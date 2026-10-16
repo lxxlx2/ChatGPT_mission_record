@@ -96,17 +96,24 @@ def collect(source_dir: Path, audit_file: Path, *, api=gh_json, downloader=gh_do
             run_cache[run_id] = api(f"repos/{REPO}/actions/runs/{run_id}")
         run = run_cache[run_id]
         if (run.get("id") != run_id or run.get("status") != "completed"
-                or run.get("conclusion") != "success"
                 or run.get("repository", {}).get("full_name") != REPO):
-            raise RuntimeError(
-                "MONSTER445_REPLAY_PRODUCER_RUN_NOT_SUCCESS "+json.dumps({
-                    "artifact_id":artifact_id,"run_id":run_id,
-                    "run_status":run.get("status"),
-                    "run_conclusion":run.get("conclusion"),
-                    "run_repo":run.get("repository",{}).get("full_name"),
-                    "artifact_head_sha":artifact["workflow_run"].get("head_sha"),
-                    "run_head_sha":run.get("head_sha"),
-                },sort_keys=True))
+            raise RuntimeError("MONSTER445_REPLAY_PRODUCER_RUN_IDENTITY_OR_STATE_DRIFT")
+        source_job_attested = "COMPLETE_PRODUCER_RUN_SUCCESS"
+        if run.get("conclusion") != "success":
+            # Two first source shards came from early 32-cohort workflows where
+            # a *later model replay* failed despite the publisher source job
+            # succeeding. Do not relabel those entire runs as successful.
+            if len(pair)!=1 or pair[0] not in (0,1):
+                raise RuntimeError("MONSTER445_REPLAY_NONFIRST_PRODUCER_RUN_FAILED")
+            old_jobs=api(f"repos/{REPO}/actions/runs/{run_id}/jobs?per_page=100")
+            target=f"official_shard{pair[0]:02d}_16_times_10_daily"
+            if (not isinstance(old_jobs.get("jobs"),list)
+                    or not any(j.get("name")==target
+                               and j.get("status")=="completed"
+                               and j.get("conclusion")=="success"
+                               for j in old_jobs["jobs"])):
+                raise RuntimeError("MONSTER445_REPLAY_FIRST_SOURCE_JOB_NOT_VERIFIED")
+            source_job_attested="PUBLISHER_SOURCE_JOB_SUCCESS_OVERALL_RUN_FAILED"
         subdir = source_dir / f"artifact_{artifact_id}"
         subdir.mkdir()
         downloader(run_id, artifact["name"], subdir)
@@ -142,6 +149,8 @@ def collect(source_dir: Path, audit_file: Path, *, api=gh_json, downloader=gh_do
                 "artifact_expires_at": artifact.get("expires_at"),
                 "source_run_id": run_id,
                 "source_run_sha": run["head_sha"],
+                "source_run_conclusion": run["conclusion"],
+                "source_job_attestation": source_job_attested,
                 "zip_sha256": proof["sha256_zip"],
                 "git_proof_sha256": hashlib.sha256(repo_proof.read_bytes()).hexdigest(),
                 "ten_day_publisher_sha_count":
