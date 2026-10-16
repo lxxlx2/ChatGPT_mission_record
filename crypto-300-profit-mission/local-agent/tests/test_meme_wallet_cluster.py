@@ -561,7 +561,7 @@ def test_real_analyzer_uninitialized_mint_fails_closed_without_network():
     assert good["assessment"]["trading_status"] != "WATCH / CHAIN_PERMISSION_UNRESOLVED"
 
 
-def test_native_rpc_authority_presence_is_not_equivalent_to_explicit_null():
+def test_native_rpc_authority_presence_is_not_equivalent_to_explicit_null(tmp_path):
     """Reviewer P2: real token_profile and analyze, no network, no hand-edited report."""
     program = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
     valid_key = "So11111111111111111111111111111111111111112"
@@ -621,3 +621,23 @@ def test_native_rpc_authority_presence_is_not_equivalent_to_explicit_null():
     incomplete_but_active = run({"mintAuthority": valid_key})
     assert incomplete_but_active["token_profile"]["authority_evidence_status"] == "UNCONFIRMED"
     assert incomplete_but_active["assessment"]["chain_permission_status"] == "RISK"
+
+    # Actual downstream consumers: the audit history must not mistake a
+    # second missing-authority observation for removed permission uncertainty.
+    from mission_agent.meme.cluster import markdown
+    from mission_agent.mission_control.server import ClusterJobManager
+
+    store = ClusterJobManager.__new__(ClusterJobManager)
+    unresolved_a = run({})
+    unresolved_b = run({"mintAuthority": None})
+    store._attach_assessment_history(tmp_path, unresolved_a, "standard")
+    store._attach_assessment_history(tmp_path, unresolved_b, "standard")
+    assert unresolved_b["assessment_history"][-1]["snapshot"]["chain_permission_status"] == "UNRESOLVED" if "snapshot" in unresolved_b["assessment_history"][-1] else unresolved_b["assessment"]["chain_permission_status"] == "UNRESOLVED"
+    assert all("CHAIN_PERMISSION_UNRESOLVED" not in entry.get("removed_uncertainty", [])
+               for entry in unresolved_b["assessment_history"])
+    assert "- Chain permission: UNRESOLVED" in markdown(unresolved_b)
+
+    verified_later = run({"mintAuthority": None, "freezeAuthority": None})
+    store._attach_assessment_history(tmp_path, verified_later, "standard")
+    assert "CHAIN_PERMISSION_UNRESOLVED" in verified_later["assessment_history"][-1]["removed_uncertainty"]
+    assert "- Chain permission: PASS" in markdown(verified_later)
