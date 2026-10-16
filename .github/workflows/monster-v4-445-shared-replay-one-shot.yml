@@ -54,7 +54,7 @@ jobs:
         working-directory: crypto-300-profit-mission/local-agent/scripts
         run: |
           python -m py_compile monster_v4_shared_445_archive_replay_runner.py monster_v4_shared_445_one_db_from_shards.py test_monster_v4_shared_445_archive_replay_runner.py
-          python -m unittest -v test_monster_v4_shared_445_archive_replay_runner.py test_monster_v4_shared_445_source_shards.py
+          python -m unittest -v test_monster_v4_shared_445_archive_replay_runner.py test_monster_v4_shared_445_source_shards.py test_monster_v4_shared_d1_zeroquote_research_v2.py
           echo MONSTER445_ALL_ARCHIVE_REPLAY_OFFLINE_TESTS_PASS_NOT_YET_REAL_REPLAY
 
   original_all445_shared_replay:
@@ -77,13 +77,13 @@ jobs:
           set -eu
           python monster_v4_shared_445_archive_replay_runner.py collect --source-dir /tmp/monster_feb445_all28_original_replay_sources --audit /tmp/monster_feb445_all28_source_audit.json
           echo MONSTER445_ALL_28_REAL_SOURCE_SHARDS_RETRIEVED_AND_ATTESTED
-      - name: ONE authentic frozen shared D0+D1 SQLite, 3360 global polls, 445 source-complete symbols
+      - name: ONE original D0 shared SQLite and experimental zeroquote V2 D1, 3360 ticks and all445 real sources
         working-directory: crypto-300-profit-mission/local-agent/scripts
         run: |
           set -eu
-          python monster_v4_shared_445_one_db_from_shards.py --source-dir /tmp/monster_feb445_all28_original_replay_sources --out /tmp/monster_feb445_all445_one_sqlite_full_result.json
+          python monster_v4_shared_445_one_db_from_shards.py --source-dir /tmp/monster_feb445_all28_original_replay_sources --out /tmp/monster_feb445_all445_one_sqlite_full_result.json --research-zeroquote-v2
           python monster_v4_shared_445_archive_replay_runner.py summarize --audit /tmp/monster_feb445_all28_source_audit.json --replay /tmp/monster_feb445_all445_one_sqlite_full_result.json --out /tmp/monster_feb445_all445_one_sqlite_summary.json
-          echo MONSTER445_REAL_ONE_SHARED_SQLITE_COMPLETED_RESEARCH_ONLY
+          echo MONSTER445_REAL_ONE_SHARED_SQLITE_EXPERIMENTAL_V2_NOT_ORIGINAL_D1_COMPLETED_RESEARCH_ONLY
       - uses: actions/upload-artifact@v4
         with:
           name: monster-feb445-all445-real-original-shared-D0D1-once
@@ -110,7 +110,7 @@ jobs:
             exit 1
           fi
           git rebase FETCH_HEAD
-          for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_archive_replay_runner.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_archive_replay_runner.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_one_db_from_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_official_source_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py .github/workflows/monster-v4-445-shared-replay-one-shot.yml crypto-300-profit-mission/monster/source-batches/monster_feb445_shared_replay_request.json; do
+          for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_archive_replay_runner.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_archive_replay_runner.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_d1_zeroquote_research_v2.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_d1_zeroquote_research_v2.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_one_db_from_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_official_source_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py .github/workflows/monster-v4-445-shared-replay-one-shot.yml crypto-300-profit-mission/monster/source-batches/monster_feb445_shared_replay_request.json; do
             test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo "MONSTER445_REPLAY_EXECUTABLE_OR_REQUEST_DRIFT=$path"; exit 1; }
           done
           for i in $(seq -w 0 27); do
