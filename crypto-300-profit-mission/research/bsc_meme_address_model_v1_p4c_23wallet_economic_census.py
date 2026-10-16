@@ -95,14 +95,17 @@ def census(d):
 
     proofs = d["two_major"]["selected_two_major_positive_receipt_proofs"]
     bound = scope["selected_2026_8e6b_cross_major_positive_proofs"]
+    token_ca = {c["token"]: c["exact_ca"].lower() for c in d["two_major"]["cross_coin_summary"]}
     require(d["two_major"]["wallet"].lower() == FROZEN_8E6B
             and len(proofs) == len(bound) == 2
-            and {x["exact_ca"].lower() for x in bound} == {p["exact_ca"].lower() for p in proofs}
-            and {p["token"] for p in proofs} == {"哈基米 / HAJIMI", "龙虾"},
+            and {x["ca"].lower() for x in bound} == {token_ca[p["token"]] for p in proofs}
+            and {p["token"] for p in proofs} == {"哈基米 / HAJIMI", "龙虾"}
+            and {(x["ca"].lower(), x["stage23_round"]) for x in bound} ==
+                {(token_ca[p["token"]], p["round"]) for p in proofs},
             "TWO_MAJOR_SELECTED_RECEIPT_GAS_PROOFS_RESELECTED")
     proofcas = set()
     for p in proofs:
-        ca = p["exact_ca"].lower()
+        ca = token_ca[p["token"]]
         require(p["settlement_reconciled_all_sells"] is True
                 and p["closed_raw_token_inventory"] is True
                 and p["buy_utc"].startswith("2026-")
