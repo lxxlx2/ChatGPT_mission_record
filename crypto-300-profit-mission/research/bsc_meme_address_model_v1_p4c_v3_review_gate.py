@@ -63,6 +63,8 @@ def classify(d):
          and d["v3"]["admission_of_V1_to_V2_change"]["removed_index_13_without_reason_in_prior_V2"]
          and d["v3"]["admission_of_V1_to_V2_change"]["p2_42_2025_dec29_invalid_calendar"],
          "H1_OUTCOME_AWARE_SWAP_NOT_DISCLOSED")
+    need(set(d["v3"]["cohort_comparisons"]) == {"v1", "v2", "v3"},
+         "H1_COULD_NOT_HIDE_OLDER_V1_OR_V2_DENOMINATORS")
     results = {}
     for name, indices in (("v1", V1), ("v2", V2), ("v3", V3)):
         vals = [ledger[i] for i in indices]
