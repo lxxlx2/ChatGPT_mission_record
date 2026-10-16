@@ -6,8 +6,8 @@
   "original_denominator": 758,
   "research_only_no_445_replay": true,
   "schema": "MONSTER_FEB2026_445_OFFICIAL_SHARD_ARTIFACT_PROOF_V1",
-  "sha256_inner_manifest": "29dd1094d875319b059aeba9d5c700cdc87f0478ff4f6da87c0445f0ee9a9e27",
-  "sha256_zip": "0a9e7a24354efdae0b3011702b5a94e34c865f32e253ea18420bdd7eae293c70",
+  "sha256_inner_manifest": "50d9f80cf74c7d7f2fe3a767de09451bad3d35febae6e06a20bf0ba359bda74d",
+  "sha256_zip": "9128f46b15361f72d88efb46c03bdd209f2ebdfdff419b1e0c08160eeac3df77",
   "shard": 1,
   "source_complete_denominator": 445,
   "source_origin_verified_at_collection": true,
@@ -769,5 +769,5 @@
     "ANKRUSDT",
     "APEUSDT"
   ],
-  "trigger_commit_sha": "e1015ab619c4da7fa24fd0f795d964f2abff1b30"
+  "trigger_commit_sha": "d8422932893d5bd124af82c355e362ec84196cc8"
 }
