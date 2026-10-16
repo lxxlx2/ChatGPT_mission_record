@@ -34,10 +34,24 @@ def git(repo, *args):
     return subprocess.check_output(["git", "-C", str(repo), *args], text=True).strip()
 
 
+def confined(root, *parts):
+    """Refuse QA symlink paths before IO, including the parent runtime folder."""
+    path = root
+    if path.is_symlink():
+        raise ValueError("QA_ROOT_SYMLINK_FORBIDDEN")
+    for part in parts:
+        path = path / part
+        if path.is_symlink():
+            raise ValueError("QA_PATH_SYMLINK_FORBIDDEN:" + str(path))
+    return path
+
+
 def check(root):
-    if root.resolve(strict=True) != ROOT.resolve(strict=True):
+    if root.absolute() != ROOT.absolute() or not root.is_dir() or root.is_symlink():
         raise ValueError("QA_ROOT_NOT_APPROVED")
-    repo = root / "repo"
+    repo = confined(root, "repo")
+    if not repo.is_dir() or (repo / ".git").is_symlink():
+        raise ValueError("QA_REPO_NOT_REGULAR_DIRECTORY")
     if git(repo, "rev-parse", "HEAD^{tree}") != TREE:
         raise ValueError("FROZEN_TREE_CHANGED")
     if git(repo, "status", "--porcelain=v1", "--untracked-files=all", "--ignored=matching"):
@@ -53,7 +67,32 @@ def read_output(proc, stream, dest):
             proc.put(line.strip())
 
 
-def start(root, repo, launcher, folder):
+def stop_process(process, reader):
+    """Bounded shutdown/reap on every child lifecycle path, ready or failed."""
+    if process.poll() is None:
+        try:
+            if process.stdin is not None:
+                process.stdin.write("\n")
+                process.stdin.flush()
+            process.wait(timeout=5)
+        except (BrokenPipeError, OSError, subprocess.TimeoutExpired):
+            if process.poll() is None:
+                process.terminate()
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=5)
+    else:
+        process.wait(timeout=5)
+    if reader is not None and reader.is_alive():
+        reader.join(timeout=4)
+    for stream in (process.stdin, process.stdout):
+        if stream is not None:
+            stream.close()
+
+
+def start(root, repo, launcher, folder, handshake_timeout=50):
     local_agent = repo / "crypto-300-profit-mission/local-agent"
     env = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"),
            "HOME": str(Path.home()), "TMPDIR": str(root / "qa-runtime"),
@@ -63,28 +102,33 @@ def start(root, repo, launcher, folder):
         [sys.executable, "-B", str(launcher), "--qa-root", str(root), "--no-safari"],
         cwd=local_agent, env=env, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT, text=True, bufsize=1)
-    messages = queue.Queue()
-    reader = threading.Thread(target=read_output,
-        args=(messages, process.stdout, folder / "launcher.log"), daemon=True)
-    reader.start()
-    end = time.monotonic() + 50
-    while time.monotonic() < end:
-        try:
-            line = messages.get(timeout=0.25)
-        except queue.Empty:
-            if process.poll() is not None:
-                raise RuntimeError("LAUNCHER_EXITED_" + str(process.returncode))
-            continue
-        if line.startswith("{"):
+    reader = None
+    try:
+        messages = queue.Queue()
+        reader = threading.Thread(target=read_output,
+            args=(messages, process.stdout, folder / "launcher.log"), daemon=True)
+        reader.start()
+        end = time.monotonic() + handshake_timeout
+        while time.monotonic() < end:
             try:
-                data = json.loads(line)
-            except ValueError:
+                line = messages.get(timeout=0.25)
+            except queue.Empty:
+                if process.poll() is not None:
+                    raise RuntimeError("LAUNCHER_EXITED_" + str(process.returncode))
                 continue
-            if data.get("status") == "MAC_PR85_SYNTHETIC_HTTP_SMOKE_PASS":
-                if data.get("source_tree_sha") != TREE or data.get("real_rpc") is not False:
-                    raise RuntimeError("LAUNCHER_SOURCE_FAILED")
-                return process, reader, data
-    raise TimeoutError("QA_LAUNCHER_TIMEOUT")
+            if line.startswith("{"):
+                try:
+                    data = json.loads(line)
+                except ValueError:
+                    continue
+                if data.get("status") == "MAC_PR85_SYNTHETIC_HTTP_SMOKE_PASS":
+                    if data.get("source_tree_sha") != TREE or data.get("real_rpc") is not False:
+                        raise RuntimeError("LAUNCHER_SOURCE_FAILED")
+                    return process, reader, data
+        raise TimeoutError("QA_LAUNCHER_TIMEOUT")
+    except BaseException:
+        stop_process(process, reader)
+        raise
 
 
 def expand(page):
@@ -118,63 +162,63 @@ def shot(page, folder, manifest, name, desc, open_details=True):
         "utc": now(), "route": page.url, "description": desc, "expanded": open_details})
 
 
-def take(browser, receipt, folder, manifest):
-    logs = []
+def take(browser, receipt, folder, manifest, logs):
     ctx = browser.new_context(viewport={"width":1440,"height":900}, locale="zh-CN")
-    def local_only(route):
-        u = urlsplit(route.request.url)
-        if u.scheme in ("http","https") and u.hostname in ("127.0.0.1","localhost"):
-            route.continue_()
-        else:
-            route.abort()
-    ctx.route("**/*", local_only)
-    def track(page):
-        page.on("pageerror", lambda err: logs.append({"utc":now(),"url":page.url,"type":"pageerror","text":str(err)}))
-        page.on("console", lambda msg: logs.append({"utc":now(),"url":page.url,"type":msg.type,"text":msg.text}) if msg.type in ("error","warning") else None)
-    ctx.on("page", track)
-    f02 = ctx.new_page()
-    f02.goto(receipt["urls"]["f02_research_only"], wait_until="domcontentloaded")
-    f02.wait_for_function("document.querySelectorAll('#position-rows tr').length === 32", timeout=15000)
-    shot(f02, folder, manifest, "01-f02-fresh-32-all", "fresh 32 Mint research state")
-    f02.locator("#mint-search").fill(receipt["mint_a"])
-    f02.wait_for_timeout(180)
-    shot(f02, folder, manifest, "02-f02-fresh-filter", "fresh exact CA search nonzero")
-    f02.locator("#mint-search").fill("")
-    signals = ctx.new_page()
-    signals.goto(receipt["urls"]["signals"], wait_until="domcontentloaded")
-    signals.wait_for_selector(".candidate-card", timeout=15000)
-    if signals.locator('button[data-view]').count()!=2:
-        raise ValueError("FORMAL_BUSINESS_TAB_COUNT_NOT_TWO")
-    if signals.locator(".candidate-card.decision-buy").count()!=1:
-        raise ValueError("F01_EXPECT_ONE_ELIGIBLE_SYNTHETIC_BUY")
-    shot(signals, folder, manifest, "03-f01-summary", "F01 actionable and excluded", False)
-    shot(signals, folder, manifest, "04-f01-expanded", "F01 all visible details")
-    for num, key, mint in ((5,"a",receipt["mint_a"]), (7,"b",receipt["mint_b"])):
-        page=ctx.new_page()
-        page.goto(receipt["urls"]["cluster"], wait_until="domcontentloaded")
-        page.locator("#cluster-mint").fill(mint)
-        page.locator("#cluster-submit").click()
-        page.wait_for_function("() => {let r=document.querySelector('#cluster-result');return r&&!r.hidden&&r.innerText.length>120}",timeout=15000)
-        if "mint_sha256_" in page.locator("#cluster-result").inner_text() or "slot_502" in page.locator("#cluster-result").inner_text():
-            raise ValueError("C02_EXPOSES_RAW_SOURCE_AUDIT")
-        shot(page,folder,manifest,f"{num:02d}-c02-{key}-summary",f"C02 exact CA {mint} summary",False)
-        shot(page,folder,manifest,f"{num+1:02d}-c02-{key}-all-expanded",f"C02 exact CA {mint} all details")
-        page.close()
-    started=datetime.fromisoformat(receipt["started_at_utc"].replace("Z","+00:00")).timestamp()
-    remaining=125-(time.time()-started)
-    if remaining>0:
-        time.sleep(remaining)
-    f02.bring_to_front()
-    f02.wait_for_timeout(1200)
-    shot(f02,folder,manifest,"09-f02-expired-all","after TTL synthetic quantities masked")
-    amounts=f02.locator("#position-rows tr td:nth-child(3)").all_inner_texts()
-    if any("123.000000" in a or "0.000000" in a for a in amounts):
-        raise ValueError("F02_EXPIRED_RESTORED_OLD_QUANTITY")
-    f02.locator("#mint-search").fill(receipt["mint_b"])
-    f02.wait_for_timeout(150)
-    shot(f02,folder,manifest,"10-f02-expired-filter","expired after filter")
-    ctx.close()
-    return logs
+    try:
+        def local_only(route):
+            u = urlsplit(route.request.url)
+            if u.scheme in ("http","https") and u.hostname in ("127.0.0.1","localhost"):
+                route.continue_()
+            else:
+                route.abort()
+        ctx.route("**/*", local_only)
+        def track(page):
+            page.on("pageerror", lambda err: logs.append({"utc":now(),"url":page.url,"type":"pageerror","text":str(err)}))
+            page.on("console", lambda msg: logs.append({"utc":now(),"url":page.url,"type":msg.type,"text":msg.text}) if msg.type in ("error","warning") else None)
+        ctx.on("page", track)
+        f02 = ctx.new_page()
+        f02.goto(receipt["urls"]["f02_research_only"], wait_until="domcontentloaded")
+        f02.wait_for_function("document.querySelectorAll('#position-rows tr').length === 32", timeout=15000)
+        shot(f02, folder, manifest, "01-f02-fresh-32-all", "fresh 32 Mint research state")
+        f02.locator("#mint-search").fill(receipt["mint_a"])
+        f02.wait_for_timeout(180)
+        shot(f02, folder, manifest, "02-f02-fresh-filter", "fresh exact CA search nonzero")
+        f02.locator("#mint-search").fill("")
+        signals = ctx.new_page()
+        signals.goto(receipt["urls"]["signals"], wait_until="domcontentloaded")
+        signals.wait_for_selector(".candidate-card", timeout=15000)
+        if signals.locator('button[data-view]').count()!=2:
+            raise ValueError("FORMAL_BUSINESS_TAB_COUNT_NOT_TWO")
+        if signals.locator(".candidate-card.decision-buy").count()!=1:
+            raise ValueError("F01_EXPECT_ONE_ELIGIBLE_SYNTHETIC_BUY")
+        shot(signals, folder, manifest, "03-f01-summary", "F01 actionable and excluded", False)
+        shot(signals, folder, manifest, "04-f01-expanded", "F01 all visible details")
+        for num, key, mint in ((5,"a",receipt["mint_a"]), (7,"b",receipt["mint_b"])):
+            page=ctx.new_page()
+            page.goto(receipt["urls"]["cluster"], wait_until="domcontentloaded")
+            page.locator("#cluster-mint").fill(mint)
+            page.locator("#cluster-submit").click()
+            page.wait_for_function("() => {let r=document.querySelector('#cluster-result');return r&&!r.hidden&&r.innerText.length>120}",timeout=15000)
+            if "mint_sha256_" in page.locator("#cluster-result").inner_text() or "slot_502" in page.locator("#cluster-result").inner_text():
+                raise ValueError("C02_EXPOSES_RAW_SOURCE_AUDIT")
+            shot(page,folder,manifest,f"{num:02d}-c02-{key}-summary",f"C02 exact CA {mint} summary",False)
+            shot(page,folder,manifest,f"{num+1:02d}-c02-{key}-all-expanded",f"C02 exact CA {mint} all details")
+            page.close()
+        started=datetime.fromisoformat(receipt["started_at_utc"].replace("Z","+00:00")).timestamp()
+        remaining=125-(time.time()-started)
+        if remaining>0:
+            time.sleep(remaining)
+        f02.bring_to_front()
+        f02.wait_for_timeout(1200)
+        shot(f02,folder,manifest,"09-f02-expired-all","after TTL synthetic quantities masked")
+        amounts=f02.locator("#position-rows tr td:nth-child(3)").all_inner_texts()
+        if any("123.000000" in a or "0.000000" in a for a in amounts):
+            raise ValueError("F02_EXPIRED_RESTORED_OLD_QUANTITY")
+        f02.locator("#mint-search").fill(receipt["mint_b"])
+        f02.wait_for_timeout(150)
+        shot(f02,folder,manifest,"10-f02-expired-filter","expired after filter")
+    finally:
+        ctx.close()
 
 
 def archive(folder, destination):
@@ -208,17 +252,26 @@ def main():
         return
     if not args.qa_root or not args.launcher_file:
         cli.error("need --qa-root and --launcher-file")
-    root=args.qa_root.expanduser().resolve(strict=True)
+    root=args.qa_root.expanduser().absolute()
     repo=check(root)
-    launcher=args.launcher_file.expanduser().resolve(strict=True)
-    if launcher != (root/"qa-runtime/frank-pr85-safari.py").resolve():
-        raise ValueError("QA_LAUNCHER_NOT_PINNED_IN_ROOT")
+    runtime=confined(root, "qa-runtime")
+    if not runtime.is_dir():
+        raise ValueError("QA_RUNTIME_DIRECTORY_MISSING")
+    expected=confined(root, "qa-runtime", "frank-pr85-safari.py")
+    launcher=args.launcher_file.expanduser().absolute()
+    if launcher != expected or not launcher.is_file() or launcher.is_symlink():
+        raise ValueError("QA_LAUNCHER_NOT_REGULAR_PINNED_FILE")
     tag=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    out=root/"qa-evidence"
+    out=confined(root, "qa-evidence")
     out.mkdir(mode=0o700,exist_ok=True)
-    folder=out/("screenshots-"+tag)
+    confined(root, "qa-evidence")
+    if not out.is_dir():
+        raise ValueError("QA_EVIDENCE_DIRECTORY_INVALID")
+    folder=confined(root, "qa-evidence", "screenshots-"+tag)
     folder.mkdir(mode=0o700)
-    zip_file=out/("frank-safari-"+tag+"-"+TREE[:12]+".zip")
+    zip_file=confined(root, "qa-evidence", "frank-safari-"+tag+"-"+TREE[:12]+".zip")
+    if zip_file.exists() or zip_file.is_symlink():
+        raise ValueError("QA_ARCHIVE_ALREADY_EXISTS")
     result={"status":"STARTED","source_tree_sha":TREE,"started_utc":now(),
             "images":[],"browser":"Playwright WebKit, NOT Safari.app",
             "mac_safari_verified_by_automation":False,
@@ -235,7 +288,7 @@ def main():
             browser=p.webkit.launch(headless=True)
             try:
                 result["browser_version"]=browser.version
-                logs=take(browser,receipt,folder,result)
+                take(browser,receipt,folder,result,logs)
                 result["status"]="WEBKIT_SCREENSHOTS_CAPTURED_NOT_SAFARI_PASS"
             finally:
                 browser.close()
@@ -244,20 +297,7 @@ def main():
         result["status"]="PARTIAL_OR_FAILED"
     finally:
         if proc is not None:
-            if proc.poll() is None:
-                try:
-                    proc.stdin.write("\n")
-                    proc.stdin.flush()
-                    proc.wait(timeout=20)
-                except (BrokenPipeError,subprocess.TimeoutExpired):
-                    proc.terminate()
-                    try:
-                        proc.wait(timeout=10)
-                    except subprocess.TimeoutExpired:
-                        proc.kill()
-                        proc.wait(timeout=10)
-            if reader:
-                reader.join(timeout=4)
+            stop_process(proc, reader)
             result["launcher_exit_code"]=proc.returncode
         if git(repo,"rev-parse","HEAD^{tree}")!=TREE:
             errors.append("FROZEN_SOURCE_DRIFT")
