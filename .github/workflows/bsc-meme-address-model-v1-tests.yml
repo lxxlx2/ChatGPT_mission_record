@@ -55,6 +55,12 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_lonxia_observer_gate.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_fiveowners14_gate.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_fiveowners14_gate.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_v3_review_gate.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_v3_review_gate.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-review-corrected-six-episodes-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-original13-block-header-calendar-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-nine-truncated-receipt-source-excerpts-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-restored-p2-13-original-two-transactions-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-replay-precommit-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-replay-precommit-corrected-v2-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-original14-pre-rpc-2026-10-16.json"
@@ -966,7 +972,7 @@ jobs:
           assert row["P5"] == "BLOCKED" and row["production"] == "NO_GO"
           print("PASS precommitted 2 Dragon post-owner buyers, 2 D503 original signed closed token rounds, 1 E11B unsold curve control; NO_GO")
           PY
-      - name: P4-C five-owner 4 major 14 original signed tx fixed-source strict 2026 batch gate
+      - name: Historical V2 five-owner 14 original tx archive (POSTHOC, NOT CANONICAL OR APPROVED)
         shell: bash
         run: |
           python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_fiveowners14_gate.py" > /tmp/bsc-five-owner14-source-grade.json
@@ -985,6 +991,30 @@ jobs:
           assert p["public_observer_executable_U"] == "UNRESOLVED"
           assert p["P5"] == "BLOCKED" and p["production"] == "NO_GO"
           print("PASS source-frozen five original owners, four exact majors, 14 signer/block, 3 unreadable receipt statuses; no P5 promotion")
+          PY
+      - name: V3 review corrections H1 cohort disclosure H2 real BNB block UTC H3 incomplete receipts NOT SUCCESS
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_v3_review_gate.py" > /tmp/bsc-p4c-v3-review-source.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path("/tmp/bsc-p4c-v3-review-source.json").read_text(encoding="utf-8"))
+          v=a["three_original_cohort_comparisons"]
+          assert v["v1"]["native_block_scope_wei"] == "223671359895044206"
+          assert v["v2"]["native_block_scope_wei"] == "-400073738684035463"
+          assert v["v3"]["native_block_scope_wei"] == "-146773456364646148"
+          assert v["v3"]["selected_original_P2_indices"] == [13,15,31,38,46,44]
+          assert a["selection_grade"] == "POST_REVIEW_OUTCOME_AWARE_EXPOSED_NOT_HOLDOUT"
+          assert a["original_2026_calendar_first_and_last_verified_for_six_cases"] == 12
+          assert a["excluded_p2_42_year"] == "2025_SOURCE_BLOCK"
+          assert a["original_signer_block_matched_count"] == 16
+          assert a["full_successful_receipts"] == 7
+          assert a["truncated_receipts_remaining_UNVERIFIED"] == 9
+          assert a["new_cross_CA_realized_PnL"] == "UNRESOLVED"
+          assert a["public_executable_U"] == "UNRESOLVED"
+          assert a["P5"] == "BLOCKED" and a["PRODUCTION"] == "NO_GO"
+          print("PASS V3 post-review disclosed V1/V2/V3, original 13 block UTC, 7 complete receipts/9 unknown, NO PNL/U/P5 promotion")
           PY
       - name: Full BSC research unittest discovery including legacy exact CA
         shell: bash
