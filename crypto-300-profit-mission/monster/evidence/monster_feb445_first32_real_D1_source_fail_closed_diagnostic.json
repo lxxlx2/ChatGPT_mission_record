@@ -1,0 +1,149 @@
+{
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "diagnostic_sha256": "0f0213e606b4658a6d44405368bebfc2765f070769ca1d0ecd473bed278347f2",
+  "do_not_alter_approved_source_contract": true,
+  "first32_shared_model_COMPLETED": false,
+  "first_fatal_D1_source_request": {
+    "D1_requested_ms": 1770525720000,
+    "D1_requested_utc": "2026-02-08T04:42:00Z",
+    "eight_closed_5m_source": [
+      {
+        "OHLC": [
+          "0.00380000",
+          "0.00380000",
+          "0.00370000",
+          "0.00380000"
+        ],
+        "close_ms": 1770523499999,
+        "open_ms": 1770523200000,
+        "quote": "284.22703400",
+        "volume": "0"
+      },
+      {
+        "OHLC": [
+          "0.00380000",
+          "0.00380000",
+          "0.00370000",
+          "0.00380000"
+        ],
+        "close_ms": 1770523799999,
+        "open_ms": 1770523500000,
+        "quote": "380.43582200",
+        "volume": "0"
+      },
+      {
+        "OHLC": [
+          "0.00370000",
+          "0.00380000",
+          "0.00370000",
+          "0.00370000"
+        ],
+        "close_ms": 1770524099999,
+        "open_ms": 1770523800000,
+        "quote": "3166.86647100",
+        "volume": "0"
+      },
+      {
+        "OHLC": [
+          "0.00370000",
+          "0.00380000",
+          "0.00370000",
+          "0.00370000"
+        ],
+        "close_ms": 1770524399999,
+        "open_ms": 1770524100000,
+        "quote": "254.94180500",
+        "volume": "0"
+      },
+      {
+        "OHLC": [
+          "0.00370000",
+          "0.00380000",
+          "0.00370000",
+          "0.00370000"
+        ],
+        "close_ms": 1770524699999,
+        "open_ms": 1770524400000,
+        "quote": "155.82111300",
+        "volume": "0"
+      },
+      {
+        "OHLC": [
+          "0.00380000",
+          "0.00380000",
+          "0.00380000",
+          "0.00380000"
+        ],
+        "close_ms": 1770524999999,
+        "open_ms": 1770524700000,
+        "quote": "119.49100000",
+        "volume": "0"
+      },
+      {
+        "OHLC": [
+          "0.00380000",
+          "0.00380000",
+          "0.00380000",
+          "0.00380000"
+        ],
+        "close_ms": 1770525299999,
+        "open_ms": 1770525000000,
+        "quote": "0E-8",
+        "volume": "0"
+      },
+      {
+        "OHLC": [
+          "0.00380000",
+          "0.00390000",
+          "0.00370000",
+          "0.00390000"
+        ],
+        "close_ms": 1770525599999,
+        "open_ms": 1770525300000,
+        "quote": "4785.21073000",
+        "volume": "0"
+      }
+    ],
+    "original_cause": "HISTORICAL_D1_SOURCE_BAD_OHLC_OR_QUOTE",
+    "research_exception": "SHARED_SPOT_ORIGINAL_D1_SOURCE_INVALID_CANDLE",
+    "source_failure_class": "ZERO_OR_NEGATIVE_OFFICIAL_KLINE_QUOTE_UNSUPPORTED_BY_FROZEN_D1",
+    "symbol": "ACAUSDT",
+    "venue": "spot"
+  },
+  "historical_313_source_censored": 313,
+  "historical_758_denominator": 758,
+  "independent_all32_shared_D0_watch_parity_if_failure": "NOT_SCORABLE",
+  "model_report_issued": false,
+  "not_tradeable_recommendation": true,
+  "official_source_archive_proofs": [
+    {
+      "producer_commit": "c16c951b24639b90b07f7b944d5911ab8005b489",
+      "shard": 0,
+      "symbol_count": 16,
+      "zip_sha256": "0a224464a317b22bd51630d9dcb86900135644ca8c72ee3390f8bf0e3d5ca2fa"
+    },
+    {
+      "producer_commit": "d8422932893d5bd124af82c355e362ec84196cc8",
+      "shard": 1,
+      "symbol_count": 16,
+      "zip_sha256": "9128f46b15361f72d88efb46c03bdd209f2ebdfdff419b1e0c08160eeac3df77"
+    }
+  ],
+  "old_stage26_32_symbols_scanned": 32,
+  "old_stage26_per_symbol_WATCH_20260206_0036_count": 7,
+  "old_stage26_per_symbol_WATCH_20260206_0036_symbols": [
+    "1000SATSUSDT",
+    "1INCHUSDT",
+    "2ZUSDT",
+    "ACAUSDT",
+    "AIXBTUSDT",
+    "ALTUSDT",
+    "APEUSDT"
+  ],
+  "original_445_complete_denominator": 445,
+  "real_445_shared_model_COMPLETED": false,
+  "schema": "MONSTER_FEB2026_FIRST32_ORIGINAL_D1_OFFICIAL_SOURCE_FAIL_CLOSED_DIAGNOSTIC_V1",
+  "status": "FAIL_CLOSED_OFFICIAL_D1_SOURCE_CONTRACT",
+  "trigger_commit_sha": "d4975048e464c9e85aa526e31d69385f8eb22b00"
+}
