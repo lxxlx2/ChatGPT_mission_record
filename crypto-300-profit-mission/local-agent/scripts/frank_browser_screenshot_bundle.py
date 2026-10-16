@@ -193,7 +193,7 @@ def selftest():
         root=Path(d)
         (root/"test.png").write_bytes(b"fixture")
         (root/"manifest.json").write_text("{}")
-        assert archive(root,root.parent/(root.name+".zip"))==1
+        assert archive(root,root/"selftest.zip")==1
     print("BROWSER_EVIDENCE_ZIP_SELFTEST_PASS")
 
 
