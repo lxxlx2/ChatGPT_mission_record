@@ -239,7 +239,10 @@ jobs:
             for idx in "$SOURCE_START" "$((SOURCE_START+1))"; do
               padded=$(printf '%02d' "$idx")
               path="$directory/monster_feb445_shard$padded.proof.json"
-              test "$(git rev-parse "$GITHUB_SHA:$path" 2>/dev/null || true)" = "" || { echo "MONSTER_445_REMAINING_ORIGINAL_TARGET_WAS_NOT_EMPTY"; exit 1; }
+              if git cat-file -e "$GITHUB_SHA:$path" 2>/dev/null; then
+                echo "MONSTER_445_REMAINING_ORIGINAL_TARGET_WAS_NOT_EMPTY=$path"
+                exit 1
+              fi
             done
             if git push origin "HEAD:refs/heads/$branch"; then
               echo "MONSTER_445_REMAINING_ORIGINAL_PAIR_SHA_PROOFS_GIT_ARCHIVED=$SOURCE_START"
