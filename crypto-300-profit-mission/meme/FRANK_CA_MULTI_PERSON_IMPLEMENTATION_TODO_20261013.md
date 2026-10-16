@@ -762,3 +762,12 @@ Remaining verified gaps / dependencies:
 - [完整预检回执及 Mac 验收流程](https://github.com/lxxlx2/ChatGPT_mission_record/blob/b0ded3e1c3dba02608798fddae3efe589343bec3/crypto-300-profit-mission/meme/FRANK_PR85_MAC_SAFARI_ACCEPTANCE_20261016.md)。冻结源、独立 APPROVE #83/#84/#85、GitHub 132 /1773 tests 均保持有效。
 - [ ] **仅经用户新一轮明确批准**，在此已通过预检的单独 QA_ROOT 内启动临时 127.0.0.1:0 synthetic native HTTP 与 Safari 用户交互，验证 F01 当前业务合格筛选/历史不跟、C02 原生权限/精确 CA/禁显 SlotSHA、F02 源 TTL 与独立研究页面；实际 Mac 截图、退出回执与 tree 一起留证。未获授权不能启动用户 Mac HTTP 服务、真实 RPC/私有 Sidecar/生产 SQLite。
 - 生产 `NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_NEW_AUTOMATION / NO_FILE_CLEANUP` 保持。
+
+
+## 2026-10-16 用户已批准 Mac PR85 synthetic Safari QA；启动器离线 smoke CI PASS
+
+- 用户明确同意继续**在已验证 Mac 新隔离根** `/Users/jerson/.local/share/frank-pr85-mac-qa-R1c6kmCU` 启动临时 `127.0.0.1:0` F01+C02+F02 synthetic native HTTP，打开 Safari 逐页验收。未许可生产、私人 Sidecar、真实 Solana RPC、Gmail、交易、清理/部署/合并。
+- 为保持已独立 APPROVE 的 **PR #85** 源码 tree `eea30efa09cb1509d7eee3fde3043ee7155257cf` 完全不变，新增隔离 QA 手工启动脚本在**另一分支** `qa/frank-pr85-approved-mac-safari-localhost-20261016`，唯一测试通过的脚本 commit `68f1267e8b35db4d8fecc84eafd27ca55aa2ee3a`，文件 `crypto-300-profit-mission/local-agent/scripts/frank_pr85_synthetic_safari_qa.py`。**Mac 只 fetch+git show 该脚本到 QA_ROOT/qa-runtime，不 checkout 此分支**。全部 runtime/临时合成 wire 与 SQLite 在此 QA_ROOT 另开私有目录；服务前台可按 Enter 正常关闭。
+- 完整 CI [`38873977753`](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38873977753) **SUCCESS**：真实重建 approved tree、启动 3 个随机端口 localhost Handler、F01 1 合成 eligible + 2 excluded、C02 两条同名不同 exact Mint、F02 32 Mint 一非零一零、桥接权限 False，断言退出后文件树未变、全部监听器关闭。此前两次 CI 因 clone 缺冻结 Git 对象及 mock Mint 身份证据缺失 FAILED，后续仅修 QA 测试设施，没有修改 frozen modules。
+- [专门的本次 Mac Safari 授权与交互验收记录](https://github.com/lxxlx2/ChatGPT_mission_record/blob/8168e0296f6d42ee56b4720a75b064eadcd2a241/crypto-300-profit-mission/meme/FRANK_PR85_APPROVED_SYNTHETIC_MAC_SAFARI_EXECUTION_20261016.md)。
+- [ ] 等待用户在实际 Mac 上执行 Git SHA-pinned QA 脚本、Safari 截图、两条 exact CA 查询、F02 前台/切后台与 120 秒 TTL、结束进程的 `MAC_PR85_SYNTHETIC_SESSION_ENDED` 原始回执。本轮**还没有 Mac Safari PASS**，下一步按真实输出修正或判定，绝不能直接发布或称已确认真实余额。
