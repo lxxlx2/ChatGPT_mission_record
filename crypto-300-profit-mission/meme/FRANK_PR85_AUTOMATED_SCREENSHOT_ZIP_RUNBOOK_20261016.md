@@ -50,7 +50,7 @@ PY="$ROOT/qa-runtime/venv/bin/python"
 "$PY" -m playwright install webkit
 
 cd "$REPO/crypto-300-profit-mission/local-agent"
-LOG="$(mktemp "$ROOT/qa-runtime/capture-XXXXXXXX.log")"
+LOG="$(mktemp "$ROOT/qa-runtime/capture-XXXXXXXX")"
 env -i PATH="$PATH" HOME="$HOME" TMPDIR="${TMPDIR:-/tmp/}" LANG="en_US.UTF-8" PYTHONNOUSERSITE=1 PYTHONPATH="$PWD" NO_PROXY="127.0.0.1,localhost" "$PY" -B "$ROOT/qa-runtime/frank-browser-bundle.py" --qa-root "$ROOT" --launcher-file "$ROOT/qa-runtime/frank-pr85-safari.py" | tee "$LOG"
 
 ZIP="$("$PY" -B - "$LOG" "$ROOT" "$TREE" <<'PY'
