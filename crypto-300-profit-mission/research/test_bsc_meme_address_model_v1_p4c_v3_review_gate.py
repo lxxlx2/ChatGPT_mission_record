@@ -65,6 +65,49 @@ class V3HistoricalCohortAndCalendarReviewTests(unittest.TestCase):
         self.reject(lambda d:d["header"]["all_13_original_block_hashes_and_integer_timestamps"][-1].update(
             utc_from_integer_milliseconds="2026-12-29T11:18:55.000Z"))
 
+    def test_gap_a_arbitrary_valid_shape_header_hash_must_fail_cross_method(self):
+        self.reject(lambda d: d["header"]["all_13_original_block_hashes_and_integer_timestamps"][0].update(
+            block_hash="0x" + "a" * 64))
+
+    def test_gap_a_corrupted_original_transaction_hash_source_must_fail(self):
+        self.reject(lambda d: d["tx_hash_cross"]["rows"][0].update(
+            tx_blockHash="0x" + "b" * 64, archive_hash="0x" + "b" * 64))
+
+    def test_gap_c_self_consistent_hour_shift_now_rejected_by_block_by_hash(self):
+        def move_hour(d):
+            r = d["header"]["all_13_original_block_hashes_and_integer_timestamps"][4]
+            ms = int(r["milliTimestamp_hex"], 16) + 3600000
+            r["milliTimestamp_hex"] = hex(ms)
+            r["timestamp_hex"] = hex(ms // 1000)
+            from datetime import datetime, timezone
+            r["utc_from_integer_milliseconds"] = datetime.fromtimestamp(
+                ms / 1000, timezone.utc).isoformat(
+                timespec="milliseconds").replace("+00:00", "Z")
+        self.reject(move_hour)
+
+    def test_gap_b_coherent_false_extra_visible_status_and_summary_rejected(self):
+        def invent(d):
+            r = d["partial"]["observations"][-1]
+            r["status_literal_if_visible"] = "0x1"
+            r["status_literal_offset"] = 21
+            r["source_response_first_350_chars"] = (
+                '{\\n  "type": "0x0",\\n  "status": "0x1",\\n  "logs": []'
+            )
+            r["status_direct_raw_span"] = '{\\n  "status": "0x1"'
+            d["partial"]["summary"]["partial_visible_status"] = 9
+            d["partial"]["summary"]["partial_no_status"] = 0
+            d["partial"]["summary"]["partial_visible_status_second_pass_self_attested"] = 9
+            d["partial"]["summary"]["partial_no_status_second_pass_self_attested"] = 0
+        self.reject(invent)
+
+    def test_gap_b_truncated_witness_cannot_claim_verified_receipt(self):
+        self.reject(lambda d: d["partial"].update(
+            status_field_witness_is_not_success_claim=False))
+
+    def test_h2_original_legacy_self_attested_prefix_must_not_be_renamed_verified(self):
+        self.reject(lambda d: d["header"]["all_13_original_block_hashes_and_integer_timestamps"][0].update(
+            status="HEADER_VERIFIED_FROM_PROVIDER_RESPONSE_PREFIX"))
+
     def test_h3_truncated_status_must_not_be_a_full_receipt(self):
         self.reject(lambda d:d["partial"]["observations"][0].update(
             provider_JSON_parseable=True,evidence_grade="FULL"))
