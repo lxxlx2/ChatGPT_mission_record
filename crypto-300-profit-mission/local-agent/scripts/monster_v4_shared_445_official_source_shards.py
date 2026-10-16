@@ -223,6 +223,19 @@ def read_archive(source_path, proof=None, expected_shard=None):
                     or proof.get("source_origin_verified_at_collection") !=
                     meta.get("source_origin_verified_at_collection")):
                 raise ValueError("SHARED_445_SHARD_PROVENANCE_MISMATCH")
+        if proof is not None:
+            # The archive ZIP SHA and inner manifest SHA bind each other;
+            # explicitly bind the independent Git-tracked proof per-symbol
+            # daily publisher receipts and raw row hashes to that manifest.
+            pinned=proof.get("source_sha256_by_symbol")
+            if (not isinstance(pinned,list)
+                    or len(pinned)!=len(archive_members)
+                    or any(not isinstance(p,dict) for p in pinned)
+                    or [p.get("symbol") for p in pinned]!=list(selected)
+                    or any(p.get("raw_sha256")!=m.get("source_json_sha256")
+                           or p.get("publisher_days")!=m.get("publisher_days")
+                           for p,m in zip(pinned,archive_members))):
+                raise ValueError("SHARED_445_SOURCE_PROOF_PUBLISHER_MANIFEST_MISMATCH")
         for m in archive_members:
             if (m.get("name")!=m["symbol"]+".json" or
                     m.get("rows")!=MINUTE_ROWS or
