@@ -60,6 +60,7 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_wbnb10_source_gate.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_wbnb10_source_gate.py"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-adff-dragon-original-two-owner-transfers-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-adff-bounded-acquisition-asset-outgoing-source-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-postapprove4-wallets10-wbnb-event-query-scope-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-postapprove-wbnb-events-partA-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-postapprove-wbnb-events-partB-2026-10-16.json"
@@ -1050,6 +1051,9 @@ jobs:
           assert a["ADFF_original_Dragon_transfer_in_raw"] == "32546033429758403566"
           assert a["ADFF_original_Dragon_transfer_out_raw"] == "32546033429758403566"
           assert a["ADFF_all_assets_input_cost"].startswith("UNRESOLVED")
+          assert a["ADFF_initial_signed_tx_standard_ERC20_owner_out"] == "ZERO_MATCHES_SINGLE_BLOCK_TRANSFER_TOPIC"
+          assert a["ADFF_economic_acquisition_class"] == "SOURCE_AMBIGUOUS_NOT_CONFIRMED_BUY_OR_FREE_AIRDROP"
+          assert a["ADFF_realized_return"].startswith("UNRESOLVED")
           assert a["repeat_trader_profitability"] == "UNRESOLVED"
           assert a["public_executable_U"] == "UNRESOLVED"
           assert a["P5"] == "BLOCKED" and a["PRODUCTION"] == "NO_GO"
