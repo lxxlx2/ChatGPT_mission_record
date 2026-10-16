@@ -123,7 +123,9 @@ def classify(docs):
                      and int(item["data"], 16) > 0,
                      "SIGNED_SELL_SCAN_TRANSFER_SOURCE_MISMATCH")
                 logs.append(item)
-        need(tuple(x["transactionHash"] for x in logs) == expected_hashes,
+        actual_hashes = tuple(x["transactionHash"] for x in logs)
+        need(actual_hashes == expected_hashes and
+             doc["observed_transfer_to_manager_tx_hashes"] == list(actual_hashes),
              "FROZEN_BUYER_EXIT_COUNT_OR_HASH_CHANGED")
         scan_results[wallet] = logs
 
