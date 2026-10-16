@@ -222,9 +222,5 @@ def test_browser_unrepresentable_impact_is_not_followable():
             "price_impact_pct": raw,
         })
         out = partition([row])
-        # Overflow must fail; underflow becomes representable zero only for
-        # nonnegative impact, but quote no longer claims the original precision.
-        if raw == "1e999":
-            assert out["eligible_count"] == 0
-        else:
-            assert out["eligible_count"] == 1
+        assert out["eligible_count"] == 0
+        assert out["not_followed"][0]["exclusion_reason"] == "QUOTE_NOT_EXECUTABLE"
