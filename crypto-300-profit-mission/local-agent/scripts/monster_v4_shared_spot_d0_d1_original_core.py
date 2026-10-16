@@ -233,6 +233,60 @@ def assert_complete_cache(db, roster, day):
             "expected_source_rows":expected}
 
 
+def verified_closed_5m_for_original_d1(db, roster, venue, sym, at_ms):
+    """Validate research source BEFORE handing candles to production D1.
+
+    Historical data defects are fatal to this replay; original production
+    catches ValueError as a retry, which would corrupt D1 deferred/LATE.
+    This callback never changes the frozen production evaluator or queue.
+    """
+    if venue != "spot" or sym not in roster:
+        raise RuntimeError("SHARED_SPOT_ORIGINAL_D1_SOURCE_UNEXPECTED_INSTRUMENT")
+    try:
+        arr = db.execute("""
+            SELECT candle_json FROM closed5m_source
+            WHERE symbol=? AND end_ms<?
+            ORDER BY end_ms DESC LIMIT 8
+        """, (sym, at_ms)).fetchall()
+        candles = [json.loads(x[0]) for x in reversed(arr)]
+        last_closed_end = (at_ms // (5 * MIN)) * (5 * MIN) - 1
+        expected = [last_closed_end - (7 - i) * 5 * MIN
+                    for i in range(8)]
+        if len(candles) != 8:
+            raise ValueError("HISTORICAL_D1_SOURCE_MISSING_CLOSED_5M")
+        for i, candle in enumerate(candles):
+            if not isinstance(candle, list) or len(candle) != 8:
+                raise ValueError("HISTORICAL_D1_SOURCE_BAD_CANDLE_SHAPE")
+            if (type(candle[0]) is not int or type(candle[6]) is not int or
+                    candle[6] != expected[i] or
+                    candle[0] != expected[i] - 5 * MIN + 1 or
+                    candle[6] >= at_ms):
+                raise ValueError("HISTORICAL_D1_SOURCE_BAD_OPEN_CLOSE_CLOCK")
+            values = []
+            for idx in (1, 2, 3, 4, 5, 7):
+                item = candle[idx]
+                if isinstance(item, bool):
+                    raise ValueError("HISTORICAL_D1_SOURCE_BOOL_NUMERIC")
+                number = Decimal(str(item))
+                if not number.is_finite():
+                    raise ValueError("HISTORICAL_D1_SOURCE_NONFINITE_NUMERIC")
+                values.append(number)
+            op, hi, lo, close, volume, quote = values
+            if (min(op, hi, lo, close) <= 0 or
+                    not (lo <= op <= hi and lo <= close <= hi) or
+                    volume < 0 or quote <= 0):
+                raise ValueError("HISTORICAL_D1_SOURCE_BAD_OHLC_OR_QUOTE")
+        # Fail closed if the ORIGINAL evaluator rejects these same candles
+        # for any further feature/continuity reason. It is read-only and
+        # will be evaluated normally once more by process_queue().
+        production.evaluate_closed_5m(candles, at_ms)
+        return candles
+    except (ValueError, TypeError, IndexError, KeyError,
+            OverflowError, ArithmeticError) as exc:
+        raise RuntimeError(
+            "SHARED_SPOT_ORIGINAL_D1_SOURCE_INVALID_CANDLE") from exc
+
+
 def run_shared(db, day, symbols, *, market_coverage_label, frozen_verified_roster=None):
     """One production DB, full-list D0 ONCE/tick, global FIFO D1 ONCE/tick."""
     assert_original_core()
@@ -255,25 +309,8 @@ def run_shared(db, day, symbols, *, market_coverage_label, frozen_verified_roste
         store = production.open_store(Path(td)/"one_global_758_or_subset.sqlite")
         try:
             def real_historical_closed_5m(venue, sym, at_ms):
-                if venue != "spot" or sym not in roster:
-                    raise ValueError("SHARED_SPOT_D1_REQUEST_UNKNOWN_VENUE_SYMBOL")
-                arr = db.execute("""
-                    SELECT candle_json FROM closed5m_source
-                    WHERE symbol=? AND end_ms<?
-                    ORDER BY end_ms DESC LIMIT 8
-                """, (sym, at_ms)).fetchall()
-                candles = [json.loads(x[0]) for x in reversed(arr)]
-                last_closed_end = (at_ms // (5 * MIN)) * (5 * MIN) - 1
-                expected = [last_closed_end - (7 - i) * 5 * MIN
-                            for i in range(8)]
-                # RuntimeError is intentionally NOT swallowed by the
-                # original production retry catcher; a bad historical
-                # source must stop the whole research run, not become a
-                # spurious D1_deferred event.
-                if (len(candles) != 8 or
-                        [int(c[6]) for c in candles] != expected):
-                    raise RuntimeError("SHARED_SPOT_ORIGINAL_D1_SOURCE_MISSING_OR_UNCLOSED")
-                return candles
+                return verified_closed_5m_for_original_d1(
+                    db, roster, venue, sym, at_ms)
 
             start, end = utc_ms(day), utc_ms(day)+ACTIVE*MIN
             for tick in range(start+3*MIN,end+1,TICK):
