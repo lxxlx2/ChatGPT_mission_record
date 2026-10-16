@@ -126,16 +126,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
-      - name: Assert checked-out PR HEAD equals exact event head SHA
+      - name: Assert checked-out source SHA on PR or manual dispatch
         shell: bash
         env:
-          REVIEWED_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          REVIEWED_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          EVENT_PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          EVENT_SHA: ${{ github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
-          test -n "$REVIEWED_HEAD_SHA"
+          set -euo pipefail
+          [[ "$REVIEWED_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            [[ "$EVENT_PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]
+            test "$REVIEWED_HEAD_SHA" = "$EVENT_PR_HEAD_SHA"
+          elif [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            test -z "$EVENT_PR_HEAD_SHA"
+            [[ "$EVENT_SHA" =~ ^[0-9a-f]{40}$ ]]
+            test "$REVIEWED_HEAD_SHA" = "$EVENT_SHA"
+          else
+            echo "Unsupported event for BSC read-only QA: $EVENT_NAME" >&2
+            exit 1
+          fi
           test "$(git rev-parse HEAD)" = "$REVIEWED_HEAD_SHA"
-          echo "PASS direct PR HEAD checkout at $REVIEWED_HEAD_SHA, not generated merge commit"
+          echo "PASS $EVENT_NAME direct source SHA checkout $REVIEWED_HEAD_SHA"
       - name: Confirm frozen Git input blob
         shell: bash
         run: |
