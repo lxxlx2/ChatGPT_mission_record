@@ -63,7 +63,8 @@ class SourceShardsAndMergeTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"SHARD_PROOF_OR_OFFICIAL_ORIGIN"):
                 # A synthetic source archive, even with valid bytes and SHA,
                 # CANNOT be certified as official through proof metadata.
-                with patch.object(assemble.shards,"SHARD_COUNT",1):
+                with patch.object(assemble,"expected_file_pair",
+                        side_effect=lambda _folder,_i:(z,p)):
                     assemble.verified_shard_paths(tmp)
 
     def test_03_missing_27_shards_blocks_before_model(self):
