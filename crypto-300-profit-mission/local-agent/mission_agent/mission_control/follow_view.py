@@ -80,6 +80,21 @@ def _reason(item: dict, *, now: float, runtime_status: str,
     quote = item.get("decision_quote") or {}
     if quote.get("status") != "OK" or quote.get("route_exists") is not True:
         return "QUOTE_NOT_EXECUTABLE"
+    # The BUY flag alone is not actionable when the corresponding execution
+    # price/impact evidence is missing, as reproduced in Mac synthetic Safari.
+    metrics = item.get("metrics") or {}
+    price = quote.get("execution_price_usdc")
+    if price is None:
+        price = metrics.get("execution_price_usdc")
+    impact = quote.get("price_impact_pct")
+    if impact is None:
+        impact = metrics.get("price_impact_pct")
+    try:
+        impact_value = Decimal(str(impact))
+    except (TypeError, InvalidOperation, ValueError):
+        return "QUOTE_NOT_EXECUTABLE"
+    if not _positive(price) or not impact_value.is_finite() or impact_value < 0:
+        return "QUOTE_NOT_EXECUTABLE"
     if not _fresh(item.get("quote_observed_at"), now=now,
                   max_age_seconds=max_quote_age_seconds):
         return "QUOTE_STALE"
