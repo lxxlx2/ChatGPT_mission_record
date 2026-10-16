@@ -44,6 +44,32 @@ jobs:
       - name: Install Python test dependencies only inside runner
         working-directory: crypto-300-profit-mission/local-agent
         run: python -m pip install -e '.[dev]' numpy==2.3.3
+      - name: Install WebKit automatic screenshot capture QA dependencies
+        run: |
+          python -m pip install playwright==1.56.0
+          python -m playwright install --with-deps webkit
+      - name: Validate automated screenshot collector standalone and true WebKit full-page capture
+        env:
+          QA_ROOT: /home/runner/.local/share/frank-pr85-mac-qa-R1c6kmCU
+        run: |
+          set -euo pipefail
+          python -B crypto-300-profit-mission/local-agent/scripts/frank_browser_screenshot_bundle.py --self-test
+          python -B crypto-300-profit-mission/local-agent/scripts/frank_browser_screenshot_bundle.py --qa-root "$HOME/.local/share/frank-pr85-mac-qa-R1c6kmCU" --launcher-file "$GITHUB_WORKSPACE/crypto-300-profit-mission/local-agent/scripts/frank_pr85_synthetic_safari_qa.py"
+          python -B - "$HOME/.local/share/frank-pr85-mac-qa-R1c6kmCU" <<'PY'
+          from pathlib import Path
+          import json,sys,zipfile
+          base=Path(sys.argv[1])
+          zips=list((base/'qa-evidence').glob('frank-safari-*.zip'))
+          assert len(zips)==1,zips
+          with zipfile.ZipFile(zips[0]) as z:
+              assert z.testzip() is None
+              info=json.loads(z.read('manifest.json'))
+              assert info['status']=='WEBKIT_SCREENSHOTS_CAPTURED_NOT_SAFARI_PASS',info
+              assert len(info['images'])==10,info
+              assert 'launcher.log' in z.namelist()
+              assert all(x['sha256'] for x in info['images'])
+          print('WEBKIT_SCREENSHOT_ZIP_CAPTURE_PASS')
+          PY
       - name: Real three-listener synthetic smoke with production modules and forced shutdown
         env:
           QA_ROOT: /home/runner/.local/share/frank-pr85-mac-qa-R1c6kmCU
