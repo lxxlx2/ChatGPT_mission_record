@@ -1,12 +1,5 @@
 name: Monster V4 shared Spot D0 global D1 real archived source proof
 on:
-  push:
-    branches: [research/monster-v4-local-discovery-20261010]
-    paths:
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_stage26_original_source_census.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_spot_d0_d1_original_core.py'
-      - '.github/workflows/monster-v4-shared-spot-d0-global-d1-official.yml'
   workflow_dispatch:
 permissions:
   contents: write
@@ -143,6 +136,8 @@ jobs:
           set -eu
           branch=research/monster-v4-local-discovery-20261010
           dest=crypto-300-profit-mission/monster/evidence
+          test ! -e "$dest/monster_shared_spot_stage26_36_source_census.json" || { echo MONSTER445_LEGACY_CENSUS_ALREADY_ARCHIVED; exit 1; }
+          test ! -e "$dest/monster_shared_spot_real_BTC_ETH_20260204.json" || { echo MONSTER445_LEGACY_BTCETH_ALREADY_ARCHIVED; exit 1; }
           cp /tmp/monster_shared_results/monster_shared_spot_stage26_36_source_census.json "$dest/"
           cp /tmp/monster_shared_results/monster_shared_spot_real_BTC_ETH_20260204.json "$dest/"
           git config user.name monster-research-ci
