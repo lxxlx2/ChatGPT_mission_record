@@ -1,0 +1,126 @@
+name: Monster V4 445 source-complete February shared D0 D1 prereg pilot
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_445_source_pilot.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_spot_445_source_pilot.py'
+      - '.github/workflows/monster-v4-445-source-complete-real-shared-pilot.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  original_445_pilot_tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-latest]
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test deterministic 445 provenance and actual old vs shared original production D0 clocks
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python -m py_compile monster_v4_shared_spot_445_source_pilot.py test_monster_v4_shared_spot_445_source_pilot.py
+          python -m unittest -v test_monster_v4_shared_spot_445_source_pilot.py
+          echo MONSTER_445_PILOT_PREREG_SYNTHETIC_SOURCE_NOT_OFFICIAL=PASS
+
+  publisher_8_source_complete_real_replay:
+    needs: original_445_pilot_tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read exactly first eight alphabetical predeclared eligible of frozen 445, all original 1m daily ZIP and CHECKSUM
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python monster_v4_shared_spot_445_source_pilot.py --size 8 --out /tmp/monster_shared_feb2026_445_prereg_first8_actual.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/monster_shared_feb2026_445_prereg_first8_actual.json')
+          r=json.loads(p.read_text())
+          assert r['trigger_commit_sha']==__import__('os').environ['GITHUB_SHA']
+          assert r['source_origin_verified'] is True
+          assert r['original_758_coverage']['original_758_denominator']==758
+          assert r['original_758_coverage']['replayed_verifiable_subset']==8
+          assert r['original_758_coverage']['source_missing_or_incomplete_original_stage26']==313
+          assert r['original_758_coverage']['source_complete_but_not_replayed']==437
+          assert r['matched_D0_watch_exact_for_all_pilot_symbols']
+          assert r['not_full_445_shared_replay'] and not r['true_full_758_replay']
+          assert len(r['publisher_proof'])==8
+          assert all(len(x['publisher_daily_sha'])==10 for x in r['publisher_proof'])
+          assert r['execution_counts']['polls']==3360
+          print('MONSTER_445_REAL_8_OF_445_ORIGINAL_D0_WATCH_CLOCKS_MATCHED_SHA_VERIFIED')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-445-feb26-first8-publisher-verified-historical-pilot
+          path: /tmp/monster_shared_feb2026_445_prereg_first8_actual.json
+          retention-days: 60
+
+  archive_after_exact_source_and_git_identity:
+    needs: publisher_8_source_complete_real_replay
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: true
+      - name: Fetch only triggering same-run original publisher history outcome
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/monster_445_first8
+          gh run download "$GITHUB_RUN_ID" --dir /tmp/monster_445_first8 --name monster-445-feb26-first8-publisher-verified-historical-pilot
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          r=json.loads(Path('/tmp/monster_445_first8/monster_shared_feb2026_445_prereg_first8_actual.json').read_text())
+          assert r['trigger_commit_sha']==os.environ['GITHUB_SHA']
+          assert r['source_origin_verified'] is True
+          assert r['market_coverage']=='OFFICIAL_VERIFIED_445_SOURCE_COMPLETE_PILOT_ONLY'
+          assert r['original_source_complete_445_subset_total']==445
+          assert r['not_full_445_shared_replay'] is True
+          print('MONSTER_445_PILOT_SOURCE_PINNED_TRUE_8_OF_445')
+          PY
+      - name: Save original pilot source SHA proof without permitting later executable drift
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          target=crypto-300-profit-mission/monster/evidence/monster_shared_spot_445_feb2026_first8_real_pilot.json
+          cp /tmp/monster_445_first8/monster_shared_feb2026_445_prereg_first8_actual.json "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add "$target"
+          git commit -m "monster: preserve fixed first-eight 445 eligible original publisher-SHA shared D0 historical pilot"
+          for attempt in 1 2 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then
+              git rebase --abort || true
+              exit 1
+            fi
+            for f in crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_445_source_pilot.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_spot_445_source_pilot.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py .github/workflows/monster-v4-445-source-complete-real-shared-pilot.yml; do
+              test "$(git rev-parse "$GITHUB_SHA:$f")" = "$(git rev-parse "HEAD:$f")" || { echo "MONSTER_445_PILOT_SOURCE_DRIFT=$f"; exit 1; }
+            done
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo MONSTER_445_FIRST8_REAL_PUBLISHER_ZIP_SHA_REPLAY_EVIDENCE_PINNED_TO_GIT
+              exit 0
+            fi
+          done
+          exit 1
