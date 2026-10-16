@@ -207,6 +207,97 @@ class JointReadOnly:
         }
 
 
+    def current_follow_context(self) -> dict:
+        """One current F01 list joined to existing A05/F02 observations by exact Mint.
+
+        F01 remains the only source of candidate decisions. No CA scan and
+        no RPC or portfolio write. A research observation never authorizes BUY.
+        """
+        timestamp = datetime.now(timezone.utc).isoformat()
+        try:
+            follow = _existing_json(self.control_port, "/api/follow-opportunities")
+            if follow is None or not _recent_f01(follow):
+                follow = None
+        except _SourceUnavailable:
+            follow = None
+
+        if follow is not None:
+            eligible = follow["eligible"]
+            # A corrupted upstream partition must never silently become an
+            # empty list of actionable opportunities, or duplicate a signal.
+            identities = [(item.get("person_id"), item.get("mint"))
+                          for item in eligible]
+            if (any(item.get("person_id") != "frank"
+                    or not valid_solana_mint(item.get("mint"))
+                    or item.get("decision") not in ("BUY", "SMALL_BUY")
+                    or not isinstance(item.get("source_signal_id"), str)
+                    or not item["source_signal_id"]
+                    for item in eligible)
+                    or len(set(identities)) != len(identities)):
+                follow = None
+
+        upstream = {"f01": "SOURCE_READ" if follow is not None
+                    else "SOURCE_UNAVAILABLE",
+                    "f02": "NOT_READ", "c02": "NOT_QUERIED"}
+        if follow is None:
+            return {
+                "schema_version": 1, "kind": "FRANK_CURRENT_F01_WITH_A05_RESEARCH_CONTEXT",
+                "as_of_utc": timestamp,
+                "status": "F01_SOURCE_UNAVAILABLE",
+                "candidate_count": None, "candidates": [],
+                "f01_valid_until_epoch": None, "upstream": upstream,
+                "archive_is_live_wallet_portfolio": False,
+                "combined_trade_permission": False,
+                "ca_query_executed": False, "initiated_solana_rpc": False,
+                "writes_production_sqlite": False,
+            }
+        try:
+            f02 = _existing_json(self.f02_port, "/api/research/positions")
+            upstream["f02"] = "SOURCE_READ"
+        except _SourceUnavailable:
+            f02 = None
+            upstream["f02"] = "SOURCE_UNAVAILABLE"
+
+        candidates = []
+        for item in follow["eligible"]:
+            context = align_frank_ca_f02(
+                mint=item["mint"], follow=follow, ca_report=None,
+                f02_positions=f02)["f02"]
+            candidates.append({
+                "person_id": item["person_id"],
+                "mint": item["mint"],
+                "f01_decision": item["decision"],
+                "source_signal_id": item["source_signal_id"],
+                "wallet_observation_state": context["state"],
+                "observed_quantity": context["observed_quantity"],
+                "token_account_count": context["token_account_count"],
+                "observation_at_utc": context["capture_observed_at_utc"],
+                "archived_source_only": True,
+                "current_wallet_position_verified": False,
+                "historical_sale_confirmed": False,
+                "may_trade_based_on_combination": False,
+            })
+        a05_gap = (upstream["f02"] != "SOURCE_READ" or any(
+            row["wallet_observation_state"] in (
+                "SOURCE_UNAVAILABLE", "OUTSIDE_FROZEN_TARGET_ROSTER")
+            for row in candidates))
+        return {
+            "schema_version": 1, "kind": "FRANK_CURRENT_F01_WITH_A05_RESEARCH_CONTEXT",
+            "as_of_utc": timestamp,
+            "status": ("NO_CURRENT_ELIGIBLE_CANDIDATES" if not candidates else
+                       "CANDIDATES_WITH_A05_SOURCE_GAP" if a05_gap else
+                       "CURRENT_F01_CANDIDATES_ARCHIVED_A05_ONLY"),
+            "candidate_count": len(candidates),
+            "candidates": candidates,
+            "f01_valid_until_epoch": follow["as_of_epoch"] + 8,
+            "upstream": upstream,
+            "archive_is_live_wallet_portfolio": False,
+            "combined_trade_permission": False,
+            "ca_query_executed": False, "initiated_solana_rpc": False,
+            "writes_production_sqlite": False,
+        }
+
+
 def make_handler(service: JointReadOnly):
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *_):
@@ -229,6 +320,13 @@ def make_handler(service: JointReadOnly):
             if self.headers.get("Host") != f"127.0.0.1:{self.server.server_port}":
                 return self._json(421, {"status": "LOOPBACK_HOST_REQUIRED"})
             url = urlsplit(self.path)
+            if url.path == "/api/research/current-follow-context":
+                if url.query:
+                    return self._json(400, {"status": "QUERY_NOT_ALLOWED"})
+                try:
+                    return self._json(200, service.current_follow_context())
+                except Exception:
+                    return self._json(503, {"status": "JOINT_RESEARCH_SOURCE_UNAVAILABLE"})
             if url.path != "/api/research/alignment":
                 return self._json(404, {"status": "NOT_FOUND"})
             args = parse_qs(url.query, keep_blank_values=True)
