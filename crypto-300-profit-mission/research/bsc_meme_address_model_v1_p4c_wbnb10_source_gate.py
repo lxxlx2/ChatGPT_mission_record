@@ -19,6 +19,7 @@ PINS = {
  "csource": ("bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partC-2026-10-16.json", "f1b8a739043de8e3763cfd96bc9025029ade63f4"),
  "ledger": ("bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json", "2a19dbd88c2971efff60a15894d952d0d05e64d9"),
  "adff": ("bsc-meme-address-model-v1-p4c-adff-dragon-original-two-owner-transfers-2026-10-16.json", "b2a428b6c2f417abaef2c0f3b94bf4d16e9c91ab"),
+ "adff_payment_scope": ("bsc-meme-address-model-v1-p4c-adff-bounded-acquisition-asset-outgoing-source-2026-10-16.json", "b921270650e00b4de190b1c396a0bbc78c89150e"),
 }
 OWNER_INDICES = [31, 38, 46, 44]
 EXPECTED_COUNTS = [2, 3, 3, 2]
@@ -157,6 +158,59 @@ def classify(d):
            and sum(incoming)==sum(sale)
            and len({e["topics"][1] for e in aq[0]["exact_original_tx_events"]})==2,
            "ADFF_DRAGON_TWO_ARRIVALS_ONE_EXIT_AND_WBNB_REBATE_SCOPE_CHANGED")
+    # Additional BNB original acquisition payment search, intentionally non-exhaustive.
+    # Standard indexed ERC20 Transfer(owner, any) absent in original block.
+    # Neither zero native msg.value nor zero observed Transfer can establish zero BASIS.
+    pay=d["adff_payment_scope"]
+    ensure(pay["base_independent_review_sha"] ==
+           "520eb0dd0851b1bb15728d4f57c50abc0917474c"
+           and pay["previous_signed_two_tx_git_blob_sha"] == PINS["adff"][1]
+           and pay["original_owner"] == result[44]["wallet"]
+           and pay["original_tx"] == need[-1]["original_txs"][0]["hash"]
+           and pay["original_block"] == need[-1]["original_txs"][0]["block"]
+           and pay["original_signed_tx_native_value_wei"] == "0",
+           "ADFF_BOUNDED_PAYMENT_SCOPE_NOT_ORIGINAL_SIGNED_TX")
+    qs=pay["source_queries"]
+    ensure(len(qs)==9
+           and qs[0]["method"]=="eth_getLogs"
+           and qs[0]["contract_filter"] is None
+           and qs[0]["topic0"]==token_topic
+           and qs[0]["topic1"]==eoa_topic
+           and qs[0]["fromBlock"]==qs[0]["toBlock"]==121783426
+           and qs[0]["full_json_parseable"] is True
+           and qs[0]["raw_text"]=="[]"
+           and qs[0]["matching_ERC20_outgoing_transfer_log_count_in_entire_block"]==0,
+           "ADFF_UNFILTERED_STANDARD_ERC20_OUTGOING_EVIDENCE_CHANGED")
+    stable={"USDT":"0x55d398326f99059ff775485246999027b3197955",
+            "USDC":"0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+            "BUSD":"0xe9e7cea3dedca5984780bafc599bd69add087d56"}
+    for q in qs[1:4]:
+        ensure(q["method"]=="eth_getLogs"
+               and q["contract_filter"].lower()==stable[q["asset"]].lower()
+               and q["direction"]=="owner_out"
+               and q["full_json_parseable"] is True and q["raw_text"]=="[]",
+               "ADFF_STABLE_QUOTE_SELECTED_BLOCK_OWNER_OUT_QUERY_DRIFT")
+    ensure(qs[4]["method"]=="alchemy_getAssetTransfers"
+           and qs[4]["category"]==["erc20","external"]
+           and qs[4]["fromAddress"]==result[44]["wallet"]
+           and qs[4]["raw_text"]=='{"transfers": []}'
+           and qs[4]["full_json_parseable"] is True
+           and qs[5]["status"]=="RPC_ERROR_UNSUPPORTED_INTERNAL_CATEGORY_ON_BNB_MAINNET"
+           and qs[5]["raw_text"] is None,
+           "ADFF_INTERNAL_UNSUPPORTED_CANNOT_BE_MISLABELED_ALL_CLEAR")
+    destinations=["0xeb91d9ed63a060077d51678248ae11dc784ab735",
+                  "0xd3604620f75fefab226d0fa50a3894e1d1111137",
+                  "0x359bf61ca77cbda27a5eb3a8b472f3c02bc2bc75"]
+    for q,to in zip(qs[6:],destinations):
+        ensure(q["method"]=="eth_getLogs" and q["contract_filter"] is None
+               and q["topic0"]==token_topic and q["topic1"]==eoa_topic
+               and q["topic2"].lower()=="0x"+to[2:].lower().rjust(64,"0")
+               and q["raw_text"]=="[]" and q["full_json_parseable"] is True,
+               "ADFF_ORIGINAL_COUNTERPARTY_STANDARD_TOKEN_OUTGOING_SEARCH_CHANGED")
+    ensure(pay["original_acquisition_payment_source"].startswith("UNRESOLVED")
+           and pay["original_owner_realized_pnl"]=="UNRESOLVED"
+           and pay["P5"]=="BLOCKED" and pay["PRODUCTION"]=="NO_GO",
+           "ADFF_NO_TOKEN_OUT_IS_NOT_FREE_OR_PROFITABLE")
     return {"schema":"BSC_P4C_POSTAPPROVE_FOUR_OWNER_TEN_TX_WBNB_EVENT_SOURCE_REPLAY",
             "original_owners":4,"original_transactions":10,
             "positive_source_native_scope_owners":2,
@@ -172,6 +226,10 @@ def classify(d):
             "ADFF_original_Dragon_transfer_out_raw":"32546033429758403566",
             "ADFF_original_first_tx_WBNB_ERC20_received_wei":"176310176278987",
             "ADFF_all_assets_input_cost":"UNRESOLVED_NO_EXHAUSTIVE_TRANSFER_OR_INTERNAL_ROUTER_TRACE",
+            "ADFF_initial_signed_tx_standard_ERC20_owner_out":"ZERO_MATCHES_SINGLE_BLOCK_TRANSFER_TOPIC",
+            "ADFF_initial_signed_tx_internal_asset_path":"UNVERIFIED_UNSUPPORTED_BY_FREE_ALCHEMY_BNB_TRANSFER_CATEGORY",
+            "ADFF_economic_acquisition_class":"SOURCE_AMBIGUOUS_NOT_CONFIRMED_BUY_OR_FREE_AIRDROP",
+            "ADFF_realized_return":"UNRESOLVED_NO_OWNER_ALL_ASSET_COST_BASIS",
             "route_observation_grade":"WBNB_WRAPPER_EVENT_ONLY_NOT_WALLET_PNL",
             "repeat_trader_profitability":"UNRESOLVED",
             "public_executable_U":"UNRESOLVED","P4_C":"PARTIAL","P5":"BLOCKED",
