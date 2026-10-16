@@ -1,0 +1,63 @@
+name: Frank PR85 synthetic Safari launcher offline smoke
+
+on:
+  push:
+    branches:
+      - qa/frank-pr85-approved-mac-safari-localhost-20261016
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  isolated-runner-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reconstruct independently audited exact tree without QA runner modifications
+        env:
+          MAIN: 662ba4aceb9d53cb7a541ad3f251f9e12b8c09ea
+          F02: 5755b8b96080f21635eaa5354588cbb8f6561ab0
+          C02: 8d425e4d0e9db9f27abd8ad662e4d59e64b57e53
+          F01: d2eeebc1b49d2bae38e05d7d01f6839e3ba237f4
+          HARNESS: 40febd8275c7710a8697af5a0503569a2bb5cb8d
+          EXPECTED_TREE: eea30efa09cb1509d7eee3fde3043ee7155257cf
+        run: |
+          set -euo pipefail
+          root="$HOME/.local/share/frank-pr85-mac-qa-R1c6kmCU"
+          mkdir -p "$root"
+          git clone --no-local --quiet --no-checkout "$GITHUB_WORKSPACE" "$root/repo"
+          git -C "$root/repo" checkout --quiet --detach "$MAIN"
+          for pin in "$F02" "$C02" "$F01" "$HARNESS"; do
+            git -C "$root/repo" -c user.name="Synthetic QA" -c user.email="qa@example.invalid" -c core.hooksPath=/dev/null merge --no-ff --no-edit --no-gpg-sign "$pin"
+          done
+          test "$(git -C "$root/repo" rev-parse 'HEAD^{tree}')" = "$EXPECTED_TREE"
+          test -z "$(git -C "$root/repo" status --porcelain=v1 --untracked-files=all --ignored=matching)"
+          echo 'FROZEN_SOURCE_TREE=PASS'
+      - name: Install Python test dependencies only inside runner
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pip install -e '.[dev]' numpy==2.3.3
+      - name: Real three-listener synthetic smoke with production modules and forced shutdown
+        env:
+          QA_ROOT: /home/runner/.local/share/frank-pr85-mac-qa-R1c6kmCU
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$QA_ROOT/repo/crypto-300-profit-mission/local-agent"
+          python -B crypto-300-profit-mission/local-agent/scripts/frank_pr85_synthetic_safari_qa.py --qa-root "$HOME/.local/share/frank-pr85-mac-qa-R1c6kmCU" --smoke
+          python -B - "$HOME/.local/share/frank-pr85-mac-qa-R1c6kmCU" <<'PY'
+          import json,sys
+          from pathlib import Path
+          sessions=list(Path(sys.argv[1]).glob('safari-session-*/session.json'))
+          assert len(sessions)==1,sessions
+          result=json.loads(sessions[0].read_text())
+          assert result['services_stopped'] and result['repo_clean']
+          assert result['source_tree_sha_after']=='eea30efa09cb1509d7eee3fde3043ee7155257cf'
+          print('MAC_PR85_SYNTHETIC_LAUNCHER_SMOKE_PASS')
+          PY
