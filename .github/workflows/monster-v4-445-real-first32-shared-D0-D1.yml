@@ -1,11 +1,5 @@
 name: Monster V4 first 32 official 445-cohort shared D0 D1 causal high-pressure
 on:
-  push:
-    branches: [research/monster-v4-local-discovery-20261010]
-    paths:
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_first32_real_comparison.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_first32_real_comparison.py'
-      - '.github/workflows/monster-v4-445-real-first32-shared-D0-D1.yml'
   workflow_dispatch:
 permissions:
   contents: write
@@ -162,6 +156,8 @@ jobs:
           set -eu
           branch=research/monster-v4-local-discovery-20261010
           d=crypto-300-profit-mission/monster/evidence
+          test ! -e "$d/monster_feb445_shard00.proof.json" || { echo MONSTER445_LEGACY_SHARD00_ALREADY_ARCHIVED; exit 1; }
+          test ! -e "$d/monster_feb445_first32_real_global_original_v4.json" || { echo MONSTER445_LEGACY_RESULT_ALREADY_ARCHIVED; exit 1; }
           cp /tmp/monster_first32_results/monster_feb445_shard00.proof.json "$d/monster_feb445_shard00.proof.json"
           cp /tmp/monster_first32_results/monster_first32_global_original_production_result.json "$d/monster_feb445_first32_real_global_original_v4.json"
           git config user.name monster-research-ci
