@@ -1,0 +1,120 @@
+name: Monster 445 original full source-complete ONE SQLite D0 D1 replay (research only)
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/monster/source-batches/monster_feb445_shared_replay_request.json'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster-445-replay-immutable-original-once-research
+  cancel-in-progress: false
+jobs:
+  freeze_and_offline_source_tests:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fail closed unless a sole fixed research-only replay request was just committed
+        run: |
+          set -eu
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          path='crypto-300-profit-mission/monster/source-batches/monster_feb445_shared_replay_request.json'
+          files=subprocess.check_output(['git','diff-tree','--no-commit-id',
+                                         '--name-only','-r','HEAD'],
+                                        text=True).splitlines()
+          if files!=[path]:
+              raise ValueError('MONSTER445_REPLAY_EXPLICIT_REQUEST_ONLY_ONE_FILE_REQUIRED')
+          got=json.loads(Path(path).read_text(encoding='utf-8'))
+          if got!={'schema':'MONSTER_FEB445_ONE_SQLITE_MANUAL_REQUEST_V1',
+                  'source_shards':28,'expected_symbols':445,
+                  'source_artifact_ids_sha_locked':True,
+                  'request_id':'20261016_full445_first_original_replay',
+                  'research_only':True,'approved_scope':'RESEARCH_REPLAY_ONLY'}:
+              raise ValueError('MONSTER445_REPLAY_REQUEST_OR_TARGET_DRIFT')
+          print('MONSTER445_REPLAY_FROZEN_MANUAL_RESEARCH_ONLY',got['request_id'])
+          PY
+          test "$GITHUB_REF_NAME" = "research/monster-v4-local-discovery-20261010"
+          git diff --exit-code
+      - name: Offline source and replay anti-overclaim tests, original core unchanged
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python -m py_compile monster_v4_shared_445_archive_replay_runner.py monster_v4_shared_445_one_db_from_shards.py test_monster_v4_shared_445_archive_replay_runner.py
+          python -m unittest -v test_monster_v4_shared_445_archive_replay_runner.py test_monster_v4_shared_445_source_shards.py
+          echo MONSTER445_ALL_ARCHIVE_REPLAY_OFFLINE_TESTS_PASS_NOT_YET_REAL_REPLAY
+
+  original_all445_shared_replay:
+    needs: freeze_and_offline_source_tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download exactly 18 historical Actions artifacts, verify 28 original publisher ZIPs against Git proof and producer runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -eu
+          python monster_v4_shared_445_archive_replay_runner.py collect --source-dir /tmp/monster_feb445_all28_original_replay_sources --audit /tmp/monster_feb445_all28_source_audit.json
+          echo MONSTER445_ALL_28_REAL_SOURCE_SHARDS_RETRIEVED_AND_ATTESTED
+      - name: ONE authentic frozen shared D0+D1 SQLite, 3360 global polls, 445 source-complete symbols
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -eu
+          python monster_v4_shared_445_one_db_from_shards.py --source-dir /tmp/monster_feb445_all28_original_replay_sources --out /tmp/monster_feb445_all445_one_sqlite_full_result.json
+          python monster_v4_shared_445_archive_replay_runner.py summarize --audit /tmp/monster_feb445_all28_source_audit.json --replay /tmp/monster_feb445_all445_one_sqlite_full_result.json --out /tmp/monster_feb445_all445_one_sqlite_summary.json
+          echo MONSTER445_REAL_ONE_SHARED_SQLITE_COMPLETED_RESEARCH_ONLY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-feb445-all445-real-original-shared-D0D1-once
+          path: |
+            /tmp/monster_feb445_all28_source_audit.json
+            /tmp/monster_feb445_all445_one_sqlite_full_result.json
+            /tmp/monster_feb445_all445_one_sqlite_summary.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Git-archive small fixed-source truth-only shared D0D1 summary, never full source or real DB
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          summary=crypto-300-profit-mission/monster/evidence/monster_feb445_all445_one_sqlite_replay_actual.json
+          test ! -e "$summary"
+          cp /tmp/monster_feb445_all445_one_sqlite_summary.json "$summary"
+          git add "$summary"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive real 445 source-complete ONE SQLite shared D0+D1 replay summary"
+          git fetch origin "refs/heads/$branch"
+          git rebase FETCH_HEAD
+          for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_archive_replay_runner.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_archive_replay_runner.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_one_db_from_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_official_source_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py .github/workflows/monster-v4-445-shared-replay-one-shot.yml crypto-300-profit-mission/monster/source-batches/monster_feb445_shared_replay_request.json; do
+            test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo "MONSTER445_REPLAY_EXECUTABLE_OR_REQUEST_DRIFT=$path"; exit 1; }
+          done
+          for i in $(seq -w 0 27); do
+            path="crypto-300-profit-mission/monster/evidence/monster_feb445_shard$i.proof.json"
+            test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo "MONSTER445_REPLAY_SOURCE_PROOF_DRIFT=$path"; exit 1; }
+          done
+          if git cat-file -e "HEAD:$summary" 2>/dev/null; then
+            test "$(git rev-parse "HEAD:$summary")" = "$(git rev-parse "$GITHUB_SHA:$summary" 2>/dev/null)" || { echo MONSTER445_REPLAY_REPORT_ALREADY_EXISTS; exit 1; }
+          fi
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER445_REAL_FULL_SOURCE_COMPLETE_SHARED_D0_D1_SUMMARY_ARCHIVED_RESEARCH_ONLY
