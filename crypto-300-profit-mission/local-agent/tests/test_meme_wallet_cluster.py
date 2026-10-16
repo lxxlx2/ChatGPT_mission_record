@@ -632,7 +632,7 @@ def test_native_rpc_authority_presence_is_not_equivalent_to_explicit_null(tmp_pa
     unresolved_b = run({"mintAuthority": None})
     store._attach_assessment_history(tmp_path, unresolved_a, "standard")
     store._attach_assessment_history(tmp_path, unresolved_b, "standard")
-    assert unresolved_b["assessment_history"][-1]["snapshot"]["chain_permission_status"] == "UNRESOLVED" if "snapshot" in unresolved_b["assessment_history"][-1] else unresolved_b["assessment"]["chain_permission_status"] == "UNRESOLVED"
+    assert unresolved_b["assessment"]["chain_permission_status"] == "UNRESOLVED"
     assert all("CHAIN_PERMISSION_UNRESOLVED" not in entry.get("removed_uncertainty", [])
                for entry in unresolved_b["assessment_history"])
     assert "- Chain permission: UNRESOLVED" in markdown(unresolved_b)
