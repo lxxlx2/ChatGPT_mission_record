@@ -57,6 +57,12 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_fiveowners14_gate.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_v3_review_gate.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_v3_review_gate.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_wbnb10_source_gate.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_wbnb10_source_gate.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-postapprove4-wallets10-wbnb-event-query-scope-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-postapprove-wbnb-events-partA-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-postapprove-wbnb-events-partB-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-postapprove-wbnb-events-partC-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-13-txhash-cross-method-blockhash-evidence-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-13-block-by-hash-timestamps-evidence-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-original13-block-header-calendar-graded-v2-2026-10-16.json"
@@ -1022,6 +1028,28 @@ jobs:
           assert a["public_executable_U"] == "UNRESOLVED"
           assert a["P5"] == "BLOCKED" and a["PRODUCTION"] == "NO_GO"
           print("PASS V3 post-review disclosed V1/V2/V3, original 13 block UTC, 7 complete receipts/9 unknown, NO PNL/U/P5 promotion")
+          PY
+      - name: P4-C post-review original ten WBNB event route source grade (four wallets, positives and negatives)
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_wbnb10_source_gate.py" > /tmp/bsc-p4c-wbnb10-event-evidence.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path("/tmp/bsc-p4c-wbnb10-event-evidence.json").read_text(encoding="utf-8"))
+          assert a["original_owners"] == 4 and a["original_transactions"] == 10
+          assert a["negative_source_native_scope_owners"] == 2
+          assert a["positive_source_native_scope_owners"] == 2
+          assert a["complete_exact_block_event_queries"] == 19
+          assert a["truncated_exact_block_event_queries"] == 1
+          assert a["cases"]["38"]["wbnb_event_sums_wei"]["Withdrawal"] == "1694918377918343466"
+          assert a["cases"]["46"]["wbnb_event_sums_wei"]["Withdrawal"] == "UNRESOLVED_PARTIAL_LOG_QUERY"
+          assert a["cases"]["44"]["wbnb_event_sums_wei"]["Deposit"] == "0"
+          assert a["ADFF_positive_native_scope_quote_cost"].startswith("UNRESOLVED")
+          assert a["repeat_trader_profitability"] == "UNRESOLVED"
+          assert a["public_executable_U"] == "UNRESOLVED"
+          assert a["P5"] == "BLOCKED" and a["PRODUCTION"] == "NO_GO"
+          print("PASS 4/4 original wallet source: 10 tx, 19 complete WBNB event queries, one truncated; no false ADFF free buy or P5 promotion")
           PY
       - name: Full BSC research unittest discovery including legacy exact CA
         shell: bash
