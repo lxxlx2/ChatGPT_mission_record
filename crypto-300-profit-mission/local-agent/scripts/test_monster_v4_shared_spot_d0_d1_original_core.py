@@ -252,7 +252,7 @@ class SharedOriginalV4Tests(unittest.TestCase):
                     fetch_candles("spot","BTCUSDT",now)
                     return dict(selected=0,completed=0,deferred=0,late=0)
                 with patch.object(sh.production,"process_queue",side_effect=call_d1):
-                    with self.assertRaisesRegex(RuntimeError,"D1_SOURCE_MISSING_OR_UNCLOSED"):
+                    with self.assertRaisesRegex(RuntimeError,"D1_SOURCE_INVALID_CANDLE"):
                         sh.run_shared(db,DAY,("BTCUSDT",),
                                market_coverage_label="OFFICIAL_VERIFIED_SUBSET_ONLY")
 
@@ -320,6 +320,95 @@ class SharedOriginalV4Tests(unittest.TestCase):
         self.assertIn("NO_PRIOR_PER_DAY_SHA_PIN",
              sh.check_secondary_daily_sha_pins("SOMENEWUSDT",
                 [{"date":x["day"],"sha256":x["sha256"]} for x in btc]))
+
+
+    def test_20_real_production_queue_high_zero_same_clock_is_fatal(self):
+        """No mocked process_queue. 1 WATCH/1 completed -> corrupt HIGH=0
+        must throw, not finish with D1_deferred or LATE.
+        """
+        with tempfile.TemporaryDirectory(prefix="original_production_D1_fatal_") as td:
+            with sh.setup_cache(Path(td)/"fault_source.sqlite") as db:
+                sh.prepare_symbol(db, "AAUSDT", DAY, self.A,
+                                  fake_receipts("AAUSDT"))
+                baseline = sh.run_shared(db, DAY, ("AAUSDT",),
+                             market_coverage_label="SYNTHETIC_TEST_ONLY")
+                self.assertEqual(baseline["execution_counts"]["D0_watch_new"], 1)
+                self.assertEqual(baseline["execution_counts"]["D1_completed"], 1)
+                self.assertEqual(baseline["execution_counts"]["D1_late"], 0)
+                watches = [x["observed_ms"] for x in baseline["events"]
+                           if x["event_type"] == "WATCH_EARLY"]
+                self.assertEqual(len(watches), 1)
+                tick = watches[0]
+                # Exact Codex counterexample: preserve SQLite row count, key,
+                # both candle clock values and all other content.
+                end_ms = (tick // (5 * sh.MIN)) * (5 * sh.MIN) - 1
+                row = db.execute("""SELECT candle_json FROM closed5m_source
+                        WHERE symbol=? AND end_ms=?""",
+                        ("AAUSDT", end_ms)).fetchone()
+                self.assertIsNotNone(row)
+                candle = json.loads(row[0])
+                self.assertEqual(int(candle[6]), end_ms)
+                candle[2] = "0"
+                total_before = db.execute(
+                    "SELECT COUNT(*) FROM closed5m_source").fetchone()[0]
+                db.execute("""UPDATE closed5m_source SET candle_json=?
+                        WHERE symbol=? AND end_ms=?""",
+                        (json.dumps(candle), "AAUSDT", end_ms))
+                db.commit()
+                self.assertEqual(db.execute(
+                    "SELECT COUNT(*) FROM closed5m_source").fetchone()[0],
+                    total_before)
+                # Actual original production.process_queue(), untouched;
+                # RuntimeError must propagate so no fraudulent study JSON.
+                with self.assertRaisesRegex(RuntimeError,
+                                             "SHARED_SPOT_ORIGINAL_D1_SOURCE_INVALID_CANDLE"):
+                    sh.run_shared(db, DAY, ("AAUSDT",),
+                        market_coverage_label="SYNTHETIC_TEST_ONLY")
+
+    def test_21_cached_closed5m_shape_open_clock_nan_and_quote_fatal(self):
+        at_ms = sh.utc_ms(DAY) + 3 * sh.MIN
+        end_ms = (at_ms // (5 * sh.MIN)) * (5 * sh.MIN) - 1
+        row = self.db.execute("""SELECT candle_json FROM closed5m_source
+            WHERE symbol=? AND end_ms=?""",
+            ("AAUSDT",end_ms)).fetchone()
+        self.assertIsNotNone(row)
+        intact = json.loads(row[0])
+        valid = sh.verified_closed_5m_for_original_d1(
+            self.db, ("AAUSDT","BBUSDT"), "spot", "AAUSDT", at_ms)
+        self.assertEqual(len(valid),8)
+        invalid = {}
+        mutated = list(intact); mutated[2] = "0"; invalid["zero_high"] = mutated
+        mutated = list(intact); mutated[3] = "999"; invalid["bad_low"] = mutated
+        mutated = list(intact); mutated[7] = "NaN"; invalid["nan_quote"] = mutated
+        mutated = list(intact); mutated[7] = "Infinity"; invalid["infinite_quote"] = mutated
+        mutated = list(intact); mutated[7] = "0"; invalid["no_trades_unsupported"] = mutated
+        mutated = list(intact); mutated[5] = "-1"; invalid["negative_volume"] = mutated
+        mutated = list(intact); mutated[0] = mutated[0] + sh.MIN
+        invalid["wrong_open_clock"] = mutated
+        mutated = list(intact); mutated[6] = mutated[6] + sh.MIN
+        invalid["wrong_close_clock"] = mutated
+        invalid["short_shape"] = intact[:6]
+        invalid["bad_json"] = "{not valid json"
+        try:
+            for reason, broken in invalid.items():
+                with self.subTest(reason=reason):
+                    raw = broken if isinstance(broken,str) else json.dumps(broken)
+                    with self.db:
+                        self.db.execute("""UPDATE closed5m_source
+                            SET candle_json=? WHERE symbol=? AND end_ms=?""",
+                            (raw,"AAUSDT",end_ms))
+                    with self.assertRaisesRegex(RuntimeError,
+                                                 "SHARED_SPOT_ORIGINAL_D1_SOURCE_INVALID_CANDLE"):
+                        sh.verified_closed_5m_for_original_d1(
+                            self.db, ("AAUSDT","BBUSDT"),"spot","AAUSDT",at_ms)
+        finally:
+            with self.db:
+                self.db.execute("""UPDATE closed5m_source
+                    SET candle_json=? WHERE symbol=? AND end_ms=?""",
+                    (row[0],"AAUSDT",end_ms))
+        verified = sh.verified_closed_5m_for_original_d1(
+            self.db, ("AAUSDT","BBUSDT"),"spot","AAUSDT",at_ms)
+        self.assertEqual(len(verified),8)
 
 
 if __name__=="__main__":
