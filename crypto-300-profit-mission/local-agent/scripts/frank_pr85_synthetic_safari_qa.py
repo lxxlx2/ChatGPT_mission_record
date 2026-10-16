@@ -104,7 +104,7 @@ def sources(root):
 
 
 def state_for(a, b):
-    profile = {"mint": a, "status": "OK", "metadata": {"status": "VERIFIED", "records": [
+    profile = {"mint": a, "status": "OK", "mint_account_status": "VERIFIED", "metadata": {"status": "VERIFIED", "records": [
         {"mint": a, "name": "SYNTHETIC SAME-NAME TOKEN", "symbol": "SYNTH",
          "source": "TOKEN2022_METADATA", "update_authority": None}]}}
     market = {"mint": a, "status": "OK", "market_match_status": "EXACT_BASE_MINT_MATCH",
