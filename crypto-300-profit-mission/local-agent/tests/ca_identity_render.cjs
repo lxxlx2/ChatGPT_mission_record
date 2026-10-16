@@ -25,6 +25,33 @@ for(const report of results){
 const report=structuredClone(results[0]);report.token_identity.display_label='身份来源冲突';report.token_identity.display_name=null;report.token_identity.conflict_status='TOKEN_IDENTITY_CONFLICT';report.token_identity.sources.push({name:'<script>wrong</script>',mint:report.mint});ctx.report=report;
 vm.runInContext('renderClusterReport(report)',ctx);
 assert(nodes['cluster-status'].innerHTML.includes('TOKEN_IDENTITY_CONFLICT'));
-assert(nodes['cluster-summary'].innerHTML.includes('&lt;script&gt;wrong&lt;/script&gt;'));
-assert(!nodes['cluster-summary'].innerHTML.includes('<script>wrong</script>'));
+assert(nodes['cluster-identity-evidence'].innerHTML.includes('&lt;script&gt;wrong&lt;/script&gt;'));
+assert(!nodes['cluster-identity-evidence'].innerHTML.includes('<script>wrong</script>'));
+assert(!nodes['cluster-summary'].innerHTML.includes('metadata_attempts'), 'raw source data must not occupy the top summary grid');
+assert(nodes['cluster-identity-evidence'].innerHTML.includes('<details>'), 'source trail must be opt-in detail');
 console.log('C02 actual app.js: 6 official cases, exact CA preview/progress, conflict and escaping PASS');
+
+const stale={mint:results[0].mint, token_identity:{display_label:'SYNTHETIC SAME-NAME TOKEN',
+  identity_status:'UNCONFIRMED',market_match_status:'NOT_CHECKED',conflict_status:'UNRESOLVED',
+  sources:[{source:'SYNTHETIC_ONLY',mint:results[0].mint}]},
+  token_profile:{status:'UNAVAILABLE'},market:{status:'UNAVAILABLE'},
+  assessment:{chain_permission_status:'UNRESOLVED',cluster_status:'WALLET_CLUSTER_UNRESOLVED',
+    trading_status:'UNRESOLVED'},coverage:{rpc_calls:0}};
+ctx.report=stale;
+vm.runInContext('renderClusterReport(report)',ctx);
+const badEvidence=nodes['cluster-token-profile'].innerHTML;
+assert(badEvidence.includes('活动扩展风险'));
+assert(badEvidence.includes('未确认'));
+assert(!badEvidence.includes('已核实未发现'));
+assert(!badEvidence.includes('class="ok-text">未发现'), 'unknown extension state cannot be green');
+assert(!badEvidence.includes('class="ok-text">无'), 'unknown must not be marked clean');
+assert(nodes['cluster-coverage'].innerHTML.includes('使用 RPC 节点</span><strong>0</strong>'));
+assert(!nodes['cluster-coverage'].innerHTML.includes('使用 RPC 节点</span><strong>1</strong>'));
+const clean=structuredClone(stale);
+clean.token_profile={status:'OK',extensions:[],active_extension_risks:[],
+  inactive_sensitive_extensions:[],unresolved_sensitive_extensions:[]};
+clean.assessment.chain_permission_status='PASS';
+ctx.report=clean;
+vm.runInContext('renderClusterReport(report)',ctx);
+assert(nodes['cluster-token-profile'].innerHTML.includes('已核实未发现'));
+console.log('C02 Safari regression: unknown risk never green, zero RPC stays zero, audit details moved PASS');
