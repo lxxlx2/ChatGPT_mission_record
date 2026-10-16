@@ -1,12 +1,5 @@
 name: Monster 445 full-source future replay official shard01
 on:
-  push:
-    branches: [research/monster-v4-local-discovery-20261010]
-    paths:
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_official_source_shards.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_one_db_from_shards.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_source_shards.py'
-      - '.github/workflows/monster-v4-445-real-official-minute-source-shard01.yml'
   workflow_dispatch:
 permissions:
   contents: write
@@ -109,6 +102,10 @@ jobs:
           set -eu
           branch=research/monster-v4-local-discovery-20261010
           target=crypto-300-profit-mission/monster/evidence/monster_feb445_shard01.proof.json
+          if test -e "$target"; then
+            echo MONSTER445_IMMUTABLE_SHARD01_SOURCE_PROOF_EXISTS_NO_OVERWRITE
+            exit 1
+          fi
           cp /tmp/monster_445_shard01/monster_feb445_shard01.proof.json "$target"
           git config user.name monster-research-ci
           git config user.email monster-research-ci@users.noreply.github.com
