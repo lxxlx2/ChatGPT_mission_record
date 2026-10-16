@@ -447,3 +447,12 @@ Stage152新最后P2固定SHA `71a041405352c9e2210d93dff9c2685149809e52` 已获�
 本轮[正式源完整性修复/实测报告](MONSTER_SHARED_SPOT_D1_CORRUPT_5M_CODEX_P2_REAL_PROD_QUEUE_FIX_AND_CI_20261016.md)及[固定`1154e97...`另一AI独立复核提示](MONSTER_SHARED_SPOT_D1_CORRUPT_5M_CODEX_P2_INDEPENDENT_REREVIEW_PINNED_1154E97_20261016.md)均已提交Git。**本阶段状态：上轮Codex P2作者已修复+22x2+官方全来源CI真实通过，其他AI独立最终`APPROVE`尚未收到；PR继续open/draft。** 旧Stage152/153限定SHA批准不变。只有独立再审通过才可关本P2，随后主线要对原2026-02 SOURCE_COMPLETE 445币（另313 CENSORED）实际获取真正官方分钟源及共同SQLite因果高压回放、Stage26/28同源对比；仍不自动部署/启采集/发邮件/交易。
 
 继续`G0 PARTIAL, G1 NOT_SCORABLE, G2/G3 NOT_PASSED, G4 UNKNOWN, G5_RELEASE NOT_PASSED, G6 NO_GO`、`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，Frank/Stage99不动。
+
+
+## Codex最终1154e97局部APPROVE、进入445完整来源共用D0/D1高压主线（2026-10-16）
+
+独立Codex给定唯一固定SHA `1154e97a25648dbf58c181be62076e4c1d406dde`，已完成真实未mock生产`process_queue`的 HIGH=`"0"` 同timestamp历史5m坏源故障负向实验：基线3360轮`WATCH=1,D1_completed=1,LATE=0`；只改K线HIGH且时钟与SQL行数不变，新代码明确`RuntimeError:SHARED_SPOT_ORIGINAL_D1_SOURCE_INVALID_CANDLE`、根因`ValueError:HISTORICAL_D1_SOURCE_BAD_OHLC_OR_QUOTE`，实际原生产本次`LATE_EVENTS=0,DEFERRED=0`，研究失败没有错误归档。新22/22单测/编译通过。Codex本次只核对原[CI #38835269851](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38835269851)5/5全部成功，**没有自行重复下载36旧ZIP或BTC/ETH20天官方ZIP**，后者独立下载发生于之前审核，已在日志披露。审核者`Codex`准确底层模型版本`UNVERIFIED`。**此旧P2在固定1154e97局部`APPROVE`范围关闭，未发现新P0/P1/P2；以前Stage152/Stage153固定APPROVE独立有效**。不能扩展称445/758真正共用D0已测、盈利/实盘/邮件/Mac通过。
+
+[独立APPROVE结论与真实445日期阶段开发事前冻结合同](MONSTER_SHARED_SPOT_CODEX_APPROVE_1154E97_AND_445_HIGHPRESSURE_EXECUTION_FREEZE_20261016.md)先于后续445任何新脚本/CI提交；445仅为原758份2026-02-04历史病例中的`SOURCE_COMPLETE_SUBSET`，其余313继续`CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26`，严禁伪造全758已重放。下一次源获取必须先准确定义445成员来自原36 Artifact逐名二次冻结 SHA `cea49caae4245dad910cc096bdaea953387bdfea64667a49916756d12297074a`和每币×日期正确官方10天1m ZIP/CHECKSUM，先无未来结果挑选的少量pilot/验证资源成本，后全445单一SQLite真实3360个3min tick的D0+D1容量、WATCH/LATE和原Stage26/28同源对比。源码完成、测试成功不等于已得另外AI对新改动批准，不能要求用户Mac部署。
+
+继续`G0 PARTIAL / G1 NOT_SCORABLE / G2/G3 NOT_PASSED / G4 UNKNOWN / G5_RELEASE NOT_PASSED / G6 NO_GO`、`NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`；PR#30 Draft/Open，Frank、Stage99、全部真实通知和定时任务不变。
