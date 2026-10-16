@@ -43,7 +43,7 @@ def load(root=ROOT):
     docs = {}
     for key, (name, blob) in PINS.items():
         raw = (Path(root) / name).read_bytes()
-        actual = hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\\0" + raw).hexdigest()
+        actual = hashlib.sha1(b"blob " + str(len(raw)).encode() + bytes((0,)) + raw).hexdigest()
         need(actual == blob, "SOURCE_BLOB_CHANGED:" + key)
         docs[key] = json.loads(raw)
     return docs
@@ -87,7 +87,7 @@ def classify(docs):
                  "SIGNED_TRADE_TOKEN_AMOUNT_OR_QUOTE_MISMATCH")
         else:
             need(row["to"] == TOKEN and row["selector"] == "0x095ea7b3" and
-                 row["approve_input"][10:74].lower() == MANAGER[2:] .rjust(64, "0"),
+                 row["approve_input"][10:74].lower() == MANAGER[2:].rjust(64, "0"),
                  "ORIGINAL_ALLOWANCE_SIGNER_OR_SPENDER_INVALID")
     need([signed[k]["nonce"] for k in expected_labels[:-1]] ==
          [1957, 1958, 1959, 1960, 1961, 1962], "D503_NONCE_SEQUENCE_DRIFT")
