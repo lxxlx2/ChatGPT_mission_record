@@ -1,0 +1,131 @@
+name: Monster 445 full-source future replay official shard01
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_official_source_shards.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_one_db_from_shards.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_source_shards.py'
+      - '.github/workflows/monster-v4-445-real-official-minute-source-shard01.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  bounded_shard_pipeline_tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-latest]
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reproducible 445 roster, 28 shard identity, SHA cache and fail-closed no-partial-D0
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python -m py_compile monster_v4_shared_445_official_source_shards.py monster_v4_shared_445_one_db_from_shards.py test_monster_v4_shared_445_source_shards.py
+          python -m unittest -v test_monster_v4_shared_445_source_shards.py
+          echo MONSTER_445_REAL_SHARD_NO_PARTIAL_GLOBAL_MODEL=PASS
+
+  official_publisher_shard01_real_source:
+    needs: bounded_shard_pipeline_tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Real publisher 16 members times 10 UTC day ZIP+CHECKSUM, keep all 12960 source bars per symbol
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python monster_v4_shared_445_official_source_shards.py --shard 1 --workers 2 --out-archive /tmp/monster_feb445_shard01.zip --out-proof /tmp/monster_feb445_shard01.proof.json
+          python - <<'PY'
+          import json,os
+          import monster_v4_shared_445_official_source_shards as shards
+          from pathlib import Path
+          p=Path('/tmp/monster_feb445_shard01.proof.json')
+          report=json.loads(p.read_text())
+          assert report['trigger_commit_sha']==os.environ['GITHUB_SHA']
+          assert report['source_origin_verified_at_collection'] is True
+          assert report['source_symbol_count']==16
+          assert len(report['source_sha256_by_symbol'])==16
+          assert all(len(s['publisher_days'])==10 for s in report['source_sha256_by_symbol'])
+          symbols=[symbol for symbol,_,_,_ in shards.read_archive(
+             '/tmp/monster_feb445_shard01.zip',proof=report,expected_shard=1)]
+          assert symbols==list(shards.members(1))
+          print('MONSTER_FEB445_OFFICIAL_SOURCE_SHARD01_ALL_160_PUBLISHER_DAY_ZIPS_VERIFIED_AND_16x12960_MINUTES_PRESERVED')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-feb445-publisher-1m-source-shard01-fixed-trigger
+          path: |
+            /tmp/monster_feb445_shard01.zip
+            /tmp/monster_feb445_shard01.proof.json
+          if-no-files-found: error
+          retention-days: 60
+
+  archive_strict_shard01_proof:
+    needs: official_publisher_shard01_real_source
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: true
+      - name: Fetch only exact same successful CI run's official source archive and independently check all SHA
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/monster_445_shard01
+          gh run download "$GITHUB_RUN_ID" --dir /tmp/monster_445_shard01 --name monster-feb445-publisher-1m-source-shard01-fixed-trigger
+          cd crypto-300-profit-mission/local-agent/scripts
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          import monster_v4_shared_445_official_source_shards as shards
+          folder=Path('/tmp/monster_445_shard01')
+          p=json.loads((folder/'monster_feb445_shard01.proof.json').read_text())
+          assert p['trigger_commit_sha']==os.environ['GITHUB_SHA']
+          assert p['source_origin_verified_at_collection'] is True
+          members=list(shards.read_archive(folder/'monster_feb445_shard01.zip',
+                                             proof=p,expected_shard=1))
+          assert len(members)==16
+          print('MONSTER_445_REAL_SHARD01_ARCHIVE_AND_INNER_1M_SOURCE_SHA_EXACT_PASS')
+          PY
+      - name: Commit only small manifest, keep original verified 1m source ZIP in GHA artifact not Git
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          target=crypto-300-profit-mission/monster/evidence/monster_feb445_shard01.proof.json
+          cp /tmp/monster_445_shard01/monster_feb445_shard01.proof.json "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add "$target"
+          git commit -m "monster: retain 16 frozen Feb source-complete coins and 160 original issuer day SHA receipts, archive kept in CI"
+          for attempt in 1 2 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then
+              git rebase --abort || true
+              exit 1
+            fi
+            for f in crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_official_source_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_one_db_from_shards.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_source_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py .github/workflows/monster-v4-445-real-official-minute-source-shard01.yml; do
+              test "$(git rev-parse "$GITHUB_SHA:$f")" = "$(git rev-parse "HEAD:$f")" || { echo "MONSTER_445_ARCHIVE_SOURCE_DRIFT=$f"; exit 1; }
+            done
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo MONSTER_445_16_COIN_160_DAY_REAL_SOURCE_GIT_SHA_ARCHIVE_CONFIRMED
+              exit 0
+            fi
+          done
+          exit 1
