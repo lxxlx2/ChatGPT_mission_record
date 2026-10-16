@@ -107,7 +107,9 @@ jobs:
           from pathlib import Path
           d=Path('/tmp/monster_first32_failed')
           a=json.loads((d/'monster_445_first32_actual_d1_source_diagnostic.json').read_text())
-          b=json.loads((d/'monster_feb445_shard00.proof.json').read_text())
+          source_proofs=list(d.rglob('monster_feb445_shard00.proof.json'))
+          assert len(source_proofs)==1
+          b=json.loads(source_proofs[0].read_text())
           assert a['trigger_commit_sha']==b['trigger_commit_sha'] or b['trigger_commit_sha']=='c16c951b24639b90b07f7b944d5911ab8005b489'
           assert a['model_report_issued'] is False
           assert a['status']=='FAIL_CLOSED_OFFICIAL_D1_SOURCE_CONTRACT'
@@ -119,7 +121,7 @@ jobs:
           branch=research/monster-v4-local-discovery-20261010
           d=crypto-300-profit-mission/monster/evidence
           cp /tmp/monster_first32_failed/monster_445_first32_actual_d1_source_diagnostic.json "$d/monster_feb445_first32_real_D1_source_fail_closed_diagnostic.json"
-          cp /tmp/monster_first32_failed/monster_feb445_shard00.proof.json "$d/monster_feb445_shard00.proof.json"
+          cp "$(find /tmp/monster_first32_failed -name monster_feb445_shard00.proof.json -print -quit)" "$d/monster_feb445_shard00.proof.json"
           git config user.name monster-research-ci
           git config user.email monster-research-ci@users.noreply.github.com
           git add "$d/monster_feb445_first32_real_D1_source_fail_closed_diagnostic.json" "$d/monster_feb445_shard00.proof.json"
