@@ -73,5 +73,52 @@ class Archived445ReplayTests(unittest.TestCase):
                 r.summarize(audit,report,p/"out.json")
 
 
+    def test_06_failed_early_model_run_source_job_exception_only_for_zero_one(self):
+        calls=[]
+        def completed_jobs(endpoint):
+            calls.append(endpoint)
+            return {"jobs":[{"name":"official_shard00_16_times_10_daily",
+                             "status":"completed","conclusion":"success"}]}
+        result=r.attest_source_job_on_failed_early_run(completed_jobs,38841076844,(0,))
+        self.assertEqual(result,"PUBLISHER_SOURCE_JOB_SUCCESS_OVERALL_RUN_FAILED")
+        self.assertEqual(len(calls),1)
+        for pair in ((2,), (8,9), (), (0,1), (28,)):
+            with self.subTest(pair=pair):
+                with self.assertRaisesRegex(RuntimeError,"NONFIRST_PRODUCER"):
+                    r.attest_source_job_on_failed_early_run(
+                        lambda *_:self.fail("unexpected Github API read"),38841076844,pair)
+        with self.assertRaisesRegex(RuntimeError,"FIRST_SOURCE_JOB_NOT_VERIFIED"):
+            r.attest_source_job_on_failed_early_run(
+                lambda *_:{"jobs":[{"name":"official_shard00_16_times_10_daily",
+                                      "status":"completed","conclusion":"failure"}]},
+                38841076844,(0,))
+        with self.assertRaisesRegex(RuntimeError,"FIRST_SOURCE_JOB_NOT_VERIFIED"):
+            r.attest_source_job_on_failed_early_run(
+                lambda *_:{"jobs":[{"name":"official_shard00_16_times_10_daily",
+                                      "status":"in_progress","conclusion":None}]},
+                38841076844,(0,))
+
+    def test_07_old_evidence_recapture_push_disabled_and_guarded(self):
+        root=Path(__file__).resolve().parents[3] / ".github/workflows"
+        names={
+            "monster-v4-445-real-official-minute-source-shard01.yml":
+                "MONSTER445_IMMUTABLE_SHARD01_SOURCE_PROOF_EXISTS_NO_OVERWRITE",
+            "monster-v4-445-first32-zeroquote-research-v2.yml":
+                "MONSTER445_LEGACY_EVIDENCE_ALREADY_EXISTS_NO_OVERWRITE",
+            "monster-v4-445-real-first32-shared-D0-D1.yml":
+                "MONSTER445_LEGACY_SHARD00_ALREADY_ARCHIVED",
+            "monster-v4-445-source-complete-real-shared-pilot.yml":
+                "MONSTER445_LEGACY_PILOT_ALREADY_ARCHIVED",
+            "monster-v4-shared-spot-d0-global-d1-official.yml":
+                "MONSTER445_LEGACY_CENSUS_ALREADY_ARCHIVED",
+        }
+        for name,guard in names.items():
+            with self.subTest(name=name):
+                yaml=(root/name).read_text(encoding="utf-8")
+                self.assertIn(guard,yaml)
+                self.assertNotIn("\n  push:\n",yaml)
+                self.assertNotIn("\n  schedule:\n",yaml)
+
+
 if __name__=="__main__":
     unittest.main()
