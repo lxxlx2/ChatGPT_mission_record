@@ -528,3 +528,20 @@ Stage152新最后P2固定SHA `71a041405352c9e2210d93dff9c2685149809e52` 已获�
 下游全部复用原受限Source-only jobs：Ubuntu/macOS源schema 7 tests、官方每片最多2 workers、片间max-parallel1、双方都成功后同一RUN_ID解包重校验及永久Git轻量proof；原始Zip与每日Publisher .CHECKSUM及SHA、12960行/币、10原天、Artifact60天；已存在proof必须拒绝覆写；git rebase后core/workflow/请求file SHA漂移即fail-closed。采样445历史来源完整与313删失维持原样，当前最多64/445已经真实归档；这一步**仅源采集**，禁止冒称445同SQLite完成、OOS/执行收益达标。
 
 计划当前用户明确继续研发后提交`start_shard=4`请求，触发04/05来源实采。只有实际GitHub Actions run和内部原数据与proof真实readback才能把64/445改成96/445；否则明确记失败/部分，禁止虚构。其它全部剩余06/07到26/27要求未来逐次主动发起，不得自动串行补齐。新workflow固定SHA另AI独立审查在实际收到报告前始终`NOT_DONE`；所有生产门禁`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`、Frank/Stage99不变。
+
+## Stage154 实际分支手动04/05源采集、失败修复与全445下一门禁（2026-10-16）
+
+本轮在用户“继续吧”后实做现有Monster PR #30，不合并、部署、发Gmail、交易、恢复Frank或Stage99。采用上一条事前冻结“**研究分支请求文件单独git push**”合同，把原workflow `.github/workflows/monster-v4-445-manual-two-original-source-shards.yml` 从仅在默认分支才可用的 `workflow_dispatch` 形式改为仅`research/monster-v4-local-discovery-20261010` 分支上`crypto-300-profit-mission/monster/source-batches/monster_feb445_manual_request.json`路径变化时才运行。无GitHub schedule、无自动排队剩余批次、无增加并发、保留原来源脚本/生产核心不变。事前协议commit `98282874e94c934e0485523a9374703234c1c780`，新原workflow代码最后固定执行SHA `ac7fa9c5ba161aae1aaba194c77e58bcdc306f05`（其父代码已修正checkout fetch-depth:2；请求变更是唯一触发文件）；此前02/03旧代码与真实CI维持历史原样。
+
+**真实失败不可删**：首次明确请求 `62f0b795d181084c666dce1e9578eb4d56db6e31` 触发[GitHub Actions #38871737877](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38871737877)，freeze Job在`MONSTER_FEB445_MANUAL_REQUEST_MUST_BE_ONLY_CHANGED_FILE`门禁失败，源任务均skipped；根因actions/checkout@v4默认depth1，`git diff-tree HEAD`取不到上一父提交而不能校验唯一请求文件。按真实日志仅增加冻结Job的`fetch-depth:2`（修复SHA`03287a18cac81431f2546853c0a298386dca3de7`），再以**唯一请求文件**单独retry commit `ac7fa9c5ba161aae1aaba194c77e58bcdc306f05` 显式触发相同04/05。没有降低单文件来源门禁，也没有把失败版本追认成功。
+
+**真实成功**：[GitHub Actions #38871892429](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38871892429)固定 `ac7fa9c5ba161aae1aaba194c77e58bcdc306f05`，`completed/success`，全部**6/6 Jobs**（冻结路径/参数验证、Ubuntu/macOS原source各7 tests+编译、单片04及05各16币官方原1m日档案、同run再下载两Artifact原ZIP+manifest+逐币10日SHA校验及Git存档）。`max-parallel=1`片、`workers<=2`严格不变。官方原source校验只证明Binance同host ZIP/.CHECKSUM自洽，非独立发行者签名，也不代表历史当年逐币PIT名单或策略盈利。
+
+| 当前新增来源 | 冻结币种范围 | 官方分钟来源真实归档 | 内部source ZIP SHA256 | Git source proof blob | GitHub Actions Artifact / 到期 |
+|---|---|---:|---|---|---|
+| shard04 | BBUSDT–BOMEUSDT（16） | 160日回执、每币12960条1m | `362afe7cde37f571b34810b0f79e2c8c2ae08906a8a59da49dbb7167d6965a58` | `0c65cb6cf9dd653bd8c2cfe08c96bb0d0ae8718e` | ID `12034075028`, 2026-12-15 08:11:31Z |
+| shard05 | BONKUSDT–CHZUSDT（16） | 160日回执、每币12960条1m | `926073e7c8a1bbeeb8621414cd9a80597990875dcb056b71ba4ebcd60d9fe4ea` | `37de4da4484f94259256427060a08495cd9024c7` | ID `12033058858`, 2026-12-15 08:12:38Z |
+
+证据Git实际自动提交 `9ee85afcf996d03c32847424f4cbe12d418f190f`（仅新 `evidence/monster_feb445_shard04.proof.json`、`shard05.proof.json`），日志真实回执`MONSTER_445_TWO_FULL_FROZEN_SHARDS_SHA_VERIFIED_NOT_GLOBAL_D1 4 5 32`、`MONSTER_445_ORIGINAL_SOURCE_TWO_SHARDS_REAL_1M_GIT_SHA_PROOFS_ARCHIVED`，两份来源artifact本轮查到`expired=false`。现在 **6/28分片、96/445币、960份原官方日1m SHA回执已真实封存；还剩22片=349个source-complete币**。原758历史尝试和313 CENSORED不变。Artifact于2026-12-15前必须确保全部可读，过期不允许仅用proof恢复源行情。
+
+**后续明确门禁**：下一批要新的人为请求文件commit设`start_shard=6`，不能无指令批量继续，06/07至26/27仍需逐对人工发起。全28份真实source完整后才可同一SQLite 445币共3360次共享D0/D1有限8 slots检验，零quote V2只是研究，原production D1仍不能因此更改；需要独立其他AI针对**新branch-push workflow固定SHA**和新的来源证据审查，目前 `OTHER_AI_REVIEW=NOT_DONE`，未见APPROVE。数据集是历史已曝光，不能声称新OOS；下一条真正决定交易是否可用的G1召回、G4时点盘口费用滑点、净利还全未通过。 `G0 PARTIAL/G1 NOT_SCORABLE/G2-G3 NOT_PASSED/G4 UNKNOWN/G5 RELEASE NOT_PASSED/G6 NO_GO`，`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，Mac/Frank不动。
