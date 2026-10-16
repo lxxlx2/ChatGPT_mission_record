@@ -223,3 +223,13 @@ The single existing 美股每日晨报 scheduler uses Asia/Bangkok 05:40 prebuil
 For 2026-10-09, primary and recovery had a complete 12-section QA-PASS pending body but approved Gmail tool calls returned execution safety blocks. Manual official recovery sent one full report to the authorized recipient, Gmail id `1a1209a71157526b`; authoritative Git archive is `us-stock-daily/reports/daily/2026/2026-10/2026-10-09.md`. Same-day future invocations MUST dedupe this Sent and repair archive only, never resend.
 
 Prioritize actual delivery over redundant research: compact attempt, read latest canonical and pending, Gmail Sent dedupe, validate latest completed market session / macro / 12 sections / STK acceptance, bounded repair, full text/plain Gmail, readback, identical Git archive/readback, terminal audit. If tool safety blocks an email, report real BLOCKED_WITH_REASON internally without claiming delivery; a future existing recovery slot may retry after Sent dedupe. Prompt simplification does not override platform checks or relax quality standards. No task, name, schedule, monitor scope, or monthly-subtask change.
+
+## 2026-10-16 formal recovery and dedupe proof
+
+The 07:40 automatic delivery invocation wrote `runs/2026-10-16/074000-final.md` with a real Gmail platform safety BLOCKED_WITH_REASON. The full 12-section QA-PASS pending body was already durable at `delivery-pending/2026-10-16.md`. The same authorized pending body was subsequently delivered successfully through Gmail with Sent/readback and archived identically:
+- Gmail subject: `美股每日晨报｜2026-10-16｜正式补发`
+- Gmail Sent id: `1a1428c5b456ae66`
+- Git archive: `us-stock-daily/reports/daily/2026/2026-10/2026-10-16.md`
+- Git commit: `b206e2d78ec01b36229ad38714fcb18e41df423e`
+
+For every existing primary/recovery slot, dedupe against Sent subject **prefix** `美股每日晨报｜YYYY-MM-DD`, including `｜正式补发`, and verify matching recipient + complete readback/canonical Git body before any send. A previous blocked primary run must not override actual later delivery proof or trigger a second email. Persist a truthful terminal BLOCKED_WITH_REASON if Gmail is blocked again; do not bypass platform safety checks or weaken STK quality gates. Today's manual recovery confirms one delivery, not that future autonomous platform safety decisions are repaired.
