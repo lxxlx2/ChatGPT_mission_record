@@ -3,28 +3,7 @@ on:
   push:
     branches: [research/monster-v4-local-discovery-20261010]
     paths:
-      - '.github/workflows/monster-v4-445-manual-two-original-source-shards.yml'
-  workflow_dispatch:
-    inputs:
-      start_shard:
-        description: 'Even original frozen shard 2..26; this and adjacent next shard only'
-        type: choice
-        required: true
-        default: '2'
-        options:
-          - '2'
-          - '4'
-          - '6'
-          - '8'
-          - '10'
-          - '12'
-          - '14'
-          - '16'
-          - '18'
-          - '20'
-          - '22'
-          - '24'
-          - '26'
+      - 'crypto-300-profit-mission/monster/source-batches/monster_feb445_manual_request.json'
 permissions:
   contents: write
   actions: read
@@ -44,24 +23,40 @@ jobs:
           ref: ${{ github.sha }}
           persist-credentials: false
       - id: freeze
-        name: Freeze exactly two predeclared source complete roster shards, never 0/1, no full-market claim
-        env:
-          BATCH_START: ${{ inputs.start_shard || '2' }}
+        name: Validate explicit one-file Git request for exactly one fixed adjacent historical pair
         run: |
           set -eu
           python - <<'PY'
-          import os,json,re
-          valid={2,4,6,8,10,12,14,16,18,20,22,24,26}
-          raw=os.environ['BATCH_START']
-          if not re.fullmatch(r'(?:[2468]|1[02468]|2[0246])',raw):
+          import json, os, re, subprocess
+          from pathlib import Path
+          req_path = 'crypto-300-profit-mission/monster/source-batches/monster_feb445_manual_request.json'
+          changed = subprocess.check_output(
+              ['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', 'HEAD'],
+              text=True).splitlines()
+          if changed != [req_path]:
+              raise ValueError('MONSTER_FEB445_MANUAL_REQUEST_MUST_BE_ONLY_CHANGED_FILE')
+          req=json.loads(Path(req_path).read_text(encoding='utf-8'))
+          expected={'schema','start_shard','request_id','research_only','approved_scope'}
+          if not isinstance(req,dict) or set(req)!=expected:
+              raise ValueError('MONSTER_FEB445_MANUAL_REQUEST_SCHEMA_DRIFT')
+          if (req['schema']!='MONSTER_445_TWO_SHARD_ON_DEMAND_REQUEST_V1'
+                  or req['research_only'] is not True
+                  or req['approved_scope']!='SOURCE_ONLY'
+                  or not isinstance(req['request_id'],str)
+                  or not re.fullmatch(r'202610[0-9]{2}_shard[0-9]{2}_[0-9]{2}',req['request_id'])):
+              raise ValueError('MONSTER_FEB445_MANUAL_REQUEST_INVALID_ID_OR_SCOPE')
+          first=req['start_shard']
+          if type(first) is not int or first not in (4,6,8,10,12,14,16,18,20,22,24,26):
               raise ValueError('MONSTER_FEB445_BATCH_SHARD_NOT_PREDECLARED')
-          first=int(raw)
-          if first not in valid:
-              raise ValueError('MONSTER_FEB445_BATCH_SHARD_NOT_IN_FROZEN_EVEN_ROSTER')
-          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
-              f.write('pair='+json.dumps([first,first+1])+'\n')
-              f.write('start='+str(first)+'\n')
-          print('MONSTER_FEB445_PREREGISTERED_TWO_SOURCE_SHARDS',first,first+1)
+          if req['request_id'] != f'20261016_shard{first:02d}_{first+1:02d}':
+              raise ValueError('MONSTER_FEB445_REQUEST_ID_SHARD_MISMATCH')
+          for idx in (first,first+1):
+              if Path(f'crypto-300-profit-mission/monster/evidence/monster_feb445_shard{idx:02d}.proof.json').exists():
+                  raise ValueError('MONSTER_FEB445_ALREADY_VERIFIED_PROOF_NO_RECOLLECT')
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as fh:
+              fh.write('pair='+json.dumps([first,first+1])+'\n')
+              fh.write('start='+str(first)+'\n')
+          print('MONSTER_FEB445_EXPLICIT_GIT_ONE_PAIR_SOURCE_ONLY',first,first+1,req['request_id'])
           PY
           test "$GITHUB_REF_NAME" = "research/monster-v4-local-discovery-20261010"
           git diff --exit-code
@@ -233,7 +228,7 @@ jobs:
               git rebase --abort || true
               exit 1
             fi
-            for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_official_source_shards.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_source_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_one_db_from_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py .github/workflows/monster-v4-445-manual-two-original-source-shards.yml; do
+            for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_official_source_shards.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_source_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_one_db_from_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py .github/workflows/monster-v4-445-manual-two-original-source-shards.yml crypto-300-profit-mission/monster/source-batches/monster_feb445_manual_request.json; do
               test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo "MONSTER_445_SOURCE_BATCH_EXECUTABLE_DRIFT=$path"; exit 1; }
             done
             if git push origin "HEAD:refs/heads/$branch"; then
