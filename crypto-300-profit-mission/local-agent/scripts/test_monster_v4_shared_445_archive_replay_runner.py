@@ -82,6 +82,13 @@ class Archived445ReplayTests(unittest.TestCase):
         result=r.attest_source_job_on_failed_early_run(completed_jobs,38841076844,(0,))
         self.assertEqual(result,"PUBLISHER_SOURCE_JOB_SUCCESS_OVERALL_RUN_FAILED")
         self.assertEqual(len(calls),1)
+        second=r.attest_source_job_on_failed_early_run(
+            lambda *_:{"jobs":[{
+                "name":"official_shard01_16_times_10_daily",
+                "status":"completed","conclusion":"success"}]},
+            38841502000,(1,))
+        self.assertEqual(
+            second,"PUBLISHER_SOURCE_JOB_SUCCESS_OVERALL_RUN_FAILED")
         for pair in ((2,), (8,9), (), (0,1), (28,)):
             with self.subTest(pair=pair):
                 with self.assertRaisesRegex(RuntimeError,"NONFIRST_PRODUCER"):
@@ -118,6 +125,67 @@ class Archived445ReplayTests(unittest.TestCase):
                 self.assertIn(guard,yaml)
                 self.assertNotIn("\n  push:\n",yaml)
                 self.assertNotIn("\n  schedule:\n",yaml)
+
+
+    def test_08_legacy_guard_shell_behavior_real_exit_codes(self):
+        import os
+        import re
+        import subprocess
+
+        root=Path(__file__).resolve().parents[3]/".github/workflows"
+        guards={
+            "monster-v4-445-first32-zeroquote-research-v2.yml":
+                "MONSTER445_LEGACY_EVIDENCE_ALREADY_EXISTS_NO_OVERWRITE",
+            "monster-v4-445-real-first32-shared-D0-D1.yml":
+                "MONSTER445_LEGACY_SHARD00_ALREADY_ARCHIVED",
+            "monster-v4-445-source-complete-real-shared-pilot.yml":
+                "MONSTER445_LEGACY_PILOT_ALREADY_ARCHIVED",
+            "monster-v4-shared-spot-d0-global-d1-official.yml":
+                "MONSTER445_LEGACY_CENSUS_ALREADY_ARCHIVED",
+        }
+        with tempfile.TemporaryDirectory() as folder:
+            env=os.environ.copy()
+            env["d"]=folder+"/evidence"
+            env["dest"]=folder+"/evidence/source-census.json"
+            env["target"]=folder+"/evidence/first8.json"
+            for name,marker in guards.items():
+                content=(root/name).read_text(encoding="utf-8")
+                matches=[ln.strip() for ln in content.splitlines()
+                         if marker in ln and "test ! -e" in ln]
+                self.assertEqual(len(matches),1,name)
+                command=matches[0]
+                m=re.search(r'test ! -e "([^"]+)"',command)
+                self.assertIsNotNone(m)
+                ref=m.group(1)
+                resolved=subprocess.run(
+                    ["bash","-c",f'printf "%s" "{ref}"'],
+                    env=env,text=True,capture_output=True,check=True).stdout
+                target=Path(resolved)
+                target.parent.mkdir(parents=True,exist_ok=True)
+                target.unlink(missing_ok=True)
+                absent=subprocess.run(["bash","-c",command],env=env,
+                    text=True,capture_output=True)
+                self.assertEqual(absent.returncode,0,name)
+                target.write_text("IMMUTABLE",encoding="utf-8")
+                present=subprocess.run(["bash","-c",command],env=env,
+                    text=True,capture_output=True)
+                self.assertNotEqual(present.returncode,0,name)
+                self.assertEqual(target.read_text(),"IMMUTABLE")
+                target.unlink()
+            # fifth historical shard01 guard is a multi-line if block.
+            name="monster-v4-445-real-official-minute-source-shard01.yml"
+            content=(root/name).read_text(encoding="utf-8")
+            block=content.split('if test -e "$target"; then',1)[1]
+            block='if test -e "$target"; then'+block.split(
+                '\\n          fi',1)[0]+'\\n          fi'
+            env["target"]=folder+"/evidence/shard01.proof.json"
+            dest=Path(env["target"])
+            self.assertEqual(subprocess.run(
+                ["bash","-c",block],env=env).returncode,0)
+            dest.write_text("FROZEN",encoding="utf-8")
+            self.assertNotEqual(subprocess.run(
+                ["bash","-c",block],env=env,capture_output=True).returncode,0)
+            self.assertEqual(dest.read_text(),"FROZEN")
 
 
 if __name__=="__main__":
