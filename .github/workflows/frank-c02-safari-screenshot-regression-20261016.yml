@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - fix/frank-c02-unknown-risk-rpc-evidence-card-safari-20261016
+      - fix/frank-c02-pr78-verified-mint-20261016
   workflow_dispatch:
 
 permissions:
