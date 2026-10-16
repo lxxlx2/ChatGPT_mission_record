@@ -1,0 +1,141 @@
+name: Monster original first32 shared D1 official source failure strict diagnostic
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_first32_d1_source_diagnostic.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_first32_d1_source_diagnostic.py'
+      - '.github/workflows/monster-v4-445-first32-d1-source-fail-diagnostic.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  causal_source_error_classification_tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-latest]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check real zero quote vs bad OHLC, do not mutate frozen D1
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python -m py_compile monster_v4_shared_445_first32_d1_source_diagnostic.py test_monster_v4_shared_445_first32_d1_source_diagnostic.py
+          python -m unittest -v test_monster_v4_shared_445_first32_d1_source_diagnostic.py
+
+  actual_old_artifacts_first32_failure_provenance:
+    needs: causal_source_error_classification_tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch both ORIGINAL artifact IDs, NO extra publisher downloads, check exact original ZIP+manifest SHAs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster_445_diagnostic_sources
+          gh api -H 'Accept: application/vnd.github+json' 'repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/12021352471/zip' > /tmp/feb445_shard00_gha_artifact.zip
+          gh api -H 'Accept: application/vnd.github+json' 'repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/12021445690/zip' > /tmp/feb445_shard01_gha_artifact.zip
+          unzip -q -j /tmp/feb445_shard00_gha_artifact.zip -d /tmp/monster_445_diagnostic_sources
+          unzip -q -j /tmp/feb445_shard01_gha_artifact.zip -d /tmp/monster_445_diagnostic_sources
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          dir=Path('/tmp/monster_445_diagnostic_sources')
+          stored=Path('crypto-300-profit-mission/monster/evidence/monster_feb445_shard01.proof.json')
+          assert json.loads(stored.read_text())==json.loads((dir/'monster_feb445_shard01.proof.json').read_text())
+          print('MONSTER_445_DIAGNOSTIC_REAL_SOURCE_SHARD01_GIT_PROOF_IDENTICAL')
+          PY
+      - name: Observe actual approved source fail-closed error and retain exact first offending symbol and quotes
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python monster_v4_shared_445_first32_d1_source_diagnostic.py --source-dir /tmp/monster_445_diagnostic_sources --out /tmp/monster_445_first32_actual_d1_source_diagnostic.json
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          x=json.loads(Path('/tmp/monster_445_first32_actual_d1_source_diagnostic.json').read_text())
+          assert x['trigger_commit_sha']==os.environ['GITHUB_SHA']
+          assert x['status']=='FAIL_CLOSED_OFFICIAL_D1_SOURCE_CONTRACT'
+          assert x['model_report_issued'] is False
+          assert x['old_stage26_32_symbols_scanned']==32
+          assert x['first_fatal_D1_source_request']['research_exception']=='SHARED_SPOT_ORIGINAL_D1_SOURCE_INVALID_CANDLE'
+          assert len(x['official_source_archive_proofs'])==2
+          print('MONSTER_FIRST32_REAL_D1_FAIL_CLOSED_FIRST_SOURCE_CULPRIT_IDENTIFIED_NO_FALSE_LATE')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-first32-fatal-D1-official-source-classification
+          path: |
+            /tmp/monster_445_first32_actual_d1_source_diagnostic.json
+            /tmp/monster_445_diagnostic_sources/monster_feb445_shard00.proof.json
+          if-no-files-found: error
+          retention-days: 60
+
+  persist_source_failure_not_a_model_approval:
+    needs: actual_old_artifacts_first32_failure_provenance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: true
+      - name: Read back only same-run classified original D1 blocker
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/monster_first32_failed
+          gh run download "$GITHUB_RUN_ID" --dir /tmp/monster_first32_failed --name monster-first32-fatal-D1-official-source-classification
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          d=Path('/tmp/monster_first32_failed')
+          a=json.loads((d/'monster_445_first32_actual_d1_source_diagnostic.json').read_text())
+          b=json.loads((d/'monster_feb445_shard00.proof.json').read_text())
+          assert a['trigger_commit_sha']==b['trigger_commit_sha'] or b['trigger_commit_sha']=='c16c951b24639b90b07f7b944d5911ab8005b489'
+          assert a['model_report_issued'] is False
+          assert a['status']=='FAIL_CLOSED_OFFICIAL_D1_SOURCE_CONTRACT'
+          print('MONSTER_FIRST32_DIAGNOSTIC_PROVENANCE_NOT_EXECUTION_PASS')
+          PY
+      - name: Only archive D1 failure and publisher source receipt, no altered prices or model gate
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          d=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_first32_failed/monster_445_first32_actual_d1_source_diagnostic.json "$d/monster_feb445_first32_real_D1_source_fail_closed_diagnostic.json"
+          cp /tmp/monster_first32_failed/monster_feb445_shard00.proof.json "$d/monster_feb445_shard00.proof.json"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add "$d/monster_feb445_first32_real_D1_source_fail_closed_diagnostic.json" "$d/monster_feb445_shard00.proof.json"
+          git commit -m "monster: source-tag exact real first32 D1 unsupported zero-quote/failure; never count as model late"
+          for attempt in 1 2 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then
+              git rebase --abort || true
+              exit 1
+            fi
+            for f in crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_first32_d1_source_diagnostic.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_first32_d1_source_diagnostic.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_first32_real_comparison.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py .github/workflows/monster-v4-445-first32-d1-source-fail-diagnostic.yml; do
+              test "$(git rev-parse "$GITHUB_SHA:$f")" = "$(git rev-parse "HEAD:$f")" || { echo "MONSTER_FIRST32_DIAGNOSTIC_SOURCE_DRIFT=$f"; exit 1; }
+            done
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo MONSTER_FIRST32_REAL_D1_SOURCE_FAIL_CLOSED_DIAG_GIT_ARCHIVED
+              exit 0
+            fi
+          done
+          exit 1
