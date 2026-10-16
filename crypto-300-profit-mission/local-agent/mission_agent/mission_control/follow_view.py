@@ -88,7 +88,8 @@ def _quote_field(item: dict, key: str, *, positive: bool) -> Decimal | None:
             browser_value = float(value)
         except (OverflowError, ValueError):
             return None
-        if not math.isfinite(browser_value) or (browser_value <= 0 if positive else browser_value < 0):
+        if (not math.isfinite(browser_value) or browser_value < 0
+                or (value > 0 and browser_value == 0)):
             return None
         values.append(value)
     if not values or any(value != values[0] for value in values[1:]):
