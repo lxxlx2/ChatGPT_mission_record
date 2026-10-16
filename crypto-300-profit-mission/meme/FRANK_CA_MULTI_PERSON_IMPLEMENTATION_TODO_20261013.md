@@ -784,3 +784,16 @@ Remaining verified gaps / dependencies:
 - [x] 在独立 QA 分支 `qa/frank-pr85-approved-mac-safari-localhost-20261016` 实现**一条 zsh 命令 → 启动真实 3 个 synthetic localhost Handler → 展开 visible `details` → 10 张 WebKit 全页 PNG → F02 120s 前后/搜索 → ZIP+manifest+Console+SHA256 → 停止监听器**。唯一 CI 测试通过 SHA `cfa0ae1e6cdf02dbb200157e3530df6e07e42fd1`，实际 [Actions #38878225375](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38878225375) **SUCCESS**：ZIP 10 张及文件 CRC / JSON 断言通过，QA 启动器独立 HTTP smoke/进程退出及旧联合 tree 洁净通过。
 - [x] 同一个独立 QA 启动器针对真实 Safari 的 Control/F02 HTML+CSS 注入醒目 `SYNTHETIC QA · 模拟数据 · 禁止交易` 标识；**冻结 PR85 产品源码不变**。C02 直接注入 synthetic VERIFIED/PASS 的报告仍标记为模拟，真实 RPC 权限尚未认证。
 - [ ] 用户 Mac 运行[固定 zsh 自动 ZIP 验收命令](https://github.com/lxxlx2/ChatGPT_mission_record/blob/9936beca940e6e95821164a2283a5b8dd5e56f9a/crypto-300-profit-mission/meme/FRANK_PR85_AUTOMATED_SCREENSHOT_ZIP_RUNBOOK_20261016.md)，将仅一个 ZIP 上传；再次复核截图、浏览器 Console 和最终停止日志。Playwright WebKit screenshot 不是原生 Safari.app，用户此前 14 张真实 Safari 截图为独立证据。当前 PR #85/产品树仍冻结，不授权真实主网 RPC/交易/Gmail/部署。
+
+
+## 2026-10-16 PR87 三项独立 P2 缺陷与 PR88 后继修复（等待另一 AI 复审）
+
+- 独立审核员固定拒绝 QA 截图工具 [PR #87](https://github.com/lxxlx2/ChatGPT_mission_record/pull/87) SHA `cfa0ae1e6cdf02dbb200157e3530df6e07e42fd1`：**REQUEST_CHANGES，3 个 P2**。虽然旧 CI 正常录制 10 张 WebKit 长图/ZIP，但其失败反例真实复现：(1) 子进程启动握手抛错/超时导致 localhost listener/PID 泄漏；(2) QA runner 固定启动器 symlink 指向隔离目录外仍会先执行；(3) screenshot 后续失败时 Browser console.error 已发生却没有保留到失败 ZIP。旧固定 SHA 结论保留，不覆盖。
+- 已另开最小后继 [Draft PR #88](https://github.com/lxxlx2/ChatGPT_mission_record/pull/88)，比较父 SHA 为上述拒绝版本。当前**固定待审** `ad0ac61c42520caed6a915d4dc90c84e97c45da9`，仅动 QA browser screenshot bundle、7 个独立实测回归和 QA GH Actions，不动已批准 F01/C02/F02 PR85 frozen product tree `eea30efa09cb1509d7eee3fde3043ee7155257cf`：
+  - `start()` 创建的 Popen 从开始即归函数负责，任何握手异常按限定 timeout 依次 stdin Enter / terminate / kill / wait + reader.join + 关闭两条管道，调用方正常结束也复用同一回收代码。
+  - 所有 QA root、repo、runtime、固定 launcher、evidence path 坚决不允许 symlink，阻止 `.resolve()` 双方一致但实际跑到根外的漏洞；测试伪造根外 launcher 哨兵未触发。
+  - 共享 console 日志缓冲放在 main，由 take 写入；take 无论截图成功或失败都在 finally 关闭 WebKit context，错误时也写入 ZIP 的 `browser-console.json`。
+- CI 真实运行 [#38899261682](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38899261682) 对此 SHA **SUCCESS**，原始 log 显示 7 项真实 P2 回归 `Ran 7 tests ... OK`、正常 WebKit **10 张**全页 PNG 与 ZIP CRC/Manifest SHA 完整验收、**120s TTL**、synthetic 三 listener shutdown 和 frozen source clean；前一个试验 [#38898949140](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38898949140) 曾因测试 Fake Browser Mock 版本不可 JSON 序列化导致 1 error，已修正并真实重新运行；失败证据保留。
+- [x] 已在 [PR #88 评论](https://github.com/lxxlx2/ChatGPT_mission_record/pull/88#issuecomment-6215395164) 直接记录完整独立复审提示词（代码、用户 QA 风险、真实 localhost、失败归档、CI 原始日志、精确 SHA、NO_* 门禁）。
+- [ ] 交另一独立 AI 对 **唯一 SHA** `ad0ac61c42520caed6a915d4dc90c84e97c45da9` 做复审，结果 APPROVE 后再更新 Mac 一键打包 runbook 的固定 SHA，进行 Mac 手动执行及上传一个 ZIP。**CI 绿色不代替独立审查，也不等于 Mac Safari.app 业务验收。**
+- 禁止擅自合并、部署、真实链上 RPC/私有 Sidecar、生产 SQLite/Gmail/交易、创建新监控自动化或删除文件；PR #86（规范）和 #87/#88（工具）都保持 Draft 审核门禁。
