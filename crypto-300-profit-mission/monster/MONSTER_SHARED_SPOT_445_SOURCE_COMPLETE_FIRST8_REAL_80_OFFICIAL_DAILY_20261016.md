@@ -23,7 +23,7 @@
 | 2ZUSDT | 2026-02-06 00:36:00 | WATCH时钟一致 | EVALUATED |
 | 0GUSDT | 2026-02-07 02:27:00 | WATCH时钟一致 | EVALUATED；SETUP_ACTIVE随后于02:30 |
 
-剩余4个原pilot成员`1000CATUSDT, 1000CHEEMSUSDT, 1MBABYDOGEUSDT, A2ZUSDT`在这一168h窗口没有WATCH。另`2ZUSDT`在2026-02-10 17:23UTC发生INVALIDATED（见机器events；不影响其之前已完成D1）。
+剩余4个原pilot成员`1000CATUSDT, 1000CHEEMSUSDT, 1MBABYDOGEUSDT, A2ZUSDT`在这一168h窗口没有WATCH。另`2ZUSDT`在2026-02-10 18:03UTC发生INVALIDATED（见机器events；不影响其之前已完成D1）。
 
 机器归档汇总：`polls=3360`,`D0_watch_new=4`,`D1_selected=20`(累计每轮处理尝试，非20不同候选),`D1_completed=4`,`D1_deferred=16`(累计延期，不是16不同token),`D1_late=0`; `queue_final=EVALUATED 4`; `WATCH_EARLY=4,SETUP_ACTIVE=1,INVALIDATED=1`。两个引擎WATCH事件的每币UTC精确吻合；源没有使用已知WATCH时间“注入”。
 
