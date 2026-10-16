@@ -14,14 +14,19 @@ PINS = {
     "v1": ("bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-replay-precommit-2026-10-16.json", "81766a70568c49ceac5e4906307b324c0a263d3f"),
     "v2": ("bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-replay-precommit-corrected-v2-2026-10-16.json", "93ccf47b87661fd734613d5b6c45aa2ddca26cd6"),
     "v3": ("bsc-meme-address-model-v1-p4c-v3-review-corrected-six-episodes-2026-10-16.json", "96efbd5bd75158601af8a5008d3c1653f30a2052"),
-    "header": ("bsc-meme-address-model-v1-p4c-v3-original13-block-header-calendar-2026-10-16.json", "529f5e660dff8134fd609682fa94c0c7aa89f868"),
-    "partial": ("bsc-meme-address-model-v1-p4c-v3-nine-truncated-receipt-source-excerpts-2026-10-16.json", "fead633edf1a8abe91f9e308dd54918ec278ac10"),
+    "header": ("bsc-meme-address-model-v1-p4c-v3-original13-block-header-calendar-graded-v2-2026-10-16.json", "fa5aff0f0e2239c22ee3b0d56cc2bac9db5593c3"),
+    "partial": ("bsc-meme-address-model-v1-p4c-v3-nine-truncated-receipt-excerpts-graded-v2-2026-10-16.json", "ee697f2b7ab8ccf160b8b2ff556fb3a47e79cb2b"),
     "extra": ("bsc-meme-address-model-v1-p4c-v3-restored-p2-13-original-two-transactions-2026-10-16.json", "7406af5caf34fae88c4cdbb60c9053e925fb194d"),
     "manifest": ("bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-original14-pre-rpc-2026-10-16.json", "723de3bb9aad1fb916eb8b958173e633d8338796"),
     "A": ("bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partA-2026-10-16.json", "52a9d1a6661070c79e29e3a16d3f35858b7daac4"),
     "B": ("bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partB-2026-10-16.json", "94d8eca8b73a687f5a7e9dca424757c67fc8416e"),
     "C": ("bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partC-2026-10-16.json", "f1b8a739043de8e3763cfd96bc9025029ade63f4"),
     "stage": ("BSC_MEME_STAGE23_8E6B_REPEAT_WINNER_HAJIMI_LOBSTER_IFML_CROSS_MAJOR_ROUNDS_2026-10-13.json", "6227e69fabd6c0d991add0d7ff5c6e406babd40b"),
+    "header_original": ("bsc-meme-address-model-v1-p4c-v3-original13-block-header-calendar-2026-10-16.json", "529f5e660dff8134fd609682fa94c0c7aa89f868"),
+    "partial_original": ("bsc-meme-address-model-v1-p4c-v3-nine-truncated-receipt-source-excerpts-2026-10-16.json", "fead633edf1a8abe91f9e308dd54918ec278ac10"),
+    "original42": ("bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json", "51a41aebe7931c242910470a6907e4c93d217568"),
+    "tx_hash_cross": ("bsc-meme-address-model-v1-p4c-v3-13-txhash-cross-method-blockhash-evidence-2026-10-16.json", "b94da94d39a3311ec4e1924b5dd086674ef962cd"),
+    "block_hash_cross": ("bsc-meme-address-model-v1-p4c-v3-13-block-by-hash-timestamps-evidence-2026-10-16.json", "1809ce1f5686b15dff0ac5a4c7dc59b4992a71bb"),
 }
 V1 = [13, 31, 38, 46, 42]
 V2 = [15, 31, 38, 46, 44]
@@ -97,6 +102,12 @@ def classify(d):
              "TOKEN_EXACT_CA_OR_STOCK_DRIFT")
 
     hdr = d["header"]
+    need(hdr["parent_original_blob_sha"] == PINS["header_original"][1]
+         and hdr["provenance_label"] ==
+         "SELF_ATTESTED_PROVIDER_PREFIX_ORIGINAL_PASS_CROSS_METHOD_IN_SEPARATE_SOURCE"
+         and hdr["full_block_response_count"] == 3
+         and hdr["all_2026_source_calendar_verified"] is False,
+         "H2_OLD_TRUNCATED_BLOCK_SOURCE_FALSELY_PROMOTED")
     rows = hdr["all_13_original_block_hashes_and_integer_timestamps"]
     need(len(rows) == 13 and len({r["block"] for r in rows}) == 13,
          "H2_MISSING_OR_DUPLICATED_BLOCK_HEADERS")
@@ -116,12 +127,64 @@ def classify(d):
             timespec="milliseconds").replace("+00:00", "Z")
         need(ms // 1000 == t and actual_utc == r["utc_from_integer_milliseconds"]
              and int(r["block_number_hex"], 16) == b
-             and len(r["block_hash"]) == 66 and r["header_fields_checked"],
+             and len(r["block_hash"]) == 66 and r["header_fields_checked"]
+             and r["status"] == "SELF_ATTESTED_PROVIDER_PREFIX"
+             and r["source_grade"] == "HEADER_FIELD_PREFIX_FROM_PROVIDER_OUTPUT_WITH_SEPARATE_SAME_PROVIDER_CROSS_METHOD_REPLAY",
              "H2_FAKE_OR_NONREPRODUCIBLE_ORIGINAL_UTC")
         year = datetime.fromtimestamp(ms / 1000, timezone.utc).year
         need(year == (2025 if b == 73339965 else 2026),
              "H2_REAL_YEAR_BOUNDARY_WRONG")
         calendar[b] = actual_utc
+    # Independently cross-query previously pinned ORIGINAL transaction hashes through
+    # eth_getTransactionByHash, then the returned hash through eth_getBlockByHash.
+    # These are distinct RPC methods but the SAME provider; no independent-node claim.
+    original_txs = {t["block"]: t["hash"] for entry in d["manifest"]["cases"]
+                    for t in entry["original_transactions"]}
+    original_txs.update({r["block"]: r["hash"] for r in d["extra"]["source_txs"]})
+    prior_42 = next(x for x in d["original42"]["rounds"] if x["selection_index"] == 7)
+    need(prior_42["first_block"] == 73339965
+         and prior_42["source_txs"][0]["block"] == 73339965,
+         "H2_2025_ORIGINAL_SIGNED_TRANSACTION_SOURCE_MISMATCH")
+    original_txs[73339965] = prior_42["source_txs"][0]["hash"]
+    cross_tx = d["tx_hash_cross"]
+    cross_block = d["block_hash_cross"]
+    need(cross_tx["grade"] == "SAME_PROVIDER_CROSS_RPC_METHOD_NOT_INDEPENDENT_PROVIDER"
+         and cross_block["grade"] ==
+         "SAME_PROVIDER_TWO_BLOCK_LOOKUP_METHODS_AND_TRANSACTION_HASH_CROSSCHECK_NOT_INDEPENDENT_PROVIDER"
+         and cross_block["source_tx_by_hash_blob"] == PINS["tx_hash_cross"][1],
+         "H2_CROSS_METHOD_EVIDENCE_MISLABELED_OR_SOURCE_MISMATCH")
+    txrows = cross_tx["rows"]
+    hashrows = cross_block["rows"]
+    need(len(txrows) == len(hashrows) == 13
+         and {r["block"] for r in txrows} == set(h)
+         and {r["block"] for r in hashrows} == set(h),
+         "H2_CROSS_METHOD_13_ORIGINAL_BLOCKS_MISSING")
+    txmap = {r["block"]: r for r in txrows}
+    bhmap = {r["block"]: r for r in hashrows}
+    for b, r in h.items():
+        original_hash = original_txs.get(b)
+        by_tx, by_hash = txmap[b], bhmap[b]
+        need(original_hash
+             and by_tx["tx"] == original_hash
+             and by_tx["tx_returned_hash"] == original_hash
+             and by_tx["tx_method_crosscheck_matches_archive"] is True
+             and by_tx["transaction_response_full_parseable"] is True
+             and by_tx["status"] == "COMPLETE_MATCH"
+             and int(by_tx["tx_blockNumber_hex"], 16) == b
+             and by_tx["archive_hash"] == r["block_hash"]
+             and by_tx["tx_blockHash"] == r["block_hash"]
+             and by_hash["original_signed_tx"] == original_hash
+             and by_hash["expected_txhash_block_hash"] == r["block_hash"]
+             and by_hash["hash_method_block_hash"] == r["block_hash"]
+             and by_hash["match"] is True
+             and by_hash["status"] == "COMPLETE_FIELDS_MATCH"
+             and int(by_hash["hash_method_number"], 16) == b
+             and int(by_hash["hash_method_timestamp"], 16) ==
+                 int(r["timestamp_hex"], 16)
+             and int(by_hash["hash_method_milliTimestamp"], 16) ==
+                 int(r["milliTimestamp_hex"], 16)
+             and by_hash["hash_method_utc"] == r["utc_from_integer_milliseconds"],
+             "H2_ORIGINAL_TX_HASH_BLOCK_HASH_TIMESTAMP_CROSS_METHOD_DISAGREEMENT")
     need(ledger[42]["first_block"] == 73339965
          and ledger[42]["is_2026_major_priority"] is True,
          "H2_P2_PRIORITY_FLAG_IS_NOT_DATE")
@@ -160,12 +223,18 @@ def classify(d):
             clipped14[row["tx"]] = row
     need((full14, len(clipped14)) == (5, 9),
          "H3_5_FULL_9_INCOMPLETE_CANNOT_BE_PROMOTED")
+    need(d["partial"]["parent_original_blob_sha"] == PINS["partial_original"][1]
+         and d["partial"]["summary_grade"] ==
+         "SELF_ATTESTED_PARTIAL_SOURCE_WITNESS_NOT_FULL_RECEIPT"
+         and d["partial"]["status_field_witness_is_not_success_claim"] is True,
+         "H3_CLIPPED_PARTIAL_SOURCE_FALSELY_CALLED_FULL")
     newpartial = d["partial"]["observations"]
     need(len(newpartial) == 9
          and {x["hash"] for x in newpartial} == set(clipped14),
          "H3_ALL_NINE_UNVERIFIED_RECEIPTS_NOT_PRESERVED")
     for w in newpartial:
         need(w["evidence_grade"] == "TRUNCATED_SOURCE_WITNESS_ONLY"
+             and w["source_grade"] == "SELF_ATTESTED_FORMATTED_350_CHAR_PREFIX_NOT_COMPLETE_RECEIPT"
              and not w["provider_JSON_parseable"]
              and w["tool_truncated_marker"]
              and w["provider_response_len"] >= 1000,
@@ -179,9 +248,16 @@ def classify(d):
         else:
             need(w["status_literal_offset"] is None,
                  "H3_NONVISIBLE_STATUS_FABRICATED")
-    need(d["partial"]["summary"]["partial_visible_status"] ==
-         sum(w["status_literal_if_visible"] == "0x1" for w in newpartial),
-         "H3_REPLAY_STATUS_WITNESS_COUNT_DRIFT")
+    visible = sum(w["status_literal_if_visible"] == "0x1" for w in newpartial)
+    absent = sum(w["status_literal_if_visible"] is None for w in newpartial)
+    need((visible, absent) == (8, 1)
+         and d["partial"]["summary"]["partial_visible_status"] == 8
+         and d["partial"]["summary"]["partial_no_status"] == 1
+         and d["partial"]["summary"]["partial_visible_status_second_pass_self_attested"] == 8
+         and d["partial"]["summary"]["partial_no_status_second_pass_self_attested"] == 1
+         and d["partial"]["summary"]["first_pass_visible_status_self_attested"] == 6
+         and d["partial"]["summary"]["first_pass_status_absent_self_attested"] == 3,
+         "H3_SELF_ATTESTED_CLIPPED_WITNESS_COUNTS_CANNOT_BE_FABRICATED")
     extra = d["extra"]["source_txs"]
     proof = next(r for r in d["stage"]["selected_two_major_positive_receipt_proofs"]
                  if r["token"] == "龙虾" and r["round"] == 2)
@@ -200,6 +276,10 @@ def classify(d):
         "three_original_cohort_comparisons": results,
         "original_2026_calendar_first_and_last_verified_for_six_cases": 12,
         "excluded_p2_42_year": "2025_SOURCE_BLOCK",
+        "cross_method_blockhash_utc_matches": 13,
+        "cross_method_provider_independence": "SAME_ALCHEMY_PROVIDER_NOT_TWO_INDEPENDENT_NODES",
+        "original_header_source_grade": "SELF_ATTESTED_PREFIX_WITH_PINNED_SAME_PROVIDER_DIFFERENT_RPC_METHOD_CHECKS",
+        "partial_status_witness_grade": "SELF_ATTESTED_LOCKED_8_VISIBLE_1_ABSENT_NOT_FULL_RECEIPTS",
         "original_signer_block_matched_count": len(old) + len(extra),
         "full_successful_receipts": full14 + len(extra),
         "truncated_receipts_remaining_UNVERIFIED": len(clipped14),
