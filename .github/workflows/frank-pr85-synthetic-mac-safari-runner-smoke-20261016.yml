@@ -83,9 +83,10 @@ jobs:
           import json,sys
           from pathlib import Path
           sessions=list(Path(sys.argv[1]).glob('safari-session-*/session.json'))
-          assert len(sessions)==1,sessions
-          result=json.loads(sessions[0].read_text())
-          assert result['services_stopped'] and result['repo_clean']
-          assert result['source_tree_sha_after']=='eea30efa09cb1509d7eee3fde3043ee7155257cf'
+          assert len(sessions)==2,sessions
+          for session in sessions:
+              result=json.loads(session.read_text())
+              assert result['services_stopped'] and result['repo_clean'], session
+              assert result['source_tree_sha_after']=='eea30efa09cb1509d7eee3fde3043ee7155257cf',session
           print('MAC_PR85_SYNTHETIC_LAUNCHER_SMOKE_PASS')
           PY
