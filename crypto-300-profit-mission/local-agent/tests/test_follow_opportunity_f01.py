@@ -187,3 +187,44 @@ def test_noncanonical_numeric_quote_from_single_source_is_not_eligible(bad):
     out = partition([row])
     assert out["eligible_count"] == 0
     assert out["not_followed"][0]["exclusion_reason"] == "QUOTE_NOT_EXECUTABLE"
+
+
+@pytest.mark.parametrize("nonrepresentable", ["1e-999", "1e999", "1e-324", "1e309"])
+def test_backend_excludes_price_outside_browser_number_range(nonrepresentable):
+    row = candidate(metrics={}, decision_quote={
+        "status": "OK", "route_exists": True,
+        "execution_price_usdc": nonrepresentable,
+        "price_impact_pct": "0.1",
+    })
+    out = partition([row])
+    assert out["eligible_count"] == 0
+    assert out["not_followed"][0]["exclusion_reason"] == "QUOTE_NOT_EXECUTABLE"
+    assert row["decision_quote"]["execution_price_usdc"] == nonrepresentable
+
+
+@pytest.mark.parametrize("price", ["0.012", "0.000000001", "1e-300", "5e-324"])
+def test_backend_preserves_browser_representable_positive_price(price):
+    row = candidate(metrics={}, decision_quote={
+        "status": "OK", "route_exists": True,
+        "execution_price_usdc": price,
+        "price_impact_pct": "0.1",
+    })
+    out = partition([row])
+    assert out["eligible_count"] == 1
+    assert float(out["eligible"][0]["validated_follow_quote"]["execution_price_usdc"]) > 0
+
+
+def test_browser_unrepresentable_impact_is_not_followable():
+    for raw in ("1e999", "1e-999"):
+        row = candidate(metrics={}, decision_quote={
+            "status": "OK", "route_exists": True,
+            "execution_price_usdc": "0.012",
+            "price_impact_pct": raw,
+        })
+        out = partition([row])
+        # Overflow must fail; underflow becomes representable zero only for
+        # nonnegative impact, but quote no longer claims the original precision.
+        if raw == "1e999":
+            assert out["eligible_count"] == 0
+        else:
+            assert out["eligible_count"] == 1
