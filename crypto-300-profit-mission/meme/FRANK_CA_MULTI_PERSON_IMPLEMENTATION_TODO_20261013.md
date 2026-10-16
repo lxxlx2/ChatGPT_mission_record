@@ -754,3 +754,11 @@ Remaining verified gaps / dependencies:
 - [ ] 在**另外明确批准**新版隔离 synthetic localhost HTTP 与 Safari 测试后，采用隔离临时数据、127.0.0.1 随机端口、不访问真实 RPC/用户私有数据，测 F01 BUY/SELL、C02 exact CA/审计、F02 TTL/后台恢复/同名不同 CA 和正式导航/Slot/SHA 禁显；保存**新版本**浏览器截图和时间、来源指纹，独立验收。
 - [ ] F02 的现在真实 32 Mint/ATA/余额与完整 CA 市场、Dev/funder/LP/风险证据需单独明确只读 RPC/私有来源授权，再做当前数据业务验收。模拟 1773 tests 不代表这项已过。
 - `NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_MAC_SERVICE_START / NO_NEW_AUTOMATION / NO_FILE_CLEANUP` 未解除。
+
+
+## 2026-10-16 Mac PR85 联合 tree 源码预检已由用户实际执行 PASS
+
+- 用户实际 Mac 终端回执：`QA_ROOT=/Users/jerson/.local/share/frank-pr85-mac-qa-R1c6kmCU`，四次 Git 合并成功，`LOCAL_EPHEMERAL_HEAD=c019f365d834dbd4f1d1ca39a8b2d95c63d753d6`，`MAC_PR85_SOURCE_PREFLIGHT=PASS`，`SOURCE_TREE_SHA=eea30efa09cb1509d7eee3fde3043ee7155257cf` 与 PR85/独立审核 CI 联合 tree 完全一致；本阶段未启动测试服务、真实 RPC、生产部署或读取私有 Sidecar。这标志 **`MAC_SOURCE_TREE_VERIFIED`**，不代表 HTTP 或浏览器测试已经通过。
+- [完整预检回执及 Mac 验收流程](https://github.com/lxxlx2/ChatGPT_mission_record/blob/b0ded3e1c3dba02608798fddae3efe589343bec3/crypto-300-profit-mission/meme/FRANK_PR85_MAC_SAFARI_ACCEPTANCE_20261016.md)。冻结源、独立 APPROVE #83/#84/#85、GitHub 132 /1773 tests 均保持有效。
+- [ ] **仅经用户新一轮明确批准**，在此已通过预检的单独 QA_ROOT 内启动临时 127.0.0.1:0 synthetic native HTTP 与 Safari 用户交互，验证 F01 当前业务合格筛选/历史不跟、C02 原生权限/精确 CA/禁显 SlotSHA、F02 源 TTL 与独立研究页面；实际 Mac 截图、退出回执与 tree 一起留证。未获授权不能启动用户 Mac HTTP 服务、真实 RPC/私有 Sidecar/生产 SQLite。
+- 生产 `NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_NEW_AUTOMATION / NO_FILE_CLEANUP` 保持。
