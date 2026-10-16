@@ -6,6 +6,7 @@ on:
       - fix/frank-c02-unknown-risk-rpc-evidence-card-safari-20261016
       - fix/frank-c02-pr78-verified-mint-20261016
       - fix/frank-c02-pr80-backend-verdict-qa-20261016
+      - fix/frank-c02-pr82-authority-presence-20261016
   workflow_dispatch:
 
 permissions:
