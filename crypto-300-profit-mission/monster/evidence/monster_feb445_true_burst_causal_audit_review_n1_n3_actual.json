@@ -1,0 +1,75 @@
+{
+  "D1_market_no_trade_vs_missing_source_determined_from_event_rows": "NOT_DETERMINABLE_FROM_EVENTS_ALONE",
+  "D1_market_zero_quote_runtime_note": "OFFLINE_SOURCE_CALLBACK_RUNTIMEERROR_STOPS_REPLAY; PRODUCTION_PROCESS_QUEUE_CATCHES_VALUEERROR_AND_DEFERS",
+  "D1_original_8_candle_quote_rule_provenance": "SEPARATE_FROZEN_PRODUCTION_SOURCE_CODE_TEST_NOT_A_REPLAY_EVENT",
+  "D1_per_tick_original_capacity": 8,
+  "D1_research_max_selected_slots": 8,
+  "D1_zeroquote_legacy_terminal_by_symbol_from_queue": {
+    "ACAUSDT": 2,
+    "GUSDT": 1
+  },
+  "D1_zeroquote_legacy_terminal_count_from_queue": 3,
+  "D1_zeroquote_terminal": 3,
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "candidate_deadline_minutes": 15,
+  "frozen_historical_date": "2026-02-04",
+  "global_polls": 3360,
+  "historical_PIT_listing": "UNVERIFIED",
+  "historical_censored": 313,
+  "historical_executable_net_profit": "UNVERIFIED",
+  "immutable_full_json_sha256": "370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf",
+  "independent_OOS": false,
+  "late_event_matching": "PRODUCTION_EVENT_KEY_SHA256_EXACT_QUEUE_ID",
+  "late_event_utc_minute_offsets_after_peak": {
+    "18": 8,
+    "21": 8,
+    "24": 8,
+    "27": 8,
+    "30": 8,
+    "33": 8,
+    "36": 8,
+    "39": 8,
+    "42": 8,
+    "45": 8,
+    "48": 8,
+    "51": 3
+  },
+  "late_from_peak_share_pct": 97.8495,
+  "late_review_origin_counts": {
+    "D1_PROCESS_QUEUE_DEADLINE_EXPIRED": 93
+  },
+  "late_review_origin_reconciled_with_queue": true,
+  "one_sqlite_original_D0_experimental_D1": true,
+  "original_445_D1_replay_completed": false,
+  "original_denominator": 758,
+  "other_late_within_next_3m": [
+    "GPSUSDT",
+    "LUNAUSDT"
+  ],
+  "overall_late": 93,
+  "overall_late_share_pct": 34.5725,
+  "peak_15m_trigger_count": 96,
+  "peak_3m_trigger_count": 2,
+  "peak_queue_statuses": {
+    "EVALUATED": 7,
+    "LATE": 91
+  },
+  "peak_related_late": 91,
+  "peak_same_tick_watch": 98,
+  "peak_utc": "2026-02-06T00:36:00Z",
+  "schema": "MONSTER_FEB445_ACTUAL_D0_BURST_QUEUE_CAUSAL_AUDIT_V2",
+  "setup_event_count": 120,
+  "setup_event_matching": "PRODUCTION_EVENT_KEY_SHA256_EXACT_QUEUE_ID",
+  "source_complete_symbols": 445,
+  "theoretical_inclusive_polls_before_deadline": 6,
+  "theoretical_max_one_pass_slots_for_peak_with_zero_competition": 48,
+  "theoretical_min_peak_not_one_pass_served_by_deadline": 50,
+  "total_watches": 269,
+  "verified_model_code_git_blobs": {
+    "monster_v4_shadow.py": "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa",
+    "monster_v4_shared_d1_zeroquote_research_v2.py": "b16e89f2a20c1dfaaebce1497da8d991d3907ed7",
+    "monster_v4_shared_spot_d0_d1_original_core.py": "3a9e4bbd75ff4f5ef6cd0bfe87895d932c95892c"
+  },
+  "watch_episodes_with_setup_in_15m": 120
+}
