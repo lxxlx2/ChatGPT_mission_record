@@ -54,7 +54,7 @@ class First32TwoShardRegressions(unittest.TestCase):
                 return iter([(shards.members(0)[0],[],[],{})])
             with patch.object(first.shards,"read_archive",side_effect=fake_shard):
                 with self.assertRaisesRegex(ValueError,
-                             "INCOMPLETE_SOURCE_SHARD"):
+                             "INVALID_OR_DUPLICATED_SOURCE_MEMBER"):
                     first.analyze_two(tmp)
 
     def test_05_no_445_claim_from_32_member_roster(self):
