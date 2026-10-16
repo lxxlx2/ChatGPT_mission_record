@@ -33,7 +33,7 @@ jobs:
           changed=subprocess.check_output(
               ['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],
               text=True).splitlines()
-          expected={'schema':'MONSTER445_SOURCE_PINNED_BURST_AUDIT_REQUEST_V2',
+          expected={'schema':'MONSTER445_SOURCE_PINNED_BURST_AUDIT_REQUEST_V3',
                     'artifact_id':12044872933,
                     'source_sha256':'370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf',
                     'research_only':True,'approved_scope':'POSTMORTEM_ONLY'}
@@ -90,27 +90,86 @@ jobs:
           assert len(r['verified_model_code_git_blobs'])==3
           print('MONSTER445_REAL_EVENT_QUEUE_CAUSAL_ACCOUNTING_BURST98_LATE91_93_PASS')
           PY
+      - name: Re-download all 18 historical originals and cross-check all 28 issuer manifests against Git proof
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          (cd crypto-300-profit-mission/local-agent/scripts && python monster_v4_shared_445_archive_replay_runner.py collect --source-dir /tmp/monster445_recheck_origins --audit /tmp/monster445_recheck_origin_audit.json)
+          (cd crypto-300-profit-mission/local-agent/scripts && python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          import monster_v4_shared_445_official_source_shards as shards
+          source=Path('/tmp/monster445_recheck_origins')
+          total=0
+          records=[]
+          for idx in range(28):
+              stem=f'monster_feb445_shard{idx:02d}'
+              proof=json.loads((source/f'{stem}.proof.json').read_text())
+              tuples=list(shards.read_archive(source/f'{stem}.zip',
+                        proof=proof,expected_shard=idx))
+              if [row[0] for row in tuples] != list(shards.members(idx)):
+                  raise RuntimeError('MONSTER445_REVIEW_ORIGINAL_ROSTER_CHANGED')
+              for symbol,bars,receipts,_ in tuples:
+                  if len(bars)!=12960 or len(receipts)!=10:
+                      raise RuntimeError('MONSTER445_REVIEW_RAW_SOURCE_INCOMPLETE')
+                  total+=len(receipts)
+              records.append({
+                  'shard':idx,'symbols':len(tuples),
+                  'publisher_days':sum(len(row[2]) for row in tuples),
+                  'zip_sha256':proof['sha256_zip'],
+                  'publisher_proof_equals_manifest':True})
+          if total!=4450 or sum(x['symbols'] for x in records)!=445:
+              raise RuntimeError('MONSTER445_REVIEW_4450_DAILY_SHA_SOURCE_COUNT_DRIFT')
+          payload={
+              'schema':'MONSTER445_REVIEW_ALL_28_ORIGINAL_SOURCE_PROOF_MANIFEST_CROSSCHECK_V1',
+              'original_full_replay_artifact_id':12044872933,
+              'source_complete_symbols':445,
+              'historical_source_censored_original758':313,
+              'publisher_days_sha_receipts':total,
+              'all_28_raw_shards_directly_rechecked':True,
+              'source_provenance_issuer_sha_equals_manifest':True,
+              'per_shard':records,
+              'research_only':True,'G4':'UNKNOWN','G6':'NO_GO'
+          }
+          dest=Path('/tmp/monster445_real_burst/monster445_original_source_proof_manifest_crosscheck.json')
+          dest.write_text(json.dumps(payload,indent=2,sort_keys=True)+'\\n')
+          print('MONSTER445_REAL_28_ARCHIVES_4450_ISSUER_SHA_CROSSCHECKED_AGAINST_SOURCE_MANIFEST')
+          PY
+          )
       - uses: actions/upload-artifact@v4
         with:
-          name: monster445-real-burst-exact-anchor-reviewed-sha-pinned
-          path: /tmp/monster445_real_burst/monster445_true_burst_exact_anchor_audit.json
+          name: monster445-real-burst-plus-issuer-28-shards-review-sha-pinned
+          path: |
+            /tmp/monster445_real_burst/monster445_true_burst_exact_anchor_audit.json
+            /tmp/monster445_real_burst/monster445_original_source_proof_manifest_crosscheck.json
           retention-days: 60
           if-no-files-found: error
       - name: Git seal small read-only burst diagnostic with immutable source, no producer code mutation
         run: |
           set -eu
           branch=research/monster-v4-local-discovery-20261010
-          report=crypto-300-profit-mission/monster/evidence/monster_feb445_true_burst_causal_audit_review_fix_actual.json
+          report=crypto-300-profit-mission/monster/evidence/monster_feb445_true_burst_causal_audit_review_final_actual.json
           if test -e "$report"; then
             echo MONSTER445_BURST_REPORT_MUST_NOT_REPLACE_EXISTING
             exit 1
           fi
           cp /tmp/monster445_real_burst/monster445_true_burst_exact_anchor_audit.json "$report"
-          git add "$report"
+          extra=crypto-300-profit-mission/monster/evidence/monster_feb445_original28_publisher_sha_proof_manifest_review_actual.json
+          if test -e "$extra"; then
+            echo MONSTER445_REVIEW_SOURCE_MANIFEST_ALREADY_ARCHIVED
+            exit 1
+          fi
+          cp /tmp/monster445_real_burst/monster445_original_source_proof_manifest_crosscheck.json "$extra"
+          git add "$report" "$extra"
           git config user.name monster-research-ci
           git config user.email monster-research-ci@users.noreply.github.com
           git commit -m "monster: immutable source anchor-exact 120 SETUP and 93 late; proof/core SHA verified"
           git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$extra" 2>/dev/null; then
+            echo MONSTER445_REVIEW_REMOTE_SOURCE_AUDIT_ALREADY_EXISTS
+            exit 1
+          fi
           if git cat-file -e "FETCH_HEAD:$report" 2>/dev/null; then
             echo MONSTER445_BURST_REMOTE_REPORT_ALREADY_EXISTS
             exit 1
