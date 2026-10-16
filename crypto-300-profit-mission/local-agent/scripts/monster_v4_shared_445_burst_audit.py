@@ -8,7 +8,7 @@ No market access, no production code import, no side effects beyond --out.
 from __future__ import annotations
 
 import argparse
-from collections import Counter, defaultdict
+from collections import Counter
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -89,17 +89,40 @@ def assess(full_bytes: bytes, summary: dict) -> dict:
     setup_events = [e for e in events if e["event_type"] == "SETUP_ACTIVE"]
     if len(setup_events) != 120:
         raise ValueError("MONSTER445_BURST_SETUP_EVENT_COUNT_DRIFT")
-    setups_by_symbol = defaultdict(list)
-    for e in setup_events:
-        setups_by_symbol[e["symbol"]].append(e["observed_ms"])
-    setup_matched = sum(
-        any(q["first_seen_ms"] <= t <= q["deadline_ms"]
-            for t in setups_by_symbol[q["symbol"]]) for q in queue)
-    if setup_matched != 120:
-        raise ValueError("MONSTER445_BURST_SETUP_CAUSAL_EPISODE_DRIFT")
-    peak_late_events = [e for e in events if e["event_type"] == "LATE_REVIEW"
-                        and e["symbol"] in {q["symbol"] for q in peak_candidates
-                                            if q["status"] == "LATE"}]
+    setup_by_event_id = {e["event_id"]: e for e in setup_events}
+    setup_matched = 0
+    for q in queue:
+        eid = hashlib.sha256(
+            f"MONSTER_V4|{q['venue']}|{q['symbol']}|SETUP_ACTIVE|{q['id']}".encode()
+        ).hexdigest()
+        if eid not in setup_by_event_id:
+            continue
+        e = setup_by_event_id[eid]
+        if (q["status"]!="EVALUATED"
+                or e["venue"]!=q["venue"] or e["symbol"]!=q["symbol"]
+                or not q["first_seen_ms"]<=e["observed_ms"]<=q["deadline_ms"]):
+            raise ValueError("MONSTER445_BURST_SETUP_QUEUE_ANCHOR_OR_WINDOW_DRIFT")
+        setup_matched += 1
+    if setup_matched != len(setup_events) or setup_matched != 120:
+        raise ValueError("MONSTER445_BURST_SETUP_EXACT_QUEUE_ID_INCOMPLETE")
+    lates = [e for e in events if e["event_type"] == "LATE_REVIEW"]
+    late_by_event_id = {e["event_id"]: e for e in lates}
+    anchored_lates = []
+    for q in queue:
+        eid = hashlib.sha256(
+            f"MONSTER_V4|{q['venue']}|{q['symbol']}|LATE_REVIEW|{q['id']}".encode()
+        ).hexdigest()
+        if eid not in late_by_event_id:
+            continue
+        e = late_by_event_id[eid]
+        if (q["status"]!="LATE" or e["venue"]!=q["venue"]
+                or e["symbol"]!=q["symbol"] or e["observed_ms"]<=q["deadline_ms"]):
+            raise ValueError("MONSTER445_BURST_LATE_QUEUE_ANCHOR_OR_WINDOW_DRIFT")
+        anchored_lates.append((q,e))
+    if len(anchored_lates)!=len(lates) or len(lates)!=93:
+        raise ValueError("MONSTER445_BURST_LATE_EXACT_QUEUE_ID_INCOMPLETE")
+    peak_late_events = [e for q,e in anchored_lates
+                        if q["first_seen_ms"] == peak_ms]
     late_event_lags = Counter((e["observed_ms"] - peak_ms) // 60_000
                               for e in peak_late_events)
     if sum(late_event_lags.values()) != 91 or min(late_event_lags) < 18:
@@ -111,6 +134,15 @@ def assess(full_bytes: bytes, summary: dict) -> dict:
         "schema": SCHEMA,
         "immutable_full_json_sha256": digest,
         "one_sqlite_original_D0_experimental_D1": True,
+        "setup_event_matching": "PRODUCTION_EVENT_KEY_SHA256_EXACT_QUEUE_ID",
+        "late_event_matching": "PRODUCTION_EVENT_KEY_SHA256_EXACT_QUEUE_ID",
+        "D1_market_zero_quote_is_real_no_trade_not_missing_data": True,
+        "D1_research_V2_zero_quote_terminal_is_market_condition": True,
+        "D1_research_D1_rates_conditional_on_market_quote_presence": True,
+        "D1_original_validates_positive_quote_for_all_8_supplied_candles":
+            True,
+        "D1_original_selects_last6_only_after_8_candle_positive_validation":
+            True,
         "frozen_historical_date": "2026-02-04",
         "source_complete_symbols": 445,
         "original_denominator": 758,
