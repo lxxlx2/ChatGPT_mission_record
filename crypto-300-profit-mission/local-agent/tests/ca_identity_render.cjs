@@ -48,10 +48,56 @@ assert(!badEvidence.includes('class="ok-text">无'), 'unknown must not be marked
 assert(nodes['cluster-coverage'].innerHTML.includes('使用 RPC 节点</span><strong>0</strong>'));
 assert(!nodes['cluster-coverage'].innerHTML.includes('使用 RPC 节点</span><strong>1</strong>'));
 const clean=structuredClone(stale);
-clean.token_profile={status:'OK',extensions:[],active_extension_risks:[],
+clean.token_profile={status:'OK',source:'SOLANA_FINALIZED_JSON_RPC',
+  mint_account_status:'VERIFIED',is_initialized:true,mint_slot:500,
+  program_id:'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
+  token_program:'SPL Token',mint_authority:null,freeze_authority:null,
+  extensions:[],active_extension_risks:[],
   inactive_sensitive_extensions:[],unresolved_sensitive_extensions:[]};
 clean.assessment.chain_permission_status='PASS';
 ctx.report=clean;
 vm.runInContext('renderClusterReport(report)',ctx);
 assert(nodes['cluster-token-profile'].innerHTML.includes('已核实未发现'));
 console.log('C02 Safari regression: unknown risk never green, zero RPC stays zero, audit details moved PASS');
+
+const notInitialized=structuredClone(clean);
+notInitialized.token_profile.mint_account_status='UNCONFIRMED';
+notInitialized.token_profile.is_initialized=false;
+ctx.report=notInitialized;
+vm.runInContext('renderClusterReport(report)',ctx);
+assert(!nodes['cluster-token-profile'].innerHTML.includes('已核实未发现'));
+assert(!nodes['cluster-conclusion'].innerHTML.includes('Mint authority 与 Freeze authority 均未活动'));
+assert(nodes['cluster-token-profile'].innerHTML.includes('未确认'));
+
+const missingEvidence=structuredClone(clean);
+delete missingEvidence.token_profile.mint_authority;
+ctx.report=missingEvidence;
+vm.runInContext('renderClusterReport(report)',ctx);
+assert(!nodes['cluster-token-profile'].innerHTML.includes('已核实未发现'));
+
+const withAudit=structuredClone(notInitialized);
+withAudit.token_identity.sources=[{source:'SYNTHETIC_ONLY',mint:withAudit.mint,
+    name:'<script>bad</script>',slot:500,response_sha256:'a'.repeat(64)}];
+withAudit.token_identity.metadata_attempts=[{source:'SOLANA',account:withAudit.mint,
+    status:'FAILED',reason:'ACCOUNT_NOT_FOUND',slot:500,response_sha256:'b'.repeat(64)}];
+ctx.report=withAudit;
+vm.runInContext('renderClusterReport(report)',ctx);
+const publicAudit=nodes['cluster-identity-evidence'].innerHTML;
+assert(publicAudit.includes('&lt;script&gt;bad&lt;/script&gt;'));
+assert(publicAudit.includes('ACCOUNT_NOT_FOUND'));
+assert(publicAudit.includes(withAudit.mint));
+assert(!publicAudit.includes('"slot"') && !publicAudit.includes('response_sha256'));
+assert(!publicAudit.includes('aaaaaaaaaaaaaaaa') && !publicAudit.includes('bbbbbbbbbbbbbbbb'));
+assert(!publicAudit.includes('<script>'));
+console.log('C02 independent reviewer P2 uninitialized mint / P3 public audit whitelist PASS');
+
+const watchMint=results[0].mint;
+ctx.watchPayload={status:'OK',summary:{total_observed:1},rows:[{
+  mint:watchMint,watch_state:'MODEL_OPEN',last_event_time:1800000000,
+  snapshot_inventory_state:'NONZERO_AT_SLOT',snapshot_token_quantity:'12',
+  snapshot_verified_slot:123456789
+}]};
+vm.runInContext('renderFrankWatchlist(watchPayload)',ctx);
+assert(!nodes['watch-rows'].innerHTML.includes('slot 123456789'),
+  'public watchlist must not expose audit Slot');
+console.log('C02 formal watchlist Slot redaction PASS');
