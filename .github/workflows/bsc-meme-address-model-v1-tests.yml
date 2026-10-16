@@ -57,6 +57,10 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_fiveowners14_gate.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_v3_review_gate.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_v3_review_gate.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-13-txhash-cross-method-blockhash-evidence-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-13-block-by-hash-timestamps-evidence-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-original13-block-header-calendar-graded-v2-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-nine-truncated-receipt-excerpts-graded-v2-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-review-corrected-six-episodes-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-original13-block-header-calendar-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-nine-truncated-receipt-source-excerpts-2026-10-16.json"
@@ -1008,6 +1012,9 @@ jobs:
           assert a["selection_grade"] == "POST_REVIEW_OUTCOME_AWARE_EXPOSED_NOT_HOLDOUT"
           assert a["original_2026_calendar_first_and_last_verified_for_six_cases"] == 12
           assert a["excluded_p2_42_year"] == "2025_SOURCE_BLOCK"
+          assert a["cross_method_blockhash_utc_matches"] == 13
+          assert a["cross_method_provider_independence"] == "SAME_ALCHEMY_PROVIDER_NOT_TWO_INDEPENDENT_NODES"
+          assert a["partial_status_witness_grade"] == "SELF_ATTESTED_LOCKED_8_VISIBLE_1_ABSENT_NOT_FULL_RECEIPTS"
           assert a["original_signer_block_matched_count"] == 16
           assert a["full_successful_receipts"] == 7
           assert a["truncated_receipts_remaining_UNVERIFIED"] == 9
