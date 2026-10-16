@@ -410,9 +410,6 @@ function renderFrankWatchlist(payload) {
       : chainState === 'ZERO_AT_SLOT'
         ? '样本余额：0'
         : '链上余额未核实';
-    const proof = x.snapshot_verified_slot
-      ? ' · slot ' + esc(x.snapshot_verified_slot)
-      : '';
     const mismatch = x.model_chain_disagreement
       ? '<div class="watch-mismatch">模型与链上记录有差异，需追溯</div>'
       : '';
@@ -448,7 +445,7 @@ function renderFrankWatchlist(payload) {
           ? '<div>另有 ATA 验证被动转入 ' + esc(x.ata_verified_extra_passive_receipts) +
             ' 笔（不计为主动买入，成本未知）</div>' : '') +
         '</div></td>' +
-      '<td>' + balance + '<div class="watch-tx">美元价值未核实' + proof +
+      '<td>' + balance + '<div class="watch-tx">美元价值未核实' +
         (x.passive_receipt_events && !x.transfer_counterparty_verified
           ? '<div>转入方与成本未核实</div>' : '') +
         '</div></td>' +
@@ -509,13 +506,18 @@ function renderCandidates(rows) {
     const m = x.metrics || {};
     const q = x.decision_quote || {};
     const decision = x.decision || 'UNASSESSED';
+    const isActionDecision = decision === 'BUY' || decision === 'SMALL_BUY';
     const reason = reasonFor(x);
 
     const frankPriceRaw = m.frank_latest_buy_price_usdc ?? x.latest_buy_price_usdc;
-    const execRaw = m.execution_price_usdc ?? q.execution_price_usdc;
-    const impactRaw = m.price_impact_pct ?? q.price_impact_pct;
+    const validated = x.validated_follow_quote || {};
+    const execRaw = validated.execution_price_usdc;
+    const impactRaw = validated.price_impact_pct;
+    const quoteVerified = execRaw != null && impactRaw != null &&
+      Number.isFinite(Number(execRaw)) && Number(execRaw) > 0 &&
+      Number.isFinite(Number(impactRaw)) && Number(impactRaw) >= 0;
 
-    let deltaRaw = m.price_deviation_pct;
+    let deltaRaw = null;
     if (deltaRaw == null && frankPriceRaw != null && execRaw != null) {
       const f = Number(frankPriceRaw);
       const e = Number(execRaw);
@@ -530,7 +532,9 @@ function renderCandidates(rows) {
     const execPrice = execRaw != null ? `${money(execRaw,8)}` : quoteUnavailableText(x,q);
     const buys = x.buy_count ?? 0;
     const sells = x.sell_count ?? 0;
-    const followable = (decision === 'BUY' || decision === 'SMALL_BUY') && x.position_state === 'OPEN' && !['SELL','EXIT','SELL_POSITION_UNRESOLVED'].includes(x.latest_side);
+    const followable = quoteVerified &&
+      (decision === 'BUY' || decision === 'SMALL_BUY') &&
+      x.position_state === 'OPEN' && !['SELL','EXIT','SELL_POSITION_UNRESOLVED'].includes(x.latest_side);
     const historyNote = followable
       ? '模式来自已观察到的建仓序列；实际操作前仍需重新确认价格和 Frank 状态。'
       : '模型模式与买入金额是历史记录；当前没有可执行的买入结论。';
@@ -538,7 +542,7 @@ function renderCandidates(rows) {
     return `<article class="candidate-card decision-${esc(decision.toLowerCase().replaceAll('_','-'))}">
       <div class="candidate-head">
         <div class="candidate-title">
-          ${badge(decision)}
+          ${isActionDecision && !quoteVerified ? '<span class="badge no-buy">不跟 · 报价未核实</span>' : badge(decision)}
           <strong>${esc(translated(patternLabel,x.pattern,'未形成模式'))}</strong>
           <span class="state-text">Frank模型仓位：${esc(translated(stateLabel,x.position_state,'未知'))}</span>
         </div>
@@ -548,7 +552,7 @@ function renderCandidates(rows) {
       ${tokenIdentity(x.mint)}
 
       <div class="decision-reason">
-        <span>当前跟单结论：“${esc(translated(decisionLabel,decision,decision))}”</span>
+        <span>当前跟单结论：“${isActionDecision && !quoteVerified ? '不跟（报价未核实）' : esc(translated(decisionLabel,decision,decision))}”</span>
         <strong>${esc(reason)} ${esc(historyNote)}</strong>
       </div>
 

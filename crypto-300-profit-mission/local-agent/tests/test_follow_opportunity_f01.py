@@ -124,3 +124,48 @@ def test_complete_quotation_can_live_in_frozen_quote_not_only_metrics():
         "execution_price_usdc": "0.012", "price_impact_pct": "0.0",
     })
     assert partition([row])["eligible_count"] == 1
+
+
+def test_reviewer_counterexample_quote_and_metrics_contradiction_is_not_eligible():
+    row = candidate(
+        decision_quote={"status": "OK", "route_exists": True,
+                        "execution_price_usdc": "0.012", "price_impact_pct": "0.1"},
+        metrics={"execution_price_usdc": "0", "price_impact_pct": "NaN"},
+    )
+    out = partition([row])
+    assert out["eligible_count"] == 0
+    assert out["not_followed"][0]["exclusion_reason"] == "QUOTE_NOT_EXECUTABLE"
+    assert row["decision_quote"]["execution_price_usdc"] == "0.012"
+    assert row["metrics"]["execution_price_usdc"] == "0"
+
+
+@pytest.mark.parametrize("key,left,right", [
+    ("execution_price_usdc", "0.012", "0.013"),
+    ("price_impact_pct", "0.1", "0.2"),
+    ("execution_price_usdc", "0.012", "NaN"),
+    ("price_impact_pct", "0.1", "-1"),
+    ("execution_price_usdc", "0.012", "0"),
+])
+def test_any_quoting_disagreement_or_invalid_source_blocks_follow(key,left,right):
+    quote = {"status": "OK", "route_exists": True,
+             "execution_price_usdc": "0.012", "price_impact_pct": "0.1"}
+    metrics = {"execution_price_usdc": "0.012", "price_impact_pct": "0.1"}
+    quote[key] = left
+    metrics[key] = right
+    result = partition([candidate(decision_quote=quote, metrics=metrics)])
+    assert result["eligible_count"] == 0
+    assert result["not_followed"][0]["exclusion_reason"] == "QUOTE_NOT_EXECUTABLE"
+
+
+def test_validated_quote_projection_used_by_ui_preserves_original_data():
+    row = candidate(decision_quote={
+        "status": "OK", "route_exists": True,
+        "execution_price_usdc": "0.0120", "price_impact_pct": "0.10",
+    }, metrics={"execution_price_usdc": "0.012", "price_impact_pct": "0.1"})
+    before = {key: dict(row[key]) for key in ("decision_quote", "metrics")}
+    result = partition([row])
+    assert result["eligible_count"] == 1
+    projected = result["eligible"][0]["validated_follow_quote"]
+    assert projected == {"execution_price_usdc": "0.0120", "price_impact_pct": "0.10"}
+    assert row["decision_quote"] == before["decision_quote"]
+    assert row["metrics"] == before["metrics"]
