@@ -33,7 +33,7 @@ jobs:
           changed=subprocess.check_output(
               ['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],
               text=True).splitlines()
-          expected={'schema':'MONSTER445_SOURCE_PINNED_BURST_AUDIT_REQUEST_V1',
+          expected={'schema':'MONSTER445_SOURCE_PINNED_BURST_AUDIT_REQUEST_V2',
                     'artifact_id':12044872933,
                     'source_sha256':'370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf',
                     'research_only':True,'approved_scope':'POSTMORTEM_ONLY'}
@@ -52,44 +52,71 @@ jobs:
           test "$(find /tmp/monster445_real_burst -maxdepth 1 -type f | wc -l)" -eq 3
           printf '%s  %s\n' 370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf /tmp/monster445_real_burst/monster_feb445_all445_one_sqlite_full_result.json | sha256sum -c -
           python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_burst_audit.py
-          python crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_burst_audit.py --full /tmp/monster445_real_burst/monster_feb445_all445_one_sqlite_full_result.json --summary /tmp/monster445_real_burst/monster_feb445_all445_one_sqlite_summary.json --out /tmp/monster445_real_burst/monster445_true_burst_audit.json
+          (cd crypto-300-profit-mission/local-agent/scripts && python -m unittest -v test_monster_v4_shared_445_source_shards test_monster_v4_shared_445_archive_replay_runner)
+          (cd crypto-300-profit-mission/local-agent/scripts && python - <<'PY'
+          import monster_v4_shadow as prod
+          from decimal import Decimal
+          now=1770000000000
+          interval=5*60000
+          bars=[]
+          for i in range(8):
+              end=now-(7-i)*interval-1
+              bars.append([end-interval+1,"1","1.1","0.9","1.05",
+                           "1",end,"100"])
+          outcome=prod.evaluate_closed_5m(bars,now)
+          assert outcome["closed_5m"]==6
+          bars[0][7]="0"
+          try:
+              prod.evaluate_closed_5m(bars,now)
+          except ValueError:
+              print("MONSTER445_ORIGINAL_PRODUCTION_REJECTS_MARKET_NO_TRADE_EVEN_IN_FIRST_TWO_OF_EIGHT")
+          else:
+              raise AssertionError("original production silently accepts leading market zero")
+          PY
+          )
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_burst_audit.py --full /tmp/monster445_real_burst/monster_feb445_all445_one_sqlite_full_result.json --summary /tmp/monster445_real_burst/monster_feb445_all445_one_sqlite_summary.json --out /tmp/monster445_real_burst/monster445_true_burst_exact_anchor_audit.json
           python - <<'PY'
           import json
           from pathlib import Path
-          r=json.loads(Path('/tmp/monster445_real_burst/monster445_true_burst_audit.json').read_text())
+          r=json.loads(Path('/tmp/monster445_real_burst/monster445_true_burst_exact_anchor_audit.json').read_text())
           assert r['peak_same_tick_watch']==98 and r['peak_related_late']==91
           assert r['overall_late']==93 and r['theoretical_max_one_pass_slots_for_peak_with_zero_competition']==48
           assert r['theoretical_min_peak_not_one_pass_served_by_deadline']==50
           assert r['G6']=='NO_GO'
+          assert r['setup_event_matching']=='PRODUCTION_EVENT_KEY_SHA256_EXACT_QUEUE_ID'
+          assert r['late_event_matching']=='PRODUCTION_EVENT_KEY_SHA256_EXACT_QUEUE_ID'
+          assert r['watch_episodes_with_setup_in_15m']==120
+          assert r['D1_market_zero_quote_is_real_no_trade_not_missing_data'] is True
+          assert len(r['verified_model_code_git_blobs'])==3
           print('MONSTER445_REAL_EVENT_QUEUE_CAUSAL_ACCOUNTING_BURST98_LATE91_93_PASS')
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: monster445-real-burst-postmortem-sha-pinned-once
-          path: /tmp/monster445_real_burst/monster445_true_burst_audit.json
+          name: monster445-real-burst-exact-anchor-reviewed-sha-pinned
+          path: /tmp/monster445_real_burst/monster445_true_burst_exact_anchor_audit.json
           retention-days: 60
           if-no-files-found: error
       - name: Git seal small read-only burst diagnostic with immutable source, no producer code mutation
         run: |
           set -eu
           branch=research/monster-v4-local-discovery-20261010
-          report=crypto-300-profit-mission/monster/evidence/monster_feb445_true_burst_causal_audit_actual.json
+          report=crypto-300-profit-mission/monster/evidence/monster_feb445_true_burst_causal_audit_review_fix_actual.json
           if test -e "$report"; then
             echo MONSTER445_BURST_REPORT_MUST_NOT_REPLACE_EXISTING
             exit 1
           fi
-          cp /tmp/monster445_real_burst/monster445_true_burst_audit.json "$report"
+          cp /tmp/monster445_real_burst/monster445_true_burst_exact_anchor_audit.json "$report"
           git add "$report"
           git config user.name monster-research-ci
           git config user.email monster-research-ci@users.noreply.github.com
-          git commit -m "monster: independently recount true 98 burst and 93 late from pinned real 445 replay"
+          git commit -m "monster: immutable source anchor-exact 120 SETUP and 93 late; proof/core SHA verified"
           git fetch origin "refs/heads/$branch"
           if git cat-file -e "FETCH_HEAD:$report" 2>/dev/null; then
             echo MONSTER445_BURST_REMOTE_REPORT_ALREADY_EXISTS
             exit 1
           fi
           git rebase FETCH_HEAD
-          for file in crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_burst_audit.py .github/workflows/monster-v4-445-burst-causal-audit-once.yml crypto-300-profit-mission/monster/source-batches/monster_feb445_burst_audit_request.json crypto-300-profit-mission/monster/evidence/monster_feb445_all445_one_sqlite_replay_actual.json; do
+          for file in crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_burst_audit.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_official_source_shards.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_source_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_archive_replay_runner.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_archive_replay_runner.py .github/workflows/monster-v4-445-burst-causal-audit-once.yml crypto-300-profit-mission/monster/source-batches/monster_feb445_burst_audit_request.json crypto-300-profit-mission/monster/evidence/monster_feb445_all445_one_sqlite_replay_actual.json; do
             test "$(git rev-parse "$GITHUB_SHA:$file")" = "$(git rev-parse "HEAD:$file")" || { echo "MONSTER445_BURST_FREEZE_FILE_CHANGED=$file"; exit 1; }
           done
           git push origin "HEAD:refs/heads/$branch"
