@@ -670,3 +670,15 @@ Remaining verified gaps / dependencies:
 - 技术隔离：依赖**现有已通过 60 项**的 native control Handler / F02 handler / read-only bridge，但**不构造`DashboardState`或真实 `ClusterJobManager`**；在前台 Python 临时脚本中注入内存 FakeState 与 FakeJobs，任何 C02 POST 都只能生成 `SYNTHETIC_ONLY` 内存报告，绝不连接市场、Solana/Jupiter。合成 F02 bundle 与合成 SQLite 只生成于新建隔离根旁支 QA 目录，不读取现有 `~/.local/share/frank-f02-research/manual-sessions`。页面原 JS/CSS 保持固定合并树原文，仅 HTML 插入鲜明「合成测试」提示，避免误认为当前真实 BUY/持仓。C02 不应因同名字段跨 exact mint 误联接。F02 可以临时缩短仅供交互验证的 ttl，但**真实产品 300s 仍只由原固定 60 pytest/Node 测试担保**，人工缩短演示并非生产门槛改变。
 - 三个本机服务使用 OS 分配**非固定**端口，启动前自行探测 GET 与 handler 身份；浏览器测试在同一个 zsh 前台进程运行、用户 Ctrl-C 或运行时上限即退出，`shutdown()/server_close()/join()` 只作用于本轮创建的临时 HTTPServer，不管理/终止任何已经存在的本机 Frank 进程，尤其不允许自动 killall / launchctl；不删除隔离根、测试目录或 QA 日志。将启动/结束、synthetic_only=true、实际浏览器观测**由用户另行回传**；不可仅凭 HTTP GET、Safari 启动返回码或进程关闭声称 Safari DOM 人工验收 PASS。
 - **本记录仅是用户授权/准备，不是已完成测试**。浏览器可用性、实际交互、是否出现 JS runtime error、是否假阳性 BUY/CA/F02，需要 Mac 用户亲自核对；独立新源 F02 当前持仓及 C03-C10 尚未做。后续如需真实 raw wire/RPC 数据，须另行明确授权。保留 `NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_NEW_AUTOMATION / NO_FILE_CLEANUP`，不启动本阶段以外的服务。
+
+
+## 2026-10-16 Safari 截图 UX 裁定：F02 仅研究页、正式 UI 禁显 Slot/SHA
+
+- 用户提交 9 张 Safari `127.0.0.1` **synthetic-browser-QA** 截图：Frank 信号当前可跟栏可见合成 BUY，已排除栏可见合成 SELL，CA 页面可见 `SYNTHETIC SAME-NAME TOKEN`、精确 CA 与 `UNCONFIRMED/UNRESOLVED`，F02 浏览器页面可见冻结 32 Mint、过期后全部 32 `SOURCE_UNAVAILABLE` 和余额/账户数字遮罩；在「身份与证据」区域用户红框明确指出 **`来源 Slot 区间` 与 `来源 SHA-256` 无用户业务价值**，只有研发审计意义。**截图是 Safari 真实页面局部可见证据，不等于用户已完成第二条同名不同 CA 的逐项回执、完整浏览器交互/Console 检查或结束服务后的 JSON。** 不自行将 `MANUAL_BROWSER_ACCEPTED` 置 PASS。
+- 代码核对：当前 F02 页面 `local-agent/scripts/frank_f02_web/positions.html` 是 `/research/positions` **独立 localhost 只读研究/QA UI**，包含 `id=slots`、`id=source-hash` 及复制 SHA 按钮；`positions.js` 把 API 的 `slot_min/slot_max`、`verified_full_wire_capture_sha256` 等写入专用研究 DOM，**原 PR73 冻结组合并未把 F02 研究页接成 Frank 正式第三 Tab**。因此当前可保留该页面作来源/TTL/ATA 的内部核验，用户**不要求回溯删除调试能力**。
+- **产品硬性新要求**（已同步正式技术方案与强制开发规则）：正式用户界面只保留「Frank 信号 / CA 链上研究」两类入口，不将 F02 独立研究页作为正式第三 Tab 或另一份与 Frank 观察池重复的仓位页。未来读取 A05/F02 的真实多钱包 Mint/ATA 余额只通过受审只读接口融合到 Frank 现有信号/持仓/观察区，且必须区分模型持有与**可验证的链上现持仓**、`SOURCE_UNAVAILABLE` 和 0，保留观察时效/身份绑定。
+- **不得在任何正式用户 UI DOM/折叠/复制控件展示** `来源 Slot 区间`、`来源 SHA-256` 或原始 64 位审计哈希。它们只允许存在**内网开发研究工具、后端证据/manifest、内部审计**中；不得删除源数据、打断校验或把 F02 研究 API 当交易信号。
+- [ ] **正式导航去重门禁**：两个业务入口；F02 研究路由不被注册为正式独立业务页面；Frank 持仓信息不出现第二份重复全量 Mint 列表；如数据未核实时显示缺失原因，而非虚构 0。
+- [ ] **正式 Slot/SHA 禁显门禁**：检查生产 HTML+JS 实际浏览器 DOM、复制按钮及折叠组件，确认不存在 `来源 Slot 区间`、`来源 SHA-256`、`slot_min/slot_max`/原始捕获 SHA 的可见开发审计块；保留后端审计与源校验原有回归。
+- [ ] **联合业务 QA 门禁**：F01 BUY/SELL 过滤、C02 两个 exact Mint 同名隔离、F02 最新完整双程序数据经只读数据契约在原 Frank UI 恰当展示、过期后余额隐藏且不被模型 OPEN 误替代；固定 SHA 独立其他 AI review + Mac 实际浏览器/Console 实测。三项 TODO 未完成前，不宣称正式 UI 完成。
+- 本轮仅固化需求至 Mission 开发文档/规则，不修改已获其他 AI 审核的代码 PR #73、不替换 Mac `integrated_head=9479e33070189231d6be2ed1633a420296dfd1a0`、不重启/停止现有 Safari QA 服务、不清理文件、不取得任何现时钱包仓位；`NO_MERGE/NO_DEPLOY/NO_NEW_REAL_RPC/NO_TRADES/NO_GMAIL/NO_PRODUCTION_SQLITE_WRITE/NO_NEW_AUTOMATION/NO_FILE_CLEANUP` 不变。
