@@ -1007,7 +1007,20 @@ class WalletClusterAnalyzer:
             sensitive_extensions=list(token_profile.get("sensitive_extensions") or [])
             active_extension_risks=list(token_profile.get("active_extension_risks") or [])
             unresolved_extension_risks=list(token_profile.get("unresolved_sensitive_extensions") or [])
-            if active_authorities or active_extension_risks:chain_status="RISK"
+            # Permission clearance requires confirmed initialized mint evidence.
+            # A partial parsed mint may be status OK but is never permission PASS.
+            mint_verified=(
+                token_profile.get("mint_account_status")=="VERIFIED" and
+                token_profile.get("is_initialized") is True and
+                token_profile.get("source")=="SOLANA_FINALIZED_JSON_RPC" and
+                type(token_profile.get("mint_slot")) is int and
+                token_profile.get("mint_slot")>0 and
+                token_profile.get("program_id") in TOKEN_PROGRAMS and
+                "mint_authority" in token_profile and
+                "freeze_authority" in token_profile
+            )
+            if not mint_verified:chain_status="UNRESOLVED"
+            elif active_authorities or active_extension_risks:chain_status="RISK"
             elif unresolved_extension_risks:chain_status="UNRESOLVED"
             else:chain_status="PASS"
         else:

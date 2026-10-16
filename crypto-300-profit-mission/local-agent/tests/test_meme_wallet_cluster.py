@@ -24,6 +24,9 @@ def analyzer():
     a.holders=lambda:(1000,0,holders())
     a.token_profile=lambda:{
         "status":"OK","mint_authority":None,"freeze_authority":None,
+        "source":"SOLANA_FINALIZED_JSON_RPC","mint_account_status":"VERIFIED",
+        "is_initialized":True,"mint_slot":500,
+        "program_id":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
         "metadata_update_authority":"UNAVAILABLE","metadata_update_authority_status":"UNAVAILABLE",
         "token_program":"SPL Token",
     }
@@ -176,6 +179,9 @@ def test_full_report_exposes_bounded_holder_acquisition_and_conservative_conclus
     a=analyzer()
     a.token_profile=lambda:{
         "status":"OK","mint_authority":None,"freeze_authority":None,
+        "source":"SOLANA_FINALIZED_JSON_RPC","mint_account_status":"VERIFIED",
+        "is_initialized":True,"mint_slot":500,
+        "program_id":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
         "metadata_update_authority":"UNAVAILABLE","metadata_update_authority_status":"UNAVAILABLE",
         "token_program":"SPL Token",
     }
@@ -210,9 +216,9 @@ def token2022_profile(extension):
     class RPC:
         endpoint="test";calls=0;cache_hits=0
         def call(self,*args,**kwargs):
-            return {"value":{
+            return {"context":{"slot":500},"value":{
                 "owner":"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
-                "data":{"parsed":{"info":{
+                "data":{"parsed":{"type":"mint","info":{
                     "mintAuthority":None,"freezeAuthority":None,"decimals":6,
                     "supply":"1000000","isInitialized":True,"extensions":[extension],
                 }}},
@@ -506,3 +512,50 @@ def test_authenticated_rpc_endpoint_validator_excludes_unsafe_urls():
         with pytest.raises(ValueError,match="RPC_ENDPOINT_INVALID") as exc:
             SolanaReadOnlyRPC(url,fallback_endpoints=[])
         assert "SECRET123" not in str(exc.value)
+
+
+def test_real_analyzer_uninitialized_mint_fails_closed_without_network():
+    """Review P1: native token_profile OK must not imply permission PASS."""
+    program = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+
+    def run(initialized):
+        class SyntheticRPC:
+            endpoint = "synthetic-only"
+            endpoints = ["synthetic-only"]
+            calls = 0
+            cache_hits = 0
+
+            def call(self, method, params, ttl=60):
+                assert method == "getAccountInfo"
+                self.calls += 1
+                if params[0] != "Mint":
+                    return {"context": {"slot": 500}, "value": None}
+                return {"context": {"slot": 500}, "value": {
+                    "owner": program,
+                    "data": {"parsed": {"type": "mint", "info": {
+                        "mintAuthority": None, "freezeAuthority": None,
+                        "decimals": 6, "supply": "1000000",
+                        "isInitialized": initialized,
+                        "extensions": [],
+                    }}},
+                }}
+
+        a = analyzer()
+        a.rpc = SyntheticRPC()
+        a.token_profile = lambda: WalletClusterAnalyzer.token_profile(a)
+        a._scan_holder = lambda *args: None
+        a._scan_funding = lambda *args: None
+        return a.analyze()
+
+    bad = run(False)
+    assert bad["token_profile"]["status"] == "OK"
+    assert bad["token_profile"]["mint_account_status"] == "UNCONFIRMED"
+    assert bad["token_profile"]["is_initialized"] is False
+    assert bad["assessment"]["chain_permission_status"] == "UNRESOLVED"
+    assert bad["assessment"]["trading_status"] == "WATCH / CHAIN_PERMISSION_UNRESOLVED"
+
+    good = run(True)
+    assert good["token_profile"]["mint_account_status"] == "VERIFIED"
+    assert good["token_profile"]["is_initialized"] is True
+    assert good["assessment"]["chain_permission_status"] == "PASS"
+    assert good["assessment"]["trading_status"] != "WATCH / CHAIN_PERMISSION_UNRESOLVED"

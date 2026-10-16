@@ -101,3 +101,35 @@ vm.runInContext('renderFrankWatchlist(watchPayload)',ctx);
 assert(!nodes['watch-rows'].innerHTML.includes('slot 123456789'),
   'public watchlist must not expose audit Slot');
 console.log('C02 formal watchlist Slot redaction PASS');
+
+const spoofHeadline=structuredClone(notInitialized);
+spoofHeadline.assessment.trading_status='WATCH / CHAIN_STRUCTURE_PASS';
+ctx.report=spoofHeadline;
+vm.runInContext('renderClusterReport(report)',ctx);
+assert(nodes['cluster-conclusion'].innerHTML.includes('链上权限未核实'));
+assert(!nodes['cluster-conclusion'].innerHTML.includes('链上结构通过当前扫描'));
+
+const suspicious=structuredClone(notInitialized);
+suspicious.token_identity.sources=[{
+  source:'SYNTHETIC_ONLY',mint:suspicious.mint,
+  reason:'mint_sha256_'+'a'.repeat(64),
+  name:'slot_502'
+}];
+suspicious.token_identity.metadata_attempts=[{
+  status:'FAILED',reason:'response_sha256='+'b'.repeat(64),
+  account:suspicious.mint,source:'SOLANA',
+  method:'slot_502'
+}];
+ctx.report=suspicious;
+vm.runInContext('renderClusterReport(report)',ctx);
+const safetyAudit=nodes['cluster-identity-evidence'].innerHTML;
+assert(safetyAudit.includes(suspicious.mint));
+assert(safetyAudit.includes('SYNTHETIC_ONLY'));
+assert(safetyAudit.includes('FAILED'));
+assert(!safetyAudit.includes('mint_sha256_'));
+assert(!safetyAudit.includes('response_sha256'));
+assert(!safetyAudit.includes('slot_502'));
+assert(!safetyAudit.includes('aaaaaaaaaaaaaaaa'));
+assert(!safetyAudit.includes('bbbbbbbbbbbbbbbb'));
+assert(safetyAudit.includes('内部来源详情已隐藏'));
+console.log('C02 real UI negative headline and embedded audit markers redacted PASS');

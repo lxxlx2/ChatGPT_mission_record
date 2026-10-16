@@ -1029,9 +1029,11 @@ function publicIdentityAudit(row) {
   for (const field of fields) {
     if (typeof row[field] !== 'string') continue;
     // Source hashes/slots are for internal provenance, never user-facing DOM.
-    const clean = row[field].replace(/\b[0-9a-f]{64}\b/gi, '[审计摘要隐藏]')
-      .replace(/\bslot\s*[:=#]?\s*\d+\b/gi, '[审计区块隐藏]');
-    result[field] = clean;
+    // Fail closed on *entire* suspicious fields: no word-boundary bypass,
+    // prefixed hashes (mint_sha256_...), or slot_502 fragments in the DOM.
+    const raw = row[field];
+    result[field] = /[a-f0-9]{64}|sha[-_]?256|slot\s*[_:=#-]?\s*\d+/i.test(raw)
+      ? '内部来源详情已隐藏' : raw;
   }
   return result;
 }
@@ -1134,7 +1136,10 @@ function renderClusterReport(report) {
       ' · 24h 成交 ' + usd(h24) + '。';
   }
 
-  const structureConclusion=assessmentLabel[assessment.trading_status] || assessment.trading_status || '等待数据';
+  const structureConclusion = !mintVerified &&
+    assessment.trading_status === 'WATCH / CHAIN_STRUCTURE_PASS'
+    ? '观察 / 链上权限未核实，不能确认结构通过'
+    : (assessmentLabel[assessment.trading_status] || assessment.trading_status || '等待数据');
   $('cluster-conclusion').innerHTML =
     '<div class="conclusion-leads">' +
       '<div class="conclusion-lead"><span>链上 / 市场结构结论</span><strong>' + esc(structureConclusion) + '</strong></div>' +
