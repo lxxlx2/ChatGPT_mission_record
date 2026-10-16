@@ -14,10 +14,12 @@ class DragonPostOwnerActualSignedExecutionTests(unittest.TestCase):
 
     def test_approved_original_two_buyer_source_replay_stays_non_followable(self):
         x = classify(self.original)
-        self.assertEqual(len(PINS), 7)
+        self.assertEqual(len(PINS), 8)
         self.assertEqual(x["frozen_actual_buyers"], 2)
         self.assertEqual(x["postowner_buy_senders_with_direct_pre_migration_sell"], 1)
         self.assertEqual(x["d503_confirmed_original_signed_token_roundtrips"], 2)
+        self.assertEqual(x["outside_frozen_23_market_buyers"], [D503, E11B])
+        self.assertTrue(x["not_a_23wallet_profit_ranking_upgrade"])
         self.assertEqual(x["e11b_direct_curve_sell_to_manager_observed"], 0)
         self.assertEqual(x["first_executable_public_observer_U"], "UNRESOLVED")
         self.assertEqual(x["1_5_15_minute_follower_backtest"],
@@ -31,6 +33,11 @@ class DragonPostOwnerActualSignedExecutionTests(unittest.TestCase):
         field_change(changed)
         with self.assertRaises(ValueError):
             classify(changed)
+
+    def test_new_market_observer_must_not_become_existing_23_wallet(self):
+        self.must_reject(
+            lambda d: d["overlay"]["cells_by_wallet"][0].update(wallet=D503)
+        )
 
     def test_wallet_selection_cannot_change_after_scan(self):
         self.must_reject(lambda d: d["pre"]["actual_buy_candidates_frozen_before_new_exit_RPC"][1].update(
