@@ -19,7 +19,7 @@ PINS = {
     "extra": ("bsc-meme-address-model-v1-p4c-v3-restored-p2-13-original-two-transactions-2026-10-16.json", "7406af5caf34fae88c4cdbb60c9053e925fb194d"),
     "manifest": ("bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-original14-pre-rpc-2026-10-16.json", "723de3bb9aad1fb916eb8b958173e633d8338796"),
     "A": ("bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partA-2026-10-16.json", "52a9d1a6661070c79e29e3a16d3f35858b7daac4"),
-    "B": ("bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partB-2026-10-16.json", "94d8eca8b73a687f5a7e9dca424757c67fc8416"),
+    "B": ("bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partB-2026-10-16.json", "94d8eca8b73a687f5a7e9dca424757c67fc8416e"),
     "C": ("bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partC-2026-10-16.json", "f1b8a739043de8e3763cfd96bc9025029ade63f4"),
     "stage": ("BSC_MEME_STAGE23_8E6B_REPEAT_WINNER_HAJIMI_LOBSTER_IFML_CROSS_MAJOR_ROUNDS_2026-10-13.json", "6227e69fabd6c0d991add0d7ff5c6e406babd40b"),
 }
