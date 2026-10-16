@@ -53,6 +53,34 @@ def _positive(value) -> bool:
         return False
 
 
+
+
+def _quote_field(item: dict, key: str, *, positive: bool) -> Decimal | None:
+    """Select a stable display/eligibility price from the same frozen decision.
+
+    When both quote and metrics provide a value, disagreements or invalid
+    values fail closed rather than silently allowing opposite UI priorities.
+    """
+    quote = item.get("decision_quote") or {}
+    metrics = item.get("metrics") or {}
+    values = []
+    for source in (quote, metrics):
+        raw = source.get(key)
+        if raw is None:
+            continue
+        if isinstance(raw, bool):
+            return None
+        try:
+            value = Decimal(str(raw))
+        except (InvalidOperation, TypeError, ValueError):
+            return None
+        if not value.is_finite() or (value <= 0 if positive else value < 0):
+            return None
+        values.append(value)
+    if not values or any(value != values[0] for value in values[1:]):
+        return None
+    return values[0]
+
 def _reason(item: dict, *, now: float, runtime_status: str,
             max_frank_buy_age_seconds: int, max_quote_age_seconds: int) -> str | None:
     # Existing V1 is Frank-only; do not treat an injected research person or
@@ -80,20 +108,8 @@ def _reason(item: dict, *, now: float, runtime_status: str,
     quote = item.get("decision_quote") or {}
     if quote.get("status") != "OK" or quote.get("route_exists") is not True:
         return "QUOTE_NOT_EXECUTABLE"
-    # The BUY flag alone is not actionable when the corresponding execution
-    # price/impact evidence is missing, as reproduced in Mac synthetic Safari.
-    metrics = item.get("metrics") or {}
-    price = quote.get("execution_price_usdc")
-    if price is None:
-        price = metrics.get("execution_price_usdc")
-    impact = quote.get("price_impact_pct")
-    if impact is None:
-        impact = metrics.get("price_impact_pct")
-    try:
-        impact_value = Decimal(str(impact))
-    except (TypeError, InvalidOperation, ValueError):
-        return "QUOTE_NOT_EXECUTABLE"
-    if not _positive(price) or not impact_value.is_finite() or impact_value < 0:
+    if (_quote_field(item, "execution_price_usdc", positive=True) is None
+            or _quote_field(item, "price_impact_pct", positive=False) is None):
         return "QUOTE_NOT_EXECUTABLE"
     if not _fresh(item.get("quote_observed_at"), now=now,
                   max_age_seconds=max_quote_age_seconds):
@@ -119,7 +135,14 @@ def partition_candidates(candidates: list[dict], *, now: float,
                          max_frank_buy_age_seconds=max_frank_buy_age_seconds,
                          max_quote_age_seconds=max_quote_age_seconds)
         if reason is None:
-            eligible.append(dict(item))
+            # This projection is the only executable quote rendered by F01.
+            # Original metrics/quote stay untouched for independent auditing.
+            price = _quote_field(item, "execution_price_usdc", positive=True)
+            impact = _quote_field(item, "price_impact_pct", positive=False)
+            eligible.append({**item, "validated_follow_quote": {
+                "execution_price_usdc": str(price),
+                "price_impact_pct": str(impact),
+            }})
         else:
             excluded.append({**item, "exclusion_reason": reason})
     return {
