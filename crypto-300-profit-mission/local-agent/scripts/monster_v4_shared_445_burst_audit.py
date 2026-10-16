@@ -45,6 +45,30 @@ def iso_utc(milliseconds: int) -> str:
             .isoformat().replace("+00:00", "Z"))
 
 
+def classify_late_production_path(event: dict, candidate: dict) -> str:
+    """Differentiate production queue expiry from overdue-on-WATCH rearm.
+
+    The full replay events carry no explicit reason for process_queue expiry.
+    That path instead records *both* queue first_seen_ms and deadline_ms.
+    The rearm path records reason=OVERDUE_WHEN_REARMING_WATCH.
+    An unfamiliar payload must not silently count as a deadline expiry.
+    """
+    payload = json.loads(event["payload"])
+    if (payload.get("classification") != "STALE_NOT_ACTIONABLE"
+            or event["observed_ms"] <= candidate["deadline_ms"]):
+        raise ValueError("MONSTER445_LATE_PAYLOAD_OR_DEADLINE_DRIFT")
+    if payload.get("reason") == "OVERDUE_WHEN_REARMING_WATCH":
+        if "first_seen_ms" in payload or "deadline_ms" in payload:
+            raise ValueError("MONSTER445_LATE_REARM_PAYLOAD_UNEXPECTED_MIX")
+        return "WATCH_REARM_OVERDUE_PRIOR_CANDIDATE"
+    if (payload.get("reason") is None
+            and set(payload) == {"first_seen_ms", "deadline_ms", "classification"}
+            and payload["first_seen_ms"] == candidate["first_seen_ms"]
+            and payload["deadline_ms"] == candidate["deadline_ms"]):
+        return "D1_PROCESS_QUEUE_DEADLINE_EXPIRED"
+    raise ValueError("MONSTER445_LATE_UNRECOGNIZED_PRODUCTION_ORIGIN")
+
+
 def assess(full_bytes: bytes, summary: dict) -> dict:
     verified_model_code_blobs = verify_immutable_model_code()
     digest = hashlib.sha256(full_bytes).hexdigest()
@@ -128,6 +152,7 @@ def assess(full_bytes: bytes, summary: dict) -> dict:
     lates = [e for e in events if e["event_type"] == "LATE_REVIEW"]
     late_by_event_id = {e["event_id"]: e for e in lates}
     anchored_lates = []
+    late_origin_counts = Counter()
     for q in queue:
         eid = hashlib.sha256(
             f"MONSTER_V4|{q['venue']}|{q['symbol']}|LATE_REVIEW|{q['id']}".encode()
@@ -138,6 +163,7 @@ def assess(full_bytes: bytes, summary: dict) -> dict:
         if (q["status"]!="LATE" or e["venue"]!=q["venue"]
                 or e["symbol"]!=q["symbol"] or e["observed_ms"]<=q["deadline_ms"]):
             raise ValueError("MONSTER445_BURST_LATE_QUEUE_ANCHOR_OR_WINDOW_DRIFT")
+        late_origin_counts[classify_late_production_path(e,q)] += 1
         anchored_lates.append((q,e))
     if len(anchored_lates)!=len(lates) or len(lates)!=93:
         raise ValueError("MONSTER445_BURST_LATE_EXACT_QUEUE_ID_INCOMPLETE")
@@ -157,13 +183,17 @@ def assess(full_bytes: bytes, summary: dict) -> dict:
         "verified_model_code_git_blobs": verified_model_code_blobs,
         "setup_event_matching": "PRODUCTION_EVENT_KEY_SHA256_EXACT_QUEUE_ID",
         "late_event_matching": "PRODUCTION_EVENT_KEY_SHA256_EXACT_QUEUE_ID",
-        "D1_market_zero_quote_is_real_no_trade_not_missing_data": True,
-        "D1_research_V2_zero_quote_terminal_is_market_condition": True,
-        "D1_research_D1_rates_conditional_on_market_quote_presence": True,
-        "D1_original_validates_positive_quote_for_all_8_supplied_candles":
-            True,
-        "D1_original_selects_last6_only_after_8_candle_positive_validation":
-            True,
+        "D1_zeroquote_legacy_terminal_count_from_queue":
+            status_counts["SOURCE_UNSUPPORTED_D1_ZERO_QUOTE"],
+        "D1_zeroquote_legacy_terminal_by_symbol_from_queue":
+            dict(sorted(Counter(q["symbol"] for q in queue
+                if q["status"] == "SOURCE_UNSUPPORTED_D1_ZERO_QUOTE").items())),
+        "D1_market_no_trade_vs_missing_source_determined_from_event_rows":
+            "NOT_DETERMINABLE_FROM_EVENTS_ALONE",
+        "D1_original_8_candle_quote_rule_provenance":
+            "SEPARATE_FROZEN_PRODUCTION_SOURCE_CODE_TEST_NOT_A_REPLAY_EVENT",
+        "D1_market_zero_quote_runtime_note":
+            "OFFLINE_SOURCE_CALLBACK_RUNTIMEERROR_STOPS_REPLAY; PRODUCTION_PROCESS_QUEUE_CATCHES_VALUEERROR_AND_DEFERS",
         "frozen_historical_date": "2026-02-04",
         "source_complete_symbols": 445,
         "original_denominator": 758,
@@ -178,6 +208,9 @@ def assess(full_bytes: bytes, summary: dict) -> dict:
         "peak_related_late": peak_statuses["LATE"],
         "other_late_within_next_3m": [s for s, _ in late_outside_peak],
         "overall_late": status_counts["LATE"],
+        "late_review_origin_counts": dict(sorted(late_origin_counts.items())),
+        "late_review_origin_reconciled_with_queue":
+            sum(late_origin_counts.values()) == status_counts["LATE"],
         "overall_late_share_pct": round(100 * status_counts["LATE"] / len(queue), 4),
         "late_from_peak_share_pct": round(100 * peak_statuses["LATE"] / status_counts["LATE"], 4),
         "late_event_utc_minute_offsets_after_peak": dict(sorted(late_event_lags.items())),
