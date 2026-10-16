@@ -97,6 +97,31 @@ class FrozenFourOwnerWrappedBNBRoutes(unittest.TestCase):
     def test_adff_missing_external_cost_query_cannot_be_silently_ignored(self):
         self.assert_reject(lambda d:d["adff"]["queries"][3].update(filter_complete=False))
 
+    def test_adff_owner_wide_outgoing_transfer_is_zero_but_acquisition_not_free(self):
+        out=classify(self.d)
+        self.assertEqual(out["ADFF_initial_signed_tx_standard_ERC20_owner_out"],
+                         "ZERO_MATCHES_SINGLE_BLOCK_TRANSFER_TOPIC")
+        self.assertEqual(out["ADFF_economic_acquisition_class"],
+                         "SOURCE_AMBIGUOUS_NOT_CONFIRMED_BUY_OR_FREE_AIRDROP")
+        self.assertTrue(out["ADFF_realized_return"].startswith("UNRESOLVED"))
+        self.assertEqual(out["P5"],"BLOCKED")
+
+    def test_adff_cannot_manufacture_payment_outflow_in_original_block(self):
+        self.assert_reject(lambda d:d["adff_payment_scope"]["source_queries"][0].update(
+            raw_text='[{"transactionHash":"0x'+'0'*64+'"}]'))
+
+    def test_adff_cannot_forge_internal_transfer_service_supported(self):
+        self.assert_reject(lambda d:d["adff_payment_scope"]["source_queries"][5].update(
+            status="SUCCESS_ALL_INTERNAL_TRANSFERS_READ"))
+
+    def test_adff_cannot_swap_original_signed_first_tx_for_another_acquisition(self):
+        self.assert_reject(lambda d:d["adff_payment_scope"].update(
+            original_tx=d["adff"]["exact_txs"][1]["hash"]))
+
+    def test_adff_counterparty_outflow_path_cannot_be_silently_changed(self):
+        self.assert_reject(lambda d:d["adff_payment_scope"]["source_queries"][6].update(
+            raw_text='[{"data":"0x1"}]'))
+
     def test_cannot_swap_positive_negative_case_order(self):
         self.assert_reject(lambda d:d["a"]["cases"].reverse())
 
