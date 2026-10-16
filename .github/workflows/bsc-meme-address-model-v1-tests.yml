@@ -53,6 +53,8 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_2026_crossowner_u.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_lonxia_observer_gate.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_lonxia_observer_gate.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_dragon_signed_roundtrip.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_dragon_signed_roundtrip.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_workflow_event_identity.py"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-lonxia-observer-nplus1-buy-sim-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-lonxia-3-real-market-sells-2026-10-16.json"
@@ -933,6 +935,28 @@ jobs:
           assert obj["follower_lag_1_5_15min_PnL"]=="UNRESOLVED"
           assert obj["production"]=="NO_GO"
           print("PASS Dragon N+1 only historical eth_call; three later signed sellers; zero U/P5 promotion")
+          PY
+      - name: P4-B Dragon source-pinned two post-owner real signed rounds and no-exit negative control
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_dragon_signed_roundtrip.py" >/tmp/bsc-dragon-postowner-real-roundtrips.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          row=json.loads(Path("/tmp/bsc-dragon-postowner-real-roundtrips.json").read_text(encoding="utf-8"))
+          assert row["frozen_actual_buyers"] == 2
+          assert row["postowner_buy_senders_with_direct_pre_migration_sell"] == 1
+          assert row["d503_confirmed_original_signed_token_roundtrips"] == 2
+          assert row["e11b_direct_curve_sell_to_manager_observed"] == 0
+          assert row["sum_4_selected_wallet_native_block_deltas_wei"] == "61218026868859435"
+          assert len(row["rounds"]) == 2 and all(
+              x["actual_origin_signed_buy_and_sale_same_EOA"] == "CONFIRMED"
+              and x["real_transaction_attributable_net_PnL"] == "UNRESOLVED"
+              for x in row["rounds"]
+          )
+          assert row["first_executable_public_observer_U"] == "UNRESOLVED"
+          assert row["P5"] == "BLOCKED" and row["production"] == "NO_GO"
+          print("PASS precommitted 2 Dragon post-owner buyers, 2 D503 original signed closed token rounds, 1 E11B unsold curve control; NO_GO")
           PY
       - name: Full BSC research unittest discovery including legacy exact CA
         shell: bash
