@@ -90,3 +90,14 @@ assert(!publicAudit.includes('"slot"') && !publicAudit.includes('response_sha256
 assert(!publicAudit.includes('aaaaaaaaaaaaaaaa') && !publicAudit.includes('bbbbbbbbbbbbbbbb'));
 assert(!publicAudit.includes('<script>'));
 console.log('C02 independent reviewer P2 uninitialized mint / P3 public audit whitelist PASS');
+
+const watchMint=results[0].mint;
+ctx.watchPayload={status:'OK',summary:{total_observed:1},rows:[{
+  mint:watchMint,watch_state:'MODEL_OPEN',last_event_time:1800000000,
+  snapshot_inventory_state:'NONZERO_AT_SLOT',snapshot_token_quantity:'12',
+  snapshot_verified_slot:123456789
+}]};
+vm.runInContext('renderFrankWatchlist(watchPayload)',ctx);
+assert(!nodes['watch-rows'].innerHTML.includes('slot 123456789'),
+  'public watchlist must not expose audit Slot');
+console.log('C02 formal watchlist Slot redaction PASS');
