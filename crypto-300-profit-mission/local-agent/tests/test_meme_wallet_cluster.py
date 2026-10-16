@@ -559,3 +559,65 @@ def test_real_analyzer_uninitialized_mint_fails_closed_without_network():
     assert good["token_profile"]["is_initialized"] is True
     assert good["assessment"]["chain_permission_status"] == "PASS"
     assert good["assessment"]["trading_status"] != "WATCH / CHAIN_PERMISSION_UNRESOLVED"
+
+
+def test_native_rpc_authority_presence_is_not_equivalent_to_explicit_null():
+    """Reviewer P2: real token_profile and analyze, no network, no hand-edited report."""
+    program = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    valid_key = "So11111111111111111111111111111111111111112"
+
+    def run(raw_authorities):
+        class FakeRPC:
+            endpoint = "SYNTHETIC_ONLY"
+            endpoints = ["SYNTHETIC_ONLY"]
+            calls = 0
+            cache_hits = 0
+
+            def call(self, method, params, ttl=60):
+                assert method == "getAccountInfo"
+                self.calls += 1
+                assert params[0] == "Mint"
+                return {"context": {"slot": 502}, "value": {
+                    "owner": program,
+                    "data": {"parsed": {"type": "mint", "info": {
+                        "decimals": 6, "supply": "1000000",
+                        "isInitialized": True, "extensions": [],
+                        **raw_authorities,
+                    }}},
+                }}
+
+        a = analyzer()
+        a.rpc = FakeRPC()
+        a.token_profile = lambda: WalletClusterAnalyzer.token_profile(a)
+        a._scan_holder = lambda *args: None
+        a._scan_funding = lambda *args: None
+        report = a.analyze()
+        assert a.rpc.calls >= 1
+        return report
+
+    fully_revoked = run({"mintAuthority": None, "freezeAuthority": None})
+    assert fully_revoked["token_profile"]["authority_evidence_status"] == "VERIFIED"
+    assert fully_revoked["token_profile"]["mint_account_status"] == "VERIFIED"
+    assert fully_revoked["assessment"]["chain_permission_status"] == "PASS"
+
+    for missing in ({}, {"mintAuthority": None}, {"freezeAuthority": None},
+                    {"mintAuthority": "", "freezeAuthority": None},
+                    {"mintAuthority": False, "freezeAuthority": None},
+                    {"mintAuthority": "not-a-base58-key", "freezeAuthority": None}):
+        report = run(missing)
+        assert report["token_profile"]["status"] == "OK"
+        assert report["token_profile"]["authority_evidence_status"] == "UNCONFIRMED"
+        assert report["token_profile"]["mint_account_status"] == "UNCONFIRMED"
+        assert report["assessment"]["chain_permission_status"] == "UNRESOLVED"
+        assert report["assessment"]["trading_status"] == "WATCH / CHAIN_PERMISSION_UNRESOLVED"
+        assert report["token_profile"]["mint_authority"] == missing.get("mintAuthority")
+        assert report["token_profile"]["freeze_authority"] == missing.get("freezeAuthority")
+
+    active = run({"mintAuthority": valid_key, "freezeAuthority": None})
+    assert active["token_profile"]["authority_evidence_status"] == "VERIFIED"
+    assert active["assessment"]["chain_permission_status"] == "RISK"
+    assert active["assessment"]["trading_status"] == "RISK / ACTIVE_CHAIN_PERMISSION"
+
+    incomplete_but_active = run({"mintAuthority": valid_key})
+    assert incomplete_but_active["token_profile"]["authority_evidence_status"] == "UNCONFIRMED"
+    assert incomplete_but_active["assessment"]["chain_permission_status"] == "RISK"
