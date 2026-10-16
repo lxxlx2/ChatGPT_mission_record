@@ -1,0 +1,244 @@
+name: Monster 445 official original Spot1m two-shard source batch (research only)
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-445-manual-two-original-source-shards.yml'
+  workflow_dispatch:
+    inputs:
+      start_shard:
+        description: 'Even original frozen shard 2..26; this and adjacent next shard only'
+        type: choice
+        required: true
+        default: '2'
+        options:
+          - '2'
+          - '4'
+          - '6'
+          - '8'
+          - '10'
+          - '12'
+          - '14'
+          - '16'
+          - '18'
+          - '20'
+          - '22'
+          - '24'
+          - '26'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster-source-445-original-manual-two-shards-research
+  cancel-in-progress: false
+jobs:
+  freeze_source_population_and_batch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      pair: ${{ steps.freeze.outputs.pair }}
+      start: ${{ steps.freeze.outputs.start }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - id: freeze
+        name: Freeze exactly two predeclared source complete roster shards, never 0/1, no full-market claim
+        env:
+          BATCH_START: ${{ inputs.start_shard || '2' }}
+        run: |
+          set -eu
+          python - <<'PY'
+          import os,json,re
+          valid={2,4,6,8,10,12,14,16,18,20,22,24,26}
+          raw=os.environ['BATCH_START']
+          if not re.fullmatch(r'(?:[2468]|1[02468]|2[0246])',raw):
+              raise ValueError('MONSTER_FEB445_BATCH_SHARD_NOT_PREDECLARED')
+          first=int(raw)
+          if first not in valid:
+              raise ValueError('MONSTER_FEB445_BATCH_SHARD_NOT_IN_FROZEN_EVEN_ROSTER')
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+              f.write('pair='+json.dumps([first,first+1])+'\n')
+              f.write('start='+str(first)+'\n')
+          print('MONSTER_FEB445_PREREGISTERED_TWO_SOURCE_SHARDS',first,first+1)
+          PY
+          test "$GITHUB_REF_NAME" = "research/monster-v4-local-discovery-20261010"
+          git diff --exit-code
+
+  offline_source_schema_tests:
+    needs: freeze_source_population_and_batch
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Original frozen 445 roster, SHA ZIP roundtrip, fail-closed 28-of-28 and never a partial market
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python -m py_compile monster_v4_shared_445_official_source_shards.py monster_v4_shared_445_one_db_from_shards.py test_monster_v4_shared_445_source_shards.py
+          python -m unittest -v test_monster_v4_shared_445_source_shards.py
+          echo MONSTER_445_BATCH_ISOLATED_SOURCE_ONLY_NOT_A_D1_REPLAY
+
+  real_official_original_spot1m_shard:
+    needs: [freeze_source_population_and_batch, offline_source_schema_tests]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        shard: ${{ fromJSON(needs.freeze_source_population_and_batch.outputs.pair) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Strict original Stage26 publisher read, 10 calendar ZIP+CHECKSUM per symbol, max two download workers
+        env:
+          SOURCE_SHARD: ${{ matrix.shard }}
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -eu
+          padded=$(printf '%02d' "$SOURCE_SHARD")
+          python monster_v4_shared_445_official_source_shards.py --shard "$SOURCE_SHARD" --workers 2 --out-archive "/tmp/monster_feb445_shard$padded.zip" --out-proof "/tmp/monster_feb445_shard$padded.proof.json"
+          python - <<'PY'
+          import os,json,hashlib
+          from pathlib import Path
+          import monster_v4_shared_445_official_source_shards as sh
+          idx=int(os.environ['SOURCE_SHARD'])
+          d=Path('/tmp')
+          stem=f'monster_feb445_shard{idx:02d}'
+          proof=json.loads((d/f'{stem}.proof.json').read_text())
+          assert proof['trigger_commit_sha']==os.environ['GITHUB_SHA']
+          assert proof['schema']=='MONSTER_FEB2026_445_OFFICIAL_SHARD_ARTIFACT_PROOF_V1'
+          assert proof['source_origin_verified_at_collection'] is True
+          assert proof['source_symbol_count']==len(sh.members(idx))
+          assert proof['symbols']==list(sh.members(idx))
+          assert proof['original_denominator']==758
+          assert proof['source_complete_denominator']==445
+          assert proof['historical_original_censored']==313
+          entries=list(sh.read_archive(d/f'{stem}.zip',proof=proof,expected_shard=idx))
+          assert len(entries)==len(sh.members(idx))
+          assert all(len(bars)==12960 and len(daily)==10 for _,bars,daily,_ in entries)
+          assert len(proof['source_sha256_by_symbol'])==len(entries)
+          assert sum(len(x['publisher_days']) for x in proof['source_sha256_by_symbol'])==len(entries)*10
+          assert all(len(s['raw_sha256'])==64 for s in proof['source_sha256_by_symbol'])
+          print('MONSTER_445_SOURCE_SHARD_OFFICIAL_REAL_PUBLISHER_ZIP_AND_ALL_ORIGINAL_1M_SHAS_OK',idx,len(entries)*10)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-feb445-original-source-shard-${{ matrix.shard }}-frozen-batch
+          path: |
+            /tmp/monster_feb445_shard*.zip
+            /tmp/monster_feb445_shard*.proof.json
+          if-no-files-found: error
+          retention-days: 60
+
+  archive_only_if_both_real_original_shards_verified:
+    needs: [freeze_source_population_and_batch, real_official_original_spot1m_shard]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download only this workflow run's pair of original source archives and verify every raw SHA again
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_START: ${{ needs.freeze_source_population_and_batch.outputs.start }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster_feb445_source_batch
+          for idx in "$SOURCE_START" "$((SOURCE_START+1))"; do
+            gh run download "$GITHUB_RUN_ID" --dir /tmp/monster_feb445_source_batch --name "monster-feb445-original-source-shard-$idx-frozen-batch"
+          done
+          cd crypto-300-profit-mission/local-agent/scripts
+          python - <<'PY'
+          import os,json,re
+          from pathlib import Path
+          import monster_v4_shared_445_official_source_shards as sh
+          import monster_v4_shared_spot_d0_d1_original_core as shared
+          start=int(os.environ['SOURCE_START'])
+          folder=Path('/tmp/monster_feb445_source_batch')
+          total_sources=0
+          for idx in (start,start+1):
+              stem=f'monster_feb445_shard{idx:02d}'
+              proof=json.loads((folder/f'{stem}.proof.json').read_text())
+              if (proof['trigger_commit_sha']!=os.environ['GITHUB_SHA']
+                      or proof['source_origin_verified_at_collection'] is not True
+                      or proof['symbols']!=list(sh.members(idx))
+                      or proof['source_symbol_count']!=len(sh.members(idx))):
+                  raise RuntimeError('MONSTER_445_SAME_RUN_PROOF_SOURCE_ID_DRIFT')
+              observed=list(sh.read_archive(folder/f'{stem}.zip',
+                                             proof=proof,expected_shard=idx))
+              if [o[0] for o in observed]!=list(sh.members(idx)):
+                  raise RuntimeError('MONSTER_445_ARCHIVE_POPULATION_DRIFT')
+              proof_by={x['symbol']:x for x in proof['source_sha256_by_symbol']}
+              if set(proof_by)!=set(sh.members(idx)):
+                  raise RuntimeError('MONSTER_445_ARCHIVE_PROOF_SYMBOL_DRIFT')
+              for sym,bars,receipts,manifest in observed:
+                  spec=next(x for x in manifest['members'] if x['symbol']==sym)
+                  entry=proof_by[sym]
+                  if (entry['raw_sha256']!=spec['source_json_sha256']
+                       or entry['publisher_days']!=spec['publisher_days']
+                       or len(receipts)!=10
+                       or len({r['day'] for r in entry['publisher_days']})!=10
+                       or not all(re.fullmatch(r'[0-9a-f]{64}',r['sha256']) for r in entry['publisher_days'])):
+                      raise RuntimeError('MONSTER_445_PUBLISHER_DAILY_SHA_MISMATCH')
+                  total_sources+=1
+          if total_sources!=len(sh.members(start))+len(sh.members(start+1)):
+              raise RuntimeError('MONSTER_445_DOUBLE_SHARD_NOT_COMPLETE')
+          print('MONSTER_445_TWO_FULL_FROZEN_SHARDS_SHA_VERIFIED_NOT_GLOBAL_D1',start,start+1,total_sources)
+          PY
+      - name: Commit only small original publisher SHA proofs after exact source blob drift and no overwrite
+        env:
+          SOURCE_START: ${{ needs.freeze_source_population_and_batch.outputs.start }}
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          directory=crypto-300-profit-mission/monster/evidence
+          for idx in "$SOURCE_START" "$((SOURCE_START+1))"; do
+            padded=$(printf '%02d' "$idx")
+            target="$directory/monster_feb445_shard$padded.proof.json"
+            if test -e "$target"; then
+              echo "MONSTER_445_PROVENANCE_ALREADY_EXISTS_REFUSE_OVERWRITE=$target"
+              exit 1
+            fi
+            cp "/tmp/monster_feb445_source_batch/monster_feb445_shard$padded.proof.json" "$target"
+            git add "$target"
+          done
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: preserve two original publisher source-complete 1m shard SHA receipts from immutable batch run"
+          for attempt in 1 2 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then
+              git rebase --abort || true
+              exit 1
+            fi
+            for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_official_source_shards.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_source_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_one_db_from_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py .github/workflows/monster-v4-445-manual-two-original-source-shards.yml; do
+              test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo "MONSTER_445_SOURCE_BATCH_EXECUTABLE_DRIFT=$path"; exit 1; }
+            done
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo "MONSTER_445_ORIGINAL_SOURCE_TWO_SHARDS_REAL_1M_GIT_SHA_PROOFS_ARCHIVED"
+              exit 0
+            fi
+          done
+          exit 1
