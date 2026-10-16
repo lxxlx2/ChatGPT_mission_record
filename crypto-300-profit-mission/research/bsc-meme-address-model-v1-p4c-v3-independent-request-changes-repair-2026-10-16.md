@@ -20,7 +20,7 @@ These values are **historical owner account/block scopes**, not tax/fee-isolated
 
 [Thirteen original BSC block header observations](./bsc-meme-address-model-v1-p4c-v3-original13-block-header-calendar-2026-10-16.json) now pin **12 first/last block headers for all six 2026 V3 episodes**, plus the excluded P2#42's first block. Each record includes exact original `block_hash`, `timestamp_hex`, `milliTimestamp_hex`, UTC from integer milliseconds and a flag disclosing when the RPC response for the full *block body* was clipped (no claim to possess a complete transaction list). Gate verifies 2026 **from raw header timestamps**, not source `is_2026_major_priority` boolean or merely a blacklist for #42.
 
-- P2#13 8E6B Dragon: 836? No; actual first **93584281** = **2026-04-20T05:53:09.350Z**, last **94208823** = **2026-04-23T12:03:24.450Z**.
+- P2#13 8E6B Dragon: first **93584281** = **2026-04-20T05:53:09.350Z**, last **94208823** = **2026-04-23T12:03:24.450Z**.
 - P2#15 8E6B 我踏马来了: **76554500–76582674**, **2026-01-21**.
 - P2#31 239E 龙虾 previously missing date: **86649314** = **2026-03-15T01:35:12.750Z**, **87876365** = **2026-03-21T11:36:16.150Z**.
 - P2#38 877AF MARSCOIN: **2026-07-28**; P2#46 2ADF 牛来: **2026-08-15–16**; P2#44 ADFF 龙虾: **2026-09-14**.
