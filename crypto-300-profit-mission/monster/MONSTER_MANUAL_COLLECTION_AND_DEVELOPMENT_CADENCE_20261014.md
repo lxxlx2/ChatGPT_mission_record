@@ -568,3 +568,15 @@ freeze job核对已封存prefix 00..07的proof确实存在（只验证是否存�
 matrix pair任务源码均checkout **相同冻结请求SHA**；前一对成功push proof时后一对必须对原branch执行真实rebase，再比较原产线core、采集源码、两套workflow、两个请求的Git blob SHA与本次GITHUB_SHA逐一一致后才push；任何已存在目标proof、tree漂移或rebase冲突 fail-closed，不强推、不修改他人改变，不启动别的run。禁用跨工作流并发碰撞：复用原source workflow concurrency group；不会因为CI自身GITHUB_TOKEN证据提交的push二次触发任何收集。每对的成功原ZIP通过60天GHA Artifact而非Git保存，proof仅轻量digest，必须在到期前取得28份真source且真实复核；前0–7另有历史Artifact到期需单独核对。
 
 此版本进入实际CI前至少完成静态合同检验，真实运行时以每对GitHub Job / Artifact / SHA / 证明commit独立记录，只有28/28真实SHA证据与有效Artifact齐备才记 source 全445归档完成；任何缺档必须记未完成并修复后续完整性。完成后再把所有新增批处理workflow固定SHA + 全28份证据交由**其他AI**做统一独立review；**不得自审代替**。后续全445共享SQLite真实3360次D0/D1、8容量验证及G1/G4/OOS仍要另验，今日不触碰Frank、Mac生产、Gmail、下单，`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE; G6 NO_GO`持续。
+
+## Stage157 全445原D0+实验D1与真实拥堵独立复核后：下一批功能性优先级（2026-10-16）
+
+此阶段以固定真实执行SHA 9b32f8debe6a4246f91f56a84aa7539884f5f857、来源模型CI #38898752712 完整Artifact 12044872933（full JSON SHA256 370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf）为唯一实测基线：28/28官方来源、445历史source-complete币、1 SQLite 3360 global polls、原D0 WATCH269、同tick峰值98、研究V2 D1队列269中 EVALUATED169/LATE93/INVALIDATED4/SOURCE_UNSUPPORTED_D1_ZERO_QUOTE3、原生产D1因真实零quote已严格fail-closed。旧Stage28注入 WATCH98/LATE91不可冒充同级证据。新版只读审计CI [#38904182068](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38904182068) 固定源回放字节SHA再次核实：2026-02-06T00:36:00Z当轮98 WATCH，96个15m、2个3m触发，其中91 LATE、7 EVALUATED；+3m 的GPSUSDT/LUNAUSDT另2 LATE，合计93/269 LATE（34.5725%，峰值占97.8495%）。120个SETUP_ACTIVE都是其各自15m窗口对应的已评估episode；**不是120笔真实BUY**。该真实诊断脚本及报告已保存在 scripts/monster_v4_shared_445_burst_audit.py 和 evidence/monster_feb445_true_burst_causal_audit_actual.json，摘要Git blob 0f935730e9fcdbbb0d75d12e801d2237559e0c93；原98冲击在最宽松8槽/3分钟、15分钟期限下最多48名额，至少50无法获得1次处理，**不代表50笔盈利或生产量化调参建议**。
+
+**已转入一次性综合外部AI Review**：固定研究代码/证据SHA 6d7ddbf135ab9967abc1a2337d4d6ea04e4c6b93；审核提示词及全部可重复的CI、zip/proof身份、零quote研究隔离、原shard01错误重采的修复、峰值及G0-G6失败都在 MONSTER_445_END_TO_END_SOURCE_REPLAY_BURST_INDEPENDENT_REVIEW_PINNED_6D7DDBF_20261016.md；审查者结果目前 OTHER_AI_REVIEW=NOT_DONE。后续仅doc提交不扩大固定源码审核范围，出现真实新源码变更必须另pin。
+
+**下一步不是继续抓历史或无限追边界，而是两条可检验的功能主线**：
+1. 对用户可见：WATCH应在一轮大市冲击时作为**市场事件分组**+原始逐币269完整保留，有每个候选首见UTC、触发哪种涨幅窗口、已知时点行情源/原24h quote proxy、新鲜度、当前仍可用否；默认不能把原98都作为98封独立行动邮件，也不能因分组隐藏真实候选；实时展示需要未来真实source与独立授权。UI只显示来源和状态，不把SETUP或LATE伪造BUY。这个分组是**通知呈现规则提案**，而非现阶段允许发送通知。
+2. 对模型：隔离比较 baseline原FIFO8、同槽位内首次服务公平性/重试隔离、市场冲击队列分组/按观察时刻可得证据排序等研究性候选处理。各策略必须先写冻结业务目标与警戒线，对98冲击与其余正常171 WATCH分别报告实际队列容量、有效SETUP召回、假信号数、丢弃比例、迟到、源支持、每轮工作量、首报时间，独立外推；同一个已看过的Feb445实验不得用事后最优排名宣称样本外收益。任何调度实验不能变更生产8槽/15分钟阈值、交易权限，也不能无限扩大伪信号邮件。
+
+**最关键后续门禁**：官方历史或前瞻真实PIT上市池、遗漏的313状态、新上市可追踪、历史/真实时点盘口卖一买一数量/价差/深度、成交费用与滑点、能否买到/卖掉、资金金额由用户指定、OOS/forward的实际WATCH提前量和净可执行PnL。G0 PARTIAL、G1 NOT_SCORABLE、G2/G3 NOT_PASSED、G4 UNKNOWN、G5 RELEASE NOT_PASSED、G6 NO_GO。现仅研究记录，PR #30 Draft/Open，NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE，不设任何ChatGPT定时任务/launchd/GitHub schedule，也不触碰Frank。
