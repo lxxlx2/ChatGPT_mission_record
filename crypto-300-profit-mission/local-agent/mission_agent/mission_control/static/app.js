@@ -1024,6 +1024,21 @@ function renderClusterGroup(group, kind) {
   '</article>';
 }
 
+
+function publicIdentityAudit(row) {
+  if (!row || typeof row !== 'object' || Array.isArray(row)) return {};
+  const fields = ['source', 'name', 'symbol', 'mint', 'account', 'status', 'reason', 'method'];
+  const result = {};
+  for (const field of fields) {
+    if (typeof row[field] !== 'string') continue;
+    // Source hashes/slots are for internal provenance, never user-facing DOM.
+    const clean = row[field].replace(/\b[0-9a-f]{64}\b/gi, '[审计摘要隐藏]')
+      .replace(/\bslot\s*[:=#]?\s*\d+\b/gi, '[审计区块隐藏]');
+    result[field] = clean;
+  }
+  return result;
+}
+
 function renderClusterReport(report) {
   $('cluster-result').hidden = false;
   $('cluster-preview').hidden = true;
@@ -1062,15 +1077,28 @@ function renderClusterReport(report) {
   $('cluster-identity-evidence').innerHTML =
     '<details><summary>核对身份来源与失败记录（展开）</summary>' +
     '<pre style="max-height:260px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px">' +
-    esc(JSON.stringify({sources:identity.sources || [],attempts:identity.metadata_attempts || [],
-      mint_account_reason:identity.mint_account_reason || null,market_attempt:identity.market_attempt || {}},null,2)) +
+    esc(JSON.stringify({
+      sources:(identity.sources || []).map(publicIdentityAudit),
+      attempts:(identity.metadata_attempts || []).map(publicIdentityAudit),
+      mint_account_reason:identity.mint_account_reason || null,
+      market_attempt:publicIdentityAudit(identity.market_attempt),
+    },null,2)) +
     '</pre></details>';
 
+  const mintVerified = profile.status === 'OK' &&
+    profile.mint_account_status === 'VERIFIED' &&
+    profile.is_initialized === true &&
+    profile.source === 'SOLANA_FINALIZED_JSON_RPC' &&
+    Number.isInteger(profile.mint_slot) && profile.mint_slot > 0 &&
+    ['TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
+     'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'].includes(profile.program_id) &&
+    Object.prototype.hasOwnProperty.call(profile, 'mint_authority') &&
+    Object.prototype.hasOwnProperty.call(profile, 'freeze_authority');
   const activeAuthorities = assessment.active_authorities || [];
   const activeExtensionRisks=assessment.active_extension_risks || [];
   const unresolvedExtensionRisks=assessment.unresolved_extension_risks || [];
   let chainConclusion = '合约权限未确认';
-  if (assessment.chain_permission_status === 'PASS' && profile.status === 'OK') {
+  if (assessment.chain_permission_status === 'PASS' && mintVerified) {
     chainConclusion = 'Mint authority 与 Freeze authority 均未活动；已解析的敏感 Token-2022 扩展未发现活动风险。';
   } else if (assessment.chain_permission_status === 'RISK') {
     const risks=activeAuthorities.concat(activeExtensionRisks.map(x => 'Token-2022 ' + (x.name || '扩展') + ' / ' + (x.reason || 'ACTIVE_RISK')));
@@ -1122,7 +1150,7 @@ function renderClusterReport(report) {
     '<details class="cluster-assessment-history"><summary>历史判断变化（仅供复核）</summary>' +
     renderAssessmentHistory(report.assessment_history) + '</details>';
 
-  const extensionCleanVerified = profile.status === 'OK' &&
+  const extensionCleanVerified = mintVerified &&
     assessment.chain_permission_status === 'PASS' &&
     Array.isArray(profile.extensions) &&
     Array.isArray(profile.active_extension_risks) &&
@@ -1140,8 +1168,8 @@ function renderClusterReport(report) {
     fact('名称 / Symbol','<span>' + esc(tokenName) + ' · ' + esc(tokenSymbol) + '</span>','名称来自市场元数据；权限来自链上') +
     fact('Token Program','<span>' + esc(profile.token_program || '未确认') + '</span>') +
     fact('Supply','<span>' + esc(Number.isFinite(supplyApprox) ? n(supplyApprox,2) : '暂无') + '</span>') +
-    fact('Mint authority',authorityText(profile.mint_authority,profile.status)) +
-    fact('Freeze authority',authorityText(profile.freeze_authority,profile.status)) +
+    fact('Mint authority',authorityText(profile.mint_authority,mintVerified ? 'OK' : 'UNAVAILABLE')) +
+    fact('Freeze authority',authorityText(profile.freeze_authority,mintVerified ? 'OK' : 'UNAVAILABLE')) +
     fact('Metadata update authority',authorityText(profile.metadata_update_authority,profile.metadata_update_authority_status==='CHAIN_PARSED' ? 'OK' : 'UNAVAILABLE')) +
     fact('Token-2022 扩展','<span>' + esc(Array.isArray(profile.extensions)
       ? (profile.extensions.join(', ') || (extensionCleanVerified ? '无已解析扩展' : '未确认')) : '未确认') + '</span>') +
