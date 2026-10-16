@@ -53,6 +53,14 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_2026_crossowner_u.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_lonxia_observer_gate.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_lonxia_observer_gate.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_fiveowners14_gate.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_fiveowners14_gate.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-replay-precommit-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-replay-precommit-corrected-v2-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-original14-pre-rpc-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partA-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partB-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partC-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_dragon_signed_roundtrip.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_dragon_signed_roundtrip.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_workflow_event_identity.py"
@@ -957,6 +965,26 @@ jobs:
           assert row["first_executable_public_observer_U"] == "UNRESOLVED"
           assert row["P5"] == "BLOCKED" and row["production"] == "NO_GO"
           print("PASS precommitted 2 Dragon post-owner buyers, 2 D503 original signed closed token rounds, 1 E11B unsold curve control; NO_GO")
+          PY
+      - name: P4-C five-owner 4 major 14 original signed tx fixed-source strict 2026 batch gate
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_fiveowners14_gate.py" > /tmp/bsc-five-owner14-source-grade.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path("/tmp/bsc-five-owner14-source-grade.json").read_text())
+          assert p["p2_original_episodes"] == [15,31,38,46,44]
+          assert p["selected_wallets"] == 5 and p["distinct_exact_major_ca"] == 4
+          assert p["native_block_scope_positive_controls"] == 2
+          assert p["native_block_scope_negative_controls"] == 3
+          assert p["original_signer_and_block_recheck_passed"] == 14
+          assert p["full_receipts_parsed"] == 5
+          assert p["original_receipt_status_unreadable"] == 3
+          assert p["realized_fully_attributable_cross_major_profits"] == "UNRESOLVED"
+          assert p["public_observer_executable_U"] == "UNRESOLVED"
+          assert p["P5"] == "BLOCKED" and p["production"] == "NO_GO"
+          print("PASS source-frozen five original owners, four exact majors, 14 signer/block, 3 unreadable receipt statuses; no P5 promotion")
           PY
       - name: Full BSC research unittest discovery including legacy exact CA
         shell: bash
