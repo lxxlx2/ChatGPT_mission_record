@@ -13,6 +13,7 @@ WORKFLOW = (Path(__file__).resolve().parents[2] /
             ".github/workflows/bsc-meme-address-model-v1-tests.yml")
 EXPR = "${{ github.event.pull_request.head.sha || github.sha }}"
 STEP = "      - name: Assert checked-out source SHA on PR or manual dispatch"
+SYSTEM_BASH = Path("/bin/bash")
 A = "a" * 40
 B = "b" * 40
 C = "c" * 40
@@ -34,11 +35,12 @@ def workflow_script():
                 if lines[i].startswith("      - name: ")), len(lines))
     script = "\n".join(line[10:] if line.startswith("          ") else line
                        for line in lines[run+1:end])
-    assert "test \"$(git rev-parse HEAD)\" = \"$REVIEWED_HEAD_SHA\" || exit 1" in script
+    assert ('test "$(git rev-parse HEAD)" = "$REVIEWED_HEAD_SHA" || '
+            '{ echo "checked-out HEAD differs from expected source SHA" >&2; exit 1; }') in script
     return script
 
 
-def run_identity(event, pr_head, event_sha, checked_out_sha, expected):
+def run_identity(event, pr_head, event_sha, checked_out_sha, expected, error_contains=None):
     with tempfile.TemporaryDirectory(prefix="bsc-workflow-sha-") as tmp:
         fake = Path(tmp) / "git"
         fake.write_text(
@@ -61,13 +63,26 @@ def run_identity(event, pr_head, event_sha, checked_out_sha, expected):
             "MOCK_CHECKOUT_SHA": checked_out_sha,
         })
         result = subprocess.run(
-            ["bash", "-c", workflow_script()],
+            [str(SYSTEM_BASH), "-c", workflow_script()],
             capture_output=True, text=True, env=env, check=False,
         )
     assert (result.returncode == 0) == expected, (
         f"Unexpected identity result for {event}: rc={result.returncode}; "
         f"stdout={result.stdout!r}; stderr={result.stderr!r}"
     )
+    if expected:
+        assert "PASS " in result.stdout and result.stderr == "", (
+            f"Positive control failed: stdout={result.stdout!r}, stderr={result.stderr!r}"
+        )
+    else:
+        assert "PASS " not in result.stdout and result.stderr.strip(), (
+            f"Denied case must fail with reason, not a silent/ambiguous exit: "
+            f"stdout={result.stdout!r}, stderr={result.stderr!r}"
+        )
+        if error_contains is not None:
+            assert error_contains in result.stderr, (
+                f"Unexpected guard cause: {result.stderr!r}"
+            )
 
 
 class WorkflowEventIdentityTests(unittest.TestCase):
@@ -90,25 +105,44 @@ class WorkflowEventIdentityTests(unittest.TestCase):
         run_identity("push", "", C, C, False)
 
     def test_manual_sha_missing_is_rejected(self):
-        run_identity("workflow_dispatch", "", "", "", False)
+        run_identity("workflow_dispatch", "", "", "", False,
+                     error_contains="invalid REVIEWED_HEAD_SHA")
 
     def test_manual_event_cannot_carry_pr_head(self):
         run_identity("workflow_dispatch", A, C, A, False)
 
-    def test_sha_guards_explicit_exit_on_failure_on_any_bash(self):
+    def test_sha_guards_static_text_explicit_exit(self):
         script = workflow_script()
         required = (
-            '[[ "$REVIEWED_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1',
-            '[[ "$EVENT_PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1',
-            '[[ "$EVENT_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1',
-            'test "$REVIEWED_HEAD_SHA" = "$EVENT_PR_HEAD_SHA" || exit 1',
-            'test "$REVIEWED_HEAD_SHA" = "$EVENT_SHA" || exit 1',
-            'test -z "$EVENT_PR_HEAD_SHA" || exit 1',
-            'test "$(git rev-parse HEAD)" = "$REVIEWED_HEAD_SHA" || exit 1',
+            '[[ "$REVIEWED_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "invalid REVIEWED_HEAD_SHA (need 40 lowercase hex)" >&2; exit 1; }',
+            '[[ "$EVENT_PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "invalid EVENT_PR_HEAD_SHA for pull_request" >&2; exit 1; }',
+            '[[ "$EVENT_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "invalid EVENT_SHA for workflow_dispatch" >&2; exit 1; }',
+            'test "$REVIEWED_HEAD_SHA" = "$EVENT_PR_HEAD_SHA" || { echo "PR expected SHA differs from PR head" >&2; exit 1; }',
+            'test "$REVIEWED_HEAD_SHA" = "$EVENT_SHA" || { echo "manual expected SHA differs from github.sha" >&2; exit 1; }',
+            'test -z "$EVENT_PR_HEAD_SHA" || { echo "workflow_dispatch must not contain PR head" >&2; exit 1; }',
+            'test "$(git rev-parse HEAD)" = "$REVIEWED_HEAD_SHA" || { echo "checked-out HEAD differs from expected source SHA" >&2; exit 1; }',
         )
         for check in required:
             with self.subTest(check=check):
                 self.assertIn(check, script)
+
+    def test_native_bash_path_and_version_are_reported(self):
+        self.assertTrue(SYSTEM_BASH.is_file(), "/bin/bash required on macOS and Ubuntu")
+        result = subprocess.run(
+            [str(SYSTEM_BASH), "-c", 'printf "%s" "$BASH_VERSION"'],
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(result.returncode, 0)
+        self.assertTrue(result.stdout.strip())
+        print(f"SYSTEM_BASH_PATH={SYSTEM_BASH} SYSTEM_BASH_VERSION={result.stdout.strip()}")
+        if os.uname().sysname == "Darwin":
+            self.assertTrue(result.stdout.startswith("3.2."),
+                            "Native macOS /bin/bash must be Bash 3.2 for acceptance")
+
+    def test_source_blob_gate_has_explicit_diagnostic_failure(self):
+        source = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn('test "$actual" = "$FROZEN_BLOB_SHA" || '
+                      '{ echo "frozen Git input blob mismatch" >&2; exit 1; }', source)
 
     def test_invalid_manual_sha_shape_rejected(self):
         for invalid in ("not-a-sha", "f" * 39, "F" * 40, "f" * 41):
