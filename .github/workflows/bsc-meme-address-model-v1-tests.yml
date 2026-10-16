@@ -59,6 +59,9 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_v3_review_gate.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_wbnb10_source_gate.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_wbnb10_source_gate.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-frozen-23wallet-economic-proof-census-scope-2026-10-17.json"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_23wallet_economic_census.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_23wallet_economic_census.py"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-adff-dragon-original-two-owner-transfers-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-adff-bounded-acquisition-asset-outgoing-source-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-postapprove4-wallets10-wbnb-event-query-scope-2026-10-16.json"
@@ -1058,6 +1061,28 @@ jobs:
           assert a["public_executable_U"] == "UNRESOLVED"
           assert a["P5"] == "BLOCKED" and a["PRODUCTION"] == "NO_GO"
           print("PASS 4/4 original wallet source: 10 tx, 19 complete WBNB event queries, one truncated; no false ADFF free buy or P5 promotion")
+          PY
+      - name: P4-C frozen 23-wallet by 19-CA economic evidence census (not a profit rank)
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_23wallet_economic_census.py" > /tmp/bsc-p4c-economic-23.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path("/tmp/bsc-p4c-economic-23.json").read_text(encoding="utf-8"))
+          assert a["frozen_wallets"] == 23 and a["frozen_exact_CAs"] == 19
+          assert a["frozen_cells"] == 437
+          assert (a["ERC20_present"], a["ERC20_absent"]) == (148, 289)
+          assert (a["curated_signed_closed_episodes"], a["curated_wallets"],
+                  a["other_wallets_without_selected_rounds_not_losses"]) == (50, 7, 16)
+          assert (a["curated_native_scope_positive_not_realized_PnL"],
+                  a["curated_native_scope_negative_not_realized_PnL"],
+                  a["curated_mixed_quote_references_not_native_PnL"]) == (30,18,2)
+          assert a["curated_gas_WBNB_partial_settlement_grade"] == 4
+          assert a["full_wallet_economic_profitable_ranks"] == 0
+          assert all(w["profit_rank"] is None and len(w["cells"]) == 19 for w in a["wallets"])
+          assert a["U"] == "UNRESOLVED" and a["P5"] == "BLOCKED" and a["PRODUCTION"] == "NO_GO"
+          print("PASS original 23 x 19 437 proof census, 50 curated episodes, 16 uncatalogued, zero profitability rank")
           PY
       - name: Full BSC research unittest discovery including legacy exact CA
         shell: bash
