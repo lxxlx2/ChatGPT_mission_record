@@ -89,7 +89,7 @@ def stop_process(process, reader):
         reader.join(timeout=4)
 
 
-def start(root, repo, launcher, folder):
+def start(root, repo, launcher, folder, handshake_timeout=50):
     local_agent = repo / "crypto-300-profit-mission/local-agent"
     env = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"),
            "HOME": str(Path.home()), "TMPDIR": str(root / "qa-runtime"),
@@ -105,7 +105,7 @@ def start(root, repo, launcher, folder):
         reader = threading.Thread(target=read_output,
             args=(messages, process.stdout, folder / "launcher.log"), daemon=True)
         reader.start()
-        end = time.monotonic() + 50
+        end = time.monotonic() + handshake_timeout
         while time.monotonic() < end:
             try:
                 line = messages.get(timeout=0.25)
