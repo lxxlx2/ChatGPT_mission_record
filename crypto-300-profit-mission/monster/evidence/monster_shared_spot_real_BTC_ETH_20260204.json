@@ -3172,7 +3172,7 @@
   "queue_status_counts": {},
   "real_market_order_or_mail": "OFF",
   "schema": "MONSTER_SHARED_SPOT_ONE_SQLITE_ORIGINAL_D0_D1_CAUSAL_V1",
-  "shared_replayer_sha256": "d1fff2ee97b7375528e9de3e0d02ab3f4432838e3dc9f188c233e5b6063b50f3",
+  "shared_replayer_sha256": "23793c2ddd031cb3e31a88eb34c20bd62b52b3b3125d8f8deaffa49e8755c363",
   "source": "OFFICIAL_SPOT_1M_PUBLISHER_SHA_WITH_STORED_PAST_24H_PROXY",
   "source_attestation": "STAGE26_PUBLISHER_ZIP_SHA256_CHECKSUM_VERIFIED_AT_RUN_TIME",
   "source_coverage": {
@@ -3182,6 +3182,6 @@
   },
   "source_level": "ARCHIVED_1M_ZIP_CHECKSUM_AND_DERIVED_CLOSED_5M",
   "source_origin_verified": true,
-  "trigger_commit_sha": "6e2897c4602ce554b57634fe05d25e7244068316",
+  "trigger_commit_sha": "1154e97a25648dbf58c181be62076e4c1d406dde",
   "true_full_758_replay": false
 }
