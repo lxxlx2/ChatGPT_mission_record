@@ -24,80 +24,87 @@ def expected_file_pair(folder, i):
             Path(folder)/f"monster_feb445_shard{i:02d}.proof.json")
 
 
-def verified_inputs(folder):
-    """Do not even call production D0 before *every* member is verified."""
-    wanted=shards.roster()
-    all_zip=[]
-    sources={}
-    provenance=[]
+def verified_shard_paths(folder):
+    """Preflight all 28 ZIP/proofs and their raw SHA before model starts.
+
+    Read publisher source rows *one symbol at a time* in the later ingest;
+    never materialize 445 x 12,960 Decimal bars in process memory.
+    """
+    archives=[]
     for i in range(shards.SHARD_COUNT):
         path,pf=expected_file_pair(folder,i)
         if not path.is_file() or not pf.is_file():
             raise ValueError("SHARED_445_REQUIRED_28_ORIGINAL_SOURCE_SHARDS_MISSING")
         proof=json.loads(pf.read_text(encoding="utf-8"))
         if (proof.get("schema")!="MONSTER_FEB2026_445_OFFICIAL_SHARD_ARTIFACT_PROOF_V1"
-            or proof.get("shard")!=i or
-                proof.get("source_origin_verified_at_collection") is not True
-            or proof.get("source_symbol_count")!=len(shards.members(i))
-            or proof.get("symbols")!=list(shards.members(i))):
+                or proof.get("shard")!=i
+                or proof.get("source_origin_verified_at_collection") is not True
+                or proof.get("source_symbol_count")!=len(shards.members(i))
+                or proof.get("symbols")!=list(shards.members(i))
+                or shards.sha(path.read_bytes())!=proof.get("sha256_zip")):
             raise ValueError("SHARED_445_SHARD_PROOF_OR_OFFICIAL_ORIGIN_UNVERIFIED")
-        all_zip.append((path,pf,proof))
-    # Must validate all archives (the actual source, not merely proof claims)
-    # before building one production cache; never silently drop failed symbols.
-    for i,(path,_,proof) in enumerate(all_zip):
-        got=[]
-        for symbol,bars,receipts,meta in shards.read_archive(
-                path,proof=proof,expected_shard=i):
-            if symbol in sources:
-                raise ValueError("SHARED_445_SOURCE_SYMBOL_DUPLICATE_ACROSS_SHARDS")
-            if meta.get("source_origin_verified_at_collection") is not True:
-                raise ValueError("SHARED_445_SOURCE_ARCHIVED_ORIGIN_UNATTESTED")
-            got.append(symbol)
-            sources[symbol]=(bars,receipts)
-        if got!=list(shards.members(i)):
-            raise ValueError("SHARED_445_SOURCE_SHARD_POPULATION_SHORT")
-        provenance.append({
-          "shard":i,"zip_sha256":proof["sha256_zip"],
-          "producer_trigger_sha":proof["trigger_commit_sha"],
-          "symbols":len(got)})
-    if tuple(sorted(sources))!=wanted or len(sources)!=445:
-        raise ValueError("SHARED_445_FULL_FROZEN_UNIVERSE_MISSING_OR_EXTRA")
-    return sources, provenance
+        archives.append((i,path,proof))
+    return archives
 
 
 def run_all(folder, *, actual_replayer=None, read_inputs=None):
-    # Synthetic injection possible for unit testing but must never be
-    # represented as actually verified official publisher source.
+    # Fake test input cannot be elevated to official research attestation.
     trusted=read_inputs is None and actual_replayer is None
-    loader=verified_inputs if read_inputs is None else read_inputs
     engine=shared.run_shared if actual_replayer is None else actual_replayer
-    source,provenance=loader(folder)
     frozen=shards.roster()
-    if tuple(sorted(source)) != frozen or len(source)!=445:
-        raise ValueError("SHARED_445_CANNOT_RUN_PARTIAL_MARKET")
-    if len(provenance)!=28 or sorted(x["shard"] for x in provenance)!=list(range(28)):
-        raise ValueError("SHARED_445_PROVENANCE_NOT_ALL_28_SHARDS")
+    if read_inputs is None:
+        archives=verified_shard_paths(folder)
+        provenance=[{"shard":i,"zip_sha256":proof["sha256_zip"],
+                      "producer_trigger_sha":proof["trigger_commit_sha"],
+                      "symbols":len(shards.members(i))}
+                    for i,_,proof in archives]
+    else:
+        source,provenance=read_inputs(folder)
+        if tuple(sorted(source))!=frozen or len(source)!=445:
+            raise ValueError("SHARED_445_CANNOT_RUN_PARTIAL_MARKET")
+        if len(provenance)!=28 or sorted(x["shard"] for x in provenance)!=list(range(28)):
+            raise ValueError("SHARED_445_PROVENANCE_NOT_ALL_28_SHARDS")
     with tempfile.TemporaryDirectory(prefix="monster_445_offline_one_sqlite_") as td:
         with shared.setup_cache(Path(td)/"all445_official_minute_cache.sqlite") as db:
-            for symbol in frozen:
-                bars,receipts=source[symbol]
-                # The archives attest only their own declared checksum; this
-                # is a provenance *recheck*, not an issuer digital signature.
+            checked_symbols=[]
+            def ingest(symbol, bars, receipts):
+                if (symbol not in frozen or
+                        (checked_symbols and symbol<=checked_symbols[-1])):
+                    raise ValueError("SHARED_445_INGEST_ORDER_DUPLICATE_OR_FOREIGN")
                 attest=[{"date":r["day"],"sha256":r["sha256"],
                          "verified_published_sha256":True,
                          "verified_by":"PREVIOUS_OFFICIAL_SHARD_ARTIFACT"}
                         for r in receipts]
                 shared.prepare_symbol(db,symbol,shards.DAY,bars,attest)
+                checked_symbols.append(symbol)
+            if read_inputs is None:
+                for i,path,proof in archives:
+                    actual=[]
+                    for sym,bars,receipts,meta in shards.read_archive(
+                            path,proof=proof,expected_shard=i):
+                        if meta.get("source_origin_verified_at_collection") is not True:
+                            raise ValueError("SHARED_445_SOURCE_ARCHIVED_ORIGIN_UNATTESTED")
+                        ingest(sym,bars,receipts)
+                        actual.append(sym)
+                    if actual!=list(shards.members(i)):
+                        raise ValueError("SHARED_445_SOURCE_SHARD_POPULATION_SHORT")
+            else:
+                for sym in frozen:
+                    bars,receipts=source[sym]
+                    ingest(sym,bars,receipts)
+            if tuple(checked_symbols)!=frozen or len(checked_symbols)!=445:
+                raise ValueError("SHARED_445_FULL_FROZEN_UNIVERSE_MISSING_OR_EXTRA")
+            # The genuine model executes once only after all 445 verified
+            # historical sources have been assembled in one staging cache.
             result=engine(db,shards.DAY,frozen,
-                       market_coverage_label="OFFICIAL_VERIFIED_SUBSET_ONLY")
+                          market_coverage_label="OFFICIAL_VERIFIED_SUBSET_ONLY")
     if result.get("actually_complete_symbols")!=445:
         raise ValueError("SHARED_445_ENGINE_DID_NOT_SCAN_ALL_SYMBOLS")
     if result.get("execution_counts",{}).get("polls")!=3360:
         raise ValueError("SHARED_445_ENGINE_WRONG_GLOBAL_POLL_COUNT")
     if result.get("true_full_758_replay") is not False:
         raise ValueError("SHARED_445_FALSIFIED_FULL_758_VERIFICATION")
-    original=shared.original_758_coverage(shards.DAY,frozen,
-                                           source_attested=False)
+    original=shared.original_758_coverage(shards.DAY,frozen,source_attested=False)
     if (original["source_complete_original_stage26"]!=445
          or original["source_missing_or_incomplete_original_stage26"]!=313
          or original["replayed_verifiable_subset"]!=445):
