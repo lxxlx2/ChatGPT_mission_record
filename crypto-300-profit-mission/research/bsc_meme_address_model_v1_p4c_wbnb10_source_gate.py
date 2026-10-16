@@ -18,6 +18,7 @@ PINS = {
  "bsource": ("bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partB-2026-10-16.json", "94d8eca8b73a687f5a7e9dca424757c67fc8416e"),
  "csource": ("bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partC-2026-10-16.json", "f1b8a739043de8e3763cfd96bc9025029ade63f4"),
  "ledger": ("bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json", "2a19dbd88c2971efff60a15894d952d0d05e64d9"),
+ "adff": ("bsc-meme-address-model-v1-p4c-adff-dragon-original-two-owner-transfers-2026-10-16.json", "b2a428b6c2f417abaef2c0f3b94bf4d16e9c91ab"),
 }
 OWNER_INDICES = [31, 38, 46, 44]
 EXPECTED_COUNTS = [2, 3, 3, 2]
@@ -114,6 +115,48 @@ def classify(d):
     ensure(result[44]["wbnb_event_sums_wei"]["Deposit"]==0
            and result[44]["original_native_scope_sign"]=="POSITIVE_NATIVE_SCOPE",
            "ADFF_ZERO_WRAP_ARRIVAL_CANNOT_IMPLY_ZERO_COST")
+    # An ADFF original buy had zero native msg.value and *no WBNB Deposit*.
+    # Independently query the two selected original tx hashes' actual ERC20 Transfer
+    # logs. The assets queried are not exhaustive, so no free-basis assumption.
+    adff=d["adff"]
+    ensure(adff["source_manifest_git_blob_sha"] == PINS["scope"][1]
+           and adff["source_owner"] == result[44]["wallet"]
+           and adff["source_ca"] == result[44]["ca"]
+           and adff["exact_txs"] == need[-1]["original_txs"],
+           "ADFF_TRANSFER_SOURCE_MUST_MATCH_FROZEN_ORIGINAL_EOA_TX")
+    aq=adff["queries"]
+    ensure(len(aq)==8 and all(x["filter_complete"] is True for x in aq),
+           "ADFF_EIGHT_QUOTE_ASSET_TRANSFER_FILTERS_MUST_COMPLETE")
+    expected_shape=[
+        ("Dragon","to_owner",2),("Dragon","from_owner",0),
+        ("WBNB","to_owner",1),("WBNB","from_owner",0),
+        ("Dragon","to_owner",0),("Dragon","from_owner",1),
+        ("WBNB","to_owner",0),("WBNB","from_owner",0),
+    ]
+    addr=result[44]["wallet"].lower().replace("0x","")
+    eoa_topic="0x"+addr.rjust(64,"0")
+    token_topic="0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+    for i,(q,(asset,direction,count)) in enumerate(zip(aq,expected_shape)):
+        orig=need[-1]["original_txs"][i//4]
+        ensure(q["asset"]==asset and q["direction"]==direction
+               and q["hash"]==orig["hash"] and q["block"]==orig["block"]
+               and len(q["exact_original_tx_events"])==count,
+               "ADFF_ORIGINAL_DRAGON_OR_WBNB_TRANSFER_SELECTION_CHANGED")
+        for ev in q["exact_original_tx_events"]:
+            ensure(ev["transactionHash"]==q["hash"]
+                   and ev["topics"][0].lower()==token_topic
+                   and ev["topics"][2 if direction=="to_owner" else 1].lower()==eoa_topic
+                   and int(ev["data"],16)==int(ev["raw_amount"])>0,
+                   "ADFF_ERC20_EVENT_OWNER_AMOUNT_OR_IDENTITY_MISMATCH")
+    incoming=[int(x["raw_amount"]) for x in aq[0]["exact_original_tx_events"]]
+    sale=[int(x["raw_amount"]) for x in aq[5]["exact_original_tx_events"]]
+    wbnb_credit=[int(x["raw_amount"]) for x in aq[2]["exact_original_tx_events"]]
+    ensure(incoming==[16218722639908748396,16327310789849655170]
+           and sale==[32546033429758403566]
+           and wbnb_credit==[176310176278987]
+           and sum(incoming)==sum(sale)
+           and len({e["topics"][1] for e in aq[0]["exact_original_tx_events"]})==2,
+           "ADFF_DRAGON_TWO_ARRIVALS_ONE_EXIT_AND_WBNB_REBATE_SCOPE_CHANGED")
     return {"schema":"BSC_P4C_POSTAPPROVE_FOUR_OWNER_TEN_TX_WBNB_EVENT_SOURCE_REPLAY",
             "original_owners":4,"original_transactions":10,
             "positive_source_native_scope_owners":2,
@@ -125,6 +168,10 @@ def classify(d):
                 for k,v in r["wbnb_event_sums_wei"].items()},
                 "quote_route_pnl":"UNRESOLVED"} for i,r in result.items()},
             "ADFF_positive_native_scope_quote_cost":"UNRESOLVED_ZERO_TX_MSG_VALUE_AND_NO_MATCHING_WBNB_DEPOSIT_DO_NOT_PROVE_FREE_BUY",
+            "ADFF_original_Dragon_transfer_in_raw":"32546033429758403566",
+            "ADFF_original_Dragon_transfer_out_raw":"32546033429758403566",
+            "ADFF_original_first_tx_WBNB_ERC20_received_wei":"176310176278987",
+            "ADFF_all_assets_input_cost":"UNRESOLVED_NO_EXHAUSTIVE_TRANSFER_OR_INTERNAL_ROUTER_TRACE",
             "route_observation_grade":"WBNB_WRAPPER_EVENT_ONLY_NOT_WALLET_PNL",
             "repeat_trader_profitability":"UNRESOLVED",
             "public_executable_U":"UNRESOLVED","P4_C":"PARTIAL","P5":"BLOCKED",
