@@ -70,61 +70,90 @@ def source_zero_closed5m(source_db, symbol, tick_ms):
     return has_zero
 
 
-def experimental_queue_handler(store,now_ms,original_fetch,source_db,*,limit=8,
-                               original_queue,stats):
-    if limit!=8:
+def experimental_queue_handler(store, now_ms, original_fetch, source_db, *, limit=8,
+                               original_queue, stats):
+    """Original eight oldest slots; mask overflow while original D1 handles valid.
+
+    Without ANY zero-quote source all eight run via original unmodified D1 once.
+    With zero-quote, freeze original eight identities and temporarily exclude
+    overflow during that tick. Original D1 handles the remaining supported
+    subset ONCE; each source-unsupported item consumes its original slot.
+    This avoids calling limit=1 repeatedly on the same still-PENDING candidate.
+    """
+    if limit != 8:
         raise ValueError("ZEROQUOTE_RESEARCH_MUST_KEEP_ORIGINAL_EIGHT_CAPACITY")
-    selected=store.execute("""
+    selected = store.execute("""
         SELECT * FROM candidate_queue WHERE status='PENDING'
         AND retry_after_ms<=? ORDER BY first_seen_ms,id LIMIT ?
-    """,(now_ms,limit)).fetchall()
-    out=dict(selected=0,completed=0,deferred=0,late=0)
+    """, (now_ms, limit)).fetchall()
+    if not selected:
+        result = original_queue(store, now_ms, original_fetch, limit=8)
+        stats["max_slots_in_single_tick"] = max(
+            stats["max_slots_in_single_tick"], result["selected"])
+        return result
+    unsupported=[]
     for item in selected:
         if item["venue"]!="spot":
             raise RuntimeError("ZEROQUOTE_RESEARCH_UNEXPECTED_FUTURES_IN_SPOT_COHORT")
-        # Explicitly only alter source-contract uncertainty, NOT queue
-        # capacity, signal ordering, price paths, or established stale policy.
-        if (now_ms>item["deadline_ms"] and
-                item["last_evaluated_bar_ms"] is None and
-                item["last_error"]==WAIT_ERROR):
-            with store:
-                store.execute("""UPDATE candidate_queue SET status=?,last_error=?
-                    WHERE id=?""",(TERMINAL,WAIT_ERROR,item["id"]))
-            stats["terminal_unsupported"]+=1
-            stats["by_symbol"][item["symbol"]]+=1
-            out["selected"]+=1
-            continue
         if now_ms>item["deadline_ms"]:
-            normal=original_queue(store,now_ms,original_fetch,limit=1)
-        else:
-            unsupported=source_zero_closed5m(
-                source_db,item["symbol"],now_ms)
-            if unsupported:
-                with store:
-                    if now_ms>=item["deadline_ms"] and item["last_evaluated_bar_ms"] is None:
-                        store.execute("""UPDATE candidate_queue
-                            SET status=?,last_error=? WHERE id=?""",
-                            (TERMINAL,WAIT_ERROR,item["id"]))
-                        stats["terminal_unsupported"]+=1
-                        stats["by_symbol"][item["symbol"]]+=1
-                    else:
-                        store.execute("""UPDATE candidate_queue SET
-                            last_error=?,retry_after_ms=? WHERE id=?""",
-                            (WAIT_ERROR,now_ms+shared.MIN,item["id"]))
-                        out["deferred"]+=1
-                    out["selected"]+=1
+            if (item["last_evaluated_bar_ms"] is None
+                    and item["last_error"]==WAIT_ERROR):
+                unsupported.append((item,"terminal"))
+            continue
+        if source_zero_closed5m(source_db,item["symbol"],now_ms):
+            unsupported.append((item,"source_zero"))
+    if not unsupported:
+        result=original_queue(store,now_ms,original_fetch,limit=8)
+        if result["selected"]!=len(selected):
+            raise RuntimeError("ZEROQUOTE_RESEARCH_QUEUED_EIGHT_IDENTITY_CHANGED")
+        stats["max_slots_in_single_tick"]=max(
+            stats["max_slots_in_single_tick"],result["selected"])
+        return result
+
+    unsupported_ids={i["id"] for i,_ in unsupported}
+    valid_ids={item["id"] for item in selected if item["id"] not in unsupported_ids}
+    # Exclude every item outside the *original* first eight, even if more
+    # candidates are eligible. Without this, an unsupported old candidate
+    # accidentally gives capacity to the ninth, rewriting the stress test.
+    suppressed = store.execute("""
+        SELECT id,retry_after_ms FROM candidate_queue
+        WHERE status='PENDING' AND retry_after_ms<=?
+    """,(now_ms,)).fetchall()
+    suppressed=[(r["id"],r["retry_after_ms"]) for r in suppressed
+                if r["id"] not in valid_ids]
+    normal={"selected":0,"completed":0,"deferred":0,"late":0}
+    with store:
+        for ident,_ in suppressed:
+            store.execute("UPDATE candidate_queue SET retry_after_ms=? WHERE id=?",
+                          (now_ms+1,ident))
+        try:
+            if valid_ids:
+                normal=original_queue(store,now_ms,original_fetch,limit=len(valid_ids))
+                if normal["selected"] != len(valid_ids):
+                    raise RuntimeError("ZEROQUOTE_RESEARCH_VALID_FIFO_SELECTION_DRIFT")
+        finally:
+            for ident,original_retry in suppressed:
+                store.execute("""UPDATE candidate_queue SET retry_after_ms=?
+                    WHERE id=?""",(original_retry,ident))
+        for item,kind in unsupported:
+            if kind=="terminal" or now_ms>=item["deadline_ms"]:
+                store.execute("""UPDATE candidate_queue
+                    SET status=?,last_error=? WHERE id=?""",
+                    (TERMINAL,WAIT_ERROR,item["id"]))
+                stats["terminal_unsupported"]+=1
+                stats["by_symbol"][item["symbol"]]+=1
+            else:
+                store.execute("""UPDATE candidate_queue
+                    SET last_error=?,retry_after_ms=? WHERE id=?""",
+                    (WAIT_ERROR,now_ms+shared.MIN,item["id"]))
+                normal["deferred"]+=1
                 stats["zero_quote_source_slots_consumed"]+=1
-                continue
-            normal=original_queue(store,now_ms,original_fetch,limit=1)
-        if normal["selected"]!=1:
-            raise RuntimeError("ZEROQUOTE_RESEARCH_FIFO_OR_SLOT_PARITY_BROKEN")
-        for k in out:
-            out[k]+=normal[k]
-    if out["selected"]!=len(selected) or out["selected"]>8:
+    normal["selected"]+=len(unsupported)
+    if normal["selected"]!=len(selected) or normal["selected"]>8:
         raise RuntimeError("ZEROQUOTE_RESEARCH_GLOBAL_SELECTION_OVER_EIGHT")
     stats["max_slots_in_single_tick"]=max(
-        stats["max_slots_in_single_tick"],out["selected"])
-    return out
+        stats["max_slots_in_single_tick"],normal["selected"])
+    return normal
 
 
 def run_v2(source_db,day,symbols,*,market_coverage_label):
@@ -167,8 +196,10 @@ def analyze_frozen_first32(dirpath):
     # Reuses independently SHA-verifiable original 16+16 archives and old
     # Stage26 per-coin watch comparison, with clearly different D1 semantics.
     result=first.analyze_two(dirpath,shared_run=run_v2)
-    if result["schema"]!=SCHEMA:
-        raise RuntimeError("ZEROQUOTE_RESEARCH_SCHEMA_LOST_IN_FROZEN_COINS")
+    if result["schema"]!=first.SCHEMA:
+        raise RuntimeError("ZEROQUOTE_RESEARCH_FIRST32_WRAPPER_SCHEMA_DRIFT")
+    result["underlying_first32_schema"]=first.SCHEMA
+    result["schema"]=SCHEMA
     result["pilot_schema"]="FIRST32_SOURCE_COMPLETE_NOT_FULL_445"
     result["not_independent_out_of_sample"]=True
     return result
