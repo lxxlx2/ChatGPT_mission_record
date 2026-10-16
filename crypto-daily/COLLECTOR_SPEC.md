@@ -93,3 +93,9 @@ Never send a second normal email for the same date.
 - Any scheduled hour with no final: backlog must not be called covered.
 The collector is factual research only: no personalized trading instructions,
 wallet signatures, NFT mint links, or unverified token purchases.
+
+## 2026-10-16 cross-project beneficiary discovery and delta-first input
+
+Every existing bounded headline discovery / 08:20 prebuild / 09:20 publisher / 10:20-11:20 recovery must perform a bounded, English, *event-centric* sweep for material newly-issued rewards/compensations by third parties benefiting communities in the current TGE Registry (including StandX), without adding those third-party issuers to the independent full-time monitored project roster. Search concepts: `<tracked project> community compensation airdrop`, `<tracked project> holders allocation`, `<tracked project> points special distribution`, `<tracked project> users snapshot`, plus official Binance Wallet Alpha launch announcements when connected to already tracked rights.
+
+Carry confirmed source URL and publication date, beneficiary, issuer, program, claim-open status, snapshot status and event key into the pending manifest. Secondary news reports are discovery leads, not proof of user eligibility. Never reject the whole story merely because the original issuer is not itself a TGE shard member. Regression: October 15 NeoSoul DNA promised StandX community allocation and October 16 Binance Wallet Alpha listing were overlooked, while previously delivered Space/Surf/StandX incidents repeated in daily reports. Apply `REPORT_ACCEPTANCE.md` CR-21 before composing the user-facing Section 7; other security and market breadth remain unchanged.
