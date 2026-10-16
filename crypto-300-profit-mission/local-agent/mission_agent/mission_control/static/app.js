@@ -410,9 +410,6 @@ function renderFrankWatchlist(payload) {
       : chainState === 'ZERO_AT_SLOT'
         ? '样本余额：0'
         : '链上余额未核实';
-    const proof = x.snapshot_verified_slot
-      ? ' · slot ' + esc(x.snapshot_verified_slot)
-      : '';
     const mismatch = x.model_chain_disagreement
       ? '<div class="watch-mismatch">模型与链上记录有差异，需追溯</div>'
       : '';
@@ -448,7 +445,7 @@ function renderFrankWatchlist(payload) {
           ? '<div>另有 ATA 验证被动转入 ' + esc(x.ata_verified_extra_passive_receipts) +
             ' 笔（不计为主动买入，成本未知）</div>' : '') +
         '</div></td>' +
-      '<td>' + balance + '<div class="watch-tx">美元价值未核实' + proof +
+      '<td>' + balance + '<div class="watch-tx">美元价值未核实' +
         (x.passive_receipt_events && !x.transfer_counterparty_verified
           ? '<div>转入方与成本未核实</div>' : '') +
         '</div></td>' +
@@ -1080,7 +1077,7 @@ function renderClusterReport(report) {
     esc(JSON.stringify({
       sources:(identity.sources || []).map(publicIdentityAudit),
       attempts:(identity.metadata_attempts || []).map(publicIdentityAudit),
-      mint_account_reason:identity.mint_account_reason || null,
+      mint_account_reason:publicIdentityAudit({reason:identity.mint_account_reason}).reason || null,
       market_attempt:publicIdentityAudit(identity.market_attempt),
     },null,2)) +
     '</pre></details>';
