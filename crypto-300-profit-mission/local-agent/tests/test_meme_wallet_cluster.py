@@ -24,6 +24,9 @@ def analyzer():
     a.holders=lambda:(1000,0,holders())
     a.token_profile=lambda:{
         "status":"OK","mint_authority":None,"freeze_authority":None,
+        "source":"SOLANA_FINALIZED_JSON_RPC","mint_account_status":"VERIFIED",
+        "is_initialized":True,"mint_slot":500,
+        "program_id":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
         "metadata_update_authority":"UNAVAILABLE","metadata_update_authority_status":"UNAVAILABLE",
         "token_program":"SPL Token",
     }
@@ -210,9 +213,9 @@ def token2022_profile(extension):
     class RPC:
         endpoint="test";calls=0;cache_hits=0
         def call(self,*args,**kwargs):
-            return {"value":{
+            return {"context":{"slot":500},"value":{
                 "owner":"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
-                "data":{"parsed":{"info":{
+                "data":{"parsed":{"type":"mint","info":{
                     "mintAuthority":None,"freezeAuthority":None,"decimals":6,
                     "supply":"1000000","isInitialized":True,"extensions":[extension],
                 }}},
