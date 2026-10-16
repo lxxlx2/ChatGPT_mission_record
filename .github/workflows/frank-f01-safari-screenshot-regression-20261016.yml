@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - fix/frank-f01-sold-excluded-badge-safari-20261016
+      - fix/frank-pr77-price-projection-slot-review-20261016
   workflow_dispatch:
 
 permissions:
@@ -30,6 +31,7 @@ jobs:
         run: |
           node --check mission_agent/mission_control/static/app.js
           node tests/frank_f01_excluded_badge_render.cjs
+          node tests/frank_f01_quote_projection_render.cjs
       - name: Targeted source regressions
         working-directory: crypto-300-profit-mission/local-agent
         run: |
