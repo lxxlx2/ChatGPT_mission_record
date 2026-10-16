@@ -1,7 +1,7 @@
 {
     "schema": "MONSTER_445_TWO_SHARD_ON_DEMAND_REQUEST_V1",
-    "start_shard": 4,
-    "request_id": "20261016_shard04_05",
+    "start_shard": 6,
+    "request_id": "20261016_shard06_07",
     "research_only": true,
     "approved_scope": "SOURCE_ONLY"
 }
