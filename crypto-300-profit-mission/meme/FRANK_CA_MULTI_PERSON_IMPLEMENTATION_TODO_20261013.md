@@ -742,3 +742,15 @@ Remaining verified gaps / dependencies:
 - [ ] 新联合 PR #85 需另一独立 AI `APPROVE / REQUEST_CHANGES` 并明确可复现原失败、SHA pin、历史证据/false-positive 不允许。
 - [ ] Mac 本地新 disposable 精确组装与 tree 比对（不可修改现有 Mac 审核 clone/旧实验、不可读私有 Sidecar/生产 DB，未经用户本次显式授权不能启动服务），再执行 Safari 合同。
 - `NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_MAC_SERVICE_START / NO_NEW_AUTOMATION / NO_FILE_CLEANUP` 全部保持。
+
+
+## 2026-10-16 PR #85 独立 APPROVE：联合源码冻结，转入新版 Mac Safari 隔离验收
+
+- 用户提供另一名独立审核 AI 的完整报告：**PR #85 固定 SHA `40febd8275c7710a8697af5a0503569a2bb5cb8d` 为 `APPROVE`**，仅批准该 SHA 的 GitHub Actions 一次性联合组装工作流和 synthetic HTTP 测试夹具，未给予 Mac 或生产发布授权。审核者从新 detached checkout 开始与结束均检查 PR HEAD、Draft、main/evidence ref，独立 Git merge 顺序 **frozen main `662ba4aceb9d53cb7a541ad3f251f9e12b8c09ea` → F02 #73 `5755b8b96080f21635eaa5354588cbb8f6561ab0` → C02 #84 `8d425e4d0e9db9f27abd8ad662e4d59e64b57e53` → F01 #83 `d2eeebc1b49d2bae38e05d7d01f6839e3ba237f4` → QA harness #85 `40febd8275c7710a8697af5a0503569a2bb5cb8d`**，历史证据 ref `b9fb6e6df9032a0e6f49c1274bb4ba61c9e4c2da`，全部 ancestry PASS，独立合并 tree SHA **`eea30efa09cb1509d7eee3fde3043ee7155257cf`** 与 GitHub [CI #38867026412](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38867026412) 一致，合并 commit SHA 因独立元数据不同不要求一致。
+- 审核者实跑 Node 四项 UI、联合 native HTTP **132 passed**、local-agent full **1773 passed**、real Git replay **3 passed**，自行复现旧 synthetic BUY 无报价返回 1 failed 的预期阴性，同时完成额外 F01 underflow/tiny price、C02 18 个原生合成 RPC 权限、F02 TTL 跨页载入、同名不同 CA、正式 2 个导航、Slot/SHA 公共 DOM 禁显、8 个 loopback 无外网/SMTP 探针。报告描述 P0/P1/P2/P3 无本轮新增证实问题。**本记录为用户提供的外部独立结果**；/tmp/frank-pr85-evidence/REVIEW.md 是审核者本地目录，并未作为远端 Git 附件上传。
+- 本次 GitHub connector 再核实 [PR #85](https://github.com/lxxlx2/ChatGPT_mission_record/pull/85)、[PR #83](https://github.com/lxxlx2/ChatGPT_mission_record/pull/83)、[PR #84](https://github.com/lxxlx2/ChatGPT_mission_record/pull/84)、[PR #73](https://github.com/lxxlx2/ChatGPT_mission_record/pull/73) 的 HEAD 均与固定 SHA 一致，所有仍 Draft/unmerged。所有此前的 `REQUEST_CHANGES` 固定 SHA 原结论保持不变。
+- **正式关口转移**：`MODULE_CODE_APPROVED / JOINT_CODE_APPROVED / CI_PASS / MAC_REAL_SAFARI_NOT_RUN / REAL_CURRENT_WALLET_NOT_VERIFIED / RELEASE_NO_GO`。唯一紧接主线是**新版本 Mac 全新隔离源码 tree 准备与真实 Safari 用户交互验收**，使用固定 tree SHA；不在旧 `9479e33070189231d6be2ed1633a420296dfd1a0` workspace 修改或拿旧截图作为新证据。完整步骤和复制命令见 `FRANK_PR85_MAC_SAFARI_ACCEPTANCE_20261016.md`。
+- [ ] Mac 新根目录执行**仅 Git clone+固定 SHA 组装+tree hash/洁净/来源 SHA 只读验证**，不启动 HTTP/Safari，不读私有 Sidecar/生产 SQLite，不删旧目录；实际 stdout 后更新证据记录。
+- [ ] 在**另外明确批准**新版隔离 synthetic localhost HTTP 与 Safari 测试后，采用隔离临时数据、127.0.0.1 随机端口、不访问真实 RPC/用户私有数据，测 F01 BUY/SELL、C02 exact CA/审计、F02 TTL/后台恢复/同名不同 CA 和正式导航/Slot/SHA 禁显；保存**新版本**浏览器截图和时间、来源指纹，独立验收。
+- [ ] F02 的现在真实 32 Mint/ATA/余额与完整 CA 市场、Dev/funder/LP/风险证据需单独明确只读 RPC/私有来源授权，再做当前数据业务验收。模拟 1773 tests 不代表这项已过。
+- `NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_MAC_SERVICE_START / NO_NEW_AUTOMATION / NO_FILE_CLEANUP` 未解除。
