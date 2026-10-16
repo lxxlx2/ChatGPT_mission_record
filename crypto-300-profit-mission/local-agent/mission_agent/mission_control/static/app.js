@@ -1053,18 +1053,24 @@ function renderClusterReport(report) {
   $('cluster-summary').innerHTML = [
     ['代币', '<span>' + esc(tokenName) + '</span><span class="subvalue">' + esc(tokenSymbol) + '</span>'],
     ['身份核实', esc(identity.identity_status || 'UNCONFIRMED') + ' / ' + esc(identity.market_match_status || 'UNCONFIRMED') + '<span class="subvalue">' + esc(identity.conflict_status || 'UNCONFIRMED') + '</span>'],
-    ['身份来源', '<details><summary>核实来源与失败记录</summary><pre style="max-height:320px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;text-align:left">' + esc(JSON.stringify({sources:identity.sources || [],attempts:identity.metadata_attempts || [],mint_account_reason:identity.mint_account_reason || null,market_attempt:identity.market_attempt || {}},null,2)) + '</pre></details>'],
     ['CA', '<code class="summary-ca">' + esc(mint) + '</code>' + copyButton(mint,'复制 CA')],
     ['参考价', market.status==='OK' && market.price_usd != null ? esc('$'+smallPrice(market.price_usd)) : '<span class="unresolved">不可用</span>'],
     ['市值', esc(usd(market.market_cap_usd))],
     ['流动性', esc(usd(mainPair.liquidity_usd))],
   ].map(([k,v]) => '<div class="cluster-summary-card"><span>' + k + '</span><strong>' + v + '</strong></div>').join('');
 
+  $('cluster-identity-evidence').innerHTML =
+    '<details><summary>核对身份来源与失败记录（展开）</summary>' +
+    '<pre style="max-height:260px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px">' +
+    esc(JSON.stringify({sources:identity.sources || [],attempts:identity.metadata_attempts || [],
+      mint_account_reason:identity.mint_account_reason || null,market_attempt:identity.market_attempt || {}},null,2)) +
+    '</pre></details>';
+
   const activeAuthorities = assessment.active_authorities || [];
   const activeExtensionRisks=assessment.active_extension_risks || [];
   const unresolvedExtensionRisks=assessment.unresolved_extension_risks || [];
   let chainConclusion = '合约权限未确认';
-  if (assessment.chain_permission_status === 'PASS') {
+  if (assessment.chain_permission_status === 'PASS' && profile.status === 'OK') {
     chainConclusion = 'Mint authority 与 Freeze authority 均未活动；已解析的敏感 Token-2022 扩展未发现活动风险。';
   } else if (assessment.chain_permission_status === 'RISK') {
     const risks=activeAuthorities.concat(activeExtensionRisks.map(x => 'Token-2022 ' + (x.name || '扩展') + ' / ' + (x.reason || 'ACTIVE_RISK')));
@@ -1116,6 +1122,18 @@ function renderClusterReport(report) {
     '<details class="cluster-assessment-history"><summary>历史判断变化（仅供复核）</summary>' +
     renderAssessmentHistory(report.assessment_history) + '</details>';
 
+  const extensionCleanVerified = profile.status === 'OK' &&
+    assessment.chain_permission_status === 'PASS' &&
+    Array.isArray(profile.extensions) &&
+    Array.isArray(profile.active_extension_risks) &&
+    Array.isArray(profile.unresolved_sensitive_extensions);
+  const activeExtensionLabels = Array.isArray(profile.active_extension_risks)
+    ? profile.active_extension_risks : [];
+  const inactiveExtensionLabels = Array.isArray(profile.inactive_sensitive_extensions)
+    ? profile.inactive_sensitive_extensions : [];
+  const unresolvedExtensionLabels = Array.isArray(profile.unresolved_sensitive_extensions)
+    ? profile.unresolved_sensitive_extensions : [];
+
   const supplyApprox = report.supply_raw == null || report.decimals == null
     ? NaN : Number(report.supply_raw) / (10 ** Number(report.decimals));
   $('cluster-token-profile').innerHTML =
@@ -1125,10 +1143,15 @@ function renderClusterReport(report) {
     fact('Mint authority',authorityText(profile.mint_authority,profile.status)) +
     fact('Freeze authority',authorityText(profile.freeze_authority,profile.status)) +
     fact('Metadata update authority',authorityText(profile.metadata_update_authority,profile.metadata_update_authority_status==='CHAIN_PARSED' ? 'OK' : 'UNAVAILABLE')) +
-    fact('Token-2022 扩展','<span>' + esc((profile.extensions || []).join(', ') || '无已解析扩展') + '</span>') +
-    fact('活动扩展风险','<span>' + ((profile.active_extension_risks || []).length ? '<span class="warn-text">' + esc((profile.active_extension_risks || []).map(x => (x.name || '扩展') + ': ' + (x.reason || 'ACTIVE_RISK')).join(', ')) + '</span>' : '<span class="ok-text">未发现</span>') + '</span>') +
-    fact('非活动敏感扩展','<span>' + esc((profile.inactive_sensitive_extensions || []).map(x => x.name || '扩展').join(', ') || '无') + '</span>') +
-    fact('待核实敏感扩展','<span>' + ((profile.unresolved_sensitive_extensions || []).length ? '<span class="warn-text">' + esc((profile.unresolved_sensitive_extensions || []).map(x => x.name || '扩展').join(', ')) + '</span>' : '<span class="ok-text">无</span>') + '</span>');
+    fact('Token-2022 扩展','<span>' + esc(Array.isArray(profile.extensions)
+      ? (profile.extensions.join(', ') || (extensionCleanVerified ? '无已解析扩展' : '未确认')) : '未确认') + '</span>') +
+    fact('活动扩展风险','<span>' + (activeExtensionLabels.length
+      ? '<span class="warn-text">' + esc(activeExtensionLabels.map(x => (x.name || '扩展') + ': ' + (x.reason || 'ACTIVE_RISK')).join(', ')) + '</span>'
+      : extensionCleanVerified ? '<span class="ok-text">已核实未发现</span>' : '<span class="unresolved">未确认</span>') + '</span>') +
+    fact('非活动敏感扩展','<span>' + esc(inactiveExtensionLabels.map(x => x.name || '扩展').join(', ') || (extensionCleanVerified ? '无' : '未确认')) + '</span>') +
+    fact('待核实敏感扩展','<span>' + (unresolvedExtensionLabels.length
+      ? '<span class="warn-text">' + esc(unresolvedExtensionLabels.map(x => (x.name || '扩展') + ': ' + (x.reason || 'UNRESOLVED')).join(', ')) + '</span>'
+      : extensionCleanVerified ? '<span class="ok-text">无</span>' : '<span class="unresolved">未确认</span>') + '</span>');
 
   const h24tx=(mainPair.txns || {}).h24 || {};
   const h1tx=(mainPair.txns || {}).h1 || {};
@@ -1182,7 +1205,7 @@ function renderClusterReport(report) {
     '<div class="coverage-grid">' +
       '<div><span>RPC 调用</span><strong>' + esc(coverage.rpc_calls ?? 0) + '</strong></div>' +
       '<div><span>本地缓存命中</span><strong>' + esc(coverage.rpc_cache_hits ?? 0) + '</strong></div>' +
-      '<div><span>使用 RPC 节点</span><strong>' + esc(Object.keys(coverage.rpc_endpoint_calls || {}).length || 1) + '</strong></div>' +
+      '<div><span>使用 RPC 节点</span><strong>' + esc(Object.keys(coverage.rpc_endpoint_calls || {}).length || (Number(coverage.rpc_calls || 0) > 0 ? '未确认' : 0)) + '</strong></div>' +
       '<div><span>RPC 失败/限流</span><strong>' + esc(rpcFailures) + '</strong></div>' +
       '<div><span>每 owner 历史上限</span><strong>' + esc(coverage.history_per_holder ?? 0) + '</strong></div>' +
       '<div><span>Funding 回看</span><strong>' + esc(coverage.funding_lookback ?? 0) + '</strong></div>' +
