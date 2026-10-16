@@ -1,0 +1,71 @@
+我会按你给的规程做只读复审：先核对 PR 头部和两个固定 SHA，再看 diff 和测试结果。开始拉取仓库。PR #66 头部与固定 SHA 一致。接着检出只读 detached HEAD，看 base..HEAD 的变更范围。变更很小：6 个文件，主要是新增 `frank_f02_manual_refresh.py`。我先看完整 diff，再逐段核对。新 CLI 的主流程读完了。有几处需要对照现有模块确认：`reconcile()` 的结果是否真正拦住写入、`collect_owner_full_receipts` 是否把超时转成 partial、TTL 用的是否真实采集时间，以及打印出的 URL 是否与 handler 路由一致。先看 diff 的其余部分。页面文案和 workflow 的改动看起来与规程一致。接下来核对依赖的已批准模块，重点是 `reconcile()` 的返回与时间戳来源。`reconcile()` 在输入不合格时直接抛错，会在写 SQLite 之前截断，这一点成立。下面查采集时间戳的来源，以及 `collect_owner_full_receipts` 的超时处理。采集时间取的是 `collect_owner_full_receipts` 开始时的 `now()`，在两次 RPC 之前，对 TTL 偏保守，没问题。接下来看只读 API 的 TTL 判定和路由/Host 校验。TTL 判定依赖存储的 `observed_at_utc`，`positions()` 默认用真实时钟，且 readiness 绑定到了已验证的 `capture_sha256`。接着看路由和 Host 校验。路由、Host 校验和固定静态映射都在。还需确认两点：`_wire_rpc` 的异常类型是否会被 `collect_owner_full_receipts` 的 except 完整覆盖（比如 `http.client.HTTPException` 不是 `OSError` 子类），以及 `_assert_directory` 对不存在路径的处理。`_wire_rpc` 只允许 HTTPS、拒绝重定向、硬性限制两次调用，这些都符合规程。我把剩下的异常路径看完，判断 `HTTPException` 之类是否会逃出 partial 处理。传输层异常在 `_wire_rpc` 内已被统一转成 `RuntimeError`，而 `collect_owner_full_receipts` 也捕获 `RuntimeError`，所以 partial 路径是闭合的。接下来准备环境跑测试。先看依赖声明。依赖很轻（`websockets`、`pytest==8.3.5`），Python 3.12 满足 `>=3.11`。建一个隔离 venv 安装 dev 依赖，并补上 CI 用的 pyflakes。依赖就绪（websockets 15.0.1、pytest 8.3.5，与规程一致）。先按规程的第一条命令跑 F02 相关测试集。F02 专项 85 项全部通过，与规程里 CI 的 module 85 数量一致。接着跑 Node 渲染测试和 pyflakes 静态检查（CI 同款）。Node 渲染、编译、pyflakes、JS 语法全部通过。最后跑全量回归（带真实 Git 回放开关），这一步耗时较长。全量 1613 通过，3 个跳过。跳过原因是 `numpy` 未装（属于 monster 回放的可选依赖），不是失败。为了不留下盲区，我装上 `requirements-monster-replay.txt` 里的 numpy 把这 3 个跑完。这 3 个文件 27 项全部通过。接下来做规程要求的联合检查：在独立临时树上叠加 main、本 HEAD、C02 与 F01。先确认这几个提交的祖先关系和是否存在。主线 `main` 与本 PR 不是祖先关系，需要先弄清楚两条线的分叉点，才能正确组装联合树。分叉点已确认：本 HEAD 与 `main` 在 `17a71c86` 分叉，C02 在 `4ac0b161` 分叉，F01 在 `449edcf1` 分叉。我在独立 worktree 里按规程顺序合并，看是否有冲突。合并本 HEAD 无冲突。接着叠加 C02 与 F01。三次合并都无冲突，联合树 HEAD 为 `b904974d`。（规程里开发方记录的本地联合 SHA 是 `b772f459`，差异来自合并顺序，不影响内容比较，我以实际树内容为准。）在联合树上跑全量回归。联合树全量 1692 通过，Node 两个渲染测试都 PASS，与规程里的 1692 数量一致。
+
+接下来是规程里的运行时检查：真实 localhost HTTP 与浏览器。先看环境里有没有可用浏览器。Playwright 的浏览器下载域名不在白名单里。试一下 Ubuntu 的软件源（`archive.ubuntu.com` 在白名单内）。浏览器这一项在本环境无法实现：Playwright 的 CDN 被拦，Ubuntu 的 chromium 只有 snap 壳。我会如实标注为未执行，并用真实 HTTP 与 Node DOM 渲染替代其中能覆盖的部分。
+
+接下来做 CLI 的真实执行检查。为了避免任何真实 RPC，我把 RPC 地址指向本机 `127.0.0.1:9`（连接必然被拒），这样能走到真实的 `_wire_rpc` 代码路径，而不会访问外网。`PIPESTATUS` 在 `/bin/sh` 下不可用，导致后面的步骤没有执行。前两项结果已经拿到（PLAN_ONLY 不建目录，`--serve` 单独使用被拒绝，返回码 2）。我用 bash 重跑端口占用和 partial 路径。端口占用检查通过：返回码 1、未创建会话目录。但 `pkill -f "http.server 18766"` 匹配到了自己的 bash 命令行，把执行环境一起杀掉了，所以 d) 没跑。我改用带括号的正则避免自匹配，重跑 d) 并确认占用端口的测试进程已清理。CLI 的 partial 路径符合要求：返回 `PARTIAL_SOURCE`、退出码 2、`sidecar_created=false`、没有 `positions.sqlite`，也不复用旧库。
+
+下一步是真实 localhost HTTP 测试。用合成来源（来自测试 fixture，不是真实链上数据）生成一个新会话，在后台起真正的 HTTP 服务，然后用 curl 检查 Host 拒绝、错误 wallet、错误路径、CSP 头和 JSON 内容。服务会保持运行，以便之后用真实时钟检查 TTL 过期。服务已在 127.0.0.1:18799 上运行，合成会话的状态计数与预期一致（1 非零、1 零、30 未观察到开放账户）。接下来逐项做 HTTP 检查。连接全部失败（000，curl 退出码 7）。先看服务是否还活着。服务在上一次工具调用结束时被一并回收了，日志里只有 READY 没有错误。改用 `setsid` 完全脱离进程组重新启动，再做 HTTP 检查。服务已正常监听（探测返回 200）。重跑刚才的 HTTP 检查。HTTP 层的全部检查通过：Host 伪造与 DNS 重绑定变体返回 403，错误 wallet/person/重复参数/未知参数返回 400，路径穿越与私有目录返回 404，CSP 与 `X-Frame-Options` 头齐全。
+
+现在看 API 的 JSON 内容，并检查是否泄露了会话路径、原文 bundle 或数据库路径。API 的内容与规程要求一致：SHA 绑定、精确数量 `123.000000`、零与未观察到账户分开、USD/PnL 为 null、无 bundle 或路径泄露。
+
+接下来两件事：一是确认 API 代码路径里没有任何网络调用（重新读取不应请求 RPC）；二是看前端对「未观察到开放账户」和「零」的展示是否区分。同时记下 TTL 的起点，待会用真实时钟验证过期。前端把「未观察到开放账户」渲染为 `—` 与标签，不会显示成 0，区分正确。读取路径里没有任何 RPC 或 socket 调用，`urllib.parse` 仅用于解析查询串。
+
+TTL 锚点是 05:58:34 UTC，真实过期点约为 06:03:34。在等待期间，我做规程要求的「原文篡改拒绝」检查：复制一份 bundle，篡改一个字节，再用同样的重放函数校验，确认会被拒绝。原 bundle 不动，以免影响正在服务的会话。篡改样本被拒绝（`OWNER_SOURCE_NOT_FULLY_VERIFIED`），原 bundle 重放仍通过且 SHA 一致。
+
+最后做真实时钟的 TTL 检查：在 300 秒边界附近分别采样（观察时间 +约 285 秒应仍为新鲜，+约 305 秒应全部遮罩）。先等到边界前。TTL 的真实时钟检查通过：286 秒时仍为新鲜，305 秒时 readiness 变为 `STALE_ARCHIVED_SOURCE`，32 个目标全部遮罩为 `SOURCE_UNAVAILABLE`，没有任何数量字段。
+
+收尾做三件事：PR 头部漂移复查、确认检出目录没有改动被审文件、读一下随 PR 的说明文档是否与代码行为一致。文档的几处说法需要和代码对照。两处我特别要核实：一是文档称新测试文件有「7 项工作流回归」，我数到的是 4 个 `def test_`；二是文档说可以用既有 `frank_f02_readonly_positions_api --bundle --sidecar --serve` 复用新会话，需要确认该 CLI 是否真有这些参数。我之前数的 4 个是错的：当时的 diff 输出被截断了，漏看了后面三个测试。实际文件有 7 个 `def test_`，与文档「7 项」一致。既然我漏读过这部分，就补读剩下的测试代码，确认断言内容。这三个测试的断言与代码行为一致：错误端口在 RPC 之前失败、非法 flags 不产生写入、旧采集时间不会因导入而变新（用 1000 秒前的时间注入验证，结果为 `STALE`、32 个遮罩）。
+
+文档还提到一条复用路径：用既有 R1 CLI 只读打开同一新会话，不再访问 RPC。我顺便实测这条路径，确认旧采集时间保持不变。R1 复用路径的结果正确：重新打开后 `observed` 仍是 05:58:34（没有因导入变新），由于已超过 300 秒，状态为遮罩，Host 伪造返回 403。返回码 -1 又是因为 `pkill -f` 匹配到了自身命令行，我用括号正则避免这个问题，再清理两个临时服务。## 结论：APPROVE
+
+这个结论只适用于本 PR 的范围：手动新来源会话，以及只读的 F02 页面。没有发现 P0、P1、P2 问题。这不是生产授权，也不代表可以合并或部署，Draft / NO_MERGE / NO_DEPLOY 状态保持不变。
+
+### 身份核对
+- PR #66 的远端头与 `a20a9f9` 一致，开始和结束时各核对一次，没有漂移。
+- base `a59e423` 是祖先，diff 为 6 个文件，+357 / −5。
+- 检出为 detached HEAD，没有已跟踪文件被修改。
+
+### 我实际执行的验证
+
+| 项目 | 结果 |
+|---|---|
+| 规程指定的 6 个 F02 相关模块 pytest | 85 passed，与 CI module 数一致 |
+| `frank_f02_r2_render.cjs` | PASS |
+| compileall / pyflakes / `node --check` | 全部通过 |
+| 全量测试，`FRANK_EXPECT_REAL_GIT_REPLAY=1` | 1613 passed，3 个模块因缺 numpy 被跳过。装上 `requirements-monster-replay.txt` 后这 3 个模块的 27 项全部通过，合计 1640 |
+| 临时联合树（main `8dec2857` + `a20a9f9` + C02 + F01） | 合并无冲突，全量 1692 passed，C02 与 F02 的 Node 渲染测试都 PASS |
+
+联合树的本地 SHA 是 `b904974d`，与开发方记录的 `b772f459` 不同，原因是合并顺序不同，以树内容和测试结果为准。规程里提到的「89 专项」我没有复现，我跑出的规定 6 模块为 85 项。
+
+### 运行时检查（合成来源，不访问外网）
+- 默认 PLAN_ONLY：没有网络访问，也没有创建目录。
+- `--serve` 不带 `--execute`：被拒绝，退出码 2。
+- 端口被占用：报 UNAVAILABLE，退出码 1，没有创建会话目录，说明在 RPC 和 SQLite 之前就失败了。
+- `--execute` 指向本机不可达的 RPC：结果为 PARTIAL_SOURCE，退出码 2，没有 sidecar，没有 positions.sqlite，也没有回用旧库。
+- 合成会话经真实 loopback HTTP 提供服务：页面返回 200，CSP、X-Frame-Options、no-store 头齐全，页面包含新来源说明，搜索框文案为「筛选已载入的 32 个 Mint」。
+- Host 伪造（`evil.com`、`127.0.0.1.evil.com`、`localhost.evil.test`）返回 403；`localhost` 返回 200。
+- 其他 wallet、其他 person_id、重复参数、未知参数返回 400；路径穿越和私有路径返回 404。
+- API 内容：readiness 为 FRESH。合成数据中 1 个非零（raw 123000000，decimals 6，显示 123.000000），1 个零，30 个未观察到开放账户。未观察到账户的数量为 null，前端显示「—」而不是 0。USD 和 PnL 全为 null，响应里没有路径或 bundle 名泄露。
+- 原始 bundle 重放通过，SHA 一致。复制一份并篡改 1 个字节后，重放被拒绝，报 `OWNER_SOURCE_NOT_FULLY_VERIFIED`。
+- 真实时钟 TTL：约 286 秒时仍为新鲜；305 秒时变为 `STALE_ARCHIVED_SOURCE`，32 个目标全部 SOURCE_UNAVAILABLE，没有数量。
+- 文档中提到的复用路径（既有 R1 CLI 的 `--bundle --sidecar --serve`）：重新打开后采集时间不变，超过 TTL 后仍然遮罩，Host 伪造同样返回 403。
+
+### 静态核对
+- 读取路径中没有 RPC 或 socket 调用。
+- `_wire_rpc` 只允许 HTTPS，不跟随重定向，最多调用两次，错误统一转为不带 URL 的 RuntimeError。
+- `reconcile()` 在 SQLite 写入之前执行，输入不合格时直接抛错。
+- partial 路径不会返回服务实例。
+- TTL 使用存储的采集时间，以及真实时钟。采集时间取的是采集开始时刻，对 TTL 偏保守。
+
+### 未覆盖的部分
+- **真实浏览器没有执行。** 沙箱里没有 Chromium：Playwright 的 CDN 不通，Ubuntu 的 chromium 包只是 snap 壳。Node DOM 渲染测试通过，但复制到剪贴板、布局、移动端仍需要真人在浏览器里走一遍。
+- **真实 RPC 和用户 Mac 上的来源没有执行。** 规程要求明确授权，我没有用真实 Frank 数据。
+- 我没有独立拉取 CI run `38688586451` 的日志，只做了本地复现。
+- 我没有把报告写入或推送到进度分支。如需归档，可把本段作为 `independent-review.md` 的内容。
+
+### P3（不阻塞）
+1. **失败尝试会留下会话目录。** 每次失败都会在 `manual-sessions` 下留下一个目录，里面有部分原文 bundle，目前没有清理或保留策略。建议在文档中写明手动清理的方式，之后再考虑保留策略。
+2. **PARTIAL 摘要信息不足。** CLI 摘要只给出 `missing_program_count`，没有说明是哪个程序、什么错误。manifest 里其实已有 `program_id` 和 `error_type`，建议直接放进摘要，方便区分超时、限流和 slot 不足。
+3. **测试覆盖可以再补一条。** 新测试文件没有直接覆盖「刷新流程中篡改原文被拒绝」和「对账失败」两条路径。篡改拒绝我已用真实样本手动验证，并且有既有 replay 测试覆盖，所以这里只是可选的补充。
+
+本次临时启动的服务均已停止，端口已释放，合成数据只存在于沙箱目录中，不在仓库内。
