@@ -718,3 +718,14 @@ Remaining verified gaps / dependencies:
 - [ ] 不同 AI 逐 PR 审 `#81/#82` 各自最新精确 SHA，独立复现 P1/P2/P3；未有 APPROVE 之前任何合并/部署均不允许。
 - [ ] 不复用旧 `9479e330...` Mac 合并树；审后构建全新 disposable F01#81+C02#82+F02 固定集成，检查共有 `app.js` 冲突、回归全量、Mac Safari 精确端到端，未经另行允许不可启动新服务/真实 RPC/读私有 SQLite。
 - 继续 `NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_NEW_AUTOMATION / NO_FILE_CLEANUP`。
+
+
+## 2026-10-16 第三轮独立审核修复 PR #83/#84：跨语言报价和原始 authority 缺失
+
+- 最新独立审核对 **F01 #81** 精确 SHA `db0ea8505fe7ebe27697db9c0fdd7dea5bb0bc0d` 与 **C02 #82** 精确 SHA `58492f0bdf7633594972702a60cf796cb0a56cca` 分别给 `REQUEST_CHANGES`，仍各有 P2，新旧 SHA 均不得回溯批准。
+- F01 P2：Python `Decimal(1e-999)` 可通过本地正值门禁，浏览器 `Number(...)=0`，API `eligible_count=1` 却在页面“不跟”的同时显示价格 0 和原冲击；反面 `1e999` 无限大。P3：`1e-9` 是真实可表示小正价但页面 `money()` 四舍五入为 0。**独立后继 [Draft PR #83](https://github.com/lxxlx2/ChatGPT_mission_record/pull/83)**，固定 SHA **`d2eeebc1b49d2bae38e05d7d01f6839e3ba237f4`**：后端 quote 对浮点不可表示的正价/冲击失败关闭；实际 F01 页面显示三个关联价格字段只消费同一份 quoteVerified，tiny 正值转科学记数法。合成 Python 正/负样本 + 真实 JS DOM 回归通过；[CI #38863225593](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38863225593) **SUCCESS：60 targeted、1487 full**，保留原策略/Writer/outbox。
+- C02 P2：RPC 原始 `info` 缺两项 authority，却因 `info.get()` 补全 None 而在 backend `chain_permission_status=PASS`；传导到历史 `removed_uncertainty`、Markdown、UI。**独立后继 [Draft PR #84](https://github.com/lxxlx2/ChatGPT_mission_record/pull/84)**，固定 SHA **`8d425e4d0e9db9f27abd8ad662e4d59e64b57e53`**：在 native raw RPC 边界确保两键均**原文存在**且各为显式 null 或有效 32-byte base58 authority；缺/坏字段状态 UNCONFIRMED，链权限 UNRESOLVED，保留真正有效活动权限 RISK。真实 `WalletClusterAnalyzer` + synthetic RPC 阴阳性、历史记录 + Markdown 完整回归完成；[CI #38863658826](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38863658826) **SUCCESS：35 targeted、1454 full**。最初 run [#38863238480](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38863238480) 报告坏 authority 被算为 RISK（新测试 1 failed）已修复，不删除测试。
+- [正式修复与原失败证据记录](https://github.com/lxxlx2/ChatGPT_mission_record/blob/08701acef6097a2995631ccbb34e75d2524745d1/crypto-300-profit-mission/meme/FRANK_SAFARI_PR77_PR78_REVIEW_REMEDIATION_20261016.md)；尚未独立其他 AI 审核新的 #83/#84 固定 SHA；以下门禁**不得跳过**。
+- [ ] 另一 AI 分别固定 SHA 审核 #83/#84，必须再次真实复现极小/极大报价+小正价和原始 RPC 缺/显式 null/活动 authority + audit/history/Markdown；返回独立 `APPROVE` 或 `REQUEST_CHANGES`。
+- [ ] 其他 AI 通过后，固定三源 F01 #83 + C02 #84 + 已审 F02 在**新 disposable** 本地组合，核查对同一 `app.js` 的交叉覆盖/冲突，执行联合 full tests/Node + 经用户明确授权的最新 Mac Safari，F01/F02/C02 用户业务版始终 2 导航、F02 仅研究页，正式 DOM 禁显 Slot/SHA。**不复用**旧 Mac `9479e330...` 的 PASSED。
+- `NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_NEW_AUTOMATION / NO_FILE_CLEANUP` 全部保持。
