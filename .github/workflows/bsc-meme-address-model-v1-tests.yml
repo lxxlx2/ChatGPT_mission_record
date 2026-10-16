@@ -138,19 +138,19 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
         run: |
           set -euo pipefail
-          [[ "$REVIEWED_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$REVIEWED_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1
           if [[ "$EVENT_NAME" == "pull_request" ]]; then
-            [[ "$EVENT_PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]
-            test "$REVIEWED_HEAD_SHA" = "$EVENT_PR_HEAD_SHA"
+            [[ "$EVENT_PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1
+            test "$REVIEWED_HEAD_SHA" = "$EVENT_PR_HEAD_SHA" || exit 1
           elif [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
-            test -z "$EVENT_PR_HEAD_SHA"
-            [[ "$EVENT_SHA" =~ ^[0-9a-f]{40}$ ]]
-            test "$REVIEWED_HEAD_SHA" = "$EVENT_SHA"
+            test -z "$EVENT_PR_HEAD_SHA" || exit 1
+            [[ "$EVENT_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1
+            test "$REVIEWED_HEAD_SHA" = "$EVENT_SHA" || exit 1
           else
             echo "Unsupported event for BSC read-only QA: $EVENT_NAME" >&2
             exit 1
           fi
-          test "$(git rev-parse HEAD)" = "$REVIEWED_HEAD_SHA"
+          test "$(git rev-parse HEAD)" = "$REVIEWED_HEAD_SHA" || exit 1
           echo "PASS $EVENT_NAME direct source SHA checkout $REVIEWED_HEAD_SHA"
       - name: Confirm frozen Git input blob
         shell: bash
