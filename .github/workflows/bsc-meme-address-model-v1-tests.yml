@@ -53,6 +53,7 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_2026_crossowner_u.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_lonxia_observer_gate.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_lonxia_observer_gate.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_workflow_event_identity.py"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-lonxia-observer-nplus1-buy-sim-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-lonxia-3-real-market-sells-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-lonxia-independent-review-errata-2026-10-16.json"
