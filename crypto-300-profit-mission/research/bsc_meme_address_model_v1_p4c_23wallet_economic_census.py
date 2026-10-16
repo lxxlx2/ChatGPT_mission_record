@@ -121,7 +121,7 @@ def census(d):
             and d["adff_boundary"]["original_acquisition_payment_source"].startswith("UNRESOLVED")
             and d["adff_boundary"]["original_owner_realized_pnl"] == "UNRESOLVED"
             and d["adff_boundary"]["P5"] == "BLOCKED"
-            and d["adff_boundary"]["production"] if False else True,
+            and d["adff_boundary"]["PRODUCTION"] == "NO_GO",
             "ADFF_PAYMENT_BASIS_UNRESOLVED")
     # No dynamic winner score, and no current wallet activity inference.
     rows = []
@@ -196,8 +196,8 @@ def census(d):
         "ERC20_present":148,"ERC20_absent":289,
         "curated_signed_closed_episodes":50,"curated_wallets":7,
         "other_wallets_without_selected_rounds_not_losses":16,
-        "curated_native_scope_positive_not_realized_PnL":31,
-        "curated_native_scope_negative_not_realized_PnL":17,
+        "curated_native_scope_positive_not_realized_PnL":30,
+        "curated_native_scope_negative_not_realized_PnL":18,
         "curated_mixed_quote_references_not_native_PnL":2,
         "curated_gas_WBNB_partial_settlement_grade":4,
         "selected_2026_two_major_positive_receipt_gas_case":"8E6B_ONLY_SELECTED_SOURCE_NOT_STATISTICAL_WINNER",
