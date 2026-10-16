@@ -98,7 +98,15 @@ def collect(source_dir: Path, audit_file: Path, *, api=gh_json, downloader=gh_do
         if (run.get("id") != run_id or run.get("status") != "completed"
                 or run.get("conclusion") != "success"
                 or run.get("repository", {}).get("full_name") != REPO):
-            raise RuntimeError("MONSTER445_REPLAY_PRODUCER_RUN_NOT_SUCCESS")
+            raise RuntimeError(
+                "MONSTER445_REPLAY_PRODUCER_RUN_NOT_SUCCESS "+json.dumps({
+                    "artifact_id":artifact_id,"run_id":run_id,
+                    "run_status":run.get("status"),
+                    "run_conclusion":run.get("conclusion"),
+                    "run_repo":run.get("repository",{}).get("full_name"),
+                    "artifact_head_sha":artifact["workflow_run"].get("head_sha"),
+                    "run_head_sha":run.get("head_sha"),
+                },sort_keys=True))
         subdir = source_dir / f"artifact_{artifact_id}"
         subdir.mkdir()
         downloader(run_id, artifact["name"], subdir)
