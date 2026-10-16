@@ -161,3 +161,16 @@ After send:
 - only then mark full delivery complete.
 
 A short correction/supplement is supplemental only and cannot become the canonical daily body.
+
+## 2026-10-16 delivery proof and suffix-aware deduplication
+
+The 2026-10-16 primary 09:20 invocation persisted `runs/2026-10-16/092111-final.md` with `BLOCKED_WITH_REASON` from a Gmail safety gate, and had no 08:20 `delivery-pending/2026-10-16.md`. In an authorized same-day recovery, a complete 13-section email was actually sent and read back:
+- report date: 2026-10-16
+- Gmail Sent subject: `Crypto Daily Brief｜2026-10-16｜正式补发`
+- Gmail Sent message ID: `1a1429397db803fe`
+- canonical Git body: `crypto-daily/reports/daily/2026/2026-10/2026-10-16.md`
+- Git archive SHA: `19438b9b738b211bdda7ace0d6fe674c95e4acbd`
+
+**Recovery idempotency fix:** search Gmail Sent by the canonical date SUBJECT PREFIX `Crypto Daily Brief｜YYYY-MM-DD`, including `｜正式补发`, `｜历史漏发补送` and corrected subjects. Accept one matching authoritative, full-body, Sent-readback Gmail message plus canonical Git body equality as delivery proof. Never require the subject to equal the unsuffixed base string, and never resend because the approved recovery edition has a suffix.
+
+At each existing 08:20 run, persist a durable QA-evidenced pending body and input manifest before optional deeper collection; if unable, persist a truthful reason in the terminal audit. At 09:20/10:20/11:20, lack of pending must trigger bounded reassembly and the unchanged full CR-01..CR-20 QA gate. Platform safety rejection remains BLOCKED_WITH_REASON and must not be bypassed; recover only via ordinary authorized calls. Gmail Sent/readback and canonical Git proof take precedence over any historical blocked attempt artifact. This fixes dedupe and records a reproducible prebuild gap; it does not assert that future platform safety blocking has been eliminated.
