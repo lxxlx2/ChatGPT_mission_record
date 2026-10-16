@@ -103,3 +103,11 @@ If delivery fails, persist PENDING_DELIVERY and retry delivery before evaluating
 - notification_decision
 
 If fields are insufficient to pass safely, default NO_ACTION / UNVERIFIED_CANDIDATE.
+
+## Gate 1B — External issuer benefiting an active registered project (2026-10-16)
+
+This is a **narrow additional relationship mode** inside the existing registered beneficiary project's monitoring scope, NOT permission to add an unrelated issuer project to the global Registry. A candidate may match existing registered project `P` as a beneficiary when first-party issuer `Q` expressly names the relevant `P` holders/users/contributors as eligible or proposed recipients, and `Q`'s issuer identity and source are independently validated. Persist BOTH `beneficiary_project_id=P` and `external_issuer_id=Q`, with a unique relationship event_key such as `Q:token_P_community_allocation:date`.
+
+A verified `Q` first-party source expressing a real new right to `P` beneficiaries may count as Tier A *for that external issuer's own commitment only*; it cannot imply approval by `P`, actual user eligibility, amount, snapshot, signed distributor authority, or safe claim link. A registered/mapped Tier B beneficiary-source notice can separately confirm user rights. If only a secondary report attributes the statement to `Q`, status remains `VERIFYING_PARTNER_RIGHTS`; no ACTION Gmail until firsthand publication and existing Gates 0/3/4/5/6 pass. For an announcement that merely promises to **publish eligibility and a portal after TGE**, capture the meaningful new candidate, but wait for an actual verified, still-current actionable eligibility/claim milestone before a claim-action email, unless independent verified evidence establishes an immediate material user-risk action.
+
+Identity collisions hard-fail: NeoSoul DNA is distinct from the legacy Neo/NEO blockchain; Binance Alpha Points generic DNA claim is distinct from a promised StandX contributor-compensation allocation. Stable event key of the original StandX shutdown cannot suppress a new NeoSoul->StandX allocation event. None of these exceptions relax the non-duplicate, approved-channel, Tier A/B, recipient, or no-fabrication gates.
