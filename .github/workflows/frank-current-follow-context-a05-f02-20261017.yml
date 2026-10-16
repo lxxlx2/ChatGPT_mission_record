@@ -66,6 +66,7 @@ jobs:
           dest="$(mktemp -d "$RUNNER_TEMP/frank-current-joint-XXXXXXXX")"
           git clone --no-local --quiet "$GITHUB_WORKSPACE" "$dest"
           git -C "$dest" checkout --quiet --detach "$GITHUB_SHA"
+          git -C "$dest" fetch --no-tags --quiet "$GITHUB_WORKSPACE" "$C02" "$F01" "$QA_HARNESS"
           for sha in "$C02" "$F01" "$QA_HARNESS"; do
             git -C "$dest" -c user.name="Frank source QA" -c user.email="qa@example.invalid" merge --no-edit --no-ff --no-gpg-sign "$sha"
             git -C "$dest" merge-base --is-ancestor "$sha" HEAD
