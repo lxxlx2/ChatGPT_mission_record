@@ -26,6 +26,8 @@ PINS = {
           "b06b2ef565ebd74bc7f83ad4a2ea731eeb5cb2b9"),
     "headers": ("bsc-meme-address-model-v1-p4b-dragon-postowner-four-execution-block-headers-2026-10-16.json",
                "e1f03de64a7716625ad5968df8fd389b48e8b261"),
+    "overlay": ("BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V21_2026-10-12.json",
+                "3761b9140d0c64b1ffd8d8d243d63a2a1a4fc690"),
 }
 TOKEN = "0xeccbb861c0dda7efd964010085488b69317e4444"
 MANAGER = "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
@@ -60,6 +62,11 @@ def classify(docs):
     need(pre["source_revision"] == "7c7c17d001114cbebd4afe6f056143955a73b025"
          and pre["token_exact_CA"] == TOKEN and pre["manager"] == MANAGER
          and pre["owner"]["block"] == 83635776, "PRECOMMIT_SCOPE_DRIFT")
+    frozen_cohort = docs["overlay"]["cells_by_wallet"]
+    frozen_addresses = {w["wallet"].lower() for w in frozen_cohort}
+    need(len(frozen_cohort) == len(frozen_addresses) == 23 and
+         D503 not in frozen_addresses and E11B not in frozen_addresses,
+         "UNREGISTERED_MARKET_OBSERVER_EOAS_FALSELY_PROMOTED_TO_FROZEN_23")
     cases = pre["actual_buy_candidates_frozen_before_new_exit_RPC"]
     need(len(cases) == 2 and [c["wallet"] for c in cases] == [D503, E11B]
          and [c["buy_block"] for c in cases] == [83636000, 83636000],
@@ -213,6 +220,8 @@ def classify(docs):
         "source_blobs": {key: {"path": n, "git_blob": blob}
                          for key, (n, blob) in PINS.items()},
         "frozen_actual_buyers": 2, "postowner_buy_senders_with_direct_pre_migration_sell": 1,
+        "outside_frozen_23_market_buyers": [D503, E11B],
+        "not_a_23wallet_profit_ranking_upgrade": True,
         "d503_confirmed_original_signed_token_roundtrips": 2,
         "e11b_direct_curve_sell_to_manager_observed": 0,
         "e11b_retained_token_at_83636127": str(inventory[E11B, 83636127]),
