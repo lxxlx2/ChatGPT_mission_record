@@ -707,3 +707,14 @@ Remaining verified gaps / dependencies:
 - 检查 PR 文件界限：[PR #77](https://github.com/lxxlx2/ChatGPT_mission_record/pull/77) 仅 F01 follow presentation gate、`static/app.js`、F01 Python+Node 测试、CI workflow 共 5 文件；[PR #78](https://github.com/lxxlx2/ChatGPT_mission_record/pull/78) 仅 C02 `static/app.js`、`static/index.html`、原 C02 Node 测试、CI workflow 共 4 文件。保留旧独立审查的 #44/#49/#73 精确 SHA 不变。
 - **本轮止于 `CODE_READY_INDEPENDENT_REVIEW_PENDING`**：两个模块各自还须由**另一 AI**固定 SHA 审阅复现后返回**独立的** APPROVE/REQUEST_CHANGES；通过后才执行两个新子补丁在临时 combined integration 里互相覆盖冲突的人工整合与更全面回归，再取得单独 Mac 隔离服务许可做真实 Safari 页面 QA。**不可将独立子 PR full-suite 绿灯当成两分支能正确合并，也不可把旧 Mac `9479e330...` 视为更新后 Safari 测试已通过**。原 F02 研究页 Slot/SHA 正式禁显/页面去重约束继续。
 - 用户确认优先修复页面真实 P2 不再拖到后续空议程；此次代码已在 GitHub 子分支完成、CI 成功；下一步独立其他 AI 审核要求**具体提示词同步在 PR 评论与用户回复**，reviewer 必须核对来源清洁、失败证据、案例，再给准许继续的 verdict。期间 `NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_NEW_AUTOMATION / NO_FILE_CLEANUP` 保持。
+
+
+## 2026-10-16 二轮独立审核 P1/P2 修复：PR #81/#82 已完成 CI，仍待复审
+
+- 原独立 reviewer 最新对 #79 `95fc00a7ab90b2fa28e34e97ec79b23db7addfa2`、#80 `f7aa430ffda98051821ac4a35ccf6d5d9b0bc95d` 均再次 `REQUEST_CHANGES`；各自 P2/P1 与 P3 完整留存，不回溯批准。
+- [Draft F01 #81](https://github.com/lxxlx2/ChatGPT_mission_record/pull/81)，固定待复审 SHA `db0ea8505fe7ebe27697db9c0fdd7dea5bb0bc0d`：BUY 缺已验证报价整卡显示 `decision-no-buy`（不再残留绿色边框）；Python 拒绝 `1_000`、有空格等非标准成交价格；真实 Node DOM 严格检查卡片类名、准确报价不可用字段以及 Slot 数字不外露。CI [#38841309899](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38841309899) **SUCCESS：51 专项，1478 全量**。
+- [Draft C02 #82](https://github.com/lxxlx2/ChatGPT_mission_record/pull/82)，固定待复审 SHA `58492f0bdf7633594972702a60cf796cb0a56cca`：修原生 `WalletClusterAnalyzer.analyze()` 中 `profile.OK`/未初始化 Mint 错误给 `chain_permission_status=PASS` 的 P1；未满足 VERIFIED/is_initialized/finalized/program/Slot/authority 的 mint 只能 UNRESOLVED，状态传导到交易判断/历史。前端拒绝矛盾 `WATCH / CHAIN_STRUCTURE_PASS`，整字段隐藏夹杂 HASH、Slot 的对外审计文本，保留后端原始来源。加**真实 native analyzer** 合成 RPC 正反测试，修正两组旧正向用例缺失的初始化证据。CI [#38841386133](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38841386133) **SUCCESS：34 专项，1453 全量**；先前旧夹具失败 CI 证据保留，没有跳过测试。
+- [完整独立复审修复/失败/CI 证据文档](https://github.com/lxxlx2/ChatGPT_mission_record/blob/44cbb86edc668042530f612fedf0070a4d667a28/crypto-300-profit-mission/meme/FRANK_SAFARI_PR77_PR78_REVIEW_REMEDIATION_20261016.md)。
+- [ ] 不同 AI 逐 PR 审 `#81/#82` 各自最新精确 SHA，独立复现 P1/P2/P3；未有 APPROVE 之前任何合并/部署均不允许。
+- [ ] 不复用旧 `9479e330...` Mac 合并树；审后构建全新 disposable F01#81+C02#82+F02 固定集成，检查共有 `app.js` 冲突、回归全量、Mac Safari 精确端到端，未经另行允许不可启动新服务/真实 RPC/读私有 SQLite。
+- 继续 `NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_NEW_AUTOMATION / NO_FILE_CLEANUP`。
