@@ -177,7 +177,7 @@ class Archived445ReplayTests(unittest.TestCase):
             content=(root/name).read_text(encoding="utf-8")
             block=content.split('if test -e "$target"; then',1)[1]
             block='if test -e "$target"; then'+block.split(
-                '\\n          fi',1)[0]+'\\n          fi'
+                chr(10)+'          fi',1)[0]+chr(10)+'          fi'
             env["target"]=folder+"/evidence/shard01.proof.json"
             dest=Path(env["target"])
             self.assertEqual(subprocess.run(
