@@ -75,6 +75,7 @@ def test_expired_a05_masks_quantity_without_removing_f01_candidate(tmp_path):
         doc = joint.JointReadOnly(control_port=ctrl.server_port,
                                   f02_port=f02.server_port).current_follow_context()
     assert doc["candidate_count"] == 1
+    assert doc["status"] == "CANDIDATES_WITH_A05_SOURCE_GAP"
     row = doc["candidates"][0]
     assert row["mint"] == mint
     assert row["f01_decision"] == "BUY"
