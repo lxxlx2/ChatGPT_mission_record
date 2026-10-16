@@ -136,3 +136,28 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - gmail_message_id: 1a13e6930e07d0ae
 - event_archive: airdrop-tge-monitor/reports/events/2026/2026-10/2026-10-15/1410-standx-winddown-dusd-airdrop.md
 - handling: keep StandX eligible for CURRENT existing dynamic urgent deadline/redemption checks until materially resolved, not as an additional project/watch task; suppress unchanged event recap emails; allow new verified material official deadline, open eligibility checker or claim window transition under a NEW stable material-delta event key only. Never suggest depositing to farm points.
+
+## 2026-10-16 newly discovered missed cross-project StandX community benefit
+
+### NeoSoul DNA proposed StandX contributor allocation
+- event_key: neosoul:dna_standx_community_allocation:2026-10-15
+- beneficiary_registry_project: standx / @StandX_Official (existing Shard 0)
+- external_issuer: NeoSoul / DNA, not legacy NEO blockchain
+- first_reported_at: 2026-10-15 (Binance News)
+- secondary_attributed_source: https://www.binance.com/en/square/post/10-15-2026-neosoul-plans-dedicated-dna-airdrop-for-standx-community-377570746498100
+- issuer_original_social_text_readback: SOURCE_GAP
+- reported_issuer_statement: NeoSoul / NS3.AI proposes dedicated DNA for long-term StandX contributors and eligibility/claim details after TGE.
+- personal_snapshot_eligibility_allocation_claim: UNVERIFIED
+- source_tier_for_STANDX_rights_ACTION: NOT_YET_A_OR_MAPPED_B
+- state: HIGH_MATERIALITY_VERIFYING_PARTNER_RIGHTS, NO_GMAIL_PENDING_AUTHORITATIVE_RIGHTS_PROOF
+- relationship_scope: existing StandX beneficiary check, no new independently monitored NeoSoul project
+- prior_delivery_dedupe: distinct from standx:winddown_dusd_airdrop:2026-10-15; the original StandX shutdown alert cannot suppress this new potential rights event
+- next_check: issuer first-party announcement/claim eligibility release after actual DNA TGE, with canonical account and exact evidence timestamp.
+
+### NeoSoul DNA Binance Wallet Alpha release (separate event)
+- event_key: neosoul:dna_binance_alpha_release:2026-10-16
+- verified_platform_source: https://www.binance.com/en-IA/square/profile/binancewallet
+- reported_platform_announcement: DNA Binance Alpha on 2026-10-16; qualified Alpha Points users can claim after trading opens, subject to later detailed rules
+- StandX_user_compensation_is_identical: FALSE, no relationship inferred between account Alpha Points and StandX-specific allocation
+- user_eligibility/actual_Alpha_points: UNVERIFIED
+- action_decision: do not deliver StandX-specific entitlement notice on generic Alpha announcement alone; retain a new material Crypto Daily news candidate and verify Alpha activity details before any action.
