@@ -1,11 +1,5 @@
 name: Monster original 445 first32 zero-quote D1 unsupported research V2
 on:
-  push:
-    branches: [research/monster-v4-local-discovery-20261010]
-    paths:
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_d1_zeroquote_research_v2.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_d1_zeroquote_research_v2.py'
-      - '.github/workflows/monster-v4-445-first32-zeroquote-research-v2.yml'
   workflow_dispatch:
 permissions:
   contents: write
@@ -124,6 +118,7 @@ jobs:
           set -eu
           branch=research/monster-v4-local-discovery-20261010
           dest=crypto-300-profit-mission/monster/evidence/monster_feb445_first32_zeroquote_D1_research_v2_actual.json
+          test ! -e "$dest" || { echo MONSTER445_LEGACY_EVIDENCE_ALREADY_EXISTS_NO_OVERWRITE; exit 1; }
           cp /tmp/monster_first32_v2/monster_feb445_first32_zeroquote_research_v2_actual.json "$dest"
           git config user.name monster-research-ci
           git config user.email monster-research-ci@users.noreply.github.com
