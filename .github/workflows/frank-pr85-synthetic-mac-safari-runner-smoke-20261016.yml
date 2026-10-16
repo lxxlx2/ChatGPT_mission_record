@@ -54,7 +54,9 @@ jobs:
         run: |
           set -euo pipefail
           python -B crypto-300-profit-mission/local-agent/scripts/frank_browser_screenshot_bundle.py --self-test
-          python -B crypto-300-profit-mission/local-agent/scripts/frank_browser_screenshot_bundle.py --qa-root "$HOME/.local/share/frank-pr85-mac-qa-R1c6kmCU" --launcher-file "$GITHUB_WORKSPACE/crypto-300-profit-mission/local-agent/scripts/frank_pr85_synthetic_safari_qa.py"
+          mkdir -p "$HOME/.local/share/frank-pr85-mac-qa-R1c6kmCU/qa-runtime"
+          cp crypto-300-profit-mission/local-agent/scripts/frank_pr85_synthetic_safari_qa.py "$HOME/.local/share/frank-pr85-mac-qa-R1c6kmCU/qa-runtime/frank-pr85-safari.py"
+          python -B crypto-300-profit-mission/local-agent/scripts/frank_browser_screenshot_bundle.py --qa-root "$HOME/.local/share/frank-pr85-mac-qa-R1c6kmCU" --launcher-file "$HOME/.local/share/frank-pr85-mac-qa-R1c6kmCU/qa-runtime/frank-pr85-safari.py"
           python -B - "$HOME/.local/share/frank-pr85-mac-qa-R1c6kmCU" <<'PY'
           from pathlib import Path
           import json,sys,zipfile
