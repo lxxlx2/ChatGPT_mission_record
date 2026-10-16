@@ -5,6 +5,7 @@ on:
     branches:
       - fix/frank-c02-unknown-risk-rpc-evidence-card-safari-20261016
       - fix/frank-c02-pr78-verified-mint-20261016
+      - fix/frank-c02-pr80-backend-verdict-qa-20261016
   workflow_dispatch:
 
 permissions:
@@ -35,7 +36,7 @@ jobs:
       - name: Targeted source regressions
         working-directory: crypto-300-profit-mission/local-agent
         run: |
-          python -B -m pytest -q -p no:cacheprovider tests/test_frank_ca_c02_claude_review_regression.py
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_ca_c02_claude_review_regression.py tests/test_meme_wallet_cluster.py
       - name: Complete local-agent Python regression
         working-directory: crypto-300-profit-mission/local-agent
         run: |
