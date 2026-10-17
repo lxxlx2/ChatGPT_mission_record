@@ -33,7 +33,7 @@ jobs:
               ['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],
               text=True).splitlines()
           expected={
-            'schema':'MONSTER163_SPOT_OFFICIAL_ORIGINAL_HTTP_T0_USER_CHAT_ONESHOT_V1',
+            'schema':'MONSTER163_SPOT_OFFICIAL_ORIGINAL_HTTP_T0_USER_CHAT_ONESHOT_V2',
             'source_base':'https://data-api.binance.vision',
             'raw_http_required':True,'source_only':True,
             'capture_date':'2026-10-18',
