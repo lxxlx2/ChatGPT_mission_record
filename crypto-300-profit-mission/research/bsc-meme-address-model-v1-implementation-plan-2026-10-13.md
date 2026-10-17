@@ -792,3 +792,14 @@ New strict [offline WBNB route-source gate](./bsc_meme_address_model_v1_p4c_wbnb
 - [固定来源校验代码](./bsc_meme_address_model_v1_p4b_239e_two_exit_v2_math.py) 对所有来源与八次 ABI 原文按 git SHA 独立复核、解码 2 个 reserves 和 4 个动态 Router getAmountsOut、9975/10000 公式逐向验证数学一致，源费用、原主人实际损益不能更改；[15 项反例](./test_bsc_meme_address_model_v1_p4b_239e_two_exit_v2_math.py) 覆盖原来源 SHA、路由池、blockTag、两个方向进出份额、反向原文、源本钱包盈利符号等。已接入原 Ubuntu + macOS /bin/bash 3.2 CI，无新生产自动化。
 
 **下一真实重点**：必须测试在可观察到原钱包信号的真实条件下第三方可以**有状态真实买卖**，不是无限延展数学报价。应优先找到已有成功签名交易的独立买家正负对照、合约 Token 税/成交实际收币、额外交易 Gas/交易路由和限额，并准确绑定信号后固定 1/5/15min **入场区块和观察时间**，因果证据不足的保持 UNKNOWN；若免费工具不可取须如实阻断，不无限加单凭内部自洽的校验项。维持 `P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
+
+
+## 2026-10-18 P4-B 真实原主人买入→最终退出区块时间核验（1／5／15 分钟信号尚存对照）
+
+接上面 P4-B 239E 龙虾固定 0.01 WBNB 两个数学报价正负样本。本次进一步先在 [四笔原始签名 TX 哈希与区块预冻结](./bsc-meme-address-model-v1-p4b-239e-original-4tx-real-historical-time-prefreeze-2026-10-18.json)（blob `e89d485eb0d6189b2f050da1ef6524c0d2b57b02`）锁定每一轮的**首买 + 最终卖**原钱包哈希，固定仅 4 次 `eth_getTransactionByHash`，没有重新选币、改金额或延迟阈值。实际四次只读 BSC 查询均返回未被工具截断的、可完整解析的 JSON，含交易发出地址、native value、blockNumber 和 blockTimestamp，**0 重试**，在 [独立只追加的四笔真实区块时钟读回](./bsc-meme-address-model-v1-p4b-239e-four-original-tx-real-blocktimestamp-2026-10-18.json) 单独归档，保留工具解析来源限制（不是全 provider wire 原文）。
+
+R1 原本人实亏回合首买块 85954137 时间 `0x69b14658`、最终卖出块 85957578 时间 `0x69b14c66`，准确 **1550s=25分50秒**；R2 本人实赚回合首买块 85959961 时间 `0x69b15097`、最终卖出块 85961371 时间 `0x69b15311`，**634s=10分34秒**。由原真实本人首买区块时间 +1/+5/+15 分钟逐项对照：R1 三个时间阈值时最后完成退出**均尚未上链**；R2 +1/+5 时退出**尚未上链**，+15 时已**上链完成**。因此 R2 的后验真实赢家结果并不说明 +15 分钟才看见旧买入信号仍可跟。这里的判断只针对原本人被确认的最终 SELL，**没有在 +1/+5/+15 的精确时间点验证本人实际完整代币余额**，也没有 third-party observer signal arrival 时间、更无第三方真实成交。不要把未 SELL 就冒充实时仍持币／下单必然成功。
+
+[复算实现](./bsc_meme_address_model_v1_p4b_239e_4tx_real_clock.py) 和 [11 项对抗测试](./test_bsc_meme_address_model_v1_p4b_239e_4tx_real_clock.py) 联合 pin 旧实际签名、旧 V2 八个数学报价、预冻结及新四 TX 时间数据；交叉验证原 wallet、hash、block、native tx.value、原主人 signed PnL 方向与实际时间差。只得出本人的历史信号末次退出 cutoff 状态，不把 V2 静态数学价差称为真实跟单净额，不偷换 Pair 的 blockTimestampLast 为区块 timestamp，也不估计公共首次 U。代码与数据源已经纳入原 Ubuntu/macOS Bash 3.2 回归路径。
+
+**下一里程碑必须面向交易而不是继续增加纯门禁**：在原冻结的币和真实外部交易对照中，将**可观察到源买入的最早区块**、对应同一可支付真实买单在固定 60/300/900 秒之后可获得的 token、历史卖单和全路径费用与到账价值单独闭合；若缺签名买入和成功 SELL，则保留 `UNKNOWN`、不虚构 follower ROI。现阶段 P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE；不要将纯静态报价方向一致误报为模型通过。
