@@ -77,11 +77,75 @@ class FirstServiceTraceTests(unittest.TestCase):
         self.assertEqual(len(self.obs.first_evaluated),8)
         self.assertTrue(all(v==self.t+180000
                             for v in self.obs.first_evaluated.values()))
+        self.assertEqual(sum(self.obs.repeated_with_new_valid_bar.values()),8)
+        self.assertEqual(sum(self.obs.repeated_no_new_valid_bar.values()),0)
 
     def test_03_mismatched_actual_original_selection_fails_closed(self):
         self.obs.original_handler=lambda *args,**kwargs:{
             "selected":9,"deferred":9,"completed":0,"late":0}
         with self.assertRaisesRegex(RuntimeError,"actual_d1_selection_changed"):
+            self.obs.instrument(self.db,self.t,None,None,limit=8,
+                                original_queue=None,stats={})
+
+    def test_06_same_selected_count_different_eighth_plus_ninth_fails(self):
+        # Malicious handler claims precisely eight but touches ID 9,
+        # whose original FIFO identity was not among the eight.
+        def wrong_same_count(store,now,fetch,source_db,*,limit,original_queue,stats):
+            selected=store.execute("""
+                SELECT id FROM candidate_queue WHERE status='PENDING'
+                ORDER BY first_seen_ms,id LIMIT 8""").fetchall()
+            with store:
+                for row in selected[:7]:
+                    store.execute("UPDATE candidate_queue SET retry_after_ms=? WHERE id=?",
+                                  (now+180000,row["id"]))
+                store.execute("UPDATE candidate_queue SET retry_after_ms=? WHERE id=9",
+                              (now+180000,))
+            return {"selected":8,"deferred":8,"completed":0,"late":0}
+        self.obs.original_handler=wrong_same_count
+        with self.assertRaisesRegex(RuntimeError,"nonselected_candidate_mutated"):
+            self.obs.instrument(self.db,self.t,None,None,limit=8,
+                                original_queue=None,stats={})
+        self.assertEqual(self.obs.ticks,0)
+        self.assertEqual(len(self.obs.slots),0)
+
+    def test_07_repeated_retry_without_new_5m_bar_is_counted_not_discarded(self):
+        def retry_with_no_new_bar(store,now,fetch,source_db,*,limit,
+                                  original_queue,stats):
+            eligible=store.execute("""
+                SELECT id FROM candidate_queue WHERE status='PENDING'
+                AND retry_after_ms<=? ORDER BY first_seen_ms,id LIMIT ?
+            """,(now,limit)).fetchall()
+            with store:
+                for item in eligible:
+                    store.execute("""
+                        UPDATE candidate_queue
+                        SET retry_after_ms=?,last_error='AWAIT_POST_WATCH_CLOSED_5M'
+                        WHERE id=?""",(now+60000,item["id"]))
+            return {"selected":len(eligible),"completed":0,
+                    "deferred":len(eligible),"late":0}
+        self.obs.original_handler=retry_with_no_new_bar
+        for tick in (self.t,self.t+180000):
+            self.obs.instrument(self.db,tick,None,None,limit=8,
+                                original_queue=None,stats={})
+        self.assertEqual(sum(self.obs.repeated_no_new_valid_bar.values()),8)
+        self.assertEqual(sum(self.obs.repeated_with_new_valid_bar.values()),0)
+        self.assertEqual(self.obs.repeated_no_new_valid_bar_by_error[
+            "AWAIT_POST_WATCH_CLOSED_5M"],8)
+        self.assertFalse(any(x["valid_5m_evaluation_marker_advanced"]
+                             for x in self.obs.slots))
+
+    def test_08_unselected_row_insertion_fails_closed(self):
+        def insert_other(store,now,fetch,source_db,*,limit,original_queue,stats):
+            with store:
+                store.execute("""
+                    INSERT INTO candidate_queue
+                    (venue,symbol,first_seen_ms,last_seen_ms,priority,reason,
+                     status,attempts,retry_after_ms,deadline_ms)
+                    VALUES('spot','INJECTUSDT',?, ?,99,'FIXTURE','PENDING',0,0,?)
+                """,(now,now,now+900000))
+            return {"selected":8,"completed":0,"deferred":8,"late":0}
+        self.obs.original_handler=insert_other
+        with self.assertRaisesRegex(RuntimeError,"candidate_row_set_changed"):
             self.obs.instrument(self.db,self.t,None,None,limit=8,
                                 original_queue=None,stats={})
 
