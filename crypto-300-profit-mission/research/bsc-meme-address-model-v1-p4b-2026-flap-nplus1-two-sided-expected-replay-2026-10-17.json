@@ -2,10 +2,11 @@
   "schema": "BSC_P4B_FLAP_2026_NPLUS1_MATH_ONLY_TWO_ASSETS_REPLAY",
   "source_sha": {
     "freeze": "57408d1a792235ce43eebcb10d7096c97e9b3aea",
-    "readback": "57fd53d2e6e00adbb1576b2436a975887ee87a8d",
+    "readback": "cc96297ace51a74efb8b800f0fd0bed385fcbce4",
     "market": "c42ad01e896f30262f89f7852f927fc84fb3ea18",
     "first_signed": "d69f2ddfade437a1d8b0fc49585eb4ca0f9268e9",
-    "prebuy_quotes": "43fe6d36fbeeda43e07a2b65874c4292e5d91606"
+    "prebuy_quotes": "43fe6d36fbeeda43e07a2b65874c4292e5d91606",
+    "raw_v1": "b7c618582b969c61772deb8a07dbd0e706a187e4"
   },
   "summary": {
     "scoped_tokens": 2,
@@ -25,7 +26,6 @@
       "historical_read_block_Nplus1": 115628775,
       "buy_request_blockTag": "0x6e45ae7",
       "reverse_request_blockTag": "0x6e45ae7",
-      "Nplus1_end_block_includes_unobserved_intrablock_trades": true,
       "actual_early_signed_buy_witness_N": 115628774,
       "source_historical_buy_sell_tax_bps": [
         100,
@@ -49,7 +49,6 @@
       "historical_read_block_Nplus1": 112441395,
       "buy_request_blockTag": "0x6b3b833",
       "reverse_request_blockTag": "0x6b3b833",
-      "Nplus1_end_block_includes_unobserved_intrablock_trades": true,
       "actual_early_signed_buy_witness_N": 112441394,
       "source_historical_buy_sell_tax_bps": [
         300,
