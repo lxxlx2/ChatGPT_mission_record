@@ -1,6 +1,6 @@
 # Repository Structure and Naming Rules
 
-Updated: 2026-09-26
+Updated: 2026-10-18 (clarify historical naming exceptions, live schedule authority and compatibility rules)
 Status: canonical repository organization rule
 
 ## Goal
@@ -107,6 +107,18 @@ A project can therefore have both:
 
 Do not duplicate mutable facts unnecessarily. Operational current state remains authoritative for monitoring.
 
+## Historical stable-name exceptions and staged legacy fixes
+
+Apply lower-case kebab-case `<entity>-<purpose>.md` with a descriptive H1 to **new human-written research documents**. Existing document identifiers are not safe to rename blindly:
+
+- Legacy uppercase `MISSION_SPEC.md`, `FRANK_*_POLICY.md`, `PHASE_*_REPORT.md`, review evidence and other historical or code-referenced file names are stable evidence/compatibility paths. Their path spelling may remain uppercase until every reader/reference is inspected and a compatibility-preserving migration passes actual readback and runtime acceptance.
+- Generated JSON artifacts, fixed run IDs, source dataset filenames, and `runs/YYYY-MM-DD/HHMMSS-final.md` are structured source/audit records, not new human-facing research filenames. Preserve exact names and hashes.
+- For old manually written documents whose first H1 is generic (e.g. `# PONS Position`), correct the H1 **in place** and add a module index linking to the current authority. Preserve its body as dated historical material and do not rewrite immutable evidence.
+- Newly created, unreviewed Draft PR modules are out of scope for a legacy rename sweep; do not preapprove or silently merge them. If restructuring is genuinely required later, review the PR separately.
+- Active operational current pointers, launchd/config paths, imports, SQL schema, snapshots, foreign references and prior audit citations are **not** moved just to satisfy a visual naming preference. Use an explicit compatibility/migration plan and leave the old file accessible until verified.
+
+2026-10-18 partial legacy audit and actual edits: [mission-legacy-naming-audit-2026-10-18.md](mission-legacy-naming-audit-2026-10-18.md).
+
 ## Filename rule
 
 Human-facing analysis:
@@ -170,12 +182,9 @@ Monitoring continuity has higher priority than cosmetic cleanup.
 
 6. Historical `runs/` content is immutable by default.
 
-7. After a path-affecting refactor, verify the existing tasks only:
-   - Crypto Daily at :00;
-   - TGE at :14;
-   - $300 Mission at :29.
+7. After any path-affecting refactor, first resolve **current** task/schedule/enablement from the authoritative per-task runtime spec and existing scheduler state, then validate only the tasks that are actually enabled and affected. Historic minute examples (:00, :14, :29) are **not current schedules**. In particular, the $300 Mission umbrella is recorded **PAUSED** in `crypto-300-profit-mission/state/latest.md`; do not start it merely to "test a refactor". Where no valid live check is available, record `UNVERIFIED` rather than claim a successful runtime acceptance.
 
-8. No refactor creates a new automation unless the user explicitly requests a new automation.
+8. No refactor creates, re-enables, or replaces any automation unless the user explicitly requests the corresponding operation.
 
 ## Migration state
 
