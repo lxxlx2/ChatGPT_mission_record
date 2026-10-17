@@ -6,7 +6,7 @@ project: "Tydro"
 event_type: historical_alert
 email_subject: "[空投提醒][Tydro][$INK Allocation Checker]"
 gmail_message_id: "1a02c6752efe8984"
-gmail_sent_at: "2026-08-23T02:16:04"
+gmail_sent_at: "2026-08-23T02:16:04Z"
 gmail_sent_at_bkk: "2026-08-23T09:16:04+07:00"
 status: official
 backfilled: true
