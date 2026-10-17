@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const html = fs.readFileSync(
   'mission_agent/mission_control/static/index.html', 'utf8'
 );
-assert.match(html, /<script src="\/static\/app\.js"><\/script>\s*<script src="\/static\/frank_source_context\.js"><\/script>/);
+assert.match(html, /<script src="\/static\/app\.js"><\/script>\s*<script src="\/static\/frank_f01_primary_freshness\.js"><\/script>\s*<script src="\/static\/frank_source_context\.js"><\/script>/);
 assert.match(html, /href="\/static\/frank_source_context\.css"/);
 assert.equal((html.match(/data-view="signals"/g) || []).length, 1);
 assert.equal((html.match(/data-view="cluster"/g) || []).length, 1);
@@ -43,8 +43,16 @@ const cardContainer = {
     pane = el;
   },
   querySelectorAll(selector) {
-    assert.equal(selector, '.candidate-card .ca-full');
-    return visible.map(mint => ({textContent: mint}));
+    assert.equal(selector, '.candidate-card');
+    return visible.map(mint => ({
+      querySelector: (selector) => selector === '.ca-full'
+        ? {textContent:mint} : null,
+      dataset: {
+        f01SourceSignalId: 'signal-1',
+        f01Decision: 'BUY',
+        f01GuardState: 'VERIFIED'
+      }
+    }));
   }
 };
 class Observer {
@@ -87,6 +95,11 @@ vm.runInNewContext(src, scope, {filename: 'frank_source_context.js'});
   assert.equal(calls[0].options.method, 'GET');
   assert.equal(calls[0].options.cache, 'no-store');
   assert.equal(timers.length, 1);
+  current.f01_valid_until_epoch = Date.now() / 1000 - 1;
+  timers[0]();
+  assert.match(pane.innerHTML, /资格已过期/);
+  assert.doesNotMatch(pane.innerHTML, /0\.000000/);
+  current.f01_valid_until_epoch = Date.now() / 1000 + 6;
 
   visible = [];
   mutationNotify();
