@@ -1,0 +1,64 @@
+{
+  "schema": "BSC_P4B_2026_239E_DRAGON_V2_SWAP_FOUR_FREE10BLOCK_WINDOWS_FALLBACK_PRECOMMIT_V1",
+  "date": "2026-10-18",
+  "original_precommit": "bsc-meme-address-model-v1-p4b-239e-owner-holding-four-v2-swap-windows-precommit-2026-10-18.json",
+  "observed_provider_gate": "bsc-meme-address-model-v1-p4b-239e-owner-4-historical-balances-v2-12block-swap-denied-2026-10-18.json",
+  "reason_for_new_frozen_scope": "All originally selected four 12/13-block logs rejected by explicit free tier maximum 10-block policy. Keep EXACT SAME case, market, original start block and log topic; cap only end to from+9. Distinct smaller windows, not same failed RPC retry.",
+  "underlying_original23x19_unchanged": true,
+  "network": "bnb-mainnet",
+  "provider": "Alchemy existing free",
+  "method": "eth_getLogs",
+  "contract": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+  "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+  "event_signature": "Swap(address,uint256,uint256,uint256,uint256,address)",
+  "orientation": "WBNB_TOKEN0_DRAGON_TOKEN1_ALREADY_REAL_ETH_CALL_CONFIRMED",
+  "wallet_source": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+  "same_wallet_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "windows": [
+    {
+      "case": "R1",
+      "name": "EARLY",
+      "from": 85954138,
+      "to": 85954147,
+      "owner_balance_checked_later_block": 85954149
+    },
+    {
+      "case": "R1",
+      "name": "LATER",
+      "from": 85954737,
+      "to": 85954746,
+      "owner_balance_checked_later_block": 85954749
+    },
+    {
+      "case": "R2",
+      "name": "EARLY",
+      "from": 85959962,
+      "to": 85959971,
+      "owner_balance_checked_later_block": 85959973
+    },
+    {
+      "case": "R2",
+      "name": "LATER",
+      "from": 85960561,
+      "to": 85960570,
+      "owner_balance_checked_later_block": 85960573
+    }
+  ],
+  "max_calls": 4,
+  "zero_retries": true,
+  "no_reselect_if_no_logs": true,
+  "selection_contract": "Commit every FULL returned window exactly, including empty. If truncated 8098 chars, window UNKNOWN and no fake exhaustive coverage. If full logs exist, next separate prefreeze for SIGNED EOA lookup selected by earliest blockNumber,txIndex,logIndex, at most 1 BUY-side V2 Swap per case per window (up to 4); preserve ALL other logs counts and raw input as immutable source. Swap indexed sender/to is NOT EOA original signed sender.",
+  "do_not_claim": [
+    "Equal to +1min/+5min/+15min absolute clock boundaries",
+    "that Pair Swap amounts equal user final token delta after tax",
+    "that visible Swap proves outside trader bought and later sold",
+    "that original owner ERC20 balance verified at all blocks",
+    "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}
