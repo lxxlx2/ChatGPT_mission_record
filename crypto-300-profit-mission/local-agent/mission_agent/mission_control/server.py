@@ -767,7 +767,7 @@ class DashboardState:
         return candidates
 
     def follow_opportunities(self):
-        """Exact reviewed F01 policy and quote gate, read-only from existing sources."""
+        """Display-only gate; frozen Frank V1 writer/decision/outbox unchanged."""
         candidates = self.candidates()
         try:
             policy_path = Path(__file__).resolve().parents[2] / "config" / "follow_policy_v1.approved.json"
@@ -782,6 +782,8 @@ class DashboardState:
             view["read_only_policy_hash"] = policy_hash
             return view
         except (OSError, ValueError, TypeError, KeyError):
+            # Missing or changed policy can never turn a historical BUY into
+            # an eligible follow opportunity. Keep candidates accessible for audit.
             return {"schema_version": 1, "scope": "FRANK_FROZEN_DECISIONS_PRESENTATION_ONLY",
                     "status": "POLICY_OR_SOURCE_UNAVAILABLE", "eligible_count": 0,
                     "excluded_count": len(candidates), "eligible": [],

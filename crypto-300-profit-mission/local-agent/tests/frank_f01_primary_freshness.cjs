@@ -7,7 +7,12 @@ const A='So11111111111111111111111111111111111111112';
 const B='EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
 let clock=1792230000*1000;
 const Clock=class extends Date{static now(){return clock}};
-const action=(mint,id='signal-1',decision='BUY')=>({mint,person_id:'frank',source_signal_id:id,decision});
+const action=(mint,id='signal-1',decision='BUY',price='0.012500',impact='0.50',quoteAt='2026-10-17T02:00:00Z')=>({
+  mint,person_id:'frank',source_signal_id:id,decision,
+  metrics:{execution_price_usdc:price,price_impact_pct:impact},
+  quote_observed_at:quoteAt,
+  validated_follow_quote:{execution_price_usdc:price,price_impact_pct:impact}
+});
 const watch={mint:B,person_id:'frank',source_signal_id:'watch-1',decision:'WAIT'};
 const documentRows=[];
 const cards=[];
@@ -52,6 +57,27 @@ assert.equal(verify([action(A),watch],following([action(A,'other')]),clock/1000)
 assert.equal(verify([action(A)],following([action(A,'signal-1','SMALL_BUY')]),clock/1000),null);
 assert.equal(verify([action(A)],following([action(A)],9),clock/1000),null);
 assert.equal(verify([watch],following([]),clock/1000),null);
+const repriced=action(A,'signal-1','BUY','0.013000');
+const reimpacted=action(A,'signal-1','BUY','0.012500','0.70');
+const requoted=action(A,'signal-1','BUY','0.012500','0.50','2026-10-17T02:00:01Z');
+assert.equal(verify([action(A)],following([repriced]),clock/1000),null,'C8 changed executable price must fail closed');
+assert.equal(verify([action(A)],following([reimpacted]),clock/1000),null,'changed impact must fail closed');
+assert.equal(verify([action(A)],following([requoted]),clock/1000),null,'changed quote observation time must fail closed');
+assert.ok(verify([action(A)],following([action(A,'signal-1','BUY','0.0125','0.500')]),clock/1000)>clock/1000,
+  'numeric decimal-equivalent quotes remain valid');
+const standalone = action(A);
+delete standalone.validated_follow_quote;
+assert.ok(verify([standalone],following([action(A)]),clock/1000)>clock/1000,
+  'standalone m.execution_price_usdc matches independently validated F01 quote');
+const sourceConflicts=action(A);
+delete sourceConflicts.validated_follow_quote;
+sourceConflicts.metrics.execution_price_usdc='0.02';
+assert.equal(verify([sourceConflicts],following([action(A)]),clock/1000),null,
+  'stale standalone displayed execution price cannot inherit verified identity');
+const missingObserved = action(A);
+delete missingObserved.quote_observed_at;
+assert.equal(verify([missingObserved],following([action(A)]),clock/1000),null,
+  'unknown quote observed timestamp cannot authorize stale BUY');
 const settle=async (rows)=>{const p=requests.shift();assert.ok(p,'expected fresh F01 request');p.resolve({ok:true,json:async()=>following(rows)});await flush();};
 (async()=>{
   // One mixed historical BUY+WAIT, but empty verified F01 => BUY must stay masked,
@@ -92,6 +118,19 @@ const settle=async (rows)=>{const p=requests.shift();assert.ok(p,'expected fresh
   await settle([action(A,'changed')]);
   assert.equal(cards[0].dataset.f01GuardState,'UNVERIFIED');
 
+  // C8 real asynchronous guard path: same identity, independently changed
+  // executable quote may not unmask the historical display card.
+  window.renderCandidates([action(A)]);
+  await settle([action(A,'signal-1','BUY','0.021000')]);
+  assert.equal(cards[0].dataset.f01GuardState,'UNVERIFIED');
+  assert.doesNotMatch(cards[0].badge.textContent,/可跟/);
+  window.renderCandidates([action(A)]);
+  await settle([action(A,'signal-1','BUY','0.012500','0.99')]);
+  assert.equal(cards[0].dataset.f01GuardState,'UNVERIFIED');
+  window.renderCandidates([action(A)]);
+  await settle([action(A,'signal-1','BUY','0.012500','0.50','2026-10-17T02:00:05Z')]);
+  assert.equal(cards[0].dataset.f01GuardState,'UNVERIFIED');
+
   window.renderCandidates([action(A,'old')]);
   const old=requests.shift();
   window.renderCandidates([action(B,'new')]);
@@ -122,5 +161,5 @@ const settle=async (rows)=>{const p=requests.shift();assert.ok(p,'expected fresh
   await flush();
   assert.equal(cards[0].dataset.f01GuardState,'VERIFIED');
   assert.ok(dispatched>=5);
-  console.log('FRANK_PRIMARY_F01_FRESHNESS_PASS: mixed fail-closed, action-only count, no-flicker, expiry, race, offline');
+  console.log('FRANK_PRIMARY_F01_FRESHNESS_PASS: C8 executable quote and impact timestamp pinned, mixed fail-closed, no-flicker, expiry, race');
 })().catch(e=>{console.error(e);process.exitCode=1;});

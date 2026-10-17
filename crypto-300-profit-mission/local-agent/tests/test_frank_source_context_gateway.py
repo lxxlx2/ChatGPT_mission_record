@@ -165,3 +165,74 @@ def test_real_dashboard_follow_route_uses_reviewed_f01_partition(monkeypatch):
         assert response["eligible"] == []
     finally:
         DashboardHandler.state = prior
+
+
+def test_native_dashboard_f01_positive_buy_and_wait_retains_exact_quote_provenance():
+    """Real approved F01 partition + real Handler GET; only source rows are synthetic."""
+    from types import SimpleNamespace
+    import time
+    from mission_agent.mission_control.server import DashboardState
+
+    now = time.time() - 1
+    first = "So11111111111111111111111111111111111111112"
+    second = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+    buy = {
+        "person_id": "frank", "mint": first, "source_signal_id": "signal-live-1",
+        "decision": "BUY", "position_state": "OPEN", "latest_side": "BUY",
+        "pattern": "MULTIPLE", "current_raw": "100000",
+        "latest_buy_at": now, "decision_created_at": now,
+        "quote_observed_at": now,
+        "decision_quote": {
+            "status": "OK", "route_exists": True,
+            "execution_price_usdc": "0.0125000",
+            "price_impact_pct": "0.50",
+        },
+        "metrics": {
+            "execution_price_usdc": "0.0125000",
+            "price_impact_pct": "0.500",
+        },
+    }
+    wait = {
+        "person_id": "frank", "mint": second, "source_signal_id": "signal-wait",
+        "decision": "WAIT", "position_state": "OPEN", "latest_side": "BUY",
+        "pattern": "MULTIPLE", "current_raw": "100",
+        "latest_buy_at": now, "decision_created_at": now,
+        "quote_observed_at": now,
+        "decision_quote": dict(buy["decision_quote"]),
+        "metrics": dict(buy["metrics"]),
+    }
+    actual = object.__new__(DashboardState)
+    actual.candidates = lambda: [buy, wait]
+    actual.frank = SimpleNamespace(runtime=lambda: {"status": "LIVE"})
+    computed = actual.follow_opportunities()
+    assert computed["status"] == "OK"
+    assert computed["eligible_count"] == 1
+    assert len(computed["not_followed"]) == 1
+    assert computed["not_followed"][0]["decision"] == "WAIT"
+    eligible = computed["eligible"][0]
+    assert eligible["mint"] == first
+    assert eligible["source_signal_id"] == "signal-live-1"
+    assert eligible["quote_observed_at"] == now
+    assert eligible["validated_follow_quote"] == {
+        "execution_price_usdc": "0.0125000",
+        "price_impact_pct": "0.50",
+    }
+
+    class ActualReadOnlyState:
+        def follow_opportunities(self):
+            return actual.follow_opportunities()
+
+    original = DashboardHandler.state
+    try:
+        DashboardHandler.state = ActualReadOnlyState()
+        with serving(DashboardHandler) as dashboard:
+            status, headers, payload = read(dashboard.server_port, "/api/follow-opportunities")
+        assert status == 200
+        assert headers["Cache-Control"] == "no-store"
+        assert payload["eligible_count"] == 1
+        assert payload["eligible"][0]["source_signal_id"] == "signal-live-1"
+        assert payload["eligible"][0]["validated_follow_quote"] == eligible["validated_follow_quote"]
+        assert payload["eligible"][0]["quote_observed_at"] == now
+        assert payload["excluded_count"] == 1
+    finally:
+        DashboardHandler.state = original
