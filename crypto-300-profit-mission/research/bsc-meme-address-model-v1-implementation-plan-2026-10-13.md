@@ -834,3 +834,20 @@ R1 原本人实亏回合首买块 85954137 时间 `0x69b14658`、最终卖出块
 [原结果与来源等级](./bsc-meme-address-model-v1-p4b-dragon-three-adjacent-actual-gas-readback-2026-10-18.json)、[独立按 SHA 复核相邻 Gas 脚本](./bsc_meme_address_model_v1_p4b_dragon_adjacent_actual_buy_gas.py)、[13 项故意破坏相邻索引／区块／Gas／E11B 未知状态的测试](./test_bsc_meme_address_model_v1_p4b_dragon_adjacent_actual_buy_gas.py) 和 [业务结论报告](./bsc-meme-address-model-v1-p4b-2026-d503-real-buy-gas-adjacent-cumulative-e11b-unknown.md) 均追加式提交，原 D503 截断旧文件与 EOA BNB／Token 真实账户来源不改。目标 D503 两笔 BUY 的**完整未截断 receipt 原始全文仍未获得**，本轮新等级是相邻全 receipt 的累计差分+原目标旧工具可见字段；不能声称目标全包已独立存储。
 
 **下一次真实业务里程碑**：真正的源钱包信号**仍持仓时**，其他公开观察者何时收到、实际可支配本金何时入场，按固定 +60/+300/+900 秒而非选定退出窗口，对成功完整卖出与未卖出／亏损进行持币、税、Gas、真实回款对照。D503 虽完整快速交易并出现正向原钱包区块余额变化，但其首买发生在 DDAC 真实清仓**200 区块后**，不能用此样本证明 DDAC 早期买入信号能被第三方复制获利。继续 `P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`，已通过代码正常回归不需要每个提交再交外部 AI 完整复审。
+
+
+## 2026-10-18 P4-B 新实证：源钱包 239E 仍有币时真实第三方 1000 USDT 买入，但仍非跟单盈利
+
+不扩原始 23×19=437 母数。**原来源不变的正负原钱包 239E 龙虾两回合**里，在四个历史区块末只读 `balanceOf(239E)` 均确认为持币。为查真实后续外部交易，先冻结四个特定来源范围的 V2 Pair Swap 查询；Alchemy Free 每次 `eth_getLogs` 不准跨超过 10 块，原 12/13 块 4/4 返回明确付费限制。缩成 10 块另行预冻结，4/4 均被工具截断 8,098 字符，不完整不得统计。最后明确 **R1/R2 各首买 N+1 唯一一个区块**诊断：R1 仍不完整，R2 即区块 85959962 真实返回 4 个 Swap 事件、2 笔不同 tx 的**完整数组**。所有拒绝和截断均新文件追加归档；本轮已停止继续切分同一批日志，也没有更换赢家或付费。
+
+R2 的真实 WBNB→龙虾 Pair Swap 最早 signed tx `0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47`，不是原签名者 239E，而是外部钱包 `0x5e600e259e3cff0757e3736223685958665866c6`。原主人 R2 在前一块 85959961 首买，其 N+1 与后续 +600 块检查点均在历史链上仍持币，直到本人退出块 85961371。外部钱包该真实买单同时有：
+- 完整已归档 Pair Swap：中间池收到 `1562236003910333182 wei` WBNB、向买家真实转出 `48454704178311452125501 raw` 龙虾；
+- 完整 ERC20 Dragon `Transfer(to=外部买家)` 日志与签名 hash 一致，买家龙虾 `balanceOf` 从 `335173813691889308361853` raw 增至 `383628517870200760487354` raw；
+- 买前、买后买家 WBNB 余额都 `128581669163208 wei`，同块没有该钱包的 WBNB `Transfer(from=它)`，所以**不能将中间 WBNB 视为签名者本金**；
+- 通过第二次预冻结对同一成功的 Router tx 读取完整 calldata，真实 `swapExactTokensForTokens` `path=[BSC USDT 0x55d398…, WBNB 0xbb4c…, Dragon 0xeccb…]`，`amountIn=1000000000000000000000 raw` = **1,000 USDT**，`amountOutMin=43745625824946640280067 raw` Dragon；原生 `tx.value=0`；
+- 历史真实买家 USDT 钱包余额从 `10946711670407384671180` 减至 `9946711670407384671180 raw`，恰好 **1,000 USDT**，同一真实 signed hash 有完整 `USDT Transfer(from=本人)` 1000 raw 单位对应；
+- 独立只读 `ethGetTransactionReceipt` 这次获得**完整可解析**的 7,310 字符工具结果，status `0x1`，实际 `gasUsed=156632`，`effectiveGasPrice=0.5gwei`，买单链上 Gas **`78316000000000 wei=0.000078316 BNB`**。Git 仅归档逐字段核实结果而未保存整份提供商网络传输层原文字节；不能把原始 receipt raw pin 等级虚报为已保存。
+
+**关键反例：** 这位外部买家买入前就有约 **335,173.8137 枚龙虾**，真实 1,000 USDT 是对既有仓位加仓，而不是一个新 EOA 初次发现信号。直到原信号钱包 239E 真实清仓块 85961371，外部买家余额依然 **383628517870200760487354 raw**。真实买入、资金与费用得到确认，但**并没有真实外部卖出/清仓/收益证据**；不得将之计入“原钱包买入后能跟单盈利”的胜率。且 239E 原买入块和外部后块的区块秒级 timestamp 完全相同，没有独立观察到的信息到达时间，不能假定因果跟随。当前完整业务读物：[真实外部 1,000 USDT 买单但未实现回合报告](./bsc-meme-address-model-v1-p4b-2026-real-1000usdt-external-buyer-not-a-realized-follower-2026-10-18.md)；[原不可变来源 blob 多文件复算程序](./bsc_meme_address_model_v1_p4b_real_external_1000usdt_buy.py) 和 [12 个故意破坏源资金、路由、真实到账、Gas、原始持币和 P5 等级的回归测试](./test_bsc_meme_address_model_v1_p4b_real_external_1000usdt_buy.py)。
+
+**下一交易价值优先级**：以真实 signed EOA 在原钱包**仍持仓时**的信号为候选，并强制逐笔区分真实资金源 `path[0]`（例如 USDT）和中间池 quote（WBNB），检查用户买前是否已有仓位、买入的实际 token 到账、成功 receipt Gas，之后锁定真实退出钱包 + 回款；EXIT_UNKNOWN、此前已有仓位或没独立 observer 时间的不得填充盈利成功率。此里程碑**不**批准生产规则和 P5，继续 `P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
