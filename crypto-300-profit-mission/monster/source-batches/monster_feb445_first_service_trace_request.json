@@ -1,5 +1,5 @@
 {
-  "schema": "MONSTER445_FIRST_SERVICE_TRACE_ONESHOT_REQUEST_V1",
+  "schema": "MONSTER445_FIRST_SERVICE_TRACE_ONESHOT_REQUEST_V2",
   "full_replay_artifact_id": 12044872933,
   "full_json_sha256": "370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf",
   "research_only": true,
