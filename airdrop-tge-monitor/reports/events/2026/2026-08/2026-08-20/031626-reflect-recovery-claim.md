@@ -8,7 +8,10 @@ email_subject: "[空投提醒][Reflect][Recovery Claim 检查]"
 gmail_message_id: "1a01baafedb7f976"
 gmail_sent_at: "2026-08-19T20:16:26Z"
 gmail_sent_at_bkk: "2026-08-20T03:16:26+07:00"
-status: official
+status: historical_public_redacted
+public_body_redacted: true
+original_private_source: Gmail Sent
+original_body_verified_before_redaction: true
 backfilled: true
 source: Gmail Sent readback
 ---
@@ -20,7 +23,7 @@ source: Gmail Sent readback
 
 官方链接：https://claims.reflect.money/
 
-适用条件：仅与你曾持有/暴露于受影响 USDC+ 余额的情况相关。由于我目前只知道你参与过 Reflect，无法确认你的具体 USDC+ 持仓，因此请先检查是否适用。
+适用条件：仅受影响的 USDC+ 历史持有人需要核对资格，具体钱包是否符合要求需独立验证。
 
 你需要做：
 
