@@ -26,8 +26,7 @@ VALID_PRICE = "0.012500"
 NEW_PRICE = "0.021000"
 
 
-def row(mint: str, decision: str, price: str) -> dict:
-    observed = datetime.now(timezone.utc).isoformat()
+def row(mint: str, decision: str, price: str, observed: str) -> dict:
     validated = {"execution_price_usdc": price, "price_impact_pct": "0.5"}
     return {
         "mint": mint, "person_id": "frank", "decision": decision,
@@ -50,6 +49,7 @@ class ReadOnlySyntheticState:
         self.mode = "valid"
         self.calls = 0
         self.invalid_runtime = False
+        self.quote_observed_at = datetime.now(timezone.utc).isoformat()
 
     def runtime(self):
         return {"status": "LIVE", "heartbeat_age_seconds": 1}
@@ -64,7 +64,7 @@ class ReadOnlySyntheticState:
     def follow_opportunities(self):
         self.calls += 1
         now = time.time()
-        base = row(A, "BUY", VALID_PRICE)
+        base = row(A, "BUY", VALID_PRICE, self.quote_observed_at)
         if self.mode == "drift" and self.calls > 1:
             # One independently refreshed F01 quote is different, same Mint and signal ID.
             base["validated_follow_quote"]["execution_price_usdc"] = NEW_PRICE
@@ -98,7 +98,10 @@ class ReadOnlySyntheticState:
 
 def native_server(state):
     class NativeHandler(Handler):
-        pass
+        def do_GET(self):
+            if self.path == "/api/runtime" and state.invalid_runtime:
+                return self._json({"status": "SOURCE_UNAVAILABLE"}, 503)
+            return super().do_GET()
 
     NativeHandler.state = state
     server = ThreadingHTTPServer(("127.0.0.1", 0), NativeHandler)
@@ -139,6 +142,7 @@ def open_case(browser, base, state, mode, page_errors, console_errors, output):
     state.mode = mode
     state.calls = 0
     state.invalid_runtime = False
+    state.quote_observed_at = datetime.now(timezone.utc).isoformat()
     page = browser.new_page(viewport={"width": 1440, "height": 900}, locale="zh-CN")
     page.on("pageerror", lambda exc: page_errors.append(str(exc)))
     page.on("console", lambda msg: console_errors.append(msg.text) if msg.type == "error" else None)
