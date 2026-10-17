@@ -1,0 +1,62 @@
+{
+  "schema": "MONSTER_STAGE163_SPOT_REAL_ORIGINAL_HTTP_T0_INDEPENDENT_SOURCE_QA_V1",
+  "venue": "Binance Spot",
+  "asof_exchange_server_time_utc": "2026-10-17T22:04:40.094Z",
+  "source_job_run": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39073557939",
+  "original_github_artifact_id": 12116091492,
+  "raw_zip_relative_path": "evidence/monster_stage163_spot_original_http_t0_actual/source_raw_http.zip",
+  "receipt_relative_path": "evidence/monster_stage163_spot_original_http_t0_actual/source_receipts.json",
+  "original_zip_sha256": "b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b",
+  "data_origin": "Verified original HTTP response body bytes from official https://data-api.binance.vision, 6 endpoints, GitHub-hosted read-only single run",
+  "independently_reopened_zip_and_compared_six_http_sha256": true,
+  "recomputed_from_raw_http_not_connector_proxy": true,
+  "market_symbol_records": 3729,
+  "status_counts": {
+    "TRADING": 1380,
+    "BREAK": 2349
+  },
+  "spot_usdt_symbols_all_states": 725,
+  "spot_usdt_trading": 511,
+  "spot_usdt_break": 214,
+  "spot_usdt_bbo_coverage": {
+    "matched": 511,
+    "eligible": 511
+  },
+  "spot_usdt_24hr_ticker_coverage": {
+    "matched": 511,
+    "eligible": 511
+  },
+  "btcusdt_depth_bid_levels": 100,
+  "btcusdt_depth_ask_levels": 100,
+  "percentile_definition": "order statistic: sorted numeric measurements index floor((N-1)*p), not average",
+  "top_of_book_spread_bps": {
+    "p10": 2.0608,
+    "median": 11.217,
+    "p90": 28.9715
+  },
+  "rolling_24h_quote_volume_usdt": {
+    "p10": 59489.3218,
+    "median": 464067.9191
+  },
+  "top_of_book_displayed_notional_usdt": {
+    "bid_median": 332.8142,
+    "ask_median": 357.5098
+  },
+  "quote_spread_calculation_bps": "20000 * (askPrice - bidPrice)/(askPrice + bidPrice); only currently positive and noncrossed pairs",
+  "order_notional_calculation": "bidPrice*bidQty and askPrice*askQty; displayed best-price levels only",
+  "venue_identity_caveat": "3729 raw all-market includes symbols not limited to permissions=SPOT; 3689 earlier connector SPOT-filtered identity census is a different request scope, not conflicting quotes",
+  "source_market_time_not_all_same_instant": true,
+  "no_authenticated_exchange_signature": true,
+  "historical_PIT_listing_changes_not_captured": true,
+  "full_7d_live_1m_signal_ticks_not_captured": true,
+  "true_exit_l2_and_real_fills_missing": true,
+  "fees_and_user_notional_unknown": true,
+  "true_future_OOS": "NOT_YET_AS_SEVEN_DAY_WINDOW_NOT_ENDED",
+  "g0": "PARTIAL_FULL_T0_SPOT_ONLY_NO_CHANGE_STREAM",
+  "g4": "UNKNOWN",
+  "g6": "NO_GO",
+  "no_merge": true,
+  "no_deploy": true,
+  "no_gmail": true,
+  "no_trade": true
+}
