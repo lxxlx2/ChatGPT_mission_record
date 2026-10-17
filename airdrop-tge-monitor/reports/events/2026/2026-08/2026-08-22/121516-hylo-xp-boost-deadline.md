@@ -6,7 +6,7 @@ project: "Hylo"
 event_type: historical_alert
 email_subject: "[空投提醒][Hylo][XP Boost 截止]"
 gmail_message_id: "1a027e50980df0c0"
-gmail_sent_at: "2026-08-22T05:15:16"
+gmail_sent_at: "2026-08-22T05:15:16Z"
 gmail_sent_at_bkk: "2026-08-22T12:15:16+07:00"
 status: official
 backfilled: true
