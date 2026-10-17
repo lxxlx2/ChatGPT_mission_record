@@ -1,0 +1,76 @@
+{
+  "D1_busy_ticks": 534,
+  "D1_first_selected": 269,
+  "D1_reselected": 484,
+  "D1_total_selected": 753,
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_DEPLOY": true,
+  "NO_GMAIL": true,
+  "NO_MERGE": true,
+  "NO_TRADE": true,
+  "actual_net_profit": "UNVERIFIED",
+  "full_trace_GHA_run_id": "39012150858",
+  "full_trace_sha256": "44fb0bec7ac0df9b86eebbc923e9e589eb0d07c523dd311758ccec44bf67928f",
+  "global_shared_polls": 3360,
+  "historical_pit_listing": "UNVERIFIED",
+  "historical_source_complete_symbols": 445,
+  "independent_OOS": false,
+  "independent_other_AI_review": "NOT_DONE",
+  "original758_censored_313": true,
+  "original_full_json_sha256": "370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf",
+  "original_research_V2_model_identical": true,
+  "peak98_vs_other171": {
+    "OTHER_171": {
+      "LATE_never_selected": 0,
+      "LATE_selected_before_deadline": 0,
+      "WATCH": 171,
+      "ever_selected": 171,
+      "ever_valid_D1_evaluation": 165,
+      "final_status": {
+        "EVALUATED": 162,
+        "INVALIDATED": 4,
+        "LATE": 2,
+        "SOURCE_UNSUPPORTED_D1_ZERO_QUOTE": 3
+      },
+      "first_selection_lag_minutes_counts": {
+        "0": 169,
+        "48": 2
+      },
+      "never_selected": 0,
+      "repeated_selected_slots": 449,
+      "total_selected_slots": 620
+    },
+    "PEAK_98": {
+      "LATE_never_selected": 0,
+      "LATE_selected_before_deadline": 0,
+      "WATCH": 98,
+      "ever_selected": 98,
+      "ever_valid_D1_evaluation": 7,
+      "final_status": {
+        "EVALUATED": 7,
+        "LATE": 91
+      },
+      "first_selection_lag_minutes_counts": {
+        "0": 7,
+        "18": 8,
+        "21": 8,
+        "24": 8,
+        "27": 8,
+        "30": 8,
+        "33": 8,
+        "36": 8,
+        "39": 8,
+        "42": 8,
+        "45": 8,
+        "48": 8,
+        "51": 3
+      },
+      "never_selected": 0,
+      "repeated_selected_slots": 35,
+      "total_selected_slots": 133
+    }
+  },
+  "schema": "MONSTER445_REAL_FIRST_D1_SERVICE_TRACE_SUMMARY_V1",
+  "source_all28_original_artifacts_attested": true
+}
