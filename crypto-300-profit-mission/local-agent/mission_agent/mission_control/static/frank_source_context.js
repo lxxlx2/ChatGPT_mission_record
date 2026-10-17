@@ -42,8 +42,8 @@
     if (doc.candidates.length === 0) {
       return noEvidence('当前 F01 没有可跟候选。仓位来源对照无需显示。');
     }
-    const visible = displayedMints && typeof displayedMints.has === 'function'
-      ? displayedMints : new Set();
+    const visible = displayedMints && typeof displayedMints.get === 'function'
+      ? displayedMints : new Map();
     const seen = new Set();
     const rows = [];
     for (const row of doc.candidates) {
@@ -54,7 +54,13 @@
         return noEvidence('候选身份或来源格式异常，已隐藏本次仓位对照。');
       }
       seen.add(row.mint);
-      if (!visible.has(row.mint)) continue;
+      const current = visible.get(row.mint);
+      if (!current) continue;
+      if (current.source_signal_id !== row.source_signal_id ||
+          current.decision !== row.f01_decision ||
+          current.guard_state !== 'VERIFIED') {
+        return noEvidence('F01 当前信号已更新或未校验，旧仓位来源不得混用。');
+      }
       const state = stateLabels[row.wallet_observation_state];
       if (!state || row.archived_source_only !== true ||
           row.current_wallet_position_verified !== false ||
@@ -116,10 +122,17 @@
   let sequence = 0;
   let stored = null;
   let expiryTimer = null;
-  const observedMints = () => new Set(Array.from(
-    cardContainer.querySelectorAll('.candidate-card .ca-full'),
-    (element) => (element.textContent || '').trim()
-  ).filter(validMint));
+  const observedMints = () => new Map(Array.from(
+    cardContainer.querySelectorAll('.candidate-card'),
+    (card) => {
+      const mint=(card.querySelector('.ca-full')?.textContent || '').trim();
+      return [mint, {
+        source_signal_id:card.dataset.f01SourceSignalId,
+        decision:card.dataset.f01Decision,
+        guard_state:card.dataset.f01GuardState,
+      }];
+    }
+  ).filter(pair => validMint(pair[0])));
   const draw = () => {
     pane.innerHTML = renderModel(stored, observedMints(), Date.now() / 1000);
   };
@@ -156,5 +169,7 @@
   // scheduler, background process, RPC, or active CA research.
   const observer = new MutationObserver(() => { void load(); });
   observer.observe(cardContainer, {childList: true});
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function')
+    window.addEventListener('frank:f01-guard-updated', draw);
   void load();
 })();

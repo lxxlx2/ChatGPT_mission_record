@@ -35,9 +35,11 @@ const row = (mint, state, quantity, review) => ({
   may_trade_based_on_combination: false,
 });
 const REVIEW = 'F01_SIGNAL_VS_ARCHIVED_WALLET_REQUIRES_REVIEW';
+const trusted = (mint, id = 'source-' + mint, decision = 'BUY') =>
+  new Map([[mint,{source_signal_id:id, decision,guard_state:'VERIFIED'}]]);
 
 const zero = doc([row(A, 'OPEN_ACCOUNT_ZERO', '0.000000', REVIEW)]);
-const rendered = render(zero, new Set([A]), now);
+const rendered = render(zero, trusted(A), now);
 assert.match(rendered, /需要复核/);
 assert.match(rendered, /0\.000000/);
 assert.match(rendered, /不代表已卖出/);
@@ -45,56 +47,59 @@ assert.match(rendered, /F01 资格剩余约 8 秒/);
 assert.doesNotMatch(rendered, /当前实时仓位已确认/);
 
 const positive = doc([row(A, 'OPEN_ACCOUNT_NONZERO', '123.000000', null)]);
-assert.match(render(positive, new Set([A]), now), /123\.000000/);
-assert.doesNotMatch(render(positive, new Set([A]), now), /需要复核/);
-assert.match(render(positive, new Set([B]), now), /尚未匹配/);
+assert.match(render(positive, trusted(A), now), /123\.000000/);
+assert.doesNotMatch(render(positive, trusted(A), now), /需要复核/);
+assert.match(render(positive, trusted(B), now), /尚未匹配/);
 
 const unobserved = doc([row(A, 'NO_OPEN_ACCOUNT_OBSERVED', null, REVIEW)]);
-assert.match(render(unobserved, new Set([A]), now), /未观察到开放账户/);
-assert.match(render(unobserved, new Set([A]), now), /需要复核/);
-assert.doesNotMatch(render(unobserved, new Set([A]), now), /0\.000000/);
+assert.match(render(unobserved, trusted(A), now), /未观察到开放账户/);
+assert.match(render(unobserved, trusted(A), now), /需要复核/);
+assert.doesNotMatch(render(unobserved, trusted(A), now), /0\.000000/);
 assert.match(render(doc([row(A, 'SOURCE_UNAVAILABLE', null, null)]),
-  new Set([A]), now), /余额未知/);
+  trusted(A), now), /余额未知/);
 
 const multiple = doc([
   row(A, 'OPEN_ACCOUNT_NONZERO', '123.000000', null),
   row(B, 'OPEN_ACCOUNT_ZERO', '0.000000', REVIEW)
 ]);
-const visibleA = render(multiple, new Set([A]), now);
+const visibleA = render(multiple, trusted(A), now);
 assert.match(visibleA, /123\.000000/);
 assert.doesNotMatch(visibleA, /0\.000000/);
-const visibleB = render(multiple, new Set([B]), now);
+const visibleB = render(multiple, trusted(B), now);
 assert.match(visibleB, /0\.000000/);
 assert.doesNotMatch(visibleB, /123\.000000/);
 
-assert.match(render(zero, new Set([A]), now + 8), /已过期/);
-assert.doesNotMatch(render(zero, new Set([A]), now + 8), /0\.000000/);
-assert.match(render(zero, new Set([A]), now + 200), /已过期/);
+assert.match(render(zero, trusted(A,'different-signal'), now), /信号已更新/);
+assert.match(render(zero, trusted(A,'source-' + A,'SMALL_BUY'), now), /信号已更新/);
+assert.match(render(zero, new Map([[A,{source_signal_id:'source-' + A,decision:'BUY',guard_state:'UNVERIFIED'}]]), now), /信号已更新/);
+assert.match(render(zero, trusted(A), now + 8), /已过期/);
+assert.doesNotMatch(render(zero, trusted(A), now + 8), /0\.000000/);
+assert.match(render(zero, trusted(A), now + 200), /已过期/);
 assert.match(render({...zero, f01_valid_until_epoch: null},
-  new Set([A]), now), /已过期/);
+  trusted(A), now), /已过期/);
 assert.match(render({...zero, combined_trade_permission: true},
-  new Set([A]), now), /来源未接入/);
+  trusted(A), now), /来源未接入/);
 assert.match(render({...zero, upstream: {f01: 'SOURCE_UNAVAILABLE'}},
-  new Set([A]), now), /来源未接入/);
+  trusted(A), now), /来源未接入/);
 assert.match(render({...zero, candidate_count: 0},
-  new Set([A]), now), /来源未接入/);
-assert.match(render(doc([]), new Set(), now), /没有可跟候选/);
+  trusted(A), now), /来源未接入/);
+assert.match(render(doc([]), new Map(), now), /没有可跟候选/);
 
 const duplication = doc([row(A, 'OPEN_ACCOUNT_ZERO', '0', REVIEW),
   row(A, 'OPEN_ACCOUNT_NONZERO', '10', null)]);
-assert.match(render(duplication, new Set([A]), now), /候选身份或来源格式异常/);
+assert.match(render(duplication, trusted(A), now), /候选身份或来源格式异常/);
 
 const forged = doc([{
   ...row(A, 'OPEN_ACCOUNT_NONZERO', '42', null),
   source_signal_id: '<script>alert(1)</script>'
 }]);
-const sanitized = render(forged, new Set([A]), now);
+const sanitized = render(forged, trusted(A), now);
 assert.doesNotMatch(sanitized, /<script>/);
 const forgedQuantity = doc([row(A, 'OPEN_ACCOUNT_NONZERO', '<img onerror=alert(1)>', null)]);
-assert.match(render(forgedQuantity, new Set([A]), now), /余额精度证据异常/);
+assert.match(render(forgedQuantity, trusted(A), now), /余额精度证据异常/);
 const forgedState = doc([{
   ...row(A, 'OPEN_ACCOUNT_NONZERO', '7', null),
   may_trade_based_on_combination: true
 }]);
-assert.match(render(forgedState, new Set([A]), now), /来源证明不完整/);
+assert.match(render(forgedState, trusted(A), now), /来源证明不完整/);
 console.log('FRANK_SOURCE_CONTEXT_RENDER_PASS: exact-mint, no-trade, expiry and XSS guards');

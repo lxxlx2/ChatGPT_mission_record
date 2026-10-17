@@ -822,7 +822,7 @@ class DashboardState:
 
 
 
-def _opt_in_research_follow_context() -> dict | None:
+def _opt_in_research_follow_context(*, local_listen_port: int) -> dict | None:
     """Optional localhost-to-localhost read-only source gateway.
 
     Unset FRANK_SOURCE_CONTEXT_PORT means no request, no RPC, no startup,
@@ -833,7 +833,7 @@ def _opt_in_research_follow_context() -> dict | None:
             or not source_port.isdecimal() or len(source_port) > 5):
         return None
     port = int(source_port)
-    if not 1024 <= port <= 65535:
+    if not 1024 <= port <= 65535 or port == local_listen_port:
         return None
     conn = HTTPConnection("127.0.0.1", port, timeout=2.5)
     try:
@@ -916,7 +916,8 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/research/current-follow-context":
             if urlparse(self.path).query:
                 return self._json({"status": "RESEARCH_QUERY_NOT_ALLOWED"}, 400)
-            context = _opt_in_research_follow_context()
+            context = _opt_in_research_follow_context(
+                local_listen_port=self.server.server_address[1])
             if context is None:
                 return self._json({"status": "RESEARCH_SOURCE_NOT_CONNECTED"}, 503)
             return self._json(context)
