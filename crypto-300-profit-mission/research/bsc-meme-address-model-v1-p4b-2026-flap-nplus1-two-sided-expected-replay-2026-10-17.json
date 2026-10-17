@@ -1,0 +1,70 @@
+{
+  "schema": "BSC_P4B_FLAP_2026_NPLUS1_MATH_ONLY_TWO_ASSETS_REPLAY",
+  "source_sha": {
+    "freeze": "57408d1a792235ce43eebcb10d7096c97e9b3aea",
+    "readback": "57fd53d2e6e00adbb1576b2436a975887ee87a8d",
+    "market": "c42ad01e896f30262f89f7852f927fc84fb3ea18",
+    "first_signed": "d69f2ddfade437a1d8b0fc49585eb4ca0f9268e9",
+    "prebuy_quotes": "43fe6d36fbeeda43e07a2b65874c4292e5d91606"
+  },
+  "summary": {
+    "scoped_tokens": 2,
+    "quote_calls": 4,
+    "isolated_bidirectional_math_quotes_2of2": 2,
+    "persisted_hypothetical_follow_trade_fills": 0,
+    "verified_public_executable_U": 0,
+    "P4_B": "PARTIAL",
+    "P5": "BLOCKED",
+    "production": "NO_GO"
+  },
+  "rows": [
+    {
+      "token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_CA": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "historical_read_block_Nplus1": 115628775,
+      "buy_request_blockTag": "0x6e45ae7",
+      "reverse_request_blockTag": "0x6e45ae7",
+      "Nplus1_end_block_includes_unobserved_intrablock_trades": true,
+      "actual_early_signed_buy_witness_N": 115628774,
+      "source_historical_buy_sell_tax_bps": [
+        100,
+        100
+      ],
+      "fixed_quote_input_raw": "10000000000000000",
+      "post_N_buy_math_token_output_raw": "1775984542161547782102975",
+      "same_end_state_reverse_math_quote_raw": "9572139608243558",
+      "two_independent_static_quote_difference_raw": "427860391756442",
+      "quote_math_gap_bps_times_1e4": "4278603",
+      "actual_post_witness_follower_buy_then_sell": "UNRESOLVED",
+      "historic_original_quote_to_BNB_or_USD_conversion": "UNRESOLVED",
+      "actual_post_hypothetical_purchase_market_state": "NOT_SIMULATED",
+      "public_first_buy_and_sell_executable_U": "UNRESOLVED",
+      "P5_one_five_fifteen_minute_return": "UNRESOLVED"
+    },
+    {
+      "token": "MARSCOIN",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_CA": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "historical_read_block_Nplus1": 112441395,
+      "buy_request_blockTag": "0x6b3b833",
+      "reverse_request_blockTag": "0x6b3b833",
+      "Nplus1_end_block_includes_unobserved_intrablock_trades": true,
+      "actual_early_signed_buy_witness_N": 112441394,
+      "source_historical_buy_sell_tax_bps": [
+        300,
+        300
+      ],
+      "fixed_quote_input_raw": "10000000000000000",
+      "post_N_buy_math_token_output_raw": "238701037758398982247391",
+      "same_end_state_reverse_math_quote_raw": "9211471514791789",
+      "two_independent_static_quote_difference_raw": "788528485208211",
+      "quote_math_gap_bps_times_1e4": "7885284",
+      "actual_post_witness_follower_buy_then_sell": "UNRESOLVED",
+      "historic_original_quote_to_BNB_or_USD_conversion": "UNRESOLVED",
+      "actual_post_hypothetical_purchase_market_state": "NOT_SIMULATED",
+      "public_first_buy_and_sell_executable_U": "UNRESOLVED",
+      "P5_one_five_fifteen_minute_return": "UNRESOLVED"
+    }
+  ]
+}
