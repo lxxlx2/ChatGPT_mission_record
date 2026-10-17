@@ -97,3 +97,8 @@ DRAFT -> PRE_SEND_LINT_PASS -> QA_PASS -> GMAIL_SENT_READBACK -> GITHUB_ARCHIVED
 
 Any state before GMAIL_SENT_READBACK is not delivered.
 If Gmail succeeds and GitHub fails, preserve GMAIL_SENT_READBACK and repair archive only; do not resend.
+
+
+## STK-20 Section-local numbering and correction-readback gate — 2026-10-17
+A report with the 12 canonical first-level headings MUST restart item numbering at （1） under EACH new heading and continue locally （2）, （3）... without gaps/duplicates. Global running numbers spanning headings are a hard failure even if sections and overall item counts pass. Parse the final email body by canonical section boundaries before EVERY primary, recovery or manual correction send; run the same parser over Gmail readback. Where a section has no substantive items, show \`无高置信新增。\` without a spurious numbered item.
+Do not resend a previously delivered same-date report on a normal automated run. If and only if a specifically identified content/format defect materially degrades a delivered official report and the user requests correction, send a full 12-section \`｜修正版\` after checking Gmail Sent for that EXACT corrected subject; mark prior delivery superseded in canonical Git metadata while preserving original Sent ID in the audit. Verify identical readback and Git archival body.
