@@ -7,6 +7,57 @@
     /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint);
   const isAction = d => d === 'BUY' || d === 'SMALL_BUY';
 
+  // Exact decimal equality avoids accepting two distinct tiny Solana prices
+  // that both round to the same IEEE-754 Number.
+  function quoteDecimal(value, positive) {
+    if ((typeof value !== 'string' && typeof value !== 'number') ||
+        (typeof value === 'number' && !Number.isFinite(value))) return null;
+    const raw = String(value);
+    if (raw.length > 128) return null;
+    const m = /^(0|[1-9][0-9]*)(?:\.([0-9]+))?(?:[eE]([+-]?[0-9]+))?$/.exec(raw);
+    if (!m) return null;
+    const power = m[3] === undefined ? 0 : Number(m[3]);
+    if (!Number.isSafeInteger(power) || Math.abs(power) > 128) return null;
+    let digits = (m[1] + (m[2] || '')).replace(/^0+/, '');
+    if (!digits) return positive ? null : '0e0';
+    let exp = power - (m[2] || '').length;
+    while (digits.endsWith('0')) {
+      digits = digits.slice(0, -1);
+      exp++;
+    }
+    return digits + 'e' + exp;
+  }
+
+  function quoteProof(row, independent) {
+    if (!row || !independent || typeof row !== 'object' ||
+        typeof independent !== 'object') return null;
+    // The reviewed F01 renderer displays validated_follow_quote exclusively;
+    // old standalone app.js uses metrics, falling back to decision_quote.
+    const validated = row.validated_follow_quote;
+    const values = validated !== null && typeof validated === 'object'
+      ? validated
+      : {
+          execution_price_usdc: row.metrics?.execution_price_usdc ??
+            row.decision_quote?.execution_price_usdc,
+          price_impact_pct: row.metrics?.price_impact_pct ??
+            row.decision_quote?.price_impact_pct
+        };
+    const independentValidated = independent.validated_follow_quote;
+    if (!independentValidated || typeof independentValidated !== 'object')
+      return null;
+    const price = quoteDecimal(values.execution_price_usdc, true);
+    const impact = quoteDecimal(values.price_impact_pct, false);
+    if (!price || !impact ||
+        price !== quoteDecimal(independentValidated.execution_price_usdc, true) ||
+        impact !== quoteDecimal(independentValidated.price_impact_pct, false))
+      return null;
+    const a = row.quote_observed_at, b = independent.quote_observed_at;
+    if ((typeof a !== 'string' && typeof a !== 'number') ||
+        (typeof b !== 'string' && typeof b !== 'number') ||
+        !String(a) || String(a) !== String(b)) return null;
+    return price + '\0' + impact + '\0' + String(a);
+  }
+
   function verifyRows(rows, doc, now) {
     if (!Array.isArray(rows) || !doc || doc.status !== 'OK' ||
         !Array.isArray(doc.eligible) ||
@@ -16,25 +67,32 @@
         !Number.isFinite(doc.as_of_epoch) ||
         !Number.isFinite(now) || now < doc.as_of_epoch ||
         now >= doc.as_of_epoch + MAX_F01_AGE_SECONDS) return null;
-    const identities = (input, allowNonAction) => {
-      const m = new Map();
-      for (const row of input) {
-        if (allowNonAction && row && !isAction(row.decision)) continue;
-        if (!row || row.person_id !== 'frank' || !validMint(row.mint) ||
-            !isAction(row.decision) ||
-            typeof row.source_signal_id !== 'string' || !row.source_signal_id ||
-            m.has(row.mint)) return null;
-        m.set(row.mint, row.source_signal_id + '\0' + row.decision);
-      }
-      return m;
-    };
-    const expected = identities(rows, true);
-    const received = identities(doc.eligible, false);
-    // An empty or mixed historic row set must NEVER verify a missing BUY.
-    if (!expected || !received || expected.size === 0 ||
-        expected.size !== received.size) return null;
-    for (const [mint, identity] of expected)
-      if (received.get(mint) !== identity) return null;
+    const expected = new Map();
+    const received = new Map();
+    for (const row of rows) {
+      if (row && !isAction(row.decision)) continue;
+      if (!row || row.person_id !== 'frank' || !validMint(row.mint) ||
+          !isAction(row.decision) ||
+          typeof row.source_signal_id !== 'string' || !row.source_signal_id ||
+          expected.has(row.mint)) return null;
+      expected.set(row.mint, row);
+    }
+    for (const row of doc.eligible) {
+      if (!row || row.person_id !== 'frank' || !validMint(row.mint) ||
+          !isAction(row.decision) ||
+          typeof row.source_signal_id !== 'string' || !row.source_signal_id ||
+          received.has(row.mint)) return null;
+      received.set(row.mint, row);
+    }
+    // Empty candidate lists must NEVER validate a historical BUY.
+    if (expected.size === 0 || expected.size !== received.size) return null;
+    for (const [mint, row] of expected) {
+      const actual = received.get(mint);
+      if (!actual ||
+          row.source_signal_id !== actual.source_signal_id ||
+          row.decision !== actual.decision ||
+          quoteProof(row, actual) === null) return null;
+    }
     return doc.as_of_epoch + MAX_F01_AGE_SECONDS;
   }
 
