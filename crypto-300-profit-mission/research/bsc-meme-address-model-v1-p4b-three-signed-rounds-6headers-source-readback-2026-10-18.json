@@ -1,0 +1,76 @@
+{
+  "schema": "BSC_P4B_2026_THREE_OWNER_CLOSED_ROUNDS_SIX_HISTORIC_BLOCK_HEADER_ATTEMPTS_V1",
+  "scope_precommit": "bsc-meme-address-model-v1-p4b-three-signed-rounds-6headers-crossmarket-precommit-2026-10-18.json",
+  "source_grade": "PROVIDER_TOOL_CLIPPED_PER_BLOCK_NO_COMPLETE_JSON_NO_TIMESTAMP_HENCE_BLOCK_DISTANCE_ONLY",
+  "network": "bnb-mainnet",
+  "queries": "eth_getBlockByNumber exact six precommitted heights fullTransactions=false, once each, no retry",
+  "expected_request_count": 6,
+  "actual_request_count": 6,
+  "results": [
+    {
+      "block": 63838943,
+      "blockTag": "0x3ce1adf",
+      "status": "TOOL_TEXT_TRUNCATED",
+      "length_chars": 8098,
+      "parsed_complete": false,
+      "timestamp": "UNRESOLVED",
+      "milliTimestamp": "UNRESOLVED"
+    },
+    {
+      "block": 74741352,
+      "blockTag": "0x4747668",
+      "status": "TOOL_TEXT_TRUNCATED",
+      "length_chars": 8098,
+      "parsed_complete": false,
+      "timestamp": "UNRESOLVED",
+      "milliTimestamp": "UNRESOLVED"
+    },
+    {
+      "block": 74741587,
+      "blockTag": "0x4747753",
+      "status": "TOOL_TEXT_TRUNCATED",
+      "length_chars": 8098,
+      "parsed_complete": false,
+      "timestamp": "UNRESOLVED",
+      "milliTimestamp": "UNRESOLVED"
+    },
+    {
+      "block": 83636128,
+      "blockTag": "0x4fc2fa0",
+      "status": "TOOL_TEXT_TRUNCATED",
+      "length_chars": 8098,
+      "parsed_complete": false,
+      "timestamp": "UNRESOLVED",
+      "milliTimestamp": "UNRESOLVED"
+    },
+    {
+      "block": 93584281,
+      "blockTag": "0x593fb99",
+      "status": "TOOL_TEXT_TRUNCATED",
+      "length_chars": 8098,
+      "parsed_complete": false,
+      "timestamp": "UNRESOLVED",
+      "milliTimestamp": "UNRESOLVED"
+    },
+    {
+      "block": 94208823,
+      "blockTag": "0x59d8337",
+      "status": "TOOL_TEXT_TRUNCATED",
+      "length_chars": 8098,
+      "parsed_complete": false,
+      "timestamp": "UNRESOLVED",
+      "milliTimestamp": "UNRESOLVED"
+    }
+  ],
+  "valid_inference": "Original prior repository first-scoped liquidity block and original prior repository owner actual tx block numbers can be compared exactly without claiming new provider full header reads; no duration/date can be calculated from these six failed-return headers.",
+  "no_inference": [
+    "Any chain date or elapsed wall-clock duration from these six clipped provider responses",
+    "Global first market activity or public first executable U from first-scoped liquidity block",
+    "Any public signal available time or 1/5/15 minute fixed-delay realized follower profit",
+    "Any claim 8E6B or DDAC was a causally followed wallet in an independently purchased trade"
+  ],
+  "restrictions": "READ_ONLY NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE",
+  "P4_B": "PARTIAL",
+  "P5": "BLOCKED",
+  "production": "NO_GO"
+}
