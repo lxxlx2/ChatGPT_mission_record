@@ -306,6 +306,11 @@ def build_report(candidate_model, observer, ref, baseline):
         cohorts[label]["alternative_setups"]=sum(cohort_of(e)==label for e in new_setups.values())
         cohorts[label]["lost_setups"]=sum(cohort_of(old_setups[x])==label for x in lost)
         cohorts[label]["new_setups"]=sum(cohort_of(new_setups[x])==label for x in gained)
+    contract(sum(x["baseline_setups"] for x in cohorts.values())==len(old_setups)
+             and sum(x["alternative_setups"] for x in cohorts.values())==len(new_setups)
+             and sum(x["lost_setups"] for x in cohorts.values())==len(lost)
+             and sum(x["new_setups"] for x in cohorts.values())==len(gained),
+             "SETUP_EXACT_EPISODE_COHORT_RECONCILIATION_DRIFT")
     return {
         "schema":SCHEMA,
         "baseline_original_full_sha256":REFERENCE_SHA,
