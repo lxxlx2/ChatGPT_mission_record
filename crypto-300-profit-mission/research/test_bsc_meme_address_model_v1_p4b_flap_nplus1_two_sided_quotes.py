@@ -56,7 +56,7 @@ class Flap2026TwoSidedMathOnlyTests(unittest.TestCase):
     def test_switched_reverse_token_direction_fails(self):
         self.fails(lambda d:d["readback"]["rows"][1]["reverse"].update(
             rpc_calldata=d["readback"]["rows"][1]["buy"]["rpc_calldata"]),
-            "INDEPENDENT_VIEW_BLOCKTAG_OR_REQUEST_IDENTITY")
+            "SCRIPT_RECONSTRUCTED_SELF_CONSISTENCY")
 
     def test_mutated_buy_output_fails(self):
         self.fails(lambda d:d["readback"]["rows"][1]["buy"].update(decoded_token_raw="1"),
@@ -94,17 +94,17 @@ class Flap2026TwoSidedMathOnlyTests(unittest.TestCase):
         self.fails(lambda d:d["first_signed"]["rows"][1].update(
             buy_tax_bps=0),"EARLY_PREBUY_OR_TAX_SOURCE")
 
-    def test_buy_request_explicit_blocktag_cannot_drift(self):
+    def test_script_reconstructed_buy_request_blocktag_cannot_drift(self):
         self.fails(lambda d:d["readback"]["rows"][0]["buy"]["request"].update(
-            blockTag="0x6e45ae6"), "INDEPENDENT_VIEW_BLOCKTAG_OR_REQUEST_IDENTITY")
+            blockTag="0x6e45ae6"), "SCRIPT_RECONSTRUCTED_SELF_CONSISTENCY")
 
-    def test_reverse_request_intra_block_state_cannot_drift(self):
+    def test_script_reconstructed_reverse_blocktag_cannot_drift(self):
         self.fails(lambda d:d["readback"]["rows"][1]["reverse"]["request"].update(
-            blockTag="latest"), "INDEPENDENT_VIEW_BLOCKTAG_OR_REQUEST_IDENTITY")
+            blockTag="latest"), "SCRIPT_RECONSTRUCTED_SELF_CONSISTENCY")
 
-    def test_original_RPC_calldata_required_in_request(self):
+    def test_script_reconstructed_RPC_calldata_self_consistency(self):
         self.fails(lambda d:d["readback"]["rows"][1]["buy"]["request"].update(
-            data="0xdead"), "INDEPENDENT_VIEW_BLOCKTAG_OR_REQUEST_IDENTITY")
+            data="0xdead"), "SCRIPT_RECONSTRUCTED_SELF_CONSISTENCY")
 
     def test_block_end_lookahead_grade_cannot_be_ignored(self):
         self.fails(lambda d:d["readback"]["rows"][0].update(
@@ -114,6 +114,16 @@ class Flap2026TwoSidedMathOnlyTests(unittest.TestCase):
     def test_raw_provider_transcripts_cannot_be_claimed(self):
         self.fails(lambda d:d["readback"].update(
             actual_provider_raw_transcript_archived=True), "BLOCK_END_GRADE")
+
+    def test_mutation_of_immutable_v1_quote_return_fails(self):
+        self.fails(lambda d:d["raw_v1"]["rows"][0]["buy"].update(
+            raw_return="0x"+("0"*63)+"1"),
+            "IMMUTABLE_V1_QUOTE_FIELD_DRIFT")
+
+    def test_script_reconstruction_grade_cannot_claim_provider_capture(self):
+        self.fails(lambda d:d["readback"].update(
+            request_evidence_grade="PROVIDER_WIRE_CAPTURED"),
+            "V1_V2_PROVENANCE_NOT_CAPTURED")
 
     def test_source_pinned_byte_tamper(self):
         with tempfile.TemporaryDirectory() as td:
