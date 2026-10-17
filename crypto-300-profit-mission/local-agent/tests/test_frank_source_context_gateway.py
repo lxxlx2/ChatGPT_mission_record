@@ -21,7 +21,12 @@ def read(port, path="/api/research/current-follow-context", host=None):
         headers = {} if host is None else {"Host": host}
         conn.request("GET", path, headers=headers)
         response = conn.getresponse()
-        return response.status, dict(response.getheaders()), json.loads(response.read())
+        body = response.read()
+        try:
+            doc = json.loads(body)
+        except (ValueError, UnicodeDecodeError):
+            doc = {"non_json_error_page": True}
+        return response.status, dict(response.getheaders()), doc
     finally:
         conn.close()
 
