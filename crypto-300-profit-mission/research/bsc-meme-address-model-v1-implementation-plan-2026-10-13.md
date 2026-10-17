@@ -821,3 +821,16 @@ R1 原本人实亏回合首买块 85954137 时间 `0x69b14658`、最终卖出块
 [固定 blob 原始来源核验程序](./bsc_meme_address_model_v1_p4b_dragon_external_five_true_txs.py) + [13 项资金/未退出负对照](./test_bsc_meme_address_model_v1_p4b_dragon_external_five_true_txs.py) 已接入既有 Ubuntu/macOS Bash 3.2 全量 CI；避免“只算盈利两轮，删掉仍持有 E11B”幸存者偏差，保证真正用户推荐目标不偏移。**下一关键工作应跨原冻结市场扩大真实可比买卖/未退出/亏损覆盖面，拿到同一有真实本金的第三方在信号可公开观察后的实际完整 buy+sell 和收款成本，绑定 +60/+300/+900 秒准确进入时间。** 不允许再用无状态数学 bidirectional 报价取代真实成交，不能因为现有两正一未知说模型通过。
 
 所有门禁仍 `P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`；此阶段不频繁因纯 CI 绿色重新进行另一 AI 全量审核。
+
+
+## 2026-10-18 P4-B 真实市场买单 Gas 新突破：跨相邻回执累计字段独立求差
+
+**实际业务阻塞关闭一部分，而不是继续堆无状态报价**。在之前已来源锁定的 DDAC 原信号已清仓后 D503 两个成功 signed BUY/SELL 回合和 E11B 同块另一成功 BUY（退出未核实）中，D503 两笔真正的 BUY receipt 曾被免费接口在 8098 字符处截断，仅记录 `cumulativeGasUsed`，导致单笔买入 `gasUsed=UNRESOLVED`。本轮先提交 [三笔 BUY 与紧邻前序交易区块索引的预冻结](./bsc-meme-address-model-v1-p4b-dragon-three-real-buys-adjacent-cumulative-gas-precommit-2026-10-18.json)（blob `e640235b63f04996870b1fe9a43d3e48a74be966`），设置 7 次免费只读上限，无重试；实际仅 6 次调用。
+
+**真实验证**：从此前旧原始 BUY 工具回执可见字段 `cumulativeGasUsed` 取 D503 买一 `0x4fa3f`、买二 `0x1ac4653`；在 BNB 原块 83636000 的 target tx index 1 严格寻找 index 0，在 83636084 的 target index 55 严格寻找 index 54。两笔前序 tx 哈希从 `ethGetTransactionByBlockNumberAndIndex` 取得，完整 `ethGetTransactionReceipt` 各自成功解析，前序累计分别 `0x8b38`、`0x1a7d74c`。按**同一区块紧邻顺序累计 Gas 差**，两笔目标买单实际均为 `290567 gasUsed`；原先 `eth_getTransactionByHash` 已确认 legacy type0 和原签名 `gasPrice` 分别 3/7 gwei，真实买单 Gas 费依次 `871701000000000 wei`（0.000871701 BNB）、`2033969000000000 wei`（0.002033969 BNB）。原钱包买入整块原生 BNB 余额支出分别 `190871700999999996`、`222033968999999982 wei`，减去 `tx.value + Gas` 尚差 **−4 wei／−18 wei**，诚实保留 `UNATTRIBUTED`，不据此认定 100% 完整内部资金闭合，不二次扣 Gas。不再把两笔 D503 BUY gasUsed 一概标 UNKNOWN，也不再混用 `eth_getTransactionByHash.gas=600000` 的 Gas 上限。
+
+原 E11B BUY（index 67）的前一笔 index 66 工具交易响应被截断 8098 字符，未完整可靠取得前序哈希，无法拿到其前序 receipt `cumulativeGasUsed`，目标自己 receipt 同样工具截断，仅可见累计 `0x8f7e66`，**E11B gasUsed、手续费和是否退出仍为 UNRESOLVED**。执行总数 6/7，严格不重选样本、不另起重试、不购买 Blockscout PRO API。
+
+[原结果与来源等级](./bsc-meme-address-model-v1-p4b-dragon-three-adjacent-actual-gas-readback-2026-10-18.json)、[独立按 SHA 复核相邻 Gas 脚本](./bsc_meme_address_model_v1_p4b_dragon_adjacent_actual_buy_gas.py)、[13 项故意破坏相邻索引／区块／Gas／E11B 未知状态的测试](./test_bsc_meme_address_model_v1_p4b_dragon_adjacent_actual_buy_gas.py) 和 [业务结论报告](./bsc-meme-address-model-v1-p4b-2026-d503-real-buy-gas-adjacent-cumulative-e11b-unknown.md) 均追加式提交，原 D503 截断旧文件与 EOA BNB／Token 真实账户来源不改。目标 D503 两笔 BUY 的**完整未截断 receipt 原始全文仍未获得**，本轮新等级是相邻全 receipt 的累计差分+原目标旧工具可见字段；不能声称目标全包已独立存储。
+
+**下一次真实业务里程碑**：真正的源钱包信号**仍持仓时**，其他公开观察者何时收到、实际可支配本金何时入场，按固定 +60/+300/+900 秒而非选定退出窗口，对成功完整卖出与未卖出／亏损进行持币、税、Gas、真实回款对照。D503 虽完整快速交易并出现正向原钱包区块余额变化，但其首买发生在 DDAC 真实清仓**200 区块后**，不能用此样本证明 DDAC 早期买入信号能被第三方复制获利。继续 `P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`，已通过代码正常回归不需要每个提交再交外部 AI 完整复审。
