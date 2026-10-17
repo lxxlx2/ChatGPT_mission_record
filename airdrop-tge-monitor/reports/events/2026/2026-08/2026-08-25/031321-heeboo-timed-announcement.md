@@ -6,7 +6,7 @@ project: HEEBOO
 event_type: historical_alert
 email_subject: "[空投/TGE提醒][HEEBOO][明确时间预告]"
 gmail_message_id: "1a03567f802748e5"
-gmail_sent_at: "2026-08-24T20:13:21"
+gmail_sent_at: "2026-08-24T20:13:21Z"
 gmail_sent_at_bkk: "2026-08-25T03:13:21+07:00"
 status: official
 backfilled: true
