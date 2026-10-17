@@ -1,0 +1,102 @@
+{
+  "D0_watch_269_event_and_queue_identity_exact": true,
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_DEPLOY": true,
+  "NO_GMAIL": true,
+  "NO_MERGE": true,
+  "NO_TRADE": true,
+  "alternative_d1_selections": 753,
+  "alternative_first_selected": 269,
+  "alternative_repeated_5m_evaluation_progress": 278,
+  "alternative_repeated_5m_no_evaluation_progress": 206,
+  "alternative_reselected": 484,
+  "artifact_run_id": "39067850479",
+  "baseline_d1_selections": 753,
+  "cohort_comparison": {
+    "OTHER_171": {
+      "alternative_evaluated_with_valid_closed_5m": 167,
+      "alternative_first_valid_eval_delay_minutes": {
+        "n": 167,
+        "p50": 3.0,
+        "p90": 6.0,
+        "p99": 15.0
+      },
+      "alternative_late": 0,
+      "alternative_queue_status": {
+        "EVALUATED": 164,
+        "INVALIDATED": 4,
+        "SOURCE_UNSUPPORTED_D1_ZERO_QUOTE": 3
+      },
+      "alternative_setups": 111,
+      "baseline_evaluated_with_valid_closed_5m": 165,
+      "baseline_first_valid_eval_delay_minutes": {
+        "n": 165,
+        "p50": 3.0,
+        "p90": 6.0,
+        "p99": 6.0
+      },
+      "baseline_late": 2,
+      "baseline_queue_status": {
+        "EVALUATED": 162,
+        "INVALIDATED": 4,
+        "LATE": 2,
+        "SOURCE_UNSUPPORTED_D1_ZERO_QUOTE": 3
+      },
+      "baseline_setups": 111,
+      "first_selected_before_actual_deadline_alternative": 171,
+      "first_selected_before_actual_deadline_baseline": 169,
+      "lost_setups": 0,
+      "new_setups": 0,
+      "watch": 171
+    },
+    "PEAK_98": {
+      "alternative_evaluated_with_valid_closed_5m": 32,
+      "alternative_first_valid_eval_delay_minutes": {
+        "n": 32,
+        "p50": 9.0,
+        "p90": 15.0,
+        "p99": 15.0
+      },
+      "alternative_late": 66,
+      "alternative_queue_status": {
+        "EVALUATED": 32,
+        "LATE": 66
+      },
+      "alternative_setups": 9,
+      "baseline_evaluated_with_valid_closed_5m": 7,
+      "baseline_first_valid_eval_delay_minutes": {
+        "n": 7,
+        "p50": 6.0,
+        "p90": 6.0,
+        "p99": 6.0
+      },
+      "baseline_late": 91,
+      "baseline_queue_status": {
+        "EVALUATED": 7,
+        "LATE": 91
+      },
+      "baseline_setups": 9,
+      "first_selected_before_actual_deadline_alternative": 32,
+      "first_selected_before_actual_deadline_baseline": 7,
+      "lost_setups": 0,
+      "new_setups": 0,
+      "watch": 98
+    }
+  },
+  "full_ab_result_sha256": "f8a01d421490f5b14a572c60d78b886b1880a3d2e90d9183610e905260e7b4ea",
+  "historical_pit_and_executable_net_profit": "UNVERIFIED",
+  "not_independent_OOS": true,
+  "original_445_source_full_sha256": "370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf",
+  "original_758_censored_313": true,
+  "original_Stage161_trace_sha256": "8d7ac8d9a0a78a0daa1164d0aee7783b0a51f29ef099437590b103bad0bab76d",
+  "schema": "MONSTER445_STAGE162_FIRST_VALID_5M_ONCE_PRIORITY_8_RESEARCH_V1",
+  "setup_event_id_alternative": 120,
+  "setup_event_id_baseline": 120,
+  "setup_guardrail": "PASS_NO_LOSS",
+  "setup_lost_ids": 0,
+  "setup_new_ids": 0,
+  "setup_retained_ids": 120,
+  "source_shard0_run_failure_job_success_disclosed": true,
+  "stage162_external_review": "NOT_DONE"
+}
