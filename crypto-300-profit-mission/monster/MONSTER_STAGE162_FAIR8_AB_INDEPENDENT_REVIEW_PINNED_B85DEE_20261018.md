@@ -29,6 +29,6 @@
 ## 独立审核操作和结论
 
 checkout固定SHA `b85dee96ec6f567e1f0b90f0d50cc5b19c79018b`，比较 `0b3044daa9eeef14ac968c6d0f36a430b6b9ca23` 及相关合约。 在 `crypto-300-profit-mission/local-agent/scripts` 真正执行：
-`python3 -m unittest -v test_monster_v4_445_stage162_first_valid_fair8_research test_monster_v4_shared_445_source_shards test_monster_v4_shared_d1_zeroquote_research_v2`；至少9+7+11=27项测试的真实退出码与源码反例结果（不要照抄作者值），核对GHA原来源/原全量JSON、新full A/B结果文件真实SHA、候选269和SETUP120事件身份。每项问题记 P0/P1/P2/P3、文件行号、复现输入、是否真实改变WATCH/SETUP、是否未来信息泄漏；输出**APPROVE / REQUEST_CHANGES / BLOCKED**，明确是限定Stage162研究代码或原数据是否已独立复算。**不批准盈利模型、Mac、Frank、Gmail或交易**。维持`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`、PR#30 Draft、禁止任何新定时任务。
+`python3 -m unittest -v test_monster_v4_445_stage162_first_valid_fair8_research test_monster_v4_shared_445_source_shards test_monster_v4_shared_d1_zeroquote_research_v2`；实际10+7+11=28项测试的真实退出码与源码反例结果（不要照抄作者值），核对GHA原来源/原全量JSON、新full A/B结果文件真实SHA、候选269和SETUP120事件身份。每项问题记 P0/P1/P2/P3、文件行号、复现输入、是否真实改变WATCH/SETUP、是否未来信息泄漏；输出**APPROVE / REQUEST_CHANGES / BLOCKED**，明确是限定Stage162研究代码或原数据是否已独立复算。**不批准盈利模型、Mac、Frank、Gmail或交易**。维持`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`、PR#30 Draft、禁止任何新定时任务。
 
 **截至本包交付：OTHER_AI_STAGE162_REVIEW=NOT_DONE**，作者CI success不是别的AI独立审查。
