@@ -75,3 +75,13 @@
 - **真实独立CI**：[fixed d389 test #39076479244](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39076479244)，`historical-baseline` 22/22步骤 SUCCESS，机会查询器**10/10**，既有Shadow **31/31**、D2 **12/12**，Python编译PASS。修复测试使用真实生产schema/函数与**合成**行情/盘口回调，未进行真实用户Mac或真实市场收益验收。
 - **审查状态**：旧SHA `7cee9f13...` = `CODEX_REQUEST_CHANGES_P2_2`；新SHA `d38999df...` = `AUTHOR_FIX_CI_PASS / INDEPENDENT_REREVIEW_PENDING`，不得宣称新SHA已独立APPROVE。完整旧审查、修复回执和定向复审提示见同目录 `monster-v4-opportunity-inspector-independent-review.md`。
 - **主线不得偏移**：此类真实性修复已完成研究级测试，本轮不再追逐无盈利增益的低价值边界；转回早期发现→可靠SETUP→实际盘口时效/成交约束→净收益/风险的价值验证。Stage163七日样本等待不阻断已授权的历史研究，`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
+
+## 七、独立复审准入更新：机会查询器两项P2关闭（2026-10-18）
+
+2026-10-18用户转交Codex**定向独立复审**，明确固定SHA `d38999df6db63192ad3e3d11e793e2e6c4df05db` 对比旧审核 `7cee9f13f01f8601ba5759466b8befc55e8dec14` 为 `APPROVE`，原P2-1/P2-2均 `CLOSED`，本次范围P0/P1/P2均0。原固定GitHub CI [#39076479244](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39076479244)已成功，机会查询器10/10、Shadow 31/31、D2 12/12。用户转交的审核者本地探针路径未变成仓库持久文件；本会话直接核查了CI和Git源。
+
+**当前状态升级限于该修复代码审核**：`MONSTER_V4_OPERATOR_RESEARCH_SNAPSHOT_V1_P2_FIX_REVIEW=APPROVE`，无需重复独立审查已关闭的这两项。早期WATCH、有效SETUP与D2清单读取的功能基础达到代码审核通过；不代表实际Mac运行或真实行情/盈利验收。最新Git文档SHA比批准的代码SHA更新属于审计记录提交，不能将批准自动套用到任何未来模型修改或主线。
+
+**下一商业重点**：从现有Stage30严格损失源入手，先因果区分新老WATCH、正向SETUP、价格回撤、流动性与资金占用，再用**预注册不回看当时未来盈利标签**的研究条件评估是否能真正减少亏损；优先实际净收益/可靠性而非继续增加查询器防御边界。Stage163固定七日OOS成熟前仍可开展隔离历史研究，不在无双时点L2/成交回执下宣称真实交易净PnL。
+
+全局不变：`NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`、`G4 UNKNOWN / G6 NO_GO`，Stage99手动采集限制以及Frank隔离仍生效。
