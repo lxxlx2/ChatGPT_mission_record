@@ -1,9 +1,9 @@
 # Mission August 2026 Sent-versus-Git historical archive reconciliation
 
 Date: 2026-10-18 Asia/Bangkok
-Status: `ALL_SCOPED_GMAIL_MATCHED_ON_DRAFT / INDEPENDENT_REVIEW_PENDING / MAIN_NOT_UPDATED`
+Status: `ORIGINAL_GMAIL_VERIFIED / PUBLIC_HEAD_6_REDACTED_7_EXACT / HISTORICAL_DISCLOSURE_UNRESOLVED / NO_MERGE`
 Scope: Issue [#1](https://github.com/lxxlx2/ChatGPT_mission_record/issues/1), only historical formal Crypto Daily, US Stock Daily, and 2026-08-19..31 TGE/airdrop alert Sent archive, plus pre-existing TGE day summaries for August dates having actual run records.
-Source authority: direct **Gmail Sent** message readback on 2026-10-18; GitHub remote content blobs; original timestamps converted to Asia/Bangkok using the fixed UTC+07 offset. Historical email content is preserved **verbatim**, including dated project claims that must not be construed as independently revalidated current facts.
+Source authority: direct **Gmail Sent** message readback on 2026-10-18; GitHub remote content blobs; original timestamps converted to Asia/Bangkok using the fixed UTC+07 offset. Original historical email content was privately verified verbatim before the privacy revision; **6 of 13 current public-branch event bodies are now explicitly redacted**, including dated project claims that must not be construed as independently revalidated current facts.
 Branch: `maintenance/mission-august-history-backfill-20261018`. No email was sent or modified. Git main is not changed by this Draft.
 
 ## 1. Daily formal report verification
@@ -93,3 +93,16 @@ No system-health repair or current financial/project fact verification is implie
 Current branch files are already exposed to readers with access to the public Draft PR and its commits. Merely changing HEAD, marking Draft or closing this PR **does not retroactively remove earlier commit history**. An actual privacy containment response would require an explicitly approved publication model (e.g., sanitized public metadata/report with exact private Gmail source retained in the connected mailbox or a private evidence store), and separately reviewed Git history treatment if removal from already-published commits is required. No history rewriting, forced pushes, secrets, wallet access, repository visibility, or branch deletion was attempted. Because no approval exists for distributing more user-specific content, keep **PR #100 Draft / PRIVACY_REVIEW_BLOCKED / NO_MERGE**, even though the data-integrity checks PASS.
 
 The definitive Issue #1 result must differentiate `GMAIL_SOURCE_BODY_VERIFIED`, `PUBLIC_SAFE_ARCHIVE`, `MAIN_MERGED` and `MAIN_READBACK` as separate gates. At the time of this audit, only source consistency on the Draft branch is proven.
+
+
+## 6. Public HEAD minimization after source verification, 2026-10-18
+
+This section **supersedes** earlier lines asserting that all 13 *current public Git files* still contain byte-for-byte original Gmail texts. Those historical checks did pass at the earlier fixed SHA. The scope has intentionally changed as a privacy mitigation:
+
+- Current public Draft HEAD has **13 event records, 13 matching original Gmail Sent message IDs and 13 validated original Sent receipts**; original complete copies remain in the authorized private Gmail account.
+- **7 event bodies remain verbatim and equal to Gmail**, while **6 current event bodies have privacy-minimized user-specific historical participation/holdings/points sentences** and are intentionally **not** exact body matches. The six mark `public_body_redacted: true`, `status: historical_public_redacted`, `original_private_source: Gmail Sent`, and `original_body_verified_before_redaction: true`.
+- Direct source-to-Git **post-redaction remote readback** on all 13 confirmed exactly 7 unredacted text matches and 6 marked non-matches; all 13 original IDs retain Gmail `SENT` labels and were resolved individually. Timezone-qualified UTC `Z` and Bangkok timestamps remain unchanged. The two stock daily one-character historical formatting fixes remain separate.
+- `GMAIL_ORIGINAL_VERIFIED` is true, `PUBLIC_BODY_EXACT` is true for only 7/13, `PUBLIC_BODY_REDACTED` is true for 6/13, `MAIN_MERGED` is false, and `PUBLIC_DISCLOSURE_CONTAINED` is **false / UNVERIFIED**.
+- **Important:** The public Draft's *earlier commits* contained the full Gmail bodies, and editing branch HEAD cannot remove them from Git history, forks or caches. This is only current-file minimization, **not verified incident containment**. Full safe-publication review and separately authorized handling of historical commits remain open. No branch deletion, forced push, visibility modification or history rewrite was performed.
+
+Because Issue #1's earlier exact-body acceptance criterion conflicts with public minimization, the acceptance should be split into original Gmail verification (private, already performed), sanitized public ledger verification (limited), and independently approved remediation for already-published history. Do not merge PR #100 yet. Do not falsely count the six intentionally sanitized public files as byte-for-byte Gmail copies, and do not resend any messages.
