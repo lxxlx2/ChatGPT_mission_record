@@ -1,4 +1,4 @@
-# GSTOCK BNB Chain Position
+# GSTOCK / BNB Chain Meme 已关闭仓位与历史交易记录
 
 Updated: 2026-09-27 12:46 Asia/Bangkok
 Status: **CLOSED_DUST**
