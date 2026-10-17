@@ -110,7 +110,7 @@ def build(d):
    "owner_actual_BNB_selected_round_net_wei":str(s["net"]),
    "owner_native_buy_block_spend_wei":str(s["spent"]),
    "owner_signed_native_round_roi_bps_trunc":
-      str(s["net"]*10000//s["spent"]),
+      ("-" if s["net"]<0 else "")+str(abs(s["net"])*10000//s["spent"]),
    "owner_source_grade":s["source_classification"],
    "global_market_first_public_buyable_U":"UNRESOLVED",
    "wallet_actual_public_followers_net_profit":"UNRESOLVED",
