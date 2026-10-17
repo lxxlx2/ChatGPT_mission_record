@@ -6,7 +6,7 @@ project: "MetaMask Rewards"
 event_type: historical_alert
 email_subject: "[空投提醒][MetaMask][Benefits 可领取]"
 gmail_message_id: "1a0209e1726ac07a"
-gmail_sent_at: "2026-08-20T19:20:26"
+gmail_sent_at: "2026-08-20T19:20:26Z"
 gmail_sent_at_bkk: "2026-08-21T02:20:26+07:00"
 status: official
 backfilled: true
