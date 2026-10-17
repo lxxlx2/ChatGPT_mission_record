@@ -1,5 +1,5 @@
 {
-  "schema": "MONSTER163_SPOT_OFFICIAL_ORIGINAL_HTTP_T0_USER_CHAT_ONESHOT_V1",
+  "schema": "MONSTER163_SPOT_OFFICIAL_ORIGINAL_HTTP_T0_USER_CHAT_ONESHOT_V2",
   "source_base": "https://data-api.binance.vision",
   "raw_http_required": true,
   "source_only": true,
