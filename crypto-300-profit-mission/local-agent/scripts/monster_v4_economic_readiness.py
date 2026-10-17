@@ -58,6 +58,14 @@ def analyze(a, b):
             "PRICE_PROXY_ONLY", "SKIP_SAME_SYMBOL_24H_CAPITAL_OCCUPIED"}:
         raise ValueError("STAGE30_UNKNOWN_PROXY_STATUS_CLASS")
     source_censor_breakdown = {k: source_status[k] for k in sorted(missing_classes)}
+    if source_censor_breakdown != {
+            "CENSORED_MINUTE_QUOTE_LT_30_USDT": 18,
+            "CENSORED_NO_COMPLETE_EXIT": 1,
+            "CENSORED_NO_ENTRY_TRADES": 1,
+            "CENSORED_ZERO_VOLUME_EXIT": 21,
+            "CENSORED_ZERO_VOLUME_NEAR_EXIT": 39,
+    }:
+        raise ValueError("STAGE30_PROXY_STATUS_BREAKDOWN_DRIFT")
     if (any(not isinstance(n, int) or isinstance(n, bool) or n < 0
             for n in source_status.values())
             or sum(source_censor_breakdown.values()) != s["source_censored_excluding_overlap"]
