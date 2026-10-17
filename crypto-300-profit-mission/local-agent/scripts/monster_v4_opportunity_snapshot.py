@@ -77,6 +77,11 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
             setup_key = event_id(venue, symbol, "SETUP_ACTIVE", q["id"])
             setup = _get(db, "SELECT observed_ms FROM events WHERE event_id=? AND observed_ms<=?",
                          (setup_key, now_ms))
+            # An evaluated D1 row is not rewritten by the production invalidation
+            # handler. The WATCH-anchored event is the episode's source of truth.
+            invalidation = _get(db, """SELECT observed_ms FROM events
+                WHERE event_id=? AND observed_ms BETWEEN ? AND ?""",
+                (event_id(venue, symbol, "INVALIDATED", first), first, now_ms))
             d2 = _get(db, """SELECT status,observed_ms,attempts,last_error
                 FROM d2_reviews WHERE source_event_id=?""", (setup_key,)) if setup else None
             d2_event = _get(db, "SELECT observed_ms,payload FROM events WHERE event_id=? AND observed_ms<=?",
@@ -90,8 +95,23 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
             except (ValueError, TypeError):
                 why = {}
             expired = now_ms > q["deadline_ms"] or now_ms - first > QUEUE_VALID_MS
-            source_ok = sources.get(venue, {}).get("state") == "RECENT_STORED_POLL"
-            if q["status"] == "INVALIDATED":
+            venue_source = sources.get(venue, {})
+            source_ok = venue_source.get("state") == "RECENT_STORED_POLL"
+            quote_age_ms = now_ms - quote["observed_ms"] if quote else None
+            last_poll_utc = venue_source.get("last_poll_utc")
+            # Poll time is stored on every symbol actually included by D0;
+            # a healthy venue poll never proves that an omitted symbol is fresh.
+            seen_in_latest_poll = bool(quote and last_poll_utc
+                and utc_time(quote["observed_ms"]) == last_poll_utc)
+            if quote is None:
+                quote_state = "MISSING"
+            elif quote_age_ms > MAX_SOURCE_LAG_MS:
+                quote_state = "STALE"
+            elif not seen_in_latest_poll:
+                quote_state = "NOT_SEEN_IN_LATEST_POLL"
+            else:
+                quote_state = "PRESENT_IN_LATEST_POLL"
+            if invalidation is not None or q["status"] == "INVALIDATED":
                 state = "INVALIDATED"
             elif q["status"] == "LATE":
                 state = "MISSED_D1_DEADLINE"
@@ -99,6 +119,8 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
                 state = "EXPIRED"
             elif not source_ok:
                 state = "SOURCE_STALE"
+            elif quote_state != "PRESENT_IN_LATEST_POLL":
+                state = "SYMBOL_QUOTE_" + quote_state
             elif not watch:
                 state = "MISSING_WATCH_EVIDENCE"
             elif setup:
@@ -125,6 +147,10 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
                 "watch_classification": why.get("classification"),
                 "d1_last_error": q["last_error"],
                 "latest_quote_utc": utc_time(quote["observed_ms"]) if quote else None,
+                "symbol_quote_state": quote_state,
+                "symbol_quote_age_seconds": quote_age_ms // 1000 if quote_age_ms is not None else None,
+                "symbol_seen_in_latest_poll": seen_in_latest_poll,
+                "invalidation_utc": utc_time(invalidation["observed_ms"]) if invalidation else None,
                 "last_stored_price": quote["price"] if quote else None,
                 "last_stored_quote24": quote["quote24"] if quote else None,
                 "queue_status": q["status"], "deadline_utc": utc_time(q["deadline_ms"]),
@@ -177,6 +203,9 @@ def main():
                   + " " + r["signal"] + " | D2=" + r["d2_status"]
                   + " | WHY=" + str(r["watch_reason"])
                   + " | MOVE=" + str(r["watch_observed_move_pct"])
+                  + " | QUOTE_STATE=" + r["symbol_quote_state"]
+                  + " | QUOTE_AGE_S=" + str(r["symbol_quote_age_seconds"])
+                  + " | INVALIDATED_AT=" + str(r["invalidation_utc"])
                   + " | PRICE_STORED=" + str(r["last_stored_price"])
                   + " | COST_BPS_STORED=" + str(r["d2_instant_roundtrip_cost_bps"])
                   + " | NO_BUY")
