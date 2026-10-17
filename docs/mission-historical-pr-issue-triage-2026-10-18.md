@@ -161,3 +161,25 @@ Read direct Gmail Sent + Git source of September 2026 final corrected reports: C
 1. Resolve PR #100 personal-data/publication model and independent review before merging anything into the publicly readable main; retain original sent content in private Gmail until approved disposition.
 2. Review overlapping root README text between #55 and #98 against latest main; do not rebase other owners' in-flight branches or treat patch-level link checks as final approval. PR #99 only coordinates, not a release authority.
 3. Continue root-cause investigation for original daily/TGE automation blocked writes, no new tasks or backup schedules. State updates follow successful terminal/source evidence, not schedule triggers.
+
+
+## Round 5: Public-data minimization and governance update (2026-10-18)
+
+### Original source versus public archive are separate authorities
+
+- [PR #100](https://github.com/lxxlx2/ChatGPT_mission_record/pull/100) HEAD `4ddfe997bee12cd1b542487e040dba4fefa0010e`: **13** historical TGE Gmail `SENT` IDs and timestamps were privately matched. The current public branch has **7 exact Gmail-body copies plus 6 privacy-minimized public event records**. All 13 retain distinct original Gmail IDs, validated Sent labels, UTC-Z/local-Bangkok timestamps. The six redacted records explicitly state `public_body_redacted=true`; they must **not** be counted as 13/13 public-original-body matches. Source text remains privately in Gmail; dated stock original-body corrections (Aug 30/31) are unchanged.
+- **P1 exposure remains unresolved:** the earlier publicly accessible PR #100 commits already contained original user-specific historical participation/holding/points context. Later redacting HEAD reduces current-file exposure but cannot erase old commits, forks or caches. **No history rewrite, deletion, force-push, visibility change or successful public-incident containment has occurred.** The user must explicitly approve any disruptive Git history/visibility strategy. Issue #1 remains open and PR #100 remains Draft/no-merge. Detail and exact verified source scope: `backfill-audit/2026-10-18-august-sent-archive-reconciliation.md` §6.
+- [PR #55](https://github.com/lxxlx2/ChatGPT_mission_record/pull/55) head `16bc10b4fa9c93a7a967db3c08fa075220b882b8`: added permanent **public repo privacy-before-first-push** and explicit incident containment gates to `docs/DEVELOPMENT_REVIEW_POLICY.md`; relabeled 2026-10-14 Frank/CA approvals as dated history so later SHAs do not inherit approval. The branch remains Draft and unmerged. Independently review the new exact head and all three changed files before merge.
+
+### PR mergeability facts
+
+At the actual latest main check, PR #55 and #98 temporarily showed `mergeable=false` in one connector view; a direct GitHub REST `pulls/{number}` readback returned **`mergeable=true`, `mergeable_state=clean`** for #55, #98, and #99. This resolves the *reported merge-conflict concern only*, **not** their independent review, age/staleness or business acceptance. No branch force-update/rebase/merge occurred as part of this check. Any future mergeability assertion requires a new GitHub read because main can advance.
+
+### Outstanding acceptance
+
+1. PR #100: independent exact-SHA source/privacy review, historical published-commit exposure assessment, authorized privacy disposition, plus eventual main source readback. **No merge**.
+2. PR #55: independent exact-SHA documentation review and policy interplay with PR #98. **No merge**.
+3. PR #98: updated independently verified scope and links, avoid overwriting newer main/user state. **No merge**.
+4. Monitor #4/#5/#6: latest *terminal* run plus actual Sent readback, never infer restored service from one `attempt` or `partial`. No new fallback automation or prod change.
+
+All source/docs mutations in Round 5 were limited to existing Draft PR #55/#100 branches, GitHub Issue #1 metadata and this central ledger. No wallet/transaction/Gmail send or automation schedule was touched.
