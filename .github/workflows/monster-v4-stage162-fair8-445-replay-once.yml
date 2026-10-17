@@ -1,0 +1,177 @@
+name: Monster Stage162 fair8 first valid D1 A-B one-shot 445 research
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/monster/source-batches/monster_feb445_stage162_first_valid_fair8_request.json'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster-stage162-445-fair8-one-shot-research
+  cancel-in-progress: false
+jobs:
+  dry_unit_and_source_contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Require exactly one explicit immutable offline research request
+        run: |
+          set -eu
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          request='crypto-300-profit-mission/monster/source-batches/monster_feb445_stage162_first_valid_fair8_request.json'
+          changed=subprocess.check_output(
+              ['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],
+              text=True).splitlines()
+          expected={
+              'schema':'MONSTER445_STAGE162_FIRST_VALID_5M_FAIR8_ONESHOT_V1',
+              'baseline_full_artifact_id':12044872933,
+              'baseline_trace_artifact_id':12113086240,
+              'full_json_sha256':'370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf',
+              'stage161_trace_sha256':'8d7ac8d9a0a78a0daa1164d0aee7783b0a51f29ef099437590b103bad0bab76d',
+              'research_only':True,
+              'unchanged_original_production_d1':True,
+              'notify':False,'deploy':False,'trade':False}
+          if changed!=[request] or json.loads(Path(request).read_text())!=expected:
+              raise ValueError('MONSTER162_NOT_SOLE_OFFLINE_FROZEN_RESEARCH_REQUEST')
+          PY
+      - name: Test research scheduler with real SQLite; historical source original guardrails
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -eu
+          python -m py_compile monster_v4_445_stage162_first_valid_fair8_research.py test_monster_v4_445_stage162_first_valid_fair8_research.py
+          python -m unittest -v test_monster_v4_445_stage162_first_valid_fair8_research
+          python -m unittest -v test_monster_v4_shared_445_source_shards test_monster_v4_shared_d1_zeroquote_research_v2
+          echo MONSTER162_ACTUAL_SQLITE_CLOCK_MASK_AND_V2_BASELINE_TESTS_PASS
+
+  actual_445_ab_original_source:
+    needs: dry_unit_and_source_contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Obtain exact original 445 baseline and last approved Stage161 trace
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster162_reference /tmp/monster162_trace
+          gh run download 38898752712 --repo lxxlx2/ChatGPT_mission_record --dir /tmp/monster162_reference --name monster-feb445-all445-real-original-shared-D0D1-once
+          gh run download 39064416945 --repo lxxlx2/ChatGPT_mission_record --dir /tmp/monster162_trace --name monster445-real-first-D1-service-phantom-fix-28shards-v4
+          printf '%s  %s\n' 370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf /tmp/monster162_reference/monster_feb445_all445_one_sqlite_full_result.json | sha256sum -c -
+          printf '%s  %s\n' 8d7ac8d9a0a78a0daa1164d0aee7783b0a51f29ef099437590b103bad0bab76d /tmp/monster162_trace/monster445_first_service_trace_full.json | sha256sum -c -
+      - name: Recover 18 official historical Artifacts and validate 28 complete shards
+        env:
+          GH_TOKEN: ${{ github.token }}
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -eu
+          python monster_v4_shared_445_archive_replay_runner.py collect --source-dir /tmp/monster162_source_shards --audit /tmp/monster162_official_source_audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path('/tmp/monster162_official_source_audit.json').read_text())
+          assert j['source_28_shards_verified'] is True
+          assert len(j['source_artifacts']) == 28
+          assert sum(e['ten_day_publisher_sha_count'] for e in j['source_artifacts'])==4450
+          exceptions=[e for e in j['source_artifacts'] if e['source_run_conclusion']!='success']
+          assert len(exceptions)==2
+          assert all(e['source_job_attestation']=='PUBLISHER_SOURCE_JOB_SUCCESS_OVERALL_RUN_FAILED' and e['shard'] in (0,1) for e in exceptions)
+          print('MONSTER162_REAL_28_SOURCE_SHARDS_ATTESTED_WITH_FAILURE_RUN_DISCLOSURE')
+          PY
+      - name: Replay 445 with research-only fair8 selection and compare all 120 baseline SETUP identities
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -eu
+          python monster_v4_445_stage162_first_valid_fair8_research.py --source-dir /tmp/monster162_source_shards --baseline-full /tmp/monster162_reference/monster_feb445_all445_one_sqlite_full_result.json --baseline-trace /tmp/monster162_trace/monster445_first_service_trace_full.json --out /tmp/monster162_actual_445_fair8_ab.json
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          full=Path('/tmp/monster162_actual_445_fair8_ab.json')
+          j=json.loads(full.read_text())
+          assert j['schema']=='MONSTER445_STAGE162_FIRST_VALID_5M_ONCE_PRIORITY_8_RESEARCH_V1'
+          assert j['D0_watch_269_event_and_queue_identity_exact'] is True
+          assert j['real_3360_shared_poll_ticks']==3360
+          assert j['setup_event_id_baseline']==120
+          assert j['capacity_per_tick']==8
+          assert j['cohort_comparison']['PEAK_98']['watch']==98
+          assert j['cohort_comparison']['OTHER_171']['watch']==171
+          assert j['G4']=='UNKNOWN' and j['G6']=='NO_GO'
+          assert j['NO_DEPLOY'] and j['NO_MERGE'] and j['NO_GMAIL'] and j['NO_TRADE']
+          fields=[
+              'schema','setup_event_id_baseline','setup_event_id_alternative',
+              'setup_retained_ids','setup_lost_ids','setup_new_ids',
+              'setup_guardrail','cohort_comparison','baseline_d1_selections',
+              'alternative_d1_selections','alternative_first_selected',
+              'alternative_reselected','alternative_repeated_5m_evaluation_progress',
+              'alternative_repeated_5m_no_evaluation_progress',
+              'D0_watch_269_event_and_queue_identity_exact']
+          out={k:j[k] for k in fields}
+          out.update({
+              'full_ab_result_sha256':hashlib.sha256(full.read_bytes()).hexdigest(),
+              'artifact_run_id':"${{ github.run_id }}",
+              'original_445_source_full_sha256':j['baseline_original_full_sha256'],
+              'original_Stage161_trace_sha256':j['baseline_first_service_trace_sha256'],
+              'original_758_censored_313':True,
+              'source_shard0_run_failure_job_success_disclosed':True,
+              'stage162_external_review':'NOT_DONE',
+              'not_independent_OOS':True,
+              'historical_pit_and_executable_net_profit':'UNVERIFIED',
+              'G4':'UNKNOWN','G6':'NO_GO',
+              'NO_MERGE':True,'NO_DEPLOY':True,'NO_GMAIL':True,'NO_TRADE':True})
+          Path('/tmp/monster162_actual_445_fair8_git_summary.json').write_text(
+              json.dumps(out,sort_keys=True,indent=2)+'\n')
+          print('MONSTER162_REAL445_FAIR8_AB_CANDIDATE_AND_SETUP_OUTCOME_ARCHIVED',
+                json.dumps({k:out[k] for k in
+                    ('setup_event_id_alternative','setup_retained_ids','setup_lost_ids',
+                     'setup_new_ids','setup_guardrail','alternative_d1_selections')},
+                    sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster162-real445-first-valid-5m-fair8-ab-once
+          path: |
+            /tmp/monster162_actual_445_fair8_ab.json
+            /tmp/monster162_actual_445_fair8_git_summary.json
+            /tmp/monster162_official_source_audit.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Seal bounded real research A-B evidence, never overwrite existing
+        run: |
+          set -eu
+          target=crypto-300-profit-mission/monster/evidence/monster_feb445_stage162_fair8_ab_real_actual.json
+          branch=research/monster-v4-local-discovery-20261010
+          test ! -e "$target"
+          cp /tmp/monster162_actual_445_fair8_git_summary.json "$target"
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive actual source445 Stage162 fair8 A-B with all original SETUP losses disclosed"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER162_REMOTE_EVIDENCE_EXISTS_REFUSE_OVERWRITE
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_445_stage162_first_valid_fair8_research.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_445_stage162_first_valid_fair8_research.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_d1_zeroquote_research_v2.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_one_db_from_shards.py .github/workflows/monster-v4-stage162-fair8-445-replay-once.yml crypto-300-profit-mission/monster/source-batches/monster_feb445_stage162_first_valid_fair8_request.json; do
+            test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo MONSTER162_EXECUTABLE_DRIFT; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER162_ALL445_FAIR8_ACTUAL_RESEARCH_EVIDENCE_GIT_ARCHIVED
