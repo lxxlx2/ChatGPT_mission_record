@@ -147,5 +147,68 @@ class Stage162ResearchTests(unittest.TestCase):
         self.assertEqual(self.observer.repeats_no_progress,0)
 
 
+    def build_synthetic_full_269_research_report(self):
+        # End-to-end report path: immutable-like 269 WATCH + 120 SETUP
+        # without any claim that these invented symbols are original evidence.
+        frozen=[]
+        watches=[]
+        setups=[]
+        service=[]
+        for i in range(269):
+            seen=fair.PEAK_MS if i<98 else fair.PEAK_MS-24*60*60000-i*60000
+            q={"id":i+1,"venue":"spot","symbol":f"SYN{i:03d}USDT",
+               "first_seen_ms":seen,"deadline_ms":seen+900000,
+               "status":"EVALUATED"}
+            frozen.append(q)
+            watches.append({"event_type":"WATCH_EARLY","event_id":f"watch_{i}",
+                            "symbol":q["symbol"],"observed_ms":seen})
+            if i<120:
+                setups.append({"event_type":"SETUP_ACTIVE","event_id":f"setup_{i}",
+                               "symbol":q["symbol"],"observed_ms":seen+360000})
+            service.append({"id":q["id"],"first_selected_ms":seen,
+                            "first_evaluation_ms":seen+360000})
+        before={"actually_complete_symbols":445,"queue_rows":frozen,
+                "events":watches+setups}
+        after={**before,"date":"2026-02-04",
+               "execution_counts":{"polls":3360,"D1_selected":269},
+               "event_type_counts":{},"queue_status_counts":{}}
+        baseline={"D1_global_selected_slots":753,
+                  "D1_first_selection_slots":269,
+                  "D1_repeated_selection_slots":484,
+                  "original_V2_every_event_and_queue_byte_semantics_equal":True,
+                  "frozen_original_full_json_sha256":fair.REFERENCE_SHA,
+                  "candidate_first_service":service}
+        observer=fair.FairEightObserver()
+        observer.ticks=3360
+        observer.selected_total=269
+        observer.slots=[{"id":x["id"]} for x in frozen]
+        observer.first_selected={x["id"]:x["first_seen_ms"] for x in frozen}
+        observer.first_evaluated={x["id"]:x["first_seen_ms"]+360000 for x in frozen}
+        observer.busy_ticks=[
+            {"selected_ids":[q["id"] for q in frozen[i:i+8]]}
+            for i in range(0,269,8)]
+        return before,after,baseline,observer
+
+    def test_08_real_report_builder_does_not_shadow_baseline_trace(self):
+        before,after,baseline,observer=self.build_synthetic_full_269_research_report()
+        j=fair.build_report(after,observer,before,baseline)
+        self.assertEqual(j["baseline_d1_selections"],753)
+        self.assertEqual(j["setup_event_id_baseline"],120)
+        self.assertEqual(j["setup_event_id_alternative"],120)
+        self.assertEqual(j["setup_guardrail"],"PASS_NO_LOSS")
+        self.assertEqual(j["cohort_comparison"]["PEAK_98"]["watch"],98)
+        self.assertEqual(j["cohort_comparison"]["OTHER_171"]["watch"],171)
+
+    def test_09_report_discloses_lost_original_setup_and_stays_no_go(self):
+        before,after,baseline,observer=self.build_synthetic_full_269_research_report()
+        after={**after,"events":[x for x in after["events"]
+                                if x["event_id"]!="setup_110"]}
+        j=fair.build_report(after,observer,before,baseline)
+        self.assertEqual(j["setup_lost_ids"],1)
+        self.assertEqual(j["setup_retained_ids"],119)
+        self.assertEqual(j["setup_guardrail"],"NO_GO_LOST_EXISTING_SETUPS")
+        self.assertEqual(j["cohort_comparison"]["OTHER_171"]["lost_setups"],1)
+
+
 if __name__=="__main__":
     unittest.main()
