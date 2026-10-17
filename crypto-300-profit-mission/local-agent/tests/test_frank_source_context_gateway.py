@@ -34,7 +34,7 @@ def test_gateway_disabled_by_default_is_unavailable_without_network(monkeypatch)
         assert doc["status"] == "RESEARCH_SOURCE_NOT_CONNECTED"
         assert "Access-Control-Allow-Origin" not in headers
         assert headers["Cache-Control"] == "no-store"
-        assert read(dashboard.server_port, "?mint=not-allowed")[0] == 400
+        assert read(dashboard.server_port, "/api/research/current-follow-context?mint=not-allowed")[0] == 400
         assert read(dashboard.server_port, host="remote.example")[0] == 421
 
 
