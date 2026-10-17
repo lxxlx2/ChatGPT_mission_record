@@ -1,8 +1,12 @@
-# FLOP Technocore Close Call — execution plan
+# FLOP Technocore Close Call / close-1 历史执行方案与最终成绩核验缺口
 
-Updated: 2026-09-26 15:06 Asia/Bangkok
+Updated: 2026-10-18 Asia/Bangkok (historical status correction; strategy body preserved)
 Contest: `close-1`
-Status: ACTIVE
+Status: `HISTORICAL_CONTEST_ENDED / OWNER_RESULT_UNVERIFIED / NO_LIVE_EXECUTION`
+
+> **Historical document boundary:** The old Sep 26 strategy and any later dated execution observations below remain immutable *context*, not an active competition or authorization to send new orders. First-party `flop-labs/technocore-close-call-challenge/contest.json` fixed close-1 lock at 2026-10-04 09:00 UTC and final reference at 10:00 UTC. The official GitHub repository is `archived=true` as of Oct 6. Official [issue #38](https://github.com/flop-labs/technocore-close-call-challenge/issues/38) confirms that a signed standings post (`d-close1-pnl` #2557) and an official per-owner result file (`https://challenges.technocore.chat/close-1/final/README.txt`) were published. **The original per-owner file was not retrievable in this review**, and this repo's exact local owner DIDs' final row/settled fees/score/rank/claim have not been independently matched. All are **UNVERIFIED**. Public controller registration alone does not prove a prize. Preserve historical traces; do not resume local runner, open new orders or infer actual FLOP rewards.
+
+Historical strategy snapshot originally recorded 2026-09-26 15:06 Asia/Bangkok.
 Capital at risk: no external crypto capital; competition uses 10,000 POLF minted per owner key.
 Prize: 1,000,000 FLOP shared by the top three places; exact per-place split is not frozen in the public rules.
 Lock: 2026-10-04 09:00 UTC / 16:00 Asia/Bangkok.
