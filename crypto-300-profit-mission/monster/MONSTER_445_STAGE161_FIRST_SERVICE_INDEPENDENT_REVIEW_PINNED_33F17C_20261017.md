@@ -12,7 +12,7 @@
 ## 独立审查重点（需负例与真实完整JSON而非仅摘要）
 
 1. **对原模型严格等价**：独立把reference raw JSON里的`execution_counts, event_type_counts, queue_status_counts, queue_rows, events`与Stage161的重放core输出比较；Stage161 runner通过`run_all(...research_zeroquote_v2=True)`临时patch `zeroq.run_v2`与原研究handler，只允许外层观察真正相同的单次调用。检查patch恢复、不污染产线、不把临时MagicMock冒充独立原产线D1。
-2. **真实原因数据**：检查全3360轮、753个选中槽与269个首次selected、484次重复selected；533/534忙轮？以**原JSON的534**为准独立算。每候选唯一id及全部269首次selected关联、来自98峰值的7在+0m、91在+18至+51m才首次selected、附近两币+48m才首次selected。原生产`attempts`都为0不等于未处理。
+2. **真实原因数据**：检查全3360轮、753个选中槽与269个首次selected、484次重复selected；**534个有D1选中任务的tick**，必须从真实trace独立复算。每候选唯一id及全部269首次selected关联、来自98峰值的7在+0m、91在+18至+51m才首次selected、附近两币+48m才首次selected。原生产`attempts`都为0不等于未处理。
 3. **高峰99人FIFO饥饿**：原`process_queue` `WHERE PENDING AND retry_after_ms<=tick ORDER BY first_seen_ms,id LIMIT 8`，真实高峰+0轮8槽为1旧+7新，+3/+6/+9/+12/+15五轮同一老8反复服务、不允许任何其他峰值币抢到slot。+6首次有效后验5m（7个）；+15老8终止，+18新的8首次选中已逾deadline，此后至+51m，总91峰值LATE从未有效期内获得D1评估。前6轮48槽只有7个峰值币首次selected、另外41重复；注释不可说“41浪费”或“91笔有盈利的币”。
 4. **实际并非公平性策略已通过**：Stage161只是观察与证明原baseline FIFO拥塞；没有改变候选规则，不能宣称未来创新方案能提高真实盈利。Stage162已冻结的FIRST_VALID_5M_ONCE_PRIORITY_8仅为方案，代码与回测NOT_DONE；旧原445已接触，不能用它优化赢家后宣称新OOS。
 5. **trace数据质量**：从raw `slot_trace`逐条按`tick_ms,id`和269原queue身份对账、观察起始与after字段、是否每轮8槽内、统计首次与重复是否准确、每次selected是否只调用原handler一次。合成真实SQLite测试至少覆盖9人竞争8槽、一个候选重试选中两次、初次有效D1识别、原模型字段不一致拒绝输出、原Reference SHA错误拒绝；请自行制造至少一个非法`selected`数、模型事件篡改或超过8槽反例并验证fail closed。
