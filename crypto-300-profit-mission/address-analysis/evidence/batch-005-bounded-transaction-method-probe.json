@@ -1,0 +1,65 @@
+{
+  "schema": "mission-address-analysis-batch-005-bounded-method-probe-v1",
+  "research_only": true,
+  "source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "scope": "Selected original source wallets 82/83/94; outbound transfers limited per page, other trade effects/expenses not reconciled",
+  "observed": [
+    {
+      "row": 83,
+      "chain": "ethereum",
+      "tx": "0xa01aa0e92ae2d84f6b893b48c68515289ced3031461455984d1b6b8a29fe330c",
+      "to": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "selector": "0x095ea7b3",
+      "classification": "ERC20_APPROVAL",
+      "cashflow": "UNRESOLVED"
+    },
+    {
+      "row": 83,
+      "chain": "ethereum",
+      "tx": "0xf499374d62f12eb2bfd12343398919f0de03b8569ae1b13b596d1ee4f706992e",
+      "to": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "selector": "0x095ea7b3",
+      "classification": "ERC20_APPROVAL",
+      "cashflow": "UNRESOLVED"
+    },
+    {
+      "row": 83,
+      "chain": "ethereum",
+      "tx": "0x3c4025b40016be6a9f7325a6a08813e12d23e97bbbefe48dc4a3fcbaa2be334e",
+      "to": "0x50c4e75a512f2a14a7b304787adf79c4531a5909",
+      "selector": "0x2213bc0b",
+      "classification": "UNDECODED_CONTRACT_CALL",
+      "cashflow": "UNRESOLVED"
+    },
+    {
+      "row": 82,
+      "chain": "bsc",
+      "tx": "0x99cbfb5a7602d6982b75c9ede2841918710879c0e28f56bec72ee873d450b948",
+      "to": "0x4d9170981748a85d7f94d460a03a2a11d526d2bc",
+      "selector": "0x39ecce49",
+      "classification": "PAID_CONTRACT_CALL",
+      "cashflow": "UNRESOLVED"
+    },
+    {
+      "row": 82,
+      "chain": "bsc",
+      "tx": "0xff2da67e54486ef36fc6f84f7f422e8192bbba811beac59e2e2ecb80cba9c3f9",
+      "to": "0x1cde8ed6aa84468bfbed56deacc264c7c1bb7777",
+      "selector": "0x095ea7b3",
+      "classification": "ERC20_APPROVAL",
+      "cashflow": "UNRESOLVED"
+    },
+    {
+      "row": 94,
+      "chain": "ethereum",
+      "tx": "0x43273aba0b69d02e177b1b9372d219a1256e61e6be329a489f2b16274bad55a7",
+      "to": "0xe731dfadbff20542e10d09d26fc71445c70d4232",
+      "selector": "0xa9b2c6eb",
+      "value_wei": "1000000000000000000",
+      "classification": "PAID_CONTRACT_CALL",
+      "cashflow": "UNRESOLVED"
+    }
+  ],
+  "nonzero_closed_pnl_positions": 0,
+  "note": "Methods do not prove wallet trades, profit or loss; all cost and execution source gaps remain open"
+}

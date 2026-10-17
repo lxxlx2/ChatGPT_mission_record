@@ -57,11 +57,11 @@ Current capital / holdings:
 
 ## 地址分析 / 449 个 EVM 聪明钱钱包（研究阶段）
 
-独立只读模块：[研究规则](address-analysis/README.md)、[原始449地址快照](address-analysis/sources/oooooyoung-evm-449-source-snapshot.json)、[完整进度](address-analysis/state/progress.md)。
+独立研究：[研究规则](address-analysis/README.md)、[449地址冻结来源](address-analysis/sources/oooooyoung-evm-449-source-snapshot.json)、[最新批次进度](address-analysis/state/progress.md)、[前100地址统一筛查报告](address-analysis/state/coverage-001-100.md)。
 
-2026-10-18 状态：**Batch001–004 原始地址001–080 已完成 BSC、Ethereum、Base 的历史签名活动筛查，80/449**。四批三链签名活跃并集依次为 **15/20、13/20、6/20、18/20**。[Batch004 原始 nonce 证据](address-analysis/evidence/batch-004-three-chain-30d-nonce-screen.json)、[Batch004 报告](address-analysis/batches/batch-004.md)。已闭合正收益代币轮次仅 **3 笔**：#016 RTX5090 +0.226099333116 BNB、#002 sauce +0.156828105278687674 BNB、#004 sauce +0.154215798043203099 BNB。亏损轮次尚无完整核算，**不得认定亏损为零；全部449钱包30天和长期总体PnL未完成**。历史签名活动不等于代币买卖或盈利。
+2026-10-18 已完成 Batch001–005 原始第001–100地址的 **BSC、Ethereum、Base 历史 nonce 活跃度筛查 100/449**。五批三链活跃并集分别 **15、13、6、18、6**，共 **58/100**；另 **42/100** 仅在这三条链没有签名活动。源地址、批次、三链数据已经与 [统一机器可读证据](address-analysis/evidence/coverage-001-100-standardized-signed-screen.json) 对账。全部跨链完整钱包的近30日及长期 PnL 仍为 **0/449 完成**。仅存先前确认的 3 笔正收益单币闭环（#016 RTX5090、#002/#004 sauce），不代表任何钱包整体盈利；亏损项目未完成闭环。其它EVM链、智能账户及被动转入未被排除。
 
-独立只读 CLI 尚未通过真实 RPC/Mac 端到端验收。原测试导入路径错误实际失败；修复后6项离线测试在 Python 3.13 全部通过，[可核对失败与修复证据](address-analysis/evidence/read-only-cli-unittest-import-qa-20261018.md)。PR #97 维持 Draft、`RESEARCH_ONLY`、`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，不修改 PR #40 BSC 模型、Frank、Monster、资产和监控。
+现有只读 CLI 单元测试 **6/6 修复后通过**，真实 CLI RPC E2E、Mac 及独立审查未完成。后续活跃度批次 Batch006 #101–120；交易盈亏核算从 Batch001–005 原始地址及未决队列持续推进。PR #97 保持 Draft，`RESEARCH_ONLY / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`，不触碰既有 BSC 模型、Frank、Monster、资产及监控。
 
 ## Canonical module files
 

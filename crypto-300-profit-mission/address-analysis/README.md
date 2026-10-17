@@ -1,7 +1,7 @@
 # 地址分析 / oooooyoung EVM 钱包按批盈利审计
 
 Updated: 2026-10-18 Asia/Bangkok
-Status: `RESEARCH_ONLY / BATCH_001_TO_004_THREE_CHAIN_SCREENED / WHOLE_WALLET_PNL_INCOMPLETE`
+Status: `RESEARCH_ONLY / BATCH_001_TO_005_THREE_CHAIN_SCREENED / WHOLE_WALLET_PNL_INCOMPLETE`
 Scope: independent Mission research module, no connection to the existing PR #40 BSC address modeling or live Frank/Monster signals.
 
 ## Objective and fixed universe
@@ -30,9 +30,11 @@ Coverage status codes: `NOT_STARTED`, `BSC_SIGNED_ACTIVE`, `BSC_SIGNED_ZERO`, `T
 - [batches/batch-002.md](batches/batch-002.md): next 20 addresses, three-chain nonce screening complete; swap/PnL NOT_STARTED. [Fixed-height JSON](evidence/batch-002-three-chain-30d-nonce-screen.json).
 - [batches/batch-003.md](batches/batch-003.md): rows041–060 fixed-height BSC/Ethereum/Base nonce coverage; 6/20 signed on at least one checked network and no audited trade PnL. [Raw evidence](evidence/batch-003-three-chain-30d-nonce-screen.json).
 - [batches/batch-004.md](batches/batch-004.md): rows061–080, 18/20 signed on at least one of BSC/Ethereum/Base, wallet PnL unresolved. [Nonce evidence](evidence/batch-004-three-chain-30d-nonce-screen.json), [sample transaction methods](evidence/batch-004-low-frequency-transaction-examples.json).
+- [batches/batch-005.md](batches/batch-005.md): rows081–100 BSC/Ethereum/Base fixed-window nonce screen, six of twenty signed-active on at least one checked chain, no complete wallet PnL; [raw nonce evidence](evidence/batch-005-three-chain-30d-nonce-screen.json), [actual selected call types](evidence/batch-005-bounded-transaction-method-probe.json).
+- [state/coverage-001-100.md](state/coverage-001-100.md) and [normalized first-100 wallet status JSON](evidence/coverage-001-100-standardized-signed-screen.json): unified non-PnL screening result, strict address/source reconciliation and network provenance, including the Batch001 BSC nonce-pair gap.
 - [Batch003 low-frequency transaction method evidence](evidence/batch-003-low-frequency-transaction-classification.json): approvals and transfers are excluded from inferred swap count; two router executions remain unknown PnL.
 - [Rows 002/004 sauce closed-position accounting](evidence/batch-001-rows-002-004-sauce-roundtrips.json): costs, proceeds, timestamps and limitations.
-- Rows 081–449 remain `NOT_STARTED` for fixed-window BSC/Ethereum/Base signed screening. Batches 001–004 rows 001–080 are screened on those three chains; all whole-wallet PnL and many per-token trade ledgers remain incomplete.
+- Rows 101–449 remain `NOT_STARTED` for fixed-window BSC/Ethereum/Base signed screening. Batches 001–005 rows 001–100 are screened on those three chains, with 58 signed-active on one or more checked networks, 42 signed-zero across those three. All whole-wallet 30d and lifetime PnL still incomplete; source labels are unverified.
 
 ## Breadth-first development cadence and user outcome
 
