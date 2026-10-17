@@ -17,7 +17,7 @@ import monster_v4_shared_445_one_db_from_shards as assembler
 import monster_v4_shared_d1_zeroquote_research_v2 as zeroq
 
 SOURCE_SHA = "370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf"
-TRACE_SCHEMA = "MONSTER445_FIRST_SELECTED_ACTUAL_D1_EIGHT_SLOTS_RESEARCH_V1"
+TRACE_SCHEMA = "MONSTER445_FIRST_SELECTED_ACTUAL_D1_EIGHT_SLOTS_RESEARCH_V2"
 PEAK_MS = 1770338160000
 SLOT_LIMIT = 8
 MIN = 60000
@@ -43,6 +43,9 @@ class FirstServiceObserver:
         self.first_evaluated={}
         self.slots_by_id=Counter()
         self.selected_count=0
+        self.repeated_no_new_valid_bar=Counter()
+        self.repeated_with_new_valid_bar=Counter()
+        self.repeated_no_new_valid_bar_by_error=Counter()
         self.no_candidate_ticks=0
         self.peak_first_service_ticks={}
         self.original_handler=zeroq.experimental_queue_handler
@@ -52,6 +55,11 @@ class FirstServiceObserver:
         if limit != SLOT_LIMIT or type(now_ms) is not int:
             raise RuntimeError("MONSTER445_TRACE_original_eight_slots_changed")
         eligible,pending=eligible_and_pending(store,now_ms)
+        # Full before/after identity guard: the original handler may touch
+        # retry masks internally, but every nonselected row must be restored
+        # byte-for-byte. A same-count different-set replay must fail closed.
+        prior_all={row["id"]:dict(row) for row in
+                   store.execute("SELECT * FROM candidate_queue ORDER BY id")}
         original_first8=eligible[:SLOT_LIMIT]
         select_ids=[r["id"] for r in original_first8]
         # The trace observes reads only. Original V2 remains sole writer.
@@ -60,6 +68,14 @@ class FirstServiceObserver:
             limit=limit,original_queue=original_queue,stats=stats)
         if outcome["selected"] != len(original_first8):
             raise RuntimeError("MONSTER445_TRACE_actual_d1_selection_changed")
+        after_all={row["id"]:dict(row) for row in
+                   store.execute("SELECT * FROM candidate_queue ORDER BY id")}
+        if set(prior_all)!=set(after_all):
+            raise RuntimeError("MONSTER445_TRACE_candidate_row_set_changed")
+        predicted=set(select_ids)
+        for candidate_id,before_row in prior_all.items():
+            if candidate_id not in predicted and before_row!=after_all[candidate_id]:
+                raise RuntimeError("MONSTER445_TRACE_nonselected_candidate_mutated")
         self.ticks+=1
         if not select_ids:
             self.no_candidate_ticks+=1
@@ -75,20 +91,28 @@ class FirstServiceObserver:
             })
         for before in original_first8:
             ident=before["id"]
-            after=store.execute("""
-                SELECT id,venue,symbol,first_seen_ms,deadline_ms,status,
-                       retry_after_ms,attempts,last_error,last_evaluated_bar_ms
-                FROM candidate_queue WHERE id=?""",(ident,)).fetchone()
-            if after is None or after["symbol"]!=before["symbol"]:
+            after=after_all[ident]
+            if (after["symbol"]!=before["symbol"]
+                    or after["venue"]!=before["venue"]
+                    or after["first_seen_ms"]!=before["first_seen_ms"]
+                    or after["deadline_ms"]!=before["deadline_ms"]):
                 raise RuntimeError("MONSTER445_TRACE_candidate_identity_drift")
-            after=dict(after)
+            advanced=(after["last_evaluated_bar_ms"] is not None and
+                (before["last_evaluated_bar_ms"] is None or
+                 after["last_evaluated_bar_ms"]>before["last_evaluated_bar_ms"]))
+            if self.slots_by_id[ident]:
+                cohort=("PEAK_98" if before["first_seen_ms"]==PEAK_MS
+                        else "OTHER_171")
+                if advanced:
+                    self.repeated_with_new_valid_bar[cohort]+=1
+                else:
+                    self.repeated_no_new_valid_bar[cohort]+=1
+                    self.repeated_no_new_valid_bar_by_error[
+                        str(after["last_error"])]+=1
             if ident not in self.first_selected:
                 self.first_selected[ident]=now_ms
             self.slots_by_id[ident]+=1
-            if (after["last_evaluated_bar_ms"] is not None and
-                    (before["last_evaluated_bar_ms"] is None or
-                     after["last_evaluated_bar_ms"]>before["last_evaluated_bar_ms"])
-                    and ident not in self.first_evaluated):
+            if advanced and ident not in self.first_evaluated:
                 self.first_evaluated[ident]=now_ms
             self.slots.append({
                 "tick_ms":now_ms,
@@ -99,6 +123,7 @@ class FirstServiceObserver:
                 "slot_class":("FIRST_SELECTION"
                               if self.slots_by_id[ident]==1
                               else "REPEATED_SELECTION"),
+                "valid_5m_evaluation_marker_advanced":advanced,
                 "status_after":after["status"],
                 "last_error_after":after["last_error"],
                 "last_evaluated_bar_ms_before":before["last_evaluated_bar_ms"],
@@ -134,7 +159,7 @@ def summarize_original_trace(model, frozen, trace):
     per_candidate=[]
     selected_lags=[]; evaluated_lags=[]
     for q in rows:
-        ident=q["id"]; seen=q["first_seen_ms"]
+        ident=q["id"]; seen=q["first_seen_ms"]; deadline=q["deadline_ms"]
         first=trace.first_selected.get(ident)
         first_eval=trace.first_evaluated.get(ident)
         if (first is not None and first<seen) or (
@@ -146,6 +171,7 @@ def summarize_original_trace(model, frozen, trace):
             evaluated_lags.append((first_eval-seen)//MIN)
         per_candidate.append({
             "id":ident,"symbol":q["symbol"],"first_seen_ms":seen,
+            "deadline_ms":deadline,
             "cohort":("PEAK_98" if seen==PEAK_MS else "OTHER_171"),
             "final_status":q["status"],
             "first_selected_ms":first,
@@ -178,9 +204,13 @@ def summarize_original_trace(model, frozen, trace):
             "LATE_never_selected":sum(x["final_status"]=="LATE" and not x["ever_selected"] for x in cohort),
             "LATE_selected_before_deadline":sum(
                 x["final_status"]=="LATE" and x["first_selected_ms"] is not None
-                and x["first_selected_ms"]<=x["first_seen_ms"]+15*MIN
+                and x["first_selected_ms"]<=x["deadline_ms"]
                 for x in cohort),
         }
+    if (sum(trace.repeated_no_new_valid_bar.values())+
+            sum(trace.repeated_with_new_valid_bar.values()) !=
+            trace.selected_count-len(trace.first_selected)):
+        raise RuntimeError("MONSTER445_TRACE_repeated_bar_progress_accounting_drift")
     if (sum(x["total_selected_slots"] for x in per_candidate)!=trace.selected_count
             or sum(x["repeated_selected_slots"] for x in per_candidate)!=
                trace.selected_count-len(trace.first_selected)
@@ -201,6 +231,17 @@ def summarize_original_trace(model, frozen, trace):
         "D1_global_selected_slots":trace.selected_count,
         "D1_first_selection_slots":len(trace.first_selected),
         "D1_repeated_selection_slots":trace.selected_count-len(trace.first_selected),
+        "D1_repeated_without_advanced_valid_5m_bar_marker":
+            sum(trace.repeated_no_new_valid_bar.values()),
+        "D1_repeated_with_advanced_valid_5m_bar_marker":
+            sum(trace.repeated_with_new_valid_bar.values()),
+        "D1_repeated_no_new_valid_bar_by_cohort":
+            dict(sorted(trace.repeated_no_new_valid_bar.items())),
+        "D1_repeated_advanced_valid_bar_by_cohort":
+            dict(sorted(trace.repeated_with_new_valid_bar.items())),
+        "D1_repeated_no_new_valid_bar_by_last_error":
+            dict(sorted(trace.repeated_no_new_valid_bar_by_error.items())),
+        "D1_no_advanced_bar_does_not_prove_safe_to_skip":True,
         "D1_busy_ticks":len(trace.busy_ticks),
         "D1_no_eligible_candidate_ticks":trace.no_candidate_ticks,
         "D1_baseline_limit_per_tick":8,
