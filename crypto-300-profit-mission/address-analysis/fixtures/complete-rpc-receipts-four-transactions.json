@@ -1,0 +1,157 @@
+{
+  "schema": "mission-address-analysis-complete-rpc-receipt-fixtures-v1",
+  "observation_date": "2026-10-18",
+  "source": "Authenticated read-only Alchemy RPC via ChatGPT; compact projection of complete JSON receipts",
+  "full_receipts_available_for_these_transactions": true,
+  "truncated_receipts_not_included": true,
+  "original_source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "observations": [
+    {
+      "row": 2,
+      "network": "bnb-mainnet",
+      "expected_classification": "APPROVAL_NOT_TRADE",
+      "tx": {
+        "hash": "0x56d745f5ac3d7458b107be7e3d3be2b7ca8c3e24f143a389222521d7e9b2f70f",
+        "chainId": "0x38",
+        "from": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+        "to": "0xd7ccd29b6fd1464edb425f24b01115556e737777",
+        "blockHash": "0xd5e77a2654ff83bc0f84b63a5432ec259ed8e3d71c8fe296e16b1755c249fad3",
+        "blockNumber": "0x7a0db98",
+        "input": "0x095ea7b30000000000000000000000001de460f363af910f51726def188f9004276bf4bc000000000000000000000000000000000000000000000d7d2de90a9cc71de9d5",
+        "value": "0x0",
+        "gasPrice": "0x7270e00"
+      },
+      "receipt": {
+        "transactionHash": "0x56d745f5ac3d7458b107be7e3d3be2b7ca8c3e24f143a389222521d7e9b2f70f",
+        "from": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+        "to": "0xd7ccd29b6fd1464edb425f24b01115556e737777",
+        "blockHash": "0xd5e77a2654ff83bc0f84b63a5432ec259ed8e3d71c8fe296e16b1755c249fad3",
+        "blockNumber": "0x7a0db98",
+        "status": "0x1",
+        "gasUsed": "0xbf58",
+        "effectiveGasPrice": "0x7270e00",
+        "logs": [
+          {
+            "transactionHash": "0x56d745f5ac3d7458b107be7e3d3be2b7ca8c3e24f143a389222521d7e9b2f70f",
+            "address": "0xd7ccd29b6fd1464edb425f24b01115556e737777",
+            "topics": [
+              "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+              "0x0000000000000000000000000d8d6c105629e472691f9a970a6f70899195b5e0",
+              "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+            ],
+            "data": "0x000000000000000000000000000000000000000000000d7d2de90a9cc71de9d5"
+          }
+        ]
+      }
+    },
+    {
+      "row": 44,
+      "network": "bnb-mainnet",
+      "expected_classification": "ERC20_TRANSFER_NOT_TRADE_PROVEN",
+      "tx": {
+        "hash": "0x9fe8b9c857bf9e2c28f64c8a21b06eabdf9357977974984885cba4beeea02e6d",
+        "chainId": "0x38",
+        "from": "0xde078309d8260fa4caf3baa6852b0561b645b710",
+        "to": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "blockHash": "0x18f54ccd98d51a48a64b18193775efe8274b5fb3ee6f4cb3650010ee37900bac",
+        "blockNumber": "0x757c2f1",
+        "input": "0xa9059cbb000000000000000000000000bd5dcac4e124a6d61bf6c68e284846c8144d0af7000000000000000000000000000000000000000000000000002d10dcf61a97d9",
+        "value": "0x0",
+        "gasPrice": "0x5f5e100"
+      },
+      "receipt": {
+        "transactionHash": "0x9fe8b9c857bf9e2c28f64c8a21b06eabdf9357977974984885cba4beeea02e6d",
+        "from": "0xde078309d8260fa4caf3baa6852b0561b645b710",
+        "to": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "blockHash": "0x18f54ccd98d51a48a64b18193775efe8274b5fb3ee6f4cb3650010ee37900bac",
+        "blockNumber": "0x757c2f1",
+        "status": "0x1",
+        "gasUsed": "0xb6d6",
+        "effectiveGasPrice": "0x5f5e100",
+        "logs": [
+          {
+            "transactionHash": "0x9fe8b9c857bf9e2c28f64c8a21b06eabdf9357977974984885cba4beeea02e6d",
+            "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x000000000000000000000000de078309d8260fa4caf3baa6852b0561b645b710",
+              "0x000000000000000000000000bd5dcac4e124a6d61bf6c68e284846c8144d0af7"
+            ],
+            "data": "0x000000000000000000000000000000000000000000000000002d10dcf61a97d9"
+          }
+        ]
+      }
+    },
+    {
+      "row": 45,
+      "network": "base-mainnet",
+      "expected_classification": "ERC20_TRANSFER_NOT_TRADE_PROVEN",
+      "tx": {
+        "hash": "0x44965de6b382eeb673e9f3c42eb74b644d2f8cdb1c2dca223fd04e39a3309f6a",
+        "chainId": "0x2105",
+        "from": "0xf89f3858bc7bac05a83ec284e3e9acdb58bf892a",
+        "to": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+        "blockHash": "0xe5190f78d54d3138e1d4424603bab882e76bea6dad279c0ca81e78e712dc1727",
+        "blockNumber": "0x322ab55",
+        "input": "0xa9059cbb0000000000000000000000009a3f860183120bf5c4e1819528c36908bbe3fcdf000000000000000000000000000000000000000000000000000000001dcd6500",
+        "value": "0x0",
+        "gasPrice": "0x5dd770"
+      },
+      "receipt": {
+        "transactionHash": "0x44965de6b382eeb673e9f3c42eb74b644d2f8cdb1c2dca223fd04e39a3309f6a",
+        "from": "0xf89f3858bc7bac05a83ec284e3e9acdb58bf892a",
+        "to": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+        "blockHash": "0xe5190f78d54d3138e1d4424603bab882e76bea6dad279c0ca81e78e712dc1727",
+        "blockNumber": "0x322ab55",
+        "status": "0x1",
+        "gasUsed": "0xf2cf",
+        "effectiveGasPrice": "0x5dd770",
+        "logs": [
+          {
+            "transactionHash": "0x44965de6b382eeb673e9f3c42eb74b644d2f8cdb1c2dca223fd04e39a3309f6a",
+            "address": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x000000000000000000000000f89f3858bc7bac05a83ec284e3e9acdb58bf892a",
+              "0x0000000000000000000000009a3f860183120bf5c4e1819528c36908bbe3fcdf"
+            ],
+            "data": "0x000000000000000000000000000000000000000000000000000000001dcd6500"
+          }
+        ]
+      }
+    },
+    {
+      "row": 50,
+      "network": "eth-mainnet",
+      "expected_classification": "NATIVE_TRANSFER_NOT_TRADE_PROVEN",
+      "tx": {
+        "hash": "0x92854f297b49b842329ccdf602845b21e8aaa99aba84607afcf6102340fd69d6",
+        "chainId": "0x1",
+        "from": "0x95ce1f0a243261821d7785715f19024ec149355b",
+        "to": "0xd095e2eb05abcf63ebc42d58239dd6d810736e88",
+        "blockHash": "0xf64177801c3bd170f417e8ad5eac43d75ce5c40ddbcfc5d13221b1cc0dcd07c1",
+        "blockNumber": "0x18e4de7",
+        "input": "0x",
+        "value": "0x2398a4ddf5c3a",
+        "gasPrice": "0x599107a"
+      },
+      "receipt": {
+        "transactionHash": "0x92854f297b49b842329ccdf602845b21e8aaa99aba84607afcf6102340fd69d6",
+        "from": "0x95ce1f0a243261821d7785715f19024ec149355b",
+        "to": "0xd095e2eb05abcf63ebc42d58239dd6d810736e88",
+        "blockHash": "0xf64177801c3bd170f417e8ad5eac43d75ce5c40ddbcfc5d13221b1cc0dcd07c1",
+        "blockNumber": "0x18e4de7",
+        "status": "0x1",
+        "gasUsed": "0x5208",
+        "effectiveGasPrice": "0x599107a",
+        "logs": []
+      }
+    }
+  ],
+  "limitations": [
+    "Only transaction and receipt fields needed for read-only ERC20 and gas inspection are retained; no logsBloom",
+    "Status SUCCESS and ERC20 transfers do not prove a swap or realized profit",
+    "For BSC sauce buy/sell transactions, the connected tool truncated receipts: those are separately unverified, not part of this complete-fixture set",
+    "No address owner identity verification"
+  ]
+}

@@ -77,6 +77,17 @@ New offline historical saved-source replay CLI: `python3 tools/closed_token_inde
 - `CLAIM_REPLAY_ONLY` means event receipts, inventory completeness and fees were **asserted by the normalized evidence**. This tool does not fetch receipts or verify those assertions on chain; it never returns completed wallet PnL or USD estimates.
 - Next major delivery gate: independent read-only transaction+receipt normalization, matched gas/native/quote outputs, verified historical inventory, actual positive AND negative closed trades, and complete-wallet accounting. Do not start production or promote a win-only wallet ranking.
 
+## Complete receipt fact extractor V1 (read-only)
+
+The [receipt evidence extractor](tools/receipt_probe.py) is the **first actual RPC/receipt-facing** piece of the transaction-ledger pipeline. It accepts full transaction+receipt JSON either from a user-provided HTTPS RPC environment variable or two local files. It matches the immutable 449-wallet manifest row, EVM chainId, transaction and block identity, successful receipt status, ERC20 Transfer logs and actual gasSpent in native wei.
+
+- [17 offline failure/transfer/gas tests](tests/test_receipt_probe.py) passed in an isolated standard-library Python runtime, exact Git blobs matched the tested files.
+- Four **actual authenticated historical RPC receipts** were read fully and checked against wallet addresses/chain/tx hashes: [compact receipt fixtures](fixtures/complete-rpc-receipts-four-transactions.json) and [direct-chain read evidence](evidence/receipt-probe-four-real-rpc-check-20261018.json). They were approval, WBNB transfer, USDC transfer and native ETH transfer; none demonstrates a profitable trade.
+- [QA and blocked-swap limitations](state/receipt-facts-v1-qa-20261018.md): the connected provider truncated all three selected sauce BUY/SELL receipts to 8098 characters, so they **could not be independently reverified** this turn. The Python URL RPC code has not passed Mac or live URL E2E, though the historical connected provider reads were real.
+- Output status is `RECEIPT_FACTS_ONLY`, **not** `TOKEN_ROUNDTRIP_VERIFIED`. Native internal return value requires additional trace and cashflow proofs; quoted ERC20 transfers require trade intent, correct historical basis, and gas FX evidence. The facts extractor does not automatically promote events into the FIFO ledger.
+
+This development gate is more important than additional signed-nonce screening. Batch007 stays queued as `NOT_STARTED`; all full-wallet PnL remains unresolved.
+
 ## Boundaries
 
 No wallet signing, swaps, follow trading, live orders, Gmail, LaunchAgent, dashboards or automation. `PRODUCTION_TRADING=NO_GO`, Frank and Monster unchanged. Original Mission PnL and wallet snapshots are separate from this third-party address intelligence research. Keep every failed/negative result, no cherry-picking and no made-up wallet profits. Research is observation-only.
