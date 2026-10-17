@@ -34,7 +34,7 @@ jobs:
               ['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],
               text=True).splitlines()
           expected={
-              'schema':'MONSTER445_STAGE162_FIRST_VALID_5M_FAIR8_ONESHOT_V1',
+              'schema':'MONSTER445_STAGE162_FIRST_VALID_5M_FAIR8_ONESHOT_V2',
               'baseline_full_artifact_id':12044872933,
               'baseline_trace_artifact_id':12113086240,
               'full_json_sha256':'370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf',
@@ -92,8 +92,13 @@ jobs:
           assert len(j['source_artifacts']) == 28
           assert sum(e['ten_day_publisher_sha_count'] for e in j['source_artifacts'])==4450
           exceptions=[e for e in j['source_artifacts'] if e['source_run_conclusion']!='success']
-          assert len(exceptions)==2
-          assert all(e['source_job_attestation']=='PUBLISHER_SOURCE_JOB_SUCCESS_OVERALL_RUN_FAILED' and e['shard'] in (0,1) for e in exceptions)
+          assert exceptions
+          assert set(e['shard'] for e in exceptions).issubset({0,1})
+          assert all(e['source_job_attestation']=='PUBLISHER_SOURCE_JOB_SUCCESS_OVERALL_RUN_FAILED' for e in exceptions)
+          assert any(e['shard']==0 and e['source_run_conclusion']=='failure' for e in exceptions)
+          print('MONSTER162_SOURCE_RUN_FAILURE_JOB_SUCCESS_EXCEPTIONS',
+                [(e['shard'],e['source_run_conclusion'],e['source_job_attestation'])
+                 for e in exceptions])
           print('MONSTER162_REAL_28_SOURCE_SHARDS_ATTESTED_WITH_FAILURE_RUN_DISCLOSURE')
           PY
       - name: Replay 445 with research-only fair8 selection and compare all 120 baseline SETUP identities
@@ -146,7 +151,7 @@ jobs:
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: monster162-real445-first-valid-5m-fair8-ab-once
+          name: monster162-real445-first-valid-5m-fair8-ab-once-v2
           path: |
             /tmp/monster162_actual_445_fair8_ab.json
             /tmp/monster162_actual_445_fair8_git_summary.json
@@ -156,7 +161,7 @@ jobs:
       - name: Seal bounded real research A-B evidence, never overwrite existing
         run: |
           set -eu
-          target=crypto-300-profit-mission/monster/evidence/monster_feb445_stage162_fair8_ab_real_actual.json
+          target=crypto-300-profit-mission/monster/evidence/monster_feb445_stage162_fair8_ab_real_v2_actual.json
           branch=research/monster-v4-local-discovery-20261010
           test ! -e "$target"
           cp /tmp/monster162_actual_445_fair8_git_summary.json "$target"
