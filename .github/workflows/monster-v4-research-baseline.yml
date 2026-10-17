@@ -33,6 +33,8 @@ on:
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_shadow.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_opportunity_snapshot.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_opportunity_snapshot.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_economic_readiness.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_economic_readiness.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_stage5_integrity.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_stage5_integrity.py'
       - '.github/workflows/monster-v4-research-baseline.yml'
@@ -94,6 +96,12 @@ jobs:
         run: |
           python -B -m py_compile scripts/monster_v4_opportunity_snapshot.py tests/test_monster_v4_opportunity_snapshot.py
           python -B -m unittest discover -v -s tests -p test_monster_v4_opportunity_snapshot.py
+      - name: Frozen exposed-market economic no-go research gate
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_economic_readiness.py tests/test_monster_v4_economic_readiness.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_economic_readiness.py
+          python -B scripts/monster_v4_economic_readiness.py --format text
       - name: Monster D2 read-only 30 USDT executable order-book model regressions
         working-directory: crypto-300-profit-mission/local-agent
         run: |
