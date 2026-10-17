@@ -1,0 +1,49 @@
+{
+  "schema": "BSC_P4B_5E60_2026_INVENTORY_OPENING_CHECK_BALANCEOF_PREFREEZE_V1",
+  "created": "2026-10-18",
+  "previous_PR_SHA": "3c6ae6389f72896406ab2456678e3db62926a76b",
+  "root_evidence_blobs": {
+    "in_first10": "cee0c1be380f9509d5c30b73cc64d1350ad66c87",
+    "in2_out1": "bcb9bb22e57c5030ecb8e0addd31b67d9b4bbf5d",
+    "in3_out2": "6635527c2e2f17b238165c25ebf10fb4d334feda",
+    "in4_final": "ec3fafb7d95f1928438f6cd3aa5a1bde32da252b"
+  },
+  "original_5e60_before_1000USDT_buy_balance": "335173813691889308361853",
+  "bounded_exact_dragon_erc20_transfers_count": {
+    "in": 33,
+    "out": 17
+  },
+  "bounded_transfer_raw_totals": {
+    "in": "2096771771412964976312348",
+    "out": "2728013687115437116815271"
+  },
+  "expected_opening_raw_from_inventory_equation": "966415729394361448864776",
+  "boundary": {
+    "first_block": 85900000,
+    "opening_balance_block": 85899999,
+    "ending_block": 85959961
+  },
+  "owner": "0x5e600e259e3cff0757e3736223685958665866c6",
+  "token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "method": "Alchemy existing free bnb-mainnet eth_call token balanceOf(address) selector 0x70a08231",
+  "reads": [
+    {
+      "label": "OPENING",
+      "block": 85899999
+    },
+    {
+      "label": "ENDING",
+      "block": 85959961
+    }
+  ],
+  "max_calls": 2,
+  "no_retry": true,
+  "verification": "opening_balance+all exact fixed-window inbound−all exact fixed-window outbound==ending_balance; fail closed on mismatch. Transfers are now exhaustively paginated only in fixed window, not historical wallet lifetime.",
+  "if_opening_positive": "Do not claim 33 incoming purchases are all source wallet acquisitions or first ever buy; earlier 966K source still UNKNOWN. Next research should shift lookback only after scoped proposal.",
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}
