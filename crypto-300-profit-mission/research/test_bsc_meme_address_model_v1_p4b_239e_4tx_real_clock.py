@@ -30,6 +30,21 @@ class Original239ERealSignedFourTxClockTests(unittest.TestCase):
         self.assertEqual(z["first_public_tradable_U"],"UNRESOLVED")
         self.assertEqual(z["P5"],"BLOCKED")
 
+    def test_original_outer_native_signed_value_vs_received_wbnb_are_different(self):
+        rows=model.build(self.orig)["sampled_original_rounds"]
+        self.assertEqual([r["original_outer_signed_buy_native_value_wei"] for r in rows],
+                         ["101000000000000000","303000000000000000"])
+        self.assertEqual([r["original_WBNB_actually_to_pool_on_buy_wei"] for r in rows],
+                         ["100000000000000000","300000000000000000"])
+        self.assertEqual([r["outer_signed_value_minus_pool_input_wei"] for r in rows],
+                         ["1000000000000000","3000000000000000"])
+        self.assertTrue(all(r["unattributed_router_residual_is_not_assumed_tax"] for r in rows))
+
+    def test_fake_equal_outer_native_and_pool_amount_must_fail(self):
+        self.bad(lambda d:d["readback"]["selected_tx_records"][0].update(
+                 raw_signed_transaction_value_hex="0x16345785d8a0000"),
+                 "SIGNED_TX_BLOCK_AUTHOR_AND_VALUE")
+
     def test_original_buy_hash_not_replaceable(self):
         self.bad(lambda d:d["readback"]["selected_tx_records"][0].update(
                  transactionHash="0x"+"f"*64),"SIGNED_TX_BLOCK_AUTHOR_AND_VALUE")
