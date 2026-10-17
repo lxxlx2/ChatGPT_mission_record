@@ -6,7 +6,7 @@ project: "rTTOK"
 event_type: historical_alert
 email_subject: "[空投提醒][rTTOK][投资者代币接收要求]"
 gmail_message_id: "1a01d9507a9169b0"
-gmail_sent_at: "2026-08-20T05:11:40"
+gmail_sent_at: "2026-08-20T05:11:40Z"
 gmail_sent_at_bkk: "2026-08-20T12:11:40+07:00"
 status: official
 backfilled: true
