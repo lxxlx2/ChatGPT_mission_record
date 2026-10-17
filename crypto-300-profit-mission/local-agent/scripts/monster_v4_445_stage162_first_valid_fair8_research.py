@@ -12,7 +12,6 @@ from collections import Counter
 import hashlib
 import json
 from pathlib import Path
-from statistics import median
 from unittest.mock import patch
 
 import monster_v4_shared_445_one_db_from_shards as assembler
@@ -256,16 +255,16 @@ def build_report(candidate_model, observer, ref, baseline):
     for label,expected in (("PEAK_98",98),("OTHER_171",171)):
         cohort=[q for q in data if q["cohort"]==label]
         contract(len(cohort)==expected,"COHORT_GROUPING_DRIFT")
-        baseline=[dict(first_seen_ms=x["first_seen_ms"],
-                       at=x["baseline_first_evaluation_ms"]) for x in cohort]
-        alternative=[dict(first_seen_ms=x["first_seen_ms"],
-                          at=x["alternative_first_evaluation_ms"]) for x in cohort]
+        baseline_evals=[dict(first_seen_ms=x["first_seen_ms"],
+                             at=x["baseline_first_evaluation_ms"]) for x in cohort]
+        alternative_evals=[dict(first_seen_ms=x["first_seen_ms"],
+                                at=x["alternative_first_evaluation_ms"]) for x in cohort]
         cohorts[label]={
             "watch":len(cohort),
             "baseline_evaluated_with_valid_closed_5m":
-                sum(x["at"] is not None for x in baseline),
+                sum(x["at"] is not None for x in baseline_evals),
             "alternative_evaluated_with_valid_closed_5m":
-                sum(x["at"] is not None for x in alternative),
+                sum(x["at"] is not None for x in alternative_evals),
             "baseline_late":sum(x["baseline_status"]=="LATE" for x in cohort),
             "alternative_late":sum(x["alternative_status"]=="LATE" for x in cohort),
             "baseline_queue_status":dict(sorted(
@@ -290,7 +289,6 @@ def build_report(candidate_model, observer, ref, baseline):
     lost=set(old_setups)-set(new_setups)
     gained=set(new_setups)-set(old_setups)
     retained=set(old_setups)&set(new_setups)
-    old_setups_by_id={e["event_id"]:e["symbol"] for e in old_setups.values()}
     cohort_of=lambda e: ("PEAK_98" if next(
         (q["first_seen_ms"] for q in old_rows.values()
          if q["symbol"]==e["symbol"]),-1)==PEAK_MS else "OTHER_171")
