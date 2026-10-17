@@ -13,7 +13,8 @@ SOURCES={
  "headers":("bsc-meme-address-model-v1-p4b-dragon-postowner-four-execution-block-headers-2026-10-16.json","e1f03de64a7716625ad5968df8fd389b48e8b261"),
  "native":("bsc-meme-address-model-v1-p4b-dragon-two-buyers-historic-native-balances-2026-10-16.json","9ac3c2bef80e5ada78c87f0949d19f80eb55ecab"),
  "inventory":("bsc-meme-address-model-v1-p4b-dragon-two-buyers-historic-token-inventory-2026-10-16.json","06bba24e15530cf9f0f7fde24ab876fcc764d173"),
- "original_freeze":("bsc-meme-address-model-v1-p4b-dragon-postowner-signed-roundtrip-precommit-2026-10-16.json","a0937b2aca1c83cd99bf7e0678538a6067cc2d3f")
+ "original_freeze":("bsc-meme-address-model-v1-p4b-dragon-postowner-signed-roundtrip-precommit-2026-10-16.json","a0937b2aca1c83cd99bf7e0678538a6067cc2d3f"),
+ "owner_exit":("bsc-meme-address-model-v1-p4c-dragon-ddac-closed-native-loss-2026-10-15.json","4e76eea4d7ab001360af82f15de5eefc8509c501")
 }
 
 def require(b,s):
@@ -29,8 +30,8 @@ def load(root=ROOT):
  return documents
 
 def build(d):
- freeze,probe,signed,headers,native,inv,pre=(d[x] for x in
-              ("freeze","probe","signed","headers","native","inventory","original_freeze"))
+ freeze,probe,signed,headers,native,inv,pre,owner=(d[x] for x in
+              ("freeze","probe","signed","headers","native","inventory","original_freeze","owner_exit"))
  case=freeze["probe_set"]
  require(freeze["max_live_readonly_calls"]==4 and probe["actual_calls"]==4 and
          probe["freeze_git_blob"]==SOURCES["freeze"][1] and
@@ -54,6 +55,16 @@ def build(d):
          "P4_B":"PARTIAL","P5":"BLOCKED","production":"NO_GO",
          "permissions":"NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"},
          "FALSIFIED_OBSERVER_PROFIT_GATE")
+ prior=owner["round"]
+ require(prior["exact_CA"]==freeze["exact_CA"] and
+         prior["owner"].lower()==freeze["owner_original_early_signal"]["EOA"].lower() and
+         prior["entry_tx"]==freeze["owner_original_early_signal"]["tx"] and
+         prior["entry_block"]==freeze["owner_original_early_signal"]["block"] and
+         prior["exit_block"]==83635800 and
+         int(prior["native_closed_owner_round_net_wei"])==-92169615514614272 and
+         prior["residual_token_raw"]=="0" and
+         prior["native_closed_owner_round_classification"]=="REALIZED_NEGATIVE_BNB_WINDOW",
+         "DDAC_ORIGINAL_SIGNED_EARLY_OWNER_EXIT_AND_LOSS")
  buyer=freeze["candidate_D503"].lower()
  originalcases={q["label"]:q for q in signed["cases"]}
  headersby={int(q["block"]):q for q in headers["rows"]}
@@ -118,7 +129,7 @@ def build(d):
           "HISTORICAL_HEADER_TIME_ORDER")
   buy_delay=buy_ms-owner_ms
   exit_delay=sell_ms-owner_ms
-  require(60000<buy_delay<300000 and exit_delay<300000,
+  require(prior["exit_block"]<buy_block and 60000<buy_delay<300000 and exit_delay<300000,
           "NO_AFTER_60S_EXECUTION_IN_SELECTED_ACTUAL_BUYS")
   diff=credit-debit
   require(diff>0,"SELECTED_BLOCK_NATIVE_GRADE_ONLY")
@@ -129,6 +140,8 @@ def build(d):
       "owner_to_actual_sell_block_timestamp_ms":exit_delay,
       "real_buyer_hold_timestamp_ms":sell_ms-buy_ms,
       "actual_buyer_execution_signed_buy_and_sell":True,
+      "signal_owner_DDAC_already_exited_before_this_buy":True,
+      "original_owner_DDAC_real_native_round_delta_wei":str(prior["native_closed_owner_round_net_wei"]),
       "selected_buy_block_BNB_debit_wei":str(debit),
       "selected_sale_block_BNB_credit_wei":str(credit),
       "selected_TWO_block_native_delta_wei":str(diff),
@@ -157,6 +170,11 @@ def build(d):
      "900":{"D503_buy_and_subsequent_exit_both_inside_cutoff":2,"causal_follower_net_return":"UNRESOLVED"}
    },
    "selected_four_blocks_sum_native_delta_wei":str(sum(int(x["selected_TWO_block_native_delta_wei"]) for x in output)),
+   "original_early_DDAC_exited_at_block":int(prior["exit_block"]),
+   "first_observed_actual_D503_buy_after_owner_exit_blocks":
+      int(case[0]["block"])-int(prior["exit_block"]),
+   "original_DDAC_native_round_delta_wei":str(prior["native_closed_owner_round_net_wei"]),
+   "owner_still_holding_when_D503_first_bought":False,
    "verified_original_buyer_complete_transaction_gas_receipts":0,
    "verified_causal_external_follower_entries":0,
    "P4_B":"PARTIAL","P5":"BLOCKED","production":"NO_GO","rows":output
