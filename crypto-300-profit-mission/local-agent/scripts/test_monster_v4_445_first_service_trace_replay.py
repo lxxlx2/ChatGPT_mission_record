@@ -149,6 +149,51 @@ class FirstServiceTraceTests(unittest.TestCase):
             self.obs.instrument(self.db,self.t,None,None,limit=8,
                                 original_queue=None,stats={})
 
+    def test_09_phantom_eighth_same_count_only_seven_predicted_rows_change(self):
+        # Same selected=8, no unselected row is touched, but eighth is a
+        # phantom service: no durable before/after trace of handler touching it.
+        def seven_written(store,now,fetch,source_db,*,limit,original_queue,stats):
+            ids=[x["id"] for x in store.execute("""
+                SELECT id FROM candidate_queue WHERE status='PENDING'
+                AND retry_after_ms<=? ORDER BY first_seen_ms,id LIMIT ?
+            """,(now,limit)).fetchall()]
+            with store:
+                for ident in ids[:7]:
+                    store.execute("""
+                        UPDATE candidate_queue SET retry_after_ms=? WHERE id=?
+                    """,(now+180000,ident))
+            return {"selected":8,"deferred":8,"completed":0,"late":0}
+        self.obs.original_handler=seven_written
+        with self.assertRaisesRegex(RuntimeError,"selected_candidate_no_state_change"):
+            self.obs.instrument(self.db,self.t,None,None,limit=8,
+                                original_queue=None,stats={})
+        self.assertEqual(self.obs.ticks,0)
+        self.assertEqual(len(self.obs.slots),0)
+
+    def test_10_phantom_all_eight_noop_same_selected_count(self):
+        self.obs.original_handler=lambda *args,**kwargs:{
+            "selected":8,"deferred":8,"completed":0,"late":0}
+        with self.assertRaisesRegex(RuntimeError,"selected_candidate_no_state_change"):
+            self.obs.instrument(self.db,self.t,None,None,limit=8,
+                                original_queue=None,stats={})
+        self.assertEqual(self.obs.ticks,0)
+        self.assertEqual(self.obs.selected_count,0)
+
+    def test_11_real_deadline_not_assumed_first_seen_plus_fifteen(self):
+        # One candidate expires early and another has an extended window.
+        # Both contradict first_seen+15min, preserving the actual queue row.
+        candidate={"first_seen_ms":self.t,
+                   "first_selected_ms":self.t+10*60000,
+                   "deadline_ms":self.t+7*60000}
+        self.assertFalse(trace.selected_within_queue_deadline(candidate))
+        candidate["deadline_ms"]=self.t+30*60000
+        self.assertTrue(trace.selected_within_queue_deadline(candidate))
+        candidate["first_selected_ms"]=None
+        self.assertFalse(trace.selected_within_queue_deadline(candidate))
+        candidate["first_selected_ms"]=candidate["deadline_ms"]
+        self.assertTrue(trace.selected_within_queue_deadline(candidate))
+
+
     def test_04_final_model_mismatch_does_not_make_trace_success(self):
         model={"execution_counts":{"D1_selected":1},"queue_rows":[]}
         frozen={"execution_counts":{"D1_selected":2},"queue_rows":[]}
