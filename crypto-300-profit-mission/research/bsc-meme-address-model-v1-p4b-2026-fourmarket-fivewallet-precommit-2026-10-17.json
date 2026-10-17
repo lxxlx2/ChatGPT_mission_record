@@ -1,0 +1,62 @@
+{
+  "schema": "BSC_P4B_2026_FOUR_MARKET_FIVE_WALLET_PREFREEZE",
+  "date": "2026-10-17",
+  "approved_baseline": "375bd09f2bf893c18d23c03c2d158410fe6aa17d",
+  "cohort_source": "bsc_meme_address_model_v1_p4b_2026_crossowner_u.py",
+  "sample_role": "ALREADY_EXPOSED_RESEARCH_COHORT_NOT_UNTOUCHED_HOLDOUT",
+  "wallet_labels": [
+    "DDAC",
+    "239E",
+    "2ADF",
+    "A83B",
+    "877AF"
+  ],
+  "cases": [
+    {
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "original_signed_buy_block": 83635776,
+      "post_witness_block": 83635777,
+      "wallet_labels": [
+        "DDAC",
+        "239E"
+      ]
+    },
+    {
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "original_signed_buy_block": 115628774,
+      "post_witness_block": 115628775,
+      "wallet_labels": [
+        "2ADF",
+        "A83B"
+      ]
+    },
+    {
+      "token": "MARSCOIN",
+      "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "original_signed_buy_block": 112441394,
+      "post_witness_block": 112441395,
+      "wallet_labels": [
+        "877AF"
+      ]
+    },
+    {
+      "token": "我踏马来了",
+      "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "original_signed_buy_block": null,
+      "post_witness_block": null,
+      "market_only_liquidity_reference_block": 73658907,
+      "wallet_labels": []
+    }
+  ],
+  "bounded_queries": "Five original cases: historical native balance at original signed-buy block N and N+1 = 10 reads. Two FLAP cases: quote ERC20 at N+1 for 2ADF/A83B/877AF = at most 3 reads. Three MARSCOIN TokenSold topic-only logs at N+1/N+2/N+3 = at most 3 one-block reads.",
+  "limits": "At most 16 calls, zero retry per failure, source chain original signed event evidence needed, no new market selection.",
+  "interpretation": "BNB balance and quote token holdings do not prove historical eligible capital, U, buy and sell, nor actual follower return. Market-only no-signed-buy is UNKNOWN, not confirmed untradeable.",
+  "gates": {
+    "PUBLIC_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  }
+}
