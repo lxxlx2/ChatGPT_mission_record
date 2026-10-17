@@ -51,3 +51,16 @@
 **现在用户不用提交个人文件或账户权限**。将来要从`研究可执行场景`进一步判断真净收益时，仅需明确一个用于模拟的**每笔名义USDT金额**、现货**手续费档位**（或允许按保守场景计算），无需任何密钥、钱包助记词或券商账户授权。在拿到真实对应时点双向盘口以前，也不急于收这些信息。
 
 截至2026-10-18：`STAGE163_SPOT_REAL_ORIGINAL_HTTP_T0=PASS_SOURCE_BYTES_SHA_VERIFIED`，`SPOT_T0_UNIVERSE=511`，`SPOT_7D_FORWARD_RESULT=NOT_MATURE`，`FULL_7D_LISTING_CHANGE_FEED=UNKNOWN`，`FAIR8_NEW_SETUPS_IN_TRUE_FUTURE=UNKNOWN`，`G4 UNKNOWN`，`G6 NO_GO`，`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。
+
+## 五、现有D0/D1/D2研究机会查询器：代码与回归实际通过（2026-10-18）
+
+这是一次**现有SQLite上游代码不变**的实用功能交付，用于使使用者读懂当前Shadow持久化的WATCH→SETUP→D2研究状态；不升级旧策略阈值，也不改变Stage162算法/历史样本。新代码：`local-agent/scripts/monster_v4_opportunity_snapshot.py`，配套：`local-agent/tests/test_monster_v4_opportunity_snapshot.py`。
+
+- 固定代码/测试及workflow提交：`5a54ef90823c4e8f51b8fed557de4fbd6c44a1b1`。基线：上一轮研究计划变更 `51fcf066ef144d1526146a952e6b190961092a3a`。
+- 实际GitHub CI：[Monster V4 Research Baseline #39075413068](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39075413068)，`historical-baseline` job **SUCCESS，22/22 steps complete**；新增真实D0/D1/D2 SQLite生命周期测试 **8/8 PASS**；同次CI原Shadow与D2模块回归通过。
+- 读取方式：`python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_opportunity_snapshot.py --db /ACTUAL_MONSTER_SQLITE_PATH --format text`，需要可访问已存在的**独立研究SQLite**，不自动创建数据库；也支持 `--format json` 输出明确带 `NO_GO` 的研究数据。路径仅为命令占位示意，未要求用户现在安装或提供私有数据；实际Mac仍未部署。
+- 只读SQLite URI `mode=ro` 与 `query_only=ON`；代码无Binance HTTP、无Gmail、无定时、无下单。关联原持久队列episode、准确SETUP event key、D2 review/source evidence，区别WATCH、SETUP、失效、迟到、15m过期、source陈旧、合约专属；同时显示最后已存报价及时间，**报价不是当前市场执行价**。
+- `SETUP_ACTIVE` 历史事件持久存在不能永久当成可跟进信号；超过原15m deadline的即`EXPIRED`。D2的`research_liquidity_gate`仅为历史研究当前盘口摩擦代理，金额若显示30U属于旧研究假设、不是用户授权金额，始终输出`RESEARCH_REVIEW_ONLY_NO_BUY` / `G4 UNKNOWN` / `G6 NO_GO`。指定`--asof-ms`仅用于在**已存在状态**上计算年龄，不能倒推其时真实数据库状态或冒充因果回放。
+- 这是**合成SQLite端到端功能测试**及GitHub runner验收，尚无真实用户Mac上部署/实时连续场景/通知送达，新的查询器独立其他AI审查仍`NOT_DONE`。历史Stage30负资金结果和Stage162新增SETUP=0均没有被新功能改变。下一价值主线继续针对可执行性、信号时效、真正独立时间样本和风险；不得因这8个测试绿灯认定模型盈利。
+
+现有`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`与手动采集规则不变。
