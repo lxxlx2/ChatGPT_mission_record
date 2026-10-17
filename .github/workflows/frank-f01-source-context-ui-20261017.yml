@@ -99,6 +99,33 @@ jobs:
             git -C "$dest" merge-base --is-ancestor "$sha" HEAD
           done
           test -z "$(git -C "$dest" status --porcelain=v1 --untracked-files=all --ignored=matching)"
+          DEST="$dest" python - <<'PY'
+          import ast
+          import os
+          import pathlib
+          import subprocess
+
+          path = "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+          dest = pathlib.Path(os.environ["DEST"])
+          reviewed = subprocess.check_output(
+              ["git", "-C", str(dest), "show", os.environ["F01"] + ":" + path],
+              text=True,
+          )
+          combined = (dest / path).read_text(encoding="utf-8")
+
+          def approved_f01_function(source):
+              module = ast.parse(source)
+              klass = next(n for n in module.body if isinstance(n, ast.ClassDef)
+                           and n.name == "DashboardState")
+              method = next(n for n in klass.body if isinstance(n, ast.FunctionDef)
+                            and n.name == "follow_opportunities")
+              return ast.dump(method, include_attributes=False)
+
+          assert approved_f01_function(reviewed) == approved_f01_function(combined), (
+              "FRANK_F01_REVIEWED_ELIGIBILITY_AST_DRIFT"
+          )
+          print("FRANK_F01_REVIEWED_ELIGIBILITY_AST_IDENTICAL=PASS")
+          PY
           echo "FRANK_UI_COMBINED_TREE=$(git -C "$dest" rev-parse HEAD^{tree})"
           echo "dest=$dest" >> "$GITHUB_OUTPUT"
       - name: Install disposable reviewed dependencies
