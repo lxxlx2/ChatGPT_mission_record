@@ -1,0 +1,57 @@
+{
+  "schema": "BSC_P4B_FLAP_FIRST_SIGNED_BUY_PORTAL_INTERMEDIARY_QUOTE_MATCHED_SOURCE_REPLAY",
+  "source_grading": "TOOL_PARSED_FILTERED_FIELDS_NOT_FULL_RPC_RAW_LOG_PINNED",
+  "source_sha": {
+    "result": "25123c96619dc6b61b4a96a6f6dbd8372128c1a9",
+    "from_freeze": "dcf3ec9a919e8fccfb77adb880ce59f5a94926ed",
+    "to_freeze": "744146ac730c0f7f2b69539bb63045b5b85b0985",
+    "original": "d69f2ddfade437a1d8b0fc49585eb4ca0f9268e9"
+  },
+  "summary": {
+    "selected_markets": 2,
+    "actual_original_tx_quote_to_portal_matches": 2,
+    "direct_original_signed_EOA_quote_transfer_from_found": 0,
+    "follower_public_executable_U": 0,
+    "P4_B": "PARTIAL",
+    "P5": "BLOCKED",
+    "production": "NO_GO"
+  },
+  "rows": [
+    {
+      "token": "牛来",
+      "quote_CA": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "original_signed_buy_tx": "0xcb89b7adafacdfb5f844102c4e27ed474abec8947c74476d461be70a9b0e8fa5",
+      "quote_transfer_payer_is_original_EOA": false,
+      "original_signed_tx_to": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+      "original_signed_tx_native_value_wei": "0",
+      "native_tx_to_is_quote_transfer_payer": false,
+      "native_spend_or_refund_net_attributable_to_original_eoa": "UNRESOLVED",
+      "confirmed_portal_recipient_quote_from_intermediary": "0x9e698d361bb2375bd335dad156accbbad45bf364",
+      "portal_quote_transfer_matches_TokenBought_cost_exactly": true,
+      "matched_portal_received_quote_raw": "205991990065603310",
+      "actual_signed_EOA_input_currency_and_funding": "UNRESOLVED",
+      "separate_event_fee_settlement": "UNRESOLVED",
+      "one_block_nonmatching_other_transfer_count": 0,
+      "public_first_executable_U": "UNRESOLVED",
+      "same_wallet_realized_follower_profit": "UNRESOLVED"
+    },
+    {
+      "token": "MARSCOIN",
+      "quote_CA": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "original_signed_buy_tx": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+      "quote_transfer_payer_is_original_EOA": false,
+      "original_signed_tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_signed_tx_native_value_wei": "536188664994919080",
+      "native_tx_to_is_quote_transfer_payer": true,
+      "native_spend_or_refund_net_attributable_to_original_eoa": "UNRESOLVED",
+      "confirmed_portal_recipient_quote_from_intermediary": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "portal_quote_transfer_matches_TokenBought_cost_exactly": true,
+      "matched_portal_received_quote_raw": "2674483304192706318",
+      "actual_signed_EOA_input_currency_and_funding": "UNRESOLVED",
+      "separate_event_fee_settlement": "UNRESOLVED",
+      "one_block_nonmatching_other_transfer_count": 1,
+      "public_first_executable_U": "UNRESOLVED",
+      "same_wallet_realized_follower_profit": "UNRESOLVED"
+    }
+  ]
+}
