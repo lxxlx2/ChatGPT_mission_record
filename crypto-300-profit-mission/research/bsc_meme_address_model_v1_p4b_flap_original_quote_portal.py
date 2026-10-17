@@ -41,14 +41,6 @@ def replay(data):
             result["original_native_value_provenance"] ==
             "JOINED_FROM_OLDER_PINNED_ORIGINAL_SIGNED_TX_METADATA_NOT_NEW_RPC_READ",
             "V1_V2_PROVENANCE_GRADE")
-    require(len(old["rows"]) == len(result["rows"]) == 2 and
-            all(old[k] == result[k] for k in
-                ("captured_date_bangkok","precommits","source_original_first_buys_git_blob",
-                 "rpc_method","topic0","portal","gates")),
-            "IMMUTABLE_V1_SELECTED_METADATA_DRIFT")
-    for orig,enrich in zip(old["rows"],result["rows"]):
-        require(all(enrich.get(k)==v for k,v in orig.items()),
-                "IMMUTABLE_V1_SELECTED_LOG_FIELD_DRIFT")
     require(old["confirmed"] == result["selected_field_match"] and
             old["evidence_grade"] ==
             "HISTORICAL_RPC_FILTERED_SELECTED_FIELDS_SUCCESS_NOT_FULL_VERBATIM_LOG_PERSISTED",
@@ -166,6 +158,14 @@ def replay(data):
             "public_first_executable_U":"UNRESOLVED",
             "same_wallet_realized_follower_profit":"UNRESOLVED"
         })
+    require(len(old["rows"]) == len(result["rows"]) == 2 and
+            all(old[k] == result[k] for k in
+                ("captured_date_bangkok","precommits","source_original_first_buys_git_blob",
+                 "rpc_method","topic0","portal","gates")),
+            "IMMUTABLE_V1_SELECTED_METADATA_DRIFT")
+    for orig,enrich in zip(old["rows"],result["rows"]):
+        require(all(enrich.get(k)==v for k,v in orig.items()),
+                "IMMUTABLE_V1_SELECTED_LOG_FIELD_DRIFT")
     return {"schema":"BSC_P4B_FLAP_FIRST_SIGNED_BUY_PORTAL_INTERMEDIARY_QUOTE_MATCHED_SOURCE_REPLAY",
             "source_grading":"TOOL_PARSED_FILTERED_FIELDS_NOT_FULL_RPC_RAW_LOG_PINNED",
             "source_sha":{k:v[1] for k,v in SOURCES.items()},
