@@ -33,7 +33,11 @@
         }
       ],
       "matching_quote_from_intermediary_to_portal_raw": "205991990065603310",
-      "nonmatching_sameblock_count": 0
+      "nonmatching_sameblock_count": 0,
+      "original_signed_tx_to": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+      "original_signed_tx_native_value_wei": "0",
+      "original_signed_tx_to_matches_portal_quote_payer": false,
+      "native_funding_evidence_grade": "ORIGINAL_SIGNED_EOA_SENT_ZERO_NATIVE_TO_PROXY; HOW_INTERMEDIATE_QUOTE_ASSET_WAS_FUNDED_UNKNOWN"
     },
     {
       "token": "MARSCOIN",
@@ -65,17 +69,22 @@
         }
       ],
       "matching_quote_from_intermediary_to_portal_raw": "2674483304192706318",
-      "nonmatching_sameblock_count": 1
+      "nonmatching_sameblock_count": 1,
+      "original_signed_tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_signed_tx_native_value_wei": "536188664994919080",
+      "original_signed_tx_to_matches_portal_quote_payer": true,
+      "native_funding_evidence_grade": "ORIGINAL_SIGNED_EOA_SENT_0_536188664994919080_BNB_TO_SAME_CONTRACT_AS_QUOTE_TRANSFER_PAYER; REFUNDS_CONVERSION_AND_FINAL_SPEND_UNKNOWN"
     }
   ],
-  "evidence_grade": "HISTORICAL_RPC_FILTERED_SELECTED_FIELDS_SUCCESS_NOT_FULL_VERBATIM_LOG_PERSISTED",
-  "confirmed": "One intermediary->Portal ERC20 configured quote transfer EXACT original signed transaction hash per selected market, matching original TokenBought.cost raw WEI/18-decimal units exactly. Full outer wallet quote funding, other tokens, protocol fee beneficiary, gas and same-state follower fill not verified.",
-  "not_confirmed": "Zero direct from-EOA quote token Transfer in that original block is only scoped absence of this exact quoteCA Transfer(from) in that block, not original purchase free of cost or proof of no other signed trade. Same-block unrelated MARS Portal transfer must not attach to selected original EOA.",
+  "evidence_grade": "TOOL_PARSED_FILTERED_FIELDS_NOT_FULL_RPC_RAW_LOG_PINNED",
+  "not_confirmed": "Original EOA selected exact quoteERC20 Transfer(from) absent in two one-block filters is not zero funding. NIULAI selected signed tx.value=0 to proxy 0xb300000b72deaeb607a12d5f54773d1c19c7028d; selected Portal configured quote was paid by distinct intermediary 0x9e698d...; origin of its quote funds remains UNKNOWN. MARSCOIN original signer sent 536188664994919080 wei (~0.536188664994919080 BNB) to 0x1de460f363af910f51726def188f9004276bf4bc, exactly the source of the tx-matched Portal quote token Transfer. This proves sent native tx.value and matched quote payer identity, NOT beneficiary's net wallet cost, swap conversion rate, eventual refund, internal trace, independent fee payment or owner attributable realized PnL. Another MARSCOIN same-block Portal transfer has different hash and is excluded. Original source evidence is source-pinned, not freshly reverified receipt.",
   "gates": {
     "original_EOA_complete_quote_funding": "UNRESOLVED",
     "public_first_executable_U": "UNRESOLVED",
     "P5": "BLOCKED",
     "production": "NO_GO",
     "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
-  }
+  },
+  "selected_field_match": "One intermediary->Portal ERC20 configured quote transfer EXACT original signed transaction hash per selected market, matching original TokenBought.cost raw WEI/18-decimal units exactly. Full outer wallet quote funding, other tokens, protocol fee beneficiary, gas and same-state follower fill not verified.",
+  "query_chronology_grade": "THE_TWO_QUOTE_FROM_EOA_EMPTY_JSON_RESPONSES_WERE_NOT_COMMITTED_BEFORE_SUBSEQUENT_TO_PORTAL_PREFREEZE. THEIR_EARLIER_OBSERVATION_IS_A_DEVELOPER_ASSERTION_RECORDED_LATER. NOT_PROVEN_BY_GIT_ANCESTRY."
 }
