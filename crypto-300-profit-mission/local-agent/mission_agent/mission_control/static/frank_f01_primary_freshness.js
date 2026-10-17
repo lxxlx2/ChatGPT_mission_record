@@ -1,6 +1,5 @@
-/* Display-only guard around the approved F01 candidate renderer.
-   Frozen BUY decisions stay unchanged; an unverified/expired main card may
-   never retain the visual '可跟' label from an earlier response. */
+/* Read-only, fail-closed presentation guard for the frozen F01 renderer.
+   Historical BUY is never '可跟' without fresh same-signal F01 evidence. */
 (() => {
   'use strict';
   const MAX_F01_AGE_SECONDS = 8;
@@ -17,9 +16,10 @@
         !Number.isFinite(doc.as_of_epoch) ||
         !Number.isFinite(now) || now < doc.as_of_epoch ||
         now >= doc.as_of_epoch + MAX_F01_AGE_SECONDS) return null;
-    const identities = (input) => {
+    const identities = (input, allowNonAction) => {
       const m = new Map();
       for (const row of input) {
+        if (allowNonAction && row && !isAction(row.decision)) continue;
         if (!row || row.person_id !== 'frank' || !validMint(row.mint) ||
             !isAction(row.decision) ||
             typeof row.source_signal_id !== 'string' || !row.source_signal_id ||
@@ -28,14 +28,16 @@
       }
       return m;
     };
-    const expected = identities(rows);
-    const received = identities(doc.eligible);
-    if (!expected || !received || expected.size !== received.size) return null;
-    for (const [mint, identity] of expected) {
+    const expected = identities(rows, true);
+    const received = identities(doc.eligible, false);
+    // An empty or mixed historic row set must NEVER verify a missing BUY.
+    if (!expected || !received || expected.size === 0 ||
+        expected.size !== received.size) return null;
+    for (const [mint, identity] of expected)
       if (received.get(mint) !== identity) return null;
-    }
     return doc.as_of_epoch + MAX_F01_AGE_SECONDS;
   }
+
   if (typeof globalThis !== 'undefined')
     globalThis.FrankPrimaryF01Freshness = {verifyRows};
   if (typeof window === 'undefined' || typeof document === 'undefined' ||
@@ -46,9 +48,12 @@
   if (!container) return;
   let generation = 0;
   let expiresAt = 0;
-  let timeout = null;
-  let cards = [];
-  let originRows = [];
+  let timer = null;
+  let request = null;
+  let actionCards = [];
+  let allRows = [];
+  let verifiedSnapshot = null;
+
   const countLabel = () => {
     const stats = document.getElementById('stats');
     if (!stats) return null;
@@ -59,17 +64,17 @@
     }
     return null;
   };
-  const reflectCount = (verified) => {
-    const el = countLabel();
-    if (el) el.textContent = verified ? String(cards.length) : '待核实';
+  const reflectCount = verified => {
+    const label = countLabel();
+    if (label) label.textContent = verified ? String(actionCards.length) :
+      actionCards.length ? '待核实' : '0';
   };
   const emit = () => {
     if (typeof window.dispatchEvent === 'function' && typeof Event === 'function')
       window.dispatchEvent(new Event('frank:f01-guard-updated'));
   };
   const mask = () => {
-    for (const info of cards) {
-      const {card, badge, conclusion} = info;
+    for (const {card, badge, conclusion} of actionCards) {
       card.dataset.f01GuardState = 'UNVERIFIED';
       card.classList.remove('decision-buy', 'decision-small-buy');
       card.classList.add('decision-unverified');
@@ -83,10 +88,9 @@
     reflectCount(false);
     emit();
   };
-  const reveal = (until) => {
-    const now = Date.now() / 1000;
-    if (now >= until) { mask(); return; }
-    for (const {card,badge,conclusion, originalBadge, originalConclusion, originalClass} of cards) {
+  const reveal = until => {
+    if (Date.now() / 1000 >= until) { mask(); return; }
+    for (const {card, badge, conclusion, originalBadge, originalConclusion, originalClass} of actionCards) {
       card.dataset.f01GuardState = 'VERIFIED';
       card.dataset.f01ValidUntilEpoch = String(until);
       card.className = originalClass;
@@ -100,80 +104,128 @@
     emit();
   };
   const cancel = () => {
-    if (timeout !== null) clearTimeout(timeout);
-    timeout = null;
+    if (timer !== null) clearTimeout(timer);
+    timer = null;
+    if (request !== null && typeof request.abort === 'function') request.abort();
+    request = null;
   };
-  const checkCurrent = () => {
+  const armExpiry = (gen, until) => {
+    if (timer !== null) clearTimeout(timer);
+    timer = setTimeout(() => {
+      if (gen === generation) {
+        expiresAt = 0;
+        verifiedSnapshot = null;
+        mask();
+      }
+    }, Math.max(0, Math.ceil((until - Date.now() / 1000) * 1000) + 1));
+  };
+
+  const checkCurrent = preserve => {
     const gen = ++generation;
     cancel();
-    expiresAt = 0;
-    mask();
-    if (!cards.length) return;
+    const prior = expiresAt;
+    if (preserve && actionCards.length && Date.now() / 1000 < prior) {
+      reveal(prior);
+      armExpiry(gen, prior);
+    } else {
+      expiresAt = 0;
+      verifiedSnapshot = null;
+      mask();
+    }
+    if (!actionCards.length) return;
+
     void (async () => {
+      const controller = typeof AbortController === 'function' ?
+        new AbortController() : null;
+      request = controller;
+      // Bound the independent verification path; stalled F01 never revives BUY.
+      const budget = controller ? setTimeout(() => controller.abort(), 2500) : null;
       try {
         const response = await fetch('/api/follow-opportunities', {
-          method:'GET', cache:'no-store', credentials:'same-origin'
+          method: 'GET', cache: 'no-store', credentials: 'same-origin',
+          ...(controller ? {signal: controller.signal} : {})
         });
-        if (!response.ok) return;
+        if (!response.ok) throw new Error('F01_SOURCE_UNAVAILABLE');
         const doc = await response.json();
         if (gen !== generation) return;
-        const until = verifyRows(originRows, doc, Date.now()/1000);
-        if (until === null) return;
+        const until = verifyRows(allRows, doc, Date.now() / 1000);
+        if (until === null) throw new Error('F01_IDENTITY_OR_TTL_INVALID');
         expiresAt = until;
+        verifiedSnapshot = JSON.stringify(allRows);
         reveal(until);
-        timeout = setTimeout(() => {
-          if (gen === generation) {
-            expiresAt = 0;
-            mask();
-          }
-        }, Math.max(0, Math.ceil((until - Date.now()/1000)*1000) + 1));
+        armExpiry(gen, until);
       } catch (_) {
-        if (gen === generation) mask();
+        if (gen === generation) {
+          expiresAt = 0;
+          verifiedSnapshot = null;
+          mask();
+        }
+      } finally {
+        if (budget !== null) clearTimeout(budget);
+        if (gen === generation) request = null;
       }
     })();
   };
+
   window.renderCandidates = function(rows, status) {
+    const incoming = Array.isArray(rows) ? rows : [];
+    const snapshot = JSON.stringify(incoming);
+    const preserve = !!verifiedSnapshot && snapshot === verifiedSnapshot &&
+      expiresAt > Date.now() / 1000;
     original.call(this, rows, status);
-    originRows = Array.isArray(rows) ? rows : [];
+    allRows = incoming;
     const rendered = Array.from(container.querySelectorAll('.candidate-card'));
-    const eligible = originRows.filter(r => r && isAction(r.decision));
-    cards = rendered.map((card, index) => {
-      const row = originRows[index] || {};
+    const allCards = [];
+    const seen = new Set();
+    let mapped = rendered.length === incoming.length;
+    for (let index = 0; index < rendered.length; index++) {
+      const card = rendered[index];
+      const row = incoming[index];
+      const mint = (card.querySelector('.ca-full')?.textContent || '').trim();
+      if (!row || !validMint(mint) || mint !== row.mint || seen.has(mint))
+        mapped = false;
+      seen.add(mint);
+      if (!row || !isAction(row.decision)) continue;
       const badge = card.querySelector('.candidate-head .badge');
       const conclusion = card.querySelector('.decision-reason > span');
       card.dataset.f01SourceSignalId = String(row.source_signal_id || '');
       card.dataset.f01Decision = String(row.decision || '');
-      return {
+      allCards.push({
         card, badge, conclusion,
         originalBadge: badge ? {cls:badge.className,text:badge.textContent} : null,
         originalConclusion: conclusion ? conclusion.textContent : '',
         originalClass: card.className
-      };
-    });
-    if (eligible.length !== rendered.length) {
-      // Never trust an unexpected DOM/card mapping or a mixed old renderer.
-      originRows = [];
+      });
     }
-    checkCurrent();
+    actionCards = allCards;
+    if (!mapped) {
+      allRows = [];
+      checkCurrent(false);
+      return;
+    }
+    checkCurrent(preserve);
   };
-  if (typeof document.addEventListener === 'function') {
+
+  if (typeof document.addEventListener === 'function')
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden && cards.length) {
-        if (Date.now()/1000 >= expiresAt) mask();
-        checkCurrent();
-      }
+      if (!document.hidden && actionCards.length) checkCurrent(
+        !!verifiedSnapshot && Date.now() / 1000 < expiresAt);
     });
-  }
-  // When original app.js rendered before this script loaded, there is no
-  // trusted source identity. Fail closed until its next controlled render.
-  if (container.querySelectorAll('.candidate-card').length) {
-    for (const card of container.querySelectorAll('.candidate-card')) {
+
+  // Any early-rendered cards before this script loaded have no trustworthy
+  // identity; the following normal F01 render must verify anew.
+  const initial = Array.from(container.querySelectorAll('.candidate-card'));
+  if (initial.length) {
+    for (const card of initial) {
+      const badge = card.querySelector('.candidate-head .badge');
+      if (!badge || !['可跟','小仓跟'].includes(badge.textContent)) continue;
       card.classList.remove('decision-buy','decision-small-buy');
       card.classList.add('decision-unverified');
-      const badge=card.querySelector('.candidate-head .badge');
-      if (badge) {badge.className='badge no-buy';badge.textContent='资格待核实';}
-      const c=card.querySelector('.decision-reason > span');
-      if (c) c.textContent='当前资格未核实，不跟';
+      card.dataset.f01GuardState = 'UNVERIFIED';
+      badge.className = 'badge no-buy';
+      badge.textContent = '资格待核实';
+      const text = card.querySelector('.decision-reason > span');
+      if (text) text.textContent = '当前资格未核实，不跟';
     }
   }
 })();
