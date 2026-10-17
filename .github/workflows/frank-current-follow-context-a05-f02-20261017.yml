@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - dev/frank-current-follow-context-a05-f02-20261017
+      - fix/frank-pr89-cross-source-review-p2-20261017
   workflow_dispatch:
 permissions:
   contents: read
