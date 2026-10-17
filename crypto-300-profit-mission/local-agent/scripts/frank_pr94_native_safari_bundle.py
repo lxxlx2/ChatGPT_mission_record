@@ -235,6 +235,28 @@ def main():
                 pass
             else:
                 raise AssertionError("NATIVE_SAFARI_BOUNDS_FAIL_CLOSED")
+        # Reproduce the user's exact CGWindowList on-screen-window miss
+        # without requiring Apple Events/Safari/Screen Recording on CI.
+        import tempfile
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        seen = []
+        def synthetic_process(argv, **kwargs):
+            seen.append(argv)
+            if argv[0] == "/usr/sbin/screencapture":
+                assert argv[1:4] == ["-x", "-R", "100,200,1000,750"]
+                Path(argv[-1]).write_bytes(b"\x89PNG\r\n\x1a\n" + b"QA" * 1600)
+                return SimpleNamespace(returncode=0, stderr="", stdout="")
+            return SimpleNamespace(returncode=2, stderr="NATIVE_SAFARI_WINDOW_NOT_FOUND", stdout="")
+        with tempfile.TemporaryDirectory() as temp:
+            with patch("subprocess.run", side_effect=synthetic_process):
+                with patch(__name__ + ".osa", return_value="100, 200, 1100, 950"):
+                    with patch(__name__ + ".js_eval", return_value="http://127.0.0.1:1234/#signals"):
+                        result=screenshot(Path(temp)/"absent-window", Path(temp)/"capture.png")
+            assert result["capture_method"] == "safari_applescript_window_bounds"
+            assert result["window_id"] is None
+            assert result["url"].startswith("http://127.0.0.1:")
+            assert len(seen) == 2
         print("FRANK_PR94_NATIVE_SAFARI_QA_SCRIPT_SELFTEST_PASS")
         return
     if sys.platform != "darwin":
