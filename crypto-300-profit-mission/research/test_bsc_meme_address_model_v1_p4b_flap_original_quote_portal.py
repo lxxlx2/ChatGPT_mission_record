@@ -76,6 +76,31 @@ class FlapPortalActualQuoteTests(unittest.TestCase):
             public_first_executable_U="CONFIRMED"),
             "PREMATURE_FUNDING_OR_U")
 
+    def test_marscoin_original_native_value_required(self):
+        self.rejected(lambda d:d["result"]["rows"][1].update(
+            original_signed_tx_native_value_wei="0"),
+            "ORIGINAL_NATIVE_VALUE_AND_TX_RECIPIENT")
+
+    def test_original_native_tx_receiver_must_match_source(self):
+        self.rejected(lambda d:d["result"]["rows"][1].update(
+            original_signed_tx_to="0x000000000000000000000000000000000000dead"),
+            "ORIGINAL_NATIVE_VALUE_AND_TX_RECIPIENT")
+
+    def test_mars_quote_payer_identity_not_claimed_if_wrong(self):
+        self.rejected(lambda d:d["result"]["rows"][1].update(
+            original_signed_tx_to_matches_portal_quote_payer=False),
+            "ORIGINAL_NATIVE_VALUE_AND_TX_RECIPIENT")
+
+    def test_quote_source_grade_cannot_be_promoted_to_full_rpc(self):
+        self.rejected(lambda d:d["result"].update(
+            evidence_grade="RAW_RPC_IMMUTABLE_FULL"),
+            "SOURCE_GRADE_OR_CHRONOLOGY_UNSUPPORTED")
+
+    def test_from_empty_filter_chronology_not_retroactively_proven(self):
+        self.rejected(lambda d:d["result"].update(
+            query_chronology_grade="RAW_FROM_FILTER_PRECOMMIT_PROVEN"),
+            "SOURCE_GRADE_OR_CHRONOLOGY_UNSUPPORTED")
+
     def test_mutating_pinned_original_result_byte_fails(self):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td)
