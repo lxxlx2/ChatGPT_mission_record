@@ -1,0 +1,88 @@
+name: Frank PR94 synthetic-only browser QA
+on:
+  push:
+    branches:
+      - qa/frank-pr94-synthetic-browser-20261018
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pr94-isolated-synthetic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Assemble exact previously approved product tree in new QA root
+        env:
+          PR94: 19d5d8be92b944f1c9814a1f527d233290bf2dfc
+          F01: d2eeebc1b49d2bae38e05d7d01f6839e3ba237f4
+          C02: 8d425e4d0e9db9f27abd8ad662e4d59e64b57e53
+          HARNESS: 40febd8275c7710a8697af5a0503569a2bb5cb8d
+          EXPECTED_TREE: e2b291a29decad536c8c10b4b1a4f9b5688d22b4
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.local/share"
+          root="$(mktemp -d "$HOME/.local/share/frank-pr94-preflight-XXXXXXXX")"
+          echo "QA_ROOT=$root" >> "$GITHUB_ENV"
+          git clone --quiet --no-checkout https://github.com/lxxlx2/ChatGPT_mission_record.git "$root/repo"
+          git -C "$root/repo" fetch --no-tags origin "refs/heads/fix/frank-pr93-executable-quote-binding-p2-20261018" "refs/heads/fix/frank-c02-pr82-authority-presence-20261016" "refs/heads/fix/frank-f01-pr81-js-range-20261016" "refs/heads/qa/frank-f01-pr83-c02-pr84-f02-p73-isolated-20261016" "refs/heads/evidence/frank-ca-local:refs/remotes/origin/evidence/frank-ca-local"
+          git -C "$root/repo" checkout --quiet --detach "$PR94"
+          git -C "$root/repo" -c user.name="PR94 QA" -c user.email="qa@example.invalid" -c core.hooksPath=/dev/null merge --no-ff --no-edit --no-gpg-sign "$C02"
+          server="crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+          if ! git -C "$root/repo" -c user.name="PR94 QA" -c user.email="qa@example.invalid" -c core.hooksPath=/dev/null merge --no-ff --no-edit --no-gpg-sign "$F01"; then
+            test "$(git -C "$root/repo" diff --name-only --diff-filter=U)" = "$server"
+            git -C "$root/repo" checkout --ours -- "$server"
+            git -C "$root/repo" add -- "$server"
+            git -C "$root/repo" -c user.name="PR94 QA" -c user.email="qa@example.invalid" -c core.hooksPath=/dev/null commit --no-edit --no-gpg-sign
+          fi
+          git -C "$root/repo" -c user.name="PR94 QA" -c user.email="qa@example.invalid" -c core.hooksPath=/dev/null merge --no-ff --no-edit --no-gpg-sign "$HARNESS"
+          test "$(git -C "$root/repo" rev-parse 'HEAD^{tree}')" = "$EXPECTED_TREE"
+          test -z "$(git -C "$root/repo" status --porcelain=v1 --untracked-files=all --ignored=matching)"
+          mkdir -p "$root/qa-runtime"
+          cp crypto-300-profit-mission/local-agent/scripts/frank_pr94_synthetic_safari_qa.py "$root/qa-runtime/frank-pr94-safari.py"
+          echo "FRANK_PR94_PRODUCT_TREE_VERIFIED=$EXPECTED_TREE"
+      - name: Install synthetic-only Python and WebKit dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e "$QA_ROOT/repo/crypto-300-profit-mission/local-agent[dev]" numpy==2.3.3 pyflakes==3.4.0 playwright==1.56.0
+          python -m playwright install --with-deps webkit
+      - name: Run native three-listener synthetic smoke without public RPC
+        env:
+          NO_PROXY: 127.0.0.1,localhost
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$QA_ROOT/repo/crypto-300-profit-mission/local-agent"
+          cd "$QA_ROOT/repo/crypto-300-profit-mission/local-agent"
+          python -B "$GITHUB_WORKSPACE/crypto-300-profit-mission/local-agent/scripts/frank_pr94_synthetic_safari_qa.py" --qa-root "$QA_ROOT" --smoke
+          echo 'FRANK_PR94_SYNTHETIC_NATIVE_HTTP_PASS'
+      - name: Capture actual Playwright WebKit official two-tab UI and F02 TTL screenshots
+        env:
+          NO_PROXY: 127.0.0.1,localhost
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$QA_ROOT/repo/crypto-300-profit-mission/local-agent"
+          cd "$QA_ROOT/repo/crypto-300-profit-mission/local-agent"
+          python -B "$GITHUB_WORKSPACE/crypto-300-profit-mission/local-agent/scripts/frank_pr94_browser_screenshot_bundle.py" --self-test
+          python -B "$GITHUB_WORKSPACE/crypto-300-profit-mission/local-agent/scripts/frank_pr94_browser_screenshot_bundle.py" --qa-root "$QA_ROOT" --launcher-file "$QA_ROOT/qa-runtime/frank-pr94-safari.py"
+          python -B - "$QA_ROOT" <<'PY'
+          import json,sys
+          from pathlib import Path
+          from zipfile import ZipFile
+          root=Path(sys.argv[1])
+          zips=list((root/'qa-evidence').glob('frank-safari-*.zip'))
+          assert len(zips)==1, zips
+          with ZipFile(zips[0]) as z:
+              assert z.testzip() is None
+              manifest=json.loads(z.read('manifest.json'))
+              assert manifest['status']=='WEBKIT_SCREENSHOTS_CAPTURED_NOT_SAFARI_PASS', manifest
+              assert manifest['source_tree_sha']=='e2b291a29decad536c8c10b4b1a4f9b5688d22b4'
+              assert len(manifest['images'])==10, manifest
+              assert not manifest['errors'], manifest
+          print('FRANK_PR94_WEBKIT_SYNTHETIC_ZIP_PASS')
+          PY
