@@ -851,3 +851,20 @@ R2 的真实 WBNB→龙虾 Pair Swap 最早 signed tx `0x2b93cfb6ae16ab4943f5f20
 **关键反例：** 这位外部买家买入前就有约 **335,173.8137 枚龙虾**，真实 1,000 USDT 是对既有仓位加仓，而不是一个新 EOA 初次发现信号。直到原信号钱包 239E 真实清仓块 85961371，外部买家余额依然 **383628517870200760487354 raw**。真实买入、资金与费用得到确认，但**并没有真实外部卖出/清仓/收益证据**；不得将之计入“原钱包买入后能跟单盈利”的胜率。且 239E 原买入块和外部后块的区块秒级 timestamp 完全相同，没有独立观察到的信息到达时间，不能假定因果跟随。当前完整业务读物：[真实外部 1,000 USDT 买单但未实现回合报告](./bsc-meme-address-model-v1-p4b-2026-real-1000usdt-external-buyer-not-a-realized-follower-2026-10-18.md)；[原不可变来源 blob 多文件复算程序](./bsc_meme_address_model_v1_p4b_real_external_1000usdt_buy.py) 和 [12 个故意破坏源资金、路由、真实到账、Gas、原始持币和 P5 等级的回归测试](./test_bsc_meme_address_model_v1_p4b_real_external_1000usdt_buy.py)。
 
 **下一交易价值优先级**：以真实 signed EOA 在原钱包**仍持仓时**的信号为候选，并强制逐笔区分真实资金源 `path[0]`（例如 USDT）和中间池 quote（WBNB），检查用户买前是否已有仓位、买入的实际 token 到账、成功 receipt Gas，之后锁定真实退出钱包 + 回款；EXIT_UNKNOWN、此前已有仓位或没独立 observer 时间的不得填充盈利成功率。此里程碑**不**批准生产规则和 P5，继续 `P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
+
+
+## 2026-10-18 P4-B 实际第三方首轮完整清仓：383,628 龙虾 → 8,399.62 USDT，历史成本仍未闭合
+
+接前述 239E 源钱包仍持币时外部钱包 5E60 的真实 1,000 USDT 加仓。本轮首先按 Git 先行预冻结，查 **5E60 在源 239E 清仓后**向 Dragon Pair 实际转出的龙虾，返回 8 个不同真实 ERC20 `Transfer`（完整第一范围、未重新挑赢家）。再冻结全部 8 笔原交易哈希，8/8 原始链上 signed `from=5E60`，`to=PancakeSwap V2 Router`，selector `0x5c11d795` 即 `swapExactTokensForTokensSupportingFeeOnTransferTokens`，路径全是 `Dragon→WBNB→USDT`。确实是其本人卖币，非礼物或 LP 动作。
+
+另一批锁定 13 次免费只读：五个 Dragon/USDT 历史 `balanceOf` 检查点与原 8 笔每笔所在块的 USDT `Transfer(to=5E60)`；全部成功，8 次 USDT 入账每笔 hash 都对应真实 signed SELL。紧接着 8 次完整成功的 `ethGetTransactionReceipt` 证实每笔 gasUsed，Gas Price=0.5gwei。
+
+**第一次完整退出**：源 239E 原 signed 退出区块 85961371 时 5E60 仍持 `383628517870200760487354 raw` Dragon；随后 85961702 至 85961787 这最早五笔签名卖出数量总和**严格等于**该余额，且第五次卖后真实 `balanceOf(5E60)==0`。五笔真实 USDT 收款逐笔相加为 **`8399620126582833083485 raw` = 8,399.620126582833083485 USDT**，同时从第五笔卖前/后冻结区块的同一钱包 `balanceOf USDT` 得到完全相同的增长值。五次原成功卖单真实 gasUsed 合计 740,708，独立 BNB gas 费用 **`370354000000000 wei` = 0.000370354 BNB**。先前那笔真实 1,000 USDT 加仓 Gas `78316000000000 wei` = 0.000078316 BNB；不可重复扣钱包余额本来已包含的手续费。
+
+另外三笔是**更晚的阶段**，卖出 `815875133572723286997184 raw` Dragon，真实收到 **`13540757456188781829802 raw` = 13,540.757456188781829802 USDT**、Gas 0.000229642 BNB；第八笔后 Dragon 余额真实为零。第二阶段单独记账，严禁混到第一次回合预测胜率。
+
+**业务结论与强制 PNL 门禁**：第一次卖出 8,399.62 USDT 是确定的**回款，不是利润**。因为 5E60 在 1,000 USDT 加仓前已经持有 **335173813691889308361853 raw Dragon**。为核对此前成本另行冻结一批历史 Dragon `getAssetTransfers(to=5E60)`，第一批就返回了 10 笔较早来自 Pair 的 ERC20 入币及**非空 pageKey**，说明历史买入来源未完成枚举。故本人完整持币成本、以前的真实 USDT/BNB 支出、增量 1,000 USDT 对应可实现利润分摊，仍必须标 `UNRESOLVED_CENSORED_BASIS`；严禁“8399−1000=7399 赚到”。真实后验资金闭合也**不能**自动证明市场第三方看见 239E 原信号的时间，或固定 +1/+5/+15 分钟公网可复制入场 U，仍 `PUBLIC_EXECUTABLE_U=UNRESOLVED`。
+
+详情见 [首次完整清仓 8399 USDT 的证据与严禁错算收益报告](./bsc-meme-address-model-v1-p4b-2026-5e60-real-five-sale-complete-liquidation-8399usdt-report.md)、[全部 8 笔真实 signed 卖出/逐笔 USDT 入账与真实余额](./bsc-meme-address-model-v1-p4b-5e60-eight-real-signed-usdt-sells-and-five-full-exit-2026-10-18.json)、[8 笔完整成功 Receipt 实际 Gas](./bsc-meme-address-model-v1-p4b-5e60-eight-real-sell-success-receipts-and-gas-readback-2026-10-18.json)、[早期买入来源第一页仅 10 笔且分页未完成](./bsc-meme-address-model-v1-p4b-5e60-earlier-ten-inbound-dragon-cost-basis-censored-2026-10-18.json)、[完整 source SHA 固定复算](./bsc_meme_address_model_v1_p4b_5e60_real_five_sell_liquidation.py) 和 [15 项防假利润与证据漂移测试](./test_bsc_meme_address_model_v1_p4b_5e60_real_five_sell_liquidation.py)，已接入 Ubuntu + macOS Bash 3.2 CI。
+
+**下一项面向用户真实可用的具体开发**：对原 23×19 的历史 P4-B 信号输出增加严格案例等级：`OWNER_HOLDING_CONFIRMED`、`OTHER_SIGNED_REAL_BUY_AND_FUNDING_CONFIRMED`、`OTHER_REAL_FULL_EXIT_CASH_RECEIPT_CONFIRMED_BASIS_UNKNOWN`、`REALIZED_PNL_FULL_BASIS_CONFIRMED`（本例**不得升级最后一级**）、`FIRST_PUBLIC_OBSERVABLE_U`（仍未解锁）。追求用户能用来买卖的事实、金额、时效和可退出性，而不是无止境扩张研究指标/复审。保持 `P4-B=PARTIAL / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
