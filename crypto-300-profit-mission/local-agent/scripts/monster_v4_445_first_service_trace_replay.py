@@ -34,6 +34,13 @@ def eligible_and_pending(store, now_ms):
     return eligible,[dict(x) for x in pending]
 
 
+def selected_within_queue_deadline(candidate):
+    """Use each persisted queue deadline, not an assumed 15-minute duration."""
+    first=candidate["first_selected_ms"]
+    deadline=candidate["deadline_ms"]
+    return first is not None and first <= deadline
+
+
 class FirstServiceObserver:
     def __init__(self):
         self.ticks=0
@@ -76,6 +83,11 @@ class FirstServiceObserver:
         for candidate_id,before_row in prior_all.items():
             if candidate_id not in predicted and before_row!=after_all[candidate_id]:
                 raise RuntimeError("MONSTER445_TRACE_nonselected_candidate_mutated")
+            # Frozen production and zeroquote V2 persist an observable
+            # status/retry/last_error/evaluation change for every selected ID.
+            # Selected count alone must never become a fabricated trace slot.
+            if candidate_id in predicted and before_row==after_all[candidate_id]:
+                raise RuntimeError("MONSTER445_TRACE_selected_candidate_no_state_change")
         self.ticks+=1
         if not select_ids:
             self.no_candidate_ticks+=1
@@ -203,8 +215,7 @@ def summarize_original_trace(model, frozen, trace):
             "repeated_selected_slots":sum(x["repeated_selected_slots"] for x in cohort),
             "LATE_never_selected":sum(x["final_status"]=="LATE" and not x["ever_selected"] for x in cohort),
             "LATE_selected_before_deadline":sum(
-                x["final_status"]=="LATE" and x["first_selected_ms"] is not None
-                and x["first_selected_ms"]<=x["deadline_ms"]
+                x["final_status"]=="LATE" and selected_within_queue_deadline(x)
                 for x in cohort),
         }
     if (sum(trace.repeated_no_new_valid_bar.values())+
