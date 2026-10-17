@@ -44,6 +44,27 @@ def analyze(a, b):
     if (s["watch_count"], s["proxy_evaluable"], s["wins"], s["losses"],
             s["same_symbol_24h_overlap_skip"], s["source_censored_excluding_overlap"]) != (760, 430, 133, 297, 250, 80):
         raise ValueError("STAGE30_PRICE_COHORT_DRIFT")
+    source_status = s["source_proxy_status_counts"]
+    # Non-evaluable does NOT mean exit-only: no entry trades and insufficient
+    # entry-or-exit minute quote also have their own explicit source classes.
+    missing_classes = {
+        "CENSORED_NO_COMPLETE_EXIT",
+        "CENSORED_ZERO_VOLUME_EXIT",
+        "CENSORED_ZERO_VOLUME_NEAR_EXIT",
+        "CENSORED_NO_ENTRY_TRADES",
+        "CENSORED_MINUTE_QUOTE_LT_30_USDT",
+    }
+    if set(source_status) != missing_classes | {
+            "PRICE_PROXY_ONLY", "SKIP_SAME_SYMBOL_24H_CAPITAL_OCCUPIED"}:
+        raise ValueError("STAGE30_UNKNOWN_PROXY_STATUS_CLASS")
+    source_censor_breakdown = {k: source_status[k] for k in sorted(missing_classes)}
+    if (any(not isinstance(n, int) or isinstance(n, bool) or n < 0
+            for n in source_status.values())
+            or sum(source_censor_breakdown.values()) != s["source_censored_excluding_overlap"]
+            or source_status["PRICE_PROXY_ONLY"] != s["proxy_evaluable"]
+            or source_status["SKIP_SAME_SYMBOL_24H_CAPITAL_OCCUPIED"] != s["same_symbol_24h_overlap_skip"]
+            or sum(source_status.values()) != s["watch_count"]):
+        raise ValueError("STAGE30_PROXY_STATUS_BREAKDOWN_DRIFT")
     if sum(state.values()) != d["n"] or (d["n"], state["PULLBACK_RECLAIM_CONFIRMED_PRICE_ONLY"],
             state["NO_PULLBACK_WITHIN_120M"], state["PULLBACK_NO_RECLAIM"]) != (305, 184, 113, 8):
         raise ValueError("STAGE152_D1_COHORT_DRIFT")
@@ -72,7 +93,8 @@ def analyze(a, b):
             "fully_source_verifiable": a["source_full_168h_joint"],
             "watch": s["watch_count"],
             "price_proxy_evaluable": s["proxy_evaluable"],
-            "censored_exits": s["source_censored_excluding_overlap"],
+            "source_censored_excluding_overlap": s["source_censored_excluding_overlap"],
+            "source_censor_status_breakdown": source_censor_breakdown,
             "repeat_watch_overlap": s["same_symbol_24h_overlap_skip"],
             "price_proxy_wins": s["wins"],
             "price_proxy_losses": s["losses"],
@@ -139,6 +161,9 @@ def main():
         print(r["verdict"], "| G4 UNKNOWN | G6 NO_GO")
         print("Stage30: WATCH", s["watch"], "priced", s["price_proxy_evaluable"],
               "win", s["price_proxy_win_fraction_pct"], "% median", s["price_proxy_median_net_pct"], "%")
+        print("Stage30 non-evaluable source cases:",
+              s["source_censored_excluding_overlap"], "| breakdown:",
+              json.dumps(s["source_censor_status_breakdown"], ensure_ascii=False, sort_keys=True))
         print("Stage30 historical 300U proxy:", f["net_usdt_price_proxy"],
               "USDT; cash-blocked", f["skipped_insufficient_30u_cash"],
               "slot-blocked", f["skipped_busy_slots"])
