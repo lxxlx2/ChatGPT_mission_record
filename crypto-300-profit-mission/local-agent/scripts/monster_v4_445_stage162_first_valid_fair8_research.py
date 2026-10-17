@@ -17,6 +17,7 @@ from unittest.mock import patch
 import monster_v4_shared_445_one_db_from_shards as assembler
 import monster_v4_shared_d1_zeroquote_research_v2 as zeroq
 import monster_v4_shared_spot_d0_d1_original_core as shared
+from monster_v4_shadow import event_key
 
 REFERENCE_SHA = "370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf"
 BASELINE_TRACE_SHA = "8d7ac8d9a0a78a0daa1164d0aee7783b0a51f29ef099437590b103bad0bab76d"
@@ -289,9 +290,17 @@ def build_report(candidate_model, observer, ref, baseline):
     lost=set(old_setups)-set(new_setups)
     gained=set(new_setups)-set(old_setups)
     retained=set(old_setups)&set(new_setups)
-    cohort_of=lambda e: ("PEAK_98" if next(
-        (q["first_seen_ms"] for q in old_rows.values()
-         if q["symbol"]==e["symbol"]),-1)==PEAK_MS else "OTHER_171")
+    # A symbol can emit several independent WATCH episodes. A setup
+    # is anchored to the exact persistent queue ID, NOT its symbol.
+    setups_to_queue={event_key(q["venue"],q["symbol"],"SETUP_ACTIVE",ident):q
+                     for ident,q in old_rows.items()}
+    def cohort_of(event):
+        actual=setups_to_queue.get(event["event_id"])
+        contract(actual is not None
+                 and actual["symbol"]==event["symbol"]
+                 and actual["venue"]==event["venue"],
+                 "SETUP_TO_QUEUE_EPISODE_EVENT_KEY_DRIFT")
+        return "PEAK_98" if actual["first_seen_ms"]==PEAK_MS else "OTHER_171"
     for label in cohorts:
         cohorts[label]["baseline_setups"]=sum(cohort_of(e)==label for e in old_setups.values())
         cohorts[label]["alternative_setups"]=sum(cohort_of(e)==label for e in new_setups.values())
