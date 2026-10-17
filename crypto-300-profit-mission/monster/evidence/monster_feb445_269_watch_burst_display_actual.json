@@ -1,0 +1,29 @@
+{
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_DEPLOY": true,
+  "NO_GMAIL": true,
+  "NO_MERGE": true,
+  "NO_TRADE": true,
+  "WATCH_in_burst": 98,
+  "all_watch_preserved": 269,
+  "capacity_slots_fixed_before_study": 8,
+  "censored_313": 313,
+  "display_cards_reduction_not_real_mail_count": 97,
+  "display_cards_research_hypothetical": 172,
+  "full_view_artifact_run": "39009734600",
+  "full_view_sha256": "fc4586fe19371042b182583ab95a4e15921edba9d45f59cf1979a3d09946f36e",
+  "hindsight_burst_98_SETUPS": 0,
+  "hindsight_burst_98_final_status": {
+    "EVALUATED": 7,
+    "LATE": 91
+  },
+  "market_burst_groups": 1,
+  "notification_sent": false,
+  "posthoc_445_of_758_not_PIT": true,
+  "profit_verified": false,
+  "research_only": true,
+  "schema": "MONSTER445_269_WATCH_MARKET_BURST_ACTUAL_SUMMARY_V1",
+  "source_sha256": "370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf",
+  "unique_poll_ticks": 159
+}
