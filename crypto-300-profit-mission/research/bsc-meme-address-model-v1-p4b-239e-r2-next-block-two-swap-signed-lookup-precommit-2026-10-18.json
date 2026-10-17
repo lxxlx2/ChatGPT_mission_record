@@ -1,0 +1,48 @@
+{
+  "schema": "BSC_P4B_2026_239E_DRAGON_R2_EARLIEST_NEXT_BLOCK_BUY_VS_SELL_SIGNER_LOOKUP_PREFREEZE_V1",
+  "date": "2026-10-18",
+  "source_log_file": "bsc-meme-address-model-v1-p4b-239e-single-block-r1-clipped-r2-four-real-v2-swap-events-2026-10-18.json",
+  "case": "R2",
+  "original_source_signer": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+  "original_signed_buy_block": 85959961,
+  "original_signed_exit_block": 85961371,
+  "source_log_block": 85959962,
+  "fixed_signed_transactions": [
+    {
+      "type": "FIRST_V2_WBNB_IN_DRAGON_OUT",
+      "tx": "0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47",
+      "expected_block": 85959962,
+      "expected_transaction_index": 2,
+      "expected_swap_count": 1
+    },
+    {
+      "type": "FIRST_V2_DRAGON_IN_WBNB_OUT",
+      "tx": "0x57feec5cf7819b9a6261de69b05e5587bfc7df173a92f1478529d6533d7d20a0",
+      "expected_block": 85959962,
+      "expected_transaction_index": 3,
+      "expected_swap_count": 3
+    }
+  ],
+  "provider": "Alchemy existing free bnb-mainnet",
+  "method": "eth_getTransactionByHash",
+  "max_calls": 2,
+  "zero_retries": true,
+  "selection_rule": "Earliest WBNB->Dragon Swap and earliest Dragon->WBNB Swap in the only untruncated R2 N+1 full single-block log archive, already chosen before looking up signers. Include both even if same person or losing/unfollowable.",
+  "if_truncated": "UNRESOLVED, no extra buyer discovery",
+  "do_not_infer": [
+    "Pair topic sender/to is not original top-level signed wallet",
+    "These 2 tx need not be a buy+sell by same account",
+    "No public observer delivery time or causal follow of original 239E",
+    "No +1/5/15min profitability, no gasUsed unless complete receipt"
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "NO_MERGE": true,
+    "NO_DEPLOY": true,
+    "NO_GMAIL": true,
+    "NO_TRADE": true
+  }
+}
