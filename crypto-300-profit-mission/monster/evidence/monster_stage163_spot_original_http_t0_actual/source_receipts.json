@@ -1,0 +1,112 @@
+{
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_DEPLOY": true,
+  "NO_GMAIL": true,
+  "NO_MERGE": true,
+  "NO_TRADE": true,
+  "allowed_base": "https://data-api.binance.vision",
+  "artifact_internal_manifest_zip_sha_note": "Zip internal manifest omits zip SHA because it cannot self-hash",
+  "complete_historical_listing_change_receipts": false,
+  "fee_tier_and_order_notional": "USER_NOT_SPECIFIED",
+  "future_1m_causal_forward_7d_data": "NOT_COLLECTED",
+  "raw_http_body_integrity_sha256_per_endpoint": true,
+  "real_fill_entry_exit_price": "UNAVAILABLE",
+  "response_is_not_exchange_signed": true,
+  "schema": "MONSTER_STAGE163_SPOT_ORIGINAL_HTTP_ONESHOT_V1",
+  "single_observation_not_live_multiday_capture": true,
+  "source_is_true_http_response_body_bytes": true,
+  "source_provider": "Official Binance public market-data-only URL",
+  "source_sha_receipts": {
+    "bookTicker": {
+      "body_byte_length": 429602,
+      "body_sha256": "0f0e0cf65f478b684cfe9d66c1ba671582829839f3658b0a5f6c2f4e3bb78c63",
+      "content_type": "application/json;charset=UTF-8",
+      "end_utc": "2026-10-17T22:04:44.443393Z",
+      "http_status": 200,
+      "raw_http_bytes_available": true,
+      "response_date_header": "Sat, 17 Oct 2026 22:04:43 GMT",
+      "start_utc": "2026-10-17T22:04:42.655682Z",
+      "url": "https://data-api.binance.vision/api/v3/ticker/bookTicker"
+    },
+    "clock_after": {
+      "body_byte_length": 28,
+      "body_sha256": "9d5020fc32e0a6d2c9a079cf3348a1b7fa683573cf10c1508b2cde882e98f84d",
+      "content_type": "application/json;charset=UTF-8",
+      "end_utc": "2026-10-17T22:04:48.349905Z",
+      "http_status": 200,
+      "raw_http_bytes_available": true,
+      "response_date_header": "Sat, 17 Oct 2026 22:04:48 GMT",
+      "start_utc": "2026-10-17T22:04:47.736449Z",
+      "url": "https://data-api.binance.vision/api/v3/time"
+    },
+    "clock_before": {
+      "body_byte_length": 28,
+      "body_sha256": "5049b438df031646bffc63035ffaca9f5557d917a4617b9c8e9c37d6b35374ed",
+      "content_type": "application/json;charset=UTF-8",
+      "end_utc": "2026-10-17T22:04:39.546204Z",
+      "http_status": 200,
+      "raw_http_bytes_available": true,
+      "response_date_header": "Sat, 17 Oct 2026 22:04:39 GMT",
+      "start_utc": "2026-10-17T22:04:38.710197Z",
+      "url": "https://data-api.binance.vision/api/v3/time"
+    },
+    "depth_BTCUSDT_probe": {
+      "body_byte_length": 6447,
+      "body_sha256": "d20c0c50ecb870a4955b8484d999c0fb693d2fbe378026be479793e6db928767",
+      "content_type": "application/json;charset=UTF-8",
+      "end_utc": "2026-10-17T22:04:47.736391Z",
+      "http_status": 200,
+      "raw_http_bytes_available": true,
+      "response_date_header": "Sat, 17 Oct 2026 22:04:47 GMT",
+      "start_utc": "2026-10-17T22:04:46.930773Z",
+      "url": "https://data-api.binance.vision/api/v3/depth?symbol=BTCUSDT&limit=100"
+    },
+    "exchangeInfo": {
+      "body_byte_length": 17767696,
+      "body_sha256": "4c04abd88caeae5613977e0f5e2a5044efaeb557dc7e7fbd5bba0d03a5794493",
+      "content_type": "application/json;charset=UTF-8",
+      "end_utc": "2026-10-17T22:04:42.644137Z",
+      "http_status": 200,
+      "raw_http_bytes_available": true,
+      "response_date_header": "Sat, 17 Oct 2026 22:04:40 GMT",
+      "start_utc": "2026-10-17T22:04:39.546301Z",
+      "url": "https://data-api.binance.vision/api/v3/exchangeInfo"
+    },
+    "ticker24": {
+      "body_byte_length": 1912204,
+      "body_sha256": "7f3dd27e8c83bdbff80f9ec3d99feac99636113308a0bdef603730ee87aef31e",
+      "content_type": "application/json;charset=UTF-8",
+      "end_utc": "2026-10-17T22:04:46.929464Z",
+      "http_status": 200,
+      "raw_http_bytes_available": true,
+      "response_date_header": "Sat, 17 Oct 2026 22:04:45 GMT",
+      "start_utc": "2026-10-17T22:04:44.443727Z",
+      "url": "https://data-api.binance.vision/api/v3/ticker/24hr"
+    }
+  },
+  "source_venue": "Binance Spot",
+  "source_zip_bytes": 592022,
+  "source_zip_sha256": "b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b",
+  "stats": {
+    "active_spot_usdt_bbo_matched": 511,
+    "active_spot_usdt_ticker24_matched": 511,
+    "active_spot_usdt_valid_top_book": 511,
+    "all_market_24hr_ticker_rows": 3732,
+    "all_market_bbo_rows": 3732,
+    "btc_l2_ask_levels": 100,
+    "btc_l2_bid_levels": 100,
+    "market_identity_record_count": 3729,
+    "market_statuses": {
+      "BREAK": 2349,
+      "TRADING": 1380
+    },
+    "source_server_time_ms": 1792274680094,
+    "source_server_time_utc": "2026-10-17T22:04:40.094000Z",
+    "spot_eth_usdt_and_other_venues_not_equivalent_to_usdm": true,
+    "spot_usdt_active": 511,
+    "spot_usdt_all_states": 725,
+    "spot_usdt_break": 214
+  },
+  "true_PIT_multi_day_universe": "NOT_PROVEN"
+}
