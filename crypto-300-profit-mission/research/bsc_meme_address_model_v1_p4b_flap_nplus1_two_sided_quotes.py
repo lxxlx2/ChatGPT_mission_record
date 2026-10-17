@@ -8,8 +8,10 @@ ROOT = Path(__file__).resolve().parent
 SOURCES = {
     "freeze": ("bsc-meme-address-model-v1-p4b-flap-major2-nplus1-roundtrip-math-precommit-2026-10-17.json",
                "57408d1a792235ce43eebcb10d7096c97e9b3aea"),
-    "readback": ("bsc-meme-address-model-v1-p4b-flap-major2-nplus1-roundtrip-math-readback-2026-10-17.json",
-                 "57fd53d2e6e00adbb1576b2436a975887ee87a8d"),
+    "readback": ("bsc-meme-address-model-v1-p4b-flap-major2-nplus1-roundtrip-math-supplement-v2-2026-10-18.json",
+                 "cc96297ace51a74efb8b800f0fd0bed385fcbce4"),
+    "raw_v1": ("bsc-meme-address-model-v1-p4b-flap-major2-nplus1-roundtrip-math-readback-2026-10-17.json",
+               "b7c618582b969c61772deb8a07dbd0e706a187e4"),
     "market": ("bsc-meme-address-model-v1-p4b-19ca-unified-early-market-buy-evidence-2026-10-14.json",
                "c42ad01e896f30262f89f7852f927fc84fb3ea18"),
     "first_signed": ("bsc-meme-address-model-v1-p4b-flap-major2-original-buys-and-quotes-2026-10-14.json",
@@ -62,13 +64,35 @@ def build(docs):
           "TWO_PRECOMMITTED_MARKETS_ONLY")
     check([c["token"] for c in pre["cases"]] == ["牛来","MARSCOIN"],
           "CASE_ORDER")
+    old = docs["raw_v1"]
+    check(read["source_v1"] ==
+          {"path":SOURCES["raw_v1"][0],"git_blob_sha":SOURCES["raw_v1"][1],
+           "source_role":"IMMUTABLE_ORIGINAL_RPC_READBACK_SELECTED_FIELDS"} and
+          read["supplement_provenance"] ==
+          "POST_HOC_AUDIT_ENRICHMENT_NOT_NEW_RPC_QUERY" and
+          read["supplement_confirms_provider_request_capture"] is False and
+          read["request_evidence_grade"] == "SCRIPT_RECONSTRUCTED_NOT_PROVIDER_CAPTURED",
+          "V1_V2_PROVENANCE_NOT_CAPTURED")
+    check(len(old["rows"]) == len(read["rows"]) == 2 and
+          all(old[k] == read[k] for k in
+              ("source_precommit_blob_sha","source_reviewed_code_baseline",
+               "network","method","read_count","complete_results","gates")),
+          "IMMUTABLE_V1_SOURCE_DATA_DRIFT")
+    for orig, enrich in zip(old["rows"], read["rows"]):
+        for key,value in orig.items():
+            if key in ("buy","reverse"):
+                check(all(enrich[key].get(k) == v for k,v in value.items()),
+                      "IMMUTABLE_V1_QUOTE_FIELD_DRIFT")
+            else:
+                check(enrich.get(key) == value,
+                      "IMMUTABLE_V1_SELECTED_FIELD_DRIFT")
     check(read["schema"] ==
-          "BSC_P4B_FLAP_2026_TWO_SIDED_QUOTE_HISTORICAL_NPLUS1_BLOCK_END_READBACK_V2" and
+          "BSC_P4B_FLAP_2026_TWO_SIDED_QUOTE_NPLUS1_BLOCK_END_SUPPLEMENT_V2" and
           read["actual_provider_raw_transcript_archived"] is False and
           "look-ahead" in read["limits"][-1], "BLOCK_END_GRADE")
     check(read["method"].startswith("quoteExactInput fixed frozen") and
-          "no state overrides" in read["source"] and
-          "eth_call" in read["source"],
+          "Original Alchemy V1 source readback" in read["source"] and
+          "no provider transport capture" in read["source"],
           "READ_ONLY_MATH_ORIGIN")
     check(read["gates"] == {
           "global_public_executable_U":"UNRESOLVED",
@@ -129,12 +153,15 @@ def build(docs):
               "BUY_ETHCALL_INPUT_OUTPUT")
         for leg in ("buy", "reverse"):
             req = x[leg]["request"]
+            check(x[leg]["request_grade"] ==
+                  "SCRIPT_RECONSTRUCTED_NOT_PROVIDER_CAPTURED",
+                  "SCRIPT_RECONSTRUCTED_SELF_CONSISTENCY")
             check(req == {
                 "network":"bnb-mainnet", "method":"eth_call",
                 "to":pre["contract"], "data":x[leg]["rpc_calldata"],
                 "blockTag":hex(c["witness_block_N"]+1),
                 "from":None, "value":None},
-                "INDEPENDENT_VIEW_BLOCKTAG_OR_REQUEST_IDENTITY")
+                "SCRIPT_RECONSTRUCTED_SELF_CONSISTENCY")
         check("lookahead" in x["Nplus1_block_end_lookahead_caveat"] or
               "look-ahead" in x["Nplus1_block_end_lookahead_caveat"] or
               "intra-block" in x["Nplus1_block_end_lookahead_caveat"],
@@ -153,7 +180,6 @@ def build(docs):
             "historical_read_block_Nplus1":x["block"],
             "buy_request_blockTag":x["buy"]["request"]["blockTag"],
             "reverse_request_blockTag":x["reverse"]["request"]["blockTag"],
-            "Nplus1_end_block_includes_unobserved_intrablock_trades":True,
             "actual_early_signed_buy_witness_N":c["witness_block_N"],
             "source_historical_buy_sell_tax_bps":[o["buy_tax_bps"],o["sell_tax_bps"]],
             "fixed_quote_input_raw":str(amount_in),
