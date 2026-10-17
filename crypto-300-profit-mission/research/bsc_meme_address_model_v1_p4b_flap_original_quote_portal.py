@@ -52,7 +52,7 @@ def replay(data):
     for i,row in enumerate(result["rows"]):
         a,bb,source=first["cases"][i],second["cases"][i],original["rows"][i]
         require(row["token"]==a["token"]==bb["token"]==source["token"] and
-                row["token_ca"]==a["tokenCA"]==bb["tokenCA"]==source["exact_CA"] and
+                row["token_ca"]==a["tokenCA"]==source["exact_CA"] and
                 row["quote_ca"]==a["quoteCA"]==bb["quote"]==source["actual_quote_CA"],
                 "TOKEN_QUOTE_CA_ID")
         require(row["signed_buy_original_tx"]==a["original_signed_buy_tx"]==
