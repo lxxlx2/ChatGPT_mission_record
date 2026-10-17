@@ -6,7 +6,7 @@ project: "N1"
 event_type: historical_alert
 email_subject: "[空投提醒][N1 / 01 Exchange][资格检查与 Badge Claim]"
 gmail_message_id: "1a01baab2f686623"
-gmail_sent_at: "2026-08-19T20:16:06"
+gmail_sent_at: "2026-08-19T20:16:06Z"
 gmail_sent_at_bkk: "2026-08-20T03:16:06+07:00"
 status: official
 backfilled: true
