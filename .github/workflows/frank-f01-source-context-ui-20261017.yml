@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - feat/frank-f01-source-context-pane-20261017
+      - fix/frank-pr91-safe-primary-f01-and-gateway-20261017
   workflow_dispatch:
 permissions:
   contents: read
@@ -27,8 +28,10 @@ jobs:
           python -B -m compileall -q mission_agent/mission_control/server.py tests/test_frank_source_context_gateway.py
           python -m pyflakes mission_agent/mission_control/server.py tests/test_frank_source_context_gateway.py
           node --check mission_agent/mission_control/static/frank_source_context.js
+          node --check mission_agent/mission_control/static/frank_f01_primary_freshness.js
           node tests/frank_source_context_render.cjs
           node tests/frank_source_context_mount.cjs
+          node tests/frank_f01_primary_freshness.cjs
           python -B -m pytest -q -p no:cacheprovider tests/test_frank_source_context_gateway.py tests/test_frank_joint_current_follow_context.py tests/test_frank_joint_readonly_http.py
       - name: Complete unmodified-source regression with real historical Git replay
         working-directory: crypto-300-profit-mission/local-agent
@@ -87,12 +90,14 @@ jobs:
         run: |
           node --check mission_agent/mission_control/static/app.js
           node --check mission_agent/mission_control/static/frank_source_context.js
+          node --check mission_agent/mission_control/static/frank_f01_primary_freshness.js
           node tests/frank_f01_excluded_badge_render.cjs
           node tests/frank_f01_quote_projection_render.cjs
           node tests/ca_identity_render.cjs
           node tests/frank_f02_r2_render.cjs
           node tests/frank_source_context_render.cjs
           node tests/frank_source_context_mount.cjs
+          node tests/frank_f01_primary_freshness.cjs
           python -B -m pytest -q -p no:cacheprovider tests/test_frank_source_context_gateway.py tests/test_frank_joint_current_follow_context.py tests/test_frank_joint_readonly_http.py tests/test_frank_f01_c02_f02_alignment.py integration_tests/test_frank_joint_native_control_http.py
       - name: Full disposable real Git historical regression
         working-directory: ${{ steps.assembly.outputs.dest }}/crypto-300-profit-mission/local-agent
