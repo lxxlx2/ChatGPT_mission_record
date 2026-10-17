@@ -9,7 +9,7 @@ SOURCES = {
     "freeze": ("bsc-meme-address-model-v1-p4b-flap-major2-nplus1-roundtrip-math-precommit-2026-10-17.json",
                "57408d1a792235ce43eebcb10d7096c97e9b3aea"),
     "readback": ("bsc-meme-address-model-v1-p4b-flap-major2-nplus1-roundtrip-math-readback-2026-10-17.json",
-                 "b7c618582b969c61772deb8a07dbd0e706a187e4"),
+                 "57fd53d2e6e00adbb1576b2436a975887ee87a8d"),
     "market": ("bsc-meme-address-model-v1-p4b-19ca-unified-early-market-buy-evidence-2026-10-14.json",
                "c42ad01e896f30262f89f7852f927fc84fb3ea18"),
     "first_signed": ("bsc-meme-address-model-v1-p4b-flap-major2-original-buys-and-quotes-2026-10-14.json",
@@ -62,6 +62,10 @@ def build(docs):
           "TWO_PRECOMMITTED_MARKETS_ONLY")
     check([c["token"] for c in pre["cases"]] == ["牛来","MARSCOIN"],
           "CASE_ORDER")
+    check(read["schema"] ==
+          "BSC_P4B_FLAP_2026_TWO_SIDED_QUOTE_HISTORICAL_NPLUS1_BLOCK_END_READBACK_V2" and
+          read["actual_provider_raw_transcript_archived"] is False and
+          "look-ahead" in read["limits"][-1], "BLOCK_END_GRADE")
     check(read["method"].startswith("quoteExactInput fixed frozen") and
           "no state overrides" in read["source"] and
           "eth_call" in read["source"],
@@ -123,6 +127,18 @@ def build(docs):
               x["buy"]["decoded_token_raw"] == str(buy_out) and
               x["buy"]["rpc_calldata"] == calldata(pre["selector"],c["quote_CA"],c["CA"],amount_in),
               "BUY_ETHCALL_INPUT_OUTPUT")
+        for leg in ("buy", "reverse"):
+            req = x[leg]["request"]
+            check(req == {
+                "network":"bnb-mainnet", "method":"eth_call",
+                "to":pre["contract"], "data":x[leg]["rpc_calldata"],
+                "blockTag":hex(c["witness_block_N"]+1),
+                "from":None, "value":None},
+                "INDEPENDENT_VIEW_BLOCKTAG_OR_REQUEST_IDENTITY")
+        check("lookahead" in x["Nplus1_block_end_lookahead_caveat"] or
+              "look-ahead" in x["Nplus1_block_end_lookahead_caveat"] or
+              "intra-block" in x["Nplus1_block_end_lookahead_caveat"],
+              "INTRABLOCK_LOOKAHEAD_CAVEAT_REQUIRED")
         check(x["reverse"]["input_token_raw"] == str(buy_out) and
               x["reverse"]["decoded_quote_raw"] == str(quote_out) and
               x["reverse"]["rpc_calldata"] == calldata(pre["selector"],c["CA"],c["quote_CA"],buy_out),
@@ -135,6 +151,9 @@ def build(docs):
         fresh.append({
             "token":coin,"exact_CA":c["CA"],"quote_CA":c["quote_CA"],
             "historical_read_block_Nplus1":x["block"],
+            "buy_request_blockTag":x["buy"]["request"]["blockTag"],
+            "reverse_request_blockTag":x["reverse"]["request"]["blockTag"],
+            "Nplus1_end_block_includes_unobserved_intrablock_trades":True,
             "actual_early_signed_buy_witness_N":c["witness_block_N"],
             "source_historical_buy_sell_tax_bps":[o["buy_tax_bps"],o["sell_tax_bps"]],
             "fixed_quote_input_raw":str(amount_in),
