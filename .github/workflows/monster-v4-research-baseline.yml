@@ -31,6 +31,8 @@ on:
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_mac_service.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_d2.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_shadow.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_opportunity_snapshot.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_opportunity_snapshot.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_stage5_integrity.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_stage5_integrity.py'
       - '.github/workflows/monster-v4-research-baseline.yml'
@@ -87,6 +89,11 @@ jobs:
         run: |
           python -B -m py_compile scripts/monster_v4_shadow.py tests/test_monster_v4_shadow.py
           python -B -m unittest discover -v -s tests -p test_monster_v4_shadow.py
+      - name: Monster offline opportunity inspector real D0 D1 D2 lifecycle
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_opportunity_snapshot.py tests/test_monster_v4_opportunity_snapshot.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_opportunity_snapshot.py
       - name: Monster D2 read-only 30 USDT executable order-book model regressions
         working-directory: crypto-300-profit-mission/local-agent
         run: |
