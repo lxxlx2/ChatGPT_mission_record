@@ -806,3 +806,18 @@ R1 原本人实亏回合首买块 85954137 时间 `0x69b14658`、最终卖出块
 
 
 **2026-10-18 追加资金差异校验（本轮时钟复算 CI 发现）：** 重新对照本轮真实可完整解析的四笔原签名交易，239E R1 首笔 Dragon 买的 **`tx.value=101000000000000000 wei`（0.101 BNB）**，池内实际 WBNB 进量仅 `100000000000000000 wei`（0.1 WBNB）；R2 **`tx.value=303000000000000000 wei`（0.303 BNB）**，池内仅 `300000000000000000 wei`（0.3 WBNB）。两个差值分别 `1000000000000000` 和 `3000000000000000 wei`，严格锁定交易与原 P4-C 文件后作为不变量，并追加负向单测。不允许把 `tx.value` 错说成池内 WBNB，不能将差值全叫手续费或再次叠加到已经依据本人原生余额闭合的回合净额。原来的 0.01 WBNB 静态 quote 只进入 V2 Pair 数学、不是个人真实起始投入 BNB 与最终实际收款，也不升级 follower 1/5/15min 盈利。
+
+
+## 2026-10-18 P4-B 原市场真实外部买家正向与 EXIT_UNKNOWN 对照（D503／E11B，免费来源）
+
+新业务研究不再只在 Pair / Router 上计算静态数学：**使用之前就已冻结的龙虾真实独立买家 D503 四笔签名买卖 + E11B 一笔签名买入**，从后续被引用的原始外部买家样本中核查来源、本人真实注入 BNB、真实交易时间、已有实际 Token 余额及对应区块本人 BNB 变化。这两钱包**均不在原 23 EOA**，不得扩张原 23×19=437 母数。完整阅读 [D503 两轮真实快速正向历史区块 / E11B 退出未知报告](./bsc-meme-address-model-v1-p4b-2026-dragon-five-real-external-trades-and-exit-unknown-2026-10-18.md)。
+
+前置 [Blockscout 五笔查询范围冻结](./bsc-meme-address-model-v1-p4b-dragon-five-actual-external-tx-independent-fee-precommit-2026-10-18.json) 之后，独立浏览器接口拒绝免费继续查，要求 Blockscout PRO API Key，故只查询第一笔，失败证据独立 [记录](./bsc-meme-address-model-v1-p4b-dragon-five-external-blockscout-public-denied-2026-10-18.json)，没有购买付费接口、重试或更换钱包。另起 [同五个 tx 的 Alchemy 免费来源预冻结](./bsc-meme-address-model-v1-p4b-dragon-five-external-signer-original-tx-alchemy-free-precommit-2026-10-18.json) 后，恰好五次免费 BNB `eth_getTransactionByHash` 全部完整返回，并将 `from`、真实签名 `tx.value`、`gasPrice`、`gas`（仅限额，**不是 gasUsed**）、`blockTimestamp`、block 与 hash 保存为 [独立新五笔交易字段原文结果](./bsc-meme-address-model-v1-p4b-dragon-five-external-signer-original-tx-alchemy-readback-2026-10-18.json)。来源等级为 TOOL_PARSED_FULL_TRANSACTION_FIELDS_NOT_COMPLETE_PROVIDER_NETWORK_WIRE_REQUEST_AND_RESPONSE，不宣称 Blockscout 批核实或自行虚构缺失的买入 Gas 收据。
+
+**真实资金与时间结论**：D503 首笔龙虾本人 signed BUY 块 83636000 原生 `tx.value=0.19 BNB`、`gasPrice=3gwei`，在 83636018 本人 signed APPROVE+SELL，区块共识时间差 **9s**；二次在 83636084 原生 `tx.value=0.22 BNB`、`gasPrice=7gwei`，83636094 本人再次卖出，差 **5s**。旧原链上真实同 EOA 四个交易区块原生 BNB 差额两轮分别 `+24264878154473742`、`+36953148714385693 wei`，合计 **`+61218026868859435 wei`**，是真实选定钱包区块差额、**不是隔离的每笔 tx 盈利归属、也不是 DDAC 可复制跟单**。两轮旧完整 APPROVE + SELL receipt 的确定 gas 为每轮 `516314000000000 wei BNB`；两个 BUY receipt 仍截断，`eth_getTransactionByHash.gas=600000` 为 gas LIMIT，**不能视为 gasUsed**、不能单靠 native block 差值宣称已闭合买入 Gas。实际钱包 native 区块差已经包含 Gas，不可重复扣减。
+
+同块 83636000 另一真实 signer **E11B** 原始本人 BUY `tx.value=0.012 BNB`，此前已有成功事件和链上 token 到账；至老冻结 83636127 块仍有 `347546637309143000000000 raw` 持有，退出与净经济结果 **EXIT_UNKNOWN**，不视为亏损或成功卖出。源 DDAC 已在 83635800 全清仓，D503 后续才买入，且老 DDAC `balanceOf` 在 D503 第一笔买单块仍为零；不允许将 D503 赚到的区块 native 差额归因于跟随 DDAC 买入信号。5–9 秒极短周转时长更说明跟单者有真实接收、延迟、发送和成交能力才可以讨论复制，而本研究**尚未证实**。
+
+[固定 blob 原始来源核验程序](./bsc_meme_address_model_v1_p4b_dragon_external_five_true_txs.py) + [13 项资金/未退出负对照](./test_bsc_meme_address_model_v1_p4b_dragon_external_five_true_txs.py) 已接入既有 Ubuntu/macOS Bash 3.2 全量 CI；避免“只算盈利两轮，删掉仍持有 E11B”幸存者偏差，保证真正用户推荐目标不偏移。**下一关键工作应跨原冻结市场扩大真实可比买卖/未退出/亏损覆盖面，拿到同一有真实本金的第三方在信号可公开观察后的实际完整 buy+sell 和收款成本，绑定 +60/+300/+900 秒准确进入时间。** 不允许再用无状态数学 bidirectional 报价取代真实成交，不能因为现有两正一未知说模型通过。
+
+所有门禁仍 `P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`；此阶段不频繁因纯 CI 绿色重新进行另一 AI 全量审核。
