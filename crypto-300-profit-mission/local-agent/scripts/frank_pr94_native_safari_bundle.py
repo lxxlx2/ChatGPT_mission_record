@@ -87,7 +87,7 @@ def poll(expr, predicate=lambda x: x == "true", seconds=18):
 
 def safari_window_rect(value):
     """AppleScript Safari window bounds; no Screen Recording window inventory."""
-    numbers = [int(x) for x in re.findall(r"-?\\d+", value)]
+    numbers = [int(x) for x in re.findall(r"-?[0-9]+", value)]
     if len(numbers) != 4:
         raise RuntimeError("NATIVE_SAFARI_WINDOW_BOUNDS_UNAVAILABLE:" + value[:150])
     left, top, right, bottom = numbers
