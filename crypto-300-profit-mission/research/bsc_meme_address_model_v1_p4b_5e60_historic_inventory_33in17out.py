@@ -14,7 +14,7 @@ FILES={
  "in2out1":("bsc-meme-address-model-v1-p4b-5e60-historical-dragon-in-page2-out-page1-censored-2026-10-18.json","bcb9bb22e57c5030ecb8e0addd31b67d9b4bbf5d"),
  "in3out2":("bsc-meme-address-model-v1-p4b-5e60-historic-dragon-in3-out2-readback-2026-10-18.json","6635527c2e2f17b238165c25ebf10fb4d334feda"),
  "in4":("bsc-meme-address-model-v1-p4b-5e60-prior-inbound-page4-final-33in17out-2026-10-18.json","ec3fafb7d95f1928438f6cd3aa5a1bde32da252b"),
- "state":("bsc-meme-address-model-v1-p4b-5e60-real-opening-966415-and-33in17out-inventory-2026-10-18.json",""), 
+ "state":("bsc-meme-address-model-v1-p4b-5e60-real-opening-966415-and-33in17out-inventory-2026-10-18.json","7c732dddf4b7693b769cfd98a980d92dd5afeed4"), 
  "buy":("bsc-meme-address-model-v1-p4b-239e-r2-external-5e60-real-usdt-debit-gas-and-dragon-readback-2026-10-18.json","4288f9819f2815cb4d899c93116b23e19e6fe0ba")
 }
 def check(condition,key):
