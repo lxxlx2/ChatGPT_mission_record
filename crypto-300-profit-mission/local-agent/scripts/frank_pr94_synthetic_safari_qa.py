@@ -153,7 +153,6 @@ def state_for(a, b):
                 return None
             return {"job_id": job_id, "status": "DONE",
                     "mint": a if job_id == "synthetic-a" else b}
-    fixed_now = time.time()
     class State:
         cluster_jobs = Jobs()
         def runtime(self):
@@ -164,7 +163,10 @@ def state_for(a, b):
         def candidates(self):
             return []
         def follow_opportunities(self):
-            now = fixed_now
+            # Keep the two immediate original-F01 and guard GETs on one
+            # deterministic quote, but advance synthetic quotes before the
+            # reviewed 30s freshness policy expires during 120s F02 QA.
+            now = float((int(time.time()) // 10) * 10)
             def candidate(mint, name, side, price):
                 return {"mint": mint, "person_id": "frank", "decision": "BUY",
                     "source_signal_id": name, "pattern": "MULTIPLE", "episode_id": "SYNTHETIC",
