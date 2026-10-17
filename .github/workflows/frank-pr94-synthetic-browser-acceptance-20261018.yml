@@ -47,6 +47,11 @@ jobs:
           mkdir -p "$root/qa-runtime"
           cp crypto-300-profit-mission/local-agent/scripts/frank_pr94_synthetic_safari_qa.py "$root/qa-runtime/frank-pr94-safari.py"
           echo "FRANK_PR94_PRODUCT_TREE_VERIFIED=$EXPECTED_TREE"
+      - name: Native Safari.app auto-capture portable Python compile and selftest
+        run: |
+          set -euo pipefail
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/frank_pr94_native_safari_bundle.py
+          python -B crypto-300-profit-mission/local-agent/scripts/frank_pr94_native_safari_bundle.py --self-test
       - name: Install synthetic-only Python and WebKit dependencies
         run: |
           set -euo pipefail
