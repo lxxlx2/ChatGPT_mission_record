@@ -25,12 +25,12 @@
 
 ### Crypto 每日情报
 - **ACTIVE**
-- 当前任务采用 08:10 prebuild、09:10 primary、10:10/11:10 recovery，并保留其他 bounded collection 时点。
+- **规范中当前指定时点为 HH:20**：00/03/06/12/16/20 普通采集，08:20 预构建，09:20 主发送，10:20 和 11:20 仅在未交付时恢复（以 `crypto-daily/AUTOMATION_RUNTIME.md` 2026-10-10 覆盖规则为准；是否实际成功送达仍需 Gmail Sent 回读）。
 - Runtime authority: `crypto-daily/` 下最新 spec/runbook。
 
 ### 全项目空投与 TGE 监控
 - **ACTIVE**
-- 当前 schedule: 每小时 `:50` Asia/Bangkok。
+- **规范中当前时点：每小时 `:00` Asia/Bangkok**（2026-10-10 现行覆盖条款；旧 `:50`、`:14` 是历史值，参见 `airdrop-tge-monitor/AUTOMATION_RUNTIME.md`）。
 - Runtime authority: `airdrop-tge-monitor/AUTOMATION_RUNTIME.md` 及其最新 gate/state 文件。
 
 ### $300-3000 Crypto Mission
