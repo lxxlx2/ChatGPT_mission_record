@@ -64,3 +64,14 @@
 - 这是**合成SQLite端到端功能测试**及GitHub runner验收，尚无真实用户Mac上部署/实时连续场景/通知送达，新的查询器独立其他AI审查仍`NOT_DONE`。历史Stage30负资金结果和Stage162新增SETUP=0均没有被新功能改变。下一价值主线继续针对可执行性、信号时效、真正独立时间样本和风险；不得因这8个测试绿灯认定模型盈利。
 
 现有`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`与手动采集规则不变。
+
+## 六、机会清单Codex两个P2实际修复与复测（2026-10-18）
+
+前文第五节固定 `7cee9f13...`、CI `#39075820114` 为**历史旧版**：后续用户提供Codex独立审核报告，该固定SHA判定 `REQUEST_CHANGES`，真实SQLite反例发现已完成SETUP失效后仍显示SETUP，以及场所成功poll掩盖9分钟不更新的单币报价。本记录不改写历史审核结论。
+
+- **修复代码/新增复现测试固定SHA**：`d38999df6db63192ad3e3d11e793e2e6c4df05db`；仅查询器和配套测试两个文件修改，未修改上游Shadow/D2规则、Frank、Gmail、自动任务、现有Binance采集模式。
+- **P2-1**：用 `venue+symbol+INVALIDATED+first_seen_ms` 精确关联WATCH回合持久失效事件，覆盖完成SETUP但队列仍EVALUATED的正向展示；下一回合重新WATCH仍独立，原D2仅作旧证据保存。
+- **P2-2**：单币独立比对 `snapshots.observed_ms` 与最新场所poll时戳和查询钟；场所成功不代表每个币仍在当前结果中。单币距查询钟大于6分钟标`SYMBOL_QUOTE_STALE`，即使小于6分钟但缺席最新成功poll也标`SYMBOL_QUOTE_NOT_SEEN_IN_LATEST_POLL`，并输出age。场所源健康仍单独显示，不假定真实上市人口全覆盖。
+- **真实独立CI**：[fixed d389 test #39076479244](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39076479244)，`historical-baseline` 22/22步骤 SUCCESS，机会查询器**10/10**，既有Shadow **31/31**、D2 **12/12**，Python编译PASS。修复测试使用真实生产schema/函数与**合成**行情/盘口回调，未进行真实用户Mac或真实市场收益验收。
+- **审查状态**：旧SHA `7cee9f13...` = `CODEX_REQUEST_CHANGES_P2_2`；新SHA `d38999df...` = `AUTHOR_FIX_CI_PASS / INDEPENDENT_REREVIEW_PENDING`，不得宣称新SHA已独立APPROVE。完整旧审查、修复回执和定向复审提示见同目录 `monster-v4-opportunity-inspector-independent-review.md`。
+- **主线不得偏移**：此类真实性修复已完成研究级测试，本轮不再追逐无盈利增益的低价值边界；转回早期发现→可靠SETUP→实际盘口时效/成交约束→净收益/风险的价值验证。Stage163七日样本等待不阻断已授权的历史研究，`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
