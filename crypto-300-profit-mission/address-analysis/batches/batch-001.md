@@ -1,7 +1,7 @@
-# 地址分析 / Batch 001：oooooyoung 前 20 个 EVM 钱包 BSC 活跃度与首笔完整盈亏审计
+# 地址分析 / Batch 001：oooooyoung 前 20 个钱包的三链筛查与单币买卖闭环
 
 Date: 2026-10-18 Asia/Bangkok
-Status: `PARTIAL`; `BSC_ACTIVITY_SCREEN_COMPLETE` = 20/20; `ETH_BASE_NONCE_SCREEN_COMPLETE` = 20/20 each; `FULL_30D_AND_LIFETIME_PNL_COMPLETE` = **0/20 wallets**; `TOKEN_ROUNDTRIP_VERIFIED` = **1 closed token roundtrip**. No claim that all EVM chains were screened.
+Status: `PARTIAL`; `BSC_ACTIVITY_SCREEN_COMPLETE` = 20/20; `ETH_BASE_NONCE_SCREEN_COMPLETE` = 20/20 each; `FULL_30D_AND_LIFETIME_PNL_COMPLETE` = **0/20 wallets**; `TOKEN_ROUNDTRIP_VERIFIED` = **3 closed token roundtrips**. No claim that all EVM chains were screened.
 
 ## Frozen scope and reproducibility
 
@@ -36,7 +36,7 @@ Status: `PARTIAL`; `BSC_ACTIVITY_SCREEN_COMPLETE` = 20/20; `ETH_BASE_NONCE_SCREE
 | 19 | 敏锐 | [`0xe70866…57e7e6`](https://bscscan.com/address/0xe7086669436e90d6a2a0a6aeb23c71188057e7e6) | 38 | PNL_UNRESOLVED |
 | 20 | (无标签) | [`0x0209aa…44eb94`](https://bscscan.com/address/0x0209aa08dd3f5a1057cd66771a6009854144eb94) | 520 | PNL_UNRESOLVED |
 
-Summary: **13/20** with signed BSC transaction(s); **7/20** signed BSC zero; total **9282** signed BSC tx in this fixed BSC window. This census includes transfer, approval, router and other types. **Ethereum, Base and other EVM networks: NOT_CHECKED in this batch stage.** No return or win rate inferred from counts.
+Summary: **13/20** with signed BSC transaction(s); **7/20** signed BSC zero; total **9282** signed BSC tx in this fixed BSC window. This census includes transfer, approval, router and other types. **此处为最初 BSC-only 阶段的数据；Ethereum/Base 随后按下面的续查章节完成，其他 EVM 网络尚未检查。** No return or win rate inferred from counts.
 
 ## 2026-10-18 continuation: Ethereum + Base signed activity
 
@@ -83,13 +83,26 @@ Alchemy historical Ethereum and Base nonce pairs were collected for the same 20 
 - Chain tx links: [buy](https://bscscan.com/tx/0x38be951419849aaaaf6c6f15cf6cf6614d069095f548bcfbd1af36ebcf5d816a), [sell 1](https://bscscan.com/tx/0x0ed58497cf8a7b3b9a2bf3b34eca387fa506ca98a9c188092fa6893d614fcb92), [sell 2](https://bscscan.com/tx/0xa6397e9648e9b1ee602bcf51444f15a732cfd0d14d7cf8631527d93d26ea92cb), [sell 3](https://bscscan.com/tx/0xc8f8649a3cc02f1e5cf940f594f548083f1216c615b5c43ad4915cb8ec3d29b4), [sell 4](https://bscscan.com/tx/0xca66407e72e2983babf5ac8ace5f00d90dc26cb369dc5955dafa6e81a26d9e5a), [sell 5](https://bscscan.com/tx/0xb4b279e0cb7b8270ee5993ac2502a87ae69ac34e0795d6f2c1ba5825ee14c223).
 - **Critical scope:** the row 016 wallet's other **1,982 signed BSC transactions in the 30-day census** are not all reconciled by this one profitable roundtrip. Do **not** treat +$162.86 as row 016's total 30d, lifetime gain, or competition PnL. Other losses may outweigh it.
 
+## 新确认：#002 和 #004 sauce 完整单币交易盈利
+
+2026-08-20 两个钱包各通过 [路由合约](https://bscscan.com/address/0x1de460f363af910f51726def188f9004276bf4bc) 使用 BNB 分两笔买入 saucecoin / sauce (`0xd7ccd29b6fd1464edb425f24b01115556e737777`)，并在 2026-10-16 全部卖出。买入早于近30天窗口，卖出发生在窗口内。Alchemy 历史 `balanceOf` 在买前和卖后都为0，卖出区块有 ERC20 授权和交易各一笔，钱包 BNB 区块净变化已扣除同区块相关 Gas。
+
+| 钱包原始行 | 买入总成本（BNB） | 卖出净回款（BNB） | 单币净收益（BNB） | BNB 本位 ROI | 指示性 USD 净收益 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 002 | 0.054313975 | 0.211142080278687674 | **+0.156828105278687674** | +288.74% | **+$118.86** |
+| 004 | 0.054313975 | 0.208529773043203099 | **+0.154215798043203099** | +283.93% | **+$116.96** |
+
+美元参照为 Binance 官方 BNBUSDT 1m 历史收盘价：2026-08-20 12:29 UTC **642.07**，2026-10-16 12:58 UTC **728.09**。这是按历史时间估计的美元等价收益，不代表链上结算 USDT。详细交易哈希、审批哈希、token raw balance 和 Wei 净额详见 [结构化可复算证据](../evidence/batch-001-rows-002-004-sauce-roundtrips.json)。两个钱包在相近区块买入、同一区块退出，仅证明时间相似，无法证明同人控制。BNB 区块余额差可能包含非钱包签名的同区块意外入账；目前尚无完全独立的 BSC 内部转账追踪，单币结果仍需要独立审核。
+
+这两个结果与 #016 RTX5090 共 **3 个已核实正收益单币闭环**。没有完整确认的负收益交易，**不代表没有亏损**。#002 的 FTR 和其他代币、#004 的其他交易、以及所有钱包整体 30d 和长期收益继续保持 `PNL_UNRESOLVED`。
+
 ## Additional observed specific tokens, PnL unresolved
 
 | Row | Token (on BSC) | Why still unresolved |
 | ---: | --- | --- |
 | 001 / 003 / 006 | FTR `0xa6546faf3ea3e7f10dcb7dab6b30b9005248265e`, S3B `0x7138b48df7d98d7e3cc221bfe7192d0a178182d8` | Shared passive FTR incoming transaction hashes, tiny S3B transfers; wallet-signed transaction count low. No independently matched paid buy and realized exit for FTR. **Do not infer airdrop value or multi-wallet control** |
-| 002 | sauce `0xd7ccd29b6fd1464edb425f24b01115556e737777`, FTR `0xe895398d9814354ca30ef5b35b9b8e13e8416666` | Actual outbound tokens; incoming sauce not found inside the 30d sample; cost basis and router proceeds need full pre-window inventory reconstruction |
-| 004 | sauce `0xd7ccd29b6fd1464edb425f24b01115556e737777` | Successful outbound transfer, but original acquisition may predate window; full sell proceeds and purchase cost not closed |
+| 002 | FTR `0xe895398d9814354ca30ef5b35b9b8e13e8416666` | sauce 已在本次闭环核算；FTR 的具体买卖与其他资产成本仍未审完 |
+| 004 | sauce `0xd7ccd29b6fd1464edb425f24b01115556e737777` | sauce 单币已闭环；其他资产和全钱包长期收益未审 |
 | 007 | ETH `0x2170ed0880ac9a755fd29b2688956bd959f933f8` | Token outbound, unverified contract identity/quote receipts, unknown basis |
 | 015 | HODL `0xc242c264efe56109c495b308985f2694593477f8` | Two transfers out, no verified starting inventory cost |
 | 017 | RM `0x33fe24f4298a8659668e8d1f2044fd01e8a57777`, Mongo `0x88adc3093a2e7bce52e9ec53f3eaf1f72a727777` | Sampled ERC20 token outflows only, buy-side/inventory/other exchanges not audited |
@@ -99,7 +112,7 @@ Alchemy historical Ethereum and Base nonce pairs were collected for the same 20 
 
 ## What is complete, what remains
 
-- **Completed & durable:** BSC first-20 signed nonce census with immutable block bounds, fully closed row016 RTX5090 profit and loss-aware evidence record, issuer labels preserved untrusted.
-- **Incomplete:** 19 other wallets' complete 30-day per-token realized PnL; row016 other trades; all 20 wallets' *total lifetime* PnL; Ethereum/Base/other EVM recent nonce checks; unexpected token/stablecoin sales, passive token spam, cross-wallet movements and USD time matching. **No verified loss roundtrip within this specific first-batch audit yet; do not assert zero losses.**
-- **Next action:** complete the low-count wallets first (rows 001–004, 006–007, 015), then paginate high-frequency 014/016–020 with bounded per-token cost checks, and check Ethereum/Base activity for all including BSC-zero rows 005, 008–013. Keep `batch-001=PARTIAL` until gate closure. Then move batch 002 rows 021–040 while preserving deferred issues explicitly.
+- **Completed & durable:** BSC first-20 signed nonce census with immutable block bounds, fully closed row016 RTX5090 and rows002/004 sauce single-token profit and loss-aware evidence records, issuer labels preserved untrusted.
+- **Incomplete:** all 20 wallets' complete 30-day and lifetime aggregate realized PnL; row016 other trades and rows002/004 non-sauce trades; other EVM networks beyond BSC/Ethereum/Base; unexpected token/stablecoin sales, passive token spam, cross-wallet movements and USD time matching. **No verified loss roundtrip within this specific first-batch audit yet; do not assert zero losses.**
+- **Next action:** loss-aware per-token audit for rows001/003/006/007/015 and other assets in 002/004; HODL row015 has unresolved historical token inventory movements, must retain as PNL_UNRESOLVED. High-frequency 014/016–020 receive bounded pagination/deferred status, and other EVM chain coverage must be assessed; Ethereum/Base nonce scans for the batch are already complete. Keep `batch-001=PARTIAL` until gate closure. Then move batch 002 rows 021–040 while preserving deferred issues explicitly.
 - **No production authority:** No trades, alerts, live scanning, deployment, Gmail or automations. Existing Frank, Monster, Mission portfolio and price-monitor states untouched.

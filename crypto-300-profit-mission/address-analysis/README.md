@@ -1,7 +1,7 @@
 # 地址分析 / oooooyoung EVM 钱包按批盈利审计
 
 Updated: 2026-10-18 Asia/Bangkok
-Status: `RESEARCH_ONLY / FIRST_BATCH_BSC_ACTIVITY_SCREENED / PNL_INCOMPLETE`
+Status: `RESEARCH_ONLY / BATCH_001_002_THREE_CHAIN_SCREENED / WHOLE_WALLET_PNL_INCOMPLETE`
 Scope: independent Mission research module, no connection to the existing PR #40 BSC address modeling or live Frank/Monster signals.
 
 ## Objective and fixed universe
@@ -26,7 +26,9 @@ Coverage status codes: `NOT_STARTED`, `BSC_SIGNED_ACTIVE`, `BSC_SIGNED_ZERO`, `T
 ## Progress
 
 - [state/progress.md](state/progress.md): single resumable queue pointer, per batch completion truth.
-- [batches/batch-001.md](batches/batch-001.md): first 20 source addresses, fixed-height signed activity census on BSC, Ethereum and Base, plus one audited token roundtrip; other EVM and full-wallet PnL pending. Its status is **PARTIAL** until all multi-chain coverage and cost-basis checks pass.
+- [batches/batch-001.md](batches/batch-001.md): first 20 source addresses, BSC/Ethereum/Base screening and 3 closed profitable single-token roundtrips; whole-wallet PnL PARTIAL.
+- [batches/batch-002.md](batches/batch-002.md): next 20 addresses, three-chain nonce screening complete; swap/PnL NOT_STARTED. [Fixed-height JSON](evidence/batch-002-three-chain-30d-nonce-screen.json).
+- [Rows 002/004 sauce closed-position accounting](evidence/batch-001-rows-002-004-sauce-roundtrips.json): costs, proceeds, timestamps and limitations.
 - Rows 21–449 retain `NOT_STARTED`, including wallets whose ad-hoc checks occurred in old chats; prior unstructured examples do not count as audited batch results until independently re-entered.
 
 ## Breadth-first development cadence and user outcome

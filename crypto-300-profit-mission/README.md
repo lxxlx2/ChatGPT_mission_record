@@ -57,9 +57,9 @@ Current capital / holdings:
 
 ## 地址分析 / 449 个 EVM 聪明钱钱包（研究阶段）
 
-新建独立、只读研究模块：[地址分析 README](address-analysis/README.md)；[449 个源地址固定快照](address-analysis/sources/oooooyoung-evm-449-source-snapshot.json)；[23 批研究队列](address-analysis/state/progress.md)；[第一批 20 个钱包报告](address-analysis/batches/batch-001.md)。
+独立只读模块：[研究规则](address-analysis/README.md)、[原始449地址快照](address-analysis/sources/oooooyoung-evm-449-source-snapshot.json)、[进度队列](address-analysis/state/progress.md)。
 
-2026-10-18 状态：**Batch 001 BSC / Ethereum / Base 三链各完成 20/20 历史区块 nonce 筛查**；三链分别 13/13/10 个有签名活动，三链并集 15 个；[原始核查证据](address-analysis/evidence/batch-001-three-chain-30d-nonce-screen.json)。其他 EVM 网络仍需检查；一笔 RTX5090 买入及 5 笔卖出已完成链上数量闭合及成交价美元换算（+0.226099333116 BNB，约 +$162.86），**仅是一个币种的一轮交易**。其余钱包及跨链 / 长期盈亏仍未全部核算；**Batch 001=PARTIAL**，不产生完整钱包盈利排名或可跟单信号。无监控、交易、部署或 Gmail 变更。
+2026-10-18 状态：Batch001（001–020）及 Batch002（021–040）已完成 **BSC、Ethereum、Base 各链固定区块 nonce 核查 40/449**。Batch001 三链并集有签名 15/20，Batch002 为 13/20；这些只证明签名活动，不代表实际获利。Batch001 核实 3 个正收益单币闭环：#016 RTX5090 +0.226099333116 BNB，#002 sauce +0.156828105278687674 BNB，#004 sauce +0.154215798043203099 BNB。**没有完成核算的亏损币种不能视为不存在，整体30天和长期钱包PnL均未完成。** Batch002 仅完成三链筛查，交易审计未开始。参见 [Batch001](address-analysis/batches/batch-001.md)、[Batch002](address-analysis/batches/batch-002.md)。PR #97 Draft、`RESEARCH_ONLY`、`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，不修改 Frank/Monster/BSC建模及 Mission 资产。
 
 ## Canonical module files
 

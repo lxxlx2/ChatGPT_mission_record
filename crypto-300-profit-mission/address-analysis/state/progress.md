@@ -9,16 +9,17 @@ Source manifest: [449 addresses](../sources/oooooyoung-evm-449-source-snapshot.j
 - Total **449** distinct EVM addresses, fixed order; batch size 20; **23** batches.
 - **Current in-progress batch = 001** (source rows **001–020**). The BNB Chain 30-day signed-activity census for these 20 has been finished, with exact fixed height window `0x74cf256` → `0x7a4ca36`. **13/20** had wallet-signed BSC transactions, **7/20** had none. This alone does not prove who bought/sold or which chains are inactive.
 - **2026-10-18 three-chain screening extension:** [machine-readable nonce evidence](../evidence/batch-001-three-chain-30d-nonce-screen.json) covers Ethereum 20/20 (13 active, 1,331 signed), Base 20/20 (10 active, 1,515 signed), alongside BSC 20/20. Three-network union 15/20 signed; rows 008/009/010/011/013 three-network signed-zero. Other EVM chain coverage and all-wallet PnL are **incomplete**.
-- **Verified realized token roundtrip = 1:** row016 RTX5090 closed position **+0.226099333116 BNB** (~**+$162.86** using contemporary Binance BNBUSDT candles); see [batch-001](../batches/batch-001.md) and [structured evidence](../evidence/batch-001-row-016-rtx5090-roundtrip.json). It is one trade, **not** the wallet's aggregate profit.
+- **Verified realized token roundtrip = 3:** row016 RTX5090 closed position **+0.226099333116 BNB** (~**+$162.86** using contemporary Binance BNBUSDT candles); see [batch-001](../batches/batch-001.md) and [structured evidence](../evidence/batch-001-row-016-rtx5090-roundtrip.json). This remains a single-token roundtrip, not the entire wallet PnL. Rows002/004 sauce additionally closed with **+0.156828105278687674 BNB** (about +$118.86) and **+0.154215798043203099 BNB** (about +$116.96). [Exact sauce evidence](../evidence/batch-001-rows-002-004-sauce-roundtrips.json). No confirmed negative token roundtrip yet, but losses cannot be assumed zero.
+- **2026-10-18 Batch 002 screen:** [three-chain raw nonce evidence](../evidence/batch-002-three-chain-30d-nonce-screen.json) for rows021–040, BSC 12/20 with 18,766 signed transactions, Ethereum 12/20 with 2,884, Base 12/20 with 3,411; union 13/20, three-chain signed-zero 7/20. Batch 002 trade and PnL audit NOT_STARTED.
 - **Completed full-wallet 30-day multi-EVM PnL = 0/449**; **completed full-wallet lifetime PnL = 0/449**. No ranking / success claim from incomplete source.
-- **Next available work:** Batch 001 real swap/cost reconstruction for low-count rows 001–004 / 006–007 / 015 across the relevant active chains. For high-frequency 014 / 016–020 bound each research round and record exact unresolved transaction ranges, trade basis and re-entry condition in a `DEFERRED` queue before moving in source order. Polygon/Arbitrum/other EVM chain discovery pending; do not mark zero on three chains as globally inactive. No signed nonce is a confirmed profitable trade.
+- **Next available work:** audit still-unresolved profitable and losing tokens in low-transaction rows001/003/006/007/015 and remaining positions of rows002/004, then proceed in source order through Batch002 trade ledgers. High-frequency rows014/016–020 and 022/027/029/038 must have bounded pagination and explicit `DEFERRED` reason/cursor/re-entry condition, not block completion of later source rows. Polygon/Arbitrum/other EVM chain discovery pending. Signed nonces are not PnL.
 
 ## Batch registry
 
 | Batch | Source rows | Screening | PnL / completion |
 | --- | --- | --- | --- |
 | 001 | 001–020 | BSC + Ethereum + Base each 20/20; other EVM pending | PARTIAL: 1 closed token roundtrip, 20 wallet-level PnL unresolved |
-| 002 | 021–040 | NOT_STARTED | NOT_STARTED |
+| 002 | 021–040 | BSC + Ethereum + Base each 20/20; other EVM pending | PARTIAL: three-chain screen complete, trading/PnL NOT_STARTED |
 | 003 | 041–060 | NOT_STARTED | NOT_STARTED |
 | 004 | 061–080 | NOT_STARTED | NOT_STARTED |
 | 005 | 081–100 | NOT_STARTED | NOT_STARTED |
