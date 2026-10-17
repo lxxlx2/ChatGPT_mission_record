@@ -25,6 +25,7 @@ Current mapped material:
 
 - TapeOut / BEM chain research: `research/projects/tapeout-bem/tapeout-bem-bsc-xlayer-due-diligence.md` (BSC, X Layer, mining circuit NFT economics and risks).
 
+- ASTER 2025 pre-TGE historical as-of backtest vs Predict.fun: `research/projects/predict-fun/predict-fun-aster-2025-ex-ante-historical-pm-backtest.md` (2025-09-16 information freeze, post-TGE valuation outcome, missing pre-TGE PM odds; no look-ahead).
 - Predict.fun pre-TGE investment and PP/Polymarket/Aspecta FDV due diligence: `research/projects/predict-fun/predict-fun-pre-tge-pm-fdv-due-diligence.md` (Thai geo restriction, no tokenomics or claim confirmed, research only).
 
 Operational monitoring thresholds remain in the Mission/TGE task roots.
