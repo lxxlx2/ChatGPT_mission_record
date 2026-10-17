@@ -9,6 +9,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -84,18 +85,50 @@ def poll(expr, predicate=lambda x: x == "true", seconds=18):
         time.sleep(0.35)
     raise RuntimeError("NATIVE_SAFARI_DOM_TIMEOUT: " + latest[:300])
 
+def safari_window_rect(value):
+    """AppleScript Safari window bounds; no Screen Recording window inventory."""
+    numbers = [int(x) for x in re.findall(r"-?\\d+", value)]
+    if len(numbers) != 4:
+        raise RuntimeError("NATIVE_SAFARI_WINDOW_BOUNDS_UNAVAILABLE:" + value[:150])
+    left, top, right, bottom = numbers
+    width, height = right - left, bottom - top
+    if not (500 <= width <= 12000 and 350 <= height <= 12000):
+        raise RuntimeError("NATIVE_SAFARI_WINDOW_BOUNDS_INVALID:" + value[:150])
+    return ",".join(str(v) for v in (left, top, width, height))
+
+
 def screenshot(binary, path):
+    # Prefer exact window capture; some macOS permissions/Spaces omit the
+    # window from CoreGraphics' on-screen-only inventory even when Safari JS
+    # and a document are valid. Never fall back to a whole-desktop screenshot.
     found = subprocess.run([str(binary)], capture_output=True, text=True, timeout=15)
-    if found.returncode or not found.stdout.strip().isdigit():
-        raise RuntimeError("NATIVE_SAFARI_WINDOW_ID_UNAVAILABLE: " + found.stderr.strip()[:300])
-    win_id = found.stdout.strip()
-    result = subprocess.run(["/usr/sbin/screencapture", "-x", "-l", win_id, str(path)],
+    window_id = found.stdout.strip() if found.returncode == 0 else ""
+    if window_id.isdigit() and int(window_id) > 0:
+        capture_method = "coregraphics_window_id"
+        target = ["-l", window_id]
+        bounds = None
+    else:
+        capture_method = "safari_applescript_window_bounds"
+        # Bring the target browser document to front before an OS rectangle
+        # capture. This is not a WebKit screenshot and stays within the
+        # Safari document window rectangle.
+        bounds = osa(['tell application "Safari"',
+                      'activate',
+                      'get bounds of front window',
+                      'end tell'])
+        target = ["-R", safari_window_rect(bounds)]
+        window_id = None
+    result = subprocess.run(["/usr/sbin/screencapture", "-x", *target, str(path)],
                             capture_output=True, text=True, timeout=35)
     if result.returncode or not path.is_file() or path.stat().st_size < 1500:
-        raise RuntimeError("SAFARI_SCREEN_RECORDING_PERMISSION_REQUIRED: " + result.stderr.strip()[:300])
+        raise RuntimeError("SAFARI_SCREEN_CAPTURE_FAILED_OR_PERMISSION_REQUIRED:"
+                           + result.stderr.strip()[:300])
     if path.read_bytes()[:8] != b"\x89PNG\r\n\x1a\n":
         raise RuntimeError("NATIVE_SAFARI_SCREENSHOT_INVALID")
-    return {"file":path.name, "window_id":int(win_id), "sha256":sha(path),
+    return {"file":path.name, "capture_method":capture_method,
+            "window_id":int(window_id) if window_id else None,
+            "safari_window_bounds":bounds,
+            "sha256":sha(path),
             "bytes":path.stat().st_size, "url":js_eval("document.location.href")}
 
 def validate_qa_root(root):
@@ -193,6 +226,15 @@ def main():
     if args.self_test:
         assert apple_escape('abc"\\') == 'abc\\"\\\\'
         assert urlsplit("http://127.0.0.1:1234/#signals").hostname=="127.0.0.1"
+        assert safari_window_rect("100, 200, 1100, 950") == "100,200,1000,750"
+        assert safari_window_rect("{-1600, 40, -100, 940}") == "-1600,40,1500,900"
+        for invalid in ("", "100, 200, 300", "100, 200, 150, 220"):
+            try:
+                safari_window_rect(invalid)
+            except RuntimeError:
+                pass
+            else:
+                raise AssertionError("NATIVE_SAFARI_BOUNDS_FAIL_CLOSED")
         print("FRANK_PR94_NATIVE_SAFARI_QA_SCRIPT_SELFTEST_PASS")
         return
     if sys.platform != "darwin":
