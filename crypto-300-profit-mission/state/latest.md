@@ -1,6 +1,6 @@
 # Mission Current Operational and Asset State
 
-Updated: 2026-10-15 Asia/Bangkok (17:46–17:50 screenshots and direct-chain portfolio refresh; operational state unchanged)
+Updated: 2026-10-17 Asia/Bangkok (17:27–17:30 screenshots, finalized portfolio refresh, SurfBoard transfer; operational state unchanged)
 Timezone: Asia/Bangkok
 Policy: `../MISSION_SPEC.md` | Latest assets: `../portfolio/current.md` | Mission PnL: `../performance/current.md`
 
@@ -24,7 +24,18 @@ Policy: `../MISSION_SPEC.md` | Latest assets: `../portfolio/current.md` | Missio
 - Binance flexible USDC is earmarked investment capital. Entire Bybit account is reserved for personal expenses/rent and excluded.
 - The original $300 cash plus six historical Credits NFTs is the Mission starting set. Later deposits and wallet movements must not be counted as Mission PnL.
 
-## Current dated investment asset reference — 2026-10-15 ~17:46–17:50 Bangkok
+## Current dated investment asset reference — 2026-10-17 ~17:27–17:30 Bangkok
+
+- **Primary evidence:** `../portfolio/current.md` new `Current user screenshot and finalized wallet snapshot — 2026-10-17` section. User Binance 17:28 and Bybit 17:27 screenshots; Alchemy Solana finalized slots **458003718/458003719**, USD USDC **1.00126** at 10:27:02Z and SOL **104.71** at 10:29:31Z. Separate asynchronous source clocks, not a single audited NAV.
+- **Binance, investable:** flexible Earn **816.18870429 USDC** (screenshot total ~817.24 USDT, independently repriced **~$817.22**). Cumulative Earn **1.52670094 USDC already included**, variable APR up to 4.05% displayed. Change **+40.17782741 USDC** vs Oct 15 screenshot, no inferred source/PnL.
+- **Direct-chain Solana:** canonical wallet **607.524474 USDC** (ref **~$608.29**), **0.0279625 SOL** (ref **~$2.93**), **0 GANG**. Since Oct 15 +105.894102 USDC, +0.015057358 SOL. Token-2022 four one-unit mints remain UNPRICED. No speculative per-wallet gains attributed.
+- **SurfBoard #5396 EXITED canonical wallet:** 2026-10-17 03:34:38 Bangkok successful Robinhood Chain ERC721 transfer to `0xd90825b15f70b64f81bab600f7f56fe3f86747ce` via Seaport `0xb222259e480d4b9264af49cbbcd9709b7296d0ee35aec35b264fff35fdde91e9`; direct ownerOf and owner list confirm canonical wallet no longer holds NFT. Seaport OrderFulfilled consideration gross **0.04 ETH**, **0.0376 ETH to canonical seller**; 05:01:50 Bangkok canonical wallet subsequently sent **0.03783 ETH** in separate successful `0xb02baa0892b9f24f0e5dda49ed76c8d48e8cbb027b447b2a8a87129c733b1be2` to `0x4cd00e387622c35bddb9b4c962c136462338bc31`. Destination and sale cashflow end disposition **UNVERIFIED**. EVM remaining Robinhood native **0.000020785408780798 ETH** (<$1), excluded. Older Oct 15 NFT ownership is historical, no current NFT position or duplicate ETH sale proceeds in NAV; true purchase/subscription cost attribution unresolved.
+- **Other EVM:** latest native balances queried on 13 networks; all individually < $1 by Oct 17 Alchemy prices. ERC20 owner sweeps incomplete/overflow on busy networks and unpriced unknowns not assigned fake $0. Current Sui RPC **UNAVAILABLE**, previously confirmed zero is historical-only.
+- **Assets reference:** Binance + direct Solana only **~$1,428.44** at Oct 17 pricing. Conditional extension using *unverified Oct 12* OKX screenshot ETH 0.002403 and TRX 3.3847 repriced on Oct 17 **~$1,435.42**, NOT current confirmed NAV. Prior Oct 15 ~$1,280.31; arithmetic reference change **~+$148.12**, NOT trading PnL or Mission starting $300 performance. No wallet proceeds double counted.
+- **Bybit wholly excluded (household/rent):** screenshot **493.683808 USDC**, Earn **473.286900**, Funding **20.310452**, Unified **0.086456**; UI dollar estimate **~$494.32**, outside investment totals. Delta vs Oct 15 **+19.258587 USDC**, attribution UNKNOWN.
+- **Policies unchanged:** each independently priced position <$1 excluded, unpriced positions unresolved. `MISSION_PNL_UNRESOLVED`, historical GANG realized loss **−96.210562 USDC before SOL gas**, `PRODUCTION_TRADING=NO_GO`; no transactions, signing, monitoring, Gmail, Mac restart or automations performed by research.
+
+## Historical investment asset reference — 2026-10-15 ~17:46–17:50 Bangkok
 
 - **Primary source / detailed ledger:** [portfolio/current.md](../portfolio/current.md) section `Newest user screenshot and live wallet balance snapshot — 2026-10-15`. Exchange quantities observed in user screenshots **17:46/17:48 Bangkok**; Solana direct finalized RPC slots **457210185 / 457210186**; Alchemy reference asset prices at **10:49:40–10:50:02 UTC**. No full live CEX authenticated read and no complete multi-chain source-time synchronization.
 - **Binance investment USDC Earn:** **776.01087688 USDC** by screenshot (17:46), 2.09% displayed real-time APR, 2% tier annualized yield; cumulative rewards **1.34887353 USDC** already included, never added again. Alchemy USDC/USD 1.00106 gives independently marked **~$776.83**. Previous Binance screenshot quantity 745.85545285; change **+30.15542403 USDC** with cause unresolved.
