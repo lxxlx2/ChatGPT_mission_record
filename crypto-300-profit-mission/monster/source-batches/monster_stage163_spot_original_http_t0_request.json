@@ -1,0 +1,13 @@
+{
+  "schema": "MONSTER163_SPOT_OFFICIAL_ORIGINAL_HTTP_T0_USER_CHAT_ONESHOT_V1",
+  "source_base": "https://data-api.binance.vision",
+  "raw_http_required": true,
+  "source_only": true,
+  "capture_date": "2026-10-18",
+  "write_production_queue": false,
+  "run_signal_model": false,
+  "send_notifications": false,
+  "deploy": false,
+  "trade": false,
+  "scheduled": false
+}
