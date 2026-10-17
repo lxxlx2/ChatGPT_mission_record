@@ -141,7 +141,7 @@ def run(root, launcher, helper, folder, images, findings):
             m=json.dumps(mint)
             js_eval('document.querySelector("#cluster-mint").value='+m+
                     ';document.querySelector("#cluster-submit").click();"submitted"')
-            poll('(()=>{const x=document.querySelector("#cluster-result");return !!x&&!x.hidden&&x.innerText.length>120})()')
+            poll('(()=>{const x=document.querySelector("#cluster-result");return !!x&&!x.hidden&&x.innerText.length>120&&x.innerText.includes('+m+')})()')
             text=js_eval('document.querySelector("#cluster-result").innerText')
             if mint not in text:
                 raise RuntimeError("NATIVE_SAFARI_CA_NOT_EXACT:"+str(i))
