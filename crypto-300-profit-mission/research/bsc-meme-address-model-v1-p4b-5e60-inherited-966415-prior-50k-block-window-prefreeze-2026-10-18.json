@@ -1,0 +1,64 @@
+{
+  "schema": "BSC_P4B_5E60_2026_INHERITED_966415_DRAGON_PREVIOUS_50000_BLOCKS_PRECOMMIT_V1",
+  "date": "2026-10-18",
+  "source_opening_precommit": "bsc-meme-address-model-v1-p4b-5e60-inventory-open-start-33in17out-prefreeze-2026-10-18.json",
+  "source_real_opening_readback": "bsc-meme-address-model-v1-p4b-5e60-real-opening-966415-and-33in17out-inventory-2026-10-18.json",
+  "fixed_owner": "0x5e600e259e3cff0757e3736223685958665866c6",
+  "fixed_token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "old_opening_block": 85899999,
+  "old_opening_raw": "966415729394361448864776",
+  "new_limited_previous_window": {
+    "from": 85850000,
+    "to": 85899999
+  },
+  "provider": "Alchemy free BNB",
+  "calls": [
+    {
+      "id": "BEFORE_EARLIER_WINDOW_HISTORIC_BALANCE",
+      "method": "eth_call",
+      "contract": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "selector": "0x70a08231",
+      "wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "block": 85849999
+    },
+    {
+      "id": "LAST_10_DRAGON_RECEIVED_IN_PREVIOUS_WINDOW",
+      "method": "getAssetTransfers",
+      "toAddress": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "fromBlock": 85850000,
+      "toBlock": 85899999,
+      "category": [
+        "erc20"
+      ],
+      "contractAddresses": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444"
+      ],
+      "order": "desc",
+      "maxCount": "0xa"
+    },
+    {
+      "id": "LAST_10_DRAGON_SENT_IN_PREVIOUS_WINDOW",
+      "method": "getAssetTransfers",
+      "fromAddress": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "fromBlock": 85850000,
+      "toBlock": 85899999,
+      "category": [
+        "erc20"
+      ],
+      "contractAddresses": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444"
+      ],
+      "order": "desc",
+      "maxCount": "0xa"
+    }
+  ],
+  "max_calls": 3,
+  "retries": 0,
+  "no_new_wallet_selection": true,
+  "scope_stop_rule": "If either result has pageKey, mark cost origin still censored. If earlier opening balance still >0, original basis is still inherited. No further queries on this fixed batch.",
+  "source_grade": "REAL_TOOL_READBACK_NOT_FULL_RAW_WIRE",
+  "P4_B": "PARTIAL",
+  "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+  "P5": "BLOCKED",
+  "PRODUCTION": "NO_GO"
+}
