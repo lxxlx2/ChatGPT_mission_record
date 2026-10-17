@@ -25,6 +25,7 @@ from .db import open_control_ro
 from .delivery_review import summarize_manual_reviews
 from .frank import FrankReader
 from .follow_view import partition_candidates
+from .policy import load_policy
 from .payment_evidence import latest_buy_payment_evidence
 from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
