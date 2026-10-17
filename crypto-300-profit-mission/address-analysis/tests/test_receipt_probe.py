@@ -64,6 +64,36 @@ class TestReceiptProbe(unittest.TestCase):
   with self.assertRaises(ValueError):normalized_wallet(src,2)
  def test_receipt_effective_gas_price_precedence(self):
   tx,r=sample();tx['gasPrice']='0x40';r['effectiveGasPrice']='0x81';self.assertEqual(inspect_receipt(tx,r,W,'bnb-mainnet')['gas_cost_native_wei'],str(16*129))
+ def test_base_l1_fee_included_in_total(self):
+  tx,r=sample();tx['chainId']='0x2105';r['l1Fee']='0xc0d600c8';r['gasUsed']='0xf2cf';r['effectiveGasPrice']='0x5dd770'
+  v=inspect_receipt(tx,r,W,'base-mainnet')
+  self.assertEqual(v['gas_l2_wei'],'382277850000')
+  self.assertEqual(v['gas_l1_data_wei'],'3235250376')
+  self.assertEqual(v['gas_cost_native_wei'],'385513100376')
+ def test_base_missing_l1_fee_blocks(self):
+  tx,r=sample();tx['chainId']='0x2105'
+  self.assertEqual(inspect_receipt(tx,r,W,'base-mainnet')['status'],'PNL_UNRESOLVED')
+ def test_base_invalid_l1_fee_blocks(self):
+  tx,r=sample();tx['chainId']='0x2105';r['l1Fee']='unknown'
+  self.assertEqual(inspect_receipt(tx,r,W,'base-mainnet')['status'],'PNL_UNRESOLVED')
+ def test_base_zero_l1_fee_accepted(self):
+  tx,r=sample();tx['chainId']='0x2105';r['l1Fee']='0x0'
+  self.assertEqual(inspect_receipt(tx,r,W,'base-mainnet')['gas_cost_native_wei'],'2048')
+ def test_aave_base_supply_not_swap(self):
+  tx,r=sample();tx['chainId']='0x2105';tx['to']=r['to']='0xa238dd80c259a72e81d7e4664a9801593f98d1c5';tx['input']='0x617ba037';r['l1Fee']='0x123'
+  v=inspect_receipt(tx,r,W,'base-mainnet')
+  self.assertEqual(v['classification'],'LENDING_SUPPLY_NOT_SWAP')
+  self.assertEqual(v['trade_execution'],'UNRESOLVED')
+ def test_aave_base_withdraw_not_swap(self):
+  tx,r=sample();tx['chainId']='0x2105';tx['to']=r['to']='0xa238dd80c259a72e81d7e4664a9801593f98d1c5';tx['input']='0x69328dec';r['l1Fee']='0x123'
+  self.assertEqual(inspect_receipt(tx,r,W,'base-mainnet')['classification'],'LENDING_WITHDRAW_NOT_SWAP')
+ def test_aave_selector_on_other_contract_not_assumed_lending(self):
+  tx,r=sample();tx['chainId']='0x2105';tx['input']='0x617ba037';r['l1Fee']='0x123'
+  self.assertEqual(inspect_receipt(tx,r,W,'base-mainnet')['classification'],'CONTRACT_EXECUTION_UNRESOLVED')
+ def test_bsc_fee_unchanged_when_l1_field_absent(self):
+  tx,r=sample();v=inspect_receipt(tx,r,W,'bnb-mainnet')
+  self.assertEqual(v['gas_cost_native_wei'],v['gas_l2_wei'])
+  self.assertEqual(v['gas_l1_data_wei'],'0')
  def test_source_duplicate_fails(self):
   src={'source_blob_sha':'954f3aba66be21911dd627fa40dd3dd0a9fd1d26','total':449,'items':[{'index':i,'batch':(i-1)//20+1,'address':'0x'+format(i,'040x')} for i in range(1,450)]}
   src['items'][1]['address']=src['items'][0]['address']

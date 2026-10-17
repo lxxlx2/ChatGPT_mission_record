@@ -88,6 +88,14 @@ The [receipt evidence extractor](tools/receipt_probe.py) is the **first actual R
 
 This development gate is more important than additional signed-nonce screening. Batch007 stays queued as `NOT_STARTED`; all full-wallet PnL remains unresolved.
 
+
+## Base transaction fee correction and lending classification
+
+- Fixed [receipt facts parser](tools/receipt_probe.py): Base total transaction fee includes **L2 execution gas plus receipt L1 data fee**. Missing or invalid Base `l1Fee` yields `PNL_UNRESOLVED`, not an understated cost. BSC/Ethereum fee handling is unchanged.
+- The existing row045 Base USDC-transfer historical audit recorded only L2 gas (382277850000 wei). [Correction](evidence/base-l1-fee-and-lending-facts-20261018.json): L1 fee 3235250376 wei, combined 385513100376 wei ETH. Historical source remains immutable.
+- Added [two complete Base row051 lending receipts](fixtures/base-row051-aave-supply-withdraw-receipts.json) and [independently checked token/gas evidence](evidence/base-l1-fee-and-lending-facts-20261018.json). Supply and withdraw on a specific Aave Base pool are classified as **lending, not swaps**; observed underlying USDC net -1 raw unit across these two calls is **not** a verified token loss.
+- [25 isolated Python tests pass](tests/test_receipt_probe.py); see [QA limitations](state/base-fee-and-lending-qa-20261018.md). The historical sauce swap receipts remain truncated and independent native cashflow tracing remains unresolved. No new trade PnL or whole-wallet completion claimed.
+
 ## Boundaries
 
 No wallet signing, swaps, follow trading, live orders, Gmail, LaunchAgent, dashboards or automation. `PRODUCTION_TRADING=NO_GO`, Frank and Monster unchanged. Original Mission PnL and wallet snapshots are separate from this third-party address intelligence research. Keep every failed/negative result, no cherry-picking and no made-up wallet profits. Research is observation-only.

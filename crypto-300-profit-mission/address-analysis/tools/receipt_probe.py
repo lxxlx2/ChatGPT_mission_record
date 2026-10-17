@@ -10,6 +10,7 @@ from urllib.request import Request, urlopen
 
 SOURCE = '954f3aba66be21911dd627fa40dd3dd0a9fd1d26'
 CHAINS = {'bnb-mainnet': 56, 'eth-mainnet': 1, 'base-mainnet': 8453}
+AAVE_BASE_POOL = '0xa238dd80c259a72e81d7e4664a9801593f98d1c5'
 TRANSFER = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
 APPROVAL = '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925'
 ADDR = re.compile(r'0x[a-fA-F0-9]{40}\Z')
@@ -64,6 +65,11 @@ def inspect_receipt(tx, receipt, wallet, network):
         price = hex_int(receipt.get('effectiveGasPrice', tx.get('gasPrice')), 'gas price')
         if gas_used == 0 or price == 0:
             raise ValueError('incomplete gas evidence')
+        # Base OP Stack charges L1 data fees in addition to L2 execution gas.
+        # Fail closed if Base's L1 fee is missing; do not understate costs.
+        l2_fee = gas_used * price
+        l1_fee = hex_int(receipt['l1Fee'], 'Base L1 data fee') if network == 'base-mainnet' else 0
+        total_fee = l2_fee + l1_fee
         native_value = hex_int(tx['value'], 'transaction value')
         selector = tx.get('input', '')[:10].lower()
         if not isinstance(tx.get('input'), str) or not tx['input'].startswith('0x'):
@@ -95,7 +101,11 @@ def inspect_receipt(tx, receipt, wallet, network):
             if to == wallet: balances[contract]['incoming'] += qty
         net_flows = {token:{'incoming_raw':str(x['incoming']),'outgoing_raw':str(x['outgoing']),
                             'net_raw':str(x['incoming']-x['outgoing'])} for token,x in balances.items()}
-        if selector == '0x095ea7b3':
+        if network == 'base-mainnet' and tx_to == AAVE_BASE_POOL and selector == '0x617ba037':
+            classification = 'LENDING_SUPPLY_NOT_SWAP'
+        elif network == 'base-mainnet' and tx_to == AAVE_BASE_POOL and selector == '0x69328dec':
+            classification = 'LENDING_WITHDRAW_NOT_SWAP'
+        elif selector == '0x095ea7b3':
             classification = 'APPROVAL_NOT_TRADE'
         elif selector == '0xa9059cbb':
             classification = 'ERC20_TRANSFER_NOT_TRADE_PROVEN'
@@ -106,7 +116,8 @@ def inspect_receipt(tx, receipt, wallet, network):
         return {'schema':'mission-receipt-facts-v1','status':'RECEIPT_FACTS_ONLY',
                 'network':network,'tx_hash':h,'sender':wallet,'block':hex_int(tx['blockNumber'], 'block'),
                 'method':selector,'classification':classification,'native_sent_wei':str(native_value),
-                'gas_cost_native_wei':str(gas_used*price),'gas_used':str(gas_used),
+                'gas_cost_native_wei':str(total_fee),'gas_l2_wei':str(l2_fee),
+                'gas_l1_data_wei':str(l1_fee),'gas_fee_complete':True,'gas_used':str(gas_used),
                 'effective_gas_price_wei':str(price),'erc20_flows':net_flows,
                 'erc20_transfers':transfers,'approval_log_count':approvals,
                 'native_incoming_wei':'UNRESOLVED_INTERNAL_TRACE',
