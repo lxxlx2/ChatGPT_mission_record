@@ -36,6 +36,20 @@ class Dragon2026CausalScopeTests(unittest.TestCase):
         self.assertTrue(all(x["actual_follower_ROI"]=="UNRESOLVED" for x in a["rows"]))
         self.assertEqual(a["verified_causal_external_follower_entries"],0)
         self.assertEqual(a["P5"],"BLOCKED")
+        self.assertEqual(a["original_early_DDAC_exited_at_block"],83635800)
+        self.assertEqual(a["first_observed_actual_D503_buy_after_owner_exit_blocks"],200)
+        self.assertEqual(a["original_DDAC_native_round_delta_wei"],"-92169615514614272")
+        self.assertFalse(a["owner_still_holding_when_D503_first_bought"])
+
+    def test_original_smart_wallet_exit_cannot_be_erased(self):
+        self.should_fail(lambda d:d["owner_exit"]["round"].update(
+          exit_block=83636000),
+          "DDAC_ORIGINAL_SIGNED_EARLY_OWNER_EXIT_AND_LOSS")
+
+    def test_original_smart_wallet_loss_cannot_be_promoted_to_profit(self):
+        self.should_fail(lambda d:d["owner_exit"]["round"].update(
+          native_closed_owner_round_net_wei="92169615514614272"),
+          "DDAC_ORIGINAL_SIGNED_EARLY_OWNER_EXIT_AND_LOSS")
 
     def test_wrong_actual_first_signed_buy(self):
         self.should_fail(lambda d:d["probe"]["results"][0].update(
