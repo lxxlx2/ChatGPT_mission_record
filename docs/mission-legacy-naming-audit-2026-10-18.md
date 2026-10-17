@@ -44,7 +44,7 @@ Separately inspected existing substantive human-authored files in the 16 `resear
 - **Comprehensive legacy path renaming not executed.** Uppercase stable files should be changed only after dependency scan, explicit migration plan, preserved compatibility link and actual runtime acceptance when applicable.
 - **No live scheduling/health validation performed.** Git documentation now points to real runtime authority; this change itself is not proof a monitor or email runs correctly.
 - **Not a historical PnL backfill.** Current portfolio and realized gains/losses retain their existing independent canonical records.
-- The 449-wallet research PR is still **DRAFT / UNMERGED**. Batch 001 records BSC 20/20 signed-transaction screening and one token roundtrip; wallet-level month/lifetime profits are unresolved.
+- The 449-wallet research PR is still **DRAFT / UNMERGED**. Batch 001 records BSC + Ethereum + Base each 20/20 signed-transaction screens (15/20 distinct addresses signed across these three networks) and one token roundtrip; wallet-level month/lifetime profits remain unresolved.
 
 ## Review / merge gates
 
