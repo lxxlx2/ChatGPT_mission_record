@@ -2,10 +2,11 @@
   "schema": "BSC_P4B_FLAP_FIRST_SIGNED_BUY_PORTAL_INTERMEDIARY_QUOTE_MATCHED_SOURCE_REPLAY",
   "source_grading": "TOOL_PARSED_FILTERED_FIELDS_NOT_FULL_RPC_RAW_LOG_PINNED",
   "source_sha": {
-    "result": "25123c96619dc6b61b4a96a6f6dbd8372128c1a9",
+    "result": "c2085b4f35187d7ca90123aaea93e15ee068044b",
     "from_freeze": "dcf3ec9a919e8fccfb77adb880ce59f5a94926ed",
     "to_freeze": "744146ac730c0f7f2b69539bb63045b5b85b0985",
-    "original": "d69f2ddfade437a1d8b0fc49585eb4ca0f9268e9"
+    "original": "d69f2ddfade437a1d8b0fc49585eb4ca0f9268e9",
+    "raw_v1": "db2e47010025fde7adf150c408748806e594a4c2"
   },
   "summary": {
     "selected_markets": 2,
