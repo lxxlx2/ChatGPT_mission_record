@@ -1,0 +1,101 @@
+{
+  "schema": "MONSTER_STAGE163_SPOT_NEW_MANUAL_T0_CONNECTOR_STRUCTURED_SNAPSHOT_V1",
+  "observed_exchange_server_time_ms": 1792274083469,
+  "observed_exchange_server_time_utc": "2026-10-17T21:54:43.469Z",
+  "client_call_window_start_utc": "2026-10-17T21:54:43.082Z",
+  "client_call_window_end_utc": "2026-10-17T21:54:55.601Z",
+  "venue": "Binance Spot",
+  "source_route": "connected Binance first-party public read-only endpoints",
+  "origin_exchange_info_request": {
+    "permissions": [
+      "SPOT"
+    ]
+  },
+  "source_is_byte_identical_official_http": false,
+  "actual_request_http_raw_body_sha256": "UNAVAILABLE_CONNECTOR_RETURNS_STRUCTURED",
+  "server_time_is_per_exinfo_only": true,
+  "bbo_quote_has_per_symbol_exchange_timestamp": false,
+  "spot_24h_all_market_captured": false,
+  "spot_1m_all_market_captured": false,
+  "full_market_status_identity_captured": true,
+  "usdt_full_exchange_rules_captured": true,
+  "live_order_placement": false,
+  "live_trading": false,
+  "automations_created": false,
+  "pit_claim": "PARTIAL_EXCHANGEINFO_STRUCTURED_SINGLE_TIME; NOT_FULL_HISTORICAL_PIT",
+  "new_forward_prediction_and_profit": "NOT_DONE",
+  "stats": {
+    "all_symbols": 3689,
+    "all_symbol_statuses": {
+      "TRADING": 1380,
+      "BREAK": 2309
+    },
+    "usdt_spot_symbols": 725,
+    "usdt_trading": 511,
+    "usdt_break": 214,
+    "bbo_all": 3732,
+    "bbo_known": 3689,
+    "usdt_bbo": 725,
+    "usdt_trading_bbo": 511,
+    "usdt_trading_positive_bid_ask": 511
+  },
+  "source_files": [
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/all_spot_symbol_identity_census.json",
+      "bytes": 572763
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_01.json",
+      "bytes": 623836
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_02.json",
+      "bytes": 623138
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_03.json",
+      "bytes": 621375
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_04.json",
+      "bytes": 625836
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_05.json",
+      "bytes": 626779
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_06.json",
+      "bytes": 628261
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_07.json",
+      "bytes": 629471
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_08.json",
+      "bytes": 628671
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_09.json",
+      "bytes": 611568
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_10.json",
+      "bytes": 403444
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/all_spot_current_bbo_structured.json",
+      "bytes": 616561
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/btc_24hr_and_recent_1m_source_probe.json",
+      "bytes": 2303
+    }
+  ],
+  "stage162_spot_research_pinned_sha": "b85dee96ec6f567e1f0b90f0d50cc5b19c79018b",
+  "no_merge": true,
+  "no_deploy": true,
+  "no_gmail": true,
+  "no_trade": true
+}
