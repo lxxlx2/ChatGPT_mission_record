@@ -1,0 +1,102 @@
+{
+  "schema": "BSC_P4B_2026_239E_R2_REAL_5E60_1000_USDT_PAYMENT_SUCCESS_RECEIPT_AND_DRAGON_DELIVERY_V1",
+  "date": "2026-10-18",
+  "source_prefreeze": "bsc-meme-address-model-v1-p4b-239e-r2-external-buyer-1000usdt-real-spend-and-gas-prefreeze-2026-10-18.json",
+  "provider": "Alchemy existing free read-only BNB",
+  "executed_calls": 4,
+  "retries": 0,
+  "proof_grade": "REAL_SIGNED_BUY_FULL_CALLDATA_TWO_SOURCE_BALANCES_TRANSFER_LOG_AND_SELECTED_FIELDS_FROM_COMPLETE_BUT_NOT_FULLY_ARCHIVED_RECEIPT",
+  "signed_tx": "0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47",
+  "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+  "block": 85959962,
+  "earlier_original_239e_buy_block": 85959961,
+  "USDT_CA": "0x55d398326f99059ff775485246999027b3197955",
+  "Dragon_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "USDT_wallet_balances": [
+    {
+      "block": 85959961,
+      "raw_32byte_hex": "0x0000000000000000000000000000000000000000000002516c244a12471a23cc",
+      "decimal_raw": "10946711670407384671180"
+    },
+    {
+      "block": 85959962,
+      "raw_32byte_hex": "0x00000000000000000000000000000000000000000000021b365a9c4c687a23cc",
+      "decimal_raw": "9946711670407384671180"
+    }
+  ],
+  "USDT_wallet_actual_delta_raw": "-1000000000000000000000",
+  "USDT_transfer_from_signer": {
+    "log_count_full_JSON": 1,
+    "response_chars": 727,
+    "full_JSON_parseable": true,
+    "transactionHash": "0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47",
+    "blockNumber": "0x51fa51a",
+    "transactionIndex": "0x2",
+    "logIndex": "0x8",
+    "address": "0x55d398326f99059ff775485246999027b3197955",
+    "topics": [
+      "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "0x0000000000000000000000005e600e259e3cff0757e3736223685958665866c6",
+      "0x00000000000000000000000016b9a82891338f9ba80e2d6970fdda79d1eb0dae"
+    ],
+    "data": "0x00000000000000000000000000000000000000000000003635c9adc5dea00000"
+  },
+  "receipt": {
+    "tool_return_chars": 7310,
+    "full_JSON_parseable_at_read_time": true,
+    "complete_original_receipt_bytes_saved": false,
+    "transactionHash": "0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47",
+    "blockNumber": "0x51fa51a",
+    "transactionIndex": "0x2",
+    "status": "0x1",
+    "gasUsed": "0x263d8",
+    "cumulativeGasUsed": "0x7589a",
+    "effectiveGasPrice": "0x1dcd6500",
+    "logs_count": 8,
+    "computed_gas_used_units": "156632",
+    "computed_buy_fee_wei": "78316000000000"
+  },
+  "signed_Router_decoded": {
+    "amountIn_USDT_raw": "1000000000000000000000",
+    "path": [
+      "0x55d398326f99059ff775485246999027b3197955",
+      "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "0xeccbb861c0dda7efd964010085488b69317e4444"
+    ],
+    "actual_dragon_received_raw": "48454704178311452125501",
+    "observed_pair_WBNB_middle_input_raw": "1562236003910333182"
+  },
+  "external_wallet_dragon_state": {
+    "before_buy_raw": "335173813691889308361853",
+    "after_buy_raw": "383628517870200760487354",
+    "at_original_239e_final_sell_raw": "383628517870200760487354",
+    "source": "bsc-meme-address-model-v1-p4b-239e-r2-external-wallet-real-incremental-buy-erc20-transfer-readback-2026-10-18.json"
+  },
+  "verification": {
+    "amountIn_equals_actual_USDT_wallet_debit": true,
+    "full_USDT_transfer_in_same_real_signed_hash": true,
+    "token_dragon_real_transfer_equals_signed_wallet_token_increment": true,
+    "receipt_success": true,
+    "original_wallet_239e_still_held_at_selected_end_blocks": true,
+    "external_signer_was_existing_token_holder_before": true,
+    "external_realized_sell_or_exit": "UNRESOLVED",
+    "independent_public_signal_received": "UNRESOLVED",
+    "actual_follower_net_return": "UNRESOLVED"
+  },
+  "constraints": [
+    "This wallet already held Dragon before 1000 USDT buy, so a new wallet first-entry or new standalone profitable round is not evidenced.",
+    "Receipt was complete parseable during tool call but ONLY SELECTED VERIFIED FIELDS and counts saved, not full 7310-byte provider response.",
+    "Even full successful buy with paid gas does not establish eventual gain, actual sale, or a 1/5/15-minute causally followed 239E signal.",
+    "Although original source wallet 239E buy mined previous block, consensus timestamps are identical to the second, public observation causal ordering unproven."
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "NO_MERGE": true,
+    "NO_DEPLOY": true,
+    "NO_GMAIL": true,
+    "NO_TRADE": true
+  }
+}
