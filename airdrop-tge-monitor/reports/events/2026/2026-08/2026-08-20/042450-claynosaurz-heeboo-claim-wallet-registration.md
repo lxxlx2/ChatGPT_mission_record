@@ -8,7 +8,10 @@ email_subject: "[空投提醒][Claynosaurz / HEEBOO][Claim Wallet Registration]"
 gmail_message_id: "1a01be99e91b740e"
 gmail_sent_at: "2026-08-19T21:24:50Z"
 gmail_sent_at_bkk: "2026-08-20T04:24:50+07:00"
-status: official
+status: historical_public_redacted
+public_body_redacted: true
+original_private_source: Gmail Sent
+original_body_verified_before_redaction: true
 backfilled: true
 source: Gmail Sent readback
 ---
@@ -16,7 +19,7 @@ source: Gmail Sent readback
 
 事件：$HEEBOO Claim Wallet Registration 目前已开放。Claynosaurz 官方公告称，所有 Claynosaurz character NFT 持有者均可进行领取钱包登记，包括 OG、Saga 和 Popkins。官方同时表示，持有人资格快照当时尚未完成，未来会公布 snapshot date。
 
-与你的相关性：你此前明确持有 1 个 Claynosaurz / HEEBOO 相关 Sui NFT，因此建议现在检查并完成领取钱包登记，避免后续快照或代币发放时缺少已指定的 Solana claim wallet。
+持有人适用性：符合官方条件的 NFT 持有人需核实领取钱包登记要求和截止时间，具体持有及资格应由个人在官方页面核对。
 
 需要执行的动作：
 1. 仅通过 Claynosaurz 官方域名进入 allocation.claynosaurz.com。
