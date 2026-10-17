@@ -56,7 +56,7 @@ class Flap2026TwoSidedMathOnlyTests(unittest.TestCase):
     def test_switched_reverse_token_direction_fails(self):
         self.fails(lambda d:d["readback"]["rows"][1]["reverse"].update(
             rpc_calldata=d["readback"]["rows"][1]["buy"]["rpc_calldata"]),
-            "INVERSE_QUOTE_SAME_HISTORIC_STATE")
+            "INDEPENDENT_VIEW_BLOCKTAG_OR_REQUEST_IDENTITY")
 
     def test_mutated_buy_output_fails(self):
         self.fails(lambda d:d["readback"]["rows"][1]["buy"].update(decoded_token_raw="1"),
