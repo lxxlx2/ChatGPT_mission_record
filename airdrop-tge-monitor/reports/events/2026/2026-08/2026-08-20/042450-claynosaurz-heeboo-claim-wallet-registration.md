@@ -6,7 +6,7 @@ project: "Claynosaurz / HEEBOO"
 event_type: historical_alert
 email_subject: "[空投提醒][Claynosaurz / HEEBOO][Claim Wallet Registration]"
 gmail_message_id: "1a01be99e91b740e"
-gmail_sent_at: "2026-08-19T21:24:50"
+gmail_sent_at: "2026-08-19T21:24:50Z"
 gmail_sent_at_bkk: "2026-08-20T04:24:50+07:00"
 status: official
 backfilled: true
