@@ -1,0 +1,212 @@
+{
+  "schema": "BSC_P4B_5E60_2026_HISTORIC_DRAGON_IN3_AND_OUT2_PAGES_FULL_READBACK_V1",
+  "freeze": "bsc-meme-address-model-v1-p4b-5e60-historical-in3-out2-prefreeze-2026-10-18.json",
+  "date": "2026-10-18",
+  "provider": "Alchemy existing free",
+  "network": "bnb-mainnet",
+  "method": "getAssetTransfers",
+  "rpc_calls": 2,
+  "retries": 0,
+  "filters": {
+    "fromBlock": "0x51ebae0",
+    "toBlock": "0x51fa519",
+    "maxCount": "0xa",
+    "tokenContract": "0xeccbb861c0dda7efd964010085488b69317e4444",
+    "wallet": "0x5e600e259e3cff0757e3736223685958665866c6"
+  },
+  "in_page3": {
+    "prevCursor": "d7e9f66e-6047-4d9a-957b-67e3ed89967f",
+    "nextCursor": "8710e33d-c3a0-47e5-be9a-aaa93cb9635b",
+    "returned_count": 10,
+    "rows": [
+      {
+        "sequence": 21,
+        "blockHex": "0x51f933a",
+        "block": 85955386,
+        "hash": "0xd8d1f9fb26b37f7e8730bf10ab3b90c75450c4f3940d50c9b69fcadb63ef5934",
+        "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "rawHex": "0x9a75277518296fc08b4",
+        "rawUint": "45587846913990961399988"
+      },
+      {
+        "sequence": 22,
+        "blockHex": "0x51f9363",
+        "block": 85955427,
+        "hash": "0x9dd76ff42499d84fb8d5bbbc508ae6b67ff47a038b38f8771f30c0248d1cfde1",
+        "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "rawHex": "0x4e12028cd8c621be6b4",
+        "rawUint": "23042300676074337199796"
+      },
+      {
+        "sequence": 23,
+        "blockHex": "0x51f9383",
+        "block": 85955459,
+        "hash": "0x8dd793a03a38a097993804e7a30bef2096c597c58bce16a164121b4aacc80882",
+        "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "rawHex": "0x4e8fb26dd690bd10fd8",
+        "rawUint": "23187207952175071301592"
+      },
+      {
+        "sequence": 24,
+        "blockHex": "0x51f9426",
+        "block": 85955622,
+        "hash": "0x8948e3ed88fd58dd3c7109d00ff1665c630959b5050a808042eba848377a811e",
+        "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "rawHex": "0xa53f0154ecb283aabe9",
+        "rawUint": "48772044406992418810857"
+      },
+      {
+        "sequence": 25,
+        "blockHex": "0x51f943f",
+        "block": 85955647,
+        "hash": "0x7691bf7ace4127c1108502bddf69f06124e98aad0a979385430dd039f4addc8f",
+        "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "rawHex": "0xa36d75c731a8129f730",
+        "rawUint": "48235307413650453165872"
+      },
+      {
+        "sequence": 26,
+        "blockHex": "0x51f9447",
+        "block": 85955655,
+        "hash": "0xfca58fe476f3eafff1bfbba094033baa5762ce0953937de020812f18e39c306b",
+        "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "rawHex": "0xa18c68e36a4382fc29c",
+        "rawUint": "47680694119610629210780"
+      },
+      {
+        "sequence": 27,
+        "blockHex": "0x51f9453",
+        "block": 85955667,
+        "hash": "0xc75f798913c2ae5786da98d2923d6d3c6710c834cb55a342616499d9724fa3b5",
+        "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "rawHex": "0xa0e5b7a6010410c6c2b",
+        "rawUint": "47488510932355923078187"
+      },
+      {
+        "sequence": 28,
+        "blockHex": "0x51f9af7",
+        "block": 85957367,
+        "hash": "0x957e531af5cb63c66bad319cfff85823935de3f575efeffc45cd09a61c48d8bc",
+        "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "rawHex": "0x14643553c1ca072a2ee6",
+        "rawUint": "96295846692744384360166"
+      },
+      {
+        "sequence": 29,
+        "blockHex": "0x51f9b7f",
+        "block": 85957503,
+        "hash": "0xbf2552775e5c6fe4646681e162b20a561ee7f90b65cc57d7dfef60b44364b0d5",
+        "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "rawHex": "0xa2f8a1cd0c1abeab576",
+        "rawUint": "48100613858967614567798"
+      },
+      {
+        "sequence": 30,
+        "blockHex": "0x51f9b83",
+        "block": 85957507,
+        "hash": "0x60c70290d23cf712904341772f874991d8210e274da9b42e064ee40aa4b45fa9",
+        "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "rawHex": "0xa20d3af3de0d6fb818b",
+        "rawUint": "47829214117553973723531"
+      }
+    ],
+    "complete": false
+  },
+  "out_page2": {
+    "prevCursor": "5882faae-d342-4646-9854-dae55162846e",
+    "nextCursor": null,
+    "returned_count": 7,
+    "rows": [
+      {
+        "sequence": 11,
+        "blockHex": "0x51f8e29",
+        "block": 85954089,
+        "hash": "0xf19e58c615faa0c21fbf09636063ce3cc71a63a4aab711fb1ed18fbbfaeabd66",
+        "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "rawHex": "0x390bb49bc483ff28000",
+        "rawUint": "16836926120000000000000"
+      },
+      {
+        "sequence": 12,
+        "blockHex": "0x51f8e2d",
+        "block": 85954093,
+        "hash": "0x8dbfb778e5a46c7beb580dcc9ae146e86cd6f004faa95a7a63f9aaab91df7136",
+        "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "rawHex": "0x2607cdbcfd2bb262000",
+        "rawUint": "11224617410000000000000"
+      },
+      {
+        "sequence": 13,
+        "blockHex": "0x51f8e34",
+        "block": 85954100,
+        "hash": "0x1ef5dc335abd66bd38951c907693f0b0b99da9a0ecbcc8f602dabb29e78d0e4c",
+        "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "rawHex": "0x2607cdbc93540a8d08e",
+        "rawUint": "11224617402726565335182"
+      },
+      {
+        "sequence": 14,
+        "blockHex": "0x51f923b",
+        "block": 85955131,
+        "hash": "0x59bf3f911cc33210d5577a9bbe44db2233072855eff65a0cdc324515713cac58",
+        "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "rawHex": "0x2725dd3d99cbce7ee000",
+        "rawUint": "184870764430000000000000"
+      },
+      {
+        "sequence": 15,
+        "blockHex": "0x51f9245",
+        "block": 85955141,
+        "hash": "0xf3787c8866b2b1c04bdd5956e140a2b7d6449184bfde90bfde31875f410ef2f5",
+        "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "rawHex": "0x2725dd3da286f6de164f",
+        "rawUint": "184870764439599929235023"
+      },
+      {
+        "sequence": 16,
+        "blockHex": "0x51f9668",
+        "block": 85956200,
+        "hash": "0x28321c390ed4dd42d05513466fa2f0826f987b94d8d0a6f6b0b5c6de5fd3eaea",
+        "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "rawHex": "0x27bdd59bdc194f4b0000",
+        "rawUint": "187674119600000000000000"
+      },
+      {
+        "sequence": 17,
+        "blockHex": "0x51f96d5",
+        "block": 85956309,
+        "hash": "0x449280faaf1d5144f0ae15e44f863b75b4c50a90892dadbbcb609ce402fbd6cd",
+        "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+        "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "rawHex": "0x27bdd59bdbbd66c9f37b",
+        "rawUint": "187674119599605257204603"
+      }
+    ],
+    "complete_for_bounded_outgoing_stream": true
+  },
+  "limitations": [
+    "Historic Dragon outgoing transfer stream is exhaustively paginated in selected bounded 85900000..85959961 period (10 + 7) only.",
+    "Historic Dragon incoming transfer stream still has nonempty pageKey; not fully enumerated.",
+    "An inbound transfer from Pair may represent buy but historical tokenIn and payment costs not yet proven.",
+    "Even if inventories reconcile in a time span, cannot assume acquisition before first selected block is zero."
+  ],
+  "P4_B": "PARTIAL",
+  "P5": "BLOCKED",
+  "PRODUCTION": "NO_GO"
+}
