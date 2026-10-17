@@ -1,7 +1,11 @@
-# FLOP Network / $FLOP
+# FLOP Network / FLOP 项目研究与 close-1 比赛历史状态
 
-Updated: 2026-09-29
-State: SETUP / ACTIVE-EARLY-PARTICIPATION
+Updated: 2026-10-18 (bounded historical-status correction)
+State: `RESEARCH_ONLY / CLOSE-1_ENDED / TOKEN_TGE_UNVERIFIED`
+
+> **As-of correction:** The 2026-09-29 `SETUP / ACTIVE-EARLY-PARTICIPATION` text below is a dated research snapshot. The separate Technocore close-1 contest locked on 2026-10-04 and its official rules repository was archived Oct 6. Official [issue #38](https://github.com/flop-labs/technocore-close-call-challenge/issues/38) points to signed final standings and an individual-owner results index, but this Mission's realized owner ranking, payout and claim eligibility remain **UNVERIFIED**. No new competition activity or token allocation is authorized by this record. FLOP testnet/mainnet roadmap and tokenomics items below are the *historical project-side claims*, not independently updated 2026-10-18 confirmations. Do not infer a confirmed TGE/claim date or mark the entire FLOP protocol abandoned because one competition has ended.
+
+Historical research originally recorded 2026-09-29.
 Scope: project analysis and participation research only. Close Call execution is delegated elsewhere.
 
 ## Project
