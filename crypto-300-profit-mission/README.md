@@ -59,7 +59,7 @@ Current capital / holdings:
 
 独立只读模块：[研究规则](address-analysis/README.md)、[原始449地址快照](address-analysis/sources/oooooyoung-evm-449-source-snapshot.json)、[进度队列](address-analysis/state/progress.md)。
 
-2026-10-18 状态：Batch001（001–020）及 Batch002（021–040）已完成 **BSC、Ethereum、Base 各链固定区块 nonce 核查 40/449**。Batch001 三链并集有签名 15/20，Batch002 为 13/20；这些只证明签名活动，不代表实际获利。Batch001 核实 3 个正收益单币闭环：#016 RTX5090 +0.226099333116 BNB，#002 sauce +0.156828105278687674 BNB，#004 sauce +0.154215798043203099 BNB。**没有完成核算的亏损币种不能视为不存在，整体30天和长期钱包PnL均未完成。** Batch002 仅完成三链筛查，交易审计未开始。参见 [Batch001](address-analysis/batches/batch-001.md)、[Batch002](address-analysis/batches/batch-002.md)。独立只读 CLI 原型及 6 项离线测试已完成，Batch003 实际 RPC 筛查尚未开始。PR #97 Draft、`RESEARCH_ONLY`、`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，不修改 Frank/Monster/BSC建模及 Mission 资产。
+2026-10-18 状态：Batch001（001–020）、Batch002（021–040）及 Batch003（041–060）已完成 **BSC、Ethereum、Base 各链固定区块 nonce 核查 60/449**。Batch001 三链并集有签名 15/20，Batch002 为 13/20，Batch003 为 6/20；这些只证明签名活动，不代表实际获利。Batch001 核实 3 个正收益单币闭环：#016 RTX5090 +0.226099333116 BNB，#002 sauce +0.156828105278687674 BNB，#004 sauce +0.154215798043203099 BNB。**没有完成核算的亏损币种不能视为不存在，整体30天和长期钱包PnL均未完成。** Batch002/003 仅完成三链筛查，交易审计未开始。参见 [Batch001](address-analysis/batches/batch-001.md)、[Batch002](address-analysis/batches/batch-002.md)、[Batch003](address-analysis/batches/batch-003.md)。独立只读 CLI 原型及 6 项离线测试已完成，Batch003 已通过 Alchemy 连接进行历史只读 RPC 筛查，CLI 本身仍未通过 Mac/真实 RPC 端到端验收。PR #97 Draft、`RESEARCH_ONLY`、`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，不修改 Frank/Monster/BSC建模及 Mission 资产。
 
 ## Canonical module files
 

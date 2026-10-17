@@ -1,0 +1,572 @@
+{
+  "schema": "mission-address-analysis-batch-003-three-chain-fixed-nonce-v1",
+  "source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "batch": 3,
+  "source_rows": [
+    41,
+    60
+  ],
+  "research_only": true,
+  "observation_date": "2026-10-18",
+  "source": "Alchemy connected app h6m5pairkgzet7vz, manually invoked historical eth_getTransactionCount at frozen heights",
+  "bounds": {
+    "bsc": {
+      "from": {
+        "height": "0x74cf256",
+        "hash": "0x77cbf3d8a37e5995f27cc48fffe9a1df3bfc48808e64a769e940caec3cecfc1d",
+        "utc": "2026-09-17T21:12:12Z"
+      },
+      "to": {
+        "height": "0x7a4ca36",
+        "hash": "0x17d7dd95285a23d69c726943ac985f8deff2d987ee559ce5ec97ea1f2f513311",
+        "utc": "2026-10-17T21:12:13Z"
+      }
+    },
+    "ethereum": {
+      "from": {
+        "height": "0x18cb9c8",
+        "hash": "0xc1c05110c8c372d5aae38462af53f2f6da78e078d5410f785ee3c5b6bbf7ac0b",
+        "utc": "2026-09-17T21:12:11Z"
+      },
+      "to": {
+        "height": "0x19001e3",
+        "hash": "0xa91aed9ba16471265db54a53db4b4946b48a4a171eb1bdd7e1c65c1b3f6c3e67",
+        "utc": "2026-10-17T21:12:11Z"
+      }
+    },
+    "base": {
+      "from": {
+        "height": "0x310fd64",
+        "hash": "0x87c67d4f90a11a75a68c685418de161b0231734a0098200aee0c103193c28abf",
+        "utc": "2026-09-17T21:12:11Z"
+      },
+      "to": {
+        "height": "0x324c3e5",
+        "hash": "0x9d641df1460ba9c2108e8c38f16c8f19222ccc63a93d54f7abb9b269769affe5",
+        "utc": "2026-10-17T21:12:13Z"
+      }
+    }
+  },
+  "summary": {
+    "addresses": 20,
+    "bsc_signed_wallets": 3,
+    "eth_signed_wallets": 3,
+    "base_signed_wallets": 5,
+    "bsc_signed_txs": 273,
+    "eth_signed_txs": 251,
+    "base_signed_txs": 44,
+    "three_chain_union_active": 6,
+    "union_active_source_rows": [
+      43,
+      44,
+      45,
+      50,
+      51,
+      60
+    ],
+    "all_three_zero_source_rows": [
+      41,
+      42,
+      46,
+      47,
+      48,
+      49,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ]
+  },
+  "rows": [
+    {
+      "source_row": 41,
+      "address": "0x1d78fb87cc62febe02ca05befcc30e71ca04810c",
+      "source_label_unverified": "O1创始人地址",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 56,
+        "nonce_end": 56,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "three_chain_signed_active": false
+    },
+    {
+      "source_row": 42,
+      "address": "0x897cff3326b37a1e1ce858f77d68b46ec7d2769b",
+      "source_label_unverified": "noxafi新地址",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "three_chain_signed_active": false
+    },
+    {
+      "source_row": 43,
+      "address": "0xc6792e3b1277d37cb2108e0de9c4603c211cc7e2",
+      "source_label_unverified": "",
+      "bsc": {
+        "nonce_start": 4163,
+        "nonce_end": 4431,
+        "signed_delta": 268,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 408,
+        "nonce_end": 657,
+        "signed_delta": 249,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 465,
+        "nonce_end": 497,
+        "signed_delta": 32,
+        "status": "OK"
+      },
+      "three_chain_signed_active": true
+    },
+    {
+      "source_row": 44,
+      "address": "0xde078309d8260fa4caf3baa6852b0561b645b710",
+      "source_label_unverified": "p选手",
+      "bsc": {
+        "nonce_start": 26210,
+        "nonce_end": 26211,
+        "signed_delta": 1,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 1,
+        "nonce_end": 1,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 45,
+        "nonce_end": 46,
+        "signed_delta": 1,
+        "status": "OK"
+      },
+      "three_chain_signed_active": true
+    },
+    {
+      "source_row": 45,
+      "address": "0xf89f3858bc7bac05a83ec284e3e9acdb58bf892a",
+      "source_label_unverified": "pons创始人？",
+      "bsc": {
+        "nonce_start": 1,
+        "nonce_end": 1,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 7,
+        "nonce_end": 7,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 6,
+        "nonce_end": 7,
+        "signed_delta": 1,
+        "status": "OK"
+      },
+      "three_chain_signed_active": true
+    },
+    {
+      "source_row": 46,
+      "address": "0x6a30c5f11f564fe6f793f8b418e43ff6bfcd9617",
+      "source_label_unverified": "robin又官方？",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "three_chain_signed_active": false
+    },
+    {
+      "source_row": 47,
+      "address": "0xa7a9ae5b0aabb8c3f53d26bc88a5ccb319626104",
+      "source_label_unverified": "老阴谋聪明钱3",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "three_chain_signed_active": false
+    },
+    {
+      "source_row": 48,
+      "address": "0x0d188418381587003b9dab5c98faf62ec85ef687",
+      "source_label_unverified": "老阴谋聪明钱2",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 28,
+        "nonce_end": 28,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "three_chain_signed_active": false
+    },
+    {
+      "source_row": 49,
+      "address": "0xf68b8bb8b2fa7e96f90b297d323439ef80dd5bda",
+      "source_label_unverified": "老阴谋聪明钱",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "three_chain_signed_active": false
+    },
+    {
+      "source_row": 50,
+      "address": "0x95ce1f0a243261821d7785715f19024ec149355b",
+      "source_label_unverified": "ape台子dev",
+      "bsc": {
+        "nonce_start": 132,
+        "nonce_end": 132,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 286,
+        "nonce_end": 287,
+        "signed_delta": 1,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 18,
+        "nonce_end": 18,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "three_chain_signed_active": true
+    },
+    {
+      "source_row": 51,
+      "address": "0x624c6dbb5d1aae291c788ef116e69a59552b17c4",
+      "source_label_unverified": "疑似robin官方",
+      "bsc": {
+        "nonce_start": 49,
+        "nonce_end": 49,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 49,
+        "nonce_end": 50,
+        "signed_delta": 1,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 114,
+        "nonce_end": 123,
+        "signed_delta": 9,
+        "status": "OK"
+      },
+      "three_chain_signed_active": true
+    },
+    {
+      "source_row": 52,
+      "address": "0xb999055cdd532632e8715f4f8f60e607db16a6fb",
+      "source_label_unverified": "疑似robin官方？",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 1,
+        "nonce_end": 1,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "three_chain_signed_active": false
+    },
+    {
+      "source_row": 53,
+      "address": "0xcbb4e8f3e97f68047540b4247ff0ff1884d201a7",
+      "source_label_unverified": "真robin官方地址",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "three_chain_signed_active": false
+    },
+    {
+      "source_row": 54,
+      "address": "0x40cb329cc0d1ddb75239a60593a87ae0572c3986",
+      "source_label_unverified": "robin视频演示地址",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "three_chain_signed_active": false
+    },
+    {
+      "source_row": 55,
+      "address": "0x6e23a5ae714451058553d85a932f7f18869f8956",
+      "source_label_unverified": "阴谋6",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "three_chain_signed_active": false
+    },
+    {
+      "source_row": 56,
+      "address": "0xecc43e2c7a031870726b2a6a6563caef04540e10",
+      "source_label_unverified": "阴谋5",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "three_chain_signed_active": false
+    },
+    {
+      "source_row": 57,
+      "address": "0x98c24faeb891ee206d05245ada45084339d87afa",
+      "source_label_unverified": "阴谋4",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "three_chain_signed_active": false
+    },
+    {
+      "source_row": 58,
+      "address": "0x7e035fb048a31e0481b88074557415b1c187242b",
+      "source_label_unverified": "noxa项目方钱包？",
+      "bsc": {
+        "nonce_start": 15,
+        "nonce_end": 15,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 25,
+        "nonce_end": 25,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 7,
+        "nonce_end": 7,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "three_chain_signed_active": false
+    },
+    {
+      "source_row": 59,
+      "address": "0x1f605cc439ff432b8a09db963c9cc08dbf83f3bb",
+      "source_label_unverified": "早期alpha",
+      "bsc": {
+        "nonce_start": 611,
+        "nonce_end": 611,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 81,
+        "nonce_end": 81,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 34,
+        "nonce_end": 34,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "three_chain_signed_active": false
+    },
+    {
+      "source_row": 60,
+      "address": "0xa02d58211389430bf47d273c8de4fe79e2173dcc",
+      "source_label_unverified": "",
+      "bsc": {
+        "nonce_start": 748,
+        "nonce_end": 752,
+        "signed_delta": 4,
+        "status": "OK"
+      },
+      "ethereum": {
+        "nonce_start": 26,
+        "nonce_end": 26,
+        "signed_delta": 0,
+        "status": "OK"
+      },
+      "base": {
+        "nonce_start": 103,
+        "nonce_end": 104,
+        "signed_delta": 1,
+        "status": "OK"
+      },
+      "three_chain_signed_active": true
+    }
+  ],
+  "limitations": [
+    "ETH/BSC/Base signed nonce activity only; no executed swap count or token PnL derived",
+    "Other EVM networks not screened; no-signed activity on these three does not rule out non-EOA and passive ERC20 transfers",
+    "Manually called provider tools; new local CLI has not yet been live RPC end-to-end validated",
+    "Complete 30d and lifetime PnL unresolved for all 20; no verified gains or losses from this batch"
+  ]
+}

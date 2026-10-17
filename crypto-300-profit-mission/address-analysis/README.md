@@ -1,7 +1,7 @@
 # 地址分析 / oooooyoung EVM 钱包按批盈利审计
 
 Updated: 2026-10-18 Asia/Bangkok
-Status: `RESEARCH_ONLY / BATCH_001_002_THREE_CHAIN_SCREENED / WHOLE_WALLET_PNL_INCOMPLETE`
+Status: `RESEARCH_ONLY / BATCH_001_002_003_THREE_CHAIN_SCREENED / WHOLE_WALLET_PNL_INCOMPLETE`
 Scope: independent Mission research module, no connection to the existing PR #40 BSC address modeling or live Frank/Monster signals.
 
 ## Objective and fixed universe
@@ -28,8 +28,9 @@ Coverage status codes: `NOT_STARTED`, `BSC_SIGNED_ACTIVE`, `BSC_SIGNED_ZERO`, `T
 - [state/progress.md](state/progress.md): single resumable queue pointer, per batch completion truth.
 - [batches/batch-001.md](batches/batch-001.md): first 20 source addresses, BSC/Ethereum/Base screening and 3 closed profitable single-token roundtrips; whole-wallet PnL PARTIAL.
 - [batches/batch-002.md](batches/batch-002.md): next 20 addresses, three-chain nonce screening complete; swap/PnL NOT_STARTED. [Fixed-height JSON](evidence/batch-002-three-chain-30d-nonce-screen.json).
+- [batches/batch-003.md](batches/batch-003.md): rows041–060 fixed-height BSC/Ethereum/Base nonce coverage; 6/20 signed on at least one checked network and no audited trade PnL. [Raw evidence](evidence/batch-003-three-chain-30d-nonce-screen.json).
 - [Rows 002/004 sauce closed-position accounting](evidence/batch-001-rows-002-004-sauce-roundtrips.json): costs, proceeds, timestamps and limitations.
-- Rows 041–449 remain `NOT_STARTED` for 30-day BSC/Ethereum/Base signed screening; Batch 002 rows 021–040 are already screened and await trade-level audit. Prior ad-hoc samples are not a substitute for evidence-backed batch results.
+- Rows 061–449 remain `NOT_STARTED` for frozen-window BSC/Ethereum/Base signed screening. Batch 001–003 rows 001–060 are screened on those three chains, while all full-wallet PnL and many per-token trade ledgers remain incomplete.
 
 ## Breadth-first development cadence and user outcome
 
