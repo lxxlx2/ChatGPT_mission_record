@@ -6,6 +6,7 @@ on:
       - fix/frank-pr91-safe-primary-f01-and-gateway-20261017
       - fix/frank-pr92-mixed-f01-route-p1-20261017
       - fix/frank-pr93-executable-quote-binding-p2-20261018
+      - qa/frank-pr94-real-webkit-ui-acceptance-20261018
   workflow_dispatch:
 permissions:
   contents: read
@@ -145,6 +146,26 @@ jobs:
           node tests/frank_source_context_mount.cjs
           node tests/frank_f01_primary_freshness.cjs
           python -B -m pytest -q -p no:cacheprovider tests/test_frank_source_context_gateway.py tests/test_frank_joint_current_follow_context.py tests/test_frank_joint_readonly_http.py tests/test_frank_f01_c02_f02_alignment.py integration_tests/test_frank_joint_native_control_http.py
+      - name: Install isolated WebKit browser for PR94 synthetic native-HTTP acceptance
+        working-directory: ${{ steps.assembly.outputs.dest }}/crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install 'playwright==1.56.0'
+          python -m playwright install --with-deps webkit
+      - name: True WebKit PR94 product UI smoke with native localhost HTTP
+        working-directory: ${{ steps.assembly.outputs.dest }}/crypto-300-profit-mission/local-agent
+        env:
+          FRANK_PR94_EXPECTED_SHA: 19d5d8be92b944f1c9814a1f527d233290bf2dfc
+          FRANK_PR94_WEBKIT_EVIDENCE_DIR: ${{ runner.temp }}/frank-pr94-webkit-evidence
+        run: |
+          python -B scripts/frank_pr94_webkit_ui_acceptance.py
+      - name: Archive isolated synthetic browser screenshots and console
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frank-pr94-webkit-synthetic-qa-${{ github.sha }}
+          path: ${{ runner.temp }}/frank-pr94-webkit-evidence/
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Full disposable real Git historical regression
         working-directory: ${{ steps.assembly.outputs.dest }}/crypto-300-profit-mission/local-agent
         env:
