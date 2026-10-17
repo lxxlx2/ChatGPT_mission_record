@@ -6,7 +6,7 @@ project: "Surf"
 event_type: historical_alert
 email_subject: "[空投提醒][Surf][Season 1 Referral Rewards Claim]"
 gmail_message_id: "1a01eaf1445b3580"
-gmail_sent_at: "2026-08-20T10:19:45"
+gmail_sent_at: "2026-08-20T10:19:45Z"
 gmail_sent_at_bkk: "2026-08-20T17:19:45+07:00"
 status: official
 backfilled: true
