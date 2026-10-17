@@ -71,8 +71,6 @@ class SignedOwnerVersusStaticV2MathTests(unittest.TestCase):
         def tamper(d):
             row=d["readback"]["calls"][1]
             row["tool_return_hex"]=row["tool_return_hex"][:-2]+"18"
-            d["readback"]["cases"][0]["buy_maths_quote_dragon_out_raw"]=str(
-                int(d["readback"]["cases"][0]["buy_maths_quote_dragon_out_raw"])+1)
         self.reject(tamper,"TWO_QUOTE_AMOUNTS_AND_EXPLICIT_NOT_REALIZED")
 
     def test_pool_raw_reserve_mutation_breaks_unmodified_quote(self):
