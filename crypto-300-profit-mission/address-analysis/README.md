@@ -1,7 +1,7 @@
 # 地址分析 / oooooyoung EVM 钱包按批盈利审计
 
 Updated: 2026-10-18 Asia/Bangkok
-Status: `RESEARCH_ONLY / BATCH_001_TO_005_THREE_CHAIN_SCREENED / WHOLE_WALLET_PNL_INCOMPLETE`
+Status: `RESEARCH_ONLY / BATCH_001_TO_006_THREE_CHAIN_SCREENED / WHOLE_WALLET_PNL_INCOMPLETE`
 Scope: independent Mission research module, no connection to the existing PR #40 BSC address modeling or live Frank/Monster signals.
 
 ## Objective and fixed universe
@@ -32,9 +32,12 @@ Coverage status codes: `NOT_STARTED`, `BSC_SIGNED_ACTIVE`, `BSC_SIGNED_ZERO`, `T
 - [batches/batch-004.md](batches/batch-004.md): rows061–080, 18/20 signed on at least one of BSC/Ethereum/Base, wallet PnL unresolved. [Nonce evidence](evidence/batch-004-three-chain-30d-nonce-screen.json), [sample transaction methods](evidence/batch-004-low-frequency-transaction-examples.json).
 - [batches/batch-005.md](batches/batch-005.md): rows081–100 BSC/Ethereum/Base fixed-window nonce screen, six of twenty signed-active on at least one checked chain, no complete wallet PnL; [raw nonce evidence](evidence/batch-005-three-chain-30d-nonce-screen.json), [actual selected call types](evidence/batch-005-bounded-transaction-method-probe.json).
 - [state/coverage-001-100.md](state/coverage-001-100.md) and [normalized first-100 wallet status JSON](evidence/coverage-001-100-standardized-signed-screen.json): unified non-PnL screening result, strict address/source reconciliation and network provenance, including the Batch001 BSC nonce-pair gap.
+- [batches/batch-006.md](batches/batch-006.md): rows101–120 signed census complete on BSC/Ethereum/Base, 16/20 active on at least one network, no whole-wallet PnL; [nonce proof](evidence/batch-006-three-chain-30d-nonce-screen.json) and [limited transaction method samples](evidence/batch-006-bounded-transaction-probe.json).
+- [Current standardized 120-address screen](state/coverage-001-120.md) and [machine-readable source-matched 120-wallet JSON](evidence/coverage-001-120-normalized.json).
+- [Closed-token saved evidence replay](tools/closed_token_index.py), [negative-sample and bad-input tests](tests/test_closed_token_index.py), [QA limits](state/closed-token-source-replay-qa-20261018.md), and [actual-source cross-check JSON](evidence/closed-token-replay-source-check-20261018.json). This **does not** produce wallet PnL, nor verify new onchain transactions.
 - [Batch003 low-frequency transaction method evidence](evidence/batch-003-low-frequency-transaction-classification.json): approvals and transfers are excluded from inferred swap count; two router executions remain unknown PnL.
 - [Rows 002/004 sauce closed-position accounting](evidence/batch-001-rows-002-004-sauce-roundtrips.json): costs, proceeds, timestamps and limitations.
-- Rows 101–449 remain `NOT_STARTED` for fixed-window BSC/Ethereum/Base signed screening. Batches 001–005 rows 001–100 are screened on those three chains, with 58 signed-active on one or more checked networks, 42 signed-zero across those three. All whole-wallet 30d and lifetime PnL still incomplete; source labels are unverified.
+- Rows 121–449 remain `NOT_STARTED` for fixed-window BSC/Ethereum/Base signed screening. Batches 001–006 rows 001–120 have signed screening, **74/120** at least one checked network signed and **46/120** signed-zero on these three only. All whole-wallet 30d and lifetime PnL incomplete; source identity labels unverified.
 
 ## Breadth-first development cadence and user outcome
 
@@ -63,7 +66,7 @@ python3 tools/address_analysis.py --source sources/oooooyoung-evm-449-source-sna
 
 **The command above is a documented example, not a claim Batch 003 has run.** The `replay_closed_token` helper performs exact integer-wei arithmetic for positive, zero and negative closed-token outcomes. Its `basis_verified`, `receipt_success` and `provenance_complete` flags must be independently proven from RPC receipts, price and inventory; the helper only consumes assertions supplied by an analyst and does *not* verify blockchain evidence by itself. A manual token ledger lacking these proofs remains `PNL_UNRESOLVED`; synthetic loss tests are not claims of real-world wallet losses.
 
-Next engineering gate: replay Batch 001/002 snapshots against live historical RPC, validate request retry/failure behavior, decode all executed swap legs plus gas and inventory in an independent ledger, and obtain external review before any claim of automatic profitable-wallet evaluation.
+New offline historical saved-source replay CLI: `python3 tools/closed_token_index.py --manifest sources/oooooyoung-evm-449-source-snapshot.json --rtx evidence/batch-001-row-016-rtx5090-roundtrip.json --sauce evidence/batch-001-rows-002-004-sauce-roundtrips.json`. This prototype only replays the saved three positions, and its 5/5 offline synthetic tests do not count as actual-chain loss discovery. Next engineering gate: independently replay complete token transaction receipts, track open positions and losses, run real historical RPC/CLI E2E and obtain independent external review before claiming a profitable-wallet research tool.
 
 ## Boundaries
 
