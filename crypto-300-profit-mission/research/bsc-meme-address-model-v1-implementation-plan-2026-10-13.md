@@ -765,3 +765,17 @@ New strict [offline WBNB route-source gate](./bsc_meme_address_model_v1_p4c_wbnb
 **开发产出**：[正式研究读物](./bsc-meme-address-model-v1-p4b-original-owner-five-round-lifecycle-2026-10-18.md)；[原来源 SHA 锁定的程序](./bsc_meme_address_model_v1_p4b_original_owner_signal_lifecycle.py) 和 [14 项对抗测试](./test_bsc_meme_address_model_v1_p4b_original_owner_signal_lifecycle.py)，已接入同一 Ubuntu 与 macOS Bash 3.2 全量测试路径。状态只依照已选择的真实 signer 成交 token raw 变化在区块事件末重放，区分首次买入、同轮加仓、部分减仓、完整清仓、下一独立入场，**不将无签名事件证据记成“钱包余额真的为零”**。DDAC 83635800 完全退出、D503 83636000 后入场时旧 DDAC 买入信号明确过期；239E 85957578 清仓再在 85959961 买入是新回合、不得恢复原买入信号；8E6B HAJIMI 74741573 先卖出 64629048195327088600523 raw，此后尚持 64629048195327088600524 raw，直到 74741587 最后出清。这些都是前期有实际签名及交易证据的**源内事件生命周期**，不是实时币持仓或第三方信号收达。
 
 **新的业务优先级**：对下一批冻结钱包与代币以**完整外部可见转入、转出、授权及 TokenBought/Sold 区块**核查 LIVE 持仓的同时，务必在用户可见页面以过期/部分退出/加仓/重入显示历史信号的正确状态；观察时间（接收区块或交易的实到时间）与公共首 U 均不能由离线 signed block 查询恢复；真实 1/5/15min 入场与出口/费用仍未完成。不要拿本次 3 正 2 负或 239E 两轮一负一正算无偏胜率；任何生产购买策略继续拒绝。**本轮不因常规测试变化不断发起全量外部审核**。所有 `P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE` 继续有效。
+
+
+## 2026-10-18 P4-B 历史持仓事实升级：13 次真实 ERC20 balanceOf，全部匹配签名库存
+
+本轮不再扩大无偏 437 格的覆盖面，而是回到影响实际交易的一个核心问题：**别人真的入场时，原信号钱包是否仍然持仓？** 依据 [13 个调用预冻结单](./bsc-meme-address-model-v1-p4b-2026-thirteen-historic-erc20-owner-balances-prefreeze-2026-10-18.json)（blob b1a5a196fabbea4fa0265a72d1c71d7660e6a899）先固定旧 DDAC、239E、8E6B / 龙虾、HAJIMI exact CA 以及 13 个历史块，之后恰好进行 13 次免费 Alchemy BNB 主网 eth_call ERC20 balanceOf(address)，**13/13 返回合法 32-byte 原始 uint256 值且与冻结旧签名 token 变化完全一致，无一次重试**。按 Git 追加 [实际历史 ERC20 回读](./bsc-meme-address-model-v1-p4b-2026-thirteen-historic-erc20-owner-balances-actual-readback-2026-10-18.json) 和 [详报](./bsc-meme-address-model-v1-p4b-2026-thirteen-actual-historic-owner-balances-report-2026-10-18.md)，旧来源 V1 均未修改。级别明确为 ALCHEMY_TOOL_PARSED_RETURN_32BYTE_NOT_ORIGINAL_PROVIDER_TRANSPORT_FULL，不承诺原提供商网络层原文及区块 hash 再验证。
+
+核心账户约束 **已用真实历史链上余额而不仅是 signer 原事件推算证实**：
+- DDAC 在真实早期龙虾本人买入块 83635776 的 ERC20 balanceOf 为 99069253510299993000000000 raw，83635800 卖光后为 **0**；D503 第一笔后来市场买入 **83636000** 块末 DDAC 仍为 **0**，因此旧 DDAC 买入不能冒称其此时尚持有。
+- 239E 龙虾 85954137、85954824 原两笔真实买入后分别持 2756988984252717159259、5733541559033810010318 raw；85957578 卖光余额为 **0**；85959960 下一轮买入前块余额仍 **0**；85959961 重入真实持有 9324059273385582494656 raw，85961371 卖完为 **0**。证明首轮加仓与第二轮重新入场不可混同。
+- 8E6B HAJIMI 第一次卖出 **74741573** 后仍持 64629048195327088600524 raw，74741587 全部退出变 **0**；8E6B 龙虾 93584281 买后 216289963627303641745350 raw，94208823 卖出后为 **0**。
+- 按过去 signed event 计算的 13 个 raw 期望在调用前冻结，不能选择性放弃不匹配案例。 [源 SHA 固化独立比对脚本](./bsc_meme_address_model_v1_p4b_13_historical_balanceof.py) 同时读取旧原签名 token delta、预冻结以及这次只读 eth_call 返回的 32-byte 数值，既检验真实 uint256，又检验 exact wallet/CA/blockTag。13 项对抗测试 `test_bsc_meme_address_model_v1_p4b_13_historical_balanceof.py` 已纳入 Ubuntu / macOS Bash 3.2 全量回归触发。
+- 结论仍只涉及选定历史**区块末**的合约完整余额；**不是实时当前持仓或块内第一买时点的余额**，未测某个外部人观察到的信号送达时间、当时可执行的最先 U、1/5/15 分钟精确延迟买卖、Gas/滑点/税、实际同一账户盈利。生产 NO_GO，严禁从“历史链上真实持币”等于“实时跟单成功”跳级。
+
+**下一业务验证里程碑（不再堆纯信号状态模块）**：在预冻结原 19 市场中选择已有实际 signer 买卖/负例且 owner 真实持仓时点有链上合约余额可证的案例，明确用有界公共事件延迟、可支付的交易金额、正确 venue Router、买/卖两腿的历史状态与退出费，对单一锁定金额在 1/5/15 分钟**实际入场时点**做“可成交/滑点超限/路由不通/无卖出”的负正并行对照；如缺 provider archive 或非免费追踪仍保持 UNKNOWN，不升级 GMGN，不重选赢家或改结果。完整 P4-B 与 P5 门禁依旧未解锁。
