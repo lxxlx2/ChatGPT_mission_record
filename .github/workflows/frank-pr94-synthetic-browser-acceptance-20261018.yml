@@ -91,3 +91,19 @@ jobs:
               assert not manifest['errors'], manifest
           print('FRANK_PR94_WEBKIT_SYNTHETIC_ZIP_PASS')
           PY
+  native-safari-script-macos-preflight:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Compile native Safari window locator on macOS without launching Safari
+        run: |
+          set -euo pipefail
+          script="crypto-300-profit-mission/local-agent/scripts/frank_pr94_native_safari_bundle.py"
+          python3 -m py_compile "$script"
+          python3 -B "$script" --self-test
+          python3 -c 'import runpy,sys,pathlib; pathlib.Path(sys.argv[1]).write_text(runpy.run_path(sys.argv[2])["SWIFT"])' "$RUNNER_TEMP/qa-safari-window.swift" "$script"
+          xcrun swiftc "$RUNNER_TEMP/qa-safari-window.swift" -o "$RUNNER_TEMP/qa-safari-window"
+          echo 'PR94_NATIVE_SAFARI_MACOS_SWIFT_COMPILE_PASS'
