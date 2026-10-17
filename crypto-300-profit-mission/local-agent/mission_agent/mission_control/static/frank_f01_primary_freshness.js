@@ -49,6 +49,20 @@
   let timeout = null;
   let cards = [];
   let originRows = [];
+  const countLabel = () => {
+    const stats = document.getElementById('stats');
+    if (!stats) return null;
+    for (const node of stats.querySelectorAll('.stat')) {
+      const label = node.querySelector('span');
+      if (label && label.textContent.trim() === '当前可跟候选')
+        return node.querySelector('strong');
+    }
+    return null;
+  };
+  const reflectCount = (verified) => {
+    const el = countLabel();
+    if (el) el.textContent = verified ? String(cards.length) : '待核实';
+  };
   const emit = () => {
     if (typeof window.dispatchEvent === 'function' && typeof Event === 'function')
       window.dispatchEvent(new Event('frank:f01-guard-updated'));
@@ -66,6 +80,7 @@
       if (conclusion)
         conclusion.textContent = '当前跟单结论：“资格已失效或来源待核实，不跟”';
     }
+    reflectCount(false);
     emit();
   };
   const reveal = (until) => {
@@ -81,6 +96,7 @@
       }
       if (conclusion) conclusion.textContent = originalConclusion;
     }
+    reflectCount(true);
     emit();
   };
   const cancel = () => {
