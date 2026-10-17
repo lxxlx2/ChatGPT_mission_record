@@ -1,6 +1,6 @@
 # $300-3000 Crypto Mission
 
-Updated: 2026-10-15 (Oct 15 portfolio pointer/screenshot and finalized source; module operational authority unchanged)
+Updated: 2026-10-17 (newest CEX screenshots, finalized Solana chain, SurfBoard NFT exit; module operational authority unchanged)
 Timezone: Asia/Bangkok
 
 Current mutable facts: [`MISSION_SPEC.md`](MISSION_SPEC.md), [`state/latest.md`](state/latest.md), [`portfolio/current.md`](portfolio/current.md), [`performance/current.md`](performance/current.md). Historical 2026-10-04 scope: [`STATUS_SCOPE_2026-10-04.md`](STATUS_SCOPE_2026-10-04.md).
@@ -36,16 +36,15 @@ Current capital / holdings:
 - [`portfolio/current.md`](portfolio/current.md)
 - [`state/latest.md`](state/latest.md)
 
-**Latest user-reported and direct-chain asset observation: 2026-10-15, 17:46–17:50 Asia/Bangkok** ([portfolio source](portfolio/current.md), [current state](state/latest.md)):
+**Latest CEX screenshots and directly rechecked wallet reference: 2026-10-17, 17:27–17:30 Asia/Bangkok** ([full asset ledger](portfolio/current.md), [state](state/latest.md), [Surf transaction performance provenance](performance/current.md)):
 
-- **Binance investment reserve:** Flexible Earn **776.01087688 USDC**, current Alchemy USDC/USD 1.00106 reference **~$776.83**, from user screenshot (not live Binance account API). Screenshot real-time APR 2.09%, yesterday reward 0.07794003 USDC and cumulative 1.34887353 USDC already included. Do not double-add interest.
-- **Canonical Solana direct finalized chain:** **501.630372 USDC** (USDC price 1.00106 → ~$502.16), **0.012905142 SOL** (SOL price $102.15 → ~$1.32), **0 GANG**. Finalized slots 457210185/457210186. USDC quantity rose **29.913613** vs Oct 13; do not treat the amount as verified trading profit. Four Token-2022 mints with no reliable price are unpriced/excluded rather than assumed $0.
-- **Identified newly observed investment USD reference:** **~$1,280.31** (Binance + direct Solana only, with ~17:50 USD pricing; asynchronous observation times). If **old Oct 12** OKX screenshot ETH 0.002403 and TRX 3.3847 were still held, today's quotes would yield a **mixed-freshness conditional ~$1,287.12**. Neither is a full audited cross-account NAV; screenshot OKX Solana assets are duplicate holdings. Exact user-controlled cashflows, CEX balances beyond provided screenshots, Sui owner balance, and some EVM ERC-20 are unresolved.
-- **Bybit life/rent only, wholly excluded:** screenshot total **474.425221 USDC** (Earn 438.953400, Funding 35.385365, Unified 0.086456); app USD estimate **~$474.94**. Record for household funds only, **do not add to investment portfolio** even though account-wide value >$1.
-- **Canonical EVM:** separate native balances each <$1 across rechecked networks, excluded by the permanent per-position threshold. Robinhood SurfBoard **NFT #5396** ownership reconfirmed direct-chain; NFT liquid USD value unpriced, not inserted into NAV. ERC20 availability partial; Sui current data unavailable. 2026-10-15 Surf entitlement/reveal/pending-right history retained in [portfolio](portfolio/current.md).
-- **GANG:** Oct 12 fully exited, realized loss **−96.210562 USDC before SOL gas** separately reported in [performance](performance/current.md). Overall original $300 Mission PnL **UNRESOLVED**. Current asset balance increases are not necessarily realized trading profits.
-
-**Permanent accounting contract:** Only add each independently priced identifiable asset >= $1; omit dust individually. Unknown/illiquid/contract-restricted NFTs and claim rights are documented separately without guessed executable marks. `PRODUCTION_TRADING=NO_GO`. No new tasks, trade actions, monitoring or activation of paused lanes.
+- **Binance Flexible Earn:** **816.18870429 USDC**, screenshot UI **~817.24 USDT**; at Oct 17 17:27 Alchemy USDC/USD **1.00126** → **~$817.22** indicative USD market mark. Cumulative interest **1.52670094 USDC** already included. Binance is investment capital and counted once.
+- **Direct Solana finalized:** **607.524474 USDC** (mark **~$608.29**) and **0.0279625 SOL** (mark **~$2.93**), **GANG 0**; Alchemy finalized slots **458003718/458003719**, SOL/USD **104.71**. Four indivisible one-unit Token-2022 mints unpriced, not assumed $0. Solana USDC up **105.894102** since Oct 15 but source/PnL not established.
+- **Directly marked investment reference:** **~$1,428.44** for Binance plus canonical Solana, with dated screenshots and asynchronous chain observations. Historical unverified Oct 12 OKX 0.002403 ETH + 3.3847 TRX would give a **mixed-freshness conditional ~$1,435.42** at Oct 17 prices; not complete real-time NAV. No double-counting of older OKX Solana or recently sold NFT.
+- **Bybit household/rent only:** screenshot **493.683808 USDC**, app estimate **~$494.32**; Earn 473.286900, Funding 20.310452, Unified 0.086456, **entire account excluded from investment assets**.
+- **SurfBoard #5396 sold/transferred from canonical wallet:** Seaport Robinhood Chain direct transaction **[0xb222259e...dde91e9](https://explorer.robinhood.com/tx/0xb222259e480d4b9264af49cbbcd9709b7296d0ee35aec35b264fff35fdde91e9)** on Oct 17 03:34 Bangkok confirms transfer to another owner. `OrderFulfilled`: total gross 0.04 ETH, seller consideration **0.0376 ETH**, followed by **0.03783 ETH** wallet outbound to another address at 05:01 Bangkok. Current Robinhood native balance < $1. No retained NFT position and no duplicated sale proceeds; NFT actual net economic PnL unresolved, earlier Surf membership service $228 not automatically an NFT basis. Historical Oct 15 ownership remains correctly preserved as a dated snapshot.
+- **Other EVM/Sui:** latest EVM native sweep across thirteen networks all individually < $1 and excluded; token inventories incomplete/unpriced. Sui current native balance not obtained; old zero remains historical only. No unsupported zero assumptions.
+- **Permanent accounting policy:** include only independently marked individual holdings >=$1; Bybit never included; unknown price/claim/NFT excluded without guessing. Oct 15 investable reference ~$1,280.31 vs Oct 17 ~$1,428.44 **+~$148.12 snapshot delta**, **not Mission realized profit**. Existing GANG loss **−96.210562 USDC before SOL gas** unchanged. `MISSION_PNL_UNRESOLVED`, `PRODUCTION_TRADING=NO_GO`; no trades, wallet signing, task, Gmail, monitor, or runtime changes by this research.
 
 
 ## Frank wallet evidence and dashboard redesign (2026-10-11)
