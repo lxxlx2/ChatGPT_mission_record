@@ -85,3 +85,15 @@
 **下一商业重点**：从现有Stage30严格损失源入手，先因果区分新老WATCH、正向SETUP、价格回撤、流动性与资金占用，再用**预注册不回看当时未来盈利标签**的研究条件评估是否能真正减少亏损；优先实际净收益/可靠性而非继续增加查询器防御边界。Stage163固定七日OOS成熟前仍可开展隔离历史研究，不在无双时点L2/成交回执下宣称真实交易净PnL。
 
 全局不变：`NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`、`G4 UNKNOWN / G6 NO_GO`，Stage99手动采集限制以及Frank隔离仍生效。
+
+## 八、现有历史证据的经济门禁复算（2026-10-18）
+
+本批不是再次在Stage30旧样本寻找“最佳盈利阈值”，而是将 Stage30 全部760 WATCH→资金机会成本与**不同样本** Stage152 305个D1后的价格代理经济性，做Git源字节固定、可复算、会明确返回`NO_GO`的只读研究门禁。
+
+- 代码`local-agent/scripts/monster_v4_economic_readiness.py`；测试`local-agent/tests/test_monster_v4_economic_readiness.py`；固定源码/工作流SHA `4004c59ccbfc70dcd5ddc53eeb188a2602a43ebc`；真实[GitHub CI #39078455021](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39078455021) 23/23 steps SUCCESS，新增5/5通过。
+- Stage30旧历史证据：760 WATCH，430笔可评价价代理，133盈297亏，中位-5.638822%；原冻结300U/10槽/30U固定头寸、未知退出100%乐观本金返还仍模拟-79.489406U；由于现金不足跳过190候选、满槽跳过31候选。**这些是已暴露来源+冻结假设，非新的实际收益。**
+- Stage152**非同群样本**：305个原D1中184个回调重新突破研究确认，113个始终未回调、8个回调未重新突破；184个在24h附带假设费用价代理正数78个，中位-2.83572%；仍没有对应时点双向可成交L2/真实fees。不得据Stage152旧后验退出分钟成交额过筛，把事后成交额视为WATCH可见特征。
+- 代码源锁定源聚合JSON两个 Git Blob `9b73bb711ed498192c1407286eb2304538876344`、`518e7aa0d8db83fd1b818513ae7e72b165252806`；本次未重新拉全部36份历史源ZIP，只验证仓库**已审计**聚合数据与分母一致，G4依旧UNKNOWN，实际净PnL尚不评分。
+- 结果与**完整独立其他AI审核指令**已存 [经济门禁报告与复审包](MONSTER_ECONOMIC_READINESS_STAGE30_STAGE152_20261018.md)，独立审核 `NOT_DONE`；该工具不改 D0/D1/D2 / Fair8 / 任何Frank逻辑，不启动新采集。往后应以 Stage163 新日期真正**时序样本外**来做先因果信号、后流动性/资金的验证；不能事后挑现有高胜率币来决定发BUY。
+
+**商业决定**：功能查询器已获原Codex定向修复APPROVE；新经济门禁 CI PASS 但未获独立AI审核。既有历史信号/资金经济表现不足以证明可赚钱。保持`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`、`G4 UNKNOWN/G6 NO_GO`，手动采集与Frank隔离不变。
