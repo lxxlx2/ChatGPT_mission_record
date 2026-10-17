@@ -15,7 +15,7 @@ Baseline main tree observed: `a9309f9b19b3c6edae6cc5b42652efadd229c6ae` (read-on
 
 ## Snapshot and performed GitHub metadata work
 
-At 2026-10-18 ~04:55 Asia/Bangkok, connector search returned **92 total PRs**, **22 merged**, **67 open**, **3 closed without merge** (the three closures in this session); **6 ordinary open Issues**. Counts are time-bound and must be recomputed for later work. No source code or main branch was merged.
+At 2026-10-18 ~04:55 Asia/Bangkok, connector search returned **92 total PRs**, **22 merged**, **67 open**, **3 closed without merge** (the three closures in this session); **6 ordinary open Issues**. Counts are a before-this-documentation-PR snapshot, and exclude the new PR opened from this branch after the count. They must be recomputed for later work. No source code or main branch was merged.
 
 **Executed and read back:**
 - [Issue #4 Crypto Daily](https://github.com/lxxlx2/ChatGPT_mission_record/issues/4): replaced stale 2026-09-03 Healthy with **DEGRADED / AUTO_DELIVERY_UNVERIFIED**, retaining verified Oct 17 Gmail and Oct 18 collector audit.
