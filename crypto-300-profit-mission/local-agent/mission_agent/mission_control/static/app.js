@@ -511,8 +511,11 @@ function renderCandidates(rows) {
     const reason = reasonFor(x);
 
     const frankPriceRaw = m.frank_latest_buy_price_usdc ?? x.latest_buy_price_usdc;
-    const execRaw = m.execution_price_usdc ?? q.execution_price_usdc;
-    const impactRaw = m.price_impact_pct ?? q.price_impact_pct;
+    // Historical saved Jupiter quotes must never appear as a current $30 price.
+    const quoteFresh = q.status === 'OK' && q.route_exists === true &&
+      globalThis.FrankCandidateSections.fresh(x.quote_observed_at, Date.now()/1000, 30);
+    const execRaw = quoteFresh ? (m.execution_price_usdc ?? q.execution_price_usdc) : null;
+    const impactRaw = quoteFresh ? (m.price_impact_pct ?? q.price_impact_pct) : null;
 
     let deltaRaw = m.price_deviation_pct;
     if (deltaRaw == null && frankPriceRaw != null && execRaw != null) {
@@ -523,10 +526,14 @@ function renderCandidates(rows) {
       }
     }
 
-    const delta = deltaRaw != null ? `${n(deltaRaw,2)}%` : quoteUnavailableText(x,q);
-    const impact = impactRaw != null ? `${n(impactRaw,2)}%` : quoteUnavailableText(x,q);
+    if (!quoteFresh) deltaRaw = null;
+    const quoteText = q.status === 'OK' && !quoteFresh
+      ? '报价已过期，不代表当前成交条件'
+      : quoteUnavailableText(x,q);
+    const delta = deltaRaw != null ? `${n(deltaRaw,2)}%` : quoteText;
+    const impact = impactRaw != null ? `${n(impactRaw,2)}%` : quoteText;
     const frankPrice = frankPriceText(x,m);
-    const execPrice = execRaw != null ? `${money(execRaw,8)}` : quoteUnavailableText(x,q);
+    const execPrice = execRaw != null ? `${money(execRaw,8)}` : quoteText;
     const buys = x.buy_count ?? 0;
     const sells = x.sell_count ?? 0;
     const followable = (decision === 'BUY' || decision === 'SMALL_BUY') && x.position_state === 'OPEN' && !['SELL','EXIT','SELL_POSITION_UNRESOLVED'].includes(x.latest_side);
@@ -562,6 +569,36 @@ function renderCandidates(rows) {
       </div>
     </article>`;
   }).join('') || '<div class="empty">当前没有需要跟踪的 Frank 候选</div>';
+}
+
+function renderArchivedCandidates(rows) {
+  const panel = $('archived-candidates-panel');
+  if (!panel) return;
+  $('archived-candidates-count').textContent = String(rows.length);
+  panel.hidden = rows.length === 0;
+  $('archived-candidates').innerHTML = rows.map(x => {
+    const decision = x.decision || 'UNASSESSED';
+    const oldAction = decision === 'BUY' || decision === 'SMALL_BUY';
+    const label = oldAction ? '历史买入结论（已失效）'
+      : '历史判断：' + translated(decisionLabel, decision, decision);
+    const at = globalThis.FrankCandidateSections.epoch(x.decision_created_at);
+    const decisionTime = at === null ? '决策时间未知' : '最后评估于' + age(at);
+    const overlay = x.candidate_source === 'MISSION_CONTROL_OVERLAY'
+      ? ' · 非当前 Frank 原始候选' : '';
+    return `<div class="ended-row">
+      <div class="ended-main">
+        ${badge('NO_BUY', {NO_BUY:'仅供历史核查'})}
+        <strong>${esc(translated(patternLabel,x.pattern,'未形成模式'))}</strong>
+        <span>${esc(label)} · ${esc(decisionTime)}${esc(overlay)}</span>
+      </div>
+      <div class="ended-ca">
+        <code>${esc(x.mint)}</code>
+        ${copyButton(x.mint,'复制 CA')}
+        ${researchLinks(x.mint)}
+      </div>
+      <div class="ended-note">${esc(reasonFor(x))} · 历史记录不含实时成交价，禁止据此跟单。</div>
+    </div>`;
+  }).join('');
 }
 
 function withinHours(ts,hours) {
@@ -710,14 +747,17 @@ async function refresh() {
       get('/api/coverage'),
       get('/api/frank-observed-watchlist').catch(() => ({status:'SOURCE_UNAVAILABLE',rows:[],summary:{}}))
     ]);
-    const activeCandidates = candidates.filter(x => x.position_state !== 'CLOSED');
+    const openCandidates = candidates.filter(x => x.position_state !== 'CLOSED');
     const endedCandidates = candidates.filter(x => x.position_state === 'CLOSED');
+    const sections = globalThis.FrankCandidateSections.split(openCandidates, Date.now()/1000);
+    const olderExits = endedCandidates.filter(x => !withinHours(x.latest_at, 24));
 
     renderRuntime(runtime,control);
-    renderStats(activeCandidates,runtime,coverage);
+    renderStats(sections.current,runtime,coverage);
     renderCoverage(coverage);
     renderFrankWatchlist(watch);
-    renderCandidates(activeCandidates);
+    renderCandidates(sections.current);
+    renderArchivedCandidates([...sections.archived, ...olderExits]);
     renderEnded(endedCandidates);
     renderTrades(trades);
     renderReviewActivity(reviewActivity);
