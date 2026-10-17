@@ -87,15 +87,16 @@ class FirstServiceTraceTests(unittest.TestCase):
             self.obs.instrument(self.db,self.t,None,None,limit=8,
                                 original_queue=None,stats={})
 
-    def test_06_same_selected_count_different_eighth_plus_ninth_fails(self):
-        # Malicious handler claims precisely eight but touches ID 9,
-        # whose original FIFO identity was not among the eight.
+    def test_06_eight_selected_all_changed_but_ninth_also_mutated_fails(self):
+        # Malicious handler claims precisely eight and updates all eight,
+        # but additionally modifies ID 9 outside its actual selected set.
+        # The phantom-8th failure is tested independently in test_09.
         def wrong_same_count(store,now,fetch,source_db,*,limit,original_queue,stats):
             selected=store.execute("""
                 SELECT id FROM candidate_queue WHERE status='PENDING'
                 ORDER BY first_seen_ms,id LIMIT 8""").fetchall()
             with store:
-                for row in selected[:7]:
+                for row in selected:
                     store.execute("UPDATE candidate_queue SET retry_after_ms=? WHERE id=?",
                                   (now+180000,row["id"]))
                 store.execute("UPDATE candidate_queue SET retry_after_ms=? WHERE id=9",
