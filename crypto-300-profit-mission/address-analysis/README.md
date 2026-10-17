@@ -29,7 +29,7 @@ Coverage status codes: `NOT_STARTED`, `BSC_SIGNED_ACTIVE`, `BSC_SIGNED_ZERO`, `T
 - [batches/batch-001.md](batches/batch-001.md): first 20 source addresses, BSC/Ethereum/Base screening and 3 closed profitable single-token roundtrips; whole-wallet PnL PARTIAL.
 - [batches/batch-002.md](batches/batch-002.md): next 20 addresses, three-chain nonce screening complete; swap/PnL NOT_STARTED. [Fixed-height JSON](evidence/batch-002-three-chain-30d-nonce-screen.json).
 - [Rows 002/004 sauce closed-position accounting](evidence/batch-001-rows-002-004-sauce-roundtrips.json): costs, proceeds, timestamps and limitations.
-- Rows 21–449 retain `NOT_STARTED`, including wallets whose ad-hoc checks occurred in old chats; prior unstructured examples do not count as audited batch results until independently re-entered.
+- Rows 041–449 remain `NOT_STARTED` for 30-day BSC/Ethereum/Base signed screening; Batch 002 rows 021–040 are already screened and await trade-level audit. Prior ad-hoc samples are not a substitute for evidence-backed batch results.
 
 ## Breadth-first development cadence and user outcome
 
@@ -42,6 +42,23 @@ Final product: **reproducible wallet research with recent signed/trade activity,
 5. **Implementation and validation:** after this frozen baseline, add a reusable read-only collector, deterministic ledger replay, tests, failure/negative fixtures and independent review. No claiming that static manual reports constitute an automated, production-ready scanner.
 
 Keep throughput of the whole 449-wallet universe visible. Do not repeatedly focus on a single unusual wallet or cosmetic edge condition to the detriment of the end-to-end research outcome.
+
+## Read-only deterministic CLI prototype (not yet Mac/network accepted)
+
+The pinned [RPC nonce collector](tools/address_analysis.py) and [offline unittest suite](tests/test_address_analysis.py) are restricted to this independent address-analysis module. Tests: **6/6 passed** in the isolated Python 3 environment on 2026-10-18 (local offline synthetic fixtures + two known sauce cashflow figures). This is a **local developer test**, not a live RPC E2E result or wallet-level PnL audit.
+
+The script uses only the Python standard library. It requires explicit read-only endpoint URLs through environment variables `ADDR_ANALYSIS_RPC_BSC`, `ADDR_ANALYSIS_RPC_ETH`, `ADDR_ANALYSIS_RPC_BASE`. No keys are stored in Git. It uses [immutable block boundaries](sources/frozen-30d-bsc-eth-base-blocks.json) and verifies both boundary block hashes before querying each wallet's nonce. Provider failure is represented as `UNRESOLVED_RPC`, never zero, and exits nonzero when any requested chain has unresolved rows. Per-chain signed deltas and their exact nonce bases are included; no swaps or profits are inferred.
+
+From this module root, once you have access to your own RPC URLs in environment variables:
+
+```zsh
+python3 -m unittest discover -s tests -v
+python3 tools/address_analysis.py --source sources/oooooyoung-evm-449-source-snapshot.json --windows sources/frozen-30d-bsc-eth-base-blocks.json --batch 3 --output /tmp/address-analysis-batch-003-nonce.json
+```
+
+**The command above is a documented example, not a claim Batch 003 has run.** The `replay_closed_token` helper performs exact integer-wei arithmetic for positive, zero and negative closed-token outcomes. Its `basis_verified`, `receipt_success` and `provenance_complete` flags must be independently proven from RPC receipts, price and inventory; the helper only consumes assertions supplied by an analyst and does *not* verify blockchain evidence by itself. A manual token ledger lacking these proofs remains `PNL_UNRESOLVED`; synthetic loss tests are not claims of real-world wallet losses.
+
+Next engineering gate: replay Batch 001/002 snapshots against live historical RPC, validate request retry/failure behavior, decode all executed swap legs plus gas and inventory in an independent ledger, and obtain external review before any claim of automatic profitable-wallet evaluation.
 
 ## Boundaries
 

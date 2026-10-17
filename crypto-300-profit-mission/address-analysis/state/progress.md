@@ -1,7 +1,7 @@
 # 地址分析 / 449 个 EVM 地址研究队列与分批进度
 
 Updated: 2026-10-18 Asia/Bangkok
-Research status: `READ_ONLY / PARTIAL_RESULTS`
+Research status: `READ_ONLY / PARTIAL_RESULTS / CLI_OFFLINE_TESTED`
 Source manifest: [449 addresses](../sources/oooooyoung-evm-449-source-snapshot.json), original blob `954f3aba66be21911dd627fa40dd3dd0a9fd1d26`.
 
 ## Canonical queue position
@@ -12,13 +12,15 @@ Source manifest: [449 addresses](../sources/oooooyoung-evm-449-source-snapshot.j
 - **Verified realized token roundtrip = 3:** row016 RTX5090 closed position **+0.226099333116 BNB** (~**+$162.86** using contemporary Binance BNBUSDT candles); see [batch-001](../batches/batch-001.md) and [structured evidence](../evidence/batch-001-row-016-rtx5090-roundtrip.json). This remains a single-token roundtrip, not the entire wallet PnL. Rows002/004 sauce additionally closed with **+0.156828105278687674 BNB** (about +$118.86) and **+0.154215798043203099 BNB** (about +$116.96). [Exact sauce evidence](../evidence/batch-001-rows-002-004-sauce-roundtrips.json). No confirmed negative token roundtrip yet, but losses cannot be assumed zero.
 - **2026-10-18 Batch 002 screen:** [three-chain raw nonce evidence](../evidence/batch-002-three-chain-30d-nonce-screen.json) for rows021–040, BSC 12/20 with 18,766 signed transactions, Ethereum 12/20 with 2,884, Base 12/20 with 3,411; union 13/20, three-chain signed-zero 7/20. Batch 002 trade and PnL audit NOT_STARTED.
 - **Completed full-wallet 30-day multi-EVM PnL = 0/449**; **completed full-wallet lifetime PnL = 0/449**. No ranking / success claim from incomplete source.
+- **Read-only CLI:** [nonce census + integer-wei token replay prototype](../tools/address_analysis.py), [tests](../tests/test_address_analysis.py), and [fixed block hashes](../sources/frozen-30d-bsc-eth-base-blocks.json); **6 offline tests pass**, but live CLI-to-RPC replay is NOT VERIFIED. No wallet PnL promoted.
+- **Next coverage batch = 003** (source rows **041–060**; signed census NOT_STARTED). The existing Batch001 PnL queue and Batch002 swap review remain unresolved and must not be silently discarded.
 - **Next available work:** audit still-unresolved profitable and losing tokens in low-transaction rows001/003/006/007/015 and remaining positions of rows002/004, then proceed in source order through Batch002 trade ledgers. High-frequency rows014/016–020 and 022/027/029/038 must have bounded pagination and explicit `DEFERRED` reason/cursor/re-entry condition, not block completion of later source rows. Polygon/Arbitrum/other EVM chain discovery pending. Signed nonces are not PnL.
 
 ## Batch registry
 
 | Batch | Source rows | Screening | PnL / completion |
 | --- | --- | --- | --- |
-| 001 | 001–020 | BSC + Ethereum + Base each 20/20; other EVM pending | PARTIAL: 1 closed token roundtrip, 20 wallet-level PnL unresolved |
+| 001 | 001–020 | BSC + Ethereum + Base each 20/20; other EVM pending | PARTIAL: 3 closed profitable token roundtrips, 20 wallet-level PnL unresolved |
 | 002 | 021–040 | BSC + Ethereum + Base each 20/20; other EVM pending | PARTIAL: three-chain screen complete, trading/PnL NOT_STARTED |
 | 003 | 041–060 | NOT_STARTED | NOT_STARTED |
 | 004 | 061–080 | NOT_STARTED | NOT_STARTED |
