@@ -93,6 +93,56 @@ class TestOperatorSnapshot(unittest.TestCase):
         m.observe_snapshot(self.db, "spot", BASE + 360_000, tick("AAAUSDT", ".8"))
         self.assertEqual(self.report(BASE + 360_000)["opportunities"][0]["signal"], "INVALIDATED")
 
+    def test_evaluated_setup_invalidation_is_episode_specific_after_rewatch(self):
+        self.watch()
+        m.observe_snapshot(self.db, "spot", BASE + 540_000, tick("AAAUSDT", "1.08"))
+        self.assertEqual(m.process_queue(self.db, BASE + 600_000,
+            lambda v, s, t: candles(t))["completed"], 1)
+        self.assertEqual(m.process_d2(self.db, BASE + 600_000,
+            evaluate_spot=lambda sym: {"symbol": sym,
+                "classification": "RESEARCH_LIQUIDITY_NOT_BUY",
+                "research_liquidity_gate": True})["checked"], 1)
+        original = self.report(BASE + 600_000)["opportunities"][0]
+        self.assertEqual(original["signal"], "SETUP_RESEARCH_ONLY")
+        self.assertEqual(original["queue_status"], "EVALUATED")
+
+        m.observe_snapshot(self.db, "spot", BASE + 780_000, tick("AAAUSDT", ".8"))
+        invalid = self.report(BASE + 780_000)["opportunities"][0]
+        self.assertEqual(invalid["queue_status"], "EVALUATED")
+        self.assertEqual(invalid["signal"], "INVALIDATED")
+        self.assertIsNotNone(invalid["invalidation_utc"])
+        self.assertEqual(invalid["d2_status"], "CHECKED")
+
+        m.observe_snapshot(self.db, "spot", BASE + 960_000, tick("AAAUSDT", ".96"))
+        episodes = self.report(BASE + 960_000)["opportunities"]
+        self.assertEqual(len(episodes), 2)
+        self.assertEqual([r["signal"] for r in episodes],
+            ["WATCH_RESEARCH_ONLY", "INVALIDATED"])
+        self.assertIsNone(episodes[0]["invalidation_utc"])
+        self.assertEqual(episodes[0]["d2_status"], "NOT_CAPTURED")
+        self.assertEqual(episodes[1]["d2_status"], "CHECKED")
+
+    def test_venue_poll_does_not_guarantee_symbol_quote_freshness(self):
+        self.watch()
+        m.observe_snapshot(self.db, "spot", BASE + 360_000, tick("BBBUSDT", "1"))
+        first = self.report(BASE + 360_000)
+        self.assertEqual(first["sources"]["spot"]["state"], "RECENT_STORED_POLL")
+        item = first["opportunities"][0]
+        self.assertEqual(item["signal"], "SYMBOL_QUOTE_NOT_SEEN_IN_LATEST_POLL")
+        self.assertEqual(item["symbol_quote_age_seconds"], 180)
+        self.assertFalse(item["symbol_seen_in_latest_poll"])
+
+        m.observe_snapshot(self.db, "spot", BASE + 540_000, tick("BBBUSDT", "1"))
+        m.observe_snapshot(self.db, "spot", BASE + 720_000, tick("BBBUSDT", "1"))
+        second = self.report(BASE + 720_000)
+        self.assertEqual(second["sources"]["spot"]["state"], "RECENT_STORED_POLL")
+        aged = second["opportunities"][0]
+        self.assertEqual(aged["signal"], "SYMBOL_QUOTE_STALE")
+        self.assertEqual(aged["symbol_quote_state"], "STALE")
+        self.assertEqual(aged["symbol_quote_age_seconds"], 540)
+        self.assertFalse(aged["symbol_seen_in_latest_poll"])
+        self.assertEqual(aged["recommendation"], "RESEARCH_REVIEW_ONLY_NO_BUY")
+
     def test_deadline_ends_research_opportunity_even_with_old_watch(self):
         self.watch()
         entry = self.report(BASE + 180_000 + 16 * 60_000)["opportunities"][0]
