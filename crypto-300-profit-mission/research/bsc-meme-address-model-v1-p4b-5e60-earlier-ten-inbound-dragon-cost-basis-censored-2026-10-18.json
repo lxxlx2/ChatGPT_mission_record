@@ -1,0 +1,124 @@
+{
+  "schema": "BSC_P4B_2026_5E60_PREEXISTING_DRAGON_ORIGIN_FIRST_TEN_CENSORED_V1",
+  "source_prefreeze": "bsc-meme-address-model-v1-p4b-5e60-preexisting-dragon-origin-fixed-inbound-prefreeze-2026-10-18.json",
+  "method": "Alchemy free getAssetTransfers",
+  "scope_from": 85900000,
+  "scope_to": 85959961,
+  "max_per_page": 10,
+  "returned_count": 10,
+  "pageKey_exists": true,
+  "page_key_preserved": "a93be65e-cfe0-4ec1-ab42-8dc1739fef16",
+  "complete_full_window": false,
+  "source_grade": "FULL_FIRST_PAGE_TOOL_PARSED_ERC20_INBOUND_TRANSFERS_CENSORED_BY_PAGINATION",
+  "rows": [
+    {
+      "blockNumberHex": "0x51edade",
+      "block": 85908190,
+      "hash": "0xd4805e1180f7a80509e0a65c558367a87d3e65b62f29034edda70b51e694db41",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_received": "58133830258135706481567",
+      "category": "erc20",
+      "actual_signed_buyer": "UNVERIFIED"
+    },
+    {
+      "blockNumberHex": "0x51edae1",
+      "block": 85908193,
+      "hash": "0x4e06b872ba52d5d63398b061f6e5e0bd48061dd1b9dd6a0ed7e063ae235a1825",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_received": "57616881769719152081092",
+      "category": "erc20",
+      "actual_signed_buyer": "UNVERIFIED"
+    },
+    {
+      "blockNumberHex": "0x51edae2",
+      "block": 85908194,
+      "hash": "0x90ab88a78b09ade1dd09b5153abb529c5246dcabb480996cba18fd056a7688cc",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_received": "57446369721892177361108",
+      "category": "erc20",
+      "actual_signed_buyer": "UNVERIFIED"
+    },
+    {
+      "blockNumberHex": "0x51edae3",
+      "block": 85908195,
+      "hash": "0xfbf1d2429b8e44e487f5757b483f7a63d63c80682210b149ff998bbf9e41c422",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_received": "57642306235316646338983",
+      "category": "erc20",
+      "actual_signed_buyer": "UNVERIFIED"
+    },
+    {
+      "blockNumberHex": "0x51edaf0",
+      "block": 85908208,
+      "hash": "0x0ef8ff00f9077318b409d2c774992d587d9686e38de1c2fba8b4a96822a39242",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_received": "58899093387008032836129",
+      "category": "erc20",
+      "actual_signed_buyer": "UNVERIFIED"
+    },
+    {
+      "blockNumberHex": "0x51edb2d",
+      "block": 85908269,
+      "hash": "0x8c88008d9d422385213dbf2e07a92926bc15efc9d08dfa650e376e668f387fab",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_received": "58185332944798764148477",
+      "category": "erc20",
+      "actual_signed_buyer": "UNVERIFIED"
+    },
+    {
+      "blockNumberHex": "0x51edb2e",
+      "block": 85908270,
+      "hash": "0x1744dc4bbb022b6c9f83564cca275caeb257f83186631ac5e332f64411d2165d",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_received": "57923129846152742448998",
+      "category": "erc20",
+      "actual_signed_buyer": "UNVERIFIED"
+    },
+    {
+      "blockNumberHex": "0x51edba7",
+      "block": 85908391,
+      "hash": "0xf36f9254e62a16955c5350c99602e9d95e41be52bfd195aca5ae5518ee4a65b7",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_received": "57890786792928600569594",
+      "category": "erc20",
+      "actual_signed_buyer": "UNVERIFIED"
+    },
+    {
+      "blockNumberHex": "0x51f470b",
+      "block": 85935883,
+      "hash": "0xb6d69715fbc00b0a2b3dfad8a05e8ddf31df6b993fd0a4836ef81eeceb4bb187",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_received": "60745216694461427158502",
+      "category": "erc20",
+      "actual_signed_buyer": "UNVERIFIED"
+    },
+    {
+      "blockNumberHex": "0x51f470e",
+      "block": 85935886,
+      "hash": "0x7d52381e4700978e66039a5151e7b9f5f251e64f726829c4036d9839adaf49e0",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_received": "60468464681557167842192",
+      "category": "erc20",
+      "actual_signed_buyer": "UNVERIFIED"
+    }
+  ],
+  "limits": [
+    "These are first 10 selected earlier Dragon receipts only, not the complete earlier wallet acquisition history.",
+    "There is a provider pageKey; source is explicitly not exhaustive and must NOT be used to derive cost basis or net PnL.",
+    "Wallet could also have earlier Dragon sells, holdings and route-funded acquisitions; original signed tx, paid token and original fees not yet retrieved.",
+    "No speculative 1000 USDT tranche return as 8399 USDT first exit proceeds includes pre-existing 335173 tokens."
+  ],
+  "P4_B": "PARTIAL",
+  "P5": "BLOCKED",
+  "PRODUCTION": "NO_GO"
+}
