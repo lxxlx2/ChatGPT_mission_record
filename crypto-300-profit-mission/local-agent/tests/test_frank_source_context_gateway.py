@@ -102,3 +102,28 @@ def test_gateway_refuses_forged_combined_trade_permission(monkeypatch):
             code, _, out = read(dashboard.server_port)
     assert code == 503
     assert out["status"] == "RESEARCH_SOURCE_NOT_CONNECTED"
+
+
+def test_gateway_rejects_own_ephemeral_dashboard_port_before_connect(monkeypatch):
+    """Bounded native HTTP probe: previously one bad port recursively dialed itself."""
+    import time
+    from mission_agent.mission_control import server as dashboard_module
+    real_factory = dashboard_module.HTTPConnection
+    attempted = []
+
+    def counting_connection(*args, **kwargs):
+        attempted.append(args)
+        return real_factory(*args, **kwargs)
+
+    monkeypatch.setattr(dashboard_module, "HTTPConnection", counting_connection)
+    with serving(DashboardHandler) as dashboard:
+        listen_port = dashboard.server_port
+        assert 1024 <= listen_port <= 65535
+        monkeypatch.setenv("FRANK_SOURCE_CONTEXT_PORT", str(listen_port))
+        start = time.monotonic()
+        code, headers, body = read(listen_port)
+        elapsed = time.monotonic() - start
+    assert code == 503 and body["status"] == "RESEARCH_SOURCE_NOT_CONNECTED"
+    assert headers["Cache-Control"] == "no-store"
+    assert attempted == [], "self-port must fail before any outbound HTTPConnection"
+    assert elapsed < 1.5, "same port must not wait for the old 2.5s connection timeout"
