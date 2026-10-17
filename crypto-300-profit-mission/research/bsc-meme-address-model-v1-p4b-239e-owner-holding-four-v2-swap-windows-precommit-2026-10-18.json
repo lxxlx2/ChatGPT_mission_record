@@ -1,0 +1,92 @@
+{
+  "schema": "BSC_P4B_2026_239E_DRAGON_FROZEN_FOUR_DISJOINT_V2_SWAP_WINDOWS_DURING_SIGNED_OWNER_EPISODES_V1",
+  "freeze_date": "2026-10-18",
+  "prior_PR_head": "8dc4c09004a5a98edd893543917a63999e3d685b",
+  "project_cohort": "ORIGINAL_23X19_437_UNCHANGED",
+  "selection_rule": "Use both previously fixed opposite signed 239E Dragon rounds, each two exact disjoint post-buy ranges, not later chosen according to observed profit. Report EVERY Swap log and every truncation; never silently drop losers or swap to another market.",
+  "source_blobs": {
+    "original_239e_signed_rounds": "46e90123b98d5324e05388b17b8a3bbb77cb5361",
+    "original_owner_clock": "96f5780e6d699b6f0d8218b5029b3d14c8fa1ea0",
+    "fixed_pair_v2": "1f44ed58bab1dec1b4ccdc4cc449dde90d6131e7",
+    "original_13_balanceof": "7e930c57fb5ba3a3dfd795575c059ade9f8a387d"
+  },
+  "exact_token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "exact_pair": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+  "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+  "quote_WBNB": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "log_source": "Alchemy existing free bnb-mainnet eth_getLogs",
+  "logs": {
+    "contract_address": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+    "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+    "event_signature": "Swap(address,uint256,uint256,uint256,uint256,address)",
+    "event_grade": "LOG_VISIBLE_SWAP_WITHOUT_INDEPENDENT_COMPLETE_PROVIDER_WIRE"
+  },
+  "ranges": [
+    {
+      "label": "R1",
+      "name": "POST_BUY_EARLY",
+      "from_block": 85954138,
+      "to_block": 85954149,
+      "original_buy_block": 85954137,
+      "original_final_sell_block": 85957578,
+      "claimed_public_causal_observer": false
+    },
+    {
+      "label": "R1",
+      "name": "POST_BUY_LATER",
+      "from_block": 85954737,
+      "to_block": 85954749,
+      "original_buy_block": 85954137,
+      "original_final_sell_block": 85957578,
+      "claimed_public_causal_observer": false
+    },
+    {
+      "label": "R2",
+      "name": "POST_BUY_EARLY",
+      "from_block": 85959962,
+      "to_block": 85959973,
+      "original_buy_block": 85959961,
+      "original_final_sell_block": 85961371,
+      "claimed_public_causal_observer": false
+    },
+    {
+      "label": "R2",
+      "name": "POST_BUY_LATER",
+      "from_block": 85960561,
+      "to_block": 85960573,
+      "original_buy_block": 85959961,
+      "original_final_sell_block": 85961371,
+      "claimed_public_causal_observer": false
+    }
+  ],
+  "max_calls": 10,
+  "log_calls": 4,
+  "owner_balanceOf_calls": 4,
+  "pair_token0_token1_calls": 2,
+  "do_not_retry_truncated": true,
+  "read_schedule": [
+    "Before logs, check historical V2 pair token0 and token1 for fixed R1 first range start using selector 0x0dfe1681 and 0xd21220a7",
+    "Issue exact four ethGetLogs Pair Swap queries with the four 12/13-block bounded scopes; no query wider than frozen scope",
+    "Read original owner ERC20 balanceOf at end of each of four frozen windows with fixed selector 0x70a08231",
+    "If provider output >8,098 chars, mark window TRUNCATED and do not derive exact event count or completeness",
+    "If full logs with eligible buy-direction Swap, signers must be obtained from original ethGetTransactionByHash in a NEW separately precommitted batch; current Pair indexed sender/to are NOT necessarily owner/signer",
+    "Do not claim each window is at +1/+5/+15 actual seconds; timestamps must come from real block/tx data",
+    "No follow profitability inferred from Swap event alone, no actual external BUY and SELL until EOA signature/receipt/native balances are independently checked"
+  ],
+  "signal_still_holding_requirements": "Return actual ERC20 balanceOf(original 239E owner) at every scope end; nonzero confirms end-block position only and does not retroactively prove intrablock availability.",
+  "disallowed": [
+    "NO_MERGE",
+    "NO_DEPLOY",
+    "NO_GMAIL",
+    "NO_TRADE",
+    "NO_SAMPLE_WINNER_RESELECTION",
+    "NO_GMGN_PAID",
+    "NO_P5_UPGRADE"
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "production": "NO_GO"
+  }
+}
