@@ -1,0 +1,114 @@
+name: Monster Stage163 authentic Spot HTTP body T0 one-shot
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/monster/source-batches/monster_stage163_spot_original_http_t0_request.json'
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage163-once-public-spot-raw-http-no-automation
+  cancel-in-progress: false
+jobs:
+  only_user_initiated_one_shot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check explicit request and selftest, never schedule or model trade
+        run: |
+          set -eu
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          path='crypto-300-profit-mission/monster/source-batches/monster_stage163_spot_original_http_t0_request.json'
+          delta=subprocess.check_output(
+              ['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],
+              text=True).splitlines()
+          expected={
+            'schema':'MONSTER163_SPOT_OFFICIAL_ORIGINAL_HTTP_T0_USER_CHAT_ONESHOT_V1',
+            'source_base':'https://data-api.binance.vision',
+            'raw_http_required':True,'source_only':True,
+            'capture_date':'2026-10-18',
+            'write_production_queue':False,'run_signal_model':False,
+            'send_notifications':False,'deploy':False,'trade':False,
+            'scheduled':False}
+          if delta!=[path] or json.loads(Path(path).read_text())!=expected:
+              raise ValueError('MONSTER163_NOT_ONLY_EXPLICIT_SOURCE_CAPTURE_REQUEST')
+          PY
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage163_spot_one_shot_raw_http_source.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage163_spot_one_shot_raw_http_source.py --selftest
+          echo MONSTER163_OFFLINE_ONE_SHOT_SOURCE_GATE_PASS
+  real_public_spot_http_capture:
+    needs: only_user_initiated_one_shot
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Acquire exact official public spot HTTP bytes, fail closed on network or source errors
+        run: |
+          set -eu
+          mkdir -p /tmp/monster163_spot_original_http_once
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage163_spot_one_shot_raw_http_source.py --out /tmp/monster163_spot_original_http_once/source_raw_http.zip --manifest /tmp/monster163_spot_original_http_once/source_receipts.json
+          python - <<'PY'
+          import json,zipfile,hashlib
+          from pathlib import Path
+          out=Path('/tmp/monster163_spot_original_http_once')
+          j=json.loads((out/'source_receipts.json').read_text())
+          assert j['schema']=='MONSTER_STAGE163_SPOT_ORIGINAL_HTTP_ONESHOT_V1'
+          assert j['source_is_true_http_response_body_bytes'] is True
+          assert j['true_PIT_multi_day_universe']=='NOT_PROVEN'
+          assert j['G4']=='UNKNOWN' and j['G6']=='NO_GO'
+          assert j['NO_DEPLOY'] and j['NO_MERGE'] and j['NO_GMAIL'] and j['NO_TRADE']
+          assert hashlib.sha256((out/'source_raw_http.zip').read_bytes()).hexdigest()==j['source_zip_sha256']
+          with zipfile.ZipFile(out/'source_raw_http.zip') as z:
+            for name,receipt in j['source_sha_receipts'].items():
+              raw=z.read(name+'.response.raw.json')
+              assert len(raw)==receipt['body_byte_length']
+              assert hashlib.sha256(raw).hexdigest()==receipt['body_sha256']
+          print('MONSTER163_RAW_OFFICIAL_HTTP_SHA256_RECEIPTS_AND_MANIFEST_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster163-spot-original-public-http-once-source
+          path: /tmp/monster163_spot_original_http_once/
+          retention-days: 60
+          if-no-files-found: error
+      - name: Preserve original-byte raw ZIP and compact receipt in Git, refuse overwrite or exec drift
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          target=crypto-300-profit-mission/monster/evidence/monster_stage163_spot_original_http_t0_actual
+          test ! -e "$target"
+          mkdir -p "$target"
+          cp /tmp/monster163_spot_original_http_once/source_raw_http.zip "$target/"
+          cp /tmp/monster163_spot_original_http_once/source_receipts.json "$target/"
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: preserve real one-shot Spot original HTTPS response bytes with source sha256 and G4 UNKNOWN"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target/source_receipts.json" 2>/dev/null; then
+            echo MONSTER163_ORIGINAL_HTTP_T0_ALREADY_ARCHIVED
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for src in crypto-300-profit-mission/local-agent/scripts/monster_v4_stage163_spot_one_shot_raw_http_source.py .github/workflows/monster-v4-stage163-spot-original-http-t0-once.yml crypto-300-profit-mission/monster/source-batches/monster_stage163_spot_original_http_t0_request.json; do
+            test "$(git rev-parse "$GITHUB_SHA:$src")" = "$(git rev-parse "HEAD:$src")" || { echo MONSTER163_SOURCE_PROVENANCE_EXEC_DRIFT; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER163_RAW_SPOT_GIT_SOURCE_ORIGINAL_ZIP_VERIFIED
