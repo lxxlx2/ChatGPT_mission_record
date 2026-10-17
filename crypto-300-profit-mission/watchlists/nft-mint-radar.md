@@ -1,8 +1,11 @@
-# NFT Mint Radar
+# NFT Mint Radar / NFT 发行发现与风险筛选规范（运行暂停）
+
+> **Runtime status: PAUSED.** This is a preserved research/alert specification, not evidence of a running hourly collector. Current authority: `../MISSION_SPEC.md` and `../state/latest.md`. No hourly execution or Gmail is authorized until explicitly restored and verified.
+
 
 Timezone: Asia/Bangkok
 
-Purpose: discover newly announced or newly live NFT / digital-art mints with verified issuer provenance and an unusually favorable early opportunity profile. This radar is discovery-first and runs hourly. It must stay silent when no candidate passes the full gate.
+Purpose: discover newly announced or newly live NFT / digital-art mints with verified issuer provenance and an unusually favorable early opportunity profile. This radar is discovery-first and was originally specified for hourly checks; its current runtime remains paused. It must stay silent when no candidate passes the full gate.
 
 ## Discovery surfaces
 
