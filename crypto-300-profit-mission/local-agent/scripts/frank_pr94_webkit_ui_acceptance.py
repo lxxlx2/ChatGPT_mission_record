@@ -45,12 +45,68 @@ def row(mint: str, decision: str, price: str, observed: str) -> dict:
     }
 
 
+class SyntheticCAJobs:
+    """Synthetic reports exercise production C02 routing, not any real Solana RPC."""
+    def __init__(self):
+        label = "SYNTHETIC SAME-NAME TOKEN"
+        self.reports = {
+            A: {
+                "mint": A, "chain": "solana", "observed_at": time.time(),
+                "token_identity": {
+                    "identity_status": "VERIFIED",
+                    "display_label": label,
+                    "market_match_status": "EXACT_BASE_MINT_MATCH",
+                    "conflict_status": "NO_CONFLICT",
+                    "sources": [],
+                },
+                "token_profile": {"status": "OK", "mint_account_status": "VERIFIED",
+                                  "mint_authority": None, "freeze_authority": None,
+                                  "extensions": []},
+                "market": {"status": "UNAVAILABLE"},
+                "assessment": {"chain_permission_status": "PASS",
+                               "trading_status": "WATCH / CLUSTER_UNRESOLVED",
+                               "narrative_status": "UNVERIFIED"},
+            },
+            B: {
+                "mint": B, "chain": "solana", "observed_at": time.time(),
+                "token_identity": {
+                    "identity_status": "UNCONFIRMED",
+                    "display_label": label,
+                    "market_match_status": "NOT_CHECKED",
+                    "conflict_status": "UNRESOLVED",
+                    "sources": [],
+                },
+                "token_profile": {"status": "UNAVAILABLE",
+                                  "mint_account_status": "UNCONFIRMED",
+                                  "extensions": []},
+                "market": {"status": "UNAVAILABLE"},
+                "assessment": {"chain_permission_status": "UNRESOLVED",
+                               "trading_status": "WATCH / CHAIN_PERMISSION_UNRESOLVED",
+                               "narrative_status": "UNVERIFIED"},
+            },
+        }
+
+    def latest(self, mint):
+        return self.reports.get(mint)
+
+    def submit(self, mint, preset):
+        if mint not in self.reports or preset != "standard":
+            raise ValueError("SYNTHETIC_CA_SCOPE_ONLY")
+        return {"job_id": "qa-" + ("a" if mint == A else "b"),
+                "mint": mint, "status": "DONE"}
+
+    def get(self, job_id):
+        key = {"qa-a": A, "qa-b": B}.get(job_id)
+        return None if key is None else {"job_id": job_id, "mint": key, "status": "DONE"}
+
+
 class ReadOnlySyntheticState:
     def __init__(self):
         self.mode = "valid"
         self.calls = 0
         self.invalid_runtime = False
         self.quote_observed_at = datetime.now(timezone.utc).isoformat()
+        self.cluster_jobs = SyntheticCAJobs()
 
     def runtime(self):
         return {"status": "LIVE", "heartbeat_age_seconds": 1}
@@ -164,6 +220,22 @@ def open_case(browser, base, state, mode, page_errors, console_errors, output):
         ensure(page.locator("#cluster-view").evaluate("(el) => el.classList.contains('active')"),
                "C02_NAVIGATION_NOT_WORKING")
         screenshot(page, "02-c02-official-tab.png")
+        for mint, identity, label in (
+            (A, "VERIFIED", "03-c02-same-name-verified-ca.png"),
+            (B, "UNCONFIRMED", "04-c02-same-name-unconfirmed-ca.png"),
+        ):
+            page.locator("#cluster-mint").fill(mint)
+            page.locator("#cluster-submit").click()
+            page.locator("#cluster-result").wait_for(state="visible", timeout=10000)
+            summary = page.locator("#cluster-summary").inner_text()
+            ensure(mint in summary, "C02_RESULT_EXACT_MINT_NOT_PRESERVED")
+            ensure(identity in summary, "C02_IDENTITY_WRONG_FOR_EXACT_MINT")
+            ensure("SYNTHETIC SAME-NAME TOKEN" in summary,
+                   "C02_SAME_NAME_SOURCE_FIXTURE_MISSING")
+            if identity == "UNCONFIRMED":
+                ensure("UNCONFIRMED" in summary,
+                       "C02_UNCONFIRMED_IDENTITY_PROMOTED")
+            screenshot(page, label)
     elif mode in {"drift", "zero"}:
         page.wait_for_function("""() => {
           const el=document.querySelector('#candidates .candidate-card');
