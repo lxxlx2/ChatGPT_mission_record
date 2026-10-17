@@ -50,7 +50,7 @@ jobs:
       - name: Install synthetic-only Python and WebKit dependencies
         run: |
           set -euo pipefail
-          python -m pip install -e "$QA_ROOT/repo/crypto-300-profit-mission/local-agent[dev]" numpy==2.3.3 pyflakes==3.4.0 playwright==1.56.0
+          python -m pip install -e "$GITHUB_WORKSPACE/crypto-300-profit-mission/local-agent[dev]" numpy==2.3.3 pyflakes==3.4.0 playwright==1.56.0
           python -m playwright install --with-deps webkit
       - name: Run native three-listener synthetic smoke without public RPC
         env:
