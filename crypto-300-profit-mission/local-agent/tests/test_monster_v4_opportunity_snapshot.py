@@ -53,6 +53,9 @@ class TestOperatorSnapshot(unittest.TestCase):
         self.assertEqual(r["sources"]["spot"]["state"], "RECENT_STORED_POLL")
         self.assertEqual(r["opportunities"][0]["signal"], "WATCH_RESEARCH_ONLY")
         self.assertTrue(r["opportunities"][0]["watch_evidence_present"])
+        self.assertEqual(r["opportunities"][0]["watch_reason"], "SNAPSHOT_WINDOW_3MIN_PLUS_24H_LIQUIDITY_CONTEXT")
+        self.assertEqual(r["opportunities"][0]["watch_observed_move_pct"], 8.0)
+        self.assertEqual(r["opportunities"][0]["watch_quote24_at_trigger"], "200000")
         self.assertEqual(r["opportunities"][0]["recommendation"], "RESEARCH_REVIEW_ONLY_NO_BUY")
         self.assertEqual(r["production"], "NO_GO")
         self.assertEqual(r["opportunities"][0]["d2_status"], "NOT_CAPTURED")
@@ -65,13 +68,17 @@ class TestOperatorSnapshot(unittest.TestCase):
         d2 = m.process_d2(self.db, BASE + 600_000, evaluate_spot=lambda symbol: {
             "symbol": symbol, "classification": "RESEARCH_LIQUIDITY_NOT_BUY",
             "research_liquidity_gate": True, "fee_source": "USER_UNCONFIRMED_SCENARIO",
-            "budget_usdt": 30})
+            "budget_usdt": 30, "spread_bps": 8.5,
+            "instant_roundtrip_cost_bps": 51.0, "depth_fully_filled": True})
         self.assertEqual(d2["checked"], 1)
         record = self.report(BASE + 600_000)["opportunities"][0]
         self.assertEqual(record["signal"], "SETUP_RESEARCH_ONLY")
         self.assertEqual(record["d2_status"], "CHECKED")
         self.assertTrue(record["d2_research_liquidity_gate"])
         self.assertEqual(record["d2_assumed_budget_usdt"], 30)
+        self.assertEqual(record["d2_spread_bps"], 8.5)
+        self.assertEqual(record["d2_instant_roundtrip_cost_bps"], 51.0)
+        self.assertTrue(record["d2_depth_fully_filled"])
         self.assertEqual(record["g4_real_execution"], "UNKNOWN")
 
     def test_source_outage_suppresses_freshness(self):
