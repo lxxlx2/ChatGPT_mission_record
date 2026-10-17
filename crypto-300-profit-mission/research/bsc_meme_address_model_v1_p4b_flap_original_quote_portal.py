@@ -6,8 +6,10 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent
 SOURCES={
-    "result": ("bsc-meme-address-model-v1-p4b-flap-major2-actual-portal-quote-transfers-2026-10-17.json",
-               "25123c96619dc6b61b4a96a6f6dbd8372128c1a9"),
+    "result": ("bsc-meme-address-model-v1-p4b-flap-major2-original-buy-payment-supplement-v2-2026-10-18.json",
+               "c2085b4f35187d7ca90123aaea93e15ee068044b"),
+    "raw_v1": ("bsc-meme-address-model-v1-p4b-flap-major2-actual-portal-quote-transfers-2026-10-17.json",
+               "db2e47010025fde7adf150c408748806e594a4c2"),
     "from_freeze": ("bsc-meme-address-model-v1-p4b-flap-original-buyer-quote-outflow-precommit-2026-10-17.json",
                     "dcf3ec9a919e8fccfb77adb880ce59f5a94926ed"),
     "to_freeze": ("bsc-meme-address-model-v1-p4b-flap-original-buy-quote-to-portal-precommit-2026-10-17.json",
@@ -29,6 +31,28 @@ def load(root=ROOT):
 def replay(data):
     result,first,second,original=(data[n] for n in
                                   ("result","from_freeze","to_freeze","original"))
+    old=data["raw_v1"]
+    require(result["source_v1"] ==
+            {"path":SOURCES["raw_v1"][0],"git_blob_sha":SOURCES["raw_v1"][1],
+             "source_role":"IMMUTABLE_ORIGINAL_RPC_READBACK_SELECTED_FIELDS"} and
+            result["supplement_provenance"] ==
+            "POST_HOC_AUDIT_ENRICHMENT_NOT_NEW_RPC_QUERY" and
+            result["supplement_confirms_provider_request_capture"] is False and
+            result["original_native_value_provenance"] ==
+            "JOINED_FROM_OLDER_PINNED_ORIGINAL_SIGNED_TX_METADATA_NOT_NEW_RPC_READ",
+            "V1_V2_PROVENANCE_GRADE")
+    require(len(old["rows"]) == len(result["rows"]) == 2 and
+            all(old[k] == result[k] for k in
+                ("captured_date_bangkok","precommits","source_original_first_buys_git_blob",
+                 "rpc_method","topic0","portal","gates")),
+            "IMMUTABLE_V1_SELECTED_METADATA_DRIFT")
+    for orig,enrich in zip(old["rows"],result["rows"]):
+        require(all(enrich.get(k)==v for k,v in orig.items()),
+                "IMMUTABLE_V1_SELECTED_LOG_FIELD_DRIFT")
+    require(old["confirmed"] == result["selected_field_match"] and
+            old["evidence_grade"] ==
+            "HISTORICAL_RPC_FILTERED_SELECTED_FIELDS_SUCCESS_NOT_FULL_VERBATIM_LOG_PERSISTED",
+            "V1_TO_V2_LABEL_PROVENANCE")
     require(result["precommits"] ==
             {"from_original_signer_ERC20_Transfer_oneblock_sha":SOURCES["from_freeze"][1],
              "to_portal_ERC20_Transfer_oneblock_sha":SOURCES["to_freeze"][1]} and
@@ -51,8 +75,7 @@ def replay(data):
     require(result["evidence_grade"] ==
             "TOOL_PARSED_FILTERED_FIELDS_NOT_FULL_RPC_RAW_LOG_PINNED" and
             "One intermediary->Portal ERC20" in result["selected_field_match"] and
-            result["query_chronology_grade"].startswith(
-                "THE_TWO_QUOTE_FROM_EOA_EMPTY_JSON_RESPONSES_WERE_NOT_COMMITTED_BEFORE"),
+            result["query_chronology_grade"] == "DEVELOPER_REPORTED_SEQUENCE_NOT_GIT_PROVEN",
             "SOURCE_GRADE_OR_CHRONOLOGY_UNSUPPORTED")
     output=[]
     for i,row in enumerate(result["rows"]):
