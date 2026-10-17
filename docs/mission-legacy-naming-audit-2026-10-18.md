@@ -7,7 +7,7 @@ Scope: existing **main-branch** documentation as of 2026-10-18. New/unreviewed [
 
 Primary repository rule: [docs/REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md); Mission-specific authority: [MISSION_SPEC.md](../crypto-300-profit-mission/MISSION_SPEC.md), [state/latest.md](../crypto-300-profit-mission/state/latest.md). Human-authored canonical research titles identify both **entity** and **purpose**; preferred filenames lower-case kebab-case `<entity>-<purpose>.md`. Operational current pointers, frozen schemas/policies, machine-generated artifacts, cross-referenced upper-case reports and immutable audit evidence retain their stable names unless a separate compatible migration is reviewed.
 
-Inspected legacy areas: repository main/root and Mission README, docs, `research/{projects,tokens,memes,nfts}`, Mission `positions/`, `watchlists/`, `meme/`, `local-agent/`, `state/`. The mapped project research directories have consistent lower-kebab-case substantive research filenames, with `README.md` used as the standard index exception.
+Inspected legacy areas: repository main/root and Mission README, Crypto Daily and TGE runtime authority/README, docs, `research/{projects,tokens,memes,nfts}`, Mission `positions/`, `watchlists/`, `meme/`, `local-agent/`, `state/`. The mapped project research directories have consistent lower-kebab-case substantive research filenames, with `README.md` used as the standard index exception.
 
 ## Corrected existing files without moving referenced paths
 
@@ -25,6 +25,8 @@ Inspected legacy areas: repository main/root and Mission README, docs, `research
 | `crypto-300-profit-mission/local-agent/README.md` | H1 identifies **Phase 1–2 synthetic history**, warning links latest Mission/Meme status | Historical statements like “no real runtime exists” do not describe later development |
 | `crypto-300-profit-mission/watchlists/nft-mint-radar.md` | H1 and paused-runtime note; change old “runs hourly” into **original design, currently paused** | Prevent false active monitor coverage claim |
 | `docs/REPOSITORY_STRUCTURE.md` | Clarify canonical exceptions and replace obsolete “Crypto Daily :00 / TGE :14 / $300 Mission :29” testing example | Old schedule examples conflict with current task state and can accidentally restart a paused task |
+| `crypto-daily/README.md` | Correct obsolete :10 times to HH:20 at 00/03/06/08/09/10/11/12/16/20 per 2026-10-10 runtime override; note 10/11 recovery-only | README conflicted with `crypto-daily/AUTOMATION_RUNTIME.md`; configuration unchanged |
+| `airdrop-tge-monitor/README.md` | Document current HH:00 hourly schedule and legacy :50/:14 supersession | Aligned with `airdrop-tge-monitor/AUTOMATION_RUNTIME.md`; no task mutation |
 
 ## Not renamed deliberately: compatibility and evidentiary retention
 
