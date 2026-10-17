@@ -1,0 +1,169 @@
+name: Monster 445 actual first D1 service trace (one-shot research)
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/monster/source-batches/monster_feb445_first_service_trace_request.json'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster445-first-service-immutable-observer-once
+  cancel-in-progress: false
+jobs:
+  freeze_and_offline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate explicit one-file-only research replay request
+        run: |
+          set -eu
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          request='crypto-300-profit-mission/monster/source-batches/monster_feb445_first_service_trace_request.json'
+          changed=subprocess.check_output(
+              ['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],
+              text=True).splitlines()
+          exact={'schema':'MONSTER445_FIRST_SERVICE_TRACE_ONESHOT_REQUEST_V1',
+                 'full_replay_artifact_id':12044872933,
+                 'full_json_sha256':'370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf',
+                 'research_only':True,'approved_scope':'OFFLINE_TRACE_ONLY',
+                 'original_production_change':False,'deploy':False,
+                 'send_messages':False,'trade':False}
+          if changed!=[request] or json.loads(Path(request).read_text())!=exact:
+              raise ValueError('MONSTER445_FIRST_SERVICE_NOT_ONE_TIME_FROZEN_REQUEST')
+          PY
+          test "$GITHUB_REF_NAME" = "research/monster-v4-local-discovery-20261010"
+      - name: Unit test real FIFO slot observer; refuse model or source identity drift
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -eu
+          python -m py_compile monster_v4_445_first_service_trace_replay.py test_monster_v4_445_first_service_trace_replay.py
+          python -m unittest -v test_monster_v4_445_first_service_trace_replay
+          python -m unittest -v test_monster_v4_shared_445_source_shards test_monster_v4_shared_d1_zeroquote_research_v2
+          echo MONSTER445_TRACE_OFFLINE_PRETESTS_PASS_NO_MODEL_CLAIM
+
+  actual_full445_eight_slot_trace:
+    needs: freeze_and_offline
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download frozen 445 original D0+V2 D1 raw result and validate SHA
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster445_trace_reference
+          gh run download 38898752712 --repo lxxlx2/ChatGPT_mission_record --dir /tmp/monster445_trace_reference --name monster-feb445-all445-real-original-shared-D0D1-once
+          printf '%s  %s\n' 370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf /tmp/monster445_trace_reference/monster_feb445_all445_one_sqlite_full_result.json | sha256sum -c -
+      - name: Reacquire exactly 18 original source artifacts, verify all 28 complete ZIPs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -eu
+          python monster_v4_shared_445_archive_replay_runner.py collect --source-dir /tmp/monster445_trace_28_original_shards --audit /tmp/monster445_trace_source_audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path('/tmp/monster445_trace_source_audit.json').read_text())
+          assert a['source_28_shards_verified'] is True
+          assert len(a['source_artifacts'])==28
+          assert sum(s['ten_day_publisher_sha_count'] for s in a['source_artifacts'])==4450
+          print('MONSTER445_FIRST_SERVICE_REAL_ALL_28_ORIGINAL_SOURCE_SHARDS_ATTESTED')
+          PY
+      - name: Replay same 445 original D0 and V2 D1 with read-only per-candidate actual service trace
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -eu
+          python monster_v4_445_first_service_trace_replay.py --source-dir /tmp/monster445_trace_28_original_shards --reference-full /tmp/monster445_trace_reference/monster_feb445_all445_one_sqlite_full_result.json --out /tmp/monster445_first_service_trace_full.json
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          trace=Path('/tmp/monster445_first_service_trace_full.json')
+          j=json.loads(trace.read_text())
+          assert j['original_V2_every_event_and_queue_byte_semantics_equal'] is True
+          assert j['actual_3360_shared_polls']==3360
+          assert j['D1_global_selected_slots']==753
+          assert j['D1_first_selection_slots']+j['D1_repeated_selection_slots']==753
+          assert j['cohort_comparison']['PEAK_98']['WATCH']==98
+          assert j['cohort_comparison']['OTHER_171']['WATCH']==171
+          assert len(j['candidate_first_service'])==269
+          assert j['G6']=='NO_GO'
+          payload={
+              'schema':'MONSTER445_REAL_FIRST_D1_SERVICE_TRACE_SUMMARY_V1',
+              'source_all28_original_artifacts_attested':True,
+              'historical_source_complete_symbols':445,
+              'original758_censored_313':True,
+              'original_full_json_sha256':j['frozen_original_full_json_sha256'],
+              'full_trace_sha256':hashlib.sha256(trace.read_bytes()).hexdigest(),
+              'full_trace_GHA_run_id':"${{ github.run_id }}",
+              'global_shared_polls':j['actual_3360_shared_polls'],
+              'original_research_V2_model_identical':j['original_V2_every_event_and_queue_byte_semantics_equal'],
+              'D1_total_selected':j['D1_global_selected_slots'],
+              'D1_first_selected':j['D1_first_selection_slots'],
+              'D1_reselected':j['D1_repeated_selection_slots'],
+              'D1_busy_ticks':j['D1_busy_ticks'],
+              'peak98_vs_other171':j['cohort_comparison'],
+              'historical_pit_listing':'UNVERIFIED',
+              'independent_OOS':False,'actual_net_profit':'UNVERIFIED',
+              'independent_other_AI_review':'NOT_DONE',
+              'G4':'UNKNOWN','G6':'NO_GO',
+              'NO_MERGE':True,'NO_DEPLOY':True,'NO_GMAIL':True,'NO_TRADE':True}
+          out=Path('/tmp/monster445_first_service_summary_git.json')
+          out.write_text(json.dumps(payload,sort_keys=True,indent=2)+'\n')
+          assert json.loads(out.read_text())==payload
+          print('MONSTER445_FIRST_SERVICE_ALL445_REAL_TRACE_MATCHED_ORIGINAL_V2')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster445-real-first-D1-service-fairness-28shards-once
+          path: |
+            /tmp/monster445_first_service_trace_full.json
+            /tmp/monster445_first_service_summary_git.json
+            /tmp/monster445_trace_source_audit.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Seal small actual first service result in Git, no overwrite / model drift
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          result=crypto-300-profit-mission/monster/evidence/monster_feb445_real_first_service_trace_actual.json
+          test ! -e "$result"
+          cp /tmp/monster445_first_service_summary_git.json "$result"
+          git add "$result"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive real 445 first-D1-service and repeated-slot actual evidence"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$result" 2>/dev/null; then
+            echo MONSTER445_FIRST_SERVICE_REMOTE_RESULT_EXISTS_NO_OVERWRITE
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_445_first_service_trace_replay.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_445_first_service_trace_replay.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_one_db_from_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_d1_zeroquote_research_v2.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py .github/workflows/monster-v4-445-first-service-trace-one-shot.yml crypto-300-profit-mission/monster/source-batches/monster_feb445_first_service_trace_request.json; do
+            test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo MONSTER445_FIRST_SERVICE_EXECUTABLE_CHANGED; exit 1; }
+          done
+          for i in $(seq -w 0 27); do
+            file=crypto-300-profit-mission/monster/evidence/monster_feb445_shard$i.proof.json
+            test "$(git rev-parse "$GITHUB_SHA:$file")" = "$(git rev-parse "HEAD:$file")" || { echo MONSTER445_FIRST_SERVICE_ORIGINAL_PROOF_CHANGED; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER445_FIRST_SERVICE_RESEARCH_EVIDENCE_IMMUTABLE_GIT_ARCHIVED
