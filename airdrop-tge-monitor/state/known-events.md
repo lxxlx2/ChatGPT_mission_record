@@ -145,7 +145,8 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - external_issuer: NeoSoul / DNA, not legacy NEO blockchain
 - first_reported_at: 2026-10-15 (Binance News)
 - secondary_attributed_source: https://www.binance.com/en/square/post/10-15-2026-neosoul-plans-dedicated-dna-airdrop-for-standx-community-377570746498100
-- issuer_original_social_text_readback: SOURCE_GAP
+- issuer_original_post_link: https://x.com/NeoSoulAI/status/2110722973703512113 (original handle/status ID discovered via cited independent source; direct X returned HTTP 403, content NOT independently readable)
+- issuer_original_social_text_readback: SOURCE_GAP; cannot upgrade secondary quoted text to Tier A without direct original or equivalent canonical first-party readback
 - reported_issuer_statement: NeoSoul / NS3.AI proposes dedicated DNA for long-term StandX contributors and eligibility/claim details after TGE.
 - personal_snapshot_eligibility_allocation_claim: UNVERIFIED
 - source_tier_for_STANDX_rights_ACTION: NOT_YET_A_OR_MAPPED_B
@@ -157,7 +158,10 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 ### NeoSoul DNA Binance Wallet Alpha release (separate event)
 - event_key: neosoul:dna_binance_alpha_release:2026-10-16
 - verified_platform_source: https://www.binance.com/en-IA/square/profile/binancewallet
-- reported_platform_announcement: DNA Binance Alpha on 2026-10-16; qualified Alpha Points users can claim after trading opens, subject to later detailed rules
+- reported_platform_announcement: Binance Wallet official 2026-10-16 08:00 UTC DNA Alpha; initial threshold >=245 Alpha Points, first-come 400 DNA, cost 15 Alpha Points; threshold drops 5 points every five minutes IF rewards remain; users must confirm within 24 hours in Alpha Events (check actual user campaign countdown and pool).
+- platform_official_detailed_source: https://www.binance.com/en/square/post/377812880382013
+- first_party_checkpoint: 2026-10-17 ~08:00 UTC / 15:00 Asia/Bangkok is 24h from launch, not a guarantee of open stock at that time
+- user_notification_accounting: DNA Alpha campaign described once in 2026-10-17 full Crypto Daily Gmail 1a14886106251842; no standalone NeoSoul project added to TGE Registry
 - StandX_user_compensation_is_identical: FALSE, no relationship inferred between account Alpha Points and StandX-specific allocation
 - user_eligibility/actual_Alpha_points: UNVERIFIED
 - action_decision: do not deliver StandX-specific entitlement notice on generic Alpha announcement alone; retain a new material Crypto Daily news candidate and verify Alpha activity details before any action.
