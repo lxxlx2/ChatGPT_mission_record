@@ -1,0 +1,48 @@
+{
+  "schema": "BSC_P4B_2026_R2_EXTERNAL_5E60_WBNB_NOT_DIRECT_DEBIT_HISTORIC_READBACK_V1",
+  "source_prefreeze": "bsc-meme-address-model-v1-p4b-239e-r2-external-buyer-wbnb-wallet-spend-precommit-2026-10-18.json",
+  "calls_executed": 3,
+  "retries": 0,
+  "network": "bnb-mainnet",
+  "method": [
+    "eth_call ERC20 WBNB balanceOf",
+    "eth_getLogs WBNB Transfer from external signer"
+  ],
+  "external_buy_wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+  "signed_router_tx": "0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47",
+  "pair_matched_input_WBNB_wei": "1562236003910333182",
+  "wbnb_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "balance_snapshots": [
+    {
+      "block": 85959961,
+      "hex": "0x000000000000000000000000000000000000000000000000000074f1c0b710c8",
+      "raw": "128581669163208"
+    },
+    {
+      "block": 85959962,
+      "hex": "0x000000000000000000000000000000000000000000000000000074f1c0b710c8",
+      "raw": "128581669163208"
+    }
+  ],
+  "transfer_from_wallet_event": {
+    "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+    "indexed_from": "0x5e600e259e3cff0757e3736223685958665866c6",
+    "block": 85959962,
+    "complete_json": true,
+    "response_chars": 2,
+    "logs": [],
+    "total": 0
+  },
+  "funding_direct_WBNB_from_buyer": "NOT_EVIDENCED",
+  "funding_route_token": "UNRESOLVED_PENDING_FULL_SIGNED_ROUTER_CALLDATA",
+  "source_grade": "TWO_ACTUAL_WBNB_END_BLOCK_BALANCES_AND_COMPLETE_EMPTY_TRANSFER_FILTER",
+  "constraints": [
+    "A real WBNB Pair input alone cannot be called WBNB spent by signer; router path may be multi-hop.",
+    "The signed router transaction has msg.value zero and selector 0x38ed1739, cannot infer tokenIn from only selector without full path.",
+    "A complete empty Transfer(from=buyer) scope means no WBNB Transfer from buyer in this specific block, not proof other contract funding was absent.",
+    "No follower signal causality, execution costs or realized PnL established."
+  ],
+  "P4_B": "PARTIAL",
+  "P5": "BLOCKED",
+  "production": "NO_GO"
+}
