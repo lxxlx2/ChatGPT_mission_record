@@ -41,9 +41,22 @@
 
 请按固定结构返回：`APPROVE | REQUEST_CHANGES | BLOCKED`；准确审核SHA及比较基线；每个P0/P1/P2的代码行号、实际复现步骤、结果、修复方向；检查是否会改变WATCH、D2/BUY解释、Frank隔离或G0–G6放行；明确剩余真实源/样本外/手续费与可成交缺口以及`NO_MERGE / NO_DEPLOY`是否仍生效。不能访问固定源码或运行测试请标`UNVERIFIED/BLOCKED`，禁止凭文字自称完成独立审核。
 
+## Codex 定向复审最终结果：APPROVE（2026-10-18）
+
+**本节为本次用户转交的独立Codex报告的归档；该报告中本地 `/tmp` 探针文件不是本会话从GitHub重新取得的证据。** 本会话另外独立核对原固定SHA的GitHub Actions成功与代码源保持不变。审核者报告的底层精确模型为 `UNVERIFIED`。
+
+- **固定审核SHA**：`d38999df6db63192ad3e3d11e793e2e6c4df05db`；比较基线 `7cee9f13f01f8601ba5759466b8befc55e8dec14`。范围仅限机会查询器和测试的两个P2修复，不批准PR其它历史研究/Stage163/交易/生产代码。
+- **结论**：`APPROVE`，P0=0/P1=0/P2=0（该固定范围）；原旧SHA的 `REQUEST_CHANGES` 保留历史事实，不反溯批准。
+- **P2-1 CLOSED**：用 WATCH 首次 `first_seen_ms` 锚定`INVALIDATED`事件；原EVALUATED的旧SETUP/D2历史保留但显示失效；新WATCH不继承旧失效、SETUP或D2。审核者自述独立调用真实Shadow schema与函数执行 `WATCH→SETUP→D2 CHECKED→INVALIDATED→new WATCH`。
+- **P2-2 CLOSED**：场所级poll健康与单币snapshot时戳独立。审核者自述隔离重现AAA在新poll缺席180秒 => `SYMBOL_QUOTE_NOT_SEEN_IN_LATEST_POLL`；缺席540秒 => `SYMBOL_QUOTE_STALE`；场所仍`RECENT_STORED_POLL`。
+- **可再验证的原CI**：[run #39076479244](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39076479244)，固定触发SHA `d38999df...`，工作流完成`SUCCESS`，新增query tests 10/10，Shadow 31/31，D2 12/12。审核者另自述本地四类命令通过、逻辑/主DB/WAL SHA只读、未发现网络/邮箱/交易/写库；独立本地日志路径仅存在于审核者的临时环境，不视为持久Git仓库Artifact。
+- **仍然`UNVERIFIED`**：真实用户Mac实时持续源、盘口、实际账户费率/成交、告警送达与获利。PR #30保持Draft/open/unmerged；`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
+
+**结项**：该两个P2不需要再重新请另一个AI重复审核；后续精力转回增量实际SETUP与可执行成本/净收益验证。只在有新的实质代码变更时为其范围建立新门禁，严格区分其它Stage的独立审核状态。
+
 ## 当前状态
 
-`CODE_TEST_CI=PASS`；`EXTERNAL_INDEPENDENT_REVIEW=NOT_DONE`；`LOCAL_MAC_ACCEPTANCE=NOT_DONE`；`ACTUAL_PROFIT_G4=UNKNOWN`；`G6=NO_GO`。仅研究代码与CI完成，禁止合并/部署/通知/交易。
+`CODE_TEST_CI=PASS`；`FIXED_D38999DF_P2_INDEPENDENT_REVIEW=APPROVE`；`LOCAL_MAC_ACCEPTANCE=NOT_DONE`；`ACTUAL_PROFIT_G4=UNKNOWN`；`G6=NO_GO`。仅研究代码与CI完成，禁止合并/部署/通知/交易。
 
 
 ## 补充：Codex REQUEST_CHANGES 的两项P2闭环修复（2026-10-18）
