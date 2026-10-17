@@ -50,7 +50,7 @@
 - `$300-3000` umbrella GPT task: **PAUSED 2026-10-04**，因为没有剩余实质授权 lane。
 - legacy `$300 Crypto资产状态监控`: **DISABLED**。
 - production trading: **NO_GO**。
-- EVM 地址分析（[Draft PR #97](https://github.com/lxxlx2/ChatGPT_mission_record/pull/97)）：**RESEARCH_ONLY / UNMERGED / Batch 001 PARTIAL**。BSC 20 地址签名活跃度筛查已做，单币 RTX5090 一轮买卖闭合；所有钱包长期/近 30 天全量盈亏尚未完成。此模块不会自动成为 Frank、Monster 的信号源。
+- EVM 地址分析（[Draft PR #97](https://github.com/lxxlx2/ChatGPT_mission_record/pull/97)）：**RESEARCH_ONLY / UNMERGED / Batch 001 PARTIAL**。第一批 BSC、Ethereum、Base 三链各 20/20 签名活跃度筛查，三链并集 15/20 有签名交易；单币 RTX5090 一轮买卖闭合；所有钱包长期/近 30 天全量盈亏尚未完成。此模块不会自动成为 Frank、Monster 的信号源。
 
 Frank 当前不依赖 ChatGPT scheduler；它由本地 deterministic runtime 独立运行。2026-10-10 PR #29 已合并，用户 Mac 上先前授权的 Loop/Dashboard 部署曾通过 7 项只读验收；实际后续运行以本地健康检查为准。
 
@@ -71,7 +71,7 @@ Frank 当前不依赖 ChatGPT scheduler；它由本地 deterministic runtime 独
 - **事实与来源：** 原始链上交易/RPC/官方 API 优先；官方声称、推断与预测明确分级。来源不可用、分页不完整、价格缺失写 `UNAVAILABLE / UNRESOLVED`，不能当成零或补造数值；不能用中文网站作为 Crypto 项目核实来源。
 - **钱包与资产：** 已识别且有可信实时美元估值的每一笔资产 **≥$1** 才计入展示总额；低于 $1 的逐项排除，未标价资产保留待核实。Binance 投资资金计入，**Bybit 整户只记录为生活/房租资金并排除**。转账、退款、解锁、余额增加以及出售毛收入不能直接等同交易利润，不能重复加总。
 - **交易盈亏：** 长期与滚动 30 天独立核算，回溯开仓成本、成功买卖交易、gas、代币税、历史兑换价格、剩余仓位和跨钱包资金。单币闭环 `TOKEN_ROUNDTRIP_VERIFIED` 不代表钱包完整 `30D_PNL_COMPLETE`，只筛出近期签名交易也不等于确认盈利。亏损样本与盈利样本同等保留。
-- **地址分析固定研究队列：** [PR #97](https://github.com/lxxlx2/ChatGPT_mission_record/pull/97) 冻结 449 个原始地址，按源文件顺序每批 20 个、共 23 批；先筛活跃钱包，再做具体代币、长期/近期盈亏。第一批仅 **BSC 活跃度 20/20、1 个代币闭环**，尚无整批钱包盈利审计完成。未解决的地址进入持久 `DEFERRED`，不得遗漏或只报赢家。**PR 未合并，不可宣称 main 已包含模块。**
+- **地址分析固定研究队列：** [PR #97](https://github.com/lxxlx2/ChatGPT_mission_record/pull/97) 冻结 449 个原始地址，按源文件顺序每批 20 个、共 23 批；先筛活跃钱包，再做具体代币、长期/近期盈亏。第一批 **BSC / Ethereum / Base 签名活跃度各 20/20（三链并集 15/20）以及 1 个代币闭环**，尚无整批钱包盈利审计完成。未解决的地址进入持久 `DEFERRED`，不得遗漏或只报赢家。**PR 未合并，不可宣称 main 已包含模块。**
 - **开发与上线隔离：** 研究、试验及 Draft PR 不能自动升级成生产交易信号。原有 `NO_GO`、暂停监控和用户已冻结的价格/妖币模型规则不因新增研究而改变。未经明确授权不新增/恢复/替换 automation、Gmail 提醒、launchd 或实际交易。
 - **Git 与完成判定：** 写入后必须检查真实 Git commit SHA 和远端文件；Draft PR、代码审核通过、回测结果与用户 Mac 实测验收彼此独立。按任务规格需要的 `HHMMSS-final.md` 或 `final-retry.md` 才是任务完成证据，trigger/临时文件不是。失败应原样记录，不能报成功。
 
