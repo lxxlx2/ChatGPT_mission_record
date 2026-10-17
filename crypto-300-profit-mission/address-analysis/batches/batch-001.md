@@ -1,7 +1,7 @@
 # 地址分析 / Batch 001：oooooyoung 前 20 个 EVM 钱包 BSC 活跃度与首笔完整盈亏审计
 
 Date: 2026-10-18 Asia/Bangkok
-Status: `PARTIAL`; `BSC_ACTIVITY_SCREEN_COMPLETE` = 20/20; `FULL_30D_AND_LIFETIME_PNL_COMPLETE` = **0/20 wallets**; `TOKEN_ROUNDTRIP_VERIFIED` = **1 closed token roundtrip**. No claim that all EVM chains were screened.
+Status: `PARTIAL`; `BSC_ACTIVITY_SCREEN_COMPLETE` = 20/20; `ETH_BASE_NONCE_SCREEN_COMPLETE` = 20/20 each; `FULL_30D_AND_LIFETIME_PNL_COMPLETE` = **0/20 wallets**; `TOKEN_ROUNDTRIP_VERIFIED` = **1 closed token roundtrip**. No claim that all EVM chains were screened.
 
 ## Frozen scope and reproducibility
 
@@ -37,6 +37,40 @@ Status: `PARTIAL`; `BSC_ACTIVITY_SCREEN_COMPLETE` = 20/20; `FULL_30D_AND_LIFETIM
 | 20 | (无标签) | [`0x0209aa…44eb94`](https://bscscan.com/address/0x0209aa08dd3f5a1057cd66771a6009854144eb94) | 520 | PNL_UNRESOLVED |
 
 Summary: **13/20** with signed BSC transaction(s); **7/20** signed BSC zero; total **9282** signed BSC tx in this fixed BSC window. This census includes transfer, approval, router and other types. **Ethereum, Base and other EVM networks: NOT_CHECKED in this batch stage.** No return or win rate inferred from counts.
+
+## 2026-10-18 continuation: Ethereum + Base signed activity
+
+Alchemy historical Ethereum and Base nonce pairs were collected for the same 20 fixed source rows. Evidence: [machine-readable three-chain screen](../evidence/batch-001-three-chain-30d-nonce-screen.json). Historical boundaries are aligned within two seconds across chains.
+
+- Ethereum: blocks 25,999,816 (2026-09-17T21:12:11Z) to 26,214,883 (2026-10-17T21:12:11Z), **13/20** wallets signed, **1,331** signed transactions.
+- Base: blocks 51,445,092 (2026-09-17T21:12:11Z) to 52,741,093 (2026-10-17T21:12:13Z), **10/20** wallets signed, **1,515** signed transactions.
+- BSC remains **13/20** wallets signed, **9,282** transactions in the previous fixed-height screen.
+- Across BSC + Ethereum + Base: **15/20** signed at least once. Rows **008/009/010/011/013** were signed-zero on these three networks only. Rows **005** and **012** had zero BSC signed transactions but nonzero Ethereum activity.
+
+| Source row | BSC signed | Ethereum signed | Base signed | Signed on any of three |
+| ---: | ---: | ---: | ---: | :---: |
+| 01 | 3 | 114 | 91 | YES |
+| 02 | 11 | 58 | 108 | YES |
+| 03 | 3 | 94 | 0 | YES |
+| 04 | 17 | 124 | 90 | YES |
+| 05 | 0 | 89 | 76 | YES |
+| 06 | 3 | 107 | 87 | YES |
+| 07 | 3 | 0 | 0 | YES |
+| 08 | 0 | 0 | 0 | NO* |
+| 09 | 0 | 0 | 0 | NO* |
+| 10 | 0 | 0 | 0 | NO* |
+| 11 | 0 | 0 | 0 | NO* |
+| 12 | 0 | 3 | 0 | YES |
+| 13 | 0 | 0 | 0 | NO* |
+| 14 | 2307 | 465 | 965 | YES |
+| 15 | 5 | 4 | 0 | YES |
+| 16 | 1982 | 157 | 0 | YES |
+| 17 | 207 | 13 | 7 | YES |
+| 18 | 4183 | 92 | 82 | YES |
+| 19 | 38 | 0 | 1 | YES |
+| 20 | 520 | 11 | 8 | YES |
+
+**NO*** means zero wallet-signed transactions on the three checked networks during the frozen window, not total EVM inactivity. Smart accounts, passive ERC20 receipts, Polygon/Arbitrum and other chains remain unexamined. Signed nonces do not establish trade execution or profitability. No additional token gain/loss positions or whole-wallet PnL were confirmed in this continuation.
 
 ## Verified completed token roundtrip: row 016 RTX5090
 

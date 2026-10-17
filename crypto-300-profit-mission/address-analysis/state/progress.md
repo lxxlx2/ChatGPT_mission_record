@@ -8,15 +8,16 @@ Source manifest: [449 addresses](../sources/oooooyoung-evm-449-source-snapshot.j
 
 - Total **449** distinct EVM addresses, fixed order; batch size 20; **23** batches.
 - **Current in-progress batch = 001** (source rows **001–020**). The BNB Chain 30-day signed-activity census for these 20 has been finished, with exact fixed height window `0x74cf256` → `0x7a4ca36`. **13/20** had wallet-signed BSC transactions, **7/20** had none. This alone does not prove who bought/sold or which chains are inactive.
+- **2026-10-18 three-chain screening extension:** [machine-readable nonce evidence](../evidence/batch-001-three-chain-30d-nonce-screen.json) covers Ethereum 20/20 (13 active, 1,331 signed), Base 20/20 (10 active, 1,515 signed), alongside BSC 20/20. Three-network union 15/20 signed; rows 008/009/010/011/013 three-network signed-zero. Other EVM chain coverage and all-wallet PnL are **incomplete**.
 - **Verified realized token roundtrip = 1:** row016 RTX5090 closed position **+0.226099333116 BNB** (~**+$162.86** using contemporary Binance BNBUSDT candles); see [batch-001](../batches/batch-001.md) and [structured evidence](../evidence/batch-001-row-016-rtx5090-roundtrip.json). It is one trade, **not** the wallet's aggregate profit.
 - **Completed full-wallet 30-day multi-EVM PnL = 0/449**; **completed full-wallet lifetime PnL = 0/449**. No ranking / success claim from incomplete source.
-- **Next available work:** resume Batch 001, not skip ahead based on perceived winners. Inspect BSC signed activity for actual roundtrips rows 001–004 / 006–007 / 015 and paginate 014 / 016–020; Ethereum + Base and other material EVM chains need independent checks, including BSC-no-signed rows 005 and 008–013. All unresolved entries stay in original queue.
+- **Next available work:** Batch 001 real swap/cost reconstruction for low-count rows 001–004 / 006–007 / 015 across the relevant active chains. For high-frequency 014 / 016–020 bound each research round and record exact unresolved transaction ranges, trade basis and re-entry condition in a `DEFERRED` queue before moving in source order. Polygon/Arbitrum/other EVM chain discovery pending; do not mark zero on three chains as globally inactive. No signed nonce is a confirmed profitable trade.
 
 ## Batch registry
 
 | Batch | Source rows | Screening | PnL / completion |
 | --- | --- | --- | --- |
-| 001 | 001–020 | BSC 20/20; all-EVM pending | PARTIAL: 1 closed trade, 20 lifetime/multichain totals unresolved |
+| 001 | 001–020 | BSC + Ethereum + Base each 20/20; other EVM pending | PARTIAL: 1 closed token roundtrip, 20 wallet-level PnL unresolved |
 | 002 | 021–040 | NOT_STARTED | NOT_STARTED |
 | 003 | 041–060 | NOT_STARTED | NOT_STARTED |
 | 004 | 061–080 | NOT_STARTED | NOT_STARTED |

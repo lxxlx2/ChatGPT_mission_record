@@ -10,7 +10,7 @@ Scope: independent Mission research module, no connection to the existing PR #40
 - Source Git blob SHA `954f3aba66be21911dd627fa40dd3dd0a9fd1d26`, as read on 2026-10-18; **449 unique, syntactically valid EVM addresses**, original labels are *unverified source annotations*.
 - Stable imported manifest: [sources/oooooyoung-evm-449-source-snapshot.json](sources/oooooyoung-evm-449-source-snapshot.json). All subsequent batches MUST use this immutable snapshot and its original source ordering, not any new version of the external repository.
 - Batch size **20**, rows 1–20 = batch 001, rows 21–40 = batch 002, ..., rows 441–449 = batch 023. No skipped candidates and no reordering to manufacture a high-PnL sample. At most one immutable batch final artifact per genuinely completed research round; preliminary screens are explicitly `PARTIAL`.
-- First 30-day cutoff established on 2026-10-18 around 04:02 Asia/Bangkok: **2026-09-17 21:02:00Z → 2026-10-17 21:02:00Z** (30 days). BNB Chain start block `0x74ced05` timestamp **2026-09-17T21:01:59Z**, the immediately preceding observed block. BSC nonce deltas were read against this block and provider `latest`, so the upper bound is observation-time latest, not an exactly frozen upper block. For exact reproducibility freeze the upper BSC block and migrate timestamps to block range before declaring a full 30-day audited result.
+- Frozen BSC 30d window uses blocks `0x74cf256 → 0x7a4ca36` (2026-09-17T21:12:12Z to 2026-10-17T21:12:13Z). The Ethereum and Base matched historical block/nonce windows appear in [three-chain evidence](evidence/batch-001-three-chain-30d-nonce-screen.json). This supersedes the preliminary lower block `0x74ced05` and its unfrozen latest upper bound. Cross-network window timestamps differ by at most 2 seconds.
 - Long-term window means **all verifiable history of the identical address**, beginning at its first funding/nonce and involving its opening inventory cost. Do not pretend source-list addition date is acquisition date.
 
 ## Research stages and explicit gates
@@ -26,8 +26,20 @@ Coverage status codes: `NOT_STARTED`, `BSC_SIGNED_ACTIVE`, `BSC_SIGNED_ZERO`, `T
 ## Progress
 
 - [state/progress.md](state/progress.md): single resumable queue pointer, per batch completion truth.
-- [batches/batch-001.md](batches/batch-001.md): first 20 source addresses, actual BSC 30d nonce screening and sampled provenance. Its status is **PARTIAL** until all multi-chain coverage and cost-basis checks pass.
+- [batches/batch-001.md](batches/batch-001.md): first 20 source addresses, fixed-height signed activity census on BSC, Ethereum and Base, plus one audited token roundtrip; other EVM and full-wallet PnL pending. Its status is **PARTIAL** until all multi-chain coverage and cost-basis checks pass.
 - Rows 21–449 retain `NOT_STARTED`, including wallets whose ad-hoc checks occurred in old chats; prior unstructured examples do not count as audited batch results until independently re-entered.
+
+## Breadth-first development cadence and user outcome
+
+Final product: **reproducible wallet research with recent signed/trade activity, profit tokens and loss tokens, 30-day and lifetime realized PnL, cost basis, fees, proof links and coverage confidence**. A fully audited wallet ranking is allowed only for complete underlying wallet ledgers. A single winning token roundtrip never makes a winning-wallet score.
+
+1. **Coverage:** process all 449 immutable source rows in original 20-address batch order. Check reproducible fixed-height signed activity on BSC/Ethereum/Base first, label additional network gaps explicitly; a BSC zero must not suppress Ethereum/Base candidates. Keep active, checked-network-zero and RPC-error distinct.
+2. **PnL evidence:** prioritize low-volume addresses for demonstrable full profitable and losing token roundtrips. Independently reconcile execution, inventory, quote receipts, fees, prior acquisition and USD marks at execution timestamps; keep 30-day and lifetime wallet total unresolved when incomplete.
+3. **Bounded high-frequency work:** restrict any one round to a documented page/transaction budget. When a wallet cannot be completed, leave `DEFERRED` with exact missing pages/cost basis, last cursor, next condition and ownership. Continue to subsequent rows/batches in original order while preserving that queue. Mark `PARTIAL_WITH_DEFERRED` only with existing review and batch-closure gates.
+4. **Usable output:** first deliver a coverage and verified-token table (positive *and* negative), then fully-audited-wallet views and historical comparisons. Expose status `VERIFIED`/`PARTIAL`/`UNRESOLVED`, never approximate leaderboard by treating missing data as zero.
+5. **Implementation and validation:** after this frozen baseline, add a reusable read-only collector, deterministic ledger replay, tests, failure/negative fixtures and independent review. No claiming that static manual reports constitute an automated, production-ready scanner.
+
+Keep throughput of the whole 449-wallet universe visible. Do not repeatedly focus on a single unusual wallet or cosmetic edge condition to the detriment of the end-to-end research outcome.
 
 ## Boundaries
 

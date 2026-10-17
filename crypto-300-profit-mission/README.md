@@ -59,7 +59,7 @@ Current capital / holdings:
 
 新建独立、只读研究模块：[地址分析 README](address-analysis/README.md)；[449 个源地址固定快照](address-analysis/sources/oooooyoung-evm-449-source-snapshot.json)；[23 批研究队列](address-analysis/state/progress.md)；[第一批 20 个钱包报告](address-analysis/batches/batch-001.md)。
 
-2026-10-18 状态：**Batch 001 BSC signed-activity screen 20/20**，13 个有钱包签名交易、7 个无钱包签名交易；一笔 RTX5090 买入及 5 笔卖出已完成链上数量闭合及成交价美元换算（+0.226099333116 BNB，约 +$162.86），**仅是一个币种的一轮交易**。其余钱包及跨链 / 长期盈亏仍未全部核算；**Batch 001=PARTIAL**，不产生完整钱包盈利排名或可跟单信号。无监控、交易、部署或 Gmail 变更。
+2026-10-18 状态：**Batch 001 BSC / Ethereum / Base 三链各完成 20/20 历史区块 nonce 筛查**；三链分别 13/13/10 个有签名活动，三链并集 15 个；[原始核查证据](address-analysis/evidence/batch-001-three-chain-30d-nonce-screen.json)。其他 EVM 网络仍需检查；一笔 RTX5090 买入及 5 笔卖出已完成链上数量闭合及成交价美元换算（+0.226099333116 BNB，约 +$162.86），**仅是一个币种的一轮交易**。其余钱包及跨链 / 长期盈亏仍未全部核算；**Batch 001=PARTIAL**，不产生完整钱包盈利排名或可跟单信号。无监控、交易、部署或 Gmail 变更。
 
 ## Canonical module files
 
