@@ -80,7 +80,7 @@ def build(d):
          "SIGNED_TX_BLOCK_AUTHOR_AND_VALUE")
    timestamp=int(record["raw_blockTimestamp_hex"],16)
    check(record["utc_derived_from_timestamp"]==
-         datetime.fromtimestamp(timestamp,timezone.utc).isoformat().replace("+00:00","Z") and
+         datetime.fromtimestamp(timestamp,timezone.utc).isoformat(timespec="milliseconds").replace("+00:00","Z") and
          timestamp>0 and int(record["raw_transactionIndex_hex"],16)>=0,
          "SOURCE_TRANSACTION_BLOCK_TIME")
    seconds.append(timestamp)
