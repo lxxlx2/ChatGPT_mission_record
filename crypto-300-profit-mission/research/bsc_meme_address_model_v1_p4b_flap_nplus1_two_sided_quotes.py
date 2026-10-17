@@ -64,7 +64,7 @@ def build(docs):
           "TWO_PRECOMMITTED_MARKETS_ONLY")
     check([c["token"] for c in pre["cases"]] == ["牛来","MARSCOIN"],
           "CASE_ORDER")
-    old = docs["raw_v1"]
+    immutable_v1 = docs["raw_v1"]
     check(read["source_v1"] ==
           {"path":SOURCES["raw_v1"][0],"git_blob_sha":SOURCES["raw_v1"][1],
            "source_role":"IMMUTABLE_ORIGINAL_RPC_READBACK_SELECTED_FIELDS"} and
@@ -180,12 +180,12 @@ def build(docs):
             "public_first_buy_and_sell_executable_U":"UNRESOLVED",
             "P5_one_five_fifteen_minute_return":"UNRESOLVED"
         })
-    check(len(old["rows"]) == len(read["rows"]) == 2 and
-          all(old[k] == read[k] for k in
+    check(len(immutable_v1["rows"]) == len(read["rows"]) == 2 and
+          all(immutable_v1[k] == read[k] for k in
               ("source_precommit_blob_sha","source_reviewed_code_baseline",
                "network","method","read_count","complete_results","gates")),
           "IMMUTABLE_V1_SOURCE_DATA_DRIFT")
-    for orig, enrich in zip(old["rows"], read["rows"]):
+    for orig, enrich in zip(immutable_v1["rows"], read["rows"]):
         for key,value in orig.items():
             if key in ("buy","reverse"):
                 check(all(enrich[key].get(k) == v for k,v in value.items()),
