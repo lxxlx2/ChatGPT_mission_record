@@ -52,7 +52,7 @@ def build(d):
         "NO_MERGE":True,"NO_DEPLOY":True,"NO_GMAIL":True,"NO_TRADE":True},
        "FREEZE_FIELDS_AND_NO_PROFIT_PROMOTION")
  check(len(real["rounds"])==2 and len(math["cases"])==2 and
-       [r["case"] for r in math["cases"]]==
+       [r["label"] for r in math["cases"]]==
        ["239E_R1_OWNER_REAL_NATIVE_LOSS","239E_R2_OWNER_REAL_NATIVE_PROFIT"],
        "ORIGINAL_SIGNED_SOURCE_SCOPE")
  rows=[]
