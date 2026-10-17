@@ -8,7 +8,10 @@ email_subject: "[空投/TGE提醒][HEEBOO / Claynosaurz][Tokenomics / Allocation
 gmail_message_id: "1a034f0f1a9a3f8a"
 gmail_sent_at: "2026-08-24T18:03:20Z"
 gmail_sent_at_bkk: "2026-08-25T01:03:20+07:00"
-status: official
+status: historical_public_redacted
+public_body_redacted: true
+original_private_source: Gmail Sent
+original_body_verified_before_redaction: true
 backfilled: true
 source: Gmail Sent readback
 ---
@@ -36,7 +39,7 @@ HEEBOO / Claynosaurz 出现高优先级更新。
 
 • Metaplex 页面当前仍显示 TGE date：TBD，Claim：At TGE
 
-与你的参与关系：Claynosaurz 官方 Watch & Collect 页面此前已确认每个 Pioneer Edition pack 都带有 $HEEBOO allocation；官方 redistribution 页面也已经完成 2026-08-04 snapshot 并显示最终分配逻辑。因此这次 tokenomics 公布直接影响 Claynosaurz / HEEBOO 相关权益。
+参与者权益关联：历史 Claynosaurz Watch & Collect 公告及 2026-08-04 snapshot 可作为资格核验线索，不能直接证明任何特定个人当前的 HEEBOO 分配额度。
 
 当前需要执行的动作：
 
