@@ -33,7 +33,7 @@ jobs:
           changed=subprocess.check_output(
               ['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],
               text=True).splitlines()
-          exact={'schema':'MONSTER445_FIRST_SERVICE_TRACE_ONESHOT_REQUEST_V1',
+          exact={'schema':'MONSTER445_FIRST_SERVICE_TRACE_ONESHOT_REQUEST_V2',
                  'full_replay_artifact_id':12044872933,
                  'full_json_sha256':'370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf',
                  'research_only':True,'approved_scope':'OFFLINE_TRACE_ONLY',
@@ -103,12 +103,25 @@ jobs:
           assert j['actual_3360_shared_polls']==3360
           assert j['D1_global_selected_slots']==753
           assert j['D1_first_selection_slots']+j['D1_repeated_selection_slots']==753
+          assert j['D1_repeated_without_advanced_valid_5m_bar_marker']==190
+          assert j['D1_repeated_with_advanced_valid_5m_bar_marker']==294
+          assert j['D1_repeated_no_new_valid_bar_by_last_error']=={
+              'AWAIT_POST_WATCH_CLOSED_5M':68,
+              'NO_SETUP_YET':93,
+              'NO_SETUP_WITHIN_WINDOW':14,
+              'SOURCE_UNSUPPORTED_ZERO_QUOTE':15}
+          assert j['D1_no_advanced_bar_does_not_prove_safe_to_skip'] is True
+          assert all(
+              x['first_selected_ms'] is None or
+              x['deadline_ms']>=x['first_seen_ms']
+              for x in j['candidate_first_service'])
+          assert j['cohort_comparison']['PEAK_98']['ever_valid_D1_evaluation']==7
           assert j['cohort_comparison']['PEAK_98']['WATCH']==98
           assert j['cohort_comparison']['OTHER_171']['WATCH']==171
           assert len(j['candidate_first_service'])==269
           assert j['G6']=='NO_GO'
           payload={
-              'schema':'MONSTER445_REAL_FIRST_D1_SERVICE_TRACE_SUMMARY_V1',
+              'schema':'MONSTER445_REAL_FIRST_D1_SERVICE_TRACE_SUMMARY_V2',
               'source_all28_original_artifacts_attested':True,
               'historical_source_complete_symbols':445,
               'original758_censored_313':True,
@@ -120,6 +133,15 @@ jobs:
               'D1_total_selected':j['D1_global_selected_slots'],
               'D1_first_selected':j['D1_first_selection_slots'],
               'D1_reselected':j['D1_repeated_selection_slots'],
+              'reselected_no_new_valid_5m_marker':j['D1_repeated_without_advanced_valid_5m_bar_marker'],
+              'reselected_advanced_valid_5m_marker':j['D1_repeated_with_advanced_valid_5m_bar_marker'],
+              'reselected_no_new_bar_by_error':j['D1_repeated_no_new_valid_bar_by_last_error'],
+              'reselected_no_new_bar_by_cohort':j['D1_repeated_no_new_valid_bar_by_cohort'],
+              'reselected_advanced_bar_by_cohort':j['D1_repeated_advanced_valid_bar_by_cohort'],
+              'no_bar_progress_does_not_prove_redundant':True,
+              'peak_valid_D1_evaluation_upper_bound_4_ticks_8_slots':32,
+              'peak_baseline_valid_D1_evaluated':7,
+              'peak_extra_valid_evaluations_theoretical_max_not_trades':25,
               'D1_busy_ticks':j['D1_busy_ticks'],
               'peak98_vs_other171':j['cohort_comparison'],
               'historical_pit_listing':'UNVERIFIED',
@@ -134,7 +156,7 @@ jobs:
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: monster445-real-first-D1-service-fairness-28shards-once
+          name: monster445-real-first-D1-service-review-fixes-28shards-once-v2
           path: |
             /tmp/monster445_first_service_trace_full.json
             /tmp/monster445_first_service_summary_git.json
@@ -145,13 +167,13 @@ jobs:
         run: |
           set -eu
           branch=research/monster-v4-local-discovery-20261010
-          result=crypto-300-profit-mission/monster/evidence/monster_feb445_real_first_service_trace_actual.json
+          result=crypto-300-profit-mission/monster/evidence/monster_feb445_real_first_service_trace_review_v2_actual.json
           test ! -e "$result"
           cp /tmp/monster445_first_service_summary_git.json "$result"
           git add "$result"
           git config user.name monster-research-ci
           git config user.email monster-research-ci@users.noreply.github.com
-          git commit -m "monster: archive real 445 first-D1-service and repeated-slot actual evidence"
+          git commit -m "monster: archive source SHA pinned real 445 first-service review fixes v2, no original evidence overwrite"
           git fetch origin "refs/heads/$branch"
           if git cat-file -e "FETCH_HEAD:$result" 2>/dev/null; then
             echo MONSTER445_FIRST_SERVICE_REMOTE_RESULT_EXISTS_NO_OVERWRITE
@@ -166,4 +188,4 @@ jobs:
             test "$(git rev-parse "$GITHUB_SHA:$file")" = "$(git rev-parse "HEAD:$file")" || { echo MONSTER445_FIRST_SERVICE_ORIGINAL_PROOF_CHANGED; exit 1; }
           done
           git push origin "HEAD:refs/heads/$branch"
-          echo MONSTER445_FIRST_SERVICE_RESEARCH_EVIDENCE_IMMUTABLE_GIT_ARCHIVED
+          echo MONSTER445_FIRST_SERVICE_REVIEW_V2_RESEARCH_EVIDENCE_IMMUTABLE_GIT_ARCHIVED
