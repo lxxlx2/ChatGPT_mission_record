@@ -31,6 +31,12 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_wallet_early_grid23x19.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_major2.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_market19.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_nplus1_two_sided_quotes.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_flap_nplus1_two_sided_quotes.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_original_quote_portal.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_flap_original_quote_portal.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-2026-flap-nplus1-two-sided-expected-replay-2026-10-17.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-2026-flap-actual-portal-payment-expected-replay-2026-10-17.json"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_ddac_dragon_closed.py"
       - "crypto-300-profit-mission/research/bsc_meme_top_traders_readonly.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_top_traders_readonly.py"
@@ -192,6 +198,28 @@ jobs:
         run: |
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1*.py" -v
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1_bulk16.py" -v
+      - name: P4-B Flap two real original-signer source replays exact committed JSON (offline only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_nplus1_two_sided_quotes.py > "$RUNNER_TEMP/p4b-flap-nplus1.json"
+          python3 -B crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_original_quote_portal.py > "$RUNNER_TEMP/p4b-flap-portal.json"
+          python3 - "$RUNNER_TEMP/p4b-flap-nplus1.json" "$RUNNER_TEMP/p4b-flap-portal.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          cases=(
+            (Path(sys.argv[1]), root/"bsc-meme-address-model-v1-p4b-2026-flap-nplus1-two-sided-expected-replay-2026-10-17.json"),
+            (Path(sys.argv[2]), root/"bsc-meme-address-model-v1-p4b-2026-flap-actual-portal-payment-expected-replay-2026-10-17.json"),
+          )
+          for actual_file, expected_file in cases:
+              actual=json.loads(actual_file.read_text(encoding="utf-8"))
+              expected=json.loads(expected_file.read_text(encoding="utf-8"))
+              assert actual==expected, f"Frozen P4-B source replay differs from committed expected: {expected_file}"
+              assert actual["summary"]["P5"]=="BLOCKED" and actual["summary"]["production"]=="NO_GO"
+              print(f"PASS strict P4-B Flap source-only deterministic comparison: {expected_file.name}")
+          PY
       - name: C0 historical source grades and P4-B 2026 five-owner U static replay
         shell: bash
         run: |
@@ -1157,3 +1185,25 @@ jobs:
           /bin/bash --version
           python3 -B -m unittest discover -s crypto-300-profit-mission/research -p 'test_bsc_meme_address_model_v1_workflow_event_identity.py' -v
           python3 -B -m unittest discover -s crypto-300-profit-mission/research -p 'test_bsc*.py'
+      - name: macOS P4-B Flap expected JSON source-only replay parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_nplus1_two_sided_quotes.py > "$RUNNER_TEMP/p4b-flap-nplus1.json"
+          python3 -B crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_original_quote_portal.py > "$RUNNER_TEMP/p4b-flap-portal.json"
+          python3 - "$RUNNER_TEMP/p4b-flap-nplus1.json" "$RUNNER_TEMP/p4b-flap-portal.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          cases=(
+            (Path(sys.argv[1]), root/"bsc-meme-address-model-v1-p4b-2026-flap-nplus1-two-sided-expected-replay-2026-10-17.json"),
+            (Path(sys.argv[2]), root/"bsc-meme-address-model-v1-p4b-2026-flap-actual-portal-payment-expected-replay-2026-10-17.json"),
+          )
+          for actual_file, expected_file in cases:
+              actual=json.loads(actual_file.read_text(encoding="utf-8"))
+              expected=json.loads(expected_file.read_text(encoding="utf-8"))
+              assert actual==expected, f"Frozen P4-B source replay differs from committed expected: {expected_file}"
+              assert actual["summary"]["P5"]=="BLOCKED" and actual["summary"]["production"]=="NO_GO"
+              print(f"PASS strict P4-B Flap source-only deterministic comparison: {expected_file.name}")
+          PY
