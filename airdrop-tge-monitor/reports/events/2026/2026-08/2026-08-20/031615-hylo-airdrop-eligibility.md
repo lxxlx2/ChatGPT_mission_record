@@ -8,13 +8,16 @@ email_subject: "[空投提醒][Hylo][Airdrop 资格检查]"
 gmail_message_id: "1a01baad33506d3d"
 gmail_sent_at: "2026-08-19T20:16:15Z"
 gmail_sent_at_bkk: "2026-08-20T03:16:15+07:00"
-status: official
+status: historical_public_redacted
+public_body_redacted: true
+original_private_source: Gmail Sent
+original_body_verified_before_redaction: true
 backfilled: true
 source: Gmail Sent readback
 ---
 项目：Hylo
 
-事件：Hylo 官方站当前显示“Airdrop for Hylo users!”并提供 Connect Wallet 入口，同时 Season 1 XP 仍在运行。你已明确参与 Hylo，因此建议用自己的参与钱包检查页面状态和资格。
+事件：Hylo 官方站当前显示“Airdrop for Hylo users!”并提供 Connect Wallet 入口，同时 Season 1 XP 仍在运行。实际参与者可使用相应钱包核对活动资格。
 
 官方来源：Hylo 官方应用/统计页面
 
