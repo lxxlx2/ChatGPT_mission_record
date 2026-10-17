@@ -779,3 +779,16 @@ New strict [offline WBNB route-source gate](./bsc_meme_address_model_v1_p4c_wbnb
 - 结论仍只涉及选定历史**区块末**的合约完整余额；**不是实时当前持仓或块内第一买时点的余额**，未测某个外部人观察到的信号送达时间、当时可执行的最先 U、1/5/15 分钟精确延迟买卖、Gas/滑点/税、实际同一账户盈利。生产 NO_GO，严禁从“历史链上真实持币”等于“实时跟单成功”跳级。
 
 **下一业务验证里程碑（不再堆纯信号状态模块）**：在预冻结原 19 市场中选择已有实际 signer 买卖/负例且 owner 真实持仓时点有链上合约余额可证的案例，明确用有界公共事件延迟、可支付的交易金额、正确 venue Router、买/卖两腿的历史状态与退出费，对单一锁定金额在 1/5/15 分钟**实际入场时点**做“可成交/滑点超限/路由不通/无卖出”的负正并行对照；如缺 provider archive 或非免费追踪仍保持 UNKNOWN，不升级 GMGN，不重选赢家或改结果。完整 P4-B 与 P5 门禁依旧未解锁。
+
+
+## 2026-10-18 P4-B 239E 龙虾原钱包一负一正的真实固定 0.01 WBNB 双向报价验证
+
+由原 23 EOA × 19 exact CA 母表的 **239E 本人 R1 实亏、R2 实赚**两个早已冻结的完整签名经济回合出发，继续补上交易路径报价而非反复审核。源 R1 `-15332805033002259 wei BNB`、R2 `+22647938898252522 wei BNB`；保持已来源证据等级，不把原钱包盈利归为后来跟随者。固定 [八个真实历史 RPC 调用预冻结](./bsc-meme-address-model-v1-p4b-239e-dragon-two-exit-v2-quote-precommit-2026-10-18.json)（源 Git blob `097cc5d638fea3c79ee83d1600115cd0316a3020`）以后进行恰好八次、全部成功、不重试的只读历史 eth_call：Pancake V2 龙虾/WBNB Pair `getReserves`（本人买入 N+1、原本人卖出前 S−1），Pancake V2 Router 0.01 WBNB→龙虾 buy 数学报价，再以**同一数学买入 token 数量**在 S−1 读取 reverse 卖数学报价。old original-19 Pair/WBNB/Router 和 0.25% `9975/10000` fee 来源未改，执行不做交易、不估算执行 Gas／tax／MEV。
+
+成果原文 [本轮历史双向 8 个 ABI 返回](./bsc-meme-address-model-v1-p4b-239e-dragon-two-exit-v2-two-sided-math-readback-2026-10-18.json) 与 [研究读物](./bsc-meme-address-model-v1-p4b-2026-239e-opposite-signed-v2-gross-math-readout-2026-10-18.md)：
+- R1 真亏原钱包买 N=85954137、N+1 静态数学报价投入 0.010000 WBNB 得到 278350347316975449623 raw 龙虾，真实原本人卖 S=85957578，S−1 同样数量的 reverse Router 数学报价是 0.009157881766988299 WBNB。两个相隔历史区块的独立数学读数价差 **−0.000842118233011701 WBNB（−8.421%）**；不能把它称为实际亏损金额或 follower PnL。
+- R2 真赚原钱包买 N=85959961、N+1 数学报价 0.010000 WBNB 得到 310011231296926372159 raw，原卖 S=85961371，S−1 反向数学报价 0.010933894786881619 WBNB，**+0.000933894786881619 WBNB（+9.339%）**。不同两个真实区块状态，模拟买单并**没有修改后续卖出时的 Pair 储备**，不是有状态买卖回放、不能说明真实税、限购、卖出路径是否支持。
+- 两轮静态方向与原主 signed BNB 经济净额方向一致，是精选本来就知道正负的对照，不是预测模型胜率、无偏样本或 1/5/15 分钟 ROI。Pair 第三返回 `blockTimestampLast` **不是区块 timestamp**；不拿它伪造分钟。缺真实观察者时间、用户真正买卖与税/Gas/滑点、链上回款，PUBLIC_EXECUTABLE_U 不升级。
+- [固定来源校验代码](./bsc_meme_address_model_v1_p4b_239e_two_exit_v2_math.py) 对所有来源与八次 ABI 原文按 git SHA 独立复核、解码 2 个 reserves 和 4 个动态 Router getAmountsOut、9975/10000 公式逐向验证数学一致，源费用、原主人实际损益不能更改；[15 项反例](./test_bsc_meme_address_model_v1_p4b_239e_two_exit_v2_math.py) 覆盖原来源 SHA、路由池、blockTag、两个方向进出份额、反向原文、源本钱包盈利符号等。已接入原 Ubuntu + macOS /bin/bash 3.2 CI，无新生产自动化。
+
+**下一真实重点**：必须测试在可观察到原钱包信号的真实条件下第三方可以**有状态真实买卖**，不是无限延展数学报价。应优先找到已有成功签名交易的独立买家正负对照、合约 Token 税/成交实际收币、额外交易 Gas/交易路由和限额，并准确绑定信号后固定 1/5/15min **入场区块和观察时间**，因果证据不足的保持 UNKNOWN；若免费工具不可取须如实阻断，不无限加单凭内部自洽的校验项。维持 `P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
