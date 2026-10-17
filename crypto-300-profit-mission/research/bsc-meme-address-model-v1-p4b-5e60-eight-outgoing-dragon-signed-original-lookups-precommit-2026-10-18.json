@@ -1,0 +1,79 @@
+{
+  "schema": "BSC_P4B_2026_EXTERNAL_5E60_ALL_EIGHT_OUTBOUND_DRAGON_ORIGINAL_SIGNED_TX_LOOKUP_PREFREEZE_V1",
+  "baseline": "c5c79572c439b05cce45b8bc0de8b1a1a54e6f9e",
+  "source_original_eight_transfers_blob": "b08b3cf9d7cbd81829281d7fec6cba65258db23a",
+  "source_original_eight_transfers_path": "bsc-meme-address-model-v1-p4b-5e60-eight-real-post-239e-exit-dragon-outbound-transfers-2026-10-18.json",
+  "provider": "Alchemy existing free BNB read-only",
+  "method": "ethGetTransactionByHash",
+  "hashes": [
+    {
+      "hash": "0x473a6f97e4580036e82142e56b1cd9d4b0fd026dd5363dcf33cf8271651777e4",
+      "block": 85961702,
+      "actual_raw": "115088555360000000000000"
+    },
+    {
+      "hash": "0x9d52a9208bae6f42154b2f974745be5c43ad116ea801badba61fc9fd1ec8701f",
+      "block": 85961711,
+      "actual_raw": "26853996250000000000000"
+    },
+    {
+      "hash": "0x67e653802aa2c2907313ecd7428ab93fe0ff92b36f75eb7600e676e278c50984",
+      "block": 85961724,
+      "actual_raw": "24168596630000000000000"
+    },
+    {
+      "hash": "0xe62f8b2435117348bfb8f320f0533638cd97f21fcced5b15edbad154eb712ef6",
+      "block": 85961776,
+      "actual_raw": "108758684820000000000000"
+    },
+    {
+      "hash": "0xbc1e4d56e0946bf63343e045dd2da459431219acbc80ba2cc0478d28901fd7f2",
+      "block": 85961787,
+      "actual_raw": "108758684810200760487354"
+    },
+    {
+      "hash": "0x9c71aaf82a867109076b58bea79ba8f52043f151484de6e0ac40361219750545",
+      "block": 85980702,
+      "actual_raw": "244762540070000000000000"
+    },
+    {
+      "hash": "0x3fd9ef769f6c294fe2d0a4949c88e5c261935e769c5144470a4570df59b5591a",
+      "block": 85980740,
+      "actual_raw": "285556296750000000000000"
+    },
+    {
+      "hash": "0xf6bba19e1dafc184f6887e672d0f3dbef662465c65ed929172ccf299193062a2",
+      "block": 85980748,
+      "actual_raw": "285556296752723286997184"
+    }
+  ],
+  "max_queries": 8,
+  "no_retries": true,
+  "no_reselect": true,
+  "fields": [
+    "hash",
+    "from",
+    "to",
+    "value",
+    "input",
+    "gas",
+    "gasPrice",
+    "blockNumber",
+    "blockTimestamp",
+    "transactionIndex",
+    "type"
+  ],
+  "classification_rules": [
+    "A real transferred ERC20 Dragon amount to Pair in same txn does not prove original wallet signed the tx; check signed from equals 5e60.",
+    "Decode full original Router path; if input clipped, UNKNOWN.",
+    "If a transaction is type4 huge delegated authorization and clipped, do NOT trust partial from field as independently captured; classify SIGNER_UNVERIFIED.",
+    "Do not compute realized profit from sells until original wallet quote token actually credited or BNB refund observed AND account prior holding/cost-basis continuity.",
+    "Every of 8 frozen original hashes retained regardless profitability; do not pick only winners."
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}
