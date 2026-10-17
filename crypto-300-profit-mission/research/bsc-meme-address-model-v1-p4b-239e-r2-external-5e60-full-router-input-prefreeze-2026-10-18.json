@@ -1,0 +1,44 @@
+{
+  "schema": "BSC_P4B_2026_R2_EXTERNAL_REAL_5E60_SIGNED_ROUTER_FULL_INPUT_FUNDING_PATH_PRECOMMIT_V1",
+  "date": "2026-10-18",
+  "transaction": "0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47",
+  "known_owner": "0x5e600e259e3cff0757e3736223685958665866c6",
+  "router": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+  "block": 85959962,
+  "selector": "0x38ed1739",
+  "source_new_buyer_actual_token_received": "bsc-meme-address-model-v1-p4b-239e-r2-external-wallet-real-incremental-buy-erc20-transfer-readback-2026-10-18.json",
+  "source_empty_wbnb_direct_spend": "bsc-meme-address-model-v1-p4b-239e-r2-external-buyer-wbnb-not-direct-debit-readback-2026-10-18.json",
+  "method": "Alchemy existing free bnb-mainnet ethGetTransactionByHash",
+  "requested_keys": [
+    "input",
+    "from",
+    "to",
+    "value",
+    "blockNumber",
+    "transactionIndex",
+    "hash",
+    "gas",
+    "gasPrice",
+    "blockTimestamp"
+  ],
+  "max_queries": 1,
+  "retries": 0,
+  "decode_signature": "swapExactTokensForTokens(uint amountIn,uint amountOutMin,address[] path,address to,uint deadline)",
+  "decode_rules": [
+    "ABI decode amountIn amountOutMin dynamic address path length, recipient and deadline; reject malformed offsets or mixed data.",
+    "Source token is path[0], intermediate WBNB may be path[1], destination Dragon must be path[last]; do not guess from pair observed WBNB alone.",
+    "This second fetch of same hash is for a different previously not archived full input field, not a retry of failed data; results must not change selected external txn.",
+    "No assumption of actual received path[0] wallet debit or historical gasUsed until signed original transfer/receipt independently proved."
+  ],
+  "if_tool_truncated": "UNRESOLVED, no alternative buyer reselection",
+  "scope_limits": {
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P4_B": "PARTIAL",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "NO_MERGE": true,
+    "NO_DEPLOY": true,
+    "NO_GMAIL": true,
+    "NO_TRADE": true
+  }
+}
