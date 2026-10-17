@@ -23,4 +23,6 @@ Current mapped material:
 
 - Backpack Exchange / BP token fundamentals, equity exchange mechanics and onchain supply: `research/projects/backpack/backpack-bp-fundamentals-and-tokenomics.md` (research only, no funds committed).
 
+- TapeOut / BEM chain research: `research/projects/tapeout-bem/tapeout-bem-bsc-xlayer-due-diligence.md` (BSC, X Layer, mining circuit NFT economics and risks).
+
 Operational monitoring thresholds remain in the Mission/TGE task roots.
