@@ -1,0 +1,50 @@
+{
+  "schema": "BSC_MEME_P3_OWNER37_SWAP_EVENT_FROM_TRANSFER_COUNTERPARTIES",
+  "part": 6,
+  "range": [
+    35,
+    36
+  ],
+  "source_precommit_sha": "b78ef9fc1824283ba82f522ff0363a33762b40f7",
+  "topics_used": [
+    "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+    "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83"
+  ],
+  "records": [
+    {
+      "hash": "0x46f4ebf92b95cd023d89a50ee20f0957eea2ec31e27fa53419dba7a3498fb17d",
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "block": 126050422,
+      "query_state": "FULL_MATCHING_SWAP_EVENT_QUERY",
+      "source_venue_addresses": [
+        "0x83aaf02b71f399805419853dfc314a369321c523"
+      ],
+      "events": [],
+      "error": null
+    },
+    {
+      "hash": "0xa9eabce653ba2cfd6ec10656da7da32a9d929f0d45d6cf040693e36c97f6bc47",
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "block": 126050553,
+      "query_state": "FULL_MATCHING_SWAP_EVENT_QUERY",
+      "source_venue_addresses": [
+        "0xe5ae318389b8d6d09370a675479c64862152d126"
+      ],
+      "events": [
+        {
+          "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+          "topic0": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+          "topics": [
+            "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+            "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc",
+            "0x00000000000000000000000016b9a82891338f9ba80e2d6970fdda79d1eb0dae"
+          ],
+          "raw_data": "0xfffffffffffffffffffffffffffffffffffffffffffffffd206691650f2972be000000000000000000000000000000000000000000000024fedf09ec0f65dc4d00000000000000000000000000000000000000039571957d07075ca59af5988100000000000000000000000000000000000000000003ec07c5ef0de3a53c372f00000000000000000000000000000000000000000000000000000000000063b900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000793a26a1208e34c",
+          "log_index": 266
+        }
+      ],
+      "error": null
+    }
+  ],
+  "production": "NO_GO"
+}

@@ -1,0 +1,1213 @@
+name: BSC address model V1 (read-only research)
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/bsc-meme-address-model-v1-tests.yml"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p2.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p3.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p3_swap.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p3_batch.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_funding.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_factory190.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_first_liquidity.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_liquidity19.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing22.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing_first4.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing_first4.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_priority4_competitors.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_priority4_competitors.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing4_creation.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing17.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_v2_swaps19.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_cross_venue19.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_nine_txs.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_router_quotes19.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_early_origin19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_early_origin19.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_dragon_ddac.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_wallet_early_grid23x19.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_major2.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_market19.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_crossmarket_owner_maturity.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_crossmarket_owner_maturity.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_dragon_two_buys_causal_scope.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_dragon_two_buys_causal_scope.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_nplus1_two_sided_quotes.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_flap_nplus1_two_sided_quotes.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_original_quote_portal.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_flap_original_quote_portal.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-2026-flap-nplus1-two-sided-expected-replay-2026-10-17.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-2026-flap-actual-portal-payment-expected-replay-2026-10-17.json"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_ddac_dragon_closed.py"
+      - "crypto-300-profit-mission/research/bsc_meme_top_traders_readonly.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_top_traders_readonly.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_closed_grid23x19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_closed_grid23x19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_ddac_dragon_closed.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_next239e877af.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_next239e877af.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_239e_dragon_two_native.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_239e_dragon_two_native.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_877af_inventory.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_877af_inventory.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_five_native_rounds23x19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_five_native_rounds23x19.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_ddac_adff_a83b_five.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_ddac_adff_a83b_five.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_c0_review_gate.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_c0_review_gate.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_2026_crossowner_u.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_2026_crossowner_u.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_lonxia_observer_gate.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_lonxia_observer_gate.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_fiveowners14_gate.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_fiveowners14_gate.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_v3_review_gate.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_v3_review_gate.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_wbnb10_source_gate.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_wbnb10_source_gate.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-frozen-23wallet-economic-proof-census-scope-2026-10-17.json"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_23wallet_economic_census.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_23wallet_economic_census.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-adff-dragon-original-two-owner-transfers-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-adff-bounded-acquisition-asset-outgoing-source-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-postapprove4-wallets10-wbnb-event-query-scope-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-postapprove-wbnb-events-partA-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-postapprove-wbnb-events-partB-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-postapprove-wbnb-events-partC-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-13-txhash-cross-method-blockhash-evidence-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-13-block-by-hash-timestamps-evidence-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-original13-block-header-calendar-graded-v2-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-nine-truncated-receipt-excerpts-graded-v2-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-review-corrected-six-episodes-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-original13-block-header-calendar-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-nine-truncated-receipt-source-excerpts-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-v3-restored-p2-13-original-two-transactions-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-replay-precommit-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-replay-precommit-corrected-v2-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-original14-pre-rpc-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partA-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partB-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-fiveowners-recheck14-partC-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_dragon_signed_roundtrip.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_dragon_signed_roundtrip.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_workflow_event_identity.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-lonxia-observer-nplus1-buy-sim-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-lonxia-3-real-market-sells-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-lonxia-independent-review-errata-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-lonxia-post-signal-u-readback-2026-10-16.md"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-u-live-readback-batch-2026-10-16.md"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-two-rounds19-precommit-2026-10-15.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-independent-five-part1-2026-10-15.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-independent-five-part2-2026-10-15.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-2025-blocktime-header-2026-10-15.json"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_8e6b_token4_19tx.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_8e6b_token4_19tx.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-19tx-five-independent-source-reconciliation-2026-10-15.json"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_8e6b_token4_two_native.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_8e6b_token4_two_native.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_seven_rounds23x19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_seven_rounds23x19.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_8e6b_external19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_8e6b_external19.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-all19-external-exclusivity-2026-10-15.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-23x19-seven-native-mixed4-2026-10-15.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-two-settled-source-audit-2026-10-15.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-ddac-adff-a83b-five-inventory-closed-2026-10-15.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-23x19-five-native-rounds-mixed239e-2026-10-15.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-877af-marscoin-inventory-closed-quote-unresolved-2026-10-15.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-239e-dragon-two-owner-native-settlements-2026-10-15.json"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_market19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_flap_major2.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_wallet_early_grid23x19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_dragon_ddac.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_router_quotes19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_nine_txs.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_cross_venue19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_v2_swaps19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing17.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing4_creation.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing22.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing4_origin.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing4_origin.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-*.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-implementation-plan-2026-10-13.md"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_liquidity19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_first_liquidity.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_factory190.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_funding.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p3_batch.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p3_swap.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p3.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p2.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_stage4.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_bulk16.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-*.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-*.md"
+      - "crypto-300-profit-mission/research/README_BSC_MEME_TOP_TRADERS.md"
+      - "crypto-300-profit-mission/research/BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V21_2026-10-12.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof_only:
+    name: Frozen source and model output QA
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      MODEL_DIR: crypto-300-profit-mission/research
+      FROZEN_BLOB_SHA: 3761b9140d0c64b1ffd8d8d243d63a2a1a4fc690
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Assert checked-out source SHA on PR or manual dispatch
+        shell: bash
+        env:
+          REVIEWED_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          EVENT_PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          EVENT_SHA: ${{ github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          [[ "$REVIEWED_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "invalid REVIEWED_HEAD_SHA (need 40 lowercase hex)" >&2; exit 1; }
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            [[ "$EVENT_PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "invalid EVENT_PR_HEAD_SHA for pull_request" >&2; exit 1; }
+            test "$REVIEWED_HEAD_SHA" = "$EVENT_PR_HEAD_SHA" || { echo "PR expected SHA differs from PR head" >&2; exit 1; }
+          elif [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            test -z "$EVENT_PR_HEAD_SHA" || { echo "workflow_dispatch must not contain PR head" >&2; exit 1; }
+            [[ "$EVENT_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "invalid EVENT_SHA for workflow_dispatch" >&2; exit 1; }
+            test "$REVIEWED_HEAD_SHA" = "$EVENT_SHA" || { echo "manual expected SHA differs from github.sha" >&2; exit 1; }
+          else
+            echo "Unsupported event for BSC read-only QA: $EVENT_NAME" >&2
+            exit 1
+          fi
+          test "$(git rev-parse HEAD)" = "$REVIEWED_HEAD_SHA" || { echo "checked-out HEAD differs from expected source SHA" >&2; exit 1; }
+          echo "PASS $EVENT_NAME direct source SHA checkout $REVIEWED_HEAD_SHA"
+      - name: Confirm frozen Git input blob
+        shell: bash
+        run: |
+          actual="$(git hash-object "$MODEL_DIR/BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V21_2026-10-12.json")"
+          test "$actual" = "$FROZEN_BLOB_SHA" || { echo "frozen Git input blob mismatch" >&2; exit 1; }
+      - name: Unit tests (stdlib only; no RPC/no secrets)
+        run: |
+          python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1*.py" -v
+          python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1_bulk16.py" -v
+      - name: P4-B Flap two real original-signer source replays exact committed JSON (offline only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_nplus1_two_sided_quotes.py > "$RUNNER_TEMP/p4b-flap-nplus1.json"
+          python3 -B crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_original_quote_portal.py > "$RUNNER_TEMP/p4b-flap-portal.json"
+          python3 - "$RUNNER_TEMP/p4b-flap-nplus1.json" "$RUNNER_TEMP/p4b-flap-portal.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          cases=(
+            (Path(sys.argv[1]), root/"bsc-meme-address-model-v1-p4b-2026-flap-nplus1-two-sided-expected-replay-2026-10-17.json"),
+            (Path(sys.argv[2]), root/"bsc-meme-address-model-v1-p4b-2026-flap-actual-portal-payment-expected-replay-2026-10-17.json"),
+          )
+          for actual_file, expected_file in cases:
+              actual=json.loads(actual_file.read_text(encoding="utf-8"))
+              expected=json.loads(expected_file.read_text(encoding="utf-8"))
+              assert actual==expected, f"Frozen P4-B source replay differs from committed expected: {expected_file}"
+              assert actual["summary"]["P5"]=="BLOCKED" and actual["summary"]["production"]=="NO_GO"
+              print(f"PASS strict P4-B Flap source-only deterministic comparison: {expected_file.name}")
+          PY
+      - name: C0 historical source grades and P4-B 2026 five-owner U static replay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_c0_review_gate.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-c0-review.json
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_2026_crossowner_u.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4b-u-five.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path("/tmp/bsc-c0-review.json").read_text(encoding="utf-8"))
+          b=json.loads(Path("/tmp/bsc-p4b-u-five.json").read_text(encoding="utf-8"))
+          assert a["five_baseline"]["selected_owner_rounds"]==5
+          assert a["seven_expanded_review_pending"]["selected_owner_rounds"]==7
+          assert a["2025_token4"]["cashflow_grade"]=="SELECTED_TRADES_ONLY_NOT_FINAL_WALLET_PNL"
+          assert a["CI_source_verification"]=="OFFLINE_STATIC_REPLAY_NOT_LIVE_RPC"
+          assert (b["summary"]["selected_wallets"],b["summary"]["selected_major_CAs"])==(5,3)
+          assert b["summary"]["qualified_observer_executable_U"]==0
+          assert b["summary"]["qualified_follow_PnL"]==0
+          assert a["production"]==b["summary"]["production"]=="NO_GO"
+          print("PASS C0 scope corrections and 2026 five-wallet cross-owner U unqualified")
+          PY
+      - name: P4-C all 23 original wallet x 19 exact CA actual negative source scope
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_closed_grid23x19.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-23x19-closed.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-p4c-23x19-closed.json").read_text(encoding="utf-8"))
+          b=json.loads((root/"bsc-meme-address-model-v1-p4c-23x19-native-economic-evidence-grid-2026-10-15.json").read_text(encoding="utf-8"))
+          assert a==b,"23 x 19 original frozen economic eligibility source replay drift"
+          s=a["summary"]
+          assert (s["frozen_wallet_candidates"],s["frozen_major_exact_CAs"],s["implicit_wallet_CAs"])==(23,19,437)
+          assert (s["verified_native_negative_rounds"],s["verified_native_positive_rounds"],s["not_economically_audited_cells"])==(1,0,436)
+          assert not s["profit_rank_ready"] and s["qualified_public_entry_follower_signals"]==0
+          assert s["production"]=="NO_GO"
+          print("PASS 23 wallet x 19 major economic ledger: 1 DDAC Dragon real loser, 436 not economically audited, P5 not qualified")
+          PY
+      - name: P4-C original DDAC Dragon fully closed TokenSale and negative BNB economic replay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_ddac_dragon_closed.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-ddac-dragon-real-loss.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4c-ddac-dragon-real-loss.json").read_text(encoding="utf-8"))
+          expected=json.loads((root/"bsc-meme-address-model-v1-p4c-dragon-ddac-closed-native-loss-2026-10-15.json").read_text(encoding="utf-8"))
+          assert actual==expected,"Original Four TokenSale + exact BNB wallet economic result drift"
+          s=actual["summary"]
+          assert (s["frozen_wallets"],s["frozen_major_CAs"],s["original_signed_owner_buys_economically_closed"],
+                  s["actual_negative_native_owner_rounds"],s["actual_positive_native_owner_rounds"])==(23,19,1,1,0)
+          f=actual["round"]
+          assert (f["exit_venue_verified_successful"],f["residual_token_raw"],
+                  f["native_closed_owner_round_net_wei"])==("FOUR_MEME_TOKENSALE","0","-92169615514614272")
+          assert f["exit_event_implied_prepay_credit_wei"]==f["exit_native_balance_plus_gas_wei"]
+          assert f["buyer_follower_entry_after_1_5_15min"]=="UNRESOLVED"
+          assert s["market_U_fully_qualified"]==0 and s["live_production"]=="NO_GO"
+          print("PASS DDAC genuine Dragon fully sold early trade, owner BNB net -0.092169615514614272, 23x19 kept, no fake profitable follow")
+          PY
+      - name: P4-B frozen 19-CA whole market entrance real buy witness ledger
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_market19.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4b-market19.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          r=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4b-market19.json").read_text(encoding="utf-8"))
+          expected=json.loads((r/"bsc-meme-address-model-v1-p4b-19ca-unified-early-market-buy-evidence-2026-10-14.json").read_text(encoding="utf-8"))
+          assert actual==expected,"P4B 19 CA source-pinned whole-market replay mismatch"
+          s=actual["summary"]
+          assert (s["frozen_major_exact_CAs"],s["original_23_EOA_candidates"],s["full_wallet_CA_denominator"])==(19,23,437)
+          assert (s["source_original_signed_early_buy_market_witnesses"],s["earlier_signed_buy_witnesses_within_frozen_23"],s["earlier_signed_buy_witnesses_outside_frozen_23"],s["remaining_major_CAs_not_yet_signed_early_buy_audited"])==(3,1,2,16)
+          assert s["global_actual_U_and_sell_capacity_fully_qualified"]==0 and s["actual_profit_ranks"]==0
+          assert s["production"]=="NO_GO"
+          assert all(x["historical_signed_roundtrip_PnL"]=="UNRESOLVED" and x["following_at_1_5_15min"]=="UNRESOLVED" for x in actual["rows"])
+          print("PASS 19/19 original market CA; 3 signed early buys incl one original 23-wallet; no false U or PnL")
+          PY
+      - name: P4-B original Flap 2026 launchpad signer buys with real quotes and taxes
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_flap_major2.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4b-flap-major2.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4b-flap-major2.json").read_text(encoding="utf-8"))
+          expected=json.loads((root/"bsc-meme-address-model-v1-p4b-flap-major2-original-buys-and-quotes-2026-10-14.json").read_text(encoding="utf-8"))
+          assert actual==expected,"Flap original contract event/tx owner receipt/tax economic source drift"
+          assert actual["summary"]["source_original_signed_purchases"]==2
+          assert actual["summary"]["signer_recipient_inventory_matches"]==2
+          assert actual["summary"]["closed_PnL"]==0
+          assert actual["summary"]["production"]=="NO_GO"
+          assert all(x["original_EOA_signer"]==x["final_ERC20_recipient"]
+                     and x["original_EOA_signer"]!=x["portal_TokenBought_intermediate_buyer"]
+                     and x["buyer_in_frozen_23"]=="NO"
+                     and x["causal_profit"]=="UNRESOLVED"
+                     for x in actual["rows"])
+          print("PASS two source-pinned 2026 Flap early owner signed buys with distinct quotes 1%/3% tax; no exit PnL")
+          PY
+      - name: P4-B 23-wallet 19-CA early original trade evidence
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_wallet_early_grid23x19.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4b-23x19.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4b-23x19.json").read_text(encoding="utf-8"))
+          expected=json.loads((root/"bsc-meme-address-model-v1-p4b-23x19-early-opportunity-ledger-2026-10-14.json").read_text(encoding="utf-8"))
+          assert actual==expected,"23 x 19 bounded early wallet source replay drift"
+          s=actual["summary"]
+          assert (s["wallets"],s["major_exact_CAs"],s["implicit_wallet_CA_cells"])==(23,19,437)
+          assert (s["one_source_proven_owner_signed_pre_dex_buy"],s["remaining_not_audited_owner_early_trade_cells"])==(1,436)
+          assert (s["market_U_qualified"],s["repeat_profit_ranks"],s["production"])==(0,0,"NO_GO")
+          print("PASS all 437 early owner trade evidence cells; one DDAC pre-DEX buy; 436 not audited are UNKNOWN")
+          PY
+      - name: P4-B early 19 CA launch-transfer/Helper3 and actual 2026 DDAC Dragon purchase
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_early_origin19.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4b-19-early-origin.json
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_dragon_ddac.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4b-ddac-dragon-buy.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          checks=[
+            ("/tmp/bsc-p4b-19-early-origin.json","bsc-meme-address-model-v1-p4b-19ca-early-launch-origin-2026-10-14.json"),
+            ("/tmp/bsc-p4b-ddac-dragon-buy.json","bsc-meme-address-model-v1-p4b-dragon-ddac-real-pre-dex-buy-2026-10-14.json"),
+          ]
+          for out,frozen in checks:
+              actual=json.loads(Path(out).read_text(encoding="utf-8"))
+              expected=json.loads((root/frozen).read_text(encoding="utf-8"))
+              assert actual==expected, f"source-pinned Dragon/19-CA historical replay drift: {frozen}"
+          a=json.loads(Path(checks[0][0]).read_text(encoding="utf-8"))
+          b=json.loads(Path(checks[1][0]).read_text(encoding="utf-8"))
+          assert (a["summary"]["exact_CAs"],a["summary"]["token_transfer_initial_block_precedes_scoped_dex"],a["summary"]["canonical_fourmeme_v2_at_pre_scoped_dex"])==(19,19,12)
+          assert a["summary"]["actually_proven_first_market_U"]==0
+          assert b["fact"]["buyer_EOA"]=="0xddac928a240bdace3994c2cc0783d4e29a002127"
+          assert b["fact"]["TokenPurchase_amount_token_raw"]==b["fact"]["original_erc20_transfer_raw_amount"]
+          assert b["fact"]["realized_net_PnL"]=="UNRESOLVED"
+          assert b["summary"]["production"]=="NO_GO"
+          print("PASS 19/19 pre-DEX early transfers, 12 canonical Four.meme manager witnesses, signed DDAC Dragon 0.8 BNB pre-DEX buy, no fake PnL")
+          PY
+      - name: P4-B frozen 19 historic original V2 0.01-WBNB route quotes and no-sellability gate
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_router_quotes19.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4b-19-router-math.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          r=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4b-19-router-math.json").read_text(encoding="utf-8"))
+          expected=json.loads((r/"bsc-meme-address-model-v1-p4b-19ca-v2-001wbnb-router-math-quotes-2026-10-14.json").read_text(encoding="utf-8"))
+          assert actual==expected, "19 CA historical quote state or fixed original amount drift"
+          s=actual["summary"]
+          assert (s["exact_CAs"],s["raw_historical_pair_reads_complete"],s["raw_historical_v2_router_buy_quotes_complete"],s["reserve_formula_cross_checks_passed"])==(19,19,19,19)
+          assert s["first_global_market_U_qualified"]==0 and s["production"]=="NO_GO"
+          assert all(r["historical_reverse_sell"]=="UNRESOLVED"
+                     and r["gas_and_actual_execution"]=="UNRESOLVED"
+                     and r["historical_token_transfer_simulation"]=="NOT_PERFORMED"
+                     for r in actual["rows"])
+          print("PASS 19/19 historical pair reserves and Router getAmountsOut exactly verify 0.01 WBNB source; no real sellability or market U")
+          PY
+      - name: P4-B nine firstswap signed transaction and exact receipt source replay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_nine_txs.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4b-nine-tx.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4b-nine-tx.json").read_text(encoding="utf-8"))
+          frozen=json.loads((root/"bsc-meme-address-model-v1-p4b-nine-firstswap-tx-provenance-2026-10-14.json").read_text(encoding="utf-8"))
+          assert actual==frozen,"nine source-pinned transaction readback mismatch"
+          s=actual["summary"]
+          assert (s["original_tx_senders_verified"],s["readback_receipt_success"],s["receipt_unresolved"])==(9,6,3)
+          assert s["qualified_major_U_proven"]==0 and s["owner_realized_pnl_proven"]==0
+          assert all(x["beneficial_owner_identity"]=="UNRESOLVED" and x["owner_realized_pnl"]=="UNRESOLVED" for x in actual["rows"])
+          print("PASS 9 fixed source original txs / 6 SUCCESS receipts / 3 unrecoverable receipts; no alpha")
+          PY
+      - name: P4-B 19 CA earliest scoped cross-venue candidate U and unknown controls
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_cross_venue19.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4b-cross-venue19.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-p4b-cross-venue19.json").read_text(encoding="utf-8"))
+          frozen=json.loads((root/"bsc-meme-address-model-v1-p4b-19ca-cross-venue-candidate-u-2026-10-14.json").read_text(encoding="utf-8"))
+          assert a==frozen,"P4-B 19 CA cross-venue source replay mismatch"
+          s=a["summary"]
+          assert (s["exact_CAs"],s["scoped_active_pools"],s["earlier_competitor_pools"],s["CA_with_scoped_alt_earlier"],s["other_inactive_at_reference_unknown"])==(19,36,17,12,5)
+          assert s["actual_market_U_qualified"]==0 and s["production"]=="NO_GO"
+          assert all(x["globally_first_executable_venue"]=="UNRESOLVED" and x["wallet_eligible_opportunity"]=="UNRESOLVED" for x in a["rows"])
+          print("PASS 19 CA / 36 scoped pool first liquidity; 17 earlier active competitors / 5 unknown inactive / no fake qualified U")
+          PY
+      - name: P4-B frozen 19 CA V2 Swap directional evidence and scoped fallbacks
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_v2_swaps19.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4b-19-v2-swaps.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          r=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4b-19-v2-swaps.json").read_text(encoding="utf-8"))
+          expected=json.loads((r/"bsc-meme-address-model-v1-p4b-v2-19ca-first10-swap-observations-2026-10-14.json").read_text(encoding="utf-8"))
+          assert actual==expected,"P4B frozen Swap source replay output drift"
+          s=actual["summary"]
+          assert (s["exact_CAs"],s["complete_ten_block_windows"],s["first_block_only_fallbacks"],
+                  s["observed_v2_swap_events_in_verified_windows"])==(19,11,8,24)
+          assert all(x["qualified_major_opportunity"]=="UNRESOLVED" and x["follower_pnl"]=="UNRESOLVED"
+                     for x in actual["rows"])
+          assert s["production"]=="NO_GO"
+          print("PASS P4B full 19 pool truth table: 11 full 10-block; eight strict one-block only; 24 Swap events; no false alpha")
+          PY
+      - name: P4 full 17 competing first active source and event semantic replay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_competing17.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4-17-actual.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4-17-actual.json").read_text(encoding="utf-8"))
+          frozen=json.loads((root/"bsc-meme-address-model-v1-p4-competing17-first-active-unified-2026-10-14.json").read_text(encoding="utf-8"))
+          assert actual == frozen, "17 pool source chain / frozen output mismatch"
+          assert len(actual["rows"])==17
+          assert sum(x["delay_blocks"]==0 for x in actual["rows"])==15
+          assert [x["delay_blocks"] for x in actual["rows"] if x["delay_blocks"]>0]==[10,17]
+          assert all(x["first_global_trade"]=="UNRESOLVED" and x["follower_profit"]=="UNRESOLVED" for x in actual["rows"])
+          assert actual["summary"]["production"]=="NO_GO"
+          print("PASS frozen 17/17 competing pools; 15 creation active, two genuine Swap-activated pools; no market/alpha claim")
+          PY
+      - name: P3 frozen 23-wallet original-signer semantic replay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p3.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-model-v1-p3-actual.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          model = Path("crypto-300-profit-mission/research")
+          frozen = json.loads((model / "bsc-meme-address-model-v1-p3-signer-evidence-overlay-2026-10-13.json").read_text(encoding="utf-8"))
+          fresh = json.loads(Path("/tmp/bsc-model-v1-p3-actual.json").read_text(encoding="utf-8"))
+          assert frozen == fresh, "P3 provenance/source regression: STOP"
+          assert fresh["summary"]["original_hashes_pending"] == 55
+          assert fresh["summary"]["confirmed_owner_market_swaps"] == 0
+          assert all(x["recent_30d_true_owner_market_swap"] == "UNRESOLVED" for x in fresh["wallets"])
+          print("PASS P3 pinned 23-wallet 19-CA overlay / 71 original hashes / no false swap or PnL")
+          PY
+      - name: P3 full 71-hash original-signer replay (no false executed swaps)
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p3.py" --full-source --source-dir "$MODEL_DIR" --output /tmp/bsc-model-v1-p3-full71.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          a = json.loads(Path("/tmp/bsc-model-v1-p3-full71.json").read_text(encoding="utf-8"))
+          s = a["summary"]
+          assert len(a["source_manifest"]) == 13
+          assert (s["wallets"], s["exact_CA"], s["erc20_transfer_events"]) == (23, 19, 89)
+          assert (s["original_hashes_read"], s["original_hashes_parsed"], s["original_hashes_unreadable"]) == (71, 70, 1)
+          assert (s["confirmed_owner_original_wallet_tx_pairs"],
+                  s["confirmed_third_party_original_wallet_tx_pairs"],
+                  s["unread_wallet_tx_pairs"]) == (38, 36, 1)
+          assert s["original_hashes_pending"] == 0
+          assert s["confirmed_owner_market_swaps"] == 0 and s["production"] == "NO_GO"
+          assert all(w["recent_30d_true_owner_market_swap"] == w["realized_profit"] == "UNRESOLVED"
+                     for w in a["wallets"])
+          print("PASS P3 71 original tx / 70 parsed / 1 unreadable / 38 owner / 36 third-party wallet pairings; no executable market swap evidence asserted")
+          PY
+      - name: P3 witnessed real owner Meme swap and no PnL/alpha claims
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p3_swap.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p3-proven-owner-swap.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          out = json.loads(Path("/tmp/bsc-p3-proven-owner-swap.json").read_text(encoding="utf-8"))
+          s = out["summary"]
+          assert (s["wallets"], s["frozen_CAs"], s["original_hashes_read"],
+                  s["wallets_with_verified_recent_true_swap"],
+                  s["remaining_owner_original_pairs_without_full_swap_evidence"]) == (23,19,71,1,37)
+          assert len(out["source_manifest"]) == 14 and s["production"] == "NO_GO"
+          assert s["realized_PnL_rank_available"] is False and s["followable_alpha_proven"] is False
+          assert [r["wallet"] for r in out["wallets"]
+                  if r["recent_true_owner_meme_swap_state"] == "VERIFIED_ACTIVE_ON_FROZEN_19_CA"] == [
+                      "0xa83b73f5644cde337b61da79589f10ea15548811"]
+          assert all(r["realized_PnL"] == "UNRESOLVED" for r in out["wallets"])
+          print("PASS one 2026-10-12 A83B/TST real owner-signed V3 pool swap; 22 wallet states unknown; no profit/followability claim")
+          PY
+      - name: P3 37 frozen owner tx pool-route and receipt causal gates
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p3_batch.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p3-batch37.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path("/tmp/bsc-p3-batch37.json").read_text(encoding="utf-8"))
+          s = d["summary"]
+          assert (s["wallets"],s["candidate_owner_tx_excluding_prior"],
+                  s["new_confirmed_owner_swap_txs"],s["prior_confirmed_owner_swap_txs"],
+                  s["total_confirmed_owner_swap_txs"]) == (23,37,19,1,20)
+          assert (s["pool_swap_seen_but_receipt_status_unverified"],
+                  s["direct_pool_swap_not_found_routing_unknown"],
+                  s["historical_verified_pools"]) == (4,14,11)
+          assert (s["wallets_with_confirmed_frozen_CA_recent_swap"],
+                  s["wallets_without_confirmed_swap_still_unknown"]) == (7,16)
+          assert all(w["lifetime_pnl"] == "UNRESOLVED" and w["follower_alpha"] == "UNRESOLVED"
+                     for w in d["wallets"])
+          assert s["production"] == "NO_GO"
+          ready = [w for w in d["wallets"] if w["latest_verified_swap_UTC"]]
+          assert len(ready) == 7
+          assert sum(w["latest_verified_swap_UTC"] is None for w in d["wallets"]) == 16
+          assert next(w for w in ready if w["wallet"].startswith("0xa83b"))["latest_verified_swap_UTC"] == "2026-10-12T07:57:23.000Z"
+          print("PASS P3 37-batch: 19 proven swap + 4 receipt-unknown + 14 route-unknown; total 20 with prior, 7 UTC verified wallets, NO_GO")
+          PY
+      - name: P4 23-wallet source-pinned P2/P3 cross-phase readiness matrix
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-model-v1-p4-actual.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          model = Path("crypto-300-profit-mission/research")
+          a = json.loads(Path("/tmp/bsc-model-v1-p4-actual.json").read_text(encoding="utf-8"))
+          b = json.loads((model / "bsc-meme-address-model-v1-p4-p2p3-readiness-matrix-2026-10-13.json").read_text(encoding="utf-8"))
+          assert a == b, "P4 source output differs from committed 23-wallet matrix"
+          s = a["summary"]
+          assert (s["wallets"],s["strict19CA_30day_owner_swap_verified_wallets"],
+                  s["sampled_two_plus_major_positive_with_recent_activity"],
+                  s["recent_active_but_economics_incomplete"],s["recent_swap_unknown_wallets"]) == (23,7,4,3,16)
+          assert s["full_2026_economic_PnL_proven_wallets"] == s["qualified_major_misses_proven"] == 0
+          assert not s["executable_follower_alpha_proven"] and s["production"] == "NO_GO"
+          print("PASS P4 23 complete P2/P3 comparator rows: 4 research priority, 3 active economics incomplete, 16 unknown, no traded PnL or follower alpha")
+          PY
+      - name: P4 pinned 4-wallet capital and native funding probe replay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_funding.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-model-v1-p4-funding.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path("/tmp/bsc-model-v1-p4-funding.json").read_text(encoding="utf-8"))
+          s = d["summary"]
+          assert (s["wallets"], s["funding_probed_wallets"], s["other_wallets_unprobed"]) == (23,4,19)
+          assert (s["native_external_inbound_windows_fully_paginated"],
+                  s["selected_quote_windows_fully_paginated"],s["selected_quote_windows_partial"]) == (4,3,1)
+          assert (s["native_external_inbound_records"], s["known_selected_ERC20_inbound_records"]) == (20,28)
+          assert s["control_attribution_proven"] == 0 and s["qualified_major_opportunity_misses"] == "UNRESOLVED"
+          assert s["production"] == "NO_GO"
+          assert len(d["source_manifest"]) == 9
+          assert all(x["common_controller"] == x["qualified_missed_opportunity"] == "UNRESOLVED"
+                     for x in d["wallets"])
+          print("PASS P4 funding: 4 BNB/quote historical snapshots + 4 complete native inbound windows, DDAC quote partial, 23 retained, NO_GO")
+          PY
+      - name: P4 19 frozen major CAs x 190 factory historical calls replay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_factory190.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4-factory190.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          d = Path("crypto-300-profit-mission/research")
+          a = json.loads(Path("/tmp/bsc-p4-factory190.json").read_text(encoding="utf-8"))
+          b = json.loads((d / "bsc-meme-address-model-v1-p4-19ca-factory190-discovery-2026-10-13.json").read_text(encoding="utf-8"))
+          assert a == b, "P4 factory190 source replay vs Git mismatch"
+          s = a["summary"]
+          assert (s["major_exact_CAs"],s["required_factory_calls"],s["parsed_factory_calls"],
+                  s["factory_nonzero_slots"],s["factory_zero_slots"]) == (19,190,190,161,29)
+          assert len(a["source_manifest"]) == 16 and s["production"] == "NO_GO"
+          assert s["code_verified_for_nonzero_pools"] == 0
+          assert s["first_executable_timestamp_confirmed"] == s["qualified_profitable_misses"] == 0
+          print("PASS 190/190 pinned historical factories, 19 major CAs, 161 addresses; NO tradability or PnL inferred")
+          PY
+      - name: P4 original PairCreated Mint Sync 4-wallet liquidity evidence
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_first_liquidity.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4-initial-reserves.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path("/tmp/bsc-p4-initial-reserves.json").read_text(encoding="utf-8"))
+          s = d["summary"]
+          assert (s["priority_wallets"], s["source_confirmed_V2_WBNB_pair_creations"],
+                  s["initial_Mint_and_Sync_same_creation_tx"], s["positive_initial_WBNB_reserves"],
+                  s["same_block_swap_confirmed_pools"]) == (4,4,4,4,2)
+          assert {x["token"]:x["first_positive_WBNB_reserve_BNB"] for x in d["rows"]} == {
+              "龙虾": "17.639999998157599996", "币安人生": "17.639999998157599996",
+              "MARSCOIN": "0.00103", "牛来": "0.1"
+          }
+          assert s["qualified_follower_entry_proven"] == s["profit_proven"] == 0
+          assert s["production"] == "NO_GO"
+          print("PASS 4 historical V2 PairCreated+Mint+Sync first liquidity; no full-universe first tradable or alpha")
+          PY
+      - name: P4 19 V2 WBNB first positive liquidity all exact CAs
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_liquidity19.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4-v2-liquidity19.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          model = Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-p4-v2-liquidity19.json").read_text(encoding="utf-8"))
+          b=json.loads((model/"bsc-meme-address-model-v1-p4-19ca-v2-wbnb-first-positive-liquidity-2026-10-14.json").read_text(encoding="utf-8"))
+          assert a==b, "P4 19CA first liquidity replay differs from source-pinned Git artifact"
+          s=a["summary"]
+          assert (s["exact_major_CAs"],s["v2_wbnb_pool_creation_verified"],
+                  s["first_positive_v2_wbnb_reserves_verified"],
+                  s["first_positive_same_creation_tx"],s["delayed_first_liquidity"])==(19,19,19,18,1)
+          assert s["delayed_giggle_blocks"] == 407
+          assert (s["global_first_tradable_proven"],s["qualified_misses_proven"],
+                  s["follower_alpha_proven"]) == (0,0,0)
+          assert s["production"]=="NO_GO"
+          print("PASS P4 full 19 CAs V2 first positive liquidity: 18 creation mints + GIGGLE 407-block delay, no inferred follower alpha")
+          PY
+      - name: P4 competing historical V2 V3 first-liquidity cross-venue guards
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_competing22.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4-competing22.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("/tmp/bsc-p4-competing22.json").read_text(encoding="utf-8"))
+          f=Path("crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-19ca-competing22-liquidity-snapshot-2026-10-14.json")
+          assert d==json.loads(f.read_text(encoding="utf-8")), "22 pool evidence replay mismatches pinned source"
+          s=d["summary"]
+          assert (s["major_CAs"],s["source_competing_slots"],s["provider_reads_complete"])==(19,22,22)
+          assert (s["V2_USDT_with_positive_reserves"],s["V3_active_initialized_at_V2_baseline"],
+                  s["V3_no_active_liquidity_at_baseline"]) == (2,15,5)
+          assert (s["earlier_first_positive_proven"],s["qualified_misses_proven"]) == (0,0)
+          assert s["production"]=="NO_GO"
+          print("PASS 171 historical factory reads; 22 competing pool liquidity snapshots: 17 active/5 inactive, no inferred first global entry")
+          PY
+      - name: P4 four source-pinned competing creation and early-liquidity proofs
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_competing4_creation.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4-competitor4.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path("/tmp/bsc-p4-competitor4.json").read_text(encoding="utf-8"))
+          s=a["summary"]
+          assert (s["precommitted_competing_pools"],s["creation_event_audited"],
+                  s["unexamined_other_active_competitors"],s["inactive_at_reference_retained"]) == (17,4,13,5)
+          assert (s["positive_active_at_creation"],s["initial_mint_but_zero_active"],
+                  s["earliest_global_executable_trades"],s["qualified_wallet_misses"]) == (3,1,0,0)
+          assert [r["creation_initial_USDT"] for r in a["rows"]] == [
+              "20","538.70512342330123571","0","13.18055194816814023"]
+          assert s["production"] == "NO_GO" and len(a["source_manifest"]) == 10
+          print("PASS four original V2/V3 pool creations: 3 in-range positives, one out-of-range; 13 pending, five inactive preserved; no alpha")
+          PY
+      - name: P4 priority competing-pool raw creation and active liquidity source audit
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_priority4_competitors.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4-competitors.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          path=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-p4-competitors.json").read_text(encoding="utf-8"))
+          b=json.loads((path/"bsc-meme-address-model-v1-p4-priority4-competitor-creation-verified-2026-10-14.json").read_text(encoding="utf-8"))
+          assert a==b, "competing source-pinned model differs from Git artifact"
+          s=a["summary"]
+          assert (s["competing_pools"],s["active_at_creation"],s["inactive_at_creation"])==(4,3,1)
+          assert s["full_market_earliest_tradability"]==0 and s["qualified_misses"]==0 and s["production"]=="NO_GO"
+          assert a["rows"][2]["v3_liquidity_at_creation_wei"]=="0"
+          print("PASS four original competing pool creation witnesses, 3 active and 1 out-of-range. NO_GO")
+          PY
+      - name: P4 first active cross-pool priority 4 historical source replay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_competing_first4.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4-priority4-first-active.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("/tmp/bsc-p4-priority4-first-active.json").read_text(encoding="utf-8"))
+          expected=json.loads(Path("crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-priority4-competing-first-active-2026-10-14.json").read_text(encoding="utf-8"))
+          assert d == expected
+          s=d["summary"]
+          assert (s["frozen_competitor_pools"],s["positive_at_creation"],
+                  s["delayed_in_range_active"],s["qualified_misses"]) == (4,3,1,0)
+          assert s["production"]=="NO_GO"
+          assert all(x["first_globally_tradable"]=="UNRESOLVED" for x in d["rows"])
+          print("PASS priority 4 competitor pool initial-liquidity: one delayed in-range Mint +17 blocks; no follower alpha inferred")
+          PY
+      - name: P4 immutable 4 competitor creation liquidity and false-alpha guards
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_competing4_origin.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4-competing4-origins.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("/tmp/bsc-p4-competing4-origins.json").read_text(encoding="utf-8"))
+          s=d["summary"]
+          assert (s["preexisting_competitors_total"],s["fully_creation_checked"],s["remaining_untested_competitors"]) == (17,4,13)
+          assert (s["creation_positive_liquidity"],s["creation_zero_active_liquidity"],s["creation_block_with_swap"]) == (3,1,2)
+          assert s["confirmed_global_first_tradable"] == 0 and s["confirmed_followable_profitable_misses"] == 0
+          assert d["rows"][2]["creation_liquidity_or_reserves_raw"] == "0"
+          assert s["production"]=="NO_GO"
+          print("PASS P4 4/17 competitor origins, 3 positive one zero-at-creation, 2 same-block swaps, no follower alpha")
+          PY
+      - name: Recompute 23x19 baseline deterministically
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1.py" \
+            --input "$MODEL_DIR/BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V21_2026-10-12.json" \
+            --output /tmp/bsc-model-v1-actual.json \
+            --source-git-blob-sha "$FROZEN_BLOB_SHA"
+      - name: Verify P2 source manifest blob pins and P1 artifact authority
+        shell: bash
+        run: |
+          python3 -B - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+
+          p = Path("crypto-300-profit-mission/research")
+          ledger = json.loads((p / "bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json").read_text(encoding="utf-8"))
+          p1 = p / "bsc-meme-address-model-v1-baseline-2026-10-13.json"
+          actual_p1_sha = subprocess.check_output(["git", "hash-object", str(p1)], text=True).strip()
+          assert ledger["baseline_artifact_git_blob_sha"] == actual_p1_sha
+          assert ledger["frozen_source_sha"] == "3761b9140d0c64b1ffd8d8d243d63a2a1a4fc690"
+          for source in ledger["source_manifest"]:
+              actual = subprocess.check_output(["git", "hash-object", source["path"]], text=True).strip()
+              assert actual == source["blob_sha"], f"source drift: {source['path']}"
+          blockers = json.loads((p / "bsc-meme-address-model-v1-p2-2026-eligibility-blocker-queue-2026-10-13.json").read_text(encoding="utf-8"))
+          episodes = {(e["wallet"], e["exact_ca"], e["episode_index"]) for e in ledger["episodes"]}
+          baseline = json.loads(p1.read_text(encoding="utf-8"))
+          cohort = {w["wallet"]: {c["ca"] for c in w["cells"] if c["ERC20_presence"] == "PRESENT"}
+                    for w in baseline["wallets"]}
+          for source in blockers["source_manifest"].values():
+              actual = subprocess.check_output(["git", "hash-object", source["path"]], text=True).strip()
+              assert actual == source["git_blob_sha"], f"blocker source drift: {source['path']}"
+          assert len(blockers["items"]) == 8
+          for item in blockers["items"]:
+              assert item["wallet"] in cohort and item["ca"] in cohort[item["wallet"]]
+              admitted = {i for wallet, ca, i in episodes
+                          if wallet == item["wallet"] and ca == item["ca"]}
+              assert admitted == set(item["audited_closed_episode_indices"]), (
+                  "Only explicitly verified signed same-CA episodes may enter P2"
+              )
+              assert admitted.isdisjoint(item["blocked_specific_episode_indices"]), (
+                  "Unverified episodes falsely counted as owner-signed settled trades"
+              )
+              assert item["realized_final_PnL"] == "UNRESOLVED"
+              assert item["entire_CA_profit_pnl_state"] == "UNRESOLVED"
+          print("PASS eight high-priority partial/open/signature-unknown P2 exclusions source-pinned")
+          stage3 = json.loads((p / "bsc-meme-address-model-v1-p2-stage3-adff-2adf-owner-closed-rounds-2026-10-13.json").read_text(encoding="utf-8"))
+          assert len(stage3["sample_rounds"]) == 3
+          assert stage3["summary"]["source_inventory_zero_cycles"] == 28
+          assert stage3["summary"]["source_quantity_segments_not_economic"] == 25
+          for src in stage3["source_git_refs"]:
+              actual = subprocess.check_output(["git", "hash-object", src["path"]], text=True).strip()
+              assert actual == src["blob_sha"], f"Stage3 raw source drift: {src['path']}"
+          print("PASS Stage3 exactly 3 signer-verified rounds, 25 other raw-only segments disallowed")
+          stage4_plan = json.loads((p / "bsc-meme-address-model-v1-p2-stage4-precommitted-2026-10-13.json").read_text(encoding="utf-8"))
+          stage4 = json.loads((p / "bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json").read_text(encoding="utf-8"))
+          for src in stage4_plan["source_manifest"]:
+              actual = subprocess.check_output(["git", "hash-object", src["path"]], text=True).strip()
+              assert actual == src["git_blob_sha"], f"Stage4 input source drift: {src['path']}"
+          assert stage4["selection_git_sha"] == subprocess.check_output(
+              ["git", "hash-object", str(p / "bsc-meme-address-model-v1-p2-stage4-precommitted-2026-10-13.json")],
+              text=True).strip()
+          assert len(stage4["rounds"]) == 2
+          assert stage4["summary"]["original_owner_successful_txs"] == 6
+          assert stage4["summary"]["unique_native_account_blocks"] == 5
+          print("PASS Stage4 source precommit, two negative signed rounds and unique native block de-dup")
+          bulk_plan = json.loads((p / "bsc-meme-address-model-v1-p2-bulk16-precommit-2026-10-13.json").read_text(encoding="utf-8"))
+          bulk_gate = json.loads((p / "bsc-meme-address-model-v1-p2-bulk16-gate-decisions-2026-10-13.json").read_text(encoding="utf-8"))
+          bulk_outcome = json.loads((p / "bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json").read_text(encoding="utf-8"))
+          for doc in [bulk_plan, bulk_outcome]:
+              for src in doc["source_manifest"]:
+                  actual = subprocess.check_output(["git", "hash-object", src["path"]], text=True).strip()
+                  expected = src.get("sha") or src.get("git_blob_sha")
+                  assert actual == expected, f"bulk manifest drift: {src['path']}"
+          plan_sha = subprocess.check_output(["git", "hash-object", str(p / "bsc-meme-address-model-v1-p2-bulk16-precommit-2026-10-13.json")], text=True).strip()
+          gate_sha = subprocess.check_output(["git", "hash-object", str(p / "bsc-meme-address-model-v1-p2-bulk16-gate-decisions-2026-10-13.json")], text=True).strip()
+          assert bulk_gate["frozen_selection_blob_sha"] == plan_sha
+          assert bulk_outcome["source_manifest"][1]["git_blob_sha"] == gate_sha
+          assert bulk_outcome["summary"]["origin_owner_gate_passed_cycles"] == 13
+          assert (bulk_outcome["summary"]["positive_native_scope_cycles"],
+                  bulk_outcome["summary"]["negative_native_scope_cycles"]) == (9, 4)
+          assert bulk_outcome["summary"]["unique_native_wallet_balance_blocks"] == 31
+          print("PASS 16 precommitted raw cycles, 39 tx, 13 signed economic cycles, 31 archived unique blocks, 9pos 4neg, three blocked")
+          print("PASS P2 source Git blobs pinned to exact evidence originals")
+          PY
+      - name: Recompute P2 23-wallet economic overlay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p2.py" \
+            --baseline "$MODEL_DIR/bsc-meme-address-model-v1-baseline-2026-10-13.json" \
+            --ledger "$MODEL_DIR/bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json" \
+            --output /tmp/bsc-model-v1-p2-actual.json
+      - name: Recompute frozen 239E 877AF 11 actual owner transaction signers
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_next239e877af.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-next-crosswallet.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          d=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-p4c-next-crosswallet.json").read_text(encoding="utf-8"))
+          b=json.loads((d/"bsc-meme-address-model-v1-p4c-next239e877af-four-signers-reconciled-2026-10-15.json").read_text(encoding="utf-8"))
+          assert a==b,"frozen 239E/877AF source replay differs"
+          s=a["summary"]
+          assert (s["wallets"],s["rounds"],s["owner_verified_bnb_chain56_txs"])==(2,4,11)
+          assert (s["original_native_block_scope_positive"],s["original_native_block_scope_negative"])==(2,2)
+          assert s["profit_rounds_newly_source_qualified"]==0 and s["production"]=="NO_GO"
+          print("PASS original 11 owner transactions 4 balanced 2026 rounds and no false alpha")
+          PY
+      - name: P4-C 239E same-token full buy-sell owner native negative and positive source replay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_239e_dragon_two_native.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-239e-two-native.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4c-239e-two-native.json").read_text(encoding="utf-8"))
+          orig=json.loads((root/"bsc-meme-address-model-v1-p4c-239e-dragon-two-owner-native-settlements-2026-10-15.json").read_text(encoding="utf-8"))
+          assert actual==orig,"239E original round fixed source replay mismatch"
+          s=actual["summary"]
+          assert (s["original_closed_owner_rounds"],s["owner_native_original_profit_rounds"],s["owner_native_original_loss_rounds"])==(2,1,1)
+          assert [x["original_native_wallet_net_wei"] for x in actual["rounds"]]==["-15332805033002259","22647938898252522"]
+          assert s["followable_signals"]==0 and s["production"]=="NO_GO"
+          print("PASS P4-C 239E same major two true native owner negative and positive, still no follow signals")
+          PY
+      - name: P4-C 877AF MARSCOIN exact token inventory but UNRESOLVED quote test
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_877af_inventory.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-877af-unknown.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-p4c-877af-unknown.json").read_text(encoding="utf-8"))
+          b=json.loads((root/"bsc-meme-address-model-v1-p4c-877af-marscoin-inventory-closed-quote-unresolved-2026-10-15.json").read_text(encoding="utf-8"))
+          assert a==b,"877AF 6 original signed MARSCOIN tx and inventory source drift"
+          s=a["summary"]
+          assert (s["original_rounds"],s["raw_owner_full_token_quantity_closed"],s["receipt_truncated"])==(2,2,6)
+          assert s["original_real_BNB_winner_rounds_newly_qualified"]==0
+          assert s["original_real_BNB_loser_rounds_newly_qualified"]==0
+          assert s["production"]=="NO_GO"
+          print("PASS MARSCOIN original 877AF both inventory round trips, incomplete gas/quote, no alpha claim")
+          PY
+      - name: P4-C 23 by 19 five actual rounds one mixed CA and 433 not economically audited
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_five_native_rounds23x19.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-five-original-real-rounds.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-p4c-five-original-real-rounds.json").read_text(encoding="utf-8"))
+          b=json.loads((root/"bsc-meme-address-model-v1-p4c-23x19-five-native-rounds-mixed239e-2026-10-15.json").read_text(encoding="utf-8"))
+          assert a==b,"P4C 23x19 original five native economic rounds replay changed"
+          s=a["summary"]
+          assert (s["total_wallet_CA_cells"],s["source_verified_original_native_rounds"],s["reviewed_distinct_wallet_CA_cells"],s["not_economically_audited_cells"])==(437,5,4,433)
+          assert (s["verified_native_positive_original_rounds"],s["verified_native_negative_original_rounds"],s["original_MARSCOIN_inventory_closed_but_profit_unknown_rounds"])==(3,2,2)
+          assert s["public_observer_follower_qualified_signals"]==0 and s["production"]=="NO_GO"
+          print("PASS 437 cells 5 native owner rounds only 4 cells and 433 unreviewed no P5")
+          PY
+      - name: P4-C three EOA five exact original inventories without fake BNB profit
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_ddac_adff_a83b_five.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-three-owner-five-rounds.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-three-owner-five-rounds.json").read_text(encoding="utf-8"))
+          b=json.loads((root/"bsc-meme-address-model-v1-p4c-ddac-adff-a83b-five-inventory-closed-2026-10-15.json").read_text(encoding="utf-8"))
+          assert a==b,"DDAC ADFF A83B five selected original source-token rounds replay mismatch"
+          s=a["summary"]
+          assert (s["frozen_wallets"],s["source_preselected_rounds"],s["verified_owner_signed_chain56_txs"],s["owner_native_historical_blocks_complete"])==(3,5,11,11)
+          assert (s["complete_full_success_receipts"],s["receipt_body_truncated"])==(5,6)
+          assert (s["source_proven_new_realized_BNB_profit_rounds"],s["source_proven_new_realized_BNB_loss_rounds"])==(0,0)
+          assert s["first_global_observer_U_qualified"]==0 and s["production"]=="NO_GO"
+          print("PASS three wallets five source closed token inventories 11 native blocks zero false PnL upgrade")
+          PY
+      - name: P4-C 8E6B token4 two original source rounds with 5 stored prior RPC reads (static replay)
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_8e6b_token4_two_native.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-8e6b-token4.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-p4c-8e6b-token4.json").read_text(encoding="utf-8"))
+          b=json.loads((root/"bsc-meme-address-model-v1-p4c-8e6b-token4-two-settled-source-audit-2026-10-15.json").read_text(encoding="utf-8"))
+          assert a==b,"8E6B token4 19 tx two original mixed real owner rounds audit source drift"
+          s=a["summary"]
+          assert (s["original_owner_signed_successful_txs"],s["independently_rechecked_full_transactions"])==(19,5)
+          assert (s["original_native_positive_rounds"],s["original_native_negative_rounds"])==(1,1)
+          assert s["new_followable_signals"]==0 and s["production"]=="NO_GO"
+          print("PASS token4 original 19 receipt-verified trades, 2 opposite native owner outcomes, 0 P5")
+          PY
+      - name: P4-C 23 x 19 seven original native rounds five cells with 2025 mixed token4
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_seven_rounds23x19.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-seven-real-rounds.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-p4c-seven-real-rounds.json").read_text(encoding="utf-8"))
+          b=json.loads((root/"bsc-meme-address-model-v1-p4c-23x19-seven-native-mixed4-2026-10-15.json").read_text(encoding="utf-8"))
+          assert a==b,"original 23x19 seven-source native history vs fixed expected JSON mismatch"
+          s=a["summary"]
+          assert (s["total_wallet_CA_cells"],s["source_verified_original_native_rounds"],s["reviewed_distinct_wallet_CA_cells"],s["not_economically_audited_cells"])==(437,7,5,432)
+          assert (s["verified_native_positive_original_rounds"],s["verified_native_negative_original_rounds"])==(4,3)
+          assert s["source_2025_token4_original_mixed_rounds"]==2 and s["public_observer_follower_qualified_signals"]==0
+          assert s["production"]=="NO_GO"
+          print("PASS 23x19 seven real native owner rounds five distinct CA cells, 432 still unreviewed")
+          PY
+      - name: P4-C 8E6B 19 original owner-only EOA native external transfer blocks
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_8e6b_external19.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-8e6b-external19.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-p4c-8e6b-external19.json").read_text(encoding="utf-8"))
+          b=json.loads((root/"bsc-meme-address-model-v1-p4c-8e6b-token4-all19-external-exclusivity-2026-10-15.json").read_text(encoding="utf-8"))
+          assert a==b,"original 19 external wallet block exclusion source mismatch"
+          s=a["summary"]
+          assert (s["original_selected_tx_blocks"],s["owner_blocks_with_other_external_native_sender"],s["owner_blocks_with_external_native_inbound"],s["provider_truncated_or_pagekey"])==(19,0,0,0)
+          assert s["internal_native_trace_status"]=="UNRESOLVED" and s["followable_signals"]==0
+          assert s["production"]=="NO_GO"
+          print("PASS all 19 original token4 owner-only external BNB blocks zero external contamination but internal trace open")
+          PY
+      - name: P4-C token 4 19 stored source trades and 5 historical RPC spot checks (static replay)
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_8e6b_token4_19tx.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-8e6b-token4-proof.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4c-8e6b-token4-proof.json").read_text(encoding="utf-8"))
+          expected=json.loads((root/"bsc-meme-address-model-v1-p4c-8e6b-token4-19tx-five-independent-source-reconciliation-2026-10-15.json").read_text(encoding="utf-8"))
+          assert actual==expected, "immutable original 19 token4 EOA receipt and five actual new spot checks drift"
+          s=actual["summary"]
+          assert (s["original_signer_success_source_records"],s["independent_live_spot_tx_count"])==(19,5)
+          assert (s["original_negative_native_rounds"],s["original_positive_native_rounds"])==(1,1)
+          assert s["original_total_native_wei"]=="13164987453603066615"
+          assert s["lagged_1_5_15_min_follower_signal_count"]==0 and s["production"]=="NO_GO"
+          print("PASS 8E6B token4 two original native loss/win across 19 source originals, five new signer/receipt/BNB/wbnb readbacks, no P5")
+          PY
+      - name: P4-B DDAC 龙虾 post-owner buy simulation and actual later sales (pinned offline evidence)
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_lonxia_observer_gate.py" > /tmp/bsc-p4b-dragon-observer-gate.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("/tmp/bsc-p4b-dragon-observer-gate.json")
+          obj=json.loads(p.read_text(encoding="utf-8"))
+          assert obj["post_owner_test_block"]==83635777
+          assert obj["historical_buy_simulations_success"]==2
+          assert obj["sampled_block_83636000_distinct_signed_dragon_sells"]==3
+          assert obj["sampled_block_total_manager_sales_all_CAs"]==4
+          assert obj["sampled_block_dragon_manager_outgoing_transfers"]==2
+          assert obj["sale_signers_in_frozen_23"]==2
+          assert obj["DDAC_initial_buy_unattributed_value_residual_wei"]=="8000000000000004"
+          assert obj["observer_first_public_execution_U"]=="UNRESOLVED"
+          assert obj["follower_lag_1_5_15min_PnL"]=="UNRESOLVED"
+          assert obj["production"]=="NO_GO"
+          print("PASS Dragon N+1 only historical eth_call; three later signed sellers; zero U/P5 promotion")
+          PY
+      - name: P4-B Dragon source-pinned two post-owner real signed rounds and no-exit negative control
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_dragon_signed_roundtrip.py" >/tmp/bsc-dragon-postowner-real-roundtrips.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          row=json.loads(Path("/tmp/bsc-dragon-postowner-real-roundtrips.json").read_text(encoding="utf-8"))
+          assert row["frozen_actual_buyers"] == 2
+          assert row["postowner_buy_senders_with_direct_pre_migration_sell"] == 1
+          assert row["d503_confirmed_original_signed_token_roundtrips"] == 2
+          assert row["e11b_direct_curve_sell_to_manager_observed"] == 0
+          assert row["sum_4_selected_wallet_native_block_deltas_wei"] == "61218026868859435"
+          assert len(row["rounds"]) == 2 and all(
+              x["actual_origin_signed_buy_and_sale_same_EOA"] == "CONFIRMED"
+              and x["real_transaction_attributable_net_PnL"] == "UNRESOLVED"
+              for x in row["rounds"]
+          )
+          assert row["first_executable_public_observer_U"] == "UNRESOLVED"
+          assert row["P5"] == "BLOCKED" and row["production"] == "NO_GO"
+          print("PASS precommitted 2 Dragon post-owner buyers, 2 D503 original signed closed token rounds, 1 E11B unsold curve control; NO_GO")
+          PY
+      - name: Historical V2 five-owner 14 original tx archive (POSTHOC, NOT CANONICAL OR APPROVED)
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_fiveowners14_gate.py" > /tmp/bsc-five-owner14-source-grade.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path("/tmp/bsc-five-owner14-source-grade.json").read_text())
+          assert p["p2_original_episodes"] == [15,31,38,46,44]
+          assert p["selected_wallets"] == 5 and p["distinct_exact_major_ca"] == 4
+          assert p["native_block_scope_positive_controls"] == 2
+          assert p["native_block_scope_negative_controls"] == 3
+          assert p["original_signer_and_block_recheck_passed"] == 14
+          assert p["full_receipts_parsed"] == 5
+          assert p["original_receipt_status_unreadable"] == 3
+          assert p["realized_fully_attributable_cross_major_profits"] == "UNRESOLVED"
+          assert p["public_observer_executable_U"] == "UNRESOLVED"
+          assert p["P5"] == "BLOCKED" and p["production"] == "NO_GO"
+          print("PASS source-frozen five original owners, four exact majors, 14 signer/block, 3 unreadable receipt statuses; no P5 promotion")
+          PY
+      - name: V3 review corrections H1 cohort disclosure H2 real BNB block UTC H3 incomplete receipts NOT SUCCESS
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_v3_review_gate.py" > /tmp/bsc-p4c-v3-review-source.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path("/tmp/bsc-p4c-v3-review-source.json").read_text(encoding="utf-8"))
+          v=a["three_original_cohort_comparisons"]
+          assert v["v1"]["native_block_scope_wei"] == "223671359895044206"
+          assert v["v2"]["native_block_scope_wei"] == "-400073738684035463"
+          assert v["v3"]["native_block_scope_wei"] == "-146773456364646148"
+          assert v["v3"]["selected_original_P2_indices"] == [13,15,31,38,46,44]
+          assert a["selection_grade"] == "POST_REVIEW_OUTCOME_AWARE_EXPOSED_NOT_HOLDOUT"
+          assert a["original_2026_calendar_first_and_last_verified_for_six_cases"] == 12
+          assert a["excluded_p2_42_year"] == "2025_SOURCE_BLOCK"
+          assert a["cross_method_blockhash_utc_matches"] == 13
+          assert a["cross_method_provider_independence"] == "SAME_ALCHEMY_PROVIDER_NOT_TWO_INDEPENDENT_NODES"
+          assert a["partial_status_witness_grade"] == "SELF_ATTESTED_LOCKED_8_VISIBLE_1_ABSENT_NOT_FULL_RECEIPTS"
+          assert a["original_signer_block_matched_count"] == 16
+          assert a["full_successful_receipts"] == 7
+          assert a["truncated_receipts_remaining_UNVERIFIED"] == 9
+          assert a["new_cross_CA_realized_PnL"] == "UNRESOLVED"
+          assert a["public_executable_U"] == "UNRESOLVED"
+          assert a["P5"] == "BLOCKED" and a["PRODUCTION"] == "NO_GO"
+          print("PASS V3 post-review disclosed V1/V2/V3, original 13 block UTC, 7 complete receipts/9 unknown, NO PNL/U/P5 promotion")
+          PY
+      - name: P4-C post-review original ten WBNB event route source grade (four wallets, positives and negatives)
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_wbnb10_source_gate.py" > /tmp/bsc-p4c-wbnb10-event-evidence.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path("/tmp/bsc-p4c-wbnb10-event-evidence.json").read_text(encoding="utf-8"))
+          assert a["original_owners"] == 4 and a["original_transactions"] == 10
+          assert a["negative_source_native_scope_owners"] == 2
+          assert a["positive_source_native_scope_owners"] == 2
+          assert a["complete_exact_block_event_queries"] == 19
+          assert a["truncated_exact_block_event_queries"] == 1
+          assert a["cases"]["38"]["wbnb_event_sums_wei"]["Withdrawal"] == "1694918377918343466"
+          assert a["cases"]["46"]["wbnb_event_sums_wei"]["Withdrawal"] == "UNRESOLVED_PARTIAL_LOG_QUERY"
+          assert a["cases"]["44"]["wbnb_event_sums_wei"]["Deposit"] == "0"
+          assert a["ADFF_positive_native_scope_quote_cost"].startswith("UNRESOLVED")
+          assert a["ADFF_original_Dragon_transfer_in_raw"] == "32546033429758403566"
+          assert a["ADFF_original_Dragon_transfer_out_raw"] == "32546033429758403566"
+          assert a["ADFF_all_assets_input_cost"].startswith("UNRESOLVED")
+          assert a["ADFF_initial_signed_tx_standard_ERC20_owner_out"] == "ZERO_MATCHES_SINGLE_BLOCK_TRANSFER_TOPIC"
+          assert a["ADFF_economic_acquisition_class"] == "SOURCE_AMBIGUOUS_NOT_CONFIRMED_BUY_OR_FREE_AIRDROP"
+          assert a["ADFF_realized_return"].startswith("UNRESOLVED")
+          assert a["repeat_trader_profitability"] == "UNRESOLVED"
+          assert a["public_executable_U"] == "UNRESOLVED"
+          assert a["P5"] == "BLOCKED" and a["PRODUCTION"] == "NO_GO"
+          print("PASS 4/4 original wallet source: 10 tx, 19 complete WBNB event queries, one truncated; no false ADFF free buy or P5 promotion")
+          PY
+      - name: P4-C frozen 23-wallet by 19-CA economic evidence census (not a profit rank)
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_23wallet_economic_census.py" > /tmp/bsc-p4c-economic-23.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path("/tmp/bsc-p4c-economic-23.json").read_text(encoding="utf-8"))
+          assert a["frozen_wallets"] == 23 and a["frozen_exact_CAs"] == 19
+          assert a["frozen_cells"] == 437
+          assert (a["ERC20_present"], a["ERC20_absent"]) == (148, 289)
+          assert (a["curated_signed_closed_episodes"], a["curated_wallets"],
+                  a["other_wallets_without_selected_rounds_not_losses"]) == (50, 7, 16)
+          assert (a["curated_native_scope_positive_not_realized_PnL"],
+                  a["curated_native_scope_negative_not_realized_PnL"],
+                  a["curated_mixed_quote_references_not_native_PnL"]) == (30,18,2)
+          assert a["curated_gas_WBNB_partial_settlement_grade"] == 4
+          assert a["full_wallet_economic_profitable_ranks"] == 0
+          assert all(w["profit_rank"] is None and len(w["cells"]) == 19 for w in a["wallets"])
+          assert a["U"] == "UNRESOLVED" and a["P5"] == "BLOCKED" and a["PRODUCTION"] == "NO_GO"
+          print("PASS original 23 x 19 437 proof census, 50 curated episodes, 16 uncatalogued, zero profitability rank")
+          PY
+      - name: Full BSC research unittest discovery including legacy exact CA
+        shell: bash
+        run: |
+          cd crypto-300-profit-mission/research
+          python3 -B -m unittest discover -v -p 'test_bsc*.py'
+      - name: Exact semantic Git artifact comparison and invariants
+        shell: bash
+        run: |
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+
+          d = Path("crypto-300-profit-mission/research")
+          expected = json.loads((d / "bsc-meme-address-model-v1-baseline-2026-10-13.json").read_text(encoding="utf-8"))
+          actual = json.loads(Path("/tmp/bsc-model-v1-actual.json").read_text(encoding="utf-8"))
+          assert expected == actual, "Non-deterministic model artifact vs source: STOP"
+          assert actual["cohort"]["cells"] == 437
+          assert actual["cohort"]["ERC20_present"] == 148
+          assert actual["cohort"]["ERC20_absent"] == 289
+          assert actual["cohort"]["observed_cells_with_null_complete_event_counts"] == 8
+          assert len(actual["wallets"]) == 23
+          assert all(w["profit_rank"] is None for w in actual["wallets"])
+          assert all(w["recent_30d_activity_state"] == "UNRESOLVED" for w in actual["wallets"])
+          assert all(
+              c["realized_cashflow_and_profit"] == "UNRESOLVED"
+              and c["owner_signed_buy_state"] == "UNRESOLVED"
+              and c["major_opportunity_eligible_miss"] == "UNRESOLVED"
+              for wallet in actual["wallets"] for c in wallet["cells"]
+          )
+          assert actual["production"] == "NO_GO"
+          p2_expected = json.loads((d / "bsc-meme-address-model-v1-p2-economic-comparison-2026-10-13.json").read_text(encoding="utf-8"))
+          p2_actual = json.loads(Path("/tmp/bsc-model-v1-p2-actual.json").read_text(encoding="utf-8"))
+          assert p2_actual == p2_expected, "P2 source-vs-Git artifact mismatch: STOP"
+          s = p2_actual["summary"]
+          assert (s["wallets_included"], s["signed_closed_episodes_imported"],
+                  s["wallets_with_curated_evidence"], s["wallets_not_yet_economically_curated"]) == (23, 50, 7, 16)
+          assert (s["selected_positive_episodes"], s["selected_negative_episodes"]) == (32, 18)
+          assert all(w["realized_profit_rank"] is None for w in p2_actual["wallets"])
+          assert all(w["recent_30d_signed_meme_swap"] == "UNRESOLVED" for w in p2_actual["wallets"])
+          assert p2_actual["production"] == "NO_GO"
+          print("PASS P2 23 wallets / 50 curated rounds / 32 pos, 18 neg / 16 unknown; no fake rank")
+          print("PASS 437/437, 148/289, 8 source exceptions, no fake PnL/ranking/recent signers")
+          PY
+
+  macos_bash32_qa:
+    name: macOS /bin/bash 3.2 offline BSC regressions
+    runs-on: macos-15
+    timeout-minutes: 12
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Verify real macOS /bin/bash 3.2 and exact source checkout
+        shell: bash
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(uname -s)" = "Darwin"
+          /bin/bash -c 'printf "SYSTEM_BASH_VERSION=%s\\n" "$BASH_VERSION"; test "${BASH_VERSINFO[0]}" -eq 3; test "${BASH_VERSINFO[1]}" -eq 2'
+          [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "invalid macOS source SHA" >&2; exit 1; }
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA" || { echo "macOS source SHA checkout mismatch" >&2; exit 1; }
+          echo "PASS macOS native Bash 3.2 source checkout at $SOURCE_SHA"
+      - name: Reproduce missing manual SHA and run all BSC source-only tests on macOS
+        shell: bash
+        run: |
+          set -euo pipefail
+          /bin/bash --version
+          python3 -B -m unittest discover -s crypto-300-profit-mission/research -p 'test_bsc_meme_address_model_v1_workflow_event_identity.py' -v
+          python3 -B -m unittest discover -s crypto-300-profit-mission/research -p 'test_bsc*.py'
+      - name: macOS P4-B Flap expected JSON source-only replay parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_nplus1_two_sided_quotes.py > "$RUNNER_TEMP/p4b-flap-nplus1.json"
+          python3 -B crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_original_quote_portal.py > "$RUNNER_TEMP/p4b-flap-portal.json"
+          python3 - "$RUNNER_TEMP/p4b-flap-nplus1.json" "$RUNNER_TEMP/p4b-flap-portal.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          cases=(
+            (Path(sys.argv[1]), root/"bsc-meme-address-model-v1-p4b-2026-flap-nplus1-two-sided-expected-replay-2026-10-17.json"),
+            (Path(sys.argv[2]), root/"bsc-meme-address-model-v1-p4b-2026-flap-actual-portal-payment-expected-replay-2026-10-17.json"),
+          )
+          for actual_file, expected_file in cases:
+              actual=json.loads(actual_file.read_text(encoding="utf-8"))
+              expected=json.loads(expected_file.read_text(encoding="utf-8"))
+              assert actual==expected, f"Frozen P4-B source replay differs from committed expected: {expected_file}"
+              assert actual["summary"]["P5"]=="BLOCKED" and actual["summary"]["production"]=="NO_GO"
+              print(f"PASS strict P4-B Flap source-only deterministic comparison: {expected_file.name}")
+          PY

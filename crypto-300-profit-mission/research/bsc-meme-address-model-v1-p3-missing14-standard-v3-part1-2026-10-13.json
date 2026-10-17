@@ -1,0 +1,68 @@
+{
+  "schema": "BSC_MEME_P3_STANDARD_V3_SWAP_EVENTS",
+  "part": 1,
+  "range": [
+    0,
+    6
+  ],
+  "precommit_sha": "66f5d8b7f398bc7928ee6d9b0576d26d939a932a",
+  "records": [
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "hash": "0x00d5eabcd78fa629f2f9036d74bfbac889cea475f8617111c32db45fae5413ed",
+      "block": 123355289,
+      "query_state": "FULL_EVENT_QUERY",
+      "matching_events": [],
+      "error": null
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "hash": "0xf9d57b0971395dc6f59a0317ba4bcbee3d4c0920e34474cf6f153300f76275d9",
+      "block": 126605440,
+      "query_state": "FULL_EVENT_QUERY",
+      "matching_events": [],
+      "error": null
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xafca658cebd8cb5a0e0afb73426451f8f3fc1fcd3796478dc6ac0269472353b8",
+      "block": 122987987,
+      "query_state": "FULL_EVENT_QUERY",
+      "matching_events": [],
+      "error": null
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xe1520b559ea7186bc733c290ba34c64e9486d9a4daf2380a2240c1993af59b9a",
+      "block": 122987993,
+      "query_state": "FULL_EVENT_QUERY",
+      "matching_events": [],
+      "error": null
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0x488a4bef32fca7a08c31cb8416ebe63f9375e46974c0978b0e308c4e75ed6874",
+      "block": 122987995,
+      "query_state": "FULL_EVENT_QUERY",
+      "matching_events": [],
+      "error": null
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0x4915f70f5a07dcc6cb6152f8a7390ffa90060a983c80c012b8254497bb165496",
+      "block": 122988406,
+      "query_state": "FULL_EVENT_QUERY",
+      "matching_events": [],
+      "error": null
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x0245294448b6197e70660a0fdc5fb9186f8c5b98919567d22915c552dbca9be6",
+      "block": 126840114,
+      "query_state": "FULL_EVENT_QUERY",
+      "matching_events": [],
+      "error": null
+    }
+  ],
+  "production": "NO_GO"
+}

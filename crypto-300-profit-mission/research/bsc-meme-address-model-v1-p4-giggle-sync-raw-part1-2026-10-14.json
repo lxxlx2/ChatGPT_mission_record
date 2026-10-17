@@ -1,0 +1,80 @@
+{
+  "schema": "BSC_P4_GIGGLE_CREATION_TO_FIRST_POSITIVE_SYNC_SCAN",
+  "group": 1,
+  "windows": [
+    {
+      "part": 0,
+      "fromBlock": 61963318,
+      "toBlock": 61963327,
+      "status": "COMPLETE_JSON",
+      "events": []
+    },
+    {
+      "part": 1,
+      "fromBlock": 61963328,
+      "toBlock": 61963337,
+      "status": "COMPLETE_JSON",
+      "events": []
+    },
+    {
+      "part": 2,
+      "fromBlock": 61963338,
+      "toBlock": 61963347,
+      "status": "COMPLETE_JSON",
+      "events": []
+    },
+    {
+      "part": 3,
+      "fromBlock": 61963348,
+      "toBlock": 61963357,
+      "status": "COMPLETE_JSON",
+      "events": []
+    },
+    {
+      "part": 4,
+      "fromBlock": 61963358,
+      "toBlock": 61963367,
+      "status": "COMPLETE_JSON",
+      "events": []
+    },
+    {
+      "part": 5,
+      "fromBlock": 61963368,
+      "toBlock": 61963377,
+      "status": "COMPLETE_JSON",
+      "events": []
+    },
+    {
+      "part": 6,
+      "fromBlock": 61963378,
+      "toBlock": 61963387,
+      "status": "COMPLETE_JSON",
+      "events": []
+    },
+    {
+      "part": 7,
+      "fromBlock": 61963388,
+      "toBlock": 61963397,
+      "status": "COMPLETE_JSON",
+      "events": []
+    },
+    {
+      "part": 8,
+      "fromBlock": 61963398,
+      "toBlock": 61963407,
+      "status": "COMPLETE_JSON",
+      "events": []
+    },
+    {
+      "part": 9,
+      "fromBlock": 61963408,
+      "toBlock": 61963417,
+      "status": "COMPLETE_JSON",
+      "events": []
+    }
+  ],
+  "pool": "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+  "source_block": 61963318,
+  "end_block": 61963725,
+  "production": "NO_GO"
+}

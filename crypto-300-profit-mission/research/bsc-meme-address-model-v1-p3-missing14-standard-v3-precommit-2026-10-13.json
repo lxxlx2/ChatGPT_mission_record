@@ -1,0 +1,160 @@
+{
+  "schema": "BSC_MEME_P3_STANDARD_V3_SWAP_TOPIC_NEGATIVE_SCAN_COMPLETION",
+  "status": "FROZEN_PRIOR_TO_NEW_QUERY",
+  "network": "bnb-mainnet",
+  "standard_V3_Swap_event_topic": "0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67",
+  "reference": "https://docs.bitquery.io/docs/blockchain/Ethereum/dextrades/uniswap-api/",
+  "source_files": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-venue-swap-log-part1-2026-10-13.json",
+      "sha": "65dd14dd798e70bcac7cee4b2ae74034800406ac"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-venue-swap-log-part2-2026-10-13.json",
+      "sha": "4480961c6a790e4a3038414f83749067e2552db4"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-venue-swap-log-part3-2026-10-13.json",
+      "sha": "ebbca4ccb8dc94716a13d4f2ac1a36b36cfabcfc"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-venue-swap-log-part4-2026-10-13.json",
+      "sha": "d5a38a161d91660f19d4e5ec6c561ebd2d3f655a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-venue-swap-log-part5-2026-10-13.json",
+      "sha": "6f2c57e22e897c1620b09effb6058fd1cc6e558f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-venue-swap-log-part6-2026-10-13.json",
+      "sha": "2fd36f10c9ed8131ac7703c5208e240b68f4a3b1"
+    }
+  ],
+  "summary": {
+    "previously_scanned": 37,
+    "existing_matching_swaps": 23,
+    "remaining_missing_swap_topic_cases": 14
+  },
+  "queries": [
+    {
+      "hash": "0x00d5eabcd78fa629f2f9036d74bfbac889cea475f8617111c32db45fae5413ed",
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "block": 123355289,
+      "address": [
+        "0x58f6213a0d5f6a32ea5dd5a727ff4a32abdf5f5b",
+        "0x918498ac17964a90678d6e811f26595764bb2fd7",
+        "0x9bab04f9731858ed7b4c9b9c2a2443fc18d0914c",
+        "0x9bc9620b66cdce07a7ad8bb9d707079504b8dc04"
+      ]
+    },
+    {
+      "hash": "0xf9d57b0971395dc6f59a0317ba4bcbee3d4c0920e34474cf6f153300f76275d9",
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "block": 126605440,
+      "address": [
+        "0x0dc747269b1759a91314c55ce36c2d7bce07ff4d"
+      ]
+    },
+    {
+      "hash": "0xafca658cebd8cb5a0e0afb73426451f8f3fc1fcd3796478dc6ac0269472353b8",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122987987,
+      "address": [
+        "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e"
+      ]
+    },
+    {
+      "hash": "0xe1520b559ea7186bc733c290ba34c64e9486d9a4daf2380a2240c1993af59b9a",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122987993,
+      "address": [
+        "0x11a9144e881ac2af84b6d7609ef29e57b3f386aa",
+        "0x1ff5f3d06fd05ab7a436de510c9e470c1961d16b"
+      ]
+    },
+    {
+      "hash": "0x488a4bef32fca7a08c31cb8416ebe63f9375e46974c0978b0e308c4e75ed6874",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122987995,
+      "address": [
+        "0xff497ca7118bd4b09435168372d188dc2d670f9d"
+      ]
+    },
+    {
+      "hash": "0x4915f70f5a07dcc6cb6152f8a7390ffa90060a983c80c012b8254497bb165496",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122988406,
+      "address": [
+        "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e"
+      ]
+    },
+    {
+      "hash": "0x0245294448b6197e70660a0fdc5fb9186f8c5b98919567d22915c552dbca9be6",
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 126840114,
+      "address": [
+        "0xe13cae07364a57304ea71efca0f4638fed9a8923",
+        "0xe3d43c02e3c7102035e04002b024a7a9ce133570"
+      ]
+    },
+    {
+      "hash": "0x8421eb9bd2bc261f6b7c2562668c3c7f2a5912894f91634d5bbc26e7effabeb8",
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 126840130,
+      "address": [
+        "0xb558b790aa640d97b83be9f55e8c53be6d45c876"
+      ]
+    },
+    {
+      "hash": "0x41d1b44d7f17218ed671609bab4cbd6dbe9eb613ed79540ff9d0be0d905fd230",
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 126840137,
+      "address": [
+        "0x63ea8724874989c4763bf765709b3854412bff88"
+      ]
+    },
+    {
+      "hash": "0x1c69f5bcf9acfbb07340890713a290e280d8f3d8dfd0957aa86c3044b92d9fe6",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 123682061,
+      "address": [
+        "0x8a08d98cbb218fceb318ecf3abc1ba43d8a7ab0e",
+        "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0"
+      ]
+    },
+    {
+      "hash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "block": 121783426,
+      "address": [
+        "0x359bf61ca77cbda27a5eb3a8b472f3c02bc2bc75",
+        "0xd3604620f75fefab226d0fa50a3894e1d1111137"
+      ]
+    },
+    {
+      "hash": "0x6b411510ce6ddb3d38b124c232fd059c431f1623c2528113f84fdb58bfbc80ae",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "block": 121848139,
+      "address": [
+        "0x27eca4b0cf0be597a37b7a1819740eb47ea79d1b"
+      ]
+    },
+    {
+      "hash": "0x6c7f28fe04982f805eca509287ce053260ed1133a89c7fe937608a7d4baed9f7",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "block": 122213277,
+      "address": [
+        "0x31704f4b3ff245753d4a7b0239d6fa252aee9bb5"
+      ]
+    },
+    {
+      "hash": "0x46f4ebf92b95cd023d89a50ee20f0957eea2ec31e27fa53419dba7a3498fb17d",
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "block": 126050422,
+      "address": [
+        "0x83aaf02b71f399805419853dfc314a369321c523"
+      ]
+    }
+  ],
+  "production": "NO_GO"
+}

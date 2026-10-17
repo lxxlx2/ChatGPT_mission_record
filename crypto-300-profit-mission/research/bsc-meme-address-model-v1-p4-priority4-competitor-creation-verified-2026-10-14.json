@@ -1,0 +1,133 @@
+{
+  "schema": "BSC_P4_PRIORITY4_COMPETING_FIRST_CREATION_AND_ACTIVE_LIQUIDITY",
+  "scope": "Only four fixed V2/USDT and V3/USDT competing pools tied to original frozen 17; exact creation state, NOT first global opportunity nor follower PnL.",
+  "sources": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-competing17-firstfactory-precommit-2026-10-14.json",
+      "git_blob_sha": "b1c2395c949ba664c2424c8b8da84924c967ab90"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-priority4-competition-bisect-stage7-2026-10-14.json",
+      "git_blob_sha": "a028afbefba965d12ea648dbf491aa6be41a7af0"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-priority4-competitor-creation-part1-2026-10-14.json",
+      "git_blob_sha": "c803a9a64d04ed64d701f78f3760688ead2203d1"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-priority4-competitor-creation-part2-2026-10-14.json",
+      "git_blob_sha": "41bf38e4640e138d441a0b07ce0e4931ffc812ff"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-19ca-v2-wbnb-first-positive-liquidity-2026-10-14.json",
+      "git_blob_sha": "9fbc8bdaeb9df342a4d200fefb0ebd48b746b903"
+    }
+  ],
+  "summary": {
+    "competing_pools": 4,
+    "creation_event_and_boundary": 4,
+    "create_transaction_mint": 4,
+    "active_at_creation": 3,
+    "inactive_at_creation": 1,
+    "full_market_earliest_tradability": 0,
+    "qualified_misses": 0,
+    "production": "NO_GO"
+  },
+  "rows": [
+    {
+      "index": 12,
+      "token": "牛来",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "protocol": "V2",
+      "quote": "USDT",
+      "fee_pips": null,
+      "pool": "0x57143fffeba8aecfe31d18bcbdc9ed590990dc1a",
+      "create_block": 116207845,
+      "create_utc": "2026-08-16T04:24:03.000Z",
+      "baseline_v2_wbnb_block": 116314917,
+      "earlier_than_baseline_blocks": 107072,
+      "create_tx": "0xa7cfc6d2c85b46741e86e7b11e7b13f225f4bf7e8f0443a5bf796b65b8da0b20",
+      "create_mint_tx": "0xa7cfc6d2c85b46741e86e7b11e7b13f225f4bf7e8f0443a5bf796b65b8da0b20",
+      "creation_active": true,
+      "first_positive_in_this_pool_block": 116207845,
+      "v3_liquidity_at_creation_wei": null,
+      "v3_sqrtPriceX96": null,
+      "v2_end_block_reserves": [
+        "16632988595529353713",
+        "923806299306260666778"
+      ],
+      "earliest_global_tradability": "UNRESOLVED",
+      "sellability_and_tax": "UNRESOLVED",
+      "qualified_wallet_miss": "UNRESOLVED"
+    },
+    {
+      "index": 13,
+      "token": "牛来",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "protocol": "V3",
+      "quote": "USDT",
+      "fee_pips": 2500,
+      "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+      "create_block": 116156658,
+      "create_utc": "2026-08-15T22:00:03.000Z",
+      "baseline_v2_wbnb_block": 116314917,
+      "earlier_than_baseline_blocks": 158259,
+      "create_tx": "0x20fc2323263d11b3db1f4f4264bf21c9aefde0572e728610dc5127533490a813",
+      "create_mint_tx": "0x20fc2323263d11b3db1f4f4264bf21c9aefde0572e728610dc5127533490a813",
+      "creation_active": true,
+      "first_positive_in_this_pool_block": 116156658,
+      "v3_liquidity_at_creation_wei": "67818067095630280009422",
+      "v3_sqrtPriceX96": "522402058907915209321976473598",
+      "v2_end_block_reserves": null,
+      "earliest_global_tradability": "UNRESOLVED",
+      "sellability_and_tax": "UNRESOLVED",
+      "qualified_wallet_miss": "UNRESOLVED"
+    },
+    {
+      "index": 14,
+      "token": "牛来",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "protocol": "V3",
+      "quote": "USDT",
+      "fee_pips": 10000,
+      "pool": "0xab058332a7279f1e64162be08f59ac0cd9601759",
+      "create_block": 115919188,
+      "create_utc": "2026-08-14T16:18:36.000Z",
+      "baseline_v2_wbnb_block": 116314917,
+      "earlier_than_baseline_blocks": 395729,
+      "create_tx": "0x528bffbe589099a65e8d1021341a551faf531089fd71f7c9359b162f090e84d8",
+      "create_mint_tx": "0x528bffbe589099a65e8d1021341a551faf531089fd71f7c9359b162f090e84d8",
+      "creation_active": false,
+      "first_positive_in_this_pool_block": null,
+      "v3_liquidity_at_creation_wei": "0",
+      "v3_sqrtPriceX96": "3586353396047961435756813052285",
+      "v2_end_block_reserves": null,
+      "earliest_global_tradability": "UNRESOLVED",
+      "sellability_and_tax": "UNRESOLVED",
+      "qualified_wallet_miss": "UNRESOLVED"
+    },
+    {
+      "index": 15,
+      "token": "MARSCOIN",
+      "CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "protocol": "V3",
+      "quote": "USDT",
+      "fee_pips": 10000,
+      "pool": "0x4a4bea953813c118c260be9a26b2321e57aa62e5",
+      "create_block": 112642885,
+      "create_utc": "2026-07-28T14:34:42.000Z",
+      "baseline_v2_wbnb_block": 112668701,
+      "earlier_than_baseline_blocks": 25816,
+      "create_tx": "0xe3644f57c40a0b47fc6a061e0dac194fc05da4c02803107eb37ef498a6c96cdc",
+      "create_mint_tx": "0xe3644f57c40a0b47fc6a061e0dac194fc05da4c02803107eb37ef498a6c96cdc",
+      "creation_active": true,
+      "first_positive_in_this_pool_block": 112642885,
+      "v3_liquidity_at_creation_wei": "2961561355582615160220",
+      "v3_sqrtPriceX96": "1131821192796896538134121989049",
+      "v2_end_block_reserves": null,
+      "earliest_global_tradability": "UNRESOLVED",
+      "sellability_and_tax": "UNRESOLVED",
+      "qualified_wallet_miss": "UNRESOLVED"
+    }
+  ]
+}

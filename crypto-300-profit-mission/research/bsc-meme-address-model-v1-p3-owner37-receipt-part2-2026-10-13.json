@@ -1,0 +1,129 @@
+{
+  "schema": "BSC_MEME_P3_OWNER37_ORIGINAL_RECEIPT_EVIDENCE",
+  "part": 2,
+  "range": [
+    7,
+    13
+  ],
+  "precommit_sha": "9d1a95b864a631b6c8559bf65817c30e871da19e",
+  "records": [
+    {
+      "hash": "0x488a4bef32fca7a08c31cb8416ebe63f9375e46974c0978b0e308c4e75ed6874",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122987995,
+      "token_cas": [
+        "0x12b4356c65340fb02cdff01293f95febb1512f3b"
+      ],
+      "receipt_state": "TRUNCATED_JSON_RECEIPT",
+      "status_header": "0x1",
+      "gas_used": null,
+      "log_count": null,
+      "compact_logs": [],
+      "error": null
+    },
+    {
+      "hash": "0xc81eadbe91ba27a418a7e574e327d3cc4d47eea8ec13221a42b746795ca4bb72",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122988185,
+      "token_cas": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "receipt_state": "TRUNCATED_JSON_RECEIPT",
+      "status_header": "0x1",
+      "gas_used": null,
+      "log_count": null,
+      "compact_logs": [],
+      "error": null
+    },
+    {
+      "hash": "0x4915f70f5a07dcc6cb6152f8a7390ffa90060a983c80c012b8254497bb165496",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122988406,
+      "token_cas": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "receipt_state": "FULL_JSON_LOGS",
+      "status_header": "0x1",
+      "gas_used": "0x24ddc",
+      "log_count": 8,
+      "compact_logs": [
+        {
+          "address": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "logIndex": "0x1cb",
+          "topics": [
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x000000000000000000000000758987ae8d4583d94742e5cbb4eaca430cf1a11e",
+            "0x0000000000000000000000002adf961b40951736bcff3b36b7fb1cd5775475ba"
+          ],
+          "data": "0x0000000000000000000000000000000000000000000000002578927d14a05acc"
+        },
+        {
+          "address": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "logIndex": "0x1ce",
+          "topics": [
+            "0xc4f02cd43bed595a7c3ee13e0ee1ec639470a7a0f374837ee7b910779d55f5ba"
+          ],
+          "data": "0x000000000000000000000000758987ae8d4583d94742e5cbb4eaca430cf1a11e0000000000000000000000002adf961b40951736bcff3b36b7fb1cd5775475ba0000000000000000000000000000000000000000000000002578927d14a05acc"
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0x118dd6d6d2c4766660342cf7e67518753928ea441943cedd8ff7a6f4f66a5756",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122995918,
+      "token_cas": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "receipt_state": "TRUNCATED_JSON_RECEIPT",
+      "status_header": "0x1",
+      "gas_used": null,
+      "log_count": null,
+      "compact_logs": [],
+      "error": null
+    },
+    {
+      "hash": "0x8ecd40fddcdc93ee3c90328166f098ec412ad4d80f50c00ed98601b0e9bb4fa2",
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "block": 122367977,
+      "token_cas": [
+        "0x0a43fc31a73013089df59194872ecae4cae14444"
+      ],
+      "receipt_state": "TRUNCATED_JSON_RECEIPT",
+      "status_header": "0x1",
+      "gas_used": null,
+      "log_count": null,
+      "compact_logs": [],
+      "error": null
+    },
+    {
+      "hash": "0x158c28e5efafde2a93fa1549d328082b2357369f666fd4cbd48eec0e54ff222b",
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "block": 122742452,
+      "token_cas": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "receipt_state": "TRUNCATED_JSON_RECEIPT",
+      "status_header": "0x1",
+      "gas_used": null,
+      "log_count": null,
+      "compact_logs": [],
+      "error": null
+    },
+    {
+      "hash": "0x49748cf3ec185c54bc3b46dc4bb6c92e225d2bcbf0a1aadf1a49c0fb093f53ca",
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "block": 123506149,
+      "token_cas": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "receipt_state": "TRUNCATED_JSON_RECEIPT",
+      "status_header": null,
+      "gas_used": null,
+      "log_count": null,
+      "compact_logs": [],
+      "error": null
+    }
+  ],
+  "production": "NO_GO"
+}

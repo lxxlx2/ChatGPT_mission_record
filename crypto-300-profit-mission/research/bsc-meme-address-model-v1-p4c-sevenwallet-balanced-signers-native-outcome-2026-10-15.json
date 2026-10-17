@@ -1,0 +1,187 @@
+{
+  "schema": "BSC_P4C_SEVEN_RECENT_WALLET_FROZEN_BALANCED_SOURCE_ECONOMIC_BATCH",
+  "scope": "Original recent 7 owner-swap active wallets; original 5 precommitted signed candidate rounds 4 distinct wallets and 2 latest swap activity-only wallets, plus DDAC previously independent genuine negative. Fresh all 14 owner transactions re-read; 11 unique archived native block spans. Only 8E6B two 2026 majors independently closed positive with full receipts WBNB Gas. Other three candidate round signs are native-scope observations, not endorsed full quote PnL; 0ABB and 498 cannot be ranked.",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-sevenwallet-balanced-five-round-precommit-2026-10-15.json",
+      "git_blob_sha": "85a39f4c5c9723e98180a1c018b9dd94588fe3b6"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-sevenwallet-owner-tx-part1-2026-10-15.json",
+      "git_blob_sha": "a038983867c6cfbad35c1fcd4b070992eba3fe8f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-sevenwallet-owner-tx-part2-2026-10-15.json",
+      "git_blob_sha": "b1ceba18b696553ac902bbb25bbd68b7abe75187"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-sevenwallet-five-round-native-part1-2026-10-15.json",
+      "git_blob_sha": "71d8c4549c176fcf9f78002f648d956aedc4a026"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-sevenwallet-five-round-native-part2-2026-10-15.json",
+      "git_blob_sha": "ce70cd208676a449ee6b9f66264835c600423ba7"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-sevenwallet-original-receipt-part1-2026-10-15.json",
+      "git_blob_sha": "0351062ea8b6290e465412e38d02a7790ae8f9a3"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-sevenwallet-original-receipt-part2-2026-10-15.json",
+      "git_blob_sha": "a28c25a1ef16315777b4b59ab1d8126f8c10d11a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-sevenwallet-original-receipt-part3-2026-10-15.json",
+      "git_blob_sha": "b0a8ec20402523f78bc73e409a22b55a5afc8164"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-hajimi-dragon-two-verified-native-positive-2026-10-15.json",
+      "git_blob_sha": "dc144d9d259ef1392478d1e25d48f2f649744f20"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-dragon-ddac-closed-native-loss-2026-10-15.json",
+      "git_blob_sha": "4e76eea4d7ab001360af82f15de5eefc8509c501"
+    }
+  ],
+  "summary": {
+    "frozen_recent_active_wallets": 7,
+    "frozen_major_exact_CAs": 19,
+    "preselected_rounds_this_batch": 5,
+    "distinct_economic_batch_wallets": 4,
+    "source_owner_signature_reverified_transactions": 14,
+    "unique_historical_native_balance_blocks": 11,
+    "full_original_receipt_success_recovered": 6,
+    "origin_receipt_truncated": 8,
+    "selected_native_positive_block_scope_rounds": 4,
+    "selected_native_negative_block_scope_rounds": 1,
+    "independently_settled_native_positive_rounds": 2,
+    "prior_DDAC_native_negative_rounds_retained": 1,
+    "unclosed_positive_or_negative_scope_only": 3,
+    "control_wallets_without_round": 2,
+    "verified_profitable_winner_wallets_in_original_7": 1,
+    "profit_rank_ready": false,
+    "public_follower_1_5_15_eligible": false,
+    "production": "NO_GO"
+  },
+  "rounds": [
+    {
+      "round_key": "8E6B_HAJIMI_R1",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "哈基米 / HAJIMI",
+      "exact_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "selected_original_signed_transactions": 3,
+      "owner_signatures_rechecked": true,
+      "unique_historical_account_blocks": 3,
+      "all_BNB_archive_pre_post_complete": true,
+      "native_account_selected_block_net_wei": "268592992917629933",
+      "native_account_selected_block_direction": "POSITIVE_NATIVE_BLOCK_SCOPE",
+      "successful_complete_original_receipts": 3,
+      "receipt_truncated_or_other_count": 0,
+      "actual_settled_owner_native_round_status": "SETTLED_OWNER_NATIVE_POSITIVE_WITH_WBNB_GAS",
+      "source_verified_owner_native_net_wei": "268592992917629933",
+      "observer_1_5_15min": "UNRESOLVED",
+      "production": "NO_GO"
+    },
+    {
+      "round_key": "8E6B_DRAGON_R2",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "selected_original_signed_transactions": 2,
+      "owner_signatures_rechecked": true,
+      "unique_historical_account_blocks": 2,
+      "all_BNB_archive_pre_post_complete": true,
+      "native_account_selected_block_net_wei": "253300282319389315",
+      "native_account_selected_block_direction": "POSITIVE_NATIVE_BLOCK_SCOPE",
+      "successful_complete_original_receipts": 2,
+      "receipt_truncated_or_other_count": 0,
+      "actual_settled_owner_native_round_status": "SETTLED_OWNER_NATIVE_POSITIVE_WITH_WBNB_GAS",
+      "source_verified_owner_native_net_wei": "253300282319389315",
+      "observer_1_5_15min": "UNRESOLVED",
+      "production": "NO_GO"
+    },
+    {
+      "round_key": "ADFF_DRAGON_R4",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "selected_original_signed_transactions": 2,
+      "owner_signatures_rechecked": true,
+      "unique_historical_account_blocks": 2,
+      "all_BNB_archive_pre_post_complete": true,
+      "native_account_selected_block_net_wei": "4522437855804654",
+      "native_account_selected_block_direction": "POSITIVE_NATIVE_BLOCK_SCOPE",
+      "successful_complete_original_receipts": 1,
+      "receipt_truncated_or_other_count": 1,
+      "actual_settled_owner_native_round_status": "UNRESOLVED_ECONOMIC_CASHFLOW_OR_FULL_RECEIPTS",
+      "source_verified_owner_native_net_wei": null,
+      "observer_1_5_15min": "UNRESOLVED",
+      "production": "NO_GO"
+    },
+    {
+      "round_key": "2ADF_NIULAI_R3",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "selected_original_signed_transactions": 2,
+      "owner_signatures_rechecked": true,
+      "unique_historical_account_blocks": 2,
+      "all_BNB_archive_pre_post_complete": true,
+      "native_account_selected_block_net_wei": "31837686901930499",
+      "native_account_selected_block_direction": "POSITIVE_NATIVE_BLOCK_SCOPE",
+      "successful_complete_original_receipts": 0,
+      "receipt_truncated_or_other_count": 2,
+      "actual_settled_owner_native_round_status": "UNRESOLVED_ECONOMIC_CASHFLOW_OR_FULL_RECEIPTS",
+      "source_verified_owner_native_net_wei": null,
+      "observer_1_5_15min": "UNRESOLVED",
+      "production": "NO_GO"
+    },
+    {
+      "round_key": "A83B_NIULAI_R2",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "selected_original_signed_transactions": 3,
+      "owner_signatures_rechecked": true,
+      "unique_historical_account_blocks": 2,
+      "all_BNB_archive_pre_post_complete": true,
+      "native_account_selected_block_net_wei": "-213598956812665039",
+      "native_account_selected_block_direction": "NEGATIVE_NATIVE_BLOCK_SCOPE",
+      "successful_complete_original_receipts": 0,
+      "receipt_truncated_or_other_count": 3,
+      "actual_settled_owner_native_round_status": "UNRESOLVED_ECONOMIC_CASHFLOW_OR_FULL_RECEIPTS",
+      "source_verified_owner_native_net_wei": null,
+      "observer_1_5_15min": "UNRESOLVED",
+      "production": "NO_GO"
+    }
+  ],
+  "activity_only_controls": [
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "source_recent_swap_tx": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+      "block": 123398349,
+      "EOA_signer_reverified": true,
+      "success_receipt_complete": false,
+      "actual_economic_buy_sell_round": "UNRESOLVED",
+      "profit_status": "UNRESOLVED",
+      "production": "NO_GO"
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "source_recent_swap_tx": "0x158c28e5efafde2a93fa1549d328082b2357369f666fd4cbd48eec0e54ff222b",
+      "block": 122742452,
+      "EOA_signer_reverified": true,
+      "success_receipt_complete": false,
+      "actual_economic_buy_sell_round": "UNRESOLVED",
+      "profit_status": "UNRESOLVED",
+      "production": "NO_GO"
+    }
+  ],
+  "preaudited_negative": {
+    "owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+    "token": "龙虾",
+    "CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+    "native_net_wei": "-92169615514614272",
+    "status": "SIGNED_TOKENSALE_NATIVE_NEGATIVE_WITH_GAS"
+  }
+}

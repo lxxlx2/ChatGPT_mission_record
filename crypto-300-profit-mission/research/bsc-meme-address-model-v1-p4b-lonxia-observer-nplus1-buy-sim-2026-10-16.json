@@ -1,0 +1,196 @@
+{
+  "schema": "BSC_P4B_LONXIA_POST_OWNER_SIGNAL_HISTORICAL_BUY_SELL_GATE_V1",
+  "captured_date_bangkok": "2026-10-16",
+  "provenance": {
+    "network": "bnb-mainnet",
+    "provider": "Alchemy historical read-only RPC",
+    "original_p4b_source_blob": "c42ad01e896f30262f89f7852f927fc84fb3ea18",
+    "previous_ddac_buyer_rpc_evidence_blob": "f47aa7405006c1b8ace64c305bb2ed2692b9237d",
+    "approved_prior_code_SHA": "47945ca77806d23d942fa2abb681c70244e273a7",
+    "current_official_reference_git_repo": "four-meme-community/fourmeme-docs",
+    "official_helper3_lite_ABI_git_blob": "3b7141fc7265bbd845fcac60b5939e4036599073",
+    "official_manager2_lite_ABI_git_blob": "7506183d10baadd294e529564f772ab330d647bc",
+    "note": "Current open-source interface docs validate decoding and ABI, but their current revision alone cannot prove the same off-chain API was available at February 2026 execution time."
+  },
+  "token": {
+    "label": "龙虾",
+    "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+    "manager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+    "helper3": "0xF251F83e40a78868FcfA3FA4599Dad6494E46034",
+    "original_signed_early_buy_tx": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+    "original_signed_early_buy_from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+    "original_buy_block": 83635776,
+    "original_buy_block_utc": "2026-02-27T08:48:02.150Z",
+    "post_owner_observer_test_block": 83635777,
+    "post_owner_test_utc": "2026-02-27T08:48:02.600Z",
+    "observer_visibility_note": "Owner signed transaction is included in block N and earliest evaluated subsequent block is N+1. Timestamp does NOT independently prove actual third-party receipt/latency; end-of-block eth_call is not guaranteed identical to before first N+1 intra-block transaction."
+  },
+  "historical_helper3_getTokenInfo": {
+    "function_signature": "getTokenInfo(address)",
+    "selector": "0x1f69565f",
+    "raw_call_arg_token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+    "sampling": [
+      {
+        "block": 83635775,
+        "version": "2",
+        "tokenManager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+        "quote": "0x0000000000000000000000000000000000000000",
+        "feeRate_bps": "100",
+        "minFee_raw": "0",
+        "offers_raw": "691455696192340590000000000",
+        "funds_raw": "693069306930693064",
+        "maxFunds_raw": "18000000000000000000",
+        "liquidityAdded": false
+      },
+      {
+        "block": 83635776,
+        "version": "2",
+        "tokenManager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+        "quote": "0x0000000000000000000000000000000000000000",
+        "feeRate_bps": "100",
+        "minFee_raw": "0",
+        "offers_raw": "592386442682040597000000000",
+        "funds_raw": "1477227722772277219",
+        "maxFunds_raw": "18000000000000000000",
+        "liquidityAdded": false
+      },
+      {
+        "block": 83635777,
+        "version": "2",
+        "tokenManager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+        "quote": "0x0000000000000000000000000000000000000000",
+        "feeRate_bps": "100",
+        "minFee_raw": "0",
+        "offers_raw": "592386442682040597000000000",
+        "funds_raw": "1477227722772277219",
+        "maxFunds_raw": "18000000000000000000",
+        "liquidityAdded": false
+      },
+      {
+        "block": 83636127,
+        "version": "2",
+        "tokenManager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+        "quote": "0x0000000000000000000000000000000000000000",
+        "feeRate_bps": "100",
+        "minFee_raw": "0",
+        "offers_raw": "0",
+        "funds_raw": "17999999998119999994",
+        "maxFunds_raw": "18000000000000000000",
+        "liquidityAdded": false
+      },
+      {
+        "block": 83636128,
+        "version": "2",
+        "tokenManager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+        "quote": "0x0000000000000000000000000000000000000000",
+        "feeRate_bps": "100",
+        "minFee_raw": "0",
+        "offers_raw": "0",
+        "funds_raw": "17999999998119999994",
+        "maxFunds_raw": "18000000000000000000",
+        "liquidityAdded": true
+      }
+    ]
+  },
+  "hypothetical_external_caller": {
+    "EOA": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+    "role": "OTHER_FROZEN_WALLET_HYPOTHETICAL_FUNDED_CALLER_NOT_REAL_FOLLOWER_TRADE",
+    "original_owner_token_balance_raw_at_83635777": "0",
+    "BNB_balance_wei_at_83635777": "2509326913060654135",
+    "note": "Eth_call from a past funded EOA is a zero-state-persistence simulation. It does not mean the EOA actually copied DDAC or owned freshly quoted tokens."
+  },
+  "historical_pre_sell_buy_quotes": [
+    {
+      "block": 83635777,
+      "budget_native_BNB_wei": "10000000000000000",
+      "helper3_signature": "tryBuy(address,uint256,uint256)",
+      "buy_amount_arg": "0",
+      "buy_funds_arg": "10000000000000000",
+      "estimated_token_amount_raw": "1121061043083007000000000",
+      "curve_cost_wei": "9900990099009895",
+      "protocol_fee_wei": "99009900990098",
+      "suggested_payable_msg_value_wei": "10000000000000000",
+      "quote_erc20_approval_raw": "0",
+      "amountFunds_raw": "10000000000000000",
+      "simulation_signature": "buyTokenAMAP(address,uint256,uint256)",
+      "simulation_from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "simulation_to": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "simulation_minAmount": "0",
+      "simulation_value_wei": "10000000000000000",
+      "read_only_call_return": "0x",
+      "eth_call_reverted": false,
+      "real_fill": false,
+      "note": "minAmount=0 for technical callable-path proof, not safe executable slippage protection."
+    },
+    {
+      "block": 83635777,
+      "budget_native_BNB_wei": "100000000000000000",
+      "helper3_signature": "tryBuy(address,uint256,uint256)",
+      "buy_amount_arg": "0",
+      "buy_funds_arg": "100000000000000000",
+      "estimated_token_amount_raw": "11081555505899497000000000",
+      "curve_cost_wei": "99009900990099002",
+      "protocol_fee_wei": "990099009900990",
+      "suggested_payable_msg_value_wei": "100000000000000000",
+      "quote_erc20_approval_raw": "0",
+      "amountFunds_raw": "100000000000000000",
+      "simulation_signature": "buyTokenAMAP(address,uint256,uint256)",
+      "simulation_from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "simulation_to": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "simulation_minAmount": "0",
+      "simulation_value_wei": "100000000000000000",
+      "read_only_call_return": "0x",
+      "eth_call_reverted": false,
+      "real_fill": false,
+      "note": "Separate non-persisting eth_call from same frozen state; not a sequence with any actual sell."
+    }
+  ],
+  "historical_sell_at_post_owner_state": {
+    "block": 83635777,
+    "quote_method": "trySell(address,uint256)",
+    "probe_amount_raw": "1121061043083007000000000",
+    "estimated_net_sell_funds_wei": "9776645627086865",
+    "estimated_protocol_fee_wei": "98753996233200",
+    "warning": "trySell at the same unmodified state as buy quote, NOT sell after buy; no compounded/roundtrip PnL can be computed."
+  },
+  "ddac_observed_sell_permission": {
+    "block": 83635777,
+    "EOA": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+    "token_balance_raw": "99069253510299993000000000",
+    "tokenManager_allowance_raw": "0",
+    "direct_sell_simulation_selector": "0xf464e7db",
+    "direct_sell_probe_amount_raw": "1000000000000000000000",
+    "direct_sell_ethCall_result": "execution reverted: ERC20: insufficient allowance",
+    "implication": "DDAC had token inventory but no approval at test block; additional approval is required to execute this direct manager path; this is NOT proof that approval could not subsequently be done."
+  },
+  "later_sell_observations": {
+    "block": 83636000,
+    "utc": "2026-02-27T08:49:42.950Z",
+    "elapsed_seconds_after_owner_buy": 100.8,
+    "trade_stage": "FOUR_V2_BEFORE_PANCAKE_LIQUIDITY",
+    "signed_owner_sale_events": 3,
+    "manager_source_topic0": "0x0a5575b3648bae2210cee56bf33254cc1ddfbc7bf637c0af2ac18b14fb1bae19",
+    "notes": "The separately archived raw manager TokenSale data and exact ERC20 buyer/seller Transfer logs will be stored in linked sale evidence. These are market sellers, not a verified follower roundtrip for the hypothetical 2ADF buyer."
+  },
+  "terminal_observation": {
+    "utc": "2026-02-27T08:50:40.100Z",
+    "offers": "0",
+    "liquidityAdded": false,
+    "native_001_buy_simulation": "REVERTED_DISABLED",
+    "utc_after": "2026-02-27T08:50:40.550Z",
+    "liquidityAdded_after": true,
+    "pre_dex_disabled_buy_block": 83636127,
+    "dex_liquidity_added_block": 83636128
+  },
+  "gate": {
+    "observer_origin_owner_signal_is_post_block_only": true,
+    "post_owner_historical_buy_call_probe": "READ_ONLY_SIMULATED_SUCCESS",
+    "same_block_after_purchase_sell_route": "NOT_VERIFIED_WITH_BUY_PERSISTED",
+    "later_real_market_sales": "TO_BE_ARCHIVED_SEPARATELY",
+    "tax_real_fill_net_fee_gas": "UNRESOLVED",
+    "observer_latency_and_actual_mempool_view": "UNRESOLVED",
+    "qualified_public_actionable_buy_AND_sell_U": "UNRESOLVED",
+    "follower_PnL_at_1_5_15min": "UNRESOLVED",
+    "production": "NO_GO"
+  }
+}

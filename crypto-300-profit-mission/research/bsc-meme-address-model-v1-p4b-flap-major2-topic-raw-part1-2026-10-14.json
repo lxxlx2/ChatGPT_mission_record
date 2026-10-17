@@ -1,0 +1,87 @@
+{
+  "schema": "BSC_P4B_FLAP_MAJOR2_FROZEN_TOPIC_LOGS",
+  "part": 1,
+  "token": "牛来",
+  "topic_precommit_git_blob_sha": "83c7f4eb0b081974fd1b2d2e9de0526d282ab22a",
+  "rows": [
+    {
+      "token": "牛来",
+      "role": "EARLIEST_TOKEN_MINT_TRANSFER_TX",
+      "tx": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+      "block": 115628768,
+      "event": "TokenCreated",
+      "event_topic0": "0x504e7f360b2e5fe33cbaaae4c593bc55305328341bf79009e43e0e3b7f699603",
+      "rpc_complete": true,
+      "total_topic_logs_in_block": 2,
+      "source_target_events": [
+        {
+          "address": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "topics": [
+            "0x504e7f360b2e5fe33cbaaae4c593bc55305328341bf79009e43e0e3b7f699603"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000000000006a7d41220000000000000000000000006af3f52369c39f6ca2d9a50799723feff7ff679e00000000000000000000000000000000000000000000000000000000001e9ef7000000000000000000000000beea1d618e533a387d941f58a7d4c9b7bd37777700000000000000000000000000000000000000000000000000000000000000e0000000000000000000000000000000000000000000000000000000000000012000000000000000000000000000000000000000000000000000000000000001600000000000000000000000000000000000000000000000000000000000000006e7899be69da500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006e7899be69da50000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003b6261666b72656962666335766b716d72693371683374626134757371653479366e7665626a376a6b736c3664686674686c6e3276326e69626a64690000000000",
+          "blockHash": "0x7640825ccac55a720fbeea3f14b532a5d3a36a7abaa6e4e0cca8cef7afd8b3dd",
+          "blockNumber": "0x6e45ae0",
+          "blockTimestamp": "0x6a7d4122",
+          "transactionHash": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+          "transactionIndex": "0x31",
+          "logIndex": "0x107",
+          "removed": false
+        }
+      ],
+      "error": null
+    },
+    {
+      "token": "牛来",
+      "role": "EARLIEST_TOKEN_MINT_TRANSFER_TX",
+      "tx": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+      "block": 115628768,
+      "event": "TokenBought",
+      "event_topic0": "0xa800a2038683844fac66747f771bfdfae862eb28b16bcfa387afa9fbacce8ff7",
+      "rpc_complete": true,
+      "total_topic_logs_in_block": 2,
+      "source_target_events": [],
+      "error": null
+    },
+    {
+      "token": "牛来",
+      "role": "FIRST_DISTINCT_POST_MINT_TRANSFER_TX",
+      "tx": "0xcb89b7adafacdfb5f844102c4e27ed474abec8947c74476d461be70a9b0e8fa5",
+      "block": 115628774,
+      "event": "TokenBought",
+      "event_topic0": "0xa800a2038683844fac66747f771bfdfae862eb28b16bcfa387afa9fbacce8ff7",
+      "rpc_complete": true,
+      "total_topic_logs_in_block": 3,
+      "source_target_events": [
+        {
+          "address": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "topics": [
+            "0xa800a2038683844fac66747f771bfdfae862eb28b16bcfa387afa9fbacce8ff7"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000000000006a7d4125000000000000000000000000beea1d618e533a387d941f58a7d4c9b7bd3777770000000000000000000000009e698d361bb2375bd335dad156accbbad45bf3640000000000000000000000000000000000000000001f65970e3d19442b831db100000000000000000000000000000000000000000000000002dbd49fa26fa2ee0000000000000000000000000000000000000000000000000007517c79f1c1a1000000000000000000000000000000000000000000000000000000014843790c",
+          "blockHash": "0x4013f38e383eb75c3f08bc6eef6f12455767747a2008ddb1b93c4c9ef8fee919",
+          "blockNumber": "0x6e45ae6",
+          "blockTimestamp": "0x6a7d4125",
+          "transactionHash": "0xcb89b7adafacdfb5f844102c4e27ed474abec8947c74476d461be70a9b0e8fa5",
+          "transactionIndex": "0x1c",
+          "logIndex": "0x10e",
+          "removed": false
+        }
+      ],
+      "error": null
+    },
+    {
+      "token": "牛来",
+      "role": "FIRST_DISTINCT_POST_MINT_TRANSFER_TX",
+      "tx": "0xcb89b7adafacdfb5f844102c4e27ed474abec8947c74476d461be70a9b0e8fa5",
+      "block": 115628774,
+      "event": "TokenSold",
+      "event_topic0": "0x03a4693e592f5e75dc7c136acb39b146d2b4966c0e509c34f362dee02b3b861a",
+      "rpc_complete": true,
+      "total_topic_logs_in_block": 0,
+      "source_target_events": [],
+      "error": null
+    }
+  ],
+  "production": "NO_GO"
+}

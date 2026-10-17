@@ -1,0 +1,11 @@
+{
+  "schema": "BSC_P4B_MARSCOIN_FIRSTBUY_BLOCK_ONLY_SELL_FALLBACK_PRECOMMIT",
+  "original_postbuy_raw_blob_sha": "69e2147e4f689c21335a7bb84695269d84caca4e",
+  "negative_case": "Ten-block original Topic TokenSold query was truncated, cannot conclude zero sales. New query tests ONLY the original earliest-buy block, not whole 10 blocks.",
+  "portal": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+  "topic0": "0x03a4693e592f5e75dc7c136acb39b146d2b4966c0e509c34f362dee02b3b861a",
+  "token": "MARSCOIN",
+  "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+  "block": 112441394,
+  "production": "NO_GO"
+}

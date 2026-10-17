@@ -1,0 +1,175 @@
+{
+  "schema": "BSC_P4C_BALANCED_239E_877AF_FOUR_ORIGINAL_ROUNDS_SIGNER_READBACK",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-next239e877af-balanced-four-rounds-precommit-2026-10-15.json",
+      "git_blob_sha": "d3c22d013c5815a11839ef179abae575cc4c161a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-next239e877af-original-tx-part1-2026-10-15.json",
+      "git_blob_sha": "ab999acb1540dfe67c7cdfac67e1ef92a4fe3860"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-next239e877af-original-tx-part2-2026-10-15.json",
+      "git_blob_sha": "284f63c722f66b6f83b95f42f440b4e1cf49ae33"
+    }
+  ],
+  "summary": {
+    "wallets": 2,
+    "tokens": 2,
+    "rounds": 4,
+    "original_signed_txs": 11,
+    "owner_verified_bnb_chain56_txs": 11,
+    "original_native_block_scope_positive": 2,
+    "original_native_block_scope_negative": 2,
+    "profit_rounds_newly_source_qualified": 0,
+    "observer_followable_opportunity_U": "UNRESOLVED",
+    "production": "NO_GO"
+  },
+  "rounds": [
+    {
+      "P2_ledger_index": 29,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode": 4,
+      "original_signed_transactions": [
+        {
+          "hash": "0x43a76faa30a37a7028cb82f75a6bc3340bd6ef6e50230126d4d40f2700606a81",
+          "block": 85954137,
+          "chain_id": 56,
+          "EOA_from": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+          "signed_value_wei": "101000000000000000",
+          "rpc_signed_original_complete": true
+        },
+        {
+          "hash": "0xc85767729665b41c7c3c18f1140328c788893606ca624d36165f9eb0ba64f86f",
+          "block": 85954824,
+          "chain_id": 56,
+          "EOA_from": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+          "signed_value_wei": "101000000000000000",
+          "rpc_signed_original_complete": true
+        },
+        {
+          "hash": "0x3e64fc9233617942d8c23edccd55c2273da16e8d32543178d1f9e9795544ba93",
+          "block": 85957578,
+          "chain_id": 56,
+          "EOA_from": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+          "signed_value_wei": "0",
+          "rpc_signed_original_complete": true
+        }
+      ],
+      "all_signed_hash_identity_confirmed": true,
+      "net_native_block_scope_wei": "-15332805033002259",
+      "native_block_scope_sign": "NEGATIVE_NATIVE_SCOPE",
+      "actual_original_quote_Gas_full_PnL": "UNRESOLVED",
+      "follower_1_5_15_min": "UNRESOLVED"
+    },
+    {
+      "P2_ledger_index": 30,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode": 5,
+      "original_signed_transactions": [
+        {
+          "hash": "0x7aa4b9daf5bdcafbd6453dbb5d86957d8ce1336c897c8b308570be54ce7d9e6c",
+          "block": 85959961,
+          "chain_id": 56,
+          "EOA_from": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+          "signed_value_wei": "303000000000000000",
+          "rpc_signed_original_complete": true
+        },
+        {
+          "hash": "0x5f7d389c874b47509989190287fdd57cf6d4a2a5f252110d1cdd71783faa6bf1",
+          "block": 85961371,
+          "chain_id": 56,
+          "EOA_from": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+          "signed_value_wei": "0",
+          "rpc_signed_original_complete": true
+        }
+      ],
+      "all_signed_hash_identity_confirmed": true,
+      "net_native_block_scope_wei": "22647938898252522",
+      "native_block_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "actual_original_quote_Gas_full_PnL": "UNRESOLVED",
+      "follower_1_5_15_min": "UNRESOLVED"
+    },
+    {
+      "P2_ledger_index": 37,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "episode": 5,
+      "original_signed_transactions": [
+        {
+          "hash": "0xb24f907d3d49d22cab32c024fb56481a5897891ebfa4dda0abe59432696e9695",
+          "block": 112633681,
+          "chain_id": 56,
+          "EOA_from": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "signed_value_wei": "550000000000000000",
+          "rpc_signed_original_complete": true
+        },
+        {
+          "hash": "0x6034212914ca925ebb875121f1e7a5c8a4a15a2c63a6bc870ce28634db15423e",
+          "block": 112633772,
+          "chain_id": 56,
+          "EOA_from": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "signed_value_wei": "0",
+          "rpc_signed_original_complete": true
+        },
+        {
+          "hash": "0x971a9ab0217b0bef829991cf12d9eb848e83cfd2fa3e9e11cb82bbc2e752a125",
+          "block": 112633805,
+          "chain_id": 56,
+          "EOA_from": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "signed_value_wei": "0",
+          "rpc_signed_original_complete": true
+        }
+      ],
+      "all_signed_hash_identity_confirmed": true,
+      "net_native_block_scope_wei": "254614082156488843",
+      "native_block_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "actual_original_quote_Gas_full_PnL": "UNRESOLVED",
+      "follower_1_5_15_min": "UNRESOLVED"
+    },
+    {
+      "P2_ledger_index": 38,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "episode": 6,
+      "original_signed_transactions": [
+        {
+          "hash": "0xb3215e0bf0884fa79f7c061f94730e72ed822b4c32df5879d9e218a33c6b05a9",
+          "block": 112634149,
+          "chain_id": 56,
+          "EOA_from": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "signed_value_wei": "1750000000000000000",
+          "rpc_signed_original_complete": true
+        },
+        {
+          "hash": "0xcfdf1cce9e7d4b17fb86e31cd4eeb93ec54a00ca7e6e6908fc0db0f42fed4f89",
+          "block": 112634161,
+          "chain_id": 56,
+          "EOA_from": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "signed_value_wei": "0",
+          "rpc_signed_original_complete": true
+        },
+        {
+          "hash": "0xeb77015b8189b7dde56ed6cd98d313c5a8e17cf13b254fb9378abe5e9e091d31",
+          "block": 112634184,
+          "chain_id": 56,
+          "EOA_from": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "signed_value_wei": "0",
+          "rpc_signed_original_complete": true
+        }
+      ],
+      "all_signed_hash_identity_confirmed": true,
+      "net_native_block_scope_wei": "-73127027700839968",
+      "native_block_scope_sign": "NEGATIVE_NATIVE_SCOPE",
+      "actual_original_quote_Gas_full_PnL": "UNRESOLVED",
+      "follower_1_5_15_min": "UNRESOLVED"
+    }
+  ]
+}

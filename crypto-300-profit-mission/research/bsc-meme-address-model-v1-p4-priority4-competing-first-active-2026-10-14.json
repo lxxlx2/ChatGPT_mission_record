@@ -1,0 +1,127 @@
+{
+  "schema": "BSC_P4_PRIORITY4_COMPETING_FIRST_ACTIVE_POOL_LIQUIDITY_MATRIX",
+  "scope": "Four pre-frozen MARSCOIN/牛来 V2 USDT/V3 USDT competitor pools only. Positive V3 liquidity is in-range active liquidity, NOT full-venue tradability, adequate depth, executed swap viability or profitable opportunity.",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-priority4-competition-initial-pool-states-2026-10-14.json",
+      "git_blob_sha": "e0e91dd1a19fc7b3e56eedc95d800d0d8c0cdd72"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-niulai-v3-10000-delayed-active-proof-2026-10-14.json",
+      "git_blob_sha": "7a5e74b5fa653b7e2a51f1f86e2200510c8a5c88"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-19ca-v2-wbnb-first-positive-liquidity-2026-10-14.json",
+      "git_blob_sha": "9fbc8bdaeb9df342a4d200fefb0ebd48b746b903"
+    }
+  ],
+  "summary": {
+    "frozen_competitor_pools": 4,
+    "creation_events_confirmed": 4,
+    "first_active_block_evidence": 4,
+    "positive_at_creation": 3,
+    "delayed_in_range_active": 1,
+    "delayed_NIULAI_V3_10000_blocks": 17,
+    "verified_before_V2_WBNB_baseline": 4,
+    "qualified_misses": 0,
+    "production": "NO_GO"
+  },
+  "rows": [
+    {
+      "token": "牛来",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "protocol": "V2",
+      "quote": "USDT",
+      "fee_pips": null,
+      "pool": "0x57143fffeba8aecfe31d18bcbdc9ed590990dc1a",
+      "pool_creation_block": 116207845,
+      "creation_UTC": "2026-08-16T04:24:03.000Z",
+      "first_active_liquidity_block": 116207845,
+      "first_active_liquidity_UTC": "2026-08-16T04:24:03.000Z",
+      "delay_blocks": 0,
+      "source_event_kind": "V2_SYNC_MINT_SAME_PAIRCREATED_TX",
+      "precedes_known_V2_WBNB_first_reserve_by_blocks": 107072,
+      "raw_initial_pool_state": {
+        "reserve0_raw": "16632988595529353713",
+        "reserve1_raw": "923806299306260666778"
+      },
+      "at_creation_active": true,
+      "first_globally_tradable": "UNRESOLVED",
+      "gas_slippage_and_token_selling": "UNRESOLVED",
+      "qualifying_missed_trade": "UNRESOLVED",
+      "follower_alpha": "UNRESOLVED"
+    },
+    {
+      "token": "牛来",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "protocol": "V3",
+      "quote": "USDT",
+      "fee_pips": 2500,
+      "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+      "pool_creation_block": 116156658,
+      "creation_UTC": "2026-08-15T22:00:03.000Z",
+      "first_active_liquidity_block": 116156658,
+      "first_active_liquidity_UTC": "2026-08-15T22:00:03.000Z",
+      "delay_blocks": 0,
+      "source_event_kind": "V3_INITIALIZE_MINT_SAME_POOLCREATED_TX",
+      "precedes_known_V2_WBNB_first_reserve_by_blocks": 158259,
+      "raw_initial_pool_state": {
+        "liquidity_raw": "67818067095630280009422",
+        "sqrtPriceX96": "522402058907915209321976473598"
+      },
+      "at_creation_active": true,
+      "first_globally_tradable": "UNRESOLVED",
+      "gas_slippage_and_token_selling": "UNRESOLVED",
+      "qualifying_missed_trade": "UNRESOLVED",
+      "follower_alpha": "UNRESOLVED"
+    },
+    {
+      "token": "牛来",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "protocol": "V3",
+      "quote": "USDT",
+      "fee_pips": 10000,
+      "pool": "0xab058332a7279f1e64162be08f59ac0cd9601759",
+      "pool_creation_block": 115919188,
+      "creation_UTC": "2026-08-14T16:18:36.000Z",
+      "first_active_liquidity_block": 115919205,
+      "first_active_liquidity_UTC": "2026-08-14T16:18:43.000Z",
+      "delay_blocks": 17,
+      "source_event_kind": "V3_FIRST_IN_RANGE_MINT_AFTER_CREATION",
+      "precedes_known_V2_WBNB_first_reserve_by_blocks": 395712,
+      "raw_initial_pool_state": {
+        "liquidity_raw": "0",
+        "sqrtPriceX96": "3586353396047961435756813052285"
+      },
+      "at_creation_active": false,
+      "first_globally_tradable": "UNRESOLVED",
+      "gas_slippage_and_token_selling": "UNRESOLVED",
+      "qualifying_missed_trade": "UNRESOLVED",
+      "follower_alpha": "UNRESOLVED"
+    },
+    {
+      "token": "MARSCOIN",
+      "CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "protocol": "V3",
+      "quote": "USDT",
+      "fee_pips": 10000,
+      "pool": "0x4a4bea953813c118c260be9a26b2321e57aa62e5",
+      "pool_creation_block": 112642885,
+      "creation_UTC": "2026-07-28T14:34:42.000Z",
+      "first_active_liquidity_block": 112642885,
+      "first_active_liquidity_UTC": "2026-07-28T14:34:42.000Z",
+      "delay_blocks": 0,
+      "source_event_kind": "V3_INITIALIZE_MINT_SAME_POOLCREATED_TX",
+      "precedes_known_V2_WBNB_first_reserve_by_blocks": 25816,
+      "raw_initial_pool_state": {
+        "liquidity_raw": "2961561355582615160220",
+        "sqrtPriceX96": "1131821192796896538134121989049"
+      },
+      "at_creation_active": true,
+      "first_globally_tradable": "UNRESOLVED",
+      "gas_slippage_and_token_selling": "UNRESOLVED",
+      "qualifying_missed_trade": "UNRESOLVED",
+      "follower_alpha": "UNRESOLVED"
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+{
+  "schema": "BSC_P4_FROZEN_REMAINING13_COMPETING_POOL_CREATION_PLAN",
+  "purpose": "Finish creation and first historical active-liquidity evidence for 13 remaining of the frozen 17 preexisting active competing pools",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-competing17-firstfactory-precommit-2026-10-14.json",
+      "sha": "b1c2395c949ba664c2424c8b8da84924c967ab90"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-competing17-firstfactory-round1-2026-10-14.json",
+      "sha": "2aa6f2145d6837d7f23eb6a2347f20dcb8731c45"
+    }
+  ],
+  "stage": "FROZEN_BEFORE_CONTINUED_RPC",
+  "remaining": [
+    {
+      "i": 0,
+      "token": "TST",
+      "CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "pool": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+      "fee_pips": 10000,
+      "baseline_block": 46421401,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "snapshot_class": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+      "initial_bounds": {
+        "lo": 23210700,
+        "hi": 46421401
+      }
+    },
+    {
+      "i": 1,
+      "token": "CHEEMS",
+      "CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "pool": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+      "fee_pips": 2500,
+      "baseline_block": 42638444,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "snapshot_class": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+      "initial_bounds": {
+        "lo": 21319222,
+        "hi": 42638444
+      }
+    },
+    {
+      "i": 2,
+      "token": "MUBARAK",
+      "CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "pool": "0x90a54475d512b8f3852351611c38fad30a513491",
+      "fee_pips": 2500,
+      "baseline_block": 47442143,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "snapshot_class": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+      "initial_bounds": {
+        "lo": 23721071,
+        "hi": 47442143
+      }
+    },
+    {
+      "i": 3,
+      "token": "MUBARAK",
+      "CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "protocol": "V2",
+      "quote": "USDT",
+      "pool": "0x8be0d063873f68a08c8b5bca2fe981618bbf5047",
+      "fee_pips": null,
+      "baseline_block": 47442143,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "snapshot_class": "V2_POSITIVE_RESERVES_AT_SNAPSHOT",
+      "initial_bounds": {
+        "lo": 23721071,
+        "hi": 47442143
+      }
+    },
+    {
+      "i": 4,
+      "token": "TUT",
+      "CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "pool": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+      "fee_pips": 10000,
+      "baseline_block": 46521964,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "snapshot_class": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+      "initial_bounds": {
+        "lo": 23260982,
+        "hi": 46521964
+      }
+    },
+    {
+      "i": 5,
+      "token": "BROCCOLI714",
+      "CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+      "fee_pips": 10000,
+      "baseline_block": 46627714,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "snapshot_class": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+      "initial_bounds": {
+        "lo": 23313857,
+        "hi": 46627714
+      }
+    },
+    {
+      "i": 6,
+      "token": "BROCCOLIF3B",
+      "CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "pool": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+      "fee_pips": 10000,
+      "baseline_block": 46628416,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "snapshot_class": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+      "initial_bounds": {
+        "lo": 23314208,
+        "hi": 46628416
+      }
+    },
+    {
+      "i": 7,
+      "token": "SIREN",
+      "CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "pool": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+      "fee_pips": 10000,
+      "baseline_block": 46828822,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "snapshot_class": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+      "initial_bounds": {
+        "lo": 23414411,
+        "hi": 46828822
+      }
+    },
+    {
+      "i": 8,
+      "token": "BANANAS31",
+      "CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+      "fee_pips": 100,
+      "baseline_block": 46871948,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "snapshot_class": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+      "initial_bounds": {
+        "lo": 23435974,
+        "hi": 46871948
+      }
+    },
+    {
+      "i": 9,
+      "token": "BANANAS31",
+      "CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "protocol": "V3",
+      "quote": "USDT",
+      "pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+      "fee_pips": 10000,
+      "baseline_block": 46871948,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "snapshot_class": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+      "initial_bounds": {
+        "lo": 23435974,
+        "hi": 46871948
+      }
+    },
+    {
+      "i": 10,
+      "token": "BULLA",
+      "CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+      "fee_pips": 10000,
+      "baseline_block": 50982326,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "snapshot_class": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+      "initial_bounds": {
+        "lo": 25491163,
+        "hi": 50982326
+      }
+    },
+    {
+      "i": 11,
+      "token": "BULLA",
+      "CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "protocol": "V3",
+      "quote": "USDT",
+      "pool": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+      "fee_pips": 10000,
+      "baseline_block": 50982326,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "snapshot_class": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+      "initial_bounds": {
+        "lo": 25491163,
+        "hi": 50982326
+      }
+    },
+    {
+      "i": 16,
+      "token": "BUBB",
+      "CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "pool": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+      "fee_pips": 2500,
+      "baseline_block": 47620838,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "snapshot_class": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+      "initial_bounds": {
+        "lo": 23810419,
+        "hi": 47620838
+      }
+    }
+  ],
+  "other_four_closed": [
+    12,
+    13,
+    14,
+    15
+  ],
+  "inactive_at_snapshot_five_preserved_as_unknown": true,
+  "no_lookahead": true,
+  "production": "NO_GO"
+}

@@ -1,0 +1,81 @@
+{
+  "schema": "BSC_MEME_ADDRESS_MODEL_V1_P2_STAGE4_PRECOMMITTED_BREADTH_FIRST_SAMPLE",
+  "freeze_date": "2026-10-13",
+  "production": "NO_GO",
+  "selection_rule": "For each of exactly two already frozen 2026 priority wallet-exact-CA pairs A83B/Niulai and 877AF/MARSCOIN, select chronological FIRST zero-token-inventory round AFTER round #1 having <=3 distinct original transaction hashes. Selection uses ONLY complete original ERC20 Transfer order, NOT signers, wallet BNB deltas, profitability or retrospective returns. Freeze before RPC query and retain all nonselected positive/negative unknowns.",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_INBOUND_CURSOR_A_2026-10-12.json",
+      "git_blob_sha": "9c4d37ea37e4d9d06acfe756a4ab684d0605d8d3"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_OUTBOUND_CURSOR_A_2026-10-12.json",
+      "git_blob_sha": "e3153d031ecf2a6f23a35a2789c6a068b75c48eb"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_877AF_MARS_FULL_ERC20_RECONCILED_CENSUS_2026-10-12.json",
+      "git_blob_sha": "8ccb13babfefb726a3a6a44ea5b766ce3628dd28"
+    }
+  ],
+  "original_erc20": {
+    "A83B_NIULAI": {
+      "all_erc20_logs": 158,
+      "closed_inventory_rounds": 12,
+      "final_inventory_raw": "0",
+      "negative_inventory_seen": false
+    },
+    "MARS_877AF": {
+      "all_erc20_logs": 170,
+      "closed_inventory_rounds": 21,
+      "final_inventory_raw": "68700271596483656647",
+      "open_remainder_logs": 2,
+      "negative_inventory_seen": false
+    }
+  },
+  "selected": [
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "scope": "A83B_NIULAI",
+      "original_episode_index": 2,
+      "first_block": 116113193,
+      "last_block": 116113197,
+      "transfer_log_count": 4,
+      "unique_transaction_hashes": 3,
+      "transaction_hashes": [
+        "0x8a22a65a977409a7e82266d05ceaf1e98074d1f6b50e942486600dacdc672716",
+        "0x3e8b50350c8d2cf87d9662434ad205d08a33595eaf253dac04996134a35e2971",
+        "0xd0bc93c086a44affed01a7bfb25022cd51e18513401b15d2fbb3692ec1bde9a4"
+      ],
+      "original_signature_receipt_state": "UNRESOLVED_PRECHECK",
+      "BNB_native_N_minus_1_delta_state": "UNRESOLVED_PRECHECK",
+      "economic_result": "UNRESOLVED_PRECHECK"
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "scope": "877AF_MARSCOIN",
+      "original_episode_index": 4,
+      "first_block": 112475764,
+      "last_block": 112476616,
+      "transfer_log_count": 4,
+      "unique_transaction_hashes": 3,
+      "transaction_hashes": [
+        "0xc507befb9df698fa0dd2958c0e22bb3714820727b3b1d8440029fb18a5f12390",
+        "0x80843ba0eab39a0ce99466f29573b46df0014bc6b13da24be1081a3b8f986b7e",
+        "0xf27b20dbffca66c49260635bece999b3324887e9cabc67c38c6810ab2871d3d7"
+      ],
+      "original_signature_receipt_state": "UNRESOLVED_PRECHECK",
+      "BNB_native_N_minus_1_delta_state": "UNRESOLVED_PRECHECK",
+      "economic_result": "UNRESOLVED_PRECHECK"
+    }
+  ],
+  "limitations": [
+    "This is not an unbiased profitability win rate; only two pre-selected investigation samples chosen independent of PnL.",
+    "22+ signed-source proofs remain outstanding; additional source-derived raw token closures do not qualify as economically signed episodes.",
+    "All later chain RPC outcomes must be stored whether positive, negative, non-owner, reverting or unknown.",
+    "877AF still has nonzero end-of-source MARSCOIN raw token inventory and must not be claimed fully liquidated."
+  ]
+}

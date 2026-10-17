@@ -1,0 +1,232 @@
+{
+  "schema": "BSC_MEME_P4_FUNDING4_EXTERNAL_NATIVE_INBOUND_COMPLETE_WINDOW",
+  "precommit_sha": "9b0a5f08a9009af016de7d8cbea9f6ad16c7165c",
+  "network": "bnb-mainnet",
+  "from_block": 121372023,
+  "scope": "external native transactions into 4 priority EOAs through previous block of first verified frozen recent Swap, provider categories supported on BSC. This cannot capture internal contract funding or funding prior to frozen window.",
+  "summary": {
+    "wallets": 4,
+    "raw_count": 20,
+    "fully_paginated": 4
+  },
+  "wallets": [
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "first_swap_block": 121786352,
+      "query_state": "COMPLETE_PROVIDER_RETURN",
+      "pageKey": null,
+      "records": [
+        {
+          "hash": "0x3244636dd823e70f0d25c58d8e238c7df590b9206aaaf0283685a8d3f0d42261",
+          "from": "0x3807771db053dae9ead980692b6ef85c9c10f0bd",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "block_hex": "0x742354d",
+          "asset": "BNB",
+          "native_value_hex": "0x17b2aec916b599",
+          "provider_display_value": 0.006670388232107417
+        },
+        {
+          "hash": "0xc228c6bd2433931b7211e3f7332f784f229de97f2c08f788cfd0c5957a9a680b",
+          "from": "0x3807771db053dae9ead980692b6ef85c9c10f0bd",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "block_hex": "0x73f376b",
+          "asset": "BNB",
+          "native_value_hex": "0x15ad6ff255a1d2",
+          "provider_display_value": 0.006101670829597138
+        },
+        {
+          "hash": "0xf187f41bcab00ede80b0adef9cdbe321b46cc9c706e3d7271c8eda4e9974fd49",
+          "from": "0x3807771db053dae9ead980692b6ef85c9c10f0bd",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "block_hex": "0x73f1d76",
+          "asset": "BNB",
+          "native_value_hex": "0xb4f37a77a7642",
+          "provider_display_value": 0.003183325195433538
+        },
+        {
+          "hash": "0x32654adb38b703b5f0dee94f3b13b256e45a32fa42aa32dd3a2b1d48146813ee",
+          "from": "0x3807771db053dae9ead980692b6ef85c9c10f0bd",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "block_hex": "0x73d4d6d",
+          "asset": "BNB",
+          "native_value_hex": "0x325ad7fd5f012d",
+          "provider_display_value": 0.014173632550863149
+        },
+        {
+          "hash": "0x11e6b7bf0b4742c7ebfea6f149adc601703623eda1707f6c9bec56be8606ab13",
+          "from": "0x3807771db053dae9ead980692b6ef85c9c10f0bd",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "block_hex": "0x73d3369",
+          "asset": "BNB",
+          "native_value_hex": "0x254dd596721f0a",
+          "provider_display_value": 0.010500153885728522
+        },
+        {
+          "hash": "0x5c6d399aeba8f75c0b1062b09da27a1d6a8d71cfd2b35688832bd445d00fb21b",
+          "from": "0x3807771db053dae9ead980692b6ef85c9c10f0bd",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "block_hex": "0x73ce374",
+          "asset": "BNB",
+          "native_value_hex": "0x228075c94a0a2e",
+          "provider_display_value": 0.00971139258476395
+        },
+        {
+          "hash": "0x32b05b4f75df934ed943c8c6cb1ea5880304e1aeb50fe051eb4309d86a5e41a9",
+          "from": "0x3807771db053dae9ead980692b6ef85c9c10f0bd",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "block_hex": "0x73ccb44",
+          "asset": "BNB",
+          "native_value_hex": "0x2f177fea0a091f",
+          "provider_display_value": 0.013255162060212511
+        },
+        {
+          "hash": "0x24099bc78085c0377e9e027763034ee3b4ec29be80b05a9aa94cd72b72655fe5",
+          "from": "0x3807771db053dae9ead980692b6ef85c9c10f0bd",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "block_hex": "0x73cae58",
+          "asset": "BNB",
+          "native_value_hex": "0x17b226af28a8ce",
+          "provider_display_value": 0.006669803681523918
+        },
+        {
+          "hash": "0x33fc30cf2d691124768ac48dde759f00dc9f5297346d53d086cdff566fc8c7d1",
+          "from": "0x3807771db053dae9ead980692b6ef85c9c10f0bd",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "block_hex": "0x73c973f",
+          "asset": "BNB",
+          "native_value_hex": "0x25baeb6bed4b34",
+          "provider_display_value": 0.010620094429088563
+        }
+      ],
+      "matched_rows": 9
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "first_swap_block": 121966513,
+      "query_state": "COMPLETE_PROVIDER_RETURN",
+      "pageKey": null,
+      "records": [
+        {
+          "hash": "0xfc3b52c0a9b58606d0ae7ca49e3b561d57108c8d55578e79aacf36fa9e758f25",
+          "from": "0x4aae5e9a0265e0d9f37fd23f5207bc131e28b797",
+          "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "block_hex": "0x73fad88",
+          "asset": "BNB",
+          "native_value_hex": "0x3b9aca00",
+          "provider_display_value": 1e-9
+        }
+      ],
+      "matched_rows": 1
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "first_swap_block": 122582898,
+      "query_state": "COMPLETE_PROVIDER_RETURN",
+      "pageKey": null,
+      "records": [],
+      "matched_rows": 0
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "first_swap_block": 126050553,
+      "query_state": "COMPLETE_PROVIDER_RETURN",
+      "pageKey": null,
+      "records": [
+        {
+          "hash": "0x3e7b28436cd48bed21ff3f50b3d6ce3a6d3c41e30d144cd6c519ad8d62c2ae3e",
+          "from": "0x786a0c878875c1b83362c707f56b5c40f93bbf63",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "block_hex": "0x777632e",
+          "asset": "BNB",
+          "native_value_hex": "0x1b287cfd087e55fc",
+          "provider_display_value": 1.956951464303548
+        },
+        {
+          "hash": "0x829314edc42e37677b00151bd258405ee25a6f20504a008b9a4f63fa776d93a5",
+          "from": "0xffc91e15784da5cd26752774422a5db261048b49",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "block_hex": "0x75b11f3",
+          "asset": "BNB",
+          "native_value_hex": "0x9a373e65c78",
+          "provider_display_value": 0.000010597628796024
+        },
+        {
+          "hash": "0xda2d02dd01de24dbf26b64ab6f0b7cca5fb87fe547a1ae74078985a2b547129a",
+          "from": "0x6fc4e2fe76cfda29ddddd8f649773c18376553ad",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "block_hex": "0x7534cc4",
+          "asset": "BNB",
+          "native_value_hex": "0x3b9aca00",
+          "provider_display_value": 1e-9
+        },
+        {
+          "hash": "0x4010728b3db6a1ee1fef249461bbb2abda0e473c81ca97dab6c3bb81fc284f6b",
+          "from": "0x6fc459ac559f71a1425bd2a6b647d0ab19afe3ad",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "block_hex": "0x753440a",
+          "asset": "BNB",
+          "native_value_hex": "0x2540be400",
+          "provider_display_value": 1e-8
+        },
+        {
+          "hash": "0x87862cf7d0464020d182cb1795ed35cc3d986795dbb7fd0bafadd674b8fc7852",
+          "from": "0x537f00a63d517320ea0107bbf6176325d6913977",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "block_hex": "0x74f0e12",
+          "asset": "BNB",
+          "native_value_hex": "0xde0b6b3a7640000",
+          "provider_display_value": 1
+        },
+        {
+          "hash": "0xf6c9d8f247c3ecaf74fcb3a5308b30ffc1e2c3f76b69315bd3a683b3232c5ba6",
+          "from": "0xd4f8d2453ac8826d578566ed4e6adc1c328fabbb",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "block_hex": "0x74e1777",
+          "asset": "BNB",
+          "native_value_hex": "0x3b9aca00",
+          "provider_display_value": 1e-9
+        },
+        {
+          "hash": "0x3bd46cfc02fa9b0b363b29e32145b83a2d2fa0c47d1f60e1b2f3abf0c1e7cdb9",
+          "from": "0x537f00a63d517320ea0107bbf6176325d6913977",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "block_hex": "0x74e15c5",
+          "asset": "BNB",
+          "native_value_hex": "0x131a8966f3b73cbf6",
+          "provider_display_value": 22.025019382138392
+        },
+        {
+          "hash": "0x2519e40fd11fcd078fb9784ee1800e8b3bea8d871042a92fcbbc85a683ecfa31",
+          "from": "0x6fc4e2fe76cfda29ddddd8f649773c18376553ad",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "block_hex": "0x7492edb",
+          "asset": "BNB",
+          "native_value_hex": "0x3b9aca00",
+          "provider_display_value": 1e-9
+        },
+        {
+          "hash": "0x04872a319158283a4a5fbcacdef33232deef7b9ac488a88d9bdf766f4daf87ef",
+          "from": "0x786a0c878875c1b83362c707f56b5c40f93bbf63",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "block_hex": "0x7492bd0",
+          "asset": "BNB",
+          "native_value_hex": "0x340aea335c2a1af8",
+          "provider_display_value": 3.750067146049854
+        },
+        {
+          "hash": "0x9d569efcf13d145ca1d280292425fa4d95434cfc2b4e25b62b147328d4c1b66e",
+          "from": "0x1380647a7ddc7e853e07bd1ec0e0bd4699544cab",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "block_hex": "0x741ff55",
+          "asset": "BNB",
+          "native_value_hex": "0x72328243895",
+          "provider_display_value": 0.000007847578712213
+        }
+      ],
+      "matched_rows": 10
+    }
+  ],
+  "provenance": "Alchemy bnb-mainnet getAssetTransfers(toAddress category external) order desc maxCount20 no pageKey in observed sources",
+  "no_common_controller_claim": true,
+  "production": "NO_GO"
+}

@@ -1,0 +1,57 @@
+{
+  "schema": "BSC_P4_FROZEN_POOL_FACTORY11_READ_RESULT",
+  "part": 2,
+  "range": [
+    6,
+    10
+  ],
+  "source_precommit_sha": "039e19fe13f98fcdbde6abc0d004599de4f4df07",
+  "records": [
+    {
+      "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+      "block": 126468121,
+      "target_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "method": "factory()",
+      "status": "DIRECT_HISTORICAL_CALL",
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "raw": "0x0000000000000000000000000bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "pool": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+      "block": 126468394,
+      "target_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "method": "factory()",
+      "status": "DIRECT_HISTORICAL_CALL",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "raw": "0x000000000000000000000000ca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "block": 123398349,
+      "target_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "method": "factory()",
+      "status": "DIRECT_HISTORICAL_CALL",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "raw": "0x000000000000000000000000ca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+      "block": 122742452,
+      "target_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "method": "factory()",
+      "status": "DIRECT_HISTORICAL_CALL",
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "raw": "0x0000000000000000000000000bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "block": 122367977,
+      "target_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "method": "factory()",
+      "status": "DIRECT_HISTORICAL_CALL",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "raw": "0x000000000000000000000000ca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    }
+  ],
+  "production": "NO_GO"
+}

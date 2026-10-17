@@ -1,0 +1,239 @@
+{
+  "schema": "BSC_MEME_ADDRESS_MODEL_V1_P3_RECENT_SIGNED_MEME_ACTION_POSITIVE_WITNESS",
+  "date": "2026-10-13",
+  "status": "PARTIAL_POSITIVE_WITNESS_ONLY_NOT_COMPLETE_P3",
+  "window_UTC": {
+    "start": "2026-09-13T00:00:00Z",
+    "end": "2026-10-13T00:00:00Z"
+  },
+  "frozen_wallet_count": 23,
+  "confirmed_signed_Meme_token_action_wallets": 1,
+  "unknown_wallets_not_full_window_scanned": 22,
+  "proven_2026_30d_owner_action": {
+    "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+    "token": "龙虾",
+    "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+    "first_utc": "2026-09-14T05:40:56.000Z",
+    "last_utc": "2026-09-14T06:02:53.000Z",
+    "original_tx_hashes": [
+      "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+      "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd"
+    ],
+    "original_owner_signed_and_successful": true,
+    "original_EOA_token_in_and_out": true,
+    "native_net_wallet_block_scope_wei": "5685807795852275",
+    "quote_route_economics": "UNRESOLVED",
+    "not_sufficient_to_establish_30day_full_trading_history": true
+  },
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-baseline-2026-10-13.json",
+      "sha": "e3c8815630878dddc03b7a6e11b8f0d2d89cbf6a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json",
+      "sha": "51a41aebe7931c242910470a6907e4c93d217568"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-tx-part4-2026-10-13.json",
+      "sha": "60d718a1f9961983fc6ce0d8c4b33bb5031e1a39"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_LOBSTER_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+      "sha": "b5a4d76d5239d9ee204aac7e20cb00e3df1694b0"
+    }
+  ],
+  "wallets": [
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "AT_LEAST_ONE_TRUE_EOA_INITIATED_MEME_TOKEN_MOVEMENT",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x2b40f892a5b8aefdf9868317330ca0f956f70d2b",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x4789f192df5deb559af2bd9185781fda995856d5",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x47b87148e6ddff25fe765a0ac23aaa4c19f1b429",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0xbeb713cced9ef608cd349cc14971c32d4e6e2ffc",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    },
+    {
+      "wallet": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
+      "period": "2026-09-13T00:00:00Z/2026-10-13T00:00:00Z",
+      "signed_Meme_token_action_verified": "NOT_CHECKED_UNIFORMLY",
+      "swap_quote_settlement_independently_confirmed": "UNRESOLVED",
+      "proved_inactive": false,
+      "realized_PnL_last30d": "UNRESOLVED"
+    }
+  ],
+  "limitations": [
+    "One positive owner signed Meme action in the 30d UTC window is proven; 22 other wallets are UNSCANNED, not proven INACTIVE.",
+    "Original EOA token in/out and native wallet block change do not automatically establish quoted swap execution price or copy trading opportunity.",
+    "This is not a 23-wallet full last30d original signer activity census, do not promote to P3-complete or trading eligibility.",
+    "An app/plugin connection is not needed; source-locked Git originals and read-only BNB RPC only."
+  ],
+  "production": "NO_GO"
+}

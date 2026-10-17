@@ -1,0 +1,147 @@
+{
+  "schema": "BSC_P4B_BOUNDED_ALCHEMY_BNB_EARLY_BUY_READBACK_V1",
+  "capture_date_bangkok": "2026-10-16",
+  "source_fixed_code_approved_SHA": "47945ca77806d23d942fa2abb681c70244e273a7",
+  "provider": "Alchemy BNB mainnet read-only",
+  "source_market": {
+    "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-19ca-unified-early-market-buy-evidence-2026-10-14.json",
+    "git_blob_sha": "c42ad01e896f30262f89f7852f927fc84fb3ea18",
+    "token": "龙虾",
+    "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+    "selected_original_early_buy_tx": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+    "selected_early_buy_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+    "selected_early_buy_block": 83635776,
+    "first_scoped_observed_token_transfer_block": 83635770,
+    "first_scoped_pancake_positive_liquidity_block": 83636128,
+    "source_quote_ca": "0x0000000000000000000000000000000000000000",
+    "source_event_cost_raw": "784158415841584155",
+    "source_event_fee_raw": "7841584158415841"
+  },
+  "read_only_rpc": {
+    "transaction_by_hash": {
+      "type": "0x0",
+      "chainId": "0x38",
+      "nonce": "0x3718",
+      "gasPrice": "0x737be7600",
+      "gas": "0x927c0",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value": "0xb1a2bc2ec500000",
+      "input": "0x0b3f5cf9000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000b1a2bc2ec50000000000000000000000000000000000000000000000028f95d7f3f4c7542cd1d000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000eccbb861c0dda7efd964010085488b69317e4444000000000000000000000000eccbb861c0dda7efd964010085488b69317e444400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000064000000000000000000000000b8159ba378904f803639d274cec79f788931c9c8",
+      "r": "0xc30843eae54e01cf3a0321687d1e36f0b772f057eeb993e733f897567dcbf79b",
+      "s": "0x665e71da6fd4caa877acce3c9e3ff82498cb7ff0b2212d3cd9988a606f6ccf0b",
+      "v": "0x94",
+      "hash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+      "blockHash": "0x8a8a49ea72acc9adb8a60add4f07391a7b5fa9b5be27b237603eb839f76ee8cd",
+      "blockNumber": "0x4fc2e40",
+      "transactionIndex": "0x1",
+      "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "blockTimestamp": "0x69a15a42"
+    },
+    "token_transfer_topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+    "token_transfer_getlogs_query": {
+      "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "fromBlock": "0x4fc2e3a",
+      "toBlock": "0x4fc2e40",
+      "topics": [
+        "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+      ]
+    },
+    "token_transfer_logs": [
+      {
+        "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x000000000000000000000000757eba15a64468e6535532fcf093cef90e226f85"
+        ],
+        "data": "0x0000000000000000000000000000000000000000033b2e3c9fd0803ce8000000",
+        "blockNumber": "0x4fc2e3a",
+        "transactionHash": "0x822621d8b11dc2d0e36ffaf8219a6c79564ad707d885e450ac73e80554c7b616",
+        "transactionIndex": "0x27",
+        "blockHash": "0x087c3ff3ee5db64599d9a6b696e35bce0717d890667c8a0cd5ceb61ec4465a81",
+        "blockTimestamp": "0x69a15a3f",
+        "logIndex": "0x74",
+        "removed": false
+      },
+      {
+        "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x000000000000000000000000757eba15a64468e6535532fcf093cef90e226f85",
+          "0x0000000000000000000000005c952063c7fc8610ffdb798152d69f0b9550762b"
+        ],
+        "data": "0x0000000000000000000000000000000000000000033b2e3c9fd0803ce8000000",
+        "blockNumber": "0x4fc2e3a",
+        "transactionHash": "0x822621d8b11dc2d0e36ffaf8219a6c79564ad707d885e450ac73e80554c7b616",
+        "transactionIndex": "0x27",
+        "blockHash": "0x087c3ff3ee5db64599d9a6b696e35bce0717d890667c8a0cd5ceb61ec4465a81",
+        "blockTimestamp": "0x69a15a3f",
+        "logIndex": "0x75",
+        "removed": false
+      },
+      {
+        "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x0000000000000000000000005c952063c7fc8610ffdb798152d69f0b9550762b",
+          "0x000000000000000000000000fdae25a95c1d608efd8181370fb19327e09692af"
+        ],
+        "data": "0x00000000000000000000000000000000000000000059c9267ffd595067e93400",
+        "blockNumber": "0x4fc2e3a",
+        "transactionHash": "0x822621d8b11dc2d0e36ffaf8219a6c79564ad707d885e450ac73e80554c7b616",
+        "transactionIndex": "0x27",
+        "blockHash": "0x087c3ff3ee5db64599d9a6b696e35bce0717d890667c8a0cd5ceb61ec4465a81",
+        "blockTimestamp": "0x69a15a3f",
+        "logIndex": "0x78",
+        "removed": false
+      },
+      {
+        "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x0000000000000000000000005c952063c7fc8610ffdb798152d69f0b9550762b",
+          "0x000000000000000000000000ddac928a240bdace3994c2cc0783d4e29a002127"
+        ],
+        "data": "0x00000000000000000000000000000000000000000051f2bafe7e98ea859a3a00",
+        "blockNumber": "0x4fc2e40",
+        "transactionHash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+        "transactionIndex": "0x1",
+        "blockHash": "0x8a8a49ea72acc9adb8a60add4f07391a7b5fa9b5be27b237603eb839f76ee8cd",
+        "blockTimestamp": "0x69a15a42",
+        "logIndex": "0x3",
+        "removed": false
+      }
+    ],
+    "signer_native_balance_query": {
+      "address": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "blocks": [
+        "0x4fc2e3f",
+        "0x4fc2e40"
+      ]
+    },
+    "signer_native_balance_prev_wei": "17806507402194926070",
+    "signer_native_balance_current_wei": "16997499825194926074",
+    "native_balance_delta_wei": "-809007576999999996",
+    "sampled_block_header": {
+      "hash": "0x8a8a49ea72acc9adb8a60add4f07391a7b5fa9b5be27b237603eb839f76ee8cd",
+      "timestamp": "0x69a15a42",
+      "milliTimestamp": "0x19c9e489266",
+      "header_response_truncated_at_tool": true
+    },
+    "receipt_excerpt": {
+      "status": "0x1",
+      "full_receipt_response_truncated_at_tool": true
+    }
+  },
+  "observed_limits": {
+    "source_preDEX_original_signer_is_frozen_23": true,
+    "valid_witness_transfer_to_signer": true,
+    "global_first_public_observer_U": "UNRESOLVED",
+    "same_time_executable_buy_and_sell": "UNRESOLVED",
+    "funds_at_public_U": "UNRESOLVED",
+    "tax_fee_gas_capacity_at_public_U": "UNRESOLVED",
+    "follower_PnL_1_5_15min": "UNRESOLVED",
+    "note": "Token Transfer/early original owner fill and N-1/N wallet native balances do not prove public executable U; receipt JSON exceeded connector response cap, do not label it fully parsed; no other sampled tokens studied here."
+  },
+  "production": "NO_GO"
+}

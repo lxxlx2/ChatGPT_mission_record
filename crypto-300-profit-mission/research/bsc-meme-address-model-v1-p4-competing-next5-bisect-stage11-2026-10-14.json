@@ -1,0 +1,134 @@
+{
+  "schema": "BSC_P4_COMPETING17_UNRESOLVED_NEXT5_BISECT",
+  "stage": 11,
+  "rounds": [
+    22,
+    23
+  ],
+  "source_selection_indices": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "source_precommit_sha": "b1c2395c949ba664c2424c8b8da84924c967ab90",
+  "previous_stage_sha": "6d43b90c64185267a26fb7ce6487eccbfa496315",
+  "from_bounds": [
+    {
+      "lo": 46411394,
+      "hi": 46411416
+    },
+    {
+      "lo": 42638382,
+      "hi": 42638403
+    },
+    {
+      "lo": 47425627,
+      "hi": 47425650
+    },
+    {
+      "lo": 47431622,
+      "hi": 47431645
+    },
+    {
+      "lo": 46484206,
+      "hi": 46484228
+    }
+  ],
+  "to_bounds": [
+    {
+      "lo": 46411399,
+      "hi": 46411405
+    },
+    {
+      "lo": 42638387,
+      "hi": 42638392
+    },
+    {
+      "lo": 47425644,
+      "hi": 47425650
+    },
+    {
+      "lo": 47431633,
+      "hi": 47431639
+    },
+    {
+      "lo": 46484222,
+      "hi": 46484228
+    }
+  ],
+  "probes": [
+    {
+      "index": 0,
+      "round": 22,
+      "block": 46411405,
+      "value": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+      "exists": true
+    },
+    {
+      "index": 1,
+      "round": 22,
+      "block": 42638392,
+      "value": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+      "exists": true
+    },
+    {
+      "index": 2,
+      "round": 22,
+      "block": 47425638,
+      "value": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "index": 3,
+      "round": 22,
+      "block": 47431633,
+      "value": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "index": 4,
+      "round": 22,
+      "block": 46484217,
+      "value": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "index": 0,
+      "round": 23,
+      "block": 46411399,
+      "value": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "index": 1,
+      "round": 23,
+      "block": 42638387,
+      "value": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "index": 2,
+      "round": 23,
+      "block": 47425644,
+      "value": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "index": 3,
+      "round": 23,
+      "block": 47431639,
+      "value": "0x8be0d063873f68a08c8b5bca2fe981618bbf5047",
+      "exists": true
+    },
+    {
+      "index": 4,
+      "round": 23,
+      "block": 46484222,
+      "value": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    }
+  ],
+  "production": "NO_GO"
+}
