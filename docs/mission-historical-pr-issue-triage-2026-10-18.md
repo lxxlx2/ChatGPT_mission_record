@@ -81,3 +81,43 @@ Root unresolved: autonomous Gmail safety-check rejections; incomplete prebuild/c
 - Updated Issue body links and three original PR closure comments preserved.
 - No claim that #55/#98/Frank/Monster/BSC/#97 were merged or production-approved.
 - Require independent documentation review and explicit merge decision. This file on a Draft PR is not a main-branch policy until merged.
+
+
+## Round 2: 2026-10-18 live-task registry repair and obsolete PR retirement
+
+Follow-up GitHub status snapshot after round 2: **93 historical PRs total, 59 open, 22 merged, 12 closed-without-merge**. Six ordinary issues remain open. This supersedes the earlier 92/67/22/3 snapshot **for PR counts only**. No source/module PR code was merged.
+
+### Direct task configuration proof and permanent stale-navigation correction
+
+Read the existing task automation registry, not just older docs. Confirmed active enabled:
+- Crypto `6a8600b9d12481919bc43ebc800c9916`: :20 at local hours 00/03/06/08/09/10/11/12/16/20.
+- US stock `6a8600c16e7081919566f170f58045a6`: 05:40/06:40/07:40/08:40 local daily.
+- TGE `6a85fff710e0819190ffcf8c1145a170`: every local HH:00.
+- The $300-3000 umbrella, legacy $300 asset monitor, Monster research watchers, Frank 30D replay and standalone Crypto fallback task are disabled. Local deterministic Frank may operate separately, and a running Mac was NOT independently checked here.
+
+**Observed defect:** main `docs/ACTIVE_AUTOMATIONS.md` still incorrectly said Crypto `:00`, TGE `:14`, and disabled $300 legacy monitor `ACTIVE`. This was more consequential than stylistic naming and contradicted actual task configuration. **Fixed only on this Draft PR #99 branch**, at stable existing path `docs/ACTIVE_AUTOMATIONS.md`, to list all three currently enabled slots, original IDs, paused lanes and health caveats. Actual automation configuration **was not changed**. Review/merge needed before main navigation is corrected.
+
+### Additional executed closures, without merge or deleting branches
+
+- [Old CA #28](https://github.com/lxxlx2/ChatGPT_mission_record/pull/28#issuecomment-6241935535), fixed `5b0b3f88c9f25a4ec5aebc84465b7dcf3a9768b9`: historical unmerged old implementation closed because active main's cluster/RPC/server/JS now provides fallback RPC for HTTP 429/403/5xx, DexScreener, chain permission and token-risk/CA report output. Main **does not contain** old `token_report.py` or its old tests; this is architectural replacement, **not old feature acceptance equivalence**, still needs current CA Mac test. Old PR over 2,000 commits behind main and no safe old-branch merge.
+- [FLOP #11–#18](https://github.com/lxxlx2/ChatGPT_mission_record/pulls?q=is%3Apr+is%3Aclosed+FLOP): eight September 29 stacked experimental PRs independently checked for current head/state; all **Closed / Unmerged** with archive comments and unchanged code. Official [contest.json](https://github.com/flop-labs/technocore-close-call-challenge/blob/main/contest.json) specifies `close-1` lock 2026-10-04 09:00 UTC and final price 10:00 UTC; the official GitHub repo was actually `archived=true`, owner archive timestamp 2026-10-06. Official [issue #38](https://github.com/flop-labs/technocore-close-call-challenge/issues/38) mentions an October 4 standings announcement, but neither the precise signed post nor our actual participating DIDs' rank/cash/fee/prize was independently reconciled. **Final prize and owner profit remain UNVERIFIED**, with the provenance task open. Closing historical strategy PRs is a `NOT_PLANNED_EXPIRED_CONTEST` disposition only; no live trading approval, no result fabrication, no deletion of code.
+- [#55 governance](https://github.com/lxxlx2/ChatGPT_mission_record/pull/55#issuecomment-6241978060): bounded source review, exact SHA `4e3e4c073eb926739ea99aa14b31c1ddfe166d96`, **171 commits behind main** at inspection; docs-only core principles valid, but independent other-AI review, fresh-base link/overlap review with #98 and integration remain pending. Keep open/Draft.
+- [#98 naming](https://github.com/lxxlx2/ChatGPT_mission_record/pull/98#issuecomment-6241978743): bounded content check, exact SHA `56f665be26a5879247152ad545d49665a299b2bf`, 15 documentation paths; live timing and paused status match independent task-config readback. No blanket independent-other-AI APPROVE/merge claimed. Its scope does **not** include the previously stale `docs/ACTIVE_AUTOMATIONS.md`, hence separate #99 fix.
+- [#38 Frank watch pool](https://github.com/lxxlx2/ChatGPT_mission_record/pull/38#issuecomment-6241979498): current main does **not** have default-collapsed `<details>` watch pool and `watch-focus-count`; **leave OPEN** pending integration with newer Frank UI, independent exact-head CI/review and Mac visual acceptance.
+
+### Incomplete but actionable historical work
+
+1. **FLOP final results/rewards:** do not interpret contest expiration as settled user results. Independently retrieve the genuine Oct 4 signed standings, match only the known owner DID keys from an authorized source, reconstruct all settled fees/profit or mark source redactions; verify any reward/claim rights against current official issuer. Do not ask for/commit any private Ed25519 seed.
+2. **Governance docs:** review #55 on current main and its interaction with #98; avoid old-base overwrites or duplicate new PRs. Review #99's task registry against actual task snapshot and its two changed paths; each remains Draft until independent review.
+3. **Operational cause:** #4/#5/#6 still DEGRADED/unverified; source and delivery gates remain. Doc correction fixes navigation, **not** running email or monitoring.
+4. **#28 residual CA acceptance:** preserve current C01-C10 / Frank module real Mac/source tests before claiming feature completed. #38 stays a pending UI feature, not a redundant PR.
+
+No monitoring task, schedule, Git branch of other product developers, real wallet, Gmail, code release or user Mac installation was mutated by this round.
+
+### Updated documentation-PR acceptance contract
+
+This Draft PR #99 now changes **two documentation files only**:
+- `docs/mission-historical-pr-issue-triage-2026-10-18.md` new ledger;
+- `docs/ACTIVE_AUTOMATIONS.md` correction of a stale existing human task registry, based on actual task readback.
+
+Require full two-path latest-main diff, Markdown link/check, external-other-AI review where the governance rules require it, no runtime-config writes and explicit final merge authorization. The old text stating “one new Markdown file” earlier in this ledger is superseded by this round-2 contract.
