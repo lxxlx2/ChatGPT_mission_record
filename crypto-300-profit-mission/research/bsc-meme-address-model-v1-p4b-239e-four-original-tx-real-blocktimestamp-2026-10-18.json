@@ -1,0 +1,164 @@
+{
+  "schema": "BSC_P4B_2026_239E_TWO_ACTUAL_OWNER_ROUND_TIMESTAMPS_4_FULL_TOOL_TX_RETURNS_V1",
+  "source_prefreeze": {
+    "file": "bsc-meme-address-model-v1-p4b-239e-original-4tx-real-historical-time-prefreeze-2026-10-18.json",
+    "git_blob_sha": "e89d485eb0d6189b2f050da1ef6524c0d2b57b02",
+    "committed_before_this_RPC_batch": true
+  },
+  "tool_method": "Alchemy BNB eth_getTransactionByHash",
+  "tool_return_grade": "TOOL_PARSED_COMPLETE_TRANSACTION_JSON_FIELDS_NOT_PROVIDER_TRANSPORT_BYTEWISE_CAPTURED",
+  "requested": 4,
+  "executed": 4,
+  "valid_full_JSON": 4,
+  "retries": 0,
+  "selected_tx_records": [
+    {
+      "case": "R1",
+      "role": "ORIGINAL_FIRST_BUY",
+      "transactionHash": "0x43a76faa30a37a7028cb82f75a6bc3340bd6ef6e50230126d4d40f2700606a81",
+      "raw_blockNumber_hex": "0x51f8e59",
+      "raw_blockTimestamp_hex": "0x69b14658",
+      "raw_transactionIndex_hex": "0x4e",
+      "raw_from": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "raw_to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "raw_signed_transaction_value_hex": "0x166d2f702508000",
+      "raw_nonce_hex": "0x913",
+      "raw_gasLimit_hex": "0x6ae73",
+      "raw_gasPrice_wei_hex": "0x3b9aca00",
+      "raw_chainId_hex": "0x38",
+      "eth_getTransactionByHash_valid_full_JSON": true,
+      "provider_tool_text_chars": 1407,
+      "tool_output_truncated": false,
+      "utc_derived_from_timestamp": "2026-03-11T10:39:20.000Z"
+    },
+    {
+      "case": "R1",
+      "role": "ORIGINAL_FINAL_SELL",
+      "transactionHash": "0x3e64fc9233617942d8c23edccd55c2273da16e8d32543178d1f9e9795544ba93",
+      "raw_blockNumber_hex": "0x51f9bca",
+      "raw_blockTimestamp_hex": "0x69b14c66",
+      "raw_transactionIndex_hex": "0x22",
+      "raw_from": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "raw_to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "raw_signed_transaction_value_hex": "0x0",
+      "raw_nonce_hex": "0x918",
+      "raw_gasLimit_hex": "0x5408a",
+      "raw_gasPrice_wei_hex": "0x3b9aca00",
+      "raw_chainId_hex": "0x38",
+      "eth_getTransactionByHash_valid_full_JSON": true,
+      "provider_tool_text_chars": 1329,
+      "tool_output_truncated": false,
+      "utc_derived_from_timestamp": "2026-03-11T11:05:10.000Z"
+    },
+    {
+      "case": "R2",
+      "role": "ORIGINAL_FIRST_BUY",
+      "transactionHash": "0x7aa4b9daf5bdcafbd6453dbb5d86957d8ce1336c897c8b308570be54ce7d9e6c",
+      "raw_blockNumber_hex": "0x51fa519",
+      "raw_blockTimestamp_hex": "0x69b15097",
+      "raw_transactionIndex_hex": "0x17",
+      "raw_from": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "raw_to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "raw_signed_transaction_value_hex": "0x43478e506f18000",
+      "raw_nonce_hex": "0x91a",
+      "raw_gasLimit_hex": "0x6ecda",
+      "raw_gasPrice_wei_hex": "0x3b9aca00",
+      "raw_chainId_hex": "0x38",
+      "eth_getTransactionByHash_valid_full_JSON": true,
+      "provider_tool_text_chars": 1407,
+      "tool_output_truncated": false,
+      "utc_derived_from_timestamp": "2026-03-11T11:23:03.000Z"
+    },
+    {
+      "case": "R2",
+      "role": "ORIGINAL_FINAL_SELL",
+      "transactionHash": "0x5f7d389c874b47509989190287fdd57cf6d4a2a5f252110d1cdd71783faa6bf1",
+      "raw_blockNumber_hex": "0x51faa9b",
+      "raw_blockTimestamp_hex": "0x69b15311",
+      "raw_transactionIndex_hex": "0x4",
+      "raw_from": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "raw_to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "raw_signed_transaction_value_hex": "0x0",
+      "raw_nonce_hex": "0x91e",
+      "raw_gasLimit_hex": "0x5408a",
+      "raw_gasPrice_wei_hex": "0x3b9aca00",
+      "raw_chainId_hex": "0x38",
+      "eth_getTransactionByHash_valid_full_JSON": true,
+      "provider_tool_text_chars": 1328,
+      "tool_output_truncated": false,
+      "utc_derived_from_timestamp": "2026-03-11T11:33:37.000Z"
+    }
+  ],
+  "derived_cases": [
+    {
+      "case": "R1",
+      "first_signed_buy_unix_seconds": 1773225560,
+      "last_signed_sell_unix_seconds": 1773227110,
+      "signed_first_buy_to_final_sell_seconds": 1550,
+      "first_buy_before_final_sell": true,
+      "cutoffs_from_original_first_buy_seconds": [
+        {
+          "seconds": 60,
+          "owner_final_sell_already_mined_by_this_timestamp": false,
+          "owner_final_sell_not_yet_mined_by_this_timestamp": true,
+          "no_inference_about_interim_unsampled_onchain_token_balance": true
+        },
+        {
+          "seconds": 300,
+          "owner_final_sell_already_mined_by_this_timestamp": false,
+          "owner_final_sell_not_yet_mined_by_this_timestamp": true,
+          "no_inference_about_interim_unsampled_onchain_token_balance": true
+        },
+        {
+          "seconds": 900,
+          "owner_final_sell_already_mined_by_this_timestamp": false,
+          "owner_final_sell_not_yet_mined_by_this_timestamp": true,
+          "no_inference_about_interim_unsampled_onchain_token_balance": true
+        }
+      ]
+    },
+    {
+      "case": "R2",
+      "first_signed_buy_unix_seconds": 1773228183,
+      "last_signed_sell_unix_seconds": 1773228817,
+      "signed_first_buy_to_final_sell_seconds": 634,
+      "first_buy_before_final_sell": true,
+      "cutoffs_from_original_first_buy_seconds": [
+        {
+          "seconds": 60,
+          "owner_final_sell_already_mined_by_this_timestamp": false,
+          "owner_final_sell_not_yet_mined_by_this_timestamp": true,
+          "no_inference_about_interim_unsampled_onchain_token_balance": true
+        },
+        {
+          "seconds": 300,
+          "owner_final_sell_already_mined_by_this_timestamp": false,
+          "owner_final_sell_not_yet_mined_by_this_timestamp": true,
+          "no_inference_about_interim_unsampled_onchain_token_balance": true
+        },
+        {
+          "seconds": 900,
+          "owner_final_sell_already_mined_by_this_timestamp": true,
+          "owner_final_sell_not_yet_mined_by_this_timestamp": false,
+          "no_inference_about_interim_unsampled_onchain_token_balance": true
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Block timestamp is consensus block time, not observer received or delivered signal time",
+    "Only selected original first buy and final sell, not complete all-wallet interim token transfers or arbitrary block-end balance",
+    "Signed trade's own realized BNB original net is from old source, not 1/5/15min third-party realized net",
+    "No public first executable U; no mempool propagation, venue swap/tax/gas executing follower at cutoff"
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "NO_MERGE": true,
+    "NO_DEPLOY": true,
+    "NO_GMAIL": true,
+    "NO_TRADE": true
+  }
+}
