@@ -6,7 +6,7 @@ project: HEEBOO
 event_type: historical_alert
 email_subject: "[空投/TGE提醒][HEEBOO / Claynosaurz][Tokenomics / Allocation 正式公布]"
 gmail_message_id: "1a034f0f1a9a3f8a"
-gmail_sent_at: "2026-08-24T18:03:20"
+gmail_sent_at: "2026-08-24T18:03:20Z"
 gmail_sent_at_bkk: "2026-08-25T01:03:20+07:00"
 status: official
 backfilled: true
