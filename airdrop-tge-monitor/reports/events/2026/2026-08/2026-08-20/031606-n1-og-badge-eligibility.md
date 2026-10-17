@@ -8,13 +8,16 @@ email_subject: "[空投提醒][N1 / 01 Exchange][资格检查与 Badge Claim]"
 gmail_message_id: "1a01baab2f686623"
 gmail_sent_at: "2026-08-19T20:16:06Z"
 gmail_sent_at_bkk: "2026-08-20T03:16:06+07:00"
-status: official
+status: historical_public_redacted
+public_body_redacted: true
+original_private_source: Gmail Sent
+original_body_verified_before_redaction: true
 backfilled: true
 source: Gmail Sent readback
 ---
 项目：N1 / 01 Exchange
 
-事件：N1 官方 Hub 当前仍显示“New 01 OG badge”，并要求用户登录后检查资格并领取 01 OG Badge。你此前参与过 01.xyz，因此建议检查自己的资格。
+事件：N1 官方 Hub 当前仍显示“New 01 OG badge”，并要求用户登录后检查资格并领取 01 OG Badge。若曾参与相关活动，可在官方页面核对个人资格。
 
 官方来源：N1 Hub
 
