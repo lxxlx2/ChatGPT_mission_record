@@ -1,0 +1,131 @@
+name: Monster 445 historical WATCH burst display research (one-shot, no alerts)
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/monster/source-batches/monster_feb445_watch_burst_preview_request.json'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster-v4-445-market-burst-study-one-shot
+  cancel-in-progress: false
+jobs:
+  verify_original_watch_events_and_preview:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Confirm only exact one-off research-only request changed
+        run: |
+          set -eu
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          req='crypto-300-profit-mission/monster/source-batches/monster_feb445_watch_burst_preview_request.json'
+          changed=subprocess.check_output(
+              ['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],
+              text=True).splitlines()
+          expected={
+              'schema':'MONSTER445_WATCH_BURST_DISPLAY_ONCE_REQUEST_V1',
+              'full_replay_artifact_id':12044872933,
+              'full_json_sha256':'370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf',
+              'capacity8_research_only':True,'approved_scope':'OFFLINE_DISPLAY_RESEARCH_ONLY',
+              'send_messages':False,'deploy':False,'trade':False}
+          if changed!=[req] or json.loads(Path(req).read_text())!=expected:
+              raise ValueError('MONSTER445_WATCH_BURST_NOT_EXPLICIT_FROZEN_ONESHOT')
+          PY
+          test "$GITHUB_REF_NAME" = "research/monster-v4-local-discovery-20261010"
+      - name: Verify no-lookahead grouping tests on synthetic source and compile
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -eu
+          python -m py_compile monster_v4_445_burst_watch_feed_research.py test_monster_v4_445_burst_watch_feed_research.py
+          python -m unittest -v test_monster_v4_445_burst_watch_feed_research
+      - name: Derive research-only presentation from frozen genuine 445 full source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster445_burst_display
+          gh run download 38898752712 --repo lxxlx2/ChatGPT_mission_record --dir /tmp/monster445_burst_display --name monster-feb445-all445-real-original-shared-D0D1-once
+          echo '370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf  /tmp/monster445_burst_display/monster_feb445_all445_one_sqlite_full_result.json' | sha256sum -c -
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_445_burst_watch_feed_research.py --full /tmp/monster445_burst_display/monster_feb445_all445_one_sqlite_full_result.json --summary /tmp/monster445_burst_display/monster_feb445_all445_one_sqlite_summary.json --out /tmp/monster445_burst_display/monster445_269_watch_display_preview.json
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          full=Path('/tmp/monster445_burst_display/monster445_269_watch_display_preview.json')
+          result=json.loads(full.read_text())
+          v=result['point_in_time_display_preview']; h=result['hindsight_diagnostic_not_for_live_display']
+          assert (v['total_WATCH'],v['unique_market_poll_ticks'],
+                  v['market_burst_cards'],v['burst_member_WATCH'],
+                  v['hypothetical_grouped_cards'],
+                  v['hypothetical_cards_reduced'])==(269,159,1,98,172,97)
+          assert h['market_bursts'][0]['hindsight_final_D1_queue_status_counts']=={'LATE':91,'EVALUATED':7}
+          assert h['market_bursts'][0]['hindsight_SETUP_count']==0
+          assert all('status' not in x and 'last_error' not in x
+                     for x in v['at_WATCH_visible_rows_all_preserved'])
+          assert v['BUY']=='FORBIDDEN' and result['G6']=='NO_GO'
+          summary={
+              'schema':'MONSTER445_269_WATCH_MARKET_BURST_ACTUAL_SUMMARY_V1',
+              'research_only':True,'source_sha256':result['full_replay_source_sha256'],
+              'full_view_sha256':hashlib.sha256(full.read_bytes()).hexdigest(),
+              'full_view_artifact_run':"${{ github.run_id }}",
+              'all_watch_preserved':v['total_WATCH'],
+              'unique_poll_ticks':v['unique_market_poll_ticks'],
+              'capacity_slots_fixed_before_study':8,
+              'market_burst_groups':v['market_burst_cards'],
+              'WATCH_in_burst':v['burst_member_WATCH'],
+              'display_cards_research_hypothetical':v['hypothetical_grouped_cards'],
+              'display_cards_reduction_not_real_mail_count':v['hypothetical_cards_reduced'],
+              'hindsight_burst_98_final_status':h['market_bursts'][0]['hindsight_final_D1_queue_status_counts'],
+              'hindsight_burst_98_SETUPS':h['market_bursts'][0]['hindsight_SETUP_count'],
+              'posthoc_445_of_758_not_PIT':True,'censored_313':313,
+              'profit_verified':False,'notification_sent':False,
+              'G4':'UNKNOWN','G6':'NO_GO',
+              'NO_MERGE':True,'NO_DEPLOY':True,'NO_GMAIL':True,'NO_TRADE':True}
+          target=Path('/tmp/monster445_burst_display/monster445_burst_display_git_summary.json')
+          target.write_text(json.dumps(summary,indent=2,sort_keys=True)+'\n')
+          assert json.loads(target.read_text())==summary
+          print('MONSTER445_TRUE_WATCH_BURST_98_GROUP_DISPLAY_ONLY_269_PRESERVED_172_CARDS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster445-269-complete-watch-burst-display-study
+          path: |
+            /tmp/monster445_burst_display/monster445_269_watch_display_preview.json
+            /tmp/monster445_burst_display/monster445_burst_display_git_summary.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Write immutable small experiment evidence, never overwrite existing
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          target=crypto-300-profit-mission/monster/evidence/monster_feb445_269_watch_burst_display_actual.json
+          if test -e "$target"; then
+            echo MONSTER445_BURST_DISPLAY_ALREADY_ARCHIVED
+            exit 1
+          fi
+          cp /tmp/monster445_burst_display/monster445_burst_display_git_summary.json "$target"
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive real 269 WATCH market-burst view, 1 event group 98, no live signals"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER445_BURST_DISPLAY_REMOTE_EVIDENCE_EXISTS
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_445_burst_watch_feed_research.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_445_burst_watch_feed_research.py .github/workflows/monster-v4-445-watch-burst-preview-one-shot.yml crypto-300-profit-mission/monster/source-batches/monster_feb445_watch_burst_preview_request.json; do
+            test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo MONSTER445_BURST_EXECUTABLE_DRIFT; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER445_BURST_SOURCE_PINNED_EVIDENCE_GIT_COMMITTED
