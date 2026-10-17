@@ -73,19 +73,6 @@ def build(docs):
           read["supplement_confirms_provider_request_capture"] is False and
           read["request_evidence_grade"] == "SCRIPT_RECONSTRUCTED_NOT_PROVIDER_CAPTURED",
           "V1_V2_PROVENANCE_NOT_CAPTURED")
-    check(len(old["rows"]) == len(read["rows"]) == 2 and
-          all(old[k] == read[k] for k in
-              ("source_precommit_blob_sha","source_reviewed_code_baseline",
-               "network","method","read_count","complete_results","gates")),
-          "IMMUTABLE_V1_SOURCE_DATA_DRIFT")
-    for orig, enrich in zip(old["rows"], read["rows"]):
-        for key,value in orig.items():
-            if key in ("buy","reverse"):
-                check(all(enrich[key].get(k) == v for k,v in value.items()),
-                      "IMMUTABLE_V1_QUOTE_FIELD_DRIFT")
-            else:
-                check(enrich.get(key) == value,
-                      "IMMUTABLE_V1_SELECTED_FIELD_DRIFT")
     check(read["schema"] ==
           "BSC_P4B_FLAP_2026_TWO_SIDED_QUOTE_NPLUS1_BLOCK_END_SUPPLEMENT_V2" and
           read["actual_provider_raw_transcript_archived"] is False and
@@ -193,6 +180,19 @@ def build(docs):
             "public_first_buy_and_sell_executable_U":"UNRESOLVED",
             "P5_one_five_fifteen_minute_return":"UNRESOLVED"
         })
+    check(len(old["rows"]) == len(read["rows"]) == 2 and
+          all(old[k] == read[k] for k in
+              ("source_precommit_blob_sha","source_reviewed_code_baseline",
+               "network","method","read_count","complete_results","gates")),
+          "IMMUTABLE_V1_SOURCE_DATA_DRIFT")
+    for orig, enrich in zip(old["rows"], read["rows"]):
+        for key,value in orig.items():
+            if key in ("buy","reverse"):
+                check(all(enrich[key].get(k) == v for k,v in value.items()),
+                      "IMMUTABLE_V1_QUOTE_FIELD_DRIFT")
+            else:
+                check(enrich.get(key) == value,
+                      "IMMUTABLE_V1_SELECTED_FIELD_DRIFT")
     return {"schema":"BSC_P4B_FLAP_2026_NPLUS1_MATH_ONLY_TWO_ASSETS_REPLAY",
             "source_sha":{k:v[1] for k,v in SOURCES.items()},
             "summary":{"scoped_tokens":2,"quote_calls":4,
