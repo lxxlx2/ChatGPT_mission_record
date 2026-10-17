@@ -17,8 +17,19 @@ Current module state:
 - **CORE PRICE / overall-market trend module:** paused; legacy `$300 Crypto资产状态监控` remains disabled.
 - **Other tracked persons / TOKEN_CONSENSUS:** deferred.
 - **Production trading:** `NO_GO`.
+- **地址分析 / 449 个历史 EVM 标签钱包：** [Draft PR #97](https://github.com/lxxlx2/ChatGPT_mission_record/pull/97)，`RESEARCH_ONLY / UNMERGED / BATCH_001_PARTIAL`。449 个独立 CA 地址（每批 20 个、23 批）；已做首 20 个 BSC 近月签名活跃度检查（13 有、7 无），1 笔 RTX5090 单币闭环。**钱包级近 30 天及长期盈亏尚未完成**；独立于现有 BSC Meme 研究 PR #40，未经评审不能接入 Frank/Monster。
 
 - **Frank / Meme integration:** [PR #29](https://github.com/lxxlx2/ChatGPT_mission_record/pull/29) merged October 10; user-authorized pre-merge Loop/Dashboard Mac acceptance passed for the scoped version. Later post-merge runtime and new-code real Gmail send are not independently verified here.
+
+## 独立研究、钱包盈利和交接规范
+
+当前 449 地址研究的分批记录在 [Draft PR #97](https://github.com/lxxlx2/ChatGPT_mission_record/pull/97) 的 `crypto-300-profit-mission/address-analysis/` 下，**main 目前没有此目录**。PR 中的第一批报告只能代表已完成的 BSC 签名活跃度和一笔买卖成本闭环。后续查到同地址其他盈利或亏损时必须保留完整证据、继续补足长期和滚动 30 天代币级账本。老的 BSC meme 地址建模研究是另一条线，不混合样本和审核门禁。
+
+**模块共通规则：** 权威以 `MISSION_SPEC.md`、`state/latest.md`、`portfolio/current.md` 和各模块冻结定义为准。逐项有价资产 ≥$1 计入，Bybit 全部作为生活储备排除；历史交易与不满 $1 的代币仍需保留证据。链上转账、代币解锁、利润截图、理论卖出价不能自行推断实际已实现收益。任何利润结论须以准确 CA、钱包交易、真实成交、gas、资金来源、历史成本和输出资产（BNB、USDC、USDT、USD1 等）重建，未查完标 `UNRESOLVED`。
+
+**文件命名/升级：** 人工研究文件 `<entity>-<purpose>.md`、H1 清楚描述研究对象和用途。老的冻结规则、机器输出、被运行时引用的 uppercase 文件名、不可变日志以及位置仓位旧路径先保留兼容；旧文档标题、导航或显然过期的状态先订正。新建未审核的 Draft PR 文件不纳入这轮旧路径重命名。审计见 [旧文件命名整改记录](../docs/mission-legacy-naming-audit-2026-10-18.md)。
+
+**操作门禁：** `PRODUCTION_TRADING=NO_GO`；不因为研究报告或代码 PR 的通过而修改监控、生产策略、任务、Gmail、LaunchAgent 或真实订单。任何实测/提交/合并/发送结论必须有对应可验证的执行结果；尚待审核的 PR 保持 Draft，不擅自合并。
 
 ## Mission scheduler authority
 
