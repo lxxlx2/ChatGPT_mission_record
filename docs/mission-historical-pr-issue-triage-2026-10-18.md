@@ -137,3 +137,11 @@ Actual direct Gmail Sent + Git content comparisons for the 2026-08-20..31 offici
 Privacy caution: the Git repository is `public` and historic Gmail may mention user participation/eligibility. External review must explicitly evaluate whether exact archived content is suitable for public Git. Do not incorrectly mark the August archives integrated into main until the approved PR actually merges and main path/body verification passes. If privacy requires redaction, reconcile Issue #1's exact-body requirement transparently instead of silently altering messages.
 
 **Updated next central gates:** independently review #100, then approved merge and main readback before Issue #1 closure. #55/#98/#99 remain separately Draft/unmerged, and operational Issues #4/#5/#6 remain non-healthy until actual autonomous final/Sent proof. PR count will now include #100 and should be freshly queried rather than copied from the Round 2 snapshot.
+
+
+### Additional Issue #3 September monthly recommendation audit
+
+Read direct Gmail Sent + Git source of September 2026 final corrected reports: Crypto `1a0f8388da681a81`, US Stock `1a0f8390e3fa9b0d`. Both mails have true Sent labels, matching subject/ID to Git; Git visible bodies each have a single leading LF before otherwise matching Gmail text. This is a historical archive precision issue, **not grounds for resending**.
+
+[Issue #3 audit comment](https://github.com/lxxlx2/ChatGPT_mission_record/issues/3#issuecomment-6242213781) records **PARTIAL** acceptance. Ranked narrative lists, tier, thesis/catalysts/risk/invalidation are present, but Crypto entry terms such as “macro pullback”/“clear pullback” lack numeric/corroborated valuation conditions; US Stock MSFT/AVGO/NVDA lack some required forward-price/peer-history comparison and executable buy valuation; IPO investments have no official final priced terms. Keep Issue #3 OPEN until a prospectively scheduled monthly report meets numeric-or-justified-watch gate and is delivered/archived with exact source. No new automation or unsolicited monthly email.
+
