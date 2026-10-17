@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 import unittest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
 from address_analysis import assert_source, nonce_pair, screen, replay_closed_token
 
 

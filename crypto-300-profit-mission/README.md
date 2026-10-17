@@ -57,9 +57,11 @@ Current capital / holdings:
 
 ## 地址分析 / 449 个 EVM 聪明钱钱包（研究阶段）
 
-独立只读模块：[研究规则](address-analysis/README.md)、[原始449地址快照](address-analysis/sources/oooooyoung-evm-449-source-snapshot.json)、[进度队列](address-analysis/state/progress.md)。
+独立只读模块：[研究规则](address-analysis/README.md)、[原始449地址快照](address-analysis/sources/oooooyoung-evm-449-source-snapshot.json)、[完整进度](address-analysis/state/progress.md)。
 
-2026-10-18 状态：Batch001（001–020）、Batch002（021–040）及 Batch003（041–060）已完成 **BSC、Ethereum、Base 各链固定区块 nonce 核查 60/449**。Batch001 三链并集有签名 15/20，Batch002 为 13/20，Batch003 为 6/20；这些只证明签名活动，不代表实际获利。Batch001 核实 3 个正收益单币闭环：#016 RTX5090 +0.226099333116 BNB，#002 sauce +0.156828105278687674 BNB，#004 sauce +0.154215798043203099 BNB。**没有完成核算的亏损币种不能视为不存在，整体30天和长期钱包PnL均未完成。** Batch002/003 仅完成三链筛查，交易审计未开始。参见 [Batch001](address-analysis/batches/batch-001.md)、[Batch002](address-analysis/batches/batch-002.md)、[Batch003](address-analysis/batches/batch-003.md)。独立只读 CLI 原型及 6 项离线测试已完成，Batch003 已通过 Alchemy 连接进行历史只读 RPC 筛查，CLI 本身仍未通过 Mac/真实 RPC 端到端验收。PR #97 Draft、`RESEARCH_ONLY`、`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，不修改 Frank/Monster/BSC建模及 Mission 资产。
+2026-10-18 状态：**Batch001–004 原始地址001–080 已完成 BSC、Ethereum、Base 的历史签名活动筛查，80/449**。四批三链签名活跃并集依次为 **15/20、13/20、6/20、18/20**。[Batch004 原始 nonce 证据](address-analysis/evidence/batch-004-three-chain-30d-nonce-screen.json)、[Batch004 报告](address-analysis/batches/batch-004.md)。已闭合正收益代币轮次仅 **3 笔**：#016 RTX5090 +0.226099333116 BNB、#002 sauce +0.156828105278687674 BNB、#004 sauce +0.154215798043203099 BNB。亏损轮次尚无完整核算，**不得认定亏损为零；全部449钱包30天和长期总体PnL未完成**。历史签名活动不等于代币买卖或盈利。
+
+独立只读 CLI 尚未通过真实 RPC/Mac 端到端验收。原测试导入路径错误实际失败；修复后6项离线测试在 Python 3.13 全部通过，[可核对失败与修复证据](address-analysis/evidence/read-only-cli-unittest-import-qa-20261018.md)。PR #97 维持 Draft、`RESEARCH_ONLY`、`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，不修改 PR #40 BSC 模型、Frank、Monster、资产和监控。
 
 ## Canonical module files
 

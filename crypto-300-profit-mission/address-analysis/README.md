@@ -1,7 +1,7 @@
 # 地址分析 / oooooyoung EVM 钱包按批盈利审计
 
 Updated: 2026-10-18 Asia/Bangkok
-Status: `RESEARCH_ONLY / BATCH_001_002_003_THREE_CHAIN_SCREENED / WHOLE_WALLET_PNL_INCOMPLETE`
+Status: `RESEARCH_ONLY / BATCH_001_TO_004_THREE_CHAIN_SCREENED / WHOLE_WALLET_PNL_INCOMPLETE`
 Scope: independent Mission research module, no connection to the existing PR #40 BSC address modeling or live Frank/Monster signals.
 
 ## Objective and fixed universe
@@ -29,9 +29,10 @@ Coverage status codes: `NOT_STARTED`, `BSC_SIGNED_ACTIVE`, `BSC_SIGNED_ZERO`, `T
 - [batches/batch-001.md](batches/batch-001.md): first 20 source addresses, BSC/Ethereum/Base screening and 3 closed profitable single-token roundtrips; whole-wallet PnL PARTIAL.
 - [batches/batch-002.md](batches/batch-002.md): next 20 addresses, three-chain nonce screening complete; swap/PnL NOT_STARTED. [Fixed-height JSON](evidence/batch-002-three-chain-30d-nonce-screen.json).
 - [batches/batch-003.md](batches/batch-003.md): rows041–060 fixed-height BSC/Ethereum/Base nonce coverage; 6/20 signed on at least one checked network and no audited trade PnL. [Raw evidence](evidence/batch-003-three-chain-30d-nonce-screen.json).
+- [batches/batch-004.md](batches/batch-004.md): rows061–080, 18/20 signed on at least one of BSC/Ethereum/Base, wallet PnL unresolved. [Nonce evidence](evidence/batch-004-three-chain-30d-nonce-screen.json), [sample transaction methods](evidence/batch-004-low-frequency-transaction-examples.json).
 - [Batch003 low-frequency transaction method evidence](evidence/batch-003-low-frequency-transaction-classification.json): approvals and transfers are excluded from inferred swap count; two router executions remain unknown PnL.
 - [Rows 002/004 sauce closed-position accounting](evidence/batch-001-rows-002-004-sauce-roundtrips.json): costs, proceeds, timestamps and limitations.
-- Rows 061–449 remain `NOT_STARTED` for frozen-window BSC/Ethereum/Base signed screening. Batch 001–003 rows 001–060 are screened on those three chains, while all full-wallet PnL and many per-token trade ledgers remain incomplete.
+- Rows 081–449 remain `NOT_STARTED` for fixed-window BSC/Ethereum/Base signed screening. Batches 001–004 rows 001–080 are screened on those three chains; all whole-wallet PnL and many per-token trade ledgers remain incomplete.
 
 ## Breadth-first development cadence and user outcome
 
@@ -47,7 +48,7 @@ Keep throughput of the whole 449-wallet universe visible. Do not repeatedly focu
 
 ## Read-only deterministic CLI prototype (not yet Mac/network accepted)
 
-The pinned [RPC nonce collector](tools/address_analysis.py) and [offline unittest suite](tests/test_address_analysis.py) are restricted to this independent address-analysis module. Tests: **6/6 passed** in the isolated Python 3 environment on 2026-10-18 (local offline synthetic fixtures + two known sauce cashflow figures). This is a **local developer test**, not a live RPC E2E result or wallet-level PnL audit.
+The pinned [RPC nonce collector](tools/address_analysis.py) and [offline unittest suite](tests/test_address_analysis.py) are restricted to this independent address-analysis module. Tests: original committed test file actually **FAILED** with `ModuleNotFoundError` (exit 1). A one-line correction to test import path (`tools/`) yields a repaired blob `d6b7b8f912846f24d1a88e4168fda7a204553d86` that passed **6/6** offline unit tests with exit 0 on Python 3.13; collector program SHA was unchanged. [Failure/retest evidence](evidence/read-only-cli-unittest-import-qa-20261018.md). This is a **local developer test**, not a live RPC E2E result or wallet-level PnL audit.
 
 The script uses only the Python standard library. It requires explicit read-only endpoint URLs through environment variables `ADDR_ANALYSIS_RPC_BSC`, `ADDR_ANALYSIS_RPC_ETH`, `ADDR_ANALYSIS_RPC_BASE`. No keys are stored in Git. It uses [immutable block boundaries](sources/frozen-30d-bsc-eth-base-blocks.json) and verifies both boundary block hashes before querying each wallet's nonce. Provider failure is represented as `UNRESOLVED_RPC`, never zero, and exits nonzero when any requested chain has unresolved rows. Per-chain signed deltas and their exact nonce bases are included; no swaps or profits are inferred.
 
