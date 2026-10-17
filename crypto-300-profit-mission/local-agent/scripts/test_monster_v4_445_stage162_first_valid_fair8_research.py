@@ -163,8 +163,10 @@ class Stage162ResearchTests(unittest.TestCase):
             watches.append({"event_type":"WATCH_EARLY","event_id":f"watch_{i}",
                             "symbol":q["symbol"],"observed_ms":seen})
             if i<120:
-                setups.append({"event_type":"SETUP_ACTIVE","event_id":f"setup_{i}",
-                               "symbol":q["symbol"],"observed_ms":seen+360000})
+                setups.append({
+                    "event_type":"SETUP_ACTIVE",
+                    "event_id":prod.event_key("spot",q["symbol"],"SETUP_ACTIVE",q["id"]),
+                    "venue":"spot","symbol":q["symbol"],"observed_ms":seen+360000})
             service.append({"id":q["id"],"first_selected_ms":seen,
                             "first_evaluation_ms":seen+360000})
         before={"actually_complete_symbols":445,"queue_rows":frozen,
@@ -201,13 +203,36 @@ class Stage162ResearchTests(unittest.TestCase):
 
     def test_09_report_discloses_lost_original_setup_and_stays_no_go(self):
         before,after,baseline,observer=self.build_synthetic_full_269_research_report()
+        lost_id=prod.event_key("spot","SYN110USDT","SETUP_ACTIVE",111)
         after={**after,"events":[x for x in after["events"]
-                                if x["event_id"]!="setup_110"]}
+                                if x["event_id"]!=lost_id]}
         j=fair.build_report(after,observer,before,baseline)
         self.assertEqual(j["setup_lost_ids"],1)
         self.assertEqual(j["setup_retained_ids"],119)
         self.assertEqual(j["setup_guardrail"],"NO_GO_LOST_EXISTING_SETUPS")
         self.assertEqual(j["cohort_comparison"]["OTHER_171"]["lost_setups"],1)
+
+
+    def test_10_duplicate_symbol_across_episodes_uses_queue_id_not_name(self):
+        before,after,baseline,observer=self.build_synthetic_full_269_research_report()
+        # Episode 0 (peak) and episode 110 (other) share a symbol, but
+        # SETUP identities are independent and must be in separate cohorts.
+        other=before["queue_rows"][110]
+        other["symbol"]=before["queue_rows"][0]["symbol"]
+        for event in before["events"]:
+            if event["event_id"]=="watch_110":
+                event["symbol"]=other["symbol"]
+                break
+        for event in before["events"]:
+            if event["event_type"]=="SETUP_ACTIVE" and event["symbol"]=="SYN110USDT":
+                event["symbol"]=other["symbol"]
+                event["event_id"]=prod.event_key("spot",other["symbol"],
+                                                   "SETUP_ACTIVE",111)
+                break
+        result=fair.build_report(after,observer,before,baseline)
+        self.assertEqual(result["cohort_comparison"]["PEAK_98"]["baseline_setups"],98)
+        self.assertEqual(result["cohort_comparison"]["OTHER_171"]["baseline_setups"],22)
+        self.assertEqual(result["setup_lost_ids"],0)
 
 
 if __name__=="__main__":
