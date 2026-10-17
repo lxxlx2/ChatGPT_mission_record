@@ -13,6 +13,7 @@ import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
+from http.client import HTTPConnection, HTTPException
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from decimal import Decimal
@@ -820,6 +821,59 @@ class DashboardState:
         return rows
 
 
+
+def _opt_in_research_follow_context() -> dict | None:
+    """Optional localhost-to-localhost read-only source gateway.
+
+    Unset FRANK_SOURCE_CONTEXT_PORT means no request, no RPC, no startup,
+    no sidecar access, and no production DB writes.
+    """
+    source_port = os.environ.get("FRANK_SOURCE_CONTEXT_PORT")
+    if (not isinstance(source_port, str) or not source_port.isascii()
+            or not source_port.isdecimal() or len(source_port) > 5):
+        return None
+    port = int(source_port)
+    if not 1024 <= port <= 65535:
+        return None
+    conn = HTTPConnection("127.0.0.1", port, timeout=2.5)
+    try:
+        conn.request("GET", "/api/research/current-follow-context",
+                     headers={"Accept": "application/json"})
+        response = conn.getresponse()
+        if response.status != 200:
+            return None
+        if response.getheader("Content-Type", "").split(";", 1)[0].strip() != "application/json":
+            return None
+        declared = response.getheader("Content-Length")
+        if (not isinstance(declared, str) or not declared.isascii()
+                or not declared.isdecimal() or len(declared) > 9):
+            return None
+        length = int(declared)
+        if not 0 < length <= 262144:
+            return None
+        raw = response.read(length)
+        if len(raw) != length:
+            return None
+        doc = json.loads(raw)
+        if (not isinstance(doc, dict) or doc.get("schema_version") != 1
+                or doc.get("kind") != "FRANK_CURRENT_F01_WITH_A05_RESEARCH_CONTEXT"
+                or doc.get("combined_trade_permission") is not False
+                or doc.get("archive_is_live_wallet_portfolio") is not False
+                or not isinstance(doc.get("candidates"), list)):
+            return None
+        count = doc.get("candidate_count")
+        if count is not None and (type(count) is not int or count < 0
+                                  or count != len(doc["candidates"])):
+            return None
+        if count is None and doc["candidates"]:
+            return None
+        return doc
+    except (OSError, HTTPException, ValueError, TypeError, OverflowError):
+        return None
+    finally:
+        conn.close()
+
+
 class Handler(BaseHTTPRequestHandler):
     state: DashboardState = None
     static_root: Path = Path(__file__).with_name("static")
@@ -859,6 +913,13 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.state.runtime())
         if path == "/api/control-health":
             return self._json(self.state.mission_control_health())
+        if path == "/api/research/current-follow-context":
+            if urlparse(self.path).query:
+                return self._json({"status": "RESEARCH_QUERY_NOT_ALLOWED"}, 400)
+            context = _opt_in_research_follow_context()
+            if context is None:
+                return self._json({"status": "RESEARCH_SOURCE_NOT_CONNECTED"}, 503)
+            return self._json(context)
         if path == "/api/candidates":
             return self._json(self.state.candidates())
         if path == "/api/frank-observed-watchlist":

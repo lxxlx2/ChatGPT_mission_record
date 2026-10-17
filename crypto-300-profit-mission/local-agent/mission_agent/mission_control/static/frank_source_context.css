@@ -1,0 +1,45 @@
+.frank-source-context {
+  margin-top: 1rem;
+  padding: .9rem 1rem;
+  border: 1px solid var(--border, #4b5563);
+  border-radius: .7rem;
+  background: var(--surface-soft, transparent);
+  font-size: .88rem;
+}
+.frank-source-notice {
+  margin: 0 0 .6rem;
+  font-weight: 600;
+}
+.frank-source-unavailable {
+  margin: 0;
+  opacity: .85;
+}
+.frank-source-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.frank-source-row {
+  padding: .65rem 0;
+  border-top: 1px solid var(--border, #4b5563);
+  display: grid;
+  gap: .35rem;
+  overflow-wrap: anywhere;
+}
+.frank-source-row code {
+  font-size: .83rem;
+  overflow-wrap: anywhere;
+}
+.frank-source-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem 1rem;
+}
+.frank-source-row small {
+  opacity: .8;
+}
+.frank-source-review {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
