@@ -210,8 +210,11 @@ class JointReadOnly:
     def current_follow_context(self) -> dict:
         """One current F01 list joined to existing A05/F02 observations by exact Mint.
 
-        F01 remains the only source of candidate decisions. No CA scan and
-        no RPC or portfolio write. A research observation never authorizes BUY.
+        F01 alone determines eligibility; archive observations never authorize
+        trading. as_of_utc dates this RESPONSE, not an underlying observation.
+        F02 freshness is checked in the existing aligner with a 1-second
+        safety margin before the source's declared TTL.
+        No CA scan, new RPC, portfolio write, or implicit page integration.
         """
         timestamp = datetime.now(timezone.utc).isoformat()
         try:
@@ -260,14 +263,16 @@ class JointReadOnly:
 
         candidates = []
         for item in follow["eligible"]:
-            context = align_frank_ca_f02(
+            aligned = align_frank_ca_f02(
                 mint=item["mint"], follow=follow, ca_report=None,
-                f02_positions=f02)["f02"]
+                f02_positions=f02)
+            context = aligned["f02"]
             candidates.append({
                 "person_id": item["person_id"],
                 "mint": item["mint"],
                 "f01_decision": item["decision"],
                 "source_signal_id": item["source_signal_id"],
+                "review_required_reason": aligned["cross_source_review_reason"],
                 "wallet_observation_state": context["state"],
                 "observed_quantity": context["observed_quantity"],
                 "token_account_count": context["token_account_count"],
@@ -281,10 +286,16 @@ class JointReadOnly:
             row["wallet_observation_state"] in (
                 "SOURCE_UNAVAILABLE", "OUTSIDE_FROZEN_TARGET_ROSTER")
             for row in candidates))
+        review_required = any(row["review_required_reason"] is not None
+                              for row in candidates)
         return {
             "schema_version": 1, "kind": "FRANK_CURRENT_F01_WITH_A05_RESEARCH_CONTEXT",
             "as_of_utc": timestamp,
             "status": ("NO_CURRENT_ELIGIBLE_CANDIDATES" if not candidates else
+                       "CANDIDATES_WITH_REVIEW_AND_A05_SOURCE_GAP"
+                       if review_required and a05_gap else
+                       "CANDIDATES_REQUIRING_CROSS_SOURCE_REVIEW"
+                       if review_required else
                        "CANDIDATES_WITH_A05_SOURCE_GAP" if a05_gap else
                        "CURRENT_F01_CANDIDATES_ARCHIVED_A05_ONLY"),
             "candidate_count": len(candidates),
