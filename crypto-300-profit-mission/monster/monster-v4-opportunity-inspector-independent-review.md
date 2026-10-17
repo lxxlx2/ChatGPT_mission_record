@@ -44,3 +44,24 @@
 ## 当前状态
 
 `CODE_TEST_CI=PASS`；`EXTERNAL_INDEPENDENT_REVIEW=NOT_DONE`；`LOCAL_MAC_ACCEPTANCE=NOT_DONE`；`ACTUAL_PROFIT_G4=UNKNOWN`；`G6=NO_GO`。仅研究代码与CI完成，禁止合并/部署/通知/交易。
+
+
+## 补充：Codex REQUEST_CHANGES 的两项P2闭环修复（2026-10-18）
+
+### 依据、精确身份及修复范围
+
+- **前一独立审核**：用户于2026-10-18转述Codex审查固定SHA `7cee9f13f01f8601ba5759466b8befc55e8dec14`，基线 `51fcf066ef144d1526146a952e6b190961092a3a`；审核者自述Codex，底层模型精确身份`UNVERIFIED`，审核结论 `REQUEST_CHANGES`，两个真实SQLite业务P2，零P0/P1。用户提供的本机 `/tmp` 复现脚本/日志未作为本会话可读取来源冒充重新执行；按审核描述用仓库本身真实生产SQLite函数补齐复现测试。
+- **本轮冻结修复代码SHA**：`d38999df6db63192ad3e3d11e793e2e6c4df05db`；仅涉及2个实用性文件：`local-agent/scripts/monster_v4_opportunity_snapshot.py`及`local-agent/tests/test_monster_v4_opportunity_snapshot.py`。相对于 `7cee9f13...` 的Git compare `ahead 4 / behind 0`，差异含之前两处文档整理；任何后续审核务必精确看新旧两版代码。未改冻结D0/D1/Fair8、D2策略与生产。
+- **P2-1**：原查询器仅凭候选队列行 `status=INVALIDATED`，而原生产 `observe_snapshot` 只改 `PENDING`；已完成 `SETUP_ACTIVE` 的 `EVALUATED` 行会继续显示正向研究SETUP。修复使用 `event_id(venue,symbol,"INVALIDATED",first_seen_ms)` **精确WATCH回合锚点**查询真实 `events`，并要求 `first_seen_ms <= observed_ms <= now`；历史SETUP与D2仍作证据保存，但当前清单 `signal=INVALIDATED`。不借用 `watch_state.invalidated`，避免新WATCH重置造成跨回合串线。新测试执行 `WATCH→SETUP→D2 CHECKED→PRICE_REVERSED→new WATCH`，验证旧回合 `EVALUATED / INVALIDATED / D2 CHECKED`、新回合仅 `WATCH_RESEARCH_ONLY / NOT_CAPTURED`。
+- **P2-2**：原工具只看场所级poll和health，忽略单个币 `snapshots.observed_ms`。修复新增 `symbol_quote_age_seconds`、`symbol_quote_state`、`symbol_seen_in_latest_poll`；如果单币报价缺失，或age>6分钟，或该symbol未出现在当前最新已归档场所poll对应时戳（虽有不超过6分钟旧报价），分别降级`SYMBOL_QUOTE_MISSING`、`SYMBOL_QUOTE_STALE`、`SYMBOL_QUOTE_NOT_SEEN_IN_LATEST_POLL`。场所 `RECENT_STORED_POLL`可独立为真；不得因此证明此symbol依旧属于当时完整可交易人口或当前可执行。新测试在场所BBBUSDT继续成功轮询的情况下，AAA报价先落后3分钟后落后9分钟，分别验证 `NOT_SEEN` 与 `STALE`，并记录540秒 age。
+- **状态判断优先级**：本回合失效与队列LATE/过期优先于源陈旧；单币报价不新鲜优先于显示正向WATCH/SETUP；失效或过期保留历史诊断事件，不回写原SQLite、不建立另一套信号源。继续全局`RESEARCH_REVIEW_ONLY_NO_BUY`，`G4 UNKNOWN`、`G6 NO_GO`。
+
+### 真实CI及审查关口
+
+- 正式新的固定SHA GitHub Actions：[#39076479244](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39076479244)；触发修复HEAD `d38999df6db63192ad3e3d11e793e2e6c4df05db`，`historical-baseline` job `SUCCESS`，全部22/22步骤完成。
+- 真实日志：新增机会查询器 **10/10 PASS**（原8＋两项真实SQLite生命周期反例），原Shadow **31/31 PASS**，D2 **12/12 PASS**，编译步骤成功。这只证明回归和现有研究接口合同，并非用户Mac持续运行、实时真实盘口或前瞻盈利。
+- **作者修复与测试已完成；独立审查未完成。** 新固定SHA需要针对两项P2进行有边界的独立`APPROVE | REQUEST_CHANGES | BLOCKED`复审，旧 `7cee9f13...` 的`REQUEST_CHANGES`不可倒改成APPROVE。Codex已验证的非争议旧契约无须无止境重审。
+
+### 可直接复制给独立Claude/Codex的定向复审提示词
+
+请独立审查 Mission Monster 原 Draft PR #30 里针对上轮Codex两个P2的修复。原审查对象SHA `7cee9f13f01f8601ba5759466b8befc55e8dec14`，结论 `REQUEST_CHANGES`，P2-1是已完成SETUP失效仍显示SETUP，P2-2是场所poll新鲜但单币报价9分钟未更新仍显示WATCH。本轮唯一**修复审核SHA**：`d38999df6db63192ad3e3d11e793e2e6c4df05db`；旧研究分支 `research/monster-v4-local-discovery-20261010`；仓库 `https://github.com/lxxlx2/ChatGPT_mission_record`；PR `https://github.com/lxxlx2/ChatGPT_mission_record/pull/30`。代码比较使用旧审核SHA `7cee9f13f01f8601ba5759466b8befc55e8dec14` 和新SHA，注意两者之间另有文档变化。要审核的源码：`crypto-300-profit-mission/local-agent/scripts/monster_v4_opportunity_snapshot.py`及其同级 `../tests/test_monster_v4_opportunity_snapshot.py`。需要时读取不变生产 `monster_v4_shadow.py` 核对事件ID、 `observe_snapshot` / `process_queue` / `process_d2` 语义。请独立使用真实SQLite schema及生产函数，重做 `WATCH→SETUP→D2 CHECKED→INVALIDATED→新WATCH`，必须核实旧回合EVALUATED即使有D2也被事件锚点覆盖、新回合不继承旧失效/SETUP；再重做AAA报价9分钟未更新但BBB继续全市场poll，检查场所与币级状态独立、3分钟即已从上次poll消失时不会误称正常、缺报价与过去报价不冒充现价。请检查事件时钟、只读安全及所有现有业务P2是否关闭，不引入无关的阈值优化。校验GitHub CI `39076479244` 对应固定SHA、10个机会查询器测试、31个Shadow测试及12个D2测试真实日志。请报告**`APPROVE | REQUEST_CHANGES | BLOCKED`**、固定SHA、P0/P1/P2文件行号/复现步骤/修复建议、已关闭的两项问题及新缺陷，不能运行/取得源码写`UNVERIFIED`。旧Stage162 Fair8历史研究APPROVE与本轮功能查询器审核独立。始终保持`NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`、`G4 UNKNOWN`、`G6 NO_GO`，不虚构收益、Mac验收或其他AI批准。
