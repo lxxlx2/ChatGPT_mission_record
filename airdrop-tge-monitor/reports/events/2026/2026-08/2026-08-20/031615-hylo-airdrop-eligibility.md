@@ -6,7 +6,7 @@ project: "Hylo"
 event_type: historical_alert
 email_subject: "[空投提醒][Hylo][Airdrop 资格检查]"
 gmail_message_id: "1a01baad33506d3d"
-gmail_sent_at: "2026-08-19T20:16:15"
+gmail_sent_at: "2026-08-19T20:16:15Z"
 gmail_sent_at_bkk: "2026-08-20T03:16:15+07:00"
 status: official
 backfilled: true
