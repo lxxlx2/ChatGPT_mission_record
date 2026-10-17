@@ -1,9 +1,16 @@
 # Mission Performance / Starting-Capital Provenance and Realized PnL
 
-Updated: 2026-10-12 Asia/Bangkok (GANG ICO realized position loss separately verified; Mission overall PnL still unresolved)
+Updated: 2026-10-17 Asia/Bangkok (SurfBoard #5396 on-chain sale cashflow recorded separately; Mission overall PnL still unresolved)
 Status: `MISSION_PNL_UNRESOLVED`
 Current position/balance authority: `../portfolio/current.md`.
 Operational authority: `../state/latest.md`.
+
+## Realized NFT sale cashflow, return unresolved — SurfBoard #5396 (2026-10-17)
+
+- **Direct-chain observation, no inferred authorization:** Robinhood Chain ERC721 `0x18c9719ab6ae4e1a6f95f281ef288e3af5d58602` token **5396** sold/transferred out of canonical EVM owner `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c` to `0xd90825b15f70b64f81bab600f7f56fe3f86747ce` at **2026-10-17 03:34:38 Bangkok**, successful Seaport tx [`0xb222259e480d4b9264af49cbbcd9709b7296d0ee35aec35b264fff35fdde91e9`](https://explorer.robinhood.com/tx/0xb222259e480d4b9264af49cbbcd9709b7296d0ee35aec35b264fff35fdde91e9), block `0x562e5dd`. OwnerOf and getNFTsForOwner confirm the NFT is **not currently held**.
+- **Seaport gross consideration:** `0.04 ETH`; successful `OrderFulfilled` event's three native consideration amounts **0.0376 ETH to seller (canonical wallet)**, **0.0004 ETH** and **0.002 ETH** to other recipients. These other-recipient amounts are not user proceeds; the buyer's gross 0.04 ETH must **not** also be counted as user assets. The sale has already happened; the USD equivalent at sale-time and actual original economic cost basis are not independently reconstructed. Historical annual Surf PRO subscription **$228** was paid for a service that generated a free NFT claim, and cannot automatically be booked as NFT cost or return.
+- **Follow-up transfer:** wallet external successful tx `0xb02baa0892b9f24f0e5dda49ed76c8d48e8cbb027b447b2a8a87129c733b1be2` at **2026-10-17 05:01:50 Bangkok**, **0.03783 ETH** sent from canonical wallet to `0x4cd00e387622c35bddb9b4c962c136462338bc31`; downstream ownership/use `UNVERIFIED`. This outbound amount is not identical to 0.0376 ETH seller payment and must not automatically be equated or subtracted as trading costs. Current Robinhood native balance only **0.000020785408780798 ETH**, separately priced under $1 and excluded from current displayed investment NAV.
+- **PnL treatment:** mark `SURFBOARD_5396_POSITION=CLOSED_BY_ONCHAIN_TRANSFER`, `SURFBOARD_5396_SALE_CONSIDERATION=CONFIRMED`, `SURFBOARD_5396_NET_PNL=UNRESOLVED`. This does not change the recorded GANG ICO realized loss **−96.210562 USDC before SOL gas**, and no external Surf subscription or NFT sale should be attributed to the original $300 Mission starting set without traced funding. No changes to `MISSION_PNL_UNRESOLVED`.
 
 ## New realized result — GANG ICO complete exit (2026-10-12)
 
