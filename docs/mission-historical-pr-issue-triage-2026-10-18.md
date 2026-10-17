@@ -121,3 +121,19 @@ This Draft PR #99 now changes **two documentation files only**:
 - `docs/ACTIVE_AUTOMATIONS.md` correction of a stale existing human task registry, based on actual task readback.
 
 Require full two-path latest-main diff, Markdown link/check, external-other-AI review where the governance rules require it, no runtime-config writes and explicit final merge authorization. The old text stating “one new Markdown file” earlier in this ledger is superseded by this round-2 contract.
+
+
+## Round 3: Issue #1 August Gmail reconciliation (2026-10-18)
+
+[Draft PR #100](https://github.com/lxxlx2/ChatGPT_mission_record/pull/100) was opened on `maintenance/mission-august-history-backfill-20261018`, fixed head `cbbb5947b80028bf5bd9009a952c16fb75a296ed`. It is **unmerged** and subject to independent external review, public Git repo privacy review and explicit merge authorization. Issue [#1](https://github.com/lxxlx2/ChatGPT_mission_record/issues/1) was updated with the source-level result and remains OPEN.
+
+Actual direct Gmail Sent + Git content comparisons for the 2026-08-20..31 official dated reports:
+- Crypto Daily **12/12 exact** on main.
+- US Stock **10/12 exact** on main, two one-character leading-newline mismatches Aug30/31; **12/12 exact** on #100 after only those two newline corrections, both remote-verified.
+- TGE August historical alerts: broader Gmail subject-term search found **13 genuine Sent alerts + 1 explicitly labeled test** (excluded); **all 13** newly archived as original-body, sent-time/ID stamped events on #100 and each compared byte-for-byte at text-string level against Gmail. No 2026-08 event directory existed on main at initial read. These are historical alerts only; no fresh ACTION/Gmail send.
+- TGE original run dates Aug28/29/30/31 had **4/4 existing daily summaries** on main, so no summary fabrication.
+- PR #100 changed-file remote check yielded **16 exact files** (13 events, 2 one-character daily corrections, 1 audit), with no invalid generated filenames. Audit: `backfill-audit/2026-10-18-august-sent-archive-reconciliation.md`.
+
+Privacy caution: the Git repository is `public` and historic Gmail may mention user participation/eligibility. External review must explicitly evaluate whether exact archived content is suitable for public Git. Do not incorrectly mark the August archives integrated into main until the approved PR actually merges and main path/body verification passes. If privacy requires redaction, reconcile Issue #1's exact-body requirement transparently instead of silently altering messages.
+
+**Updated next central gates:** independently review #100, then approved merge and main readback before Issue #1 closure. #55/#98/#99 remain separately Draft/unmerged, and operational Issues #4/#5/#6 remain non-healthy until actual autonomous final/Sent proof. PR count will now include #100 and should be freshly queried rather than copied from the Round 2 snapshot.
