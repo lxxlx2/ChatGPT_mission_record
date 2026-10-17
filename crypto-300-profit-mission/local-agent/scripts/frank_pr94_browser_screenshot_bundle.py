@@ -159,7 +159,7 @@ def shot(page, folder, manifest, name, desc, open_details=True):
         expand(page)
     label(page)
     path = folder / (name + ".png")
-    page.screenshot(path=str(path), full_page=True, animations="disabled", timeout=30000)
+    page.screenshot(path=str(path), full_page=True, timeout=30000)
     manifest["images"].append({"file": path.name, "sha256": sha(path),
         "utc": now(), "route": page.url, "description": desc, "expanded": open_details})
 
@@ -222,6 +222,25 @@ def take(browser, receipt, folder, manifest, logs):
         f02.locator("#mint-search").fill(receipt["mint_b"])
         f02.wait_for_timeout(150)
         shot(f02,folder,manifest,"10-f02-expired-filter","expired after filter")
+        # F02 expiry is independent: after 125s the *active* F01 synthetic
+        # endpoint must still return reviewed fresh eligible BUY, not 500.
+        api = signals.request.get(
+            receipt["urls"]["signals"].split("#", 1)[0] + "api/follow-opportunities",
+            timeout=5000
+        )
+        if api.status != 200:
+            raise ValueError("PR94_F01_SYNTHETIC_HTTP_FAILED_AFTER_F02_TTL:" + str(api.status))
+        latest = api.json()
+        if (latest.get("status") != "OK" or latest.get("eligible_count") != 1
+                or len(latest.get("eligible", [])) != 1
+                or time.time() - float(latest["eligible"][0]["quote_observed_at"]) >= 30):
+            raise ValueError("PR94_F01_SYNTHETIC_QUOTE_STALE_AFTER_F02_TTL")
+        signals.bring_to_front()
+        signals.wait_for_function(
+            "document.querySelectorAll('.candidate-card.decision-buy[data-f01-guard-state=VERIFIED]').length === 1",
+            timeout=15000
+        )
+        manifest["f01_still_verified_after_f02_expiry"] = True
     finally:
         ctx.close()
 
@@ -304,6 +323,20 @@ def main():
         if proc is not None:
             stop_process(proc, reader)
             result["launcher_exit_code"]=proc.returncode
+            log_path=folder / "launcher.log"
+            if log_path.is_file():
+                launcher_output=log_path.read_text(encoding="utf-8", errors="replace")
+                if ("Traceback (most recent call last):" in launcher_output or
+                        "F01_SYNTHETIC_PARTITION_FAILED" in launcher_output):
+                    errors.append("QA_LAUNCHER_NATIVE_HTTP_EXCEPTION")
+            if proc.returncode != 0:
+                errors.append("QA_LAUNCHER_NONZERO_EXIT:" + str(proc.returncode))
+        functional_console_errors=[
+            item for item in logs
+            if item.get("type") in ("pageerror","error")
+        ]
+        if functional_console_errors:
+            errors.append("QA_BROWSER_CONSOLE_ERRORS:" + str(len(functional_console_errors)))
         if git(repo,"rev-parse","HEAD^{tree}")!=TREE:
             errors.append("FROZEN_SOURCE_DRIFT")
             result["status"]="PARTIAL_OR_FAILED"
