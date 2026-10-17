@@ -32,6 +32,8 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_major2.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_market19.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_crossmarket_owner_maturity.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_original_owner_signal_lifecycle.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_original_owner_signal_lifecycle.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_crossmarket_owner_maturity.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_dragon_two_buys_causal_scope.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_dragon_two_buys_causal_scope.py"
