@@ -1,0 +1,104 @@
+{
+  "schema": "BSC_P4B_2026_FIVE_CURATED_OWNER_ROUNDS_ASOF_POSITION_LIFECYCLE_PRECOMMIT_V1",
+  "date": "2026-10-18",
+  "baseline_pr_head": "6fd56bd339221bd1dc8a4f3bd2e430126934a67b",
+  "purpose": "As-of-executed-block event-sourced OWNER signal lifecycle: first buy, additional buys, partial exits, complete exit, new independent re-entry; do NOT predict follower ROI or public observer clock",
+  "original_cohort": {
+    "wallets": 23,
+    "exact_CAs": 19,
+    "cells": 437
+  },
+  "sources": {
+    "ddac": "bsc-meme-address-model-v1-p4c-dragon-ddac-closed-native-loss-2026-10-15.json",
+    "ddac_blob": "4e76eea4d7ab001360af82f15de5eefc8509c501",
+    "e239": "bsc-meme-address-model-v1-p4c-239e-dragon-two-owner-native-settlements-2026-10-15.json",
+    "e239_blob": "46e90123b98d5324e05388b17b8a3bbb77cb5361",
+    "e8": "bsc-meme-address-model-v1-p4c-8e6b-hajimi-dragon-two-verified-native-positive-2026-10-15.json",
+    "e8_blob": "dc144d9d259ef1392478d1e25d48f2f649744f20",
+    "matrix": "bsc-meme-address-model-v1-p4c-23x19-crosswallet-native-verified-matrix-2026-10-15.json",
+    "matrix_blob": "39c94ce57937c00528523607c0b3e7e0c20b3693",
+    "d503": "bsc-meme-address-model-v1-p4b-dragon-postowner-original-seven-txs-2026-10-16.json",
+    "d503_blob": "b06b2ef565ebd74bc7f83ad4a2ea731eeb5cb2b9"
+  },
+  "preselected_round_keys": [
+    "DDAC_DRAGON_R1",
+    "239E_DRAGON_R1",
+    "239E_DRAGON_R2",
+    "8E6B_HAJIMI_R1",
+    "8E6B_DRAGON_R2"
+  ],
+  "checkpoints_by_signer": [
+    {
+      "case": "DDAC_DRAGON_R1",
+      "blocks": [
+        83635775,
+        83635776,
+        83635800,
+        83636000
+      ]
+    },
+    {
+      "case": "239E_DRAGON_R1",
+      "blocks": [
+        85954136,
+        85954137,
+        85954824,
+        85957578,
+        85959960,
+        85959961,
+        85961371
+      ]
+    },
+    {
+      "case": "239E_DRAGON_R2",
+      "blocks": [
+        85957578,
+        85959960,
+        85959961,
+        85961371
+      ]
+    },
+    {
+      "case": "8E6B_HAJIMI_R1",
+      "blocks": [
+        74741351,
+        74741352,
+        74741573,
+        74741587
+      ]
+    },
+    {
+      "case": "8E6B_DRAGON_R2",
+      "blocks": [
+        93584280,
+        93584281,
+        94208823
+      ]
+    }
+  ],
+  "evidence_assumptions": [
+    "Use only original signed per-event token amounts and successful receipts from already pinned files; do not rewrite old origin.",
+    "At block-end selected events, compute reconstructed token inventory from sampled own signed tx ONLY; no assertion of all-chain exact EOA onchain balance at arbitrary other blocks.",
+    "Full exits invalidate the old specific buy event; subsequent independent signed buy is a new episode, not revival of the old signal.",
+    "One earlier buy in an OPEN episode followed by second buy is ADD_TO_POSITION not a new independent market win.",
+    "8E6B HAJIMI sells only half first: distinguish PARTIAL_EXIT from CLOSED_EXIT.",
+    "Actual historical signer native net signs: DDAC negative, 239E negative then positive, 8E6B HAJIMI and Dragon positive; no wallet-wide win rate, no new early-alpha claim.",
+    "D503 actual signed Dragon first buy at 83636000 is 200 blocks AFTER DDAC selected last sell at 83635800, so DDAC initial buy not considered still-held.",
+    "Block number is not public observer signal arrival timestamp. Never use block distance to claim 1/5/15 minute trade or profitability."
+  ],
+  "planned_code_artifacts": [
+    "bsc_meme_address_model_v1_p4b_original_owner_signal_lifecycle.py",
+    "test_bsc_meme_address_model_v1_p4b_original_owner_signal_lifecycle.py",
+    "bsc-meme-address-model-v1-p4b-original-owner-five-round-lifecycle-2026-10-18.md"
+  ],
+  "max_new_chain_rpc_calls": 0,
+  "gates": {
+    "public_causal_observer_U": "UNRESOLVED",
+    "live_wallet_position_authority": "NO_CHAIN_CURRENT_RECONCILIATION",
+    "fixed_delay_1_5_15_minute_follower_profit": "UNRESOLVED",
+    "P4_B": "PARTIAL",
+    "P5": "BLOCKED",
+    "production": "NO_GO",
+    "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  }
+}
