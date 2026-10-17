@@ -72,7 +72,7 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
         for r in rows:
             q = dict(r)
             venue, symbol, first = q["venue"], q["symbol"], q["first_seen_ms"]
-            watch = _get(db, "SELECT observed_ms FROM events WHERE event_id=? AND observed_ms<=?",
+            watch = _get(db, "SELECT observed_ms,payload FROM events WHERE event_id=? AND observed_ms<=?",
                          (event_id(venue, symbol, "WATCH_EARLY", first), now_ms))
             setup_key = event_id(venue, symbol, "SETUP_ACTIVE", q["id"])
             setup = _get(db, "SELECT observed_ms FROM events WHERE event_id=? AND observed_ms<=?",
@@ -83,6 +83,12 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
                             (event_id(venue, symbol, "D2_LIQUIDITY", setup_key), now_ms)) if d2 else None
             quote = _get(db, """SELECT observed_ms,price,quote24 FROM snapshots
                 WHERE venue=? AND symbol=? AND observed_ms<=?""", (venue, symbol, now_ms))
+            try:
+                why = json.loads(watch["payload"]) if watch is not None else {}
+                if not isinstance(why, dict):
+                    why = {}
+            except (ValueError, TypeError):
+                why = {}
             expired = now_ms > q["deadline_ms"] or now_ms - first > QUEUE_VALID_MS
             source_ok = sources.get(venue, {}).get("state") == "RECENT_STORED_POLL"
             if q["status"] == "INVALIDATED":
@@ -112,6 +118,12 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
                 "venue": venue, "symbol": symbol,
                 "first_watch_utc": utc_time(first),
                 "watch_evidence_present": watch is not None,
+                "watch_reason": q["reason"], "watch_priority_research_only": q["priority"],
+                "watch_observed_move_pct": why.get("return_snapshot_pct"),
+                "watch_lookback_window_ms": why.get("research_window_ms"),
+                "watch_quote24_at_trigger": why.get("quote24_usdt"),
+                "watch_classification": why.get("classification"),
+                "d1_last_error": q["last_error"],
                 "latest_quote_utc": utc_time(quote["observed_ms"]) if quote else None,
                 "last_stored_price": quote["price"] if quote else None,
                 "last_stored_quote24": quote["quote24"] if quote else None,
@@ -122,6 +134,11 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
                 "d2_research_liquidity_gate": depth.get("research_liquidity_gate")
                     if isinstance(depth, dict) else None,
                 "d2_fee_source": depth.get("fee_source") if isinstance(depth, dict) else None,
+                "d2_spread_bps": depth.get("spread_bps") if isinstance(depth, dict) else None,
+                "d2_instant_roundtrip_cost_bps":
+                    depth.get("instant_roundtrip_cost_bps") if isinstance(depth, dict) else None,
+                "d2_depth_fully_filled":
+                    depth.get("depth_fully_filled") if isinstance(depth, dict) else None,
                 "d2_assumed_budget_usdt": depth.get("budget_usdt")
                     if isinstance(depth, dict) else None,
                 "g4_real_execution": "UNKNOWN",
@@ -158,7 +175,10 @@ def main():
         for r in result["opportunities"]:
             print(r["first_watch_utc"] + " " + r["venue"] + "/" + r["symbol"]
                   + " " + r["signal"] + " | D2=" + r["d2_status"]
+                  + " | WHY=" + str(r["watch_reason"])
+                  + " | MOVE=" + str(r["watch_observed_move_pct"])
                   + " | PRICE_STORED=" + str(r["last_stored_price"])
+                  + " | COST_BPS_STORED=" + str(r["d2_instant_roundtrip_cost_bps"])
                   + " | NO_BUY")
         print("Shown " + str(result["displayed"]) + "; research records, not current orders.")
 
