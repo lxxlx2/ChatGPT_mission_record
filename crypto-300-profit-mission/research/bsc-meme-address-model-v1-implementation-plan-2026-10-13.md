@@ -756,3 +756,12 @@ New strict [offline WBNB route-source gate](./bsc_meme_address_model_v1_p4c_wbnb
 **实施**：[三原钱包市场成熟度/收益信号分离研究报告](./bsc-meme-address-model-v1-p4b-2026-three-owners-market-maturity-and-pnl-2026-10-18.md)；`bsc_meme_address_model_v1_p4b_crossmarket_owner_maturity.py` 精确 Git blob 来源核查、三 owner 实际 signed 经济 BNB 正负、首次**指定来源范围**流动性区块差、DDAC 已退出而 D503 后入场的源闭合，不能向 P5 或 U 解锁。11 项专项负对照 `test_bsc_meme_address_model_v1_p4b_crossmarket_owner_maturity.py` 不能假称 Provider 6 截断时间为可解析、市场首次 U、原钱包成功复制收益。首次测试故意篡改 unknown exact CA 得到 Python KeyError 而非门禁拒绝，修复后用明确 `OWNER_SIGNED_SOURCES_VS_FROZEN_COHORT` 错误拒绝，来源不变。
 
 **下一业务主线不再反复 QA 门禁**：跨已冻结 19 exact CA 挑出既有证据支持的其他早期 owner 买入，在外部第一次可观察、可实际下单的区块及随后固定 1/5/15min **入场时点**做真实执行能力／实际成交与持有/清仓状态判定，并保留错误信号/真实亏损/没有退出的负对照；不要继续把成熟市场原钱包 ROI 当作早期交易盈利能力。确认全市场首次可交易价格、链上资金容量、税、Gas、真实退出、接收延迟之前始终 `P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。只读 Mac/Ubuntu CI 完成时归档准确 SHA；此批不循环要求其他 AI 完整复审。
+
+
+## 2026-10-18 P4-B 原钱包历史信号持仓生命周期：加仓、减半、完整退出、重入
+
+研究重点继续远离事后收益排行榜。**新增原 23 EOA 中三个钱包在龙虾与 HAJIMI 两个 exact CA 上五轮真实本人签名买卖回合**的区块事件历史重放，不新增样本、不做新的 RPC 查询、不动旧归档。Git 在代码开发前先记录 [已选 5 回合、精确源 blob 与 as-of 检查点](./bsc-meme-address-model-v1-p4b-5owner-rounds-signal-lifecycle-precommit-2026-10-18.json)，固定 DDAC 龙虾一轮负向，239E 龙虾第一次两笔买入后亏损退出、随后第二次独立买入盈利退出，8E6B HAJIMI 两次分批卖出盈利退出，8E6B 龙虾盈利退出。全部为已有 source-graded 的**精选原主人交易与库存闭合**，不等于 5 个可跟单机会或全 437 格的无偏胜率。
+
+**开发产出**：[正式研究读物](./bsc-meme-address-model-v1-p4b-original-owner-five-round-lifecycle-2026-10-18.md)；[原来源 SHA 锁定的程序](./bsc_meme_address_model_v1_p4b_original_owner_signal_lifecycle.py) 和 [14 项对抗测试](./test_bsc_meme_address_model_v1_p4b_original_owner_signal_lifecycle.py)，已接入同一 Ubuntu 与 macOS Bash 3.2 全量测试路径。状态只依照已选择的真实 signer 成交 token raw 变化在区块事件末重放，区分首次买入、同轮加仓、部分减仓、完整清仓、下一独立入场，**不将无签名事件证据记成“钱包余额真的为零”**。DDAC 83635800 完全退出、D503 83636000 后入场时旧 DDAC 买入信号明确过期；239E 85957578 清仓再在 85959961 买入是新回合、不得恢复原买入信号；8E6B HAJIMI 74741573 先卖出 64629048195327088600523 raw，此后尚持 64629048195327088600524 raw，直到 74741587 最后出清。这些都是前期有实际签名及交易证据的**源内事件生命周期**，不是实时币持仓或第三方信号收达。
+
+**新的业务优先级**：对下一批冻结钱包与代币以**完整外部可见转入、转出、授权及 TokenBought/Sold 区块**核查 LIVE 持仓的同时，务必在用户可见页面以过期/部分退出/加仓/重入显示历史信号的正确状态；观察时间（接收区块或交易的实到时间）与公共首 U 均不能由离线 signed block 查询恢复；真实 1/5/15min 入场与出口/费用仍未完成。不要拿本次 3 正 2 负或 239E 两轮一负一正算无偏胜率；任何生产购买策略继续拒绝。**本轮不因常规测试变化不断发起全量外部审核**。所有 `P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE` 继续有效。
