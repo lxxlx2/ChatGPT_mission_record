@@ -1,0 +1,181 @@
+{
+  "schema": "BSC_P4B_2026_239E_TWO_FIXED_REAL_ROUND_PANCAKE_V2_BIDIRECTIONAL_MATH_READBACK_V1",
+  "source_prefreeze": {
+    "file": "bsc-meme-address-model-v1-p4b-239e-dragon-two-exit-v2-quote-precommit-2026-10-18.json",
+    "git_blob_sha": "097cc5d638fea3c79ee83d1600115cd0316a3020",
+    "precommitted_before_any_rpc": true
+  },
+  "exact_calls_precommitted": 8,
+  "exact_calls_executed": 8,
+  "successes": 8,
+  "retries": 0,
+  "network": "bnb-mainnet",
+  "provider": "Alchemy free existing read-only app, connector returned tool-level ABI response",
+  "evidence_grade": "ALCHEMY_TOOL_RETURN_HEX_AND_TOOL_CALL_ARGS_NOT_PROVIDER_TRANSPORT_FULL",
+  "cases": [
+    {
+      "label": "239E_R1_OWNER_REAL_NATIVE_LOSS",
+      "owner_actual_signed_native_net_wei": "-15332805033002259",
+      "hypothetical_fixed_WBNB_in_wei": "10000000000000000",
+      "buy_maths_quote_dragon_out_raw": "278350347316975449623",
+      "sell_maths_quote_WBNB_out_wei": "9157881766988299",
+      "two_independent_static_quote_gross_delta_wei": "-842118233011701",
+      "strictly_not_realizable_profit": true
+    },
+    {
+      "label": "239E_R2_OWNER_REAL_NATIVE_PROFIT",
+      "owner_actual_signed_native_net_wei": "22647938898252522",
+      "hypothetical_fixed_WBNB_in_wei": "10000000000000000",
+      "buy_maths_quote_dragon_out_raw": "310011231296926372159",
+      "sell_maths_quote_WBNB_out_wei": "10933894786881619",
+      "two_independent_static_quote_gross_delta_wei": "933894786881619",
+      "strictly_not_realizable_profit": true
+    }
+  ],
+  "calls": [
+    {
+      "case": "239E_R1_OWNER_REAL_NATIVE_LOSS",
+      "phase": "BUY_PAIR_RESERVES",
+      "tool_invoked_with": {
+        "network": "bnb-mainnet",
+        "method": "eth_call",
+        "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "calldata": "0x0902f1ac",
+        "blockTag": "0x51f8e5a",
+        "from": null,
+        "value": null
+      },
+      "tool_return_hex": "0x00000000000000000000000000000000000000000000002051f540f22f94740c0000000000000000000000000000000000000000000dc30e4398c1e0334c2b260000000000000000000000000000000000000000000000000000000069b14658",
+      "tool_return_parseable_hex": true,
+      "provider_full_wire_record": false
+    },
+    {
+      "case": "239E_R1_OWNER_REAL_NATIVE_LOSS",
+      "phase": "BUY_ROUTER_WBNB_TO_DRAGON",
+      "tool_invoked_with": {
+        "network": "bnb-mainnet",
+        "method": "eth_call",
+        "to": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+        "calldata": "0xd06ca61f000000000000000000000000000000000000000000000000002386f26fc1000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000002000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c000000000000000000000000eccbb861c0dda7efd964010085488b69317e4444",
+        "blockTag": "0x51f8e5a",
+        "from": null,
+        "value": null
+      },
+      "tool_return_hex": "0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000002386f26fc1000000000000000000000000000000000000000000000000000f16e3161f16ed3617",
+      "tool_return_parseable_hex": true,
+      "provider_full_wire_record": false
+    },
+    {
+      "case": "239E_R1_OWNER_REAL_NATIVE_LOSS",
+      "phase": "PRE_OWNER_SELL_PAIR_RESERVES",
+      "tool_invoked_with": {
+        "network": "bnb-mainnet",
+        "method": "eth_call",
+        "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "calldata": "0x0902f1ac",
+        "blockTag": "0x51f9bc9",
+        "from": null,
+        "value": null
+      },
+      "tool_return_hex": "0x00000000000000000000000000000000000000000000001f65627fb49542f1840000000000000000000000000000000000000000000e863dd6df92e01ba1b5820000000000000000000000000000000000000000000000000000000069b14c66",
+      "tool_return_parseable_hex": true,
+      "provider_full_wire_record": false
+    },
+    {
+      "case": "239E_R1_OWNER_REAL_NATIVE_LOSS",
+      "phase": "PRE_OWNER_SELL_ROUTER_DRAGON_TO_WBNB",
+      "tool_invoked_with": {
+        "network": "bnb-mainnet",
+        "method": "eth_call",
+        "to": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+        "calldata": "0xd06ca61f00000000000000000000000000000000000000000000000f16e3161f16ed361700000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000002000000000000000000000000eccbb861c0dda7efd964010085488b69317e4444000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "blockTag": "0x51f9bc9",
+        "from": null,
+        "value": null
+      },
+      "tool_return_hex": "0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000f16e3161f16ed36170000000000000000000000000000000000000000000000000020890b819dca0b",
+      "tool_return_parseable_hex": true,
+      "provider_full_wire_record": false
+    },
+    {
+      "case": "239E_R2_OWNER_REAL_NATIVE_PROFIT",
+      "phase": "BUY_PAIR_RESERVES",
+      "tool_invoked_with": {
+        "network": "bnb-mainnet",
+        "method": "eth_call",
+        "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "calldata": "0x0902f1ac",
+        "blockTag": "0x51fa51a",
+        "from": null,
+        "value": null
+      },
+      "tool_return_hex": "0x00000000000000000000000000000000000000000000001f1a43bd0ccb98cdd70000000000000000000000000000000000000000000ebff8cc1b4ae5a44274bb0000000000000000000000000000000000000000000000000000000069b15097",
+      "tool_return_parseable_hex": true,
+      "provider_full_wire_record": false
+    },
+    {
+      "case": "239E_R2_OWNER_REAL_NATIVE_PROFIT",
+      "phase": "BUY_ROUTER_WBNB_TO_DRAGON",
+      "tool_invoked_with": {
+        "network": "bnb-mainnet",
+        "method": "eth_call",
+        "to": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+        "calldata": "0xd06ca61f000000000000000000000000000000000000000000000000002386f26fc1000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000002000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c000000000000000000000000eccbb861c0dda7efd964010085488b69317e4444",
+        "blockTag": "0x51fa51a",
+        "from": null,
+        "value": null
+      },
+      "tool_return_hex": "0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000002386f26fc10000000000000000000000000000000000000000000000000010ce45245acac1d13f",
+      "tool_return_parseable_hex": true,
+      "provider_full_wire_record": false
+    },
+    {
+      "case": "239E_R2_OWNER_REAL_NATIVE_PROFIT",
+      "phase": "PRE_OWNER_SELL_PAIR_RESERVES",
+      "tool_invoked_with": {
+        "network": "bnb-mainnet",
+        "method": "eth_call",
+        "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "calldata": "0x0902f1ac",
+        "blockTag": "0x51faa9a",
+        "from": null,
+        "value": null
+      },
+      "tool_return_hex": "0x000000000000000000000000000000000000000000000020afecbbc50e78dac50000000000000000000000000000000000000000000e1b262133f39ebea95d250000000000000000000000000000000000000000000000000000000069b15310",
+      "tool_return_parseable_hex": true,
+      "provider_full_wire_record": false
+    },
+    {
+      "case": "239E_R2_OWNER_REAL_NATIVE_PROFIT",
+      "phase": "PRE_OWNER_SELL_ROUTER_DRAGON_TO_WBNB",
+      "tool_invoked_with": {
+        "network": "bnb-mainnet",
+        "method": "eth_call",
+        "to": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+        "calldata": "0xd06ca61f000000000000000000000000000000000000000000000010ce45245acac1d13f00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000002000000000000000000000000eccbb861c0dda7efd964010085488b69317e4444000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "blockTag": "0x51faa9a",
+        "from": null,
+        "value": null
+      },
+      "tool_return_hex": "0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000010ce45245acac1d13f0000000000000000000000000000000000000000000000000026d851c2c89853",
+      "tool_return_parseable_hex": true,
+      "provider_full_wire_record": false
+    }
+  ],
+  "assertions": {
+    "buy_and_sell_quote_sides": "MATH_ONLY_NOT_STATEFUL_EXECUTION",
+    "real_owner_actual_2_round_economics": "SOURCE_VERIFIED_BUT_DIFFERENT_SIZE_AND_ROUTE",
+    "not_actual_provider_wire_transcript": true,
+    "no_token_transfer_execution": true,
+    "no_owner_observer_delivery_timestamp": true,
+    "no_fixed_delay_1_5_15min": true,
+    "no_follow_profit_claim": true
+  },
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  }
+}
