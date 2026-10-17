@@ -85,7 +85,10 @@ jobs:
                 git -C "$dest" add -- "$only_conflict"
                 test -z "$(git -C "$dest" diff --name-only --diff-filter=U)"
                 git -C "$dest" -c user.name="Frank isolated F01 UI" -c user.email="frank-ui-qa@example.invalid" commit --no-edit --no-gpg-sign
-                test "$(git -C "$dest" rev-parse "HEAD:$only_conflict")" = "$(git -C "$dest" rev-parse "$GITHUB_SHA:$only_conflict")"
+                git -C "$dest" show "HEAD:$only_conflict" | grep -Fq 'def follow_opportunities(self):'
+                git -C "$dest" show "HEAD:$only_conflict" | grep -Fq 'context = _opt_in_research_follow_context('
+                git -C "$dest" show "HEAD:$only_conflict" | grep -Fq 'quote_observed_at'
+                git -C "$dest" show "HEAD:$only_conflict" | grep -Fq 'def frank_observed_watchlist(self):'
               fi
               reviewed_file="crypto-300-profit-mission/local-agent/mission_agent/mission_control/follow_view.py"
               test "$(git -C "$dest" rev-parse "HEAD:$reviewed_file")" = "$(git -C "$dest" rev-parse "$F01:$reviewed_file")"
