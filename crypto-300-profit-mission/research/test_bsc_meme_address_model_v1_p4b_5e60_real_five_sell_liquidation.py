@@ -30,9 +30,9 @@ class TrueOriginalExternalSignedDragonSells(unittest.TestCase):
                          "UNRESOLVED_PAGINATED_PRIOR_10_OR_MORE_RECEIPTS")
         self.assertEqual(z["PUBLIC_EXECUTABLE_U"],"UNRESOLVED")
         self.assertEqual(z["P5"],"BLOCKED")
-    def test_cannot_fake_first_full_exit_by_incorrect_bnb_delta(self):
-        self.reject(lambda d:d["sells"]["checkpoints"][1].update(
-               balance_raw="1"),"INDEPENDENT_HISTORIC_BALANCE_32BYTE")
+    def test_cannot_fake_full_exit_by_changing_actual_dragon_post_balance(self):
+        self.reject(lambda d:d["sells"]["checkpoints"].update(
+               after_fifth_sell_Dragon_raw="1"),"FIRST_FIVE_FULL_REAL_LIQUIDATION_AND_USDT_WALLET_CREDIT")
     def test_cannot_replace_original_signer_of_sell(self):
         self.reject(lambda d:d["sells"]["rows"][0].update(
                signer="0x"+"f"*40),"ALL_EIGHT_SAME_REAL_SIGNED_ROUTER_SELL_PATH")
