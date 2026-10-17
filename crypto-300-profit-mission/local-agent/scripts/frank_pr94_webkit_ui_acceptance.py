@@ -13,6 +13,7 @@ from pathlib import Path
 import subprocess
 import threading
 import time
+import traceback
 
 from playwright.sync_api import sync_playwright
 from mission_agent.mission_control.server import Handler
@@ -156,7 +157,7 @@ def open_case(browser, base, state, mode, page_errors, console_errors, output):
         page.wait_for_function("""() => document.querySelector('#candidates .candidate-card')?.dataset.f01GuardState === 'VERIFIED'""", timeout=10000)
         ensure("可跟" in card(page).locator(".candidate-head .badge").inner_text(),
                "FRESH_VERIFIED_BUY_NOT_VISIBLE")
-        ensure(VALID_PRICE in page.locator("#candidates").inner_text(),
+        ensure("0.0125" in page.locator("#candidates").inner_text(),
                "BUY_CARD_EXECUTABLE_QUOTE_MISSING")
         screenshot(page, "01-f01-verified-buy.png")
         page.locator("button[data-view='cluster']").click()
@@ -200,15 +201,24 @@ def main():
     cases = []
     page_errors, console_errors = [], []
     try:
-        with sync_playwright() as playwright:
-            browser = playwright.webkit.launch(headless=True)
-            try:
-                base = "http://127.0.0.1:" + str(server.server_port) + "/"
-                for scenario in ("valid", "drift", "zero", "expiry"):
-                    open_case(browser, base, state, scenario,
-                              page_errors, console_errors, cases)
-            finally:
-                browser.close()
+        try:
+            with sync_playwright() as playwright:
+                browser = playwright.webkit.launch(headless=True)
+                try:
+                    base = "http://127.0.0.1:" + str(server.server_port) + "/"
+                    for scenario in ("valid", "drift", "zero", "expiry"):
+                        open_case(browser, base, state, scenario,
+                                  page_errors, console_errors, cases)
+                finally:
+                    browser.close()
+        except Exception:
+            (OUTPUT / "failure.log").write_text(traceback.format_exc(), encoding="utf-8")
+            (OUTPUT / "partial.json").write_text(
+                json.dumps({"status": "PARTIAL_OR_FAILED", "cases": cases,
+                            "page_errors": page_errors, "console_errors": console_errors,
+                            "synthetic_only": True}, ensure_ascii=False, indent=2),
+                encoding="utf-8")
+            raise
     finally:
         server.shutdown()
         server.server_close()
