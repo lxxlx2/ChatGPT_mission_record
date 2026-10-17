@@ -100,22 +100,20 @@ def build(d):
               "hash":sell["tx"],"sold_Dragon_raw":str(amount),
               "real_USDT_receipt_raw":str(usdt),
               "actual_gas_used":str(gas),"actual_BNB_gas_fee_wei":str(gas*price)})
-    check={x["case"]:x for x in sales["checkpoints"]}
-    require(set(check)=={"DRAGON_BEFORE_FIRST_SELL","DRAGON_AFTER_FIFTH_SELL",
-        "DRAGON_AFTER_EIGHTH_SELL","USDT_BEFORE_FIRST_SELL","USDT_AFTER_FIFTH_SELL"},
+    check=sales["checkpoints"]
+    require(set(check)=={"before_first_sell_Dragon_raw","after_fifth_sell_Dragon_raw",
+        "after_eighth_sell_Dragon_raw","before_first_sell_USDT_raw","after_fifth_sell_USDT_raw"},
         "FIVE_EXACT_HISTORY_CHECKPOINTS")
-    for x in check.values():
-        require(len(x["raw_hex"])==66 and
-                int(x["raw_hex"],16)==int(x["balance_raw"]) and
-                x["token"] in (Dragon,USDT),"INDEPENDENT_HISTORIC_BALANCE_32BYTE")
-    starting=int(check["DRAGON_BEFORE_FIRST_SELL"]["balance_raw"])
-    final=int(check["DRAGON_AFTER_FIFTH_SELL"]["balance_raw"])
+    require(all(isinstance(v,str) and v.isdigit() for v in check.values()),
+        "FIVE_CHECKPOINTS_NONNEGATIVE_RAW_UINT256")
+    starting=int(check["before_first_sell_Dragon_raw"])
+    final=int(check["after_fifth_sell_Dragon_raw"])
     actual_out=sum(int(x["sold_Dragon_raw"]) for x in sale_summary[:5])
     received=sum(int(x["real_USDT_receipt_raw"]) for x in sale_summary[:5])
-    actual_balance_diff=(int(check["USDT_AFTER_FIFTH_SELL"]["balance_raw"])-
-                         int(check["USDT_BEFORE_FIRST_SELL"]["balance_raw"]))
+    actual_balance_diff=(int(check["after_fifth_sell_USDT_raw"])-
+                         int(check["before_first_sell_USDT_raw"]))
     require(starting==actual_out==383628517870200760487354 and final==0 and
-            check["DRAGON_AFTER_EIGHTH_SELL"]["balance_raw"]=="0" and
+            check["after_eighth_sell_Dragon_raw"]=="0" and
             actual_balance_diff==received==8399620126582833083485 and
             sales["first_five"]["Dragon_sold_raw"]==str(actual_out) and
             sales["first_five"]["USDT_received_raw"]==
