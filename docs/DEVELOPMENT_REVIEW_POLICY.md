@@ -35,9 +35,17 @@ For *every module checkpoint*, append in its owning PR and canonical module revi
 
 A dependent feature must not silently replace upstream fields, contracts, DB identities or UI content. Any such change invokes **impact review** and combined regression, even if the new module's own tests pass. For distinct modules, schedule review at each completion checkpoint; do not let a backlog accumulate until all modules are done. After all modules pass, perform one **additional complete system Review**.
 
-## Specific current Frank / CA authority
+## Public repository privacy and disclosure gate
 
-- Independently reported **C02 PR #49 APPROVE** on `8898134a8a302e1187138f7fb3da87a554567e6d`.
+When the target GitHub repository or PR branch is publicly readable, **treat private connected records as non-public by default**. In particular, Gmail Sent bodies, medical or account records, wallet-to-person mappings, detailed personal positions/eligibility and private transaction-context notes require a publication-scope check **before the first push**. Verify repository visibility, PR visibility, generated artifact payload, filenames and commit history; do not assume Draft means private.
+
+Public archival may preserve source type, observed time, immutable provider message identifier where appropriate, status, a minimal non-sensitive evidence summary and a redaction manifest. The exact sensitive original remains in its authorized private source (e.g. Gmail) or an explicitly authorized private evidence store. Mark `PUBLIC_BODY_REDACTED / ORIGINAL_VERIFIED_PRIVATELY`; do not assert `PUBLIC_BODY_EXACT_MATCH` on sanitized text. Avoid including personal email addresses, wallet ownership assertions, access secrets, connected account details or personal reward amounts unless their public disclosure has separately been authorized.
+
+If sensitive content has already been committed to a public branch, simply editing HEAD, closing a PR or deleting one file **does not delete it from Git history**. Record `PUBLIC_DISCLOSURE_INCIDENT / CONTAINMENT_PENDING`, stop replication, assess downstream exposure, and obtain explicit approval before history rewrite, force-push, changing repository visibility, deleting branches, or other disruptive containment. Independently review the privacy remedy and verify remote results. A correct exact-body backfill cannot override the user's data-disclosure boundary.
+
+## Frank / CA historical review examples (snapshot 2026-10-14; not live authority)
+
+These exact-version examples were known at policy authorship and are preserved only as dated historical review context. For the latest stage status, use the owning module's current main/PR head and review ledger; a dated historical approval never travels to later code.\n\n- Independently reported **C02 PR #49 APPROVE** on `8898134a8a302e1187138f7fb3da87a554567e6d`.
 - Independently reported **A04 storage/normalizer review PR #54 APPROVE** on `6e1f8cec197bab30703fb4524c9710191dc25522`. This only closes the reviewed code/version migration defect; other A04 historical/business coverage remains partial.
 - A02/A03/A05 (upstream research), F01 (screen), F02 (real position), C01/C08 and remaining CA stages **do not inherit blanket module APPROVE** merely because the disposable combined CI passed. Check each exact module/criterion's separate review ledger.
 - Full true current/32-Mint ATA and transaction history, failed parsed transaction, owner-missing, ATA close, economic PnL, real browser/Mac release remain `BUSINESS_ACCEPTANCE_PENDING`. No merge to main or production rollout without the above complete gates.
