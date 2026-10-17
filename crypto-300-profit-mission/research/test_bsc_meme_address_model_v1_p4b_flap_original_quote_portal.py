@@ -101,6 +101,16 @@ class FlapPortalActualQuoteTests(unittest.TestCase):
             query_chronology_grade="RAW_FROM_FILTER_PRECOMMIT_PROVEN"),
             "SOURCE_GRADE_OR_CHRONOLOGY_UNSUPPORTED")
 
+    def test_mutation_of_immutable_v1_actual_transfer_fails(self):
+        self.rejected(lambda d:d["raw_v1"]["rows"][0]["to_portal_transfers"][0].update(
+            raw_value_hex="0x"+("0"*63)+"1"),
+            "IMMUTABLE_V1_SELECTED_LOG_FIELD_DRIFT")
+
+    def test_v2_supplement_cannot_claim_new_rpc_read(self):
+        self.rejected(lambda d:d["result"].update(
+            supplement_provenance="NEW_RPC_REFRESHED"),
+            "V1_V2_PROVENANCE_GRADE")
+
     def test_mutating_pinned_original_result_byte_fails(self):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td)
