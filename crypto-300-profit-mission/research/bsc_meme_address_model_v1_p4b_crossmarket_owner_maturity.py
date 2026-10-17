@@ -89,6 +89,7 @@ def build(d):
   s=source_rounds[{"DDAC_DRAGON_NEGATIVE":"DDAC_DRAGON_NEGATIVE",
         "8E6B_HAJIMI_POSITIVE":"8E6B_HAJIMI_R1",
         "8E6B_DRAGON_POSITIVE":"8E6B_DRAGON_R2"}[code]]
+  assert_true(a["CA"] in markets, "OWNER_SIGNED_SOURCES_VS_FROZEN_COHORT")
   market=markets[a["CA"]]
   begin=int(a["entry_block"])
   dx=begin-int(market["first_scoped_dex_liquidity_block"])
