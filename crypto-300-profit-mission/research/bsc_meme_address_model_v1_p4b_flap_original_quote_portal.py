@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 SOURCES={
     "result": ("bsc-meme-address-model-v1-p4b-flap-major2-actual-portal-quote-transfers-2026-10-17.json",
-               "db2e47010025fde7adf150c408748806e594a4c2"),
+               "25123c96619dc6b61b4a96a6f6dbd8372128c1a9"),
     "from_freeze": ("bsc-meme-address-model-v1-p4b-flap-original-buyer-quote-outflow-precommit-2026-10-17.json",
                     "dcf3ec9a919e8fccfb77adb880ce59f5a94926ed"),
     "to_freeze": ("bsc-meme-address-model-v1-p4b-flap-original-buy-quote-to-portal-precommit-2026-10-17.json",
@@ -48,6 +48,12 @@ def replay(data):
              "public_first_executable_U":"UNRESOLVED","P5":"BLOCKED",
              "production":"NO_GO","permissions":"NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"},
             "PREMATURE_FUNDING_OR_U")
+    require(result["evidence_grade"] ==
+            "TOOL_PARSED_FILTERED_FIELDS_NOT_FULL_RPC_RAW_LOG_PINNED" and
+            "One intermediary->Portal ERC20" in result["selected_field_match"] and
+            result["query_chronology_grade"].startswith(
+                "THE_TWO_QUOTE_FROM_EOA_EMPTY_JSON_RESPONSES_WERE_NOT_COMMITTED_BEFORE"),
+            "SOURCE_GRADE_OR_CHRONOLOGY_UNSUPPORTED")
     output=[]
     for i,row in enumerate(result["rows"]):
         a,bb,source=first["cases"][i],second["cases"][i],original["rows"][i]
@@ -60,6 +66,14 @@ def replay(data):
                 row["original_signed_eoa"]==a["signer"]==source["original_EOA_signer"] and
                 row["block"]==a["blockN"]==bb["block"]==source["first_sampled_buy_block"],
                 "SOURCE_ORIGINAL_TX_AND_SIGNER")
+        require(row["original_signed_tx_to"] == source["signed_tx_to"] and
+                row["original_signed_tx_native_value_wei"] ==
+                source["signed_tx_native_value_wei"] and
+                int(row["original_signed_tx_native_value_wei"]) ==
+                (0 if i == 0 else 536188664994919080) and
+                (row["original_signed_tx_to_matches_portal_quote_payer"] is
+                 (i == 1)),
+                "ORIGINAL_NATIVE_VALUE_AND_TX_RECIPIENT")
         require(row["from_signer_quote_ERC20_Transfer_filter_status"]=="COMPLETE_PARSED_JSON" and
                 row["from_signer_quote_ERC20_Transfer_count_in_N"]==0 and
                 row["to_portal_quote_ERC20_Transfer_filter_status"]=="COMPLETE_PARSED_JSON" and
@@ -91,6 +105,15 @@ def replay(data):
         require(len(matched)==1 and
                 row["nonmatching_sameblock_count"]==len(row["to_portal_transfers"])-1,
                 "REAL_ORIGINAL_TX_MATCH_ONLY")
+        require((row["original_signed_tx_to"].lower() ==
+                 matched[0]["from"].lower()) is
+                row["original_signed_tx_to_matches_portal_quote_payer"],
+                "NATIVE_TX_TO_INTERMEDIATE_QUOTE_PAYER_IDENTITY")
+        require(("ZERO_NATIVE_TO_PROXY" in row["native_funding_evidence_grade"]
+                 if i == 0 else
+                 "ORIGINAL_SIGNED_EOA_SENT_0_536188664994919080_BNB" in
+                 row["native_funding_evidence_grade"]),
+                "NATIVE_FUNDING_EVIDENCE_SCOPE")
         value=int(matched[0]["raw_value_hex"],16)
         require(value==int(row["source_Original_TokenBought_cost_raw"])==
                 int(row["matching_quote_from_intermediary_to_portal_raw"]) and
@@ -105,6 +128,12 @@ def replay(data):
             "token":row["token"],"quote_CA":row["quote_ca"],
             "original_signed_buy_tx":row["signed_buy_original_tx"],
             "quote_transfer_payer_is_original_EOA":False,
+            "original_signed_tx_to":row["original_signed_tx_to"],
+            "original_signed_tx_native_value_wei":
+                row["original_signed_tx_native_value_wei"],
+            "native_tx_to_is_quote_transfer_payer":
+                row["original_signed_tx_to_matches_portal_quote_payer"],
+            "native_spend_or_refund_net_attributable_to_original_eoa":"UNRESOLVED",
             "confirmed_portal_recipient_quote_from_intermediary":matched[0]["from"],
             "portal_quote_transfer_matches_TokenBought_cost_exactly":True,
             "matched_portal_received_quote_raw":str(value),
