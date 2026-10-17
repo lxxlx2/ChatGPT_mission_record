@@ -28,6 +28,13 @@ Inspected legacy areas: repository main/root and Mission README, Crypto Daily an
 | `crypto-daily/README.md` | Correct obsolete :10 times to HH:20 at 00/03/06/08/09/10/11/12/16/20 per 2026-10-10 runtime override; note 10/11 recovery-only | README conflicted with `crypto-daily/AUTOMATION_RUNTIME.md`; configuration unchanged |
 | `airdrop-tge-monitor/README.md` | Document current HH:00 hourly schedule and legacy :50/:14 supersession | Aligned with `airdrop-tge-monitor/AUTOMATION_RUNTIME.md`; no task mutation |
 
+| `crypto-300-profit-mission/positions/flop-close-call.md` | Replace stale `ACTIVE` as-of header with `HISTORICAL_CONTEST_ENDED / OWNER_RESULT_UNVERIFIED`; retain all historical strategy, signed-trade and research evidence | Official close-1 lock/final were Oct 4; official contest GitHub archived Oct 6; no independent per-owner score/fees/prize proof |
+| `crypto-300-profit-mission/watchlists/flop-network.md` | Replace historical `SETUP / ACTIVE-EARLY-PARTICIPATION` header with `RESEARCH_ONLY / CLOSE-1_ENDED / TOKEN_TGE_UNVERIFIED`; preserve historic Flop protocol roadmap statements as dated project claims | Competition expiry does not settle owner's final rank or prove FLOP protocol terminated, token TGE confirmed or airdrop claimable |
+
+## FLOP close-1 evidence boundary
+
+Official [FLOP Labs contest #38](https://github.com/flop-labs/technocore-close-call-challenge/issues/38) was closed on 2026-10-06 with a first-party organizer reply identifying signed `d-close1-pnl` standing #2557 and [published per-owner final source](https://challenges.technocore.chat/close-1/final/README.txt). That official external result URL could **not** be retrieved in this review, so our fleet owner's official score/rank/profit/prize remain **UNVERIFIED**. A public controller DID appearing in the historical execution plan is insufficient for owner settlement proof; local sensitive signing keys are neither required nor authorized for this documentation fix. If final proofs later become accessible, they require a separate validated result update. This work closes a false ACTIVE documentation status only; no FLOP tokens, rewards or token TGE were verified. Older historical paragraphs are retained as historical design evidence.
+
 ## Research-library naming spot check
 
 Separately inspected existing substantive human-authored files in the 16 `research/projects/<project>/` directories, mapped `research/nfts/` files and representative `research/tokens/` reports. Their examined lower-kebab-case names and first H1s already identify the subject and research purpose, so **no research-library rename or duplicate file copy was necessary**. This is a targeted naming review, not a claim of exhaustive H1 validation over every generated or operational file.
