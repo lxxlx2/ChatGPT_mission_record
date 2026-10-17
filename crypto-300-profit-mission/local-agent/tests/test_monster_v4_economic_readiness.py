@@ -19,6 +19,16 @@ class TestEconomicReadiness(unittest.TestCase):
         s = doc["stage30_original_spot_v4"]
         self.assertEqual((s["watch"], s["price_proxy_evaluable"], s["price_proxy_wins"],
                           s["price_proxy_losses"]), (760, 430, 133, 297))
+        self.assertNotIn("censored_exits", s)
+        self.assertEqual(s["source_censored_excluding_overlap"], 80)
+        self.assertEqual(s["source_censor_status_breakdown"], {
+            "CENSORED_MINUTE_QUOTE_LT_30_USDT": 18,
+            "CENSORED_NO_COMPLETE_EXIT": 1,
+            "CENSORED_NO_ENTRY_TRADES": 1,
+            "CENSORED_ZERO_VOLUME_EXIT": 21,
+            "CENSORED_ZERO_VOLUME_NEAR_EXIT": 39,
+        })
+        self.assertEqual(430 + 250 + sum(s["source_censor_status_breakdown"].values()), 760)
         self.assertEqual(s["historical_funded_300u_10slots_30u_fixed_lot"]["net_usdt_price_proxy"], -79.489406)
         d = doc["stage152_distinct_original305_d1_research"]
         self.assertEqual((d["original_d1_count"], d["pullback_reclaim_price_only_confirmed"],
@@ -53,6 +63,36 @@ class TestEconomicReadiness(unittest.TestCase):
         copyb["full305"]["states"]["NO_PULLBACK_WITHIN_120M"] += 1
         with self.assertRaisesRegex(ValueError, "D1_COHORT_DRIFT"):
             gate.analyze(a, copyb)
+
+    def test_source_censor_classification_is_not_exit_only(self):
+        a = gate.source(gate.EVIDENCE, gate.STAGE30)
+        b = gate.source(gate.EVIDENCE, gate.STAGE152)
+        result = gate.analyze(a, b)["stage30_original_spot_v4"]
+        cases = result["source_censor_status_breakdown"]
+        self.assertEqual(cases["CENSORED_NO_ENTRY_TRADES"], 1)
+        self.assertEqual(cases["CENSORED_MINUTE_QUOTE_LT_30_USDT"], 18)
+        self.assertEqual(cases["CENSORED_ZERO_VOLUME_EXIT"], 21)
+        self.assertNotIn("censored_exits", result)
+
+        # A changed source classification must be noticed, not silently merged
+        # into an alleged exit-only bucket.
+        bad = copy.deepcopy(a)
+        counts = bad["all_24h_original_WATCH_20bps"]["source_proxy_status_counts"]
+        counts["CENSORED_NO_ENTRY_TRADES"] = 0
+        counts["CENSORED_ZERO_VOLUME_EXIT"] += 1
+        with self.assertRaisesRegex(ValueError, "STAGE30_PROXY_STATUS_BREAKDOWN_DRIFT"):
+            # A correct total is insufficient to prove original classification.
+            # In-memory mutation is rejected by explicit stage30 category counts.
+            gate.analyze(bad, b)
+
+    def test_unknown_stage30_source_class_refused(self):
+        a = gate.source(gate.EVIDENCE, gate.STAGE30)
+        b = gate.source(gate.EVIDENCE, gate.STAGE152)
+        bad = copy.deepcopy(a)
+        status = bad["all_24h_original_WATCH_20bps"]["source_proxy_status_counts"]
+        status["CENSORED_UNCLASSIFIED"] = status.pop("CENSORED_NO_ENTRY_TRADES")
+        with self.assertRaisesRegex(ValueError, "STAGE30_UNKNOWN_PROXY_STATUS_CLASS"):
+            gate.analyze(bad, b)
 
     def test_sign_reversal_is_not_silently_promoted(self):
         a = gate.source(gate.EVIDENCE, gate.STAGE30)
