@@ -162,14 +162,14 @@ def selftest():
     base=1792274080000
     req={"exchangeInfo":{"serverTime":base,"symbols":[
         {"symbol":f"SYM{i}USDT","status":"TRADING",
-         "quoteAsset":"USDT","isSpotTradingAllowed":True} for i in range(300)]},
+         "quoteAsset":"USDT","isSpotTradingAllowed":True} for i in range(1100)]},
          "clock_before":{"serverTime":base-3000},
          "clock_after":{"serverTime":base+6000},
          "bookTicker":[{"symbol":f"SYM{i}USDT","bidPrice":"1",
                         "askPrice":"1.01","bidQty":"3","askQty":"3"}
-                       for i in range(300)],
+                       for i in range(1100)],
          "ticker24":[{"symbol":f"SYM{i}USDT","quoteVolume":"100"}
-                     for i in range(300)],
+                     for i in range(1100)],
          "depth_BTCUSDT_probe":{"lastUpdateId":1,"bids":[["1","2"]],
                                  "asks":[["1.01","2"]]}}
     # Frozen selftest never obtains network or manufactures user market source.
@@ -177,7 +177,7 @@ def selftest():
         base/1000,timezone.utc).isoformat().replace("+00:00","Z")} for k in req}
     decoded={k:json.dumps(v).encode() for k,v in req.items()}
     outcome=validate_payload(decoded,rec)
-    assert outcome["spot_usdt_active"]==300
+    assert outcome["spot_usdt_active"]==1100
     req["bookTicker"][0]["symbol"]="SYM1USDT"
     try:
         validate_payload({k:json.dumps(v).encode() for k,v in req.items()},rec)
