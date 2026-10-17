@@ -73,7 +73,7 @@ def build(d):
          record["raw_to"]=="0xca980f000771f70b15647069e9e541ef73f71f2f" and
          record["raw_chainId_hex"]=="0x38" and
          int(record["raw_signed_transaction_value_hex"],16)==
-           (int(tx["original_wbnb_transfer_wei"]) if tx["action"]=="BUY" else 0) and
+           (int(tx["original_wbnb_transfer_wei"])*101//100 if tx["action"]=="BUY" else 0) and
          record["eth_getTransactionByHash_valid_full_JSON"] is True and
          record["tool_output_truncated"] is False and
          1200<=record["provider_tool_text_chars"]<=2000,
@@ -115,11 +115,20 @@ def build(d):
        "actual_public_follower_signal_arrived":"UNRESOLVED",
        "real_follower_eligible_fill_and_net":"UNRESOLVED"})
   rows.append({"case":case,"original_owner_real_net_BNB_wei":orig["original_native_wallet_net_wei"],
+               "original_outer_signed_buy_native_value_wei":str(int(part[0]["raw_signed_transaction_value_hex"],16)),
+               "original_WBNB_actually_to_pool_on_buy_wei":str(orig["txs"][0]["original_wbnb_transfer_wei"]),
+               "outer_signed_value_minus_pool_input_wei":str(int(part[0]["raw_signed_transaction_value_hex"],16)-int(orig["txs"][0]["original_wbnb_transfer_wei"])),
+               "unattributed_router_residual_is_not_assumed_tax":True,
                "first_original_buy_unix_seconds":entry,
                "last_original_sell_unix_seconds":exit,
                "duration_first_buy_to_final_sell_seconds":exit-entry,
                "cutoffs":cutoffs,
                "actual_copy_strategy_1_5_15_minute_return":"UNRESOLVED"})
+ check([x["original_outer_signed_buy_native_value_wei"] for x in rows]==
+       ["101000000000000000","303000000000000000"] and
+       [x["outer_signed_value_minus_pool_input_wei"] for x in rows]==
+       ["1000000000000000","3000000000000000"],
+       "OUTER_SIGNED_NATIVE_VS_POOL_WBNB_CANNOT_BE_INTERCHANGED")
  check([x["duration_first_buy_to_final_sell_seconds"] for x in rows]==[1550,634] and
        [[x["original_final_signed_sell_already_mined"] for x in y["cutoffs"]] for y in rows]==
        [[False,False,False],[False,False,True]],
