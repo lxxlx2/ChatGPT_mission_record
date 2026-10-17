@@ -1,4 +1,4 @@
-# Monster Stage162 — 独立 Codex APPPROVE 回执及研究关口关闭（2026-10-18）
+# Monster Stage162 — 独立 Codex APPROVE 回执及研究关口关闭（2026-10-18）
 
 ## 独立审核来源与不可变版本
 
