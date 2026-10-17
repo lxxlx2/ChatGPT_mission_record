@@ -36,7 +36,7 @@ class DragonFiveActualExternalTxTests(unittest.TestCase):
         self.assertFalse(actual["can_prove_causal_copy_of_DDAC"])
         self.assertEqual(actual["P5"],"BLOCKED")
 
-    def test_real_first_D503_buy_has_higher_native_input_than_gas_limit(self):
+    def test_real_first_D503_buy_has_separate_native_input_and_gas_limit(self):
         actual=study.build(self.docs)
         first=actual["observations"][0]
         self.assertEqual(first["signed_native_tx_value_wei"],"190000000000000000")
@@ -90,7 +90,7 @@ class DragonFiveActualExternalTxTests(unittest.TestCase):
     def test_wallet_BNB_profit_cannot_be_increased(self):
         self.fails(lambda d:d["original_native"]["movements"][1].update(
             block_native_delta_wei="216136579154473738"),
-            "SELECTED_EOA_NATIVE_DELTA_NOT_DDAC_FOLLOW_PROFIT")
+            "ACTUAL_OWNER_SELECTED_NATIVE_BALANCE_SIGNS")
 
     def test_original_blob_modified_is_fail_closed(self):
         with tempfile.TemporaryDirectory() as td:
