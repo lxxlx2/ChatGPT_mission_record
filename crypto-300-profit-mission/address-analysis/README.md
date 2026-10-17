@@ -29,6 +29,7 @@ Coverage status codes: `NOT_STARTED`, `BSC_SIGNED_ACTIVE`, `BSC_SIGNED_ZERO`, `T
 - [batches/batch-001.md](batches/batch-001.md): first 20 source addresses, BSC/Ethereum/Base screening and 3 closed profitable single-token roundtrips; whole-wallet PnL PARTIAL.
 - [batches/batch-002.md](batches/batch-002.md): next 20 addresses, three-chain nonce screening complete; swap/PnL NOT_STARTED. [Fixed-height JSON](evidence/batch-002-three-chain-30d-nonce-screen.json).
 - [batches/batch-003.md](batches/batch-003.md): rows041–060 fixed-height BSC/Ethereum/Base nonce coverage; 6/20 signed on at least one checked network and no audited trade PnL. [Raw evidence](evidence/batch-003-three-chain-30d-nonce-screen.json).
+- [Batch003 low-frequency transaction method evidence](evidence/batch-003-low-frequency-transaction-classification.json): approvals and transfers are excluded from inferred swap count; two router executions remain unknown PnL.
 - [Rows 002/004 sauce closed-position accounting](evidence/batch-001-rows-002-004-sauce-roundtrips.json): costs, proceeds, timestamps and limitations.
 - Rows 061–449 remain `NOT_STARTED` for frozen-window BSC/Ethereum/Base signed screening. Batch 001–003 rows 001–060 are screened on those three chains, while all full-wallet PnL and many per-token trade ledgers remain incomplete.
 

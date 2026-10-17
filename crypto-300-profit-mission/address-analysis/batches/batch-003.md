@@ -36,4 +36,16 @@ Status: `PARTIAL / THREE_CHAIN_NONCE_SCREEN_COMPLETE / PNL_NOT_STARTED`
 
 **审计范围：**仅完成 BSC/Ethereum/Base 历史 nonce 筛查。Polygon、Arbitrum 和被动 ERC20 转入/智能合约账户活动未查。没有对本批任何代币形成盈利或亏损结论，完整月度及长期钱包 PnL **0/20**。该批仍为 `PARTIAL`，不产生 final artifact，不构成实盘信号。
 
+## 交易级有界反例核查：签名不等于成交
+
+在三链 nonce 筛查后，通过 Alchemy 交易哈希与合约调用数据进行有限核对，参见 [交易哈希及选择器证据](../evidence/batch-003-low-frequency-transaction-classification.json)。
+
+- **#044:** BSC ERC-20 `transfer` (`0xa9059cbb`)，Base 原生 ETH 直接转账。没有已确认的 DEX 盈利。
+- **#045:** Base 唯一签名交易为成功的 ERC-20 `transfer` (`0xa9059cbb`)。
+- **#050:** Ethereum 唯一签名交易为原生 ETH 直接转账，没有合约调用数据。
+- **#051:** Ethereum 一笔零原生价值调用还未完整解码；Base 九笔签名中，五笔 `approve`、两笔借贷池风格调用、两笔 `0x3593564c` router `execute`，后两笔回执成功，但 **并未完成具体买卖代币、成本与卖出回款核对**。
+- **#060:** BSC 四笔签名含一次授权、一次原生 BNB 转账以及两次未解码合约调用；Base 一次原生 ETH 转账。
+
+这是签名交易与真正成交的反例核查，不代表钱包无亏损或已完整审计。两笔 router `execute` 按 `PNL_UNRESOLVED` 留在后续队列，不能推算真实利润或复制交易。
+
 **下一步：**在维护 Batch001/002 未决交易队列的同时，对本批低签名量地址进行真实交易审计；后续签名普查推进原始第 061–080 行 Batch004。只读研究、不合并、不部署、不启用生产通知。
