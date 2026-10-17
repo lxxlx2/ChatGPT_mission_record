@@ -4,6 +4,7 @@ on:
     branches:
       - feat/frank-f01-source-context-pane-20261017
       - fix/frank-pr91-safe-primary-f01-and-gateway-20261017
+      - fix/frank-pr92-mixed-f01-route-p1-20261017
   workflow_dispatch:
 permissions:
   contents: read
