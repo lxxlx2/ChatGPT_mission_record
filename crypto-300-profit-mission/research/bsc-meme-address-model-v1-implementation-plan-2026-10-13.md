@@ -803,3 +803,6 @@ R1 原本人实亏回合首买块 85954137 时间 `0x69b14658`、最终卖出块
 [复算实现](./bsc_meme_address_model_v1_p4b_239e_4tx_real_clock.py) 和 [11 项对抗测试](./test_bsc_meme_address_model_v1_p4b_239e_4tx_real_clock.py) 联合 pin 旧实际签名、旧 V2 八个数学报价、预冻结及新四 TX 时间数据；交叉验证原 wallet、hash、block、native tx.value、原主人 signed PnL 方向与实际时间差。只得出本人的历史信号末次退出 cutoff 状态，不把 V2 静态数学价差称为真实跟单净额，不偷换 Pair 的 blockTimestampLast 为区块 timestamp，也不估计公共首次 U。代码与数据源已经纳入原 Ubuntu/macOS Bash 3.2 回归路径。
 
 **下一里程碑必须面向交易而不是继续增加纯门禁**：在原冻结的币和真实外部交易对照中，将**可观察到源买入的最早区块**、对应同一可支付真实买单在固定 60/300/900 秒之后可获得的 token、历史卖单和全路径费用与到账价值单独闭合；若缺签名买入和成功 SELL，则保留 `UNKNOWN`、不虚构 follower ROI。现阶段 P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE；不要将纯静态报价方向一致误报为模型通过。
+
+
+**2026-10-18 追加资金差异校验（本轮时钟复算 CI 发现）：** 重新对照本轮真实可完整解析的四笔原签名交易，239E R1 首笔 Dragon 买的 **`tx.value=101000000000000000 wei`（0.101 BNB）**，池内实际 WBNB 进量仅 `100000000000000000 wei`（0.1 WBNB）；R2 **`tx.value=303000000000000000 wei`（0.303 BNB）**，池内仅 `300000000000000000 wei`（0.3 WBNB）。两个差值分别 `1000000000000000` 和 `3000000000000000 wei`，严格锁定交易与原 P4-C 文件后作为不变量，并追加负向单测。不允许把 `tx.value` 错说成池内 WBNB，不能将差值全叫手续费或再次叠加到已经依据本人原生余额闭合的回合净额。原来的 0.01 WBNB 静态 quote 只进入 V2 Pair 数学、不是个人真实起始投入 BNB 与最终实际收款，也不升级 follower 1/5/15min 盈利。
