@@ -42,7 +42,8 @@
     if (doc.candidates.length === 0) {
       return noEvidence('当前 F01 没有可跟候选。仓位来源对照无需显示。');
     }
-    const visible = displayedMints instanceof Set ? displayedMints : new Set();
+    const visible = displayedMints && typeof displayedMints.has === 'function'
+      ? displayedMints : new Set();
     const seen = new Set();
     const rows = [];
     for (const row of doc.candidates) {
