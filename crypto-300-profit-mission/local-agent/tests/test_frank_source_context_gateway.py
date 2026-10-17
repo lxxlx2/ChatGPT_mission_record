@@ -127,3 +127,41 @@ def test_gateway_rejects_own_ephemeral_dashboard_port_before_connect(monkeypatch
     assert headers["Cache-Control"] == "no-store"
     assert attempted == [], "self-port must fail before any outbound HTTPConnection"
     assert elapsed < 1.5, "same port must not wait for the old 2.5s connection timeout"
+
+
+def test_real_dashboard_follow_route_uses_reviewed_f01_partition(monkeypatch):
+    """The actual /api/follow-opportunities route must exist before joint merges.
+
+    No HTTP fake for the endpoint: real DashboardState policy and partition,
+    with only the candidate list and runtime supplied as synthetic read inputs.
+    """
+    from types import SimpleNamespace
+    from mission_agent.mission_control.server import DashboardState
+
+    actual = object.__new__(DashboardState)
+    actual.candidates = lambda: []
+    actual.frank = SimpleNamespace(runtime=lambda: {"status": "LIVE"})
+    computed = actual.follow_opportunities()
+    assert computed["schema_version"] == 1
+    assert computed["scope"] == "FRANK_FROZEN_DECISIONS_PRESENTATION_ONLY"
+    assert computed["status"] == "OK"
+    assert computed["eligible_count"] == 0 and computed["eligible"] == []
+    assert computed["as_of_epoch"] > 0
+    assert computed.get("read_only_policy_hash")
+
+    class FakeState:
+        def follow_opportunities(self):
+            return actual.follow_opportunities()
+
+    prior = DashboardHandler.state
+    try:
+        DashboardHandler.state = FakeState()
+        with serving(DashboardHandler) as dashboard:
+            status, headers, response = read(dashboard.server_port, "/api/follow-opportunities")
+        assert status == 200
+        assert headers["Cache-Control"] == "no-store"
+        assert response["scope"] == "FRANK_FROZEN_DECISIONS_PRESENTATION_ONLY"
+        assert response["status"] == "OK"
+        assert response["eligible"] == []
+    finally:
+        DashboardHandler.state = prior

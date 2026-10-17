@@ -24,6 +24,8 @@ from ..meme.market import DexScreenerMarketClient
 from .db import open_control_ro
 from .delivery_review import summarize_manual_reviews
 from .frank import FrankReader
+from .follow_view import partition_candidates
+from .policy import load_policy
 from .payment_evidence import latest_buy_payment_evidence
 from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
@@ -728,6 +730,7 @@ class DashboardState:
                 item["metrics"] = body.get("metrics") or {}
                 inputs = body.get("inputs") or {}
                 item["decision_quote"] = inputs.get("quote") or {}
+                item["quote_observed_at"] = inputs.get("quote_observed_at")
                 item["reasons"] = body.get("reasons") or []
                 item["missing"] = body.get("missing") or []
                 item["invalidation"] = body.get("invalidation") or []
@@ -735,6 +738,7 @@ class DashboardState:
                 item["decision"] = "UNASSESSED"
                 item["metrics"] = {}
                 item["decision_quote"] = {}
+                item["quote_observed_at"] = None
         # A SOL-normalized sidecar can legitimately create a follow candidate that
         # does not exist in the frozen production signal table. candidate_latest is
         # the canonical Mission Control view, so expose those rows without writing
@@ -754,12 +758,35 @@ class DashboardState:
             item.update({
                 "decision":body["decision"],"decision_created_at":row["evaluated_at"],
                 "metrics":body.get("metrics") or {},"decision_quote":inputs.get("quote") or {},
+                "quote_observed_at":inputs.get("quote_observed_at"),
                 "reasons":body.get("reasons") or [],"missing":body.get("missing") or [],
                 "invalidation":body.get("invalidation") or [],"candidate_source":"MISSION_CONTROL_OVERLAY",
             })
             candidates.append(item)
         candidates.sort(key=lambda x:int(x.get("latest_at") or 0),reverse=True)
         return candidates
+
+    def follow_opportunities(self):
+        """Exact reviewed F01 policy and quote gate, read-only from existing sources."""
+        candidates = self.candidates()
+        try:
+            policy_path = Path(__file__).resolve().parents[2] / "config" / "follow_policy_v1.approved.json"
+            policy, policy_hash = load_policy(policy_path)
+            rules = policy["decision"]
+            view = partition_candidates(
+                candidates, now=time.time(),
+                runtime_status=self.frank.runtime().get("status"),
+                max_frank_buy_age_seconds=int(rules["max_frank_buy_age_seconds"]),
+                max_quote_age_seconds=int(rules["max_quote_age_seconds"]),
+            )
+            view["read_only_policy_hash"] = policy_hash
+            return view
+        except (OSError, ValueError, TypeError, KeyError):
+            return {"schema_version": 1, "scope": "FRANK_FROZEN_DECISIONS_PRESENTATION_ONLY",
+                    "status": "POLICY_OR_SOURCE_UNAVAILABLE", "eligible_count": 0,
+                    "excluded_count": len(candidates), "eligible": [],
+                    "not_followed": [{**x, "exclusion_reason": "POLICY_OR_SOURCE_UNAVAILABLE"}
+                                     for x in candidates]}
 
     def frank_observed_watchlist(self):
         try:
@@ -923,6 +950,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(context)
         if path == "/api/candidates":
             return self._json(self.state.candidates())
+        if path == "/api/follow-opportunities":
+            return self._json(self.state.follow_opportunities())
         if path == "/api/frank-observed-watchlist":
             return self._json(self.state.frank_observed_watchlist())
         if path == "/api/trades":
