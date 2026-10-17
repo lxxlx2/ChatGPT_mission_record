@@ -45,3 +45,31 @@
 > 请独立审查GitHub `lxxlx2/ChatGPT_mission_record` Draft PR #30 的 Monster 经济证据核对工具。唯一固定审核 SHA `4004c59ccbfc70dcd5ddc53eeb188a2602a43ebc`，比较基线 `30a7835f5ee0d5ae800362097592ac6e1240d81f`，分支 `research/monster-v4-local-discovery-20261010`。检查三个文件：`crypto-300-profit-mission/local-agent/scripts/monster_v4_economic_readiness.py`、`crypto-300-profit-mission/local-agent/tests/test_monster_v4_economic_readiness.py`、`.github/workflows/monster-v4-research-baseline.yml`。请实际获取固定代码和Diff，真实运行5项测试及 CLI，不根据PR说明推测已运行。核验引用Stage30 JSON源Git blob `9b73bb711ed498192c1407286eb2304538876344`、Stage152 JSON源Git blob `518e7aa0d8db83fd1b818513ae7e72b165252806`，代码对两组独立样本/430可评价/250重叠/80删失/300U乐观模拟/305 D1仅184确认与121未交易的处理是否正确，检查是否偷用未来已知退出量筛币、有无把价格代理当真订单、利润、BUY、真实G4或当前交易金额。独立复核GHA [#39078455021](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39078455021) 触发HEAD、原始日志是否实际5/5 PASS以及23/23步骤。审查能否在测试造假、聚合来源变更、D1分母变化时fail-closed，并说明本工具只验证来源聚合JSON而非36份原ZIP本轮重取；检查不会启动schedule、Mac服务、交易、邮箱、Frank或写库。请只报告实质P0/P1/P2缺陷，给出 `APPROVE | REQUEST_CHANGES | BLOCKED`、准确审核SHA、基线、复现步骤/代码行号和必要修复。不能访问源码/跑测试标 `UNVERIFIED`，不可自称独立审核已完成。保持 `NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`、G4 UNKNOWN、G6 NO_GO。
 
 **状态**：`CODE_CI=PASS`；`INDEPENDENT_OTHER_AI_REVIEW=NOT_DONE`；`STAGE163_FORWARD=NOT_MATURE`；`ACTUAL_TRADABLE_NET=UNKNOWN`；`G6=NO_GO`。不得自动新建GHA schedule、ChatGPT automation、launchd或任何通知/交易。
+
+
+## 五、Codex 首轮 REQUEST_CHANGES P2-1 修复记录及定向复审（2026-10-18）
+
+**先前独立审核的准确结论**：用户转交Codex固定SHA `4004c59ccbfc70dcd5ddc53eeb188a2602a43ebc`，比较 `30a7835f5ee0d5ae800362097592ac6e1240d81f`，`REQUEST_CHANGES`，P0=0/P1=0/P2=1。原5个测试、来源Git Blob SHA、Stage30/Stage152经济数字与算术都通过；唯一P2是旧查询器输出字段 `censored_exits: 80` 将包括**入场端缺口**的全部来源不可评价情况误称成“退出删失”。审查者自述的本机 `/tmp/monster-econ-review-4004c59c` 检查及本机脚本输出属于转交报告，未冒充Git可取得的持久审计文件。底层准确AI模型`UNVERIFIED`。先前固定SHA的`REQUEST_CHANGES`保留历史状态，不反溯APPROVE。
+
+**本次定向修复（只改研究数据含义、未改模型）**：
+- 固定完整**修复代码＋7项测试SHA**：`8f0714dd34926c0e17305024ab3ef51d85323409`，对照旧审核 `4004c59ccbfc70dcd5ddc53eeb188a2602a43ebc`。仅 `local-agent/scripts/monster_v4_economic_readiness.py` 与对应`tests/test_monster_v4_economic_readiness.py` 有新的可执行变更。
+- 删除错误输出键 `stage30_original_spot_v4.censored_exits`；改为 `source_censored_excluding_overlap:80`，新增 `source_censor_status_breakdown` 的原始五类**逐类别**记录。
+- 完整原始分布：`CENSORED_NO_COMPLETE_EXIT=1`、`CENSORED_ZERO_VOLUME_EXIT=21`、`CENSORED_ZERO_VOLUME_NEAR_EXIT=39`、`CENSORED_NO_ENTRY_TRADES=1`、`CENSORED_MINUTE_QUOTE_LT_30_USDT=18`；五项总80。最后一项是原价代理在**入场或退出**分钟 quote 不足，不能断言18条全发生在退出端。上述五类分布已在固定Stage30来源中，来源原JSON**未改字节**。
+- 还要求明确`s.source_proxy_status_counts`其他仅有`PRICE_PROXY_ONLY=430`与`SKIP_SAME_SYMBOL_24H_CAPITAL_OCCUPIED=250`，7类合760，每类数量以及三个总体数均相互一致；分类键或分类值变动拒绝，不拿同总数替代真实类别。
+- 原测试5项+本轮新2项=**7项真实CI回归**；新测试特别覆盖`CENSORED_NO_ENTRY_TRADES`、`CENSORED_MINUTE_QUOTE_LT_30_USDT`、旧`censored_exits`键不存在、即使分母不变但类别变更也拒绝、未知类别拒绝。文本命令也打印80及五类，而非只修JSON。
+- **真实运行 GitHub CI**：[fix SHA 8f0714dd run #39080407728](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39080407728)：`historical-baseline` job `SUCCESS`、23/23步骤通过；原始日志明确`Ran 7 tests ... OK`、`FAIL_ECONOMIC_RELEASE_GATE_NO_BUY`、五类明细`18/1/1/21/39`、旧模拟`-79.489406U`与`G4 UNKNOWN/G6 NO_GO`不变。
+- **固定审核范围**：新 `8f0714dd...` 修复的独立其它AI复审仍`NOT_DONE`；无需重审旧版已经独立确认的Stage30总数与Stage152 184/305、Git Blob SHA算术或上一次机会查询器修复，更不能把CI通过说成独立审核通过。
+
+### 可直接转交Codex/Claude的定向修复审核任务
+
+请独立定向审核 Mission Monster PR #30 经济证据门禁上轮 **P2来源不可评价误称退出删失** 修复。
+
+- 仓库 `https://github.com/lxxlx2/ChatGPT_mission_record`，分支 `research/monster-v4-local-discovery-20261010`，PR `https://github.com/lxxlx2/ChatGPT_mission_record/pull/30`
+- **唯一修复审核固定 SHA**：`8f0714dd34926c0e17305024ab3ef51d85323409`；**比较基线/原REQUEST_CHANGES SHA**：`4004c59ccbfc70dcd5ddc53eeb188a2602a43ebc`。务必固定checkout，不要拿之后有文档更新的PR HEAD替代目标。
+- 审核两个可执行文件 `crypto-300-profit-mission/local-agent/scripts/monster_v4_economic_readiness.py` 和 `crypto-300-profit-mission/local-agent/tests/test_monster_v4_economic_readiness.py`，确认其它生产Shadow/D2、Fair8、Mac、Frank未改。两份历史聚合JSON原Git Blob仍分别`9b73bb711ed498192c1407286eb2304538876344`、`518e7aa0d8db83fd1b818513ae7e72b165252806`。
+- 独立复现`read_report()`及CLI的JSON、text两模式；确认旧键`censored_exits`已删除，新`source_censored_excluding_overlap=80`及`source_censor_status_breakdown`一一保持来源类别的 `1/21/39/1/18`，重点验证`CENSORED_NO_ENTRY_TRADES=1`是入场端缺口，`CENSORED_MINUTE_QUOTE_LT_30_USDT=18`未被错误定为全部退出端。七类包含430可评价与250重叠后合计760。用类别同总数篡改/未知类型制造反例，不许仅测试8f源码字面字段。
+- 核验真实 CI `https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39080407728` 的SHA、原始日志`Ran 7 tests ... OK`与经济`NO_GO`输出；同时确认 Stage30 -79.489406U，Stage152 305/184，中位负收益，输出无 BUY / 实盘成交、无交易授权、无部署/自动采集/邮件/Frank影响。
+- 报告`APPROVE / REQUEST_CHANGES / BLOCKED`、固定SHA、P0/P1/P2、复现步骤、文件行号、是否真正关闭原P2以及新增缺陷；未实际取得源码或运行则标`UNVERIFIED`。本次仅定向复核原P2，避免对旧已核验事项无限重复。旧审核 `4004c59...` 的`REQUEST_CHANGES`保留，不自动回溯修改。
+- 研究样本为已暴露历史价格代理，**无真实双向L2/实际成交费率/实际买卖**，原门禁`NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`、`G4 UNKNOWN/G6 NO_GO`始终保持。
+
+**当前分项状态**：`AUTHOR_P2_FIXED / CI_PASS / NEW_SHA_EXTERNAL_REVIEW_NOT_DONE`；此项对数据解释影响已在代码中修复，尚待真正独立复审后方能记`P2=CLOSED`。Stage163 Spot七日前瞻研究不因此提前通过。
