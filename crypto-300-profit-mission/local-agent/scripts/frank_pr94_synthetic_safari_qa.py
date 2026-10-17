@@ -236,7 +236,7 @@ QA_BANNER = (
     '</div>'
 ).encode("utf-8")
 QA_BANNER_CSS = (
-    "#synthetic-qa-banner{position:sticky;top:0;z-index:1000000;"
+    "#synthetic-qa-banner{position:relative;top:0;z-index:1000000;"
     "background:#991b3b;color:#fff;text-align:center;"
     "padding:12px;font-size:15px;font-weight:700;"
     "box-shadow:0 2px 8px #0009;}\\n"
