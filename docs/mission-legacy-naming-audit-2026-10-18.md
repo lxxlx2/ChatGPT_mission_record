@@ -28,6 +28,10 @@ Inspected legacy areas: repository main/root and Mission README, Crypto Daily an
 | `crypto-daily/README.md` | Correct obsolete :10 times to HH:20 at 00/03/06/08/09/10/11/12/16/20 per 2026-10-10 runtime override; note 10/11 recovery-only | README conflicted with `crypto-daily/AUTOMATION_RUNTIME.md`; configuration unchanged |
 | `airdrop-tge-monitor/README.md` | Document current HH:00 hourly schedule and legacy :50/:14 supersession | Aligned with `airdrop-tge-monitor/AUTOMATION_RUNTIME.md`; no task mutation |
 
+## Research-library naming spot check
+
+Separately inspected existing substantive human-authored files in the 16 `research/projects/<project>/` directories, mapped `research/nfts/` files and representative `research/tokens/` reports. Their examined lower-kebab-case names and first H1s already identify the subject and research purpose, so **no research-library rename or duplicate file copy was necessary**. This is a targeted naming review, not a claim of exhaustive H1 validation over every generated or operational file.
+
 ## Not renamed deliberately: compatibility and evidentiary retention
 
 1. Mission/Meme uppercase `FRANK_*`, `MISSION_MEME_*`, `WALLET_CLUSTER_*`, Local Agent `PHASE_*` and `CURRENT_MAINLINE_CHECKPOINT.md`. These are frozen configurations, review reports, historical phase snapshots and widely linked documents. The existing uppercase naming is **legacy exception**, not an invitation to create new uppercase human research files. No blanket file moves without direct consumer/dependency analysis.
