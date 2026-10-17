@@ -33,7 +33,7 @@ jobs:
           changed=subprocess.check_output(
               ['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],
               text=True).splitlines()
-          exact={'schema':'MONSTER445_FIRST_SERVICE_TRACE_ONESHOT_REQUEST_V2',
+          exact={'schema':'MONSTER445_FIRST_SERVICE_TRACE_ONESHOT_REQUEST_V3',
                  'full_replay_artifact_id':12044872933,
                  'full_json_sha256':'370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf',
                  'research_only':True,'approved_scope':'OFFLINE_TRACE_ONLY',
@@ -102,6 +102,7 @@ jobs:
           assert j['original_V2_every_event_and_queue_byte_semantics_equal'] is True
           assert j['actual_3360_shared_polls']==3360
           assert j['D1_global_selected_slots']==753
+          assert j['schema']=='MONSTER445_FIRST_SELECTED_ACTUAL_D1_EIGHT_SLOTS_RESEARCH_V2'
           assert j['D1_first_selection_slots']+j['D1_repeated_selection_slots']==753
           assert j['D1_repeated_without_advanced_valid_5m_bar_marker']==190
           assert j['D1_repeated_with_advanced_valid_5m_bar_marker']==294
@@ -121,7 +122,7 @@ jobs:
           assert len(j['candidate_first_service'])==269
           assert j['G6']=='NO_GO'
           payload={
-              'schema':'MONSTER445_REAL_FIRST_D1_SERVICE_TRACE_SUMMARY_V2',
+              'schema':'MONSTER445_REAL_FIRST_D1_SERVICE_TRACE_SUMMARY_V3',
               'source_all28_original_artifacts_attested':True,
               'historical_source_complete_symbols':445,
               'original758_censored_313':True,
@@ -156,7 +157,7 @@ jobs:
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: monster445-real-first-D1-service-review-fixes-28shards-once-v2
+          name: monster445-real-first-D1-service-phantom-fix-28shards-v3
           path: |
             /tmp/monster445_first_service_trace_full.json
             /tmp/monster445_first_service_summary_git.json
@@ -167,13 +168,13 @@ jobs:
         run: |
           set -eu
           branch=research/monster-v4-local-discovery-20261010
-          result=crypto-300-profit-mission/monster/evidence/monster_feb445_real_first_service_trace_review_v2_actual.json
+          result=crypto-300-profit-mission/monster/evidence/monster_feb445_real_first_service_trace_review_v3_actual.json
           test ! -e "$result"
           cp /tmp/monster445_first_service_summary_git.json "$result"
           git add "$result"
           git config user.name monster-research-ci
           git config user.email monster-research-ci@users.noreply.github.com
-          git commit -m "monster: archive source SHA pinned real 445 first-service review fixes v2, no original evidence overwrite"
+          git commit -m "monster: archive source SHA pinned phantom-safe 445 D1 trace v3, no old overwrite"
           git fetch origin "refs/heads/$branch"
           if git cat-file -e "FETCH_HEAD:$result" 2>/dev/null; then
             echo MONSTER445_FIRST_SERVICE_REMOTE_RESULT_EXISTS_NO_OVERWRITE
@@ -188,4 +189,4 @@ jobs:
             test "$(git rev-parse "$GITHUB_SHA:$file")" = "$(git rev-parse "HEAD:$file")" || { echo MONSTER445_FIRST_SERVICE_ORIGINAL_PROOF_CHANGED; exit 1; }
           done
           git push origin "HEAD:refs/heads/$branch"
-          echo MONSTER445_FIRST_SERVICE_REVIEW_V2_RESEARCH_EVIDENCE_IMMUTABLE_GIT_ARCHIVED
+          echo MONSTER445_FIRST_SERVICE_REVIEW_V3_RESEARCH_EVIDENCE_IMMUTABLE_GIT_ARCHIVED
