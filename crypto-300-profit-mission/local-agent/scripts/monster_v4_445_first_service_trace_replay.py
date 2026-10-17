@@ -223,14 +223,16 @@ def run_trace(source_dir:Path, reference_json:Path):
         raise RuntimeError("MONSTER445_TRACE_original_raw_full_SHA_drift")
     frozen=json.loads(original_raw)
     tracer=FirstServiceObserver()
-    # Run the exact original V2 and production once on all 445 source shards.
-    # Monkeypatch only this observer's reading hook for the duration of the call.
+    # Assemble and run via assembler's ORIGINAL explicit V2 mode, preserving
+    # its research-only schema and source-complete statements. Instrument only
+    # the real handler with read-only pre/post SQL around ONE actual call.
+    real_v2=zeroq.run_v2
     def traced_engine(db, day, roster, *, market_coverage_label):
         with patch.object(zeroq,"experimental_queue_handler",
                           side_effect=tracer.instrument):
-            return zeroq.run_v2(db,day,roster,market_coverage_label=market_coverage_label)
-    model=assembler.run_all(source_dir,actual_replayer=traced_engine,
-                            research_zeroquote_v2=False)
+            return real_v2(db,day,roster,market_coverage_label=market_coverage_label)
+    with patch.object(zeroq,"run_v2",side_effect=traced_engine):
+        model=assembler.run_all(source_dir,research_zeroquote_v2=True)
     return summarize_original_trace(model,frozen,tracer)
 
 
