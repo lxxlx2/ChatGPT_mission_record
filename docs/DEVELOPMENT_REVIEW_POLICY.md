@@ -45,7 +45,9 @@ If sensitive content has already been committed to a public branch, simply editi
 
 ## Frank / CA historical review examples (snapshot 2026-10-14; not live authority)
 
-These exact-version examples were known at policy authorship and are preserved only as dated historical review context. For the latest stage status, use the owning module's current main/PR head and review ledger; a dated historical approval never travels to later code.\n\n- Independently reported **C02 PR #49 APPROVE** on `8898134a8a302e1187138f7fb3da87a554567e6d`.
+These exact-version examples were known at policy authorship and are preserved only as dated historical review context. For the latest stage status, use the owning module's current main/PR head and review ledger; a dated historical approval never travels to later code.
+
+- Independently reported **C02 PR #49 APPROVE** on `8898134a8a302e1187138f7fb3da87a554567e6d`.
 - Independently reported **A04 storage/normalizer review PR #54 APPROVE** on `6e1f8cec197bab30703fb4524c9710191dc25522`. This only closes the reviewed code/version migration defect; other A04 historical/business coverage remains partial.
 - A02/A03/A05 (upstream research), F01 (screen), F02 (real position), C01/C08 and remaining CA stages **do not inherit blanket module APPROVE** merely because the disposable combined CI passed. Check each exact module/criterion's separate review ledger.
 - Full true current/32-Mint ATA and transaction history, failed parsed transaction, owner-missing, ATA close, economic PnL, real browser/Mac release remain `BUSINESS_ACCEPTANCE_PENDING`. No merge to main or production rollout without the above complete gates.
