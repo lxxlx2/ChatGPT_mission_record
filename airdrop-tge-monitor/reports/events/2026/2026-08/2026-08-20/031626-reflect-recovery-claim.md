@@ -6,7 +6,7 @@ project: "Reflect"
 event_type: historical_alert
 email_subject: "[空投提醒][Reflect][Recovery Claim 检查]"
 gmail_message_id: "1a01baafedb7f976"
-gmail_sent_at: "2026-08-19T20:16:26"
+gmail_sent_at: "2026-08-19T20:16:26Z"
 gmail_sent_at_bkk: "2026-08-20T03:16:26+07:00"
 status: official
 backfilled: true
