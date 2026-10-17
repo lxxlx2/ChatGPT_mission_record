@@ -42,60 +42,75 @@
   "source_files": [
     {
       "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/all_spot_symbol_identity_census.json",
-      "bytes": 572763
+      "bytes": 572763,
+      "git_blob_sha": "560f0c7ca4f069a04ecaf7c8e740c6df1b7b9cf5"
     },
     {
       "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_01.json",
-      "bytes": 623836
+      "bytes": 623836,
+      "git_blob_sha": "e04c05a96046245e4457e8f33d9a4c69c10b74d8"
     },
     {
       "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_02.json",
-      "bytes": 623138
+      "bytes": 623138,
+      "git_blob_sha": "e3e28a42910cb94694f403c32f7d42726fcfab41"
     },
     {
       "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_03.json",
-      "bytes": 621375
+      "bytes": 621375,
+      "git_blob_sha": "0caf1094e3176b3c1ef376754bc1642f424a9766"
     },
     {
       "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_04.json",
-      "bytes": 625836
+      "bytes": 625836,
+      "git_blob_sha": "25186c8cab90641a807a85ec334cc141b4d29bab"
     },
     {
       "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_05.json",
-      "bytes": 626779
+      "bytes": 626779,
+      "git_blob_sha": "a17974a63d6ff9ec172033ad281c54526dbd6be5"
     },
     {
       "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_06.json",
-      "bytes": 628261
+      "bytes": 628261,
+      "git_blob_sha": "ff47977b8cdee4622208bad0c9244d2712ab92d1"
     },
     {
       "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_07.json",
-      "bytes": 629471
+      "bytes": 629471,
+      "git_blob_sha": "494ae366f71711daf662059c4641d7f155ca5aa5"
     },
     {
       "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_08.json",
-      "bytes": 628671
+      "bytes": 628671,
+      "git_blob_sha": "9dfe01375cb0a5976993e47af79876c1a37a2a38"
     },
     {
       "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_09.json",
-      "bytes": 611568
+      "bytes": 611568,
+      "git_blob_sha": "fa077c53b2f2ccbc9933d571b56a80ca507c678a"
     },
     {
       "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/usdt_original_structured_rules_10.json",
-      "bytes": 403444
+      "bytes": 403444,
+      "git_blob_sha": "c0265893bcc0ea2fe259b347a5a4b3a203325419"
     },
     {
       "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/all_spot_current_bbo_structured.json",
-      "bytes": 616561
+      "bytes": 616561,
+      "git_blob_sha": "1b7db15d9004f0262b1a3599a1abcc5964e52313"
     },
     {
       "path": "crypto-300-profit-mission/monster/evidence/monster_stage163_spot_manual_t0_20261017T215443Z/btc_24hr_and_recent_1m_source_probe.json",
-      "bytes": 2303
+      "bytes": 2303,
+      "git_blob_sha": "4be764edda49f4880a7136bed4d95aceb4f52a7d"
     }
   ],
   "stage162_spot_research_pinned_sha": "b85dee96ec6f567e1f0b90f0d50cc5b19c79018b",
   "no_merge": true,
   "no_deploy": true,
   "no_gmail": true,
-  "no_trade": true
+  "no_trade": true,
+  "git_source_file_blob_identity_verified_count": 13,
+  "github_sha_identity_is_git_blob_sha1_not_original_http_sha256": true
 }
