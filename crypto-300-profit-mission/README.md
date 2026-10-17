@@ -61,7 +61,7 @@ Current capital / holdings:
 
 2026-10-18：Batch001–006 已完成 **120/449** 原始地址 BSC、Ethereum、Base 冻结历史 nonce 筛查，三链并集 **74/120** 地址有签名交易，**46/120** 仅在这三条链零签名。[120钱包逐行可复算 JSON](address-analysis/evidence/coverage-001-120-normalized.json) 与源清单对齐。已保存的 3 组正收益单币闭环（#002/#004 sauce、#016 RTX5090）通过 [静态证据交叉复算](address-analysis/evidence/closed-token-replay-source-check-20261018.json)；新建 [独立源文件复算 CLI](address-analysis/tools/closed_token_index.py) 和 5项离线输入/亏损反例测试。**真实亏损仍未完成核算，完整钱包近30日/长期 PnL 均为 0/449 完成。** 这是历史筛查和原证据复算，不构成实时盈利分析、跟单信号或多链完整账户审计。
 
-后续研究重点：Batch007 签名普查，以及 Batch001–006 的真实买卖日志、成本基础、Gas、代币税与亏损闭环；RPC/CLI主网端到端、Mac实测、独立审核仍缺失。PR #97 保持 Draft、`RESEARCH_ONLY / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`，不触碰已有 PR#40 BSC建模、Frank、Monster及生产监控。
+新增 [通用FIFO单币账本V1](address-analysis/tools/transaction_ledger.py) 与 [20项离线测试和实测限制](address-analysis/state/ledger-v1-fifo-qa-20261018.md)。它仅复算归一化来源声明，尚未自主验证链上收据；**没有新增真实盈利/亏损或整钱包收益结论**。后续研究重点为成功交易收据解码、历史成本与真实亏损闭环，再推进 Batch007；Mac 实测及独立外部审核仍缺失。PR #97 保持 Draft、`RESEARCH_ONLY / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`，不触碰已有 PR#40 BSC建模、Frank、Monster及生产监控。
 
 ## Canonical module files
 

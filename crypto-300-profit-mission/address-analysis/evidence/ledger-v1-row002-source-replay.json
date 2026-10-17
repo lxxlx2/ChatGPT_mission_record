@@ -1,0 +1,55 @@
+{
+  "schema": "mission-token-fifo-replay-v1",
+  "status": "CLAIM_REPLAY_ONLY",
+  "network": "bnb-mainnet",
+  "source_row": 2,
+  "wallet": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+  "token_contract": "0xd7ccd29b6fd1464edb425f24b01115556e737777",
+  "quote_asset": "NATIVE_BNB",
+  "matched_sells": [
+    {
+      "sell_tx_hash": "0x8f4e9a6da569698e9c6c28d59bf39cf600d1bdbb3f497db915e18b9f8677885a",
+      "sold_at_utc": "2026-10-16T12:58:56Z",
+      "token_sold_raw": "63699915473588833872341",
+      "proceeds_quote_raw": "211142080278687674",
+      "allocated_cost_quote_raw": "54313975000000000",
+      "realized_quote_raw": "156828105278687674",
+      "result": "GAIN",
+      "within_fixed_30d_window": true,
+      "fifo_lots": [
+        {
+          "buy_tx_hash": "0x0642b8ec018ca67763d89964b3f48e0bd923ff41261e081fdc9d8f380aaf7dbf",
+          "base_qty_raw": "31708285150519965576422",
+          "allocated_cost_quote_raw": "27290390000000000"
+        },
+        {
+          "buy_tx_hash": "0xb7e3e18bd21ca862edb1ac72d95292064d5c3033dc3f3b15d36bf42f62d06ab0",
+          "base_qty_raw": "31991630323068868295919",
+          "allocated_cost_quote_raw": "27023585000000000"
+        }
+      ]
+    }
+  ],
+  "unspent_base_raw": "0",
+  "remaining_basis_quote_raw": "0",
+  "all_period_realized_quote_raw": "156828105278687674",
+  "window_realized_quote_raw": "156828105278687674",
+  "gain_exits": 1,
+  "loss_exits": 0,
+  "wallet_30d_pnl": "UNRESOLVED",
+  "wallet_lifetime_pnl": "UNRESOLVED",
+  "note": "Normalized events and proof flags are assertions from saved sources; not independently chain-verified; no USD or wallet-level PnL.",
+  "qa_metadata": {
+    "tested_in_isolated_container": true,
+    "python_version": "3.11+",
+    "actual_command": "python3 tools/transaction_ledger.py --manifest qa-synthetic-manifest-not-for-git.json --events fixtures/batch001-row002-sauce-executions.json --output qa-sauce-replay.json",
+    "synthetic_manifest": "All 449 addresses are synthetically constructed except source row 002, which matches the historical Git snapshot. This is not an execution using the complete original Git manifest.",
+    "success_exit_code": 0,
+    "deliberate_inventory_over_sell_exit_code": 3,
+    "deliberate_over_sell_result": "PNL_UNRESOLVED",
+    "offline_unittest_passed": 20,
+    "offline_unittest_failed": 0,
+    "identity_validated_against_original_git_row_002": true,
+    "normalized_event_values_matched_original_sauce_evidence": true
+  }
+}

@@ -68,6 +68,15 @@ python3 tools/address_analysis.py --source sources/oooooyoung-evm-449-source-sna
 
 New offline historical saved-source replay CLI: `python3 tools/closed_token_index.py --manifest sources/oooooyoung-evm-449-source-snapshot.json --rtx evidence/batch-001-row-016-rtx5090-roundtrip.json --sauce evidence/batch-001-rows-002-004-sauce-roundtrips.json`. This prototype only replays the saved three positions, and its 5/5 offline synthetic tests do not count as actual-chain loss discovery. Next engineering gate: independently replay complete token transaction receipts, track open positions and losses, run real historical RPC/CLI E2E and obtain independent external review before claiming a profitable-wallet research tool.
 
+## General FIFO execution-ledger V1 (offline research gate)
+
+- [`tools/transaction_ledger.py`](tools/transaction_ledger.py) implements exact integer/Fraction FIFO for normalized per-token BUY/SELL execution claims. It handles pre-window acquisition with in-window exit, partial exits and losses, reconciles balances after each event, and keeps unspent cost basis separate.
+- [`tests/test_transaction_ledger.py`](tests/test_transaction_ledger.py): **20/20 offline tests passed** after fixing an observed same-block ordering defect. These tests include synthetic losses and failures; they do not prove new real-chain profits/losses.
+- [Historical row002 sauce normalized input](fixtures/batch001-row002-sauce-executions.json) and [archived source-claim replay result](evidence/ledger-v1-row002-source-replay.json): +0.156828105278687674 BNB, the **same existing** saved roundtrip, not an additional winning position. Real Git row002 and recorded event values were compared against the existing evidence.
+- [Exact local QA and limitations](state/ledger-v1-fifo-qa-20261018.md). The CLI in isolation was run with a synthetic manifest for 448 other address rows, so no end-to-end claim of original 449-row manifest ingestion is authorized.
+- `CLAIM_REPLAY_ONLY` means event receipts, inventory completeness and fees were **asserted by the normalized evidence**. This tool does not fetch receipts or verify those assertions on chain; it never returns completed wallet PnL or USD estimates.
+- Next major delivery gate: independent read-only transaction+receipt normalization, matched gas/native/quote outputs, verified historical inventory, actual positive AND negative closed trades, and complete-wallet accounting. Do not start production or promote a win-only wallet ranking.
+
 ## Boundaries
 
 No wallet signing, swaps, follow trading, live orders, Gmail, LaunchAgent, dashboards or automation. `PRODUCTION_TRADING=NO_GO`, Frank and Monster unchanged. Original Mission PnL and wallet snapshots are separate from this third-party address intelligence research. Keep every failed/negative result, no cherry-picking and no made-up wallet profits. Research is observation-only.
