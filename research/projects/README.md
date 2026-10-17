@@ -25,4 +25,6 @@ Current mapped material:
 
 - TapeOut / BEM chain research: `research/projects/tapeout-bem/tapeout-bem-bsc-xlayer-due-diligence.md` (BSC, X Layer, mining circuit NFT economics and risks).
 
+- Predict.fun pre-TGE investment and PP/Polymarket/Aspecta FDV due diligence: `research/projects/predict-fun/predict-fun-pre-tge-pm-fdv-due-diligence.md` (Thai geo restriction, no tokenomics or claim confirmed, research only).
+
 Operational monitoring thresholds remain in the Mission/TGE task roots.
