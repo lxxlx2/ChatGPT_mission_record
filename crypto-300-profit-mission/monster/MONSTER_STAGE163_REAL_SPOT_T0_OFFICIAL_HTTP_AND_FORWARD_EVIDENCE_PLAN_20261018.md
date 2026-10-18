@@ -161,3 +161,17 @@ Codex独立从原BINANCE HTTP ZIP和6份来源SHA重算，511样本中合成锁�
 Stage163 V3固定SHA `15edf022d8b99071701357dfd51d7534f3470409` 经Codex最终独立`APPROVE`后，正式关闭P1-E/P2-A/P2-B；没有继续改这三个问题的代码。已从**实际保存且冻结的Stage162/Stage30/Stage152/Stage163四个独立Git来源**复核并提交[Monster用户价值及下一步冻结决策](MONSTER_USER_VALUE_AND_NEXT_VALIDATION_DECISION_20261018.md)，只作研发优先级、不是新的交易策略审批：Stage162 Fair8高峰有效首评7→32，合计比FIFO新增27首次有效，但**新SETUP=0**，原120保留；Stage30历史价代理可评价430、133赢297亏，在乐观未知退出本金全额返还情景中300U历史资金净-79.489406U；Stage152另一个305 D1队列中确认184的24h费用价代理中位-2.83571964%；Stage163 V3仅为511旧USDT Spot的T0后收包报价摩擦，不能对旧WATCH或未来盘口匹配。
 
 **因此当前最有意义的下一开发任务**不是再审V3或继续针对已暴露样本改Fair8，而是通过同场所、同规则、未用于优化的未来分钟源与当时真实人口证据验证WATCH→SETUP真实转化，并对首次发现/到期/原始来源缺口一条条核对；真正G4则需同一事件时点新鲜双向L2、订单金额/手续费、预冻结退出时点真实买一深度与交易回执。七日新窗口在2026-10-24T22:06Z结束后还要等官方日ZIP与CHECKSUM实际发布，不得提前宣布通过；其中缺乏连续现时源的部分只能降级为分钟价代理。未启动任何新自动采集、应用、通知或交易。仍`G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。
+
+
+## 十五、只读研究机会清单全窗口可见性修复：不让失效记录挤掉有效WATCH/SETUP（2026-10-18）
+
+Stage163 V3报价证据固定SHA `15edf022d8b99071701357dfd51d7534f3470409` 已由Codex定向APPROVE且旧P1/P2 CLOSED，不再重审。转向真实用户看得见的研究信号时，检查已获Codex P2审核批准的`local-agent/scripts/monster_v4_opportunity_snapshot.py`后发现**真实业务缺陷**：SQL原先按最新`first_seen`裁掉超过显示limit(默认25)的队列Episode，然后才计算失效/过期/SETUP，造成**最新25个都已失效时，稍早仍有效的WATCH/SETUP不可见**。原子读没有错，功能性却难以使用；只优化Fair8首次5m次数并不能解决这一问题。
+
+在[修改前已冻结的最小合同](MONSTER_OPERATOR_FULL_WINDOW_SIGNAL_VISIBILITY_PRECHANGE_FREEZE_20261018.md)之后，仅修改原只读查询器及其SQLite/Shadow真实集成测试：先读请求窗口内全部已存候选，对每个按原event key、15min deadline、单币与venue独立quote健康推导研究状态，完整输出`window_total / hidden_by_display_limit / counts_by_signal_full_window`；先Spot SETUP研究，再WATCH研究，再Futures-only SETUP，再失效/过期/缺数据诊断；组内仍按原`first_seen DESC,id DESC`，最后应用显示limit。**所有排序都只是呈现，不动原D0/D1 Fair8、D2策略/真实数据库写入/候选的产生，不新增BUY。**
+
+- **新代码/测试冻结SHA** `731a0dfad0a78e77c53d20dbea3e375aaa9e55e1`，原研究主线基线 `2c37f0979832e2aafc3df94a78cb59660023e3eb`，Git实际diff只有`local-agent/scripts/monster_v4_opportunity_snapshot.py`与`local-agent/tests/test_monster_v4_opportunity_snapshot.py`修改，新增前置设计文档；其余生产、Frank、Stage163源、CI工作流不变。真实 [**完整CI #39086912646**](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39086912646) 23/23 steps SUCCESS，单查询器 **12/12**、Shadow **31/31**、D2 **12/12**，来源为生产Shadow函数操作的合成SQLite，非真实用户Mac运行或实时信号。
+- **真实生产schema注入对照**：21个原始已存队列episode（20更新的INVALIDATED + 1较早仍有效WATCH），`limit=3`输出有效WATCH第一名，报告整个窗口21、隐藏18；单独老Spot SETUP和更新WATCH的正反例也能保证先显示仍在期内的Spot研究SETUP，并维持D2未执行`NOT_CAPTURED`、G4 UNKNOWN、NO_BUY。
+- 首轮失败 [CI #39086849157](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39086849157) 原因只在新增测试：错误期待未运行D2时`PENDING`，实际生产正确`NOT_CAPTURED`；修正测试预期后全绿，没有为了测试改变生产D2行为。
+- **审核**：该新增查询器代码固定SHA的外部其他AI review仍`NOT_DONE`，完整可复制的局部审核任务写在[代码/测试/CI/审核包](MONSTER_OPERATOR_FULL_WINDOW_SIGNAL_VISIBILITY_IMPLEMENTATION_AND_REVIEW_20261018.md)。不得因为旧查询器P2通过就挪用其他AI审查结论；同样不能凭新显示排序推出更多SETUP或历史盈利。
+
+本工作是**可用性设计实际代码落地**，不是阶段性策略收益证实。当前无真实用户Mac上的持续Monster独立研究SQLite可读/应用上线证据；不存在可以直接交付的现时BUY。仍`G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，用户无需提供Mac、钱包、密钥或金额。真正后续价值仍须在冻结的新Spot时间窗口成熟并取得官方档案后做同源全市场Fair8/FIFO8 SETUP实证，以及同一事件真实进出盘口与执行成本；Stage99继续停用。
