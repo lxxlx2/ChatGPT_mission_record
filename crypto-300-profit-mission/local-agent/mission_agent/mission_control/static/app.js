@@ -513,7 +513,7 @@ function renderCandidates(rows) {
     const frankPriceRaw = m.frank_latest_buy_price_usdc ?? x.latest_buy_price_usdc;
     // Historical saved Jupiter quotes must never appear as a current $30 price.
     const quoteFresh = q.status === 'OK' && q.route_exists === true &&
-      globalThis.FrankCandidateSections.fresh(x.quote_observed_at, Date.now()/1000, 30);
+      globalThis.FrankCandidateSections?.fresh?.(x.quote_observed_at, Date.now()/1000, 30) === true;
     const execRaw = quoteFresh ? (m.execution_price_usdc ?? q.execution_price_usdc) : null;
     const impactRaw = quoteFresh ? (m.price_impact_pct ?? q.price_impact_pct) : null;
 
@@ -581,7 +581,7 @@ function renderArchivedCandidates(rows) {
     const oldAction = decision === 'BUY' || decision === 'SMALL_BUY';
     const label = oldAction ? '历史买入结论（已失效）'
       : '历史判断：' + translated(decisionLabel, decision, decision);
-    const at = globalThis.FrankCandidateSections.epoch(x.decision_created_at);
+    const at = globalThis.FrankCandidateSections?.epoch?.(x.decision_created_at) ?? null;
     const decisionTime = at === null ? '决策时间未知' : '最后评估于' + age(at);
     const overlay = x.candidate_source === 'MISSION_CONTROL_OVERLAY'
       ? ' · 非当前 Frank 原始候选' : '';
@@ -749,7 +749,8 @@ async function refresh() {
     ]);
     const openCandidates = candidates.filter(x => x.position_state !== 'CLOSED');
     const endedCandidates = candidates.filter(x => x.position_state === 'CLOSED');
-    const sections = globalThis.FrankCandidateSections.split(openCandidates, Date.now()/1000);
+    const sections = globalThis.FrankCandidateSections?.split?.(openCandidates, Date.now()/1000) ||
+      {current:[], archived:openCandidates};
     const olderExits = endedCandidates.filter(x => !withinHours(x.latest_at, 24));
 
     renderRuntime(runtime,control);
