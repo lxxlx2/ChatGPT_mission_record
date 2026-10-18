@@ -945,3 +945,14 @@ Geth 文档指出 WebSocket `logs` 在链重组时向同一旧块事件再发 `r
 
 测试覆盖包含了受限 Node `--dry-run`（不打开 WebSocket）、纯 stdlib Python 编码/输入门禁、有效和无效及撤销合成事件、五个旧历史 tx 不得冒充实时 firstSeen、来源 blob 固定/候选拒绝。请以此段生成后的固定 SHA Linux/macOS 原始 GitHub Actions Job logs 为唯一最终 CI 结论。任何 `APPROVE@0b8e0f709c5af1a20058eb1da4b6656eb2b69cc8` 仅适用于以前已经审核的 F1–F7 历史重放，**不自动批准本轮新 observer 数据入口**。下一正式门禁对这次核心 U 采集组件交付一次带具体 SHA 的独立 other-AI Review，随后另等用户许可作有界 Mac 真实免费 WebSocket 测试及可量化观察率。保持 `P4-B/P4-C=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
 
+## 2026-10-19 P4-B 原公网日志采集器独立审核 REQUEST_CHANGES：P2/P3 定向修复及可用性复验
+
+接手用户提供的独立 Codex 只读审核 `REQUEST_CHANGES@c8482d1e2d5c44fb7e712538def09abd33a5739d`（1 P2 + 1 P3），不回溯批准该旧 SHA。P2：已有 log 已正常候选，但之后的 `removed=true` 帧在共享校验被拒绝（wrong network、重复 event_id、另一个 frozen CA/EOA）时，旧代码仍将其收纳到撤销集合，只凭 blockHash/txHash/logIndex 错误撤销好记录。P3：`9999-12-31T23:59:59Z` 格式正确却无法计算 900 秒延迟，溢出异常使整个导入丢失可读结果。并接受另一实测审查关于 SIGTERM 直接终止丢失采集文件、未核对真实链 ID、同 log 伪造事件 ID 重复计数的关键反馈。
+
+本次在原研究 Draft PR #40 **仅做相应重要路径修复，不追逐无限早期区块、不伪造可交易 U**：
+1. Python 仅从已通过网络/来源/钱包/token/raw SHA/时钟/唯一 ID 的 `validate_event` 结果认定合格 tombstone；仅接受相同 chain、wallet、CA、blockHash、txHash、logIndex、blockNumber、sender topic、原始转账数额的撤销。原同批 reorg 仍保留撤销效果；错误网络、另一 CA/EOA、重复 ID、金额/发送方不符、SHA 篡改均无撤销副作用。重复 log 即使换新 event_id 也不可二次计入。跨批次去重与撤销**目前不保证**。
+2. 统一安全计算 `+60/+300/+900s` UTC，OverflowError 显式转单条 `UTC_DELAY_WINDOW_OUT_OF_RANGE`，其它合法行正常通过。pending、post-block log 两类都单独有反例。
+3. Node 手动只读 collector 必须先查询并证明公网 RPC 回执的 `eth_chainId=0x38` 才发 `eth_subscribe logs`，其它链拒绝订阅；`SIGTERM` 与 SIGINT 一样走有界归档并有退出码。采用全离线 Fake WebSocket 保留 0600 文件、原始 bytes SHA 且恢复 `provider_chain_id`，验证错误链没有订阅。旧原 frozen JSON 没有修改，没运行真实 WSS、没有推送信号/邮件/交易。
+4. **没有承诺修复历史时间倒签**：原始帧 SHA 不能证明帧以外 UTC 的独立真实性；实际第三方时钟鉴证和事件/行情源、跨批重组要等另有明确授权后采集真实来源。目前任何进口数据都不得被程序直接判定为 public first-seen 或真实 1/5/15 分钟收益，只能 `UNATTESTED`。
+
+具体新源码及定向修复差异在 [入口源码](./bsc_meme_address_model_v1_p4b_public_observer_ingress_gate.py)、[有界 Node 采集器](./bsc_meme_address_model_v1_p4b_bounded_postblock_log_collector.js)、[40+ 离线反例/模拟测试](./test_bsc_meme_address_model_v1_p4b_public_observer_ingress_gate.py)、[更新源限制与业务结果报告](./bsc-meme-address-model-v1-p4b-public-observer-ingress-collector-report-2026-10-18.md)。**新的最终 Git SHA、实际测试 Job 原始日志和外审定向请求必须以 PR #40 后续新评论为准；在复核以前标 `PENDING_OTHER_AI_REVIEW`，不得延用旧 SHA 审批。** 保留 `P4-B=PARTIAL / P4-C=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
