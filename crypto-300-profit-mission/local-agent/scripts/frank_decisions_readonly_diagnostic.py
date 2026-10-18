@@ -50,6 +50,16 @@ def request_metadata(port: int, path: str = SOURCE, timeout: float = 8.0) -> dic
             "bytes_read": len(body),
             "read_cap_reached": len(body) >= MAX_CAPTURE,
         }
+        if response.status == 503 and mime == "text/html":
+            # Only whitelist fixed QA proxy error codes. Never save HTTP
+            # response text, decisions data or arbitrary HTML.
+            for reason in (
+                "LOCAL_API_OVERSIZED", "LOCAL_API_SOURCE_UNAVAILABLE",
+                "LOCAL_API_NOT_JSON", "LOCAL_API_UNAVAILABLE",
+            ):
+                if reason.encode("ascii") in body[:8192]:
+                    result["qa_proxy_failure_code"] = reason
+                    break
         return result
     except (OSError, TimeoutError, HTTPException, ValueError) as exc:
         return {
@@ -85,9 +95,11 @@ def classify_samples(samples: list[dict]) -> dict:
                     or s["direct"].get("read_cap_reached"))]
     slow = [s for s in comparisons
             if s["direct"].get("elapsed_ms", 0) >= PROXY_SECONDS * 1000]
+    proxy_codes = Counter(s["proxy"].get("qa_proxy_failure_code")
+                          for s in samples if s["proxy"].get("qa_proxy_failure_code"))
     if direct_bad:
         verdict = "DIRECT_SOURCE_ERROR_OBSERVED"
-    elif oversize:
+    elif oversize or proxy_codes.get("LOCAL_API_OVERSIZED"):
         verdict = "PROXY_4MB_LIMIT_PROBABLE"
     elif slow:
         verdict = "PROXY_3S_TIMEOUT_POSSIBLE"
@@ -103,6 +115,7 @@ def classify_samples(samples: list[dict]) -> dict:
         "direct200_proxy503_count": len(comparisons),
         "oversize_suspected_count": len(oversize),
         "slow_source_suspected_count": len(slow),
+        "qa_proxy_failure_codes": dict(proxy_codes),
     }
 
 
