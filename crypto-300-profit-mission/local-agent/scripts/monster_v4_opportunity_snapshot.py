@@ -64,10 +64,13 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
                 "degraded_since_utc": utc_time(health["degraded_since_ms"])
                 if health and health["degraded_since_ms"] is not None else None,
             }
+        # Materialize the entire requested research window *before* display
+        # truncation: recent invalidated/expired episodes must not hide an
+        # older, still-current WATCH or SETUP.
         rows = db.execute("""SELECT * FROM candidate_queue
             WHERE first_seen_ms BETWEEN ? AND ?
-            ORDER BY first_seen_ms DESC,id DESC LIMIT ?""",
-            (now_ms - window_hours * 3_600_000, now_ms, limit)).fetchall()
+            ORDER BY first_seen_ms DESC,id DESC""",
+            (now_ms - window_hours * 3_600_000, now_ms)).fetchall()
         entries = []
         for r in rows:
             q = dict(r)
@@ -170,15 +173,31 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
                 "g4_real_execution": "UNKNOWN",
                 "recommendation": "RESEARCH_REVIEW_ONLY_NO_BUY",
             })
+        full_counts = {}
+        for item in entries:
+            full_counts[item["signal"]] = full_counts.get(item["signal"], 0) + 1
+        full_total = len(entries)
+        # Stable sort retains first_seen_ms DESC,id DESC within each research
+        # state because SQL produced that chronology. No retrospective winners.
+        research_rank = {
+            "SETUP_RESEARCH_ONLY": 0,
+            "WATCH_RESEARCH_ONLY": 1,
+            "FUTURES_ONLY_SETUP": 2,
+        }
+        entries.sort(key=lambda item: research_rank.get(item["signal"], 3))
+        visible = entries[:limit]
         return {
-            "schema": "MONSTER_V4_OPERATOR_RESEARCH_SNAPSHOT_V1",
+            "schema": "MONSTER_V4_OPERATOR_RESEARCH_SNAPSHOT_V2_WINDOW_COMPLETE",
             "asof_utc": utc_time(now_ms), "mode": "OFFLINE_SQLITE_READ_ONLY",
             "historical_asof_reconstruction": False,
             "production": "NO_GO", "trading": "NO_GO", "g4_real_profit": "UNKNOWN",
             "data_window_hours": window_hours, "limited_to": limit,
-            "sources": sources, "opportunities": entries,
-            "displayed": len(entries),
-            "note": "No historical PIT reconstruction or live market quote; no trading or mail.",
+            "display_priority_contract": "SPOT_SETUP_RESEARCH_THEN_WATCH_THEN_FUTURES_SETUP_THEN_DIAGNOSTICS; EACH_DESCENDING_FIRST_SEEN_ID",
+            "sources": sources, "opportunities": visible,
+            "window_total": full_total, "hidden_by_display_limit": full_total - len(visible),
+            "counts_by_signal_full_window": dict(sorted(full_counts.items())),
+            "displayed": len(visible),
+            "note": "Full stored window classified before display limit; no live market quote, historical PIT reconstruction, trading or mail.",
         }
 
 
@@ -209,7 +228,10 @@ def main():
                   + " | PRICE_STORED=" + str(r["last_stored_price"])
                   + " | COST_BPS_STORED=" + str(r["d2_instant_roundtrip_cost_bps"])
                   + " | NO_BUY")
-        print("Shown " + str(result["displayed"]) + "; research records, not current orders.")
+        print("Shown " + str(result["displayed"]) + "/" + str(result["window_total"])
+              + " stored episodes; hidden_by_display_limit=" + str(result["hidden_by_display_limit"])
+              + " | full_window_states=" + json.dumps(result["counts_by_signal_full_window"], sort_keys=True)
+              + " | research records, not current orders.")
 
 
 if __name__ == "__main__":
