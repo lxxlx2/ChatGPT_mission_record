@@ -1,8 +1,11 @@
 # Monster Stage163 — Claude Haiku 5.5 定向审核 REQUEST_CHANGES → 官方后置报价 V2 修复（2026-10-18）
 
+> **版本状态更正：V2已被V3继承，只供审计复现。** V2的UTC收包偏移是**未经双端点时钟探针校准的名义差**，不是实际准确的交易所时间偏移；当前取用[V3后置客户端回执时钟误差报告](evidence/monster_stage163_spot_post_t0_original511_quote_friction_v3_clock_actual.json)的双时钟中点与请求半窗误差包络。老V2 Blob保留，不覆盖。见[证据继承及失效标签登记](evidence/monster_stage163_spot_quote_friction_evidence_supersession_register_20261018.json)。G4 UNKNOWN/G6 NO_GO。
+
+
 ## 结论及唯一有效证据
 
-**本轮作者修复与 CI：PASS；其他AI对新固定代码的独立复审：NOT_DONE。** 上轮 Claude 聊天审核 V1 固定 SHA `e860c1aa6485c453f99a1a17c207670a3685eb85` 为 `REQUEST_CHANGES`，审核底层模型自述 Claude Haiku 5.5，准确底层版本`UNVERIFIED`。报告指出 P1=1/P2=2：不能把T0之后才收到的BBO称为可在T0使用的盘口、不可将511个Spot/USDT TRADING合格分母称为所有Binance Spot、行情端点与交易对目录不一致的3项身份不应静默丢弃。旧报告没有被修改或重新写币价，它在本PR仅作为历史V1不可用于T0交易因果证据。
+**本轮历史V2作者修复与CI：PASS；其后独立复审为REQUEST_CHANGES，当前继续以V3修复；V3独立审核NOT_DONE。** 上轮 Claude 聊天审核 V1 固定 SHA `e860c1aa6485c453f99a1a17c207670a3685eb85` 为 `REQUEST_CHANGES`，审核底层模型自述 Claude Haiku 5.5，准确底层版本`UNVERIFIED`。报告指出 P1=1/P2=2：不能把T0之后才收到的BBO称为可在T0使用的盘口、不可将511个Spot/USDT TRADING合格分母称为所有Binance Spot、行情端点与交易对目录不一致的3项身份不应静默丢弃。旧报告没有被修改或重新写币价，它在本PR仅作为历史V1不可用于T0交易因果证据。
 
 **本轮唯一V2固定代码/测试/工作流SHA：`4c6bff916bb432ba778c59e6283c5a75e2902293`。** 定向比较基线选上轮V1报告发布完成的Git SHA `0bc71dc9642023371d362bca435f909e721f5e01`，固定diff只包括**3个可执行文件**：
 - `crypto-300-profit-mission/local-agent/scripts/monster_v4_stage163_spot_t0_quote_friction.py`
