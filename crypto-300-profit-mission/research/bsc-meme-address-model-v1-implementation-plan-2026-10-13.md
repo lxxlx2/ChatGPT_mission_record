@@ -937,3 +937,11 @@ R2 的真实 WBNB→龙虾 Pair Swap 最早 signed tx `0x2b93cfb6ae16ab4943f5f20
 
 **业务验收与明确停止点**：静态仓库功能只测试 Node `--dry-run`/Python 离线重放、23×19 来源和假输入拒绝；不会连接用户 Mac、公网 WebSocket 或邮箱。下一次触发真实 G4/G5 功能门禁时先完成一个固定 SHA 的独立其他 AI Review，再另行得到用户对 Mac `--live` 限时只读试跑的批准。最小实测一期限定 120 秒、最多 100 条日志：只看供应商是否接受订阅、原始帧是否保真、多少是真原钱包 signed swap vs 被动转入、时钟校准是否可追溯和失连失败如何落盘。只有后续同口径落地实际可支付 quote 资金/真实买卖路由/税/退出及 `+60/+300/+900s` 之后，才有 P5 盈亏分析资格。维持 `P4-B=PARTIAL / P4-C=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`，且之前 `APPROVE@0b8e0f...` 只批准其固定老 SHA。
 
+## 2026-10-18 P4-B 公网观察采集器追加：原日志撤销、离线安全回归
+
+本批在已有冻结 23 EOA/19 CA 与 first-seen 缺失证据之上完成单次有意义的功能补强：`PUBLIC_CONFIRMED_ERC20_TRANSFER_LOG_INGRESS` 会从原始 Subscription 帧校验 `Transfer` topic、固定 token exact CA、wallet 索引收款、BNB blockHash/blockNumber、txHash/logIndex、非零 raw 数量、原始帧 SHA256、UTC/monotonic/时钟来源。仅给出 **post-block 本地接收候选**，不得解读为原钱包自己签名买入，更不等于 pending mempool first seen。也支持单独导入公网全 `from` 的 pending tx 全对象，但鉴于 Alchemy 增强版地址过滤不支持 BNB，本轮没有编造一个免费 23-E0A pending 实时订阅服务。
+
+Geth 文档指出 WebSocket `logs` 在链重组时向同一旧块事件再发 `removed=true`，测试已对这一场景修复源码：Node recorder **分别保留 INCLUDED/REMOVED 两条原始帧**，不因哈希相同去重丢掉回滚；Python 同批使用原始帧 SHA、CA/topic/wallet/hash/logIndex/blockHash 精确匹配把已接受的原 post-block 候选标 `REORG_REVOKED_POSTBLOCK_LOG`，删除候选的延迟目标而保留撤销事件证据。不同新块 hash 不受旧块 tombstone 影响，造假的 removed 原始帧 SHA 不能触发撤销。详细技术和用户解释见 [BNB 官方能力限制、捕获/回滚报告](./bsc-meme-address-model-v1-p4b-public-observer-ingress-collector-report-2026-10-18.md)。该批仍不触发真实 RPC，不运行 Mac 服务。
+
+测试覆盖包含了受限 Node `--dry-run`（不打开 WebSocket）、纯 stdlib Python 编码/输入门禁、有效和无效及撤销合成事件、五个旧历史 tx 不得冒充实时 firstSeen、来源 blob 固定/候选拒绝。请以此段生成后的固定 SHA Linux/macOS 原始 GitHub Actions Job logs 为唯一最终 CI 结论。任何 `APPROVE@0b8e0f709c5af1a20058eb1da4b6656eb2b69cc8` 仅适用于以前已经审核的 F1–F7 历史重放，**不自动批准本轮新 observer 数据入口**。下一正式门禁对这次核心 U 采集组件交付一次带具体 SHA 的独立 other-AI Review，随后另等用户许可作有界 Mac 真实免费 WebSocket 测试及可量化观察率。保持 `P4-B/P4-C=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
+
