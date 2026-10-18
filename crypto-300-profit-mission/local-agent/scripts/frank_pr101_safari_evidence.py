@@ -105,6 +105,28 @@ def exact_review_checkout(destination: Path) -> Path:
                    check=True, timeout=15)
     return static
 
+def pinned_candidate_checkout(script_file: Path, expected_sha: str) -> Path:
+    """Preview a newer QA product tree only after an explicit exact-SHA request.
+
+    This *never* deploys candidate code. Its review status is not implied.
+    """
+    if not re.fullmatch(r"[0-9a-f]{40}", expected_sha):
+        raise RuntimeError("CANDIDATE_SHA_INVALID")
+    root = script_file.resolve().parents[3]
+    actual = subprocess.run(["git", "-C", str(root), "rev-parse", "HEAD"],
+                            capture_output=True, text=True, check=True, timeout=15).stdout.strip()
+    if actual != expected_sha:
+        raise RuntimeError("CANDIDATE_SHA_MISMATCH")
+    dirty = subprocess.run(["git", "-C", str(root), "status", "--porcelain"],
+                           capture_output=True, text=True, check=True, timeout=15).stdout
+    if dirty:
+        raise RuntimeError("CANDIDATE_WORKTREE_DIRTY")
+    static = root / STATIC_REL
+    if not static.is_dir() or any(not (static / name).is_file() for name in STATIC_FILES):
+        raise RuntimeError("CANDIDATE_STATIC_INCOMPLETE")
+    return static
+
+
 def make_handler(static: Path, live_port: int):
     class View(SimpleHTTPRequestHandler):
         def __init__(self, *args, **kwargs):
@@ -195,12 +217,16 @@ def screenshots(capture_root: Path, *, input_fn=input, invoke=subprocess.run) ->
     return result
 
 def package_evidence(screenshots_dir: Path, out_path: Path, captures: list[dict], static: Path,
-                     *, source_port: int, preview_port: int) -> Path:
+                     *, source_port: int, preview_port: int, preview_sha: str = APPROVED) -> Path:
     manifest = {
         "kind": "FRANK_PR101_MAC_SAFARI_MANUAL_EVIDENCE",
         "schema_version": 1,
         "captured_at_utc": datetime.now(timezone.utc).isoformat(),
-        "approved_product_sha": APPROVED,
+        "approved_pr101_base_sha": APPROVED,
+        "preview_source_sha": preview_sha,
+        "approved_product_sha": preview_sha if preview_sha == APPROVED else None,
+        "candidate_source_review_status": "PR101_EXTERNALLY_APPROVED" if preview_sha == APPROVED
+            else "CANDIDATE_REQUIRES_SEPARATE_INDEPENDENT_REVIEW",
         "reviewed_static_files_sha256": {name: sha256_bytes((static / name).read_bytes()) for name in sorted(STATIC_FILES)},
         "capture_method": "macOS interactive screencapture -i -x, chosen regions",
         "screenshot_count": len(captures),
@@ -230,6 +256,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--skip-safari", action="store_true",
                         help="Leave the preview URL printed, useful if Safari is already open")
+    parser.add_argument("--candidate-sha",
+                        help="Explicit SHA of a newer candidate source tree from this script's clean Git checkout; isolated QA only")
     args = parser.parse_args()
     if sys.platform != "darwin":
         raise SystemExit("STOP: macOS Safari capture only")
@@ -239,7 +267,12 @@ def main() -> int:
     verify_local_source(source_port)
     with tempfile.TemporaryDirectory(prefix="frank-pr101-safari-evidence-") as tmp:
         work = Path(tmp)
-        static = exact_review_checkout(work / "approved")
+        if args.candidate_sha:
+            static = pinned_candidate_checkout(Path(__file__), args.candidate_sha)
+            preview_sha = args.candidate_sha
+        else:
+            static = exact_review_checkout(work / "approved")
+            preview_sha = APPROVED
         screenshots_dir = work / "screenshots"
         screenshots_dir.mkdir(mode=0o700)
         server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(static, source_port))
@@ -248,7 +281,10 @@ def main() -> int:
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
         try:
-            print(f"APPROVED_PR101_SHA={APPROVED}")
+            print(f"PR101_APPROVED_BASE_SHA={APPROVED}")
+            print(f"PREVIEW_SOURCE_SHA={preview_sha}")
+            print("REVIEW_SCOPE=" + ("PR101_APPROVED" if preview_sha == APPROVED
+                  else "QA_CANDIDATE_NOT_PRODUCTION_APPROVED"))
             print("GET_ONLY=YES; NEW_RPC=NO; POST=BLOCKED; NO_DEPLOY=YES")
             print("SAFARI_PREVIEW_URL=" + url)
             if not args.skip_safari:
@@ -258,9 +294,9 @@ def main() -> int:
                 print("NO_SCREENSHOT_CAPTURED; NO_ZIP_CREATED")
                 return 2
             stamp = datetime.now().astimezone().strftime("%Y%m%d-%H%M%S")
-            archive = Path.home() / "Downloads" / f"frank-pr101-safari-evidence-{stamp}-{APPROVED[:8]}.zip"
+            archive = Path.home() / "Downloads" / f"frank-pr101-safari-evidence-{stamp}-{preview_sha[:8]}.zip"
             package_evidence(screenshots_dir, archive, captured, static,
-                             source_port=source_port, preview_port=port)
+                             source_port=source_port, preview_port=port, preview_sha=preview_sha)
             print("EVIDENCE_ZIP=" + str(archive))
             print("SCREENSHOT_COUNT=" + str(len(captured)))
             subprocess.run(["open", "-R", str(archive)], check=False)
