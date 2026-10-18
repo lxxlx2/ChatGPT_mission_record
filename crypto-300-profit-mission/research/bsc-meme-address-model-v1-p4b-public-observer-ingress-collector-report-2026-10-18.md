@@ -1,0 +1,38 @@
+# BSC Meme V1 P4-B：真实公众可观察时刻的最小可行证据入口
+
+日期 2026-10-18。目标：在既有 23 EOA × 19 exact CA 研究集之外**不引入新钱包、不放大研究利润**，提前准备真实“观察者何时收到原钱包相关公开事件”的可审计记录。保留此阶段所有 G4/G5 未证实条件。
+
+## 一、已核对的 BNB 免费技术路线及限制
+
+根据 Alchemy 官方文档（2026-10-18 阅读）：
+
+- BNB Smart Chain `eth_subscribe` 允许 WebSocket `wss://`，官方列有 `logs`、`newHeads`、`newPendingTransactions` 等类别：<https://www.alchemy.com/docs/chains/bnb-smart-chain/bnb-smart-chain-api-endpoints/eth-subscribe>。
+- **Alchemy 地址过滤的增强型 `alchemy_pendingTransactions` 官方明确仅支持 Ethereum/Arbitrum/Polygon/Optimism**，未列 BNB：<https://www.alchemy.com/docs/reference/subscription-api>。故不能直接拿原 23 个 EOA 在 BNB 依赖该增强订阅，也不能把收到 BNB 成交后的日志冒充“mempool 首见”。
+- 标准 `logs` 支持合约地址、topic 条件：<https://www.alchemy.com/docs/reference/logs>。本阶段选择 `eth_subscribe(["logs", {"address":[19 exact CA], "topics":[ERC20 Transfer, null, [23 EOA indexed recipient]]}])`。这是**ERC20 入币候选发现**，不是本人原始签名、买入意图、交易成功独立结算、报价币种或跟单 U 认证。BNB 上生产网络对这组组合过滤器的实际接受情况**本轮未连网实测**；不保证服务商免费配额、筛选性能或端到端时延。
+- Alchemy BNB 免费 `eth_getLogs` 单次回溯最大 10 块（供以后人工核验，不代表本轮调用）：<https://www.alchemy.com/docs/chains/bnb-smart-chain/bnb-smart-chain-api-endpoints/eth-get-logs>。本轮不执行 RPC，也不新建监控任务。
+
+## 二、本次新增的可运行、未部署代码
+
+1. `bsc_meme_address_model_v1_p4b_bounded_postblock_log_collector.js`：Node v24 原生 WebSocket，**默认 `--dry-run` 且绝不打开网络连接**；只有用户之后显式 `--live`、`BSC_WSS_URL` 环境变量与本地输出文件才连接。最多 600 秒和 250 条原始日志，不自动重连，不发送交易，不使用私钥、不修改链上状态。单组来源固定 `23×19` blob SHA，RPC 订阅失败写实际失败，不伪造观察成功。把 WebSocket **收到时的真实本地 UTC 与 monotonic 时钟**、完整接收帧 base64+SHA256、blockHash、txHash、logs 等保存在带 `0600` 文件权限的 JSON，避免在报告和文件泄露 WebSocket URL/API key。记录 `removed` 重组日志供门禁拒绝。
+2. `bsc_meme_address_model_v1_p4b_public_observer_ingress_gate.py`：只读 Python stdlib CLI，默认输出 **五份历史证据的 U 缺失**；`--input` 可离线读采集 JSON，无网络。对固定 23×19 集合、历史冻结交易不可倒填成新的 live first-seen、原数据 SHA、原始 pending 对象的 `from`/hash、ERC20 Transfer 的 token exact CA/收币人 topic/区块/数量/是否被 reorg 标记、UTC/monotonic/用户报告的时钟信息做门禁验证。程序支持两类候选：待打包 tx 全对象、已上链 post-block Transfer log。
+3. `test_bsc_meme_address_model_v1_p4b_public_observer_ingress_gate.py`：只用 **SYNTHETIC_TEST** 事件覆盖伪造 hash、地址外越界、错 CA、重组日志、归零金额、原始 SHA 篡改、历史时间替代、时钟不合格、过期历史交易回填、重复 ID、无界输入、Node `--dry-run` 和 23×19 topic filter。测试通过只表示输入验证按设计处理，不是历史链上收益或真实 WebSocket 连接证明。
+
+运行仓库本身内现有代码的**无网络自检**，无须新增依赖：
+
+```zsh
+node crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_bounded_postblock_log_collector.js --dry-run
+python3 -B crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_public_observer_ingress_gate.py
+python3 -B -m unittest discover -s crypto-300-profit-mission/research -p test_bsc_meme_address_model_v1_p4b_public_observer_ingress_gate.py -v
+```
+
+只会打印或检测冻结参数，不启动监听。**未授权部署前不执行 `--live`，不建立 launchd 常驻、不接 Mac 用户本地钱包、不做任何报警/买卖。** 系统默认时钟校准证据 `UNKNOWN`：原始真实帧仍可以保存，但导入器拒绝将它升级为可用延迟起点；需要来自用户自己确有证据的时钟校准来源和实际偏移上限，不能通过随意传 `0` 假装已校准。即使用户报告已同步，导入器也只输出 `UNATTESTED` 本地时间候选。
+
+## 三、首次收到事件 != 原钱包可跟单的买入
+
+- 此项目最初要在 19 个真实 major exact CA 中发现 2026 年仍主动交易、可重复盈利且可被旁观者按公平规则跟进的地址。`Transfer(to=EOA)` 本身可以是 passive transfer、空投、内部转移、合约授权交易的结果，并不能单独证明原 EOA 是 tx signer 或钱包买入。
+- 原始交易哈希和合约转账只是**候选**，后续还要独立读取 `eth_getTransactionByHash` 的原始发起人、成功 receipt、完整 Token Transfers、报价资产净出入、Gas/税费、池资金深度和入场时实际可得报价。必须先处理非 BUY/被 reorg/过期/未成交等反例。
+- 实际 `first_local_observer_received_utc_claim` 和历史 `consensus block.timestamp` 各自独立存证；前者也只是**单个接收节点看到的最早已上链日志时间**，不是世界所有公网节点中最早的 mempool 首见。没有真实独立采集原始帧，历史五案例 `first_public_observer_received_utc` 仍为 null。
+- 执行 `+60/+300/+900 seconds` 的时间只作为未来候选的待验证目标，而不是真实可下单或成交。未预冻结本金、费用/退出规则、未提供有状态历史报价与实际回款前，仍 `PUBLIC_EXECUTABLE_U=UNRESOLVED`、`P5=BLOCKED`。
+- 由于未获得 Mac 只读运行和外部服务商实测授权，**目前业务完成度是“来源边界、采集器源码、导入门禁、离线测试”**；真正公网观察第一笔、证明可复制正负回合、运行时性能和真实盈利仍未完成。
+
+下一里程碑：其他 AI 对本次独立 U 入口核心算法进行一次**固定 SHA 代码安全/证据等级定向审核**；通过后另获许可，在用户 Mac 使用 free RPC 作有时长、有条数上限的 **2 分钟 read-only dry actual WSS** 验收，确认 BNB provider 真实接受过滤器与日志质量，观察实际捕获率与时钟证据。拿到独立验收前绝不把原五个历史回合产生的模型收益当成回测结论。
