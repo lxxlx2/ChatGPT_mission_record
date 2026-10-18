@@ -96,6 +96,15 @@ This development gate is more important than additional signed-nonce screening. 
 - Added [two complete Base row051 lending receipts](fixtures/base-row051-aave-supply-withdraw-receipts.json) and [independently checked token/gas evidence](evidence/base-l1-fee-and-lending-facts-20261018.json). Supply and withdraw on a specific Aave Base pool are classified as **lending, not swaps**; observed underlying USDC net -1 raw unit across these two calls is **not** a verified token loss.
 - [25 isolated Python tests pass](tests/test_receipt_probe.py); see [QA limitations](state/base-fee-and-lending-qa-20261018.md). The historical sauce swap receipts remain truncated and independent native cashflow tracing remains unresolved. No new trade PnL or whole-wallet completion claimed.
 
+
+## Historical sauce transfer-log/BNB block correlation (new independent RPC facts)
+
+For fixed-source rows **002/004**, the [narrow Transfer-event + historic balance/nonce evidence](evidence/batch001-sauce-rows002-004-narrow-transfer-native-block-20261018.json) now independently corroborates both sauce token closed cycles. Instead of relying on truncated whole receipts, Alchemy read-only `eth_getLogs` used the token address plus indexed wallet from/to topics and exact heights; `eth_call(balanceOf)`, `eth_getBalance`, and `eth_getTransactionCount` also verified the same relevant historical block states. Each sale emits **two** outgoing token Transfer logs that must be summed. The two wallets have block-level BNB differences matching the saved values, not new paid wins.
+
+**Critical:** native receipt-by-transaction attribution remains `UNRESOLVED_WITHOUT_INTERNAL_TRACE`. Block-level wallet BNB changes may include external same-block receipts, and complete router receipt JSON is truncated through the current provider. Do not change their PnL evidence to fully transaction-audited or promote either wallet to a ranked profitable-wallet candidate.
+
+[Read-only saved-evidence verifier](tools/verify_block_roundtrip.py) + [12/12 isolated offline regression tests](tests/test_verify_block_roundtrip.py) check original row identities, historical nonce deltas, ERC20 event signatures and hashes, both sell logs, zero reverse filter results, balance snapshots and block-level arithmetic. [Evidence limits](state/sauce-rows-002-004-independent-log-block-recheck-20261018.md) note that Python's real-original-449-manifest CLI E2E has not yet been demonstrated. This is an **evidence corroboration**, not new whole-wallet PnL.
+
 ## Boundaries
 
 No wallet signing, swaps, follow trading, live orders, Gmail, LaunchAgent, dashboards or automation. `PRODUCTION_TRADING=NO_GO`, Frank and Monster unchanged. Original Mission PnL and wallet snapshots are separate from this third-party address intelligence research. Keep every failed/negative result, no cherry-picking and no made-up wallet profits. Research is observation-only.

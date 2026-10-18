@@ -110,6 +110,17 @@ Alchemy historical Ethereum and Base nonce pairs were collected for the same 20 
 | 019 | GOOGLon `0x091fc7778e6932d4009b087b191d1ee3bac5729a`, AAPLon `0x390a684ef9cade28a7ad0dfa61ab1eb3842618c4` | Contract identity/prices and trade history not established; numerous likely tiny transfers |
 | 020 | 屌丝生活 `0x11e80d2b5f182149c9168ec62d93eaf51d0177777` | Multi-sale outflows observed, acquisition cash flows and precise exits not fully reconciled |
 
+
+## 2026-10-18 独立 RPC 校验升级：#002/#004 sauce
+
+[最新窄过滤 ERC-20 Transfer / 历史代币余额 / BNB 区块余额 / nonce 证据](../evidence/batch001-sauce-rows002-004-narrow-transfer-native-block-20261018.json) 已重新读取 **两钱包各2买1卖** 的链上数据。每钱包买入区块两条实际收币日志、卖出交易两条转出日志（必须合并计算）与历史 `balanceOf` 的 0 → 两次买入合计 → 0 完全一致。6组反向日志查询均为空；各钱包买入高度签名 nonce +1/+1，卖出高度 +2（含授权）。
+
+另外历史 BNB 地址余额在交易所处**区块**的差分总和，#002 为 **+156828105278687674 wei BNB**，#004 为 **+154215798043203099 wei BNB**；这是重新取得的区块级现金流，数值与先前保存的 sauce 单币轮次一致，并不是新增收益案例。
+
+**重要证据等级限制：**当前 Alchemy 的完整路由收据仍截断、免费档无法提供 BSC internal trace，尚不能排除同一出售区块中的其他被动 BNB 收款，更不能把全部余额差分百分之百归因于该笔 router sell。记录为 `NATIVE_TX_ATTRIBUTION_UNRESOLVED`，不得宣称已获得完整独立买卖利润审计通过。其它交易及整钱包月度/长期 PnL 继续 `UNRESOLVED`。
+
+[可复核的保存数据一致性程序](../tools/verify_block_roundtrip.py)、[12个通过的合成反例测试](../tests/test_verify_block_roundtrip.py) 与 [完整 QA](../state/sauce-rows-002-004-independent-log-block-recheck-20261018.md)。模块重点仍是逐交易来源与成本归因，不是继续单纯提高活跃地址筛查数。
+
 ## What is complete, what remains
 
 - **Completed & durable:** BSC first-20 signed nonce census with immutable block bounds, fully closed row016 RTX5090 and rows002/004 sauce single-token profit and loss-aware evidence records, issuer labels preserved untrusted.
