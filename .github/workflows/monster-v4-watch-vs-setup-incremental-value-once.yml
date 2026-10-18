@@ -1,0 +1,100 @@
+name: Monster original269 WATCH vs original120 SETUP same-source incremental value
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-watch-vs-setup-incremental-value-once.yml'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_watch_vs_setup_incremental_value.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_watch_vs_setup_incremental_value.py'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster-original-watch-versus-setup-same-source-once
+  cancel-in-progress: false
+jobs:
+  prior_feb445_exposed_watch_vs_setup:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test economic matching, anti-oracle labels and causal entry-time locks
+        run: |
+          set -eu
+          python3 -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_watch_vs_setup_incremental_value.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_watch_vs_setup_incremental_value.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_watch_vs_setup_incremental_value.py
+      - name: Acquire original publisher-proven 28 archived February shards and original A-B
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster_watch_setup_feb162
+          gh run download 39068290868 --repo lxxlx2/ChatGPT_mission_record --dir /tmp/monster_watch_setup_feb162 --name monster162-real445-first-valid-5m-fair8-ab-once-v4
+          printf '%s  %s\n' c30c8b6467b0017b36efc33fadfa2c7853f29f9c7e32993249774269ba4e2ae2 /tmp/monster_watch_setup_feb162/monster162_actual_445_fair8_ab.json | sha256sum -c -
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_archive_replay_runner.py collect --source-dir /tmp/monster_watch_setup_orig28 --audit /tmp/monster_watch_setup_orig28_archive_receipts.json
+      - name: Compare all actual WATCHs and SETUPs with the same real minute source and exact fixed price-proxy rules
+        run: |
+          set -eu
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_watch_vs_setup_incremental_value.py --stage162-full /tmp/monster_watch_setup_feb162/monster162_actual_445_fair8_ab.json --original28-source-dir /tmp/monster_watch_setup_orig28 --out /tmp/monster_watch_vs_setup_same_source_v1.json
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path('/tmp/monster_watch_vs_setup_same_source_v1.json')
+          j=json.loads(p.read_text())
+          assert j['schema']=='MONSTER_WATCH_VS_SETUP_SAME445_ORIGINAL_SOURCE_DESCRIPTIVE_V1'
+          assert j['event_counts']=={'WATCH':269,'SETUP':120}
+          assert len(j['read_only_original28_shard_zip_proofs'])==28
+          assert j['descriptive_matched_later_setups']['summary']['source_join_counts']=={'UNIQUE':119,'AMBIGUOUS':1}
+          for tag,total in (('WATCH',269),('SETUP',120)):
+              for kind in ('independent_signals','causal_at_entry_same_symbol_24h_lock'):
+                  summary=j[tag][kind]
+                  assert summary['original_total_signal_events']==total
+                  assert sum(summary['status_counts'].values())==total
+                  assert summary['wins']+summary['losses']+summary['flats']==summary['price_proxy_valid']
+              assert len(j[tag]['full_original_event_rows_no_lock'])==total
+              assert len(j[tag]['full_original_event_rows_entry_time_lock'])==total
+          assert len(j['descriptive_matched_later_setups']['original_event_pairs'])==120
+          assert j['not_independent_OOS'] and not j['true_historical_pit_listing_verified']
+          assert j['no_hindsight_setup_labels_are_buyable_at_watch'] is True
+          assert j['actual_executable_net_profit']=='UNVERIFIED'
+          assert j['G4']=='UNKNOWN' and j['G6']=='NO_GO'
+          assert j['NO_MERGE'] and j['NO_DEPLOY'] and j['NO_GMAIL'] and j['NO_TRADE']
+          print('MONSTER_ORIGINAL_WATCH_VS_SETUP_CAUSAL_INPUT_LOCK_AND_PRICE_VALUE_SOURCE_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-watch-vs-setup-feb445-original-source-locked-economic-comparison
+          path: |
+            /tmp/monster_watch_vs_setup_same_source_v1.json
+            /tmp/monster_watch_setup_orig28_archive_receipts.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Archive same-source economic comparison without touching deployment or trading
+        run: |
+          set -eu
+          target=crypto-300-profit-mission/monster/evidence/monster_watch_vs_setup_original269_120_same_source_economics_v1.json
+          branch=research/monster-v4-local-discovery-20261010
+          test ! -e "$target"
+          cp /tmp/monster_watch_vs_setup_same_source_v1.json "$target"
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive matched WATCH and D1 SETUP future price-proxy value from actual Feb445 source"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER_MATCHED_WATCH_SETUP_EXISTING_RESULT_REFUSE_OVERWRITE
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_watch_vs_setup_incremental_value.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_watch_vs_setup_incremental_value.py .github/workflows/monster-v4-watch-vs-setup-incremental-value-once.yml crypto-300-profit-mission/local-agent/scripts/monster_v4_original120_setup_price_economics.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_official_source_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_one_db_from_shards.py; do
+            test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo MONSTER_SOURCE_OR_EXECUTION_CHANGED; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER_WATCH_SETUP_269_120_OBSERVED_RESEARCH_ONLY_NO_GMAIL_NO_TRADE
