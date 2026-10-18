@@ -176,7 +176,7 @@ def evaluate(blobs, receipts, research_notional=None):
             "denominator": EXPECTED_ACTIVE,
         } if n is not None else "NOT_EVALUATED_WITHOUT_EXPLICIT_RESEARCH_AMOUNT",
         "original_exited_24h_funding_economics": "NOT_SCORABLE",
-        "bid_ask_venues_not_simultaneous": True,
+        "market_endpoint_snapshots_not_atomic": True,
         "no_historical_exit_L2": True, "no_observed_actual_fills": True,
         "quote_is_not_trade_guarantee": True,
         "current_market_quote": False,
