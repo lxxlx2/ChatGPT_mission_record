@@ -14,6 +14,7 @@ from datetime import datetime, timezone
 from http.client import HTTPConnection
 from http.server import ThreadingHTTPServer
 import json
+import os
 from pathlib import Path
 import re
 import shutil
@@ -212,6 +213,25 @@ def safari_front_url():
     return r.stdout.strip() if r.returncode == 0 else None
 
 
+def safari_front_matches(actual: str | None, expected: str) -> bool:
+    """Require the expected document including origin, per-run token and stage."""
+    try:
+        if not actual:
+            return False
+        front, target = urlsplit(actual), urlsplit(expected)
+        expected_params = parse_qs(target.query, strict_parsing=True, keep_blank_values=True)
+        received_params = parse_qs(front.query, strict_parsing=True, keep_blank_values=True)
+        return (front.scheme == target.scheme == "http"
+                and front.netloc == target.netloc
+                and front.path == target.path == "/__qa/panel"
+                and not front.fragment and not target.fragment
+                and set(expected_params) == {"token", "stage"}
+                and all(len(values) == 1 and values[0] for values in expected_params.values())
+                and received_params == expected_params)
+    except (ValueError, TypeError):
+        return False
+
+
 def automatic_screenshot(out: Path):
     subprocess.run(["screencapture", "-x", "-D", "1", str(out)], timeout=15, check=True)
     raw = out.read_bytes()
@@ -247,7 +267,6 @@ def run_auto(*, sha: str, mint: str | None, skip_browser: bool = False):
         server_thread = threading.Thread(target=server.serve_forever, daemon=True)
         server_thread.start()
         output = None
-        output_created = False
         stamp = datetime.now().astimezone().strftime("%Y%m%d-%H%M%S")
         try:
             rows = []
@@ -261,14 +280,15 @@ def run_auto(*, sha: str, mint: str | None, skip_browser: bool = False):
                 if stage not in receipts:
                     raise RuntimeError("SAFARI_QA_PAGE_DID_NOT_REPORT_READY_" + stage)
                 if not skip_browser:
-                    actual_url = safari_front_url()
-                    if not actual_url or actual_url.split("?")[0] != link.split("?")[0]:
-                        raise RuntimeError("SAFARI_FRONT_WINDOW_UNVERIFIED_" + stage)
                     subprocess.run(["osascript", "-e", 'tell application "Safari" to activate'],
                                    check=True, capture_output=True, timeout=15)
                     time.sleep(0.8)
+                    if not safari_front_matches(safari_front_url(), link):
+                        raise RuntimeError("SAFARI_FRONT_STAGE_OR_TOKEN_MISMATCH_" + stage)
                 dest = captures / f"c02-{stage}.png"
                 rows.append(automatic_screenshot(dest))
+                if not skip_browser and not safari_front_matches(safari_front_url(), link):
+                    raise RuntimeError("SAFARI_FRONT_CHANGED_DURING_CAPTURE_" + stage)
                 print(f"C02_AUTOMATIC_{stage.upper()}={receipts[stage]}", flush=True)
                 if receipts[stage] in {
                     "PRODUCT_TIMEOUT", "PRODUCT_UI_ERROR",
@@ -277,36 +297,43 @@ def run_auto(*, sha: str, mint: str | None, skip_browser: bool = False):
                     raise RuntimeError("STOP_C02_PRODUCT_UI_NOT_VERIFIED_" + receipts[stage])
             old.verify_git_source(checkout, sha)
             old.verify_preview_snapshot(static, hashes)
-            output = Path.home() / "Downloads" / f"frank-c02-auto-evidence-{stamp}-{sha[:8]}.zip"
-            if output.exists():
-                raise RuntimeError("EVIDENCE_ARCHIVE_ALREADY_EXISTS")
-            try:
-                old.package_evidence(captures, output, rows, static,
+            downloads = Path.home() / "Downloads"
+            downloads.mkdir(parents=True, exist_ok=True)
+            output = downloads / (
+                f"frank-c02-auto-evidence-{stamp}-{sha[:8]}-{uuid4().hex[:12]}.zip")
+            # Stage the entire ZIP on the SAME filesystem in a uniquely owned
+            # private directory. Never use existence as proof of ownership.
+            with tempfile.TemporaryDirectory(prefix=".frank-c02-stage-", dir=downloads) as staging:
+                staged_zip = Path(staging) / "evidence.zip"
+                old.package_evidence(captures, staged_zip, rows, static,
                                      source_port=source_port, preview_port=server.server_port,
                                      preview_sha=sha, verified_static_hashes=hashes)
-            finally:
-                output_created = output.exists()
-            with zipfile.ZipFile(output, "a", compression=zipfile.ZIP_DEFLATED) as z:
-                z.writestr("c02-automatic-acceptance.json",
-                           json.dumps({
-                               "mode":"AUTOMATIC_SAFARI_APP_IFRAME_INTERACTION",
-                               "preview_static_sha":sha, "backend_code_identity":"UNVERIFIED",
-                               "selected":selected,"page_states":receipts,
-                               "new_rpc":False,"new_scan":False,"captured_at_utc":datetime.now(timezone.utc).isoformat(),
-                               "source":"EXISTING_LOCAL_DASHBOARD_READ_ONLY_GET",
-                               "display_capture":"PRIMARY_DISPLAY_SCREENSHOT",
-                               "real_mac_safari":not skip_browser,
-                               "archive_reporting":("ARCHIVE_FOUND" if all(v=="ARCHIVE_FOUND" for v in receipts.values())
-                                   else "NO_VERIFIED_CACHED_ARCHIVE"),
-                           }, ensure_ascii=False, indent=2))
-            old.verify_git_source(checkout, sha)
-            old.verify_preview_snapshot(static, hashes)
+                with zipfile.ZipFile(staged_zip, "a", compression=zipfile.ZIP_DEFLATED) as z:
+                    z.writestr("c02-automatic-acceptance.json",
+                               json.dumps({
+                                   "mode":"AUTOMATIC_SAFARI_APP_IFRAME_INTERACTION",
+                                   "preview_static_sha":sha, "backend_code_identity":"UNVERIFIED",
+                                   "selected":selected,"page_states":receipts,
+                                   "new_rpc":False,"new_scan":False,
+                                   "captured_at_utc":datetime.now(timezone.utc).isoformat(),
+                                   "source":"EXISTING_LOCAL_DASHBOARD_READ_ONLY_GET",
+                                   "display_capture":"PRIMARY_DISPLAY_SCREENSHOT",
+                                   "real_mac_safari":not skip_browser,
+                                   "archive_reporting":(
+                                       "ARCHIVE_FOUND" if all(v=="ARCHIVE_FOUND" for v in receipts.values())
+                                       else "NO_VERIFIED_CACHED_ARCHIVE"),
+                               }, ensure_ascii=False, indent=2))
+                old.verify_git_source(checkout, sha)
+                old.verify_preview_snapshot(static, hashes)
+                # os.link is an atomic no-overwrite publication. A racing ZIP
+                # at the final name is NEVER replaced, claimed or unlinked.
+                os.link(staged_zip, output)
             print("ZIP_READY="+str(output),flush=True)
             subprocess.run(["open", "-R", str(output)],check=False)
             return 0
         except Exception as exc:
-            if output_created and output is not None:
-                output.unlink(missing_ok=True)
+            # Only private per-run staging files can be cleaned up. We never
+            # delete a final path we did not exclusively publish.
             rejected_root = Path.home() / "Downloads"
             rejected = rejected_root / f"frank-c02-REJECTED-{stamp}-{sha[:8]}-{uuid4().hex[:8]}"
             rejected.mkdir(mode=0o700)
