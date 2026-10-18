@@ -20,6 +20,20 @@ Applies to: Frank, C02 and subsequent Mission browser UI modules (and other UI c
 - 仓库脚本：`crypto-300-profit-mission/local-agent/scripts/frank_pr101_safari_evidence.py`。
 - CLI 通过隔离浅克隆验证批准 SHA `e8bc450d836ac46df5224ce7b6fc048ea5720db0`，并且**不改用当前分支未经审核的 UI**；新 QA 分支中的 C02 已归档报告按钮仍需单独代码审核。
 - 脚本自动启动仅绑定 `127.0.0.1` 的只读 GET 页面预览；现有 Frank localhost 控制台是唯一数据源。仅允许指定 JSON GET（包括 `/api/cluster-latest?mint=EXACT_CA` 的历史归档），对 POST、新 RPC、未审批端点拒绝。
+
+Mac zsh 本地执行（从任何目录均可，脚本保存在 Git 中；临时 checkout 清理不会删除 Downloads 中的 ZIP）：
+
+```zsh
+(
+set -e
+QA_DIR="$(mktemp -d "${TMPDIR:-/tmp/}frank-safari-qa.XXXXXXXX")"
+trap 'rm -rf "$QA_DIR"' EXIT
+git clone -q --depth 1 --filter=blob:none --branch ops/frank-pr101-safari-evidence-and-c02-archive-20261018 https://github.com/lxxlx2/ChatGPT_mission_record.git "$QA_DIR/repo"
+python3 -B "$QA_DIR/repo/crypto-300-profit-mission/local-agent/scripts/frank_pr101_safari_evidence.py"
+)
+```
+
+截屏使用 macOS `screencapture -i -x` 交互框选实际 Safari 页面区域；依提示确认或跳过每个验收点。选择结束后脚本**自动**生成 ZIP，并调用 `open -R` 在 Finder 中选中 ZIP。不要将该 ZIP 提交 GitHub。
 - 依次提示四类实际 screenshot：顶部机会及展开历史、交易统计、持续观察池及待核查记录、C02 历史资料（如果页面版本具备可用入口）；本地 `screencapture -i -x` 由用户框选实际可见区域，可按 `s` 跳过不适用阶段，`done` 提前完成。
 - 脚本生成 `~/Downloads/frank-pr101-safari-evidence-YYYYMMDD-HHMMSS-e8bc450d.zip`，包含 `manifest.json`、截图的 SHA256、批准静态文件 SHA256、拍摄时间、read-only 声明，并调用 `open -R` 选中 ZIP。**不会自动上传、不会输出私有钱包/截图内容到日志或 Git。**
 - 截图仅证明截图时间点的 UI；指标是本地索引范围，不等于 Solana 链完整性。未点击/未加载的控件保持 `NOT_VERIFIED`；报告截图不能代替真正的链上历史来源核验。
