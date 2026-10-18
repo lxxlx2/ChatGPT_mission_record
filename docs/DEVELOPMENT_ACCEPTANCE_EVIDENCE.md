@@ -16,6 +16,17 @@ Applies to: Frank, C02 and subsequent Mission browser UI modules (and other UI c
 8. 用户上传 ZIP 后再根据截图和来源记录标注 `PASS / PARTIAL / BLOCKED / NOT_VERIFIED`，附 PR comment 证据，明确仍缺什么。不能把仅静态展示说成生产部署验收。
 9. 仅在独立审核、相关验收和**用户另行明确授权**后，才能进入 merge/deploy。默认保留 `NO_MERGE / NO_DEPLOY / NO_NEW_RPC / NO_GMAIL / NO_TRADES / NO_PRODUCTION_SQLITE_WRITE`。
 
+## 进一步要求：全自动实机截图（2026-10-18）
+
+- **用户不应再负责找截图位置、选择 CA、展开面板、手动框选或反复按 Enter。** 用户只运行一条固定 SHA 的 zsh 命令，结束后 Finder 自动选中 ZIP；除 macOS 首次要求的 Safari 自动化/屏幕录制系统权限外不得依赖人工操作。仅当自动化明确失败时给出对应阻断状态，不得要求用户猜要截哪里。
+- 对新增的 C02 归档页面，使用 `crypto-300-profit-mission/local-agent/scripts/frank_c02_auto_safari_capture.py --candidate-sha <固定审核SHA>`。脚本读取**现有 localhost Dashboard 的 GET** 候选/观察池，最多检查 24 个 exact CA 的已有历史归档；不扫描链上，也不从用户钱包直接读取余额。若有匹配归档自动选用，否则明确记录 NO_LOCAL_CA / ARCHIVE_MISSING，不能虚报通过。
+- 只从固定 SHA Git blob 导出私有页面快照。自动在 Safari 同源 iframe 打开实际 C02 页面并点击“查看已有归档（只读）”按钮、等待页面明确回执、确认显示 CA 一致后自动截图 `c02-overview.png` 与 `c02-report.png`；额外 QA 页仅辅助导航，不改动受审产品静态源码。
+- 不依赖 Safari 开启 JavaScript from Apple Events；仅使用 AppleScript 读取前台 Safari URL 来核对截图窗口，以及 macOS `screencapture -x -D 1` 捕获主屏。系统若要求首次授权，用户可按系统弹窗授权；若 Safari 不在前台、页面不回应或权限拒绝则拒绝有效 ZIP，保留已抓取图并写 `REJECTED.json`。
+- **分阶段截图身份：** 同一路径的不同 `overview/report` 页面必须逐阶段核对完整 origin、path、随机 token 与 stage；收到后台 ready 回执并不等于前台截图页正确。Safari 激活后临近截图前和截图后都应独立核对目标 URL；任何错页或 token 漂移均拒绝有效 ZIP。
+- **证据所有权：** ZIP 必须先写进每次运行独有的私有 staging 目录，再以原子、不覆盖（例如同卷 `os.link`）方式提交 Downloads，清理只能触及本次创建的暂存文件。不可使用 `Path.exists()` 推测 ZIP 所有权，更不能在冲突后删除另一个运行的文件。
+- ZIP 另包含 `c02-automatic-acceptance.json`，记载候选 Mint 来源、页面返回状态、`backend_code_identity=UNVERIFIED`、准确审核 SHA、截图哈希、只读范围和异常原因。记录 `ARCHIVE_MISSING` 表示缺少历史数据，不可当作 C02 正向成功验收；主屏截图可能包含个人信息，仅保存 Downloads/当前聊天，严禁自动上传公共仓库。
+- 任何自动验收代码改动都必须在独立 QA 分支走 CI 和外部 AI 审核，旧版 PR101/PR102 已批准 SHA 保持不变。
+ 
 ## Frank PR101 Mac/Safari 示例（已固定审批源码）
 
 - 仓库脚本：`crypto-300-profit-mission/local-agent/scripts/frank_pr101_safari_evidence.py`。

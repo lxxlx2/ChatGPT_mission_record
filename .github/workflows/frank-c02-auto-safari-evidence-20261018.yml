@@ -1,0 +1,46 @@
+name: Frank C02 automatic Safari capture QA
+on:
+  push:
+    branches:
+      - feat/frank-c02-autocapture-zero-touch-20261018
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pinned-offline-qa-and-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Pin exact commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "FRANK_C02_AUTO_EXACT_SHA=$GITHUB_SHA"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile new automation and old preview code
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/frank_c02_auto_safari_capture.py scripts/frank_pr101_safari_evidence.py
+          node --check mission_agent/mission_control/static/app.js
+      - name: Install offline Python test dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3
+      - name: Test zero-manual C02 auto capture with real GET readiness and synthetic Safari
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_c02_auto_safari_capture.py tests/test_frank_pr101_safari_evidence.py tests/test_mission_control_dashboard.py tests/research/test_frank_dashboard_priority_layout.py
+          node --test tests/test_frank_c02_archive_readonly.cjs tests/test_frank_candidate_sections.cjs tests/test_frank_candidate_sections_dom.cjs tests/frank_f01_primary_freshness.cjs tests/frank_source_context_mount.cjs tests/frank_source_context_render.cjs
+      - name: Full local-agent history and regression
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests
