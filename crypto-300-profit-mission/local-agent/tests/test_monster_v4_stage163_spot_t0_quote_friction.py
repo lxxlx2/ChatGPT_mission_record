@@ -24,11 +24,15 @@ def fake():
     ]
     ticker = [{"symbol": x["symbol"], "quoteVolume": "123.45"} for x in entries]
     receipts = {"source_sha_receipts": {
+        "clock_before": {"start_utc": "2026-10-17T22:04:38Z", "end_utc": "2026-10-17T22:04:39Z"},
         "bookTicker": {"start_utc": "2026-10-17T22:04:42Z", "end_utc": "2026-10-17T22:04:44Z"},
         "ticker24": {"start_utc": "2026-10-17T22:04:44Z", "end_utc": "2026-10-17T22:04:47Z"},
+        "clock_after": {"start_utc": "2026-10-17T22:04:47Z", "end_utc": "2026-10-17T22:04:49Z"},
     }}
     return {"exchangeInfo": {"serverTime": gate.T0_MS, "symbols": entries},
-            "bookTicker": books, "ticker24": ticker}, receipts
+            "bookTicker": books, "ticker24": ticker,
+            "clock_before": {"serverTime": gate.T0_MS - 1500},
+            "clock_after": {"serverTime": gate.T0_MS + 7500}}, receipts
 
 
 class TestT0Friction(unittest.TestCase):
@@ -56,6 +60,11 @@ class TestT0Friction(unittest.TestCase):
         self.assertEqual(intervals["ticker24"]["end_offset_from_exchange_t0_ms_approx"], "6835.464")
         self.assertEqual(result["quote_bundle_not_available_until_client_receipt_utc"],
                          "2026-10-17T22:04:46.929464Z")
+        self.assertTrue(result["clock_bridge_calibration"]["conditional_interval_not_certified_exchange_event_timestamp"])
+        calibration = result["clock_bridge_calibration"]
+        self.assertEqual(set(calibration["samples"]), {"clock_before", "clock_after"})
+        self.assertEqual(calibration["clock_drift_between_samples"], "UNVERIFIED")
+        self.assertGreater(float(intervals["bookTicker"]["start_clock_bridged_lower_ms_conditional"]), 0)
         self.assertEqual(len(result["rows"]), 511)
         self.assertEqual(len({x["symbol"] for x in result["rows"]}), 511)
         self.assertEqual(result["exchange_server_time_ms"], gate.T0_MS)
@@ -171,13 +180,45 @@ class TestT0Friction(unittest.TestCase):
         self.assertEqual(len(r["rows"]), 511)
         self.assertNotIn("LISTEDLATERUSDT", [x["symbol"] for x in r["rows"]])
 
-    def test_locked_quotes_and_empty_top_levels_are_rejected(self):
+    def test_locked_quotes_and_zero_top_levels_are_classified_not_globally_discarded(self):
         blobs, receipts = fake()
-        for field, value in (("askPrice", "1"), ("bidQty", "0"), ("askQty", "0")):
-            bad = copy.deepcopy(blobs)
-            bad["bookTicker"][0][field] = value
-            with self.assertRaisesRegex(ValueError, "INVALID_BBO"):
-                gate.evaluate(bad, receipts)
+        blobs["bookTicker"][0]["askPrice"] = "1"
+        blobs["bookTicker"][1]["bidQty"] = "0"
+        blobs["bookTicker"][2]["askQty"] = "0"
+        d = gate.evaluate(blobs, receipts)
+        counts = d["quote_status_counts"]
+        self.assertEqual(counts, {"DISPLAYED_TWO_SIDED": 508, "LOCKED_QUOTE": 1, "ZERO_DISPLAYED_SIZE": 2})
+        self.assertEqual(d["displayed_depth_distribution_evaluable_count"], 508)
+        self.assertEqual(len(d["rows"]), 511)
+        status = {x["symbol"]: x for x in d["rows"]}
+        self.assertEqual(status["TEST0USDT"]["post_t0_bookticker_spread_bps"], "0.000000")
+        self.assertTrue(status["TEST0USDT"]["locked_quote_zero_spread"])
+        self.assertFalse(status["TEST1USDT"]["both_sides_show_positive_size"])
+        self.assertFalse(status["TEST2USDT"]["both_sides_show_positive_size"])
+        self.assertEqual(d["G6"], "NO_GO")
+        optional = gate.evaluate(blobs, receipts, "5")
+        self.assertEqual(optional["research_notional_displayed_top_level_size_coverage_only"],
+                         {"count": 508, "denominator": 511})
+
+    def test_crossed_quote_remains_global_source_failure(self):
+        blobs, receipts = fake()
+        blobs["bookTicker"][0]["askPrice"] = "0.9"
+        with self.assertRaisesRegex(ValueError, "INVALID_BBO"):
+            gate.evaluate(blobs, receipts)
+
+    def test_clock_bridge_and_cross_endpoint_order_refuse_bad_source(self):
+        blobs, receipts = fake()
+        d = gate.evaluate(blobs, receipts)
+        self.assertLess(float(d["clock_bridge_calibration"]["server_minus_client_envelope_ms"][0]),
+                        float(d["clock_bridge_calibration"]["server_minus_client_envelope_ms"][1]))
+        swapped = copy.deepcopy(receipts)
+        swapped["source_sha_receipts"]["ticker24"]["start_utc"] = "2026-10-17T22:04:43Z"
+        with self.assertRaisesRegex(ValueError, "CROSS_ENDPOINT_RECEIPT_CHRONOLOGY"):
+            gate.evaluate(blobs, swapped)
+        wrong_clock = copy.deepcopy(blobs)
+        wrong_clock["clock_before"]["serverTime"] -= 10000
+        with self.assertRaisesRegex(ValueError, "NOT_PROVEN_UNDER_CLOCK_BRIDGE"):
+            gate.evaluate(wrong_clock, receipts)
 
     def test_zip_byte_tamper_fails_sha(self):
         import tempfile
