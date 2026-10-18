@@ -1,4 +1,7 @@
-# PHASE 1 synthetic local E2E
+# Mission Local Agent / Phase 1–2 合成测试和历史开发指南
+
+> **Historical development document:** this README describes Phase 1/2 synthetic/test-only milestones and commands when those experiments were written. Do not read the older phrase "no collector/HTTP/Gmail exists" as a present-tense description of all newer Mission/Frank code or Mac deployment. Actual current module authority and release gates: `../MISSION_SPEC.md`, `../state/latest.md`, `../meme/MISSION_MEME_CURRENT_STATUS_2026-10-07.md`, and the latest reviewed Git/PR evidence. No new runtime authorization is granted here.
+
 
 Status: synthetic-only implementation. No market/RPC collector, HTTP/GitHub runtime adapter, real GPT, real Gmail, automation management or launchd installation exists in this package. The default future runtime repo name is configuration only, never contacted.
 

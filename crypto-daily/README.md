@@ -1,15 +1,16 @@
 # Crypto Daily — 实际运行入口（2026-10-10）
 
-仅现有 `Crypto 每日情报` 自动任务，不创建或启用其他定时任务。
-时区 `Asia/Bangkok`；实际 schedule 原样不变：
+现有 `Crypto 每日情报` 自动任务的文档入口；**此文件不创建、恢复或调整定时任务**。
+时区 `Asia/Bangkok`；以 `AUTOMATION_RUNTIME.md` 最上方的 **2026-10-10 ACTIVE EXECUTION TIME** 覆盖条款为准：
 
-- 00:10、03:10、06:10、15:10、19:10、23:10：普通 bounded collector
-- 08:10：过去24小时资料+独立新闻发现，完整13章预构建
-- 09:10：主发送；10:10、11:10：只有未交付时恢复
-- 非触发时段不执行后台工作；TGE仍由自己的既有独立任务按自己的规则执行。
+- **00:20、03:20、06:20、12:20、16:20、20:20**：普通 bounded collector
+- **08:20**：过去24小时资料 + 独立新闻发现，完整13章预构建
+- **09:20**：主发送；**10:20、11:20**：只有未交付时恢复
+- 旧的 00:10/03:10/06:10、15:10/19:10/23:10、08:10/09:10/10:10/11:10 是历史日期下的文档快照，已被现行覆盖条款取代；不能根据旧记录修改任务。
+- 非触发时段不执行后台工作；TGE 独立按其当前运行规范执行。此处时点是配置事实，实际某次 Gmail Sent 与最终 audit 成功仍需另外核验。
 
 ## 规范优先级
-读取 `COLLECTOR_SPEC.md` V2、`REPORT_SPEC.md`、`REPORT_ACCEPTANCE.md`（包括CR-20）、`DELIVERY_RUNBOOK.md`、`SECURITY_SOURCE_POLICY.md` 和 `AUTOMATION_RUNTIME.md`。如历史文档出现“每小时整点”“09:00/10:00/11:00”或 `hour % 3` 字样，均按本文件上述实际 schedule 和 COLLECTOR_SPEC V2 的完成记录轮转替代。这仅澄清原 schedule，不调整任何触发时间。
+读取 `COLLECTOR_SPEC.md` V2、`REPORT_SPEC.md`、`REPORT_ACCEPTANCE.md`（包括CR-20）、`DELIVERY_RUNBOOK.md`、`SECURITY_SOURCE_POLICY.md` 和 `AUTOMATION_RUNTIME.md`。如历史文档出现“每小时整点”“09:00/10:00/11:00”或 `hour % 3` 字样，均按 **AUTOMATION_RUNTIME.md 顶部现行时点**与 COLLECTOR_SPEC V2 的完成记录轮转替代。这仅澄清原 schedule，不调整任何触发时间。
 
 ## 三种不可混淆的完成状态
 1. **DISCOVERY**：本轮真正查了哪些英文源？重大新候选进入哪条event_key、是否可核实、是否被合理排除？缺final或查询收据记覆盖缺口。
