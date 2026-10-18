@@ -1,0 +1,226 @@
+{
+  "schema": "BSC_MEME_V1_P4B_HISTORICAL_OBSERVER_U_FIVE_PRECOMMITTED_CONTROL_V1",
+  "precommit_utc": "2026-10-18",
+  "authority": "FROZEN_G0_V1_G4_G5_NOT_APPROVED",
+  "approved_prior_code_sha": "0b8e0f709c5af1a20058eb1da4b6656eb2b69cc8",
+  "approval_scope": "USER_FORWARDED_EXTERNAL_REVIEW_F1_F7_ONLY",
+  "selection": "POSTHOC_POSITIVE_NEGATIVE_STALE_EVIDENCE_AVAILABILITY_CONTROLS_NOT_UNTOUCHED_VALIDATION",
+  "scope": {
+    "original_wallet_cohort": 23,
+    "original_exact_ca": 19,
+    "selected_owner_wallets": 5,
+    "selected_market_ca": 4,
+    "selected_owner_rounds": 5,
+    "selected_native_positive": 2,
+    "selected_native_negative": 3
+  },
+  "source_manifest": {
+    "ddac": {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-dragon-ddac-closed-native-loss-2026-10-15.json",
+      "git_blob_sha": "4e76eea4d7ab001360af82f15de5eefc8509c501"
+    },
+    "239e": {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-239e-dragon-two-owner-native-settlements-2026-10-15.json",
+      "git_blob_sha": "46e90123b98d5324e05388b17b8a3bbb77cb5361"
+    },
+    "8e6b": {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-hajimi-dragon-two-verified-native-positive-2026-10-15.json",
+      "git_blob_sha": "dc144d9d259ef1392478d1e25d48f2f649744f20"
+    },
+    "negatives": {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json",
+      "git_blob_sha": "5d3b64a96f6ae59585953a620e9414154ee44985"
+    },
+    "grid": {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-23x19-early-opportunity-ledger-2026-10-14.json",
+      "git_blob_sha": "f88ed9abfcb0f321ec31e98a029303aca48a8623"
+    }
+  },
+  "fixed_observer_delays_seconds": [
+    60,
+    300,
+    900
+  ],
+  "funding_benchmark": "SINGLE_PREDECLARED_UNIFORM_OBSERVER_CAPITAL_AMOUNT_BEFORE_PRICE_FILL_RESEARCH_NOT_ASSUMED",
+  "capital_amount": "UNRESOLVED_NOT_CHOSEN_BEFORE_EXECUTION_CONTRACT",
+  "exit_policy": "UNRESOLVED_NOT_CHOSEN_BEFORE_EXECUTION_CONTRACT",
+  "first_seen_definition": "INDEPENDENT_PUBLIC_OBSERVER_PERSISTED_RECEIPT_OF_ORIGINAL_SIGNED_TRANSACTION_NOT_BLOCK_TIMESTAMP",
+  "historical_consensus_block_time_is_first_seen": false,
+  "historical_mempool_first_seen_reconstructible_from_sources": false,
+  "no_new_rpc_at_prefreeze": true,
+  "cases": [
+    {
+      "case": "DDAC_DRAGON",
+      "source": "ddac",
+      "key": "negative_stale_pre_dex",
+      "grade": "OWNER_NATIVE_WINDOW_UNATTRIBUTED_BUY_AND_EXIT_FLOWS",
+      "reason": "Older original owner short-lived loss, external D503 arrived after DDAC token balance was zero; show stale signal without creating follower profit.",
+      "original_owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "first_signed_buy_block": 83635776,
+      "first_signed_buy_tx": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+      "last_selected_exit_block": 83635800,
+      "last_signed_exit_tx": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+      "owner_native_window_wei": "-92169615514614272",
+      "observed_native_direction": "NEGATIVE",
+      "first_public_observer_received_utc": null,
+      "first_public_observer_received_provenance": "MISSING_AT_FROZEN_HISTORICAL_REPLAY",
+      "historical_owner_entry_header_utc": "NOT_AN_OBSERVER_FIRST_SEEN",
+      "observed_executable_route_at_60s": "UNRESOLVED",
+      "observed_executable_route_at_300s": "UNRESOLVED",
+      "observed_executable_route_at_900s": "UNRESOLVED",
+      "real_trade_capital_available_to_observer": "UNRESOLVED",
+      "real_follower_received_proceeds": "UNRESOLVED",
+      "follower_net_pnl": "UNRESOLVED",
+      "p5_gate": "BLOCKED"
+    },
+    {
+      "case": "239E_DRAGON_R2",
+      "source": "239e",
+      "key": "positive_route_fee_unknown",
+      "grade": "OWNER_SIGNED_NATIVE_WBNB_GAS_SCOPE",
+      "reason": "Original owner's separate positive R2 while an external 5E60 owner later funded and sold; 5E60 profit and causation unproven.",
+      "original_owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "first_signed_buy_block": 85959961,
+      "first_signed_buy_tx": "0x7aa4b9daf5bdcafbd6453dbb5d86957d8ce1336c897c8b308570be54ce7d9e6c",
+      "last_selected_exit_block": 85961371,
+      "last_signed_exit_tx": "0x5f7d389c874b47509989190287fdd57cf6d4a2a5f252110d1cdd71783faa6bf1",
+      "owner_native_window_wei": "22647938898252522",
+      "observed_native_direction": "POSITIVE",
+      "first_public_observer_received_utc": null,
+      "first_public_observer_received_provenance": "MISSING_AT_FROZEN_HISTORICAL_REPLAY",
+      "historical_owner_entry_header_utc": "NOT_AN_OBSERVER_FIRST_SEEN",
+      "observed_executable_route_at_60s": "UNRESOLVED",
+      "observed_executable_route_at_300s": "UNRESOLVED",
+      "observed_executable_route_at_900s": "UNRESOLVED",
+      "real_trade_capital_available_to_observer": "UNRESOLVED",
+      "real_follower_received_proceeds": "UNRESOLVED",
+      "follower_net_pnl": "UNRESOLVED",
+      "p5_gate": "BLOCKED"
+    },
+    {
+      "case": "8E6B_HAJIMI",
+      "source": "8e6b",
+      "key": "positive_buy_route_unattributed",
+      "grade": "OWNER_NATIVE_POSITIVE_WITH_UNATTRIBUTED_BUY_ROUTING",
+      "reason": "Positive native wallet result and complete token exit, with unexplained 0.05 BNB routing difference.",
+      "original_owner": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "HAJIMI",
+      "exact_ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "first_signed_buy_block": 74741352,
+      "first_signed_buy_tx": "0x379a9f56fa6b47182c30a5854240aeb08a599b61d530ea969a446adfbfa09231",
+      "last_selected_exit_block": 74741587,
+      "last_signed_exit_tx": "0x3055cbb9f252a4b20a8cb2a127011fea8fc3c4ccaa24464a7f4bd75881d0e95e",
+      "owner_native_window_wei": "268592992917629933",
+      "observed_native_direction": "POSITIVE",
+      "first_public_observer_received_utc": null,
+      "first_public_observer_received_provenance": "MISSING_AT_FROZEN_HISTORICAL_REPLAY",
+      "historical_owner_entry_header_utc": "NOT_AN_OBSERVER_FIRST_SEEN",
+      "observed_executable_route_at_60s": "UNRESOLVED",
+      "observed_executable_route_at_300s": "UNRESOLVED",
+      "observed_executable_route_at_900s": "UNRESOLVED",
+      "real_trade_capital_available_to_observer": "UNRESOLVED",
+      "real_follower_received_proceeds": "UNRESOLVED",
+      "follower_net_pnl": "UNRESOLVED",
+      "p5_gate": "BLOCKED"
+    },
+    {
+      "case": "A83B_NIULAI",
+      "source": "negatives",
+      "key": "negative_native_only_receipt_truncated",
+      "grade": "SIGNED_NATIVE_BLOCK_SCOPE_NOT_CAUSAL_NET_PNL",
+      "reason": "Negative wallet account block window, multiple signed buys in one block; no fully isolated quote/Gas.",
+      "original_owner": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "first_signed_buy_block": 116113193,
+      "first_signed_buy_tx": "0x8a22a65a977409a7e82266d05ceaf1e98074d1f6b50e942486600dacdc672716",
+      "last_selected_exit_block": 116113197,
+      "last_signed_exit_tx": "0xd0bc93c086a44affed01a7bfb25022cd51e18513401b15d2fbb3692ec1bde9a4",
+      "owner_native_window_wei": "-213598956812665039",
+      "observed_native_direction": "NEGATIVE",
+      "first_public_observer_received_utc": null,
+      "first_public_observer_received_provenance": "MISSING_AT_FROZEN_HISTORICAL_REPLAY",
+      "historical_owner_entry_header_utc": "NOT_AN_OBSERVER_FIRST_SEEN",
+      "observed_executable_route_at_60s": "UNRESOLVED",
+      "observed_executable_route_at_300s": "UNRESOLVED",
+      "observed_executable_route_at_900s": "UNRESOLVED",
+      "real_trade_capital_available_to_observer": "UNRESOLVED",
+      "real_follower_received_proceeds": "UNRESOLVED",
+      "follower_net_pnl": "UNRESOLVED",
+      "p5_gate": "BLOCKED"
+    },
+    {
+      "case": "877AF_MARSCOIN",
+      "source": "negatives",
+      "key": "negative_native_only_receipt_truncated",
+      "grade": "SIGNED_NATIVE_BLOCK_SCOPE_NOT_CAUSAL_NET_PNL",
+      "reason": "Negative wallet block scope, original success receipts incomplete; preserve uncertain real PnL.",
+      "original_owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "first_signed_buy_block": 112475764,
+      "first_signed_buy_tx": "0xc507befb9df698fa0dd2958c0e22bb3714820727b3b1d8440029fb18a5f12390",
+      "last_selected_exit_block": 112476616,
+      "last_signed_exit_tx": "0xf27b20dbffca66c49260635bece999b3324887e9cabc67c38c6810ab2871d3d7",
+      "owner_native_window_wei": "-26064663781901692",
+      "observed_native_direction": "NEGATIVE",
+      "first_public_observer_received_utc": null,
+      "first_public_observer_received_provenance": "MISSING_AT_FROZEN_HISTORICAL_REPLAY",
+      "historical_owner_entry_header_utc": "NOT_AN_OBSERVER_FIRST_SEEN",
+      "observed_executable_route_at_60s": "UNRESOLVED",
+      "observed_executable_route_at_300s": "UNRESOLVED",
+      "observed_executable_route_at_900s": "UNRESOLVED",
+      "real_trade_capital_available_to_observer": "UNRESOLVED",
+      "real_follower_received_proceeds": "UNRESOLVED",
+      "follower_net_pnl": "UNRESOLVED",
+      "p5_gate": "BLOCKED"
+    }
+  ],
+  "known_nonselected_confounders": [
+    {
+      "case": "239E_DRAGON_R1",
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "classification": "ORIGINAL_OWNER_NEGATIVE_COMPANION_NOT_SILENTLY_DELETED",
+      "source_key": "239e",
+      "net_wei": "-15332805033002259"
+    },
+    {
+      "case": "5E60_DRAGON",
+      "classification": "OUTSIDE_ORIGINAL_23_EXTERNAL_FUNDED_BUY_AND_REAL_SELL_RECEIPTS_PREEXISTING_BASIS_UNKNOWN_NOT_PROVEN_FOLLOWER",
+      "source_key": "EXISTING_PR40_APPROVED_CROSSMARKET"
+    },
+    {
+      "case": "D503_DRAGON",
+      "classification": "EXTERNAL_LATER_SIGNED_BUY_DDAC_ALREADY_ZERO_AT_BLOCK_83636000",
+      "source_key": "EXISTING_PR40_APPROVED_CROSSMARKET"
+    },
+    {
+      "case": "E11B_DRAGON",
+      "classification": "EXTERNAL_BUY_EXIT_AND_GAS_UNRESOLVED",
+      "source_key": "EXISTING_PR40_ARCHIVED_HISTORY"
+    }
+  ],
+  "next_phase_acceptance": [
+    "Real immutable first-seen independent observer receipt evidence for each new live signal; no conversion from consensus block time or post-hoc TX inclusion",
+    "Freeze funded quote-asset amount, actual observable buy and sell route, fee/tax/gas, execution horizon and exit policy BEFORE seeing chosen outcome",
+    "Report 60/300/900-second genuine positive, negative, stale, no-fill and no-exit statuses per original denominator; never replace unknown with zero",
+    "Historical frozen cases without archived observer first-seen remain RESEARCH_ONLY and may act only as negative/unknown controls; cannot be counted as P5 performance",
+    "Mac local capture requires separate authorization; repository artifacts are static only and cannot call RPC or submit transactions"
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "P4_C": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "NO_MERGE": true,
+    "NO_DEPLOY": true,
+    "NO_GMAIL": true,
+    "NO_TRADE": true
+  }
+}
