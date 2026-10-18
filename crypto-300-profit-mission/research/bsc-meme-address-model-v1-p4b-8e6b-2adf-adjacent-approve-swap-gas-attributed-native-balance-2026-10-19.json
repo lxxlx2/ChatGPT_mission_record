@@ -1,0 +1,200 @@
+{
+  "schema": "BSC_P4B_8E6B_2ADF_BNB_APPROVE_SWAP_ADJACENT_GAS_RECONCILIATION_V1",
+  "date_utc": "2026-10-19",
+  "scope": "TWO_PINNED_EOA_CA_OBSERVATION_ROUNDS_NOT_PORTFOLIO_PNL",
+  "network": "bnb-mainnet",
+  "provider": "USER_CONNECTED_ALCHEMY_FREE_READ_ONLY",
+  "same_block_analyses": "Ethereum cumulativeGasUsed differences for contiguous approval->swap indices; net BNB block balance paired state before/after; all tx statuses observed 0x1; legacy transaction type=0x0; tx gasPrice=0x7270e00",
+  "additional_validation": [
+    "Both token contracts have no code at original 30d start block (eth_getCode=0x), ERC20 balanceOf returns 0 immediately before EOA signer buy and 0 immediately after last sale and at window end.",
+    "Every exit block has exactly two EOA-signed transactions; separate eth_getTransactionByBlockNumberAndIndex proves consecutive approve at index k, swap at k+1.",
+    "All entry, approve and swap receipts show status=0x1; swap receipts are truncated after log array by connected API but cumulativeGasUsed is present and enough for exact adjacent gas subtraction.",
+    "getAssetTransfers external inbound directly to wallet over each exit block returned 0 events, full response/no pagination.",
+    "Alchemy standard WBNB Withdrawal event logs filtered to 0x10ED... contract at exact exit blocks returned 0 (not proof of no other internal BNB transfer).",
+    "Alchemy trace_transaction and debug_traceTransaction both forbidden on user's free tier. Blockscout connector chain 56 unsupported even with a valid session."
+  ],
+  "cases": [
+    {
+      "id": "8E6B_FLAP",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "ca": "0x3b7a5c1519731e555782bb623adfb9cfca5c7777",
+      "buy": {
+        "hash": "0x795a0d949ef8c65c043d7b2f9301a8a5ecf82f2fb7cb7508ee7be6b6b0214b67",
+        "block": 127758979,
+        "utc": "2026-10-15T09:01:06Z",
+        "block_hash": "0x76cc817f2f682820c222d695fc32ff151487cb17126c9d5eda64311c4851c569",
+        "value_wei": "150000000000000000",
+        "balance_delta_wei": "-150045928800000000",
+        "cumulative_gas_before": "0x68910",
+        "cumulative_gas_after": "0xc6024",
+        "minReturn": "652518420026597440059428",
+        "balance_before_entry_raw": "0",
+        "gas_used_from_adjacent_cumulative": "382740",
+        "gas_price_wei": "120000000",
+        "gas_fee_wei": "45928800000000",
+        "buy_block_delta_equals_value_plus_gas": true
+      },
+      "exits": [
+        {
+          "approval_hash": "0xdd40c8019b2d10fe400434b0291348fade1ef2de02a3a0e91e143a0cabda1a6a",
+          "approval_tx_index": 13,
+          "approval_nonce": "0x5f16",
+          "swap_hash": "0x514945d5da5f7fd373fd0d3772d6e50d8ded905590fd443d7304be2d1df7e73f",
+          "swap_tx_index": 14,
+          "block": 127760321,
+          "utc": "2026-10-15T09:11:10Z",
+          "block_hash": "0xb3c4a6bc53ec188fb012938a59c266eb876fb9e1c18cfa7f8c6a7f20cfd9bab1",
+          "approval_gas_used": "48984",
+          "cumulative_gas_approval": "0x294525",
+          "cumulative_gas_swap": "0x2f8c0a",
+          "block_balance_delta_wei": "140223743955461336",
+          "minReturnWei": "71003630115525826",
+          "gas_price_wei": "120000000",
+          "swap_gas_used_from_adjacent_cumulative": "411365",
+          "approval_plus_swap_fee_wei": "55241880000000",
+          "inferred_sale_native_wei": "140278985835461336",
+          "inferred_sale_native_greater_than_min_return": true,
+          "owner_signed_transactions_in_block": 2,
+          "only_owner_signed_tx_kinds_in_block": [
+            "approve(0x095ea7b3)",
+            "swap(0x4d819a2a)"
+          ],
+          "direct_external_native_transfers_to_wallet_in_block": 0,
+          "independent_internal_transfers_excluded": false
+        },
+        {
+          "approval_hash": "0x240afeea16c6535fd2aafa4aeba962db4ffae49c4ba306a177a35240feea327c",
+          "approval_tx_index": 107,
+          "approval_nonce": "0x5f18",
+          "swap_hash": "0x9d6c8d64d24367f2f52cdcdb9cebe84c7462209b71ba291377a9056000ac6559",
+          "swap_tx_index": 108,
+          "block": 127893440,
+          "utc": "2026-10-16T01:50:20Z",
+          "block_hash": "0xcd062d57488e97b011623c9c0528d02bfbf238db4296f6fdc63761c8621fb595",
+          "approval_gas_used": "48984",
+          "cumulative_gas_approval": "0x1909a5c",
+          "cumulative_gas_swap": "0x196a8fc",
+          "block_balance_delta_wei": "10165345121883870",
+          "minReturnWei": "5169051939482894",
+          "gas_price_wei": "120000000",
+          "swap_gas_used_from_adjacent_cumulative": "396960",
+          "approval_plus_swap_fee_wei": "53513280000000",
+          "inferred_sale_native_wei": "10218858401883870",
+          "inferred_sale_native_greater_than_min_return": true,
+          "owner_signed_transactions_in_block": 2,
+          "only_owner_signed_tx_kinds_in_block": [
+            "approve(0x095ea7b3)",
+            "swap(0x4d819a2a)"
+          ],
+          "direct_external_native_transfers_to_wallet_in_block": 0,
+          "independent_internal_transfers_excluded": false
+        }
+      ],
+      "raw_token_in": "1293859551216114584142304",
+      "raw_token_out": "1293859551216114584142304",
+      "balance_after_last_exit_raw": "0",
+      "balance_window_end_raw": "0",
+      "gross_native_sale_inferred_wei": "150497844237345206",
+      "combined_entry_and_sell_gas_wei": "154683960000000",
+      "net_selected_block_balance_delta_wei": "343160277345206",
+      "net_selected_block_balance_delta_bnb": "0.000343160277",
+      "net_selected_block_pct_of_entry": "0.228774",
+      "owner_profit_grade": "BLOCK_BALANCE_GAS_RECONCILED_CANDIDATE_UNATTESTED",
+      "true_realized_net_pnl": "UNRESOLVED_NO_TRANSACTION_INTERNAL_NATIVE_TRACE"
+    },
+    {
+      "id": "2ADF_YOKI",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "ca": "0xa96402db0112ed21a6613b43cdfb766d9e5c7777",
+      "buy": {
+        "hash": "0x676f0c753d49761a80dadd8b9485e60e9ffb8ae6e72f17498ff476a3d75cfa80",
+        "block": 128198012,
+        "utc": "2026-10-17T15:55:53Z",
+        "block_hash": "0x43a7227c4431b3c9945b706d27064500df9b68d6d3894eec3d9d054113d7cd40",
+        "value_wei": "80000000000000000",
+        "balance_delta_wei": "-80045233880000000",
+        "cumulative_gas_before": "0x805cf",
+        "cumulative_gas_after": "0xdc644",
+        "minReturn": "150176269626784385841818",
+        "balance_before_entry_raw": "0",
+        "gas_used_from_adjacent_cumulative": "376949",
+        "gas_price_wei": "120000000",
+        "gas_fee_wei": "45233880000000",
+        "buy_block_delta_equals_value_plus_gas": true
+      },
+      "exits": [
+        {
+          "approval_hash": "0xcf9c1a57bce29763de60a6da8d2ccdb6197e707439abc2a9acbe71928a691304",
+          "approval_tx_index": 13,
+          "approval_nonce": "0x6c5e",
+          "swap_hash": "0x092edd1dc44a7b1671d0e6de1e7594bca1b9129a6c12a7ea9967c0326e235c6a",
+          "swap_tx_index": 14,
+          "block": 128324413,
+          "utc": "2026-10-18T07:44:06Z",
+          "block_hash": "0x01127747804cde4d651a3eaa6b73203a5193fce8cd386a2722bb14efde8c0513",
+          "approval_gas_used": "48984",
+          "cumulative_gas_approval": "0x3d17ff",
+          "cumulative_gas_swap": "0x42e9e8",
+          "block_balance_delta_wei": "71015472779666730",
+          "minReturnWei": "43069905402123265",
+          "gas_price_wei": "120000000",
+          "swap_gas_used_from_adjacent_cumulative": "381417",
+          "approval_plus_swap_fee_wei": "51648120000000",
+          "inferred_sale_native_wei": "71067120899666730",
+          "inferred_sale_native_greater_than_min_return": true,
+          "owner_signed_transactions_in_block": 2,
+          "only_owner_signed_tx_kinds_in_block": [
+            "approve(0x095ea7b3)",
+            "swap(0x4d819a2a)"
+          ],
+          "direct_external_native_transfers_to_wallet_in_block": 0,
+          "independent_internal_transfers_excluded": false
+        }
+      ],
+      "raw_token_in": "247790844884194236639000",
+      "raw_token_out": "247790844884194236639000",
+      "balance_after_last_exit_raw": "0",
+      "balance_window_end_raw": "0",
+      "gross_native_sale_inferred_wei": "71067120899666730",
+      "combined_entry_and_sell_gas_wei": "96882000000000",
+      "net_selected_block_balance_delta_wei": "-9029761100333270",
+      "net_selected_block_balance_delta_bnb": "-0.009029761100",
+      "net_selected_block_pct_of_entry": "-11.287201",
+      "owner_profit_grade": "BLOCK_BALANCE_GAS_RECONCILED_CANDIDATE_UNATTESTED",
+      "true_realized_net_pnl": "UNRESOLVED_NO_TRANSACTION_INTERNAL_NATIVE_TRACE"
+    }
+  ],
+  "summary": [
+    {
+      "case": "8E6B_FLAP",
+      "token_position_zero_after_exit": true,
+      "buy_block_identity_reconciled": true,
+      "negative_candidate": false,
+      "netWei": "343160277345206",
+      "pct": "0.228774"
+    },
+    {
+      "case": "2ADF_YOKI",
+      "token_position_zero_after_exit": true,
+      "buy_block_identity_reconciled": true,
+      "negative_candidate": true,
+      "netWei": "-9029761100333270",
+      "pct": "-11.287201"
+    }
+  ],
+  "limitations": [
+    "The BNB sale amounts are inferred assuming no unrelated passive internal native deposits or outflows to the wallet in that exact block. No full native call trace available. Do not upgrade calculated figures to independently settled realized PnL.",
+    "Even if a wallet returned to zero in token balance at end, external protocol fees, reentrancy or transfer event subflows need exact receipt call trace to definitively attribute all BNB movement.",
+    "Gas computed exactly for known adjacent legacy transactions and entry from prior cumulative receipt; gasPrice is transaction gasPrice, consistent with approve receipt effectiveGasPrice.",
+    "Do not confuse quoted calldata minReturn (price floor) with actual sale receipt.",
+    "Time to first and last exit derived from block timestamp, not public first seen nor fair follower fill.",
+    "No cash payment API/upgrade, monitor service, execution or alert. This is evidence-only."
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "P4_C": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}
