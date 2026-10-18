@@ -31,3 +31,9 @@ Claude原次报告把4个**非阻断P3**列为建议：硬编码`actual_setup_fr
 本轮`EVIDENCE_ACCESS_BLOCKER_SOLVED_AS_ATTACHMENTS`，`AUTHOR_INDEPENDENT_RECOMPUTE=PASS`，`STAGE165_CLAUDE_NEW_REVIEW=NOT_DONE`。须由Claude/Codex**实际拿到附件并运行/计算**后回传明确`APPROVE/REQUEST_CHANGES/BLOCKED`，不得修改原`BLOCKED`历史记录；原Stage165代码审核SHA **`dc9d09ebce688bd33d901fbfed2b00ea49ae5910`不变**。这些文件只供研究审查，不保证所有外部网页版AI都支持直接解压ZIP/运行Python；若无该能力，应使用可操作代码执行或将可读27×8 5m源JSON供其人工复算，不能假装它执行过。
 
 未来原冻结Spot前瞻七日市场窗口尚未结束，不能报告完整真实OOS或已盈利；`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`，PR#30仍Draft、没有新后台服务/Frank/Gmail/Mac或下单。
+
+## 后续独立Codex已完整取得原始Actions归档并APPROVE（2026-10-19）
+
+**本记录原文Claude`BLOCKED`仅是原时点真实事实，现已由新取得的可复核原始证据解除。** 用户转交Codex独立审结果：唯一Stage165审核SHA`dc9d09ebce688bd33d901fbfed2b00ea49ae5910`（基线`4f1e2f791a8239bb547b6224d03c50b2ae15d0a1`），审查者Codex、底层版本UNVERIFIED、隔离detached checkout；**最终定向结论APPROVE，新P0/P1/P2=0**。Codex实际上没有看到此前聊天内本地compact ZIP或`verify_independent.py`，而是从GitHub Actions直接获得原Stage162全档+28原ZIP、全445符号逐成员与publisher proof关系，独立写新Decimal复算脚本处理27确切D1 tick，全27三条件+精确比率与Stage165结果逐行一致，互斥18/8/1、新SETUP 0。冻结CLI文件和CI Artifact原字节相同SHA256`1690078cb41fc6c0c46a44f2c33910d52c63c9fe53daea338a5a592dc0539216`；测试6/6、成功CI11/11，旧CI失败真实原因已核实。原日级Binance ZIP/CHECKSUM独立重新下载层仍UNVERIFIED、真实市场盈利亦未通过。
+
+**以后不再以Claude当时权限缺失阻断Stage165**，但也不把Codex定向APPROVE扩大到G4/G6/真实可交易或2026年10月前瞻完整窗。最终独立审批摘要同步见[Stage165原始指标结果文件第五节](MONSTER_STAGE165_REAL27_EXACT_D1_QUOTE_RATIO_FAILURE_RESULTS_AND_REVIEW_20261018.md)。门禁`G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`维持。
