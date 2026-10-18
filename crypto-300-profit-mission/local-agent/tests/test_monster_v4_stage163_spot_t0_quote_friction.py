@@ -40,11 +40,11 @@ class TestT0Friction(unittest.TestCase):
         self.assertEqual(len(result["rows"]), 511)
         self.assertEqual(len({x["symbol"] for x in result["rows"]}), 511)
         self.assertEqual(result["exchange_server_time_ms"], gate.T0_MS)
-        # Original independently archived T0 QA published only four decimals.
-        # Compare that precision; do not round the underlying source quotes.
-        self.assertEqual(
-            [round(float(x), 4) for x in result["quote_spread_bps_p10_median_p90"]],
-            [2.0608, 11.2170, 28.9715])
+        # The original T0 QA published rounded four-decimal presentation.
+        # Its median 11.2170 vs new high precision 11.217050 is not drift.
+        for actual, published in zip(result["quote_spread_bps_p10_median_p90"],
+                                     [2.0608, 11.2170, 28.9715]):
+            self.assertAlmostEqual(float(actual), published, delta=0.0001)
         self.assertEqual(result["research_notional_usdt"], "UNKNOWN_NOT_SPECIFIED")
         self.assertEqual(result["research_notional_top_quote_size_coverage"],
                          "NOT_EVALUATED_WITHOUT_EXPLICIT_RESEARCH_AMOUNT")
