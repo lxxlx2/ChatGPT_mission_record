@@ -87,6 +87,64 @@ def historical_summary(pre: dict) -> dict:
             "gates": dict(BLOCKED)}
 
 
+TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+PENDING_KIND = "PUBLIC_PENDING_TRANSACTION_INGRESS"
+CONFIRMED_LOG_KIND = "PUBLIC_CONFIRMED_ERC20_TRANSFER_LOG_INGRESS"
+
+
+def _address_topic(address: str) -> str:
+    return "0x" + "0" * 24 + address.lower()[2:]
+
+
+def validate_confirmed_log(payload: dict, row: dict, wallet: str, ca: str, tx_hash: str, t: datetime, clock: dict) -> dict:
+    """An immutable BNB mined ERC20 Transfer is NOT a signed EOA BUY signal."""
+    if payload.get("removed") is True:
+        raise ValueError("LOG_REMOVED_REORG_NOT_ACTIONABLE")
+    if payload.get("removed") is not False:
+        raise ValueError("LOG_REMOVAL_STATUS_NOT_PROVEN")
+    topics = payload.get("topics")
+    if (not isinstance(topics, list) or len(topics) != 3
+            or str(topics[0]).lower() != TRANSFER_TOPIC
+            or str(topics[2]).lower() != _address_topic(wallet)):
+        raise ValueError("LOG_NOT_EXACT_ERC20_TRANSFER_TO_OWNER")
+    if (str(payload.get("address", "")).lower() != ca
+            or str(payload.get("transactionHash", "")).lower() != tx_hash):
+        raise ValueError("LOG_CA_OR_TRANSACTION_HASH_MISMATCH")
+    for topic in topics:
+        if not isinstance(topic, str) or not re.fullmatch(r"0x[0-9a-fA-F]{64}", topic):
+            raise ValueError("INVALID_LOG_TOPIC")
+    data = payload.get("data")
+    if not isinstance(data, str) or not re.fullmatch(r"0x[0-9a-fA-F]{64}", data) or int(data, 16) <= 0:
+        raise ValueError("INVALID_LOG_TOKEN_AMOUNT")
+    for key in ("blockNumber", "logIndex"):
+        val = payload.get(key)
+        if not isinstance(val, str) or not re.fullmatch(r"0x[0-9a-fA-F]+", val):
+            raise ValueError("LOG_MISSING_MINED_BLOCK_OR_INDEX")
+    if int(payload["blockNumber"], 16) <= 0:
+        raise ValueError("LOG_NOT_CONFIRMED_IN_BLOCK")
+    if not isinstance(payload.get("blockHash"), str) or not HASH.fullmatch(payload["blockHash"]):
+        raise ValueError("LOG_NO_BLOCK_HASH_PROOF")
+    return {
+        "state": "POST_BLOCK_TOKEN_RECEIPT_OBSERVER_CANDIDATE_UNATTESTED",
+        "reason": "TOKEN_TRANSFER_INTO_WALLET_NOT_PROOF_ORIGINAL_SIGNED_BUY",
+        "wallet": wallet, "exact_ca": ca, "tx_hash": tx_hash,
+        "received_erc20_raw": str(int(data, 16)),
+        "confirmed_block_number": int(payload["blockNumber"], 16),
+        "confirmed_block_hash": payload["blockHash"].lower(),
+        "log_index": int(payload["logIndex"], 16),
+        "first_local_observer_received_utc_claim": iso(t),
+        "first_public_observer_received_utc": None,
+        "target_windows_utc": {str(delay): iso(t + timedelta(seconds=delay)) for delay in DELAY_SECONDS},
+        "time_anchor": "FIRST_LOCAL_POST_BLOCK_LOG_INGRESS_CLAIM_NOT_MEMPOOL_FIRST_SEEN",
+        "source_raw_sha256": row["raw_sha256"].lower(),
+        "observer_clock_claim_source": clock["source"],
+        "tx_original_signer": "UNRESOLVED_RECEIPT_AND_FROM_NOT_READ",
+        "exact_ca_trade_buy_validation": "UNRESOLVED_TRANSFER_MAY_BE_PASSIVE",
+        "trade_funding_and_execution": "UNRESOLVED",
+        "follower_net_pnl": "UNRESOLVED",
+    }
+
+
 def _reject(reason: str) -> dict:
     return {"state": "REJECTED_EVIDENCE", "reason": reason,
             "first_public_observer_received_utc": None,
@@ -121,7 +179,7 @@ def validate_event(row: dict, wallets: set[str], cas: set[str], archived_txs: se
             raise ValueError("INVALID_TX_HASH")
         if tx_hash.lower() in archived_txs:
             raise ValueError("FROZEN_HISTORICAL_TX_CANNOT_BE_PROMOTED_TO_LIVE_CAPTURE")
-        if row["capture_kind"] != "PUBLIC_PENDING_TRANSACTION_INGRESS":
+        if row["capture_kind"] not in (PENDING_KIND, CONFIRMED_LOG_KIND):
             raise ValueError("HISTORICAL_OR_SIMULATED_CAPTURE_NOT_LIVE")
         if (not isinstance(row["event_id"], str) or not row["event_id"].strip()
                 or not isinstance(row["capture_machine_id"], str) or not row["capture_machine_id"].strip()
@@ -152,6 +210,15 @@ def validate_event(row: dict, wallets: set[str], cas: set[str], archived_txs: se
             payload = json.loads(raw)
         except (UnicodeDecodeError, json.JSONDecodeError) as exc:
             raise ValueError("RAW_EVENT_NOT_JSON") from exc
+        if isinstance(payload, dict) and isinstance(payload.get("params"), dict):
+            candidate_payload = payload["params"].get("result")
+        else:
+            candidate_payload = payload
+        if row["capture_kind"] == CONFIRMED_LOG_KIND:
+            if not isinstance(candidate_payload, dict):
+                raise ValueError("RAW_EVENT_NOT_A_LOG_OBJECT")
+            return validate_confirmed_log(candidate_payload, row, wallet.lower(),
+                                          ca.lower(), tx_hash.lower(), t, clock)
         # Support a JSON-RPC pending tx object or a direct pending transaction
         # object. A bare hash is NOT an authenticated original-signer event.
         if isinstance(payload, dict) and isinstance(payload.get("params"), dict):
@@ -206,6 +273,7 @@ def ingest_document(doc: dict, grid: dict, pre: dict) -> dict:
             "records": records,
             "counts": {"total": len(records),
                        "unattested_pending_tx_candidates": sum(x["state"] == "PENDING_OWNER_TX_CAPTURE_CANDIDATE_UNATTESTED" for x in records),
+                       "unattested_post_block_transfer_candidates": sum(x["state"] == "POST_BLOCK_TOKEN_RECEIPT_OBSERVER_CANDIDATE_UNATTESTED" for x in records),
                        "rejected": sum(x["state"] == "REJECTED_EVIDENCE" for x in records),
                        "verified_public_executable_U": 0, "proven_net_profitable_follower": 0},
             "gates": dict(BLOCKED)}
