@@ -233,3 +233,18 @@ The 07:40 automatic delivery invocation wrote `runs/2026-10-16/074000-final.md` 
 - Git commit: `b206e2d78ec01b36229ad38714fcb18e41df423e`
 
 For every existing primary/recovery slot, dedupe against Sent subject **prefix** `美股每日晨报｜YYYY-MM-DD`, including `｜正式补发`, and verify matching recipient + complete readback/canonical Git body before any send. A previous blocked primary run must not override actual later delivery proof or trigger a second email. Persist a truthful terminal BLOCKED_WITH_REASON if Gmail is blocked again; do not bypass platform safety checks or weaken STK quality gates. Today's manual recovery confirms one delivery, not that future autonomous platform safety decisions are repaired.
+
+## 2026-10-18 actual QA/Pending/Delivery single-write correction (latest)
+
+Observed failure at the existing 07:40 2026-10-18 scheduled primary:
+- \`us-stock-daily/runs/2026-10-18/074000-final.md\` correctly reports \`BLOCKED_WITH_REASON\`: a 12-section 55-item \`delivery-pending/2026-10-18.md\` was initially persisted with \`qa_status: PASS\`, but *afterward* STK-17/STK-18 semantic lint found items with weak decision value/process language. The attempted Git update to repair the same pending file was blocked by provider safety checks. Gmail was NOT attempted. A \`qa_status: PASS\` manifest written before final semantic lint is not authoritative.
+- The same pending was independently rechecked and full Oct 18 email manually sent/read back: \`1a14c8c78a35b388\`, subject \`美股每日晨报｜2026-10-18｜正式补发\`, to \`lxx.run688@gmail.com\`, 12 chapters, 55 locally numbered items, 6188 chars; identical canonical archive \`us-stock-daily/reports/daily/2026/2026-10/2026-10-18.md\`, commit \`25908fca5264d6a50d3f0e50b5bf301ba1602416\`. Normal 08:40 recovery MUST dedupe this actual Sent and only repair archive, never re-email.
+
+Required no-extra-task publisher sequence:
+1. Check Gmail Sent exact **date prefix including corrected/resend subjects** first, and existing canonical readback. If already delivered, exit silently after archive-only repair where necessary.
+2. **In memory** build full 12-section body; apply all CURRENT STK hard gates and semantic lints including STK-17/18/20, section-local numbering, event and source coverage, no operational filler and trailing-five collapse. If a lint detects weak items, fix the in-memory text and RE-RUN lint before marking \`QA_PASS\`.
+3. After full lint PASS, persist at most **one** ready body (pending or equivalent complete terminal draft). A prebuilt early checkpoint must be labeled \`DRAFT_UNVERIFIED\`, never \`READY/qa_status: PASS\` before all semantic tests. Do not persist speculative PASS and then depend on an additional GitHub update of the same file.
+4. If a second GitHub edit is blocked yet a *different* independently audited final in-memory full body passes ALL gates, Git is not a prerequisite to Gmail: attempt the legitimate Gmail send of that actual verified full body, then read back and archive exactly what was sent. This does NOT permit skipping QA, pretending missing proofs passed, or circumventing safety checks. A Gmail provider block remains \`BLOCKED_WITH_REASON\`; no false delivery claim.
+5. At 07:40/08:40 ensure the terminal audit describes the final *verified body* and exact remaining gaps, rather than calling the whole operation PASS because a preliminary draft looked structurally complete. Report success only on real Gmail Sent/readback + canonical Git equality; manual recovery success does not prove future automated reliability.
+
+Do not modify the existing scheduler, recipient, 12-section market-news scope, monthly reporting, quiet App policy, or safety constraints.
