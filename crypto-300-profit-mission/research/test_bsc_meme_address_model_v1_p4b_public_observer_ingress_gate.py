@@ -408,6 +408,97 @@ class PublicObserverIngressEvidenceTests(unittest.TestCase):
         self.assertEqual(out["params"][0], "logs")
         self.assertEqual(out["production"], "NO_GO")
 
+    def node_mock_capture(self, chain_id="0x38"):
+        node = shutil.which("node")
+        if node is None:
+            self.skipTest("Node unavailable (mocked WebSocket only)")
+        script = str(gate.ROOT / "bsc_meme_address_model_v1_p4b_bounded_postblock_log_collector.js")
+        mock = r"""
+const script = process.argv[1];
+const output = process.argv[2];
+const chainId = process.argv[3];
+process.env.BSC_WSS_URL = 'wss://no-network.example.invalid/mock';
+process.env.BSC_CLOCK_SYNC_SOURCE = 'SYNTHETIC_CLOCK_ONLY';
+process.env.BSC_CLOCK_MAX_ABS_OFFSET_MS = '0.5';
+process.argv = [process.execPath, script, '--live', '--output', output,
+                '--duration-seconds', '5', '--max-events', '5'];
+class FakeSocket {
+  constructor(url) {
+    this.callbacks = {};
+    if (!url.startsWith('wss://no-network.example.invalid/')) throw Error('MOCK_URL');
+  }
+  addEventListener(name, callback) {
+    this.callbacks[name] = callback;
+    if (name === 'open') setImmediate(() => callback());
+  }
+  send(text) {
+    const request = JSON.parse(text);
+    const deliver = frame => this.callbacks.message({data: JSON.stringify(frame)});
+    if (request.method === 'eth_chainId') {
+      setImmediate(() => deliver({jsonrpc:'2.0', id:1, result: chainId}));
+      return;
+    }
+    if (request.method !== 'eth_subscribe' || request.id !== 2) {
+      throw Error('SUBSCRIBE_WITHOUT_BNB_CHAIN_VERIFICATION');
+    }
+    const filter = request.params[1];
+    const recipient = filter.topics[2][0];
+    const address = filter.address[0];
+    const log = {removed:false, address, topics:[filter.topics[0],
+      '0x' + '0'.repeat(24) + '1'.repeat(40),recipient],
+      transactionHash:'0x' + 'e'.repeat(64), blockHash:'0x' + 'd'.repeat(64),
+      blockNumber:'0x5200000', logIndex:'0x1',
+      data:'0x' + '0'.repeat(63) + '1'};
+    setImmediate(() => {
+      deliver({jsonrpc:'2.0', id:2, result:'0xf00d'});
+      deliver({jsonrpc:'2.0', method:'eth_subscription',
+              params:{subscription:'0xf00d',result:log}});
+      setTimeout(() => process.kill(process.pid, 'SIGTERM'), 20);
+    });
+  }
+  close() {}
+}
+globalThis.WebSocket = FakeSocket;
+require(script);
+"""
+        with tempfile.TemporaryDirectory() as tmp:
+            output = str(Path(tmp) / "observer.json")
+            run = subprocess.run([node, "-e", mock, script, output, chain_id],
+                                 capture_output=True, text=True, timeout=15)
+            if not Path(output).exists():
+                return run, None
+            saved = json.loads(Path(output).read_text(encoding="utf-8"))
+            import stat
+            self.assertEqual(stat.S_IMODE(Path(output).stat().st_mode), 0o600)
+            return run, saved
+
+    def test_mock_bnb_chain_verification_and_sigterm_persists_included_log(self):
+        run, saved = self.node_mock_capture()
+        self.assertEqual(run.returncode, 143, run.stderr)
+        self.assertIsNotNone(saved, run.stderr)
+        self.assertEqual(saved["provider_chain_id_confirmed"], "0x38")
+        self.assertEqual(saved["stop_reason"], "MANUALLY_TERMINATED_SIGTERM")
+        self.assertEqual(saved["subscription_status"], "SUBSCRIBED_OK")
+        self.assertEqual(len(saved["events"]), 1)
+        self.assertEqual(saved["events"][0]["provider_chain_id"], "0x38")
+        self.assertEqual(gate.ingest_document(saved, self.grid, self.prefreeze)["counts"]
+                         ["unattested_post_block_transfer_candidates"], 1)
+        self.assertNotIn("no-network.example.invalid", json.dumps(saved))
+
+    def test_mock_wrong_chain_refuses_subscription_before_any_logs(self):
+        run, saved = self.node_mock_capture("0x1")
+        self.assertEqual(run.returncode, 2, run.stderr)
+        self.assertIsNotNone(saved, run.stderr)
+        self.assertEqual(saved["stop_reason"], "PROVIDER_ERROR_WRONG_CHAIN_ID")
+        self.assertIsNone(saved["provider_chain_id_confirmed"])
+        self.assertEqual(saved["events"], [])
+
+    def test_explicit_wrong_provider_chain_id_rejected_by_importer(self):
+        x = self.confirmed_log_event()
+        x["provider_chain_id"] = "0x1"
+        r, _ = self.check(x)
+        self.assertEqual(r["reason"], "WRONG_PROVIDER_CHAIN_ID")
+
     def test_boolean_monotonic_clock_fails(self):
         x = self.valid_event()
         x["observer_monotonic_ns"] = True
