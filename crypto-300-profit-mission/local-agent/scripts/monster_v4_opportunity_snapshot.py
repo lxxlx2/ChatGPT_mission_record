@@ -9,11 +9,13 @@ import hashlib
 import json
 import sqlite3
 import time
+from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
 
 MAX_SOURCE_LAG_MS = 6 * 60_000
 QUEUE_VALID_MS = 15 * 60_000
+MAX_WINDOW_EPISODES = 50_000
 REQUIRED = {"candidate_queue", "events", "d2_reviews", "polls", "source_state", "snapshots"}
 
 
@@ -39,7 +41,9 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
     path = Path(db_path)
     if not path.is_file():
         raise FileNotFoundError("MONSTER_DB_NOT_FOUND")
-    with sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True) as db:
+    # Explicit close: sqlite3 connection context manager alone does not close.
+    # SQLite may still create WAL/SHM sidecars when opening an existing WAL DB.
+    with closing(sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)) as db:
         db.row_factory = sqlite3.Row
         db.execute("PRAGMA query_only=ON")
         present = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
@@ -50,27 +54,38 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
             poll = _get(db, """SELECT observed_ms,source_total,scanned,invalid
                 FROM polls WHERE venue=? AND observed_ms<=?
                 ORDER BY observed_ms DESC,poll_id DESC LIMIT 1""", (venue, now_ms))
-            health = _get(db, "SELECT degraded_since_ms,last_ok_ms FROM source_state WHERE venue=?", (venue,))
+            # source_state is mutable current state, not an as-of history.
+            # Durable transition events preserve outages even after recovery.
+            transition = _get(db, """SELECT observed_ms,event_type FROM events
+                WHERE venue=? AND symbol='FULL_UNIVERSE'
+                AND event_type IN ('SOURCE_DEGRADED','SOURCE_RECOVERED')
+                AND observed_ms<=? ORDER BY observed_ms DESC,event_id DESC LIMIT 1""",
+                (venue, now_ms))
+            degraded_at_asof = bool(transition and transition["event_type"] == "SOURCE_DEGRADED")
             source_age = now_ms - poll["observed_ms"] if poll else None
             healthy = bool(poll and source_age <= MAX_SOURCE_LAG_MS
                            and poll["invalid"] == 0 and poll["scanned"] == poll["source_total"]
-                           and not (health and health["degraded_since_ms"] is not None))
+                           and not degraded_at_asof)
             sources[venue] = {
                 "state": "RECENT_STORED_POLL" if healthy else "STALE_OR_DEGRADED",
                 "last_poll_utc": utc_time(poll["observed_ms"]) if poll else None,
                 "age_seconds": source_age // 1000 if source_age is not None else None,
                 "scanned": poll["scanned"] if poll else None,
                 "source_total": poll["source_total"] if poll else None,
-                "degraded_since_utc": utc_time(health["degraded_since_ms"])
-                if health and health["degraded_since_ms"] is not None else None,
+                "degraded_since_utc": utc_time(transition["observed_ms"])
+                if degraded_at_asof else None,
+                "health_origin": "PERSISTED_SOURCE_TRANSITION_EVENTS_ASOF",
             }
         # Materialize the entire requested research window *before* display
         # truncation: recent invalidated/expired episodes must not hide an
         # older, still-current WATCH or SETUP.
         rows = db.execute("""SELECT * FROM candidate_queue
             WHERE first_seen_ms BETWEEN ? AND ?
-            ORDER BY first_seen_ms DESC,id DESC""",
-            (now_ms - window_hours * 3_600_000, now_ms)).fetchall()
+            ORDER BY first_seen_ms DESC,id DESC LIMIT ?""",
+            (now_ms - window_hours * 3_600_000, now_ms,
+             MAX_WINDOW_EPISODES + 1)).fetchall()
+        if len(rows) > MAX_WINDOW_EPISODES:
+            raise ValueError("MONSTER_OPERATOR_WINDOW_EXCEEDS_SAFE_EPISODE_LIMIT")
         entries = []
         for r in rows:
             q = dict(r)
@@ -85,10 +100,20 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
             invalidation = _get(db, """SELECT observed_ms FROM events
                 WHERE event_id=? AND observed_ms BETWEEN ? AND ?""",
                 (event_id(venue, symbol, "INVALIDATED", first), first, now_ms))
-            d2 = _get(db, """SELECT status,observed_ms,attempts,last_error
-                FROM d2_reviews WHERE source_event_id=?""", (setup_key,)) if setup else None
-            d2_event = _get(db, "SELECT observed_ms,payload FROM events WHERE event_id=? AND observed_ms<=?",
-                            (event_id(venue, symbol, "D2_LIQUIDITY", setup_key), now_ms)) if d2 else None
+            # D2 review status is mutable: CHECKED could have happened after
+            # --asof-ms. Only terminal events with observed_ms<=asof are valid.
+            d2_event = _get(db, """SELECT observed_ms,event_type,payload FROM events
+                WHERE event_id IN (?,?,?) AND observed_ms<=?
+                ORDER BY observed_ms DESC,event_id DESC LIMIT 1""",
+                (event_id(venue, symbol, "D2_LIQUIDITY", setup_key),
+                 event_id(venue, symbol, "D2_NOT_SPOT", setup_key),
+                 event_id(venue, symbol, "D2_LATE", setup_key), now_ms)) if setup else None
+            d2_status = {"D2_LIQUIDITY": "CHECKED",
+                         "D2_NOT_SPOT": "FUTURES_ONLY",
+                         "D2_LATE": "LATE"}.get(d2_event["event_type"], "NOT_CAPTURED") if d2_event else "NOT_CAPTURED"
+            late_event = _get(db, """SELECT observed_ms FROM events
+                WHERE event_id=? AND observed_ms<=?""",
+                (event_id(venue, symbol, "LATE_REVIEW", q["id"]), now_ms))
             quote = _get(db, """SELECT observed_ms,price,quote24 FROM snapshots
                 WHERE venue=? AND symbol=? AND observed_ms<=?""", (venue, symbol, now_ms))
             try:
@@ -114,9 +139,9 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
                 quote_state = "NOT_SEEN_IN_LATEST_POLL"
             else:
                 quote_state = "PRESENT_IN_LATEST_POLL"
-            if invalidation is not None or q["status"] == "INVALIDATED":
+            if invalidation is not None:
                 state = "INVALIDATED"
-            elif q["status"] == "LATE":
+            elif late_event is not None:
                 state = "MISSED_D1_DEADLINE"
             elif expired:
                 state = "EXPIRED"
@@ -128,12 +153,13 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
                 state = "MISSING_WATCH_EVIDENCE"
             elif setup:
                 state = "SETUP_RESEARCH_ONLY" if venue == "spot" else "FUTURES_ONLY_SETUP"
-            elif q["status"] == "PENDING":
-                state = "WATCH_RESEARCH_ONLY"
             else:
-                state = "CLOSED_WITHOUT_SETUP"
+                # Current queue.status can be EVALUATED/LATE/INVALIDATED from a
+                # *future* transition. No timestamped as-of closure event was
+                # captured; retain WATCH, never fabricate a historical closure.
+                state = "WATCH_RESEARCH_ONLY"
             depth = None
-            if d2_event is not None:
+            if d2_status == "CHECKED":
                 try:
                     payload = json.loads(d2_event["payload"])
                     depth = payload.get("depth")
@@ -156,12 +182,21 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
                 "invalidation_utc": utc_time(invalidation["observed_ms"]) if invalidation else None,
                 "last_stored_price": quote["price"] if quote else None,
                 "last_stored_quote24": quote["quote24"] if quote else None,
-                "queue_status": q["status"], "deadline_utc": utc_time(q["deadline_ms"]),
+                # Derived from timestamped events/deadline, not current
+                # mutable candidate_queue.status (which may reflect the future).
+                "queue_status": ("INVALIDATED" if invalidation else
+                                 "LATE" if late_event else
+                                 "EVALUATED" if setup else
+                                 "EXPIRED" if expired else "UNRESOLVED_ASOF"),
+                "queue_status_origin": "ASOF_EVENTS_AND_DEADLINE_NOT_MUTABLE_QUEUE_STATE",
+                "deadline_utc": utc_time(q["deadline_ms"]),
                 "signal": state, "setup_utc": utc_time(setup["observed_ms"]) if setup else None,
-                "d2_status": d2["status"] if d2 else "NOT_CAPTURED",
+                "d2_status": d2_status,
+                "d2_status_origin": "D2_TERMINAL_EVENT_OBSERVED_BY_ASOF",
                 "d2_observed_utc": utc_time(d2_event["observed_ms"]) if d2_event else None,
                 "d2_research_liquidity_gate": depth.get("research_liquidity_gate")
                     if isinstance(depth, dict) else None,
+                "d2_research_liquidity_gate_is_not_fill_proof": True,
                 "d2_fee_source": depth.get("fee_source") if isinstance(depth, dict) else None,
                 "d2_spread_bps": depth.get("spread_bps") if isinstance(depth, dict) else None,
                 "d2_instant_roundtrip_cost_bps":
@@ -190,6 +225,8 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
             "schema": "MONSTER_V4_OPERATOR_RESEARCH_SNAPSHOT_V2_WINDOW_COMPLETE",
             "asof_utc": utc_time(now_ms), "mode": "OFFLINE_SQLITE_READ_ONLY",
             "historical_asof_reconstruction": False,
+            "asof_is_only_persisted_event_state_not_full_market_pit": True,
+            "safe_full_window_episode_limit": MAX_WINDOW_EPISODES,
             "production": "NO_GO", "trading": "NO_GO", "g4_real_profit": "UNKNOWN",
             "data_window_hours": window_hours, "limited_to": limit,
             "display_priority_contract": "SPOT_SETUP_RESEARCH_THEN_WATCH_THEN_FUTURES_SETUP_THEN_DIAGNOSTICS; EACH_DESCENDING_FIRST_SEEN_ID",
@@ -197,7 +234,7 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
             "window_total": full_total, "hidden_by_display_limit": full_total - len(visible),
             "counts_by_signal_full_window": dict(sorted(full_counts.items())),
             "displayed": len(visible),
-            "note": "Full stored window classified before display limit; no live market quote, historical PIT reconstruction, trading or mail.",
+            "note": "As-of state uses stored timestamped events; mutable quotes are not full historical PIT. SQLite read-only queries may create WAL/SHM sidecars; no live quote, trade or mail.",
         }
 
 
