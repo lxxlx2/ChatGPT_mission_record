@@ -230,6 +230,99 @@ class PublicObserverIngressEvidenceTests(unittest.TestCase):
         self.assertEqual(batch["counts"]["unattested_post_block_transfer_candidates"], 1)
         self.assertEqual(batch["records"][1]["reason"], "DUPLICATE_ORIGINAL_LOG_IDENTITY")
 
+    def conflicting_included(self, field):
+        original = self.confirmed_log_event()
+        altered = copy.deepcopy(original)
+        altered["event_id"] = "SYNTHETIC_SAME_LOG_POSITION_CONFLICT_" + field
+        frame = json.loads(base64.b64decode(altered["raw_event_base64"]))
+        log = frame["params"]["result"]
+        if field == "amount":
+            log["data"] = "0x" + format(2 * 10 ** 18, "064x")
+        elif field == "sender":
+            log["topics"][1] = gate._address_topic("0x" + "c" * 40)
+        elif field == "blockNumber":
+            log["blockNumber"] = "0x5200001"
+        elif field == "exact_ca":
+            other = next(m["ca"] for m in self.grid["markets"]
+                         if m["ca"].lower() != original["exact_ca"].lower())
+            altered["exact_ca"] = other
+            log["address"] = other
+        elif field == "wallet":
+            other = next(w["wallet"] for w in self.grid["wallets"]
+                         if w["wallet"].lower() != original["wallet"].lower())
+            altered["wallet"] = other
+            log["topics"][2] = gate._address_topic(other)
+        else:
+            raise AssertionError("UNSUPPORTED_SYNTHETIC_VARIATION")
+        self.replace_event(altered, frame)
+        return original, altered
+
+    def exact_tombstone(self, included):
+        removed = copy.deepcopy(included)
+        removed["event_id"] = "SYNTHETIC_VALID_SAME_POSITION_TOMBSTONE"
+        frame = json.loads(base64.b64decode(removed["raw_event_base64"]))
+        frame["params"]["result"]["removed"] = True
+        self.replace_event(removed, frame)
+        return removed
+
+    def test_same_position_conflicting_included_quarantines_both_versions(self):
+        for field in ("amount", "sender", "blockNumber", "exact_ca", "wallet"):
+            with self.subTest(field=field):
+                original, altered = self.conflicting_included(field)
+                batch = gate.ingest_document(self.doc([original, altered]),
+                                             self.grid, self.prefreeze)
+                self.assertEqual(batch["counts"]["unattested_post_block_transfer_candidates"], 0)
+                self.assertEqual(batch["counts"]["log_identity_conflicts"], 2)
+                self.assertEqual([x["state"] for x in batch["records"]],
+                                 ["LOG_IDENTITY_CONFLICT", "LOG_IDENTITY_CONFLICT"])
+                for item in batch["records"]:
+                    self.assertEqual(item["reason"], "SAME_ONCHAIN_LOG_POSITION_DIFFERENT_CONTENT")
+                    self.assertIsNone(item["target_windows_utc"])
+                    self.assertIsNone(item["first_public_observer_received_utc"])
+                self.assertEqual(batch["counts"]["verified_public_executable_U"], 0)
+
+    def test_conflicting_included_plus_exact_removal_has_no_surviving_candidate(self):
+        for field in ("amount", "sender", "blockNumber", "exact_ca", "wallet"):
+            with self.subTest(field=field):
+                original, altered = self.conflicting_included(field)
+                tombstone = self.exact_tombstone(original)
+                for order in ([original, altered, tombstone],
+                              [tombstone, altered, original]):
+                    batch = gate.ingest_document(self.doc(order), self.grid, self.prefreeze)
+                    self.assertEqual(batch["counts"]["unattested_post_block_transfer_candidates"], 0)
+                    self.assertEqual(batch["counts"]["log_identity_conflicts"], 2)
+                    self.assertEqual(batch["counts"]["proven_net_profitable_follower"], 0)
+                    self.assertTrue(all(
+                        x["target_windows_utc"] is None for x in batch["records"]))
+                    self.assertEqual(sum(x.get("validated_reorg_tombstone") is True
+                                         for x in batch["records"]), 1)
+
+    def test_same_position_same_content_other_serialization_is_a_duplicate(self):
+        original = self.confirmed_log_event()
+        duplicate = copy.deepcopy(original)
+        duplicate["event_id"] = "SAME_LOG_DIFFERENT_JSON_SERIALIZATION"
+        same_payload = json.loads(base64.b64decode(duplicate["raw_event_base64"]))
+        raw = json.dumps(same_payload, indent=3).encode("utf-8")
+        duplicate["raw_event_base64"] = base64.b64encode(raw).decode("ascii")
+        duplicate["raw_sha256"] = hashlib.sha256(raw).hexdigest()
+        batch = gate.ingest_document(self.doc([original, duplicate]),
+                                     self.grid, self.prefreeze)
+        self.assertEqual(batch["counts"]["unattested_post_block_transfer_candidates"], 1)
+        self.assertEqual(batch["counts"]["log_identity_conflicts"], 0)
+        self.assertEqual(batch["records"][1]["reason"], "DUPLICATE_ORIGINAL_LOG_IDENTITY")
+
+    def test_same_transaction_different_log_index_is_a_distinct_location(self):
+        original = self.confirmed_log_event()
+        next_log = copy.deepcopy(original)
+        next_log["event_id"] = "DIFFERENT_LOG_INDEX_IN_SAME_TRANSACTION"
+        frame = json.loads(base64.b64decode(next_log["raw_event_base64"]))
+        frame["params"]["result"]["logIndex"] = "0x5"
+        self.replace_event(next_log, frame)
+        batch = gate.ingest_document(self.doc([original, next_log]),
+                                     self.grid, self.prefreeze)
+        self.assertEqual(batch["counts"]["unattested_post_block_transfer_candidates"], 2)
+        self.assertEqual(batch["counts"]["log_identity_conflicts"], 0)
+
     def test_utc_window_overflow_pending_keeps_other_record(self):
         included = self.valid_event()
         over = self.valid_event()
