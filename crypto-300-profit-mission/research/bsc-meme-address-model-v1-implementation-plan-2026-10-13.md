@@ -956,3 +956,14 @@ Geth 文档指出 WebSocket `logs` 在链重组时向同一旧块事件再发 `r
 4. **没有承诺修复历史时间倒签**：原始帧 SHA 不能证明帧以外 UTC 的独立真实性；实际第三方时钟鉴证和事件/行情源、跨批重组要等另有明确授权后采集真实来源。目前任何进口数据都不得被程序直接判定为 public first-seen 或真实 1/5/15 分钟收益，只能 `UNATTESTED`。
 
 具体新源码及定向修复差异在 [入口源码](./bsc_meme_address_model_v1_p4b_public_observer_ingress_gate.py)、[有界 Node 采集器](./bsc_meme_address_model_v1_p4b_bounded_postblock_log_collector.js)、[40+ 离线反例/模拟测试](./test_bsc_meme_address_model_v1_p4b_public_observer_ingress_gate.py)、[更新源限制与业务结果报告](./bsc-meme-address-model-v1-p4b-public-observer-ingress-collector-report-2026-10-18.md)。**新的最终 Git SHA、实际测试 Job 原始日志和外审定向请求必须以 PR #40 后续新评论为准；在复核以前标 `PENDING_OTHER_AI_REVIEW`，不得延用旧 SHA 审批。** 保留 `P4-B=PARTIAL / P4-C=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
+
+## 2026-10-19 第二次独立 `REQUEST_CHANGES`：同一链上位置两条冲突 INCLUDED 证据
+
+外部独立审核固定 `REQUEST_CHANGES@e7caa4caee517ef39ea436dfe34aa34fab6c22db`，比较基线 `c8482d1e2d5c44fb7e712538def09abd33a5739d`。独立确认旧撤销注入、UTC 溢出及 Node chainId/SIGTERM 已修复，但新 P2 证明同一 `blockHash + txHash + logIndex` 的不同原日志转账数额、sender topic 或 blockNumber 因被错误当作不同日志而产生两个 `UNATTESTED` 候选，真 REMOVED 撤销 A 后 B 会继续带着 60/300/900 秒窗口存活。
+
+本轮仅对这项真正影响数据完整性的 P2 修改：把网络/区块哈希/交易哈希/日志 index 定义为**位置**，将 CA、EOA、区块号、sender topic、raw amount 定义为**规范化内容**。同位置同内容换 event_id、JSON 排列顺序视为重复，仅计一次；同位置内容冲突，无论先后顺序，全部已接受的 INCLUDED 及其后续变体统一置 `LOG_IDENTITY_CONFLICT`，清空 `target_windows_utc`。REMOVED 保留上一轮已获独立复核的完整来源/网络/身份校验和内容精确匹配能力；不同 CA、EOA、区块号、金额或 sender 的 REMOVED 不撤销原来的可信候选。实现严格限定**同一输入批次**，跨批次及历史 UTC 的独立可信性仍属于另一阶段，未发生公网实测。
+
+新增回归方法覆盖金额、sender、blockNumber、另一个冻结 CA / wallet 的 `[A,B]`、匹配原 A 的 `[A,B,R]` 和 `[R,B,A]`、同位置只改 event_id 与序列化格式的正常去重，以及不同 logIndex 正常两个候选。旧全部回归继续执行；新 Git SHA/Ubuntu+macOS 全部原生 Job 日志结果与其他 AI review 状态单独回报 PR #40，不回溯批准旧 SHA。不得将 `LOG_IDENTITY_CONFLICT` 解释成真实亏损/没有交易，不得将 `raw_sha256` 解释成第三方时钟认证。不得启动真实 RPC/WSS、Mac 服务、生产或交易。
+
+维持 `P4-B/P4-C=PARTIAL`、`PUBLIC_EXECUTABLE_U=UNRESOLVED`、`P5=BLOCKED`、`PRODUCTION=NO_GO`、`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。
+
