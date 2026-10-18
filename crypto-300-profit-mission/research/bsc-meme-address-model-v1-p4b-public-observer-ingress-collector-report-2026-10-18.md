@@ -27,6 +27,10 @@ python3 -B -m unittest discover -s crypto-300-profit-mission/research -p test_bs
 
 只会打印或检测冻结参数，不启动监听。**未授权部署前不执行 `--live`，不建立 launchd 常驻、不接 Mac 用户本地钱包、不做任何报警/买卖。** 系统默认时钟校准证据 `UNKNOWN`：原始真实帧仍可以保存，但导入器拒绝将它升级为可用延迟起点；需要来自用户自己确有证据的时钟校准来源和实际偏移上限，不能通过随意传 `0` 假装已校准。即使用户报告已同步，导入器也只输出 `UNATTESTED` 本地时间候选。
 
+### 链重组与重复日志的真实安全语义
+
+Ethereum/Geth 官方原始订阅语义明确：相同区块里的日志可能在 reorg 时重新以 `removed=true` 发出，随后交易也可能出现在新区块。来源：<https://geth.ethereum.org/docs/interacting-with-geth/rpc/pubsub>。本项目**不可按 txHash+logIndex 简单去重再丢弃 removed 事件**。当前 Node 采集器对同一 `blockHash+txHash+logIndex` 分别保留 INCLUDED 与 REMOVED 两个原始订阅帧，SHA 分别保存；Python 导入阶段在一个批次发现完整来源校验的同一旧区块 `removed` 墓碑时，将旧 INCLUDED 候选转为 `REORG_REVOKED_POSTBLOCK_LOG`，且 `target_windows_utc=null`。新链不同 blockHash 的事件不应随旧块撤销。原始帧自报仍非独立外部证据，不得将这次撤销/确认凭空认证为第三方达标收益。若服务商没有发来重组撤销日志，该离线批次也不能自行宣称最终性。
+
 ## 三、首次收到事件 != 原钱包可跟单的买入
 
 - 此项目最初要在 19 个真实 major exact CA 中发现 2026 年仍主动交易、可重复盈利且可被旁观者按公平规则跟进的地址。`Transfer(to=EOA)` 本身可以是 passive transfer、空投、内部转移、合约授权交易的结果，并不能单独证明原 EOA 是 tx signer 或钱包买入。
