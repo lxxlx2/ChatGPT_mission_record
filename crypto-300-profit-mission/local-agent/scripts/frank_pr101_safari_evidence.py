@@ -127,6 +127,68 @@ def pinned_candidate_checkout(script_file: Path, expected_sha: str) -> Path:
     return static
 
 
+def verify_git_source(root: Path, expected_sha: str) -> None:
+    """Recheck both commit and tracked checkout, even after a long screenshot session."""
+    result = subprocess.run(["git", "-C", str(root), "rev-parse", "HEAD"],
+                            capture_output=True, text=True, check=True, timeout=15)
+    if result.stdout.strip() != expected_sha:
+        raise RuntimeError("STOP_SOURCE_HEAD_CHANGED")
+    status = subprocess.run(["git", "-C", str(root), "status", "--porcelain"],
+                            capture_output=True, text=True, check=True, timeout=15)
+    if status.stdout.strip():
+        raise RuntimeError("STOP_SOURCE_WORKTREE_CHANGED")
+
+
+def verify_preview_snapshot(static: Path, expected_hashes: dict[str, str]) -> None:
+    if set(expected_hashes) != STATIC_FILES:
+        raise RuntimeError("STOP_STATIC_IDENTITY_INCOMPLETE")
+    for name, digest in expected_hashes.items():
+        target = static / name
+        if target.is_symlink() or not target.is_file() or sha256_bytes(target.read_bytes()) != digest:
+            raise RuntimeError("STOP_STATIC_SNAPSHOT_CHANGED " + name)
+
+
+def export_exact_git_static(root: Path, expected_sha: str, destination: Path) -> dict[str, str]:
+    """Export bytes from the Git object, never serve a mutable checkout."""
+    verify_git_source(root, expected_sha)
+    destination.mkdir(mode=0o700, parents=True, exist_ok=False)
+    hashes = {}
+    for name in sorted(STATIC_FILES):
+        result = subprocess.run(
+            ["git", "-C", str(root), "show", f"{expected_sha}:{STATIC_REL}/{name}"],
+            capture_output=True, check=True, timeout=30,
+        )
+        payload = result.stdout
+        if not payload:
+            raise RuntimeError("STOP_EMPTY_COMMITTED_STATIC_FILE")
+        target = destination / name
+        target.write_bytes(payload)
+        target.chmod(0o400)
+        hashes[name] = sha256_bytes(payload)
+    verify_preview_snapshot(destination, hashes)
+    verify_git_source(root, expected_sha)
+    return hashes
+
+
+def preserve_rejected_screenshots(capture_root: Path, destination: Path,
+                                  preview_sha: str, reason: str) -> Path | None:
+    """Retain already captured images on a rejected run, no accepted ZIP."""
+    source_images = [capture_root / f"{stage}.png" for stage, _ in CAPTURE_STAGES
+                     if (capture_root / f"{stage}.png").is_file()]
+    if not source_images:
+        return None
+    destination.mkdir(mode=0o700, parents=True, exist_ok=False)
+    for png in source_images:
+        if not png.is_symlink():
+            shutil.copy2(png, destination / png.name)
+    (destination / "REJECTED.json").write_text(
+        json.dumps({"status": "REJECTED_SOURCE_DRIFT_NO_VALID_ATTESTATION",
+                    "expected_sha": preview_sha, "reason": reason,
+                    "captured_at_utc": datetime.now(timezone.utc).isoformat()},
+                   ensure_ascii=False, indent=2), encoding="utf-8")
+    return destination
+
+
 def make_handler(static: Path, live_port: int):
     class View(SimpleHTTPRequestHandler):
         def __init__(self, *args, **kwargs):
@@ -217,7 +279,10 @@ def screenshots(capture_root: Path, *, input_fn=input, invoke=subprocess.run) ->
     return result
 
 def package_evidence(screenshots_dir: Path, out_path: Path, captures: list[dict], static: Path,
-                     *, source_port: int, preview_port: int, preview_sha: str = APPROVED) -> Path:
+                     *, source_port: int, preview_port: int, preview_sha: str = APPROVED,
+                     verified_static_hashes: dict[str, str] | None = None) -> Path:
+    if verified_static_hashes is not None:
+        verify_preview_snapshot(static, verified_static_hashes)
     manifest = {
         "kind": "FRANK_PR101_MAC_SAFARI_MANUAL_EVIDENCE",
         "schema_version": 1,
@@ -227,7 +292,9 @@ def package_evidence(screenshots_dir: Path, out_path: Path, captures: list[dict]
         "approved_product_sha": preview_sha if preview_sha == APPROVED else None,
         "candidate_source_review_status": "PR101_EXTERNALLY_APPROVED" if preview_sha == APPROVED
             else "CANDIDATE_REQUIRES_SEPARATE_INDEPENDENT_REVIEW",
-        "reviewed_static_files_sha256": {name: sha256_bytes((static / name).read_bytes()) for name in sorted(STATIC_FILES)},
+        "reviewed_static_files_sha256": (dict(verified_static_hashes) if verified_static_hashes is not None
+                                         else {name: sha256_bytes((static / name).read_bytes())
+                                               for name in sorted(STATIC_FILES)}),
         "capture_method": "macOS interactive screencapture -i -x, chosen regions",
         "screenshot_count": len(captures),
         "screenshots": captures,
@@ -268,11 +335,15 @@ def main() -> int:
     with tempfile.TemporaryDirectory(prefix="frank-pr101-safari-evidence-") as tmp:
         work = Path(tmp)
         if args.candidate_sha:
-            static = pinned_candidate_checkout(Path(__file__), args.candidate_sha)
+            candidate_static = pinned_candidate_checkout(Path(__file__), args.candidate_sha)
+            checkout_root = candidate_static.parents[4]
             preview_sha = args.candidate_sha
         else:
-            static = exact_review_checkout(work / "approved")
+            approved_static = exact_review_checkout(work / "approved")
+            checkout_root = approved_static.parents[4]
             preview_sha = APPROVED
+        static = work / "immutable-committed-static"
+        committed_hashes = export_exact_git_static(checkout_root, preview_sha, static)
         screenshots_dir = work / "screenshots"
         screenshots_dir.mkdir(mode=0o700)
         server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(static, source_port))
@@ -295,8 +366,27 @@ def main() -> int:
                 return 2
             stamp = datetime.now().astimezone().strftime("%Y%m%d-%H%M%S")
             archive = Path.home() / "Downloads" / f"frank-pr101-safari-evidence-{stamp}-{preview_sha[:8]}.zip"
-            package_evidence(screenshots_dir, archive, captured, static,
-                             source_port=source_port, preview_port=port, preview_sha=preview_sha)
+            try:
+                verify_git_source(checkout_root, preview_sha)
+                verify_preview_snapshot(static, committed_hashes)
+                package_evidence(
+                    screenshots_dir, archive, captured, static,
+                    source_port=source_port, preview_port=port,
+                    preview_sha=preview_sha, verified_static_hashes=committed_hashes,
+                )
+                verify_git_source(checkout_root, preview_sha)
+                verify_preview_snapshot(static, committed_hashes)
+            except (RuntimeError, OSError, subprocess.CalledProcessError) as exc:
+                archive.unlink(missing_ok=True)
+                rejected = Path.home() / "Downloads" / (
+                    f"frank-pr101-REJECTED-source-drift-{stamp}-{preview_sha[:8]}")
+                preserved = preserve_rejected_screenshots(
+                    screenshots_dir, rejected, preview_sha, type(exc).__name__ + ": " + str(exc))
+                print("STOP_EVIDENCE_REJECTED_SOURCE_DRIFT=" + str(exc))
+                if preserved is not None:
+                    print("REJECTED_SCREENSHOTS_PRESERVED=" + str(preserved))
+                    subprocess.run(["open", "-R", str(preserved)], check=False)
+                return 3
             print("EVIDENCE_ZIP=" + str(archive))
             print("SCREENSHOT_COUNT=" + str(len(captured)))
             subprocess.run(["open", "-R", str(archive)], check=False)
