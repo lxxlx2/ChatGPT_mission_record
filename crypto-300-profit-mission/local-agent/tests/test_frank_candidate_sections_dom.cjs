@@ -92,7 +92,7 @@ assert(elements.candidates.innerHTML.includes('12.34'));
 context.renderCandidates([{...basis, quote_observed_at:date(now-120)}]);
 assert(elements.candidates.innerHTML.includes('报价已过期，不代表当前成交条件'));
 assert(!elements.candidates.innerHTML.includes('12.34'));
-delete context.FrankCandidateSections;
+vm.runInContext('delete globalThis.FrankCandidateSections', context);
 context.renderCandidates([basis]);
 assert(elements.candidates.innerHTML.includes('报价已过期，不代表当前成交条件'));
 
