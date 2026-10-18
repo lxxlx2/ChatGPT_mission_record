@@ -24,7 +24,7 @@ class PublicObserverIngressEvidenceTests(unittest.TestCase):
             "network": "bnb-mainnet",
             "wallet": self.example["original_owner"],
             "exact_ca": self.example["exact_ca"],
-            "tx_hash": self.example["first_signed_buy_tx"],
+            "tx_hash": "0x" + "e" * 64,
             "capture_kind": "PUBLIC_PENDING_TRANSACTION_INGRESS",
             "observer_received_utc": "2026-10-18T10:00:00.000000Z",
             "capture_machine_id": "SYNTHETIC_MAC_ID",
@@ -49,7 +49,7 @@ class PublicObserverIngressEvidenceTests(unittest.TestCase):
         return {"schema": "BSC_P4B_PUBLIC_OBSERVER_INGRESS_V1", "events": events}
 
     def check(self, event):
-        out = gate.ingest_document(self.doc([event]), self.grid)
+        out = gate.ingest_document(self.doc([event]), self.grid, self.prefreeze)
         return out["records"][0], out["counts"]
 
     def test_original_five_historical_cases_have_no_first_seen(self):
@@ -76,6 +76,17 @@ class PublicObserverIngressEvidenceTests(unittest.TestCase):
                           "900": "2026-10-18T10:15:00.000000Z"})
         self.assertEqual(summary["verified_public_executable_U"], 0)
         self.assertEqual(summary["proven_net_profitable_follower"], 0)
+
+    def test_historical_real_tx_cannot_be_replayed_as_new_live_observation(self):
+        x = self.valid_event()
+        x["tx_hash"] = self.example["first_signed_buy_tx"]
+        raw = json.dumps({"hash": x["tx_hash"], "from": x["wallet"],
+                          "blockNumber": None}).encode()
+        x["raw_event_base64"] = base64.b64encode(raw).decode()
+        x["raw_sha256"] = hashlib.sha256(raw).hexdigest()
+        r, summary = self.check(x)
+        self.assertEqual(r["reason"], "FROZEN_HISTORICAL_TX_CANNOT_BE_PROMOTED_TO_LIVE_CAPTURE")
+        self.assertEqual(summary["verified_public_executable_U"], 0)
 
     def test_historical_block_replay_is_not_live_capture(self):
         x = self.valid_event()
@@ -148,21 +159,21 @@ class PublicObserverIngressEvidenceTests(unittest.TestCase):
 
     def test_repeated_record_id_is_rejected_not_replaced(self):
         x = self.valid_event()
-        out = gate.ingest_document(self.doc([x, copy.deepcopy(x)]), self.grid)
+        out = gate.ingest_document(self.doc([x, copy.deepcopy(x)]), self.grid, self.prefreeze)
         self.assertEqual(out["counts"]["rejected"], 1)
         self.assertEqual(out["records"][1]["reason"], "DUPLICATE_OR_MISSING_EVENT_ID")
         self.assertEqual(out["counts"]["verified_public_executable_U"], 0)
 
     def test_unbounded_input_rejected(self):
         with self.assertRaisesRegex(ValueError, "INGRESS_EVENTS_NOT_BOUNDED"):
-            gate.ingest_document(self.doc([{}] * 501), self.grid)
+            gate.ingest_document(self.doc([{}] * 501), self.grid, self.prefreeze)
 
     def test_wrong_schema_rejected(self):
         with self.assertRaisesRegex(ValueError, "INGRESS_SCHEMA_INVALID"):
-            gate.ingest_document({"events": []}, self.grid)
+            gate.ingest_document({"events": []}, self.grid, self.prefreeze)
 
     def test_invalid_empty_record_still_gated(self):
-        r = gate.ingest_document(self.doc([{}]), self.grid)
+        r = gate.ingest_document(self.doc([{}]), self.grid, self.prefreeze)
         self.assertEqual(r["counts"]["rejected"], 1)
         self.assertEqual(r["counts"]["verified_public_executable_U"], 0)
         self.assertEqual(r["gates"]["PRODUCTION"], "NO_GO")
