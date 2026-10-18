@@ -8,7 +8,7 @@ Scope: independent Mission research module, no connection to the existing PR #40
 
 **449/449 screened**, **237 signed-active on BSC/Ethereum/Base**, **212 three-chain signed-zero**. [Full row-by-row results](evidence/activity-candidates-001-449.json) · [Active-only 237-wallet PnL queue](evidence/active-wallets-237.csv) · [Screening completion report](state/activity-screening-001-449.md). Screening concluded with Batches020–023; future work should investigate actual realized profits and losses for these 237 candidates in source order, rather than extend the nonce-screening tool.
 
-No wallet-level PnL is yet completed. Three historical positive single-token closes are **not** an audited profitable-wallet ranking. Screens cover historical signed nonce only on BSC/Ethereum/Base, not all EVM networks or passive activity.
+[2026-10-19 首组 20/237 活跃候选盈利初查](batches/pnl-active-queue-pass-001-20261019.md)已产生 3 钱包 S3B 闭合持仓和 GPAY 开放仓的链上证据，但未增加完整钱包收益结论。\n\nNo wallet-level PnL is yet completed. Three historical positive single-token closes are **not** an audited profitable-wallet ranking. Screens cover historical signed nonce only on BSC/Ethereum/Base, not all EVM networks or passive activity.
 
 ## Objective and fixed universe
 
@@ -43,7 +43,7 @@ Coverage status codes: `NOT_STARTED`, `BSC_SIGNED_ACTIVE`, `BSC_SIGNED_ZERO`, `T
 - [Closed-token saved evidence replay](tools/closed_token_index.py), [negative-sample and bad-input tests](tests/test_closed_token_index.py), [QA limits](state/closed-token-source-replay-qa-20261018.md), and [actual-source cross-check JSON](evidence/closed-token-replay-source-check-20261018.json). This **does not** produce wallet PnL, nor verify new onchain transactions.
 - [Batch003 low-frequency transaction method evidence](evidence/batch-003-low-frequency-transaction-classification.json): approvals and transfers are excluded from inferred swap count; two router executions remain unknown PnL.
 - [Rows 002/004 sauce closed-position accounting](evidence/batch-001-rows-002-004-sauce-roundtrips.json): costs, proceeds, timestamps and limitations.
-- Rows 121–449 remain `NOT_STARTED` for fixed-window BSC/Ethereum/Base signed screening. Batches 001–006 rows 001–120 have signed screening, **74/120** at least one checked network signed and **46/120** signed-zero on these three only. All whole-wallet 30d and lifetime PnL incomplete; source identity labels unverified.
+- **已失效的旧提示（2026-10-19 更正）：** rows 121–449 的首遇 BSC/Ethereum/Base 签名筛查已经完成，449/449 均有记录。 Batches 001–006 rows 001–120 have signed screening, **74/120** at least one checked network signed and **46/120** signed-zero on these three only. All whole-wallet 30d and lifetime PnL incomplete; source identity labels unverified.
 
 ## Breadth-first development cadence and user outcome
 
@@ -92,7 +92,7 @@ The [receipt evidence extractor](tools/receipt_probe.py) is the **first actual R
 - [QA and blocked-swap limitations](state/receipt-facts-v1-qa-20261018.md): the connected provider truncated all three selected sauce BUY/SELL receipts to 8098 characters, so they **could not be independently reverified** this turn. The Python URL RPC code has not passed Mac or live URL E2E, though the historical connected provider reads were real.
 - Output status is `RECEIPT_FACTS_ONLY`, **not** `TOKEN_ROUNDTRIP_VERIFIED`. Native internal return value requires additional trace and cashflow proofs; quoted ERC20 transfers require trade intent, correct historical basis, and gas FX evidence. The facts extractor does not automatically promote events into the FIFO ledger.
 
-This development gate is more important than additional signed-nonce screening. Batch007 stays queued as `NOT_STARTED`; all full-wallet PnL remains unresolved.
+This development gate is more important than additional signed-nonce screening. Batch007 的签名活动筛查已完成；所有完整钱包 PnL 仍未决。
 
 
 ## Base transaction fee correction and lending classification
