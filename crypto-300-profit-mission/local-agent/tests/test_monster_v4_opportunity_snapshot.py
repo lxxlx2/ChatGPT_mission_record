@@ -228,7 +228,7 @@ class TestOperatorSnapshot(unittest.TestCase):
                          {"SETUP_RESEARCH_ONLY": 1, "WATCH_RESEARCH_ONLY": 1})
         self.assertEqual(result["opportunities"][0]["symbol"], "AAAUSDT")
         self.assertEqual(result["opportunities"][0]["signal"], "SETUP_RESEARCH_ONLY")
-        self.assertEqual(result["opportunities"][0]["d2_status"], "PENDING")
+        self.assertEqual(result["opportunities"][0]["d2_status"], "NOT_CAPTURED")
         self.assertEqual(result["opportunities"][0]["g4_real_execution"], "UNKNOWN")
         self.assertEqual(result["opportunities"][0]["recommendation"],
                          "RESEARCH_REVIEW_ONLY_NO_BUY")
