@@ -97,3 +97,13 @@
 - 结果与**完整独立其他AI审核指令**已存 [经济门禁报告与复审包](MONSTER_ECONOMIC_READINESS_STAGE30_STAGE152_20261018.md)，独立审核 `NOT_DONE`；该工具不改 D0/D1/D2 / Fair8 / 任何Frank逻辑，不启动新采集。往后应以 Stage163 新日期真正**时序样本外**来做先因果信号、后流动性/资金的验证；不能事后挑现有高胜率币来决定发BUY。
 
 **商业决定**：功能查询器已获原Codex定向修复APPROVE；新经济门禁 CI PASS 但未获独立AI审核。既有历史信号/资金经济表现不足以证明可赚钱。保持`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`、`G4 UNKNOWN/G6 NO_GO`，手动采集与Frank隔离不变。
+
+## 九、经济门禁来源分类P2独立批准归档（2026-10-18）
+
+用户提供Codex独立定向复审：固定 `8f0714dd34926c0e17305024ab3ef51d85323409` 对照原 `4004c59ccbfc70dcd5ddc53eeb188a2602a43ebc`，**APPROVE；旧唯一P2 CLOSED；本轮新增P0/P1/P2=0**。这一审核仅覆盖Stage30经济只读门禁的80来源不可评价类别字段/逐类校验及直接回归，不应视作旧版SHA获批准或盈利模型交易批准。
+
+- 最新只读经济门禁现将80逐类标记为退出不完整1、退出零成交21、附近零成交39、入场无成交1、入场或退出分钟quote不足18，不再合并称为退出删失；旧历史现金模型-79.489406U、Stage152独立305/184与负中位研究收益均不变。
+- 原固定 [CI #39080407728](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39080407728) trigger SHA精确匹配、23/23步成功，经济新增7/7测试通过；独立审核者自述20个分类重分配及5个未知类别反例全部正确阻断，审查底层准确AI模型版本`UNVERIFIED`。
+- 主记录：[经济门禁批准与商业下一步](MONSTER_ECONOMIC_READINESS_STAGE30_STAGE152_20261018.md) 第六节。**只复审过修复，不可衍生BUY**；Stage163七日同venue来源还没成熟，独立实际G4仍`UNKNOWN`、G6`NO_GO`。Mac、Frank、Stage99、邮件、实盘、采集定时、合并均未放行。
+
+这项P2不再反复审核；开发优先级重回可信源的新窗口真实WATCH/SETUP增益和交易可成交证据，禁止在已暴露市场中补挑赢家。
