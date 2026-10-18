@@ -52,6 +52,83 @@ class PublicObserverIngressEvidenceTests(unittest.TestCase):
         out = gate.ingest_document(self.doc([event]), self.grid, self.prefreeze)
         return out["records"][0], out["counts"]
 
+    def confirmed_log_event(self):
+        x = self.valid_event()
+        x["capture_kind"] = "PUBLIC_CONFIRMED_ERC20_TRANSFER_LOG_INGRESS"
+        event = {"jsonrpc": "2.0", "method": "eth_subscription", "params": {
+            "subscription": "0x" + "f" * 64,
+            "result": {
+                "removed": False,
+                "address": x["exact_ca"],
+                "topics": [gate.TRANSFER_TOPIC,
+                           "0x" + "0" * 24 + "1" * 40,
+                           gate._address_topic(x["wallet"])],
+                "transactionHash": x["tx_hash"],
+                "blockHash": "0x" + "d" * 64,
+                "blockNumber": "0x5200000",
+                "logIndex": "0x4",
+                "data": "0x" + format(10 ** 18, "064x"),
+            }
+        }}
+        self.replace_event(x, event)
+        return x
+
+    def replace_event(self, x, event):
+        raw = json.dumps(event, sort_keys=True).encode("utf-8")
+        x["raw_event_base64"] = base64.b64encode(raw).decode("ascii")
+        x["raw_sha256"] = hashlib.sha256(raw).hexdigest()
+
+    def test_confirmed_token_receipt_is_not_assumed_to_be_owner_signed_buy(self):
+        r, summary = self.check(self.confirmed_log_event())
+        self.assertEqual(r["state"], "POST_BLOCK_TOKEN_RECEIPT_OBSERVER_CANDIDATE_UNATTESTED")
+        self.assertEqual(r["received_erc20_raw"], str(10 ** 18))
+        self.assertEqual(r["confirmed_block_number"], 0x5200000)
+        self.assertIsNone(r["first_public_observer_received_utc"])
+        self.assertEqual(r["tx_original_signer"], "UNRESOLVED_RECEIPT_AND_FROM_NOT_READ")
+        self.assertEqual(r["exact_ca_trade_buy_validation"], "UNRESOLVED_TRANSFER_MAY_BE_PASSIVE")
+        self.assertEqual(summary["unattested_post_block_transfer_candidates"], 1)
+        self.assertEqual(summary["proven_net_profitable_follower"], 0)
+
+    def test_log_wrong_recipient_rejected(self):
+        x = self.confirmed_log_event()
+        event = json.loads(base64.b64decode(x["raw_event_base64"]))
+        event["params"]["result"]["topics"][2] = "0x" + "0" * 24 + "c" * 40
+        self.replace_event(x, event)
+        self.assertEqual(self.check(x)[0]["reason"], "LOG_NOT_EXACT_ERC20_TRANSFER_TO_OWNER")
+
+    def test_log_wrong_contract_rejected(self):
+        x = self.confirmed_log_event()
+        event = json.loads(base64.b64decode(x["raw_event_base64"]))
+        event["params"]["result"]["address"] = "0x" + "a" * 40
+        self.replace_event(x, event)
+        self.assertEqual(self.check(x)[0]["reason"], "LOG_CA_OR_TRANSACTION_HASH_MISMATCH")
+
+    def test_removed_log_not_actionable(self):
+        x = self.confirmed_log_event()
+        event = json.loads(base64.b64decode(x["raw_event_base64"]))
+        event["params"]["result"]["removed"] = True
+        self.replace_event(x, event)
+        self.assertEqual(self.check(x)[0]["reason"], "LOG_REMOVED_REORG_NOT_ACTIONABLE")
+
+    def test_log_zero_token_transfer_rejected(self):
+        x = self.confirmed_log_event()
+        event = json.loads(base64.b64decode(x["raw_event_base64"]))
+        event["params"]["result"]["data"] = "0x" + "0" * 64
+        self.replace_event(x, event)
+        self.assertEqual(self.check(x)[0]["reason"], "INVALID_LOG_TOKEN_AMOUNT")
+
+    def test_log_with_missing_block_or_wrong_hash_rejected(self):
+        x = self.confirmed_log_event()
+        event = json.loads(base64.b64decode(x["raw_event_base64"]))
+        event["params"]["result"]["blockNumber"] = None
+        self.replace_event(x, event)
+        self.assertEqual(self.check(x)[0]["reason"], "LOG_MISSING_MINED_BLOCK_OR_INDEX")
+        x = self.confirmed_log_event()
+        event = json.loads(base64.b64decode(x["raw_event_base64"]))
+        event["params"]["result"]["transactionHash"] = "0x" + "a" * 64
+        self.replace_event(x, event)
+        self.assertEqual(self.check(x)[0]["reason"], "LOG_CA_OR_TRANSACTION_HASH_MISMATCH")
+
     def test_original_five_historical_cases_have_no_first_seen(self):
         out = gate.historical_summary(self.prefreeze)
         self.assertEqual(out["selected_cases"], 5)
