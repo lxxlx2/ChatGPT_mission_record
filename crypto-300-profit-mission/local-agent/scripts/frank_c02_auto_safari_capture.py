@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
-from html import escape as html_escape
 from http.client import HTTPConnection
 from http.server import ThreadingHTTPServer
 import json
@@ -147,6 +146,8 @@ frame.onload=()=>{
       const timeout=Date.now()-begin>12500;
       if(!found&&!missing&&!timeout)return;
       clearInterval(poll);
+      const activeMint=d.querySelector('.summary-ca')?.textContent||'';
+      if(found && activeMint!==MINT){ready('PRODUCT_UI_MINT_MISMATCH');return;}
       if(STAGE==='report'&&found){
          d.getElementById('cluster-market')?.scrollIntoView({block:'start'});
       }else{
@@ -189,7 +190,8 @@ def make_auto_handler(static: Path, live_port: int, token: str, mint: str | None
                         or params.get("stage", [None])[0] not in STAGES
                         or params.get("state", [None])[0] not in {
                             "ARCHIVE_FOUND","ARCHIVE_MISSING","NO_LOCAL_CA",
-                            "PRODUCT_TIMEOUT","PRODUCT_UI_ERROR","PRODUCT_BUTTON_MISSING"
+                            "PRODUCT_TIMEOUT","PRODUCT_UI_ERROR","PRODUCT_BUTTON_MISSING",
+                            "PRODUCT_UI_MINT_MISMATCH"
                         }):
                     return self.send_error(403)
                 receipts[params["stage"][0]] = params["state"][0]
@@ -245,6 +247,7 @@ def run_auto(*, sha: str, mint: str | None, skip_browser: bool = False):
         server_thread = threading.Thread(target=server.serve_forever, daemon=True)
         server_thread.start()
         output = None
+        output_created = False
         stamp = datetime.now().astimezone().strftime("%Y%m%d-%H%M%S")
         try:
             rows = []
@@ -270,9 +273,14 @@ def run_auto(*, sha: str, mint: str | None, skip_browser: bool = False):
             old.verify_git_source(checkout, sha)
             old.verify_preview_snapshot(static, hashes)
             output = Path.home() / "Downloads" / f"frank-c02-auto-evidence-{stamp}-{sha[:8]}.zip"
-            old.package_evidence(captures, output, rows, static,
-                                 source_port=source_port, preview_port=server.server_port,
-                                 preview_sha=sha, verified_static_hashes=hashes)
+            if output.exists():
+                raise RuntimeError("EVIDENCE_ARCHIVE_ALREADY_EXISTS")
+            try:
+                old.package_evidence(captures, output, rows, static,
+                                     source_port=source_port, preview_port=server.server_port,
+                                     preview_sha=sha, verified_static_hashes=hashes)
+            finally:
+                output_created = output.exists()
             with zipfile.ZipFile(output, "a", compression=zipfile.ZIP_DEFLATED) as z:
                 z.writestr("c02-automatic-acceptance.json",
                            json.dumps({
@@ -292,13 +300,25 @@ def run_auto(*, sha: str, mint: str | None, skip_browser: bool = False):
             subprocess.run(["open", "-R", str(output)],check=False)
             return 0
         except Exception as exc:
-            if output is not None and output.exists():
+            if output_created and output is not None:
                 output.unlink(missing_ok=True)
-            rejected = Path.home() / "Downloads" / f"frank-c02-REJECTED-{stamp}-{sha[:8]}"
-            old.preserve_rejected_screenshots(captures, rejected, sha, str(exc))
+            rejected_root = Path.home() / "Downloads"
+            rejected = rejected_root / f"frank-c02-REJECTED-{stamp}-{sha[:8]}-{uuid4().hex[:8]}"
+            rejected.mkdir(mode=0o700)
+            for screenshot in captures.glob("c02-*.png"):
+                if screenshot.is_file() and not screenshot.is_symlink():
+                    shutil.copy2(screenshot, rejected / screenshot.name)
+            (rejected / "REJECTED.json").write_text(
+                json.dumps({"status":"REJECTED_NOT_VALID_MAC_ACCEPTANCE",
+                            "reason":type(exc).__name__ + ": " + str(exc),
+                            "expected_sha":sha,
+                            "selected_ca":selected.get("mint"),
+                            "page_states":receipts,
+                            "captured_at_utc":datetime.now(timezone.utc).isoformat()},
+                           ensure_ascii=False, indent=2), encoding="utf-8")
             print("STOP_C02_AUTOMATIC_ACCEPTANCE="+str(exc),flush=True)
-            if rejected.exists():
-                subprocess.run(["open","-R",str(rejected)],check=False)
+            print("REJECTED_SCREENSHOTS_PRESERVED="+str(rejected),flush=True)
+            subprocess.run(["open","-R",str(rejected)],check=False)
             return 3
         finally:
             server.shutdown()
