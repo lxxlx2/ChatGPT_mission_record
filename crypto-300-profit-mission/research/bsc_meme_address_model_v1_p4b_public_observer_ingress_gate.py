@@ -250,6 +250,37 @@ def validate_event(row: dict, wallets: set[str], cas: set[str], archived_txs: se
         return _reject(str(exc))
 
 
+def _valid_removed_log_key(row: dict) -> tuple | None:
+    """Find a same-block reorg tombstone with intact raw-frame SHA and identity."""
+    try:
+        if not isinstance(row, dict) or row.get("capture_kind") != CONFIRMED_LOG_KIND:
+            return None
+        raw = base64.b64decode(row["raw_event_base64"], validate=True)
+        if hashlib.sha256(raw).hexdigest() != row["raw_sha256"].lower():
+            return None
+        outer = json.loads(raw)
+        log = outer.get("params", {}).get("result", {})
+        if not isinstance(log, dict) or log.get("removed") is not True:
+            return None
+        block_hash, tx_hash = log["blockHash"], log["transactionHash"]
+        if (not isinstance(block_hash, str) or not HASH.fullmatch(block_hash)
+                or not isinstance(tx_hash, str) or not HASH.fullmatch(tx_hash)
+                or tx_hash.lower() != row["tx_hash"].lower()
+                or str(log["address"]).lower() != row["exact_ca"].lower()):
+            return None
+        if (not isinstance(log.get("topics"), list) or len(log["topics"]) != 3
+                or str(log["topics"][0]).lower() != TRANSFER_TOPIC
+                or str(log["topics"][2]).lower() != _address_topic(row["wallet"])):
+            return None
+        index = log["logIndex"]
+        if not isinstance(index, str) or not re.fullmatch(r"0x[0-9a-fA-F]+", index):
+            return None
+        return block_hash.lower(), tx_hash.lower(), int(index, 16)
+    except (KeyError, TypeError, ValueError, binascii.Error, AttributeError,
+            UnicodeDecodeError, json.JSONDecodeError):
+        return None
+
+
 def ingest_document(doc: dict, grid: dict, pre: dict) -> dict:
     if not isinstance(doc, dict) or doc.get("schema") != "BSC_P4B_PUBLIC_OBSERVER_INGRESS_V1":
         raise ValueError("INGRESS_SCHEMA_INVALID")
@@ -259,7 +290,7 @@ def ingest_document(doc: dict, grid: dict, pre: dict) -> dict:
     wallets = {w["wallet"].lower() for w in grid["wallets"]}
     cas = {m["ca"].lower() for m in grid["markets"]}
     archived_txs = {x[field].lower() for x in pre["cases"] for field in ("first_signed_buy_tx", "last_signed_exit_tx")}
-    records, ids = [], set()
+    records, ids, removed = [], set(), set()
     for row in observations:
         event_id = row.get("event_id") if isinstance(row, dict) else None
         if not isinstance(event_id, str) or event_id in ids:
@@ -268,6 +299,20 @@ def ingest_document(doc: dict, grid: dict, pre: dict) -> dict:
             ids.add(event_id)
             result = validate_event(row, wallets, cas, archived_txs)
         records.append({"event_id": event_id, **result})
+        removed_key = _valid_removed_log_key(row)
+        if removed_key is not None:
+            removed.add(removed_key)
+    # Do not allow an earlier included log to stay an active candidate when
+    # the same blockHash/txHash/logIndex is later reorg-removed in this batch.
+    for record in records:
+        if record.get("state") != "POST_BLOCK_TOKEN_RECEIPT_OBSERVER_CANDIDATE_UNATTESTED":
+            continue
+        key = (record["confirmed_block_hash"], record["tx_hash"], record["log_index"])
+        if key in removed:
+            record.update(state="REORG_REVOKED_POSTBLOCK_LOG",
+                          reason="SAME_BLOCK_LOG_REMOVAL_RECORDED_IN_INGRESS_BATCH",
+                          first_public_observer_received_utc=None,
+                          target_windows_utc=None, follower_net_pnl="UNRESOLVED")
     return {"schema": "BSC_P4B_FIRST_SEEN_EVIDENCE_GATE_V1",
             "mode": "OFFLINE_IMPORT_ONLY_NOT_AN_ACTIVE_MONITOR",
             "records": records,
@@ -275,6 +320,7 @@ def ingest_document(doc: dict, grid: dict, pre: dict) -> dict:
                        "unattested_pending_tx_candidates": sum(x["state"] == "PENDING_OWNER_TX_CAPTURE_CANDIDATE_UNATTESTED" for x in records),
                        "unattested_post_block_transfer_candidates": sum(x["state"] == "POST_BLOCK_TOKEN_RECEIPT_OBSERVER_CANDIDATE_UNATTESTED" for x in records),
                        "rejected": sum(x["state"] == "REJECTED_EVIDENCE" for x in records),
+                       "reorg_revoked": sum(x["state"] == "REORG_REVOKED_POSTBLOCK_LOG" for x in records),
                        "verified_public_executable_U": 0, "proven_net_profitable_follower": 0},
             "gates": dict(BLOCKED)}
 
