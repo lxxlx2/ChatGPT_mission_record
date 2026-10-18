@@ -633,7 +633,9 @@ function renderEnded(rows) {
   $('ended').innerHTML = recent.map(x => `
     <div class="ended-row">
       <div class="ended-main">
-        ${badge(x.decision || 'NO_BUY')}
+        ${(x.decision === 'BUY' || x.decision === 'SMALL_BUY')
+          ? badge('NO_BUY', {NO_BUY:'历史买入结论（已失效）'})
+          : badge(x.decision || 'NO_BUY')}
         <strong>${esc(translated(patternLabel,x.pattern,'未形成模式'))}</strong>
         <span>${esc(age(x.latest_at))}退出</span>
       </div>
