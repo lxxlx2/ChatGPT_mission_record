@@ -1,0 +1,55 @@
+name: Frank F01 current-vs-history display acceptance
+on:
+  push:
+    branches:
+      - feat/frank-f01-current-candidates-history-20261018
+    paths:
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/**'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_candidate_sections*.cjs'
+      - 'crypto-300-profit-mission/local-agent/tests/research/test_frank_dashboard_priority_layout.py'
+      - '.github/workflows/frank-f01-current-history-tests-20261018.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  display-integration-and-git-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout immutable candidate tree
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Pin exact tested commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "F01_CURRENT_HISTORY_EXACT_HEAD=$GITHUB_SHA"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Committed JS syntax and DOM integration
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          node --check mission_agent/mission_control/static/app.js
+          node --check mission_agent/mission_control/static/frank_candidate_sections.js
+          node --check mission_agent/mission_control/static/frank_f01_primary_freshness.js
+          node --test tests/test_frank_candidate_sections.cjs tests/test_frank_candidate_sections_dom.cjs
+      - name: Install existing Python developer dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3
+      - name: Legacy layout and F01 integration regression
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/research/test_frank_dashboard_priority_layout.py tests/test_mission_control_dashboard.py
+      - name: Full local-agent regression with actual Git historical replay
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests
