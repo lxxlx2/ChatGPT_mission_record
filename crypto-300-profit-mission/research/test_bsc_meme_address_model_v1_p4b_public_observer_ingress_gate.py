@@ -111,6 +111,46 @@ class PublicObserverIngressEvidenceTests(unittest.TestCase):
         self.replace_event(x, event)
         self.assertEqual(self.check(x)[0]["reason"], "LOG_REMOVED_REORG_NOT_ACTIONABLE")
 
+    def test_reorg_tombstone_revokes_previous_included_log(self):
+        included = self.confirmed_log_event()
+        removed = copy.deepcopy(included)
+        removed["event_id"] = "SYNTHETIC_REORG_REMOVAL_002"
+        raw = json.loads(base64.b64decode(removed["raw_event_base64"]))
+        raw["params"]["result"]["removed"] = True
+        self.replace_event(removed, raw)
+        batch = gate.ingest_document(self.doc([included, removed]), self.grid, self.prefreeze)
+        self.assertEqual(batch["counts"]["reorg_revoked"], 1)
+        self.assertEqual(batch["counts"]["unattested_post_block_transfer_candidates"], 0)
+        self.assertEqual(batch["records"][0]["state"], "REORG_REVOKED_POSTBLOCK_LOG")
+        self.assertIsNone(batch["records"][0]["target_windows_utc"])
+        self.assertEqual(batch["records"][1]["reason"], "LOG_REMOVED_REORG_NOT_ACTIONABLE")
+        self.assertEqual(batch["counts"]["verified_public_executable_U"], 0)
+
+    def test_fake_reorg_tombstone_with_modified_sha_cannot_revoke_original(self):
+        included = self.confirmed_log_event()
+        removed = copy.deepcopy(included)
+        removed["event_id"] = "SYNTHETIC_FAKE_TOMBSTONE"
+        raw = json.loads(base64.b64decode(removed["raw_event_base64"]))
+        raw["params"]["result"]["removed"] = True
+        self.replace_event(removed, raw)
+        removed["raw_sha256"] = "f" * 64
+        batch = gate.ingest_document(self.doc([included, removed]), self.grid, self.prefreeze)
+        self.assertEqual(batch["counts"]["reorg_revoked"], 0)
+        self.assertEqual(batch["counts"]["unattested_post_block_transfer_candidates"], 1)
+        self.assertEqual(batch["records"][1]["reason"], "RAW_EVENT_SHA256_MISMATCH")
+
+    def test_new_chain_same_tx_new_block_hash_not_revoked(self):
+        included = self.confirmed_log_event()
+        removed = copy.deepcopy(included)
+        removed["event_id"] = "SYNTHETIC_REMOVED_FROM_OTHER_BLOCK"
+        raw = json.loads(base64.b64decode(removed["raw_event_base64"]))
+        raw["params"]["result"]["removed"] = True
+        raw["params"]["result"]["blockHash"] = "0x" + "c" * 64
+        self.replace_event(removed, raw)
+        batch = gate.ingest_document(self.doc([included, removed]), self.grid, self.prefreeze)
+        self.assertEqual(batch["counts"]["reorg_revoked"], 0)
+        self.assertEqual(batch["counts"]["unattested_post_block_transfer_candidates"], 1)
+
     def test_log_zero_token_transfer_rejected(self):
         x = self.confirmed_log_event()
         event = json.loads(base64.b64decode(x["raw_event_base64"]))
