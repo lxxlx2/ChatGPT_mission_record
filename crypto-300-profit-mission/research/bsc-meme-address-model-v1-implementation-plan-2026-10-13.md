@@ -927,3 +927,13 @@ R2 的真实 WBNB→龙虾 Pair Swap 最早 signed tx `0x2b93cfb6ae16ab4943f5f20
 
 本轮所有新文件与以后的 Stage 代码都属于**新 SHA 未获原 0b8e... 审批覆盖的研究进展**，按门禁仅在真的升级核心因果/可执行 U/P5 时触发再次完整其他 AI 审核。当前仍 `P4-B=PARTIAL / P4-C=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
 
+## 2026-10-18 P4-B 未来真实公网可观察事件：BNB WebSocket 方案核实、有限时长采集器与离线证据门禁
+
+承接 [五样本首次 U 预冻结](./bsc-meme-address-model-v1-p4b-five-case-first-seen-u-prefreeze-2026-10-18.json)，新一轮把已审 F1–F7 结果保持固定，不重启历史钱包单案追查。重点核对 BNB 免费数据源真实能力：官方 `eth_subscribe` 有 WebSocket `logs/newPendingTransactions`；**Alchemy `alchemy_pendingTransactions` fromAddress/toAddress 增强过滤官方明确不支持 BNB**，不能在方案中假装该功能可用。BNB `logs` 的 exact ERC20 19 CA + indexed `Transfer(to=23 frozen EOA)` 组合筛选是可尝试的最低流量 read-only 方案，但仍必须通过真正公网 provider 回执测试，不允许只凭文档断言供应商接受超长 topic 数组/免费配额或响应时延。
+
+本轮新建可复用的工作代码：[Node24 带 `--dry-run` 默认值、有界 1–600 秒 / 1–250 事件的手工只读 WebSocket collector](./bsc_meme_address_model_v1_p4b_bounded_postblock_log_collector.js)、[stdlib Python 首次观察原始事件质量门禁](./bsc_meme_address_model_v1_p4b_public_observer_ingress_gate.py)、[包含原始 SHA/哈希/路由/时钟/重组/越界/伪造和 Node `--dry-run` 的负向离线测试](./test_bsc_meme_address_model_v1_p4b_public_observer_ingress_gate.py)、[业务报告和官方源限制说明](./bsc-meme-address-model-v1-p4b-public-observer-ingress-collector-report-2026-10-18.md)。
+
+设计严禁混用三个时间与事件层：`historical consensus block UTC` 仅链上打包结果；`local original observed pending tx` 是提供者先送到本机的自报时间，仍待独立来源校验；`local observed mined ERC20 log` 只能证明**候选 token 收到日志**，可能是 passive transfer 且不是原 signer BUY，绝不认为这是更早 mempool first-seen。原五历史控制不准被冒充新 `LIVE` 记录；新接收记录需要 raw WebSocket frame base64、SHA256、原交易 hash、wallet/topic/CA/amount/blockHash、实际本机 UTC 与精确保留的 monotonic ns、具名时钟校准。没有校准证据即本机原始事件可归档但不得被离线 gate 升级候选。用户自报同步校准也不构成独立观察者公信认证。合格原始帧的输出仍仅 `UNATTESTED_CANDIDATE`，真实 `PUBLIC_EXECUTABLE_U=UNRESOLVED`。
+
+**业务验收与明确停止点**：静态仓库功能只测试 Node `--dry-run`/Python 离线重放、23×19 来源和假输入拒绝；不会连接用户 Mac、公网 WebSocket 或邮箱。下一次触发真实 G4/G5 功能门禁时先完成一个固定 SHA 的独立其他 AI Review，再另行得到用户对 Mac `--live` 限时只读试跑的批准。最小实测一期限定 120 秒、最多 100 条日志：只看供应商是否接受订阅、原始帧是否保真、多少是真原钱包 signed swap vs 被动转入、时钟校准是否可追溯和失连失败如何落盘。只有后续同口径落地实际可支付 quote 资金/真实买卖路由/税/退出及 `+60/+300/+900s` 之后，才有 P5 盈亏分析资格。维持 `P4-B=PARTIAL / P4-C=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`，且之前 `APPROVE@0b8e0f...` 只批准其固定老 SHA。
+
