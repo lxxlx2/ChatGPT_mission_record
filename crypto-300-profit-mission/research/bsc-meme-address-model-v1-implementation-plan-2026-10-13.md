@@ -868,3 +868,19 @@ R2 的真实 WBNB→龙虾 Pair Swap 最早 signed tx `0x2b93cfb6ae16ab4943f5f20
 详情见 [首次完整清仓 8399 USDT 的证据与严禁错算收益报告](./bsc-meme-address-model-v1-p4b-2026-5e60-real-five-sale-complete-liquidation-8399usdt-report.md)、[全部 8 笔真实 signed 卖出/逐笔 USDT 入账与真实余额](./bsc-meme-address-model-v1-p4b-5e60-eight-real-signed-usdt-sells-and-five-full-exit-2026-10-18.json)、[8 笔完整成功 Receipt 实际 Gas](./bsc-meme-address-model-v1-p4b-5e60-eight-real-sell-success-receipts-and-gas-readback-2026-10-18.json)、[早期买入来源第一页仅 10 笔且分页未完成](./bsc-meme-address-model-v1-p4b-5e60-earlier-ten-inbound-dragon-cost-basis-censored-2026-10-18.json)、[完整 source SHA 固定复算](./bsc_meme_address_model_v1_p4b_5e60_real_five_sell_liquidation.py) 和 [15 项防假利润与证据漂移测试](./test_bsc_meme_address_model_v1_p4b_5e60_real_five_sell_liquidation.py)，已接入 Ubuntu + macOS Bash 3.2 CI。
 
 **下一项面向用户真实可用的具体开发**：对原 23×19 的历史 P4-B 信号输出增加严格案例等级：`OWNER_HOLDING_CONFIRMED`、`OTHER_SIGNED_REAL_BUY_AND_FUNDING_CONFIRMED`、`OTHER_REAL_FULL_EXIT_CASH_RECEIPT_CONFIRMED_BASIS_UNKNOWN`、`REALIZED_PNL_FULL_BASIS_CONFIRMED`（本例**不得升级最后一级**）、`FIRST_PUBLIC_OBSERVABLE_U`（仍未解锁）。追求用户能用来买卖的事实、金额、时效和可退出性，而不是无止境扩张研究指标/复审。保持 `P4-B=PARTIAL / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
+
+
+## 2026-10-18 P4-B 严格资金先后：5E60 历史 33 IN / 17 OUT token 对账闭合，96.64 万起始成本仍未知
+
+对上次已真实核实 1,000 USDT 买入和五笔 8,399.620126582833083485 USDT 完整退出的外部 EOA `0x5e600e…c6c6`，本轮专门验证其**加仓前 335,173 龙虾库存的来源**，不重选赢面好的钱包。先冻结 BNB 区块 85900000..85959961，使用免费只读 Alchemy `getAssetTransfers`，分别针对该 EOA 的龙虾入币／出币流按实际 `pageKey` 顺序完成分页：**入币 4 页、33 笔；出币 2 页、17 笔，两边末页 next cursor 都为 null**。逐 tx 哈希/区块/最小单位额固化在独立新增 JSON；并非 API 截断片段充当完整清单。
+
+两方向 token 18 位 raw 汇总：
+- 33 IN `2096771771412964976312348` raw；
+- 17 OUT `2728013687115437116815271` raw；
+- 期间 token 净变化 `-631241915702472140502923` raw。
+
+独立事前预冻结的原钱包 `eth_call balanceOf` 取得固定范围前一块 85899999：`966415729394361448864776` raw 龙虾（**966,415.729394361448864776**）；固定范围结束 85959961：`335173813691889308361853` raw（**335,173.813691889308361853**）。两端真实 `balanceOf` 与 50 笔转账实际相加**严格差额为 0 raw**，说明该来源范围的 ERC20 龙虾库存完全对得上。**因此成本未闭合的真正原因是开始查账以前这个 EOA 已有 966,415 枚龙虾，而不是此次源区块窗内漏掉若干转账。**
+
+为控制免费数据源成本与避免无穷前史，额外先冻**更早紧邻 50,000 块** 85850000..85899999，单独真实读取 85849999 的钱包 Dragon `balanceOf`，仍是 `966415729394361448864776` raw，且此固定窗口内 `Transfer(to=EOA)`、`Transfer(from=EOA)` 均完整返回空结果、无后续分页。因此 **96.64 万枚早于区块 85850000 已在钱包**，但更早真正取得成本目前没有证据；明确在此停止这次边界查询，不能把交易收款 8399 美元减掉单笔 1000 USDT 误记为收益，也不能认为 33 笔转入代表已有成本认证的 33 次买入。
+
+[新增完整研究报告](./bsc-meme-address-model-v1-p4b-2026-5e60-exact-33in17out-inherited-966415-cost-unknown-report.md)、[起末双链上余额和库存汇总](./bsc-meme-address-model-v1-p4b-5e60-real-opening-966415-and-33in17out-inventory-2026-10-18.json)、[更早 50k 区块空事件记录](./bsc-meme-address-model-v1-p4b-5e60-older-50000-blocks-966415-opening-no-transfer-readback-2026-10-18.json)、[固定所有分页/真实原始 blob SHA 校验脚本](./bsc_meme_address_model_v1_p4b_5e60_historic_inventory_33in17out.py)、[14 项负向门禁](./test_bsc_meme_address_model_v1_p4b_5e60_historic_inventory_33in17out.py) 均已追加。**业务里程碑：EXTERNAL_REAL_FUNDED_BUY AND REAL_SELL CASH PROVEN；SCOPED_TOKEN_INVENTORY RECONCILED；REALIZED_NET_PNL UNKNOWN HISTORICAL BASIS；PUBLIC FOLLOWABLE U UNKNOWN**。后续优先换到可审计首次外部信号观察和真正正负跟随样本，而不是重复往前无限扫描这一赢家钱包的历史；若有人主张完成历史 PNL，必须先显式冻结前史资金成本/取得原始交易及手续费的可完成边界。保持 `P4-B=PARTIAL / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
