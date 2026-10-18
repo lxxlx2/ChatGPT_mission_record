@@ -25,7 +25,7 @@ RECEIPTS = ARCHIVE / "source_receipts.json"
 ZIP_SHA256 = "b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b"
 T0_MS = 1792274680094
 EXPECTED_ACTIVE = 511
-SCHEMA = "MONSTER_STAGE163_SPOT_POST_T0_RECEIPT_BOUNDED_511_FRICTION_NO_TRADES_V2"
+SCHEMA = "MONSTER_STAGE163_SPOT_POST_T0_CLOCK_BRIDGED_511_FRICTION_NO_TRADES_V3"
 TEN_THOUSAND = Decimal("10000")
 
 
@@ -86,6 +86,60 @@ def load_archived(zip_path=ZIP, receipts_path=RECEIPTS):
             raise ValueError("STAGE163_ARCHIVED_T0_MANIFEST_DRIFT")
     return blobs, m
 
+def parse_utc(value):
+    stamp = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if stamp.tzinfo is None:
+        raise ValueError("STAGE163_NAIVE_CLIENT_TIMESTAMP")
+    return stamp.astimezone(timezone.utc)
+
+
+def millis(delta):
+    return Decimal((delta.days * 86400 + delta.seconds) * 1000000 +
+                   delta.microseconds) / Decimal(1000)
+
+
+def clock_bridge(blobs, receipts):
+    """Source-bounded server/client clock offset; not an exchange quote event time."""
+    samples = {}
+    bounds = []
+    for key in ("clock_before", "clock_after"):
+        obj = receipts["source_sha_receipts"][key]
+        start, end = parse_utc(obj["start_utc"]), parse_utc(obj["end_utc"])
+        if start > end:
+            raise ValueError("STAGE163_CLOCK_BRIDGE_CHRONOLOGY_INVALID")
+        midpoint = start + (end - start) / 2
+        server = datetime.fromtimestamp(int(blobs[key]["serverTime"]) / 1000, timezone.utc)
+        offset = millis(server - midpoint)
+        half = millis(end - start) / 2
+        low, high = offset - half, offset + half
+        bounds.extend((low, high))
+        samples[key] = {
+            "server_minus_client_midpoint_ms": fmt(offset, 3),
+            "client_half_request_window_ms": fmt(half, 3),
+            "server_minus_client_lower_ms": fmt(low, 3),
+            "server_minus_client_upper_ms": fmt(high, 3),
+            "client_start_utc": obj["start_utc"],
+            "client_end_utc": obj["end_utc"],
+            "server_time_ms": int(blobs[key]["serverTime"]),
+        }
+    before = parse_utc(receipts["source_sha_receipts"]["clock_before"]["end_utc"])
+    startbook = parse_utc(receipts["source_sha_receipts"]["bookTicker"]["start_utc"])
+    endbook = parse_utc(receipts["source_sha_receipts"]["bookTicker"]["end_utc"])
+    startticker = parse_utc(receipts["source_sha_receipts"]["ticker24"]["start_utc"])
+    endticker = parse_utc(receipts["source_sha_receipts"]["ticker24"]["end_utc"])
+    after = parse_utc(receipts["source_sha_receipts"]["clock_after"]["start_utc"])
+    if not (before <= startbook <= endbook <= startticker <= endticker <= after):
+        raise ValueError("STAGE163_CROSS_ENDPOINT_RECEIPT_CHRONOLOGY_INVALID")
+    lower, upper = min(bounds), max(bounds)
+    return {
+        "samples": samples,
+        "server_minus_client_envelope_ms": [fmt(lower, 3), fmt(upper, 3)],
+        "sampling_model": "server_time_at_unknown_instant_inside_client_request_RTT",
+        "clock_drift_between_samples": "UNVERIFIED",
+        "conditional_interval_not_certified_exchange_event_timestamp": True,
+    }, lower, upper
+
+
 def receipt_offsets(receipts):
     """Client receipt bounds relative to exchangeInfo SERVER T0, NOT quote times.
 
@@ -97,8 +151,7 @@ def receipt_offsets(receipts):
     ends = []
     for kind in ("bookTicker", "ticker24"):
         receipt = receipts["source_sha_receipts"][kind]
-        start = datetime.fromisoformat(receipt["start_utc"].replace("Z", "+00:00"))
-        end = datetime.fromisoformat(receipt["end_utc"].replace("Z", "+00:00"))
+        start, end = parse_utc(receipt["start_utc"]), parse_utc(receipt["end_utc"])
         if start.tzinfo is None or end.tzinfo is None or start > end:
             raise ValueError("STAGE163_POST_T0_RECEIPT_CHRONOLOGY_INVALID")
         def offset_ms(dt):
@@ -121,6 +174,14 @@ def evaluate(blobs, receipts, research_notional=None):
     if int(info["serverTime"]) != T0_MS:
         raise ValueError("STAGE163_NOT_FROZEN_T0")
     receipt_bound_windows, quote_bundle_available_after_utc = receipt_offsets(receipts)
+    bridge, clock_low, clock_high = clock_bridge(blobs, receipts)
+    for window in receipt_bound_windows.values():
+        for phase in ("start", "end"):
+            nominal = Decimal(window[phase + "_offset_from_exchange_t0_ms_approx"])
+            window[phase + "_clock_bridged_lower_ms_conditional"] = fmt(nominal + clock_low, 3)
+            window[phase + "_clock_bridged_upper_ms_conditional"] = fmt(nominal + clock_high, 3)
+        if Decimal(window["start_clock_bridged_lower_ms_conditional"]) <= 0:
+            raise ValueError("STAGE163_POST_T0_NOT_PROVEN_UNDER_CLOCK_BRIDGE")
     all_exchange = info["symbols"]
     if len({s["symbol"] for s in all_exchange}) != len(all_exchange):
         raise ValueError("STAGE163_EXCHANGEINFO_DUPLICATE_SYMBOL")
@@ -197,6 +258,7 @@ def evaluate(blobs, receipts, research_notional=None):
         "source_zip_sha256": ZIP_SHA256, "exchange_server_time_ms": T0_MS,
         "exchange_server_time_utc": datetime.fromtimestamp(T0_MS / 1000, timezone.utc).isoformat().replace("+00:00", "Z"),
         "post_t0_receipt_windows_vs_exchangeinfo_t0_approx": receipt_bound_windows,
+        "clock_bridge_calibration": bridge,
         "quote_bundle_not_available_until_client_receipt_utc": quote_bundle_available_after_utc,
         "receipt_offsets_are_cross_clock_approx_not_exchange_quote_event_timestamps": True,
         "t0_causal_quote_at_t0_proven": False,
