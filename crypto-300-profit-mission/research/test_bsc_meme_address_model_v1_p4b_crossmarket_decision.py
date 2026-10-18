@@ -127,8 +127,11 @@ class CrossMarketDecisionTest(unittest.TestCase):
             self.replay(lambda s: s["frozen_grid"]["wallets"].pop())
 
     def test_original_cohort_market_membership(self):
+        def tamper(s):
+            market = next(m for m in s["frozen_grid"]["markets"] if m["ca"] == model.DRAGON)
+            market["ca"] = "0x" + "0" * 40
         with self.assertRaisesRegex(ValueError, "FROZEN_SELECTED_OWNER_NOT_IN_23X19"):
-            self.replay(lambda s: s["ddac"]["round"].update(exact_CA="0x" + "0" * 40))
+            self.replay(tamper)
 
     def test_source_file_bytes_modified_in_temporary_copy_fail(self):
         with tempfile.TemporaryDirectory() as tmp:
