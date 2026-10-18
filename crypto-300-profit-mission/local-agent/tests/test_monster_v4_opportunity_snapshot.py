@@ -180,5 +180,59 @@ class TestOperatorSnapshot(unittest.TestCase):
         self.assertEqual(rows[1]["signal"], "INVALIDATED")
 
 
+    def test_full_window_active_watch_survives_more_recent_invalidated_episode_limit(self):
+        # Real Shadow producer creates 20 newer WATCH episodes that immediately
+        # invalidate. A legitimate earlier WATCH must not be hidden by LIMIT 3.
+        losers = ["LOSE" + str(i) + "USDT" for i in range(20)]
+        all_symbols = ["KEEPUSDT"] + losers
+        def batch(keep, lose):
+            return [{"symbol": sym, "lastPrice": str(keep if sym == "KEEPUSDT" else lose),
+                     "quoteVolume": "200000"} for sym in all_symbols]
+        m.observe_snapshot(self.db, "spot", BASE, batch("1", "1"))
+        m.observe_snapshot(self.db, "spot", BASE + 180_000, batch("1.08", "1"))
+        m.observe_snapshot(self.db, "spot", BASE + 360_000, batch("1.08", "1.10"))
+        m.observe_snapshot(self.db, "spot", BASE + 540_000, batch("1.08", "0.80"))
+
+        result = viewer.read_snapshot(self.path, BASE + 540_000, limit=3)
+        self.assertEqual(result["window_total"], 21)
+        self.assertEqual(result["hidden_by_display_limit"], 18)
+        self.assertEqual(result["displayed"], 3)
+        self.assertEqual(result["counts_by_signal_full_window"],
+                         {"INVALIDATED": 20, "WATCH_RESEARCH_ONLY": 1})
+        self.assertEqual(result["opportunities"][0]["symbol"], "KEEPUSDT")
+        self.assertEqual(result["opportunities"][0]["signal"], "WATCH_RESEARCH_ONLY")
+        self.assertEqual(result["opportunities"][0]["recommendation"],
+                         "RESEARCH_REVIEW_ONLY_NO_BUY")
+        self.assertEqual(result["opportunities"][1]["signal"], "INVALIDATED")
+        self.assertEqual(result["sources"]["spot"]["state"], "RECENT_STORED_POLL")
+        self.assertEqual(result["trading"], "NO_GO")
+
+    def test_older_spot_setup_ranks_before_newer_watch_without_becoming_buy(self):
+        base = [dict(symbol="AAAUSDT", lastPrice="1", quoteVolume="200000"),
+                dict(symbol="BBBUSDT", lastPrice="1", quoteVolume="200000")]
+        m.observe_snapshot(self.db, "spot", BASE, base)
+        m.observe_snapshot(self.db, "spot", BASE + 180_000, [
+            dict(symbol="AAAUSDT", lastPrice="1.08", quoteVolume="200000"),
+            dict(symbol="BBBUSDT", lastPrice="1", quoteVolume="200000")])
+        m.observe_snapshot(self.db, "spot", BASE + 540_000, [
+            dict(symbol="AAAUSDT", lastPrice="1.08", quoteVolume="200000"),
+            dict(symbol="BBBUSDT", lastPrice="1.08", quoteVolume="200000")])
+        outcome = m.process_queue(self.db, BASE + 600_000,
+            lambda v, s, t: candles(t) if s == "AAAUSDT" else [])
+        self.assertEqual(outcome["completed"], 1)
+        self.assertEqual(outcome["deferred"], 1)
+        result = viewer.read_snapshot(self.path, BASE + 600_000, limit=1)
+        self.assertEqual(result["window_total"], 2)
+        self.assertEqual(result["hidden_by_display_limit"], 1)
+        self.assertEqual(result["counts_by_signal_full_window"],
+                         {"SETUP_RESEARCH_ONLY": 1, "WATCH_RESEARCH_ONLY": 1})
+        self.assertEqual(result["opportunities"][0]["symbol"], "AAAUSDT")
+        self.assertEqual(result["opportunities"][0]["signal"], "SETUP_RESEARCH_ONLY")
+        self.assertEqual(result["opportunities"][0]["d2_status"], "PENDING")
+        self.assertEqual(result["opportunities"][0]["g4_real_execution"], "UNKNOWN")
+        self.assertEqual(result["opportunities"][0]["recommendation"],
+                         "RESEARCH_REVIEW_ONLY_NO_BUY")
+
+
 if __name__ == "__main__":
     unittest.main()
