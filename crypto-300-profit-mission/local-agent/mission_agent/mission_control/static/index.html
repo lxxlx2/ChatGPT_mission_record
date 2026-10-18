@@ -25,11 +25,21 @@
     <div id="signals-view" class="view-pane active">
     <section class="panel priority-panel" id="follow-opportunities">
       <div class="panel-title">
-        <div><h2>当前跟单机会</h2><p>优先查看当前跟单判断；WAIT / NO_BUY 不是买入信号，历史买卖也不是实时跟单建议。</p></div>
+        <div><h2>当前跟单机会与即时观察</h2><p>仅展示近期 Frank 买入及近期已评估的候选；WAIT / NO_BUY 不是买入信号。BUY / SMALL_BUY 还必须通过独立 F01 实时来源核验，历史买卖不能当作实时建议。</p></div>
         <span id="updated">未刷新</span>
       </div>
       <div id="candidates" class="candidate-list"></div>
     </section>
+    <details class="panel ended-panel" id="archived-candidates-panel" hidden>
+      <summary>
+        <div>
+          <h2>历史与不可跟候选 <span id="archived-candidates-count">0</span></h2>
+          <p>过期判断、模型已退出或仓位无法核实的记录保留供查询；不展示过期的 Jupiter 成交报价。</p>
+        </div>
+        <span class="summary-hint">展开查看</span>
+      </summary>
+      <div id="archived-candidates" class="ended-list"></div>
+    </details>
     <section class="stats" id="stats"></section>
 
     <section class="panel">
@@ -186,6 +196,7 @@
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/static/frank_candidate_sections.js"></script>
   <script src="/static/app.js"></script>
   <script src="/static/frank_f01_primary_freshness.js"></script>
   <script src="/static/frank_source_context.js"></script>
