@@ -105,6 +105,13 @@ For fixed-source rows **002/004**, the [narrow Transfer-event + historic balance
 
 [Read-only saved-evidence verifier](tools/verify_block_roundtrip.py) + [12/12 isolated offline regression tests](tests/test_verify_block_roundtrip.py) check original row identities, historical nonce deltas, ERC20 event signatures and hashes, both sell logs, zero reverse filter results, balance snapshots and block-level arithmetic. [Evidence limits](state/sauce-rows-002-004-independent-log-block-recheck-20261018.md) note that Python's real-original-449-manifest CLI E2E has not yet been demonstrated. This is an **evidence corroboration**, not new whole-wallet PnL.
 
+
+## Transfer-cost provenance gate (Batch001 #002/#007/#015)
+
+The [complete bounded BSC/ERC20 transfer observations](evidence/batch001-rows002-007-015-erc20-cost-origin-20261018.json) confirm two *externally received then fully transferred* token positions and one *partly distributed, still held* position. Row015 HODL and row007 BSC-ETH both have unknown original economic acquisition costs. Row002 FTR has five inbound transfers, **six Transfer events in one outbound transaction**, and an open balance. Two recipients correspond to frozen source rows001/006; this proves a flow, not common control.
+
+The [saved-evidence gate](tools/verify_transfer_provenance.py) and [10 offline synthetic/invariant tests](tests/test_verify_transfer_provenance.py) match original source identities, transfer direction/pages, integer token balances, native-block/nonce snapshots and known source-list recipients; outcomes remain `ARCHIVED_FLOW_CONSISTENT_ONLY`, not profit/loss. [Actual-source analysis and next requirements](state/batch001-erc20-cost-origin-20261018.md). Focus next on real basis and proceeds proof, not further nonce expansion or edge-case-only work.
+
 ## Boundaries
 
 No wallet signing, swaps, follow trading, live orders, Gmail, LaunchAgent, dashboards or automation. `PRODUCTION_TRADING=NO_GO`, Frank and Monster unchanged. Original Mission PnL and wallet snapshots are separate from this third-party address intelligence research. Keep every failed/negative result, no cherry-picking and no made-up wallet profits. Research is observation-only.

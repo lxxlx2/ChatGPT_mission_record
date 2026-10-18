@@ -121,6 +121,13 @@ Alchemy historical Ethereum and Base nonce pairs were collected for the same 20 
 
 [可复核的保存数据一致性程序](../tools/verify_block_roundtrip.py)、[12个通过的合成反例测试](../tests/test_verify_block_roundtrip.py) 与 [完整 QA](../state/sauce-rows-002-004-independent-log-block-recheck-20261018.md)。模块重点仍是逐交易来源与成本归因，不是继续单纯提高活跃地址筛查数。
 
+
+## 2026-10-18：其它代币的真实转入/转出与未决成本（#002/#007/#015）
+
+新核查 [三钱包 ERC20 完整方向分页、历史余额、native BNB 区块变化及钱包关联证据](../evidence/batch001-rows002-007-015-erc20-cost-origin-20261018.json)：**#015 HODL** 一笔第三方交易转入、两笔路由转出，代币入出一致、卖出两区块 BNB 余额合计增加 161287873766664482 wei，但资金取得成本/交易内部回款归因仍无证据，不能认盈利；**#007 BSC-ETH** 两笔外部转入、一次转出，代币全部移走，后者区块级 BNB 余额增加 40938120000000 wei，不能当净利润；**#002 FTR** 5笔转入、同一交易内6条转出、期末仍有 4143143596856588493468792 raw 持仓。FTR 转出流向来源清单 #001/#006 是明确的链上关系，**不是同人控制证明**。
+
+[分析、未决成本和下一核验条件](../state/batch001-erc20-cost-origin-20261018.md)。[机器可重复核查工具](../tools/verify_transfer_provenance.py) 与 [10项离线测试](../tests/test_verify_transfer_provenance.py) 已通过，门禁明确拒绝把被动转入记为零成本、把多个转出日志记为多个盈利卖单。所有三个钱包及其完整盈亏依然未决。该轮没有新的已证明盈利或亏损闭环。
+
 ## What is complete, what remains
 
 - **Completed & durable:** BSC first-20 signed nonce census with immutable block bounds, fully closed row016 RTX5090 and rows002/004 sauce single-token profit and loss-aware evidence records, issuer labels preserved untrusted.
