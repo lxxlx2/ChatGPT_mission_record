@@ -1,0 +1,92 @@
+name: Monster Stage165 original27 actual D1 failure-feature source-locked research
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-stage165-original27-d1-feature-source-once.yml'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage165_original27_d1_feature_causal_audit.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage165_original27_d1_feature_causal_audit.py'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster-stage165-offline-original27-exact-feature-proof
+  cancel-in-progress: false
+jobs:
+  real_archived_original_D1_27:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Independent fixture tests against unchanged production D1 evaluator
+        run: |
+          set -eu
+          python3 -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage165_original27_d1_feature_causal_audit.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage165_original27_d1_feature_causal_audit.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_stage165_original27_d1_feature_causal_audit.py
+      - name: Read exact original Stage162 A-B artifact and previously publisher-attested 28 February shards
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster165_stage162
+          gh run download 39068290868 --repo lxxlx2/ChatGPT_mission_record --dir /tmp/monster165_stage162 --name monster162-real445-first-valid-5m-fair8-ab-once-v4
+          printf '%s  %s\n' c30c8b6467b0017b36efc33fadfa2c7853f29f9c7e32993249774269ba4e2ae2 /tmp/monster165_stage162/monster162_actual_445_fair8_ab.json | sha256sum -c -
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_archive_replay_runner.py collect --source-dir /tmp/monster165_original28 --audit /tmp/monster165_original28_receipts.json
+      - name: Validate and compute D1 feature failures at the 27 actually selected first-evaluation ticks
+        run: |
+          set -eu
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage165_original27_d1_feature_causal_audit.py --stage162-full /tmp/monster165_stage162/monster162_actual_445_fair8_ab.json --stage164-git-evidence crypto-300-profit-mission/monster/evidence/monster_stage164_original445_fair8_new27_nonconversion_actual_v1.json --source-dir /tmp/monster165_original28 --out /tmp/monster165_real27_first_d1_feature_failures.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path('/tmp/monster165_real27_first_d1_feature_failures.json').read_text())
+          assert j['schema']=='MONSTER_STAGE165_ORIGINAL_FROZEN27_D1_THREE_CONDITION_REAL_SOURCE_V1'
+          assert j['sample_fair8_new_d1']==27
+          assert j['actually_advanced_5m_candle_evaluation_events']==27
+          assert j['actual_setup_from_these_events']==0
+          assert len({r['candidate_id'] for r in j['real_source_per_candidate']})==27
+          assert all(r['original_setup_candidate'] is False
+                     and len(r['failed_feature_conditions'])>=1
+                     and r['evaluation_tick_ms']<=r['original_deadline_ms']
+                     for r in j['real_source_per_candidate'])
+          assert j['G4']=='UNKNOWN' and j['G6']=='NO_GO'
+          assert j['NO_MERGE'] and j['NO_DEPLOY'] and j['NO_GMAIL'] and j['NO_TRADE']
+          print('MONSTER165_ORIGINAL_27_D1_EXACT_FEATURE_REASONS_REAL_SOURCE_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster165-original27-real5m-d1-feature-failures-once
+          path: |
+            /tmp/monster165_real27_first_d1_feature_failures.json
+            /tmp/monster165_original28_receipts.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Archive immutable source-bound report without overwriting existing evidence
+        run: |
+          set -eu
+          target=crypto-300-profit-mission/monster/evidence/monster_stage165_original27_real5m_d1_feature_failures_actual_v1.json
+          branch=research/monster-v4-local-discovery-20261010
+          test ! -e "$target"
+          cp /tmp/monster165_real27_first_d1_feature_failures.json "$target"
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive exact three D1 feature conditions at original27 real observed5m ticks"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER165_TARGET_ALREADY_ARCHIVED_REFUSE_OVERWRITE
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_stage165_original27_d1_feature_causal_audit.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage165_original27_d1_feature_causal_audit.py .github/workflows/monster-v4-stage165-original27-d1-feature-source-once.yml crypto-300-profit-mission/monster/evidence/monster_stage164_original445_fair8_new27_nonconversion_actual_v1.json crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py; do
+            test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo MONSTER165_REAL_SOURCE_OR_EXECUTABLE_DRIFT; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER165_IMMUTABLE_FROZEN27_RESEARCH_FEATURE_EVIDENCE_ARCHIVED
