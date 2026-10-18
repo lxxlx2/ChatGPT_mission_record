@@ -146,9 +146,15 @@ def audit(stage162_file, stage164_file, source_dir):
                     db, (e["symbol"],), "spot", e["symbol"], slot["tick_ms"])
                 actual, exact_ratio, conditions = classify_original_d1(
                     candles, slot["tick_ms"])
+                # At the original 15m deadline a genuine negative D1
+                # evaluation closes the queue with EVALUATED/NO_SETUP;
+                # earlier negative evaluations stay PENDING/NO_SETUP_YET.
+                terminal = slot["tick_ms"] >= slot["deadline_ms"]
+                expected_status = "EVALUATED" if terminal else "PENDING"
+                expected_error = "NO_SETUP_WITHIN_WINDOW" if terminal else "NO_SETUP_YET"
                 if (actual["setup_candidate"] is not False
-                    or slot["status_after"] != "PENDING"
-                    or slot["last_error_after"] != "NO_SETUP_YET"
+                    or slot["status_after"] != expected_status
+                    or slot["last_error_after"] != expected_error
                     or actual["bar_last_open_ms"] != slot["last_evaluated_bar_ms_after"]):
                     raise ValueError("STAGE165_REAL_EVALUATION_OR_NO_SETUP_DRIFT")
                 failed = sorted(k for k,v in conditions.items() if not v)
