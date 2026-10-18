@@ -4,6 +4,8 @@ on:
     branches: [research/monster-v4-local-discovery-20261010]
     paths:
       - '.github/workflows/monster-v4-stage166-spot511-publisher-source-intake-once.yml'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage166_spot511_official_1m_intake.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage166_spot511_official_1m_intake.py'
 permissions:
   contents: write
 concurrency:
