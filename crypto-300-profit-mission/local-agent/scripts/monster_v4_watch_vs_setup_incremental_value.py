@@ -119,7 +119,7 @@ def per_arm(events, bars_by_symbol, *, causal_symbol_lock):
         item["source_entry_admission"] = admission
         # Lock is decided solely at entry. Future exit quality cannot unlock
         # an already admissible 24-hour occupied position.
-        if causal_symbol_lock and e["observed_ms"] < locks.get(e["symbol"], -1):
+        if causal_symbol_lock and minute < locks.get(e["symbol"], -1):
             item["status"] = "SKIP_SAME_SYMBOL_24H_LOCKED_AT_ENTRY"
         elif admission != "ENTRY_PROXY_ADMISSIBLE":
             item["status"] = admission
