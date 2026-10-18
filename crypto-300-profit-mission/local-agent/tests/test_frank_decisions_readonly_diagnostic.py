@@ -90,6 +90,8 @@ def test_oversize_direct_200_proxy_503_detected_using_real_proxy():
     assert s["direct"]["status"] == 200
     assert s["direct"]["read_cap_reached"]
     assert s["proxy"]["status"] == 503
+    assert s["proxy"]["qa_proxy_failure_code"] == "LOCAL_API_OVERSIZED"
+    assert report["summary"]["qa_proxy_failure_codes"] == {"LOCAL_API_OVERSIZED": 1}
     assert report["summary"]["verdict"] == "PROXY_4MB_LIMIT_PROBABLE"
     assert report["summary"]["oversize_suspected_count"] == 1
     assert Large.requests == [("GET", "/api/decisions"), ("GET", "/api/decisions")]
