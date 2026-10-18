@@ -27,6 +27,7 @@ function slice(start, end) {
 
 const elements = {
   candidates: {innerHTML:''},
+  stats: {innerHTML:''},
   'archived-candidates-panel': {hidden: true},
   'archived-candidates-count': {textContent: ''},
   'archived-candidates': {innerHTML:''},
@@ -37,6 +38,7 @@ const context = {
   esc: x => String(x ?? ''),
   translated: (dict, key, fallback) => dict[key] || key || fallback,
   decisionLabel: {BUY:'可跟', SMALL_BUY:'小仓跟', WAIT:'等待', NO_BUY:'不跟', UNASSESSED:'未评估'},
+  runtimeLabel: {LIVE:'正常'},
   patternLabel: {REENTRY_WATCH:'重新建仓观察', MULTIPLE:'强建仓', ACCUMULATION:'持续建仓'},
   stateLabel: {OPEN:'模型持有', CLOSED:'模型退出', INVENTORY_UNDETERMINED:'仓位不明'},
   sideLabel: {BUY:'买入', SELL:'卖出', REENTRY:'重新建仓'},
@@ -56,6 +58,7 @@ const context = {
 vm.createContext(context);
 vm.runInContext(helper, context);
 vm.runInContext(slice('function renderCandidates(rows) {', 'function withinHours(ts,hours) {'), context);
+vm.runInContext(slice('function renderStats(candidates, runtime, coverage) {', 'const watchLabels = {'), context);
 const split = context.FrankCandidateSections.split;
 const now = Date.now() / 1000;
 const date = seconds => new Date(seconds * 1000).toISOString();
@@ -87,8 +90,30 @@ assert.equal(elements['archived-candidates-count'].textContent, '4');
 assert(elements['archived-candidates'].innerHTML.includes('历史判断'));
 assert(!elements['archived-candidates'].innerHTML.includes('12.34'));
 
+// P2 reproduction: the guard script is not loaded; neither a current
+// 40-second-old BUY nor a fresh-looking BUY may be displayed as '可跟'.
+const guardless = {...basis, quote_observed_at: date(now-40)};
+context.renderCandidates([guardless]);
+context.renderStats([guardless], {status:'LIVE'}, {windows:{'24h':{}}});
+assert(elements.candidates.innerHTML.includes('当前跟单结论：“资格待核实”'));
+assert(elements.candidates.innerHTML.includes('独立 F01 实时核验脚本不可用'));
+assert(!elements.candidates.innerHTML.includes('当前跟单结论：“可跟”'));
+assert(!elements.candidates.innerHTML.includes('candidate-card decision-buy'));
+assert(!elements.candidates.innerHTML.includes('12.34'));
+assert(elements.stats.innerHTML.includes('当前可跟候选</span><strong>0</strong>'));
+
+context.renderCandidates([basis]);
+assert(!elements.candidates.innerHTML.includes('当前跟单结论：“可跟”'));
+assert(!elements.candidates.innerHTML.includes('12.34'));
+
+// The real F01 independent script will install this API before app rendering.
+// The presentation may expose original saved decision *only* for its wrapper
+// to verify and reveal; the actual async verifyRows is tested separately.
+vm.runInContext('globalThis.FrankPrimaryF01Freshness = {verifyRows() { return null }}', context);
 context.renderCandidates([basis]);
 assert(elements.candidates.innerHTML.includes('12.34'));
+context.renderStats([basis], {status:'LIVE'}, {windows:{'24h':{}}});
+assert(elements.stats.innerHTML.includes('当前可跟候选</span><strong>1</strong>'));
 context.renderCandidates([{...basis, quote_observed_at:date(now-120)}]);
 assert(elements.candidates.innerHTML.includes('报价已过期，不代表当前成交条件'));
 assert(!elements.candidates.innerHTML.includes('12.34'));
