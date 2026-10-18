@@ -1,0 +1,85 @@
+name: Monster Stage163 Archived Spot T0 511 Offline Friction
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage163_spot_t0_quote_friction.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage163_spot_t0_quote_friction.py'
+      - '.github/workflows/monster-v4-stage163-offline-spot-t0-511-friction.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: monster-stage163-archived-t0-offline-source-only
+  cancel-in-progress: true
+
+jobs:
+  archived_spot_t0_friction:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline source locked real 511 pair regressions
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage163_spot_t0_quote_friction.py tests/test_monster_v4_stage163_spot_t0_quote_friction.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage163_spot_t0_quote_friction.py
+      - name: Recompute research-only full511 from exact original git ZIP and receipts
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage163_spot_t0_quote_friction.py --output /tmp/monster_stage163_spot_t0_511_quote_friction.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/monster_stage163_spot_t0_511_quote_friction.json')
+          j=json.loads(p.read_text())
+          assert j['schema']=='MONSTER_STAGE163_SPOT_T0_ORIGINAL511_BBO_FRICTION_NO_TRADES_V1'
+          assert len(j['rows'])==511
+          assert j['source_zip_sha256']=='b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b'
+          assert j['G4']=='UNKNOWN' and j['G6']=='NO_GO'
+          assert j['NO_DEPLOY'] and j['NO_MERGE'] and j['NO_GMAIL'] and j['NO_TRADE']
+          assert j['research_notional_usdt']=='UNKNOWN_NOT_SPECIFIED'
+          assert j['research_notional_top_quote_size_coverage']=='NOT_EVALUATED_WITHOUT_EXPLICIT_RESEARCH_AMOUNT'
+          assert j['historical_T0_observed_once_not_forward_live_signal']
+          assert j['no_historical_exit_L2'] and j['no_observed_actual_fills']
+          print('MONSTER163_ARCHIVED_SPOT_T0_511_ORIGINAL_SHA_NO_TRADE_PASS')
+          PY
+      - name: Upload machine-readable source-derived full511 historical research
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage163-archived-original-511-t0-quote-friction-only
+          path: /tmp/monster_stage163_spot_t0_511_quote_friction.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Commit immutable one-snapshot 511 rows under existing Monster research evidence
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          target=crypto-300-profit-mission/monster/evidence/monster_stage163_spot_t0_original511_quote_friction_actual.json
+          test ! -e "$target"
+          cp /tmp/monster_stage163_spot_t0_511_quote_friction.json "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add "$target"
+          git commit -m "monster: archive original Stage163 Spot T0 511-pair quote friction with NO_GO"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER163_T0_FRICTION_REPORT_ALREADY_ARCHIVED
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for source in crypto-300-profit-mission/local-agent/scripts/monster_v4_stage163_spot_t0_quote_friction.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage163_spot_t0_quote_friction.py crypto-300-profit-mission/monster/evidence/monster_stage163_spot_original_http_t0_actual/source_raw_http.zip crypto-300-profit-mission/monster/evidence/monster_stage163_spot_original_http_t0_actual/source_receipts.json .github/workflows/monster-v4-stage163-offline-spot-t0-511-friction.yml; do
+            test "$(git rev-parse "$GITHUB_SHA:$source")" = "$(git rev-parse "HEAD:$source")" || { echo MONSTER163_T0_FRICTION_SOURCE_CHANGED_DURING_CI; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER163_T0_511_SOURCE_ARCHIVED_GIT_READBACK_REQUIRED
