@@ -112,6 +112,13 @@ The [complete bounded BSC/ERC20 transfer observations](evidence/batch001-rows002
 
 The [saved-evidence gate](tools/verify_transfer_provenance.py) and [10 offline synthetic/invariant tests](tests/test_verify_transfer_provenance.py) match original source identities, transfer direction/pages, integer token balances, native-block/nonce snapshots and known source-list recipients; outcomes remain `ARCHIVED_FLOW_CONSISTENT_ONLY`, not profit/loss. [Actual-source analysis and next requirements](state/batch001-erc20-cost-origin-20261018.md). Focus next on real basis and proceeds proof, not further nonce expansion or edge-case-only work.
 
+
+## Cost-bearing origin and distribution provenance gate (HODL rows015/016)
+
+[Upstream BSC distribution evidence](evidence/batch001-hodl-funded-distributor-lineage-20261018.json) tracks **two paid router inputs**, one distributor transaction with **six recipients**, and the full HODL token outflow of **source rows015/016**, plus the distributor's undistributed inventory. The upstream address spent a total native `value` of **0.425046148539676102 BNB** across buys; observed native block balance decrease **0.426177349239676102 BNB**. These are **group-origin facts**, *not a valid per-recipient cost basis or proof of shared control*. Row016's first HODL exit height includes **four wallet-signed operations**, so the block BNB delta is not specific sale proceeds.
+
+[Saved-event group conservation gate](tools/lineage_gate.py) / [10 tested fail-closed scenarios](tests/test_lineage_gate.py) never allocate upstream cost or produce recipient profit without economic-ownership and transaction-level quote proofs. [Audit and queued missing evidence](state/batch001-hodl-funded-distribution-20261018.md). Reusable primitive for recipient transfers; do **not** keep expanding hand-coded token edge cases in place of building the general true-PnL ledger.
+
 ## Boundaries
 
 No wallet signing, swaps, follow trading, live orders, Gmail, LaunchAgent, dashboards or automation. `PRODUCTION_TRADING=NO_GO`, Frank and Monster unchanged. Original Mission PnL and wallet snapshots are separate from this third-party address intelligence research. Keep every failed/negative result, no cherry-picking and no made-up wallet profits. Research is observation-only.

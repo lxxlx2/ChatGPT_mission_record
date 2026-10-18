@@ -128,6 +128,15 @@ Alchemy historical Ethereum and Base nonce pairs were collected for the same 20 
 
 [分析、未决成本和下一核验条件](../state/batch001-erc20-cost-origin-20261018.md)。[机器可重复核查工具](../tools/verify_transfer_provenance.py) 与 [10项离线测试](../tests/test_verify_transfer_provenance.py) 已通过，门禁明确拒绝把被动转入记为零成本、把多个转出日志记为多个盈利卖单。所有三个钱包及其完整盈亏依然未决。该轮没有新的已证明盈利或亏损闭环。
 
+
+## 2026-10-18：HODL 上游经济成本与跨钱包分发关系（#015/#016）
+
+[新链上资金上游证据](../evidence/batch001-hodl-funded-distributor-lineage-20261018.json)：`0x1c2b…6e3f` 两次直接向 BSC 路由支付合计 **0.425046148539676102 BNB**，相应区块钱包 BNB 余额减少 **0.426177349239676102 BNB**，收到约2,435万 HODL，随后一次分发给6个钱包；其中原始名单 **#015/#016** 均在收款后两次转出全部 HODL。六人分发合计 `20582363267535883637548391` raw，上游仍留 `3770187907347020068657211` raw，整数守恒。
+
+**不能自动推断：**不证明这6个地址属于一人、没有收款地址各自的经济取得成本、上游源支付不能比例摊派为下游成本、#016 首次退出高度钱包**另外有签名交易（nonce +4）**；该块的 BNB 余额增量不能直接作为单笔退出回款。#015/#016 以及所有钱包整体盈亏仍 `UNRESOLVED`。
+
+[独立上游/收款守恒报告](../state/batch001-hodl-funded-distribution-20261018.md)、[通用成本归属拒绝门禁](../tools/lineage_gate.py)、[10项通过的合成测试](../tests/test_lineage_gate.py)。下一阶段转到其它低频候选的**真实成交和亏损**，而非无期限重复HODL归因。
+
 ## What is complete, what remains
 
 - **Completed & durable:** BSC first-20 signed nonce census with immutable block bounds, fully closed row016 RTX5090 and rows002/004 sauce single-token profit and loss-aware evidence records, issuer labels preserved untrusted.
