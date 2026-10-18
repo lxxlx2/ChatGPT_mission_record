@@ -1,12 +1,14 @@
 # 地址分析 / oooooyoung EVM 钱包按批盈利审计
 
-Updated: 2026-10-18 Asia/Bangkok
-Status: `RESEARCH_ONLY / BATCH_001_TO_019_SCREENED_WITH_FIRST_HIT_MODE / WHOLE_WALLET_PNL_INCOMPLETE`
+Updated: 2026-10-19 Asia/Bangkok
+Status: `RESEARCH_ONLY / BATCH_001_TO_023_SCREENED_ACTIVITY_COMPLETE / WHOLE_WALLET_PNL_INCOMPLETE`
 Scope: independent Mission research module, no connection to the existing PR #40 BSC address modeling or live Frank/Monster signals.
 
-## Current priority: 449-wallet activity first (2026-10-18)
+## Stage 1 complete: screen all 449, start PnL research
 
-**380/449 screened**, **204 signed-active** and **176 signed-zero across BSC/Ethereum/Base**; next **Batch020 rows381–400**. [Current 380-wallet shortlist](evidence/activity-candidates-001-380.json) · [Batch018](evidence/batch-018-first-hit-bsc-eth-base-nonce.json) · [Batch019](evidence/batch-019-first-hit-bsc-eth-base-nonce.json) · [Simple progress](state/activity-screening-001-380.md). BSC-first + fallback + first positive stops additional queries; the first 120 wallets used full tri-chain queries. No wallet PnL conclusions until screening completes; unverified labels remain unverified.
+**449/449 screened**, **237 signed-active on BSC/Ethereum/Base**, **212 three-chain signed-zero**. [Full row-by-row results](evidence/activity-candidates-001-449.json) · [Active-only 237-wallet PnL queue](evidence/active-wallets-237.csv) · [Screening completion report](state/activity-screening-001-449.md). Screening concluded with Batches020–023; future work should investigate actual realized profits and losses for these 237 candidates in source order, rather than extend the nonce-screening tool.
+
+No wallet-level PnL is yet completed. Three historical positive single-token closes are **not** an audited profitable-wallet ranking. Screens cover historical signed nonce only on BSC/Ethereum/Base, not all EVM networks or passive activity.
 
 ## Objective and fixed universe
 

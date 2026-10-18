@@ -1,22 +1,21 @@
 # 地址分析 / 449 个 EVM 地址研究队列与分批进度
 
-Updated: 2026-10-18 Asia/Bangkok
-Research status: `READ_ONLY / PARTIAL_RESULTS / CLI_OFFLINE_TESTED`
+Updated: 2026-10-19 Asia/Bangkok
+Research status: `READ_ONLY / ACTIVITY_SCREEN_COMPLETE / PNL_REVIEW_INCOMPLETE`
 Source manifest: [449 addresses](../sources/oooooyoung-evm-449-source-snapshot.json), original blob `954f3aba66be21911dd627fa40dd3dd0a9fd1d26`.
 
 ## Canonical queue position
 
-- **Current user-requested priority: complete activity screening of all 449 first.** Batch012–019 are done, next **Batch020 rows381–400**. The [new 380-wallet shortlist](../evidence/activity-candidates-001-380.json) records all per-wallet statuses. No new wallet profit/loss claims.
-
-
-- **User-requested revised priority: complete activity screening of all 449 original wallets first; defer individual deep wallet analysis until active shortlist is complete.** Only screen status and precise source bounds now. Next batch **020 (381–400)**; signed-active means at least one positive BSC/ETH/Base nonce delta, not proof of profitable swaps. Do not invent a wallet profit ranking. [Current 380-address result](activity-screening-001-380.md).
+- **Activity screening complete: 449/449.** [Full 449-wallet activity status](../evidence/activity-candidates-001-449.json) · [237 active candidates for PnL review](../evidence/active-wallets-237.csv) · [Short completion report](activity-screening-001-449.md).
+- **Next user goal: analyze profitability and losses of 237 signed-active candidate wallets, in original source order, 20 per analysis batch.** Mark unprovable per-token costs and entire-wallet PnL as UNRESOLVED rather than looping on one wallet; continue next batch.
+- **No additional signature screening queued.** The 212 three-chain signed-zero wallets are deprioritized, not proven inactive across every EVM chain or passive transfers.
 
 - Total **449** distinct EVM addresses, fixed order; batch size 20; **23** batches.
-- **PnL review frontier = Batch 001** (source rows **001–020**); **activity screening frontier = Batch 019 completed, Batch 020 next**. The BNB Chain 30-day signed-activity census for these 20 has been finished, with exact fixed height window `0x74cf256` → `0x7a4ca36`. **13/20** had wallet-signed BSC transactions, **7/20** had none. This alone does not prove who bought/sold or which chains are inactive.
+- **PnL review frontier = Batch 001** (source rows **001–020**); **activity screening frontier = Batch 023 completed, 449/449 screened; PnL stage next**. The BNB Chain 30-day signed-activity census for these 20 has been finished, with exact fixed height window `0x74cf256` → `0x7a4ca36`. **13/20** had wallet-signed BSC transactions, **7/20** had none. This alone does not prove who bought/sold or which chains are inactive.
 - **2026-10-18 three-chain screening extension:** [machine-readable nonce evidence](../evidence/batch-001-three-chain-30d-nonce-screen.json) covers Ethereum 20/20 (13 active, 1,331 signed), Base 20/20 (10 active, 1,515 signed), alongside BSC 20/20. Three-network union 15/20 signed; rows 008/009/010/011/013 three-network signed-zero. Other EVM chain coverage and all-wallet PnL are **incomplete**.
 - **Verified realized token roundtrip = 3:** row016 RTX5090 closed position **+0.226099333116 BNB** (~**+$162.86** using contemporary Binance BNBUSDT candles); see [batch-001](../batches/batch-001.md) and [structured evidence](../evidence/batch-001-row-016-rtx5090-roundtrip.json). This remains a single-token roundtrip, not the entire wallet PnL. Rows002/004 sauce additionally closed with **+0.156828105278687674 BNB** (about +$118.86) and **+0.154215798043203099 BNB** (about +$116.96). [Exact sauce evidence](../evidence/batch-001-rows-002-004-sauce-roundtrips.json). No confirmed negative token roundtrip yet, but losses cannot be assumed zero.
 - **2026-10-18 Batch 002 screen:** [three-chain raw nonce evidence](../evidence/batch-002-three-chain-30d-nonce-screen.json) for rows021–040, BSC 12/20 with 18,766 signed transactions, Ethereum 12/20 with 2,884, Base 12/20 with 3,411; union 13/20, three-chain signed-zero 7/20. Batch 002 trade and PnL audit NOT_STARTED.
-- **Historical signed activity screening = 380/449**, 204 signed-active, 176 BSC/Ethereum/Base signed-zero, 69 unscreened. Batch001–006 full three-chain checks, Batch007–019 BSC-first fallback early-exit. [Current simple progress](activity-screening-001-380.md) · [380-wallet roster](../evidence/activity-candidates-001-380.json). All older files remain archived. **NO new verified whole-wallet PnL.**
+- **Historical signed activity screening = 449/449 COMPLETED:** 237 have at least one positive BSC/Ethereum/Base signed nonce delta, 212 signed-zero across all three checked chains, 0 unscreened. [449-wallet screening evidence](../evidence/activity-candidates-001-449.json) · [237-wallet active PnL queue](../evidence/active-wallets-237.csv) · [clear completion report](activity-screening-001-449.md). Initial 120 used full tri-chain checks; rows121–449 used first-hit early exit. **NO new validated wallet PnL, no proof of all-chain current activity.**
 - **2026-10-18 closed-token source replay:** [standardized three-position evidence](../evidence/closed-token-replay-source-check-20261018.json) and [test/replay status](closed-token-source-replay-qa-20261018.md). New isolated Python replay/negative-fixture tests **5/5 passed** (Git blobs verified). This validates existing source arithmetic and refuses invalid costs/inventory, **not** new onchain receipts or whole-wallet PnL. Real losing positions remain UNRESOLVED.
 - **2026-10-18 generalized FIFO ledger V1 offline QA:** [code](../tools/transaction_ledger.py), [20 offline tests](../tests/test_transaction_ledger.py), [historical saved sauce source replay](../evidence/ledger-v1-row002-source-replay.json), [failure/QA details](ledger-v1-fifo-qa-20261018.md). Strictly *SOURCE CLAIM REPLAY*: validates inventory, FIFO, date cutoffs, negative results and fail-closed provenance. No independent onchain receipt verification and no newly realized loss; comprehensive per-wallet PnL remains unresolved. This is the current primary development track, ahead of extending batch counts.
 - **2026-10-18 real receipt fact extraction V1:** [read-only parser/optional HTTPS RPC reader](../tools/receipt_probe.py), [17 offline tests](../tests/test_receipt_probe.py), [4 complete historical receipt input pairs](../fixtures/complete-rpc-receipts-four-transactions.json), [source-row wallet/transfer/gas cross-check](../evidence/receipt-probe-four-real-rpc-check-20261018.json), [QA and source truncation limitations](receipt-facts-v1-qa-20261018.md). Current four reads prove two token transfers, one approval, one native transfer, *not any new paid swap or PnL*. Connected provider truncated all 3 sauce trade receipts; do not promote previous saved profits as independently reverified. Python URL RPC/Mac E2E NOT VERIFIED.
@@ -57,10 +56,10 @@ Source manifest: [449 addresses](../sources/oooooyoung-evm-449-source-snapshot.j
 | 017 | 321–340 | COMPLETE: 2 signed-active / 18 three-chain signed-zero | PNL_NOT_ANALYZED |
 | 018 | 341–360 | COMPLETE: 5 signed-active / 15 three-chain signed-zero | PNL_NOT_ANALYZED |
 | 019 | 361–380 | COMPLETE: 12 signed-active / 8 three-chain signed-zero | PNL_NOT_ANALYZED |
-| 020 | 381–400 | NOT_STARTED | NOT_STARTED |
-| 021 | 401–420 | NOT_STARTED | NOT_STARTED |
-| 022 | 421–440 | NOT_STARTED | NOT_STARTED |
-| 023 | 441–449 | NOT_STARTED | NOT_STARTED |
+| 020 | 381–400 | COMPLETE: first-hit signed nonce, 10 active / 10 three-chain zero | PNL_NOT_ANALYZED |
+| 021 | 401–420 | COMPLETE: first-hit signed nonce, 11 active / 9 three-chain zero | PNL_NOT_ANALYZED |
+| 022 | 421–440 | COMPLETE: first-hit signed nonce, 11 active / 9 three-chain zero | PNL_NOT_ANALYZED |
+| 023 | 441–449 | COMPLETE: first-hit signed nonce, 1 active / 8 three-chain zero | PNL_NOT_ANALYZED |
 
 ## Phase-based closure criteria
 
