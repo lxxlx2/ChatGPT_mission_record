@@ -19,7 +19,7 @@ Applies to: Frank, C02 and subsequent Mission browser UI modules (and other UI c
 ## 进一步要求：全自动实机截图（2026-10-18）
 
 - **用户不应再负责找截图位置、选择 CA、展开面板、手动框选或反复按 Enter。** 用户只运行一条固定 SHA 的 zsh 命令，结束后 Finder 自动选中 ZIP；除 macOS 首次要求的 Safari 自动化/屏幕录制系统权限外不得依赖人工操作。仅当自动化明确失败时给出对应阻断状态，不得要求用户猜要截哪里。
-- 对新增的 C02 归档页面，使用 `crypto-300-profit-mission/local-agent/scripts/frank_c02_auto_safari_capture.py --candidate-sha <固定审核SHA>`。脚本读取**现有 localhost Dashboard 的 GET** 候选/观察池，最多检查 24 个 exact CA 的已有历史归档；不扫描链上，也不从用户钱包直接读取余额。若有匹配归档自动选用，否则明确记录 NO_LOCAL_CA / ARCHIVE_MISSING，不能虚报通过。
+- 对新增的 C02 归档页面，使用 `crypto-300-profit-mission/local-agent/scripts/frank_c02_auto_safari_capture.py --candidate-sha <固定审核SHA>`。脚本先从 Mac 的 `~/.frank_meme_control_root` 指向的**现有** `cluster-reports/<mint>/latest.json` 只读枚举全部归档 CA，优先选择能通过**现有 Dashboard `/api/cluster-latest?mint=...` GET** 返回且 Mint 一致的报告。仅在没有可读归档时回退到候选/观察池（最多 24 个 CA）；不扫描链上，也不从用户钱包直接读取余额。大于现有 GET 读取上限的报告必须跳过、不可虚报找到；若无可读归档，明确记录 `LOCAL_ARCHIVE_CATALOG_NOT_READABLE` / `NO_LOCAL_CA` / `ARCHIVE_MISSING`。此路径不新增 HTTP 路由、不修改生产服务或归档文件。
 - 只从固定 SHA Git blob 导出私有页面快照。自动在 Safari 同源 iframe 打开实际 C02 页面并点击“查看已有归档（只读）”按钮、等待页面明确回执、确认显示 CA 一致后自动截图 `c02-overview.png` 与 `c02-report.png`；额外 QA 页仅辅助导航，不改动受审产品静态源码。
 - 不依赖 Safari 开启 JavaScript from Apple Events；仅使用 AppleScript 读取前台 Safari URL 来核对截图窗口，以及 macOS `screencapture -x -D 1` 捕获主屏。系统若要求首次授权，用户可按系统弹窗授权；若 Safari 不在前台、页面不回应或权限拒绝则拒绝有效 ZIP，保留已抓取图并写 `REJECTED.json`。
 - **分阶段截图身份：** 同一路径的不同 `overview/report` 页面必须逐阶段核对完整 origin、path、随机 token 与 stage；收到后台 ready 回执并不等于前台截图页正确。Safari 激活后临近截图前和截图后都应独立核对目标 URL；任何错页或 token 漂移均拒绝有效 ZIP。
