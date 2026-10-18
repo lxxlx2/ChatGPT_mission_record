@@ -143,7 +143,7 @@ def result_for_events(events, symbol_bars):
             if horizons["1440"]["status"]=="PRICE_PROXY_ONLY":
                 locked_until[symbol]=entry_tick+1440*MIN
         rows.append(output)
-    if len(rows)!=120:
+    if len(rows)!=len(events):
         raise ValueError("MONSTER_SETUP120_OUTPUT_ROW_COUNT_DRIFT")
     return rows
 
@@ -192,7 +192,7 @@ def summarize(rows):
                 str(sum(v)*Decimal("0.3")) if v else None),
             "historical_30usdt_is_not_user_order_authorization":True
         }
-        if sum(status.values())!=120:
+        if sum(status.values())!=len(rows):
             raise ValueError("MONSTER_SETUP120_HORIZON_DENOMINATOR_DRIFT")
     return grouped
 
