@@ -108,7 +108,8 @@ def test_real_localhost_qa_server_readiness_and_post_blocked(tmp_path):
         assert get_request(srv.server_port,"/index.html")[0]==200
 
 
-def test_zero_touch_capture_path_automatically_produces_zip_and_finder_selection(tmp_path,monkeypatch):
+@pytest.mark.parametrize("outcome,expected_rc",[("ARCHIVE_MISSING",0),("PRODUCT_UI_MINT_MISMATCH",3)])
+def test_zero_touch_capture_path_automatically_produces_zip_and_finder_selection(tmp_path,monkeypatch,outcome,expected_rc):
     home=tmp_path / "home"
     (home/"Downloads").mkdir(parents=True)
     monkeypatch.setattr(Path,"home",staticmethod(lambda:home))
@@ -145,7 +146,7 @@ def test_zero_touch_capture_path_automatically_produces_zip_and_finder_selection
             bits=urlsplit(link)
             params=parse_qs(bits.query)
             ready="/__qa/ready?" + urlencode({"token":params["token"][0],
-               "stage":params["stage"][0],"state":"ARCHIVE_MISSING"})
+               "stage":params["stage"][0],"state":outcome})
             status,_=get_request(int(bits.netloc.split(":")[-1]),ready)
             assert status==204
         return SimpleNamespace(returncode=0)
@@ -158,9 +159,16 @@ def test_zero_touch_capture_path_automatically_produces_zip_and_finder_selection
                 "sha256":old.sha256_bytes(binary),"meaning":"SYNTHETIC_ONLY"}
     monkeypatch.setattr(qa,"automatic_screenshot",fake_png)
     monkeypatch.setattr(qa.time,"sleep",lambda *_:None)
-    assert qa.run_auto(sha=approved_sha,mint=None)==0
-    assert len(urls)==2
+    assert qa.run_auto(sha=approved_sha,mint=None)==expected_rc
+    assert len(urls)==(2 if expected_rc==0 else 1)
     files=list((home/"Downloads").glob("frank-c02-auto-evidence-*.zip"))
+    if expected_rc!=0:
+        assert files==[], "bad product UI must not produce a valid acceptance ZIP"
+        rejected=list((home/"Downloads").glob("frank-c02-REJECTED-*"))
+        assert len(rejected)==1
+        assert (rejected[0]/"c02-overview.png").is_file()
+        assert "STOP_C02_PRODUCT_UI_NOT_VERIFIED" in json.loads((rejected[0]/"REJECTED.json").read_text())["reason"]
+        return
     assert len(files)==1
     with zipfile.ZipFile(files[0]) as z:
         assert {"manifest.json","c02-automatic-acceptance.json",
