@@ -967,3 +967,13 @@ Geth 文档指出 WebSocket `logs` 在链重组时向同一旧块事件再发 `r
 
 维持 `P4-B/P4-C=PARTIAL`、`PUBLIC_EXECUTABLE_U=UNRESOLVED`、`P5=BLOCKED`、`PRODUCTION=NO_GO`、`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。
 
+## 2026-10-19 P4-B：23 EOA 跨代币真实 30 天活跃钱包第一轮筛选
+
+承接用户授权 120 秒/100 事件 BNB WSS 实际 0 匹配的原始验收（非 WSS 服务故障；证据为 PR #40 的真实验收评论），立刻回归本来业务目标“筛选实际还在交易的钱包”，不再盲目限于原 19 个历史 CA。通过用户已连 Alchemy 的 BNB Mainnet 公共只读 RPC 取得**准确 30 天边界** `#122654260 2026-09-18T18:34:56Z` → `#128411164 2026-10-18T18:34:56Z`，对旧冻结 23 EOA 全部取得边界两端 `eth_getTransactionCount`，每地址 nonce 差值定义为本人发出的交易笔数（可能含失败、内部操作，不等于赢利交易）。**23/23 数据回收，14 地址有 nonce 增量，9 地址零增量，8 地址单月超过 1,000 笔**，此为真实链上初筛结论，不是模型历史回测。
+
+第一批各地址最近 4～6 条 `getAssetTransfers`（不是完整分页）已显示多个新 CA 脱离历史 19 CA；再对 A83B、877AF、0ABB、8E6B、DDAC、2ADF 各抽一笔真实 `eth_getTransactionByHash`，六笔 `transaction.from` 均匹配原研究 EOA，`to=0x1de460f363af910f51726def188f9004276bf4bc` 且 method `0x4d819a2a`，关联的六种真实 token exact CA 都不在旧 19 CA 里。仅证明现在有本人 signer 路由调用，尚未证明每笔实际 BUY/SELL 成功、双向 BNB/USDT 净流或持仓闭合、可用本金、盈利，不因某 token 名叫 BNB 就把 spoof 作为原生币，禁止报告伪利润。原 `239E` 边界 nonce 不变但转账索引返回非零 token-from 事件，故必须严格区分 token transfer from 与真正交易 signer。
+
+原研究路径下新增 [23 行精确起末 nonce、6 笔 signer+CA 来源汇总 JSON](./bsc-meme-address-model-v1-p4b-23eoa-full-market-30day-activity-screen-2026-10-19.json) 和 [完整排名与第二批钱包业务执行清单](./bsc-meme-address-model-v1-p4b-23eoa-full-market-30day-activity-report-2026-10-19.md)。冻结原 23×19 文件未变，原 P2 通过的 **`APPROVE@f8e7ba21f466774b16ed1eef45f8ff31ff7f6243` 只适用该固定代码 SHA**；这些后来的来源/报告不是新核心算法，不要求每次新增日志做完整外部审核。实际交易、邮件、生产均未启动。
+
+**下一批业务优先**：877AF、DDAC、8E6B、2ADF 各挑最近真正签名的 1～2 个不同 CA，沿当前真实 quote 资产、交易 receipt 和后续现金退出查完整经济回合、亏损案例；拿不到旧成本就标 UNKNOWN；A83B/0ABB 高频钱包仅作可跟性基准，不作单凭 5 万笔的买入推荐。状态 `P4-B/P4-C=PARTIAL; PUBLIC_EXECUTABLE_U=UNRESOLVED; P5=BLOCKED; PRODUCTION=NO_GO; NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。
+
