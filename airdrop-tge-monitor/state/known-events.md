@@ -165,3 +165,24 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - StandX_user_compensation_is_identical: FALSE, no relationship inferred between account Alpha Points and StandX-specific allocation
 - user_eligibility/actual_Alpha_points: UNVERIFIED
 - action_decision: do not deliver StandX-specific entitlement notice on generic Alpha announcement alone; retain a new material Crypto Daily news candidate and verify Alpha activity details before any action.
+
+## 2026-10-18 targeted pending existing-scope rights verification (not delivered)
+
+### Cambria Blast/Abstract gameplay transition (HIGH source-verification priority)
+- event_key: cambria:blast_abstract_gameplay_migration:2026-10-19
+- project_id: cambria (EXISTING Registry Shard 3; existing Genesis opt-in alert delivered Oct15; no new project/automation)
+- multiple_english_secondary_sources: https://airdrops.io/cambria/ (updated Oct17 2026); https://blockchaingames.fun/latest-news/ (Oct16 announcement brief); https://t.me/s/airdrops_io?before=7954 (repeat of same secondary ecosystem)
+- alleged_effective_at: 2026-10-19 11:00 US Eastern / 15:00 UTC / 22:00 Asia/Bangkok (October EDT), REQUIRES FIRST-PARTY CONFIRMATION
+- reported_consequence: Cambria game disables Blast/Abstract support, game treasury/unclaimed Duel Arena stakes may move to Base/Ethereum; secondary guide says manual withdrawals before transition and Discord ticket route afterward, NOT authoritative advice for user action.
+- issuer_original_source_text: SOURCE_GAP; no matching canonical Cambria official blog/docs/X announcement independently read at 2026-10-18 08:10 BKK
+- personal_exposure: UNKNOWN; no evidence user's Cambria Duel Arena stakes on Blast/Abstract
+- status: HIGH_MATERIALITY_VERIFYING_FIRST_PARTY; DO NOT SEND ACTION GMAIL until original issuer or mapped user-rights Tier A/B independently verifies actual current actionable user rights, appropriate route and deadline
+- next_check: bounded time-sensitive official Cambria X/docs/blog and account-firstparty announcements before alleged 2026-10-19 22:00 BKK deadline, prioritizing this EXISTING shard event even when shard 3 is not scheduled; not a second full deep shard
+- dedupe: NOT the same event as previously delivered Cambria Genesis Opt-in; a later independent material verified transition may have a new email exactly once.
+
+### NeoSoul DNA generic issuer eligibility checker (separate from StandX-specific promise)
+- generic_checker_official: https://airdrop.neosoul.ai/ (first-party issuer domain, checked Oct18)
+- generic_checker_displayed_window: 2026-10-15 00:00 to 2026-10-23 00:00 UTC+8 (deadline 2026-10-22 16:00 UTC / 23:00 Asia/Bangkok)
+- official_visible_action: wallet eligibility check and confirmation for Sybil-screened wallets; user's wallet inclusion NOT VERIFIED
+- standx_contributor_specific_entitlement: UNVERIFIED; generic checker does not explicitly confirm a StandX beneficiary set. Cannot promote existing \`neosoul:dna_standx_community_allocation:2026-10-15\` into Tier A user-rights action based on this alone.
+- relationship_scope: informational evidence for already-monitored StandX beneficiary check, not new full-watch NeoSoul project or independent urgent notification.
