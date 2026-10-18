@@ -884,3 +884,16 @@ R2 的真实 WBNB→龙虾 Pair Swap 最早 signed tx `0x2b93cfb6ae16ab4943f5f20
 为控制免费数据源成本与避免无穷前史，额外先冻**更早紧邻 50,000 块** 85850000..85899999，单独真实读取 85849999 的钱包 Dragon `balanceOf`，仍是 `966415729394361448864776` raw，且此固定窗口内 `Transfer(to=EOA)`、`Transfer(from=EOA)` 均完整返回空结果、无后续分页。因此 **96.64 万枚早于区块 85850000 已在钱包**，但更早真正取得成本目前没有证据；明确在此停止这次边界查询，不能把交易收款 8399 美元减掉单笔 1000 USDT 误记为收益，也不能认为 33 笔转入代表已有成本认证的 33 次买入。
 
 [新增完整研究报告](./bsc-meme-address-model-v1-p4b-2026-5e60-exact-33in17out-inherited-966415-cost-unknown-report.md)、[起末双链上余额和库存汇总](./bsc-meme-address-model-v1-p4b-5e60-real-opening-966415-and-33in17out-inventory-2026-10-18.json)、[更早 50k 区块空事件记录](./bsc-meme-address-model-v1-p4b-5e60-older-50000-blocks-966415-opening-no-transfer-readback-2026-10-18.json)、[固定所有分页/真实原始 blob SHA 校验脚本](./bsc_meme_address_model_v1_p4b_5e60_historic_inventory_33in17out.py)、[14 项负向门禁](./test_bsc_meme_address_model_v1_p4b_5e60_historic_inventory_33in17out.py) 均已追加。**业务里程碑：EXTERNAL_REAL_FUNDED_BUY AND REAL_SELL CASH PROVEN；SCOPED_TOKEN_INVENTORY RECONCILED；REALIZED_NET_PNL UNKNOWN HISTORICAL BASIS；PUBLIC FOLLOWABLE U UNKNOWN**。后续优先换到可审计首次外部信号观察和真正正负跟随样本，而不是重复往前无限扫描这一赢家钱包的历史；若有人主张完成历史 PNL，必须先显式冻结前史资金成本/取得原始交易及手续费的可完成边界。保持 `P4-B=PARTIAL / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
+
+
+## 2026-10-18 P4-B 跨市场历史证据分级，回到用户可执行性主线
+
+这一批按既有开发规则，复用已审计来源，不追加无界 5E60 早期历史 RPC，也不选取新后验赢家。已构建 [源码 Git blob 锁定的跨市场对照程序](./bsc_meme_address_model_v1_p4b_crossmarket_decision.py)、[九项反例及结构测试](./test_bsc_meme_address_model_v1_p4b_crossmarket_decision.py) 与 [人可读业务报告](./bsc-meme-address-model-v1-p4b-crossmarket-observer-decision-report-2026-10-18.md)。一并展示原 23 钱包中 **5 个 EOA / 4 个重大 exact CA / 6 个历史原本人完整选定回合**（DDAC 龙虾、239E 龙虾 R1/R2、8E6B HAJIMI、A83B 牛来 R2、877AF MARSCOIN R4）和独立的外部 5E60 成交回款控制。已知结果精选，仅 POST_HOC_DESCRIPTIVE_SOURCE_REPLAY，不声称独立无偏样本、1/5/15m 跟单收益或整个 437 格的原始经济验证。
+
+六个回合原主所选 BNB 方向为 **2 正 / 4 负**，但 A83B/877AF 仅为原签名区块 native delta，不能和已经本人 signed/WBNB/Gas 部分闭合的回合当成统一收益率或推导胜率。5E60 历史 33 IN /17 OUT 库存 raw 严格闭合，旧 966415 枚成本仍未知，完整首次清仓真实收到 8399.620126582833083485 USDT 是**回款**。过期信号 DDAC 在外部 D503 买入之时真实历史余额为 0，E11B 仍缺有效卖出来源。以上在源中强制分开，未扩张 23×19 原始母数。
+
+固定代码/测试 SHA **54edb8acbb20c92aec003fb4dbf11ab3ed16e465** 的 [Actions #39084890164](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39084890164) 已实际核对 Job 日志：Ubuntu **731/731**、macOS **731/731** BSC 全量，以及专项 **9/9**。另外三套既存 P4-C workflow 同 SHA SUCCESS。原不可变来源不改，未运行新链上 RPC、未合并、未部署、未使用生产接口。CI 只是重放通过，不算独立 other-AI review，也不升级 P4-B、U、P5 或生产。
+
+**下一阶段只做影响可交易性的新证据**：在这组已冻结跨市场正负样本中，先验证历史公开首可见数据来源是否允许保存节点实际收达时间；缺少它就诚实分为链上共识时间下界与 observer received UNRESOLVED。用先冻结的统一可支付资金、市场路由、报价 token、入场精确 +60/+300/+900 秒和真实成交/失败/退出收款/税 Gas，构造可审计的不同市场正负与 no-fill 样本；没有有状态执行或者现实交易证据就 BLOCKED，不把 N+1 math 和其他人的 5–9s 实际买卖当作策略回测。达到真正经济/因果算法阶段评审触发门禁时，再按开发规则交付固定 SHA 完整外部 Review 提示词；低风险静态来源分层不重复发起整个 731 测试的外部逐轮审核。
+
+门禁不变：P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE。
