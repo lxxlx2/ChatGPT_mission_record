@@ -7,7 +7,7 @@
 根据 Alchemy 官方文档（2026-10-18 阅读）：
 
 - BNB Smart Chain `eth_subscribe` 允许 WebSocket `wss://`，官方列有 `logs`、`newHeads`、`newPendingTransactions` 等类别：<https://www.alchemy.com/docs/chains/bnb-smart-chain/bnb-smart-chain-api-endpoints/eth-subscribe>。
-- **Alchemy 地址过滤的增强型 `alchemy_pendingTransactions` 官方明确仅支持 Ethereum/Arbitrum/Polygon/Optimism**，未列 BNB：<https://www.alchemy.com/docs/reference/subscription-api>。故不能直接拿原 23 个 EOA 在 BNB 依赖该增强订阅，也不能把收到 BNB 成交后的日志冒充“mempool 首见”。
+- **Alchemy 地址过滤的增强型 `alchemy_pendingTransactions` 各官方参考页对支持链的枚举表述并不完全一致，且未确认支持 BNB**：<https://www.alchemy.com/docs/reference/subscription-api>。故不能直接拿原 23 个 EOA 在 BNB 依赖该增强订阅，也不能把收到 BNB 成交后的日志冒充“mempool 首见”。
 - 标准 `logs` 支持合约地址、topic 条件：<https://www.alchemy.com/docs/reference/logs>。本阶段选择 `eth_subscribe(["logs", {"address":[19 exact CA], "topics":[ERC20 Transfer, null, [23 EOA indexed recipient]]}])`。这是**ERC20 入币候选发现**，不是本人原始签名、买入意图、交易成功独立结算、报价币种或跟单 U 认证。BNB 上生产网络对这组组合过滤器的实际接受情况**本轮未连网实测**；不保证服务商免费配额、筛选性能或端到端时延。
 - Alchemy BNB 免费 `eth_getLogs` 单次回溯最大 10 块（供以后人工核验，不代表本轮调用）：<https://www.alchemy.com/docs/chains/bnb-smart-chain/bnb-smart-chain-api-endpoints/eth-get-logs>。本轮不执行 RPC，也不新建监控任务。
 
@@ -40,3 +40,17 @@ Ethereum/Geth 官方原始订阅语义明确：相同区块里的日志可能在
 - 由于未获得 Mac 只读运行和外部服务商实测授权，**目前业务完成度是“来源边界、采集器源码、导入门禁、离线测试”**；真正公网观察第一笔、证明可复制正负回合、运行时性能和真实盈利仍未完成。
 
 下一里程碑：其他 AI 对本次独立 U 入口核心算法进行一次**固定 SHA 代码安全/证据等级定向审核**；通过后另获许可，在用户 Mac 使用 free RPC 作有时长、有条数上限的 **2 分钟 read-only dry actual WSS** 验收，确认 BNB provider 真实接受过滤器与日志质量，观察实际捕获率与时钟证据。拿到独立验收前绝不把原五个历史回合产生的模型收益当成回测结论。
+
+## 四、2026-10-18 外部审核 REQUEST_CHANGES 后的定向修复（未经新外部 APPROVE）
+
+外部 Codex 对原固定 SHA `c8482d1e2d5c44fb7e712538def09abd33a5739d`（比较基线 `4158e7bd...`）出具 `REQUEST_CHANGES`：P2 撤销帧绕过完整校验，P3 在 UTC 接近 9999 年底时导致整批 OverflowError；另一名审核者的本地回环模拟另指出 SIGTERM 未落盘、没有核查 WebSocket 来源 `eth_chainId`，以及同一个 log 修改 `event_id`、来自旧区块的转账换新自报时间亦能被当成未证明时效的候选。这些是真实提出的风险，不等同于财务盈利证据。
+
+**定向修复结果：**
+
+- Python 原共享 `validate_event()` 会先验证 `network=bnb-mainnet`、23/19 集合、事件 ID 唯一性、原始帧 SHA、所报告的时钟质量、固定历史交易黑名单。已上链 log 的 `removed=true` 现须再次满足与包含事件**同级别的 token CA、钱包收款 topic、tx、blockHash、logIndex、数量及发送方 topic** 完整验证，才可成为结构化撤销证据；普通 `REJECTED_EVIDENCE` 不会产生任何撤销副作用。重复 ID、错误网络、同 tx 的其他钱包/CA、数量/发送方冲突不得撤销第一条；原本同批次真正 `removed` 仍撤销且 `target_windows_utc` 清空。
+- 单一原始日志即使被复制成不同 `event_id`，同样绑定交易/区块/钱包/Token/数额后进行去重，不能重复计入候选。该去重的证据作用**仅限同一次输入批次**，并未解决不同采集文件跨批去重或跨批链重组。
+- `+60/+300/+900 秒` 的 UTC 算术集中校验。极端 `9999-12-31T23:59:59Z` 在 pending 与 mined-log 均返回明确 `UTC_DELAY_WINDOW_OUT_OF_RANGE`，合法的同批其他记录继续处理，而不是中断整个导入。
+- Node.js 限时只读采集器在订阅之前必须先通过 `eth_chainId` 验证 `0x38`，不匹配即拒绝订阅和归档失败状态；收到 SIGTERM 后走同一 `finish()` 写盘并以 143 退出。分别追加完全在 Node 进程内覆盖 `WebSocket` 的离线模拟测试，证明 BNB 正确路径有真实接收帧与终止证据，错误 chain ID 不开启订阅、不产生事件文件中的假数据（仅写失败状态）。**没有接入任何真实公共 RPC/WSS、未启动后台监听。**
+- **仍未解决的信任边界：** `raw_sha256` 只锁定消息帧原始字节，`observer_received_utc`、`observer_monotonic_ns` 及 provider/capture 端字段本身仍是自报，不存在可被本次离线复算独立验证的防倒签、第三方时间公证。已发生的历史新区块事件换上新的自报 UTC 可能得到 `UNATTESTED` 候选，但始终不能生成 `first_public_observer_received_utc`、经过鉴证的公网 U、经审计可执行跟单报价或盈利。该问题必须在**未来真实受控实测的来源与时钟证明**中解决，不能继续对老历史区块逐条添加黑名单。真正公平样本外跟单回测仍未开始。
+
+当前代码不得因为单元测试通过而被自我标为独立 `APPROVE`。保留 `PENDING_OTHER_AI_REVIEW`、`P4-B/P4-C=PARTIAL`、`PUBLIC_EXECUTABLE_U=UNRESOLVED`、`P5=BLOCKED`、`PRODUCTION=NO_GO`。最后一次完整 CI、审核比较 SHA 与来源由 PR #40 的新固定版本评论补充。
