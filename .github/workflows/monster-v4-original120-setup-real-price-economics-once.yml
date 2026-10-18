@@ -1,0 +1,93 @@
+name: Monster original120 SETUP historical price economics, research only
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-original120-setup-real-price-economics-once.yml'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_original120_setup_price_economics.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_original120_setup_price_economics.py'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster-original120-setup-economics-one-off
+  cancel-in-progress: false
+jobs:
+  original120_setup_price_economics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate fixed descriptive economics and error-path tests
+        run: |
+          set -eu
+          python3 -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_original120_setup_price_economics.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_original120_setup_price_economics.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_original120_setup_price_economics.py
+      - name: Collect only previously frozen 28 exact original February publisher-source shards
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster_setup120_stage162
+          gh run download 39068290868 --repo lxxlx2/ChatGPT_mission_record --dir /tmp/monster_setup120_stage162 --name monster162-real445-first-valid-5m-fair8-ab-once-v4
+          printf '%s  %s\n' c30c8b6467b0017b36efc33fadfa2c7853f29f9c7e32993249774269ba4e2ae2 /tmp/monster_setup120_stage162/monster162_actual_445_fair8_ab.json | sha256sum -c -
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_archive_replay_runner.py collect --source-dir /tmp/monster_setup120_original28 --audit /tmp/monster_setup120_original28_receipts.json
+      - name: Calculate real original120 D1 SETUP plus3m entry and frozen price-proxy 24h exits
+        run: |
+          set -eu
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_original120_setup_price_economics.py --stage162-full /tmp/monster_setup120_stage162/monster162_actual_445_fair8_ab.json --original28-source-dir /tmp/monster_setup120_original28 --out /tmp/monster_setup120_original_exposed_price_economics.json
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          d=json.loads(Path('/tmp/monster_setup120_original_exposed_price_economics.json').read_text())
+          assert d['setup_event_ids_total']==120 and d['unique_setup_symbols']==56
+          assert len(d['event_level_actual_source_rows'])==120
+          assert len(d['original_source_shard_zip_sha256'])==28
+          assert set(d['horizon_results'])=={'15','60','360','1440'}
+          for key,s in d['horizon_results'].items():
+              assert sum(s['status_counts'].values())==120
+              assert s['win_count']+s['loss_count']+s['flat_count']==s['price_proxy_valid']
+              assert s['price_proxy_valid'] <= 120
+          assert d['not_independent_OOS'] and d['not_historical_true_pit_listing']
+          assert d['real_executable_net_profit']=='UNKNOWN'
+          assert d['G4']=='UNKNOWN' and d['G6']=='NO_GO'
+          assert d['NO_MERGE'] and d['NO_DEPLOY'] and d['NO_GMAIL'] and d['NO_TRADE']
+          print('MONSTER_ORIGINAL120_REAL_PRICE_PROXY_SOURCE_BOUNDED_MAINLINE_SUCCESS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-original120-setup-historical-minute-price-economics-once
+          path: |
+            /tmp/monster_setup120_original_exposed_price_economics.json
+            /tmp/monster_setup120_original28_receipts.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Archive immutable result to PR research branch, no deployment
+        run: |
+          set -eu
+          target=crypto-300-profit-mission/monster/evidence/monster_original120_setup_exposed_minute_price_economics_v1.json
+          branch=research/monster-v4-local-discovery-20261010
+          test ! -e "$target"
+          cp /tmp/monster_setup120_original_exposed_price_economics.json "$target"
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive all original120 D1 SETUP delayed-price economics without fills"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER_ORIGINAL120_ECONOMIC_EVIDENCE_ALREADY_EXISTS
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_original120_setup_price_economics.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_original120_setup_price_economics.py .github/workflows/monster-v4-original120-setup-real-price-economics-once.yml crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_official_source_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_one_db_from_shards.py; do
+            test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo MONSTER_ORIGINAL120_CODE_OR_SOURCE_READER_CHANGED; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER_ORIGINAL120_PRICE_ECONOMICS_RESEARCH_ONLY_NO_DEPLOY_NO_BUY
