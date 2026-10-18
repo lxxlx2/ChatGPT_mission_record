@@ -24,7 +24,7 @@ NO_GO = {"public_executable_U": "UNRESOLVED", "follower_1_5_15min_net_pnl": "UNR
 
 
 def git_blob_sha(raw: bytes) -> str:
-    return hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\\0" + raw).hexdigest()
+    return hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + bytes((0,)) + raw).hexdigest()
 
 
 def read_all(root: Path = RESEARCH) -> dict:
