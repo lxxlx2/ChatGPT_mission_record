@@ -57,11 +57,11 @@ Current capital / holdings:
 
 ## 地址分析 / 449 个 EVM 聪明钱钱包（研究阶段）
 
-**当前只做活跃度初筛，不做单个钱包盈利深挖。** [前320钱包简明进度](address-analysis/state/activity-screening-001-320.md) · [统一候选及原地址表](address-analysis/evidence/activity-candidates-001-320.json) · [分批研究队列](address-analysis/state/progress.md)。
+**目前先完成449地址活跃度初筛，再研究活跃钱包盈亏。** [前340地址简明进度](address-analysis/state/activity-screening-001-340.md) · [当前活跃候选表](address-analysis/evidence/activity-candidates-001-340.json) · [分批队列](address-analysis/state/progress.md)。
 
-截至2026-10-18：固定历史BSC/Ethereum/Base窗口筛查 **320/449（71.3%）**，**185个保留活跃**、**135个三链无签名增长暂缓**、**129个未查**。本次完成五批Batch012–016共100地址（50活跃/50暂缓）；下一批Batch017 #321–340。前120地址全三链检查，之后早停；**没有签名不等于其它链不活跃，被动转账和实时活跃无法用此证明，也不能当盈利结果**。完整钱包月度、长期PnL核算仍为 **0/449**，单币获利不能代表全部钱包盈利。
+截至2026-10-19，固定历史BSC/Ethereum/Base区块筛查完成 **340/449（75.7%）**；**187个活跃候选**、**153个三链签名无增长暂缓**、**109个待查**。本次 Batch017 #321–340 只有 #323/#324 有BSC主动签名，其余18个三链均无签名增长；下一批 Batch018 #341–360。历史活动不等于当前活动或实际盈利。完整钱包月度、长期 PnL 完成仍 **0/449**，待全部名单初筛后再统一研究活跃钱包盈亏。
 
-PR #97 Draft；`RESEARCH_ONLY / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。不动旧PR#40 BSC模型、Frank、Monster或生产监控。
+PR #97 Draft；`RESEARCH_ONLY / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`；不修改旧 BSC 模型、Frank、Monster及其它生产模块。
 
 ## Canonical module files
 

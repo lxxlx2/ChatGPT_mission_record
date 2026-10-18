@@ -1,12 +1,12 @@
 # 地址分析 / oooooyoung EVM 钱包按批盈利审计
 
 Updated: 2026-10-18 Asia/Bangkok
-Status: `RESEARCH_ONLY / BATCH_001_TO_016_SCREENED_WITH_FIRST_HIT_MODE / WHOLE_WALLET_PNL_INCOMPLETE`
+Status: `RESEARCH_ONLY / BATCH_001_TO_017_SCREENED_WITH_FIRST_HIT_MODE / WHOLE_WALLET_PNL_INCOMPLETE`
 Scope: independent Mission research module, no connection to the existing PR #40 BSC address modeling or live Frank/Monster signals.
 
 ## Current priority: 449-wallet activity first (2026-10-18)
 
-**320/449 screened**, **185 signed-active** and **135 signed-zero across BSC/Ethereum/Base**; next **Batch017 rows321–340**. [Current 320-wallet shortlist](evidence/activity-candidates-001-320.json) · [Batch015](evidence/batch-015-first-hit-bsc-eth-base-nonce.json) · [Batch016](evidence/batch-016-first-hit-bsc-eth-base-nonce.json) · [Simple progress](state/activity-screening-001-320.md). BSC-first + fallback + first positive stops additional queries; the first 120 wallets used full tri-chain queries. No wallet PnL conclusions until screening completes; unverified labels remain unverified.
+**340/449 screened**, **187 signed-active** and **153 signed-zero across BSC/Ethereum/Base**; next **Batch018 rows341–360**. [Current 340-wallet shortlist](evidence/activity-candidates-001-340.json) · [Batch017](evidence/batch-017-first-hit-bsc-eth-base-nonce.json) · [Simple progress](state/activity-screening-001-340.md). BSC-first + fallback + first positive stops additional queries; the first 120 wallets used full tri-chain queries. No wallet PnL conclusions until screening completes; unverified labels remain unverified.
 
 ## Objective and fixed universe
 
