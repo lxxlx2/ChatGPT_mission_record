@@ -175,3 +175,10 @@ Stage163 V3报价证据固定SHA `15edf022d8b99071701357dfd51d7534f3470409` 已�
 - **审核**：该新增查询器代码固定SHA的外部其他AI review仍`NOT_DONE`，完整可复制的局部审核任务写在[代码/测试/CI/审核包](MONSTER_OPERATOR_FULL_WINDOW_SIGNAL_VISIBILITY_IMPLEMENTATION_AND_REVIEW_20261018.md)。不得因为旧查询器P2通过就挪用其他AI审查结论；同样不能凭新显示排序推出更多SETUP或历史盈利。
 
 本工作是**可用性设计实际代码落地**，不是阶段性策略收益证实。当前无真实用户Mac上的持续Monster独立研究SQLite可读/应用上线证据；不存在可以直接交付的现时BUY。仍`G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，用户无需提供Mac、钱包、密钥或金额。真正后续价值仍须在冻结的新Spot时间窗口成熟并取得官方档案后做同源全市场Fair8/FIFO8 SETUP实证，以及同一事件真实进出盘口与执行成本；Stage99继续停用。
+
+
+## 十六、Opportunity查询器历史as-of事件时钟P2修复（2026-10-18）
+
+从真实Shadow生产状态持久化机制核对，原`d2_reviews.status`与`source_state`均会被原地修改，不能给历史`--asof-ms`提供逐时点事实。Claude对旧审核SHA `731a0dfad0a78e77c53d20dbea3e375aaa9e55e1` 给 `REQUEST_CHANGES`（P2-1），已确认上一轮`LIMIT`遮挡修复成立。**本次作者新冻结源码/测试SHA `456111143f5ea1ac2e32103f71ea50dc5a27d078`，对比旧被审SHA`731a0df...`**，只改同一查询器和测试，不改生产Shadow、D0/D1/D2及工作流：以真实`D2_LIQUIDITY/D2_NOT_SPOT/D2_LATE`事件时间推D2状态，以`SOURCE_DEGRADED/SOURCE_RECOVERED`事件历史推指定asof的数据源降级或恢复；已保存`candidate_queue.status`的未来变更不再用来倒写过去的INVALIDATED/LATE，队列没有可证事件时以`UNRESOLVED_ASOF`表示。只能得知已保存事件的当时可见状态，**不是全历史真实市场PIT**。
+
+已增至机会查询器 **15/15**、原Shadow **31/31**、D2 **12/12**真实测试通过，旧研究工作流[CI #39128008157](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39128008157) **23/23 steps SUCCESS**；首次单独脚本提交失败的[#39127921607](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39127921607)保留为历史测试/修复轨迹。另加50,000一次读取安全阈值（超额报错而非静默抽样）、数据库连接显式close、WAL sidecar副作用披露、D2研究流动性不代表实际Fill字段。完整[修复详情及固定SHA审核包](MONSTER_OPERATOR_ASOF_EVENT_TIME_P2_FIX_AND_REVIEW_20261018.md)。**新独立其他AI审查仍NOT_DONE**；真实Mac/交易所同刻可成交盘口/历史全PIT、收益仍未验证；G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE。
