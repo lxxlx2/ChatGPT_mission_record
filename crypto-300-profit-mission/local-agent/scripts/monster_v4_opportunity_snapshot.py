@@ -174,7 +174,12 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
                 "watch_lookback_window_ms": why.get("research_window_ms"),
                 "watch_quote24_at_trigger": why.get("quote24_usdt"),
                 "watch_classification": why.get("classification"),
-                "d1_last_error": q["last_error"],
+                # candidate_queue.last_error is mutable and has NO per-error
+                # occurrence timestamp. failures(stage='D1') stores only venue,
+                # not a candidate/episode ID, so it cannot safely be joined.
+                # Never promote a later D1 failure into an earlier --asof-ms.
+                "d1_last_error": None,
+                "d1_last_error_history_status": "UNRECONSTRUCTABLE_FROM_MUTABLE_QUEUE_FIELD",
                 "latest_quote_utc": utc_time(quote["observed_ms"]) if quote else None,
                 "symbol_quote_state": quote_state,
                 "symbol_quote_age_seconds": quote_age_ms // 1000 if quote_age_ms is not None else None,
