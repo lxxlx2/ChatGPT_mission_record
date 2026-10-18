@@ -1,0 +1,49 @@
+name: Frank PR101 Mac evidence and C02 archived GET-only review
+
+on:
+  push:
+    branches:
+      - ops/frank-pr101-safari-evidence-and-c02-archive-20261018
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  isolated-qa-syntax-proxy-and-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Pin exact tested tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "F01_C02_QA_EXACT_HEAD=$GITHUB_SHA"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline Python and JavaScript test of new features
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/frank_pr101_safari_evidence.py
+          node --check mission_agent/mission_control/static/app.js
+          node --test tests/test_frank_c02_archive_readonly.cjs tests/test_frank_candidate_sections.cjs tests/test_frank_candidate_sections_dom.cjs tests/frank_f01_primary_freshness.cjs tests/frank_source_context_mount.cjs tests/frank_source_context_render.cjs
+      - name: Install existing Python test requirements
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3
+      - name: Offline local-host GET-only and evidence ZIP tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_pr101_safari_evidence.py tests/test_mission_control_dashboard.py tests/research/test_frank_dashboard_priority_layout.py
+      - name: Full project local-agent regression with existing historical Git replay
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests

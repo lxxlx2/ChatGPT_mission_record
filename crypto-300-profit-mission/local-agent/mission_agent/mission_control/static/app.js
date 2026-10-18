@@ -868,6 +868,35 @@ async function loadLatestCluster(mint, silent=false) {
   }
 }
 
+async function loadArchivedClusterReadOnly() {
+  const mint = $('cluster-mint').value.trim();
+  if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint)) {
+    clusterStatus('error', '请输入有效的 Solana CA', '只读取本地已保存的分析，不发起链上扫描。');
+    return;
+  }
+  const button = $('cluster-archive-load');
+  button.disabled = true;
+  try {
+    const report = await get('/api/cluster-latest?mint=' + encodeURIComponent(mint));
+    if (!report || report.mint !== mint) throw new Error('ARCHIVE_IDENTITY_UNAVAILABLE');
+    // Read-only archival lookup must never present a saved Jupiter quote as
+    // current, even if its original observation was less than 30 seconds ago.
+    const archive = {...report};
+    if (archive.execution_quote_30_usdc) {
+      archive.execution_quote_30_usdc = {...archive.execution_quote_30_usdc,
+        is_current_at_response:false, freshness_status:'ARCHIVED_NOT_LIVE'};
+    }
+    renderClusterReport(archive);
+    clusterStatus('info','已读取本地历史分析（只读）',
+      '不是当前链上扫描；权限、余额、价格和钱包归因均以报告生成时间为准，历史成交报价不可直接使用。');
+  } catch (_) {
+    clusterStatus('error','没有可读取的本地历史分析',
+      '没有请求任何新的链上 RPC；如需实时扫描，需另行批准。');
+  } finally {
+    button.disabled = false;
+  }
+}
+
 function setView(name) {
   const view = name === 'cluster' ? 'cluster' : 'signals';
   const heading=$('product-title');
@@ -891,6 +920,8 @@ document.querySelectorAll('.view-tab').forEach(btn => {
 
 window.addEventListener('hashchange', () => setView(window.location.hash.slice(1)));
 setView(window.location.hash.slice(1));
+
+$('cluster-archive-load').addEventListener('click', loadArchivedClusterReadOnly);
 
 $('cluster-preset').addEventListener('change', (e) => {
   $('cluster-preset-help').textContent = clusterPresetHelp[e.target.value] || '';
