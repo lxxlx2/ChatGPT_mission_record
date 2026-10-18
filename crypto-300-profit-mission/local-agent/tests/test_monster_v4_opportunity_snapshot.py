@@ -1,5 +1,8 @@
 """End-to-end offline query test against the real Monster shadow SQLite schema."""
 import importlib.util
+import json
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -306,6 +309,54 @@ class TestOperatorSnapshot(unittest.TestCase):
         self.assertEqual(normal["window_total"], 2)
         self.assertEqual(normal["hidden_by_display_limit"], 0)
         self.assertEqual(normal["trading"], "NO_GO")
+
+
+    def test_d1_future_failure_is_not_leaked_into_same_past_asof_json_cli(self):
+        # Reproduce the independent Codex P2 using the real writer, real WAL
+        # SQLite schema and the real user-visible CLI (not a mocked queue).
+        self.watch()
+        asof = BASE + 180_000
+        def cli():
+            run = subprocess.run(
+                [sys.executable, "-B", str(SCRIPTS / "monster_v4_opportunity_snapshot.py"),
+                 "--db", str(self.path), "--asof-ms", str(asof), "--format", "json"],
+                capture_output=True, text=True, check=True)
+            self.assertEqual(run.returncode, 0)
+            return json.loads(run.stdout)
+
+        before = cli()
+        self.assertEqual(before["window_total"], 1)
+        self.assertEqual(before["opportunities"][0]["signal"], "WATCH_RESEARCH_ONLY")
+        self.assertIsNone(before["opportunities"][0]["d1_last_error"])
+        self.assertEqual(before["opportunities"][0]["d1_last_error_history_status"],
+                         "UNRECONSTRUCTABLE_FROM_MUTABLE_QUEUE_FIELD")
+
+        def future_d1_failure(venue, symbol, now_ms):
+            raise OSError("FUTURE_D1_FETCH_FAILURE")
+
+        failed_at = BASE + 600_000
+        result = m.process_queue(self.db, failed_at, future_d1_failure)
+        self.assertEqual(result["deferred"], 1)
+        current_queue = self.db.execute(
+            "SELECT last_error FROM candidate_queue WHERE symbol='AAAUSDT'").fetchone()
+        self.assertIn("FUTURE_D1_FETCH_FAILURE", current_queue["last_error"])
+        recorded = self.db.execute(
+            "SELECT observed_ms FROM failures WHERE stage='D1'").fetchone()
+        self.assertEqual(recorded["observed_ms"], failed_at)
+        self.assertGreater(recorded["observed_ms"], asof)
+
+        after = cli()
+        self.assertEqual(before, after)
+        self.assertIsNone(after["opportunities"][0]["d1_last_error"])
+        self.assertNotIn("FUTURE_D1_FETCH_FAILURE", json.dumps(after))
+        # Even when queried later, a mutable error cannot be assigned to
+        # this episode at a precise historical time.
+        later = viewer.read_snapshot(self.path, failed_at)
+        self.assertIsNone(later["opportunities"][0]["d1_last_error"])
+        self.assertEqual(later["opportunities"][0]["d1_last_error_history_status"],
+                         "UNRECONSTRUCTABLE_FROM_MUTABLE_QUEUE_FIELD")
+        self.assertEqual(later["trading"], "NO_GO")
+
 
 
 if __name__ == "__main__":
