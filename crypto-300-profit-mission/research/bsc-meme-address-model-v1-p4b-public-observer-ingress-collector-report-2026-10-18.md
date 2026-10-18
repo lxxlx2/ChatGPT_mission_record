@@ -48,9 +48,21 @@ Ethereum/Geth 官方原始订阅语义明确：相同区块里的日志可能在
 **定向修复结果：**
 
 - Python 原共享 `validate_event()` 会先验证 `network=bnb-mainnet`、23/19 集合、事件 ID 唯一性、原始帧 SHA、所报告的时钟质量、固定历史交易黑名单。已上链 log 的 `removed=true` 现须再次满足与包含事件**同级别的 token CA、钱包收款 topic、tx、blockHash、logIndex、数量及发送方 topic** 完整验证，才可成为结构化撤销证据；普通 `REJECTED_EVIDENCE` 不会产生任何撤销副作用。重复 ID、错误网络、同 tx 的其他钱包/CA、数量/发送方冲突不得撤销第一条；原本同批次真正 `removed` 仍撤销且 `target_windows_utc` 清空。
-- 单一原始日志即使被复制成不同 `event_id`，同样绑定交易/区块/钱包/Token/数额后进行去重，不能重复计入候选。该去重的证据作用**仅限同一次输入批次**，并未解决不同采集文件跨批去重或跨批链重组。
+- 同一链上位置 `bnb-mainnet + blockHash + txHash + logIndex` 只能对应一条规范化内容；同位置同内容换 `event_id` 或 JSON 序列化只计一次；同位置金额、sender、区块号、CA 或 wallet 有冲突时，两份 INCLUDED 均标 `LOG_IDENTITY_CONFLICT` 并清空延迟目标，不作为有效候选。`REMOVED` 仍需与原 INCLUDED 的 CA、wallet、blockNumber、sender topic、金额等内容严格一致才能撤销，**不同内容的 tombstone 无权更改原候选**。证据作用仅限同一输入批次，不保证跨批去重和跨批重组。
 - `+60/+300/+900 秒` 的 UTC 算术集中校验。极端 `9999-12-31T23:59:59Z` 在 pending 与 mined-log 均返回明确 `UTC_DELAY_WINDOW_OUT_OF_RANGE`，合法的同批其他记录继续处理，而不是中断整个导入。
 - Node.js 限时只读采集器在订阅之前必须先通过 `eth_chainId` 验证 `0x38`，不匹配即拒绝订阅和归档失败状态；收到 SIGTERM 后走同一 `finish()` 写盘并以 143 退出。分别追加完全在 Node 进程内覆盖 `WebSocket` 的离线模拟测试，证明 BNB 正确路径有真实接收帧与终止证据，错误 chain ID 不开启订阅、不产生事件文件中的假数据（仅写失败状态）。**没有接入任何真实公共 RPC/WSS、未启动后台监听。**
 - **仍未解决的信任边界：** `raw_sha256` 只锁定消息帧原始字节，`observer_received_utc`、`observer_monotonic_ns` 及 provider/capture 端字段本身仍是自报，不存在可被本次离线复算独立验证的防倒签、第三方时间公证。已发生的历史新区块事件换上新的自报 UTC 可能得到 `UNATTESTED` 候选，但始终不能生成 `first_public_observer_received_utc`、经过鉴证的公网 U、经审计可执行跟单报价或盈利。该问题必须在**未来真实受控实测的来源与时钟证明**中解决，不能继续对老历史区块逐条添加黑名单。真正公平样本外跟单回测仍未开始。
 
 当前代码不得因为单元测试通过而被自我标为独立 `APPROVE`。保留 `PENDING_OTHER_AI_REVIEW`、`P4-B/P4-C=PARTIAL`、`PUBLIC_EXECUTABLE_U=UNRESOLVED`、`P5=BLOCKED`、`PRODUCTION=NO_GO`。最后一次完整 CI、审核比较 SHA 与来源由 PR #40 的新固定版本评论补充。
+
+## 五、2026-10-19 第二次独立 `REQUEST_CHANGES`：相同链上日志位置的冲突版本隔离
+
+独立审查结果 `REQUEST_CHANGES@e7caa4caee517ef39ea436dfe34aa34fab6c22db`，比较基线 `c8482d1e2d5c44fb7e712538def09abd33a5739d`。旧 P2 四类撤销注入、旧 P3 两种 UTC 溢出、Node 链 ID/SIGTERM 离线测试均通过，但新 P2 是：已有 `_validated_log_key` 把金额、sender topic、blockNumber 等**内容**混进**位置身份**，导致同 `blockHash/txHash/logIndex` 但内容不同的两个 INCLUDED 被计为两个候选；如再追加与原 A 完全匹配的 REMOVED，旧代码只撤销 A，伪造 B 继续保留 60/300/900 秒窗口。原报告称“同一原始日志不能重复计入”过宽，已在上文收紧到有界单批**位置去重 + 内容一致性隔离**。
+
+本轮新实现分别采用：
+- 稳定位置：`("bnb-mainnet", blockHash, txHash, logIndex)`，不包含 CA、wallet、sender topic、blockNumber、amount。
+- 规范化内容：位置 + exact CA + original receiver EOA + blockNumber + sender topic + ERC20 raw amount。上述字段均先通过原 `validate_event`、真实消息帧 SHA 与 23 EOA/19 CA 范围校验。大小写或 JSON 字节序列化变化不会创建新位置。
+- 相同位置、内容一致：第二份 `DUPLICATE_ORIGINAL_LOG_IDENTITY`，只算一条；相同位置、任一内容冲突：所有同位置已接受的 INCLUDED 均 `LOG_IDENTITY_CONFLICT`，`target_windows_utc=null`；后续同位置重复也不解封。严格的 `REMOVED` 仍必须完整匹配原内容才能撤销，错误网络或另一个 CA/EOA/金额的 tombstone 不触发撤销副作用。真实同块、同内容 REMOVED 对没有冲突的候选继续产生 `REORG_REVOKED_POSTBLOCK_LOG`。
+- 冲突数单列 `counts.log_identity_conflicts`，不冒充历史发生的交易亏损，也不冒充来自独立公网的时钟/地址审核成功。记录保留原始数据供离线核验。
+
+测试单独加入四组方法、覆盖多种子例：金额、sender、blockNumber、CA、wallet 冲突的 `[A,B]`；匹配 A 的真实 REMOVED 与 `[A,B,R]` / `[R,B,A]`；同内容不同格式但不同 event ID；同交易不同 logIndex 本来就属于另一个位置。旧 P2/P3/链身份/中断落盘测试均保留。任何正式批准仍需独立 other-AI 在**新固定 SHA**定向复审，之前被拒绝的 SHA 仍为 `REQUEST_CHANGES`。所有结果仍为**只读离线证据门禁**，没有真实 BNB 节点连接、没有可交易 U/P5 成果。
