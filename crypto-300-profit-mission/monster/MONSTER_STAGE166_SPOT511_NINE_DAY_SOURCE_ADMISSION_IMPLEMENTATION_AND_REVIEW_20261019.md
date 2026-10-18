@@ -29,3 +29,17 @@
 ## 下一步真正可交付
 
 等待真实七日窗2026-10-24T22:06Z结束且官方Publisher对最后的10月24日实际发布日ZIP和CHECKSUM之后，**一次用户对话触发手工官方来源取得**，严守511已锁人口与动态变更证据的缺口，将全部4599 attempt过本Stage166工具；依据校验结果才决定可评估符号与删失，之后使用冻结Spot同源原D0/D1/Fair8逐时运行3360格并结合同时刻entry ask/exit bid、手续费名义仓位做`G4`审计。不存在当前批准盈利模型或部署的依据。
+
+## 五、Codex 独立固定 SHA 复审：APPROVE（2026-10-19）
+
+**独立审核结论：`APPROVE`；P0=0/P1=0/P2=0。** 审核者 Codex，底层准确模型版本 `UNVERIFIED`。唯一审核 SHA `30a87f0a21097d9a6bc1c3a6d5d91c403f0f36cf`，比较基线 `0248be50cbff976b16f51fe3c7f55e05e247f306`。审核工作区为独立 detached HEAD `/tmp/monster166-review-30a87f0a`，最后工作树干净，没有替换当前PR HEAD。此节**取代本文原先的 `Stage166独立其他AI review=NOT_DONE` 时点状态**，不追溯改写先前进度记录。
+
+**Codex独立取得原正式T0 HTTP ZIP原字节**，SHA256 `b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b`；直接解析 `exchangeInfo.response.raw.json` 得到Spot交易未禁止、quote=USDT、status=TRADING唯一511个，另214个同一权限口径的BREAK币与511完全不重叠。源日期2026-10-16至2026-10-24共9 UTC日、精确4599个文件准入条目。
+
+审查方**独立制作源CSV/ZIP/CHECKSUM正反例**：合法1440行微秒1m文件通过；错误SHA、删一中间分钟且重算哈希、毫秒替代微秒且重算哈希、重复分钟且重算哈希、低价大于开盘或收盘、NaN收盘均拒绝；未来尚未结束交易日即使本地提供数据也保持 `UTC_DAY_NOT_YET_ENDED`；原输出文件存在时拒绝覆盖并保持字节不变。审核真正的冻结时间 `2026-10-18T16:00:00Z` 空目录CLI产生：SOURCE_NOT_SUPPLIED 1022、UTC_DAY_NOT_YET_ENDED 3577、VERIFIED_FULL_DAY_1440 0，4599条完整JSON与CI原Artifact**逐字节相同**，SHA256 `975be1ae1c5a8982a5ba6902b24a048f0be92d7d1bc75d92fdff7768fb3b25f1`。
+
+Codex独立执行 `python3 -B -m unittest` 9/9通过、`py_compile`与额外反例成功，复查[成功CI #39152182853](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39152182853)固定触发SHA及原Job日志，10/10成功步骤；并核实[最早失败CI #39152106082](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39152106082)仅因为测试访问不存在的0计数键 `KeyError: 'VERIFIED_FULL_DAY_1440'`，`7800010c`测试改 `.get(...,0)` 后通过，实际来源准入逻辑未放宽。测试环境Python 3.14.7。
+
+**审查局限仍在**：正式10月16-24共4599份Binance日级ZIP/CHECKSUM未被本阶段获取或核验；空目录的SOURCE_NOT_SUPPLIED不证明发布方没有文件；来源SHA可校验也不等于取得过程的来源证明、动态上市身份/PIT、bid/ask、全7日真实D0/D1公平队列回放、盈利或G4/G6通过。Stage165已批准无需复核。**本阶段不需再反复外部审核已批准固定SHA**，把研发转回完整七日前瞻真实源收集和可执行收益决定。
+
+PR#30保持Draft且未合并；`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`不变。
