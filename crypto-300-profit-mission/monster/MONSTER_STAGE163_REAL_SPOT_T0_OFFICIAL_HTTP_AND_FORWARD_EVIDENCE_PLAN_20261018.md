@@ -147,3 +147,11 @@
 **薄盘口**：V3保留511个source eligible交易对原始行，把锁定盘口、零数量逐币标记为`LOCKED_QUOTE`/`ZERO_DISPLAYED_SIZE`，单币此类状态不再取消整个市场分母；仅有效双边报价进入深度分位数，同时记真实深度可评价分母。真实本次分类 **`511/0/0`**，它不是未来市场规则测试中的所有币都必然有效。交叉/NaN/负量、缺来源等仍拒绝。旧原始源字节/历史价差完全未改。
 
 完整 [V3 Claude P1-E/P2-A/P2-B审核任务](MONSTER_STAGE163_SPOT_POST_T0_CLOCK_BRIDGE_V3_CLAUDE_REVIEW_20261018.md) 已固定代码比较、V3事实、旧V1/V2保全/新S3引用；**新其他AI实际复审暂未完成**，不可回溯把旧REQUEST_CHANGES改为APPROVE。更不代表Stage163完整前瞻OOS、实时D0/D1、真实手续费/退出盘口已经获得；G4 UNKNOWN/G6 NO_GO，NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE持续，Frank与本地监控不动。
+
+## 十三、Stage163 V3 Codex 最终独立批准归档（2026-10-18）
+
+2026-10-18用户转交Codex独立复审 **APPROVE（唯一证据完整审核SHA `15edf022d8b99071701357dfd51d7534f3470409`）**，对比上轮 `REQUEST_CHANGES` 的固定SHA `4c6bff916bb432ba778c59e6283c5a75e2902293`，代码/实际Actions触发SHA `59c546af14cc42ab2be6e8e2af9a5c1d7d55f7be`，准确底层模型版本`UNVERIFIED`。原P1-E证据V1失效与V2/V3树锚点、P2-A双Time探针条件时钟桥、P2-B零量/锁定盘口不阻断511报告 **全部CLOSED**，新增P0/P1/P2均0。
+
+Codex独立从原BINANCE HTTP ZIP和6份来源SHA重算，511样本中合成锁定1、零量2仍保留完整分母、可评价深度508/511；独立重算名义深度分位数与脚本相同；原官方归档SHA不变。Codex实际验证固定SHA的12/12 Python测试、编译、CLI与 [Actions #39084681931](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39084681931)日志PASS、发布Artifact与固定证据树V3逐字节一致，机器内容SHA256`819210d88d5794081238af6439d5139c08064c9c8e9a01d0a6e6eaff1c02864d`。非阻断精度说明：采用独立微秒Decimal直接计时得时钟差条件包络上界+755.803ms，而代码用timedelta/2结果+755.802ms，相差**0.001ms**；其不能认证盘口真实变动时间、不影响结论，毋须为了本固定批准反复开新AI审核。
+
+**明确结项范围**：`STAGE163_V3_HISTORICAL_QUOTE_EVIDENCE_AND_CODE=APPROVED_15EDF022`，不是D0→D1→D2收益/监控/部署准入。完整批准证据与旧结论见 [Stage163 V3审核归档](MONSTER_STAGE163_SPOT_POST_T0_CLOCK_BRIDGE_V3_CLAUDE_REVIEW_20261018.md) 第五节；后续若代码变动只审核新变更，不重开已关闭的P1/P2。**真实商业主线**：可因果复现WATCH/SETUP的首次发现时间和升级、同一市场同一事件时点新鲜bid/ask深度及账户成本、漏报和全资金账本；已有Stage30历史亏损及Stage152费用代理负中位证明不能把“早看到2×上涨”当BUY。固定七日前瞻档案未成熟；不伪造未来样本。依然`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
