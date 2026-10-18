@@ -69,7 +69,7 @@ class Stage166Tests(unittest.TestCase):
             publisher_fixture(Path(d),corrupt=True)
             r=m.build_report(Path(d),datetime(2026,10,18,16,tzinfo=timezone.utc))
             self.assertEqual(r["admission_counts"]["SOURCE_REJECTED_OR_INCOMPLETE"],1)
-            self.assertEqual(r["admission_counts"]["VERIFIED_FULL_DAY_1440"],0)
+            self.assertEqual(r["admission_counts"].get("VERIFIED_FULL_DAY_1440",0),0)
 
     def test_millisecond_rows_cannot_impersonate_spot_microseconds(self):
         with tempfile.TemporaryDirectory() as d:
