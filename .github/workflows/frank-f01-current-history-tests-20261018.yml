@@ -38,7 +38,7 @@ jobs:
           node --check mission_agent/mission_control/static/app.js
           node --check mission_agent/mission_control/static/frank_candidate_sections.js
           node --check mission_agent/mission_control/static/frank_f01_primary_freshness.js
-          node --test tests/test_frank_candidate_sections.cjs tests/test_frank_candidate_sections_dom.cjs
+          node --test tests/test_frank_candidate_sections.cjs tests/test_frank_candidate_sections_dom.cjs tests/frank_f01_primary_freshness.cjs tests/frank_source_context_mount.cjs tests/frank_source_context_render.cjs
       - name: Install existing Python developer dependencies
         working-directory: crypto-300-profit-mission/local-agent
         run: |
