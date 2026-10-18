@@ -1,0 +1,189 @@
+"""Public observer inbox gate tests: synthetic data is NEVER strategy evidence."""
+import base64
+import copy
+from datetime import datetime, timezone
+import hashlib
+import json
+import shutil
+import tempfile
+import unittest
+from pathlib import Path
+
+import bsc_meme_address_model_v1_p4b_public_observer_ingress_gate as gate
+
+
+class PublicObserverIngressEvidenceTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.prefreeze, cls.grid = gate.load_frozen()
+        cls.example = cls.prefreeze["cases"][2]
+
+    def valid_event(self):
+        row = {
+            "event_id": "SYNTHETIC_FIXTURE_ONLY_001",
+            "network": "bnb-mainnet",
+            "wallet": self.example["original_owner"],
+            "exact_ca": self.example["exact_ca"],
+            "tx_hash": self.example["first_signed_buy_tx"],
+            "capture_kind": "PUBLIC_PENDING_TRANSACTION_INGRESS",
+            "observer_received_utc": "2026-10-18T10:00:00.000000Z",
+            "capture_machine_id": "SYNTHETIC_MAC_ID",
+            "provider_id": "SYNTHETIC_PUBLIC_NODE",
+            "observer_monotonic_ns": 123456789000,
+            "clock_sync": {"sync_state": "REPORTED_SYNCED",
+                           "source": "SYNTHETIC_CLOCK",
+                           "max_abs_offset_ms": 0.5},
+        }
+        payload = {"jsonrpc": "2.0", "params": {"result": {
+            "hash": row["tx_hash"],
+            "from": row["wallet"],
+            "to": "0x" + "1" * 40,
+            "blockNumber": None,
+        }}}
+        raw = json.dumps(payload, sort_keys=True).encode("utf-8")
+        row["raw_event_base64"] = base64.b64encode(raw).decode("ascii")
+        row["raw_sha256"] = hashlib.sha256(raw).hexdigest()
+        return row
+
+    def doc(self, events):
+        return {"schema": "BSC_P4B_PUBLIC_OBSERVER_INGRESS_V1", "events": events}
+
+    def check(self, event):
+        out = gate.ingest_document(self.doc([event]), self.grid)
+        return out["records"][0], out["counts"]
+
+    def test_original_five_historical_cases_have_no_first_seen(self):
+        out = gate.historical_summary(self.prefreeze)
+        self.assertEqual(out["selected_cases"], 5)
+        self.assertEqual(out["usable_public_first_seen_records"], 0)
+        self.assertEqual([x["case"] for x in out["cases"]],
+                         ["DDAC_DRAGON", "239E_DRAGON_R2", "8E6B_HAJIMI",
+                          "A83B_NIULAI", "877AF_MARSCOIN"])
+        for row in out["cases"]:
+            self.assertIsNone(row["first_public_observer_received_utc"])
+            self.assertIsNone(row["target_windows_utc"])
+            self.assertEqual(row["observer_60_300_900_real_fills"], "UNRESOLVED")
+
+    def test_offline_candidate_is_unverified_even_if_all_self_reported_fields_match(self):
+        record, summary = self.check(self.valid_event())
+        self.assertEqual(record["state"], "PENDING_OWNER_TX_CAPTURE_CANDIDATE_UNATTESTED")
+        self.assertIsNone(record["first_public_observer_received_utc"])
+        self.assertEqual(record["first_local_observer_received_utc_claim"],
+                         "2026-10-18T10:00:00.000000Z")
+        self.assertEqual(record["target_windows_utc"],
+                         {"60": "2026-10-18T10:01:00.000000Z",
+                          "300": "2026-10-18T10:05:00.000000Z",
+                          "900": "2026-10-18T10:15:00.000000Z"})
+        self.assertEqual(summary["verified_public_executable_U"], 0)
+        self.assertEqual(summary["proven_net_profitable_follower"], 0)
+
+    def test_historical_block_replay_is_not_live_capture(self):
+        x = self.valid_event()
+        x["capture_kind"] = "HISTORICAL_BLOCK_TIMESTAMP"
+        r, _ = self.check(x)
+        self.assertEqual(r["reason"], "HISTORICAL_OR_SIMULATED_CAPTURE_NOT_LIVE")
+        self.assertIsNone(r["first_public_observer_received_utc"])
+
+    def test_raw_mutation_without_sha_update_rejected(self):
+        x = self.valid_event()
+        x["raw_sha256"] = "a" * 64
+        self.assertEqual(self.check(x)[0]["reason"], "RAW_EVENT_SHA256_MISMATCH")
+
+    def test_forged_tx_hash_inside_raw_rejected(self):
+        x = self.valid_event()
+        payload = {"hash": "0x" + "a" * 64, "from": x["wallet"], "blockNumber": None}
+        raw = json.dumps(payload).encode()
+        x["raw_event_base64"] = base64.b64encode(raw).decode()
+        x["raw_sha256"] = hashlib.sha256(raw).hexdigest()
+        self.assertEqual(self.check(x)[0]["reason"], "RAW_EVENT_TX_HASH_OR_FROM_MISMATCH")
+
+    def test_forged_original_signer_inside_raw_rejected(self):
+        x = self.valid_event()
+        raw = json.dumps({"hash": x["tx_hash"], "from": "0x" + "a" * 40}).encode()
+        x["raw_event_base64"] = base64.b64encode(raw).decode()
+        x["raw_sha256"] = hashlib.sha256(raw).hexdigest()
+        self.assertEqual(self.check(x)[0]["reason"], "RAW_EVENT_TX_HASH_OR_FROM_MISMATCH")
+
+    def test_confirmed_block_replay_not_pending(self):
+        x = self.valid_event()
+        raw = json.dumps({"hash": x["tx_hash"], "from": x["wallet"], "blockNumber": "0x5"}).encode()
+        x["raw_event_base64"] = base64.b64encode(raw).decode()
+        x["raw_sha256"] = hashlib.sha256(raw).hexdigest()
+        self.assertEqual(self.check(x)[0]["reason"], "RAW_EVENT_IS_CONFIRMED_BLOCK_REPLAY")
+
+    def test_bare_hash_cannot_verify_real_signer(self):
+        x = self.valid_event()
+        raw = json.dumps({"hash": x["tx_hash"]}).encode()
+        x["raw_event_base64"] = base64.b64encode(raw).decode()
+        x["raw_sha256"] = hashlib.sha256(raw).hexdigest()
+        self.assertEqual(self.check(x)[0]["reason"], "RAW_EVENT_TX_HASH_OR_FROM_MISMATCH")
+
+    def test_invalid_base64_does_not_crash(self):
+        x = self.valid_event()
+        x["raw_event_base64"] = "$invalid!"
+        self.assertEqual(self.check(x)[0]["reason"], "RAW_EVENT_NOT_BASE64")
+
+    def test_fake_source_wallet_or_out_of_cohort_ca_rejected(self):
+        x = self.valid_event()
+        x["wallet"] = "0x" + "a" * 40
+        self.assertEqual(self.check(x)[0]["reason"], "OUTSIDE_FROZEN_23X19")
+        y = self.valid_event()
+        y["exact_ca"] = "0x" + "b" * 40
+        self.assertEqual(self.check(y)[0]["reason"], "OUTSIDE_FROZEN_23X19")
+
+    def test_non_utc_timestamp_fails_no_fallback(self):
+        x = self.valid_event()
+        x["observer_received_utc"] = "2026-10-18T17:00:00+07:00"
+        self.assertEqual(self.check(x)[0]["reason"], "UTC_Z_REQUIRED")
+
+    def test_clock_unsynchronized_fails(self):
+        x = self.valid_event()
+        x["clock_sync"]["sync_state"] = "UNKNOWN"
+        self.assertEqual(self.check(x)[0]["reason"], "CLOCK_SYNC_CLAIM_MISSING_OR_INVALID")
+
+    def test_boolean_monotonic_clock_fails(self):
+        x = self.valid_event()
+        x["observer_monotonic_ns"] = True
+        self.assertEqual(self.check(x)[0]["reason"], "INVALID_MONOTONIC_CLOCK")
+
+    def test_repeated_record_id_is_rejected_not_replaced(self):
+        x = self.valid_event()
+        out = gate.ingest_document(self.doc([x, copy.deepcopy(x)]), self.grid)
+        self.assertEqual(out["counts"]["rejected"], 1)
+        self.assertEqual(out["records"][1]["reason"], "DUPLICATE_OR_MISSING_EVENT_ID")
+        self.assertEqual(out["counts"]["verified_public_executable_U"], 0)
+
+    def test_unbounded_input_rejected(self):
+        with self.assertRaisesRegex(ValueError, "INGRESS_EVENTS_NOT_BOUNDED"):
+            gate.ingest_document(self.doc([{}] * 501), self.grid)
+
+    def test_wrong_schema_rejected(self):
+        with self.assertRaisesRegex(ValueError, "INGRESS_SCHEMA_INVALID"):
+            gate.ingest_document({"events": []}, self.grid)
+
+    def test_invalid_empty_record_still_gated(self):
+        r = gate.ingest_document(self.doc([{}]), self.grid)
+        self.assertEqual(r["counts"]["rejected"], 1)
+        self.assertEqual(r["counts"]["verified_public_executable_U"], 0)
+        self.assertEqual(r["gates"]["PRODUCTION"], "NO_GO")
+
+    def test_changed_frozen_bytes_rejected_in_temp_dir(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            for name in (gate.FROZEN, gate.GRID):
+                shutil.copyfile(gate.ROOT / name, root / name)
+            p = root / gate.FROZEN
+            p.write_bytes(p.read_bytes() + b" ")
+            with self.assertRaisesRegex(ValueError, "PINNED_SOURCE_BLOB_SHA_DRIFT"):
+                gate.load_frozen(root)
+
+    def test_public_pending_tx_does_not_verify_exact_ca_trade_or_funding(self):
+        r, _ = self.check(self.valid_event())
+        self.assertEqual(r["exact_ca_trade_buy_validation"], "UNRESOLVED_ROUTER_AND_TOKEN_LOGS")
+        self.assertEqual(r["trade_funding_and_execution"], "UNRESOLVED")
+        self.assertEqual(r["follower_net_pnl"], "UNRESOLVED")
+        self.assertNotIn("PROVEN", r["state"])
+
+
+if __name__ == "__main__":
+    unittest.main()
