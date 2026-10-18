@@ -147,6 +147,10 @@ def receipt_offsets(receipts):
     Fail if a declared post-T0 endpoint starts before T0 or time goes backwards.
     """
     reference = datetime.fromtimestamp(T0_MS / 1000, timezone.utc)
+    def depth_quantiles(values):
+        return [percentile(values, p) for p in (10, 50, 90)] if values else "NO_DISPLAYED_TWO_SIDED_DEPTH"
+    statuses = {kind: sum(r["quote_status"] == kind for r in rows)
+                for kind in ("DISPLAYED_TWO_SIDED", "LOCKED_QUOTE", "ZERO_DISPLAYED_SIZE")}
     result = {}
     ends = []
     for kind in ("bookTicker", "ticker24"):
@@ -223,8 +227,12 @@ def evaluate(blobs, receipts, research_notional=None):
         bid, ask = dec(book["bidPrice"]), dec(book["askPrice"])
         bqty, aqty = dec(book["bidQty"]), dec(book["askQty"])
         volume = dec(ticker["quoteVolume"])
-        if bid <= 0 or ask <= bid or bqty <= 0 or aqty <= 0 or volume < 0:
+        if bid <= 0 or ask < bid or bqty < 0 or aqty < 0 or volume < 0:
             raise ValueError("STAGE163_T0_INVALID_BBO_OR_24H_VOLUME:" + name)
+        quote_status = ("LOCKED_QUOTE" if ask == bid else
+                        "ZERO_DISPLAYED_SIZE" if bqty == 0 or aqty == 0 else
+                        "DISPLAYED_TWO_SIDED")
+        depth_evaluable = quote_status == "DISPLAYED_TWO_SIDED"
         bid_n, ask_n = bid * bqty, ask * aqty
         spread = TEN_THOUSAND * (ask - bid) / ((ask + bid) / 2)
         cross = TEN_THOUSAND * (ask - bid) / ask
@@ -239,17 +247,21 @@ def evaluate(blobs, receipts, research_notional=None):
             "post_t0_bookticker_spread_bps": fmt(spread),
             "post_t0_bookticker_cross_loss_before_fees_bps": fmt(cross),
             "both_sides_show_positive_size": bqty > 0 and aqty > 0,
+            "quote_status": quote_status,
+            "displayed_depth_distribution_evaluable": depth_evaluable,
+            "locked_quote_zero_spread": ask == bid,
         }
         if n is not None:
             # This is only a *single-snapshot displayed top-level* size check.
             # It says nothing about later exit L2, actual fills or executable P&L.
             row["optional_research_notional_displayed_top_quote_size_only"] = (
-                ask_n >= n and bid_n >= n)
+                depth_evaluable and ask_n >= n and bid_n >= n)
         rows.append(row)
     spreads = [dec(r["post_t0_bookticker_spread_bps"]) for r in rows]
     losses = [dec(r["post_t0_bookticker_cross_loss_before_fees_bps"]) for r in rows]
-    askdepth = [dec(r["displayed_ask_notional_usdt"]) for r in rows]
-    biddepth = [dec(r["displayed_bid_notional_usdt"]) for r in rows]
+    depth_rows = [r for r in rows if r["displayed_depth_distribution_evaluable"]]
+    askdepth = [dec(r["displayed_ask_notional_usdt"]) for r in depth_rows]
+    biddepth = [dec(r["displayed_bid_notional_usdt"]) for r in depth_rows]
     volumes = [dec(r["24h_rolling_quote_volume_usdt"]) for r in rows]
     if len(rows) != EXPECTED_ACTIVE:
         raise ValueError("STAGE163_T0_511_ROWS_NOT_RETAINED")
@@ -286,11 +298,14 @@ def evaluate(blobs, receipts, research_notional=None):
             all(s["symbol"] in books and s["symbol"] in tickers for s in eligible_trading)),
 
         "displayed_positive_size_both_sides": sum(r["both_sides_show_positive_size"] for r in rows),
+        "quote_status_counts": statuses,
+        "displayed_depth_distribution_evaluable_count": len(depth_rows),
+        "displayed_depth_percentiles_exclude_zero_and_locked_quotes": True,
         "post_t0_bookticker_spread_bps_p10_median_p90": [percentile(spreads, p) for p in (10, 50, 90)],
         "post_t0_same_bookticker_cross_loss_before_fees_bps_p10_median_p90": [
             percentile(losses, p) for p in (10, 50, 90)],
-        "best_ask_displayed_notional_usdt_p10_median_p90": [percentile(askdepth, p) for p in (10, 50, 90)],
-        "best_bid_displayed_notional_usdt_p10_median_p90": [percentile(biddepth, p) for p in (10, 50, 90)],
+        "best_ask_displayed_notional_usdt_p10_median_p90": depth_quantiles(askdepth),
+        "best_bid_displayed_notional_usdt_p10_median_p90": depth_quantiles(biddepth),
         "rolling_24h_quote_volume_usdt_p10_median_p90": [percentile(volumes, p) for p in (10, 50, 90)],
         "research_notional_is_user_supplied_only": n is not None,
         "research_notional_usdt": str(n) if n is not None else "UNKNOWN_NOT_SPECIFIED",
@@ -313,7 +328,7 @@ def evaluate(blobs, receipts, research_notional=None):
 
 
 def main():
-    p = argparse.ArgumentParser(description="Read-only 511 Spot archived T0 quote friction")
+    p = argparse.ArgumentParser(description="Read-only 511 Spot post-T0 receipt bounded quote friction")
     p.add_argument("--output", type=Path)
     p.add_argument("--research-notional-usdt", help="Optional research sensitivity; never inferred or traded")
     args = p.parse_args()
@@ -327,7 +342,7 @@ def main():
             json.dump(d, f, sort_keys=True, indent=2, ensure_ascii=False)
             f.write("\n")
     summary = {k:v for k,v in d.items() if k != "rows"}
-    print("MONSTER_STAGE163_ORIGINAL511_QUOTE_FRICTION_ONLY", json.dumps(summary, sort_keys=True))
+    print("MONSTER_STAGE163_CLOCK_BRIDGED_POST_T0_QUOTE_ONLY", json.dumps(summary, sort_keys=True))
 
 
 if __name__ == "__main__":
