@@ -107,3 +107,16 @@
 - 主记录：[经济门禁批准与商业下一步](MONSTER_ECONOMIC_READINESS_STAGE30_STAGE152_20261018.md) 第六节。**只复审过修复，不可衍生BUY**；Stage163七日同venue来源还没成熟，独立实际G4仍`UNKNOWN`、G6`NO_GO`。Mac、Frank、Stage99、邮件、实盘、采集定时、合并均未放行。
 
 这项P2不再反复审核；开发优先级重回可信源的新窗口真实WATCH/SETUP增益和交易可成交证据，禁止在已暴露市场中补挑赢家。
+
+
+## 十、官方原T0全511报价摩擦已实测并入Git（2026-10-18）
+
+本轮业务优先做全市场交易摩擦事实，而不是针对Stage30负收益旧日期反复微调模型。使用**已永久存Git、真实Binance Spot官方HTTP原始字节**的Stage163 T0 `exchangeInfo / bookTicker / ticker24`，编写离线工具重算全部511个当时USDT Spot TRADING项目的最优买卖档数量、金额、价差和同刻交叉报价成本（只说明单点报价，非同刻原子实时订单双向成交）。不联网、不重新采集、更不建立定时或修改任何现有信号、Frank、通知/交易/钱包。
+
+- 源ZIP SHA256 `b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b`、6份HTTP接收回执各自SHA，T0交易所 `2026-10-17T22:04:40.094Z`。计算器 `local-agent/scripts/monster_v4_stage163_spot_t0_quote_friction.py`、回归 `local-agent/tests/test_monster_v4_stage163_spot_t0_quote_friction.py`、仅offline GitHub Actions `.github/workflows/monster-v4-stage163-offline-spot-t0-511-friction.yml`。
+- **固定代码/测试/CI SHA `e860c1aa6485c453f99a1a17c207670a3685eb85`**；真实CI [#39082186839](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39082186839) SUCCESS，6/6真实原ZIP+合成负例测试成功，直接回算511条，artifact `12119252571`，CI成功将真实[全511逐币JSON](evidence/monster_stage163_spot_t0_original511_quote_friction_actual.json)同步Git Blob `d2df270708b48d1b374aa314b25e848ae12cbd75`。前两次测试显示精度不一致的失败CI另已在专用结果报告保存，不构成官方数据源失败。
+- **真实报价事实**：511个均显示正买卖一数量，价差(p10/median/p90) `2.060793 / 11.217050 / 28.971511 bps`；同一旧报价假设先ask买再bid卖、未计费用的理论摩擦中位`11.210762 bps`；最优卖一/买一名义金额中位`357.509800 / 332.814150 USDT`；116/511 (22.70%)的当时价差超过20bps、11/511 (2.15%)超过50bps。历史24h滚动成交额中位`464067.919100 USDT`，不能替代真实双向L2深度。
+- 这属于**一份档案两个按顺序获取的市场端点**；不是同纳秒原子报价，没有每币逐笔最优报价更新时间；未来固定退出时的bid/ask缺失；实际费率/用户研究金额UNKNOWN，`G4=UNKNOWN/G6=NO_GO`。即使源有511条，发行方类别与新上币期间的完整PIT依旧不成立。单点旧档案**不能回填Stage30任何WATCH时的成交价**。
+- 研究结论、所有数字、可运行命令和新关键代码其他AI审核提示见 [Stage163 官方T0全511报价摩擦真实报告](MONSTER_STAGE163_SPOT_T0_511_QUOTE_FRICTION_REAL_SOURCE_RESULTS_20261018.md)。**独立其他AI审查当前NOT_DONE**；旧经济门禁获批SHA不可延伸批准到本轮新增代码。
+
+**后续重点**：将这类真实执行摩擦数据的「证据等级/观察时间」结构与现有只读机会查询器对应，但不冒充把过去T0的报价关联到以后WATCH；真正商业可行性必须取得**相同WATCH入场时点与预冻结退出时点**双向真实盘口/费用/时间，且完成独立前瞻、资金与风险评估。Stage163七日原正式窗口在2026-10-24T22:06 UTC结束前仍`NOT_MATURE`；仅聊天触发后手动源采集，绝不恢复Stage99或额外自动采集。
