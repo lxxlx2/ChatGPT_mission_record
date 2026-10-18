@@ -92,3 +92,17 @@
 
 真正的盈利结算仍卡在**真实卖出 BNB/quote 资金回到原钱包多少**、receipt 实际 Gas 和其他资金流：当前 Alchemy BNB 免费接入 `getAssetTransfers(category=internal)` 报 `-32602 unsupported`，`trace_transaction` 报 `-32600 requires Pay As You Go/Enterprise`，用户使用免费方案，**不得自动升级或自费试用付费接口**。本阶段及时停止，不靠推测、代币数量或单一 WBNB 流动性报价填写盈利。下一步若要核算，可用官方允许的其他免费来源取得逐 TX native internal trace/receipt，且必须能交叉验证 exact TX hash、start/end balance、Gas 与真实最终币种回款；无法拿到即保持 `ACTUAL_OWNER_REALIZED_NET_PNL=UNRESOLVED`。对 877AF 仍需继续分页完整 Token 流后才能做同等级结论；其他高频钱包不可自动类推。
 
+## 七、免费原生余额双区块实测：增加真实金额但不能伪造逐交易盈利
+
+继续实际读取两组本人交易的前一块和目标块 `eth_getBalance`、`eth_getTransactionCount`（总共 5 个目标区块，每个都有真实前后 BNB 余额及 EOA nonce），证据保存在 [8E6B/2ADF 原生 BNB 区块变化与不可单 TX 归因](./bsc-meme-address-model-v1-p4b-8e6b-2adf-signed-round-bnb-block-delta-unattributed-2026-10-19.json)。
+
+| 钱包 | 目标交易区块 | 整区块钱包 BNB 净变化 | 同区块本人发送交易数 |
+|---|---|---:|---:|
+| 8E6B FLAP 入场 | `0x79d7283` | −0.150045929 BNB | 1 |
+| 8E6B FLAP 出账 1 | `0x79d77c1` | +0.140223744 BNB | **2** |
+| 8E6B FLAP 出账 2 | `0x79f7fc0` | +0.010165345 BNB | **2** |
+| 2ADF yoki酱 入场 | `0x7a4257c` | −0.080045234 BNB | 1 |
+| 2ADF yoki酱 出账 | `0x7a6133d` | +0.071015473 BNB | **2** |
+
+**不能把上述出账区块余额增量直接记作被选 token 的卖出收入**。每个出账区块的本人 nonce 都增长 2，说明还包含另一笔本人签名交易；不能把一整个区块的 native 变化强行归因到唯一一笔 Meme token trade（还可能有同块被动入账）。准确实际 Gas 与原生币内部 trace 尚未取得，受免费 API 限制。用户追求的是真实可复现赢/亏，故本批明确输出 `NATIVE_BLOCK_DELTA_OBSERVED / PER_TX_NATIVE_PROCEEDS_UNRESOLVED / REALIZED_NET_PNL_UNRESOLVED`，不报看似精确的收益率。下一步必须获取交易级别的真实 internal value 以及其他同块交易归因才可升级。
+
