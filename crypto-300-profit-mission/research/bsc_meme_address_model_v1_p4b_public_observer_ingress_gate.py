@@ -271,14 +271,25 @@ def validate_event(row: dict, wallets: set[str], cas: set[str], archived_txs: se
         return _reject(str(exc))
 
 
+def _onchain_log_position(record: dict) -> tuple:
+    """An immutable block/transaction/log index identifies one log slot."""
+    return ("bnb-mainnet", record["confirmed_block_hash"],
+            record["tx_hash"], record["log_index"])
+
+
 def _validated_log_key(record: dict) -> tuple:
-    """Bind reorg identity to every audited log dimension, not event_id alone."""
-    return (
-        "bnb-mainnet", record["exact_ca"], record["wallet"],
-        record["confirmed_block_hash"], record["tx_hash"],
-        record["log_index"], record["confirmed_block_number"],
-        record["transfer_from_topic"], record["received_erc20_raw"],
-    )
+    """Canonical validated content; tombstones require exact matching content."""
+    return (_onchain_log_position(record), record["exact_ca"], record["wallet"],
+            record["confirmed_block_number"], record["transfer_from_topic"],
+            record["received_erc20_raw"])
+
+
+def _quarantine_conflict(record: dict) -> None:
+    """A contradictory INCLUDED version invalidates the whole local log slot."""
+    record.update(state="LOG_IDENTITY_CONFLICT",
+                  reason="SAME_ONCHAIN_LOG_POSITION_DIFFERENT_CONTENT",
+                  first_public_observer_received_utc=None,
+                  target_windows_utc=None, follower_net_pnl="UNRESOLVED")
 
 
 def ingest_document(doc: dict, grid: dict, pre: dict) -> dict:
@@ -290,7 +301,7 @@ def ingest_document(doc: dict, grid: dict, pre: dict) -> dict:
     wallets = {w["wallet"].lower() for w in grid["wallets"]}
     cas = {m["ca"].lower() for m in grid["markets"]}
     archived_txs = {x[field].lower() for x in pre["cases"] for field in ("first_signed_buy_tx", "last_signed_exit_tx")}
-    records, ids, removed, seen_logs = [], set(), set(), set()
+    records, ids, removed, seen_logs = [], set(), set(), {}
     for row in observations:
         event_id = row.get("event_id") if isinstance(row, dict) else None
         if not isinstance(event_id, str) or event_id in ids:
@@ -299,11 +310,20 @@ def ingest_document(doc: dict, grid: dict, pre: dict) -> dict:
             ids.add(event_id)
             result = validate_event(row, wallets, cas, archived_txs)
         if result["state"] == "POST_BLOCK_TOKEN_RECEIPT_OBSERVER_CANDIDATE_UNATTESTED":
-            key = _validated_log_key(result)
-            if key in seen_logs:
+            position = _onchain_log_position(result)
+            fingerprint = _validated_log_key(result)
+            earlier = seen_logs.get(position)
+            if earlier is None:
+                seen_logs[position] = {"fingerprint": fingerprint,
+                                       "index": len(records), "conflicted": False}
+            elif earlier["conflicted"]:
+                _quarantine_conflict(result)
+            elif earlier["fingerprint"] == fingerprint:
                 result = _reject("DUPLICATE_ORIGINAL_LOG_IDENTITY")
             else:
-                seen_logs.add(key)
+                earlier["conflicted"] = True
+                _quarantine_conflict(records[earlier["index"]])
+                _quarantine_conflict(result)
         elif result.get("validated_reorg_tombstone") is True:
             # A wrong-network, duplicate-ID, uncalibrated, hash-mismatched,
             # out-of-cohort or malformed tombstone never reaches this branch.
@@ -332,6 +352,7 @@ def ingest_document(doc: dict, grid: dict, pre: dict) -> dict:
                        "unattested_post_block_transfer_candidates": sum(x["state"] == "POST_BLOCK_TOKEN_RECEIPT_OBSERVER_CANDIDATE_UNATTESTED" for x in records),
                        "rejected": sum(x["state"] == "REJECTED_EVIDENCE" for x in records),
                        "reorg_revoked": sum(x["state"] == "REORG_REVOKED_POSTBLOCK_LOG" for x in records),
+                       "log_identity_conflicts": sum(x["state"] == "LOG_IDENTITY_CONFLICT" for x in records),
                        "verified_public_executable_U": 0, "proven_net_profitable_follower": 0},
             "gates": dict(BLOCKED)}
 
