@@ -8,6 +8,7 @@
 
 完整结构规则：
 - `docs/REPOSITORY_STRUCTURE.md`
+- `docs/DEVELOPMENT_ACCEPTANCE_EVIDENCE.md`（开发审核、Mac 截图、证据 ZIP 与 Finder 自动选中）
 - `docs/X_TECHNICAL_POST_WRITING_GUIDE.md`
 
 ## 内容导航
