@@ -270,6 +270,11 @@ def run_auto(*, sha: str, mint: str | None, skip_browser: bool = False):
                 dest = captures / f"c02-{stage}.png"
                 rows.append(automatic_screenshot(dest))
                 print(f"C02_AUTOMATIC_{stage.upper()}={receipts[stage]}", flush=True)
+                if receipts[stage] in {
+                    "PRODUCT_TIMEOUT", "PRODUCT_UI_ERROR",
+                    "PRODUCT_BUTTON_MISSING", "PRODUCT_UI_MINT_MISMATCH",
+                }:
+                    raise RuntimeError("STOP_C02_PRODUCT_UI_NOT_VERIFIED_" + receipts[stage])
             old.verify_git_source(checkout, sha)
             old.verify_preview_snapshot(static, hashes)
             output = Path.home() / "Downloads" / f"frank-c02-auto-evidence-{stamp}-{sha[:8]}.zip"
