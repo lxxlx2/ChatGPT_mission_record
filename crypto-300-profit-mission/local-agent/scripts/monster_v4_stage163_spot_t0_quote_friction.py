@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Stage163 fixed Spot T0: read-only, all-market archived HTTP quote friction.
+"""Stage163 post-T0 archived Spot/USDT bookTicker friction, reference T0 identity.
 
 One point-in-time *descriptive* bookTicker + 24hr ticker analysis; NOT a signal
 model, PIT 7-day replay, fill quote, liquidity warranty, or trade execution.
 No HTTP, private keys, notifications, orders, schedules, or SQLite.
 """
 import argparse
-from collections import Counter
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 import hashlib
@@ -26,7 +25,7 @@ RECEIPTS = ARCHIVE / "source_receipts.json"
 ZIP_SHA256 = "b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b"
 T0_MS = 1792274680094
 EXPECTED_ACTIVE = 511
-SCHEMA = "MONSTER_STAGE163_SPOT_T0_ORIGINAL511_BBO_FRICTION_NO_TRADES_V1"
+SCHEMA = "MONSTER_STAGE163_SPOT_POST_T0_RECEIPT_BOUNDED_511_FRICTION_NO_TRADES_V2"
 TEN_THOUSAND = Decimal("10000")
 
 
@@ -87,14 +86,52 @@ def load_archived(zip_path=ZIP, receipts_path=RECEIPTS):
             raise ValueError("STAGE163_ARCHIVED_T0_MANIFEST_DRIFT")
     return blobs, m
 
+def receipt_offsets(receipts):
+    """Client receipt bounds relative to exchangeInfo SERVER T0, NOT quote times.
+
+    Cross-clock offsets are approximate, not proof of exchange event time.
+    Fail if a declared post-T0 endpoint starts before T0 or time goes backwards.
+    """
+    reference = datetime.fromtimestamp(T0_MS / 1000, timezone.utc)
+    result = {}
+    ends = []
+    for kind in ("bookTicker", "ticker24"):
+        receipt = receipts["source_sha_receipts"][kind]
+        start = datetime.fromisoformat(receipt["start_utc"].replace("Z", "+00:00"))
+        end = datetime.fromisoformat(receipt["end_utc"].replace("Z", "+00:00"))
+        if start.tzinfo is None or end.tzinfo is None or start > end:
+            raise ValueError("STAGE163_POST_T0_RECEIPT_CHRONOLOGY_INVALID")
+        def offset_ms(dt):
+            delta = dt - reference
+            micros = (delta.days * 86400 + delta.seconds) * 1000000 + delta.microseconds
+            return format(Decimal(micros) / Decimal(1000), ".3f")
+        first, last = offset_ms(start), offset_ms(end)
+        if Decimal(first) < 0 or Decimal(last) < 0:
+            raise ValueError("STAGE163_NOT_POST_T0_RECEIPT_WINDOW")
+        result[kind] = {"start_utc": receipt["start_utc"],
+                        "end_utc": receipt["end_utc"],
+                        "start_offset_from_exchange_t0_ms_approx": first,
+                        "end_offset_from_exchange_t0_ms_approx": last}
+        ends.append(end)
+    return result, max(ends).isoformat(timespec="microseconds").replace("+00:00", "Z")
+
 
 def evaluate(blobs, receipts, research_notional=None):
     info = blobs["exchangeInfo"]
     if int(info["serverTime"]) != T0_MS:
         raise ValueError("STAGE163_NOT_FROZEN_T0")
-    universe = [s for s in info["symbols"] if s.get("quoteAsset") == "USDT"
-                and s.get("isSpotTradingAllowed") is not False
-                and s.get("status") == "TRADING"]
+    receipt_bound_windows, quote_bundle_available_after_utc = receipt_offsets(receipts)
+    all_exchange = info["symbols"]
+    if len({s["symbol"] for s in all_exchange}) != len(all_exchange):
+        raise ValueError("STAGE163_EXCHANGEINFO_DUPLICATE_SYMBOL")
+    usdt = [s for s in all_exchange if s.get("quoteAsset") == "USDT"]
+    usdt_trading = [s for s in usdt if s["status"] == "TRADING"]
+    usdt_break = [s for s in usdt if s["status"] == "BREAK"]
+    usdt_other_states = [s for s in usdt if s["status"] not in ("TRADING", "BREAK")]
+    eligible_trading = [s for s in usdt_trading if s.get("isSpotTradingAllowed") is not False]
+    universe = eligible_trading
+    # T0 universe is USDT+TRADING+Spot-allowed only, not ALL Binance Spot.
+    # No silently converted BREAK instruments, other quote assets, or new listings.
     if len(universe) != EXPECTED_ACTIVE:
         raise ValueError("STAGE163_FULL511_FROZEN_COHORT_CHANGED")
     names = [s["symbol"] for s in universe]
@@ -106,6 +143,9 @@ def evaluate(blobs, receipts, research_notional=None):
             raise ValueError("STAGE163_MARKET_ROWS_DUPLICATE_OR_MISSING:" + kind)
     books = {x["symbol"]: x for x in blobs["bookTicker"]}
     tickers = {x["symbol"]: x for x in blobs["ticker24"]}
+    exchange_ids = {s["symbol"] for s in all_exchange}
+    book_only_new_symbols = sorted(set(books) - exchange_ids)
+    ticker_only_new_symbols = sorted(set(tickers) - exchange_ids)
     missing = sorted(set(names) - set(books) | set(names) - set(tickers))
     if missing:
         raise ValueError("STAGE163_T0_BBO_OR_24H_SOURCE_MISSING:" + ",".join(missing[:5]))
@@ -122,7 +162,7 @@ def evaluate(blobs, receipts, research_notional=None):
         bid, ask = dec(book["bidPrice"]), dec(book["askPrice"])
         bqty, aqty = dec(book["bidQty"]), dec(book["askQty"])
         volume = dec(ticker["quoteVolume"])
-        if bid <= 0 or ask < bid or bqty < 0 or aqty < 0 or volume < 0:
+        if bid <= 0 or ask <= bid or bqty <= 0 or aqty <= 0 or volume < 0:
             raise ValueError("STAGE163_T0_INVALID_BBO_OR_24H_VOLUME:" + name)
         bid_n, ask_n = bid * bqty, ask * aqty
         spread = TEN_THOUSAND * (ask - bid) / ((ask + bid) / 2)
@@ -135,44 +175,65 @@ def evaluate(blobs, receipts, research_notional=None):
             "displayed_bid_notional_usdt": fmt(bid_n, 6),
             "displayed_ask_notional_usdt": fmt(ask_n, 6),
             "24h_rolling_quote_volume_usdt": fmt(volume, 6),
-            "instantaneous_top_quote_spread_bps": fmt(spread),
-            "instantaneous_cross_quote_loss_bps_before_fees": fmt(cross),
+            "post_t0_bookticker_spread_bps": fmt(spread),
+            "post_t0_bookticker_cross_loss_before_fees_bps": fmt(cross),
             "both_sides_show_positive_size": bqty > 0 and aqty > 0,
         }
         if n is not None:
             # This is only a *single-snapshot displayed top-level* size check.
             # It says nothing about later exit L2, actual fills or executable P&L.
-            row["optional_research_notional_both_top_quotes_show_size"] = (
+            row["optional_research_notional_displayed_top_quote_size_only"] = (
                 ask_n >= n and bid_n >= n)
         rows.append(row)
-    spreads = [dec(r["instantaneous_top_quote_spread_bps"]) for r in rows]
-    losses = [dec(r["instantaneous_cross_quote_loss_bps_before_fees"]) for r in rows]
+    spreads = [dec(r["post_t0_bookticker_spread_bps"]) for r in rows]
+    losses = [dec(r["post_t0_bookticker_cross_loss_before_fees_bps"]) for r in rows]
     askdepth = [dec(r["displayed_ask_notional_usdt"]) for r in rows]
     biddepth = [dec(r["displayed_bid_notional_usdt"]) for r in rows]
     volumes = [dec(r["24h_rolling_quote_volume_usdt"]) for r in rows]
     if len(rows) != EXPECTED_ACTIVE:
         raise ValueError("STAGE163_T0_511_ROWS_NOT_RETAINED")
     result = {
-        "schema": SCHEMA, "source": "ARCHIVED_BINANCE_SPOT_OFFICIAL_HTTP_T0",
+        "schema": SCHEMA, "source": "ARCHIVED_BINANCE_SPOT_OFFICIAL_HTTP_POST_T0_BOOKTICKER",
         "source_zip_sha256": ZIP_SHA256, "exchange_server_time_ms": T0_MS,
         "exchange_server_time_utc": datetime.fromtimestamp(T0_MS / 1000, timezone.utc).isoformat().replace("+00:00", "Z"),
-        "quote_collection_window_utc": {
-            kind: [receipts["source_sha_receipts"][kind]["start_utc"],
-                   receipts["source_sha_receipts"][kind]["end_utc"]]
-            for kind in ("bookTicker", "ticker24")},
-        "t0_active_spot_usdt_denominator": EXPECTED_ACTIVE,
-        "symbols_represent_complete_511_source_cohort": True,
+        "post_t0_receipt_windows_vs_exchangeinfo_t0_approx": receipt_bound_windows,
+        "quote_bundle_not_available_until_client_receipt_utc": quote_bundle_available_after_utc,
+        "receipt_offsets_are_cross_clock_approx_not_exchange_quote_event_timestamps": True,
+        "t0_causal_quote_at_t0_proven": False,
+        "eligible_for_t0_asof_executable_execution_or_signal_backtest": False,
+        "t0_active_spot_usdt_denominator": len(universe),
+        "population_definition": "USDT_quote_AND_TRADING_AND_spot_trading_allowed_not_false_at_exchangeInfo_T0",
+        "population_scope_is_all_binance_spot": False,
+        "population_counts_from_exchangeinfo": {
+            "all_exchange_symbol_records": len(all_exchange),
+            "usdt_all_statuses_including_spot_disallowed": len(usdt),
+            "usdt_trading_any_spot_permission": len(usdt_trading),
+            "usdt_trading_spot_allowed": len(eligible_trading),
+            "usdt_trading_spot_disallowed": len(usdt_trading)-len(eligible_trading),
+            "usdt_break_all_spot_permissions": len(usdt_break),
+            "usdt_break_spot_allowed": sum(s.get("isSpotTradingAllowed") is not False for s in usdt_break),
+            "usdt_break_spot_disallowed": sum(s.get("isSpotTradingAllowed") is False for s in usdt_break),
+            "usdt_other_states": len(usdt_other_states),
+        },
+        "excluded_market_symbols_not_in_exchangeinfo": {
+            "bookTicker": book_only_new_symbols, "ticker24": ticker_only_new_symbols,
+        },
+        "complete_archived_exchangeinfo_t0_eligible_cohort_represented": (
+            len(rows)==len(eligible_trading) and
+            set(r["symbol"] for r in rows)==set(s["symbol"] for s in eligible_trading) and
+            all(s["symbol"] in books and s["symbol"] in tickers for s in eligible_trading)),
+
         "displayed_positive_size_both_sides": sum(r["both_sides_show_positive_size"] for r in rows),
-        "quote_spread_bps_p10_median_p90": [percentile(spreads, p) for p in (10, 50, 90)],
-        "instantaneous_cross_quote_loss_before_fees_bps_p10_median_p90": [
+        "post_t0_bookticker_spread_bps_p10_median_p90": [percentile(spreads, p) for p in (10, 50, 90)],
+        "post_t0_same_bookticker_cross_loss_before_fees_bps_p10_median_p90": [
             percentile(losses, p) for p in (10, 50, 90)],
         "best_ask_displayed_notional_usdt_p10_median_p90": [percentile(askdepth, p) for p in (10, 50, 90)],
         "best_bid_displayed_notional_usdt_p10_median_p90": [percentile(biddepth, p) for p in (10, 50, 90)],
         "rolling_24h_quote_volume_usdt_p10_median_p90": [percentile(volumes, p) for p in (10, 50, 90)],
         "research_notional_is_user_supplied_only": n is not None,
         "research_notional_usdt": str(n) if n is not None else "UNKNOWN_NOT_SPECIFIED",
-        "research_notional_top_quote_size_coverage": {
-            "count": sum(r["optional_research_notional_both_top_quotes_show_size"] for r in rows),
+        "research_notional_displayed_top_level_size_coverage_only": {
+            "count": sum(r["optional_research_notional_displayed_top_quote_size_only"] for r in rows),
             "denominator": EXPECTED_ACTIVE,
         } if n is not None else "NOT_EVALUATED_WITHOUT_EXPLICIT_RESEARCH_AMOUNT",
         "original_exited_24h_funding_economics": "NOT_SCORABLE",
@@ -180,7 +241,7 @@ def evaluate(blobs, receipts, research_notional=None):
         "no_historical_exit_L2": True, "no_observed_actual_fills": True,
         "quote_is_not_trade_guarantee": True,
         "current_market_quote": False,
-        "historical_T0_observed_once_not_forward_live_signal": True,
+        "historical_post_t0_quote_receipts_once_not_forward_live_signal": True,
         "true_full_forward_spot_7d": "NOT_YET_MATURE",
         "user_fee_tier": "UNKNOWN", "G4": "UNKNOWN", "G6": "NO_GO",
         "NO_MERGE": True, "NO_DEPLOY": True, "NO_GMAIL": True, "NO_TRADE": True,
