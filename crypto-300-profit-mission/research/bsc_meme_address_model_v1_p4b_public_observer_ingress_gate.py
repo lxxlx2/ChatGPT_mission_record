@@ -188,6 +188,8 @@ def validate_event(row: dict, wallets: set[str], cas: set[str], archived_txs: se
             raise ValueError("REQUIRED_RAW_CAPTURE_FIELDS_MISSING")
         if row["network"] != "bnb-mainnet":
             raise ValueError("WRONG_NETWORK")
+        if "provider_chain_id" in row and row["provider_chain_id"] != "0x38":
+            raise ValueError("WRONG_PROVIDER_CHAIN_ID")
         wallet, ca, tx_hash = row["wallet"], row["exact_ca"], row["tx_hash"]
         if (not isinstance(wallet, str) or not ADDR.fullmatch(wallet)
                 or wallet.lower() not in wallets
