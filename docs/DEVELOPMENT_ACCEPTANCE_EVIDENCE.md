@@ -12,8 +12,9 @@ Applies to: Frank, C02 and subsequent Mission browser UI modules (and other UI c
 4. GitHub CI 固定 SHA 执行。记录实际 Actions run URL、完整日志结论、测试数与未验证项；P0/P1/P2 阻断修复后必须重新审核新固定 SHA，P3 不得无故使项目陷入无限修复循环。
 5. **Mac 实机/浏览器验收**：明确区分 GitHub 离线测试、隔离页面 + 现有 GET 数据、真实 Mac/Safari、真实链上证据和生产部署。不能凭截图假定交易、钱包余额或来源真实性。
 6. **截图与压缩证据是每次要求用户实机验收时的命令组成部分，不得只让用户逐张手工上传截图。** 标准命令/仓库脚本必须（a）使用固定审核 SHA；（b）提示并捕获实际需要的页面区域；（c）记录可核验的时间、SHA、页面来源与结果范围；（d）将截图和 manifest 打包 ZIP 至用户本地 Downloads（不是 Git 仓库）；（e）自动在 Finder 中选中 ZIP 方便用户直接上传；（f）退出时安全清理隔离临时目录/服务，不能删除现有监控。
-7. 用户上传 ZIP 后再根据截图和来源记录标注 `PASS / PARTIAL / BLOCKED / NOT_VERIFIED`，附 PR comment 证据，明确仍缺什么。不能把仅静态展示说成生产部署验收。
-8. 仅在独立审核、相关验收和**用户另行明确授权**后，才能进入 merge/deploy。默认保留 `NO_MERGE / NO_DEPLOY / NO_NEW_RPC / NO_GMAIL / NO_TRADES / NO_PRODUCTION_SQLITE_WRITE`。
+7. **截图取证的源码完整性：** 任何允许人工停留的验收预览，必须从固定 Git commit 的 blob 导出至本次私有临时快照，只提供该快照，不可直接提供可变工作区；在导出后与 ZIP 成功交付前重新核验原 checkout 的 HEAD、dirty 状态及快照逐文件 SHA256。检测到任何漂移必须以非零状态拒绝可信验收 ZIP，保留已拍截图并明确标记 REJECTED，不得将其归属于启动时 SHA；不得覆盖或删除用户已有同名压缩包。
+8. 用户上传 ZIP 后再根据截图和来源记录标注 `PASS / PARTIAL / BLOCKED / NOT_VERIFIED`，附 PR comment 证据，明确仍缺什么。不能把仅静态展示说成生产部署验收。
+9. 仅在独立审核、相关验收和**用户另行明确授权**后，才能进入 merge/deploy。默认保留 `NO_MERGE / NO_DEPLOY / NO_NEW_RPC / NO_GMAIL / NO_TRADES / NO_PRODUCTION_SQLITE_WRITE`。
 
 ## Frank PR101 Mac/Safari 示例（已固定审批源码）
 
