@@ -1,4 +1,4 @@
-name: Monster Stage163 Archived Post-T0 Spot USDT Quote Friction V2
+name: Monster Stage163 Post-T0 Clock Bridged Spot USDT Friction V3
 
 on:
   push:
@@ -37,13 +37,13 @@ jobs:
       - name: Recompute research-only full511 from exact original git ZIP and receipts
         working-directory: crypto-300-profit-mission/local-agent
         run: |
-          python -B scripts/monster_v4_stage163_spot_t0_quote_friction.py --output /tmp/monster_stage163_spot_post_t0_receipt_bounded_v2.json
+          python -B scripts/monster_v4_stage163_spot_t0_quote_friction.py --output /tmp/monster_stage163_spot_post_t0_clock_bridge_v3.json
           python - <<'PY'
           import json
           from pathlib import Path
-          p=Path('/tmp/monster_stage163_spot_post_t0_receipt_bounded_v2.json')
+          p=Path('/tmp/monster_stage163_spot_post_t0_clock_bridge_v3.json')
           j=json.loads(p.read_text())
-          assert j['schema']=='MONSTER_STAGE163_SPOT_POST_T0_RECEIPT_BOUNDED_511_FRICTION_NO_TRADES_V2'
+          assert j['schema']=='MONSTER_STAGE163_SPOT_POST_T0_CLOCK_BRIDGED_511_FRICTION_NO_TRADES_V3'
           assert len(j['rows'])==511
           assert j['source_zip_sha256']=='b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b'
           assert j['G4']=='UNKNOWN' and j['G6']=='NO_GO'
@@ -57,6 +57,10 @@ jobs:
           assert j['complete_archived_exchangeinfo_t0_eligible_cohort_represented'] is True
           assert j['population_counts_from_exchangeinfo']['usdt_all_statuses_including_spot_disallowed']==765
           assert j['population_counts_from_exchangeinfo']['usdt_break_all_spot_permissions']==254
+          assert j['clock_bridge_calibration']['clock_drift_between_samples']=='UNVERIFIED'
+          assert j['clock_bridge_calibration']['conditional_interval_not_certified_exchange_event_timestamp'] is True
+          assert j['quote_status_counts']=={'DISPLAYED_TWO_SIDED':511,'LOCKED_QUOTE':0,'ZERO_DISPLAYED_SIZE':0}
+          assert j['displayed_depth_distribution_evaluable_count']==511
           assert j['post_t0_receipt_windows_vs_exchangeinfo_t0_approx']['bookTicker']['start_offset_from_exchange_t0_ms_approx']=='2561.682'
           assert j['post_t0_receipt_windows_vs_exchangeinfo_t0_approx']['ticker24']['end_offset_from_exchange_t0_ms_approx']=='6835.464'
           assert j['excluded_market_symbols_not_in_exchangeinfo']['bookTicker']==['AXSBIDR','NBTBIDR','NBTUSDT']
@@ -67,24 +71,24 @@ jobs:
       - name: Upload machine-readable source-derived full511 historical research
         uses: actions/upload-artifact@v4
         with:
-          name: monster-stage163-archived-original-511-post-t0-quote-friction-v2
-          path: /tmp/monster_stage163_spot_post_t0_receipt_bounded_v2.json
+          name: monster-stage163-archived-original-511-post-t0-quote-clock-v3
+          path: /tmp/monster_stage163_spot_post_t0_clock_bridge_v3.json
           retention-days: 60
           if-no-files-found: error
       - name: Commit immutable one-snapshot 511 rows under existing Monster research evidence
         run: |
           set -eu
           branch=research/monster-v4-local-discovery-20261010
-          target=crypto-300-profit-mission/monster/evidence/monster_stage163_spot_post_t0_original511_quote_friction_v2_actual.json
+          target=crypto-300-profit-mission/monster/evidence/monster_stage163_spot_post_t0_original511_quote_friction_v3_clock_actual.json
           test ! -e "$target"
-          cp /tmp/monster_stage163_spot_post_t0_receipt_bounded_v2.json "$target"
+          cp /tmp/monster_stage163_spot_post_t0_clock_bridge_v3.json "$target"
           git config user.name monster-research-ci
           git config user.email monster-research-ci@users.noreply.github.com
           git add "$target"
-          git commit -m "monster: archive post-T0 bounded Stage163 511-pair quote friction v2 NO_GO"
+          git commit -m "monster: archive post-T0 clock-bridged Stage163 511-pair quote friction v3 NO_GO"
           git fetch origin "refs/heads/$branch"
           if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
-            echo MONSTER163_POST_T0_FRICTION_V2_REPORT_ALREADY_ARCHIVED
+            echo MONSTER163_POST_T0_FRICTION_V3_REPORT_ALREADY_ARCHIVED
             exit 1
           fi
           git rebase FETCH_HEAD
@@ -92,4 +96,4 @@ jobs:
             test "$(git rev-parse "$GITHUB_SHA:$source")" = "$(git rev-parse "HEAD:$source")" || { echo MONSTER163_POST_T0_FRICTION_SOURCE_CHANGED_DURING_CI; exit 1; }
           done
           git push origin "HEAD:refs/heads/$branch"
-          echo MONSTER163_POST_T0_511_V2_SOURCE_ARCHIVED_GIT_READBACK_REQUIRED
+          echo MONSTER163_POST_T0_511_V3_SOURCE_ARCHIVED_GIT_READBACK_REQUIRED
