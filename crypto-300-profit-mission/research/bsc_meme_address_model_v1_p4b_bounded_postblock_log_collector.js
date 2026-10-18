@@ -100,7 +100,7 @@ function main() {
     const id = "bsc-freeze-" + crypto.randomBytes(8).toString("hex");
     const events = [];
     const accepted = new Set();
-    let subscriptionId = null, finished = false, timer = null, ws;
+    let subscriptionId = null, providerChainId = null, finished = false, timer = null, ws;
     let frames = 0, ignored = 0, state = "NOT_CONNECTED";
 
     function finish(why) {
@@ -113,6 +113,7 @@ function main() {
             capture_mode: "BOUNDED_PUBLIC_MINED_LOGS_ONLY_NOT_PENDING",
             run_id: id,
             network: "bnb-mainnet",
+            provider_chain_id_confirmed: providerChainId,
             started_at_utc: started,
             stopped_at_utc: new Date().toISOString(),
             stop_reason: why, subscription_status: state,
@@ -137,14 +138,14 @@ function main() {
             public_U_verified: false, production: "NO_GO"
         }) + "\n");
         if (why.startsWith("PROVIDER_ERROR")) process.exitCode = 2;
+        if (why === "MANUALLY_TERMINATED_SIGTERM") process.exitCode = 143;
     }
 
     ws = new WebSocket(wss);
     timer = setTimeout(() => finish("BOUND_DURATION_COMPLETE"), a.duration * 1000);
     ws.addEventListener("open", () => {
-        state = "OPEN_SUBSCRIBING";
-        ws.send(JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_subscribe",
-                                 params: ["logs", filter] }));
+        state = "OPEN_VERIFYING_BNB_CHAIN";
+        ws.send(JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_chainId", params: [] }));
     });
     ws.addEventListener("message", e => {
         if (finished) return;
@@ -156,7 +157,16 @@ function main() {
         let frame;
         try { frame = JSON.parse(raw.toString("utf8")); }
         catch (_) { ignored++; return; }
-        if (frame.id === 1) {
+        if (frame.id === 1 && state === "OPEN_VERIFYING_BNB_CHAIN") {
+            if (frame.error || typeof frame.result !== "string" || !/^0x0*38$/i.test(frame.result))
+                return finish("PROVIDER_ERROR_WRONG_CHAIN_ID");
+            providerChainId = "0x38";
+            state = "OPEN_SUBSCRIBING";
+            ws.send(JSON.stringify({ jsonrpc: "2.0", id: 2, method: "eth_subscribe",
+                                     params: ["logs", filter] }));
+            return;
+        }
+        if (frame.id === 2 && state === "OPEN_SUBSCRIBING") {
             if (frame.error) return finish("PROVIDER_ERROR_SUBSCRIPTION_REFUSED");
             subscriptionId = frame.result || null;
             if (!subscriptionId) return finish("PROVIDER_ERROR_MISSING_SUBSCRIPTION");
@@ -194,6 +204,7 @@ function main() {
         events.push({
             event_id: id + ":" + eventUid,
             network: "bnb-mainnet",
+            provider_chain_id: providerChainId,
             wallet, exact_ca: log.address.toLowerCase(),
             tx_hash: log.transactionHash.toLowerCase(),
             capture_kind: "PUBLIC_CONFIRMED_ERC20_TRANSFER_LOG_INGRESS",
@@ -213,7 +224,8 @@ function main() {
     ws.addEventListener("close", () => {
         if (!finished) finish("PROVIDER_ERROR_SOCKET_CLOSED");
     });
-    process.on("SIGINT", () => finish("MANUALLY_STOPPED"));
+    process.once("SIGINT", () => finish("MANUALLY_STOPPED"));
+    process.once("SIGTERM", () => finish("MANUALLY_TERMINATED_SIGTERM"));
 }
 try { main(); }
 catch (err) { process.stderr.write("BSC_READONLY_COLLECTOR_ERROR:" + err.message + "\n"); process.exitCode = 1; }
