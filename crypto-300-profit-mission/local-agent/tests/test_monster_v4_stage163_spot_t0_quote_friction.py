@@ -72,7 +72,7 @@ class TestT0Friction(unittest.TestCase):
         self.assertEqual(d["user_fee_tier"], "UNKNOWN")
         self.assertFalse(d["current_market_quote"])
         self.assertTrue(d["historical_T0_observed_once_not_forward_live_signal"])
-        self.assertTrue(d["bid_ask_venues_not_simultaneous"])
+        self.assertTrue(d["market_endpoint_snapshots_not_atomic"])
         self.assertNotIn("pnl", d)
         self.assertNotIn("buy_signal", d)
 
