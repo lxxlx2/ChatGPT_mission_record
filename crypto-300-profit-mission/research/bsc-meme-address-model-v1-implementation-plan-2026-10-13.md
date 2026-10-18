@@ -897,3 +897,19 @@ R2 的真实 WBNB→龙虾 Pair Swap 最早 signed tx `0x2b93cfb6ae16ab4943f5f20
 **下一阶段只做影响可交易性的新证据**：在这组已冻结跨市场正负样本中，先验证历史公开首可见数据来源是否允许保存节点实际收达时间；缺少它就诚实分为链上共识时间下界与 observer received UNRESOLVED。用先冻结的统一可支付资金、市场路由、报价 token、入场精确 +60/+300/+900 秒和真实成交/失败/退出收款/税 Gas，构造可审计的不同市场正负与 no-fill 样本；没有有状态执行或者现实交易证据就 BLOCKED，不把 N+1 math 和其他人的 5–9s 实际买卖当作策略回测。达到真正经济/因果算法阶段评审触发门禁时，再按开发规则交付固定 SHA 完整外部 Review 提示词；低风险静态来源分层不重复发起整个 731 测试的外部逐轮审核。
 
 门禁不变：P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE。
+
+
+## 2026-10-18 P4-B 针对外部独立 REQUEST_CHANGES F1–F7 的定向修复
+
+外部 AI 针对固定 SHA `4d0e5246b8669e4548383fca0823a30cb7bd98a3`、比较基线 `b8f6342ca450895942bd4120fa31ebd123cd9e98` 给出 `REQUEST_CHANGES`：3 MEDIUM (F1/DDAC、F2/8E6B、F3/5E60 原始分页未计算)，4 LOW (F4/磁盘来源字节篡改测试、F5/23×19 来源硬编码、F6/计划措辞、F7/报告区块单位)。报告复现 9/9 以及 731/731，但本轮重点是来源经济等级和充分性而非额外生成收益。原真实链上来源文件一律保持 immutable，避免新软件修复篡改已固定旧 source SHA。
+
+**已执行修复（同一个原 Draft PR）**：
+- 对 DDAC 源内经济闭合标签保留原样作为旧出处，不再升级研究呈现。其买入钱包余额与 cost+fee 差 `17007577000000000 wei`，退出事件 cost−fee 与含 Gas 的原生净入账差 `7314989186993731 wei`，另有退出区块两笔本人签名交易。原买单完整 receipt 仍截断。故新的展示层统一使用 `OWNER_NATIVE_WINDOW_UNATTRIBUTED_BUY_AND_EXIT_FLOWS`，未核实流向不能强称已结算协议费或完全归因净利润。
+- 对 8E6B HAJIMI 源 `5.0 BNB signed value → 4.95 WBNB to pool` 的 `0.05 BNB` 差额标 `UNATTRIBUTED_ROUTING_NATIVE_FLOW`，保留钱包净额正向的来源事实，但不将 BUY 每项成本标已解释完毕；原 SHA 不变。
+- 5E60 的来源由 7 个已固定 JSON 扩到 **12 个不可变 blob**：新纳入有界 33 IN / 17 OUT 的 **4 个分页文件（入四页、出两页）**与原 23×19 冻结网格。新脚本逐页验证 cursor 连续性、末页 null、33/17 顺序及哈希唯一、token/EOA 身份、十进制与十六进制数量一致；所有原始 token raw 逐笔重新求和，再对聚合文件及原 `balanceOf` 进行闭合。经济持仓取得成本、最早来源之前历史与观察者 U 保持未知。
+- 测试由 9 项扩至 **20 项**，包括磁盘拷贝字节篡改和“同步造假聚合值 + 期末余额”必须无法绕过真实行级数量门禁。原 23 EOA 与 19 CA 的真实独立冻结列表读入，不允许新钱包/新 CA 参与既有母数。相关研究报告对 “200 块” 改为 “200 个区块”。
+- 对上一节曾写的 “六轮完整选定回合”作明确勘误：**准确表述是“六轮选定历史本人签名交易与原生账户区块净变化研究样本”**，其中 A83B、877AF 与 DDAC 的内部资金与 Gas 归属并未同口径完全闭合；2026 年正负来源对照不等于 6 个统一 PnL 回合，更不能计算实际 follower 胜率。为遵守实施计划历史追加规则，不改写原记录。
+
+本次修复保留实际中间测试失败历史：SHA `297d70df3737c279fcb3d03e9f4547d0ac900de3` 的 `test_original_cohort_market_membership` 意外先触发另一项分母断言，原 Linux/macOS CI 均 742 项中有 1 项失败。后来测试调整为仅篡改原网格 CA，提交 `c8f0e3a4fc759289a43841f4cf3c8912fda19e2d`，同 SHA 四条工作流 success。这是迭代纠错而非原失败自动变成功。报告与计划补充后的**最终固定 SHA 和新的完整 Actions 日志仍须另行确认**，不得用旧 SHA CI 冒充最终验证。
+
+继续 `P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P4-C=PARTIAL / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。新固定 SHA 须接受其他 AI 的 **F1–F7 定向复核**，无需因现有正常静态回归盲目进行全部历史外审。解决这些研究数据口径问题只恢复横向可用性；后续主业务保持首次第三方公开观察时刻 U、可支付本金、固定 60/300/900 秒入场以及实际买卖和无退出负样本。
