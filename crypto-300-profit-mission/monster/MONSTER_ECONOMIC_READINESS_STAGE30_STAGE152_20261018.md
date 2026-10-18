@@ -38,7 +38,7 @@
 2. 即使官方分钟价能够因果重放D0/D1，因**缺少同一入场和未来确定退出时的真实买卖盘口L2、账户fee tier和实际送达/成交回执**，仍仅是`OFFICIAL_1M_CAUSAL_PROXY_STRESS`；真正可执行双向成交费用后净收益记 `UNKNOWN`，不能单凭历史高价或分钟成交额填充。
 3. 交易金额未指定时为`USER_AMOUNT_UNKNOWN`；30U和300U是**历史模拟实验参数**而不是今后Monster应自动建议的仓位。先证明模型增量真实信号质量和执行可行，再请用户输入模拟金额，绝不触发订单。
 
-## 四、独立其他AI代码与决策审查任务（NOT_DONE）
+## 四、首轮独立审核任务提示（历史归档：首轮实际结论 REQUEST_CHANGES）
 
 给Codex/Claude网页端的提示词，审核单一冻结SHA，不要求重审此前已关闭的机会查询器2个P2：
 
@@ -73,3 +73,18 @@
 - 研究样本为已暴露历史价格代理，**无真实双向L2/实际成交费率/实际买卖**，原门禁`NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`、`G4 UNKNOWN/G6 NO_GO`始终保持。
 
 **当前分项状态**：`AUTHOR_P2_FIXED / CI_PASS / NEW_SHA_EXTERNAL_REVIEW_NOT_DONE`；此项对数据解释影响已在代码中修复，尚待真正独立复审后方能记`P2=CLOSED`。Stage163 Spot七日前瞻研究不因此提前通过。
+
+## 六、Codex 定向复审最终结论：APPROVE（2026-10-18）
+
+用户转交独立 Codex 审核者对固定代码 **`8f0714dd34926c0e17305024ab3ef51d85323409`** 的正式定向结论为 **`APPROVE`**；对照旧固定SHA `4004c59ccbfc70dcd5ddc53eeb188a2602a43ebc` 的唯一P2 **CLOSED**，新增P0=0/P1=0/P2=0（仅此修复及直接回归范围）。审核者底层精确模型为 `UNVERIFIED`；其独立本地 `/tmp` 探针及完整输出仅在用户转交的报告中存在，**不是本轮重新取得的Git仓库证据**。旧SHA的`REQUEST_CHANGES`不得改写为旧SHA已批准。
+
+已证明的固定范围如下：
+
+- **P2已关闭**：删除旧 `censored_exits`；保留 `source_censored_excluding_overlap:80` 和原五类`source_censor_status_breakdown`。类别分别是退出不完整1、退出零量21、退出附近零量39、**入场无成交1**、**入场或退出分钟quote不足18**；其中后两类不得称为退出端确定缺失。
+- 独立Codex自述重演20种同分母改类别场景全部拒绝、5种未知分类替代全部拒绝、非法bool/float/negative全部拒绝。原430价代理可评价+250同币重叠+80来源不可评价=760，不改变真实历史源Blob。
+- 本仓库固定独立CI [#39080407728](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39080407728) 的触发SHA严格是`8f0714dd...`，原始日志 7/7测试PASS、23/23步骤SUCCESS，并打印`FAIL_ECONOMIC_RELEASE_GATE_NO_BUY | G4 UNKNOWN | G6 NO_GO`和源五类计数。该CI为本会话先前真实核对，不代表真市场经济获利。
+- 上轮已核实旧集合数值不变：Stage30资金历史代理净`-79.489406 USDT`、Stage152 D1研究305/确认184、24h费用价代理中位`-2.8357196440%`。跨组不合并胜率；没有实盘双向L2、真实交易手续费/成交、通知延迟验证；原资金名义额度仅为历史模拟假设。
+
+**独立审核门禁状态变化**：`ECONOMIC_RESEARCH_VIEWER_CODE_P2_REVIEW=APPROVE_FIXED_8F0714DD`；但`ECONOMIC_STRATEGY=FAIL_NO_BUY`、`G4=UNKNOWN`、`G6=NO_GO`。PR #30仍Draft、未合并；**NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE**，Frank、Stage99、Mac服务保持不动。这项证据分类P2已结项，**不再重复发起AI审查**。若后续真实模型改动须审核其新增范围，不能挪用本固定SHA的批准。
+
+**商业下一步**：维持Stage163新Spot点时官方数据原T0及固定未来窗口，不用已暴露样本中后验赢家/未来退出流动性筛选出入场规则；研究重点为WATCH→有效SETUP→可成交价差、深度、账户费用及资金净收益。2026-10-18固定的7日未来资料尚未成熟，今天不可伪造未来分钟档案或宣布样本外盈利达标。
