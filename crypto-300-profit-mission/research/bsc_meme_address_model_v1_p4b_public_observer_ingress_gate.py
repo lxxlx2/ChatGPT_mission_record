@@ -186,7 +186,7 @@ def validate_event(row: dict, wallets: set[str], cas: set[str], archived_txs: se
                 or not isinstance(row["provider_id"], str) or not row["provider_id"].strip()):
             raise ValueError("MISSING_CAPTURE_IDENTITY")
         mono = row["observer_monotonic_ns"]
-        if isinstance(mono, bool) or not isinstance(mono, int) or mono < 0:
+        if isinstance(mono, bool) or not ((isinstance(mono, int) and mono >= 0) or (isinstance(mono, str) and re.fullmatch(r"[0-9]{1,24}", mono))):
             raise ValueError("INVALID_MONOTONIC_CLOCK")
         clock = row["clock_sync"]
         if (not isinstance(clock, dict) or clock.get("sync_state") != "REPORTED_SYNCED"
