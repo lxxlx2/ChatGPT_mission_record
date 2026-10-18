@@ -3,6 +3,8 @@
 Updated: 2026-09-26
 Status: canonical repository organization rule
 
+Related process rule: [Development review, Mac screenshots and evidence ZIP](DEVELOPMENT_ACCEPTANCE_EVIDENCE.md).
+
 ## Goal
 
 Keep the repository readable for humans without breaking existing monitoring automations.
