@@ -977,3 +977,9 @@ Geth 文档指出 WebSocket `logs` 在链重组时向同一旧块事件再发 `r
 
 **下一批业务优先**：877AF、DDAC、8E6B、2ADF 各挑最近真正签名的 1～2 个不同 CA，沿当前真实 quote 资产、交易 receipt 和后续现金退出查完整经济回合、亏损案例；拿不到旧成本就标 UNKNOWN；A83B/0ABB 高频钱包仅作可跟性基准，不作单凭 5 万笔的买入推荐。状态 `P4-B/P4-C=PARTIAL; PUBLIC_EXECUTABLE_U=UNRESOLVED; P5=BLOCKED; PRODUCTION=NO_GO; NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。
 
+## 2026-10-19 P4-B 第二批：8E6B FLAP 与 2ADF yoki酱 新 CA 的真实本人签名 Token 流回合
+
+从 23 钱包 exact 30-day 活跃度筛出 14 个后，继续直接检查两位原钱包的新 Meme CA，不需要重启 WSS 或追加抽象算法：8E6B `0x3b7a5c1519731e555782bb623adfb9cfca5c7777` 与 2ADF `0xa96402db0112ed21a6613b43cdfb766d9e5c7777`。Alchemy 在冻结区块 `#122654260..#128411164` 上，按 EOA + exact CA 双向查询 `erc20` 转账各无下一页；用原始 16 进制 Raw 整数而非显示浮点数重新求和。8E6B `1293859551216114584142304 in = 1293859551216114584142304 out`；2ADF `247790844884194236639000 in = 247790844884194236639000 out`。进/出交易哈希全部核对 signer=`EOA` 且 `to=0x1de460f363af910f51726def188f9004276bf4bc`、方法 `0x4d819a2a`；相应入场实际 `tx.value` 分别 0.15 和 0.08 BNB，后续卖出方向有拆分 Token transfer（包含代币手续费）。只能写 **30 天转入总量=转出总量，签名进出存在**，不能直接宣称期初/期末持仓为零或真实盈利。
+
+[两组 exact CA、签名交易、raw 入出与不推测盈亏来源 JSON](./bsc-meme-address-model-v1-p4b-8e6b-2adf-two-new-ca-complete-token-flow-2026-10-19.json) 及 [累计用户向研究报告](./bsc-meme-address-model-v1-p4b-23eoa-full-market-30day-activity-report-2026-10-19.md) 已创建/追加，原 P2 审核代码与旧 23×19 冻结源未变。剩余真实净额无法被当前免费连接直接读取：`getAssetTransfers internal` 在 BNB 返回 `-32602 unsupported`，`trace_transaction` 返回 `-32600 requires Pay As You Go/Enterprise`；坚决不为求结论而升级付费或填估计值。**下一步要检查的是免费可信来源上精确卖出 TX 的 BNB/quote 实际回款、receipt gas、此前历史成本基础；没有证据继续 UNRESOLVED**。原来其他高频/低频分类如常，PR 仍是同一研究 Draft，`P4-B/P4-C=PARTIAL; PUBLIC_EXECUTABLE_U=UNRESOLVED; P5=BLOCKED; PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
+
