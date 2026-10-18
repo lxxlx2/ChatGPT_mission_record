@@ -1,5 +1,10 @@
 # Monster Stage163 — 官方原 HTTP T0 全511个Spot USDT交易对报价摩擦离线证据（2026-10-18）
 
+> **历史 V1 记录，因Claude独立审核 P1/P2 已被V2证据解释替代。** 此文档曾以「T0报价」描述实际在exchangeInfo T0之后**2.562–6.835秒**取得的REST行情。不能将其当作T0因果可用的买卖盘口，也不能将511个合格USDT Spot交易对称为全部Binance Spot。原V1代码审核`REQUEST_CHANGES`，旧全511 JSON保留以供审计但不覆盖。
+>
+> **唯一新解释与数据**：[已修复Stage163 V2及新代码审核包](MONSTER_STAGE163_SPOT_POST_T0_511_FRICTION_CLAUDE_P1_P2_FIX_20261018.md)；[真正新 V2 post-T0 511逐币JSON](evidence/monster_stage163_spot_post_t0_original511_quote_friction_v2_actual.json)。新独立AI审核尚未完成，G4 UNKNOWN/G6 NO_GO。
+
+
 ## 结论与业务含义（研究，不是可成交收益）
 
 **源核验成功，信号/盈利未放行。** 真正用户操作关注的是：开新仓时是否有新鲜报价、买卖价差成本、买盘卖盘名义深度、在资金约束下能否退出。原 T0 审计此前只给出511个交易对的整体摘要；本轮从**仓库永久保存的原始Binance官方响应ZIP**独立计算511条逐币报价摩擦机器研究明细，供后续D2真实性和机会展示复算使用，不更改WATCH/D1/D2或任何生产策略。
