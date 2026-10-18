@@ -69,6 +69,43 @@ def collect_mints(value):
     return result
 
 
+
+def discover_local_archive_mints(home: Path) -> list[str]:
+    """Read only the existing control-root archive catalog; no new chain scan.
+
+    The Dashboard itself reads control_root/cluster-reports/<mint>/latest.json.
+    Sort smaller reports first because its existing QA GET reader has a 2 MB
+    bound; newest first within equal size bands.
+    """
+    pointer = home / ".frank_meme_control_root"
+    try:
+        if pointer.is_symlink() or not pointer.is_file():
+            return []
+        value = pointer.read_text(encoding="utf-8").strip()
+        if not value:
+            return []
+        control_root = Path(value).expanduser().resolve(strict=True)
+        reports = control_root / "cluster-reports"
+        if reports.is_symlink() or not reports.is_dir():
+            return []
+        discovered = []
+        for directory in reports.iterdir():
+            if (directory.is_symlink() or not directory.is_dir()
+                    or re.fullmatch(r"[1-9A-HJ-NP-Za-km-z]{32,44}", directory.name) is None):
+                continue
+            latest = directory / "latest.json"
+            if latest.is_symlink() or not latest.is_file():
+                continue
+            stat = latest.stat()
+            if stat.st_size <= 0:
+                continue
+            discovered.append((stat.st_size > MAX_SOURCE_BYTES, -stat.st_mtime_ns, directory.name))
+        discovered.sort()
+        return [mint for _, _, mint in discovered]
+    except (OSError, ValueError, UnicodeError):
+        return []
+
+
 def select_local_ca(port: int, explicit: str | None) -> dict:
     if explicit is not None:
         if not re.fullmatch(r"[1-9A-HJ-NP-Za-km-z]{32,44}", explicit):
@@ -77,6 +114,13 @@ def select_local_ca(port: int, explicit: str | None) -> dict:
         exists = isinstance(report, dict) and report.get("mint") == explicit
         return {"mint": explicit, "archive_found": exists, "source": "USER_EXPLICIT_CA",
                 "checked": 1}
+    archive_mints = discover_local_archive_mints(Path.home())
+    for i, archived_mint in enumerate(archive_mints):
+        report = local_json(port, "/api/cluster-latest?" + urlencode({"mint": archived_mint}))
+        if isinstance(report, dict) and report.get("mint") == archived_mint:
+            return {"mint": archived_mint, "archive_found": True,
+                    "source": "LOCAL_ARCHIVE_CATALOG",
+                    "checked": i + 1, "catalog_count": len(archive_mints)}
     ordered = []
     for endpoint in ("/api/candidates", "/api/frank-observed-watchlist"):
         for mint in collect_mints(local_json(port, endpoint)):
@@ -92,8 +136,9 @@ def select_local_ca(port: int, explicit: str | None) -> dict:
             return {"mint": mint, "archive_found": True, "source": "LOCAL_CACHED_CA_MATCH",
                     "checked": i + 1}
     return {"mint": ordered[0] if ordered else None, "archive_found": False,
-            "source": "LOCAL_CA_WITHOUT_ARCHIVE" if ordered else "NO_LOCAL_CA",
-            "checked": len(ordered)}
+            "source": ("LOCAL_ARCHIVE_CATALOG_NOT_READABLE"
+                       if archive_mints else "LOCAL_CA_WITHOUT_ARCHIVE" if ordered else "NO_LOCAL_CA"),
+            "checked": len(ordered), "catalog_count": len(archive_mints)}
 
 
 def qa_page(mint: str | None, stage: str, token: str) -> bytes:
