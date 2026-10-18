@@ -147,10 +147,6 @@ def receipt_offsets(receipts):
     Fail if a declared post-T0 endpoint starts before T0 or time goes backwards.
     """
     reference = datetime.fromtimestamp(T0_MS / 1000, timezone.utc)
-    def depth_quantiles(values):
-        return [percentile(values, p) for p in (10, 50, 90)] if values else "NO_DISPLAYED_TWO_SIDED_DEPTH"
-    statuses = {kind: sum(r["quote_status"] == kind for r in rows)
-                for kind in ("DISPLAYED_TWO_SIDED", "LOCKED_QUOTE", "ZERO_DISPLAYED_SIZE")}
     result = {}
     ends = []
     for kind in ("bookTicker", "ticker24"):
@@ -265,6 +261,10 @@ def evaluate(blobs, receipts, research_notional=None):
     volumes = [dec(r["24h_rolling_quote_volume_usdt"]) for r in rows]
     if len(rows) != EXPECTED_ACTIVE:
         raise ValueError("STAGE163_T0_511_ROWS_NOT_RETAINED")
+    def depth_quantiles(values):
+        return [percentile(values, p) for p in (10, 50, 90)] if values else "NO_DISPLAYED_TWO_SIDED_DEPTH"
+    statuses = {kind: sum(r["quote_status"] == kind for r in rows)
+                for kind in ("DISPLAYED_TWO_SIDED", "LOCKED_QUOTE", "ZERO_DISPLAYED_SIZE")}
     result = {
         "schema": SCHEMA, "source": "ARCHIVED_BINANCE_SPOT_OFFICIAL_HTTP_POST_T0_BOOKTICKER",
         "source_zip_sha256": ZIP_SHA256, "exchange_server_time_ms": T0_MS,
