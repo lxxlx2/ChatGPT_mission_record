@@ -10,7 +10,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const crypto = require("node:crypto");
-const { performance } = require("node:perf_hooks");
 
 const GRID = "bsc-meme-address-model-v1-p4b-23x19-early-opportunity-ledger-2026-10-14.json";
 const GRID_BLOB = "f88ed9abfcb0f321ec31e98a029303aca48a8623";
@@ -102,7 +101,7 @@ function main() {
     const events = [];
     const accepted = new Set();
     let subscriptionId = null, finished = false, timer = null, ws;
-    let frames = 0, ignored = 0, rejection = null, state = "NOT_CONNECTED";
+    let frames = 0, ignored = 0, state = "NOT_CONNECTED";
 
     function finish(why) {
         if (finished) return;
@@ -198,7 +197,7 @@ function main() {
             raw_event_base64: raw.toString("base64"),
             raw_sha256: crypto.createHash("sha256").update(raw).digest("hex"),
             observer_received_utc: receivedAtUtc,
-            observer_monotonic_ns: Number(BigInt(monotonic)),
+            observer_monotonic_ns: monotonic,
             capture_machine_id: id,
             provider_id: "PUBLIC_BNB_WEBSOCKET_MANUAL",
             clock_sync: clockClaim()
@@ -206,7 +205,7 @@ function main() {
         if (events.length >= a.maxEvents) finish("MAX_EVENTS_REACHED");
     });
     ws.addEventListener("error", () => {
-        if (!finished) { rejection = "PROVIDER_ERROR_WEBSOCKET"; finish(rejection); }
+        if (!finished) finish("PROVIDER_ERROR_WEBSOCKET");
     });
     ws.addEventListener("close", () => {
         if (!finished) finish("PROVIDER_ERROR_SOCKET_CLOSED");
