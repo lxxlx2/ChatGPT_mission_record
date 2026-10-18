@@ -7,7 +7,7 @@ Reusable project-analysis framework currently remains at:
 
 Current mapped material:
 - JUMP / Jumper Legion sale: `research/projects/jump/jump-legion-sale.md`
-- StandX development / platform-token TGE: `research/projects/standx/standx-development-tge.md`
+- StandX confirmed 2026-10-15 platform-token cancellation, final one-time DUSD distribution, compensation checker/claim and operations wind-down: `research/projects/standx/standx-development-tge.md` (historical TGE research archived in same document).
 - Meridian Capital / MCD due diligence: `research/projects/meridian-capital/meridian-capital-mcd-due-diligence.md`
 - PaperDAO / daos.world / Papertrade launch analysis: `research/projects/paperdao/paperdao-daos-world-papertrade-launch-analysis.md`
 - daos.world historical launch performance: `research/projects/daos-world/daos-world-historical-launch-performance.md`
