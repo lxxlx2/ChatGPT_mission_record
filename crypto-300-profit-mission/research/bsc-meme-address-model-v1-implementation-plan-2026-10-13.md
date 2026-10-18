@@ -983,3 +983,7 @@ Geth 文档指出 WebSocket `logs` 在链重组时向同一旧块事件再发 `r
 
 [两组 exact CA、签名交易、raw 入出与不推测盈亏来源 JSON](./bsc-meme-address-model-v1-p4b-8e6b-2adf-two-new-ca-complete-token-flow-2026-10-19.json) 及 [累计用户向研究报告](./bsc-meme-address-model-v1-p4b-23eoa-full-market-30day-activity-report-2026-10-19.md) 已创建/追加，原 P2 审核代码与旧 23×19 冻结源未变。剩余真实净额无法被当前免费连接直接读取：`getAssetTransfers internal` 在 BNB 返回 `-32602 unsupported`，`trace_transaction` 返回 `-32600 requires Pay As You Go/Enterprise`；坚决不为求结论而升级付费或填估计值。**下一步要检查的是免费可信来源上精确卖出 TX 的 BNB/quote 实际回款、receipt gas、此前历史成本基础；没有证据继续 UNRESOLVED**。原来其他高频/低频分类如常，PR 仍是同一研究 Draft，`P4-B/P4-C=PARTIAL; PUBLIC_EXECUTABLE_U=UNRESOLVED; P5=BLOCKED; PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
 
+## 2026-10-19 BNB 本人卖出余额交叉核验：5 个区块的免费来源阻断归因
+
+追加两位本人签名新 token 入出回合对应 5 个精确目标区块的 `eth_getBalance` 与区块前后 `eth_getTransactionCount`，分别保存整个块包含的 EOA BNB 净余额变化及钱包在该块发送交易数。8E6B FLAP 入场整块 -0.1500459288 BNB，两个出账区块分别 +0.140223743955461336 和 +0.010165345121883870 BNB；2ADF yoki酱入场整块 -0.08004523388 BNB，出账块 +0.071015472779666730 BNB。**三个出账块各有 EOA nonce +2，证明不能把整区块 BNB 变化直接记为单笔 selected Meme 卖出所得。** 特别禁止将跨区块求和转写为两钱包实际利润；原生内部转账 trace/完整 Gas 回执还没拿到。证据单列 [五个区块余额/nonce/目标 TX 来源 JSON](./bsc-meme-address-model-v1-p4b-8e6b-2adf-signed-round-bnb-block-delta-unattributed-2026-10-19.json) 和 [当轮总报告](./bsc-meme-address-model-v1-p4b-23eoa-full-market-30day-activity-report-2026-10-19.md)，无新增产品规则或算法代码。下一步仅在免费、可信来源能验证 **每笔原生实际到账+Gas+同块其他交易** 时继续经济利润结算，否则维持 `UNRESOLVED`，不付费、不需要再复核已经批准的旧 Python 门禁。门禁仍全部 NO_GO。
+
