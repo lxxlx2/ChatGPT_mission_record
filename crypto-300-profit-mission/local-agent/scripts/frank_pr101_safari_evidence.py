@@ -366,6 +366,7 @@ def main() -> int:
                 return 2
             stamp = datetime.now().astimezone().strftime("%Y%m%d-%H%M%S")
             archive = Path.home() / "Downloads" / f"frank-pr101-safari-evidence-{stamp}-{preview_sha[:8]}.zip"
+            archive_created = False
             try:
                 verify_git_source(checkout_root, preview_sha)
                 verify_preview_snapshot(static, committed_hashes)
@@ -374,10 +375,12 @@ def main() -> int:
                     source_port=source_port, preview_port=port,
                     preview_sha=preview_sha, verified_static_hashes=committed_hashes,
                 )
+                archive_created = True
                 verify_git_source(checkout_root, preview_sha)
                 verify_preview_snapshot(static, committed_hashes)
             except (RuntimeError, OSError, subprocess.CalledProcessError) as exc:
-                archive.unlink(missing_ok=True)
+                if archive_created:
+                    archive.unlink(missing_ok=True)
                 rejected = Path.home() / "Downloads" / (
                     f"frank-pr101-REJECTED-source-drift-{stamp}-{preview_sha[:8]}")
                 preserved = preserve_rejected_screenshots(
