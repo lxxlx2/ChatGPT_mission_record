@@ -4,6 +4,8 @@ on:
     branches: [research/monster-v4-local-discovery-20261010]
     paths:
       - '.github/workflows/monster-v4-stage164-fair8-new27-nonconversion-once.yml'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage164_fair8_nonconversion_audit.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage164_fair8_nonconversion_audit.py'
 permissions:
   contents: write
   actions: read
