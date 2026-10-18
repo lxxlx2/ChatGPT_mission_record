@@ -151,6 +151,109 @@ class PublicObserverIngressEvidenceTests(unittest.TestCase):
         self.assertEqual(batch["counts"]["reorg_revoked"], 0)
         self.assertEqual(batch["counts"]["unattested_post_block_transfer_candidates"], 1)
 
+    def test_rejected_wrong_network_tombstone_cannot_revoke(self):
+        included = self.confirmed_log_event()
+        removed = copy.deepcopy(included)
+        removed["event_id"] = "REJECTED_WRONG_NETWORK_TOMBSTONE"
+        removed["network"] = "eth-mainnet"
+        frame = json.loads(base64.b64decode(removed["raw_event_base64"]))
+        frame["params"]["result"]["removed"] = True
+        self.replace_event(removed, frame)
+        batch = gate.ingest_document(self.doc([included, removed]), self.grid, self.prefreeze)
+        self.assertEqual(batch["records"][1]["reason"], "WRONG_NETWORK")
+        self.assertEqual(batch["records"][0]["state"], "POST_BLOCK_TOKEN_RECEIPT_OBSERVER_CANDIDATE_UNATTESTED")
+        self.assertEqual(batch["counts"]["reorg_revoked"], 0)
+
+    def test_other_frozen_ca_tombstone_cannot_revoke(self):
+        included = self.confirmed_log_event()
+        removed = copy.deepcopy(included)
+        removed["event_id"] = "OTHER_FROZEN_CA_TOMBSTONE"
+        ca = next(m["ca"] for m in self.grid["markets"] if m["ca"].lower() != included["exact_ca"].lower())
+        removed["exact_ca"] = ca
+        frame = json.loads(base64.b64decode(removed["raw_event_base64"]))
+        frame["params"]["result"]["address"] = ca
+        frame["params"]["result"]["removed"] = True
+        self.replace_event(removed, frame)
+        batch = gate.ingest_document(self.doc([included, removed]), self.grid, self.prefreeze)
+        self.assertEqual(batch["records"][1]["reason"], "LOG_REMOVED_REORG_NOT_ACTIONABLE")
+        self.assertEqual(batch["counts"]["reorg_revoked"], 0)
+        self.assertEqual(batch["counts"]["unattested_post_block_transfer_candidates"], 1)
+
+    def test_other_frozen_wallet_tombstone_cannot_revoke(self):
+        included = self.confirmed_log_event()
+        removed = copy.deepcopy(included)
+        removed["event_id"] = "OTHER_FROZEN_WALLET_TOMBSTONE"
+        wallet = next(w["wallet"] for w in self.grid["wallets"] if w["wallet"].lower() != included["wallet"].lower())
+        removed["wallet"] = wallet
+        frame = json.loads(base64.b64decode(removed["raw_event_base64"]))
+        frame["params"]["result"]["topics"][2] = gate._address_topic(wallet)
+        frame["params"]["result"]["removed"] = True
+        self.replace_event(removed, frame)
+        batch = gate.ingest_document(self.doc([included, removed]), self.grid, self.prefreeze)
+        self.assertEqual(batch["records"][1]["reason"], "LOG_REMOVED_REORG_NOT_ACTIONABLE")
+        self.assertEqual(batch["counts"]["reorg_revoked"], 0)
+        self.assertEqual(batch["counts"]["unattested_post_block_transfer_candidates"], 1)
+
+    def test_duplicate_event_id_tombstone_cannot_revoke(self):
+        included = self.confirmed_log_event()
+        removed = copy.deepcopy(included)
+        frame = json.loads(base64.b64decode(removed["raw_event_base64"]))
+        frame["params"]["result"]["removed"] = True
+        self.replace_event(removed, frame)
+        batch = gate.ingest_document(self.doc([included, removed]), self.grid, self.prefreeze)
+        self.assertEqual(batch["records"][1]["reason"], "DUPLICATE_OR_MISSING_EVENT_ID")
+        self.assertEqual(batch["counts"]["reorg_revoked"], 0)
+        self.assertEqual(batch["counts"]["unattested_post_block_transfer_candidates"], 1)
+
+    def test_other_transfer_sender_or_raw_amount_does_not_trigger_revoke(self):
+        for field in ("topics", "data"):
+            with self.subTest(field=field):
+                included = self.confirmed_log_event()
+                removed = copy.deepcopy(included)
+                removed["event_id"] = "CONFLICTING_TRANSFER_" + field
+                frame = json.loads(base64.b64decode(removed["raw_event_base64"]))
+                frame["params"]["result"]["removed"] = True
+                if field == "topics":
+                    frame["params"]["result"]["topics"][1] = "0x" + "0" * 24 + "c" * 40
+                else:
+                    frame["params"]["result"]["data"] = "0x" + format(2 * 10 ** 18, "064x")
+                self.replace_event(removed, frame)
+                batch = gate.ingest_document(self.doc([included, removed]), self.grid, self.prefreeze)
+                self.assertEqual(batch["counts"]["reorg_revoked"], 0)
+                self.assertEqual(batch["counts"]["unattested_post_block_transfer_candidates"], 1)
+
+    def test_same_raw_log_new_event_id_not_double_counted(self):
+        included = self.confirmed_log_event()
+        duplicate = copy.deepcopy(included)
+        duplicate["event_id"] = "SAME_LOG_DIFFERENT_EVENT_ID"
+        batch = gate.ingest_document(self.doc([included, duplicate]), self.grid, self.prefreeze)
+        self.assertEqual(batch["counts"]["unattested_post_block_transfer_candidates"], 1)
+        self.assertEqual(batch["records"][1]["reason"], "DUPLICATE_ORIGINAL_LOG_IDENTITY")
+
+    def test_utc_window_overflow_pending_keeps_other_record(self):
+        included = self.valid_event()
+        over = self.valid_event()
+        over["event_id"] = "PENDING_OVERFLOW_9999"
+        over["tx_hash"] = "0x" + "f" * 64
+        frame = json.loads(base64.b64decode(over["raw_event_base64"]))
+        frame["params"]["result"]["hash"] = over["tx_hash"]
+        self.replace_event(over, frame)
+        over["observer_received_utc"] = "9999-12-31T23:59:59Z"
+        batch = gate.ingest_document(self.doc([included, over]), self.grid, self.prefreeze)
+        self.assertEqual(batch["records"][0]["state"], "PENDING_OWNER_TX_CAPTURE_CANDIDATE_UNATTESTED")
+        self.assertEqual(batch["records"][1]["reason"], "UTC_DELAY_WINDOW_OUT_OF_RANGE")
+        self.assertEqual(batch["counts"]["rejected"], 1)
+
+    def test_utc_window_overflow_confirmed_log_keeps_other_record(self):
+        included = self.confirmed_log_event()
+        over = self.confirmed_log_event()
+        over["event_id"] = "CONFIRMED_LOG_OVERFLOW_9999"
+        over["observer_received_utc"] = "9999-12-31T23:59:59Z"
+        batch = gate.ingest_document(self.doc([included, over]), self.grid, self.prefreeze)
+        self.assertEqual(batch["records"][0]["state"], "POST_BLOCK_TOKEN_RECEIPT_OBSERVER_CANDIDATE_UNATTESTED")
+        self.assertEqual(batch["records"][1]["reason"], "UTC_DELAY_WINDOW_OUT_OF_RANGE")
+        self.assertEqual(batch["counts"]["rejected"], 1)
+
     def test_log_zero_token_transfer_rejected(self):
         x = self.confirmed_log_event()
         event = json.loads(base64.b64decode(x["raw_event_base64"]))
