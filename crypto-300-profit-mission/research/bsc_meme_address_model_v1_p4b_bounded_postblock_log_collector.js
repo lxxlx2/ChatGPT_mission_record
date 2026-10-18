@@ -185,11 +185,14 @@ function main() {
             ignored++; return;
         }
         const uid = (String(log.blockHash) + ":" + log.transactionHash + ":" + log.logIndex).toLowerCase();
-        if (accepted.has(uid)) { ignored++; return; }
-        accepted.add(uid);
-        // Preserve removed logs too: consumer must mark them REJECTED, not erase reorg evidence.
+        const isRemoved = log.removed === true;
+        const eventUid = uid + (isRemoved ? ":REMOVED" : ":INCLUDED");
+        if (accepted.has(eventUid)) { ignored++; return; }
+        accepted.add(eventUid);
+        // A reorg emits the SAME blockHash/txHash/logIndex with removed=true.
+        // Preserve both arrival and reversal as separate immutable evidence rows.
         events.push({
-            event_id: id + ":" + uid,
+            event_id: id + ":" + eventUid,
             network: "bnb-mainnet",
             wallet, exact_ca: log.address.toLowerCase(),
             tx_hash: log.transactionHash.toLowerCase(),
