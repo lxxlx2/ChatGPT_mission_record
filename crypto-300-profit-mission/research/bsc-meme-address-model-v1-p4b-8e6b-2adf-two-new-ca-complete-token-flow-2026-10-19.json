@@ -1,0 +1,110 @@
+{
+  "schema": "BSC_P4B_TWO_SIGNED_NEW_CA_FULL_IN_OUT_TOKEN_FLOW_V1",
+  "source": "USER_CONNECTED_ALCHEMY_BNB_MAINNET_READ_ONLY",
+  "window_anchor": "2026-09-18T18:34:56Z_to_2026-10-18T18:34:56Z",
+  "source_evidence_file": "bsc-meme-address-model-v1-p4b-23eoa-full-market-30day-activity-screen-2026-10-19.json",
+  "coverage": "FOR EACH SELECTED EXACT CA AND WALLET, ALL 30-DAY ERC20 FROM/TO ENTRIES HAVE pagination=false; SOURCE RESPONSE NOT INDEPENDENTLY ARCHIVED",
+  "cases": [
+    {
+      "id": "8E6B_FLAP",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "exact_ca": "0x3b7a5c1519731e555782bb623adfb9cfca5c7777",
+      "symbol_claim": "FLAP",
+      "incoming": [
+        {
+          "block": "0x79d7283",
+          "hash": "0x795a0d949ef8c65c043d7b2f9301a8a5ecf82f2fb7cb7508ee7be6b6b0214b67",
+          "raw": [
+            "0x111fc444e0d5adaee41e0"
+          ],
+          "signed_from_wallet": true,
+          "native_transaction_value_wei": "150000000000000000"
+        }
+      ],
+      "outgoing": [
+        {
+          "block": "0x79d77c1",
+          "hash": "0x514945d5da5f7fd373fd0d3772d6e50d8ded905590fd443d7304be2d1df7e73f",
+          "raw": [
+            "0x8006ac2dec82b18f0dcb",
+            "0x14b0eab216b572079ac"
+          ],
+          "signed_from_wallet": true,
+          "native_transaction_value_wei": "0"
+        },
+        {
+          "block": "0x79f7fc0",
+          "hash": "0x9d6c8d64d24367f2f52cdcdb9cebe84c7462209b71ba291377a9056000ac6559",
+          "raw": [
+            "0x8f38310ade269cf14d07",
+            "0x172586a2146354d6d62"
+          ],
+          "signed_from_wallet": true,
+          "native_transaction_value_wei": "0"
+        }
+      ],
+      "raw_token_in": "1293859551216114584142304",
+      "raw_token_out": "1293859551216114584142304",
+      "raw_token_net": "0",
+      "in_window_net_flow_zero": true,
+      "transaction_counterparty": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "exit_native_received_wei": "UNRESOLVED_ALCHEMY_BNB_INTERNAL_UNSUPPORTED",
+      "gas_used_actual_wei": "UNRESOLVED_RECEIPT_COMPLETE_UNAVAILABLE",
+      "realized_net_profit": "UNRESOLVED"
+    },
+    {
+      "id": "2ADF_YOKI",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "exact_ca": "0xa96402db0112ed21a6613b43cdfb766d9e5c7777",
+      "symbol_claim": "yoki酱",
+      "incoming": [
+        {
+          "block": "0x7a4257c",
+          "hash": "0x676f0c753d49761a80dadd8b9485e60e9ffb8ae6e72f17498ff476a3d75cfa80",
+          "raw": [
+            "0x3478c4c41a031cc92718"
+          ],
+          "signed_from_wallet": true,
+          "native_transaction_value_wei": "80000000000000000"
+        }
+      ],
+      "outgoing": [
+        {
+          "block": "0x7a6133d",
+          "hash": "0x092edd1dc44a7b1671d0e6de1e7594bca1b9129a6c12a7ea9967c0326e235c6a",
+          "raw": [
+            "0x33f270e0dc4fe19e2e62",
+            "0x8653e33db33b2af8b6"
+          ],
+          "signed_from_wallet": true,
+          "native_transaction_value_wei": "0"
+        }
+      ],
+      "raw_token_in": "247790844884194236639000",
+      "raw_token_out": "247790844884194236639000",
+      "raw_token_net": "0",
+      "in_window_net_flow_zero": true,
+      "transaction_counterparty": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "exit_native_received_wei": "UNRESOLVED_ALCHEMY_BNB_INTERNAL_UNSUPPORTED",
+      "gas_used_actual_wei": "UNRESOLVED_RECEIPT_COMPLETE_UNAVAILABLE",
+      "realized_net_profit": "UNRESOLVED"
+    }
+  ],
+  "limitations": [
+    "Token in/out quantity equality does not alone prove zero start or end wallet token inventory; getTokenBalance at endpoints not read.",
+    "Historical native BNB buy value from real signer confirmed; net native BNB realized sale proceeds NOT CONFIRMED.",
+    "Alchemy getAssetTransfers BNB 'internal' category RPC -32602 unsupported.",
+    "Alchemy trace_transaction RPC -32600 requires Pay As You Go/Enterprise; no paid attempt.",
+    "No actualGasUsed/quote token fees fully preserved from receipts; cannot calculate net PnL.",
+    "Token amount from logs includes fee split to contract; cannot treat only liquidity-pool transfer as total owner debit.",
+    "One new post-window incoming/outgoing event after end block is not counted toward strict 30 day interval.",
+    "All cases only token-flow-closed within bounded period; profitability and first public U remain unresolved."
+  ],
+  "gates": {
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}
