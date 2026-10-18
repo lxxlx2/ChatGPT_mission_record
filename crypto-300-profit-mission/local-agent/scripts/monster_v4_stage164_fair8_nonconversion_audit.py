@@ -69,7 +69,7 @@ def make_report(j, *, strict=True):
     old_status = counts("baseline_status_final")
     slots = counts("fair8_selected_slot_count")
     if strict and not (
-        j["schema"] == "MONSTER445_STAGE162_FIRST_VALID_5M_ONCE_PRIORITY_8_RESEARCH_V1"
+        j.get("schema") == "MONSTER445_STAGE162_FIRST_VALID_5M_ONCE_PRIORITY_8_RESEARCH_V1"
         and len(candidates) == len(queues) == 269
         and len(gained) == 27 and len(lost) == 0
         and sum(r["baseline_first_evaluation_ms"] is not None for r in candidates) == 172
