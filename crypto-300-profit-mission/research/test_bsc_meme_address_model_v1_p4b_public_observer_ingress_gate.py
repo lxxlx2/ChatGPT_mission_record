@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 import shutil
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -228,6 +229,41 @@ class PublicObserverIngressEvidenceTests(unittest.TestCase):
         x = self.valid_event()
         x["clock_sync"]["sync_state"] = "UNKNOWN"
         self.assertEqual(self.check(x)[0]["reason"], "CLOCK_SYNC_CLAIM_MISSING_OR_INVALID")
+
+    def test_monotonic_over_53bit_keeps_exact_decimal_string(self):
+        x = self.confirmed_log_event()
+        x["observer_monotonic_ns"] = "9007199254740993123"
+        r, _ = self.check(x)
+        self.assertEqual(r["state"], "POST_BLOCK_TOKEN_RECEIPT_OBSERVER_CANDIDATE_UNATTESTED")
+
+    def test_missing_clock_does_not_promote_unverified_timing(self):
+        x = self.confirmed_log_event()
+        x["clock_sync"] = {"sync_state": "UNKNOWN",
+                           "source": "NO_CALIBRATION_SUPPLIED",
+                           "max_abs_offset_ms": None}
+        r, _ = self.check(x)
+        self.assertEqual(r["reason"], "CLOCK_SYNC_CLAIM_MISSING_OR_INVALID")
+        self.assertIsNone(r["first_public_observer_received_utc"])
+
+    def test_node_bounded_collector_default_dry_run_when_node_installed(self):
+        node = shutil.which("node")
+        if node is None:
+            self.skipTest("node unavailable on this runner")
+        script = str(gate.ROOT / "bsc_meme_address_model_v1_p4b_bounded_postblock_log_collector.js")
+        syntax = subprocess.run([node, "--check", script], capture_output=True,
+                                text=True, timeout=15)
+        self.assertEqual(syntax.returncode, 0, syntax.stderr)
+        run = subprocess.run([node, script, "--dry-run", "--duration-seconds", "60",
+                              "--max-events", "5"], capture_output=True, text=True,
+                             timeout=15)
+        self.assertEqual(run.returncode, 0, run.stderr)
+        out = json.loads(run.stdout)
+        self.assertEqual(out["mode"], "OFFLINE_DRY_RUN_NO_NETWORK")
+        self.assertEqual((out["original_wallets"], out["exact_cas"]), (23, 19))
+        self.assertEqual(len(out["params"][1]["address"]), 19)
+        self.assertEqual(len(out["params"][1]["topics"][2]), 23)
+        self.assertEqual(out["params"][0], "logs")
+        self.assertEqual(out["production"], "NO_GO")
 
     def test_boolean_monotonic_clock_fails(self):
         x = self.valid_event()
