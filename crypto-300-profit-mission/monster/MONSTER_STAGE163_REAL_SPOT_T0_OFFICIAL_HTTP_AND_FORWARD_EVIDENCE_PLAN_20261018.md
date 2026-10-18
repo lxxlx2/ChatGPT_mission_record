@@ -134,3 +134,16 @@
 - 原6项测试增加四项，真实用例覆盖后置回执倒序/前视、BREAK/Spot denied、跨端点不一致、锁定盘口/零数量。单个显示名义金额敏感性更名，不暗示真正可成交；用户交易本金仍未授权。
 
 完整新审核包及业务范围：[Claude P1/P2 修复与V2官方真实来源报告](MONSTER_STAGE163_SPOT_POST_T0_511_FRICTION_CLAUDE_P1_P2_FIX_20261018.md)。**这项研究并未解决原Stage163七日前瞻的完整交易所新挂牌PIT、每根分钟实时WATCH时点真实买卖价/订单状态/退出深度，也未解决实盘净收益**。下步在真实连续信号时点评估送达延迟与执行可行性，避免继续围绕已关闭的经济P2或静态单张截图堆报告。仍保持`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`，Stage99自动采集、Frank、Mac服务都不变。
+
+
+## 十二、V3时钟桥/零盘口独立档案与证据继承记录（2026-10-18）
+
+用户转交Claude聊天审核前固定 `4c6bff916bb432ba778c59e6283c5a75e2902293`：`REQUEST_CHANGES`，原T0前视/511人口/跨端点身份修复仍被认可，但新P1-E指出旧V1证据未失效/V2不在其**固定旧树**；P2-A要求从同一已保存官方`clock_before/clock_after`计算客户端与服务器时钟差及不确定区间；P2-B要求薄/锁定盘口单行不可整批中止。审核者准确底层版本`UNVERIFIED`，后续批准仍`NOT_DONE`。
+
+**作者修复已在原PR主线完成**：代码/测试/一次性offine工作流固定头`59c546af14cc42ab2be6e8e2af9a5c1d7d55f7be`，独立CI [#39084681931](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39084681931) **SUCCESS，12/12实际测试通过**；CI把当前V3新[原511机器证据](evidence/monster_stage163_spot_post_t0_original511_quote_friction_v3_clock_actual.json)保存Git Blob `f87ea5342642055af4e8ea8f15dd4efa76e1eb7d`。**定向其他AI审核证据完整固定SHA为`15edf022d8b99071701357dfd51d7534f3470409`**，与上一轮被拒绝`4c6bff916bb432ba778c59e6283c5a75e2902293`比较；这个固定树已包含旧V1、旧V2、新V3及[supersession失效登记](evidence/monster_stage163_spot_quote_friction_evidence_supersession_register_20261018.json)，避免在早期代码SHA树找不到后来的证据导致误判。以后只有新研究文档追加，已测试代码保持不变。
+
+**实际源时钟模型**：Binance `serverTime - client请求中点`两个探针估计分别 +337.799ms、+227.823ms；每个HTTP client请求时长半窗±418.004ms、±306.728ms，合并形成[−80.204,+755.802]ms条件包络。不同探针之间时钟漂移、网络单向延时依旧UNVERIFIED，**不构成已认证的逐币报价时间/当前可执行盘口**；V3同时保留bookTicker/ticker24真实请求起止UTC、原客户端相对T0偏移及被桥接后的条件上下界。跨端点乱序和不能证明后置的回执拒绝，T0已知因果一直为False。
+ 
+**薄盘口**：V3保留511个source eligible交易对原始行，把锁定盘口、零数量逐币标记为`LOCKED_QUOTE`/`ZERO_DISPLAYED_SIZE`，单币此类状态不再取消整个市场分母；仅有效双边报价进入深度分位数，同时记真实深度可评价分母。真实本次分类 **`511/0/0`**，它不是未来市场规则测试中的所有币都必然有效。交叉/NaN/负量、缺来源等仍拒绝。旧原始源字节/历史价差完全未改。
+
+完整 [V3 Claude P1-E/P2-A/P2-B审核任务](MONSTER_STAGE163_SPOT_POST_T0_CLOCK_BRIDGE_V3_CLAUDE_REVIEW_20261018.md) 已固定代码比较、V3事实、旧V1/V2保全/新S3引用；**新其他AI实际复审暂未完成**，不可回溯把旧REQUEST_CHANGES改为APPROVE。更不代表Stage163完整前瞻OOS、实时D0/D1、真实手续费/退出盘口已经获得；G4 UNKNOWN/G6 NO_GO，NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE持续，Frank与本地监控不动。
