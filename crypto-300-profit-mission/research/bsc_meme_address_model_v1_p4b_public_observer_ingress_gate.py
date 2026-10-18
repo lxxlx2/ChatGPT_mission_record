@@ -69,6 +69,13 @@ def iso(value: datetime) -> str:
     return value.isoformat(timespec="microseconds").replace("+00:00", "Z")
 
 
+def delay_windows(t: datetime) -> dict:
+    try:
+        return {str(seconds): iso(t + timedelta(seconds=seconds)) for seconds in DELAY_SECONDS}
+    except OverflowError as exc:
+        raise ValueError("UTC_DELAY_WINDOW_OUT_OF_RANGE") from exc
+
+
 def historical_summary(pre: dict) -> dict:
     return {"schema": "BSC_P4B_FIRST_SEEN_EVIDENCE_GATE_V1",
             "mode": "FROZEN_HISTORICAL_EVIDENCE_STATUS",
@@ -98,9 +105,7 @@ def _address_topic(address: str) -> str:
 
 def validate_confirmed_log(payload: dict, row: dict, wallet: str, ca: str, tx_hash: str, t: datetime, clock: dict) -> dict:
     """An immutable BNB mined ERC20 Transfer is NOT a signed EOA BUY signal."""
-    if payload.get("removed") is True:
-        raise ValueError("LOG_REMOVED_REORG_NOT_ACTIONABLE")
-    if payload.get("removed") is not False:
+    if payload.get("removed") not in (True, False) or not isinstance(payload.get("removed"), bool):
         raise ValueError("LOG_REMOVAL_STATUS_NOT_PROVEN")
     topics = payload.get("topics")
     if (not isinstance(topics, list) or len(topics) != 3
@@ -124,17 +129,31 @@ def validate_confirmed_log(payload: dict, row: dict, wallet: str, ca: str, tx_ha
         raise ValueError("LOG_NOT_CONFIRMED_IN_BLOCK")
     if not isinstance(payload.get("blockHash"), str) or not HASH.fullmatch(payload["blockHash"]):
         raise ValueError("LOG_NO_BLOCK_HASH_PROOF")
-    return {
-        "state": "POST_BLOCK_TOKEN_RECEIPT_OBSERVER_CANDIDATE_UNATTESTED",
-        "reason": "TOKEN_TRANSFER_INTO_WALLET_NOT_PROOF_ORIGINAL_SIGNED_BUY",
+    shared_identity = {
         "wallet": wallet, "exact_ca": ca, "tx_hash": tx_hash,
         "received_erc20_raw": str(int(data, 16)),
         "confirmed_block_number": int(payload["blockNumber"], 16),
         "confirmed_block_hash": payload["blockHash"].lower(),
         "log_index": int(payload["logIndex"], 16),
+        "transfer_from_topic": topics[1].lower(),
+    }
+    if payload["removed"]:
+        return {
+            "state": "REJECTED_EVIDENCE",
+            "reason": "LOG_REMOVED_REORG_NOT_ACTIONABLE",
+            "validated_reorg_tombstone": True,
+            **shared_identity,
+            "first_public_observer_received_utc": None,
+            "target_windows_utc": None,
+            "follower_net_pnl": "UNRESOLVED",
+        }
+    return {
+        "state": "POST_BLOCK_TOKEN_RECEIPT_OBSERVER_CANDIDATE_UNATTESTED",
+        "reason": "TOKEN_TRANSFER_INTO_WALLET_NOT_PROOF_ORIGINAL_SIGNED_BUY",
+        **shared_identity,
         "first_local_observer_received_utc_claim": iso(t),
         "first_public_observer_received_utc": None,
-        "target_windows_utc": {str(delay): iso(t + timedelta(seconds=delay)) for delay in DELAY_SECONDS},
+        "target_windows_utc": delay_windows(t),
         "time_anchor": "FIRST_LOCAL_POST_BLOCK_LOG_INGRESS_CLAIM_NOT_MEMPOOL_FIRST_SEEN",
         "source_raw_sha256": row["raw_sha256"].lower(),
         "observer_clock_claim_source": clock["source"],
@@ -233,7 +252,7 @@ def validate_event(row: dict, wallets: set[str], cas: set[str], archived_txs: se
         if payload.get("timestamp") == row["observer_received_utc"]:
             # Timestamp supplied by a historical API is not arrival proof.
             raise ValueError("RAW_EVENT_REUSES_HISTORICAL_TIMESTAMP")
-        windows = {str(s): iso(t + timedelta(seconds=s)) for s in DELAY_SECONDS}
+        windows = delay_windows(t)
         return {"state": "PENDING_OWNER_TX_CAPTURE_CANDIDATE_UNATTESTED",
                 "reason": "RAW_PUBLIC_FEED_EVENT_AND_SELF_REPORTED_LOCAL_CLOCK_ONLY",
                 "wallet": wallet.lower(), "exact_ca": ca.lower(), "tx_hash": tx_hash.lower(),
@@ -250,35 +269,14 @@ def validate_event(row: dict, wallets: set[str], cas: set[str], archived_txs: se
         return _reject(str(exc))
 
 
-def _valid_removed_log_key(row: dict) -> tuple | None:
-    """Find a same-block reorg tombstone with intact raw-frame SHA and identity."""
-    try:
-        if not isinstance(row, dict) or row.get("capture_kind") != CONFIRMED_LOG_KIND:
-            return None
-        raw = base64.b64decode(row["raw_event_base64"], validate=True)
-        if hashlib.sha256(raw).hexdigest() != row["raw_sha256"].lower():
-            return None
-        outer = json.loads(raw)
-        log = outer.get("params", {}).get("result", {})
-        if not isinstance(log, dict) or log.get("removed") is not True:
-            return None
-        block_hash, tx_hash = log["blockHash"], log["transactionHash"]
-        if (not isinstance(block_hash, str) or not HASH.fullmatch(block_hash)
-                or not isinstance(tx_hash, str) or not HASH.fullmatch(tx_hash)
-                or tx_hash.lower() != row["tx_hash"].lower()
-                or str(log["address"]).lower() != row["exact_ca"].lower()):
-            return None
-        if (not isinstance(log.get("topics"), list) or len(log["topics"]) != 3
-                or str(log["topics"][0]).lower() != TRANSFER_TOPIC
-                or str(log["topics"][2]).lower() != _address_topic(row["wallet"])):
-            return None
-        index = log["logIndex"]
-        if not isinstance(index, str) or not re.fullmatch(r"0x[0-9a-fA-F]+", index):
-            return None
-        return block_hash.lower(), tx_hash.lower(), int(index, 16)
-    except (KeyError, TypeError, ValueError, binascii.Error, AttributeError,
-            UnicodeDecodeError, json.JSONDecodeError):
-        return None
+def _validated_log_key(record: dict) -> tuple:
+    """Bind reorg identity to every audited log dimension, not event_id alone."""
+    return (
+        "bnb-mainnet", record["exact_ca"], record["wallet"],
+        record["confirmed_block_hash"], record["tx_hash"],
+        record["log_index"], record["confirmed_block_number"],
+        record["transfer_from_topic"], record["received_erc20_raw"],
+    )
 
 
 def ingest_document(doc: dict, grid: dict, pre: dict) -> dict:
@@ -290,7 +288,7 @@ def ingest_document(doc: dict, grid: dict, pre: dict) -> dict:
     wallets = {w["wallet"].lower() for w in grid["wallets"]}
     cas = {m["ca"].lower() for m in grid["markets"]}
     archived_txs = {x[field].lower() for x in pre["cases"] for field in ("first_signed_buy_tx", "last_signed_exit_tx")}
-    records, ids, removed = [], set(), set()
+    records, ids, removed, seen_logs = [], set(), set(), set()
     for row in observations:
         event_id = row.get("event_id") if isinstance(row, dict) else None
         if not isinstance(event_id, str) or event_id in ids:
@@ -298,16 +296,27 @@ def ingest_document(doc: dict, grid: dict, pre: dict) -> dict:
         else:
             ids.add(event_id)
             result = validate_event(row, wallets, cas, archived_txs)
+        if result["state"] == "POST_BLOCK_TOKEN_RECEIPT_OBSERVER_CANDIDATE_UNATTESTED":
+            key = _validated_log_key(result)
+            if key in seen_logs:
+                result = _reject("DUPLICATE_ORIGINAL_LOG_IDENTITY")
+            else:
+                seen_logs.add(key)
+        elif result.get("validated_reorg_tombstone") is True:
+            # A wrong-network, duplicate-ID, uncalibrated, hash-mismatched,
+            # out-of-cohort or malformed tombstone never reaches this branch.
+            key = _validated_log_key(result)
+            if key in removed:
+                result = _reject("DUPLICATE_REORG_TOMBSTONE")
+            else:
+                removed.add(key)
         records.append({"event_id": event_id, **result})
-        removed_key = _valid_removed_log_key(row)
-        if removed_key is not None:
-            removed.add(removed_key)
     # Do not allow an earlier included log to stay an active candidate when
     # the same blockHash/txHash/logIndex is later reorg-removed in this batch.
     for record in records:
         if record.get("state") != "POST_BLOCK_TOKEN_RECEIPT_OBSERVER_CANDIDATE_UNATTESTED":
             continue
-        key = (record["confirmed_block_hash"], record["tx_hash"], record["log_index"])
+        key = _validated_log_key(record)
         if key in removed:
             record.update(state="REORG_REVOKED_POSTBLOCK_LOG",
                           reason="SAME_BLOCK_LOG_REMOVAL_RECORDED_IN_INGRESS_BATCH",
