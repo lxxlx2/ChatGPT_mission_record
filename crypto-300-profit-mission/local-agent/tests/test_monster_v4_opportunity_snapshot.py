@@ -2,6 +2,7 @@
 import importlib.util
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
@@ -74,6 +75,8 @@ class TestOperatorSnapshot(unittest.TestCase):
         record = self.report(BASE + 600_000)["opportunities"][0]
         self.assertEqual(record["signal"], "SETUP_RESEARCH_ONLY")
         self.assertEqual(record["d2_status"], "CHECKED")
+        self.assertEqual(record["d2_status_origin"], "D2_TERMINAL_EVENT_OBSERVED_BY_ASOF")
+        self.assertTrue(record["d2_research_liquidity_gate_is_not_fill_proof"])
         self.assertTrue(record["d2_research_liquidity_gate"])
         self.assertEqual(record["d2_assumed_budget_usdt"], 30)
         self.assertEqual(record["d2_spread_bps"], 8.5)
@@ -108,7 +111,8 @@ class TestOperatorSnapshot(unittest.TestCase):
 
         m.observe_snapshot(self.db, "spot", BASE + 780_000, tick("AAAUSDT", ".8"))
         invalid = self.report(BASE + 780_000)["opportunities"][0]
-        self.assertEqual(invalid["queue_status"], "EVALUATED")
+        self.assertEqual(invalid["queue_status"], "INVALIDATED")
+        self.assertEqual(invalid["queue_status_origin"], "ASOF_EVENTS_AND_DEADLINE_NOT_MUTABLE_QUEUE_STATE")
         self.assertEqual(invalid["signal"], "INVALIDATED")
         self.assertIsNotNone(invalid["invalidation_utc"])
         self.assertEqual(invalid["d2_status"], "CHECKED")
@@ -232,6 +236,76 @@ class TestOperatorSnapshot(unittest.TestCase):
         self.assertEqual(result["opportunities"][0]["g4_real_execution"], "UNKNOWN")
         self.assertEqual(result["opportunities"][0]["recommendation"],
                          "RESEARCH_REVIEW_ONLY_NO_BUY")
+
+
+    def test_asof_d2_and_source_outage_must_follow_observed_events(self):
+        self.watch()
+        m.observe_snapshot(self.db, "spot", BASE + 540_000, tick("AAAUSDT", "1.08"))
+        self.assertEqual(m.process_queue(self.db, BASE + 600_000,
+            lambda v, s, t: candles(t))["completed"], 1)
+        after_setup = BASE + 650_000
+        self.assertEqual(self.report(after_setup)["opportunities"][0]["d2_status"], "NOT_CAPTURED")
+
+        m.mark_source_health(self.db, "spot", BASE + 720_000, "OFFLINE")
+        self.assertEqual(m.process_d2(self.db, BASE + 720_000,
+            evaluate_spot=lambda sym: {
+                "symbol": sym, "classification": "RESEARCH_LIQUIDITY_NOT_BUY",
+                "research_liquidity_gate": True, "fee_source": "USER_UNCONFIRMED_SCENARIO",
+                "budget_usdt": 30, "spread_bps": 9.0})["checked"], 1)
+
+        # This is queried *after* the database contains both future events:
+        # neither should appear in an earlier as-of report.
+        before = self.report(after_setup)
+        prior = before["opportunities"][0]
+        self.assertEqual(prior["signal"], "SETUP_RESEARCH_ONLY")
+        self.assertEqual(prior["d2_status"], "NOT_CAPTURED")
+        self.assertIsNone(prior["d2_observed_utc"])
+        self.assertIsNone(prior["d2_spread_bps"])
+        self.assertIsNone(prior["d2_assumed_budget_usdt"])
+        self.assertEqual(before["sources"]["spot"]["state"], "RECENT_STORED_POLL")
+        self.assertIsNone(before["sources"]["spot"]["degraded_since_utc"])
+        self.assertEqual(before["sources"]["spot"]["health_origin"],
+                         "PERSISTED_SOURCE_TRANSITION_EVENTS_ASOF")
+        self.assertFalse(before["historical_asof_reconstruction"])
+
+        during = self.report(BASE + 720_000)
+        self.assertEqual(during["sources"]["spot"]["state"], "STALE_OR_DEGRADED")
+        self.assertEqual(during["opportunities"][0]["signal"], "SOURCE_STALE")
+        self.assertEqual(during["opportunities"][0]["d2_status"], "CHECKED")
+        self.assertEqual(during["opportunities"][0]["d2_spread_bps"], 9.0)
+
+        # The mutable source_state becomes healthy again, but the historical
+        # 720s as-of must still report the outage seen before recovery.
+        m.observe_snapshot(self.db, "spot", BASE + 900_000, tick("AAAUSDT", "1.08"))
+        m.mark_source_health(self.db, "spot", BASE + 900_000)
+        self.assertEqual(self.report(BASE + 720_000)["sources"]["spot"]["state"],
+                         "STALE_OR_DEGRADED")
+        self.assertEqual(self.report(BASE + 901_000)["sources"]["spot"]["state"],
+                         "RECENT_STORED_POLL")
+
+    def test_late_queue_current_status_cannot_retroactively_hide_watch(self):
+        self.watch()
+        cutoff = BASE + 180_000
+        later = cutoff + 16 * 60_000
+        self.assertEqual(m.process_queue(self.db, later,
+            lambda v, s, t: self.fail("expired queue must not fetch"))["late"], 1)
+        old = self.report(cutoff)["opportunities"][0]
+        self.assertEqual(old["signal"], "WATCH_RESEARCH_ONLY")
+        self.assertEqual(old["queue_status"], "UNRESOLVED_ASOF")
+        self.assertEqual(self.report(later)["opportunities"][0]["signal"],
+                         "MISSED_D1_DEADLINE")
+
+    def test_full_window_safe_cap_fails_explicitly_without_hiding_watches(self):
+        self.watch()
+        m.observe_snapshot(self.db, "spot", BASE + 360_000, tick("AAAUSDT", ".8"))
+        m.observe_snapshot(self.db, "spot", BASE + 540_000, tick("AAAUSDT", ".96"))
+        with patch.object(viewer, "MAX_WINDOW_EPISODES", 1):
+            with self.assertRaisesRegex(ValueError, "EXCEEDS_SAFE_EPISODE_LIMIT"):
+                viewer.read_snapshot(self.path, BASE + 540_000, limit=1)
+        normal = self.report(BASE + 540_000)
+        self.assertEqual(normal["window_total"], 2)
+        self.assertEqual(normal["hidden_by_display_limit"], 0)
+        self.assertEqual(normal["trading"], "NO_GO")
 
 
 if __name__ == "__main__":
