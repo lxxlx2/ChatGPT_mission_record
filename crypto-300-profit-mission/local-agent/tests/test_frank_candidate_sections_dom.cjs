@@ -31,6 +31,9 @@ const elements = {
   'archived-candidates-panel': {hidden: true},
   'archived-candidates-count': {textContent: ''},
   'archived-candidates': {innerHTML:''},
+  'ended-panel': {hidden:true},
+  'ended-count': {textContent:''},
+  ended: {innerHTML:''},
 };
 const context = {
   Date,
@@ -42,7 +45,7 @@ const context = {
   patternLabel: {REENTRY_WATCH:'重新建仓观察', MULTIPLE:'强建仓', ACCUMULATION:'持续建仓'},
   stateLabel: {OPEN:'模型持有', CLOSED:'模型退出', INVENTORY_UNDETERMINED:'仓位不明'},
   sideLabel: {BUY:'买入', SELL:'卖出', REENTRY:'重新建仓'},
-  badge: (key) => String(key),
+  badge: (key, labels) => (labels && labels[key]) || ({BUY:'可跟', SMALL_BUY:'小仓跟', WAIT:'等待', NO_BUY:'不跟'}[key] || String(key)),
   age: () => '历史时间',
   reasonFor: () => '不能跟单',
   tokenIdentity: x => 'CA:' + x,
@@ -59,6 +62,7 @@ vm.createContext(context);
 vm.runInContext(helper, context);
 vm.runInContext(slice('function renderCandidates(rows) {', 'function withinHours(ts,hours) {'), context);
 vm.runInContext(slice('function renderStats(candidates, runtime, coverage) {', 'const watchLabels = {'), context);
+vm.runInContext(slice('function withinHours(ts,hours) {', 'function tradeHint(side) {'), context);
 const split = context.FrankCandidateSections.split;
 const now = Date.now() / 1000;
 const date = seconds => new Date(seconds * 1000).toISOString();
@@ -120,5 +124,30 @@ assert(!elements.candidates.innerHTML.includes('12.34'));
 vm.runInContext('delete globalThis.FrankCandidateSections', context);
 context.renderCandidates([basis]);
 assert(elements.candidates.innerHTML.includes('报价已过期，不代表当前成交条件'));
+
+// P2-2: a CLOSED candidate that stored an old BUY/SMALL_BUY can never
+// display a live-action label inside "最近结束", regardless of F01 guard.
+const exited = [
+  {...basis, decision:'BUY', position_state:'CLOSED', latest_side:'SELL', latest_at:now-3600},
+  {...basis, decision:'SMALL_BUY', position_state:'CLOSED', latest_side:'SELL', latest_at:now-3600},
+  {...basis, decision:'NO_BUY', position_state:'CLOSED', latest_side:'SELL', latest_at:now-3600},
+  {...basis, decision:'BUY', position_state:'CLOSED', latest_side:'SELL', latest_at:now-25*3600}
+];
+vm.runInContext('delete globalThis.FrankPrimaryF01Freshness', context);
+context.renderEnded(exited);
+assert.equal(elements['ended-count'].textContent, 3);
+assert.equal(elements['ended-panel'].hidden, false);
+assert(!elements.ended.innerHTML.includes('可跟'));
+assert(!elements.ended.innerHTML.includes('小仓跟'));
+assert.equal((elements.ended.innerHTML.match(/历史买入结论（已失效）/g) || []).length, 2);
+assert(elements.ended.innerHTML.includes('不跟'));
+vm.runInContext('globalThis.FrankPrimaryF01Freshness = {verifyRows() { return null }}', context);
+context.renderEnded(exited);
+assert(!elements.ended.innerHTML.includes('可跟'));
+assert.equal((elements.ended.innerHTML.match(/历史买入结论（已失效）/g) || []).length, 2);
+context.renderEnded([{...basis, decision:'BUY',position_state:'OPEN', latest_at:now-3600}]);
+assert.equal(elements['ended-count'].textContent, 0);
+assert.equal(elements['ended-panel'].hidden, true);
+console.log('FRANK_ENDED_HISTORICAL_ACTION_NONACTIONABLE_PASS');
 
 console.log('FRANK_CANDIDATE_SECTIONS_DOM_INTEGRATION_PASS');
