@@ -120,3 +120,17 @@
 - 研究结论、所有数字、可运行命令和新关键代码其他AI审核提示见 [Stage163 官方T0全511报价摩擦真实报告](MONSTER_STAGE163_SPOT_T0_511_QUOTE_FRICTION_REAL_SOURCE_RESULTS_20261018.md)。**独立其他AI审查当前NOT_DONE**；旧经济门禁获批SHA不可延伸批准到本轮新增代码。
 
 **后续重点**：将这类真实执行摩擦数据的「证据等级/观察时间」结构与现有只读机会查询器对应，但不冒充把过去T0的报价关联到以后WATCH；真正商业可行性必须取得**相同WATCH入场时点与预冻结退出时点**双向真实盘口/费用/时间，且完成独立前瞻、资金与风险评估。Stage163七日原正式窗口在2026-10-24T22:06 UTC结束前仍`NOT_MATURE`；仅聊天触发后手动源采集，绝不恢复Stage99或额外自动采集。
+
+
+## 十一、Stage163 Claude 后置报价P1/人口P2修复：旧V1研究不能用于T0因果（2026-10-18）
+
+用户转交Claude Haiku 5.5聊天窗口对Stage163全511静态报价研究固定V1代码SHA `e860c1aa6485c453f99a1a17c207670a3685eb85` 的独立 `REQUEST_CHANGES`，P1=1、P2=2：原V1把在T0之后收得的报价当“T0盘口”极易发生约7秒前视；511仅是exchangeInfo的USDT+TRADING+Spot-allowed人口，不等于全部Spot；bookTicker/ticker24有3个原T0目录里没有的代码未披露。上轮reviewer称CI无法访问`UNVERIFIED`，本次助手已自行查询GitHub真实GHA作跨核对，不能将两种审核证据混淆。
+
+**已修复新冻结代码SHA `4c6bff916bb432ba778c59e6283c5a75e2902293`，比较基线 `0bc71dc9642023371d362bca435f909e721f5e01`，只改源分析、测试与offline CI三个文件**。真实 [GHA #39083479916](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39083479916) **10/10实测PASS、整job SUCCESS**，已产生独立新[post-T0 511行 V2 完整JSON](evidence/monster_stage163_spot_post_t0_original511_quote_friction_v2_actual.json)，Git Blob `0f6e63829c39ff28ce41b02e5ae08ed536414f2c`。旧V1 Git JSON及代码记录保留，不覆盖旧文件。**V2的另一AI独立复审目前仍NOT_DONE**。
+
+- 真实请求/收包相对exchangeInfo T0：bookTicker `+2561.682..+4349.393ms`，ticker24 `+4349.727..+6835.464ms`（跨客户端与交易所时钟近似，而非每币行情事件精确时间）。全部Quote联用数据在 `2026-10-17T22:04:46.929464Z` 才能保守确认完整收包，绝不可将这份资料视为T0已知出入场价格；新JSON明确 `t0_causal_quote_at_t0_proven=false`、`eligible_for_t0_asof_executable_execution_or_signal_backtest=false`、来源时间偏移及原窗口。
+- exchangeInfo原3729个记录中USDT总765，TRADING且允许Spot=511，BREAK=254（其Spot allowed=214/disabled=40），其余币对**不计入511**；完整本批资格分母由source实际推导，完成度为独立集合交叉校验，不是`all Spot`。额外 `AXSBIDR/NBTBIDR/NBTUSDT`在bookTicker与ticker24均出现但T0目录无此记录，原币名和两端点明确列出，**不能自行猜测具体上币时刻**。
+- 原价差/深度数值正确且不变，但不能拿它给T0或未来WATCH计算真实盈利；仅报告已经到手的历史单点报价统计，账户净成交仍UNKNOWN。现在不再直接称“全市场T0盘口”，只称“**T0交易对目录锚定、T0后取得的Spot/USDT报价研究**”。不会拿未来已知退出成交量或旧一次性报价做入场因果门槛。
+- 原6项测试增加四项，真实用例覆盖后置回执倒序/前视、BREAK/Spot denied、跨端点不一致、锁定盘口/零数量。单个显示名义金额敏感性更名，不暗示真正可成交；用户交易本金仍未授权。
+
+完整新审核包及业务范围：[Claude P1/P2 修复与V2官方真实来源报告](MONSTER_STAGE163_SPOT_POST_T0_511_FRICTION_CLAUDE_P1_P2_FIX_20261018.md)。**这项研究并未解决原Stage163七日前瞻的完整交易所新挂牌PIT、每根分钟实时WATCH时点真实买卖价/订单状态/退出深度，也未解决实盘净收益**。下步在真实连续信号时点评估送达延迟与执行可行性，避免继续围绕已关闭的经济P2或静态单张截图堆报告。仍保持`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`，Stage99自动采集、Frank、Mac服务都不变。
