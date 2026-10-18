@@ -309,7 +309,12 @@ function renderRuntime(runtime, control) {
 
 function renderStats(candidates, runtime, coverage) {
   const w = coverage?.windows?.['24h'] || {};
-  const action = candidates.filter(x => x.decision === 'BUY' || x.decision === 'SMALL_BUY').length;
+  // If the independent F01 validator script did not load, there is no
+  // verified actionable opportunity even when a saved decision says BUY.
+  const guardLoaded = typeof globalThis.FrankPrimaryF01Freshness?.verifyRows === 'function';
+  const action = guardLoaded
+    ? candidates.filter(x => x.decision === 'BUY' || x.decision === 'SMALL_BUY').length
+    : 0;
   const items = [
     ['Frank状态', translated(runtimeLabel,runtime.status,'未知')],
     ['24h已索引签名', w.indexed_signatures ?? '—'],
@@ -508,11 +513,14 @@ function renderCandidates(rows) {
     const m = x.metrics || {};
     const q = x.decision_quote || {};
     const decision = x.decision || 'UNASSESSED';
+    const action = decision === 'BUY' || decision === 'SMALL_BUY';
+    const guardLoaded = typeof globalThis.FrankPrimaryF01Freshness?.verifyRows === 'function';
+    const unverifiedAction = action && !guardLoaded;
     const reason = reasonFor(x);
 
     const frankPriceRaw = m.frank_latest_buy_price_usdc ?? x.latest_buy_price_usdc;
     // Historical saved Jupiter quotes must never appear as a current $30 price.
-    const quoteFresh = q.status === 'OK' && q.route_exists === true &&
+    const quoteFresh = !unverifiedAction && q.status === 'OK' && q.route_exists === true &&
       globalThis.FrankCandidateSections?.fresh?.(x.quote_observed_at, Date.now()/1000, 30) === true;
     const execRaw = quoteFresh ? (m.execution_price_usdc ?? q.execution_price_usdc) : null;
     const impactRaw = quoteFresh ? (m.price_impact_pct ?? q.price_impact_pct) : null;
@@ -536,15 +544,20 @@ function renderCandidates(rows) {
     const execPrice = execRaw != null ? `${money(execRaw,8)}` : quoteText;
     const buys = x.buy_count ?? 0;
     const sells = x.sell_count ?? 0;
-    const followable = (decision === 'BUY' || decision === 'SMALL_BUY') && x.position_state === 'OPEN' && !['SELL','EXIT','SELL_POSITION_UNRESOLVED'].includes(x.latest_side);
-    const historyNote = followable
-      ? '模式来自已观察到的建仓序列；实际操作前仍需重新确认价格和 Frank 状态。'
-      : '模型模式与买入金额是历史记录；当前没有可执行的买入结论。';
+    const followable = action && guardLoaded && x.position_state === 'OPEN' && !['SELL','EXIT','SELL_POSITION_UNRESOLVED'].includes(x.latest_side);
+    const historyNote = unverifiedAction
+      ? '独立 F01 实时核验脚本不可用；不可按保存的 BUY 判断跟单。'
+      : followable
+        ? '模式来自已观察到的建仓序列；实际操作前仍需重新确认价格和 Frank 状态。'
+        : '模型模式与买入金额是历史记录；当前没有可执行的买入结论。';
+    const displayStatus = unverifiedAction ? '资格待核实' : translated(decisionLabel,decision,decision);
+    const displayBadge = unverifiedAction ? '<span class="badge no-buy">资格待核实</span>' : badge(decision);
+    const cardClass = unverifiedAction ? 'decision-unverified' : 'decision-' + decision.toLowerCase().replaceAll('_','-');
 
-    return `<article class="candidate-card decision-${esc(decision.toLowerCase().replaceAll('_','-'))}">
+    return `<article class="candidate-card ${esc(cardClass)}">
       <div class="candidate-head">
         <div class="candidate-title">
-          ${badge(decision)}
+          ${displayBadge}
           <strong>${esc(translated(patternLabel,x.pattern,'未形成模式'))}</strong>
           <span class="state-text">Frank模型仓位：${esc(translated(stateLabel,x.position_state,'未知'))}</span>
         </div>
@@ -554,7 +567,7 @@ function renderCandidates(rows) {
       ${tokenIdentity(x.mint)}
 
       <div class="decision-reason">
-        <span>当前跟单结论：“${esc(translated(decisionLabel,decision,decision))}”</span>
+        <span>当前跟单结论：“${esc(displayStatus)}”</span>
         <strong>${esc(reason)} ${esc(historyNote)}</strong>
       </div>
 
