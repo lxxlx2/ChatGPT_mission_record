@@ -1,0 +1,87 @@
+name: Monster Stage164 original fair8 new27 nonconversion one-shot research
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-stage164-fair8-new27-nonconversion-once.yml'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster-stage164-source-locked-one-shot-report
+  cancel-in-progress: false
+jobs:
+  original_archive_new27_source_audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test source-bounded offline classifier and reject mismatched episodes
+        run: |
+          set -eu
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage164_fair8_nonconversion_audit.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage164_fair8_nonconversion_audit.py
+          python -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_stage164_fair8_nonconversion_audit.py
+      - name: Download only archived Stage162 actual-445 artifact, never fetch new market prices
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster164_stage162
+          gh run download 39068290868 --repo lxxlx2/ChatGPT_mission_record --dir /tmp/monster164_stage162 --name monster162-real445-first-valid-5m-fair8-ab-once-v4
+          printf '%s  %s\n' c30c8b6467b0017b36efc33fadfa2c7853f29f9c7e32993249774269ba4e2ae2 /tmp/monster164_stage162/monster162_actual_445_fair8_ab.json | sha256sum -c -
+          test -s /tmp/monster164_stage162/monster162_actual_445_fair8_ab.json
+      - name: Derive all 27 immutable historical per-candidate nonconversion proofs
+        run: |
+          set -eu
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage164_fair8_nonconversion_audit.py --stage162-full /tmp/monster164_stage162/monster162_actual_445_fair8_ab.json --out /tmp/monster164_real445_new27_nonconversion_v1.json
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path('/tmp/monster164_real445_new27_nonconversion_v1.json')
+          j=json.loads(p.read_text())
+          assert j['gained_first_valid_d1']==27 and j['lost_first_valid_d1']==0
+          assert j['gained_cohort_count']=={'PEAK_98':25,'OTHER_171':2}
+          assert j['gained_final_queue_error']=={'NO_SETUP_WITHIN_WINDOW':27}
+          assert j['gained_first_valid_delay_minutes']=={'6':1,'9':8,'12':8,'15':10}
+          assert len(j['candidate_episode_rows'])==27
+          assert j['new_setup_count']==0 and j['retained_original_setup_count']==120
+          assert j['specific_5m_feature_threshold_reasons'].startswith('UNVERIFIED')
+          assert j['G4']=='UNKNOWN' and j['G6']=='NO_GO'
+          assert j['NO_MERGE'] and j['NO_DEPLOY'] and j['NO_GMAIL'] and j['NO_TRADE']
+          print('MONSTER164_ACTUAL_27_PER_EPISODE_SOURCE_BOUNDED_NO_SETUP_PROOF')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster164-stage162-source-locked-new27-nonconversion-v1
+          path: /tmp/monster164_real445_new27_nonconversion_v1.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Archive immutable small derived evidence to same PR only
+        run: |
+          set -eu
+          target=crypto-300-profit-mission/monster/evidence/monster_stage164_original445_fair8_new27_nonconversion_actual_v1.json
+          branch=research/monster-v4-local-discovery-20261010
+          test ! -e "$target"
+          cp /tmp/monster164_real445_new27_nonconversion_v1.json "$target"
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive real original445 Fair8 27 non-SETUP D1 evaluations with source pins"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER164_EVIDENCE_ALREADY_EXISTS_REFUSE_OVERWRITE
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_stage164_fair8_nonconversion_audit.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage164_fair8_nonconversion_audit.py .github/workflows/monster-v4-stage164-fair8-new27-nonconversion-once.yml; do
+            test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo MONSTER164_SOURCE_OR_WORKFLOW_DRIFT; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER164_RESEARCH_ONLY_NEW27_EVIDENCE_ARCHIVED_NO_DEPLOY
