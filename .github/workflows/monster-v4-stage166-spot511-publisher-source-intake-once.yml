@@ -1,0 +1,100 @@
+name: Monster Stage166 frozen real Spot511 publisher source offline intake
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-stage166-spot511-publisher-source-intake-once.yml'
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage166-source-admission-one-shot
+  cancel-in-progress: false
+jobs:
+  frozen_spot511_source_admission:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Real archived T0 census and synthetic publisher 1m source tests
+        run: |
+          set -eu
+          python3 -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage166_spot511_official_1m_intake.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage166_spot511_official_1m_intake.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_stage166_spot511_official_1m_intake.py
+      - name: One-shot real T0 511 census with zero supplied future sources
+        run: |
+          set -eu
+          mkdir -p /tmp/monster166_not_supplied
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage166_spot511_official_1m_intake.py --source-dir /tmp/monster166_not_supplied --asof-utc 2026-10-18T16:00:00Z --out /tmp/monster166_real_t0_511_daily_source_attempts.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/monster166_real_t0_511_daily_source_attempts.json')
+          j=json.loads(p.read_text(encoding='utf-8'))
+          assert j['t0_spot_usdt_trading']==511
+          assert j['t0_spot_usdt_break_excluded']==214
+          assert len(j['t0_eligible_symbol_ids'])==511
+          assert j['daily_source_attempts']==4599
+          assert j['admission_counts']=={'SOURCE_NOT_SUPPLIED':1022,'UTC_DAY_NOT_YET_ENDED':3577}
+          assert not j['all_511_nine_days_officially_verified']
+          assert not j['full_7d_exchange_listing_changes_proven']
+          assert j['G4']=='UNKNOWN' and j['G6']=='NO_GO'
+          assert j['NO_MERGE'] and j['NO_DEPLOY'] and j['NO_GMAIL'] and j['NO_TRADE']
+          print('MONSTER166_TRUE_T0_511_BUT_NO_FUTURE_7D_MARKET_DATA_CLAIM')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster166-real-t0-511-nine-day-source-intake-attempts
+          path: /tmp/monster166_real_t0_511_daily_source_attempts.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Persist only compact verified census metadata to the existing research PR
+        run: |
+          set -eu
+          python3 - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          p=Path('/tmp/monster166_real_t0_511_daily_source_attempts.json')
+          j=json.loads(p.read_text())
+          o=Path('crypto-300-profit-mission/monster/evidence/monster_stage166_real_t0_511_daily_source_intake_readiness_v1.json')
+          if o.exists() or o.is_symlink():
+              raise SystemExit('STAGE166_READINESS_EVIDENCE_ALREADY_EXISTS_REFUSE_OVERWRITE')
+          keep={k:j[k] for k in (
+             'schema','source_t0_server_time_ms','t0_spot_usdt_trading',
+             't0_spot_usdt_break_excluded','utc_daily_source_dates',
+             'window_start_utc','window_end_exclusive_utc','three_minute_ticks_total',
+             'asof_source_check_utc','daily_source_attempts','admission_counts',
+             'all_511_nine_days_officially_verified',
+             'full_7d_exchange_listing_changes_proven','G4','G6','NO_MERGE',
+             'NO_DEPLOY','NO_GMAIL','NO_TRADE')}
+          keep['exact_t0_511_sorted_symbols']=j['t0_eligible_symbol_ids']
+          keep['original_t0_raw_source_sha256']='b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b'
+          keep['full_4599_attempts_original_artifact_sha256']=hashlib.sha256(p.read_bytes()).hexdigest()
+          keep['source_not_supplied_does_not_mean_exchange_missing_or_zero_watch']=True
+          keep['spot_daily_minute_publisher_downloads_executed']=False
+          o.write_text(json.dumps(keep,sort_keys=True,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+          print('MONSTER166_ORIGINAL_T0_511_SOURCE_READINESS_RECORDED',len(keep['exact_t0_511_sorted_symbols']))
+          PY
+          target=crypto-300-profit-mission/monster/evidence/monster_stage166_real_t0_511_daily_source_intake_readiness_v1.json
+          branch=research/monster-v4-local-discovery-20261010
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive real T0 511 immutable daily source census and truthful not-supplied status"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER166_EVIDENCE_ALREADY_ON_REMOTE_REFUSE_REWRITE
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_stage166_spot511_official_1m_intake.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage166_spot511_official_1m_intake.py .github/workflows/monster-v4-stage166-spot511-publisher-source-intake-once.yml crypto-300-profit-mission/monster/evidence/monster_stage163_spot_original_http_t0_actual/source_raw_http.zip crypto-300-profit-mission/monster/evidence/monster_stage163_spot_original_http_t0_actual/source_receipts.json; do
+            test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo MONSTER166_INPUT_OR_EXECUTABLE_CHANGED; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER166_SOURCE_READINESS_NO_NEW_MARKET_HTTP_NO_DEPLOY
