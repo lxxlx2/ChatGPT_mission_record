@@ -57,11 +57,11 @@ Current capital / holdings:
 
 ## 地址分析 / 449 个 EVM 聪明钱钱包（研究阶段）
 
-新独立模块：[仓库规则](address-analysis/README.md)、[449地址冻结清单](address-analysis/sources/oooooyoung-evm-449-source-snapshot.json)、[最新批次进度](address-analysis/state/progress.md)、[前120地址统一覆盖报告](address-analysis/state/coverage-001-120.md)。
+当前任务已调整为**先完成449钱包活跃度初筛，再分析活跃钱包的盈利与亏损**。[当前简明进度](address-analysis/state/activity-screening-001-160.md)、[前160钱包机器结果表](address-analysis/evidence/activity-candidates-001-160.json)、[详细原始研究队列](address-analysis/state/progress.md)。
 
-2026-10-18：Batch001–006 已完成 **120/449** 原始地址 BSC、Ethereum、Base 冻结历史 nonce 筛查，三链并集 **74/120** 地址有签名交易，**46/120** 仅在这三条链零签名。[120钱包逐行可复算 JSON](address-analysis/evidence/coverage-001-120-normalized.json) 与源清单对齐。已保存的 3 组正收益单币闭环（#002/#004 sauce、#016 RTX5090）通过 [静态证据交叉复算](address-analysis/evidence/closed-token-replay-source-check-20261018.json)；新建 [独立源文件复算 CLI](address-analysis/tools/closed_token_index.py) 和 5项离线输入/亏损反例测试。**真实亏损仍未完成核算，完整钱包近30日/长期 PnL 均为 0/449 完成。** 这是历史筛查和原证据复算，不构成实时盈利分析、跟单信号或多链完整账户审计。
+2026-10-18：**160/449** 地址已完成冻结历史三链 nonce 优先筛查；**97** 地址至少一条链有签名，**63** 地址在 BSC/Ethereum/Base 均无签名变化；**289** 地址待筛。最新 Batch007/008 完成（各20地址），下一批为 **Batch009 161–180**。前120个地址采用全三链配对，后40地址采用 BSC-first/ETH/Base 回退早停；活跃筛查方法变化已明确记载。历史个别单币正收益3笔不能算完整钱包收益，整钱包月度/长期 PnL 审计仍为 **0/449**。无实时活动结论，未合并/部署/交易。
 
-新增 [通用FIFO单币账本V1](address-analysis/tools/transaction_ledger.py) 与 [20项离线测试和实测限制](address-analysis/state/ledger-v1-fifo-qa-20261018.md)。它仅复算归一化来源声明，尚未自主验证链上收据；**没有新增真实盈利/亏损或整钱包收益结论**。现新增 [真实交易收据只读检查 V1](address-analysis/tools/receipt_probe.py)，已读取并核验4笔完整历史收据（含 WBNB/USDC转账、授权及ETH原生转账），[原始字段与Gas证明](address-analysis/evidence/receipt-probe-four-real-rpc-check-20261018.json)；17项离线测试通过。sauce 三笔买卖收据在当前连接中均被截断，未完成独立验证；不得自动计入新的盈利成果。后续研究重点为完整路由收据、历史成本与真实亏损闭环，再推进 Batch007；Mac 在线实测及独立外部审核仍缺失。最新修复 [Base L1 数据费漏算及借贷调用分类](address-analysis/state/base-fee-and-lending-qa-20261018.md)，25项离线测试通过；#045 原交易费用已按L2+L1更正，#051 Aave 存取不是DEX买卖，也不认定亏损。全部钱包PnL仍未完成。通过 [窄范围链上Transfer日志及历史BNB区块余额独立复核](address-analysis/state/sauce-rows-002-004-independent-log-block-recheck-20261018.md)，#002/#004 sauce 的代币买卖数量重新闭合，区块级BNB净差与旧账一致；但无完整内部交易轨迹，不能将区块余额差直接提升为已独立验证的逐笔盈利，完整钱包PnL仍为0/449完成。新增 [真实ERC20转入来源与成本缺口审计](address-analysis/state/batch001-erc20-cost-origin-20261018.md)：#015 HODL、#007 BSC-ETH 均在BSC转入转出数量闭合但购入成本未知；#002 FTR同一交易分发至多个地址并仍有持仓，不能计为盈利卖单。10项离线校验通过；完整PnL不变。进一步确认 [#015/#016 HODL同源上游付费与六钱包分发](address-analysis/state/batch001-hodl-funded-distribution-20261018.md)：同一上游两次购买后分发，原始名单两地址都已转出HODL，但不能证明同一人控制或按比例计算取得成本，不能将同块BNB收入算作盈利。新增10项守恒校验测试通过，继续优先真实亏损账本。PR #97 保持 Draft、`RESEARCH_ONLY / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`，不触碰已有 PR#40 BSC建模、Frank、Monster及生产监控。
+Draft PR #97；保持 `RESEARCH_ONLY / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。不修改旧 PR#40 BSC 地址建模、Frank、Monster或生产监控。
 
 ## Canonical module files
 
