@@ -1,0 +1,66 @@
+{
+  "schema": "MONSTER_STAGE163_SPOT_QUOTE_FRICTION_SOURCE_EVIDENCE_SUPERSESSION_V1",
+  "created_date": "2026-10-18",
+  "source_zip_sha256": "b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b",
+  "original_exchangeinfo_t0_utc": "2026-10-17T22:04:40.094Z",
+  "current_source_evidence_version": "V3_POST_T0_CLOCK_BRIDGED_511",
+  "versions": [
+    {
+      "version": "V1",
+      "path": "monster_stage163_spot_t0_original511_quote_friction_actual.json",
+      "git_blob": "d2df270708b48d1b374aa314b25e848ae12cbd75",
+      "status": "SUPERSEDED_INVALID_T0_QUOTE_ASOF_AND_ALL_SPOT_IMPLICATION",
+      "immutable_bytes_retained": true,
+      "invalid_labels": [
+        "historical_T0_observed_once_not_forward_live_signal",
+        "symbols_represent_complete_511_source_cohort"
+      ],
+      "permitted_use": "HISTORICAL_REPRODUCTION_AND_AUDIT_ONLY_NOT_T0_TRADING_EVIDENCE"
+    },
+    {
+      "version": "V2",
+      "path": "monster_stage163_spot_post_t0_original511_quote_friction_v2_actual.json",
+      "git_blob": "0f6e63829c39ff28ce41b02e5ae08ed536414f2c",
+      "status": "SUPERSEDED_BY_V3_CLOCK_UNCERTAINTY_AND_NONFATAL_ZERO_SIZE",
+      "immutable_bytes_retained": true,
+      "permitted_use": "HISTORICAL_APPROX_RECEIPT_TIME_RECONCILIATION_ONLY",
+      "present_in_branch_commit": "0d2a4c45147e23b04bfee9c60df93826c848db4c"
+    },
+    {
+      "version": "V3",
+      "path": "monster_stage163_spot_post_t0_original511_quote_friction_v3_clock_actual.json",
+      "git_blob": "f87ea5342642055af4e8ea8f15dd4efa76e1eb7d",
+      "status": "CURRENT_RESEARCH_EVIDENCE_EXTERNAL_AI_REVIEW_PENDING",
+      "immutable_bytes_retained": true,
+      "present_in_branch_commit": "e26fee10d3b8864f8689c364e5656818fb09cd34",
+      "permitted_use": "SOURCE_BOUNDED_POST_T0_DESCRIPTIVE_QUOTE_FRICTION_ONLY_NOT_T0_TRADABLE_QUOTES"
+    }
+  ],
+  "clock_model": {
+    "relative_bookticker_client_offset_ms": [
+      "2561.682",
+      "4349.393"
+    ],
+    "relative_ticker24_client_offset_ms": [
+      "4349.727",
+      "6835.464"
+    ],
+    "server_minus_client_conservative_envelope_ms": [
+      "-80.204",
+      "755.802"
+    ],
+    "clock_drift_between_probes": "UNVERIFIED",
+    "not_per_symbol_event_time": true,
+    "t0_causal_quote_usable": false
+  },
+  "original_friction_statistics_recomputed_unchanged": true,
+  "original_usdt_spot_eligible_cohort": 511,
+  "all_binance_spot_scope": false,
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_MERGE": true,
+  "NO_DEPLOY": true,
+  "NO_GMAIL": true,
+  "NO_TRADE": true,
+  "why_not_overwrite_old_files": "Maintain immutable audit trail and explicit supersession; do not silently rewrite already reviewed evidence."
+}
