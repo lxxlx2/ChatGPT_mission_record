@@ -117,6 +117,17 @@ def test_zip_contains_only_local_screenshots_and_sha256_manifest():
             assert manifest["production_deployment"] is False
             assert manifest["screenshot_count"] == 1
             assert z.read("screenshots/01-current-history.png") == png
+        candidate_zip = root / "frank-c02-unreviewed-sandbox.zip"
+        candidate_sha = "f" * 40
+        module.package_evidence(pics, candidate_zip, captured, static,
+                                source_port=8765, preview_port=49153, preview_sha=candidate_sha)
+        with zipfile.ZipFile(candidate_zip) as candidate:
+            m = json.loads(candidate.read("manifest.json"))
+            assert m["preview_source_sha"] == candidate_sha
+            assert m["approved_pr101_base_sha"] == module.APPROVED
+            assert m["approved_product_sha"] is None
+            assert m["candidate_source_review_status"] == "CANDIDATE_REQUIRES_SEPARATE_INDEPENDENT_REVIEW"
+
         try:
             module.package_evidence(pics, archive, captured, static,
                                     source_port=8765, preview_port=49152)
