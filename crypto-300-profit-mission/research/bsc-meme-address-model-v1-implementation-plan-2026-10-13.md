@@ -913,3 +913,17 @@ R2 的真实 WBNB→龙虾 Pair Swap 最早 signed tx `0x2b93cfb6ae16ab4943f5f20
 本次修复保留实际中间测试失败历史：SHA `297d70df3737c279fcb3d03e9f4547d0ac900de3` 的 `test_original_cohort_market_membership` 意外先触发另一项分母断言，原 Linux/macOS CI 均 742 项中有 1 项失败。后来测试调整为仅篡改原网格 CA，提交 `c8f0e3a4fc759289a43841f4cf3c8912fda19e2d`，同 SHA 四条工作流 success。这是迭代纠错而非原失败自动变成功。报告与计划补充后的**最终固定 SHA 和新的完整 Actions 日志仍须另行确认**，不得用旧 SHA CI 冒充最终验证。
 
 继续 `P4-B=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P4-C=PARTIAL / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。新固定 SHA 须接受其他 AI 的 **F1–F7 定向复核**，无需因现有正常静态回归盲目进行全部历史外审。解决这些研究数据口径问题只恢复横向可用性；后续主业务保持首次第三方公开观察时刻 U、可支付本金、固定 60/300/900 秒入场以及实际买卖和无退出负样本。
+
+## 2026-10-18 外部 F1–F7 定向 APPROVE 已收到；启动独立五样本 U 证据预冻结
+
+**用户转来的独立 AI 只读复审结论：`APPROVE@0b8e0f709c5af1a20058eb1da4b6656eb2b69cc8`，比较基线原 `REQUEST_CHANGES@4d0e5246b8669e4548383fca0823a30cb7bd98a3`。** F1–F3 MEDIUM、F4–F7 LOW 在该固定 SHA 代码/来源/测试范围内均标 CLOSED，原 JSON 未修改。独立报告描述 20/20 专项、742/742 本地全回归、Ubuntu/macOS SHA 对应 742/742 的 GitHub 原 Job 日志；原 `297d70df...` 旧 CI 失败永久保留。该报告来自用户转交，不能伪装成独立 AI 本人直接提交的 GitHub PR Review。收到结论时 PR #40 HEAD 仍精确为 `0b8e0f...`，Draft/Open/unmerged。[PR 独立 APPROVE 归档评论](https://github.com/lxxlx2/ChatGPT_mission_record/pull/40#issuecomment-6250144919)。
+
+**审批不随之后的新 commit 传递。** 为开始 G4/G5 真实可观察研究，本阶段才另外新建
+[五样本首次可观察 U 预冻结](./bsc-meme-address-model-v1-p4b-five-case-first-seen-u-prefreeze-2026-10-18.json)、[离线来源门禁](./test_bsc_meme_address_model_v1_p4b_first_seen_u_prefreeze.py)、[用户业务可行性与证据缺口报告](./bsc-meme-address-model-v1-p4b-five-case-first-seen-u-feasibility-report-2026-10-18.md)。
+
+预冻结五个原 23 钱包中不同 EOA 的真实本人签名历史样本：**DDAC/龙虾、239E/龙虾 R2、8E6B/HAJIMI、A83B/牛来、877AF/MARSCOIN**。合计 5 钱包/4 exact CA、原始 native 方向 2 正 3 负；仅 `POSTHOC_POSITIVE_NEGATIVE_STALE_EVIDENCE_AVAILABILITY_CONTROLS`，**严禁统计成无偏策略胜率**。同时保存未选入五样本母数但不能删除的 239E R1 负向、D503 迟到过期入场、5E60 真实回款但原库存成本未知、E11B 未退出/手续未知。
+
+真实业务断点：**现有历史来源没有第三方公网节点真正首次收到原人交易的接收时钟记录**。链上历史头 UTC、receipt 的打包时刻、别人在区块内真实成功成交，均不能填 `first_public_observer_received_utc`。因此 +60/+300/+900 秒相对**首次收到**的历史真实可成交价格、Gas、Token 税和真实退出利润现在仍没有原始证据。预冻结五样本的真实第三方 first-seen 全部 `null`，(P5=BLOCKED)，不允许将缺数据回填为 loss/no-trade。接下来应先制定版本化 live public first-seen 只读捕获与可验证时钟合同，再固定实际可支付本金、报价与退出逻辑，作为未来 Mac 只读验收目标；未经用户授权不运行后台捕获或触发新 RPC 服务、邮件和交易。资金 amount 与退出条件目前保持 UNKNOWN，禁止看到利润后再调参数。
+
+本轮所有新文件与以后的 Stage 代码都属于**新 SHA 未获原 0b8e... 审批覆盖的研究进展**，按门禁仅在真的升级核心因果/可执行 U/P5 时触发再次完整其他 AI 审核。当前仍 `P4-B=PARTIAL / P4-C=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
+
