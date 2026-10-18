@@ -21,3 +21,10 @@
 ## 状态与下一最有业务价值的步骤
 
 此处仅`AUTHOR_CODE_TEST_CI=PASS`，`EXTERNAL_REVIEW_NEW_SHA=NOT_DONE`，`REAL_MAC_READABLE_CURRENT_DB=NOT_DONE`，`PRODUCTION_SIGNAL_AND_TRADING=NO_GO`。继续优先等同源事先冻结Spot未来官方1m全量收包和市场动态证据，确认原公平8是否真的净新增SETUP并带原信号时点足额订单簿及退出收包；不可用本地合成SQLite测试声明当下有交易机会。
+
+
+## 后续 Claude REQUEST_CHANGES 及新代码修复（2026-10-18，作者CI PASS，复审待完成）
+
+上一轮Claude聊天审核固定机会查询器SHA `731a0dfad0a78e77c53d20dbea3e375aaa9e55e1` 判定`REQUEST_CHANGES`：原先全窗口先分类后LIMIT遮挡已实证修复，新增P2-1是 `--asof-ms` 回查时把后来的 `d2_reviews.status=CHECKED`、`source_state.degraded_since_ms`反填为过去。另有三个非阻断P3：全窗口异常大成本、SQLite连接未close与WAL sidecar可能创建、D2研究流动性字段容易误读。**此原文档旧状态是被审核之前历史证据，不再代表当前作者修复状态**。
+
+**已完成和仍缺**：新增三项真实Shadow生成生产SQLite隔离回归验证D2与降级仅在事件时间之后出现、当前source_state恢复不会使旧历史降级消失、未来LATE事件不能覆盖过去WATCH，以及50,000回合安全阈值fail-closed；查询器15/15、Shadow31/31、D2 12/12，真实CI [#39128008157](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39128008157) 成功，job 23/23步骤。只读连接显式close，WAL/-shm可能创建仍属SQLITE正常机制，展示提示，`d2_research_liquidity_gate_is_not_fill_proof=true`。新唯一固定SHA的完整直接可复制独立其他AI审核任务见[新作者修复及审核包](MONSTER_OPERATOR_ASOF_EVENT_TIME_P2_FIX_AND_REVIEW_20261018.md)。**外部复审未实际回收**，不得借旧版本Codex APPPROVE越权放行。G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE。
