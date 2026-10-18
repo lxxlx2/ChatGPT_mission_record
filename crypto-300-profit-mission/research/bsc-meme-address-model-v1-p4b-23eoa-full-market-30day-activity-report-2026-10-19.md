@@ -78,3 +78,17 @@
 **尚未解决：** 完整 30 天 token 交易分页、每钱包成本基础、买卖全链上资产流、诈骗同名代币核验、真实已实现盈亏、可信公网上首次发现 U、60/300/900 秒本金/成交/退出、生产。
 
 代码独立 `APPROVE@f8e7ba21f466774b16ed1eef45f8ff31ff7f6243` 仍仅限其固定**旧代码 SHA**，本轮只新添研究数据/报告，不回溯更改已审核代码结论。下一步只读、分批审计上述四钱包各 1～2 个真实完整成交回合，不在没有新证据时扩大代码负向测试或自动启动新监控。始终 `P4-B/P4-C=PARTIAL / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
+
+## 六、进一步独立筛到两组新 CA 的本人签名入场与完整出账 Token 流
+
+本轮未停留在 nonce 活跃排行榜。对 **8E6B 的 FLAP**（CA `0x3b7a5c1519731e555782bb623adfb9cfca5c7777`）及 **2ADF 的 yoki酱**（CA `0xa96402db0112ed21a6613b43cdfb766d9e5c7777`），使用 Alchemy BNB Mainnet 只读 `getAssetTransfers` 按 **钱包地址 + exact CA + 起止固定区块** 查询完整 Token IN/OUT；两者的 IN/OUT 查询均返回 `pagination=false`（该 30 天窗口内索引数据可以枚举到这一具体 CA 的全部回执）。随后按原始 TX hash 独立读取原 signer `from`、目标路由 `to`、原生 `value` 和调用 method；所有主进出交易都由对应原 EOA 本人签名。
+
+| 地址 | 精确 token CA | 窗口内转入 Raw | 窗口内转出 Raw | 本人签名入场原生 value | 实际卖出 BNB 净回款 |
+|---|---|---:|---:|---:|---|
+| 8E6B FLAP | `0x3b7a5c1519731e555782bb623adfb9cfca5c7777` | `1293859551216114584142304` | `1293859551216114584142304` | **0.15 BNB** | **UNRESOLVED** |
+| 2ADF yoki酱 | `0xa96402db0112ed21a6613b43cdfb766d9e5c7777` | `247790844884194236639000` | `247790844884194236639000` | **0.08 BNB** | **UNRESOLVED** |
+
+证明的是上述**两个固定钱包对两个精确 token CA 的 30 天入出 Token 账面流水精确守恒（Raw 整数差为 0）**，分别有一个本人签名收到 Token 的入场调用，随后 8E6B 有 2 笔、2ADF 有 1 笔本人签名出币交换调用；将手续费拆成两条 Token Transfer 归集，不能只看给池子的部分就误算剩余库存。**不能借此证明窗口期初或期末没有历史遗留库存，也不能得出已实现净盈利。** 原始交易及每段原始 Token Raw 记录见 [两组新 CA 全量 IN/OUT 只读证据 JSON](./bsc-meme-address-model-v1-p4b-8e6b-2adf-two-new-ca-complete-token-flow-2026-10-19.json)。
+
+真正的盈利结算仍卡在**真实卖出 BNB/quote 资金回到原钱包多少**、receipt 实际 Gas 和其他资金流：当前 Alchemy BNB 免费接入 `getAssetTransfers(category=internal)` 报 `-32602 unsupported`，`trace_transaction` 报 `-32600 requires Pay As You Go/Enterprise`，用户使用免费方案，**不得自动升级或自费试用付费接口**。本阶段及时停止，不靠推测、代币数量或单一 WBNB 流动性报价填写盈利。下一步若要核算，可用官方允许的其他免费来源取得逐 TX native internal trace/receipt，且必须能交叉验证 exact TX hash、start/end balance、Gas 与真实最终币种回款；无法拿到即保持 `ACTUAL_OWNER_REALIZED_NET_PNL=UNRESOLVED`。对 877AF 仍需继续分页完整 Token 流后才能做同等级结论；其他高频钱包不可自动类推。
+
