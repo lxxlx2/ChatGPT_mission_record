@@ -1,7 +1,53 @@
 # StandX 官方开发进度、平台 Token TGE 与公开代码审计
 
+Updated: 2026-10-18 Asia/Bangkok
+State: **PLANNED_PLATFORM_TOKEN_CANCELED / FINAL_ONE_TIME_DUSD_AIRDROP / OPERATIONS_WIND_DOWN**
+Source priority: official homepage notice -> official X October 15 2026 announcement, then independent contemporaneous news corroboration.
+Historical research dated 2026-09-29 below is retained as archived TGE-prep view, **not current**.
+
+## 2026-10-15 decisive update: StandX cancels token and winds down operations
+
+### Evidence grade and primary notice
+
+- StandX's official site https://standx.com/ currently displays notice "StandX is easing operations. Please read the announcement and withdraw your assets in time." The notice links DIRECTLY to official X post https://x.com/StandX_Official/status/2110613283967230232 .
+- Direct official X text fetching returned 403 to research browser. Full procedural terms, dates and reward scope corroborated by contemporaneous independent outlets: https://defiprime.com/standx-sets-january-closure-and-dusd-exit-dates (2026-10-15; explicitly cites original official post), https://www.rootdata.com/news/790088 and https://www.tokenpost.com/news/business/32327 .
+- Evidence label: **OFFICIAL_HOMEPAGE_LINK_CONFIRMED + OFFICIAL_X_POST_POINTER_CONFIRMED + SECONDARY_RECONSTRUCTION**. Do not claim full original X post independently retrieved verbatim. The earlier StandX SIP docs offering future platform token remain published but are **historical/stale relative to later October 15 decision**.
+
+### New issuer plan and exact calendar
+
+Issuer **announced** it is abandoning issuance of the planned platform token and shifting to a **one-time DUSD stablecoin airdrop, no lockup**. No actual TGE/vesting/tokenomics/centralized listing should be assumed going forward; any Polymarket token-FDV or launch-probability contracts need official settlement rules applied to **NO TGE** scenario (do not fabricate market outcome without instrument specifics). Distribution funded by protocol remaining revenue plus unspecified additional funds from team; total dollar pool and per-account payout not announced.
+
+| Event | Original announced UTC | Bangkok UTC+7 |
+|---|---|---|
+| all DUSD yield / Position Yield / maker yield / referral commissions cease, new vault creation or additions stop | 2026-10-15 | 2026-10-15 |
+| perps reduce-only; new users and DUSD mint close; new Block Trades / Block Options close | 2026-10-20 (no exact hour confirmed) | 2026-10-20 |
+| **airdrop eligibility checker** | **2026-10-26 00:00 UTC** | **2026-10-26 07:00** |
+| **DUSD airdrop claim starts** | **2026-11-01 00:00 UTC** | **2026-11-01 07:00** |
+| **DUSD airdrop claim ends** | **2026-12-31 08:00 UTC** | **2026-12-31 15:00** |
+| automatic settlement of outstanding open positions at Mark Price, vault close process | 2027-01-15 (hour not provided) | 2027-01-15 |
+| **final DUSD redemption requests and platform withdrawals** | **2027-01-31 (hour not provided)** | **2027-01-31** |
+
+Rewards assessment categories: **pre-deposits, Alpha participation, mainnet trading, active market-making, referrals**. All subject to **anti-Sybil / wash volume** adjustments; abnormal allocations may be cut or canceled. No authoritative weights, PP→DUSD ratio, user-specific total, compensation size or final pool balance published at check time => `UNCONFIRMED`. Eligibility and individual amount should be checked via the historical **BNB Chain / Solana address originally used on StandX** on October 26.
+
+For user funds, differentiate two obligations:
+1. Claim the **one-time discretionary DUSD allocation** in Nov 1–Dec 31; unclaimed rights **forfeited** after claim window.
+2. Independently **close active derivatives and withdraw/redeem user-owned deposited assets** by Jan 31, 2027. Position close via mark price Jan 15, Perps Wallet → Cash Wallet → onchain DUSD withdrawal; stablecoin swap/redeem separately as needed. StandX redemption procedures say ~7 day waiting period, and users need to consider it; DUSD LP liquidity on PancakeSwap/Raydium to be withdrawn by StandX on Jan 31 per announcement. **Do not mix airdrop payout and refundable customer deposits**, and do not assume yield/APR continues.
+Issuer's assertions that DUSD remains fully collateralized / no fund incidents are `ISSUER_CLAIMS`, not an audited current reserve solvency result.
+
+### Operational conclusion
+
+- **Permanent project research state**: `NO_PLATFORM_TOKEN / FINAL_DUSD_COMPENSATION / WIND_DOWN`. Old TGE estimate and token-allocation ledger expectation now superseded.
+- As of 2026-10-18, per planned schedule, **Oct 26 checker not yet available**, wallet-specific eligibility/allocated DUSD `UNVERIFIED`. Claim must not be described as already open or successfully executed.
+- User has historically monitored/considered StandX and related NEO/DNA compensation; **do not conflate this StandX winddown DUSD distribution with any unrelated NeoSoul DNA airdrop**. No personal DUSD payout verified and no wallet claim, signatures, funding movements or trade performed.
+- Record only; existing monitoring/automation/production configurations **untouched**. Any operational TGE alerts that may still expect a StandX token should not be treated as valid project state, but task changes require user permission.
+
+---
+
+## Historical 2026-09-29 research snapshot (superseded)
+
+
 Updated: 2026-09-29 18:xx Asia/Bangkok
-State: PRODUCTION / SIP-5 PARTIAL ROLLOUT / PRE-TGE
+State at the time: PRODUCTION / SIP-5 PARTIAL ROLLOUT / PRE-TGE; **NO LONGER CURRENT**
 Project: StandX
 Official: https://standx.com
 Docs: https://docs.standx.com
