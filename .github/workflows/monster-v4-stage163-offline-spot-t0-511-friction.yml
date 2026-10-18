@@ -1,4 +1,4 @@
-name: Monster Stage163 Archived Spot T0 511 Offline Friction
+name: Monster Stage163 Archived Post-T0 Spot USDT Quote Friction V2
 
 on:
   push:
@@ -37,49 +37,59 @@ jobs:
       - name: Recompute research-only full511 from exact original git ZIP and receipts
         working-directory: crypto-300-profit-mission/local-agent
         run: |
-          python -B scripts/monster_v4_stage163_spot_t0_quote_friction.py --output /tmp/monster_stage163_spot_t0_511_quote_friction.json
+          python -B scripts/monster_v4_stage163_spot_t0_quote_friction.py --output /tmp/monster_stage163_spot_post_t0_receipt_bounded_v2.json
           python - <<'PY'
           import json
           from pathlib import Path
-          p=Path('/tmp/monster_stage163_spot_t0_511_quote_friction.json')
+          p=Path('/tmp/monster_stage163_spot_post_t0_receipt_bounded_v2.json')
           j=json.loads(p.read_text())
-          assert j['schema']=='MONSTER_STAGE163_SPOT_T0_ORIGINAL511_BBO_FRICTION_NO_TRADES_V1'
+          assert j['schema']=='MONSTER_STAGE163_SPOT_POST_T0_RECEIPT_BOUNDED_511_FRICTION_NO_TRADES_V2'
           assert len(j['rows'])==511
           assert j['source_zip_sha256']=='b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b'
           assert j['G4']=='UNKNOWN' and j['G6']=='NO_GO'
           assert j['NO_DEPLOY'] and j['NO_MERGE'] and j['NO_GMAIL'] and j['NO_TRADE']
           assert j['research_notional_usdt']=='UNKNOWN_NOT_SPECIFIED'
-          assert j['research_notional_top_quote_size_coverage']=='NOT_EVALUATED_WITHOUT_EXPLICIT_RESEARCH_AMOUNT'
-          assert j['historical_T0_observed_once_not_forward_live_signal']
+          assert j['research_notional_displayed_top_level_size_coverage_only']=='NOT_EVALUATED_WITHOUT_EXPLICIT_RESEARCH_AMOUNT'
+          assert j['historical_post_t0_quote_receipts_once_not_forward_live_signal']
+          assert j['t0_causal_quote_at_t0_proven'] is False
+          assert j['eligible_for_t0_asof_executable_execution_or_signal_backtest'] is False
+          assert j['population_scope_is_all_binance_spot'] is False
+          assert j['complete_archived_exchangeinfo_t0_eligible_cohort_represented'] is True
+          assert j['population_counts_from_exchangeinfo']['usdt_all_statuses_including_spot_disallowed']==765
+          assert j['population_counts_from_exchangeinfo']['usdt_break_all_spot_permissions']==254
+          assert j['post_t0_receipt_windows_vs_exchangeinfo_t0_approx']['bookTicker']['start_offset_from_exchange_t0_ms_approx']=='2561.682'
+          assert j['post_t0_receipt_windows_vs_exchangeinfo_t0_approx']['ticker24']['end_offset_from_exchange_t0_ms_approx']=='6835.464'
+          assert j['excluded_market_symbols_not_in_exchangeinfo']['bookTicker']==['AXSBIDR','NBTBIDR','NBTUSDT']
+          assert j['quote_bundle_not_available_until_client_receipt_utc']=='2026-10-17T22:04:46.929464Z'
           assert j['no_historical_exit_L2'] and j['no_observed_actual_fills']
-          print('MONSTER163_ARCHIVED_SPOT_T0_511_ORIGINAL_SHA_NO_TRADE_PASS')
+          print('MONSTER163_POST_T0_QUOTE_BOUNDED_511_NO_TRADE_PASS')
           PY
       - name: Upload machine-readable source-derived full511 historical research
         uses: actions/upload-artifact@v4
         with:
-          name: monster-stage163-archived-original-511-t0-quote-friction-only
-          path: /tmp/monster_stage163_spot_t0_511_quote_friction.json
+          name: monster-stage163-archived-original-511-post-t0-quote-friction-v2
+          path: /tmp/monster_stage163_spot_post_t0_receipt_bounded_v2.json
           retention-days: 60
           if-no-files-found: error
       - name: Commit immutable one-snapshot 511 rows under existing Monster research evidence
         run: |
           set -eu
           branch=research/monster-v4-local-discovery-20261010
-          target=crypto-300-profit-mission/monster/evidence/monster_stage163_spot_t0_original511_quote_friction_actual.json
+          target=crypto-300-profit-mission/monster/evidence/monster_stage163_spot_post_t0_original511_quote_friction_v2_actual.json
           test ! -e "$target"
-          cp /tmp/monster_stage163_spot_t0_511_quote_friction.json "$target"
+          cp /tmp/monster_stage163_spot_post_t0_receipt_bounded_v2.json "$target"
           git config user.name monster-research-ci
           git config user.email monster-research-ci@users.noreply.github.com
           git add "$target"
-          git commit -m "monster: archive original Stage163 Spot T0 511-pair quote friction with NO_GO"
+          git commit -m "monster: archive post-T0 bounded Stage163 511-pair quote friction v2 NO_GO"
           git fetch origin "refs/heads/$branch"
           if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
-            echo MONSTER163_T0_FRICTION_REPORT_ALREADY_ARCHIVED
+            echo MONSTER163_POST_T0_FRICTION_V2_REPORT_ALREADY_ARCHIVED
             exit 1
           fi
           git rebase FETCH_HEAD
           for source in crypto-300-profit-mission/local-agent/scripts/monster_v4_stage163_spot_t0_quote_friction.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage163_spot_t0_quote_friction.py crypto-300-profit-mission/monster/evidence/monster_stage163_spot_original_http_t0_actual/source_raw_http.zip crypto-300-profit-mission/monster/evidence/monster_stage163_spot_original_http_t0_actual/source_receipts.json .github/workflows/monster-v4-stage163-offline-spot-t0-511-friction.yml; do
-            test "$(git rev-parse "$GITHUB_SHA:$source")" = "$(git rev-parse "HEAD:$source")" || { echo MONSTER163_T0_FRICTION_SOURCE_CHANGED_DURING_CI; exit 1; }
+            test "$(git rev-parse "$GITHUB_SHA:$source")" = "$(git rev-parse "HEAD:$source")" || { echo MONSTER163_POST_T0_FRICTION_SOURCE_CHANGED_DURING_CI; exit 1; }
           done
           git push origin "HEAD:refs/heads/$branch"
-          echo MONSTER163_T0_511_SOURCE_ARCHIVED_GIT_READBACK_REQUIRED
+          echo MONSTER163_POST_T0_511_V2_SOURCE_ARCHIVED_GIT_READBACK_REQUIRED
