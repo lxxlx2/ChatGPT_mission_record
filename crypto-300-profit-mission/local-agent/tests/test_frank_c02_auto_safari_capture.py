@@ -241,3 +241,97 @@ def test_safari_front_requires_exact_origin_path_token_and_stage():
         "http://127.0.0.1:50998/__qa/panel?token=abcd1234&stage=report#fake",
     )
     assert all(not qa.safari_front_matches(actual,good) for actual in rejects)
+
+
+def test_archive_catalog_is_preferred_to_24_recent_mints(tmp_path, monkeypatch):
+    """The Mac's real control-root pointer wins over stale follow/watch lists."""
+    home = tmp_path / "home"
+    home.mkdir()
+    root = tmp_path / "existing-control"
+    reports = root / "cluster-reports"
+    reports.mkdir(parents=True)
+    (home / ".frank_meme_control_root").write_text(str(root), encoding="utf-8")
+
+    # Mimic the real Mac evidence: a 3 MB archived report and a ~119 KB
+    # archived report; the 2 MB bounded GET reader must favor the small one.
+    large = reports / MINT
+    small = reports / OTHER
+    large.mkdir()
+    small.mkdir()
+    (large / "latest.json").write_text(
+        json.dumps({"mint": MINT, "filler": "a" * 3_000_000}), encoding="utf-8")
+    (small / "latest.json").write_text(
+        json.dumps({"mint": OTHER, "filler": "b" * 118_000}), encoding="utf-8")
+
+    monkeypatch.setattr(Path, "home", staticmethod(lambda: home))
+    requests = []
+    def local_get(port, path):
+        requests.append(path)
+        if path == "/api/cluster-latest?mint=" + OTHER:
+            return {"mint": OTHER, "observed_at": 123}
+        if path.startswith("/api/candidates") or path.startswith("/api/frank-observed-watchlist"):
+            raise AssertionError("Found archived report; no reason to search recent candidates")
+        return None
+    monkeypatch.setattr(qa, "local_json", local_get)
+    assert qa.discover_local_archive_mints(home) == [OTHER, MINT]
+    result = qa.select_local_ca(8766, None)
+    assert result == {
+        "mint": OTHER, "archive_found": True, "source": "LOCAL_ARCHIVE_CATALOG",
+        "checked": 1, "catalog_count": 2,
+    }
+    assert requests == ["/api/cluster-latest?mint=" + OTHER]
+
+
+def test_archive_catalog_ignores_unsafe_names_symlinks_and_broken_pointer(tmp_path, monkeypatch):
+    home = tmp_path / "home"
+    home.mkdir()
+    root = tmp_path / "root"
+    reports = root / "cluster-reports"
+    reports.mkdir(parents=True)
+    pointer = home / ".frank_meme_control_root"
+    pointer.write_text(str(root))
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "latest.json").write_text('{"mint":"outside"}')
+    (reports / MINT).symlink_to(outside, target_is_directory=True)
+    invalid = reports / "not-a-solana-ca"
+    invalid.mkdir()
+    (invalid / "latest.json").write_text("{}")
+    second = reports / OTHER
+    second.mkdir()
+    (second / "latest.json").symlink_to(outside / "latest.json")
+    assert qa.discover_local_archive_mints(home) == []
+    pointer.unlink()
+    pointer.symlink_to(tmp_path / "real-pointer")
+    (tmp_path / "real-pointer").write_text(str(root))
+    assert qa.discover_local_archive_mints(home) == []
+    pointer.unlink()
+    pointer.write_text(str(tmp_path / "not-there"))
+    assert qa.discover_local_archive_mints(home) == []
+
+
+def test_catalog_does_not_assume_valid_archive_when_dashboard_get_rejects(tmp_path, monkeypatch):
+    home = tmp_path / "home"
+    home.mkdir()
+    root = tmp_path / "root"
+    latest = root / "cluster-reports" / MINT / "latest.json"
+    latest.parent.mkdir(parents=True)
+    latest.write_text(json.dumps({"mint":MINT}))
+    (home / ".frank_meme_control_root").write_text(str(root))
+    monkeypatch.setattr(Path, "home", staticmethod(lambda: home))
+    calls = []
+    def unavailable(port, path):
+        calls.append(path)
+        if path == "/api/candidates":
+            return {"candidates":[{"mint":OTHER}]}
+        if path == "/api/frank-observed-watchlist":
+            return {"rows":[]}
+        return None
+    monkeypatch.setattr(qa, "local_json", unavailable)
+    result = qa.select_local_ca(8766, None)
+    assert result["archive_found"] is False
+    assert result["catalog_count"] == 1
+    assert result["source"] == "LOCAL_ARCHIVE_CATALOG_NOT_READABLE"
+    assert result["mint"] == OTHER
+    assert "/api/cluster-latest?mint=" + MINT in calls
+    assert all("cluster-analysis" not in call for call in calls)
