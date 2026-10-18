@@ -94,7 +94,7 @@ def _reject(reason: str) -> dict:
             "follower_net_pnl": "UNRESOLVED"}
 
 
-def validate_event(row: dict, wallets: set[str], cas: set[str]) -> dict:
+def validate_event(row: dict, wallets: set[str], cas: set[str], archived_txs: set[str]) -> dict:
     """Accept raw public pending tx evidence for research, never as signed token BUY.
 
     Source JSON must contain its actual raw pending event bytes encoded as b64.
@@ -119,6 +119,8 @@ def validate_event(row: dict, wallets: set[str], cas: set[str]) -> dict:
             raise ValueError("OUTSIDE_FROZEN_23X19")
         if not isinstance(tx_hash, str) or not HASH.fullmatch(tx_hash):
             raise ValueError("INVALID_TX_HASH")
+        if tx_hash.lower() in archived_txs:
+            raise ValueError("FROZEN_HISTORICAL_TX_CANNOT_BE_PROMOTED_TO_LIVE_CAPTURE")
         if row["capture_kind"] != "PUBLIC_PENDING_TRANSACTION_INGRESS":
             raise ValueError("HISTORICAL_OR_SIMULATED_CAPTURE_NOT_LIVE")
         if (not isinstance(row["event_id"], str) or not row["event_id"].strip()
@@ -181,7 +183,7 @@ def validate_event(row: dict, wallets: set[str], cas: set[str]) -> dict:
         return _reject(str(exc))
 
 
-def ingest_document(doc: dict, grid: dict) -> dict:
+def ingest_document(doc: dict, grid: dict, pre: dict) -> dict:
     if not isinstance(doc, dict) or doc.get("schema") != "BSC_P4B_PUBLIC_OBSERVER_INGRESS_V1":
         raise ValueError("INGRESS_SCHEMA_INVALID")
     observations = doc.get("events")
@@ -189,6 +191,7 @@ def ingest_document(doc: dict, grid: dict) -> dict:
         raise ValueError("INGRESS_EVENTS_NOT_BOUNDED")
     wallets = {w["wallet"].lower() for w in grid["wallets"]}
     cas = {m["ca"].lower() for m in grid["markets"]}
+    archived_txs = {x[field].lower() for x in pre["cases"] for field in ("first_signed_buy_tx", "last_signed_exit_tx")}
     records, ids = [], set()
     for row in observations:
         event_id = row.get("event_id") if isinstance(row, dict) else None
@@ -196,7 +199,7 @@ def ingest_document(doc: dict, grid: dict) -> dict:
             result = _reject("DUPLICATE_OR_MISSING_EVENT_ID")
         else:
             ids.add(event_id)
-            result = validate_event(row, wallets, cas)
+            result = validate_event(row, wallets, cas, archived_txs)
         records.append({"event_id": event_id, **result})
     return {"schema": "BSC_P4B_FIRST_SEEN_EVIDENCE_GATE_V1",
             "mode": "OFFLINE_IMPORT_ONLY_NOT_AN_ACTIVE_MONITOR",
@@ -215,7 +218,7 @@ def main() -> None:
     a = p.parse_args()
     pre, grid = load_frozen()
     if a.input:
-        output = ingest_document(json.loads(a.input.read_text(encoding="utf-8")), grid)
+        output = ingest_document(json.loads(a.input.read_text(encoding="utf-8")), grid, pre)
     else:
         output = historical_summary(pre)
     encoded = json.dumps(output, indent=2, ensure_ascii=False, sort_keys=True) + "\n"
