@@ -1,6 +1,9 @@
 # Monster Stage163 — 官方原 HTTP T0 全511个Spot USDT交易对报价摩擦离线证据（2026-10-18）
 
-> **历史 V1 记录，因Claude独立审核 P1/P2 已被V2证据解释替代。** 此文档曾以「T0报价」描述实际在exchangeInfo T0之后**2.562–6.835秒**取得的REST行情。不能将其当作T0因果可用的买卖盘口，也不能将511个合格USDT Spot交易对称为全部Binance Spot。原V1代码审核`REQUEST_CHANGES`，旧全511 JSON保留以供审计但不覆盖。
+> **审查状态更正：此文档属于已废止的历史 V1 解释，不是当前T0报价证据。** 不得以文内任何“实际永久”的说法推导“T0可用”或“全部Binance Spot”。当前有效研究证据是[V3后置客户端回执时钟误差报告](evidence/monster_stage163_spot_post_t0_original511_quote_friction_v3_clock_actual.json)；完整V1/V2/V3身份与Git Blob见[证据继承及失效标签登记](evidence/monster_stage163_spot_quote_friction_evidence_supersession_register_20261018.json)。V1源字节因审计要求保留，失效标签不再生效。G4 UNKNOWN/G6 NO_GO。
+
+
+> **历史 V1 记录，因Claude独立审核 P1/P2 已由V2记录澄清、再由V3加入时钟区间与零盘口语义。** 此文档曾以「T0报价」描述实际在exchangeInfo T0之后**2.562–6.835秒**取得的REST行情。不能将其当作T0因果可用的买卖盘口，也不能将511个合格USDT Spot交易对称为全部Binance Spot。原V1代码审核`REQUEST_CHANGES`，旧全511 JSON保留以供审计但不覆盖。
 >
 > **唯一新解释与数据**：[已修复Stage163 V2及新代码审核包](MONSTER_STAGE163_SPOT_POST_T0_511_FRICTION_CLAUDE_P1_P2_FIX_20261018.md)；[真正新 V2 post-T0 511逐币JSON](evidence/monster_stage163_spot_post_t0_original511_quote_friction_v2_actual.json)。新独立AI审核尚未完成，G4 UNKNOWN/G6 NO_GO。
 
@@ -17,7 +20,7 @@
 - 采集网站官方 `https://data-api.binance.vision`，原HTTP源实收于 `2026-10-17T22:04:38…22:04:48Z`，其中真实 `bookTicker` GET `22:04:42.655682…22:04:44.443393Z`、真实`24hr ticker` GET `22:04:44.443727…22:04:46.929464Z`。两个HTTP端点**并非精确同秒原子快照**；每个原价没有逐币精确更新时间戳，不能宣称511个币在同一瞬间同步可成交。
 - 实施的纯离线源码：`../local-agent/scripts/monster_v4_stage163_spot_t0_quote_friction.py`、`../local-agent/tests/test_monster_v4_stage163_spot_t0_quote_friction.py`；一次性无实时数据源/无 schedule 工作流`../../.github/workflows/monster-v4-stage163-offline-spot-t0-511-friction.yml`。**触发成功的唯一固定代码SHA**：`e860c1aa6485c453f99a1a17c207670a3685eb85`；研究原始基线（上一项结项SHA）`be8b91b60599dd8c9a6659da57f52ff9f72f3942`。代码独立其他AI审核`NOT_DONE`。
 - 真正成功的[GitHub Actions #39082186839](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39082186839) 触发SHA与代码固定一致，1 job SUCCESS/10步骤， **6/6测试成功**、原价档案SHA + HTTP six receipts逐个验证PASS、生成并回写 511 行。Artifact ID `12119252571`。本轮第一次 [#39082119931](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39082119931) 与第二次 [#39082156805](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39082156805) 曾测试失败：因最初测试把旧QA四位小数与新六位精确字符串直接比较、以及Python四舍五入临界(11.217050→11.2171)。修复是**测试**允许0.0001 bps表面精度差，不改源ZIP、原始价格和计算器。`e860c1...` CI完整通过。
-- 实际永久 [逐币511行机器证据](evidence/monster_stage163_spot_t0_original511_quote_friction_actual.json)，Git Blob `d2df270708b48d1b374aa314b25e848ae12cbd75`。GHA一次性只读取Git内压缩源，来源档案及两个Blob之后未改；此批无新的官方HTTP网络采集、无市场定时任务、无Gmail或Mac运行。
+- 废止标签保留供审计的V1 [逐币511行原始机器记录](evidence/monster_stage163_spot_t0_original511_quote_friction_actual.json)，Git Blob `d2df270708b48d1b374aa314b25e848ae12cbd75`。GHA一次性只读取Git内压缩源，来源档案及两个Blob之后未改；此批无新的官方HTTP网络采集、无市场定时任务、无Gmail或Mac运行。
 
 ## 二、全511个交易对实际口径与结果
 
