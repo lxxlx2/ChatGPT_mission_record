@@ -81,6 +81,56 @@ class FactorySourceProbeTests(unittest.TestCase):
         self.assertEqual(record["token0"], token)
         self.assertEqual(record["pool"], token)
 
+    def test_bsc_v3_poolcreated_decodes_as_v3_not_v2(self):
+        row = mocklog(100, "0x" + "e"*40)
+        cfg = m.CHAINS["bsc-v3"]
+        row["address"] = cfg["factory"]
+        row["topics"][0] = cfg["topic"]
+        row["topics"][1] = "0x" + "0"*24 + cfg["bases"][0][2:].lower()
+        decoded = m.decode(row, "bsc-v3")
+        self.assertEqual(decoded["pool"], "0x" + "a"*40)
+        _, cohort, n = m.build_roster([row], "bsc-v3")
+        self.assertEqual((n, len(cohort)), (1, 1))
+
+    def test_historical_v2_counter_reconciles_actual_archived_paircreated_layout(self):
+        cfg = m.CHAINS["bsc-v2"]
+        record = {
+            "address": cfg["factory"], "topics": [
+                cfg["topic"],
+                "0x0000000000000000000000001c88e86556b815f4b140ec14297ada7863bc97c8",
+                "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"],
+            "data": "0x000000000000000000000000b2dc7c7f5b67b2d604603fbc56530ba7832648a800000000000000000000000000000000000000000000000000000000001e4a5d",
+            "blockNumber": "0x3c00085", "transactionIndex": "0x46",
+            "logIndex": "0xfa",
+            "transactionHash": "0xb63846e92b19018da4d0e24cec8aab69d979c14059130b7b76dbfe972e5e1418",
+            "removed": False,
+        }
+        class Counter:
+            def request(self, method, params):
+                self_method = method == "eth_call" and params[0]["data"] == "0x574f2ba3"
+                if not self_method:
+                    raise AssertionError("unexpected RPC method")
+                block = int(params[1], 16)
+                return (hex(1985116 if block == 62914692 else 1985117), b"{}")
+        rpc = Counter()
+        found = m.reconcile_v2_factory_counter(rpc, 62914693, 62914693, [record])
+        self.assertEqual(found["status"], "COUNTER_MATCHES_EVENTS")
+        self.assertEqual(found["created_events"], 1)
+        self.assertEqual(m.decode(record, "bsc-v2")["pool"],
+                         "0xb2dc7c7f5b67b2d604603fbc56530ba7832648a8")
+        with self.assertRaisesRegex(m.SourceError, "EVENT_COUNT_MISMATCH"):
+            m.reconcile_v2_factory_counter(rpc, 62914693, 62914693, [])
+        malformed = dict(record, data=record["data"][:-1] + "0")
+        with self.assertRaisesRegex(m.SourceError, "FACTORY_SEQUENCE_MISMATCH"):
+            m.reconcile_v2_factory_counter(rpc, 62914693, 62914693, [malformed])
+
+    def test_endpoint_fingerprint_prevents_resume_same_host_different_url(self):
+        class Dummy: pass
+        a = m.RPC("https://example-rpc.org/a", 56, 8, 0)
+        b = m.RPC("https://example-rpc.org/b", 56, 8, 0)
+        self.assertEqual(a.host, b.host)
+        self.assertNotEqual(a.source_tag, b.source_tag)
+
     def test_wrong_chain_and_embedded_credentials_rejected(self):
         with self.assertRaisesRegex(m.SourceError, "CREDENTIALS"):
             m.RPC("https://name:pass@some-rpc.com", 8453, 3, 0)
