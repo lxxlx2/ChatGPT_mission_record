@@ -1,6 +1,30 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
 
+## 2026-10-20 Mac实际验收完成：38/38测试，18份真实卖出原RPC回执已落地，0 RPC离线重放通过
+
+**验收代码固定SHA** `b783d154376b154d54b1e86f3b613300558ac05a`。用户在macOS zsh前台执行`git pull --ff-only`从`3e897bf`到上述SHA；两个原测试文件分别 **18/18 PASS** 与 **20/20 PASS**，合计 **38/38 PASS**。其中新增两项真实卖出源验证测试均`ok`，但它们的fixture仍是合成收据；真实历史来源证明来自随后的实际RPC调用及本地raw文件。
+
+同次`--mode sell-archive`明确输出（受限范围`bsc-v2`、固定2025-07-01原始冻结30例中预选的18个**深度达标真实卖出**）：
+
+- `status=HISTORICAL_18_REAL_SELL_RECEIPTS_ARCHIVED_AND_OFFLINE_REPLAYED`；`rank_count=18`；`matched_real_sell_tx=18`，`raw_receipt_hashes_verified=true`，在线`requests_this_invocation=19`（1次chainId + 18笔Tx收据）。
+- 紧接着`--mode sell-audit`从Mac已保存**原始JSON-RPC响应**离线运行，仍输出上述相同status与`matched_real_sell_tx=18`、`raw_receipt_hashes_verified=true`，且`requests_this_invocation=0`。
+- 观察到**卖出回执报告`effectiveGasPrice=0x0`**的rank是`[7,11,12,21,25,30]`。这一字段为数据源的真实返回值，不代表零Gas、补贴或净收益为正。其他12笔的Gas字段值没有随本次终端摘要传入，不做“确定非零”断言。
+- 本验收数据来自**用户粘贴的Mac终端结果**。这证明**用户本机**实际执行了在线采集/完整本地离线核验；聊天内**没有独立读到这18份raw字节或manifest原SHA**，也不知道用户Mac端点和先前Alchemy端点是否独立供应商，因此不写`INDEPENDENT_SECOND_PROVIDER_PASS`。原文在Mac私有`~/monster-p0-readonly-raw/bsc-v2-2025-07-01/v2_p0_real_sell_receipts/`，不能上传包含私有RPC信息的请求/端点URL。
+
+**分层进度判定（防止整数碰巧等于研究门槛而错误晋级）：**
+
+| 判定对象 | 现在可证明 | 还不能证明 |
+|---|---|---|
+| 原30币中的18笔所选历史卖出收据 | **PASS：18/18有界原RPC归档 + 完整交易/Pool Sync/Swap/Transfer/售前reserve本地重放，38/38代码测试** | 不是其余12币全部历史交易覆盖；不是全市场/全时间事件无漏 |
+| 原冻结24/30完整PIT覆盖 | **`NOT_SCORABLE`** | `chain_event_at`不等于当时公网可查询`available_at`；缺连续窗口及其它Venue V3/launchpad实际来源证据 |
+| 原冻结18/30统一研究订单金额双向执行 | **`NOT_SCORABLE`** | 18笔实际成交名义金额互不一致；未预冻结同一个notional、历史限制/税费/完整退出规则，不能拿pool depth 2 WBNB/1000 USDT冒充订单金额 |
+| 原币种总体研究实用性/P1 | **`P0 PARTIAL / OVERALL INSUFFICIENT_COVERAGE`（当前阶段诊断，非放弃研究）** | 仍需事先冻结时间延迟假设（只能标`RECONSTRUCTED`）、有界同额买卖容量及真实来源完整度；不得从本轮把交易存在性与策略利润混为一谈 |
+
+**研发下一步**：不再重跑这18个卖出回执、不新建Stage；只做预先可评分的研究订单金额/时间与缺失分母说明，审查此BSC V2-only样本能否满足原24/30与18/30，不足则按架构合同正式输出`INSUFFICIENT_COVERAGE`而不是无限补无关边界。冻结母体30例、命名/权限、原有2026-11-02 source probe停止界限均未修改。当前仅向P0结果进度报告记入真实验收，**未改动验收代码、未运行CI、未合并部署和下单**。
+
+---
+
 ## 2026-10-20 P0真实卖出来源档案与Gas来源异常：有界18份原HTTP回执，待Mac独立离线验收
 
 **为什么继续这一步**：既有事实已包括30例冻结母体、18例达到历史深度地板的真实token→quote成功卖出，且已有7例与原买入收币地址及数量匹配的完整token退出。但原先18例的转账/Swap/Sync与卖出前报价池储备主要通过同一个Alchemy app标准化历史查询，本次聊天**尚未取得和永久审计原始JSON-RPC字节**。即使18这个整数等于旧覆盖门槛，**不等于P0已过18/30的相同研究名义金额真实可卖出验收**。时钟`available_at`、统一研究订单规模、合约限制和费用继续缺口。
