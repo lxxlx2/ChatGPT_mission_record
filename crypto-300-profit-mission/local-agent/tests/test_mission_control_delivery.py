@@ -572,8 +572,8 @@ def test_live_resume_quarantines_fresh_old_policy_pending_without_sending(tmp_pa
     gmail.drain(provider, active_policy_hash="different-live-policy-hash2")
     assert local_calls == []
     assert provider.sent == []
-    assert db.db.execute("SELECT status,attempts FROM decision_outbox WHERE channel='local'").fetchone() == ("MANUAL_REVIEW",0)
-    assert db.db.execute("SELECT status,attempts FROM decision_outbox WHERE channel='gmail'").fetchone() == ("MANUAL_REVIEW",0)
+    assert tuple(db.db.execute("SELECT status,attempts FROM decision_outbox WHERE channel='local'").fetchone()) == ("MANUAL_REVIEW",0)
+    assert tuple(db.db.execute("SELECT status,attempts FROM decision_outbox WHERE channel='gmail'").fetchone()) == ("MANUAL_REVIEW",0)
     assert db.db.execute("SELECT count(*) FROM decision_events").fetchone()[0] == 1
     assert db.db.execute("SELECT policy_hash FROM decision_snapshots").fetchone()[0] == "hash1"
 
