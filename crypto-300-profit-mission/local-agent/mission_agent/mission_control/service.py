@@ -121,7 +121,20 @@ class MissionMemeService:
             return {"status":"SKIPPED","reason":"POSITION_NOT_FOLLOWABLE","source":"JUPITER_OFFICIAL","observed_at":time.time()}
         if candidate.get("latest_side") == "SELL":
             return {"status":"SKIPPED","reason":"LATEST_ACTION_SELL","source":"JUPITER_OFFICIAL","observed_at":time.time()}
-        amount = Decimal(str(self.policy["decision"]["quote_usdc_amount"]))
+        # No fixed order size is authorized. A quote is optional and only
+        # allowed for an amount explicitly supplied in the active policy.
+        # The checked-in approved policy intentionally defines no such amount.
+        raw_amount = self.policy["decision"].get("quote_usdc_amount")
+        if raw_amount is None:
+            return {"status": "SKIPPED", "reason": "USER_ORDER_AMOUNT_NOT_SPECIFIED",
+                    "source": "NONE", "observed_at": time.time()}
+        try:
+            amount = Decimal(str(raw_amount))
+            if not amount.is_finite() or amount <= 0:
+                raise ValueError("INVALID_OPTIONAL_USER_AMOUNT")
+        except (ValueError, ArithmeticError):
+            return {"status": "SKIPPED", "reason": "INVALID_USER_ORDER_AMOUNT",
+                    "source": "NONE", "observed_at": time.time()}
         key = f"jupiter:{candidate['mint']}:{candidate.get('token_decimals')}:{amount}"
         cached = self.control.cache_get(key, time.time())
         if cached is not None:
