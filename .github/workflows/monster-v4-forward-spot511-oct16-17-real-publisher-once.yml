@@ -1,0 +1,125 @@
+name: Monster real official Spot511 Oct16-17 publisher ZIP acquisition (one-shot)
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-forward-spot511-oct16-17-real-publisher-once.yml'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_official_publisher_acquire.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_forward_spot511_official_publisher_acquire.py'
+permissions:
+  contents: write
+concurrency:
+  group: monster-spot511-first-two-days-official-publisher-manual
+  cancel-in-progress: false
+jobs:
+  actual_official_spot_source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify original immutable 511 roster and source data safety tests
+        run: |
+          set -eu
+          python3 -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_official_publisher_acquire.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_forward_spot511_official_publisher_acquire.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_forward_spot511_official_publisher_acquire.py
+      - name: Download original Oct16-17 daily Spot ZIP and checksum for all frozen T0 511
+        run: |
+          set -eu
+          mkdir -p /tmp/monster_actual_publisher_oct16_17
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_official_publisher_acquire.py --source-dir /tmp/monster_actual_publisher_oct16_17 --workers 8 --out /tmp/monster_actual_publisher_oct16_17_manifest.json
+      - name: Preserve original checksum and ZIP bytes plus raw manifest to GitHub artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-spot511-oct16-17-original-publisher-zip-checksum-1022-attempts
+          path: |
+            /tmp/monster_actual_publisher_oct16_17_manifest.json
+            /tmp/monster_actual_publisher_oct16_17
+          retention-days: 60
+          if-no-files-found: warn
+      - name: Verify no source absence is miscounted and at least one publisher file is real
+        run: |
+          set -eu
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path('/tmp/monster_actual_publisher_oct16_17_manifest.json')
+          j=json.loads(p.read_text(encoding='utf-8'))
+          assert j['schema']=='MONSTER_SPOT511_ORIGINAL_PUBLISHER_DAILY_1M_ACQUISITION_V1'
+          assert j['original_roster_count']==511
+          assert j['attempts_total']==1022
+          assert j['days_utc']==['2026-10-16','2026-10-17']
+          assert len(j['all_attempts'])==1022
+          assert sum(j['status_counts'].values())==1022
+          confirmed=j['status_counts'].get('VERIFIED_FULL_DAY_1440',0)
+          print('MONSTER_REAL_PUBLISHER_CONFIRMED_SOURCE_FILES',confirmed)
+          print('MONSTER_REAL_PUBLISHER_UNVERIFIED',1022-confirmed)
+          assert j['no_failed_archive_can_count_as_no_WATCH_or_no_SETUP']
+          assert j['G4']=='UNKNOWN' and j['G6']=='NO_GO'
+          assert j['NO_MERGE'] and j['NO_DEPLOY'] and j['NO_GMAIL'] and j['NO_TRADE']
+          if confirmed==0:
+              raise SystemExit('MONSTER_OFFICIAL_PUBLISHER_ZERO_VERIFIED_CHECK_ARTIFACT_FOR_NETWORK_OR_DATE_GAP')
+          PY
+      - name: Commit compact real source receipts to existing Monster research PR
+        run: |
+          set -eu
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,hashlib
+          raw=Path('/tmp/monster_actual_publisher_oct16_17_manifest.json')
+          j=json.loads(raw.read_text(encoding='utf-8'))
+          dest=Path('crypto-300-profit-mission/monster/evidence/monster_forward_spot511_oct16_17_real_issuer_zip_receipts_v1.json')
+          if dest.exists() or dest.is_symlink():
+              raise SystemExit('MONSTER_PUBLISHER_SOURCE_RECEIPTS_ALREADY_EXIST')
+          data={
+              'schema':j['schema'],
+              'original_T0_source_sha256':j['fixed_T0_original_http_zip_sha256'],
+              'source_scope':j['source_scope'],
+              'days_utc':j['days_utc'],
+              'T0_symbol_count':j['original_roster_count'],
+              'attempts_total':j['attempts_total'],
+              'status_counts':j['status_counts'],
+              'actual_acquired_at_utc':j['acquired_at_utc'],
+              'full_1022_original_manifest_sha256':hashlib.sha256(raw.read_bytes()).hexdigest(),
+              'issuer_real_zip_receipts':[
+                  {'symbol':r['symbol'],'date_utc':r['date_utc'],
+                   'publisher_url':r['publisher_zip_url'],
+                   'publisher_checksum_url':r['publisher_checksum_url'],
+                   'status':r['status'],'zip_sha256':r['zip_sha256'],
+                   'checksum_sha256':r['publisher_checksum_sha256'],
+                   'error':r['error']}
+                  for r in j['all_attempts']],
+              'raw_original_zip_checksum_pairs_only_in_actions_artifact':True,
+              'artifact_retention_days':60,
+              'is_full_seven_day_oos':False,
+              'is_executable_spot_profit':False,
+              'G4':'UNKNOWN','G6':'NO_GO',
+              'NO_MERGE':True,'NO_DEPLOY':True,'NO_GMAIL':True,'NO_TRADE':True
+          }
+          dest.write_text(json.dumps(data,indent=2,sort_keys=True,ensure_ascii=False)+'\n')
+          print('MONSTER_OFFICIAL_SOURCE_REAL_ARCHIVE_RECEIPTS',data['status_counts'])
+          PY
+          target=crypto-300-profit-mission/monster/evidence/monster_forward_spot511_oct16_17_real_issuer_zip_receipts_v1.json
+          branch=research/monster-v4-local-discovery-20261010
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive genuine publisher spot 511 original ZIP SHA and 2026-10-16-17 1m evidence"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER_ORIGINAL_PUBLISHER_RECEIPT_ALREADY_EXISTS_NO_OVERWRITE
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_official_publisher_acquire.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_forward_spot511_official_publisher_acquire.py .github/workflows/monster-v4-forward-spot511-oct16-17-real-publisher-once.yml crypto-300-profit-mission/local-agent/scripts/monster_v4_stage166_spot511_official_1m_intake.py crypto-300-profit-mission/monster/evidence/monster_stage163_spot_original_http_t0_actual/source_raw_http.zip; do
+            test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo MONSTER_PUBLISHER_INPUT_OR_READER_CHANGED; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER_REAL_SOURCE_ACQUIRED_RESEARCH_ONLY_NO_SIGNAL_NO_ORDER
