@@ -3,10 +3,13 @@ import hashlib
 import importlib.util
 from datetime import date,datetime,timezone
 from io import BytesIO
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import threading
 from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest import mock
 import zipfile
 
 S=Path(__file__).resolve().parents[1]/"scripts"
@@ -114,6 +117,95 @@ class RealPublisherSourceTests(unittest.TestCase):
             actual=m.one_pair(symbol,"2026-10-16",Path(directory),getter=getter(fake))
             self.assertEqual(actual["status"],"VERIFIED_FULL_DAY_1440")
             self.assertEqual(actual["csv_closed_1m_rows"],1440)
+
+    def test_actual_http_redirect_fails_before_disallowed_server_get(self):
+        """Genuine two HTTP servers, no getter mock: redirected target GET must be zero."""
+        hits={"official":0,"disallowed":0}
+        redirect_code={"status":302}
+
+        class Disallowed(BaseHTTPRequestHandler):
+            def do_GET(self):
+                hits["disallowed"]+=1
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(b"not an issuer")
+
+            def log_message(self, *args):
+                pass
+
+        blocked=ThreadingHTTPServer(("127.0.0.1",0),Disallowed)
+
+        class Allowed(BaseHTTPRequestHandler):
+            def do_GET(self):
+                hits["official"]+=1
+                self.send_response(redirect_code["status"])
+                self.send_header(
+                    "Location",
+                    f"http://127.0.0.1:{blocked.server_port}/non-publisher.zip"
+                )
+                self.end_headers()
+
+            def log_message(self, *args):
+                pass
+
+        allowed=ThreadingHTTPServer(("127.0.0.1",0),Allowed)
+        threads=[threading.Thread(target=x.serve_forever,daemon=True)
+                 for x in (blocked,allowed)]
+        for thread in threads:
+            thread.start()
+        try:
+            base=f"http://127.0.0.1:{allowed.server_port}/data/spot/daily/klines"
+            with mock.patch.object(m,"BASE",base):
+                source=base+"/BTCUSDT/1m/BTCUSDT-1m-2026-10-16.zip"
+                for status in (301,302,303,307,308):
+                    with self.subTest(status=status):
+                        redirect_code["status"]=status
+                        with self.assertRaisesRegex(
+                            ValueError,"PUBLISHER_REDIRECT_BLOCKED_BEFORE_FOLLOW"
+                        ):
+                            m.fetch_one_url(source,64)
+                        self.assertEqual(hits["disallowed"],0)
+            self.assertEqual(hits["official"],5)
+            self.assertEqual(hits["disallowed"],0)
+        finally:
+            for server in (allowed,blocked):
+                server.shutdown()
+                server.server_close()
+            for thread in threads:
+                thread.join(timeout=5)
+
+    def test_actual_http_direct_200_publisher_source_still_works(self):
+        """The redirect veto must not break the ordinary HTTP 200 path."""
+        payload=b"verified caller-controlled test bytes"
+        hits={"source":0}
+
+        class Direct(BaseHTTPRequestHandler):
+            def do_GET(self):
+                hits["source"]+=1
+                self.send_response(200)
+                self.send_header("Content-Type","application/octet-stream")
+                self.send_header("Content-Length",str(len(payload)))
+                self.end_headers()
+                self.wfile.write(payload)
+
+            def log_message(self,*args):
+                pass
+
+        server=ThreadingHTTPServer(("127.0.0.1",0),Direct)
+        thread=threading.Thread(target=server.serve_forever,daemon=True)
+        thread.start()
+        try:
+            base=f"http://127.0.0.1:{server.server_port}/data/spot/daily/klines"
+            with mock.patch.object(m,"BASE",base):
+                source=base+"/BTCUSDT/1m/BTCUSDT-1m-2026-10-16.zip"
+                received,meta=m.fetch_one_url(source,128)
+            self.assertEqual(received,payload)
+            self.assertEqual(meta["http_status"],200)
+            self.assertEqual(hits["source"],1)
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=5)
 
     def test_existing_source_pair_is_never_overwritten(self):
         with tempfile.TemporaryDirectory() as directory:
