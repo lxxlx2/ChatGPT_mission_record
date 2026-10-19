@@ -49,3 +49,28 @@
 在当前免费/已连接来源约束下，**首个Source stop已触发**。暂停这条链上30例样本生成和后续预测开发，保留冻结合同与实际失败记录。重新继续的唯一合格条件是先取得一个真实可复现、无需当前结果倒推的历史Factory `PoolCreated`全量事件来源，能审计连续区块、原交易哈希及重建前30个目标代币；否则不再打着“继续”名义只补日志边界。切换另一个公开索引提供商之前，必须检验它是允许连续历史数据及可取SHA/区块凭证的**合法免费方案**，不能要求用户购买API。
 
 原Spot511冻结七日窗口仍保持独立研究对照，不拿它的亏损证明新链上模型也亏损。生产Monster、Frank、Gmail/launchd均不改；`G0 PARTIAL / G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`保持。
+
+
+## 5. 2026-10-19 复审纠偏：容器/连接器source-stop不代表链上档案缺失
+
+收到Claude针对固定 \`438288d0\` / \`5555960c\` 的审查建议（用户转交）。**前文第4节是当时使用受限通道的正确停止执行结论，必须保留；不是对原数据不可获取的永久断言**。新的更精确状态是 \`SOURCE_BLOCKED_IN_CURRENT_RUNTIME / MAC_PUBLIC_RPC_FALLBACK_NOT_TESTED\`。在冻结母体、30样本和2次CI预算不变前提下，允许**一次用户Mac本地前台只读来源探针**，这是源路由能力验证，不消耗CI预算，不开启定时任务或生产Shadow。
+
+关键事实复验：
+- 经本轮**实际调用已连接Alchemy用户现有All Chains免费App**，Base工厂 \`eth_getLogs\` 一次请求2000区块得到明确报错：\`Under the Free tier plan, you can make eth_getLogs requests with up to a 10 block range\`。该限制适用于本次连接器和plan，不泛化断言所有Alchemy免费账户与其它网络上限相同。预计一个整日数万区块逐10块访问不划算，也不应为了这一个供应商连续消耗几千次调用。
+- BNB Chain [2026-08-19官方RPC文档](https://docs.bnbchain.org/bnb-smart-chain/developers/json_rpc/json-rpc-endpoint/)明示**列出的公用主网节点 \`eth_getLogs\` 被禁用**，包括 \`https://bsc-dataseed.bnbchain.org\` 系列。即使Mac有网，也不能假定该官方公共URL能直接扫描整日Pancake Factory，必须先做小范围能力探测/使用确实允许日志的其他合规免费节点。不能把BSC节点拒绝当成0新币。
+- Base的官方限速公开RPC \`https://mainnet.base.org\` 以及Uniswap Base V3 Factory \`0x33128a8fC17869897dcE68Ed026d694621f6FDfD\`真实存在；它是**技术可用性探针，不代表目标Binance Alpha大量项目在Base**。Base已安装公共RPC不适合无界高频请求，先测试2000块与10块两档，确认可用再扫同一整日。
+
+### Git已交付、不需散装补丁的只读工具
+
+- [\`../local-agent/scripts/monster_early_venue_factory_rpc_roster_probe.py\`](../local-agent/scripts/monster_early_venue_factory_rpc_roster_probe.py)：标准库Python，**仅**\`eth_chainId\` / \`eth_blockNumber\` / \`eth_getBlockByNumber\` / \`eth_getLogs\`。不获取钱包、不签名、不写任何链上事务。支持\`base-v3\` Uniswap PoolCreated及\`bsc-v2\` Pancake PairCreated，链ID固定校验；\`--rpc\`仅允许非嵌入凭证HTTPS节点；识别并拒绝错误chain、Factory/topic、malformed log。默认\`--mode probe\`只检查固定历史UTC日和2000/10块的源能力，**不会**假装扫描整天或得到30个样本。
+- \`--mode scan\`为额外明确选项，只有在probe测试显示历史\`eth_getLogs\`可用时才应使用。先用官方chain时间戳按二分定位整个2025-07-01完整UTC日闭区块范围，再从头到尾**不跳块**查询Factory单事件topic，过大时缩小chunk、每份原始RPC原字节及SHA256回执持久化到**用户Mac私有目录**，中断再运行可审计式接着扫；\`--max-requests\`默认250，耗尽即\`PARTIAL_SOURCE_BLOCKED_NOT_ZERO_EVENTS\`，没有完整连续范围**不会形成30代币母体**。本程序的响应SHA保证保存后未意外改变，不能证明RPC供应商给出了独立链共识的完整性；正式入库前还应交叉核对区块hash、选中交易receipt及至少第二独立来源。**先不运行整日扫描，以真实Mac小探针响应判断是否必要。**
+- [\`../local-agent/tests/test_monster_early_venue_factory_rpc_roster_probe.py\`](../local-agent/tests/test_monster_early_venue_factory_rpc_roster_probe.py)：本轮独立离线6项实测PASS（作者本地容器，非CI、非Mac真实网络），涵盖V2/V3原日志、按事件序而非赢家名单生成、跨段连续性、原响应SHA篡改失败、网络错误标UNKNOWN与首末日UTC边界。CI预算2次尚未使用。新脚本尚未完成其他AI正式代码审核、Mac连接试验。
+- 两种模式都不使用\`eth_sendTransaction\`、\`eth_sendRawTransaction\`、钱包私钥/账户权限，输出文件仅写到显式\`--out-dir\`（默认\`~/monster-pit-source-probe\`），不碰Frank/Monster生产库、不安装launchd、不发送邮件；**不要把可能含RPC API密钥的\`--rpc\`私有地址或响应上传Git**。
+
+### 事前冻结正式母体的流动性准入——与“新池抽样”分开
+
+首30例**源覆盖探针仍然不按流动性、赢家、是否还存活或垃圾风险删人**；30例保留分母，\`NOT_SCORABLE\`留在表中。它只解决“可不可以拿到历史原字节和逐项目PIT”的问题。
+
+**将来正式评估“进入可观察交易窗口”的筛选规则，现在先锁一项低门槛来源合同**，不是用户交易名义金额或BUY过滤器：首次Factory事件后60分钟内，池实际链上可观察到首次有正流动性、至少一次真实Swap，且在当时可读状态的**报价侧**流动性大致超过以下预先冻结的最低绝对档位（必须使用该时点储备/头寸状态）：Base WETH侧\`>=0.5 WETH\`或USDC侧\`>=1000 USDC\`；BSC WBNB侧\`>=2 WBNB\`或USDT侧\`>=1000 USDT\`。这些档位**并非跨日期美元价值等价，也不是可成交金额或预测参数**；应按当时已知池储备/集中流动性折算，V3不能从一个\`liquidity()\`字段直接推断某金额双向可成交。符合的观察时点应记录为**首次满足所有条件的时刻**，不得把此后60分钟内最终达到门槛倒填到刚建池时。未达标的池子仍保留在原始样本母体，\`PIT_NOT_ELIGIBLE\`而非删掉；没有足够历史储备/Swap字节则\`NOT_SCORABLE\`。这一初版准入合同只为防止后验按赢家定X；如真实覆盖探针证明对链/场所不可比，必须在**读取未来收益标签之前**先冻结修改，不可回头调参使已知赢家看起来更好。
+
+**后续主方向**：Base技术探针合格后，BSC Pancake V2/V3应先做正式跨场所生命期母体；Solana Pump.fun/Raydium需独立Program log/交易解析，不许照搬EVM\`PoolCreated\`topic。Alpha官方历史公告/下架完整性若无原始PIT，仍留\`SOURCE_NOT_ACCESSIBLE\`，不能以当前Alpha列表填空。继续条件不变：先证明能按日期/工厂完整取得普通代币和死亡代币的连续名单，再做30例5个字段来源覆盖度，随后才可讨论模型研发和两次CI。旧盈利与部署门禁保持原状。
