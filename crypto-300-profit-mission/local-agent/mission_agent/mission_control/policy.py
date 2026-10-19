@@ -106,6 +106,21 @@ def evaluate(candidate: dict, quote: dict, policy: dict, *, now: float | None = 
             "metrics":{"frank_buy_age_seconds":None if frank_age is None else str(frank_age)},
         }
 
+    # The wallet's authenticated source signal exists independently of a user's
+    # optional quote amount. Do not invent an executable BUY/NO_ROUTE or imply
+    # market data is missing when no amount was ever requested.
+    if quote.get("reason") == "USER_ORDER_AMOUNT_NOT_SPECIFIED":
+        return {
+            "decision": "WAIT",
+            "reasons": ["EXECUTION_NOT_ASSESSED_USER_AMOUNT_MISSING"],
+            "missing": ["USER_ORDER_AMOUNT_NOT_SPECIFIED"],
+            "invalidation": [],
+            "metrics": {
+                "frank_buy_age_seconds": str(frank_age),
+                "execution_assessment_status": "NOT_ASSESSED",
+            },
+        }
+
     if quote.get("status") != "OK":
         missing.append(quote.get("reason") or "JUPITER_QUOTE_UNAVAILABLE")
     observed_at = _decimal(quote.get("observed_at"))
