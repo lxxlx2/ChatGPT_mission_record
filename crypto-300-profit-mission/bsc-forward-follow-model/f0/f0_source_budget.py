@@ -47,8 +47,8 @@ def estimate(*, hours: Decimal, block_seconds: Decimal, watch_receipts: int,
              ws_bytes_per_block: int, eoa_checks: int,
              max_total_rpc_calls: int, max_control_discovery_calls: int,
              cu_budget: int) -> dict:
-    if (hours <= 0 or block_seconds <= 0 or not hours.is_finite() or
-            not block_seconds.is_finite()):
+    if (not hours.is_finite() or not block_seconds.is_finite() or
+            hours <= 0 or block_seconds <= 0):
         raise ValueError("time inputs must be positive and finite")
     integers = (watch_receipts, control_receipts, eligible_entry_quotes,
                 eligible_exit_quotes, audit_receipts, ws_bytes_per_block,
