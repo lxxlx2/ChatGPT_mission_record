@@ -51,7 +51,8 @@ def cohort_watchlist(cohort: dict) -> tuple[set[str], dict]:
     forbid = ("pnl", "profit", "win_rate", "score", "return", "independently_closed")
     require(not any(any(term in key.lower() for term in forbid for key in entry)
                     for entry in entries), "OUTCOME_FIELDS_FORBIDDEN")
-    counts = {"PR40_23": 0, "PR97_449_BSC_SIGNED": 0}
+    counts = {"PR40_23": {"PRIMARY": 0, "BACKUP": 0},
+              "PR97_449_BSC_SIGNED": {"PRIMARY": 0, "BACKUP": 0}}
     seen: set[str] = set()
     for e in entries:
         w = address(e["wallet"])
@@ -59,10 +60,10 @@ def cohort_watchlist(cohort: dict) -> tuple[set[str], dict]:
                 e.get("source") in counts and e.get("watch_runtime_enabled") is False,
                 "INVALID_COHORT_ENTRY")
         seen.add(w)
-        if e["role"] == "PRIMARY":
-            counts[e["source"]] += 1
-    require(counts == {"PR40_23": 10, "PR97_449_BSC_SIGNED": 10},
-            "COHORT_PRIMARY_STRATA_MISMATCH")
+        counts[e["source"]][e["role"]] += 1
+    require(counts == {"PR40_23": {"PRIMARY": 10, "BACKUP": 5},
+                       "PR97_449_BSC_SIGNED": {"PRIMARY": 10, "BACKUP": 5}},
+            "COHORT_10_PRIMARY_5_BACKUP_EACH_STRATUM_REQUIRED")
     primary = {address(e["wallet"]) for e in entries if e["role"] == "PRIMARY"}
     return primary, {"primary_count": len(primary),
                      "technical_eoa_eligibility": "UNVERIFIED",
@@ -95,7 +96,7 @@ def offline_window(fixture: dict, cohort: dict) -> dict:
     require(len(records) <= cap and len(records) <= discovery_cap,
             "OFFLINE_RPC_OR_CONTROL_BUDGET_EXCEEDED")
     by_height: dict[int, dict] = {}
-    last_monotonic = -1
+    last_request_monotonic = -1
     for item in records:
         h = integer(item.get("height"), "INVALID_RECORDED_HEIGHT", start)
         require(h <= end and h not in by_height, "OUT_OF_RANGE_OR_DUPLICATE_HEIGHT")
@@ -106,9 +107,10 @@ def offline_window(fixture: dict, cohort: dict) -> dict:
         response_mono = integer(item.get("response_monotonic_ms"), "INVALID_RESPONSE_MONOTONIC")
         received_mono = integer(item.get("first_received_monotonic_ms"), "INVALID_FIRST_MONOTONIC")
         require(request_ms <= response_ms <= first_ms and
-                last_monotonic <= request_mono <= response_mono <= received_mono,
+                last_request_monotonic <= request_mono <= response_mono <= received_mono,
                 "INCONSISTENT_OBSERVATION_CLOCKS")
-        last_monotonic = received_mono
+        # Requests may overlap when BSC produces blocks faster than network RTT.
+        last_request_monotonic = request_mono
         path = item.get("ingest_path")
         require(path in ("POLL", "WS", "BACKFILL"), "INVALID_INGEST_PATH")
         ok = item.get("result")
