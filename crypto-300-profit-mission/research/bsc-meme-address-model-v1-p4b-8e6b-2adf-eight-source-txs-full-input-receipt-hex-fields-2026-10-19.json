@@ -1,8 +1,8 @@
 {
   "schema": "BSC_P4B_TWO_EOA_EIGHT_TX_FULL_INPUT_AND_RECEIPT_ORIGINAL_HEX_SCALAR_SOURCES_V1",
   "date_utc": "2026-10-19",
-  "provider": "Alchemy connected bnb-mainnet read-only; eight full tx input fields were fetched, manually losslessly zero-run compressed for transit and reconstituted exactly (length validated). Receipt fields separately fetched: full approvals, connector-truncated large swaps/buys.",
-  "note": "This archives complete input hex plus individually observed exact raw hex scalar fields, NOT full serialized receipt response. Large receipts lacked raw gasUsed due to connector truncation; legacy gas computed via adjacent transaction cumulative receipt subtraction. All evidence may be independently requeried by tx hash.",
+  "provider": "EARLIER_CONNECTED_ALCHEMY_EXTRACTED_SOURCE_FIELDS; LATER_REQUERIED_AND_TIMESTAMPED_VERBATIM_CONNECTOR_BODY_CAPTURE_AVAILABLE",
+  "note": "This archives complete input hex plus individually observed exact raw hex scalar fields, NOT full serialized receipt response. Large receipts lacked raw gasUsed due to connector truncation; legacy gas computed via adjacent transaction cumulative receipt subtraction. All evidence may be independently requeried by tx hash. Later live queries were executed and their returned .text body was directly stored (not reconstructed from chat) with timestamps in raw_source_capture_file, allowing comparisons with full calldata.",
   "transactions": [
     {
       "id": "8E6B_FLAP",
@@ -283,5 +283,7 @@
   "gates": {
     "owner_realized_pnl": "UNRESOLVED",
     "production": "NO_GO"
-  }
+  },
+  "provenance_grade": "TRANSCRIBED_OR_EXTRACTED_ORIGINAL_RPC_FIELDS_CROSS_CHECKED_BY_LATER_LIVE_REQUERY_NOT_CRYPTOGRAPHIC_HTTP_ATTESTATION",
+  "raw_source_capture_file": "bsc-meme-address-model-v1-p4b-alchemy-16-live-tool-response-transcript-2026-10-19.json"
 }
