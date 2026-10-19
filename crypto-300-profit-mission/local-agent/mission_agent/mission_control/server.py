@@ -811,14 +811,24 @@ class DashboardState:
         # call, balance scan, writer intervention, or automatic deployment.
         snapshot = self.control_root / "frank-inventory-snapshot.json"
         snapshot_origin = "CONTROL_ROOT_EXPLICIT_IMPORT"
-        if not snapshot.is_file():
+        # lstat distinguishes truly absent input from a broken symlink or
+        # directory. An invalid explicit source must never select another one.
+        try:
+            snapshot.lstat()
+        except FileNotFoundError:
             # Reuse PR #110's dated evidence already checked into this repo.
             # This is a historic point-in-time sample, never current inventory.
             snapshot = (Path(__file__).resolve().parents[3] / "meme" / "evidence" /
                         "frank-v2-thirty-two-mint-finalized-2026-10-11.json")
             snapshot_origin = "REPO_DATED_2026_10_11_NOT_LIVE"
+            if not snapshot.is_file() or snapshot.is_symlink():
+                observed["snapshot_status"] = "SNAPSHOT_NOT_PRESENT"
+                return observed
+        except OSError:
+            observed["snapshot_status"] = "SNAPSHOT_INVALID_READ_ONLY_IGNORED"
+            return observed
         if not snapshot.is_file() or snapshot.is_symlink():
-            observed["snapshot_status"] = "SNAPSHOT_NOT_PRESENT"
+            observed["snapshot_status"] = "SNAPSHOT_INVALID_READ_ONLY_IGNORED"
             return observed
         try:
             if snapshot.stat().st_size > 500_000:
