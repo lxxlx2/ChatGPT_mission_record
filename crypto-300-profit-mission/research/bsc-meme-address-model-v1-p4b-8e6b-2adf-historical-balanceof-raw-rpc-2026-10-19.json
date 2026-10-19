@@ -1,0 +1,163 @@
+{
+  "schema": "BSC_P4B_TWO_EOA_EIGHT_HISTORICAL_ERC20_BALANCEOF_ORIGINAL_RPC_REPLY_V1",
+  "date_utc": "2026-10-19",
+  "source": "User connected Alchemy on bnb-mainnet; eight separate eth_call returned exact 32-byte hex replies; this record transcribes source-return hex from current conversation; other reviewer can replay inputs.",
+  "original_30_day_start_contract_state": "Original tokens not deployed at 30-day boundary. balanceOf=0x at undeployed contract is NOT zero; only real pre-buy block return 32-byte zero is reliable.",
+  "cases": [
+    {
+      "id": "8E6B_FLAP",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "ca": "0x3b7a5c1519731e555782bb623adfb9cfca5c7777",
+      "observations": [
+        {
+          "phase": "PRE_BUY",
+          "rpc_request": {
+            "method": "eth_call",
+            "params": [
+              {
+                "to": "0x3b7a5c1519731e555782bb623adfb9cfca5c7777",
+                "data": "0x70a082310000000000000000000000008e6b3c9c72ca592bbab470f761fa869c174e9ea0"
+              },
+              "0x79d7282"
+            ],
+            "network": "bnb-mainnet"
+          },
+          "original_provider_return_hex": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "decoded_uint256_raw": "0",
+          "result_exactly_32_bytes": true
+        },
+        {
+          "phase": "POST_BUY",
+          "rpc_request": {
+            "method": "eth_call",
+            "params": [
+              {
+                "to": "0x3b7a5c1519731e555782bb623adfb9cfca5c7777",
+                "data": "0x70a082310000000000000000000000008e6b3c9c72ca592bbab470f761fa869c174e9ea0"
+              },
+              "0x79d7283"
+            ],
+            "network": "bnb-mainnet"
+          },
+          "original_provider_return_hex": "0x0000000000000000000000000000000000000000000111fc444e0d5adaee41e0",
+          "decoded_uint256_raw": "1293859551216114584142304",
+          "result_exactly_32_bytes": true
+        },
+        {
+          "phase": "POST_LAST_EXIT",
+          "rpc_request": {
+            "method": "eth_call",
+            "params": [
+              {
+                "to": "0x3b7a5c1519731e555782bb623adfb9cfca5c7777",
+                "data": "0x70a082310000000000000000000000008e6b3c9c72ca592bbab470f761fa869c174e9ea0"
+              },
+              "0x79f7fc0"
+            ],
+            "network": "bnb-mainnet"
+          },
+          "original_provider_return_hex": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "decoded_uint256_raw": "0",
+          "result_exactly_32_bytes": true
+        },
+        {
+          "phase": "END_30D",
+          "rpc_request": {
+            "method": "eth_call",
+            "params": [
+              {
+                "to": "0x3b7a5c1519731e555782bb623adfb9cfca5c7777",
+                "data": "0x70a082310000000000000000000000008e6b3c9c72ca592bbab470f761fa869c174e9ea0"
+              },
+              "0x7a7661c"
+            ],
+            "network": "bnb-mainnet"
+          },
+          "original_provider_return_hex": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "decoded_uint256_raw": "0",
+          "result_exactly_32_bytes": true
+        }
+      ]
+    },
+    {
+      "id": "2ADF_YOKI",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "ca": "0xa96402db0112ed21a6613b43cdfb766d9e5c7777",
+      "observations": [
+        {
+          "phase": "PRE_BUY",
+          "rpc_request": {
+            "method": "eth_call",
+            "params": [
+              {
+                "to": "0xa96402db0112ed21a6613b43cdfb766d9e5c7777",
+                "data": "0x70a082310000000000000000000000002adf961b40951736bcff3b36b7fb1cd5775475ba"
+              },
+              "0x7a4257b"
+            ],
+            "network": "bnb-mainnet"
+          },
+          "original_provider_return_hex": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "decoded_uint256_raw": "0",
+          "result_exactly_32_bytes": true
+        },
+        {
+          "phase": "POST_BUY",
+          "rpc_request": {
+            "method": "eth_call",
+            "params": [
+              {
+                "to": "0xa96402db0112ed21a6613b43cdfb766d9e5c7777",
+                "data": "0x70a082310000000000000000000000002adf961b40951736bcff3b36b7fb1cd5775475ba"
+              },
+              "0x7a4257c"
+            ],
+            "network": "bnb-mainnet"
+          },
+          "original_provider_return_hex": "0x000000000000000000000000000000000000000000003478c4c41a031cc92718",
+          "decoded_uint256_raw": "247790844884194236639000",
+          "result_exactly_32_bytes": true
+        },
+        {
+          "phase": "POST_LAST_EXIT",
+          "rpc_request": {
+            "method": "eth_call",
+            "params": [
+              {
+                "to": "0xa96402db0112ed21a6613b43cdfb766d9e5c7777",
+                "data": "0x70a082310000000000000000000000002adf961b40951736bcff3b36b7fb1cd5775475ba"
+              },
+              "0x7a6133d"
+            ],
+            "network": "bnb-mainnet"
+          },
+          "original_provider_return_hex": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "decoded_uint256_raw": "0",
+          "result_exactly_32_bytes": true
+        },
+        {
+          "phase": "END_30D",
+          "rpc_request": {
+            "method": "eth_call",
+            "params": [
+              {
+                "to": "0xa96402db0112ed21a6613b43cdfb766d9e5c7777",
+                "data": "0x70a082310000000000000000000000002adf961b40951736bcff3b36b7fb1cd5775475ba"
+              },
+              "0x7a7661c"
+            ],
+            "network": "bnb-mainnet"
+          },
+          "original_provider_return_hex": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "decoded_uint256_raw": "0",
+          "result_exactly_32_bytes": true
+        }
+      ]
+    }
+  ],
+  "verified_scope": "EXACT_HISTORICAL_TOKEN_HOLDING_ONLY_NOT_OWNER_PNL",
+  "gates": {
+    "realized_pnl": "UNRESOLVED",
+    "public_executable_u": "UNRESOLVED"
+  }
+}
