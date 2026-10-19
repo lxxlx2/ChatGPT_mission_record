@@ -307,9 +307,9 @@ function renderRuntime(runtime, control) {
     </div>`;
 }
 
-function renderStats(candidates, runtime, coverage) {
+function renderStats(candidates, runtime, coverage, followStatus='OK') {
   const w = coverage?.windows?.['24h'] || {};
-  const action = candidates.filter(x => x.decision === 'BUY' || x.decision === 'SMALL_BUY').length;
+  const action = followStatus === 'API_UNAVAILABLE' || followStatus === 'POLICY_OR_SOURCE_UNAVAILABLE' ? '待核实' : candidates.length;
   const items = [
     ['Frank状态', translated(runtimeLabel,runtime.status,'未知')],
     ['24h已索引签名', w.indexed_signatures ?? '—'],
@@ -504,6 +504,7 @@ function frankPriceText(x, m) {
 }
 
 function renderCandidates(rows) {
+  const status = arguments.length > 1 ? arguments[1] : 'OK';
   $('candidates').innerHTML = rows.map(x => {
     const m = x.metrics || {};
     const q = x.decision_quote || {};
@@ -561,7 +562,50 @@ function renderCandidates(rows) {
         ${metric('预计价格冲击',esc(impact),'用 $30 USDC 下单时 Jupiter 估算的价格冲击；已退出仓位不会浪费请求。')}
       </div>
     </article>`;
-  }).join('') || '<div class="empty">当前没有需要跟踪的 Frank 候选</div>';
+  }).join('') || (status === 'API_UNAVAILABLE' || status === 'POLICY_OR_SOURCE_UNAVAILABLE'
+    ? '<div class="empty">当前机会数据不可用，无法核实实时跟单资格。</div>'
+    : '<div class="empty">当前没有需要跟踪的 Frank 候选。当前可跟机会：0。历史判断及不跟记录见下方折叠区域。</div>');
+}
+
+const followExclusionLabels = {
+  NOT_ACTIONABLE_DECISION:'当前不是 BUY / SMALL_BUY',
+  MODEL_POSITION_NOT_OPEN:'模型状态已非 OPEN',
+  LATEST_ACTION_NOT_BUY:'最近已卖出或无有效买入',
+  MODEL_INVENTORY_UNKNOWN_OR_ZERO:'模型剩余量未知或为零',
+  SOURCE_SIGNAL_UNVERIFIED:'无可核对的本轮信号',
+  FRANK_BUY_STALE:'最新买入已过冻结策略时效',
+  DECISION_STALE:'最新判断已过有效期',
+  QUOTE_NOT_EXECUTABLE:'缺少可执行 Jupiter 报价',
+  QUOTE_STALE:'报价超时，不能按实时价跟进',
+  FRANK_RUNTIME_NOT_LIVE:'Frank 运行态未确认在线',
+  NOT_APPROVED_FRANK_SCOPE:'非授权 Frank 生产人物',
+  NOT_FROZEN_FRANK_SOURCE:'仅研究覆盖，没有正式生产信号',
+  POLICY_OR_SOURCE_UNAVAILABLE:'策略或数据源不可用',
+};
+
+function renderNotFollowed(rows, status) {
+  const count = $('not-followed-count');
+  count.textContent = String(rows.length);
+  const panel = $('not-followed-panel');
+  panel.hidden = rows.length === 0 && status === 'OK';
+  const limited = rows.slice(0, 100);
+  $('not-followed').innerHTML = limited.map(x => `
+    <div class="ended-row">
+      <div class="ended-main">
+        ${badge(x.decision || 'UNASSESSED')}
+        <strong>${esc(translated(patternLabel,x.pattern,'未形成模式'))}</strong>
+        <span>${esc(followExclusionLabels[x.exclusion_reason] || x.exclusion_reason || '证据尚未核实')}</span>
+      </div>
+      <div class="ended-ca"><code>${esc(x.mint)}</code>
+        ${copyButton(x.mint,'复制 CA')} ${researchLinks(x.mint)}
+      </div>
+    </div>`).join('') || '<div class="empty">当前没有需要归档的已排除判断。</div>';
+  if (rows.length > limited.length) {
+    $('not-followed').innerHTML += `<p>另外 ${rows.length-limited.length} 项请在历史观察池搜索，全部原始审计数据仍保留。</p>`;
+  }
+  if (status === 'API_UNAVAILABLE' || status === 'POLICY_OR_SOURCE_UNAVAILABLE') {
+    $('not-followed').innerHTML += '<p>跟单资格接口暂时不可用，禁止把旧 BUY 当作当前信号。</p>';
+  }
 }
 
 function withinHours(ts,hours) {
@@ -700,24 +744,27 @@ function renderDecisions(rows) {
 
 async function refresh() {
   try {
-    const [runtime,control,candidates,trades,reviewActivity,decisions,coverage,watch] = await Promise.all([
+    const [runtime,control,candidates,follow,trades,reviewActivity,decisions,coverage,watch] = await Promise.all([
       get('/api/runtime'),
       get('/api/control-health'),
       get('/api/candidates'),
+      get('/api/follow-opportunities').catch(() => ({status:'API_UNAVAILABLE',eligible:[],not_followed:[]})),
       get('/api/trades'),
       get('/api/review-activity'),
       get('/api/decisions'),
       get('/api/coverage'),
       get('/api/frank-observed-watchlist').catch(() => ({status:'SOURCE_UNAVAILABLE',rows:[],summary:{}}))
     ]);
-    const activeCandidates = candidates.filter(x => x.position_state !== 'CLOSED');
+    const activeCandidates = Array.isArray(follow.eligible) ? follow.eligible : [];
+    const excludedCandidates = Array.isArray(follow.not_followed) ? follow.not_followed : [];
     const endedCandidates = candidates.filter(x => x.position_state === 'CLOSED');
 
     renderRuntime(runtime,control);
-    renderStats(activeCandidates,runtime,coverage);
+    renderStats(activeCandidates,runtime,coverage,follow.status);
     renderCoverage(coverage);
     renderFrankWatchlist(watch);
-    renderCandidates(activeCandidates);
+    renderCandidates(activeCandidates,follow.status);
+    renderNotFollowed(excludedCandidates,follow.status);
     renderEnded(endedCandidates);
     renderTrades(trades);
     renderReviewActivity(reviewActivity);
