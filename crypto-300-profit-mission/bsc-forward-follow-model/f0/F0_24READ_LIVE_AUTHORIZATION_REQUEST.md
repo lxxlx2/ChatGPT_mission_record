@@ -1,6 +1,6 @@
 # F0 — 24 次真实 BSC HTTP getCode 资格检查：待用户单独授权的执行申请
 
-**状态：`PERMISSION_NOT_GRANTED / NO_RUN / NO_ACTIVE_PERMIT`。**
+**状态：`USER_SCOPE_CONSENT_GRANTED_2026-10-20 / CONCRETE_PERMIT_REVIEW_PENDING / NO_RUN / NO_ACTIVE_PERMIT`。** 用户在当前对话中已明确同意本文件所列 **一次、最多 24 次** 的免费 BSC 公共 HTTP 只读钱包/Router 资格检查范围；这并未批准任何尚未生成的具体 permit，也不允许跳过执行前的独立审查。
 
 ## 审核基线与审核边界
 
@@ -28,7 +28,7 @@
 
 ## 获得单独用户授权之后（必须按此顺序完成）
 
-1. **用户在对话中明确同意以上准确的 24 次提议范围。** 先前四次真实 smoke 的许可已用尽；PR 审核者的 `APPROVE` 不是用户授权。
+1. **用户范围授权已获得（2026-10-20，当前对话）。** 用户确认一次不超过 24 次、免费官方 BSC HTTP、Mac 本机、只读、不重试的资格检查。先前四次 smoke 许可已用尽。**这只是新实验的范围授权；具体 permit 的独立审核仍是未满足的前置条件。**
 2. 在用户 Mac 的 **独立 Git checkout（HEAD 精确为 `cd30f8b...`）** 生成一份不可执行前置状态的 `permit.json`，随后填入一次性 32–64 小写十六进制随机 nonce、私有 `storage_root`、真实绝对 UTC 起止时刻（最多 10 分钟）、`approved_commit_sha`、`approved_source_sha256`、刚批准的 endpoint/methods/caps 和明确用户同意标记。**本仓库绝不提交具体 permit/nonce**。
 3. 由另一审核者**在真实请求之前逐字段复审同一份具体 permit 的完整内容及 SHA256**，并核对单独用户授权、受审 Git HEAD、源码 SHA256、执行入口、请求数、存储目录、独立文件名、时间窗和无重试。该审核可以在本地进行；不得把原始 nonce、私有 permit 或本地路径公开粘贴到 Git。若 permit 过期或改变任何字段，审核视为失效，重新生成并复审。
 4. 获准后才在用户 Mac 从审核过的源代码调用 `f0_l1_code_probe.py --execute-live --manifest <approved-repo>/f0/F0_COHORT_PRESELECTION.json --router-registry <approved-repo>/f0/F0_ROUTER_SOURCE_CANDIDATES.json --permit <private-path>/permit.json --report <private-root>/report.json`。运行前仍执行既有许可、Git SHA、依赖、nonce、路径检查；不得自动重试。
@@ -40,4 +40,4 @@
 
 ### 关于本文件的性质
 
-本文件是**不可执行的权限申请书**，故意**不包含** `user_authorized: true` 的有效 permit、不含 nonce、不设可直接通过校验的实时 UTC 窗口，也不触发任何网络请求。新提交为说明与交接资料；它不改变受审执行器固定 SHA。
+本文件是**授权范围与未完成许可门禁的资料**：用户已同意范围，但本文件仍**不包含** `user_authorized: true` 的有效 permit、不含 nonce、不设可直接通过校验的实时 UTC 窗口，也不触发任何网络请求。新提交仅为说明与交接资料；它不改变受审执行器固定 SHA，且**未经具体 permit 独立审核不得运行**。
