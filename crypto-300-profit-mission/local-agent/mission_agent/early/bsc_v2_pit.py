@@ -7,6 +7,7 @@ never accesses networks, wallet keys, future token outcomes, or trading systems.
 PAIR_CREATED = '0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9'
 SYNC = '0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1'
 MINT = '0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f'
+SWAP = '0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822'
 
 
 class PITInvalid(ValueError):
@@ -26,6 +27,24 @@ def first_creation_block(factory_index, first, last, get_length):
         mid = (lo + hi) // 2
         count = get_length(mid)
         if count > factory_index:
+            hi = mid
+        else:
+            lo = mid + 1
+    return lo
+
+
+def first_later_reserve_update(creation_block, last_block, initial_timestamp, get_timestamp):
+    """First subsequent Sync timestamp update. Not proof that its cause was Swap."""
+    if not 0 <= creation_block < last_block or initial_timestamp < 0:
+        raise PITInvalid('INVALID_RESERVE_SEARCH_RANGE')
+    if get_timestamp(creation_block) != initial_timestamp:
+        raise PITInvalid('INITIAL_RESERVE_TIMESTAMP_MISMATCH')
+    if get_timestamp(last_block) <= initial_timestamp:
+        return None
+    lo, hi = creation_block + 1, last_block
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if get_timestamp(mid) > initial_timestamp:
             hi = mid
         else:
             lo = mid + 1
