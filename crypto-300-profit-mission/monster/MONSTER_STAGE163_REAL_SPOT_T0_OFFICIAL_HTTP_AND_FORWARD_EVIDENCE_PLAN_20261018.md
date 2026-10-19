@@ -264,3 +264,13 @@ Codex独立复审固定旧SHA `456111143f5ea1ac2e32103f71ea50dc5a27d078` 判定 
 用户提供完整独立Codex审核报告：**固定代码SHA `5eeee8c05cd3eaf2b52e779c22759aed2c75aa49`、基线`50531188c4336b84f1ecb3b5b432e05aadc06819`获`APPROVE`，P0/P1/P2均0**，审核者使用隔离detached HEAD、自写50位Decimal账本与28份真实旧原ZIP核源，从Stage162全269 WATCH/120 SETUP SHA和旧经济Git blob重新计算300U、每笔30U、最多10仓、入退前已闭合分钟、完整8种升降排序×删失回款情景；所选事件与归还完全一致，原98同时WATCH**0笔实际选中（97现金不足、1 ACAUSDT同币占用）**，100%删失本金返还情景最后WATCH`214.407854577...`、SETUP`226.807260276...`，不能当实际交易利润。独立完整CLI和[CI #39209690902](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39209690902)Artifact SHA256`764c8de3aa2e537e016b73368cc3c8a9333a0c569247d05d0dff5ebd120165ee`精确一致，10/10测试和11/11工作流步骤通过；前两次CI失败原因已逐一核实。完整细节和业务局限见[300U最终报告第六节](MONSTER_MAINLINE_300U_PRE_CLOSED_SOURCE_FINITE_CASH_RESULTS_20261019.md)。
 
 **该资金账本研究模块已经`RESEARCH_CLOSED_APPROVED`，无新修复项**。Stage165/166先前固定SHA亦APPROVE；其他尚未独立审的WATCH/SETUP/市场广度研究不自动借此获批。**优先级**不再是对2月445旧曝光样本反复寻找“正收益”规则，而是在既定原511 Spot全市场2026-10-17T22:06Z→2026-10-24T22:06Z冻结7日窗真实结束、官方完整1m日ZIP与CHECKSUM真实发布之后，去验证完整可得源码/PIT市场成员、入退出同时刻盘口/手续费和有限现金策略净收益，缺什么必须明示删失而非报0。当前2026-10-19该窗未成熟，不能伪造新七日WATCH/SETUP/盈利成果。未授权生产操作：继续`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`，PR保持Draft。
+
+## 二十九、真实24h退出源的第十个UTC日不可遗漏（2026-10-19前瞻预定补充）
+
+**完整盈利统计关键来源缺口：Stage166已批准的`2026-10-16…2026-10-24`九日4599条准入对象只覆盖D0所需T0前24h和七日观察窗口，不覆盖末尾策略的24小时固定退出。** 本主线现已冻结的价格代理持有24h：观察窗口左闭右开`[2026-10-17T22:06:00Z,2026-10-24T22:06:00Z)`，3360个3m T。最晚有效观察信号`T=2026-10-24T22:03:00Z`，信号后3m价代理入场`2026-10-24T22:06:00Z`，24h后固定退出`2026-10-25T22:06:00Z`，需要**2026-10-25 UTC全天官方Publisher 1m数据和`.CHECKSUM`**，如严格退出前5个完整1m也包含于同日。对于截止附近更早信号部分退出同样落10月25日。
+
+按原冻结起点**511个Spot USDT TRADING人口**保持不变，如简单按symbol×UTC日期排计划，前瞻**完整24h退出价格来源最小检查矩阵为`2026-10-16…2026-10-25`共10天，511×10=5110个币-日计划检查对象**，并非宣称5100+真实日ZIP存在或511个币全天可交易。新增的最后1天511个检查对象与Stage166已批准9日4599**分开记录**：**不能修改已获审Stage166固定SHA、覆盖旧4599个历史结果、悄悄扩大其APPROVE范围**；应先独立取得并验原Publisher未来退出日ZIP/CHECKSUM，再单独按相同严谨准入条件核验晚退出源，缺数据一律`CENSORED_EXIT_SOURCE_NOT_PROVEN`，绝不缩短末尾24h持有时间、将缺退出记0收益，或只挑已经有完整盈利退出的样本。
+
+[Binance官方历史数据说明](https://github.com/binance/binance-public-data/blob/master/README.md)称Spot daily archive一般下一天提供、2025年后Spot 1m时间戳单位微秒，但**这只是官方常规发布说明，不能证明对应2026-10-25完整源已经发布或取得**；对完整窗口的24h结果，最早在10月25日 UTC结束并有实际Publisher文件及CHECKSUM后再手动核验，需视真实发布情况。动态上市、点时盘口/ask-bid、fee tiers、执行成本的证据仍缺，即使十日1m价源全部经Publisher校验也只是`OFFICIAL_1M_CAUSAL_PROXY`、不是实际可成交盈利。
+
+**这是修正完整收益验证的来源覆盖计划，不是一次新成功回放，不产生新WATCH/SETUP/PnL数字**。现有Stage166固定SHA独立Codex APPROVE、现金300U研究独立Codex APPROVE均保留，不追溯扩批。PR Draft，`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`继续。
