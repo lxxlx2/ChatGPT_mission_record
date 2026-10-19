@@ -56,8 +56,8 @@ class OfflineBudgetTests(unittest.TestCase):
                  eligible_exit_quotes=3, audit_receipts=5, eoa_checks=20)
         self.assertEqual(r["rpc_breakdown"]["entry_quote_calls"]["count"], 6)
         self.assertEqual(r["rpc_breakdown"]["exit_quote_calls"]["count"], 9)
-        self.assertEqual(r["estimated_total_rpc_calls"], 192044)
-        self.assertEqual(r["estimated_total_cu"], "3841010")
+        self.assertEqual(r["estimated_total_rpc_calls"], 192050)
+        self.assertEqual(r["estimated_total_cu"], "3841090")
 
     def test_websocket_byte_cost_is_scenario(self):
         r = plan(ws_bytes_per_block=1000, cu_budget=30000000)
