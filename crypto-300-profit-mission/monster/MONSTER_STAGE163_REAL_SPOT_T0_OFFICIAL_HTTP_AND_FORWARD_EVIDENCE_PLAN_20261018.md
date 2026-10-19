@@ -292,3 +292,10 @@ Codex独立复审固定旧SHA `456111143f5ea1ac2e32103f71ea50dc5a27d078` 判定 
 本轮根据[冻结P2方案](MONSTER_PUBLISHER_REDIRECT_PRE_REQUEST_P2_FROZEN_FIX_20261019.md)只改采集器`_RejectPublisherRedirect(HTTPRedirectHandler)`，于`redirect_request`钩子**未发第二次请求**前立即抛错，改`build_opener(_RejectPublisherRedirect()).open()`，原最终URL和原publisher CRC/SHA/CSV校验、Unicode、资金/策略、档案不变。新增本地真实两个`ThreadingHTTPServer`的301/302/303/307/308反例，被拒绝第二台HTTP服务器**GET=0**，直接200源仍可用。源与测试代码固定SHA `18ec436d04fb2c121a62a46311e56d15d4dc2606`，[**单次离线CI #39216876277**](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39216876277) 真正**12/12 unittest、10/10工作流步骤成功**，Git三日原1533文件源证据不变，未重新下载原任何日ZIP，不设schedule/部署/邮件/交易。
 
 [完整固定SHA复审包与CI原日志说明](MONSTER_PUBLISHER_REDIRECT_P2_FIX_ACTUAL_CI_AND_INDEPENDENT_REVIEW_PACKAGE_20261019.md)。**新修复仅`AUTHOR_FIXED_P2_CI_PASS`，原独立Codex审核仍然`REQUEST_CHANGES`直至修复SHA新独立复审返回APPROVE**；不得将作者CI当正式G5或全七日新OOS盈利过线。继续`G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，PR#30 Draft。
+
+## 三十二、Publisher定向独立复审结项，回归七日前瞻价值验证（2026-10-19）
+
+用户提供的第二轮外部复审报告对采集器固定SHA `18ec436d04fb2c121a62a46311e56d15d4dc2606` 给出 **`APPROVE`，原HTTP redirect P2 CLOSED**。报告标题注明Claude，报告内审查者自称Codex助手，准确底层模型/版本未核实（`UNVERIFIED`）。报告描述真实双HTTP测试301/302/303/307/308第二台GET始终0、HTTP200正常、12/12测试通过。本轮另从GitHub直接验证[原CI #39216876277](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39216876277)日志与10/10步骤，比较批准源码SHA至先前HEAD `7eb074700f866f8a21e27f7d68f83ba4e1709afc`仅三个文档文件、未动执行代码。完整外部回报、用户转交属性和独立实测/CI证据边界见[Publisher P2结项专报](MONSTER_PUBLISHER_REDIRECT_P2_FIX_ACTUAL_CI_AND_INDEPENDENT_REVIEW_PACKAGE_20261019.md)第四节。原旧SHA `e6fb680b...` 的`REQUEST_CHANGES`保留不变；本次只结项Publisher网络修复，不升级其它策略审核。
+
+核心功能主线当前保持**源准入PARTIAL，真实七日D0/D1前瞻未完成，执行净PnL仍UNKNOWN**。新原T0完整511 Spot与Oct16-18共1533份官方日档已核验，完整七日与固定24h退出需Oct19-25剩3577份实际发行方日源。接下来应在源到位后跑原冻结3360个3m全市场时钟，FIFO8/Fair8同源配对与原D0/D1、不新增阈值，真实现金约束和来源删失分开输出；避免重复研究已曝光二月赢家。没有真实点时PIT/ticker24/L2和可执行ask/bid/fee数据时不能称盈利可交易。继续`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`；PR保持Draft，不能建立未授权定时器或改变Frank。
+
