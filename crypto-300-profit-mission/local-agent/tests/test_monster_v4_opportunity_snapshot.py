@@ -358,6 +358,71 @@ class TestOperatorSnapshot(unittest.TestCase):
         self.assertEqual(later["trading"], "NO_GO")
 
 
+    def test_true_partial_population_keeps_fresh_symbol_watch_but_blocks_execution(self):
+        bad = [{"symbol": "币安人生USDT", "lastPrice": "1", "quoteVolume": "200000"},
+               {"symbol": "牛来USDT", "lastPrice": "1", "quoteVolume": "200000"}]
+        valid = [{"symbol": "AAAUSDT", "lastPrice": "1", "quoteVolume": "200000"}]
+        first = m.observe_snapshot(self.db, "spot", BASE, valid + bad)
+        second = m.observe_snapshot(self.db, "spot", BASE + 180_000,
+                                    [{**valid[0], "lastPrice": "1.08"}] + bad)
+        self.assertEqual((first["source_total"], first["valid"], first["invalid"]), (3, 1, 2))
+        self.assertEqual(second["watch_new"], 1)
+        result = self.report()
+        source = result["sources"]["spot"]
+        self.assertEqual(source["state"], "STALE_OR_DEGRADED")
+        self.assertEqual(source["diagnostic_state"], "RECENT_PARTIAL_POPULATION")
+        self.assertEqual(source["health_reason_codes"], ["POPULATION_PARTIALLY_SCANNED"])
+        self.assertTrue(source["recent_poll_present"])
+        self.assertFalse(source["full_population_scanned"])
+        self.assertEqual(source["coverage_pct_of_recorded_population"], 33.3333)
+        self.assertEqual(source["recorded_invalid_rows"], 2)
+        item = result["opportunities"][0]
+        self.assertEqual(item["signal"], "SOURCE_STALE")
+        self.assertEqual(item["event_lifecycle_independent_of_source_health"],
+                         "WATCH_RECORDED")
+        self.assertTrue(item["symbol_has_fresh_record_despite_partial_venue"])
+        self.assertEqual(item["symbol_quote_state"], "PRESENT_IN_LATEST_POLL")
+        self.assertIn("SOURCE_POPULATION_PARTIAL", item["decision_blocker_codes"])
+        self.assertIn("D2_BID_ASK_DEPTH_NOT_CAPTURED", item["decision_blocker_codes"])
+        self.assertEqual(item["recommendation"], "RESEARCH_REVIEW_ONLY_NO_BUY")
+        self.assertEqual(result["counts_by_decision_blocker_full_window"]
+                         ["SOURCE_POPULATION_PARTIAL"], 1)
+
+    def test_expired_partial_signal_is_expired_not_live_buy_or_hidden(self):
+        bad = [{"symbol": "币安人生USDT", "lastPrice": "1", "quoteVolume": "200000"}]
+        m.observe_snapshot(self.db, "spot", BASE, tick("AAAUSDT", "1") + bad)
+        m.observe_snapshot(self.db, "spot", BASE + 180_000,
+                           tick("AAAUSDT", "1.08") + bad)
+        old = self.report(BASE + 180_000)
+        self.assertEqual(old["opportunities"][0]
+                         ["event_lifecycle_independent_of_source_health"], "WATCH_RECORDED")
+        later = self.report(BASE + 180_000 + 16*60_000)
+        item = later["opportunities"][0]
+        self.assertEqual(item["event_lifecycle_independent_of_source_health"], "EXPIRED")
+        self.assertEqual(item["signal"], "EXPIRED")
+        self.assertIn("SIGNAL_EXPIRED", item["decision_blocker_codes"])
+        self.assertIn("SOURCE_POPULATION_PARTIAL", item["decision_blocker_codes"])
+        self.assertIn("D2_BID_ASK_DEPTH_NOT_CAPTURED", item["decision_blocker_codes"])
+        self.assertEqual(item["recommendation"], "RESEARCH_REVIEW_ONLY_NO_BUY")
+        self.assertEqual(later["sources"]["spot"]["diagnostic_state"], "POLL_STALE")
+        self.assertEqual(later["sources"]["futures"]["diagnostic_state"], "NO_POLL")
+
+    def test_fully_covered_recent_poll_keeps_original_research_only_watch(self):
+        self.watch()
+        result = self.report()
+        source = result["sources"]["spot"]
+        self.assertEqual(source["diagnostic_state"], "RECENT_FULL_POPULATION")
+        self.assertEqual(source["health_reason_codes"], [])
+        self.assertEqual(source["coverage_pct_of_recorded_population"], 100.0)
+        item = result["opportunities"][0]
+        self.assertEqual(item["signal"], "WATCH_RESEARCH_ONLY")
+        self.assertEqual(item["event_lifecycle_independent_of_source_health"], "WATCH_RECORDED")
+        self.assertFalse(item["symbol_has_fresh_record_despite_partial_venue"])
+        self.assertNotIn("SOURCE_POPULATION_PARTIAL", item["decision_blocker_codes"])
+        self.assertIn("D2_BID_ASK_DEPTH_NOT_CAPTURED", item["decision_blocker_codes"])
+        self.assertEqual(item["recommendation"], "RESEARCH_REVIEW_ONLY_NO_BUY")
+
+
 
 if __name__ == "__main__":
     unittest.main()
