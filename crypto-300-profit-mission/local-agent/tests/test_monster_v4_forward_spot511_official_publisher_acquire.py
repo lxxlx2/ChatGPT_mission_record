@@ -87,6 +87,23 @@ class RealPublisherSourceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"URL_NOT_ALLOWED"):
             m.fetch_one_url("https://evil.example.com/x.zip",100)
 
+    def test_unicode_symbol_and_zip_name_must_use_percent_encoded_official_path(self):
+        symbol="币安人生USDT"
+        filename,zip_url,checksum_url=m.url_parts(symbol,"2026-10-16")
+        self.assertEqual(filename,"币安人生USDT-1m-2026-10-16.zip")
+        self.assertIn("%E5%B8%81",zip_url)
+        self.assertNotIn(symbol,zip_url)
+        self.assertTrue(checksum_url.endswith(".zip.CHECKSUM"))
+        self.assertIn(symbol,m.admitted.frozen_roster())
+
+    def test_unicode_filename_zip_and_issuer_checksum_can_be_validated_offline(self):
+        symbol="牛来USDT"
+        with tempfile.TemporaryDirectory() as directory:
+            fake=fake_publisher(symbol)
+            actual=m.one_pair(symbol,"2026-10-16",Path(directory),getter=getter(fake))
+            self.assertEqual(actual["status"],"VERIFIED_FULL_DAY_1440")
+            self.assertEqual(actual["csv_closed_1m_rows"],1440)
+
     def test_existing_source_pair_is_never_overwritten(self):
         with tempfile.TemporaryDirectory() as directory:
             fixtures=fake_publisher()
