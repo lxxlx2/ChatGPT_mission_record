@@ -130,6 +130,15 @@
       "nonquote_pools_in_prefix": 4,
       "raw_http_sha256": null,
       "assessment": "FIRST_30_BSC_V2_POOL_IDENTITIES_CONFIRMED_FROM_SAME_PROVIDER; not historical buy/sell windows"
+    },
+    {
+      "kind": "historical V2 pool.getReserves() spotcheck",
+      "block": 52555482,
+      "selected_early_pairs": 6,
+      "successful_reads": 6,
+      "nonzero_raw_reserve_both_sides": 6,
+      "first_liquidity_time_known": false,
+      "sellability_proven": false
     }
   ],
   "verified_historical_v2_log": {
@@ -1111,7 +1120,93 @@
     ],
     "sample_30_unique_CAs": 30,
     "unfiltered_all_factory_pools_in_day": 785,
-    "cohort_reason": "Identity source roster of first30 achieved; NOT an event-level PIT or liquidity/swap/sellability-verified sample; raw original HTTP not archived"
+    "cohort_reason": "Identity source roster of first30 achieved; NOT an event-level PIT or liquidity/swap/sellability-verified sample; raw original HTTP not archived",
+    "end_of_july1_reserve_spotchecks": [
+      {
+        "factory_index_zero_based": 1874173,
+        "asof_block": 52555482,
+        "call": "getReserves() 0x0902f1ac",
+        "reserve0_raw": "2406161540478755",
+        "reserve1_raw": "6686061584173045129214833205",
+        "quote_asset_index": 0,
+        "quote_raw": "2406161540478755",
+        "pool_reserves_nonzero": true,
+        "source_raw_http_sha256": null,
+        "not_initial_liquidity": true,
+        "not_same_block_swap_or_executable_bid_ask": true,
+        "not_usable_as_time_of_pool_creation": true
+      },
+      {
+        "factory_index_zero_based": 1874174,
+        "asof_block": 52555482,
+        "call": "getReserves() 0x0902f1ac",
+        "reserve0_raw": "18044509147222",
+        "reserve1_raw": "903359922586477439134772",
+        "quote_asset_index": 0,
+        "quote_raw": "18044509147222",
+        "pool_reserves_nonzero": true,
+        "source_raw_http_sha256": null,
+        "not_initial_liquidity": true,
+        "not_same_block_swap_or_executable_bid_ask": true,
+        "not_usable_as_time_of_pool_creation": true
+      },
+      {
+        "factory_index_zero_based": 1874175,
+        "asof_block": 52555482,
+        "call": "getReserves() 0x0902f1ac",
+        "reserve0_raw": "3820128028383126",
+        "reserve1_raw": "321512298064826102807344",
+        "quote_asset_index": 0,
+        "quote_raw": "3820128028383126",
+        "pool_reserves_nonzero": true,
+        "source_raw_http_sha256": null,
+        "not_initial_liquidity": true,
+        "not_same_block_swap_or_executable_bid_ask": true,
+        "not_usable_as_time_of_pool_creation": true
+      },
+      {
+        "factory_index_zero_based": 1874176,
+        "asof_block": 52555482,
+        "call": "getReserves() 0x0902f1ac",
+        "reserve0_raw": "3664778197922662",
+        "reserve1_raw": "117092290",
+        "quote_asset_index": 0,
+        "quote_raw": "3664778197922662",
+        "pool_reserves_nonzero": true,
+        "source_raw_http_sha256": null,
+        "not_initial_liquidity": true,
+        "not_same_block_swap_or_executable_bid_ask": true,
+        "not_usable_as_time_of_pool_creation": true
+      },
+      {
+        "factory_index_zero_based": 1874177,
+        "asof_block": 52555482,
+        "call": "getReserves() 0x0902f1ac",
+        "reserve0_raw": "1212059481221402635",
+        "reserve1_raw": "922312970107374472",
+        "quote_asset_index": 0,
+        "quote_raw": "1212059481221402635",
+        "pool_reserves_nonzero": true,
+        "source_raw_http_sha256": null,
+        "not_initial_liquidity": true,
+        "not_same_block_swap_or_executable_bid_ask": true,
+        "not_usable_as_time_of_pool_creation": true
+      },
+      {
+        "factory_index_zero_based": 1874178,
+        "asof_block": 52555482,
+        "call": "getReserves() 0x0902f1ac",
+        "reserve0_raw": "2203746113258370093327250",
+        "reserve1_raw": "16165736952285",
+        "quote_asset_index": 1,
+        "quote_raw": "16165736952285",
+        "pool_reserves_nonzero": true,
+        "source_raw_http_sha256": null,
+        "not_initial_liquidity": true,
+        "not_same_block_swap_or_executable_bid_ask": true,
+        "not_usable_as_time_of_pool_creation": true
+      }
+    ]
   },
   "bsc_v2_identity_30_count": 30,
   "bsc_v2_identity_30_is_officially_PIT_eligible": false
