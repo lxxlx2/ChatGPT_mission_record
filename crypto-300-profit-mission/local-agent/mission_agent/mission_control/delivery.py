@@ -345,14 +345,19 @@ class LocalDelivery:
             (reason,decision_id),
         )
 
-    def drain(self, *, authorization_guard=None)->None:
+    def drain(self, *, active_policy_hash: str | None = None, authorization_guard=None)->None:
         rows=self.control.db.execute("""
-            SELECT d.*,e.body,e.created_at AS decision_created_at
+            SELECT d.*,e.body,e.created_at AS decision_created_at,
+                   s.policy_hash AS decision_policy_hash
             FROM local_delivery d JOIN decision_events e USING(decision_id)
+            JOIN decision_snapshots s ON s.snapshot_id=e.snapshot_id
             WHERE d.status IN ('PENDING','RETRY_PENDING')
             ORDER BY d.created_at
         """).fetchall()
         for row in rows:
+            if active_policy_hash is not None and row["decision_policy_hash"] != active_policy_hash:
+                self._review_unverifiable(row["decision_id"],"LOCAL_OLD_POLICY_PENDING_BLOCKED")
+                continue
             if not _live_send_authorized(authorization_guard):
                 self._review_unverifiable(row["decision_id"],"LOCAL_LIVE_APPROVAL_EXPIRED_BEFORE_DISPATCH")
                 continue
@@ -439,11 +444,13 @@ class GmailDelivery:
                 return False
             return age is None or age>=self.READBACK_BACKOFF_SECONDS
         return True
-    def drain(self,provider, *, authorization_guard=None)->None:
+    def drain(self,provider, *, active_policy_hash: str | None = None, authorization_guard=None)->None:
         rows=self.db.execute("""
-            SELECT g.*,e.created_at AS decision_created_at
+            SELECT g.*,e.created_at AS decision_created_at,
+                   s.policy_hash AS decision_policy_hash
             FROM gmail_delivery g
             JOIN decision_events e ON e.decision_id=g.decision_id
+            JOIN decision_snapshots s ON s.snapshot_id=e.snapshot_id
             WHERE g.delivery_forbidden=0
               AND g.status NOT IN ('SENT_VERIFIED','PERMANENT_ERROR','DRY_RUN_AUDIT','MANUAL_REVIEW')
             ORDER BY g.created_at
@@ -451,6 +458,10 @@ class GmailDelivery:
         for raw_row in rows:
             row=dict(raw_row)
             decision_id=row["decision_id"]
+            # Isolate old policy before any provider action; preserve audit.
+            if active_policy_hash is not None and row["decision_policy_hash"] != active_policy_hash:
+                self._set(decision_id,"MANUAL_REVIEW","GMAIL_OLD_POLICY_PENDING_BLOCKED")
+                continue
             if not _live_send_authorized(authorization_guard):
                 self._set(decision_id,"MANUAL_REVIEW","GMAIL_LIVE_APPROVAL_EXPIRED_BEFORE_SEND")
                 continue

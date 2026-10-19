@@ -338,9 +338,11 @@ class MissionMemeService:
             if first_enqueued_monotonic is not None else None
         )
         if self._delivery_approval_guard():
-            self.local.drain(authorization_guard=self._delivery_approval_guard)
+            self.local.drain(active_policy_hash=self.policy_hash,
+                             authorization_guard=self._delivery_approval_guard)
             if self._delivery_approval_guard():
                 self.gmail.drain(existing_provider(self.gmail_config),
+                                 active_policy_hash=self.policy_hash,
                                  authorization_guard=self._delivery_approval_guard)
         cycle_elapsed_seconds=round(time.monotonic()-cycle_started_monotonic,3)
 
