@@ -42,3 +42,9 @@
 ## 五、下一决策
 
 本轮不继续围绕旧2026年2月已曝光98个同步WATCH拟合阈值；新真实完整日行情将用于随后真实有限现金前瞻因果D0/D1、上市人口和可执行买卖证据重建。现在数据收集推进到**完整3日**（以表格与机器JSON为唯一准确定量：**1533份/2207520根**），仍不生成真实BUY、不部署不发信。PR#30 Draft，`G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。
+
+## 六、原发行方采集器独立Codex审查REQUEST_CHANGES（P2）与本轮定向修复CI
+
+用户提交的独立Codex审查对`e6fb680b868d52a9a0d77d80920b6049fa36252d`认定唯一P2：采集器`urlopen()`在`response.geturl()`审查前已向HTTP重定向的非官方目标GET，拒绝结果不能阻止网络请求；**原1533份实际Issuer ZIP/CHECKSUM、2207520根分钟数据已被Codex逐字节独立复验全部通过，事实不变**。针对此P2按冻结单点修复：官方请求改用`build_opener(_RejectPublisherRedirect(HTTPRedirectHandler)).open()`，在`redirect_request`拒绝重定向；原数据没有重新下载。
+
+**唯一修复源码CI固定SHA `18ec436d04fb2c121a62a46311e56d15d4dc2606`**，真实[CI #39216876277](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39216876277)**12/12测试/10/10步骤PASS**；真实双本地HTTP服务验证301/302/303/307/308源请求确实被发出，非官方目标服务器GET严格0，正常HTTP200成功。完整[冻结修复、实际证据及独立Codex二次审核任务](MONSTER_PUBLISHER_REDIRECT_P2_FIX_ACTUAL_CI_AND_INDEPENDENT_REVIEW_PACKAGE_20261019.md)，未修改原三日来源、模型、300U资金、部署或资金授权。**源字节真实核验保留`DONE`，采集器代码固定SHA正式第二次独立复审`NOT_DONE`，在正式回审前记`P2_FIX_CI_VERIFIED_PENDING_INDEPENDENT_APPROVAL`。**完整七日/真实盘口/利润验证仍UNKNOWN或NO_GO。
