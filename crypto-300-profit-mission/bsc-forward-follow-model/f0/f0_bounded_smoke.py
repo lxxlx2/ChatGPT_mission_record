@@ -183,6 +183,40 @@ def smoke(sender: Callable, cap: int = MAX_RESPONSE_BYTES,
     }
 
 
+def live_failure_report(error: Exception, rpc: LimitedRPC) -> dict:
+    """Preserve attempted request counts even when the sender/decoder failed."""
+    if isinstance(error, TimeoutError):
+        code = "NETWORK_TIMEOUT"
+    elif isinstance(error, urllib.error.HTTPError):
+        code = "HTTP_ERROR"
+    elif isinstance(error, urllib.error.URLError):
+        code = "NETWORK_ERROR"
+    elif isinstance(error, ConnectionError):
+        code = "NETWORK_ERROR"
+    elif isinstance(error, ValueError):
+        # All validation errors in this module use stable, non-sensitive codes.
+        code = str(error) if str(error).isupper() and len(str(error)) <= 80 else "VALIDATION_FAILED"
+    else:
+        code = "SMOKE_FAILED"
+    return {
+        "schema": "bsc-f0-bounded-smoke-v1",
+        "mode": "AUTHORIZED_PUBLIC_HTTP_SMOKE_FAILED_CLOSED",
+        "actual_rpc_calls": rpc.attempts,
+        "attempted_rpc_calls": rpc.attempts,
+        "attempted_control_discovery_calls": rpc.discovery_attempts,
+        "error_code": code,
+        "stop_state": "BLOCKED_SOURCE",
+        "control_random_coverage": "NOT_MEASURED",
+        "first_public_observed_latency": "NOT_MEASURED",
+        "e1_finality": "UNRESOLVED_F1_POLICY",
+        "e2_attested": False,
+        "e3_actual_count": 0,
+        "quoted_actual_count": 0,
+        "paper_profit_labels": 0,
+        "note": "Attempted request counter includes sends that may not have reached the provider.",
+    }
+
+
 def fixture_sender(fixture: dict) -> Callable:
     """Deterministic in-memory sequence, never touches urllib."""
     require(fixture.get("mode") == "OFFLINE_ONLY" and fixture.get("trial") is True,
