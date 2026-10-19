@@ -1,9 +1,12 @@
-# Frank V2 — G1 architecture and development contract (candidate)
+# Frank V2 — G1 architecture and development contract (frozen)
 
 Date: 2026-10-19 Asia/Bangkok  
-Status: **DRAFT_FOR_USER_SIGNOFF / NOT_FROZEN / NO_PRODUCTION_CHANGE**  
+Status: **FROZEN / G1_APPROVED / NO_PRODUCTION_CHANGE**  
+Approved architecture content commit: `e4d61d1c8f246a7b04ea46ba674855346625a243` (pre-status-change SHA)  
+User approval: [PR #114 comment #6271276885](https://github.com/lxxlx2/ChatGPT_mission_record/pull/114#issuecomment-6271276885), by `lxxlx2` at `2026-10-19T15:48:33Z` (UTC)  
+Approval records **architecture only**; status-only commit SHA is recorded separately in the PR audit comment after this update.  
 Source base: `main` `4e2bf056438830cf69a171d30474fdf489dd93f0`  
-Scope: Frank/Meme lane only. This document is the **G1 decision input**, not a claim that G0 backtesting, business acceptance, independent review, or a Mac rollout has passed.
+Scope: Frank/Meme lane only. This document is the **G1-approved architecture baseline**, not a claim that G0 backtesting, business acceptance, independent review, or a Mac rollout has passed.
 
 Authority and precedence: preserve `crypto-300-profit-mission/MISSION_SPEC.md`, repository-wide engineering/security rules, the frozen Frank V1 runtime mapping, and immutable historical evidence. The user's 2026-10-19 explicit rejection of any fixed execution notional supersedes obsolete historical design references to an automatic $30 follow size. Do not rewrite original archived reports to conceal their original assumptions.
 
@@ -120,7 +123,7 @@ Historical workflow and QA evidence remain traceable until an approved dependenc
 
 ## 8. Signoff, change discipline, and weekly output
 
-**User signoff requested on this exact revision**:
+**User-approved G1 scope at the pre-status-change SHA recorded above**:
 1. #111 is the intended D1 activity UI foundation; #109 kept as causal forensic/audit evidence, not merged as a duplicate UI.
 2. G0-A exploratory coverage/availability first; **numeric GO gates frozen for a separate independent G0-B validation before its evaluation**, not after seeing its results. No pristine holdout => no confirmed GO.
 3. Multi-wallet deferred; support stays architectural only.
