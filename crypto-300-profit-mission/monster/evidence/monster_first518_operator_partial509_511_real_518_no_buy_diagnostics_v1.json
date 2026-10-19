@@ -1,0 +1,219 @@
+{
+  "G0": "PARTIAL",
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_DEPLOY": true,
+  "NO_GMAIL": true,
+  "NO_MERGE": true,
+  "NO_TRADE": true,
+  "author_GHA_actual_518_bridge_sha256": "71681c748ce36d50b21f706eb4b2cfb95e46c2f667d74d4d33ebf39cb7b3f213",
+  "event_count": 8,
+  "fixed_code_sha": "485731df2756f593934bbfecde681ab8ef9fce73",
+  "full_window_counts_by_blocker": {
+    "D2_BID_ASK_DEPTH_NOT_CAPTURED": 8,
+    "REAL_EXECUTABLE_NET_PNL_UNVERIFIED": 8,
+    "SIGNAL_EXPIRED": 8,
+    "SOURCE_POPULATION_PARTIAL": 8,
+    "VENUE_SOURCE_NOT_FULLY_HEALTHY": 8
+  },
+  "no_confident_buy": true,
+  "not_real_buy_order_quote_or_fill": true,
+  "operator_asof_utc": "2026-10-18T23:57:00Z",
+  "original_D0_D1_all_event_keys_preserved": true,
+  "original_independent_Codex_source_518_replay_approval_sha": "94f15a318d6a2a02d6da9e05e54b0c5a75ead79e",
+  "original_operator_legacy_fields_preserved": true,
+  "schema": "MONSTER_FIRST518_OPERATOR_PARTIAL509_511_HONEST_SOURCE_AND_EXECUTION_V1",
+  "source_health_diagnostics": {
+    "futures": {
+      "age_seconds": null,
+      "coverage_pct_of_recorded_population": null,
+      "degraded_since_utc": null,
+      "diagnostic_state": "NO_POLL",
+      "full_population_scanned": false,
+      "health_origin": "PERSISTED_SOURCE_TRANSITION_EVENTS_ASOF",
+      "health_reason_codes": [
+        "NO_STORED_POLL"
+      ],
+      "last_poll_utc": null,
+      "recent_poll_present": false,
+      "recorded_invalid_rows": null,
+      "scanned": null,
+      "source_total": null,
+      "state": "STALE_OR_DEGRADED"
+    },
+    "spot": {
+      "age_seconds": 0,
+      "coverage_pct_of_recorded_population": 99.6086,
+      "degraded_since_utc": null,
+      "diagnostic_state": "RECENT_PARTIAL_POPULATION",
+      "full_population_scanned": false,
+      "health_origin": "PERSISTED_SOURCE_TRANSITION_EVENTS_ASOF",
+      "health_reason_codes": [
+        "POPULATION_PARTIALLY_SCANNED"
+      ],
+      "last_poll_utc": "2026-10-18T23:57:00Z",
+      "recent_poll_present": true,
+      "recorded_invalid_rows": 2,
+      "scanned": 509,
+      "source_total": 511,
+      "state": "STALE_OR_DEGRADED"
+    }
+  },
+  "source_not_full_market_PIT": true,
+  "source_original_1533_pairs_revalidated_this_author_GHA": 1533,
+  "symbol_decisions": [
+    {
+      "D2_source_evidence": "NOT_CAPTURED",
+      "decision_blockers": [
+        "SIGNAL_EXPIRED",
+        "VENUE_SOURCE_NOT_FULLY_HEALTHY",
+        "SOURCE_POPULATION_PARTIAL",
+        "D2_BID_ASK_DEPTH_NOT_CAPTURED",
+        "REAL_EXECUTABLE_NET_PNL_UNVERIFIED"
+      ],
+      "event_lifecycle_independent_of_source_health": "EXPIRED",
+      "fresh_symbol_price_even_when_venue_partial": true,
+      "original_signal": "EXPIRED",
+      "recommendation": "RESEARCH_REVIEW_ONLY_NO_BUY",
+      "setup_utc": "2026-10-18T21:51:00Z",
+      "symbol": "MANTRAUSDT",
+      "venue": "spot",
+      "watch_first_utc": "2026-10-18T21:45:00Z",
+      "watch_reason": "SNAPSHOT_WINDOW_15MIN_PLUS_24H_LIQUIDITY_CONTEXT"
+    },
+    {
+      "D2_source_evidence": "NOT_CAPTURED",
+      "decision_blockers": [
+        "SIGNAL_EXPIRED",
+        "VENUE_SOURCE_NOT_FULLY_HEALTHY",
+        "SOURCE_POPULATION_PARTIAL",
+        "D2_BID_ASK_DEPTH_NOT_CAPTURED",
+        "REAL_EXECUTABLE_NET_PNL_UNVERIFIED"
+      ],
+      "event_lifecycle_independent_of_source_health": "EXPIRED",
+      "fresh_symbol_price_even_when_venue_partial": true,
+      "original_signal": "EXPIRED",
+      "recommendation": "RESEARCH_REVIEW_ONLY_NO_BUY",
+      "setup_utc": "2026-10-18T18:36:00Z",
+      "symbol": "EPICUSDT",
+      "venue": "spot",
+      "watch_first_utc": "2026-10-18T18:30:00Z",
+      "watch_reason": "SNAPSHOT_WINDOW_3MIN_PLUS_24H_LIQUIDITY_CONTEXT"
+    },
+    {
+      "D2_source_evidence": "NOT_CAPTURED",
+      "decision_blockers": [
+        "SIGNAL_EXPIRED",
+        "VENUE_SOURCE_NOT_FULLY_HEALTHY",
+        "SOURCE_POPULATION_PARTIAL",
+        "D2_BID_ASK_DEPTH_NOT_CAPTURED",
+        "REAL_EXECUTABLE_NET_PNL_UNVERIFIED"
+      ],
+      "event_lifecycle_independent_of_source_health": "EXPIRED",
+      "fresh_symbol_price_even_when_venue_partial": true,
+      "original_signal": "EXPIRED",
+      "recommendation": "RESEARCH_REVIEW_ONLY_NO_BUY",
+      "setup_utc": "2026-10-18T17:27:00Z",
+      "symbol": "QUICKUSDT",
+      "venue": "spot",
+      "watch_first_utc": "2026-10-18T17:24:00Z",
+      "watch_reason": "SNAPSHOT_WINDOW_15MIN_PLUS_24H_LIQUIDITY_CONTEXT"
+    },
+    {
+      "D2_source_evidence": "NOT_CAPTURED",
+      "decision_blockers": [
+        "SIGNAL_EXPIRED",
+        "VENUE_SOURCE_NOT_FULLY_HEALTHY",
+        "SOURCE_POPULATION_PARTIAL",
+        "D2_BID_ASK_DEPTH_NOT_CAPTURED",
+        "REAL_EXECUTABLE_NET_PNL_UNVERIFIED"
+      ],
+      "event_lifecycle_independent_of_source_health": "EXPIRED",
+      "fresh_symbol_price_even_when_venue_partial": true,
+      "original_signal": "EXPIRED",
+      "recommendation": "RESEARCH_REVIEW_ONLY_NO_BUY",
+      "setup_utc": "2026-10-18T14:21:00Z",
+      "symbol": "BARUSDT",
+      "venue": "spot",
+      "watch_first_utc": "2026-10-18T14:18:00Z",
+      "watch_reason": "SNAPSHOT_WINDOW_15MIN_PLUS_24H_LIQUIDITY_CONTEXT"
+    },
+    {
+      "D2_source_evidence": "NOT_CAPTURED",
+      "decision_blockers": [
+        "SIGNAL_EXPIRED",
+        "VENUE_SOURCE_NOT_FULLY_HEALTHY",
+        "SOURCE_POPULATION_PARTIAL",
+        "D2_BID_ASK_DEPTH_NOT_CAPTURED",
+        "REAL_EXECUTABLE_NET_PNL_UNVERIFIED"
+      ],
+      "event_lifecycle_independent_of_source_health": "EXPIRED",
+      "fresh_symbol_price_even_when_venue_partial": true,
+      "original_signal": "EXPIRED",
+      "recommendation": "RESEARCH_REVIEW_ONLY_NO_BUY",
+      "setup_utc": "2026-10-18T13:42:00Z",
+      "symbol": "QKCUSDT",
+      "venue": "spot",
+      "watch_first_utc": "2026-10-18T13:36:00Z",
+      "watch_reason": "SNAPSHOT_WINDOW_15MIN_PLUS_24H_LIQUIDITY_CONTEXT"
+    },
+    {
+      "D2_source_evidence": "NOT_CAPTURED",
+      "decision_blockers": [
+        "SIGNAL_EXPIRED",
+        "VENUE_SOURCE_NOT_FULLY_HEALTHY",
+        "SOURCE_POPULATION_PARTIAL",
+        "D2_BID_ASK_DEPTH_NOT_CAPTURED",
+        "REAL_EXECUTABLE_NET_PNL_UNVERIFIED"
+      ],
+      "event_lifecycle_independent_of_source_health": "EXPIRED",
+      "fresh_symbol_price_even_when_venue_partial": true,
+      "original_signal": "EXPIRED",
+      "recommendation": "RESEARCH_REVIEW_ONLY_NO_BUY",
+      "setup_utc": "2026-10-18T10:06:00Z",
+      "symbol": "ACMUSDT",
+      "venue": "spot",
+      "watch_first_utc": "2026-10-18T10:00:00Z",
+      "watch_reason": "SNAPSHOT_WINDOW_3MIN_PLUS_24H_LIQUIDITY_CONTEXT"
+    },
+    {
+      "D2_source_evidence": "NOT_CAPTURED",
+      "decision_blockers": [
+        "SIGNAL_EXPIRED",
+        "VENUE_SOURCE_NOT_FULLY_HEALTHY",
+        "SOURCE_POPULATION_PARTIAL",
+        "D2_BID_ASK_DEPTH_NOT_CAPTURED",
+        "REAL_EXECUTABLE_NET_PNL_UNVERIFIED"
+      ],
+      "event_lifecycle_independent_of_source_health": "EXPIRED",
+      "fresh_symbol_price_even_when_venue_partial": true,
+      "original_signal": "EXPIRED",
+      "recommendation": "RESEARCH_REVIEW_ONLY_NO_BUY",
+      "setup_utc": "2026-10-18T09:57:00Z",
+      "symbol": "AMPUSDT",
+      "venue": "spot",
+      "watch_first_utc": "2026-10-18T09:51:00Z",
+      "watch_reason": "SNAPSHOT_WINDOW_15MIN_PLUS_24H_LIQUIDITY_CONTEXT"
+    },
+    {
+      "D2_source_evidence": "NOT_CAPTURED",
+      "decision_blockers": [
+        "SIGNAL_EXPIRED",
+        "VENUE_SOURCE_NOT_FULLY_HEALTHY",
+        "SOURCE_POPULATION_PARTIAL",
+        "D2_BID_ASK_DEPTH_NOT_CAPTURED",
+        "REAL_EXECUTABLE_NET_PNL_UNVERIFIED"
+      ],
+      "event_lifecycle_independent_of_source_health": "EXPIRED",
+      "fresh_symbol_price_even_when_venue_partial": true,
+      "original_signal": "EXPIRED",
+      "recommendation": "RESEARCH_REVIEW_ONLY_NO_BUY",
+      "setup_utc": "2026-10-18T07:12:00Z",
+      "symbol": "ERAUSDT",
+      "venue": "spot",
+      "watch_first_utc": "2026-10-18T07:09:00Z",
+      "watch_reason": "SNAPSHOT_WINDOW_15MIN_PLUS_24H_LIQUIDITY_CONTEXT"
+    }
+  ],
+  "this_new_operator_change_other_AI_review": "NOT_DONE"
+}
