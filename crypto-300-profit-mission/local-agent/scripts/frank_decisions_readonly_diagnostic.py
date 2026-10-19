@@ -180,6 +180,60 @@ def save_evidence(home: Path, report: dict, sha: str) -> Path:
     return final
 
 
+def read_git_head_passively(checkout: Path) -> str:
+    """Read local Git metadata without running Git, helpers, filters, or index refresh.
+
+    This intentionally verifies only checkout HEAD identity, NOT clean worktree
+    bytes. The ephemeral caller checkout must not be represented as fully
+    independently verified source content.
+    """
+    entry = checkout / ".git"
+    try:
+        if entry.is_dir():
+            git_dir = entry
+        elif entry.is_file():
+            pointer = entry.read_text(encoding="utf-8").strip()
+            if not pointer.startswith("gitdir: "):
+                raise RuntimeError("DIAGNOSTIC_GITDIR_INVALID")
+            target = Path(pointer[len("gitdir: "):].strip())
+            git_dir = (target if target.is_absolute() else checkout / target).resolve(strict=True)
+        else:
+            raise RuntimeError("DIAGNOSTIC_GITDIR_MISSING")
+        if not git_dir.is_dir():
+            raise RuntimeError("DIAGNOSTIC_GITDIR_INVALID")
+        head = (git_dir / "HEAD").read_text(encoding="utf-8").strip()
+        if head.startswith("ref: "):
+            ref = head[len("ref: "):].strip()
+            if (not re.fullmatch(r"refs/(?:heads|remotes|tags)/[A-Za-z0-9_./-]+", ref)
+                    or any(part in {"", ".", ".."} for part in ref.split("/"))):
+                raise RuntimeError("DIAGNOSTIC_GIT_REF_INVALID")
+            common = git_dir
+            commondir = git_dir / "commondir"
+            if commondir.is_file():
+                relative = commondir.read_text(encoding="utf-8").strip()
+                common = (git_dir / relative).resolve(strict=True)
+            loose = common / ref
+            if loose.is_file():
+                head = loose.read_text(encoding="utf-8").strip()
+            else:
+                packed = common / "packed-refs"
+                if not packed.is_file():
+                    raise RuntimeError("DIAGNOSTIC_GIT_REF_MISSING")
+                matches = [
+                    line.split(" ", 1)[0]
+                    for line in packed.read_text(encoding="utf-8").splitlines()
+                    if line and not line.startswith(("#", "^")) and line.endswith(" " + ref)
+                ]
+                if len(matches) != 1:
+                    raise RuntimeError("DIAGNOSTIC_GIT_REF_MISSING")
+                head = matches[0]
+        if re.fullmatch(r"[0-9a-f]{40}", head) is None:
+            raise RuntimeError("DIAGNOSTIC_GIT_HEAD_INVALID")
+        return head
+    except (OSError, UnicodeError) as exc:
+        raise RuntimeError("DIAGNOSTIC_GIT_METADATA_UNREADABLE") from exc
+
+
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--expected-sha", required=True)
@@ -190,17 +244,13 @@ def main() -> int:
     if not re.fullmatch(r"[0-9a-f]{40}", args.expected_sha):
         raise RuntimeError("EXPECTED_SHA_INVALID")
     checkout = Path(__file__).resolve().parents[3]
-    actual = subprocess.run(["git", "-C", str(checkout), "rev-parse", "HEAD"],
-                            capture_output=True, text=True, check=True, timeout=10).stdout.strip()
+    actual = read_git_head_passively(checkout)
     if actual != args.expected_sha:
         raise RuntimeError("DIAGNOSTIC_SOURCE_SHA_MISMATCH")
-    changed = subprocess.run(["git", "-C", str(checkout), "status", "--porcelain"],
-                             capture_output=True, text=True, check=True, timeout=10).stdout
-    if changed.strip():
-        raise RuntimeError("DIAGNOSTIC_SOURCE_WORKTREE_DIRTY")
     port = discover_dashboard_port(Path.home())
     report = run_diagnostic(port, samples=args.samples)
-    report["diagnostic_script_sha"] = args.expected_sha
+    report["diagnostic_checkout_head_sha"] = args.expected_sha
+    report["source_identity_scope"] = "PASSIVE_GIT_HEAD_ONLY_WORKTREE_UNVERIFIED"
     final = save_evidence(Path.home(), report, args.expected_sha)
     print("DIAGNOSTIC_STATUS=" + report["summary"]["verdict"])
     print("ZIP_READY=" + str(final), flush=True)
