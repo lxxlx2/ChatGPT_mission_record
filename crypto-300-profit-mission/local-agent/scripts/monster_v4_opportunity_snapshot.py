@@ -63,11 +63,41 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
                 (venue, now_ms))
             degraded_at_asof = bool(transition and transition["event_type"] == "SOURCE_DEGRADED")
             source_age = now_ms - poll["observed_ms"] if poll else None
-            healthy = bool(poll and source_age <= MAX_SOURCE_LAG_MS
-                           and poll["invalid"] == 0 and poll["scanned"] == poll["source_total"]
-                           and not degraded_at_asof)
+            fresh = bool(poll and 0 <= source_age <= MAX_SOURCE_LAG_MS)
+            full_population = bool(poll and poll["source_total"] > 0
+                                   and poll["scanned"] == poll["source_total"]
+                                   and poll["invalid"] == 0)
+            healthy = fresh and full_population and not degraded_at_asof
+            health_reasons = []
+            if poll is None:
+                health_reasons.append("NO_STORED_POLL")
+            else:
+                if not fresh:
+                    health_reasons.append("POLL_NOT_FRESH")
+                if not full_population:
+                    health_reasons.append("POPULATION_PARTIALLY_SCANNED")
+                if degraded_at_asof:
+                    health_reasons.append("PERSISTED_SOURCE_DEGRADED")
+            if poll is None:
+                diagnostic_state = "NO_POLL"
+            elif not fresh:
+                diagnostic_state = "POLL_STALE"
+            elif degraded_at_asof:
+                diagnostic_state = "PERSISTED_SOURCE_DEGRADED"
+            elif not full_population:
+                diagnostic_state = "RECENT_PARTIAL_POPULATION"
+            else:
+                diagnostic_state = "RECENT_FULL_POPULATION"
             sources[venue] = {
                 "state": "RECENT_STORED_POLL" if healthy else "STALE_OR_DEGRADED",
+                "diagnostic_state": diagnostic_state,
+                "health_reason_codes": health_reasons,
+                "recent_poll_present": fresh,
+                "full_population_scanned": full_population,
+                "coverage_pct_of_recorded_population": (
+                    round(100 * poll["scanned"] / poll["source_total"], 4)
+                    if poll and poll["source_total"] > 0 else None),
+                "recorded_invalid_rows": poll["invalid"] if poll else None,
                 "last_poll_utc": utc_time(poll["observed_ms"]) if poll else None,
                 "age_seconds": source_age // 1000 if source_age is not None else None,
                 "scanned": poll["scanned"] if poll else None,
@@ -140,6 +170,18 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
             else:
                 quote_state = "PRESENT_IN_LATEST_POLL"
             if invalidation is not None:
+                event_lifecycle = "INVALIDATED"
+            elif late_event is not None:
+                event_lifecycle = "MISSED_D1_DEADLINE"
+            elif expired:
+                event_lifecycle = "EXPIRED"
+            elif setup is not None:
+                event_lifecycle = "SETUP_RECORDED"
+            elif watch is not None:
+                event_lifecycle = "WATCH_RECORDED"
+            else:
+                event_lifecycle = "WATCH_EVIDENCE_NOT_FOUND"
+            if invalidation is not None:
                 state = "INVALIDATED"
             elif late_event is not None:
                 state = "MISSED_D1_DEADLINE"
@@ -165,8 +207,36 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
                     depth = payload.get("depth")
                 except (ValueError, TypeError):
                     depth = None
+            # Independent diagnosis does not relax existing fail-closed signal.
+            # A fresh symbol inside a 509/511 poll can still have a valid WATCH
+            # event while the overall issuer population remains incomplete.
+            blockers = []
+            if event_lifecycle in ("EXPIRED", "INVALIDATED", "MISSED_D1_DEADLINE"):
+                blockers.append("SIGNAL_" + event_lifecycle)
+            if venue != "spot":
+                blockers.append("SPOT_EXECUTION_NOT_APPLICABLE")
+            if not source_ok:
+                blockers.append("VENUE_SOURCE_NOT_FULLY_HEALTHY")
+            if "POPULATION_PARTIALLY_SCANNED" in venue_source.get("health_reason_codes", []):
+                blockers.append("SOURCE_POPULATION_PARTIAL")
+            if quote_state != "PRESENT_IN_LATEST_POLL":
+                blockers.append("SYMBOL_QUOTE_" + quote_state)
+            if watch is None:
+                blockers.append("WATCH_EVENT_EVIDENCE_NOT_FOUND")
+            if setup is None:
+                blockers.append("D1_SETUP_NOT_CAPTURED")
+            if d2_status == "NOT_CAPTURED":
+                blockers.append("D2_BID_ASK_DEPTH_NOT_CAPTURED")
+            else:
+                blockers.append("D2_RECORD_NOT_PROOF_OF_FILL")
+            blockers.append("REAL_EXECUTABLE_NET_PNL_UNVERIFIED")
             entries.append({
                 "venue": venue, "symbol": symbol,
+                "event_lifecycle_independent_of_source_health": event_lifecycle,
+                "decision_blocker_codes": blockers,
+                "symbol_has_fresh_record_despite_partial_venue": (
+                    quote_state == "PRESENT_IN_LATEST_POLL" and
+                    venue_source.get("diagnostic_state") == "RECENT_PARTIAL_POPULATION"),
                 "first_watch_utc": utc_time(first),
                 "watch_evidence_present": watch is not None,
                 "watch_reason": q["reason"], "watch_priority_research_only": q["priority"],
@@ -214,8 +284,11 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
                 "recommendation": "RESEARCH_REVIEW_ONLY_NO_BUY",
             })
         full_counts = {}
+        blocker_counts = {}
         for item in entries:
             full_counts[item["signal"]] = full_counts.get(item["signal"], 0) + 1
+            for blocker in item["decision_blocker_codes"]:
+                blocker_counts[blocker] = blocker_counts.get(blocker, 0) + 1
         full_total = len(entries)
         # Stable sort retains first_seen_ms DESC,id DESC within each research
         # state because SQL produced that chronology. No retrospective winners.
@@ -238,6 +311,7 @@ def read_snapshot(db_path, now_ms, limit=25, window_hours=24):
             "sources": sources, "opportunities": visible,
             "window_total": full_total, "hidden_by_display_limit": full_total - len(visible),
             "counts_by_signal_full_window": dict(sorted(full_counts.items())),
+            "counts_by_decision_blocker_full_window": dict(sorted(blocker_counts.items())),
             "displayed": len(visible),
             "note": "As-of state uses stored timestamped events; mutable quotes are not full historical PIT. SQLite read-only queries may create WAL/SHM sidecars; no live quote, trade or mail.",
         }
@@ -269,6 +343,8 @@ def main():
                   + " | INVALIDATED_AT=" + str(r["invalidation_utc"])
                   + " | PRICE_STORED=" + str(r["last_stored_price"])
                   + " | COST_BPS_STORED=" + str(r["d2_instant_roundtrip_cost_bps"])
+                  + " | LIFECYCLE=" + r["event_lifecycle_independent_of_source_health"]
+                  + " | BLOCKERS=" + ",".join(r["decision_blocker_codes"])
                   + " | NO_BUY")
         print("Shown " + str(result["displayed"]) + "/" + str(result["window_total"])
               + " stored episodes; hidden_by_display_limit=" + str(result["hidden_by_display_limit"])
