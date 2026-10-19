@@ -10,6 +10,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import re
+import subprocess
 import urllib.error
 import urllib.request
 from datetime import datetime, timedelta, timezone
@@ -22,6 +25,9 @@ SCOPE = "ONE_TIME_BSC_PUBLIC_HTTP_SOURCE_SMOKE_ONLY"
 MAX_CALLS = 4
 MAX_DISCOVERY = 1
 MAX_RESPONSE_BYTES = 2_000_000
+HASH40 = re.compile(r"[0-9a-f]{40}\Z")
+HASH64 = re.compile(r"[0-9a-f]{64}\Z")
+NONCE = re.compile(r"[0-9a-f]{32,64}\Z")
 
 
 def require(condition: bool, code: str) -> None:
@@ -42,6 +48,15 @@ def utc(value: str) -> datetime:
 def validate_permit(permit: dict, now: datetime) -> None:
     """Do not infer approval from data alone: user must explicitly approve scope in chat."""
     require(isinstance(permit, dict), "PERMIT_REQUIRED")
+    require(isinstance(permit.get("approved_commit_sha"), str) and
+            HASH40.fullmatch(permit["approved_commit_sha"]) is not None,
+            "REVIEWED_COMMIT_REQUIRED")
+    require(isinstance(permit.get("approved_source_sha256"), str) and
+            HASH64.fullmatch(permit["approved_source_sha256"]) is not None,
+            "REVIEWED_SOURCE_DIGEST_REQUIRED")
+    require(isinstance(permit.get("run_nonce"), str) and
+            NONCE.fullmatch(permit["run_nonce"]) is not None,
+            "ONE_TIME_NONCE_REQUIRED")
     require(permit.get("scope") == SCOPE and permit.get("user_authorized") is True,
             "EXPLICIT_USER_AUTHORIZATION_REQUIRED")
     require(permit.get("approved_endpoint") == ENDPOINT, "ENDPOINT_NOT_APPROVED")
@@ -72,6 +87,82 @@ def digest(obj: object) -> str:
     return hashlib.sha256(json.dumps(obj, sort_keys=True, separators=(",", ":"),
                                      ensure_ascii=False).encode()).hexdigest()
 
+
+
+def verify_code_binding(permit: dict, script_path: Path | None = None) -> None:
+    """Local git HEAD + committed exact script + SHA256, never a network lookup.
+
+    An approved commit/hash is supplied *out of band* only after independent
+    review. The local permit still cannot cryptographically prove user consent.
+    """
+    script = (script_path or Path(__file__)).resolve()
+    content = script.read_bytes()
+    require(hashlib.sha256(content).hexdigest() == permit["approved_source_sha256"],
+            "REVIEWED_SOURCE_DIGEST_MISMATCH")
+    try:
+        root = Path(subprocess.run(
+            ["git", "-C", str(script.parent), "rev-parse", "--show-toplevel"],
+            check=True, capture_output=True, text=True, timeout=5,
+        ).stdout.strip()).resolve()
+        relative = script.relative_to(root).as_posix()
+        head = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "HEAD"],
+            check=True, capture_output=True, text=True, timeout=5,
+        ).stdout.strip()
+        require(head == permit["approved_commit_sha"], "REVIEWED_COMMIT_MISMATCH")
+        blob = subprocess.run(
+            ["git", "-C", str(root), "show", "HEAD:" + relative],
+            check=True, capture_output=True, timeout=5,
+        ).stdout
+        require(content == blob, "UNREVIEWED_LOCAL_SOURCE")
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
+        if isinstance(exc, ValueError) and str(exc) in (
+            "REVIEWED_COMMIT_MISMATCH", "UNREVIEWED_LOCAL_SOURCE"
+        ):
+            raise
+        raise ValueError("REVIEWED_GIT_CHECK_FAILED") from None
+
+
+def permit_audit_fields(permit: dict) -> dict:
+    return {
+        "permit_sha256": digest(permit),
+        "reviewed_commit_sha": permit["approved_commit_sha"],
+        "reviewed_source_sha256": permit["approved_source_sha256"],
+        "run_nonce_sha256": hashlib.sha256(permit["run_nonce"].encode("ascii")).hexdigest(),
+        "user_consent_cryptographically_verified": False,
+    }
+
+
+def consume_nonce(permit: dict, root: Path) -> None:
+    """Claim before any network attempt. An interrupted/failed run is still spent."""
+    root.mkdir(parents=True, exist_ok=True)
+    marker = root / (".bsc_f0_nonce_" + permit["run_nonce"] + ".json")
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    try:
+        fd = os.open(marker, flags, 0o600)
+    except FileExistsError:
+        raise ValueError("NONCE_ALREADY_CONSUMED") from None
+    except OSError:
+        raise ValueError("NONCE_CLAIM_FAILED") from None
+    with os.fdopen(fd, "w", encoding="utf-8") as output:
+        json.dump({"status": "CONSUMED_BEFORE_ANY_REQUEST", **permit_audit_fields(permit)},
+                  output, sort_keys=True)
+        output.write("\n")
+        output.flush()
+        os.fsync(output.fileno())
+
+
+FAILURE_CODES = frozenset({
+    "WRONG_CHAIN_ID", "NO_BLOCK_HEIGHT", "BLOCK_NUMBER_MISMATCH",
+    "WRONG_HEX_SIZE", "INVALID_HEX_RESPONSE", "FULL_BLOCK_TRANSACTIONS_UNAVAILABLE",
+    "RECEIPT_IDENTITY_MISMATCH", "RECEIPT_BLOCK_MISMATCH",
+    "RECEIPT_HEIGHT_MISMATCH", "RESPONSE_TOO_LARGE", "RPC_ERROR_OR_BAD_ENVELOPE",
+    "INVALID_JSON_RESPONSE", "HTTP_NOT_OK", "REDIRECT_FORBIDDEN",
+    "RPC_CALL_CAP_REACHED", "CONTROL_DISCOVERY_CAP_REACHED", "METHOD_NOT_APPROVED",
+    "ENDPOINT_NOT_APPROVED",
+})
 
 def rpc_hex(value: str, expected_bytes: int | None = None) -> int:
     require(isinstance(value, str) and value.startswith("0x") and
@@ -195,7 +286,7 @@ def live_failure_report(error: Exception, rpc: LimitedRPC) -> dict:
         code = "NETWORK_ERROR"
     elif isinstance(error, ValueError):
         # All validation errors in this module use stable, non-sensitive codes.
-        code = str(error) if str(error).isupper() and len(str(error)) <= 80 else "VALIDATION_FAILED"
+        code = str(error) if str(error) in FAILURE_CODES else "VALIDATION_FAILED"
     else:
         code = "SMOKE_FAILED"
     return {
@@ -258,6 +349,8 @@ def main() -> None:
         out = args.report.resolve()
         allowed_root = Path(permit["storage_root"]).resolve()
         require(out.parent == allowed_root, "REPORT_OUTSIDE_APPROVED_STORAGE")
+        verify_code_binding(permit)
+        consume_nonce(permit, allowed_root)
         rpc = LimitedRPC(https_sender, ENDPOINT, permit["max_response_bytes"])
         try:
             result = smoke(https_sender, cap=permit["max_response_bytes"], rpc=rpc)
@@ -265,10 +358,12 @@ def main() -> None:
             # Fail closed, but do not lose already-attempted billable calls.
             # Report is local and contains no raw RPC responses or credentials.
             result = live_failure_report(exc, rpc)
+            result.update(permit_audit_fields(permit))
             out.parent.mkdir(parents=True, exist_ok=True)
             out.write_text(json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
             raise SystemExit(1) from None
         result["mode"] = "AUTHORIZED_PUBLIC_HTTP_SMOKE_NOT_FULL_F0"
+        result.update(permit_audit_fields(permit))
         result["actual_rpc_calls"] = result["attempted_rpc_calls"]
     text = json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False) + "\n"
     if args.report:
