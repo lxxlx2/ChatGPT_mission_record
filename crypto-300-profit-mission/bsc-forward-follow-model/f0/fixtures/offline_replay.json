@@ -275,7 +275,8 @@
       "delta_ms": 60000,
       "requested_ms": 61000,
       "received_ms": 61080,
-      "synthetic_amount_out_raw": "1000"
+      "synthetic_amount_out_raw": "1000",
+      "response_status": "SUCCESS"
     },
     {
       "kind": "quote",
@@ -284,7 +285,8 @@
       "delta_ms": 60000,
       "requested_ms": 61300,
       "received_ms": 61380,
-      "synthetic_amount_out_raw": "1000"
+      "synthetic_amount_out_raw": "1000",
+      "response_status": "SUCCESS"
     },
     {
       "kind": "quote",
@@ -293,7 +295,8 @@
       "delta_ms": 300000,
       "requested_ms": 301000,
       "received_ms": 301080,
-      "synthetic_amount_out_raw": "1000"
+      "synthetic_amount_out_raw": "1000",
+      "response_status": "SUCCESS"
     },
     {
       "kind": "quote",
@@ -302,7 +305,8 @@
       "delta_ms": 300000,
       "requested_ms": 301300,
       "received_ms": 301380,
-      "synthetic_amount_out_raw": "1000"
+      "synthetic_amount_out_raw": "1000",
+      "response_status": "SUCCESS"
     },
     {
       "kind": "quote",
@@ -311,7 +315,8 @@
       "delta_ms": 900000,
       "requested_ms": 901000,
       "received_ms": 901080,
-      "synthetic_amount_out_raw": "1000"
+      "synthetic_amount_out_raw": "1000",
+      "response_status": "SUCCESS"
     }
   ],
   "end_ms": 950000
