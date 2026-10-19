@@ -4,8 +4,8 @@
   "research_only": true,
   "observation_window_policy": {
     "P3_original_frozen_utc": [
-      "2026-09-13",
-      "2026-10-13"
+      "2026-09-13T08:37:36Z",
+      "2026-10-13T08:37:36Z"
     ],
     "rolling_new_screen_utc": [
       "2026-09-18T18:34:56Z",
@@ -55,6 +55,10 @@
     "R": {
       "path": "bsc-meme-address-model-v1-p4b-23eoa-full-market-30day-activity-screen-2026-10-19.json",
       "git_blob_sha": "941549cd13b864b43e95cdadf9535f8c453786f9"
+    },
+    "P3_frozen": {
+      "path": "bsc-meme-address-model-v1-p4-p2p3-readiness-matrix-2026-10-13.json",
+      "git_blob_sha": "3252e05c3ef1a4de14a5e10aed3e5ba80566154f"
     }
   },
   "summary": {
@@ -67,7 +71,10 @@
     "cross_market_later_V2": 2,
     "confirmed_ca_realized_profit_rounds": 0,
     "confirmed_public_global_U": 0,
-    "qualified_U_for_P5": 0
+    "qualified_U_for_P5": 0,
+    "P3_verified_recent_true_swap_distinct_wallets_in_five": 3,
+    "P3_no_strict_witness_wallets_in_five": 2,
+    "P2_research_priority_wallets_in_five_with_2plus_positive_SELECTED_scope_distinct_CA": 3
   },
   "rows": [
     {
@@ -101,13 +108,21 @@
       "same_signal_market_buy_sell_and_capacity": "UNRESOLVED",
       "gas_tax_slippage_execution": "UNRESOLVED",
       "causal_independent_follower_profit": "UNRESOLVED",
-      "P3_strict_frozen_2026_09_13_to_2026_10_13_owner_Meme_swaps": "NOT_RECONCILED_IN_THIS_SIX_CASE_CHECKPOINT",
       "supplemental_nonce_count_2026_09_18_to_2026_10_18": 4415,
       "supplemental_nonce_is_confirmed_meme_swap": false,
       "lag_60s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
       "lag_300s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
       "lag_900s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
-      "source_grade": "POST_HOC_2026_DESCRIPTIVE_REPLAY_NOT_UNTOUCHED"
+      "source_grade": "POST_HOC_2026_DESCRIPTIVE_REPLAY_NOT_UNTOUCHED",
+      "P3_frozen_19_CA_recent_strict_owner_swap": "CONFIRMED_AT_LEAST_ONE_SIGNED_POOL_SWAP",
+      "P3_frozen_latest_verified_swap_utc": "2026-10-06T11:16:54.000Z",
+      "P3_frozen_latest_verified_swap_hash": "0xa9eabce653ba2cfd6ec10656da7da32a9d929f0d45d6cf040693e36c97f6bc47",
+      "P2_historical_selected_positive_distinct_major_CA_count_NOT_CONFIRMED_CAUSAL_PROFIT": 2,
+      "P2_historical_selected_positive_distinct_major_CA_list": [
+        "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "P2_stated_source_only_research_qualification": "PRIORITY_REPEAT_NATIVE_OR_QUOTE_POSITIVE_WITH_RECENT_SWAP_NOT_REALIZED_PROFIT"
     },
     {
       "case": "239E_DRAGON_R1",
@@ -140,13 +155,21 @@
       "same_signal_market_buy_sell_and_capacity": "UNRESOLVED",
       "gas_tax_slippage_execution": "UNRESOLVED",
       "causal_independent_follower_profit": "UNRESOLVED",
-      "P3_strict_frozen_2026_09_13_to_2026_10_13_owner_Meme_swaps": "NOT_RECONCILED_IN_THIS_SIX_CASE_CHECKPOINT",
       "supplemental_nonce_count_2026_09_18_to_2026_10_18": 0,
       "supplemental_nonce_is_confirmed_meme_swap": false,
       "lag_60s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
       "lag_300s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
       "lag_900s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
-      "source_grade": "POST_HOC_2026_DESCRIPTIVE_REPLAY_NOT_UNTOUCHED"
+      "source_grade": "POST_HOC_2026_DESCRIPTIVE_REPLAY_NOT_UNTOUCHED",
+      "P3_frozen_19_CA_recent_strict_owner_swap": "UNRESOLVED_NO_STRICT_POSITIVE_WITNESS",
+      "P3_frozen_latest_verified_swap_utc": null,
+      "P3_frozen_latest_verified_swap_hash": null,
+      "P2_historical_selected_positive_distinct_major_CA_count_NOT_CONFIRMED_CAUSAL_PROFIT": 2,
+      "P2_historical_selected_positive_distinct_major_CA_list": [
+        "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+        "0xeccbb861c0dda7efd964010085488b69317e4444"
+      ],
+      "P2_stated_source_only_research_qualification": "RECENT_SIGNED_SWAP_UNRESOLVED"
     },
     {
       "case": "239E_DRAGON_R2",
@@ -179,13 +202,21 @@
       "same_signal_market_buy_sell_and_capacity": "UNRESOLVED",
       "gas_tax_slippage_execution": "UNRESOLVED",
       "causal_independent_follower_profit": "UNRESOLVED",
-      "P3_strict_frozen_2026_09_13_to_2026_10_13_owner_Meme_swaps": "NOT_RECONCILED_IN_THIS_SIX_CASE_CHECKPOINT",
       "supplemental_nonce_count_2026_09_18_to_2026_10_18": 0,
       "supplemental_nonce_is_confirmed_meme_swap": false,
       "lag_60s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
       "lag_300s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
       "lag_900s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
-      "source_grade": "POST_HOC_2026_DESCRIPTIVE_REPLAY_NOT_UNTOUCHED"
+      "source_grade": "POST_HOC_2026_DESCRIPTIVE_REPLAY_NOT_UNTOUCHED",
+      "P3_frozen_19_CA_recent_strict_owner_swap": "UNRESOLVED_NO_STRICT_POSITIVE_WITNESS",
+      "P3_frozen_latest_verified_swap_utc": null,
+      "P3_frozen_latest_verified_swap_hash": null,
+      "P2_historical_selected_positive_distinct_major_CA_count_NOT_CONFIRMED_CAUSAL_PROFIT": 2,
+      "P2_historical_selected_positive_distinct_major_CA_list": [
+        "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+        "0xeccbb861c0dda7efd964010085488b69317e4444"
+      ],
+      "P2_stated_source_only_research_qualification": "RECENT_SIGNED_SWAP_UNRESOLVED"
     },
     {
       "case": "8E6B_HAJIMI",
@@ -218,13 +249,24 @@
       "same_signal_market_buy_sell_and_capacity": "UNRESOLVED",
       "gas_tax_slippage_execution": "UNRESOLVED",
       "causal_independent_follower_profit": "UNRESOLVED",
-      "P3_strict_frozen_2026_09_13_to_2026_10_13_owner_Meme_swaps": "NOT_RECONCILED_IN_THIS_SIX_CASE_CHECKPOINT",
       "supplemental_nonce_count_2026_09_18_to_2026_10_18": 1258,
       "supplemental_nonce_is_confirmed_meme_swap": false,
       "lag_60s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
       "lag_300s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
       "lag_900s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
-      "source_grade": "POST_HOC_2026_DESCRIPTIVE_REPLAY_NOT_UNTOUCHED"
+      "source_grade": "POST_HOC_2026_DESCRIPTIVE_REPLAY_NOT_UNTOUCHED",
+      "P3_frozen_19_CA_recent_strict_owner_swap": "CONFIRMED_AT_LEAST_ONE_SIGNED_POOL_SWAP",
+      "P3_frozen_latest_verified_swap_utc": "2026-09-15T04:34:39.000Z",
+      "P3_frozen_latest_verified_swap_hash": "0x72cd4f7d896f045680cbbaf70eb2377e4f534d1939df05f68c26ed75535e12f1",
+      "P2_historical_selected_positive_distinct_major_CA_count_NOT_CONFIRMED_CAUSAL_PROFIT": 5,
+      "P2_historical_selected_positive_distinct_major_CA_list": [
+        "0x0a43fc31a73013089df59194872ecae4cae14444",
+        "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+        "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+        "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+        "0xeccbb861c0dda7efd964010085488b69317e4444"
+      ],
+      "P2_stated_source_only_research_qualification": "PRIORITY_REPEAT_NATIVE_OR_QUOTE_POSITIVE_WITH_RECENT_SWAP_NOT_REALIZED_PROFIT"
     },
     {
       "case": "A83B_NIULAI",
@@ -257,13 +299,18 @@
       "same_signal_market_buy_sell_and_capacity": "UNRESOLVED",
       "gas_tax_slippage_execution": "UNRESOLVED",
       "causal_independent_follower_profit": "UNRESOLVED",
-      "P3_strict_frozen_2026_09_13_to_2026_10_13_owner_Meme_swaps": "NOT_RECONCILED_IN_THIS_SIX_CASE_CHECKPOINT",
       "supplemental_nonce_count_2026_09_18_to_2026_10_18": 53452,
       "supplemental_nonce_is_confirmed_meme_swap": false,
       "lag_60s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
       "lag_300s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
       "lag_900s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
-      "source_grade": "POST_HOC_2026_DESCRIPTIVE_REPLAY_NOT_UNTOUCHED"
+      "source_grade": "POST_HOC_2026_DESCRIPTIVE_REPLAY_NOT_UNTOUCHED",
+      "P3_frozen_19_CA_recent_strict_owner_swap": "CONFIRMED_AT_LEAST_ONE_SIGNED_POOL_SWAP",
+      "P3_frozen_latest_verified_swap_utc": "2026-10-12T07:57:23.000Z",
+      "P3_frozen_latest_verified_swap_hash": "0xcfcc99e6a8d6900fa805cf5b8da72761e9d175455914772ebf394778d9d8aed4",
+      "P2_historical_selected_positive_distinct_major_CA_count_NOT_CONFIRMED_CAUSAL_PROFIT": 0,
+      "P2_historical_selected_positive_distinct_major_CA_list": [],
+      "P2_stated_source_only_research_qualification": "RECENT_SWAP_CONFIRMED_ECONOMICS_INCOMPLETE"
     },
     {
       "case": "877AF_MARSCOIN",
@@ -296,13 +343,20 @@
       "same_signal_market_buy_sell_and_capacity": "UNRESOLVED",
       "gas_tax_slippage_execution": "UNRESOLVED",
       "causal_independent_follower_profit": "UNRESOLVED",
-      "P3_strict_frozen_2026_09_13_to_2026_10_13_owner_Meme_swaps": "NOT_RECONCILED_IN_THIS_SIX_CASE_CHECKPOINT",
       "supplemental_nonce_count_2026_09_18_to_2026_10_18": 9106,
       "supplemental_nonce_is_confirmed_meme_swap": false,
       "lag_60s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
       "lag_300s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
       "lag_900s": "NOT_RUN_NO_CONFIRMED_PUBLIC_U",
-      "source_grade": "POST_HOC_2026_DESCRIPTIVE_REPLAY_NOT_UNTOUCHED"
+      "source_grade": "POST_HOC_2026_DESCRIPTIVE_REPLAY_NOT_UNTOUCHED",
+      "P3_frozen_19_CA_recent_strict_owner_swap": "UNRESOLVED_NO_STRICT_POSITIVE_WITNESS",
+      "P3_frozen_latest_verified_swap_utc": null,
+      "P3_frozen_latest_verified_swap_hash": null,
+      "P2_historical_selected_positive_distinct_major_CA_count_NOT_CONFIRMED_CAUSAL_PROFIT": 1,
+      "P2_historical_selected_positive_distinct_major_CA_list": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "P2_stated_source_only_research_qualification": "RECENT_SIGNED_SWAP_UNRESOLVED"
     }
   ],
   "limits": [
