@@ -3,7 +3,8 @@ import json
 import unittest
 from pathlib import Path
 from mission_agent.early.bsc_v2_pit import (
-    PAIR_CREATED, SYNC, MINT, PITInvalid, first_creation_block, verify_bootstrap,
+    PAIR_CREATED, SYNC, MINT, SWAP, PITInvalid, first_creation_block,
+    first_later_reserve_update, verify_bootstrap,
 )
 
 
@@ -24,6 +25,14 @@ class BscV2PitTests(unittest.TestCase):
             first_creation_block(99, 10, 40, count)
         with self.assertRaisesRegex(PITInvalid, 'NOT_YET_CREATED'):
             first_creation_block(102, 10, 40, count)
+
+    def test_first_later_reserve_update_and_real_swap_topic(self):
+        timestamp = lambda b: 100 if b < 27 else (145 if b < 50 else 190)
+        self.assertEqual(first_later_reserve_update(10, 60, 100, timestamp), 27)
+        self.assertIsNone(first_later_reserve_update(10, 20, 100, timestamp))
+        self.assertEqual(SWAP, '0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822')
+        with self.assertRaisesRegex(PITInvalid, 'TIMESTAMP_MISMATCH'):
+            first_later_reserve_update(10, 60, 101, timestamp)
 
     def test_real_creation_and_mint_layout(self):
         factory = '0x'+'1'*40
