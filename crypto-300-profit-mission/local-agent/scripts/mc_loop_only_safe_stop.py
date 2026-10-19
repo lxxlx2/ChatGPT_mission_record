@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+"""Explicit, operator-only stop of the MC LOOP (not Dashboard or V1).
+
+Defaults to dry-run. This STOPS MC evaluation entirely, not just its
+delivery; Dashboard continues serving previously persisted MC observations.
+No old $30 runner is restored or restarted. Never invoke without
+separate user approval of this exact production operation.
+"""
+from __future__ import annotations
+
+import argparse
+import getpass
+import json
+import os
+import plistlib
+import subprocess
+import sys
+from pathlib import Path
+
+
+def stop_plan(home: Path, uid: int, user: str) -> dict:
+    support = home / "Library" / "Application Support" / "FrankMeme"
+    loop_runner = support / "mission-loop.sh"
+    agent = home / "Library" / "LaunchAgents" / f"com.{user}.frank-meme.loop.plist"
+    label = f"com.{user}.frank-meme.loop"
+    if agent.is_symlink() or loop_runner.is_symlink():
+        raise ValueError("LOOP_ONLY_TARGET_SYMLINK_REJECTED")
+    with agent.open("rb") as fh:
+        entry = plistlib.load(fh)
+    if (not isinstance(entry, dict) or entry.get("Label") != label
+            or entry.get("ProgramArguments") != [str(loop_runner)]
+            or not loop_runner.is_file()):
+        raise ValueError("LOOP_ONLY_TARGET_MISMATCH")
+    return {
+        "target_label": f"gui/{uid}/{label}",
+        "bootout_domain": f"gui/{uid}",
+        "loop_plist": str(agent),
+        "dashboard_touched": False,
+        "v1_source_touched": False,
+        "mc_evaluation_will_stop": True,
+        "old_live_policy_not_restarted": True,
+    }
+
+
+def stop_loop_only(plan: dict, *, run=subprocess.run) -> None:
+    # The sequence disables automatic launch BEFORE stopping the running loop.
+    # Never issue bootout/bootstrap/kickstart for the dashboard or V1.
+    run(["launchctl", "disable", plan["target_label"]],
+        check=True, capture_output=True, text=True, timeout=15)
+    run(["launchctl", "bootout", plan["bootout_domain"], plan["loop_plist"]],
+        check=True, capture_output=True, text=True, timeout=15)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--apply", action="store_true",
+                        help="Requires separate explicit user deployment authorization")
+    opts = parser.parse_args()
+    if sys.platform != "darwin":
+        raise SystemExit("MACOS_REQUIRED")
+    plan = stop_plan(Path.home(), os.getuid(), getpass.getuser())
+    print(json.dumps({"mode": "PREVIEW", **plan}, sort_keys=True))
+    if not opts.apply:
+        return
+    if os.environ.get("CONFIRM_MC_LOOP_ONLY_STOP") != "1":
+        raise SystemExit("LOOP_ONLY_STOP_NOT_AUTHORIZED")
+    stop_loop_only(plan)
+    print("MC_LOOP_DISABLED_DASHBOARD_UNTOUCHED")
+    print("NO_AUTOMATIC_ROLLBACK_TO_OLD_LIVE_POLICY")
+
+
+if __name__ == "__main__":
+    main()
