@@ -58,3 +58,17 @@
 ### 独立其它AI单次局部审核任务
 
 仅审核固定新源码SHA `5eeee8c05cd3eaf2b52e779c22759aed2c75aa49` 与冻结基线 `50531188c4336b84f1ecb3b5b432e05aadc06819` 的新资金账本/10项测试/单次工作流，分别核查原T+3m入场1m OPEN与**前一分钟闭合**输入，不得使用入场分钟未来quote/trades；退出仅其**前5分钟已闭合**且1m OPEN价代理；同一币24h锁定、最多10仓、30U/笔、300U现金无借贷、原始信号时间和symbol升降两种预冻结平序，以及删失0/100%假设是否进入未来选择而非入场前提前泄漏；从原Stage162 full SHA+28真实source ZIP和旧269/120原机器Git Blob核验全部事件、98同时WATCH确为0单可选（97现金、1同币）、4种情景每臂结果。复核真正CI #39209690902 的10/10测试与11/11步日志及旧两次fail。不得把历史价代理、原minute的真实来源证明升级为可交易点时盘口或赚钱模型。给出 `APPROVE/REQUEST_CHANGES/BLOCKED`、固定SHA、审查者/模型版本或UNVERIFIED、P0/P1/P2和证据边界；已批准Stage165/166不重审。
+
+## 六、独立Codex固定SHA审查：APPROVE，历史300U资金账本正式结项（2026-10-19）
+
+**独立审核结论 `APPROVE`，P0=0/P1=0/P2=0，无必须修复项。** 由用户提供的Codex独立审核报告：底层准确模型版本`UNVERIFIED`，唯一审核 SHA `5eeee8c05cd3eaf2b52e779c22759aed2c75aa49`，比较基线`50531188c4336b84f1ecb3b5b432e05aadc06819`，在`/tmp/monster-ledger-review-5eeee8c0` detached隔离checkout审查，结束干净，未以PR最新HEAD替代。**从此本报告先前记载的“本资金模块独立审核NOT_DONE”是过去时点记录，当前状态为`APPROVE_FIXED_SHA`。** 本文不追溯改变原作者报告，不代表其它尚未审的研究代码自动获批。
+
+Codex独立读取原Stage162 A/B JSON SHA256 `c30c8b6467b0017b36efc33fadfa2c7853f29f9c7e32993249774269ba4e2ae2`，重新核对28份旧封存来源ZIP、所有445币内层JSON的SHA256与长度、proof与manifest/publisher日级回执，原事件经济Git Blob `62241ce57d5d275da289aa602bfde32070b0b4f2`。**独立提取269 WATCH +120 SETUP，共389个唯一事件ID**，以独立50位Decimal脚本重做之前已冻结的**入场OPEN以前最后一根闭合分钟源、退出OPEN以前五根闭合分钟源、原300U现金/30U整数/10仓/同币24h锁仓**，并没有调用作者新模块`cash_simulation()`直接生成独立结果。符号升/降序×未来删失本金假设0/100%共**8种独立情景的每笔选择、固定结算时刻、假设回款结果**均匹配；资金差值小于`1e-20 USDT`。特别复算`2026-02-06T00:36Z`原98个同步WATCH：**0笔选中、97现金不足、1同币ACAUSDT占用**，四个WATCH情景相同；不得将其61条理论胜者当有限真实可得盈利。
+
+审核细分真实结果，升序下假设未来删失全部返还本金：WATCH选54（33合法后续分钟价代理、21后续删失，6赢27亏），**末余214.407854577…USDT**；SETUP选50（34合法、16删失，12赢22亏），**末余226.807260276…USDT**。若未来删失本金全损，WATCH末余**19.437782865…USDT**、SETUP**27.507186190…USDT**；这两假设**不是真实可成交净收益严格上下界**。特别对照：WATCH现金和事件分母`54+176+34+5=269`，SETUP`50+51+18+1=120`。审核注意214.407854577小数六位四舍五入为214.407855，与旧报告214.407854截断展示略异、不影响账本。
+
+Codex实际复测`python3 -B -m unittest`**10/10**、编译、独立账本与因果反例，固定CLI与真正成功[CI #39209690902](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39209690902)原Artifact**逐字节一致**，JSON SHA256`764c8de3aa2e537e016b73368cc3c8a9333a0c569247d05d0dff5ebd120165ee`；对应CI触发唯一固定SHA且11/11步骤成功。审核也核实[失败CI #39209463828](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39209463828)只是零收益合成单测期待错误，[失败CI #39209534186](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39209534186)为Decimal末位守恒精度，实际八情景全部独立逐笔对账，绝对`1e-8 USDT`守恒容差无掩盖已知资金问题。另确认退出前1毫秒不放仓、恰好固定到期才放仓，改变入场/退出OPEN对应未闭合分钟内量价不会改变准入。
+
+**批准范围仅“已封存历史300U资金账本研究”代码+来源核对/独立复算，不能推出Monster可交易或新511币七日样本外盈利通过。** Codex此次未独立重新向Binance下载全部issuer原日级ZIP及CHECKSUM；当时真实同时刻ask/bid、盘口深度、订单成交、费用层级、历史动态上市PIT/新窗口收益仍`UNVERIFIED`。现金+未结仓位成本标价**不是逐时市场盯市回撤**。
+
+**本资金账本模块固定SHA状态 `RESEARCH_CLOSED_APPROVED`**，不再重复审核/追求旧2月赢家的边界问题；研究主线转向实际新Spot窗口取源、完整市场成员/交易可用性、有限现金真实价格及执行成本。PR#30仍Draft，`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`全部保持。
