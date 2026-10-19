@@ -139,6 +139,14 @@
       "nonzero_raw_reserve_both_sides": 6,
       "first_liquidity_time_known": false,
       "sellability_proven": false
+    },
+    {
+      "kind": "cross-boundary BSC old block timing",
+      "utc_day": "2025-07-01",
+      "all_four_adjacent_boundary_blocks_checked": true,
+      "first_block": 52440287,
+      "last_block": 52555482,
+      "full_original_http_archived": false
     }
   ],
   "verified_historical_v2_log": {
@@ -1205,6 +1213,28 @@
         "not_initial_liquidity": true,
         "not_same_block_swap_or_executable_bid_ask": true,
         "not_usable_as_time_of_pool_creation": true
+      }
+    ],
+    "date_boundary_block_proof": [
+      {
+        "block": 52440286,
+        "utc": "2025-06-30T23:59:59Z",
+        "block_hash": "0x2e8a1affbd60170d3d9f475451abadce440ce915a877dbc3f508aec3de630436"
+      },
+      {
+        "block": 52440287,
+        "utc": "2025-07-01T00:00:00Z",
+        "block_hash": "0x8c9b7ef8652186073e1a27272982ae093f034865fe1b477e24be99d6aea2f433"
+      },
+      {
+        "block": 52555482,
+        "utc": "2025-07-01T23:59:59Z",
+        "block_hash": "0x560ab69c73363efbe173c1866a441c157da3e770277956d016b98a831ca82dcf"
+      },
+      {
+        "block": 52555483,
+        "utc": "2025-07-02T00:00:00Z",
+        "block_hash": "0x702208ec0c16aa8f2d11d43cd3ceb04cee26d16d101d89e9bb445414acb826b6"
       }
     ]
   },
