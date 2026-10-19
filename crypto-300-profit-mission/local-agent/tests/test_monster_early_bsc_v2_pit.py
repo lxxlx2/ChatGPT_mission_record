@@ -61,7 +61,7 @@ class BscV2PitTests(unittest.TestCase):
             verify_bootstrap(**{**args,'pool_logs':[sync,{**mint,'data':'0x'+word(1)+word(20000)}]})
 
 
-    def test_all_24_frozen_factory_creation_records_and_delayed_liquidity_replay(self):
+    def test_all_30_frozen_factory_creation_records_and_delayed_liquidity_replay(self):
         import json
         from pathlib import Path
         from mission_agent.early.bsc_v2_pit import verify_delayed_mint_sync
@@ -71,7 +71,7 @@ class BscV2PitTests(unittest.TestCase):
         data = archive['historical_bsc_v2_append_only_factory_enumeration']
         samples = data['creation_liquidity_source_spotchecks']
         cases = samples['cases']
-        self.assertEqual([x['rank'] for x in cases], list(range(1, 25)))
+        self.assertEqual([x['rank'] for x in cases], list(range(1, 31)))
         originals = {x['factory_index_zero_based']: x for x in data['first36']}
         logs = {x['rank']: x for x in samples['normalized_event_log_samples']}
         initial = 0
@@ -89,7 +89,7 @@ class BscV2PitTests(unittest.TestCase):
                 expected = case['same_tx_erc20_lp_transfer_sync_mint']
                 self.assertEqual(result['initial_quote_liquidity_proven'], expected)
                 initial += bool(expected)
-        self.assertEqual(initial, 20)
+        self.assertEqual(initial, 25)
         delayed = next(x for x in samples['delayed_liquidity_spotchecks']
                        if x['rank'] == 14)
         pool = next(x for x in cases if x['rank'] == 14)['pair']
