@@ -1,0 +1,44 @@
+name: Frank decisions GET 503 isolated diagnostic
+on:
+  push:
+    branches:
+      - ops/frank-decisions-503-readonly-diagnostic-20261019
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  direct-vs-preview-proxy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Exact SHA marker
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "FRANK_DECISIONS_503_DIAGNOSTIC_SHA=$GITHUB_SHA"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile diagnostics without running production paths
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/frank_decisions_readonly_diagnostic.py
+          python -B -m py_compile scripts/frank_pr101_safari_evidence.py
+      - name: Install offline Python dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3
+      - name: Paired localhost direct/proxy fault and artifact tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_decisions_readonly_diagnostic.py tests/test_frank_pr101_safari_evidence.py tests/test_mission_control_dashboard.py
+      - name: All offline mission agent tests including history replay
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests
