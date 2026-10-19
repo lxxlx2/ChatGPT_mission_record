@@ -4,6 +4,13 @@ Updated: 2026-10-19 Asia/Bangkok
 Research status: `READ_ONLY / ACTIVITY_SCREEN_COMPLETE / PNL_REVIEW_INCOMPLETE`
 Source manifest: [449 addresses](../sources/oooooyoung-evm-449-source-snapshot.json), original blob `954f3aba66be21911dd627fa40dd3dd0a9fd1d26`.
 
+## 2026-10-19 新主线第二批实测：双Token正负方向＋56/56补链完成（**最新状态覆盖旧29/37中间值**）
+
+- **P1 核心投资结果 #227：** [BOARDSEAT / BTCLIFE 本钱包同一两种Token闭合证据](../batches/pnl-mainline-row227-two-token-replay-20261019.md)与 [机器原始整数](../evidence/pnl-mainline-row227-two-token-replay-20261019.json) 已使用Alchemy BNB主网只读RPC重新验证。BOARDSEAT买卖执行块BNB净变化 `+0.139871398530549414`，BTCLIFE为 `-0.190058157929590970`，两币合计`-0.050186759399041556 BNB`。Token合约、签名买/授权/卖、授权实际Gas `230045000000000 wei`／次、四个执行块 nonce+1/+2、原始币量完整闭合，均有重放。**BSC交易内部Native回款未单独trace，这不是核定的交易Net PnL，也不是该高频钱包全部PnL。**
+- **P2 低频可靠性审计已完整收尾：** 从初始67个“≤6笔低频候选”，基于固定窗口BNB/Ethereum/Base三链钱包本人签名Nonce **67/67核实**，确认**50个真实三链≤6笔低频钱包**，剔除17个假低频（但原449钱包名单不删除）。原“首次活跃链即停止”的56个目标，**56/56补齐**，剩余需补链**0**。中间补链进度先为11已核实+18/19=29，再为29+7/12=36，最终36+14/25=**50**；剩余17笔数超出阈值。权威名单：[50/17唯一三链低频队列](low-frequency-three-chain-canonical-50-20261019.json) · [最终50钱包业务报告](../batches/low-frequency-three-chain-final-50-20261019.md) · [第二批12](../evidence/low-frequency-crosschain-pass-002-20261019.json) · [最终第三批25](../evidence/low-frequency-crosschain-pass-003-20261019.json)。
+- **主线下一步仅做实际PNL账本：** 本阶段停止地址活动筛查/补链（工作已完成）。从已审闭合买卖且可取真实quote的Token、及50个真正三链低频钱包出发，核历史进入成本/代币实际退出结算/Gas/未平仓残值，分别输出每币盈利亏损与30天/长期已审核部分。只有主动转账或未卖出时标记`NO_VERIFIABLE_CLOSED_TRADE`/`OPEN_POSITION`，绝不凭Nonce或区块余额变化宣称赚钱。**新核准真实交易Net PnL=0，完整钱包30天／长期PnL=0/449，避免误报。**
+- **Git与生产范围：** 本记录跟随正常 Git 文件提交更新同一个Draft PR #97；不合并、不部署、不交易、不启动邮件监控。
+
 ## 2026-10-19 盈利主线纠偏（当前执行优先）
 
 - **唯一下一阶段权威计划：** [盈利审计纠偏与交付门禁](pnl-mainline-recovery-plan-20261019.md)。先恢复真实盈利／亏损Token与钱包30d/长期PnL交付，**不再以237个首页读完充当PnL完成**；449/449活跃度筛查已完成、237/237所选链出账事件首页已读、171个队列位置仍有分页，完整钱包30d/长期PNL为**0/449**。
