@@ -83,7 +83,7 @@ def test_fixture_capture_keyless_matches_runtime_request(monkeypatch):
         return Response(json.dumps(body).encode())
 
     monkeypatch.setattr(fixture.urllib.request,'urlopen',open_url)
-    record=fixture.capture('KEYLESS','Mint111',6,None)
+    record=fixture.capture('KEYLESS','Mint111',6,None,amount_usdc='27.25')
     headers={k.lower():v for k,v in seen[0].header_items()}
     query=urllib.parse.parse_qs(urllib.parse.urlparse(seen[0].full_url).query)
     assert record['access_mode']=='KEYLESS'
