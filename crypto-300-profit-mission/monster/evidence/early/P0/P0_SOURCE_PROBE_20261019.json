@@ -5517,5 +5517,83 @@
     "p0_gate_status": "PARTIAL_NOT_ACCEPTED_FOR_P1_OR_TRADING",
     "source_scope": "2025-07-01 UTC, Pancake BSC V2 Factory frozen first30 eligible pair identities only",
     "reconciliation_note": "30 replayable creation proofs including 25 with creation-transaction Mint/Sync; 5 without immediate initial LP remain in the denominator. 88 locally audited response files are audit stdout, not files inspected by this assistant. Terminal tests on exact new head 26/26 PASS; earlier 24/24 was previous head."
+  },
+  "bsc_v2_p0_mac_first30_swap_window_audit_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_MAC_FIRST30_ARCHIVED_SWAP_DIRECTION_STDOUT_V1",
+    "source_kind": "USER_PASTED_MAC_TERMINAL_STDOUT",
+    "fixed_code_sha": "8c5ed2494f256ab4d172cdf3d986794d9b9d2727",
+    "reported_fast_forward": true,
+    "tests": [
+      {
+        "name": "test_monster_early_bsc_v2_pit.py",
+        "passed": 14,
+        "ran": 14
+      },
+      {
+        "name": "test_monster_early_venue_factory_rpc_roster_probe.py",
+        "passed": 16,
+        "ran": 16
+      }
+    ],
+    "tests_passed_total": 30,
+    "tests_run_total": 30,
+    "cohort_frozen_count": 30,
+    "locally_replayed_creation_count": 30,
+    "creation_same_tx_mint_sync_count": 25,
+    "creation_without_same_tx_mint_sync_count": 5,
+    "original_response_files_audited": 88,
+    "unknown_ranks": [],
+    "observed_quote_to_token_swap_with_same_tx_sync_ranks": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      7,
+      9,
+      10,
+      11,
+      12,
+      13,
+      15,
+      16,
+      17,
+      19,
+      21,
+      22,
+      23,
+      24,
+      25,
+      27,
+      29,
+      30
+    ],
+    "observed_token_to_quote_swap_with_same_tx_sync_ranks": [
+      5,
+      8,
+      28
+    ],
+    "archived_window_no_direction_observed_ranks": [
+      14,
+      18,
+      20,
+      26
+    ],
+    "later_update_source_window_not_archived_ranks": [
+      18,
+      20
+    ],
+    "observed_buys_in_archived_windows_count": 23,
+    "observed_sells_in_archived_windows_count": 3,
+    "not_contiguous_pool_event_history": true,
+    "first_observed_not_proven_first_actual_swap": true,
+    "no_direction_not_proven_untradeable": true,
+    "erc20_transfer_tax_verified_for_8_and_28": false,
+    "source_manifest_retrieved_by_chat": false,
+    "historical_same_notional_buy_then_sell": "NOT_SCORABLE",
+    "gate_24_30_complete_PIT": "NOT_SCORABLE",
+    "gate_18_30_sellability": "NOT_SCORABLE",
+    "meaning": "Local source code rerun, no new RPC. Observed pair Swap direction + earlier same-transaction Sync in limited archived windows; not evidence of user-wallet tradeability. Actual sell tx identifiers for rank 8 and 28 still only in user's local archive, not provided in pasted stdout.",
+    "gate_decision": "P0_PARTIAL_G4_UNKNOWN_G6_NO_GO"
   }
 }
