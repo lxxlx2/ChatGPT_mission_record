@@ -6,7 +6,6 @@ from contextlib import contextmanager
 from http.client import HTTPConnection
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import importlib
-import json
 from pathlib import Path
 import sys
 import threading
@@ -176,3 +175,127 @@ def test_source_approval_sha_is_fixed():
     assert qa.STAGES==("fault","recovery")
     assert qa.API.issubset(qa.base.GET_PATHS)
     assert "/api/cluster-analysis" not in qa.API
+
+
+@pytest.mark.parametrize("stage",qa.STAGES)
+def test_real_http_core_503_after_ready_revokes_old_receipt_and_fresh_attest(
+        tmp_path, stage):
+    """Reviewer P2: HTTP200 at ready, then real next refresh 503 cannot PASS."""
+    token="d"*32
+    receipts={}
+    observed=defaultdict(list)
+    checks={}
+    class ChangingSource(ExistingDashboard):
+        observed=[]
+        degraded=False
+        def do_GET(self):
+            if self.path=="/api/runtime" and type(self).degraded:
+                type(self).observed.append(self.path)
+                data=b'{"error":"temporary runtime unavailable"}'
+                self.send_response(503)
+                self.send_header("Content-Type","application/json")
+                self.send_header("Content-Length",str(len(data)))
+                self.end_headers()
+                self.wfile.write(data)
+                return
+            return super().do_GET()
+    with served(ChangingSource) as source:
+        handler=qa.make_handler(tmp_path,source.server_port,stage,token,receipts,observed,checks)
+        with served(handler) as preview:
+            for endpoint in qa.CORE:
+                assert http_call(preview.server_port,endpoint)[0]==200
+            assert http_call(preview.server_port,"/api/decisions")[0]==(
+                503 if stage=="fault" else 200)
+            ready="/__qa/ready?"+urlencode({
+                "token":token,"stage":stage,"state":qa.EXPECTED[stage]})
+            assert http_call(preview.server_port,ready)[0]==204
+            qa.verify_stage(stage,receipts,observed,checks)
+            nonce="e"*32
+            checks.update({"nonce":nonce,"ack":None,"phase":"before"})
+            check="/__qa/challenge?"+urlencode({"token":token,"stage":stage})
+            status,body=http_call(preview.server_port,check)
+            assert status==200 and __import__("json").loads(body)["nonce"]==nonce
+            attest="/__qa/attest?"+urlencode({
+                "token":token,"stage":stage,"state":qa.EXPECTED[stage],
+                "nonce":nonce})
+            assert http_call(preview.server_port,attest)[0]==204
+            assert checks["ack"]==nonce
+            assert http_call(preview.server_port,attest.replace(nonce,"f"*32))[0]==409
+            ChangingSource.degraded=True
+            assert http_call(preview.server_port,"/api/runtime")[0]==503
+            assert checks["invalidated"] is True
+            with pytest.raises(RuntimeError,match="REQUIRED_FRANK_GET_NOT_200|STAGE_INVALIDATED"):
+                qa.verify_stage(stage,receipts,observed,checks)
+            with pytest.raises(RuntimeError,match="REQUIRED_FRANK_GET_NOT_200|STAGE_INVALIDATED"):
+                qa.confirm_fresh_dom(stage,receipts,observed,checks,"after",timeout=.15)
+            assert http_call(preview.server_port,attest)[0]==409
+            assert not any(code!=200 for endpoint in qa.CORE
+                           for code in observed[endpoint] if endpoint!="/api/runtime")
+
+
+@pytest.mark.parametrize("stage",qa.STAGES)
+def test_each_screenshot_boundary_needs_distinct_new_dom_nonce(tmp_path,stage):
+    from concurrent.futures import ThreadPoolExecutor
+    token="f"*32
+    receipts={}
+    observed=defaultdict(list)
+    checks={}
+    class Source(ExistingDashboard):
+        observed=[]
+    with served(Source) as upstream:
+        handler=qa.make_handler(tmp_path,upstream.server_port,stage,token,receipts,observed,checks)
+        with served(handler) as preview:
+            for endpoint in qa.CORE:
+                assert http_call(preview.server_port,endpoint)[0]==200
+            assert http_call(preview.server_port,"/api/decisions")[0]==(
+                503 if stage=="fault" else 200)
+            assert http_call(preview.server_port,"/__qa/ready?"+urlencode({
+                "token":token,"stage":stage,"state":qa.EXPECTED[stage]}))[0]==204
+            def browser_ack():
+                import time
+                deadline=time.monotonic()+2.0
+                while time.monotonic()<deadline:
+                    current=checks.get("nonce")
+                    if current:
+                        url="/__qa/attest?"+urlencode({
+                            "token":token,"stage":stage,
+                            "state":qa.EXPECTED[stage],"nonce":current})
+                        code,_=http_call(preview.server_port,url)
+                        return code
+                    time.sleep(.01)
+                return 0
+            with ThreadPoolExecutor(max_workers=1) as pool:
+                pending=pool.submit(browser_ack)
+                first=qa.confirm_fresh_dom(stage,receipts,observed,checks,"before",timeout=2)
+                assert pending.result()==204
+            assert http_call(preview.server_port,"/__qa/attest?"+urlencode({
+                "token":token,"stage":stage,
+                "state":qa.EXPECTED[stage],"nonce":"a"*32}))[0]==409
+            def second_ack():
+                import time
+                deadline=time.monotonic()+2
+                while time.monotonic()<deadline:
+                    current=checks.get("nonce")
+                    if current and current!=first:
+                        return http_call(preview.server_port,"/__qa/attest?"+urlencode({
+                            "token":token,"stage":stage,"state":qa.EXPECTED[stage],
+                            "nonce":current}))[0]
+                    time.sleep(.01)
+                return 0
+            with ThreadPoolExecutor(max_workers=1) as pool:
+                pending=pool.submit(second_ack)
+                second=qa.confirm_fresh_dom(stage,receipts,observed,checks,"after",timeout=2)
+                assert pending.result()==204
+            assert second!=first
+            assert checks["phase"]=="after"
+            assert checks["ack"]==second
+
+
+def test_unacknowledged_fresh_dom_cannot_use_old_ready(tmp_path):
+    receipts={"fault":qa.EXPECTED["fault"]}
+    observed=defaultdict(list,{p:[200] for p in qa.CORE})
+    observed["/api/decisions"]=[503]
+    checks={}
+    with pytest.raises(RuntimeError,match="ATTESTATION_TIMEOUT_before_fault"):
+        qa.confirm_fresh_dom("fault",receipts,observed,checks,"before",timeout=.08)
+    assert checks["nonce"] and checks.get("ack") is None
