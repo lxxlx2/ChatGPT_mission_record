@@ -1,0 +1,369 @@
+{
+  "actual_rpc_calls": 0,
+  "archive_quote_observations": [
+    {
+      "amount_out_raw": "900",
+      "bridge_observed_ms": 5000,
+      "mode": "OFFLINE_RPC_FIXTURE_ONLY",
+      "path_amounts_raw": [
+        "1000",
+        "900"
+      ],
+      "quoted_actual_count": 0,
+      "raw_rpc_sha256": "a7ce19a53f6130a6c463df4012d84f2d5f47463c824929e447cf49a23b8652f5",
+      "status": "SIMULATED_ARCHIVE_QUOTE",
+      "usable_as_live_quoted": false
+    }
+  ],
+  "clock_provenance": "INJECTED_OFFLINE_TIMESTAMPS_NOT_PUBLIC_FIRST_SEEN",
+  "e3_actual_count": 0,
+  "events_from_rpc": 3,
+  "finality_rule": "UNRESOLVED_F1_POLICY",
+  "fixture_sha256": "ae3f2ce3726255eb7153cc04ecc36ba0eb35ef2bfb8e18d48e5ba3749ac656da",
+  "independent_denominator": "NOT_MEASURED",
+  "live_control_coverage": "NOT_MEASURED",
+  "mode": "OFFLINE_BRIDGE_FIXTURE_ONLY",
+  "paper_profit_labels": 0,
+  "quoted_actual_count": 0,
+  "receipt_observations": [
+    {
+      "E2_attested": false,
+      "ca_hint": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "confirmations_seen": 4,
+      "event_id": "f0-f3530ec67a59f60767c6de02",
+      "finality": "UNRESOLVED_F1_POLICY",
+      "observed_ms": 2000,
+      "raw_rpc_sha256": "53cef070712389f91df1a199106859f2b5c9cb6d590e2283056f010cc33c5cb0",
+      "reason": "UNVERIFIED_SWAP_ROUTE",
+      "receipt_success": true,
+      "side_hint": "BUY_CANDIDATE",
+      "source": "SAVED_RECEIPT"
+    },
+    {
+      "E2_attested": false,
+      "ca_hint": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "confirmations_seen": 4,
+      "event_id": "f0-6d3d54acf09b4808ae0ab0ef",
+      "finality": "UNRESOLVED_F1_POLICY",
+      "observed_ms": 3000,
+      "raw_rpc_sha256": "68cd3eac44fbfa3c4f8e263621fac55b7b7673004511ede10bc669aaf1dba76a",
+      "reason": "UNVERIFIED_SWAP_ROUTE",
+      "receipt_success": true,
+      "side_hint": "SELL_CANDIDATE",
+      "source": "SAVED_RECEIPT"
+    },
+    {
+      "E2_attested": false,
+      "ca_hint": null,
+      "confirmations_seen": 4,
+      "event_id": "f0-d25db104b4979a748e597903",
+      "finality": "UNRESOLVED_F1_POLICY",
+      "observed_ms": 4000,
+      "raw_rpc_sha256": "aaa368308f38953585241037f1b982de0dbc525cb13ba6e1de0a82a4f5948938",
+      "reason": "RECEIPT_FAILED_OR_ROUTER_NOT_ALLOWED",
+      "receipt_success": false,
+      "side_hint": "UNKNOWN",
+      "source": "SAVED_RECEIPT"
+    }
+  ],
+  "safety": [
+    "SYNTHETIC_TIME",
+    "NO_NETWORK",
+    "NO_TRADE",
+    "NO_REAL_QUOTES",
+    "NO_E2_ATTESTATION"
+  ],
+  "schema": "bsc-f0-offline-rpc-state-bridge-v1",
+  "source_provenance": [
+    {
+      "block": 100,
+      "observed_ms": 1000,
+      "sha256": "0637b40d1052df6abeb42c7a502276a1490a9c019a36c320f1a9b5ff9e42d1b9",
+      "source": "SAVED_FULL_BLOCK"
+    },
+    {
+      "observed_ms": 2000,
+      "sha256": "53cef070712389f91df1a199106859f2b5c9cb6d590e2283056f010cc33c5cb0",
+      "source": "SAVED_RECEIPT",
+      "tx_hash": "0x1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "observed_ms": 3000,
+      "sha256": "68cd3eac44fbfa3c4f8e263621fac55b7b7673004511ede10bc669aaf1dba76a",
+      "source": "SAVED_RECEIPT",
+      "tx_hash": "0x2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    {
+      "observed_ms": 4000,
+      "sha256": "aaa368308f38953585241037f1b982de0dbc525cb13ba6e1de0a82a4f5948938",
+      "source": "SAVED_RECEIPT",
+      "tx_hash": "0x4444444444444444444444444444444444444444444444444444444444444444"
+    },
+    {
+      "observed_ms": 5000,
+      "sha256": "a7ce19a53f6130a6c463df4012d84f2d5f47463c824929e447cf49a23b8652f5",
+      "source": "SAVED_ARCHIVE_ETH_CALL"
+    }
+  ],
+  "state_machine": {
+    "audit_trace": [
+      {
+        "actionable_ms": null,
+        "event_id": "f0-f3530ec67a59f60767c6de02",
+        "first_received_ms": 1000,
+        "group": "WATCHLIST",
+        "ingest_path": "POLL",
+        "kind": "detected",
+        "selected": true,
+        "side": "UNKNOWN"
+      },
+      {
+        "event_id": "f0-f3530ec67a59f60767c6de02",
+        "kind": "excluded_from_l2",
+        "reason": "SIDE_UNKNOWN"
+      },
+      {
+        "actionable_ms": null,
+        "event_id": "f0-6d3d54acf09b4808ae0ab0ef",
+        "first_received_ms": 1000,
+        "group": "CONTROL_RANDOM",
+        "ingest_path": "POLL",
+        "kind": "detected",
+        "selected": true,
+        "side": "UNKNOWN"
+      },
+      {
+        "event_id": "f0-6d3d54acf09b4808ae0ab0ef",
+        "kind": "excluded_from_l2",
+        "reason": "SIDE_UNKNOWN"
+      },
+      {
+        "actionable_ms": null,
+        "event_id": "f0-d25db104b4979a748e597903",
+        "first_received_ms": 1000,
+        "group": "WATCHLIST",
+        "ingest_path": "POLL",
+        "kind": "detected",
+        "selected": true,
+        "side": "UNKNOWN"
+      },
+      {
+        "event_id": "f0-d25db104b4979a748e597903",
+        "kind": "excluded_from_l2",
+        "reason": "SIDE_UNKNOWN"
+      },
+      {
+        "actionable_ms": 2000,
+        "ca": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "event_id": "f0-f3530ec67a59f60767c6de02",
+        "first_received_ms": 1000,
+        "kind": "direction_identified",
+        "side": "BUY"
+      },
+      {
+        "actionable_ms": 3000,
+        "ca": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "event_id": "f0-6d3d54acf09b4808ae0ab0ef",
+        "first_received_ms": 1000,
+        "kind": "direction_identified",
+        "side": "SELL"
+      },
+      {
+        "event_id": "f0-d25db104b4979a748e597903",
+        "kind": "receipt_rejected",
+        "reason": "E1_FAILED_SYNTHETIC"
+      },
+      {
+        "actual_real_request": false,
+        "delta_seconds": 60,
+        "event_id": "f0-f3530ec67a59f60767c6de02",
+        "group": "WATCHLIST",
+        "kind": "quote_request_scheduled",
+        "purpose": "ENTRY",
+        "scheduled_ms": 62000,
+        "source": "SYNTHETIC_ONLY"
+      },
+      {
+        "delta_seconds": 60,
+        "event_id": "f0-f3530ec67a59f60767c6de02",
+        "group": "WATCHLIST",
+        "kind": "quote_replay",
+        "purpose": "ENTRY",
+        "raw_blob_sha256": "9ff2baa503119580b5097aa75f73d2f76de301ce75bd7623be8142703df596e6",
+        "received_ms": 62010,
+        "requested_ms": 62000,
+        "scheduled_ms": 62000,
+        "source": "SYNTHETIC_ONLY",
+        "synthetic_amount_out_raw": "900"
+      },
+      {
+        "actual_real_request": false,
+        "delta_seconds": 60,
+        "event_id": "f0-6d3d54acf09b4808ae0ab0ef",
+        "group": "CONTROL_RANDOM",
+        "kind": "exit_quote_request_scheduled",
+        "purpose": "EXIT",
+        "scheduled_ms": 63000,
+        "source": "SYNTHETIC_ONLY"
+      },
+      {
+        "delta_seconds": 60,
+        "event_id": "f0-6d3d54acf09b4808ae0ab0ef",
+        "group": "CONTROL_RANDOM",
+        "kind": "quote_unavailable",
+        "purpose": "EXIT",
+        "raw_blob_sha256": "6ada3428580f18739c4b5638ad90825f6ed79a84052d1e7837b52059e6173cc3",
+        "reason": "ERROR_RESPONSE"
+      },
+      {
+        "actual_real_request": false,
+        "delta_seconds": 300,
+        "event_id": "f0-f3530ec67a59f60767c6de02",
+        "group": "WATCHLIST",
+        "kind": "quote_request_scheduled",
+        "purpose": "ENTRY",
+        "scheduled_ms": 302000,
+        "source": "SYNTHETIC_ONLY"
+      },
+      {
+        "actual_real_request": false,
+        "delta_seconds": 300,
+        "event_id": "f0-6d3d54acf09b4808ae0ab0ef",
+        "group": "CONTROL_RANDOM",
+        "kind": "exit_quote_request_scheduled",
+        "purpose": "EXIT",
+        "scheduled_ms": 303000,
+        "source": "SYNTHETIC_ONLY"
+      },
+      {
+        "actual_real_request": false,
+        "delta_seconds": 900,
+        "event_id": "f0-f3530ec67a59f60767c6de02",
+        "group": "WATCHLIST",
+        "kind": "quote_request_scheduled",
+        "purpose": "ENTRY",
+        "scheduled_ms": 902000,
+        "source": "SYNTHETIC_ONLY"
+      },
+      {
+        "actual_real_request": false,
+        "delta_seconds": 900,
+        "event_id": "f0-6d3d54acf09b4808ae0ab0ef",
+        "group": "CONTROL_RANDOM",
+        "kind": "exit_quote_request_scheduled",
+        "purpose": "EXIT",
+        "scheduled_ms": 903000,
+        "source": "SYNTHETIC_ONLY"
+      },
+      {
+        "delta_seconds": 300,
+        "event_id": "f0-f3530ec67a59f60767c6de02",
+        "kind": "quote_missing",
+        "purpose": "ENTRY"
+      },
+      {
+        "delta_seconds": 900,
+        "event_id": "f0-f3530ec67a59f60767c6de02",
+        "kind": "quote_missing",
+        "purpose": "ENTRY"
+      },
+      {
+        "delta_seconds": 300,
+        "event_id": "f0-6d3d54acf09b4808ae0ab0ef",
+        "kind": "quote_missing",
+        "purpose": "EXIT"
+      },
+      {
+        "delta_seconds": 900,
+        "event_id": "f0-6d3d54acf09b4808ae0ab0ef",
+        "kind": "quote_missing",
+        "purpose": "EXIT"
+      }
+    ],
+    "backfill_events": 0,
+    "duplicates_skipped": 0,
+    "e3_actual_count": 0,
+    "event_rows": [
+      {
+        "actionable_ms": 3000,
+        "event_id": "f0-6d3d54acf09b4808ae0ab0ef",
+        "evidence": "E0_SEEN_SYNTHETIC",
+        "exit_quote_state": {
+          "300": "NO_QUOTE",
+          "60": "NO_QUOTE",
+          "900": "NO_QUOTE"
+        },
+        "first_received_ms": 1000,
+        "group": "CONTROL_RANDOM",
+        "quote_state": {},
+        "reason": null,
+        "selected": true,
+        "side": "SELL",
+        "source": "SYNTHETIC_ONLY",
+        "state": "SEEN",
+        "trial": true,
+        "wallet": "0x2222222222222222222222222222222222222222"
+      },
+      {
+        "actionable_ms": null,
+        "event_id": "f0-d25db104b4979a748e597903",
+        "evidence": "E0_SEEN_SYNTHETIC",
+        "exit_quote_state": {},
+        "first_received_ms": 1000,
+        "group": "WATCHLIST",
+        "quote_state": {},
+        "reason": "E1_FAILED_SYNTHETIC",
+        "selected": true,
+        "side": "UNKNOWN",
+        "source": "SYNTHETIC_ONLY",
+        "state": "REJECTED",
+        "trial": true,
+        "wallet": "0x4444444444444444444444444444444444444444"
+      },
+      {
+        "actionable_ms": 2000,
+        "event_id": "f0-f3530ec67a59f60767c6de02",
+        "evidence": "E0_SEEN_SYNTHETIC",
+        "exit_quote_state": {},
+        "first_received_ms": 1000,
+        "group": "WATCHLIST",
+        "quote_state": {
+          "300": "NO_QUOTE",
+          "60": "SYNTHETIC_REPLAY_QUOTE",
+          "900": "NO_QUOTE"
+        },
+        "reason": null,
+        "selected": true,
+        "side": "BUY",
+        "source": "SYNTHETIC_ONLY",
+        "state": "SEEN",
+        "trial": true,
+        "wallet": "0x1111111111111111111111111111111111111111"
+      }
+    ],
+    "events": 3,
+    "group_state_counts": {
+      "CONTROL_RANDOM/SELL/SEEN": 1,
+      "WATCHLIST/BUY/SEEN": 1,
+      "WATCHLIST/UNKNOWN/REJECTED": 1
+    },
+    "input_records": 8,
+    "mode": "SYNTHETIC_TRIAL_ONLY_NO_CHAIN_NO_EXECUTION",
+    "paper_profit_labels": 0,
+    "quote_counts": {
+      "NO_QUOTE": 5,
+      "SYNTHETIC_REPLAY_QUOTE": 1
+    },
+    "quoted_actual_count": 0,
+    "safety": [
+      "NO_NETWORK",
+      "NO_TRADE",
+      "NO_NOTIFICATIONS",
+      "NO_REAL_TIME_QUOTE"
+    ],
+    "schema": "bsc-forward-f0-offline-replay-v1",
+    "selected_control_events": 1,
+    "unknown_direction_events": 1
+  },
+  "trial": true
+}
