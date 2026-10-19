@@ -5853,5 +5853,421 @@
     "complete_24_of_30_pit_gate": "NOT_SCORABLE",
     "same_notional_two_sided_18_of_30": "NOT_SCORABLE",
     "status": "SOURCE_PATH_MAC_PASS_P0_PARTIAL"
+  },
+  "bsc_v2_p0_mac_deployment_code_full30_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_MAC_ACTUAL_HISTORICAL_FIRST_CODE_FULL30_V1",
+    "source_kind": "USER_PASTED_MAC_TERMINAL_STDOUT",
+    "code_sha_proven_by_user_in_initial_batch": "15625f373250cc2356ee05ca92e8a321b1bcd565",
+    "subsequent_git_fast_forward": "496a0357ef1fc9709558993ad59f17806bdcf49a",
+    "code_unchanged_since_tested_sha": true,
+    "scope": "2025-07-01 BNB mainnet Pancake V2 frozen 30 original CAs, historical complete-block eth_getCode",
+    "batches": [
+      {
+        "rank_start": 1,
+        "rank_end": 5,
+        "all_five_ranks_status": "BOUNDED_CODE_STATE_REPLAY_PASS_NOT_DEPLOY_TX",
+        "requests_this_invocation": 38,
+        "requested_count": 5
+      },
+      {
+        "rank_start": 6,
+        "rank_end": 10,
+        "all_five_ranks_status": "BOUNDED_CODE_STATE_REPLAY_PASS_NOT_DEPLOY_TX",
+        "requests_this_invocation": 53,
+        "requested_count": 5
+      },
+      {
+        "rank_start": 11,
+        "rank_end": 15,
+        "all_five_ranks_status": "BOUNDED_CODE_STATE_REPLAY_PASS_NOT_DEPLOY_TX",
+        "requests_this_invocation": 57,
+        "requested_count": 5
+      },
+      {
+        "rank_start": 16,
+        "rank_end": 20,
+        "all_five_ranks_status": "BOUNDED_CODE_STATE_REPLAY_PASS_NOT_DEPLOY_TX",
+        "requests_this_invocation": 68,
+        "requested_count": 5
+      },
+      {
+        "rank_start": 21,
+        "rank_end": 25,
+        "all_five_ranks_status": "BOUNDED_CODE_STATE_REPLAY_PASS_NOT_DEPLOY_TX",
+        "requests_this_invocation": 74,
+        "requested_count": 5
+      },
+      {
+        "rank_start": 26,
+        "rank_end": 30,
+        "all_five_ranks_status": "BOUNDED_CODE_STATE_REPLAY_PASS_NOT_DEPLOY_TX",
+        "requests_this_invocation": 74,
+        "requested_count": 5
+      }
+    ],
+    "remaining_five_batches_user_pasted_status": "ALL_PASS",
+    "original_first_batch_tested_unit_tests": {
+      "ran": 33,
+      "passed": 33
+    },
+    "fixed_sample_count": 30,
+    "fully_replayed_code_state_ranks": 30,
+    "preexisting_day_ranks": [
+      1,
+      5,
+      8,
+      15
+    ],
+    "in_day_code_transition_ranks": [
+      2,
+      3,
+      4,
+      6,
+      7,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30
+    ],
+    "in_day_exact_state_transition_count": 26,
+    "preexisting_day_count": 4,
+    "first_code_at_pair_creation_same_block_ranks": [
+      14,
+      16,
+      17,
+      18,
+      26
+    ],
+    "rpc_calls_in_remaining_five_batches": 326,
+    "rpc_calls_all_six_batches": 364,
+    "rank_results": [
+      {
+        "rank": 1,
+        "ca": "0x9ca24ba11b0f472fdd704849113c93ea0bf0d798",
+        "created_pair_block": 52440324,
+        "code_state_status": "RUNTIME_CODE_PREEXISTS_FROZEN_UTC_DAY",
+        "first_nonempty_code_block_in_day": null,
+        "previous_block_empty_when_in_day": null,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 2,
+        "ca": "0xf7c401020fbcf6dd99a72c03652a6a0f827a33ed",
+        "created_pair_block": 52440617,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52440593,
+        "previous_block_empty_when_in_day": 52440592,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 3,
+        "ca": "0xd19ed19b1fae4f1f502b989745352e7b3a5a58a0",
+        "created_pair_block": 52440691,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52440672,
+        "previous_block_empty_when_in_day": 52440671,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 4,
+        "ca": "0xf117696056f233bada548a02466ca2c34a6ab000",
+        "created_pair_block": 52440950,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52440725,
+        "previous_block_empty_when_in_day": 52440724,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 5,
+        "ca": "0x6d75721984a6678dabe2c5e34ed872f9cc2d5a65",
+        "created_pair_block": 52441107,
+        "code_state_status": "RUNTIME_CODE_PREEXISTS_FROZEN_UTC_DAY",
+        "first_nonempty_code_block_in_day": null,
+        "previous_block_empty_when_in_day": null,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": false
+      },
+      {
+        "rank": 6,
+        "ca": "0x797fc281ebb2c50d8c60a9a59c5ee851b2fb4563",
+        "created_pair_block": 52441231,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52441208,
+        "previous_block_empty_when_in_day": 52441207,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 7,
+        "ca": "0x0896b798a2e0ac9039b26a6d87393c5a18fe9f26",
+        "created_pair_block": 52441361,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52441121,
+        "previous_block_empty_when_in_day": 52441120,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 8,
+        "ca": "0xa2c9256d41176d1fa2846f5bdd8935a10a467f00",
+        "created_pair_block": 52442067,
+        "code_state_status": "RUNTIME_CODE_PREEXISTS_FROZEN_UTC_DAY",
+        "first_nonempty_code_block_in_day": null,
+        "previous_block_empty_when_in_day": null,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": false
+      },
+      {
+        "rank": 9,
+        "ca": "0x9b2e8af6a63b696939e2899f24191081f1c67226",
+        "created_pair_block": 52442145,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52442035,
+        "previous_block_empty_when_in_day": 52442034,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 10,
+        "ca": "0xe1b55fd4577992b7d47bb2bdf6e0cbf9e9040c94",
+        "created_pair_block": 52442443,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52442413,
+        "previous_block_empty_when_in_day": 52442412,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 11,
+        "ca": "0x6543a01ad967ddc611c8ff13878848155f5bd706",
+        "created_pair_block": 52442576,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52442436,
+        "previous_block_empty_when_in_day": 52442435,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 12,
+        "ca": "0xce3cdafaaba701b803ad9dfe28bbdbac1694a2c6",
+        "created_pair_block": 52442914,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52442588,
+        "previous_block_empty_when_in_day": 52442587,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 13,
+        "ca": "0x588a75457a1b34c692e64c698e24beab9b00eeec",
+        "created_pair_block": 52443493,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52443473,
+        "previous_block_empty_when_in_day": 52443472,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 14,
+        "ca": "0x1c6a3d4fd98ee13d86ba0ec3336b9ed74293cdca",
+        "created_pair_block": 52443568,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52443568,
+        "previous_block_empty_when_in_day": 52443567,
+        "first_nonempty_block_equals_pair_created_block": true,
+        "creation_quote_side_floor_reached": false
+      },
+      {
+        "rank": 15,
+        "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+        "created_pair_block": 52443863,
+        "code_state_status": "RUNTIME_CODE_PREEXISTS_FROZEN_UTC_DAY",
+        "first_nonempty_code_block_in_day": null,
+        "previous_block_empty_when_in_day": null,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": false
+      },
+      {
+        "rank": 16,
+        "ca": "0x39df206ba75b1a4913f78c8d771c7689296127f4",
+        "created_pair_block": 52444037,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52444037,
+        "previous_block_empty_when_in_day": 52444036,
+        "first_nonempty_block_equals_pair_created_block": true,
+        "creation_quote_side_floor_reached": false
+      },
+      {
+        "rank": 17,
+        "ca": "0x1766a3f7004e596c1c8ba8cdaddd5e304df6549a",
+        "created_pair_block": 52444121,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52444121,
+        "previous_block_empty_when_in_day": 52444120,
+        "first_nonempty_block_equals_pair_created_block": true,
+        "creation_quote_side_floor_reached": false
+      },
+      {
+        "rank": 18,
+        "ca": "0xdd657f7667680d5c78a15087ea1daf02b7092489",
+        "created_pair_block": 52444292,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52444292,
+        "previous_block_empty_when_in_day": 52444291,
+        "first_nonempty_block_equals_pair_created_block": true,
+        "creation_quote_side_floor_reached": false
+      },
+      {
+        "rank": 19,
+        "ca": "0x83cef4c021cf1c14ab3c98cc61a2b9996f95771e",
+        "created_pair_block": 52444404,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52444256,
+        "previous_block_empty_when_in_day": 52444255,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 20,
+        "ca": "0x406396307f78fdbf2fec8c7609aa7958f1191b76",
+        "created_pair_block": 52444471,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52441994,
+        "previous_block_empty_when_in_day": 52441993,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": false
+      },
+      {
+        "rank": 21,
+        "ca": "0x64c715bc55fdc21db6fc5e3452a285a49fbdad78",
+        "created_pair_block": 52444928,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52444843,
+        "previous_block_empty_when_in_day": 52444842,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 22,
+        "ca": "0x33e48f9169cc05d5d4499cc48d0d4530ea29d92c",
+        "created_pair_block": 52445051,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52445026,
+        "previous_block_empty_when_in_day": 52445025,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 23,
+        "ca": "0x2cf3afad093266d3fec6f07a0cf709a6e0b4d8b0",
+        "created_pair_block": 52446070,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52446052,
+        "previous_block_empty_when_in_day": 52446051,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 24,
+        "ca": "0xae3428783ef16c5105332128424cf50e40327174",
+        "created_pair_block": 52446089,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52445813,
+        "previous_block_empty_when_in_day": 52445812,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 25,
+        "ca": "0xad08d3c23b4745937758a1c34abbcabf44821b45",
+        "created_pair_block": 52446208,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52446101,
+        "previous_block_empty_when_in_day": 52446100,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 26,
+        "ca": "0x63e91ffed58d8ba38926d7103d8b45e0ef4dcc86",
+        "created_pair_block": 52446484,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52446484,
+        "previous_block_empty_when_in_day": 52446483,
+        "first_nonempty_block_equals_pair_created_block": true,
+        "creation_quote_side_floor_reached": false
+      },
+      {
+        "rank": 27,
+        "ca": "0x24dab630aedb277dab7a08a7f2632512632a71e2",
+        "created_pair_block": 52446947,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52446842,
+        "previous_block_empty_when_in_day": 52446841,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 28,
+        "ca": "0x7f094036fe1877a87f710ffedaae6858043b355b",
+        "created_pair_block": 52447528,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52444009,
+        "previous_block_empty_when_in_day": 52444008,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": false
+      },
+      {
+        "rank": 29,
+        "ca": "0x0b864b2d88122d62e8a6cc7749775f8151ab8f59",
+        "created_pair_block": 52447627,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52447070,
+        "previous_block_empty_when_in_day": 52447069,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      },
+      {
+        "rank": 30,
+        "ca": "0xeb0944f8c75517537d3fff4344e49ff1d0f3dbf9",
+        "created_pair_block": 52447760,
+        "code_state_status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_nonempty_code_block_in_day": 52447562,
+        "previous_block_empty_when_in_day": 52447561,
+        "first_nonempty_block_equals_pair_created_block": false,
+        "creation_quote_side_floor_reached": true
+      }
+    ],
+    "archive_original_raw_rpc_bytes_available_to_assistant": false,
+    "local_archival_expected_by_cli": true,
+    "receipt_creation_transaction_found": false,
+    "bytecode_construction_trace_verified": false,
+    "public_observer_available_at_verified": false,
+    "complete_24_of_30_pit_gate": "NOT_SCORABLE",
+    "two_way_sellable_18_of_30_gate": "NOT_SCORABLE",
+    "status": "HISTORICAL_FIRST_RUNTIME_CODE_COVERAGE_30_OF_30_PASS_ONLY",
+    "guardrails": "READ_ONLY_NO_TRADE_NO_MERGE_NO_DEPLOY",
+    "interpretation": "Historical post-block runtime code presence and first code state transition are NOT first token deployment transaction, not live source-observed timestamp and not tradeable execution evidence."
   }
 }
