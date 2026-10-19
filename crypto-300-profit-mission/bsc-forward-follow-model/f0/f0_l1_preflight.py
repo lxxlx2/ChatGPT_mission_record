@@ -58,9 +58,38 @@ def decode_code_observation(item: dict, *, height: int, wallet: str) -> dict:
     require(item.get('method') == CODE_METHOD and item.get('params') ==
             [wallet, hex(height)] and item.get('chain_id') == 56,
             'CODE_REQUEST_IDENTITY_MISMATCH')
+    require(type(item.get('id')) is int and item['id'] > 0,
+            'CODE_REQUEST_ID_INVALID')
+    if 'transport_error_code' in item:
+        # A real sender may persist a failed attempt with no RPC envelope.
+        # This is SAVED input, never proof the remote provider billed a call.
+        require(item.get('rpc') is None and item.get('attempted') is True and
+                item['transport_error_code'] in
+                ('NETWORK_TIMEOUT', 'NETWORK_ERROR', 'HTTP_ERROR',
+                 'RESPONSE_TOO_LARGE'), 'TRANSPORT_FAILURE_INVALID')
+        return {
+            'wallet': wallet,
+            'observed_code_state': 'TRANSPORT_FAILED_AT_SAMPLED_BLOCK',
+            'response_sha256': None, 'checked_block': height,
+            'failure_code': item['transport_error_code'],
+            'rpc_error_code': None,
+            'real_eoa_attested': False, 'wallet_live_eligible': False,
+        }
     resp = item.get('rpc')
-    require(isinstance(resp, dict) and resp.get('id') == item.get('id') and
+    require(isinstance(resp, dict) and resp.get('id') == item['id'] and
             resp.get('jsonrpc') == '2.0', 'CODE_RESPONSE_IDENTITY_MISMATCH')
+    if resp.get('error') is not None:
+        err = resp['error']
+        require(isinstance(err, dict) and type(err.get('code')) is int and
+                ('result' not in resp or resp['result'] is None),
+                'MALFORMED_RPC_ERROR_ENVELOPE')
+        return {
+            'wallet': wallet,
+            'observed_code_state': 'RPC_ERROR_AT_SAMPLED_BLOCK',
+            'response_sha256': digest(resp), 'checked_block': height,
+            'failure_code': 'RPC_ERROR', 'rpc_error_code': err['code'],
+            'real_eoa_attested': False, 'wallet_live_eligible': False,
+        }
     code = envelope(resp)
     require(isinstance(code, str) and code.startswith('0x') and
             len(code) % 2 == 0 and all(v in '0123456789abcdefABCDEF' for v in code[2:]),
@@ -71,6 +100,7 @@ def decode_code_observation(item: dict, *, height: int, wallet: str) -> dict:
             else 'HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK',
         'response_sha256': digest(resp),
         'checked_block': height,
+        'failure_code': None, 'rpc_error_code': None,
         'real_eoa_attested': False,
         'wallet_live_eligible': False,
     }
@@ -108,7 +138,11 @@ def audit_offline(cohort: dict, code_snapshot: dict, registry: dict) -> dict:
         }))
     cnt = {state: sum(x['observed_code_state'] == state for x in result)
            for state in ['NOT_CHECKED', 'NO_CODE_AT_SAMPLED_BLOCK',
-                         'HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK']}
+                         'HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK',
+                         'RPC_ERROR_AT_SAMPLED_BLOCK',
+                         'TRANSPORT_FAILED_AT_SAMPLED_BLOCK']}
+    require(sum(cnt.values()) == meta['primary_count'] == 20,
+            'CODE_ATTEMPT_DENOMINATOR_MISMATCH')
     return {
         'schema': SCHEMA,
         'mode': 'OFFLINE_PRECHECK_NOT_LIVE_ELIGIBILITY',
@@ -119,6 +153,13 @@ def audit_offline(cohort: dict, code_snapshot: dict, registry: dict) -> dict:
         'primary_count': meta['primary_count'],
         'per_primary': result,
         'counts': cnt,
+        'saved_getcode_attempts': len(rows),
+        'saved_getcode_rpc_errors': cnt['RPC_ERROR_AT_SAMPLED_BLOCK'],
+        'saved_getcode_transport_failures': cnt['TRANSPORT_FAILED_AT_SAMPLED_BLOCK'],
+        'saved_getcode_success_responses': cnt['NO_CODE_AT_SAMPLED_BLOCK'] +
+            cnt['HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK'],
+        'saved_getcode_not_checked': cnt['NOT_CHECKED'],
+        'saved_attempts_provider_billed': 'UNVERIFIED',
         'source_envelope_sha256': digest(code_snapshot),
         'router_documented_candidates': list(routers),
         'router_registry_source_only': True,
