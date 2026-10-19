@@ -1,6 +1,18 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
 
+## 2026-10-20 P0主线增量：已存原始池事件中的真实Swap方向离线重放
+
+不重复RPC、不新增样本也不新建Stage。在已有`mission_agent/early/bsc_v2_pit.py`添加`summarize_v2_archived_swap_windows`，接入已有Factory原归档`--mode audit`。对冻结30个排名，读取先前本地`*.pool.rpc.json`（建池后的最多10块）与有文件时的`*.later.rpc.json`（首次后续储备更新块），以当时已冻结的token0/token1/quote CA判定Pair `Swap`的**实际池子方向**，与同交易、同池、较早`Sync`作一致性核对；记录原块号、Tx、日志序号和Pool原始金额。多个归档窗口重合时，只计相同事件一次，冲突字节拒绝通过。
+
+新增主报告键：`observed_token_to_quote_swap_with_same_tx_sync_ranks`、`observed_quote_to_token_swap_with_same_tx_sync_ranks`、`later_update_source_window_not_archived_ranks`；每排名`archived_pair_swap_evidence`记录全部被观察的方向/来源窗口。**此程序目前只在既有小窗口回放**，中间区块未连贯扫描，任何未观察到Swap的排名不得被叫作卖不出；实际观察到别人成功卖出某笔也不能推出本用户的固定名义额、实际到账转账税、白名单/黑名单状态、任何历史时刻都可以卖，绝不能借此把18/30升级为PASS。LP代币自己发的`Transfer`也不是目标token实际转账，必须看**token合约**收发或真实完整receipt来补证。
+
+已经把Git中三笔独立历史真实Swap（固定排名#1和#2买入方向、#5卖出方向）作为**离线回归夹具**，测试同交易先`Sync`和后`Swap`，另外测试无对应Sync/重叠窗口/冒名池/不合法quote/缺源时不能越级。注意：Git中既存的这三笔正规化观察是历史事实；**本轮新增的针对用户Mac 88份原RPC正文重放还未运行**，新的30排名买入/卖出结果仍未知，不得据此填写比例或声称本地测试已PASS。
+
+下个最小单次命令只要`git pull --ff-only`、两组单元测试、原`--mode audit`。**不需要重新调用此前1471次RPC，不需要授权付费、钱包签名、现货下单、模型/定时任务/生产部署**。本轮仍仅覆盖2025-07-01 BSC Pancake V2，V3/Four.meme/Alpha母体尚未验证，G0/G4/G6维持原冻结状态。
+
+---
+
 ## 2026-10-20 固定SHA本机验收回执：归档重放已通过（P0业务门槛未通过）
 
 2026-10-20用户回传第二轮**实际Mac终端输出**：`git pull --ff-only`成功、`git rev-parse HEAD=c1cf218093b2ca9a99a90037dd20ee4b6d83527e`；原PIT测试**12/12 PASS**，新增原始归档验证器所在测试**14/14 PASS**，合计**26/26 PASS**。已有私有归档离线执行`--mode audit`得到：
