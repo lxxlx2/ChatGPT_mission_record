@@ -213,6 +213,9 @@ class PermitTests(unittest.TestCase):
             'min_interval_ms':100,
         }
 
+    def test_import_dependency_bound_including_offline_collector(self):
+        self.assertIn('f0_offline_collector.py', DEPENDENCIES)
+
     def test_valid_dry_permit_never_implies_user_approval(self):
         validate_qualification_permit(self.permit,self.now)
 
