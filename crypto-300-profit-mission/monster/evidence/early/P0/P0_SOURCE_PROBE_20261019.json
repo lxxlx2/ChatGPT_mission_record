@@ -6724,5 +6724,101 @@
     "first_public_after_mint_execution": "UNVERIFIED",
     "same_notional_sellability": "UNVERIFIED",
     "full_P0_gates_still": "NOT_SCORABLE"
+  },
+  "bsc_v2_p0_mac_30_rank_distinct_transaction_activity_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_FROZEN30_ACTUAL_MAC_DISTINCT_TX_REPLAY_V1",
+    "source": "USER_UPLOADED_MAC_TERMINAL_OUTPUT",
+    "fixed_code_sha": "3e897bfe89a54f3945dc51df70076eaa13cbc4b4",
+    "unit_tests": [
+      {
+        "pattern": "test_monster_early_bsc_v2_pit.py",
+        "pass": 18,
+        "run": 18
+      },
+      {
+        "pattern": "test_monster_early_venue_factory_rpc_roster_probe.py",
+        "pass": 18,
+        "run": 18
+      }
+    ],
+    "tests_total": 36,
+    "tests_passed": 36,
+    "archive_replay_status": "LOCAL_FROZEN_30_CREATION_REPLAY_PASS",
+    "original_response_files_audited": 88,
+    "fully_replayed_creation_count": 30,
+    "same_tx_initial_lp_count": 25,
+    "without_same_tx_initial_lp_count": 5,
+    "all_30_ranks_reported": true,
+    "ranks_with_swap_events": 26,
+    "ranks_without_swap_in_saved_windows": [
+      14,
+      18,
+      20,
+      26
+    ],
+    "observed_buy_swap_events": 150,
+    "observed_distinct_buy_transactions": 23,
+    "observed_sell_swap_events": 4,
+    "observed_distinct_sell_transactions": 4,
+    "observed_above_floor_buy_ranks": 22,
+    "observed_above_floor_distinct_buy_transactions": 22,
+    "observed_above_floor_sell_transactions": 0,
+    "qualified_later_block_buy_ranks": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      7,
+      9,
+      10,
+      11,
+      12,
+      13,
+      19,
+      21,
+      22,
+      23,
+      24,
+      25,
+      27,
+      29,
+      30
+    ],
+    "qualified_later_block_buy_distinct_transactions": 20,
+    "atomic_mint_and_buy_same_tx_ranks": [
+      16,
+      17
+    ],
+    "rank16": {
+      "buy_swap_events": 65,
+      "buy_distinct_txs": 1,
+      "qualified_later_block_buy_distinct_txs": 0,
+      "source_status": "SAME_TX_NOT_PUBLICLY_REACTABLE_AFTER_SYNC"
+    },
+    "rank17": {
+      "buy_swap_events": 64,
+      "buy_distinct_txs": 1,
+      "qualified_later_block_buy_distinct_txs": 0,
+      "source_status": "SAME_TX_NOT_PUBLICLY_REACTABLE_AFTER_SYNC"
+    },
+    "shallow_buy_rank": [
+      15
+    ],
+    "shallow_sell_ranks": [
+      5,
+      8,
+      28
+    ],
+    "rank8_sell_swaps": 2,
+    "rank8_sell_distinct_transactions": 2,
+    "new_trading_activity_beyond_saved_windows": "UNVERIFIED",
+    "real_public_available_at": "UNVERIFIED",
+    "independent_trade_success_unverified_for_20": true,
+    "historical_two_leg_same_notional_18_of_30": "NOT_SCORABLE",
+    "complete_pit_24_of_30": "NOT_SCORABLE",
+    "archived_raw_http_bytes_independently_read_by_assistant": false,
+    "no_wallet_transactions_executed": true,
+    "interpretation": "150 BUY Swap events are 23 distinct transaction hashes across the sampled pools, not unique humans or executable public entry signals; 129 events on ranks16+17 are only two atomic Mint transactions. The 20 remaining above-floor later-block transaction candidates are historical examples only and not confirmed available_at or sellable at fixed notional."
   }
 }
