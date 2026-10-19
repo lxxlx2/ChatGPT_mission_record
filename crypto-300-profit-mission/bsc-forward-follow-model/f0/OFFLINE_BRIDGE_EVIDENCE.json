@@ -1,0 +1,29 @@
+{
+  "actual_rpc_calls": 0,
+  "approved_parents": {
+    "PR118": "78e4d26ff7cd1074b7c8de44109b4356e5d0409d",
+    "PR120": "c0a6dca08a57316f70ca7b7e1358c89e262918f4"
+  },
+  "e3_actual_count": 0,
+  "git_candidate_files_sha256": {
+    "BRIDGE_ACCEPTANCE.md": "b490f844363d640ef569212172aaf5d93da08d087e70855cd37cce7809a98b97",
+    "HANDOFF.md": "0e7d62962231297acf034203a0abdfb56f66646f1b4f01a134751101cc9c1a00",
+    "f0_rpc_bridge.py": "6a89591df168c4798c9744576a8b5a91334f027f57b77099d152b5a594760293",
+    "fixture_bridge_report.json": "2c588f502b02e5240f97f8f2eddf679ad18b593b918ef3a8be90c1cc528f194e",
+    "fixtures/rpc_bridge_replay.json": "ae3f2ce3726255eb7153cc04ecc36ba0eb35ef2bfb8e18d48e5ba3749ac656da",
+    "tests/test_f0_rpc_bridge.py": "def1c6028e43adc44157a24b4164e3bfee89cdb932267ebe9f1dd4be85d9e561"
+  },
+  "live_f0_authorized": false,
+  "paper_profit_labels": 0,
+  "quoted_actual_count": 0,
+  "schema": "bsc-forward-f0-bridge-offline-evidence-v1",
+  "status": "SYNTHETIC_ONLY_PENDING_OTHER_AI_REVIEW",
+  "test_counts": {
+    "existing_rpc_parser": 18,
+    "legacy_state_machine": 36,
+    "new_bridge": 26,
+    "passed": 80,
+    "total": 80
+  },
+  "test_stdout_tail": "----------------------------------------------------------------------\nRan 80 tests in 0.839s\n\nOK"
+}
