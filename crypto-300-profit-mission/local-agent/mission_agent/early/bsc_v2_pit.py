@@ -156,3 +156,36 @@ def verify_delayed_mint_sync(*, pool, creation_block, update_block, pool_logs):
             'reserve0_raw': str(a), 'reserve1_raw': str(b),
             'first_trade_or_executable_t_entry': 'UNRESOLVED', 'sell_path': 'UNKNOWN'}
 
+def v2_amount_out_from_reserves(amount_in, reserve_in, reserve_out, fee_bps=25):
+    """Pancake V2 constant-product *quote* (0.25% fee); never a transfer-tax simulation."""
+    if any(type(v) is not int for v in (amount_in, reserve_in, reserve_out, fee_bps)):
+        raise PITInvalid('STATIC_QUOTE_REQUIRES_INTEGER_RAW_UNITS')
+    if min(amount_in, reserve_in, reserve_out) <= 0 or not 0 <= fee_bps < 10000:
+        raise PITInvalid('STATIC_QUOTE_INVALID_AMOUNT_RESERVES_OR_FEE')
+    effective = amount_in * (10000 - fee_bps)
+    out = (effective * reserve_out) // (reserve_in * 10000 + effective)
+    if out <= 0 or out >= reserve_out:
+        raise PITInvalid('STATIC_QUOTE_DUST_OR_RESERVE_EXHAUSTION')
+    return out
+
+
+def v2_static_two_way_quote(quote_amount_raw, quote_reserve_raw, token_reserve_raw,
+                            fee_bps=25):
+    """Two independent quotes against the SAME unmodified historical reserves.
+
+    The return is NOT sequential roundtrip proceeds, not a tax/honeypot check,
+    not a trading instruction, and never promotes a venue to sellable evidence.
+    """
+    token_out = v2_amount_out_from_reserves(
+        quote_amount_raw, quote_reserve_raw, token_reserve_raw, fee_bps)
+    quote_back = v2_amount_out_from_reserves(
+        token_out, token_reserve_raw, quote_reserve_raw, fee_bps)
+    return {'status': 'TWO_STATIC_QUOTES_ON_UNCHANGED_HISTORICAL_RESERVES',
+            'quote_in_raw': str(quote_amount_raw),
+            'indicative_token_out_raw': str(token_out),
+            'reverse_quote_back_raw': str(quote_back),
+            'fee_bps_per_quote': fee_bps,
+            'historical_token_transfer_tax': 'UNKNOWN',
+            'sequential_roundtrip_pnl': 'NOT_COMPUTED',
+            'historical_sell_executable': 'UNVERIFIED'}
+
