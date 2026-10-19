@@ -1,0 +1,102 @@
+name: Monster original 269 WATCH 120 SETUP funded 300U preclosed-source economic audit
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-mainline-300u-preclosed-finite-capital-once.yml'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_mainline_preclosed_300u_cash_ledger.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_mainline_preclosed_300u_cash_ledger.py'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster-300u-original269-120-preclosed-one-shot
+  cancel-in-progress: false
+jobs:
+  original_market_funded_300u_research:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test causal input and 10-position cash-conservation before reading original sources
+        run: |
+          set -eu
+          python3 -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_mainline_preclosed_300u_cash_ledger.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_mainline_preclosed_300u_cash_ledger.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_mainline_preclosed_300u_cash_ledger.py
+      - name: Reacquire ONLY original archived publisher-proven 28 February source shards and full A-B
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster300u_originalAB
+          gh run download 39068290868 --repo lxxlx2/ChatGPT_mission_record --dir /tmp/monster300u_originalAB --name monster162-real445-first-valid-5m-fair8-ab-once-v4
+          printf '%s  %s\n' c30c8b6467b0017b36efc33fadfa2c7853f29f9c7e32993249774269ba4e2ae2 /tmp/monster300u_originalAB/monster162_actual_445_fair8_ab.json | sha256sum -c -
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_archive_replay_runner.py collect --source-dir /tmp/monster300u_original28 --audit /tmp/monster300u_original28_receipts.json
+      - name: Full-source funded cash comparison on the original real 269 WATCH and 120 SETUP
+        run: |
+          set -eu
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_mainline_preclosed_300u_cash_ledger.py --stage162-full /tmp/monster300u_originalAB/monster162_actual_445_fair8_ab.json --old-watch-setup-economics crypto-300-profit-mission/monster/evidence/monster_watch_vs_setup_original269_120_same_source_economics_v1.json --original28-source-dir /tmp/monster300u_original28 --out /tmp/monster300u_preclosed_full_economics.json
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          j=json.loads(Path('/tmp/monster300u_preclosed_full_economics.json').read_text())
+          assert j['schema']=='MONSTER_MAINLINE_ORIGINAL269_120_300U_PRE_ENTRY_CLOSED_1M_CASH_V1'
+          assert j['eligible_signal_groups']=={'WATCH':269,'SETUP':120}
+          assert len(j['original_source_proof_28_shards'])==28
+          for name,n in (('WATCH',269),('SETUP',120)):
+              v=j[name]
+              assert v['historical_signals_total']==n
+              assert len(v['all_original_events_new_preclosed_source'])==n
+              assert len(v['funded_300u_scenarios'])==4
+              for scenario in v['funded_300u_scenarios'].values():
+                  s=scenario['summary']
+                  assert s['total_signals']==n
+                  assert s['initial_cash_usdt']=='300'
+                  assert s['max_simultaneous_30usdt_lots']==10
+                  assert s['maximum_concurrent_lots']<=10
+                  assert s['selected_source_evaluable']+s['selected_future_censored_proxy']==s['selected_count']
+                  assert s['selected_count']+s['skipped_10_slots']+s['skipped_cash']+s['skipped_same_symbol']+s['entry_source_rejected']==n
+                  assert len(scenario['event_decisions'])==n
+                  assert len(scenario['assumed_settlements'])==s['selected_count']
+          assert j['G4']=='UNKNOWN' and j['G6']=='NO_GO'
+          assert j['NO_MERGE'] and j['NO_DEPLOY'] and j['NO_GMAIL'] and j['NO_TRADE']
+          assert j['real_executable_net_profit']=='UNVERIFIED'
+          print('MONSTER_300U_CLOSED_PRIOR_1MIN_AND_TEN_SLOTS_REAL_COHORT_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-original269-120-funded-300u-preclosed-causing-research-only
+          path: |
+            /tmp/monster300u_preclosed_full_economics.json
+            /tmp/monster300u_original28_receipts.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Preserve 269 and 120 source bound exact result in the same draft PR
+        run: |
+          set -eu
+          target=crypto-300-profit-mission/monster/evidence/monster_mainline_300u_preclosed_funded_cash_original269_120_v1.json
+          branch=research/monster-v4-local-discovery-20261010
+          test ! -e "$target"
+          cp /tmp/monster300u_preclosed_full_economics.json "$target"
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive historical 300U funded preclosed-only 269 WATCH 120 SETUP ledger"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER_300U_FROZEN_SOURCE_RESULT_ALREADY_EXISTS_NO_OVERWRITE
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_mainline_preclosed_300u_cash_ledger.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_mainline_preclosed_300u_cash_ledger.py .github/workflows/monster-v4-mainline-300u-preclosed-finite-capital-once.yml crypto-300-profit-mission/monster/evidence/monster_watch_vs_setup_original269_120_same_source_economics_v1.json crypto-300-profit-mission/local-agent/scripts/monster_v4_watch_vs_setup_incremental_value.py; do
+            test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo MONSTER_300U_INPUT_OR_CODE_DRIFT; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER_300U_NO_BID_ASK_FILL_NO_DEPLOY_OR_MAIL_OR_TRADE
