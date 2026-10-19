@@ -50,5 +50,7 @@
   "actual_e3": 0,
   "actual_quoted": 0,
   "paper_profit_labels": 0,
-  "permission_state": "NO_RUN / PRIOR_FOUR_CALL_SMOKE_AUTHORIZATION_SPENT"
+  "permission_state": "NO_RUN / PRIOR_FOUR_CALL_SMOKE_AUTHORIZATION_SPENT",
+  "test_log_repo_path": "crypto-300-profit-mission/bsc-forward-follow-model/f0/fixtures/l1_unittest_154.log",
+  "test_log_type": "EXECUTED_LOCAL_UNITTEST_OUTPUT_SAVED_AND_SHA256_VERIFIABLE"
 }
