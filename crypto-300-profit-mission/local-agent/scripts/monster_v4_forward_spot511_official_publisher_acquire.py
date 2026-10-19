@@ -191,7 +191,7 @@ def main():
     roster=all_roster
     if a.retry_unicode_from is not None:
         raw=a.retry_unicode_from.read_bytes()
-        blob=hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\\0"+raw).hexdigest()
+        blob=hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest()
         if blob!=PREVIOUS_1018_REAL_RECEIPTS_BLOB:
             raise ValueError("MONSTER_PUBLISHER_PREVIOUS_RECEIPTS_BLOB_DRIFT")
         previous=json.loads(raw)
