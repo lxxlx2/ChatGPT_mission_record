@@ -13,6 +13,7 @@ import getpass
 import json
 import os
 import plistlib
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -42,13 +43,54 @@ def stop_plan(home: Path, uid: int, user: str) -> dict:
     }
 
 
-def stop_loop_only(plan: dict, *, run=subprocess.run) -> None:
+def _registered_loop_pid(plan: dict, *, run) -> int:
+    """Read-only proof of which launchd-managed loop is about to be stopped."""
+    result = run(["launchctl", "print", plan["target_label"]],
+                 check=False, capture_output=True, text=True, timeout=15)
+    if result.returncode != 0:
+        raise RuntimeError("MC_LOOP_PRESTOP_LAUNCHCTL_STATE_UNKNOWN")
+    # Must capture one concrete managed process, not merely a launchd label.
+    match = re.search(r"(?m)^\s*pid = ([1-9][0-9]*)\s*$", result.stdout or "")
+    if match is None:
+        raise RuntimeError("MC_LOOP_PRESTOP_PID_UNKNOWN")
+    return int(match.group(1))
+
+
+def _assert_loop_absent(plan: dict, *, old_pid: int, run, probe_pid) -> None:
+    """Never report a stop as successful while launchd or its old PID remains."""
+    result = run(["launchctl", "print", plan["target_label"]],
+                 check=False, capture_output=True, text=True, timeout=15)
+    diagnostic = (result.stderr or "") + (result.stdout or "")
+    if result.returncode == 0:
+        raise RuntimeError("MC_LOOP_STILL_REGISTERED_AFTER_BOOTOUT")
+    if "Could not find service" not in diagnostic:
+        raise RuntimeError("MC_LOOP_POSTSTOP_LAUNCHCTL_READBACK_UNKNOWN")
+    try:
+        probe_pid(old_pid, 0)  # Signal 0 only; never sends a terminating signal.
+    except ProcessLookupError:
+        return
+    except PermissionError as exc:
+        raise RuntimeError("MC_LOOP_POSTSTOP_PID_PERMISSION_UNKNOWN") from exc
+    raise RuntimeError("MC_LOOP_ORIGINAL_PID_STILL_RUNNING_OR_REUSED")
+
+
+def stop_loop_only(plan: dict, *, run=subprocess.run, probe_pid=os.kill) -> dict:
     # The sequence disables automatic launch BEFORE stopping the running loop.
     # Never issue bootout/bootstrap/kickstart for the dashboard or V1.
-    run(["launchctl", "disable", plan["target_label"]],
-        check=True, capture_output=True, text=True, timeout=15)
-    run(["launchctl", "bootout", plan["bootout_domain"], plan["loop_plist"]],
-        check=True, capture_output=True, text=True, timeout=15)
+    old_pid = _registered_loop_pid(plan, run=run)
+    try:
+        run(["launchctl", "disable", plan["target_label"]],
+            check=True, capture_output=True, text=True, timeout=15)
+        run(["launchctl", "bootout", plan["bootout_domain"], plan["loop_plist"]],
+            check=True, capture_output=True, text=True, timeout=15)
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+        # A successful disable followed by failed bootout may leave a LIVE
+        # process. The caller must not treat a partial command sequence as a stop.
+        raise RuntimeError("MC_LOOP_STOP_PARTIAL_OR_UNKNOWN_READBACK_REQUIRED") from exc
+    _assert_loop_absent(plan, old_pid=old_pid, run=run, probe_pid=probe_pid)
+    return {"status": "MC_LOOP_STOP_VERIFIED",
+            "old_pid": old_pid, "dashboard_touched": False,
+            "v1_source_touched": False}
 
 
 def main() -> None:
@@ -64,7 +106,8 @@ def main() -> None:
         return
     if os.environ.get("CONFIRM_MC_LOOP_ONLY_STOP") != "1":
         raise SystemExit("LOOP_ONLY_STOP_NOT_AUTHORIZED")
-    stop_loop_only(plan)
+    proof = stop_loop_only(plan)
+    print(json.dumps(proof, sort_keys=True))
     print("MC_LOOP_DISABLED_DASHBOARD_UNTOUCHED")
     print("NO_AUTOMATIC_ROLLBACK_TO_OLD_LIVE_POLICY")
 
