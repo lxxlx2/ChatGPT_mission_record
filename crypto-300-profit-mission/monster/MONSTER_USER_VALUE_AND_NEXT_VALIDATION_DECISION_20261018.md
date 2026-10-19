@@ -1,5 +1,19 @@
 # Monster — 以真实赚钱价值为目标的阶段决策和下一次有证据的验证（2026-10-18）
 
+## 2026-10-19：新方向唯一入口（旧正文冻结归档）
+
+**从本索引提交之后，本文件停止追加新研发方案、Stage报告或单点修复结论。** 下方历史报告、2026-10-19旧总体提议及其源证据保持原文，供审计和回看，不作为当前可执行模型或付费/部署授权。只有以下三个新版对象作为之后Monster早期链上研究设计的入口：
+
+- [MONSTER_EARLY_ARCHITECTURE_CONTRACT_V1.md](MONSTER_EARLY_ARCHITECTURE_CONTRACT_V1.md) — BSC优先、数据源Plan A/B/C、证据归档、可卖出10x、as-of时钟、止损、复用与Phase验收的总体架构；状态`ARCHITECTURE_REVIEW_BASELINE`。
+- [schemas/monster_early_records_v1.schema.json](schemas/monster_early_records_v1.schema.json) — tokens、events、eligibility、outcomes四个机器schema。**尚未形成实际P0真实数据/测试通过声明**。
+- [adr/ADR-001-research-budget-power-and-decision-governance-20261019.md](adr/ADR-001-research-budget-power-and-decision-governance-20261019.md) — 研究预算零付费（Plan C须用户另行明确授权）、15个10x独立正例仅为必要非充分功效下限、合同变更只走编号ADR。后续变更用新ADR supersede，不在此处继续堆正文。
+
+原 [30例已冻结源探针](MONSTER_EARLY_VENUE_30_PIT_SOURCE_PROBE_BUDGET_AND_STOP_20261019.md) 是P0既有研究边界，不修改其原样本和2026-11-02截止及2次CI预算。**本次只完成架构/数据契约，不意味着用户批准10周自动运行或已经获得可用BSC来源。** `NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`不变。
+
+---
+
+
+
 ## 当前产品研发总纲（2026-10-19，PROPOSED，不覆盖原历史冻结合同）
 
 **适用范围：仅 Monster 妖币早期发现 PR #30，不是 BSC 钱包跟单 PR #40，也不是449钱包资产审计 PR #97。** 这段是用户转交Claude十周重设计方案后的项目级可行性、复用和门禁审查；目的是先统一整个产品，不先动代码、合并、Mac安装、通知、定时或交易。待用户明确接受后才能把它变更为新的正式Phase参数冻结。其余本文现存历史原文、已冻结样本、审核结论和2025-07-01 Base覆盖探针**保持不变**。
