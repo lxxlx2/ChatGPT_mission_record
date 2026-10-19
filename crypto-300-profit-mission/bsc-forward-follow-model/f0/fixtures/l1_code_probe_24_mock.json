@@ -1,0 +1,192 @@
+{
+  "mode": "OFFLINE_SYNTHETIC_ONLY",
+  "responses": [
+    {
+      "method": "eth_chainId",
+      "params": [],
+      "result": "0x38"
+    },
+    {
+      "method": "eth_blockNumber",
+      "params": [],
+      "result": "0x64"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000001",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000002",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000003",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000004",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000005",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000006",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000007",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000008",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000009",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x000000000000000000000000000000000000000a",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000010",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000011",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000012",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000013",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000014",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000015",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000016",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000017",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000018",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x0000000000000000000000000000000000000019",
+        "0x64"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0x1a0a18ac4becddbd6389559687d1a73d8927e416",
+        "0x64"
+      ],
+      "result": "0x6000"
+    },
+    {
+      "method": "eth_getCode",
+      "params": [
+        "0xd9c500dff816a1da21a48a732d3498bf09dc9aeb",
+        "0x64"
+      ],
+      "result": "0x6000"
+    }
+  ],
+  "trial": true
+}
