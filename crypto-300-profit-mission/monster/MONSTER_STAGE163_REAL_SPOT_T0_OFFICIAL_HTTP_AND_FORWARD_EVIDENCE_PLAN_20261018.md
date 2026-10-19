@@ -353,3 +353,18 @@ Codex独立复审固定旧SHA `456111143f5ea1ac2e32103f71ea50dc5a27d078` 判定 
 
 为避免用户亲手下载8个分散文件，又新增[一条命令独立审核器](../local-agent/scripts/monster_v4_first518_independent_audit_from_shards.py)（初始SHA `94f15a318d6a2a02d6da9e05e54b0c5a75ead79e`）：只会在审核者自己的隔离checkout明确运行时通过`gh`分别下载8小源包+原515，核对manifest、原issuer SHA、再由自己执行518轮D0/D1 SQLite和8+8经济，落地完整源/日志/结果。**截至作者对GitHub的检查，该外部Codex尚未使用新8包独立运行，因此原审查仍BLOCKED；新脚本提交不自动等于已真实Mac验收通过。** 仅建议对该新增传输路径进行一次定向独立复核；下一业务主线仍为G0两Unicode拒绝的健康展示、D2真实当时买卖盘证据与七日成熟后的3360轮，负收益不得粉饰。绝不自动创建定时任务/购买/部署/Gmail/Frank变更。
 
+
+## 三十七、Codex 真实独立APPROVE与原509/511场所健康的用户可见诊断（2026-10-19）
+
+**复现阻断正式关闭，策略盈利门槛仍失败或未知。** 用户提供的其他AI Codex在独立detached固定 `94f15a318d6a2a02d6da9e05e54b0c5a75ead79e` 上，前台自下载8份原Publisher分片（加独立Unicode4和Oct18原515份），用自己的校验脚本逐个验证**1533/1533个官方ZIP/CHECKSUM**与Git收据并真正运行518轮D0/FIFO8 D1、8 WATCH/8 SETUP、两套经济结果及同一SQLite运营查询，全字段与原作者一致，单测28/28通过，模型精确版本`UNVERIFIED`。**明确结论`APPROVE`仅限该固定SHA的独立原始复现/研究源码范围**。四个非阻断P2（清单信任链、`python -O`可能跳过schema assert、两次后台运行不保留退出日志、Spot人口509/511和Futures无数据）保留；不因它们循环重复审查原已重现来源。该用户传入的外部证据已单独[正式归档](MONSTER_FIRST518_SPLIT8_CODEX_INDEPENDENT_APPROVE_SCOPE_20261019.md)。新查询器的后续代码不自动继承先前SHA审查。
+
+**回到真实产品问题而不是增加审核回合：** 原生产`monster_v4_shadow.observe_snapshot`对两个Unicode名称拒绝，源全511仍如实记录、有效509；原查询器只给`STALE_OR_DEGRADED`，不告诉用户行情虽然历史观测仅0秒却因为**人口不全而不可使用**，也把合法已捕获的WATCH事件状态覆盖成`SOURCE_STALE`，不利于检查提前发现情况。因此本轮**只改现有read-only** `local-agent/scripts/monster_v4_opportunity_snapshot.py`，原生产D0、D1门槛/队列、源归档、原收益结果不修改：
+1. 保留原`source.state`和`signal`两项fail-closed兼容行为，新增`source.diagnostic_state`、`health_reason_codes`、`coverage_pct_of_recorded_population`、`recorded_invalid_rows`与`full_population_scanned`，区分`NO_POLL / POLL_STALE / PERSISTED_SOURCE_DEGRADED / RECENT_PARTIAL_POPULATION / RECENT_FULL_POPULATION`，不冒充全市场健康。
+2. 新`event_lifecycle_independent_of_source_health`独立展示原已保存的WATCH、SETUP、过期、撤销和D1错过时限：即使来源人口部分失败，也不抹掉已发生事件，且不擅自恢复原`signal`或给交易能力。
+3. 每条增加`decision_blocker_codes`（例如`SIGNAL_EXPIRED`、`SOURCE_POPULATION_PARTIAL`、`D2_BID_ASK_DEPTH_NOT_CAPTURED`、`REAL_EXECUTABLE_NET_PNL_UNVERIFIED`）、全窗口阻断原因计数，便于用户知道为什么不能跟进。无真实历史买卖档、资金、退出来源时依旧`RESEARCH_REVIEW_ONLY_NO_BUY`。
+4. 用生产D0实际三行（含两个Unicode真实形式）创建的SQLite作回归，再用已归档原511×3天官方源完整回放。新增3项测试验证实源人口只有部分有效但单币Watch仍存在、过期不因人口部分消失、全覆盖时报健康且不宣称可买。
+
+本轮一次性原始CI [#39239666814](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39239666814)，固定触发SHA `485731df2756f593934bbfecde681ab8ef9fce73`，**12/12原桥接/经济 + 19/19读写器原Schema回归 = 31/31测试PASS，12/12步骤SUCCESS**。再次在隔离Runner中校验原1533发行方ZIP/CHECKSUM、518轮D0/D1、原全16事件与之前完全一致并从原SQLite直接查询。真实新报告 [`monster_first518_operator_partial509_511_real_518_no_buy_diagnostics_v1.json`](evidence/monster_first518_operator_partial509_511_real_518_no_buy_diagnostics_v1.json)，Git Blob `29593f48101bddfc7c1bb8554db8661ffd0fb880`，作者侧来源Runner归档commit `3f2ef5d69e39bfd1bf1df0b083009a7c773d1d46`，Artifact `12180353275`。全8条`EXPIRED`、D2`NOT_CAPTURED`，5种真实阻断都为8/8，最后原historical observation at 2026-10-18T23:57Z时Spot`coverage=509/511=99.6086%`、age=0秒却`RECENT_PARTIAL_POPULATION`，Futures`NO_POLL`，不会向用户声称完全实时可跟进。
+
+**判断：** 这是业务功能缺口的关闭——已能解释为何历史WATCH不可买，而不是原模型成功赚钱。运营界面仍是离线SQLite只读合同，**未部署到用户Mac、没有现时实时数据、没有实际通知延迟或bid/ask L2**。下一研发不再重审本次来源，优先在未来用户主动授权的公开资料获取中取得**事件当时的订单簿与listing状态**，无法再拿日K线重建真实盘口；其次等完整10月25日UTC之后实际Publisher发布的Oct19–25资料齐备，再沿冻结七日3360轮做D0/FIFO8/Fair8全面漏报/成本试验。若依旧费后负收益，明确按照Stage77返回D1模型方案，不为新指标凑文档。**新reader代码自己独立other-AI review仍`NOT_DONE`**，获批的旧SHA `94f15a3`不可冒称覆盖新实现。保持`G0 PARTIAL/G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，Frank和Stage99不动。
+
