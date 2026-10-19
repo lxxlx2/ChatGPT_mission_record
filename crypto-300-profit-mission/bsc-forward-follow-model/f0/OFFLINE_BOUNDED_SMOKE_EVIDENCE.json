@@ -1,29 +1,59 @@
 {
-  "schema": "bsc-f0-one-time-http-smoke-offline-evidence-v1",
-  "observed_date": "2026-10-20",
-  "test_method": "python3 -m unittest discover -s /mnt/data/bsc_f0_smoke/f0/tests -p 'test_*.py' -v",
-  "tests_executed": 19,
-  "tests_status": "PASS",
-  "prior_unchanged_tests": "92 prior tests approved/recorded, not rerun in this local fixture-only prototype",
+  "schema": "bsc-f0-bounded-public-http-smoke-review-fix-evidence-v2",
+  "review_baseline_sha": "d481cdd9d010c207fa537b5fafe4f80969e3e63a",
+  "mode": "OFFLINE_ONLY_NO_BSC_NETWORK",
+  "fixes": [
+    "P1: persist on-error counters and BLOCKED_SOURCE with nonzero exit",
+    "P2: all full-block reads forced into discovery cap",
+    "P2 evidence: no untracked log claimed as in-repo artifact"
+  ],
+  "original_tests": 19,
+  "new_tests": 8,
+  "previous_unchanged_tests": 92,
+  "combined_tests_executed": 119,
+  "combined_test_result": "PASS",
+  "command": "python3 -m unittest discover -s crypto-300-profit-mission/bsc-forward-follow-model/f0/tests -p \"test_*.py\"",
+  "local_test_location": "/mnt/data/bsc_f0_pr124_fix/f0/tests (assembled from exact old Git blobs and current branch changes)",
+  "baseline_source_blobs": {
+    "f0_offline_collector.py": "d70338741c90e50ae1f9a84ba93fc8b6f86eae92",
+    "f0_rpc_adapter.py": "35ce2aee341586879c4ede95d3e7669cb8e30e3f",
+    "f0_rpc_bridge.py": "dcaf8b30df60dee361b9d0e745095fcc113950db",
+    "f0_source_budget.py": "479b64bf530c6094d36a8e82e01b7c54bb0f549d",
+    "tests/test_f0_offline_collector.py": "9898cd61381cda215b8d6d7822deccece253693a",
+    "tests/test_f0_rpc_adapter.py": "aa78342ffcba6d5c65c20dacaa380d4678a138ad",
+    "tests/test_f0_rpc_bridge.py": "0b1d4ab9c3db3687c5889228b88e322c94e3cf3d",
+    "tests/test_f0_source_budget.py": "bbef2d80511d380c47e878888d59852fb6d89144"
+  },
   "artifacts_sha256": {
-    "f0_bounded_smoke.py": "ffb248b2616f582e25d7892164819d46aa15581f0b42eda81c5bbd890429a7c1",
-    "tests/test_f0_bounded_smoke.py": "47391a9ef899bb39aa96f70b8ff92c3d7fd751428bd02ec72562de36960b2dbc",
+    "f0_bounded_smoke.py": "c4228ba3c852c46edaeabe3bc3a220ab5ee4122ab1fe6ee61f3c03592ed8e2ae",
+    "tests/test_f0_bounded_smoke.py": "4363e690ffc5a6298a6a20940b5c84494e99012b86e22e218cc3c882a9755a31",
     "fixtures/bounded_smoke.json": "41eea36bbc6f227ec42a2dab0e4297cef8f7e6c8ca79fa7f24a25782254da553",
     "fixture_smoke_report.json": "42d19d756706b79b5d96fdb802ae792d172c83b0355c04ab7d6f244a723f817a",
-    "F0_PUBLIC_HTTP_SMOKE.md": "19816a85671558b0fbafed5e106c81f4f2b264d0bb69bcd10ceb1e006ec5c4b8",
-    "test_run.log": "9bba9f3727c05e02eda19bba9177f8469b4b48230f26d57ffb4a87cc79b1b9a3"
+    "F0_PUBLIC_HTTP_SMOKE.md": "076451a31ead73dcf1050c1a84e459bc0088c5e396caa1109e7dc6ba9884b7e1"
   },
-  "fixture_observation": {
-    "actual_rpc_calls": 0,
-    "attempted_mock_calls": 4,
-    "control_calls": 1,
-    "e3_actual": 0,
-    "real_quoted": 0,
-    "paper_labels": 0
+  "artifacts_git_blob_sha1": {
+    "f0_bounded_smoke.py": "dba69494d63de21d6a974d6c1c5622a9dbc23ad0",
+    "tests/test_f0_bounded_smoke.py": "aee8152f752c76f448f2b5deb23c8b466e555ca1",
+    "fixtures/bounded_smoke.json": "e2d961d71a091ef21fbc52ff1052d9ba491dcc39",
+    "fixture_smoke_report.json": "53c27ac3b3e22d93b77ca4e8b22eaac43c5ab674",
+    "F0_PUBLIC_HTTP_SMOKE.md": "4888560b499c75d470c915059301522b912468d3"
   },
-  "code_review_status": "PENDING_INDEPENDENT_REVIEW",
+  "replay_report_matches_original_PR124": true,
+  "failure_case_tested": {
+    "injected_failure_request_number": 3,
+    "attempted_rpc_calls": 3,
+    "attempted_control_discovery_calls": 1,
+    "expected_stop": "BLOCKED_SOURCE",
+    "report_persisted": true,
+    "actual_bsc_network_requests": 0
+  },
+  "success_mock_tested": true,
+  "network_usage": "NONE; urllib opener patched to throw if called",
   "live_permission": "NOT_GRANTED",
-  "actual_http_calls": 0,
-  "real_chain_data": false,
-  "caveat": "A mocked sender and artificial RPC fixture; no real provider availability, latency, quota, causal E2, finality or E3 evidence."
+  "auth_binding_before_run": "P2-1_PENDING_REVIEWED_SHA_AND_ONCE_NONCE",
+  "caveats": [
+    "No user permit or actual network request exists",
+    "Fault injector represents attempted calls, not confirmed provider billing",
+    "Filesystem failures/process crashes are not audited atomically; independently verify quota before any real authorization"
+  ]
 }
