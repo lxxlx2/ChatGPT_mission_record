@@ -81,11 +81,22 @@ class RealPublisherSourceTests(unittest.TestCase):
 
     def test_unfrozen_symbol_day_or_network_url_refused(self):
         with self.assertRaisesRegex(ValueError,"FROZEN_SYMBOL_OR_DAY"):
-            m.url_parts("BTCUSDT","2026-10-18")
+            m.url_parts("BTCUSDT","2026-10-19")
         with self.assertRaisesRegex(ValueError,"FROZEN_SYMBOL_OR_DAY"):
             m.url_parts("../BTCUSDT","2026-10-16")
         with self.assertRaisesRegex(ValueError,"URL_NOT_ALLOWED"):
             m.fetch_one_url("https://evil.example.com/x.zip",100)
+
+    def test_first_full_forward_day_2026_10_18_is_separate_source_scope(self):
+        filename,url,checksum=m.url_parts("BTCUSDT","2026-10-18")
+        self.assertEqual(filename,"BTCUSDT-1m-2026-10-18.zip")
+        with tempfile.TemporaryDirectory() as directory:
+            fixtures=fake_publisher(day="2026-10-18")
+            result=m.collect(Path(directory),roster=["BTCUSDT"],days=("2026-10-18",),
+                             getter=getter(fixtures))
+            self.assertEqual(result["days_utc"],["2026-10-18"])
+            self.assertEqual(result["attempts_total"],1)
+            self.assertEqual(result["status_counts"],{"VERIFIED_FULL_DAY_1440":1})
 
     def test_unicode_symbol_and_zip_name_must_use_percent_encoded_official_path(self):
         symbol="币安人生USDT"
