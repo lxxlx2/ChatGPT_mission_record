@@ -6515,5 +6515,65 @@
     "pit_24_of_30": "NOT_SCORABLE",
     "sellability_18_of_30": "NOT_SCORABLE",
     "next_probe": "Reconstruct chronological original saved Pair Mint/Sync/Swap logs at rank16/17 first reserve-update block, distinguish first floor Sync versus same-tx swap, avoid retrospective same-tx T_entry promotion"
+  },
+  "bsc_v2_p0_delayed_liquidity_atomic_mint_and_buy_mainline_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_DELAYED_MINT_FIRST_BUY_ATOMIC_TRANSACTION_AND_POST_BLOCK_RESERVES_V1",
+    "source_levels": [
+      "USER_PASTED_MAC_ARCHIVED_QUALIFYING_FIRST_BUY_EVENTS",
+      "ALCHEMY_CONNECTED_BNB_READONLY_HISTORIC_MINT_TOPIC_NARROW_ONE_BLOCK_ETH_GETLOGS",
+      "ALCHEMY_CONNECTED_BNB_READONLY_HISTORIC_ETH_CALL_GETRESERVES"
+    ],
+    "quote_asset": "WBNB",
+    "pair_first_reserve_update_block": 52444232,
+    "prior_block": 52444231,
+    "following_block": 52444233,
+    "mint_topic": "0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f",
+    "observations": [
+      {
+        "rank": 16,
+        "pool": "0x7b4afbce3ddbc19586cc331e6a312b214a9d8056",
+        "tx": "0x39d28c9d42c174151d6f6ac31df93ee2edf2bc709a3550889c3f69ccf0638f16",
+        "mint_log_index": 737,
+        "mint_transaction_index": 103,
+        "first_observed_buy_log_index": 742,
+        "mint_quote_amount_raw": "4000000000000000000",
+        "first_buy_pre_quote_reserve_raw": "4000000000000000000",
+        "quote_reserve_before_update_block_raw": "0",
+        "quote_reserve_at_end_block_raw": "9600027800000000000",
+        "quote_reserve_at_end_following_block_raw": "9600027800000000000",
+        "mint_log_prior_to_first_observed_buy_log": true,
+        "quote_floor_raw": "2000000000000000000",
+        "after_block_above_frozen_quote_floor": true
+      },
+      {
+        "rank": 17,
+        "pool": "0x7d8f9b72d702ae97c330dc14691ccfbde8562f00",
+        "tx": "0x8fbe3ba7e888f1380f2ea660eec643a868436373827a91d57bd36b6946d3fbb2",
+        "mint_log_index": 1077,
+        "mint_transaction_index": 107,
+        "first_observed_buy_log_index": 1082,
+        "mint_quote_amount_raw": "6000000000000000000",
+        "first_buy_pre_quote_reserve_raw": "6000000000000000000",
+        "quote_reserve_before_update_block_raw": "0",
+        "quote_reserve_at_end_block_raw": "20200028700000000000",
+        "quote_reserve_at_end_following_block_raw": "20200028700000000000",
+        "mint_log_prior_to_first_observed_buy_log": true,
+        "quote_floor_raw": "2000000000000000000",
+        "after_block_above_frozen_quote_floor": true
+      }
+    ],
+    "narrow_mint_logs_original_raw_bytes_saved_in_git": false,
+    "eth_get_reserves_raw_http_bytes_saved_in_git": false,
+    "historical_receipt_entire_logs_retrieved": false,
+    "report_proves_same_transaction_late_mint_precedes_buy_event": true,
+    "report_proves_next_block_certain_taker_buy_sellability": false,
+    "candidate_conservative_earliest_eligible_observable_block_not_before": 52444233,
+    "candidate_earliest_observable_block_is_not_verified_public_available_at": true,
+    "candidate_first_public_available_at": "UNVERIFIED",
+    "real_buy_from_outside_mint_tx_unverified": true,
+    "same_notional_two_way_exit": "NOT_SCORABLE",
+    "point_in_time_24_of_30": "NOT_SCORABLE",
+    "two_sided_18_of_30": "NOT_SCORABLE",
+    "scope": "Two frozen cohorts ranks 16/17, block-state observation only; the previous block had zero reserves and end-of-block retained above-floor WBNB. During mint's same atomic transaction other traders cannot react to mid-transaction Sync as a sequential public event. No proof public observer could have bought, transferred, or sold in next block."
   }
 }
