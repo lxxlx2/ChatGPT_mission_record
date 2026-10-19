@@ -114,6 +114,8 @@ class LimitedRPC:
     def call(self, method: str, params: list, discovery: bool = False) -> tuple[object, str]:
         require(method in METHODS, "METHOD_NOT_APPROVED")
         require(self.attempts < self.max_calls, "RPC_CALL_CAP_REACHED")
+        # Every full-block read is control discovery, regardless of caller flag.
+        discovery = discovery or method == "eth_getBlockByNumber"
         if discovery:
             require(method == "eth_getBlockByNumber" and
                     self.discovery_attempts < MAX_DISCOVERY, "CONTROL_DISCOVERY_CAP_REACHED")
@@ -129,9 +131,11 @@ class LimitedRPC:
         return received["result"], digest(received)
 
 
-def smoke(sender: Callable, cap: int = MAX_RESPONSE_BYTES) -> dict:
-    """Maximum four nontransactional JSON-RPC reads; no loop/stream/poll."""
-    rpc = LimitedRPC(sender, ENDPOINT, cap)
+def smoke(sender: Callable, cap: int = MAX_RESPONSE_BYTES,
+          rpc: LimitedRPC | None = None) -> dict:
+    """Maximum four nontransactional reads; a supplied counter survives failures."""
+    if rpc is None:
+        rpc = LimitedRPC(sender, ENDPOINT, cap)
     chain, chain_sha = rpc.call("eth_chainId", [])
     require(rpc_hex(chain) == 56, "WRONG_CHAIN_ID")
     height_hex, head_sha = rpc.call("eth_blockNumber", [])
