@@ -777,6 +777,23 @@ def audit_saved_bsc_v2_p0(out_dir, evidence_path):
         == "SAME_TX_NOT_PUBLICLY_REACTABLE_AFTER_SYNC"]
     buy_first_above_floor_same_tx_first_mint = [x["rank"] for x in good if
         x["archived_pair_swap_evidence"]["first_above_floor_buy_prior_mint_same_tx"]]
+    observed_transaction_activity = [{
+        "rank": x["rank"],
+        "buy_swap_events": x["archived_pair_swap_evidence"]["observed_buy_swap_events"],
+        "buy_distinct_txs": x["archived_pair_swap_evidence"]["observed_buy_distinct_transactions"],
+        "above_floor_buy_swap_events": (
+            x["archived_pair_swap_evidence"]["observed_above_floor_buy_swap_events"]),
+        "above_floor_buy_distinct_txs": (
+            x["archived_pair_swap_evidence"]["observed_above_floor_buy_distinct_transactions"]),
+        "sell_swap_events": x["archived_pair_swap_evidence"]["observed_sell_swap_events"],
+        "sell_distinct_txs": x["archived_pair_swap_evidence"]["observed_sell_distinct_transactions"],
+        "above_floor_sell_distinct_txs": (
+            x["archived_pair_swap_evidence"]["observed_above_floor_sell_distinct_transactions"]),
+        "first_qualified_buy_public_reaction_status": (
+            x["archived_pair_swap_evidence"]["first_above_floor_buy_public_reaction_status"]),
+        "qualified_buy_later_block_distinct_txs": (
+            x["archived_pair_swap_evidence"]["observed_qualified_buy_distinct_tx_count_later_block"]),
+        } for x in good]
     return {
         "schema": "MONSTER_BSC_V2_P0_LOCAL_ORIGINAL_RPC_OFFLINE_REPLAY_V1",
         "status": ("LOCAL_FROZEN_30_CREATION_REPLAY_PASS" if complete
@@ -800,6 +817,8 @@ def audit_saved_bsc_v2_p0(out_dir, evidence_path):
         "observed_buy_below_preswap_quote_floor_ranks": buy_below,
         "observed_sell_below_preswap_quote_floor_ranks": sell_below,
         "observed_swap_preswap_depth_unresolved_ranks": reserve_unknown,
+        "observed_swap_activity_distinct_transactions_by_rank": observed_transaction_activity,
+        "observed_swap_transactions_not_same_as_distinct_buyers": True,
         "first_above_floor_buy_same_tx_as_first_above_floor_sync_ranks":
             buy_first_above_floor_same_tx_first_sync,
         "first_above_floor_buy_with_prior_mint_in_same_tx_ranks":
