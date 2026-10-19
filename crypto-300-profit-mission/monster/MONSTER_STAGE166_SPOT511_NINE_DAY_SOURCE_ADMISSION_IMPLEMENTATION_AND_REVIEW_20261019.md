@@ -43,3 +43,7 @@ Codex独立执行 `python3 -B -m unittest` 9/9通过、`py_compile`与额外反�
 **审查局限仍在**：正式10月16-24共4599份Binance日级ZIP/CHECKSUM未被本阶段获取或核验；空目录的SOURCE_NOT_SUPPLIED不证明发布方没有文件；来源SHA可校验也不等于取得过程的来源证明、动态上市身份/PIT、bid/ask、全7日真实D0/D1公平队列回放、盈利或G4/G6通过。Stage165已批准无需复核。**本阶段不需再反复外部审核已批准固定SHA**，把研发转回完整七日前瞻真实源收集和可执行收益决定。
 
 PR#30保持Draft且未合并；`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`不变。
+
+## 六、版本边界：九日准入已APPROVE，但资金收益需要额外2026-10-25日级退出行情
+
+原Stage166 4599=511×9仅冻结/审过`2026-10-16…2026-10-24`、适用于T0前24h与`[2026-10-17T22:06Z,2026-10-24T22:06Z)`的七日**信号发现**来源；不等于覆盖“SETUP后+3m入场、固定24h退出”在窗口尾部的价格来源。最晚原3m tick`2026-10-24T22:03Z`的延迟入场为`2026-10-24T22:06Z`，固定24h退出到`2026-10-25T22:06Z`，因此另需`2026-10-25` **511个额外计划检查对象**，完整动态信号与退出价代理评估的总日级检查对象**5110=511×10**（并非已验证文件数；真实断档/新停牌要删失）。九日Stage166代码无需追溯修改；此前Codex APPROVE**只覆盖4599条离线来源准备工具及其代码测试**，不能扩展为额外511条已审核/已下载。真实最终数据和Publisher`.CHECKSUM`必须之后取得并校验；历史点时ask/bid、盘口深度、上市状态与fee还没有。完整时间窗计算见[Stage163主线计划第29节](MONSTER_STAGE163_REAL_SPOT_T0_OFFICIAL_HTTP_AND_FORWARD_EVIDENCE_PLAN_20261018.md)。原`G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`保持。
