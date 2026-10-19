@@ -9,7 +9,7 @@ Each distinct Frank research signal stage is tracked independently:
 - ACCUMULATION
 - MULTIPLE
 
-The tracker registers the first moment Mission Control sees that stage. If a real Jupiter 30 USDC -> token route exists at that moment, the exact token raw output becomes the hypothetical executable entry inventory.
+The tracker registers the first moment Mission Control sees that stage. An executable entry quote is only meaningful for a user-specified notional. The former fixed-notional quote assumption has been withdrawn; without explicit user amount, entry/exit execution returns stay UNAVAILABLE and no simulated position is created.
 
 Future exit value is measured by asking Jupiter for a read-only quote from that exact token raw amount back to USDC.
 
