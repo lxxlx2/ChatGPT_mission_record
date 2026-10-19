@@ -229,77 +229,105 @@ def run(*, qa_sha: str, no_browser: bool=False) -> int:
         data=[]
         statuses={}
         stamp=datetime.now().astimezone().strftime("%Y%m%d-%H%M%S")
-        for stage in STAGES:
-            token=uuid4().hex
-            receipt={}
-            observed=defaultdict(list)
-            handler=make_handler(static,existing_port,stage,token,receipt,observed)
-            server=ThreadingHTTPServer(("127.0.0.1",0),handler)
-            thread=threading.Thread(target=server.serve_forever,daemon=True)
-            thread.start()
-            try:
-                link=f"http://127.0.0.1:{server.server_port}/__qa/panel?"+urlencode(
-                    {"token":token,"stage":stage})
-                if not no_browser:
-                    subprocess.run(["open","-a","Safari",link],check=True,timeout=15)
-                until=time.monotonic()+WAIT_SECONDS
-                while stage not in receipt and time.monotonic()<until:
-                    time.sleep(.2)
-                if stage not in receipt:
-                    raise RuntimeError("SAFARI_READY_TIMEOUT_"+stage)
-                if not no_browser:
-                    subprocess.run(["osascript","-e",'tell application "Safari" to activate'],
-                                   check=True,capture_output=True,timeout=15)
-                    time.sleep(.8)
-                    if not capture.safari_front_matches(capture.safari_front_url(),link):
-                        raise RuntimeError("SAFARI_FRONT_URL_MISMATCH_"+stage)
-                verify_stage(stage,receipt,observed)
-                photo=screenshots/f"frank-decisions-{stage}.png"
-                data.append(capture.automatic_screenshot(photo))
-                if not no_browser and not capture.safari_front_matches(
-                        capture.safari_front_url(),link):
-                    raise RuntimeError("SAFARI_SCREENSHOT_STAGE_DRIFT_"+stage)
-                statuses[stage]={"receipt":receipt[stage],
-                                 "http_status_counts":{key:dict(
-                                     (str(code),values.count(code)) for code in sorted(set(values)))
-                                     for key,values in observed.items()}}
-                print(f"FRANK_DECISIONS_{stage.upper()}={receipt[stage]}",flush=True)
-            finally:
-                server.shutdown()
-                server.server_close()
-                thread.join(timeout=3)
-        base.verify_preview_snapshot(static,hashes)
-        if read_git_head_passively(checkout)!=qa_sha:
-            raise RuntimeError("QA_HEAD_CHANGED")
-        downloads=home/"Downloads"
-        downloads.mkdir(parents=True,exist_ok=True)
-        output=downloads/f"frank-pr106-safari-503-{stamp}-{qa_sha[:8]}-{uuid4().hex[:10]}.zip"
-        metadata={
-            "kind":"FRANK_PR106_REAL_MAC_SAFARI_503_ISOLATION_QA",
-            "qa_head_sha":qa_sha,"product_approved_sha":PRODUCT_SHA,
-            "product_static_sha256":hashes,
-            "backend_source_sha":"UNVERIFIED",
-            "observed_at_utc":datetime.now(timezone.utc).isoformat(),
-            "stages":statuses,
-            "screenshots":data,
-            "synthetic_503_scope":"EPHEMERAL_QA_PROXY_ONLY",
-            "production_dashboard_modified":False,"new_rpc":False,
-            "new_scan":False,"new_sqlite_write":False,"mail":False,"trades":False,
-            "production_deploy":False,
-        }
-        with tempfile.TemporaryDirectory(prefix=".frank-pr106-stage-",dir=downloads) as staging:
-            tempzip=Path(staging)/"bundle.zip"
-            with zipfile.ZipFile(tempzip,"x",compression=zipfile.ZIP_DEFLATED) as z:
-                z.writestr("frank-pr106-acceptance.json",json.dumps(metadata,indent=2,ensure_ascii=False))
-                for row in data:
-                    z.write(screenshots/row["file"],"screenshots/"+row["file"])
+        try:
+            for stage in STAGES:
+                token=uuid4().hex
+                receipt={}
+                observed=defaultdict(list)
+                handler=make_handler(static,existing_port,stage,token,receipt,observed)
+                server=ThreadingHTTPServer(("127.0.0.1",0),handler)
+                thread=threading.Thread(target=server.serve_forever,daemon=True)
+                thread.start()
+                try:
+                    link=f"http://127.0.0.1:{server.server_port}/__qa/panel?"+urlencode(
+                        {"token":token,"stage":stage})
+                    if not no_browser:
+                        subprocess.run(["open","-a","Safari",link],check=True,timeout=15)
+                    until=time.monotonic()+WAIT_SECONDS
+                    while stage not in receipt and time.monotonic()<until:
+                        time.sleep(.2)
+                    if stage not in receipt:
+                        raise RuntimeError("SAFARI_READY_TIMEOUT_"+stage)
+                    if not no_browser:
+                        subprocess.run(["osascript","-e",'tell application "Safari" to activate'],
+                                       check=True,capture_output=True,timeout=15)
+                        time.sleep(.8)
+                        if not capture.safari_front_matches(capture.safari_front_url(),link):
+                            raise RuntimeError("SAFARI_FRONT_URL_MISMATCH_"+stage)
+                    verify_stage(stage,receipt,observed)
+                    photo=screenshots/f"frank-decisions-{stage}.png"
+                    data.append(capture.automatic_screenshot(photo))
+                    if not no_browser and not capture.safari_front_matches(
+                            capture.safari_front_url(),link):
+                        raise RuntimeError("SAFARI_SCREENSHOT_STAGE_DRIFT_"+stage)
+                    statuses[stage]={"receipt":receipt[stage],
+                                     "http_status_counts":{key:dict(
+                                         (str(code),values.count(code)) for code in sorted(set(values)))
+                                         for key,values in observed.items()}}
+                    print(f"FRANK_DECISIONS_{stage.upper()}={receipt[stage]}",flush=True)
+                finally:
+                    server.shutdown()
+                    server.server_close()
+                    thread.join(timeout=3)
             base.verify_preview_snapshot(static,hashes)
             if read_git_head_passively(checkout)!=qa_sha:
-                raise RuntimeError("QA_HEAD_CHANGED_BEFORE_ZIP")
-            os.link(tempzip,output)
-        print("ZIP_READY="+str(output),flush=True)
-        subprocess.run(["open","-R",str(output)],check=False,timeout=12)
-        return 0
+                raise RuntimeError("QA_HEAD_CHANGED")
+            downloads=home/"Downloads"
+            downloads.mkdir(parents=True,exist_ok=True)
+            output=downloads/f"frank-pr106-safari-503-{stamp}-{qa_sha[:8]}-{uuid4().hex[:10]}.zip"
+            metadata={
+                "kind":"FRANK_PR106_REAL_MAC_SAFARI_503_ISOLATION_QA",
+                "qa_head_sha":qa_sha,"product_approved_sha":PRODUCT_SHA,
+                "product_static_sha256":hashes,
+                "backend_source_sha":"UNVERIFIED",
+                "observed_at_utc":datetime.now(timezone.utc).isoformat(),
+                "stages":statuses,
+                "screenshots":data,
+                "synthetic_503_scope":"EPHEMERAL_QA_PROXY_ONLY",
+                "production_dashboard_modified":False,"new_rpc":False,
+                "new_scan":False,"new_sqlite_write":False,"mail":False,"trades":False,
+                "production_deploy":False,
+            }
+            with tempfile.TemporaryDirectory(prefix=".frank-pr106-stage-",dir=downloads) as staging:
+                tempzip=Path(staging)/"bundle.zip"
+                with zipfile.ZipFile(tempzip,"x",compression=zipfile.ZIP_DEFLATED) as z:
+                    z.writestr("frank-pr106-acceptance.json",json.dumps(metadata,indent=2,ensure_ascii=False))
+                    for row in data:
+                        z.write(screenshots/row["file"],"screenshots/"+row["file"])
+                base.verify_preview_snapshot(static,hashes)
+                if read_git_head_passively(checkout)!=qa_sha:
+                    raise RuntimeError("QA_HEAD_CHANGED_BEFORE_ZIP")
+                os.link(tempzip,output)
+            print("ZIP_READY="+str(output),flush=True)
+            subprocess.run(["open","-R",str(output)],check=False,timeout=12)
+            return 0
+
+        except Exception as exc:
+            # A failed QA run must retain any screenshots already captured and
+            # an explicit REJECTED marker, never claim an accepted PASS ZIP.
+            downloads=home/"Downloads"
+            downloads.mkdir(parents=True,exist_ok=True)
+            rejected=downloads/(
+                f"frank-pr106-REJECTED-{stamp}-{qa_sha[:8]}-{uuid4().hex[:10]}.zip")
+            with tempfile.TemporaryDirectory(prefix=".frank-pr106-rejected-",dir=downloads) as staging:
+                staged=Path(staging)/"REJECTED.zip"
+                with zipfile.ZipFile(staged,"x",compression=zipfile.ZIP_DEFLATED) as z:
+                    z.writestr("REJECTED.json",json.dumps({
+                        "status":"NOT_ACCEPTED","error_class":type(exc).__name__,
+                        "reason":str(exc),"qa_sha":qa_sha,
+                        "product_sha":PRODUCT_SHA,"stage_receipts":statuses,
+                        "captured_at_utc":datetime.now(timezone.utc).isoformat(),
+                        "no_rpc":True,"no_scan":True,"no_deploy":True,
+                    },indent=2,ensure_ascii=False))
+                    for row in data:
+                        photo=screenshots/row["file"]
+                        if photo.is_file() and not photo.is_symlink():
+                            z.write(photo,"screenshots/"+photo.name)
+                os.link(staged,rejected)
+            print("STOP_FRANK_PR106_MAC_ACCEPTANCE="+str(exc),flush=True)
+            print("REJECTED_ZIP_READY="+str(rejected),flush=True)
+            subprocess.run(["open","-R",str(rejected)],check=False,timeout=12)
+            return 3
 
 
 def main():
