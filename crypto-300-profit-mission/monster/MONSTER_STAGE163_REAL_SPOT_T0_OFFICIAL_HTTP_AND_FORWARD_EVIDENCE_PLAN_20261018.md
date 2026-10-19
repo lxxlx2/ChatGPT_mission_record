@@ -274,3 +274,13 @@ Codex独立复审固定旧SHA `456111143f5ea1ac2e32103f71ea50dc5a27d078` 判定 
 [Binance官方历史数据说明](https://github.com/binance/binance-public-data/blob/master/README.md)称Spot daily archive一般下一天提供、2025年后Spot 1m时间戳单位微秒，但**这只是官方常规发布说明，不能证明对应2026-10-25完整源已经发布或取得**；对完整窗口的24h结果，最早在10月25日 UTC结束并有实际Publisher文件及CHECKSUM后再手动核验，需视真实发布情况。动态上市、点时盘口/ask-bid、fee tiers、执行成本的证据仍缺，即使十日1m价源全部经Publisher校验也只是`OFFICIAL_1M_CAUSAL_PROXY`、不是实际可成交盈利。
 
 **这是修正完整收益验证的来源覆盖计划，不是一次新成功回放，不产生新WATCH/SETUP/PnL数字**。现有Stage166固定SHA独立Codex APPROVE、现金300U研究独立Codex APPROVE均保留，不追溯扩批。PR Draft，`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`继续。
+
+## 三十、真正前瞻起点：原511 Spot三日1533份官方分钟档案全部SHA校验通过（2026-10-19）
+
+**本节是正式新样本外市场数据取得的真实重大进展，不是空目录/历史回测。** 原官方Spot`2026-10-17T22:04:40.094Z`真实T0的**511个TRADING USDT Spot**币种（另214个BREAK）不变；真实Publisher`data.binance.vision`已直接提供2026-10-16、17、18三个UTC日全部原始`1m` ZIP+`.CHECKSUM`，逐份由已获独立Codex审核的Stage166来源准入函数核验原SHA256、唯一CSV、1440行、微秒1m时间网格/全OHLC/成交数据。**511×3=1533个币-日全部实证完整，2,207,520根真实1分钟历史K线**，与原511名单逐币日期严格完全对齐，零遗漏/重复/缺档；并非过去Stage166空目录的`SOURCE_NOT_SUPPLIED`。
+
+真实证据详见[本轮完整发行方下载报告和定向独立Review任务](MONSTER_FORWARD_SPOT511_20261016_18_TRUE_PUBLISHER_FIRST_OOS_RESULTS_20261019.md)、[三日完全体机器SHA及人口对账](evidence/monster_forward_spot511_oct16_18_1533_actual_issuer_source_reconciled_v1.json)。**原ZIP和CHECKSUM实际存放在3个Actions Artifact**：[#39212800265](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39212800265) ID12167818438（1018份）、[#39213387756](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39213387756) ID12168243737（T0实际包含的2个Unicode交易对各2日，共4份，官方URL正确百分号编码后的实证校验）、[#39214007356](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39214007356) ID12168334522（2026-10-18 **511/511份**）。三批原始artifact 60天保留，Git永久提交的是来源URI、观察时间、ZIP SHA、manifest来源证明及精简来源身份总账，原ZIP并未直接永久Git归档。成功CI原版本分别11/11、10/10、10/10步骤。首个全1022 push工作流因脚本改动错误重跑过两次，在Git拒绝覆盖已存在真实来源回执时报失败，非官方文件校验失败；已将原push触发退出，只单独重取非ASCII四份、单独新日511份，无schedule、不修改已审生产策略/资金账本。
+
+**当前完整新OOS七日仍NOT_MATURE**：固定窗口`[2026-10-17T22:06Z,2026-10-24T22:06Z)`3360个3m tick；现在Oct16-18的已验证1m可覆盖起始warmup与到Oct19T00:00Z之前**518个3分钟时钟所需的1m源**，但这只是数据覆盖，不等于已经真实运行518轮D0/D1或历史真实`ticker/24hr`的PIT等价。若做完整七日D0扫描，旧九日4599来源中还需2026-10-19..24六日**3066个日级对象**；若还做最迟24h真实退出价代理，之前确认的10日5110中还需10月19..25七日**3577个对象**。这些日期不能超前下载或假设官方已经发布。连续动态上市/停牌、点时ticker24/L2/ask-bid深度、真实fee、消息送达、有限资金真实净收益仍UNVERIFIED。**新采集脚本独立其它AI review NOT_DONE，Stage165/166和已审300U账本的Codex APPROVE并不自动扩大其批准范围**，完整提示词在新报告第四节。
+
+**主线后续一旦取得足够真实源**必须用原D0/D1相同决策规则处理正确全市场人口、动态新币和事件唯一ID，成本与24h退出证据缺失应做删失而非冒充0。现阶段**官方source部分到位已证实，盈利与交易放行仍NO_GO**；不创建周期任务、不触碰Mac/Frank、不发邮件不交易，`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`全部不变。
