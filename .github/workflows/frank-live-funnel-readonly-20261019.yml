@@ -1,0 +1,41 @@
+name: Frank live funnel localhost read-only audit
+on:
+  push:
+    branches:
+      - ops/frank-live-funnel-readonly-20261019
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pinned-aggregate-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Exact Git revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "FRANK_LIVE_FUNNEL_READONLY_SHA=$GITHUB_SHA"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Real native localhost GET and aggregate privacy tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m unittest discover -s tests -p 'test_frank_live_funnel_readonly.py' -v
+          python -B -m py_compile scripts/frank_live_funnel_readonly.py
+      - name: Install regression dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3
+      - name: Existing local-agent complete offline regression
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests
