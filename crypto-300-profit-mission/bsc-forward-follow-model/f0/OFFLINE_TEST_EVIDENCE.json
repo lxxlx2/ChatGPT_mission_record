@@ -1,11 +1,19 @@
 {
-  "schema": "bsc-forward-f0-offline-test-evidence-v1",
+  "schema": "bsc-forward-f0-offline-test-evidence-v2",
   "source_reviewed_architecture_sha": "9134fcd41df49ef836b81c8a040974ad89c1fde1",
   "source_reviewed_f0_preparation_sha": "cf88cd9f6568502f5c052ae3befc9cc16cbab98b",
+  "PR118_independent_review_rejected_sha": "db8c0781c8abdfb06955059b0f237421ff838760",
+  "review_conclusion_on_original": "REQUEST_CHANGES",
+  "fixed_issues": [
+    "P1_1_QUOTE_RESPONSE_VALIDATION",
+    "P1_2_UNKNOWN_TO_DIRECTION_SAME_EVENT",
+    "P1_3_SELL_EXIT_QUOTE_PIPELINE"
+  ],
   "test_runner": "python3 -m unittest discover -s tests -q",
   "local_result": "PASS",
-  "test_count": 23,
-  "test_report": "Ran 23 tests ... OK",
+  "test_count": 36,
+  "test_report": "Ran 36 tests ... OK",
+  "synthetic_replay": "python3 f0_offline_collector.py --fixture fixtures/offline_replay.json --report fixture_run_report.json",
   "fixture_events": 6,
   "fixture_source": "SYNTHETIC_ONLY",
   "real_rpc_calls": 0,
@@ -18,11 +26,11 @@
     "SYNTHETIC_REPLAY_QUOTE": 5
   },
   "sha256": {
-    "f0_offline_collector.py": "545e3e08f3ca743856791e2d3486ecfc634eb6f3dd139efed6ad4c276df13846",
-    "tests/test_f0_offline_collector.py": "452a6a15f9db377a1d59eed3a9379bbe61a6566d711cc2b96e020ce684a62819",
-    "fixtures/offline_replay.json": "2d0a3827a962e1745d318f8d4fcd8e30ebb87253cd7897b5ddd47094b56a50a0",
-    "OFFLINE_DEVELOPMENT.md": "aa622a2ac5c3e2ce2b595034d054ce5905d33a7c3c7631191d17841d6d10670a",
-    "fixture_run_report.json": "5abb9b0f96ffca58e3c34dca9b0852a0a43ac68115bc85cae4cfd68f832f5677"
+    "f0_offline_collector.py": "a1dc72c74da27a488d4c7544b8e21049569d76d1982cc58d70eb8d7c0f66ef9a",
+    "tests/test_f0_offline_collector.py": "c19fd7ee6f9bb74eebecea2cb77c85dfe792a3a9a26b534605645316096d50d8",
+    "fixtures/offline_replay.json": "9bb9bd9fcda95c559386920f8aa487073306f2a2df07b22366ed27203460b7d2",
+    "OFFLINE_DEVELOPMENT.md": "93d6412d520a415b8a7e849c057a0e356031990c58ee30824d01efdc01742b16",
+    "fixture_run_report.json": "c035743d19fe2d6178aae29e936f3c916b4ae6fd02b687a4cd0776f662a62c74"
   },
   "next_gate": "PENDING_OTHER_AI_REVIEW"
 }
