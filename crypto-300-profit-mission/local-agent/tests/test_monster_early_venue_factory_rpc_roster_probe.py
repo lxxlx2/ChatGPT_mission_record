@@ -248,6 +248,15 @@ class FactorySourceProbeTests(unittest.TestCase):
                              (str(first["factory_index"]) + ".pool.rpc.json")).is_file())
             self.assertTrue((base / "v2_bootstrap_raw" /
                              (str(first["factory_index"]) + ".later.rpc.json")).is_file())
+            last = m.bootstrap_bsc_v2_saved_roster(
+                Fake(), 52440287, 52555482, base, 1, start_rank=30)
+            self.assertEqual(last["start_rank"], 30)
+            self.assertEqual(last["requested_count"], 1)
+            self.assertEqual(last["verified_creation_and_first_mint"], 1)
+            with self.assertRaisesRegex(m.SourceError, "INVALID_FROZEN_RANK_WINDOW"):
+                m.bootstrap_bsc_v2_saved_roster(
+                    Fake(), 52440287, 52555482, base, 1, start_rank=31)
+
 
     def test_wrong_chain_and_embedded_credentials_rejected(self):
         with self.assertRaisesRegex(m.SourceError, "CREDENTIALS"):
