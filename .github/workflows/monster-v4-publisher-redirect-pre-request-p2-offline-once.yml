@@ -1,0 +1,53 @@
+name: Monster publisher redirect P2 no-follow real HTTP regression (manual push once)
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-publisher-redirect-pre-request-p2-offline-once.yml'
+permissions:
+  contents: read
+concurrency:
+  group: monster-redirect-pre-request-p2-fixed-sha-once
+  cancel-in-progress: false
+jobs:
+  only_redirect_security_and_existing_source_regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile fixed existing production-independent bounded publisher collector
+        run: |
+          set -eu
+          python3 -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_official_publisher_acquire.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_forward_spot511_official_publisher_acquire.py
+      - name: Real two-server redirect test and official archive intake unit tests
+        run: |
+          set -eu
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_forward_spot511_official_publisher_acquire.py
+          echo MONSTER_PUBLISHER_REDIRECT_REAL_DUAL_HTTP_TARGET_GET_ZERO_P2_TEST_PASS
+      - name: Verify original three-day 1533 full sources remain unchanged and signals still forbidden
+        run: |
+          set -eu
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('crypto-300-profit-mission/monster/evidence')
+          x=json.loads((root/'monster_forward_spot511_oct16_18_1533_actual_issuer_source_reconciled_v1.json').read_text())
+          assert x['expected_official_daily_symbol_files']==1533
+          assert x['all_real_original_issuer_zip_checksum_sha_verified']==1533
+          assert x['total_original_publisher_closed_1m_rows_verified']==2207520
+          assert x['G4']=='UNKNOWN' and x['G6']=='NO_GO'
+          assert x['NO_MERGE'] and x['NO_DEPLOY'] and x['NO_GMAIL'] and x['NO_TRADE']
+          assert [s['publisher_files'] for s in x['original_data_artifact_sources']]==[1018,4,511]
+          print('MONSTER_1533_ORIGINAL_SOURCE_PROOF_UNCHANGED_NO_REDOWNLOAD')
+          PY
+      - name: Verify no archive download or research-output modification was triggered
+        run: |
+          set -eu
+          test -z "$(git status --porcelain)"
+          echo MONSTER_REDIRECT_P2_ONLY_NO_ARCHIVE_DOWNLOAD_NO_GIT_WRITE_NO_DEPLOY
