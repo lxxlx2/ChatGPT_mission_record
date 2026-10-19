@@ -1,0 +1,155 @@
+{
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_DEPLOY": true,
+  "NO_GMAIL": true,
+  "NO_MERGE": true,
+  "NO_TRADE": true,
+  "actual_items": [
+    {
+      "attempt_observed_at_utc": "2026-10-19T07:02:02.022285Z",
+      "checksum_http_receipt": {
+        "content_type": "application/zip",
+        "etag": "\"7aec0e37be608cc403063f6a5468ccfd\"",
+        "http_status": 200,
+        "last_modified": "Sat, 17 Oct 2026 02:30:00 GMT",
+        "obtained_at_utc": "2026-10-19T07:02:02.272342Z",
+        "server_date": "Mon, 19 Oct 2026 07:02:02 GMT"
+      },
+      "csv_closed_1m_rows": 1440,
+      "date_utc": "2026-10-16",
+      "error": null,
+      "original_publisher_checksum_valid": true,
+      "publisher_checksum_sha256": "8d1dfbdabdb392bcc87107345a24c28c16b980d45c36889b27934c0d19e7ac29",
+      "publisher_checksum_url": "https://data.binance.vision/data/spot/daily/klines/%E5%B8%81%E5%AE%89%E4%BA%BA%E7%94%9FUSDT/1m/%E5%B8%81%E5%AE%89%E4%BA%BA%E7%94%9FUSDT-1m-2026-10-16.zip.CHECKSUM",
+      "publisher_zip_url": "https://data.binance.vision/data/spot/daily/klines/%E5%B8%81%E5%AE%89%E4%BA%BA%E7%94%9FUSDT/1m/%E5%B8%81%E5%AE%89%E4%BA%BA%E7%94%9FUSDT-1m-2026-10-16.zip",
+      "source_provenance": "OFFICIAL_HTTPS_DATA_BINANCE_VISION",
+      "status": "VERIFIED_FULL_DAY_1440",
+      "symbol": "币安人生USDT",
+      "timestamp_unit": "MICROSECONDS",
+      "zip_bytes": 37782,
+      "zip_http_receipt": {
+        "content_type": "application/zip",
+        "etag": "\"8282b12712b080cc7c247bf2f082af72\"",
+        "http_status": 200,
+        "last_modified": "Sat, 17 Oct 2026 02:30:00 GMT",
+        "obtained_at_utc": "2026-10-19T07:02:02.599288Z",
+        "server_date": "Mon, 19 Oct 2026 07:02:02 GMT"
+      },
+      "zip_sha256": "e3bf65c65cd659f673469fe2ec970bb760c06cc2af657c2dd7b30f16cc0369f4"
+    },
+    {
+      "attempt_observed_at_utc": "2026-10-19T07:02:02.022576Z",
+      "checksum_http_receipt": {
+        "content_type": "application/zip",
+        "etag": "\"b2423196f741b6870acc65cc53697039\"",
+        "http_status": 200,
+        "last_modified": "Sun, 18 Oct 2026 03:05:21 GMT",
+        "obtained_at_utc": "2026-10-19T07:02:02.253725Z",
+        "server_date": "Mon, 19 Oct 2026 07:02:02 GMT"
+      },
+      "csv_closed_1m_rows": 1440,
+      "date_utc": "2026-10-17",
+      "error": null,
+      "original_publisher_checksum_valid": true,
+      "publisher_checksum_sha256": "d2e69a816b71631aef2fac23c50809019d7f41af0b8e7a4efaa169bdeed6363d",
+      "publisher_checksum_url": "https://data.binance.vision/data/spot/daily/klines/%E5%B8%81%E5%AE%89%E4%BA%BA%E7%94%9FUSDT/1m/%E5%B8%81%E5%AE%89%E4%BA%BA%E7%94%9FUSDT-1m-2026-10-17.zip.CHECKSUM",
+      "publisher_zip_url": "https://data.binance.vision/data/spot/daily/klines/%E5%B8%81%E5%AE%89%E4%BA%BA%E7%94%9FUSDT/1m/%E5%B8%81%E5%AE%89%E4%BA%BA%E7%94%9FUSDT-1m-2026-10-17.zip",
+      "source_provenance": "OFFICIAL_HTTPS_DATA_BINANCE_VISION",
+      "status": "VERIFIED_FULL_DAY_1440",
+      "symbol": "币安人生USDT",
+      "timestamp_unit": "MICROSECONDS",
+      "zip_bytes": 41716,
+      "zip_http_receipt": {
+        "content_type": "application/zip",
+        "etag": "\"662d0706ba62ebb3e7fb3a8c1ad8ee73\"",
+        "http_status": 200,
+        "last_modified": "Sun, 18 Oct 2026 03:05:21 GMT",
+        "obtained_at_utc": "2026-10-19T07:02:02.626589Z",
+        "server_date": "Mon, 19 Oct 2026 07:02:02 GMT"
+      },
+      "zip_sha256": "55f6db2de9777d2c44a0e7842882cb928e498708c94e1b440a63bdbe91dcc21c"
+    },
+    {
+      "attempt_observed_at_utc": "2026-10-19T07:02:02.609211Z",
+      "checksum_http_receipt": {
+        "content_type": "application/zip",
+        "etag": "\"d923136a24291b300d0a1cc2947e70b3\"",
+        "http_status": 200,
+        "last_modified": "Sat, 17 Oct 2026 02:37:21 GMT",
+        "obtained_at_utc": "2026-10-19T07:02:03.101350Z",
+        "server_date": "Mon, 19 Oct 2026 07:02:03 GMT"
+      },
+      "csv_closed_1m_rows": 1440,
+      "date_utc": "2026-10-16",
+      "error": null,
+      "original_publisher_checksum_valid": true,
+      "publisher_checksum_sha256": "1b917c09119f175215f92a52f4a074d9d27a9f4fb5fe11bad7ae8b5cc79b5d19",
+      "publisher_checksum_url": "https://data.binance.vision/data/spot/daily/klines/%E7%89%9B%E6%9D%A5USDT/1m/%E7%89%9B%E6%9D%A5USDT-1m-2026-10-16.zip.CHECKSUM",
+      "publisher_zip_url": "https://data.binance.vision/data/spot/daily/klines/%E7%89%9B%E6%9D%A5USDT/1m/%E7%89%9B%E6%9D%A5USDT-1m-2026-10-16.zip",
+      "source_provenance": "OFFICIAL_HTTPS_DATA_BINANCE_VISION",
+      "status": "VERIFIED_FULL_DAY_1440",
+      "symbol": "牛来USDT",
+      "timestamp_unit": "MICROSECONDS",
+      "zip_bytes": 48293,
+      "zip_http_receipt": {
+        "content_type": "application/zip",
+        "etag": "\"7e2c82bba2e483bbcd4f1165c912050c\"",
+        "http_status": 200,
+        "last_modified": "Sat, 17 Oct 2026 02:37:21 GMT",
+        "obtained_at_utc": "2026-10-19T07:02:03.626241Z",
+        "server_date": "Mon, 19 Oct 2026 07:02:03 GMT"
+      },
+      "zip_sha256": "29b7f48d6b6795f23f8e8d22daaa013490b303c2317a221675d081986c828872"
+    },
+    {
+      "attempt_observed_at_utc": "2026-10-19T07:02:02.636365Z",
+      "checksum_http_receipt": {
+        "content_type": "application/zip",
+        "etag": "\"94827260981b399dacca8512952a80b6\"",
+        "http_status": 200,
+        "last_modified": "Sun, 18 Oct 2026 03:12:31 GMT",
+        "obtained_at_utc": "2026-10-19T07:02:02.825950Z",
+        "server_date": "Mon, 19 Oct 2026 07:02:02 GMT"
+      },
+      "csv_closed_1m_rows": 1440,
+      "date_utc": "2026-10-17",
+      "error": null,
+      "original_publisher_checksum_valid": true,
+      "publisher_checksum_sha256": "dd8b3f14d3c3cc72278d00d56c91e58b02ba5e0c73c195c53c17217db09337de",
+      "publisher_checksum_url": "https://data.binance.vision/data/spot/daily/klines/%E7%89%9B%E6%9D%A5USDT/1m/%E7%89%9B%E6%9D%A5USDT-1m-2026-10-17.zip.CHECKSUM",
+      "publisher_zip_url": "https://data.binance.vision/data/spot/daily/klines/%E7%89%9B%E6%9D%A5USDT/1m/%E7%89%9B%E6%9D%A5USDT-1m-2026-10-17.zip",
+      "source_provenance": "OFFICIAL_HTTPS_DATA_BINANCE_VISION",
+      "status": "VERIFIED_FULL_DAY_1440",
+      "symbol": "牛来USDT",
+      "timestamp_unit": "MICROSECONDS",
+      "zip_bytes": 48398,
+      "zip_http_receipt": {
+        "content_type": "application/zip",
+        "etag": "\"6818d03896f622d310e49c1bf17a48d3\"",
+        "http_status": 200,
+        "last_modified": "Sun, 18 Oct 2026 03:12:31 GMT",
+        "obtained_at_utc": "2026-10-19T07:02:03.641417Z",
+        "server_date": "Mon, 19 Oct 2026 07:02:03 GMT"
+      },
+      "zip_sha256": "4739918b56d35316f94094908f1b42a6c4c6c26beb9c331adae92c393e77a120"
+    }
+  ],
+  "attempts": 4,
+  "dates": [
+    "2026-10-16",
+    "2026-10-17"
+  ],
+  "no_claim_of_full_7d_or_execution": true,
+  "original_1018_publisher_verified_plus_exact_4_failures": true,
+  "original_1022_manifest_git_blob": "2852bbfd030d11bf84385681a32b07ee5d84d6b1",
+  "original_4_record_sha256": "467791daf6dba21540229d1e64a07ff3c2461e75ecd6f5be12c943bebabafefa",
+  "original_T0_count": 511,
+  "original_zip_artifact_retention_days": 60,
+  "reacquired_at_utc": "2026-10-19T07:02:03.651412Z",
+  "schema": "MONSTER_SPOT511_ORIGINAL_PUBLISHER_DAILY_1M_ACQUISITION_V1",
+  "source_counts": {
+    "VERIFIED_FULL_DAY_1440": 4
+  },
+  "source_scope": "FROZEN_T0_511_UNICODE_GAP_4_ONLY"
+}
