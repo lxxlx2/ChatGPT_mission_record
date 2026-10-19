@@ -1,0 +1,64 @@
+name: Frank remove unauthorized fixed order amount
+on:
+  push:
+    branches:
+      - fix/frank-remove-unapproved-fixed-notional-20261019
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  no-default-execution-size:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Verify pinned Git source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "FRANK_NO_FIXED_ORDER_AMOUNT_SHA=$GITHUB_SHA"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Static source safety and no default amount
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for p in ("approved", "review"):
+              config=json.loads(Path("config/follow_policy_v1."+p+".json").read_text())
+              assert "quote_usdc_amount" not in config["decision"], p
+          from pathlib import Path
+          svc=Path("mission_agent/mission_control/service.py").read_text()
+          server=Path("mission_agent/mission_control/server.py").read_text()
+          ui=Path("mission_agent/mission_control/static/app.js").read_text()
+          jupiter=Path("mission_agent/mission_control/jupiter.py").read_text()
+          assert 'raw_amount = self.policy["decision"].get("quote_usdc_amount")' in svc
+          assert 'Decimal("30")' not in server
+          assert 'Decimal("30")' not in jupiter
+          assert "$30" not in ui
+          assert "quote_usdc_to_token(" not in server
+          assert "execution_quote_30_usdc" not in ui
+          print("NO_IMPLICIT_USER_ORDER_NOTIONAL_OR_CA_PRESET_QUOTE: PASS")
+          PY
+          node --check mission_agent/mission_control/static/app.js
+          python -B -m py_compile mission_agent/mission_control/jupiter.py mission_agent/mission_control/server.py mission_agent/mission_control/service.py mission_agent/mission_control/delivery.py mission_agent/meme/cluster.py scripts/capture_jupiter_quote_fixtures.py
+          bash -n scripts/accept_meme_ca_v3.sh
+      - name: Install existing test dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3
+      - name: Full offline local agent regression
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests
