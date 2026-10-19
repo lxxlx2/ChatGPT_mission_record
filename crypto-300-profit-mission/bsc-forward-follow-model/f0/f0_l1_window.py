@@ -18,6 +18,9 @@ from f0_rpc_adapter import address, block_candidates, digest, hexb
 
 SCHEMA = "bsc-f0-l1-contiguous-window-offline-v1"
 COHORT_SCHEMA = "bsc-forward-f0-preparation-cohort-v1"
+FROZEN_PR116_MANIFEST_PATH = "crypto-300-profit-mission/bsc-forward-follow-model/f0/F0_COHORT_PRESELECTION.json"
+FROZEN_PR116_COMMIT = "cf88cd9f6568502f5c052ae3befc9cc16cbab98b"
+FROZEN_PR116_BLOB = "fcd0029314353313867e565190cd4f2882089f11"
 ARCHITECTURE_SHA = "9134fcd41df49ef836b81c8a040974ad89c1fde1"
 MAX_WINDOW = 512
 
@@ -41,10 +44,34 @@ def utc_ms(value: object) -> int:
         raise ValueError("UTC_INVALID") from exc
 
 
+def git_blob_sha1(raw: bytes) -> str:
+    """Identity of exact Git blob bytes, not JSON serialization or an RPC proof."""
+    return hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest()
+
+
+def load_frozen_cohort(raw: bytes) -> dict:
+    """Only the exact PR #116 signed-off manifest can bind real cohort addresses.
+
+    This works in a detached `git archive` too: cryptographically matches the
+    exact Git blob identified in the PR #116 approved commit. It never fetches.
+    """
+    require(git_blob_sha1(raw) == FROZEN_PR116_BLOB,
+            "FROZEN_COHORT_GIT_BLOB_MISMATCH")
+    try:
+        cohort = json.loads(raw)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError("INVALID_FROZEN_MANIFEST_JSON") from exc
+    require(cohort.get("selection_seed") == ARCHITECTURE_SHA and
+            cohort.get("reviewed_architecture_commit") == ARCHITECTURE_SHA,
+            "FROZEN_MANIFEST_SEED_MISMATCH")
+    return cohort
+
+
 def cohort_watchlist(cohort: dict) -> tuple[set[str], dict]:
     """Accept PRIMARY addresses ONLY; never use historical PnL or backups."""
     require(cohort.get("schema") == COHORT_SCHEMA and cohort.get("chain_id") == 56 and
-            cohort.get("reviewed_architecture_commit") == ARCHITECTURE_SHA,
+            cohort.get("reviewed_architecture_commit") == ARCHITECTURE_SHA and
+            cohort.get("selection_seed") == ARCHITECTURE_SHA,
             "WRONG_FROZEN_COHORT_IDENTITY")
     entries = cohort.get("preliminary_wallets")
     require(isinstance(entries, list) and len(entries) == 30, "COHORT_NOT_20_PLUS_10")
@@ -72,21 +99,42 @@ def cohort_watchlist(cohort: dict) -> tuple[set[str], dict]:
                      "watch_runtime_enabled": False}
 
 
-def offline_window(fixture: dict, cohort: dict) -> dict:
+def offline_window(fixture: dict, cohort: dict,
+                   cohort_raw_bytes: bytes | None = None) -> dict:
     require(isinstance(fixture, dict) and fixture.get("schema") == SCHEMA and
             fixture.get("mode") == "SYNTHETIC_SAVED_RPC_ONLY" and
             fixture.get("trial") is True and fixture.get("chain_id") == 56,
             "OFFLINE_ONLY")
+    source_kind = fixture.get("cohort_source_kind")
+    require(source_kind in ("SYNTHETIC_FIXTURE_ONLY", "FROZEN_PR116_GIT_BLOB"),
+            "EXPLICIT_COHORT_SOURCE_REQUIRED")
+    if source_kind == "FROZEN_PR116_GIT_BLOB":
+        require(cohort_raw_bytes is not None, "FROZEN_COHORT_RAW_BYTES_REQUIRED")
+        require(load_frozen_cohort(cohort_raw_bytes) == cohort,
+                "FROZEN_COHORT_OBJECT_MISMATCH")
+    else:
+        require(cohort_raw_bytes is None and cohort.get("synthetic_fixture_only") is True,
+                "SYNTHETIC_COHORT_MUST_BE_EXPLICIT")
     watched, cohort_meta = cohort_watchlist(cohort)
+    cohort_meta["cohort_binding"] = (
+        "VERIFIED_PR116_GIT_BLOB_OFFLINE_ONLY"
+        if source_kind == "FROZEN_PR116_GIT_BLOB"
+        else "SYNTHETIC_FIXTURE_NOT_REAL_COHORT"
+    )
+    cohort_meta["frozen_manifest_blob_sha1"] = (
+        FROZEN_PR116_BLOB if source_kind == "FROZEN_PR116_GIT_BLOB" else None
+    )
+    cohort_meta["control_seed_source"] = "COHORT_SELECTION_SEED"
     start = integer(fixture.get("start_height"), "INVALID_START_HEIGHT", 1)
     end = integer(fixture.get("end_height"), "INVALID_END_HEIGHT", start)
     require(end - start + 1 <= MAX_WINDOW, "WINDOW_EXCEEDS_OFFLINE_CAP")
     cap = integer(fixture.get("max_rpc_calls"), "MISSING_RPC_CAP", 1)
     discovery_cap = integer(fixture.get("max_control_discovery_calls"),
                             "MISSING_CONTROL_DISCOVERY_CAP", 1)
-    seed = fixture.get("control_seed")
+    require("control_seed" not in fixture, "FIXTURE_CONTROL_SEED_OVERRIDE_FORBIDDEN")
+    seed = cohort["selection_seed"]
     mod = integer(fixture.get("control_modulo"), "INVALID_CONTROL_MODULO", 1)
-    require(isinstance(seed, str) and seed.isascii() and bool(seed),
+    require(isinstance(seed, str) and seed == ARCHITECTURE_SHA,
             "MISSING_FROZEN_CONTROL_SEED")
     routers = {address(x) for x in fixture.get("synthetic_routers", [])}
     require(bool(routers) and fixture.get("router_allowlist_kind") == "SYNTHETIC_ONLY",
@@ -212,7 +260,12 @@ def main() -> None:
     args = p.parse_args()
     raw = args.fixture.read_bytes()
     manifest = args.cohort.read_bytes()
-    report = offline_window(json.loads(raw), json.loads(manifest))
+    fixture = json.loads(raw)
+    if fixture.get("cohort_source_kind") == "FROZEN_PR116_GIT_BLOB":
+        cohort = load_frozen_cohort(manifest)
+        report = offline_window(fixture, cohort, cohort_raw_bytes=manifest)
+    else:
+        report = offline_window(fixture, json.loads(manifest))
     report["fixture_sha256"] = hashlib.sha256(raw).hexdigest()
     report["cohort_file_sha256"] = hashlib.sha256(manifest).hexdigest()
     out = json.dumps(report, sort_keys=True, indent=2, ensure_ascii=False) + "\n"
