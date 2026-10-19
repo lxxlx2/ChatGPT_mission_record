@@ -6681,5 +6681,48 @@
     "no_18_of_30_sellability_gate_pass": true,
     "raw_original_local_archives_independently_read_by_assistant": false,
     "status": "OFFLINE_ATOMIC_ACTIVITY_DISAMBIGUATION_PASS_NO_EXECUTABLE_ENTRY"
+  },
+  "bsc_v2_p0_alchemy_post_mint_first_10_blocks_probe_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_RANK16_17_POST_MINT_10_BLOCK_SWAP_PROBE_V1",
+    "source": "CONNECTED_USER_ALCHEMY_APP_BNB_MAINNET_READ_ONLY",
+    "method": "eth_getLogs FILTER EXACT POOL ADDRESS AND PANCAKE_V2_SWAP_TOPIC",
+    "network": "bnb-mainnet",
+    "pools": [
+      {
+        "rank": 16,
+        "pair": "0x7b4afbce3ddbc19586cc331e6a312b214a9d8056",
+        "range_inclusive": [
+          52444233,
+          52444242
+        ],
+        "returned_swap_logs": 0,
+        "returned_unique_tx": 0,
+        "result_complete_in_bound": true
+      },
+      {
+        "rank": 17,
+        "pair": "0x7d8f9b72d702ae97c330dc14691ccfbde8562f00",
+        "range_inclusive": [
+          52444233,
+          52444242
+        ],
+        "returned_swap_logs": 0,
+        "returned_unique_tx": 0,
+        "result_complete_in_bound": true
+      }
+    ],
+    "free_tier_max_eth_getLogs_window_blocks": 10,
+    "attempted_larger_90_block_request_rejected_before_execution": true,
+    "read_only_no_wallet": true,
+    "source_response_http_raw_bytes_independently_archived_by_assistant": false,
+    "not_covered": [
+      52444243,
+      52444332
+    ],
+    "not_covered_interpretation": "Provider free-tier size limit precludes 90 block single query, no data or absence assertions outside ten checked blocks.",
+    "absence_in_following_blocks_not_proof_of_no_later_trading": true,
+    "first_public_after_mint_execution": "UNVERIFIED",
+    "same_notional_sellability": "UNVERIFIED",
+    "full_P0_gates_still": "NOT_SCORABLE"
   }
 }
