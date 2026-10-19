@@ -1,0 +1,1047 @@
+{
+  "G0": "PARTIAL",
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_DEPLOY": true,
+  "NO_GMAIL": true,
+  "NO_MERGE": true,
+  "NO_TRADE": true,
+  "both_alternative_non_combined_signal_views": {
+    "SETUP": {
+      "1440": {
+        "rows": [
+          {
+            "event_id": "a7b9daf09be1222b01bc315234cd835781b97320b65742b9854c5914dd266fd6",
+            "hold_minutes": 1440,
+            "observed_ms": 1792307520000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "ERAUSDT"
+          },
+          {
+            "event_id": "d5ee6b8fdca66dade3196e6f874005f768a0ed9909af45f6b2521fc25f0962f3",
+            "hold_minutes": 1440,
+            "observed_ms": 1792317420000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "AMPUSDT"
+          },
+          {
+            "event_id": "848ea83add5fdd477557a2ac39023bff6a2022ebfcb43808df1b2dfea36f8df1",
+            "hold_minutes": 1440,
+            "observed_ms": 1792317960000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "ACMUSDT"
+          },
+          {
+            "event_id": "90e39fddee77e23aefa82f5833367263fbedf232e2e38a4b355151965c28e802",
+            "hold_minutes": 1440,
+            "observed_ms": 1792330920000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "QKCUSDT"
+          },
+          {
+            "event_id": "3e28497482aeeb38a841201a49553a1e7be5c7bd7a23450a0c83ab96a4f3da74",
+            "hold_minutes": 1440,
+            "observed_ms": 1792333260000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "BARUSDT"
+          },
+          {
+            "event_id": "c37f09689f94eea32090e95a5577139e99999f18f5f0cb0708820d4d904879e0",
+            "hold_minutes": 1440,
+            "observed_ms": 1792344420000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "QUICKUSDT"
+          },
+          {
+            "event_id": "a82d485c369dbcc0ab92d16bbf435287162125b02c1ddaa2b794347276b77316",
+            "hold_minutes": 1440,
+            "observed_ms": 1792348560000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "EPICUSDT"
+          },
+          {
+            "event_id": "added729933e6a20a32fc26de90578aedeaa457415f8d37a1e494abf94b23787",
+            "hold_minutes": 1440,
+            "observed_ms": 1792360260000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "MANTRAUSDT"
+          }
+        ],
+        "summary": {
+          "all_original_signals": 8,
+          "evaluable_net_price_proxies": 0,
+          "losing_price_proxies": 0,
+          "mean_net_price_proxy_pct": null,
+          "median_net_price_proxy_pct": null,
+          "statuses": {
+            "CENSORED_EXIT_SOURCE_NOT_AVAILABLE": 8
+          },
+          "winning_price_proxies": 0,
+          "zero_price_proxies": 0
+        }
+      },
+      "15": {
+        "rows": [
+          {
+            "event_id": "a7b9daf09be1222b01bc315234cd835781b97320b65742b9854c5914dd266fd6",
+            "hold_minutes": 15,
+            "observed_ms": 1792307520000,
+            "result": {
+              "entry_utc": "2026-10-18T07:15:00+00:00",
+              "exit_utc": "2026-10-18T07:30:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "1.371742112482853223593964300",
+              "net_price_proxy_pct": "0.765231337325349301397205600",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "ERAUSDT"
+          },
+          {
+            "event_id": "d5ee6b8fdca66dade3196e6f874005f768a0ed9909af45f6b2521fc25f0962f3",
+            "hold_minutes": 15,
+            "observed_ms": 1792317420000,
+            "result": {
+              "entry_utc": "2026-10-18T10:00:00+00:00",
+              "exit_utc": "2026-10-18T10:15:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-2.800",
+              "net_price_proxy_pct": "-3.381551092215568862275449100",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "AMPUSDT"
+          },
+          {
+            "event_id": "848ea83add5fdd477557a2ac39023bff6a2022ebfcb43808df1b2dfea36f8df1",
+            "hold_minutes": 15,
+            "observed_ms": 1792317960000,
+            "result": {
+              "entry_utc": "2026-10-18T10:09:00+00:00",
+              "exit_utc": "2026-10-18T10:24:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "3.900709219858156028368794300",
+              "net_price_proxy_pct": "3.279067543636131991336475900",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "ACMUSDT"
+          },
+          {
+            "event_id": "90e39fddee77e23aefa82f5833367263fbedf232e2e38a4b355151965c28e802",
+            "hold_minutes": 15,
+            "observed_ms": 1792330920000,
+            "result": {
+              "entry_utc": "2026-10-18T13:45:00+00:00",
+              "exit_utc": "2026-10-18T14:00:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "5.880191106210951855935317900",
+              "net_price_proxy_pct": "5.246706118743769352144663300",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "QKCUSDT"
+          },
+          {
+            "event_id": "3e28497482aeeb38a841201a49553a1e7be5c7bd7a23450a0c83ab96a4f3da74",
+            "hold_minutes": 15,
+            "observed_ms": 1792333260000,
+            "result": {
+              "entry_utc": "2026-10-18T14:24:00+00:00",
+              "exit_utc": "2026-10-18T14:39:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-0.7299270072992700729927007300",
+              "net_price_proxy_pct": "-1.323863420604047379693168410",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "BARUSDT"
+          },
+          {
+            "event_id": "c37f09689f94eea32090e95a5577139e99999f18f5f0cb0708820d4d904879e0",
+            "hold_minutes": 15,
+            "observed_ms": 1792344420000,
+            "result": {
+              "entry_utc": "2026-10-18T17:30:00+00:00",
+              "exit_utc": "2026-10-18T17:45:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-0.2865329512893982808022922600",
+              "net_price_proxy_pct": "-0.8831222071616080160595714000",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "QUICKUSDT"
+          },
+          {
+            "event_id": "a82d485c369dbcc0ab92d16bbf435287162125b02c1ddaa2b794347276b77316",
+            "hold_minutes": 15,
+            "observed_ms": 1792348560000,
+            "result": {
+              "entry_utc": "2026-10-18T18:39:00+00:00",
+              "exit_utc": "2026-10-18T18:54:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-0.0352982703847511471937875000",
+              "net_price_proxy_pct": "-0.6333906723792091073764930400",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "EPICUSDT"
+          },
+          {
+            "event_id": "added729933e6a20a32fc26de90578aedeaa457415f8d37a1e494abf94b23787",
+            "hold_minutes": 15,
+            "observed_ms": 1792360260000,
+            "result": {
+              "entry_utc": "2026-10-18T21:54:00+00:00",
+              "exit_utc": "2026-10-18T22:09:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-3.640776699029126213592233010",
+              "net_price_proxy_pct": "-4.217297394046857740829021560",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "MANTRAUSDT"
+          }
+        ],
+        "summary": {
+          "all_original_signals": 8,
+          "evaluable_net_price_proxies": 8,
+          "losing_price_proxies": 5,
+          "mean_net_price_proxy_pct": "-0.1435274733377550576694198388",
+          "median_net_price_proxy_pct": "-0.758256439770408561718032220",
+          "statuses": {
+            "OFFICIAL_1M_PRICE_PROXY_ONLY": 8
+          },
+          "winning_price_proxies": 3,
+          "zero_price_proxies": 0
+        }
+      },
+      "360": {
+        "rows": [
+          {
+            "event_id": "a7b9daf09be1222b01bc315234cd835781b97320b65742b9854c5914dd266fd6",
+            "hold_minutes": 360,
+            "observed_ms": 1792307520000,
+            "result": {
+              "entry_utc": "2026-10-18T07:15:00+00:00",
+              "exit_utc": "2026-10-18T13:15:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-1.783264746227709190672153640",
+              "net_price_proxy_pct": "-2.370899001996007984031936130",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "ERAUSDT"
+          },
+          {
+            "event_id": "d5ee6b8fdca66dade3196e6f874005f768a0ed9909af45f6b2521fc25f0962f3",
+            "hold_minutes": 360,
+            "observed_ms": 1792317420000,
+            "result": {
+              "entry_utc": "2026-10-18T10:00:00+00:00",
+              "exit_utc": "2026-10-18T16:00:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "1.200",
+              "net_price_proxy_pct": "0.594516764071856287425149700",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "AMPUSDT"
+          },
+          {
+            "event_id": "848ea83add5fdd477557a2ac39023bff6a2022ebfcb43808df1b2dfea36f8df1",
+            "hold_minutes": 360,
+            "observed_ms": 1792317960000,
+            "result": {
+              "entry_utc": "2026-10-18T10:09:00+00:00",
+              "exit_utc": "2026-10-18T16:09:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-5.673758865248226950354609930",
+              "net_price_proxy_pct": "-6.238116154924194164861765830",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "ACMUSDT"
+          },
+          {
+            "event_id": "90e39fddee77e23aefa82f5833367263fbedf232e2e38a4b355151965c28e802",
+            "hold_minutes": 360,
+            "observed_ms": 1792330920000,
+            "result": {
+              "entry_utc": "2026-10-18T13:45:00+00:00",
+              "exit_utc": "2026-10-18T19:45:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-4.777655273796398382947445790",
+              "net_price_proxy_pct": "-5.347373983455360502809155670",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "QKCUSDT"
+          },
+          {
+            "event_id": "3e28497482aeeb38a841201a49553a1e7be5c7bd7a23450a0c83ab96a4f3da74",
+            "hold_minutes": 360,
+            "observed_ms": 1792333260000,
+            "result": {
+              "entry_utc": "2026-10-18T14:24:00+00:00",
+              "exit_utc": "2026-10-18T20:24:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-2.189781021897810218978102190",
+              "net_price_proxy_pct": "-2.774983076183399624109445350",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "BARUSDT"
+          },
+          {
+            "event_id": "c37f09689f94eea32090e95a5577139e99999f18f5f0cb0708820d4d904879e0",
+            "hold_minutes": 360,
+            "observed_ms": 1792344420000,
+            "result": {
+              "entry_utc": "2026-10-18T17:30:00+00:00",
+              "exit_utc": "2026-10-18T23:30:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-1.432664756446991404011461320",
+              "net_price_proxy_pct": "-2.022396664550555050357737260",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "QUICKUSDT"
+          },
+          {
+            "event_id": "a82d485c369dbcc0ab92d16bbf435287162125b02c1ddaa2b794347276b77316",
+            "hold_minutes": 360,
+            "observed_ms": 1792348560000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "EPICUSDT"
+          },
+          {
+            "event_id": "added729933e6a20a32fc26de90578aedeaa457415f8d37a1e494abf94b23787",
+            "hold_minutes": 360,
+            "observed_ms": 1792360260000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "MANTRAUSDT"
+          }
+        ],
+        "summary": {
+          "all_original_signals": 8,
+          "evaluable_net_price_proxies": 6,
+          "losing_price_proxies": 5,
+          "mean_net_price_proxy_pct": "-3.02654201950627683979081509",
+          "median_net_price_proxy_pct": "-2.572941039089703804070690740",
+          "statuses": {
+            "CENSORED_EXIT_SOURCE_NOT_AVAILABLE": 2,
+            "OFFICIAL_1M_PRICE_PROXY_ONLY": 6
+          },
+          "winning_price_proxies": 1,
+          "zero_price_proxies": 0
+        }
+      },
+      "60": {
+        "rows": [
+          {
+            "event_id": "a7b9daf09be1222b01bc315234cd835781b97320b65742b9854c5914dd266fd6",
+            "hold_minutes": 60,
+            "observed_ms": 1792307520000,
+            "result": {
+              "entry_utc": "2026-10-18T07:15:00+00:00",
+              "exit_utc": "2026-10-18T08:15:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "7.681755829903978052126200300",
+              "net_price_proxy_pct": "7.037492015968063872255489100",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "ERAUSDT"
+          },
+          {
+            "event_id": "d5ee6b8fdca66dade3196e6f874005f768a0ed9909af45f6b2521fc25f0962f3",
+            "hold_minutes": 60,
+            "observed_ms": 1792317420000,
+            "result": {
+              "entry_utc": "2026-10-18T10:00:00+00:00",
+              "exit_utc": "2026-10-18T11:00:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "2.800",
+              "net_price_proxy_pct": "2.184943906586826347305389200",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "AMPUSDT"
+          },
+          {
+            "event_id": "848ea83add5fdd477557a2ac39023bff6a2022ebfcb43808df1b2dfea36f8df1",
+            "hold_minutes": 60,
+            "observed_ms": 1792317960000,
+            "result": {
+              "entry_utc": "2026-10-18T10:09:00+00:00",
+              "exit_utc": "2026-10-18T11:09:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-4.255319148936170212765957450",
+              "net_price_proxy_pct": "-4.828163014396738438017581860",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "ACMUSDT"
+          },
+          {
+            "event_id": "90e39fddee77e23aefa82f5833367263fbedf232e2e38a4b355151965c28e802",
+            "hold_minutes": 60,
+            "observed_ms": 1792330920000,
+            "result": {
+              "entry_utc": "2026-10-18T13:45:00+00:00",
+              "exit_utc": "2026-10-18T14:45:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-1.176038221242190371187063580",
+              "net_price_proxy_pct": "-1.767305535125999379410968580",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "QKCUSDT"
+          },
+          {
+            "event_id": "3e28497482aeeb38a841201a49553a1e7be5c7bd7a23450a0c83ab96a4f3da74",
+            "hold_minutes": 60,
+            "observed_ms": 1792333260000,
+            "result": {
+              "entry_utc": "2026-10-18T14:24:00+00:00",
+              "exit_utc": "2026-10-18T15:24:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-0.3649635036496350364963503600",
+              "net_price_proxy_pct": "-0.9610835067092093185890991600",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "BARUSDT"
+          },
+          {
+            "event_id": "c37f09689f94eea32090e95a5577139e99999f18f5f0cb0708820d4d904879e0",
+            "hold_minutes": 60,
+            "observed_ms": 1792344420000,
+            "result": {
+              "entry_utc": "2026-10-18T17:30:00+00:00",
+              "exit_utc": "2026-10-18T18:30:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "2.292263610315186246418338100",
+              "net_price_proxy_pct": "1.680245321963522811111301800",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "QUICKUSDT"
+          },
+          {
+            "event_id": "a82d485c369dbcc0ab92d16bbf435287162125b02c1ddaa2b794347276b77316",
+            "hold_minutes": 60,
+            "observed_ms": 1792348560000,
+            "result": {
+              "entry_utc": "2026-10-18T18:39:00+00:00",
+              "exit_utc": "2026-10-18T19:39:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-2.965054712319096364278150370",
+              "net_price_proxy_pct": "-3.545618276260750648367930570",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "EPICUSDT"
+          },
+          {
+            "event_id": "added729933e6a20a32fc26de90578aedeaa457415f8d37a1e494abf94b23787",
+            "hold_minutes": 60,
+            "observed_ms": 1792360260000,
+            "result": {
+              "entry_utc": "2026-10-18T21:54:00+00:00",
+              "exit_utc": "2026-10-18T22:54:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-0.9708737864077669902912621400",
+              "net_price_proxy_pct": "-1.563368606476367653043427720",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "MANTRAUSDT"
+          }
+        ],
+        "summary": {
+          "all_original_signals": 8,
+          "evaluable_net_price_proxies": 8,
+          "losing_price_proxies": 5,
+          "mean_net_price_proxy_pct": "-0.2203572118063315508446034738",
+          "median_net_price_proxy_pct": "-1.262226056592788485816263440",
+          "statuses": {
+            "OFFICIAL_1M_PRICE_PROXY_ONLY": 8
+          },
+          "winning_price_proxies": 3,
+          "zero_price_proxies": 0
+        }
+      }
+    },
+    "WATCH": {
+      "1440": {
+        "rows": [
+          {
+            "event_id": "9d16e92a6367d614f616f0ec0c7478f9b9379fcd5e8d9943dfa42ffc311db0d7",
+            "hold_minutes": 1440,
+            "observed_ms": 1792307340000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "ERAUSDT"
+          },
+          {
+            "event_id": "fbf13d3101b922a0ace22763cf028189b20f3e825e3ad2cc4be924574d6044c4",
+            "hold_minutes": 1440,
+            "observed_ms": 1792317060000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "AMPUSDT"
+          },
+          {
+            "event_id": "1d67b212f160e850008c0b9f13cf77b84519264a9337b5fcc28f13922f5927cf",
+            "hold_minutes": 1440,
+            "observed_ms": 1792317600000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "ACMUSDT"
+          },
+          {
+            "event_id": "860dc161f4db9306c70b97766131360d163ffe27300d9dd61691ddc4192ae760",
+            "hold_minutes": 1440,
+            "observed_ms": 1792330560000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "QKCUSDT"
+          },
+          {
+            "event_id": "d9ea2fbc6ab92451d72af77315bdb21169146e6776b10efa36fb0fa52e516fa2",
+            "hold_minutes": 1440,
+            "observed_ms": 1792333080000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "BARUSDT"
+          },
+          {
+            "event_id": "c39c4d64a8d83a0801499c263f782ae6e0ee44ed437f61b82e186390d1b87189",
+            "hold_minutes": 1440,
+            "observed_ms": 1792344240000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "QUICKUSDT"
+          },
+          {
+            "event_id": "b7130b99e624ad13c16e94350984cc0b619812e18097af9cd537829fbb9858a5",
+            "hold_minutes": 1440,
+            "observed_ms": 1792348200000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "EPICUSDT"
+          },
+          {
+            "event_id": "aa56b99ff968966c332ccbdf69b00707b33367c408b4855e1cecc5c8a5d811d9",
+            "hold_minutes": 1440,
+            "observed_ms": 1792359900000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "MANTRAUSDT"
+          }
+        ],
+        "summary": {
+          "all_original_signals": 8,
+          "evaluable_net_price_proxies": 0,
+          "losing_price_proxies": 0,
+          "mean_net_price_proxy_pct": null,
+          "median_net_price_proxy_pct": null,
+          "statuses": {
+            "CENSORED_EXIT_SOURCE_NOT_AVAILABLE": 8
+          },
+          "winning_price_proxies": 0,
+          "zero_price_proxies": 0
+        }
+      },
+      "15": {
+        "rows": [
+          {
+            "event_id": "9d16e92a6367d614f616f0ec0c7478f9b9379fcd5e8d9943dfa42ffc311db0d7",
+            "hold_minutes": 15,
+            "observed_ms": 1792307340000,
+            "result": {
+              "entry_utc": "2026-10-18T07:12:00+00:00",
+              "exit_utc": "2026-10-18T07:27:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "3.596127247579529737206085800",
+              "net_price_proxy_pct": "2.976307896240713593559768400",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "ERAUSDT"
+          },
+          {
+            "event_id": "fbf13d3101b922a0ace22763cf028189b20f3e825e3ad2cc4be924574d6044c4",
+            "hold_minutes": 15,
+            "observed_ms": 1792317060000,
+            "result": {
+              "entry_utc": "2026-10-18T09:54:00+00:00",
+              "exit_utc": "2026-10-18T10:09:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-5.208333333333333333333333330",
+              "net_price_proxy_pct": "-5.775475280688622754491017950",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "AMPUSDT"
+          },
+          {
+            "event_id": "1d67b212f160e850008c0b9f13cf77b84519264a9337b5fcc28f13922f5927cf",
+            "hold_minutes": 15,
+            "observed_ms": 1792317600000,
+            "result": {
+              "entry_utc": "2026-10-18T10:03:00+00:00",
+              "exit_utc": "2026-10-18T10:18:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-3.703703703703703703703703700",
+              "net_price_proxy_pct": "-4.279847904191616766467065860",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "ACMUSDT"
+          },
+          {
+            "event_id": "860dc161f4db9306c70b97766131360d163ffe27300d9dd61691ddc4192ae760",
+            "hold_minutes": 15,
+            "observed_ms": 1792330560000,
+            "result": {
+              "entry_utc": "2026-10-18T13:39:00+00:00",
+              "exit_utc": "2026-10-18T13:54:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "3.509420022164758034724787600",
+              "net_price_proxy_pct": "2.890119443270828125794956000",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "QKCUSDT"
+          },
+          {
+            "event_id": "d9ea2fbc6ab92451d72af77315bdb21169146e6776b10efa36fb0fa52e516fa2",
+            "hold_minutes": 15,
+            "observed_ms": 1792333080000,
+            "result": {
+              "entry_utc": "2026-10-18T14:21:00+00:00",
+              "exit_utc": "2026-10-18T14:36:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-4.225352112676056338028169010",
+              "net_price_proxy_pct": "-4.798375271991228809985662470",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "BARUSDT"
+          },
+          {
+            "event_id": "c39c4d64a8d83a0801499c263f782ae6e0ee44ed437f61b82e186390d1b87189",
+            "hold_minutes": 15,
+            "observed_ms": 1792344240000,
+            "result": {
+              "entry_utc": "2026-10-18T17:27:00+00:00",
+              "exit_utc": "2026-10-18T17:42:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "0",
+              "net_price_proxy_pct": "-0.5983035928143712574850299400",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "QUICKUSDT"
+          },
+          {
+            "event_id": "b7130b99e624ad13c16e94350984cc0b619812e18097af9cd537829fbb9858a5",
+            "hold_minutes": 15,
+            "observed_ms": 1792348200000,
+            "result": {
+              "entry_utc": "2026-10-18T18:33:00+00:00",
+              "exit_utc": "2026-10-18T18:48:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "0.315678709224833391792353600",
+              "net_price_proxy_pct": "-0.2845136006485800759057122100",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "EPICUSDT"
+          },
+          {
+            "event_id": "aa56b99ff968966c332ccbdf69b00707b33367c408b4855e1cecc5c8a5d811d9",
+            "hold_minutes": 15,
+            "observed_ms": 1792359900000,
+            "result": {
+              "entry_utc": "2026-10-18T21:48:00+00:00",
+              "exit_utc": "2026-10-18T22:03:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-6.896551724137931034482758620",
+              "net_price_proxy_pct": "-7.453593000206483584555027870",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "MANTRAUSDT"
+          }
+        ],
+        "summary": {
+          "all_original_signals": 8,
+          "evaluable_net_price_proxies": 8,
+          "losing_price_proxies": 6,
+          "mean_net_price_proxy_pct": "-2.165460163878670191191848988",
+          "median_net_price_proxy_pct": "-2.439075748502994011976047900",
+          "statuses": {
+            "OFFICIAL_1M_PRICE_PROXY_ONLY": 8
+          },
+          "winning_price_proxies": 2,
+          "zero_price_proxies": 0
+        }
+      },
+      "360": {
+        "rows": [
+          {
+            "event_id": "9d16e92a6367d614f616f0ec0c7478f9b9379fcd5e8d9943dfa42ffc311db0d7",
+            "hold_minutes": 360,
+            "observed_ms": 1792307340000,
+            "result": {
+              "entry_utc": "2026-10-18T07:12:00+00:00",
+              "exit_utc": "2026-10-18T13:12:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-1.521438450899031811894882430",
+              "net_price_proxy_pct": "-2.110639222799214848311675400",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "ERAUSDT"
+          },
+          {
+            "event_id": "fbf13d3101b922a0ace22763cf028189b20f3e825e3ad2cc4be924574d6044c4",
+            "hold_minutes": 360,
+            "observed_ms": 1792317060000,
+            "result": {
+              "entry_utc": "2026-10-18T09:54:00+00:00",
+              "exit_utc": "2026-10-18T15:54:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-0.5208333333333333333333333300",
+              "net_price_proxy_pct": "-1.116020761601796407185628730",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "AMPUSDT"
+          },
+          {
+            "event_id": "1d67b212f160e850008c0b9f13cf77b84519264a9337b5fcc28f13922f5927cf",
+            "hold_minutes": 360,
+            "observed_ms": 1792317600000,
+            "result": {
+              "entry_utc": "2026-10-18T10:03:00+00:00",
+              "exit_utc": "2026-10-18T16:03:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-10.43771043771043771043771044",
+              "net_price_proxy_pct": "-10.97356483396842678279804028",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "ACMUSDT"
+          },
+          {
+            "event_id": "860dc161f4db9306c70b97766131360d163ffe27300d9dd61691ddc4192ae760",
+            "hold_minutes": 360,
+            "observed_ms": 1792330560000,
+            "result": {
+              "entry_utc": "2026-10-18T13:39:00+00:00",
+              "exit_utc": "2026-10-18T19:39:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-4.765422977465829331363132620",
+              "net_price_proxy_pct": "-5.335214873393220946359958320",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "QKCUSDT"
+          },
+          {
+            "event_id": "d9ea2fbc6ab92451d72af77315bdb21169146e6776b10efa36fb0fa52e516fa2",
+            "hold_minutes": 360,
+            "observed_ms": 1792333080000,
+            "result": {
+              "status": "CENSORED_PREEXIT_ZERO_TRADES_OR_QUOTE"
+            },
+            "symbol": "BARUSDT"
+          },
+          {
+            "event_id": "c39c4d64a8d83a0801499c263f782ae6e0ee44ed437f61b82e186390d1b87189",
+            "hold_minutes": 360,
+            "observed_ms": 1792344240000,
+            "result": {
+              "entry_utc": "2026-10-18T17:27:00+00:00",
+              "exit_utc": "2026-10-18T23:27:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-0.2849002849002849002849002800",
+              "net_price_proxy_pct": "-0.8814993090741593735605711600",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "QUICKUSDT"
+          },
+          {
+            "event_id": "b7130b99e624ad13c16e94350984cc0b619812e18097af9cd537829fbb9858a5",
+            "hold_minutes": 360,
+            "observed_ms": 1792348200000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "EPICUSDT"
+          },
+          {
+            "event_id": "aa56b99ff968966c332ccbdf69b00707b33367c408b4855e1cecc5c8a5d811d9",
+            "hold_minutes": 360,
+            "observed_ms": 1792359900000,
+            "result": {
+              "status": "CENSORED_EXIT_SOURCE_NOT_AVAILABLE"
+            },
+            "symbol": "MANTRAUSDT"
+          }
+        ],
+        "summary": {
+          "all_original_signals": 8,
+          "evaluable_net_price_proxies": 5,
+          "losing_price_proxies": 5,
+          "mean_net_price_proxy_pct": "-4.083387800167363671643174778",
+          "median_net_price_proxy_pct": "-2.110639222799214848311675400",
+          "statuses": {
+            "CENSORED_EXIT_SOURCE_NOT_AVAILABLE": 2,
+            "CENSORED_PREEXIT_ZERO_TRADES_OR_QUOTE": 1,
+            "OFFICIAL_1M_PRICE_PROXY_ONLY": 5
+          },
+          "winning_price_proxies": 0,
+          "zero_price_proxies": 0
+        }
+      },
+      "60": {
+        "rows": [
+          {
+            "event_id": "9d16e92a6367d614f616f0ec0c7478f9b9379fcd5e8d9943dfa42ffc311db0d7",
+            "hold_minutes": 60,
+            "observed_ms": 1792307340000,
+            "result": {
+              "entry_utc": "2026-10-18T07:12:00+00:00",
+              "exit_utc": "2026-10-18T08:12:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "8.298755186721991701244813300",
+              "net_price_proxy_pct": "7.650799843466593783387581700",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "ERAUSDT"
+          },
+          {
+            "event_id": "fbf13d3101b922a0ace22763cf028189b20f3e825e3ad2cc4be924574d6044c4",
+            "hold_minutes": 60,
+            "observed_ms": 1792317060000,
+            "result": {
+              "entry_utc": "2026-10-18T09:54:00+00:00",
+              "exit_utc": "2026-10-18T10:54:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "1.17187500",
+              "net_price_proxy_pct": "0.566560036957335329341317400",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "AMPUSDT"
+          },
+          {
+            "event_id": "1d67b212f160e850008c0b9f13cf77b84519264a9337b5fcc28f13922f5927cf",
+            "hold_minutes": 60,
+            "observed_ms": 1792317600000,
+            "result": {
+              "entry_utc": "2026-10-18T10:03:00+00:00",
+              "exit_utc": "2026-10-18T11:03:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-9.427609427609427609427609430",
+              "net_price_proxy_pct": "-9.969507294501905280348394120",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "ACMUSDT"
+          },
+          {
+            "event_id": "860dc161f4db9306c70b97766131360d163ffe27300d9dd61691ddc4192ae760",
+            "hold_minutes": 60,
+            "observed_ms": 1792330560000,
+            "result": {
+              "entry_utc": "2026-10-18T13:39:00+00:00",
+              "exit_utc": "2026-10-18T14:39:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-3.066124861470262282970077580",
+              "net_price_proxy_pct": "-3.646083719078282297613859830",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "QKCUSDT"
+          },
+          {
+            "event_id": "d9ea2fbc6ab92451d72af77315bdb21169146e6776b10efa36fb0fa52e516fa2",
+            "hold_minutes": 60,
+            "observed_ms": 1792333080000,
+            "result": {
+              "status": "CENSORED_PREEXIT_ZERO_TRADES_OR_QUOTE"
+            },
+            "symbol": "BARUSDT"
+          },
+          {
+            "event_id": "c39c4d64a8d83a0801499c263f782ae6e0ee44ed437f61b82e186390d1b87189",
+            "hold_minutes": 60,
+            "observed_ms": 1792344240000,
+            "result": {
+              "entry_utc": "2026-10-18T17:27:00+00:00",
+              "exit_utc": "2026-10-18T18:27:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-0.1424501424501424501424501400",
+              "net_price_proxy_pct": "-0.7399014509442653155228005500",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "QUICKUSDT"
+          },
+          {
+            "event_id": "b7130b99e624ad13c16e94350984cc0b619812e18097af9cd537829fbb9858a5",
+            "hold_minutes": 60,
+            "observed_ms": 1792348200000,
+            "result": {
+              "entry_utc": "2026-10-18T18:33:00+00:00",
+              "exit_utc": "2026-10-18T19:33:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-2.244826376709926341634514210",
+              "net_price_proxy_pct": "-2.829699092659997437604622400",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "EPICUSDT"
+          },
+          {
+            "event_id": "aa56b99ff968966c332ccbdf69b00707b33367c408b4855e1cecc5c8a5d811d9",
+            "hold_minutes": 60,
+            "observed_ms": 1792359900000,
+            "result": {
+              "entry_utc": "2026-10-18T21:48:00+00:00",
+              "exit_utc": "2026-10-18T22:48:00+00:00",
+              "fee_per_side_assumption_bps": 10,
+              "gross_pct": "-5.747126436781609195402298850",
+              "net_price_proxy_pct": "-6.311044765641131530043361550",
+              "real_ask_bid_or_fill_verified": false,
+              "slippage_per_side_assumption_bps": 20,
+              "status": "OFFICIAL_1M_PRICE_PROXY_ONLY"
+            },
+            "symbol": "MANTRAUSDT"
+          }
+        ],
+        "summary": {
+          "all_original_signals": 8,
+          "evaluable_net_price_proxies": 7,
+          "losing_price_proxies": 5,
+          "mean_net_price_proxy_pct": "-2.182696634628807535486305621",
+          "median_net_price_proxy_pct": "-2.829699092659997437604622400",
+          "statuses": {
+            "CENSORED_PREEXIT_ZERO_TRADES_OR_QUOTE": 1,
+            "OFFICIAL_1M_PRICE_PROXY_ONLY": 7
+          },
+          "winning_price_proxies": 2,
+          "zero_price_proxies": 0
+        }
+      }
+    }
+  },
+  "executable_net_pnl": "UNKNOWN",
+  "historical_1m_rolling_ticker24_proxy_not_real": true,
+  "independent_other_AI_review": "NOT_DONE",
+  "no_default_notional_or_cash_profit": true,
+  "not_fresh_live_market_capture": true,
+  "paired_SETUP_after_WATCH_delay_minutes": {
+    "ACMUSDT": 6,
+    "AMPUSDT": 6,
+    "BARUSDT": 3,
+    "EPICUSDT": 6,
+    "ERAUSDT": 3,
+    "MANTRAUSDT": 6,
+    "QKCUSDT": 6,
+    "QUICKUSDT": 3
+  },
+  "pre_registered_horizons_minutes": [
+    15,
+    60,
+    360,
+    1440
+  ],
+  "schema": "MONSTER_FORWARD_SPOT511_FIRST518_ALL8_WATCH_SETUP_FIXED_PRICE_HORIZON_V1",
+  "source_1533_full_sha_reverified_in_previous_CI": true,
+  "source_eight_pairs_publisher_sha_reverified_here": true,
+  "source_first518_sha256": "d51ce0faa70609dfa24659eed29958cef167c068838ad3986c6a8a0e297b0c2d",
+  "source_immutable_setup_count": 8,
+  "source_immutable_watch_count": 8,
+  "source_original_1533_names_present": true,
+  "symbol_venue": "BINANCE_SPOT",
+  "true_7day_OOS": "NOT_DONE"
+}
