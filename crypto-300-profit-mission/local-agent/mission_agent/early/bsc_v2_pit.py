@@ -189,3 +189,26 @@ def v2_static_two_way_quote(quote_amount_raw, quote_reserve_raw, token_reserve_r
             'sequential_roundtrip_pnl': 'NOT_COMPUTED',
             'historical_sell_executable': 'UNVERIFIED'}
 
+def classify_v2_swap_by_quote_side(row, *, quote_is_token0):
+    """Observed V2 Swap *direction*, not a general token sellability guarantee."""
+    if type(quote_is_token0) is not bool or not isinstance(row, dict):
+        raise PITInvalid('SWAP_DIRECTION_INPUT_INVALID')
+    topics = row.get('topics') or []
+    if not topics or str(topics[0]).lower() != SWAP:
+        raise PITInvalid('NOT_A_V2_SWAP_LOG')
+    values = words(row.get('data'), 4)
+    a0_in, a1_in, a0_out, a1_out = values
+    quote_in, token_in = (a0_in, a1_in) if quote_is_token0 else (a1_in, a0_in)
+    quote_out, token_out = (a0_out, a1_out) if quote_is_token0 else (a1_out, a0_out)
+    if quote_in > 0 and token_out > 0 and quote_out == token_in == 0:
+        direction = 'OBSERVED_QUOTE_TO_TOKEN_SWAP'
+    elif token_in > 0 and quote_out > 0 and quote_in == token_out == 0:
+        direction = 'OBSERVED_TOKEN_TO_QUOTE_SWAP'
+    else:
+        direction = 'OTHER_OR_AMBIGUOUS_SWAP'
+    return {'direction': direction, 'quote_in_raw': str(quote_in),
+            'quote_out_raw': str(quote_out),
+            'token_in_raw': str(token_in), 'token_out_raw': str(token_out),
+            'user_same_notional_sellability': 'UNVERIFIED',
+            'tax_and_allowed_addresses': 'UNKNOWN'}
+
