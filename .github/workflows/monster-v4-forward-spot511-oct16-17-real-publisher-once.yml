@@ -1,11 +1,6 @@
-name: Monster real official Spot511 Oct16-17 publisher ZIP acquisition (one-shot)
+name: Monster completed initial real Spot511 publisher archive - manual only
 on:
-  push:
-    branches: [research/monster-v4-local-discovery-20261010]
-    paths:
-      - '.github/workflows/monster-v4-forward-spot511-oct16-17-real-publisher-once.yml'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_official_publisher_acquire.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_forward_spot511_official_publisher_acquire.py'
+  workflow_dispatch:
 permissions:
   contents: write
 concurrency:
