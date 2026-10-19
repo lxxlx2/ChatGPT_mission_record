@@ -1,0 +1,56 @@
+name: Frank PR106 Safari 503 Mac acceptance QA code
+on:
+  push:
+    branches:
+      - qa/frank-pr106-mac-safari-decisions-failure-20261019
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-qa-bridge-http-and-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Exact QA SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "FRANK_PR106_MAC_QA_SHA=$GITHUB_SHA"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Syntax and exact approved product comparison
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/frank_pr106_safari_refresh_acceptance.py
+          node --check mission_agent/mission_control/static/app.js
+          test "$(git rev-parse HEAD^)" != "$GITHUB_SHA"
+          git diff --quiet 8a8b4fcc36242c0ba03b03170225f723d847fa53 HEAD -- mission_agent/mission_control/static/ || (echo "APPROVED_PRODUCT_STATIC_CHANGED"; exit 1)
+      - name: Install offline QA dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3
+      - name: Real synthetic HTTP QA fault/recovery, former C02 QA, and Web UI tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_pr106_safari_refresh_acceptance.py tests/test_frank_c02_auto_safari_capture.py tests/test_frank_pr101_safari_evidence.py tests/test_frank_decisions_readonly_diagnostic.py
+          node --test tests/test_frank_decisions_partial_refresh.cjs tests/test_frank_c02_archive_readonly.cjs tests/test_frank_candidate_sections.cjs tests/test_frank_candidate_sections_dom.cjs tests/frank_f01_primary_freshness.cjs tests/frank_source_context_mount.cjs tests/frank_source_context_render.cjs
+      - name: Install local WebKit and rerun natural five-second refresh state drift
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install playwright==1.55.0
+          python -m playwright install --with-deps webkit
+          python -B scripts/frank_pr107_webkit_state_drift_probe.py
+      - name: Full local agent historical replay regression
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests
