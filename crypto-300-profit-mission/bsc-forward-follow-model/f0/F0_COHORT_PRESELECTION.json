@@ -4,7 +4,7 @@
   "reviewed_architecture_commit": "9134fcd41df49ef836b81c8a040974ad89c1fde1",
   "trial_only": true,
   "chain_id": 56,
-  "sampling_method": "FNV1A32_ASCENDING_OVER_UTF16_ASCII(seed+'|'+source+'|'+lowercase_wallet); unsigned 32-bit rank, tie break lex wallet",
+  "sampling_method": "FNV1A32_ASCENDING_OVER_ASCII_BYTES(seed+'|'+source+'|'+lowercase_wallet); unsigned 32-bit rank, tie break lex wallet",
   "selection_seed": "9134fcd41df49ef836b81c8a040974ad89c1fde1",
   "strata": [
     {
@@ -409,5 +409,42 @@
       "source_row": 283,
       "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127"
     }
-  ]
+  ],
+  "replacement_policy": {
+    "status": "NO_REPLACEMENTS_APPROVED_OR_EXECUTED",
+    "allowed_reason_codes": [
+      "NOT_EOA",
+      "KNOWN_INFRA",
+      "DUPLICATE",
+      "SOURCE_ERROR"
+    ],
+    "required_audit_fields": [
+      "rejected_wallet",
+      "source_id",
+      "replacement_reason_code",
+      "checked_block",
+      "checked_at_utc",
+      "raw_rpc_response_sha256",
+      "evidence_source_ref",
+      "replacement_wallet",
+      "replacement_rank",
+      "decision_version"
+    ],
+    "run_only_after_separate_authorization": true,
+    "missing_rpc_evidence_policy": "UNDERFILLED_NO_SUBSTITUTION",
+    "same_source_backup_only": true,
+    "order": "NEXT_RANKED_UNCONSUMED_BACKUP",
+    "profit_outcome_fields_permitted": false
+  },
+  "screening_protocol_limits": {
+    "scope": "PR97 historical source only, not present EOA/live trade confirmation",
+    "FULL_THREE_CHAIN_NONCE_PAIRS": "PR97 source rows 1-120: nonce activity examined on BSC, ETH and Base",
+    "BSC_FIRST_EARLY_EXIT": "PR97 source rows 121-449: BSC-first and stop after a positive result; cannot infer equal three-chain coverage",
+    "bsc_first_positive_count_full_protocol": 65,
+    "bsc_first_positive_count_early_exit_protocol": 154,
+    "source_total_bsc_first_positive": 219,
+    "removed_PR40_overlaps": 2,
+    "bsc_candidates_after_overlap": 217,
+    "F0_report_must_stratify_by_screening_protocol": true
+  }
 }
