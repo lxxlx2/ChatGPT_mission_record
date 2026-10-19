@@ -1,6 +1,18 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
 
+## 2026-10-20 用户Mac前台实际来源调用及离线归档验收入口
+
+**用户在本对话直接粘贴实际Mac终端输出**：新Git clone后两组已有离线测试分别12/12 PASS，总共24/24；BSC V2 UTC 2025-07-01历史Factory枚举实得**785个当日新池**、检查前34池并复得冻结**30个CA**，枚举共162个RPC调用。之后六批（排名1–5、6–10、11–15、16–20、21–25、26–30）实际read-only bootstrap回执依次报**5、5、4、2、5、4**个同建池交易Mint/Sync，共**25/30**，六批合计**1309**个RPC调用，加枚举总**1471**个RPC调用。与之前30冻结样本的25/30创建同Tx事实一致。原始Mac终端流已记录在同一JSON中的`bsc_v2_p0_user_mac_local_run_20261020`，来源分类为`USER_PASTED_MAC_TERMINAL_STDOUT`，不可冒充本会话远程读取Mac文件或第二来源的独立审核。用户Mac当次具体Git SHA、原始文件字节与SHA尚未由本会话回读，仍然不能将24/30部署/PIT或18/30真实双向可卖门槛升级为PASS。
+
+**发现并修复一个真实可用性问题**：旧CLI每批会覆盖同一`v2_bootstrap_status.json`，因此六批的状态文件只留最后一批。按Factory index分开的原JSON RPC文件不会因这个状态文件覆盖而直接丢失。现有CLI在保留历史兼容`v2_bootstrap_status.json`的同时，新增不覆盖的`v2_bootstrap_rank_<first>_<last>.json`，供**今后执行**保留各批摘要；此次用户已经完成的六批不会被追溯伪造为具有六份状态文件。
+
+**离线原字节验证入口已写现有CLI**：`--chain bsc-v2 --day 2025-07-01 --mode audit --out-dir ~/monster-p0-readonly-raw`，只读取既有Mac私有目录，不连接RPC、不读钱包、不交易，按已冻结30身份重放每例Factory创建证据及同交易Mint/Sync，对原始已存JSON结果计算SHA256并核对之前单独保存在本地的三份ABI响应SHA；结果落在原目录`bsc-v2-2025-07-01/v2_p0_offline_audit_status.json`，以明确`prior_independent_response_sha256=null`区分审计时重算的哈希与取得时独立回执。缺文件、越范围、内容与历史冻结事实不一致均为`NOT_SCORABLE`。未尝试宣称HTTP headers、独立提供商、公众接收时点、延迟LP全部验收、税/黑名单或真实买卖通过。
+
+**状态分级**：上面24/24测试成功只针对**用户已经运行的旧checkout**；本轮新加的离线`audit`与保留批次文件相关测试已写Git，**新固定HEAD在Mac/CI实际运行仍NOT_DONE**。建议下一步单次本机重新运行此两组单测与离线`audit`，无需重复发1471个RPC请求或再次下载已取得的历史原始资料。保留`P0_PARTIAL/G4_UNKNOWN/G6_NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。
+
+---
+
 ## 2026-10-20 P0 增量核算：首次LP储备覆盖与连续AMM数学参考（仅研究）
 
 本次按冻结的30个BSC V2身份逐项回读同份P0 JSON中事先固定的历史Mint/Sync源，并添加`bsc_v2_p0_reference_sequential_amm_20261020`机器节。**30/30保留在分母，27/30能够从本仓库已存的历史正规化事件重建两资产储备向量**：25个建池同交易LP，加上#14与#26两个延迟首次LP时点的完整Sync。#16/#17仍受连接器完整同块响应截断影响；#18截至7月1日末无Sync，尚余3个储备向量UNKNOWN。**27/30仅是已存事件的数学输入覆盖，绝不能升级为24/30完整部署/PIT或18/30历史真实可交易通过。**
