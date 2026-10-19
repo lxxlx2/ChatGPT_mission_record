@@ -13,7 +13,7 @@ Prospectively capture BSC Meme-wallet signed buys and sells, measure when a thir
 - PR #118 `78e4d26ff7cd1074b7c8de44109b4356e5d0409d`: pure synthetic state machine **APPROVE** (36 original tests, separately 103 adversarial).
 - PR #120 `c0a6dca08a57316f70ca7b7e1358c89e262918f4`: saved JSON-RPC parser **APPROVE** (18 tests, separately 60 adversarial). Its HEAD was independently verified before this development; it remains Draft, not merged.
 - PR #121 `bf9fbb0a6bbff3a9375c6a937cea52d016104733`: offline bridge **APPROVE**. Independent reviewer ran 80/80 tests plus adversarial probes. No actual RPC or E3. PR remains unmerged Draft; corrected F0 test invocation is `python3 -m unittest discover -s crypto-300-profit-mission/bsc-forward-follow-model/f0/tests -p "test_*.py"`.
-- Current next-stage branch `research/bsc-forward-f0-live-source-readiness-20261020`: bounded real-free-source **readiness only**; consult its current Draft PR URL/HEAD and `f0/F0_REAL_SOURCE_READINESS.md`. Pending separate review; no runtime permission.
+- Current next-stage [Draft PR #122](https://github.com/lxxlx2/ChatGPT_mission_record/pull/122), branch `research/bsc-forward-f0-live-source-readiness-20261020`: real-free-source **readiness only**, `f0/F0_REAL_SOURCE_READINESS.md`, offline budget CLI and 12 tests, `f0/F0_SOURCE_PREFLIGHT_TEST_EVIDENCE.json`. Locally executed 92/92 combined tests against blob-matched PR #121 baseline + new code; source quotas/performance still UNVERIFIED. **Latest PR #122 head must be re-read from Git; independent review PENDING; no runtime permission.**
 
 ## Real implementation state
 
