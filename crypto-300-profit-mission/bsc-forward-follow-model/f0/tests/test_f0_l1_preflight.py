@@ -105,13 +105,97 @@ class SourcePreflightTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'CODE_REQUEST_IDENTITY_MISMATCH'):
             run([a])
 
-    def test_reject_rpc_error_and_id_mismatch(self):
-        x = envelope(WATCH[0]); x['rpc']['error']={'code':-32000, 'message':'bad'}
-        with self.assertRaisesRegex(ValueError, 'RPC_ERROR'):
-            run([x])
-        x = envelope(WATCH[0]); x['rpc']['id']=999
+    def test_saved_rpc_error_counted_without_wallet_approval(self):
+        x = envelope(WATCH[0]); x['rpc'] = {
+            'jsonrpc': '2.0', 'id': 1,
+            'error': {'code': -32000, 'message': 'fake PRIVATE_KEY_123'}}
+        r = run([x])
+        self.assertEqual(r['counts']['RPC_ERROR_AT_SAMPLED_BLOCK'], 1)
+        self.assertEqual(r['counts']['NOT_CHECKED'], 19)
+        self.assertEqual(r['saved_getcode_attempts'], 1)
+        self.assertEqual(r['saved_getcode_rpc_errors'], 1)
+        self.assertEqual(r['saved_getcode_success_responses'], 0)
+        self.assertEqual(r['saved_attempts_provider_billed'], 'UNVERIFIED')
+        self.assertFalse(r['per_primary'][0]['wallet_live_eligible'])
+        self.assertNotIn('PRIVATE_KEY_123', json.dumps(r))
+
+    def test_reject_rpc_error_wrong_id_even_if_valid_error(self):
+        x = envelope(WATCH[0]); x['rpc']['id'] = 999
+        x['rpc']['error'] = {'code': -32000, 'message': 'bad'}
         with self.assertRaisesRegex(ValueError, 'CODE_RESPONSE_IDENTITY_MISMATCH'):
             run([x])
+
+    def test_transport_attempt_counted_separately_from_never_checked(self):
+        x = envelope(WATCH[0])
+        x['rpc'] = None
+        x['attempted'] = True
+        x['transport_error_code'] = 'NETWORK_TIMEOUT'
+        r = run([x])
+        self.assertEqual(r['saved_getcode_attempts'], 1)
+        self.assertEqual(r['saved_getcode_transport_failures'], 1)
+        self.assertEqual(r['saved_getcode_rpc_errors'], 0)
+        self.assertEqual(r['saved_getcode_not_checked'], 19)
+        row = next(t for t in r['per_primary'] if t['wallet'] == WATCH[0])
+        self.assertEqual(row['observed_code_state'], 'TRANSPORT_FAILED_AT_SAMPLED_BLOCK')
+        self.assertIsNone(row['response_sha256'])
+        self.assertFalse(row['real_eoa_attested'])
+        self.assertEqual(r['actual_rpc_calls'], 0)
+
+    def test_mixed_failure_code_and_unchecked_preserves_20_denominator(self):
+        error = envelope(WATCH[0])
+        error['rpc'] = {'jsonrpc': '2.0', 'id': 1, 'error': {'code': -32603}}
+        timeout = envelope(WATCH[1], id=2)
+        timeout.update({'rpc': None, 'attempted': True,
+                        'transport_error_code': 'NETWORK_ERROR'})
+        no_code = envelope(WATCH[2], id=3)
+        contract = envelope(WATCH[3], id=4, code='0x6000')
+        report = run([error, timeout, no_code, contract])
+        self.assertEqual(report['saved_getcode_attempts'], 4)
+        self.assertEqual(report['saved_getcode_rpc_errors'], 1)
+        self.assertEqual(report['saved_getcode_transport_failures'], 1)
+        self.assertEqual(report['saved_getcode_success_responses'], 2)
+        self.assertEqual(report['saved_getcode_not_checked'], 16)
+        self.assertEqual(sum(report['counts'].values()), 20)
+        self.assertFalse(report['live_watchlist_enabled'])
+
+    def test_unknown_or_missing_transport_attempt_rejected(self):
+        x = envelope(WATCH[0])
+        x.update({'rpc': None, 'attempted': True,
+                  'transport_error_code': 'SECRET_EXFIL_ERROR'})
+        with self.assertRaisesRegex(ValueError, 'TRANSPORT_FAILURE_INVALID'):
+            run([x])
+        x['transport_error_code'] = 'NETWORK_TIMEOUT'
+        x.pop('attempted')
+        with self.assertRaisesRegex(ValueError, 'TRANSPORT_FAILURE_INVALID'):
+            run([x])
+
+    def test_wrong_chain_height_request_even_in_transport_failure(self):
+        x = envelope(WATCH[0], height=HEIGHT+1)
+        x.update({'rpc': None, 'attempted': True,
+                  'transport_error_code': 'NETWORK_TIMEOUT'})
+        with self.assertRaisesRegex(ValueError, 'CODE_REQUEST_IDENTITY_MISMATCH'):
+            run([x])
+
+    def test_rpc_error_with_result_rejected_as_ambiguous(self):
+        x = envelope(WATCH[0])
+        x['rpc']['error'] = {'code': -32000}
+        with self.assertRaisesRegex(ValueError, 'MALFORMED_RPC_ERROR_ENVELOPE'):
+            run([x])
+
+    def test_invalid_error_envelope_rejected(self):
+        x = envelope(WATCH[0])
+        x['rpc'] = {'jsonrpc': '2.0', 'id': 1, 'error': {'code': True}}
+        with self.assertRaisesRegex(ValueError, 'MALFORMED_RPC_ERROR_ENVELOPE'):
+            run([x])
+
+    def test_no_error_rows_no_new_network_in_success_report(self):
+        r = run([envelope(WATCH[0]), envelope(WATCH[1], id=2, code='0x6000')])
+        self.assertEqual(r['saved_getcode_attempts'], 2)
+        self.assertEqual(r['saved_getcode_success_responses'], 2)
+        self.assertEqual(r['saved_getcode_rpc_errors'], 0)
+        self.assertEqual(r['saved_getcode_transport_failures'], 0)
+        self.assertEqual(r['actual_rpc_calls'], 0)
+        self.assertEqual(r['stop_state'], 'NO_RUN')
 
     def test_reject_bad_hex_result(self):
         with self.assertRaisesRegex(ValueError, 'INVALID_RETURNED_CODE_HEX'):
