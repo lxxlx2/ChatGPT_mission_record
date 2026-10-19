@@ -426,6 +426,45 @@ class V2HistoricQuoteAndSwapEvidenceTests(unittest.TestCase):
                     {**sync, 'data': '0x'+word(100)+word(10000)}, swap]}]})
 
 
+    def test_first_above_floor_buy_in_same_liquidity_mint_tx_is_not_public_entry(self):
+        from mission_agent.early.bsc_v2_pit import summarize_v2_archived_swap_windows
+        pool, token0, token1 = '0x'+'1'*40, '0x'+'2'*40, '0x'+'3'*40
+        tx1, tx2 = '0x'+'a'*64, '0x'+'b'*64
+        def event(block, tx, ind, topic0, data):
+            return dict(address=pool, blockNumber=hex(block), transactionIndex='0x1',
+                        transactionHash=tx, logIndex=hex(ind), topics=[topic0],
+                        data='0x'+''.join(word(v) for v in data), removed=False)
+        source_sync = event(50, tx1, 10, SYNC, [1000, 4000])
+        minted = event(50, tx1, 11, MINT, [1000, 4000])
+        swap_sync = event(50, tx1, 12, SYNC, [900, 4600])
+        swap = event(50, tx1, 13, SWAP, [0, 600, 100, 0])
+        swap['topics'] = [SWAP, topic(token0), topic(token1)]
+        kwargs = dict(pool=pool, token0=token0, token1=token1,
+                      quote_asset=token1, quote_reserve_floor_raw=2000)
+        same = summarize_v2_archived_swap_windows(
+            **kwargs, windows=[{'name': 'MINT_AND_SWAP_TX', 'logs': [
+                source_sync, minted, swap_sync, swap]}])
+        self.assertEqual(
+            same['first_observed_above_floor_sync_in_saved_windows']['log_index'], 10)
+        self.assertEqual(
+            same['first_observed_above_floor_buy_in_saved_windows']['pre_swap_quote_reserve_raw'],
+            '4000')
+        self.assertTrue(same['first_above_floor_buy_prior_mint_same_tx'])
+        self.assertEqual(same['first_above_floor_buy_public_reaction_status'],
+                         'SAME_TX_NOT_PUBLICLY_REACTABLE_AFTER_SYNC')
+        self.assertEqual(same['twentyfour_of_thirty_complete_pit_gate'], 'NOT_SCORABLE')
+        subsequent_sync = event(51, tx2, 2, SYNC, [800, 5200])
+        subsequent_swap = event(51, tx2, 3, SWAP, [0, 600, 100, 0])
+        subsequent_swap['topics'] = [SWAP, topic(token0), topic(token1)]
+        later = summarize_v2_archived_swap_windows(
+            **kwargs, windows=[{'name': 'SOURCE_SYNC_EARLIER_BLOCK', 'logs': [
+                source_sync, minted, subsequent_sync, subsequent_swap]}])
+        self.assertEqual(later['first_above_floor_buy_public_reaction_status'],
+                         'LATER_BLOCK_PUBLIC_AVAILABILITY_UNVERIFIED')
+        self.assertFalse(later['first_above_floor_buy_prior_mint_same_tx'])
+        self.assertEqual(later['first_observed_above_floor_buy_in_saved_windows']['block'], 51)
+
+
 
 if __name__=='__main__':
     unittest.main()
