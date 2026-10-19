@@ -538,6 +538,10 @@ def test_real_live_cycle_gmail_ready_crosses_signed_expiry_without_send(
     assert service.delivery_allowed is True
     queued=event(service.control)
     service.gmail.enqueue(queued,mode="LIVE",forbidden=False)
+    # No network even if the source contains a fresh research candidate.
+    service.jupiter.quote_usdc_to_token=lambda *a,**k:good_quote()
+    service.jupiter.quote_token_to_usdc=lambda *a,**k: (
+        _ for _ in ()).throw(AssertionError("FAKE_ONLY_NO_EXIT_QUOTE"))
     # This service-level fixture disables local sends but drives real
     # MissionMemeService.cycle() and real GmailDelivery.drain().
     local_calls=[]
