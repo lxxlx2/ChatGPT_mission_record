@@ -494,5 +494,120 @@ class FactoryOfflineP0ArchiveAuditTests(unittest.TestCase):
 
 
 
+
+class RealSellRawSourceReplayTests(unittest.TestCase):
+    """Synthetic raw receipts; never assert actual onchain provenance."""
+
+    def _targets(self):
+        evidence = (Path(__file__).resolve().parents[2] /
+                    "monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json")
+        return m.frozen_depth_qualified_real_sell_targets(json.loads(evidence.read_text()))
+
+    @staticmethod
+    def _receipt(target):
+        transfer = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+        sync = "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1"
+        swap = "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
+        token_in = int(target["token_in_raw"])
+        quote_out = int(target["quote_out_raw"])
+        after_quote = int(target["pre_quote_raw"]) - quote_out
+        if after_quote <= 0:
+            raise AssertionError("invalid test fixture reserves")
+        after_token = 10**35 + token_in
+        def pad(value):
+            return format(value, "064x")
+        def topic(address):
+            return "0x" + "0"*24 + address[2:]
+        sender, recipient = "0x" + "a"*40, "0x" + "b"*40
+        def row(address, topics, data, i):
+            return {"address": address, "topics": topics, "data": data,
+                    "blockNumber": hex(target["block"]),
+                    "transactionHash": target["tx"], "logIndex": hex(i),
+                    "removed": False}
+        logs = [
+            row(target["token"], [transfer, topic(sender), topic(target["pair"])],
+                "0x" + pad(token_in), 0),
+            row(target["quote"], [transfer, topic(target["pair"]), topic(recipient)],
+                "0x" + pad(quote_out), 1),
+        ]
+        if target["quote_is_token0"]:
+            after0, after1 = after_quote, after_token
+            swaps = [0, token_in, quote_out, 0]
+        else:
+            after0, after1 = after_token, after_quote
+            swaps = [token_in, 0, 0, quote_out]
+        logs += [
+            row(target["pair"], [sync], "0x" + pad(after0) + pad(after1), 2),
+            row(target["pair"], [swap],
+                "0x" + "".join(pad(x) for x in swaps), 3),
+        ]
+        return {"status": "0x1", "transactionHash": target["tx"],
+                "blockNumber": hex(target["block"]),
+                "effectiveGasPrice": "0x0", "logs": logs}
+
+    def test_frozen_18_distinct_sells_and_receipt_amount_validation(self):
+        targets = self._targets()
+        self.assertEqual(len(targets), 18)
+        self.assertEqual(len({x["rank"] for x in targets}), 18)
+        self.assertEqual(set(x["rank"] for x in targets), {
+            1, 3, 4, 7, 9, 11, 12, 13, 16, 17, 19, 21, 23, 24, 25, 27, 29, 30})
+        for target in targets:
+            receipt = self._receipt(target)
+            result = m.validate_frozen_real_sell_receipt(receipt, target)
+            self.assertTrue(result["historical_real_pool_sell"])
+            self.assertEqual(result["uniform_notional_sellability"], "NOT_SCORABLE")
+            self.assertEqual(result["gas_cost_evidence"], "UNVERIFIED_ZERO_REPORTED")
+            self.assertEqual(result["quote_out_raw"], target["quote_out_raw"])
+            self.assertEqual(result["preswap_quote_raw"], target["pre_quote_raw"])
+        original = self._receipt(targets[0])
+        wrong = json.loads(json.dumps(original))
+        wrong["logs"][0]["data"] = "0x" + format(int(targets[0]["token_in_raw"])+1, "064x")
+        with self.assertRaisesRegex(m.SourceError, "SWAP_SYNC_TRANSFER"):
+            m.validate_frozen_real_sell_receipt(wrong, targets[0])
+        wrong = json.loads(json.dumps(original))
+        wrong["transactionHash"] = "0x" + "1"*64
+        with self.assertRaisesRegex(m.SourceError, "IDENTITY_OR_STATUS"):
+            m.validate_frozen_real_sell_receipt(wrong, targets[0])
+        wrong = json.loads(json.dumps(original))
+        wrong["logs"][2]["data"] = "0x" + "0"*128
+        with self.assertRaisesRegex(m.SourceError, "SWAP_SYNC_TRANSFER|IMPOSSIBLE"):
+            m.validate_frozen_real_sell_receipt(wrong, targets[0])
+
+    def test_18_receipt_raw_archive_offline_replay_and_byte_mutation(self):
+        targets = self._targets()
+        class FakeRPC:
+            source_tag = "fixed-fixture-source"
+            calls = 0
+            def request(self, method, params):
+                self.calls += 1
+                if method != "eth_getTransactionReceipt":
+                    raise AssertionError("wrong or extra RPC call")
+                target = next(t for t in targets if t["tx"] == params[0])
+                payload = {"jsonrpc": "2.0", "id": self.calls,
+                           "result": RealSellRawSourceReplayTests._receipt(target)}
+                raw = json.dumps(payload, separators=(",", ":")).encode()
+                return payload["result"], raw
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            evidence = (Path(__file__).resolve().parents[2] /
+                        "monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json")
+            fake = FakeRPC()
+            first = m.replay_frozen_sell_receipts(root, evidence, fake)
+            self.assertEqual(fake.calls, 18)
+            self.assertEqual(first["rank_count"], 18)
+            self.assertEqual(first["receipt_and_swap_transfer_sync_matches"], 18)
+            again = m.replay_frozen_sell_receipts(root, evidence)
+            self.assertEqual(again["requests_this_invocation"], 0)
+            self.assertEqual([r["sha256"] for r in first["rows"]],
+                             [r["sha256"] for r in again["rows"]])
+            file = root / first["rows"][0]["relative_raw_file"]
+            data = json.loads(file.read_text())
+            data["result"]["effectiveGasPrice"] = "0x1"
+            file.write_text(json.dumps(data))
+            with self.assertRaisesRegex(m.SourceError, "RAW_OR_TX_SHA_DRIFT"):
+                m.replay_frozen_sell_receipts(root, evidence)
+
+
+
 if __name__ == "__main__":
     unittest.main()
