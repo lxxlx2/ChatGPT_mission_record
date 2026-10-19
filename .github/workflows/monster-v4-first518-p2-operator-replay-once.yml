@@ -80,7 +80,7 @@ jobs:
           assert all(item['d2_status']=='NOT_CAPTURED' and item['g4_real_execution']=='UNKNOWN'
                      and item['recommendation']=='RESEARCH_REVIEW_ONLY_NO_BUY'
                      and item['watch_evidence_present'] and item['setup_utc'] is not None
-                     and item['watch_reason'] and item['signal']=='SOURCE_STALE'
+                     and item['watch_reason'] and item['signal']=='EXPIRED'
                      for item in view['opportunities'])
           assert p['both_alternative_non_combined_signal_views']==original_prices['both_alternative_non_combined_signal_views']
           assert p['paired_SETUP_after_WATCH_delay_minutes']==original_prices['paired_SETUP_after_WATCH_delay_minutes']
