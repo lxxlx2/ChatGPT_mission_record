@@ -7,11 +7,12 @@ from __future__ import annotations
 
 import argparse
 import json
-import subprocess
 from datetime import datetime
 from pathlib import Path
 
-from mission_agent.mission_control.release_approval import verify_signed_release_approval
+from mission_agent.mission_control.release_approval import (
+    trusted_checkout_identity, verify_signed_release_approval,
+)
 from mission_agent.mission_control.server import serve
 from mission_agent.mission_control.service import MissionMemeService
 
@@ -52,16 +53,10 @@ def main():
         # A release manifest must bind to actual checked-out source, rather
         # than a caller-supplied or self-generated commit SHA.
         checkout = Path(__file__).resolve().parents[1]
-        code_sha = subprocess.check_output(
-            ["git", "-C", str(checkout), "rev-parse", "--verify", "HEAD"],
-            text=True, timeout=5,
-        ).strip()
-        dirty = subprocess.check_output(
-            ["git", "-C", str(checkout), "status", "--porcelain", "--untracked-files=no"],
-            text=True, timeout=5,
-        )
-        if dirty:
-            raise SystemExit("LIVE_RELEASE_WORKTREE_DIRTY")
+        try:
+            code_sha = trusted_checkout_identity(checkout)
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from exc
         proof = verify_signed_release_approval(
             record_path=args.approval_record,
             signature_path=args.approval_signature,
