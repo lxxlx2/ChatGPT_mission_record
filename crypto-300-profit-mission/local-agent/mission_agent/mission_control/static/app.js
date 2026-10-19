@@ -101,7 +101,7 @@ const reasonText = {
   QUOTE_METRICS_INVALID:'Jupiter 报价缺少有效成交价或价格冲击数据。',
   NO_EXECUTABLE_JUPITER_ROUTE:'Jupiter 当前没有可执行的跟单路径，不跟。',
   PRICE_TOO_FAR_FROM_FRANK:'当前价格已经离 Frank 买入价太远，暂时不追。',
-  EXECUTION_IMPACT_TOO_HIGH:'当前 $30 跟单的预计价格冲击太高，暂时不追。',
+  EXECUTION_IMPACT_TOO_HIGH:'价格冲击取决于实际交易金额；未获得用户指定金额，不作可执行性结论。',
   FRANK_MULTIPLE_ACTIVE:'Frank 已观察到多次强加仓模型事件；是否可以跟随以本次结论为准。',
   PRICE_STILL_CLOSE_TO_FRANK:'当前成交价仍接近 Frank 的参考买入价。',
   EXECUTION_IMPACT_ACCEPTABLE:'当前预计价格冲击在可接受范围。',
@@ -556,9 +556,6 @@ function renderCandidates(rows) {
         ${metric('Frank 最近动作',`${esc(translated(sideLabel,x.latest_side,'未知'))} · ${esc(age(x.latest_at))}`)}
         ${metric('Frank 最近一次买入支付（历史）',frankQuote(x),'仅对应本轮最近一笔已识别买入事件；金额是否为完整支付由原始资金腿证据决定。不代表 Frank 当前持仓、当前市值、全部建仓成本或净投入。')}
         ${metric('Frank 参考买入价',frankPrice,'直接来自 Frank 最近买入事件；即使当前 Decision 因超时提前结束，也尽量展示。')}
-        ${metric('当前 $30 成交价',execPrice,'Jupiter 已经请求过就展示真实报价；只有明确跳过/失败才显示原因。')}
-        ${metric('相对 Frank 偏离',esc(delta),'如果决策提前返回但 Frank 参考价和 Jupiter 报价都存在，Dashboard 会独立计算偏离供研究。')}
-        ${metric('预计价格冲击',esc(impact),'用 $30 USDC 下单时 Jupiter 估算的价格冲击；已退出仓位不会浪费请求。')}
       </div>
     </article>`;
   }).join('') || '<div class="empty">当前没有需要跟踪的 Frank 候选</div>';
@@ -1012,10 +1009,6 @@ function renderClusterPreview(job) {
     : extUnknown ? '部分扩展风险待核实'
     : '已解析权限未发现活动风险';
   const ready=p.market_status==='OK';
-  const q=p.execution_quote_30_usdc;
-  const quoteText=caQuoteCurrent(q)
-    ? '$'+smallPrice(q.execution_price_usdc)+' · 冲击 '+pctText(q.price_impact_pct)
-    : caQuoteUnavailableLabel(q);
   node.hidden=false;
   const incomplete=job.status==='ERROR';
   node.innerHTML=
@@ -1025,14 +1018,11 @@ function renderClusterPreview(job) {
     fact('参考价',ready ? esc(usd(p.price_usd,8)) : '暂不可用') +
     fact('市值',ready ? esc(usd(p.market_cap_usd)) : '暂不可用') +
     fact('主池流动性',ready ? esc(usd(p.liquidity_usd)) : '暂不可用') +
-    fact('$30 可成交报价','<span id="cluster-preview-quote">'+esc(quoteText)+'</span>',
-      'Jupiter 服务端校验时效的只读报价，不构成下单建议') +
     fact('权限',esc(authority)) +
     fact('原始 Top10 持币占比', p.raw_top10_resolved_pct != null
       ? esc(pctText(p.raw_top10_resolved_pct)) : '待解析', '含池子，未做 LP 排除或钱包关联归因') +
     '</div><p>已解析 Owner：' + esc(p.top_accounts_resolved ?? '待查询') +
     '。原始 Top10 可能含 LP 或交易所；钱包聚类仍在独立核对，不能据此认定筹码安全或可跟单。</p>';
-  caScheduleQuoteExpiry(q, 'cluster-preview-quote');
 }
 
 function clusterErrorMessage(error) {
@@ -1090,7 +1080,6 @@ function renderClusterReport(report) {
   const profile = report.token_profile || {};
   const market = report.market || {};
   const mainPair = market.main_pair || {};
-  const quote = report.execution_quote_30_usdc || {};
   const assessment = report.assessment || {};
 
   const observedAt = report.observed_at == null ? NaN : Number(report.observed_at);
@@ -1188,14 +1177,9 @@ function renderClusterReport(report) {
   const pairLink=mainPair.pair_address
     ? '<a class="link-btn compact" href="https://solscan.io/account/' + encodeURIComponent(mainPair.pair_address) + '" target="_blank" rel="noreferrer">Pool ↗</a>'
     : '';
-  const quoteText = caQuoteCurrent(quote)
-    ? '$'+smallPrice(quote.execution_price_usdc) + '<span class="subvalue">冲击 ' + pctText(quote.price_impact_pct) + '</span>'
-    : '<span class="unresolved">' + esc(caQuoteUnavailableLabel(quote,'报价不可用')) + '</span>';
 
   $('cluster-market').innerHTML =
     fact('查询时参考价','<span>' + (market.status==='OK' && market.price_usd != null ? '$'+smallPrice(market.price_usd) : '<span class="unresolved">不可用</span>') + '</span>','DexScreener 参考价') +
-    fact('$30 实际可成交价','<span id="cluster-final-quote">' + quoteText + '</span>',
-      'Jupiter read-only quote; server-validated at response time') +
     fact('Market Cap','<span>' + (market.status==='OK' ? usd(market.market_cap_usd) : '暂无') + '</span>') +
     fact('主池流动性','<span>' + (market.status==='OK' ? usd(mainPair.liquidity_usd) : '暂无') + '</span>') +
     fact('24h 成交额','<span>' + (market.status==='OK' ? usd((mainPair.volume || {}).h24) : '暂无') + '</span>') +
