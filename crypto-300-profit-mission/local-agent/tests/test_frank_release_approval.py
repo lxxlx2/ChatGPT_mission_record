@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 from mission_agent.mission_control.release_approval import (
-    SCOPE, verify_signed_release_approval,
+    SCOPE, trusted_checkout_identity, verify_signed_release_approval,
 )
 
 
@@ -166,3 +166,89 @@ def test_loop_only_stop_rejects_foreign_or_symlinked_plist(tmp_path):
     }))
     with pytest.raises(ValueError, match="LOOP_ONLY_TARGET_MISMATCH"):
         module.stop_plan(home, 501, "testuser")
+
+
+def _init_git_repo(root: Path, note: str) -> str:
+    root.mkdir()
+    subprocess.run(["/usr/bin/git","-C",str(root),"init","-q"],check=True)
+    subprocess.run(
+        ["/usr/bin/git","-C",str(root),
+         "-c","user.name=Isolated Test","-c","user.email=git-test@example.invalid",
+         "commit","-q","--allow-empty","-m",note],
+        check=True,
+    )
+    return subprocess.check_output(
+        ["/usr/bin/git","-C",str(root),"rev-parse","HEAD"],text=True
+    ).strip()
+
+
+def test_git_identity_cannot_be_redirected_by_inherited_git_environment(
+    signed_fixture, tmp_path, monkeypatch
+):
+    other=tmp_path/"repo-A"
+    actual=tmp_path/"repo-B"
+    signed_sha=_init_git_repo(other,"signed unrelated repo A")
+    actual_sha=_init_git_repo(actual,"actual checked-out code B")
+    assert signed_sha != actual_sha
+
+    # First independently reproduce the vulnerability with real system git.
+    monkeypatch.setenv("GIT_DIR",str(other/".git"))
+    monkeypatch.setenv("GIT_WORK_TREE",str(other))
+    monkeypatch.setenv("GIT_CONFIG_COUNT","1")
+    monkeypatch.setenv("GIT_CONFIG_KEY_0","core.bare")
+    monkeypatch.setenv("GIT_CONFIG_VALUE_0","false")
+    poisoned=subprocess.check_output(
+        ["/usr/bin/git","-C",str(actual),"rev-parse","HEAD"],text=True
+    ).strip()
+    assert poisoned==signed_sha
+
+    # The release identity helper must derive B even if A is inherited.
+    checked_sha=trusted_checkout_identity(actual)
+    assert checked_sha==actual_sha
+    payload=dict(signed_fixture["payload"])
+    payload["integration_sha"]=signed_sha
+    signed_fixture["resign"](payload)
+    args=_args(signed_fixture)
+    args["code_commit_sha"]=checked_sha
+    with pytest.raises(ValueError,match="APPROVAL_POLICY_OR_CODE_MISMATCH"):
+        verify_signed_release_approval(**args)
+
+
+def test_live_cli_rejects_real_signature_for_wrong_inherited_git_repo(
+    signed_fixture, tmp_path, monkeypatch
+):
+    import scripts.mission_meme_v1 as entry
+    other=tmp_path/"repo-A"
+    actual=tmp_path/"repo-B"
+    signed_sha=_init_git_repo(other,"approved only repo A")
+    actual_sha=_init_git_repo(actual,"running code repo B")
+    assert signed_sha!=actual_sha
+    payload=dict(signed_fixture["payload"])
+    payload["integration_sha"]=signed_sha
+    signed_fixture["resign"](payload)
+
+    monkeypatch.setenv("GIT_DIR",str(other/".git"))
+    monkeypatch.setenv("GIT_WORK_TREE",str(other))
+    monkeypatch.setattr(entry,"__file__",str(actual/"scripts"/"mission_meme_v1.py"))
+    def really_verify(**kwargs):
+        return verify_signed_release_approval(
+            **kwargs,
+            trusted_key=signed_fixture["trusted_key"],
+            enforce_protected_key=False,
+            now=signed_fixture["now"],
+        )
+    monkeypatch.setattr(entry,"verify_signed_release_approval",really_verify)
+    monkeypatch.setattr(entry,"MissionMemeService",lambda **kw:
+                        pytest.fail("Unapproved CLI must not construct a live service"))
+    monkeypatch.setattr(sys,"argv",[
+        "mission_meme_v1.py","cycle",
+        "--production-root",str(tmp_path/"prod"),
+        "--control-root",str(tmp_path/"control"),
+        "--policy",str(signed_fixture["policy_path"]),
+        "--live-delivery",
+        "--approved-policy-sha256",signed_fixture["externally_approved_sha"],
+        "--approval-record",str(signed_fixture["record_path"]),
+        "--approval-signature",str(signed_fixture["signature_path"]),
+    ])
+    with pytest.raises(ValueError,match="APPROVAL_POLICY_OR_CODE_MISMATCH"):
+        entry.main()
