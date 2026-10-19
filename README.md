@@ -10,6 +10,10 @@
 - `docs/REPOSITORY_STRUCTURE.md`
 - `docs/X_TECHNICAL_POST_WRITING_GUIDE.md`
 
+## 开发主线和停止规则（2026-10-19 生效）
+
+后续开发统一遵守 [业务成果优先、D0→D4 阶段验收与停止规则](docs/DEVELOPMENT_MAINLINE_RULES.md)：先查真实数据和现有代码，每轮交付一项实际可用能力；已批准的同范围功能不重复走截图/QA 循环；非阻断 P3 不挤占主线。所有原有数据来源、审查、生产安全及用户授权门禁仍有效。
+
 ## 内容导航
 
 | 类别 | 位置 | 用途 |
