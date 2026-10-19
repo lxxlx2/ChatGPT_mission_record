@@ -54,3 +54,15 @@
 3. **C 条件未满足：0/6 CONFIRMED U**，因此真实 P5 净收益回测**不执行**，防止事后 spot math 假装成交。下一步如需改变此状态，只允许对预先固定的有潜力 **8E6B/HAJIMI 与 239E/龙虾 R2** 各做最多一次来源明确的免费有界观察者 U 和实际可买卖场所检查；新信息不足即以 `UNRESOLVED` 结束此批，不再追旧钱包未知内转。若用户认为无历史 first seen 值得重设任务，必须由用户修改 G0，而不能擅自换成“看见区块等于首次发现”。
 
 **最新业务门禁（仅限此来源级报告）**：`P2/P3=PARTIAL`, `P4-B/P4-C=PARTIAL`, `PUBLIC_EXECUTABLE_U=UNRESOLVED`, `ACTUAL_REALIZED_NET_PNL=UNRESOLVED`, `P5=BLOCKED`, `PRODUCTION=NO_GO`。不合并、不部署、不通知、不交易；若以后升级公开 U 或真实 P5 资格，须按仓库规则绑定新 SHA 再交其他 AI 审核。
+
+## E. 两个冻结正向样本的 +60 秒指定 V2 池验证（只读，非回测）
+
+实际 BNB 历史 `eth_call` 在原主人交易块时间戳 +60 秒处，分别调用该 exact CA 的 V2 池 `getReserves`、`token0`、`token1`，依据仓库已冻结的 Pancake V2 `9975/10000` 单边手续费与 0.01 WBNB 名义投入重新计算 Router 型**理论**代币到账 raw 数量；这些结果并非真买入、未持有该代币，也不是税后收益。
+
+| 样本 | +60s 原始块 | 固定 exact CA 对应池 | 池中 WBNB 储备 | 输入 0.01 WBNB 的 V2 纯数学代币 raw 输出 |
+|---|---:|---|---:|---:|
+| 239E 龙虾 R2 | 85960095（2026-03-11 11:24:03Z） | `0x22af7297243c4eef12e2d5a4f888b92e56bf127c` | 581.117125747590873873 WBNB | `302294351953451740495` |
+| 8E6B HAJIMI | 74741432（2026-01-10 15:20:04Z） | `0xc33bacff9141da689875e6381c1932348ab4c5cb` | 971.185409018684593200 WBNB | `241289723751120301701` |
+
+[完整保留历史 getReserves/token0/token1 原文标量、引用池地址及整数公式的研究 JSON](./bsc-meme-address-model-v1-mainline-2positive-lag60-v2-reserve-precheck-2026-10-19.json)。数据属于**从当前 Alchemy 连接器返回正文提取出的原始标量**，未归档独立签名 HTTP/完整供应商响应，因此暂不具备 G5 认证；不能宣称已核实历史节点 first seen、真实 +60s 第三方成交、买入税、转账限制、卖出路径、Gas 或止盈止损。因此 2/2 池可验证存在数学储备，**0/2 获得可执行双向收益认证**，`PUBLIC_EXECUTABLE_U=UNRESOLVED; P5=BLOCKED`。本批按计划不因它们已有数学报价便冒充实际可跟单策略。
+
