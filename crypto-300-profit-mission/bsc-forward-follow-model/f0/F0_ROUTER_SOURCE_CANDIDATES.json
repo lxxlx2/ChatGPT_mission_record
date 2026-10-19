@@ -1,0 +1,23 @@
+{
+  "schema": "bsc-f0-official-router-source-candidates-v1",
+  "chain_id": 56,
+  "source_status": "OFFICIAL_DOCUMENTED_ADDRESSES_CODE_NOT_VERIFIED",
+  "onchain_code_verified": false,
+  "control_eligible": false,
+  "routers": [
+    {
+      "family": "v3_universal",
+      "address": "0x1A0A18AC4BECDDbd6389559687d1A73d8927E416",
+      "official_source": "https://developer.pancakeswap.finance/contracts/universal-router/addresses",
+      "onchain_runtime_code_check": "NOT_PERFORMED",
+      "swap_causality_attested": false
+    },
+    {
+      "family": "infinity_universal",
+      "address": "0xd9C500DfF816a1Da21A48A732d3498Bf09dc9AEB",
+      "official_source": "https://developer.pancakeswap.finance/contracts/universal-router/addresses",
+      "onchain_runtime_code_check": "NOT_PERFORMED",
+      "swap_causality_attested": false
+    }
+  ]
+}
