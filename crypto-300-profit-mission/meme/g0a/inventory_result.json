@@ -1,0 +1,313 @@
+{
+  "status": "G0_A_COMPLETE",
+  "study_sha256": "0d1dce59566d1471f59eb72f14a2f5d1b55ad7bbe2a1ac9e5357c697245fe93d",
+  "scope": "KNOWN_DEVELOPMENT_HISTORY_NOT_INDEPENDENT_OOS",
+  "historical_code_commit": "89135131dc1a8ae48890dbe6bfd4b98a03ad2b20",
+  "historical_protected_hashes_match": true,
+  "runtime": {
+    "status": "AVAILABLE",
+    "rows": 93,
+    "side_counts": {
+      "BUY": 26,
+      "ADD": 20,
+      "SELL_POSITION_UNRESOLVED": 21,
+      "EXIT": 17,
+      "REENTRY": 2,
+      "SELL": 7
+    },
+    "BUY": {
+      "signatures": 48,
+      "episodes": 28,
+      "mints": 26
+    },
+    "SELL": {
+      "signatures": 45,
+      "episodes": 18,
+      "mints": 31
+    },
+    "UNKNOWN": {
+      "signatures": 0,
+      "episodes": 0,
+      "mints": 0
+    },
+    "observed_trade_body_keys": [
+      "direction",
+      "episode_id",
+      "mint",
+      "position_after_raw",
+      "position_before_raw",
+      "quote_amount_raw",
+      "quote_asset",
+      "quote_decimals",
+      "reason",
+      "referenced_post_raw",
+      "referenced_pre_raw",
+      "side",
+      "token_amount_raw",
+      "token_decimals"
+    ]
+  },
+  "cache": {
+    "status": "AVAILABLE",
+    "json_files": 173,
+    "getTransaction_wrappers": 173,
+    "other_schema_files": 0,
+    "price_series_assessment": "MANUAL_SOURCE_INSPECTION_REQUIRED; raw transaction counts are not delayed quotes"
+  },
+  "history": {
+    "status": "VERIFIED",
+    "usable_signatures": 6874,
+    "raw_hash_verified": 6874,
+    "duplicate_wallet_signatures": 0,
+    "classification_counts": {
+      "PASSIVE_TRANSFER": 4433,
+      "ACTIVE_TRADE": 634,
+      "UNKNOWN_NEEDS_REVIEW": 642,
+      "FAILED_TX": 900,
+      "ATA_CREATE": 265
+    },
+    "chronology_sha256": "7dd4cb90f0dc3bcd3d527421742fa45b55ac1807967deb4f81f7ee30b20f6ed3",
+    "database_sha256": "c67a2dd05b246882c94c1964774b4243b0cc8b18066ce69ca5a9bc859d56f685",
+    "source_bytes_unchanged": true
+  },
+  "M3_recovery": {
+    "candidate_cases": 47,
+    "unique_restored_signatures": 19,
+    "directions": {
+      "BUY": 14,
+      "SELL": 5
+    },
+    "original_classes": {
+      "UNKNOWN_NEEDS_REVIEW": 19
+    },
+    "archived_cases_match": true,
+    "raw_bound_reconstruction": true
+  },
+  "J0": {
+    "ACTIVE_BUY": 301,
+    "ACTIVE_SELL": 333,
+    "ACTIVE_TOTAL": 634,
+    "groups": {
+      "ALL_ACTIVE_BUY": {
+        "signatures": 301,
+        "episodes": 180,
+        "mints": 153,
+        "episode_unresolved_signatures": 0,
+        "original_event_quote_token_ratios": {
+          "signatures": 301,
+          "episodes": 180,
+          "mints": 153,
+          "episode_unresolved_signatures": 0
+        }
+      },
+      "ACTIVE_SELL": {
+        "signatures": 333,
+        "episodes": 161,
+        "mints": 185,
+        "episode_unresolved_signatures": 64,
+        "original_event_quote_token_ratios": {
+          "signatures": 333,
+          "episodes": 161,
+          "mints": 185,
+          "episode_unresolved_signatures": 64
+        }
+      },
+      "OTHER_ACTIVE_BUY_OUTSIDE_SIGNAL_EPISODES": {
+        "signatures": 184,
+        "episodes": 159,
+        "mints": 145,
+        "episode_unresolved_signatures": 0,
+        "original_event_quote_token_ratios": {
+          "signatures": 184,
+          "episodes": 159,
+          "mints": 145,
+          "episode_unresolved_signatures": 0
+        }
+      },
+      "FRANK_ACCUMULATION_SIGNAL": {
+        "signatures": 117,
+        "episodes": 21,
+        "mints": 17,
+        "episode_unresolved_signatures": 0,
+        "signal_events": 21,
+        "signal_episodes": 21,
+        "signal_mints": 17,
+        "trigger_BUY_signatures": 21,
+        "original_event_quote_token_ratios": {
+          "signatures": 117,
+          "episodes": 21,
+          "mints": 17,
+          "episode_unresolved_signatures": 0
+        }
+      },
+      "FRANK_MULTIPLE_SIGNAL": {
+        "signatures": 55,
+        "episodes": 10,
+        "mints": 9,
+        "episode_unresolved_signatures": 0,
+        "signal_events": 10,
+        "signal_episodes": 10,
+        "signal_mints": 9,
+        "trigger_BUY_signatures": 10,
+        "original_event_quote_token_ratios": {
+          "signatures": 55,
+          "episodes": 10,
+          "mints": 9,
+          "episode_unresolved_signatures": 0
+        }
+      },
+      "SIGNAL_UNION": {
+        "signatures": 117,
+        "episodes": 21,
+        "mints": 17,
+        "episode_unresolved_signatures": 0,
+        "signal_events": 31,
+        "signal_episodes": 21,
+        "signal_mints": 17,
+        "original_event_quote_token_ratios": {
+          "signatures": 117,
+          "episodes": 21,
+          "mints": 17,
+          "episode_unresolved_signatures": 0
+        }
+      }
+    },
+    "original_chain_BUY_quote_token_ratios": {
+      "signatures": 301,
+      "episodes": 180,
+      "mints": 153,
+      "episode_unresolved_signatures": 0
+    },
+    "recovered_BUY_excluded_from_original_trade_ratio_count": 0
+  },
+  "baseline": {
+    "status": "VERIFIED",
+    "signal_count": 31,
+    "database_sha256": "106f815286cf2ddbc10cf6fbd99c155b402e0587d88fc4466b45f830a963fa3a"
+  },
+  "M3": {
+    "ACTIVE_BUY": 315,
+    "ACTIVE_SELL": 338,
+    "ACTIVE_TOTAL": 653,
+    "groups": {
+      "ALL_ACTIVE_BUY": {
+        "signatures": 315,
+        "episodes": 188,
+        "mints": 160,
+        "episode_unresolved_signatures": 0,
+        "original_event_quote_token_ratios": {
+          "signatures": 301,
+          "episodes": 180,
+          "mints": 153,
+          "episode_unresolved_signatures": 0
+        }
+      },
+      "ACTIVE_SELL": {
+        "signatures": 338,
+        "episodes": 169,
+        "mints": 189,
+        "episode_unresolved_signatures": 61,
+        "original_event_quote_token_ratios": {
+          "signatures": 333,
+          "episodes": 166,
+          "mints": 185,
+          "episode_unresolved_signatures": 59
+        }
+      },
+      "OTHER_ACTIVE_BUY_OUTSIDE_SIGNAL_EPISODES": {
+        "signatures": 192,
+        "episodes": 166,
+        "mints": 151,
+        "episode_unresolved_signatures": 0,
+        "original_event_quote_token_ratios": {
+          "signatures": 184,
+          "episodes": 159,
+          "mints": 145,
+          "episode_unresolved_signatures": 0
+        }
+      },
+      "FRANK_ACCUMULATION_SIGNAL": {
+        "signatures": 123,
+        "episodes": 22,
+        "mints": 18,
+        "episode_unresolved_signatures": 0,
+        "signal_events": 22,
+        "signal_episodes": 22,
+        "signal_mints": 18,
+        "trigger_BUY_signatures": 22,
+        "original_event_quote_token_ratios": {
+          "signatures": 117,
+          "episodes": 21,
+          "mints": 17,
+          "episode_unresolved_signatures": 0
+        }
+      },
+      "FRANK_MULTIPLE_SIGNAL": {
+        "signatures": 43,
+        "episodes": 10,
+        "mints": 9,
+        "episode_unresolved_signatures": 0,
+        "signal_events": 10,
+        "signal_episodes": 10,
+        "signal_mints": 9,
+        "trigger_BUY_signatures": 10,
+        "original_event_quote_token_ratios": {
+          "signatures": 41,
+          "episodes": 9,
+          "mints": 8,
+          "episode_unresolved_signatures": 0
+        }
+      },
+      "SIGNAL_UNION": {
+        "signatures": 123,
+        "episodes": 22,
+        "mints": 18,
+        "episode_unresolved_signatures": 0,
+        "signal_events": 32,
+        "signal_episodes": 22,
+        "signal_mints": 18,
+        "original_event_quote_token_ratios": {
+          "signatures": 117,
+          "episodes": 21,
+          "mints": 17,
+          "episode_unresolved_signatures": 0
+        }
+      }
+    },
+    "original_chain_BUY_quote_token_ratios": {
+      "signatures": 301,
+      "episodes": 180,
+      "mints": 153,
+      "episode_unresolved_signatures": 0
+    },
+    "recovered_BUY_excluded_from_original_trade_ratio_count": 14
+  },
+  "price_assessment_method": "MANUAL_SOURCE_INSPECTION of archived reports and inspected DB/cache schemas; no delayed quote dataset supplied",
+  "delay_price_evidence": {
+    "30": {
+      "verified_executable_quote_records": 0,
+      "evidence_grade": "MANUAL_SOURCE_INSPECTION; not a market-wide absence proof",
+      "status": "NO_VERIFIED_RECORDS_IN_INSPECTED_SOURCES; NOT_MARKET_PRICE_ABSENCE",
+      "pool_OHLCV": "UNRESOLVED; manual archived report has 3/18 M3 signal mints at 5m, no raw response/time join",
+      "own_trade_price": "EVENT_TIME_QUOTE_TOKEN_RATIO_ONLY; not a follower delay price"
+    },
+    "120": {
+      "verified_executable_quote_records": 0,
+      "evidence_grade": "MANUAL_SOURCE_INSPECTION; not a market-wide absence proof",
+      "status": "NO_VERIFIED_RECORDS_IN_INSPECTED_SOURCES; NOT_MARKET_PRICE_ABSENCE",
+      "pool_OHLCV": "UNRESOLVED; manual archived report has 3/18 M3 signal mints at 5m, no raw response/time join",
+      "own_trade_price": "EVENT_TIME_QUOTE_TOKEN_RATIO_ONLY; not a follower delay price"
+    },
+    "300": {
+      "verified_executable_quote_records": 0,
+      "evidence_grade": "MANUAL_SOURCE_INSPECTION; not a market-wide absence proof",
+      "status": "NO_VERIFIED_RECORDS_IN_INSPECTED_SOURCES; NOT_MARKET_PRICE_ABSENCE",
+      "pool_OHLCV": "UNRESOLVED; manual archived report has 3/18 M3 signal mints at 5m, no raw response/time join",
+      "own_trade_price": "EVENT_TIME_QUOTE_TOKEN_RATIO_ONLY; not a follower delay price"
+    }
+  },
+  "research_helper_sha256": {
+    "frank_trade_coverage_historical_replay.py": "298a269a2e89a9fd59f4c424daa11db45068d175b7145366f92d8ae012b730d3",
+    "frank_hft_sticky_rolling_historical_replay.py": "a77f21a6565287347ca6cd94a460064432535e8edc088e5eeffe14daeb7e8aae"
+  }
+}
