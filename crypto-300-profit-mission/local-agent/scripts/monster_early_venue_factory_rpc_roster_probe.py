@@ -840,6 +840,204 @@ def audit_saved_bsc_v2_p0(out_dir, evidence_path):
     }
 
 
+def frozen_depth_qualified_real_sell_targets(evidence):
+    """An already identified source-only 18-rank set, never a P0 trading gate."""
+    history = evidence["historical_bsc_v2_append_only_factory_enumeration"]
+    cohort = history["chronological_quoted_unique_first30"]
+    identities = {r["factory_index_zero_based"]: r for r in history["first36"]}
+    main = evidence["bsc_v2_p0_uploaded20_actual_buy_and_indexed_real_sell_replay_20261020"]
+    delayed = evidence["bsc_v2_p0_ranks16_17_post_atomic_distinct_buy_and_partial_sell_pilot_20261020"]
+    if len(cohort) != 30 or len(main["case_results"]) != 20 or len(delayed["cases"]) != 2:
+        raise SourceError("SELL_ARCHIVE_FROZEN_COHORT_DRIFT")
+    selected = []
+    for item in main["case_results"]:
+        if item["sell_above_frozen_floor"]:
+            selected.append((item["rank"], item["sell_tx"], item["sell_block"],
+                             item["sell_pool_swap_token_in_raw"],
+                             item["sell_pool_swap_quote_out_raw"],
+                             item["sell_preswap_quote_reserve_raw"]))
+    for item in delayed["cases"]:
+        selected.append((item["rank"], item["real_sell_tx"],
+                         item["real_first_indexed_sell_block"],
+                         item["real_token_transfer_into_pool_raw"],
+                         item["pool_quote_out_raw"],
+                         item["sell_preswap_quote_reserve_raw"]))
+    ranks = [row[0] for row in selected]
+    if len(selected) != 18 or len(set(ranks)) != 18:
+        raise SourceError("SELL_ARCHIVE_EXPECTED_18_UNIQUE_RANKS")
+    targets = []
+    for rank, tx, block, token_in, quote_out, pre_quote in sorted(selected):
+        if type(rank) is not int or not 1 <= rank <= 30:
+            raise SourceError("SELL_ARCHIVE_RANK_INVALID")
+        orig = cohort[rank - 1]
+        if orig["cohort_rank"] != rank:
+            raise SourceError("SELL_ARCHIVE_RANK_IDENTITY_MISMATCH")
+        pair = identities[orig["factory_index"]]
+        quote = orig["quote_asset"].lower()
+        quote_is_token0 = pair["token0"].lower() == quote
+        if quote not in tuple(x.lower() for x in CHAINS["bsc-v2"]["bases"]):
+            raise SourceError("SELL_ARCHIVE_UNKNOWN_QUOTE")
+        if not quote_is_token0 and pair["token1"].lower() != quote:
+            raise SourceError("SELL_ARCHIVE_QUOTE_NOT_IN_PAIR")
+        token = pair["token1"] if quote_is_token0 else pair["token0"]
+        if token.lower() != orig["token_ca"].lower():
+            raise SourceError("SELL_ARCHIVE_TOKEN_NOT_IN_PAIR")
+        floor = (2 if quote == CHAINS["bsc-v2"]["bases"][0].lower()
+                 else 1000) * 10**18
+        if (type(block) is not int or block <= 0 or
+                not isinstance(tx, str) or not re.fullmatch("0x[0-9a-fA-F]{64}", tx) or
+                any(not isinstance(a, str) or not a.isdecimal() or int(a) <= 0
+                    for a in (token_in, quote_out, pre_quote)) or
+                int(pre_quote) < floor):
+            raise SourceError("SELL_ARCHIVE_INPUT_DEPTH_OR_ID_INVALID")
+        targets.append({"rank": rank, "tx": tx.lower(), "block": block,
+                        "pair": orig["pool"].lower(), "token": token.lower(),
+                        "quote": quote, "quote_is_token0": quote_is_token0,
+                        "token_in_raw": token_in, "quote_out_raw": quote_out,
+                        "pre_quote_raw": pre_quote})
+    return targets
+
+
+def validate_frozen_real_sell_receipt(receipt, target):
+    """Fail closed on transaction, pool reserves, transfers and raw sell amounts."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from mission_agent.early.bsc_v2_pit import SYNC, SWAP, words
+    transfer_topic = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+    if (not isinstance(receipt, dict) or receipt.get("status") != "0x1" or
+            str(receipt.get("transactionHash", "")).lower() != target["tx"] or
+            as_int(receipt.get("blockNumber")) != target["block"] or
+            not isinstance(receipt.get("logs"), list)):
+        raise SourceError("SELL_RECEIPT_IDENTITY_OR_STATUS_MISMATCH")
+    logs = receipt["logs"]
+    for row in logs:
+        if (not isinstance(row, dict) or
+                str(row.get("transactionHash", "")).lower() != target["tx"] or
+                as_int(row.get("blockNumber")) != target["block"] or
+                not isinstance(row.get("topics"), list)):
+            raise SourceError("SELL_RECEIPT_LOG_NOT_SAME_TX")
+        as_int(row.get("logIndex"))
+    pool_logs = [(as_int(x["logIndex"]), x) for x in logs
+                 if x.get("address", "").lower() == target["pair"]]
+    swaps = [(k, x) for k, x in pool_logs
+             if x["topics"] and x["topics"][0].lower() == SWAP]
+    verified = []
+    for k, swap in swaps:
+        amount0in, amount1in, amount0out, amount1out = words(swap["data"], 4)
+        q_in, token_in = ((amount0in, amount1in) if target["quote_is_token0"]
+                          else (amount1in, amount0in))
+        q_out, token_out = ((amount0out, amount1out) if target["quote_is_token0"]
+                            else (amount1out, amount0out))
+        if q_in != 0 or token_out != 0 or token_in <= 0 or q_out <= 0:
+            continue
+        syncs = [(i, x) for i, x in pool_logs
+                 if i < k and x["topics"] and x["topics"][0].lower() == SYNC]
+        if not syncs:
+            continue
+        sync = max(syncs, key=lambda x: x[0])[1]
+        r0, r1 = words(sync["data"])
+        after_q, after_token = ((r0, r1) if target["quote_is_token0"]
+                                else (r1, r0))
+        pre_quote, pre_token = after_q - q_in + q_out, after_token - token_in + token_out
+        if pre_quote <= 0 or pre_token <= 0:
+            raise SourceError("SELL_RECEIPT_IMPOSSIBLE_PRE_RESERVES")
+        token_paid = [x for x in logs
+            if (x.get("address", "").lower() == target["token"]
+                and len(x["topics"]) == 3 and x["topics"][0].lower() == transfer_topic
+                and x["topics"][2][-40:].lower() == target["pair"][2:]
+                and int(x["data"], 16) == token_in)]
+        quote_received = [x for x in logs
+            if (x.get("address", "").lower() == target["quote"]
+                and len(x["topics"]) == 3 and x["topics"][0].lower() == transfer_topic
+                and x["topics"][1][-40:].lower() == target["pair"][2:]
+                and int(x["data"], 16) == q_out)]
+        if (token_paid and quote_received and
+                str(token_in) == target["token_in_raw"] and
+                str(q_out) == target["quote_out_raw"] and
+                str(pre_quote) == target["pre_quote_raw"]):
+            verified.append({"swap_log_index": k, "token_in_raw": str(token_in),
+                             "quote_out_raw": str(q_out),
+                             "preswap_quote_raw": str(pre_quote),
+                             "token_transfer_log_index": as_int(token_paid[0]["logIndex"]),
+                             "quote_transfer_log_index": as_int(quote_received[0]["logIndex"])})
+    if len(verified) != 1:
+        raise SourceError("SELL_RECEIPT_SWAP_SYNC_TRANSFER_OR_RESERVE_NOT_PROVEN")
+    gas_price = receipt.get("effectiveGasPrice")
+    if gas_price is not None:
+        as_int(gas_price)
+    return {"rank": target["rank"], "tx": target["tx"],
+            "block": target["block"], **verified[0],
+            "receipt_status": "0x1", "historical_real_pool_sell": True,
+            "gas_price_field": gas_price,
+            "gas_cost_evidence": "UNVERIFIED_ZERO_REPORTED" if gas_price == "0x0"
+                                 else "RPC_RECEIPT_ONLY_NOT_INDEPENDENTLY_VERIFIED",
+            "uniform_notional_sellability": "NOT_SCORABLE",
+            "public_available_at": "UNVERIFIED"}
+
+
+def replay_frozen_sell_receipts(directory, evidence_path, rpc=None):
+    """Exact 18 receipt calls on first run; saved raw bytes only thereafter."""
+    evidence = json.loads(Path(evidence_path).read_text(encoding="utf-8"))
+    targets = frozen_depth_qualified_real_sell_targets(evidence)
+    manifest_path = directory / "v2_p0_real_sell_receipt_manifest.json"
+    old = json.loads(manifest_path.read_text()) if manifest_path.exists() else None
+    if old is not None and (old.get("rank_count") != 18 or
+                            [x.get("rank") for x in old.get("rows", [])] !=
+                            [x["rank"] for x in targets]):
+        raise SourceError("SELL_ARCHIVE_EXISTING_MANIFEST_IDENTITY_DRIFT")
+    if rpc is None and old is None:
+        raise SourceError("SELL_ARCHIVE_NO_LOCAL_MANIFEST")
+    if rpc is not None and old is not None and old.get("endpoint_sha256") != rpc.source_tag:
+        raise SourceError("SELL_ARCHIVE_ENDPOINT_FINGERPRINT_CHANGED")
+    source_tag = old["endpoint_sha256"] if rpc is None else rpc.source_tag
+    rows = []
+    for target in targets:
+        filename = "rank_" + str(target["rank"]) + ".rpc.json"
+        stored = directory / "v2_p0_real_sell_receipts" / source_tag / filename
+        if stored.exists():
+            raw = stored.read_bytes()
+        else:
+            if rpc is None:
+                raise SourceError("SELL_ARCHIVE_MISSING_RAW_RANK_" + str(target["rank"]))
+            _, raw = rpc.request("eth_getTransactionReceipt", [target["tx"]])
+        try:
+            envelope = json.loads(raw)
+        except (ValueError, UnicodeDecodeError):
+            raise SourceError("SELL_ARCHIVE_INVALID_RAW_JSON") from None
+        if not isinstance(envelope, dict) or "result" not in envelope:
+            raise SourceError("SELL_ARCHIVE_MISSING_RAW_RESULT")
+        row = validate_frozen_real_sell_receipt(envelope["result"], target)
+        if old is not None:
+            prior = old["rows"][len(rows)]
+            if (prior.get("rank") != target["rank"] or
+                    prior.get("sha256") != sha(raw) or
+                    prior.get("tx") != target["tx"]):
+                raise SourceError("SELL_ARCHIVE_RAW_OR_TX_SHA_DRIFT")
+        if not stored.exists():
+            safe_file(stored, raw)
+        rows.append({**row, "relative_raw_file": str(stored.relative_to(directory)),
+                     "raw_bytes": len(raw), "sha256": sha(raw)})
+    manifest = {
+        "status": "HISTORICAL_18_REAL_SELL_RECEIPTS_ARCHIVED_AND_OFFLINE_REPLAYED",
+        "chain": "bsc-v2", "day": "2025-07-01", "rank_count": 18,
+        "endpoint_sha256": source_tag,
+        "requests_this_invocation": 0 if rpc is None else rpc.calls,
+        "source_is_independent_provider": "UNVERIFIED",
+        "all_original_rpc_bodies_sha256_checked": True,
+        "receipt_and_swap_transfer_sync_matches": 18,
+        "research_frozen_quote_depth_not_user_order_notional": True,
+        "public_T_entry": "UNVERIFIED",
+        "notional_18_of_30_gate": "NOT_SCORABLE",
+        "rows": rows,
+    }
+    if old is not None:
+        if [(x["rank"], x["sha256"], x["tx"]) for x in rows] != [
+                (x["rank"], x["sha256"], x["tx"]) for x in old["rows"]]:
+            raise SourceError("SELL_ARCHIVE_MANIFEST_CHANGED")
+    else:
+        safe_file(manifest_path, plain_json(manifest).encode("utf-8"))
+    return manifest
+
+
 def run(args):
     if args.mode == "audit":
         if args.chain != "bsc-v2" or args.day != "2025-07-01":
