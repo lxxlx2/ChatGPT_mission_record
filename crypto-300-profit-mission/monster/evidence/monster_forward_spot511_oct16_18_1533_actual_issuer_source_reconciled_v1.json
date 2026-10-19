@@ -1,0 +1,79 @@
+{
+  "schema": "MONSTER_FROZEN_SPOT_T0_511_OFFICIAL_THREE_DAY_SOURCE_RECONCILIATION_V1",
+  "original_t0_symbol_count": 511,
+  "days_utc": [
+    "2026-10-16",
+    "2026-10-17",
+    "2026-10-18"
+  ],
+  "expected_official_daily_symbol_files": 1533,
+  "all_real_original_issuer_zip_checksum_sha_verified": 1533,
+  "all_three_dates_complete_for_frozen_T0_universe": true,
+  "real_full_minute_bars_per_symbol_day": 1440,
+  "total_original_publisher_closed_1m_rows_verified": 2207520,
+  "original_t0_raw_http_sha256": "b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b",
+  "by_day": {
+    "2026-10-16": 511,
+    "2026-10-17": 511,
+    "2026-10-18": 511
+  },
+  "original_data_artifact_sources": [
+    {
+      "run": 39212800265,
+      "artifact_id": 12167818438,
+      "publisher_files": 1018
+    },
+    {
+      "run": 39213387756,
+      "artifact_id": 12168243737,
+      "publisher_files": 4
+    },
+    {
+      "run": 39214007356,
+      "artifact_id": 12168334522,
+      "publisher_files": 511
+    }
+  ],
+  "original_files_actions_artifact_retention_days": 60,
+  "source_evidence_git_blobs": [
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_forward_spot511_oct16_17_real_issuer_zip_receipts_v1.json",
+      "sha": "2852bbfd030d11bf84385681a32b07ee5d84d6b1",
+      "count": 1018,
+      "manifest_sha256": "892aa8663370c766c297b903fc267c9bd91d154c478ea4e06f8fe9bbba958f0f"
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_forward_spot511_unicode4_original_publisher_supplement_v1.json",
+      "sha": "e3ff0e8250b3ec09ebe18cc2eea961b231882e5e",
+      "count": 4,
+      "manifest_sha256": "467791daf6dba21540229d1e64a07ff3c2461e75ecd6f5be12c943bebabafefa"
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_forward_spot511_oct18_real_issuer_zip_receipts_v1.json",
+      "sha": "6e1d5d6cdb027213f5627810478dda838c1f3cc9",
+      "count": 511,
+      "manifest_sha256": "f57b29c7ef194a5186e15ed448a6ce6cc813c3b5fbfa68e6319ae904d95278d1"
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage166_real_t0_511_daily_source_intake_readiness_v1.json",
+      "sha": "c061b7e88735808c25c6f9c86ebac6e72730e803",
+      "t0_roster_count": 511
+    }
+  ],
+  "not_all_nine_discovery_dates": true,
+  "discovery_day_sources_remain_six_utc_days": 6,
+  "discovery_source_symbol_days_remaining": 3066,
+  "all_24h_exit_10days_remaining_utc_days": 7,
+  "complete_24h_exit_source_symbol_days_remaining": 3577,
+  "oos_3360_three_minute_ticks_not_yet_complete": true,
+  "dynamic_listing_and_Historical_ticker24_not_proven": true,
+  "true_ask_bid_L2_impact_fees_not_archived_for_every_signal": true,
+  "source_from_actual_publisher_not_yet_independently_other_ai_reviewed": true,
+  "no_backfilled_missing_data_no_synthetic_profitable_price_claim": true,
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_MERGE": true,
+  "NO_DEPLOY": true,
+  "NO_GMAIL": true,
+  "NO_TRADE": true
+}
