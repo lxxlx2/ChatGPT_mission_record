@@ -116,6 +116,31 @@ class G2ReadOnlyIntegrationTests(unittest.TestCase):
                 output = state.frank_observed_watchlist()
             self.assertEqual(output["snapshot_status"], "SNAPSHOT_INVALID_READ_ONLY_IGNORED")
 
+    def test_invalid_explicit_symlink_or_directory_does_not_fall_back(self):
+        observed = {"status":"OK", "scope":"LOCAL_INDEX_ONLY_NOT_COMPLETE_CHAIN",
+                    "summary":{}, "rows":[]}
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            state = server.DashboardState.__new__(server.DashboardState)
+            state.control_root = root
+            state.frank = SimpleNamespace(database=root / "forward.sqlite", person_id="frank")
+            explicit = root / "frank-inventory-snapshot.json"
+            for kind in ("BROKEN_SYMLINK", "DIRECTORY"):
+                with self.subTest(kind=kind):
+                    if kind == "BROKEN_SYMLINK":
+                        explicit.symlink_to(root / "missing-evidence.json")
+                    else:
+                        explicit.mkdir()
+                    with patch.object(server, "read_frank_watchlist", return_value=observed):
+                        result = state.frank_observed_watchlist()
+                    self.assertEqual(result["snapshot_status"], "SNAPSHOT_INVALID_READ_ONLY_IGNORED")
+                    self.assertNotIn("snapshot_origin", result)
+                    self.assertNotIn("snapshot_reconciliation", result)
+                    if explicit.is_symlink():
+                        explicit.unlink()
+                    else:
+                        explicit.rmdir()
+
     def test_frontend_integrated_into_existing_ui(self):
         path = Path(server.__file__).with_name("static")
         html = (path / "index.html").read_text("utf-8")
