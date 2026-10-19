@@ -11,18 +11,18 @@ Assess, using *forward-observed* buys of historically early-acting BSC meme wall
 - PR #113: architecture `APPROVE`, SHA `9134fcd41df49ef836b81c8a040974ad89c1fde1`, lives on distinct unmerged Draft branch.
 - PR #116: F0 preparation `APPROVE`, SHA `cf88cd9f6568502f5c052ae3befc9cc16cbab98b`.
 - PR #118: offline state-machine `APPROVE`, SHA `78e4d26ff7cd1074b7c8de44109b4356e5d0409d`: 36/36 original offline tests plus independently reported 103/103 targeted checks. No real E3, QUOTED or paper-profit evidence.
-- Current work: **new Draft PR branched from PR #118 fixed SHA** for BSC RPC *response parsing without network*. Its SHA and review are **pending independent review**. Do not infer approval from PR #118.
+- Current work: **[Draft PR #120](https://github.com/lxxlx2/ChatGPT_mission_record/pull/120)**, stacked on PR #118's fixed SHA; BSC RPC *response parsing without network*. Check its current HEAD before relying on any reported SHA; **independent review is PENDING**, and approval does not inherit from PR #118.
 - Independent PR #40 (23 BSC research wallets) and PR #97 (449 EVM wallet history analysis) remain separate, no changes or cancellation. F0 preselected 20+10 public wallet IDs pinned at PR #116.
 
 ## Functionality and truthful evidence
 
 Previous: synthetic BUY/SELL/UNKNOWN progressive state machine, virtual entry/exit quotes, E1 failure/reorg/backfill barriers, symmetric random-group behavior, audit statuses; **only synthetic**.
 
-Current: saved full-block, receipt/ERC20 Transfer and ABI Router quote *offline* normalization. Local `unittest` 18 tests PASS, saved-fixture CLI outputs 0 actual RPC / 0 E3 / 0 real quoted / 0 paper-profit labels. Decoded Transfer combinations are provisional hints, not proven actual swaps or realtime signals.
+Current: saved full-block, receipt/ERC20 Transfer and ABI Router quote *offline* normalization. In a single isolated tree, **54/54 local `unittest` PASS** (36 original fixed PR #118 tests + 18 new adapter tests); all three original source blobs match PR #118 approved Git. Saved-fixture CLI reports 0 actual RPC / 0 E3 / 0 real quoted / 0 paper-profit labels. Decoded Transfer combinations are provisional hints, not proven actual swaps or realtime signals.
 
 ## The next useful step
 
-1. Independent reviewer inspect new fixed SHA, run 18 new tests plus all original 36, replay fixture, test falsely upgraded E2/E3/QUOTED, malformed RPC and error paths. If P0/P1, fix only blockers then re-review fixed SHA.
+1. Independent reviewer inspect new fixed SHA, independently rerun all 54 tests, replay fixture, test falsely upgraded E2/E3/QUOTED, malformed RPC and error paths. If P0/P1, fix only blockers then re-review fixed SHA.
 2. After this adapter's independent APPROVE: implement **local-only** bridge from parsed RPC candidate/receipt into existing offline event engine with recorded UTC and per-source original blob hashes, still no network. Prioritize actual functional interface over ornamental guards.
 3. Only after required authorization: bounded F0 real free-provider feasibility (watchlist and ordinary control detection, true 60/300/900s timed quote requests, independent denominator, request costs) with explicit maximum RPC budgets, provider, storage and stop conditions.
 
