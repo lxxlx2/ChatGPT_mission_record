@@ -197,7 +197,7 @@ Source behaviors are preserved; V1 episode reset/dust rules are not invented.
 | Deprecated executable price bounds | VWAP *0.92 to *1.10; stale-entry cap *1.05 | REMOVED_FROM_AUTHORITY |
 | Old preconfirm display deviations | >15%, >25% above VWAP | ENRICHMENT_ONLY |
 | Superseded base entry rules | two consecutive hourly observations; >=70% retention; sell value <=30% gross buys | SUPERSEDED_BY_OVERRIDES |
-| Trading size and execution method | User-controlled; any earlier preset sizing suggestions are **UNAUTHORIZED / WITHDRAWN** | NOT_SIGNAL_PREDICATES |
+| Trading size and execution method | USER_CONTROLLED; historic preset amounts withdrawn | NOT_SIGNAL_PREDICATES |
 | Old runway scenarios | 3x and 5x implied capitalization | NOT_SIGNAL_PREDICATES_NO_GUARANTEE |
 | Old scheduler / overlap | hourly :29; 0–59 min latency; 15 min signature overlap; 2 h social overlap | OLD_OPERATIONAL_NOT_NEW_BEHAVIOR_THRESHOLD |
 | Relative-size / percentile / dust / extra ADD count | NOT_SPECIFIED | DO_NOT_INVENT |
