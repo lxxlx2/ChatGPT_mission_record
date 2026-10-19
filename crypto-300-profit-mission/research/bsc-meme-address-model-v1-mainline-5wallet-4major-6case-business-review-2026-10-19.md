@@ -39,3 +39,16 @@
 - **P5 触发**：只有 B 的某行实际公开信号和相同市场/资金及双向退出证据符合 U 门禁时，才按预冻结真实延迟 +60/+300/+900 秒执行收益验算。当前 **0 个合格**，所以只报告 P5 阻断，不展示未发生交易的假盈利。
 
 **边界**：`ACTUAL_REALIZED_NET_PNL=UNRESOLVED; PUBLIC_EXECUTABLE_U=UNRESOLVED; P4-B/P4-C=PARTIAL; P5=BLOCKED; PRODUCTION=NO_GO; NO_MERGE; NO_DEPLOY; NO_GMAIL; NO_TRADE`。
+
+## 5. 启动里程碑 B 的下一组限定原始交易核查（3 回合/6 笔，免费只读）
+
+为避免只停在「市场最早流动性」层面，本轮紧接着对 **239E 龙虾 R1/R2、8E6B HAJIMI** 的 3 笔原主人首次选定 BUY 和 3 笔末次 EXIT 原交易，通过已连接 Alchemy BNB 主网的 `eth_getTransactionByHash` 分别重新查询：**6/6 实际 `tx.from` 为原 EOA，原 hash、区块均与上述固定来源一致**。这次的返回只是当前会话实时只读查询结果；**完整 RPC 原始正文未归档到 Git**，以下标为 `DIRECT_CHAIN_SCALAR_RECHECK_NOT_ARCHIVED_RAW`，不能把它提升成已获独立外审批准的经济或路由结论。
+
+| 原主回合 | BUY 真正 `transaction.to / input selector` | EXIT 真正 `transaction.to / input selector` | 本轮实际可判定 |
+|---|---|---|---|
+| 239E 龙虾 R1 | `0xca980f000771f70b15647069e9e541ef73f71f2f` / `0x3b164a8e` | 同一 `0xca980f…` / `0x1c25dd39` | 本人先后调用同一合约但**不是直接调用已冻结 V2 池**；需辨明该合约是否路由到其买卖报价池 |
+| 239E 龙虾 R2 | 同一 `0xca980f…` / `0x3b164a8e` | 同一 `0xca980f…` / `0x1c25dd39` | 连续两轮复用该执行入口，不代表该合约可由普通第三方无门槛调用 |
+| 8E6B HAJIMI | `0x1de460f363af910f51726def188f9004276bf4bc` / `0x0b3f5cf9` | `0x13f4ea83d0bd40e75c8222255bc855a974568dd4` / `0x5ae401dc` | 本人买入和最终退出调用的**直接接收合约不同**；同一池/净回款因果路径不能只看历史 V2 quote 代替 |
+
+6 个 source tx hashes 按上一节 [六案例机器表](./bsc-meme-address-model-v1-mainline-5wallet-4major-6case-source-gate-2026-10-19.json) 的 `original_signed_entry_tx` 与 `original_selected_exit_tx` 保留（239E R1 R2 买入 `0x43a76f…`、`0x7aa4b9…`，8E6B `0x379a9f…`）。**这里只新增直接接收合约和 selector 的现实核对，不宣称已经证明真实相同 venue、公众 first received、税/滑点或可以 1/5/15 分钟跟随获利。** 下次只在会影响 `U` 判断时归档必要的原始执行合约路由/交易回执；拿不到就保留未知，转下一个冻结样本。
+
