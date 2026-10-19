@@ -194,14 +194,26 @@ class FactorySourceProbeTests(unittest.TestCase):
             calls = 0
             def request(self, method, params):
                 self.calls += 1
+                if method == "eth_getBlockByNumber":
+                    block = int(params[0], 16)
+                    response = {"number": hex(block),
+                                "timestamp": hex(1751328027 if block == 52440324 else 1751328048)}
+                    return response, json.dumps({"result": response}).encode()
                 if method == "eth_call":
                     block = int(params[1], 16)
-                    val = hex(1874173 if block < 52440324 else 1874174)
+                    if params[0]["data"] == "0x0902f1ac":
+                        t = 1751328027 if block < 52440351 else 1751328048
+                        val = "0x" + format(10000, "064x") + format(1600, "064x") + format(t, "064x")
+                    else:
+                        val = hex(1874173 if block < 52440324 else 1874174)
                     return val, json.dumps({"result": val}).encode()
                 if method == "eth_getLogs":
                     selector = params[0]
                     if selector["address"].lower() == m.CHAINS["bsc-v2"]["factory"].lower():
                         rows = event["scope_factory_event"]
+                    elif int(selector["fromBlock"], 16) == 52440351:
+                        rows = next(x for x in proof["first_later_reserve_update_events"]
+                                    if x["rank"] == 1)["events"]
                     else:
                         rows = event["scope_pair_same_tx_events"]
                     return rows, json.dumps({"jsonrpc": "2.0", "result": rows}).encode()
@@ -224,11 +236,15 @@ class FactorySourceProbeTests(unittest.TestCase):
                 Fake(), 52440287, 52555482, base, 1)
             self.assertEqual(got["verified_creation_and_first_mint"], 1)
             self.assertEqual(got["records"][0]["creation_block"], 52440324)
+            self.assertEqual(got["records"][0]["first_later_pool_reserve_update_block"], 52440351)
+            self.assertTrue(got["records"][0]["first_later_reserve_update_has_swap"])
             self.assertEqual(got["records"][0]["sell_path"], "UNKNOWN")
             self.assertTrue((base / "v2_bootstrap_raw" /
                              (str(first["factory_index"]) + ".factory.rpc.json")).is_file())
             self.assertTrue((base / "v2_bootstrap_raw" /
                              (str(first["factory_index"]) + ".pool.rpc.json")).is_file())
+            self.assertTrue((base / "v2_bootstrap_raw" /
+                             (str(first["factory_index"]) + ".later.rpc.json")).is_file())
 
     def test_wrong_chain_and_embedded_credentials_rejected(self):
         with self.assertRaisesRegex(m.SourceError, "CREDENTIALS"):
