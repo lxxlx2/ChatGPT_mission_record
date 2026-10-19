@@ -1,31 +1,33 @@
-# BSC forward wallet-follow research — authoritative handoff
+# BSC forward wallet-follow module — single ongoing handoff
 
-Updated: 2026-10-20 (Asia/Bangkok). **Scope is this module only.** Read this alongside the real GitHub PR HEADs; never assume these SHA values are the latest without checking.
+Updated: 2026-10-20 Asia/Bangkok. **Do not trust this file without independently checking current PR heads, review comments and source blobs.** This module must not take over old PR #40 or PR #97.
 
-## Business goal
+## One objective
 
-Assess, using *forward-observed* buys of historically early-acting BSC meme wallets, whether a third party can follow after measured delay at configured size and realize conservative **paper** returns better than a pre-selected ordinary-Router-wallet control. Separate L1 discovery reliability, L2 paper executability, L3/L4 increment above controls. No historical cherry-picking, no trading advice, no real-execution assertion.
+Prospectively capture BSC Meme-wallet signed buys and sells, measure when a third party can act with actual quote cost at `+60/+300/+900s`, compare conservative PAPER net outcomes to a pre-registered real ordinary Router random-control cohort. Distinguish L1 capture, L2 executability, L3 as-of features, L4 comparative performance. No retrospective profits or synthetic exercises can prove actual followability.
 
-## Current stage / fixed approvals
+## Fixed approvals (read only, no auto-merge)
 
-- PR #113: architecture `APPROVE`, SHA `9134fcd41df49ef836b81c8a040974ad89c1fde1`, lives on distinct unmerged Draft branch.
-- PR #116: F0 preparation `APPROVE`, SHA `cf88cd9f6568502f5c052ae3befc9cc16cbab98b`.
-- PR #118: offline state-machine `APPROVE`, SHA `78e4d26ff7cd1074b7c8de44109b4356e5d0409d`: 36/36 original offline tests plus independently reported 103/103 targeted checks. No real E3, QUOTED or paper-profit evidence.
-- Current work: **[Draft PR #120](https://github.com/lxxlx2/ChatGPT_mission_record/pull/120)**, stacked on PR #118's fixed SHA; BSC RPC *response parsing without network*. Check its current HEAD before relying on any reported SHA; **independent review is PENDING**, and approval does not inherit from PR #118.
-- Independent PR #40 (23 BSC research wallets) and PR #97 (449 EVM wallet history analysis) remain separate, no changes or cancellation. F0 preselected 20+10 public wallet IDs pinned at PR #116.
+- PR #113 `9134fcd41df49ef836b81c8a040974ad89c1fde1`: architecture **APPROVE**; separate unmerged Draft branch.
+- PR #116 `cf88cd9f6568502f5c052ae3befc9cc16cbab98b`: trial cohort & F0 prep **APPROVE**; deterministic preselected 20 primary/10 backup only, replacement proof rules, no outcome fields.
+- PR #118 `78e4d26ff7cd1074b7c8de44109b4356e5d0409d`: pure synthetic state machine **APPROVE** (36 original tests, separately 103 adversarial).
+- PR #120 `c0a6dca08a57316f70ca7b7e1358c89e262918f4`: saved JSON-RPC parser **APPROVE** (18 tests, separately 60 adversarial). Its HEAD was independently verified before this development; it remains Draft, not merged.
+- New stacked bridge Draft PR: fixed SHA and URL must be read from its actual GitHub PR head; this file was prepared **before** its independent review, status `PENDING_INDEPENDENT_REVIEW`.
 
-## Functionality and truthful evidence
+## Real implementation state
 
-Previous: synthetic BUY/SELL/UNKNOWN progressive state machine, virtual entry/exit quotes, E1 failure/reorg/backfill barriers, symmetric random-group behavior, audit statuses; **only synthetic**.
+Fully offline Python stdlib work from existing PR #120, with no modifications to its approved parser or the earlier state machine. `f0_rpc_bridge.py` connects a saved full BSC block response to UNKNOWN detection, saved receipt to progressive BUY/SELL hint at injected receipt observation time, a synthetic seeded random-control selection path and three virtual entry/exit quote deadlines. Successful receipts remain **provisional** because Router causality and F1 finality have not been certified. Saved archive `eth_call` quotes remain sidecars, never live or synthetic timed quote successes. Invalid receipts and reorg cancel/reject synthetic quote state.
 
-Current: saved full-block, receipt/ERC20 Transfer and ABI Router quote *offline* normalization. In a single isolated tree, **54/54 local `unittest` PASS** (36 original fixed PR #118 tests + 18 new adapter tests); all three original source blobs match PR #118 approved Git. Saved-fixture CLI reports 0 actual RPC / 0 E3 / 0 real quoted / 0 paper-profit labels. Decoded Transfer combinations are provisional hints, not proven actual swaps or realtime signals.
+Bridge integration: 26 additional tests; all 80 tests (36 + 18 + 26) passed locally with saved fabricated data. Fixed report `fixture_bridge_report.json` has no real RPC/E3/QUOTED/PnL evidence. Do not call this an online collector.
 
-## The next useful step
+## Next action & review
 
-1. Independent reviewer inspect new fixed SHA, independently rerun all 54 tests, replay fixture, test falsely upgraded E2/E3/QUOTED, malformed RPC and error paths. If P0/P1, fix only blockers then re-review fixed SHA.
-2. After this adapter's independent APPROVE: implement **local-only** bridge from parsed RPC candidate/receipt into existing offline event engine with recorded UTC and per-source original blob hashes, still no network. Prioritize actual functional interface over ornamental guards.
-3. Only after required authorization: bounded F0 real free-provider feasibility (watchlist and ordinary control detection, true 60/300/900s timed quote requests, independent denominator, request costs) with explicit maximum RPC budgets, provider, storage and stop conditions.
+1. Reviewer must check the new stacked PR fixed SHA, compare to PR #120 approved SHA, rerun full 80 test suite and bridge CLI, verify saved evidence SHA256 and independently challenge archive-quote promotion, same-identity UNKNOWN-to-BUY flow, failure/reorg, timestamp attribution, side hints and control selection.
+2. Fix only actual P0/P1 functional blockers on the same PR branch and get new fixed SHA review. Avoid endless boundary additions and historical forensic detours.
+3. Once bridge APPROVE, prioritize source/provider feasibility (free BSC service, full-block enumeration cost, wallet first-observed timings, normal ordinary Router control stream, independent chain denominator, live timed quotes). Any real request/run still needs the user's separate **written authorization** including provider, quotas, call ceilings, storage, duration, allowed local environment; no automatic service setup.
 
-## Hard prohibitions / stop rules
+## Hard stop / authority
 
-No real RPC without explicit user permission; no tokens, private keys, wallet signing, trading, paid GMGN, email, notifications, new automations, background Mac launchd, production deploy, PR merge. F0 failures like no live control stream, incomplete denominator, missing free source are reportable `BLOCKED/INSUFFICIENT` — do not silently replace with simulated performance. F3 will be blinded and requires final strategy freeze before first sample. For each next task specify its L1/L2/L3/L4/V contribution, baseline SHA, tests, raw evidence, exact remaining blocker and Git report; do not restart PR40/97 forensics or redesign approved architecture.
+`NO_TRADE / NO_RPC_WITHOUT_PERMISSION / NO_PAID_GMGN / NO_WALLET_SIGN / NO_EMAIL / NO_NOTIFICATIONS / NO_BACKGROUND_MAC_SERVICE / NO_NEW_AUTOMATION / NO_PRODUCTION_DEPLOY / NO_MERGE`.
+
+F1 strategy and finality-policy freeze is not complete; F3 6–8wk prospective observation and blinded L4 evaluation have not begun. All real denominators, on-chain causal BUY/E2, E3, actual Router requests and actual profitability remain `NOT_MEASURED/UNRESOLVED`. All stages require independent review; approved SHA is immutable by definition.

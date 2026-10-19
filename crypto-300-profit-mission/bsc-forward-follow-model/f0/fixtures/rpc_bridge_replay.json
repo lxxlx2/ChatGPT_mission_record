@@ -1,0 +1,186 @@
+{
+  "schema": "bsc-f0-offline-rpc-state-bridge-v1",
+  "mode": "OFFLINE_BRIDGE_FIXTURE_ONLY",
+  "trial": true,
+  "chain_id": 56,
+  "watchlist": [
+    "0x1111111111111111111111111111111111111111",
+    "0x4444444444444444444444444444444444444444"
+  ],
+  "routers": [
+    "0xcccccccccccccccccccccccccccccccccccccccc"
+  ],
+  "quote_assets": [
+    "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  ],
+  "control_seed": "f0-control-precommit-v1",
+  "control_modulo": 1,
+  "min_confirmations": 2,
+  "blocks": [
+    {
+      "rpc": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {
+          "hash": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "number": "0x64",
+          "transactions": [
+            {
+              "hash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+              "from": "0x1111111111111111111111111111111111111111",
+              "to": "0xcccccccccccccccccccccccccccccccccccccccc",
+              "value": "0x0",
+              "blockNumber": "0x64",
+              "blockHash": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            },
+            {
+              "hash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+              "from": "0x2222222222222222222222222222222222222222",
+              "to": "0xcccccccccccccccccccccccccccccccccccccccc",
+              "value": "0x0",
+              "blockNumber": "0x64",
+              "blockHash": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            },
+            {
+              "hash": "0x4444444444444444444444444444444444444444444444444444444444444444",
+              "from": "0x4444444444444444444444444444444444444444",
+              "to": "0xcccccccccccccccccccccccccccccccccccccccc",
+              "value": "0x0",
+              "blockNumber": "0x64",
+              "blockHash": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            }
+          ]
+        }
+      },
+      "observed_ms": 1000,
+      "ingest_path": "POLL",
+      "receipts": [
+        {
+          "rpc": {
+            "jsonrpc": "2.0",
+            "id": 2,
+            "result": {
+              "transactionHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+              "blockNumber": "0x64",
+              "blockHash": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "status": "0x1",
+              "logs": [
+                {
+                  "address": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "topics": [
+                    "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                    "0x000000000000000000000000dddddddddddddddddddddddddddddddddddddddd",
+                    "0x0000000000000000000000001111111111111111111111111111111111111111"
+                  ],
+                  "data": "0x0000000000000000000000000000000000000000000000000000000000000384",
+                  "logIndex": "0x0"
+                },
+                {
+                  "address": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                  "topics": [
+                    "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                    "0x0000000000000000000000001111111111111111111111111111111111111111",
+                    "0x000000000000000000000000dddddddddddddddddddddddddddddddddddddddd"
+                  ],
+                  "data": "0x00000000000000000000000000000000000000000000000000000000000003e8",
+                  "logIndex": "0x1"
+                }
+              ]
+            }
+          },
+          "observed_ms": 2000,
+          "tip_number": 103
+        },
+        {
+          "rpc": {
+            "jsonrpc": "2.0",
+            "id": 5,
+            "result": {
+              "transactionHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+              "blockNumber": "0x64",
+              "blockHash": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "status": "0x1",
+              "logs": [
+                {
+                  "address": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "topics": [
+                    "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                    "0x0000000000000000000000002222222222222222222222222222222222222222",
+                    "0x000000000000000000000000dddddddddddddddddddddddddddddddddddddddd"
+                  ],
+                  "data": "0x000000000000000000000000000000000000000000000000000000000000014a",
+                  "logIndex": "0x0"
+                },
+                {
+                  "address": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                  "topics": [
+                    "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                    "0x000000000000000000000000dddddddddddddddddddddddddddddddddddddddd",
+                    "0x0000000000000000000000002222222222222222222222222222222222222222"
+                  ],
+                  "data": "0x00000000000000000000000000000000000000000000000000000000000000c8",
+                  "logIndex": "0x1"
+                }
+              ]
+            }
+          },
+          "observed_ms": 3000,
+          "tip_number": 103
+        },
+        {
+          "rpc": {
+            "jsonrpc": "2.0",
+            "id": 6,
+            "result": {
+              "transactionHash": "0x4444444444444444444444444444444444444444444444444444444444444444",
+              "blockNumber": "0x64",
+              "blockHash": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "status": "0x0",
+              "logs": []
+            }
+          },
+          "observed_ms": 4000,
+          "tip_number": 103
+        }
+      ]
+    }
+  ],
+  "archive_quotes": [
+    {
+      "rpc": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "result": "0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000003e80000000000000000000000000000000000000000000000000000000000000384"
+      },
+      "observed_ms": 5000,
+      "expected_path_length": 2
+    }
+  ],
+  "virtual_quotes": [
+    {
+      "tx_hash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+      "synthetic_response": true,
+      "purpose": "ENTRY",
+      "delta_ms": 60000,
+      "requested_ms": 62000,
+      "received_ms": 62010,
+      "response_status": "SUCCESS",
+      "synthetic_amount_out_raw": "900"
+    },
+    {
+      "tx_hash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+      "synthetic_response": true,
+      "purpose": "EXIT",
+      "delta_ms": 60000,
+      "requested_ms": 63000,
+      "received_ms": 63010,
+      "response_status": "ERROR",
+      "synthetic_amount_out_raw": null,
+      "error": {
+        "code": -32000,
+        "message": "offline unavailable"
+      }
+    }
+  ],
+  "end_ms": 960000
+}
