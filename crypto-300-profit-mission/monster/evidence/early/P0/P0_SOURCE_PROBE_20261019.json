@@ -5595,5 +5595,98 @@
     "gate_18_30_sellability": "NOT_SCORABLE",
     "meaning": "Local source code rerun, no new RPC. Observed pair Swap direction + earlier same-transaction Sync in limited archived windows; not evidence of user-wallet tradeability. Actual sell tx identifiers for rank 8 and 28 still only in user's local archive, not provided in pasted stdout.",
     "gate_decision": "P0_PARTIAL_G4_UNKNOWN_G6_NO_GO"
+  },
+  "bsc_v2_p0_actual_sell_receipt_checks_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_THREE_REAL_HISTORIC_TOKEN_SELL_RECEIPTS_V1",
+    "scope": "BSC mainnet Pancake V2 pre-frozen rank5, rank8, rank28 only, 2025-07-01 UTC",
+    "source_origin_kind": "HISTORICAL_CHAIN_RPC",
+    "provider": "Existing user's Alchemy app ChatGPT Crypto Monitor All Chains, BNB mainnet read-only",
+    "source_return_mode": "CONNECTOR_NORMALIZED_HTTP_NOT_ORIGINAL_COMPLETE_BYTES",
+    "prior_independent_response_sha256": null,
+    "same_provider_not_independent_second_source": true,
+    "entries": [
+      {
+        "rank": 5,
+        "creation_block": 52441107,
+        "token_ca": "0x6d75721984a6678dabe2c5e34ed872f9cc2d5a65",
+        "pair": "0x67bd637ca7456c519857ecfad388eb98686285af",
+        "quote_asset": "USDT",
+        "observed_sell_block": 52441377,
+        "transaction_hash": "0xddf4631429c9faf6bb2a117516a2fff39debe9fd207d19c274808ca99a16f348",
+        "receipt_status": "0x1",
+        "token_transfer_in_raw": "69914887641473879",
+        "pool_swap_token_in_raw": "69914887641473879",
+        "pool_transfer_quote_out_raw": "99632794358189979",
+        "pool_swap_quote_out_raw": "99632794358189979",
+        "log_indices_hex": {
+          "token_transfer": "0x247",
+          "quote_transfer": "0x248",
+          "sync": "0x249",
+          "swap": "0x24a"
+        },
+        "quote_reserve_after_sync_raw": "1214335435302822748",
+        "quote_reserve_at_creation_raw": "1313968229661012727",
+        "research_quote_liquidity_floor_raw": "1000000000000000000000"
+      },
+      {
+        "rank": 8,
+        "creation_block": 52442067,
+        "token_ca": "0xa2c9256d41176d1fa2846f5bdd8935a10a467f00",
+        "pair": "0x0c686c34f8abc970f3744b62943712f0acf6698a",
+        "quote_asset": "USDT",
+        "observed_sell_block": 52442068,
+        "transaction_hash": "0x864245a074f1d48ab773a1c4be9f6cdbb0a4fe3d420c9a28b76e56a70df1e235",
+        "receipt_status": "0x1",
+        "token_transfer_in_raw": "29589794019094988811556518546",
+        "pool_swap_token_in_raw": "29589794019094988811556518546",
+        "pool_transfer_quote_out_raw": "937879706105171712",
+        "pool_swap_quote_out_raw": "937879706105171712",
+        "log_indices_hex": {
+          "token_transfer": "0x1d7",
+          "quote_transfer": "0x1d8",
+          "sync": "0x1d9",
+          "swap": "0x1da"
+        },
+        "quote_reserve_after_sync_raw": "191648907398026673",
+        "quote_reserve_at_creation_raw": "50000000000000000000",
+        "research_quote_liquidity_floor_raw": "1000000000000000000000"
+      },
+      {
+        "rank": 28,
+        "creation_block": 52447528,
+        "token_ca": "0x7f094036fe1877a87f710ffedaae6858043b355b",
+        "pair": "0x0079d710fcb5d227b5fd7a93846aecb027ff090e",
+        "quote_asset": "WBNB",
+        "observed_sell_block": 52447990,
+        "transaction_hash": "0xe58cfceaec28c06221309f55d413bcced063757cc0c8e84ce9d3d9dfdc3e985b",
+        "receipt_status": "0x1",
+        "token_transfer_in_raw": "22000000000000000000000",
+        "pool_swap_token_in_raw": "22000000000000000000000",
+        "pool_transfer_quote_out_raw": "39261406924078",
+        "pool_swap_quote_out_raw": "39261406924078",
+        "log_indices_hex": {
+          "token_transfer": "0x1e",
+          "quote_transfer": "0x1f",
+          "sync": "0x20",
+          "swap": "0x21"
+        },
+        "quote_reserve_after_sync_raw": "2645322364368946",
+        "quote_reserve_at_creation_raw": "2684583771293024",
+        "research_quote_liquidity_floor_raw": "2000000000000000000",
+        "first_later_reserve_update_located_by_historical_getReserves_timestamp_binary_search": true,
+        "first_later_reserve_update_read_only_calls_reported": 18
+      }
+    ],
+    "all_three_same_transaction_swap_sync_and_token_transfer_quote_transfer_match": true,
+    "all_three_quote_reserve_at_creation_below_frozen_minimum": true,
+    "all_three_quote_reserve_after_observed_sell_below_frozen_minimum": true,
+    "frozen_floor_timing_caveat": "Cannot infer never crossed threshold in another intervening block, nor assert fail at all historic T.",
+    "sell_recipient_actual_wallet_constraints": "UNVERIFIED_FOR_ANY_FUTURE_USER",
+    "reusable_same_notional_buy_then_sell_at_public_entry": "NOT_SCORABLE",
+    "eighteen_of_thirty_gate": "NOT_SCORABLE",
+    "research_only": true,
+    "no_trading_done": true,
+    "evidence_grade": "OBSERVED_SUCCESSFUL_SPECIFIC_HISTORICAL_SELL_TX_NOT_GENERALIZED_TRADEABILITY",
+    "proof_limitation": "Specific historical successful transactions prove third-party token Transfer to pool matched Pool Swap tokenIn, and quote Transfer out matched Swap quoteOut. Full HTTP response bytes not archived through connector; some receipt payloads truncated, filtered logs and status independently retrieved from same provider."
   }
 }
