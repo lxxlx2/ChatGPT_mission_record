@@ -1,5 +1,11 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20 Mac 复验：8/8 通过，真实 The Graph Gateway 返回 HTTP 403（源仍 BLOCKED）
+
+用户提供的最新 Mac 终端截图（Python 3.14.7）：修订后的 Graph 探针 **8/8 单元测试 PASS**，测试输出包含由 mock HTTPError 清理产生的 ResourceWarning，不代表真实 Gateway 响应。随后唯一手动真实 Graph 请求返回 `GRAPH_HTTP_403_KEY_OR_ACCESS_DENIED`，HTTP 层确认收到拒绝答复；没有成功取得 `_meta` 或历史 V3 池，无法从 403 单独断言 API Key 无效、账户未开通、子图不可用或具体计费故障。当前代码在失败时丢弃原 HTTP body，故根因 **UNRESOLVED**。
+
+The Graph 官方 [Managing API keys](https://thegraph.com/docs/en/subgraphs/providers/subgraph-studio/managing-api-keys/) 和 [Serving Queries](https://thegraph.com/docs/en/gateways/subgraphs/consumer-side/serving-queries/) 均支持 POST+Bearer；API Key 的 Security 可设置**域名白名单及子图访问范围**，均可能导致 403（还未取得用户账户设置证据）。下一步首先检查原 Key 的 Security（是否有限域名、是否只允许指定 Subgraph）、Active 状态及 Free Plan，而非再造 Key、修改正确的认证格式或购买付费额度。此轮只追查源门禁，保留 V2 冻结30池及无全覆盖、无公共 PIT、无统一交易金额的停门状态。P0 `INSUFFICIENT_COVERAGE`、P1 `BLOCKED`、G6 `NO_GO`，无模型训练、部署、邮件及交易。
+
 ## 2026-10-20：用户 Mac 首次 Graph 探针失败，已修正静默吞掉 HTTP 诊断问题
 
 用户在本地隔离 worktree HEAD `3f6e2984` 前台执行原始 Graph 单次探针，终端实际返回 `GRAPH_NETWORK_OR_AUTH_FAILURE`；同期 Graph Studio 截图显示 `No queries yet`。旧脚本将 HTTP 401/403/402/404/429/5xx、DNS、TLS 和超时统一捕获成同一个错误，故**真实 HTTP 状态、是否到达 Gateway、是否为凭证错误均未知**，不得将它写成 key 不可用、历史子图不存在或历史无池。

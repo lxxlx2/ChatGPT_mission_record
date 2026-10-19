@@ -8861,5 +8861,31 @@
     "phase_p0": "INSUFFICIENT_COVERAGE",
     "phase_p1": "BLOCKED",
     "paid_actions": false
+  },
+  "bsc_v3_graph_live_mac_http403_verified_20261020": {
+    "source": "USER_MAC_TERMINAL_SCREENSHOT_CONFIRMED_2026-10-20",
+    "observed_operation": "Manual local one-query BSC V3 The Graph gateway test",
+    "mac_python_version": "3.14.7",
+    "new_graph_probe_unit_tests": "8/8_PASS_MAC_USER_TERMINAL_SCREENSHOT",
+    "unit_test_warnings": "ResourceWarning on synthetic HTTPError fixture object cleanup; tests report OK; not a real API response result",
+    "gateway_status": "HTTP_403",
+    "actual_cli_exit": "GRAPH_HTTP_403_KEY_OR_ACCESS_DENIED",
+    "request_made": "YES_NETWORK_RETURNED_HTTP_RESPONSE",
+    "response_body_captured": "NO_EXCEPTION_HANDLER_DISCARDS_BODY",
+    "identity_of_denial": "UNRESOLVED_KEY_SCOPE_OR_ACCOUNT_OR_PROVIDER",
+    "subgraph_access_token_is_invalid": "NOT_PROVEN",
+    "subgraph_historical_availability": "NOT_SCORABLE_NO_SUCCESSFUL_QUERY",
+    "same_free_plan_docs": "100000_queries_per_month_documented_not_account_entitlement_verified",
+    "official_auth_bearer_accepted": true,
+    "official_link": "https://thegraph.com/docs/en/subgraphs/providers/subgraph-studio/managing-api-keys/",
+    "official_subgraph_allowlist": "Security -> Assign Subgraphs may restrict coverage; must inspect account setup, not assumed set",
+    "official_domain_allowlist": "Security -> Add Domain may restrict headless CLI, inspect whether currently configured",
+    "recommended_next": "Inspect existing key Security domain restrictions, assigned subgraphs, key active/free billing. Do not regenerate again or pay before confirming root cause.",
+    "api_key_values_saved_to_git": false,
+    "full_v3_source_proof": "FAIL_HTTP_403",
+    "phase_gate": "P0_INSUFFICIENT_COVERAGE_P1_BLOCKED",
+    "code_changed_this_turn": false,
+    "no_paid_requests": true,
+    "no_trading": true
   }
 }
