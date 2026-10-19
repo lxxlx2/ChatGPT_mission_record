@@ -260,6 +260,69 @@ class V2HistoricQuoteAndSwapEvidenceTests(unittest.TestCase):
                     {**swap,'topics':[SYNC]}, quote_is_token0=True)
 
 
+    def test_three_historical_archived_swap_windows_preserve_buy_sell_directions(self):
+        from mission_agent.early.bsc_v2_pit import summarize_v2_archived_swap_windows
+        archive = json.loads((Path(__file__).resolve().parents[2] /
+            'monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json').read_text())
+        history = archive['historical_bsc_v2_append_only_factory_enumeration']
+        cohort = {x['cohort_rank']: x for x in history['chronological_quoted_unique_first30']}
+        pairs = {x['factory_index_zero_based']: x for x in history['first36']}
+        events = history['creation_liquidity_source_spotchecks']['first_later_reserve_update_events']
+        for rank, expected in [(1, 'OBSERVED_QUOTE_TO_TOKEN_SWAP'),
+                               (2, 'OBSERVED_QUOTE_TO_TOKEN_SWAP'),
+                               (5, 'OBSERVED_TOKEN_TO_QUOTE_SWAP')]:
+            case = next(x for x in events if x['rank'] == rank)
+            item = cohort[rank]
+            identity = pairs[item['factory_index']]
+            with self.subTest(rank=rank):
+                result = summarize_v2_archived_swap_windows(
+                    pool=case['pool'], token0=identity['token0'],
+                    token1=identity['token1'], quote_asset=item['quote_asset'],
+                    windows=[{'name': 'FIRST_LATER_POOL_UPDATE', 'logs': case['events']}])
+                self.assertEqual(result['observed_swap_events'], 1)
+                self.assertEqual(result['swap_with_prior_same_tx_sync'], 1)
+                self.assertEqual(
+                    result['first_observed_in_saved_windows']['direction'], expected)
+                self.assertEqual(result['historical_token_tax_and_user_sellability'],
+                                 'UNVERIFIED')
+                self.assertEqual(result['eighteen_of_thirty_sellable_gate'], 'NOT_SCORABLE')
+
+    def test_archived_swap_missing_sync_overlap_and_wrong_scope_fail_closed(self):
+        from mission_agent.early.bsc_v2_pit import summarize_v2_archived_swap_windows
+        archive = json.loads((Path(__file__).resolve().parents[2] /
+            'monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json').read_text())
+        history = archive['historical_bsc_v2_append_only_factory_enumeration']
+        case = history['creation_liquidity_source_spotchecks']['first_later_reserve_update_events'][2]
+        item = history['chronological_quoted_unique_first30'][4]
+        identity = next(r for r in history['first36']
+                        if r['factory_index_zero_based'] == item['factory_index'])
+        kwargs = dict(pool=item['pool'], token0=identity['token0'],
+                      token1=identity['token1'], quote_asset=item['quote_asset'])
+        swap = next(x for x in case['events'] if x['topics'][0].lower() == SWAP)
+        no_sync = summarize_v2_archived_swap_windows(
+            **kwargs, windows=[{'name': 'PARTIAL', 'logs': [swap]}])
+        self.assertEqual(no_sync['observed_swap_events'], 1)
+        self.assertEqual(no_sync['observed_token_to_quote_with_sync'], 0)
+        self.assertEqual(no_sync['absence_of_swap_in_missing_intervals'], 'UNKNOWN')
+        repeated = summarize_v2_archived_swap_windows(
+            **kwargs, windows=[{'name': 'A', 'logs': case['events']},
+                               {'name': 'B', 'logs': case['events']}])
+        self.assertEqual(repeated['observed_swap_events'], 1)
+        self.assertEqual(repeated['observed_token_to_quote_with_sync'], 1)
+        empty = summarize_v2_archived_swap_windows(
+            **kwargs, windows=[{'name': 'NONE', 'logs': []}])
+        self.assertEqual(empty['observed_swap_events'], 0)
+        self.assertIsNone(empty['first_observed_in_saved_windows'])
+        with self.assertRaisesRegex(PITInvalid, 'WRONG_PAIR'):
+            summarize_v2_archived_swap_windows(
+                **kwargs, windows=[{'name': 'WRONG', 'logs': [
+                    {**swap, 'address': '0x' + 'f'*40}]}])
+        with self.assertRaisesRegex(PITInvalid, 'SCOPE_OR_QUOTE_INVALID'):
+            summarize_v2_archived_swap_windows(
+                **{**kwargs, 'quote_asset': '0x'+'f'*40},
+                windows=[{'name': 'A', 'logs': case['events']}])
+
+
 
 if __name__=='__main__':
     unittest.main()
