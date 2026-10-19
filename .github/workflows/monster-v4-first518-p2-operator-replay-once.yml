@@ -1,0 +1,158 @@
+name: Monster first518 audited P2 repair and D0 D1 D2 operator real-source CI once
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-first518-p2-operator-replay-once.yml'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster-first518-p2-operator-original-1533-once
+  cancel-in-progress: false
+jobs:
+  real_first518_operator_and_economics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: true
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify explicit single push and module offline code and operator tests
+        run: |
+          set -eu
+          python3 - <<'PY'
+          import subprocess
+          changed=subprocess.check_output(['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],text=True).splitlines()
+          assert changed==['.github/workflows/monster-v4-first518-p2-operator-replay-once.yml'],changed
+          print('MONSTER_FIRST518_P2_AND_OPERATOR_SINGLE_MANUAL_COMMIT_ONLY')
+          PY
+          python3 -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_fifo8_bridge.py crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_postsignal_economics.py crypto-300-profit-mission/local-agent/scripts/monster_v4_opportunity_snapshot.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_forward_spot511_first518_fifo8_bridge.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_forward_spot511_first518_postsignal_economics.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_opportunity_snapshot.py
+          echo MONSTER_FIRST518_P2_CODE_AND_EXISTING_OPERATOR_NO_BUY_TESTS_OK
+      - name: Restore only already published issuer ZIP and checksum pairs through GitHub Actions archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster_p2/a /tmp/monster_p2/b /tmp/monster_p2/c
+          gh run download 39212800265 --repo lxxlx2/ChatGPT_mission_record --name monster-spot511-oct16-17-original-publisher-zip-checksum-1022-attempts --dir /tmp/monster_p2/a
+          gh run download 39213387756 --repo lxxlx2/ChatGPT_mission_record --name monster-frozen-spot511-unicode4-source-gap-official-publisher-originals --dir /tmp/monster_p2/b
+          gh run download 39214007356 --repo lxxlx2/ChatGPT_mission_record --name monster-real-spot511-20261018-original-issuer-zip-and-checksum --dir /tmp/monster_p2/c
+          echo MONSTER_FIRST518_ORIGINAL_ARCHIVES_RESTORED_NO_NEW_MARKET_CAPTURE
+      - name: Independently rerun 1533 original daily ZIP SHA checks against frozen receipts and actual 518 queue ticks
+        run: |
+          set -eu
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_fifo8_bridge.py --source-dir /tmp/monster_p2/a --source-dir /tmp/monster_p2/b --source-dir /tmp/monster_p2/c --operator-view --out /tmp/monster_p2/bridge_with_operator.json
+          echo MONSTER_REAL_D0_D1_D2_OPERATOR_QUERY_AFTER_ALL518_TICKS
+      - name: Rerun all 16 pre-frozen price paths and build evidence scope-checked economic comparison
+        run: |
+          set -eu
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_postsignal_economics.py --source-dir /tmp/monster_p2/a --source-dir /tmp/monster_p2/b --source-dir /tmp/monster_p2/c --out /tmp/monster_p2/prices_p2_repaired.json
+          python3 - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          ev=Path('crypto-300-profit-mission/monster/evidence')
+          original_bridge=json.loads((ev/'monster_forward_spot511_first518_official_minute_causal_fifo8_actual_v1.json').read_text())
+          original_prices=json.loads((ev/'monster_forward_spot511_first518_8watch_8setup_fixed_horizons_actual_v1.json').read_text())
+          bp=Path('/tmp/monster_p2/bridge_with_operator.json')
+          ep=Path('/tmp/monster_p2/prices_p2_repaired.json')
+          b=json.loads(bp.read_text())
+          p=json.loads(ep.read_text())
+          for key in ('WATCH_event_identity','SETUP_event_identity','D0_D1_totals','event_type_counts','queue_status_counts'):
+              assert b[key]==original_bridge[key],key
+          assert b['strict_3m_global_polls']==518
+          assert b['publisher_verified_zip_checksum_pairs']==1533
+          assert b['original_production_D0_valid_symbols_per_tick']==509
+          assert b['operator_business_gate']=='D2_MISSING_NO_BUY'
+          view=b['operator_readonly_from_same_original_D0_D1_SQLite']
+          assert view['window_total']==8 and view['displayed']==8
+          assert view['sources']['spot']['scanned']==509
+          assert view['sources']['spot']['source_total']==511
+          assert view['sources']['spot']['state']=='STALE_OR_DEGRADED'
+          assert all(item['d2_status']=='NOT_CAPTURED' and item['g4_real_execution']=='UNKNOWN'
+                     and item['recommendation']=='RESEARCH_REVIEW_ONLY_NO_BUY'
+                     and item['watch_evidence_present'] and item['setup_utc'] is not None
+                     and item['watch_reason'] and item['signal']=='SOURCE_STALE'
+                     for item in view['opportunities'])
+          assert p['both_alternative_non_combined_signal_views']==original_prices['both_alternative_non_combined_signal_views']
+          assert p['paired_SETUP_after_WATCH_delay_minutes']==original_prices['paired_SETUP_after_WATCH_delay_minutes']
+          assert p['original_artifact_name_pairs_verified_here']==1533
+          assert p['signal_symbol_days_publisher_sha_reverified_here']==24
+          assert p['producer_full_source_verification']['this_economics_job_did_not_reverify_all_1533_bytes'] is True
+          assert p['producer_full_source_verification']['independent_other_AI_source_replay']=='BLOCKED_NOT_PERFORMED'
+          assert all(p[k] for k in ('NO_MERGE','NO_DEPLOY','NO_GMAIL','NO_TRADE'))
+          result={
+              'schema':'MONSTER_FIRST518_P2_CORRECTED_SAME_SQLITE_OPERATOR_E2E_REAL_ARTIFACT_V1',
+              'source_runner_original_1533_sha_revalidated_on_GITHUB_CI':True,
+              'source_all_frozen_511_daily_attempts':1533,
+              'source_t0_eligible_spot':511,
+              'original_production_D0_handled':509,
+              'unicode_source_excluded_in_original_production_D0':2,
+              'replay_real_first518_ticks':518,
+              'replay_event_type_counts':b['event_type_counts'],
+              'replay_events_identical_to_pre_fix':True,
+              'economics_8_8_all_horizons_identical_to_pre_fix':True,
+              'economics_original_1533_archive_names_rechecked':1533,
+              'economics_original_publisher_symbol_days_verified_this_run':24,
+              'historical_source_quote24_is_reconstructed_1m_proxy':True,
+              'operator_snapshot':view,
+              'operator_D2_evidence':'NOT_CAPTURED',
+              'operator_recommendation':'RESEARCH_ONLY_NO_BUY',
+              'operator_live_delivery':'NOT_TESTED',
+              'original_03eaddc_review':'BLOCKED',
+              'new_independent_other_AI_review':'NOT_DONE',
+              'original_result_commit':'d673bd57e2ce9bf136da4de0c5b934be06337acf',
+              'original_source_producer_run_id':39226387610,
+              'original_economics_producer_run_id':39227104752,
+              'new_code_fixed_input_commit':'${{ github.sha }}',
+              'new_bridge_full_output_sha256':hashlib.sha256(bp.read_bytes()).hexdigest(),
+              'new_economics_full_output_sha256':hashlib.sha256(ep.read_bytes()).hexdigest(),
+              'G0':'PARTIAL','G4':'UNKNOWN','G6':'NO_GO',
+              'NO_MERGE':True,'NO_DEPLOY':True,'NO_GMAIL':True,'NO_TRADE':True
+          }
+          target=Path('/tmp/monster_p2/operator_research_report.json')
+          target.write_text(json.dumps(result,ensure_ascii=False,indent=2,sort_keys=True)+'\n')
+          print('MONSTER_FIRST518_REAL_SOURCE_D0_D1_OPERATOR_D2_MISSING_WITH_8_REAL_SIGNALS_NO_BUY',
+                json.dumps({'events':b['event_type_counts'],'source':view['sources']['spot'],
+                            'operator_total':view['window_total'],'d2':'NOT_CAPTURED',
+                            'full_economic_sha':result['new_economics_full_output_sha256']},sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-first518-audit-P2-repaired-real-original-1533-operator-research-v1
+          path: |
+            /tmp/monster_p2/bridge_with_operator.json
+            /tmp/monster_p2/prices_p2_repaired.json
+            /tmp/monster_p2/operator_research_report.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Archive exact report on original Draft PR without changing historical source or money
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          target=crypto-300-profit-mission/monster/evidence/monster_first518_real_operator_d0_d1_d2_no_buy_research_p2_fixed_v1.json
+          test ! -e "$target"
+          cp /tmp/monster_p2/operator_research_report.json "$target"
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive source-verified 518 D0 D1 to real SQLite operator no-D2 evidence"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER_FIRST518_OPERATOR_RESULT_ALREADY_EXISTS
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for f in crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_fifo8_bridge.py crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_postsignal_economics.py crypto-300-profit-mission/local-agent/scripts/monster_v4_opportunity_snapshot.py crypto-300-profit-mission/monster/MONSTER_FORWARD_SPOT511_FIRST518_POST_SIGNAL_ECONOMICS_FROZEN_20261019.md crypto-300-profit-mission/monster/evidence/monster_forward_spot511_first518_official_minute_causal_fifo8_actual_v1.json crypto-300-profit-mission/monster/evidence/monster_forward_spot511_first518_8watch_8setup_fixed_horizons_actual_v1.json .github/workflows/monster-v4-first518-p2-operator-replay-once.yml; do
+            test "$(git rev-parse "$GITHUB_SHA:$f")" = "$(git rev-parse "HEAD:$f")" || { echo "MONSTER_FIRST518_OPERATOR_CODE_SOURCE_OR_PROTOCOL_DRIFT=$f"; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER_FIRST518_P2_OPERATOR_REAL_SOURCE_ARCHIVED_NO_DEPLOY
