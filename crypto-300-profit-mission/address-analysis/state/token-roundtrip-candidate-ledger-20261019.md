@@ -48,3 +48,9 @@
 - **对应钱包BNB买卖执行区块余额变化合计：-0.337858120186780058 BNB**，等级 `PROVISIONAL_NEGATIVE_CLOSED_TOKEN_CASHFLOW`，缺 Router 内部 native 的逐交易出金 trace；**不得定性为已审计亏损**。
 - [研究报告](../batches/pnl-active-queue-pass-011-20261019.md) · [原始整数/交易哈希JSON](../evidence/pnl-active-queue-pass-011-20261019.json)。
 - 同 exact CA 在 #227 BOARDSEAT 曾出现正向候选，二者是**不同钱包与交易**，不能合并成本、推定共同控制或直接作跟单胜率。
+
+## 第12组新增：#429 UPTOBER，同币同卖出区块关联（2026-10-19）
+
+源行 #429 `0xc51b0f84cd767e18ae1364a302d6ca56a5fe9672`，BNB exact CA `0xd1d21633b34312a3f490ef2d111bfe0342b47777`，一买一卖，原始量 `238138351436254473768300` 完整闭合；买入、授权、卖出均本人签名成功，钱包执行区块BNB余额合计 **-0.000172084300895389 BNB**，为**负向候选**、不是已审计净亏损。[报告](../batches/pnl-active-queue-pass-012-20261019.md) · [链上证据](../evidence/pnl-active-queue-pass-012-20261019.json)。
+
+与源行 #213 UPTOBER 使用同一合约、同一个卖出区块 `0x7745165`，但两笔签名哈希和地址不同。**仅证明链上同时卖币，不证明控制关系**。
