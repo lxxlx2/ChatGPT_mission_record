@@ -385,6 +385,84 @@ def build_roster(rows, chain):
     return ordered, cohort[:30], len(cohort)
 
 
+
+def bootstrap_bsc_v2_saved_roster(rpc, first, last, out_dir, limit):
+    """Bounded historical PairCreated + same-tx Mint/Sync verification for prior frozen identities."""
+    source_path = out_dir / "v2_factory_enum_status.json"
+    if not source_path.is_file():
+        raise SourceError("RUN_ENUMERATE_MODE_BEFORE_BOOTSTRAP")
+    source = json.loads(source_path.read_text())
+    if (source.get("chain") != "bsc-v2" or source.get("day_blocks") != [first, last]
+            or source.get("rpc_source_sha256") != rpc.source_tag
+            or source.get("sample_complete_first30_by_factory_order") is not True
+            or len(source.get("sample", [])) != 30):
+        raise SourceError("BOOTSTRAP_FROZEN_ROSTER_MISMATCH")
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from mission_agent.early.bsc_v2_pit import (PITInvalid, first_creation_block,
+                                                 verify_bootstrap)
+    folder = out_dir / "v2_bootstrap_raw"
+    folder.mkdir(parents=True, exist_ok=True)
+    cache = {}
+    def count_at(block):
+        if block not in cache:
+            cache[block] = historical_v2_count(rpc, block)
+        return cache[block]
+    records = []
+    for item in source["sample"][:limit]:
+        index = item["factory_index"]
+        pair = item["pair"].lower()
+        identity = json.loads((out_dir / "v2_historical_index_raw" /
+                               (str(index) + ".json")).read_text())
+        if (identity.get("factory_index") != index or
+                identity.get("pair") != pair or
+                identity.get("block") != last or
+                identity.get("rpc_source_sha256") != rpc.source_tag):
+            raise SourceError("BOOTSTRAP_RAW_FACTORY_IDENTITY_DRIFT")
+        record = {"factory_index": index, "pair": pair, "token_ca": item["token_ca"],
+                  "status": "UNRESOLVED", "source": "HISTORICAL_CHAIN_REPLAY_NOT_LIVE_OBSERVER"}
+        try:
+            creation = first_creation_block(index, first, last, count_at)
+            factory_logs, raw_factory = fetch_logs(rpc, "bsc-v2", creation, creation)
+            pool_filter = {"address": pair, "fromBlock": hex(creation),
+                           "toBlock": hex(min(last, creation + 9))}
+            pool_logs, raw_pair = rpc.request("eth_getLogs", [pool_filter])
+            if not isinstance(pool_logs, list):
+                raise SourceError("BOOTSTRAP_POOL_LOGS_NOT_ARRAY")
+            for log in pool_logs:
+                if (str(log.get("address", "")).lower() != pair
+                        or not creation <= as_int(log.get("blockNumber")) <= min(last, creation + 9)
+                        or log.get("removed") is True):
+                    raise SourceError("BOOTSTRAP_POOL_LOG_WRONG_SOURCE_OR_RANGE")
+            result = verify_bootstrap(
+                factory=CHAINS["bsc-v2"]["factory"], factory_index=index,
+                creation_block=creation, pool=pair, token0=identity["token0"],
+                token1=identity["token1"], factory_logs=factory_logs,
+                pool_logs=pool_logs)
+            for tag, raw in (("factory", raw_factory), ("pool", raw_pair)):
+                safe_file(folder / (str(index) + "." + tag + ".rpc.json"), raw)
+                record[tag + "_response_sha256"] = sha(raw)
+            record.update(result)
+            record["first_swap_observed_within_10_blocks"] = any(
+                str(x.get("topics", [""])[0]).lower() ==
+                "0xd78ad95fa46c994b6551d0da85fc275fe613d1188e8a7a2f85dd70fc2782a34"
+                for x in pool_logs if x.get("topics"))
+        except (SourceError, PITInvalid, ValueError, OSError, KeyError) as exc:
+            record["status"] = "BOOTSTRAP_SOURCE_OR_IDENTITY_UNRESOLVED"
+            record["reason"] = str(exc)[:180]
+        record["sell_path"] = "UNKNOWN"
+        record["t_entry"] = None
+        records.append(record)
+    return {"schema": "MONSTER_BSC_V2_HISTORICAL_BOOTSTRAP_BATCH_V1",
+            "status": "BOUNDED_FIRST_N_PIT_CREATION_ONLY_NOT_EXECUTABLE",
+            "verified_creation_and_first_mint": sum(
+                r.get("initial_quote_liquidity_proven") is True for r in records),
+            "records": records, "requested_count": limit,
+            "source_day_blocks": [first, last],
+            "source_rpc_fingerprint": rpc.source_tag,
+            "real_executable_pnl": "UNKNOWN",
+            "not_24_30_or_18_30_gate_pass": True}
+
+
 def run(args):
     chain = CHAINS[args.chain]
     endpoint = args.rpc or chain["rpc"]
@@ -413,6 +491,19 @@ def run(args):
             "requests_this_invocation", "reason")}).strip())
         if not result.get("sample_complete_first30_by_factory_order"):
             raise SystemExit(2)
+        return
+    if args.mode == "bootstrap":
+        if args.chain != "bsc-v2":
+            raise SourceError("BOOTSTRAP_REQUIRES_BSC_V2")
+        out_dir = args.out_dir.resolve() / (args.chain + "-" + args.day)
+        result = bootstrap_bsc_v2_saved_roster(
+            rpc, first, last, out_dir, args.bootstrap_limit)
+        result["requests_this_invocation"] = rpc.calls
+        safe_file(out_dir / "v2_bootstrap_status.json",
+                  plain_json(result).encode("utf-8"))
+        print(plain_json({k: result[k] for k in (
+            "status", "verified_creation_and_first_mint", "requested_count",
+            "requests_this_invocation")}).strip())
         return
     if args.mode == "probe":
         attempts = []
@@ -501,9 +592,11 @@ def main():
     parser = argparse.ArgumentParser(description="Manual historical Factory RPC coverage; no transactions")
     parser.add_argument("--chain", choices=CHAINS, default="base-v3")
     parser.add_argument("--day", default="2025-07-01")
-    parser.add_argument("--mode", choices=("probe", "scan", "enumerate"), default="probe")
+    parser.add_argument("--mode", choices=("probe", "scan", "enumerate", "bootstrap"), default="probe")
     parser.add_argument("--limit", type=int, default=45,
                         help="BSC V2 historical index identities to check, max 200 per invocation")
+    parser.add_argument("--bootstrap-limit", type=int, default=3,
+                        help="Max frozen BSC V2 identities per manual initial-liquidity batch (1–5)")
     parser.add_argument("--rpc", default=None, help="Override only with a trusted HTTPS RPC with eth_getLogs")
     parser.add_argument("--out-dir", type=Path, default=Path.home() / "monster-pit-source-probe")
     parser.add_argument("--chunk", type=int, default=1000)
@@ -511,7 +604,8 @@ def main():
     parser.add_argument("--delay", type=float, default=0.3)
     args = parser.parse_args()
     if (args.chunk < 1 or args.chunk > 10000 or args.max_requests < 1
-        or not 1 <= args.limit <= 200 or args.delay < 0):
+        or not 1 <= args.limit <= 200 or not 1 <= args.bootstrap_limit <= 5
+        or args.delay < 0):
         parser.error("invalid request budget / chunk / delay")
     try:
         run(args)
