@@ -1,0 +1,71 @@
+{
+  "schema": "bsc-f0-free-source-offline-preflight-evidence-v1",
+  "observed_date": "2026-10-20",
+  "review_scope": "OFFLINE_ARITHMETIC_AND_TESTS_ONLY",
+  "baseline_approved_pr121_sha": "bf9fbb0a6bbff3a9375c6a937cea52d016104733",
+  "source_blobs": {
+    "f0/f0_offline_collector.py": "d70338741c90e50ae1f9a84ba93fc8b6f86eae92",
+    "f0/f0_rpc_adapter.py": "35ce2aee341586879c4ede95d3e7669cb8e30e3f",
+    "f0/f0_rpc_bridge.py": "dcaf8b30df60dee361b9d0e745095fcc113950db",
+    "f0/tests/test_f0_offline_collector.py": "9898cd61381cda215b8d6d7822deccece253693a",
+    "f0/tests/test_f0_rpc_adapter.py": "aa78342ffcba6d5c65c20dacaa380d4678a138ad",
+    "f0/tests/test_f0_rpc_bridge.py": "0b1d4ab9c3db3687c5889228b88e322c94e3cf3d",
+    "f0/f0_source_budget.py": "479b64bf530c6094d36a8e82e01b7c54bb0f549d",
+    "f0/tests/test_f0_source_budget.py": "bbef2d80511d380c47e878888d59852fb6d89144"
+  },
+  "test_execution": {
+    "command": "python3 -m unittest discover -s /mnt/data/bsc_f0_bridge/tests -p 'test_*.py'",
+    "test_bundle": "PR121 baseline verified by 6 exact Git blobs; f0_source_budget.py and test_f0_source_budget.py exact Git blobs",
+    "result": "PASS",
+    "tests_run": 92,
+    "baseline_tests": 80,
+    "new_budget_tests": 12,
+    "log_sha256": "2b3cfa1eb90d7183974cba83dc7a23873a41a3d519ea8024d763d15dc0610daf",
+    "new_script_sha256": "4885594565bc0017faa81cff2e9244981884446bd7a279acac9436b40f3eafe0",
+    "new_test_sha256": "b3dab70b7040dc9b48353616460d2f98edeb4f584ae3b2672f779c9770b2d362",
+    "repo_root_equivalent": "python3 -m unittest discover -s crypto-300-profit-mission/bsc-forward-follow-model/f0/tests -p 'test_*.py'"
+  },
+  "outputs": [
+    {
+      "scenario": "24h 0.45s block full-block-only; zero WS bytes",
+      "block_count": 192000,
+      "rpc_calls": 192000,
+      "cu": "3840000.00",
+      "stop_state": "NO_RUN",
+      "actual_rpc_calls": 0,
+      "sha256": "84907a1ec2cc9b62ce0d3169e3c4f429e30527df8348749e5804a36447c30c76"
+    },
+    {
+      "scenario": "48h 0.45s block + hypothetical 1000 WS bytes per block; no additional calls",
+      "block_count": 384000,
+      "rpc_calls": 384000,
+      "cu": "23040000.00",
+      "stop_state": "NO_RUN",
+      "actual_rpc_calls": 0,
+      "sha256": "a4b6886994d30ac9575f5fb0419d1725b896a3f2bdc246a33616e704ae59d1ea"
+    }
+  ],
+  "static_checks": {
+    "status": "PASS",
+    "total": 16,
+    "passed": 16,
+    "scope": "Git SHA/head, offline no network imports, cap policy, fee math, 12 defined tests and F1 P2 source statements"
+  },
+  "source_status": {
+    "actual_bsc_ws_calls": 0,
+    "actual_bsc_http_rpc_calls": 0,
+    "actual_free_quota": "UNVERIFIED",
+    "per_method_live_latency": "NOT_MEASURED",
+    "control_stream_coverage": "NOT_MEASURED",
+    "independent_buy_denominator": "NOT_MEASURED",
+    "real_quoted": 0,
+    "real_e3": 0,
+    "paper_profit_labels": 0
+  },
+  "permissions": "NO_RUN; NO_NETWORK; NO_TRADE; NO_MERGE; NO_DEPLOY; NO_AUTOMATION; SEPARATE_USER_AUTHORIZATION_REQUIRED",
+  "caveats": [
+    "Code and tests were locally copied from and byte-compared against exact Git blob SHAs before testing",
+    "Hypothetical provider CU costs and average WS bytes are illustrative and must not be treated as account entitlements",
+    "No live chain read, actual provider feasibility or approved F1 finality/E2 policy was established"
+  ]
+}
