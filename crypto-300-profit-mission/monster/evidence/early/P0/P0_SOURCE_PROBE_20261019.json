@@ -3,7 +3,7 @@
   "observed_date": "2026-10-19",
   "research_only": true,
   "phase0_full_source_pass": false,
-  "phase0_status": "FIRST_30_V2_POOL_CREATE_FACTS_COMPLETE_P0_BUSINESS_GATE_NOT_PASSED",
+  "phase0_status": "BSC_V2_HISTORICAL_AMM_STATIC_ROUTER_QUOTES_AND_ACTUAL_BUY_SELL_LOGS_VERIFIED; COMPLETE_PIT_AND_EXECUTABILITY_STILL_BLOCKED",
   "privacy": "NO_KEYS_NO_WALLET_SIGNING",
   "cost_usd": 0,
   "provider": "Connected user's pre-existing Alchemy All Chains free app via read-only connector",
@@ -4575,5 +4575,226 @@
     "bsc_v3_four_meme_alpha_coverage": "NOT_TESTED_NOT_INCLUDED",
     "status": "FIRST_30_V2_POOL_CREATE_FACTS_COMPLETE_P0_BUSINESS_GATE_NOT_PASSED",
     "reason": "historical standardized logs not raw original HTTP, deployments/clock and tradability unresolved"
+  },
+  "bsc_v2_p0_execution_source_pilot_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_HISTORICAL_AMM_QUOTE_AND_SWAP_DIRECTION_V1",
+    "researched_at_utc_day": "2026-10-20",
+    "venue": "PancakeSwap V2 Binance Smart Chain",
+    "historic_v2_router": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+    "router_selector": "0xd06ca61f",
+    "function": "getAmountsOut(uint256,address[])",
+    "all_router_returns_have_abi_dynamic_offset_length_verified": true,
+    "fee_bps_per_swap": 25,
+    "fee_source_url": "https://docs.pancakeswap.finance/trade/pancakeswap-exchange/trade",
+    "quote_method": "TWO_INDEPENDENT_ROUTER_VIEW_CALLS_AGAINST_SAME_UNCHANGED_HISTORICAL_BLOCK",
+    "notional_status": "EXPLORATORY_DIFFERENT_RAW_NOTIONAL_PER_QUOTE_ASSET_NOT_YET_FROZEN_FOR_OUTCOMES",
+    "samples": [
+      {
+        "rank": 1,
+        "block": 52440324,
+        "quoteIn": "10000000000000000000",
+        "quote": "USDT",
+        "tokenOut": "1594409576447493625",
+        "back": "9930276362283922020",
+        "pct": "99.3027636228392202",
+        "calculated_formula_matches_router_forward_and_reverse_exact": true,
+        "identity": "0x9ca24ba11b0f472fdd704849113c93ea0bf0d798",
+        "quote_asset": "0x55d398326f99059ff775485246999027b3197955",
+        "token_transfer_fee_modeled": false,
+        "actual_sequential_roundtrip_pnl": "NOT_COMPUTED",
+        "same_notional_sellability": "UNVERIFIED"
+      },
+      {
+        "rank": 2,
+        "block": 52440617,
+        "quoteIn": "10000000000000000",
+        "quote": "WBNB",
+        "tokenOut": "5521677261363602176901855",
+        "back": "9926233485230985",
+        "pct": "99.26233485230985",
+        "calculated_formula_matches_router_forward_and_reverse_exact": true,
+        "identity": "0xf7c401020fbcf6dd99a72c03652a6a0f827a33ed",
+        "quote_asset": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "token_transfer_fee_modeled": false,
+        "actual_sequential_roundtrip_pnl": "NOT_COMPUTED",
+        "same_notional_sellability": "UNVERIFIED"
+      },
+      {
+        "rank": 5,
+        "block": 52441107,
+        "quoteIn": "1000000000000000000",
+        "quote": "USDT",
+        "tokenOut": "366812309648030379",
+        "back": "395408042268688956",
+        "pct": "39.5408042268688956",
+        "calculated_formula_matches_router_forward_and_reverse_exact": true,
+        "identity": "0x6d75721984a6678dabe2c5e34ed872f9cc2d5a65",
+        "quote_asset": "0x55d398326f99059ff775485246999027b3197955",
+        "token_transfer_fee_modeled": false,
+        "actual_sequential_roundtrip_pnl": "NOT_COMPUTED",
+        "same_notional_sellability": "UNVERIFIED"
+      },
+      {
+        "rank": 14,
+        "block": 52446013,
+        "quoteIn": "10000000000000000",
+        "quote": "WBNB",
+        "tokenOut": "293210307481345504623022",
+        "back": "9938414057573645",
+        "pct": "99.38414057573645",
+        "calculated_formula_matches_router_forward_and_reverse_exact": true,
+        "identity": "0x1c6a3d4fd98ee13d86ba0ec3336b9ed74293cdca",
+        "quote_asset": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "token_transfer_fee_modeled": false,
+        "actual_sequential_roundtrip_pnl": "NOT_COMPUTED",
+        "same_notional_sellability": "UNVERIFIED"
+      }
+    ],
+    "observed_actual_pool_swaps": [
+      {
+        "rank": 1,
+        "block": 52440351,
+        "tx": "0x2d0361e427bc0feaf9e316f6a79b3a9f935777043d13cb4084c9adfeed2f9ae7",
+        "direction": "OBSERVED_QUOTE_TO_TOKEN_SWAP",
+        "quoteInRaw": "88000000000000000000",
+        "quoteOutRaw": "0",
+        "tokenInRaw": "0",
+        "tokenOutRaw": "13922587526690708956",
+        "same_notional_exit_status": "NOT_ESTABLISHED",
+        "chain_event_receipt_source": "normalized Alchemy historic eth_getLogs Swap topic; exact tx link supplied"
+      },
+      {
+        "rank": 2,
+        "block": 52440642,
+        "tx": "0x459ad9b0a8601b3502077ce5e26a65af7b461429958c4ff8d9e269ee48324547",
+        "direction": "OBSERVED_QUOTE_TO_TOKEN_SWAP",
+        "quoteInRaw": "93700000000000000",
+        "quoteOutRaw": "0",
+        "tokenInRaw": "0",
+        "tokenOutRaw": "51223471067359749457487212",
+        "same_notional_exit_status": "NOT_ESTABLISHED",
+        "chain_event_receipt_source": "normalized Alchemy historic eth_getLogs Swap topic; exact tx link supplied"
+      },
+      {
+        "rank": 5,
+        "block": 52441377,
+        "tx": "0xddf4631429c9faf6bb2a117516a2fff39debe9fd207d19c274808ca99a16f348",
+        "direction": "OBSERVED_TOKEN_TO_QUOTE_SWAP",
+        "quoteInRaw": "0",
+        "quoteOutRaw": "99632794358189979",
+        "tokenInRaw": "69914887641473879",
+        "tokenOutRaw": "0",
+        "same_notional_exit_status": "NOT_ESTABLISHED",
+        "chain_event_receipt_source": "normalized Alchemy historic eth_getLogs Swap topic; exact tx link supplied"
+      }
+    ],
+    "current_status": "FIRST_STATIC_AMM_QUOTE_AND_SWAP_DIRECTION_SOURCE_VERIFIED_NOT_LIVE_SELLABILITY",
+    "underlying_rpc_http_original_body_archived": false,
+    "historic_fee_on_transfer_verified": false,
+    "known_takeaway": "Low-liquidity #5 has a real token-to-USDT swap but 1 USDT static two-way quote returns only 0.3954 USDT; a tiny successful sell does not prove user-sized exits."
+  },
+  "bsc_v2_p0_late_lp_source_pilot_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_LATE_LP_AND_TOKEN_CODE_SOURCE_V1",
+    "tokens_code_at_created": [
+      {
+        "rank": 1,
+        "code_response_status": "NONEMPTY_BYTECODE_FULL_TEXT_5004",
+        "first_observer_time": "UNVERIFIED"
+      },
+      {
+        "rank": 2,
+        "code_response_status": "NONEMPTY_BYTECODE_FULL_TEXT_7110",
+        "first_observer_time": "UNVERIFIED"
+      },
+      {
+        "rank": 5,
+        "code_response_status": "NONEMPTY_BYTECODE_FULL_TEXT_6530",
+        "first_observer_time": "UNVERIFIED"
+      },
+      {
+        "rank": 14,
+        "code_response_status": "NONEMPTY_BYTECODE_FULL_TEXT_344",
+        "first_observer_time": "UNVERIFIED"
+      },
+      {
+        "rank": 16,
+        "code_response_status": "NONEMPTY_BYTECODE_FULL_TEXT_7184",
+        "first_observer_time": "UNVERIFIED"
+      },
+      {
+        "rank": 17,
+        "code_response_status": "NONEMPTY_BYTECODE_FULL_TEXT_7184",
+        "first_observer_time": "UNVERIFIED"
+      },
+      {
+        "rank": 18,
+        "code_response_status": "NONEMPTY_BYTECODE_PREFIX_RESPONSE_8098_TRUNCATED",
+        "first_observer_time": "UNVERIFIED"
+      },
+      {
+        "rank": 26,
+        "code_response_status": "NONEMPTY_BYTECODE_PREFIX_RESPONSE_8098_TRUNCATED",
+        "first_observer_time": "UNVERIFIED"
+      }
+    ],
+    "late_pair_evidence": [
+      {
+        "rank": 14,
+        "first_sync_block": 52446013,
+        "first_mint_and_sync_same_tx": true,
+        "quote_reserve_raw": "17000000000000000000",
+        "quote": "WBNB",
+        "status": "DELAYED_MINT_SYNC_CONFIRMED",
+        "previously_in_evidence": true
+      },
+      {
+        "rank": 16,
+        "first_nonzero_reserve_block": 52444232,
+        "original_pair_creation_reserve_zero": true,
+        "first_mint_in_same_block": true,
+        "first_mint_quote_raw": "4000000000000000000",
+        "historical_pool_quote_reserve_at_block_raw": "9600027800000000000",
+        "sync_log_status": "SOURCE_TRUNCATED_AT_8KB",
+        "status": "MINT_PLUS_NONZERO_POOL_STATE_CONFIRMED_SYNC_TX_MATCH_UNKNOWN"
+      },
+      {
+        "rank": 17,
+        "first_nonzero_reserve_block": 52444232,
+        "original_pair_creation_reserve_zero": true,
+        "first_mint_in_same_block": true,
+        "first_mint_quote_raw": "6000000000000000000",
+        "historical_pool_quote_reserve_at_block_raw": "20200028700000000000",
+        "sync_log_status": "SOURCE_TRUNCATED_AT_8KB",
+        "status": "MINT_PLUS_NONZERO_POOL_STATE_CONFIRMED_SYNC_TX_MATCH_UNKNOWN"
+      },
+      {
+        "rank": 18,
+        "created": 52444292,
+        "reserve_on_creation": [
+          "0",
+          "0"
+        ],
+        "reserve_end_day": [
+          "0",
+          "0"
+        ],
+        "last_sync_timestamp_utc_day_end": 0,
+        "status": "NO_SYNC_BY_2025_07_01_DAYEND_V2_PAIR_STORAGE",
+        "caveat": "No Sync by dayend under standard V2 pair timestamp behavior; no inference about after this UTC day"
+      },
+      {
+        "rank": 26,
+        "first_sync_block": 52446701,
+        "first_mint_and_sync_same_tx": true,
+        "first_mint_tx": "0xe722f3db159d390decd678fc7b1a5a7f863599a52d07b737e5be0b101d112",
+        "quote": "WBNB",
+        "quote_reserve_raw": "15000000000000000000",
+        "status": "DELAYED_MINT_SYNC_CONFIRMED",
+        "normalized_mint_log_raw": "0x00000000000000000000000000000000000000000051104ea52a72f7a2000000000000000000000000000000000000000000000000000000d02ab486cedc0000",
+        "first_public_receipt": "UNKNOWN"
+      }
+    ],
+    "remaining_same_notional_sellability": "NOT_SCORABLE",
+    "current_status": "2_LATE_LP_FULL_SYNC_MINT_2_MINT_STATE_1_DAY_END_NO_SYNC"
   }
 }
