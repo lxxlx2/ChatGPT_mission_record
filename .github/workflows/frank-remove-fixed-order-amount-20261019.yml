@@ -42,6 +42,8 @@ jobs:
           for p in ("approved", "review"):
               config=json.loads(Path("config/follow_policy_v1."+p+".json").read_text())
               assert "quote_usdc_amount" not in config["decision"], p
+              assert config["status"] == "REVIEW_ONLY", p
+              assert config["live_delivery_approved"] is False, p
           from pathlib import Path
           svc=Path("mission_agent/mission_control/service.py").read_text()
           server=Path("mission_agent/mission_control/server.py").read_text()
