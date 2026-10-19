@@ -1,0 +1,71 @@
+{
+  "schema": "MONSTER_ORIGINAL_T0_SPOT511_TWO_DAY_OFFICIAL_1M_COMPLETE_SOURCE_CONFIRMATION_V1",
+  "observed_acquired_utc": {
+    "initial_primary_manifest_at_utc": "2026-10-19T06:57:09.614710Z",
+    "unicode_supplement_at_utc": "2026-10-19T07:02:03.651412Z"
+  },
+  "original_T0_spot_trading_symbol_count": 511,
+  "original_T0_source_sha256": "b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b",
+  "dates_utc": [
+    "2026-10-16",
+    "2026-10-17"
+  ],
+  "expected_symbol_days": 1022,
+  "verified_by_real_original_publisher_ZIP_and_CHECKSUM": 1022,
+  "unique_verified_symbol_days": 1022,
+  "daily_verification_counts": {
+    "2026-10-16": 511,
+    "2026-10-17": 511
+  },
+  "complete_closed_1m_bars_per_symbol_day": 1440,
+  "verified_original_1m_source_rows": 1471680,
+  "fully_verified_within_this_two_day_source_subset": true,
+  "all_forward_seven_day_1m_sources_available": false,
+  "issuer_full_originals_archived_in_actions_artifacts": [
+    {
+      "run_id": 39212800265,
+      "artifact_id": 12167818438,
+      "validated_symbol_days": 1018
+    },
+    {
+      "run_id": 39213387756,
+      "artifact_id": 12168243737,
+      "validated_symbol_days": 4
+    }
+  ],
+  "original_artifact_retention_days": 60,
+  "durable_git_provenance": [
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_forward_spot511_oct16_17_real_issuer_zip_receipts_v1.json",
+      "git_blob": "2852bbfd030d11bf84385681a32b07ee5d84d6b1",
+      "validated": 1018,
+      "original_manifest_sha256": "892aa8663370c766c297b903fc267c9bd91d154c478ea4e06f8fe9bbba958f0f"
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_forward_spot511_unicode4_original_publisher_supplement_v1.json",
+      "git_blob": "e3ff0e8250b3ec09ebe18cc2eea961b231882e5e",
+      "validated": 4,
+      "original_manifest_sha256": "467791daf6dba21540229d1e64a07ff3c2461e75ecd6f5be12c943bebabafefa"
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage166_real_t0_511_daily_source_intake_readiness_v1.json",
+      "git_blob": "c061b7e88735808c25c6f9c86ebac6e72730e803",
+      "source_t0_roster": 511
+    }
+  ],
+  "source_original_non_ascii_symbols": [
+    "币安人生USDT",
+    "牛来USDT"
+  ],
+  "unicode_issuer_zip_percent_encoded_path_recovered": true,
+  "no_failures_remaining_in_these_1022_symbol_day_source_proofs": true,
+  "published_source_1m_not_proof_of_dynamic_pit_listing_or_true_bid_ask": true,
+  "not_complete_forward_511_seven_day_and_24h_exit_source": true,
+  "not_market_profit_or_trade_recommendation": true,
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_MERGE": true,
+  "NO_DEPLOY": true,
+  "NO_GMAIL": true,
+  "NO_TRADE": true
+}
