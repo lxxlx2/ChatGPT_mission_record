@@ -7,6 +7,7 @@ This module validates policy approval, NOT permission to restart/deploy.
 from __future__ import annotations
 
 import hashlib
+import os
 import json
 import re
 import stat
@@ -24,6 +25,43 @@ _FIELDS = {
     "schema_version", "scope", "policy_sha256", "integration_sha",
     "approved_by", "approved_at", "expires_at", "deployment_approved",
 }
+
+
+def trusted_checkout_identity(checkout: Path) -> str:
+    """Resolve Git identity for *this* checkout, not inherited Git state.
+
+    Sanitize all GIT_* variables, use the system git executable and validate
+    repository discovery against the actual on-disk .git root. Fail closed.
+    """
+    checkout = Path(checkout).resolve(strict=True)
+    expected_root = next(
+        (p for p in (checkout, *checkout.parents)
+         if (p / ".git").is_file() or (p / ".git").is_dir()),
+        None,
+    )
+    if expected_root is None:
+        raise ValueError("RELEASE_GIT_ROOT_NOT_FOUND")
+    clean_env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    def git(*args: str) -> str:
+        try:
+            result = subprocess.run(
+                ["/usr/bin/git", "-C", str(checkout), *args],
+                env=clean_env, capture_output=True, text=True,
+                timeout=10, check=True,
+            )
+        except (OSError, subprocess.CalledProcessError,
+                subprocess.TimeoutExpired) as exc:
+            raise ValueError("RELEASE_GIT_IDENTITY_UNVERIFIED") from exc
+        return result.stdout.strip()
+    top = Path(git("rev-parse", "--show-toplevel")).resolve(strict=True)
+    if top != expected_root:
+        raise ValueError("RELEASE_GIT_CHECKOUT_ROOT_MISMATCH")
+    actual_sha = git("rev-parse", "--verify", "HEAD^{commit}")
+    if _SHA1.fullmatch(actual_sha) is None:
+        raise ValueError("RELEASE_GIT_COMMIT_IDENTITY_INVALID")
+    if git("status", "--porcelain", "--untracked-files=no"):
+        raise ValueError("LIVE_RELEASE_WORKTREE_DIRTY")
+    return actual_sha
 
 
 def _instant(value: str) -> datetime:
