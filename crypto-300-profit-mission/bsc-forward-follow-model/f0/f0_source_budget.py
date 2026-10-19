@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 from decimal import Decimal, InvalidOperation, ROUND_CEILING
 
 SCHEMA = "bsc-f0-source-budget-preflight-v1"
