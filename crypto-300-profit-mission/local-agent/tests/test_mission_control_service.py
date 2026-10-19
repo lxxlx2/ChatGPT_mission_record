@@ -447,3 +447,51 @@ def test_checked_in_frank_policy_has_no_assumed_order_amount_and_no_quote_call()
     result = evaluate(candidate, quote, approved, now=1005)
     assert result["decision"] == "WAIT"
     assert "BUY" not in result["reasons"]
+
+
+
+def test_unapproved_old_outcome_track_cannot_trigger_exit_quote_without_user_amount(tmp_path):
+    """A legacy ACTIVE track may contain an old notional: no opt-in, no exit RPC."""
+    prod=tmp_path/"prod";control=tmp_path/"control";pol=tmp_path/"policy.json"
+    make_prod(prod);policy(pol)
+    candidate_policy=json.loads(pol.read_text())
+    candidate_policy["decision"].pop("quote_usdc_amount")
+    pol.write_text(json.dumps(candidate_policy))
+    service=MissionMemeService(
+        production_root=prod,control_root=control,policy_path=pol,
+        live_delivery=False,
+    )
+    now=time.time()
+    old_track={
+        "person_id":"frank","mint":"HistoricalMint","episode_id":"legacy",
+        "pattern":"MULTIPLE","source_signal_id":"old-signal",
+        "source_signal_type":"FRANK_MULTIPLE_SIGNAL",
+        "source_signal_at":now-350,"latest_at":now-350,"token_decimals":6,
+    }
+    historical_quote={
+        "status":"OK","route_exists":True,"source":"JUPITER_OFFICIAL",
+        "input_usdc":"30","out_amount_raw":"30000000",
+        "execution_price_usdc":"1", "price_impact_pct":"0.1",
+    }
+    assert service.outcomes.register(
+        candidate=old_track,result={"decision":"BUY"},
+        quote=historical_quote,now=now-350,
+    )
+    calls={"entry":0,"exit":0}
+    def no_entry(*args,**kwargs):
+        calls["entry"]+=1
+        raise AssertionError("NO_USER_AMOUNT_NO_ENTRY_QUOTE")
+    def no_exit(*args,**kwargs):
+        calls["exit"]+=1
+        raise AssertionError("LEGACY_AMOUNT_NOT_AUTHORIZED_FOR_EXIT_QUOTE")
+    service.jupiter.quote_usdc_to_token=no_entry
+    service.jupiter.quote_token_to_usdc=no_exit
+    result=service.cycle()
+    assert result["candidate_errors"]==[]
+    assert result["delivery_allowed"] is False
+    assert result["outcome_tracking"]["active"]==1
+    assert result["outcome_tracking"]["sampled"]==0
+    assert result["outcome_tracking"]["errors"]==[]
+    assert calls=={"entry":0,"exit":0}
+    assert service.control.db.execute("SELECT COUNT(*) FROM outcome_samples").fetchone()[0]==0
+    service.close()
