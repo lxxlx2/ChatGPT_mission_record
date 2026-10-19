@@ -507,6 +507,115 @@ def bootstrap_bsc_v2_saved_roster(rpc, first, last, out_dir, limit, start_rank=1
             "not_24_30_or_18_30_gate_pass": True}
 
 
+def probe_frozen_bsc_v2_runtime_code(rpc, out_dir, evidence_path, start_rank, limit):
+    """Bounded manual historical code checks over the original frozen 30 only.
+
+    Each fetched eth_getCode JSON-RPC response is saved byte-for-byte with its
+    audit-time SHA. No token deployment transaction or public observation time
+    is inferred from a nonempty post-block code snapshot.
+    """
+    if not 1 <= start_rank <= 30 or not 1 <= limit <= 5:
+        raise SourceError("DEPLOY_CODE_INVALID_FROZEN_RANK_RANGE")
+    original = json.loads(Path(evidence_path).read_text(encoding="utf-8"))
+    hist = original["historical_bsc_v2_append_only_factory_enumeration"]
+    sample = hist["chronological_quoted_unique_first30"]
+    cases = hist["creation_liquidity_source_spotchecks"]["cases"]
+    baseline = json.loads((out_dir / "v2_factory_enum_status.json").read_text())
+    if (len(sample) != 30 or len(cases) != 30
+            or baseline.get("chain") != "bsc-v2"
+            or baseline.get("sample_complete_first30_by_factory_order") is not True
+            or baseline.get("day_blocks") != hist["july1_2025_utc"]
+            or len(baseline.get("sample", [])) != 30):
+        raise SourceError("DEPLOY_CODE_FROZEN_SOURCE_OR_DAY_MISMATCH")
+    from mission_agent.early.bsc_v2_pit import (
+        PITInvalid, locate_first_runtime_code_block)
+    first_day = hist["july1_2025_utc"][0]
+    archive = out_dir / "v2_runtime_code_raw" / rpc.source_tag
+    archive.mkdir(parents=True, exist_ok=True)
+    results = []
+    for rank in range(start_rank, min(30, start_rank + limit - 1) + 1):
+        row, case, frozen = sample[rank - 1], cases[rank - 1], baseline["sample"][rank - 1]
+        if (row["cohort_rank"] != rank or case["rank"] != rank
+                or case["index"] != row["factory_index"]
+                or frozen["factory_index"] != row["factory_index"]
+                or case["pair"].lower() != row["pool"].lower()
+                or frozen["pair"].lower() != row["pool"].lower()
+                or frozen["token_ca"].lower() != row["token_ca"].lower()
+                or not first_day <= case["creation_block"] <= hist["july1_2025_utc"][1]):
+            raise SourceError("DEPLOY_CODE_RANK_OR_IDENTITY_DRIFT")
+        token = row["token_ca"].lower()
+        index = case["index"]
+        cache, records = {}, []
+        def has_code(block):
+            if block in cache:
+                return cache[block]
+            stem = archive / (str(index) + "." + str(block))
+            bodyfile = Path(str(stem) + ".rpc.json")
+            hashfile = Path(str(stem) + ".sha256")
+            if bodyfile.exists() != hashfile.exists():
+                raise SourceError("DEPLOY_CODE_INCOMPLETE_RAW_SHA_PAIR")
+            if bodyfile.exists():
+                raw = bodyfile.read_bytes()
+                if sha(raw) != hashfile.read_text(encoding="utf-8").strip():
+                    raise SourceError("DEPLOY_CODE_ARCHIVE_HASH_DRIFT")
+                body = json.loads(raw)
+                if not isinstance(body, dict) or body.get("error") or "result" not in body:
+                    raise SourceError("DEPLOY_CODE_ARCHIVED_RPC_RESULT_INVALID")
+                value = body["result"]
+                src = "SAVED_SAME_RPC_FINGERPRINT_ARCHIVE"
+            else:
+                value, raw = rpc.request("eth_getCode", [token, hex(block)])
+                safe_file(bodyfile, raw)
+                safe_file(hashfile, (sha(raw) + "\n").encode("utf-8"))
+                src = "FRESH_HISTORICAL_RPC"
+            if not isinstance(value, str) or not re.fullmatch(r"0x(?:[0-9a-fA-F]{2})*", value):
+                raise SourceError("DEPLOY_CODE_BYTECODE_RESULT_INVALID")
+            exists = len(value) > 2
+            cache[block] = exists
+            records.append({"block": block, "source": src,
+                            "response_sha256": sha(raw),
+                            "runtime_code_present": exists})
+            return exists
+        answer = {
+            "rank": rank, "factory_index": index,
+            "creation_block": case["creation_block"],
+            "at_creation_quote_floor_pass": case["initial_quote_floor_reached"],
+            "source_state": "NOT_SCORABLE",
+        }
+        try:
+            verified = locate_first_runtime_code_block(
+                first_day, case["creation_block"], has_code)
+            answer.update(verified)
+            answer["source_state"] = "BOUNDED_HISTORICAL_CODE_STATE_ONLY"
+        except (SourceError, PITInvalid, OSError, ValueError, TypeError) as exc:
+            answer["source_state"] = "SOURCE_BLOCKED_UNRESOLVED"
+            answer["reason"] = type(exc).__name__ + ":" + str(exc)[:180]
+        answer["archived_snapshots_this_run"] = records
+        results.append(answer)
+        if answer["source_state"] == "SOURCE_BLOCKED_UNRESOLVED":
+            break
+    return {
+        "schema": "MONSTER_BSC_V2_FIRST_RUNTIME_CODE_BATCH_V1",
+        "status": ("BOUNDED_CODE_STATE_REPLAY_PASS_NOT_DEPLOY_TX"
+                   if len(results) == min(limit, 31 - start_rank)
+                   and all(x["source_state"] == "BOUNDED_HISTORICAL_CODE_STATE_ONLY"
+                           for x in results)
+                   else "SOURCE_PARTIAL_CODE_STATE_NOT_SCORABLE"),
+        "chain": "bsc-v2", "day": "2025-07-01",
+        "source_rpc_fingerprint": rpc.source_tag,
+        "baseline_source_same_rpc": baseline["rpc_source_sha256"] == rpc.source_tag,
+        "rank_results": results,
+        "requested_start_rank": start_rank,
+        "requested_count": len(results),
+        "requests_this_invocation": rpc.calls,
+        "archive_sha_calculated_at_read_not_original_independent_receipt": True,
+        "deployment_tx_proven": False,
+        "complete_24_of_30_pit_gate": "NOT_SCORABLE",
+        "public_available_at": "UNVERIFIED",
+        "no_trade": True,
+    }
+
+
 def audit_saved_bsc_v2_p0(out_dir, evidence_path):
     """Offline archive replay of the fixed 30, without RPC or private URLs.
 
@@ -700,6 +809,37 @@ def run(args):
         if result["status"] != "LOCAL_FROZEN_30_CREATION_REPLAY_PASS":
             raise SystemExit(2)
         return
+    if args.mode == "deployment":
+        if args.chain != "bsc-v2" or args.day != "2025-07-01":
+            raise SourceError("DEPLOY_CODE_ONLY_FROZEN_BSC_V2_DAY")
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+        chain = CHAINS[args.chain]
+        rpc = RPC(args.rpc or chain["rpc"], chain["chain_id"],
+                  args.max_requests, args.delay)
+        rpc.chain_check()
+        directory = args.out_dir.resolve() / (args.chain + "-" + args.day)
+        evidence_path = (Path(__file__).resolve().parents[2] /
+                         "monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json")
+        result = probe_frozen_bsc_v2_runtime_code(
+            rpc, directory, evidence_path, args.bootstrap_start_rank,
+            args.bootstrap_limit)
+        last_rank = (args.bootstrap_start_rank + result["requested_count"] - 1)
+        safe_file(directory / ("v2_deployment_rank_" + str(args.bootstrap_start_rank)
+                              + "_" + str(last_rank) + ".json"),
+                  plain_json(result).encode("utf-8"))
+        print(plain_json({
+            "status": result["status"],
+            "requested_count": result["requested_count"],
+            "requests_this_invocation": result["requests_this_invocation"],
+            "rank_results": [{k: row.get(k) for k in
+                             ("rank", "status", "first_code_block_in_day",
+                              "source_state", "reason")}
+                            for row in result["rank_results"]],
+            "complete_24_of_30_pit_gate": result["complete_24_of_30_pit_gate"],
+        }).strip())
+        if result["status"] != "BOUNDED_CODE_STATE_REPLAY_PASS_NOT_DEPLOY_TX":
+            raise SystemExit(2)
+        return
     chain = CHAINS[args.chain]
     endpoint = args.rpc or chain["rpc"]
     rpc = RPC(endpoint, chain["chain_id"], args.max_requests, args.delay)
@@ -834,7 +974,7 @@ def main():
     parser = argparse.ArgumentParser(description="Manual historical Factory RPC coverage; no transactions")
     parser.add_argument("--chain", choices=CHAINS, default="base-v3")
     parser.add_argument("--day", default="2025-07-01")
-    parser.add_argument("--mode", choices=("probe", "scan", "enumerate", "bootstrap", "audit"), default="probe")
+    parser.add_argument("--mode", choices=("probe", "scan", "enumerate", "bootstrap", "audit", "deployment"), default="probe")
     parser.add_argument("--limit", type=int, default=45,
                         help="BSC V2 historical index identities to check, max 200 per invocation")
     parser.add_argument("--bootstrap-start-rank", type=int, default=1,
