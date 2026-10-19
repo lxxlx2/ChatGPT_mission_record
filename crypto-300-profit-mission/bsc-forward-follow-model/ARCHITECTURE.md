@@ -50,7 +50,7 @@
 
 - `t_first_received_utc` 仅为本机第一次看到 tx/hash 的时间；**hash 本身不代表当时能识别 BUY**。`t_buy_detected_utc`/`t_sell_detected_utc` 分别为采集器在当时可得信息中首次识别交易方向和 CA 的时间，才是跟单策略时间起点。不可事后以哈希首见时间或区块时间回填 BUY 信号。以上均不冒充全网最早公开时间。
 - 区块时间与观察时间不同；用它们的差不能直接证明节点传播延迟。时间源记录 NTP/时钟漂移与采集方式；可独立交叉验证时另记多观察者证据。
-- `E0_SEEN`: 只见哈希/通知；`E1_CONFIRMED`: 成功 receipt + tx.from==目标 EOA + F1 冻结最终性门禁；`E2_TRADE_ATTESTED`: E1 且同 tx 内有明确目标 CA 流入以及原生/WBNB/稳定币等**因果关联的实际支付路径**，不是仅凭同笔交易出现不相关 Transfer；`E3_LIVE_CAPTURE_ATTESTED`: E2 且真实前向首次捕获，`ingest_path != BACKFILL` 且时间证据可用。
+- `E0_SEEN`：见到原始哈希/通知，不代表已知方向；`E1_CONFIRMED`：成功 receipt + `tx.from == wallet` + 满足 F1 冻结最终性门禁；`E2_TRADE_ATTESTED`：E1 + BUY 的目标 CA 入账及可归因的报价付出，或 SELL 的目标 CA 出账及可归因的报价实收。单纯同笔交易出现不相关 Transfer、仅原生 `tx.value > 0` 均不足以升级；`E3_LIVE_CAPTURE_ATTESTED`：E2 + 前向当时实测的 BUY/SELL 方向与 CA 首次识别时间，且未因 BACKFILL 或时钟缺失污染。E3 证明本采集器观察事实，是否可执行另由 L2 评价。
 - E0–E3 是追加保存的证据里程碑，**不是永不撤销的真实状态**。F1 须定义可用的 BSC finality 语义或固定 N 确认深度、观察频率及不少于 N 的重组监测窗口；记录首次成功 receipt 与达到最终性门禁的两个独立 UTC 时间；重组按 block_hash 复核并把原等级标记 INVALIDATED。候选的实时报价可以先于 E1 最终性确认，失败/重组事后撤销正式标签，但不删除历史原始报价。
 - 事件业务状态 `SEEN -> CONFIRMED -> ATTESTED -> LABELED -> CLOSED`；可以带原因进入 `REJECTED / INVALIDATED / GAP_UNRECOVERABLE`。失败事件保留并进入相关分母。
 - 历史 21 行最多可**逐条验证到 E0/E1/E2**，绝不能因为历史补录取得 E3；原 bulk16 的 13 条 owner-signed 不能在未验证买入报价因果前一律标 E2。
