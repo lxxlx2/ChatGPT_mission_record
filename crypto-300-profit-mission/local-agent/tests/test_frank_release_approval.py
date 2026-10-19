@@ -144,7 +144,7 @@ def test_loop_only_stop_targets_one_exact_agent_and_never_dashboard(tmp_path):
         if cmd[1] == "print":
             if len([x for x in calls if x[1] == "print"]) == 1:
                 return subprocess.CompletedProcess(
-                    cmd, 0, "state = running\\n    pid = 424242\\n", "")
+                    cmd, 0, "state = running\n    pid = 424242\n", "")
             return subprocess.CompletedProcess(cmd, 113, "", "Could not find service")
         return subprocess.CompletedProcess(cmd, 0, "", "")
     def pid_not_running(pid, signal):
@@ -294,9 +294,9 @@ def test_loop_only_stop_never_claims_success_without_pid_readback(tmp_path, scen
                     return subprocess.CompletedProcess(cmd, 77, "", "launchd inaccessible")
                 if scenario == "prestop_pid_missing":
                     return subprocess.CompletedProcess(cmd, 0, "state = running", "")
-                return subprocess.CompletedProcess(cmd, 0, "state = running\\npid = 424242\\n", "")
+                return subprocess.CompletedProcess(cmd, 0, "state = running\npid = 424242\n", "")
             if scenario == "poststop_still_registered":
-                return subprocess.CompletedProcess(cmd, 0, "pid = 424242\\n", "")
+                return subprocess.CompletedProcess(cmd, 0, "pid = 424242\n", "")
             if scenario == "poststop_unknown_error":
                 return subprocess.CompletedProcess(cmd, 9, "", "permission denied")
             return subprocess.CompletedProcess(cmd, 113, "", "Could not find service")
