@@ -9,6 +9,7 @@ import json
 import tempfile
 import threading
 import unittest
+from unittest.mock import patch
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts/frank_d2_dated_holdings_preview.py"
 spec = importlib.util.spec_from_file_location("frank_d2_preview", SCRIPT)
@@ -99,7 +100,6 @@ class D2EvidenceTests(unittest.TestCase):
         self.assertIn("本地观察记录", html)
         self.assertIn("2026-10-11", html)
         self.assertIn("约 8 天", html)
-        self.assertIn("not real USD", "not real USD")  # no invented valuation source
         self.assertIn("https://solscan.io/token/", html)
         self.assertIn("NOT_QUERIED_IN_SNAPSHOT", html)
         self.assertIn("历史样本非零", html)
@@ -153,20 +153,25 @@ class D2EvidenceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             d2.render({"snapshot_status": "SNAPSHOT_NOT_PRESENT", "rows": []})
 
-    def test_preview_is_private_and_does_not_write_production(self):
+    def test_full_main_real_http_creates_one_local_html_no_prod_mutations(self):
         with tempfile.TemporaryDirectory() as t:
             root = Path(t)
             pointer = root / "Library/Application Support/FrankMeme/dashboard_port"
             pointer.parent.mkdir(parents=True)
             pointer.write_text(str(self.http.server_port))
             self.assertEqual(d2._port(root), self.http.server_port)
-            html = d2.generate(synthetic_watch(), data())
-            output = root / "Downloads/private_preview.html"
-            output.parent.mkdir()
-            output.write_text(html)
-            self.assertIn("NOT_QUERIED_IN_SNAPSHOT", output.read_text())
+            with patch.object(d2.Path, "home", return_value=root), \
+                 patch.object(d2.sys, "platform", "linux"):
+                self.assertEqual(d2.main(), 0)
+            previews = list((root / "Downloads").glob("frank-d2-dated-inventory-*.html"))
+            self.assertEqual(len(previews), 1)
+            text = previews[0].read_text("utf-8")
+            self.assertIn("NOT_QUERIED_IN_SNAPSHOT", text)
+            self.assertIn("样本当时非零<b>10</b>", text)
+            self.assertEqual(Backend.requests, [("GET", "/api/frank-observed-watchlist")])
             self.assertFalse((root / ".frank_meme_control_root").exists())
             self.assertFalse((root / "mission-control.sqlite").exists())
+            self.assertFalse((root / "forward.sqlite").exists())
 
 
 if __name__ == "__main__":
