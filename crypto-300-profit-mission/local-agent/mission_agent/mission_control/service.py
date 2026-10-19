@@ -20,7 +20,7 @@ from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .transfer_archive import publish_evidence_batch
 from .jupiter import JupiterQuoteClient
 from .observations import ObservationStore
-from .outcomes import OutcomeTracker
+from .outcomes import OutcomeTracker, MAX_QUOTES_PER_CYCLE
 from .sol_mirror import SolNormalizedMirror
 from .policy import evaluate, load_policy, should_notify, live_delivery_policy_authorized
 
@@ -311,9 +311,13 @@ class MissionMemeService:
                                "message": "CANDIDATE_EVALUATION_FAILED"})
                 continue
 
+        # Historical outcome tracks can predate the removal of the rejected
+        # default order amount. They must not silently trigger more Jupiter
+        # exit-size quotes while there is no user-specified research notional.
         outcome_tracking = self.outcomes.sample_due(
             now=time.time(),
             slippage_bps=int(rules["slippage_bps"]),
+            max_quotes=MAX_QUOTES_PER_CYCLE if rules.get("quote_usdc_amount") is not None else 0,
         )
         outcome_tracking["registered"] = outcome_registered
         pruned = self.observations.prune(time.time(), retention_seconds)
