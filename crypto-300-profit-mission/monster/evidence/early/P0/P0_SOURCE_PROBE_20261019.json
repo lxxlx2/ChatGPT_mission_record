@@ -3,7 +3,7 @@
   "observed_date": "2026-10-19",
   "research_only": true,
   "phase0_full_source_pass": false,
-  "phase0_status": "BSC_V2_30_CHRONOLOGICAL_POOL_IDENTITIES_OBTAINED; PIT_AND_MULTIVENUE_AND_D2_NOT_YET_SCORED",
+  "phase0_status": "BSC_V2_FIRST30_IDENTITY_CONFIRMED; 3_OF_30_CREATION_MINT_SYNC_CHECKED; PIT_24_30_AND_EXECUTABILITY_18_30_NOT_SCORABLE",
   "privacy": "NO_KEYS_NO_WALLET_SIGNING",
   "cost_usd": 0,
   "provider": "Connected user's pre-existing Alchemy All Chains free app via read-only connector",
@@ -147,6 +147,20 @@
       "first_block": 52440287,
       "last_block": 52555482,
       "full_original_http_archived": false
+    },
+    {
+      "kind": "initial liquidity positive and low-liquidity control",
+      "cohort_ranks": [
+        1,
+        2,
+        5
+      ],
+      "source": "eth_getLogs factory + pair 10 blocks and eth_call getReserves at exact historical creation block",
+      "created_and_minted_same_tx": 3,
+      "quote_initial_floor_met": 2,
+      "below_floor": 1,
+      "both_side_sellability_verified": 0,
+      "raw_http_sha256": null
     }
   ],
   "verified_historical_v2_log": {
@@ -1236,7 +1250,109 @@
         "utc": "2025-07-02T00:00:00Z",
         "block_hash": "0x702208ec0c16aa8f2d11d43cd3ceb04cee26d16d101d89e9bb445414acb826b6"
       }
-    ]
+    ],
+    "creation_liquidity_source_spotchecks": {
+      "schema": "MONSTER_BSC_V2_P0_FIRST_POOL_CREATION_LIQUIDITY_ASOF_V1",
+      "nature": "REAL_ALCHEMY_HISTORICAL_STATE_AND_PAIR_CREATED_MINT_SYNC_LOGS; NO_RAW_HTTP_BYTES_ARCHIVED",
+      "scope": "Fixed 30 identity roster ranks 1,2,5; not random inference about unverified 27",
+      "initial_quote_floor_version": "BSC_MIN_RESEARCH_ENTRY_V1_2_WBNB_OR_1000_USDT; not standalone T_entry or real trade approval",
+      "cases": [
+        {
+          "rank": 1,
+          "index": 1874173,
+          "creation_block": 52440324,
+          "creation_utc": "2025-07-01T00:00:27Z",
+          "creation_tx_hash": "0x26396c2954f8f1ff36449d76454f0706c9cf1564da89b2a4a3f0fdfbac6744dc",
+          "pair": "0x021d84d4d9f88518f74935c61e2cf4b70713bc16",
+          "quote": "USDT",
+          "quote_asset": "0x55d398326f99059ff775485246999027b3197955",
+          "initial_reserve0_raw": "10000000000000000000000",
+          "initial_reserve1_raw": "1600000000000000000000",
+          "same_tx_erc20_lp_transfer_sync_mint": true,
+          "first_10_block_events": [
+            "TRANSFER",
+            "TRANSFER",
+            "SYNC",
+            "MINT"
+          ],
+          "first_10_blocks_swap_observed": false,
+          "quote_reserve_at_dayend_raw": "2406161540478755",
+          "initial_quote_floor_reached": true,
+          "initial_liquidity_event_confirmed": true,
+          "exact_original_pair_created_tx_confirmed": true,
+          "block_after_creator_count_increased": true,
+          "first_10_blocks_no_swap_is_limited_negative": true,
+          "quote_reserve_decline_not_necessarily_liquidity_withdrawal": true,
+          "initial_two_way_sellability": "UNRESOLVED",
+          "token_deployment": "UNRESOLVED",
+          "actual_entry_time": "UNRESOLVED",
+          "quote_snapshots_are_historical_asof_block_not_original_live_observer_time": true
+        },
+        {
+          "rank": 2,
+          "index": 1874174,
+          "creation_block": 52440617,
+          "creation_utc": "2025-07-01T00:04:07Z",
+          "creation_tx_hash": "0x51d6219287049c10e7e61b039aee60222bd37e8ae2b3c20f52860fc30b79fd33",
+          "pair": "0xc8e6d373797eae36d810fadd4cbb8c58c3374cf8",
+          "quote": "WBNB",
+          "quote_asset": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "initial_reserve0_raw": "8300000000000000000",
+          "initial_reserve1_raw": "4600000000000000000000000000",
+          "same_tx_erc20_lp_transfer_sync_mint": true,
+          "first_10_block_events": [
+            "TRANSFER",
+            "TRANSFER",
+            "SYNC",
+            "MINT",
+            "APPROVAL"
+          ],
+          "first_10_blocks_swap_observed": false,
+          "quote_reserve_at_dayend_raw": "18044509147222",
+          "initial_quote_floor_reached": true,
+          "initial_liquidity_event_confirmed": true,
+          "exact_original_pair_created_tx_confirmed": true,
+          "block_after_creator_count_increased": true,
+          "first_10_blocks_no_swap_is_limited_negative": true,
+          "quote_reserve_decline_not_necessarily_liquidity_withdrawal": true,
+          "initial_two_way_sellability": "UNRESOLVED",
+          "token_deployment": "UNRESOLVED",
+          "actual_entry_time": "UNRESOLVED",
+          "quote_snapshots_are_historical_asof_block_not_original_live_observer_time": true
+        },
+        {
+          "rank": 5,
+          "index": 1874177,
+          "creation_block": 52441107,
+          "creation_utc": "2025-07-01T00:10:15Z",
+          "creation_tx_hash": "0x84be9a910e2786682d7130b8fa6e5471aa75c36d352f9d8550021ed0c4da9a86",
+          "pair": "0x67bd637ca7456c519857ecfad388eb98686285af",
+          "quote": "USDT",
+          "quote_asset": "0x55d398326f99059ff775485246999027b3197955",
+          "initial_reserve0_raw": "1313968229661012727",
+          "initial_reserve1_raw": "850000000000000000",
+          "same_tx_erc20_lp_transfer_sync_mint": true,
+          "first_10_block_events": [
+            "TRANSFER",
+            "TRANSFER",
+            "SYNC",
+            "MINT"
+          ],
+          "first_10_blocks_swap_observed": false,
+          "quote_reserve_at_dayend_raw": "1212059481221402635",
+          "initial_quote_floor_reached": false,
+          "initial_liquidity_event_confirmed": true,
+          "exact_original_pair_created_tx_confirmed": true,
+          "block_after_creator_count_increased": true,
+          "first_10_blocks_no_swap_is_limited_negative": true,
+          "quote_reserve_decline_not_necessarily_liquidity_withdrawal": true,
+          "initial_two_way_sellability": "UNRESOLVED",
+          "token_deployment": "UNRESOLVED",
+          "actual_entry_time": "UNRESOLVED",
+          "quote_snapshots_are_historical_asof_block_not_original_live_observer_time": true
+        }
+      ]
+    }
   },
   "bsc_v2_identity_30_count": 30,
   "bsc_v2_identity_30_is_officially_PIT_eligible": false
