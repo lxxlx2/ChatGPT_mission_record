@@ -58,6 +58,7 @@ CONTROL="$(cat "$CONTROL_POINTER")"
 # VERIFIED_GIT_WORKTREE: read actual source SHA from sanitized Git identity.
 # Do not let inherited GIT_DIR/GIT_WORK_TREE/GIT_CONFIG_* redirect checkout.
 CODE_COMMIT_SHA="$(PYTHONPATH="$LOCAL_AGENT" "$VENV/bin/python" - "$WORKTREE" <<'PY'
+# VERIFIED_GIT_WORKTREE: isolated installer fixture identifies this preflight.
 import sys
 from pathlib import Path
 from mission_agent.mission_control.release_approval import trusted_checkout_identity
