@@ -406,6 +406,73 @@ class FactoryOfflineP0ArchiveAuditTests(unittest.TestCase):
             self.assertEqual(got['fully_replayed_creation_count'], 29)
 
 
+    def test_bounded_deployment_code_batch_archives_and_reuses_rpc_snapshots(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out, cases, archive = self._build_fake_saved_30(Path(tmp))
+            source = archive['historical_bsc_v2_append_only_factory_enumeration']
+            ranks = source['chronological_quoted_unique_first30']
+            threshold_by_ca = {
+                ranks[1]['token_ca'].lower(): 52440593,
+                ranks[2]['token_ca'].lower(): 52440672,
+                ranks[3]['token_ca'].lower(): 52440725,
+            }
+            class Fake:
+                source_tag = 'fixture-source'
+                calls = 0
+                def request(self, method, params):
+                    self.calls += 1
+                    self_method = method
+                    assert self_method == 'eth_getCode'
+                    address, block = params
+                    deployed = threshold_by_ca.get(address.lower(), 52440000)
+                    value = '0x6001' if int(block, 16) >= deployed else '0x'
+                    return value, json.dumps({'jsonrpc': '2.0', 'id': self.calls,
+                                               'result': value}).encode()
+            evidence = Path(tmp) / 'source.json'
+            evidence.write_text(json.dumps(archive))
+            got = m.probe_frozen_bsc_v2_runtime_code(
+                Fake(), out, evidence, 1, 5)
+            self.assertEqual(got['status'], 'BOUNDED_CODE_STATE_REPLAY_PASS_NOT_DEPLOY_TX')
+            self.assertEqual(got['requested_count'], 5)
+            self.assertEqual(got['rank_results'][0]['status'],
+                             'RUNTIME_CODE_PREEXISTS_FROZEN_UTC_DAY')
+            self.assertEqual([x['first_code_block_in_day']
+                              for x in got['rank_results'][1:4]],
+                             [52440593, 52440672, 52440725])
+            self.assertFalse(got['deployment_tx_proven'])
+            self.assertEqual(got['complete_24_of_30_pit_gate'], 'NOT_SCORABLE')
+            class Offline(Fake):
+                def request(self, method, params):
+                    raise AssertionError('RPC must not run after archival replay')
+            reused = m.probe_frozen_bsc_v2_runtime_code(
+                Offline(), out, evidence, 1, 5)
+            self.assertEqual(reused['status'], 'BOUNDED_CODE_STATE_REPLAY_PASS_NOT_DEPLOY_TX')
+            self.assertEqual(reused['requests_this_invocation'], 0)
+
+    def test_bounded_deployment_code_archive_mutation_is_not_accepted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out, cases, archive = self._build_fake_saved_30(Path(tmp))
+            class Fake:
+                source_tag = 'fixture-source'
+                calls = 0
+                def request(self, method, params):
+                    self.calls += 1
+                    return '0x6001', b'{"result":"0x6001"}'
+            evidence = Path(tmp) / 'source.json'
+            evidence.write_text(json.dumps(archive))
+            got = m.probe_frozen_bsc_v2_runtime_code(Fake(), out, evidence, 1, 1)
+            self.assertEqual(got['status'], 'BOUNDED_CODE_STATE_REPLAY_PASS_NOT_DEPLOY_TX')
+            file = (out / 'v2_runtime_code_raw' / 'fixture-source' /
+                    (str(cases[0]['index']) + '.' + str(cases[0]['creation_block']) + '.rpc.json'))
+            file.write_text('{"result":"0x"}')
+            invalid = m.probe_frozen_bsc_v2_runtime_code(
+                Fake(), out, evidence, 1, 1)
+            self.assertEqual(invalid['status'], 'SOURCE_PARTIAL_CODE_STATE_NOT_SCORABLE')
+            self.assertEqual(invalid['rank_results'][0]['source_state'],
+                             'SOURCE_BLOCKED_UNRESOLVED')
+            self.assertIn('ARCHIVE_HASH_DRIFT', invalid['rank_results'][0]['reason'])
+
+
 
 if __name__ == "__main__":
     unittest.main()
