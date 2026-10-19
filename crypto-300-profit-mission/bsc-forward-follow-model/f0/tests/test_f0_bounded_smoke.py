@@ -170,5 +170,129 @@ class OfflineSmokeTests(unittest.TestCase):
                     validate_permit(p, now)
 
 
+class FailingLiveAuditTests(unittest.TestCase):
+    def invoke_mock_live(self, sender):
+        with tempfile.TemporaryDirectory(prefix="bsc-smoke-review-", dir="/tmp") as location:
+            directory = Path(location)
+            permit_path = directory / "permit.json"
+            report_path = directory / "report.json"
+            fake_permit = permit(datetime.now(timezone.utc))
+            fake_permit["storage_root"] = location
+            permit_path.write_text(json.dumps(fake_permit))
+            args = ["f0_bounded_smoke.py", "--execute-live", "--permit", str(permit_path),
+                    "--report", str(report_path)]
+            with patch.object(sys, "argv", args), patch("f0_bounded_smoke.https_sender", side_effect=sender), \
+                 patch("urllib.request.build_opener", side_effect=AssertionError("real network forbidden")):
+                with self.assertRaises(SystemExit) as cm:
+                    main()
+                self.assertNotEqual(cm.exception.code, 0)
+            self.assertTrue(report_path.exists(), "failure consumed quota but wrote no report")
+            return json.loads(report_path.read_text())
+
+    def test_third_attempt_connection_failure_persists_counts(self):
+        send = fixture_sender(sample())
+        calls = []
+        def fail_third(endpoint, payload, cap):
+            calls.append(payload["method"])
+            if len(calls) == 3:
+                raise ConnectionError("injected private transport detail")
+            return send(endpoint, payload, cap)
+        r = self.invoke_mock_live(fail_third)
+        self.assertEqual(calls, ["eth_chainId", "eth_blockNumber", "eth_getBlockByNumber"])
+        self.assertEqual(r["mode"], "AUTHORIZED_PUBLIC_HTTP_SMOKE_FAILED_CLOSED")
+        self.assertEqual(r["attempted_rpc_calls"], 3)
+        self.assertEqual(r["actual_rpc_calls"], 3)
+        self.assertEqual(r["attempted_control_discovery_calls"], 1)
+        self.assertEqual(r["error_code"], "NETWORK_ERROR")
+        self.assertEqual(r["stop_state"], "BLOCKED_SOURCE")
+        self.assertNotIn("injected private", json.dumps(r))
+        self.assertEqual(r["e3_actual_count"], 0)
+
+    def test_third_attempt_timeout_persists_counts(self):
+        send = fixture_sender(sample())
+        calls = []
+        def fail_third(endpoint, payload, cap):
+            calls.append(payload)
+            if len(calls) == 3:
+                raise TimeoutError("injected timeout")
+            return send(endpoint, payload, cap)
+        r = self.invoke_mock_live(fail_third)
+        self.assertEqual(len(calls), 3)
+        self.assertEqual(r["attempted_rpc_calls"], 3)
+        self.assertEqual(r["attempted_control_discovery_calls"], 1)
+        self.assertEqual(r["error_code"], "NETWORK_TIMEOUT")
+
+    def test_third_attempt_response_too_large_persists_counts(self):
+        send = fixture_sender(sample())
+        calls = []
+        def fail_third(endpoint, payload, cap):
+            calls.append(payload)
+            if len(calls) == 3:
+                raise ValueError("RESPONSE_TOO_LARGE")
+            return send(endpoint, payload, cap)
+        r = self.invoke_mock_live(fail_third)
+        self.assertEqual(r["attempted_rpc_calls"], 3)
+        self.assertEqual(r["error_code"], "RESPONSE_TOO_LARGE")
+
+    def test_third_attempt_bad_envelope_persists_counts(self):
+        send = fixture_sender(sample())
+        calls = []
+        def fail_third(endpoint, payload, cap):
+            calls.append(payload)
+            if len(calls) == 3:
+                return {"jsonrpc": "2.0", "id": payload["id"], "error": {"code": -32000}}
+            return send(endpoint, payload, cap)
+        r = self.invoke_mock_live(fail_third)
+        self.assertEqual(r["attempted_rpc_calls"], 3)
+        self.assertEqual(r["error_code"], "RPC_ERROR_OR_BAD_ENVELOPE")
+
+    def test_wrong_chain_failure_first_attempt_persisted(self):
+        def wrong_chain(endpoint, payload, cap):
+            return {"jsonrpc": "2.0", "id": payload["id"], "result": "0x1"}
+        r = self.invoke_mock_live(wrong_chain)
+        self.assertEqual(r["attempted_rpc_calls"], 1)
+        self.assertEqual(r["attempted_control_discovery_calls"], 0)
+        self.assertEqual(r["error_code"], "WRONG_CHAIN_ID")
+
+    def test_successful_mock_live_report_still_has_all_four_counts(self):
+        mock_sender = fixture_sender(sample())
+        with tempfile.TemporaryDirectory(prefix="bsc-smoke-reviewed-", dir="/tmp") as location:
+            folder = Path(location)
+            permit_path, report_path = folder / "permit.json", folder / "report.json"
+            fake_permit = permit(datetime.now(timezone.utc))
+            fake_permit["storage_root"] = location
+            permit_path.write_text(json.dumps(fake_permit))
+            args = ["f0_bounded_smoke.py", "--execute-live", "--permit", str(permit_path),
+                    "--report", str(report_path)]
+            with patch.object(sys, "argv", args), patch("f0_bounded_smoke.https_sender", side_effect=mock_sender), \
+                 patch("urllib.request.build_opener", side_effect=AssertionError("real network forbidden")):
+                main()
+            report = json.loads(report_path.read_text())
+            self.assertEqual(report["mode"], "AUTHORIZED_PUBLIC_HTTP_SMOKE_NOT_FULL_F0")
+            self.assertEqual(report["actual_rpc_calls"], 4)
+            self.assertEqual(report["attempted_control_discovery_calls"], 1)
+            self.assertEqual(report["stop_state"], "SMOKE_COMPLETE_NOT_F0_PASS")
+
+    def test_discovery_limit_cannot_be_bypassed_with_false_flag(self):
+        attempts = []
+        def sender(endpoint, payload, cap):
+            attempts.append(payload)
+            return {"jsonrpc": "2.0", "id": payload["id"], "result": {}}
+        rpc = LimitedRPC(sender, ENDPOINT, 500)
+        rpc.call("eth_getBlockByNumber", ["0x1", True], discovery=False)
+        self.assertEqual(rpc.discovery_attempts, 1)
+        with self.assertRaisesRegex(ValueError, "CONTROL_DISCOVERY_CAP_REACHED"):
+            rpc.call("eth_getBlockByNumber", ["0x1", True], discovery=False)
+        self.assertEqual(rpc.attempts, 1)
+        self.assertEqual(len(attempts), 1)
+
+    def test_failure_report_never_exposes_exception_message(self):
+        rpc = LimitedRPC(lambda *args: None, ENDPOINT, 500)
+        output = live_failure_report(RuntimeError("secret token and url"), rpc)
+        self.assertEqual(output["error_code"], "SMOKE_FAILED")
+        self.assertNotIn("secret", json.dumps(output))
+        self.assertEqual(output["stop_state"], "BLOCKED_SOURCE")
+
+
 if __name__ == "__main__":
     unittest.main()
