@@ -1039,6 +1039,33 @@ def replay_frozen_sell_receipts(directory, evidence_path, rpc=None):
 
 
 def run(args):
+    if args.mode in ("sell-archive", "sell-audit"):
+        if args.chain != "bsc-v2" or args.day != "2025-07-01":
+            raise SourceError("REAL_SELL_RECEIPTS_ONLY_FROZEN_BSC_V2_DAY")
+        base = args.out_dir.resolve() / ("bsc-v2-" + args.day)
+        evidence_path = (Path(__file__).resolve().parents[2] /
+                         "monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json")
+        if args.mode == "sell-archive":
+            if args.rpc is None or args.max_requests < 19:
+                raise SourceError("SELL_ARCHIVE_NEEDS_EXPLICIT_RPC_AND_19_CALL_BUDGET")
+            chain = CHAINS[args.chain]
+            rpc = RPC(args.rpc, chain["chain_id"], min(args.max_requests, 19), args.delay)
+            rpc.chain_check()
+            result = replay_frozen_sell_receipts(base, evidence_path, rpc)
+        else:
+            result = replay_frozen_sell_receipts(base, evidence_path)
+        print(plain_json({
+            "status": result["status"],
+            "rank_count": result["rank_count"],
+            "requests_this_invocation": result["requests_this_invocation"],
+            "raw_receipt_hashes_verified": result["all_original_rpc_bodies_sha256_checked"],
+            "matched_real_sell_tx": result["receipt_and_swap_transfer_sync_matches"],
+            "gas_price_reported_zero_ranks": [x["rank"] for x in result["rows"]
+                                              if x["gas_price_field"] == "0x0"],
+            "uniform_notional_sellability": result["notional_18_of_30_gate"],
+            "public_T_entry": result["public_T_entry"],
+        }).strip())
+        return
     if args.mode == "audit":
         if args.chain != "bsc-v2" or args.day != "2025-07-01":
             raise SourceError("OFFLINE_AUDIT_ONLY_FROZEN_BSC_V2_DAY")
@@ -1232,7 +1259,7 @@ def main():
     parser = argparse.ArgumentParser(description="Manual historical Factory RPC coverage; no transactions")
     parser.add_argument("--chain", choices=CHAINS, default="base-v3")
     parser.add_argument("--day", default="2025-07-01")
-    parser.add_argument("--mode", choices=("probe", "scan", "enumerate", "bootstrap", "audit", "deployment"), default="probe")
+    parser.add_argument("--mode", choices=("probe", "scan", "enumerate", "bootstrap", "audit", "deployment", "sell-archive", "sell-audit"), default="probe")
     parser.add_argument("--limit", type=int, default=45,
                         help="BSC V2 historical index identities to check, max 200 per invocation")
     parser.add_argument("--bootstrap-start-rank", type=int, default=1,
