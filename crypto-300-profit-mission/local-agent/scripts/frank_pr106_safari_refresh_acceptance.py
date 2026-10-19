@@ -44,7 +44,7 @@ def committed_blob(checkout: Path, sha: str, path: str) -> bytes:
     if not re.fullmatch(r"[0-9a-f]{40}", sha) or path not in {
             base.STATIC_REL + "/" + name for name in base.STATIC_FILES}:
         raise RuntimeError("UNAPPROVED_STATIC_OBJECT")
-    env = dict(os.environ, GIT_OPTIONAL_LOCKS="0", GIT_NO_LAZY_FETCH="1",
+    env = dict(os.environ, GIT_OPTIONAL_LOCKS="0",
                GIT_NO_REPLACE_OBJECTS="1", GIT_PAGER="cat")
     p = subprocess.run(["git", "-C", str(checkout), "--no-pager",
                         "cat-file", "blob", f"{sha}:{path}"],
@@ -175,8 +175,10 @@ def make_handler(static: Path, port: int, stage: str, token: str,
                     self.end_headers()
                     self.wfile.write(data)
                     return
-                if args.get("state") not in [EXPECTED[stage], "PRODUCT_UI_NOT_VERIFIED",
-                                             "PRODUCT_UI_EXCEPTION", "PRODUCT_TIMEOUT"]:
+                if args.get("state") not in [
+                    [EXPECTED[stage]], ["PRODUCT_UI_NOT_VERIFIED"],
+                    ["PRODUCT_UI_EXCEPTION"], ["PRODUCT_TIMEOUT"],
+                ]:
                     return self.send_error(403,"QA_INVALID_RECEIPT")
                 receipts[stage]=args["state"][0]
                 self.send_response(204)
