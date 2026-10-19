@@ -1,0 +1,101 @@
+name: Monster original Spot T0 Chinese-symbol 4 publisher ZIP gap fix once
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-forward-spot511-unicode4-publisher-gap-once.yml'
+permissions:
+  contents: write
+concurrency:
+  group: monster-frozen-original-511-only-four-unicode-source-gaps
+  cancel-in-progress: false
+jobs:
+  exact_4_official_unicode_source_gaps:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: true
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recheck original T0 and Unicode encoded issuer checksum tests
+        run: |
+          set -eu
+          python3 -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_official_publisher_acquire.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_forward_spot511_official_publisher_acquire.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_forward_spot511_official_publisher_acquire.py
+      - name: Reattempt ONLY four first-run failed Unicode symbol-days from proven source manifest
+        run: |
+          set -eu
+          mkdir -p /tmp/monster_fwd_unicode4
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_official_publisher_acquire.py --source-dir /tmp/monster_fwd_unicode4 --workers 2 --retry-unicode-from crypto-300-profit-mission/monster/evidence/monster_forward_spot511_oct16_17_real_issuer_zip_receipts_v1.json --out /tmp/monster_fwd_unicode4_original_issuer_status.json
+      - name: Store original Unicode issuer ZIP and checksum only if valid
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-frozen-spot511-unicode4-source-gap-official-publisher-originals
+          path: |
+            /tmp/monster_fwd_unicode4_original_issuer_status.json
+            /tmp/monster_fwd_unicode4
+          retention-days: 60
+          if-no-files-found: warn
+      - name: Persist exact 4 results without rewriting original 1018 validated publishers
+        run: |
+          set -eu
+          python3 - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          raw=Path('/tmp/monster_fwd_unicode4_original_issuer_status.json')
+          j=json.loads(raw.read_text(encoding='utf-8'))
+          assert j['schema']=='MONSTER_SPOT511_ORIGINAL_PUBLISHER_DAILY_1M_ACQUISITION_V1'
+          assert j['original_roster_count']==2 and j['attempts_total']==4
+          assert j['days_utc']==['2026-10-16','2026-10-17']
+          assert j['source_scope']=='FROZEN_T0_511_UNICODE_GAP_4_ONLY'
+          assert j['original_full_t0_roster_count']==511
+          assert j['recovery_of_original_1022_attempts_blob']=='2852bbfd030d11bf84385681a32b07ee5d84d6b1'
+          assert len(j['all_attempts'])==4
+          assert {s['symbol'] for s in j['all_attempts']}=={'币安人生USDT','牛来USDT'}
+          assert sum(j['status_counts'].values())==4
+          assert j['G4']=='UNKNOWN' and j['G6']=='NO_GO'
+          assert j['NO_MERGE'] and j['NO_DEPLOY'] and j['NO_GMAIL'] and j['NO_TRADE']
+          keep={
+              'schema':j['schema'],'original_T0_count':511,
+              'original_1018_publisher_verified_plus_exact_4_failures':True,
+              'original_1022_manifest_git_blob':j['recovery_of_original_1022_attempts_blob'],
+              'source_scope':j['source_scope'],
+              'dates':j['days_utc'],'attempts':j['attempts_total'],
+              'source_counts':j['status_counts'],
+              'original_4_record_sha256':hashlib.sha256(raw.read_bytes()).hexdigest(),
+              'reacquired_at_utc':j['acquired_at_utc'],
+              'actual_items':j['all_attempts'],
+              'no_claim_of_full_7d_or_execution':True,
+              'original_zip_artifact_retention_days':60,
+              'G4':'UNKNOWN','G6':'NO_GO','NO_MERGE':True,'NO_DEPLOY':True,
+              'NO_GMAIL':True,'NO_TRADE':True
+          }
+          out=Path('crypto-300-profit-mission/monster/evidence/monster_forward_spot511_unicode4_original_publisher_supplement_v1.json')
+          if out.exists() or out.is_symlink():
+              raise SystemExit('MONSTER_UNICODE4_SUPPLEMENT_ALREADY_EXISTS')
+          out.write_text(json.dumps(keep,indent=2,sort_keys=True,ensure_ascii=False)+'\n')
+          print('MONSTER_PUBLISHER_UNICODE4_SOURCE_GAP_ACTUAL',keep['source_counts'])
+          PY
+          target=crypto-300-profit-mission/monster/evidence/monster_forward_spot511_unicode4_original_publisher_supplement_v1.json
+          branch=research/monster-v4-local-discovery-20261010
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: preserve genuine original Unicode Spot publisher source gap outcomes"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER_UNICODE4_SOURCE_ALREADY_PERSISTED
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_official_publisher_acquire.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_forward_spot511_official_publisher_acquire.py .github/workflows/monster-v4-forward-spot511-unicode4-publisher-gap-once.yml crypto-300-profit-mission/monster/evidence/monster_forward_spot511_oct16_17_real_issuer_zip_receipts_v1.json; do
+            test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo MONSTER_UNICODE4_COLLECTOR_OR_SOURCE_CHANGED; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER_ONLY_ORIGINAL_UNICODE_SOURCE_GAPS_NO_MERGE_NO_SIGNAL
