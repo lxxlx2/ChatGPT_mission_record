@@ -43,11 +43,11 @@ def add_candidate(root: Path, *, mint="Mint222", episode="ep2", signal="signal2"
 
 
 def policy(path: Path, *, status="REVIEW_ONLY", live=False):
-    path.write_text(json.dumps({"schema_version":1,"policy_id":"P1","status":status,"live_delivery_approved":live,"decision":{"quote_usdc_amount":"30","observation_retention_seconds":5184000,"slippage_bps":100,"quote_cache_seconds":20,"max_quote_age_seconds":30,"max_frank_buy_age_seconds":600,"initial_notification_max_age_seconds":600,"max_candidates_per_cycle":50,"hard_no_buy_position_states":["CLOSED","INVENTORY_UNDETERMINED"],"buy":{"required_pattern":"MULTIPLE","max_price_deviation_pct":"8","max_price_impact_pct":"1.5"},"small_buy":{"allowed_patterns":["MULTIPLE","ACCUMULATION"],"max_price_deviation_pct":"20","max_price_impact_pct":"3"}}}))
+    path.write_text(json.dumps({"schema_version":1,"policy_id":"P1","status":status,"live_delivery_approved":live,"decision":{"quote_usdc_amount":"27.25","observation_retention_seconds":5184000,"slippage_bps":100,"quote_cache_seconds":20,"max_quote_age_seconds":30,"max_frank_buy_age_seconds":600,"initial_notification_max_age_seconds":600,"max_candidates_per_cycle":50,"hard_no_buy_position_states":["CLOSED","INVENTORY_UNDETERMINED"],"buy":{"required_pattern":"MULTIPLE","max_price_deviation_pct":"8","max_price_impact_pct":"1.5"},"small_buy":{"allowed_patterns":["MULTIPLE","ACCUMULATION"],"max_price_deviation_pct":"20","max_price_impact_pct":"3"}}}))
 
 
 def good_quote():
-    return {"status":"OK","source":"JUPITER_OFFICIAL","observed_at":time.time(),"input_usdc":"30","out_amount_raw":"30000000","token_out":"30","execution_price_usdc":"1.02","price_impact_pct":"0.5","route_exists":True,"route_plan":[{}],"time_taken":0.0123}
+    return {"status":"OK","source":"JUPITER_OFFICIAL","observed_at":time.time(),"input_usdc":"27.25","out_amount_raw":"30000000","token_out":"30","execution_price_usdc":"1.02","price_impact_pct":"0.5","route_exists":True,"route_plan":[{}],"time_taken":0.0123}
 
 
 def test_review_policy_never_allows_live_delivery_and_records_dry_outbox(tmp_path):
@@ -338,7 +338,7 @@ def test_service_preserves_quote_observation_and_uses_frozen_gmail_max_age(tmp_p
         "SELECT body FROM gmail_delivery"
     ).fetchone()[0]
     assert "Jupiter 报价观察时间：" in gmail
-    assert "决策时 $30 报价：" in gmail
+    assert "指定金额的参考报价（不代表实际成交）：" in gmail
     assert "当前可成交价：" not in gmail
     service.close()
 
