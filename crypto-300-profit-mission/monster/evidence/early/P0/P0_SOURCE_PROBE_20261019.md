@@ -1,6 +1,26 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
 
+## 2026-10-20 第二次用户Mac PASS及三笔真实卖出交易的Token转账闭环
+
+用户再次在原Mac checkout前台快进至精确固定SHA`8c5ed2494f256ab4d172cdf3d986794d9b9d2727`，两组测试**14/14+16/16=30/30 PASS**；本地原始JSON审计**88份、30/30建池重放、25/30同创建Tx Mint+Sync、unknown_ranks=[]**。旧小窗口当中的**23个排名**有报价币→token的实际Pool Swap+同交易Sync，**3个排名#5、#8、#28**有token→报价币Swap+Sync；窗口未观测到上述两方向的是#14/#18/#20/#26，**缺后续更新窗口的是#18/#20**。完整数组已写本Phase的机器JSON：`bsc_v2_p0_mac_first30_swap_window_audit_20261020`。这些数值仅是用户原本保存的非连续小窗口，不能把无Swap视为0、不能把“第一次在所存窗口观察到”冒充全链第一笔、不能把23+3视为26个双向可交易池。
+
+**额外独立于Mac汇总、由已连接免费Alchemy应用历史只读RPC按确定区块复核的三笔卖出如下**。每例历史receipt的`status=0x1`；原token合约`Transfer(holder→pair)`真实传入额=Pool Swap的tokenIn，报价资产的`Transfer(pair→recipient)`额=Swap报价币out，且有同Tx先Sync后Swap。完整32字节Raw事件值及来源限制写入JSON`bsc_v2_p0_actual_sell_receipt_checks_20261020`。这只证明**该账户那笔已发生卖出**，不证明另一个钱包任意时刻/名义额可卖。
+
+| 冻结排名 | 卖出Tx / 区块 | 实际报出报价币（18位精度，仅该笔） | 初始报价池储备 | 卖出Sync之后报价池储备 | 事前冻结最低档位 |
+|---|---|---:|---:|---:|---:|
+| #5 | `0xddf4631429c9faf6bb2a117516a2fff39debe9fd207d19c274808ca99a16f348` / 52441377 | 约0.099632794 USDT | 约1.313968 USDT | 约1.214335 USDT | 1000 USDT |
+| #8 | `0x864245a074f1d48ab773a1c4be9f6cdbb0a4fe3d420c9a28b76e56a70df1e235` / 52442068 | 约0.937879706 USDT | 50 USDT | 约0.191649 USDT | 1000 USDT |
+| #28 | `0xe58cfceaec28c06221309f55d413bcced063757cc0c8e84ce9d3d9dfdc3e985b` / 52447990 | 约0.0000392614 WBNB | 约0.002684584 WBNB | 约0.002645322 WBNB | 2 WBNB |
+
+#28首次后续储备更新块52447990经历史`getReserves`更新时间戳二分定位，再在此块完整定向取Swap与两种token Transfer；#8卖出发生在创建后紧接一块。这些数字是实际链上已完成交易而**非用户自定义单笔订单金额**。**关键业务结论：三笔真实卖出所在币在建池初始及该笔卖出后均未达到P0原冻结的2 WBNB/1000 USDT最低报价侧储备**，不能把它们不加条件地变成模型准入后的卖出正例；中途其他时刻是否曾越过门槛并未全时间覆盖，保持UNKNOWN。
+
+本次链上检索仍是**同一Alchemy供应商经连接器归一化的响应**，不是第二供应商交叉确认、不是原HTTP字节SHA/接收UTC、也不是完整可审计receipt文件的Git入库；有大receipt文本截断，字段通过窄`eth_getLogs`及receipt状态分别验证，禁止抬高来源等级。额外抽查#8/#28合约在各自建池区块`eth_getCode`均返回非空bytecode前缀，但响应被连接器截断，**不代表已证明首次部署区块或完整源代码**；不把局部抽查升级为30/30 deployment PASS。
+
+**下一步主线决策**：保留30名单和原失败样本，后续覆盖按“历史首次确实符合事前LP门槛的时点→当时可观察Swap/买卖来源→目标资金量与退出限制”的顺序推进。先以已经可审计的窗口及合同部署来源判PIT是否达到24/30，再选少量符合早期准入的代币查同笔token Transfer和退出可模拟性，未建立免费可连续读的源路径不扩大成全日网络扫描。本轮无需再次执行Mac测试或1471次历史调用，`P0_PARTIAL / 24_OF_30=NOT_SCORABLE / 18_OF_30=NOT_SCORABLE / NO_P1 / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`不变。
+
+---
+
 ## 2026-10-20 P0主线增量：已存原始池事件中的真实Swap方向离线重放
 
 不重复RPC、不新增样本也不新建Stage。在已有`mission_agent/early/bsc_v2_pit.py`添加`summarize_v2_archived_swap_windows`，接入已有Factory原归档`--mode audit`。对冻结30个排名，读取先前本地`*.pool.rpc.json`（建池后的最多10块）与有文件时的`*.later.rpc.json`（首次后续储备更新块），以当时已冻结的token0/token1/quote CA判定Pair `Swap`的**实际池子方向**，与同交易、同池、较早`Sync`作一致性核对；记录原块号、Tx、日志序号和Pool原始金额。多个归档窗口重合时，只计相同事件一次，冲突字节拒绝通过。
