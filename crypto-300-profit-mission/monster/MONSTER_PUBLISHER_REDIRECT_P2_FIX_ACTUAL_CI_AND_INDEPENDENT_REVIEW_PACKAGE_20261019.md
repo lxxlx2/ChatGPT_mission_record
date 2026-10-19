@@ -34,3 +34,14 @@
 此P2定向修复作者CI成功但**独立第二轮复审尚`NOT_DONE`**。正式其它AI重审回复前，仍应记录为`REQUEST_CHANGES_P2_REMEDIATED_PENDING_INDEPENDENT_REVIEW`；成功后才升级固定SHA的Publisher Collector `APPROVE`。2026-10-19原冻结7日新Spot窗口未完成，后续继续按完整官方source/population、真实3分钟T因果队列、上市PIT及执行L2/费率推进，而非旧2月历史回调上拟合“正盈利”。
 
 `G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
+
+## 四、用户转交的独立复审结论与当前状态（2026-10-19）
+
+**当前固定SHA结论：`APPROVE_FIXED_SHA`，原采集器重定向P2已由用户转交的另一AI独立复审报告判定关闭。** 唯一复审对象 `18ec436d04fb2c121a62a46311e56d15d4dc2606`；上轮 `REQUEST_CHANGES` 固定SHA `e6fb680b868d52a9a0d77d80920b6049fa36252d` 保留原结论，不回溯批准。用户将报告标为“Claude报告”，报告正文自称“Codex助手”；因此**审核主体精确底层模型/版本 `UNVERIFIED`，身份自述按原文记录，不另行冒充官方GitHub APPROVE review**。审核报告来自用户转交，不能当作本仓库里有独立原始审核脚本或GitHub正式review记录。
+
+该报告称在干净detached checkout `/Users/jerson/antigravity-agent-test/mission_pr30_p2_18ec436` 重做真实双HTTP服务器的301/302/303/307/308定向重定向试验，目标服务器GET恒0；直接HTTP 200实际返回 `b'hello'` 且状态200；12/12测试通过；旧CHECKSUM/ZIP/Unicode、重试、非覆盖保护没有在修复diff中退化。**本轮仓库接手者另直接从GitHub连接器核验**：CI run [#39216876277](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39216876277) job `117942686055` 的原始日志确实 `Ran 12 tests ... OK`、10/10步骤success；读取固定版源码可见 `_RejectPublisherRedirect.redirect_request` 在follow前抛出 `ValueError` 与 `build_opener(...).open`；GitHub compare `18ec436d..7eb0747` 仅3个文档变动、无执行代码变化。**报告的本地独立实测记录由用户提供，不冒充本轮远程连接器再次本地执行**；大小限制的独立专用反例亦未被本次外部报告证明，保留原已存在单测结论。
+
+**批准严格仅适用于Publisher下载器这一网络修复固定SHA**。原3日1,533个Publisher ZIP/.CHECKSUM和2,207,520根1m的先前独立来源核验仍有效，不因P2重下载；Stage165、Stage166、历史300U账本各自固定范围保留；其他未获审的历史经济/市场广度脚本不因本次批准升级。完整新Spot前瞻7日/24h退出、PIT上市动态、同一信号点时ticker24和双侧L2、用户名义金额与真实可成交净利润仍未获得证明。PR #30 Draft，`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
+
+**唯一高价值下一主线：** 新T0 511 Spot研究窗口 `[2026-10-17T22:06Z, 2026-10-24T22:06Z)`；官方分钟源已有Oct16-18共1533/5110全进出场检查对象。仅对实际已发布且有Issuer ZIP+CHECKSUM的新UTC日按需采集、校验并保留旧SHA，下一步以**完整原冻结3360轮**重跑同一D0→D1 FIFO8/Fair8，对账WATCH、首次有效评估、SETUP、过期/漏报；同一时间因果地运行有限现金收益代理，并将ticker24/PIT/L2及费用缺口列为删失。所需Oct19-25余3577币日只有实际发行并核验后才能计入，完整结果不能早于Oct25全天结束及相应发行方文件可用。若新样本无新增SETUP或无正的可执行价值，接受负结论，不为抬高历史盈利改阈值。未经新授权不得创建定时采集/Gmail/Mac部署/交易或修改Frank。
+
