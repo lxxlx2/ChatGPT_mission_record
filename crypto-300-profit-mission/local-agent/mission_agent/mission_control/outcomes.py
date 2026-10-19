@@ -163,13 +163,17 @@ class OutcomeTracker:
     def sample_due(self,*,now=None,slippage_bps=100,max_quotes=MAX_QUOTES_PER_CYCLE):
         now=time.time() if now is None else float(now);self._mark_missed(now)
         rows=[dict(r) for r in self.db.execute("SELECT * FROM outcome_tracks WHERE status='ACTIVE' ORDER BY available_at")]
-        sampled=0;errors=[]
+        sampled=0;attempted=0;errors=[]
         for track in rows:
-            if sampled>=int(max_quotes):break
+            # max_quotes is a hard limit on external quote ATTEMPTS, including
+            # provider failures; counting only successful samples could exhaust
+            # quota across arbitrarily many ACTIVE tracks in one loop.
+            if attempted>=int(max_quotes):break
             age=max(0,int(now-float(track["available_at"])))
             if age<SAMPLE_SECONDS or age>max(HORIZONS)+HORIZON_GRACE_SECONDS:continue
             bucket=age//SAMPLE_SECONDS
             if self.db.execute("SELECT 1 FROM outcome_samples WHERE tracking_id=? AND sample_bucket=?",(track["tracking_id"],bucket)).fetchone():continue
+            attempted+=1
             try:
                 quote=self.jupiter.quote_token_to_usdc(
                     track["mint"],track["entry_token_raw"],int(track["token_decimals"]),slippage_bps=int(slippage_bps)
