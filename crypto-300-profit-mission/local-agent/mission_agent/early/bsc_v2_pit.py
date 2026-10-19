@@ -328,10 +328,22 @@ def summarize_v2_archived_swap_windows(*, pool, token0, token1, quote_asset, win
                 seen[key] = row
     ordered = sorted(seen.items())
     syncs_by_tx = {}
+    first_saved_above_floor_sync = None
     for (block, txindex, logindex), row in ordered:
         if row['topics'][0].lower() == SYNC:
-            words(row.get('data'))
+            reserve0, reserve1 = words(row.get('data'))
             syncs_by_tx.setdefault((block, txindex, row['transactionHash'].lower()), []).append(logindex)
+            quote_reserve = reserve0 if quote_is_token0 else reserve1
+            if (quote_reserve_floor_raw is not None
+                    and quote_reserve >= quote_reserve_floor_raw
+                    and first_saved_above_floor_sync is None):
+                first_saved_above_floor_sync = {
+                    'block': block, 'tx_hash': row['transactionHash'].lower(),
+                    'transaction_index': txindex, 'log_index': logindex,
+                    'quote_reserve_raw': str(quote_reserve),
+                    'first_in_complete_day': 'UNVERIFIED_SAVED_WINDOWS_ONLY',
+                    'intra_tx_sync_not_public_entry': True,
+                }
     swaps = []
     for pos, ((block, txindex, logindex), row) in enumerate(ordered):
         if row['topics'][0].lower() != SWAP:
@@ -386,6 +398,31 @@ def summarize_v2_archived_swap_windows(*, pool, token0, token1, quote_asset, win
     verified_buys = [x for x in swaps if (
         x['direction'] == 'OBSERVED_QUOTE_TO_TOKEN_SWAP'
         and x['preceding_same_tx_pool_sync_in_saved_window'])]
+    first_above_floor_buy = next((x for x in swaps if
+        x['direction'] == 'OBSERVED_QUOTE_TO_TOKEN_SWAP'
+        and x['pre_swap_quote_depth_frozen_floor_status'] == 'AT_OR_ABOVE_FROZEN_FLOOR'), None)
+    first_above_floor_buy_mint_in_same_tx = False
+    public_after_threshold_sync_status = 'NOT_SCORABLE_MISSING_RELEVANT_SYNC_OR_BUY'
+    if first_above_floor_buy is not None and first_saved_above_floor_sync is not None:
+        first_buy_id = (first_above_floor_buy['block'], first_above_floor_buy['tx_hash'])
+        first_sync_id = (first_saved_above_floor_sync['block'], first_saved_above_floor_sync['tx_hash'])
+        first_above_floor_buy_mint_in_same_tx = any(
+            (blk == first_above_floor_buy['block']
+             and event.get('transactionHash', '').lower() == first_above_floor_buy['tx_hash']
+             and ind < first_above_floor_buy['log_index']
+             and event['topics'][0].lower() == MINT)
+            for (blk, _, ind), event in ordered)
+        if first_buy_id == first_sync_id:
+            if first_saved_above_floor_sync['log_index'] < first_above_floor_buy['log_index']:
+                public_after_threshold_sync_status = 'SAME_TX_NOT_PUBLICLY_REACTABLE_AFTER_SYNC'
+            else:
+                public_after_threshold_sync_status = 'SYNC_NOT_PROVEN_TO_PRECEDE_BUY'
+        elif first_above_floor_buy['block'] == first_saved_above_floor_sync['block']:
+            public_after_threshold_sync_status = 'SAME_BLOCK_DIFFERENT_TX_PUBLIC_AVAILABILITY_UNVERIFIED'
+        elif first_above_floor_buy['block'] > first_saved_above_floor_sync['block']:
+            public_after_threshold_sync_status = 'LATER_BLOCK_PUBLIC_AVAILABILITY_UNVERIFIED'
+        else:
+            public_after_threshold_sync_status = 'OBSERVATION_ORDER_MISMATCH'
     return {
         'status': 'NONCONTIGUOUS_ARCHIVED_PAIR_WINDOWS_ONLY',
         'archived_windows': window_presence,
@@ -415,6 +452,11 @@ def summarize_v2_archived_swap_windows(*, pool, token0, token1, quote_asset, win
             x['pre_swap_quote_reserve_raw'] is None for x in swaps),
         'frozen_research_quote_floor_raw': (
             str(quote_reserve_floor_raw) if quote_reserve_floor_raw is not None else None),
+        'first_observed_above_floor_sync_in_saved_windows': first_saved_above_floor_sync,
+        'first_observed_above_floor_buy_in_saved_windows': first_above_floor_buy,
+        'first_above_floor_buy_prior_mint_same_tx': first_above_floor_buy_mint_in_same_tx,
+        'first_above_floor_buy_public_reaction_status': public_after_threshold_sync_status,
+        'first_observed_above_floor_sync_not_first_public_T_entry': True,
         'first_observed_in_saved_windows': swaps[0] if swaps else None,
         'observed_direction_events': swaps,
         'absence_of_swap_in_missing_intervals': 'UNKNOWN',
