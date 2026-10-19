@@ -30,6 +30,7 @@ _TRANSIENT_WAIT_REASONS = {
     "FRANK_RUNTIME_NOT_LIVE",
     "FRANK_BUY_SIGNAL_STALE_OR_UNKNOWN",
     "QUOTE_METRICS_INVALID",
+    "EXECUTION_NOT_ASSESSED_USER_AMOUNT_MISSING",
 }
 _ACTIONABLE = {"BUY", "SMALL_BUY"}
 
@@ -127,7 +128,7 @@ class MissionMemeService:
         raw_amount = self.policy["decision"].get("quote_usdc_amount")
         if raw_amount is None:
             return {"status": "SKIPPED", "reason": "USER_ORDER_AMOUNT_NOT_SPECIFIED",
-                    "source": "NONE", "observed_at": time.time()}
+                    "source": "NONE", "observed_at": None}
         try:
             amount = Decimal(str(raw_amount))
             if not amount.is_finite() or amount <= 0:
