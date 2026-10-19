@@ -5388,5 +5388,89 @@
     "status": "STATIC_REVERSE_IS_NOT_SEQUENTIAL_TRADE_PROCEEDS; HISTORICAL_SELLABILITY_STILL_NOT_SCORABLE",
     "coverage_gate_24_of_30": "NOT_SCORABLE",
     "coverage_gate_18_of_30": "NOT_SCORABLE"
+  },
+  "bsc_v2_p0_user_mac_local_run_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_MAC_TERMINAL_EXECUTION_REPORTED_V1",
+    "evidence_origin": "USER_PASTED_MAC_TERMINAL_STDOUT_IN_CHAT_2026_10_20",
+    "machine_log_not_attached": true,
+    "frozen_day_utc": "2025-07-01",
+    "research_only": true,
+    "execution_environment": "USER_MAC_FRONTGROUND_STANDARD_PYTHON_HTTPS_RPC",
+    "fresh_git_checkout_reported": true,
+    "local_checkout_path": "LOCAL_PRIVATE_PATH_REDACTED",
+    "local_git_head_verification_at_mac_run": "NOT_REPORTED",
+    "tests_reported": [
+      {
+        "pattern": "test_monster_early_bsc_v2_pit.py",
+        "run": 12,
+        "passed": 12,
+        "failed": 0
+      },
+      {
+        "pattern": "test_monster_early_venue_factory_rpc_roster_probe.py",
+        "run": 12,
+        "passed": 12,
+        "failed": 0
+      }
+    ],
+    "source_enum_stdout": {
+      "status": "CHRONOLOGICAL_FIRST30_V2_POOL_IDENTITIES_ONLY",
+      "factory_new_pools_in_day": 785,
+      "factory_index_rows_checked": 34,
+      "identity_candidates_found": 30,
+      "sample_complete_first30_by_factory_order": true,
+      "requests_this_invocation": 162
+    },
+    "bootstrap_stdout_batches": [
+      {
+        "ranks": "1-5",
+        "requested_count": 5,
+        "verified_creation_and_first_mint": 5,
+        "requests": 223
+      },
+      {
+        "ranks": "6-10",
+        "requested_count": 5,
+        "verified_creation_and_first_mint": 5,
+        "requests": 226
+      },
+      {
+        "ranks": "11-15",
+        "requested_count": 5,
+        "verified_creation_and_first_mint": 4,
+        "requests": 223
+      },
+      {
+        "ranks": "16-20",
+        "requested_count": 5,
+        "verified_creation_and_first_mint": 2,
+        "requests": 184
+      },
+      {
+        "ranks": "21-25",
+        "requested_count": 5,
+        "verified_creation_and_first_mint": 5,
+        "requests": 226
+      },
+      {
+        "ranks": "26-30",
+        "requested_count": 5,
+        "verified_creation_and_first_mint": 4,
+        "requests": 227
+      }
+    ],
+    "bootstrap_total_attempted": 30,
+    "bootstrap_verified_same_creation_tx_mint_sync": 25,
+    "bootstrap_requests_total": 1309,
+    "enumerate_plus_bootstrap_reported_rpc_requests": 1471,
+    "raw_file_archive_root": "LOCAL_MAC_PRIVATE_DIRECTORY_NOT_TRANSFERRED",
+    "original_http_response_bytes_read_back": "NOT_VERIFIED_IN_THIS_CHAT",
+    "source_sha256_independently_verified": "NOT_DONE",
+    "independent_full_original_source_archive_review": "NOT_DONE",
+    "actual_public_t_entry": "UNVERIFIED",
+    "token_transfer_tax_sellability": "NOT_SCORABLE",
+    "two_sided_18_30_gate": "NOT_SCORABLE",
+    "complete_pit_24_30_gate": "NOT_SCORABLE",
+    "note": "User stdout demonstrates full 30 rank processing and offline test success for the earlier cloned head. After this output, subsequent new audit-mode code/test commit requires a fresh local test and a readback of the private archive manifest. All source/coverage and prod gates remain unchanged."
   }
 }
