@@ -398,6 +398,16 @@ def summarize_v2_archived_swap_windows(*, pool, token0, token1, quote_asset, win
     verified_buys = [x for x in swaps if (
         x['direction'] == 'OBSERVED_QUOTE_TO_TOKEN_SWAP'
         and x['preceding_same_tx_pool_sync_in_saved_window'])]
+    buy_events = [x for x in swaps if x['direction'] == 'OBSERVED_QUOTE_TO_TOKEN_SWAP']
+    sell_events = [x for x in swaps if x['direction'] == 'OBSERVED_TOKEN_TO_QUOTE_SWAP']
+    qualified_buy_events = [x for x in buy_events if
+                            x['pre_swap_quote_depth_frozen_floor_status'] ==
+                            'AT_OR_ABOVE_FROZEN_FLOOR']
+    qualified_sell_events = [x for x in sell_events if
+                             x['pre_swap_quote_depth_frozen_floor_status'] ==
+                             'AT_OR_ABOVE_FROZEN_FLOOR']
+    def unique_tx_count(rows):
+        return len({(row['block'], row['tx_hash']) for row in rows})
     first_above_floor_buy = next((x for x in swaps if
         x['direction'] == 'OBSERVED_QUOTE_TO_TOKEN_SWAP'
         and x['pre_swap_quote_depth_frozen_floor_status'] == 'AT_OR_ABOVE_FROZEN_FLOOR'), None)
@@ -447,6 +457,15 @@ def summarize_v2_archived_swap_windows(*, pool, token0, token1, quote_asset, win
             x['preceding_same_tx_pool_sync_in_saved_window'] for x in swaps),
         'observed_quote_to_token_with_sync': len(verified_buys),
         'observed_token_to_quote_with_sync': len(verified_sells),
+        'observed_buy_swap_events': len(buy_events),
+        'observed_buy_distinct_transactions': unique_tx_count(buy_events),
+        'observed_sell_swap_events': len(sell_events),
+        'observed_sell_distinct_transactions': unique_tx_count(sell_events),
+        'observed_above_floor_buy_swap_events': len(qualified_buy_events),
+        'observed_above_floor_buy_distinct_transactions': unique_tx_count(qualified_buy_events),
+        'observed_above_floor_sell_swap_events': len(qualified_sell_events),
+        'observed_above_floor_sell_distinct_transactions': unique_tx_count(qualified_sell_events),
+        'distinct_transaction_does_not_imply_distinct_human_or_public_entry': True,
         'observed_buy_at_or_above_frozen_quote_depth': sum(
             x['direction'] == 'OBSERVED_QUOTE_TO_TOKEN_SWAP'
             and x['pre_swap_quote_depth_frozen_floor_status'] == 'AT_OR_ABOVE_FROZEN_FLOOR'
