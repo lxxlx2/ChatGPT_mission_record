@@ -46,6 +46,7 @@ class MissionMemeService:
         gmail_config: Path | None = None,
         jupiter_api_key: str | None = None,
         approved_policy_sha256: str | None = None,
+        approval_expires_at: float | None = None,
     ):
         self.production_root = Path(production_root)
         self.control_root = Path(control_root)
@@ -63,8 +64,10 @@ class MissionMemeService:
         self.policy, self.policy_hash = load_policy(policy_path)
         self.live_delivery_requested = bool(live_delivery)
         self.approved_policy_sha256 = approved_policy_sha256
+        self.approval_expires_at = approval_expires_at
         self.delivery_allowed = bool(
             self.live_delivery_requested
+            and (approval_expires_at is None or time.time() < approval_expires_at)
             and live_delivery_policy_authorized(
                 self.policy, self.policy_hash, self.approved_policy_sha256
             )
@@ -207,6 +210,10 @@ class MissionMemeService:
         return notify
 
     def cycle(self) -> dict:
+        # A live approval may expire while the daemon continues running.
+        # Once expired, never re-enable sending in this process.
+        if self.approval_expires_at is not None and time.time() >= self.approval_expires_at:
+            self.delivery_allowed = False
         cycle_started_monotonic=time.monotonic()
         first_enqueued_monotonic=None
         runtime = self.frank.runtime()
@@ -325,6 +332,8 @@ class MissionMemeService:
             round(time.monotonic()-first_enqueued_monotonic,3)
             if first_enqueued_monotonic is not None else None
         )
+        if self.approval_expires_at is not None and time.time() >= self.approval_expires_at:
+            self.delivery_allowed = False
         if self.delivery_allowed:
             self.local.drain()
             self.gmail.drain(existing_provider(self.gmail_config))
