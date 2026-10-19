@@ -293,11 +293,16 @@ def probe(sender: Callable, cohort: dict, registry: dict,
     router_rows = []
     stop = 'QUALIFICATION_READS_COMPLETE_NOT_LIVE_MONITORING'
     fatal_code = None
+    # Only a validated eth_blockNumber is an observed height. The offline saved
+    # parser uses an internal placeholder for early-stop reports; never expose
+    # that placeholder as the actually confirmed block height.
+    confirmed_height = None
     try:
         row, err, _ = client.call('eth_chainId', [], 'SOURCE_IDENTITY')
         source_quantity(row, err, 'chain')
         row, err, _ = client.call('eth_blockNumber', [], 'SOURCE_IDENTITY')
         height = source_quantity(row, err, 'height')
+        confirmed_height = height
         snapshot['checked_block'] = height
         failure_streak = 0
         for category, wallets in [('PRIMARY_CODE', sorted(watched)),
@@ -342,6 +347,7 @@ def probe(sender: Callable, cohort: dict, registry: dict,
     # audit_offline is deliberately a SAVED input parser, and does zero RPC of its own.
     report.update(schema=SCHEMA, mode='AUTHORIZED_READ_ONLY_QUALIFICATION'
                   if strict_frozen else 'OFFLINE_SYNTHETIC_READ_ONLY_QUALIFICATION',
+                  checked_block=confirmed_height,
                   stop_state=stop, error_code=fatal_code,
                   attempt_ledger_status='DURABLE_BEFORE_EACH_SEND' if journal.path
                   else 'IN_MEMORY_OFFLINE_ONLY',
