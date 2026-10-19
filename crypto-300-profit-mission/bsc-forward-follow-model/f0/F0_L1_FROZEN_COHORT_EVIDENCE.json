@@ -1,0 +1,56 @@
+{
+  "schema": "bsc-f0-l1-pr129-frozen-real-cohort-fix-offline-evidence-v1",
+  "approved_parent_pr129_sha": "9a89f6a9ec1e2fcc2874f441d82fc09ec456d345",
+  "approved_source_pr116_sha": "cf88cd9f6568502f5c052ae3befc9cc16cbab98b",
+  "real_cohort_git_blob_sha1": "fcd0029314353313867e565190cd4f2882089f11",
+  "real_cohort_git_blob_confirmed_in_pr116_and_pr129_by_github_connector": true,
+  "cohort_seed": "9134fcd41df49ef836b81c8a040974ad89c1fde1",
+  "cohort_seed_source": "F0_COHORT_PRESELECTION.json selection_seed, never fixture control_seed",
+  "cohort_real_wallet_fields_checked_against_github": true,
+  "cohort_manifest_real_raw_bytes_test_ran_locally": false,
+  "cohort_manifest_real_raw_bytes_test_condition": "Must run and PASS from complete Git checkout; isolated local directory lacked frozen manifest; cannot claim skipped test passed",
+  "local_tests_discovered": 163,
+  "local_tests_passed": 162,
+  "local_tests_skipped": 1,
+  "local_test_result": "OK (skipped=1)",
+  "base_tests_unchanged": 156,
+  "new_tests_added": 7,
+  "fixture_report_metrics": {
+    "attempted_control_discovery_rpc_calls_offline": 4,
+    "attempted_full_block_rpc_calls_offline": 4,
+    "backfill_received_blocks": 1,
+    "blocks_expected_window": 5,
+    "blocks_failed": 1,
+    "blocks_received": 3,
+    "missing_heights": [
+      101,
+      102
+    ],
+    "preselected_control_offline": 2,
+    "router_control_candidates_in_received_blocks": 3,
+    "watch_signer_tx_in_received_blocks": 3
+  },
+  "fixture_report_cohort_binding": "SYNTHETIC_FIXTURE_NOT_REAL_COHORT",
+  "fixture_seed_source": "COHORT_SELECTION_SEED",
+  "files_sha256": {
+    "f0_l1_window.py": "94285073ac64d393aefa8a5e18c0038f8c62c462371a820177b549ef6fcaf7e5",
+    "tests/test_f0_l1_window.py": "d1a033360f7bc5fd902780a35bad533d8c2142007a5c39beeca4da575d34582b",
+    "fixtures/l1_fake_cohort.json": "12339c3c9010a8b2c776fcb2d68462ddf33f66f9fb560079b299c42c636f4578",
+    "fixtures/l1_contiguous_replay.json": "8f7cace5750bb308895c16e5a476c2832a07be8c9f834890177be24e101566a2",
+    "fixture_l1_report.json": "c81f0041bf1dbcf17ca1b33b9d9b3aea1e778b7e0357fe66be691f6993f50ce9"
+  },
+  "expected_git_blobs": {
+    "f0_l1_window.py": "28ef1ecd1de37ec1523fcc723c5eebc335caa510",
+    "tests/test_f0_l1_window.py": "8ed0822fdb263ea1abc0cc242b732668daf7554c",
+    "fixtures/l1_fake_cohort.json": "45e4c06d75475ef422b4d5a71a366ba8f15002aa",
+    "fixtures/l1_contiguous_replay.json": "0d4cedeab4eb19c9cf7efac998ae91f013c6035c",
+    "fixture_l1_report.json": "457eded676e2b18ff864fa3be80b8e2839c4bfcb"
+  },
+  "local_test_log_sha256": "93c594dc0edf884795d4f2fd8db5e27a60fbe89233cf1a165a44d27efbd55a85",
+  "network_calls": 0,
+  "actual_rpc_calls": 0,
+  "real_wallet_technical_eoa_eligibility": "UNVERIFIED",
+  "real_router_allowlist": "UNVERIFIED",
+  "approval_required_for_live": true,
+  "permissions": "NO_RUN; PREVIOUS_4_CALL_ONE_TIME_PERMIT_EXHAUSTED"
+}

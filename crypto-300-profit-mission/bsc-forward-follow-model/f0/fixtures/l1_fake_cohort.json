@@ -214,5 +214,7 @@
       "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
     }
   ],
-  "mode": "FAKE_COHORT_TEST_ONLY"
+  "mode": "FAKE_COHORT_TEST_ONLY",
+  "synthetic_fixture_only": true,
+  "selection_seed": "9134fcd41df49ef836b81c8a040974ad89c1fde1"
 }

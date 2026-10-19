@@ -7,8 +7,7 @@
   "end_height": 104,
   "max_rpc_calls": 4,
   "max_control_discovery_calls": 4,
-  "control_seed": "f0-control-precommit-v1",
-  "control_modulo": 3,
+  "control_modulo": 7,
   "router_allowlist_kind": "SYNTHETIC_ONLY",
   "synthetic_routers": [
     "0x00000000000000000000000000000000000003e8"
@@ -148,5 +147,6 @@
         }
       }
     }
-  ]
+  ],
+  "cohort_source_kind": "SYNTHETIC_FIXTURE_ONLY"
 }
