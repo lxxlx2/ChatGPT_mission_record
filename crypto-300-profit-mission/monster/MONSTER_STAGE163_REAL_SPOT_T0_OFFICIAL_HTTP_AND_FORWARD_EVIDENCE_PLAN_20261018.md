@@ -284,3 +284,11 @@ Codex独立复审固定旧SHA `456111143f5ea1ac2e32103f71ea50dc5a27d078` 判定 
 **当前完整新OOS七日仍NOT_MATURE**：固定窗口`[2026-10-17T22:06Z,2026-10-24T22:06Z)`3360个3m tick；现在Oct16-18的已验证1m可覆盖起始warmup与到Oct19T00:00Z之前**518个3分钟时钟所需的1m源**，但这只是数据覆盖，不等于已经真实运行518轮D0/D1或历史真实`ticker/24hr`的PIT等价。若做完整七日D0扫描，旧九日4599来源中还需2026-10-19..24六日**3066个日级对象**；若还做最迟24h真实退出价代理，之前确认的10日5110中还需10月19..25七日**3577个对象**。这些日期不能超前下载或假设官方已经发布。连续动态上市/停牌、点时ticker24/L2/ask-bid深度、真实fee、消息送达、有限资金真实净收益仍UNVERIFIED。**新采集脚本独立其它AI review NOT_DONE，Stage165/166和已审300U账本的Codex APPROVE并不自动扩大其批准范围**，完整提示词在新报告第四节。
 
 **主线后续一旦取得足够真实源**必须用原D0/D1相同决策规则处理正确全市场人口、动态新币和事件唯一ID，成本与24h退出证据缺失应做删失而非冒充0。现阶段**官方source部分到位已证实，盈利与交易放行仍NO_GO**；不创建周期任务、不触碰Mac/Frank、不发邮件不交易，`G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`全部不变。
+
+## 三十一、Publisher 采集器P2定向封闭：禁止HTTP redirect在源外请求发出后才检查（2026-10-19）
+
+原已证实的Binance Spot/USDT原T0 511人口、2026-10-16/17/18三天真实发行方SHA核验源**1533/1533个ZIP/CHECKSUM、2207520根微秒1m**仍有效。Codex对原采集器固定SHA `e6fb680b868d52a9a0d77d80920b6049fa36252d`审查`REQUEST_CHANGES`，发现**一个P2**：urllib默认跟随HTTP重定向，旧`response.geturl()`只能在非官方跳转请求已经发出后才发现违规，真实双HTTP服务器反例证明非允许目标被访问；这是采集器出站网络边界问题，并非原1533份已验证来源SHA错误。
+
+本轮根据[冻结P2方案](MONSTER_PUBLISHER_REDIRECT_PRE_REQUEST_P2_FROZEN_FIX_20261019.md)只改采集器`_RejectPublisherRedirect(HTTPRedirectHandler)`，于`redirect_request`钩子**未发第二次请求**前立即抛错，改`build_opener(_RejectPublisherRedirect()).open()`，原最终URL和原publisher CRC/SHA/CSV校验、Unicode、资金/策略、档案不变。新增本地真实两个`ThreadingHTTPServer`的301/302/303/307/308反例，被拒绝第二台HTTP服务器**GET=0**，直接200源仍可用。源与测试代码固定SHA `18ec436d04fb2c121a62a46311e56d15d4dc2606`，[**单次离线CI #39216876277**](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39216876277) 真正**12/12 unittest、10/10工作流步骤成功**，Git三日原1533文件源证据不变，未重新下载原任何日ZIP，不设schedule/部署/邮件/交易。
+
+[完整固定SHA复审包与CI原日志说明](MONSTER_PUBLISHER_REDIRECT_P2_FIX_ACTUAL_CI_AND_INDEPENDENT_REVIEW_PACKAGE_20261019.md)。**新修复仅`AUTHOR_FIXED_P2_CI_PASS`，原独立Codex审核仍然`REQUEST_CHANGES`直至修复SHA新独立复审返回APPROVE**；不得将作者CI当正式G5或全七日新OOS盈利过线。继续`G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，PR#30 Draft。
