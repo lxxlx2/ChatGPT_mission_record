@@ -1,0 +1,93 @@
+name: Monster original269 pre-WATCH full445 market breadth audit
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-original-watch-pre-signal-breadth-once.yml'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_watch_pre_signal_market_breadth.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_watch_pre_signal_market_breadth.py'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster-watch-prior-breadth-445-exposed-once
+  cancel-in-progress: false
+jobs:
+  prior_closed_market_breadth_original269:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test no future candles, strict original stage identity and minute grid
+        run: |
+          set -eu
+          python3 -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_watch_pre_signal_market_breadth.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_watch_pre_signal_market_breadth.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_watch_pre_signal_market_breadth.py
+      - name: Reacquire exactly original source proven 28 February publisher archives and immutable original A-B
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster_regime_feb
+          gh run download 39068290868 --repo lxxlx2/ChatGPT_mission_record --dir /tmp/monster_regime_feb --name monster162-real445-first-valid-5m-fair8-ab-once-v4
+          printf '%s  %s\n' c30c8b6467b0017b36efc33fadfa2c7853f29f9c7e32993249774269ba4e2ae2 /tmp/monster_regime_feb/monster162_actual_445_fair8_ab.json | sha256sum -c -
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_archive_replay_runner.py collect --source-dir /tmp/monster_regime_feb_source28 --audit /tmp/monster_regime_feb_source28_receipts.json
+      - name: Compute only PRE-signal 445 symbol breadth and join fixed old WATCH price results
+        run: |
+          set -eu
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_watch_pre_signal_market_breadth.py --stage162-full /tmp/monster_regime_feb/monster162_actual_445_fair8_ab.json --watch-setup-economics crypto-300-profit-mission/monster/evidence/monster_watch_vs_setup_original269_120_same_source_economics_v1.json --original28-source-dir /tmp/monster_regime_feb_source28 --out /tmp/monster_watch_445_pre_signal_breadth.json
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          r=json.loads(Path('/tmp/monster_watch_445_pre_signal_breadth.json').read_text())
+          assert r['watch_events']==269
+          assert len(r['full_269_watch_event_rows'])==269
+          assert len(r['all_unique_tick_prior_breadth'])==r['unique_watch_ticks']
+          assert sum(x['original_event_count'] for x in r['groups_by_preregistered_prior_breadth'].values())==269
+          assert len(r['original_445_source_shard_zip_sha256'])==28
+          assert all(x['prior_60m_end_candle_open_ms']==x['watch_observed_ms']-180000 for x in r['all_unique_tick_prior_breadth'])
+          assert all(x['prior_60m_start_candle_open_ms']==x['watch_observed_ms']-3780000 for x in r['all_unique_tick_prior_breadth'])
+          assert r['original_758_missing_313_and_not_listing_PIT']
+          assert r['retrospective_market_regime_not_actionable_model']
+          assert r['not_independent_OOS'] and r['real_executable_positive_net_profit']=='UNVERIFIED'
+          assert r['G4']=='UNKNOWN' and r['G6']=='NO_GO'
+          assert r['NO_MERGE'] and r['NO_DEPLOY'] and r['NO_GMAIL'] and r['NO_TRADE']
+          print('MONSTER_445_269_PRIOR_OBSERVABLE_REGIME_CAUSAL_TIME_SOURCE_LOCKED')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-original269-watch-presignal-445-breadth-full-evidence
+          path: |
+            /tmp/monster_watch_445_pre_signal_breadth.json
+            /tmp/monster_regime_feb_source28_receipts.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Persist immutable research result, no deployment or trading
+        run: |
+          set -eu
+          target=crypto-300-profit-mission/monster/evidence/monster_watch_pre_signal_full445_breadth_original269_actual_v1.json
+          branch=research/monster-v4-local-discovery-20261010
+          test ! -e "$target"
+          cp /tmp/monster_watch_445_pre_signal_breadth.json "$target"
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive original445 pre-WATCH-only regime values and 269 frozen price outcomes"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER_445_WATCH_PRE_SIGNAL_BREADTH_EVIDENCE_ALREADY_EXISTS
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_watch_pre_signal_market_breadth.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_watch_pre_signal_market_breadth.py .github/workflows/monster-v4-original-watch-pre-signal-breadth-once.yml crypto-300-profit-mission/monster/evidence/monster_watch_vs_setup_original269_120_same_source_economics_v1.json crypto-300-profit-mission/local-agent/scripts/monster_v4_watch_vs_setup_incremental_value.py; do
+            test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo MONSTER_WATCH_REGIME_SOURCE_OR_CODE_DRIFT; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER_EXPOSED_PRE_SIGNAL_MARKET_BREADTH_RESEARCH_NO_SIGNAL_NO_ORDER
