@@ -1,7 +1,7 @@
 {
   "schema": "BSC_P4B_TWO_EOA_EIGHT_HISTORICAL_ERC20_BALANCEOF_ORIGINAL_RPC_REPLY_V1",
   "date_utc": "2026-10-19",
-  "source": "User connected Alchemy on bnb-mainnet; eight separate eth_call returned exact 32-byte hex replies; this record transcribes source-return hex from current conversation; other reviewer can replay inputs.",
+  "source": "EARLIER_CHAT_TRANSCRIPTION_OF_CONNECTED_ALCHEMY_TOOL_RETURNS; SUPPORTED_BY_LATER_SAME_EXECUTION_LIVE_CONNECTOR_RAW_BODY_CAPTURE",
   "original_30_day_start_contract_state": "Original tokens not deployed at 30-day boundary. balanceOf=0x at undeployed contract is NOT zero; only real pre-buy block return 32-byte zero is reliable.",
   "cases": [
     {
@@ -159,5 +159,9 @@
   "gates": {
     "realized_pnl": "UNRESOLVED",
     "public_executable_u": "UNRESOLVED"
-  }
+  },
+  "provenance_grade": "LATEST_REQUERIED_TIMESTAMPED_CONNECTOR_TOOL_RETURN_TEXT_RECORDED_AS_RECEIVED_NOT_PROVIDER_ATTESTED_HTTP",
+  "raw_source_capture_file": "bsc-meme-address-model-v1-p4b-alchemy-16-live-tool-response-transcript-2026-10-19.json",
+  "capture_verification": "8 historical eth_call exact arguments and raw result strings reissued and stored together with local request and response timestamps; any reviewer may cross-check and requery.",
+  "first_exit_recheck": "FLAP_post_first_exit response is also directly archived in the same live transcript (17th observation)."
 }
