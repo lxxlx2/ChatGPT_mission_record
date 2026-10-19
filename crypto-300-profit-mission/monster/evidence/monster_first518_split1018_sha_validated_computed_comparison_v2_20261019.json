@@ -1,0 +1,48 @@
+{
+  "G0": "PARTIAL",
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_DEPLOY": true,
+  "NO_GMAIL": true,
+  "NO_MERGE": true,
+  "NO_TRADE": true,
+  "all_1533_daily_issuer_zip_checksum_pairs_replayed": 1533,
+  "computed_from_actual_JSON_field_comparisons": {
+    "all_8_early_watches_and_8_setups": true,
+    "all_8_expired_d2_not_captured_no_buy": true,
+    "economics_8_8_all_horizons_identical_to_pre_fix": true,
+    "operator_snapshot_identical_to_previous_archive": true,
+    "original_1533_full_source_verified_from_shards": true,
+    "replay_events_identical_to_pre_fix": true
+  },
+  "fixed_code_input_commit": "85f3c05c8daf1dc8595077da53838d6591a5bc90",
+  "historical_24h_ticker_reconstructed_not_actual": true,
+  "independent_Codex_replay": "NOT_DONE",
+  "minute_rows": 2207520,
+  "not_current_live_market": true,
+  "old_Codex_audit_commit": "eed4ea67e7868770367fbacffc1e9058ce59b635",
+  "original_1018_daily_issuer_zip_checksum_pairs_repacked": 1018,
+  "original_artifact_id": 12167818438,
+  "schema": "MONSTER_FIRST518_SPLIT1018_SOURCE_AND_COMPUTED_EVIDENCE_V2",
+  "shard_artifact_prefix": "monster-first518-issuer-original1018-shard-",
+  "shard_manifest_sha256": [
+    "81a6c18de47e455faebec95537b7cb14bd9a902bccbcde17132eaae354d3fb8b",
+    "4308f14ff527784575ca72c987ac6561ad67348350b7b4dc6433d492f641ebec",
+    "79ee27742d4ecf95b49a576e10b20afd8be20929b355b54b1a09af9c6c61611b",
+    "0ee3637bfe60fc296455140c4cd71b90dd0b8e1d482b95b788ae11d43a82dccc",
+    "db47d4b4bc021b897a0e9f4492d317fd465ad3dda05c12abb500d59671fdb36c",
+    "bb1071e9f9ac86c2fdd00f597db5497297ed937b3851daedd65331eb359d4792",
+    "5b3862fcd98ca769b69d6fe3e1511bfcacbdea302467252c9c361c37bc186565",
+    "04124265dbdf81d9512c8687404a15d1c7a08ce49c4efca1c2343dd20229fc77"
+  ],
+  "shard_pair_counts": [
+    128,
+    127,
+    127,
+    127,
+    128,
+    127,
+    127,
+    127
+  ]
+}
