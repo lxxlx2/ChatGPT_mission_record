@@ -1,0 +1,32 @@
+{
+  "schema": "bsc-f0-24read-journal-report-path-p1-offline-evidence-v1",
+  "reviewed_base_pr": 135,
+  "reviewed_base_sha": "fed9d88fcdbaeb8acaafafbc066ed50af0cf8b6d",
+  "base_review": "REQUEST_CHANGES_ONE_P1_REPORT_OVERWRITES_JOURNAL",
+  "fix_scope": "RESERVE_DISTINCT_REPORT_AND_JOURNAL_FILE_NAMES_BEFORE_NONCE",
+  "changed_source_blob": "046f50179a4163739d4dc1ed47fac243b196381d",
+  "new_test_blob": "da56ee7e5c7043c4a9ebeba8040fb0e4e7673f44",
+  "changed_source_sha256": "3a3b399262280760a3c87a161a96536911717671612919bd66770ed842a6fea8",
+  "new_test_sha256": "5972820bd55ba7733cf37f10970dbe8e8abc0c79d4a501900215ffd9eceadee2",
+  "local_verbose_test_log_sha256": "2f64f9bbde4bcf0abb5ade56589374b5de4c13c046c03afde10744dfea66a237",
+  "local_log_uploaded_to_git": false,
+  "local_suite": {
+    "discovered": 213,
+    "pass": 211,
+    "skip": 2,
+    "fail": 0,
+    "skipped_reason": "Real frozen PR116 manifest not included in local isolated copy"
+  },
+  "review_required": "Independent full Git checkout: 213 PASS, ZERO SKIP",
+  "targeted_regressions": {
+    "report_journal_conflict_before_nonce_zero_send": "PASS_SYNTHETIC_MAIN_PATH",
+    "report_journal_roles_distinct": "PASS",
+    "success_24_mock_attempt_rows_preserved": "PASS",
+    "exception_early_one_mock_attempt_row_preserved": "PASS"
+  },
+  "actual_network_calls": 0,
+  "real_permit_created": false,
+  "runtime_permission": "NO_RUN; EXPIRED_PREVIOUS_SMOKE_PERMIT; NO_24_READ_CONSENT",
+  "e1_e2_e3_pnl": "NOT_MEASURED",
+  "notes": "Git source/test blobs checked exactly against local executed files. These are offline mocks of the real CLI branch, not a live permit or RPC demonstration."
+}
