@@ -344,3 +344,12 @@ Codex独立复审固定旧SHA `456111143f5ea1ac2e32103f71ea50dc5a27d078` 判定 
 
 **下个优先交付**为真实业务中的D2来源与全市场健康状态的可理解反馈：先根据本8个真实实例分清`交易已过期`、`源覆盖不足`、`没有当时盘口`三类独立原因及具体可操作性；不得通过放宽历史时间戳/伪造早期L2或自动投递掩盖。只有缺口确实影响WATCH/SETUP的实时可见性才做有限技术修补；其次在**真实发布并由用户触发取得**后继续新七日前瞻完整3360轮、真实漏报与独立成本验证。原P2不再循环，独立其他AI对新固定SHA需重新单次核验仍`BLOCKED/NOT_DONE`。严格保持`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，Frank/本机/Stage99不变。
 
+
+## 三十六、审阅者原1018档下载为零：源字节拆8包+可重算比较（2026-10-19）
+
+用户转交Codex第二轮固定SHA `eed4ea67e7868770367fbacffc1e9058ce59b635` 独立审查`BLOCKED`：Codex实际拿到原Unicode4+Oct18 511 = 515个Publisher ZIP/CHECKSUM并逐SHA验证515/515通过，但老Oct16–17合包Artifact `12167818438` 下载为0字节，欠1018组。证据不具备独立重跑，属于**原独立复现P1阻断**，不推翻作者CI已生成原8 WATCH/8 SETUP且原价代理亏损的事实。不得靠改历史策略或无限网络重试解决。
+
+一次性真实修复：新[CI #39235915099](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39235915099)固定输入SHA `85f3c05c8daf1dc8595077da53838d6591a5bc90`，SUCCESS 20/20；**原字节1018对每对issuer SHA/日1440微秒格式重验**后仅逐字节复制为8个新4MB左右Artifacts；新8包按128/127/127/127/128/127/127/127对覆盖，8个Artifact IDs、manifest SHA、各包大小及唯一审核命令见[独立审核交接](MONSTER_FIRST518_CODEX_1018_MISSING_SOURCE_SPLIT8_REVIEW_HANDOFF_20261019.md)。新旧Unicode4和Oct18 511继续使用前次原档，合并原1533组、2207520根后，**从这8份拆出的发行方ZIP真正又跑原518轮与8+8价格**。新V2机器[实证](evidence/monster_first518_split1018_sha_validated_computed_comparison_v2_20261019.json)六项相等/不买验证项全部为**Python从机器JSON逐字段计算并实际断言**（有偏差即失败），并非原审查指出的两项硬编码True；来源结果commit `67c10315180e678e8303a3b8829e2f9806bbfe46`。
+
+为避免用户亲手下载8个分散文件，又新增[一条命令独立审核器](../local-agent/scripts/monster_v4_first518_independent_audit_from_shards.py)（初始SHA `94f15a318d6a2a02d6da9e05e54b0c5a75ead79e`）：只会在审核者自己的隔离checkout明确运行时通过`gh`分别下载8小源包+原515，核对manifest、原issuer SHA、再由自己执行518轮D0/D1 SQLite和8+8经济，落地完整源/日志/结果。**截至作者对GitHub的检查，该外部Codex尚未使用新8包独立运行，因此原审查仍BLOCKED；新脚本提交不自动等于已真实Mac验收通过。** 仅建议对该新增传输路径进行一次定向独立复核；下一业务主线仍为G0两Unicode拒绝的健康展示、D2真实当时买卖盘证据与七日成熟后的3360轮，负收益不得粉饰。绝不自动创建定时任务/购买/部署/Gmail/Frank变更。
+
