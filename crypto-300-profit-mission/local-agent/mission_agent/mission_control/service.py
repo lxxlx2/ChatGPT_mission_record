@@ -326,8 +326,12 @@ class MissionMemeService:
             if first_enqueued_monotonic is not None else None
         )
         if self.delivery_allowed:
-            self.local.drain()
-            self.gmail.drain(existing_provider(self.gmail_config))
+            # Enforce immutable source-policy identity on every resumed queue item.
+            # A fresh old-policy PENDING event must not become live under a
+            # newly approved policy merely because its TTL has not expired.
+            self.local.drain(active_policy_hash=self.policy_hash)
+            self.gmail.drain(existing_provider(self.gmail_config),
+                             active_policy_hash=self.policy_hash)
         cycle_elapsed_seconds=round(time.monotonic()-cycle_started_monotonic,3)
 
         status = "OK" if not errors else "DEGRADED"
