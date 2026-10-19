@@ -418,10 +418,16 @@ def test_optin_export_sqlite_error_never_kills_decision_loop(tmp_path, monkeypat
         obj.close()
 
 def test_checked_in_frank_policy_has_no_assumed_order_amount_and_no_quote_call():
-    from mission_agent.mission_control.policy import load_policy, evaluate
+    from mission_agent.mission_control.policy import load_policy, evaluate, live_delivery_policy_authorized
     file = Path(__file__).parents[1] / "config" / "follow_policy_v1.approved.json"
-    approved, _ = load_policy(file)
+    approved, actual_sha = load_policy(file)
     assert "quote_usdc_amount" not in approved["decision"]
+    assert approved["status"] == "REVIEW_ONLY"
+    assert approved["live_delivery_approved"] is False
+    assert approved["basis"] == "PR112_NO_DEFAULT_AMOUNT_POLICY_PENDING_EXPLICIT_USER_LIVE_APPROVAL"
+    # Even if a caller supplies its own policy content SHA as an attempted
+    # approval, the changed candidate must never permit live delivery.
+    assert live_delivery_policy_authorized(approved, actual_sha, actual_sha) is False
     assert approved["sizing_authority"] == "USER_DECIDES_AMOUNT_AND_EXECUTION_NO_DEFAULT_NOTIONAL"
     instance = MissionMemeService.__new__(MissionMemeService)
     instance.policy = approved
