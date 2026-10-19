@@ -772,6 +772,11 @@ def audit_saved_bsc_v2_p0(out_dir, evidence_path):
                   x["archived_pair_swap_evidence"]["observed_sell_below_frozen_quote_depth"]]
     reserve_unknown = [x["rank"] for x in good if
                        x["archived_pair_swap_evidence"]["observed_swaps_without_proven_preswap_depth"]]
+    buy_first_above_floor_same_tx_first_sync = [x["rank"] for x in good if
+        x["archived_pair_swap_evidence"]["first_above_floor_buy_public_reaction_status"]
+        == "SAME_TX_NOT_PUBLICLY_REACTABLE_AFTER_SYNC"]
+    buy_first_above_floor_same_tx_first_mint = [x["rank"] for x in good if
+        x["archived_pair_swap_evidence"]["first_above_floor_buy_prior_mint_same_tx"]]
     return {
         "schema": "MONSTER_BSC_V2_P0_LOCAL_ORIGINAL_RPC_OFFLINE_REPLAY_V1",
         "status": ("LOCAL_FROZEN_30_CREATION_REPLAY_PASS" if complete
@@ -795,6 +800,11 @@ def audit_saved_bsc_v2_p0(out_dir, evidence_path):
         "observed_buy_below_preswap_quote_floor_ranks": buy_below,
         "observed_sell_below_preswap_quote_floor_ranks": sell_below,
         "observed_swap_preswap_depth_unresolved_ranks": reserve_unknown,
+        "first_above_floor_buy_same_tx_as_first_above_floor_sync_ranks":
+            buy_first_above_floor_same_tx_first_sync,
+        "first_above_floor_buy_with_prior_mint_in_same_tx_ranks":
+            buy_first_above_floor_same_tx_first_mint,
+        "same_tx_first_qualified_buy_not_public_reaction": True,
         "quote_depth_floor_is_research_eligibility_not_purchase_notional": True,
         "archive_swap_window_observation_scope":
             "FIRST_TEN_CREATION_BLOCKS_PLUS_ONE_LATER_UPDATE_BLOCK_IF_SAVED; NONCONTIGUOUS",
@@ -833,6 +843,8 @@ def run(args):
             "observed_buy_below_preswap_quote_floor_ranks",
             "observed_sell_below_preswap_quote_floor_ranks",
             "observed_swap_preswap_depth_unresolved_ranks",
+            "first_above_floor_buy_same_tx_as_first_above_floor_sync_ranks",
+            "first_above_floor_buy_with_prior_mint_in_same_tx_ranks",
             "twentyfour_of_thirty_complete_pit_gate",
             "eighteen_of_thirty_sellable_gate")}).strip())
         if result["status"] != "LOCAL_FROZEN_30_CREATION_REPLAY_PASS":
