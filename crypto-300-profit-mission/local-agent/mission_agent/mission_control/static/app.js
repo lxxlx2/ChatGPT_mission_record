@@ -101,7 +101,8 @@ const reasonText = {
   QUOTE_METRICS_INVALID:'Jupiter 报价缺少有效成交价或价格冲击数据。',
   NO_EXECUTABLE_JUPITER_ROUTE:'Jupiter 当前没有可执行的跟单路径，不跟。',
   PRICE_TOO_FAR_FROM_FRANK:'当前价格已经离 Frank 买入价太远，暂时不追。',
-  EXECUTION_IMPACT_TOO_HIGH:'价格冲击取决于实际交易金额；未获得用户指定金额，不作可执行性结论。',
+  EXECUTION_IMPACT_TOO_HIGH:'指定交易金额下预计价格冲击超过阈值，不应视为可执行建议。',
+  EXECUTION_NOT_ASSESSED_USER_AMOUNT_MISSING:'Frank 的链上行为已单独记录；没有用户指定的金额，未评估执行价格和冲击。',
   FRANK_MULTIPLE_ACTIVE:'Frank 已观察到多次强加仓模型事件；是否可以跟随以本次结论为准。',
   PRICE_STILL_CLOSE_TO_FRANK:'当前成交价仍接近 Frank 的参考买入价。',
   EXECUTION_IMPACT_ACCEPTABLE:'当前预计价格冲击在可接受范围。',
@@ -121,6 +122,7 @@ const missingText = {
   EXECUTION_PRICE_OR_IMPACT:'缺少当前成交价或价格冲击。',
   TOKEN_DECIMALS_UNKNOWN:'Token decimals 未确认。',
   JUPITER_QUOTE_UNAVAILABLE:'Jupiter 当前报价不可用。',
+  USER_ORDER_AMOUNT_NOT_SPECIFIED:'未指定用户交易金额，因此没有请求执行报价。',
 };
 
 function translated(map, raw, fallback='未知') {
