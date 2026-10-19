@@ -1,0 +1,41 @@
+name: Frank isolated historical decisions 503 UI resilience
+on:
+  push:
+    branches:
+      - fix/frank-decisions-partial-refresh-20261019
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pinned-real-http-js-and-full-python:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Verify exact source commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "FRANK_DECISIONS_PARTIAL_REFRESH_SHA=$GITHUB_SHA"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Actual app refresh, real localhost 503 and previous F01 C02 Node tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          node --check mission_agent/mission_control/static/app.js
+          node --test tests/test_frank_decisions_partial_refresh.cjs tests/test_frank_c02_archive_readonly.cjs tests/test_frank_candidate_sections.cjs tests/test_frank_candidate_sections_dom.cjs tests/frank_f01_primary_freshness.cjs tests/frank_source_context_mount.cjs tests/frank_source_context_render.cjs
+      - name: Install local agent test dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3
+      - name: Full local-agent historical replay and Python regression
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests
