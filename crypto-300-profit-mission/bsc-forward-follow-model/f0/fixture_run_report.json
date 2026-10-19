@@ -113,6 +113,7 @@
       "event_id": "event-1",
       "group": "WATCHLIST",
       "kind": "quote_request_scheduled",
+      "purpose": "ENTRY",
       "scheduled_ms": 61000,
       "source": "SYNTHETIC_ONLY"
     },
@@ -121,11 +122,13 @@
       "event_id": "event-1",
       "group": "WATCHLIST",
       "kind": "quote_replay",
-      "raw_blob_sha256": "9f90b0b1c726a9a94e73de5c5bd58acdf517d76facf40c38b7fc883a2c68b188",
+      "purpose": "ENTRY",
+      "raw_blob_sha256": "4a1d42325638855085c18205379787998d332f53f96c9146ac1e87b4438ee086",
       "received_ms": 61080,
       "requested_ms": 61000,
       "scheduled_ms": 61000,
-      "source": "SYNTHETIC_ONLY"
+      "source": "SYNTHETIC_ONLY",
+      "synthetic_amount_out_raw": "1000"
     },
     {
       "actual_real_request": false,
@@ -133,6 +136,7 @@
       "event_id": "event-2",
       "group": "CONTROL_RANDOM",
       "kind": "quote_request_scheduled",
+      "purpose": "ENTRY",
       "scheduled_ms": 61300,
       "source": "SYNTHETIC_ONLY"
     },
@@ -141,16 +145,19 @@
       "event_id": "event-2",
       "group": "CONTROL_RANDOM",
       "kind": "quote_replay",
-      "raw_blob_sha256": "7556a52a90b5e0b0223d6ce305a9f9cc0e3bd72e29584ae203fbc6494738cd01",
+      "purpose": "ENTRY",
+      "raw_blob_sha256": "b76f6bfc0ba43b6252115644d5923e691dc59b6272bbc5cca2dc969744f665c5",
       "received_ms": 61380,
       "requested_ms": 61300,
       "scheduled_ms": 61300,
-      "source": "SYNTHETIC_ONLY"
+      "source": "SYNTHETIC_ONLY",
+      "synthetic_amount_out_raw": "1000"
     },
     {
       "delta_seconds": 60,
       "event_id": "event-3",
       "kind": "quote_cancelled",
+      "purpose": "ENTRY",
       "reason": "EVENT_INVALIDATED"
     },
     {
@@ -159,6 +166,7 @@
       "event_id": "event-6",
       "group": "WATCHLIST",
       "kind": "quote_request_scheduled",
+      "purpose": "ENTRY",
       "scheduled_ms": 72000,
       "source": "SYNTHETIC_ONLY"
     },
@@ -168,6 +176,7 @@
       "event_id": "event-1",
       "group": "WATCHLIST",
       "kind": "quote_request_scheduled",
+      "purpose": "ENTRY",
       "scheduled_ms": 301000,
       "source": "SYNTHETIC_ONLY"
     },
@@ -176,11 +185,13 @@
       "event_id": "event-1",
       "group": "WATCHLIST",
       "kind": "quote_replay",
-      "raw_blob_sha256": "a777697d3acd22cfeb57f5004de10b7581907263744284ba407ccb58c9920dcc",
+      "purpose": "ENTRY",
+      "raw_blob_sha256": "90aec1b3f8af5d9416df017dc358c2809db3236f938a1d1510b56508ce8bdc15",
       "received_ms": 301080,
       "requested_ms": 301000,
       "scheduled_ms": 301000,
-      "source": "SYNTHETIC_ONLY"
+      "source": "SYNTHETIC_ONLY",
+      "synthetic_amount_out_raw": "1000"
     },
     {
       "actual_real_request": false,
@@ -188,6 +199,7 @@
       "event_id": "event-2",
       "group": "CONTROL_RANDOM",
       "kind": "quote_request_scheduled",
+      "purpose": "ENTRY",
       "scheduled_ms": 301300,
       "source": "SYNTHETIC_ONLY"
     },
@@ -196,16 +208,19 @@
       "event_id": "event-2",
       "group": "CONTROL_RANDOM",
       "kind": "quote_replay",
-      "raw_blob_sha256": "a71dceeccd9c52f56da3f0a346d7b47a80d0880ff03dae6820120c71dfb8fc0b",
+      "purpose": "ENTRY",
+      "raw_blob_sha256": "f587291f732a3e52ef9c9528329692dd35459be71061c401ebe5e0b582aefdda",
       "received_ms": 301380,
       "requested_ms": 301300,
       "scheduled_ms": 301300,
-      "source": "SYNTHETIC_ONLY"
+      "source": "SYNTHETIC_ONLY",
+      "synthetic_amount_out_raw": "1000"
     },
     {
       "delta_seconds": 300,
       "event_id": "event-3",
       "kind": "quote_cancelled",
+      "purpose": "ENTRY",
       "reason": "EVENT_INVALIDATED"
     },
     {
@@ -214,6 +229,7 @@
       "event_id": "event-6",
       "group": "WATCHLIST",
       "kind": "quote_request_scheduled",
+      "purpose": "ENTRY",
       "scheduled_ms": 312000,
       "source": "SYNTHETIC_ONLY"
     },
@@ -223,6 +239,7 @@
       "event_id": "event-1",
       "group": "WATCHLIST",
       "kind": "quote_request_scheduled",
+      "purpose": "ENTRY",
       "scheduled_ms": 901000,
       "source": "SYNTHETIC_ONLY"
     },
@@ -231,11 +248,13 @@
       "event_id": "event-1",
       "group": "WATCHLIST",
       "kind": "quote_replay",
-      "raw_blob_sha256": "3248b38401fb3322d55a22e9ea12a95fa5986f0e4952752317c98806d810ce13",
+      "purpose": "ENTRY",
+      "raw_blob_sha256": "29bd47685c2768e741eba0152c6f8f504cf93f54906992a3780eeae53f96f5e6",
       "received_ms": 901080,
       "requested_ms": 901000,
       "scheduled_ms": 901000,
-      "source": "SYNTHETIC_ONLY"
+      "source": "SYNTHETIC_ONLY",
+      "synthetic_amount_out_raw": "1000"
     },
     {
       "actual_real_request": false,
@@ -243,6 +262,7 @@
       "event_id": "event-2",
       "group": "CONTROL_RANDOM",
       "kind": "quote_request_scheduled",
+      "purpose": "ENTRY",
       "scheduled_ms": 901300,
       "source": "SYNTHETIC_ONLY"
     },
@@ -250,6 +270,7 @@
       "delta_seconds": 900,
       "event_id": "event-3",
       "kind": "quote_cancelled",
+      "purpose": "ENTRY",
       "reason": "EVENT_INVALIDATED"
     },
     {
@@ -258,28 +279,33 @@
       "event_id": "event-6",
       "group": "WATCHLIST",
       "kind": "quote_request_scheduled",
+      "purpose": "ENTRY",
       "scheduled_ms": 912000,
       "source": "SYNTHETIC_ONLY"
     },
     {
       "delta_seconds": 900,
       "event_id": "event-2",
-      "kind": "quote_missing"
+      "kind": "quote_missing",
+      "purpose": "ENTRY"
     },
     {
       "delta_seconds": 60,
       "event_id": "event-6",
-      "kind": "quote_missing"
+      "kind": "quote_missing",
+      "purpose": "ENTRY"
     },
     {
       "delta_seconds": 300,
       "event_id": "event-6",
-      "kind": "quote_missing"
+      "kind": "quote_missing",
+      "purpose": "ENTRY"
     },
     {
       "delta_seconds": 900,
       "event_id": "event-6",
-      "kind": "quote_missing"
+      "kind": "quote_missing",
+      "purpose": "ENTRY"
     }
   ],
   "backfill_events": 1,
@@ -287,8 +313,11 @@
   "e3_actual_count": 0,
   "event_rows": [
     {
+      "actionable_ms": 1000,
       "event_id": "event-1",
       "evidence": "E2_TRADE_ATTESTED_SYNTHETIC",
+      "exit_quote_state": {},
+      "first_received_ms": 1000,
       "group": "WATCHLIST",
       "quote_state": {
         "300": "SYNTHETIC_REPLAY_QUOTE",
@@ -304,8 +333,11 @@
       "wallet": "0x1111111111111111111111111111111111111111"
     },
     {
+      "actionable_ms": 1300,
       "event_id": "event-2",
       "evidence": "E2_TRADE_ATTESTED_SYNTHETIC",
+      "exit_quote_state": {},
+      "first_received_ms": 1300,
       "group": "CONTROL_RANDOM",
       "quote_state": {
         "300": "SYNTHETIC_REPLAY_QUOTE",
@@ -321,8 +353,11 @@
       "wallet": "0x2222222222222222222222222222222222222222"
     },
     {
+      "actionable_ms": 4000,
       "event_id": "event-3",
       "evidence": "E0_SEEN_SYNTHETIC",
+      "exit_quote_state": {},
+      "first_received_ms": 4000,
       "group": "WATCHLIST",
       "quote_state": {
         "300": "REJECTED",
@@ -338,8 +373,11 @@
       "wallet": "0x3333333333333333333333333333333333333333"
     },
     {
+      "actionable_ms": 5500,
       "event_id": "event-4",
       "evidence": "E2_TRADE_ATTESTED_SYNTHETIC",
+      "exit_quote_state": {},
+      "first_received_ms": 5500,
       "group": "WATCHLIST",
       "quote_state": {},
       "reason": null,
@@ -351,8 +389,11 @@
       "wallet": "0x4444444444444444444444444444444444444444"
     },
     {
+      "actionable_ms": null,
       "event_id": "event-5",
       "evidence": "E1_CONFIRMED_SYNTHETIC",
+      "exit_quote_state": {},
+      "first_received_ms": 10000,
       "group": "WATCHLIST",
       "quote_state": {},
       "reason": null,
@@ -364,8 +405,11 @@
       "wallet": "0x5555555555555555555555555555555555555555"
     },
     {
+      "actionable_ms": 12000,
       "event_id": "event-6",
       "evidence": "E1_CONFIRMED_SYNTHETIC",
+      "exit_quote_state": {},
+      "first_received_ms": 12000,
       "group": "WATCHLIST",
       "quote_state": {
         "300": "NO_QUOTE",
@@ -382,7 +426,7 @@
     }
   ],
   "events": 6,
-  "fixture_sha256": "2d0a3827a962e1745d318f8d4fcd8e30ebb87253cd7897b5ddd47094b56a50a0",
+  "fixture_sha256": "9bb9bd9fcda95c559386920f8aa487073306f2a2df07b22366ed27203460b7d2",
   "group_state_counts": {
     "CONTROL_RANDOM/BUY/ATTESTED_TRIAL": 1,
     "WATCHLIST/BUY/ATTESTED_TRIAL": 2,
