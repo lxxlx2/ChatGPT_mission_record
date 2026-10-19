@@ -59,9 +59,13 @@ def run_installer_isolated(tmp_path, *, status="FROZEN_APPROVED",
         "import os,sys",
         "from pathlib import Path",
         "script=sys.stdin.read()",
-        "if 'POLICY_GATE: PASS' in script:",
+        "if 'VERIFIED_GIT_WORKTREE:' in script:",
+        "    print('a'*40)",
+        "elif 'POLICY_GATE: PASS' in script:",
         "    sys.argv=['-',*sys.argv[2:]]",
         "    exec(compile(script,'<real-policy-gate>','exec'))",
+        "elif '-m' in sys.argv and 'mission_agent.mission_control.release_approval' in sys.argv:",
+        "    print('SIGNED_APPROVAL: TEST_FIXTURE_MOCK_ONLY')",
         "else:",
         "    if os.environ.get('TEST_MUTATE_CANDIDATE') == '1':",
         "        Path(os.environ['POLICY']).write_text('{\\\"status\\\":\\\"MUTATED_AFTER_APPROVAL\\\"}')",
@@ -80,6 +84,24 @@ def run_installer_isolated(tmp_path, *, status="FROZEN_APPROVED",
     approved=hashlib.sha256(candidate.read_bytes()).hexdigest()
     if hash_mismatch:approved="0"*64 if approved!="0"*64 else "1"*64
     fakebin=tmp_path/"fakebin";fakebin.mkdir()
+    # Fake git and signer execution exist ONLY in this isolated installer
+    # harness. Cryptographic signatures are independently exercised in
+    # test_frank_release_approval.py with real system openssl and keys.
+    fakegit=fakebin/"git"
+    fakegit.write_text(chr(10).join([
+        "#!/bin/sh",
+        "case \"$*\" in",
+        "  *rev-parse*) echo aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ;;",
+        "  *status*) exit 0 ;;",
+        "  *) exit 1 ;;",
+        "esac",
+        "",
+    ]))
+    fakegit.chmod(0o700)
+    approval=tmp_path/"approval-test-only.json"
+    signature=tmp_path/"approval-test-only.sig"
+    approval.write_text('{"test":"FAKE_APPROVAL_DOES_NOT_ESTABLISH_OWNER_CONSENT"}')
+    signature.write_text("NOT_REAL_SIGNATURE__TEST_RUNNER_INTERCEPTS_VERIFIER")
     log=tmp_path/"launchctl.log"
     fake=(fakebin/"launchctl")
     fake.write_text(chr(10).join([
@@ -119,7 +141,9 @@ def run_installer_isolated(tmp_path, *, status="FROZEN_APPROVED",
          "SOLANA_RPC_URLS":"https://new.example.invalid/?api-key=NEW_SECRET",
          "PATH":str(fakebin)+os.pathsep+os.environ["PATH"],
          "FAKE_LAUNCH_LOG":str(log),
-         "TEST_MUTATE_CANDIDATE":"1" if tamper_candidate_during_oauth else "0"}
+         "TEST_MUTATE_CANDIDATE":"1" if tamper_candidate_during_oauth else "0",
+         "POLICY_APPROVAL_RECORD":str(approval),
+         "POLICY_APPROVAL_SIGNATURE":str(signature)}
     if confirm:env["CONFIRM_MISSION_LOOP_RESTART"]="1"
     else:env.pop("CONFIRM_MISSION_LOOP_RESTART",None)
     if not no_approval:env["APPROVED_POLICY_SHA256"]=approved
