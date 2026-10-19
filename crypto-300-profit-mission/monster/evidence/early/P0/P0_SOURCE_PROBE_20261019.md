@@ -1,6 +1,20 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
 
+## 2026-10-20 Mac 36/36验收：65/64次Swap不是65/64笔独立成交；停止误用事件活跃度
+
+用户直接上传Mac命令终端回执，固定代码SHA `9fcc34d025f282bce458cd0800ada77a483f4f12`：`test_monster_early_bsc_v2_pit.py` **18/18 PASS**，`test_monster_early_venue_factory_rpc_roster_probe.py` **18/18 PASS**，共**36/36 PASS**；旧存档**88份RPC响应**离线重放、冻结30/30真实PairCreated、25例创建同笔Mint+Sync、零身份异常继续通过。`24/30完整PIT`和`18/30实际同金额双向买卖`仍`NOT_SCORABLE`。
+
+最重要的PIT/刷量防错证据：仅来自已归档非连续窗口，rank **#16观察到65次买入Swap、去重只有1笔独立transactionHash**；rank **#17观察到64次买入Swap、去重只有1笔独立transactionHash**。这两笔各自均为块**52444232**的首个后续注入`Mint`同一原子交易；Mac独立排序证据：#16第一个达标Sync logIndex736、Mint logIndex737、首笔Swap日志742；#17依次为1076、1077、1082。各自第一次Sync quote reserve 4/6 WBNB，均过2 WBNB研究深度地板；但**129个Swap日志不是129笔独立TX、更不是129个交易用户或129次公开可跟进买入**；其中没有任何已保存的另一笔TX出现在较后区块。首次可公开观察块、可用RPC延迟及可卖性均不因此确认。
+
+为小成本实际查补，在Alchemy现有免费只读BNB端点用精确pool address+Pancake V2 Swap topic分别查#16/#17从**52444233到52444242**共**10个后续区块**：两池都返回**0 Swap**、0交易。这是10块的严格范围内缺事件，并非全天、未来90块或历史后续永久无交易。服务端对尝试的较大90块`eth_getLogs`窗口给出了**Free最多10块**的限制（无调用成功的90块数据），故不再无限追加逐块RPC追此二币；原始provider HTTP bytes不在Git，当前来源是同一既有Alchemy连接器规范化响应。
+
+实用工程调整（未获新的Mac测试）：`summarize_v2_archived_swap_windows`在保持原真实Swap、真实深度、原子Tx边界结果不变的同时，**新增按区块+交易哈希去重的买入/卖出交易数量以及冻结门槛达标买入的独立Tx数**。`--mode audit`在原主结果JSON中列`observed_swap_activity_distinct_transactions_by_rank`（30行），每rank有`buy_swap_events/buy_distinct_txs/above_floor_buy_swap_events/above_floor_buy_distinct_txs/sell_swap_events/sell_distinct_txs/first_qualified_buy_public_reaction_status/qualified_buy_later_block_distinct_txs`。单元测试用**同一Mint交易内多笔Swap**反例确认swap count=2而独立交易=1；原#1/#2/#5真实离线旧归档回归确保其他样本不回退。新代码版本 **NOT_RUN_ON_MAC**，不把原SHA 36/36自动视为新版本通过。
+
+**主线决定：** 接下来先用本机已归档88个真实RPC文件对**整个冻结30币**计算独立交易数，识别有真实独立外部订单的候选。然后只对这些真实候选优先核对代币Transfer、转账税/限制、进入时间和统一研究名义额双向退出能力。明确保留少量交易/死亡/无法退出的代币在母体分母，绝不从先前Binance/Alpha赢家倒推。没有足量卖出交易与完整窗口时必须输出`INSUFFICIENT_COVERAGE`或`NOT_SCORABLE`，不为推进P1制造模型样本。原研究深度2 WBNB/1000 USDT不是用户买多少的指标，禁止把它当建议买入金额。
+
+---
+
 ## 2026-10-20 #15/#16/#17首笔归档买入、延迟LP及原子交易边界
 
 用户Mac离线审计`v2_p0_offline_audit_status.json`的原始首笔事件摘要（来源`USER_PASTED_MAC_STDOUT`）：
