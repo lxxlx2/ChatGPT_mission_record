@@ -1,0 +1,9 @@
+{
+  "schema": "bsc-f0-l1-eoa-router-preflight-v1",
+  "mode": "OFFLINE_SYNTHETIC_ONLY",
+  "chain_id": 56,
+  "store_raw_payloads": false,
+  "checked_block": 128614660,
+  "actual_rpc_calls": 0,
+  "observations": []
+}
