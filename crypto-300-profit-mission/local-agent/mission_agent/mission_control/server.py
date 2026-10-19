@@ -26,6 +26,7 @@ from .frank import FrankReader
 from .payment_evidence import latest_buy_payment_evidence
 from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
+from .wallet_activity import activity as read_signed_activity
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .jupiter import JupiterQuoteClient
 
@@ -760,6 +761,23 @@ class DashboardState:
         candidates.sort(key=lambda x:int(x.get("latest_at") or 0),reverse=True)
         return candidates
 
+    def frank_signed_activity(self, days: int = 1):
+        """Bounded D1 indexed source facts; never an actionable signal or balance."""
+        try:
+            result = read_signed_activity(self.frank.database, int(time.time()), days=days)
+            return {"status": "INDEXED_LOCAL_ONLY", **result}
+        except (ValueError, OSError, sqlite3.DatabaseError) as exc:
+            reason = ("INDEX_WINDOW_TOO_LARGE_NOT_TRUNCATED"
+                      if isinstance(exc, ValueError)
+                      and str(exc) == "INDEX_WINDOW_TOO_LARGE_NOT_TRUNCATED"
+                      else "LOCAL_ACTIVITY_SOURCE_UNAVAILABLE")
+            return {
+                "status": "UNAVAILABLE", "reason": reason,
+                "scope": "LOCAL_INDEX_ONLY_NOT_COMPLETE_CHAIN",
+                "full_chain_verified": False, "current_balance_verified": False,
+                "rows": [], "signatures": None,
+            }
+
     def frank_observed_watchlist(self):
         try:
             observed = read_frank_watchlist(
@@ -792,14 +810,23 @@ class DashboardState:
         # Optional dated, manually imported read-only provenance. No network
         # call, balance scan, writer intervention, or automatic deployment.
         snapshot = self.control_root / "frank-inventory-snapshot.json"
+        snapshot_origin = "CONTROL_ROOT_EXPLICIT_IMPORT"
         if not snapshot.is_file():
+            # Reuse PR #110's dated evidence already checked into this repo.
+            # This is a historic point-in-time sample, never current inventory.
+            snapshot = (Path(__file__).resolve().parents[3] / "meme" / "evidence" /
+                        "frank-v2-thirty-two-mint-finalized-2026-10-11.json")
+            snapshot_origin = "REPO_DATED_2026_10_11_NOT_LIVE"
+        if not snapshot.is_file() or snapshot.is_symlink():
             observed["snapshot_status"] = "SNAPSHOT_NOT_PRESENT"
             return observed
         try:
             if snapshot.stat().st_size > 500_000:
                 raise InventoryEvidenceError("OVERSIZED_SNAPSHOT")
             source = json.loads(snapshot.read_text(encoding="utf-8"))
-            return reconcile_watchlist(observed, source)
+            reconciled = reconcile_watchlist(observed, source)
+            reconciled["snapshot_origin"] = snapshot_origin
+            return reconciled
         except (OSError, ValueError, InventoryEvidenceError, TypeError):
             observed["snapshot_status"] = "SNAPSHOT_INVALID_READ_ONLY_IGNORED"
             return observed
@@ -863,6 +890,14 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.state.candidates())
         if path == "/api/frank-observed-watchlist":
             return self._json(self.state.frank_observed_watchlist())
+        if path == "/api/frank-signed-activity":
+            values = parse_qs(urlparse(self.path).query)
+            if set(values) - {"days"} or len(values.get("days", ["1"])) != 1:
+                return self._json({"error": "INVALID_ACTIVITY_RANGE"}, 400)
+            days = values.get("days", ["1"])[0]
+            if days not in ("1", "7"):
+                return self._json({"error": "INVALID_ACTIVITY_RANGE"}, 400)
+            return self._json(self.state.frank_signed_activity(int(days)))
         if path == "/api/trades":
             return self._json(self.state.recent_trades())
         if path == "/api/coverage":
