@@ -22,6 +22,7 @@ import zipfile
 
 import monster_v4_historical_replay as minute
 import monster_v4_shadow as production
+import monster_v4_opportunity_snapshot as operator
 import monster_v4_shared_spot_d0_d1_original_core as original
 import monster_v4_shared_d1_zeroquote_research_v2 as zeroq
 import monster_v4_stage166_spot511_official_1m_intake as admitted
@@ -132,7 +133,7 @@ def parse_symbol_three_days(symbol, receipts, zips, checksums):
         raise ValueError("MONSTER518_CONTINUOUS_THREE_DAYS_REQUIRED")
     return out,verified
 
-def build(source_dirs):
+def build(source_dirs, *, capture_operator_snapshot=False):
     roster = admitted.frozen_roster()
     if len(roster)!=511:
         raise ValueError("MONSTER518_ORIGINAL_T0_ROSTER_DRIFT")
@@ -204,6 +205,11 @@ def build(source_dirs):
                     "SELECT id,venue,symbol,first_seen_ms,deadline_ms,status,"
                     "last_error,last_evaluated_bar_ms FROM candidate_queue "
                     "ORDER BY first_seen_ms,id")]
+                operator_view=None
+                if capture_operator_snapshot:
+                    operator_view=operator.read_snapshot(
+                        Path(work)/"frozen_D0_D1.sqlite",END-TICK_MS,
+                        limit=25,window_hours=48)
             finally:
                 shadow.close()
         finally:
@@ -214,7 +220,7 @@ def build(source_dirs):
         raise ValueError("MONSTER518_EVENT_OR_CLOCK_DRIFT")
     if stats["max_slots_in_single_tick"]>8 or len(queue)!=counts["WATCH_EARLY"]:
         raise ValueError("MONSTER518_FIFO8_QUEUE_INVARIANT_DRIFT")
-    return {
+    result={
         "schema":SCHEMA,
         "source_calendar_days":list(DAY_UTC),
         "frozen_T0_spot_USDT_TRADING":len(roster),
@@ -256,15 +262,28 @@ def build(source_dirs):
         "G0":"PARTIAL","G4":"UNKNOWN","G6":"NO_GO",
         "NO_MERGE":True,"NO_DEPLOY":True,"NO_GMAIL":True,"NO_TRADE":True
     }
+    if capture_operator_snapshot:
+        if (operator_view["window_total"]!=len(queue)
+                or len(operator_view["opportunities"])!=len(queue)
+                or any(row["d2_status"]!="NOT_CAPTURED"
+                       or row["recommendation"]!="RESEARCH_REVIEW_ONLY_NO_BUY"
+                       or row["g4_real_execution"]!="UNKNOWN"
+                       for row in operator_view["opportunities"])):
+            raise ValueError("MONSTER518_OPERATOR_EVENT_COVERAGE_OR_D2_GATE_INVALID")
+        result["operator_readonly_from_same_original_D0_D1_SQLite"]=operator_view
+        result["operator_business_gate"]="D2_MISSING_NO_BUY"
+        result["operator_has_no_real_PIT_or_live_notices"]=True
+    return result
 
 def main():
     p=argparse.ArgumentParser()
     p.add_argument("--source-dir",type=Path,action="append",required=True)
     p.add_argument("--out",type=Path,required=True)
+    p.add_argument("--operator-view",action="store_true")
     a=p.parse_args()
     if a.out.exists() or a.out.is_symlink():
         raise ValueError("MONSTER518_OUTPUT_EXISTS_REFUSE_OVERWRITE")
-    result=build(a.source_dir)
+    result=build(a.source_dir,capture_operator_snapshot=a.operator_view)
     a.out.parent.mkdir(parents=True,exist_ok=True)
     a.out.write_text(json.dumps(result,ensure_ascii=False,indent=2,sort_keys=True)+"\n",
                      encoding="utf-8")
