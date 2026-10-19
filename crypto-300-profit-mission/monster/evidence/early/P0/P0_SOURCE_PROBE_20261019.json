@@ -8740,6 +8740,22 @@
         "uniform_research_notional_sellability": "NOT_SCORABLE",
         "no_quote_floor_observed_does_not_mean_never_met": true
       }
-    ]
+    ],
+    "historical_source_log_budget_limit": {
+      "single_example_day": "2025-07-01",
+      "bsc_utc_day_inclusive_block_start": 52440287,
+      "bsc_utc_day_inclusive_block_end": 52555482,
+      "bsc_blocks_in_day": 115196,
+      "existing_alchemy_free_log_range_max_blocks": 10,
+      "estimated_min_eth_getLogs_calls_per_factory_for_all_day": 11520,
+      "original_one_invocation_default_max_rpc_calls": 250,
+      "budget_vs_one_full_day_one_factory_calls_factor": 46.08,
+      "estimated_calls_same_day_v2_plus_v3_at_free_tier_limit": 23040,
+      "three_date_coverage_still_unverified": true,
+      "underlying_factory_event_log_source_completeness_not_proven": true,
+      "conclusion": "EXISTING_CONNECTED_ALCHEMY_10_BLOCK_LIMIT_NOT_REASONABLE_P0_FULL_DAY_V2_AND_V3_SOURCE_WITH_250_CALL_BUDGET; THIS DOES NOT RULE OUT OTHER LEGAL_FREE_MAC_RPC_SOURCE_CAPABILITY",
+      "excludes_chainid_receipts_retry_calls": true,
+      "no_additional_network_queries_for_calculation": true
+    }
   }
 }
