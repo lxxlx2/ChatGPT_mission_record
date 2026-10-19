@@ -7517,6 +7517,92 @@
     "all20_original_buy_receipt_token_transfer_receiver_and_raw_amount_checked": true,
     "historical_seller_identity_classification_scope": "Only earliest indexed transfer-to-original-pool after specific observed BUY; same transfer address is not proof of same human/beneficial owner; no claim of all holdings or all sales",
     "historical_quoted_assets_to_recipient_or_router_not_inferred_all_wallet_pnl": true,
-    "case_grouped_by_address_not_user_or_trader": true
+    "case_grouped_by_address_not_user_or_trader": true,
+    "exact_received_amount_sell_unique_recipient_addresses": 5,
+    "exact_received_amount_sell_rank_to_quote_amounts": [
+      {
+        "rank": 3,
+        "buy_quote_in_raw": "1100000000000000",
+        "first_indexed_sell_pool_quote_out_raw": "1347005349558909",
+        "quote_unit": "WBNB",
+        "ratio_as_quote_leg_only_not_net": "1.224550",
+        "same_recipient": true,
+        "sell_pretrade_depth_research_floor_met": true,
+        "recipient_is_tx_initiator": "UNVERIFIED_FOR_ALL_CASES"
+      },
+      {
+        "rank": 7,
+        "buy_quote_in_raw": "12000000000000000",
+        "first_indexed_sell_pool_quote_out_raw": "11940359843178181",
+        "quote_unit": "WBNB",
+        "ratio_as_quote_leg_only_not_net": "0.995029",
+        "same_recipient": true,
+        "sell_pretrade_depth_research_floor_met": true,
+        "recipient_is_tx_initiator": "UNVERIFIED_FOR_ALL_CASES"
+      },
+      {
+        "rank": 12,
+        "buy_quote_in_raw": "250000000000000000",
+        "first_indexed_sell_pool_quote_out_raw": "249547777402681631",
+        "quote_unit": "WBNB",
+        "ratio_as_quote_leg_only_not_net": "0.998191",
+        "same_recipient": true,
+        "sell_pretrade_depth_research_floor_met": true,
+        "recipient_is_tx_initiator": "UNVERIFIED_FOR_ALL_CASES"
+      },
+      {
+        "rank": 13,
+        "buy_quote_in_raw": "1100000000000000",
+        "first_indexed_sell_pool_quote_out_raw": "1383378401750402",
+        "quote_unit": "WBNB",
+        "ratio_as_quote_leg_only_not_net": "1.257616",
+        "same_recipient": true,
+        "sell_pretrade_depth_research_floor_met": true,
+        "recipient_is_tx_initiator": "UNVERIFIED_FOR_ALL_CASES"
+      },
+      {
+        "rank": 21,
+        "buy_quote_in_raw": "5000000000000000",
+        "first_indexed_sell_pool_quote_out_raw": "9725401038080023",
+        "quote_unit": "WBNB",
+        "ratio_as_quote_leg_only_not_net": "1.945080",
+        "same_recipient": true,
+        "sell_pretrade_depth_research_floor_met": true,
+        "recipient_is_tx_initiator": "UNVERIFIED_FOR_ALL_CASES"
+      },
+      {
+        "rank": 23,
+        "buy_quote_in_raw": "1100000000000000",
+        "first_indexed_sell_pool_quote_out_raw": "1376362548656745",
+        "quote_unit": "WBNB",
+        "ratio_as_quote_leg_only_not_net": "1.251238",
+        "same_recipient": true,
+        "sell_pretrade_depth_research_floor_met": true,
+        "recipient_is_tx_initiator": "UNVERIFIED_FOR_ALL_CASES"
+      },
+      {
+        "rank": 30,
+        "buy_quote_in_raw": "300000000000000000",
+        "first_indexed_sell_pool_quote_out_raw": "304689368200754634",
+        "quote_unit": "WBNB",
+        "ratio_as_quote_leg_only_not_net": "1.015631",
+        "same_recipient": true,
+        "sell_pretrade_depth_research_floor_met": true,
+        "recipient_is_tx_initiator": "UNVERIFIED_FOR_ALL_CASES"
+      }
+    ],
+    "duplicates_in_exact_sell_recipient_address_across_ranks": [
+      {
+        "ranks": [
+          3,
+          13,
+          23
+        ],
+        "address": "0x7347a30460516c8451687d9b1fc61efec6f8dae6"
+      }
+    ],
+    "unique_recipient_is_not_unique_human_or_independent_cohort_warning": true,
+    "exact_sold_amount_plus_success_is_not_strategy_exit_at_live_T_entry": true,
+    "original_30_coin_denominator_and_gate_unaltered": true
   }
 }
