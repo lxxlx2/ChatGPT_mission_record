@@ -1,6 +1,18 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
 
+## 2026-10-20 Mac 历史 runtime-code 全30完成；下一主线改为真实 Swap 前流动性
+
+用户Mac五次连续前台只读运行，`--mode deployment`固定rank#6–10、11–15、16–20、21–25、26–30均返回`BOUNDED_CODE_STATE_REPLAY_PASS_NOT_DEPLOY_TX`、每批`requested_count=5`，请求分别**53/57/68/74/74**，合计326；加上已验第一批#1–5的38次，整30例共**364次RPC**。全部冻结30 CA历史 runtime-code 状态已有正常输出：**#1/#5/#8/#15在UTC前一日已有代码，其余26个首次出现于2025-07-01当日已确定块**。本次额外第一见代码块在PairCreated同块的排名为**#14/#16/#17/#18/#26**；严格区分“区块结束时已经有代码”与“同交易已经完成token部署”，也不根据缺初始LP丢弃这些失败/延迟样本。30排名完整对照、5批每批请求数和来源限制均保存于本Phase主JSON键`bsc_v2_p0_mac_deployment_code_full30_20261020`。用户本地已由程序归档RPC正文/同机校验SHA；Git未读取私人原始正文，不把终端复制的数值冒充独立HTTP回执原字节核验。**完整部署交易receipt、当时首次公众可查询available_at和真实可交易PIT仍不成立，24/30 PIT仍`NOT_SCORABLE`，不升P1。**
+
+停止针对30例的纯历史代码区块重复二分，转入可以影响用户资金风险的验证：在原`bsc_v2_pit.py`已有离线窗口`summarize_v2_archived_swap_windows`里，新增`quote_reserve_floor_raw`参数。只在目标池**同交易、在Swap紧邻之前的Pair Sync**可用时，以Sync之后reserve和Swap实际`amountIn/amountOut`逆推该次真实Swap**交易前**的报价侧reserve，并与旧冻结的2 WBNB / 1000 USDT比较；没有紧邻Sync则`UNKNOWN`，数据不自洽则 fail closed。若是Tax/转账导致Swap内部实际入池额不同，按Pair事件真实amountIn计算，不假设币税为零；仍不能推出该用户钱包的代币实际到账或任意名义金额可卖。原离线Factory`--mode audit`因此可从之前Mac保存的88份原始RPC文件直接输出`observed_buy_with_proven_preswap_quote_floor_ranks`、`observed_sell_with_proven_preswap_quote_floor_ranks`、`observed_buy_below_preswap_quote_floor_ranks`、`observed_sell_below_preswap_quote_floor_ranks`和`observed_swap_preswap_depth_unresolved_ranks`。有缺页的非连续窗口仍不能推断全年首次Swap，也不能认定首个符合条件的`T_entry`。
+
+验证设计时已经从Git归档的真实#1/#2/#5 Pool Sync+Swap原始十六进制事件重算，交易前quote储备**#1=10000 USDT、#2=8.3 WBNB、#5≈1.313968230 USDT**，与此前各自原始Mint+Sync创建储备逐整数一致；前二者当笔高于门槛、后者未达到。其余27个真实Mac本地事件结果**待运行新增离线审计，不能提前声明通过或枚举其金额**。新逻辑及回归测试虽然已入branch，但测试结果目前是`NOT_RUN_AFTER_CHANGE`；此前Mac `33/33 PASS`固定SHA`15625f3`仅针对前一版代码，不自动迁移到新提交。
+
+冻结母体不变、基线研究门槛不变、quote深度下限**不是用户下单的名义金额**，不制造`SELLABLE_AT_NOTIONAL`标签和过去可观察时钟。开发优先级从源开关转成“真实Trade时的交易前深度→token/quote真实收发→用户固定名义金额模拟及真实T_entry”顺序；`G0 PARTIAL/G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`保持。
+
+---
+
 ## 2026-10-20 Mac部署代码状态实测第一批 #1–#5：完整通过
 
 固定SHA `15625f373250cc2356ee05ca92e8a321b1bcd565` 在用户Mac前台 `git pull --ff-only` 成功，离线测试 `test_monster_early_bsc_v2_pit.py` **15/15 PASS**、`test_monster_early_venue_factory_rpc_roster_probe.py` **18/18 PASS**，合计**33/33 PASS**。新`--mode deployment`首次真实BSC历史HTTPS RPC运行（冻结2025-07-01 UTC，rank1–5）**38个RPC请求、5/5正常完成、无来源失败**。rank#1和#5 `RUNTIME_CODE_PREEXISTS_FROZEN_UTC_DAY`（当天之前已有code），rank#2首次代码可见块**52440593**、#3 **52440672**、#4 **52440725**（前一块无code；和之前只读Alchemy结果一致）。本机原始HTTP响应+本机计算SHA预期按代码写入原P0本地归档，**本对话没有读取/独立校验用户Mac文件**；记录为`USER_PASTED_MAC_TERMINAL_STDOUT`而非第三方原始字节证明。用户回执证据详见JSON的`bsc_v2_p0_mac_deployment_code_batch1_20261020`。该固定代码版本本地新单测由NOT_RUN转为PASS。
