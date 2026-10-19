@@ -61,6 +61,45 @@ class BscV2PitTests(unittest.TestCase):
             verify_bootstrap(**{**args,'pool_logs':[sync,{**mint,'data':'0x'+word(1)+word(20000)}]})
 
 
+    def test_all_24_frozen_factory_creation_records_and_delayed_liquidity_replay(self):
+        import json
+        from pathlib import Path
+        from mission_agent.early.bsc_v2_pit import verify_delayed_mint_sync
+        path = Path(__file__).resolve().parents[2] / (
+            'monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json')
+        archive = json.loads(path.read_text())
+        data = archive['historical_bsc_v2_append_only_factory_enumeration']
+        samples = data['creation_liquidity_source_spotchecks']
+        cases = samples['cases']
+        self.assertEqual([x['rank'] for x in cases], list(range(1, 25)))
+        originals = {x['factory_index_zero_based']: x for x in data['first36']}
+        logs = {x['rank']: x for x in samples['normalized_event_log_samples']}
+        initial = 0
+        for case in cases:
+            with self.subTest(rank=case['rank']):
+                identity = originals[case['index']]
+                result = verify_bootstrap(
+                    factory='0xca143ce32fe78f1f7019d7d551a6402fc5350c73',
+                    factory_index=case['index'], creation_block=case['creation_block'],
+                    pool=case['pair'], token0=identity['token0'],
+                    token1=identity['token1'],
+                    factory_logs=logs[case['rank']]['scope_factory_event'],
+                    pool_logs=logs[case['rank']]['scope_pair_same_tx_events'])
+                self.assertEqual(result['creation_tx'], case['creation_tx_hash'])
+                expected = case['same_tx_erc20_lp_transfer_sync_mint']
+                self.assertEqual(result['initial_quote_liquidity_proven'], expected)
+                initial += bool(expected)
+        self.assertEqual(initial, 20)
+        delayed = next(x for x in samples['delayed_liquidity_spotchecks']
+                       if x['rank'] == 14)
+        pool = next(x for x in cases if x['rank'] == 14)['pair']
+        combined = delayed['sync_logs'] + delayed['mint_logs']
+        recovered = verify_delayed_mint_sync(
+            pool=pool, creation_block=52443568,
+            update_block=52446013, pool_logs=combined)
+        self.assertTrue(recovered['delayed_initial_liquidity_proven'])
+        self.assertEqual(recovered['sell_path'], 'UNKNOWN')
+
     def test_real_frozen_three_historical_creation_and_mint_source_replay(self):
         repo = Path(__file__).resolve().parents[2]
         path = repo / 'monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json'
