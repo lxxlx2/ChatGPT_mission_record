@@ -106,28 +106,22 @@
 
 **不能把上述出账区块余额增量直接记作被选 token 的卖出收入**。每个出账区块的本人 nonce 都增长 2，说明还包含另一笔本人签名交易；不能把一整个区块的 native 变化强行归因到唯一一笔 Meme token trade（还可能有同块被动入账）。准确实际 Gas 与原生币内部 trace 尚未取得，受免费 API 限制。用户追求的是真实可复现赢/亏，故本批明确输出 `NATIVE_BLOCK_DELTA_OBSERVED / PER_TX_NATIVE_PROCEEDS_UNRESOLVED / REALIZED_NET_PNL_UNRESOLVED`，不报看似精确的收益率。下一步必须获取交易级别的真实 internal value 以及其他同块交易归因才可升级。
 
-## 八、两组新 CA 的完整归零＋同区块 approve/swap Gas 归因：可以给出有条件的盈亏候选
+## 八、2026-10-19 Codex 独立 REQUEST_CHANGES 后的事实纠正：不再报告两组“候选回合收益率”
 
-此前三个“退出区块 nonce+2”未能确认是否混有另一笔交换。本轮进一步实际使用 `eth_getTransactionByBlockNumberAndIndex` 在**每个退出区块按交易索引定位**第二笔本人交易，三组均证明正好是**先 `approve(0x095ea7b3)` 后 `swap(0x4d819a2a)`，且相邻交易索引**：
+**审核固定 SHA `94777871756da910be2e1ccbf724d520c82ae69f`，结论 `REQUEST_CHANGES`。** 主要发现成立：原先报告把 8E6B 的 +0.228774% 与 2ADF 的 −11.287201% 显示在“EOA / 交易回合”收益率表，易误读为真实目标 Meme 交易利润。实际只是 **1 个买入区块与 1～2 个卖出区块**的 BNB 钱包余额净变化，对整个交易持仓时间内其他活动没有归因。现在撤销作为经济结论的两项百分比，保留原整数证据，仅作选定区块内部算术。历史计划记录不删除，后文追加审核纠正条目。
 
-- 8E6B FLAP 第一次卖出：`#127760321`，approve index `13`，swap index `14`。
-- 8E6B FLAP 第二次卖出：`#127893440`，approve index `107`，swap index `108`。
-- 2ADF yoki酱 卖出：`#128324413`，approve index `13`，swap index `14`。
+| 钱包/精确代币 | **选定交易区块子集**钱包 BNB Δ（非 PnL） | 买入前一块 → 最后卖出块后**完整时间窗口**钱包 BNB Δ（亦非 PnL） | 未选择时间区间 BNB 净变化（未归因） | 同间隔额外本人签名 tx |
+|---|---:|---:|---:|---:|
+| 8E6B / FLAP | +0.000343160277345206 BNB | −0.064002978929316013 BNB | −0.064346139206661219 BNB | 3 笔 |
+| 2ADF / yoki酱 | −0.009029761100333270 BNB | +0.008418724570372552 BNB | +0.017448485670705822 BNB | 6 笔 |
 
-这些 approve 不是另一笔本金买入。五笔选择交易（两个入场，三个出场）及上述三个授权回执均返回 `status=0x1`。Alchemy 连接器在复杂 swap receipt 超 8KB 时会截断尾部 `gasUsed`，但保留了**每笔 receipt 开头的 `cumulativeGasUsed`**。严格依据同块相邻交易前后累计 Gas 差，能恢复真实 swap `gasUsed`；三个 approve 的完整 receipt 直接读取 `gasUsed=48984`。原交易均为 legacy `type=0x0`，`gasPrice=0x7270e00=120000000 wei`，与 approve receipt 的 `effectiveGasPrice` 相符。两笔买入也用前一序号 receipt 的累计 Gas 复算，与钱包块级实际 BNB 减少量**逐 wei 一致**，因此这次 Gas 不是估值或配额。
+这些数值全部由**原始 wei 大整数**从已归档的相邻区块前后余额与 nonce 重新计算，不使用浮点数作底层对账。8E6B 在最后一次退出后直到固定 30 天截止又发出 2 笔本人交易（nonce 24346–24347），本轮未归入任何代币利润。**“额外 3/6 笔本人交易”仅说明该时间窗并不清净；不能仅凭 nonce 把整段余额差额全归咎于这些本人交易，可能还有被动或内部资金活动。** 完整连续性来源参见 [区块间隔余额与 nonce 差异 JSON](./bsc-meme-address-model-v1-p4b-8e6b-2adf-full-window-bnb-continuity-review-2026-10-19.json)。
 
-独立链上 ERC20 `balanceOf` 经 `eth_call` 证明：两位钱包在**入场前一块持有目标 token Raw=0**，入场后分别持有 `1293859551216114584142304` FLAP 和 `247790844884194236639000` yoki酱，最后出场区块末、30 天终点持仓均 **0**。两个 token 合约在历史 30 天起始块 `eth_getCode=0x`，不能将当时无合约的 `balanceOf` 返回 `0x` 错当有效余额；这里使用的是**真实开仓前一块返回完整 32 字节 `0`**。因此这两个**选定钱包与精确 CA 的样本已确认代币仓位完整归零**，不是仅推算 Token 流量。
+**历史代币余额确证与来源归档（F2）**：再次使用连接的 Alchemy `eth_call` 在精确区块对 exact CA 调用 `balanceOf(EOA)`，共 **8 份含请求网络、合约、完整 ABI data、区块编号、原始 32 字节返回十六进制**的记录。两组钱包的目标代币在**本人买入前一块余额=0**、本人买入块后分别为 `1293859551216114584142304` 与 `247790844884194236639000` Raw，最后卖出块后和 30 天终点皆为 **0**。这些是精确指定区块的 Token 持仓事实，而**不是 BNB 盈利证据**。[8 份可独立重放的历史 balanceOf 请求及原始结果](./bsc-meme-address-model-v1-p4b-8e6b-2adf-historical-balanceof-raw-rpc-2026-10-19.json)。上游“Token flow 初次归档时尚未读取 balanceOf”的描述应理解为**较早证据阶段**，不再代表补采后的当前状态；这不是从无合约部署的起始区块的 `0x` 返回值推断的零余额。
 
-现将区块级 BNB 余额变化与对应区块两个本人签名交易的 Gas 汇总，并以 `BNB EXIT GROSS (推导) = BNB BLOCK Δ + approve gas + swap gas` 得到**有条件的 BNB 退出回款**：
+**交易签名、状态与 Gas 证据（F4/F5）**：已在本轮重新通过只读 `eth_getTransactionByHash` 取得 2 个原钱包 BUY、3 个 approve、3 个对应 swap，以及两笔 BUY 同块前序交易的 `from/to/value/nonce/transactionIndex/blockNumber/type/gasPrice/input` 等原字段；`eth_getTransactionReceipt` 的完整 approve 回执保留 `gasUsed=0xbf58`、`status=0x1` 和原 `cumulativeGasUsed`，五笔大型 swap/buy receipt 仅有原始文本开头并保留 `status=0x1` 和 `cumulativeGasUsed`，`gasUsed` 字段尾部**被连接器截断**，不可谎称原文齐全。根据同区块相邻交易的 cumulative 差可复算用于**选定区块算术**的 Gas，不能据此核定 BNB 交易内部收款。两笔 BUY 的前序交易及索引、Gas 反例应连同新来源记录复核，若字段无法归档明确标为尚欠材料，不让外审自行推测。
 
-| EOA / 交易回合 | 真正投入 BNB | 出场 BNB 总回款（区块与 Gas 重建，待交易内部流最终鉴证） | 选定区块合计钱包净变化 | 占入场 BNB 的候选回报 | 持仓及时间 |
-|---|---:|---:|---:|---:|---|
-| 8E6B FLAP | 0.15 | **0.150497844237345206 BNB** | **+0.000343160277345206 BNB** | **+0.228774%** | 最后持仓 0；10m04s 开始卖，16h49m14s 全部卖出 |
-| 2ADF yoki酱 | 0.08 | **0.071067120899666730 BNB** | **−0.009029761100333270 BNB** | **−11.287201%** | 最后持仓 0；15h48m13s 全部卖出 |
+**卖出回款仍未核验（F3）**：选定卖出区块中原 EOA 的两笔签名交易已观察到相邻 approve + swap，直接 external BNB 入账索引结果为 0，但该免费 RPC 没有完整 `trace_transaction` 或 `debug_traceTransaction`，仍可能混有其他交易带来的被动/内部原生币变化。原 `0.150497844237345206` 与 `0.071067120899666730` BNB 是在未排除无关资金流的假设下，用 **整个块 BNB Δ + approve Gas + swap Gas** 得出的**条件算术**，不是已观测、已独立鉴证的单笔卖出回款；两项均不得在研究展示中用作真实 cashflow 或本轮的收益率。
 
-**特别重要的证据等级：上述百分比不是“已独立认证的实际已实现利润”，而是 `BLOCK_BALANCE_GAS_RECONCILED_CANDIDATE_UNATTESTED`。** 三个卖出块都用索引证实钱包发出的两笔交易仅为 approve + swap，且查询到钱包同区块的普通 `external` 原生 BNB 入账为 0；上述真实区块和 Gas 的 BNB 重建还与这些 swap 的 `minReturn` calldata 下限兼容。**但 BNB 仍可能由同区块的第三方合约内部转入，或出现未被跟踪的内部调用**。既然免费 Alchemy `trace_transaction` 与 `debug_traceTransaction` 明确不开放，尚不能单独隔离这些可能性，故资金归因必须停在候选等级。它比之前“整块 BNB 涨跌、完全不知道第二笔交易是什么”推进了实质一步，但仍不等于经过外部独立 trace 的真实结算。
-
-[完整相邻交易索引、各笔原 Gas、入场区块逐 wei 对账、两笔出场净候选及可信边界 JSON](./bsc-meme-address-model-v1-p4b-8e6b-2adf-adjacent-approve-swap-gas-attributed-native-balance-2026-10-19.json) 可以独立复算。**资金收益非常微薄的 8E6B 正例并不足以证明“普通跟单者 1/5/15 分钟后还能盈利”；2ADF 大幅负例必须一并保留。** 不得据此给钱包打长期盈利标签，不得把高频 A83B 交易量当成收益率。
-
-下一次真正提升经济证据等级的路径：使用免费可信公共 BNB 交易内链上 value trace，或者其他可认证的单笔原生到账信息，并确保同块外部/内部事件不会将与目标 swap 无关的 BNB 变化混入；没有该证据则将这两个结果保留为有条件的资金候选。**绝不升级付费 Alchemy 或凭报价反推出回款**。
+**当前业务结论：** 两位钱包近期确实有本人签名入场/出场、目标代币区块余额完整归零，选定区块 Gas 数学自洽，但**单代币回合经济净额、长期盈利率、任何 1/5/15 分钟跟单收益均 `UNRESOLVED`**。继续审查必须优先得到可独立验证的免费真实逐交易 BNB/quote 资金归属；不为清除边界缺口把“整段钱包余额差”改装为利润，也不申请付费 trace。既有 `APPROVE@f8e7ba21f466774b16ed1eef45f8ff31ff7f6243` 仅限旧核心代码，不能用来覆盖新经济报告的 `REQUEST_CHANGES`。
 
