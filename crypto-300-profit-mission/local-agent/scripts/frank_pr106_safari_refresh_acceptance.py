@@ -93,7 +93,13 @@ iframe{display:block;width:100%;height:calc(100% - 72px);border:0}
 (function() {
 const stage=__STAGE__,token=__TOKEN__,expected=__EXPECTED__;
 const frame=document.getElementById('product');
-let finished=false, invalidated=false, checking=false, lastNonce='';
+let finished=false, invalidated=false, receiptAcknowledged=false, checking=false, lastNonce='';
+function revoke(){
+  invalidated=true;
+  document.title='FRANK_106_STATE_REVOKED';
+  document.getElementById('qa-status').textContent='MODE='+stage.toUpperCase()+
+    ' · 状态已失效，截图不可作为通过证据';
+}
 function domValid() {
   const d=frame.contentDocument;
   const runtime=d?.getElementById('runtime');
@@ -111,27 +117,27 @@ function domValid() {
     stats?.textContent.trim()&&(stage==='fault'?unavailable:recovered));
 }
 async function attestCurrentPage() {
-  if(!finished||checking||invalidated)return;
+  if(!finished||!receiptAcknowledged||checking||invalidated)return;
   checking=true;
   try {
-    if(!domValid()){invalidated=true;return;}
+    if(!domValid()){revoke();return;}
     const query=new URLSearchParams({token,stage});
     const response=await fetch('/__qa/challenge?'+query,{cache:'no-store'});
-    if(!response.ok){invalidated=true;return;}
+    if(!response.ok){revoke();return;}
     const {nonce}=await response.json();
-    if(!domValid()){invalidated=true;return;}
+    if(!domValid()){revoke();return;}
     if(nonce&&nonce!==lastNonce) {
       lastNonce=nonce;
       const attestation=new URLSearchParams({token,stage,nonce,state:expected});
       const ack=await fetch('/__qa/attest?'+attestation,{cache:'no-store'});
-      if(!ack.ok||!domValid()){invalidated=true;return;}
+      if(!ack.ok||!domValid()){revoke();return;}
     }
-  }catch(error){invalidated=true;}
+  }catch(error){revoke();}
   finally{checking=false;}
 }
 setInterval(()=>{
-  if(!finished)return;
-  if(!domValid()){invalidated=true;return;}
+  if(!finished||!receiptAcknowledged)return;
+  if(!domValid()){revoke();return;}
   void attestCurrentPage();
 },120);
 function ready(value) {
@@ -141,7 +147,9 @@ function ready(value) {
   document.getElementById('qa-status').textContent='MODE='+stage.toUpperCase()+' · '+value+
      ' · 此环境不执行链上扫描或交易';
   const q=new URLSearchParams({token,stage,state:value});
-  fetch('/__qa/ready?'+q,{method:'GET',cache:'no-store'}).catch(()=>{});
+  fetch('/__qa/ready?'+q,{method:'GET',cache:'no-store'})
+    .then(response=>{if(response.ok&&value===expected)receiptAcknowledged=true;else revoke();})
+    .catch(()=>revoke());
 }
 frame.onload=()=>{
   const started=Date.now();
