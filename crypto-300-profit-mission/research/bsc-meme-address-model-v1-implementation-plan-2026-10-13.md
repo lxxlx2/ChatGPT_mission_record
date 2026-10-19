@@ -1039,3 +1039,13 @@ DDAC 本人 0.25 BNB 各自买入的两个不同 CA `0xcc629b954ccf0563838c797d4
 
 **工程与成本停止条件**：每个里程碑限一小批、不扩 23 钱包/19 CA、复用旧 source blob；先业务事实后测试，仅当跨样本结论/经济口径/核心算法升级时申请有固定 SHA 的独立其他 AI Review；局部来源缺口最多一次免费有界重查，失败就记队列并移至下一个原冻结样本。不要为防止任意不可能的边界开发无限 guard，不因局部来源失败锁死其余五行。统一保持 `P4-B/P4-C=PARTIAL / ACTUAL_REALIZED_NET_PNL=UNRESOLVED / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO`；禁止 `NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。与另一新建的 400+ 地址分析模块完全隔离。
 
+## 2026-10-19 纠偏计划执行记录：首批重大币 5 钱包/4 CA/6 回合的 P2/P3 横比及 P4-B 第一轮门禁
+
+**实际上已执行**：沿原同一 PR #40 的既有源码/数据契约，不增加新 EOA/CA，读取十份 Git blob 固定历史来源，形成 [六回合可机读横向核查表](./bsc-meme-address-model-v1-mainline-5wallet-4major-6case-source-gate-2026-10-19.json) 与 [用户向业务报告](./bsc-meme-address-model-v1-mainline-5wallet-4major-6case-business-review-2026-10-19.md)。六例均带原 EOA、exact CA、本人入/出哈希、历史区块、selected wallet BNB 变化方向、经济可归因等级、最早**范围内**已证实 DEX 活跃池和后来不同场所的数学报价来源；23×19 冻结母数未改。**2 正/4 负只能理解为原选定钱包范围方向，不是真实因果交易净利、策略胜率或 P5 跟单收益。**
+
+**时间口径已实修**：直接读取既有 P4/P3 23 钱包冻结矩阵的 `2026-09-13T08:37:36Z—2026-10-13T08:37:36Z` 精确 P3 范围，不混合随后 2026-09-18 18:34:56Z—2026-10-18 18:34:56Z 的 EOA nonce 补充筛选。五个钱包的 P3 本人真实严格 Swap 在冻结 19 CA 只确认 3 个 EOA：DDAC/8E6B/A83B；239E/877AF **没有该冻结范围的严格见证而非可判定停止交易**。历史 P2 记录至少两个重大 CA 的精选正方向候选为 DDAC/239E/8E6B 三个，但 **0 个获得最终归因的跨两重大币净利润证据**。
+
+**第一轮 P4-B 具体结果**：6/6 原样本与现有 19 CA scoped 最早正流动性来源配对；DDAC 龙虾及 877AF MARSCOIN 原钱包买入**早于所证实的最早 scoped DEX**（不意味着更早不存在 launchpad），而牛来和 MARSCOIN 原之后 V2/WBNB 数学报价与初期 V3/USDT 并非同一场所/报价资产；其余 Dragon/HAJIMI 晚于所证实 V2 首次活跃也未验证同一观察时点买卖、税、Gas、可用资金。真正首次第三方观察者节点到达时间、当时实际双向可执行路由、交易容量和实际 +60/+300/+900 秒跟单全是 `UNRESOLVED`。**0/6 有完整合格可执行 U，P5 未启动（不是 6/6 市场不能交易）**。
+
+**下一项限定主线**：优先已有 239E 龙虾 R1/R2、8E6B HAJIMI 的首次观察者真实可见性与同一场所历史入/出执行证据，一次有界免费核查即止；保留 DDAC 龙虾负样本，不再追逐新普通 Meme 或无限补孤立原生 trace。此为 **P2/P3 受限横向 source checkpoint + P4-B 部分来源匹配**，不是里程碑 B 的公众 U 验收通过；核心因果策略/经济规则没有更改，局部研究阶段不重新向独立 AI 提交整模块审查。原 `APPROVE@948467fef3bc26f8e1a03ef013d94e93c3b4356d` 仅用户转述的 74 原始响应事实级审核，不能给本新增报告或任何收益提前批准。门禁全保持 `P4-B/P4-C=PARTIAL; ACTUAL_REALIZED_NET_PNL=UNRESOLVED; PUBLIC_EXECUTABLE_U=UNRESOLVED; P5=BLOCKED; PRODUCTION=NO_GO; NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。
+
