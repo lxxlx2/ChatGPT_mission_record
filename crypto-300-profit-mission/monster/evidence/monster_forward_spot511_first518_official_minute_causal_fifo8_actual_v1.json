@@ -1,0 +1,142 @@
+{
+  "D0_D1_totals": {
+    "D1_completed": 8,
+    "D1_deferred": 13,
+    "D1_late": 0,
+    "D1_selected": 21,
+    "poll_ticks": 518,
+    "watch_new": 8
+  },
+  "D0_original_function_unchanged": true,
+  "D1_FIFO8_original_for_supported_source": true,
+  "D1_zero_quote_uses_existing_research_V2_not_production": true,
+  "G0": "PARTIAL",
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_DEPLOY": true,
+  "NO_GMAIL": true,
+  "NO_MERGE": true,
+  "NO_TRADE": true,
+  "SETUP_event_identity": [
+    {
+      "event_id": "a7b9daf09be1222b01bc315234cd835781b97320b65742b9854c5914dd266fd6",
+      "observed_ms": 1792307520000,
+      "symbol": "ERAUSDT"
+    },
+    {
+      "event_id": "d5ee6b8fdca66dade3196e6f874005f768a0ed9909af45f6b2521fc25f0962f3",
+      "observed_ms": 1792317420000,
+      "symbol": "AMPUSDT"
+    },
+    {
+      "event_id": "848ea83add5fdd477557a2ac39023bff6a2022ebfcb43808df1b2dfea36f8df1",
+      "observed_ms": 1792317960000,
+      "symbol": "ACMUSDT"
+    },
+    {
+      "event_id": "90e39fddee77e23aefa82f5833367263fbedf232e2e38a4b355151965c28e802",
+      "observed_ms": 1792330920000,
+      "symbol": "QKCUSDT"
+    },
+    {
+      "event_id": "3e28497482aeeb38a841201a49553a1e7be5c7bd7a23450a0c83ab96a4f3da74",
+      "observed_ms": 1792333260000,
+      "symbol": "BARUSDT"
+    },
+    {
+      "event_id": "c37f09689f94eea32090e95a5577139e99999f18f5f0cb0708820d4d904879e0",
+      "observed_ms": 1792344420000,
+      "symbol": "QUICKUSDT"
+    },
+    {
+      "event_id": "a82d485c369dbcc0ab92d16bbf435287162125b02c1ddaa2b794347276b77316",
+      "observed_ms": 1792348560000,
+      "symbol": "EPICUSDT"
+    },
+    {
+      "event_id": "added729933e6a20a32fc26de90578aedeaa457415f8d37a1e494abf94b23787",
+      "observed_ms": 1792360260000,
+      "symbol": "MANTRAUSDT"
+    }
+  ],
+  "WATCH_event_identity": [
+    {
+      "event_id": "9d16e92a6367d614f616f0ec0c7478f9b9379fcd5e8d9943dfa42ffc311db0d7",
+      "observed_ms": 1792307340000,
+      "symbol": "ERAUSDT"
+    },
+    {
+      "event_id": "fbf13d3101b922a0ace22763cf028189b20f3e825e3ad2cc4be924574d6044c4",
+      "observed_ms": 1792317060000,
+      "symbol": "AMPUSDT"
+    },
+    {
+      "event_id": "1d67b212f160e850008c0b9f13cf77b84519264a9337b5fcc28f13922f5927cf",
+      "observed_ms": 1792317600000,
+      "symbol": "ACMUSDT"
+    },
+    {
+      "event_id": "860dc161f4db9306c70b97766131360d163ffe27300d9dd61691ddc4192ae760",
+      "observed_ms": 1792330560000,
+      "symbol": "QKCUSDT"
+    },
+    {
+      "event_id": "d9ea2fbc6ab92451d72af77315bdb21169146e6776b10efa36fb0fa52e516fa2",
+      "observed_ms": 1792333080000,
+      "symbol": "BARUSDT"
+    },
+    {
+      "event_id": "c39c4d64a8d83a0801499c263f782ae6e0ee44ed437f61b82e186390d1b87189",
+      "observed_ms": 1792344240000,
+      "symbol": "QUICKUSDT"
+    },
+    {
+      "event_id": "b7130b99e624ad13c16e94350984cc0b619812e18097af9cd537829fbb9858a5",
+      "observed_ms": 1792348200000,
+      "symbol": "EPICUSDT"
+    },
+    {
+      "event_id": "aa56b99ff968966c332ccbdf69b00707b33367c408b4855e1cecc5c8a5d811d9",
+      "observed_ms": 1792359900000,
+      "symbol": "MANTRAUSDT"
+    }
+  ],
+  "end_exclusive_utc": "2026-10-19T00:00:00Z",
+  "event_type_counts": {
+    "SETUP_ACTIVE": 8,
+    "WATCH_EARLY": 8
+  },
+  "executable_net_profit": "UNKNOWN",
+  "first_poll_utc": "2026-10-17T22:06:00Z",
+  "frozen_T0_spot_USDT_TRADING": 511,
+  "full_OOS_7d_replay": "NOT_DONE",
+  "global_tick_source_rows": 264698,
+  "independent_other_AI_review": "NOT_DONE",
+  "original_production_D0_invalid_unicode_symbols_per_tick": [
+    "币安人生USDT",
+    "牛来USDT"
+  ],
+  "original_production_D0_valid_symbols_per_tick": 509,
+  "partial_window_not_final_OOS": true,
+  "point_in_time_dynamic_listing": "UNVERIFIED",
+  "publisher_verified_closed_1m_bars": 2207520,
+  "publisher_verified_zip_checksum_pairs": 1533,
+  "queue_at_partial_right_boundary_may_be_pending": true,
+  "queue_status_counts": {
+    "EVALUATED": 8
+  },
+  "real_streaming_ticker24_PIT": false,
+  "schema": "MONSTER_FORWARD_SPOT511_FIRST518_OFFICIAL_1M_CAUSAL_PROXY_FIFO8_V1",
+  "source_all_511_included_but_D0_still_excludes_unicode": true,
+  "source_calendar_days": [
+    "2026-10-16",
+    "2026-10-17",
+    "2026-10-18"
+  ],
+  "strict_3m_global_polls": 518,
+  "ticker24_source": "CLOSED_1M_1440_ROLLING_QUOTE_PROXY_NOT_BINANCE_TICKER24",
+  "trades_fills_L2_fees_bid_ask": "UNVERIFIED",
+  "venue": "spot",
+  "zero_quote_terminal_candidates": 0,
+  "zero_quote_unsupported_attempt_slots": 4
+}
