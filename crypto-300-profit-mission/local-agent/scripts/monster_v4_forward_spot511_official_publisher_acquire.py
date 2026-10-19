@@ -22,6 +22,7 @@ import monster_v4_stage166_spot511_official_1m_intake as admitted
 SCHEMA = "MONSTER_SPOT511_ORIGINAL_PUBLISHER_DAILY_1M_ACQUISITION_V1"
 BASE = "https://data.binance.vision/data/spot/daily/klines"
 FIXED_DAYS = ("2026-10-16", "2026-10-17")
+ALLOWED_DAYS = FIXED_DAYS + ("2026-10-18",)
 MAX_WORKERS = 8
 ZIP_MAX = 20_000_000
 CHECKSUM_MAX = 2048
@@ -37,7 +38,7 @@ def utc():
 
 def url_parts(symbol,day):
     if not (symbol.isalnum() and symbol.endswith("USDT")
-            and day in FIXED_DAYS):
+            and day in ALLOWED_DAYS):
         raise ValueError("MONSTER_PUBLISHER_FROZEN_SYMBOL_OR_DAY_DRIFT")
     filename = f"{symbol}-1m-{day}.zip"
     url=f"{BASE}/{quote(symbol,safe='')}/1m/{quote(filename,safe='')}"
@@ -146,9 +147,10 @@ def one_pair(symbol,day,root,*,getter=None):
 def collect(root,*,roster,days=FIXED_DAYS,max_workers=MAX_WORKERS,getter=None):
     if (not roster or len(roster)!=len(set(roster)) or
         any(not x.isalnum() or not x.endswith("USDT") for x in roster)
-        or tuple(days)!=FIXED_DAYS or max_workers<1 or max_workers>MAX_WORKERS):
+        or tuple(days) not in (FIXED_DAYS,("2026-10-18",))
+        or max_workers<1 or max_workers>MAX_WORKERS):
         raise ValueError("MONSTER_PUBLISHER_SOURCE_SCOPE_DRIFT")
-    tasks=[(s,d) for s in sorted(roster) for d in FIXED_DAYS]
+    tasks=[(s,d) for s in sorted(roster) for d in days]
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
         results=list(pool.map(lambda pair:one_pair(pair[0],pair[1],root,getter=getter),tasks))
     by_status={}
@@ -162,7 +164,7 @@ def collect(root,*,roster,days=FIXED_DAYS,max_workers=MAX_WORKERS,getter=None):
         "source_scope":"ORIGINAL_SPOT_USDT_511_T0_TRADING",
         "original_roster_count":len(roster),
         "original_roster":sorted(roster),
-        "days_utc":list(FIXED_DAYS),
+        "days_utc":list(days),
         "attempts_total":len(tasks),
         "status_counts":by_status,
         "acquired_at_utc":utc(),
@@ -182,12 +184,15 @@ def main():
     p.add_argument("--out",required=True,type=Path)
     p.add_argument("--workers",type=int,default=MAX_WORKERS)
     p.add_argument("--retry-unicode-from",type=Path,default=None)
+    p.add_argument("--collect-oos-2026-10-18",action="store_true")
     a=p.parse_args()
     if a.out.exists() or a.out.is_symlink():
         raise ValueError("MONSTER_PUBLISHER_RESULT_EXISTS_NO_REWRITE")
     all_roster=admitted.frozen_roster()
     if len(all_roster)!=511:
         raise ValueError("MONSTER_ORIGINAL_T0_511_DRIFT")
+    if a.collect_oos_2026_10_18 and a.retry_unicode_from is not None:
+        raise ValueError("MONSTER_PUBLISHER_INCOMPATIBLE_MODES")
     roster=all_roster
     if a.retry_unicode_from is not None:
         raw=a.retry_unicode_from.read_bytes()
@@ -206,7 +211,11 @@ def main():
             or any(r["symbol"] not in all_roster for r in missing)):
             raise ValueError("MONSTER_PUBLISHER_UNICODE_SCOPE_NOT_PREVIOUS_4")
         roster=sorted({r["symbol"] for r in missing})
-    report=collect(a.source_dir,roster=roster,max_workers=a.workers)
+    chosen_days=("2026-10-18",) if a.collect_oos_2026_10_18 else FIXED_DAYS
+    report=collect(a.source_dir,roster=roster,days=chosen_days,max_workers=a.workers)
+    if a.collect_oos_2026_10_18:
+        report["source_scope"]="FROZEN_T0_511_FIRST_FULL_OOS_UTC_DAY_2026_10_18"
+        report["utc_day_finished_but_publisher_availability_unverified_until_download"]=True
     if a.retry_unicode_from is not None:
         report["recovery_of_original_1022_attempts_blob"]=PREVIOUS_1018_REAL_RECEIPTS_BLOB
         report["recovery_exactly_4_nonascii_failed_sources"]=True
