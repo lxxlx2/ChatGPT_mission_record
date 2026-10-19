@@ -1,0 +1,41 @@
+{
+  "actual_network_calls": 0,
+  "approved_parent_pr124_sha": "f7736ca1301720c338db72be9fba0b3d7ff06515",
+  "approved_pr124_old_evidence_blob_sha1": "7e254fe4c7c41b69978712849ec488b2737374df",
+  "approved_pr124_old_evidence_hashes_rechecked_against_approved_version": {
+    "F0_PUBLIC_HTTP_SMOKE.md": true,
+    "f0_bounded_smoke.py": true,
+    "fixture_smoke_report.json": true,
+    "fixtures/bounded_smoke.json": true,
+    "tests/test_f0_bounded_smoke.py": true
+  },
+  "baseline_tests": 119,
+  "caveat": "A file boolean and nonce do not cryptographically prove user consent. Actual user-approved permit must be supplied only after separate authorization and review.",
+  "combined_result": "PASS",
+  "combined_tests_executed": 127,
+  "error_code_policy": "KNOWN_INTERNAL_ERROR_WHITELIST_OTHERWISE_VALIDATION_FAILED",
+  "failure_report": "ATTEMPT_COUNTS_PLUS_PERMIT_SHA256_PLUS_NONCE_SHA256_NOT_RAW_NONCE",
+  "live_user_permission": "NOT_GRANTED",
+  "new_artifact_sha256": {
+    "F0_PUBLIC_HTTP_SMOKE.md": "7c46b237208684d0369ee2b905a4dd41f0dca1374f036434a118d3c99ca8876a",
+    "f0_bounded_smoke.py": "2322e024e9beb0e92e653e564be4831b09367b49eb1e868f3affe44636002115",
+    "fixture_smoke_report.json": "42d19d756706b79b5d96fdb802ae792d172c83b0355c04ab7d6f244a723f817a",
+    "fixtures/bounded_smoke.json": "41eea36bbc6f227ec42a2dab0e4297cef8f7e6c8ca79fa7f24a25782254da553",
+    "tests/test_f0_bounded_smoke.py": "3724321f3c74f69e88945c5621b8f445cac5b272d1661748c5705f5d391799ea"
+  },
+  "new_tests_added": 8,
+  "offline_replay_report_matches_prior": true,
+  "one_time_nonce_gate": "O_CREAT_O_EXCL_PERSISTED_BEFORE_ANY_NETWORK",
+  "repro_command": "python3 -m unittest discover -s crypto-300-profit-mission/bsc-forward-follow-model/f0/tests -p \"test_*.py\"",
+  "reviewed_source_gate": "HEAD_COMMIT_SHA_PLUS_CURRENT_SCRIPT_SHA256_PLUS_COMMITTED_BLOB_IDENTITY",
+  "safety": [
+    "NO_RUN",
+    "NO_TRADE",
+    "NO_WS",
+    "NO_SIGN",
+    "NO_NOTIFICATIONS",
+    "NO_DEPLOY",
+    "NO_MERGE"
+  ],
+  "schema": "bsc-f0-smoke-reviewed-permit-offline-evidence-v1"
+}
