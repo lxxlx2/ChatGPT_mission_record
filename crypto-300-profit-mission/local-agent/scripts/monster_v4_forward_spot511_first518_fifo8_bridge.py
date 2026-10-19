@@ -60,7 +60,7 @@ def evidence_receipts(roster):
                 raise ValueError("MONSTER518_UNEXPECTED_SOURCE_FAILURE")
             if key not in expected or key in accepted:
                 raise ValueError("MONSTER518_DUPLICATE_OR_FOREIGN_SOURCE_RECEIPT")
-            zsha = item["zip_sha256"]
+            zsha = item.get("zip_sha256", item.get("original_zip_sha256"))
             csha = item[checksum_field]
             if not all(isinstance(x, str) and len(x)==64
                        and all(c in "0123456789abcdef" for c in x)
@@ -89,7 +89,7 @@ def source_files(directories):
             target[path.name] = path
     return zips, checksums
 
-def tick_input(bar_index, tick_ms, start_ms, prefix, bars):
+def tick_input(tick_ms, start_ms, prefix, bars):
     """Use only completed minutes before an observation tick."""
     i = (tick_ms-start_ms)//MIN_MS-1
     if i < 1439 or i >= len(bars) or bars[i][0]+MIN_MS != tick_ms:
@@ -155,7 +155,7 @@ def build(source_dirs):
                     prefix.append(prefix[-1]+row[5])
                 ticks=[]
                 for tick in range(START,END,TICK_MS):
-                    at,last,q=tick_input(0,tick,bars[0][0],prefix,bars)
+                    at,last,q=tick_input(tick,bars[0][0],prefix,bars)
                     ticks.append((at,symbol,str(last),str(q)))
                 candles=minute.make_closed_five_minute_bars(bars)
                 with source:
