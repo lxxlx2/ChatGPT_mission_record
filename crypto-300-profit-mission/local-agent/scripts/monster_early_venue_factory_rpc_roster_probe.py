@@ -731,9 +731,17 @@ def audit_saved_bsc_v2_p0(out_dir, evidence_path):
                 archived_swap_windows.append({
                     "name": "FIRST_LATER_POOL_RESERVE_UPDATE_BLOCK",
                     "logs": later_events})
+            quote = item["quote_asset"].lower()
+            known_bases = tuple(x.lower() for x in CHAINS["bsc-v2"]["bases"])
+            if quote not in known_bases:
+                raise SourceError("OFFLINE_AUDIT_UNKNOWN_BSC_QUOTE")
+            frozen_quote_depth_floor = (
+                2 * 10**18 if quote == known_bases[0] else 1000 * 10**18)
             answer["archived_pair_swap_evidence"] = summarize_v2_archived_swap_windows(
                 pool=case["pair"], token0=row["token0"], token1=row["token1"],
-                quote_asset=item["quote_asset"], windows=archived_swap_windows)
+                quote_asset=item["quote_asset"], windows=archived_swap_windows,
+                quote_reserve_floor_raw=frozen_quote_depth_floor)
+            answer["observed_pool_depth_at_swap_is_not_public_t_entry"] = True
             answer["status"] = "CREATION_MINT_SYNC_CONFIRMED" if (
                 proof["initial_quote_liquidity_proven"]
                 ) else "CREATION_CONFIRMED_NO_SAME_TX_MINT_SYNC"
@@ -754,6 +762,16 @@ def audit_saved_bsc_v2_p0(out_dir, evidence_path):
                      x["archived_pair_swap_evidence"]["observed_quote_to_token_with_sync"] > 0]
     absent_later = [x["rank"] for x in good if
                     len(x["archived_pair_swap_evidence"]["archived_windows"]) == 1]
+    buy_above = [x["rank"] for x in good if
+                 x["archived_pair_swap_evidence"]["observed_buy_at_or_above_frozen_quote_depth"]]
+    sell_above = [x["rank"] for x in good if
+                  x["archived_pair_swap_evidence"]["observed_sell_at_or_above_frozen_quote_depth"]]
+    buy_below = [x["rank"] for x in good if
+                 x["archived_pair_swap_evidence"]["observed_buy_below_frozen_quote_depth"]]
+    sell_below = [x["rank"] for x in good if
+                  x["archived_pair_swap_evidence"]["observed_sell_below_frozen_quote_depth"]]
+    reserve_unknown = [x["rank"] for x in good if
+                       x["archived_pair_swap_evidence"]["observed_swaps_without_proven_preswap_depth"]]
     return {
         "schema": "MONSTER_BSC_V2_P0_LOCAL_ORIGINAL_RPC_OFFLINE_REPLAY_V1",
         "status": ("LOCAL_FROZEN_30_CREATION_REPLAY_PASS" if complete
@@ -772,6 +790,12 @@ def audit_saved_bsc_v2_p0(out_dir, evidence_path):
         "observed_token_to_quote_swap_with_same_tx_sync_ranks": observed_sells,
         "observed_quote_to_token_swap_with_same_tx_sync_ranks": observed_buys,
         "later_update_source_window_not_archived_ranks": absent_later,
+        "observed_buy_with_proven_preswap_quote_floor_ranks": buy_above,
+        "observed_sell_with_proven_preswap_quote_floor_ranks": sell_above,
+        "observed_buy_below_preswap_quote_floor_ranks": buy_below,
+        "observed_sell_below_preswap_quote_floor_ranks": sell_below,
+        "observed_swap_preswap_depth_unresolved_ranks": reserve_unknown,
+        "quote_depth_floor_is_research_eligibility_not_purchase_notional": True,
         "archive_swap_window_observation_scope":
             "FIRST_TEN_CREATION_BLOCKS_PLUS_ONE_LATER_UPDATE_BLOCK_IF_SAVED; NONCONTIGUOUS",
         "observed_sells_are_not_same_notional_user_sellability": True,
@@ -804,6 +828,11 @@ def run(args):
             "observed_token_to_quote_swap_with_same_tx_sync_ranks",
             "observed_quote_to_token_swap_with_same_tx_sync_ranks",
             "later_update_source_window_not_archived_ranks",
+            "observed_buy_with_proven_preswap_quote_floor_ranks",
+            "observed_sell_with_proven_preswap_quote_floor_ranks",
+            "observed_buy_below_preswap_quote_floor_ranks",
+            "observed_sell_below_preswap_quote_floor_ranks",
+            "observed_swap_preswap_depth_unresolved_ranks",
             "twentyfour_of_thirty_complete_pit_gate",
             "eighteen_of_thirty_sellable_gate")}).strip())
         if result["status"] != "LOCAL_FROZEN_30_CREATION_REPLAY_PASS":
