@@ -5,6 +5,7 @@
   "attempted_primary_getcode": 20,
   "attempted_router_getcode": 2,
   "attempted_rpc_calls": 24,
+  "checked_block": 100,
   "cohort_source": "CALLER_MUST_REPORT_FROZEN_BLOB_EVIDENCE",
   "counts": {
     "HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK": 0,
