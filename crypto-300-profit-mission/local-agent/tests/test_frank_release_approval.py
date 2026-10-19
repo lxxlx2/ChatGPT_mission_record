@@ -141,11 +141,22 @@ def test_loop_only_stop_targets_one_exact_agent_and_never_dashboard(tmp_path):
     calls = []
     def fake_run(cmd, **kwargs):
         calls.append(cmd)
-        return subprocess.CompletedProcess(cmd, 0)
-    module.stop_loop_only(plan, run=fake_run)
+        if cmd[1] == "print":
+            if len([x for x in calls if x[1] == "print"]) == 1:
+                return subprocess.CompletedProcess(
+                    cmd, 0, "state = running\\n    pid = 424242\\n", "")
+            return subprocess.CompletedProcess(cmd, 113, "", "Could not find service")
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+    def pid_not_running(pid, signal):
+        assert (pid, signal) == (424242, 0)
+        raise ProcessLookupError
+    proof = module.stop_loop_only(plan, run=fake_run, probe_pid=pid_not_running)
+    assert proof["status"] == "MC_LOOP_STOP_VERIFIED"
     assert calls == [
+        ["launchctl", "print", "gui/501/com.testuser.frank-meme.loop"],
         ["launchctl", "disable", "gui/501/com.testuser.frank-meme.loop"],
         ["launchctl", "bootout", "gui/501", str(plist)],
+        ["launchctl", "print", "gui/501/com.testuser.frank-meme.loop"],
     ]
     assert "dashboard" not in json.dumps(calls).lower()
     assert plan["mc_evaluation_will_stop"] is True
@@ -252,3 +263,59 @@ def test_live_cli_rejects_real_signature_for_wrong_inherited_git_repo(
     ])
     with pytest.raises(ValueError,match="APPROVAL_POLICY_OR_CODE_MISMATCH"):
         entry.main()
+
+
+
+@pytest.mark.parametrize("scenario", [
+    "prestop_unreadable", "prestop_pid_missing",
+    "disable_failed", "bootout_failed",
+    "poststop_still_registered", "poststop_unknown_error", "old_pid_still_alive",
+])
+def test_loop_only_stop_never_claims_success_without_pid_readback(tmp_path, scenario):
+    module = _safe_stop_module()
+    home = tmp_path / "home"
+    runner = home / "Library" / "Application Support" / "FrankMeme" / "mission-loop.sh"
+    plist = home / "Library" / "LaunchAgents" / "com.testuser.frank-meme.loop.plist"
+    runner.parent.mkdir(parents=True)
+    plist.parent.mkdir(parents=True)
+    runner.write_text("test-loop-only")
+    plist.write_bytes(plistlib.dumps({
+        "Label": "com.testuser.frank-meme.loop",
+        "ProgramArguments": [str(runner)],
+    }))
+    plan = module.stop_plan(home, 501, "testuser")
+    calls = []
+    def fake_run(cmd, **kwargs):
+        calls.append(cmd)
+        if cmd[1] == "print":
+            times = sum(c[1] == "print" for c in calls)
+            if times == 1:
+                if scenario == "prestop_unreadable":
+                    return subprocess.CompletedProcess(cmd, 77, "", "launchd inaccessible")
+                if scenario == "prestop_pid_missing":
+                    return subprocess.CompletedProcess(cmd, 0, "state = running", "")
+                return subprocess.CompletedProcess(cmd, 0, "state = running\\npid = 424242\\n", "")
+            if scenario == "poststop_still_registered":
+                return subprocess.CompletedProcess(cmd, 0, "pid = 424242\\n", "")
+            if scenario == "poststop_unknown_error":
+                return subprocess.CompletedProcess(cmd, 9, "", "permission denied")
+            return subprocess.CompletedProcess(cmd, 113, "", "Could not find service")
+        if cmd[1] == "disable" and scenario == "disable_failed":
+            raise subprocess.CalledProcessError(1, cmd)
+        if cmd[1] == "bootout" and scenario == "bootout_failed":
+            raise subprocess.CalledProcessError(1, cmd)
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+    def probe(pid, sig):
+        assert (pid, sig) == (424242, 0)
+        if scenario != "old_pid_still_alive":
+            raise ProcessLookupError
+    with pytest.raises(RuntimeError, match="MC_LOOP_"):
+        module.stop_loop_only(plan, run=fake_run, probe_pid=probe)
+    if scenario.startswith("prestop_"):
+        assert len(calls) == 1
+    if scenario == "disable_failed":
+        assert not any(c[1] == "bootout" for c in calls)
+    if scenario == "bootout_failed":
+        assert len(calls) == 3
+    assert "dashboard" not in json.dumps(calls).lower()
+    assert "v1" not in json.dumps(calls).lower()
