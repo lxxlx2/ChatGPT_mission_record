@@ -423,6 +423,21 @@ def summarize_v2_archived_swap_windows(*, pool, token0, token1, quote_asset, win
             public_after_threshold_sync_status = 'LATER_BLOCK_PUBLIC_AVAILABILITY_UNVERIFIED'
         else:
             public_after_threshold_sync_status = 'OBSERVATION_ORDER_MISMATCH'
+    after_synced_qualified_buys = []
+    same_mint_tx_qualified_buys = []
+    distinct_later_block_buy = None
+    if first_saved_above_floor_sync is not None:
+        root = first_saved_above_floor_sync
+        for row in swaps:
+            if (row['direction'] != 'OBSERVED_QUOTE_TO_TOKEN_SWAP'
+                    or row['pre_swap_quote_depth_frozen_floor_status'] != 'AT_OR_ABOVE_FROZEN_FLOOR'):
+                continue
+            if row['block'] == root['block'] and row['tx_hash'] == root['tx_hash']:
+                same_mint_tx_qualified_buys.append(row)
+            elif row['block'] > root['block']:
+                after_synced_qualified_buys.append(row)
+                if distinct_later_block_buy is None:
+                    distinct_later_block_buy = row
     return {
         'status': 'NONCONTIGUOUS_ARCHIVED_PAIR_WINDOWS_ONLY',
         'archived_windows': window_presence,
@@ -457,6 +472,12 @@ def summarize_v2_archived_swap_windows(*, pool, token0, token1, quote_asset, win
         'first_above_floor_buy_prior_mint_same_tx': first_above_floor_buy_mint_in_same_tx,
         'first_above_floor_buy_public_reaction_status': public_after_threshold_sync_status,
         'first_observed_above_floor_sync_not_first_public_T_entry': True,
+        'observed_qualified_buy_swaps_within_first_above_floor_sync_tx':
+            len(same_mint_tx_qualified_buys),
+        'observed_qualified_buy_distinct_tx_count_later_block':
+            len({x['tx_hash'] for x in after_synced_qualified_buys}),
+        'first_observed_qualified_buy_later_block': distinct_later_block_buy,
+        'same_block_separate_transactions_are_not_proof_of_public_reaction': True,
         'first_observed_in_saved_windows': swaps[0] if swaps else None,
         'observed_direction_events': swaps,
         'absence_of_swap_in_missing_intervals': 'UNKNOWN',
