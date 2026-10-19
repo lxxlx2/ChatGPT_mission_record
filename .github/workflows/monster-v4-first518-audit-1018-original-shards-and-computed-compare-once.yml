@@ -1,0 +1,137 @@
+name: Monster 518 original 1018 issuer audit shard review bridge once
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-first518-audit-1018-original-shards-and-computed-compare-once.yml'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster-first518-original-shards-audit-once
+  cancel-in-progress: false
+jobs:
+  verify_and_repackage_issuer_originals:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Confirm only one explicitly pushed workflow and existing offline regressions
+        run: |
+          set -eu
+          python3 - <<'PY'
+          import subprocess
+          changed=subprocess.check_output(['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],text=True).splitlines()
+          assert changed==['.github/workflows/monster-v4-first518-audit-1018-original-shards-and-computed-compare-once.yml'],changed
+          print('MONSTER_SPLIT_NO_SCHEDULE_NO_SERVICE_START')
+          PY
+          python3 -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_first518_issuer_artifact_audit_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_first518_original_shards_computed_review.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_forward_spot511_first518_fifo8_bridge.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_forward_spot511_first518_postsignal_economics.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_opportunity_snapshot.py
+      - name: Restore preexisting original 1018 plus Unicode4 and Oct18 511 official daily archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster_old/a /tmp/monster_old/b /tmp/monster_old/c
+          gh run download 39212800265 --repo lxxlx2/ChatGPT_mission_record --name monster-spot511-oct16-17-original-publisher-zip-checksum-1022-attempts --dir /tmp/monster_old/a
+          gh run download 39213387756 --repo lxxlx2/ChatGPT_mission_record --name monster-frozen-spot511-unicode4-source-gap-official-publisher-originals --dir /tmp/monster_old/b
+          gh run download 39214007356 --repo lxxlx2/ChatGPT_mission_record --name monster-real-spot511-20261018-original-issuer-zip-and-checksum --dir /tmp/monster_old/c
+          echo MONSTER_ALL_OLD_ARTIFACTS_RESTORED_AUTHOR_CI_ONLY
+      - name: Recheck each of 1018 original issuer SHA checksums and copy unchanged bytes into 8 small shards
+        run: |
+          set -eu
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_first518_issuer_artifact_audit_shards.py --original-dir /tmp/monster_old/a --out-dir /tmp/monster_shards
+      - name: Rebuild full 518 original D0 D1 and 8 plus 8 price results FROM eight small shards
+        run: |
+          set -eu
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_fifo8_bridge.py --source-dir /tmp/monster_shards --source-dir /tmp/monster_old/b --source-dir /tmp/monster_old/c --operator-view --out /tmp/monster_sharded_bridge.json
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_postsignal_economics.py --source-dir /tmp/monster_shards --source-dir /tmp/monster_old/b --source-dir /tmp/monster_old/c --out /tmp/monster_sharded_economics.json
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_first518_original_shards_computed_review.py --shard-index /tmp/monster_shards/index.json --bridge /tmp/monster_sharded_bridge.json --economics /tmp/monster_sharded_economics.json --fixed-commit "$GITHUB_SHA" --out crypto-300-profit-mission/monster/evidence/monster_first518_split1018_sha_validated_computed_comparison_v2_20261019.json
+          echo MONSTER_ACTUAL_COMPUTED_COMPARISON_AND_FULL_1533_REPLAY_PASS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-first518-issuer-original1018-shard-00
+          path: /tmp/monster_shards/shard_00/
+          retention-days: 60
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-first518-issuer-original1018-shard-01
+          path: /tmp/monster_shards/shard_01/
+          retention-days: 60
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-first518-issuer-original1018-shard-02
+          path: /tmp/monster_shards/shard_02/
+          retention-days: 60
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-first518-issuer-original1018-shard-03
+          path: /tmp/monster_shards/shard_03/
+          retention-days: 60
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-first518-issuer-original1018-shard-04
+          path: /tmp/monster_shards/shard_04/
+          retention-days: 60
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-first518-issuer-original1018-shard-05
+          path: /tmp/monster_shards/shard_05/
+          retention-days: 60
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-first518-issuer-original1018-shard-06
+          path: /tmp/monster_shards/shard_06/
+          retention-days: 60
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-first518-issuer-original1018-shard-07
+          path: /tmp/monster_shards/shard_07/
+          retention-days: 60
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-first518-original-shards-computed-source-proof-v2
+          path: |
+            /tmp/monster_shards/index.json
+            /tmp/monster_sharded_bridge.json
+            /tmp/monster_sharded_economics.json
+            crypto-300-profit-mission/monster/evidence/monster_first518_split1018_sha_validated_computed_comparison_v2_20261019.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Archive new author-side computed report on original Monster Draft PR
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          target=crypto-300-profit-mission/monster/evidence/monster_first518_split1018_sha_validated_computed_comparison_v2_20261019.json
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add "$target"
+          git commit -m "monster: archive computed comparison after immutable original 1018 byte split and 518 replay"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER_COMPUTED_COMPARISON_ALREADY_EXISTS
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for f in crypto-300-profit-mission/local-agent/scripts/monster_v4_first518_issuer_artifact_audit_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_first518_original_shards_computed_review.py crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_fifo8_bridge.py crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_postsignal_economics.py .github/workflows/monster-v4-first518-audit-1018-original-shards-and-computed-compare-once.yml; do
+            test "$(git rev-parse "$GITHUB_SHA:$f")" = "$(git rev-parse "HEAD:$f")" || { echo "MONSTER_UNREVIEWED_INPUT_DRIFT=$f"; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER_SMALL_SOURCE_SHARDS_AND_COMPUTED_ECONOMIC_RESEARCH_ARCHIVED
