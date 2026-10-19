@@ -14,7 +14,7 @@ import re
 import time
 import zipfile
 from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 from urllib.parse import quote
 
 import monster_v4_stage166_spot511_official_1m_intake as admitted
@@ -45,6 +45,13 @@ def url_parts(symbol,day):
     return filename,url,url+".CHECKSUM"
 
 
+class _RejectPublisherRedirect(HTTPRedirectHandler):
+    """Abort on a 3xx response before urllib sends a redirected GET."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise ValueError("PUBLISHER_REDIRECT_BLOCKED_BEFORE_FOLLOW")
+
+
 def fetch_one_url(url, limit, *, getter=None):
     """Only publisher domain, finite bytes, HTTP response metadata and retries."""
     if not url.startswith(BASE+"/") or (not url.endswith(".zip") and
@@ -59,7 +66,7 @@ def fetch_one_url(url, limit, *, getter=None):
                     raise ValueError("PUBLISHER_RESPONSE_SIZE_LIMIT")
                 return data,metadata
             request=Request(url,headers={"User-Agent":"monster-research-official-readonly/1.0"})
-            with urlopen(request,timeout=REQ_TIMEOUT_SECONDS) as response:
+            with build_opener(_RejectPublisherRedirect()).open(request,timeout=REQ_TIMEOUT_SECONDS) as response:
                 final=response.geturl()
                 if final != url:
                     raise ValueError("PUBLISHER_UNEXPECTED_REDIRECT")
