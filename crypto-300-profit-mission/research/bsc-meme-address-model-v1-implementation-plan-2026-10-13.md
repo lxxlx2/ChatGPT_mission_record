@@ -1015,3 +1015,15 @@ F6：8E6B 最后卖出后至 30 天终点还有 2 笔本人发出 TX，未核对
 
 L1 将报告中的“完整时间窗口”改为**买入前一块至最后卖出块后的连续区块窗口**，仍不包含退出后 8E6B 的 2 笔本人交易；L2 给曾经被拒绝的 [历史 Gas JSON blob `1d4ebea38477f35ace3be8528a966d663a8f0807` 于 `94777871`](https://github.com/lxxlx2/ChatGPT_mission_record/blob/94777871756da910be2e1ccbf724d520c82ae69f/crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-8e6b-2adf-adjacent-approve-swap-gas-attributed-native-balance-2026-10-19.json) 增加明确的 supersession 指针，不擦除历史 Git 版本；L3 保存 8 笔**未压缩完整原始 calldata**于自动捕获归档并对照早期零段无损恢复版本；I1 的 FLAP 退出一次后的持仓也在历史指定区块查询中明确保留。所有选定区块余额数据仅是可审计算术，不得写为 Meme 回合收益率，`ACTUAL_REALIZED_NET_PNL=UNRESOLVED`、`PUBLIC_EXECUTABLE_U=UNRESOLVED`、`P5=BLOCKED`、`PRODUCTION=NO_GO`、`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE` 不变。下一轮外审只关注 M1/M2 数据来源、replay 不漂移和旧缺口关闭，不应无限重启已批准算法审查。
 
+## 2026-10-19 P4-B 新业务批次：877AF 尤栗完整分页、DDAC 两个不同 Fâché CA 完整退出与关联镜像判别
+
+**承接独立 APPROVE@c2d36bc5e93a13be25262563218d3f0e0a0f1014**（只批准之前研究源与 replay，不批准真实盈利），不再反复重查已批准的旧 Python/Node。直接用免费 Alchemy BNB Mainnet 的 ERC20 双向 exact CA 索引、原始 `eth_getTransactionByHash`、历史 `balanceOf`、本人 EOA native `eth_getBalance`、nonce、receipt 的累计 Gas 与区块相邻交易索引，从已冻结 23 个 EOA 中优先审查 **877AF、DDAC**，严格区别新 oooooyoung 地址分析模块。
+
+877AF 原 EOA 的尤栗 `0x1bd0d654e44a78d9b20dcf09fa61100013c07777`：3 笔本人签名入场原生 0.66、0.66、0.25 BNB（共 1.57 BNB，不含 Gas）；单 token CA 转出完整分页 2 页共 14 条 token transfer / 7 笔不同 tx，最后无 pageKey。token raw 入账 `20702771945057607690441227`、出账 `8869110650471634260184494`、持仓剩余 `11833661294585973430256733`，窗口末以及本轮 latest `balanceOf` 均吻合。**只卖出 42.8402%，仍持有 57.1598%**，不能升级为清仓或总回合已实现盈利。另一个 877AF 方桃子 CA 样本也只卖出 25% 并剩余 75%，避免把高活动 EOA 误列为连胜聪明钱。
+
+DDAC 本人 0.25 BNB 各自买入的两个不同 CA `0xcc629b954ccf0563838c797d431dd153b35b7777`、`0x9ec1c7fc2cbd74ad0f9badd0c6b7e7260e8c7777` 代币都叫 Fâché 但 CA 绝不混合，各自确实 Token Raw IN=OUT、开仓前及最后退出后 ERC20 `balanceOf=0`。本人原生 BNB 四块钱包首尾连续且本人 nonce 增量分别 1/2/1/2；两笔本人买入对应原交易 `tx.value=0.25 BNB`，真实 cumulativeGas 差分别 550613、655154，均以 120000000 wei/gas 与真实买入块 BNB 减额逐 wei 吻合；卖出各是紧邻 approve+swap，gas 分别 (48996+613288)、(48996+713013)。整个选定连续区间 native 钱包 Δ 分别 `+4084060212209003 wei` 与 `-57777449086707009 wei`，**两段钱包 Δ 合计 `-53693388874498006 wei`**。这些是特定区块观察算术、条件经济结果，免费层仍未能独立排除其他交易/合约的内部原生转入，**不得当作已经认证的单代币净利润**。
+
+**关键优先级发现：疑似同区块关联买卖。** 另一个公开 EOA `0x537f00a63d517320ea0107bbf6176325d6913977` 在两个 DDAC CA 入场块分别在 index 4/8 先买入，DDAC 紧邻 index 5/9 后买入；两笔的 0.25 BNB、gasPrice 和**完整交易 calldata 逐字节完全相同**。两个卖出块按链上 txIndex 均顺序出现该 EOA 先 approve→swap，DDAC 再 approve→swap，分别 index 26/27/28/29、2/3/4/5；这位先行钱包在两个 CA 上同样转入出账等量。仅能称 `SAME_BLOCK_MIRROR_OR_COORDINATED_BEHAVIOR_CANDIDATE`，**不意味着证明同一控制者**，但说明普通用户事后 1/5/15 分钟跟单绝不能由这些同块执行效果证明。要先研究这类钱包关联性与开放观察时延，而不是按 DDAC 某一段 +1.63% 条件变化推荐买入。
+
+仓库已新增 [有界事实记录与交易 hash/CA、nonce/Gas、状态和适用边界](./bsc-meme-address-model-v1-p4b-ddac-877af-batch-screen-2026-10-19.md)，原始 RPC 全文未随本轮新报告自动归档，来源级别先保持本对话中读得的连接器查询证据，可按 exact CA/txHash 重查。P4-B/P4-C 仍 PARTIAL；`ACTUAL_REALIZED_NET_PNL=UNRESOLVED / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。不应为了样本经济不可归因问题无止境加负面边界测试。
+
