@@ -1,0 +1,85 @@
+# BSC 前向跟单研究 F0：开发准备、数据源选择和有限期技术验收合同
+
+> Status: `F0_PREPARATION_ONLY / F0_RUNTIME_NOT_AUTHORIZED / PENDING_OTHER_AI_REVIEW / RESEARCH_ONLY`  
+> Date: 2026-10-19 Asia/Bangkok  
+> Architecture authority: [PR #113 APPROVED at fixed SHA](https://github.com/lxxlx2/ChatGPT_mission_record/blob/9134fcd41df49ef836b81c8a040974ad89c1fde1/crypto-300-profit-mission/bsc-forward-follow-model/ARCHITECTURE.md), commit `9134fcd41df49ef836b81c8a040974ad89c1fde1`. This file is an **F0-only test contract**, not a second evolving architecture authority. Review approval was provided as an independent read-only review and authorizes **preparation, not runtime**.
+> Source branches: Draft [PR #40](https://github.com/lxxlx2/ChatGPT_mission_record/pull/40) and independent Draft [PR #97](https://github.com/lxxlx2/ChatGPT_mission_record/pull/97) are immutable read-only inputs. No merge or modifications to them.
+
+## 1. F0 target: three hard feasibility questions, not trading performance
+
+F0 is a **24–48-hour, capped, TRIAL-only** technical experiment *only after separate user permission for an actual Mac/local read-only run*. The start of F0 development preparation is NOT permission to launch any local daemon/automations, send alerts, use paid APIs, request wallet signatures or execute trades.
+
+1. **L1**: can available no-cost providers deliver actual BSC wallet signed BUY/SELL identification with preserved first-actionable time, receipt and recoverable gaps?
+2. **L2**: can one real-time scheduled, multi-delay quotation pipeline issue and retain requests at `+60/+300/+900s` for both watchlist and live randomized ordinary Router BUY controls? What are quote failure/staleness/queue latency?
+3. **L4 comparator feasibility**: can an *unwatched ordinary Router transaction stream* be found and sampled in real time **without exorbitant resource usage**, and can historical chain evidence independently audit event recall?
+
+The trial **does not evaluate realized profit**. No significant true buys during a 24–48 h trial means `INSUFFICIENT_LIVE_EVENTS`, not a fraudulent 100% recall PASS or automatic research failure.
+
+## 2. Frozen source-stratified preselection, not final admissibility
+
+- Input A: PR40 immutable baseline `431c02d1…`, Git blob `e3c8815630878dddc03b7a6e11b8f0d2d89cbf6a`, 23 frozen BSC research candidates.
+- Input B: PR97 449 screening `5bca0e8f…`, Git blob `4727b8b53dcd63b350d9e5f27922cd06db8a2a14`; `ACTIVE && first_positive_chain=bsc` = 219 rows, minus 2 duplicate PR40 wallets (#167 A83B and #283 DDAC) = **217 distinct BSC nonce-active candidates**. Historical three-chain nonce activity ≠ current signed Meme swap or validated EOA.
+- Deterministic rank: 32-bit unsigned FNV-1a over ASCII `9134fcd41df49ef836b81c8a040974ad89c1fde1|source|lowercase_wallet`, ascending hash then lex wallet. Source-stratified **10 + 10 PRIMARY; 5 + 5 ranked BACKUP**. The full pinned selection is `F0_COHORT_PRESELECTION.json`; `f0_verify_cohort.py` deterministically recomputes against `git cat-file` and verifies source blobs with Git SHA1. Sampling ignores prior performance, activity recency score or events since PR source freeze.
+- **No RPC-based EOA check has occurred**. Prior to any trial run, check `eth_getCode == 0x` at the relevant observation block for all primaries, plus no known infrastructure address; only ineligible candidates are replaced by same-stratum next BACKUP **in rank order**. Every replacement must record independent technical reason, raw source, checked block and timestamp, not market outcome. If too few candidates, report `UNDERFILLED` instead of outcome-driven selection.
+- All 30 selected public addresses are **preselection**, not permission to query, deploy, monitor or classify profitable. `watch_runtime_enabled=false` for all.
+
+## 3. Data source options and true selection criterion
+
+Official BNB Chain RPC documentation (https://docs.bnbchain.org/bnb-smart-chain/developers/json_rpc/json-rpc-endpoint/) states mainnet public endpoints have `eth_getLogs` disabled for certain listed endpoints and advertise a rate cap of 10K per 5 min (endpoint documentation, not a guaranteed user quota). Frequent log discovery is recommended via capable WebSocket providers. The BSC finality JSON-RPC API is documented at https://docs.bnbchain.org/bnb-smart-chain/developers/json_rpc/bsc-api-list/; support on any chosen provider **must be tested, not assumed**.
+
+| Candidate route | What F0 must confirm, not assume | Main risk / STOP condition |
+|---|---|---|
+| Connected Alchemy BSC RPC / asset transfers | Explicitly selected authorized app; network BSC actually supported; free read quota; historical receipt; eligible WS/log subscriptions if any | Available app ≠ automatically selected/configured; proprietary `getAssetTransfers` may lag, pagination or fees/quotas; same provider cannot alone prove independent denominator |
+| Official BSC mainnet HTTP RPC | Actual calls for chain ID, block, transaction and receipt; health/failure/latency, rate limiting | Cannot rely on `eth_getLogs` for discovery; scanning every transaction in every block may be too expensive |
+| Public no-cost WS or trusted documented free tier | `newHeads`/logs/tx or specific subscription semantics, message timestamps, reconnection, limits and SLA | Provider WS availability and completeness currently **UNVERIFIED**; absence of websocket in public endpoint list is not proof it exists |
+| Mixed dual-path | Fast-path first-seen capture, archived gap recovery, independent **method** by block/tx/receipt and preferably **provider** | Both paths share upstream failure; huge control-stream cost; inability to construct expected buys yields denominator UNRESOLVED |
+
+This is a shortlist, **not a vendor recommendation or free-tier confirmation**. F0 report must have a provider-by-method matrix with exact authorization state, measured calls, response counts, latency, errors, free unit consumption, cost and failures. No paid/funded GMGN or other payment API. No credentials in Git.
+
+**Control stream has its own cost ledger**: `rpc_watchlist`, `rpc_random_control_discovery`, `rpc_quote_watchlist`, `rpc_quote_control`, `rpc_independent_audit`, `rpc_gap_recovery`, provider-specific free quota remaining. If the ordinary Router control stream dominates cap or cannot be sampled live, F0 must report `BLOCKED_REALTIME_CONTROL`. Do not silently swap it for post-hoc historical control.
+
+## 4. Clock / buyer / seller state machine acceptance contract
+
+- Record original `t_first_received_utc` / monotonic local receive time separately from `t_buy_detected_utc` / `t_sell_detected_utc`, `t_receipt_success_utc`, finality-confirmation UTC, quote scheduled and actual request/response times; clock offset and original message source must survive restart and replay.
+- L1 `side=UNKNOWN` is legal: visible hash or transaction without a causally validated trade direction is present in *raw discovery/recognition* denominator and unresolved gap metrics, and **does not** trigger BUY/SELL L2 quote tasks until a live directional candidate with exact CA is identified. E2 is confirmed using price asset and token path causality in frozen rule framework.
+- BUY detection **before** finality may schedule `PROVISIONAL_QUOTE` at `t_buy_detected+60/300/900`, even if finality arrives later. If receipt fails, provenance becomes REORGED or finality not met, **all three quotes are REJECTED**, no paper buy and **no control-group pairing** in the final eligible strategy comparison. Preserve raw quote and failed/cancelled denominators **in both groups**. Main/control use the identical policy.
+- SELL has independent initial receipt, directional signal time, quote flow and exit schedule; non-actionable SELL and failed receipt are retained without pretending a timely executable exit.
+- If first BUY+CA discovery occurs too late for a scheduled deadline, preserve `MISSED_DEADLINE`; if request errors or quote expires, `NO_QUOTE` or `STALE_QUOTE`. Do not re-anchor timestamp or backfill real-time quote evidence after the fact.
+- `BACKFILL` and `REORGED` data can support completeness auditing but cannot become new E3 realtime detections. Failed E1 must not inflate "capture success"; disjoint ledger columns capture raw discovery and eligible event denominators.
+- F1 later chooses the finality N / official `finalized` endpoint policy and E2 Router / quote exact-CA list. F0 must **measure availability** and preserve scenarios of missing finality, not invent a confirmed N.
+
+## 5. Acceptance and stop gates
+
+| Gate | Evidence / metric | Required status |
+|---|---|---|
+| A: no-cost transport | Per-method 24–48h actual calls, rate limits, errors, auth and network chain ID; no spending | `PASS` or `BLOCKED_SOURCE` |
+| B: live actionable events | Raw signed BUY candidate to receipt/CA/quote path E0–E3, provenance; no fake lag | `PASS` if reproducible real forward witness; otherwise `INSUFFICIENT_LIVE_EVENTS` |
+| C: quote schedule | Main/control **same pipeline**; live actual request/receive times for all three delays; exact missing/cancel reasons | `PASS` only for actually witnessed events; replay validates mechanics but not live timeliness |
+| D: control stream | Real-time ordinary BUY discovery, *pre-registered selection*, cost ledger; quote parity for valid controls | `PASS` or `BLOCKED_REALTIME_CONTROL` |
+| E: independent denominator | Separate path/method to reconstruct wallet-signed tx + receipt + causal buy, within a bounded scope; two-path difference report | `PASS` or `DENOMINATOR_UNRESOLVED`; **nonce increments alone cannot count as expected buys** |
+| F: recovery/quality | Offline fixtures for WS disconnect, duplicate/late/out-of-order, SELL, E1 fail/reorg, E2 causal mismatch, UNFILLABLE and clock jump | `PASS` or explicit bug severity |
+| G: repeatability | Fixed code SHA, source blob SHA, immutable trial ledger/UTC and local resource costs, dry-run CLI tests | `PASS` or `BLOCKED` |
+
+**Do not falsely claim F0 PASS** from offline replay alone. For provider unavailable or inaccessible, F0 stops at `BLOCKED_SOURCE`; for observer no genuine trading events, report `INSUFFICIENT_LIVE_EVENTS`; for control-stream infeasibility, stop rather than bypass comparison. The 95% discovery target in architecture is conditional on an independently auditable adequate denominator, **not a score to be invented from small or biased trial samples**.
+
+**Budget / stop before any runtime**: no RPC, WS, local background service, Mac deployment, automatic alert, purchase, wallet signature, transaction or trade now. F0 run requires a separate explicit go-ahead specifying allowed locally running environment, chosen *free* endpoint/app, account quotas, `MAX_TOTAL_RPC_CALLS` and `MAX_CONTROL_DISCOVERY_CALLS`, storage path/retention and bounded trial window. Any missing field = `NO_RUN`; no automatic retry extension or second provider requiring payment.
+
+## 6. Development preparation completion (this PR only)
+
+The current PR may provide:
+- fixed architecture reference and separate F0 contract;
+- source-stratified, deterministic sample manifest with raw source SHA;
+- **pure offline** integrity/reproducibility checker;
+- read-only/production-deny requirements for a future prototype; no collector yet.
+
+No F0 runner exists, no API calls were made, no source credentials were accessed, no production or existing Mission monitoring was modified. F0 runtime is **NOT_AUTHORIZED**. Reviewer gate for changes to this F0 spec remains `PENDING_OTHER_AI_REVIEW`, even though fixed SHA `9134fcd...` of the upstream *architecture* was independently approved.
+
+## 7. Offline reproduction
+
+From a local repo containing the two pinned commits, run:
+
+```zsh
+python3 crypto-300-profit-mission/bsc-forward-follow-model/f0/f0_verify_cohort.py --repo . --manifest crypto-300-profit-mission/bsc-forward-follow-model/f0/F0_COHORT_PRESELECTION.json
+```
+
+This command only performs `git cat-file` reads plus hash comparisons; it does **not** query BSC or alter Git. Use a separate checkout of this F0 branch and ensure source PR commits are locally fetched.
