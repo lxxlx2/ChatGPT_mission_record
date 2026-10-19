@@ -205,6 +205,98 @@ def reconcile_v2_factory_counter(rpc, first, last, logs):
             "pairs_after": after, "created_events": len(ordered)}
 
 
+def historical_v2_address(rpc, contract, call_data, block):
+    """Decode only the 32-byte ABI address return, retaining raw provider bytes."""
+    val, raw = rpc.request("eth_call", [{"to": contract, "data": call_data}, hex(block)])
+    if not isinstance(val, str) or not re.fullmatch(r"0x[0-9a-fA-F]{64}", val):
+        raise SourceError("BSC_V2_ADDRESS_ABI_INVALID")
+    address = "0x" + val[-40:].lower()
+    if address == "0x" + "0" * 40:
+        raise SourceError("BSC_V2_FACTORY_ZERO_OR_MISSING_PAIR")
+    return address, raw
+
+
+def enumerate_bsc_v2(rpc, first, last, *, limit, out_dir):
+    """Append-only historical factory index pilot; does not prove buy/sell or T_entry."""
+    if first <= 0:
+        raise SourceError("BSC_V2_INVALID_FIRST_BLOCK")
+    before = historical_v2_count(rpc, first - 1)
+    after = historical_v2_count(rpc, last)
+    if after < before:
+        raise SourceError("BSC_V2_NONMONOTONIC_FACTORY_COUNT")
+    root = out_dir / "v2_historical_index_raw"
+    root.mkdir(parents=True, exist_ok=True)
+    selected, seen = [], set()
+    attempted = 0
+    cfg = CHAINS["bsc-v2"]
+    bases = {a.lower() for a in cfg["bases"]}
+    for index in range(before, min(after, before + limit)):
+        pair_file = root / (str(index) + ".json")
+        if pair_file.exists():
+            row = json.loads(pair_file.read_bytes())
+            if (row.get("factory_index") != index or row.get("block") != last
+                or row.get("rpc_source_sha256") != rpc.source_tag
+                or row.get("chain") != "bsc-v2"
+                or row.get("factory") != cfg["factory"].lower()):
+                raise SourceError("HISTORICAL_V2_RESUME_SOURCE_DRIFT")
+            for name in ("pair", "token0", "token1"):
+                if not re.fullmatch(r"0x[0-9a-f]{40}", row.get(name, "")):
+                    raise SourceError("HISTORICAL_V2_SAVED_ADDRESS_MALFORMED")
+            raws = row.get("raw_abi_response_records")
+            if not isinstance(raws, list) or len(raws) != 3:
+                raise SourceError("HISTORICAL_V2_SAVED_RAW_MISSING")
+            if any(sha(x["raw_json"].encode("utf-8")) != x["sha256"]
+                   for x in raws):
+                raise SourceError("HISTORICAL_V2_SAVED_RAW_SHA_MISMATCH")
+        else:
+            pair, raw_pair = historical_v2_address(
+                rpc, cfg["factory"], "0x1e3dd18b" + format(index, "064x"), last)
+            token0, raw0 = historical_v2_address(rpc, pair, "0x0dfe1681", last)
+            token1, raw1 = historical_v2_address(rpc, pair, "0xd21220a7", last)
+            if not token0 < token1:
+                raise SourceError("HISTORICAL_V2_INVALID_TOKEN_ORDER")
+            raw_records = []
+            for method, raw in (("allPairs", raw_pair), ("token0", raw0), ("token1", raw1)):
+                raw_records.append({"method": method, "raw_json": raw.decode("utf-8"),
+                                    "sha256": sha(raw)})
+            row = {"chain": "bsc-v2", "factory": cfg["factory"].lower(),
+                   "block": last, "factory_index": index,
+                   "rpc_source_sha256": rpc.source_tag,
+                   "pair": pair, "token0": token0, "token1": token1,
+                   "raw_abi_response_records": raw_records}
+            safe_file(pair_file, plain_json(row).encode("utf-8"))
+        attempted += 1
+        a, b = row["token0"], row["token1"]
+        if (a in bases) == (b in bases):
+            continue
+        token = b if a in bases else a
+        if token in seen:
+            continue
+        seen.add(token)
+        selected.append({"factory_index": index, "pair": row["pair"],
+                         "token_ca": token,
+                         "quote_asset": a if a in bases else b,
+                         "historical_identity_only": True,
+                         "original_paircreated_tx_hash": None,
+                         "t_entry": None,
+                         "actual_two_sided_sellability": "NOT_SCORABLE"})
+        if len(selected) >= 30:
+            break
+    return {
+        "schema": "MONSTER_BSC_V2_FACTORY_HISTORICAL_IDENTITY_PILOT_V1",
+        "status": ("CHRONOLOGICAL_FIRST30_V2_POOL_IDENTITIES_ONLY"
+                   if len(selected) == 30 else "PARTIAL_NOT_30_ELIGIBLE_OR_LIMIT"),
+        "factory": cfg["factory"].lower(), "factory_count_before_day": before,
+        "factory_count_at_day_end": after, "factory_new_pools_in_day": after - before,
+        "factory_index_rows_checked": attempted, "identity_candidates_found": len(selected),
+        "sample_complete_first30_by_factory_order": len(selected) == 30,
+        "sample": selected,
+        "source_identity": "HISTORICAL_ONCHAIN_FACTORY_STORAGE_AND_PAIR_IMMUTABLE_TOKENS",
+        "first_real_swap": "NOT_SCORABLE", "actual_executable_pnl": "UNKNOWN",
+        "source_raw_archive_dir": str(root), "contains_current_token_list": False
+    }
+
+
 def safe_file(path, raw):
     path.parent.mkdir(parents=True, exist_ok=True)
     temp = path.with_name(path.name + ".pending")
@@ -299,6 +391,29 @@ def run(args):
     rpc = RPC(endpoint, chain["chain_id"], args.max_requests, args.delay)
     rpc.chain_check()
     first, last = resolve_day(rpc, args.day)
+    if args.mode == "enumerate":
+        if args.chain != "bsc-v2":
+            raise SourceError("FACTORY_STORAGE_ENUMERATION_ONLY_FOR_BSC_V2")
+        out_dir = args.out_dir.resolve() / (args.chain + "-" + args.day)
+        try:
+            result = enumerate_bsc_v2(rpc, first, last, limit=args.limit, out_dir=out_dir)
+        except SourceError as exc:
+            result = {"status": "SOURCE_PARTIAL_OR_UNAVAILABLE", "reason": str(exc),
+                      "sample_complete_first30_by_factory_order": False,
+                      "first_real_swap": "NOT_SCORABLE"}
+        result.update({"day": args.day, "chain": args.chain, "day_blocks": [first, last],
+                       "provider_host": rpc.host, "rpc_source_sha256": rpc.source_tag,
+                       "requests_this_invocation": rpc.calls,
+                       "not_final_population_or_PIT_pass": True})
+        safe_file(out_dir / "v2_factory_enum_status.json",
+                  plain_json(result).encode("utf-8"))
+        print(plain_json({k: result.get(k) for k in (
+            "status", "factory_new_pools_in_day", "factory_index_rows_checked",
+            "identity_candidates_found", "sample_complete_first30_by_factory_order",
+            "requests_this_invocation", "reason")}).strip())
+        if not result.get("sample_complete_first30_by_factory_order"):
+            raise SystemExit(2)
+        return
     if args.mode == "probe":
         attempts = []
         for n in (2000, 10):
@@ -386,14 +501,17 @@ def main():
     parser = argparse.ArgumentParser(description="Manual historical Factory RPC coverage; no transactions")
     parser.add_argument("--chain", choices=CHAINS, default="base-v3")
     parser.add_argument("--day", default="2025-07-01")
-    parser.add_argument("--mode", choices=("probe", "scan"), default="probe")
+    parser.add_argument("--mode", choices=("probe", "scan", "enumerate"), default="probe")
+    parser.add_argument("--limit", type=int, default=45,
+                        help="BSC V2 historical index identities to check, max 200 per invocation")
     parser.add_argument("--rpc", default=None, help="Override only with a trusted HTTPS RPC with eth_getLogs")
     parser.add_argument("--out-dir", type=Path, default=Path.home() / "monster-pit-source-probe")
     parser.add_argument("--chunk", type=int, default=1000)
     parser.add_argument("--max-requests", type=int, default=250)
     parser.add_argument("--delay", type=float, default=0.3)
     args = parser.parse_args()
-    if args.chunk < 1 or args.chunk > 10000 or args.max_requests < 1 or args.delay < 0:
+    if (args.chunk < 1 or args.chunk > 10000 or args.max_requests < 1
+        or not 1 <= args.limit <= 200 or args.delay < 0):
         parser.error("invalid request budget / chunk / delay")
     try:
         run(args)
