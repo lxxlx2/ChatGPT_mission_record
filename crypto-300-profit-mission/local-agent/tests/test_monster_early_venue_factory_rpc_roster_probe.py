@@ -150,7 +150,7 @@ class FactorySourceProbeTests(unittest.TestCase):
                 elif data == "0x0dfe1681":
                     returned = "0x" + "0"*24 + ("1"*40 if contract.endswith("1") else "2"*40)
                 elif data == "0xd21220a7":
-                    returned = "0x" + "0"*24 + ("b"*39 + "0" if contract.endswith("1") else "e"*40)
+                    returned = "0x" + "0"*24 + ("bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c" if contract.endswith("1") else "e"*40)
                 else:
                     raise AssertionError("unexpected read")
                 import json
@@ -160,7 +160,8 @@ class FactorySourceProbeTests(unittest.TestCase):
             result = m.enumerate_bsc_v2(rpc, 10, 20, limit=2, out_dir=Path(tmp))
             self.assertEqual(result["factory_new_pools_in_day"], 2)
             self.assertEqual(result["status"], "PARTIAL_NOT_30_ELIGIBLE_OR_LIMIT")
-            self.assertEqual(result["identity_candidates_found"], 0)
+            self.assertEqual(result["identity_candidates_found"], 1)
+            self.assertEqual(result["sample"][0]["token_ca"], "0x" + "1"*40)
             self.assertEqual(result["factory_index_rows_checked"], 2)
             before = rpc.calls
             result2 = m.enumerate_bsc_v2(rpc, 10, 20, limit=2, out_dir=Path(tmp))
