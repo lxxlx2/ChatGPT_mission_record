@@ -1,0 +1,202 @@
+{
+  "schema": "bsc-f0-l1-live-code-qualification-result-v1",
+  "linked_authorization": [
+    "PR #136 (approved offline code, reviewed SHA cd30f8b69301b53380473a33ebb428351d4c1bce)",
+    "PR #137 (user authorization record, <=24 free read-only RPC)"
+  ],
+  "reviewed_code_sha": "cd30f8b69301b53380473a33ebb428351d4c1bce",
+  "script_sha256": "3a3b399262280760a3c87a161a96536911717671612919bd66770ed842a6fea8",
+  "cohort_manifest_blob": "fcd0029314353313867e565190cd4f2882089f11",
+  "router_registry_blob": "dc425f85a3f89dd0eb2f73ee6583ad88549a00f2",
+  "permit_sha256": "b63c8892281c3debe4739972460b1b9c0e0a93eebbdba0816cd6b3aefae14bcf",
+  "independent_permit_review": {
+    "reviewer": "separate codex exec read-only process",
+    "verdict": "APPROVE_PERMIT b63c8892281c3debe4739972460b1b9c0e0a93eebbdba0816cd6b3aefae14bcf",
+    "reviewed_at_utc": "2026-10-19T22:47:49Z"
+  },
+  "execution": {
+    "exit_code": 0,
+    "start_utc": "2026-10-19T22:47:58.918263+00:00",
+    "end_utc": "2026-10-19T22:48:15.614574+00:00",
+    "endpoint": "https://bsc-dataseed.bnbchain.org",
+    "chain_id": 56,
+    "chain_id_result_sha256": "c355f3c2a096750278d86f476f4464c6f61fbbcdc72f04ad739ccc649cde662f",
+    "block_number_hex": "0x7aad797",
+    "block_number_decimal": 128636823
+  },
+  "budget": {
+    "max_total": 24,
+    "attempted_total": 24,
+    "attempted_identity": 2,
+    "attempted_primary_getcode": 20,
+    "attempted_router_getcode": 2,
+    "failed": 0,
+    "retries": 0,
+    "over_budget": false
+  },
+  "journal_states": {
+    "RPC_RESPONSE": 24,
+    "unknown_left": 0
+  },
+  "reconciliation": {
+    "unreconciled_attempts": 0,
+    "journal_sequence_contiguous": true
+  },
+  "primary_wallets": [
+    {
+      "wallet": "0x00077705952c90b728c6d7dc450beb4429331111",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "b4a38c378697678169aedb9ada81554574bf5954d536568f91aa84389d7918b9",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "34c1edc832f2acf6d391f2e13c81db3e8109bae4099984dd2027edafad683c13",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "fa2520db59efe09a2ce5b76bc357f99cffd3e7384541120a11d6e4bc76452838",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0x386712d1f9d3fa11ee4506e03697c36041ff0052",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "6a4d48f7b19b79393ac82a9aed6ecd3b75fb4479054669649bf327e1b1046e07",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0x61a08dc9b41f79fe7cccaabf626d694deded2a5a",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "abc56eeb987cc94bfcec07b9589d87f0dcb539cf6d2db094611fe47313f634f1",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0x712b5069c457c92133c026520c9e7d91c6f8bceb",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "08a2c4242de65cef1b7a7ef0f9ecc573de39cee3396c108443cacb5ca3d651e5",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0x7b3d8e939ee08b52d06ab5e6f85791a6007e8d61",
+      "observed_code_state": "HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "0c18f62cd1f9e949f5261a1eda6dfd1df2ca33d3cc4c0ce65c5db41f7ebaf0bd",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0x7e8fb0392542812476d9f2d0d71c01d1fa0776c5",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "5d8d6ac85dda713315fe97663469d139e3f51b476688b839841c8a72f97dbddf",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "c4d07c21b84783e7ec61b14e831ed9232c3ea23b4bb8fab4cb7b7ae273c260d4",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "4289fcc06a1554036fa95d87dadcee45edba5a69455d36e509261d7f34d7d025",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "a111083961f29e47da875b28a4e9ffa1c2fc4b5c978a26427c09c8ad5ff8ef01",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "2c53739ac56cc809aca2619c8bd62991cf7ae6e8732b83657ce161d774a26bf7",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "3cf46dd361f1f9de3fa1113e1ab377bc41e285f152087067902578c940dbc693",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "7164687dd9ed107fd8b35f5a33a7b7a36429ca5e910f12858829af56ded493d4",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0xb44fdf0e2e4e416433a7a1390dac992b92fcca04",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "1674f60490c717552152961f605160cf6ea84692c06eac4256a4c42503ba3b0d",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0xb870f78d2e73dda3b73bab8eab9d31fb4ae1355a",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "7264a2058fdc7f0b38c50e256cad073cd09f5845f2f0fde2fbfb7334c65bb0ce",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "0de83a16b33cfac02e290e55beea17c3e38dd089d121ed0521da8bed21fe6900",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "a69e7f978110e5a7f2bd623897e37f4e8b5bff1656f38b6e2f7adb6f04108b34",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0xe16b706c138c0923970c73ba2ee385c4b1f0b202",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "f11c722597056091ed8bbdcd74b8fdbadfbfcd541abf8cf81f52251c811b3090",
+      "checked_block_decimal": 128636823
+    },
+    {
+      "wallet": "0xf9814f7c77194d123ebd68706f17bf308c5471f2",
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "faabdd15ccc5ef1ec48bb9ea7bbfcef071f8f27afee4c4bf6649474ad84fc459",
+      "checked_block_decimal": 128636823
+    }
+  ],
+  "primary_summary": {
+    "NO_CODE_AT_SAMPLED_BLOCK": 19,
+    "HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK": 1,
+    "RPC_ERROR_AT_SAMPLED_BLOCK": 0,
+    "TRANSPORT_FAILED_AT_SAMPLED_BLOCK": 0,
+    "NOT_CHECKED": 0
+  },
+  "router_observations": [
+    {
+      "router": "0x1a0a18ac4becddbd6389559687d1a73d8927e416",
+      "code_state": "HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "d4cff6b04c0fdaab911355a227db00d0d5745d0a91c1ccc8f0ff9160d61f7e66",
+      "control_eligible": false
+    },
+    {
+      "router": "0xd9c500dff816a1da21a48a732d3498bf09dc9aeb",
+      "code_state": "HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK",
+      "response_sha256": "393d66f33d4c7b171164ba3a2b1fdd54bf3f00955a23220fd88bc4d4e872ff59",
+      "control_eligible": false
+    }
+  ],
+  "interpretation_limits": [
+    "NO_CODE and HAS_CODE are observations at one sampled block only",
+    "NO_CODE is not proof of a permanent EOA or key control",
+    "HAS_CODE does not prove swap causality",
+    "Router HAS_CODE does not make a control group eligible",
+    "provider_billing UNVERIFIED",
+    "no quotes, no E2/E3, no paper profit"
+  ],
+  "report_defect_noted": "top-level checked_block was null in report.json; height recovered from eth_getCode params and eth_blockNumber journal entry",
+  "raw_permit_and_nonce_committed": false,
+  "raw_payloads_committed": false,
+  "live_watchlist_enabled": false,
+  "live_control_enabled": false,
+  "stop_state": "QUALIFICATION_READS_COMPLETE_NOT_LIVE_MONITORING"
+}
