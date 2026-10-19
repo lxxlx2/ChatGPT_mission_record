@@ -572,6 +572,10 @@ class RealSellRawSourceReplayTests(unittest.TestCase):
         wrong["logs"][2]["data"] = "0x" + "0"*128
         with self.assertRaisesRegex(m.SourceError, "SWAP_SYNC_TRANSFER|IMPOSSIBLE"):
             m.validate_frozen_real_sell_receipt(wrong, targets[0])
+        wrong = json.loads(json.dumps(original))
+        wrong["logs"][0]["logIndex"] = "0x4"
+        with self.assertRaisesRegex(m.SourceError, "SWAP_SYNC_TRANSFER"):
+            m.validate_frozen_real_sell_receipt(wrong, targets[0])
 
     def test_18_receipt_raw_archive_offline_replay_and_byte_mutation(self):
         targets = self._targets()
