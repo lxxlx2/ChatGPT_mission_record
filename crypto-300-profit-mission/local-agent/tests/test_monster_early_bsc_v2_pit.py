@@ -120,10 +120,14 @@ class BscV2PitTests(unittest.TestCase):
                     token0=item['token0'], token1=item['token1'],
                     factory_logs=response['scope_factory_event'],
                     pool_logs=response['scope_pair_same_tx_events'])
-                self.assertTrue(fact['initial_quote_liquidity_proven'])
+                expected = case['same_tx_erc20_lp_transfer_sync_mint']
+                self.assertEqual(fact['initial_quote_liquidity_proven'], expected)
                 self.assertEqual(fact['creation_tx'], case['creation_tx_hash'])
-                self.assertEqual(fact['reserve0_raw'], case['initial_reserve0_raw'])
-                self.assertEqual(fact['reserve1_raw'], case['initial_reserve1_raw'])
+                if expected:
+                    self.assertEqual(fact['reserve0_raw'], case['initial_reserve0_raw'])
+                    self.assertEqual(fact['reserve1_raw'], case['initial_reserve1_raw'])
+                else:
+                    self.assertEqual(fact['status'], 'CREATED_NO_UNIQUE_SAME_TX_MINT_SYNC')
                 self.assertEqual(fact['sell_path'], 'UNKNOWN')
                 broken = dict(response['scope_factory_event'][0])
                 broken['data'] = '0x' + '0'*128
@@ -180,6 +184,33 @@ class V2HistoricQuoteAndSwapEvidenceTests(unittest.TestCase):
                 self.assertEqual(int(q['reverse_quote_back_raw']), expected_reverse)
                 self.assertEqual(q['historical_sell_executable'], 'UNVERIFIED')
                 self.assertEqual(q['sequential_roundtrip_pnl'], 'NOT_COMPUTED')
+
+    def test_sequential_roundtrip_uses_post_buy_reserves_and_never_claims_execution(self):
+        from mission_agent.early.bsc_v2_pit import (
+            v2_reference_sequential_roundtrip, v2_static_two_way_quote)
+        samples = [
+            (10000000000000000000, 10000000000000000000000, 1600000000000000000000, 9950112138733759041),
+            (10000000000000000, 8300000000000000000, 4600000000000000000000000000, 9950122293529727),
+            (1000000000000000000, 1313968229661012727, 850000000000000000, 997158206422518356),
+            (10000000000000000, 17000000000000000000, 500000000000000000000000000, 9950091711211336),
+        ]
+        for amount, reserve_quote, reserve_token, back in samples:
+            with self.subTest(amount=amount, reserve_quote=reserve_quote):
+                seq = v2_reference_sequential_roundtrip(amount, reserve_quote, reserve_token)
+                static = v2_static_two_way_quote(amount, reserve_quote, reserve_token)
+                self.assertEqual(seq['token_bought_raw'], static['indicative_token_out_raw'])
+                self.assertEqual(int(seq['reference_quote_back_raw']), back)
+                self.assertGreater(back, int(static['reverse_quote_back_raw']))
+                self.assertFalse(seq['historical_trade_execution_verified'])
+                self.assertEqual(seq['sellable_at_notional'], 'UNVERIFIED')
+                self.assertEqual(seq['paper_net_pnl_status'], 'NOT_SCORABLE')
+
+    def test_sequential_amm_reference_rejects_invalid_or_dust_input(self):
+        from mission_agent.early.bsc_v2_pit import v2_reference_sequential_roundtrip
+        for inputs in [('1', 1000, 1000), (1, 1000000, 1),
+                       (0, 10, 10), (10, 0, 100), (10, 100, 0)]:
+            with self.subTest(inputs=inputs), self.assertRaises(PITInvalid):
+                v2_reference_sequential_roundtrip(*inputs)
 
     def test_invalid_or_uneconomical_quotes_fail_closed(self):
         from mission_agent.early.bsc_v2_pit import v2_static_two_way_quote
