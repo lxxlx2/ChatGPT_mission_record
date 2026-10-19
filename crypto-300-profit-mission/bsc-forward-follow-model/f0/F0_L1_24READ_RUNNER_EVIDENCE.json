@@ -1,0 +1,31 @@
+{
+  "schema": "bsc-f0-l1-code-24read-runner-offline-review-evidence-v1",
+  "approved_parent_sha": "296aa3f2b8dfb80726f06b3663dede3e2e7c0d5c",
+  "real_network_calls": 0,
+  "result": "OFFLINE_CODE_READY_REVIEW_REQUIRED_NO_RUN",
+  "local_tests_discovered": 209,
+  "local_pass": 207,
+  "local_skip": 2,
+  "local_skip_reason": "real PR116 manifest absent from isolated local test tree",
+  "independent_review_gate": "209 tests passed, zero skipped in complete checkout; inspect fake sender and live-gate negative tests",
+  "full_test_log_sha256": "ae63d98712c5f48911431fff69b425b21392369684cde58800d068dc92bb8fd9",
+  "file_sha256": {
+    "f0_l1_code_probe.py": "573015c182c831b7753d68cf89e9ccf7b4647d02f2dd8cf0d11091b77a614153",
+    "tests/test_f0_l1_code_probe.py": "3da3cb007d4a4e14275a876d909b474f51cae334591e34b163e3f89f08213032",
+    "fixtures/l1_code_probe_24_mock.json": "865583cc1ff86ba20212f017c1fde01a9ff53a97a3bba5d93934e25f2bb9b16b",
+    "fixture_l1_code_probe_24_report.json": "6327525e28378424b499cfb2808ec2772c9344befb9051665534668a06f67548",
+    "F0_L1_24READ_QUALIFICATION_RUNNER.md": "4255a94d841f4717781db2134fa07d20d2d29301de8ab63865f628aca1fb41fe"
+  },
+  "fixture_report_metrics": {
+    "attempted_rpc_calls": 24,
+    "attempted_primary_getcode": 20,
+    "attempted_router_getcode": 2,
+    "attempted_identity_reads": 2,
+    "actual_rpc_calls": 0,
+    "stop_state": "QUALIFICATION_READS_COMPLETE_NOT_LIVE_MONITORING"
+  },
+  "no_user_live_consent": true,
+  "reviewed_permit_exists": false,
+  "previous_four_call_authority": "EXHAUSTED",
+  "full_test_log_repo_path": "crypto-300-profit-mission/bsc-forward-follow-model/f0/fixtures/l1_code_probe_209_local_tests.log"
+}

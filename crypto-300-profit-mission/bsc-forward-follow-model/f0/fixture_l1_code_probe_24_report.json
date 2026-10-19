@@ -1,0 +1,270 @@
+{
+  "actual_rpc_calls": 0,
+  "attempt_ledger_status": "IN_MEMORY_OFFLINE_ONLY",
+  "attempted_identity_reads": 2,
+  "attempted_primary_getcode": 20,
+  "attempted_router_getcode": 2,
+  "attempted_rpc_calls": 24,
+  "cohort_source": "CALLER_MUST_REPORT_FROZEN_BLOB_EVIDENCE",
+  "counts": {
+    "HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK": 0,
+    "NOT_CHECKED": 0,
+    "NO_CODE_AT_SAMPLED_BLOCK": 20,
+    "RPC_ERROR_AT_SAMPLED_BLOCK": 0,
+    "TRANSPORT_FAILED_AT_SAMPLED_BLOCK": 0
+  },
+  "e1_finality": "UNRESOLVED_F1_POLICY",
+  "e2_attested": false,
+  "e3_actual_count": 0,
+  "error_code": null,
+  "first_actionable_latency": "NOT_MEASURED",
+  "frozen_pr116_manifest_blob": "fcd0029314353313867e565190cd4f2882089f11",
+  "independent_control_denominator": "NOT_MEASURED",
+  "live_control_enabled": false,
+  "live_watchlist_enabled": false,
+  "mode": "OFFLINE_SYNTHETIC_READ_ONLY_QUALIFICATION",
+  "paper_profit_labels": 0,
+  "per_primary": [
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "b4a38c378697678169aedb9ada81554574bf5954d536568f91aa84389d7918b9",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000001",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "34c1edc832f2acf6d391f2e13c81db3e8109bae4099984dd2027edafad683c13",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000002",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "fa2520db59efe09a2ce5b76bc357f99cffd3e7384541120a11d6e4bc76452838",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000003",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "6a4d48f7b19b79393ac82a9aed6ecd3b75fb4479054669649bf327e1b1046e07",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000004",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "abc56eeb987cc94bfcec07b9589d87f0dcb539cf6d2db094611fe47313f634f1",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000005",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "08a2c4242de65cef1b7a7ef0f9ecc573de39cee3396c108443cacb5ca3d651e5",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000006",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "65ec65762b2b1f95ed9c194a5ea758ed0a759d8340f646a54c484fff1d668780",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000007",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "5d8d6ac85dda713315fe97663469d139e3f51b476688b839841c8a72f97dbddf",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000008",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "c4d07c21b84783e7ec61b14e831ed9232c3ea23b4bb8fab4cb7b7ae273c260d4",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000009",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "4289fcc06a1554036fa95d87dadcee45edba5a69455d36e509261d7f34d7d025",
+      "rpc_error_code": null,
+      "wallet": "0x000000000000000000000000000000000000000a",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "a111083961f29e47da875b28a4e9ffa1c2fc4b5c978a26427c09c8ad5ff8ef01",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000010",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "2c53739ac56cc809aca2619c8bd62991cf7ae6e8732b83657ce161d774a26bf7",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000011",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "3cf46dd361f1f9de3fa1113e1ab377bc41e285f152087067902578c940dbc693",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000012",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "7164687dd9ed107fd8b35f5a33a7b7a36429ca5e910f12858829af56ded493d4",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000013",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "1674f60490c717552152961f605160cf6ea84692c06eac4256a4c42503ba3b0d",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000014",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "7264a2058fdc7f0b38c50e256cad073cd09f5845f2f0fde2fbfb7334c65bb0ce",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000015",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "0de83a16b33cfac02e290e55beea17c3e38dd089d121ed0521da8bed21fe6900",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000016",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "a69e7f978110e5a7f2bd623897e37f4e8b5bff1656f38b6e2f7adb6f04108b34",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000017",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "f11c722597056091ed8bbdcd74b8fdbadfbfcd541abf8cf81f52251c811b3090",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000018",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": 100,
+      "failure_code": null,
+      "observed_code_state": "NO_CODE_AT_SAMPLED_BLOCK",
+      "real_eoa_attested": false,
+      "response_sha256": "faabdd15ccc5ef1ec48bb9ea7bbfcef071f8f27afee4c4bf6649474ad84fc459",
+      "rpc_error_code": null,
+      "wallet": "0x0000000000000000000000000000000000000019",
+      "wallet_live_eligible": false
+    }
+  ],
+  "primary_count": 20,
+  "provider_billed": "UNVERIFIED",
+  "quoted_actual_count": 0,
+  "real_technical_eoa_eligibility": "NOT_ESTABLISHED",
+  "requested_height": 100,
+  "router_code_observations": [
+    {
+      "code_at_sampled_block_only": true,
+      "code_state": "HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK",
+      "control_eligible": false,
+      "failure_code": null,
+      "response_sha256": "2ee0452d6d44706034f15374e710612355f46bbd3ddbf98d321a345ca57000ff",
+      "router": "0x1a0a18ac4becddbd6389559687d1a73d8927e416"
+    },
+    {
+      "code_at_sampled_block_only": true,
+      "code_state": "HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK",
+      "control_eligible": false,
+      "failure_code": null,
+      "response_sha256": "cbd763dc7eb74bab5888716c96b221c3f07e911406cfa95ca5ff64f5f851fb93",
+      "router": "0xd9c500dff816a1da21a48a732d3498bf09dc9aeb"
+    }
+  ],
+  "router_documented_candidates": [
+    "0x1a0a18ac4becddbd6389559687d1a73d8927e416",
+    "0xd9c500dff816a1da21a48a732d3498bf09dc9aeb"
+  ],
+  "router_onchain_code_verified": false,
+  "router_registry_source_only": true,
+  "router_swap_causality_verified": false,
+  "saved_attempts_provider_billed": "UNVERIFIED",
+  "saved_getcode_attempts": 20,
+  "saved_getcode_not_checked": 0,
+  "saved_getcode_rpc_errors": 0,
+  "saved_getcode_success_responses": 20,
+  "saved_getcode_transport_failures": 0,
+  "schema": "bsc-f0-l1-one-shot-code-qualification-probe-v1",
+  "snapshot_source": "OFFLINE_SYNTHETIC_ONLY",
+  "source_envelope_sha256": "c17f974a37c431c29624a7fd71687f7395853a8f8ddead19be466548cde25921",
+  "stop_state": "QUALIFICATION_READS_COMPLETE_NOT_LIVE_MONITORING",
+  "unreconciled_attempts": 0
+}
