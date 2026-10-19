@@ -119,3 +119,40 @@ def verify_bootstrap(*, factory, factory_index, creation_block, pool, token0, to
             'initial_quote_liquidity_proven': True,
             'first_swap': 'UNKNOWN', 'sell_path': 'UNKNOWN',
             'realized_pnl': 'UNKNOWN', 'public_observer_time': 'UNVERIFIED'}
+
+def verify_delayed_mint_sync(*, pool, creation_block, update_block, pool_logs):
+    """Identify delayed first LP Mint+Sync, without asserting a buy/sell path."""
+    if update_block <= creation_block:
+        raise PITInvalid('DELAYED_LIQUIDITY_BLOCK_NOT_AFTER_CREATION')
+    pair = pool.lower()
+    eligible = []
+    for log in pool_logs:
+        if (str(log.get('address', '')).lower() != pair
+                or as_uint(log.get('blockNumber')) != update_block
+                or log.get('removed') is True):
+            raise PITInvalid('DELAYED_POOL_LOG_SOURCE_MISMATCH')
+        eligible.append(log)
+    syncs = [x for x in eligible if x.get('topics') and x['topics'][0].lower() == SYNC]
+    mints = [x for x in eligible if x.get('topics') and x['topics'][0].lower() == MINT]
+    matches = []
+    for mint in mints:
+        tx = mint['transactionHash'].lower()
+        before = [s for s in syncs if s['transactionHash'].lower() == tx
+                  and as_uint(s['logIndex']) < as_uint(mint['logIndex'])
+                  and s['data'].lower() == mint['data'].lower()]
+        if len(before) == 1:
+            a, b = words(mint['data'])
+            if a > 0 and b > 0:
+                matches.append((mint, a, b))
+    if len(matches) != 1:
+        return {'status': 'DELAYED_FIRST_MINT_SYNC_UNRESOLVED',
+                'delayed_initial_liquidity_proven': False,
+                'first_sync_update_block': update_block, 'sell_path': 'UNKNOWN'}
+    mint, a, b = matches[0]
+    return {'status': 'DELAYED_FIRST_MINT_SYNC_CONFIRMED',
+            'delayed_initial_liquidity_proven': True,
+            'first_sync_update_block': update_block,
+            'first_delayed_mint_tx': mint['transactionHash'].lower(),
+            'reserve0_raw': str(a), 'reserve1_raw': str(b),
+            'first_trade_or_executable_t_entry': 'UNRESOLVED', 'sell_path': 'UNKNOWN'}
+
