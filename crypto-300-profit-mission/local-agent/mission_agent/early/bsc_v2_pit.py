@@ -214,6 +214,115 @@ def classify_v2_swap_by_quote_side(row, *, quote_is_token0):
 
 
 
+def summarize_v2_archived_swap_windows(*, pool, token0, token1, quote_asset, windows):
+    """Replay only archived pair-event windows; never treat gaps as no trading.
+
+    Pair Swap/Sync logs show pool-direction events, not ERC20 transfer amount
+    received by the pair or a token's allowance, tax, or holder restrictions.
+    Distinct windows can overlap, so equal source events count only once.
+    """
+    def valid_address(value):
+        if not isinstance(value, str) or len(value) != 42 or not value.startswith('0x'):
+            return False
+        try:
+            int(value[2:], 16)
+        except ValueError:
+            return False
+        return True
+
+    if (not all(valid_address(a) for a in (pool, token0, token1, quote_asset))
+            or token0.lower() == token1.lower()
+            or quote_asset.lower() not in (token0.lower(), token1.lower())
+            or not isinstance(windows, list)):
+        raise PITInvalid('ARCHIVED_SWAP_SCOPE_OR_QUOTE_INVALID')
+    quote_is_token0 = quote_asset.lower() == token0.lower()
+    seen = {}
+    window_presence = []
+    for item in windows:
+        if not isinstance(item, dict) or not isinstance(item.get('name'), str):
+            raise PITInvalid('ARCHIVED_SWAP_WINDOW_INVALID')
+        name = item['name']
+        events = item.get('logs')
+        if not isinstance(events, list):
+            raise PITInvalid('ARCHIVED_SWAP_LOGS_MISSING')
+        window_presence.append(name)
+        for row in events:
+            if not isinstance(row, dict) or row.get('address', '').lower() != pool.lower():
+                raise PITInvalid('ARCHIVED_SWAP_WRONG_PAIR_ADDRESS')
+            if row.get('removed') is True:
+                raise PITInvalid('ARCHIVED_SWAP_REMOVED_LOG')
+            topics = row.get('topics')
+            if not isinstance(topics, list) or not topics or not isinstance(topics[0], str):
+                raise PITInvalid('ARCHIVED_SWAP_MALFORMED_TOPICS')
+            if (not isinstance(row.get('transactionHash'), str)
+                    or len(row['transactionHash']) != 66
+                    or not row['transactionHash'].startswith('0x')):
+                raise PITInvalid('ARCHIVED_SWAP_TX_HASH_INVALID')
+            try:
+                int(row['transactionHash'][2:], 16)
+                block = as_uint(row.get('blockNumber'))
+                txindex = as_uint(row.get('transactionIndex'))
+                logindex = as_uint(row.get('logIndex'))
+            except (PITInvalid, ValueError):
+                raise PITInvalid('ARCHIVED_SWAP_LOG_INDEX_INVALID') from None
+            key = (block, txindex, logindex)
+            if key in seen:
+                if seen[key] != row:
+                    raise PITInvalid('ARCHIVED_SWAP_CONFLICTING_DUPLICATE_LOG')
+            else:
+                seen[key] = row
+    ordered = sorted(seen.items())
+    syncs_by_tx = {}
+    for (block, txindex, logindex), row in ordered:
+        if row['topics'][0].lower() == SYNC:
+            words(row.get('data'))
+            syncs_by_tx.setdefault((block, txindex, row['transactionHash'].lower()), []).append(logindex)
+    swaps = []
+    for (block, txindex, logindex), row in ordered:
+        if row['topics'][0].lower() != SWAP:
+            continue
+        if len(row['topics']) != 3:
+            raise PITInvalid('ARCHIVED_SWAP_TOPICS_LAYOUT_INVALID')
+        direction = classify_v2_swap_by_quote_side(row, quote_is_token0=quote_is_token0)
+        sync_prior = any(
+            n < logindex for n in syncs_by_tx.get(
+                (block, txindex, row['transactionHash'].lower()), []))
+        swaps.append({
+            'block': block, 'tx_hash': row['transactionHash'].lower(),
+            'log_index': logindex, 'direction': direction['direction'],
+            'quote_in_raw': direction['quote_in_raw'],
+            'quote_out_raw': direction['quote_out_raw'],
+            'token_in_raw': direction['token_in_raw'],
+            'token_out_raw': direction['token_out_raw'],
+            'preceding_same_tx_pool_sync_in_saved_window': sync_prior,
+            'actual_erc20_transfer_included_in_pair_logs': False,
+            'historical_sellable_at_notional': 'UNVERIFIED',
+        })
+    verified_sells = [x for x in swaps if (
+        x['direction'] == 'OBSERVED_TOKEN_TO_QUOTE_SWAP'
+        and x['preceding_same_tx_pool_sync_in_saved_window'])]
+    verified_buys = [x for x in swaps if (
+        x['direction'] == 'OBSERVED_QUOTE_TO_TOKEN_SWAP'
+        and x['preceding_same_tx_pool_sync_in_saved_window'])]
+    return {
+        'status': 'NONCONTIGUOUS_ARCHIVED_PAIR_WINDOWS_ONLY',
+        'archived_windows': window_presence,
+        'archived_windows_complete_between_earliest_and_latest': False,
+        'observed_swap_events': len(swaps),
+        'swap_with_prior_same_tx_sync': sum(
+            x['preceding_same_tx_pool_sync_in_saved_window'] for x in swaps),
+        'observed_quote_to_token_with_sync': len(verified_buys),
+        'observed_token_to_quote_with_sync': len(verified_sells),
+        'first_observed_in_saved_windows': swaps[0] if swaps else None,
+        'observed_direction_events': swaps,
+        'absence_of_swap_in_missing_intervals': 'UNKNOWN',
+        'all_token_erc20_transfer_receipts': 'NOT_IN_PAIR_EVENT_SCOPE',
+        'historical_token_tax_and_user_sellability': 'UNVERIFIED',
+        'twentyfour_of_thirty_complete_pit_gate': 'NOT_SCORABLE',
+        'eighteen_of_thirty_sellable_gate': 'NOT_SCORABLE',
+    }
+
+
 def v2_reference_sequential_roundtrip(quote_amount_raw, quote_reserve_raw,
                                        token_reserve_raw, fee_bps=25):
     """Counterfactual two-leg AMM reserve update, with *zero* transfer tax.
