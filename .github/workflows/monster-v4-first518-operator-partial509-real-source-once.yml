@@ -1,0 +1,171 @@
+name: Monster operator 509 of 511 partial source honest signal readout one shot
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-first518-operator-partial509-real-source-once.yml'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster-operator-partial509-real-source-once
+  cancel-in-progress: false
+jobs:
+  original_1533_and_full_operator_diagnostics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: true
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify one off trigger and run original plus new read only regression tests
+        run: |
+          set -eu
+          python3 - <<'PY'
+          import subprocess
+          changed=subprocess.check_output(['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],text=True).splitlines()
+          if changed != ['.github/workflows/monster-v4-first518-operator-partial509-real-source-once.yml']:
+              raise RuntimeError('MONSTER_EXPECT_ONLY_MANUAL_WORKFLOW_COMMIT:' + repr(changed))
+          print('MONSTER_OPERATOR_PARTIAL509_WORKFLOW_EXPLICIT_PUSH_ONLY')
+          PY
+          python3 -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_opportunity_snapshot.py crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_fifo8_bridge.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_forward_spot511_first518_fifo8_bridge.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_forward_spot511_first518_postsignal_economics.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_opportunity_snapshot.py
+      - name: Restore original immutable publisher source only from existing GitHub archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster_partial_operator/a /tmp/monster_partial_operator/b /tmp/monster_partial_operator/c
+          gh run download 39212800265 --repo lxxlx2/ChatGPT_mission_record --name monster-spot511-oct16-17-original-publisher-zip-checksum-1022-attempts --dir /tmp/monster_partial_operator/a
+          gh run download 39213387756 --repo lxxlx2/ChatGPT_mission_record --name monster-frozen-spot511-unicode4-source-gap-official-publisher-originals --dir /tmp/monster_partial_operator/b
+          gh run download 39214007356 --repo lxxlx2/ChatGPT_mission_record --name monster-real-spot511-20261018-original-issuer-zip-and-checksum --dir /tmp/monster_partial_operator/c
+      - name: Replay actual source 518 D0 D1 and operator reporting unchanged original strategy
+        run: |
+          set -eu
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_fifo8_bridge.py --source-dir /tmp/monster_partial_operator/a --source-dir /tmp/monster_partial_operator/b --source-dir /tmp/monster_partial_operator/c --operator-view --out /tmp/monster_partial_operator/actual_bridge.json
+      - name: Verify independent approval source and all real eight user facing status and blockers
+        run: |
+          set -eu
+          python3 - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          ev=Path('crypto-300-profit-mission/monster/evidence')
+          source=Path('/tmp/monster_partial_operator/actual_bridge.json')
+          b=json.loads(source.read_text())
+          pre=json.loads((ev/'monster_first518_real_operator_d0_d1_d2_no_buy_research_p2_fixed_v1.json').read_text())
+          original=json.loads((ev/'monster_forward_spot511_first518_official_minute_causal_fifo8_actual_v1.json').read_text())
+          for k in ('WATCH_event_identity','SETUP_event_identity','D0_D1_totals','event_type_counts','queue_status_counts'):
+              if b[k]!=original[k]:
+                  raise ValueError('MONSTER_RESEARCH_STRATEGY_EVENT_DRIFT:'+k)
+          v=b['operator_readonly_from_same_original_D0_D1_SQLite']
+          pv=pre['operator_snapshot']
+          for k in ('asof_utc','mode','window_total','displayed','counts_by_signal_full_window'):
+              if v[k]!=pv[k]:
+                  raise ValueError('MONSTER_USER_OPERATOR_TOP_LEVEL_DRIFT:'+k)
+          for venue in ('spot','futures'):
+              for k,value in pv['sources'][venue].items():
+                  if v['sources'][venue][k]!=value:
+                      raise ValueError('MONSTER_OLD_SOURCE_FACT_DRIFT:'+venue+':'+k)
+          for row,old in zip(v['opportunities'],pv['opportunities']):
+              for k,value in old.items():
+                  if row[k]!=value:
+                      raise ValueError('MONSTER_OLD_BUSINESS_EVENT_FACT_DRIFT:'+str(row['symbol'])+':'+k)
+          spot=v['sources']['spot']; fut=v['sources']['futures']
+          if not (b['strict_3m_global_polls']==518
+                  and b['publisher_verified_zip_checksum_pairs']==1533
+                  and spot['scanned']==509 and spot['source_total']==511
+                  and spot['diagnostic_state']=='RECENT_PARTIAL_POPULATION'
+                  and spot['age_seconds']==0
+                  and spot['coverage_pct_of_recorded_population']==round(100*509/511,4)
+                  and spot['recorded_invalid_rows']==2
+                  and spot['health_reason_codes']==['POPULATION_PARTIALLY_SCANNED']
+                  and fut['diagnostic_state']=='NO_POLL'
+                  and v['window_total']==8):
+              raise ValueError('MONSTER_OPERATOR_FULL_POPULATION_OR_FRESHNESS_CONTRACT_DRIFT')
+          for row in v['opportunities']:
+              if not (row['signal']=='EXPIRED'
+                      and row['event_lifecycle_independent_of_source_health']=='EXPIRED'
+                      and row['setup_utc'] and row['watch_reason']
+                      and row['d2_status']=='NOT_CAPTURED'
+                      and row['recommendation']=='RESEARCH_REVIEW_ONLY_NO_BUY'
+                      and row['symbol_has_fresh_record_despite_partial_venue']
+                      and {'SIGNAL_EXPIRED','SOURCE_POPULATION_PARTIAL',
+                           'D2_BID_ASK_DEPTH_NOT_CAPTURED',
+                           'REAL_EXECUTABLE_NET_PNL_UNVERIFIED'}
+                          <= set(row['decision_blocker_codes'])):
+                  raise ValueError('MONSTER_OPERATOR_NO_BUY_OR_EXPIRED_OR_D2_GATE_DRIFT:'+row['symbol'])
+          assert v['counts_by_decision_blocker_full_window']['SOURCE_POPULATION_PARTIAL']==8
+          assert v['counts_by_decision_blocker_full_window']['D2_BID_ASK_DEPTH_NOT_CAPTURED']==8
+          report={
+            'schema':'MONSTER_FIRST518_OPERATOR_PARTIAL509_511_HONEST_SOURCE_AND_EXECUTION_V1',
+            'fixed_code_sha':'${{ github.sha }}',
+            'original_independent_Codex_source_518_replay_approval_sha':'94f15a318d6a2a02d6da9e05e54b0c5a75ead79e',
+            'this_new_operator_change_other_AI_review':'NOT_DONE',
+            'source_original_1533_pairs_revalidated_this_author_GHA':b['publisher_verified_zip_checksum_pairs'],
+            'author_GHA_actual_518_bridge_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
+            'original_D0_D1_all_event_keys_preserved':True,
+            'original_operator_legacy_fields_preserved':True,
+            'operator_asof_utc':v['asof_utc'],
+            'source_health_diagnostics':v['sources'],
+            'event_count':v['window_total'],
+            'symbol_decisions':[{
+              'symbol':r['symbol'],'venue':r['venue'],
+              'watch_first_utc':r['first_watch_utc'],'setup_utc':r['setup_utc'],
+              'watch_reason':r['watch_reason'],
+              'original_signal':r['signal'],
+              'event_lifecycle_independent_of_source_health':r['event_lifecycle_independent_of_source_health'],
+              'fresh_symbol_price_even_when_venue_partial':r['symbol_has_fresh_record_despite_partial_venue'],
+              'D2_source_evidence':r['d2_status'],
+              'decision_blockers':r['decision_blocker_codes'],
+              'recommendation':r['recommendation']
+            } for r in v['opportunities']],
+            'full_window_counts_by_blocker':v['counts_by_decision_blocker_full_window'],
+            'source_not_full_market_PIT':True,'not_real_buy_order_quote_or_fill':True,
+            'no_confident_buy':True,
+            'G0':'PARTIAL','G4':'UNKNOWN','G6':'NO_GO',
+            'NO_MERGE':True,'NO_DEPLOY':True,'NO_GMAIL':True,'NO_TRADE':True,
+          }
+          target=ev/'monster_first518_operator_partial509_511_real_518_no_buy_diagnostics_v1.json'
+          if target.exists():raise ValueError('MONSTER_DIAGNOSTIC_OUTPUT_ALREADY_EXISTS')
+          target.write_text(json.dumps(report,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
+          print('MONSTER_REAL_518_SOURCE_509_OF_511_PARTIAL_FRESH_NO_BUY_RECONCILED',
+                json.dumps({'source':spot['diagnostic_state'],'futures':fut['diagnostic_state'],
+                            'events':report['event_count'],'blockers':report['full_window_counts_by_blocker'],
+                            'sha':report['author_GHA_actual_518_bridge_sha256']},
+                           sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-first518-operator-partial509-source-actual-original-issuer-research-v1
+          path: |
+            /tmp/monster_partial_operator/actual_bridge.json
+            crypto-300-profit-mission/monster/evidence/monster_first518_operator_partial509_511_real_518_no_buy_diagnostics_v1.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Archive exact real functional verdict on same original research branch only
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          target=crypto-300-profit-mission/monster/evidence/monster_first518_operator_partial509_511_real_518_no_buy_diagnostics_v1.json
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive honest 509 of 511 health and no-buy blocker operator actual 518 source replay"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER_PARTIAL_OPERATOR_RESULT_ALREADY_EXISTS
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for f in crypto-300-profit-mission/local-agent/scripts/monster_v4_opportunity_snapshot.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_opportunity_snapshot.py crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_fifo8_bridge.py .github/workflows/monster-v4-first518-operator-partial509-real-source-once.yml; do
+            test "$(git rev-parse "$GITHUB_SHA:$f")" = "$(git rev-parse "HEAD:$f")" || { echo "MONSTER_PRODUCTION_OR_OPERATOR_INPUT_CHANGED=$f"; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER_OPERATOR_509_511_SOURCE_RESEARCH_VERDICT_ARCHIVED_NO_DEPLOY
