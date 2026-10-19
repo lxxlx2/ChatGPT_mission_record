@@ -1,6 +1,29 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
 
+## 2026-10-20 P0真实卖出来源档案与Gas来源异常：有界18份原HTTP回执，待Mac独立离线验收
+
+**为什么继续这一步**：既有事实已包括30例冻结母体、18例达到历史深度地板的真实token→quote成功卖出，且已有7例与原买入收币地址及数量匹配的完整token退出。但原先18例的转账/Swap/Sync与卖出前报价池储备主要通过同一个Alchemy app标准化历史查询，本次聊天**尚未取得和永久审计原始JSON-RPC字节**。即使18这个整数等于旧覆盖门槛，**不等于P0已过18/30的相同研究名义金额真实可卖出验收**。时钟`available_at`、统一研究订单规模、合约限制和费用继续缺口。
+
+对四个真实同地址EOA Router直连双腿（rank **#7/#12/#21/#30**）用当前连接的Alchemy BNB节点重新分别读`eth_getTransactionByHash`和`eth_getTransactionReceipt`（共8笔）：每例买入`0x7ff36ab5`和卖出`0x18cbafe5`均由原token收币地址发起、状态成功。Gas消耗并非0：
+- #7 买入`165146` gas / 卖出`117448`；
+- #12 `165066 / 117528`；
+- #21 `165134 / 117424`；
+- #30 `165054 / 117516`。
+
+但当前响应中这8笔的`eth_getTransactionByHash.gasPrice`和`eth_getTransactionReceipt.effectiveGasPrice`**全部为`0x0`**；这一极端一致字段目前**独立源无法复核**，不能用`gasUsed×0`得出`ZERO_GAS`或据此给出任何费后净利润。既有浏览器读取BscScan具体历史Tx失败，未进行第二数据提供商独立gas交叉。若Mac独立RPC给出非零`effectiveGasPrice`，应以完整原始字节/哈希保存其差异，先解决来源差异，再谈净收益。原完整历史账本还需要授权费用、BNB原生转账和税费，不得只凭Router输入输出计算真实费后结果。
+
+**已提交但尚未Mac实测的最小来源强化代码**：只扩展既有`local-agent/scripts/monster_early_venue_factory_rpc_roster_probe.py`，不创建第二统计框架或新Stage。
+- `--mode sell-archive`仅用于预冻结`bsc-v2/2025-07-01`和P0证据JSON中已经归档的**18个不同rank原真实卖出tx**（16个原20候选中深度达标卖出+延迟LP#16/#17），手动显式填历史HTTPS RPC，`eth_chainId`验证+最多18次`eth_getTransactionReceipt`，**单次最多19 RPC请求**；不会调用`eth_getLogs`历史区块扫描，不需要付费API，不查询钱包余额、签名、发邮件、交易或启动后台。
+- 严格重算每个Receipt的pool地址、固定token与quote、block+txhash、成功状态、交易内`Sync→Swap`和确切token/quote`Transfer` raw、卖出前池quote reserve与原P0已存记录是否一致。不接受转账到错池、浅池、失败回执、缺源或更改rank、重复rank的乐观PASS。
+- 把真实API回应的**原HTTP/RPC字节**保存在Mac原私有`monster-p0-readonly-raw/bsc-v2-2025-07-01/v2_p0_real_sell_receipts/<SHA256_of_endpoint>/rank_N.rpc.json`，不上传Git、不显示含密钥URL。完成18份后才创建本机`v2_p0_real_sell_receipt_manifest.json`（raw长度、SHA256、身份与来源指纹）；
+- `--mode sell-audit`**完全离线**复核上述18份原字节/清单哈希、交易回执的Pool Swap+Sync+ERC20 Transfer；源丢失、原文件更改、SHA不一致必须fail closed。不替用户改变原本18/30的模型门禁。
+- 新增两个纯合成fixture单元测试，覆盖18固定真实Tx身份与合成成功receipt、错转账/错tx和档案SHA突变；需在Mac执行才能声称PASS。前一个固定SHA`3e897bfe89a54f3945dc51df70076eaa13cbc4b4`的36/36不能自动移植到本次Python改动。未使用/不消耗原仓库最多2次手动CI预算。
+
+**主线止损与结果解释**：若Mac独立历史RPC不支持`eth_getTransactionReceipt`完整原件或真实18例反算不符，必须记录`SOURCE_BLOCKED / INSUFFICIENT_COVERAGE`与具体rank，不为凑18放宽条件；如果18份全部通过，只批准**指定历史真实卖出存在性+原响应可复核**，不批准统一研究订单名义额退出、历史`available_at`或盈利模型。原冻结研究到**2026-11-02**的源探针停止界限、BSC V2-only小样本外推限制、`NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`不变。
+
+---
+
 ## 2026-10-20 冻结#16/#17已获首次注池之后的真实独立买入与同收币地址部分卖出，历史达标卖出样本由16提升至18
 
 原Mac 36/36离线回放显示#16/#17在块52444232初次流动性注入`Mint`同一TX内分别有65/64次Swap日志；它们**不是可由外部交易者见到注池后响应的129笔买单**。此前仅额外核查随后52444233–52444242十块确为0次Swap，属于特定短窗缺口，不代表之后没交易。
