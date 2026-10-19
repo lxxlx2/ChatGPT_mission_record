@@ -450,6 +450,10 @@ class V2HistoricQuoteAndSwapEvidenceTests(unittest.TestCase):
             same['first_observed_above_floor_buy_in_saved_windows']['pre_swap_quote_reserve_raw'],
             '4000')
         self.assertTrue(same['first_above_floor_buy_prior_mint_same_tx'])
+        self.assertEqual(
+            same['observed_qualified_buy_swaps_within_first_above_floor_sync_tx'], 1)
+        self.assertEqual(same['observed_qualified_buy_distinct_tx_count_later_block'], 0)
+        self.assertIsNone(same['first_observed_qualified_buy_later_block'])
         self.assertEqual(same['first_above_floor_buy_public_reaction_status'],
                          'SAME_TX_NOT_PUBLICLY_REACTABLE_AFTER_SYNC')
         self.assertEqual(same['twentyfour_of_thirty_complete_pit_gate'], 'NOT_SCORABLE')
@@ -462,6 +466,9 @@ class V2HistoricQuoteAndSwapEvidenceTests(unittest.TestCase):
         self.assertEqual(later['first_above_floor_buy_public_reaction_status'],
                          'LATER_BLOCK_PUBLIC_AVAILABILITY_UNVERIFIED')
         self.assertFalse(later['first_above_floor_buy_prior_mint_same_tx'])
+        self.assertEqual(later['observed_qualified_buy_swaps_within_first_above_floor_sync_tx'], 0)
+        self.assertEqual(later['observed_qualified_buy_distinct_tx_count_later_block'], 1)
+        self.assertEqual(later['first_observed_qualified_buy_later_block']['block'], 51)
         self.assertEqual(later['first_observed_above_floor_buy_in_saved_windows']['block'], 51)
 
 
