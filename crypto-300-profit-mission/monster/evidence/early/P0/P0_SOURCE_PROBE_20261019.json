@@ -8803,5 +8803,39 @@
     "p0_gate_same_notional_18_of_30": "NOT_SCORABLE",
     "one_day_v2_cohort_unchanged": true,
     "no_paid_calls_no_writes_other_than_evidence": true
+  },
+  "bsc_p0_v3_graph_single_request_probe_implementation_20261020": {
+    "status": "OFFLINE_IMPLEMENTATION_TESTED_LIVE_GRAPH_API_NOT_QUERIED",
+    "git_code_sha": "ef7e3f84742b36118095ae731854e0011afbe76b",
+    "git_test_sha": "28144005c5de68fd099df13abc8b6db917e56a76",
+    "source_code_path": "crypto-300-profit-mission/local-agent/mission_agent/early/graph_v3_source_probe.py",
+    "test_path": "crypto-300-profit-mission/local-agent/tests/test_graph_v3_source_probe.py",
+    "offline_test_environment": "Isolated Python execution container; exact Git blob files matched and 6/6 unittest PASS",
+    "mac_tests_on_new_code": "NOT_RUN",
+    "authenticated_the_graph_query": "NOT_RUN",
+    "subgraph_id": "Hv1GncLY5docZoGtXjo4kwbTvxm3MAhVZqBZE4sUT9eZ",
+    "pancake_source_schema": "https://github.com/pancakeswap/pancake-subgraph/blob/master/subgraphs/exchange-v3/lite/schema.graphql",
+    "pancake_source_factory_config": "https://github.com/pancakeswap/pancake-subgraph/blob/master/subgraphs/exchange-v3/lite/subgraph.yaml",
+    "schema_has_fields": [
+      "Pool.createdAtBlockNumber",
+      "Pool.createdAtTimestamp",
+      "Pool.token0",
+      "Pool.token1",
+      "Pool.feeTier"
+    ],
+    "bsc_factory_start_block_in_source_repo": 26956207,
+    "live_deployment_schema_same_as_github_lite": "UNVERIFIED",
+    "planned_requests_max_per_invocation": 1,
+    "planned_pool_first_limit": 5,
+    "query_window_utc": "2025-07-01",
+    "api_key_status": "NOT_AVAILABLE_IN_SESSION",
+    "api_key_written_to_repository": false,
+    "raw_response_real": "NOT_PRESENT",
+    "v2_30_cohort_changed": false,
+    "full_pit_gate_24_of_30": "NOT_SCORABLE",
+    "common_notional_sellability_gate_18_of_30": "NOT_SCORABLE",
+    "p1": "BLOCKED",
+    "production": "NO_GO",
+    "spend_usd": 0
   }
 }

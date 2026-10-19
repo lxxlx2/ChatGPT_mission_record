@@ -1,5 +1,12 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：BSC V3 索引来源单次请求探针代码已提交，真实历史 GraphQL 仍未查询
+
+- 官方 PancakeSwap BSC V3 子图 ID `Hv1GncLY5docZoGtXjo4kwbTvxm3MAhVZqBZE4sUT9eZ`；其官方开源 [lite BSC Factory 源配置](https://github.com/pancakeswap/pancake-subgraph/blob/master/subgraphs/exchange-v3/lite/subgraph.yaml) 起始区块 26956207，源码 [Pool schema](https://github.com/pancakeswap/pancake-subgraph/blob/master/subgraphs/exchange-v3/lite/schema.graphql) 定义创建块、创建时间、token0、token1、feeTier。**线上部署 schema 与 2025 完整索引覆盖尚未经过实际 API 核实。**
+- 在既有 `local-agent/mission_agent/early/` 新增 `graph_v3_source_probe.py`，并在既有 tests 中增加 `test_graph_v3_source_probe.py`。由人手动前台执行时只允许 **1 个带环境变量 API Key 的官方 The Graph Gateway HTTPS POST**：读取 `_meta` 和 2025-07-01 UTC 指定区块区间内按创建块排序最多 5 个 pool；保存原响应和 SHA256，零分页、零交易、零部署，不含凭证。无 Key 不调用网络。
+- 隔离 Python 环境按远端完整 Git blob 匹配执行离线 **6/6 PASS**，覆盖单 POST、无 Key 零请求、原响应SHA256、索引未到目标、空池、异常/错误响应；**尚未在 Mac 上运行新增代码，真实 The Graph API 请求次数 0**。本次无实际 V3 池身份入库，不宣称索引连续/完整、链上 Factory 回执交叉验证、当时公共可用时间或真实买卖容量。
+- 既有 V2 30例及冻结条件原样，24/30 完整PIT = NOT_SCORABLE，18/30统一研究金额双向可交易 = NOT_SCORABLE。P0仍 INSUFFICIENT_COVERAGE，P1 BLOCKED，G6 NO_GO。The Graph Free API Key 需用户自行创建且确认 Free Plan；不得升级付费。没有在本次会话创建帐号或接受付费方案。
+
 
 ## 2026-10-20 P0来源路径再调查：V3存在官方免费查询候选，但当前尚不具备正式来源PASS
 
