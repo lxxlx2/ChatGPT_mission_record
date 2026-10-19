@@ -14,7 +14,7 @@
     "f0/tests/test_f0_source_budget.py": "bbef2d80511d380c47e878888d59852fb6d89144"
   },
   "test_execution": {
-    "command": "python3 -m unittest discover -s /mnt/data/bsc_f0_bridge/tests -p test_*.py",
+    "command": "python3 -m unittest discover -s /mnt/data/bsc_f0_bridge/tests -p 'test_*.py'",
     "test_bundle": "PR121 baseline verified by 6 exact Git blobs; f0_source_budget.py and test_f0_source_budget.py exact Git blobs",
     "result": "PASS",
     "tests_run": 92,
@@ -22,7 +22,8 @@
     "new_budget_tests": 12,
     "log_sha256": "2b3cfa1eb90d7183974cba83dc7a23873a41a3d519ea8024d763d15dc0610daf",
     "new_script_sha256": "4885594565bc0017faa81cff2e9244981884446bd7a279acac9436b40f3eafe0",
-    "new_test_sha256": "b3dab70b7040dc9b48353616460d2f98edeb4f584ae3b2672f779c9770b2d362"
+    "new_test_sha256": "b3dab70b7040dc9b48353616460d2f98edeb4f584ae3b2672f779c9770b2d362",
+    "repo_root_equivalent": "python3 -m unittest discover -s crypto-300-profit-mission/bsc-forward-follow-model/f0/tests -p 'test_*.py'"
   },
   "outputs": [
     {
