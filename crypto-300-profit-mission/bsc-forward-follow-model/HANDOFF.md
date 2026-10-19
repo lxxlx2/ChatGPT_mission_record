@@ -47,3 +47,16 @@ Bridge integration: 26 additional tests; all 80 tests (36 + 18 + 26) passed loca
 `NO_TRADE / NO_RPC_WITHOUT_PERMISSION / NO_PAID_GMGN / NO_WALLET_SIGN / NO_EMAIL / NO_NOTIFICATIONS / NO_BACKGROUND_MAC_SERVICE / NO_NEW_AUTOMATION / NO_PRODUCTION_DEPLOY / NO_MERGE`.
 
 The one-time official public HTTP transport smoke is **USER-REPORTED LIVE SUCCESS** (4 calls, one 49-transaction block), but sustained free-source viability, real per-request latency, first-actionable clock accuracy and ordinary-Router control stream remain `NOT_MEASURED`.  F1 strategy and finality-policy freeze is not complete; F3 6–8wk prospective observation and blinded L4 evaluation have not begun. All real denominators, on-chain causal BUY/E2, E3, actual Router requests and actual profitability remain `NOT_MEASURED/UNRESOLVED`. All stages require independent review; approved SHA is immutable by definition.
+
+## 2026-10-19 首次真实 24 次 getCode 资格检查（结果记录）
+
+- 状态：`LIVE_QUALIFICATION_COMPLETED_NOT_MONITORING`。证据：`f0/F0_LIVE_QUALIFICATION_RESULT_20261019.json`。
+- 执行代码 `cd30f8b69301b53380473a33ebb428351d4c1bce`（PR #136），脚本 SHA256 `3a3b3992…6fea8`，许可 SHA256 `b63c8892…4bcf`，独立审查进程输出 `APPROVE_PERMIT` 且哈希一致。
+- 请求：24/24 次尝试，失败 0，重试 0，超限 false；journal 24 条全部 `RPC_RESPONSE`，无 `ATTEMPTED_OUTCOME_UNKNOWN`；对账差 0。
+- 冻结区块 128636823（0x7aad797）；chainId 56。
+- 20 个 PRIMARY：19 个 `NO_CODE_AT_SAMPLED_BLOCK`，1 个 `HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK`（`0x7b3d8e939ee08b52d06ab5e6f85791a6007e8d61`）。
+- 2 个 Router：两个官方候选地址在该高度均 `HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK`，但 `control_eligible=false`，不作为对照组。
+- 解释边界：单一高度观察；NO_CODE 不证明永久 EOA 或私钥控制；Router 有代码不证明 swap 因果；不含报价、E2/E3、纸面盈利。
+- 已知报告缺陷：`report.json` 顶层 `checked_block` 为 null，高度由 journal 与 eth_getCode 参数还原。
+- 原始 permit、nonce、raw payload 未提交。
+- 未解决/下一步：需独立审核后才能进入连续区块 L1 捕获；provider 计费 UNVERIFIED；需修复 report 缺陷的 P2 补丁（不改已审代码，另行审核）。
