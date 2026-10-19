@@ -3,7 +3,7 @@
   "observed_date": "2026-10-19",
   "research_only": true,
   "phase0_full_source_pass": false,
-  "phase0_status": "BSC_V2_FIRST30_IDENTITY_CONFIRMED; 3_OF_30_CREATION_MINT_SYNC_CHECKED; PIT_24_30_AND_EXECUTABILITY_18_30_NOT_SCORABLE",
+  "phase0_status": "BSC_V2_FIRST30_IDENTITIES; 3_CREATION_MINT_SYNC_AND_3_NEXT_SWAP_CONFIRMED; EXITS_AND_24_30_18_30_NOT_SCORABLE",
   "privacy": "NO_KEYS_NO_WALLET_SIGNING",
   "cost_usd": 0,
   "provider": "Connected user's pre-existing Alchemy All Chains free app via read-only connector",
@@ -176,6 +176,18 @@
         4
       ],
       "original_provider_http_response_archived": false
+    },
+    {
+      "kind": "first actual subsequent V2 pool reserve update and Swap log",
+      "sample_ranks": [
+        1,
+        2,
+        5
+      ],
+      "first_subsequent_sync_swap_observed": 3,
+      "source": "historical eth_call getReserves() timestamp bisection followed by exact block eth_getLogs",
+      "cannot_claim_t_entry": true,
+      "cannot_claim_sellable": true
     }
   ],
   "verified_historical_v2_log": {
@@ -1628,6 +1640,146 @@
           "pair_first_10_blocks_event_count": 4,
           "provider_source": "ALCHEMY_FREE_APP_NORMALIZED_RPC_RESULT_TEXT; NO_ORIGINAL_HTTP_ENVELOPE_OR_SHA",
           "normalized_complete_for_matched_tx": true
+        }
+      ],
+      "first_later_reserve_update_events": [
+        {
+          "rank": 1,
+          "pool": "0x021d84d4d9f88518f74935c61e2cf4b70713bc16",
+          "block": 52440351,
+          "first_subsequent_swap_utc": "2025-07-01T00:00:48Z",
+          "tx": "0x2d0361e427bc0feaf9e316f6a79b3a9f935777043d13cb4084c9adfeed2f9ae7",
+          "sec": 21,
+          "events": [
+            {
+              "address": "0x021d84d4d9f88518f74935c61e2cf4b70713bc16",
+              "topics": [
+                "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1"
+              ],
+              "data": "0x000000000000000000000000000000000000000000000222df1f977c3ca00000000000000000000000000000000000000000000000000055fb3eeb3f0650e224",
+              "blockNumber": "0x3202d1f",
+              "blockTimestamp": "0x68632530",
+              "blockHash": "0x5be0a210152c5e351ecb799af66ac32037fcffcdf1342045f293263e6ebe0748",
+              "transactionHash": "0x2d0361e427bc0feaf9e316f6a79b3a9f935777043d13cb4084c9adfeed2f9ae7",
+              "transactionIndex": "0x3a",
+              "logIndex": "0xf7",
+              "removed": false
+            },
+            {
+              "address": "0x021d84d4d9f88518f74935c61e2cf4b70713bc16",
+              "topics": [
+                "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+                "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e",
+                "0x0000000000000000000000007499885e0195c957af71ec108c9fac8d58949826"
+              ],
+              "data": "0x000000000000000000000000000000000000000000000004c53ecdc18a60000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c136f7972aaf1ddc",
+              "blockNumber": "0x3202d1f",
+              "blockTimestamp": "0x68632530",
+              "blockHash": "0x5be0a210152c5e351ecb799af66ac32037fcffcdf1342045f293263e6ebe0748",
+              "transactionHash": "0x2d0361e427bc0feaf9e316f6a79b3a9f935777043d13cb4084c9adfeed2f9ae7",
+              "transactionIndex": "0x3a",
+              "logIndex": "0xf8",
+              "removed": false
+            }
+          ],
+          "source": "ALCHEMY_HISTORICAL_POOL_ETH_GETLOGS_NORMALIZED",
+          "initial_quote_floor_reached": true,
+          "last_update_timestamp_binary_search_consistent": true,
+          "first_seen_public_observer_timestamp": "UNVERIFIED",
+          "real_bid_ask_sellability": "UNRESOLVED",
+          "actual_10x_label": "NOT_SCORED"
+        },
+        {
+          "rank": 2,
+          "pool": "0xc8e6d373797eae36d810fadd4cbb8c58c3374cf8",
+          "block": 52440642,
+          "first_subsequent_swap_utc": "2025-07-01T00:04:26Z",
+          "tx": "0x459ad9b0a8601b3502077ce5e26a65af7b461429958c4ff8d9e269ee48324547",
+          "sec": 19,
+          "events": [
+            {
+              "address": "0xc8e6d373797eae36d810fadd4cbb8c58c3374cf8",
+              "topics": [
+                "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1"
+              ],
+              "data": "0x000000000000000000000000000000000000000000000000747c69ada332400000000000000000000000000000000000000000000eb2a8e5bdb1a7522c115a94",
+              "blockNumber": "0x3202e42",
+              "blockTimestamp": "0x6863260a",
+              "blockHash": "0x5cf69c5d46a8bb63ee69eb84a020c6efbdc0ce851eed355e3469655edd3688a5",
+              "transactionHash": "0x459ad9b0a8601b3502077ce5e26a65af7b461429958c4ff8d9e269ee48324547",
+              "transactionIndex": "0x22",
+              "logIndex": "0x117",
+              "removed": false
+            },
+            {
+              "address": "0xc8e6d373797eae36d810fadd4cbb8c58c3374cf8",
+              "topics": [
+                "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+                "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e",
+                "0x000000000000000000000000fbc84d40a37e43fa7d002d5c0029a95b6c48f50c"
+              ],
+              "data": "0x000000000000000000000000000000000000000000000000014ce3a74f744000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002a5efdee40a692cbeea56c",
+              "blockNumber": "0x3202e42",
+              "blockTimestamp": "0x6863260a",
+              "blockHash": "0x5cf69c5d46a8bb63ee69eb84a020c6efbdc0ce851eed355e3469655edd3688a5",
+              "transactionHash": "0x459ad9b0a8601b3502077ce5e26a65af7b461429958c4ff8d9e269ee48324547",
+              "transactionIndex": "0x22",
+              "logIndex": "0x118",
+              "removed": false
+            }
+          ],
+          "source": "ALCHEMY_HISTORICAL_POOL_ETH_GETLOGS_NORMALIZED",
+          "initial_quote_floor_reached": true,
+          "last_update_timestamp_binary_search_consistent": true,
+          "first_seen_public_observer_timestamp": "UNVERIFIED",
+          "real_bid_ask_sellability": "UNRESOLVED",
+          "actual_10x_label": "NOT_SCORED"
+        },
+        {
+          "rank": 5,
+          "pool": "0x67bd637ca7456c519857ecfad388eb98686285af",
+          "block": 52441377,
+          "first_subsequent_swap_utc": "2025-07-01T00:13:37Z",
+          "tx": "0xddf4631429c9faf6bb2a117516a2fff39debe9fd207d19c274808ca99a16f348",
+          "sec": 202,
+          "events": [
+            {
+              "address": "0x67bd637ca7456c519857ecfad388eb98686285af",
+              "topics": [
+                "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1"
+              ],
+              "data": "0x00000000000000000000000000000000000000000000000010da2fa50364e35c0000000000000000000000000000000000000000000000000cc431b76576a357",
+              "blockNumber": "0x3203121",
+              "blockTimestamp": "0x68632831",
+              "blockHash": "0xee6fc75e53098ced472080a7a2f3dc821d7fcdb145c7e37213d1ee2738210599",
+              "transactionHash": "0xddf4631429c9faf6bb2a117516a2fff39debe9fd207d19c274808ca99a16f348",
+              "transactionIndex": "0x5b",
+              "logIndex": "0x249",
+              "removed": false
+            },
+            {
+              "address": "0x67bd637ca7456c519857ecfad388eb98686285af",
+              "topics": [
+                "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+                "0x0000000000000000000000006f708949699d278f2a70160aaa974ebce3d2bc48",
+                "0x0000000000000000000000006f708949699d278f2a70160aaa974ebce3d2bc48"
+              ],
+              "data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000f863384a61a3570000000000000000000000000000000000000000000000000161f77fa3b30f9b0000000000000000000000000000000000000000000000000000000000000000",
+              "blockNumber": "0x3203121",
+              "blockTimestamp": "0x68632831",
+              "blockHash": "0xee6fc75e53098ced472080a7a2f3dc821d7fcdb145c7e37213d1ee2738210599",
+              "transactionHash": "0xddf4631429c9faf6bb2a117516a2fff39debe9fd207d19c274808ca99a16f348",
+              "transactionIndex": "0x5b",
+              "logIndex": "0x24a",
+              "removed": false
+            }
+          ],
+          "source": "ALCHEMY_HISTORICAL_POOL_ETH_GETLOGS_NORMALIZED",
+          "initial_quote_floor_reached": false,
+          "last_update_timestamp_binary_search_consistent": true,
+          "first_seen_public_observer_timestamp": "UNVERIFIED",
+          "real_bid_ask_sellability": "UNRESOLVED",
+          "actual_10x_label": "NOT_SCORED"
         }
       ]
     }
