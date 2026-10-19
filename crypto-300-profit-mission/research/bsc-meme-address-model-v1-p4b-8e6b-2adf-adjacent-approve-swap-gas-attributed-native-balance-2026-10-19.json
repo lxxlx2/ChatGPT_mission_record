@@ -1,5 +1,5 @@
 {
-  "schema": "BSC_P4B_8E6B_2ADF_BNB_APPROVE_SWAP_ADJACENT_GAS_RECONCILIATION_V1",
+  "schema": "BSC_P4B_TWO_OWNER_SELECTED_BLOCK_GAS_AND_WALLET_CONTINUITY_REVIEW_CORRECTED_V2",
   "date_utc": "2026-10-19",
   "scope": "TWO_PINNED_EOA_CA_OBSERVATION_ROUNDS_NOT_PORTFOLIO_PNL",
   "network": "bnb-mainnet",
@@ -94,13 +94,22 @@
       "raw_token_out": "1293859551216114584142304",
       "balance_after_last_exit_raw": "0",
       "balance_window_end_raw": "0",
-      "gross_native_sale_inferred_wei": "150497844237345206",
       "combined_entry_and_sell_gas_wei": "154683960000000",
       "net_selected_block_balance_delta_wei": "343160277345206",
       "net_selected_block_balance_delta_bnb": "0.000343160277",
-      "net_selected_block_pct_of_entry": "0.228774",
-      "owner_profit_grade": "BLOCK_BALANCE_GAS_RECONCILED_CANDIDATE_UNATTESTED",
-      "true_realized_net_pnl": "UNRESOLVED_NO_TRANSACTION_INTERNAL_NATIVE_TRACE"
+      "true_realized_net_pnl": "UNRESOLVED_NO_TRANSACTION_INTERNAL_NATIVE_TRACE",
+      "selected_blocks_bnB_change_wei_arithmetic_only": "343160277345206",
+      "continuous_wallet_balance_change_wei_not_token_pnl": "-64002978929316013",
+      "unattributed_between_selected_blocks_wei": "-64346139206661219",
+      "unselected_signed_nonce_counts": [
+        3,
+        0
+      ],
+      "signed_nonce_count_after_last_exit_before_window_end": 2,
+      "unattributed_block_native_reconstruction_wei_not_confirmed_sale_cashflow": "150497844237345206",
+      "selected_block_change_ratio_to_buy_input_pct_arithmetic_only": "0.228774",
+      "gas_validation_state": "SELECTED_BLOCK_CUMULATIVE_GAS_ARITHMETIC_VALIDATED",
+      "owner_economic_profitability": "UNRESOLVED_TRANSACTION_AND_INTERVENING_NATIVE_VALUE_NOT_ATTRIBUTABLE"
     },
     {
       "id": "2ADF_YOKI",
@@ -155,31 +164,37 @@
       "raw_token_out": "247790844884194236639000",
       "balance_after_last_exit_raw": "0",
       "balance_window_end_raw": "0",
-      "gross_native_sale_inferred_wei": "71067120899666730",
       "combined_entry_and_sell_gas_wei": "96882000000000",
       "net_selected_block_balance_delta_wei": "-9029761100333270",
       "net_selected_block_balance_delta_bnb": "-0.009029761100",
-      "net_selected_block_pct_of_entry": "-11.287201",
-      "owner_profit_grade": "BLOCK_BALANCE_GAS_RECONCILED_CANDIDATE_UNATTESTED",
-      "true_realized_net_pnl": "UNRESOLVED_NO_TRANSACTION_INTERNAL_NATIVE_TRACE"
+      "true_realized_net_pnl": "UNRESOLVED_NO_TRANSACTION_INTERNAL_NATIVE_TRACE",
+      "selected_blocks_bnB_change_wei_arithmetic_only": "-9029761100333270",
+      "continuous_wallet_balance_change_wei_not_token_pnl": "8418724570372552",
+      "unattributed_between_selected_blocks_wei": "17448485670705822",
+      "unselected_signed_nonce_counts": [
+        6
+      ],
+      "signed_nonce_count_after_last_exit_before_window_end": 0,
+      "unattributed_block_native_reconstruction_wei_not_confirmed_sale_cashflow": "71067120899666730",
+      "selected_block_change_ratio_to_buy_input_pct_arithmetic_only": "-11.287201",
+      "gas_validation_state": "SELECTED_BLOCK_CUMULATIVE_GAS_ARITHMETIC_VALIDATED",
+      "owner_economic_profitability": "UNRESOLVED_TRANSACTION_AND_INTERVENING_NATIVE_VALUE_NOT_ATTRIBUTABLE"
     }
   ],
   "summary": [
     {
-      "case": "8E6B_FLAP",
-      "token_position_zero_after_exit": true,
-      "buy_block_identity_reconciled": true,
-      "negative_candidate": false,
-      "netWei": "343160277345206",
-      "pct": "0.228774"
+      "id": "8E6B_FLAP",
+      "selected_blocks_native_change_wei_only": "343160277345206",
+      "continuous_wallet_change_wei_not_pnl": "-64002978929316013",
+      "unattributed_intervening_balance_change_wei": "-64346139206661219",
+      "token_round_actual_profitability": "UNRESOLVED"
     },
     {
-      "case": "2ADF_YOKI",
-      "token_position_zero_after_exit": true,
-      "buy_block_identity_reconciled": true,
-      "negative_candidate": true,
-      "netWei": "-9029761100333270",
-      "pct": "-11.287201"
+      "id": "2ADF_YOKI",
+      "selected_blocks_native_change_wei_only": "-9029761100333270",
+      "continuous_wallet_change_wei_not_pnl": "8418724570372552",
+      "unattributed_intervening_balance_change_wei": "17448485670705822",
+      "token_round_actual_profitability": "UNRESOLVED"
     }
   ],
   "limitations": [
@@ -188,13 +203,20 @@
     "Gas computed exactly for known adjacent legacy transactions and entry from prior cumulative receipt; gasPrice is transaction gasPrice, consistent with approve receipt effectiveGasPrice.",
     "Do not confuse quoted calldata minReturn (price floor) with actual sale receipt.",
     "Time to first and last exit derived from block timestamp, not public first seen nor fair follower fill.",
-    "No cash payment API/upgrade, monitor service, execution or alert. This is evidence-only."
+    "No cash payment API/upgrade, monitor service, execution or alert. This is evidence-only.",
+    "INDEPENDENT REVIEW F1: The wallet native balance between buy and final sell changes substantially in blocks omitted by the subset. Whole-period wallet delta is also NOT per-token PnL, since there are 3 and 6 intervening signed transactions (and possibly independent internal or passive movements); the FLAP wallet has 2 more signed transactions after exit before cohort end.",
+    "The original +0.228774% and -11.287201% values were ratios of selected-block net native balance deltas over buy input and MUST NOT be called ROI, profit or owner result. They are preserved as historical arithmetic only."
   ],
   "gates": {
     "P4_B": "PARTIAL",
     "P4_C": "PARTIAL",
     "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
     "P5": "BLOCKED",
-    "PRODUCTION": "NO_GO"
-  }
+    "PRODUCTION": "NO_GO",
+    "ACTUAL_REALIZED_NET_PNL": "UNRESOLVED"
+  },
+  "review_status": "REQUEST_CHANGES_9477787_F1_F3_SUPERSESSION_DATA_CORRECTED_NO_PNL_APPROVAL",
+  "factual_scope": "Gas arithmetic for selected buy/sale/approve block subsets; NOT economic token-round profit, NOT independent native trace.",
+  "balanceof_evidence_file": "bsc-meme-address-model-v1-p4b-8e6b-2adf-historical-balanceof-raw-rpc-2026-10-19.json",
+  "continuity_evidence_file": "bsc-meme-address-model-v1-p4b-8e6b-2adf-full-window-bnb-continuity-review-2026-10-19.json"
 }
