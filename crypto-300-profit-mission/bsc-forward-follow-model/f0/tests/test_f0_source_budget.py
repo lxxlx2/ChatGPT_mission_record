@@ -26,13 +26,13 @@ class OfflineBudgetTests(unittest.TestCase):
         r = plan()
         self.assertEqual(r["estimated_blocks"], 192000)
         self.assertEqual(r["estimated_total_rpc_calls"], 192000)
-        self.assertEqual(r["estimated_total_cu"], "3840000")
+        self.assertEqual(r["estimated_total_cu"], "3840000.00")
         self.assertEqual(r["stop_state"], "NO_RUN")
 
     def test_48h_bsc_blocks(self):
         r = plan(hours=Decimal("48"))
         self.assertEqual(r["estimated_blocks"], 384000)
-        self.assertEqual(r["estimated_total_cu"], "7680000")
+        self.assertEqual(r["estimated_total_cu"], "7680000.00")
 
     def test_never_implicitly_grant_run(self):
         r = plan(max_total_rpc_calls=1000000, max_control_discovery_calls=1000000,
@@ -57,7 +57,7 @@ class OfflineBudgetTests(unittest.TestCase):
         self.assertEqual(r["rpc_breakdown"]["entry_quote_calls"]["count"], 6)
         self.assertEqual(r["rpc_breakdown"]["exit_quote_calls"]["count"], 9)
         self.assertEqual(r["estimated_total_rpc_calls"], 192050)
-        self.assertEqual(r["estimated_total_cu"], "3841090")
+        self.assertEqual(r["estimated_total_cu"], "3841090.00")
 
     def test_websocket_byte_cost_is_scenario(self):
         r = plan(ws_bytes_per_block=1000, cu_budget=30000000)
