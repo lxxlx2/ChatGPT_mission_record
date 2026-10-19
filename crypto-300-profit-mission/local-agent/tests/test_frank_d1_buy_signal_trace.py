@@ -162,7 +162,7 @@ class D1BuyCausalTests(unittest.TestCase):
     def test_zero_source_buy_is_zero_local_only(self):
         with tempfile.TemporaryDirectory() as temp:
             source, control = fixture(Path(temp))
-            result = d1.trace(source, control, REFERENCE - 100_000)
+            result = d1.trace(source, control, REFERENCE - 200_000)
             self.assertEqual(result["recognized_buy_rows_24h"], 0)
             self.assertFalse(result["chain_completeness_verified"])
 
