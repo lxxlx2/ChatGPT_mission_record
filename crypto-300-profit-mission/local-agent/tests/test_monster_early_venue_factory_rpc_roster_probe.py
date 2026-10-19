@@ -186,6 +186,9 @@ class FactorySourceProbeTests(unittest.TestCase):
         fixture = json.loads(original.read_text())
         index = fixture["historical_bsc_v2_append_only_factory_enumeration"]
         first = index["chronological_quoted_unique_first30"][0]
+        roster_first = {"factory_index": first["factory_index"],
+                        "pair": first["pool"], "token_ca": first["token_ca"],
+                        "quote_asset": first["quote_asset"]}
         row = index["first36"][0]
         proof = index["creation_liquidity_source_spotchecks"]
         event = next(x for x in proof["normalized_event_log_samples"] if x["rank"] == 1)
@@ -226,7 +229,7 @@ class FactorySourceProbeTests(unittest.TestCase):
                 "chain": "bsc-v2", "day_blocks": [52440287,52555482],
                 "rpc_source_sha256": Fake.source_tag,
                 "sample_complete_first30_by_factory_order": True,
-                "sample": [first] * 30}))
+                "sample": [roster_first] * 30}))
             (folder / (str(first["factory_index"]) + ".json")).write_text(
                 json.dumps({"factory_index": first["factory_index"],
                             "pair": first["pool"], "block": 52555482,
