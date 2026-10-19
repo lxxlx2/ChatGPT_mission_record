@@ -5471,6 +5471,51 @@
     "token_transfer_tax_sellability": "NOT_SCORABLE",
     "two_sided_18_30_gate": "NOT_SCORABLE",
     "complete_pit_24_30_gate": "NOT_SCORABLE",
-    "note": "User stdout demonstrates full 30 rank processing and offline test success for the earlier cloned head. After this output, subsequent new audit-mode code/test commit requires a fresh local test and a readback of the private archive manifest. All source/coverage and prod gates remain unchanged."
+    "note": "User stdout demonstrates full 30 rank processing and offline test success for the earlier cloned head. After this output, subsequent new audit-mode code/test commit requires a fresh local test and a readback of the private archive manifest. All source/coverage and prod gates remain unchanged. Follow-up Mac confirms commit c1cf218 and 26/26 tests, plus 30/30 archived creation replay; see bsc_v2_p0_mac_local_offline_audit_20261020."
+  },
+  "bsc_v2_p0_mac_local_offline_audit_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_MAC_FROZEN30_RAW_RPC_ARCHIVE_AUDIT_REPORTED_V1",
+    "source_kind": "USER_PASTED_MAC_TERMINAL_STDOUT",
+    "audited_git_commit_sha": "c1cf218093b2ca9a99a90037dd20ee4b6d83527e",
+    "mac_git_rev_parse_head_explicitly_reported": true,
+    "mac_fast_forward_success_reported": true,
+    "local_mac_tests": [
+      {
+        "pattern": "test_monster_early_bsc_v2_pit.py",
+        "ran": 12,
+        "passed": 12,
+        "failed": 0
+      },
+      {
+        "pattern": "test_monster_early_venue_factory_rpc_roster_probe.py",
+        "ran": 14,
+        "passed": 14,
+        "failed": 0
+      }
+    ],
+    "total_tests_reported": 26,
+    "total_tests_reported_pass": 26,
+    "offline_audit_stdout": {
+      "status": "LOCAL_FROZEN_30_CREATION_REPLAY_PASS",
+      "fully_replayed_creation_count": 30,
+      "same_tx_initial_lp_count": 25,
+      "created_without_same_tx_initial_lp": 5,
+      "original_response_files_audited": 88,
+      "unknown_ranks": [],
+      "twentyfour_of_thirty_complete_pit_gate": "NOT_SCORABLE",
+      "eighteen_of_thirty_sellable_gate": "NOT_SCORABLE"
+    },
+    "test_fixture_30_cases_and_fail_closed_tested": true,
+    "local_sha_manifest_computed_reported": true,
+    "original_archive_manifest_uploaded_or_read_by_assistant": false,
+    "prior_independent_http_sha_receipts": false,
+    "independent_second_provider_validation": false,
+    "original_http_headers_provenance": false,
+    "verified_contemporaneous_public_available_at": false,
+    "verified_historical_token_deployment_and_first_swap_for_all30": false,
+    "dynamic_fee_tax_and_live_execution_at_historical_block": false,
+    "p0_gate_status": "PARTIAL_NOT_ACCEPTED_FOR_P1_OR_TRADING",
+    "source_scope": "2025-07-01 UTC, Pancake BSC V2 Factory frozen first30 eligible pair identities only",
+    "reconciliation_note": "30 replayable creation proofs including 25 with creation-transaction Mint/Sync; 5 without immediate initial LP remain in the denominator. 88 locally audited response files are audit stdout, not files inspected by this assistant. Terminal tests on exact new head 26/26 PASS; earlier 24/24 was previous head."
   }
 }
