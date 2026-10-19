@@ -416,3 +416,28 @@ def test_optin_export_sqlite_error_never_kills_decision_loop(tmp_path, monkeypat
         assert heartbeat["status"] == "OK"
     finally:
         obj.close()
+
+def test_checked_in_frank_policy_has_no_assumed_order_amount_and_no_quote_call():
+    from mission_agent.mission_control.policy import load_policy, evaluate
+    file = Path(__file__).parents[1] / "config" / "follow_policy_v1.approved.json"
+    approved, _ = load_policy(file)
+    assert "quote_usdc_amount" not in approved["decision"]
+    assert approved["sizing_authority"] == "USER_DECIDES_AMOUNT_AND_EXECUTION_NO_DEFAULT_NOTIONAL"
+    instance = MissionMemeService.__new__(MissionMemeService)
+    instance.policy = approved
+    class NeverQuote:
+        def quote_usdc_to_token(self, *args, **kwargs):
+            raise AssertionError("UNAUTHORIZED_JUPITER_QUOTE")
+    instance.jupiter = NeverQuote()
+    candidate = {
+        "mint": "Mint111", "runtime_status": "LIVE",
+        "position_state": "OPEN", "latest_side": "BUY", "token_decimals": 6,
+        "current_raw": "100", "pattern": "MULTIPLE",
+        "latest_buy_at": 1000, "latest_buy_price_usdc": "1",
+    }
+    quote = instance._quote(candidate)
+    assert quote["status"] == "SKIPPED"
+    assert quote["reason"] == "USER_ORDER_AMOUNT_NOT_SPECIFIED"
+    result = evaluate(candidate, quote, approved, now=1005)
+    assert result["decision"] == "WAIT"
+    assert "BUY" not in result["reasons"]
