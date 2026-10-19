@@ -457,6 +457,23 @@ class V2HistoricQuoteAndSwapEvidenceTests(unittest.TestCase):
         self.assertEqual(same['first_above_floor_buy_public_reaction_status'],
                          'SAME_TX_NOT_PUBLICLY_REACTABLE_AFTER_SYNC')
         self.assertEqual(same['twentyfour_of_thirty_complete_pit_gate'], 'NOT_SCORABLE')
+        self.assertEqual(same['observed_buy_swap_events'], 1)
+        self.assertEqual(same['observed_buy_distinct_transactions'], 1)
+        self.assertEqual(same['observed_above_floor_buy_distinct_transactions'], 1)
+        extra_sync = event(50, tx1, 14, SYNC, [820, 5100])
+        extra_swap = event(50, tx1, 15, SWAP, [0, 500, 80, 0])
+        extra_swap['topics'] = [SWAP, topic(token0), topic(token1)]
+        atomic_multi = summarize_v2_archived_swap_windows(
+            **kwargs, windows=[{'name': 'SAME_MINT_TX_TWO_SWAPS', 'logs': [
+                source_sync, minted, swap_sync, swap, extra_sync, extra_swap]}])
+        self.assertEqual(atomic_multi['observed_buy_swap_events'], 2)
+        self.assertEqual(atomic_multi['observed_buy_distinct_transactions'], 1)
+        self.assertEqual(atomic_multi['observed_above_floor_buy_swap_events'], 2)
+        self.assertEqual(atomic_multi['observed_above_floor_buy_distinct_transactions'], 1)
+        self.assertEqual(
+            atomic_multi['observed_qualified_buy_swaps_within_first_above_floor_sync_tx'], 2)
+        self.assertTrue(atomic_multi[
+            'distinct_transaction_does_not_imply_distinct_human_or_public_entry'])
         subsequent_sync = event(51, tx2, 2, SYNC, [800, 5200])
         subsequent_swap = event(51, tx2, 3, SWAP, [0, 600, 100, 0])
         subsequent_swap['topics'] = [SWAP, topic(token0), topic(token1)]
@@ -470,6 +487,8 @@ class V2HistoricQuoteAndSwapEvidenceTests(unittest.TestCase):
         self.assertEqual(later['observed_qualified_buy_distinct_tx_count_later_block'], 1)
         self.assertEqual(later['first_observed_qualified_buy_later_block']['block'], 51)
         self.assertEqual(later['first_observed_above_floor_buy_in_saved_windows']['block'], 51)
+        self.assertEqual(later['observed_buy_swap_events'], 1)
+        self.assertEqual(later['observed_above_floor_buy_distinct_transactions'], 1)
 
 
 
