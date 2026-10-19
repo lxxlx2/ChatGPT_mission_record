@@ -1,0 +1,43 @@
+name: Frank watch pool compact UI review
+
+on:
+  push:
+    branches:
+      - review/frank-watchpool-collapse-20261012
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  read-only-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exact tested HEAD
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "WATCH_UI_HEAD=$GITHUB_SHA"
+      - name: Test dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3
+      - name: Structured DOM and real JS syntax
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/research/test_frank_watchpool_collapsed_20261012.py tests/research/test_frank_dashboard_priority_layout.py
+          node --check mission_agent/mission_control/static/app.js
+      - name: Full Frank regression
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests
