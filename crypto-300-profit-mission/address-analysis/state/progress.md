@@ -4,6 +4,15 @@ Updated: 2026-10-19 Asia/Bangkok
 Research status: `READ_ONLY / ACTIVITY_SCREEN_COMPLETE / PNL_REVIEW_INCOMPLETE`
 Source manifest: [449 addresses](../sources/oooooyoung-evm-449-source-snapshot.json), original blob `954f3aba66be21911dd627fa40dd3dd0a9fd1d26`.
 
+## 2026-10-19 盈利主线纠偏（当前执行优先）
+
+- **唯一下一阶段权威计划：** [盈利审计纠偏与交付门禁](pnl-mainline-recovery-plan-20261019.md)。先恢复真实盈利／亏损Token与钱包30d/长期PnL交付，**不再以237个首页读完充当PnL完成**；449/449活跃度筛查已完成、237/237所选链出账事件首页已读、171个队列位置仍有分页，完整钱包30d/长期PNL为**0/449**。
+- **P1正负交易第一批已进入PR：** [首批钱包盈利/亏损候选业务报告](../batches/pnl-mainline-first-signed-roundtrips-20261019.md)、[逐笔精确BNB整数与链上证据](../evidence/pnl-mainline-first-signed-roundtrips-20261019.json)。#002 sauce `+0.156828105278687674 BNB`、#004 sauce `+0.154215798043203099 BNB`、#400 BOARDSEAT `-0.337858120186780058 BNB`，**均是成功本人签名的完整Token库存回合和钱包买卖执行区块BNB余额变化，不是经过Router内部trace归因的净利润**。#002/#004同块交易，不算互相独立策略样本；新增可批准真实交易净利润0、全钱包PnL 0/449。
+- **P2低频优先补链第1批已进入PR：** [Ethereum+Base补链19钱包报告](../batches/low-frequency-ethereum-base-nonce-recheck-19-20261019.md)、[19钱包起终nonce证据JSON](../evidence/low-frequency-ethereum-base-nonce-recheck-19-20261019.json)。原“56个首命中链≤6签名”已补19个，其18个仍三链合计≤6，**#367三链合计9笔，剔除低频≤6队列**；原前120钱包已证三链低频11，故已验证**29个三链≤6**，另37个首链低频还待补其它链。下一组源行 #153/#166/#178/#205 开始补链，优先真实可结算闭合交易，不盲目循环。
+- **历史Git交付缺口已修复：** 2026-10-19此前创建但没有进入PR的 #213/#429 [BNB窗口资金账本](../batches/pnl-up-tober-native-cashflow-audit-213-429-20261019.md)、[九钱包关联簇](../batches/pnl-up-tober-nine-wallet-cluster-20261019.md)、[原始67低频候选](../batches/active-237-low-frequency-triage-20261019.md)及3份JSON已通过普通Git文件创建方式重新挂入PR，并非强制更新旧ref或覆写历史。与本次19钱包补链后的29/37实际口径并行保存为历史研究。
+- **项目安全**：研究只读/不签名、不交易、不部署、不发送邮件、不启用监控，不合并Draft PR。无法证实成交成本与逐笔内部BNB回款即保留UNRESOLVED，切到下一钱包，不能为了关边界拖延可用输出。
+
+
 ## Canonical queue position
 
 - **Activity screening complete: 449/449.** [Full 449-wallet activity status](../evidence/activity-candidates-001-449.json) · [237 active candidates for PnL review](../evidence/active-wallets-237.csv) · [Short completion report](activity-screening-001-449.md).
