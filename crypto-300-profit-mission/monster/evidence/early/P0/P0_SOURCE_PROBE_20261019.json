@@ -1881,7 +1881,17 @@
           "initial_two_way_sellability": "UNRESOLVED",
           "token_deployment": "UNRESOLVED",
           "actual_entry_time": "UNRESOLVED",
-          "pool_log_source_status": "FULL_CREATION_BLOCK_LOGS_NORMALIZED"
+          "pool_log_source_status": "FULL_CREATION_BLOCK_LOGS_NORMALIZED",
+          "delayed_liquidity": {
+            "status": "DELAYED_FIRST_MINT_SYNC_CONFIRMED_WITH_FULL_FILTERED_LOGS",
+            "first_sync_block": 52446701,
+            "first_mint_tx": "0xe722f3db159d390decd678fc7b1a5a7f863599a52d07b737e5be6be0b101d112",
+            "quote_raw": "15000000000000000000",
+            "pool_token_reserve_raw": "98000000000000000000000000",
+            "public_received_at": "UNVERIFIED",
+            "source_original_http_sha256": null,
+            "actual_sell_path": "UNVERIFIED"
+          }
         },
         {
           "rank": 27,
@@ -4520,6 +4530,48 @@
           "provider_source": "ALCHEMY_CONNECTED_APP_NORMALIZED",
           "original_http_sha256": null,
           "blocked_reason": "SOURCE_NORMALIZED_8KB_TRUNCATION_OR_ERROR"
+        },
+        {
+          "rank": 26,
+          "block": 52446701,
+          "status": "DELAYED_FIRST_MINT_SYNC_CONFIRMED_WITH_FULL_FILTERED_LOGS",
+          "sync_logs": [
+            {
+              "address": "0x47009c98b5e2d234724b1f8a9fb43da6fbe882f2",
+              "topics": [
+                "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1"
+              ],
+              "data": "0x00000000000000000000000000000000000000000051104ea52a72f7a2000000000000000000000000000000000000000000000000000000d02ab486cedc0000",
+              "blockHash": "0xf9a09f0cfa1ee4232b944ec6d5596195a321188bf49754cd05d007400bc42595",
+              "blockNumber": "0x32045ed",
+              "blockTimestamp": "0x686337ca",
+              "transactionHash": "0xe722f3db159d390decd678fc7b1a5a7f863599a52d07b737e5be6be0b101d112",
+              "transactionIndex": "0x6a",
+              "logIndex": "0x141",
+              "removed": false
+            }
+          ],
+          "mint_logs": [
+            {
+              "address": "0x47009c98b5e2d234724b1f8a9fb43da6fbe882f2",
+              "topics": [
+                "0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f",
+                "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e"
+              ],
+              "data": "0x00000000000000000000000000000000000000000051104ea52a72f7a2000000000000000000000000000000000000000000000000000000d02ab486cedc0000",
+              "blockHash": "0xf9a09f0cfa1ee4232b944ec6d5596195a321188bf49754cd05d007400bc42595",
+              "blockNumber": "0x32045ed",
+              "blockTimestamp": "0x686337ca",
+              "transactionHash": "0xe722f3db159d390decd678fc7b1a5a7f863599a52d07b737e5be6be0b101d112",
+              "transactionIndex": "0x6a",
+              "logIndex": "0x142",
+              "removed": false
+            }
+          ],
+          "provider_source": "ALCHEMY_CONNECTED_APP_NORMALIZED_HISTORICAL_FILTERED_V2_POOL",
+          "original_http_sha256": null,
+          "filtered_sync_rows": 1,
+          "filtered_mint_rows": 1
         }
       ]
     }
@@ -4838,12 +4890,23 @@
         "rank": 26,
         "first_sync_block": 52446701,
         "first_mint_and_sync_same_tx": true,
-        "first_mint_tx": "0xe722f3db159d390decd678fc7b1a5a7f863599a52d07b737e5be0b101d112",
+        "first_mint_tx": "0xe722f3db159d390decd678fc7b1a5a7f863599a52d07b737e5be6be0b101d112",
         "quote": "WBNB",
         "quote_reserve_raw": "15000000000000000000",
         "status": "DELAYED_MINT_SYNC_CONFIRMED",
         "normalized_mint_log_raw": "0x00000000000000000000000000000000000000000051104ea52a72f7a2000000000000000000000000000000000000000000000000000000d02ab486cedc0000",
-        "first_public_receipt": "UNKNOWN"
+        "first_public_receipt": "UNKNOWN",
+        "original_incomplete_tx_hash_superseded": "0xe722f3db159d390decd678fc7b1a5a7f863599a52d07b737e5be0b101d112",
+        "sync_log_index": "0x141",
+        "mint_log_index": "0x142",
+        "filtered_historical_sync_and_mint_full_responses": true,
+        "origin": "Alchemy connected app eth_getLogs bnb-mainnet; one BSC block each topic",
+        "original_rpc_http_bytes_sha256": null,
+        "corrected_tx_hash_from_20261020_historical_log_read": true,
+        "two_asset_sync_reserve_raw": [
+          "98000000000000000000000000",
+          "15000000000000000000"
+        ]
       }
     ],
     "remaining_same_notional_sellability": "NOT_SCORABLE",
@@ -4852,7 +4915,7 @@
   "bsc_v2_p0_reference_sequential_amm_20261020": {
     "schema": "MONSTER_BSC_V2_P0_REFERENCE_SEQUENTIAL_AMM_AND_30_POOL_STATUS_V1",
     "historical_scope": "2025-07-01 UTC fixed first 30 BSC PancakeSwap V2 quoted pool tokens",
-    "input_provenance": "Previously committed normalized Alchemy historical PairCreated/Mint/Sync and four historical Router view results. Original HTTP bytes and independent RPC source unavailable.",
+    "input_provenance": "Previously committed normalized Alchemy historical PairCreated/Mint/Sync and four historical Router view results. Original HTTP bytes and independent RPC source unavailable. Rank26 additionally re-read by full filtered one-block Sync and Mint event outputs; prior malformed 63-character TX string superseded.",
     "historical_source_sha256": null,
     "mode": "READ_ONLY_OFFLINE_RECALCULATION_FROM_GIT_NORMALIZED_HISTORY",
     "method": "Each reference roundtrip: hypothetical tokenOut=(quoteIn*9975*tokenReserve)//(quoteReserve*10000+quoteIn*9975); post-buy reserves quote+=quoteIn,token-=tokenOut; reverse output=(tokenOut*9975*postQuote)//(postToken*10000+tokenOut*9975). Integer floor exact.",
@@ -5195,10 +5258,10 @@
         "token_ca": "0x63e91ffed58d8ba38926d7103d8b45e0ef4dcc86",
         "pool": "0x47009c98b5e2d234724b1f8a9fb43da6fbe882f2",
         "quote_asset": "WBNB",
-        "first_liquidity_evidence_block": null,
-        "quote_reserve_raw": null,
-        "token_reserve_raw": null,
-        "reserve_vector_basis": "UNKNOWN",
+        "first_liquidity_evidence_block": 52446701,
+        "quote_reserve_raw": "15000000000000000000",
+        "token_reserve_raw": "98000000000000000000000000",
+        "reserve_vector_basis": "DELAYED_FILTERED_MATCHED_MINT_SYNC_ALCHEMY_NORMALIZED",
         "actual_user_buy_sell_executable": "UNVERIFIED",
         "first_public_available_at": "UNKNOWN",
         "raw_rpc_http_sha256": null
@@ -5256,15 +5319,14 @@
         "raw_rpc_http_sha256": null
       }
     ],
-    "quote_reserve_vectors_reconstructable_from_committed_normalized_logs": 26,
+    "quote_reserve_vectors_reconstructable_from_committed_normalized_logs": 27,
     "unknown_reserve_vector_ranks": [
       16,
       17,
-      18,
-      26
+      18
     ],
     "creation_same_tx_mint_sync_verified_prior_evidence": 25,
-    "delayed_mint_sync_quote_known_but_full_two_asset_reserve_vector_not_archived_rank26": true,
+    "delayed_mint_sync_quote_known_but_full_two_asset_reserve_vector_not_archived_rank26": false,
     "reference_prior_pilot_roundtrip_cases": [
       {
         "rank": 1,
