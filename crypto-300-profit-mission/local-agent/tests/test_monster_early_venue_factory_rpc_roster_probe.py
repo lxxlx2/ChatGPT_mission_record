@@ -385,6 +385,13 @@ class FactoryOfflineP0ArchiveAuditTests(unittest.TestCase):
             self.assertEqual(got['observed_token_to_quote_swap_with_same_tx_sync_ranks'], [5])
             self.assertEqual(got['observed_quote_to_token_swap_with_same_tx_sync_ranks'], [1, 2])
             self.assertEqual(len(got['later_update_source_window_not_archived_ranks']), 27)
+            self.assertEqual(got['observed_buy_with_proven_preswap_quote_floor_ranks'],
+                             [1, 2])
+            self.assertEqual(got['observed_sell_with_proven_preswap_quote_floor_ranks'],
+                             [])
+            self.assertEqual(got['observed_sell_below_preswap_quote_floor_ranks'], [5])
+            self.assertEqual(got['observed_swap_preswap_depth_unresolved_ranks'], [])
+            self.assertTrue(got['quote_depth_floor_is_research_eligibility_not_purchase_notional'])
             self.assertTrue(got['observed_sells_are_not_same_notional_user_sellability'])
             self.assertEqual(got['eighteen_of_thirty_sellable_gate'], 'NOT_SCORABLE')
 
