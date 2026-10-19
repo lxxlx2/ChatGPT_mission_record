@@ -112,7 +112,9 @@ def run() -> None:
                                 timeout=8500)
                             assert any(c==503 for c in observed["/api/runtime"])
                             assert checks["invalidated"] is True
-                            assert page.title()=="FRANK_106_STATE_REVOKED"
+                            page.wait_for_function(
+                                "() => document.title === 'FRANK_106_STATE_REVOKED'",
+                                timeout=2500)
                             try:
                                 qa.confirm_fresh_dom(
                                     stage,receipts,observed,checks,"after",timeout=.2)
