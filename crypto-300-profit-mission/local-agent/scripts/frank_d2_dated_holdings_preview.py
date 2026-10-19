@@ -15,13 +15,15 @@ from urllib.parse import quote
 import json
 import os
 import re
-import signal
 import subprocess
 import sys
 import tempfile
-import time
 from uuid import uuid4
 
+# Execute directly from the checked-out repository without installing packages.
+_LOCAL_AGENT = Path(__file__).resolve().parents[1]
+if str(_LOCAL_AGENT) not in sys.path:
+    sys.path.insert(0, str(_LOCAL_AGENT))
 from mission_agent.mission_control.wallet_inventory import reconcile_watchlist
 
 ROOT = Path(__file__).resolve().parents[2]
