@@ -6269,5 +6269,114 @@
     "status": "HISTORICAL_FIRST_RUNTIME_CODE_COVERAGE_30_OF_30_PASS_ONLY",
     "guardrails": "READ_ONLY_NO_TRADE_NO_MERGE_NO_DEPLOY",
     "interpretation": "Historical post-block runtime code presence and first code state transition are NOT first token deployment transaction, not live source-observed timestamp and not tradeable execution evidence."
+  },
+  "bsc_v2_p0_mac_preswap_quote_depth_audit_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_MAC_REAL_PRESWAP_DEPTH_OFFLINE_AUDIT_V1",
+    "input_origin": "USER_PASTED_MAC_TERMINAL_STDOUT",
+    "fixed_code_sha": "91ffecf096af60dda0658744337402a54d0b5aaa",
+    "reported_checkout_sha_verified_in_terminal": true,
+    "test_results": [
+      {
+        "pattern": "test_monster_early_bsc_v2_pit.py",
+        "ran": 17,
+        "passed": 17
+      },
+      {
+        "pattern": "test_monster_early_venue_factory_rpc_roster_probe.py",
+        "ran": 18,
+        "passed": 18
+      }
+    ],
+    "tests_total": 35,
+    "tests_all_pass": true,
+    "offline_archive_replay_status": "LOCAL_FROZEN_30_CREATION_REPLAY_PASS",
+    "original_response_files_audited": 88,
+    "fully_replayed_creation_count": 30,
+    "same_tx_initial_lp_count": 25,
+    "created_without_same_tx_initial_lp": 5,
+    "unknown_ranks": [],
+    "observed_quote_to_token_swap_with_same_tx_sync_ranks": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      7,
+      9,
+      10,
+      11,
+      12,
+      13,
+      15,
+      16,
+      17,
+      19,
+      21,
+      22,
+      23,
+      24,
+      25,
+      27,
+      29,
+      30
+    ],
+    "observed_token_to_quote_swap_with_same_tx_sync_ranks": [
+      5,
+      8,
+      28
+    ],
+    "observed_buy_with_proven_preswap_quote_floor_ranks": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      7,
+      9,
+      10,
+      11,
+      12,
+      13,
+      16,
+      17,
+      19,
+      21,
+      22,
+      23,
+      24,
+      25,
+      27,
+      29,
+      30
+    ],
+    "observed_buy_below_preswap_quote_floor_ranks": [
+      15
+    ],
+    "observed_sell_with_proven_preswap_quote_floor_ranks": [],
+    "observed_sell_below_preswap_quote_floor_ranks": [
+      5,
+      8,
+      28
+    ],
+    "observed_swap_preswap_depth_unresolved_ranks": [],
+    "later_update_source_window_not_archived_ranks": [
+      18,
+      20
+    ],
+    "observed_buy_passed_frozen_depth_ranks_which_had_no_same_tx_initial_lp": [
+      16,
+      17
+    ],
+    "observed_buys_above_count": 22,
+    "observed_sells_above_count": 0,
+    "historical_transactions_when_depth_passed_not_newly_public_entry": true,
+    "archived_windows_not_contiguous": true,
+    "archive_raw_http_independently_read_by_assistant": false,
+    "historic_erc20_transfer_and_wallet_buy_sell_after_entry_unverified": true,
+    "full_deployment_tx_or_public_available_at_unverified": true,
+    "twentyfour_of_thirty_complete_pit_gate": "NOT_SCORABLE",
+    "eighteen_of_thirty_two_way_sellability_gate": "NOT_SCORABLE",
+    "caveat": "No sell Swap above floor OBSERVED IN THE SAVED LIMITED WINDOWS is NOT evidence of 0 sellable coins or no later sells; no verified entry/exit or absent transactions outside windows.",
+    "decision": "P0_PARTIAL_ENTRY_DYNAMIC_LIQUIDITY_TRANSITION_NEXT"
   }
 }
