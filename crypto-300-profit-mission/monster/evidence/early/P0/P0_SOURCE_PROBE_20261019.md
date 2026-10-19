@@ -1,5 +1,30 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20 本轮最新实际进展（以下早期章节为历史研究快照）
+
+**本轮继续原P0，没有建新Stage、没有修改30个身份筛选规则，没有查看后验价格/未来赢家名单，也未执行Mac/后台/实盘交易。** 依赖原唯一固定2025-07-01 UTC PancakeSwap V2 Factory；此处`30/30`指**30个池的创建源**，不是P0终验、Binance Alpha可见性或全BSC代币母体完整性。
+
+| 任务 | 实际查证事实 | 计数 |
+| --- | --- | ---: |
+| 原Factory时间序号+真实 `PairCreated` | 从历史`allPairsLength`逐序号二分首创建区块，再逐一查Factory事件交易哈希、Pair地址和序号，30/30互异token CA保留 | **30/30** |
+| 建池同交易 `Mint/Sync` | 有匹配的原事件、数量和事务；另5个建池时没有同交易加池，但不删除 | **25/30** |
+| 当下初始报价侧余额达到冻结粗门槛 | 2 WBNB或1000 USDT，是有界**研究门槛而非用户实际订单额度** | **20/30** |
+| 同交易加池但不足门槛 | `#5/#8/#15/#20/#28`，全部保留原母体 | **5/30** |
+| 创建时空池/未找到同Tx初始Mint | `#14/#16/#17/#18/#26`，不把建池空池直接当死亡、也不回填未来流动性 | **5/30** |
+| 延迟加池 `Mint+Sync` 真实证据 | `#14`，创建00:41:00 UTC，01:11:34 UTC才有首个可验证Mint/Sync，报价侧 **17 WBNB**；严禁把17 WBNB提前到00:41的`T_entry` | **1个另证** |
+| 延迟Mint但相关Sync不完整 | `#16/#17`：首次储备更新区块均定位，Mint确有原事件，但本会话Alchemy连接器在同块Sync日志约8KB截断；`SOURCE_TRUNCATED/NOT_SCORABLE`，不得强行把Mint数据当确认的完整双向成交 | **2个部分** |
+| 暂未补足延迟流动性 | `#18/#26`，状态保留`UNKNOWN` | **2个待查** |
+
+**最重要的业务判断**：Pancake V2的历史池身份及真实创建时点在这30个抽样记录里已经可核对，但`30/30 PairCreated`绝不能晋升`24/30完整Token部署+公众时间可用性PIT`。当前`token creation`、历史独立可见性、税/黑名单/买卖权限、当时真正bidirectional固定金额深度以及纸面退出手续费均不足，所以**24/30和18/30正式验收均`NOT_SCORABLE`，预测模型不启动**。原始完整提供商HTTP JSON-RPC字节与header未能由本会话Alchemy连接器归档，Git只保存原RPC**标准化原事件字段**和每条事实的来源范围；不能把Git里标准化结果伪装成完整raw SHA归档。
+
+**避免重复做无效单点工作**：新早期研究纯包`mission_agent/early/bsc_v2_pit.py`新增`verify_delayed_mint_sync`，判断是否确实后来才加池；原只读CLI `monster_early_venue_factory_rpc_roster_probe.py`的 `--mode bootstrap --bootstrap-start-rank 1..30 --bootstrap-limit 1..5` 可有界处理任意冻结排名段，避免原只能处理前五名的业务阻断；待用户Mac实际联网与授权执行才会留下带SHA的完整RPC bytes。原始`--mode enumerate`须先成功且同源，同日固定名单不可更改。测试已添加整30例历史标准化事件确定性回放和#14延迟加池反例；**本会话在隔离Python镜像实际跑过4项纯函数unittest，全部通过；这不是远端完整测试/CI/Mac联调通过，新增30例回放仍待仓库环境执行**。PR依旧Draft，不授权`MERGE / DEPLOY / GMAIL / TRADE`。
+
+**下一步关键阻断仅两件**：①取得Mac上的历史RPC原始JSON和SHA完整归档，并正式跑完整代码/三十例回归及必要独立审查；②按冻结名单验证当时的真实可买**且可卖**路径/代币限制与费用，不要继续只靠AMM储备数学模拟判可卖、更不能从本次历史创建事实倒推以后十倍。原2025-07-01 Base30探针属于另一套冻结研究，不能混成这30个BSC V2结果；BSC V3/Four.meme/Alpha分母也尚未覆盖。保留11月2日源预算停止规则。
+
+---
+
+
+
 状态：`BSC_V2_30_IDENTITY_ROSTER_VERIFIED_AS_HISTORICAL_SCALARS / PIT_NOT_SCORABLE / NO_MODEL / NO_TRADE`。本文件是本Phase唯一当前报告，不新增Stage文档，不更改2025-07-01 Base30原冻结探针，未使用任何付费RPC、钱包、Mac后台服务或两次P0 CI预算。本轮真实连接器读取的机器可核数字和前12个池地址在同目录[源结果JSON](P0_SOURCE_PROBE_20261019.json)；**原始提供商HTTP正文/响应header没有通过当前连接器归档，因此SHA256字段为null，尚不满足最终PIT和审计门禁**。
 
 ## 1. 先拿到真正的链上事实
