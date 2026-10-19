@@ -1,0 +1,668 @@
+{
+  "schema": "mission-address-analysis-crosschain-lownonce-completion-first19-v1",
+  "created_date": "2026-10-19",
+  "plan": "state/pnl-mainline-recovery-plan-20261019.md",
+  "repo": "lxxlx2/ChatGPT_mission_record",
+  "pr": 97,
+  "source_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "frozen_block_bounds": {
+    "bnb": [
+      "0x74cf256",
+      "0x7a4ca36"
+    ],
+    "ethereum": [
+      "0x18cb9c8",
+      "0x19001e3"
+    ],
+    "base": [
+      "0x310fd64",
+      "0x324c3e5"
+    ]
+  },
+  "scope": "Correct early-exit batches (#007-023) for first 19 BSC-signed-one candidates; read ETH and Base start+end nonce, not token PnL.",
+  "first_hit_candidates_total": 56,
+  "first_hit_candidates_cross_chain_completed": 19,
+  "first_hit_candidates_still_missing_cross_chain": 37,
+  "verified_still_three_chain_low_leq6": 18,
+  "verified_exceeds_six": 1,
+  "previously_checked_11_three_chain_low_remain": 11,
+  "new_total_verified_three_chain_low_leq6": 29,
+  "source_wallets": [
+    {
+      "source_row": 149,
+      "address": "0x44a5630ed91fcb1832c7274d04d777aa73708847",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 0,
+        "end_nonce": 0,
+        "signed_delta": 0
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 0,
+        "end_nonce": 0,
+        "signed_delta": 0
+      },
+      "total_three_chain_signed_delta": 1,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 177,
+      "address": "0x9006eb7785a69bbf05d071a3ab831056a919b151",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 0,
+        "end_nonce": 0,
+        "signed_delta": 0
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 0,
+        "end_nonce": 0,
+        "signed_delta": 0
+      },
+      "total_three_chain_signed_delta": 1,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 181,
+      "address": "0x1e64b98530b7ced47abd7f21792c96d5e233d244",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 0,
+        "end_nonce": 0,
+        "signed_delta": 0
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 0,
+        "end_nonce": 0,
+        "signed_delta": 0
+      },
+      "total_three_chain_signed_delta": 1,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 193,
+      "address": "0xf9814f7c77194d123ebd68706f17bf308c5471f2",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 622,
+        "end_nonce": 626,
+        "signed_delta": 4
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 153,
+        "end_nonce": 153,
+        "signed_delta": 0
+      },
+      "total_three_chain_signed_delta": 5,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 223,
+      "address": "0xfa71b875a401a676eceb718b48dad01fa753875a",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 1172,
+        "end_nonce": 1172,
+        "signed_delta": 0
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 1269,
+        "end_nonce": 1272,
+        "signed_delta": 3
+      },
+      "total_three_chain_signed_delta": 4,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 224,
+      "address": "0x8366ef0f646edfbdc063bb5ae98a4a5b1f7544cb",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 0,
+        "end_nonce": 0,
+        "signed_delta": 0
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 0,
+        "end_nonce": 0,
+        "signed_delta": 0
+      },
+      "total_three_chain_signed_delta": 1,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 241,
+      "address": "0x712b5069c457c92133c026520c9e7d91c6f8bceb",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 111,
+        "end_nonce": 112,
+        "signed_delta": 1
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 14,
+        "end_nonce": 14,
+        "signed_delta": 0
+      },
+      "total_three_chain_signed_delta": 2,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 248,
+      "address": "0x5a9a50801020bdb91be1dd776d2db91d114ec40b",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 0,
+        "end_nonce": 0,
+        "signed_delta": 0
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 9,
+        "end_nonce": 10,
+        "signed_delta": 1
+      },
+      "total_three_chain_signed_delta": 2,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 311,
+      "address": "0xb5932a6b7d50a966aec6c74c97385412fb497540",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 37,
+        "end_nonce": 38,
+        "signed_delta": 1
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 0,
+        "end_nonce": 0,
+        "signed_delta": 0
+      },
+      "total_three_chain_signed_delta": 2,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 348,
+      "address": "0x9fecd44b015d3ceee17ad7770a79fb6edf512f5e",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 0,
+        "end_nonce": 0,
+        "signed_delta": 0
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 0,
+        "end_nonce": 0,
+        "signed_delta": 0
+      },
+      "total_three_chain_signed_delta": 1,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 367,
+      "address": "0x7d9471511a6c027e978adaf02014c3d2f40a0571",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 46,
+        "end_nonce": 50,
+        "signed_delta": 4
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 103,
+        "end_nonce": 107,
+        "signed_delta": 4
+      },
+      "total_three_chain_signed_delta": 9,
+      "low_frequency_leq6": false
+    },
+    {
+      "source_row": 368,
+      "address": "0x2e2446cba537aa0084f395340c08d767b9f85289",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 3,
+        "end_nonce": 3,
+        "signed_delta": 0
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 8,
+        "end_nonce": 8,
+        "signed_delta": 0
+      },
+      "total_three_chain_signed_delta": 1,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 369,
+      "address": "0x020ca66c30bec2c4fe3861a94e4db4a498a35872",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 20173,
+        "end_nonce": 20176,
+        "signed_delta": 3
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 252,
+        "end_nonce": 252,
+        "signed_delta": 0
+      },
+      "total_three_chain_signed_delta": 4,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 374,
+      "address": "0x571b6770ed63863d7cc7d461b1c4ec5504f17faa",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 53,
+        "end_nonce": 53,
+        "signed_delta": 0
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 148,
+        "end_nonce": 149,
+        "signed_delta": 1
+      },
+      "total_three_chain_signed_delta": 2,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 385,
+      "address": "0xf3e1ffd93b97b25cdd2829716a0febddd643f9d9",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 210,
+        "end_nonce": 210,
+        "signed_delta": 0
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 0,
+        "end_nonce": 0,
+        "signed_delta": 0
+      },
+      "total_three_chain_signed_delta": 1,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 395,
+      "address": "0xb21439d9bc421735f74afb8b17f9a11971af6adf",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 306,
+        "end_nonce": 306,
+        "signed_delta": 0
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 279,
+        "end_nonce": 279,
+        "signed_delta": 0
+      },
+      "total_three_chain_signed_delta": 1,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 396,
+      "address": "0xbebda77402cafdaba5e997e4506b9b9aae91bfe0",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 11,
+        "end_nonce": 11,
+        "signed_delta": 0
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 0,
+        "end_nonce": 0,
+        "signed_delta": 0
+      },
+      "total_three_chain_signed_delta": 1,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 418,
+      "address": "0x8f6448ea8a6a0d223acf4f2746dab5d032c65b72",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 134,
+        "end_nonce": 134,
+        "signed_delta": 0
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 2,
+        "end_nonce": 2,
+        "signed_delta": 0
+      },
+      "total_three_chain_signed_delta": 1,
+      "low_frequency_leq6": true
+    },
+    {
+      "source_row": 433,
+      "address": "0x6df7f71f8c9786dcbb127bb957e3ec9695d7a66e",
+      "previous_frozen_bsc_signatures": 1,
+      "ethereum": {
+        "block_from": "0x18cb9c8",
+        "block_to": "0x19001e3",
+        "start_nonce": 10,
+        "end_nonce": 12,
+        "signed_delta": 2
+      },
+      "base": {
+        "block_from": "0x310fd64",
+        "block_to": "0x324c3e5",
+        "start_nonce": 10,
+        "end_nonce": 12,
+        "signed_delta": 2
+      },
+      "total_three_chain_signed_delta": 5,
+      "low_frequency_leq6": true
+    }
+  ],
+  "excluded_from_low_priority": [
+    {
+      "source_row": 367,
+      "initial_bsc_first_hit_nonce_delta": 1,
+      "ethereum_extra": 4,
+      "base_extra": 4,
+      "actual_3chain_signed_delta": 9,
+      "reason": "FIRST_POSITIVE_EARLY_EXIT_WAS_NOT_ALL_CHAIN_LOWFREQUENCY"
+    }
+  ],
+  "pending_rows": [
+    {
+      "source_row": 153,
+      "original_first_hit_signed_delta": 2,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 166,
+      "original_first_hit_signed_delta": 2,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 178,
+      "original_first_hit_signed_delta": 2,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 205,
+      "original_first_hit_signed_delta": 2,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 208,
+      "original_first_hit_signed_delta": 2,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 237,
+      "original_first_hit_signed_delta": 2,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 240,
+      "original_first_hit_signed_delta": 2,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 376,
+      "original_first_hit_signed_delta": 2,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 127,
+      "original_first_hit_signed_delta": 3,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 211,
+      "original_first_hit_signed_delta": 3,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 275,
+      "original_first_hit_signed_delta": 3,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 280,
+      "original_first_hit_signed_delta": 3,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 293,
+      "original_first_hit_signed_delta": 3,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 308,
+      "original_first_hit_signed_delta": 3,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 413,
+      "original_first_hit_signed_delta": 3,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 125,
+      "original_first_hit_signed_delta": 4,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 130,
+      "original_first_hit_signed_delta": 4,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 213,
+      "original_first_hit_signed_delta": 4,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 226,
+      "original_first_hit_signed_delta": 4,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 279,
+      "original_first_hit_signed_delta": 4,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 312,
+      "original_first_hit_signed_delta": 4,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 365,
+      "original_first_hit_signed_delta": 4,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 392,
+      "original_first_hit_signed_delta": 4,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 425,
+      "original_first_hit_signed_delta": 4,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 429,
+      "original_first_hit_signed_delta": 4,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 142,
+      "original_first_hit_signed_delta": 5,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 168,
+      "original_first_hit_signed_delta": 5,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 186,
+      "original_first_hit_signed_delta": 5,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 274,
+      "original_first_hit_signed_delta": 5,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 345,
+      "original_first_hit_signed_delta": 5,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 380,
+      "original_first_hit_signed_delta": 5,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 414,
+      "original_first_hit_signed_delta": 5,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 430,
+      "original_first_hit_signed_delta": 5,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 196,
+      "original_first_hit_signed_delta": 6,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 323,
+      "original_first_hit_signed_delta": 6,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 419,
+      "original_first_hit_signed_delta": 6,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    },
+    {
+      "source_row": 426,
+      "original_first_hit_signed_delta": 6,
+      "other_networks": "NOT_CHECKED",
+      "status": "PENDING_CROSS_CHAIN_NONCE"
+    }
+  ],
+  "no_trade_profit_conclusion": true,
+  "approved_wallet_pnl_30d": 0,
+  "approved_wallet_pnl_lifetime": 0
+}
