@@ -180,6 +180,56 @@ class FactorySourceProbeTests(unittest.TestCase):
         with self.assertRaisesRegex(m.SourceError, "ZERO_OR_MISSING_PAIR"):
             m.historical_v2_address(Fake(), "0x" + "1"*40, "0x1e3dd18b", 10)
 
+    def test_batch_bootstrap_replays_real_fixed_P0_event_and_archives_raw(self):
+        original = Path(__file__).resolve().parents[2] / (
+            "monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json")
+        fixture = json.loads(original.read_text())
+        index = fixture["historical_bsc_v2_append_only_factory_enumeration"]
+        first = index["chronological_quoted_unique_first30"][0]
+        row = index["first36"][0]
+        proof = index["creation_liquidity_source_spotchecks"]
+        event = next(x for x in proof["normalized_event_log_samples"] if x["rank"] == 1)
+        class Fake:
+            source_tag = "frozen-test-source"
+            calls = 0
+            def request(self, method, params):
+                self.calls += 1
+                if method == "eth_call":
+                    block = int(params[1], 16)
+                    val = hex(1874173 if block < 52440324 else 1874174)
+                    return val, json.dumps({"result": val}).encode()
+                if method == "eth_getLogs":
+                    selector = params[0]
+                    if selector["address"].lower() == m.CHAINS["bsc-v2"]["factory"].lower():
+                        rows = event["scope_factory_event"]
+                    else:
+                        rows = event["scope_pair_same_tx_events"]
+                    return rows, json.dumps({"jsonrpc": "2.0", "result": rows}).encode()
+                raise AssertionError("unexpected method")
+        with tempfile.TemporaryDirectory() as root:
+            base = Path(root)
+            folder = base / "v2_historical_index_raw"
+            folder.mkdir()
+            (base / "v2_factory_enum_status.json").write_text(json.dumps({
+                "chain": "bsc-v2", "day_blocks": [52440287,52555482],
+                "rpc_source_sha256": Fake.source_tag,
+                "sample_complete_first30_by_factory_order": True,
+                "sample": [first] * 30}))
+            (folder / (str(first["factory_index"]) + ".json")).write_text(
+                json.dumps({"factory_index": first["factory_index"],
+                            "pair": first["pool"], "block": 52555482,
+                            "rpc_source_sha256": Fake.source_tag,
+                            "token0": row["token0"], "token1": row["token1"]}))
+            got = m.bootstrap_bsc_v2_saved_roster(
+                Fake(), 52440287, 52555482, base, 1)
+            self.assertEqual(got["verified_creation_and_first_mint"], 1)
+            self.assertEqual(got["records"][0]["creation_block"], 52440324)
+            self.assertEqual(got["records"][0]["sell_path"], "UNKNOWN")
+            self.assertTrue((base / "v2_bootstrap_raw" /
+                             (str(first["factory_index"]) + ".factory.rpc.json")).is_file())
+            self.assertTrue((base / "v2_bootstrap_raw" /
+                             (str(first["factory_index"]) + ".pool.rpc.json")).is_file())
+
     def test_wrong_chain_and_embedded_credentials_rejected(self):
         with self.assertRaisesRegex(m.SourceError, "CREDENTIALS"):
             m.RPC("https://name:pass@some-rpc.com", 8453, 3, 0)
