@@ -1,0 +1,23 @@
+{
+  "schema": "bsc-f0-l1-eoa-router-preflight-review-evidence-v1",
+  "approved_base_sha": "82705502079c85685fc6a3ccb3cefa9fa027dc33",
+  "prior_total_tests": 163,
+  "new_test_count": 15,
+  "local_tests_discovered": 178,
+  "local_tests_passed": 176,
+  "local_tests_skipped": 2,
+  "full_checkout_required_result": "178 PASS, ZERO SKIP",
+  "local_manifest_raw_present": false,
+  "actual_network_calls": 0,
+  "official_address_source": "https://developer.pancakeswap.finance/contracts/universal-router/addresses",
+  "historical_smoke_remaining_authority": "EXHAUSTED",
+  "sha256": {
+    "f0_l1_preflight.py": "475a4710f00d4ada5a03384684ae210e59a1170512e414780f0bb3bdda7da4da",
+    "tests/test_f0_l1_preflight.py": "abb0b4ec871fa88f1894050e64832e174aabedc8979e746a3111d0a9b49b7968",
+    "F0_ROUTER_SOURCE_CANDIDATES.json": "55dc75d55e7b0ba6e6a6926980eb63c0ff5cdc8a4bb3dcce6bd5d0bafc2fd652",
+    "fixtures/l1_code_fake_snapshot.json": "dd3e033fab888329a31769e60ce8db007c684770d31a5a723180d8ac7b095e56",
+    "fixture_l1_preflight_report.json": "de35bf24f0dab54524e3a0be5243e23a31b6cc355748040149de0ea14b5aa97d",
+    "F0_L1_EOA_ROUTER_PREFLIGHT.md": "e6156663562b23e3558c3915a6f51ea6229c98f069af26c7228c417f7961793e"
+  },
+  "notes": "Hash list covers only newly authored inputs and code. No onchain Router/EOA checks. Full-checkout independent review is required."
+}
