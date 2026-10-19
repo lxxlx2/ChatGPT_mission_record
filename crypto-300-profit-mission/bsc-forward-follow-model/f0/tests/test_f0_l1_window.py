@@ -150,7 +150,25 @@ class ContiguousBlockWindowOfflineTests(unittest.TestCase):
 
     def test_bad_cohort_source_split(self):
         c=copy.deepcopy(COHORT); c['preliminary_wallets'][0]['source']='PR97_449_BSC_SIGNED'
-        with self.assertRaisesRegex(ValueError, 'COHORT_PRIMARY_STRATA_MISMATCH'):
+        with self.assertRaisesRegex(ValueError, 'COHORT_10_PRIMARY_5_BACKUP_EACH_STRATUM_REQUIRED'):
+            go(c=c)
+
+    def test_concurrent_block_requests_not_implicitly_forbidden(self):
+        x=copy.deepcopy(FIX)
+        second=x['block_attempts'][1]
+        second['request_monotonic_ms']=150
+        second['response_monotonic_ms']=2300
+        second['first_received_monotonic_ms']=2320
+        second['request_utc']='2026-10-19T20:00:00.050Z'
+        second['response_utc']='2026-10-19T20:00:02.200Z'
+        second['first_received_utc']='2026-10-19T20:00:02.250Z'
+        out=go(x)
+        self.assertEqual(out['metrics']['blocks_failed'], 1)
+
+    def test_cohort_backup_strata_must_remain_five_each(self):
+        c=copy.deepcopy(COHORT)
+        c['preliminary_wallets'][10]['source']='PR97_449_BSC_SIGNED'
+        with self.assertRaisesRegex(ValueError, 'COHORT_10_PRIMARY_5_BACKUP_EACH_STRATUM_REQUIRED'):
             go(c=c)
 
     def test_cohort_outcome_field_forbidden(self):
