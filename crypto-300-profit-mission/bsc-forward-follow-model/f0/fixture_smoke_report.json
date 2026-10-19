@@ -1,0 +1,25 @@
+{
+  "actual_rpc_calls": 0,
+  "attempted_control_discovery_calls": 1,
+  "attempted_rpc_calls": 4,
+  "chain_id": 56,
+  "control_random_coverage": "NOT_MEASURED",
+  "e1_finality": "UNRESOLVED_F1_POLICY",
+  "e2_attested": false,
+  "e3_actual_count": 0,
+  "first_public_observed_latency": "NOT_MEASURED",
+  "full_block_transaction_count": 1,
+  "height": 1000,
+  "mode": "OFFLINE_FIXTURE_ONLY_NO_NETWORK",
+  "paper_profit_labels": 0,
+  "quoted_actual_count": 0,
+  "raw_rpc_sha256": {
+    "block": "c1134698b0cfdb08f1e75eee2922e7f347afd7d44c54f309de8867ff85f43fbf",
+    "chain_id": "c355f3c2a096750278d86f476f4464c6f61fbbcdc72f04ad739ccc649cde662f",
+    "head": "8048e966c17c6079b9ab5b34c348ff78796d1c64891327cadbfa0645831f2256",
+    "receipt": "bb8811bcc0e7a2ccda1a819390d99d1b0b49d3adc17f006d76379eb3ccf34841"
+  },
+  "receipt_state": "IDENTITY_VALIDATED_NOT_FINALITY",
+  "schema": "bsc-f0-bounded-smoke-v1",
+  "stop_state": "SMOKE_COMPLETE_NOT_F0_PASS"
+}
