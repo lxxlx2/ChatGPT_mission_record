@@ -1,0 +1,50 @@
+{
+  "schema": "bsc-f0-l1-saved-code-attempt-denominator-offline-v1",
+  "date": "2026-10-20",
+  "approved_parent_pr131_sha": "33f14bbfa0173d067d01a71dec740aaa40a8e50e",
+  "network_calls": 0,
+  "scope": "OFFLINE_SAVED_GETCODE_OBSERVATIONS_ONLY",
+  "source_blobs": {
+    "f0_l1_preflight.py": "526937f65ec8745dddc12de0f185546a2bfff924",
+    "tests/test_f0_l1_preflight.py": "370e36a7cae642779eeb5584d70e173d1d8af8b8",
+    "fixture_l1_preflight_report.json": "37a6a8fcba03ab19ae38b15c0f13af5bbda93960"
+  },
+  "source_sha256": {
+    "f0_l1_preflight.py": "5a7e6cf006e713a2691c44b8e1547ce58b8a3aa4df13a96bf83ef39656a5a89b",
+    "tests/test_f0_l1_preflight.py": "e49d3a69575609b900d27e607adddf3ecb9762d9a4b102c2f209cc917e4b847c",
+    "fixture_l1_preflight_report.json": "d04e84adf44b2f96ed814a9c50654888537f0497d6440cdaa7592fb8db5455e1"
+  },
+  "saved_local_test_log_sha256": "33ab8a26f724caee6342814831d8d6b61537a6b6aaeeb533142b10614d6947ba",
+  "test_log_location": "fixtures/l1_failed_getcode_186_local_tests.log",
+  "tests_discovered": 186,
+  "tests_passed": 184,
+  "tests_skipped": 2,
+  "local_test_result": "OK (skipped=2)",
+  "skipped_reason": "Local isolation copy does not include actual PR116 raw cohort manifest. Two positive tests require full checkout.",
+  "independent_review_gate": "In complete Git checkout, 186 PASS and 0 SKIP, verify both PR116 positive tests and saved failure pathways.",
+  "targeted_saved_fixture_replay": {
+    "source": "SYNTHETIC_ONLY",
+    "chain_id": 56,
+    "sampled_height": 128614660,
+    "primary_count": 20,
+    "saved_getcode_attempts": 4,
+    "rpc_errors": 1,
+    "transport_failures": 1,
+    "success_no_code": 1,
+    "success_has_code": 1,
+    "not_checked": 16,
+    "provider_billing": "UNVERIFIED",
+    "raw_rpc_error_text_in_report": false,
+    "result": "PASS",
+    "actual_rpc_calls": 0
+  },
+  "safety": {
+    "runtime_authorized": false,
+    "real_wallet_eoa_attested": false,
+    "router_runtime_verified": false,
+    "watchlist_enabled": false,
+    "real_control_enabled": false,
+    "permissions": "NO_RPC_NO_WS_NO_TRADE_NO_SIGN_NO_NOTIFICATIONS_NO_DEPLOY_NO_MERGE"
+  },
+  "preserve_history": "PR131 evidence remains 176 PASS + 2 SKIP in its earlier isolated environment; separate reviewer independently approved 178/178 zero skip at fixed approved SHA. New 186/186 zero skip awaits review."
+}
