@@ -47,7 +47,7 @@ def committed_blob(checkout: Path, sha: str, path: str) -> bytes:
     env = dict(os.environ, GIT_OPTIONAL_LOCKS="0", GIT_NO_LAZY_FETCH="1",
                GIT_NO_REPLACE_OBJECTS="1", GIT_PAGER="cat")
     p = subprocess.run(["git", "-C", str(checkout), "--no-pager",
-                        "show", f"{sha}:{path}"],
+                        "cat-file", "blob", f"{sha}:{path}"],
                        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                        env=env, timeout=20, check=True)
     if not p.stdout:
