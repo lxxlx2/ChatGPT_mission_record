@@ -1,0 +1,92 @@
+name: Monster first518 real publisher 1m D0 D1 research once
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-forward-spot511-first518-causal-bridge-once.yml'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster-forward511-first518-fifo8-once
+  cancel-in-progress: false
+jobs:
+  real_publisher_first518:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify one-shot workflow creation and run immutable unit tests
+        run: |
+          set -eu
+          python3 - <<'PY'
+          import subprocess
+          files=subprocess.check_output(['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],text=True).splitlines()
+          assert files==['.github/workflows/monster-v4-forward-spot511-first518-causal-bridge-once.yml'],files
+          print('MONSTER518_EXPLICIT_SINGLE_WORKFLOW_RESEARCH_ONLY')
+          PY
+          python3 -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_fifo8_bridge.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_forward_spot511_first518_fifo8_bridge.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_forward_spot511_first518_fifo8_bridge.py
+      - name: Retrieve earlier three original issuer publisher datasets without downloading market anew
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster518/a /tmp/monster518/b /tmp/monster518/c
+          gh run download 39212800265 --repo lxxlx2/ChatGPT_mission_record --name monster-spot511-oct16-17-original-publisher-zip-checksum-1022-attempts --dir /tmp/monster518/a
+          gh run download 39213387756 --repo lxxlx2/ChatGPT_mission_record --name monster-frozen-spot511-unicode4-source-gap-official-publisher-originals --dir /tmp/monster518/b
+          gh run download 39214007356 --repo lxxlx2/ChatGPT_mission_record --name monster-real-spot511-20261018-original-issuer-zip-and-checksum --dir /tmp/monster518/c
+          echo MONSTER518_ORIGINAL_1018_4_511_ARCHIVES_RECOVERED
+      - name: Rerun complete immutable publisher SHA checks and original D0 plus bounded D1 research pipeline
+        run: |
+          set -eu
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_fifo8_bridge.py --source-dir /tmp/monster518/a --source-dir /tmp/monster518/b --source-dir /tmp/monster518/c --out /tmp/monster518_actual.json
+          python3 - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          p=Path('/tmp/monster518_actual.json')
+          r=json.loads(p.read_text())
+          assert r['publisher_verified_zip_checksum_pairs']==1533
+          assert r['strict_3m_global_polls']==518
+          assert r['frozen_T0_spot_USDT_TRADING']==511
+          assert r['original_production_D0_valid_symbols_per_tick']==509
+          assert r['global_tick_source_rows']==264698
+          assert r['G0']=='PARTIAL' and r['G4']=='UNKNOWN' and r['G6']=='NO_GO'
+          assert r['NO_MERGE'] and r['NO_DEPLOY'] and r['NO_GMAIL'] and r['NO_TRADE']
+          print('MONSTER518_ACTUAL_CAUSAL_PROXY_FULL_RESULT_SHA256',hashlib.sha256(p.read_bytes()).hexdigest())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-forward511-first518-official-source-causal-FIFO8-research-v1
+          path: /tmp/monster518_actual.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Commit bounded actual research result to original PR without rewriting evidence
+        run: |
+          set -eu
+          target=crypto-300-profit-mission/monster/evidence/monster_forward_spot511_first518_official_minute_causal_fifo8_actual_v1.json
+          branch=research/monster-v4-local-discovery-20261010
+          test ! -e "$target"
+          cp /tmp/monster518_actual.json "$target"
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive actual source511 first518 FIFO8 proxy research outcome"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER518_REMOTE_EVIDENCE_ALREADY_EXISTS
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for f in crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_fifo8_bridge.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_forward_spot511_first518_fifo8_bridge.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_d1_zeroquote_research_v2.py crypto-300-profit-mission/local-agent/scripts/monster_v4_stage166_spot511_official_1m_intake.py .github/workflows/monster-v4-forward-spot511-first518-causal-bridge-once.yml crypto-300-profit-mission/monster/evidence/monster_forward_spot511_oct16_17_real_issuer_zip_receipts_v1.json crypto-300-profit-mission/monster/evidence/monster_forward_spot511_unicode4_original_publisher_supplement_v1.json crypto-300-profit-mission/monster/evidence/monster_forward_spot511_oct18_real_issuer_zip_receipts_v1.json; do
+            test "$(git rev-parse "$GITHUB_SHA:$f")" = "$(git rev-parse "HEAD:$f")" || { echo "MONSTER518_EXECUTION_OR_SOURCE_LEDGER_SHA_DRIFT=$f"; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER518_ACTUAL_RESEARCH_GIT_ARCHIVED_NO_DEPLOY
