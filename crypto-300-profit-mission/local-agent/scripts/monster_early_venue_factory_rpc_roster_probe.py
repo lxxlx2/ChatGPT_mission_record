@@ -507,7 +507,174 @@ def bootstrap_bsc_v2_saved_roster(rpc, first, last, out_dir, limit, start_rank=1
             "not_24_30_or_18_30_gate_pass": True}
 
 
+def audit_saved_bsc_v2_p0(out_dir, evidence_path):
+    """Offline archive replay of the fixed 30, without RPC or private URLs.
+
+    Hashes of the saved raw JSON are audit-time baselines only. This does not
+    establish independent-provider fidelity, public T_entry, or sellability.
+    """
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from mission_agent.early.bsc_v2_pit import PITInvalid, verify_bootstrap
+
+    frozen = json.loads(Path(evidence_path).read_text(encoding="utf-8"))
+    history = frozen["historical_bsc_v2_append_only_factory_enumeration"]
+    expected = history["chronological_quoted_unique_first30"]
+    cases = history["creation_liquidity_source_spotchecks"]["cases"]
+    identities = {r["factory_index_zero_based"]: r for r in history["first36"]}
+    source = json.loads((out_dir / "v2_factory_enum_status.json").read_text())
+    roster = source.get("sample", [])
+    if (len(expected) != 30 or len(cases) != 30 or len(roster) != 30
+            or source.get("chain") != "bsc-v2"
+            or source.get("day_blocks") != history["july1_2025_utc"]
+            or not source.get("sample_complete_first30_by_factory_order")):
+        raise SourceError("OFFLINE_AUDIT_FROZEN_ROSTER_OR_DATE_MISMATCH")
+    if len({x["factory_index"] for x in roster}) != 30:
+        raise SourceError("OFFLINE_AUDIT_DUPLICATE_FACTORY_INDEX")
+    if source.get("rpc_source_sha256") is None:
+        raise SourceError("OFFLINE_AUDIT_MISSING_SOURCE_FINGERPRINT")
+
+    original_files = []
+    results = []
+    def original_json_file(path):
+        raw = path.read_bytes()
+        payload = json.loads(raw)
+        if not isinstance(payload, dict) or "result" not in payload:
+            raise SourceError("OFFLINE_AUDIT_RAW_JSONRPC_RESULT_MISSING")
+        original_files.append({
+            "relative_file": str(path.relative_to(out_dir)),
+            "bytes": len(raw), "sha256_at_audit": sha(raw),
+            "prior_independent_response_sha256": None,
+        })
+        return payload["result"]
+
+    for rank, (member, case, item) in enumerate(zip(roster, cases, expected), 1):
+        index = member["factory_index"]
+        answer = {"rank": rank, "factory_index": index,
+                  "status": "SOURCE_NOT_SCORABLE"}
+        try:
+            if (case["rank"] != rank or item["cohort_rank"] != rank
+                    or index != case["index"] or index != item["factory_index"]
+                    or member["pair"].lower() != case["pair"].lower()
+                    ):
+                raise SourceError("OFFLINE_AUDIT_IDENTITY_ORDER_DRIFT")
+            if (member["token_ca"].lower() != item["token_ca"].lower()
+                    or member["quote_asset"].lower() != item["quote_asset"].lower()
+                    or member["pair"].lower() != item["pool"].lower()):
+                raise SourceError("OFFLINE_AUDIT_TOKEN_POOL_OR_QUOTE_DRIFT")
+            row = json.loads((out_dir / "v2_historical_index_raw" /
+                              (str(index) + ".json")).read_text())
+            key = identities[index]
+            if (row.get("factory_index") != index or
+                    row.get("pair", "").lower() != member["pair"].lower() or
+                    row.get("rpc_source_sha256") != source["rpc_source_sha256"] or
+                    row.get("block") != source["day_blocks"][1] or
+                    row.get("token0") != key["token0"] or
+                    row.get("token1") != key["token1"]):
+                raise SourceError("OFFLINE_AUDIT_INDEX_DATA_DRIFT")
+            abis = row.get("raw_abi_response_records", [])
+            expected_abi = [("allPairs", row["pair"]),
+                            ("token0", row["token0"]),
+                            ("token1", row["token1"])]
+            if len(abis) != 3:
+                raise SourceError("OFFLINE_AUDIT_ABI_RAW_MISSING")
+            for entry, (method, addr) in zip(abis, expected_abi):
+                raw = entry["raw_json"].encode("utf-8")
+                decoded = json.loads(raw)
+                if (entry["method"] != method or sha(raw) != entry["sha256"]
+                        or not isinstance(decoded, dict)
+                        or decoded.get("result", "").lower() !=
+                        "0x" + "0" * 24 + addr.lower()[2:]):
+                    raise SourceError("OFFLINE_AUDIT_ABI_RESPONSE_SHA_OR_VALUE_MISMATCH")
+            p = out_dir / "v2_bootstrap_raw" / str(index)
+            factory_logs = original_json_file(Path(str(p) + ".factory.rpc.json"))
+            pool_logs = original_json_file(Path(str(p) + ".pool.rpc.json"))
+            if not isinstance(factory_logs, list) or not isinstance(pool_logs, list):
+                raise SourceError("OFFLINE_AUDIT_EVENT_RESULT_NOT_ARRAY")
+            for log in pool_logs:
+                if (log.get("address", "").lower() != case["pair"].lower()
+                        or not case["creation_block"] <= as_int(log.get("blockNumber"))
+                        <= min(source["day_blocks"][1], case["creation_block"] + 9)
+                        or log.get("removed") is True):
+                    raise SourceError("OFFLINE_AUDIT_POOL_LOG_SCOPE_MISMATCH")
+            proof = verify_bootstrap(
+                factory=CHAINS["bsc-v2"]["factory"], factory_index=index,
+                creation_block=case["creation_block"], pool=case["pair"],
+                token0=row["token0"], token1=row["token1"],
+                factory_logs=factory_logs, pool_logs=pool_logs)
+            if (proof["creation_tx"] != case["creation_tx_hash"].lower()
+                    or proof["initial_quote_liquidity_proven"] is not
+                    case["same_tx_erc20_lp_transfer_sync_mint"]):
+                raise SourceError("OFFLINE_AUDIT_MINT_OR_CREATION_CONFLICT")
+            if proof["initial_quote_liquidity_proven"]:
+                if (proof["reserve0_raw"] != case["initial_reserve0_raw"]
+                        or proof["reserve1_raw"] != case["initial_reserve1_raw"]):
+                    raise SourceError("OFFLINE_AUDIT_LP_RESERVES_DRIFT")
+            later = Path(str(p) + ".later.rpc.json")
+            if later.is_file():
+                later_events = original_json_file(later)
+                if not isinstance(later_events, list) or any(
+                        log.get("address", "").lower() != case["pair"].lower()
+                        or log.get("removed") is True for log in later_events):
+                    raise SourceError("OFFLINE_AUDIT_LATER_POOL_LOG_SCOPE_MISMATCH")
+            answer["status"] = "CREATION_MINT_SYNC_CONFIRMED" if (
+                proof["initial_quote_liquidity_proven"]
+                ) else "CREATION_CONFIRMED_NO_SAME_TX_MINT_SYNC"
+            answer["creation_tx"] = proof["creation_tx"]
+            answer["initial_lp_same_creation_tx"] = proof["initial_quote_liquidity_proven"]
+            answer["sellable_at_notional"] = "UNVERIFIED"
+        except (SourceError, PITInvalid, OSError, ValueError, TypeError, KeyError, IndexError) as exc:
+            answer["status"] = "SOURCE_NOT_SCORABLE"
+            answer["reason"] = type(exc).__name__ + ":" + str(exc)[:150]
+        results.append(answer)
+    good = [r for r in results if r["status"] != "SOURCE_NOT_SCORABLE"]
+    creation_lp = sum(r.get("initial_lp_same_creation_tx") is True for r in good)
+    no_creation_lp = sum(r.get("initial_lp_same_creation_tx") is False for r in good)
+    complete = len(good) == 30 and creation_lp == 25 and no_creation_lp == 5
+    return {
+        "schema": "MONSTER_BSC_V2_P0_LOCAL_ORIGINAL_RPC_OFFLINE_REPLAY_V1",
+        "status": ("LOCAL_FROZEN_30_CREATION_REPLAY_PASS" if complete
+                   else "PARTIAL_OR_SOURCE_INCONSISTENT_NOT_SCORABLE"),
+        "scope": "PANCAKE_V2_BSC_FIRST30_2025_07_01_ONLY",
+        "archive_source_fingerprint": source["rpc_source_sha256"],
+        "all_30_roster_matched": len(roster) == 30,
+        "fully_replayed_creation_count": len(good),
+        "same_tx_initial_lp_count": creation_lp,
+        "created_without_same_tx_initial_lp": no_creation_lp,
+        "unknown_ranks": [r["rank"] for r in results
+                          if r["status"] == "SOURCE_NOT_SCORABLE"],
+        "original_response_files_audited": len(original_files),
+        "original_response_manifest": original_files,
+        "rank_results": results,
+        "raw_sha256_scope": "RECALCULATED_FROM_LOCAL_BYTES_AT_AUDIT_NO_PRIOR_INDEPENDENT_SHA",
+        "response_headers_captured": False,
+        "independent_provider_verified": False,
+        "public_t_entry": "UNVERIFIED",
+        "token_deployment_date": "UNVERIFIED",
+        "historical_dynamic_buy_sell": "UNVERIFIED",
+        "eighteen_of_thirty_sellable_gate": "NOT_SCORABLE",
+        "twentyfour_of_thirty_complete_pit_gate": "NOT_SCORABLE",
+        "no_network_no_trade": True,
+    }
+
+
 def run(args):
+    if args.mode == "audit":
+        if args.chain != "bsc-v2" or args.day != "2025-07-01":
+            raise SourceError("OFFLINE_AUDIT_ONLY_FROZEN_BSC_V2_DAY")
+        base = args.out_dir.resolve() / ("bsc-v2-" + args.day)
+        evidence_path = (Path(__file__).resolve().parents[2] /
+                         "monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json")
+        result = audit_saved_bsc_v2_p0(base, evidence_path)
+        safe_file(base / "v2_p0_offline_audit_status.json",
+                  plain_json(result).encode("utf-8"))
+        print(plain_json({k: result[k] for k in (
+            "status", "fully_replayed_creation_count", "same_tx_initial_lp_count",
+            "created_without_same_tx_initial_lp", "unknown_ranks",
+            "original_response_files_audited", "twentyfour_of_thirty_complete_pit_gate",
+            "eighteen_of_thirty_sellable_gate")}).strip())
+        if result["status"] != "LOCAL_FROZEN_30_CREATION_REPLAY_PASS":
+            raise SystemExit(2)
+        return
     chain = CHAINS[args.chain]
     endpoint = args.rpc or chain["rpc"]
     rpc = RPC(endpoint, chain["chain_id"], args.max_requests, args.delay)
@@ -544,6 +711,11 @@ def run(args):
             rpc, first, last, out_dir, args.bootstrap_limit,
             start_rank=args.bootstrap_start_rank)
         result["requests_this_invocation"] = rpc.calls
+        rank_first = args.bootstrap_start_rank
+        rank_last = rank_first + result["requested_count"] - 1
+        safe_file(out_dir / ("v2_bootstrap_rank_" + str(rank_first) + "_"
+                             + str(rank_last) + ".json"),
+                  plain_json(result).encode("utf-8"))
         safe_file(out_dir / "v2_bootstrap_status.json",
                   plain_json(result).encode("utf-8"))
         print(plain_json({k: result[k] for k in (
@@ -637,7 +809,7 @@ def main():
     parser = argparse.ArgumentParser(description="Manual historical Factory RPC coverage; no transactions")
     parser.add_argument("--chain", choices=CHAINS, default="base-v3")
     parser.add_argument("--day", default="2025-07-01")
-    parser.add_argument("--mode", choices=("probe", "scan", "enumerate", "bootstrap"), default="probe")
+    parser.add_argument("--mode", choices=("probe", "scan", "enumerate", "bootstrap", "audit"), default="probe")
     parser.add_argument("--limit", type=int, default=45,
                         help="BSC V2 historical index identities to check, max 200 per invocation")
     parser.add_argument("--bootstrap-start-rank", type=int, default=1,
