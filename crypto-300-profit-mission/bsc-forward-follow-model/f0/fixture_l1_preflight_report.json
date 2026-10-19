@@ -4,7 +4,9 @@
   "counts": {
     "HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK": 0,
     "NOT_CHECKED": 20,
-    "NO_CODE_AT_SAMPLED_BLOCK": 0
+    "NO_CODE_AT_SAMPLED_BLOCK": 0,
+    "RPC_ERROR_AT_SAMPLED_BLOCK": 0,
+    "TRANSPORT_FAILED_AT_SAMPLED_BLOCK": 0
   },
   "frozen_pr116_manifest_blob": "fcd0029314353313867e565190cd4f2882089f11",
   "live_control_enabled": false,
@@ -182,6 +184,12 @@
   "router_onchain_code_verified": false,
   "router_registry_source_only": true,
   "router_swap_causality_verified": false,
+  "saved_attempts_provider_billed": "UNVERIFIED",
+  "saved_getcode_attempts": 0,
+  "saved_getcode_not_checked": 20,
+  "saved_getcode_rpc_errors": 0,
+  "saved_getcode_success_responses": 0,
+  "saved_getcode_transport_failures": 0,
   "schema": "bsc-f0-l1-eoa-router-preflight-v1",
   "snapshot_source": "OFFLINE_SYNTHETIC_ONLY",
   "source_envelope_sha256": "77c832f4edeb9bcff3e6621a1362056cf40d42c1cbc53258bfbc97c13069c336",
