@@ -93,7 +93,7 @@
     }
   ],
   "limitations": [
-    "Token in/out quantity equality does not alone prove zero start or end wallet token inventory; getTokenBalance at endpoints not read.",
+    "EARLIER SNAPSHOT NOTE (SUPERSEDED BY FOLLOWUP): Token in/out quantity equality alone is never proof of token balances; at original snapshot getTokenBalance at endpoints was not read. Current source: see followup_balanceof_evidence for verified eth_call balanceOf at pre-entry, post-entry, post-final-exit and end-month block.",
     "Historical native BNB buy value from real signer confirmed; net native BNB realized sale proceeds NOT CONFIRMED.",
     "Alchemy getAssetTransfers BNB 'internal' category RPC -32602 unsupported.",
     "Alchemy trace_transaction RPC -32600 requires Pay As You Go/Enterprise; no paid attempt.",
@@ -106,5 +106,8 @@
     "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
     "P5": "BLOCKED",
     "PRODUCTION": "NO_GO"
-  }
+  },
+  "source_timeline_note": "Earlier source-only token-flow snapshot did not query balanceOf; follow-up now explicitly re-fetched eight historical balanceOf contract calls with 32-byte hex raw replies. Older 'not read' text was accurate at the earlier stage but cannot be used as CURRENT balanceOf status.",
+  "followup_balanceof_evidence": "bsc-meme-address-model-v1-p4b-8e6b-2adf-historical-balanceof-raw-rpc-2026-10-19.json",
+  "current_historical_balanceof_status": "SOURCE_REQUERIED_EIGHT_BLOCK_POINT_RAW_RESPONSES_ARCHIVED"
 }
