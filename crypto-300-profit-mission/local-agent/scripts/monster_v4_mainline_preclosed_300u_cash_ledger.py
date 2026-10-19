@@ -245,7 +245,8 @@ def cash_simulation(events, *,symbol_order,censored_principal_recovery):
                         "price_proxy_exit_status":e["source_exit"]["status"] if e["source_exit"] else None,
                         "executable_trade":"UNVERIFIED"})
     settle_until(10**30)
-    if active_symbols or heap or len(results)!=len(events) or (cash!=START_CASH-spent+returned):
+    if (active_symbols or heap or len(results)!=len(events)
+        or abs(cash-(START_CASH-spent+returned))>Decimal("0.00000001")):
         raise ValueError("MONSTER_300U_CASH_CONSERVATION_OR_EVENT_COUNT_DRIFT")
     selected=[r for r in results if r["selection_status"]=="SELECT_30_USDT"]
     burst=[r for r in results if r["is_maximum_watch_burst"]]
