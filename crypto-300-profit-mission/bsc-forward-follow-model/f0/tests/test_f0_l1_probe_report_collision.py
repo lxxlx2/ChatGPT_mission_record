@@ -134,3 +134,4 @@ class ReportJournalCollisionTests(unittest.TestCase):
             self.assertEqual(report['attempted_rpc_calls'],1)
             self.assertNotIn('fake key',json.dumps(report))
             self.assertNotIn('attempts',report)
+
