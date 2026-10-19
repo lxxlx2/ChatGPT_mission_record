@@ -6575,5 +6575,111 @@
     "point_in_time_24_of_30": "NOT_SCORABLE",
     "two_sided_18_of_30": "NOT_SCORABLE",
     "scope": "Two frozen cohorts ranks 16/17, block-state observation only; the previous block had zero reserves and end-of-block retained above-floor WBNB. During mint's same atomic transaction other traders cannot react to mid-transaction Sync as a sequential public event. No proof public observer could have bought, transferred, or sold in next block."
+  },
+  "bsc_v2_p0_mac_atomic_buy_36_tests_full_verification_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_MAC_ATOMIC_MINT_MULTI_SWAP_DUPLICATION_AUDIT_V1",
+    "data_source": "USER_UPLOADED_MAC_TERMINAL_OUTPUT",
+    "report_checkout_fixed_sha": "9fcc34d025f282bce458cd0800ada77a483f4f12",
+    "tests": [
+      {
+        "file": "test_monster_early_bsc_v2_pit.py",
+        "run": 18,
+        "pass": 18
+      },
+      {
+        "file": "test_monster_early_venue_factory_rpc_roster_probe.py",
+        "run": 18,
+        "pass": 18
+      }
+    ],
+    "tests_total": 36,
+    "all_tests_pass": true,
+    "archive_status": "LOCAL_FROZEN_30_CREATION_REPLAY_PASS",
+    "archived_rpc_response_files_replayed": 88,
+    "frozen_creation_count": 30,
+    "creation_same_tx_mint_count": 25,
+    "creation_no_same_tx_mint_count": 5,
+    "creation_unknown_ranks": [],
+    "first_above_floor_buy_same_tx_as_first_above_floor_sync_ranks": [
+      16,
+      17
+    ],
+    "first_above_floor_buy_with_prior_mint_in_same_tx_ranks": [
+      16,
+      17
+    ],
+    "observed_buy_at_or_above_frozen_floor_ranks": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      7,
+      9,
+      10,
+      11,
+      12,
+      13,
+      16,
+      17,
+      19,
+      21,
+      22,
+      23,
+      24,
+      25,
+      27,
+      29,
+      30
+    ],
+    "observed_sell_at_or_above_frozen_floor_ranks": [],
+    "observed_sell_below_frozen_floor_ranks": [
+      5,
+      8,
+      28
+    ],
+    "missing_later_update_source_window_ranks": [
+      18,
+      20
+    ],
+    "case_results": [
+      {
+        "rank": 16,
+        "observed_buy_swap_events": 65,
+        "distinct_buy_tx_count": 1,
+        "first_above_floor_sync": {
+          "block": 52444232,
+          "tx": "0x39d28c9d42c174151d6f6ac31df93ee2edf2bc709a3550889c3f69ccf0638f16",
+          "index": 736,
+          "quote_reserve_raw": "4000000000000000000"
+        },
+        "first_buy_public_reaction_status": "SAME_TX_NOT_PUBLICLY_REACTABLE_AFTER_SYNC",
+        "prior_mint_same_tx": true,
+        "qualified_buys_in_first_sync_tx": 65,
+        "distinct_qualified_buy_txs_in_later_blocks": 0
+      },
+      {
+        "rank": 17,
+        "observed_buy_swap_events": 64,
+        "distinct_buy_tx_count": 1,
+        "first_above_floor_sync": {
+          "block": 52444232,
+          "tx": "0x8fbe3ba7e888f1380f2ea660eec643a868436373827a91d57bd36b6946d3fbb2",
+          "index": 1076,
+          "quote_reserve_raw": "6000000000000000000"
+        },
+        "first_buy_public_reaction_status": "SAME_TX_NOT_PUBLICLY_REACTABLE_AFTER_SYNC",
+        "prior_mint_same_tx": true,
+        "qualified_buys_in_first_sync_tx": 64,
+        "distinct_qualified_buy_txs_in_later_blocks": 0
+      }
+    ],
+    "archived_transactions_are_not_unique_buyers_or_independent_public_reactions": true,
+    "do_not_count_atomic_in_mint_tx_swaps_as_65_64_independent_users": true,
+    "no_public_available_at_validated": true,
+    "no_24_of_30_pit_gate_pass": true,
+    "no_18_of_30_sellability_gate_pass": true,
+    "raw_original_local_archives_independently_read_by_assistant": false,
+    "status": "OFFLINE_ATOMIC_ACTIVITY_DISAMBIGUATION_PASS_NO_EXECUTABLE_ENTRY"
   }
 }
