@@ -140,7 +140,7 @@ def test_mission_control_notification_is_chinese_and_research_friendly(tmp_path)
     assert "结论：可跟" in rendered["body"]
     assert "CA（单独一行，便于长按复制）\nMint111111111111111\n" in rendered["body"]
     assert "Frank 买/卖次数" not in rendered["body"]
-    assert "决策时 $30 报价：1.02 USDC" in rendered["body"]
+    assert "指定金额的参考报价（不代表实际成交）：1.02 USDC" in rendered["body"]
     assert "决策时间：" in rendered["body"]
     assert "Jupiter 报价观察时间：未记录（不可当作实时报价）" in rendered["body"]
     assert "报价为决策时历史快照" in rendered["body"]
@@ -440,7 +440,7 @@ def test_quote_timestamp_is_frozen_utc_and_original_message_identity(tmp_path):
     assert "决策时间：2026-10-09 20:45:00 UTC" in quoted["body"]
     assert "Jupiter 报价观察时间：2026-10-09 20:44:58 UTC" in quoted["body"]
     assert "当前可成交价" not in quoted["body"]
-    assert "决策时 $30 报价：1.02 USDC" in quoted["body"]
+    assert "指定金额的参考报价（不代表实际成交）：1.02 USDC" in quoted["body"]
     for invalid in [float("nan"),float("inf"),-1,0,None,"nonsense"]:
         body["inputs"]["quote_observed_at"]=invalid
         assert "报价观察时间：未记录" in render({"body":body})["body"]
