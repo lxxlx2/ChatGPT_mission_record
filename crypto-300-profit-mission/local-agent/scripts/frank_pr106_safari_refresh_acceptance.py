@@ -172,13 +172,19 @@ setTimeout(()=>ready('PRODUCT_TIMEOUT'),20000);
 
 
 def make_handler(static: Path, port: int, stage: str, token: str,
-                 receipts: dict, observations: dict):
+                 receipts: dict, observations: dict, checks: dict | None = None):
+    if checks is None:
+        checks={}
     parent = base.make_handler(static, port)
     class StageHandler(parent):
         def send_response(self, code, message=None):
             endpoint=urlsplit(self.path).path
             if endpoint in API:
                 observations[endpoint].append(code)
+                if receipts.get(stage)==EXPECTED[stage] and (
+                        (endpoint in CORE and code!=200) or
+                        (endpoint=="/api/decisions" and code!=(503 if stage=="fault" else 200))):
+                    checks["invalidated"]=True
             return super().send_response(code, message)
 
         def do_GET(self):
@@ -188,9 +194,11 @@ def make_handler(static: Path, port: int, stage: str, token: str,
             }:
                 return self.send_error(421,"LOOPBACK_HOST_REQUIRED")
             parsed=urlsplit(self.path)
-            if parsed.path in ("/__qa/panel","/__qa/ready"):
+            if parsed.path in ("/__qa/panel","/__qa/ready","/__qa/challenge","/__qa/attest"):
                 args=parse_qs(parsed.query,strict_parsing=True)
-                keys={"token","stage"} if parsed.path=="/__qa/panel" else {"token","stage","state"}
+                keys=({"token","stage"} if parsed.path in ("/__qa/panel","/__qa/challenge")
+                      else {"token","stage","state"} if parsed.path=="/__qa/ready"
+                      else {"token","stage","nonce","state"})
                 if set(args)!=keys or args.get("token")!=[token] or args.get("stage")!=[stage]:
                     return self.send_error(403,"QA_ACCESS_DENIED")
                 if parsed.path=="/__qa/panel":
@@ -200,6 +208,27 @@ def make_handler(static: Path, port: int, stage: str, token: str,
                     self.send_header("Content-Length",str(len(data)))
                     self.end_headers()
                     self.wfile.write(data)
+                    return
+                if parsed.path=="/__qa/challenge":
+                    if receipts.get(stage)!=EXPECTED[stage]:
+                        return self.send_error(409,"QA_NOT_READY")
+                    data=json.dumps({"nonce":checks.get("nonce","")}).encode("utf-8")
+                    self.send_response(200)
+                    self.send_header("Content-Type","application/json")
+                    self.send_header("Content-Length",str(len(data)))
+                    self.end_headers()
+                    self.wfile.write(data)
+                    return
+                if parsed.path=="/__qa/attest":
+                    if (receipts.get(stage)!=EXPECTED[stage] or checks.get("invalidated")
+                            or not checks.get("nonce")
+                            or args.get("nonce")!=[checks["nonce"]]
+                            or args.get("state")!=[EXPECTED[stage]]):
+                        return self.send_error(409,"QA_STALE_OR_INVALID_ATTESTATION")
+                    checks["ack"]=checks["nonce"]
+                    self.send_response(204)
+                    self.send_header("Content-Length","0")
+                    self.end_headers()
                     return
                 if args.get("state") not in [
                     [EXPECTED[stage]], ["PRODUCT_UI_NOT_VERIFIED"],
@@ -225,15 +254,38 @@ def make_handler(static: Path, port: int, stage: str, token: str,
     return StageHandler
 
 
-def verify_stage(stage: str, receipts: dict, observations: dict) -> None:
+def verify_stage(stage: str, receipts: dict, observations: dict,
+                 checks: dict | None = None) -> None:
     if receipts.get(stage)!=EXPECTED[stage]:
         raise RuntimeError("FRANK_SAFARI_UI_STAGE_NOT_VERIFIED_"+stage)
+    if checks is not None and checks.get("invalidated"):
+        raise RuntimeError("FRANK_SAFARI_STAGE_INVALIDATED_"+stage)
     for endpoint in CORE:
-        if 200 not in observations.get(endpoint, []):
+        values=observations.get(endpoint,[])
+        if not values or any(code!=200 for code in values):
             raise RuntimeError("REQUIRED_FRANK_GET_NOT_200_"+endpoint)
     expected_status=503 if stage=="fault" else 200
-    if expected_status not in observations.get("/api/decisions",[]):
+    values=observations.get("/api/decisions",[])
+    if not values or any(code!=expected_status for code in values):
         raise RuntimeError("HISTORY_GET_NOT_EXPECTED_STATUS_"+stage)
+
+
+def confirm_fresh_dom(stage: str, receipts: dict, observations: dict,
+                      checks: dict, phase: str, *, timeout: float = 5.0) -> str:
+    """A new browser-side DOM state acknowledgement is required for each checkpoint."""
+    if phase not in ("before","after"):
+        raise ValueError("QA_PHASE_INVALID")
+    verify_stage(stage,receipts,observations,checks)
+    nonce=uuid4().hex
+    checks.update({"nonce":nonce,"ack":None,"phase":phase})
+    deadline=time.monotonic()+timeout
+    while time.monotonic()<deadline:
+        verify_stage(stage,receipts,observations,checks)
+        if checks.get("ack")==nonce:
+            verify_stage(stage,receipts,observations,checks)
+            return nonce
+        time.sleep(.06)
+    raise RuntimeError("FRANK_SAFARI_FRESH_DOM_ATTESTATION_TIMEOUT_"+phase+"_"+stage)
 
 
 def run(*, qa_sha: str, no_browser: bool=False) -> int:
@@ -262,7 +314,8 @@ def run(*, qa_sha: str, no_browser: bool=False) -> int:
                 token=uuid4().hex
                 receipt={}
                 observed=defaultdict(list)
-                handler=make_handler(static,existing_port,stage,token,receipt,observed)
+                checks={}
+                handler=make_handler(static,existing_port,stage,token,receipt,observed,checks)
                 server=ThreadingHTTPServer(("127.0.0.1",0),handler)
                 thread=threading.Thread(target=server.serve_forever,daemon=True)
                 thread.start()
@@ -282,13 +335,17 @@ def run(*, qa_sha: str, no_browser: bool=False) -> int:
                         time.sleep(.8)
                         if not capture.safari_front_matches(capture.safari_front_url(),link):
                             raise RuntimeError("SAFARI_FRONT_URL_MISMATCH_"+stage)
-                    verify_stage(stage,receipt,observed)
+                    before=confirm_fresh_dom(stage,receipt,observed,checks,"before")
                     photo=screenshots/f"frank-decisions-{stage}.png"
                     data.append(capture.automatic_screenshot(photo))
                     if not no_browser and not capture.safari_front_matches(
                             capture.safari_front_url(),link):
                         raise RuntimeError("SAFARI_SCREENSHOT_STAGE_DRIFT_"+stage)
+                    after=confirm_fresh_dom(stage,receipt,observed,checks,"after")
+                    verify_stage(stage,receipt,observed,checks)
                     statuses[stage]={"receipt":receipt[stage],
+                                      "fresh_dom_attestations":{"before":before,"after":after},
+                                      "post_ready_invalidated":checks.get("invalidated",False),
                                      "http_status_counts":{key:dict(
                                          (str(code),values.count(code)) for code in sorted(set(values)))
                                          for key,values in observed.items()}}
