@@ -333,3 +333,14 @@ Codex独立复审固定旧SHA `456111143f5ea1ac2e32103f71ea50dc5a27d078` 判定 
 
 **持续硬门禁：**`G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。未启用或授权Mac/Frank/交易/真邮件，保持Stage99已关闭，不另创建监控或定时程序。本段属于业务优先级及外部审核状态的长期交接记录，**没有替代任何旧固定SHA代码审核，也没有批准新策略**。
 
+
+## 三十五、按原产品主线开始实际研发：P2修补与8条真实机会查询器闭环（2026-10-19）
+
+原 V4→Stage77/163 用户价值路线本轮已落地第一项**可测功能闭环**，见[Codex BLOCKED后的真实CI与功能交接报告](MONSTER_FIRST518_CODEX_BLOCKED_P2_FIXED_OPERATOR_REAL_CI_HANDOFF_20261019.md)。新代码源按518轮全部原3分钟时钟对完整T0 511个已归档交易对逐分钟派生后，同一真实生产D0/D1研究SQLite直接由既有read-only opportunity查询器读取；并非只有把已审核旧JSON重新格式化。旧Codex SHA `03eaddcf...` 的`BLOCKED`维持；作者侧有界 P2-1/2已修，P2-3旧源码与产物提交时序明确记录，不伪造单一旧SHA包含后发原输出。
+
+真实新[一次性CI #39233361177](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39233361177)，源码触发SHA `07b82ff76c786c95706808aec1c9f6fdfea4129c`，**6+6+16=28/28离线测试、1533原Publisher源逐一SHA/分钟格点复核、518轮原D0/D1 FIFO8研究V2、8币24组经济ZIP重新读、研究成本/盈亏原逐字段核对、原SQLite到运营只读视图查询及Artifact/Git归档均SUCCESS**。原失败[CI #39233103771](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39233103771)如实保留：代码与518重放成功，但作者错误期望老信号SOURCE_STALE；原查询器正确判定超过15min后`EXPIRED`，更正断言而非调整原策略。新机读报告[永久Git归档](evidence/monster_first518_real_operator_d0_d1_d2_no_buy_research_p2_fixed_v1.json)，原CI后归档commit `eed4ea67e7868770367fbacffc1e9058ce59b635`，Artifact ID `12178242713`，可区分源码审查SHA/执行SHA/归档SHA。
+
+**业务结果：** 至2026-10-18T23:57Z研究asof，源518轮真实存留8 WATCH→8 SETUP、8行查询器有完整早发现UTC与WATCH理由/SETUP时钟，**8/8全为EXPIRED**；**D2盘口实际证据8/8 NOT_CAPTURED**；**8/8 NO_BUY**，并非模型产生8个SETUP就都可赚钱。Spot全来源511但原D0只处理ASCII 509，2 Unicode被拒，导致查询器聚合全市场状态`STALE_OR_DEGRADED`，尽管当轮数据为0秒龄；这是值得下阶段处理的**实用性缺口**，却不得静默剔除原人口或把现在虚报为完整可操作行情。原所有经济成本价代理与亏损和删失情况逐条不变；G0 PARTIAL，G4 UNKNOWN。
+
+**下个优先交付**为真实业务中的D2来源与全市场健康状态的可理解反馈：先根据本8个真实实例分清`交易已过期`、`源覆盖不足`、`没有当时盘口`三类独立原因及具体可操作性；不得通过放宽历史时间戳/伪造早期L2或自动投递掩盖。只有缺口确实影响WATCH/SETUP的实时可见性才做有限技术修补；其次在**真实发布并由用户触发取得**后继续新七日前瞻完整3360轮、真实漏报与独立成本验证。原P2不再循环，独立其他AI对新固定SHA需重新单次核验仍`BLOCKED/NOT_DONE`。严格保持`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，Frank/本机/Stage99不变。
+
