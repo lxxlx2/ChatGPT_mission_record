@@ -143,6 +143,29 @@ class BscV2PitTests(unittest.TestCase):
 
 
 class DelayedLiquidityTests(unittest.TestCase):
+    def test_actual_rank26_delayed_mint_sync_with_corrected_transaction(self):
+        from mission_agent.early.bsc_v2_pit import verify_delayed_mint_sync
+        archive = json.loads((Path(__file__).resolve().parents[2] /
+            'monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json').read_text())
+        history = archive['historical_bsc_v2_append_only_factory_enumeration']
+        evidence = history['creation_liquidity_source_spotchecks']
+        case = next(c for c in evidence['cases'] if c['rank'] == 26)
+        events = next(s for s in evidence['delayed_liquidity_spotchecks'] if s['rank'] == 26)
+        checked = verify_delayed_mint_sync(
+            pool=case['pair'], creation_block=case['creation_block'],
+            update_block=events['block'],
+            pool_logs=events['sync_logs'] + events['mint_logs'])
+        expected_tx = '0xe722f3db159d390decd678fc7b1a5a7f863599a52d07b737e5be6be0b101d112'
+        self.assertEqual(checked['status'], 'DELAYED_FIRST_MINT_SYNC_CONFIRMED')
+        self.assertEqual(checked['first_delayed_mint_tx'], expected_tx)
+        self.assertEqual(len(expected_tx), 66)
+        self.assertEqual(checked['reserve0_raw'], '98000000000000000000000000')
+        self.assertEqual(checked['reserve1_raw'], '15000000000000000000')
+        self.assertEqual(checked['sell_path'], 'UNKNOWN')
+        source = archive['bsc_v2_p0_reference_sequential_amm_20261020']
+        self.assertEqual(source['quote_reserve_vectors_reconstructable_from_committed_normalized_logs'], 27)
+        self.assertEqual(source['unknown_reserve_vector_ranks'], [16, 17, 18])
+
     def test_delayed_mint_matches_sync_and_prevents_early_entry(self):
         from mission_agent.early.bsc_v2_pit import verify_delayed_mint_sync
         pair='0x'+'7'*40
