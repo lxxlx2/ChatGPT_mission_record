@@ -161,5 +161,51 @@ class DelayedLiquidityTests(unittest.TestCase):
                                      pool_logs=[dict(sync,address='0x'+'9'*40),mint])
 
 
+
+class V2HistoricQuoteAndSwapEvidenceTests(unittest.TestCase):
+    def test_pancake_v2_fee_integer_math_matches_four_historical_router_reads(self):
+        from mission_agent.early.bsc_v2_pit import v2_static_two_way_quote
+        # Each result below was read using getAmountsOut at the specified historical
+        # block, including the second reverse view against UNCHANGED pool storage.
+        cases = [
+            (10000000000000000000, 10000000000000000000000, 1600000000000000000000, 1594409576447493625, 9930276362283922020),
+            (10000000000000000, 8300000000000000000, 4600000000000000000000000000, 5521677261363602176901855, 9926233485230985),
+            (1000000000000000000, 1313968229661012727, 850000000000000000, 366812309648030379, 395408042268688956),
+            (10000000000000000, 17000000000000000000, 500000000000000000000000000, 293210307481345504623022, 9938414057573645),
+        ]
+        for amount, quote, token, expected_buy, expected_reverse in cases:
+            with self.subTest(amount=amount, quote=quote):
+                q = v2_static_two_way_quote(amount, quote, token)
+                self.assertEqual(int(q['indicative_token_out_raw']), expected_buy)
+                self.assertEqual(int(q['reverse_quote_back_raw']), expected_reverse)
+                self.assertEqual(q['historical_sell_executable'], 'UNVERIFIED')
+                self.assertEqual(q['sequential_roundtrip_pnl'], 'NOT_COMPUTED')
+
+    def test_invalid_or_uneconomical_quotes_fail_closed(self):
+        from mission_agent.early.bsc_v2_pit import v2_static_two_way_quote
+        for args in [(1, 0, 1000), (0, 100, 1000), ('10', 100, 1000), (100, 1000, 1)]:
+            with self.subTest(args=args), self.assertRaises(PITInvalid):
+                v2_static_two_way_quote(*args)
+
+    def test_replay_three_actual_swap_directions_but_not_sell_guarantees(self):
+        from mission_agent.early.bsc_v2_pit import classify_v2_swap_by_quote_side
+        evidence = json.loads((Path(__file__).resolve().parents[2] /
+            'monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json').read_text())
+        src = evidence['historical_bsc_v2_append_only_factory_enumeration']
+        proofs = src['creation_liquidity_source_spotchecks']['first_later_reserve_update_events']
+        for rank, direction in [(1,'OBSERVED_QUOTE_TO_TOKEN_SWAP'),
+                                (2,'OBSERVED_QUOTE_TO_TOKEN_SWAP'),
+                                (5,'OBSERVED_TOKEN_TO_QUOTE_SWAP')]:
+            event = next(q for q in proofs if q['rank'] == rank)
+            swap = next(x for x in event['events'] if x['topics'][0].lower() == SWAP)
+            observed = classify_v2_swap_by_quote_side(swap, quote_is_token0=True)
+            self.assertEqual(observed['direction'], direction)
+            self.assertEqual(observed['user_same_notional_sellability'], 'UNVERIFIED')
+            with self.assertRaisesRegex(PITInvalid, 'NOT_A_V2_SWAP'):
+                classify_v2_swap_by_quote_side(
+                    {**swap,'topics':[SYNC]}, quote_is_token0=True)
+
+
+
 if __name__=='__main__':
     unittest.main()
