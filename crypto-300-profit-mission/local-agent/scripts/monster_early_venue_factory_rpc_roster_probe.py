@@ -448,7 +448,6 @@ def bootstrap_bsc_v2_saved_roster(rpc, first, last, out_dir, limit):
                 for x in pool_logs if x.get("topics"))
             start_time = (timestamp_for_block(rpc, creation)
                           if result.get("initial_quote_liquidity_proven") is True else 0)
-            start_time = timestamp_for_block(rpc, creation)
             time_cache = {}
             def pool_update_at(block):
                 if block not in time_cache:
