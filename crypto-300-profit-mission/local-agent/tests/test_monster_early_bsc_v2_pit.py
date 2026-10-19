@@ -323,6 +323,37 @@ class V2HistoricQuoteAndSwapEvidenceTests(unittest.TestCase):
                 windows=[{'name': 'A', 'logs': case['events']}])
 
 
+    def test_historical_first_runtime_code_boundary_and_preexisting(self):
+        from mission_agent.early.bsc_v2_pit import locate_first_runtime_code_block
+        day_start = 52440287
+        boundaries = [(52440593, 52440617), (52440672, 52440691),
+                      (52440725, 52440950), (52441208, 52441231)]
+        for deployed_state, pool in boundaries:
+            with self.subTest(first_code=deployed_state):
+                visited = []
+                def has_code(block):
+                    visited.append(block)
+                    return block >= deployed_state
+                result = locate_first_runtime_code_block(day_start, pool, has_code)
+                self.assertEqual(result['status'],
+                                 'FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE')
+                self.assertEqual(result['first_code_block_in_day'], deployed_state)
+                self.assertIn(deployed_state - 1, visited)
+                self.assertIn(deployed_state, visited)
+                self.assertFalse(result['deploy_transaction_verified'])
+                self.assertEqual(result['public_observed_at'], 'UNVERIFIED')
+        before = locate_first_runtime_code_block(
+            day_start, 52440324, lambda b: b >= day_start - 20)
+        self.assertEqual(before['status'], 'RUNTIME_CODE_PREEXISTS_FROZEN_UTC_DAY')
+        self.assertIsNone(before['first_code_block_in_day'])
+        with self.assertRaisesRegex(PITInvalid, 'NO_RUNTIME_CODE'):
+            locate_first_runtime_code_block(day_start, day_start + 3, lambda b: False)
+        with self.assertRaisesRegex(PITInvalid, 'NOT_BOOLEAN'):
+            locate_first_runtime_code_block(day_start, day_start + 3, lambda b: None)
+        with self.assertRaisesRegex(PITInvalid, 'INVALID_HISTORIC_CODE_SEARCH_RANGE'):
+            locate_first_runtime_code_block(day_start, day_start - 1, lambda b: True)
+
+
 
 if __name__=='__main__':
     unittest.main()
