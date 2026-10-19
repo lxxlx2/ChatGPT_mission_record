@@ -1,0 +1,88 @@
+{
+  "actual_rpc_calls": 0,
+  "block": {
+    "block_hash": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "block_number": 100,
+    "candidates": [
+      {
+        "actionable_time": "UNRESOLVED",
+        "block_hash": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "block_number": 100,
+        "ca": null,
+        "direction": "UNKNOWN",
+        "evidence": "TX_OBJECT_ONLY_NO_TRADE_ATTESTATION",
+        "group": "WATCHLIST",
+        "router_eligible": true,
+        "to": "0xcccccccccccccccccccccccccccccccccccccccc",
+        "tx_hash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+        "value_wei": "0",
+        "wallet": "0x1111111111111111111111111111111111111111"
+      },
+      {
+        "actionable_time": "UNRESOLVED",
+        "block_hash": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "block_number": 100,
+        "ca": null,
+        "direction": "UNKNOWN",
+        "evidence": "TX_OBJECT_ONLY_NO_TRADE_ATTESTATION",
+        "group": "CONTROL_CANDIDATE",
+        "router_eligible": true,
+        "to": "0xcccccccccccccccccccccccccccccccccccccccc",
+        "tx_hash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+        "value_wei": "0",
+        "wallet": "0x2222222222222222222222222222222222222222"
+      }
+    ],
+    "e3_actual_count": 0,
+    "full_block_tx_count": 3,
+    "mode": "OFFLINE_RPC_FIXTURE_ONLY",
+    "raw_rpc_sha256": "fafee8db151c5b452824c216ee951198a92ad402de9f766ae03b73ec8ce8608f",
+    "source_method": "eth_getBlockByNumber"
+  },
+  "e3_actual_count": 0,
+  "paper_profit_labels": 0,
+  "quote": {
+    "amount_out_raw": "900",
+    "mode": "OFFLINE_RPC_FIXTURE_ONLY",
+    "path_amounts_raw": [
+      "1000",
+      "900"
+    ],
+    "quoted_actual_count": 0,
+    "raw_rpc_sha256": "a7ce19a53f6130a6c463df4012d84f2d5f47463c824929e447cf49a23b8652f5",
+    "status": "SIMULATED_ARCHIVE_QUOTE"
+  },
+  "quoted_actual_count": 0,
+  "receipt": {
+    "E2_attested": false,
+    "ca_hint": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "confirmations_seen": 4,
+    "e3_actual_count": 0,
+    "finality": "UNRESOLVED_F1_POLICY",
+    "mode": "OFFLINE_RPC_FIXTURE_ONLY",
+    "raw_rpc_sha256": "53cef070712389f91df1a199106859f2b5c9cb6d590e2283056f010cc33c5cb0",
+    "reason": "UNVERIFIED_SWAP_ROUTE",
+    "receipt_success": true,
+    "side_hint": "BUY_CANDIDATE",
+    "transfers": [
+      {
+        "amount_raw": "900",
+        "from": "0xdddddddddddddddddddddddddddddddddddddddd",
+        "log_index": 0,
+        "to": "0x1111111111111111111111111111111111111111",
+        "token_ca": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "amount_raw": "1000",
+        "from": "0x1111111111111111111111111111111111111111",
+        "log_index": 1,
+        "to": "0xdddddddddddddddddddddddddddddddddddddddd",
+        "token_ca": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    ],
+    "tx_hash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+    "wallet": "0x1111111111111111111111111111111111111111"
+  },
+  "schema": "bsc-f0-rpc-fixture-adapter-v1",
+  "trial": true
+}
