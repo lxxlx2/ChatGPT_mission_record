@@ -5688,5 +5688,102 @@
     "no_trading_done": true,
     "evidence_grade": "OBSERVED_SUCCESSFUL_SPECIFIC_HISTORICAL_SELL_TX_NOT_GENERALIZED_TRADEABILITY",
     "proof_limitation": "Specific historical successful transactions prove third-party token Transfer to pool matched Pool Swap tokenIn, and quote Transfer out matched Swap quoteOut. Full HTTP response bytes not archived through connector; some receipt payloads truncated, filtered logs and status independently retrieved from same provider."
+  },
+  "bsc_v2_p0_historic_runtime_code_pilot_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_FROZEN30_HISTORIC_CODE_DAYBOUNDARY_READ_ONLY_PILOT_V1",
+    "source_kind": "ALCHEMY_CONNECTED_APP_NORMALIZED_HISTORICAL_ETH_GETCODE",
+    "source_provider": "Existing user's All Chains Alchemy app BNB mainnet",
+    "original_http_receipts_sha256": null,
+    "independent_second_provider_verified": false,
+    "rank_count": 30,
+    "created_pool_day": "2025-07-01 UTC",
+    "day_utc_first_block": 52440287,
+    "day_before_block": 52440286,
+    "all_30_code_nonempty_at_pair_created": true,
+    "full_code_bodies_obtained_for_all": false,
+    "prefix_truncated_at_creation_ranks": [
+      8,
+      18,
+      20,
+      26,
+      28
+    ],
+    "full_runtime_bytecode_prefix_exists_these_ranks": true,
+    "code_already_nonempty_before_day_ranks": [
+      1,
+      5,
+      8,
+      15
+    ],
+    "code_empty_before_day_nonempty_by_pair_creation_ranks": [
+      2,
+      3,
+      4,
+      6,
+      7,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30
+    ],
+    "deployment_tx_30_of_30_proven": false,
+    "public_observed_at_30_of_30_proven": false,
+    "first_runtime_code_transition_binary_search_results": [
+      {
+        "rank": 2,
+        "first_code_block": 52440593,
+        "creation_block": 52440617,
+        "prior_block": 52440592,
+        "prior_block_code_empty_observed": true,
+        "first_code_block_nonempty_observed": true
+      },
+      {
+        "rank": 3,
+        "first_code_block": 52440672,
+        "creation_block": 52440691,
+        "prior_block": 52440671,
+        "prior_block_code_empty_observed": true,
+        "first_code_block_nonempty_observed": true
+      },
+      {
+        "rank": 4,
+        "first_code_block": 52440725,
+        "creation_block": 52440950,
+        "prior_block": 52440724,
+        "prior_block_code_empty_observed": true,
+        "first_code_block_nonempty_observed": true
+      },
+      {
+        "rank": 6,
+        "first_code_block": 52441208,
+        "creation_block": 52441231,
+        "prior_block": 52441207,
+        "prior_block_code_empty_observed": true,
+        "first_code_block_nonempty_observed": true
+      }
+    ],
+    "first_runtime_code_transition_not_first_ever_contract_deploy_tx": true,
+    "unobserved_older_selfdestruct_redeploy_paths_not_ruled_out": true,
+    "source_caveat": "eth_getCode at historic block after full block state, not per-transaction deployment, not contract creation trace, not contemporaneous public observation. Before-day nonempty only proves deployment predated the day; empty daybefore and nonempty at pool creation bounds first code existence to interval, with binary search exact state transition for four ranks.",
+    "gate_24_of_30_complete_pit": "NOT_SCORABLE",
+    "gate_18_of_30_bidirectional_sellability": "NOT_SCORABLE",
+    "phase": "P0_PARTIAL_NO_P1"
   }
 }
