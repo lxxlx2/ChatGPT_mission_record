@@ -1,0 +1,29 @@
+{
+  "schema": "bsc-f0-one-time-http-smoke-offline-evidence-v1",
+  "observed_date": "2026-10-20",
+  "test_method": "python3 -m unittest discover -s /mnt/data/bsc_f0_smoke/f0/tests -p 'test_*.py' -v",
+  "tests_executed": 19,
+  "tests_status": "PASS",
+  "prior_unchanged_tests": "92 prior tests approved/recorded, not rerun in this local fixture-only prototype",
+  "artifacts_sha256": {
+    "f0_bounded_smoke.py": "ffb248b2616f582e25d7892164819d46aa15581f0b42eda81c5bbd890429a7c1",
+    "tests/test_f0_bounded_smoke.py": "47391a9ef899bb39aa96f70b8ff92c3d7fd751428bd02ec72562de36960b2dbc",
+    "fixtures/bounded_smoke.json": "41eea36bbc6f227ec42a2dab0e4297cef8f7e6c8ca79fa7f24a25782254da553",
+    "fixture_smoke_report.json": "42d19d756706b79b5d96fdb802ae792d172c83b0355c04ab7d6f244a723f817a",
+    "F0_PUBLIC_HTTP_SMOKE.md": "19816a85671558b0fbafed5e106c81f4f2b264d0bb69bcd10ceb1e006ec5c4b8",
+    "test_run.log": "9bba9f3727c05e02eda19bba9177f8469b4b48230f26d57ffb4a87cc79b1b9a3"
+  },
+  "fixture_observation": {
+    "actual_rpc_calls": 0,
+    "attempted_mock_calls": 4,
+    "control_calls": 1,
+    "e3_actual": 0,
+    "real_quoted": 0,
+    "paper_labels": 0
+  },
+  "code_review_status": "PENDING_INDEPENDENT_REVIEW",
+  "live_permission": "NOT_GRANTED",
+  "actual_http_calls": 0,
+  "real_chain_data": false,
+  "caveat": "A mocked sender and artificial RPC fixture; no real provider availability, latency, quota, causal E2, finality or E3 evidence."
+}
