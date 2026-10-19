@@ -23,6 +23,8 @@
 
 **Plan A/B/C实测状态**：Plan A对本次**单日/单BSC V2 Factory/所选18笔收据**的本地历史只读重放有效；**尚未完成3个非连续日期的整日无缺页Source、BSC V3和launchpad范围，不等于整个BSC免费历史源已通过**。当前已连接免费Alchemy`eth_getLogs`最多10块的限制，不支持以少量窄窗代替一天约115196个区块的完整日志覆盖；其它Mac RPC可能不同，须以其真实回执为准。Plan B完整BSC历史批量导出免费许可和真实覆盖**未确立**；Plan C**$0、不授权付费采购**。历史第三方来源重放的SHA保证本机文件未篡改，**不能单独证明上游从未漏日志**。
 
+**Plan A当前已证实的资源瓶颈（不是“查询不到市场数据”）**：已冻结BSC 2025-07-01整天区块`[52440287,52555482]`共**115196块**；对目前已连接的Alchemy免费层`eth_getLogs`最多10块/次的已见限制，**一个Factory整日无跳块日志至少需11520次请求**，同日Pancake V2与V3两个Factory至少**23040次**，且尚未包括失败重试、链ID、日志校验、其它launchpad或3个非连续研究日期。原脚本默认每次250请求，仅一个Factory/天的理论最低调用量就为**46.08倍预算**。因此不应在这个免费10块限制的同一提供商上继续无意义的大批量逐块扫描；这是`PLAN_A_CONNECTED_ALCHEMY_CURRENT_BUDGET_INFEASIBLE_FOR_FULL_DAY`，**不否定用户Mac另一个有合法免费大区间日志权限的RPC**，更不能将这一天的Factory V2存储索引成功误写成V3/launchpad历史完整覆盖。机器预算明细见主JSON矩阵的`historical_source_log_budget_limit`。
+
 **止损与当前研发决策**：截至2026-10-20，当前结果是`P0 PARTIAL / OVERALL INSUFFICIENT_COVERAGE`，这不是提前永久停止；仍遵守原2026-11-02来源核查窗口、最多2次一次性CI的限制。下一投入只针对真正改变门禁的事实：①免费连续V2/V3/launchpad历史日志是否存在合规且可在预算内重复取得的实际路径及缺页计数；②完整PIT中`available_at`与部署Tx缺口；③**在预注册统一研究notional后**才能从固定30币进行同额买卖和成本压力试验，否则明确`NOT_SCORABLE`。不能再为了把18变成PASS，继续反复扫描同18笔已通过的卖单；不把6个未证深度币删除分母。`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，PR保持Draft。
 
 ---
