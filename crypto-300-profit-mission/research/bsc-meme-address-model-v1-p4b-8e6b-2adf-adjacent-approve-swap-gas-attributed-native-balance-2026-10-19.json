@@ -218,5 +218,12 @@
   "review_status": "REQUEST_CHANGES_9477787_F1_F3_SUPERSESSION_DATA_CORRECTED_NO_PNL_APPROVAL",
   "factual_scope": "Gas arithmetic for selected buy/sale/approve block subsets; NOT economic token-round profit, NOT independent native trace.",
   "balanceof_evidence_file": "bsc-meme-address-model-v1-p4b-8e6b-2adf-historical-balanceof-raw-rpc-2026-10-19.json",
-  "continuity_evidence_file": "bsc-meme-address-model-v1-p4b-8e6b-2adf-full-window-bnb-continuity-review-2026-10-19.json"
+  "continuity_evidence_file": "bsc-meme-address-model-v1-p4b-8e6b-2adf-full-window-bnb-continuity-review-2026-10-19.json",
+  "supersession_notice": {
+    "independently_review_rejected_commit": "94777871756da910be2e1ccbf724d520c82ae69f",
+    "original_rejected_blob_sha": "1d4ebea38477f35ace3be8528a966d663a8f0807",
+    "original_read_only_blob_url": "https://github.com/lxxlx2/ChatGPT_mission_record/blob/94777871756da910be2e1ccbf724d520c82ae69f/crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-8e6b-2adf-adjacent-approve-swap-gas-attributed-native-balance-2026-10-19.json",
+    "supersession_reason": "Previously misleading round ROI and inferred native proceeds labels withdrawn; source wei numeric fields preserved across original correction.",
+    "profit_claim": "UNRESOLVED"
+  }
 }
