@@ -37,7 +37,7 @@
       "block": "d194e9584671c67ea29da9c858a095381b1ded4ebede3faaf94a00167664d303",
       "chain_id": "c355f3c2a096750278d86f476f4464c6f61fbbcdc72f04ad739ccc649cde662f",
       "head": "67d8880b7a55783073a5b0cd6769198a7f0a7667c343b9055d51755659959b4e",
-      "receipt": "62e6de18c47dbda5ad33a41e1095a5df25c581f7cc07e4bcfb30261a6d5bd30089cb4"
+      "receipt": "62e6de18c47dbda5ad33a41e1095a5df25c581f7cc07e4bcfbdf727e0ec6f803"
     },
     "receipt_state": "IDENTITY_VALIDATED_NOT_FINALITY",
     "reviewed_commit_sha": "fa3dae9b0f221747cb64bb1be21497979985e596",
