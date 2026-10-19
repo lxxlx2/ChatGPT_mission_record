@@ -15,6 +15,7 @@ import time
 import zipfile
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
+from urllib.parse import quote
 
 import monster_v4_stage166_spot511_official_1m_intake as admitted
 
@@ -27,6 +28,7 @@ CHECKSUM_MAX = 2048
 REQ_TIMEOUT_SECONDS = 18
 MAX_RETRIES = 2
 OFFICIAL_SHA = "b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b"
+PREVIOUS_1018_REAL_RECEIPTS_BLOB = "2852bbfd030d11bf84385681a32b07ee5d84d6b1"
 
 
 def utc():
@@ -38,7 +40,7 @@ def url_parts(symbol,day):
             and day in FIXED_DAYS):
         raise ValueError("MONSTER_PUBLISHER_FROZEN_SYMBOL_OR_DAY_DRIFT")
     filename = f"{symbol}-1m-{day}.zip"
-    url=f"{BASE}/{symbol}/1m/{filename}"
+    url=f"{BASE}/{quote(symbol,safe='')}/1m/{quote(filename,safe='')}"
     return filename,url,url+".CHECKSUM"
 
 
@@ -179,13 +181,37 @@ def main():
     p.add_argument("--source-dir",required=True,type=Path)
     p.add_argument("--out",required=True,type=Path)
     p.add_argument("--workers",type=int,default=MAX_WORKERS)
+    p.add_argument("--retry-unicode-from",type=Path,default=None)
     a=p.parse_args()
     if a.out.exists() or a.out.is_symlink():
         raise ValueError("MONSTER_PUBLISHER_RESULT_EXISTS_NO_REWRITE")
-    roster=admitted.frozen_roster()
-    if len(roster)!=511:
+    all_roster=admitted.frozen_roster()
+    if len(all_roster)!=511:
         raise ValueError("MONSTER_ORIGINAL_T0_511_DRIFT")
+    roster=all_roster
+    if a.retry_unicode_from is not None:
+        raw=a.retry_unicode_from.read_bytes()
+        blob=hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\\0"+raw).hexdigest()
+        if blob!=PREVIOUS_1018_REAL_RECEIPTS_BLOB:
+            raise ValueError("MONSTER_PUBLISHER_PREVIOUS_RECEIPTS_BLOB_DRIFT")
+        previous=json.loads(raw)
+        missing=[r for r in previous["issuer_real_zip_receipts"]
+                 if r["status"]=="SOURCE_REJECTED_OR_UNAVAILABLE"]
+        if (len(missing)!=4 or len(previous["issuer_real_zip_receipts"])!=1022
+            or previous["status_counts"]!={"SOURCE_REJECTED_OR_UNAVAILABLE":4,
+                                         "VERIFIED_FULL_DAY_1440":1018}
+            or {r["symbol"] for r in missing}!={"币安人生USDT","牛来USDT"}
+            or {r["date_utc"] for r in missing}!=set(FIXED_DAYS)
+            or any("ascii" not in r["error"].lower() for r in missing)
+            or any(r["symbol"] not in all_roster for r in missing)):
+            raise ValueError("MONSTER_PUBLISHER_UNICODE_SCOPE_NOT_PREVIOUS_4")
+        roster=sorted({r["symbol"] for r in missing})
     report=collect(a.source_dir,roster=roster,max_workers=a.workers)
+    if a.retry_unicode_from is not None:
+        report["recovery_of_original_1022_attempts_blob"]=PREVIOUS_1018_REAL_RECEIPTS_BLOB
+        report["recovery_exactly_4_nonascii_failed_sources"]=True
+        report["source_scope"]="FROZEN_T0_511_UNICODE_GAP_4_ONLY"
+        report["original_full_t0_roster_count"]=511
     a.out.parent.mkdir(parents=True,exist_ok=True)
     with a.out.open("x",encoding="utf-8") as output:
         json.dump(report,output,sort_keys=True,indent=2,ensure_ascii=False)
