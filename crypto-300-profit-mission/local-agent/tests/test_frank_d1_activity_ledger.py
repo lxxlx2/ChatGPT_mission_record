@@ -76,7 +76,7 @@ class TestFrankD1ActivityLedger(unittest.TestCase):
             self.assertIn("https://solscan.io/token/", content)
             self.assertIn("ACTIVE_WITHOUT_TRADE_LEG", content)
             self.assertIn("被动转入", content)
-            self.assertIn("不等于索引器故障", content)
+            self.assertIn("不自动说明索引器故障", content)
             self.assertNotIn(SECRET, content)
             self.assertNotIn("another_account", content)
             self.assertNotIn("frank_wallet", content)
