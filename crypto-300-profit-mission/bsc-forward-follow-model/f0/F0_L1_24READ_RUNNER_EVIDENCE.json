@@ -1,0 +1,30 @@
+{
+  "schema": "bsc-f0-l1-code-24read-runner-offline-review-evidence-v1",
+  "approved_parent_sha": "296aa3f2b8dfb80726f06b3663dede3e2e7c0d5c",
+  "real_network_calls": 0,
+  "result": "OFFLINE_CODE_READY_REVIEW_REQUIRED_NO_RUN",
+  "local_tests_discovered": 208,
+  "local_pass": 206,
+  "local_skip": 2,
+  "local_skip_reason": "real PR116 manifest absent from isolated local test tree",
+  "independent_review_gate": "208 tests passed, zero skipped in complete checkout; inspect fake sender and live-gate negative tests",
+  "full_test_log_sha256": "e6bc1228ad47e6ab444e7b6168215e616046bbaaef7c8bc21148629e556c2b70",
+  "file_sha256": {
+    "f0_l1_code_probe.py": "0bfb84dc4774a8407d3893ac325542089de1b31869c5d62835acba528553ea22",
+    "tests/test_f0_l1_code_probe.py": "e9f972876e845c6ec6e9e54ba6b4f04e92b92c6e583ebbd86d8148c4cb5dca01",
+    "fixtures/l1_code_probe_24_mock.json": "865583cc1ff86ba20212f017c1fde01a9ff53a97a3bba5d93934e25f2bb9b16b",
+    "fixture_l1_code_probe_24_report.json": "6327525e28378424b499cfb2808ec2772c9344befb9051665534668a06f67548",
+    "F0_L1_24READ_QUALIFICATION_RUNNER.md": "eaf177e2afe90216d5c33318d33835ab53d3a9bd03579c5a29fe342114f29c28"
+  },
+  "fixture_report_metrics": {
+    "attempted_rpc_calls": 24,
+    "attempted_primary_getcode": 20,
+    "attempted_router_getcode": 2,
+    "attempted_identity_reads": 2,
+    "actual_rpc_calls": 0,
+    "stop_state": "QUALIFICATION_READS_COMPLETE_NOT_LIVE_MONITORING"
+  },
+  "no_user_live_consent": true,
+  "reviewed_permit_exists": false,
+  "previous_four_call_authority": "EXHAUSTED"
+}
