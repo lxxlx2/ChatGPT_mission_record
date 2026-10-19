@@ -1,5 +1,67 @@
 # Monster — 以真实赚钱价值为目标的阶段决策和下一次有证据的验证（2026-10-18）
 
+## 当前产品研发总纲（2026-10-19，PROPOSED，不覆盖原历史冻结合同）
+
+**适用范围：仅 Monster 妖币早期发现 PR #30，不是 BSC 钱包跟单 PR #40，也不是449钱包资产审计 PR #97。** 这段是用户转交Claude十周重设计方案后的项目级可行性、复用和门禁审查；目的是先统一整个产品，不先动代码、合并、Mac安装、通知、定时或交易。待用户明确接受后才能把它变更为新的正式Phase参数冻结。其余本文现存历史原文、已冻结样本、审核结论和2025-07-01 Base覆盖探针**保持不变**。
+
+### 产品目的与三项分立可行性判断
+
+- **产品目的**：在代币的首次真实可交易窗口，以当时公众可取得的链上、场所、合约权限和资金分布证据，对所有符合事前PIT准入的项目排序，发现未来可能出现5x/10x而且有真实卖出机会的少数代币；不是事后挑出赢家、不是保证发现每个10x、更不是把旧CEX的WATCH数量做高。
+- **SOURCE_FEASIBLE_CONDITIONAL**：EVM官方链事件理论上可重建部署/池/Swap，但免费公网历史RPC `eth_getLogs`、存档节点完整性、Binance Alpha历史上架/下架档案、V3历史状态和死币覆盖**并未验证**。BNB Chain官方文档公开说明列出的mainnet公共RPC禁用eth_getLogs；已连Alchemy Base免费实测2000块拒绝、每次10块。Mac公网有网本身不能证明BSC完整历史日志可取。须按原30例探针先拿出真实数据路径，不强行开六个月采集。
+- **EARLY_SIGNAL_UNKNOWN**：暂无新策略对未来10x可成交项目的样本外分离力证据，先验不承诺精确率、频率或期待回报。若独立正例太少，结果`INSUFFICIENT_POSITIVE_EVENTS`而不是虚称lift显著通过/失败。
+- **EXECUTABLE_RETURN_UNPROVEN**：Stage30/162及初期518轮各自历史不同假设的代理账本表现负面，仅能证伪旧规则在那些假设下的有利性，不能证明所有新链上策略必败。必须把最高价格/池瞬时math/真实双向容量、手续费与实际fill严格分级。
+
+### 产品架构（集中到一个早期研究包，不再新增Stage一次性脚本）
+
+架构建议（**未创建目录/代码**）：`crypto-300-profit-mission/local-agent/mission_agent/early/`下包含`source/`(EVM及后续Solana/官方CEX/Alpha档案）、`identity/`(chain+CA/venue+product，跨链project_id仅证实后匹配)、`lifecycle/`(事件与PIT可用时间)、`eligibility/`(首次真实流动性与双向卖出可行性)、`features/`(as-of因果特征)、`labels/`(延迟出场价格/5x/10x/归零/删失)、`evaluation/`(分时段验证/随机/CEX对照)、`ledger/`(资金/手续费/容量/损失)，一个`cli.py`含`probe-source`, `build-cohort`, `label`, `evaluate`, `report`。先做最薄source+schema，不预建全部空包，不复制186个旧workflows；若需CI最多一个新研究workflow，旧workflow仅归档、不擅自删除或重新触发。
+
+**身份和因果时间**：基础键`chain_id|token_ca`；场所另有`venue|pool_address|product|official_instrument`。一个代币可多池/多费档/多报价币/代理桥接；同名ticker不得当CA。独立事件按原`block|tx|log_index`或当时已发布官方公告及source-hash确定；所有`observed_at`、`available_at`、`source_hash`、`evidence_grade`要区分历史区块时钟与当时第三方真的已能读到信息。不能用2026已知上市结果认定此前必能看到Alpha公告。基础生命周期是`DEPLOYED → POOL_CREATED → REAL_LIQUIDITY_AND_BUY_SELL_PATH → [ALPHA/USDM/SPOT] → 30D/90D_OUTCOME`；事件可能缺失、乱序或从未发生，不应强制要求所有项目最终上市。
+
+**双层母体**：第一层全集为跨预冻结BSC Pancake V2/V3(必要时含launchpad)连续事件得到的所有CA/原池事件，含0流动性、rug、死币、无法再查询的合约与完整源缺失计数。第二层是**实时实际首次满足并已可观察**事前最低流动性+买卖两侧成交能力的交易可评资格，`T_entry = max(条件真正达到的区块可用时点, 首次可查询时点)`；绝不可在T_pool+1min使用未来一小时累计50笔Swap。未合格/来源缺失的必须保留第一层分母，分别`INELIGIBLE_AT_T` / `NOT_SCORABLE`，不能过滤出幸存币后再分胜负。
+
+**保留原冻结门槛**：现有Base30例探针、24/30部署+池、18/30流动性+双向可模拟的覆盖终止条件，以及Base0.5 WETH/1000 USDC、BSC2 WBNB/1000 USDT研究前置额度是已记载的现行版本。Claude新建议的`20 BNB + 首小时50 swap`**只是候选V2大流动性分层，不自动替换**，因为会直接降低发现更早、更小币的能力及产生一小时lookahead。正式规模/额度按源覆盖验证并在读取未来收益标签前提交独立参数变更。
+
+**标签分层**：主标签可选`T_entry`后90天中首次出现、可以事先冻结的标准名义金额**卖出**的净可得10x（`SELLABLE_10X`），5x和30天是辅助标签；观察时间必须完整跨越90天。最高OHLC、高薄池末笔价格、CEX 1m最高价只能列`THEORETICAL_MAX`，不算可卖出10x。实际交易性价比需同一可观察场所/当时可得历史储备或集中流动性/税/手续费/Gas/容量/先买后卖/退出失败；单侧PoolCreated/单点Reserve不足则`NOT_SCORABLE`或`AMM_MATH_ONLY`，绝不晋升`VERIFIED_FILL`。死亡、迁池、下架、不可退出、未满90天是不同结局或删失，不能全部标成0盈利。
+
+**模型目标分开**：一为全新币中高倍且可卖出项目的识别能力（base rate、precision@k、recall、PR/Top-decile lift与置信区间、每天候选个数）；二为给定冻结资金/仓位/假设手续费/进入观察延迟/明确退出规则的费后**纸面**净收益、最大回撤、无法成交比率和单币收益集中度。高10x标签并不等于成功卖在最高点。比较必须同一PIT母体、同样资金与成本规则的随机基线；旧CEX动量只作另一可比时间/场所的辅助基线，若其上市时点更晚、无共同可买窗口则不能简单作同一个分类器准确率比较。
+
+### 旧仓库代码迁移等级（先迁最少必要功能，不重复审核已封存旧脚本）
+
+| 已有项目/代码 | 处理 | 证据边界 |
+| --- | --- | --- |
+| 原source SHA、PIT、G0–G6、不可推导则UNKNOWN | KEEP_AS_CONTRACT | 直接沿用不可变原始来源及时间可用性规范 |
+| `monster_v4_stage166_spot511_official_1m_intake.py`和`monster_v4_forward_spot511_official_publisher_acquire.py` | ADAPTER_AFTER_EQUIVALENCE_TEST | 已有官方ZIP/CHECKSUM校验作为后期CEX价路或回放对照；非Alpha首次可交易时间/DEX初池证据 |
+| `monster_v4_stage139_official_t0_and_saved_contractinfo_evidence.py`和`monster_v4_stage120_exchangeinfo_execution_rules.py` | SELECT_FUNCTIONS_ONLY | 原偏USD-M合约元数据/ASOF；对Alpha公告或DEX税费不直接适用 |
+| `monster_v4_mainline_preclosed_300u_cash_ledger.py` | EXTRACT_ECONOMIC_ACCOUNTING_ONLY | 原程序写死300U/30U/10槽、老代理价格与来源；只能移植资金守恒/并发占用/损失记法，不移植实验金额和历史回报 |
+| `monster_v4_shadow.py`观察函数和Stage30/162/518证据 | FROZEN_CEX_BASELINE_ONLY | 旧动量WATCH/SETUP、FIFO8、队列/TTL仅适合旧CEX，不进入早期DEX筛选核心 |
+| Frank `rpc.py`/`parser.py`/`store.py` | READ_AND_ADAPT_LATER | 当前是Frank生产相关专用解析/库；Solana另需Raydium/pump.fun具体Program事件测试；不能直接把Frank部署/DB接入新研究 |
+| 旧Stage一次性脚本和186个workflow | ARCHIVE_IN_PLACE | 不删除过去已审批证据或触发原CI，除正式确认某个模块需要代码等价迁移，否则不做批量审计、修边界或重构 |
+| 当前已提交的Mac Factory RPC roster probe | SOURCE_SPIKE_NOT_PRODUCT_MODULE | 尚无实际Mac全天可重复覆盖的证据；首30 Base是源测试，不代表BSC Alpha样本母体 |
+
+### 十周研发提议（总时间盒需用户确认；每阶段一次决定，不开放尾随Stage膨胀）
+
+| Gate / 建议相对周次 | 真正交付 | 放行/停止（未真实通过前不可假报） |
+| --- | --- | --- |
+| P0，第1周，数据源可用性+设计冻结 | 统一源码版本、BSC V2/V3实际Factory、3个跨不同月份日期及负例的完整事件访问试探、Base30覆盖探针、solana后置价值判断；FROZEN cohort selector/schema/PIT/来源预算 | **SOURCE_BLOCKED**：若不能免费、可复验地取得连续历史原日志或足量实际退出证据，则停止模型/大规模迁移；沿用原Base30探针11-02截止，不为通过门槛伪造样本 |
+| P1，第2–4周，BSC历史母体+首可交易 | 预冻结区间真实独立币CA全集（含死币/未上架）、创建/首次注入/首可买卖及Alpha/USDM/Spot资料覆盖度、缺失分母；较长2025上半年档案**仅在源路径真实可用后**才扩展 | 先达到原小探针24/30+18/30硬门槛，再评估是否可建立至少500例具备必要标签与独立负例的母体；500只是探索最低量，10x独立正例太少不能论分离力；失败停止，不缩小到已知热币 |
+| P2，第5–7周，1个可解释轻量策略 | 仅用`available_at <= T_entry`信息建立冻结特征表；跨日期训练/内部验证fold的5x/10x precision、lift/PR、源可评比、隐形成本；同时保留同条件随机以及原CEX动量对照 | 在查看最终holdout之前冻结唯一策略及结构；可讨论预注册top-decile lift 3x但应考虑正例数、区间不确定度和每月样本，若统计功效不足明确`INSUFFICIENT_POSITIVES`，不能拿3个赢家承诺显著有效 |
+| P3，第8–9周，一次历史holdout +经济 | 对明确未用于训练/阈值重选的时间分割，仅一次预注册评估：同期间无差别随机、相同执行名义额/税费/仓位锁定/退出规则，与CEX旧动量可比区间报告分开；必须有双向历史价格容量 | 若费后纸面净收益不优于同口径随机或<=0、严重集中单币、退出证据不足 -> `REJECT/UNRESOLVED`；旧已曝光2025–26不自动称真正前向，绝不可改holdout重考 |
+| P4，第10周，业务判决 | 一个机器结果+一份用户可读报告，核心数据/单币贡献/真实不可卖比例、来源成本、未来shadow需要的连续数据能力，必要的独立其他AI核心结论审阅 | `RESEARCH_SUPPORTS_FURTHER_FORWARD_TEST` / `REJECT_STRATEGY` / `INSUFFICIENT_EVIDENCE` 三选一；即使好也**不是**自动生产GO或利润可复现保证 |
+
+**90天成熟延迟不能压缩**：上述10周（若自2026-10-19计算至2026-12-28）最多对2026-07-19以前进入的历史项目得到完整90日结果；随后新开始的真实前向项目必须到各自T_entry+90日才可打90天标签。使用过去已经曝光的多个大赢家的历史holdout只能称`RETROSPECTIVE_TIME_SPLIT`，不能自称`UNTOUCHED_PROSPECTIVE`。当未来成熟数据不足时报告删失并等明确批准新一期研究，不能为了十周结项偷改为“最高已出现10×”。
+
+### 最少且明确的开发/Review规则
+
+1. **用户价值优先**：每期报告样本CA/可买卖T_entry、来源实际覆盖、5x/10x真实可卖出、入场/退出及费后资金、误报/丢币/死亡、负向、集中度。没有这些的单点代码审计不计主线进度。
+2. **只改一个包、一个CLI、一套小回归CI**，源码模块需要迁移时固定Git SHA并做迁移前后等价测试；只有真正重复用到时才抽成包，不为漂亮架构先重写旧库。每Phase一份合同及一份结论，bug记录在commit，不新增Stage文档/逐次审查工作流。
+3. **评审分层**：P0来源和PIT冻结需一次针对“无法获得数据或泄漏”的设计评审；探索期普通小改只跑确定性测试；到P2参数冻结和P3经济结论各做必要的独立核心审核，避免每个单点Review循环；不取消仓库要求的交易/发布前独立审核、真实测试、本机只读实测、修复和复验。
+4. **硬截止与失败定义**：来源不行`SOURCE_BLOCKED`，母体/正例不足`INSUFFICIENT_DATA`，排除未来泄漏后分离力不显著`NO_DEMONSTRATED_LIFT`，费用后不优于一致随机基线`REJECT_STRATEGY`；都不是`GO`；不因连续数周负面结论去改同一个冻结holdout。
+5. **不授权自动行为**：本段未改变原`G0 PARTIAL / G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`，不批准Alpha/DEX定时监控、Mac launchd、Frank改动、用户资金、电子邮件或真实订单。原已冻结Spot511七日前瞻比较和原Base30探针原截止/CI次数单独保留，不跨研究混算。
+
+---
+
+
+
 ## 结论先行
 
 **研究源与代码审计走到这一步，下一次优化不应继续提高历史首评数量，也不应再反复审核已被APPROVE的V3静态报价处理。关键业务障碍是 `WATCH → 可使用的 SETUP → 真正可成交的正收益` 整条链未获验证，且现有历史经济证据显示较强负面风险。**
