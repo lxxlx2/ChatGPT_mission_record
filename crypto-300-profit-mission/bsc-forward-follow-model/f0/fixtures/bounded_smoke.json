@@ -1,0 +1,10 @@
+{
+  "mode": "OFFLINE_ONLY",
+  "trial": true,
+  "responses": [
+    {"method":"eth_chainId","params":[],"result":"0x38"},
+    {"method":"eth_blockNumber","params":[],"result":"0x3e8"},
+    {"method":"eth_getBlockByNumber","params":["0x3e8",true],"result":{"number":"0x3e8","hash":"0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","transactions":[{"hash":"0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","from":"0x1111111111111111111111111111111111111111","to":"0x2222222222222222222222222222222222222222"}]}},
+    {"method":"eth_getTransactionReceipt","params":["0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"],"result":{"transactionHash":"0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","blockNumber":"0x3e8","blockHash":"0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","status":"0x1"}}
+  ]
+}
