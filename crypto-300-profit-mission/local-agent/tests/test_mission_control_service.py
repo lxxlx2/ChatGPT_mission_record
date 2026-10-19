@@ -517,3 +517,44 @@ def test_live_approval_expiry_latches_delivery_off_before_cycle(tmp_path):
     assert service.control.db.execute("SELECT COUNT(*) FROM gmail_delivery WHERE status='PENDING'").fetchone()[0]==0
     assert service.control.db.execute("SELECT COUNT(*) FROM local_delivery WHERE status='PENDING'").fetchone()[0]==0
     service.close()
+
+
+def test_real_live_cycle_gmail_ready_crosses_signed_expiry_without_send(
+    monkeypatch,tmp_path
+):
+    """P1 replay: provider readiness crosses deadline inside a real cycle."""
+    import mission_agent.mission_control.service as service_module
+    from test_mission_control_delivery import Provider, event
+
+    prod=tmp_path/"prod";control=tmp_path/"control";pol=tmp_path/"policy.json"
+    make_prod(prod)
+    policy(pol,status="FROZEN_APPROVED",live=True)
+    sha=hashlib.sha256(pol.read_bytes()).hexdigest()
+    service=MissionMemeService(
+        production_root=prod,control_root=control,policy_path=pol,
+        live_delivery=True,approved_policy_sha256=sha,
+        approval_expires_at=time.time()+3600,
+    )
+    assert service.delivery_allowed is True
+    queued=event(service.control)
+    service.gmail.enqueue(queued,mode="LIVE",forbidden=False)
+    # This service-level fixture disables local sends but drives real
+    # MissionMemeService.cycle() and real GmailDelivery.drain().
+    local_calls=[]
+    service.local.drain=lambda **kwargs:local_calls.append(kwargs)
+    provider=Provider()
+    def slow_ready():
+        service.approval_expires_at=time.time()-1
+    provider.ready=slow_ready
+    monkeypatch.setattr(service_module,"existing_provider",lambda config:provider)
+    result=service.cycle()
+    assert local_calls and local_calls[0]["authorization_guard"]
+    assert provider.sent==[]
+    assert result["delivery_allowed"] is False
+    assert service.delivery_allowed is False
+    assert service.gmail.row(queued["decision_id"])["status"]=="MANUAL_REVIEW"
+    assert service.control.db.execute(
+        "SELECT attempts FROM decision_outbox WHERE channel='gmail' AND decision_id=?",
+        (queued["decision_id"],),
+    ).fetchone()[0]==0
+    service.close()
