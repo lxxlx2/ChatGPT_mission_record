@@ -391,6 +391,19 @@ class FactoryOfflineP0ArchiveAuditTests(unittest.TestCase):
                              [])
             self.assertEqual(got['observed_sell_below_preswap_quote_floor_ranks'], [5])
             self.assertEqual(got['observed_swap_preswap_depth_unresolved_ranks'], [])
+            self.assertEqual(len(got['observed_swap_activity_distinct_transactions_by_rank']), 30)
+            activities = {a['rank']: a for a in
+                          got['observed_swap_activity_distinct_transactions_by_rank']}
+            self.assertEqual(
+                (activities[1]['buy_swap_events'], activities[1]['buy_distinct_txs'],
+                 activities[1]['above_floor_buy_distinct_txs']), (1, 1, 1))
+            self.assertEqual(
+                (activities[2]['buy_swap_events'], activities[2]['buy_distinct_txs'],
+                 activities[2]['above_floor_buy_distinct_txs']), (1, 1, 1))
+            self.assertEqual(
+                (activities[5]['sell_swap_events'], activities[5]['sell_distinct_txs'],
+                 activities[5]['above_floor_sell_distinct_txs']), (1, 1, 0))
+            self.assertTrue(got['observed_swap_transactions_not_same_as_distinct_buyers'])
             self.assertTrue(got['quote_depth_floor_is_research_eligibility_not_purchase_notional'])
             self.assertTrue(got['observed_sells_are_not_same_notional_user_sellability'])
             self.assertEqual(got['eighteen_of_thirty_sellable_gate'], 'NOT_SCORABLE')
