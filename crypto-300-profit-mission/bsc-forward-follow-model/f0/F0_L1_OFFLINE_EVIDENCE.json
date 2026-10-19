@@ -5,18 +5,18 @@
   "review_status": "PENDING_INDEPENDENT_REVIEW",
   "mode": "SYNTHETIC_OFFLINE_ONLY",
   "files_sha256": {
-    "f0_l1_window.py": "5e5cfb03d9ee483a7f1c30fdad5facb59ae60b8ba5ce20b8437460a31eb50560",
-    "tests/test_f0_l1_window.py": "48485801eea638301ef9c5c616c9127c1354510cba763fb8db2230a52ff9cb31",
+    "f0_l1_window.py": "b3c693a906b09e112fad0da693c8de10baece5dbd8c31b79d485938138fd94f7",
+    "tests/test_f0_l1_window.py": "86bf8b977e2c9aff9009053e4709f8a26d8f7e54af87784f19ea9901077ee609",
     "fixtures/l1_fake_cohort.json": "456df0b152ca83876d80f36bb30ab12b1378fcecf56ebeed03e80ffcc742b273",
     "fixtures/l1_contiguous_replay.json": "9cfdc7ef31fbca5c2a4be81a6d77e02b34a4cf97d301211428506c4bbfa49517",
     "fixture_l1_report.json": "b58db206bcad0b789363ffdc2da1a360b03d497f3071004655c2f1797400013d",
-    "F0_L1_CONTIGUOUS_OFFLINE.md": "7fa6941a78b7151c8c565e2edc4a985e3da0207a9d2a877a0cca84bd9c273b59"
+    "F0_L1_CONTIGUOUS_OFFLINE.md": "e08f3b859463672086a4e9e47be15e47c714dd02701f6ab0a0dc82f8087578b7"
   },
-  "test_log_sha256": "2ee983a4d9b3c358bc228a68695cfb7ae898853d23c4a3ba7d3b0250231e7de4",
+  "test_log_sha256": "156d030d54f7eb046b716f4300514902304821e420b8eedc6a7a3d0234625e0d",
   "combined_unittest": {
-    "executed": 154,
+    "executed": 156,
     "baseline_unchanged": 127,
-    "new_l1_cases": 27,
+    "new_l1_cases": 29,
     "result": "PASS"
   },
   "test_execution": "python3 -m unittest discover -s /mnt/data/bsc_f0_l1_next/f0/tests -p test_*.py",
@@ -51,6 +51,8 @@
   "actual_quoted": 0,
   "paper_profit_labels": 0,
   "permission_state": "NO_RUN / PRIOR_FOUR_CALL_SMOKE_AUTHORIZATION_SPENT",
-  "test_log_repo_path": "crypto-300-profit-mission/bsc-forward-follow-model/f0/fixtures/l1_unittest_154.log",
-  "test_log_type": "EXECUTED_LOCAL_UNITTEST_OUTPUT_SAVED_AND_SHA256_VERIFIABLE"
+  "notes": [
+    "Added overlapping-request acceptance for subsecond BSC blocks; injected monotonic request starts remain ordered",
+    "Each frozen source stratum must contain 10 PRIMARY and 5 BACKUP"
+  ]
 }
