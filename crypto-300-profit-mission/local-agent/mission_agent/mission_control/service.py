@@ -86,6 +86,12 @@ class MissionMemeService:
         self.health_path = self.control_root / "mission-control-health.json"
         self.evidence_export_last_error_type = None
 
+    def _delivery_approval_guard(self) -> bool:
+        """Latch authorization closed as soon as the signed deadline passes."""
+        if self.approval_expires_at is not None and time.time() >= self.approval_expires_at:
+            self.delivery_allowed = False
+        return self.delivery_allowed is True
+
     def close(self):
         self.sol_mirror.close()
         self.control.close()
@@ -212,8 +218,7 @@ class MissionMemeService:
     def cycle(self) -> dict:
         # A live approval may expire while the daemon continues running.
         # Once expired, never re-enable sending in this process.
-        if self.approval_expires_at is not None and time.time() >= self.approval_expires_at:
-            self.delivery_allowed = False
+        self._delivery_approval_guard()
         cycle_started_monotonic=time.monotonic()
         first_enqueued_monotonic=None
         runtime = self.frank.runtime()
@@ -332,11 +337,11 @@ class MissionMemeService:
             round(time.monotonic()-first_enqueued_monotonic,3)
             if first_enqueued_monotonic is not None else None
         )
-        if self.approval_expires_at is not None and time.time() >= self.approval_expires_at:
-            self.delivery_allowed = False
-        if self.delivery_allowed:
-            self.local.drain()
-            self.gmail.drain(existing_provider(self.gmail_config))
+        if self._delivery_approval_guard():
+            self.local.drain(authorization_guard=self._delivery_approval_guard)
+            if self._delivery_approval_guard():
+                self.gmail.drain(existing_provider(self.gmail_config),
+                                 authorization_guard=self._delivery_approval_guard)
         cycle_elapsed_seconds=round(time.monotonic()-cycle_started_monotonic,3)
 
         status = "OK" if not errors else "DEGRADED"
