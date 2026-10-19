@@ -1108,7 +1108,6 @@ def markdown(report:dict)->str:
     profile=report.get("token_profile") or {}
     market=report.get("market") or {}
     assessment=report.get("assessment") or {}
-    quote=report.get("execution_quote_30_usdc") or {}
     pair=market.get("main_pair") or {}
     lines=[
         f"# Meme CA Research — {report.get('mint')}",
@@ -1160,13 +1159,7 @@ def markdown(report:dict)->str:
         f"- Main pair: {pair.get('pair_address','UNAVAILABLE')}",
         f"- Main-pair liquidity USD: {pair.get('liquidity_usd','UNAVAILABLE')}",
         f"- 24h volume USD: {(pair.get('volume') or {}).get('h24','UNAVAILABLE')}",
-        f"- Jupiter $30 quote (HISTORICAL_SNAPSHOT, never a live trading quote): "
-        f"status_at_capture={quote.get('status','UNAVAILABLE')} / "
-        f"price={quote.get('execution_price_usdc','UNAVAILABLE')} / "
-        f"impact={quote.get('price_impact_pct','UNAVAILABLE')}%",
-        f"- Jupiter quote observed_at: {quote_time(quote.get('observed_at'))}",
-        f"- Jupiter quote valid_until: {quote_time(quote.get('valid_until'))} "
-        "(expires 30 seconds after quote; do not treat this saved report as current)",
+        "- Executable trade quote: not calculated; trading amount is user-controlled.",
         "",
         "## Concentration",
         "",
