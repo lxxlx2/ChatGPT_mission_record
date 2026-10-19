@@ -98,5 +98,29 @@ class BscV2PitTests(unittest.TestCase):
                                      pool_logs=response['scope_pair_same_tx_events'])
 
 
+
+class DelayedLiquidityTests(unittest.TestCase):
+    def test_delayed_mint_matches_sync_and_prevents_early_entry(self):
+        from mission_agent.early.bsc_v2_pit import verify_delayed_mint_sync
+        pair='0x'+'7'*40
+        tx='0x'+'8'*64
+        sync=dict(address=pair,blockNumber=hex(20),logIndex=hex(3),transactionHash=tx,
+                  topics=[SYNC],data='0x'+word(100)+word(200),removed=False)
+        mint=dict(sync,logIndex=hex(4),topics=[MINT])
+        found=verify_delayed_mint_sync(pool=pair,creation_block=10,update_block=20,
+                                       pool_logs=[sync,mint])
+        self.assertTrue(found['delayed_initial_liquidity_proven'])
+        self.assertEqual(found['sell_path'],'UNKNOWN')
+        self.assertEqual(found['first_trade_or_executable_t_entry'],'UNRESOLVED')
+        self.assertFalse(verify_delayed_mint_sync(pool=pair,creation_block=10,
+                          update_block=20,pool_logs=[sync])['delayed_initial_liquidity_proven'])
+        with self.assertRaisesRegex(PITInvalid,'DELAYED_LIQUIDITY_BLOCK'):
+            verify_delayed_mint_sync(pool=pair,creation_block=20,update_block=20,
+                                     pool_logs=[sync,mint])
+        with self.assertRaisesRegex(PITInvalid,'DELAYED_POOL_LOG_SOURCE'):
+            verify_delayed_mint_sync(pool=pair,creation_block=10,update_block=20,
+                                     pool_logs=[dict(sync,address='0x'+'9'*40),mint])
+
+
 if __name__=='__main__':
     unittest.main()
