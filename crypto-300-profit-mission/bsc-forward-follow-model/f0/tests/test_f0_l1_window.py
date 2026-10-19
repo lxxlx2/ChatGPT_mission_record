@@ -7,7 +7,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from f0_l1_window import offline_window, cohort_watchlist, utc_ms, SCHEMA, MAX_WINDOW
+from f0_l1_window import (offline_window, cohort_watchlist, utc_ms, SCHEMA, MAX_WINDOW,
+                          git_blob_sha1, load_frozen_cohort, FROZEN_PR116_BLOB,
+                          FROZEN_PR116_MANIFEST_PATH, ARCHITECTURE_SHA)
 from f0_offline_collector import _hash32
 
 FIX = json.loads((ROOT / "fixtures/l1_contiguous_replay.json").read_text())
@@ -47,7 +49,7 @@ class ContiguousBlockWindowOfflineTests(unittest.TestCase):
         control = [c for c in out['candidate_rows'] if c['group']=='CONTROL_CANDIDATE']
         self.assertEqual(len(control), 3)
         for c in control:
-            key = FIX['control_seed']+'|'+c['wallet']+'|'+c['tx_hash']
+            key = COHORT['selection_seed']+'|'+c['wallet']+'|'+c['tx_hash']
             self.assertEqual(c['control_selected_offline'], _hash32(key)%FIX['control_modulo']==0)
 
     def test_preselected_cohort_not_verified_eoa(self):
@@ -55,7 +57,7 @@ class ContiguousBlockWindowOfflineTests(unittest.TestCase):
         self.assertEqual(out['cohort']['primary_count'], 20)
         self.assertEqual(out['cohort']['technical_eoa_eligibility'], 'UNVERIFIED')
         self.assertFalse(out['cohort']['watch_runtime_enabled'])
-        self.assertEqual(out['cohort']['cohort_binding'], 'INPUT_SCHEMA_ONLY_NOT_GIT_BLOB_ATTESTED')
+        self.assertEqual(out['cohort']['cohort_binding'], 'SYNTHETIC_FIXTURE_NOT_REAL_COHORT')
 
     def test_no_real_network_and_no_real_labels(self):
         out = go()
@@ -190,6 +192,70 @@ class ContiguousBlockWindowOfflineTests(unittest.TestCase):
         x=copy.deepcopy(FIX); x['mode']='LIVE_BSC_RPC'
         with self.assertRaisesRegex(ValueError, 'OFFLINE_ONLY'):
             go(x)
+
+    def test_control_seed_cannot_override_manifest_seed(self):
+        x = copy.deepcopy(FIX)
+        x['control_seed'] = 'f0-control-precommit-v1'
+        with self.assertRaisesRegex(ValueError, 'FIXTURE_CONTROL_SEED_OVERRIDE_FORBIDDEN'):
+            go(x)
+
+    def test_synthetic_cohort_cannot_claim_real_binding(self):
+        x = copy.deepcopy(FIX)
+        x['cohort_source_kind'] = 'FROZEN_PR116_GIT_BLOB'
+        with self.assertRaisesRegex(ValueError, 'FROZEN_COHORT_RAW_BYTES_REQUIRED'):
+            go(x)
+
+    def test_frozen_blob_mutation_rejected_preparse(self):
+        raw = json.dumps(COHORT, sort_keys=True).encode()
+        self.assertNotEqual(git_blob_sha1(raw), FROZEN_PR116_BLOB)
+        with self.assertRaisesRegex(ValueError, 'FROZEN_COHORT_GIT_BLOB_MISMATCH'):
+            load_frozen_cohort(raw)
+
+    def test_manifest_seed_cannot_be_changed(self):
+        c = copy.deepcopy(COHORT)
+        c['selection_seed'] = 'f0-control-precommit-v1'
+        with self.assertRaisesRegex(ValueError, 'WRONG_FROZEN_COHORT_IDENTITY'):
+            go(c=c)
+
+    def test_synthetic_flag_required(self):
+        c = copy.deepcopy(COHORT)
+        c.pop('synthetic_fixture_only')
+        with self.assertRaisesRegex(ValueError, 'SYNTHETIC_COHORT_MUST_BE_EXPLICIT'):
+            go(c=c)
+
+    def test_explicit_cohort_source_kind_required(self):
+        x = copy.deepcopy(FIX)
+        x.pop('cohort_source_kind')
+        with self.assertRaisesRegex(ValueError, 'EXPLICIT_COHORT_SOURCE_REQUIRED'):
+            go(x)
+
+    @unittest.skipUnless((ROOT / 'F0_COHORT_PRESELECTION.json').is_file(),
+                         'Real PR116 manifest exists in checked-out Git tree, absent from isolated local test copy')
+    def test_real_pr116_git_blob_and_primary_wallet_positive(self):
+        raw = (ROOT / 'F0_COHORT_PRESELECTION.json').read_bytes()
+        self.assertEqual(git_blob_sha1(raw), FROZEN_PR116_BLOB)
+        cohort = load_frozen_cohort(raw)
+        self.assertEqual(cohort['selection_seed'], ARCHITECTURE_SHA)
+        self.assertEqual(len(cohort['preliminary_wallets']), 30)
+        self.assertNotEqual({row['wallet'] for row in cohort['preliminary_wallets']},
+                            {row['wallet'] for row in COHORT['preliminary_wallets']})
+        x = copy.deepcopy(FIX)
+        x['cohort_source_kind'] = 'FROZEN_PR116_GIT_BLOB'
+        real_wallet = next(row['wallet'] for row in cohort['preliminary_wallets']
+                           if row['role']=='PRIMARY' and row['source']=='PR40_23')
+        x['block_attempts'][0]['rpc']['result']['transactions'][0]['from'] = real_wallet
+        out = offline_window(x, cohort, cohort_raw_bytes=raw)
+        self.assertEqual(out['cohort']['cohort_binding'], 'VERIFIED_PR116_GIT_BLOB_OFFLINE_ONLY')
+        self.assertEqual(out['cohort']['frozen_manifest_blob_sha1'], FROZEN_PR116_BLOB)
+        self.assertEqual(out['cohort']['control_seed_source'], 'COHORT_SELECTION_SEED')
+        self.assertTrue(any(z['wallet']==real_wallet and z['group']=='WATCHLIST_PRESELECTED'
+                            for z in out['candidate_rows']))
+        self.assertEqual(out['actual_rpc_calls'], 0)
+        self.assertEqual(out['stop_state'], 'NO_RUN')
+        self.assertFalse(out['e2_attested'])
+        changed = raw.replace(real_wallet.encode(), b'0x' + b'f'*40, 1)
+        with self.assertRaisesRegex(ValueError, 'FROZEN_COHORT_GIT_BLOB_MISMATCH'):
+            offline_window(x, cohort, cohort_raw_bytes=changed)
 
     def test_request_counts_do_not_grant_new_permission(self):
         x=copy.deepcopy(FIX); x['max_rpc_calls']=100; x['max_control_discovery_calls']=100
