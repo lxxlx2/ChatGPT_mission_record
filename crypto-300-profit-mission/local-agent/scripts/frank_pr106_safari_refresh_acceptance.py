@@ -93,7 +93,47 @@ iframe{display:block;width:100%;height:calc(100% - 72px);border:0}
 (function() {
 const stage=__STAGE__,token=__TOKEN__,expected=__EXPECTED__;
 const frame=document.getElementById('product');
-let finished=false;
+let finished=false, invalidated=false, checking=false, lastNonce='';
+function domValid() {
+  const d=frame.contentDocument;
+  const runtime=d?.getElementById('runtime');
+  const history=d?.getElementById('decisions');
+  const stamp=d?.getElementById('updated');
+  const stats=d?.getElementById('stats');
+  const historyText=history?.textContent||'';
+  const unavailable=historyText.includes('历史判断记录暂时无法读取')&&
+     historyText.includes('本区域数据未核实')&&historyText.includes('/api/decisions');
+  const recovered=historyText.trim().length>0&&!unavailable&&
+     !historyText.includes('正在读取');
+  return !!((stamp?.textContent||'').includes('更新于 ')&&
+    runtime&&!runtime.classList.contains('offline')&&
+    !(runtime.textContent||'').includes('控制台读取失败')&&
+    stats?.textContent.trim()&&(stage==='fault'?unavailable:recovered));
+}
+async function attestCurrentPage() {
+  if(!finished||checking||invalidated)return;
+  checking=true;
+  try {
+    if(!domValid()){invalidated=true;return;}
+    const query=new URLSearchParams({token,stage});
+    const response=await fetch('/__qa/challenge?'+query,{cache:'no-store'});
+    if(!response.ok){invalidated=true;return;}
+    const {nonce}=await response.json();
+    if(!domValid()){invalidated=true;return;}
+    if(nonce&&nonce!==lastNonce) {
+      lastNonce=nonce;
+      const attestation=new URLSearchParams({token,stage,nonce,state:expected});
+      const ack=await fetch('/__qa/attest?'+attestation,{cache:'no-store'});
+      if(!ack.ok||!domValid()){invalidated=true;return;}
+    }
+  }catch(error){invalidated=true;}
+  finally{checking=false;}
+}
+setInterval(()=>{
+  if(!finished)return;
+  if(!domValid()){invalidated=true;return;}
+  void attestCurrentPage();
+},120);
 function ready(value) {
   if(finished)return;
   finished=true;
@@ -107,22 +147,8 @@ frame.onload=()=>{
   const started=Date.now();
   const timer=setInterval(()=>{
     try {
-      const d=frame.contentDocument;
-      const runtime=d?.getElementById('runtime');
-      const history=d?.getElementById('decisions');
-      const stamp=d?.getElementById('updated');
-      const stats=d?.getElementById('stats');
-      const historyPanel=d?.getElementById('decision-history');
-      const refreshed=(stamp?.textContent||'').includes('更新于 ');
-      const healthy=runtime&&!runtime.classList.contains('offline')&&
-           !(runtime.textContent||'').includes('控制台读取失败');
-      const statsReady=!!(stats&&stats.textContent.trim());
-      const historyText=history?.textContent||'';
-      const unavailable=historyText.includes('历史判断记录暂时无法读取')&&
-         historyText.includes('本区域数据未核实')&&historyText.includes('/api/decisions');
-      const recovered=historyText.trim().length>0&&!unavailable&&
-         !historyText.includes('正在读取');
-      if(refreshed&&healthy&&statsReady&&(stage==='fault'?unavailable:recovered)) {
+      const historyPanel=frame.contentDocument?.getElementById('decision-history');
+      if(domValid()) {
          clearInterval(timer);
          if(historyPanel)historyPanel.open=true;
          historyPanel?.scrollIntoView({block:'center'});
