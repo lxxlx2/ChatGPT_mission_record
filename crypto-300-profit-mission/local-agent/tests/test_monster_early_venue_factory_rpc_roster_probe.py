@@ -283,5 +283,89 @@ class FactorySourceProbeTests(unittest.TestCase):
         self.assertEqual(m.resolve_day(Fake(), "2025-07-01"), (2, 4))
 
 
+class FactoryOfflineP0ArchiveAuditTests(unittest.TestCase):
+    def _build_fake_saved_30(self, root):
+        """Deterministic no-network archive, based on frozen normalized history."""
+        archive = json.loads((Path(__file__).resolve().parents[2] /
+            "monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json").read_text())
+        history = archive["historical_bsc_v2_append_only_factory_enumeration"]
+        cases = history["creation_liquidity_source_spotchecks"]["cases"]
+        event_map = {r["rank"]: r for r in
+                     history["creation_liquidity_source_spotchecks"]["normalized_event_log_samples"]}
+        all_index = {row["factory_index_zero_based"]: row
+                     for row in history["first36"]}
+        out = root / "bsc-v2-2025-07-01"
+        (out / "v2_historical_index_raw").mkdir(parents=True)
+        (out / "v2_bootstrap_raw").mkdir(parents=True)
+        frozen = history["chronological_quoted_unique_first30"]
+        sample = []
+        for item, case in zip(frozen, cases):
+            self.assertEqual(case["rank"], item["cohort_rank"])
+            index = item["factory_index"]
+            existing = all_index[index]
+            sample.append({"factory_index": index, "pair": item["pool"],
+                           "quote_asset": item["quote_asset"],
+                           "token_ca": item["token_ca"]})
+            fields = []
+            for method, address in [("allPairs", item["pool"]),
+                                    ("token0", existing["token0"]),
+                                    ("token1", existing["token1"])]:
+                raw = json.dumps({"result": "0x" + "0" * 24 + address[2:]})
+                fields.append({"method": method, "raw_json": raw,
+                               "sha256": m.sha(raw.encode())})
+            row = {"factory_index": index, "pair": item["pool"],
+                   "rpc_source_sha256": "fixture-source",
+                   "block": history["july1_2025_utc"][1],
+                   "token0": existing["token0"], "token1": existing["token1"],
+                   "raw_abi_response_records": fields}
+            (out / "v2_historical_index_raw" / (str(index) + ".json")).write_text(
+                json.dumps(row))
+            events = event_map[case["rank"]]
+            for label, key in [("factory", "scope_factory_event"),
+                               ("pool", "scope_pair_same_tx_events")]:
+                target = (out / "v2_bootstrap_raw" /
+                          (str(index) + "." + label + ".rpc.json"))
+                target.write_text(json.dumps({"result": events[key]}))
+        (out / "v2_factory_enum_status.json").write_text(json.dumps({
+            "chain": "bsc-v2", "day_blocks": history["july1_2025_utc"],
+            "rpc_source_sha256": "fixture-source",
+            "sample_complete_first30_by_factory_order": True, "sample": sample}))
+        return out, cases, archive
+
+    def test_offline_p0_reconciles_30_frozen_original_response_bodies(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            out, _, archive = self._build_fake_saved_30(root)
+            evidence = root / "input_p0.json"
+            evidence.write_text(json.dumps(archive))
+            result = m.audit_saved_bsc_v2_p0(out, evidence)
+            self.assertEqual(result["status"], "LOCAL_FROZEN_30_CREATION_REPLAY_PASS")
+            self.assertEqual(result["fully_replayed_creation_count"], 30)
+            self.assertEqual(result["same_tx_initial_lp_count"], 25)
+            self.assertEqual(result["created_without_same_tx_initial_lp"], 5)
+            self.assertEqual(result["original_response_files_audited"], 60)
+            self.assertEqual(result["unknown_ranks"], [])
+            self.assertFalse(result["independent_provider_verified"])
+            self.assertEqual(result["eighteen_of_thirty_sellable_gate"], "NOT_SCORABLE")
+            self.assertIsNone(result["original_response_manifest"][0]["prior_independent_response_sha256"])
+
+    def test_offline_p0_archive_missing_and_mutated_rpc_is_not_a_pass(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out, cases, archive = self._build_fake_saved_30(Path(tmp))
+            evidence = Path(tmp) / "p0.json"
+            evidence.write_text(json.dumps(archive))
+            index = cases[0]["index"]
+            file = out / "v2_bootstrap_raw" / (str(index) + ".factory.rpc.json")
+            file.write_text('{"result":[]}')
+            result = m.audit_saved_bsc_v2_p0(out, evidence)
+            self.assertEqual(result["status"], "PARTIAL_OR_SOURCE_INCONSISTENT_NOT_SCORABLE")
+            self.assertEqual(result["unknown_ranks"], [1])
+            self.assertEqual(result["fully_replayed_creation_count"], 29)
+            file.unlink()
+            result = m.audit_saved_bsc_v2_p0(out, evidence)
+            self.assertEqual(result["unknown_ranks"], [1])
+
+
+
 if __name__ == "__main__":
     unittest.main()
