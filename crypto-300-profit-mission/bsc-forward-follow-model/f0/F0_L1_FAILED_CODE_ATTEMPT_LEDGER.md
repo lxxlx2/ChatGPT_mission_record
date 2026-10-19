@@ -31,7 +31,7 @@ Router 文档地址仍只属于来源候选：`router_onchain_code_verified=fals
 python3 -m unittest discover -s crypto-300-profit-mission/bsc-forward-follow-model/f0/tests -p 'test_*.py'
 ```
 
-PR #131 的完整 checkout 复审确认 `178/178 OK, ZERO skipped`。本轮拆分旧的一个复合错误测试为两个，并新增八项定向回归，**期望 187 项，无 skipped**，以审核者真实执行结果为准；不能把期望写为实测。重点包括：RPC error message 不泄露、三类状态分母、无响应超时显式计费、错误 request/response identity 拒绝、非法错误 envelope 拒绝、未知传输错误码拒绝、模拟成功路径不回归。此前获批代码及旧版证据文件原样保留，不能修改 PR #131 的批准 SHA。
+PR #131 的完整 checkout 复审确认 `178/178 OK, ZERO skipped`。本轮拆分旧的一个复合错误测试为两个，并新增七项定向回归，**本地发现 186 项：184 PASS + 2 SKIP**（隔离目录未包含真实 PR #116 manifest）；完整 Git checkout 必须 **186 PASS、零 SKIP**，以独立审核者实际运行结果为准；不能把期望写为实测。重点包括：RPC error message 不泄露、三类状态分母、无响应超时显式计费、错误 request/response identity 拒绝、非法错误 envelope 拒绝、未知传输错误码拒绝、模拟成功路径不回归。此前获批代码及旧版证据文件原样保留，不能修改 PR #131 的批准 SHA。
 
 ## 接下来的业务步骤（仍全部 NO_RUN）
 
