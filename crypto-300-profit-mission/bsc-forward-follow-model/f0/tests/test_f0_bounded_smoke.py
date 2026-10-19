@@ -3,6 +3,7 @@ import importlib.util
 import json
 import sys
 import unittest
+import tempfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
@@ -10,7 +11,7 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from f0_bounded_smoke import (
     ENDPOINT, MAX_CALLS, METHODS, SCOPE, LimitedRPC, NoRedirect,
-    fixture_sender, smoke, utc, validate_permit, https_sender,
+    fixture_sender, smoke, utc, validate_permit, https_sender, live_failure_report, main,
 )
 ROOT = Path(__file__).resolve().parents[1]
 SAMPLE = json.loads((ROOT / "fixtures" / "bounded_smoke.json").read_text())
