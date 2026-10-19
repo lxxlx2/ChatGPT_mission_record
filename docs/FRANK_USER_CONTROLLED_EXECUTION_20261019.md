@@ -22,6 +22,13 @@ The user **never approved any default fixed $30 transaction size or $30-specific
 - Generic CA research no longer automatically quotes a preset amount or re-publishes old preset quotes. It still shows historical source market prices and on-chain evidence.
 - Existing saved historical artifact bytes, past test cases and transaction histories are not retroactively rewritten. Their old sizing assumptions are **deprecated; not an active policy**. Future replay must not treat old fixed-notional outcomes as user PnL or user-approved follow performance.
 
+## Source notification vs optional execution assessment (G1 compatibility)
+
+- **Already authorized frozen V1 source path (independent):** `signals/engine.py` writes ACCUMULATION/MULTIPLE to **production source `signals` and `outbox`**. ACCUMULATION has a local notification; MULTIPLE has local + Gmail frozen V1 source content. These are unaffected by any Mission Control user amount; this PR does not rewrite, drain, or suppress these source outbox rows.
+- **Mission Control decision path (separate):** with no explicit user amount, optional Jupiter execution quote is **not requested**, its observation time is absent, and execution assessment is `NOT_ASSESSED`. The old BUY/SMALL_BUY decision notification cannot still claim executable trading advice; initial WAIT transitions are suppressed here to avoid misleading duplicate *decision* notifications. Historical/visible V1 source signal identity remains on the candidate; no amount is ever invented.
+- **Do not conflate the channels:** proof that V1 source `outbox` remains intact is **not** proof that new Mission Control decision/Gmail notifications are unchanged; old quote-dependent decision-alert semantics intentionally differ. If a future release needs additional source-event email beyond existing V1, this requires independent permission, deduplication, and rate-limit policy—not an unapproved new sender.
+- **Rollback/migration boundary:** keep the presently running frozen V1 source signal service and its signed event ledger untouched. Do not use the old policy digest to authorize the modified approved JSON. Before separately authorized rollout, verify the new policy SHA, both signal/outbox channels, Mac local notifications, Gmail freshness/deduplication in an isolated copy, and a rollback that restores the previous running Mission Control deployment **without reviving any unapproved default order amount**. No automatic installation, new credentials, or live delivery is authorized by these notes.
+
 ## Acceptance
 
 1. Default checked-in policy has **no execution notional** and no automatic Jupiter request, quote-price metric, percentage impact or BUY/SMALL_BUY based on a fabricated position size.
