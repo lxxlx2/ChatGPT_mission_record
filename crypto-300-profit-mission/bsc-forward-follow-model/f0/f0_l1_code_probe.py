@@ -35,7 +35,8 @@ MAX_WALLETS = 20
 MAX_ROUTERS = 2
 MAX_BYTES = 2_000_000
 MAX_FAILURE_STREAK = 3
-DEPENDENCIES = ('f0_l1_preflight.py', 'f0_l1_window.py', 'f0_rpc_adapter.py',
+DEPENDENCIES = ('f0_l1_preflight.py', 'f0_l1_window.py', 'f0_offline_collector.py',
+                'f0_rpc_adapter.py',
                 'f0_bounded_smoke.py', 'F0_COHORT_PRESELECTION.json',
                 'F0_ROUTER_SOURCE_CANDIDATES.json')
 TRANSPORT_ERRORS = frozenset(('NETWORK_TIMEOUT', 'NETWORK_ERROR',
@@ -404,6 +405,8 @@ def main() -> None:
         permit = json.loads(args.permit.read_text())
         validate_qualification_permit(permit, datetime.now(timezone.utc))
         root = Path(permit['storage_root']).resolve()
+        require(root.is_relative_to(Path('/tmp').resolve()),
+                'QUALIFICATION_STORAGE_OUTSIDE_TMP')
         out = bounded_report_path(args.report, root)
         journal_path = bounded_report_path(root / 'journal.json', root)
         script = Path(__file__).resolve()
