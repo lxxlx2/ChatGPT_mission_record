@@ -550,3 +550,73 @@ def test_local_and_gmail_use_same_policy_max_age_validation(tmp_path):
             GmailDelivery(db,max_decision_age_seconds=value)
     assert LocalDelivery(db,max_decision_age_seconds=600).max_decision_age_seconds==600
     db.close()
+
+
+
+def test_live_resume_quarantines_fresh_old_policy_pending_without_sending(tmp_path):
+    """TTL alone is insufficient when a release policy changes."""
+    db = ControlDB(tmp_path / "control.sqlite")
+    e = event(db)  # immutable event was authored by source policy hash1
+    local_calls = []
+    local = LocalDelivery(
+        db, run=lambda *args, **kwargs: local_calls.append(args) or
+        (_ for _ in ()).throw(AssertionError("OLD_LOCAL_MUST_NOT_SEND"))
+    )
+    gmail = GmailDelivery(db)
+    local.enqueue(e, forbidden=False)
+    gmail.enqueue(e, mode="LIVE", forbidden=False)
+    provider = Provider()
+    assert db.db.execute("SELECT count(*) FROM decision_outbox").fetchone()[0] == 2
+
+    local.drain(active_policy_hash="different-live-policy-hash2")
+    gmail.drain(provider, active_policy_hash="different-live-policy-hash2")
+    assert local_calls == []
+    assert provider.sent == []
+    assert tuple(db.db.execute("SELECT status,attempts FROM decision_outbox WHERE channel='local'").fetchone()) == ("MANUAL_REVIEW",0)
+    assert tuple(db.db.execute("SELECT status,attempts FROM decision_outbox WHERE channel='gmail'").fetchone()) == ("MANUAL_REVIEW",0)
+    assert db.db.execute("SELECT count(*) FROM decision_events").fetchone()[0] == 1
+    assert db.db.execute("SELECT policy_hash FROM decision_snapshots").fetchone()[0] == "hash1"
+
+    # A second resume must not requeue or re-send the quarantined decision.
+    local.drain(active_policy_hash="hash1")
+    gmail.drain(provider, active_policy_hash="hash1")
+    assert local_calls == [] and provider.sent == []
+    db.close()
+
+
+def test_live_resume_same_policy_still_delivers_fresh_event(tmp_path):
+    db = ControlDB(tmp_path / "control.sqlite")
+    e = event(db)
+    calls=[]
+    local = LocalDelivery(db, run=lambda *args, **kwargs: calls.append(args) or
+                          subprocess.CompletedProcess([], 0, "", ""))
+    gmail = GmailDelivery(db)
+    local.enqueue(e, forbidden=False)
+    gmail.enqueue(e, mode="LIVE", forbidden=False)
+    provider = Provider()
+    local.drain(active_policy_hash="hash1")
+    gmail.drain(provider, active_policy_hash="hash1")
+    assert len(calls) == 1
+    assert len(provider.sent) == 1
+    assert db.db.execute("SELECT status FROM local_delivery").fetchone()[0] == "COMMAND_ACCEPTED"
+    assert db.db.execute("SELECT status FROM gmail_delivery").fetchone()[0] == "SENT_VERIFIED"
+    db.close()
+
+
+def test_policy_change_quarantines_ambiguous_gmail_without_losing_receipt(tmp_path):
+    db = ControlDB(tmp_path / "control.sqlite")
+    e = event(db)
+    gmail = GmailDelivery(db)
+    gmail.enqueue(e, mode="LIVE", forbidden=False)
+    db.db.execute("UPDATE gmail_delivery SET status='SENT_UNVERIFIED',"
+                  "gmail_message_id='old-unverified-id',attempt_count=1 "
+                  "WHERE decision_id=?", (e["decision_id"],))
+    provider = Provider()
+    gmail.drain(provider, active_policy_hash="new-policy-hash")
+    row = gmail.row(e["decision_id"])
+    assert row["status"] == "MANUAL_REVIEW"
+    assert row["gmail_message_id"] == "old-unverified-id"
+    assert row["attempt_count"] == 1
+    assert provider.sent == []
+    assert db.db.execute("SELECT status FROM decision_outbox WHERE channel='gmail'").fetchone()[0] == "MANUAL_REVIEW"
+    db.close()

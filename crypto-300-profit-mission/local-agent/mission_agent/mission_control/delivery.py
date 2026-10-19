@@ -335,14 +335,19 @@ class LocalDelivery:
             (reason,decision_id),
         )
 
-    def drain(self)->None:
+    def drain(self, *, active_policy_hash: str | None = None)->None:
         rows=self.control.db.execute("""
-            SELECT d.*,e.body,e.created_at AS decision_created_at
+            SELECT d.*,e.body,e.created_at AS decision_created_at,
+                   s.policy_hash AS decision_policy_hash
             FROM local_delivery d JOIN decision_events e USING(decision_id)
+            JOIN decision_snapshots s ON s.snapshot_id=e.snapshot_id
             WHERE d.status IN ('PENDING','RETRY_PENDING')
             ORDER BY d.created_at
         """).fetchall()
         for row in rows:
+            if active_policy_hash is not None and row["decision_policy_hash"] != active_policy_hash:
+                self._review_unverifiable(row["decision_id"],"LOCAL_OLD_POLICY_PENDING_BLOCKED")
+                continue
             age=_decision_age_seconds(row["decision_created_at"])
             if age is None or age>self.max_decision_age_seconds:
                 self._expire(row["decision_id"])
@@ -423,11 +428,13 @@ class GmailDelivery:
                 return False
             return age is None or age>=self.READBACK_BACKOFF_SECONDS
         return True
-    def drain(self,provider)->None:
+    def drain(self,provider, *, active_policy_hash: str | None = None)->None:
         rows=self.db.execute("""
-            SELECT g.*,e.created_at AS decision_created_at
+            SELECT g.*,e.created_at AS decision_created_at,
+                   s.policy_hash AS decision_policy_hash
             FROM gmail_delivery g
             JOIN decision_events e ON e.decision_id=g.decision_id
+            JOIN decision_snapshots s ON s.snapshot_id=e.snapshot_id
             WHERE g.delivery_forbidden=0
               AND g.status NOT IN ('SENT_VERIFIED','PERMANENT_ERROR','DRY_RUN_AUDIT','MANUAL_REVIEW')
             ORDER BY g.created_at
@@ -435,6 +442,12 @@ class GmailDelivery:
         for raw_row in rows:
             row=dict(raw_row)
             decision_id=row["decision_id"]
+            # Never deliver an old-policy decision under a different live policy.
+            # Preserve any sent/unknown receipt fields for manual reconciliation;
+            # a policy mismatch must not trigger a new Gmail send or readback.
+            if active_policy_hash is not None and row["decision_policy_hash"] != active_policy_hash:
+                self._set(decision_id,"MANUAL_REVIEW","GMAIL_OLD_POLICY_PENDING_BLOCKED")
+                continue
             uncertain=row["status"] in {"SENDING","SENT_UNVERIFIED"} or bool(row["gmail_message_id"])
             # Already-attempted sends must still be reconciled against Gmail Sent,
             # even after the original decision expires. Never retry their send.
