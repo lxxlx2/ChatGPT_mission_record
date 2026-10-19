@@ -933,7 +933,7 @@ def validate_frozen_real_sell_receipt(receipt, target):
                  if i < k and x["topics"] and x["topics"][0].lower() == SYNC]
         if not syncs:
             continue
-        sync = max(syncs, key=lambda x: x[0])[1]
+        sync_idx, sync = max(syncs, key=lambda x: x[0])
         r0, r1 = words(sync["data"])
         after_q, after_token = ((r0, r1) if target["quote_is_token0"]
                                 else (r1, r0))
@@ -944,11 +944,13 @@ def validate_frozen_real_sell_receipt(receipt, target):
             if (x.get("address", "").lower() == target["token"]
                 and len(x["topics"]) == 3 and x["topics"][0].lower() == transfer_topic
                 and x["topics"][2][-40:].lower() == target["pair"][2:]
+                and as_int(x["logIndex"]) < sync_idx
                 and int(x["data"], 16) == token_in)]
         quote_received = [x for x in logs
             if (x.get("address", "").lower() == target["quote"]
                 and len(x["topics"]) == 3 and x["topics"][0].lower() == transfer_topic
                 and x["topics"][1][-40:].lower() == target["pair"][2:]
+                and as_int(x["logIndex"]) < sync_idx
                 and int(x["data"], 16) == q_out)]
         if (token_paid and quote_received and
                 str(token_in) == target["token_in_raw"] and
