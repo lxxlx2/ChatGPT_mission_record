@@ -1,0 +1,189 @@
+{
+  "actual_rpc_calls": 0,
+  "cohort_source": "SYNTHETIC_FIXTURE_NOT_PR116",
+  "counts": {
+    "HAS_RUNTIME_CODE_AT_SAMPLED_BLOCK": 0,
+    "NOT_CHECKED": 20,
+    "NO_CODE_AT_SAMPLED_BLOCK": 0
+  },
+  "frozen_pr116_manifest_blob": "fcd0029314353313867e565190cd4f2882089f11",
+  "live_control_enabled": false,
+  "live_watchlist_enabled": false,
+  "mode": "OFFLINE_PRECHECK_NOT_LIVE_ELIGIBILITY",
+  "per_primary": [
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000001",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000002",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000003",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000004",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000005",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000006",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000007",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000008",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000009",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x000000000000000000000000000000000000000a",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000010",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000011",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000012",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000013",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000014",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000015",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000016",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000017",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000018",
+      "wallet_live_eligible": false
+    },
+    {
+      "checked_block": null,
+      "observed_code_state": "NOT_CHECKED",
+      "real_eoa_attested": false,
+      "response_sha256": null,
+      "wallet": "0x0000000000000000000000000000000000000019",
+      "wallet_live_eligible": false
+    }
+  ],
+  "primary_count": 20,
+  "real_technical_eoa_eligibility": "NOT_ESTABLISHED",
+  "requested_height": 128614660,
+  "router_documented_candidates": [
+    "0x1a0a18ac4becddbd6389559687d1a73d8927e416",
+    "0xd9c500dff816a1da21a48a732d3498bf09dc9aeb"
+  ],
+  "router_onchain_code_verified": false,
+  "router_registry_source_only": true,
+  "router_swap_causality_verified": false,
+  "schema": "bsc-f0-l1-eoa-router-preflight-v1",
+  "snapshot_source": "OFFLINE_SYNTHETIC_ONLY",
+  "source_envelope_sha256": "77c832f4edeb9bcff3e6621a1362056cf40d42c1cbc53258bfbc97c13069c336",
+  "stop_state": "NO_RUN"
+}
