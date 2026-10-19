@@ -33,6 +33,57 @@ def first_creation_block(factory_index, first, last, get_length):
     return lo
 
 
+def locate_first_runtime_code_block(day_first_block, pool_creation_block, has_code):
+    """Bound first historical runtime-code visibility; NOT deployment-Tx proof.
+
+    Uses complete-block historical eth_getCode snapshots, not contract receipt
+    or real-time observed_at. The result cannot exclude a past selfdestruct and
+    re-deploy sequence that predates the bounded UTC day.
+    """
+    if (type(day_first_block) is not int or type(pool_creation_block) is not int
+            or day_first_block < 1 or pool_creation_block < day_first_block):
+        raise PITInvalid('INVALID_HISTORIC_CODE_SEARCH_RANGE')
+    cache = {}
+
+    def present(block):
+        if block not in cache:
+            value = has_code(block)
+            if type(value) is not bool:
+                raise PITInvalid('HISTORIC_CODE_PRESENCE_NOT_BOOLEAN')
+            cache[block] = value
+        return cache[block]
+
+    if not present(pool_creation_block):
+        raise PITInvalid('NO_RUNTIME_CODE_AT_VERIFIED_POOL_CREATION')
+    if present(day_first_block - 1):
+        return {
+            'status': 'RUNTIME_CODE_PREEXISTS_FROZEN_UTC_DAY',
+            'first_code_block_in_day': None,
+            'pool_creation_block': pool_creation_block,
+            'before_day_code_present': True,
+            'deploy_transaction_verified': False,
+            'public_observed_at': 'UNVERIFIED',
+        }
+    low, high = day_first_block, pool_creation_block
+    while low < high:
+        mid = (low + high) // 2
+        if present(mid):
+            high = mid
+        else:
+            low = mid + 1
+    if not present(low) or present(low - 1):
+        raise PITInvalid('HISTORIC_CODE_BOUNDARY_NOT_CONSISTENT')
+    return {
+        'status': 'FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE',
+        'first_code_block_in_day': low,
+        'prior_code_empty_block': low - 1,
+        'pool_creation_block': pool_creation_block,
+        'before_day_code_present': False,
+        'deploy_transaction_verified': False,
+        'public_observed_at': 'UNVERIFIED',
+    }
+
+
 def first_later_reserve_update(creation_block, last_block, initial_timestamp, get_timestamp):
     """First subsequent Sync timestamp update. Not proof that its cause was Swap."""
     if not 0 <= creation_block < last_block or initial_timestamp < 0:
