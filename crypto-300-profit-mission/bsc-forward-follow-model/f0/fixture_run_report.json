@@ -1,0 +1,411 @@
+{
+  "audit_trace": [
+    {
+      "actionable_ms": 1000,
+      "event_id": "event-1",
+      "first_received_ms": 1000,
+      "group": "WATCHLIST",
+      "ingest_path": "WS",
+      "kind": "detected",
+      "selected": true,
+      "side": "BUY"
+    },
+    {
+      "event_id": "event-1",
+      "evidence": "E2_TRADE_ATTESTED_SYNTHETIC",
+      "kind": "receipt_evaluated",
+      "reason": null,
+      "state": "ATTESTED_TRIAL"
+    },
+    {
+      "actionable_ms": 1300,
+      "event_id": "event-2",
+      "first_received_ms": 1300,
+      "group": "CONTROL_RANDOM",
+      "ingest_path": "WS",
+      "kind": "detected",
+      "selected": true,
+      "side": "BUY"
+    },
+    {
+      "event_id": "event-2",
+      "evidence": "E2_TRADE_ATTESTED_SYNTHETIC",
+      "kind": "receipt_evaluated",
+      "reason": null,
+      "state": "ATTESTED_TRIAL"
+    },
+    {
+      "actionable_ms": 4000,
+      "event_id": "event-3",
+      "first_received_ms": 4000,
+      "group": "WATCHLIST",
+      "ingest_path": "WS",
+      "kind": "detected",
+      "selected": true,
+      "side": "BUY"
+    },
+    {
+      "event_id": "event-3",
+      "kind": "receipt_rejected",
+      "reason": "E1_FAILED_SYNTHETIC"
+    },
+    {
+      "actionable_ms": 5500,
+      "event_id": "event-4",
+      "first_received_ms": 5500,
+      "group": "WATCHLIST",
+      "ingest_path": "BACKFILL",
+      "kind": "detected",
+      "selected": true,
+      "side": "BUY"
+    },
+    {
+      "event_id": "event-4",
+      "kind": "excluded_from_l2",
+      "reason": "BACKFILL_NO_E3"
+    },
+    {
+      "event_id": "event-4",
+      "evidence": "E2_TRADE_ATTESTED_SYNTHETIC",
+      "kind": "receipt_evaluated",
+      "reason": null,
+      "state": "ATTESTED_TRIAL"
+    },
+    {
+      "actionable_ms": null,
+      "event_id": "event-5",
+      "first_received_ms": 10000,
+      "group": "WATCHLIST",
+      "ingest_path": "WS",
+      "kind": "detected",
+      "selected": true,
+      "side": "UNKNOWN"
+    },
+    {
+      "event_id": "event-5",
+      "kind": "excluded_from_l2",
+      "reason": "SIDE_UNKNOWN"
+    },
+    {
+      "event_id": "event-5",
+      "kind": "receipt_confirmed_unknown"
+    },
+    {
+      "actionable_ms": 12000,
+      "event_id": "event-6",
+      "first_received_ms": 12000,
+      "group": "WATCHLIST",
+      "ingest_path": "WS",
+      "kind": "detected",
+      "selected": true,
+      "side": "BUY"
+    },
+    {
+      "event_id": "event-6",
+      "evidence": "E1_CONFIRMED_SYNTHETIC",
+      "kind": "receipt_evaluated",
+      "reason": "QUOTE_PATH_UNRESOLVED_SYNTHETIC",
+      "state": "CONFIRMED"
+    },
+    {
+      "actual_real_request": false,
+      "delta_seconds": 60,
+      "event_id": "event-1",
+      "group": "WATCHLIST",
+      "kind": "quote_request_scheduled",
+      "scheduled_ms": 61000,
+      "source": "SYNTHETIC_ONLY"
+    },
+    {
+      "delta_seconds": 60,
+      "event_id": "event-1",
+      "group": "WATCHLIST",
+      "kind": "quote_replay",
+      "raw_blob_sha256": "9f90b0b1c726a9a94e73de5c5bd58acdf517d76facf40c38b7fc883a2c68b188",
+      "received_ms": 61080,
+      "requested_ms": 61000,
+      "scheduled_ms": 61000,
+      "source": "SYNTHETIC_ONLY"
+    },
+    {
+      "actual_real_request": false,
+      "delta_seconds": 60,
+      "event_id": "event-2",
+      "group": "CONTROL_RANDOM",
+      "kind": "quote_request_scheduled",
+      "scheduled_ms": 61300,
+      "source": "SYNTHETIC_ONLY"
+    },
+    {
+      "delta_seconds": 60,
+      "event_id": "event-2",
+      "group": "CONTROL_RANDOM",
+      "kind": "quote_replay",
+      "raw_blob_sha256": "7556a52a90b5e0b0223d6ce305a9f9cc0e3bd72e29584ae203fbc6494738cd01",
+      "received_ms": 61380,
+      "requested_ms": 61300,
+      "scheduled_ms": 61300,
+      "source": "SYNTHETIC_ONLY"
+    },
+    {
+      "delta_seconds": 60,
+      "event_id": "event-3",
+      "kind": "quote_cancelled",
+      "reason": "EVENT_INVALIDATED"
+    },
+    {
+      "actual_real_request": false,
+      "delta_seconds": 60,
+      "event_id": "event-6",
+      "group": "WATCHLIST",
+      "kind": "quote_request_scheduled",
+      "scheduled_ms": 72000,
+      "source": "SYNTHETIC_ONLY"
+    },
+    {
+      "actual_real_request": false,
+      "delta_seconds": 300,
+      "event_id": "event-1",
+      "group": "WATCHLIST",
+      "kind": "quote_request_scheduled",
+      "scheduled_ms": 301000,
+      "source": "SYNTHETIC_ONLY"
+    },
+    {
+      "delta_seconds": 300,
+      "event_id": "event-1",
+      "group": "WATCHLIST",
+      "kind": "quote_replay",
+      "raw_blob_sha256": "a777697d3acd22cfeb57f5004de10b7581907263744284ba407ccb58c9920dcc",
+      "received_ms": 301080,
+      "requested_ms": 301000,
+      "scheduled_ms": 301000,
+      "source": "SYNTHETIC_ONLY"
+    },
+    {
+      "actual_real_request": false,
+      "delta_seconds": 300,
+      "event_id": "event-2",
+      "group": "CONTROL_RANDOM",
+      "kind": "quote_request_scheduled",
+      "scheduled_ms": 301300,
+      "source": "SYNTHETIC_ONLY"
+    },
+    {
+      "delta_seconds": 300,
+      "event_id": "event-2",
+      "group": "CONTROL_RANDOM",
+      "kind": "quote_replay",
+      "raw_blob_sha256": "a71dceeccd9c52f56da3f0a346d7b47a80d0880ff03dae6820120c71dfb8fc0b",
+      "received_ms": 301380,
+      "requested_ms": 301300,
+      "scheduled_ms": 301300,
+      "source": "SYNTHETIC_ONLY"
+    },
+    {
+      "delta_seconds": 300,
+      "event_id": "event-3",
+      "kind": "quote_cancelled",
+      "reason": "EVENT_INVALIDATED"
+    },
+    {
+      "actual_real_request": false,
+      "delta_seconds": 300,
+      "event_id": "event-6",
+      "group": "WATCHLIST",
+      "kind": "quote_request_scheduled",
+      "scheduled_ms": 312000,
+      "source": "SYNTHETIC_ONLY"
+    },
+    {
+      "actual_real_request": false,
+      "delta_seconds": 900,
+      "event_id": "event-1",
+      "group": "WATCHLIST",
+      "kind": "quote_request_scheduled",
+      "scheduled_ms": 901000,
+      "source": "SYNTHETIC_ONLY"
+    },
+    {
+      "delta_seconds": 900,
+      "event_id": "event-1",
+      "group": "WATCHLIST",
+      "kind": "quote_replay",
+      "raw_blob_sha256": "3248b38401fb3322d55a22e9ea12a95fa5986f0e4952752317c98806d810ce13",
+      "received_ms": 901080,
+      "requested_ms": 901000,
+      "scheduled_ms": 901000,
+      "source": "SYNTHETIC_ONLY"
+    },
+    {
+      "actual_real_request": false,
+      "delta_seconds": 900,
+      "event_id": "event-2",
+      "group": "CONTROL_RANDOM",
+      "kind": "quote_request_scheduled",
+      "scheduled_ms": 901300,
+      "source": "SYNTHETIC_ONLY"
+    },
+    {
+      "delta_seconds": 900,
+      "event_id": "event-3",
+      "kind": "quote_cancelled",
+      "reason": "EVENT_INVALIDATED"
+    },
+    {
+      "actual_real_request": false,
+      "delta_seconds": 900,
+      "event_id": "event-6",
+      "group": "WATCHLIST",
+      "kind": "quote_request_scheduled",
+      "scheduled_ms": 912000,
+      "source": "SYNTHETIC_ONLY"
+    },
+    {
+      "delta_seconds": 900,
+      "event_id": "event-2",
+      "kind": "quote_missing"
+    },
+    {
+      "delta_seconds": 60,
+      "event_id": "event-6",
+      "kind": "quote_missing"
+    },
+    {
+      "delta_seconds": 300,
+      "event_id": "event-6",
+      "kind": "quote_missing"
+    },
+    {
+      "delta_seconds": 900,
+      "event_id": "event-6",
+      "kind": "quote_missing"
+    }
+  ],
+  "backfill_events": 1,
+  "duplicates_skipped": 0,
+  "e3_actual_count": 0,
+  "event_rows": [
+    {
+      "event_id": "event-1",
+      "evidence": "E2_TRADE_ATTESTED_SYNTHETIC",
+      "group": "WATCHLIST",
+      "quote_state": {
+        "300": "SYNTHETIC_REPLAY_QUOTE",
+        "60": "SYNTHETIC_REPLAY_QUOTE",
+        "900": "SYNTHETIC_REPLAY_QUOTE"
+      },
+      "reason": null,
+      "selected": true,
+      "side": "BUY",
+      "source": "SYNTHETIC_ONLY",
+      "state": "ATTESTED_TRIAL",
+      "trial": true,
+      "wallet": "0x1111111111111111111111111111111111111111"
+    },
+    {
+      "event_id": "event-2",
+      "evidence": "E2_TRADE_ATTESTED_SYNTHETIC",
+      "group": "CONTROL_RANDOM",
+      "quote_state": {
+        "300": "SYNTHETIC_REPLAY_QUOTE",
+        "60": "SYNTHETIC_REPLAY_QUOTE",
+        "900": "NO_QUOTE"
+      },
+      "reason": null,
+      "selected": true,
+      "side": "BUY",
+      "source": "SYNTHETIC_ONLY",
+      "state": "ATTESTED_TRIAL",
+      "trial": true,
+      "wallet": "0x2222222222222222222222222222222222222222"
+    },
+    {
+      "event_id": "event-3",
+      "evidence": "E0_SEEN_SYNTHETIC",
+      "group": "WATCHLIST",
+      "quote_state": {
+        "300": "REJECTED",
+        "60": "REJECTED",
+        "900": "REJECTED"
+      },
+      "reason": "E1_FAILED_SYNTHETIC",
+      "selected": true,
+      "side": "BUY",
+      "source": "SYNTHETIC_ONLY",
+      "state": "REJECTED",
+      "trial": true,
+      "wallet": "0x3333333333333333333333333333333333333333"
+    },
+    {
+      "event_id": "event-4",
+      "evidence": "E2_TRADE_ATTESTED_SYNTHETIC",
+      "group": "WATCHLIST",
+      "quote_state": {},
+      "reason": null,
+      "selected": true,
+      "side": "BUY",
+      "source": "SYNTHETIC_ONLY",
+      "state": "ATTESTED_TRIAL",
+      "trial": true,
+      "wallet": "0x4444444444444444444444444444444444444444"
+    },
+    {
+      "event_id": "event-5",
+      "evidence": "E1_CONFIRMED_SYNTHETIC",
+      "group": "WATCHLIST",
+      "quote_state": {},
+      "reason": null,
+      "selected": true,
+      "side": "UNKNOWN",
+      "source": "SYNTHETIC_ONLY",
+      "state": "CONFIRMED",
+      "trial": true,
+      "wallet": "0x5555555555555555555555555555555555555555"
+    },
+    {
+      "event_id": "event-6",
+      "evidence": "E1_CONFIRMED_SYNTHETIC",
+      "group": "WATCHLIST",
+      "quote_state": {
+        "300": "NO_QUOTE",
+        "60": "NO_QUOTE",
+        "900": "NO_QUOTE"
+      },
+      "reason": "QUOTE_PATH_UNRESOLVED_SYNTHETIC",
+      "selected": true,
+      "side": "BUY",
+      "source": "SYNTHETIC_ONLY",
+      "state": "CONFIRMED",
+      "trial": true,
+      "wallet": "0x6666666666666666666666666666666666666666"
+    }
+  ],
+  "events": 6,
+  "fixture_sha256": "2d0a3827a962e1745d318f8d4fcd8e30ebb87253cd7897b5ddd47094b56a50a0",
+  "group_state_counts": {
+    "CONTROL_RANDOM/BUY/ATTESTED_TRIAL": 1,
+    "WATCHLIST/BUY/ATTESTED_TRIAL": 2,
+    "WATCHLIST/BUY/CONFIRMED": 1,
+    "WATCHLIST/BUY/REJECTED": 1,
+    "WATCHLIST/UNKNOWN/CONFIRMED": 1
+  },
+  "input_records": 17,
+  "mode": "SYNTHETIC_TRIAL_ONLY_NO_CHAIN_NO_EXECUTION",
+  "paper_profit_labels": 0,
+  "quote_counts": {
+    "NO_QUOTE": 4,
+    "REJECTED": 3,
+    "SYNTHETIC_REPLAY_QUOTE": 5
+  },
+  "quoted_actual_count": 0,
+  "safety": [
+    "NO_NETWORK",
+    "NO_TRADE",
+    "NO_NOTIFICATIONS",
+    "NO_REAL_TIME_QUOTE"
+  ],
+  "schema": "bsc-forward-f0-offline-replay-v1",
+  "selected_control_events": 1,
+  "unknown_direction_events": 1
+}
