@@ -8,9 +8,9 @@
 
 ## 已实现接口 `f0_l1_window.py`
 
-输入：`--fixture`（只能 `mode=SYNTHETIC_SAVED_RPC_ONLY`、`trial=true`、BSC 56，注入 UTC + 单调毫秒钟）；`--cohort`（PR #116 固定预选清单格式，恰 20 PRIMARY + 10 BACKUP，PR40/PR97 各 10 个 PRIMARY，排除已知事后收益字段，不得自动启用 watch）；`--report`（可选本地 JSON）。只接受已保存的 `eth_getBlockByNumber(full=true)` 格式信封，无 HTTP、WS、付费 API、后台服务、实际报价、签名或通知。遗留适配器 `block_candidates()` 与抽样 `_hash32(seed|wallet|tx_hash)` 函数直接复用，**不修改已审核模块**。
+输入：`--fixture`（只能 `mode=SYNTHETIC_SAVED_RPC_ONLY`、`trial=true`、BSC 56，注入 UTC + 单调毫秒钟）；`--cohort`（PR #116 固定预选清单格式，恰 20 PRIMARY + 10 BACKUP，PR40/PR97 各 10 个 PRIMARY + 5 个 BACKUP，排除已知事后收益字段，不得自动启用 watch）；`--report`（可选本地 JSON）。只接受已保存的 `eth_getBlockByNumber(full=true)` 格式信封，无 HTTP、WS、付费 API、后台服务、实际报价、签名或通知。遗留适配器 `block_candidates()` 与抽样 `_hash32(seed|wallet|tx_hash)` 函数直接复用，**不修改已审核模块**。
 
-逐高度建立 4 种事实：`RECEIVED`、`FAILED`（请求已尝试，保存原因）、`MISSING_NOT_ATTEMPTED` 与成功读取但 `ingest_path=BACKFILL`。保留区块哈希、parentHash 连续关系、响应哈希、请求/响应/首次记录 UTC 与单调时钟，检查高度与 full-tx 身份。跨缺失区块不宣称已核实连续父哈希。任何验证时钟仍是**合成注入**，不代表 BSC 实际首次对外可见时间。
+逐高度建立 4 种事实：`RECEIVED`、`FAILED`（请求已尝试，保存原因）、`MISSING_NOT_ATTEMPTED` 与成功读取但 `ingest_path=BACKFILL`。保留区块哈希、parentHash 连续关系、响应哈希、请求/响应/首次记录 UTC 与单调时钟，检查高度与 full-tx 身份。**允许不同区块请求在时间上重叠**（只要求请求开始时间有序及各自的请求→响应→首次入库顺序），不把未来真实 0.45 秒出块误认为只能串行采集。跨缺失区块不宣称已核实连续父哈希。任何验证时钟仍是**合成注入**，不代表 BSC 实际首次对外可见时间。
 
 WATCHLIST 用交易对象 `from` 是否命中 PRIMARY 判断，含普通签名交易，**不是 BUY 成交**；普通 Router 候选要求非名单发起地址 `from` 且 `to` 精确在**合成** Router 允许列表。控制组按照现有固定 FNV 函数预选，输出 `control_selected_offline=true/false`，但不假装已经建立真实对照组。`BACKFILL` 不会成为真实 E3。实际清单来源 Git blob、当期 EOA/技术资格、真实 Router allowlist 和随机参数的正式冻结仍是后续门禁，当前只做输入 schema 校验并公开 `INPUT_SCHEMA_ONLY_NOT_GIT_BLOB_ATTESTED`。
 
@@ -25,7 +25,7 @@ python3 -m unittest discover -s crypto-300-profit-mission/bsc-forward-follow-mod
 python3 crypto-300-profit-mission/bsc-forward-follow-model/f0/f0_l1_window.py --fixture crypto-300-profit-mission/bsc-forward-follow-model/f0/fixtures/l1_contiguous_replay.json --cohort crypto-300-profit-mission/bsc-forward-follow-model/f0/fixtures/l1_fake_cohort.json --report /tmp/bsc-f0-l1-synthetic-report.json
 ```
 
-测试清单 `l1_fake_cohort.json` **全是编造的 EVM 测试地址**，只模拟 PR #116 的结构，不能视为获准的正式 EOA 研究清单；真正未来使用应指定 PR #116 固定 `F0_COHORT_PRESELECTION.json` 并单独校验其 Git blob。合成夹具高度 100–104：成功 100、103、104；101 模拟请求失败、102 未读取；103 是 BACKFILL。返回 **窗口 5，高度成功 3、失败 1、未读 1、已尝试发现 4、watch signer 3、Router 候选 3、合成预选 2**。27 项定向测试包括漏块、hash 链、错误区块/重复高度、发起人而非收款人、失败计数、预算、时钟、预选分层及禁止盈利字段、BACKFILL 不可变成 E3。合计原 127 + 本轮 27 = **154/154** 本地 `unittest PASS`，测试日志及源文件 SHA256 记录在 `F0_L1_OFFLINE_EVIDENCE.json`。独立审查尚未完成。
+测试清单 `l1_fake_cohort.json` **全是编造的 EVM 测试地址**，只模拟 PR #116 的结构，不能视为获准的正式 EOA 研究清单；真正未来使用应指定 PR #116 固定 `F0_COHORT_PRESELECTION.json` 并单独校验其 Git blob。合成夹具高度 100–104：成功 100、103、104；101 模拟请求失败、102 未读取；103 是 BACKFILL。返回 **窗口 5，高度成功 3、失败 1、未读 1、已尝试发现 4、watch signer 3、Router 候选 3、合成预选 2**。29 项定向测试包括漏块、hash 链、错误区块/重复高度、发起人而非收款人、失败计数、预算、时钟、预选分层及禁止盈利字段、BACKFILL 不可变成 E3。合计原 127 + 本轮 29 = **156/156** 本地 `unittest PASS`，测试日志及源文件 SHA256 记录在 `F0_L1_OFFLINE_EVIDENCE.json`。独立审查尚未完成。
 
 ## 下一阶段真正需要什么
 
