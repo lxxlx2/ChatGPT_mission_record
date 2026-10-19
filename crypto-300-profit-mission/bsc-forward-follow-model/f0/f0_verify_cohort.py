@@ -21,6 +21,67 @@ PR97_PATH = "crypto-300-profit-mission/address-analysis/evidence/activity-candid
 PR40_BLOB = "e3c8815630878dddc03b7a6e11b8f0d2d89cbf6a"
 PR97_BLOB = "4727b8b53dcd63b350d9e5f27922cd06db8a2a14"
 
+# Source PR40 contains retrospective outcomes; the runtime cohort must never inherit
+# these or any unlisted source fields. We parse pinned source for wallet IDs only.
+FORBIDDEN_OUTCOME_KEYS = frozenset({
+    "profit_rank",
+    "independently_closed_positive_major_count",
+    "independently_closed_negative_major_count",
+    "owner_signed_trade_verified_major_count",
+    "recent_30d_activity_state",
+    "last_confirmed_true_swap_UTC",
+    "realized_profit_state",
+    "pnl_30d",
+    "pnl_lifetime",
+    "score",
+    "win_rate",
+})
+ALLOWED_COHORT_KEYS = frozenset({
+    "source", "wallet", "source_index", "source_row",
+    "qualification", "rank_uint32", "role", "cohort_position",
+    "eligibility", "watch_runtime_enabled",
+})
+REPLACEMENT_REASON_CODES = frozenset({
+    "NOT_EOA", "KNOWN_INFRA", "DUPLICATE", "SOURCE_ERROR",
+})
+REPLACEMENT_REQUIRED_FIELDS = frozenset({
+    "rejected_wallet", "source_id", "replacement_reason_code",
+    "checked_block", "checked_at_utc", "raw_rpc_response_sha256",
+    "evidence_source_ref", "replacement_wallet", "replacement_rank",
+    "decision_version",
+})
+
+
+def validate_no_outcome_leak(manifest: dict) -> None:
+    """Fail closed if retrospective source fields leak into the frozen cohort."""
+    assert manifest["sampling_method"].startswith(
+        "FNV1A32_ASCENDING_OVER_ASCII_BYTES("
+    ), "Sampling description must describe actual ASCII byte implementation"
+    rows = manifest["preliminary_wallets"]
+    for index, row in enumerate(rows, start=1):
+        keys = set(row)
+        forbidden = keys & FORBIDDEN_OUTCOME_KEYS
+        if forbidden:
+            raise ValueError(f"Outcome leak in cohort row {index}: {sorted(forbidden)}")
+        extra = keys - ALLOWED_COHORT_KEYS
+        if extra:
+            raise ValueError(f"Unreviewed fields in cohort row {index}: {sorted(extra)}")
+        if row["eligibility"] != "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY":
+            raise ValueError(f"Unapproved cohort status at row {index}")
+    policy = manifest["replacement_policy"]
+    if set(policy["allowed_reason_codes"]) != REPLACEMENT_REASON_CODES:
+        raise ValueError("Replacement reason codes changed")
+    if set(policy["required_audit_fields"]) != REPLACEMENT_REQUIRED_FIELDS:
+        raise ValueError("Mandatory replacement audit evidence changed")
+    if (policy["status"] != "NO_REPLACEMENTS_APPROVED_OR_EXECUTED"
+        or not policy["run_only_after_separate_authorization"]
+        or not policy["same_source_backup_only"]
+        or policy["order"] != "NEXT_RANKED_UNCONSUMED_BACKUP"
+        or policy["missing_rpc_evidence_policy"] != "UNDERFILLED_NO_SUBSTITUTION"
+        or policy["profit_outcome_fields_permitted"]):
+        raise ValueError("Replacement audit safety policy changed")
+
+
 
 def source_blob(repo: Path, commit: str, path: str, expected_blob: str) -> dict:
     source = f"{commit}:{path}"
@@ -106,6 +167,7 @@ def main() -> int:
     manifest = json.loads(Path(args.manifest).read_text(encoding="utf-8"))
     if manifest["selection_seed"] != SEED:
         raise ValueError("Seed mismatch")
+    validate_no_outcome_leak(manifest)
     actual, overlaps = construct(Path(args.repo))
     if actual != manifest["preliminary_wallets"]:
         for i, (a, b) in enumerate(zip(actual, manifest["preliminary_wallets"])):
@@ -126,6 +188,8 @@ def main() -> int:
         "primaries": 20,
         "backups": 10,
         "excluded_PR97_overlaps": len(overlaps),
+        "manifest_outcome_fields": "NONE",
+        "replacement_reason_codes": sorted(REPLACEMENT_REASON_CODES),
         "live_RPC_calls": 0,
         "production": "NO_GO",
     }, ensure_ascii=False))
