@@ -962,40 +962,6 @@ function clusterProgressDetail(job) {
 }
 
 
-let caQuoteExpiryTimer = null;
-
-function caQuoteCurrent(q, nowSeconds=Date.now()/1000) {
-  if (q?.is_current_at_response !== true || q?.freshness_status !== 'CURRENT_AT_RESPONSE') return false;
-  const validUntil = q?.valid_until == null ? NaN : Number(q.valid_until);
-  return Number.isFinite(validUntil) && validUntil > 0 && nowSeconds <= validUntil;
-}
-
-function caQuoteUnavailableLabel(q, waiting='正在请求 Jupiter 报价') {
-  if (!q) return waiting;
-  if (q.freshness_status === 'EXPIRED' ||
-      (q.is_current_at_response === true && q.valid_until != null &&
-       Date.now()/1000 > Number(q.valid_until))) return '报价已过期，请重新查询';
-  if (q.freshness_status === 'ARCHIVED_NOT_LIVE') return '仅存档报价，请重新查询';
-  if (q.status === 'OK' && q.route_exists === false) return '暂无可成交路线';
-  if (q.status === 'OK') return '报价未通过服务端时效核验';
-  return q.reason ? '报价不可用：' + String(q.reason) : '暂不可成交 / 报价不可用';
-}
-
-function caScheduleQuoteExpiry(q, elementId) {
-  clearTimeout(caQuoteExpiryTimer);
-  caQuoteExpiryTimer = null;
-  if (!caQuoteCurrent(q)) return;
-  const remainingMs = Math.max(0, Number(q.valid_until)*1000-Date.now());
-  caQuoteExpiryTimer = setTimeout(() => {
-    const node=$(elementId);
-    if (node) {
-      node.textContent='报价已过期，请重新查询';
-      node.classList.add('unresolved');
-    }
-    caQuoteExpiryTimer = null;
-  }, Math.ceil(remainingMs)+15);
-}
-
 function renderClusterPreview(job) {
   const node=$('cluster-preview');
   const p=job?.preview;
@@ -1313,8 +1279,6 @@ $('cluster-form').addEventListener('submit', async (event) => {
   $('cluster-submit').textContent = '分析中…';
   $('cluster-result').hidden = true;
   $('cluster-preview').hidden = true;
-  clearTimeout(caQuoteExpiryTimer);
-  caQuoteExpiryTimer=null;
   clusterStatus('running','准备链上分析','只读查询，不连接钱包，不发交易。');
   try {
     const r = await fetch('/api/cluster-analysis',{
