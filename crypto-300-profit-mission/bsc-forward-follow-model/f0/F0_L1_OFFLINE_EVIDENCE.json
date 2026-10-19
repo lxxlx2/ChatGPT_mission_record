@@ -1,0 +1,58 @@
+{
+  "schema": "bsc-f0-l1-offline-contiguous-evidence-v1",
+  "base_pr127_sha": "91eca250939f17fd0430f2b657e704434f0421eb",
+  "approved_code_pr125_sha": "fa3dae9b0f221747cb64bb1be21497979985e596",
+  "review_status": "PENDING_INDEPENDENT_REVIEW",
+  "mode": "SYNTHETIC_OFFLINE_ONLY",
+  "files_sha256": {
+    "f0_l1_window.py": "b3c693a906b09e112fad0da693c8de10baece5dbd8c31b79d485938138fd94f7",
+    "tests/test_f0_l1_window.py": "86bf8b977e2c9aff9009053e4709f8a26d8f7e54af87784f19ea9901077ee609",
+    "fixtures/l1_fake_cohort.json": "456df0b152ca83876d80f36bb30ab12b1378fcecf56ebeed03e80ffcc742b273",
+    "fixtures/l1_contiguous_replay.json": "9cfdc7ef31fbca5c2a4be81a6d77e02b34a4cf97d301211428506c4bbfa49517",
+    "fixture_l1_report.json": "b58db206bcad0b789363ffdc2da1a360b03d497f3071004655c2f1797400013d",
+    "F0_L1_CONTIGUOUS_OFFLINE.md": "e08f3b859463672086a4e9e47be15e47c714dd02701f6ab0a0dc82f8087578b7"
+  },
+  "test_log_sha256": "156d030d54f7eb046b716f4300514902304821e420b8eedc6a7a3d0234625e0d",
+  "combined_unittest": {
+    "executed": 156,
+    "baseline_unchanged": 127,
+    "new_l1_cases": 29,
+    "result": "PASS"
+  },
+  "test_execution": "python3 -m unittest discover -s /mnt/data/bsc_f0_l1_next/f0/tests -p test_*.py",
+  "repo_root_equivalent": "python3 -m unittest discover -s crypto-300-profit-mission/bsc-forward-follow-model/f0/tests -p test_*.py",
+  "fixture_metrics": {
+    "attempted_control_discovery_rpc_calls_offline": 4,
+    "attempted_full_block_rpc_calls_offline": 4,
+    "backfill_received_blocks": 1,
+    "blocks_expected_window": 5,
+    "blocks_failed": 1,
+    "blocks_received": 3,
+    "missing_heights": [
+      101,
+      102
+    ],
+    "preselected_control_offline": 2,
+    "router_control_candidates_in_received_blocks": 3,
+    "watch_signer_tx_in_received_blocks": 3
+  },
+  "source_blobs_known": {
+    "f0_rpc_adapter.py": "35ce2aee341586879c4ede95d3e7669cb8e30e3f",
+    "f0_offline_collector.py": "d70338741c90e50ae1f9a84ba93fc8b6f86eae92",
+    "f0_bounded_smoke.py": "b5498a059d362ea30cc01edbe2f8cee0a403f579"
+  },
+  "actual_network_requests": 0,
+  "first_real_smoke_user_report": "PR127 separate unreviewed doc; no raw HTTP payload included",
+  "cohort_manifest_real_blob_verified": false,
+  "synthetic_router_allowlist_only": true,
+  "live_control_coverage": "NOT_MEASURED",
+  "independent_denominator": "NOT_MEASURED",
+  "actual_e3": 0,
+  "actual_quoted": 0,
+  "paper_profit_labels": 0,
+  "permission_state": "NO_RUN / PRIOR_FOUR_CALL_SMOKE_AUTHORIZATION_SPENT",
+  "notes": [
+    "Added overlapping-request acceptance for subsecond BSC blocks; injected monotonic request starts remain ordered",
+    "Each frozen source stratum must contain 10 PRIMARY and 5 BACKUP"
+  ]
+}

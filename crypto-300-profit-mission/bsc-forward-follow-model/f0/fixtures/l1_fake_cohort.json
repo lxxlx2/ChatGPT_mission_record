@@ -1,0 +1,218 @@
+{
+  "schema": "bsc-forward-f0-preparation-cohort-v1",
+  "chain_id": 56,
+  "reviewed_architecture_commit": "9134fcd41df49ef836b81c8a040974ad89c1fde1",
+  "preliminary_wallets": [
+    {
+      "wallet": "0x0000000000000000000000000000000000000001",
+      "source": "PR40_23",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000002",
+      "source": "PR40_23",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000003",
+      "source": "PR40_23",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000004",
+      "source": "PR40_23",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000005",
+      "source": "PR40_23",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000006",
+      "source": "PR40_23",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000007",
+      "source": "PR40_23",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000008",
+      "source": "PR40_23",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000009",
+      "source": "PR40_23",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x000000000000000000000000000000000000000a",
+      "source": "PR40_23",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x000000000000000000000000000000000000000b",
+      "source": "PR40_23",
+      "role": "BACKUP",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x000000000000000000000000000000000000000c",
+      "source": "PR40_23",
+      "role": "BACKUP",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x000000000000000000000000000000000000000d",
+      "source": "PR40_23",
+      "role": "BACKUP",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x000000000000000000000000000000000000000e",
+      "source": "PR40_23",
+      "role": "BACKUP",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x000000000000000000000000000000000000000f",
+      "source": "PR40_23",
+      "role": "BACKUP",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000010",
+      "source": "PR97_449_BSC_SIGNED",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000011",
+      "source": "PR97_449_BSC_SIGNED",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000012",
+      "source": "PR97_449_BSC_SIGNED",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000013",
+      "source": "PR97_449_BSC_SIGNED",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000014",
+      "source": "PR97_449_BSC_SIGNED",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000015",
+      "source": "PR97_449_BSC_SIGNED",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000016",
+      "source": "PR97_449_BSC_SIGNED",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000017",
+      "source": "PR97_449_BSC_SIGNED",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000018",
+      "source": "PR97_449_BSC_SIGNED",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x0000000000000000000000000000000000000019",
+      "source": "PR97_449_BSC_SIGNED",
+      "role": "PRIMARY",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x000000000000000000000000000000000000001a",
+      "source": "PR97_449_BSC_SIGNED",
+      "role": "BACKUP",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x000000000000000000000000000000000000001b",
+      "source": "PR97_449_BSC_SIGNED",
+      "role": "BACKUP",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x000000000000000000000000000000000000001c",
+      "source": "PR97_449_BSC_SIGNED",
+      "role": "BACKUP",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x000000000000000000000000000000000000001d",
+      "source": "PR97_449_BSC_SIGNED",
+      "role": "BACKUP",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    },
+    {
+      "wallet": "0x000000000000000000000000000000000000001e",
+      "source": "PR97_449_BSC_SIGNED",
+      "role": "BACKUP",
+      "watch_runtime_enabled": false,
+      "eligibility": "PRESELECTED_UNVERIFIED_EOA_AND_CURRENT_ACTIVITY"
+    }
+  ],
+  "mode": "FAKE_COHORT_TEST_ONLY"
+}
