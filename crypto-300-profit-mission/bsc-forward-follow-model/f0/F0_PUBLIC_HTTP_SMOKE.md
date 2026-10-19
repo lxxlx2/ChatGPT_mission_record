@@ -43,7 +43,17 @@ This branch initially added 19 direct tests (chain and receipt identity, respons
 
 A real smoke requires a **new user decision after independent code review**, including the exact official endpoint, method list (four reads), `MAX_TOTAL_RPC_CALLS=4`, `MAX_CONTROL_DISCOVERY_CALLS=1`, `max_response_bytes<=2_000_000`, `no_retries=true`, `no_ws=true`, permitted user Mac environment, duration <=10 minutes in UTC, retention <=24h and `/tmp/` report storage. No wallet address/private key and no payment authorization are necessary.
 
-The permit parser requires `user_authorized=true` in a local approval file; that flag is a **procedural gate**, not cryptographic proof of user consent. **Unresolved P2 before any future live authorization:** bind an approved permit to the reviewed code SHA and single-use nonce, and record the permit digest, with a separate fixed-SHA review before running. The operator must have independently obtained user's explicit written approval in this conversation and must never create an approval file by assumption or check one into Git. At present **NO_RUN**.
+### Added review-bound single-use authorization gate (offline implementation only)
+
+A future local permit, **created only after separately documented user approval**, additionally must contain:
+
+- `approved_commit_sha`: exactly 40 lowercase hex characters, equal to the local Git `HEAD` of the separately reviewed immutable code revision.
+- `approved_source_sha256`: exactly 64 lowercase hex characters, equal to both the on-disk `f0_bounded_smoke.py` bytes and the exact same file in the Git `HEAD` tree. A dirty or altered script, SHA mismatch, missing local Git, or incorrect checkout is rejected **before** network.
+- `run_nonce`: 32–64 lowercase hex characters, unique to this one approved run; MUST NOT be placed in Git or reports. A local claim `.bsc_f0_nonce_<nonce>.json` is atomically created (exclusive create, permissions 0600) under the exact approved `/tmp/` storage root **before the first call**, and never automatically released, even after a crash or failure. Reuse of the same permit and root is rejected before any request.
+
+The permit and both success/failure reports retain `permit_sha256`, `reviewed_commit_sha`, `reviewed_source_sha256`, and a **hash of the nonce**, not the secret nonce. A successful mock test does not prove a real provider accepted any call. `ValueError` error-code reporting uses a finite whitelist of internal identifiers; unknown/external strings are mapped to `VALIDATION_FAILED` rather than included verbatim. Any malformed or unauthorized permit is a strict `NO_RUN`; no permit or nonce has been approved or created for real execution.
+
+**Important limitation:** `user_authorized: true`, a commit SHA, a code digest and a one-time nonce are *local software safeguards*, **not cryptographic proof of the user's actual consent**; they can be self-asserted by someone controlling the local machine. Before any live run an operator must independently obtain explicit written approval specifying the exact fixed SHA, source digest, endpoint, bounded methods and costs, UTC window, report folder and a unique nonce. Do not create or execute a permit from this document or earlier ChatGPT approval. The new code changes require their own fixed-SHA independent review. Current status remains **NO_RUN**.
 
 ## PR #124 independent review corrections
 
@@ -57,3 +67,7 @@ The permit parser requires `user_authorized=true` in a local approval file; that
 - Independent reviewer evaluates the gate and negative tests before allowing any real smoke.
 - Only after separate explicit authorization may the exact limited public HTTP test be executed on the user's permitted Mac environment. If it cannot access a full block under limits: report `BLOCKED_SOURCE` with request count. Do not swap providers or bypass with archive evidence.
 - A passed smoke is **not** a 24–48h F0 trial authorization. F0 feasibility still requires sustained source budget, WS/control discovery, independently auditable denominator, true first-seen clocks, finality/E2 causal rules, and real three-delay quote timing.
+
+## Follow-on review of PR #124 authority-binding work
+
+The original smoke code was independently **APPROVE** at fixed SHA `f7736ca1301720c338db72be9fba0b3d7ff06515` for OFFLINE ONLY. The new stacked branch changes the permit code and mock tests, hence requires its **own** SHA review. The previous reviewer identified P2-A (evidence hashes not independently rechecked), P2-B (exception error-code whitelist), and P2-C (reviewed SHA / one-time nonce). The original five artifact hashes have been independently rechecked against the approved PR #124 local byte-identical files and match its evidence JSON; do not rewrite the approved SHA. Local testing of the new branch covers Git-matched immutable source verification, nonce replay, missing/malformed fields, failure reports and raw-nonce privacy. **No real RPC has been run or authorized.**
