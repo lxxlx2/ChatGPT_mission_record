@@ -1,0 +1,7 @@
+run_time_bkk: 2026-10-19T20:31:39+07:00
+automation_id: 6a8600b9d12481919bc43ebc800c9916
+scheduled_slot_bkk: 2026-10-19T20:20:00+07:00
+mode: BOUNDED_COLLECTOR
+status: started
+source_rules: main crypto-daily REPORT_SPEC, REPORT_ACCEPTANCE CR-01..23, COLLECTOR_SPEC V2, SECURITY_SOURCE_POLICY, AUTOMATION_RUNTIME, DELIVERY_RUNBOOK
+notifications: silent
