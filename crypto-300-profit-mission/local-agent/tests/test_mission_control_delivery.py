@@ -709,3 +709,94 @@ def test_policy_change_quarantines_ambiguous_gmail_without_losing_receipt(tmp_pa
     assert provider.sent == []
     assert db.db.execute("SELECT status FROM decision_outbox WHERE channel='gmail'").fetchone()[0] == "MANUAL_REVIEW"
     db.close()
+
+
+
+def test_joint_policy_identity_and_signed_guard_denies_both_senders(tmp_path):
+    """Expired approval is not an excuse to release a fresh old-policy event."""
+    db=ControlDB(tmp_path/"control.sqlite")
+    e=event(db)
+    local_calls=[]
+    local=LocalDelivery(db,run=lambda *a,**k:local_calls.append(a))
+    gmail=GmailDelivery(db)
+    local.enqueue(e,forbidden=False)
+    gmail.enqueue(e,mode="LIVE",forbidden=False)
+    provider=Provider()
+    guard_calls=[]
+    def approved():
+        guard_calls.append(True)
+        return True
+    local.drain(active_policy_hash="new-policy",authorization_guard=approved)
+    gmail.drain(provider,active_policy_hash="new-policy",authorization_guard=approved)
+    assert not local_calls and not provider.sent
+    assert not guard_calls  # source policy fails before any external auth/provider
+    assert tuple(db.db.execute(
+        "SELECT channel,status,attempts FROM decision_outbox ORDER BY channel"
+    ).fetchall()[0]) in [
+        ("gmail","MANUAL_REVIEW",0),("local","MANUAL_REVIEW",0)
+    ]
+    assert db.db.execute(
+        "SELECT count(*) FROM decision_outbox WHERE status='MANUAL_REVIEW'"
+    ).fetchone()[0]==2
+    local.drain(active_policy_hash="hash1",authorization_guard=approved)
+    gmail.drain(provider,active_policy_hash="hash1",authorization_guard=approved)
+    assert not local_calls and not provider.sent
+    db.close()
+
+
+def test_joint_same_policy_valid_guard_still_delivers_both_channels(tmp_path):
+    db=ControlDB(tmp_path/"control.sqlite")
+    e=event(db)
+    local_calls=[]
+    local=LocalDelivery(
+        db,run=lambda args,**kwargs:local_calls.append(args) or
+        subprocess.CompletedProcess(args,0,"","")
+    )
+    gmail=GmailDelivery(db)
+    local.enqueue(e,forbidden=False)
+    gmail.enqueue(e,mode="LIVE",forbidden=False)
+    provider=Provider()
+    allowed=lambda:True
+    local.drain(active_policy_hash="hash1",authorization_guard=allowed)
+    gmail.drain(provider,active_policy_hash="hash1",authorization_guard=allowed)
+    assert len(local_calls)==1 and len(provider.sent)==1
+    assert gmail.row(e["decision_id"])["status"]=="SENT_VERIFIED"
+    assert db.db.execute("SELECT status FROM local_delivery").fetchone()[0]=="COMMAND_ACCEPTED"
+    db.close()
+
+
+def test_joint_same_policy_expiry_after_ready_prevents_gmail_send(tmp_path):
+    db=ControlDB(tmp_path/"control.sqlite")
+    e=event(db)
+    gmail=GmailDelivery(db)
+    gmail.enqueue(e,mode="LIVE",forbidden=False)
+    provider=Provider()
+    permitted={"ok":True}
+    provider.ready=lambda:permitted.update(ok=False)
+    gmail.drain(provider,active_policy_hash="hash1",
+                authorization_guard=lambda:permitted["ok"])
+    assert not provider.sent
+    assert gmail.row(e["decision_id"])["status"]=="MANUAL_REVIEW"
+    assert db.db.execute("SELECT attempts FROM decision_outbox").fetchone()[0]==0
+    db.close()
+
+
+def test_joint_old_policy_uncertain_gmail_receipt_remains_unmodified(tmp_path):
+    db=ControlDB(tmp_path/"control.sqlite")
+    e=event(db)
+    gmail=GmailDelivery(db)
+    gmail.enqueue(e,mode="LIVE",forbidden=False)
+    db.db.execute(
+        "UPDATE gmail_delivery SET status='SENT_UNVERIFIED',"
+        "gmail_message_id='frozen-id',attempt_count=2,receipt='frozen-receipt'"
+    )
+    provider=Provider()
+    gmail.drain(provider,active_policy_hash="other-policy",
+                authorization_guard=lambda:True)
+    row=gmail.row(e["decision_id"])
+    assert row["status"]=="MANUAL_REVIEW"
+    assert row["gmail_message_id"]=="frozen-id"
+    assert row["attempt_count"]==2
+    assert row["receipt"]=="frozen-receipt"
+    assert provider.sent==[]
+    db.close()
