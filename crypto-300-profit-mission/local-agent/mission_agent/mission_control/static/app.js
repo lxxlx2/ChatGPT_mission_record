@@ -752,13 +752,16 @@ function renderDecisions(rows) {
 
 async function refresh() {
   try {
-    const [runtime,control,candidates,trades,reviewActivity,decisions,coverage,watch] = await Promise.all([
+    const [runtime,control,candidates,trades,reviewActivity,decisionsResult,coverage,watch] = await Promise.all([
       get('/api/runtime'),
       get('/api/control-health'),
       get('/api/candidates'),
       get('/api/trades'),
       get('/api/review-activity'),
-      get('/api/decisions'),
+      get('/api/decisions').then(
+        rows => ({available:true,rows}),
+        () => ({available:false,rows:[]})
+      ),
       get('/api/coverage'),
       get('/api/frank-observed-watchlist').catch(() => ({status:'SOURCE_UNAVAILABLE',rows:[],summary:{}}))
     ]);
@@ -777,7 +780,11 @@ async function refresh() {
     renderEnded(endedCandidates);
     renderTrades(trades);
     renderReviewActivity(reviewActivity);
-    renderDecisions(decisions);
+    if (decisionsResult.available) {
+      renderDecisions(decisionsResult.rows);
+    } else {
+      $('decisions').innerHTML = '<div class="empty">历史判断记录暂时无法读取（/api/decisions）；本区域数据未核实，请稍后重试。</div>';
+    }
     $('updated').textContent = `更新于 ${new Date().toLocaleTimeString('zh-CN')}`;
   } catch (e) {
     $('runtime').className = 'runtime offline';

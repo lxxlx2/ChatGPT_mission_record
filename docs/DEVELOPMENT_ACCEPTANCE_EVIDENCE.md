@@ -35,6 +35,12 @@ Applies to: Frank, C02 and subsequent Mission browser UI modules (and other UI c
 - **诊断源码身份检查必须纯被动读取 `.git/HEAD`、引用文件及 packed-refs**，不能调用可能执行 fsmonitor/filter helper、刷新 index 或产生磁盘写入的 `git status`/工作区内容路径。HEAD 元数据一致仅证明当前指针身份，**不证明全部工作区文件内容与提交逐字节一致**；在证据元数据中显式写入 `PASSIVE_GIT_HEAD_ONLY_WORKTREE_UNVERIFIED`。真实合成 Git 测试需验证 configured helper 未执行、index/HEAD、tracked/untracked 文件字节保持不变。
 - 如果故障未复现，记录 `NOT_REPRODUCED`，不得直接修改线上 server、改超时或取消响应限制；若定位到代理过大／超时／上游失败，再依据实机证据提出最小修复。仍保留独立代码审核与 NO_DEPLOY 门禁。
 
+## Frank 页面部分 GET 失败隔离（2026-10-19）
+
+- Frank 的 5 秒刷新包含 8 个并发 GET。已在用户真实 Safari 的隔离验收页面观察到 `/api/decisions 503`，但用户 Mac 顺序 direct/proxy GET 8 对全部 200（未复现真实 503 根因）。此证据**不能**用于盲目调整上游、代理超时或数据真实性。
+- 发生**非交易关键的历史判断日志 GET 故障**时，页面应继续正常呈现已成功取得的实时 Frank 状态、候选、交易、覆盖情况和观察池；历史判断区域必须明确显示 `/api/decisions` 数据不可用，绝不可将失败伪装成“暂无判断变化”或静默保留过期内容。其余关键 GET 失败仍按现行失效关闭策略处理，不能隐藏重要数据失败。
+- 使用真实 `static/app.js` 的 `refresh()` 配合本地模拟 HTTP 200/503、实际 Promise.all 并发进行回归测试；覆盖历史日志 503 → 其他板块正常、恢复 GET 200 → 区域恢复、关键 runtime 503 → 全局故障提示、已有 watch 降级不回归。新功能应当先通过独立固定 SHA 代码审核后才能进入 Mac 实机隔离预览。**不能据此宣称 /api/decisions 的 503 根因已找到或服务器已修复。**
+
 ## Frank PR101 Mac/Safari 示例（已固定审批源码）
 
 - 仓库脚本：`crypto-300-profit-mission/local-agent/scripts/frank_pr101_safari_evidence.py`。
