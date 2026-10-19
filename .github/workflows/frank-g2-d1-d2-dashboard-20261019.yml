@@ -1,0 +1,30 @@
+name: Frank G2 D1/D2 localhost dashboard integration
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/frank-g2-d1-d2-dashboard-20261019.yml'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/**'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_g2_d1_d2_dashboard.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  readonly-dashboard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: G2 D1 source, route, D2 provenance and fail-closed smoke tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m unittest discover -s tests -p 'test_frank_g2_d1_d2_dashboard.py' -v
+          python -B -m py_compile mission_agent/mission_control/wallet_activity.py mission_agent/mission_control/server.py
+      - name: Verify integrated Dashboard JavaScript syntax
+        working-directory: crypto-300-profit-mission/local-agent
+        run: node --check mission_agent/mission_control/static/app.js
