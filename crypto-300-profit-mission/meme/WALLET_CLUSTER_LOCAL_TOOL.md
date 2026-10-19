@@ -178,7 +178,7 @@ Chain-authoritative section:
 
 Secondary market section:
 - DexScreener token-pairs API is used only for current market/pair metadata: name/symbol, reference price, market cap, DEX/pair, liquidity, volume, buys/sells and price change;
-- Jupiter official quote remains the source for a current read-only $30 USDC executable quote and price impact;
+- Jupiter quote must be requested explicitly for a user-supplied amount; no fixed research or trading notional is authorized;
 - neither source is allowed to override raw-chain ownership or authority facts.
 
 Conclusion section:
