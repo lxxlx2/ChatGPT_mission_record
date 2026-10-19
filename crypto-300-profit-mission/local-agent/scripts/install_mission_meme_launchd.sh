@@ -21,6 +21,8 @@ LOOP_RUNNER="$APP_SUPPORT/mission-loop.sh"
 DASH_RUNNER="$APP_SUPPORT/dashboard.sh"
 APPROVED_HASH_FILE="$APP_SUPPORT/approved_policy_sha256"
 RUNTIME_POLICY="$APP_SUPPORT/follow_policy_v1.approved.json"
+RUNTIME_APPROVAL_RECORD="$APP_SUPPORT/signed_policy_approval.json"
+RUNTIME_APPROVAL_SIGNATURE="$APP_SUPPORT/signed_policy_approval.sig"
 PORT_FILE="$APP_SUPPORT/dashboard_port"
 RPC_FILE="$APP_SUPPORT/solana_rpc_urls"
 
@@ -51,6 +53,10 @@ CONTROL="$(cat "$CONTROL_POINTER")"
 # PREPARE AND AUTHORIZE before mutating any installed policy, credential,
 # runner, plist or launchd state. No self-approval from a candidate's own hash.
 [ -n "${APPROVED_POLICY_SHA256:-}" ] || die "EXTERNAL_POLICY_APPROVAL_REQUIRED"
+[ -f "${POLICY_APPROVAL_RECORD:-}" ] || die "SIGNED_APPROVAL_RECORD_REQUIRED"
+[ -f "${POLICY_APPROVAL_SIGNATURE:-}" ] || die "SIGNED_APPROVAL_SIGNATURE_REQUIRED"
+CODE_COMMIT_SHA="$(git -C "$WORKTREE" rev-parse --verify HEAD)"
+[ "$(git -C "$WORKTREE" status --porcelain --untracked-files=no)" = "" ] || die "RELEASE_CODE_WORKTREE_DIRTY"
 if [ -n "${SOLANA_RPC_URLS:-}" ]; then
   RPC_URLS_VALUE="$SOLANA_RPC_URLS"
 else
@@ -64,8 +70,13 @@ fi
 # original policy during this delay cannot alter the approved bytes.
 STAGED_POLICY="$(mktemp "${TMPDIR:-/tmp}/frank-meme-policy.XXXXXXXX")"
 chmod 600 "$STAGED_POLICY"
-trap 'rm -f "$STAGED_POLICY"' EXIT
+STAGED_APPROVAL_RECORD="$(mktemp "${TMPDIR:-/tmp}/frank-meme-approval.XXXXXXXX")"
+STAGED_APPROVAL_SIGNATURE="$(mktemp "${TMPDIR:-/tmp}/frank-meme-approval-sign.XXXXXXXX")"
+chmod 600 "$STAGED_APPROVAL_RECORD" "$STAGED_APPROVAL_SIGNATURE"
+trap 'rm -f "$STAGED_POLICY" "$STAGED_APPROVAL_RECORD" "$STAGED_APPROVAL_SIGNATURE"' EXIT
 cat "$POLICY" > "$STAGED_POLICY"
+cat "$POLICY_APPROVAL_RECORD" > "$STAGED_APPROVAL_RECORD"
+cat "$POLICY_APPROVAL_SIGNATURE" > "$STAGED_APPROVAL_SIGNATURE"
 
 # Use the EXACT authorization predicate also enforced by MissionMemeService.
 # The external digest is supplied by the operator via environment; it is
@@ -82,6 +93,13 @@ print("POLICY_GATE: PASS")
 print("policy_sha256:", actual)
 PY
 POLICY_SHA="$APPROVED_POLICY_SHA256"
+
+# A matching SHA is not a human signature. Require independently signed
+# approval from a root-owned trust anchor before ANY installed state changes.
+PYTHONPATH="$LOCAL_AGENT" "$VENV/bin/python" -m mission_agent.mission_control.release_approval \
+  --record "$STAGED_APPROVAL_RECORD" --signature "$STAGED_APPROVAL_SIGNATURE" \
+  --policy "$STAGED_POLICY" --approved-policy-sha256 "$POLICY_SHA" \
+  --code-commit-sha "$CODE_COMMIT_SHA"
 
 # External OAuth/readiness preflight occurs after policy authorization,
 # but BEFORE any installed state is altered. This only validates readiness.
@@ -142,6 +160,8 @@ if [ "$INSTALLED_POLICY_SHA" != "$POLICY_SHA" ]; then
 fi
 [ -z "$PREVIOUS_RUNTIME_POLICY" ] || rm -f "$PREVIOUS_RUNTIME_POLICY"
 printf '%s\n' "$POLICY_SHA" | install_atomic "$APPROVED_HASH_FILE"
+install_atomic "$RUNTIME_APPROVAL_RECORD" < "$STAGED_APPROVAL_RECORD"
+install_atomic "$RUNTIME_APPROVAL_SIGNATURE" < "$STAGED_APPROVAL_SIGNATURE"
 if [ -n "${SOLANA_RPC_URLS:-}" ]; then
   printf '%s\n' "$SOLANA_RPC_URLS" | install_atomic "$RPC_FILE"
 fi
@@ -157,6 +177,8 @@ VENV="$VENV"
 CONTROL_POINTER="$CONTROL_POINTER"
 POLICY="$RUNTIME_POLICY"
 APPROVED_HASH_FILE="$APPROVED_HASH_FILE"
+APPROVAL_RECORD="$RUNTIME_APPROVAL_RECORD"
+APPROVAL_SIGNATURE="$RUNTIME_APPROVAL_SIGNATURE"
 RPC_FILE="$RPC_FILE"
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 CONTROL="\$(cat "\$CONTROL_POINTER")"
@@ -173,6 +195,8 @@ exec env PYTHONPATH=. "\$VENV/bin/python" scripts/mission_meme_v1.py loop \
   --policy "\$POLICY" \
   --live-delivery \
   --approved-policy-sha256 "\$APPROVED_HASH" \
+  --approval-record "\$APPROVAL_RECORD" \
+  --approval-signature "\$APPROVAL_SIGNATURE" \
   --interval 5
 EOF
 
