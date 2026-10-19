@@ -144,3 +144,99 @@ def test_sampling_limit_fails_closed():
         diag.run_diagnostic(8765, samples=0)
     with pytest.raises(ValueError, match="INVALID_SAMPLING_LIMITS"):
         diag.run_diagnostic(8765, samples=21)
+
+
+@pytest.mark.parametrize("head_form", ("loose_ref", "packed_ref", "detached"))
+def test_passive_git_pin_does_not_run_fsmonitor_or_write_index(
+        tmp_path, monkeypatch, head_form):
+    """Actual Git repo with configured shell helper: no Git subprocess in CLI pin."""
+    import hashlib
+    import shlex
+    import subprocess
+
+    repo = tmp_path / "synthetic-repo"
+    repo.mkdir()
+    script = repo / "crypto-300-profit-mission" / "local-agent" / "scripts" / "frank_decisions_readonly_diagnostic.py"
+    script.parent.mkdir(parents=True)
+    script.write_text("tracked test entry", encoding="utf-8")
+    def git(*args):
+        return subprocess.run(
+            ["git", "-C", str(repo), *args], check=True, text=True,
+            capture_output=True, timeout=15,
+        ).stdout.strip()
+    git("init", "-q")
+    git("config", "user.name", "Read Only Fixture")
+    git("config", "user.email", "fixture@example.invalid")
+    git("add", ".")
+    git("commit", "-qm", "pinned synthetic fixture")
+    expected = git("rev-parse", "HEAD")
+    if head_form == "packed_ref":
+        git("pack-refs", "--all", "--prune")
+    elif head_form == "detached":
+        git("checkout", "--detach", "-q", "HEAD")
+
+    sentinel = tmp_path / "unexpected-fsmonitor"
+    helper = tmp_path / "fsmonitor-helper.sh"
+    helper.write_text(
+        "#!/bin/sh\nprintf 'EXECUTED' > " + shlex.quote(str(sentinel)) + "\n",
+        encoding="utf-8",
+    )
+    helper.chmod(0o700)
+    git("config", "core.fsmonitor", str(helper))
+    git("config", "filter.fixture.clean", str(helper))
+    git("config", "filter.fixture.smudge", str(helper))
+
+    untracked = repo / "untracked-local-note.txt"
+    untracked.write_text("KEEP UNTRACKED", encoding="utf-8")
+    before_index = (repo / ".git" / "index").read_bytes()
+    before_tracked = script.read_bytes()
+    before_untracked = untracked.read_bytes()
+    before_head = (repo / ".git" / "HEAD").read_bytes()
+
+    assert diag.read_git_head_passively(repo) == expected
+    assert not sentinel.exists()
+
+    def must_not_call_git_or_http(_home):
+        raise RuntimeError("STOP_BEFORE_ANY_HTTP")
+    with monkeypatch.context() as patch:
+        patch.setattr(diag, "__file__", str(script))
+        patch.setattr(diag.sys, "platform", "darwin")
+        patch.setattr(diag, "discover_dashboard_port", must_not_call_git_or_http)
+        patch.setattr(diag.sys, "argv", ["frank_decisions_readonly_diagnostic.py",
+                                         "--expected-sha", expected])
+        original_run = subprocess.run
+        def forbid_subprocess_git(cmd, *a, **kw):
+            if isinstance(cmd, (tuple, list)) and cmd and cmd[0] == "git":
+                raise AssertionError("DIAGNOSTIC_MUST_NOT_INVOKE_GIT")
+            return original_run(cmd, *a, **kw)
+        patch.setattr(diag.subprocess, "run", forbid_subprocess_git)
+        with pytest.raises(RuntimeError, match="STOP_BEFORE_ANY_HTTP"):
+            diag.main()
+
+    assert not sentinel.exists(), "Configured fsmonitor/clean/smudge helper ran"
+    assert (repo / ".git" / "index").read_bytes() == before_index
+    assert script.read_bytes() == before_tracked
+    assert untracked.read_bytes() == before_untracked
+    assert (repo / ".git" / "HEAD").read_bytes() == before_head
+    assert diag.read_git_head_passively(repo) == expected
+    assert hashlib.sha256(before_index).digest() == hashlib.sha256(
+        (repo / ".git" / "index").read_bytes()).digest()
+
+
+def test_passive_git_metadata_handles_gitfile_and_rejects_missing_refs(tmp_path):
+    repo = tmp_path / "checkout"
+    gitdir = tmp_path / "actual-git-dir"
+    repo.mkdir()
+    gitdir.mkdir()
+    expected = "a" * 40
+    (repo / ".git").write_text("gitdir: ../actual-git-dir\n")
+    (gitdir / "HEAD").write_text("ref: refs/heads/main\n")
+    (gitdir / "packed-refs").write_text(
+        "# pack-refs with: peeled fully-peeled\n" + expected + " refs/heads/main\n")
+    assert diag.read_git_head_passively(repo) == expected
+    (gitdir / "packed-refs").unlink()
+    with pytest.raises(RuntimeError, match="DIAGNOSTIC_GIT_REF_MISSING"):
+        diag.read_git_head_passively(repo)
+    (gitdir / "HEAD").write_text("ref: refs/heads/../../outside\n")
+    with pytest.raises(RuntimeError, match="DIAGNOSTIC_GIT_REF_INVALID"):
+        diag.read_git_head_passively(repo)
