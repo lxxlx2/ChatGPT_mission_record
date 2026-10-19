@@ -87,7 +87,7 @@ REASON_ZH={
     "QUOTE_METRICS_INVALID":"Jupiter 报价指标不完整",
     "NO_EXECUTABLE_JUPITER_ROUTE":"Jupiter 当前无可执行路径",
     "PRICE_TOO_FAR_FROM_FRANK":"当前价格离 Frank 买入价过远",
-    "EXECUTION_IMPACT_TOO_HIGH":"当前 30 USDC 跟单价格冲击过高",
+    "EXECUTION_IMPACT_TOO_HIGH":"未指定实际交易金额，不能判断该笔交易的价格冲击",
     "FRANK_MULTIPLE_ACTIVE":"Frank 已观察到多次强加仓模型事件，是否可以跟随以本次结论为准",
     "PRICE_STILL_CLOSE_TO_FRANK":"当前成交价仍接近 Frank 参考买入价",
     "EXECUTION_IMPACT_ACCEPTABLE":"当前预计价格冲击可接受",
@@ -227,7 +227,7 @@ def render(event:dict)->dict:
     if frank_price not in (None,""):
         lines.append("Frank 参考买价："+_compact_price(frank_price)+" USDC")
     if exec_price not in (None,""):
-        lines.append("决策时 $30 报价："+_compact_price(exec_price)+" USDC")
+        lines.append("指定金额的参考报价（不代表实际成交）："+_compact_price(exec_price)+" USDC")
     if deviation not in (None,""):
         lines.append("相对 Frank 买价："+_readable_number(deviation,decimal_places=1)+"%")
     if impact not in (None,""):
