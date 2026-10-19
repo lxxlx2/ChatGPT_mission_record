@@ -1,0 +1,87 @@
+{
+  "mode": "OFFLINE_RPC_FIXTURE_ONLY",
+  "trial": true,
+  "chain_id": 56,
+  "watchlist": [
+    "0x1111111111111111111111111111111111111111"
+  ],
+  "routers": [
+    "0xcccccccccccccccccccccccccccccccccccccccc"
+  ],
+  "quote_assets": [
+    "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  ],
+  "tip_number": 103,
+  "path_length": 2,
+  "block": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "hash": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "number": "0x64",
+      "transactions": [
+        {
+          "hash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+          "from": "0x1111111111111111111111111111111111111111",
+          "to": "0xcccccccccccccccccccccccccccccccccccccccc",
+          "value": "0x0",
+          "blockNumber": "0x64",
+          "blockHash": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        },
+        {
+          "hash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+          "from": "0x2222222222222222222222222222222222222222",
+          "to": "0xcccccccccccccccccccccccccccccccccccccccc",
+          "value": "0x0",
+          "blockNumber": "0x64",
+          "blockHash": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        },
+        {
+          "hash": "0x3333333333333333333333333333333333333333333333333333333333333333",
+          "from": "0x2222222222222222222222222222222222222222",
+          "to": "0x2222222222222222222222222222222222222222",
+          "value": "0x0",
+          "blockNumber": "0x64",
+          "blockHash": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        }
+      ]
+    }
+  },
+  "receipt": {
+    "jsonrpc": "2.0",
+    "id": 2,
+    "result": {
+      "transactionHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+      "blockNumber": "0x64",
+      "blockHash": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "status": "0x1",
+      "logs": [
+        {
+          "address": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "topics": [
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x000000000000000000000000dddddddddddddddddddddddddddddddddddddddd",
+            "0x0000000000000000000000001111111111111111111111111111111111111111"
+          ],
+          "data": "0x0000000000000000000000000000000000000000000000000000000000000384",
+          "logIndex": "0x0"
+        },
+        {
+          "address": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "topics": [
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x0000000000000000000000001111111111111111111111111111111111111111",
+            "0x000000000000000000000000dddddddddddddddddddddddddddddddddddddddd"
+          ],
+          "data": "0x00000000000000000000000000000000000000000000000000000000000003e8",
+          "logIndex": "0x1"
+        }
+      ]
+    }
+  },
+  "quote": {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "result": "0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000003e80000000000000000000000000000000000000000000000000000000000000384"
+  }
+}
