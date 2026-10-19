@@ -444,7 +444,7 @@ def bootstrap_bsc_v2_saved_roster(rpc, first, last, out_dir, limit):
             record.update(result)
             record["first_swap_observed_within_10_blocks"] = any(
                 str(x.get("topics", [""])[0]).lower() ==
-                "0xd78ad95fa46c994b6551d0da85fc275fe613d1188e8a7a2f85dd70fc2782a34"
+                "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
                 for x in pool_logs if x.get("topics"))
         except (SourceError, PITInvalid, ValueError, OSError, KeyError) as exc:
             record["status"] = "BOOTSTRAP_SOURCE_OR_IDENTITY_UNRESOLVED"
