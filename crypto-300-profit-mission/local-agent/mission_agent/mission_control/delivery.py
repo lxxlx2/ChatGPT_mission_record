@@ -255,6 +255,16 @@ def _local_summary(title: str, body: str, event_body: dict) -> str:
     ))
 
 
+def _live_send_authorized(authorization_guard) -> bool:
+    """Fail closed on errors; a callback can latch a running approval closed."""
+    if authorization_guard is None:
+        return True  # Only direct legacy/offline callers; live service supplies guard.
+    try:
+        return authorization_guard() is True
+    except Exception:
+        return False
+
+
 class LocalDelivery:
     def __init__(self,control:ControlDB,run=subprocess.run,*,max_decision_age_seconds:int=600):
         if type(max_decision_age_seconds) is not int or max_decision_age_seconds<=0:
@@ -335,7 +345,7 @@ class LocalDelivery:
             (reason,decision_id),
         )
 
-    def drain(self)->None:
+    def drain(self, *, authorization_guard=None)->None:
         rows=self.control.db.execute("""
             SELECT d.*,e.body,e.created_at AS decision_created_at
             FROM local_delivery d JOIN decision_events e USING(decision_id)
@@ -343,6 +353,9 @@ class LocalDelivery:
             ORDER BY d.created_at
         """).fetchall()
         for row in rows:
+            if not _live_send_authorized(authorization_guard):
+                self._review_unverifiable(row["decision_id"],"LOCAL_LIVE_APPROVAL_EXPIRED_BEFORE_DISPATCH")
+                continue
             age=_decision_age_seconds(row["decision_created_at"])
             if age is None or age>self.max_decision_age_seconds:
                 self._expire(row["decision_id"])
@@ -363,6 +376,9 @@ class LocalDelivery:
                 age=_decision_age_seconds(row["decision_created_at"])
                 if age is None or age>self.max_decision_age_seconds:
                     self._expire(row["decision_id"])
+                    continue
+                if not _live_send_authorized(authorization_guard):
+                    self._review_unverifiable(row["decision_id"],"LOCAL_LIVE_APPROVAL_EXPIRED_BEFORE_DISPATCH")
                     continue
                 result=self.run(args,capture_output=True,text=True,timeout=15)
                 if result.returncode:raise RuntimeError("LOCAL_NOTIFICATION_COMMAND_FAILED")
@@ -423,7 +439,7 @@ class GmailDelivery:
                 return False
             return age is None or age>=self.READBACK_BACKOFF_SECONDS
         return True
-    def drain(self,provider)->None:
+    def drain(self,provider, *, authorization_guard=None)->None:
         rows=self.db.execute("""
             SELECT g.*,e.created_at AS decision_created_at
             FROM gmail_delivery g
@@ -435,6 +451,9 @@ class GmailDelivery:
         for raw_row in rows:
             row=dict(raw_row)
             decision_id=row["decision_id"]
+            if not _live_send_authorized(authorization_guard):
+                self._set(decision_id,"MANUAL_REVIEW","GMAIL_LIVE_APPROVAL_EXPIRED_BEFORE_SEND")
+                continue
             uncertain=row["status"] in {"SENDING","SENT_UNVERIFIED"} or bool(row["gmail_message_id"])
             # Already-attempted sends must still be reconciled against Gmail Sent,
             # even after the original decision expires. Never retry their send.
@@ -446,7 +465,11 @@ class GmailDelivery:
             if not self._due(row):continue
             try:
                 if provider is None:raise CredentialBlocked("NO_LOCAL_GMAIL_CREDENTIAL")
-                provider.ready();candidates=[provider.get(row["gmail_message_id"])] if row["gmail_message_id"] else [provider.get(mid) for mid in provider.find_sent(row["wire_message_id"],decision_id)]
+                provider.ready()
+                if not _live_send_authorized(authorization_guard):
+                    self._set(decision_id,"MANUAL_REVIEW","GMAIL_LIVE_APPROVAL_EXPIRED_BEFORE_SEND")
+                    continue
+                candidates=[provider.get(row["gmail_message_id"])] if row["gmail_message_id"] else [provider.get(mid) for mid in provider.find_sent(row["wire_message_id"],decision_id)]
                 if len(candidates)>1:raise PermanentError("MULTIPLE_SENT_IDENTITIES_REQUIRE_REVIEW")
                 if candidates:self._verified(decision_id,self._verify(row,candidates[0]));continue
                 if uncertain:self._set(decision_id,"SENT_UNVERIFIED","SEND_OUTCOME_UNCERTAIN_WAITING_SENT");continue
@@ -458,11 +481,19 @@ class GmailDelivery:
                         self._set(decision_id,"MANUAL_REVIEW","GMAIL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND")
                         continue
                 wire=self._wire(row,provider.recipient)
+                if not _live_send_authorized(authorization_guard):
+                    self._set(decision_id,"MANUAL_REVIEW","GMAIL_LIVE_APPROVAL_EXPIRED_BEFORE_SEND")
+                    continue
                 self.db.execute("UPDATE gmail_delivery SET status='SENDING',attempt_count=attempt_count+1,last_attempt_at=? WHERE decision_id=?",(utc(),decision_id));self.db.execute("UPDATE decision_outbox SET status='SENDING',attempts=attempts+1 WHERE decision_id=? AND channel='gmail'",(decision_id,))
                 # From this point onward, any exception is ambiguous: the provider may
                 # have accepted the message. Never automatically resend until Sent
                 # readback proves presence through the stable identity.
                 uncertain=True
+                # The DB preparation itself may have consumed the last moment
+                # of the human-approved window. Never send after its expiry.
+                if not _live_send_authorized(authorization_guard):
+                    self._set(decision_id,"MANUAL_REVIEW","GMAIL_LIVE_APPROVAL_EXPIRED_BEFORE_SEND")
+                    continue
                 response=provider.send(wire)
                 if not response.get("id"):raise AmbiguousSend("SEND_RETURNED_NO_MESSAGE_ID")
                 self.db.execute("UPDATE gmail_delivery SET status='SENT_UNVERIFIED',gmail_message_id=?,gmail_thread_id=?,sent_at=? WHERE decision_id=?",(response["id"],response.get("threadId"),utc(),decision_id));self._verified(decision_id,self._verify(self.row(decision_id),provider.get(response["id"])))
