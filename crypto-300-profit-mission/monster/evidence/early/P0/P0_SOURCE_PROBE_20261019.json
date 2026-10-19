@@ -3,7 +3,7 @@
   "observed_date": "2026-10-19",
   "research_only": true,
   "phase0_full_source_pass": false,
-  "phase0_status": "BSC_V2_30_IDENTITY_ROSTER; FIRST_24_ORIGINAL_FACTORY_PAIR_CREATED_CONFIRMED; T_ENTRY_AND_SELLABILITY_NOT_SCORABLE",
+  "phase0_status": "BSC_V2_FIRST_24_PAIR_CREATED_VERIFIED; FIRST_20_SAME_TX_LP_PLUS_1_DELAYED_LP_VERIFIED; EXECUTABILITY_NOT_SCORABLE",
   "privacy": "NO_KEYS_NO_WALLET_SIGNING",
   "cost_usd": 0,
   "provider": "Connected user's pre-existing Alchemy All Chains free app via read-only connector",
@@ -1596,7 +1596,20 @@
           "first_swap_verified_only_within_first10": true,
           "initial_two_way_sellability": "UNRESOLVED",
           "token_deployment": "UNRESOLVED",
-          "actual_entry_time": "UNRESOLVED"
+          "actual_entry_time": "UNRESOLVED",
+          "delayed_liquidity": {
+            "status": "DELAYED_FIRST_MINT_SYNC_CONFIRMED",
+            "first_sync_block": 52446013,
+            "first_liquidity_utc": "2025-07-01T01:11:34.000Z",
+            "first_mint_tx": "0xdaab62332ed2d7ab44d57d940dec6f69cfbafe0e00d843143050a7cd7170cda6",
+            "quote_asset": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "quote_raw": "17000000000000000000",
+            "meets_initial_frozen_quote_floor": true,
+            "creator_tx_differs": true,
+            "public_received_at": "UNVERIFIED",
+            "actual_sell_path": "UNRESOLVED",
+            "evidence_grade": "HISTORICAL_CHAIN_LOG_NORMALIZED"
+          }
         },
         {
           "rank": 15,
@@ -1636,7 +1649,14 @@
           "first_swap_verified_only_within_first10": true,
           "initial_two_way_sellability": "UNRESOLVED",
           "token_deployment": "UNRESOLVED",
-          "actual_entry_time": "UNRESOLVED"
+          "actual_entry_time": "UNRESOLVED",
+          "delayed_liquidity": {
+            "status": "MINT_OBSERVED_SYNC_UNRESOLVED",
+            "first_reserve_update_block": 52444232,
+            "mint_tx": "0x39d28c9d42c174151d6f6ac31df93ee2edf2bc709a3550889c3f69ccf0638f16",
+            "provider_observation": "SAME_BLOCK_SYNC_EVENT_ARRAY_TOO_LONG_TRUNCATED_AT_8KB",
+            "actual_sell_path": "UNRESOLVED"
+          }
         },
         {
           "rank": 17,
@@ -1656,7 +1676,14 @@
           "first_swap_verified_only_within_first10": true,
           "initial_two_way_sellability": "UNRESOLVED",
           "token_deployment": "UNRESOLVED",
-          "actual_entry_time": "UNRESOLVED"
+          "actual_entry_time": "UNRESOLVED",
+          "delayed_liquidity": {
+            "status": "MINT_OBSERVED_SYNC_UNRESOLVED",
+            "first_reserve_update_block": 52444232,
+            "mint_tx": "0x8fbe3ba7e888f1380f2ea660eec643a868436373827a91d57bd36b6946d3fbb2",
+            "provider_observation": "SAME_BLOCK_SYNC_EVENT_ARRAY_TOO_LONG_TRUNCATED_AT_8KB",
+            "actual_sell_path": "UNRESOLVED"
+          }
         },
         {
           "rank": 18,
@@ -3800,6 +3827,101 @@
           "first_seen_public_observer_timestamp": "UNVERIFIED",
           "real_bid_ask_sellability": "UNRESOLVED",
           "actual_10x_label": "NOT_SCORED"
+        }
+      ],
+      "delayed_liquidity_spotchecks": [
+        {
+          "rank": 14,
+          "block": 52446013,
+          "status": "DELAYED_FIRST_MINT_SYNC_CONFIRMED",
+          "mint_logs": [
+            {
+              "address": "0x33a2eab1230aaa41b297fdb091463dabc66fccdb",
+              "topics": [
+                "0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f",
+                "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e"
+              ],
+              "data": "0x0000000000000000000000000000000000000000019d971e4fe8401e74000000000000000000000000000000000000000000000000000000ebec21ee1da40000",
+              "blockHash": "0x083e1e4a52e652c5b6d98e5982ae2d2a518e93da30423fbed3589446b74fdd01",
+              "blockNumber": "0x320433d",
+              "blockTimestamp": "0x686335c6",
+              "transactionHash": "0xdaab62332ed2d7ab44d57d940dec6f69cfbafe0e00d843143050a7cd7170cda6",
+              "transactionIndex": "0x24",
+              "logIndex": "0x159",
+              "removed": false
+            }
+          ],
+          "sync_logs": [
+            {
+              "address": "0x33a2eab1230aaa41b297fdb091463dabc66fccdb",
+              "topics": [
+                "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1"
+              ],
+              "data": "0x0000000000000000000000000000000000000000019d971e4fe8401e74000000000000000000000000000000000000000000000000000000ebec21ee1da40000",
+              "blockHash": "0x083e1e4a52e652c5b6d98e5982ae2d2a518e93da30423fbed3589446b74fdd01",
+              "blockNumber": "0x320433d",
+              "blockTimestamp": "0x686335c6",
+              "transactionHash": "0xdaab62332ed2d7ab44d57d940dec6f69cfbafe0e00d843143050a7cd7170cda6",
+              "transactionIndex": "0x24",
+              "logIndex": "0x158",
+              "removed": false
+            }
+          ],
+          "provider_source": "ALCHEMY_CONNECTED_APP_NORMALIZED",
+          "original_http_sha256": null,
+          "blocked_reason": null
+        },
+        {
+          "rank": 16,
+          "block": 52444232,
+          "status": "MINT_OBSERVED_SYNC_UNRESOLVED",
+          "mint_logs": [
+            {
+              "address": "0x7b4afbce3ddbc19586cc331e6a312b214a9d8056",
+              "topics": [
+                "0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f",
+                "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e"
+              ],
+              "data": "0x0000000000000000000000000000000000000000033b2e3c9fd0803ce80000000000000000000000000000000000000000000000000000003782dace9d900000",
+              "blockHash": "0x0d4ca9b78f644a6c5a6287b05c6e4c7bfb23209d24d023aa8a0355aadbb7485b",
+              "blockNumber": "0x3203c48",
+              "blockTimestamp": "0x6863308e",
+              "transactionHash": "0x39d28c9d42c174151d6f6ac31df93ee2edf2bc709a3550889c3f69ccf0638f16",
+              "transactionIndex": "0x67",
+              "logIndex": "0x2e1",
+              "removed": false
+            }
+          ],
+          "sync_logs": null,
+          "provider_source": "ALCHEMY_CONNECTED_APP_NORMALIZED",
+          "original_http_sha256": null,
+          "blocked_reason": "SOURCE_NORMALIZED_8KB_TRUNCATION_OR_ERROR"
+        },
+        {
+          "rank": 17,
+          "block": 52444232,
+          "status": "MINT_OBSERVED_SYNC_UNRESOLVED",
+          "mint_logs": [
+            {
+              "address": "0x7d8f9b72d702ae97c330dc14691ccfbde8562f00",
+              "topics": [
+                "0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f",
+                "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e"
+              ],
+              "data": "0x0000000000000000000000000000000000000000033b2e3c9fd0803ce800000000000000000000000000000000000000000000000000000053444835ec580000",
+              "blockHash": "0x0d4ca9b78f644a6c5a6287b05c6e4c7bfb23209d24d023aa8a0355aadbb7485b",
+              "blockNumber": "0x3203c48",
+              "blockTimestamp": "0x6863308e",
+              "transactionHash": "0x8fbe3ba7e888f1380f2ea660eec643a868436373827a91d57bd36b6946d3fbb2",
+              "transactionIndex": "0x6b",
+              "logIndex": "0x435",
+              "removed": false
+            }
+          ],
+          "sync_logs": null,
+          "provider_source": "ALCHEMY_CONNECTED_APP_NORMALIZED",
+          "original_http_sha256": null,
+          "blocked_reason": "SOURCE_NORMALIZED_8KB_TRUNCATION_OR_ERROR"
         }
       ]
     }
