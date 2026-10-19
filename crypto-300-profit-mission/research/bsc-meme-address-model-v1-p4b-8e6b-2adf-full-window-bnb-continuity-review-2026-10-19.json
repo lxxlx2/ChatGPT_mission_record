@@ -1,0 +1,81 @@
+{
+  "schema": "BSC_P4B_TWO_OWNERS_BOUNDARY_CONTINUITY_ACCOUNT_BALANCE_DISCREPANCY_V1",
+  "review_source": "Independent Codex REQUEST_CHANGES@94777871756da910be2e1ccbf724d520c82ae69f",
+  "evidence_source": "Original read-only Alchemy eth_getBalance and eth_getTransactionCount before/after each pinned block, crosschecked against 23-EOA fixed end nonce; original provider RPC raw fields not independently attested",
+  "arithmetic": "whole_wallet_delta = final_after_sale_balance - before_buy_balance; selected_delta = sum(five exact selected block deltas); unselected_gap = whole - selected, and equals sum intervening before/after balance gaps",
+  "limitation": "Do NOT interpret continuous-window delta as a target-token PnL either: intervening signer transactions, passive credits, internal value may have occurred. A signed nonce jump does not prove a particular value-flow source. No per-transaction native trace in Alchemy free tier.",
+  "cases": [
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "FLAP",
+      "first_selected_buy_block": "0x79d7283",
+      "last_selected_sale_block": "0x79f7fc0",
+      "pre_buy_wallet_bnb_balance_wei": "6325683251563181611",
+      "post_last_sale_wallet_bnb_balance_wei": "6261680272633865598",
+      "selected_block_delta_sum_wei": "343160277345206",
+      "continuous_window_wallet_delta_wei": "-64002978929316013",
+      "all_unselected_gap_delta_wei": "-64346139206661219",
+      "intervening_fragments": [
+        {
+          "after_block": "0x79d7283",
+          "before_block": "0x79d77c1",
+          "preceding_balance_after_wei": "6175637322763181611",
+          "next_selected_block_balance_before_wei": "6111291183556520392",
+          "unselected_gap_wallet_balance_change_wei": "-64346139206661219",
+          "signed_nonce_count_between_selected_blocks": 3,
+          "explanation": "UNATTRIBUTED; signed nonce counts cannot explain passive or internal value movements"
+        },
+        {
+          "after_block": "0x79d77c1",
+          "before_block": "0x79f7fc0",
+          "preceding_balance_after_wei": "6251514927511981728",
+          "next_selected_block_balance_before_wei": "6251514927511981728",
+          "unselected_gap_wallet_balance_change_wei": "0",
+          "signed_nonce_count_between_selected_blocks": 0,
+          "explanation": "UNATTRIBUTED; signed nonce counts cannot explain passive or internal value movements"
+        }
+      ],
+      "signed_owner_transactions_after_last_sale_before_30day_end": null,
+      "round_profitability": "UNRESOLVED",
+      "not_profit_columns": [
+        "selected_block_delta_sum_wei",
+        "continuous_window_wallet_delta_wei",
+        "all_unselected_gap_delta_wei"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "yoki酱",
+      "first_selected_buy_block": "0x7a4257c",
+      "last_selected_sale_block": "0x7a6133d",
+      "pre_buy_wallet_bnb_balance_wei": "102861804305312629",
+      "post_last_sale_wallet_bnb_balance_wei": "111280528875685181",
+      "selected_block_delta_sum_wei": "-9029761100333270",
+      "continuous_window_wallet_delta_wei": "8418724570372552",
+      "all_unselected_gap_delta_wei": "17448485670705822",
+      "intervening_fragments": [
+        {
+          "after_block": "0x7a4257c",
+          "before_block": "0x7a6133d",
+          "preceding_balance_after_wei": "22816570425312629",
+          "next_selected_block_balance_before_wei": "40265056096018451",
+          "unselected_gap_wallet_balance_change_wei": "17448485670705822",
+          "signed_nonce_count_between_selected_blocks": 6,
+          "explanation": "UNATTRIBUTED; signed nonce counts cannot explain passive or internal value movements"
+        }
+      ],
+      "signed_owner_transactions_after_last_sale_before_30day_end": null,
+      "round_profitability": "UNRESOLVED",
+      "not_profit_columns": [
+        "selected_block_delta_sum_wei",
+        "continuous_window_wallet_delta_wei",
+        "all_unselected_gap_delta_wei"
+      ]
+    }
+  ],
+  "gates": {
+    "SELECTED_BLOCK_GAS_BALANCE_ARITHMETIC": "VERIFIED_INTERNAL_RECALC_ONLY",
+    "PER_TOKEN_REALIZED_PNL": "UNRESOLVED",
+    "PRODUCTION": "NO_GO"
+  }
+}
