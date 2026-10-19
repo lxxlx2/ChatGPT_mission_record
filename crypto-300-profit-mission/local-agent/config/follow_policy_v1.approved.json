@@ -5,7 +5,6 @@
   "live_delivery_approved": true,
   "basis": "USER_APPROVED_LIVE_NOTIFICATION_2026-10-07",
   "decision": {
-    "quote_usdc_amount": "30",
     "slippage_bps": 100,
     "quote_cache_seconds": 20,
     "max_quote_age_seconds": 30,
@@ -33,5 +32,7 @@
       "max_price_deviation_pct": "20",
       "max_price_impact_pct": "3"
     }
-  }
+  },
+  "sizing_authority": "USER_DECIDES_AMOUNT_AND_EXECUTION_NO_DEFAULT_NOTIONAL",
+  "price_execution_scope": "OPTIONAL_USER_REQUESTED_QUOTE_ONLY_NOT_STRATEGY_TRIGGER"
 }
