@@ -2,6 +2,7 @@ import io
 import json
 import urllib.error
 from pathlib import Path
+from decimal import Decimal
 
 import pytest
 
@@ -36,7 +37,7 @@ def test_keyless_jupiter_quote_uses_network_without_auth_header():
         return FakeResponse(json.dumps(body).encode())
 
     client=JupiterQuoteClient(None,open_url=open_url,minimum_interval_seconds=0)
-    result=client.quote_usdc_to_token("Mint111",6)
+    result=client.quote_usdc_to_token("Mint111",6,usdc_amount=Decimal("27.25"))
     assert result["status"]=="OK"
     assert result["route_exists"] is True
     assert result["price_impact_pct"]=="0.100"
@@ -62,7 +63,7 @@ def test_keyed_jupiter_quote_sends_auth_header():
         return FakeResponse(json.dumps(body).encode())
 
     client=JupiterQuoteClient("key",open_url=open_url,minimum_interval_seconds=0)
-    result=client.quote_usdc_to_token("Mint111",6)
+    result=client.quote_usdc_to_token("Mint111",6,usdc_amount=Decimal("27.25"))
     assert result["status"]=="OK"
     headers={k.lower():v for k,v in seen[0].header_items()}
     assert headers["x-api-key"]=="key"
@@ -93,8 +94,8 @@ def test_jupiter_429_sets_cooldown_before_next_request(monkeypatch):
         minimum_interval_seconds=0,
         rate_limit_cooldown_seconds=10,
     )
-    first=client.quote_usdc_to_token("Mint111",6)
-    second=client.quote_usdc_to_token("Mint111",6)
+    first=client.quote_usdc_to_token("Mint111",6,usdc_amount=Decimal("27.25"))
+    second=client.quote_usdc_to_token("Mint111",6,usdc_amount=Decimal("27.25"))
     assert first["status"]=="UNAVAILABLE"
     assert first["reason"]=="JUPITER_RATE_LIMITED"
     assert second["status"]=="OK"
@@ -126,8 +127,8 @@ def test_jupiter_retry_after_is_capped_at_60_seconds(monkeypatch):
         minimum_interval_seconds=0,
         rate_limit_cooldown_seconds=10,
     )
-    first=client.quote_usdc_to_token("Mint111",6)
-    second=client.quote_usdc_to_token("Mint111",6)
+    first=client.quote_usdc_to_token("Mint111",6,usdc_amount=Decimal("27.25"))
+    second=client.quote_usdc_to_token("Mint111",6,usdc_amount=Decimal("27.25"))
     assert first["status"]=="UNAVAILABLE"
     assert first["reason"]=="JUPITER_RATE_LIMITED"
     assert second["status"]=="OK"
@@ -137,7 +138,7 @@ def test_jupiter_retry_after_is_capped_at_60_seconds(monkeypatch):
 def test_jupiter_missing_price_impact_fails_closed():
     body={"outAmount":"1000000","routePlan":[{"swapInfo":{}}]}
     client=JupiterQuoteClient("key",open_url=responder(body),minimum_interval_seconds=0)
-    result=client.quote_usdc_to_token("Mint111",6)
+    result=client.quote_usdc_to_token("Mint111",6,usdc_amount=Decimal("27.25"))
     assert result["status"]=="UNAVAILABLE"
     assert result["reason"]=="JUPITER_PRICE_IMPACT_MISSING"
 
@@ -145,7 +146,7 @@ def test_jupiter_missing_price_impact_fails_closed():
 def test_jupiter_explicit_no_route_is_reachable_no_buy_input():
     body={"error":"Could not find any route"}
     client=JupiterQuoteClient("key",open_url=responder(body),minimum_interval_seconds=0)
-    result=client.quote_usdc_to_token("Mint111",6)
+    result=client.quote_usdc_to_token("Mint111",6,usdc_amount=Decimal("27.25"))
     assert result["status"]=="OK"
     assert result["route_exists"] is False
     assert result["reason"]=="JUPITER_NO_ROUTE"
@@ -155,7 +156,7 @@ def test_jupiter_quote_does_not_send_instruction_version_parameter():
     seen=[]
     body={"outAmount":"1000000","routePlan":[{"swapInfo":{}}],"priceImpactPct":"0.001"}
     client=JupiterQuoteClient("key",open_url=responder(body,seen),minimum_interval_seconds=0)
-    result=client.quote_usdc_to_token("Mint111",6)
+    result=client.quote_usdc_to_token("Mint111",6,usdc_amount=Decimal("27.25"))
     assert result["status"]=="OK"
     assert "instructionVersion" not in seen[0]
     assert result["price_impact_pct"]=="0.100"
@@ -276,3 +277,12 @@ def test_rpc_runner_patcher_rejects_unknown_and_partial_configs():
         )
     with pytest.raises(ValueError, match="RUNNER_WORKDIR_ANCHOR_MISMATCH"):
         module.patch_runner("exec python scripts/mission_meme_v1.py loop\n", "loop")
+
+def test_jupiter_without_user_amount_never_opens_network():
+    def forbidden(*args, **kwargs):
+        raise AssertionError("quote must not be requested without a user-supplied amount")
+    client=JupiterQuoteClient(None,open_url=forbidden,minimum_interval_seconds=0)
+    result=client.quote_usdc_to_token("Mint111",6)
+    assert result["status"]=="UNAVAILABLE"
+    assert result["reason"]=="USER_ORDER_AMOUNT_NOT_SPECIFIED"
+    assert client.quote_usdc_to_token("Mint111",6,usdc_amount=Decimal("-1"))["status"]=="UNAVAILABLE"
