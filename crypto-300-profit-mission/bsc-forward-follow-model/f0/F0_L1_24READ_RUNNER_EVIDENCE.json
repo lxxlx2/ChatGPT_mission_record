@@ -26,5 +26,6 @@
   },
   "no_user_live_consent": true,
   "reviewed_permit_exists": false,
-  "previous_four_call_authority": "EXHAUSTED"
+  "previous_four_call_authority": "EXHAUSTED",
+  "full_test_log_repo_path": "crypto-300-profit-mission/bsc-forward-follow-model/f0/fixtures/l1_code_probe_209_local_tests.log"
 }
