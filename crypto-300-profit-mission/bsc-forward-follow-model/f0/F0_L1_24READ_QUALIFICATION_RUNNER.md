@@ -38,7 +38,7 @@ python3 crypto-300-profit-mission/bsc-forward-follow-model/f0/f0_l1_code_probe.p
 
 合成回放固定 **24 次尝试（2 来源身份、20 钱包、2 Router）**，`actual_rpc_calls=0`，本地 CLI 结果与 `fixture_l1_code_probe_24_report.json` 一致。
 
-**本地隔离测试：`Ran 208 tests, OK (skipped=2)`：206 PASS、2 SKIP。** 跳过的两项是继承的真实 PR116 原始 manifest 正例，因为此隔离目录缺少它。**独立审核必须在含真实 manifest 的完整 Git checkout 重新执行并证明 `208/208 PASS、零 SKIP`**。新 22 项定向测试均已执行且通过。不能把这一期的 2 SKIP 声称通过，也不能把审核通过自动升级为真实 API 许可。
+**本地隔离测试：`Ran 209 tests, OK (skipped=2)`：207 PASS、2 SKIP。** 跳过的两项是继承的真实 PR116 原始 manifest 正例，因为此隔离目录缺少它。**独立审核必须在含真实 manifest 的完整 Git checkout 重新执行并证明 `209/209 PASS、零 SKIP`**。新 23 项定向测试均已执行且通过。不能把这一期的 2 SKIP 声称通过，也不能把审核通过自动升级为真实 API 许可。
 
 ### 下一阶段真实业务目标（仍待授权）
 
