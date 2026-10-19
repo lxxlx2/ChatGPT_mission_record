@@ -399,7 +399,8 @@ def bootstrap_bsc_v2_saved_roster(rpc, first, last, out_dir, limit):
         raise SourceError("BOOTSTRAP_FROZEN_ROSTER_MISMATCH")
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     from mission_agent.early.bsc_v2_pit import (PITInvalid, SWAP, first_creation_block,
-                                                 first_later_reserve_update, verify_bootstrap)
+                                                 first_later_reserve_update, verify_bootstrap,
+                                                 verify_delayed_mint_sync)
     folder = out_dir / "v2_bootstrap_raw"
     folder.mkdir(parents=True, exist_ok=True)
     cache = {}
@@ -445,39 +446,45 @@ def bootstrap_bsc_v2_saved_roster(rpc, first, last, out_dir, limit):
             record["first_swap_observed_within_10_blocks"] = any(
                 str(x["topics"][0]).lower() == SWAP
                 for x in pool_logs if x.get("topics"))
-            if result.get("initial_quote_liquidity_proven") is True:
-                start_time = timestamp_for_block(rpc, creation)
-                time_cache = {}
-                def pool_update_at(block):
-                    if block not in time_cache:
-                        val, raw = rpc.request("eth_call", [
-                            {"to": pair, "data": "0x0902f1ac"}, hex(block)])
-                        if not isinstance(val, str) or not re.fullmatch(
-                                r"0x[0-9a-fA-F]{192}", val):
-                            raise SourceError("POOL_RESERVE_TIMESTAMP_ABI_INVALID")
-                        time_cache[block] = as_int("0x" + val[130:194])
-                    return time_cache[block]
-                later_block = first_later_reserve_update(
-                    creation, last, start_time, pool_update_at)
-                record["first_later_pool_reserve_update_block"] = later_block
-                record["first_later_pool_reserve_update_is_not_first_swap_proof"] = True
-                if later_block is not None:
-                    later, later_raw = rpc.request("eth_getLogs", [{
-                        "address": pair, "fromBlock": hex(later_block),
-                        "toBlock": hex(later_block)}])
-                    if not isinstance(later, list) or any(
-                            str(x.get("address", "")).lower() != pair or
-                            as_int(x.get("blockNumber")) != later_block or
-                            x.get("removed") is True for x in later):
-                        raise SourceError("FIRST_LATER_POOL_LOG_SOURCE_MISMATCH")
-                    safe_file(folder / (str(index) + ".later.rpc.json"), later_raw)
-                    record["later_response_sha256"] = sha(later_raw)
-                    record["first_later_reserve_update_has_swap"] = any(
-                        str(x["topics"][0]).lower() == SWAP
-                        for x in later if x.get("topics"))
-                    record["first_later_reserve_update_utc"] = (
-                        dt.datetime.fromtimestamp(pool_update_at(later_block),
-                                                  tz=dt.timezone.utc).isoformat())
+            start_time = (timestamp_for_block(rpc, creation)
+                          if result.get("initial_quote_liquidity_proven") is True else 0)
+            start_time = timestamp_for_block(rpc, creation)
+            time_cache = {}
+            def pool_update_at(block):
+                if block not in time_cache:
+                    val, raw = rpc.request("eth_call", [
+                        {"to": pair, "data": "0x0902f1ac"}, hex(block)])
+                    if not isinstance(val, str) or not re.fullmatch(
+                            r"0x[0-9a-fA-F]{192}", val):
+                        raise SourceError("POOL_RESERVE_TIMESTAMP_ABI_INVALID")
+                    time_cache[block] = as_int("0x" + val[130:194])
+                return time_cache[block]
+            later_block = first_later_reserve_update(
+                creation, last, start_time, pool_update_at)
+            record["first_later_pool_reserve_update_block"] = later_block
+            record["first_later_pool_reserve_update_is_not_first_swap_proof"] = True
+            if later_block is not None:
+                later, later_raw = rpc.request("eth_getLogs", [{
+                    "address": pair, "fromBlock": hex(later_block),
+                    "toBlock": hex(later_block)}])
+                if not isinstance(later, list) or any(
+                        str(x.get("address", "")).lower() != pair or
+                        as_int(x.get("blockNumber")) != later_block or
+                        x.get("removed") is True for x in later):
+                    raise SourceError("FIRST_LATER_POOL_LOG_SOURCE_MISMATCH")
+                safe_file(folder / (str(index) + ".later.rpc.json"), later_raw)
+                record["later_response_sha256"] = sha(later_raw)
+                if result.get("initial_quote_liquidity_proven") is not True:
+                    delayed = verify_delayed_mint_sync(
+                        pool=pair, creation_block=creation,
+                        update_block=later_block, pool_logs=later)
+                    record["delayed_liquidity"] = delayed
+                record["first_later_reserve_update_has_swap"] = any(
+                    str(x["topics"][0]).lower() == SWAP
+                    for x in later if x.get("topics"))
+                record["first_later_reserve_update_utc"] = (
+                    dt.datetime.fromtimestamp(pool_update_at(later_block),
+                                              tz=dt.timezone.utc).isoformat())
         except (SourceError, PITInvalid, ValueError, OSError, KeyError) as exc:
             record["status"] = "BOOTSTRAP_SOURCE_OR_IDENTITY_UNRESOLVED"
             record["reason"] = str(exc)[:180]
@@ -486,6 +493,9 @@ def bootstrap_bsc_v2_saved_roster(rpc, first, last, out_dir, limit):
         records.append(record)
     return {"schema": "MONSTER_BSC_V2_HISTORICAL_BOOTSTRAP_BATCH_V1",
             "status": "BOUNDED_FIRST_N_PIT_CREATION_ONLY_NOT_EXECUTABLE",
+            "verified_delayed_first_mint": sum(
+                r.get("delayed_liquidity", {}).get("delayed_initial_liquidity_proven")
+                is True for r in records),
             "verified_creation_and_first_mint": sum(
                 r.get("initial_quote_liquidity_proven") is True for r in records),
             "records": records, "requested_count": limit,
