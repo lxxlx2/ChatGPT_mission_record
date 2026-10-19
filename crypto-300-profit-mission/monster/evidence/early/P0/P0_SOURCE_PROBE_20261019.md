@@ -1,5 +1,42 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+
+## 2026-10-20 P0 当前优先结论（旧日期下方进度为历史快照，不覆盖本节）
+
+**本节是当前唯一决策摘要。** 原冻结2025-07-01 UTC历史Pancake V2母体30个候选，`30/30 PairCreated`原交易及池序号已证明；`25/30`在创建同交易有Mint+Sync，`20/30`创建时达到2 WBNB/1000 USDT的历史研究阈值。**这不是24/30完整PIT，更不是18/30双向交易门禁通过。** 全部身份及交易来源仍来自Alchemy已连接免费历史查询的正规化RPC返回；用户Mac原始HTTP存档/哈希、第二独立数据源、部署准确时刻、实际可观测T_entry与税费/禁售验证尚未完成。
+
+创建时没有同交易LP的5个（#14、#16、#17、#18、#26）也始终保留在30币分母中：
+- **#14**：00:41建池，01:11:34 UTC（块52,446,013）首次可核Mint+Sync，报价侧17 WBNB。故不能以创建时间充当入场时间。
+- **#26**：随后块**52,446,701**找到完全匹配的Mint+Sync，同笔交易`0xe722f3db159d390decd678fc7b1a5a7f863599a52d07b737e5be0b101d112`，报价侧**15 WBNB**；是第二个延迟加池证实案例。
+- **#16/#17**：建池时getReserves为0，块52,444,232有Mint且历史getReserves报价侧分别约9.6000及20.2000 WBNB；但当前连接器的同块Sync列表超过约8KB被截断，**不得声称同Tx Sync完整匹配**，先记`MINT_PLUS_NONZERO_POOL_STATE_SYNC_UNRESOLVED`。
+- **#18**：创建时和当日末的pair `getReserves()` 仍为0/0，`blockTimestampLast=0`；按标准Pancake V2代码意味着**当日末前尚未执行Sync**，但不能推论次日永远不加池，也不可直接从母体剔除。
+
+**开始了可交易性来源核验，但未证明普通用户的实际可卖出能力。**
+
+在2025-07-01历史区块执行[PancakeSwap V2 Router](https://github.com/pancakeswap/pancakeswap-ai/blob/main/packages/plugins/pancakeswap-driver/skills/swap-integration/SKILL.md) `getAmountsOut`（**view only**）；每项先读`quote→token`，再以第一步原始token报价对**同一未改变的历史池**读`token→quote`。费率据[PancakeSwap官方文档](https://docs.pancakeswap.finance/trade/pancakeswap-exchange/trade)为每次0.25%。两次静态quote结果和整数V2 AMM公式均逐字一致，不能把第二次读操作误称为实际连续回合卖出/利润：
+
+| 冻结候选 | 固定历史区块 | 只读买入输入 | 在同一未变动池上再独立查询的token反向报价 | 解释 |
+| --- | --- | --- | --- | --- |
+| #1 | 52,440,324 | 10 USDT | 9.930276362283922020 USDT | 静态报价，不保证token可转账 |
+| #2 | 52,440,617 | 0.01 WBNB | 0.009926233485230985 WBNB | 同上 |
+| #5 | 52,441,107 | 1 USDT | 0.395408042268688956 USDT | 仅有约1.314 USDT初始池报价储备，容量极浅 |
+| #14 | 52,446,013（延迟首Mint） | 0.01 WBNB | 0.009938414057573645 WBNB | 不能把创建时空池当作已有报价 |
+
+这些notional是**试验金额**，不同quote资产的金额不能直接横向衡量胜率、不能取代未来P1前冻结的相同研究金额。报价没有计算historical token税费、账户限制、MEV、真实持币到账、真实连续下单后的更新池状态，也**不代表**`SELLABLE_at_notional`标签通过。
+
+**真实Swap方向也已从原事件拆出并与ERC20 Transfer原日志互证：**
+- #1在块52,440,351发生`QUOTE_TO_TOKEN`，Swap报告池收约**88 USDT**，token由池子转给接收方，Transfer与Swap`tokenOut=13922587526690708956`精确一致。
+- #2在块52,440,642发生`QUOTE_TO_TOKEN`，Swap报告池收约**0.0937 WBNB**，token Transfer与Swap`tokenOut=51223471067359749457487212`一致。
+- **#5在块52,441,377确实发生`TOKEN_TO_QUOTE`真实卖出**，有转入池的token Transfer，`tokenIn=69914887641473879`和Swap完全一致，池付`quoteOut=99632794358189979`（约**0.099632794358189979 USDT**）。这只是**一笔已观察到的小额卖出事实**，不能由此推论其他地址、更大订单或未来时点能卖，更不等于净利润。
+
+上述静态买卖报价、三笔Swap与Transfer互证、合约部署时运行字节码初检及5个空池后续状态已统一写入同份[P0来源JSON](P0_SOURCE_PROBE_20261019.json)的`bsc_v2_p0_execution_source_pilot_20261020`和`bsc_v2_p0_late_lp_source_pilot_20261020`，不新增Stage文件。代码在原`mission_agent/early/bsc_v2_pit.py`加入只读V2 0.25%整数quote、Swap方向分类并有真实Router数值回归。**仅临时Python隔离镜像8项定向纯函数测试实际PASS；Git源码完整测试、Mac原HTTP字节及独立审查尚未通过**，此版本不得标APPROVE。
+
+**下一步主线门禁**：再以事前确定研究notional和完整税/blacklist/Router转账路径检验出场，获取有原始SHA的当时可观察事件和跨时间真实流动性，达到P0所列`24/30`及`18/30`的审查条件才进入P1。未通过时固定标`SOURCE_PARTIAL / EXECUTION_NOT_VERIFIED / P5_NO_GO / NO_TRADE`。不能用已观察1笔成功卖出、4组静态报价或30个建池事件充当30币回测或可盈利证明。
+
+---
+
+
+
 ## 2026-10-20 本轮最新实际进展（以下早期章节为历史研究快照）
 
 **本轮继续原P0，没有建新Stage、没有修改30个身份筛选规则，没有查看后验价格/未来赢家名单，也未执行Mac/后台/实盘交易。** 依赖原唯一固定2025-07-01 UTC PancakeSwap V2 Factory；此处`30/30`指**30个池的创建源**，不是P0终验、Binance Alpha可见性或全BSC代币母体完整性。
