@@ -1,0 +1,54 @@
+{
+  "schema": "bsc-f0-l1-offline-contiguous-evidence-v1",
+  "base_pr127_sha": "91eca250939f17fd0430f2b657e704434f0421eb",
+  "approved_code_pr125_sha": "fa3dae9b0f221747cb64bb1be21497979985e596",
+  "review_status": "PENDING_INDEPENDENT_REVIEW",
+  "mode": "SYNTHETIC_OFFLINE_ONLY",
+  "files_sha256": {
+    "f0_l1_window.py": "5e5cfb03d9ee483a7f1c30fdad5facb59ae60b8ba5ce20b8437460a31eb50560",
+    "tests/test_f0_l1_window.py": "48485801eea638301ef9c5c616c9127c1354510cba763fb8db2230a52ff9cb31",
+    "fixtures/l1_fake_cohort.json": "456df0b152ca83876d80f36bb30ab12b1378fcecf56ebeed03e80ffcc742b273",
+    "fixtures/l1_contiguous_replay.json": "9cfdc7ef31fbca5c2a4be81a6d77e02b34a4cf97d301211428506c4bbfa49517",
+    "fixture_l1_report.json": "b58db206bcad0b789363ffdc2da1a360b03d497f3071004655c2f1797400013d",
+    "F0_L1_CONTIGUOUS_OFFLINE.md": "7fa6941a78b7151c8c565e2edc4a985e3da0207a9d2a877a0cca84bd9c273b59"
+  },
+  "test_log_sha256": "2ee983a4d9b3c358bc228a68695cfb7ae898853d23c4a3ba7d3b0250231e7de4",
+  "combined_unittest": {
+    "executed": 154,
+    "baseline_unchanged": 127,
+    "new_l1_cases": 27,
+    "result": "PASS"
+  },
+  "test_execution": "python3 -m unittest discover -s /mnt/data/bsc_f0_l1_next/f0/tests -p test_*.py",
+  "repo_root_equivalent": "python3 -m unittest discover -s crypto-300-profit-mission/bsc-forward-follow-model/f0/tests -p test_*.py",
+  "fixture_metrics": {
+    "attempted_control_discovery_rpc_calls_offline": 4,
+    "attempted_full_block_rpc_calls_offline": 4,
+    "backfill_received_blocks": 1,
+    "blocks_expected_window": 5,
+    "blocks_failed": 1,
+    "blocks_received": 3,
+    "missing_heights": [
+      101,
+      102
+    ],
+    "preselected_control_offline": 2,
+    "router_control_candidates_in_received_blocks": 3,
+    "watch_signer_tx_in_received_blocks": 3
+  },
+  "source_blobs_known": {
+    "f0_rpc_adapter.py": "35ce2aee341586879c4ede95d3e7669cb8e30e3f",
+    "f0_offline_collector.py": "d70338741c90e50ae1f9a84ba93fc8b6f86eae92",
+    "f0_bounded_smoke.py": "b5498a059d362ea30cc01edbe2f8cee0a403f579"
+  },
+  "actual_network_requests": 0,
+  "first_real_smoke_user_report": "PR127 separate unreviewed doc; no raw HTTP payload included",
+  "cohort_manifest_real_blob_verified": false,
+  "synthetic_router_allowlist_only": true,
+  "live_control_coverage": "NOT_MEASURED",
+  "independent_denominator": "NOT_MEASURED",
+  "actual_e3": 0,
+  "actual_quoted": 0,
+  "paper_profit_labels": 0,
+  "permission_state": "NO_RUN / PRIOR_FOUR_CALL_SMOKE_AUTHORIZATION_SPENT"
+}
