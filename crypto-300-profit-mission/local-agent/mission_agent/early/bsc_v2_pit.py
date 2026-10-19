@@ -212,3 +212,37 @@ def classify_v2_swap_by_quote_side(row, *, quote_is_token0):
             'user_same_notional_sellability': 'UNVERIFIED',
             'tax_and_allowed_addresses': 'UNKNOWN'}
 
+
+
+def v2_reference_sequential_roundtrip(quote_amount_raw, quote_reserve_raw,
+                                       token_reserve_raw, fee_bps=25):
+    """Counterfactual two-leg AMM reserve update, with *zero* transfer tax.
+
+    Unlike two getAmountsOut calls on an unchanged pool, the second leg uses
+    reserves after the first hypothetical buy. This cannot prove token transfer,
+    router execution, holder eligibility, taxes, gas, MEV, or public T_entry.
+    """
+    token_out = v2_amount_out_from_reserves(
+        quote_amount_raw, quote_reserve_raw, token_reserve_raw, fee_bps)
+    quote_after_buy = quote_reserve_raw + quote_amount_raw
+    token_after_buy = token_reserve_raw - token_out
+    quote_back = v2_amount_out_from_reserves(
+        token_out, token_after_buy, quote_after_buy, fee_bps)
+    if quote_back > quote_amount_raw:
+        raise PITInvalid('REFERENCE_ROUNDTRIP_PROCEEDS_EXCEED_INPUT')
+    return {
+        'status': 'REFERENCE_SEQUENTIAL_AMM_MATH_NO_TOKEN_TAX',
+        'quote_in_raw': str(quote_amount_raw),
+        'token_bought_raw': str(token_out),
+        'quote_reserve_after_buy_raw': str(quote_after_buy),
+        'token_reserve_after_buy_raw': str(token_after_buy),
+        'reference_quote_back_raw': str(quote_back),
+        'reference_amm_only_loss_raw': str(quote_amount_raw - quote_back),
+        'fee_bps_per_swap': fee_bps,
+        'pool_changes_between_legs_assumed': False,
+        'transfer_tax_assumed_zero': True,
+        'gas_mev_other_swaps_modeled': False,
+        'historical_trade_execution_verified': False,
+        'sellable_at_notional': 'UNVERIFIED',
+        'paper_net_pnl_status': 'NOT_SCORABLE',
+    }
