@@ -7794,5 +7794,63 @@
         "native_BNB_net_flow": "UNVERIFIED_FULL_TRACE_NOT_AVAILABLE"
       }
     ]
+  },
+  "bsc_v2_p0_mac_real_sell18_raw_receipts_acceptance_20261020": {
+    "schema": "MONSTER_P0_MAC_REAL_SELL_18_ARCHIVED_RECEIPT_SOURCE_ACCEPTANCE_V1",
+    "evidence_as_of_day": "2026-10-20",
+    "observed_from": "USER_PASTED_MAC_ZSH_STDOUT",
+    "checked_git_sha": "b783d154376b154d54b1e86f3b613300558ac05a",
+    "observed_git_pull": "FAST_FORWARD_FROM_3e897bf_TO_b783d15",
+    "unit_tests": [
+      {
+        "suite": "test_monster_early_bsc_v2_pit.py",
+        "run": 18,
+        "passed": 18
+      },
+      {
+        "suite": "test_monster_early_venue_factory_rpc_roster_probe.py",
+        "run": 20,
+        "passed": 20
+      }
+    ],
+    "unit_test_status": "38_OF_38_PASS_USER_MAC",
+    "online_archive": {
+      "command_mode": "sell-archive",
+      "chain": "bsc-v2",
+      "frozen_day": "2025-07-01",
+      "rank_count": 18,
+      "matched_real_sell_tx": 18,
+      "requests_this_invocation": 19,
+      "reported_status": "HISTORICAL_18_REAL_SELL_RECEIPTS_ARCHIVED_AND_OFFLINE_REPLAYED",
+      "raw_receipt_hashes_verified_reported": true
+    },
+    "offline_replay": {
+      "command_mode": "sell-audit",
+      "rank_count": 18,
+      "matched_real_sell_tx": 18,
+      "requests_this_invocation": 0,
+      "reported_status": "HISTORICAL_18_REAL_SELL_RECEIPTS_ARCHIVED_AND_OFFLINE_REPLAYED",
+      "raw_receipt_hashes_verified_reported": true
+    },
+    "reported_zero_effective_gas_price_sell_ranks": [
+      7,
+      11,
+      12,
+      21,
+      25,
+      30
+    ],
+    "reported_nonzero_effective_gas_price_sell_ranks": "UNVERIFIED_NO_PER_RANK_FIELDS_SHARED",
+    "raw_response_bytes_provided_to_github_or_assistant": false,
+    "raw_manifest_sha256_uploaded_to_github": false,
+    "source_provider_independent_crosscheck": "UNVERIFIED_PROVIDER_ID_NOT_DISCLOSED_IN_STDOUT",
+    "historical_onchain_real_sale_source_coverage": "18_OF_18_SELECTED_QUALIFYING_SELL_RECEIPTS_REPLAYED",
+    "historical_sell_source_feasibility": "PASS_WITHIN_SELECTED_18_RECEIPT_SCOPE",
+    "real_time_public_available_at": "UNVERIFIED",
+    "entire_frozen_30_full_asof_PIT_24_gate": "NOT_SCORABLE",
+    "unified_research_notional_18_of_30_sellability_gate": "NOT_SCORABLE",
+    "do_not_upgrade_to_p1": true,
+    "no_payment_no_trade_no_merge_no_deploy": true,
+    "note": "38/38 tests validate code on user's Mac and replays locally saved original RPC responses; original bytes were not sent, so this assistant has not independently recalculated their checksums. Zero gas fields are observations, not zero execution costs."
   }
 }
