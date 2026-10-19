@@ -3,7 +3,7 @@
   "observed_date": "2026-10-19",
   "research_only": true,
   "phase0_full_source_pass": false,
-  "phase0_status": "BSC_V2_HISTORICAL_AMM_STATIC_ROUTER_QUOTES_AND_ACTUAL_BUY_SELL_LOGS_VERIFIED; COMPLETE_PIT_AND_EXECUTABILITY_STILL_BLOCKED",
+  "phase0_status": "P0_DEX_STATIC_QUOTE_AND_THREE_REAL_SWAP_TRANSFER_EVENTS_VERIFIED_NOT_REALIZED_EXIT_PASS",
   "privacy": "NO_KEYS_NO_WALLET_SIGNING",
   "cost_usd": 0,
   "provider": "Connected user's pre-existing Alchemy All Chains free app via read-only connector",
@@ -4688,10 +4688,62 @@
         "chain_event_receipt_source": "normalized Alchemy historic eth_getLogs Swap topic; exact tx link supplied"
       }
     ],
-    "current_status": "FIRST_STATIC_AMM_QUOTE_AND_SWAP_DIRECTION_SOURCE_VERIFIED_NOT_LIVE_SELLABILITY",
+    "current_status": "THREE_HISTORICAL_ACTUAL_SWAP_PLUS_TRANSFER_CROSSCHECK_AND_FOUR_ROUTER_STATIC_QUOTES; TARGET_NOTIONAL_SELLABILITY_UNKNOWN",
     "underlying_rpc_http_original_body_archived": false,
     "historic_fee_on_transfer_verified": false,
-    "known_takeaway": "Low-liquidity #5 has a real token-to-USDT swap but 1 USDT static two-way quote returns only 0.3954 USDT; a tiny successful sell does not prove user-sized exits."
+    "known_takeaway": "Low-liquidity #5 has a real token-to-USDT swap but 1 USDT static two-way quote returns only 0.3954 USDT; a tiny successful sell does not prove user-sized exits.",
+    "observed_erc20_transfer_swap_crosschecks": [
+      {
+        "rank": 1,
+        "tx": "0x2d0361e427bc0feaf9e316f6a79b3a9f935777043d13cb4084c9adfeed2f9ae7",
+        "from": "0x021d84d4d9f88518f74935c61e2cf4b70713bc16",
+        "to": "0x7499885e0195c957af71ec108c9fac8d58949826",
+        "token_transfer_raw": "13922587526690708956",
+        "pool_swap_token_out_raw": "13922587526690708956",
+        "transfer_direction": "POOL_TO_BUYER",
+        "exact_amount_match": true,
+        "asset": "TOKEN_CA_FROM_FROZEN_COHORT",
+        "source": "historical eth_getLogs ERC20 Transfer topic filtered by pool indexed from/to; normalized Alchemy result",
+        "notional_verified": "ONLY_OBSERVED_TX_RAW_AMOUNT",
+        "user_general_sellable_at_target_notional": "UNVERIFIED",
+        "tax_at_other_amounts_or_times": "UNKNOWN"
+      },
+      {
+        "rank": 2,
+        "tx": "0x459ad9b0a8601b3502077ce5e26a65af7b461429958c4ff8d9e269ee48324547",
+        "from": "0xc8e6d373797eae36d810fadd4cbb8c58c3374cf8",
+        "to": "0xfbc84d40a37e43fa7d002d5c0029a95b6c48f50c",
+        "token_transfer_raw": "51223471067359749457487212",
+        "pool_swap_token_out_raw": "51223471067359749457487212",
+        "transfer_direction": "POOL_TO_BUYER",
+        "exact_amount_match": true,
+        "asset": "TOKEN_CA_FROM_FROZEN_COHORT",
+        "source": "historical eth_getLogs ERC20 Transfer topic filtered by pool indexed from/to; normalized Alchemy result",
+        "notional_verified": "ONLY_OBSERVED_TX_RAW_AMOUNT",
+        "user_general_sellable_at_target_notional": "UNVERIFIED",
+        "tax_at_other_amounts_or_times": "UNKNOWN"
+      },
+      {
+        "rank": 5,
+        "tx": "0xddf4631429c9faf6bb2a117516a2fff39debe9fd207d19c274808ca99a16f348",
+        "from": "0x238a358808379702088667322f80ac48bad5e6c4",
+        "to": "0x67bd637ca7456c519857ecfad388eb98686285af",
+        "token_transfer_raw": "69914887641473879",
+        "pool_swap_token_in_raw": "69914887641473879",
+        "pool_swap_quote_out_raw": "99632794358189979",
+        "transfer_direction": "HOLDER_TO_POOL_SELL",
+        "exact_amount_match": true,
+        "asset": "TOKEN_CA_FROM_FROZEN_COHORT",
+        "source": "historical eth_getLogs ERC20 Transfer topic filtered by pool indexed from/to; normalized Alchemy result",
+        "notional_verified": "ONLY_OBSERVED_TX_RAW_AMOUNT",
+        "user_general_sellable_at_target_notional": "UNVERIFIED",
+        "tax_at_other_amounts_or_times": "UNKNOWN"
+      }
+    ],
+    "experimental_static_quote_checks_locally_tested": 8,
+    "local_test_scope": "ISOLATED_PURE_HELPER_MIRROR_NOT_REMOTE_COMPLETE_PYTHON_SUITE",
+    "immutable_replay_fees_verified_exact_on_four_history_blocks": true,
+    "actual_small_seller_transfer_matches_pair_swap_amount": true
   },
   "bsc_v2_p0_late_lp_source_pilot_20261020": {
     "schema": "MONSTER_BSC_V2_P0_LATE_LP_AND_TOKEN_CODE_SOURCE_V1",
