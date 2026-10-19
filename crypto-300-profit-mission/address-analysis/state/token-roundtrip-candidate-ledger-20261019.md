@@ -14,3 +14,18 @@
 [源行#148 MEMEBANK 的逐笔证据](../batches/pnl-active-queue-pass-005-20261019.md) · [源行#227 BOARDSEAT 的逐笔证据](../batches/pnl-active-queue-pass-008-20261019.md) · [源行#121 TILCAYO 的逐笔证据](../batches/pnl-active-queue-pass-004-20261019.md) · [源行#213 UPTOBER 的逐笔证据](../batches/pnl-active-queue-pass-007-20261019.md) · [源行#167 GZC 的逐笔证据](../batches/pnl-active-queue-pass-006-20261019.md) · [源行#227 BTCLIFE 的逐笔证据](../batches/pnl-active-queue-pass-008-20261019.md)。
 
 #002/#004 sauce、#016 RTX5090 的历史保存正向单币闭环采取不同证据口径，暂不与本账本混排。第三方转入、空投、销毁、跨地址汇款和未退出开放仓位也不视为盈利。**完整钱包30日与长期盈亏审计：0/449**。升级交易净PNL需要完整原始收据、内部原生币回款追踪、签名Gas及期初持仓成本复算，不能仅凭钱包总余额区块差。
+
+## 第9组新增：#283 DEGENIUS 与 GIGGLE（2026-10-19）
+
+以下仍是**钱包BNB执行区块余额变化**，不是交易级已实现损益；钱包之间隔开的其它交易不包含在数字内。详情：[第9组批次报告](../batches/pnl-active-queue-pass-009-20261019.md) · [机器证据](../evidence/pnl-active-queue-pass-009-20261019.json)。
+
+| 449源行 | 代币 exact CA | 原钱包执行区块BNB变化 | 候选方向 |
+|---:|---|---:|---|
+| #283 | DEGENIUS `0xb7f3b2fd1b17a1c4af16cfbe4ca8d93adf448c8e`（1买2卖） | **+0.211060583278927373 BNB** | 正 |
+| #283 | GIGGLE `0x702efdded8a2e28fa88d2fd6778bdb6611e70536`（回合1） | **-0.021320875331330312 BNB** | 负 |
+| #283 | GIGGLE `0x702efdded8a2e28fa88d2fd6778bdb6611e70536`（回合2） | **-0.050199214934143648 BNB** | 负 |
+| #283 | GIGGLE `0x702efdded8a2e28fa88d2fd6778bdb6611e70536`（回合3） | **-0.015967416978148114 BNB** | 负 |
+| #283 | GIGGLE 三组小计 | **-0.087487507243622074 BNB** | 负 |
+| #283 | 两种代币区块变化合计 | **+0.123573076035305299 BNB** | 正 |
+
+该源行不是已审计正收益钱包，近30天及长期整体盈利仍未决。
