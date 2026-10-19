@@ -131,6 +131,54 @@ class FactorySourceProbeTests(unittest.TestCase):
         self.assertEqual(a.host, b.host)
         self.assertNotEqual(a.source_tag, b.source_tag)
 
+    def test_v2_historical_factory_index_enumeration_includes_quote_and_nonquote(self):
+        class IndexedRPC:
+            source_tag = "fake"
+            calls = 0
+            def request(self, method, params):
+                self.calls += 1
+                if method != "eth_call":
+                    raise AssertionError("only read eth_call permitted")
+                obj, block = params
+                contract, data = obj["to"].lower(), obj["data"]
+                if data == "0x574f2ba3":
+                    value = 100 if int(block, 16) == 9 else 102
+                    returned = hex(value)
+                elif data.startswith("0x1e3dd18b"):
+                    idx = int(data[10:], 16)
+                    returned = "0x" + "0"*24 + ("%040x" % (idx - 99))
+                elif data == "0x0dfe1681":
+                    returned = "0x" + "0"*24 + ("1"*40 if contract.endswith("1") else "2"*40)
+                elif data == "0xd21220a7":
+                    returned = "0x" + "0"*24 + ("b"*39 + "0" if contract.endswith("1") else "e"*40)
+                else:
+                    raise AssertionError("unexpected read")
+                import json
+                return returned, json.dumps({"jsonrpc":"2.0","result":returned}).encode()
+        with tempfile.TemporaryDirectory() as tmp:
+            rpc = IndexedRPC()
+            result = m.enumerate_bsc_v2(rpc, 10, 20, limit=2, out_dir=Path(tmp))
+            self.assertEqual(result["factory_new_pools_in_day"], 2)
+            self.assertEqual(result["status"], "PARTIAL_NOT_30_ELIGIBLE_OR_LIMIT")
+            self.assertEqual(result["identity_candidates_found"], 0)
+            self.assertEqual(result["factory_index_rows_checked"], 2)
+            before = rpc.calls
+            result2 = m.enumerate_bsc_v2(rpc, 10, 20, limit=2, out_dir=Path(tmp))
+            self.assertEqual(rpc.calls - before, 2)
+            src = Path(tmp) / "v2_historical_index_raw" / "100.json"
+            payload = json.loads(src.read_text())
+            payload["raw_abi_response_records"][0]["sha256"] = "0" * 64
+            src.write_text(json.dumps(payload))
+            with self.assertRaisesRegex(m.SourceError, "SAVED_RAW_SHA_MISMATCH"):
+                m.enumerate_bsc_v2(rpc, 10, 20, limit=2, out_dir=Path(tmp))
+
+    def test_v2_historical_index_rejects_zero_abi_address(self):
+        class Fake:
+            def request(self, method, params):
+                return "0x" + "0"*64, b"{}"
+        with self.assertRaisesRegex(m.SourceError, "ZERO_OR_MISSING_PAIR"):
+            m.historical_v2_address(Fake(), "0x" + "1"*40, "0x1e3dd18b", 10)
+
     def test_wrong_chain_and_embedded_credentials_rejected(self):
         with self.assertRaisesRegex(m.SourceError, "CREDENTIALS"):
             m.RPC("https://name:pass@some-rpc.com", 8453, 3, 0)
