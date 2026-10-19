@@ -8837,5 +8837,29 @@
     "p1": "BLOCKED",
     "production": "NO_GO",
     "spend_usd": 0
+  },
+  "bsc_p0_v3_graph_mac_first_manual_failure_and_http_diagnostics_20261020": {
+    "source": "USER_MAC_TERMINAL_SCREENSHOT_IN_CHAT",
+    "user_worktree_commit": "3f6e2984bc59cffcaabbcbfaef03112e5b2007aa",
+    "user_reported_stdout": "GRAPH_NETWORK_OR_AUTH_FAILURE",
+    "graph_api_key_created_by_user": true,
+    "graph_api_key_shared_in_conversation": true,
+    "credential_safety": "ROTATION_RECOMMENDED_DO_NOT_COMMIT_OR_ECHO_KEY",
+    "graph_api_http_status": "UNKNOWN_SWALLOWED_BY_OLD_CLIENT",
+    "actual_authenticated_query_success": false,
+    "query_reached_gateway": "UNKNOWN",
+    "original_raw_graph_response": "NOT_AVAILABLE",
+    "graph_studio_ui_reported": "No queries yet (screenshot at observation; may be delayed)",
+    "root_cause": "UNRESOLVED_OLD_CLIENT_COLLAPSED_HTTP_URLError_TimeoutError",
+    "graph_documented_auth": "Authorization Bearer is supported by The Graph official docs",
+    "fix_commit": "947b1397234fe745b800d78c276a86828e714ea5",
+    "fix_scope": "Distinct HTTP_401_403_402_404_429_5xx vs DNS/TLS/TIMEOUT without URL/body/secret in errors",
+    "isolated_diagnostic_logic_test": "9/9 PASS, exact handler logic replicated in isolated local Python",
+    "full_python_tests_for_new_commit": "NOT_RUN",
+    "mac_code_retest_after_fix": "NOT_RUN",
+    "new_graph_pools_verified": 0,
+    "phase_p0": "INSUFFICIENT_COVERAGE",
+    "phase_p1": "BLOCKED",
+    "paid_actions": false
   }
 }

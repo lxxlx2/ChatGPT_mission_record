@@ -1,5 +1,13 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：用户 Mac 首次 Graph 探针失败，已修正静默吞掉 HTTP 诊断问题
+
+用户在本地隔离 worktree HEAD `3f6e2984` 前台执行原始 Graph 单次探针，终端实际返回 `GRAPH_NETWORK_OR_AUTH_FAILURE`；同期 Graph Studio 截图显示 `No queries yet`。旧脚本将 HTTP 401/403/402/404/429/5xx、DNS、TLS 和超时统一捕获成同一个错误，故**真实 HTTP 状态、是否到达 Gateway、是否为凭证错误均未知**，不得将它写成 key 不可用、历史子图不存在或历史无池。
+
+已在固定代码提交 `947b1397234fe745b800d78c276a86828e714ea5` 修改同一来源探针错误分类，只输出不含 URL、body、API Key 的固定 HTTP/网络状态，新增针对 HTTP 拒绝/DNS 的两个离线单测。隔离 Python 环境对同等诊断逻辑的9个独立模拟案例 PASS，但**新提交的完整8个 Python unittest 尚未执行，新代码尚未经用户 Mac 重跑，真实 Graph API 请求未成功**。The Graph 官方文档支持现用的 Authorization: Bearer 格式，无证据要求改变 URL 或添加付费方案。
+
+用户在聊天中粘贴了 Key，应在 Graph Studio 轮换；本 JSON/MD/PR 严禁记录密钥或其部分前缀。账户 Free Plan 有免费查询额度，若后续返回402不得付费重试。既有30个 V2 样本、24/30 PIT和18/30同金额门槛均未更改；P0 `INSUFFICIENT_COVERAGE`、P1 `BLOCKED` 保持。
+
 ## 2026-10-20：BSC V3 索引来源单次请求探针代码已提交，真实历史 GraphQL 仍未查询
 
 - 官方 PancakeSwap BSC V3 子图 ID `Hv1GncLY5docZoGtXjo4kwbTvxm3MAhVZqBZE4sUT9eZ`；其官方开源 [lite BSC Factory 源配置](https://github.com/pancakeswap/pancake-subgraph/blob/master/subgraphs/exchange-v3/lite/subgraph.yaml) 起始区块 26956207，源码 [Pool schema](https://github.com/pancakeswap/pancake-subgraph/blob/master/subgraphs/exchange-v3/lite/schema.graphql) 定义创建块、创建时间、token0、token1、feeTier。**线上部署 schema 与 2025 完整索引覆盖尚未经过实际 API 核实。**
