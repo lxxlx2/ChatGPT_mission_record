@@ -35,13 +35,14 @@
           "explanation": "UNATTRIBUTED; signed nonce counts cannot explain passive or internal value movements"
         }
       ],
-      "signed_owner_transactions_after_last_sale_before_30day_end": null,
+      "signed_owner_transactions_after_last_sale_before_30day_end": 2,
       "round_profitability": "UNRESOLVED",
       "not_profit_columns": [
         "selected_block_delta_sum_wei",
         "continuous_window_wallet_delta_wei",
         "all_unselected_gap_delta_wei"
-      ]
+      ],
+      "owner_30day_end_nonce": 24348
     },
     {
       "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
@@ -64,13 +65,14 @@
           "explanation": "UNATTRIBUTED; signed nonce counts cannot explain passive or internal value movements"
         }
       ],
-      "signed_owner_transactions_after_last_sale_before_30day_end": null,
+      "signed_owner_transactions_after_last_sale_before_30day_end": 0,
       "round_profitability": "UNRESOLVED",
       "not_profit_columns": [
         "selected_block_delta_sum_wei",
         "continuous_window_wallet_delta_wei",
         "all_unselected_gap_delta_wei"
-      ]
+      ],
+      "owner_30day_end_nonce": 27744
     }
   ],
   "gates": {
