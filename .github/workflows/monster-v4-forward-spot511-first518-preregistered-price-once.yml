@@ -1,0 +1,97 @@
+name: Monster first518 all8 WATCH SETUP fixed horizon original issuer research once
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-forward-spot511-first518-preregistered-price-once.yml'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: monster-first518-original-eight-fixed-price-once
+  cancel-in-progress: false
+jobs:
+  original_16_events_preregistered_horizons:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: true
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify immutable original protocol and unit tests
+        run: |
+          set -eu
+          python3 - <<'PY'
+          import subprocess
+          from pathlib import Path
+          files=subprocess.check_output(['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],text=True).splitlines()
+          assert files==['.github/workflows/monster-v4-forward-spot511-first518-preregistered-price-once.yml'],files
+          protocol=Path('crypto-300-profit-mission/monster/MONSTER_FORWARD_SPOT511_FIRST518_POST_SIGNAL_ECONOMICS_FROZEN_20261019.md')
+          assert protocol.is_file()
+          print('MONSTER518_SOURCE_AND_PRICE_RULES_ALREADY_PRE_REGISTERED_NO_PROFIT_CHERRY_PICK')
+          PY
+          python3 -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_postsignal_economics.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_forward_spot511_first518_postsignal_economics.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_forward_spot511_first518_postsignal_economics.py
+      - name: Retrieve only original already acquired issuer 1m data source artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster518p/a /tmp/monster518p/b /tmp/monster518p/c
+          gh run download 39212800265 --repo lxxlx2/ChatGPT_mission_record --name monster-spot511-oct16-17-original-publisher-zip-checksum-1022-attempts --dir /tmp/monster518p/a
+          gh run download 39213387756 --repo lxxlx2/ChatGPT_mission_record --name monster-frozen-spot511-unicode4-source-gap-official-publisher-originals --dir /tmp/monster518p/b
+          gh run download 39214007356 --repo lxxlx2/ChatGPT_mission_record --name monster-real-spot511-20261018-original-issuer-zip-and-checksum --dir /tmp/monster518p/c
+          echo MONSTER518_POSTSIGNAL_REUSE_REAL_ORIGINAL_SOURCE_ZERO_NEW_PUBLISHER_GET
+      - name: Execute 15 60 360 1440 minute frozen source all8 each with no future admission
+        run: |
+          set -eu
+          python3 -B crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_postsignal_economics.py --source-dir /tmp/monster518p/a --source-dir /tmp/monster518p/b --source-dir /tmp/monster518p/c --out /tmp/monster518_postsignal_real.json
+          python3 - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          p=Path('/tmp/monster518_postsignal_real.json')
+          result=json.loads(p.read_text())
+          assert result['source_first518_sha256']=='d51ce0faa70609dfa24659eed29958cef167c068838ad3986c6a8a0e297b0c2d'
+          assert result['source_immutable_watch_count']==8 and result['source_immutable_setup_count']==8
+          assert result['pre_registered_horizons_minutes']==[15,60,360,1440]
+          for role,by_horizon in result['both_alternative_non_combined_signal_views'].items():
+              for minutes,datum in by_horizon.items():
+                  assert datum['summary']['all_original_signals']==8
+                  assert len(datum['rows'])==8
+          assert result['G0']=='PARTIAL' and result['G4']=='UNKNOWN' and result['G6']=='NO_GO'
+          assert result['NO_MERGE'] and result['NO_DEPLOY'] and result['NO_GMAIL'] and result['NO_TRADE']
+          print('MONSTER518_REAL_ORIGINAL16_EVENTS_PRE_FROZEN_ECONOMIC_PROXY_SHA256',hashlib.sha256(p.read_bytes()).hexdigest())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-first518-all8-original-signal-fixed-prices-issuer-v1
+          path: /tmp/monster518_postsignal_real.json
+          retention-days: 60
+          if-no-files-found: error
+      - name: Archive true results once on PR30 with immutable source/code SHA guard
+        run: |
+          set -eu
+          target=crypto-300-profit-mission/monster/evidence/monster_forward_spot511_first518_8watch_8setup_fixed_horizons_actual_v1.json
+          branch=research/monster-v4-local-discovery-20261010
+          test ! -e "$target"
+          cp /tmp/monster518_postsignal_real.json "$target"
+          git add "$target"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git commit -m "monster: archive original8 WATCH and 8 SETUP fixed price horizons actual"
+          git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$target" 2>/dev/null; then
+            echo MONSTER518_POSTSIGNAL_ECONOMICS_ALREADY_SEALED
+            exit 1
+          fi
+          git rebase FETCH_HEAD
+          for f in crypto-300-profit-mission/monster/MONSTER_FORWARD_SPOT511_FIRST518_POST_SIGNAL_ECONOMICS_FROZEN_20261019.md crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_postsignal_economics.py crypto-300-profit-mission/local-agent/scripts/monster_v4_forward_spot511_first518_fifo8_bridge.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_forward_spot511_first518_postsignal_economics.py crypto-300-profit-mission/monster/evidence/monster_forward_spot511_first518_official_minute_causal_fifo8_actual_v1.json .github/workflows/monster-v4-forward-spot511-first518-preregistered-price-once.yml; do
+            test "$(git rev-parse "$GITHUB_SHA:$f")" = "$(git rev-parse "HEAD:$f")" || { echo "MONSTER518_PRICE_FREEZE_OR_SOURCE_DRIFT=$f"; exit 1; }
+          done
+          git push origin "HEAD:refs/heads/$branch"
+          echo MONSTER518_REAL_FIXED_PRICE_RESULTS_ARCHIVED_NOT_EXECUTABLE_TRADING
