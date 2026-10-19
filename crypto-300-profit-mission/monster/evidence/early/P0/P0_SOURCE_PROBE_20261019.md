@@ -1,6 +1,16 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
 
+## 2026-10-20 Mac部署代码状态实测第一批 #1–#5：完整通过
+
+固定SHA `15625f373250cc2356ee05ca92e8a321b1bcd565` 在用户Mac前台 `git pull --ff-only` 成功，离线测试 `test_monster_early_bsc_v2_pit.py` **15/15 PASS**、`test_monster_early_venue_factory_rpc_roster_probe.py` **18/18 PASS**，合计**33/33 PASS**。新`--mode deployment`首次真实BSC历史HTTPS RPC运行（冻结2025-07-01 UTC，rank1–5）**38个RPC请求、5/5正常完成、无来源失败**。rank#1和#5 `RUNTIME_CODE_PREEXISTS_FROZEN_UTC_DAY`（当天之前已有code），rank#2首次代码可见块**52440593**、#3 **52440672**、#4 **52440725**（前一块无code；和之前只读Alchemy结果一致）。本机原始HTTP响应+本机计算SHA预期按代码写入原P0本地归档，**本对话没有读取/独立校验用户Mac文件**；记录为`USER_PASTED_MAC_TERMINAL_STDOUT`而非第三方原始字节证明。用户回执证据详见JSON的`bsc_v2_p0_mac_deployment_code_batch1_20261020`。该固定代码版本本地新单测由NOT_RUN转为PASS。
+
+精确业务边界：5/5成功只证明P0历史 runtime-code 出现/存在区块，**不是5/5部署Tx证明，也不是5/5 public `available_at`、买卖实际可行、策略赚钱**。`24/30` PIT与`18/30`卖出均仍`NOT_SCORABLE`。有界免费链上方法可用性检查：Alchemy连接器的`trace_filter`明确需要付费，`alchemy_getTransactionReceipts`在BNB网络不受支持；标准`eth_getBlockReceipts`能返回结果但当前连接器大结果截断（约8KB），不能作为完整区块所有部署收据。**不升级付费、不把截断数组当完整验证**。若需准确部署Tx，后续仅通过已验证免费历史RPC在指定代码首次非空块读取完整收据或有界交易索引，且对factory内部CREATE与顶层contractAddress作区分，先证实可用才开发；不要无条件跑全天交易收据。
+
+下一次仅需**接着执行rank6–30的五批**，不需要重复rank1–5或既往1471请求；每批独立100次免费RPC上限，故障后停止并保留旧原始归档。完成后即可以代码状态为背景，集中验证实际入场/可卖证据与完整PIT门槛，不增新Stage，不开始P1或模型。
+
+---
+
 ## 2026-10-20 P0新实证：冻结30币历史代码存在性、首次代码状态与实际入场分层
 
 不从赢家倒推，**只按冻结V2工厂时间顺序**查2025-07-01的30个token；结合早已冻结的池原始Mint/Sync和2 WBNB / 1000 USDT报价侧下限：**20/30在建池Tx初始流动性已达原冻结档位且30内均出现在历史归档买入Swap+Sync列表中**；其他10个在建池时未达到这一档位，含后续延迟LP样本、零储备及超浅池。**20是条件交集的来源证据而不是已确立完整`T_entry`的买入资格，更不是已可卖出样本；10仍保留母体且可在之后首次满足条件时入场**。23/30买入Swap和3/30卖出Swap均只覆盖保存的非连续短窗口，不能由此推断全天事件全集。
