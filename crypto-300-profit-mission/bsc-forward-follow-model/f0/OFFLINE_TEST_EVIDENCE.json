@@ -1,0 +1,36 @@
+{
+  "schema": "bsc-forward-f0-offline-test-evidence-v2",
+  "source_reviewed_architecture_sha": "9134fcd41df49ef836b81c8a040974ad89c1fde1",
+  "source_reviewed_f0_preparation_sha": "cf88cd9f6568502f5c052ae3befc9cc16cbab98b",
+  "PR118_independent_review_rejected_sha": "db8c0781c8abdfb06955059b0f237421ff838760",
+  "review_conclusion_on_original": "REQUEST_CHANGES",
+  "fixed_issues": [
+    "P1_1_QUOTE_RESPONSE_VALIDATION",
+    "P1_2_UNKNOWN_TO_DIRECTION_SAME_EVENT",
+    "P1_3_SELL_EXIT_QUOTE_PIPELINE"
+  ],
+  "test_runner": "python3 -m unittest discover -s tests -q",
+  "local_result": "PASS",
+  "test_count": 36,
+  "test_report": "Ran 36 tests ... OK",
+  "synthetic_replay": "python3 f0_offline_collector.py --fixture fixtures/offline_replay.json --report fixture_run_report.json",
+  "fixture_events": 6,
+  "fixture_source": "SYNTHETIC_ONLY",
+  "real_rpc_calls": 0,
+  "real_e3_events": 0,
+  "real_quote_events": 0,
+  "paper_pnl_labels": 0,
+  "sample_output_quote_counts": {
+    "NO_QUOTE": 4,
+    "REJECTED": 3,
+    "SYNTHETIC_REPLAY_QUOTE": 5
+  },
+  "sha256": {
+    "f0_offline_collector.py": "a1dc72c74da27a488d4c7544b8e21049569d76d1982cc58d70eb8d7c0f66ef9a",
+    "tests/test_f0_offline_collector.py": "c19fd7ee6f9bb74eebecea2cb77c85dfe792a3a9a26b534605645316096d50d8",
+    "fixtures/offline_replay.json": "9bb9bd9fcda95c559386920f8aa487073306f2a2df07b22366ed27203460b7d2",
+    "OFFLINE_DEVELOPMENT.md": "93d6412d520a415b8a7e849c057a0e356031990c58ee30824d01efdc01742b16",
+    "fixture_run_report.json": "c035743d19fe2d6178aae29e936f3c916b4ae6fd02b687a4cd0776f662a62c74"
+  },
+  "next_gate": "PENDING_OTHER_AI_REVIEW"
+}

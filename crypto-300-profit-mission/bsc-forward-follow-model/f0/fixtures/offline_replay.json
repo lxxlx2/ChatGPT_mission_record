@@ -1,0 +1,323 @@
+{
+  "schema": "bsc-forward-f0-offline-replay-v1",
+  "mode": "SYNTHETIC_ONLY",
+  "config": {
+    "control_seed": "f0-control-precommit-v1",
+    "control_modulo": 1,
+    "min_confirmations": 2,
+    "trial_routers": [
+      "0xcccccccccccccccccccccccccccccccccccccccc"
+    ]
+  },
+  "records": [
+    {
+      "kind": "detection",
+      "at_ms": 1000,
+      "chain_id": 56,
+      "event_id": "event-1",
+      "wallet": "0x1111111111111111111111111111111111111111",
+      "tx_hash": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "ca": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "side": "BUY",
+      "group": "WATCHLIST",
+      "ingest_path": "WS",
+      "first_received_ms": 1000,
+      "actionable_ms": 1000,
+      "trial": true
+    },
+    {
+      "kind": "receipt",
+      "at_ms": 1100,
+      "chain_id": 56,
+      "event_id": "event-1",
+      "tx_hash": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "tx_from": "0x1111111111111111111111111111111111111111",
+      "status": 1,
+      "confirmations": 3,
+      "block_hash": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "router": "0xcccccccccccccccccccccccccccccccccccccccc",
+      "quote_ca": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "flow": {
+        "swap_route_connected": true,
+        "token": {
+          "ca": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "raw": "1000",
+          "to": "0x1111111111111111111111111111111111111111",
+          "from": "0xcccccccccccccccccccccccccccccccccccccccc"
+        },
+        "quote": {
+          "ca": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "raw": "10",
+          "from": "0x1111111111111111111111111111111111111111",
+          "to": "0xcccccccccccccccccccccccccccccccccccccccc"
+        }
+      }
+    },
+    {
+      "kind": "detection",
+      "at_ms": 1300,
+      "chain_id": 56,
+      "event_id": "event-2",
+      "wallet": "0x2222222222222222222222222222222222222222",
+      "tx_hash": "0x0000000000000000000000000000000000000000000000000000000000000002",
+      "ca": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "side": "BUY",
+      "group": "CONTROL_RANDOM",
+      "ingest_path": "WS",
+      "first_received_ms": 1300,
+      "actionable_ms": 1300,
+      "trial": true
+    },
+    {
+      "kind": "receipt",
+      "at_ms": 1700,
+      "chain_id": 56,
+      "event_id": "event-2",
+      "tx_hash": "0x0000000000000000000000000000000000000000000000000000000000000002",
+      "tx_from": "0x2222222222222222222222222222222222222222",
+      "status": 1,
+      "confirmations": 3,
+      "block_hash": "0x0000000000000000000000000000000000000000000000000000000000000002",
+      "router": "0xcccccccccccccccccccccccccccccccccccccccc",
+      "quote_ca": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "flow": {
+        "swap_route_connected": true,
+        "token": {
+          "ca": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "raw": "1000",
+          "to": "0x2222222222222222222222222222222222222222",
+          "from": "0xcccccccccccccccccccccccccccccccccccccccc"
+        },
+        "quote": {
+          "ca": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "raw": "10",
+          "from": "0x2222222222222222222222222222222222222222",
+          "to": "0xcccccccccccccccccccccccccccccccccccccccc"
+        }
+      }
+    },
+    {
+      "kind": "detection",
+      "at_ms": 4000,
+      "chain_id": 56,
+      "event_id": "event-3",
+      "wallet": "0x3333333333333333333333333333333333333333",
+      "tx_hash": "0x0000000000000000000000000000000000000000000000000000000000000003",
+      "ca": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "side": "BUY",
+      "group": "WATCHLIST",
+      "ingest_path": "WS",
+      "first_received_ms": 4000,
+      "actionable_ms": 4000,
+      "trial": true
+    },
+    {
+      "kind": "receipt",
+      "at_ms": 4100,
+      "chain_id": 56,
+      "event_id": "event-3",
+      "tx_hash": "0x0000000000000000000000000000000000000000000000000000000000000003",
+      "tx_from": "0x3333333333333333333333333333333333333333",
+      "status": 0,
+      "confirmations": 3,
+      "block_hash": "0x0000000000000000000000000000000000000000000000000000000000000003",
+      "router": "0xcccccccccccccccccccccccccccccccccccccccc",
+      "quote_ca": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "flow": {
+        "swap_route_connected": true,
+        "token": {
+          "ca": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "raw": "1000",
+          "to": "0x3333333333333333333333333333333333333333",
+          "from": "0xcccccccccccccccccccccccccccccccccccccccc"
+        },
+        "quote": {
+          "ca": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "raw": "10",
+          "from": "0x3333333333333333333333333333333333333333",
+          "to": "0xcccccccccccccccccccccccccccccccccccccccc"
+        }
+      }
+    },
+    {
+      "kind": "detection",
+      "at_ms": 5500,
+      "chain_id": 56,
+      "event_id": "event-4",
+      "wallet": "0x4444444444444444444444444444444444444444",
+      "tx_hash": "0x0000000000000000000000000000000000000000000000000000000000000004",
+      "ca": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "side": "BUY",
+      "group": "WATCHLIST",
+      "ingest_path": "BACKFILL",
+      "first_received_ms": 5500,
+      "actionable_ms": 5500,
+      "trial": true
+    },
+    {
+      "kind": "receipt",
+      "at_ms": 5600,
+      "chain_id": 56,
+      "event_id": "event-4",
+      "tx_hash": "0x0000000000000000000000000000000000000000000000000000000000000004",
+      "tx_from": "0x4444444444444444444444444444444444444444",
+      "status": 1,
+      "confirmations": 3,
+      "block_hash": "0x0000000000000000000000000000000000000000000000000000000000000004",
+      "router": "0xcccccccccccccccccccccccccccccccccccccccc",
+      "quote_ca": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "flow": {
+        "swap_route_connected": true,
+        "token": {
+          "ca": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "raw": "1000",
+          "to": "0x4444444444444444444444444444444444444444",
+          "from": "0xcccccccccccccccccccccccccccccccccccccccc"
+        },
+        "quote": {
+          "ca": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "raw": "10",
+          "from": "0x4444444444444444444444444444444444444444",
+          "to": "0xcccccccccccccccccccccccccccccccccccccccc"
+        }
+      }
+    },
+    {
+      "kind": "detection",
+      "at_ms": 10000,
+      "chain_id": 56,
+      "event_id": "event-5",
+      "wallet": "0x5555555555555555555555555555555555555555",
+      "tx_hash": "0x0000000000000000000000000000000000000000000000000000000000000005",
+      "ca": null,
+      "side": "UNKNOWN",
+      "group": "WATCHLIST",
+      "ingest_path": "WS",
+      "first_received_ms": 10000,
+      "actionable_ms": null,
+      "trial": true
+    },
+    {
+      "kind": "receipt",
+      "at_ms": 10100,
+      "chain_id": 56,
+      "event_id": "event-5",
+      "tx_hash": "0x0000000000000000000000000000000000000000000000000000000000000005",
+      "tx_from": "0x5555555555555555555555555555555555555555",
+      "status": 1,
+      "confirmations": 3,
+      "block_hash": "0x0000000000000000000000000000000000000000000000000000000000000005",
+      "router": "0xcccccccccccccccccccccccccccccccccccccccc",
+      "quote_ca": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "flow": {
+        "swap_route_connected": true,
+        "token": {
+          "ca": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "raw": "1000",
+          "to": "0x5555555555555555555555555555555555555555",
+          "from": "0xcccccccccccccccccccccccccccccccccccccccc"
+        },
+        "quote": {
+          "ca": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "raw": "10",
+          "from": "0x5555555555555555555555555555555555555555",
+          "to": "0xcccccccccccccccccccccccccccccccccccccccc"
+        }
+      }
+    },
+    {
+      "kind": "detection",
+      "at_ms": 12000,
+      "chain_id": 56,
+      "event_id": "event-6",
+      "wallet": "0x6666666666666666666666666666666666666666",
+      "tx_hash": "0x0000000000000000000000000000000000000000000000000000000000000006",
+      "ca": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "side": "BUY",
+      "group": "WATCHLIST",
+      "ingest_path": "WS",
+      "first_received_ms": 12000,
+      "actionable_ms": 12000,
+      "trial": true
+    },
+    {
+      "kind": "receipt",
+      "at_ms": 12100,
+      "chain_id": 56,
+      "event_id": "event-6",
+      "tx_hash": "0x0000000000000000000000000000000000000000000000000000000000000006",
+      "tx_from": "0x6666666666666666666666666666666666666666",
+      "status": 1,
+      "confirmations": 3,
+      "block_hash": "0x0000000000000000000000000000000000000000000000000000000000000006",
+      "router": "0xcccccccccccccccccccccccccccccccccccccccc",
+      "quote_ca": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "flow": {
+        "swap_route_connected": false,
+        "token": {
+          "ca": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "raw": "1000",
+          "to": "0x6666666666666666666666666666666666666666",
+          "from": "0xcccccccccccccccccccccccccccccccccccccccc"
+        },
+        "quote": {
+          "ca": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "raw": "10",
+          "from": "0x6666666666666666666666666666666666666666",
+          "to": "0xcccccccccccccccccccccccccccccccccccccccc"
+        }
+      }
+    },
+    {
+      "kind": "quote",
+      "at_ms": 61080,
+      "event_id": "event-1",
+      "delta_ms": 60000,
+      "requested_ms": 61000,
+      "received_ms": 61080,
+      "synthetic_amount_out_raw": "1000",
+      "response_status": "SUCCESS"
+    },
+    {
+      "kind": "quote",
+      "at_ms": 61380,
+      "event_id": "event-2",
+      "delta_ms": 60000,
+      "requested_ms": 61300,
+      "received_ms": 61380,
+      "synthetic_amount_out_raw": "1000",
+      "response_status": "SUCCESS"
+    },
+    {
+      "kind": "quote",
+      "at_ms": 301080,
+      "event_id": "event-1",
+      "delta_ms": 300000,
+      "requested_ms": 301000,
+      "received_ms": 301080,
+      "synthetic_amount_out_raw": "1000",
+      "response_status": "SUCCESS"
+    },
+    {
+      "kind": "quote",
+      "at_ms": 301380,
+      "event_id": "event-2",
+      "delta_ms": 300000,
+      "requested_ms": 301300,
+      "received_ms": 301380,
+      "synthetic_amount_out_raw": "1000",
+      "response_status": "SUCCESS"
+    },
+    {
+      "kind": "quote",
+      "at_ms": 901080,
+      "event_id": "event-1",
+      "delta_ms": 900000,
+      "requested_ms": 901000,
+      "received_ms": 901080,
+      "synthetic_amount_out_raw": "1000",
+      "response_status": "SUCCESS"
+    }
+  ],
+  "end_ms": 950000
+}
