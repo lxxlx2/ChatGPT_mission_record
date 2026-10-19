@@ -1,6 +1,30 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
 
+## 2026-10-20 实际买卖链上证据推进：20例独立候选全部找到后续成功卖出，16例卖出前深度达标
+
+**新增实证来源与重要口径改变。** 用户上传了Mac离线产物`v2_p0_20_later_block_buy_candidates.json`（本轮实际文件原字节SHA256 `c4fc4e30c4e1e670b5a339dc25951cc27831b63c36a68436396967d5fde8a4a5`，5495 bytes）。逐条对照原冻结Pancake V2 Factory30成员、20个唯一rank、20笔唯一买入TX、买入块严格晚于建池块、买入时的原冻结报价侧池深度下限：**20/20身份和时间/流动性标注一致**。全部20个rank的旧短窗阶段前身已经有`Swap+Sync`，但不能把`first_observed`写成全历史首次可公共反应的`T_entry`。
+
+使用用户已连接且可用的免费Alchemy BNB-mainnet只读端点（无需API升级）完成**两个相互补强但非独立供应商**的历史事实查询：
+
+1. 对上传的20个确定买入TX读历史`eth_getTransactionReceipt`：**20/20状态`0x1`**。此前#1/#2/#3以及本次#4/#7/#12/#25另有原池WBNB/USDT实际转入、候选代币从池实际转出、Pair Swap数量逐原始整数匹配的闭环抽查；其他13笔首先确认回执status，不能把所有20笔均写成已逐条核对原ERC20买入Transfer。
+2. 对**每个冻结token CA + 对应原Pair地址**，用Alchemy已索引的`getAssetTransfers(category=erc20,toAddress=pair,contractAddresses=[token],fromBlock=买入区块,order=asc,maxCount=2)`取得**买入后至少一笔代币真实转回原池的Tx**，再读取每笔首次索引回流的原始`eth_getTransactionReceipt`。**20/20**有成功`status=0x1`、该Pool真实`Swap`、该候选Token的`Transfer(sender→pair)`、报价Token的`Transfer(pair→router/recipient)`，两种资产的转账raw分别与同笔Swap的`tokenIn/quoteOut`逐整数匹配。并以该笔交易的Pair`Sync`反推**当笔卖出之前**quote reserve，非用事后某个OHLC高点。这**是实际市场中存在的卖出，不是单纯看到有人将代币转入池子**；但被观察到的卖方不一定是上传的买方。
+3. 上述**20笔各自第一笔索引后续真实卖出中，16笔卖出前quote reserve达到原冻结的`2 WBNB`（rank#1为`1000 USDT`）研究地板**：#1/#3/#4/#7/#9/#11/#12/#13/#19/#21/#23/#24/#25/#27/#29/#30。**4笔低于门槛**：#2/#6/#10/#22，其中报价余额接近dust，不能与较早达标买入的储备混算或宣布可承受同额退出。研究池门槛不是用户下单金额。各20例的真实买卖Tx、block、原始Token实际入池/quote实际转出数量、当笔卖出前的reserve和是否达门槛均记录在本P0唯一JSON主文件的`bsc_v2_p0_uploaded20_actual_buy_and_indexed_real_sell_replay_20261020.case_results`，未创建平行新Stage/多余成果文件。
+
+**三条同收币地址、同购买Token原始数量实际回流的闭环样例（均卖出前过冻结流动性门槛）**，只计算池quote侧两腿流入与流出，不计Gas、授权、其它资产跨钱包出入及交易服务成本：
+
+| 冻结rank | 买入真实quote | 对应原token全部回流数量 | 成功卖出池quoteOut | 两腿quote变化，非净利润 | 交易细节 |
+|---|---:|---|---:|---:|---|
+| #3 | 0.0011 WBNB | `122279179504473913187874` raw | 0.001347005349558909 WBNB | **+22.46%（费前金额）** | 买方token收币地址与后续卖出tokenFrom和报价收币地址均`0x7347a30460516c8451687d9b1fc61efec6f8dae6`；实际卖出Tx发起人是**另一地址**，不可冒称同一EOA执行 |
+| #7 | 0.012 WBNB | `476518429758317` raw | 0.011940359843178181 WBNB | **−0.50%（费前金额）** | 同一钱包于Router执行后续`swapExactTokensForETH`；WBNB从Pool进Router，最终native输出由成功路由器调用支持 |
+| #12 | 0.25 WBNB | `987648209114086` raw | 0.249547777402681631 WBNB | **−0.18%（费前金额）** | 同一钱包直接从Router买入并通过Router `swapExactTokensForETH`卖出，卖出手续费及批准的完整Gas口径未核实 |
+
+#7/#12的卖单函数选择器为`0x18cbafe5`，且成功receipt；#3卖出TX选择器`0xfe061fbb`、由第三方发起，实际原Pair报价Token直接转向同原Token收币地址。以上均为**单笔历史参与者的结果，不得当作策略在当时公众可用时点赚到该收益**。查询来自同一Alchemy供应商的标准化索引+RPC，非第二家独立交叉提供商；本次没有把原HTTP bytes采集为不可变Git原始证据，不能声称已核验源哈希保真。
+
+**P0门禁不升档。** 此轮明显改变了旧结论“已存建池短窗口达标卖出0个”：那只是**非连续短窗口范围**，并非历史事实全貌；现用定向索引查到了20例真实后续卖出和16笔足量报价储备下的实际卖出。然而原冻结`24/30完整PIT`、`18/30统一研究金额的双向可模拟卖出覆盖`仍`NOT_SCORABLE`：离线公开实时`available_at`/税费/卖出Router限额/买入后连续源覆盖/90天完整退出规则/统一事先冻结的研究notional未闭环；另外10个冻结母体成员不能从分母删除。下一阶段优先**确认完整30例在冻结金额条件下的来源与交易容量是否可评分**，真实费后回测再决定P1，而不是继续机械增加买卖TX样本或用这三笔历史交易随意推销盈利能力。PR #30始终Draft，`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。
+
+---
+
 ## 2026-10-20 全量冻结30例独立成交口径确认，锁定20例下一阶段买入样本
 
 用户上传的Mac命令行文本明确确认：固定SHA `3e897bfe89a54f3945dc51df70076eaa13cbc4b4`、原两组离线测试18/18+18/18=**36/36 PASS**；离线复用原88份历史RPC归档，30/30建池身份与25/30原建池同Tx注资验证仍通过。`observed_swap_activity_distinct_transactions_by_rank`对全部30行输出，其中**26个样本在已存有限窗口存在Swap，4例#14/#18/#20/#26未见Swap**（不等于无交易，#18/#20后续窗口缺失）。
