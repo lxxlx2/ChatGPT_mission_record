@@ -514,7 +514,8 @@ def audit_saved_bsc_v2_p0(out_dir, evidence_path):
     establish independent-provider fidelity, public T_entry, or sellability.
     """
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    from mission_agent.early.bsc_v2_pit import PITInvalid, verify_bootstrap
+    from mission_agent.early.bsc_v2_pit import (PITInvalid, verify_bootstrap,
+                                               summarize_v2_archived_swap_windows)
 
     frozen = json.loads(Path(evidence_path).read_text(encoding="utf-8"))
     history = frozen["historical_bsc_v2_append_only_factory_enumeration"]
@@ -609,6 +610,8 @@ def audit_saved_bsc_v2_p0(out_dir, evidence_path):
                 if (proof["reserve0_raw"] != case["initial_reserve0_raw"]
                         or proof["reserve1_raw"] != case["initial_reserve1_raw"]):
                     raise SourceError("OFFLINE_AUDIT_LP_RESERVES_DRIFT")
+            archived_swap_windows = [{"name": "CREATION_BLOCK_TO_PLUS_9",
+                                      "logs": pool_logs}]
             later = Path(str(p) + ".later.rpc.json")
             if later.is_file():
                 later_events = original_json_file(later)
@@ -616,6 +619,12 @@ def audit_saved_bsc_v2_p0(out_dir, evidence_path):
                         log.get("address", "").lower() != case["pair"].lower()
                         or log.get("removed") is True for log in later_events):
                     raise SourceError("OFFLINE_AUDIT_LATER_POOL_LOG_SCOPE_MISMATCH")
+                archived_swap_windows.append({
+                    "name": "FIRST_LATER_POOL_RESERVE_UPDATE_BLOCK",
+                    "logs": later_events})
+            answer["archived_pair_swap_evidence"] = summarize_v2_archived_swap_windows(
+                pool=case["pair"], token0=row["token0"], token1=row["token1"],
+                quote_asset=item["quote_asset"], windows=archived_swap_windows)
             answer["status"] = "CREATION_MINT_SYNC_CONFIRMED" if (
                 proof["initial_quote_liquidity_proven"]
                 ) else "CREATION_CONFIRMED_NO_SAME_TX_MINT_SYNC"
@@ -630,6 +639,12 @@ def audit_saved_bsc_v2_p0(out_dir, evidence_path):
     creation_lp = sum(r.get("initial_lp_same_creation_tx") is True for r in good)
     no_creation_lp = sum(r.get("initial_lp_same_creation_tx") is False for r in good)
     complete = len(good) == 30 and creation_lp == 25 and no_creation_lp == 5
+    observed_sells = [x["rank"] for x in good if
+                      x["archived_pair_swap_evidence"]["observed_token_to_quote_with_sync"] > 0]
+    observed_buys = [x["rank"] for x in good if
+                     x["archived_pair_swap_evidence"]["observed_quote_to_token_with_sync"] > 0]
+    absent_later = [x["rank"] for x in good if
+                    len(x["archived_pair_swap_evidence"]["archived_windows"]) == 1]
     return {
         "schema": "MONSTER_BSC_V2_P0_LOCAL_ORIGINAL_RPC_OFFLINE_REPLAY_V1",
         "status": ("LOCAL_FROZEN_30_CREATION_REPLAY_PASS" if complete
@@ -645,6 +660,12 @@ def audit_saved_bsc_v2_p0(out_dir, evidence_path):
         "original_response_files_audited": len(original_files),
         "original_response_manifest": original_files,
         "rank_results": results,
+        "observed_token_to_quote_swap_with_same_tx_sync_ranks": observed_sells,
+        "observed_quote_to_token_swap_with_same_tx_sync_ranks": observed_buys,
+        "later_update_source_window_not_archived_ranks": absent_later,
+        "archive_swap_window_observation_scope":
+            "FIRST_TEN_CREATION_BLOCKS_PLUS_ONE_LATER_UPDATE_BLOCK_IF_SAVED; NONCONTIGUOUS",
+        "observed_sells_are_not_same_notional_user_sellability": True,
         "raw_sha256_scope": "RECALCULATED_FROM_LOCAL_BYTES_AT_AUDIT_NO_PRIOR_INDEPENDENT_SHA",
         "response_headers_captured": False,
         "independent_provider_verified": False,
@@ -670,7 +691,11 @@ def run(args):
         print(plain_json({k: result[k] for k in (
             "status", "fully_replayed_creation_count", "same_tx_initial_lp_count",
             "created_without_same_tx_initial_lp", "unknown_ranks",
-            "original_response_files_audited", "twentyfour_of_thirty_complete_pit_gate",
+            "original_response_files_audited",
+            "observed_token_to_quote_swap_with_same_tx_sync_ranks",
+            "observed_quote_to_token_swap_with_same_tx_sync_ranks",
+            "later_update_source_window_not_archived_ranks",
+            "twentyfour_of_thirty_complete_pit_gate",
             "eighteen_of_thirty_sellable_gate")}).strip())
         if result["status"] != "LOCAL_FROZEN_30_CREATION_REPLAY_PASS":
             raise SystemExit(2)
