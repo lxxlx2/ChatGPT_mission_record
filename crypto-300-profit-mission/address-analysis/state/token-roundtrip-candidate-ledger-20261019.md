@@ -41,3 +41,10 @@
 | #363 | 两轮区块余额变化合计 | **+0.217132915606493102 BNB** | 尚非完整钱包PNL |
 
 交易级 Router 内部 BNB 回款缺独立 trace；不能把上述金额当已审核净利润。两个回合之间的其它钱包收付不在这些执行区块数字内。
+
+## 第11组新增：#400 BOARDSEAT 完整买卖负向候选（2026-10-19）
+
+- **钱包（源行#400）**：`0xbac453b9b7f53b35ac906b641925b2f5f2567a89`，BNB Chain exact CA `0x1dfbfd0adec46b824a959cb7936625be0cb76711`，历史一买一卖完全退出。买入tx.value=1 BNB，转入和转出原始数量均 `29871175301577255802404783`（18位）。买入、授权、卖出签名及收据状态可核实；历史exact CA已经无分页。
+- **对应钱包BNB买卖执行区块余额变化合计：-0.337858120186780058 BNB**，等级 `PROVISIONAL_NEGATIVE_CLOSED_TOKEN_CASHFLOW`，缺 Router 内部 native 的逐交易出金 trace；**不得定性为已审计亏损**。
+- [研究报告](../batches/pnl-active-queue-pass-011-20261019.md) · [原始整数/交易哈希JSON](../evidence/pnl-active-queue-pass-011-20261019.json)。
+- 同 exact CA 在 #227 BOARDSEAT 曾出现正向候选，二者是**不同钱包与交易**，不能合并成本、推定共同控制或直接作跟单胜率。
