@@ -1,6 +1,27 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
 
+## 2026-10-20 固定SHA本机验收回执：归档重放已通过（P0业务门槛未通过）
+
+2026-10-20用户回传第二轮**实际Mac终端输出**：`git pull --ff-only`成功、`git rev-parse HEAD=c1cf218093b2ca9a99a90037dd20ee4b6d83527e`；原PIT测试**12/12 PASS**，新增原始归档验证器所在测试**14/14 PASS**，合计**26/26 PASS**。已有私有归档离线执行`--mode audit`得到：
+
+| 实际离线审计输出字段 | 本机回执 | 可以得出的结论 |
+|---|---|---|
+| `status` | `LOCAL_FROZEN_30_CREATION_REPLAY_PASS` | 固定30样本的建池证据与本地存档成功重放；仅限Pancake V2这一Factory |
+| `fully_replayed_creation_count` | 30 | 30个冻结身份全部有相容的Factory创建原响应 |
+| `same_tx_initial_lp_count` | 25 | 同建池交易LP初次Sync/Mint存在 |
+| `created_without_same_tx_initial_lp` | 5 | 这5个必须继续留在分母，并非样本剔除或证明永远无LP |
+| `original_response_files_audited` | 88 | 本地原始JSON-RPC响应字节在运行时被重读并计算SHA；本对话**未接触**原始字节及其完整manifest |
+| `unknown_ranks` | [] | 当前本地建池重放程序没有未解析身份；不能推导出所有样本已可买卖 |
+| `twentyfour_of_thirty_complete_pit_gate` | `NOT_SCORABLE` | 代币**部署首时点**与公众可用时点仍未完成 |
+| `eighteen_of_thirty_sellable_gate` | `NOT_SCORABLE` | 原买入后代币真实转账/税/授权/双向滑点/出售不能由Factory日志推出 |
+
+回执归属`USER_PASTED_MAC_TERMINAL_STDOUT`。该CLI依其代码不发RPC进行离线审计；但**不能把当次重算的SHA冒充采集当时独立提供商签发哈希，也不能将30/30原建池身份称作30/30全PIT可交易**。前次新审计代码`NOT_RUN`状态现已由用户本机26/26实际测试替代。保留`P0_PARTIAL / G4_UNKNOWN / G6_NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。
+
+**主线下一步**：不再请求用户重复生成30样本或重发1471次RPC。按同一冻结30排名优先从已存`*.later.rpc.json`和冻结历史Sync/Swap证据确定每币在当时是否发生可判方向的真实Token→报价币Swap、是否有可重放的储备/转账/税费来源；不以`getAmountsOut`无税数学结果冒充真实可卖。随后才针对仍缺历史读取的部署交易、不可在本地归档中验证的卖出限制进行**最少量有界免费只读外部查证**。P0覆盖门槛满足前不建预测器、不读事后赢家和30/90天价格标签。
+
+---
+
 ## 2026-10-20 用户Mac前台实际来源调用及离线归档验收入口
 
 **用户在本对话直接粘贴实际Mac终端输出**：新Git clone后两组已有离线测试分别12/12 PASS，总共24/24；BSC V2 UTC 2025-07-01历史Factory枚举实得**785个当日新池**、检查前34池并复得冻结**30个CA**，枚举共162个RPC调用。之后六批（排名1–5、6–10、11–15、16–20、21–25、26–30）实际read-only bootstrap回执依次报**5、5、4、2、5、4**个同建池交易Mint/Sync，共**25/30**，六批合计**1309**个RPC调用，加枚举总**1471**个RPC调用。与之前30冻结样本的25/30创建同Tx事实一致。原始Mac终端流已记录在同一JSON中的`bsc_v2_p0_user_mac_local_run_20261020`，来源分类为`USER_PASTED_MAC_TERMINAL_STDOUT`，不可冒充本会话远程读取Mac文件或第二来源的独立审核。用户Mac当次具体Git SHA、原始文件字节与SHA尚未由本会话回读，仍然不能将24/30部署/PIT或18/30真实双向可卖门槛升级为PASS。
