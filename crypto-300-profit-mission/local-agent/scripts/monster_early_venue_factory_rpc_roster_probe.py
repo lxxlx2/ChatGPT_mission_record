@@ -386,8 +386,10 @@ def build_roster(rows, chain):
 
 
 
-def bootstrap_bsc_v2_saved_roster(rpc, first, last, out_dir, limit):
+def bootstrap_bsc_v2_saved_roster(rpc, first, last, out_dir, limit, start_rank=1):
     """Bounded historical PairCreated + same-tx Mint/Sync verification for prior frozen identities."""
+    if not 1 <= start_rank <= 30 or not 1 <= limit <= 5:
+        raise SourceError("BOOTSTRAP_INVALID_FROZEN_RANK_WINDOW")
     source_path = out_dir / "v2_factory_enum_status.json"
     if not source_path.is_file():
         raise SourceError("RUN_ENUMERATE_MODE_BEFORE_BOOTSTRAP")
@@ -409,7 +411,7 @@ def bootstrap_bsc_v2_saved_roster(rpc, first, last, out_dir, limit):
             cache[block] = historical_v2_count(rpc, block)
         return cache[block]
     records = []
-    for item in source["sample"][:limit]:
+    for item in source["sample"][start_rank - 1:start_rank - 1 + limit]:
         index = item["factory_index"]
         pair = item["pair"].lower()
         identity = json.loads((out_dir / "v2_historical_index_raw" /
@@ -497,7 +499,8 @@ def bootstrap_bsc_v2_saved_roster(rpc, first, last, out_dir, limit):
                 is True for r in records),
             "verified_creation_and_first_mint": sum(
                 r.get("initial_quote_liquidity_proven") is True for r in records),
-            "records": records, "requested_count": limit,
+            "records": records, "start_rank": start_rank,
+            "requested_count": len(records),
             "source_day_blocks": [first, last],
             "source_rpc_fingerprint": rpc.source_tag,
             "real_executable_pnl": "UNKNOWN",
@@ -538,7 +541,8 @@ def run(args):
             raise SourceError("BOOTSTRAP_REQUIRES_BSC_V2")
         out_dir = args.out_dir.resolve() / (args.chain + "-" + args.day)
         result = bootstrap_bsc_v2_saved_roster(
-            rpc, first, last, out_dir, args.bootstrap_limit)
+            rpc, first, last, out_dir, args.bootstrap_limit,
+            start_rank=args.bootstrap_start_rank)
         result["requests_this_invocation"] = rpc.calls
         safe_file(out_dir / "v2_bootstrap_status.json",
                   plain_json(result).encode("utf-8"))
@@ -636,6 +640,8 @@ def main():
     parser.add_argument("--mode", choices=("probe", "scan", "enumerate", "bootstrap"), default="probe")
     parser.add_argument("--limit", type=int, default=45,
                         help="BSC V2 historical index identities to check, max 200 per invocation")
+    parser.add_argument("--bootstrap-start-rank", type=int, default=1,
+                        help="First 1-based frozen cohort rank to verify (1–30)")
     parser.add_argument("--bootstrap-limit", type=int, default=3,
                         help="Max frozen BSC V2 identities per manual initial-liquidity batch (1–5)")
     parser.add_argument("--rpc", default=None, help="Override only with a trusted HTTPS RPC with eth_getLogs")
@@ -646,6 +652,7 @@ def main():
     args = parser.parse_args()
     if (args.chunk < 1 or args.chunk > 10000 or args.max_requests < 1
         or not 1 <= args.limit <= 200 or not 1 <= args.bootstrap_limit <= 5
+        or not 1 <= args.bootstrap_start_rank <= 30
         or args.delay < 0):
         parser.error("invalid request budget / chunk / delay")
     try:
