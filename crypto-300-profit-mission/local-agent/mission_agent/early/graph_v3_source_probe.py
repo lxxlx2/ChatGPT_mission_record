@@ -8,6 +8,8 @@ import datetime as dt
 import hashlib
 import json
 import os
+import socket
+import ssl
 from pathlib import Path
 import re
 import urllib.error
@@ -107,9 +109,36 @@ def probe_once(api_key, out_dir, *, opener=urllib.request.urlopen):
     try:
         with opener(request, timeout=20) as response:
             raw = response.read(1048577)
-    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError):
-        # Do not print provider body, exception URLs, headers, or credentials.
-        raise ProbeError("GRAPH_NETWORK_OR_AUTH_FAILURE") from None
+    except urllib.error.HTTPError as exc:
+        # HTTPError contains the request URL and body. Never expose those.
+        # Only disclose the integer status and a fixed, non-secret category.
+        status = int(exc.code)
+        if status in (401, 403):
+            reason = "KEY_OR_ACCESS_DENIED"
+        elif status == 402:
+            reason = "BILLING_OR_PAYMENT_REQUIRED_NO_AUTOMATIC_UPGRADE"
+        elif status == 404:
+            reason = "ENDPOINT_OR_SUBGRAPH_NOT_FOUND"
+        elif status == 429:
+            reason = "RATE_LIMIT"
+        elif 500 <= status <= 599:
+            reason = "GATEWAY_OR_UPSTREAM_UNAVAILABLE"
+        else:
+            reason = "REQUEST_REJECTED"
+        raise ProbeError(f"GRAPH_HTTP_{status}_{reason}") from None
+    except urllib.error.URLError as exc:
+        cause = exc.reason
+        if isinstance(cause, socket.gaierror):
+            reason = "DNS_FAILURE"
+        elif isinstance(cause, ssl.SSLError):
+            reason = "TLS_FAILURE"
+        elif isinstance(cause, (TimeoutError, socket.timeout)):
+            reason = "TIMEOUT"
+        else:
+            reason = "CONNECTION_FAILURE"
+        raise ProbeError("GRAPH_" + reason) from None
+    except TimeoutError:
+        raise ProbeError("GRAPH_TIMEOUT") from None
     if len(raw) > 1048576:
         raise ProbeError("GRAPH_RESPONSE_TOO_LARGE")
     tip, pools = validate_body(raw)

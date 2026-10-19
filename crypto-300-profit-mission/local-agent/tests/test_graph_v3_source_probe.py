@@ -1,6 +1,8 @@
 """Offline-only source check tests; all network calls are replaced."""
 import importlib.util
 import json
+import socket
+import urllib.error
 import tempfile
 import unittest
 from pathlib import Path
@@ -89,6 +91,33 @@ class OneQueryProbeTests(unittest.TestCase):
         self.assertTrue(pools)
         self.assertNotIn("available_at", pools[0])
         self.assertNotIn("can_sell", pools[0])
+
+    def test_http_error_classified_without_leaking_key_or_request_url(self):
+        categories = {401: "KEY_OR_ACCESS_DENIED",
+                      403: "KEY_OR_ACCESS_DENIED",
+                      402: "BILLING_OR_PAYMENT_REQUIRED_NO_AUTOMATIC_UPGRADE",
+                      404: "ENDPOINT_OR_SUBGRAPH_NOT_FOUND",
+                      429: "RATE_LIMIT",
+                      503: "GATEWAY_OR_UPSTREAM_UNAVAILABLE"}
+        for status, reason in categories.items():
+            with self.subTest(status=status), tempfile.TemporaryDirectory() as tmp:
+                def opener(req, timeout):
+                    raise urllib.error.HTTPError(
+                        req.full_url + "?secret-should-not-leak",
+                        status, "private-body", {}, None)
+                with self.assertRaises(p.ProbeError) as caught:
+                    p.probe_once("synthetic-api-secret", tmp, opener=opener)
+                self.assertEqual(str(caught.exception), f"GRAPH_HTTP_{status}_{reason}")
+                self.assertNotIn("secret", str(caught.exception))
+                self.assertEqual(list(Path(tmp).glob("*.json")), [])
+
+    def test_dns_network_failure_distinct_from_http_auth(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            def opener(req, timeout):
+                raise urllib.error.URLError(socket.gaierror("private-dns-detail"))
+            with self.assertRaisesRegex(p.ProbeError, "^GRAPH_DNS_FAILURE$"):
+                p.probe_once("synthetic-api-secret", tmp, opener=opener)
+            self.assertEqual(list(Path(tmp).glob("*.json")), [])
 
 
 if __name__ == "__main__":
