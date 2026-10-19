@@ -354,6 +354,78 @@ class V2HistoricQuoteAndSwapEvidenceTests(unittest.TestCase):
             locate_first_runtime_code_block(day_start, day_start - 1, lambda b: True)
 
 
+    def test_real_three_swaps_reconstruct_pretrade_quote_depth_and_frozen_floor(self):
+        from mission_agent.early.bsc_v2_pit import summarize_v2_archived_swap_windows
+        archive = json.loads((Path(__file__).resolve().parents[2] /
+            'monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json').read_text())
+        hist = archive['historical_bsc_v2_append_only_factory_enumeration']
+        cases = hist['creation_liquidity_source_spotchecks']['cases']
+        windows = hist['creation_liquidity_source_spotchecks']['first_later_reserve_update_events']
+        by_index = {x['factory_index_zero_based']: x for x in hist['first36']}
+        for rank in (1, 2, 5):
+            case = cases[rank - 1]
+            item = hist['chronological_quoted_unique_first30'][rank - 1]
+            pair = by_index[item['factory_index']]
+            event = next(x for x in windows if x['rank'] == rank)
+            floor = 1000 * 10**18 if item['quote_asset'].lower().startswith(
+                '0x55d398') else 2 * 10**18
+            result = summarize_v2_archived_swap_windows(
+                pool=case['pair'], token0=pair['token0'], token1=pair['token1'],
+                quote_asset=item['quote_asset'], quote_reserve_floor_raw=floor,
+                windows=[{'name': 'SAVED_LATER', 'logs': event['events']}])
+            fact = result['first_observed_in_saved_windows']
+            self.assertTrue(fact['immediately_preceding_same_tx_pool_sync'])
+            expected = (case['initial_reserve0_raw']
+                        if item['quote_asset'].lower() == pair['token0'].lower()
+                        else case['initial_reserve1_raw'])
+            self.assertEqual(int(fact['pre_swap_quote_reserve_raw']), int(expected))
+            self.assertEqual(result['observed_swaps_without_proven_preswap_depth'], 0)
+            self.assertEqual(
+                fact['pre_swap_quote_depth_frozen_floor_status'],
+                'BELOW_FROZEN_FLOOR' if rank == 5 else 'AT_OR_ABOVE_FROZEN_FLOOR')
+            self.assertEqual(result['eighteen_of_thirty_sellable_gate'], 'NOT_SCORABLE')
+
+    def test_missing_or_invalid_adjacent_sync_never_promotes_quote_depth(self):
+        from mission_agent.early.bsc_v2_pit import summarize_v2_archived_swap_windows
+        pool = '0x' + '1'*40
+        token0 = '0x' + '2'*40
+        token1 = '0x' + '3'*40
+        tx = '0x' + 'a'*64
+        base = dict(address=pool, blockNumber='0x20', transactionIndex='0x1',
+                    transactionHash=tx, removed=False)
+        sync = dict(base, logIndex='0x5', topics=[SYNC],
+                    data='0x'+word(1200)+word(10000))
+        swap = dict(base, logIndex='0x6',
+                    topics=[SWAP, topic(token0), topic(token1)],
+                    data='0x'+word(200)+word(0)+word(0)+word(1500))
+        kwargs = dict(pool=pool, token0=token0, token1=token1,
+                      quote_asset=token0, quote_reserve_floor_raw=1000,
+                      windows=[{'name': 'SAVED', 'logs': [sync, swap]}])
+        valid = summarize_v2_archived_swap_windows(**kwargs)
+        event = valid['observed_direction_events'][0]
+        self.assertEqual(event['pre_swap_quote_reserve_raw'], '1000')
+        self.assertEqual(event['post_swap_quote_reserve_raw'], '1200')
+        self.assertEqual(valid['observed_buy_at_or_above_frozen_quote_depth'], 1)
+        missing = summarize_v2_archived_swap_windows(
+            **{**kwargs, 'windows': [{'name': 'PARTIAL', 'logs': [swap]}]})
+        self.assertIsNone(missing['observed_direction_events'][0]['pre_swap_quote_reserve_raw'])
+        self.assertEqual(missing['observed_buy_at_or_above_frozen_quote_depth'], 0)
+        intervening = dict(base, logIndex='0x5', topics=[MINT],
+                           data='0x'+word(1)+word(1))
+        noadj = summarize_v2_archived_swap_windows(
+            **{**kwargs, 'windows': [{'name': 'NOT_ADJACENT',
+                                       'logs': [sync, {**intervening, 'logIndex': '0x7'},
+                                                {**swap, 'logIndex': '0x8'}]}]})
+        self.assertEqual(noadj['observed_buy_at_or_above_frozen_quote_depth'], 0)
+        with self.assertRaisesRegex(PITInvalid, 'FLOOR_INVALID'):
+            summarize_v2_archived_swap_windows(
+                **{**kwargs, 'quote_reserve_floor_raw': '1000'})
+        with self.assertRaisesRegex(PITInvalid, 'IMPOSSIBLE_PRETRADE_RESERVE'):
+            summarize_v2_archived_swap_windows(
+                **{**kwargs, 'windows': [{'name': 'INVALID', 'logs': [
+                    {**sync, 'data': '0x'+word(100)+word(10000)}, swap]}]})
+
+
 
 if __name__=='__main__':
     unittest.main()
