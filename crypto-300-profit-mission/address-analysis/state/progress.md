@@ -4,6 +4,14 @@ Updated: 2026-10-19 Asia/Bangkok
 Research status: `READ_ONLY / ACTIVITY_SCREEN_COMPLETE / PNL_REVIEW_INCOMPLETE`
 Source manifest: [449 addresses](../sources/oooooyoung-evm-449-source-snapshot.json), original blob `954f3aba66be21911dd627fa40dd3dd0a9fd1d26`.
 
+## 2026-10-19 新主线第三批成交证据：3笔交易WBNB报价事件链上匹配（**最新**）
+
+- **明确不是再次活跃筛查。** 在真实BSC链从 canonical WBNB CA `0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c` 取得 `Deposit/Withdrawal` 事件，分别匹配本人签名 Router 买卖哈希（对应原始钱包 #227 与 #400），独立对照既有真实Token进出和钱包原生BNB执行块差。完成**3个完整Token回合的WBNB路由报价**：#227 BOARDSEAT 0.330000→0.483663976630184592 WBNB，gross事件差 `+0.153663976630184592 BNB`；#227 BTCLIFE 0.330000→0.149944555963376124，差 `-0.180055444036623876`；#400 BOARDSEAT 0.990000→0.668967157750727214，差 `-0.321032842249272786`。全部方向与各自钱包执行块Native余额净差一致。
+- **执行块现金流不等于quote毛差，也不等于已审计盈利。** #227 BOARDSEAT执行块净 `+0.139871398530549414`，#227 BTCLIFE `-0.190058157929590970`，#400 BOARDSEAT `-0.337858120186780058`。WBNB Deposit/Withdrawal只是交易内部Router合约事件，可能还存在税/手续费/Gas和不同接收者，**不可直接将报价差认定为到账用户的净利润**。详细[3笔WBNB报价核验业务表](../batches/pnl-mainline-wbnb-event-quotes-20261019.md)与[原始事件值、hash JSON](../evidence/pnl-mainline-wbnb-event-quotes-20261019.json)。
+- **统一可恢复候选账本：** [目前5笔可核验完整Token进出案例](pnl-canonical-closed-token-ledger-20261019.json)：4个原始449源行钱包（#002/#004 sauce同区块策略可能相关，#227两笔反方向，#400负方向），其中**3笔正向、2笔负向钱包执行区块Native变动**，3笔有进一步独立WBNB报价事件证据。**已最终批准逐笔Net PnL仍0，完整钱包30天及长期PnL 0/449**，不能生成盈利钱包排行榜。
+- **下一阶段执行入口：** 不再重复查询这3笔Router交易的内部Native Trace缺口；转向真正以WBNB、USDC或其它可验证ERC20作为**钱包直接收付报价资产**的代币买卖，必须按同一钱包签名、精确Token CA、出入日志、历史成本和Gas配对方可升级`TOKEN_VERIFIED_PNL`。若在有界免费数据中不能找到则明确`DEFERRED`并切换候选，不额外增加筛查工作量。
+- **研究门禁：** PR97 Draft，链上只读，不交易，不合并，不部署、不自动发邮件。最新SHA以PR远端回读为准。
+
 ## 2026-10-19 新主线第二批实测：双Token正负方向＋56/56补链完成（**最新状态覆盖旧29/37中间值**）
 
 - **P1 核心投资结果 #227：** [BOARDSEAT / BTCLIFE 本钱包同一两种Token闭合证据](../batches/pnl-mainline-row227-two-token-replay-20261019.md)与 [机器原始整数](../evidence/pnl-mainline-row227-two-token-replay-20261019.json) 已使用Alchemy BNB主网只读RPC重新验证。BOARDSEAT买卖执行块BNB净变化 `+0.139871398530549414`，BTCLIFE为 `-0.190058157929590970`，两币合计`-0.050186759399041556 BNB`。Token合约、签名买/授权/卖、授权实际Gas `230045000000000 wei`／次、四个执行块 nonce+1/+2、原始币量完整闭合，均有重放。**BSC交易内部Native回款未单独trace，这不是核定的交易Net PnL，也不是该高频钱包全部PnL。**
