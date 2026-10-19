@@ -3,7 +3,7 @@
   "observed_date": "2026-10-19",
   "research_only": true,
   "phase0_full_source_pass": false,
-  "phase0_status": "P0_BSC_V2_FIRST_30_IDENTITY_AND_PAIR_CREATED_VERIFIED; INITIAL_LP_PARTIAL; FULL_PIT_AND_SELLABILITY_NOT_SCORABLE",
+  "phase0_status": "FIRST_30_V2_POOL_CREATE_FACTS_COMPLETE_P0_BUSINESS_GATE_NOT_PASSED",
   "privacy": "NO_KEYS_NO_WALLET_SIGNING",
   "cost_usd": 0,
   "provider": "Connected user's pre-existing Alchemy All Chains free app via read-only connector",
@@ -4525,5 +4525,55 @@
     }
   },
   "bsc_v2_identity_30_count": 30,
-  "bsc_v2_identity_30_is_officially_PIT_eligible": false
+  "bsc_v2_identity_30_is_officially_PIT_eligible": false,
+  "bsc_v2_first30_phase0_progress_20261020": {
+    "schema": "MONSTER_BSC_V2_FROZEN_30_P0_FACTUAL_SOURCE_COVERAGE_20261020_V1",
+    "date_reported_utc": "2026-10-20",
+    "scope": "ONE PANCAKESWAP V2 FACTORY, fixed date 2025-07-01 UTC, 30 consecutive by factory-created quotepaired unique token identities",
+    "overall_cohort_identities": 30,
+    "canonical_factory_paircreated_verified": 30,
+    "raw_factory_tx_hashes_present": 30,
+    "source_provider": "connected alchemy app normalized historical eth_getLogs and eth_call; not original HTTP raw bytes",
+    "direct_http_receipts_sha256_status": "UNAVAILABLE",
+    "same_creation_transaction_pair_mint_and_sync": 25,
+    "at_creation_quote_liquidity_above_frozen_floor": 20,
+    "at_creation_quote_liquidity_below_frozen_floor": [
+      5,
+      8,
+      15,
+      20,
+      28
+    ],
+    "missing_same_tx_mint_sync": [
+      14,
+      16,
+      17,
+      18,
+      26
+    ],
+    "independently_verified_delayed_initial_lp_ranks": [
+      14
+    ],
+    "delayed_quote_asset_reserve_raw": {
+      "rank14": "17000000000000000000",
+      "symbol": "WBNB"
+    },
+    "delayed_mint_seen_without_complete_sync_ranks": [
+      16,
+      17
+    ],
+    "delayed_not_yet_verified_ranks": [
+      18,
+      26
+    ],
+    "known_original_creation_and_liquidity_event_sources_not_full_PIT": true,
+    "token_contract_deployment_24_of_30": "NOT_SCORABLE",
+    "public_asof_availability_24_of_30": "NOT_SCORABLE",
+    "same_notional_bidirectional_quote_18_of_30": "NOT_SCORABLE",
+    "actual_trade_execution_verified": 0,
+    "outcome_label_study_started": false,
+    "bsc_v3_four_meme_alpha_coverage": "NOT_TESTED_NOT_INCLUDED",
+    "status": "FIRST_30_V2_POOL_CREATE_FACTS_COMPLETE_P0_BUSINESS_GATE_NOT_PASSED",
+    "reason": "historical standardized logs not raw original HTTP, deployments/clock and tradability unresolved"
+  }
 }
