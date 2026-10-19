@@ -1,6 +1,20 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
 
+## 2026-10-20 P0真实历史Swap准入快照：用户Mac 35/35与原88份离线回放PASS
+
+用户Mac固定代码版本`91ffecf096af60dda0658744337402a54d0b5aaa`离线单测`17/17+18/18=35/35 PASS`，旧归档共**88份原始RPC响应成功重放**、固定30例创建30/30、创建同Tx Mint+Sync 25/30，`unknown_ranks=[]`。重算**交易前报价资产深度**后，原非连续存档短窗观察到：**23个rank有买入Swap，其中22个在所观察具体买入时达到事先冻结的2 WBNB/1000 USDT门槛，#15买入时低于门槛；3个rank有卖出Swap，但#5/#8/#28在所观察具体卖出时均低于门槛，达标卖出观测数0。** #16/#17两例虽然建池交易时没有同笔Mint+Sync、初始LP不足以评估，但在所存后续`Swap`中反推出交易前报价储备高于事前门槛；**这不能直接写成入场时刻`T_entry`已找到**，因为所存窗口只含建池起初10块及第一后续储备更新块，并不证明哪次注入首次满足门槛，也没有历史公共可读时间。后续窗口缺失仍是#18/#20。
+
+**业务结论**：在这有限窗口中**0个符合事前深度标准的实际卖出样例**，不是“30个币都卖不出去”，不是“卖出胜率0%”，更不是18/30的失败判定。当前数据已不足以给出18/30双向实际卖出可模拟性：`18/30=NOT_SCORABLE`，`24/30 PIT=NOT_SCORABLE`。若免费可连续获得池日志及原ERC20转账/费率/限制数据，下一验证应针对初始达标+延迟达标候选的真实同Tx收发、确定连续区块内首次资格跨越和统一研究名义金额的退出情景；如数据窗口始终不完整则报告`INSUFFICIENT_COVERAGE`并停止扩大模型。本次归档与开发可复验并不授权进P1。
+
+**额外链上实际Transfer闭环**：通过已连接Alchemy BNB-mainnet只读RPC对初始达标的#1、#2在2025-07-01的已知历史买入交易，分别读取成功`status=0x1`的receipt及精确按报价Token->Pair、候选Token Pair->recipient过滤的ERC20 `Transfer`事件。#1：块52440351交易`0x2d0361e427bc0feaf9e316f6a79b3a9f935777043d13cb4084c9adfeed2f9ae7`，**88 USDT**转入原池、`13922587526690708956` token raw转出，逐整数等于Pool Swap。`Swap`前报价储备为10,000 USDT（>=1000 USDT）。#2：块52440642交易`0x459ad9b0a8601b3502077ce5e26a65af7b461429958c4ff8d9e269ee48324547`，**0.0937 WBNB**转入池、`51223471067359749457487212` token raw转出，逐整数与Swap一致；事前池报价储备8.3 WBNB（>=2 WBNB）。#2报价转入可能经路由器，不能以WBNB Transfer.sender冒充买方钱包。对应完整整数、真实转账主体和研究/实际订单区别存入`bsc_v2_p0_historical_buy_transfer_receipts_20261020`机器JSON。**只证明这两笔具体历史买入成功，不推断全钱包买卖、首次可观测T、税费或卖出成功；同一Alchemy供应商，不冒充独立第二源。**
+
+对延迟LP #16/#17（首次后续储备更新与大量Tx集中在块52444232），连接器按池在该块过滤`Sync/Swap`和完整Mint交易receipt响应仍因结果过长被截断；不能把不完整文本当全事件顺序。Mac原离线文件`v2_p0_offline_audit_status.json`已经保存各rank对应所有已归档的`observed_direction_events`；可本机**只读取**#15/#16/#17的实际首个达标Swap的区块/Tx/储备，必要时下一次加固定窄块离线事件排序，不重复全部前史RPC，不调用付费`trace_filter`。
+
+来源等级：`USER_PASTED_MAC_STDOUT`、`ALCHEMY_NORMALIZED_READONLY_CHAIN_EVENT`；Mac归档原始HTTP字节未由本对话读取/签收；不将任何此处成功声明为`SELLABLE_AT_NOTIONAL`/Paper盈利。`G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_TRADE/NO_GMAIL`不变。
+
+---
+
 ## 2026-10-20 Mac 历史 runtime-code 全30完成；下一主线改为真实 Swap 前流动性
 
 用户Mac五次连续前台只读运行，`--mode deployment`固定rank#6–10、11–15、16–20、21–25、26–30均返回`BOUNDED_CODE_STATE_REPLAY_PASS_NOT_DEPLOY_TX`、每批`requested_count=5`，请求分别**53/57/68/74/74**，合计326；加上已验第一批#1–5的38次，整30例共**364次RPC**。全部冻结30 CA历史 runtime-code 状态已有正常输出：**#1/#5/#8/#15在UTC前一日已有代码，其余26个首次出现于2025-07-01当日已确定块**。本次额外第一见代码块在PairCreated同块的排名为**#14/#16/#17/#18/#26**；严格区分“区块结束时已经有代码”与“同交易已经完成token部署”，也不根据缺初始LP丢弃这些失败/延迟样本。30排名完整对照、5批每批请求数和来源限制均保存于本Phase主JSON键`bsc_v2_p0_mac_deployment_code_full30_20261020`。用户本地已由程序归档RPC正文/同机校验SHA；Git未读取私人原始正文，不把终端复制的数值冒充独立HTTP回执原字节核验。**完整部署交易receipt、当时首次公众可查询available_at和真实可交易PIT仍不成立，24/30 PIT仍`NOT_SCORABLE`，不升P1。**
