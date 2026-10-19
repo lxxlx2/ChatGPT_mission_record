@@ -1,0 +1,124 @@
+{
+  "schema": "MONSTER_EARLY_P0_SOURCE_PROBE_V1",
+  "observed_date": "2026-10-19",
+  "research_only": true,
+  "phase0_full_source_pass": false,
+  "phase0_status": "SOURCE_PARTIAL_SMALL_RANGE_CONFIRMED_NO_FULL_CONTIGUOUS_ROSTER",
+  "privacy": "NO_KEYS_NO_WALLET_SIGNING",
+  "cost_usd": 0,
+  "provider": "Connected user's pre-existing Alchemy All Chains free app via read-only connector",
+  "source_response_limit": "MCP returned parsed results / provider result text; full original RPC HTTP headers and bytes NOT archived. Treat source hash as unavailable.",
+  "chain_id": 56,
+  "factory_v2": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+  "factory_v3": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+  "v2_topic0": "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+  "v3_topic0": "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+  "source_checks": [
+    {
+      "kind": "eth_getBlockByNumber",
+      "block_number": 62914560,
+      "result": "HISTORICAL_BLOCK_RETURNED",
+      "timestamp_hex": "0x68db0842",
+      "raw_sha256": null
+    },
+    {
+      "kind": "eth_call allPairsLength",
+      "block_number": 62914560,
+      "pairs_count": 1985116,
+      "raw_sha256": null
+    },
+    {
+      "kind": "eth_call allPairsLength",
+      "block_number": 62915060,
+      "pairs_count": 1985123,
+      "delta_pairs_500_blocks": 7,
+      "raw_sha256": null
+    },
+    {
+      "kind": "eth_call allPairsLength",
+      "block_number": 62916560,
+      "pairs_count": 1985132,
+      "delta_pairs_2000_blocks": 16,
+      "raw_sha256": null
+    },
+    {
+      "kind": "binary_search first V2 factory counter delta",
+      "search_range": [
+        62914561,
+        62915060
+      ],
+      "first_delta_block": 62914693,
+      "before_count": 1985116,
+      "after_count": 1985117,
+      "method": "9 historical eth_calls then adjacent-state independent check"
+    },
+    {
+      "kind": "eth_getLogs V2 PairCreated",
+      "range": [
+        62914690,
+        62914699
+      ],
+      "log_count": 1,
+      "contains_anchor": true,
+      "full_raw_http": false
+    },
+    {
+      "kind": "eth_getLogs V3 PoolCreated",
+      "range": [
+        62914560,
+        62914569
+      ],
+      "log_count": 0,
+      "interpretation": "only these ten historical blocks, NOT day zero",
+      "full_raw_http": false
+    },
+    {
+      "kind": "eth_getLogs 2000 blocks",
+      "range": [
+        62914690,
+        62916689
+      ],
+      "result": "FAIL",
+      "rpc_error_code": -32600,
+      "rpc_error": "Under the Free tier plan, you can make eth_getLogs requests with up to a 10 block range"
+    },
+    {
+      "kind": "network sandbox direct public HTTPS",
+      "result": "DNS_UNAVAILABLE_IN_RUNTIME",
+      "interpretation": "Does not assert user Mac/public RPC unavailable"
+    }
+  ],
+  "verified_historical_v2_log": {
+    "chain_id": 56,
+    "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+    "block_number": 62914693,
+    "block_hash": "0x0f82ade0a397f58bb18d7edcf308f6f4e569b0835b59e94f8854bdfff928f606",
+    "block_timestamp_utc": "2025-09-29T22:31:02Z",
+    "transaction_hash": "0xb63846e92b19018da4d0e24cec8aab69d979c14059130b7b76dbfe972e5e1418",
+    "transaction_index": 70,
+    "log_index": 250,
+    "token0": "0x1c88e86556b815f4b140ec14297ada7863bc97c8",
+    "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+    "pair": "0xb2dc7c7f5b67b2d604603fbc56530ba7832648a8",
+    "pair_created_factory_sequence": 1985117,
+    "sequence_matches_historical_state_change": true,
+    "origins": [
+      "ALCHEMY_HISTORICAL_GETLOGS",
+      "ALCHEMY_HISTORICAL_ETH_CALL"
+    ],
+    "sha256_of_original_rpc_http": null,
+    "pit_time_status": "HISTORICAL_RECONSTRUCTED_CHAIN_BLOCK_ONLY",
+    "did_verify_deployment": false,
+    "did_verify_initial_liquidity": false,
+    "did_verify_swap": false,
+    "did_verify_same_size_sellability": false,
+    "did_verify_profit": false
+  },
+  "base30_original_frozen_day": "2025-07-01",
+  "bsc_sample_inclusion": "NOT_IN_ORIGINAL_BASE30_COHORT; P0 source witness only, deliberately not used as a new training sample",
+  "cohort_created": 0,
+  "thirty_case_coverage": "NOT_SCORABLE",
+  "raw_git_source_status": "SCALAR_COPY_ONLY_NOT_INDEPENDENT_RAW_RCP_RECEIPT",
+  "followup": "Mac foreground verified third-party RPC continuous event source capability; signed complete manifest and cross-source sampled receipts. No long-running or paid job without separate authorization",
+  "gates": "G0 PARTIAL; G4 UNKNOWN; G6 NO_GO; NO_MERGE; NO_DEPLOY; NO_GMAIL; NO_TRADE"
+}
