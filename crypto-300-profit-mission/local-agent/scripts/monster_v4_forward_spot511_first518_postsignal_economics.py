@@ -109,10 +109,19 @@ def run(source_dirs):
     if len(zips)!=1533 or len(checksums)!=1533:
         raise ValueError("MONSTER518_POSTSIGNAL_1533_ARCHIVE_PAIRS_REQUIRED")
     symbols=sorted({r["symbol"] for r in watches+setups})
+    expected={f"{sym}-1m-{day}.zip" for sym in roster for day in bridge.DAY_UTC}
+    if set(zips)!=expected or set(checksums)!={name+".CHECKSUM" for name in expected}:
+        raise ValueError("MONSTER518_SOURCE_ARCHIVE_NAME_POPULATION_DRIFT")
     valid={}
+    independently_revalidated_symbol_days=0
     for sym in symbols:
-        bars,_=bridge.parse_symbol_three_days(sym,receipts,zips,checksums)
+        bars,proof=bridge.parse_symbol_three_days(sym,receipts,zips,checksums)
+        if len(proof)!=len(bridge.DAY_UTC):
+            raise ValueError("MONSTER518_EIGHT_SIGNAL_SOURCE_PROOF_INCOMPLETE")
+        independently_revalidated_symbol_days+=len(proof)
         valid[sym]=bars
+    if independently_revalidated_symbol_days!=8*len(bridge.DAY_UTC):
+        raise ValueError("MONSTER518_EIGHT_SIGNAL_SHA_SCOPE_WRONG")
     result={}
     for kind,events in (("WATCH",watches),("SETUP",setups)):
         report={}
@@ -132,9 +141,15 @@ def run(source_dirs):
     return {
         "schema":SCHEMA,"source_first518_sha256":SOURCE_SHA,
         "source_immutable_watch_count":8,"source_immutable_setup_count":8,
-        "source_1533_full_sha_reverified_in_previous_CI":True,
-        "source_original_1533_names_present":True,
-        "source_eight_pairs_publisher_sha_reverified_here":True,
+        "producer_full_source_verification": {
+            "producer_run_id":39226387610,
+            "producer_original_report_sha256":SOURCE_SHA,
+            "verified_original_symbol_days_in_producer":len(receipts),
+            "this_economics_job_did_not_reverify_all_1533_bytes":True,
+            "independent_other_AI_source_replay":"BLOCKED_NOT_PERFORMED"
+        },
+        "original_artifact_name_pairs_verified_here":len(expected),
+        "signal_symbol_days_publisher_sha_reverified_here":independently_revalidated_symbol_days,
         "symbol_venue":"BINANCE_SPOT",
         "not_fresh_live_market_capture":True,
         "no_default_notional_or_cash_profit":True,
