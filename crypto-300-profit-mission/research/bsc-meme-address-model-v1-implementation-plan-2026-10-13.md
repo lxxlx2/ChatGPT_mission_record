@@ -1027,3 +1027,15 @@ DDAC 本人 0.25 BNB 各自买入的两个不同 CA `0xcc629b954ccf0563838c797d4
 
 仓库已新增 [有界事实记录与交易 hash/CA、nonce/Gas、状态和适用边界](./bsc-meme-address-model-v1-p4b-ddac-877af-batch-screen-2026-10-19.md)，原始 RPC 全文未随本轮新报告自动归档，来源级别先保持本对话中读得的连接器查询证据，可按 exact CA/txHash 重查。P4-B/P4-C 仍 PARTIAL；`ACTUAL_REALIZED_NET_PNL=UNRESOLVED / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。不应为了样本经济不可归因问题无止境加负面边界测试。
 
+## 2026-10-19 用户授权：主线纠偏与三个有限业务里程碑（不改变 G0 冻结规则）
+
+**批准输入**：用户确认按 `bsc-meme-address-model-v1-requirements-2026-10-13.md` 和原 P0–P7 合同回到多钱包重大 Meme 盈利及公开可跟单验证，而不是继续无限研究普通新币/单笔 RPC 边界。前一次独立审查对 `948467fef3bc26f8e1a03ef013d94e93c3b4356d` 新 74 条 BNB RPC 原始来源给予 **`APPROVE`（仅链上事实可复现性）**；此批准由用户转述，不等于原钱包真实利润、公开 U、P5 或正式 GitHub review。**此节点停止对 877AF 尤栗、DDAC Fâché 等非原重大币延伸补证**，其现有证据留在 Git 作为主动交易/镜像风控对照。
+
+**里程碑 A — P2/P3 重大市场多钱包横向比较。** **不事后挑选赢家**，直接复用已冻结 [5 原始钱包 × 4 重大 exact CA × 6 个正负历史回合](./bsc-meme-address-model-v1-p4b-crossmarket-observer-decision-report-2026-10-18.md)（DDAC 龙虾负、239E 龙虾 R1 负和 R2 正、8E6B HAJIMI 正、A83B 牛来负、877AF MARSCOIN 负）及 [来源 blob 固定的跨市场读数器](./bsc_meme_address_model_v1_p4b_crossmarket_decision.py)。六个原钱包回合的符号仅是**不同证据级别的区块/成本范围事实，不能合并成 2/6 真实胜率**；23×19=437 母表永远保留。增加一份适合用户阅读的 6 回合逐项矩阵：确切 EOA、CA、入场和退出区块、source blob、签名/库存/原生或 WBNB 归因级别、负向与未完成对照、潜在共享交易行为，以及近期**冻结 P3 `2026-09-13…2026-10-13 UTC`** 与后续 **2026-09-18…2026-10-18 UTC 滚动补充**严格双列。对免费来源无法证明因果盈利的样本仅记 `UNRESOLVED`，本批结束后不得再逐个追踪不确定的内部 trace；不得新增高分或伪胜率。**完成判据**：六行横比和每个未闭合根因有 Git pinned source，可重算人数/正负方向/未知类型，报告多个钱包是否符合至少两个不同重大 CA 盈利门槛（可以明确 NONE VERIFIED）。
+
+**里程碑 B — P4-B 公众首次可执行 U 的否证或证成。** 在**同一预冻结 5 钱包/4 重大市场/6 回合**中逐行配对 [19 CA 历史跨场所 U 门禁](./bsc_meme_address_model_v1_p4b_u19_readiness.py) 的既有七个源（两种现成冻结 blob 集合不回写），区分 launchpad / V2 / V3、报价币、first scoped active vs truly global first execution、原本人交易已上链 UTC vs 第三方节点**首次实际接收时间**。按 `CONFIRMED / REJECTED / UNRESOLVED` 输出公开可见信号、同一观察时点资本、可买/可卖路径、流动性和税/Gas；不许用后来的 0.01 WBNB V2 math quote 代替更早 V3/USDT 入场、用户/第三方后来成交替代本策略成交流。**完成判据**：6/6 项都有 source-pinned 公开 U 判定与实际缺口；无法获得历史接收时刻就写 `UNRESOLVED` 并停止重试，不触发 P5 盈利评级。
+
+**里程碑 C — P5 首次小样本可执行跟单结果或明确不可测。** 仅把里程碑 B 取得 `CONFIRMED` 的公开 U 候选推进 `+60/+300/+900 sec`（1/5/15min）入场研究；先冻结观察者实际可见时刻、每次真实可支付资金/报价资产、买入/退出路径、退出规则、Gas/税/滑点/流动性容量、市场失败与未成交，后进行有证据的历史双向可执行性重放及未碰过的 2026 样本验证。**如果本批 0 项有完整 U，则立即输出 `0/6 qualified; P5=BLOCKED_INSUFFICIENT_CAUSAL_EVIDENCE` 并停止把假设 spot 算成实际收益；不得创建模拟盈利排行榜或改动冻结规则来制造正样本。**
+
+**工程与成本停止条件**：每个里程碑限一小批、不扩 23 钱包/19 CA、复用旧 source blob；先业务事实后测试，仅当跨样本结论/经济口径/核心算法升级时申请有固定 SHA 的独立其他 AI Review；局部来源缺口最多一次免费有界重查，失败就记队列并移至下一个原冻结样本。不要为防止任意不可能的边界开发无限 guard，不因局部来源失败锁死其余五行。统一保持 `P4-B/P4-C=PARTIAL / ACTUAL_REALIZED_NET_PNL=UNRESOLVED / PUBLIC_EXECUTABLE_U=UNRESOLVED / P5=BLOCKED / PRODUCTION=NO_GO`；禁止 `NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。与另一新建的 400+ 地址分析模块完全隔离。
+
