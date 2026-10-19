@@ -253,7 +253,7 @@ Mandatory next engineering work:
 2. Fix current top-20-token-account / filtering pitfall when reporting exact Top10 after LP/vault exclusion; obtain enough additional ranks/owner mapping and evidence or state that the metric cannot be computed from the current source.
 3. Replace arbitrary 100 target-token + 50 funding signature bounded history as a supposed full deep result; paginate/reconstruct material first-acquisition and funder lineage, preserving true source coverage.
 4. Include independently sourced external narrative, exact-CA affiliation checks and source timestamps. Showing DexScreener social URL hints alone does not satisfy narrative requirements.
-5. Remove generic CA's 30-USDC Jupiter quote and expired-quote display; **do not** change Frank follow-decision's frozen, separate 30-USDC quote policy.
+5. Remove all preset executable quote and expired-quote display from generic CA and Frank follow-decision; monitoring stays informational, while user controls amount and execution.
 6. Compare real outputs against accessible third-party public displays/second data source with matched definitions; independently review real code and run on the Mac before considering rollout.
 
 **As of this documentation commit, none of these product corrections have been implemented, reviewed, run or deployed.** Current Frank monitoring must remain unaffected; no new monitoring, Gmail or trading authority is granted.
