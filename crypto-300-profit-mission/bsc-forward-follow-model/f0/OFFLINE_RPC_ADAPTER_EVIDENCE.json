@@ -1,0 +1,18 @@
+{
+  "mode": "OFFLINE_RPC_FIXTURE_ONLY",
+  "test_result": "18/18 PASS",
+  "actually_run": true,
+  "actual_rpc_calls": 0,
+  "real_e3": 0,
+  "real_quoted": 0,
+  "paper_labels": 0,
+  "file_sha256": {
+    "f0_rpc_adapter.py": "fa80960a3a4369a4d73323ec8ce65d163ca764deb69220d306f0205c21a93094",
+    "tests/test_f0_rpc_adapter.py": "8356fc438fb09ee0e896e7d9902e06e068dd68a3339492ed285c84a6c9b0b335",
+    "fixtures/rpc_envelopes.json": "36e56a157851ef0776743a4b8fbde57460bbf3fd1d01eb17595cf1e04f515e89",
+    "fixture_rpc_report.json": "a842b65f3609ac1c8bc6034a6a21c5f618d4f859d3c8ed88a71ba09afd4acce8",
+    "F0_RPC_ADAPTER.md": "40e5c1c14d778330f8e77a0a6de17dccbd78d5776ce6f62b2c1384a9976ece97",
+    "HANDOFF.md": "e671e8765899eeee03a0a5c04d7ddd2409b5ff7aedd70cdfe684ecef311c5138"
+  },
+  "independent_review": "PENDING"
+}
