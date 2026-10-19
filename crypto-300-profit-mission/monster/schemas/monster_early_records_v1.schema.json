@@ -1,0 +1,581 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/lxxlx2/ChatGPT_mission_record/blob/research/monster-v4-local-discovery-20261010/crypto-300-profit-mission/monster/schemas/monster_early_records_v1.schema.json",
+  "title": "Monster Early Four-record Contracts v1",
+  "description": "Four concrete object definitions. Source/clock semantics also require contract.md PIT tests and business-gate checks; schema alone cannot validate economic causality.",
+  "$defs": {
+    "tokens": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Exact chain + CA identity; never alias tickers or assume creation from first observed event.",
+      "required": [
+        "schema_version",
+        "token_key",
+        "chain_id",
+        "token_ca",
+        "project_id",
+        "identity_status",
+        "first_known_block",
+        "first_observed_source_sha256"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "monster-early-tokens-v1"
+        },
+        "token_key": {
+          "type": "string",
+          "pattern": "^[0-9]+:0x[a-f0-9]{40}$"
+        },
+        "chain_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "token_ca": {
+          "type": "string",
+          "pattern": "^0x[a-f0-9]{40}$"
+        },
+        "project_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "identity_status": {
+          "enum": [
+            "CONFIRMED",
+            "UNRESOLVED",
+            "MULTIPLE_CANDIDATES"
+          ]
+        },
+        "first_known_block": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "first_observed_source_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "events": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "event_id",
+        "token_key",
+        "event_type",
+        "venue",
+        "pool_address",
+        "product",
+        "block_number",
+        "block_hash",
+        "tx_hash",
+        "log_index",
+        "chain_event_at",
+        "published_at",
+        "available_at",
+        "observed_at",
+        "ingested_at",
+        "availability_basis",
+        "source_uri",
+        "source_sha256",
+        "origin_kind",
+        "derivation_kind",
+        "pit_status"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "monster-early-events-v1"
+        },
+        "event_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "token_key": {
+          "type": "string",
+          "pattern": "^[0-9]+:0x[a-f0-9]{40}$"
+        },
+        "event_type": {
+          "enum": [
+            "DEPLOYED",
+            "POOL_CREATED",
+            "LIQ_ADDED",
+            "FIRST_SWAP",
+            "SWAP",
+            "ALPHA_ANNOUNCED",
+            "ALPHA_LISTED",
+            "USDM_ANNOUNCED",
+            "USDM_LISTED",
+            "SPOT_ANNOUNCED",
+            "SPOT_LISTED",
+            "LIQ_REMOVED",
+            "POOL_MIGRATED",
+            "DELISTED"
+          ]
+        },
+        "venue": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pool_address": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^0x[a-f0-9]{40}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "product": {
+          "enum": [
+            "DEX_V2",
+            "DEX_V3",
+            "LAUNCHPAD",
+            "ALPHA",
+            "USD_M",
+            "SPOT",
+            "OTHER"
+          ]
+        },
+        "block_number": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "block_hash": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^0x[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "tx_hash": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^0x[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "log_index": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "chain_event_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "published_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "available_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ingested_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "availability_basis": {
+          "enum": [
+            "ACTUAL_HISTORICAL_PUBLICATION",
+            "ACTUAL_LIVE_OBSERVER_RECEIPT",
+            "RECONSTRUCTED_DELAY_ASSUMPTION",
+            "UNKNOWN"
+          ]
+        },
+        "source_uri": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "origin_kind": {
+          "type": "string",
+          "enum": [
+            "RAW_CHAIN_LOG",
+            "OFFICIAL_ARCHIVE",
+            "THIRD_PARTY_INDEX",
+            "WAYBACK_SNAPSHOT"
+          ]
+        },
+        "derivation_kind": {
+          "enum": [
+            "DIRECT",
+            "DERIVED"
+          ]
+        },
+        "pit_status": {
+          "type": "string",
+          "enum": [
+            "PIT_VERIFIED",
+            "PIT_RECONSTRUCTED_ONLY",
+            "SOURCE_NOT_ACCESSIBLE",
+            "NOT_SCORABLE",
+            "IDENTITY_UNRESOLVED"
+          ]
+        },
+        "source_field_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "token_key",
+        "venue",
+        "pool_address",
+        "rule_version",
+        "evaluated_at",
+        "t_entry",
+        "liquidity_quote_asset",
+        "liquidity_quote_raw",
+        "swap_count_at_t",
+        "buy_path_ok",
+        "sell_path_ok",
+        "status",
+        "asof_policy",
+        "required_source_hashes"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "monster-early-eligibility-v1"
+        },
+        "token_key": {
+          "type": "string",
+          "pattern": "^[0-9]+:0x[a-f0-9]{40}$"
+        },
+        "venue": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pool_address": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^0x[a-f0-9]{40}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rule_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evaluated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "t_entry": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "liquidity_quote_asset": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "liquidity_quote_raw": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]+(\\.[0-9]+)?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "swap_count_at_t": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "buy_path_ok": {
+          "enum": [
+            "YES",
+            "NO",
+            "UNKNOWN"
+          ]
+        },
+        "sell_path_ok": {
+          "enum": [
+            "YES",
+            "NO",
+            "UNKNOWN"
+          ]
+        },
+        "status": {
+          "enum": [
+            "ELIGIBLE",
+            "INELIGIBLE_AT_T",
+            "NOT_SCORABLE"
+          ]
+        },
+        "asof_policy": {
+          "enum": [
+            "LIVE_OBSERVED",
+            "RECONSTRUCTED_CONSERVATIVE",
+            "NO_VERIFIABLE_ASOF"
+          ]
+        },
+        "required_source_hashes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "uniqueItems": true
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "outcomes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "token_key",
+        "venue",
+        "t_entry",
+        "horizon_days",
+        "notional_scenario_id",
+        "exit_rule_version",
+        "theoretical_max_x",
+        "sellable_at_notional_x",
+        "rule_exit_paper_x",
+        "outcome_class",
+        "matured_at",
+        "censored_reason",
+        "source_manifest_sha256"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "monster-early-outcomes-v1"
+        },
+        "token_key": {
+          "type": "string",
+          "pattern": "^[0-9]+:0x[a-f0-9]{40}$"
+        },
+        "venue": {
+          "type": "string",
+          "minLength": 1
+        },
+        "t_entry": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "horizon_days": {
+          "enum": [
+            30,
+            90
+          ]
+        },
+        "notional_scenario_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exit_rule_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "theoretical_max_x": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]+(\\.[0-9]+)?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sellable_at_notional_x": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]+(\\.[0-9]+)?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rule_exit_paper_x": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]+(\\.[0-9]+)?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "outcome_class": {
+          "enum": [
+            "DEAD",
+            "FLAT",
+            "5X",
+            "10X",
+            "CENSORED",
+            "NOT_SCORABLE"
+          ]
+        },
+        "matured_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "censored_reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_lineage": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/tokens"
+    },
+    {
+      "$ref": "#/$defs/events"
+    },
+    {
+      "$ref": "#/$defs/eligibility"
+    },
+    {
+      "$ref": "#/$defs/outcomes"
+    }
+  ]
+}
