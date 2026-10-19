@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "policy_id": "FOLLOW_POLICY_V1_REVIEW_CANDIDATE",
-  "status": "FROZEN_APPROVED",
-  "live_delivery_approved": true,
-  "basis": "USER_APPROVED_LIVE_NOTIFICATION_2026-10-07",
+  "status": "REVIEW_ONLY",
+  "live_delivery_approved": false,
+  "basis": "PR112_NO_DEFAULT_AMOUNT_POLICY_PENDING_EXPLICIT_USER_LIVE_APPROVAL",
   "decision": {
     "slippage_bps": 100,
     "quote_cache_seconds": 20,
