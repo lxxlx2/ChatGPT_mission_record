@@ -27,9 +27,18 @@ CHAINS = {
                   "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"),
         "event": "PoolCreated",
     },
+    "bsc-v3": {
+        "chain_id": 56,
+        "rpc": "https://bsc-rpc.publicnode.com",
+        "factory": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+        "topic": "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+        "bases": ("0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                  "0x55d398326f99059fF775485246999027B3197955"),
+        "event": "PoolCreated",
+    },
     "bsc-v2": {
         "chain_id": 56,
-        "rpc": "https://bsc-dataseed.bnbchain.org",
+        "rpc": "https://bsc-rpc.publicnode.com",
         "factory": "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73",
         "topic": "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
         "bases": ("0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
@@ -63,6 +72,7 @@ class RPC:
             raise SourceError("RPC_MUST_BE_HTTPS_NO_EMBEDDED_CREDENTIALS")
         self.url = endpoint
         self.host = u.hostname
+        self.source_tag = sha(endpoint.encode("utf-8"))
         self.chain = chain
         self.max_requests = max_requests
         self.delay = delay
@@ -169,6 +179,32 @@ def fetch_logs(rpc, chain, low, high):
     return data, raw
 
 
+def historical_v2_count(rpc, block):
+    """Historical allPairsLength() proves expected factory PairCreated event count."""
+    factory = CHAINS["bsc-v2"]["factory"]
+    result, _ = rpc.request("eth_call", [{"to": factory, "data": "0x574f2ba3"}, hex(block)])
+    return as_int(result)
+
+
+def reconcile_v2_factory_counter(rpc, first, last, logs):
+    before = historical_v2_count(rpc, first - 1)
+    after = historical_v2_count(rpc, last)
+    ordered = sorted(logs, key=lambda row: (
+        as_int(row["blockNumber"]), as_int(row["transactionIndex"]),
+        as_int(row["logIndex"])))
+    if before + len(ordered) != after:
+        raise SourceError("HISTORICAL_V2_FACTORY_EVENT_COUNT_MISMATCH")
+    for seq, row in enumerate(ordered, before + 1):
+        data = row.get("data", "")
+        if not isinstance(data, str) or not re.fullmatch(r"0x[0-9a-fA-F]{128}", data):
+            raise SourceError("HISTORICAL_V2_PAIR_CREATED_DATA_MALFORMED")
+        emitted_number = as_int("0x" + data[66:130])
+        if emitted_number != seq:
+            raise SourceError("HISTORICAL_V2_FACTORY_SEQUENCE_MISMATCH")
+    return {"status": "COUNTER_MATCHES_EVENTS", "pairs_before": before,
+            "pairs_after": after, "created_events": len(ordered)}
+
+
 def safe_file(path, raw):
     path.parent.mkdir(parents=True, exist_ok=True)
     temp = path.with_name(path.name + ".pending")
@@ -188,11 +224,11 @@ def decode(row, chain):
     data = row.get("data", "")
     if not isinstance(data, str) or not re.fullmatch(r"0x[0-9a-fA-F]{128,}", data):
         raise SourceError("EVENT_DATA_MALFORMED")
-    if chain == "base-v3" and len(topics) != 4:
+    if CHAINS[chain]["event"] == "PoolCreated" and len(topics) != 4:
         raise SourceError("V3_FEE_TOPIC_MISSING")
-    if chain == "bsc-v2" and len(topics) != 3:
+    if CHAINS[chain]["event"] == "PairCreated" and len(topics) != 3:
         raise SourceError("V2_UNEXPECTED_TOPIC_LAYOUT")
-    pool = "0x" + data[2:66][-40:].lower() if chain == "bsc-v2" else "0x" + data[66:130][-40:].lower()
+    pool = "0x" + data[2:66][-40:].lower() if CHAINS[chain]["event"] == "PairCreated" else "0x" + data[66:130][-40:].lower()
     if pool == "0x" + "0" * 40 or a[0] == a[1]:
         raise SourceError("ZERO_POOL_OR_DUPLICATE_TOKEN")
     return {
@@ -204,13 +240,14 @@ def decode(row, chain):
     }
 
 
-def read_saved(directory, low, high, chain, endpoint_host):
+def read_saved(directory, low, high, chain, endpoint_host, endpoint_sha=None):
     """Require every persisted segment to match this frozen chain, range and factory."""
     rows = []
     cursor = low
     for receipt_path in sorted(directory.glob("*.receipt.json"), key=lambda p: int(p.name.split("-")[0])):
         receipt = json.loads(receipt_path.read_text())
         if (receipt.get("chain") != chain or receipt.get("rpc_host") != endpoint_host or
+            (endpoint_sha is not None and receipt.get("rpc_source_sha256") != endpoint_sha) or
             receipt.get("factory") != CHAINS[chain]["factory"].lower() or
             receipt.get("topic") != CHAINS[chain]["topic"]):
             raise SourceError("STORED_RECEIPT_WRONG_SOURCE_OR_SCOPE")
@@ -268,12 +305,21 @@ def run(args):
             end = min(last, first + n - 1)
             try:
                 logs, raw = fetch_logs(rpc, args.chain, first, end)
-                attempts.append({"range": [first, end], "status": "OK", "event_count": len(logs),
-                                 "raw_response_sha256": sha(raw)})
+                sample = {"range": [first, end], "status": "OK", "event_count": len(logs),
+                          "raw_response_sha256": sha(raw)}
+                if args.chain == "bsc-v2":
+                    try:
+                        sample["v2_factory_counter"] = reconcile_v2_factory_counter(
+                            rpc, first, end, logs)
+                    except SourceError as e:
+                        sample["v2_factory_counter"] = {
+                            "status": "UNVERIFIED_OR_MISMATCH", "reason": str(e)}
+                attempts.append(sample)
             except SourceError as e:
                 attempts.append({"range": [first, end], "status": "ERROR", "reason": str(e)})
         print(plain_json({"schema": "MONSTER_FACTORY_RPC_PROBE_V1", "mode": "READ_ONLY_PROBE",
-              "chain": args.chain, "rpc_host": rpc.host, "day": args.day,
+              "chain": args.chain, "rpc_host": rpc.host,
+              "rpc_source_sha256": rpc.source_tag, "day": args.day,
               "resolved_full_day_blocks": [first, last], "tests": attempts,
               "full_day_covered": False, "cohort_30": "NOT_SCORABLE",
               "requests": rpc.calls}).strip())
@@ -283,10 +329,11 @@ def run(args):
     directory.mkdir(parents=True, exist_ok=True)
     state = {"schema": "MONSTER_FACTORY_RPC_COHORT_V1", "chain": args.chain,
              "factory": chain["factory"], "topic": chain["topic"],
-             "rpc_host": rpc.host, "day": args.day, "blocks": [first, last],
+             "rpc_host": rpc.host, "rpc_source_sha256": rpc.source_tag,
+             "day": args.day, "blocks": [first, last],
              "mode": "OFFLINE_READ_ONLY_MANUAL", "has_real_swap_or_historical_depth": False}
     try:
-        cursor, rows = read_saved(directory, first, last, args.chain, rpc.host)
+        cursor, rows = read_saved(directory, first, last, args.chain, rpc.host, rpc.source_tag)
         width = args.chunk
         while cursor <= last:
             end = min(last, cursor + width - 1)
@@ -300,17 +347,21 @@ def run(args):
                 raise
             receipt = {"schema": "RPC_JSON_BYTES_SHA256_V1", "chain": args.chain,
                        "factory": chain["factory"].lower(), "topic": chain["topic"],
-                       "rpc_host": rpc.host, "start": cursor, "end": end,
+                       "rpc_host": rpc.host, "rpc_source_sha256": rpc.source_tag,
+                       "start": cursor, "end": end,
                        "response_sha256": sha(raw), "log_count": len(new)}
             safe_file(directory / (str(cursor) + "-" + str(end) + ".raw.json"), raw)
             safe_file(directory / (str(cursor) + "-" + str(end) + ".receipt.json"),
                       plain_json(receipt).encode())
             rows.extend(new)
             cursor = end + 1
+        counter_check = (reconcile_v2_factory_counter(rpc, first, last, rows)
+                         if args.chain == "bsc-v2" else {"status": "NOT_AVAILABLE_FOR_THIS_FACTORY"})
         ordered, selection, eligible_total = build_roster(rows, args.chain)
         state.update({"status": "FULL_DAY_RPC_SEGMENTS_COLLECTED_ROSTER_ONLY",
                       "complete_contiguous_block_coverage": True,
-                      "factory_events": len(ordered), "unique_quote_paired_tokens": eligible_total,
+                      "factory_events": len(ordered), "historical_counter_check": counter_check,
+                      "unique_quote_paired_tokens": eligible_total,
                       "cohort_created": len(selection) if len(selection) == 30 else 0,
                       "cohort_30_status": "FROZEN_UNVALIDATED_POOL_EVENTS_ONLY" if len(selection) == 30
                            else "NOT_SCORABLE_FEWER_THAN_30_ELIGIBLE",
