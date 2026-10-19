@@ -127,9 +127,16 @@ def verify_loaded_sources(permit: dict, script: Path) -> None:
         raise ValueError('QUALIFICATION_DEPENDENCY_CHECK_FAILED') from None
 
 
-def bounded_report_path(out: Path, root: Path) -> Path:
-    require(out.parent.resolve() == root.resolve() and
-            not out.is_symlink() and out.name in ('report.json', 'journal.json'),
+def bounded_report_path(out: Path, root: Path, *, expected_name: str = 'report.json') -> Path:
+    """Distinct reserved filenames prevent a final report replacing an attempt journal.
+
+    The default is for the final report; journal usage must name the role
+    explicitly. This validation runs before nonce consumption or any RPC.
+    """
+    require(expected_name in ('report.json', 'journal.json') and
+            out.name == expected_name and
+            out.parent.resolve() == root.resolve() and
+            not out.is_symlink(),
             'QUALIFICATION_REPORT_OUTSIDE_APPROVED_STORAGE')
     return out
 
@@ -408,7 +415,10 @@ def main() -> None:
         require(root.is_relative_to(Path('/tmp').resolve()),
                 'QUALIFICATION_STORAGE_OUTSIDE_TMP')
         out = bounded_report_path(args.report, root)
-        journal_path = bounded_report_path(root / 'journal.json', root)
+        journal_path = bounded_report_path(root / 'journal.json', root,
+                                           expected_name='journal.json')
+        require(out.resolve(strict=False) != journal_path.resolve(strict=False),
+                'QUALIFICATION_REPORT_JOURNAL_CONFLICT')
         script = Path(__file__).resolve()
         require(args.manifest.resolve() == script.parent / 'F0_COHORT_PRESELECTION.json' and
                 args.router_registry.resolve() == script.parent / 'F0_ROUTER_SOURCE_CANDIDATES.json',
