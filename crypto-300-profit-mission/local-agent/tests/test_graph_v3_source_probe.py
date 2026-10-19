@@ -120,5 +120,41 @@ class OneQueryProbeTests(unittest.TestCase):
             self.assertEqual(list(Path(tmp).glob("*.json")), [])
 
 
+class TestGraphControlProbe(unittest.TestCase):
+    def test_reference_success_isolated_from_v3_source_gate(self):
+        seen = []
+        raw = json.dumps({"data": {"_meta": {"block": {"number": 290000000}}}}).encode()
+        def opener(req, timeout):
+            seen.append(req)
+            self.assertEqual(timeout, 20)
+            return Response(raw)
+        result = p.diagnose_control_once("synthetic-secret", opener=opener)
+        self.assertEqual(result["status"], "CONTROL_QUERY_OK")
+        self.assertEqual(result["p0_historical_source_gate"], "UNCHANGED")
+        self.assertEqual(result["raw_response_sha256"], p.sha256(raw))
+        self.assertEqual(len(seen), 1)
+        self.assertEqual(seen[0].get_method(), "POST")
+        self.assertEqual(seen[0].full_url, p.CONTROL_GATEWAY)
+        self.assertEqual(seen[0].get_header("Authorization"), "Bearer synthetic-secret")
+        self.assertNotIn("synthetic-secret", json.dumps(result))
+
+    def test_reference_http_403_is_not_falsely_invalid_key(self):
+        seen = []
+        def opener(req, timeout):
+            seen.append(req)
+            raise urllib.error.HTTPError(req.full_url, 403, "secret-provider-text", {}, None)
+        result = p.diagnose_control_once("synthetic-secret", opener=opener)
+        self.assertEqual(len(seen), 1)
+        self.assertEqual(result["http_status"], 403)
+        self.assertEqual(result["key_validity"], "UNVERIFIED")
+        self.assertNotIn("secret", json.dumps(result))
+
+    def test_reference_missing_key_no_request(self):
+        calls = []
+        with self.assertRaisesRegex(p.ProbeError, "GRAPH_API_KEY_REQUIRED"):
+            p.diagnose_control_once(None, opener=lambda *a, **kw: calls.append(a))
+        self.assertFalse(calls)
+
+
 if __name__ == "__main__":
     unittest.main()

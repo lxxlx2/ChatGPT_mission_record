@@ -16,6 +16,8 @@ import urllib.error
 import urllib.request
 
 SUBGRAPH_ID = "Hv1GncLY5docZoGtXjo4kwbTvxm3MAhVZqBZE4sUT9eZ"
+CONTROL_SUBGRAPH_ID = "DZz4kDTdmzWLWsV373w2bSmoar3umKKH9y82SUKr5qmp"
+CONTROL_GATEWAY = f"https://gateway.thegraph.com/api/subgraphs/id/{CONTROL_SUBGRAPH_ID}"
 GATEWAY = f"https://gateway.thegraph.com/api/subgraphs/id/{SUBGRAPH_ID}"
 FIRST_BLOCK = 52440287
 LAST_BLOCK = 52555482
@@ -172,13 +174,70 @@ def probe_once(api_key, out_dir, *, opener=urllib.request.urlopen):
     return result
 
 
+def diagnose_control_once(api_key, *, opener=urllib.request.urlopen):
+    """One POST to a separate, recently updated official Graph Network subgraph.
+
+    Check if the same key works on any other subgraph; this does not prove
+    the BSC V3 indexed history or historical public available_at.
+    """
+    if not isinstance(api_key, str) or not api_key.strip():
+        raise ProbeError("GRAPH_API_KEY_REQUIRED")
+    if "\r" in api_key or "\n" in api_key:
+        raise ProbeError("GRAPH_API_KEY_INVALID")
+    payload = b'{"query":"{ _meta { block { number } } }"}'
+    request = urllib.request.Request(
+        CONTROL_GATEWAY, data=payload, method="POST",
+        headers={"Content-Type": "application/json", "Authorization": "Bearer " + api_key},
+    )
+    try:
+        with opener(request, timeout=20) as response:
+            raw = response.read(65537)
+    except urllib.error.HTTPError as exc:
+        code = int(exc.code)
+        exc.close()
+        return {"status": "CONTROL_HTTP_DENIED", "http_status": code,
+                "control_subgraph_id": CONTROL_SUBGRAPH_ID,
+                "key_validity": "UNVERIFIED", "root_cause": "UNRESOLVED"}
+    except (urllib.error.URLError, TimeoutError):
+        raise ProbeError("GRAPH_CONTROL_NETWORK_ERROR") from None
+    if len(raw) > 65536:
+        raise ProbeError("GRAPH_CONTROL_RESPONSE_TOO_LARGE")
+    try:
+        parsed = json.loads(raw)
+    except (ValueError, UnicodeDecodeError):
+        raise ProbeError("GRAPH_CONTROL_INVALID_JSON") from None
+    if not isinstance(parsed, dict) or parsed.get("errors"):
+        return {"status": "CONTROL_GRAPHQL_ERROR", "control_subgraph_id": CONTROL_SUBGRAPH_ID,
+                "key_validity": "UNVERIFIED", "root_cause": "UNRESOLVED"}
+    data = parsed.get("data")
+    meta = data.get("_meta") if isinstance(data, dict) else None
+    block = meta.get("block") if isinstance(meta, dict) else None
+    height = block.get("number") if isinstance(block, dict) else None
+    if type(height) is not int or height < 0:
+        raise ProbeError("GRAPH_CONTROL_BAD_META")
+    if api_key.encode("utf-8") in raw:
+        raise ProbeError("GRAPH_CONTROL_REFLECTED_KEY_NO_ARCHIVE")
+    return {"status": "CONTROL_QUERY_OK", "http_status": 200,
+            "control_subgraph_id": CONTROL_SUBGRAPH_ID, "control_indexed_block": height,
+            "raw_response_sha256": sha256(raw),
+            "key_validity": "CONFIRMED_FOR_CONTROL_QUERY_ONLY",
+            "p0_historical_source_gate": "UNCHANGED"}
+
+
 def main():
     parser = argparse.ArgumentParser(description="Manual one-query The Graph BSC V3 source gate")
-    parser.add_argument("--live-one-query", action="store_true", required=True)
-    parser.add_argument("--out-dir", required=True)
+    action = parser.add_mutually_exclusive_group(required=True)
+    action.add_argument("--live-one-query", action="store_true")
+    action.add_argument("--diagnose-control", action="store_true")
+    parser.add_argument("--out-dir")
     args = parser.parse_args()
     try:
-        result = probe_once(os.getenv("GRAPH_API_KEY"), Path(args.out_dir))
+        if args.diagnose_control:
+            result = diagnose_control_once(os.getenv("GRAPH_API_KEY"))
+        else:
+            if not args.out_dir:
+                parser.error("--out-dir required for --live-one-query")
+            result = probe_once(os.getenv("GRAPH_API_KEY"), Path(args.out_dir))
     except ProbeError as exc:
         parser.exit(2, str(exc) + "\n")
     print(json.dumps(result, sort_keys=True))

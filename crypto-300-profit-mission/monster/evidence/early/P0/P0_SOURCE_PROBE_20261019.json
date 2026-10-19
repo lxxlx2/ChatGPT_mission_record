@@ -8887,5 +8887,29 @@
     "code_changed_this_turn": false,
     "no_paid_requests": true,
     "no_trading": true
+  },
+  "bsc_v3_graph_api_key_security_unrestricted_and_reference_control_20261020": {
+    "source": "USER_MAC_GRAPH_STUDIO_SECURITY_SCREENSHOT",
+    "authorized_subgraphs": "ANY_SUBGRAPH_NO_RESTRICTION",
+    "authorized_domains": "ANY_DOMAIN_NO_RESTRICTION",
+    "prior_live_http_status": 403,
+    "restrict_allowlist_causes_excluded": true,
+    "root_cause": "UNRESOLVED",
+    "official_bearer_header_and_base_url": "SUPPORTED_PER_THE_GRAPH_CURRENT_DOCUMENTATION",
+    "official_reference_subgraph": "DZz4kDTdmzWLWsV373w2bSmoar3umKKH9y82SUKr5qmp",
+    "reference_subgraph_page": "https://thegraph.com/explorer/subgraphs/DZz4kDTdmzWLWsV373w2bSmoar3umKKH9y82SUKr5qmp",
+    "reference_recent_activity": "UPDATED_14_DAYS_AGO_ON_PUBLIC_GRAPH_EXPLORER",
+    "added_diagnostic_mode": "--diagnose-control",
+    "max_requests_added_per_manual_diagnostic_invocation": 1,
+    "diagnostic_purpose": "Single POST for _meta on independent official reference subgraph to distinguish key-wide vs target-only access",
+    "isolated_python_local_logic_tests": "9_9_PASS_LOCAL_FUNCTIONAL_RECONSTRUCTION_WITH_NO_NETWORK",
+    "fixed_remote_exact_git_blob_test": "NOT_RUN",
+    "mac_new_code_tests": "NOT_RUN",
+    "mac_reference_query": "NOT_RUN",
+    "api_key_stored": false,
+    "cost_usd": 0,
+    "p0": "INSUFFICIENT_COVERAGE",
+    "p1": "BLOCKED",
+    "permissions": "NO_MERGE_NO_DEPLOY_NO_GMAIL_NO_TRADE"
   }
 }

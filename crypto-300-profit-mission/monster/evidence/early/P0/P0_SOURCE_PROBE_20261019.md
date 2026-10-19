@@ -1,5 +1,13 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：API Key Security 无白名单限制，提供一次性独立参考子图对照
+
+用户 Graph Studio Security 截图直接显示 **Authorized Subgraphs: Any Subgraph** 与 **Authorized Domains: Any Domain**。因此可排除这两类当前配置的 whitelist 导致目标 Graph Gateway 403；Key 状态与 Free 账户授权仍未知。The Graph 官方文档明确支持 `Authorization: Bearer` 及现有 Gateway URL，无需盲目重建 Key 或转为 URL 内嵌 Key。目标 Pancake V3 子图 Explorer 显示久未更新，**但不能由此推断 403 具体原因**。
+
+在同一个 `local-agent/mission_agent/early/graph_v3_source_probe.py` 新增手动 `--diagnose-control`：只对 Graph Network Arbitrum 官方参考子图 `DZz4kDTdmzWLWsV373w2bSmoar3umKKH9y82SUKr5qmp` 发**一次 POST `_meta`**，使用现有 Bearer Key，打印固定分类、成功时的区块高度及原响应 SHA256，不打印请求 URL、Key 或服务端失败 body。该参考子图 Explorer 近期更新，适合区分“同Key完全不能查询公开参考子图”和“仅目标BSC V3出错”。成功参考子图不会使 BSC V3 或 PIT 通过，任何失败也不能直接宣称 Key 无效。
+
+原有目标 V3 `--live-one-query` 保持单请求原限制；未创建后台任务或重复扫描。新模式隔离环境以等价代码做了9个离线测试通过（含3个参考探针用例），**新远端提交的完整测试、Mac参考子图请求尚未执行**。最终P0仍 `INSUFFICIENT_COVERAGE`，P1 `BLOCKED`，零付费，NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE。
+
 ## 2026-10-20 Mac 复验：8/8 通过，真实 The Graph Gateway 返回 HTTP 403（源仍 BLOCKED）
 
 用户提供的最新 Mac 终端截图（Python 3.14.7）：修订后的 Graph 探针 **8/8 单元测试 PASS**，测试输出包含由 mock HTTPError 清理产生的 ResourceWarning，不代表真实 Gateway 响应。随后唯一手动真实 Graph 请求返回 `GRAPH_HTTP_403_KEY_OR_ACCESS_DENIED`，HTTP 层确认收到拒绝答复；没有成功取得 `_meta` 或历史 V3 池，无法从 403 单独断言 API Key 无效、账户未开通、子图不可用或具体计费故障。当前代码在失败时丢弃原 HTTP body，故根因 **UNRESOLVED**。
