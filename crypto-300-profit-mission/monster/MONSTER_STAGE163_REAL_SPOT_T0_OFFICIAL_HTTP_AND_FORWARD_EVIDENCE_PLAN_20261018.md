@@ -307,3 +307,29 @@ Codex独立复审固定旧SHA `456111143f5ea1ac2e32103f71ea50dc5a27d078` 判定 
 
 技术/商业完整[研究报告与独立其它AI审核完整任务](MONSTER_FORWARD_SPOT511_FIRST518_CAUSAL_AND_FIXED_PRICE_REAL_RESULTS_20261019.md)已入Git。**本阶段新经济/回放代码Other AI Review尚NOT_DONE**，不能继承之前P2/Stage165/Stage166/300U已批准范围。新Frozen完整7日3360轮与2026-10-19..25实际Published 3577份退出数据仍缺；无真实逐轮ticker24、PIT动态上市/退市、真实bid/ask L2或本人费率，保持 `G0 PARTIAL/G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。不恢复Stage99、后台监控、Gmail、Mac或自动交易，Frank不变。
 
+## 三十四、原始V4与Stage77主线对照及首次518审核BLOCKED分流（2026-10-19）
+
+### 证据、批准边界和主线优先级
+
+本次回读原始 [V4产品与架构](MONSTER_V4_MODEL_AND_LOCAL_ARCHITECTURE.md)、[Stage77冻结验收门槛](MONSTER_STAGE77_CORE_MODEL_ACCEPTANCE_AND_BOUNDARY_FREEZE_20261013.md)、[用户业务价值决策](MONSTER_USER_VALUE_AND_NEXT_VALIDATION_DECISION_20261018.md) 和[模块交付规则](MONSTER_MODULE_DEVELOPMENT_RULES.md)。**总体仍按D0早期发现→D1可解释SETUP→D2真实可执行性→独立新样本费后收益→独立Review→真实本机授权部署推进**，但近期过多精力停留在Publisher形式化安全、来源复核和局部审计。下一阶段禁止把边界修复等同业务里程碑，也不能为Git阶段编号而创造缺真实用户价值的研究。
+
+原初V4产品首期场所为 **Binance Spot + USD-M Perpetual**，现 511 T0 Spot只是严格单场所前瞻研究切片，**并非整个V4资产/venue覆盖验收**。初版状态机还要求早期机会对用户可见、信号时效、过期/漏报、退出能力和真实通知；当前518轮Publisher离线代理没有真正历史ticker24逐轮原字节、实际全窗PIT上市/退市、实时送达时钟、当时L2买卖报价及资金容量。因此只有严格`OFFICIAL_1M_CAUSAL_PROXY_PARTIAL_518`而不是`LIVE_SIGNAL`，`G0 PARTIAL/G1 NOT_SCORED/G2 NOT_PASSED/G3 NOT_SCORED/G4 UNKNOWN/G5 BLOCKED/G6 NO_GO`。新8 WATCH→8 SETUP表明这26小时的部分模型事件转换真实可以执行，**不证明原Stage77要求的≥20真实2×事件、≥3窗口、≥90%/85%提早、D1至少80%保留、平均5/日与峰值12/日的效果**。经济结果经假设成本后多为负，不能升级BUY。
+
+### 用户提交Codex固定SHA审核BLOCKED：按影响业务的范围处理
+
+用户提供Codex本地detached审核：审核固定SHA `03eaddcfb95d630e26b98c55796a9f835243387e`，结论`BLOCKED`；其独立12/12单测、两个原CI成功记录、原16事件哈希与各期限归档JSON复算一致，但本地三次`gh run download`原issuer ZIP数据停留0字节，因此**没有独立取得1533份原字节/重做518轮**。该结果为“独立复现证据未就绪”，不宣称已推翻之前CI生成8+8的事实，也不得从作者CI推导“独立Review APPROVED”。本次又直接读取GitHub Actions Artifact列表（无需重下载），原数据来源：run`39212800265` artifact `12167818438`（33,392,878 bytes）、run`39213387756` artifact `12168243737`（180,491 bytes）、run`39214007356` artifact `12168334522`（16,509,804 bytes），截至当前查询均`expired=false`，expires_at为`2026-12-18`；**这些是GitHub Artifact元数据，不能证明Codex本地下载成功或原始字节重新验收**。已有Codex上一轮独立通过1533来源完整性的批准范围保持，不自动覆盖新代码。
+
+审核P2仅需在下次统一新代码复审前修补两处低成本表达准确性：
+1. 协议写明15/60/360分钟为正式三项固定收益观测；1440分钟为另行预先冻结的**24h来源可用性/右删失记录**。若代码也计算1440来源到位后的价格回报，必须按同一前置冻结协议标明，此次全16条24h都因源未覆盖右端而`CENSORED`。不改旧现成亏损结论。
+2. `postsignal_economics.py`三个`True`证据标志应由读取实际回执/校验成功的分支显式导出，或改为精确字面证据等级。禁止用一条常量冒充重新下载或第二次独立SHA验收。
+3. 将`03eaddc`固定源码测试与其后自动归档结果提交`d673bd57e2ce9bf136da4de0c5b934be06337acf`的不同审计对象明确标注。结果文件必然在CI输入版固定SHA之后生成，**无需为让它“回到过去的代码SHA”而伪造Git历史或覆盖原文件**；用代码固定SHA+生产run ID+产物SHA256+`d673bd5`结果提交关系审计。新修复如有执行代码变更必须另外冻结新的review SHA。原`BLOCKED`保持，未经重验不升级通过。
+
+### 唯一商业研发先后顺序（反复审查止损）
+
+1. **功能闭环优先**：使用仓库已有持久SQLite/机会查询器、现成历史与首批8个真实源事件，完成一条无需真实通知的端到端实例：固定Spot原生身份、WATCH时效/触发原因、D1 SETUP/过期、队列容量及删失、D2当时有无bid/ask和可用市场状态、用户可理解的`仅观察/不可买或未知`最终只读输出。用实际可复现样本验证，不创建新的Daemon/UI监控/自动Gmail。
+2. **正面面对模型质量**：保留历史Stage30/162及本次8个SETUP大多费后亏损，确认异常“发现”转“买入”仍存在大缺口，坚决不在8币或原445旧样本上优化到漂亮收益；若下一独立新日期G1/G2/净值未过，按Stage77转回模型提案而不是无限小修补。
+3. **只有一次有限范围复审修复**：先统一P2-1/2及审核工件SHA引用；原1533只在能独立取得原字节的环境尝试一次合并复核。若再次下载失败，明确`INDEPENDENT_REPRO_BLOCKED_BY_ARTIFACT_TRANSPORT`，保留作者原CI和用户提供的审查失败证据，继续研究价值相关的其他独立路径，禁止把网络下载0字节当作市场无数据或追加一堆重复流程。
+4. **未来完整官方来源**：原冻结`[2026-10-17T22:06Z, 2026-10-24T22:06Z)`的3360轮及24h退出，必须等相应Publisher Oct19..25来源真正发布后、按用户主动会话要求取得/验证才能做最终511 Spot A/B与负例分母；该日期目前未来部分真实未发生，不能提前回填、不能扩大验证口径。它不是暂停功能工程的理由。
+
+**持续硬门禁：**`G4 UNKNOWN/G6 NO_GO/NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。未启用或授权Mac/Frank/交易/真邮件，保持Stage99已关闭，不另创建监控或定时程序。本段属于业务优先级及外部审核状态的长期交接记录，**没有替代任何旧固定SHA代码审核，也没有批准新策略**。
+
