@@ -258,7 +258,16 @@ def main() -> None:
         out = args.report.resolve()
         allowed_root = Path(permit["storage_root"]).resolve()
         require(out.parent == allowed_root, "REPORT_OUTSIDE_APPROVED_STORAGE")
-        result = smoke(https_sender, cap=permit["max_response_bytes"])
+        rpc = LimitedRPC(https_sender, ENDPOINT, permit["max_response_bytes"])
+        try:
+            result = smoke(https_sender, cap=permit["max_response_bytes"], rpc=rpc)
+        except Exception as exc:
+            # Fail closed, but do not lose already-attempted billable calls.
+            # Report is local and contains no raw RPC responses or credentials.
+            result = live_failure_report(exc, rpc)
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            raise SystemExit(1) from None
         result["mode"] = "AUTHORIZED_PUBLIC_HTTP_SMOKE_NOT_FULL_F0"
         result["actual_rpc_calls"] = result["attempted_rpc_calls"]
     text = json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False) + "\n"
