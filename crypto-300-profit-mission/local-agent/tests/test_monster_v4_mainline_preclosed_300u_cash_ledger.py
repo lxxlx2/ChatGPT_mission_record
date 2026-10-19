@@ -70,7 +70,7 @@ class Monster300UPreclosedTests(unittest.TestCase):
         self.assertEqual(s["maximum_concurrent_lots"],10)
         self.assertEqual(s["initial_cash_usdt"],"300")
         self.assertEqual(s["gross_assumed_entry_spend_usdt"],"300")
-        self.assertNotEqual(s["final_cash_after_all_assumed_24h_settlements_usdt"],"300")
+        self.assertEqual(s["final_cash_after_all_assumed_24h_settlements_usdt"],"300")
         self.assertEqual(len(s["largest_98_watch_burst"]["selected_symbols"]),0)
 
     def test_cash_scenario_unknown_exit_remains_hypothetical(self):
