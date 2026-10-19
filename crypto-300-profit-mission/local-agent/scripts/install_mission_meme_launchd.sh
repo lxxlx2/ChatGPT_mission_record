@@ -55,8 +55,15 @@ CONTROL="$(cat "$CONTROL_POINTER")"
 [ -n "${APPROVED_POLICY_SHA256:-}" ] || die "EXTERNAL_POLICY_APPROVAL_REQUIRED"
 [ -f "${POLICY_APPROVAL_RECORD:-}" ] || die "SIGNED_APPROVAL_RECORD_REQUIRED"
 [ -f "${POLICY_APPROVAL_SIGNATURE:-}" ] || die "SIGNED_APPROVAL_SIGNATURE_REQUIRED"
-CODE_COMMIT_SHA="$(git -C "$WORKTREE" rev-parse --verify HEAD)"
-[ "$(git -C "$WORKTREE" status --porcelain --untracked-files=no)" = "" ] || die "RELEASE_CODE_WORKTREE_DIRTY"
+# VERIFIED_GIT_WORKTREE: read actual source SHA from sanitized Git identity.
+# Do not let inherited GIT_DIR/GIT_WORK_TREE/GIT_CONFIG_* redirect checkout.
+CODE_COMMIT_SHA="$(PYTHONPATH="$LOCAL_AGENT" "$VENV/bin/python" - "$WORKTREE" <<'PY'
+import sys
+from pathlib import Path
+from mission_agent.mission_control.release_approval import trusted_checkout_identity
+print(trusted_checkout_identity(Path(sys.argv[1])))
+PY
+)"
 if [ -n "${SOLANA_RPC_URLS:-}" ]; then
   RPC_URLS_VALUE="$SOLANA_RPC_URLS"
 else
