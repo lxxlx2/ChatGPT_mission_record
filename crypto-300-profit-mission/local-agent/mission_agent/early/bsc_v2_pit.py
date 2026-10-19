@@ -265,7 +265,8 @@ def classify_v2_swap_by_quote_side(row, *, quote_is_token0):
 
 
 
-def summarize_v2_archived_swap_windows(*, pool, token0, token1, quote_asset, windows):
+def summarize_v2_archived_swap_windows(*, pool, token0, token1, quote_asset, windows,
+                                     quote_reserve_floor_raw=None):
     """Replay only archived pair-event windows; never treat gaps as no trading.
 
     Pair Swap/Sync logs show pool-direction events, not ERC20 transfer amount
@@ -286,6 +287,9 @@ def summarize_v2_archived_swap_windows(*, pool, token0, token1, quote_asset, win
             or quote_asset.lower() not in (token0.lower(), token1.lower())
             or not isinstance(windows, list)):
         raise PITInvalid('ARCHIVED_SWAP_SCOPE_OR_QUOTE_INVALID')
+    if (quote_reserve_floor_raw is not None and
+            (type(quote_reserve_floor_raw) is not int or quote_reserve_floor_raw <= 0)):
+        raise PITInvalid('ARCHIVED_SWAP_FROZEN_QUOTE_FLOOR_INVALID')
     quote_is_token0 = quote_asset.lower() == token0.lower()
     seen = {}
     window_presence = []
@@ -329,7 +333,7 @@ def summarize_v2_archived_swap_windows(*, pool, token0, token1, quote_asset, win
             words(row.get('data'))
             syncs_by_tx.setdefault((block, txindex, row['transactionHash'].lower()), []).append(logindex)
     swaps = []
-    for (block, txindex, logindex), row in ordered:
+    for pos, ((block, txindex, logindex), row) in enumerate(ordered):
         if row['topics'][0].lower() != SWAP:
             continue
         if len(row['topics']) != 3:
@@ -338,6 +342,28 @@ def summarize_v2_archived_swap_windows(*, pool, token0, token1, quote_asset, win
         sync_prior = any(
             n < logindex for n in syncs_by_tx.get(
                 (block, txindex, row['transactionHash'].lower()), []))
+        prior_quote = prior_token = after_quote = None
+        adjacent_sync = False
+        if pos > 0:
+            (prior_block, prior_index, prior_logindex), prior_log = ordered[pos - 1]
+            adjacent_sync = (
+                prior_block == block and prior_index == txindex
+                and prior_log.get('transactionHash', '').lower() == row['transactionHash'].lower()
+                and prior_log['topics'][0].lower() == SYNC
+                and prior_logindex < logindex)
+            if adjacent_sync:
+                reserve0, reserve1 = words(prior_log.get('data'))
+                after_quote, after_token = ((reserve0, reserve1) if quote_is_token0
+                                            else (reserve1, reserve0))
+                prior_quote = (after_quote - int(direction['quote_in_raw'])
+                               + int(direction['quote_out_raw']))
+                prior_token = (after_token - int(direction['token_in_raw'])
+                               + int(direction['token_out_raw']))
+                if prior_quote <= 0 or prior_token <= 0:
+                    raise PITInvalid('ARCHIVED_SWAP_IMPOSSIBLE_PRETRADE_RESERVE')
+        floor_result = ('UNKNOWN' if prior_quote is None or quote_reserve_floor_raw is None
+                        else 'AT_OR_ABOVE_FROZEN_FLOOR' if
+                        prior_quote >= quote_reserve_floor_raw else 'BELOW_FROZEN_FLOOR')
         swaps.append({
             'block': block, 'tx_hash': row['transactionHash'].lower(),
             'log_index': logindex, 'direction': direction['direction'],
@@ -346,6 +372,11 @@ def summarize_v2_archived_swap_windows(*, pool, token0, token1, quote_asset, win
             'token_in_raw': direction['token_in_raw'],
             'token_out_raw': direction['token_out_raw'],
             'preceding_same_tx_pool_sync_in_saved_window': sync_prior,
+            'immediately_preceding_same_tx_pool_sync': adjacent_sync,
+            'pre_swap_quote_reserve_raw': str(prior_quote) if prior_quote is not None else None,
+            'post_swap_quote_reserve_raw': str(after_quote) if after_quote is not None else None,
+            'pre_swap_quote_depth_frozen_floor_status': floor_result,
+            'pre_swap_depth_only_at_observed_historical_tx': True,
             'actual_erc20_transfer_included_in_pair_logs': False,
             'historical_sellable_at_notional': 'UNVERIFIED',
         })
@@ -364,6 +395,26 @@ def summarize_v2_archived_swap_windows(*, pool, token0, token1, quote_asset, win
             x['preceding_same_tx_pool_sync_in_saved_window'] for x in swaps),
         'observed_quote_to_token_with_sync': len(verified_buys),
         'observed_token_to_quote_with_sync': len(verified_sells),
+        'observed_buy_at_or_above_frozen_quote_depth': sum(
+            x['direction'] == 'OBSERVED_QUOTE_TO_TOKEN_SWAP'
+            and x['pre_swap_quote_depth_frozen_floor_status'] == 'AT_OR_ABOVE_FROZEN_FLOOR'
+            for x in swaps),
+        'observed_sell_at_or_above_frozen_quote_depth': sum(
+            x['direction'] == 'OBSERVED_TOKEN_TO_QUOTE_SWAP'
+            and x['pre_swap_quote_depth_frozen_floor_status'] == 'AT_OR_ABOVE_FROZEN_FLOOR'
+            for x in swaps),
+        'observed_buy_below_frozen_quote_depth': sum(
+            x['direction'] == 'OBSERVED_QUOTE_TO_TOKEN_SWAP'
+            and x['pre_swap_quote_depth_frozen_floor_status'] == 'BELOW_FROZEN_FLOOR'
+            for x in swaps),
+        'observed_sell_below_frozen_quote_depth': sum(
+            x['direction'] == 'OBSERVED_TOKEN_TO_QUOTE_SWAP'
+            and x['pre_swap_quote_depth_frozen_floor_status'] == 'BELOW_FROZEN_FLOOR'
+            for x in swaps),
+        'observed_swaps_without_proven_preswap_depth': sum(
+            x['pre_swap_quote_reserve_raw'] is None for x in swaps),
+        'frozen_research_quote_floor_raw': (
+            str(quote_reserve_floor_raw) if quote_reserve_floor_raw is not None else None),
         'first_observed_in_saved_windows': swaps[0] if swaps else None,
         'observed_direction_events': swaps,
         'absence_of_swap_in_missing_intervals': 'UNKNOWN',
