@@ -366,6 +366,46 @@ class FactoryOfflineP0ArchiveAuditTests(unittest.TestCase):
             self.assertEqual(result["unknown_ranks"], [1])
 
 
+    def test_p0_offline_audit_reuses_three_real_later_pool_swap_windows(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out, cases, archive = self._build_fake_saved_30(Path(tmp))
+            history = archive['historical_bsc_v2_append_only_factory_enumeration']
+            sources = history['creation_liquidity_source_spotchecks']['first_later_reserve_update_events']
+            for event in sources:
+                case = cases[event['rank'] - 1]
+                self.assertEqual(case['rank'], event['rank'])
+                file = (out / 'v2_bootstrap_raw' /
+                        (str(case['index']) + '.later.rpc.json'))
+                file.write_text(json.dumps({'result': event['events']}))
+            p0 = Path(tmp) / 'p0.json'
+            p0.write_text(json.dumps(archive))
+            got = m.audit_saved_bsc_v2_p0(out, p0)
+            self.assertEqual(got['status'], 'LOCAL_FROZEN_30_CREATION_REPLAY_PASS')
+            self.assertEqual(got['original_response_files_audited'], 63)
+            self.assertEqual(got['observed_token_to_quote_swap_with_same_tx_sync_ranks'], [5])
+            self.assertEqual(got['observed_quote_to_token_swap_with_same_tx_sync_ranks'], [1, 2])
+            self.assertEqual(len(got['later_update_source_window_not_archived_ranks']), 27)
+            self.assertTrue(got['observed_sells_are_not_same_notional_user_sellability'])
+            self.assertEqual(got['eighteen_of_thirty_sellable_gate'], 'NOT_SCORABLE')
+
+    def test_p0_offline_audit_rejects_spoofed_later_pair_event(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out, cases, archive = self._build_fake_saved_30(Path(tmp))
+            history = archive['historical_bsc_v2_append_only_factory_enumeration']
+            event = history['creation_liquidity_source_spotchecks']['first_later_reserve_update_events'][2]
+            case = cases[event['rank'] - 1]
+            file = (out / 'v2_bootstrap_raw' /
+                    (str(case['index']) + '.later.rpc.json'))
+            tampered = [{**row, 'address': '0x' + 'f'*40} for row in event['events']]
+            file.write_text(json.dumps({'result': tampered}))
+            p0 = Path(tmp) / 'p0.json'
+            p0.write_text(json.dumps(archive))
+            got = m.audit_saved_bsc_v2_p0(out, p0)
+            self.assertEqual(got['status'], 'PARTIAL_OR_SOURCE_INCONSISTENT_NOT_SCORABLE')
+            self.assertEqual(got['unknown_ranks'], [5])
+            self.assertEqual(got['fully_replayed_creation_count'], 29)
+
+
 
 if __name__ == "__main__":
     unittest.main()
