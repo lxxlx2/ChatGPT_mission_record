@@ -5785,5 +5785,73 @@
     "gate_24_of_30_complete_pit": "NOT_SCORABLE",
     "gate_18_of_30_bidirectional_sellability": "NOT_SCORABLE",
     "phase": "P0_PARTIAL_NO_P1"
+  },
+  "bsc_v2_p0_mac_deployment_code_batch1_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_FROZEN_RUNTIME_CODE_FIRST5_MAC_ACTUAL_STDOUT_V1",
+    "evidence_source": "USER_PASTED_MAC_TERMINAL_STDOUT",
+    "source_body_raw_http_available_in_this_chat": false,
+    "target_code_sha": "15625f373250cc2356ee05ca92e8a321b1bcd565",
+    "checkout_fast_forward_reported": true,
+    "tests": [
+      {
+        "pattern": "test_monster_early_bsc_v2_pit.py",
+        "ran": 15,
+        "passed": 15
+      },
+      {
+        "pattern": "test_monster_early_venue_factory_rpc_roster_probe.py",
+        "ran": 18,
+        "passed": 18
+      }
+    ],
+    "tests_total": 33,
+    "tests_passed": 33,
+    "deployment_mode": "BOUNDED_CODE_STATE_REPLAY_PASS_NOT_DEPLOY_TX",
+    "requested_rank_window": [
+      1,
+      5
+    ],
+    "requested_count": 5,
+    "requests_this_invocation": 38,
+    "rank_results": [
+      {
+        "rank": 1,
+        "status": "RUNTIME_CODE_PREEXISTS_FROZEN_UTC_DAY",
+        "first_code_block_in_day": null,
+        "source_state": "BOUNDED_HISTORICAL_CODE_STATE_ONLY"
+      },
+      {
+        "rank": 2,
+        "status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_code_block_in_day": 52440593,
+        "source_state": "BOUNDED_HISTORICAL_CODE_STATE_ONLY"
+      },
+      {
+        "rank": 3,
+        "status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_code_block_in_day": 52440672,
+        "source_state": "BOUNDED_HISTORICAL_CODE_STATE_ONLY"
+      },
+      {
+        "rank": 4,
+        "status": "FIRST_NONEMPTY_CODE_IN_FROZEN_DAY_BLOCK_STATE",
+        "first_code_block_in_day": 52440725,
+        "source_state": "BOUNDED_HISTORICAL_CODE_STATE_ONLY"
+      },
+      {
+        "rank": 5,
+        "status": "RUNTIME_CODE_PREEXISTS_FROZEN_UTC_DAY",
+        "first_code_block_in_day": null,
+        "source_state": "BOUNDED_HISTORICAL_CODE_STATE_ONLY"
+      }
+    ],
+    "failures_in_user_stdout": 0,
+    "archived_original_json_rpc_and_audit_time_sha_saved_locally_expected_by_code": true,
+    "archive_raw_contents_independently_replayed_by_assistant": false,
+    "first_runtime_code_block_not_contract_creation_receipt": true,
+    "historical_public_available_at": "UNVERIFIED",
+    "complete_24_of_30_pit_gate": "NOT_SCORABLE",
+    "same_notional_two_sided_18_of_30": "NOT_SCORABLE",
+    "status": "SOURCE_PATH_MAC_PASS_P0_PARTIAL"
   }
 }
