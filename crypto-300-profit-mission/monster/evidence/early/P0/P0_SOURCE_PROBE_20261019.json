@@ -3,7 +3,7 @@
   "observed_date": "2026-10-19",
   "research_only": true,
   "phase0_full_source_pass": false,
-  "phase0_status": "BSC_V2_30_IDENTITY_ROSTER; 11_CREATION_PIT_WITNESSES_ACQUIRED; EXECUTABILITY_UNKNOWN",
+  "phase0_status": "BSC_V2_30_POOL_IDENTITIES; FIRST_17_CHAIN_CREATION_SOURCES_CHECKED; EXECUTABILITY_NOT_SCORABLE",
   "privacy": "NO_KEYS_NO_WALLET_SIGNING",
   "cost_usd": 0,
   "provider": "Connected user's pre-existing Alchemy All Chains free app via read-only connector",
@@ -1537,6 +1537,126 @@
           "initial_two_way_sellability": "UNRESOLVED",
           "token_deployment": "UNRESOLVED",
           "actual_entry_time": "UNRESOLVED"
+        },
+        {
+          "rank": 12,
+          "index": 1874186,
+          "creation_block": 52442914,
+          "creation_utc": "2025-07-01T00:32:50.000Z",
+          "creation_tx_hash": "0xb815d93e8bb45187392ee2e7d654b6f90431572d935939bae7441bedc9c3cdde",
+          "pair": "0xf161b654a09efde6f7ad38258575ac3666ed97a7",
+          "quote_asset": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "quote": "WBNB",
+          "initial_reserve0_raw": "25000000000000000000",
+          "initial_reserve1_raw": "100000000000000000",
+          "initial_quote_reserve_raw": "25000000000000000000",
+          "initial_quote_floor_reached": true,
+          "same_tx_erc20_lp_transfer_sync_mint": true,
+          "first_10_blocks_swap_observed": false,
+          "first_swap_verified_only_within_first10": true,
+          "initial_two_way_sellability": "UNRESOLVED",
+          "token_deployment": "UNRESOLVED",
+          "actual_entry_time": "UNRESOLVED"
+        },
+        {
+          "rank": 13,
+          "index": 1874189,
+          "creation_block": 52443493,
+          "creation_utc": "2025-07-01T00:40:04.000Z",
+          "creation_tx_hash": "0x93216a17124f823083209ea895397ce84a1c9e5415139f950e3a9e9a0b0e60c7",
+          "pair": "0xc740e2c6bf04d1bc2f4faba9e4d5f447f1090000",
+          "quote_asset": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "quote": "WBNB",
+          "initial_reserve0_raw": "6500000000000000000000000000",
+          "initial_reserve1_raw": "60090000000000000000",
+          "initial_quote_reserve_raw": "60090000000000000000",
+          "initial_quote_floor_reached": true,
+          "same_tx_erc20_lp_transfer_sync_mint": true,
+          "first_10_blocks_swap_observed": true,
+          "first_swap_verified_only_within_first10": true,
+          "initial_two_way_sellability": "UNRESOLVED",
+          "token_deployment": "UNRESOLVED",
+          "actual_entry_time": "UNRESOLVED"
+        },
+        {
+          "rank": 14,
+          "index": 1874190,
+          "creation_block": 52443568,
+          "creation_utc": "2025-07-01T00:41:00.000Z",
+          "creation_tx_hash": "0x25a3cf913a06f513b37b971af7f19aefe418e8a4c64398f6163dd07b4962a2e1",
+          "pair": "0x33a2eab1230aaa41b297fdb091463dabc66fccdb",
+          "quote_asset": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "quote": "WBNB",
+          "initial_reserve0_raw": null,
+          "initial_reserve1_raw": null,
+          "initial_quote_reserve_raw": null,
+          "initial_quote_floor_reached": false,
+          "same_tx_erc20_lp_transfer_sync_mint": false,
+          "first_10_blocks_swap_observed": false,
+          "first_swap_verified_only_within_first10": true,
+          "initial_two_way_sellability": "UNRESOLVED",
+          "token_deployment": "UNRESOLVED",
+          "actual_entry_time": "UNRESOLVED"
+        },
+        {
+          "rank": 15,
+          "index": 1874191,
+          "creation_block": 52443863,
+          "creation_utc": "2025-07-01T00:44:42.000Z",
+          "creation_tx_hash": "0xe1f96d1cfcace7ab89a5b1d78f3ba792eb818ccdd18baedf2684efc1711fc2b9",
+          "pair": "0x4c5679011dfce5a6c6cd3b126d38f858063b8551",
+          "quote_asset": "0x55d398326f99059ff775485246999027b3197955",
+          "quote": "USDT",
+          "initial_reserve0_raw": "1131902945232507780",
+          "initial_reserve1_raw": "10000000000000000000",
+          "initial_quote_reserve_raw": "1131902945232507780",
+          "initial_quote_floor_reached": false,
+          "same_tx_erc20_lp_transfer_sync_mint": true,
+          "first_10_blocks_swap_observed": false,
+          "first_swap_verified_only_within_first10": true,
+          "initial_two_way_sellability": "UNRESOLVED",
+          "token_deployment": "UNRESOLVED",
+          "actual_entry_time": "UNRESOLVED"
+        },
+        {
+          "rank": 16,
+          "index": 1874192,
+          "creation_block": 52444037,
+          "creation_utc": "2025-07-01T00:46:52.000Z",
+          "creation_tx_hash": "0x080fe7cbf8dc20ad60073685ba79b5b96d632a884a7d14e9c927d605e1c7bb04",
+          "pair": "0x7b4afbce3ddbc19586cc331e6a312b214a9d8056",
+          "quote_asset": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "quote": "WBNB",
+          "initial_reserve0_raw": null,
+          "initial_reserve1_raw": null,
+          "initial_quote_reserve_raw": null,
+          "initial_quote_floor_reached": false,
+          "same_tx_erc20_lp_transfer_sync_mint": false,
+          "first_10_blocks_swap_observed": false,
+          "first_swap_verified_only_within_first10": true,
+          "initial_two_way_sellability": "UNRESOLVED",
+          "token_deployment": "UNRESOLVED",
+          "actual_entry_time": "UNRESOLVED"
+        },
+        {
+          "rank": 17,
+          "index": 1874193,
+          "creation_block": 52444121,
+          "creation_utc": "2025-07-01T00:47:55.000Z",
+          "creation_tx_hash": "0x43c5512219441e5187461905bf2c4781251d9b3143c1802d475d1939d20cee9a",
+          "pair": "0x7d8f9b72d702ae97c330dc14691ccfbde8562f00",
+          "quote_asset": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "quote": "WBNB",
+          "initial_reserve0_raw": null,
+          "initial_reserve1_raw": null,
+          "initial_quote_reserve_raw": null,
+          "initial_quote_floor_reached": false,
+          "same_tx_erc20_lp_transfer_sync_mint": false,
+          "first_10_blocks_swap_observed": false,
+          "first_swap_verified_only_within_first10": true,
+          "initial_two_way_sellability": "UNRESOLVED",
+          "token_deployment": "UNRESOLVED",
+          "actual_entry_time": "UNRESOLVED"
         }
       ],
       "normalized_event_log_samples": [
@@ -2495,6 +2615,342 @@
           ],
           "pair_first_10_blocks_event_count": 5,
           "provider_source": "ALCHEMY_CONNECTED_APP_NORMALIZED_HISTORICAL_RESULT_NO_ORIGINAL_HTTP_BYTES",
+          "normalized_complete_for_matched_tx": true
+        },
+        {
+          "rank": 12,
+          "scope_factory_event": [
+            {
+              "address": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+              "topics": [
+                "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+                "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+                "0x000000000000000000000000ce3cdafaaba701b803ad9dfe28bbdbac1694a2c6"
+              ],
+              "data": "0x000000000000000000000000f161b654a09efde6f7ad38258575ac3666ed97a700000000000000000000000000000000000000000000000000000000001c990b",
+              "blockHash": "0xb0875b084ead046769faa57887c9fe1e58fa09653e736b7137613bbe38924ca7",
+              "blockNumber": "0x3203722",
+              "blockTimestamp": "0x68632cb2",
+              "transactionHash": "0xb815d93e8bb45187392ee2e7d654b6f90431572d935939bae7441bedc9c3cdde",
+              "transactionIndex": "0x9d",
+              "logIndex": "0x33f",
+              "removed": false
+            }
+          ],
+          "scope_pair_same_tx_events": [
+            {
+              "address": "0xf161b654a09efde6f7ad38258575ac3666ed97a7",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "0x0000000000000000000000000000000000000000000000000000000000000000"
+              ],
+              "data": "0x00000000000000000000000000000000000000000000000000000000000003e8",
+              "blockHash": "0xb0875b084ead046769faa57887c9fe1e58fa09653e736b7137613bbe38924ca7",
+              "blockNumber": "0x3203722",
+              "blockTimestamp": "0x68632cb2",
+              "transactionHash": "0xb815d93e8bb45187392ee2e7d654b6f90431572d935939bae7441bedc9c3cdde",
+              "transactionIndex": "0x9d",
+              "logIndex": "0x343",
+              "removed": false
+            },
+            {
+              "address": "0xf161b654a09efde6f7ad38258575ac3666ed97a7",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "0x000000000000000000000000e610ab3156861e9c7b70666aad09c7af4d52cb2e"
+              ],
+              "data": "0x00000000000000000000000000000000000000000000000015f1556383bea9f9",
+              "blockHash": "0xb0875b084ead046769faa57887c9fe1e58fa09653e736b7137613bbe38924ca7",
+              "blockNumber": "0x3203722",
+              "blockTimestamp": "0x68632cb2",
+              "transactionHash": "0xb815d93e8bb45187392ee2e7d654b6f90431572d935939bae7441bedc9c3cdde",
+              "transactionIndex": "0x9d",
+              "logIndex": "0x344",
+              "removed": false
+            },
+            {
+              "address": "0xf161b654a09efde6f7ad38258575ac3666ed97a7",
+              "topics": [
+                "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1"
+              ],
+              "data": "0x0000000000000000000000000000000000000000000000015af1d78b58c40000000000000000000000000000000000000000000000000000016345785d8a0000",
+              "blockHash": "0xb0875b084ead046769faa57887c9fe1e58fa09653e736b7137613bbe38924ca7",
+              "blockNumber": "0x3203722",
+              "blockTimestamp": "0x68632cb2",
+              "transactionHash": "0xb815d93e8bb45187392ee2e7d654b6f90431572d935939bae7441bedc9c3cdde",
+              "transactionIndex": "0x9d",
+              "logIndex": "0x345",
+              "removed": false
+            },
+            {
+              "address": "0xf161b654a09efde6f7ad38258575ac3666ed97a7",
+              "topics": [
+                "0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f",
+                "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e"
+              ],
+              "data": "0x0000000000000000000000000000000000000000000000015af1d78b58c40000000000000000000000000000000000000000000000000000016345785d8a0000",
+              "blockHash": "0xb0875b084ead046769faa57887c9fe1e58fa09653e736b7137613bbe38924ca7",
+              "blockNumber": "0x3203722",
+              "blockTimestamp": "0x68632cb2",
+              "transactionHash": "0xb815d93e8bb45187392ee2e7d654b6f90431572d935939bae7441bedc9c3cdde",
+              "transactionIndex": "0x9d",
+              "logIndex": "0x346",
+              "removed": false
+            }
+          ],
+          "pair_first_10_blocks_event_count": 5,
+          "provider_source": "ALCHEMY_CONNECTED_HISTORICAL_RPC_NORMALIZED_NO_ORIGINAL_HTTP",
+          "normalized_complete_for_matched_tx": true
+        },
+        {
+          "rank": 13,
+          "scope_factory_event": [
+            {
+              "address": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+              "topics": [
+                "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+                "0x000000000000000000000000588a75457a1b34c692e64c698e24beab9b00eeec",
+                "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+              ],
+              "data": "0x000000000000000000000000c740e2c6bf04d1bc2f4faba9e4d5f447f109000000000000000000000000000000000000000000000000000000000000001c990e",
+              "blockHash": "0x8d51f9dcc35443e1bf5ec6cda72ccae7d1a9bc4c674cec5417569d66834e90d3",
+              "blockNumber": "0x3203965",
+              "blockTimestamp": "0x68632e64",
+              "transactionHash": "0x93216a17124f823083209ea895397ce84a1c9e5415139f950e3a9e9a0b0e60c7",
+              "transactionIndex": "0x5d",
+              "logIndex": "0x162",
+              "removed": false
+            }
+          ],
+          "scope_pair_same_tx_events": [
+            {
+              "address": "0xc740e2c6bf04d1bc2f4faba9e4d5f447f1090000",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "0x0000000000000000000000000000000000000000000000000000000000000000"
+              ],
+              "data": "0x00000000000000000000000000000000000000000000000000000000000003e8",
+              "blockHash": "0x8d51f9dcc35443e1bf5ec6cda72ccae7d1a9bc4c674cec5417569d66834e90d3",
+              "blockNumber": "0x3203965",
+              "blockTimestamp": "0x68632e64",
+              "transactionHash": "0x93216a17124f823083209ea895397ce84a1c9e5415139f950e3a9e9a0b0e60c7",
+              "transactionIndex": "0x5d",
+              "logIndex": "0x166",
+              "removed": false
+            },
+            {
+              "address": "0xc740e2c6bf04d1bc2f4faba9e4d5f447f1090000",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "0x000000000000000000000000f8b5c14a986553caafcf1405c8f3d6a6afc00333"
+              ],
+              "data": "0x00000000000000000000000000000000000000000000845795478086f6f70595",
+              "blockHash": "0x8d51f9dcc35443e1bf5ec6cda72ccae7d1a9bc4c674cec5417569d66834e90d3",
+              "blockNumber": "0x3203965",
+              "blockTimestamp": "0x68632e64",
+              "transactionHash": "0x93216a17124f823083209ea895397ce84a1c9e5415139f950e3a9e9a0b0e60c7",
+              "transactionIndex": "0x5d",
+              "logIndex": "0x167",
+              "removed": false
+            },
+            {
+              "address": "0xc740e2c6bf04d1bc2f4faba9e4d5f447f1090000",
+              "topics": [
+                "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1"
+              ],
+              "data": "0x00000000000000000000000000000000000000001500ac8a0ecb418be400000000000000000000000000000000000000000000000000000341ea90a129390000",
+              "blockHash": "0x8d51f9dcc35443e1bf5ec6cda72ccae7d1a9bc4c674cec5417569d66834e90d3",
+              "blockNumber": "0x3203965",
+              "blockTimestamp": "0x68632e64",
+              "transactionHash": "0x93216a17124f823083209ea895397ce84a1c9e5415139f950e3a9e9a0b0e60c7",
+              "transactionIndex": "0x5d",
+              "logIndex": "0x168",
+              "removed": false
+            },
+            {
+              "address": "0xc740e2c6bf04d1bc2f4faba9e4d5f447f1090000",
+              "topics": [
+                "0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f",
+                "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e"
+              ],
+              "data": "0x00000000000000000000000000000000000000001500ac8a0ecb418be400000000000000000000000000000000000000000000000000000341ea90a129390000",
+              "blockHash": "0x8d51f9dcc35443e1bf5ec6cda72ccae7d1a9bc4c674cec5417569d66834e90d3",
+              "blockNumber": "0x3203965",
+              "blockTimestamp": "0x68632e64",
+              "transactionHash": "0x93216a17124f823083209ea895397ce84a1c9e5415139f950e3a9e9a0b0e60c7",
+              "transactionIndex": "0x5d",
+              "logIndex": "0x169",
+              "removed": false
+            }
+          ],
+          "pair_first_10_blocks_event_count": 7,
+          "provider_source": "ALCHEMY_CONNECTED_HISTORICAL_RPC_NORMALIZED_NO_ORIGINAL_HTTP",
+          "normalized_complete_for_matched_tx": true
+        },
+        {
+          "rank": 14,
+          "scope_factory_event": [
+            {
+              "address": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+              "topics": [
+                "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+                "0x0000000000000000000000001c6a3d4fd98ee13d86ba0ec3336b9ed74293cdca",
+                "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+              ],
+              "data": "0x00000000000000000000000033a2eab1230aaa41b297fdb091463dabc66fccdb00000000000000000000000000000000000000000000000000000000001c990f",
+              "blockHash": "0xee1677a502229db7fdc565658a2abb69761b12cb8f45580285dcb33221ae5aee",
+              "blockNumber": "0x32039b0",
+              "blockTimestamp": "0x68632e9c",
+              "transactionHash": "0x25a3cf913a06f513b37b971af7f19aefe418e8a4c64398f6163dd07b4962a2e1",
+              "transactionIndex": "0x4c",
+              "logIndex": "0x211",
+              "removed": false
+            }
+          ],
+          "scope_pair_same_tx_events": [],
+          "pair_first_10_blocks_event_count": 0,
+          "provider_source": "ALCHEMY_CONNECTED_HISTORICAL_RPC_NORMALIZED_NO_ORIGINAL_HTTP",
+          "normalized_complete_for_matched_tx": true
+        },
+        {
+          "rank": 15,
+          "scope_factory_event": [
+            {
+              "address": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+              "topics": [
+                "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+                "0x00000000000000000000000055d398326f99059ff775485246999027b3197955",
+                "0x000000000000000000000000595e21b20e78674f8a64c1566a20b2b316bc3511"
+              ],
+              "data": "0x0000000000000000000000004c5679011dfce5a6c6cd3b126d38f858063b855100000000000000000000000000000000000000000000000000000000001c9910",
+              "blockHash": "0xe2f533a555355b369560ebbb1136d8fa99c59831478ff8ca612215a11846689a",
+              "blockNumber": "0x3203ad7",
+              "blockTimestamp": "0x68632f7a",
+              "transactionHash": "0xe1f96d1cfcace7ab89a5b1d78f3ba792eb818ccdd18baedf2684efc1711fc2b9",
+              "transactionIndex": "0x47",
+              "logIndex": "0x1ac",
+              "removed": false
+            }
+          ],
+          "scope_pair_same_tx_events": [
+            {
+              "address": "0x4c5679011dfce5a6c6cd3b126d38f858063b8551",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "0x0000000000000000000000000000000000000000000000000000000000000000"
+              ],
+              "data": "0x00000000000000000000000000000000000000000000000000000000000003e8",
+              "blockHash": "0xe2f533a555355b369560ebbb1136d8fa99c59831478ff8ca612215a11846689a",
+              "blockNumber": "0x3203ad7",
+              "blockTimestamp": "0x68632f7a",
+              "transactionHash": "0xe1f96d1cfcace7ab89a5b1d78f3ba792eb818ccdd18baedf2684efc1711fc2b9",
+              "transactionIndex": "0x47",
+              "logIndex": "0x1b0",
+              "removed": false
+            },
+            {
+              "address": "0x4c5679011dfce5a6c6cd3b126d38f858063b8551",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "0x000000000000000000000000df1d421ebe130897690a342c5c06c8a90230444d"
+              ],
+              "data": "0x0000000000000000000000000000000000000000000000002eb0aaa18d557b44",
+              "blockHash": "0xe2f533a555355b369560ebbb1136d8fa99c59831478ff8ca612215a11846689a",
+              "blockNumber": "0x3203ad7",
+              "blockTimestamp": "0x68632f7a",
+              "transactionHash": "0xe1f96d1cfcace7ab89a5b1d78f3ba792eb818ccdd18baedf2684efc1711fc2b9",
+              "transactionIndex": "0x47",
+              "logIndex": "0x1b1",
+              "removed": false
+            },
+            {
+              "address": "0x4c5679011dfce5a6c6cd3b126d38f858063b8551",
+              "topics": [
+                "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1"
+              ],
+              "data": "0x0000000000000000000000000000000000000000000000000fb553bb4acd53840000000000000000000000000000000000000000000000008ac7230489e80000",
+              "blockHash": "0xe2f533a555355b369560ebbb1136d8fa99c59831478ff8ca612215a11846689a",
+              "blockNumber": "0x3203ad7",
+              "blockTimestamp": "0x68632f7a",
+              "transactionHash": "0xe1f96d1cfcace7ab89a5b1d78f3ba792eb818ccdd18baedf2684efc1711fc2b9",
+              "transactionIndex": "0x47",
+              "logIndex": "0x1b2",
+              "removed": false
+            },
+            {
+              "address": "0x4c5679011dfce5a6c6cd3b126d38f858063b8551",
+              "topics": [
+                "0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f",
+                "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e"
+              ],
+              "data": "0x0000000000000000000000000000000000000000000000000fb553bb4acd53840000000000000000000000000000000000000000000000008ac7230489e80000",
+              "blockHash": "0xe2f533a555355b369560ebbb1136d8fa99c59831478ff8ca612215a11846689a",
+              "blockNumber": "0x3203ad7",
+              "blockTimestamp": "0x68632f7a",
+              "transactionHash": "0xe1f96d1cfcace7ab89a5b1d78f3ba792eb818ccdd18baedf2684efc1711fc2b9",
+              "transactionIndex": "0x47",
+              "logIndex": "0x1b3",
+              "removed": false
+            }
+          ],
+          "pair_first_10_blocks_event_count": 4,
+          "provider_source": "ALCHEMY_CONNECTED_HISTORICAL_RPC_NORMALIZED_NO_ORIGINAL_HTTP",
+          "normalized_complete_for_matched_tx": true
+        },
+        {
+          "rank": 16,
+          "scope_factory_event": [
+            {
+              "address": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+              "topics": [
+                "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+                "0x00000000000000000000000039df206ba75b1a4913f78c8d771c7689296127f4",
+                "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+              ],
+              "data": "0x0000000000000000000000007b4afbce3ddbc19586cc331e6a312b214a9d805600000000000000000000000000000000000000000000000000000000001c9911",
+              "blockHash": "0xd46eb15ee2f23d07c62abe468085decd712f5fe87471cef82f06acd5a469e1df",
+              "blockNumber": "0x3203b85",
+              "blockTimestamp": "0x68632ffc",
+              "transactionHash": "0x080fe7cbf8dc20ad60073685ba79b5b96d632a884a7d14e9c927d605e1c7bb04",
+              "transactionIndex": "0x40",
+              "logIndex": "0x262",
+              "removed": false
+            }
+          ],
+          "scope_pair_same_tx_events": [],
+          "pair_first_10_blocks_event_count": 0,
+          "provider_source": "ALCHEMY_CONNECTED_HISTORICAL_RPC_NORMALIZED_NO_ORIGINAL_HTTP",
+          "normalized_complete_for_matched_tx": true
+        },
+        {
+          "rank": 17,
+          "scope_factory_event": [
+            {
+              "address": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+              "topics": [
+                "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+                "0x0000000000000000000000001766a3f7004e596c1c8ba8cdaddd5e304df6549a",
+                "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+              ],
+              "data": "0x0000000000000000000000007d8f9b72d702ae97c330dc14691ccfbde8562f0000000000000000000000000000000000000000000000000000000000001c9912",
+              "blockHash": "0xf715614f9d9be097a403c27e0d70675534e779ef12c1765e84a1fe78ccc7796d",
+              "blockNumber": "0x3203bd9",
+              "blockTimestamp": "0x6863303b",
+              "transactionHash": "0x43c5512219441e5187461905bf2c4781251d9b3143c1802d475d1939d20cee9a",
+              "transactionIndex": "0x49",
+              "logIndex": "0x25b",
+              "removed": false
+            }
+          ],
+          "scope_pair_same_tx_events": [],
+          "pair_first_10_blocks_event_count": 0,
+          "provider_source": "ALCHEMY_CONNECTED_HISTORICAL_RPC_NORMALIZED_NO_ORIGINAL_HTTP",
           "normalized_complete_for_matched_tx": true
         }
       ],
