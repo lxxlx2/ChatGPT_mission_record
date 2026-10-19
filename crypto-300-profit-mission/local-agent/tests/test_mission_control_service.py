@@ -495,3 +495,25 @@ def test_unapproved_old_outcome_track_cannot_trigger_exit_quote_without_user_amo
     assert calls=={"entry":0,"exit":0}
     assert service.control.db.execute("SELECT COUNT(*) FROM outcome_samples").fetchone()[0]==0
     service.close()
+
+
+def test_live_approval_expiry_latches_delivery_off_before_cycle(tmp_path):
+    prod=tmp_path/"prod"; control=tmp_path/"control"; pol=tmp_path/"policy.json"
+    make_prod(prod); policy(pol,status="FROZEN_APPROVED",live=True)
+    sha=hashlib.sha256(pol.read_bytes()).hexdigest()
+    service=MissionMemeService(
+        production_root=prod,control_root=control,policy_path=pol,
+        live_delivery=True,approved_policy_sha256=sha,
+        approval_expires_at=time.time()+3600,
+    )
+    assert service.delivery_allowed is True
+    service.approval_expires_at=time.time()-1
+    service.jupiter.quote_usdc_to_token=lambda *a,**k: good_quote()
+    service.jupiter.quote_token_to_usdc=lambda *a,**k: (
+        _ for _ in ()).throw(AssertionError("NO_EXIT_QUOTES_EXPECTED"))
+    outcome=service.cycle()
+    assert outcome["delivery_allowed"] is False
+    assert service.delivery_allowed is False
+    assert service.control.db.execute("SELECT COUNT(*) FROM gmail_delivery WHERE status='PENDING'").fetchone()[0]==0
+    assert service.control.db.execute("SELECT COUNT(*) FROM local_delivery WHERE status='PENDING'").fetchone()[0]==0
+    service.close()
