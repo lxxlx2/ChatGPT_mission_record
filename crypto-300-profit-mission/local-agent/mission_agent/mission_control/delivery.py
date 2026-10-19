@@ -87,7 +87,8 @@ REASON_ZH={
     "QUOTE_METRICS_INVALID":"Jupiter 报价指标不完整",
     "NO_EXECUTABLE_JUPITER_ROUTE":"Jupiter 当前无可执行路径",
     "PRICE_TOO_FAR_FROM_FRANK":"当前价格离 Frank 买入价过远",
-    "EXECUTION_IMPACT_TOO_HIGH":"未指定实际交易金额，不能判断该笔交易的价格冲击",
+    "EXECUTION_IMPACT_TOO_HIGH":"指定金额下的预计交易价格冲击超过策略阈值",
+    "EXECUTION_NOT_ASSESSED_USER_AMOUNT_MISSING":"未指定用户交易金额，本次不评估执行可行性；Frank 源行为仍可查看",
     "FRANK_MULTIPLE_ACTIVE":"Frank 已观察到多次强加仓模型事件，是否可以跟随以本次结论为准",
     "PRICE_STILL_CLOSE_TO_FRANK":"当前成交价仍接近 Frank 参考买入价",
     "EXECUTION_IMPACT_ACCEPTABLE":"当前预计价格冲击可接受",
@@ -106,6 +107,7 @@ MISSING_ZH={
     "EXECUTION_PRICE_OR_IMPACT":"缺少当前成交价或价格冲击",
     "TOKEN_DECIMALS_UNKNOWN":"Token decimals 未确认",
     "JUPITER_QUOTE_UNAVAILABLE":"Jupiter 报价不可用",
+    "USER_ORDER_AMOUNT_NOT_SPECIFIED":"未提供用户自行决定的交易金额；未请求 Jupiter 执行报价",
     "SOL_EVENT_TIME_USDC_UNAVAILABLE":"缺少事件时间 SOL/USDC 参考价",
 }
 USDC_MINT="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
