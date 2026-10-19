@@ -60,3 +60,12 @@
 为避免继续先造策略再找数据，按照本文件“先母体+标签再模型”的顺序，独立预冻结了[30例PIT覆盖度探针的选择机制、五时点、两个停止条件、预算和实际源失败记录](MONSTER_EARLY_VENUE_30_PIT_SOURCE_PROBE_BUDGET_AND_STOP_20261019.md)。首次工厂来源固定为Base(8453) UniswapV3官方Factory 2025-07-01 00:00至次日00:00 UTC，在完整原始PoolCreated事件按区块/交易/日志顺序抽首30个互异CA；并明确跨场所无上市≠源缺失、创建池≠真实Swap、当前存活列表不能替代历史母体。覆盖门槛：30完整保留、至少24/30真实部署+池PIT、至少18/30当时真实流动性和双向可模拟交易证据；最多2次一次性研究CI/到2026-11-02截止，不成立则停止模型。
 
 **真实尝试发现源阻断：** 已连接Blockscout明确不支持BSC chain 56，Base历史factory交易API返回PRO 402额度耗尽；免费Alchemy虽然能查Base历史区块，但事件日志每次最多10区块，首次五段随机稀疏10区块在factory均无事件，不能凑足全日按序PoolCreated母体。当前公开HTTPS容器DNS不可用。不买付费额度、不改挑热门币、不虚构30个。**实际30样本尚未形成，不能写“0/30覆盖率”**，按预冻结第一Source-stop判`COHORT_NOT_FORMED_SOURCE_BLOCKED`，本分支不启动预测器/生产采集任务；除非以后先有可复现的免费全量历史PoolCreated母体证据。旧Spot511七日及此前独立APPROVE继续作为独立研究事实，不因这项新路线阻断改变交易/部署门禁。
+
+## 2026-10-19 后续纠偏：改为本地前台公共RPC试探，纠正“Source Stop”的范围
+
+原2026-10-19 `COHORT_NOT_FORMED_SOURCE_BLOCKED`结论**仅针对本会话受限连接器及容器直接外网环境**，并非链上历史Pool数据不存在或整项研究永久停止。完整来源停止条件仍在，**正式30例母体目前为0、覆盖率NOT_SCORABLE**。用户转交Claude审核指出Mac本机可按公开RPC原生`eth_getLogs`直接查全区块历史；本轮因此交付同分支 **仅前台手动执行、只读、无密钥**的`local-agent/scripts/monster_early_venue_factory_rpc_roster_probe.py`及6项离线测试。按用户授权之前，脚本未在其Mac运行，不启动任何后台或定时服务，不假定公网端点实际支持历史日志。
+
+本轮真实外部核查显示：已连接Alchemy Base免费应用2,000块`eth_getLogs` **明确拒绝且提示上限10块**；BNB Chain官方2026-08-19文档公开说明列出的BSC公用RPC**禁用`eth_getLogs`**，所以Claude举出的BSC默认节点不能不经探针直接假定成功。Base官方公共RPC支持只读接口但限速，亦不能保证给出全日历史原日志。新程序先`--mode probe`分别试2000/10块，之后**只有供应商真正支持时**才应显式`--mode scan`连续历史源；分段SHA存Mac私有目录、可续跑、有请求次数上限，缺块/拒绝就`NOT_SCORABLE`不凑30币。脚本初版只支持Base V3与BSC V2原Factory技术探针，**真正Binance Alpha高倍项目母体BSC和Solana更重要，Solana须另用Program原交易链做独立数据路由试验**。
+
+正式交易准入先锁只用当时数据的首次1h真实池中Mint/Swap/报价侧最小流动性（Base 0.5 WETH或1000 USDC、BSC 2 WBNB或1000 USDT），仅是未来母体粗准入**并非用户下单金额、实际D2可成交门槛或链间等额**；已归零/不足准入/缺历史原字节的案例保留分母，不因未来赢家调准入X。具体新冻结章节、测试与审核边界见[30例PIT探针](MONSTER_EARLY_VENUE_30_PIT_SOURCE_PROBE_BUDGET_AND_STOP_20261019.md)，新脚本代码范围的其他AI独立审核提示词已写在[审查包](MONSTER_MAC_PUBLIC_RPC_PIT_PROBE_CODEX_REVIEW_REQUEST_20261019.md)，尚未取得其他AI审核结果。最多2次真正来源CI及2026-11-02截止规则不变，**这轮不启动GHA CI、不计入历史样本30个、不改旧CEX/Frank/通知/交易及门禁**。
+
