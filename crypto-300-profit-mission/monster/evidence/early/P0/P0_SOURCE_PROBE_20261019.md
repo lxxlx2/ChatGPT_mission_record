@@ -1,6 +1,25 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
 
+## 2026-10-20 P0来源路径再调查：V3存在官方免费查询候选，但当前尚不具备正式来源PASS
+
+**目标**：直接解决`V2-only固定30币`不能代表BSC V3及launchpad的源覆盖问题。没有新建预测器、增加Stage、变更母体或擅自设研究下单额；此处只是`PLAN_B_SOURCE_DISCOVERY`，不是宣称已经拿到2025年V3完整原始数据。
+
+**已查到的官方可复核候选**：
+- PancakeSwap官方[Subgraph目录](https://developer.pancakeswap.finance/apis/subgraph)列出**BSC Exchange V3**对应The Graph [`Hv1GncLY5docZoGtXjo4kwbTvxm3MAhVZqBZE4sUT9eZ`](https://thegraph.com/explorer/subgraphs/Hv1GncLY5docZoGtXjo4kwbTvxm3MAhVZqBZE4sUT9eZ?chain=arbitrum-one&view=About)。子图面向Pool/Swap/流动性索引，可望避免在当前Alchemy免费`eth_getLogs`每10块的限制下整日遍历；**但不是原始链上全量日志，也不等于PoolCreated完整列表已验证**。
+- The Graph官方[查询指引](https://thegraph.com/docs/en/subgraphs/querying/introduction/)明确**Free Plan 100,000次查询/月**，需在Studio申请API Key；[密钥管理文档](https://thegraph.com/docs/en/subgraphs/providers/subgraph-studio/managing-api-keys/)要求安全保存密钥，不能写入Git。**没有创建用户账户、没有获取授权Key、没有实际执行GraphQL查询、没有付费**，所以不能将免费额度或网页例子写成实际可用的数据出口。
+- 该官方BSC V3子图的Explorer网页查询时显示**Indexing约74.5%**（网页进度快照，并非本轮用`_meta.block.number`实测）；历史2025-07-01目标区块是否已完整被索引、子图是否存在历史过滤和完整分页、原数据是否缺失，全部`UNVERIFIED`，不能凭索引进度认定指定旧日必缺失，也不能认为必完整。
+- PancakeSwap官方目录给出的**BSC Exchange V2**来源为NodeReal Marketplace，不是上述The Graph V3子图；未经实测账号权限、可用免费额度和历史覆盖，不把其标为`V2_FREE_SOURCE_PASS`。
+- [Routescan官方迁移文档](https://routescan.io/docs/getting-started/migrate-from-etherscan)列举支持迁移的Mainnet chainIds未包含BNB的**56**；虽然其[免密钥免费额度](https://routescan.io/docs/plans-and-limits/rate-limits)约为1万次/日，但**不应假定其免费API支持BNB**或基于不支持的chainId直接建适配器。Etherscan/BscScan的BNB历史日志当前免付费许可也未取得单次真实响应确认，不计作Plan A备份来源。
+
+**精确下一次Proof，而不是直接开发采集器**：只有获得可用且`$0`的合法查询权限后，先向上述**固定官方V3子图**发**一次小样本只读GraphQL POST**，至少保存响应原始字节、响应SHA、`_meta.block.number`、实际成功/错误及一页时间过滤的2025-07-01 Pool `id/token0/token1/createdAtBlockNumber/feeTier`。不能把第一页当整日分母；仅当历史区块确实被索引、原CA/pool创建事实可逐Tx与其它RPC交叉核查、分页/缺页机制明确，再考虑有界获取整日候选。若Key不免费、要求开通付费订阅、旧区块缺失、索引/权限不满足，则记录具体`SOURCE_BLOCKED/INSUFFICIENT_COVERAGE`，**不购买、不猜测、不继续开发V3数据模块**。
+
+**V3的不同物理执行模型是业务门槛**：V3使用tick/活跃流动性和feeTier，子图`Pool.liquidity`原始整数**不能当成V2 Pair的报价侧WBNB/USDT reserve**；V3是否真实能买、能按相同订单名义额卖出，必须有真实tick/报价/模拟及当时限制证据，不能把V2的2 WBNB/1000 USDT池深度直接照搬为V3的liquidity门槛，也不能把最近查询的索引数据倒填原`available_at`。研究额需合同审批并在读取未来收益标签前冻结。
+
+**当前Plan判定**：`A=SOURCE_FEASIBLE_SCOPED_TO_FROZEN_V2_RECEIPTS_ONLY`、`B=V3_OFFICIAL_GRAPH_FREE_CANDIDATE_NOT_LIVE_TESTED`、`C=PAID_NOT_AUTHORIZED`、launchpad来源仍`NOT_ESTABLISHED`。不因找到了官网链接提高原24/30 PIT和18/30统一金额卖出Gate：二者仍`NOT_SCORABLE`，P0总体`INSUFFICIENT_COVERAGE`、P1 BLOCKED。机器化候选来源与停止条件见本P0主JSON`bsc_p0_v3_subgraph_free_source_screen_20261020`。
+
+---
+
 ## P0 最新一页结论（2026-10-20）：按原验收合同报告可用性，不以刚好达标的数字代替PIT
 
 **适用范围和结论**：原冻结`2025-07-01 UTC` BNB主网PancakeSwap V2 Factory**按原始时间顺序首30个quote池代币**，不包括BSC V3、其它launchpad或全BSC。用户Mac固定SHA `b783d154376b154d54b1e86f3b613300558ac05a`实测**38/38测试PASS**、18份真实卖出原始RPC收据在线19次调用全部核对PASS且本地离线**0 RPC**重放PASS。**子集链上来源可用：`SOURCE_FEASIBLE_SCOPED`；完整P0当前为`INSUFFICIENT_COVERAGE`，P1仍`BLOCKED`。** 这不是对已发现真实卖出的否定，而是坚持事前冻结的完整PIT和统一名义额门槛。
