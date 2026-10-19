@@ -50,7 +50,7 @@ def _registered_loop_pid(plan: dict, *, run) -> int:
     if result.returncode != 0:
         raise RuntimeError("MC_LOOP_PRESTOP_LAUNCHCTL_STATE_UNKNOWN")
     # Must capture one concrete managed process, not merely a launchd label.
-    match = re.search(r"(?m)^\\s*pid = ([1-9][0-9]*)\\s*$", result.stdout or "")
+    match = re.search(r"(?m)^\s*pid = ([1-9][0-9]*)\s*$", result.stdout or "")
     if match is None:
         raise RuntimeError("MC_LOOP_PRESTOP_PID_UNKNOWN")
     return int(match.group(1))
