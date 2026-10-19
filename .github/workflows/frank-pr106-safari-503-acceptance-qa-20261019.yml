@@ -43,6 +43,12 @@ jobs:
         run: |
           python -B -m pytest -q -p no:cacheprovider tests/test_frank_pr106_safari_refresh_acceptance.py tests/test_frank_c02_auto_safari_capture.py tests/test_frank_pr101_safari_evidence.py tests/test_frank_decisions_readonly_diagnostic.py
           node --test tests/test_frank_decisions_partial_refresh.cjs tests/test_frank_c02_archive_readonly.cjs tests/test_frank_candidate_sections.cjs tests/test_frank_candidate_sections_dom.cjs tests/frank_f01_primary_freshness.cjs tests/frank_source_context_mount.cjs tests/frank_source_context_render.cjs
+      - name: Install local WebKit and rerun natural five-second refresh state drift
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install playwright==1.55.0
+          python -m playwright install --with-deps webkit
+          python -B scripts/frank_pr107_webkit_state_drift_probe.py
       - name: Full local agent historical replay regression
         working-directory: crypto-300-profit-mission/local-agent
         env:
