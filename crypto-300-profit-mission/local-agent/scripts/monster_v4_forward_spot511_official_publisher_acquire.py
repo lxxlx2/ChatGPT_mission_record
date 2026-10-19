@@ -12,6 +12,7 @@ import json
 from pathlib import Path
 import re
 import time
+import zipfile
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
@@ -94,6 +95,11 @@ def one_pair(symbol,day,root,*,getter=None):
         "error":None,
         "attempt_observed_at_utc":utc()
     }
+    zpath,cpath=admitted.daily_paths(root,symbol,date.fromisoformat(day))
+    if zpath.exists() or cpath.exists():
+        result["status"]="SOURCE_REJECTED_OR_UNAVAILABLE"
+        result["error"]="MONSTER_SOURCE_PAIR_ALREADY_EXISTS_NO_REWRITE"
+        return result
     try:
         # Checksum first avoids downloading a huge ZIP for unpublished dates.
         checksum,cr=fetch_one_url(checksum_url,CHECKSUM_MAX,getter=getter)
@@ -109,8 +115,6 @@ def one_pair(symbol,day,root,*,getter=None):
         filedir.mkdir(parents=True,exist_ok=True)
         zpath=filedir/filename
         cpath=filedir/(filename+".CHECKSUM")
-        if zpath.exists() or cpath.exists():
-            raise ValueError("MONSTER_SOURCE_PAIR_ALREADY_EXISTS_NO_REWRITE")
         zpath.write_bytes(zipped)
         cpath.write_bytes(checksum)
         # Reuse Stage166's fixed independently approved publisher validator;
@@ -127,7 +131,7 @@ def one_pair(symbol,day,root,*,getter=None):
             "zip_http_receipt":zr,
             "checksum_http_receipt":cr
         })
-    except (ValueError,RuntimeError,OSError,UnicodeError,EOFError) as exc:
+    except (ValueError,RuntimeError,OSError,UnicodeError,EOFError,zipfile.BadZipFile) as exc:
         result["status"]="SOURCE_REJECTED_OR_UNAVAILABLE"
         result["error"]=str(exc)
         # Never retain invalid ZIP/CHECKSUM as an admitted publisher pair.
