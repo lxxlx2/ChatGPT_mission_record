@@ -1,5 +1,7 @@
 """No-network regressions for historical BSC V2 initial pool liquidity PIT."""
+import json
 import unittest
+from pathlib import Path
 from mission_agent.early.bsc_v2_pit import (
     PAIR_CREATED, SYNC, MINT, PITInvalid, first_creation_block, verify_bootstrap,
 )
@@ -48,6 +50,43 @@ class BscV2PitTests(unittest.TestCase):
             verify_bootstrap(**{**args,'factory_logs':[]})
         with self.assertRaisesRegex(PITInvalid,'BOOTSTRAP_SYNC_MINT'):
             verify_bootstrap(**{**args,'pool_logs':[sync,{**mint,'data':'0x'+word(1)+word(20000)}]})
+
+
+    def test_real_frozen_three_historical_creation_and_mint_source_replay(self):
+        repo = Path(__file__).resolve().parents[2]
+        path = repo / 'monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json'
+        evidence = json.loads(path.read_text())
+        history = evidence['historical_bsc_v2_append_only_factory_enumeration']
+        proof = history['creation_liquidity_source_spotchecks']
+        all_pools = {x['factory_index_zero_based']: x for x in history['first36']}
+        archived = {x['rank']: x for x in proof['normalized_event_log_samples']}
+        for case in proof['cases']:
+            with self.subTest(rank=case['rank']):
+                item = all_pools[case['index']]
+                response = archived[case['rank']]
+                fact = verify_bootstrap(
+                    factory='0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
+                    factory_index=case['index'],
+                    creation_block=case['creation_block'],
+                    pool=case['pair'],
+                    token0=item['token0'], token1=item['token1'],
+                    factory_logs=response['scope_factory_event'],
+                    pool_logs=response['scope_pair_same_tx_events'])
+                self.assertTrue(fact['initial_quote_liquidity_proven'])
+                self.assertEqual(fact['creation_tx'], case['creation_tx_hash'])
+                self.assertEqual(fact['reserve0_raw'], case['initial_reserve0_raw'])
+                self.assertEqual(fact['reserve1_raw'], case['initial_reserve1_raw'])
+                self.assertEqual(fact['sell_path'], 'UNKNOWN')
+                broken = dict(response['scope_factory_event'][0])
+                broken['data'] = '0x' + '0'*128
+                with self.assertRaisesRegex(PITInvalid, 'PAIR_CREATED_EVENT_NOT_UNIQUE'):
+                    verify_bootstrap(factory='0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
+                                     factory_index=case['index'],
+                                     creation_block=case['creation_block'],
+                                     pool=case['pair'],
+                                     token0=item['token0'], token1=item['token1'],
+                                     factory_logs=[broken],
+                                     pool_logs=response['scope_pair_same_tx_events'])
 
 
 if __name__=='__main__':
