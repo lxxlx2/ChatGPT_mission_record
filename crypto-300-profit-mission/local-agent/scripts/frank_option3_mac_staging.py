@@ -29,7 +29,10 @@ PINNED = "72cf75c61fdb220a01b98df0abe81ebc5d248fd4"
 LOCAL_AGENT = Path(__file__).resolve().parents[1]
 REPO = LOCAL_AGENT.parents[1]
 STATIC = LOCAL_AGENT / "mission_agent" / "mission_control" / "static"
-ALLOWED_DELTA = "crypto-300-profit-mission/local-agent/scripts/frank_option3_mac_staging.py"
+ALLOWED_DELTAS = (
+    "crypto-300-profit-mission/local-agent/scripts/frank_option3_mac_staging.py",
+    "crypto-300-profit-mission/local-agent/scripts/frank_option3_p4_history.py",
+)
 SOURCE_PORT = 8766
 MAX_BYTES = 6_000_000
 
@@ -37,6 +40,7 @@ sys.path.insert(0, str(LOCAL_AGENT))
 from mission_agent.mission_control.intelligence_preview import (  # noqa: E402
     analyze_rows, fake_intelligence_updates,
 )
+from frank_option3_p4_history import run_replay  # noqa: E402
 
 SOURCE_PATHS = (
     "/api/runtime", "/api/control-health", "/api/candidates",
@@ -61,7 +65,7 @@ def check_frozen_source() -> None:
         ["git", "-C", str(REPO), "diff", "--name-only", PINNED, "HEAD"],
         capture_output=True, text=True, check=True,
     ).stdout.splitlines()
-    if sorted(diff) != [ALLOWED_DELTA]:
+    if sorted(diff) != sorted(ALLOWED_DELTAS):
         raise RuntimeError("QA_BRANCH_CONTAINS_UNREVIEWED_APP_CHANGES: " + repr(diff))
     status = subprocess.run(
         ["git", "-C", str(REPO), "status", "--porcelain"],
@@ -155,6 +159,7 @@ def evidence_summary(captured: dict[str, Any]) -> dict[str, Any]:
 class StageHandler(BaseHTTPRequestHandler):
     snapshots: dict[str, Any] = {}
     intelligence: dict[str, Any] = {}
+    p4_replay: dict[str, Any] = {}
     capture_at: float = 0
     port: int = 18766
 
@@ -168,7 +173,8 @@ class StageHandler(BaseHTTPRequestHandler):
         self.send_header("X-Frank-Mode", "LOCAL_SNAPSHOT_ONLY_NO_SEND")
         self.send_header("Content-Security-Policy",
                          "default-src 'self'; connect-src 'self'; "
-                         "style-src 'self' 'unsafe-inline'; script-src 'self'; "
+                         "style-src 'self' 'unsafe-inline'; "
+                         "script-src 'self'" + (" 'unsafe-inline'" if self.path == "/qa/p4-replay" else "") + "; "
                          "img-src 'self' data:; object-src 'none'; "
                          "form-action 'none'; frame-ancestors 'none'")
         self.send_header("Content-Length", str(len(body)))
@@ -208,6 +214,22 @@ class StageHandler(BaseHTTPRequestHandler):
                 "</div>"
             )
             html = html.replace("<body>", "<body>" + marker, 1)
+            html = html.replace(
+                'id="cluster-submit" class="primary-btn" type="submit"',
+                'id="cluster-submit" class="primary-btn" type="submit" disabled '
+                'aria-disabled="true" title="隔离验收不提供链上 CA 实时查询"',
+            )
+            html = html.replace(
+                '<div id="frank-intelligence-cards"',
+                '<div id="frank-intelligence-cards"',
+            )
+            html = html.replace(
+                '<main>',
+                '<p style="padding:12px"><a href="/qa/p4-replay" '
+                'style="font-weight:bold;color:#9ed3ff">'
+                '查看十条真实本地历史交易的模拟分析（不是实时提醒）</a></p>'
+                '<main>', 1,
+            )
             self._respond(200, html.encode("utf-8"), "text/html; charset=utf-8")
             return
         if path in {"/static/app.js", "/static/styles.css"}:
@@ -218,6 +240,34 @@ class StageHandler(BaseHTTPRequestHandler):
             self._respond(200, fn.read_bytes(),
                           "text/javascript; charset=utf-8" if path.endswith(".js")
                           else "text/css; charset=utf-8")
+            return
+        if path == "/qa/p4-replay":
+            if query:
+                self._json({"error": "QUERY_NOT_ALLOWED"}, 400)
+                return
+            report = self.p4_replay
+            summary = (
+                '<div role="alert" style="padding:16px;background:#34313d;'
+                'color:white"><strong>历史回放 · 非实时 · 非链上独立核验</strong>'
+                '<p>这些案例取自旧版 Frank 本地索引，仅在历史交易发生时刻模拟分析。'
+                '不能证明当时就能发现交易、已有 V1 信号或可以跟单盈利。'
+                '所有 SELL 提醒仅为历史模拟，绝不发送。</p>'
+                '<p>验收结果：' + str(report.get("status", "UNKNOWN")) +
+                '；交易记录数：' + str(report.get("counts", {}).get("distinct_signatures", 0)) +
+                '；模拟卖出风险提示：' + str(report.get("counts", {}).get("historical_fake_sell_notices", 0)) +
+                '（均未发送）</p><a style="color:#9ed3ff" href="/">返回新版候选看板</a>'
+                '</div>'
+            )
+            html = report.get("html", "").replace(
+                "<body>", "<body>" + summary, 1,
+            )
+            self._respond(200, html.encode("utf-8"), "text/html; charset=utf-8")
+            return
+        if path == "/qa/p4-replay.json":
+            if query:
+                self._json({"error": "QUERY_NOT_ALLOWED"}, 400)
+            else:
+                self._json({k: v for k, v in self.p4_replay.items() if k != "html"})
             return
         if path == "/api/frank-intelligence":
             if query:
@@ -255,6 +305,15 @@ def smoke(port: int, expected_rows: int) -> None:
         page = response.read().decode("utf-8")
         assert "frank-intelligence-panel" in page
         assert "隔离验收" in page
+    with OPENER.open(root + "/qa/p4-replay", timeout=5) as response:
+        replay_page = response.read().decode("utf-8")
+        assert "历史回放" in replay_page
+        assert "FAKE ONLY, UNSENT" in replay_page or "No qualifying new SELL fact" in replay_page
+    with OPENER.open(root + "/qa/p4-replay.json", timeout=5) as response:
+        replay = json.load(response)
+        assert replay["source_scope"] == "LOCAL_INDEX_ONLY_NOT_CHAIN_VERIFIED"
+        assert replay["profit_or_executability_proven"] is False
+        assert "html" not in replay
     with OPENER.open(root + "/static/app.js", timeout=5) as response:
         assert "get('/api/frank-intelligence')" in response.read().decode("utf-8")
     with OPENER.open(root + "/api/frank-intelligence", timeout=5) as response:
@@ -295,6 +354,8 @@ def main() -> int:
     previews = fake_intelligence_updates(
         analyses, as_of=as_of, max_event_age_seconds=600,
     )
+    replay = run_replay(data["/api/trades"], snapshot_at=as_of)
+    StageHandler.p4_replay = replay
     StageHandler.snapshots = dict(data)
     StageHandler.intelligence = {
         "status": "LOCAL_SOURCE_RESEARCH_ONLY",
@@ -310,7 +371,7 @@ def main() -> int:
     StageHandler.snapshots["/api/runtime"] = {
         "status": "STAGING_SNAPSHOT_NOT_LIVE",
         "runtime_reason": "FIXED_CAPTURE_REPLAY_ONLY",
-        "heartbeat_age_seconds": None,
+        "heartbeat_age_seconds": "UNAVAILABLE",
         "production_db_readable": False,
     }
     StageHandler.snapshots["/api/control-health"] = {
@@ -325,6 +386,9 @@ def main() -> int:
     print("SOURCE_EVIDENCE:", json.dumps(evidence_summary(data), ensure_ascii=False), flush=True)
     print("INTELLIGENCE_ROWS:", len(analyses), flush=True)
     print("FAKE_UNSENT_SELL_NOTICES:", len(previews), flush=True)
+    print("P4_REPLAY_STATUS:", replay["status"], flush=True)
+    print("P4_REPLAY_CASE_COUNTS:", json.dumps(replay["counts"], ensure_ascii=False), flush=True)
+    print("P4_REPLAY_CHECK_ERRORS:", json.dumps(replay["errors"], ensure_ascii=False), flush=True)
     print("REAL_NOTICES_SENT: 0", flush=True)
     print("PRODUCTION_FILES_WRITTEN: 0", flush=True)
     server = ThreadingHTTPServer(("127.0.0.1", args.port), StageHandler)
@@ -334,6 +398,7 @@ def main() -> int:
     try:
         smoke(args.port, len(analyses))
         print(f"OPEN_IN_BROWSER: http://127.0.0.1:{args.port}/", flush=True)
+        print(f"OPEN_P4_HISTORY: http://127.0.0.1:{args.port}/qa/p4-replay", flush=True)
         print("Press Ctrl+C to stop the isolated server.", flush=True)
         worker.join()
     except KeyboardInterrupt:
