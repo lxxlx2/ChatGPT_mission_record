@@ -78,6 +78,13 @@ class DocumentedRouterSavedWindow(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'FROZEN_ROUTER_REGISTRY_REQUIRED'):
             offline_window(fixture, FAKE, router_registry_raw=ROUTER_RAW)
 
+    def test_saved_synthetic_fixture_report_is_exactly_regenerated(self):
+        saved = json.loads((ROOT / 'fixture_l1_report.json').read_text())
+        saved.pop('fixture_sha256', None)
+        saved.pop('cohort_file_sha256', None)
+        actual = offline_window(copy.deepcopy(FIX), copy.deepcopy(FAKE))
+        self.assertEqual(actual, saved)
+
     def test_original_synthetic_fixture_still_runs_unchanged(self):
         out = offline_window(copy.deepcopy(FIX), copy.deepcopy(FAKE))
         self.assertEqual(out['router_registry_provenance'], 'SYNTHETIC_ROUTER_FIXTURE_ONLY')
