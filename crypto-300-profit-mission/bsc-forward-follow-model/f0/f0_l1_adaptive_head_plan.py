@@ -20,7 +20,8 @@ def require(ok, code):
 
 def init_plan(*, initial_head, max_head_polls, max_block_reads,
               refresh_after_blocks=4, head_poll_interval_ms=500,
-              min_request_interval_ms=250, initial_monotonic_ms=0):
+              min_request_interval_ms=250, initial_monotonic_ms=0,
+              max_stagnant_poll_wait_ms=8000):
     """Initial head MUST come from a separately journalled verified source.
 
     Budgets below exclude initial chainId and initial head reads, both of which
@@ -32,7 +33,9 @@ def init_plan(*, initial_head, max_head_polls, max_block_reads,
             type(refresh_after_blocks) is int and 1 <= refresh_after_blocks <= 100 and
             type(head_poll_interval_ms) is int and 250 <= head_poll_interval_ms <= 60000 and
             type(min_request_interval_ms) is int and 250 <= min_request_interval_ms <= 60000 and
-            type(initial_monotonic_ms) is int and initial_monotonic_ms >= 0,
+            type(initial_monotonic_ms) is int and initial_monotonic_ms >= 0 and
+            type(max_stagnant_poll_wait_ms) is int and
+            head_poll_interval_ms <= max_stagnant_poll_wait_ms <= 60000,
             "ADAPTIVE_INVALID_PLAN")
     return {
         "schema": SCHEMA, "initial_head": initial_head,
@@ -43,6 +46,8 @@ def init_plan(*, initial_head, max_head_polls, max_block_reads,
         "max_head_polls": max_head_polls, "max_block_reads": max_block_reads,
         "refresh_after_blocks": refresh_after_blocks,
         "head_poll_interval_ms": head_poll_interval_ms,
+        "max_stagnant_poll_wait_ms": max_stagnant_poll_wait_ms,
+        "head_stagnation_streak": 0,
         "min_request_interval_ms": min_request_interval_ms,
         "last_head_sample_ms": initial_monotonic_ms,
         "last_request_ms": None, "blocks_since_head_poll": 0,
@@ -76,9 +81,17 @@ def next_action(state, *, now_ms):
         if state["head_polls_attempted"] >= state["max_head_polls"]:
             return {"action": "STOP", "reason": "HEAD_POLL_BUDGET_EXHAUSTED"}
         delta = now_ms - state["last_head_sample_ms"]
-        if delta < state["head_poll_interval_ms"]:
-            return {"action": "WAIT", "reason": "HEAD_POLL_MIN_INTERVAL",
-                    "wait_ms": state["head_poll_interval_ms"] - delta}
+        # Stalled heads must not consume the finite HEAD budget every 500ms.
+        # After N unchanged samples wait 2^N times the normal poll interval,
+        # capped at the explicit maximum. This is only a wait decision; the
+        # next real HEAD call would still count as an attempted request.
+        stagnant = min(state["head_stagnation_streak"], 16)
+        effective_wait = min(state["head_poll_interval_ms"] * (1 << stagnant),
+                             state["max_stagnant_poll_wait_ms"])
+        if delta < effective_wait:
+            return {"action": "WAIT", "reason": "HEAD_STAGNATION_BACKOFF"
+                    if stagnant else "HEAD_POLL_MIN_INTERVAL",
+                    "wait_ms": effective_wait - delta}
         return {"action": "READ_HEAD", "method": "eth_blockNumber",
                 "params": [], "reason": "UNKNOWN_OR_STALE_CONFIRMED_HEAD"}
     return {"action": "READ_BLOCK", "method": "eth_getBlockByNumber",
@@ -105,7 +118,11 @@ def apply_head_result(state, *, now_ms, observed_head):
         if observed_head < new["confirmed_head"]:
             new["stopped_reason"] = "HEAD_REGRESSED_UNVERIFIED"
         else:
-            new["confirmed_head"] = observed_head
+            if observed_head == new["confirmed_head"]:
+                new["head_stagnation_streak"] += 1
+            else:
+                new["confirmed_head"] = observed_head
+                new["head_stagnation_streak"] = 0
     return new
 
 
@@ -136,6 +153,7 @@ def summarize(state):
         "latest_sampled_head": state["confirmed_head"],
         "next_unattempted_height": state["next_height"],
         "head_polls_attempted_after_initial": state["head_polls_attempted"],
+        "head_stagnation_streak": state["head_stagnation_streak"],
         "block_reads_attempted": state["block_reads_attempted"],
         "block_reads_received": state["blocks_received"],
         "block_reads_failed": state["blocks_failed"],
