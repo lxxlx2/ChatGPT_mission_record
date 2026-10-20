@@ -1,5 +1,13 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：原30币历史runtime字节码完整度25/30、至少两组完全相同的合约模板
+
+本轮从**冻结的原2025-07-01 BSC PancakeSwap V2首30币**逐rank读取历史`eth_getCode`，先使用已在4笔Approval案例中的同一1346字节Token源码作**准确整串字节比对**：rank **7/9/11/12/19/21/25/27/30共9币完全相同**（模板A）；另外rank **2/3/6/10共4币**拥有完全相同3553字节runtime（模板B），与模板A不同。另12币均不同于A/B，**未断言这12币互不相同**。rank **8/18/20/26/28**因Alchemy连接器向当前对话截断`eth_getCode`长输出（约8000字符）无法核对完整字节码，属于`UNREADABLE`而不是合约代码不存在。30个Token身份仍逐一保留、没有事后剔币。完整rank、合约地址、历史完整块、高度、返回字节数及证据等级在**原单一P0 JSON**键`bsc_v2_p0_all30_historical_runtime_bytecode_family_exploration_20261020`。
+
+尤其之前的**4笔同钱包Router BUY→Approval→SELL案例rank7/12/21/30全部同属模板A**。此前四笔Approval日志的data与其approve calldata最大值不一致，可能与这一共同runtime实现相关；但没有独立提供商确认交易或解析代码，**不得声称已经证明是哪一行合约代码导致，也不能声称Alchemy一定造假**。该4例只证明相同代码族曾出现的历史交易，不能据此得出4种独立代币卖出机制均已通过；字节码一致也**不等于同一实际控制者/一个项目/一个人/重复同一收益事件**。后续统计的15个独立可卖出10x正例仍需另外依据研究规则核实，并非当前合约族数量。
+
+独立免费验证仍未达成：BscScan tx页面本环境403；Blockscout连接器提示2026-10-08起需要PRO key，不按用户禁止付费约束继续；公开搜索对#7 token能得到部分当前合约元数据，**不能当2025年原RPC收据交叉验证**。本轮没有现金支出、没有后验标签、没有改研究金额/池深/成功门槛，也没有新增Stage、新模型、部署、邮件或交易。P0 `INSUFFICIENT_COVERAGE`、P1 `BLOCKED`、G6`NO_GO`不变。
+
 ## 2026-10-20：四例真实Approval交易已定位，3笔Gas保本界限更新
 
 本轮继续此前**已选定**的四个真实同钱包Router成功买卖样本#7/#12/#21/#30。对每个 Token/owner/router 在原买入与历史卖出前之间使用Alchemy BNB-mainnet历史`eth_call allowance`二分定位**相邻区块授权状态从0变uint256.max的边界**，再读取该单块Token事件日志并以实际`eth_getTransactionByHash`和`eth_getTransactionReceipt`核对。四笔均为同原持有人向原Token发出`0x095ea7b3 approve(router,uint256.max)`，状态`0x1`，GasUsed均**46,398**。只读验证不做批准/发交易。区块内真实Approval事件topic的owner/spender准确，但**四笔事件data均编码Router地址数值，和approve calldata最大额度冲突**。这是链上提供的数据源实际显示的冲突，依赖相邻块历史allowance变更与调用输入来确认授权结果；不得用此事件data宣称标准金额。也不能因为邻接块转变就断言这是钱包历史首次Approval，允许此前非单调授权变更。
