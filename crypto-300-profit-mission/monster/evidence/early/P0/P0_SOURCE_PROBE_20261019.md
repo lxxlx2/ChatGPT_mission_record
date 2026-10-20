@@ -1,5 +1,15 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-21：Four.meme单日538个历史代币索引已全部读取、去重并验证3个真实创建事件
+
+**决策：真实数据来源取得局部突破，不是整体Monster模型/全链Source PASS。**本轮不再重复之前四个Router钱包Gas细节，转而针对BSC发射平台Four.meme历史数据。此前在2025-07-01 UTC冻结历史区块 `52440286/52555482` 上用`_tokens(uint256)`重建出**247596–248133共538个新增索引位置**，只核实了起始/末端两个真实TokenCreate事件。此后直接以BNB主网历史 `Multicall3`（`0xca11bde05977b3631167028862be2a173976ca11`，`aggregate3`选择器`0x82ad56cb`）批量调用同一个Four.meme TokenManager2（`0x5c952063c7fc8610ffdb798152d69f0b9550762b`）`_tokens(index)`，**36个只读RPC请求、每批最多15个inner calls，成功取回完整538个index→token_CA地址**。链上历史区块每个返回都是非零、每个CA格式有效，**538个地址互不重复、538个index没有缺口**，首末地址均与已核实真实TokenCreate事件匹配。所有538条地址和逐批响应长度保存于原P0 JSON键`bsc_fourmeme_p0_multicall3_frozen_538_index_slot_enumeration_20261021`。这是**2025-07-01当日结束时Four.meme该合约这一索引区间的538个独立CA**，不是所有BSC发币项目，不包含Pancake V3/其他launchpad的分母，也不是538个通过流动性门槛的买入机会。
+
+除了先前的首个`247596`（2025-07-01T00:00:33Z，block`52440331`）、末个`248133`（23:48:34Z，block`52554568`），进一步对**中间索引`247868`**做历史状态区块二分：`52507858`仍返回零地址，`52507859`首次非零`0x2046b70500bfc3ac3a558b697dee9bba89524444`；同块`TokenCreate`真实日志仅1条、token字段恰好一致，交易hash`0xca38b566d04cd53b9782ac23c31abb746dcbab966638e7d6ce228e80c428840c`、log index`0x163`，UTC时间**2025-07-01T14:04:40Z**。这提供了**首/中/末三处真实历史创建事件锚点**；并不等于逐一解码538笔创建事件、完整无缺的当天所有历史日志、原HTTP字节归档或者第二节点交叉验证。
+
+**工程改造与请求预算：**之前写入PR的独立只读原始归档器`local-agent/mission_agent/early/fourmeme_index_source_probe.py`原来单笔读取538次。根据实际已验证的Multicall3查询，现修改为36批、每批≤15条，并保留6次冻结边界、1次chainId、2条真实首末TokenCreate日志及2个成功回执校验；完整手工单次执行预计**47次RPC，硬上限50次**。一次运行只输出本地JSONL形式逐RPC原始HTTP JSON正文的可逆base64、各响应SHA256、完整538地址清单和manifest，异常/空洞/重复/错误chain/失败事件直接拒绝成功manifest；不存用户RPC密钥到Git，不跟踪日志自动运行，不新增Stage工作流或启动本地监控。同步更新`local-agent/tests/test_fourmeme_index_source_probe.py`，**11项离线模拟用例已编写但未对远端这两份源码实际执行pytest/unittest**。助手在独立Python执行环境仅将新ABI编码/解码核心函数抽取测试，通过了2地址往返、15条最大批长度和两种错误回执拒绝等局部检查，**不是完整源码的11项回归PASS，不是独立AI审核**。
+
+**仍存在的真正阻断**：现在538个地址是Alchemy连接器返回的规范化历史`eth_call`数据，可证明“这个合约某日索引状态可低成本重建”，但本轮**无法在助手运行环境保存连接器的原始HTTP响应正文**；Mac端47请求归档器须在真实RPC接口下执行并留下字节级SHA，且需要真实测试。没有当时公众真实`available_at`的2025来源回执；其它发射平台/Pancake V3连续来源也没有完整覆盖；未验证这些538币各自何时达到真实买卖资格、税/流动性/滑点、用户可选任意金额。因此不能用538当作成功交易的分母或启动模型训练、PIT盈利回测。继续遵守冻结日期**2026-11-02**和`P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO`，没有任何真实下单、部署、邮件、账号付费、额度购买、Frank修改、CI或工作流运行。
+
 ## 2026-10-20：Four.meme 历史索引来源突破与有界原始回执采集器
 
 **本轮优先处理缺失的BSC发射平台覆盖，而非继续研究4个Gas为零的旧钱包，也没有扩大或筛掉冻结BSC V2的30币。**此前Pancake V3的公开Graph API、PublicNode、OnFinality的403/429及Alchemy 10块限制已有真实源测试，**不重试已拒绝来源**。本轮新调查的Four.meme为Pancake V2/V3池建立**之前**即可创建并交易的独立平台路径，故历史新币全集不能只用Pancake PairCreated/PoolCreated事件代替。
