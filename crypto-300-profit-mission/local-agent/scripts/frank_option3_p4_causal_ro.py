@@ -22,6 +22,7 @@ from urllib.parse import quote
 from urllib.request import build_opener, ProxyHandler, HTTPRedirectHandler, Request
 
 LOCAL_AGENT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(LOCAL_AGENT))
 sys.path.insert(0, str(LOCAL_AGENT / "scripts"))
 from frank_option3_p4_history import select_cases  # noqa: E402
 
