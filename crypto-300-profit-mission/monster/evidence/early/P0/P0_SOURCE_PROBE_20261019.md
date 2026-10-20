@@ -1,5 +1,11 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：Mac BSC V3 PublicNode 免费源探针59次调用，2,000/10块eth_getLogs均HTTP 403；停用该来源
+
+用户在原分支固定SHA`b6219785e4f5b88222da7104648fd62e544c93e7`的现有`monster_early_venue_factory_rpc_roster_probe.py`前台运行`--chain bsc-v3 --day 2025-07-01 --mode probe --max-requests 80 --delay 0.4`，结果`chain=bsc-v3`，RPC Host `bsc-rpc.publicnode.com`，RPC源URL摘要`474b7939233328340174d2967470a6a2e6951f51e119471ff7e51ea7eca54ee1`；全日UTC历史区块准确定位`52440287–52555482`，总59个RPC请求。Factory历史`PoolCreated`查日志两档都失败：块`52440287–52442286`的2000区块、块`52440287–52440296`的10区块均得到**`RPC_HTTP_403`**。这是RPC访问失败，不是零新池、零流动性或没有V3；HTTP 403未提供服务端body，不能断言源不支持方法的全部原因。继续同一来源重试或开始11万区块扫描没有收益，`V3_FULL_DAY=UNKNOWN`、`P0=INSUFFICIENT_COVERAGE`和`P1=BLOCKED`不变。
+
+公开查询2026-10-20服务商文档得到另一个潜在合法免费源**OnFinality BNB public RPC `https://bnb.api.onfinality.io/public`**，服务商明确声称支持`eth_getLogs`和历史Archive，并列公共限流10请求/分钟，官方BNB文档亦提示其自身公用节点禁用`eth_getLogs`。这仅是**服务商文档证明，尚未Mac网络实际查询**，不能提前承诺支持2025-07-01历史日志或2000区块范围。优先在Mac直接对冻结历史块`52440287–52442286`和10区块短段分别发**一次小额前台只读RPC检查**，前置一次`eth_chainId=0x38`，避免再次用59次RPC重做日期二分。失败即停，不启动自动扫描、不购买API/套餐、不设钱包或交易，不修改原V2候选和研究金额。
+
 ## 2026-10-20：BSC V3三日期预登记小窗来源能力实际通过，首次原日志得到May1真实V3池
 
 在独立固定Git登记 `36dab85ad9146f3cab3fe929de85d62527a7000d` 之后，使用现有Alchemy BNB-mainnet免费只读连接，定位三日UTC零点历史区块和上一块时间，严格只查询已登记每个日期起首10个连续块的V3 Factory `PoolCreated`：**2025-05-01块48876398–48876407：1条；2025-07-01块52440287–52440296：0条；2025-09-01块59581791–59581800：0条**，全部`eth_getLogs`返回成功且topic、地址正确。零仅证明该10块无事件，**绝不意味着该日不存在新V3池/能形成整日完整母体**，不能再以这种稀疏结果推进P1。2025-03-18公开已知的另外两笔V3 PoolCreated交易receipt与单区块logs一致，仅作**事后source正对照**，严禁与预登记三日期同分母混算。

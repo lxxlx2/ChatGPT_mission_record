@@ -11150,5 +11150,56 @@
     "P1": "BLOCKED",
     "G6": "NO_GO",
     "no_paid_calls_no_trade_no_deploy_no_merge": true
+  },
+  "bsc_v3_p0_publicnode_mac_rpc_probe_403_and_onfinality_free_source_screen_20261020": {
+    "schema": "MONSTER_BSC_V3_P0_PUBLICNODE_REAL_MAC_BOUNDED_RPC_SOURCE_PROBE_20261020",
+    "observed_source": "USER_MAC_FOREGROUND_STDOUT_PASTED_IN_CHAT",
+    "code_ref_git_sha": "b6219785e4f5b88222da7104648fd62e544c93e7",
+    "code_path": "crypto-300-profit-mission/local-agent/scripts/monster_early_venue_factory_rpc_roster_probe.py",
+    "chain": "bsc-v3",
+    "day": "2025-07-01",
+    "rpc_host": "bsc-rpc.publicnode.com",
+    "rpc_source_sha256": "474b7939233328340174d2967470a6a2e6951f51e119471ff7e51ea7eca54ee1",
+    "rpc_total_requests_reported": 59,
+    "utc_day_first_block": 52440287,
+    "utc_day_last_block": 52555482,
+    "full_day_covered": false,
+    "test_windows": [
+      {
+        "first_block": 52440287,
+        "last_block": 52442286,
+        "block_count": 2000,
+        "status": "ERROR",
+        "reason": "RPC_HTTP_403"
+      },
+      {
+        "first_block": 52440287,
+        "last_block": 52440296,
+        "block_count": 10,
+        "status": "ERROR",
+        "reason": "RPC_HTTP_403"
+      }
+    ],
+    "eth_chainid_and_block_history_reads_status": "PARTIAL_SUCCESS_DAY_WINDOW_RESOLVED; EXACT_SUCCESS_COUNT_PER_METHOD_UNKNOWN",
+    "eth_getLogs_http403_cause": "NOT_PROVEN_AUTHORIZATION_CDN_POLICY_REQUEST_METHOD_OR_OTHER",
+    "http403_not_zero_factory_events": true,
+    "historical_v3_poolcount_in_utc_day": "UNKNOWN",
+    "frozen_v2_30_cohort_unchanged": true,
+    "no_replay_publicnode_until_new_external_evidence": true,
+    "existing_free_alchemy_bnb_source_eth_getLogs_10_block_request_supported": true,
+    "alchemy_free_chain_10_block_range_confirmed_by_provider_docs_2026_10_20": true,
+    "public_bnb_official_eth_getLogs_disabled_documented": true,
+    "alternative_candidate": "ONFINALITY_PUBLIC_BNB_RPC",
+    "alternative_url": "https://bnb.api.onfinality.io/public",
+    "alternative_provider_docs": "https://onfinality.io/en/networks/bnb",
+    "alternative_provider_claim": "Public no-API-key BNB RPC with historical eth_getLogs/archive support; stated public rate limit 10 requests/minute",
+    "alternative_status": "DOC_SCREEN_ONLY_UNTESTED_FROM_USER_MAC_NO_ELIGIBILITY_ASSUMPTION",
+    "no_full_day_scan_without_2000_block_log_success": true,
+    "next_diagnostic": "THREE_QUERY_SINGLE_FOREGROUND_CHECK_CHAINID_FIXED_2000_BLOCK_FILTER_FIXED_10_BLOCK_FILTER_NO_REBINARY_SEARCH",
+    "no_paid_key_or_account_required_for_next_probe": true,
+    "p0": "INSUFFICIENT_COVERAGE",
+    "p1": "BLOCKED",
+    "g6": "NO_GO",
+    "production_untouched": true
   }
 }
