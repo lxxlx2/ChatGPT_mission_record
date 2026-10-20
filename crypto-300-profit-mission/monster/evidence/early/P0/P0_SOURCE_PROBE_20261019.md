@@ -1,5 +1,23 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：Four.meme 历史索引来源突破与有界原始回执采集器
+
+**本轮优先处理缺失的BSC发射平台覆盖，而非继续研究4个Gas为零的旧钱包，也没有扩大或筛掉冻结BSC V2的30币。**此前Pancake V3的公开Graph API、PublicNode、OnFinality的403/429及Alchemy 10块限制已有真实源测试，**不重试已拒绝来源**。本轮新调查的Four.meme为Pancake V2/V3池建立**之前**即可创建并交易的独立平台路径，故历史新币全集不能只用Pancake PairCreated/PoolCreated事件代替。
+
+### 验证到的真正源能力（原始链上只读，不是实时2025接收记录）
+
+1. 来源：BNB mainnet 56，Four.meme TokenManager2 `0x5c952063c7fc8610ffdb798152d69f0b9550762b`；[Four.meme社区集成ABI](https://github.com/four-meme-community/fourmeme-docs/blob/main/abi/TokenManager2.lite.json)真实枚举`_tokens(uint256)`及`TokenCreate(address,address,uint256,string,string,uint256,uint256,uint256)`。对应ABI Git blob为`7506183d10baadd294e529564f772ab330d647bc`，**社区文档不是独立的完整历史来源**，最终以本次链上历史状态和真实事件为准。公开4M TokenManager2代码在2025-07-01历史区块非空。
+2. 沿用早已冻结的2025-07-01 UTC BSC历史边界（首块前`52440286`，当日最后`52555482`），只读`eth_call _tokens(index)`定位索引从前日最后非零`247595`/第一个零`247596`推进到日末最后非零`248133`/下一个零`248134`，**增量538个索引位置**。不是把538当成已经完整审计的独立代币数。
+3. 对当天第一个新增索引`247596`做合约历史状态二分：`52440330`仍零，`52440331`首个非零`0x1e395d5edb51e7e7c6b1203912d0d0b6f87f4444`。该一块过滤`TokenCreate`真实事件于2025-07-01 00:00:33 UTC出现，token字段完全相同，原交易`0xf21aca5c7b8369cd02b78b1461dd718da0f6a6ab1f6ece27343dd169ae060b9b`，日志序号`0x4`，receipt status`0x1`。
+4. 对当天最后一个索引`248133`二分：`52554567`仍零，`52554568`首个非零`0xc4be692236dba677f3db2d2cdb38f998d2f54444`。同块真实`TokenCreate`于2025-07-01 23:48:34 UTC出现，原交易`0xd12b6bab0c732925496f3ac0250a86355251bf54498dc30ef3f97e1da74ef142`，日志序号`0x41`，receipt status`0x1`。中间索引`247597、247868、248132`在当日末均返回非零独立CA，`248134、248500`返回零。
+5. **未证明的范围**：538个索引当时确实都存在且互不重复，目前只抽查起始/中间/末端。没有本轮完整当天`TokenCreate`原日志连续导出，没有跨服务商验证、没有2025当时`available_at`、没有Four.meme真实买卖退路/手续费，没有其它发射平台或Pancake V3完整事件来源。因此不宣称发射平台P0源门禁PASS，更不得启动P1、TGE或10x训练。
+
+### 真实下一步与有界工程落地
+
+针对这个**已经通过两个真实事件锚定**的来源，在现有`local-agent/mission_agent/early/`增加一次性手动可运行的`fourmeme_index_source_probe.py`及对应`tests/test_fourmeme_index_source_probe.py`。它并非新Stage、后台服务或交易策略。功能设计：仅在明确`--live-frozen-2025-07-01`后，从用户自行提供的只读HTTPS历史RPC环境变量中查链ID、冻结六个边界、**恰好538个索引**（遇洞或重复即失败）、当天首末两个TokenCreate真实事件及成功回执；硬预算最多**550个只读RPC请求**，不重试429/403，不跨重定向，不回填亏损/盈利或预测。将每个**原HTTP JSON-RPC响应正文**以base64无损储存在Mac本地JSONL，另有SHA256、逐索引CA、缺陷/范围说明的单份manifest；不向Git提交密钥和原始响应。若其中任一步未通过则留不完整原响应，不生成成功manifest；不擅自切换API或付款。这个脚本的代码和**离线模拟测试**已提交到本PR，**本轮未实际运行Mac完整538地址采集，也未执行已写测试、CI或独立AI审查，不把脚本提交等同通过**。
+
+**源验收与资源止损**：后续仅当能在已有免费额度的归档RPC上执行整次采集并本地核对manifest，才可将**Four.meme这一条发射平台一日索引来源**标为部分`SOURCE_FEASIBLE`；Pancake V3/其它Launchpad与整条2025已公开可读时间仍缺，BSC整体`SOURCE_BLOCKED_FOR_FULL_POPULATION`。独立Review及未执行测试完成前不可部署。硬截止日仍是**2026-11-02**，不许自动续期。P0`INSUFFICIENT_COVERAGE` / P1`BLOCKED` / G4`UNKNOWN` / G6`NO_GO`。
+
 ## 2026-10-20：零Gas历史交易核实，官方PBS协议可容纳零Gas交易，但不能推定普通用户免费
 
 **这一步核对并纠正原证据里“0 Gas一律只是可疑的RPC数据异常”的过度结论；并未证明这些机器人交易应被当成普通用户交易成本基线。** 本轮从原30币里已有的#7/#12/#21/#30普通外部账户真实卖出回执抽取`transactionIndex`，在**同一历史区块**分别只读查询前后一笔交易（共8笔）`eth_getTransactionByBlockNumberAndIndex`并核对Gas报价字段：**5/8为0 wei、3/8非0**，并存留原transactionHash、区块、序号和Gas原始整数；选择样本不是代表全区块随机抽样。四笔已核实的卖出交易本身`gasPrice=0`，买卖共8笔`gasPrice/effectiveGasPrice=0`，此前查到的原生BNB余额变化也等于买卖的原始币量；这一组事实在单来源内相互自洽，并非单个receipt遗漏价格字段的直接证明。
