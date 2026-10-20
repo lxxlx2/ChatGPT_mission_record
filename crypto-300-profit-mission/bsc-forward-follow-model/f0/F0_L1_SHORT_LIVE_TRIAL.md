@@ -25,11 +25,11 @@
 ## 本轮代码
 
 - `f0_l1_live_short.py`：真实 HTTPS 传输 + 统一预算与逐请求 fsync 日志；调用 #147 的 HTTP 编解码和 #145/#143 的同源全块解析；固定结束状态与错误分母；本地保存原始来源字节以允许事后复算。
-- `tests/test_f0_l1_live_short.py`：**10 项完全 fake HTTP 测试**，包括 60+2 预算、未来一个块成功、`result:null`、错误 Chain ID、超时、KeyboardInterrupt 保留 UNKNOWN、已存在输出拒绝、改动 manifest 拒绝、时间窗过期、禁止 redirect。
+- `tests/test_f0_l1_live_short.py`：**11 项完全 fake HTTP 测试**，包括 60+2 预算、完整 60 连续区块 + 2 身份请求的 62 次端到端假 HTTP 回放与原始响应归档、未来一个块成功、`result:null`、错误 Chain ID 提前拒绝（不浪费 head 请求）、超时、KeyboardInterrupt 保留 UNKNOWN、已存在输出拒绝、改动 manifest 拒绝、时间窗过期、禁止 redirect。
 - `.github/workflows/bsc-f0-offline-unittest.yml`：只运行不带任何真实网络许可的 F0 unittest，`contents:read`，5 分钟超时。
 - #147 的纯 HTTP wire、#145 的 bounded injected collector、#144 的 #141/#143 组合不进行源文件重写。
 
-此前已批准的 #145 完整 suite **230/230 零 SKIP**，#147 的 11 项新增测试本地**11/11 PASS**、但 #147 完整 suite 尚未独立复审。本分支新增 10 项，预计 **251 项完整测试**（230+11+10），只以 CI/完整 Git checkout 的**实际运行**为准。不能把预期 251 宣称通过。
+此前已批准的 #145 完整 suite **230/230 零 SKIP**，#147 的 11 项新增测试本地**11/11 PASS**、但 #147 完整 suite 尚未独立复审。本分支新增 11 项，整套 **252 项**（230+11+11）。**GitHub Actions 首次实测 251 项、250 PASS/1 FAIL，错误 Chain ID 时多消费 head 请求；修正后第二轮 251/251 PASS；加入 62 请求全量回放后第三轮 CI 实测 252/252 PASS、ZERO SKIP**，对应 [workflow run 39393931728](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39393931728)。该 CI 为 GitHub 上的真实 Python 测试执行，但不是独立人工/Agent 代码安全审核，也不代表真实 BSC RPC 成功。最终代码固定 SHA 还需独立复审。
 
 ## 执行门禁（在用户 Mac，不要在 GitHub Actions 运行 `--execute-live`）
 
