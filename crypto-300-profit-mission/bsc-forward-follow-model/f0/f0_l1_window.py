@@ -153,7 +153,7 @@ def offline_window(fixture: dict, cohort: dict,
         router_provenance = "OFFICIAL_DOCUMENTED_ONLY_NO_SWAP_CAUSALITY"
     else:
         require(router_registry_raw is None and router_mode == "SYNTHETIC_ONLY",
-                "ROUTER_REGISTRY_SOURCE_MODE_MISMATCH")
+                "NO_VERIFIED_ROUTER_ALLOWLIST")
         routers = {address(x) for x in fixture.get("synthetic_routers", [])}
         router_provenance = "SYNTHETIC_ROUTER_FIXTURE_ONLY"
     require(bool(routers), "NO_ROUTER_CANDIDATES")
