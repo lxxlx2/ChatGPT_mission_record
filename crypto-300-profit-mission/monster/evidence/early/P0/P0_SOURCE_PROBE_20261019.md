@@ -1,5 +1,18 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：四例真实Approval交易已定位，3笔Gas保本界限更新
+
+本轮继续此前**已选定**的四个真实同钱包Router成功买卖样本#7/#12/#21/#30。对每个 Token/owner/router 在原买入与历史卖出前之间使用Alchemy BNB-mainnet历史`eth_call allowance`二分定位**相邻区块授权状态从0变uint256.max的边界**，再读取该单块Token事件日志并以实际`eth_getTransactionByHash`和`eth_getTransactionReceipt`核对。四笔均为同原持有人向原Token发出`0x095ea7b3 approve(router,uint256.max)`，状态`0x1`，GasUsed均**46,398**。只读验证不做批准/发交易。区块内真实Approval事件topic的owner/spender准确，但**四笔事件data均编码Router地址数值，和approve calldata最大额度冲突**。这是链上提供的数据源实际显示的冲突，依赖相邻块历史allowance变更与调用输入来确认授权结果；不得用此事件data宣称标准金额。也不能因为邻接块转变就断言这是钱包历史首次Approval，允许此前非单调授权变更。
+
+#7 approval block 52442032, tx 0xabd855e35df0feaeaa5c2df0edd964efb9ca8eda4b449749bc72fd08ccef827f, approve-to-sell 3 blocks / 3s, 3tx GasUsed 328992, equal-gas break-even NO_POSITIVE_GROSS_POOL_QUOTE_MARGIN Gwei
+#12 approval block 52443729, tx 0x3969503d3fba3cde5b973b10d60cdcfafda032028ce425c0a150eee409ee5f8b, approve-to-sell 2 blocks / 2s, 3tx GasUsed 328992, equal-gas break-even NO_POSITIVE_GROSS_POOL_QUOTE_MARGIN Gwei
+#21 approval block 52445408, tx 0x34f6f9dec322597cd95a025840b10edb806294ff5c3973e26eaffd1defe312ca, approve-to-sell 28 blocks / 21s, 3tx GasUsed 328956, equal-gas break-even 14.364842 Gwei
+#30 approval block 52448418, tx 0xe792353ad47ed0391be0b1890a66bc8b9198d8e1174d90ddd7be5bbaaa471c2d, approve-to-sell 3 blocks / 2s, 3tx GasUsed 328968, equal-gas break-even 14.254785 Gwei
+
+在之前买+卖两笔GasUsed之外加入确证的Approval GasUsed，#21三笔合计328,956、#30三笔合计328,968。**只有假设三笔使用相等、非零但未知的GasPrice且无其他费/税时**，#21池侧正差的保本上界从约16.723649调整为`14.364842` Gwei，#30从16.595421调整为`14.254785` Gwei；#7/#12池侧差在任何非负手续费前已为负，不能变为正。四笔Approval交易GasPrice/effectiveGasPrice与旧八笔买卖一样都被同Alchemy接口报告为`0x0`，**实际支付Gas依然未核实**，不得记为免手续费。授权与卖出的链上时间差仅2、3、21、2秒，是历史块timestamp差，非当时用户可执行公共观察窗口。第三方BscScan网页版在本运行环境不可访问，尚无独立第二来源校验。逐笔txhash、原始十六进制状态、Gas和派生界限在**原有**P0 JSON键`bsc_v2_p0_four_actual_approval_transactions_and_three_tx_gas_break_even_20261020`。
+
+本轮未冻结名义额，未做模型、没有真实交易、部署、邮件、持续监控、新脚本或重审历史测试；本轮只做业务链路的缺失审批取证及既有成本字段更新。P0`INSUFFICIENT_COVERAGE`，24/30 PIT、18/30同名义额双向门槛仍`NOT_SCORABLE`，P1`BLOCKED`，G6`NO_GO`。
+
 ## 2026-10-20：9 个原买入地址的真实历史余额、转回Pair模拟与Router授权来源核查
 
 在原冻结30例中只选旧有回执证明存在“Token接收地址后来将Token卖回同池”的9例（7笔原接收金额整笔回池，2笔仅部分卖回）。使用既有已授权的Alchemy BNB mainnet连接，在对应**买入区块结束时**读取`balanceOf(owner)`、以当时余额和历史观察卖出Token数量做单次非持久`eth_call transfer(pair,amount)`，以及`allowance(owner,PancakeV2Router)`。之后对旧证据中4例明确经Pancake Router真实卖出的钱包，在对应卖出区块前一完整区块另查询allowance。共**31次成功的真实历史只读eth_call**：9/9余额足额、9/9直接Token转池的模拟返回ABI bool true（无状态改变）、9/9买入块末Router授权为0、4/4确证后续Router卖出的案例在卖出前一块已有max uint256足够额度。旧4例排名#7/#12/#21/#30。严格区分`transfer`和Router内部`transferFrom`，**成功的直接转账模拟不证明当时已可通过Router退出**；买后allowance 0意味着走标准Router卖出还需要授权状态发生变化，其Approval交易、Gas、等待时间没有查询。不能由后续交易成功反推该交易当时提前可执行。
