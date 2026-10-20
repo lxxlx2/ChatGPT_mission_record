@@ -129,8 +129,12 @@ def validate_permit(permit, now):
     require(type(raw_root) is str and raw_root.startswith("/tmp/") and
             ".." not in Path(raw_root).parts, "ADAPTIVE_PERMIT_ROOT_INVALID")
     root = Path(raw_root)
+    # macOS normally aliases /tmp to /private/tmp; compare resolved containment
+    # against resolved /tmp instead of demanding textual path equality.
+    canonical_tmp = Path("/tmp").resolve()
     require(root.is_dir() and not root.is_symlink() and
-            root.resolve() == root and root.stat().st_mode & 0o077 == 0 and
+            canonical_tmp in root.resolve().parents and
+            root.stat().st_mode & 0o077 == 0 and
             all(not (root / name).exists() and not (root / name).is_symlink()
                 for name in ("journal.json", "report.json", "raw_responses")),
             "ADAPTIVE_PERMIT_OUTPUT_NOT_PRIVATE_OR_FRESH")
