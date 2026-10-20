@@ -14163,4 +14163,117 @@
       }
     ]
   }
+,
+  "bsc_v2_p0_zero_gas_historical_bsc_bundle_compatibility_and_stop_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_ZERO_GAS_PRICE_PROTOCOL_PLAUSIBILITY_WITH_ADJACENT_CHAIN_RECEIPTS_V1",
+    "captured_date_utc": "2026-10-20",
+    "fixed_prior_head": "2195ff169ea6eab88e93ebb192ac84f2638e2fb4",
+    "historic_chain": "BNB_SMART_CHAIN_MAINNET_56",
+    "subject_ranks": [
+      7,
+      12,
+      21,
+      30
+    ],
+    "subject_sells_all_reported_gasPrice_zero": true,
+    "subject_buy_and_sell_eight_effectiveGasPrice_zero_reported_by_same_provider": true,
+    "subject_buy_and_sell_native_block_state_delta_matches_quote_legs": true,
+    "adjacent_transaction_samples": 8,
+    "neighbor_zero_price_samples": 5,
+    "neighbor_nonzero_price_samples": 3,
+    "method": "READ_ONLY_ETH_GET_TRANSACTION_BY_BLOCK_NUMBER_AND_INDEX_AROUND_FOUR_FIXED_SELL_INDEXES",
+    "official_protocol_source": "https://docs.bnbchain.org/bnb-smart-chain/developers/paymaster/overview/",
+    "protocol_source_claim": "BSC_PBS_BUNDLES_ALLOW_ZERO_GAS_PRICE_TRANSACTIONS_PAID_AT_BUNDLE_AGGREGATE_OR_SPONSORED_BY_A_SEPARATE_SENDER",
+    "protocol_source_scope": "PROTOCOL_MECHANISM_SUPPORT_ONLY_NOT_PROOF_OF_SPECIFIC_2025_TRANSACTION_BUNDLE",
+    "bundles_identified_for_selected_txs": "UNVERIFIED",
+    "sponsor_fee_amounts_for_selected_txs": "UNVERIFIED",
+    "user_paid_fee_for_selected_eoa_in_selected_transaction": "ONCHAIN_FIELDS_ZERO_SINGLE_PROVIDER_NOT_INDEPENDENTLY_AUDITED",
+    "generic_user_transaction_gas_price": "NOT_ESTIMATED_AND_NOT_ZERO_BY_DEFAULT",
+    "correction_of_old_anomaly_label": "ZERO_GAS_PRICE_IS_PROTOCOL_PLAUSIBLE_NOT_AUTOMATICALLY_A_PROVIDER_BUG",
+    "external_second_rpc_independent_exact_transaction_read": "NOT_AVAILABLE",
+    "onchain_transaction_fee_sponsorship_is_not_merchant_approval_or_PUBLIC_FILL": true,
+    "quote_leg_buy_sell_at_personal_trade_size": "NOT_SCORABLE",
+    "full_history_and_2025_public_available_at": "UNKNOWN",
+    "phase0_source_stop_unchanged": true,
+    "model_training_allowed": false,
+    "P0": "INSUFFICIENT_COVERAGE",
+    "P1": "BLOCKED",
+    "G4": "UNKNOWN",
+    "G6": "NO_GO",
+    "no_paid_source_no_jobs_no_email_no_source_code_or_workflows_no_trade": true,
+    "neighbor_transactions": [
+      {
+        "rank": 7,
+        "relative_to_selected_sell_transaction": "PREV",
+        "block": 52442035,
+        "transaction_index": 105,
+        "transaction_hash": "0x6f609474626d29dc5e4d85768937cad0a41c3475acb0b35fb4286750f243999d",
+        "gasPrice_wei": "1",
+        "source": "EXISTING_FREE_ALCHEMY_BNB_MAINNET_ETH_GET_TRANSACTION_BY_BLOCK_NUMBER_AND_INDEX"
+      },
+      {
+        "rank": 7,
+        "relative_to_selected_sell_transaction": "NEXT",
+        "block": 52442035,
+        "transaction_index": 107,
+        "transaction_hash": "0x4a04f80e479fc677bc80ebd2e5f3ad03f0c97343fae60d86e7721b6b13882987",
+        "gasPrice_wei": "0",
+        "source": "EXISTING_FREE_ALCHEMY_BNB_MAINNET_ETH_GET_TRANSACTION_BY_BLOCK_NUMBER_AND_INDEX"
+      },
+      {
+        "rank": 12,
+        "relative_to_selected_sell_transaction": "PREV",
+        "block": 52443731,
+        "transaction_index": 160,
+        "transaction_hash": "0x3c32420fbfb772aa47752495be7cd15dfc8b470755788737a8d0dbf11791e55e",
+        "gasPrice_wei": "0",
+        "source": "EXISTING_FREE_ALCHEMY_BNB_MAINNET_ETH_GET_TRANSACTION_BY_BLOCK_NUMBER_AND_INDEX"
+      },
+      {
+        "rank": 12,
+        "relative_to_selected_sell_transaction": "NEXT",
+        "block": 52443731,
+        "transaction_index": 162,
+        "transaction_hash": "0x60b97a777be63a50cf53acded75e0f057ab5f65ecd280bd156c51bf4616ad62b",
+        "gasPrice_wei": "0",
+        "source": "EXISTING_FREE_ALCHEMY_BNB_MAINNET_ETH_GET_TRANSACTION_BY_BLOCK_NUMBER_AND_INDEX"
+      },
+      {
+        "rank": 21,
+        "relative_to_selected_sell_transaction": "PREV",
+        "block": 52445436,
+        "transaction_index": 125,
+        "transaction_hash": "0x7fd7e04a8173410de77c86939117e0b1a97ee69b5ee432cb2d1a17d3df55567f",
+        "gasPrice_wei": "1548294",
+        "source": "EXISTING_FREE_ALCHEMY_BNB_MAINNET_ETH_GET_TRANSACTION_BY_BLOCK_NUMBER_AND_INDEX"
+      },
+      {
+        "rank": 21,
+        "relative_to_selected_sell_transaction": "NEXT",
+        "block": 52445436,
+        "transaction_index": 127,
+        "transaction_hash": "0x957e0e58e76c681316fc59d3ee484b61d84692a861be2b221d12582f6d9ebb53",
+        "gasPrice_wei": "0",
+        "source": "EXISTING_FREE_ALCHEMY_BNB_MAINNET_ETH_GET_TRANSACTION_BY_BLOCK_NUMBER_AND_INDEX"
+      },
+      {
+        "rank": 30,
+        "relative_to_selected_sell_transaction": "PREV",
+        "block": 52448421,
+        "transaction_index": 119,
+        "transaction_hash": "0xed9bcf2a200a6c8a234b1462beca78437873600a2928b606432e9e70f76633be",
+        "gasPrice_wei": "957861",
+        "source": "EXISTING_FREE_ALCHEMY_BNB_MAINNET_ETH_GET_TRANSACTION_BY_BLOCK_NUMBER_AND_INDEX"
+      },
+      {
+        "rank": 30,
+        "relative_to_selected_sell_transaction": "NEXT",
+        "block": 52448421,
+        "transaction_index": 121,
+        "transaction_hash": "0x4a512447313c48c89a38ebd78c4c4ba1662dd29518574aa24a797a2d7553963c",
+        "gasPrice_wei": "0",
+        "source": "EXISTING_FREE_ALCHEMY_BNB_MAINNET_ETH_GET_TRANSACTION_BY_BLOCK_NUMBER_AND_INDEX"
+      }
+    ]
+  }
 }
