@@ -32,6 +32,9 @@ STATIC = LOCAL_AGENT / "mission_agent" / "mission_control" / "static"
 ALLOWED_DELTAS = (
     "crypto-300-profit-mission/local-agent/scripts/frank_option3_mac_staging.py",
     "crypto-300-profit-mission/local-agent/scripts/frank_option3_p4_history.py",
+    "crypto-300-profit-mission/local-agent/scripts/frank_option3_p4_causal_ro.py",
+    "crypto-300-profit-mission/local-agent/tests/test_frank_option3_p4_qa.py",
+    "crypto-300-profit-mission/meme/FRANK_OPTION3_P4_MAC_RETROSPECTIVE_QA_RESULT_20261020.md",
 )
 SOURCE_PORT = 8766
 MAX_BYTES = 6_000_000
