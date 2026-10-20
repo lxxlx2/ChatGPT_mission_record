@@ -1,5 +1,13 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：Graph 对照子图同样403，停止无证据的重复查询；Alchemy重核原V2样本
+
+本次用户 Mac 前台手动运行原Branch HEAD `45e598d4`：11/11定向Python测试 **PASS**，仅出现模拟HTTPError资源释放`ResourceWarning`；随后独立 Graph Network 参考子图 `DZz4kDTdmzWLWsV373w2bSmoar3umKKH9y82SUKr5qmp` 唯一真实请求返回 `CONTROL_HTTP_DENIED`、**HTTP 403**。此前 Pancake V3 同一个Key也返回403；Security截图已确认任意Subgraph/Domain均允许。两次403的真实服务端 body 未保存，因此无法区分 Key本身、账户状态、Gateway政策或其他认证故障。The Graph Free官方文档提供每月100000次免费查询，不需要因此推断必须升级；当前Plan B Graph实际状态 `BLOCKED_HTTP403`。暂停以相同凭据重试相同请求，直到获得新根因证据。
+
+转而使用已连接的 **Alchemy ChatGPT Crypto Monitor All Chains**，真实调用 `eth_getTransactionReceipt`、network `bnb-mainnet`，获得成功回执 `0x26396c2954f8f1ff36449d76454f0706c9cf1564da89b2a4a3f0fdfbac6744dc`。区块 52440324 的日志同时包含 Pancake V2 Factory `PairCreated`、对应 Pair `0x021d84d4d9f88518f74935c61e2cf4b70713bc16` 的 `Sync/Mint` 和真实 Token Transfer，证明历史交易原始链事实可以再次通过现有免费只读连接核查。但该交易属于原30币rank1，已在旧证据中记录，本次**仅交叉回读，无新增样本、无提升PIT、可卖覆盖或模型标签**。连接器返回的是标准化回执结果，不生成原HTTP bytes SHA256，不能冒充Mac raw归档。
+
+下一步优先在已冻结30币内核实真实首次可观察时间的重建可行性、统一名义额双向历史执行成本及失败币保留，按原24/30和18/30门槛停止。V3全量母体依然未知，Graph免费权限未通过，P0 `INSUFFICIENT_COVERAGE`、P1 `BLOCKED`、G6 NO_GO，零付费、未部署、未交易。
+
 ## 2026-10-20：API Key Security 无白名单限制，提供一次性独立参考子图对照
 
 用户 Graph Studio Security 截图直接显示 **Authorized Subgraphs: Any Subgraph** 与 **Authorized Domains: Any Domain**。因此可排除这两类当前配置的 whitelist 导致目标 Graph Gateway 403；Key 状态与 Free 账户授权仍未知。The Graph 官方文档明确支持 `Authorization: Bearer` 及现有 Gateway URL，无需盲目重建 Key 或转为 URL 内嵌 Key。目标 Pancake V3 子图 Explorer 显示久未更新，**但不能由此推断 403 具体原因**。

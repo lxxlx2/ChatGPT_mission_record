@@ -8911,5 +8911,51 @@
     "p0": "INSUFFICIENT_COVERAGE",
     "p1": "BLOCKED",
     "permissions": "NO_MERGE_NO_DEPLOY_NO_GMAIL_NO_TRADE"
+  },
+  "bsc_p0_graph_reference_403_and_alchemy_receipt_readback_20261020": {
+    "reported_by": "USER_MAC_TERMINAL_OUTPUT_AND_CURRENT_SESSION_ALCHEMY_READ_ONLY_CONNECTOR",
+    "mac_worktree_head": "45e598d4f70e41a4f07f52d8cdfe895f1eb94061",
+    "mac_graph_probe_tests": "11/11_PASS",
+    "mac_graph_probe_warnings": "ResourceWarning_mock_HTTPError_file_closing_not_gate_failure",
+    "target_pancakeswap_v3_gateway": "HTTP_403_PRIOR_MAC_RUN",
+    "reference_graph_network_gateway": "HTTP_403_CURRENT_MAC_RUN",
+    "reference_subgraph_id": "DZz4kDTdmzWLWsV373w2bSmoar3umKKH9y82SUKr5qmp",
+    "reference_key_validity": "UNVERIFIED",
+    "security_subgraph_allowlist": "ANY_SUBGRAPH",
+    "security_domain_allowlist": "ANY_DOMAIN",
+    "possible_failures": [
+      "ACCOUNT_STATUS",
+      "PROVIDER_ACCESS_POLICY",
+      "KEY_AUTHENTICATION_OR_VALIDITY",
+      "OTHER_GATEWAY_DENIAL"
+    ],
+    "http_rejection_body": "NOT_CAPTURED",
+    "graph_data_received": false,
+    "graph_plan_B": "BLOCKED_FREE_GATEWAY_HTTP403_2_INDEPENDENT_SUBGRAPHS",
+    "repeated_same_key_tests": "PAUSED_PENDING_NEW_ACCOUNT_OR_PROVIDER_ERROR_EVIDENCE",
+    "alchemy_connected_app": "ChatGPT Crypto Monitor All Chains",
+    "alchemy_read_network": "bnb-mainnet",
+    "alchemy_receipt_read_method": "eth_getTransactionReceipt",
+    "alchemy_receipt_tx": "0x26396c2954f8f1ff36449d76454f0706c9cf1564da89b2a4a3f0fdfbac6744dc",
+    "alchemy_receipt_block": 52440324,
+    "alchemy_receipt_status": "0x1",
+    "alchemy_receipt_factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+    "alchemy_receipt_pool": "0x021d84d4d9f88518f74935c61e2cf4b70713bc16",
+    "alchemy_receipt_token": "0x9ca24ba11b0f472fdd704849113c93ea0bf0d798",
+    "alchemy_receipt_events": [
+      "PairCreated",
+      "Transfer",
+      "Sync",
+      "Mint"
+    ],
+    "alchemy_connector_response_origin": "NORMALIZED_RPC_RESULT_NOT_RAW_HTTP_BYTES",
+    "alchemy_original_http_response_sha256": "NOT_AVAILABLE",
+    "alchemy_is_new_population_member": false,
+    "alchemy_new_sample_count": 0,
+    "alchemy_p0_effect": "SAME_FROZEN_V2_RANK1_CROSSCHECK_ONLY_NO_COVERAGE_INCREASE",
+    "p0_current": "INSUFFICIENT_COVERAGE",
+    "p1": "BLOCKED",
+    "cost_usd": 0,
+    "no_merge_no_deploy_no_gmail_no_trade": true
   }
 }
