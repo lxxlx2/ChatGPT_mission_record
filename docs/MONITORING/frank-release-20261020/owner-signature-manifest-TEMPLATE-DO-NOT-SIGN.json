@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "scope": "FRANK_MC_DECISION_LOCAL_AND_GMAIL_ONLY",
+  "policy_sha256": "c1e8d9822bb6a95e744e56d0d71092cef86b102771b0433a38f7eb30882ee013",
+  "integration_sha": "REPLACE_WITH_FINAL_INSTALLED_40_HEX_GIT_SHA",
+  "approved_by": "REPLACE_WITH_USER_CONTROLLED_SIGNER_IDENTITY",
+  "approved_at": "REPLACE_WITH_USER_CHOSEN_TIME_WITH_UTC_OFFSET",
+  "expires_at": "REPLACE_WITH_USER_CHOSEN_EXPIRY_WITH_UTC_OFFSET",
+  "deployment_approved": false
+}
