@@ -1,5 +1,13 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：BSC V3三日期预登记小窗来源能力实际通过，首次原日志得到May1真实V3池
+
+在独立固定Git登记 `36dab85ad9146f3cab3fe929de85d62527a7000d` 之后，使用现有Alchemy BNB-mainnet免费只读连接，定位三日UTC零点历史区块和上一块时间，严格只查询已登记每个日期起首10个连续块的V3 Factory `PoolCreated`：**2025-05-01块48876398–48876407：1条；2025-07-01块52440287–52440296：0条；2025-09-01块59581791–59581800：0条**，全部`eth_getLogs`返回成功且topic、地址正确。零仅证明该10块无事件，**绝不意味着该日不存在新V3池/能形成整日完整母体**，不能再以这种稀疏结果推进P1。2025-03-18公开已知的另外两笔V3 PoolCreated交易receipt与单区块logs一致，仅作**事后source正对照**，严禁与预登记三日期同分母混算。
+
+新获得的预冻结时段链上May1事件：块`48876404`，Factory`0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865`，tx`0xdc17cf044b461178d0ba629239e9935c3a9c9d941e88848fab9c654479d7c2a4`，token0`0x6eb23a077490759e17a7e59fe1aee03f201814dd`，token1为WBNB，feeTier=10000（1%），tickSpacing=200，pool`0x96d37ca7626818c5a9e2a22d46606a3c5445578c`。在创建块以factory `getPool(token0,token1,10000)`独立读取Storage返回该pool，池同一tx真实事件 **Initialize、Mint**，pool `liquidity()`历史状态数值85730557630176831、`slot0()`历史价格状态可读；pool在该10块的所有log仅2个（Initialize/Mint），**没有Swap**。池部署/初始化/首加池和当时可双向卖出是不同层级，V3 `liquidity()`不能直接换成2 WBNB/1000 USDT的报价储备或真实用户可卖容量。本次Factory交易receipt因连接器约8KB输出上限截断，开头success和PoolCreated可见但完整receipt原字节未获得；所有调用仍由单一Alchemy规范化响应，无独立网络时间recv、无原HTTP SHA。两笔事后案例不能视为三日期的样本。
+
+原脚本`local-agent/scripts/monster_early_venue_factory_rpc_roster_probe.py`**早已有`bsc-v3`配置及离线测试**，没有重复开发/新Stage/新付费服务。V3全天窗口预计远超30区块，当前免费Alchemy每次10块，单三个小窗不能计为V3全母体，也不能替代真正连续+缺页校验；Graph Gateway双子图403依然BLOCKED。本轮未采任何未来币价或钱包收益标签。实际结果逐块/逐事件保存在原P0 JSON `bsc_v3_p0_three_date_preregistered_alchemy_factory_log_pilot_results_20261020`；原V2冻结30未改、正式PIT和同一notional双向门槛仍NOT_SCORABLE。P0`INSUFFICIENT_COVERAGE`、P1`BLOCKED`、G6`NO_GO`不变。
+
 ## 2026-10-20：事前登记BSC V3来源检验三日期，避免选择性样本
 
 先于本轮三日期V3目标日志读取，冻结UTC历史日期`2025-05-01`、`2025-07-01`、`2025-09-01`。对每一天以历史区块`timestamp`定位当天最初完整区块，**只读首10个连续区块**的PancakeSwap BSC V3 Factory `PoolCreated`事件（Factory `0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865`）；不读未来币价、不挑已知赢家，使用现有免费Alchemy 10区块上限。该任务仅确认三个预登记时点的来源读写/真实日志返回能力，不声明全日V3母体或零事件；数据与结果必须另一个commit记录，日期不得因结果难看而修改。已通过公开BscScan线索定位两笔2025-03-18 BSC V3 PoolCreated回执（后验**仅为Source positive control**），但与三日期随机母体不可混淆。现有`monster_early_venue_factory_rpc_roster_probe.py`源代码已经含`bsc-v3`选项，不创建重复脚本。P0、P1/G6门槛不变。
