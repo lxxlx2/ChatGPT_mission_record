@@ -1,5 +1,13 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：9 个原买入地址的真实历史余额、转回Pair模拟与Router授权来源核查
+
+在原冻结30例中只选旧有回执证明存在“Token接收地址后来将Token卖回同池”的9例（7笔原接收金额整笔回池，2笔仅部分卖回）。使用既有已授权的Alchemy BNB mainnet连接，在对应**买入区块结束时**读取`balanceOf(owner)`、以当时余额和历史观察卖出Token数量做单次非持久`eth_call transfer(pair,amount)`，以及`allowance(owner,PancakeV2Router)`。之后对旧证据中4例明确经Pancake Router真实卖出的钱包，在对应卖出区块前一完整区块另查询allowance。共**31次成功的真实历史只读eth_call**：9/9余额足额、9/9直接Token转池的模拟返回ABI bool true（无状态改变）、9/9买入块末Router授权为0、4/4确证后续Router卖出的案例在卖出前一块已有max uint256足够额度。旧4例排名#7/#12/#21/#30。严格区分`transfer`和Router内部`transferFrom`，**成功的直接转账模拟不证明当时已可通过Router退出**；买后allowance 0意味着走标准Router卖出还需要授权状态发生变化，其Approval交易、Gas、等待时间没有查询。不能由后续交易成功反推该交易当时提前可执行。
+
+8/9历史buy块末余额与该笔买入收到的Token相等，**#17买后余额277369498906744234958525580**，明显高于单笔买入`9567924680128822181663051`，说明地址已有其他同币头寸或当区块另有来源，随后部分卖出无法精确归属于这笔BUY。此点必须保留在同一钱包收益归因的边界。
+
+所有返回是同一Alchemy提供商正规化RPC，不含独立原始HTTP来源哈希/当时公开网络recv；真实无链上交易发生。模拟不包含配对Pool的实际Swap、Router规则、Token转账税扣量、Gas费用、抢跑/MEV，也没有跨币统一研究订单金额或证明普通用户在信号时点可卖出。逐项地址、raw数量、买卖区块及不确定性已追加原P0 JSON单一键`bsc_v2_p0_nine_historic_holder_balance_transfer_and_router_allowance_20261020`。本次仅事实来源增量，未新增脚本或修改旧参数，P0 `INSUFFICIENT_COVERAGE`、P1 `BLOCKED`、G6 `NO_GO`均不变。
+
 ## 2026-10-20：4笔真实同EOA历史买卖的池侧WBNB回转及Gas保本上限，首次量化执行成本阻断
 
 未额外查询链上，也未自定研究订单金额。仅从已有并交叉过字段的4例同一个EOA通过Pancake V2 Router真实买入、随后同一EOA卖出（Token原接收数额整笔回池）的历史回执，逐币按BigInt计算**原池报价资产流入(买)与流出(卖)差额**，以及两笔交易的GasUsed之和。四例的固定原始交易金额不同，仅属于历史个人成交，不是Monster研究的统一下单金额。所用WBNB“卖出回池释放”的报价不一定就是同EOA钱包最终可支配的BNB，不包括Router拆分、其他资金动作，故这只是**池侧资金流约束**，不宣称钱包真实盈利。
