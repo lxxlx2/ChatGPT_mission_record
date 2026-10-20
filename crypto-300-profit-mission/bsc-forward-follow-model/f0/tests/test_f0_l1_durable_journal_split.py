@@ -98,6 +98,22 @@ class TransportFreeJournalTests(unittest.TestCase):
             self.assertEqual(disk["attempts"][0]["state"],
                              "ATTEMPTED_OUTCOME_UNKNOWN")
 
+    def test_existing_unknown_journal_fails_closed_without_overwrite(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)
+            prior={"schema":SCHEMA, "attempted_calls":1,
+                   "attempts":[{"index":1, "state":"ATTEMPTED_OUTCOME_UNKNOWN"}],
+                   "provider_billed":"UNVERIFIED"}
+            saved=json.dumps(prior,sort_keys=True).encode()
+            (root/"journal.json").write_bytes(saved)
+            # Simulate a partial cleanup where raw_responses is absent.
+            # The previous implementation recreated that directory, then
+            # erased the journal, resetting the durable request denominator.
+            with self.assertRaisesRegex(ValueError,"CAPTURE_JOURNAL_ALREADY_EXISTS"):
+                new_journal(root,Clock())
+            self.assertEqual((root/"journal.json").read_bytes(),saved)
+            self.assertFalse((root/"raw_responses").exists())
+
     def test_failure_classifications_retained_without_urllib_dependency(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d);clock=Clock();j=new_journal(root,clock)

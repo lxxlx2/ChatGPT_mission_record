@@ -76,6 +76,10 @@ class Journal:
         self.path, self.limit, self.clock, self.mono, self.sleep = (
             path, limit, clock, mono, sleep)
         self.interval_ms, self.deadline, self.raw_dir = interval_ms, deadline, raw_dir
+        # A new session must never reset a durable attempt count or UNKNOWN state.
+        # Do not silently resume a consumed/partially used one-use permit.
+        require(not path.exists() and not path.is_symlink(),
+                "CAPTURE_JOURNAL_ALREADY_EXISTS")
         self.rows = []
         self.last_attempt_mono = None
         self.raw_dir.mkdir(mode=0o700)
