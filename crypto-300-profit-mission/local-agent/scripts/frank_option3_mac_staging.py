@@ -76,7 +76,7 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
-OPENER = urllib.request.build_opener(NoRedirect)
+OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect)
 
 
 def capture(endpoint: str) -> Any:
@@ -251,25 +251,25 @@ class StageHandler(BaseHTTPRequestHandler):
 
 def smoke(port: int, expected_rows: int) -> None:
     root = f"http://127.0.0.1:{port}"
-    with urllib.request.urlopen(root + "/", timeout=5) as response:
+    with OPENER.open(root + "/", timeout=5) as response:
         page = response.read().decode("utf-8")
         assert "frank-intelligence-panel" in page
         assert "隔离验收" in page
-    with urllib.request.urlopen(root + "/static/app.js", timeout=5) as response:
+    with OPENER.open(root + "/static/app.js", timeout=5) as response:
         assert "get('/api/frank-intelligence')" in response.read().decode("utf-8")
-    with urllib.request.urlopen(root + "/api/frank-intelligence", timeout=5) as response:
+    with OPENER.open(root + "/api/frank-intelligence", timeout=5) as response:
         j = json.load(response)
         assert j["status"] == "LOCAL_SOURCE_RESEARCH_ONLY"
         assert len(j["rows"]) == expected_rows
         assert j["live_notification_authorized"] is False
     try:
-        urllib.request.urlopen(root + "/api/frank-intelligence?market=live", timeout=5)
+        OPENER.open(root + "/api/frank-intelligence?market=live", timeout=5)
     except urllib.error.HTTPError as exc:
         assert exc.code == 400
     else:
         raise AssertionError("UNSAFE_INTELLIGENCE_QUERY_ACCEPTED")
     try:
-        urllib.request.urlopen(
+        OPENER.open(
             urllib.request.Request(root + "/api/cluster-analysis", method="POST", data=b"{}"),
             timeout=5,
         )
