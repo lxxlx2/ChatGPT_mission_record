@@ -7,6 +7,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import f0_l1_code_probe as storage
+import f0_l1_durable_journal as transport_free_storage
 from f0_l1_live_short import Journal
 from datetime import datetime, timedelta, timezone
 
@@ -29,7 +30,7 @@ class DirectoryDurabilityTests(unittest.TestCase):
                               mono=lambda:0.0, sleep=lambda _:None, interval_ms=250,
                               deadline=now+timedelta(minutes=1), raw_dir=root/'raw_responses')
             post = Mock()
-            with patch.object(storage, 'fsync_directory', side_effect=OSError('simulated sync failure')):
+            with patch.object(transport_free_storage, 'fsync_directory', side_effect=OSError('simulated sync failure')):
                 with self.assertRaises(OSError):
                     journal.request('eth_chainId', [], 'CHAIN_ID', post)
             post.assert_not_called()
