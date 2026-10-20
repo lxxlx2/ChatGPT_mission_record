@@ -12711,4 +12711,230 @@
       }
     ]
   }
+,
+  "bsc_v2_p0_three_preregistered_dates_factory_storage_index_source_capability_20261020": {
+    "schema": "MONSTER_BSC_V2_P0_THREE_SEPARATED_DAY_FACTORY_STORAGE_SOURCE_CHECK_V1",
+    "source_date": "2026-10-20",
+    "fixed_parent_head": "0587cd4bc213475e70120df0bad72f5663a024f0",
+    "provider": "EXISTING_SELECTED_ALCHEMY_FREE_BNB_MAINNET_NORMALIZED_RPC",
+    "scope": "PancakeSwap_V2_Factory_STORAGE_COUNTER_ACROSS_THREE_PREVIOUSLY_CHOSEN_DATES_ONLY",
+    "preexisting_three_date_selection": "2025-05-01,2025-07-01,2025-09-01_PREVIOUSLY_PREREGISTERED_IN_V3_SOURCE_TEST;_REUSED_FOR_SEPARATE_V2_SOURCE_CHECK",
+    "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+    "methods": [
+      "eth_getBlockByNumber_historical_timestamp_boundaries",
+      "eth_call_allPairsLength",
+      "eth_call_allPairs_first_and_last",
+      "eth_call_token0_token1_getReserves",
+      "eth_getLogs_PairCreated_one_creation_block_for_May_and_Sept"
+    ],
+    "all_counter_reads_complete": true,
+    "all_days_first_and_last_validated": true,
+    "three_separated_date_factory_new_pair_counts_sum": 2038,
+    "three_day_pool_count_is_not_distinct_token_count": true,
+    "three_day_eligible_or_sellable_token_count": "NOT_SCORABLE",
+    "three_day_complete_pair_identities_enumerated": false,
+    "third_party_source_cross_check": "NOT_DONE",
+    "raw_unmodified_http_response_archived": false,
+    "original_rpc_response_sha256": "NOT_AVAILABLE_NORMALIZED_CONNECTOR",
+    "utc_day_boundaries_confirmed_by_block_timestamp_binary_search": true,
+    "day_counts": [
+      {
+        "utc_day": "2025-05-01",
+        "first_block": 48876398,
+        "previous_block": 48876397,
+        "last_block": 48933977,
+        "following_block": 48933978,
+        "previous_count": 1826120,
+        "end_count": 1826575,
+        "created_pair_count": 455,
+        "first_index": 1826120,
+        "last_index": 1826574,
+        "first_pair": "0xf14395e78c2a037570b05eb657672af36ffd380c",
+        "last_pair": "0x353055d51e265682a7e83d1dc82262f3de3496f8",
+        "first_pair_creation_block": 48876497,
+        "first_pair_original_factory_tx": "0xada1424a9a94ade33995776b311a204735328f227898563bdb9208a9076d7287",
+        "factory_event_pair_number": 1826121
+      },
+      {
+        "utc_day": "2025-07-01",
+        "first_block": 52440287,
+        "previous_block": 52440286,
+        "last_block": 52555482,
+        "following_block": 52555483,
+        "previous_count": 1874173,
+        "end_count": 1874958,
+        "created_pair_count": 785,
+        "first_index": 1874173,
+        "last_index": 1874957,
+        "first_pair": "0x021d84d4d9f88518f74935c61e2cf4b70713bc16",
+        "last_pair": "0xf1498f6a3df74fadc4a77dfb2bd1cc9369f54785",
+        "first_pair_creation_block": 52440324,
+        "first_pair_original_factory_tx": "0x26396c2954f8f1ff36449d76454f0706c9cf1564da89b2a4a3f0fdfbac6744dc",
+        "factory_event_pair_number": 1874174
+      },
+      {
+        "utc_day": "2025-09-01",
+        "first_block": 59581791,
+        "previous_block": 59581790,
+        "last_block": 59696970,
+        "following_block": 59696971,
+        "previous_count": 1943765,
+        "end_count": 1944563,
+        "created_pair_count": 798,
+        "first_index": 1943765,
+        "last_index": 1944562,
+        "first_pair": "0x14f7c8c33487e16677eaa72ddb253912b9bba1c0",
+        "last_pair": "0x551bde52bc2995852b00644e7c7b5e77f5f50cd3",
+        "first_pair_creation_block": 59582029,
+        "first_pair_original_factory_tx": "0x6c4665cc9d50acf290ed9c203d7f8d060a188ecc8e5198ac9b0ab2ee7a51e70d",
+        "factory_event_pair_number": 1943766
+      }
+    ],
+    "day_boundary_pool_samples": [
+      {
+        "utc_day": "2025-05-01",
+        "position": "FIRST",
+        "zero_based_index": 1826120,
+        "pool": "0xf14395e78c2a037570b05eb657672af36ffd380c",
+        "token0": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "token1": "0xf3a81c5971cbb046d6a9d3b84a88b3360bcc4444",
+        "day_end_reserve0_raw": "325304576700",
+        "day_end_reserve1_raw": "135674668436615052",
+        "source": "SAME_DAY_END_BLOCK_ETH_CALL_NOT_INITIAL_LIQUIDITY"
+      },
+      {
+        "utc_day": "2025-05-01",
+        "position": "LAST",
+        "zero_based_index": 1826574,
+        "pool": "0x353055d51e265682a7e83d1dc82262f3de3496f8",
+        "token0": "0xba8f501cefe6a32ef3e695f490b5cdf5a1db0957",
+        "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "day_end_reserve0_raw": "9943792903034767756215",
+        "day_end_reserve1_raw": "15085000000000000000",
+        "source": "SAME_DAY_END_BLOCK_ETH_CALL_NOT_INITIAL_LIQUIDITY"
+      },
+      {
+        "utc_day": "2025-07-01",
+        "position": "FIRST",
+        "zero_based_index": 1874173,
+        "pool": "0x021d84d4d9f88518f74935c61e2cf4b70713bc16",
+        "token0": "0x55d398326f99059ff775485246999027b3197955",
+        "token1": "0x9ca24ba11b0f472fdd704849113c93ea0bf0d798",
+        "day_end_reserve0_raw": "2406161540478755",
+        "day_end_reserve1_raw": "6686061584173045129214833205",
+        "source": "SAME_DAY_END_BLOCK_ETH_CALL_NOT_INITIAL_LIQUIDITY"
+      },
+      {
+        "utc_day": "2025-07-01",
+        "position": "LAST",
+        "zero_based_index": 1874957,
+        "pool": "0xf1498f6a3df74fadc4a77dfb2bd1cc9369f54785",
+        "token0": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "token1": "0xeb76ee410fb3d827c660d2e08b186ca116007f79",
+        "day_end_reserve0_raw": "5216505648072533280",
+        "day_end_reserve1_raw": "910782143311632085367",
+        "source": "SAME_DAY_END_BLOCK_ETH_CALL_NOT_INITIAL_LIQUIDITY"
+      },
+      {
+        "utc_day": "2025-09-01",
+        "position": "FIRST",
+        "zero_based_index": 1943765,
+        "pool": "0x14f7c8c33487e16677eaa72ddb253912b9bba1c0",
+        "token0": "0x1735edf1f43382be349ce3890974f9bc8f22096d",
+        "token1": "0x55d398326f99059ff775485246999027b3197955",
+        "day_end_reserve0_raw": "107271800818121454175367274",
+        "day_end_reserve1_raw": "5981981299985909",
+        "source": "SAME_DAY_END_BLOCK_ETH_CALL_NOT_INITIAL_LIQUIDITY"
+      },
+      {
+        "utc_day": "2025-09-01",
+        "position": "LAST",
+        "zero_based_index": 1944562,
+        "pool": "0x551bde52bc2995852b00644e7c7b5e77f5f50cd3",
+        "token0": "0x8996a215e4c8a3e8157155bdf2b0a9ff02e8c510",
+        "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "day_end_reserve0_raw": "0",
+        "day_end_reserve1_raw": "0",
+        "source": "SAME_DAY_END_BLOCK_ETH_CALL_NOT_INITIAL_LIQUIDITY"
+      }
+    ],
+    "first_index_event_crosscheck": [
+      {
+        "day": "2025-05-01",
+        "block": 48876497,
+        "tx": "0xada1424a9a94ade33995776b311a204735328f227898563bdb9208a9076d7287",
+        "log_index": "0x9a",
+        "one_based_pair_number": 1826121,
+        "matched_allPairs_address": "0xf14395e78c2a037570b05eb657672af36ffd380c",
+        "event_token0": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "event_token1": "0xf3a81c5971cbb046d6a9d3b84a88b3360bcc4444",
+        "match": true
+      },
+      {
+        "day": "2025-07-01",
+        "block": 52440324,
+        "tx": "0x26396c2954f8f1ff36449d76454f0706c9cf1564da89b2a4a3f0fdfbac6744dc",
+        "one_based_pair_number": 1874174,
+        "matched_allPairs_address": "0x021d84d4d9f88518f74935c61e2cf4b70713bc16",
+        "match": true,
+        "source": "OLDER_FROZEN_P0_EXACT_LOG_PREVIOUSLY_VERIFIED"
+      },
+      {
+        "day": "2025-09-01",
+        "block": 59582029,
+        "tx": "0x6c4665cc9d50acf290ed9c203d7f8d060a188ecc8e5198ac9b0ab2ee7a51e70d",
+        "log_index": "0xfe",
+        "one_based_pair_number": 1943766,
+        "matched_allPairs_address": "0x14f7c8c33487e16677eaa72ddb253912b9bba1c0",
+        "event_token0": "0x1735edf1f43382be349ce3890974f9bc8f22096d",
+        "event_token1": "0x55d398326f99059ff775485246999027b3197955",
+        "match": true
+      }
+    ],
+    "first_pool_creation_block_and_next_block": [
+      {
+        "day": "2025-05-01",
+        "pool": "0xf14395e78c2a037570b05eb657672af36ffd380c",
+        "creation_block": 48876497,
+        "following_block": 48876498,
+        "quote_asset": "WBNB",
+        "reserve0_raw_creation": "3000000000000000000",
+        "reserve1_raw_creation": "980000000000000000",
+        "reserve0_raw_next": "3000000000000000000",
+        "reserve1_raw_next": "980000000000000000",
+        "originating_pair_events": "TRANSFER_X2_SYNC_MINT_AND_OTHER_TOPIC_NOT_ASSESSED_NO_SWAP_TOPIC_OBSERVED",
+        "pool_logs_in_creation_and_next_blocks": 5,
+        "observed_real_swap": false,
+        "quote_depth_over_frozen_2_WBNB": "YES_RECONSTRUCTED_AT_CREATION_BLOCK_END_NOT_PUBLIC_AVAILABLE_AT",
+        "pool_events_topic0": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1",
+          "0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f",
+          "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925"
+        ]
+      },
+      {
+        "day": "2025-09-01",
+        "pool": "0x14f7c8c33487e16677eaa72ddb253912b9bba1c0",
+        "creation_block": 59582029,
+        "following_block": 59582030,
+        "quote_asset": "USDT",
+        "reserve0_raw_creation": "0",
+        "reserve1_raw_creation": "0",
+        "reserve0_raw_next": "0",
+        "reserve1_raw_next": "0",
+        "pool_logs_in_creation_and_next_blocks": 0,
+        "observed_real_swap": false,
+        "quote_depth_over_frozen_1000_USDT": "NO_AT_TWO_SAMPLED_BLOCK_END_STATES",
+        "future_liquidity": "UNKNOWN"
+      }
+    ],
+    "no_current_trade_and_no_historical_available_at_inference": true,
+    "source_scope": "V2_ONLY_DOES_NOT_FILL_V3_LAUNCHPAD_OR_BINANCE_HISTORICAL_COHORT",
+    "p0": "INSUFFICIENT_COVERAGE",
+    "p1": "BLOCKED",
+    "g6": "NO_GO",
+    "no_research_or_trade_notional_selected": true,
+    "no_paid_no_schedule_no_mac_service_no_gmail_no_trade_no_merge": true
+  }
 }
