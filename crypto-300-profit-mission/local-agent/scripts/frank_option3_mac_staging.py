@@ -35,6 +35,8 @@ ALLOWED_DELTAS = (
     "crypto-300-profit-mission/local-agent/scripts/frank_option3_p4_causal_ro.py",
     "crypto-300-profit-mission/local-agent/tests/test_frank_option3_p4_qa.py",
     "crypto-300-profit-mission/meme/FRANK_OPTION3_P4_MAC_RETROSPECTIVE_QA_RESULT_20261020.md",
+    "crypto-300-profit-mission/meme/FRANK_OPTION3_P4_TEN_TRADE_CAUSAL_MAC_RESULT_20261020.md",
+    "crypto-300-profit-mission/local-agent/scripts/frank_option3_p4_stdlib_selftest.py",
 )
 SOURCE_PORT = 8766
 MAX_BYTES = 6_000_000
