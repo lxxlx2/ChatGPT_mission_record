@@ -23,6 +23,7 @@ from .db import open_control_ro
 from .delivery_review import summarize_manual_reviews
 from .frank import FrankReader
 from .intelligence_preview import analyze_rows
+from .frank_activity_watch import summarize_activity
 from .payment_evidence import latest_buy_payment_evidence
 from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
@@ -704,6 +705,26 @@ class DashboardState:
             "rows": rows,
         }
 
+    def frank_activity_watch(self):
+        """Report local signed activity, including old-mint sales not in candidates.
+
+        Independent research lane: never emits signals or actual notifications.
+        """
+        observed_at = time.time()
+        try:
+            trades = self.frank.recent_trades(100)
+            candidates = self.frank.candidates()
+            return summarize_activity(trades, candidates, as_of=observed_at)
+        except (OSError, ValueError, TypeError, sqlite3.DatabaseError):
+            return {
+                "status": "SOURCE_UNAVAILABLE",
+                "scope": "LATEST_100_INDEXED_TRADES_NOT_COMPLETE_CHAIN",
+                "captured_at": observed_at,
+                "reason": "LOCAL_FRANK_ACTIVITY_SOURCE_UNAVAILABLE",
+                "rows": [],
+                "notification_authorized": False,
+            }
+
     def frank_signed_activity(self, days: int = 1):
         """Bounded D1 indexed source facts; never an actionable signal or balance."""
         try:
@@ -845,6 +866,10 @@ class Handler(BaseHTTPRequestHandler):
             if urlparse(self.path).query:
                 return self._json({"error": "UNSUPPORTED_INTELLIGENCE_QUERY"}, 400)
             return self._json(self.state.frank_intelligence())
+        if path == "/api/frank-activity-watch":
+            if urlparse(self.path).query:
+                return self._json({"error": "UNSUPPORTED_ACTIVITY_QUERY"}, 400)
+            return self._json(self.state.frank_activity_watch())
         if path == "/api/frank-observed-watchlist":
             return self._json(self.state.frank_observed_watchlist())
         if path == "/api/frank-signed-activity":
