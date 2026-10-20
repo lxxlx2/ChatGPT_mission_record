@@ -1,5 +1,11 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：P0历史买卖链路18例严格先后顺序再核对（无新RPC）
+
+从24例首次池深达标后下一个完整区块仍具备双边储备的真实Alchemy回读，与先前已归档的后续BUY/SELL交易比对：冻结30样本中的**18个**满足`next_block_end < distinct BUY block < later successful SELL block`，并且原先的SELL回执池深达到冻结门槛。按Token实际接收/回池关系：**7个**同接收地址且原买入Token数量完整回池，**2个**同地址但只是观察到部分数量卖回（#16/#17），其余**9个**卖出来源并非相应买入Token接收方。这18例只说明历史真实交易的时间先后和存在的卖方，绝不可认定相同投资者18例都能获利退出。#3、#13的实际BUY距观察到的下一个区块状态只有一个区块的间隔；没有同期实际公共`available_at`，不能声称实时可跟入。
+
+逐rank证据见原P0 JSON新键`bsc_v2_p0_next_block_to_later_real_buy_sell_chronology_20261020`。本次为原有证据确定性Join，**没有新RPC、代码、测试或费用**。P0 24/30完整PIT和18/30同一研究名义额双向买卖仍`NOT_SCORABLE`，P1`BLOCKED`。继续以首次真实可观察时点和用户可执行统一金额为未来验证标准。
+
 ## 2026-10-20：冻结V2样本的24个首次达标池，下一完整区块储备24/24仍达标（新真实只读核验）
 
 本次采用已连接的免费Alchemy BNB mainnet，只读`eth_call`向**已冻结且曾观察到首次池深达标**的24个原PancakeSwap V2 Pair，在对应首次确认门槛区块`block+1`读取`getReserves()`（selector `0x0902f1ac`）。分4批、每批6个，**24/24 均成功**、池中Token储备大于零且报价侧储备仍达到原冻结阈值（2 WBNB或1000 USDT）。其中20个首次达标位于建池区块，4个是后来区块#14/#16/#17/#26。本次原始`reserve0/reserve1/blockTimestampLast`的报价侧/Token储备、池地址、查询块及当时阈值已逐项记录到同一P0 JSON键 `bsc_v2_p0_all24_next_block_reserve_source_read_20261020`，可复核原值。**注意getReserves第三值是最近一次Sync的blockTimestampLast，不是区块时间戳，也不能充当公开available_at。**
