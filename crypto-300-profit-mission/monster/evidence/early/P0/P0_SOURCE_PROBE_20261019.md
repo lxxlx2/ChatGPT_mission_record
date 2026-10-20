@@ -1,5 +1,13 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：OnFinality公共BNB历史日志前台实测2档HTTP429，V3计划A暂时止损
+
+用户已执行我们给的**仅3请求**（若链ID通过）Mac标准库前台只读探针到`https://bnb.api.onfinality.io/public`。`eth_chainId`返回`0x38`，原响应的用户报告SHA256=`ce50ba55ecf1a9410c6f5503d09da66974203165305ff8f5a2b520f49a705c07`；`eth_getLogs`同一V3 Factory+topic的2025-07-01区间**52440287–52442286（2000块）HTTP 429**、**52440287–52440296（10块）HTTP 429**。用户Mac归档相对目录`monster-p0-readonly-raw/v3-onfinality-check/20261020T090040103009Z`，脚本仅在正常200响应时保存原始JSON；因此**两次429的HTTP body/header及SHA不存在**，不能据此声称服务器拒绝理由是明确的次数上限、没有历史日志或不支持V3。链ID的SHA只来自用户提供，不是助手读取文件后重算。7秒间隔仍得到429，但不进行反复重试，不尝试绕过限速。
+
+归纳V3历史PoolCreated完整来源：Alchemy已确认部分10区块`eth_getLogs`并发现真实5月1日V3池；免费单请求≤10块，UTC 2025-07-01从`52440287`至`52555482`共**115196块**，如10块连续扫描至少**11520次**，与当前时间/免费资源预算不符，**本轮未执行该扫描**；Graph Gateway两不同子图403；PublicNode 2000块及10块均403；OnFinality两档429；BNB官方公共节点禁用`eth_getLogs`。上面都是**本会话实际尝试或明确文档限制**，没有一个源提供V3完整2025-07-01全天连续日志及受控可复验缺页证明。暂停无证据的免费RPC轮换和整日V3扫描，不寻找随机公共节点刷满速率；除非以后发现一个可信、合法免费、可连续回溯且有原始归档能力的来源才重开。**这只是当前源门禁阻断，不证明BSC V3市场空或任何历史没有可交易Token。**
+
+按Monster既有Source stop，V3及launchpad母体为`UNKNOWN / COHORT_NOT_FORMED`。保留原冻结V2 30/30 identity、P0已有回执及相关UNKNOWN，不换赢家名单补齐。不提前固定用户交易金额、不启动P1/P2模型、G6继续NO_GO。后续有价值的主线仅限**原V2 30的PIT/双向执行来源和真实未达标原因整理**，而非为赚任务进度无限制造附属边界。P0`INSUFFICIENT_COVERAGE`，P1`BLOCKED`。
+
 ## 2026-10-20：Mac BSC V3 PublicNode 免费源探针59次调用，2,000/10块eth_getLogs均HTTP 403；停用该来源
 
 用户在原分支固定SHA`b6219785e4f5b88222da7104648fd62e544c93e7`的现有`monster_early_venue_factory_rpc_roster_probe.py`前台运行`--chain bsc-v3 --day 2025-07-01 --mode probe --max-requests 80 --delay 0.4`，结果`chain=bsc-v3`，RPC Host `bsc-rpc.publicnode.com`，RPC源URL摘要`474b7939233328340174d2967470a6a2e6951f51e119471ff7e51ea7eca54ee1`；全日UTC历史区块准确定位`52440287–52555482`，总59个RPC请求。Factory历史`PoolCreated`查日志两档都失败：块`52440287–52442286`的2000区块、块`52440287–52440296`的10区块均得到**`RPC_HTTP_403`**。这是RPC访问失败，不是零新池、零流动性或没有V3；HTTP 403未提供服务端body，不能断言源不支持方法的全部原因。继续同一来源重试或开始11万区块扫描没有收益，`V3_FULL_DAY=UNKNOWN`、`P0=INSUFFICIENT_COVERAGE`和`P1=BLOCKED`不变。
