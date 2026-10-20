@@ -12,6 +12,7 @@ sys.path.insert(0, str(SCRIPTS))
 import frank_option3_p4_causal_ro as causal  # noqa: E402
 from frank_option3_p4_history import run_replay  # noqa: E402
 from frank_option3_p4_signal_first import scan as scan_prior_signal_sales  # noqa: E402
+from frank_option3_p4_activity_watch import build_activity_watch, render_activity_watch  # noqa: E402
 
 
 def source_rows():
@@ -211,3 +212,42 @@ def test_signal_first_finds_verified_source_signal_before_same_episode_sale_only
         assert first["mint"] not in serialized
     finally:
         db.close()
+
+
+def test_activity_watch_keeps_signed_sell_facts_absent_from_current_candidates():
+    rows = source_rows()
+    as_of = 1_799_000_999
+    report = build_activity_watch(rows, [
+        {"mint": rows[0]["mint"], "pattern": "REENTRY_WATCH"}
+    ], as_of=as_of)
+    assert report["status"] == "LOCAL_SOURCE_ACTIVITY_RESEARCH_ONLY"
+    assert report["displayed_transactions"] == 10
+    assert report["counts"]["buy_category"] == 5
+    assert report["counts"]["sell_category"] == 5
+    assert report["counts"]["unresolved_position_sell"] == 2
+    assert report["counts"]["sell_not_in_current_candidate_mint_set"] == 5
+    assert report["prior_v1_signal_linkage_verified"] is False
+    assert report["real_notifications_authorized"] is False
+    assert report["user_order_amount"] is None
+    sell = [x for x in report["items"] if x["source_side"] in
+            {"SELL", "EXIT", "SELL_POSITION_UNRESOLVED"}]
+    assert len(sell) == 5
+    assert all(not x["send_allowed"] and not x["channels"] for x in sell)
+    assert all(x["related_to_prior_v1_signal"] == "NOT_VERIFIED" for x in sell)
+    assert all(x["current_wallet_balance"] == "NOT_VERIFIED" for x in sell)
+    html = render_activity_watch(report)
+    assert "观察到卖出；剩余仓位无法确定" in html
+    assert "本地索引分类为退出；当前链上余额未核实" in html
+    assert "当前候选无此币种" in html
+    assert "复制 CA" in html
+    assert rows[0]["signature"] in html
+
+    duplicates = build_activity_watch(rows + [dict(rows[0])], [], as_of=as_of)
+    assert duplicates["displayed_transactions"] == 10
+    assert duplicates["counts"]["omissions"]["DUPLICATE_SIGNATURE_SUPPRESSED"] == 1
+
+    future = build_activity_watch(
+        [dict(rows[0], block_time=as_of + 1)], [], as_of=as_of
+    )
+    assert future["displayed_transactions"] == 0
+    assert future["counts"]["omissions"]["UNVERIFIABLE_SOURCE_FIELDS"] == 1
