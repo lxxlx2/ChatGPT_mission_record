@@ -1,14 +1,15 @@
 """Strictly offline injected sender tests for bounded L1 capture and journal."""
 import copy
 import json
+import sys
 import tempfile
 import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from f0_l1_injected_capture import capture_injected_blocks
-
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from f0_l1_injected_capture import capture_injected_blocks
 MANIFEST = (ROOT / "F0_COHORT_PRESELECTION.json").read_bytes()
 ROUTERS = (ROOT / "F0_ROUTER_SOURCE_CANDIDATES.json").read_bytes()
 FIX = json.loads((ROOT / "fixtures/l1_contiguous_replay.json").read_text())
