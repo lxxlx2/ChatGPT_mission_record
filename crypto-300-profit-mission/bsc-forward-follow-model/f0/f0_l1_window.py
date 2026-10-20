@@ -21,6 +21,8 @@ COHORT_SCHEMA = "bsc-forward-f0-preparation-cohort-v1"
 FROZEN_PR116_MANIFEST_PATH = "crypto-300-profit-mission/bsc-forward-follow-model/f0/F0_COHORT_PRESELECTION.json"
 FROZEN_PR116_COMMIT = "cf88cd9f6568502f5c052ae3befc9cc16cbab98b"
 FROZEN_PR116_BLOB = "fcd0029314353313867e565190cd4f2882089f11"
+FROZEN_ROUTER_REGISTRY_BLOB = "dc425f85a3f89dd0eb2f73ee6583ad88549a00f2"
+DOCUMENTED_ROUTER_MODE = "OFFICIAL_DOCUMENTED_ADDRESS_ONLY_NOT_CAUSAL_CONTROL"
 ARCHITECTURE_SHA = "9134fcd41df49ef836b81c8a040974ad89c1fde1"
 MAX_WINDOW = 512
 
@@ -100,7 +102,8 @@ def cohort_watchlist(cohort: dict) -> tuple[set[str], dict]:
 
 
 def offline_window(fixture: dict, cohort: dict,
-                   cohort_raw_bytes: bytes | None = None) -> dict:
+                   cohort_raw_bytes: bytes | None = None,
+                   router_registry_raw: bytes | None = None) -> dict:
     require(isinstance(fixture, dict) and fixture.get("schema") == SCHEMA and
             fixture.get("mode") == "SYNTHETIC_SAVED_RPC_ONLY" and
             fixture.get("trial") is True and fixture.get("chain_id") == 56,
@@ -136,9 +139,24 @@ def offline_window(fixture: dict, cohort: dict,
     mod = integer(fixture.get("control_modulo"), "INVALID_CONTROL_MODULO", 1)
     require(isinstance(seed, str) and seed == ARCHITECTURE_SHA,
             "MISSING_FROZEN_CONTROL_SEED")
-    routers = {address(x) for x in fixture.get("synthetic_routers", [])}
-    require(bool(routers) and fixture.get("router_allowlist_kind") == "SYNTHETIC_ONLY",
-            "NO_VERIFIED_ROUTER_ALLOWLIST")
+    router_mode = fixture.get("router_allowlist_kind")
+    if router_mode == DOCUMENTED_ROUTER_MODE:
+        # The registry pins *documented* addresses, not verified swap routes.
+        # Reuse its reviewed validator; keep actual control eligibility false.
+        require(source_kind == "FROZEN_PR116_GIT_BLOB" and
+                isinstance(router_registry_raw, bytes) and
+                git_blob_sha1(router_registry_raw) == FROZEN_ROUTER_REGISTRY_BLOB and
+                "synthetic_routers" not in fixture, "FROZEN_ROUTER_REGISTRY_REQUIRED")
+        from f0_l1_preflight import official_router_addresses
+        registry = json.loads(router_registry_raw)
+        routers = set(official_router_addresses(registry))
+        router_provenance = "OFFICIAL_DOCUMENTED_ONLY_NO_SWAP_CAUSALITY"
+    else:
+        require(router_registry_raw is None and router_mode == "SYNTHETIC_ONLY",
+                "NO_VERIFIED_ROUTER_ALLOWLIST")
+        routers = {address(x) for x in fixture.get("synthetic_routers", [])}
+        router_provenance = "SYNTHETIC_ROUTER_FIXTURE_ONLY"
+    require(bool(routers), "NO_ROUTER_CANDIDATES")
     records = fixture.get("block_attempts")
     require(isinstance(records, list), "MISSING_OFFLINE_REQUEST_RECORDS")
     require(len(records) <= cap and len(records) <= discovery_cap,
@@ -213,6 +231,8 @@ def offline_window(fixture: dict, cohort: dict,
             candidates.append({"height": height, "wallet": tx["wallet"],
                                "tx_hash": tx["tx_hash"], "group": group,
                                "router_eligible": tx["router_eligible"],
+                               "router_address_match_only": tx["router_eligible"],
+                               "control_eligible": False,
                                "control_selected_offline": selected,
                                "ingest_path": item["ingest_path"],
                                "first_received_utc": item["first_received_utc"],
@@ -241,6 +261,8 @@ def offline_window(fixture: dict, cohort: dict,
             "clock_source": "INJECTED_SYNTHETIC_TIMESTAMPS_NOT_REAL_FIRST_SEEN",
             "cohort": cohort_meta,
             "control_selection": "OFFLINE_PRESELECTION_ONLY_ROUTER_AND_EOA_UNVERIFIED",
+            "router_registry_provenance": router_provenance,
+            "router_control_eligible": False,
             "start_height": start, "end_height": end,
             "block_rows": rows, "candidate_rows": candidates, "metrics": metrics,
             "actual_rpc_calls": 0, "live_control_coverage": "NOT_MEASURED",
@@ -256,16 +278,20 @@ def main() -> None:
     p = argparse.ArgumentParser(description="BSC F0 offline contiguous L1 ledger; NO RPC")
     p.add_argument("--fixture", type=Path, required=True)
     p.add_argument("--cohort", type=Path, required=True)
+    p.add_argument("--router-registry", type=Path)
     p.add_argument("--report", type=Path)
     args = p.parse_args()
     raw = args.fixture.read_bytes()
     manifest = args.cohort.read_bytes()
     fixture = json.loads(raw)
+    router_raw = args.router_registry.read_bytes() if args.router_registry else None
     if fixture.get("cohort_source_kind") == "FROZEN_PR116_GIT_BLOB":
         cohort = load_frozen_cohort(manifest)
-        report = offline_window(fixture, cohort, cohort_raw_bytes=manifest)
+        report = offline_window(fixture, cohort, cohort_raw_bytes=manifest,
+                                router_registry_raw=router_raw)
     else:
-        report = offline_window(fixture, json.loads(manifest))
+        report = offline_window(fixture, json.loads(manifest),
+                                router_registry_raw=router_raw)
     report["fixture_sha256"] = hashlib.sha256(raw).hexdigest()
     report["cohort_file_sha256"] = hashlib.sha256(manifest).hexdigest()
     out = json.dumps(report, sort_keys=True, indent=2, ensure_ascii=False) + "\n"
