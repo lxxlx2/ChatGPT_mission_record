@@ -14276,4 +14276,96 @@
       }
     ]
   }
+,
+  "bsc_fourmeme_p0_historical_tokenmanager2_index_source_pilot_20261020": {
+    "schema": "MONSTER_BSC_FOURMEME_P0_HISTORIC_TOKEN_MANAGER2_STATE_PREFIX_AND_REAL_TOKENCREATE_ANCHORS_V1",
+    "date_utc": "2026-10-20",
+    "research_goal": "EVALUATE_MISSING_BSC_LAUNCHPAD_HISTORY_NOT_TRADE_STRATEGY_OR_WINNER_SELECTION",
+    "source_type": "READ_ONLY_HISTORICAL_BSC_CONTRACT_ETH_CALL_AND_SINGLE_BLOCK_RAW_TOKENCREATE_EVENT",
+    "network": "bnb-mainnet",
+    "chain_id": 56,
+    "provider": "EXISTING_USER_SELECTED_FREE_ALCHEMY_APP_NORMALIZED_RPC",
+    "token_manager2": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+    "manager_code_historical_day_start": "NONEMPTY_PROXY_RUNTIME_PRESENT",
+    "community_abi_ref": "https://github.com/four-meme-community/fourmeme-docs/blob/main/abi/TokenManager2.lite.json",
+    "community_abi_source_blob": "7506183d10baadd294e529564f772ab330d647bc",
+    "read_only_function": "_tokens(uint256)",
+    "function_selector": "0xed70554d",
+    "tokenCreate_event_signature": "TokenCreate(address,address,uint256,string,string,uint256,uint256,uint256)",
+    "event_topic0": "0x396d5e902b675b032348d3d2e9517ee8f0c4a926603fbc075d3d282ff00cad20",
+    "fixed_day_utc": "2025-07-01",
+    "utc_day_parent_block": 52440286,
+    "utc_day_first_block": 52440287,
+    "utc_day_last_block": 52555482,
+    "day_parent_last_nonzero_index": 247595,
+    "day_parent_first_zero_index": 247596,
+    "day_end_last_nonzero_index": 248133,
+    "day_end_first_zero_index": 248134,
+    "observed_new_append_only_prefix_index_positions": 538,
+    "full_538_indices_enumerated": false,
+    "all_538_tokens_distinct_verified": false,
+    "no_holes_or_deleted_entries_exhaustively_proven": false,
+    "actual_onchain_new_created_token_count_final": "NOT_YET_CERTIFIED_538_IS_STATE_PREFIX_POSITION_DELTA_ONLY",
+    "full_2025_07_01_tokenmanager2_creation_log_scan": "NOT_DONE",
+    "single_block_exact_event_crosschecks": 2,
+    "first_new_index_event": {
+      "index": 247596,
+      "token_ca": "0x1e395d5edb51e7e7c6b1203912d0d0b6f87f4444",
+      "parent_block_null": 52440330,
+      "first_nonzero_at_block": 52440331,
+      "chain_event_utc": "2025-07-01T00:00:33Z",
+      "exact_manager_TokenCreate_event_matched": true,
+      "transaction_hash": "0xf21aca5c7b8369cd02b78b1461dd718da0f6a6ab1f6ece27343dd169ae060b9b",
+      "transaction_index_hex": "0x1",
+      "log_index_hex": "0x4",
+      "receipt_success_hex": "0x1",
+      "receipt_full_untruncated_available": false
+    },
+    "last_new_index_event": {
+      "index": 248133,
+      "token_ca": "0xc4be692236dba677f3db2d2cdb38f998d2f54444",
+      "parent_block_null": 52554567,
+      "first_nonzero_at_block": 52554568,
+      "chain_event_utc": "2025-07-01T23:48:34Z",
+      "exact_manager_TokenCreate_event_matched": true,
+      "transaction_hash": "0xd12b6bab0c732925496f3ac0250a86355251bf54498dc30ef3f97e1da74ef142",
+      "transaction_index_hex": "0x1e",
+      "log_index_hex": "0x41",
+      "receipt_success_hex": "0x1",
+      "receipt_full_untruncated_available": false
+    },
+    "extra_day_end_index_samples": [
+      {
+        "index": 247597,
+        "address": "0x23f0a28925ad389330a6621432ec5fcecb3f4444"
+      },
+      {
+        "index": 247868,
+        "address": "0x2046b70500bfc3ac3a558b697dee9bba89524444"
+      },
+      {
+        "index": 248132,
+        "address": "0xb4a70ba33beafe722ef0d40a822661b203114444"
+      }
+    ],
+    "first_zero_beyond_end_checked": [
+      248134,
+      248500
+    ],
+    "same_day_utc_sample_source": "2025-07-01_PRESELECTED_ALREADY_USED_IN_FROZEN_BSC_V2_V3_ANALYSIS",
+    "future_price_outcome_profit_token_selection_used": false,
+    "raw_http_original_json_rpc_response_bytes_archived": false,
+    "normalized_provider_full_receipt_output_truncated_to_approximately_8kb": true,
+    "independent_second_provider_crosscheck": false,
+    "proof_strength": "REAL_TWO_BOUNDARY_EVENTS_AND_HISTORIC_INDEX_QUERY_BUT_NOT_FULL_DAILY_ROSTER",
+    "full_BSC_multivenue_population_coverage": "NO_V3_AND_OTHER_LAUNCHPADS_STILL_UNRESOLVED",
+    "historical_public_available_at_2025": "UNKNOWN",
+    "notional_sellability_gates": "NOT_SCORABLE",
+    "proof_next": "ONE_MANUAL_BOUNDED_READONLY_538_INDEX_ENUMERATION_WITH_COMPLETE_RAW_HTTP_ARCHIVE_SHA256_DEDUP_AND_SPOT_EVENT_CROSSCHECK_OR_STOP_IF_FREE_QUOTA_INSUFFICIENT",
+    "no_deployment_no_scheduler_no_trade_no_user_notional_no_paid_calls": true,
+    "P0": "INSUFFICIENT_COVERAGE",
+    "P1": "BLOCKED",
+    "G4": "UNKNOWN",
+    "G6": "NO_GO"
+  }
 }
