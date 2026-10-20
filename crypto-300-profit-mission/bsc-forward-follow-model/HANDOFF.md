@@ -65,3 +65,11 @@ Bridge integration: 26 additional tests; all 80 tests (36 + 18 + 26) passed loca
 `NO_TRADE / NO_RPC_WITHOUT_PERMISSION / NO_PAID_GMGN / NO_WALLET_SIGN / NO_EMAIL / NO_NOTIFICATIONS / NO_BACKGROUND_MAC_SERVICE / NO_NEW_AUTOMATION / NO_PRODUCTION_DEPLOY / NO_MERGE`.
 
 The one-time official public HTTP transport smoke is **USER-REPORTED LIVE SUCCESS** (4 calls, one 49-transaction block), but sustained free-source viability, real per-request latency, first-actionable clock accuracy and ordinary-Router control stream remain `NOT_MEASURED`.  F1 strategy and finality-policy freeze is not complete; F3 6–8wk prospective observation and blinded L4 evaluation have not begun. All real denominators, on-chain causal BUY/E2, E3, actual Router requests and actual profitability remain `NOT_MEASURED/UNRESOLVED`. All stages require independent review; approved SHA is immutable by definition.
+
+## 2026-10-20 离线 60 块滞后复算结果（PR #150 代码，独立审核 REQUEST_CHANGES）
+
+- 结果摘要：`f0/F0_SHORT60_LAG_OFFLINE_RESULT_20261020.json` 与 `f0/F0_SHORT60_LAG_OFFLINE_RESULT_20261020.md`。
+- 本机私有归档 62/62 原始响应 SHA256 匹配；60 块、5,940 笔交易；PRIMARY 候选 0；Router 地址候选 40。
+- 滞后代理中位数 18.5 s，前后 10 块斜率约 +549 ms/块；平均出块约 0.44 s。固定约 1 s/高度的读取不足以持续追平链头（仅就该样本）。
+- 未发送任何 RPC，未使用 WS，未重用许可。
+- 独立审核 PR #150 结论为 REQUEST_CHANGES（P1：首块父哈希未锚定）；本结果按该口径记录，PR #150 代码未修改。
