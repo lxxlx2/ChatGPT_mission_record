@@ -112,6 +112,7 @@ def test_exact_trigger_join_rejects_old_same_mint_and_wrong_episode(tmp_path, mo
     result = causal.analyze(source, control)
     assert result["distinct_locally_indexed_rows"] == 10
     assert result["source_reconciled_rows"] == 10
+    assert result["status"] == "TEN_LOCAL_SOURCE_ROWS_RECONCILED"
     assert result["source_database"] == "EXISTING_FORWARD_SQLITE_MODE_RO_QUERY_ONLY"
     assert result["rows"][0]["causal_status"] == "SOURCE_SIGNAL_EMITTED_BY_ACTIVE_TRADE_EVALUATION"
     assert result["rows"][0]["active_trade_signal_emission_proven"] is True
@@ -138,6 +139,7 @@ def test_source_timestamp_change_is_not_silent_causal_pass(tmp_path, monkeypatch
     monkeypatch.setattr(causal, "get_existing_trades", lambda: modified)
     result = causal.analyze(source, control)
     assert result["source_reconciled_rows"] == 9
+    assert result["status"] == "LOCAL_SOURCE_RECONCILIATION_INCOMPLETE_NOT_ZERO_TRADES"
     assert result["rows"][0]["source_match"] == "SOURCE_TRADE_CHANGED_SINCE_LOCAL_HTTP_CAPTURE"
     assert result["rows"][0]["causal_status"] == "NOT_EVALUATED_SOURCE_INCONSISTENT"
 
