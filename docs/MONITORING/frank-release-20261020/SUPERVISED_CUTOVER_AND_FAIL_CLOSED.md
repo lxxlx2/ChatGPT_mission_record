@@ -1,18 +1,18 @@
 # Frank Mac 发布 / 安全退出操作设计（**仅纸面方案，不执行**）
 
-2026-10-20，`PRODUCTION_NO_GO`。与 [RELEASE_DECISION_SHEET.md](./RELEASE_DECISION_SHEET.md) 和未签名技术候选同属 Draft 审阅资料。**不得把这份文件视为用户授权、安装脚本或完成的现场恢复演练。**
+2026-10-20，`OPTION_3_SELECTED / PRODUCTION_NO_GO`。用户已选择保留原始买入提醒、开发新的无默认金额智能分析与风险提醒，见 [新的功能开发计划](./FRANK_AMOUNT_INDEPENDENT_INTELLIGENCE_PLAN.md)。旧的无金额 WAIT-only 技术候选不满足已选目标：`SUPERSEDED_FOR_OPTION_3 / DO_NOT_SIGN`。与 [RELEASE_DECISION_SHEET.md](./RELEASE_DECISION_SHEET.md) 同属 Draft 审阅资料。**不得把这份文件视为用户授权、安装脚本或完成的现场恢复演练。**
 
 ## 0. 目前确切事实
 
 - 代码最后一个独立审查修复 SHA 为 PR #139 `938fd5cae3aea7d5a1931fa89f2e7999aaa8cbcd`，来源联合代码 PR #138 `a34d64c7661175742928bcea7652991640796998`。本审阅分支的文档提交会形成**不同的新 HEAD**；只有在最终实际 checkout SHA 固定以后，才能填写正式签名清单。
 - 2026-10-20 05:58 +07 只读：生产 Loop 36070、Dashboard 35963、V1 52300；安装旧策略 SHA 前缀 `355336f2`。不是当前状态的持续保证。
-- 当前仓库运行配置 `config/follow_policy_v1.approved.json` 仍为 `REVIEW_ONLY/false`。候选置于 `docs/` 而非运行配置；其内容 `FROZEN_APPROVED/true` 仅用于以后经用户审核后签署的**技术性候选原始字节**。
+- 当前仓库运行配置 `config/follow_policy_v1.approved.json` 仍为 `REVIEW_ONLY/false`。置于 `docs/` 的旧技术候选虽然包含 `FROZEN_APPROVED/true`，但现在**已被方案 3 淘汰为发布对象，不得签署/安装**；仅保存历史审阅字节与证据。新分析功能完成后另出真正满足目标的策略字节与 SHA。
 - 经代码验证的 `mc_loop_only_safe_stop.py` 是 **Loop-only STOP**，不是 Loop live-delivery toggle。需要真实 Mac 授权后才可 `--apply`；成功必须回读 launchd absent 及原 PID 不存在，否则 UNKNOWN，绝不算停机成功。
 
 ## 1. 用户批准前：只读 / 离线准备
 
-1. 明确用户选择 V1-only(A1)、现有无金额 MC 两通道(A2)，还是先研发新信息提醒(A3)；**现有代码不能在没金额时产出可执行 BUY/SMALL_BUY**，不要以 A2 冒充 A3。
-2. 若 A2：审批本候选**完整 JSON 字节**和 `c1e8d9822bb6a95e744e56d0d71092cef86b102771b0433a38f7eb30882ee013`。先看最终要安装的 checkout HEAD；与 manifest 的 `integration_sha` 必须逐字相同（若 merge/squash 后变化，重新签）。打印并逐字核查 `quote_usdc_amount` **不存在**，`sizing_authority` 是用户自主选择，`observation_retention_seconds=5184000`。
+1. **用户已选择 A3（方案 3）**，无需再询问 A1/A2。先按 P1–P4 建立能够独立使用的金额无关信息分析：Frank 原始信号保留，增量风险提示必须有数据依据；新通知先在假通道演练。当前代码不能在没金额时产生可执行 BUY/SMALL_BUY，不能拿旧 WAIT-only 候选冒充新功能。
+2. 完成新功能及独立审查以后，再根据**新策略实际完整字节**计算 SHA-256，供用户独立审核；旧 `c1e8d9822bb6a95e744e56d0d71092cef86b102771b0433a38f7eb30882ee013` 只用于识别历史技术候选，**不得签署为方案 3 正式版本**。签名清单的 `integration_sha` 必须与最终实际安装 checkout HEAD 一致（merge/squash 后重新核对），`quote_usdc_amount` 必须不存在。
 3. 用户在仓库外、AI 无法写入的可信设备/渠道自己持有 RSA 私钥。使用个人确定的 `approved_by`、带时区起止时间，填写模板（`schema_version=1`, `scope=FRANK_MC_DECISION_LOCAL_AND_GMAIL_ONLY`, `deployment_approved=false`），对整个 manifest 原始字节签名。用户/管理员独立将对应公钥部署到根保护 trust anchor 路径。未布置/不匹配/过期 → **不安装**；GitHub 评论、shell 中自算 candidate SHA、AI 写文件都不是签名。
 4. 在 Mac **只读**重看真实 Loop + Dashboard + V1 PID、plist Label/ProgramArguments、真实 runner、installed policy SHA、队列状态数量和健康记录（只做受控快照，不导出凭据）；旧 `355336f2...` 若仍为活动策略，确认没有与新策略混用。
 5. 使用隔离 worktree、独立临时 HOME、SQLite backup API 的一致性副本、假 Gmail/本地 utility/RPC/Jupiter/launchctl 完成最小停机-异常与通知恢复 mock 演练（已有代码模拟曾通过；生产实际 restart 仍 NOT_TESTED）。禁止在未获授权时用完整 installer 试运行“验证”，因为它会修改状态/重启服务。
@@ -41,4 +41,4 @@
 
 `CODE_APPROVE` (#138/#139) + `MAC_LAYOUT_READONLY_MATCH` ≠ `REAL_STOP_TESTED` ≠ `NEW_POLICY_USER_APPROVED` ≠ `INSTALL_AND_RESTART_APPROVED`。
 
-当前状态：`UNSIGNED_POLICY_CANDIDATE_PREPARED / FINAL_SHA_DEPENDS_ON_ACTUAL_INSTALL_CHECKOUT / OWNER_SIGNING_PENDING / ACTUAL_STOP_AND_RESUME_UNVERIFIED / PRODUCTION_NO_GO`。任何真实 `sudo`、launchctl 改动、签名密钥创建、Gmail 系统发送、RPC/Jupiter 或交易，均不在本次用户“只准备”的授权范围内。
+当前状态：`OPTION_3_PRODUCT_PLAN_ACTIVE / NEW_INTELLIGENCE_FEATURE_NOT_IMPLEMENTED / OLD_UNSIGNED_CANDIDATE_SUPERSEDED / FINAL_CODE_AND_POLICY_SHA_PENDING / OWNER_SIGNING_PENDING / ACTUAL_STOP_AND_RESUME_UNVERIFIED / PRODUCTION_NO_GO`。任何真实 `sudo`、launchctl 改动、签名密钥创建、Gmail 系统发送、RPC/Jupiter 或交易，均不在本次用户“只准备”的授权范围内。
