@@ -22,6 +22,7 @@ from ..meme.market import DexScreenerMarketClient
 from .db import open_control_ro
 from .delivery_review import summarize_manual_reviews
 from .frank import FrankReader
+from .intelligence_preview import analyze_rows
 from .payment_evidence import latest_buy_payment_evidence
 from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
@@ -674,6 +675,35 @@ class DashboardState:
         candidates.sort(key=lambda x:int(x.get("latest_at") or 0),reverse=True)
         return candidates
 
+    def frank_intelligence(self):
+        """Source-only amount-free research observations. No price fetch/sender."""
+        observed_at = time.time()
+        try:
+            # Reuse existing read-only Frank candidate facts, never the MC
+            # execution overlay, Jupiter or the provider-backed CA job.
+            candidates = self.frank.candidates()
+            rows = analyze_rows(
+                candidates, as_of=observed_at,
+                max_market_age_seconds=1, market_observations=None,
+            )
+        except (OSError, ValueError, TypeError, sqlite3.DatabaseError):
+            return {
+                "status": "SOURCE_UNAVAILABLE", "rows": [],
+                "as_of": observed_at, "scope": "FRANK_INDEX_ONLY",
+                "reason": "LOCAL_FRANK_SOURCE_UNAVAILABLE",
+                "market_reference": "NOT_REQUESTED",
+                "live_notification_authorized": False,
+            }
+        return {
+            "status": "LOCAL_SOURCE_RESEARCH_ONLY",
+            "as_of": observed_at,
+            "scope": "FRANK_INDEX_ONLY_NOT_COMPLETE_CHAIN_OR_CURRENT_BALANCE",
+            "source": "EXISTING_FRANK_READONLY_CANDIDATES",
+            "market_reference": "NOT_REQUESTED",
+            "live_notification_authorized": False,
+            "rows": rows,
+        }
+
     def frank_signed_activity(self, days: int = 1):
         """Bounded D1 indexed source facts; never an actionable signal or balance."""
         try:
@@ -811,6 +841,10 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.state.mission_control_health())
         if path == "/api/candidates":
             return self._json(self.state.candidates())
+        if path == "/api/frank-intelligence":
+            if urlparse(self.path).query:
+                return self._json({"error": "UNSUPPORTED_INTELLIGENCE_QUERY"}, 400)
+            return self._json(self.state.frank_intelligence())
         if path == "/api/frank-observed-watchlist":
             return self._json(self.state.frank_observed_watchlist())
         if path == "/api/frank-signed-activity":
