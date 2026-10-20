@@ -2,7 +2,7 @@
 
 No training, signal emission, wallet signing, trades, subscription or scheduling.
 Save original JSON-RPC HTTP response bytes losslessly via base64 JSONL locally.
-The 538 historical _tokens(index) slots are a scope-limited launchpad pilot,
+The 538 historical _tokens(index) slots are read in 36 bounded Multicall3 batches,
 NOT complete BSC coverage or evidence of contemporaneous public available_at.
 """
 import argparse
@@ -30,7 +30,10 @@ END_INDEX_EXCLUSIVE = 248134
 ANCHORS = ((START_INDEX, 52440331, "0x1e395d5edb51e7e7c6b1203912d0d0b6f87f4444"),
            (END_INDEX_EXCLUSIVE - 1, 52554568,
             "0xc4be692236dba677f3db2d2cdb38f998d2f54444"))
-MAX_REQUESTS = 550
+MULTICALL3 = "0xca11bde05977b3631167028862be2a173976ca11"
+AGGREGATE3_SELECTOR = "0x82ad56cb"
+BATCH_SIZE = 15
+MAX_REQUESTS = 50
 ADDRESS = re.compile(r"^0x[0-9a-f]{40}$")
 HEX_WORD = re.compile(r"^0x[0-9a-fA-F]{64}$")
 
@@ -114,6 +117,73 @@ class JsonRPC:
         return parsed["result"], raw
 
 
+
+
+def word_hex(value):
+    if not isinstance(value, int) or not 0 <= value < 2 ** 256:
+        raise ProbeError("FOURMEME_WORD_OUT_OF_RANGE")
+    return format(value, "064x")
+
+
+def multicall_calldata(indexes):
+    """ABI-encode Multicall3 aggregate3((address,bool,bytes)[]) immutably."""
+    indexes = tuple(indexes)
+    if not 1 <= len(indexes) <= BATCH_SIZE:
+        raise ProbeError("FOURMEME_INVALID_MULTICALL_BATCH_SIZE")
+    structures = []
+    for index in indexes:
+        payload = SELECTOR[2:] + word_hex(index)
+        struct = (word_hex(int(MANAGER, 16)) + word_hex(1) + word_hex(96)
+                  + word_hex(len(payload) // 2)
+                  + payload.ljust(((len(payload) + 63) // 64) * 64, "0"))
+        structures.append(struct)
+    offset = len(indexes) * 32
+    offsets = []
+    for struct in structures:
+        offsets.append(word_hex(offset))
+        offset += len(struct) // 2
+    return (AGGREGATE3_SELECTOR + word_hex(32) + word_hex(len(indexes))
+            + "".join(offsets) + "".join(structures))
+
+
+def decode_multicall_result(value, expected_count):
+    """Fail closed on malformed, failed, zero or truncated historic calls."""
+    if (not isinstance(value, str) or not value.startswith("0x")
+            or len(value) % 2 or
+            not re.fullmatch(r"0x[0-9a-fA-F]*", value)):
+        raise ProbeError("FOURMEME_MULTICALL_BAD_HEX")
+    raw = bytes.fromhex(value[2:])
+    if len(raw) > 32768:
+        raise ProbeError("FOURMEME_MULTICALL_RETURN_TOO_LARGE")
+
+    def u(pos):
+        if pos < 0 or pos % 32 or pos + 32 > len(raw):
+            raise ProbeError("FOURMEME_MULTICALL_TRUNCATED_OR_UNALIGNED")
+        return int.from_bytes(raw[pos:pos + 32], "big")
+
+    offset = u(0)
+    if offset != 32 or u(offset) != expected_count:
+        raise ProbeError("FOURMEME_MULTICALL_COUNT_MISMATCH")
+    base = offset + 32
+    results = []
+    for i in range(expected_count):
+        entry = base + u(base + i * 32)
+        if u(entry) != 1:
+            raise ProbeError("FOURMEME_MULTICALL_INNER_CALL_FAILED")
+        dynamic = entry + u(entry + 32)
+        if u(dynamic) != 32:
+            raise ProbeError("FOURMEME_MULTICALL_INVALID_TOKEN_WORD_LENGTH")
+        token_word = u(dynamic + 32)
+        if token_word >> 160:
+            raise ProbeError("FOURMEME_MULTICALL_ADDRESS_PADDING_NONZERO")
+        address = "0x" + format(token_word, "040x")
+        if address == "0x" + "0" * 40:
+            raise ProbeError("FOURMEME_HOLE_IN_FROZEN_INDEX_RANGE")
+        results.append(address)
+    if base + expected_count * 32 > len(raw):
+        raise ProbeError("FOURMEME_MULTICALL_ARRAY_HEADER_TRUNCATED")
+    return results
+
 def collect(out_dir, rpc):
     """A fresh directory only. Incomplete archives stay incomplete, never PASS."""
     out_dir = Path(out_dir)
@@ -165,14 +235,17 @@ def collect(out_dir, rpc):
 
         tokens = []
         unique = set()
-        for index in range(START_INDEX, END_INDEX_EXCLUSIVE):
-            addr = token(index, LAST_BLOCK)
-            if addr == empty:
-                raise ProbeError("FOURMEME_HOLE_IN_FROZEN_INDEX_RANGE")
-            if not ADDRESS.fullmatch(addr) or addr in unique:
-                raise ProbeError("FOURMEME_INVALID_OR_DUPLICATE_TOKEN_CA")
-            unique.add(addr)
-            tokens.append({"index": index, "token_ca": addr})
+        for start in range(START_INDEX, END_INDEX_EXCLUSIVE, BATCH_SIZE):
+            indices = list(range(start, min(start + BATCH_SIZE, END_INDEX_EXCLUSIVE)))
+            calldata = multicall_calldata(indices)
+            raw_result = request("eth_call", [
+                {"to": MULTICALL3, "data": calldata}, hex(LAST_BLOCK)])
+            values = decode_multicall_result(raw_result, len(indices))
+            for index, addr in zip(indices, values):
+                if not ADDRESS.fullmatch(addr) or addr in unique:
+                    raise ProbeError("FOURMEME_INVALID_OR_DUPLICATE_TOKEN_CA")
+                unique.add(addr)
+                tokens.append({"index": index, "token_ca": addr})
 
         for index, block, expected in ANCHORS:
             logs = request("eth_getLogs", [{
@@ -214,6 +287,10 @@ def collect(out_dir, rpc):
         "pre_day_block": PRE_BLOCK, "end_day_block": LAST_BLOCK,
         "range_start": START_INDEX, "range_end_exclusive": END_INDEX_EXCLUSIVE,
         "address_count": len(tokens), "rpc_response_count": response_count,
+        "historic_multicall3": MULTICALL3,
+        "multicall3_batch_size": BATCH_SIZE,
+        "multicall3_batch_count": ((END_INDEX_EXCLUSIVE - START_INDEX +
+                                    BATCH_SIZE - 1) // BATCH_SIZE),
         "raw_archive_sha256": sha256(raw_path.read_bytes()),
         "raw_archive_bytes": raw_path.stat().st_size,
         "indexed_token_addresses": tokens,
