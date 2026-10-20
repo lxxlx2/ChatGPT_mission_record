@@ -874,6 +874,10 @@ function renderFrankIntelligence(snapshot) {
         ${metric('模型本轮仓位（非链上余额）', esc(translated(stateLabel,x.model_episode_position_state,'尚未核实')))}
         ${metric('来源已核实的行为', facts.length ? esc(facts.map(intelligenceExplain).join(' / ')) : '无可证明事件')}
         ${metric('无法核实的内容', missing.length ? esc(missing.map(intelligenceExplain).join(' / ')) : '本研究范围内无其他缺口声明')}
+        ${metric('Frank 已核实买入参考价', price.buy_price_usdc != null
+          ? esc(price.buy_price_usdc) + ' USDC/token · ' +
+            esc(frankIntelligenceTimestamp(price.buy_observed_at))
+          : '无法核实（交易成本来源不足）')}
         ${metric('与 Frank 已核实买价相比', delta,
           '只有同币种、同计价单位和有效时点的行情才比较；不代表实际可执行收益或用户盈亏。')}
         ${metric('参考行情来源与时间',
