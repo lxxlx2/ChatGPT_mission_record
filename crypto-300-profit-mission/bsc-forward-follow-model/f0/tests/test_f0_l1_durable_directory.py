@@ -38,3 +38,28 @@ class DirectoryDurabilityTests(unittest.TestCase):
     def test_directory_sync_supported_on_this_host(self):
         with tempfile.TemporaryDirectory() as tmp:
             storage.fsync_directory(Path(tmp))
+
+class HttpErrorArchiveTests(unittest.TestCase):
+    def test_http_503_body_archived_and_counted_without_retry(self):
+        import io
+        import urllib.error
+        import f0_l1_live_short as live
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            now = datetime.now(timezone.utc)
+            journal = Journal(root/'journal.json', limit=62, clock=lambda:now,
+                              mono=lambda:0.0, sleep=lambda _:None, interval_ms=250,
+                              deadline=now+timedelta(minutes=1), raw_dir=root/'raw_responses')
+            body = b'{"error":"simulated service unavailable"}'
+            error = urllib.error.HTTPError(live.ENDPOINT, 503, 'Unavailable',
+                                          {'Content-Type':'application/json'}, io.BytesIO(body))
+            opener = Mock()
+            opener.open.side_effect = error
+            with patch.object(live.urllib.request, 'build_opener', return_value=opener):
+                response, failure, item = journal.request('eth_chainId', [], 'CHAIN_ID', live.live_https_post)
+            self.assertIsNone(response)
+            self.assertEqual(failure, 'INVALID_HTTP_OR_RPC_RESPONSE')
+            self.assertEqual(opener.open.call_count, 1)
+            self.assertEqual((root/'raw_responses'/item['local_raw_response_file']).read_bytes(), body)
+            self.assertEqual(item['response_sha256'], live.sha(body))
+            self.assertEqual(item['state'], 'FAILED')

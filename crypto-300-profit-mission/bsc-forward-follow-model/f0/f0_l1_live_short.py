@@ -145,7 +145,13 @@ def live_https_post(url, body, timeout_s, cap):
     request = urllib.request.Request(url, data=body, method="POST",
         headers={"Content-Type":"application/json", "Accept":"application/json",
                  "Accept-Encoding":"identity", "Connection":"close"})
-    with opener.open(request, timeout=timeout_s) as response:
+    try:
+        response = opener.open(request, timeout=timeout_s)
+    except urllib.error.HTTPError as exc:
+        # HTTP errors still contain returned evidence. Read under the same cap;
+        # the parser will reject the status after Journal archives these bytes.
+        response = exc
+    with response:
         status = response.status
         headers = dict(response.headers.items())
         raw = response.read(cap + 1)
