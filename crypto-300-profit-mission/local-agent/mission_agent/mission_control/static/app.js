@@ -905,6 +905,90 @@ $('frank-intelligence-search').addEventListener('input',
   () => renderFrankIntelligence(frankIntelligenceSnapshot));
 $('frank-intelligence-reload').addEventListener('click', refreshFrankIntelligence);
 
+const frankActivityLabels = {
+  BUY: 'Frank 买入（已索引）',
+  ADD: 'Frank 继续买入（已索引）',
+  REENTRY: 'Frank 重新买入（已索引）',
+  SELL: 'Frank 已卖出；剩余仓位未核实',
+  EXIT: '本地索引标记退出；当前余额未核实',
+  SELL_POSITION_UNRESOLVED: 'Frank 已卖出；剩余仓位无法确定'
+};
+let frankActivitySnapshot = null;
+
+function renderFrankActivity(snapshot) {
+  const summary = $('frank-activity-summary');
+  const root = $('frank-activity-feed');
+  if (!snapshot || snapshot.status !== 'LOCAL_SOURCE_ACTIVITY_RESEARCH_ONLY') {
+    summary.textContent = '本地交易数据暂不可用，不能解释为 Frank 没有交易。';
+    root.innerHTML = '<div class="empty">无法核实；原买入信号和正式监控不受本研究面板影响。</div>';
+    return;
+  }
+  const rows = Array.isArray(snapshot.rows) ? snapshot.rows : [];
+  const type = $('frank-activity-type').value;
+  const query = $('frank-activity-search').value.trim().toLowerCase();
+  const filtered = rows.filter(x => {
+    const side = x.source_side;
+    const isSell = ['SELL','EXIT','SELL_POSITION_UNRESOLVED'].includes(side);
+    if (type === 'SELL' && !isSell) return false;
+    if (type === 'BUY' && isSell) return false;
+    if (type === 'UNRESOLVED' && side !== 'SELL_POSITION_UNRESOLVED') return false;
+    return [x.mint, x.signature, side].join(' ').toLowerCase().includes(query);
+  });
+  const visible = filtered.slice(0,15);
+  const counts = snapshot.counts || {};
+  summary.textContent = '本地最近 ' + (snapshot.source_rows_considered || 0) +
+    ' 条记录：买类 ' + (counts.buy_category ?? '未知') +
+    '、卖类 ' + (counts.sell_category ?? '未知') +
+    '；卖类中有 ' + (counts.sell_outside_current_candidate_mint_set ?? '未知') +
+    ' 条不属于当前候选币种；仓位不明的卖出 ' +
+    (counts.sell_position_unresolved ?? '未知') +
+    '。筛选命中 ' + filtered.length + ' 条，展示前 ' + visible.length + ' 条。';
+  root.innerHTML = visible.map(x => {
+    const mint = typeof x.mint === 'string' ? x.mint : '';
+    const signature = typeof x.signature === 'string' ? x.signature : '';
+    const side = x.source_side;
+    const isSell = ['SELL','EXIT','SELL_POSITION_UNRESOLVED'].includes(side);
+    const tag = isSell ? '卖' : '买';
+    const sourceRelation = x.in_current_candidate_mint_set
+      ? '当前候选包含同币种，非同轮次证明'
+      : '当前候选无此币种，仍有已索引交易';
+    const validSignature = /^[1-9A-HJ-NP-Za-km-z]{32,88}$/.test(signature);
+    const tx = validSignature
+      ? '<a class="link-btn" href="https://solscan.io/tx/' +
+        encodeURIComponent(signature) +
+        '" target="_blank" rel="noopener noreferrer">交易证据 ↗</a>'
+      : '交易签名尚不可核实';
+    return '<div class="feed-row">' +
+      '<div class="feed-badge">' + esc(tag) + '</div>' +
+      '<div class="feed-main"><div class="feed-token"><code>' +
+      esc(short(mint,8,6)) + '</code> ' + copyButton(mint,'复制 CA') +
+      '</div><small>' + esc(frankActivityLabels[side] || '分类未核实') +
+      ' · ' + esc(sourceRelation) + '</small>' +
+      '<small>与此前买入提醒的关联：未核实；当前链上仓位：未核实</small>' +
+      '<small>' + tx + '</small></div>' +
+      '<time>' + esc(frankIntelligenceTimestamp(x.block_time)) + '</time>' +
+      '</div>';
+  }).join('') || '<div class="empty">当前筛选没有可核实的本地交易记录。</div>';
+}
+
+async function refreshFrankActivity() {
+  try {
+    frankActivitySnapshot = await get('/api/frank-activity-watch');
+    renderFrankActivity(frankActivitySnapshot);
+    $('frank-activity-updated').textContent = '本地读取于 ' +
+      new Date().toLocaleTimeString('zh-CN');
+  } catch (e) {
+    frankActivitySnapshot = null;
+    renderFrankActivity(null);
+    $('frank-activity-updated').textContent = '来源不可用';
+  }
+}
+$('frank-activity-search').addEventListener('input',
+  () => renderFrankActivity(frankActivitySnapshot));
+$('frank-activity-type').addEventListener('change',
+  () => renderFrankActivity(frankActivitySnapshot));
+$('frank-activity-reload').addEventListener('click',refreshFrankActivity);
+
 async function refresh() {
   try {
     const [runtime,control,candidates,trades,reviewActivity,decisions,coverage,watch] = await Promise.all([
@@ -943,9 +1027,11 @@ async function refresh() {
 refresh();
 refreshSignedActivity(true);
 refreshFrankIntelligence();
+refreshFrankActivity();
 setInterval(refresh,5000);
 setInterval(refreshSignedActivity,60000);
 setInterval(refreshFrankIntelligence,60000);
+setInterval(refreshFrankActivity,60000);
 
 
 const clusterPresetHelp = {
