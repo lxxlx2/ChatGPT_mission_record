@@ -48,6 +48,9 @@ from mission_agent.mission_control.intelligence_preview import (  # noqa: E402
     analyze_rows, fake_intelligence_updates,
 )
 from frank_option3_p4_history import run_replay  # noqa: E402
+from frank_option3_p4_activity_watch import (  # noqa: E402
+    build_activity_watch, render_activity_watch,
+)
 
 SOURCE_PATHS = (
     "/api/runtime", "/api/control-health", "/api/candidates",
@@ -167,6 +170,7 @@ class StageHandler(BaseHTTPRequestHandler):
     snapshots: dict[str, Any] = {}
     intelligence: dict[str, Any] = {}
     p4_replay: dict[str, Any] = {}
+    activity_watch: dict[str, Any] = {}
     capture_at: float = 0
     port: int = 18766
 
@@ -181,7 +185,7 @@ class StageHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Security-Policy",
                          "default-src 'self'; connect-src 'self'; "
                          "style-src 'self' 'unsafe-inline'; "
-                         "script-src 'self'" + (" 'unsafe-inline'" if self.path == "/qa/p4-replay" else "") + "; "
+                         "script-src 'self'" + (" 'unsafe-inline'" if self.path in {"/qa/p4-replay","/qa/activity-watch"} else "") + "; "
                          "img-src 'self' data:; object-src 'none'; "
                          "form-action 'none'; frame-ancestors 'none'")
         self.send_header("Content-Length", str(len(body)))
@@ -228,6 +232,9 @@ class StageHandler(BaseHTTPRequestHandler):
             )
             html = html.replace(
                 '<main>',
+                '<p style="padding:12px"><a href="/qa/activity-watch" '
+                'style="font-weight:bold;color:#9ed3ff">'
+                '查看真实钱包活动与风险观察（只读）</a></p>'
                 '<p style="padding:12px"><a href="/qa/p4-replay" '
                 'style="font-weight:bold;color:#9ed3ff">'
                 '查看十条真实本地历史交易的模拟分析（不是实时提醒）</a></p>'
@@ -243,6 +250,21 @@ class StageHandler(BaseHTTPRequestHandler):
             self._respond(200, fn.read_bytes(),
                           "text/javascript; charset=utf-8" if path.endswith(".js")
                           else "text/css; charset=utf-8")
+            return
+        if path == "/qa/activity-watch":
+            if query:
+                self._json({"error": "QUERY_NOT_ALLOWED"}, 400)
+            else:
+                self._respond(
+                    200, render_activity_watch(self.activity_watch).encode("utf-8"),
+                    "text/html; charset=utf-8",
+                )
+            return
+        if path == "/qa/activity-watch.json":
+            if query:
+                self._json({"error": "QUERY_NOT_ALLOWED"}, 400)
+            else:
+                self._json(self.activity_watch)
             return
         if path == "/qa/p4-replay":
             if query:
@@ -308,6 +330,15 @@ def smoke(port: int, expected_rows: int) -> None:
         page = response.read().decode("utf-8")
         assert "frank-intelligence-panel" in page
         assert "隔离验收" in page
+    with OPENER.open(root + "/qa/activity-watch", timeout=5) as response:
+        page = response.read().decode("utf-8")
+        assert "钱包活动与风险观察" in page
+        assert "复制 CA" in page
+    with OPENER.open(root + "/qa/activity-watch.json", timeout=5) as response:
+        feed = json.load(response)
+        assert feed["status"] == "LOCAL_SOURCE_ACTIVITY_RESEARCH_ONLY"
+        assert feed["real_notifications_authorized"] is False
+        assert feed["counts"]["sell_category"] >= 0
     with OPENER.open(root + "/qa/p4-replay", timeout=5) as response:
         replay_page = response.read().decode("utf-8")
         assert "历史回放" in replay_page
@@ -359,6 +390,9 @@ def main() -> int:
     )
     replay = run_replay(data["/api/trades"], snapshot_at=as_of)
     StageHandler.p4_replay = replay
+    StageHandler.activity_watch = build_activity_watch(
+        data["/api/trades"], data["/api/candidates"], as_of=as_of
+    )
     StageHandler.snapshots = dict(data)
     StageHandler.intelligence = {
         "status": "LOCAL_SOURCE_RESEARCH_ONLY",
@@ -389,6 +423,9 @@ def main() -> int:
     print("SOURCE_EVIDENCE:", json.dumps(evidence_summary(data), ensure_ascii=False), flush=True)
     print("INTELLIGENCE_ROWS:", len(analyses), flush=True)
     print("FAKE_UNSENT_SELL_NOTICES:", len(previews), flush=True)
+    print("ACTIVITY_WATCH_COUNTS:",
+          json.dumps(StageHandler.activity_watch["counts"], ensure_ascii=False),
+          flush=True)
     print("P4_REPLAY_STATUS:", replay["status"], flush=True)
     print("P4_REPLAY_CASE_COUNTS:", json.dumps(replay["counts"], ensure_ascii=False), flush=True)
     print("P4_REPLAY_CHECK_ERRORS:", json.dumps(replay["errors"], ensure_ascii=False), flush=True)
@@ -402,6 +439,7 @@ def main() -> int:
         smoke(args.port, len(analyses))
         print(f"OPEN_IN_BROWSER: http://127.0.0.1:{args.port}/", flush=True)
         print(f"OPEN_P4_HISTORY: http://127.0.0.1:{args.port}/qa/p4-replay", flush=True)
+        print(f"OPEN_ACTIVITY_WATCH: http://127.0.0.1:{args.port}/qa/activity-watch", flush=True)
         print("Press Ctrl+C to stop the isolated server.", flush=True)
         worker.join()
     except KeyboardInterrupt:
