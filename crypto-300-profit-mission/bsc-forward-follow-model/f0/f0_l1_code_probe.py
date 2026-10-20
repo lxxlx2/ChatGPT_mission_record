@@ -141,6 +141,16 @@ def bounded_report_path(out: Path, root: Path, *, expected_name: str = 'report.j
     return out
 
 
+def fsync_directory(directory: Path) -> None:
+    """Commit directory entries before a persisted attempt may reach a sender."""
+    flags = os.O_RDONLY | getattr(os, 'O_DIRECTORY', 0)
+    fd = os.open(directory, flags)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
 def atomic_json(out: Path, data: dict) -> None:
     """Fsync + atomic replace, no readable credentials, no raw RPC errors."""
     require(not out.is_symlink(), 'OUTPUT_SYMLINK_FORBIDDEN')
@@ -156,6 +166,7 @@ def atomic_json(out: Path, data: dict) -> None:
             dest.flush()
             os.fsync(dest.fileno())
         os.replace(temp, out)
+        fsync_directory(out.parent)
     finally:
         if temp.exists():
             temp.unlink()

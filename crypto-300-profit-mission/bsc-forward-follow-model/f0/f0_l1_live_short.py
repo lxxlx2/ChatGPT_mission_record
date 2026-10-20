@@ -20,7 +20,7 @@ from datetime import datetime, timezone, timedelta
 import urllib.error
 import urllib.request
 
-from f0_l1_code_probe import atomic_json
+from f0_l1_code_probe import atomic_json, fsync_directory
 from f0_l1_http_wire import ENDPOINT, json_body, parse_http_response, plan_prospective_heights, _parse_quantity
 from f0_l1_window import (SCHEMA as WINDOW_SCHEMA, DOCUMENTED_ROUTER_MODE,
                           FROZEN_ROUTER_REGISTRY_BLOB, git_blob_sha1,
@@ -145,7 +145,13 @@ def live_https_post(url, body, timeout_s, cap):
     request = urllib.request.Request(url, data=body, method="POST",
         headers={"Content-Type":"application/json", "Accept":"application/json",
                  "Accept-Encoding":"identity", "Connection":"close"})
-    with opener.open(request, timeout=timeout_s) as response:
+    try:
+        response = opener.open(request, timeout=timeout_s)
+    except urllib.error.HTTPError as exc:
+        # HTTP errors still contain returned evidence. Read under the same cap;
+        # the parser will reject the status after Journal archives these bytes.
+        response = exc
+    with response:
         status = response.status
         headers = dict(response.headers.items())
         raw = response.read(cap + 1)
@@ -162,6 +168,7 @@ class Journal:
         self.rows = []
         self.last_attempt_mono = None
         self.raw_dir.mkdir(mode=0o700)
+        fsync_directory(self.raw_dir.parent)
         self.persist()
 
     def persist(self):
@@ -186,6 +193,7 @@ class Journal:
         self.rows.append(item)
         self.last_attempt_mono = start_mono
         self.persist()  # MUST complete before post() / any real network.
+        require(self.clock() <= self.deadline, "CAPTURE_DEADLINE_EXPIRED")
         result, failure, raw = None, None, None
         try:
             status, headers, raw = post(ENDPOINT, encoded,
@@ -216,6 +224,7 @@ class Journal:
                 output.write(raw)
                 output.flush()
                 os.fsync(output.fileno())
+            fsync_directory(self.raw_dir)
             item["local_raw_response_file"] = artifact.name
         self.persist()
         return result, failure, item
@@ -374,6 +383,7 @@ def main():
                    "consumed_at_utc":iso(utcnow())},mark)
         mark.flush()
         os.fsync(mark.fileno())
+    fsync_directory(root)
     base=script.parent
     result=capture_once(permit,
                 (base/"F0_COHORT_PRESELECTION.json").read_bytes(),
