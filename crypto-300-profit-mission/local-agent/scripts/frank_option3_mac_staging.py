@@ -295,7 +295,7 @@ def main() -> int:
     previews = fake_intelligence_updates(
         analyses, as_of=as_of, max_event_age_seconds=600,
     )
-    StageHandler.snapshots = data
+    StageHandler.snapshots = dict(data)
     StageHandler.intelligence = {
         "status": "LOCAL_SOURCE_RESEARCH_ONLY",
         "as_of": as_of,
