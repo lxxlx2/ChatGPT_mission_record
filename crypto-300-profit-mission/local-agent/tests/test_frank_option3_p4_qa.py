@@ -87,6 +87,20 @@ def fixtures(tmp_path, transactions):
                         "signal_id": signal_id,
                         "triggering_signature": triggering,
                     })))
+    sixth, seventh, eighth = transactions[5], transactions[6], transactions[7]
+    for signal_id, tr, ep, at in (
+        ("earlier-sell-5", sixth, "episode-5", sixth["block_time"] - 100),
+        ("different-sell-6", seventh, "old-unrelated-episode", seventh["block_time"] - 100),
+        ("later-sell-7", eighth, "episode-7", eighth["block_time"] + 100),
+    ):
+        db.execute("INSERT INTO signals VALUES(?,?,?,?,?,?,?)",
+                   (signal_id, "frank", tr["mint"],
+                    "FRANK_ACCUMULATION_SIGNAL", ep, at,
+                    json.dumps({
+                        "signal_id": signal_id,
+                        "policy_id": "FRANK_LOCAL_SIGNAL_V1",
+                        "triggering_signature": "C" * 63 + "K",
+                    })))
     db.commit()
     db.close()
 
@@ -125,6 +139,10 @@ def test_exact_trigger_join_rejects_old_same_mint_and_wrong_episode(tmp_path, mo
     assert result["rows"][4]["causal_status"] == "SIGNAL_EVALUATION_EPISODE_MISMATCH"
     assert result["rows"][4]["control_link"] == "SIGNAL_EVALUATION_EPISODE_MISMATCH_NO_JOIN"
     assert result["rows"][6]["causal_status"] == "SELL_NO_V1_BUY_SIGNAL_EXPECTED"
+    assert result["rows"][5]["sell_prior_signal_context"] == "EARLIER_SAME_EPISODE_V1_SIGNAL_CONFIRMED"
+    assert result["rows"][6]["sell_prior_signal_context"] == "OLDER_SIGNAL_EXISTS_DIFFERENT_EPISODE_NOT_JOINED"
+    assert result["rows"][7]["sell_prior_signal_context"] == "NO_EARLIER_SAME_EPISODE_V1_SIGNAL_PROVEN"
+    assert result["rows"][5]["current_wallet_balance_verified"] is False
     assert all("mint" not in row and "signature" not in row for row in result["rows"])
     display = json.dumps(result, sort_keys=True)
     assert rows[0]["mint"] not in display
