@@ -70,6 +70,7 @@ def replay_saved(journal_bytes: bytes, raw_dir: Path,
     watched_n = router_n = tx_count = 0
     selectors = Counter()
     prior_hash = None
+    verified_parent_links = 0
     observed_head = None
     all_requests = []
 
@@ -120,6 +121,10 @@ def replay_saved(journal_bytes: bytes, raw_dir: Path,
             parent_hash = block["parentHash"].lower()
             if prior_hash is not None:
                 fail(parent_hash == prior_hash, "PARENT_HASH_NOT_CONTIGUOUS")
+                verified_parent_links += 1
+            # The first saved block's parentHash is NOT verified against the
+            # initial eth_blockNumber: that RPC returned a height, not a hash.
+            # Do not infer or fabricate a parent anchor from adjacent blocks.
             prior_hash = block_hash
             raw_timestamp = block.get("timestamp")
             fail(raw_timestamp is not None, "BLOCK_TIMESTAMP_MISSING")
@@ -144,7 +149,9 @@ def replay_saved(journal_bytes: bytes, raw_dir: Path,
                     selectors[selector[:10].lower() if type(selector) is str and len(selector)>=10
                               else "UNKNOWN_OR_EMPTY"] += 1
 
-    fail(len(heights) == 60 and tx_count >= router_n, "SAVED_BLOCK_COVERAGE_INVALID")
+    fail(len(heights) == 60 and tx_count >= router_n and
+         verified_parent_links == len(heights) - 1,
+         "SAVED_BLOCK_COVERAGE_INVALID")
     elapsed_local = (receipts[-1] - receipts[0]).total_seconds()
     elapsed_chain = (timestamps[-1] - timestamps[0]).total_seconds()
     result = {
@@ -157,6 +164,12 @@ def replay_saved(journal_bytes: bytes, raw_dir: Path,
         "start_height": heights[0],
         "end_height": heights[-1],
         "complete_requested_interval_blocks": len(heights),
+        "consecutive_height_count": len(heights),
+        "internal_parent_links_verified": verified_parent_links,
+        "internal_parent_links_possible": len(heights) - 1,
+        "first_saved_block_parent_anchored_to_observed_head": False,
+        "observed_head_hash_available": False,
+        "parentage_verification_scope": "59_INTERNAL_LINKS_ONLY_FIRST_PARENT_UNANCHORED",
         "total_full_block_transactions": tx_count,
         "watch_signer_candidate_transactions": watched_n,
         "router_address_candidate_transactions": router_n,
