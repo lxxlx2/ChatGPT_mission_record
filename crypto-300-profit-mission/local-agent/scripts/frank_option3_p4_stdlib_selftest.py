@@ -1,6 +1,6 @@
-"""Run targeted Frank P4 QA regressions WITHOUT installing pytest.
+"""Run four targeted Frank P4 QA regressions WITHOUT installing pytest.
 
-This invokes three existing fixture-style tests with temporary SQLite files,
+This invokes four existing fixture-style tests with temporary SQLite files,
 using only standard-library pathlib/tempfile/importlib and the audited
 mission_agent pure analysis code. It makes no localhost/RPC/network requests.
 """
@@ -42,6 +42,7 @@ def main():
     for name in (
         "test_exact_trigger_join_rejects_old_same_mint_and_wrong_episode",
         "test_source_timestamp_change_is_not_silent_causal_pass",
+        "test_signal_first_finds_verified_source_signal_before_same_episode_sale_only",
     ):
         patch = ScopedPatch()
         try:
@@ -55,7 +56,7 @@ def main():
     passed += 1
     print("test_p4_historical_fake_notices_separate_unresolved_sell_from_index_exit: PASS",
           flush=True)
-    print("FRANK_P4_STDLIB_SELFTEST:", str(passed) + "/3 PASS", flush=True)
+    print("FRANK_P4_STDLIB_SELFTEST:", str(passed) + "/4 PASS", flush=True)
     return 0
 
 
