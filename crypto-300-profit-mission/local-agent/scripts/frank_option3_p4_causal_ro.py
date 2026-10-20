@@ -264,8 +264,17 @@ def analyze(forward: Path, control: Path | None) -> dict:
                 "unexpected_source_signal_types": causal["unexpected_signal_type_count"],
                 "control_link": joined,
             })
+        complete = len(selected) == 10 and len(rows) == 10
+        exact_sources = sum(
+            x["source_match"] == "EXACT_LOCAL_SOURCE_TRADE_VERIFIED"
+            for x in rows
+        )
         return {
             "kind": "FRANK_OPTION3_TEN_TRADE_EXACT_CAUSAL_JOIN",
+            "status": (
+                "TEN_LOCAL_SOURCE_ROWS_RECONCILED" if complete and exact_sources == 10
+                else "LOCAL_SOURCE_RECONCILIATION_INCOMPLETE_NOT_ZERO_TRADES"
+            ),
             "sampled_at_utc": datetime.now(timezone.utc).isoformat(),
             "scope": "LOCAL_INDEX_ONLY_NOT_CHAIN_VERIFIED",
             "source_database": "EXISTING_FORWARD_SQLITE_MODE_RO_QUERY_ONLY",
@@ -273,9 +282,7 @@ def analyze(forward: Path, control: Path | None) -> dict:
                                  if ctl else "UNAVAILABLE_NOT_ZERO"),
             "distinct_locally_indexed_rows": len(selected),
             "distinct_transaction_signatures_selected": len(selected),
-            "source_reconciled_rows": sum(
-                x["source_match"] == "EXACT_LOCAL_SOURCE_TRADE_VERIFIED"
-                for x in rows),
+            "source_reconciled_rows": exact_sources,
             "source_status_counts": dict(Counter(x["source_match"] for x in rows)),
             "buy_causal_counts": dict(Counter(
                 x["causal_status"] for x in rows
