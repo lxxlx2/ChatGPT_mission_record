@@ -1,8 +1,17 @@
 # Mission Portfolio / Current Assets and Capital Classification
 
-Updated: 2026-10-17 Asia/Bangkok (17:27–17:30 user screenshots/direct-chain refresh; SurfBoard #5396 ownership transfer verified)
+Updated: 2026-10-20 Asia/Bangkok (pending BALANCE bids and entrusted capital classification only; other asset snapshots last checked Oct 17 or earlier)
 Timezone: Asia/Bangkok
 Portfolio authority: this file; operational status: `../state/latest.md`; performance attribution: `../performance/current.md`.
+
+## 2026-10-20 new pending CCA escrow — BALANCE two separate beneficial owners
+
+**Direct Ethereum verified** for canonical wallet `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`: BALANCE Uniswap CCA contract `0xa93807cd89a99bb564c7a887ab49cc4ecc3c9226` `bids(364)` **0.2055 ETH** at max **0.0001608 ETH/BALANCE**, `bids(367)` **0.2050 ETH** at max **0.0001600 ETH/BALANCE**, both `exitedBlock=0` and not claimable yet. **Total 0.4105 ETH (~$999.52 at dated $2434.88/ETH)** is held inside auction, NOT current liquid ETH. Dated ~2026-10-20 23:10 Asia/Bangkok; chain `isGraduated=false`, current clearing at read `0.0001595 ETH`, end/claimBlock `26241565`. The recorded zero `bids().tokensFilled` **before exit is unfinalized book accounting**, not proof no token allocation. NO confirmed settled or wallet-held BALANCE tokens yet.
+
+**Beneficial ownership separation (user explicit report)**: one **~$500 user-owned bid** is pending investment commitment; the other **~$500 is held on behalf of another person and is EXCLUDED** from user's asset holdings and Mission performance. Both bids share same Ethereum wallet/account, but which Bid ID is owned beneficially by which person has **not been established**. Keep them as two separate sub-ledgers when future individual filled tokens, ETH refunds and profit/loss can be determined. Do NOT count combined ~$1k as user investment, and do not attribute the entrusted bid's future proceeds to user's realized profit. These are **illiquid escrow rights / contingent claims**; not part of cash/marked liquid investment subtotal and should not be duplicated as remaining native ETH.
+
+Research and direct reading: `../../research/projects/jack-balance/jack-balance-cca-auction-20261020.md`; official contract https://etherscan.io/address/0xa93807cd89a99bb564c7a887ab49cc4ecc3c9226 . Original earlier wallet snapshots below retain original dates and must not be represented as current post-deposit balances. No ChatGPT order or signing occurred.
+
 
 ## Accounting and display policy (user-approved)
 
