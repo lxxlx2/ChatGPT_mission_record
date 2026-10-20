@@ -6,6 +6,13 @@ See [first real short L1 result](f0/results/20261020_first_short_l1_62/RESULT.md
 
 **The 62-attempt permit is fully consumed. Do not execute it again or extend to 120 seconds.** Next safe action is offline inspection of the saved sample. Further real RPC/WS requires new user consent and a new reviewed permit. No merge/deployment authorization.
 
+## 2026-10-20 offline lag result and independent P1 scope correction
+
+- [Draft PR #151](https://github.com/lxxlx2/ChatGPT_mission_record/pull/151) at historical SHA `2dcbc4ba1555f1ddf69e72eda3a1ac887085d4b9` reported local replay of all 62 private source bytes: 60 blocks, 5,940 transactions, 0 PRIMARY from matches, 40 documentary Router-to matches (38 selector `0x3593564c`, 2 selector `0x24856bc3`). Header vs local-receipt lag proxy rose from 2.01s to 34.99s; 60 block headers span 26s whereas local receipts span 58.979s. This supports **sample-specific source pacing behind BSC block production**, NOT independent network head lag or public first-seen. User/operator independently replayed private raw files on their Mac; the GitHub maintainer only checked the published aggregate and CI.
+- Original [PR #150](https://github.com/lxxlx2/ChatGPT_mission_record/pull/150) at `65ef18be395fbbe9cc638199405bb67f7a22871f` retains its independent **REQUEST_CHANGES** (P1: falsely suggesting all 60 block parent hashes anchored; `eth_blockNumber` provided only an integer height). PR151's historical evidence already correctly reports **59 internal parentHash links verified and first block unanchored**.
+- **CURRENT [Draft PR #152](https://github.com/lxxlx2/ChatGPT_mission_record/pull/152), OFFLINE REMEDIATION PENDING FIXED-SHA INDEPENDENT REVIEW:** based on PR151 result SHA; code explicitly returns `consecutive_height_count=60`, `internal_parent_links_verified=59`, `first_saved_block_parent_anchored_to_observed_head=false`, with a new negative test. This is a classification/disclosure correction only, **NO head hash was retrieved**. Full 263 tests were observed passing on the pre-HANDOFF commit; re-run and check the final HEAD after this documentation update. If independently approved, proceed to **OFFLINE adaptive head-pacing design**, not more real EOA prechecks or rushed extended collection.
+- The first 62-call permit and all older grants are **CONSUMED**, not reusable; no further HTTP/WS/trading/quotes/deployment/merge authority has been provided. Preserve PR149/150/151 original SHAs as historical evidence.
+
 ---
 
 # BSC forward wallet-follow module — single ongoing handoff
