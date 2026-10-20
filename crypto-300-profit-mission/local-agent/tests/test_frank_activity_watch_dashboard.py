@@ -74,7 +74,8 @@ def test_no_future_events_duplicate_or_direction_conflicts_are_counted_as_trades
         summarize_activity(sample_trades() + [trade], [], as_of=1_792_494_000)
 
 
-def test_dashboard_readonly_state_and_failure_do_not_create_false_zero():
+def test_dashboard_readonly_state_and_failure_do_not_create_false_zero(monkeypatch):
+    monkeypatch.setattr(server.time, "time", lambda: 1_792_494_000.0)
     state = server.DashboardState.__new__(server.DashboardState)
     events = []
     state.frank = SimpleNamespace(
