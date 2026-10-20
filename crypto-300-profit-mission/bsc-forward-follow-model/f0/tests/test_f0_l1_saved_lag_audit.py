@@ -73,6 +73,13 @@ class LagArchiveOfflineTests(unittest.TestCase):
             self.assertEqual(out["verified_raw_responses"],62)
             self.assertEqual((out["start_height"],out["end_height"]),(100,159))
             self.assertEqual(out["complete_requested_interval_blocks"],60)
+            self.assertEqual(out["consecutive_height_count"],60)
+            self.assertEqual(out["internal_parent_links_verified"],59)
+            self.assertEqual(out["internal_parent_links_possible"],59)
+            self.assertFalse(out["first_saved_block_parent_anchored_to_observed_head"])
+            self.assertFalse(out["observed_head_hash_available"])
+            self.assertEqual(out["parentage_verification_scope"],
+                             "59_INTERNAL_LINKS_ONLY_FIRST_PARENT_UNANCHORED")
             self.assertEqual(out["total_full_block_transactions"],2)
             self.assertEqual(out["watch_signer_candidate_transactions"],1)
             self.assertEqual(out["router_address_candidate_transactions"],1)
@@ -88,6 +95,22 @@ class LagArchiveOfflineTests(unittest.TestCase):
             path.write_bytes(path.read_bytes()+b" ")
             with self.assertRaisesRegex(ValueError,"RAW_RESPONSE_SHA256_MISMATCH"):
                 replay(j,raw)
+
+    def test_first_saved_block_parent_remains_unanchored_even_with_62_matching_hashes(self):
+        with tempfile.TemporaryDirectory() as d:
+            j,raw=fixture(Path(d))
+            path=raw/"003.response.json"
+            rpc=json.loads(path.read_bytes())
+            rpc["result"]["parentHash"]="0x"+"f"*64
+            body=json.dumps(rpc).encode()
+            path.write_bytes(body)
+            j["attempts"][2]["response_sha256"]=sha(body)
+            # The initial head was observed ONLY via eth_blockNumber;
+            # there is no head block hash in the archive for this comparison.
+            out=replay(j,raw)
+            self.assertEqual(out["internal_parent_links_verified"],59)
+            self.assertFalse(out["first_saved_block_parent_anchored_to_observed_head"])
+            self.assertEqual(out["consecutive_height_count"],60)
 
     def test_header_parent_break_fails_even_with_updated_sha(self):
         with tempfile.TemporaryDirectory() as d:
