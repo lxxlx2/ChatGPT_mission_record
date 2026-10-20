@@ -63,3 +63,22 @@ class HttpErrorArchiveTests(unittest.TestCase):
             self.assertEqual((root/'raw_responses'/item['local_raw_response_file']).read_bytes(), body)
             self.assertEqual(item['response_sha256'], live.sha(body))
             self.assertEqual(item['state'], 'FAILED')
+
+class PostPersistenceDeadlineTests(unittest.TestCase):
+    def test_expiry_during_persistence_never_calls_transport(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            now = [datetime.now(timezone.utc)]
+            journal = Journal(root/'journal.json', limit=62, clock=lambda:now[0],
+                              mono=lambda:0.0, sleep=lambda _:None, interval_ms=250,
+                              deadline=now[0]+timedelta(seconds=1), raw_dir=root/'raw_responses')
+            persist = journal.persist
+            def slow_persist():
+                persist()
+                now[0] += timedelta(seconds=2)
+            post = Mock()
+            with patch.object(journal, 'persist', side_effect=slow_persist):
+                with self.assertRaisesRegex(ValueError, 'CAPTURE_DEADLINE_EXPIRED'):
+                    journal.request('eth_chainId', [], 'CHAIN_ID', post)
+            post.assert_not_called()
+            self.assertEqual(json.loads((root/'journal.json').read_text())['attempts'][0]['state'], 'ATTEMPTED_OUTCOME_UNKNOWN')

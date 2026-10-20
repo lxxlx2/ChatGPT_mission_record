@@ -193,6 +193,7 @@ class Journal:
         self.rows.append(item)
         self.last_attempt_mono = start_mono
         self.persist()  # MUST complete before post() / any real network.
+        require(self.clock() <= self.deadline, "CAPTURE_DEADLINE_EXPIRED")
         result, failure, raw = None, None, None
         try:
             status, headers, raw = post(ENDPOINT, encoded,
