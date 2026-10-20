@@ -70,6 +70,9 @@ def analyze_rows(
             market=market if isinstance(market, Mapping) else None,
             max_market_age_seconds=max_market_age_seconds,
         )
+        item["model_episode_position_state"] = (candidate.get("position_state")
+            if item.get("latest_action_at") is not None and
+               isinstance(candidate.get("position_state"), str) else "UNVERIFIED")
         result.append(item)
     return result
 
@@ -149,6 +152,8 @@ def render_html(
             '<dl><dt>Latest verified side</dt><dd>' + _s(a["latest_side"]) +
             '</dd><dt>Latest action time</dt><dd>' + _s(_time(a.get("latest_action_at"))) +
             '</dd><dt>V1 source signal ID</dt><dd>' + _s(a.get("source_signal_id")) +
+            '</dd><dt>Model episode state (NOT chain balance)</dt><dd>' +
+            _s(a.get('model_episode_position_state')) +
             '</dd><dt>Source-confirmed facts</dt><dd>' + _s(facts) +
             '</dd><dt>Not verified / missing</dt><dd>' + _s(missing) +
             '</dd><dt>Price comparison</dt><dd>' + _s(comparison) +
@@ -217,6 +222,7 @@ def main(argv: list[str] | None = None) -> int:
     src.add_argument("--candidate-json", type=Path, help="Explicit local file containing candidate list")
     src.add_argument("--production-root", type=Path, help="Explicit existing Frank local root, read-only SQLite")
     parser.add_argument("--market-json", type=Path, help="Optional explicit offline {mint: market observation} mapping")
+    parser.add_argument("--previous-fake-json", type=Path, help="Optional prior fake preview JSON for cross-run simulated dedupe (read only)")
     parser.add_argument("--output", type=Path, required=True, help="Local HTML output path")
     parser.add_argument("--fake-out", type=Path, required=True, help="Local fake-only alert JSON output path")
     parser.add_argument("--max-market-age-seconds", type=int, required=True)
@@ -236,8 +242,11 @@ def main(argv: list[str] | None = None) -> int:
         candidates, as_of=as_of, max_market_age_seconds=args.max_market_age_seconds,
         market_observations=markets,
     )
+    previous = json.loads(args.previous_fake_json.read_text(encoding="utf-8")) if args.previous_fake_json else None
+    seen = {str(msg["key"]) for msg in previous.get("messages", []) if isinstance(msg, dict) and isinstance(msg.get("key"), str)} if isinstance(previous, dict) else set()
     updates = fake_intelligence_updates(
         analyses, as_of=as_of, max_event_age_seconds=args.max_event_age_seconds,
+        previously_seen=seen,
     )
     args.output.write_text(render_html(analyses, as_of=as_of, simulated_updates=updates), encoding="utf-8")
     args.fake_out.write_text(
