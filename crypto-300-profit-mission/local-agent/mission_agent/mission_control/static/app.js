@@ -780,6 +780,44 @@ function renderDecisions(rows) {
   }).join('') || '<div class="empty">暂无判断变化</div>';
 }
 
+const intelligenceEvidenceLabel = {
+  V1_SOURCE_ACCUMULATION: '已有原始持续建仓信号',
+  V1_SOURCE_MULTIPLE: '已有原始多次买入信号',
+  REENTRY_OBSERVE_ONLY: '重新建仓，仅观察',
+  REENTRY_UNCONFIRMED: '重新建仓待核实',
+  FRANK_LATEST_ACTION_BUY: 'Frank 最新已识别动作：买入',
+  FRANK_LATEST_ACTION_SELL: 'Frank 最新已识别动作：卖出',
+  FRANK_SELL_OBSERVED_REVIEW_RISK: 'Frank 已卖出，需复核原观察结论',
+  PRICE_ABOVE_VERIFIED_FRANK_BUY_REFERENCE: '参考价格高于 Frank 核实买价',
+  PRICE_BELOW_VERIFIED_FRANK_BUY_REFERENCE: '参考价格低于 Frank 核实买价',
+  PRICE_EQUAL_TO_VERIFIED_FRANK_BUY_REFERENCE: '参考价格接近 Frank 核实买价',
+  CANDIDATE_EVENT_AFTER_AS_OF: '事件发生在本次查看时点之后，未采用',
+  LATEST_ACTION_NOT_PROVEN: '最新主动买卖动作未核实',
+  V1_SOURCE_SIGNAL_NOT_VERIFIED: '尚无已核实的原始买入信号',
+  POSITION_STATE_UNKNOWN: '模型仓位状态不明',
+  VERIFIED_COMPARABLE_FRANK_BUY_PRICE_UNAVAILABLE: 'Frank 买入参考价缺少可靠同口径数据',
+  MARKET_REFERENCE_MISSING: '未提供独立可核实的市场价格',
+  MARKET_REFERENCE_MINT_OR_CHAIN_MISMATCH: '市场价格币种或网络不匹配',
+  MARKET_REFERENCE_UNVERIFIABLE: '市场价格来源或数值不可核实',
+  MARKET_REFERENCE_AFTER_AS_OF: '市场数据晚于查看时点，不允许使用',
+  MARKET_REFERENCE_STALE: '市场价格资料已过期'
+};
+function intelligenceExplain(raw) {
+  const count = String(raw).match(/^OBSERVED_(BUY|SELL)_COUNT_(\d+)$/);
+  if (count) return '本轮已识别' + (count[1] === 'BUY' ? '买入' : '卖出') + ' ' + count[2] + ' 次';
+  return intelligenceEvidenceLabel[raw] || String(raw);
+}
+
+const intelligencePriceLabel = {
+  PRICE_UNAVAILABLE: '缺少可靠市场行情',
+  PRICE_STALE: '市场行情过期',
+  PRICE_FROM_FUTURE: '价格时间晚于查看时点',
+  PRICE_SOURCE_MISMATCH: '价格币种或链不符',
+  PRICE_SOURCE_UNVERIFIED: '市场参考价无法核实',
+  VERIFIED_BUY_REFERENCE_MISSING: '缺少可比较的 Frank 买价',
+  COMPARABLE_REFERENCE_CHANGE: '仅显示参考价变化'
+};
+
 let frankIntelligenceSnapshot = null;
 
 function frankIntelligenceTimestamp(ts) {
@@ -816,7 +854,7 @@ function renderFrankIntelligence(snapshot) {
     const price = x.price || {};
     const change = price.change_pct_vs_last_verified_buy;
     const delta = change == null
-      ? '无法核实（' + esc(price.status || 'PRICE_UNAVAILABLE') + '）'
+      ? '无法核实（' + esc(intelligencePriceLabel[price.status] || price.status || '缺少可靠市场行情') + '）'
       : esc(change) + '%（相对 Frank 核实买价，仅参考价变化）';
     const side = x.latest_side === 'BUY' ? '买入' :
       x.latest_side === 'SELL' ? '卖出' : '未核实';
@@ -833,9 +871,9 @@ function renderFrankIntelligence(snapshot) {
       ${tokenIdentity(x.mint)}
       <p>来源信号：<code>${esc(x.source_signal_id || '未核实')}</code> ${tx}</p>
       <div class="metrics-grid">
-        ${metric('模型本轮仓位（非链上余额）', esc(x.model_episode_position_state || 'UNVERIFIED'))}
-        ${metric('来源已核实的行为', facts.length ? esc(facts.join(' / ')) : '无可证明事件')}
-        ${metric('无法核实的内容', missing.length ? esc(missing.join(' / ')) : '本研究范围内无其他缺口声明')}
+        ${metric('模型本轮仓位（非链上余额）', esc(translated(stateLabel,x.model_episode_position_state,'尚未核实')))}
+        ${metric('来源已核实的行为', facts.length ? esc(facts.map(intelligenceExplain).join(' / ')) : '无可证明事件')}
+        ${metric('无法核实的内容', missing.length ? esc(missing.map(intelligenceExplain).join(' / ')) : '本研究范围内无其他缺口声明')}
         ${metric('与 Frank 已核实买价相比', delta,
           '只有同币种、同计价单位和有效时点的行情才比较；不代表实际可执行收益或用户盈亏。')}
         ${metric('参考行情来源与时间',
