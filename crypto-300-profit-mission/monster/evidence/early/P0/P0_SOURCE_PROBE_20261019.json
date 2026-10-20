@@ -15226,6 +15226,37 @@
     "subgraph_and_pancake_v3_full_population": "NOT_PROVEN",
     "independent_provider_verification": "NOT_AVAILABLE",
     "cheap_multicall_eth_call_return_bytes_archived": "NO_CONNECTOR_ONLY_NORMALIZED_RESPONSE",
-    "decision": "FOURMEME_ONE_DAY_SCOPED_STATE_INDEX_COVERAGE_RECONSTRUCTED_NOT_FULL_P0_PASS"
+    "decision": "FOURMEME_ONE_DAY_SCOPED_STATE_INDEX_COVERAGE_RECONSTRUCTED_NOT_FULL_P0_PASS",
+    "median_index_true_chain_creation_event": {
+      "index": 247868,
+      "token_ca": "0x2046b70500bfc3ac3a558b697dee9bba89524444",
+      "last_zero_block": 52507858,
+      "first_nonzero_block": 52507859,
+      "first_nonzero_utc": "2025-07-01T14:04:40Z",
+      "topic0": "0x396d5e902b675b032348d3d2e9517ee8f0c4a926603fbc075d3d282ff00cad20",
+      "event_tx_hash": "0xca38b566d04cd53b9782ac23c31abb746dcbab966638e7d6ce228e80c428840c",
+      "event_log_index": "0x163",
+      "event_transaction_index": "0x41",
+      "single_block_manager_TokenCreate_logs": 1,
+      "source": "ETH_CALL_BINARY_SEARCH_HISTORICAL_AND_ETH_GETLOGS_ONE_BLOCK_ALCHEMY_FREE",
+      "full_receipt_crosscheck": "NOT_PERFORMED_THIS_MID_ANCHOR"
+    },
+    "verified_distinct_creation_event_anchors": 3,
+    "implementation_improved_for_free_source": {
+      "source_file": "crypto-300-profit-mission/local-agent/mission_agent/early/fourmeme_index_source_probe.py",
+      "planned_local_http_raw_byte_archive": "JSONL_BASE64_EACH_OF_47_RESPONSE_BODIES",
+      "max_http_requests_per_one_manual_run": 50,
+      "target_http_requests": 47,
+      "max_inner_calls_per_batch": 15,
+      "index_slot_batch_count": 36,
+      "offline_test_file": "crypto-300-profit-mission/local-agent/tests/test_fourmeme_index_source_probe.py",
+      "offline_tests_authored": 11,
+      "offline_tests_executed_on_checked_in_git_files": false,
+      "extracted_Python_multicall_codec_checks": "PASS_IN_ISOLATED_LOCAL_SNIPPET_NOT_FULL_REPO_TEST",
+      "Mac_live_execution": "NOT_RUN",
+      "source_byte_archive_on_user_Mac": "NOT_YET_COLLECTED",
+      "no_autoschedule_or_deployment": true
+    },
+    "source_research_level": "SCOPED_ONE_DAY_FOURMEME_538_UNIQUE_NONZERO_STATE_SLOTS_PROVEN_IN_NORMALIZED_FREE_RPC_WITH_THREE_CHAIN_EVENT_ANCHORS"
   }
 }
