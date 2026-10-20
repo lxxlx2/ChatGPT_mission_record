@@ -105,6 +105,47 @@ def checked_source(db: sqlite3.Connection, case: dict) -> tuple[str, dict | None
     return "EXACT_LOCAL_SOURCE_TRADE_VERIFIED", row
 
 
+def earlier_source_signal_for_sell(case: dict, row: dict,
+                                   signals: list[sqlite3.Row]) -> str:
+    """Research provenance only. Not an authorization to send any alert.
+
+    An old signal for the same token is not automatically a prior alert for
+    this episode, and a sale is not proof of a zero remaining balance.
+    """
+    if case["indexed_side"] in BUY_SIDES:
+        return "NOT_SELL"
+    episode = row.get("episode_id")
+    if not isinstance(episode, str) or not episode:
+        return "SELL_EPISODE_UNVERIFIED"
+    prior_same_mint_other_episode = False
+    same_episode_invalid_time = False
+    at = row.get("block_time")
+    if isinstance(at, bool) or not isinstance(at, (int, float)) or at <= 0:
+        return "SELL_EVENT_TIME_UNVERIFIED"
+    for signal in signals:
+        if signal["signal_type"] not in SIGNALS:
+            continue
+        body = safe_json(signal["body"])
+        if body.get("signal_id") != signal["signal_id"] or (
+            body.get("policy_id") != "FRANK_LOCAL_SIGNAL_V1"
+        ):
+            continue
+        if str(signal["episode_id"]) != episode:
+            prior_same_mint_other_episode = True
+            continue
+        raw_time = signal["created_at"]
+        if isinstance(raw_time, bool) or not str(raw_time).isdigit():
+            same_episode_invalid_time = True
+            continue
+        if 0 < int(raw_time) < at:
+            return "EARLIER_SAME_EPISODE_V1_SIGNAL_CONFIRMED"
+    if same_episode_invalid_time:
+        return "SAME_EPISODE_SOURCE_SIGNAL_TIME_UNVERIFIED"
+    if prior_same_mint_other_episode:
+        return "OLDER_SIGNAL_EXISTS_DIFFERENT_EPISODE_NOT_JOINED"
+    return "NO_EARLIER_SAME_EPISODE_V1_SIGNAL_PROVEN"
+
+
 def causal_status(db: sqlite3.Connection, case: dict, row: dict) -> dict:
     evals = db.execute(
         """SELECT episode_id,at,body FROM v1_evaluations
@@ -124,6 +165,7 @@ def causal_status(db: sqlite3.Connection, case: dict, row: dict) -> dict:
                      and s["signal_type"] not in SIGNALS]
     evaluation_episode = str(evals[0]["episode_id"]) if evals else None
     signal_types = sorted({str(s["signal_type"]) for s in exact_signals})
+    earlier_sell_context = earlier_source_signal_for_sell(case, row, signals)
     exact_ids = {s["signal_id"] for s in exact_signals}
     bound_active_ids: set[str] = set()
     bound_hourly_ids: set[str] = set()
@@ -192,6 +234,7 @@ def causal_status(db: sqlite3.Connection, case: dict, row: dict) -> dict:
         "signal_emitted_by_active_trade_eval": bool(bound_active_ids),
         "signal_emitted_by_hourly_tick_eval": bool(bound_hourly_ids),
         "signal_emission_evaluation_binding_complete": evaluation_binding_complete,
+        "previously_signaled_episode_sell_context": earlier_sell_context,
     }
 
 
@@ -264,6 +307,8 @@ def analyze(forward: Path, control: Path | None) -> dict:
                 "in_current_model_episode": causal["in_current_v1_state_event_list"],
                 "unexpected_source_signal_types": causal["unexpected_signal_type_count"],
                 "control_link": joined,
+                "sell_prior_signal_context": causal["previously_signaled_episode_sell_context"],
+                "current_wallet_balance_verified": False,
             })
         complete = len(selected) == 10 and len(rows) == 10
         exact_sources = sum(
@@ -288,6 +333,10 @@ def analyze(forward: Path, control: Path | None) -> dict:
             "buy_causal_counts": dict(Counter(
                 x["causal_status"] for x in rows
                 if x["indexed_side"] in BUY_SIDES
+            )),
+            "sell_prior_signal_context_counts": dict(Counter(
+                x.get("sell_prior_signal_context", "SOURCE_UNAVAILABLE")
+                for x in rows if x["indexed_side"] not in BUY_SIDES
             )),
             "control_link_counts": dict(Counter(x["control_link"] for x in rows)),
             "rows": rows,
