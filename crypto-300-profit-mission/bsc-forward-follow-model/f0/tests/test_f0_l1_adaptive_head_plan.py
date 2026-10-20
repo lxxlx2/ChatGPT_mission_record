@@ -90,9 +90,12 @@ class AdaptiveHeadOfflineTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"ADAPTIVE_INVALID_CLOCK_OR_STATE"):
             next_action(s,now_ms=-1)
         s=apply_head_result(s,now_ms=500,observed_head=103)
-        with self.assertRaisesRegex(ValueError,"ADAPTIVE_CLOCK_REGRESSION"):
+        with self.assertRaisesRegex(ValueError,"ADAPTIVE_INVALID_CLOCK_OR_STATE"):
             next_action(s,now_ms=499)
         self.assertEqual(next_action(s,now_ms=600)["wait_ms"],150)
+        s=apply_block_result(s,now_ms=750,received=True)
+        with self.assertRaisesRegex(ValueError,"ADAPTIVE_CLOCK_REGRESSION"):
+            next_action(s,now_ms=600)
 
     def test_historical_60_block_rate_projection_does_not_promise_catch_up(self):
         p=throughput_scenarios(saved_blocks=60,header_span_s=26,
