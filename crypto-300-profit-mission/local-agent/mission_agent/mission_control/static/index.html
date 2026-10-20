@@ -29,6 +29,23 @@
       </div>
       <div id="candidates" class="candidate-list"></div>
     </section>
+    <section class="panel" id="frank-intelligence-panel">
+      <div class="panel-title">
+        <div>
+          <h2>Frank 智能分析（只读）</h2>
+          <p>复用已有钱包信号与真实交易记录；风险提示依据已核实的动作。不预设交易金额、不发新通知，也不把历史价格或模型仓位当成实时链上事实。</p>
+        </div>
+        <span id="frank-intelligence-updated">等待本地数据</span>
+      </div>
+      <div class="frank-watch-controls">
+        <label for="frank-intelligence-search">筛选代币 CA、买卖方向或证据</label>
+        <input type="search" id="frank-intelligence-search" autocomplete="off" placeholder="仅本地筛选，不触发额外 RPC">
+        <button class="link-btn" type="button" id="frank-intelligence-reload">刷新事实</button>
+      </div>
+      <div class="frank-watch-summary" id="frank-intelligence-summary">仅限本机已索引的信号和交易；没有新的行情采集。</div>
+      <div class="candidate-list" id="frank-intelligence-cards"></div>
+      <p class="frank-watch-footnote">原 ACCUMULATION/MULTIPLE 提醒保持不变。本区所有风险词汇仅用于进一步调查；卖出可证明时才提示复核。当前市场参考价未采集就显示“无法核实”，不计算跟单盈亏或执行滑点。</p>
+    </section>
     <section class="stats" id="stats"></section>
 
     <section class="panel">
