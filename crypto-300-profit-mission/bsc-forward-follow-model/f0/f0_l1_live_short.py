@@ -21,6 +21,7 @@ import urllib.error
 import urllib.request
 
 from f0_l1_code_probe import atomic_json, fsync_directory
+from f0_l1_durable_journal import Journal
 from f0_l1_http_wire import ENDPOINT, json_body, parse_http_response, plan_prospective_heights, _parse_quantity
 from f0_l1_window import (SCHEMA as WINDOW_SCHEMA, DOCUMENTED_ROUTER_MODE,
                           FROZEN_ROUTER_REGISTRY_BLOB, git_blob_sha1,
@@ -33,7 +34,7 @@ MAX_BLOCKS = 60
 MAX_CALLS = 62
 MAX_BODY = 2_000_000
 DEPENDENCIES = (
-    "f0_l1_http_wire.py", "f0_l1_injected_capture.py", "f0_l1_window.py",
+    "f0_l1_http_wire.py", "f0_l1_durable_journal.py", "f0_l1_injected_capture.py", "f0_l1_window.py",
     "f0_l1_preflight.py", "f0_l1_code_probe.py", "f0_offline_collector.py",
     "f0_rpc_adapter.py", "f0_bounded_smoke.py", "F0_COHORT_PRESELECTION.json",
     "F0_ROUTER_SOURCE_CANDIDATES.json")
@@ -158,79 +159,6 @@ def live_https_post(url, body, timeout_s, cap):
     require(len(raw) <= cap, "RESPONSE_TOO_LARGE")
     return status, headers, raw
 
-
-class Journal:
-    def __init__(self, path, *, limit, clock, mono, sleep, interval_ms,
-                 deadline, raw_dir):
-        self.path, self.limit, self.clock, self.mono, self.sleep = (
-            path, limit, clock, mono, sleep)
-        self.interval_ms, self.deadline, self.raw_dir = interval_ms, deadline, raw_dir
-        self.rows = []
-        self.last_attempt_mono = None
-        self.raw_dir.mkdir(mode=0o700)
-        fsync_directory(self.raw_dir.parent)
-        self.persist()
-
-    def persist(self):
-        atomic_json(self.path, {"schema":SCHEMA,"attempted_calls":len(self.rows),
-                  "attempts":self.rows, "provider_billed":"UNVERIFIED"})
-
-    def request(self, method, params, category, post):
-        require(len(self.rows) < self.limit, "CAPTURE_CALL_CAP_REACHED")
-        if self.last_attempt_mono is not None:
-            delta = self.interval_ms/1000 - (self.mono()-self.last_attempt_mono)
-            if delta > 0:
-                self.sleep(delta)
-        require(self.clock() <= self.deadline, "CAPTURE_DEADLINE_EXPIRED")
-        idx = len(self.rows) + 1
-        payload = {"jsonrpc":"2.0","id":idx,"method":method,"params":params}
-        encoded = json_body(payload)
-        before = self.clock()
-        start_mono = self.mono()
-        item = {"index":idx,"method":method,"params":params,"category":category,
-                "requested_utc":iso(before),"requested_monotonic_ns":int(start_mono*1e9),
-                "state":"ATTEMPTED_OUTCOME_UNKNOWN"}
-        self.rows.append(item)
-        self.last_attempt_mono = start_mono
-        self.persist()  # MUST complete before post() / any real network.
-        require(self.clock() <= self.deadline, "CAPTURE_DEADLINE_EXPIRED")
-        result, failure, raw = None, None, None
-        try:
-            status, headers, raw = post(ENDPOINT, encoded,
-                    self.timeout_seconds, self.response_cap)
-            result = parse_http_response(status, headers, raw, payload,
-                                         max_bytes=self.response_cap)
-        except Exception as exc:
-            if isinstance(exc, TimeoutError):
-                failure = "NETWORK_TIMEOUT"
-            elif isinstance(exc, (urllib.error.HTTPError, urllib.error.URLError,
-                                  ConnectionError, OSError)):
-                failure = "NETWORK_ERROR_OR_HTTP_ERROR"
-            elif isinstance(exc, ValueError):
-                failure = "INVALID_HTTP_OR_RPC_RESPONSE"
-            else:
-                failure = "SOURCE_EXCEPTION"
-        # BaseException/KeyboardInterrupt still leaves the pre-send UNKNOWN row.
-        finished = self.clock()
-        item.update(completed_utc=iso(finished),
-                    completed_monotonic_ns=int(self.mono()*1e9),
-                    state="RPC_RESPONSE" if result is not None else "FAILED",
-                    response_sha256=sha(raw) if type(raw) is bytes else None,
-                    failure_code=failure)
-        if raw is not None and type(raw) is bytes:
-            artifact = self.raw_dir / ("%03d.response.json" % idx)
-            with artifact.open("xb") as output:
-                os.chmod(artifact, 0o600)
-                output.write(raw)
-                output.flush()
-                os.fsync(output.fileno())
-            fsync_directory(self.raw_dir)
-            item["local_raw_response_file"] = artifact.name
-        self.persist()
-        return result, failure, item
-
-    timeout_seconds = 5.0
-    response_cap = MAX_BODY
 
 
 def capture_once(permit, cohort_raw, router_raw, post, *,
