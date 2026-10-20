@@ -106,6 +106,42 @@ class LiveShortOfflineTests(unittest.TestCase):
             self.assertEqual(result["offline_block_analysis"]["actual_rpc_calls"],0)
             self.assertEqual(result["offline_block_analysis"]["metrics"]["blocks_received"],1)
 
+    def test_real_cap_path_60_contiguous_fake_full_blocks_totals_62(self):
+        with tempfile.TemporaryDirectory(prefix="f0fake-",dir="/tmp") as d:
+            root=Path(d);t=Clock();requests=[]
+            def fake(url,body,timeout,cap):
+                row=json.loads(body)
+                requests.append(row["method"])
+                if row["id"]==1:
+                    value="0x38"
+                elif row["id"]==2:
+                    value="0x63"
+                else:
+                    height=int(row["params"][0],16)
+                    value={"number":hex(height),
+                           "hash":"0x"+format(height,"064x"),
+                           "parentHash":"0x"+format(height-1,"064x"),
+                           "transactions":[]}
+                return (200,{"Content-Type":"application/json"},
+                        json.dumps({"jsonrpc":"2.0","id":row["id"],
+                                    "result":value}).encode())
+            result=live.capture_once(permit(root,t,60),MANIFEST,REGISTRY,fake,
+                                     clock=t.utc,mono=t.mono,sleep=t.sleep)
+            self.assertEqual(result["attempted_total"],62)
+            self.assertEqual(result["attempted_identity"],2)
+            self.assertEqual(result["attempted_blocks"],60)
+            self.assertEqual(result["failed_block_attempts"],0)
+            self.assertEqual(result["unattempted_blocks"],0)
+            self.assertEqual(result["stop_state"],"CAPTURE_WINDOW_COMPLETED")
+            self.assertEqual(result["offline_block_analysis"]["metrics"]["blocks_received"],60)
+            self.assertEqual(len(requests),62)
+            journal=json.loads((root/"journal.json").read_text())
+            self.assertEqual(journal["attempted_calls"],62)
+            self.assertEqual([x["index"] for x in journal["attempts"]],list(range(1,63)))
+            self.assertEqual(len(list((root/"raw_responses").glob("*.json"))),62)
+            self.assertTrue(all(x["state"]=="RPC_RESPONSE" for x in journal["attempts"]))
+            self.assertFalse(result["live_control_eligible"])
+
     def test_future_height_null_result_is_failure_no_retry(self):
         with tempfile.TemporaryDirectory(prefix="f0fake-",dir="/tmp") as d:
             root=Path(d);t=Clock();count=[]
