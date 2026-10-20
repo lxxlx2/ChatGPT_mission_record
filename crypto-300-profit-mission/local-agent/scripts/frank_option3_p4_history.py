@@ -104,6 +104,23 @@ def run_replay(trades: list[dict[str, Any]], *, snapshot_at: float) -> dict[str,
                               market_observations=None)[0]
         immediate = fake_intelligence_updates([analysis], as_of=at,
                                               max_event_age_seconds=600)
+        # Present the actual source-side category, not an invented full exit
+        # or current zero balance. All messages are past-time unsent previews.
+        for mock in immediate:
+            if event["indexed_side"] == "SELL_POSITION_UNRESOLVED":
+                mock["event"] = "观察到卖出 · 剩余仓位未核实"
+                mock["position_assessment"] = "REMAINING_POSITION_UNVERIFIED"
+            elif event["indexed_side"] == "EXIT":
+                mock["event"] = "本地索引标记退出 · 当前钱包余额未核实"
+                mock["position_assessment"] = "INDEXED_EXIT_CURRENT_BALANCE_UNVERIFIED"
+            else:
+                mock["event"] = "观察到卖出 · 是否全部退出未核实"
+                mock["position_assessment"] = "REMAINING_POSITION_UNVERIFIED"
+            mock["source_side"] = event["indexed_side"]
+            mock["body"] = ("历史交易的模拟风险变化，非实时消息；"
+                            "交易方向来自 Frank 本地索引。"
+                            "当前账户/其他地址的剩余仓位未独立核验。")
+            mock["current_wallet_balance_verified"] = False
         duplicate = fake_intelligence_updates(
             [analysis], as_of=at, max_event_age_seconds=600,
             previously_seen={x["key"] for x in immediate},
@@ -141,6 +158,14 @@ def run_replay(trades: list[dict[str, Any]], *, snapshot_at: float) -> dict[str,
             "unresolved_sell_not_called_exit": (
                 event["indexed_side"] != "SELL_POSITION_UNRESOLVED"
                 or analysis["model_episode_position_state"] == "UNVERIFIED"
+            ),
+            "mock_notice_residual_balance_unverified": (
+                all(mock.get("current_wallet_balance_verified") is False
+                    and mock.get("source_side") == event["indexed_side"]
+                    and mock.get("position_assessment") in {
+                        "REMAINING_POSITION_UNVERIFIED",
+                        "INDEXED_EXIT_CURRENT_BALANCE_UNVERIFIED",
+                    } for mock in immediate)
             ),
         }
         records.append({
