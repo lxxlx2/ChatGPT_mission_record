@@ -59,20 +59,32 @@ def fixtures(tmp_path, transactions):
                        {"events": [{"signature": tr["signature"]}]})))
         if i in (0, 1, 2, 4):
             ep = ("unrelated-evaluation-episode" if i == 4 else "episode-" + str(i))
+            payload = (
+                {"kind": "ACTIVE_TRADE", "signal_ids": ["signal-0"]}
+                if i == 0 else
+                {"kind": "HOURLY_29", "signal_ids": ["signal-3"]}
+                if i == 2 else
+                {"kind": "ACTIVE_TRADE", "signal_ids": ["signal-2"]}
+                if i == 4 else
+                {"kind": "ACTIVE_TRADE", "signal_ids": []}
+            )
             db.execute("INSERT INTO v1_evaluations VALUES(?,?,?,?,?,?)",
                        ("frank", tr["mint"], tr["signature"], ep,
-                        tr["block_time"], '{"stages":[]}'))
-    first, second, fifth = transactions[0], transactions[1], transactions[4]
-    for idx, (tr, triggering) in enumerate(
-        ((first, first["signature"]),
-         (second, "C" * 63 + "A"),
-         (fifth, fifth["signature"]))
-    ):
+                        tr["block_time"], json.dumps(payload)))
+    first, second, third, fifth = (
+        transactions[0], transactions[1], transactions[2], transactions[4])
+    samples = (
+        ("signal-0", first, first["signature"], "episode-0"),
+        ("signal-1", second, "C" * 63 + "A", "episode-1"),
+        ("signal-2", fifth, fifth["signature"], "episode-4"),
+        ("signal-3", third, third["signature"], "episode-2"),
+    )
+    for signal_id, tr, triggering, episode in samples:
         db.execute("INSERT INTO signals VALUES(?,?,?,?,?,?,?)",
-                   ("signal-" + str(idx), "frank", tr["mint"],
-                    "FRANK_ACCUMULATION_SIGNAL", "episode-" + str(idx),
+                   (signal_id, "frank", tr["mint"],
+                    "FRANK_ACCUMULATION_SIGNAL", episode,
                     tr["block_time"], json.dumps({
-                        "signal_id": "signal-" + str(idx),
+                        "signal_id": signal_id,
                         "triggering_signature": triggering,
                     })))
     db.commit()
@@ -101,11 +113,15 @@ def test_exact_trigger_join_rejects_old_same_mint_and_wrong_episode(tmp_path, mo
     assert result["distinct_locally_indexed_rows"] == 10
     assert result["source_reconciled_rows"] == 10
     assert result["source_database"] == "EXISTING_FORWARD_SQLITE_MODE_RO_QUERY_ONLY"
-    assert result["rows"][0]["causal_status"] == "EXACT_TRANSACTION_TRIGGERED_V1_SIGNAL"
+    assert result["rows"][0]["causal_status"] == "SOURCE_SIGNAL_EMITTED_BY_ACTIVE_TRADE_EVALUATION"
+    assert result["rows"][0]["active_trade_signal_emission_proven"] is True
     assert result["rows"][0]["control_link"] == "EXACT_SIGNAL_TO_CONTROL_WAIT"
     assert result["rows"][1]["causal_status"] == "EXACT_TRANSACTION_EVALUATED_NO_NEW_SIGNAL"
     assert result["rows"][1]["exact_v1_signals"] == 0
-    assert result["rows"][4]["causal_status"] == "EXACT_SIGNED_EVENT_SIGNAL_EPISODE_MISMATCH"
+    assert result["rows"][2]["causal_status"] == "SIGNAL_REFERENCES_BUY_SIGNATURE_EMITTED_ON_HOURLY_TICK"
+    assert result["rows"][2]["active_trade_signal_emission_proven"] is False
+    assert result["rows"][2]["hourly_tick_signal_emission_proven"] is True
+    assert result["rows"][4]["causal_status"] == "SIGNAL_EVALUATION_EPISODE_MISMATCH"
     assert result["rows"][4]["control_link"] == "SIGNAL_EVALUATION_EPISODE_MISMATCH_NO_JOIN"
     assert result["rows"][6]["causal_status"] == "SELL_NO_V1_BUY_SIGNAL_EXPECTED"
     assert all("mint" not in row and "signature" not in row for row in result["rows"])
