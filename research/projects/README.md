@@ -6,6 +6,8 @@ Reusable project-analysis framework currently remains at:
 - `crypto-300-profit-mission/PROJECT_ANALYSIS_FRAMEWORK.md`
 
 Current mapped material:
+- Jack Butcher BALANCE / Credits / Statements Uniswap CCA audit and $500 hypothetical participation analysis: `research/projects/jack-balance/jack-balance-cca-auction-20261020.md` (read-only, no position, no trade).
+
 - JUMP / Jumper Legion sale: `research/projects/jump/jump-legion-sale.md`
 - StandX confirmed 2026-10-15 platform-token cancellation, final one-time DUSD distribution, compensation checker/claim and operations wind-down: `research/projects/standx/standx-development-tge.md` (historical TGE research archived in same document).
 - Meridian Capital / MCD due diligence: `research/projects/meridian-capital/meridian-capital-mcd-due-diligence.md`
