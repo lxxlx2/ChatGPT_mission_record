@@ -38,6 +38,7 @@ ALLOWED_DELTAS = (
     "crypto-300-profit-mission/meme/FRANK_OPTION3_P4_TEN_TRADE_CAUSAL_MAC_RESULT_20261020.md",
     "crypto-300-profit-mission/local-agent/scripts/frank_option3_p4_stdlib_selftest.py",
     "crypto-300-profit-mission/local-agent/scripts/frank_option3_p4_signal_first.py",
+    "crypto-300-profit-mission/local-agent/scripts/frank_option3_p4_activity_watch.py",
     "crypto-300-profit-mission/meme/FRANK_OPTION3_P4_PRIOR_SIGNAL_SELL_MAC_RESULT_20261020.md",
 )
 SOURCE_PORT = 8766
