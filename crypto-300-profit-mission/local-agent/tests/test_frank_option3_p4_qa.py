@@ -105,8 +105,8 @@ def test_exact_trigger_join_rejects_old_same_mint_and_wrong_episode(tmp_path, mo
     assert result["rows"][0]["control_link"] == "EXACT_SIGNAL_TO_CONTROL_WAIT"
     assert result["rows"][1]["causal_status"] == "EXACT_TRANSACTION_EVALUATED_NO_NEW_SIGNAL"
     assert result["rows"][1]["exact_v1_signals"] == 0
-    assert result["rows"][4]["causal_status"] == "EXACT_TRANSACTION_TRIGGERED_V1_SIGNAL"
-    assert result["rows"][4]["control_link"] == "NO_SAME_EPISODE_CONTROL_CANDIDATE"
+    assert result["rows"][4]["causal_status"] == "EXACT_SIGNED_EVENT_SIGNAL_EPISODE_MISMATCH"
+    assert result["rows"][4]["control_link"] == "SIGNAL_EVALUATION_EPISODE_MISMATCH_NO_JOIN"
     assert result["rows"][6]["causal_status"] == "SELL_NO_V1_BUY_SIGNAL_EXPECTED"
     assert all("mint" not in row and "signature" not in row for row in result["rows"])
     display = json.dumps(result, sort_keys=True)
