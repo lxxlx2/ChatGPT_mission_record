@@ -123,8 +123,16 @@ def causal_status(db: sqlite3.Connection, case: dict, row: dict) -> dict:
                      and s["signal_type"] not in SIGNALS]
     evaluation_episode = str(evals[0]["episode_id"]) if evals else None
     signal_types = sorted({str(s["signal_type"]) for s in exact_signals})
+    conflicting_signal_episode = bool(
+        exact_signals and evaluation_episode is not None and
+        any(str(s["episode_id"]) != evaluation_episode for s in exact_signals)
+    )
     if case["indexed_side"] in BUY_SIDES:
-        if exact_signals:
+        if conflicting_signal_episode:
+            causal = "EXACT_SIGNED_EVENT_SIGNAL_EPISODE_MISMATCH"
+        elif exact_signals and not evals:
+            causal = "EXACT_SIGNAL_PRESENT_BUT_MODEL_EVALUATION_UNAVAILABLE"
+        elif exact_signals:
             causal = "EXACT_TRANSACTION_TRIGGERED_V1_SIGNAL"
         elif evals:
             causal = "EXACT_TRANSACTION_EVALUATED_NO_NEW_SIGNAL"
@@ -157,6 +165,7 @@ def causal_status(db: sqlite3.Connection, case: dict, row: dict) -> dict:
         "source_episode_exact": evaluation_episode,
         "in_current_v1_state_event_list": in_current_episode,
         "triggered_signal_ids": {s["signal_id"] for s in exact_signals},
+        "signal_evaluation_episode_conflict": conflicting_signal_episode,
     }
 
 
@@ -166,6 +175,8 @@ def control_link(ctl: sqlite3.Connection | None, case: dict,
         return "CONTROL_NOT_AVAILABLE"
     if evidence["source_signal_count_exact_triggering_signature"] == 0:
         return "NO_EXACT_TRIGGERED_V1_SIGNAL_TO_JOIN"
+    if evidence["signal_evaluation_episode_conflict"]:
+        return "SIGNAL_EVALUATION_EPISODE_MISMATCH_NO_JOIN"
     episode = evidence["source_episode_exact"]
     if episode is None:
         return "SIGNAL_PRESENT_BUT_EXACT_EVALUATION_EPISODE_UNKNOWN"
