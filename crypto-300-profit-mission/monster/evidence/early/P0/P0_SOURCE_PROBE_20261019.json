@@ -12172,5 +12172,139 @@
         "historical_complete_native_wallet_net_pnl": "UNKNOWN"
       }
     ]
+  },
+  "bsc_v2_p0_forward_only_factory_counter_logless_discovery_readonly_pilot_20261020": {
+    "schema": "MONSTER_P0_READ_ONLY_FACTORY_STORAGE_NEW_V2_PAIR_SOURCE_CAPABILITY_SINGLE_SNAPSHOT_V1",
+    "date": "2026-10-20",
+    "source_kind": "ALCHEMY_EXISTING_CONNECTED_BNB_MAINNET_NORMALIZED_JSON_RPC",
+    "origin_query_type": "LIVE_TIP_AND_HISTORICAL_FIXED_BLOCK_ETH_BLOCKNUMBER_ETH_CALL_PLUS_ONE_ETH_GETLOGS",
+    "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+    "factory_allPairsLength_selector": "0x574f2ba3",
+    "factory_allPairs_selector": "0x1e3dd18b",
+    "pair_token0_selector": "0x0dfe1681",
+    "pair_token1_selector": "0xd21220a7",
+    "pair_getReserves_selector": "0x0902f1ac",
+    "snapshot_chain_tip_block": 128722337,
+    "factory_count_end": 3509484,
+    "counts_at_fixed_blocks": [
+      {
+        "block": 128719937,
+        "total_pair_count": 3509336,
+        "delta_to_snapshot": 148
+      },
+      {
+        "block": 128721737,
+        "total_pair_count": 3509449,
+        "delta_to_snapshot": 35
+      },
+      {
+        "block": 128722217,
+        "total_pair_count": 3509471,
+        "delta_to_snapshot": 13
+      },
+      {
+        "block": 128722337,
+        "total_pair_count": 3509484,
+        "delta_to_snapshot": 0
+      }
+    ],
+    "source_identifies_new_pair_addresses_by_factory_index_without_eth_getLogs": true,
+    "all_pairs_index_based_selection": "ZERO_BASED_CHRONOLOGICAL_FACTORY_STORAGE_ORDER_NOT_OUTCOME_FILTERED",
+    "sampled_indices": [
+      3509471,
+      3509477,
+      3509483
+    ],
+    "sample_selection": "FIRST_MIDDLE_LAST_OF_LAST_120_BLOCK_NEW_INDEX_RANGE_PRECHOSEN_WITHOUT_POOL_LIQUIDITY_RESULTS",
+    "sampled_index_count": 3,
+    "sampled_zero_quote_and_token_reserve_count": 3,
+    "quote_asset": "WBNB",
+    "first_index_creation_block_history": {
+      "index_zero_based": 3509471,
+      "first_block_factory_count_exceeded_index": 128722229,
+      "previous_block": 128722228,
+      "previous_count": 3509471,
+      "new_count": 3509472,
+      "source": "HISTORICAL_BISECTION_7_READS_OF_FACTORY_COUNT"
+    },
+    "first_index_real_event_crosscheck": {
+      "block": 128722229,
+      "block_header_time_utc": "2026-10-20T09:28:43Z",
+      "tx_hash": "0x26eb11e27d6fdb75315c74e9f1b312d746ce654d6188a6ae819f9c628044e2af",
+      "transaction_index_hex": "0x5f",
+      "log_index_hex": "0x1c9",
+      "factory_event_topic0": "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+      "event_token0": "0x9843fd452ea550c2542b9e4c06acdbbacb627777",
+      "event_token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "event_pool": "0x1c4725bee3de56b09b8f022101d8bae61e0ffe97",
+      "event_pair_number_one_based": 3509472,
+      "event_pool_equals_factory_allPairs_index": true,
+      "event_pair_count_equals_factory_count_end_of_creation_block": true
+    },
+    "samples": [
+      {
+        "factory_index_zero_based": 3509471,
+        "pool": "0x1c4725bee3de56b09b8f022101d8bae61e0ffe97",
+        "token0": "0x9843fd452ea550c2542b9e4c06acdbbacb627777",
+        "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "asof_block": 128722337,
+        "reserve0_raw": "0",
+        "reserve1_raw": "0",
+        "block_timestamp_last_uint32": 0,
+        "zero_reserves_at_snapshot": true,
+        "actual_trade_eligibility": "NO_POSITIVE_RESERVES_AT_THIS_SNAPSHOT",
+        "future_pool_liquidity_status": "UNKNOWN",
+        "real_swap_status": "NOT_READ"
+      },
+      {
+        "factory_index_zero_based": 3509477,
+        "pool": "0x7dab56bc4e9e8351599e94ae9d47cf6daaabd8ff",
+        "token0": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "token1": "0xcc2f60c65fbc40d71ebfca5578b7f79383677777",
+        "asof_block": 128722337,
+        "reserve0_raw": "0",
+        "reserve1_raw": "0",
+        "block_timestamp_last_uint32": 0,
+        "zero_reserves_at_snapshot": true,
+        "actual_trade_eligibility": "NO_POSITIVE_RESERVES_AT_THIS_SNAPSHOT",
+        "future_pool_liquidity_status": "UNKNOWN",
+        "real_swap_status": "NOT_READ"
+      },
+      {
+        "factory_index_zero_based": 3509483,
+        "pool": "0xedc3964b993983d44fa05dc39169edaa18defe80",
+        "token0": "0x4e7e8b5da0e411eed01017f0f0a9db3d17cd7777",
+        "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "asof_block": 128722337,
+        "reserve0_raw": "0",
+        "reserve1_raw": "0",
+        "block_timestamp_last_uint32": 0,
+        "zero_reserves_at_snapshot": true,
+        "actual_trade_eligibility": "NO_POSITIVE_RESERVES_AT_THIS_SNAPSHOT",
+        "future_pool_liquidity_status": "UNKNOWN",
+        "real_swap_status": "NOT_READ"
+      }
+    ],
+    "not_live_public_reception_receipt": true,
+    "first_observed_wall_clock_reception": "UNKNOWN_CONNECTOR_FETCH_NOT_ARCHIVED_WITH_UTC_RECEIVED_AT",
+    "all_queries_happen_after_historical_blocks": "DO_NOT_BACKDATE_AVAILABLE_AT_TO_CREATION_BLOCK",
+    "not_continuous_current_collection": true,
+    "not_historical_2025_07_01_pit_proof": true,
+    "does_not_cover_BSC_V3_or_other_launchpads": true,
+    "does_not_prove_buy_sell_or_tax_or_real_spread": true,
+    "read_only_future_capability_contract": "PROPOSED_MANUAL_FOREGROUND_PROBE_ONLY_NOT_AUTHORIZED_FOR_SCHEDULE_OR_DEPLOY",
+    "later_feasibility_checks": "ONLY_AFTER_INDEPENDENT_DESIGN_AND_USER_APPROVAL_OF_ANY_RUNTIME; MUST_CAPTURE_RECEIVED_AT_SOURCE_HASH_AND_CONCURRENT_FREESH_INFO",
+    "no_scheduler_or_monitor_installed": true,
+    "prior_manual_stage99_disabled_untouched": true,
+    "frank_unchanged": true,
+    "historical_v2_frozen30_unchanged": true,
+    "no_study_or_trade_notional_selected": true,
+    "future_source_eligibility": "PARTIAL_V2_PAIR_DISCOVERY_ONLY_NOT_D2",
+    "P0": "INSUFFICIENT_COVERAGE",
+    "P1": "BLOCKED",
+    "G6": "NO_GO",
+    "original_raw_http_source_sha256": "NOT_AVAILABLE_ALCHEMY_CONNECTED_NORMALIZED",
+    "other_provider_independent_validation": "NOT_PERFORMED_CURRENT_PAIR",
+    "no_paid_api_no_trade_no_deployment_no_merge": true
   }
 }

@@ -1,5 +1,13 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：V2工厂计数可不依赖历史getLogs发现新增池，3个真实新池无储备，严格限制为只读可行性
+
+为避免V3历史日志源失败后反复寻找免费节点，本轮只在**已有Alchemy连接**内短暂核查PancakeSwap V2 Factory合约的历史`allPairsLength()`与`allPairs(index)`：块`128722337`工厂总数**3,509,484**；前120块增**13**对、前600块增**35**对、前2400块增**148**对，增量是**Pair数不是通过流动性准入的新Token数**。对前120块新增索引按顺序先取**第一个、中间一个、最后一个**，三个`allPairs(index)`分别返回`0x1c4725bee3de56b09b8f022101d8bae61e0ffe97`、`0x7dab56bc4e9e8351599e94ae9d47cf6daaabd8ff`、`0xedc3964b993983d44fa05dc39169edaa18defe80`，其`token0/token1`均有一侧WBNB，但在同一固定块通过`getReserves()`都返回**0/0**，**这是池身份有效、尚无真实池深的反例**；不能发WATCH/BUY，也不证明它们将来始终没流动性。
+
+以第一个索引`3509471`为历史目标，对`allPairsLength`二分7个只读历史块，找到了该索引首次可用的块`128722229`（前一块工厂长度3509471，当块3509472）。再对**该块一个**Pancake V2 Factory `eth_getLogs(PairCreated)`实际读取，出现成功真实事件tx`0x26eb11e27d6fdb75315c74e9f1b312d746ce654d6188a6ae819f9c628044e2af`、`logIndex=0x1c9`、区块头时间`2026-10-20T09:28:43Z`、Pair编号3509472、Pair地址与`allPairs(3509471)`相同。证明**Factory存储索引可作为不依赖连续大范围getLogs的V2新池候选发现通道**；仍需另行确认首次公开接收时钟及流动性/交易真实执行，PairCreated != real liquidity、Pool count != distinct token count。
+
+**权限与研究止损**：本次只读临时探针，无自动定时/手动任务创建、无新脚本、无Mac部署/CI、无旧Stage99重启、无Frank改动、不固定金额；不可拿2026-10-20事后历史读数填充2025-07-01的真实`available_at`或V3/launchpad母体；只作为以后单独获授权时前台采集工具的局部技术依据。原P0主线Source stop、30币正式24/30 PIT及18/30统一订单额、P1 BLOCKED、G6 NO_GO都未通过。逐块数量、三个Pair的raw uint值与首Pair真实事件独立匹配在原P0 JSON键`bsc_v2_p0_forward_only_factory_counter_logless_discovery_readonly_pilot_20261020`。
+
 ## 2026-10-20：P0原30币一页业务缺口/停止决策——不再追同类RPC边界
 
 **固定分母与来源**：2025-07-01 BSC PancakeSwap V2先到的30个不同Token，全部保留，绝非全BSC或V3、launchpad。根据旧P0真实日志、Alchemy历史交易回执、Mac卖出原档审核、24池次区块储备及30币字节码资料，**零新链上查询**做了30/30确定性逐币来源Join，分成完全互斥的4组（合计30，不改变母体）：
