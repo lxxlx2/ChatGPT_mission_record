@@ -14373,7 +14373,7 @@
     "schema": "MONSTER_BSC_FOURMEME_MULTICALL3_HISTORIC_INDEX_ENUMERATION_V1",
     "research_date_utc": "2026-10-21",
     "provider": "EXISTING_FREE_ALCHEMY_BNB_MAINNET_NORMALIZED_RPC",
-    "state": "IN_PROGRESS",
+    "state": "COMPLETE_538_UNIQUE_HISTORIC_INDEX_ADDRESSES_ONLY",
     "manager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
     "multicall3": "0xca11bde05977b3631167028862be2a173976ca11",
     "method": "ETH_CALL_AGGREGATE3_STATIC_TOKEN_MANAGER_TOKENS_INDEX",
@@ -14381,8 +14381,8 @@
     "range_first": 247596,
     "range_end_exclusive": 248134,
     "target_slots": 538,
-    "validated_slots": 480,
-    "calls": 32,
+    "validated_slots": 538,
+    "calls": 36,
     "calls_per_batch_max": 15,
     "source_byte_evidence": "NORMALIZED_CONNECTOR_OUTPUT_ONLY_NO_HTTP_RAW_BYTES",
     "public_available_at_2025": "UNKNOWN",
@@ -15126,7 +15126,106 @@
           "0xa6152c2d163e14fa8f5b0c23680c3face6a34444"
         ],
         "returned_hex_chars": 4930
+      },
+      {
+        "start_index": 248076,
+        "end_exclusive": 248091,
+        "source": "ALCHEMY_NORMALIZED_ETH_CALL_TO_HISTORIC_MULTICALL3",
+        "addresses": [
+          "0x44280d489a75b733244f8eb02526b40f19d34444",
+          "0x878b7f5f050f7082558e970ce9199211df0f4444",
+          "0x947f49c82c7627146fc30e208663203dcc704444",
+          "0xca03fa301d37af5f35c000abf5ed90e9a6eb4444",
+          "0xa9d8c32c6188f6d298ea4fd279c0e908027f4444",
+          "0x9c7ac1a15b265a7bfc0937f24c3cc71835cc4444",
+          "0xe82a4189da5cbb6ad997133f2bc29f47b18e4444",
+          "0xf6fce02b75825845ec5afaab3ede79c40e554444",
+          "0xfbf79c03498e62337f6c2dcbf7833f42cd274444",
+          "0xe224ac0dd9afdc33918e7accee859a3b067d4444",
+          "0x66bbd6a48d6dd524e34136b608535828dab64444",
+          "0x4eabbaf572a36691e6a3dd7b7f8907de73114444",
+          "0xb92a93ca8cd173096f24cf1b3b48b7d9172f4444",
+          "0xf26767291c79d1775db5dafc54402d1063604444",
+          "0x71f8e344f247bb74aaadcd2b382a8adcf27b4444"
+        ],
+        "returned_hex_chars": 4930
+      },
+      {
+        "start_index": 248091,
+        "end_exclusive": 248106,
+        "source": "ALCHEMY_NORMALIZED_ETH_CALL_TO_HISTORIC_MULTICALL3",
+        "addresses": [
+          "0x08528441c39d7ba437dac2e3781da0de265f4444",
+          "0xc3a3ebd90ffc804b282c34156b4d5c624ece4444",
+          "0x1390fd6591524de67999c81839657cf611d64444",
+          "0x7e5f0ac014e8a3462cffaea7da7ebce755f04444",
+          "0x929670bb90f3fa43a3e884965fd2397459f34444",
+          "0xd2291e05dc4470188e55a0ebc71977140a874444",
+          "0x5be5aed83da725eda1f9e6e4907bedfa5c8d4444",
+          "0xe26d347363d0126a467604923c2d005e9b254444",
+          "0xb78d98d2fee1fdc42f1911b97ad3ba1066394444",
+          "0xba7e5389a1200f97adb4c0e8d4b4ffb03e1a4444",
+          "0x04445f92cde9541036fb22f56e50f9a5634c4444",
+          "0x4e37dc72cb457581f551590b7b61752df7114444",
+          "0x297f59085570404ed6d5f43068b760b82c844444",
+          "0xfe73bcc753dab10b57d0f14320266c2069444444",
+          "0x2a029ac11c12b0f43fd1086f7a001392c7ca4444"
+        ],
+        "returned_hex_chars": 4930
+      },
+      {
+        "start_index": 248106,
+        "end_exclusive": 248121,
+        "source": "ALCHEMY_NORMALIZED_ETH_CALL_TO_HISTORIC_MULTICALL3",
+        "addresses": [
+          "0xc0895b45f1ab95e5f48323ba42357b62b7134444",
+          "0x27e732a7d82577d14457262c7ba330a5e35e4444",
+          "0xfff99754e0d6b93be3792730d7ea0f2d89f54444",
+          "0x69d8ebf5afdf18645df5bb4a895ac901f2f94444",
+          "0xc507ab8b93617d34a6e0bf7c4850594f2e354444",
+          "0x227cbedc02c16bc385a1d14413d7a57357174444",
+          "0x93c2a809f5ccaeb1b99ae0806a83d37e0cfc4444",
+          "0xc2ea9fd561f04ea70245b2864800b4b687a24444",
+          "0xcb5a6a9801444a9f9a15749dce4ddf733b9e4444",
+          "0xc516447c0e3f85a6420b775046bffd59af174444",
+          "0x61fa4193fa0672c0233bf8c53bd1ecddb62c4444",
+          "0xa80f3938dd69b97aac3e23bccfbb1cdb983b4444",
+          "0xa8d132dce0a0032693bed2e93a3ccff4b38f4444",
+          "0x8a219178e7b3136a076591e7f7e473b022344444",
+          "0x11acdda0ed0256db5ef042cdcd43484884c14444"
+        ],
+        "returned_hex_chars": 4930
+      },
+      {
+        "start_index": 248121,
+        "end_exclusive": 248134,
+        "source": "ALCHEMY_NORMALIZED_ETH_CALL_TO_HISTORIC_MULTICALL3",
+        "addresses": [
+          "0xe7a0d2f2b3a8bf446d4ac3ad27050f008e7e4444",
+          "0x222cd539079e634fdc267b14a6a2e8c5f6404444",
+          "0xd00233d65b7314d5dedcf55369b5232aa3b74444",
+          "0xc8e417ab97d2cd6c5a2fadc3f0c220a0b7014444",
+          "0xc31aa81fa12582bb84aeba0418f05e901b3c4444",
+          "0x86251e0e060d5a423c4e0ab09c5996f92f774444",
+          "0xb8a417e88f01834b6fa95fc8838f5853ba884444",
+          "0x2877f3b2e3bd37b7cd1cdb457765d8c7b65b4444",
+          "0x7d9a0ab12e6d39f8757d7a1dc29e0717abd74444",
+          "0xe9ed5c282318aeb6237c15e54154fcf0a5624444",
+          "0x83d06b03b6850930f95d908433392994860a4444",
+          "0xb4a70ba33beafe722ef0d40a822661b203114444",
+          "0xc4be692236dba677f3db2d2cdb38f998d2f54444"
+        ],
+        "returned_hex_chars": 4290
       }
-    ]
+    ],
+    "chunks_verified": 36,
+    "all_slots_nonzero": true,
+    "all_slots_unique": true,
+    "boundaries_match_two_real_TokenCreate_event_anchors": true,
+    "full_historical_creation_event_log_coverage": "NOT_PROVEN_BY_538_INDEXED_ADDRESSES",
+    "subgraph_and_pancake_v3_full_population": "NOT_PROVEN",
+    "independent_provider_verification": "NOT_AVAILABLE",
+    "cheap_multicall_eth_call_return_bytes_archived": "NO_CONNECTOR_ONLY_NORMALIZED_RESPONSE",
+    "decision": "FOURMEME_ONE_DAY_SCOPED_STATE_INDEX_COVERAGE_RECONSTRUCTED_NOT_FULL_P0_PASS"
   }
 }
