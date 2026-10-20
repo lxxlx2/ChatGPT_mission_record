@@ -21,7 +21,7 @@ import urllib.error
 import urllib.request
 
 from f0_l1_code_probe import atomic_json
-from f0_l1_http_wire import ENDPOINT, json_body, parse_http_response, plan_prospective_heights
+from f0_l1_http_wire import ENDPOINT, json_body, parse_http_response, plan_prospective_heights, _parse_quantity
 from f0_l1_window import (SCHEMA as WINDOW_SCHEMA, DOCUMENTED_ROUTER_MODE,
                           FROZEN_ROUTER_REGISTRY_BLOB, git_blob_sha1,
                           load_frozen_cohort, cohort_watchlist, offline_window, utc_ms)
@@ -254,6 +254,8 @@ def capture_once(permit, cohort_raw, router_raw, post, *,
         chain, failure, _ = audit.request("eth_chainId", [], "CHAIN_ID", post)
         if failure is not None or chain is None:
             raise ValueError("CHAIN_ID_UNAVAILABLE")
+        # Fail before spending the separate head-call budget on a wrong chain.
+        _parse_quantity(chain, "eth_chainId", 1)
         head, failure, head_item = audit.request("eth_blockNumber", [], "HEAD", post)
         if failure is not None or head is None:
             raise ValueError("HEAD_UNAVAILABLE")
