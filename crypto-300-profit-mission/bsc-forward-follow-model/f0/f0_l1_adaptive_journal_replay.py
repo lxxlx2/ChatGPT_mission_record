@@ -15,7 +15,7 @@ from pathlib import Path
 
 from f0_l1_adaptive_head_plan import (
     init_plan, next_action, apply_block_result, apply_head_result, summarize)
-from f0_l1_live_short import Journal, atomic_json
+from f0_l1_durable_journal import Journal, atomic_json
 from f0_l1_http_wire import _parse_quantity
 from f0_l1_window import (
     FROZEN_ROUTER_REGISTRY_BLOB, git_blob_sha1, load_frozen_cohort,
