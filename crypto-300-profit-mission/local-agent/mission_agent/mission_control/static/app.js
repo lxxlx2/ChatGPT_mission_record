@@ -780,6 +780,88 @@ function renderDecisions(rows) {
   }).join('') || '<div class="empty">暂无判断变化</div>';
 }
 
+let frankIntelligenceSnapshot = null;
+
+function frankIntelligenceTimestamp(ts) {
+  const n = Number(ts);
+  return Number.isFinite(n) && n > 0
+    ? new Date(n*1000).toLocaleString('zh-CN')
+    : '未核实时间';
+}
+
+function renderFrankIntelligence(snapshot) {
+  const root = $('frank-intelligence-cards');
+  if (!snapshot || snapshot.status !== 'LOCAL_SOURCE_RESEARCH_ONLY') {
+    $('frank-intelligence-summary').textContent =
+      'Frank 原始事实来源不可用；不能把接口失败当成“没有交易”。';
+    root.innerHTML = '<div class="empty">数据暂不可核实。原有钱包活动与买入提醒不受本面板影响。</div>';
+    return;
+  }
+  const raw = Array.isArray(snapshot.rows) ? snapshot.rows : [];
+  const q = $('frank-intelligence-search').value.trim().toLowerCase();
+  const visible = raw.filter(x => [
+    x.mint, x.pattern, x.latest_side, ...(x.facts || []), ...(x.missing || [])
+  ].join(' ').toLowerCase().includes(q));
+  const shown = visible.slice(0,40);
+  $('frank-intelligence-summary').textContent =
+    '已索引研究条目 ' + raw.length + ' 个；当前筛选 ' + visible.length +
+    ' 个，展示 ' + shown.length +
+    ' 个。事件仅代表 Frank 本地已索引范围；市场行情未新采集。';
+  root.innerHTML = shown.map(x => {
+    const facts = Array.isArray(x.facts) ? x.facts : [];
+    const missing = Array.isArray(x.missing) ? x.missing : [];
+    const risk = facts.includes('FRANK_SELL_OBSERVED_REVIEW_RISK')
+      ? '已核实 Frank 最近有卖出，先复核之前的观察结论'
+      : (x.latest_side === 'UNVERIFIED' ? '最近真实买卖行为未核实' : '尚无额外已证实卖出风险');
+    const price = x.price || {};
+    const change = price.change_pct_vs_last_verified_buy;
+    const delta = change == null
+      ? '无法核实（' + esc(price.status || 'PRICE_UNAVAILABLE') + '）'
+      : esc(change) + '%（相对 Frank 核实买价，仅参考价变化）';
+    const side = x.latest_side === 'BUY' ? '买入' :
+      x.latest_side === 'SELL' ? '卖出' : '未核实';
+    const tx = typeof x.latest_signature === 'string' &&
+      /^[1-9A-HJ-NP-Za-km-z]{32,88}$/.test(x.latest_signature)
+      ? '<a class="link-btn" href="https://solscan.io/tx/' +
+        encodeURIComponent(x.latest_signature) +
+        '" target="_blank" rel="noopener noreferrer">交易证据 ↗</a>' : '';
+    return `<article class="candidate-card">
+      <div class="candidate-head"><div class="candidate-title">
+        <strong>${esc(translated(patternLabel,x.pattern,'未核实模式'))}</strong>
+        <span class="state-text">研究提醒：${esc(risk)}</span>
+      </div><span class="candidate-time">最近动作：${esc(side)} · ${esc(frankIntelligenceTimestamp(x.latest_action_at))}</span></div>
+      ${tokenIdentity(x.mint)}
+      <p>来源信号：<code>${esc(x.source_signal_id || '未核实')}</code> ${tx}</p>
+      <div class="metrics-grid">
+        ${metric('来源已核实的行为', facts.length ? esc(facts.join(' / ')) : '无可证明事件')}
+        ${metric('无法核实的内容', missing.length ? esc(missing.join(' / ')) : '本研究范围内无其他缺口声明')}
+        ${metric('与 Frank 已核实买价相比', delta,
+          '只有同币种、同计价单位和有效时点的行情才比较；不代表实际可执行收益或用户盈亏。')}
+        ${metric('参考行情来源与时间',
+          esc(price.market_source || '未采集') + ' · ' +
+          esc(frankIntelligenceTimestamp(price.market_observed_at)))}
+      </div>
+      <p class="frank-watch-footnote">不自动交易；未提供用户交易金额，因此未做路由、滑点或可执行评估。</p>
+    </article>`;
+  }).join('') || '<div class="empty">当前筛选没有可展示的已索引研究条目。</div>';
+}
+
+async function refreshFrankIntelligence() {
+  try {
+    frankIntelligenceSnapshot = await get('/api/frank-intelligence');
+    renderFrankIntelligence(frankIntelligenceSnapshot);
+    $('frank-intelligence-updated').textContent = '本地读取于 ' +
+      new Date().toLocaleTimeString('zh-CN');
+  } catch (e) {
+    renderFrankIntelligence(null);
+    $('frank-intelligence-updated').textContent = '来源不可用';
+  }
+}
+
+$('frank-intelligence-search').addEventListener('input',
+  () => renderFrankIntelligence(frankIntelligenceSnapshot));
+$('frank-intelligence-reload').addEventListener('click', refreshFrankIntelligence);
+
 async function refresh() {
   try {
     const [runtime,control,candidates,trades,reviewActivity,decisions,coverage,watch] = await Promise.all([
@@ -817,8 +899,10 @@ async function refresh() {
 
 refresh();
 refreshSignedActivity(true);
+refreshFrankIntelligence();
 setInterval(refresh,5000);
 setInterval(refreshSignedActivity,60000);
+setInterval(refreshFrankIntelligence,60000);
 
 
 const clusterPresetHelp = {
