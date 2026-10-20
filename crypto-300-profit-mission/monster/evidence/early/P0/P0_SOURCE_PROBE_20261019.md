@@ -1,5 +1,13 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：冻结V2样本的24个首次达标池，下一完整区块储备24/24仍达标（新真实只读核验）
+
+本次采用已连接的免费Alchemy BNB mainnet，只读`eth_call`向**已冻结且曾观察到首次池深达标**的24个原PancakeSwap V2 Pair，在对应首次确认门槛区块`block+1`读取`getReserves()`（selector `0x0902f1ac`）。分4批、每批6个，**24/24 均成功**、池中Token储备大于零且报价侧储备仍达到原冻结阈值（2 WBNB或1000 USDT）。其中20个首次达标位于建池区块，4个是后来区块#14/#16/#17/#26。本次原始`reserve0/reserve1/blockTimestampLast`的报价侧/Token储备、池地址、查询块及当时阈值已逐项记录到同一P0 JSON键 `bsc_v2_p0_all24_next_block_reserve_source_read_20261020`，可复核原值。**注意getReserves第三值是最近一次Sync的blockTimestampLast，不是区块时间戳，也不能充当公开available_at。**
+
+其余6个排名 **#5/#8/#15/#18/#20/#28** 没有此前确认的首次达标事件，故本轮不做“首达标+1块”检查，并保持在原30个样本分母；没有将它们定性为永远无池深或无法卖出。24个成功只能证明对应**下一完整区块末的历史池状态**，不能证明用户在当时接收过信息、可在指定订单名义额买卖、Token没有转账税、反卖限制、MEV/Gas以及真实净收益。返回来源为Alchemy连接器规范化RPC，不是本次取得独立原HTTP bytes，不能冒充新SHA归档或第二服务商一致性证明。
+
+**P0正式24/30完整PIT仍NOT_SCORABLE，18/30统一名义额双向可卖仍NOT_SCORABLE，P1 BLOCKED，研究预算0美元。** 这项24/24不推动Phase验收，下一工作应检验事前冻结订单金额及历史Buy/Sell容量是否可独立证明，优先保留最小完整样本链，不重复已审交易回执。
+
 ## 2026-10-20：Graph 对照子图同样403，停止无证据的重复查询；Alchemy重核原V2样本
 
 本次用户 Mac 前台手动运行原Branch HEAD `45e598d4`：11/11定向Python测试 **PASS**，仅出现模拟HTTPError资源释放`ResourceWarning`；随后独立 Graph Network 参考子图 `DZz4kDTdmzWLWsV373w2bSmoar3umKKH9y82SUKr5qmp` 唯一真实请求返回 `CONTROL_HTTP_DENIED`、**HTTP 403**。此前 Pancake V3 同一个Key也返回403；Security截图已确认任意Subgraph/Domain均允许。两次403的真实服务端 body 未保存，因此无法区分 Key本身、账户状态、Gateway政策或其他认证故障。The Graph Free官方文档提供每月100000次免费查询，不需要因此推断必须升级；当前Plan B Graph实际状态 `BLOCKED_HTTP403`。暂停以相同凭据重试相同请求，直到获得新根因证据。
