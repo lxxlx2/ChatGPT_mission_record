@@ -833,6 +833,7 @@ function renderFrankIntelligence(snapshot) {
       ${tokenIdentity(x.mint)}
       <p>来源信号：<code>${esc(x.source_signal_id || '未核实')}</code> ${tx}</p>
       <div class="metrics-grid">
+        ${metric('模型本轮仓位（非链上余额）', esc(x.model_episode_position_state || 'UNVERIFIED'))}
         ${metric('来源已核实的行为', facts.length ? esc(facts.join(' / ')) : '无可证明事件')}
         ${metric('无法核实的内容', missing.length ? esc(missing.join(' / ')) : '本研究范围内无其他缺口声明')}
         ${metric('与 Frank 已核实买价相比', delta,
