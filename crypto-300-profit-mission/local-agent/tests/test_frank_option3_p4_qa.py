@@ -11,6 +11,7 @@ sys.path.insert(0, str(SCRIPTS))
 
 import frank_option3_p4_causal_ro as causal  # noqa: E402
 from frank_option3_p4_history import run_replay  # noqa: E402
+from frank_option3_p4_signal_first import scan as scan_prior_signal_sales  # noqa: E402
 
 
 def source_rows():
@@ -174,3 +175,39 @@ def test_p4_historical_fake_notices_separate_unresolved_sell_from_index_exit():
     assert all(c["fake_only"] for c in result["cases"])
     assert result["old_v1_signal_emission_proven"] is False
     assert result["profit_or_executability_proven"] is False
+
+
+def test_signal_first_finds_verified_source_signal_before_same_episode_sale_only(tmp_path):
+    rows = source_rows()
+    source, control = fixtures(tmp_path, rows)
+    first, sale = rows[0], rows[5]
+    db = sqlite3.connect(source)
+    db.execute("UPDATE trades SET mint=?,episode_id=? WHERE signature=?",
+               (first["mint"], "episode-0", sale["signature"]))
+    db.execute("UPDATE signals SET body=? WHERE signal_id='signal-0'",
+               (json.dumps({
+                   "policy_id": "FRANK_LOCAL_SIGNAL_V1",
+                   "signal_id": "signal-0",
+                   "episode_id": "episode-0",
+                   "mint": first["mint"],
+                   "triggering_signature": first["signature"],
+               }),))
+    db.commit()
+    db.close()
+    db = causal.open_ro(source)
+    try:
+        summary = scan_prior_signal_sales(db, as_of=sale["block_time"] + 1)
+        assert summary["status"] == "SOME_PRIOR_SIGNAL_TO_LATER_SELL_LOCAL_FACTS"
+        assert summary["source_signal_emission_bound"] == 1
+        assert summary["signals_with_same_episode_later_sell"] == 1
+        assert summary["distinct_verified_sale_signatures"] == 1
+        assert summary["distinct_linked_episodes"] == 1
+        assert summary["linked_sale_sides"] == {"EXIT": 1}
+        assert summary["source_emission_modes_for_sales"] == {"ACTIVE_TRADE": 1}
+        assert summary["recipient_delivery_verified"] is False
+        assert summary["current_wallet_balance_verified"] is False
+        serialized = json.dumps(summary)
+        assert sale["signature"] not in serialized
+        assert first["mint"] not in serialized
+    finally:
+        db.close()
