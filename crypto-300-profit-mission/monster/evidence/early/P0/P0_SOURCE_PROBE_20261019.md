@@ -1,5 +1,9 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：事前登记BSC V3来源检验三日期，避免选择性样本
+
+先于本轮三日期V3目标日志读取，冻结UTC历史日期`2025-05-01`、`2025-07-01`、`2025-09-01`。对每一天以历史区块`timestamp`定位当天最初完整区块，**只读首10个连续区块**的PancakeSwap BSC V3 Factory `PoolCreated`事件（Factory `0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865`）；不读未来币价、不挑已知赢家，使用现有免费Alchemy 10区块上限。该任务仅确认三个预登记时点的来源读写/真实日志返回能力，不声明全日V3母体或零事件；数据与结果必须另一个commit记录，日期不得因结果难看而修改。已通过公开BscScan线索定位两笔2025-03-18 BSC V3 PoolCreated回执（后验**仅为Source positive control**），但与三日期随机母体不可混淆。现有`monster_early_venue_factory_rpc_roster_probe.py`源代码已经含`bsc-v3`选项，不创建重复脚本。P0、P1/G6门槛不变。
+
 ## 2026-10-20：用户Mac BNB官方公共RPC原响应与Alchemy原异常交易独立交叉核对通过（仅#7）
 
 用户在Mac前台通过 `https://bsc-dataseed.bnbchain.org` 原生只读JSON-RPC分别请求`eth_chainId`、`eth_getTransactionReceipt`、`eth_getTransactionByHash`，贴回简要结果并保留**三份原始字节文件及SHA256**在私有目录`monster-p0-readonly-raw/bnb-official-check/20261020T082832Z-de07fa`。官方回报chainId`0x38`，交易`0xabd855e35df0feaeaa5c2df0edd964efb9ca8eda4b449749bc72fd08ccef827f`，区块`0x32033b0`，receipt status`0x1`，gasUsed`0xb53e`（46398），`effectiveGasPrice=0x0`，transaction `gasPrice=0x0`，Approval事件`data=0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e`。**这些字段逐项与之前Alchemy现读一致**。三份用户报告的SHA：chainId `ce50ba55ecf1a9410c6f5503d09da66974203165305ff8f5a2b520f49a705c07`、receipt `aef83b6df4f891bf0b9398d7ffcc45d30c00ad08cae07197ed347edda6fd9dbd`、tx `19d10677d8c4e4d11494e9d85fb86cfc0a8799cddbe055308aa16ebe9233dd2a`。**原文件仅位于用户Mac，助手未读到其原始字节，也未独立重新计算SHA；三份hash属于用户提供的待复核来源证明**。

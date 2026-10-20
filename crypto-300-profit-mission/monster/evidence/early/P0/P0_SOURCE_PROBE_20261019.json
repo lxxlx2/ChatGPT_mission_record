@@ -10985,5 +10985,31 @@
     "P1": "BLOCKED",
     "G6": "NO_GO",
     "cost_or_trade_actions_this_update": false
+  },
+  "bsc_v3_p0_three_date_factory_rpc_capability_preregistered_20261020": {
+    "schema": "MONSTER_P0_BSC_V3_PREREGISTERED_THREE_DATE_ALCHEMY_LOG_CAPABILITY_V1",
+    "registration_date": "2026-10-20",
+    "registration_before_target_three_dates_query": true,
+    "pre_registered_days_utc": [
+      "2025-05-01",
+      "2025-07-01",
+      "2025-09-01"
+    ],
+    "day_window": "FIRST_10_CONSECUTIVE_BLOCKS_OF_EACH_UTC_DAY_ONLY",
+    "fix_chain": "bnb-mainnet",
+    "factory_v3": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+    "event_topic0": "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+    "data_source": "USER_EXISTING_FREE_ALCHEMY_APP",
+    "rpc_method": "eth_getLogs",
+    "protocol_verification": "positive controls by known historical factory tx receipt and single-block logs (event cases selected post hoc solely for RPC sanity, no cohort)",
+    "selection_looks_at_future_winners": false,
+    "source_result_before_queries": "NOT_TESTED_THREE_FIXED_DATES",
+    "max_requests_per_date_after_block_boundary_resolved": 1,
+    "day_boundaries": "USE_ALCHEMY_HISTORICAL_BLOCK_TIMESTAMP_BINARY_SEARCH_TO_FIND_FIRST_UTC_BLOCK; do not use approximate guess",
+    "zero_event_first_10": "DOES_NOT_MEAN_ZERO_POOLS_FOR_DAY",
+    "no_full_day_no_general_bsc_population": true,
+    "frozen_v2_cohort_30_unchanged": true,
+    "model_phase": "BLOCKED",
+    "no_paid": true
   }
 }
