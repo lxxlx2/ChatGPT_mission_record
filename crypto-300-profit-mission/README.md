@@ -11,6 +11,7 @@ The Mission remains the umbrella `$300 -> $3000` speculative-asset project, but 
 
 Current module state:
 - **Frank / Meme:** `FRANK_LOCAL_SIGNAL_V1_LIVE`; local deterministic authority; ACCUMULATION local alert LIVE; MULTIPLE local alert + standalone Gmail LIVE; GPT signal authority removed.
+- **Frank option 3 (2026-10-20, selected, not implemented):** preserve frozen existing ACCUMULATION/MULTIPLE notifications; build **order-size-independent factual wallet/price/risk intelligence**, with provenance, alert dedupe, and user-controlled delivery. [Canonical new development plan](../docs/MONITORING/frank-release-20261020/FRANK_AMOUNT_INDEPENDENT_INTELLIGENCE_PLAN.md) in [Draft PR #142](https://github.com/lxxlx2/ChatGPT_mission_record/pull/142). Old unsigned WAIT-only policy candidate is `SUPERSEDED_FOR_OPTION_3 / DO_NOT_SIGN`; no live service, Gmail, launchctl or trading authorization was granted. 
 - **Frank historical delivery acceptance:** STONK frozen-V1 MULTIPLE historical E2E passed through replay -> local TEST notifications -> Gmail -> Sent readback -> dedupe/crash recovery.
 - **NFT radar:** specification/research preserved, runtime currently paused/not active.
 - **MONSTER / 妖币:** V3 failed independent 2024 validation. V4 2026-10-10 read-only research continues in [Draft PR #30](https://github.com/lxxlx2/ChatGPT_mission_record/pull/30) with no validated BUY strategy, live scanner, Gmail or LaunchAgent.

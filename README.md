@@ -4,6 +4,8 @@
 
 **Frank 执行金额与交易方式权限（2026-10-19 更新）：** 用户明确否认此前固定的跟单金额、默认下单量和自动执行假设。现行要求见 [用户自行决定交易金额与执行方式](docs/FRANK_USER_CONTROLLED_EXECUTION_20261019.md)。Frank 继续监控真实钱包行为与信号，任何 Jupiter 可执行报价必须有用户明确指定的研究金额；不能把历史预设金额作为买卖条件。冻结历史证据保持不变，已废止的建议没有未来效力。
 
+**Frank 新版功能主线（2026-10-20 用户已选择方案 3）：** 保留既有 ACCUMULATION/MULTIPLE 买入提醒，新增不依赖预设购买金额的 Frank 行为分析和风险提醒。当前仅已更新 [开发计划](docs/MONITORING/frank-release-20261020/FRANK_AMOUNT_INDEPENDENT_INTELLIGENCE_PLAN.md)，**功能尚未开发，旧无金额 WAIT-only 策略候选不得签署上线**；相关材料在 [Draft PR #142](https://github.com/lxxlx2/ChatGPT_mission_record/pull/142)。真实部署/通知许可仍为 `PRODUCTION_NO_GO`。
+
 仓库分成两层：
 1. **运行层**：保存当前 runtime、state、health、alerts、delivery 与 audit。
 2. **研究层**：按项目 / token / Meme / NFT 组织可复用研究。
