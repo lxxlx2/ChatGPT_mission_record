@@ -352,13 +352,44 @@ def probe(port, expected):
     print("PR157_STAGED_PRODUCT_GET_AND_UI_SMOKE: PASS", flush=True)
 
 
+def offline_preflight():
+    """Exercise actual reviewed PR157 product method with no external inputs."""
+    ensure_only_qa_addition()
+    now = int(time.time())
+    mint = "B" * 43
+    signature = "A" * 65
+    fake_signed_sell = {
+        "mint": mint, "signature": signature, "side": "SELL_POSITION_UNRESOLVED",
+        "block_time": now - 60, "body": {"direction": "SELL"},
+    }
+    snap = {
+        "/api/trades": [fake_signed_sell],
+        "/api/candidates": [{"mint": "C" * 43}],
+    }
+    result = StagedSnapshotState(snap, float(now)).frank_activity_watch()
+    assert result["status"] == "LOCAL_SOURCE_ACTIVITY_RESEARCH_ONLY"
+    assert result["displayed_transactions"] == 1
+    assert result["counts"]["sell_outside_current_candidate_mint_set"] == 1
+    assert result["counts"]["sell_position_unresolved"] == 1
+    assert result["rows"][0]["send_allowed"] is False
+    assert result["rows"][0]["position_status"] == "CURRENT_BALANCE_NOT_VERIFIED"
+    assert result["rows"][0]["order_amount_usdc"] is None
+    assert 'id="frank-activity-panel"' in (STATIC / "index.html").read_text("utf-8")
+    assert "get('/api/frank-activity-watch')" in (STATIC / "app.js").read_text("utf-8")
+    print("PR157_STAGING_PINNED_SOURCE_OFFLINE_PREFLIGHT: PASS", flush=True)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=STAGING_PORT)
+    parser.add_argument("--preflight", action="store_true",
+                        help="Check exact reviewed source + isolated imports without HTTP or DB")
     args = parser.parse_args()
     if args.port != STAGING_PORT:
         parser.error("Only audited local isolated port 18766 is allowed")
-    ensure_only_qa_addition()
+    offline_preflight()
+    if args.preflight:
+        return
     data, captured_at = one_time_capture()
     state = StagedSnapshotState(data, captured_at)
     StagedHandler.state = state
