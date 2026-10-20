@@ -16,6 +16,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import tempfile
 import time
 
 from f0_l1_adaptive_source_core import collect_adaptive_injected
@@ -126,14 +127,16 @@ def validate_permit(permit, now):
             HEX64.fullmatch(permit["run_nonce"]),
             "ADAPTIVE_PERMIT_SHA_OR_NONCE_INVALID")
     raw_root = permit["storage_root"]
-    require(type(raw_root) is str and raw_root.startswith("/tmp/") and
+    require(type(raw_root) is str and Path(raw_root).is_absolute() and
             ".." not in Path(raw_root).parts, "ADAPTIVE_PERMIT_ROOT_INVALID")
     root = Path(raw_root)
-    # macOS normally aliases /tmp to /private/tmp; compare resolved containment
-    # against resolved /tmp instead of demanding textual path equality.
-    canonical_tmp = Path("/tmp").resolve()
+    # On macOS the default tempfile directory is usually /var/folders/...,
+    # not /tmp (/private/tmp). Constrain the resolved path to either the
+    # resolved /tmp or this process's resolved default temp directory.
+    resolved_root = root.resolve()
+    temp_roots = (Path("/tmp").resolve(), Path(tempfile.gettempdir()).resolve())
     require(root.is_dir() and not root.is_symlink() and
-            canonical_tmp in root.resolve().parents and
+            any(base in resolved_root.parents for base in temp_roots) and
             root.stat().st_mode & 0o077 == 0 and
             all(not (root / name).exists() and not (root / name).is_symlink()
                 for name in ("journal.json", "report.json", "raw_responses")),

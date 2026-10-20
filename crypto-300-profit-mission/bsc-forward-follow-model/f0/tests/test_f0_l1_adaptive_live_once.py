@@ -52,6 +52,16 @@ class AdaptivePermitGateTests(unittest.TestCase):
             self.assertFalse((root / "journal.json").exists())
             self.assertFalse((root / "raw_responses").exists())
 
+    def test_default_temp_root_outside_slash_tmp_is_accepted(self):
+        # On macOS, tempfile.gettempdir() is typically /var/folders/...,
+        # outside /private/tmp. Reproduce that containment on Linux too.
+        with tempfile.TemporaryDirectory(dir=Path.home()) as d:
+            root = self.private_root(d)
+            with patch.object(one.tempfile, "gettempdir", return_value=d):
+                self.assertEqual(one.validate_permit(valid_permit(root), NOW), root)
+                self.assertFalse((root / "journal.json").exists())
+                self.assertFalse((root / "raw_responses").exists())
+
     def test_disallow_all_wider_scopes_and_bool_int_coercion(self):
         with tempfile.TemporaryDirectory() as d:
             root = self.private_root(d)

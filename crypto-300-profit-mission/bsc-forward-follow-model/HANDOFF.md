@@ -1,3 +1,12 @@
+# 2026-10-20 PR158 Mac tempfile P1 fixed in descendant (independent re-review required)
+
+- Historical PR158 SHA `7959b4146a6e3aa002e24eece20b4e08309e7cea` received independent `REQUEST_CHANGES`: [comment #6289771802](https://github.com/lxxlx2/ChatGPT_mission_record/pull/158#issuecomment-6289771802). macOS default `TMPDIR=/var/folders/...`: 305 total, 1 FAIL + 2 ERROR in permit gate tests. Explicit `TMPDIR=/tmp`: 305/305 PASS. Do not describe the old SHA as approved.
+- Targeted descendant patch: remove the premature `/tmp/` string prefix requirement; permit a private/fresh absolute capture root *only under* the resolved system `/tmp` OR resolved `tempfile.gettempdir()` root (which on Mac is typically `/private/var/folders/.../T`). Still reject `..` parts, symlink output root, world/group-accessible output directories, old journal/report/raw dir and invalid permits. Add a fake-only regression that simulates the non-`/tmp` default temporary directory on CI/Linux.
+- Prior independently approved PR156 SHA `9326edc3b78bbd9e19f2d405668bf430432e853a` remains unchanged; previous grants consumed. This fix is only for F0 source authorization preflight. **Re-review exact new SHA**, test all seven permit tests and full suite in writable Linux and Mac default `TMPDIR` (no `TMPDIR=/tmp` override). Linux CI alone cannot claim Mac reproduction. Do not create permit or run `--execute-live`.
+- Gate: `NOT_APPROVED_FOR_REAL_RPC / F0_NOT_PASSED / PRODUCTION_NO_GO`; independently reviewed fixed-code SHA plus fresh separate user consent/permit review needed before real BSC traffic.
+
+---
+
 # Latest F0 development handoff: independent PR156 offline approval and gated next source stage
 
 - **Approved fixed SHA:** PR #156 `9326edc3b78bbd9e19f2d405668bf430432e853a`, independent `APPROVE_OFFLINE_CODE`, original review comment https://github.com/lxxlx2/ChatGPT_mission_record/pull/156#issuecomment-6289325992. Writable independent checkout 299/299 full, 9/9 core and 7/7 Journal tests PASS ZERO SKIP; four additional targeted durable-journal adversarial checks passed. Previous #155 original P1 journal reset closed at this descendant SHA. Review author was separate from development; direct GitHub reviewer submission is not claimed.
