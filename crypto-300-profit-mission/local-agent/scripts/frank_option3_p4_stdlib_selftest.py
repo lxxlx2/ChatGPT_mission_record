@@ -39,15 +39,18 @@ def main():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     passed = 0
-    for name in (
-        "test_exact_trigger_join_rejects_old_same_mint_and_wrong_episode",
-        "test_source_timestamp_change_is_not_silent_causal_pass",
-        "test_signal_first_finds_verified_source_signal_before_same_episode_sale_only",
+    for name, needs_patch in (
+        ("test_exact_trigger_join_rejects_old_same_mint_and_wrong_episode", True),
+        ("test_source_timestamp_change_is_not_silent_causal_pass", True),
+        ("test_signal_first_finds_verified_source_signal_before_same_episode_sale_only", False),
     ):
         patch = ScopedPatch()
         try:
             with tempfile.TemporaryDirectory(prefix="frank-p4-qa-") as directory:
-                getattr(module, name)(Path(directory), patch)
+                if needs_patch:
+                    getattr(module, name)(Path(directory), patch)
+                else:
+                    getattr(module, name)(Path(directory))
             passed += 1
             print(name + ": PASS", flush=True)
         finally:
