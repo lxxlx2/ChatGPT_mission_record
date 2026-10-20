@@ -1,0 +1,16 @@
+{
+  "authority_consumed": true,
+  "code_review_sha256": "b81084f0690a0efd31631339a793d77007b4e44c000e242723b11828a496be54",
+  "code_verdict": "APPROVE_CODE e2b70967484e6a4226314977cb2cca28033cfbc5",
+  "no_additional_network_authorized": true,
+  "offline_test_log_sha256": "ad453cb602899d08b57f40649605891e259ede079ffa7354167b73429940337a",
+  "permit_review_sha256": "c213f3fa87cfa741930dd965bf8af315a8b7c7f5df7fc19e6f8cde8e4cd805b0",
+  "permit_verdict": "APPROVE_PERMIT a225a8101c99031ae5fd7a0325f1b7b32e013c36daa922cc8875802577e3aaf1",
+  "raw_reviews_private": true,
+  "resolved_p1": [
+    "fsync parent directory after journal atomic replace and nonce/raw file creation",
+    "archive bounded HTTP error response body while classifying failure without retry",
+    "recheck UTC deadline after presend journal persistence before transport"
+  ],
+  "separate_fresh_codex_processes": true
+}

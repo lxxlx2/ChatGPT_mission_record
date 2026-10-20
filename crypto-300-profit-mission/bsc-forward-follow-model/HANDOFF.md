@@ -1,3 +1,13 @@
+# Latest actual result — 2026-10-20 first short L1 capture
+
+One user-authorized official free BSC HTTP sample completed exactly once: **62 attempts, 60/60 future full blocks received, zero failure/null/missing, exit 0**. Executed code `e2b70967484e6a4226314977cb2cca28033cfbc5` followed independent code and actual private permit approvals, after fixing three P1s. 257/257 offline tests, zero skips. Heights 128716367–128716426; 5940 transactions; PRIMARY signer candidates 0, Router address candidates 40 (20 offline preselected). Raw byte hashes, block parentage and candidate counts were independently recomputed locally.
+
+See [first real short L1 result](f0/results/20261020_first_short_l1_62/RESULT.md) and its sanitized summary/review hashes. Private permit, consumed nonce, raw responses, journal, report and fresh-process review transcripts remain in the user's Mac private evidence archive. This is local response-receipt evidence, not public first-seen, independent control coverage, E2/E3, quotes or profitability. Zero watch candidates means insufficient events for watched-trade evaluation.
+
+**The 62-attempt permit is fully consumed. Do not execute it again or extend to 120 seconds.** Next safe action is offline inspection of the saved sample. Further real RPC/WS requires new user consent and a new reviewed permit. No merge/deployment authorization.
+
+---
+
 # BSC forward wallet-follow module — single ongoing handoff
 
 Updated: 2026-10-20 Asia/Bangkok. **Do not trust this file without independently checking current PR heads, review comments and source blobs.** This module must not take over old PR #40 or PR #97.
