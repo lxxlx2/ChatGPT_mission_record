@@ -1,0 +1,25 @@
+name: BSC F0 offline unittest
+on:
+  pull_request:
+    paths:
+      - 'crypto-300-profit-mission/bsc-forward-follow-model/**'
+      - '.github/workflows/bsc-f0-offline-unittest.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify F0 offline test suite
+        run: |
+          python3 -m unittest discover -s crypto-300-profit-mission/bsc-forward-follow-model/f0/tests -p 'test_*.py' -v
