@@ -1,0 +1,28 @@
+# 2026-10-20 three-monitor delivery: observed failure, full recovery, residuals
+
+Audit window: 2026-10-20 approximately 13:20–13:32 Asia/Bangkok.
+Canonical repo: lxxlx2/ChatGPT_mission_record. Existing user-approved three automations only. No new tasks, schedule changes, trading, wallet actions or notifications.
+
+## Actual schedule/worker facts
+- Crypto 每日情报: enabled; task id 6a8600b9d12481919bc43ebc800c9916; Asia/Bangkok :20 hours 00/03/06/08/09/10/11/12/16/20. 09:20 run recorded `BLOCKED_WITH_REASON`, file `crypto-daily/runs/2026-10-20/092306-final-retry.md`: no Gmail Sent, no canonical, material source coverage gaps, platform safety block for Gmail and Git. Research 12:20 collector was PARTIAL, `crypto-daily/runs/2026-10-20/122135-final.md`. Earlier complete Oct19 report delivered; not resent.
+- 美股每日晨报: enabled; id 6a8600c16e7081919566f170f58045a6; Asia/Bangkok original 05:40/06:40/07:40/08:40. `us-stock-daily/runs/2026-10-20/084000-attempt.md` says earlier 05:40/06:40 pending writes blocked by platform safety; 07:40 attempt no proven final, 08:40 recovery started; at ~13:20 Sent and Git canonical absent. Do not assert Gmail attempted at 08:40 without an actual receipt.
+- 全项目空投与TGE监控: enabled; id 6a85fff710e0819190ffcf8c1145a170; hourly HH:00 BKK. `airdrop-tge-monitor/runs/2026-10-20/080459-final.md` and `090205-final-retry.md` are PARTIAL, newest separately read terminal 09:02 with five candidate families, eight SOURCE_GAP, zero Tier A or mapped B ACTION, no Gmail attempted. A later 12:57 task run was seen in scheduler status, but no complete terminal verified for that invocation. `state/current.md` header remains stale at Oct18 despite appended later notes; correcting the header through GitHub update was platform safety BLOCKED; no cache fix was persisted.
+
+## Gmail / canonical recovery (actually verified)
+Both 2026-10-20 formal reports missing before the intervention and are now genuinely sent to lxx.run688@gmail.com, with exact Gmail message readback and Git canonical body comparison.
+- US Stock: subject `美股每日晨报｜2026-10-20｜正式补发`; Gmail Sent `1a157fbf44a05c48`; full 12 chapters / 59 within-section numbered items. Source latest completed US stock session Oct19, AP index close, Reuters macro; Netflix official Q3 Oct20 and Tesla SEC Q3 Oct21. Git `us-stock-daily/reports/daily/2026/2026-10/2026-10-20.md`; commit `4e56bc703b0ceda970a6ff515c937874f4dd3c32`. Gmail connector trims one final newline from sent text; Git canonical uses the ACTUAL readback body, exact equality PASS. Delivery CONFIRMED.
+- Crypto: subject `Crypto Daily Brief｜2026-10-20｜正式补发`; Gmail Sent `1a157ff300a8a5c0`; full 13 chapters / 61 within-section numbered items. Source official Binance per-symbol 24h around 13:21 BKK, official JPM Coin Ethereum Oct19 release, Farside Oct19 ETF tables, secondary Qubic weak seed attack/chain halt, secondary Cysic bridge unauthorized mint. Primary issuer evidence missing explicitly distinguished from media reporting; no made-up user holdings, chain losses or claim URLs. Git `crypto-daily/reports/daily/2026/2026-10/2026-10-20.md`; commit `8ebf56180808e6b1a33356c7ba36c5bfe271f785`. Exact Gmail readback/Git canonical body PASS. Delivery CONFIRMED.
+- Gmail Sent listing before send also confirmed Oct18/19 previously delivered reports; neither was resent. No same-date duplicated full report.
+
+## Remediations / accepted boundaries
+1. Original Crypto task prompt updated in place with user-established source gates CR-01..23, no automatic disabling on ordinary source or service failures, and delivery-first once complete in-memory QA passes; does not require optional Git pending/attempt files as prerequisites. The verified Oct20 Sent/Git pair is explicitly pinned for future date-prefix deduplication.
+2. Original US Stock task prompt updated in place with STK-01..21, full 12 chapters and local numbering, QA-before-READY, Gmail delivery before optional Git plumbing, no same-day resend; verified Oct20 Sent/Git pair pinned.
+3. Original TGE task prompt updated in place to prioritize real first-party actionable entitlement, preserve no-alert on no verified ACTION, rely on recent verified run receipts rather than stale state header, avoid repeated optional Git writes, and attempt state repair only on ordinary permitted future runs. No sham TGE email generated.
+4. All three original task IDs, schedule strings and enabled state preserved. No new automation or extra monitored project.
+
+## Unresolved, do not claim fixed
+- Provider safety checks have repeatedly blocked GitHub mutations and Gmail calls inside scheduled executions. Interactive sends proved Gmail connector permissions can work, but do NOT prove next autonomous sends work. These blocks cannot be bypassed through alternative tooling.
+- TGE actual breadth/source coverage remains PARTIAL; canonical issuer X links for Cambria/StandX/NeoSoul, Concrete additional rights and others could not be authenticated. Oct20 attempted direct Git cache update was BLOCKED; stale `state/current.md` header remains. Latest authoritative fully complete source scan still Oct10.
+- Scheduled next-day reliability requires observing actual Gmail Sent/readback and Git archive at original slots. Do not call all three production-stable on today's manual recovery alone.
+
+Relevant original market sources: https://apnews.com/article/5aec11ee466841cc2a69b2d23ab77f0e ; https://www.reuters.com/world/china/global-markets-global-markets-2026-10-20/ ; https://www.jpmorgan.com/payments/newsroom/jpm-coin-live-on-ethereum ; https://farside.co.uk/btc/ ; https://www.theblock.co/news/defi/2026-10-18-cysic-suspends-bridge-after-attacker-mints-tokens-and-moves-727000-to-ethereum-418863 ; https://www.tokenpost.com/news/technology/34851 .
