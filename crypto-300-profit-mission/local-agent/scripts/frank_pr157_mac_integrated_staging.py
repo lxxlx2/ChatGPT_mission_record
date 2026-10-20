@@ -67,7 +67,11 @@ def ensure_only_qa_addition():
 
     if git("rev-parse", "--verify", PINNED_PR157 + "^{commit}") != PINNED_PR157:
         raise RuntimeError("REVIEWED_PR157_PARENT_NOT_AVAILABLE")
-    if git("diff", "--name-only", PINNED_PR157, "HEAD").splitlines() != [QA_REL_PATH]:
+    expected_qa_files = sorted([
+        QA_REL_PATH,
+        ".github/workflows/frank-pr157-isolated-stage-qa-20261020.yml",
+    ])
+    if sorted(git("diff", "--name-only", PINNED_PR157, "HEAD").splitlines()) != expected_qa_files:
         raise RuntimeError("QA_HAS_UNREVIEWED_PRODUCT_CODE_CHANGES")
     if git("status", "--porcelain"):
         raise RuntimeError("STAGING_GIT_CHECKOUT_DIRTY")
