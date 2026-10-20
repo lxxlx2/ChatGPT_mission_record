@@ -123,17 +123,39 @@ def causal_status(db: sqlite3.Connection, case: dict, row: dict) -> dict:
                      and s["signal_type"] not in SIGNALS]
     evaluation_episode = str(evals[0]["episode_id"]) if evals else None
     signal_types = sorted({str(s["signal_type"]) for s in exact_signals})
+    exact_ids = {s["signal_id"] for s in exact_signals}
+    bound_active_ids: set[str] = set()
+    bound_hourly_ids: set[str] = set()
+    for evaluation in evals:
+        payload = safe_json(evaluation["body"])
+        emitted = payload.get("signal_ids")
+        if not isinstance(emitted, list):
+            continue
+        bound = {sig["signal_id"] for sig in exact_signals
+                 if sig["signal_id"] in emitted
+                 and str(sig["episode_id"]) == str(evaluation["episode_id"])}
+        if payload.get("kind") == "ACTIVE_TRADE":
+            bound_active_ids.update(bound)
+        elif payload.get("kind") == "HOURLY_29":
+            bound_hourly_ids.update(bound)
+    matched_emission_ids = bound_active_ids | bound_hourly_ids
+    evaluation_binding_complete = (
+        bool(exact_ids) and matched_emission_ids == exact_ids
+    )
     conflicting_signal_episode = bool(
-        exact_signals and evaluation_episode is not None and
-        any(str(s["episode_id"]) != evaluation_episode for s in exact_signals)
+        exact_signals and evals and
+        any(not any(str(sig["episode_id"]) == str(e["episode_id"])
+                    for e in evals) for sig in exact_signals)
     )
     if case["indexed_side"] in BUY_SIDES:
         if conflicting_signal_episode:
-            causal = "EXACT_SIGNED_EVENT_SIGNAL_EPISODE_MISMATCH"
-        elif exact_signals and not evals:
-            causal = "EXACT_SIGNAL_PRESENT_BUT_MODEL_EVALUATION_UNAVAILABLE"
+            causal = "SIGNAL_EVALUATION_EPISODE_MISMATCH"
+        elif bound_active_ids and evaluation_binding_complete:
+            causal = "SOURCE_SIGNAL_EMITTED_BY_ACTIVE_TRADE_EVALUATION"
+        elif bound_hourly_ids and evaluation_binding_complete:
+            causal = "SIGNAL_REFERENCES_BUY_SIGNATURE_EMITTED_ON_HOURLY_TICK"
         elif exact_signals:
-            causal = "EXACT_TRANSACTION_TRIGGERED_V1_SIGNAL"
+            causal = "SIGNAL_REFERENCES_SIGNATURE_BUT_EVALUATION_LINK_UNPROVEN"
         elif evals:
             causal = "EXACT_TRANSACTION_EVALUATED_NO_NEW_SIGNAL"
         else:
@@ -166,6 +188,9 @@ def causal_status(db: sqlite3.Connection, case: dict, row: dict) -> dict:
         "in_current_v1_state_event_list": in_current_episode,
         "triggered_signal_ids": {s["signal_id"] for s in exact_signals},
         "signal_evaluation_episode_conflict": conflicting_signal_episode,
+        "signal_emitted_by_active_trade_eval": bool(bound_active_ids),
+        "signal_emitted_by_hourly_tick_eval": bool(bound_hourly_ids),
+        "signal_emission_evaluation_binding_complete": evaluation_binding_complete,
     }
 
 
@@ -177,6 +202,8 @@ def control_link(ctl: sqlite3.Connection | None, case: dict,
         return "NO_EXACT_TRIGGERED_V1_SIGNAL_TO_JOIN"
     if evidence["signal_evaluation_episode_conflict"]:
         return "SIGNAL_EVALUATION_EPISODE_MISMATCH_NO_JOIN"
+    if not evidence["signal_emission_evaluation_binding_complete"]:
+        return "SIGNAL_REFERENCES_SIGNATURE_BUT_EMISSION_LINK_UNPROVEN"
     episode = evidence["source_episode_exact"]
     if episode is None:
         return "SIGNAL_PRESENT_BUT_EXACT_EVALUATION_EPISODE_UNKNOWN"
@@ -231,6 +258,8 @@ def analyze(forward: Path, control: Path | None) -> dict:
                 "exact_source_evaluations": causal["source_eval_count_exact_signature"],
                 "exact_v1_signals": causal["source_signal_count_exact_triggering_signature"],
                 "v1_signal_types": causal["source_signal_types_exact"],
+                "active_trade_signal_emission_proven": causal["signal_emitted_by_active_trade_eval"],
+                "hourly_tick_signal_emission_proven": causal["signal_emitted_by_hourly_tick_eval"],
                 "in_current_model_episode": causal["in_current_v1_state_event_list"],
                 "unexpected_source_signal_types": causal["unexpected_signal_type_count"],
                 "control_link": joined,
