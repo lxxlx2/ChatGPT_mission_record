@@ -220,10 +220,6 @@ class StageHandler(BaseHTTPRequestHandler):
                 'aria-disabled="true" title="隔离验收不提供链上 CA 实时查询"',
             )
             html = html.replace(
-                '<div id="frank-intelligence-cards"',
-                '<div id="frank-intelligence-cards"',
-            )
-            html = html.replace(
                 '<main>',
                 '<p style="padding:12px"><a href="/qa/p4-replay" '
                 'style="font-weight:bold;color:#9ed3ff">'
