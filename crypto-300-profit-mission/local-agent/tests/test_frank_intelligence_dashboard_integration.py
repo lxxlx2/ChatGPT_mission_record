@@ -63,6 +63,14 @@ def test_source_failure_is_unavailable_and_cannot_become_zero_wallet_activity(mo
     assert result["market_reference"] == "NOT_REQUESTED"
 
 
+def test_invalid_candidate_fails_closed_rather_than_silently_skipping():
+    state = server.DashboardState.__new__(server.DashboardState)
+    state.frank = SimpleNamespace(candidates=lambda: [{"mint": ""}])
+    result = state.frank_intelligence()
+    assert result["status"] == "SOURCE_UNAVAILABLE"
+    assert result["reason"] == "LOCAL_FRANK_SOURCE_UNAVAILABLE"
+
+
 def test_new_route_is_restricted_to_read_only_queryless_local_source():
     handler = server.Handler.__new__(server.Handler)
     handler._allowed_host = lambda: True
