@@ -1,0 +1,49 @@
+name: Frank Option 3 D2 observed activity - read only
+on:
+  push:
+    branches: [feature/frank-option3-activity-feed-20261020]
+    paths:
+      - '.github/workflows/frank-option3-d2-activity-20261020.yml'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/frank_activity_watch.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/**'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_activity_watch_dashboard.py'
+  pull_request:
+    branches: [feature/frank-amount-free-intelligence-p1p2-20261020]
+    paths:
+      - '.github/workflows/frank-option3-d2-activity-20261020.yml'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/frank_activity_watch.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/**'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_activity_watch_dashboard.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-activity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install only existing test dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pip install -e '.[dev]'
+      - name: Verify Python and UI source syntax
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile mission_agent/mission_control/frank_activity_watch.py mission_agent/mission_control/server.py
+          node --check mission_agent/mission_control/static/app.js
+      - name: New D2 facts and existing source-only Dashboard regressions
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: |
+          python -B -m pytest -q -p no:cacheprovider             tests/test_frank_activity_watch_dashboard.py             tests/test_frank_intelligence_dashboard_integration.py             tests/test_frank_amount_free_intelligence.py             tests/test_frank_amount_free_preview.py             tests/test_mission_control_dashboard.py

@@ -46,6 +46,30 @@
       <div class="candidate-list" id="frank-intelligence-cards"></div>
       <p class="frank-watch-footnote">原 ACCUMULATION/MULTIPLE 提醒保持不变。本区所有风险词汇仅用于进一步调查；卖出可证明时才提示复核。当前市场参考价未采集就显示“无法核实”，不计算跟单盈亏或执行滑点。</p>
     </section>
+    <section class="panel" id="frank-activity-panel">
+      <div class="panel-title">
+        <div>
+          <h2>Frank 买卖与风险观察（只读）</h2>
+          <p>包含未进入当前候选的真实卖出；独立于原买入信号。卖出不代表清仓，也不代表此前收到过提醒。</p>
+        </div>
+        <span id="frank-activity-updated">等待本地索引</span>
+      </div>
+      <div class="frank-watch-controls">
+        <label for="frank-activity-type">只看</label>
+        <select id="frank-activity-type">
+          <option value="SELL" selected>卖出与退出</option>
+          <option value="UNRESOLVED">仓位无法确定的卖出</option>
+          <option value="BUY">买入与重新买入</option>
+          <option value="ALL">全部买卖</option>
+        </select>
+        <label for="frank-activity-search">代币 CA / 交易签名</label>
+        <input id="frank-activity-search" type="search" autocomplete="off" placeholder="仅筛选已索引活动，不触发新 RPC">
+        <button type="button" class="link-btn" id="frank-activity-reload">重新读取</button>
+      </div>
+      <div class="frank-watch-summary" id="frank-activity-summary">正在读取本机已有的最新交易活动…</div>
+      <div class="feed" id="frank-activity-feed"></div>
+      <p class="frank-watch-footnote">只覆盖本地最近 100 条交易，每次最多展示筛选后的 15 条，不是完整链或现时钱包余额。没有可靠行情就不计算涨跌、利润或跟单金额。本面板不产生、发送或重发任何通知。</p>
+    </section>
     <section class="stats" id="stats"></section>
 
     <section class="panel">
