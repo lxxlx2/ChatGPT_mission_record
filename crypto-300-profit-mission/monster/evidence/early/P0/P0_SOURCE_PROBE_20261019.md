@@ -1,5 +1,15 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：Factory存储索引跨三个月份历史日期可读，原始V2来源取得增量证据
+
+**本轮是P0来源能力的有限、前台只读验证，冻结30币及交易金额均未变。**复用以前V3来源核查事前选定的三个独立UTC日期**2025-05-01、2025-07-01、2025-09-01**，针对PancakeSwap V2 Factory（`0xca143ce32fe78f1f7019d7d551a6402fc5350c73`）通过Alchemy免费BNB主网历史`eth_call(allPairsLength)`分别比较每个日期**首块之前**与**最后一块**的Factory计数；两个跨月日期的UTC边界以区块头timestamp二分定位。历史V2新Pair数分别为**455 / 785 / 798**，三个不连续日期合计**2038个新Pair索引**。这些只是Factory累计状态差，不等于2038个独立Token/有流动性的池/真实可卖币，也不声称连续覆盖五月至九月的所有日期。
+
+**抽样验证真实链事件，避免把Factory计数差当成虚构数据**：对三天各用`allPairs`精确读取当日**首个与末个**新索引（共6对），再读各Pool的token0/token1及同日末历史储备。对5月与9月的首个索引用历史Factory计数二分找出创建区块，分别是**48,876,497**与**59,582,029**；在各自**单区块**读取原`PairCreated`并证明Pool地址、两边Token、Factory单调一基序号一致。5月首池为`0xf14395e78c2a037570b05eb657672af36ffd380c`，对应tx `0xada1424a9a94ade33995776b311a204735328f227898563bdb9208a9076d7287`；9月首池为`0x14f7c8c33487e16677eaa72ddb253912b9bba1c0`，tx `0x6c4665cc9d50acf290ed9c203d7f8d060a188ecc8e5198ac9b0ab2ee7a51e70d`。7月首池原P0已独立验证过，此次Pool索引与既有rank1一致，无须再审。
+
+**两种真实业务反例**：在创建块和紧接下一块，5月首池WBNB侧`3 WBNB`、另一侧`0.98` Token单位（18位假设不可自动成立，原始token储备为`980000000000000000`），有同创建交易`Sync/Mint`，但该两块**无Swap**；9月首池这两块**0/0储备、0条Pool事件**。因此即使Factory索引可以早期发现真实Pair，**不能据此下结论已经可买，更不能认定可按相同名义金额卖出**。同日末的6池储备仅供历史状态反例，绝不能倒填为建池即刻可用储备。
+
+**证据和门禁**：原P0 JSON键`bsc_v2_p0_three_preregistered_dates_factory_storage_index_source_capability_20261020`保存UTC区块边界、3个累计差值、6个Pool身份及储备、两例真实Factory交易哈希和早期状态。所有结果为现有**单一Alchemy规范化RPC**，未取得原HTTP字节SHA或第二来源交叉核查；也**没有逐条枚举2038个Pool、取得完整Token母体或证明2025真实`available_at`**。这只实证了跨日期**V2 Factory存储索引源的一条能力**，并未解决V3、launchpad、历史实时PIT或统一研究金额的买卖/费后退出。P0`INSUFFICIENT_COVERAGE`、P1`BLOCKED`、G4`UNKNOWN`、G6`NO_GO`保持。不跑连续历史日志、不付费、不启用Mac后台采集或Frank、Stage99、Gmail、交易，不做模型训练。
+
 ## 2026-10-20：原冻结BSC V2 30币恢复29笔真实合约直接部署交易，24个达标池均已关联部署回执
 
 **这次取得新的部署链上证据，且没有选择未来赢家。** 以原用户Mac前台归档的2025-07-01冻结30币及26币「相邻块无代码→有代码」为确定性输入，复用用户已有的**Alchemy免费BNB主网只读连接**，仅对每个已知首代码块读取**该Token地址在该单块的事件**，再用实际`eth_getTransactionReceipt`核对。`29/30`条创建交易同时满足 **status=0x1、receipt.contractAddress=冻结CA、receipt.to=null、receipt.blockNumber=已确认首代码块**，链上证据支持「ERC20代币合约的直接部署交易」；准确的29条txhash/CA/区块逐行记在原P0 JSON键`bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020`。其中#1/#8/#15先在当日以前的块对`eth_getCode`有界二分确认代码出现边界，再取创建回执。所有原30币继续保留分母。
