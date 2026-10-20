@@ -10927,5 +10927,63 @@
         "public_asof_receipt": "UNKNOWN"
       }
     ]
+  },
+  "bsc_v2_p0_official_bnb_chain_approval_alchemy_crosscheck_20261020": {
+    "source": "USER_REPORTED_LOCAL_MAC_OFFICIAL_BNB_CHAIN_PUBLIC_RPC_FIRST_PARTY_OUTPUT_AND_PREVIOUS_ALCHEMY_CONNECTED_READBACK",
+    "provider_1": "BNB_CHAIN_PUBLIC_RPC",
+    "provider_1_url": "https://bsc-dataseed.bnbchain.org",
+    "provider_2": "ALCHEMY_EXISTING_READ_ONLY_BNB_MAINNET_CONNECTOR",
+    "user_executed_script": "FOREGROUND_2026_10_20_THREE_STANDARD_READ_ONLY_ETH_JSON_RPC_METHODS",
+    "official_chain_id": "0x38",
+    "rank": 7,
+    "token_ca": "0x0896b798a2e0ac9039b26a6d87393c5a18fe9f26",
+    "tx_hash": "0xabd855e35df0feaeaa5c2df0edd964efb9ca8eda4b449749bc72fd08ccef827f",
+    "block_number_hex": "0x32033b0",
+    "block_number_decimal": 52442032,
+    "receipt_status": "0x1",
+    "gas_used_hex": "0xb53e",
+    "gas_used_decimal": 46398,
+    "receipt_effective_gas_price_hex": "0x0",
+    "transaction_gas_price_hex": "0x0",
+    "receipt_execution_gas_fee_wei_arithmetic": "0",
+    "approval_log_data": "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e",
+    "approval_log_data_not_standard_approved_amount": true,
+    "spender": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+    "previous_alchemy_approval_calldata_max_uint_true": true,
+    "previous_alchemy_allowance_state_zero_to_max": true,
+    "same_fields_agreed_between_official_and_alchemy": [
+      "network_chain_id",
+      "tx_hash",
+      "receipt_status",
+      "block_number",
+      "gas_used",
+      "effective_gas_price",
+      "transaction_gas_price",
+      "approval_log_data"
+    ],
+    "official_raw_archive_reported_by_user": true,
+    "raw_archive_user_mac_relative_location": "monster-p0-readonly-raw/bnb-official-check/20261020T082832Z-de07fa",
+    "raw_archive_available_in_model_runtime": false,
+    "official_raw_response_sha256_user_reported": {
+      "eth_chainId": "ce50ba55ecf1a9410c6f5503d09da66974203165305ff8f5a2b520f49a705c07",
+      "eth_getTransactionReceipt": "aef83b6df4f891bf0b9398d7ffcc45d30c00ad08cae07197ed347edda6fd9dbd",
+      "eth_getTransactionByHash": "19d10677d8c4e4d11494e9d85fb86cfc0a8799cddbe055308aa16ebe9233dd2a"
+    },
+    "raw_hashes_independently_recomputed_by_assistant": false,
+    "credential_in_source": false,
+    "official_transaction_gas_cost_interpretation": "CONFIRMED_0_WEI_FROM_RETURNED_EFFECTIVE_GAS_PRICE_TIMES_GAS_USED_FOR_THIS_TX_ONLY",
+    "actual_router_buy_sell_gas_cost_independently_confirmed": false,
+    "actual_full_position_net_pnl": "UNVERIFIED",
+    "other_three_approval_txs_independently_verified": false,
+    "nonstandard_token_contract_event_interpretation": "OFFICIAL_AND_ALCHEMY_MATCH_ON_THIS_TX;EVENT_DATA_IS_SPENDER_NOT_UINT256_MAX_CALLED",
+    "other_fees_sponsorship_or_offchain_effect": "UNVERIFIED",
+    "source_result_grade": "TWO_RPC_PROVIDERS_CONSISTENT_1_TX_USER_ARCHIVED_RAW_BYTES_NOT_IN_THIS_RUNTIME",
+    "does_not_prove_independent_project_controller": true,
+    "formal_24_of_30_PIT_gate": "NOT_SCORABLE",
+    "formal_18_of_30_same_notional_bidirectional_gate": "NOT_SCORABLE",
+    "P0": "INSUFFICIENT_COVERAGE",
+    "P1": "BLOCKED",
+    "G6": "NO_GO",
+    "cost_or_trade_actions_this_update": false
   }
 }

@@ -1,5 +1,13 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-20：用户Mac BNB官方公共RPC原响应与Alchemy原异常交易独立交叉核对通过（仅#7）
+
+用户在Mac前台通过 `https://bsc-dataseed.bnbchain.org` 原生只读JSON-RPC分别请求`eth_chainId`、`eth_getTransactionReceipt`、`eth_getTransactionByHash`，贴回简要结果并保留**三份原始字节文件及SHA256**在私有目录`monster-p0-readonly-raw/bnb-official-check/20261020T082832Z-de07fa`。官方回报chainId`0x38`，交易`0xabd855e35df0feaeaa5c2df0edd964efb9ca8eda4b449749bc72fd08ccef827f`，区块`0x32033b0`，receipt status`0x1`，gasUsed`0xb53e`（46398），`effectiveGasPrice=0x0`，transaction `gasPrice=0x0`，Approval事件`data=0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e`。**这些字段逐项与之前Alchemy现读一致**。三份用户报告的SHA：chainId `ce50ba55ecf1a9410c6f5503d09da66974203165305ff8f5a2b520f49a705c07`、receipt `aef83b6df4f891bf0b9398d7ffcc45d30c00ad08cae07197ed347edda6fd9dbd`、tx `19d10677d8c4e4d11494e9d85fb86cfc0a8799cddbe055308aa16ebe9233dd2a`。**原文件仅位于用户Mac，助手未读到其原始字节，也未独立重新计算SHA；三份hash属于用户提供的待复核来源证明**。
+
+这**排除本例相关字段是Alchemy单一RPC解析错误**，确认同一Token合约Approval日志data编码Router地址而非calldata指定的max uint256；之前通过历史`allowance`验证过0→MAX。不能仅按标准ERC20的Approval事件金额重建此模板的allowance，正式功能要使用状态/交易输入进行判断并标记非标准事件。官方及Alchemy对**本例Approval**均返回0 effectiveGasPrice，按链上回执字段，该笔交易gasUsed×effectiveGasPrice=**0 wei**；这修正了“本例zero gas字段只是Alchemy源异常不能采信”的先前不确定性。**并未独立核实其余三笔Approval的官方返回、四币BUY/SELL真实全部费用、外部赞助/其他成本、钱包净PnL或用户可获得的网络时点**。#7此前池侧毛差为负这一事实仍成立，不能把零授权Gas推断为整体盈利。相同1346字节模板9币不能由一笔事件假定所有成员或所有日期一致，也不是同一控制者证明。
+
+仅更新原P0一份JSON与一份MD，不新增Stage/新策略/盲目补边界。源交叉检查为一笔交易、非完整P0来源覆盖：`P0=INSUFFICIENT_COVERAGE`、完整PIT及统一金额双向`NOT_SCORABLE`、`P1=BLOCKED`、`G6=NO_GO`。无需付费、合并、部署、交易或改生产。
+
 ## 2026-10-20：原30币历史runtime字节码完整度25/30、至少两组完全相同的合约模板
 
 本轮从**冻结的原2025-07-01 BSC PancakeSwap V2首30币**逐rank读取历史`eth_getCode`，先使用已在4笔Approval案例中的同一1346字节Token源码作**准确整串字节比对**：rank **7/9/11/12/19/21/25/27/30共9币完全相同**（模板A）；另外rank **2/3/6/10共4币**拥有完全相同3553字节runtime（模板B），与模板A不同。另12币均不同于A/B，**未断言这12币互不相同**。rank **8/18/20/26/28**因Alchemy连接器向当前对话截断`eth_getCode`长输出（约8000字符）无法核对完整字节码，属于`UNREADABLE`而不是合约代码不存在。30个Token身份仍逐一保留、没有事后剔币。完整rank、合约地址、历史完整块、高度、返回字节数及证据等级在**原单一P0 JSON**键`bsc_v2_p0_all30_historical_runtime_bytecode_family_exploration_20261020`。
