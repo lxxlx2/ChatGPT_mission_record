@@ -126,6 +126,14 @@ def test_local_json_cli_creates_html_and_fake_only_json(tmp_path):
     assert data["mode"] == "FAKE_PREVIEW_ONLY_NO_SEND"
     assert len(data["messages"]) == 1
     assert data["messages"][0]["send_allowed"] is False
+    second_html = tmp_path / "second.html"
+    second_fake = tmp_path / "second.json"
+    args2 = ["--candidate-json", str(input_file), "--output", str(second_html),
+             "--fake-out", str(second_fake), "--previous-fake-json", str(out_fake),
+             "--max-market-age-seconds", "300", "--max-event-age-seconds", "600",
+             "--as-of", "1300"]
+    assert main(args2) == 0
+    assert json.loads(second_fake.read_text())["messages"] == []
 
 
 def test_invalid_batch_fails_instead_of_representing_empty_activity():
