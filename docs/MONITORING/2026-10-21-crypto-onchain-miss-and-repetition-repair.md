@@ -73,3 +73,13 @@ Executable code likewise removed the minimum 25 numbered item floor (it remains 
 - After this revision: matching local Node.js files in repository scripts/tests-relative layout executed \`node --test\`: **10 PASS, 0 FAIL**, including a new regression proving 13 complete headings with 13 substantive numbered items need not be padded to 55.
 
 All code/files were Git-fetched after writes and exact contents compared. This is an offline tested code/spec fix, NOT a proven autonomous production send. The automated tasks must actually adopt the new source sweep, content gate and no-quota rule on a later scheduled real run; provider Gmail safety checks still may block.
+
+## Update: user-authorized full correction WAS sent, source discoverer committed
+
+Previous statement that no corrected second email had been sent is now superseded. The user explicitly authorized a corrected full resend in this turn. Oct21 final Gmail corrected ID 1a15c6d25715d6ca sent to lxx.run688@gmail.com; the earlier original ID 1a15c49e3ff24c51 was retained. The corrected 13-section, 25-item report has two substantive Clifton Collins 500 BTC entries and no stale Qubic/Cysic/JPMD/HTX/StandX/NeoSoul/Space/Surf filler. Gmail full readback, section-local number lint, Git canonical exact body comparison all passed. Canonical commit da084972cdd5b05ef2e6bfcd343ff6eda867ee67; existing Git archive retains both versions through history.
+
+Material event ledger state/daily-event-ledger.json was changed from MISSED to DELIVERED only after Sent proof; commit babc2c78872a7d3987d2eaee7a62e5a76d76f8a6. Later unchanged news must not repeat.
+
+New first-party bounded scanner is crypto-daily/scripts/arkham_primary_discovery.mjs (24 source article cap, latest-first sitemap selection, manual redirect checks, 6.5s per request, eight concurrent reads, read-only no paid credentials). Tests crypto-daily/tests/test_arkham_primary_discovery.mjs contain 12 Node cases. The fetched actual pure source logic was compiled in a separate V8 validation harness and passed 13/13 functional fixture checks, including TXID identity, separate equal-sized transfers, source 403, spoofed domain, recency and seed precedence. The tests were NOT run as Node on the user's Mac; live HTTP scanning and future automated Gmail provider behavior remain unverified. The existing Crypto task was updated in place to require actual source sweeps and clear runtime-unavailable provenance; task ID/schedule/recipient not changed.
+
+Risk boundary: primary Arkham research identifies its address labels and a TXID, but an Arkham-tagged Coinbase Prime destination is not direct proof of sale, governmental seizure or beneficial owner. No remote transaction inputs/outputs decoded independently during this correction.
