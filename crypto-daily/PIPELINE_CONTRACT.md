@@ -60,6 +60,14 @@ The fixed report is broad market intelligence, NOT a list of projects the user j
 - Send ONE complete `text/plain` report using existing authorized Gmail. Read actual Sent ID and entire body, revalidate sections and content, archive EXACT readback body in the canonical Git report (including original version supersession links if explicitly corrected). Read Git back; only then say `DELIVERED_AND_ARCHIVED`. If Gmail succeeded but Git failed: `SENT_ARCHIVE_PENDING`, NEVER resend.
 - All process errors, source gaps and internal exclusions stay in Git run logs, not user-visible repeated numbered news. Silent if no separate Tier A/B TGE ACTION.
 
+## GitHub-only executable check — no new scheduler
+
+A checked-in JS gate is not self-executing on a ChatGPT task. To make the rules independent of prompt compliance, GitHub runs the **push-triggered**, **non-scheduled** workflow `.github/workflows/crypto-daily-editorial-qa.yml` when the existing monitor prepares a dated `crypto-daily/delivery-pending/YYYY-MM-DD.json` manifest. It uses a GitHub-hosted Node 22 runner, reads the current Git `EDITORIAL_RULESET.json`, runs the offline tests and machine gate, then writes SHA-bound `crypto-daily/delivery-qa/YYYY-MM-DD.json` on success. This is **not** another market monitor: it never scans external markets, never runs hourly and never accesses Gmail or wallets. It does not touch the user's Mac. Refer to `delivery-pending/README.md` for the exact schema.
+
+The existing ChatGPT task must match Git SHA for the pending manifest, JSON rules and gate program against the CI receipt; a stale/missing receipt is `CI_NOT_PROVEN`, not a PASS. It should check Gmail Sent both BEFORE drafting and immediately BEFORE sending. When an already sent report exists, it skips even if CI triggered. A cloud provider failure cannot be worked around; any optional independently justified DEGRADED send stays accurately labeled and all provider blocks remain authoritative.
+
+Cloud CI alone cannot guarantee a newly published Arkham story was discovered if no source scanner surfaced it. The full source-check receipt and candidate reconciliation are separately required. `_ci-selftest.json` is only proof the runner completed offline unit tests, never proof the report or mail reached the user.
+
 ## Non-goals and honest reliability boundary
 
 - No Mac deployment or local background agent; no GitHub Actions schedule; no new monitor/scheduler; no change to existing reminder times.
