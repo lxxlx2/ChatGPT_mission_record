@@ -20,7 +20,7 @@ export function validArticle(url) {
 export function extractArticleUrls(source) {
   const data = String(source||'').replaceAll('\\/','/');
   const result=[];
-  for (const m of data.matchAll(/(?:https:\/\/info\.arkm\.com)?\/research\/[a-z0-9-]+\/?/gi)) {
+  for (const m of data.matchAll(/(?:https?:\/\/[a-z0-9.:-]+)?\/research\/[a-z0-9-]+\/?/gi)) {
     const u=validArticle(m[0]);
     if (u && !result.includes(u)) result.push(u);
   }
