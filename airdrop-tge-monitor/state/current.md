@@ -1,23 +1,23 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-21 09:06:04 Asia/Bangkok, latest verified durable PARTIAL final
+Updated: 2026-10-21 14:04:46 Asia/Bangkok, latest verified durable PARTIAL final
 Timezone: Asia/Bangkok
 - expected_schedule: hourly :00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-21 09:06:04 Asia/Bangkok
+- latest_actual_run: 2026-10-21 14:04:46 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-21/090604-final-retry.md
-- latest_attempt_path: BLOCKED_WITH_REASON at 09:06 (not persisted)
-- latest_scheduled_shard: 1
-- latest_executed_shard: 1
-- stale_shard_recovery: not_verified
-- latest_candidate_count: 6
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-21/140446-final-retry.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-21/140308-attempt.md
+- latest_scheduled_shard: 2
+- latest_executed_shard: 2
+- stale_shard_recovery: false
+- latest_candidate_count: 8
 - latest_triggered_events: 0
-- latest_identity_failures: not_reported_as_new
-- latest_source_failures: 7
+- latest_identity_failures: 0
+- latest_source_failures: 6
 - latest_notification_decision: NO_ACTION_WITH_PARTIAL_COVERAGE
 - latest_notification_status: SILENT
 - latest_gmail_attempted: false
-- latest_source_gaps: Concrete_extra_USDC, StandX_original, NeoSoul_StandX_original, Cambria_migration, ForecastFDN, Theo, Neutrl_redemption
+- latest_source_gaps: Concrete_extra_USDC, StandX_X_original, NeoSoul_StandX_original, Cambria_migration, OhBabyGames_current, 01_Exchange_mapped_rights
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 
 ## Durable known-events
@@ -102,3 +102,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-19 02:06:58 Asia/Bangkok: existing HH:00 task run PARTIAL; attempt `runs/2026-10-19/ 020426-attempt.md` (leading space in filename), terminal `runs/2026-10-19/020658-final-retry.md` committed after primary final safety block. Scheduled/executed shard2, no override; urgent5 + dynamic Surf/StandX + Cambria Oct19 primary verification, 16 distinct registry projects considered, 5 candidate families, 0 Tier A/B new ACTION, 6 unresolved source/rights gaps (Cambria issuer original, NeoSoul StandX relation, StandX original X, Concrete extra USDC, 01 mapped rights, Space new extension). SurfBoard and StandX Gmail Sent/readback verified and suppressed; no Gmail/App. shard2 last_meaningful_attempt_at 2026-10-19T02:06:58+07:00, last_verified_complete_at unchanged (PARTIAL). Recent terminal-backed shards [1,3,0,2]; task/schedule/registry unchanged.
 
 - 2026-10-20 00:01:13 Asia/Bangkok: scheduled/executed shard0, PARTIAL; terminal `runs/2026-10-20/000113-final-retry.md` committed. Attempt and primary final blocked by platform safety checks. Existing urgent5 + Surf/StandX + Cambria Oct19 candidate + shard0 and cross-shard headline attempted; 5 candidate families, 0 Tier A/B new ACTION, no Gmail/App. Cambria Oct19 original official X remains 403, issuer blog no migration notice; StandX Oct20 reduce-only already notified Oct15; NeoSoul generic checker does not prove StandX-specific allocation. Source gaps remain for Cambria, StandX original X, NeoSoul StandX relation, Concrete extra USDC, Block Stranding and some shard0 feeds. Shard0 last_meaningful_attempt_at advanced to 00:01:13, last_verified_complete_at unchanged (PARTIAL). Original schedule/scope/task unchanged.
+
+- 2026-10-21 14:04:46 BKK: real existing monitor invocation; 140308-attempt.md and 140446-final-retry.md persisted; primary final BLOCKED_WITH_REASON by platform safety checks. Urgent5 + dynamic Surf/StandX + scheduled/executed shard2, bounded cross-shard NeoSoul/StandX/Cambria; 8 candidate families, 0 new Tier A/B ACTION, 6 SOURCE_GAP (Concrete extra USDC, StandX original X, NeoSoul StandX-specific issuer, Cambria original migration, OhBabyGames current source, 01 Exchange mapped rights). Gmail Sent prior Surf/StandX confirmed and suppressed; no Gmail/App. Shard2 meaningful attempt 14:04:46 PARTIAL; last fully verified complete remains 2026-10-10 07:52:16. Last four terminal-backed shards [3,3,0,2]; no override. No schedule/task/scope change.
