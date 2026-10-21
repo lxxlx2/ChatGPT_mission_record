@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
   "updated_at": "2026-10-21",
-  "status": "BOOTSTRAP_FROM_VERIFIED_OCT17_TO_OCT21_GMAIL_CANONICAL",
-  "note": "This is a seed ledger of already user-visible material versions, NOT a complete blockchain scan or proof of all prior events. Refresh from the last 7 days of actual Sent/canonical and terminal final before using it; never suppress distinct TXIDs based on family_key.",
+  "status": "OCT21_MISSED_BTC_EVENT_CORRECTED_DELIVERED_AND_SUPPRESSED_FOR_FUTURE_UNCHANGED_REPORTS",
+  "note": "The fifth 500 BTC tranche was materially omitted in the original Oct21 official email, then included in an explicitly requested full corrected Gmail edition 1a15c6d25715d6ca. No re-alert without genuinely new on-chain transaction or sourced material development. This seed ledger must be reconciled against authoritative Sent/Git, not substituted for source discovery.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -61,9 +61,7 @@
       ],
       "delivered_date": "2026-10-17",
       "source_status": "BENEFICIARY_NOT_FIRST_PARTY_VERIFIED"
-    }
-  ],
-  "open_missed_candidates": [
+    },
     {
       "event_key": "btc:clifton-collins:2026-10-20:tranche-5",
       "family_key": "btc:clifton-collins",
@@ -71,15 +69,17 @@
       "aliases": [
         "Clifton Collins"
       ],
-      "amount_btc": 500,
-      "amount_usd_at_report": 41500000,
-      "discovered_at": "2026-10-21",
-      "published_date": "2026-10-20",
-      "source": "https://info.arkm.com/research/clifton-collins-fifth-500-btc-40m-transfer-from-drug-dealers-lost-stack",
-      "report_delivery_status": "NOT_IN_OCT21_GMAIL_SENT",
+      "delivered_date": "2026-10-21",
+      "delivered_edition": "official_corrected",
+      "gmail_message_id": "1a15c6d25715d6ca",
       "source_tier": "ARKHAM_PRIMARY_ANALYTICS",
-      "government_seizure_status": "UNVERIFIED_FOR_FIFTH_TRANCHE",
-      "actual_sale_status": "UNVERIFIED"
+      "source_url": "https://info.arkm.com/research/clifton-collins-fifth-500-btc-40m-transfer-from-drug-dealers-lost-stack",
+      "unresolved": [
+        "ultimate_recipient_beneficial_owner",
+        "government_announcement_for_fifth",
+        "btc_spot_sale"
+      ]
     }
-  ]
+  ],
+  "open_missed_candidates": []
 }
