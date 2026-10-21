@@ -58,7 +58,7 @@ export function orderedUrls(surfaces) {
       const u=validArticle(loc);
       if(u)ranked.push({url:u,timestamp:Date.parse(last||'')||0});
     }
-    for(const u of extractArticleUrls(s.body))ranked.push({url:u,timestamp:0});
+    for(const u of extractArticleUrls(s.body))ranked.push({url:u,timestamp:s.url==='manual-seed'?Number.MAX_SAFE_INTEGER:0});
   }
   ranked.sort((a,b)=>b.timestamp-a.timestamp);
   return [...new Set(ranked.map(x=>x.url))];
