@@ -45,7 +45,8 @@
       2,
       13
     ],
-    "checked_source_lanes_minimum": 2
+    "checked_source_lanes_minimum": 2,
+    "prices_must_appear_in_market_section_with_numbers": true
   },
   "top_highlights": {
     "section": 1,
@@ -72,7 +73,15 @@
       "price_move_without_material_catalyst"
     ],
     "force_include_count": null,
-    "one_summary_max_per_event": true
+    "one_summary_max_per_event": true,
+    "require_global_breadth": [
+      "market-wide",
+      "multi-venue",
+      "sector-wide"
+    ],
+    "require_impact_basis_min_chars": 40,
+    "require_impact_evidence_url": true,
+    "material_movement_does_not_imply_top5": true
   },
   "routing": [
     {
