@@ -1,22 +1,24 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-18 02:04:39 Asia/Bangkok, latest partial final
+Updated: 2026-10-21 09:06:04 Asia/Bangkok, latest verified durable PARTIAL final
 Timezone: Asia/Bangkok
-- expected_schedule: hourly :00 Asia/Bangkok (user-approved 2026-10-10)
-- latest_actual_run: 2026-10-18 02:04:39 Asia/Bangkok
+- expected_schedule: hourly :00 Asia/Bangkok (unchanged)
+- latest_actual_run: 2026-10-21 09:06:04 Asia/Bangkok
 - latest_actual_run_status: partial
-- latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-18/020439-final.md
-- latest_attempt_path: BLOCKED_WITH_REASON GitHub safety checks (not persisted)
-- latest_scheduled_shard: 2
-- latest_executed_shard: 2
-- stale_shard_recovery: false
-- latest_candidate_count: 5
+- latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-21/090604-final-retry.md
+- latest_attempt_path: BLOCKED_WITH_REASON at 09:06 (not persisted)
+- latest_scheduled_shard: 1
+- latest_executed_shard: 1
+- stale_shard_recovery: not_verified
+- latest_candidate_count: 6
 - latest_triggered_events: 0
-- latest_identity_failures: 0
-- latest_source_failures: 5
-- latest_notification_decision: NO_ACTION
+- latest_identity_failures: not_reported_as_new
+- latest_source_failures: 7
+- latest_notification_decision: NO_ACTION_WITH_PARTIAL_COVERAGE
 - latest_notification_status: SILENT
 - latest_gmail_attempted: false
+- latest_source_gaps: Concrete_extra_USDC, StandX_original, NeoSoul_StandX_original, Cambria_migration, ForecastFDN, Theo, Neutrl_redemption
+- latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
