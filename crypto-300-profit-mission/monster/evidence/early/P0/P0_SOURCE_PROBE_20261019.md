@@ -1,5 +1,19 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-21：Four.meme精准Git SHA离线测试11/11与冻结V2同日30币对比
+
+**这次不是“编写测试”而是已对两份真实Git源码的逐字节一致副本执行了完整的离线回归。** 当前PR #30当时固定 HEAD `a35d463d8b5654ace54b3f202bd763ef977ef8a3`；通过GitHub直接读取`local-agent/mission_agent/early/fourmeme_index_source_probe.py`和`local-agent/tests/test_fourmeme_index_source_probe.py`，在隔离Linux（Python **3.13.5**）原样存入对应包目录。源文件14,477字节、本地`git hash-object`为`7ddf0c2bcb4738cc4bc3c5c2df9e0002ed292546`，测试文件10,687字节、Git blob SHA为`b579074872d13792db4d229d23b94c5f1fbd6b4f`，**两个SHA均和远端GitHub同文件blob SHA精确一致**。在隔离运行环境执行：
+
+```sh
+python3 -m unittest discover -s /tmp/monster_checkout/local-agent/tests -p 'test_fourmeme_index_source_probe.py' -v
+```
+
+真实输出：**Ran 11 tests / OK；11 PASS、0 FAIL、0 ERROR、0 SKIP**。涉及完整538模拟地址、47次RPC模拟与原始JSON-RPC响应可逆base64归档和SHA256、两个真实事件格式、错误链ID、已存在输出目录、索引空洞、重复地址、创建日志错配、HTTP地址限制、请求预算、Multicall3 15条批容量与ABI编码解码异常。**注意测试内网络来源为Mock；不能说真实Mac原HTTP归档已采集，也不是用户Mac上的Python 3.14实测，亦非另一AI独立Review。**不请求CI，也不新增工作流。
+
+**对历史来源的新增业务核对**：从已经完全读取并留在原P0 JSON中的Four.meme单日索引全部**538个非零、唯一CA**，对比**同一2025-07-01 UTC日冻结30个PancakeSwap V2早期样本**，使用精确`token_ca`去重后的集合交集为 **0/30**。这是两个已冻结样本在**相同日期、不同来源定义**下的具体事实；它能证明现有V2 30个候选不能代表当日Four.meme的发行样本，却**不能**据此得出“Four.meme代币从未迁入V2”、“其它日期亦无交集”或“所有BSC发币全集完全互斥”。据此优先补独立发行入口，而不把这538个独立CA静默合入原30币并重新计算原冻结验收百分比。
+
+下一步骤不是追零Gas、不是重跑已拒绝的Graph或HTTP429源，而是保留最小研究权限：已有免费的归档RPC才允许手工做**47次完整原始HTTP正文归档及manifest复算**，没有能访问的免费源则显式保留`RAW_BYTES_MISSING`；并继续核实Pancake V3与剩余发行渠道真正可取得的来源。没有**2025实时可访问`available_at`**、统一研究名义金额下可买可卖/税/费用与全场所分母之前，不能把**11/11工程测试**晋升为**P0整体来源通过、历史10倍正例、生产可用**。保留**2026-11-02**原停止日，`P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO`。未付费、未部署、未下单、未发邮件，未修改Frank。
+
 ## 2026-10-21：Four.meme单日538个历史代币索引已全部读取、去重并验证3个真实创建事件
 
 **决策：真实数据来源取得局部突破，不是整体Monster模型/全链Source PASS。**本轮不再重复之前四个Router钱包Gas细节，转而针对BSC发射平台Four.meme历史数据。此前在2025-07-01 UTC冻结历史区块 `52440286/52555482` 上用`_tokens(uint256)`重建出**247596–248133共538个新增索引位置**，只核实了起始/末端两个真实TokenCreate事件。此后直接以BNB主网历史 `Multicall3`（`0xca11bde05977b3631167028862be2a173976ca11`，`aggregate3`选择器`0x82ad56cb`）批量调用同一个Four.meme TokenManager2（`0x5c952063c7fc8610ffdb798152d69f0b9550762b`）`_tokens(index)`，**36个只读RPC请求、每批最多15个inner calls，成功取回完整538个index→token_CA地址**。链上历史区块每个返回都是非零、每个CA格式有效，**538个地址互不重复、538个index没有缺口**，首末地址均与已核实真实TokenCreate事件匹配。所有538条地址和逐批响应长度保存于原P0 JSON键`bsc_fourmeme_p0_multicall3_frozen_538_index_slot_enumeration_20261021`。这是**2025-07-01当日结束时Four.meme该合约这一索引区间的538个独立CA**，不是所有BSC发币项目，不包含Pancake V3/其他launchpad的分母，也不是538个通过流动性门槛的买入机会。
