@@ -4,6 +4,8 @@ Last updated: 2026-09-27
 Status: canonical
 Timezone: Asia/Bangkok
 
+> **Git editorial control-plane override (2026-10-21):** In addition to this canonical 13-section structure, every collector/prebuild/publisher MUST read `PIPELINE_CONTRACT.md` and `EDITORIAL_RULESET.json` from main. The JSON is authoritative on TOP5 eligibility, primary section and completeness; a user-held BALANCE CCA belongs in §7 not automatically in global Top5. Old quantity-based prompts do not supersede this. No local Mac deployment, new task or GitHub Actions cron. Real final QA and delivery proof are separate requirements.
+
 > **Execution precedence (2026-10-10):** The historic `09:00/10:00/11:00` and `every hour` scheduling paragraphs below describe older designs, NOT today's executable schedule. Existing sole task now runs at 00/03/06/08/09/10/11/12/16/20 **at :20** Asia/Bangkok, user-authorized 2026-10-10. Ordinary collectors 00/03/06/12/16/20 use `COLLECTOR_SPEC.md` V2. 08:20 prebuild; 09:20 primary; 10:20/11:20 recovery. Current `REPORT_ACCEPTANCE.md` CR-20 and `AUTOMATION_RUNTIME.md` latest override precedence. No added schedule, task or monitored category.
 
 
