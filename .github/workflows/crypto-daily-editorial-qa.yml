@@ -1,0 +1,65 @@
+name: Crypto Daily Editorial QA - Git push only
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'crypto-daily/delivery-pending/*.json'
+      - 'crypto-daily/EDITORIAL_RULESET.json'
+      - 'crypto-daily/scripts/editorial_gate.mjs'
+      - 'crypto-daily/scripts/ci_editorial_receipt.mjs'
+      - 'crypto-daily/tests/test_editorial_gate.mjs'
+      - '.github/workflows/crypto-daily-editorial-qa.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: crypto-daily-editorial-qa-main
+  cancel-in-progress: false
+
+jobs:
+  check-editorial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Check out exact commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Select Node for cloud validation
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Offline program regressions
+        run: |
+          node --test crypto-daily/tests/test_editorial_gate.mjs crypto-daily/tests/test_daily_event_gate.mjs crypto-daily/tests/test_arkham_primary_discovery.mjs
+      - name: Evaluate changed daily manifests against checked-in rules
+        env:
+          PUSH_BEFORE: ${{ github.event.before }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          before="$PUSH_BEFORE"
+          if [[ "$before" =~ ^0+$ ]] || ! git cat-file -e "$before^{commit}" 2>/dev/null; then
+            before="$(git rev-parse HEAD^)"
+          fi
+          mapfile -t manifests < <(git diff --name-only "$before" "${GITHUB_SHA}" -- 'crypto-daily/delivery-pending/*.json')
+          for manifest in "${manifests[@]}"; do
+            if [[ -f "$manifest" ]]; then
+              node crypto-daily/scripts/ci_editorial_receipt.mjs "$manifest"
+            fi
+          done
+      - name: Publish SHA-bound validation receipt into Git
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- crypto-daily/delivery-qa/
+          if git diff --cached --quiet; then
+            echo 'No report manifest changed; tests-only validation.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'crypto-daily: CI editorial PASS receipt [skip ci]'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
