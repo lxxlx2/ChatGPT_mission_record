@@ -7,6 +7,14 @@
 
 ---
 
+# 2026-10-21 current mainline — actual one-use sample did NOT catch up; offline capacity next
+
+- Latest real BSC HTTP one-use run **completed exactly once** on Mac with independently reviewed SHA `3a826d3eec1433d536c6fed1789997e225f6a8a0`; precise result is [PR158 comment #6318282277](https://github.com/lxxlx2/ChatGPT_mission_record/pull/158#issuecomment-6318282277). 30/32 attempted requests, 22/22 full blocks received with zero attempted missing, 6/6 HEAD refreshes consumed, stop `HEAD_POLL_BUDGET_EXHAUSTED` after 21.046sec, exit 0. Last sampled HEAD 128952156 versus received contiguous 128952120–141; 15 known unattempted heights, not returned-null or failed. Observed sampled-head rate 2.178 blocks/sec vs total delivered 1.045; no live E2/E3 or quote evidence. Raw 30 responses/private permit/nonce are local only, report and journal SHA in PR comment. Original permit fully consumed.
+- **This branch:** purely offline local journal timing verifier and bounded hypothetical 1/2/3-slot capacity scenarios; scope and exact Mac invocation in `f0/F0_SAVED30_OFFLINE_PARALLEL_CAPACITY.md`. Do not describe synthetic concurrency throughput as provider validation. No real concurrency wiring or source calls.
+- Next gate: independent code review and Mac-private saved journal replay, then decide a *small, separately authorized* actual concurrency observation only if simulated envelope is credible. Need durable global pre-send reservation and ordered verified block release before any concrete parallel live runner; avoid blindly extending HEAD budget or observation duration. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # Latest F0 development handoff: independent PR156 offline approval and gated next source stage
 
 - **Approved fixed SHA:** PR #156 `9326edc3b78bbd9e19f2d405668bf430432e853a`, independent `APPROVE_OFFLINE_CODE`, original review comment https://github.com/lxxlx2/ChatGPT_mission_record/pull/156#issuecomment-6289325992. Writable independent checkout 299/299 full, 9/9 core and 7/7 Journal tests PASS ZERO SKIP; four additional targeted durable-journal adversarial checks passed. Previous #155 original P1 journal reset closed at this descendant SHA. Review author was separate from development; direct GitHub reviewer submission is not claimed.
