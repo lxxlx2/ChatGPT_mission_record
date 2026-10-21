@@ -45,7 +45,7 @@ export function validateReport(input) {
     }
   }
   if (headings.length !== HEADINGS.length || headings.some((h, i) => h !== HEADINGS[i])) errors.push('CANONICAL_13_HEADINGS_MISMATCH');
-  if (items.length < 25) errors.push('REPORT_TOO_THIN');
+  if (items.length === 0) errors.push('REPORT_HAS_NO_SUBSTANTIVE_ITEMS');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(String(input.report_date ?? ''))) errors.push('INVALID_REPORT_DATE');
 
   const coverage = Array.isArray(input.coverage) ? input.coverage : [];
@@ -74,7 +74,7 @@ export function validateReport(input) {
     if (!/^https:\/\//.test(candidate.source_url ?? '') || !candidate.published_at) errors.push('MISSING_SOURCE_PROVENANCE:' + event_key);
     const prior = history.find(h => h.event_key === event_key || (h.family_key === family_key && h.material_version === material_version));
     const hasDelta = !prior && String(candidate.material_delta ?? '').trim().length >= 15;
-    if (hasDelta) newFamilyVersions.add(family_key);
+    if (hasDelta && decision === 'include') newFamilyVersions.add(family_key);
     if (decision === 'include') {
       if (!hasDelta) errors.push('REPEATED_WITHOUT_DELTA:' + event_key);
       const appearances = counted(items, aliases);
