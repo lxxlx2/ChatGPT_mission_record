@@ -1,0 +1,85 @@
+{
+  "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
+  "updated_at": "2026-10-21",
+  "status": "BOOTSTRAP_FROM_VERIFIED_OCT17_TO_OCT21_GMAIL_CANONICAL",
+  "note": "This is a seed ledger of already user-visible material versions, NOT a complete blockchain scan or proof of all prior events. Refresh from the last 7 days of actual Sent/canonical and terminal final before using it; never suppress distinct TXIDs based on family_key.",
+  "previous_events": [
+    {
+      "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
+      "family_key": "qubic:weak_seed_wallet_drain",
+      "material_version": "incident_reported_2026-10-20_v1",
+      "aliases": [
+        "Qubic"
+      ],
+      "delivered_date": "2026-10-20"
+    },
+    {
+      "event_key": "cysic:bridge_mint_exploit:2026-10-17",
+      "family_key": "cysic:bridge_mint_exploit",
+      "material_version": "incident_reported_2026-10-20_v1",
+      "aliases": [
+        "Cysic"
+      ],
+      "delivered_date": "2026-10-20"
+    },
+    {
+      "event_key": "jpm:jpm-coin-ethereum-expansion:2026-10-19",
+      "family_key": "jpm:jpm-coin-ethereum-expansion",
+      "material_version": "issuer_launch_2026-10-19",
+      "aliases": [
+        "JPMD",
+        "JPM Coin"
+      ],
+      "delivered_date": "2026-10-20"
+    },
+    {
+      "event_key": "bitget:restricted-counterparty-htx:2026-10-16",
+      "family_key": "cex:htx-source-of-funds-restrictions",
+      "material_version": "bitget_delta_2026-10-16",
+      "aliases": [
+        "HTX",
+        "Huobi Global SA"
+      ],
+      "delivered_date": "2026-10-17"
+    },
+    {
+      "event_key": "cambria:blast-abstract-transition:2026-10-19",
+      "family_key": "cambria:blast-abstract-transition",
+      "material_version": "secondary_unverified_2026-10-17",
+      "aliases": [
+        "Cambria"
+      ],
+      "delivered_date": "2026-10-18",
+      "source_status": "SOURCE_GAP_NOT_USER_ACTION"
+    },
+    {
+      "event_key": "neosoul:dna-standx-beneficiary:2026-10-15",
+      "family_key": "neosoul:dna-standx-beneficiary",
+      "material_version": "secondary_unverified_2026-10-15",
+      "aliases": [
+        "NeoSoul"
+      ],
+      "delivered_date": "2026-10-17",
+      "source_status": "BENEFICIARY_NOT_FIRST_PARTY_VERIFIED"
+    }
+  ],
+  "open_missed_candidates": [
+    {
+      "event_key": "btc:clifton-collins:2026-10-20:tranche-5",
+      "family_key": "btc:clifton-collins",
+      "material_version": "tx:eb0bde50049e924590a1812af2d2699c13d513415d3f03bbe3d10f316b3d6756",
+      "aliases": [
+        "Clifton Collins"
+      ],
+      "amount_btc": 500,
+      "amount_usd_at_report": 41500000,
+      "discovered_at": "2026-10-21",
+      "published_date": "2026-10-20",
+      "source": "https://info.arkm.com/research/clifton-collins-fifth-500-btc-40m-transfer-from-drug-dealers-lost-stack",
+      "report_delivery_status": "NOT_IN_OCT21_GMAIL_SENT",
+      "source_tier": "ARKHAM_PRIMARY_ANALYTICS",
+      "government_seizure_status": "UNVERIFIED_FOR_FIFTH_TRANCHE",
+      "actual_sale_status": "UNVERIFIED"
+    }
+  ]
+}
