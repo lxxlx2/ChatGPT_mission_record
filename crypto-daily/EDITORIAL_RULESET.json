@@ -169,6 +169,7 @@
       "section": 7,
       "title": "空投、积分、TGE、ICO/公售、解锁和实际可参与机会",
       "examples": [
+        "BALANCE只有竞价截止、用户获配、退款、领取这类可执行事项",
         "BALANCE的CCA投标、结算、退款和领取",
         "注册/申领时间",
         "代币拍卖成交机制"
@@ -183,6 +184,7 @@
       "section": 8,
       "title": "Early / Meme / NFT / 新生态热点",
       "examples": [
+        "BALANCE新项目与Jack Butcher艺术/代币设计及早期估值",
         "Jack Butcher NFT艺术与Credits/Statements创作机制",
         "Meme及Open Edition铸造",
         "早期项目热点"
@@ -259,12 +261,13 @@
     }
   ],
   "top5_alias_policy": {
-    "BALANCE": "TGE_PUBLIC_SALE",
+    "BALANCE": "EARLY_NFT_MEME",
     "Jack_Butcher_Credits": "EARLY_NFT_MEME",
     "Clifton_Collins_500BTC": "INSTITUTIONAL_FLOW",
     "Qubic_exploit": "MAJOR_SECURITY",
     "Cysic_bridge_exploit": "MAJOR_SECURITY",
-    "JPMD_Ethereum": "MAJOR_INFRASTRUCTURE"
+    "JPMD_Ethereum": "MAJOR_INFRASTRUCTURE",
+    "BALANCE_CCA_ACTION": "TGE_PUBLIC_SALE"
   },
   "event": {
     "key_fields": [
@@ -319,5 +322,33 @@
       "editorial_gate_blob_sha"
     ],
     "note": "Cloud CI validates declared-source evidence, structure, categorization and old-event versions. It does not retrieve external news or send Gmail."
+  },
+  "classification_examples": {
+    "BALANCE_project_news": {
+      "kind": "EARLY_NFT_MEME",
+      "section": 8,
+      "top5": "not_by_user_participation",
+      "new_event_key_required": true
+    },
+    "BALANCE_CCA_user_action": {
+      "kind": "TGE_PUBLIC_SALE",
+      "section": 7,
+      "top5": "never_solely_personal",
+      "independent_delta_required": true
+    },
+    "Clifton_Collins_fifth_transfer": {
+      "kind": "INSTITUTIONAL_FLOW",
+      "section": 5,
+      "top5": "only_if_independent_global_impact_verified"
+    },
+    "issuer_security_incident": {
+      "kind": "MAJOR_SECURITY",
+      "section": 9,
+      "top5": "only_if_broad_material"
+    },
+    "exchange_restricted_counterparty_policy": {
+      "kind": "MAJOR_POLICY",
+      "section": 4
+    }
   }
 }
