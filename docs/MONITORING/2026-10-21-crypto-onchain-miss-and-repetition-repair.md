@@ -57,3 +57,19 @@ Existing Crypto Daily and US Stock Daily ChatGPT automations have been updated i
 - Discovery can miss even if post-detection candidate validator passes, so source sweep receipts and independent retrospective missed-event reviews remain necessary.
 - Existing Oct21 original Gmail remains immutable. No second corrected or duplicate daily email was sent because the user did not request a second same-date email in this turn.
 - No Mac prod deployment, credentials, paid APIs, GitHub cron, other automation, transaction or wallet signature was created.
+
+
+## 6. Newly confirmed hard numerical padding root cause and corrected offline baseline
+
+Independent repository inspection found an additional concrete cause: old Crypto \`REPORT_ACCEPTANCE.md\` CR-12 required the report to reach >=70% of the trailing five delivered reports' median body length AND numbered-item count unless the editor justified a low-event exception. US Stock STK-12 had the same requirement. In practice both maintained 50–65 numbered items even when stories did not materially change. This interacted with the section template and generated repeated Qubic, Cysic, JPMD, HTX, Cambria, StandX and generic risk prose. An old source-gap warning should not become "news" merely to satisfy count floors.
+
+Both 70%-median *hard failures* have now been replaced by diagnostic WARN/REVIEW ONLY; genuinely missing financial data, required 13/12 headings, news coverage, provenance, semantic novelty, factual integrity, and high-impact accounted candidates remain hard failures. Git commits:
+- Crypto CR-12 \`e68dc8117db37fc66afb536e8da762e4c4b0ba50\`.
+- US Stock STK-12 \`51088e5aef8a1546cecdf1ec365e3b419ae2e5ca\`.
+
+Executable code likewise removed the minimum 25 numbered item floor (it remains forbidden to send an entirely empty report) and prevents an excluded/watch new candidate from exempting the old family from dedupe:
+- \`crypto-daily/scripts/daily_event_gate.mjs\` latest commit \`f27f2ad20fd118a107d7f3794d6ea911967ece2d\`, blob \`0bb4d09f5a978f6bccfc6d50c4dcaa466757520e\`.
+- \`crypto-daily/tests/test_daily_event_gate.mjs\` latest commit \`7fd80ec70514c7a46ac58513149f92f0cb501787\`, blob \`d0ec3e1723287210f56ce128423b47d0329517dd\`.
+- After this revision: matching local Node.js files in repository scripts/tests-relative layout executed \`node --test\`: **10 PASS, 0 FAIL**, including a new regression proving 13 complete headings with 13 substantive numbered items need not be padded to 55.
+
+All code/files were Git-fetched after writes and exact contents compared. This is an offline tested code/spec fix, NOT a proven autonomous production send. The automated tasks must actually adopt the new source sweep, content gate and no-quota rule on a later scheduled real run; provider Gmail safety checks still may block.
