@@ -51,3 +51,8 @@ test('per-section numbering must restart at 1', () => {
   const m=manifest();m.body=m.body.replace('二、BTC/ETH/SOL及主要资产\n（1）','二、BTC/ETH/SOL及主要资产\n（3）');
   assert.ok(validateReport(m).errors.some(e=>e.startsWith('SECTION_NUMBER_GAP')));
 });
+
+test('full 13-section report can have just 13 material items instead of filler', () => {
+  const m=manifest();m.body=m.body.replace(/^（2）[^\n]*$/gm,'');
+  const r=validateReport(m);assert.equal(r.passed,true);assert.equal(r.metrics.numbered_items,13);
+});
