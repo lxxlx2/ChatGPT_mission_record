@@ -1,0 +1,280 @@
+{
+  "schema": "CRYPTO_EDITORIAL_RULESET_V1",
+  "version": "2026-10-21",
+  "purpose": "Single Git authority for news routing, top highlights, breadth and proof. Not a new automation or local process.",
+  "scope": "existing_13_section_crypto_daily",
+  "precedence": [
+    "REPORT_SPEC.md core source and structure",
+    "EDITORIAL_RULESET.json editorial routing and quality",
+    "REPORT_ACCEPTANCE.md other hard gates",
+    "COLLECTOR_SPEC.md discovery and coverage",
+    "DELIVERY_RUNBOOK.md Gmail/Git integrity"
+  ],
+  "full_report": {
+    "headings": 13,
+    "keep_all_headings": true,
+    "require_structured_domain_receipts": true,
+    "empty_section_line": "无高置信新增。",
+    "no_padding": true,
+    "minimum_numbered_items": null,
+    "minimum_characters": null,
+    "market_core_must_have": [
+      "BTC",
+      "ETH",
+      "SOL"
+    ],
+    "require_asof_timestamp": true,
+    "do_not_reuse_known_unmodified_events": true,
+    "minimum_domain_receipts": [
+      "spot",
+      "derivatives",
+      "capital_flows",
+      "onchain",
+      "policy",
+      "infrastructure",
+      "tge",
+      "early_nft",
+      "security",
+      "macro",
+      "forward_catalysts"
+    ],
+    "allow_source_gap_with_reason": true
+  },
+  "top_highlights": {
+    "section": 1,
+    "capacity": 5,
+    "quota": 0,
+    "allow_kinds": [
+      "MAJOR_SECURITY",
+      "MAJOR_POLICY",
+      "SYSTEMIC_MARKET",
+      "INSTITUTIONAL_FLOW",
+      "MAJOR_INFRASTRUCTURE"
+    ],
+    "impact_required": [
+      "SYSTEMIC",
+      "MAJOR"
+    ],
+    "must_be_new_delta": true,
+    "must_have_verified_or_attributed_source": true,
+    "never_promote_because": [
+      "user_holds_asset",
+      "user_placed_bid",
+      "tweet_popularity_alone",
+      "need_to_fill_five",
+      "price_move_without_material_catalyst"
+    ],
+    "force_include_count": null,
+    "one_summary_max_per_event": true
+  },
+  "routing": [
+    {
+      "kind": "CORE_QUOTE",
+      "section": 2,
+      "title": "BTC/ETH/SOL及主要资产",
+      "examples": [
+        "BTC/ETH/SOL价量报价",
+        "BNB、HYPE价格快照"
+      ],
+      "exclude": [
+        "长线方向推断",
+        "ETF机构资金"
+      ]
+    },
+    {
+      "kind": "TREND_DERIVATIVES",
+      "section": 3,
+      "title": "二级市场剧烈波动与持续趋势",
+      "examples": [
+        "多周期趋势",
+        "成交、OI、资金费率变化",
+        "ZEC大波动"
+      ],
+      "exclude": [
+        "重复逐币报价",
+        "机构标签钱包转账"
+      ]
+    },
+    {
+      "kind": "MAJOR_POLICY",
+      "section": 4,
+      "title": "监管与政策",
+      "examples": [
+        "新增交易所入金限制",
+        "监管正式公告",
+        "政策生效"
+      ],
+      "exclude": [
+        "旧政策无增量",
+        "已经确认的安全攻击"
+      ]
+    },
+    {
+      "kind": "INSTITUTIONAL_FLOW",
+      "section": 5,
+      "title": "机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作",
+      "examples": [
+        "Clifton Collins独立第5笔500 BTC",
+        "基金逐日ETF净流量",
+        "有TXID的交易所流向"
+      ],
+      "exclude": [
+        "没有金额与TX证据的鲸鱼传闻",
+        "实际成交未经证实的转账被称作卖出"
+      ]
+    },
+    {
+      "kind": "MAJOR_INFRASTRUCTURE",
+      "section": 6,
+      "title": "融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态",
+      "examples": [
+        "银行存款代币上链",
+        "重大协议主网上线",
+        "PM新市场机制"
+      ],
+      "exclude": [
+        "首发/拍卖参与窗口",
+        "钱包被盗事故"
+      ]
+    },
+    {
+      "kind": "TGE_PUBLIC_SALE",
+      "section": 7,
+      "title": "空投、积分、TGE、ICO/公售、解锁和实际可参与机会",
+      "examples": [
+        "BALANCE的CCA投标、结算、退款和领取",
+        "注册/申领时间",
+        "代币拍卖成交机制"
+      ],
+      "exclude": [
+        "单纯NFT艺术评论",
+        "因用户参与而进入全市场Top5"
+      ]
+    },
+    {
+      "kind": "EARLY_NFT_MEME",
+      "section": 8,
+      "title": "Early / Meme / NFT / 新生态热点",
+      "examples": [
+        "Jack Butcher NFT艺术与Credits/Statements创作机制",
+        "Meme及Open Edition铸造",
+        "早期项目热点"
+      ],
+      "exclude": [
+        "CCA报价/用户获配/退款",
+        "已售代币的日内报价"
+      ]
+    },
+    {
+      "kind": "MAJOR_SECURITY",
+      "section": 9,
+      "title": "安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁",
+      "examples": [
+        "Qubic资金失窃/弱种子新公告",
+        "Cysic桥安全事件",
+        "实际新增合约风险"
+      ],
+      "exclude": [
+        "无进展旧事故",
+        "交易所一般经营政策"
+      ]
+    },
+    {
+      "kind": "MACRO_CROSS_MARKET",
+      "section": 10,
+      "title": "全球局势与跨市场冲击",
+      "examples": [
+        "新美债利率/油价/纳指交易日行情",
+        "全球局势重大新变化"
+      ],
+      "exclude": [
+        "重复同一新闻细节"
+      ]
+    },
+    {
+      "kind": "FUTURE_CATALYST",
+      "section": 11,
+      "title": "未来24至72小时催化",
+      "examples": [
+        "经过发行方确认的未来财报/拍卖结束时刻",
+        "具体未来解锁"
+      ],
+      "exclude": [
+        "整篇已详述的新闻复述",
+        "已过期事项"
+      ]
+    },
+    {
+      "kind": "PERSISTENT_WATCH",
+      "section": 12,
+      "title": "持续趋势与跨市场机会观察清单",
+      "examples": [
+        "含多周期/条件/失效条件的交易观察",
+        "不同于实时价的后续复核点"
+      ],
+      "exclude": [
+        "复制第二章同一报价",
+        "泛泛持币建议"
+      ]
+    },
+    {
+      "kind": "ACTION_CONCLUSION",
+      "section": 13,
+      "title": "今日行动与风险结论",
+      "examples": [
+        "面向用户有独立决策价值的风险处理",
+        "可验证的观察阈值与失效条件"
+      ],
+      "exclude": [
+        "重复事件报道",
+        "无需操作的旧空投"
+      ]
+    }
+  ],
+  "top5_alias_policy": {
+    "BALANCE": "TGE_PUBLIC_SALE",
+    "Jack_Butcher_Credits": "EARLY_NFT_MEME",
+    "Clifton_Collins_500BTC": "INSTITUTIONAL_FLOW",
+    "Qubic_exploit": "MAJOR_SECURITY",
+    "Cysic_bridge_exploit": "MAJOR_SECURITY",
+    "JPMD_Ethereum": "MAJOR_INFRASTRUCTURE"
+  },
+  "event": {
+    "key_fields": [
+      "event_key",
+      "material_version",
+      "kind",
+      "source_url",
+      "published_at",
+      "actual_delta",
+      "primary_section"
+    ],
+    "primary_section_uniqueness": true,
+    "top5_requires_eligible_event": true,
+    "detail_allowed_once": true,
+    "prior7_day_gmail_git_dedupe": true,
+    "different_txid_is_new_version": true,
+    "no_repeat_unchanged_incident": true
+  },
+  "sequence": [
+    "READ_GIT_RULE_VERSION",
+    "COLLECT_WITH_SOURCE_RECEIPTS",
+    "CANDIDATE_ACCOUNTING",
+    "DEDUPE_AND_ROUTE",
+    "DRAFT_COMPLETE_13_SECTIONS",
+    "EDITORIAL_AND_FACT_QA",
+    "PERSIST_APPROVED_ARTIFACT_IN_GIT",
+    "GMAIL_SENT_PREFIX_DEDUPE",
+    "SEND_GMAIL",
+    "READBACK_GMAIL",
+    "ARCHIVE_EXACT_SENT_BODY_AND_RECORD_STATUS"
+  ],
+  "delivery": {
+    "report_qa_fail": "NO_SEND_AND_INTERNAL_AUDIT",
+    "git_prep_write_failure": "REPORT_BLOCKED_UNLESS_EXISTING_APPROVED_GIT_ARTIFACT",
+    "gmail_send_failure": "BLOCKED_WITH_REASON",
+    "send_success_git_archive_failure": "SENT_ARCHIVE_PENDING_NO_RESEND",
+    "source_not_accessible": "SOURCE_GAP_NO_FALSE_ZERO",
+    "web_provider_safety_block": "DO_NOT_CIRCUMVENT"
+  }
+}
