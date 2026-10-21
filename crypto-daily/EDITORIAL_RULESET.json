@@ -285,13 +285,15 @@
   },
   "sequence": [
     "READ_GIT_RULE_VERSION",
+    "CHECK_GMAIL_SENT_PREFIX_BEFORE_BUILD",
     "COLLECT_WITH_SOURCE_RECEIPTS",
     "CANDIDATE_ACCOUNTING",
     "DEDUPE_AND_ROUTE",
     "DRAFT_COMPLETE_13_SECTIONS",
     "EDITORIAL_AND_FACT_QA",
     "PERSIST_APPROVED_ARTIFACT_IN_GIT",
-    "GMAIL_SENT_PREFIX_DEDUPE",
+    "READ_SHA_MATCHED_GITHUB_CI_QA_RECEIPT_IF_AVAILABLE",
+    "CHECK_GMAIL_SENT_PREFIX_AGAIN_BEFORE_SEND",
     "SEND_GMAIL",
     "READBACK_GMAIL",
     "ARCHIVE_EXACT_SENT_BODY_AND_RECORD_STATUS"
@@ -303,5 +305,19 @@
     "send_success_git_archive_failure": "SENT_ARCHIVE_PENDING_NO_RESEND",
     "source_not_accessible": "SOURCE_GAP_NO_FALSE_ZERO",
     "web_provider_safety_block": "DO_NOT_CIRCUMVENT"
+  },
+  "cloud_validation": {
+    "trigger": "GitHub push to main for a new crypto-daily/delivery-pending/YYYY-MM-DD.json",
+    "workflow": ".github/workflows/crypto-daily-editorial-qa.yml",
+    "cloud_only": true,
+    "cron": false,
+    "mac_runtime": false,
+    "qa_receipt": "crypto-daily/delivery-qa/YYYY-MM-DD.json",
+    "require_matching_sha": [
+      "manifest_blob_sha",
+      "rules_blob_sha",
+      "editorial_gate_blob_sha"
+    ],
+    "note": "Cloud CI validates declared-source evidence, structure, categorization and old-event versions. It does not retrieve external news or send Gmail."
   }
 }
