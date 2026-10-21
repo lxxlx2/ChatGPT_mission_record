@@ -38,7 +38,14 @@
       "macro",
       "forward_catalysts"
     ],
-    "allow_source_gap_with_reason": true
+    "allow_source_gap_with_reason": true,
+    "empty_sections_must_document_research": true,
+    "blank_section_check_requires": "section,reason>=25chars,checked_lanes,source receipts",
+    "mandatory_substantive_sections": [
+      2,
+      13
+    ],
+    "checked_source_lanes_minimum": 2
   },
   "top_highlights": {
     "section": 1,
@@ -79,6 +86,17 @@
       "exclude": [
         "长线方向推断",
         "ETF机构资金"
+      ]
+    },
+    {
+      "kind": "SYSTEMIC_MARKET",
+      "section": 3,
+      "title": "二级市场剧烈波动与持续趋势",
+      "examples": [
+        "大级别市场危机/波动有重大实体催化"
+      ],
+      "exclude": [
+        "正常BTC报价"
       ]
     },
     {
