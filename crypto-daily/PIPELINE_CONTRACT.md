@@ -29,15 +29,15 @@ The fixed report is broad market intelligence, NOT a list of projects the user j
 | 4. 监管与政策 | new legal/exchange/regulatory rules | new HTX funding path restrictions | no-delta historical restrictions |
 | 5. 机构/基金/鲸鱼真实资金动作 | real ETF flows, exchange wallets, original onchain entity/tx | **Clifton Collins distinct fifth 500 BTC** | infer sold BTC from custody transfer |
 | 6. 融资/基础设施/RWA/PM/公链 | new fundamental protocol/company infrastructure facts | JPMD new Ethereum institutional support | public token auction/ticket |
-| 7. 空投/TGE/ICO/公售/解锁 | current executable eligibility, token sale, bids, claiming, settlement | **BALANCE CCA bid, allocation, refund and claim** | global Top5 just because user participated |
-| 8. Early/Meme/NFT/艺术 | genuine new early assets/art mechanics and social heat | Jack Butcher Credits/Statements NFT mechanics | BALANCE auction settlement/price repetition |
+| 7. 空投/TGE/ICO/公售/解锁 | current executable eligibility, token sale, bids, claiming, settlement | **BALANCE live CCA bid/clear/refund/claim ONLY when a distinct current action** | general BALANCE project coverage; global Top5 just because user participated |
+| 8. Early/Meme/NFT/艺术 | substantive early-project research, art/token design and verifiable social/market heat | **BALANCE project fundamentals and Jack Butcher Credits/Statements art** | same BALANCE auction settlement/claim copied from §7 |
 | 9. 安全/黑客/漏洞 | new exploit, wallet drain, loss, repair or active threat | Qubic weak seed new issuer advisory | old issue summary with no new detail |
 | 10. 全球局势/跨市场 | significant current macro and rates/equity/geopolitical news | newly completed US close, 10yr yields, oil | repeat same BTC quote |
 | 11. 未来24–72小时催化 | future independently sourced dated event NOT already repeated | launch/earnings/deadline with new action | expired date or extra summary of same incident |
 | 12. 持续趋势与机会观察 | multi-period evidence, falsifiable invalidation and next checkpoint | why a tracked trend persists or breaks | same section 2 24h data alone |
 | 13. 今日行动与风险结论 | distinct actionable consequence, safety and invalidation | check actual transferable auction token after settle | rehash detailed story again |
 
-**BALANCE test**: the user has invested in CCA, so it can be highly relevant in §7. Jack Butcher art/NFT distinctions can go in §8 only if a DIFFERENT fact (not the same auction) warrants it. The project remains out of §1 unless its independently verified cross-market/capital impact qualifies under the global Top5 rules. A personal stake is **not** materiality.
+**BALANCE test**: BALANCE itself is an EARLY art/token experiment, so its primary *project story*, economics and verified valuation evidence are in §8. Only its independently distinct time-limited CCA bid/clear/claim/refund operations belong in §7; never duplicate the same facts in both. The user's personal stake never promotes it to global Top5. A large independent system-wide change would need explicit quantified external impact evidence, not popularity.
 
 **Collins test**: a distinct new TXID and Arkham research qualify it for §5 once attribution is correctly caveated. It is a candidate for §1 ONLY if independently assessed as top-global significance, not simply because it exceeds a $10m *discovery threshold*. An exchange deposit is not a sale or proof of new police seizure.
 
