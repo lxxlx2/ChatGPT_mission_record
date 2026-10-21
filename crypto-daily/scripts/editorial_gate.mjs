@@ -17,7 +17,7 @@ export function validateEditorial(input, rules) {
       if(m){number++;if(Number(m[1])!==number)fail('NUMBERING',section+'/'+m[1]);parsed.push({section,item_number:number,text:m[2]});}
     }
   }
-  const canonical=['一、今日最重要的5件事',...rules.routing.map(r=>r.title).filter((_,i)=>i!==0)].slice(0,13);
+
   const expected=[
     '一、今日最重要的5件事','二、BTC/ETH/SOL及主要资产','三、二级市场剧烈波动与持续趋势',
     '四、监管与政策','五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作',
@@ -90,10 +90,21 @@ export function validateEditorial(input, rules) {
     if(ev.priority==='HIGH'&&ev.status==='verified'&&!counts.has(ev.event_key) && !ev.excluded_reason)fail('UNACCOUNTED_HIGH_EVENT',ev.event_key);
     if(ev.no_material_delta===true && counts.has(ev.event_key))fail('OLD_EVENT_REPLAY',ev.event_key);
   }
+  let blank=0;
   for(let n=2;n<=13;n++){
     const present=parsed.filter(x=>x.section===n).length;
-    if(!present && !report.includes(expected[n-1]+'\n'+rules.full_report.empty_section_line))fail('SECTION_WITHOUT_CONTENT_OR_NO_NEW',n);
+    if(!present){
+      blank++;
+      if(!report.includes(expected[n-1]+'\n'+rules.full_report.empty_section_line))fail('SECTION_WITHOUT_CONTENT_OR_NO_NEW',n);
+      const reason=(input.empty_section_reasons||[]).find(x=>x.section===n);
+      if(!reason||String(reason.reason||'').length<25||!Array.isArray(reason.checked_lanes)||!reason.checked_lanes.length)fail('BLANK_SECTION_WITHOUT_REVIEW',n);
+      else if(reason.checked_lanes.some(lane=>!receipts.some(r=>r.lane===lane)))fail('BLANK_SECTION_SOURCE_NOT_CHECKED',n);
+    }
   }
+  if(!parsed.some(x=>x.section===2))fail('MARKET_REPORT_MISSING_CORE_CONTENT',2);
+  if(!parsed.some(x=>x.section===13))fail('REPORT_MISSING_DECISION_CONCLUSION',13);
+  if(receipts.filter(r=>r.status==='checked'&&r.result_urls?.length).length<2)fail('INSUFFICIENT_VERIFIED_SOURCE_COVERAGE',receipts.length);
+  details.blank_sections=blank;
   details.headings=headings.length;details.numbered_items=parsed.length;details.highlight_count=highlights.length;
   details.source_lanes=receipts.length;details.event_count=byId.size;
   return {passed:errors.length===0,errors,warnings,metrics:details};
