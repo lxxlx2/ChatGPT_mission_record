@@ -49,10 +49,10 @@ STK-11 Missing-source resilience
 - missing data is replaced by an equivalent source when possible or disclosed internally in the audit;
 - source/process failure text must not be used as user-visible filler.
 
-STK-12 Quality-collapse guard
-- compare body length and numbered-item count against the trailing 5 latest complete formal reports;
-- if body length < 70% of trailing-5 median OR numbered-item count < 70% of trailing-5 median, QA fails unless the run audit records a genuine low-event/market-closed reason and all semantic hard gates still pass;
-- recovery-path status alone is never a valid reason for the exception.
+STK-12 Quality-collapse guard (revised 2026-10-21)
+- compare body length and numbered-item count against trailing 5 actually delivered formal reports for diagnostic coverage warnings, not numerical quota filling;
+- below 70% of historical median is WARN/REVIEW only and cannot by itself produce QA_FAIL or require old AI/rates/earnings news to be copied. Market-closed/low-event periods legitimately contain fewer current facts, while all 12 original headings remain;
+- HARD FAIL still applies when essential available market indices, genuinely new high-impact news, dated sources, market-day integrity, actionable catalyst/risk checks or other semantic STK rules are missing. Never send a vague recovery digest as a shortcut; do not pad with unchanged repeated commentary to match old report length.
 
 STK-13 User-visible cleanliness
 The email body must not contain monitoring plumbing or editorial commentary about what the report chose not to do.
