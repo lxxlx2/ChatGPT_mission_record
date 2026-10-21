@@ -60,8 +60,8 @@ Primary, recovery, manual resend and correction all use the same full 13-section
 - exact body equality after YAML metadata;
 - prior incomplete/superseded same-day versions recorded.
 
-## CR-12 Quality-collapse guard
-Compare against trailing 5 latest complete formal reports. If body length <70% of median OR numbered-item count <70% of median, QA fails unless a genuine low-event reason is documented and CR-01 through CR-09 all still pass. Provider failure, recovery mode or time pressure are never sufficient exceptions.
+## CR-12 Quality-collapse guard (revised 2026-10-21 to remove padding incentive)
+Compare trailing 5 actually delivered complete reports to detect missing coverage, but a report below 70% of historical median in length or item count triggers INTERNAL REVIEW/WARNING, NOT automatic failure and NOT a requirement to pad. After removing unchanged old events, a substantively correct current daily may legitimately have fewer numbered items. Hard FAIL still applies to missing canonical headings, omitted verified high-impact candidates, unverified data, missing critical accessible BTC/ETH/SOL facts, and other CR gates. Keep any no-news section heading with one short unnumbered no-new line. Do not send a low-quality recovery digest just to pass a shorter length check; conversely never recycle Qubic/Cysic/HTX or process commentary to satisfy an old median. Provider failure, recovery mode or time pressure never justify bypassing actual semantic/source QA.
 
 ## CR-13 User-visible cleanliness
 Monitoring-health details, run failures, QA mechanics and persistence plumbing stay out of the report body. Audit-only: omission explanations, old-item suppression reasons, source-coverage/process explanations, scheduler/Gmail/GitHub/recovery/prebuild/pending/canonical details. If there is genuinely no decision-relevant update for a section, use one short neutral line such as `无高置信新增。`.
