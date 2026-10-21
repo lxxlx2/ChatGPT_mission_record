@@ -35,3 +35,9 @@ No second Oct21 full daily is authorized by this investigation; original Sent/Gi
 - Internal default review threshold: labelled BTC transfer >= USD 10,000,000, major exchange/government-related movement, or otherwise high materiality. This is a discovery trigger, not a trade signal or alert-only threshold.
 - Gate: `crypto-daily/scripts/daily_event_gate.mjs` with distinct `event_key`, `family_key`, `material_version`, source URL/timestamp and `material_delta`; no repeats without delta and no more than two top+deep numbered mentions of the same event.
 - Idempotency: successful Gmail Sent and canonical date must never be silently overwritten or emailed a second time without an explicit user-requested corrected edition.
+
+## Resolved: actual full corrected edition sent after user approval
+
+The initial original Oct21 email omitted this fifth tranche; user explicitly requested a resend. The corrected, complete 13-section email was sent as Gmail ID 1a15c6d25715d6ca with the Collins-specific TXID and the Arkham original-source attribution, then independently read back from Gmail and archived byte-for-byte at crypto-daily/reports/daily/2026/2026-10/2026-10-21.md (commit da084972cdd5b05ef2e6bfcd343ff6eda867ee67). Earlier Sent ID 1a15c49e3ff24c51 remains a superseded historic artifact. The event ledger has now marked this exact fifth tranche delivered; only distinct newer on-chain transactions or material verified changes merit another daily mention.
+
+Scanner: crypto-daily/scripts/arkham_primary_discovery.mjs plus 12 offline Node test definitions, with 13 equivalent pure-source V8 fixture validations passed; no full production or live HTTP autonomous verification claimed.
