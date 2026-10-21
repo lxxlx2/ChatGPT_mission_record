@@ -51,8 +51,18 @@ export function parseArticle(url, source, checked = new Date()) {
 }
 export function scanOffline(surfaces, articles, now = new Date()) {
   const source_receipts=surfaces.map(s=>({url:s.url,status:s.error?'SOURCE_GAP':'CHECKED',checked_at:nowISO(now),error:s.error||null}));
-  const urls=[];
-  for(const s of surfaces) if(!s.error) for(const u of extractArticleUrls(s.body)) if(!urls.includes(u)) urls.push(u);
+  const ranked=[];
+  for(const s of surfaces) if(!s.error){
+    for(const entry of String(s.body||'').matchAll(/<url>([\\s\\S]*?)<\\/url>/gi)){
+      const loc=(entry[1].match(/<loc>([^<]+)<\\/loc>/i)||[])[1];
+      const last=(entry[1].match(/<lastmod>([^<]+)<\\/lastmod>/i)||[])[1];
+      const u=validArticle(loc);
+      if(u)ranked.push({url:u,timestamp:Date.parse(last||'')||0});
+    }
+    for(const u of extractArticleUrls(s.body))ranked.push({url:u,timestamp:0});
+  }
+  ranked.sort((a,b)=>b.timestamp-a.timestamp);
+  const urls=[...new Set(ranked.map(x=>x.url))];
   const candidates=[],article_gaps=[];
   for(const u of urls.slice(0,LIMIT)){
     if(!articles[u]||articles[u].error){article_gaps.push({url:u,reason:articles[u]?.error||'ARTICLE_NOT_READ'});continue}
@@ -83,8 +93,7 @@ export async function scanLive(when=new Date(),seedUrl=null){
   for(const u of [...new Set(urls)].slice(0,LIMIT)){
     try{articles[u]={body:await get(u)}}catch(e){articles[u]={error:String(e?.message||e)}}
   }
-  const scan=scanOffline([{url:SURFACES[0],body:surfaces[0].body,error:surfaces[0].error},{url:SURFACES[1],body:surfaces[1].body,error:surfaces[1].error},
-    ...(seedUrl?[{url:'manual-seed',body:validArticle(seedUrl)}]:[])],articles,when);
+  const scan=scanOffline([...(seedUrl?[{url:'manual-seed',body:validArticle(seedUrl)}]:[]),...surfaces],articles,when);
   return scan;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
