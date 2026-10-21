@@ -50,3 +50,18 @@ test('cannot declare source checked with no actual source result',()=>assert.ok(
 
 test('bare $41m wallet transfer not promoted to global Top5 merely by size',()=>assert.ok(run(x=>{x.items[0].event_key='fifth-500-btc';x.items.find(t=>t.event_key==='systemic-security'&&t.section===9).text='Wallet transfer is not a security loss';}).errors.some(e=>e.startsWith('TOP5_NOT_ELIGIBLE'))));
 test('systemic top5 must have independent breadth evidence',()=>assert.ok(run(x=>{delete x.events.find(e=>e.event_key==='systemic-security').top5_evidence_url}).errors.some(e=>e.startsWith('TOP5_NOT_ELIGIBLE'))));
+
+test('BALANCE overall Early project must use section 8, distinct from live CCA actions in 7',()=>{
+ const r=run(x=>{
+   x.events.push(mkEvent('balance-project','EARLY_NFT_MEME','NICHE',{user_only:true}));
+   x.items.push({section:8,event_key:'balance-project',role:'detail',text:'BALANCE作为Jack Butcher早期艺术与代币项目的作品和估值机制。'});
+ });
+ assert.equal(r.passed,true);
+});
+test('BALANCE Early project in public-sale section without separate CCA event fails',()=>{
+ const r=run(x=>{
+   x.events.push(mkEvent('balance-project','EARLY_NFT_MEME','NICHE',{user_only:true}));
+   x.items.push({section:7,event_key:'balance-project',role:'detail',text:'BALANCE艺术和代币项目基础介绍，不是新的CCA截止或退款操作。'});
+ });
+ assert.ok(r.errors.some(e=>e.startsWith('WRONG_PRIMARY_SECTION:balance-project')));
+});
