@@ -50,6 +50,21 @@ jobs:
               node crypto-daily/scripts/ci_editorial_receipt.mjs "$manifest"
             fi
           done
+      - name: Durable CI smoke receipt (not a daily-report QA)
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module -e '
+            import fs from "node:fs";
+            import {execFileSync} from "node:child_process";
+            const sha=p=>execFileSync("git",["hash-object",p],{encoding:"utf8"}).trim();
+            fs.mkdirSync("crypto-daily/delivery-qa",{recursive:true});
+            fs.writeFileSync("crypto-daily/delivery-qa/_ci-selftest.json",
+              JSON.stringify({schema:"CRYPTO_DAILY_CLOUD_CI_SELFTEST_V1",state:"NODE_TESTS_PASSED_ON_GITHUB_RUNNER_NOT_PRODUCTION_DELIVERY",
+                tested_commit:process.env.GITHUB_SHA,editorial_rules_blob_sha:sha("crypto-daily/EDITORIAL_RULESET.json"),
+                gate_blob_sha:sha("crypto-daily/scripts/editorial_gate.mjs"),
+                checked_at:new Date().toISOString()},null,2)+"\n");
+          '
       - name: Publish SHA-bound validation receipt into Git
         shell: bash
         run: |
