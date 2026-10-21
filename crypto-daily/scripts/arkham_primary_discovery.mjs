@@ -49,20 +49,23 @@ export function parseArticle(url, source, checked = new Date()) {
     source_tier:'ARKHAM_ORIGINAL_ANALYTICS', priority:fresh&&btc&&movement&&(dollars.some(x=>x>=1e7)||amounts.some(x=>x>=100))?'HIGH_REVIEW':'NORMAL_REVIEW',
     qualification:'Arkham attribution is not independent proof of beneficial ownership, law enforcement seizure or spot sale.'};
 }
-export function scanOffline(surfaces, articles, now = new Date()) {
-  const source_receipts=surfaces.map(s=>({url:s.url,status:s.error?'SOURCE_GAP':'CHECKED',checked_at:nowISO(now),error:s.error||null}));
+export function orderedUrls(surfaces) {
   const ranked=[];
   for(const s of surfaces) if(!s.error){
-    for(const entry of String(s.body||'').matchAll(/<url>([\\s\\S]*?)<\\/url>/gi)){
-      const loc=(entry[1].match(/<loc>([^<]+)<\\/loc>/i)||[])[1];
-      const last=(entry[1].match(/<lastmod>([^<]+)<\\/lastmod>/i)||[])[1];
+    for(const entry of String(s.body||'').matchAll(/<url>([\s\S]*?)<\/url>/gi)){
+      const loc=(entry[1].match(/<loc>([^<]+)<\/loc>/i)||[])[1];
+      const last=(entry[1].match(/<lastmod>([^<]+)<\/lastmod>/i)||[])[1];
       const u=validArticle(loc);
       if(u)ranked.push({url:u,timestamp:Date.parse(last||'')||0});
     }
     for(const u of extractArticleUrls(s.body))ranked.push({url:u,timestamp:0});
   }
   ranked.sort((a,b)=>b.timestamp-a.timestamp);
-  const urls=[...new Set(ranked.map(x=>x.url))];
+  return [...new Set(ranked.map(x=>x.url))];
+}
+export function scanOffline(surfaces, articles, now = new Date()) {
+  const source_receipts=surfaces.map(s=>({url:s.url,status:s.error?'SOURCE_GAP':'CHECKED',checked_at:nowISO(now),error:s.error||null}));
+  const urls=orderedUrls(surfaces);
   const candidates=[],article_gaps=[];
   for(const u of urls.slice(0,LIMIT)){
     if(!articles[u]||articles[u].error){article_gaps.push({url:u,reason:articles[u]?.error||'ARTICLE_NOT_READ'});continue}
@@ -87,7 +90,7 @@ async function get(url){
 }
 export async function scanLive(when=new Date(),seedUrl=null){
   const surfaces=await Promise.all(SURFACES.map(async url=>{try{return {url,body:await get(url)}}catch(e){return {url,error:String(e?.message||e)}}}));
-  const urls=[...new Set(surfaces.flatMap(s=>s.error?[]:extractArticleUrls(s.body)))];
+  const urls=orderedUrls(surfaces);
   if(seedUrl){const u=validArticle(seedUrl);if(!u)throw new Error('INVALID_SEED_URL');urls.unshift(u)}
   const articles={};
   for(const u of [...new Set(urls)].slice(0,LIMIT)){
