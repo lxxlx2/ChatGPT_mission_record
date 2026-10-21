@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 const BASE = 'https://info.arkm.com';
 const SURFACES = [BASE+'/research', BASE+'/sitemap.xml'];
-const LIMIT = 32;
+const LIMIT = 24;
 const nowISO = d => d.toISOString();
 const digest = s => crypto.createHash('sha256').update(s).digest('hex').slice(0,24);
 const clear = s => String(s || '').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
@@ -81,7 +81,7 @@ export function scanOffline(surfaces, articles, now = new Date()) {
 async function get(url){
   const u=new URL(url);
   if(u.protocol!=='https:'||u.hostname!=='info.arkm.com')throw new Error('NOT_ALLOWED_ORIGIN');
-  const res=await fetch(url,{redirect:'manual',signal:AbortSignal.timeout(10000)});
+  const res=await fetch(url,{redirect:'manual',signal:AbortSignal.timeout(6500)});
   if(!res.ok||res.status>=300)throw new Error('HTTP_'+res.status);
   if(Number(res.headers.get('content-length')||0)>2000000)throw new Error('BODY_TOO_LARGE');
   const body=await res.text();
@@ -93,8 +93,13 @@ export async function scanLive(when=new Date(),seedUrl=null){
   const urls=orderedUrls(surfaces);
   if(seedUrl){const u=validArticle(seedUrl);if(!u)throw new Error('INVALID_SEED_URL');urls.unshift(u)}
   const articles={};
-  for(const u of [...new Set(urls)].slice(0,LIMIT)){
-    try{articles[u]={body:await get(u)}}catch(e){articles[u]={error:String(e?.message||e)}}
+  const selected=[...new Set(urls)].slice(0,LIMIT);
+  for(let n=0;n<selected.length;n+=8){
+    const group=selected.slice(n,n+8);
+    const results=await Promise.all(group.map(async u=>{
+      try{return {url:u,value:{body:await get(u)}}}catch(e){return {url:u,value:{error:String(e?.message||e)}}}
+    }));
+    for(const r of results)articles[r.url]=r.value;
   }
   const scan=scanOffline([...(seedUrl?[{url:'manual-seed',body:validArticle(seedUrl)}]:[]),...surfaces],articles,when);
   return scan;
