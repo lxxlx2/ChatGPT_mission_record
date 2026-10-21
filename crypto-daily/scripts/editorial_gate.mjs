@@ -73,7 +73,10 @@ export function validateEditorial(input, rules) {
       if(item.role!=='highlight')fail('TOP5_ROLE_INVALID',ev.event_key);
       if(!rules.top_highlights.allow_kinds.includes(ev.kind)||
          !rules.top_highlights.impact_required.includes(ev.impact)||
-         ev.user_only===true||ev.no_material_delta===true||ev.source_confirmed===false)fail('TOP5_NOT_ELIGIBLE',ev.event_key+'/'+ev.kind);
+         ev.user_only===true||ev.no_material_delta===true||ev.source_confirmed===false||
+         !['market-wide','multi-venue','sector-wide'].includes(ev.impact_breadth)||
+         String(ev.top5_basis||'').length<40||
+         !/^https:\/\//.test(ev.top5_evidence_url||''))fail('TOP5_NOT_ELIGIBLE',ev.event_key+'/'+ev.kind);
     }else{
       if(item.role!=='detail')fail('DETAIL_ROLE_INVALID',ev.event_key);
       const expectedRoute=rules.routing.find(r=>r.kind===ev.kind);
@@ -102,6 +105,11 @@ export function validateEditorial(input, rules) {
     }
   }
   if(!parsed.some(x=>x.section===2))fail('MARKET_REPORT_MISSING_CORE_CONTENT',2);
+  const coreTexts=parsed.filter(x=>x.section===2).map(x=>x.text);
+  for(const symbol of rules.full_report.market_core_must_have){
+    const containsActualNumber=coreTexts.some(s=>new RegExp(symbol+'(?:\\/USDT)?[^\\n]{0,100}[0-9][0-9,.]*','i').test(s));
+    if(!containsActualNumber)fail('CORE_PRICE_NOT_REPORTED_IN_BODY',symbol);
+  }
   if(!parsed.some(x=>x.section===13))fail('REPORT_MISSING_DECISION_CONCLUSION',13);
   if(receipts.filter(r=>r.status==='checked'&&r.result_urls?.length).length<2)fail('INSUFFICIENT_VERIFIED_SOURCE_COVERAGE',receipts.length);
   details.blank_sections=blank;
