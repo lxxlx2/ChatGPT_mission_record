@@ -1,0 +1,21 @@
+# Crypto daily bounded collector attempt
+
+- date_bkk: 2026-10-22
+- scheduled_window_bkk: 03:20
+- attempt_started_bkk: 2026-10-22 03:20:04 +07:00
+- automation_id: 6a8600b9d12481919bc43ebc800c9916
+- stage: ATTEMPT; NOT FINAL
+- task_enabled: true (automation list checked)
+- Gmail: NO_SEND (ordinary collection)
+- planned_shard: 1 (fallback: no last-two completed shard finals found; 2026-10-21 03 final was PARTIAL)
+- rule_blob_sha:
+  - PIPELINE_CONTRACT.md: 1b3efb8943786d48c4cf370e17bebacc6978c5f0
+  - EDITORIAL_RULESET.json: df26ea064cc6feae99e345f6efaf402485b0482c
+  - REPORT_SPEC.md: 809a5c1cbcd6503d42305c842f37826b74a4741f
+  - REPORT_ACCEPTANCE.md: 466e4e6dbb84e0d21d8edc7a15527a64508cee52
+  - COLLECTOR_SPEC.md: a8422295314731212f2b20e241d481f1327dd838
+  - SECURITY_SOURCE_POLICY.md: 86b36f208220e90a52caa1cb8acaeec47add9628
+  - DELIVERY_RUNBOOK.md: 181c0448dddd2586e6082faaa1f51f7556eaa795
+  - state/daily-event-ledger.json: ccaea8c04401dfd975680c1fd709014f63a047a9
+- pre-window discovery: English search/index and official sources inspected 03:17-03:19 BKK; formal spot snapshot to be acquired in-window. Pre-window timestamps must not be relabeled as 03:20.
+- next: Binance primary BTC/ETH/SOL, primary regulatory/chain/TGE/security verification, event dedup, compact terminal final.
