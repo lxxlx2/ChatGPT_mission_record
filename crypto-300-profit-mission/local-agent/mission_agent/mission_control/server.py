@@ -586,7 +586,7 @@ class DashboardState:
         try:
             db = open_control_ro(self.control_db)
             rows = [dict(row) for row in db.execute("""
-                SELECT o.channel, o.status AS outbox_status,
+                SELECT o.decision_id, o.channel, o.status AS outbox_status,
                        o.last_error, o.attempts AS outbox_attempts,
                        g.status AS gmail_status, g.attempt_count AS gmail_attempts,
                        g.sent_at, g.gmail_message_id,
