@@ -1,3 +1,13 @@
+# 2026-10-23 D0 REAL HTTP + ONE-USE GRANT DESIGN ONLY
+
+- [PR167 approved code](https://github.com/lxxlx2/ChatGPT_mission_record/commit/566a0851da059427fe05b7ce833469a942e687bd): user-reported independent Mac APPROVE_OFFLINE_CODE at SHA `566a0851da059427fe05b7ce833469a942e687bd` with 361/361 full, 15/15 focused, 1004/1005 buffered-parent P1 closed; approved parent unchanged. Six saved30 timing-based scenarios & 0.5/1/2.178/5 synthetic source stress remain synthetic; 2.178 source growth vs 1.740 contiguous commit blocks/s in finite window. No real provider three-slot observation.
+- This new D0 Draft PR changes only TWO design documents `f0/F0_REAL_TRANSPORT_ONE_USE_DESIGN.md` and `f0/F0_REAL_TRANSPORT_ACCEPTANCE_MATRIX.md` plus HANDOFF. NO executable network transport, NO permit/nonce material, NO signature/attestation, NO RPC/WS, NO merge/deploy/trade/background jobs. It starts an independent architecture review, not a live performance trial.
+- **Critical inherited risk to fix at D1**: existing serial one-use live code's consume_nonce is rooted in caller-provided **replaceable output_root**; replacing output directory could permit same grant reuse. A self-reported `user_authorized:true` and locally editable `APPROVE_PERMIT <hash>` are not independent proof of authorization identity. D0 specifies separate fixed private grant registry with atomic fsync global consumption and separately verified user + independent reviewer approval bound to exact bytes/code/time/budgets.
+- D1 (future separate code PR) must implement a bounded 3-shared-slot actual HTTP architecture only with fake network tests and independent Mac code review. D2 explicit new user consent and exact permit independent audit, D3 a new explicit user-authorized manual one-shot real sampling. The old 30-call grant remains CONSUMED; current `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+- D0 reviewer: prioritize unified budget, serialized presend fsync with out-of-order settlement, stable grant registry, fail-closed identity, original raw response archive, HEAD TTL, stops/drains, end-to-end contiguous block backlog. No local daemon, scheduled task, paid RPC, real calls, automatic retry, signing/trading or auto merge.
+
+---
+
 # 2026-10-23 PR167 P1 ownership/accounting correction — pending independent Mac review
 
 - Independent reviewer `REQUEST_CHANGES` for old PR167 SHA `e863e7ecf897c90a99bcb911fe5ee5fe139e62af` despite Mac 360/360 passing: during out-of-order completions, buffering only hashes caused parent mismatch on height 1005 to be misattributed to triggering clean RPC for height 1004, then repeated for later 1008/1012 settlements. Old SHA remains rejected.
