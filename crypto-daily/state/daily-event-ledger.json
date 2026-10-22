@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-10-21",
-  "status": "OCT21_MISSED_BTC_EVENT_CORRECTED_DELIVERED_AND_SUPPRESSED_FOR_FUTURE_UNCHANGED_REPORTS",
-  "note": "The fifth 500 BTC tranche was materially omitted in the original Oct21 official email, then included in an explicitly requested full corrected Gmail edition 1a15c6d25715d6ca. No re-alert without genuinely new on-chain transaction or sourced material development. This seed ledger must be reconciled against authoritative Sent/Git, not substituted for source discovery.",
+  "updated_at": "2026-10-22",
+  "status": "OCT22_FINAL_SECURITY_CORRECTION_DELIVERED_ALL_NEW_INCIDENTS_VERSIONED",
+  "note": "Exact authoritative October22 corrected Gmail id 1a16279bdb00ea34 contains PHP2Shell and eMudhra. First Oct22 sent 1a1625138e98951e lacked both; current Git canonical replaces it with preserved original via Git history. No repeated mentions tomorrow absent a material new patch/exploitation incident or client revocation delta. User actions are recommendations, not proof user's server or browser is compromised.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -79,6 +79,37 @@
         "government_announcement_for_fifth",
         "btc_spot_sale"
       ]
+    },
+    {
+      "event_key": "php:php2shell:2026-10-21",
+      "family_key": "php:php2shell",
+      "material_version": "cve-2026-109618-109619:fix-2026-10-21",
+      "aliases": [
+        "PHP2Shell",
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "delivered_date": "2026-10-22",
+      "delivered_edition": "official_security_corrected",
+      "gmail_message_id": "1a16279bdb00ea34",
+      "source_url": "https://www.php.net/archive/2026.php",
+      "event_status": "PATCHED_UPGRADE_URGENT",
+      "new_user_action": "Upgrade affected PHP web-server deployment via official distributor packages; monitor for signs of prior compromise."
+    },
+    {
+      "event_key": "pki:emudhra:2026-10-20",
+      "family_key": "pki:emudhra",
+      "material_version": "8_intermediate_ca_keys_exposed:removal-2026-10-20",
+      "aliases": [
+        "eMudhra",
+        "emSign ECC Root CA"
+      ],
+      "delivered_date": "2026-10-22",
+      "delivered_edition": "official_security_corrected",
+      "gmail_message_id": "1a16279bdb00ea34",
+      "source_url": "https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/",
+      "event_status": "INTERMEDIATE_CERTS_BLOCKED_MAINSTREAM_BROWSERS_DOWNSTREAM_UPDATE_PENDING",
+      "new_user_action": "Keep browser OS and non-browser TLS trust stores updated; do not override invalid TLS certificate warnings."
     }
   ],
   "open_missed_candidates": []
