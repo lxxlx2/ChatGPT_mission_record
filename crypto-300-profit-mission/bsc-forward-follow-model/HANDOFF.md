@@ -1,3 +1,11 @@
+# 2026-10-22 three-slot offline JSON-RPC envelope replay handoff (Draft PR163)
+
+- PR162 previous approved offline fixed SHA `39f12c716e061eb1e51bf4843737a5cd6cef5d8c` (user-supplied independent Mac `APPROVE_OFFLINE_CODE`; 338 full PASS, 9 targeted PASS, 24 policy simulations and 6 float-wakeup regressions). That SHA remains unchanged. Its saved30-Journal-derived **synthetic** contiguous throughput is below observed 2.178 bps HEAD growth.
+- This child PR adds `f0/f0_l1_three_slot_response_replay.py`, focused fake-frame tests, and `f0/F0_THREE_SLOT_RESPONSE_REPLAY.md` only. Replays the EXISTING three-slot virtual RESERVE/SETTLE schedule with HTTP JSON-RPC 2.0 shaped in-memory bytes; existing response parser and block candidate parser independently verify ID, height, full block, parent linkage and strict contiguous commits. Errors/holes don't count as success. Initial parent unanchored. Private saved journal input used for HISTORIC TIMINGS ONLY; replay frames and source HEAD are **synthetic**, not original actual full-block public RPC response bytes.
+- Explicitly **NOT YET CLOSED LOOP**: bad frames cannot update already-created dispatch schedule. No arbitrary `post` callback, network/WS, real signer/permit or live RPC, trade, deployment, background task or merge. Next step after independent exact SHA offline review: separate fake closed-loop source adapter with response-driven dispatch and true outage/gap backpressure; only then independently reviewed real transport design and fresh user network authorization. Old 30-call grant consumed. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 ## 2026-10-22 PR162 3500 ms absolute-wakeup P1 (independent re-review required)
 
 Independent macOS reviewer gave `REQUEST_CHANGES` for old SHA `dc2c6cbf2b4e228225d936a278b25dcde2ae1872`: 337/337 tests passed but replaying the actual 30-call saved Journal revealed a float subtraction mismatch. At HEAD completion ~872.774417 ms, absolute due ~4372.774417 ms; `due - head_complete = 3499.9999999999995` incorrectly passed `age < 3500`, while the event loop had already reached `due`. It then advanced to the 60000ms virtual deadline with only 2 requests / 0 blocks. The invalid 1.0x / 3500ms / HEAD4 and HEAD8 output must NOT be used as a measured policy conclusion.
