@@ -1,0 +1,37 @@
+[
+  {
+    "view": "SELL",
+    "summary": "本地最近 100 条记录：买类 40、卖类 60；卖类中有 40 条不属于当前候选币种；仓位不明的卖出 23。筛选命中 60 条，展示前 15 条。",
+    "rendered": 15
+  },
+  {
+    "view": "UNRESOLVED",
+    "summary": "本地最近 100 条记录：买类 40、卖类 60；卖类中有 40 条不属于当前候选币种；仓位不明的卖出 23。筛选命中 23 条，展示前 15 条。",
+    "rendered": 15,
+    "onlyUnresolved": true
+  },
+  {
+    "view": "BUY",
+    "summary": "本地最近 100 条记录：买类 40、卖类 60；卖类中有 40 条不属于当前候选币种；仓位不明的卖出 23。筛选命中 40 条，展示前 15 条。",
+    "rendered": 15,
+    "reentryVisible": true
+  },
+  {
+    "view": "ALL",
+    "summary": "本地最近 100 条记录：买类 40、卖类 60；卖类中有 40 条不属于当前候选币种；仓位不明的卖出 23。筛选命中 100 条，展示前 15 条。",
+    "rendered": 15,
+    "containsBuyAndSell": true
+  },
+  {
+    "view": "FULL_REAL_CA_SEARCH",
+    "summary": "本地最近 100 条记录：买类 40、卖类 60；卖类中有 40 条不属于当前候选币种；仓位不明的卖出 23。筛选命中 1 条，展示前 1 条。",
+    "rendered": 1,
+    "allCopyTargetsMatch": true,
+    "outsideCandidateVisible": true
+  },
+  {
+    "check": "COPY_CA",
+    "exactClipboardMatch": true,
+    "buttonText": "已复制"
+  }
+]
