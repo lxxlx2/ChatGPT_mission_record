@@ -1,0 +1,17 @@
+{
+  "timezone": "Asia/Bangkok",
+  "times": {
+    "capture_unix": "2026-10-22T21:57:25.884262+07:00",
+    "runner_replaced_unix": "2026-10-22T21:58:04.193307+07:00",
+    "old_service_stopped_readback_unix": "2026-10-22T21:58:09.686002+07:00",
+    "new_http_ready_unix": "2026-10-22T21:58:19.828725+07:00"
+  },
+  "old_absence_to_first_verified_http_seconds": 10.143,
+  "runner_replace_to_verified_http_seconds": 15.635,
+  "not_a_continuous_outage_measurement": true,
+  "rollback_performed": false,
+  "new_runner_sha256": "0b4af41dda31f2a45985019fdfec427a1bc74cb8d6ab44ddc1424949691f243a",
+  "old_runner_sha256": "e62d260efb5c9efac118923da151f2e04b82983dab5b4dca0c8e159e78541489",
+  "new_dashboard_start": "Thu Oct 22 21:58:09 2026",
+  "final_observed_bangkok": "2026-10-22T22:00:31.909048+07:00"
+}

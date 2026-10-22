@@ -1,0 +1,13 @@
+{
+  "old_verified_disk_git_backup_files": 148,
+  "old_manifest_sha256": "8f3f4336d9581b5fb8fb509517773088b630e27d7e3a78375ea1a86325c25086",
+  "candidate_source_sha": "31dd598df248ca15f731913a5cbf82e88b981874",
+  "candidate_files": 435,
+  "candidate_manifest_sha256": "568c02201905377e83c4fd126ecb37fa02c6baa6f672b6ab62a40c80d155ff5a",
+  "candidate_dedicated_directory": true,
+  "candidate_read_only_modes": true,
+  "rollback_runner_exact_bytes_verified": true,
+  "rollback_plist_exact_bytes_verified": true,
+  "interpreter_imports": "PINNED_DASHBOARD_IMPORTS_PASS",
+  "production_runner_changed": false
+}

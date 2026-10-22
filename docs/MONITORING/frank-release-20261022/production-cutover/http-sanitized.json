@@ -1,0 +1,30 @@
+{
+  "dashboard_pid": 69009,
+  "dashboard_start": "Thu Oct 22 21:58:09 2026",
+  "cwd_matches_pinned_candidate": true,
+  "listener_matches_new_pid": true,
+  "http": {
+    "/": 200,
+    "/static/app.js": 200,
+    "/static/styles.css": 200,
+    "/api/runtime": 200,
+    "/api/candidates": 200,
+    "/api/trades": 200,
+    "/api/frank-intelligence": 200,
+    "/api/frank-activity-watch": 200,
+    "/api/control-health": 200
+  },
+  "captured_unix": 1792681099.7216241,
+  "activity_keys": [
+    "status",
+    "scope",
+    "captured_at",
+    "source_rows_considered",
+    "displayed_transactions",
+    "counts",
+    "rows",
+    "notification_authorized",
+    "chain_completeness_verified",
+    "user_order_amount_usdc"
+  ]
+}

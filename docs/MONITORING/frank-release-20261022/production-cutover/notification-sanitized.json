@@ -1,0 +1,50 @@
+{
+  "v1_counters": {
+    "gmail_sent_verified": 2,
+    "gmail_sent_unverified": 0,
+    "gmail_pending": 0,
+    "gmail_failed": 0,
+    "local_pending": 0
+  },
+  "mc_review_counts_before": {
+    "manual_review_gmail_count": 15,
+    "manual_review_local_count": 0,
+    "manual_review_total_count": 15,
+    "manual_review_breakdown_available": true,
+    "manual_review_expired_unsent_count": 15,
+    "manual_review_expired_unsent_gmail_count": 15,
+    "manual_review_expired_unsent_local_count": 0,
+    "manual_review_actionable_count": 0,
+    "manual_review_actionable_gmail_count": 0,
+    "manual_review_actionable_local_count": 0,
+    "manual_review_actionable_other_count": 0,
+    "manual_review_pending_count": 0,
+    "manual_review_pending_gmail_count": 0,
+    "manual_review_pending_local_count": 0,
+    "manual_review_pending_other_count": 0,
+    "manual_review_visible_total_count": 15
+  },
+  "mc_review_counts_after": {
+    "manual_review_gmail_count": 15,
+    "manual_review_local_count": 0,
+    "manual_review_total_count": 15,
+    "manual_review_breakdown_available": true,
+    "manual_review_expired_unsent_count": 15,
+    "manual_review_expired_unsent_gmail_count": 15,
+    "manual_review_expired_unsent_local_count": 0,
+    "manual_review_actionable_count": 0,
+    "manual_review_actionable_gmail_count": 0,
+    "manual_review_actionable_local_count": 0,
+    "manual_review_actionable_other_count": 0,
+    "manual_review_pending_count": 0,
+    "manual_review_pending_gmail_count": 0,
+    "manual_review_pending_local_count": 0,
+    "manual_review_pending_other_count": 0,
+    "manual_review_visible_total_count": 15
+  },
+  "mc_review_counts_unchanged": true,
+  "dashboard_pid_file_matches": true,
+  "dashboard_port_file_matches": true,
+  "notification_test_or_dispatch_invoked": false,
+  "outbox_write_or_replay_invoked": false
+}

@@ -1,0 +1,79 @@
+{
+  "captured_unix": 1792681169.166052,
+  "protected_agents": {
+    "loop": {
+      "pid": 36070,
+      "start": "Tue Oct 13 17:32:13 2026",
+      "pid_start_cwd_runner_plist_unchanged": true
+    },
+    "v1": {
+      "pid": 52300,
+      "start": "Sat Oct 10 05:51:08 2026",
+      "pid_start_cwd_runner_plist_unchanged": true
+    }
+  },
+  "protected_files_count": 13,
+  "v1_health": {
+    "status": "LIVE",
+    "runtime_reason": "OK",
+    "pid": 52300,
+    "heartbeat_age_seconds": 4.143022298812866,
+    "last_successful_poll": "2026-10-22T14:59:25.130807+00:00",
+    "lag_seconds": 0,
+    "consecutive_errors": 0
+  },
+  "v1_notification_counters_before": {
+    "gmail_sent_verified": 2,
+    "gmail_sent_unverified": 0,
+    "gmail_pending": 0,
+    "gmail_failed": 0,
+    "local_pending": 0
+  },
+  "v1_notification_counters_after": {
+    "gmail_sent_verified": 2,
+    "gmail_sent_unverified": 0,
+    "gmail_pending": 0,
+    "gmail_failed": 0,
+    "local_pending": 0
+  },
+  "loop_health": {
+    "status": "OK",
+    "updated_at": "2026-10-22T14:59:24.874136+00:00",
+    "delivery_allowed": true,
+    "live_delivery_requested": null,
+    "policy_hash": "355336f2959e674939210b51be97d2df1d6e66f4ee3cca8acfe041dabb9e3ae8"
+  },
+  "intelligence": {
+    "status": "LOCAL_SOURCE_RESEARCH_ONLY",
+    "scope": "FRANK_INDEX_ONLY_NOT_COMPLETE_CHAIN_OR_CURRENT_BALANCE",
+    "notification_authorized": null,
+    "user_order_amount_usdc": null
+  },
+  "activity": {
+    "status": "LOCAL_SOURCE_ACTIVITY_RESEARCH_ONLY",
+    "scope": "LATEST_100_INDEXED_TRADES_NOT_COMPLETE_CHAIN",
+    "captured_at": 1792681169.2831528,
+    "source_rows_considered": 100,
+    "displayed_transactions": 100,
+    "counts": {
+      "buy_category": 38,
+      "sell_category": 62,
+      "sell_outside_current_candidate_mint_set": 48,
+      "sell_position_unresolved": 25,
+      "excluded": {}
+    },
+    "notification_authorized": false,
+    "chain_completeness_verified": false,
+    "user_order_amount_usdc": null
+  },
+  "old_148_files_unchanged": true,
+  "candidate_435_files_manifest_verified": true,
+  "dashboard_plist_unchanged": true,
+  "all_protected_file_hashes_unchanged": true,
+  "database_writes_by_release_commands": 0,
+  "real_notifications_requested_by_release": 0,
+  "trades": 0,
+  "rollback_performed": false,
+  "dashboard_pid": 69009,
+  "source_sha": "31dd598df248ca15f731913a5cbf82e88b981874"
+}
