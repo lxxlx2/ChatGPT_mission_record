@@ -47,3 +47,24 @@ curl --proto '=https' --tlsv1.2 --silent --show-error --fail --connect-timeout 5
 **下一顺序**：仅用该相同无钥HTTPS端点做`eth_blockNumber`获取一个块高、在**同一块高**做`eth_getBlockByNumber`和Factory`eth_call(allPairsLength)`，分别验证JSON-RPC envelope、固定高度、Factory ABI整数、无凭据和HTTP错误；这是有限的环境预检查**不是**`--manual-once`的两快照试验。预检查用户实际返回前保持`MAC_PUBLIC_RPC_PINNED_READ_UNVERIFIED`，也不填造Factory计数。公开端点通过单次chainId不保证后续调用限流或零费用用户账户额度，禁止在失败时循环试其他无名供应商。真实`MANUAL_FORWARD_READONLY_PILOT_BLOCKED`保持，除非环境核查完整且用户**另外单独明确批准**一次性真实采样。
 
 不修改2025样本、P0/P1门槛、Free $0预算和`2026-11-02`历史来源终止日；不部署、不定时、不自动交易。
+
+## 2026-10-23：Mac固定区块公开RPC读取已通过（用户回传）
+
+**接收回执（用户Mac终端输出，尚非我方直接核验的原HTTP归档）**：
+
+```text
+CHAIN: BSC Mainnet (previously verified)
+BLOCK: 129174690
+BLOCK_HASH: 0x6ad7014c12f6f0fc9305e76a7d915216ced1e3423736b6e507a0d73a7a2bc98b
+PANCAKESWAP_V2_TOTAL_PAIRS: 3532598
+STATUS: PINNED_READ_PASS
+```
+
+用户执行的是此前列出的独立前置检查（**3次同步只读RPC**）：`eth_blockNumber`取得高度；在同一高度`eth_getBlockByNumber`校验回传区块号；在**同一高度**对Pancake V2 Factory `0xca143ce32fe78f1f7019d7d551a6402fc5350c73`读取`allPairsLength()`，并检查合法64位ABI word。此前单独`eth_chainId`回执是`0x38`。据此将该公开节点的Mac基础功能标记为`MAC_PUBLIC_RPC_PINNED_READ_PASS_USER_REPORTED`；**不假称原始HTTP响应、节点签名、独立时间戳已进入Git或PIT可信来源完整通过**。
+
+**含义必须严格区分**：
+- `3,532,598`是截至区块129174690该**单个Factory的累计Pair索引数量**，不是独立代币总数、最近新区块新增数、盈利样本或可交易池数量。
+- 与此前另一高度既有连接器回传3,531,690相比累计计数差908；两者不是同一单次前向观察窗口的快照，**不可**拿来冒充两次三秒内新池发现、实时进入时间或完整V2/V3/Four.meme覆盖。
+- 固定区块静态读取能力成功，不等于前向采样器在Mac完成了真实原字节采集、时钟/延迟验证和20请求预算验证。
+
+**更新的准入判断**：无钥公共端点`eth_chainId`与Mac`eth_blockNumber + eth_getBlockByNumber + eth_call`前置检查已按用户回报通过，因`MONSTER_BSC_ARCHIVE_RPC_URL`缺失造成的**静态读取能力阻断已消除**；正式运行时仍只能通过一次性进程内环境变量传入公开无钥URL，不需要创建`.env`、配置私钥或改变现有Alchemy账户。但真实一次性前向`--manual-once`仍**尚未授权、尚未执行**；开始前必须重新检查当时Mac CPU/内存与私有数据目录、确认限流/失败止损，并由用户明确单独批准。因此状态为`APPROVE_OFFLINE_CODE / PINNED_RPC_PREFLIGHT_PASS_USER_REPORTED / MANUAL_PILOT_AWAITING_EXPLICIT_AUTHORIZATION`；不能声称`PIT_VERIFIED`、P0来源已过门槛或P1可启动。历史`2026-11-02`终止日、免费$0预算与`NO_DEPLOY/NO_SCHEDULE/NO_TRADE`不变。
