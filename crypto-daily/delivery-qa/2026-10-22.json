@@ -2,19 +2,19 @@
   "schema": "CRYPTO_DAILY_EDITORIAL_CI_RECEIPT_V1",
   "report_date": "2026-10-22",
   "manifest_path": "crypto-daily/delivery-pending/2026-10-22.json",
-  "manifest_blob_sha": "f21c940011de990a4c4874a183c322ecb0ecbfdc",
-  "rules_blob_sha": "df26ea064cc6feae99e345f6efaf402485b0482c",
+  "manifest_blob_sha": "78b82e67e5fa4d61cc49137b9322528da15cac01",
+  "rules_blob_sha": "ced4ab6a6c43e8c8050edf1b6a3d7694679e1b66",
   "editorial_gate_blob_sha": "5761607601d0934bb87c33124e4a9c69676a127c",
-  "git_trigger_commit": "958ed2559836083abe6f976518f55a3807b6fff1",
+  "git_trigger_commit": "a1a8d39a3967e5587a7098801b499069876f4055",
   "status": "EDITORIAL_QA_PASS",
-  "validated_at": "2026-10-22T06:33:18.579Z",
+  "validated_at": "2026-10-22T07:17:31.397Z",
   "metrics": {
-    "blank_sections": 1,
+    "blank_sections": 0,
     "headings": 13,
-    "numbered_items": 31,
-    "highlight_count": 2,
-    "source_lanes": 17,
-    "event_count": 29
+    "numbered_items": 35,
+    "highlight_count": 4,
+    "source_lanes": 19,
+    "event_count": 31
   },
   "warnings": [
     "SOURCE_GAP:onchain",

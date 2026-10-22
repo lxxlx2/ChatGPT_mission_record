@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_CLOUD_CI_SELFTEST_V1",
   "state": "NODE_TESTS_PASSED_ON_GITHUB_RUNNER_NOT_PRODUCTION_DELIVERY",
-  "tested_commit": "981b8db3890f98bf4cf03945ef478f29e39c4240",
+  "tested_commit": "a1a8d39a3967e5587a7098801b499069876f4055",
   "editorial_rules_blob_sha": "ced4ab6a6c43e8c8050edf1b6a3d7694679e1b66",
   "gate_blob_sha": "5761607601d0934bb87c33124e4a9c69676a127c",
-  "checked_at": "2026-10-22T07:16:03.869Z"
+  "checked_at": "2026-10-22T07:17:31.449Z"
 }
