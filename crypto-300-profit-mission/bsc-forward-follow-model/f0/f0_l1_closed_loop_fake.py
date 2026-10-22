@@ -149,7 +149,7 @@ def run_closed_loop(durations: dict, ledger_path: Path, *,
                     math.isfinite(v) for v in durations[name])
                 for name in METHODS), "CLOSED_LOOP_SCOPE_INVALID")
     # All timing/horizon values are finite synthetic milliseconds.
-    require(type(ledger_path) is Path, "CLOSED_LOOP_LEDGER_PATH_INVALID")
+    require(isinstance(ledger_path, Path), "CLOSED_LOOP_LEDGER_PATH_INVALID")
     now = next_start = 0.0
     seq = 0
     events = []
