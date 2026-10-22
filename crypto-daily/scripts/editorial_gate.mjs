@@ -39,13 +39,18 @@ export function validateEditorial(input, rules) {
   const receipts=Array.isArray(input.source_receipts)?input.source_receipts:[];
   for(const lane of lanes){
     const found=receipts.filter(r=>r.lane===lane);
-    if(found.length!==1)fail('DISCOVERY_LANE_RECEIPT_MISSING',lane);
-    else {
-      const receipt=found[0];
+    if(found.length===0){fail('DISCOVERY_LANE_RECEIPT_MISSING',lane);continue;}
+    // One lane may legitimately have multiple distinct issuer/source receipts.
+    // Reject malformed receipts individually, preserve both checked and source_gap.
+    const uniqueSources=new Set();
+    for(const receipt of found){
+      const evidenceKey=String(receipt.query_or_url||'');
+      if(uniqueSources.has(evidenceKey))warnings.push('DUPLICATE_SOURCE_QUERY:'+lane);
+      uniqueSources.add(evidenceKey);
       if(!['checked','source_gap'].includes(receipt.status)||!receipt.checked_at||!receipt.query_or_url)fail('UNTRUSTED_SOURCE_RECEIPT',lane);
       if(receipt.status==='source_gap'){
         if(!receipt.error)fail('SOURCE_GAP_NO_REASON',lane);
-        else warnings.push('SOURCE_GAP:'+lane);
+        else if(!warnings.includes('SOURCE_GAP:'+lane))warnings.push('SOURCE_GAP:'+lane);
       }else if(!receipt.result_urls?.length)fail('CHECKED_WITHOUT_SOURCE_RESULT',lane);
     }
   }
