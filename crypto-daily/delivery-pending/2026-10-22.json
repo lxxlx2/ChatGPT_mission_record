@@ -1,7 +1,7 @@
 {
   "schema": "CRYPTO_DAILY_EDITORIAL_MANIFEST_V1",
   "report_date": "2026-10-22",
-  "body": "Crypto Daily Brief｜2026-10-22\nAsia/Bangkok。Binance现货滚动24小时快照截至2026-10-22 09:24:42，基金流量按美国10月21日交易日，新闻按各自实际发布日期。来源缺报不视为零；此报告不代表个人账户持仓或资格。\n\n一、今日最重要的5件事\n（1）美国OCC于10月21日发布实施GENIUS法案的支付稳定币最终规则，涵盖储备、赎回、托管与监管；生效日为2027年1月18日，反洗钱与制裁细则另行制定。来源：OCC官方。\n（2）Grayscale于10月21日宣布将实物申购扩展至10只加密投资产品，符合资格的投资者可用底层代币换取产品份额，最低门槛约8.03万至36.48万美元；不等于所有散户可直接申购。来源：Grayscale发行方公告。\n\n二、BTC/ETH/SOL及主要资产\n（1）BTC/USDT：83,000.01美元，滚动24小时+0.307%，区间82,635.32至84,898.00，该交易对24小时成交额约15.09亿美元；报价截至曼谷2026-10-22 09:24:42。来源：Binance官方现货API。\n（2）ETH/USDT：2,444.66美元，滚动24小时-0.096%，区间2,436.87至2,526.62，该交易对24小时成交额约8.72亿美元；报价截至曼谷2026-10-22 09:24:38。来源：Binance官方现货API。\n（3）SOL/USDT：105.58美元，滚动24小时-0.621%，区间105.35至109.20，该交易对24小时成交额约2.05亿美元；报价截至曼谷2026-10-22 09:24:42。来源：Binance官方现货API。\n（4）BNB/USDT：741.31美元，24小时+0.101%，高低751.86 / 739.89美元，24小时计价成交额约85.47百万美元。来源：Binance官方现货API。\n（5）HYPE/USDT：79.67美元，24小时-2.365%，高低82.54 / 79.50美元，24小时计价成交额约45.27百万美元。来源：Binance官方现货API。\n（6）ZEC/USDT：1,297.14美元，24小时+2.678%，高低1,368.40 / 1,250.66美元，24小时计价成交额约243.92百万美元。来源：Binance官方现货API。\n\n三、二级市场剧烈波动与持续趋势\n（1）Binance USDⓈ-M永续单点未平仓量：BTC 93,980.458 BTC、ETH 2,259,301.692 ETH，观测于曼谷2026-10-22 09:24:39。这是合约数量，不能由单点OI推断净多头增加、资金流入或爆仓金额。来源：Binance Futures官方API。\n（2）Binance公告称美国一家夜间交易ATS在10月21日03:46至06:30 UTC发生间歇连接故障，因此在08:00 UTC的美股标的TradFi永续资金费率计算中剔除受影响时段的溢价指数。属于已发生的计价调整，不能据此推断加密现货遭攻击。来源：Binance官方。\n\n四、监管与政策\n（1）OCC正式文本明确新规2027年1月18日生效，适用受其管辖的合格支付稳定币发行机构，包含储备资产、赎回、风险管理、审计、托管及境外发行商监管。银行保密法、AML和OFAC部分将另行协调制定，不应误称本次已全部落地。来源：OCC 2026-92及Bulletin 2026-50。\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）美国10月21日BTC现货ETF，Farside当前显示已报列合计净流入2.898亿美元，其中FBTC +2.127亿、BITB +1,920万、ARKB +980万、GBTC +3,260万；IBIT列仍为缺失，合计暂不可认作最终全市场净流入。来源：Farside当日基金表。\n（2）10月21日ETH现货ETF，Farside已报部分合计+4,420万美元，包含FETH +1,300万、Grayscale ETH +2,810万；ETHA和ETHB未报数，不能将缺失视为零或认定ETH ETF已经整体净流入。来源：Farside。\n（3）10月21日SOL现货ETF，Farside显示MSOL净流入60万美元，其余已列基金为0，汇总+60万美元；10月20日为净流出260万美元。单日小幅回流不构成持续资金趋势确认。来源：Farside。\n（4）Grayscale 10月21日发行方公告列出10只实物申购产品，含BTC、ETH、SOL、HYPE、ZEC等，最低申购门槛GSOL约80,300美元、BTC Mini约364,800美元；这是产品申购渠道变化，未提供当日实际代币净买入量。来源：Grayscale。\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n（1）Zcash开发仓库于10月21日合并NU7主网激活高度3,543,405的ZIP PR #1405；计划将目标区块间隔由75秒缩短至25秒，并修改手续费储备等共识规则。具体日历日期受实际出块影响，节点运营者应核查兼容版本。来源：zcash/zips原始合并PR。\n（2）BitGo 10月21日正式成立BitGo Labs，先从AI与加密支付/金融基础设施交叉领域推进，并公布首个Gokubu应用。属于公司产品布局，尚不能由发布会推导代币发行、空投或营收。来源：BitGo投资者关系公告。\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n（1）Binance于10月21日公布RLUSD持仓活动，10月23日00:00 UTC至11月20日00:00 UTC，合格用户共同分配60万XRP；参与须符合KYC、地区与账户限制并在活动期确认参加。日最低余额按每小时快照计算，最低0.01 RLUSD，实际收益率待后续公布，不能把公告示例APR当作承诺。来源：Binance官方。\n（2）NeoSoul DNA于10月20日另获Binance Alpha交易竞赛：首期10月20日13:00 UTC至27日13:00 UTC，第二期至11月3日13:00 UTC；须先在App活动页点Join，只有之后的合规买入成交量计入排名，前2,000名分享51万DNA（每人255枚）。这与此前尚未核实的StandX社区专项分配是不同活动，不代表个人已有补偿资格。来源：Binance官方。\n\n八、Early / Meme / NFT / 新生态热点\n无高置信新增。\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n无高置信新增。\n\n十、全球局势与跨市场冲击\n（1）10月21日美股收盘，道指+0.69%、标普500 +0.58%、纳指+1.05%，SpaceX与Super Micro相关业绩提振AI风险偏好。美股上行与加密价格短线同向并不证明存在直接因果；后续仍需看美债收益率与流动性。来源：Reuters。\n（2）10月21日Brent结算约108.82美元/桶，WTI约97.15美元/桶；地缘油运风险仍与潜在和谈消息交错。高油价可能通过通胀预期影响实际利率与风险资产折现，方向需结合后续通胀和利率数据判断。来源：Reuters。\n\n十一、未来24至72小时催化\n（1）10月23日09:00 UTC（曼谷16:00），Binance将自动结算并下架PTBUSDT、MITOUSDT U本位永续，10月21日09:30 UTC起已限制新开非只减仓订单；持有相关合约者应在截止前自行核查仓位与强平风险。来源：Binance官方。\n\n十二、持续趋势与跨市场机会观察清单\n（1）ZEC/USDT截至曼谷2026-10-22 09:24:42报1,297.14美元，相比Binance 10月15日UTC日线收盘1,221.40约+5.90%，相比9月22日收盘1,630.05约-20.65%。短线反弹与较长窗口回撤并存；观察NU7节点升级进度及价格是否守住最近24小时低点1,250.66，跌破则短线强势假设失效。来源：Binance日线与现货API、zcash/zips。\n\n十三、今日行动与风险结论\n（1）若使用Binance全仓或组合保证金，10月23日06:00 UTC（曼谷13:00）将调整POL、SHIB、XLM抵押率50%→60%，COW、NEXO、RVN、SAND 10%→30%，部分PM Pro档位同步调整；提前核对统一维持保证金率uniMMR，避免抵押参数变化导致非预期借贷/转出额度与清算风险。未确认用户实际持有这些保证金仓位。来源：Binance官方。\n\n主要英文一手来源：OCC、Grayscale发行公告、Farside BTC/ETH/SOL、Binance官方现货/期货与活动公告、zcash/zips PR #1405、BitGo投资者关系。相关新闻背景：Reuters。原始URL及检查记录保留在Git待发清单。\n",
+  "body": "Crypto Daily Brief｜2026-10-22\nAsia/Bangkok。Binance现货滚动24小时快照截至2026-10-22 09:24:42，基金流量按美国10月21日交易日，新闻按各自实际发布日期。来源缺报不视为零；此报告不代表个人账户持仓或资格。\n\n一、今日最重要的5件事\n（1）美国OCC于10月21日发布实施GENIUS法案的支付稳定币最终规则，涵盖储备、赎回、托管与监管；生效日为2027年1月18日，反洗钱与制裁细则另行制定。来源：OCC官方。\n（2）Grayscale于10月21日宣布将实物申购扩展至10只加密投资产品，符合资格的投资者可用底层代币换取产品份额，最低门槛约8.03万至36.48万美元；不等于所有散户可直接申购。来源：Grayscale发行方公告。\n\n二、BTC/ETH/SOL及主要资产\n（1）BTC/USDT：83,000.01美元，滚动24小时+0.307%，区间82,635.32至84,898.00，该交易对24小时成交额约15.09亿美元；报价截至曼谷2026-10-22 09:24:42。来源：Binance官方现货API。\n（2）ETH/USDT：2,444.66美元，滚动24小时-0.096%，区间2,436.87至2,526.62，该交易对24小时成交额约8.72亿美元；报价截至曼谷2026-10-22 09:24:38。来源：Binance官方现货API。\n（3）SOL/USDT：105.58美元，滚动24小时-0.621%，区间105.35至109.20，该交易对24小时成交额约2.05亿美元；报价截至曼谷2026-10-22 09:24:42。来源：Binance官方现货API。\n（4）BNB/USDT：741.31美元，24小时+0.101%，高低751.86 / 739.89美元，24小时计价成交额约85.47百万美元。来源：Binance官方现货API。\n（5）HYPE/USDT：79.67美元，24小时-2.365%，高低82.54 / 79.50美元，24小时计价成交额约45.27百万美元。来源：Binance官方现货API。\n（6）ZEC/USDT：1,297.14美元，24小时+2.678%，高低1,368.40 / 1,250.66美元，24小时计价成交额约243.92百万美元。来源：Binance官方现货API。\n\n三、二级市场剧烈波动与持续趋势\n（1）Binance USDⓈ-M永续单点未平仓量：BTC 93,980.458 BTC、ETH 2,259,301.692 ETH，观测于曼谷2026-10-22 09:24:39。这是合约数量，不能由单点OI推断净多头增加、资金流入或爆仓金额。来源：Binance Futures官方API。\n（2）Binance公告称美国一家夜间交易ATS在10月21日03:46至06:30 UTC发生间歇连接故障，因此在08:00 UTC的美股标的TradFi永续资金费率计算中剔除受影响时段的溢价指数。属于已发生的计价调整，不能据此推断加密现货遭攻击。来源：Binance官方。\n（3）Binance UTC日线对照10月15日收盘与本轮快照：BTC 82,245.93→83,000.01美元，约+0.92%；ETH 2,442.08→2,444.66，约+0.11%；SOL 105.44→105.58，约+0.13%。一周内BTC略强，ETH/SOL总体横盘，不能只凭今日24小时涨跌认定三币同步突破。来源：Binance官方日线及现货API。\n\n四、监管与政策\n（1）OCC正式文本明确新规2027年1月18日生效，适用受其管辖的合格支付稳定币发行机构，包含储备资产、赎回、风险管理、审计、托管及境外发行商监管。银行保密法、AML和OFAC部分将另行协调制定，不应误称本次已全部落地。来源：OCC 2026-92及Bulletin 2026-50。\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）美国10月21日BTC现货ETF，Farside当前显示已报列合计净流入2.898亿美元，其中FBTC +2.127亿、BITB +1,920万、ARKB +980万、GBTC +3,260万；IBIT列仍为缺失，合计暂不可认作最终全市场净流入。来源：Farside当日基金表。\n（2）10月21日ETH现货ETF，Farside已报部分合计+4,420万美元，包含FETH +1,300万、Grayscale ETH +2,810万；ETHA和ETHB未报数，不能将缺失视为零或认定ETH ETF已经整体净流入。来源：Farside。\n（3）10月21日SOL现货ETF，Farside显示MSOL净流入60万美元，其余已列基金为0，汇总+60万美元；10月20日为净流出260万美元。单日小幅回流不构成持续资金趋势确认。来源：Farside。\n（4）Grayscale 10月21日发行方公告列出10只实物申购产品，含BTC、ETH、SOL、HYPE、ZEC等，最低申购门槛GSOL约80,300美元、BTC Mini约364,800美元；这是产品申购渠道变化，未提供当日实际代币净买入量。来源：Grayscale。\n（5）昨日早报中10月20日BTC ETF的IBIT曾缺报，今日Farside回读已补为IBIT +2,990万美元，合计全日+2,320万美元；该数字是10月20日的补齐修订，不能误作10月21日新流入。来源：Farside。\n（6）10月20日ETH ETF的ETHA缺报已补齐为-3,300万美元，Farside全日合计-2,610万美元；因此此前缺报时的+690万美元小计不能当作最终净流入，补齐后方向转负。来源：Farside。\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n（1）Zcash开发仓库于10月21日合并NU7主网激活高度3,543,405的ZIP PR #1405；计划将目标区块间隔由75秒缩短至25秒，并修改手续费储备等共识规则。具体日历日期受实际出块影响，节点运营者应核查兼容版本。来源：zcash/zips原始合并PR。\n（2）BitGo 10月21日正式成立BitGo Labs，先从AI与加密支付/金融基础设施交叉领域推进，并公布首个Gokubu应用。属于公司产品布局，尚不能由发布会推导代币发行、空投或营收。来源：BitGo投资者关系公告。\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n（1）Binance于10月21日公布RLUSD持仓活动，10月23日00:00 UTC至11月20日00:00 UTC，合格用户共同分配60万XRP；参与须符合KYC、地区与账户限制并在活动期确认参加。日最低余额按每小时快照计算，最低0.01 RLUSD，实际收益率待后续公布，不能把公告示例APR当作承诺。来源：Binance官方。\n（2）NeoSoul DNA于10月20日另获Binance Alpha交易竞赛：首期10月20日13:00 UTC至27日13:00 UTC，第二期至11月3日13:00 UTC；须先在App活动页点Join，只有之后的合规买入成交量计入排名，前2,000名分享51万DNA（每人255枚）。这与此前尚未核实的StandX社区专项分配是不同活动，不代表个人已有补偿资格。来源：Binance官方。\n\n八、Early / Meme / NFT / 新生态热点\n（1）DOGE生态10月21日发布Dogecoin Labs：与Dogecoin Foundation合作，整合MyDoge、DogeOS、Such App产品与开发团队，主打消费端应用与支付基础设施。该声明来自DogeOS发布方，实际新增活跃用户、链上成交与盈利能力尚无独立验证；这不是新DOGE代币或空投。来源：DogeOS发行方新闻稿。\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n无高置信新增。\n\n十、全球局势与跨市场冲击\n（1）10月21日美股收盘，道指+0.69%、标普500 +0.58%、纳指+1.05%，SpaceX与Super Micro相关业绩提振AI风险偏好。美股上行与加密价格短线同向并不证明存在直接因果；后续仍需看美债收益率与流动性。来源：Reuters。\n（2）10月21日Brent结算约108.82美元/桶，WTI约97.15美元/桶；地缘油运风险仍与潜在和谈消息交错。高油价可能通过通胀预期影响实际利率与风险资产折现，方向需结合后续通胀和利率数据判断。来源：Reuters。\n（3）10月21日现货黄金约4,137.94美元/盎司，涨0.3%，受美债收益率回落支撑；黄金与美股同涨显示跨资产对利率和风险偏好的反应并不总是单向。该报价为Reuters当日时点，不等于曼谷此刻实时金价。\n\n十一、未来24至72小时催化\n（1）10月23日09:00 UTC（曼谷16:00），Binance将自动结算并下架PTBUSDT、MITOUSDT U本位永续，10月21日09:30 UTC起已限制新开非只减仓订单；持有相关合约者应在截止前自行核查仓位与强平风险。来源：Binance官方。\n（2）10月23日03:00 UTC（曼谷10:00），Binance将移除BONK/FDUSD、JUP/FDUSD、LDO/FDUSD、WAL/BNB四个现货交易对，并关闭对应现货交易机器人服务；不等于这四种代币全面下架。相关挂单和机器人需提前检查。来源：Binance官方。\n\n十二、持续趋势与跨市场机会观察清单\n（1）ZEC/USDT截至曼谷2026-10-22 09:24:42报1,297.14美元，相比Binance 10月15日UTC日线收盘1,221.40约+5.90%，相比9月22日收盘1,630.05约-20.65%。短线反弹与较长窗口回撤并存；观察NU7节点升级进度及价格是否守住最近24小时低点1,250.66，跌破则短线强势假设失效。来源：Binance日线与现货API、zcash/zips。\n（2）Binance 10月21日宣布从10月27日00:00 UTC起，每日清理总负债低于1美元且近6个月无资金活动的全仓杠杆账户，从可用资产扣除小额欠款；只针对满足双重条件的账户，正常持仓与交易账户不能据此认定受影响。来源：Binance官方。\n\n十三、今日行动与风险结论\n（1）若使用Binance全仓或组合保证金，10月23日06:00 UTC（曼谷13:00）将调整POL、SHIB、XLM抵押率50%→60%，COW、NEXO、RVN、SAND 10%→30%，部分PM Pro档位同步调整；提前核对统一维持保证金率uniMMR，避免抵押参数变化导致非预期借贷/转出额度与清算风险。未确认用户实际持有这些保证金仓位。来源：Binance官方。\n\n主要英文一手来源：OCC、Grayscale、Farside、Binance、zcash/zips、BitGo、DogeOS；宏观背景Reuters。完整URL、时间与来源缺口见Git待发清单。\n",
   "items": [
     {
       "section": 1,
@@ -74,6 +74,13 @@
       "text": "Binance公告称美国一家夜间交易ATS在10月21日03:46至06:30 UTC发生间歇连接故障，因此在08:00 UTC的美股标的TradFi永续资金费率计算中剔除受影响时段的溢价指数。属于已发生的计价调整，不能据此推断加密现货遭攻击。来源：Binance官方。"
     },
     {
+      "section": 3,
+      "item_number": 3,
+      "event_key": "binance:spot-7day-core:2026-10-22",
+      "role": "detail",
+      "text": "Binance UTC日线对照10月15日收盘与本轮快照：BTC 82,245.93→83,000.01美元，约+0.92%；ETH 2,442.08→2,444.66，约+0.11%；SOL 105.44→105.58，约+0.13%。一周内BTC略强，ETH/SOL总体横盘，不能只凭今日24小时涨跌认定三币同步突破。来源：Binance官方日线及现货API。"
+    },
+    {
       "section": 4,
       "item_number": 1,
       "event_key": "occ:genius-final-rule:2026-10-21",
@@ -109,6 +116,20 @@
       "text": "Grayscale 10月21日发行方公告列出10只实物申购产品，含BTC、ETH、SOL、HYPE、ZEC等，最低申购门槛GSOL约80,300美元、BTC Mini约364,800美元；这是产品申购渠道变化，未提供当日实际代币净买入量。来源：Grayscale。"
     },
     {
+      "section": 5,
+      "item_number": 5,
+      "event_key": "farside:btc-etf:2026-10-20:completed",
+      "role": "detail",
+      "text": "昨日早报中10月20日BTC ETF的IBIT曾缺报，今日Farside回读已补为IBIT +2,990万美元，合计全日+2,320万美元；该数字是10月20日的补齐修订，不能误作10月21日新流入。来源：Farside。"
+    },
+    {
+      "section": 5,
+      "item_number": 6,
+      "event_key": "farside:eth-etf:2026-10-20:completed",
+      "role": "detail",
+      "text": "10月20日ETH ETF的ETHA缺报已补齐为-3,300万美元，Farside全日合计-2,610万美元；因此此前缺报时的+690万美元小计不能当作最终净流入，补齐后方向转负。来源：Farside。"
+    },
+    {
       "section": 6,
       "item_number": 1,
       "event_key": "zec:nu7:height-3543405:2026-10-21",
@@ -137,6 +158,13 @@
       "text": "NeoSoul DNA于10月20日另获Binance Alpha交易竞赛：首期10月20日13:00 UTC至27日13:00 UTC，第二期至11月3日13:00 UTC；须先在App活动页点Join，只有之后的合规买入成交量计入排名，前2,000名分享51万DNA（每人255枚）。这与此前尚未核实的StandX社区专项分配是不同活动，不代表个人已有补偿资格。来源：Binance官方。"
     },
     {
+      "section": 8,
+      "item_number": 1,
+      "event_key": "dogecoin:labs-launch:2026-10-21",
+      "role": "detail",
+      "text": "DOGE生态10月21日发布Dogecoin Labs：与Dogecoin Foundation合作，整合MyDoge、DogeOS、Such App产品与开发团队，主打消费端应用与支付基础设施。该声明来自DogeOS发布方，实际新增活跃用户、链上成交与盈利能力尚无独立验证；这不是新DOGE代币或空投。来源：DogeOS发行方新闻稿。"
+    },
+    {
       "section": 10,
       "item_number": 1,
       "event_key": "us:equity-close:2026-10-21",
@@ -151,6 +179,13 @@
       "text": "10月21日Brent结算约108.82美元/桶，WTI约97.15美元/桶；地缘油运风险仍与潜在和谈消息交错。高油价可能通过通胀预期影响实际利率与风险资产折现，方向需结合后续通胀和利率数据判断。来源：Reuters。"
     },
     {
+      "section": 10,
+      "item_number": 3,
+      "event_key": "gold:spot-close:2026-10-21",
+      "role": "detail",
+      "text": "10月21日现货黄金约4,137.94美元/盎司，涨0.3%，受美债收益率回落支撑；黄金与美股同涨显示跨资产对利率和风险偏好的反应并不总是单向。该报价为Reuters当日时点，不等于曼谷此刻实时金价。"
+    },
+    {
       "section": 11,
       "item_number": 1,
       "event_key": "binance:ptb-mito-perp-delist:2026-10-23",
@@ -158,11 +193,25 @@
       "text": "10月23日09:00 UTC（曼谷16:00），Binance将自动结算并下架PTBUSDT、MITOUSDT U本位永续，10月21日09:30 UTC起已限制新开非只减仓订单；持有相关合约者应在截止前自行核查仓位与强平风险。来源：Binance官方。"
     },
     {
+      "section": 11,
+      "item_number": 2,
+      "event_key": "binance:spot-pair-removal:2026-10-23",
+      "role": "detail",
+      "text": "10月23日03:00 UTC（曼谷10:00），Binance将移除BONK/FDUSD、JUP/FDUSD、LDO/FDUSD、WAL/BNB四个现货交易对，并关闭对应现货交易机器人服务；不等于这四种代币全面下架。相关挂单和机器人需提前检查。来源：Binance官方。"
+    },
+    {
       "section": 12,
       "item_number": 1,
       "event_key": "zec:trend:2026-10-22",
       "role": "detail",
       "text": "ZEC/USDT截至曼谷2026-10-22 09:24:42报1,297.14美元，相比Binance 10月15日UTC日线收盘1,221.40约+5.90%，相比9月22日收盘1,630.05约-20.65%。短线反弹与较长窗口回撤并存；观察NU7节点升级进度及价格是否守住最近24小时低点1,250.66，跌破则短线强势假设失效。来源：Binance日线与现货API、zcash/zips。"
+    },
+    {
+      "section": 12,
+      "item_number": 2,
+      "event_key": "binance:small-margin-debt-cleanup:2026-10-27",
+      "role": "detail",
+      "text": "Binance 10月21日宣布从10月27日00:00 UTC起，每日清理总负债低于1美元且近6个月无资金活动的全仓杠杆账户，从可用资产扣除小额欠款；只针对满足双重条件的账户，正常持仓与交易账户不能据此认定受影响。来源：Binance官方。"
     },
     {
       "section": 13,
@@ -470,6 +519,97 @@
       "status": "verified",
       "source_confirmed": true,
       "priority": "NORMAL"
+    },
+    {
+      "event_key": "binance:spot-7day-core:2026-10-22",
+      "material_version": "v1",
+      "kind": "TREND_DERIVATIVES",
+      "primary_section": 3,
+      "source_url": "https://api.binance.com/api/v3/klines",
+      "published_at": "2026-10-22",
+      "actual_delta": "Binance UTC daily candle comparison for BTC ETH SOL across 7d",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "farside:btc-etf:2026-10-20:completed",
+      "material_version": "v1",
+      "kind": "INSTITUTIONAL_FLOW",
+      "primary_section": 5,
+      "source_url": "https://farside.co.uk/btc/",
+      "published_at": "2026-10-20",
+      "actual_delta": "Oct20 BTC ETF formerly incomplete now reports +23.2m including IBIT 29.9m",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "farside:eth-etf:2026-10-20:completed",
+      "material_version": "v1",
+      "kind": "INSTITUTIONAL_FLOW",
+      "primary_section": 5,
+      "source_url": "https://farside.co.uk/eth/",
+      "published_at": "2026-10-20",
+      "actual_delta": "Oct20 ETH ETF formerly incomplete now reports -26.1m with ETHA -33m",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "dogecoin:labs-launch:2026-10-21",
+      "material_version": "v1",
+      "kind": "EARLY_NFT_MEME",
+      "primary_section": 8,
+      "source_url": "https://www.globenewswire.com/news-release/2026/10/21/3385425/0/en/dogecoin-labs-unites-dogecoin-s-product-teams-technology-and-applications-to-lead-a-new-chapter-for-doge.html",
+      "published_at": "2026-10-21T07:45:00-04:00",
+      "actual_delta": "Dogecoin Labs formed consolidating MyDoge DogeOS Such App teams",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "gold:spot-close:2026-10-21",
+      "material_version": "v1",
+      "kind": "MACRO_CROSS_MARKET",
+      "primary_section": 10,
+      "source_url": "https://www.reuters.com/world/india/gold-dips-fourth-session-oil-rally-fans-inflation-concerns-2026-10-21/",
+      "published_at": "2026-10-21",
+      "actual_delta": "Spot gold recovered 0.3pct to 4137.94 USD/oz as yields eased",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "binance:spot-pair-removal:2026-10-23",
+      "material_version": "v1",
+      "kind": "FUTURE_CATALYST",
+      "primary_section": 11,
+      "source_url": "https://www.binance.com/en-IN/support/announcement/detail/ad54863d7b0446ebae48bbf3b868ee20",
+      "published_at": "2026-10-20",
+      "actual_delta": "Binance removes BONK/FDUSD JUP/FDUSD LDO/FDUSD WAL/BNB Oct23 03 UTC",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "binance:small-margin-debt-cleanup:2026-10-27",
+      "material_version": "v1",
+      "kind": "PERSISTENT_WATCH",
+      "primary_section": 12,
+      "source_url": "https://www.binance.com/en/support/announcement/detail/4de277a9d372407f85c05ae3e7e54e03",
+      "published_at": "2026-10-21",
+      "actual_delta": "Binance will daily clear dormant cross-margin liabilities under 1 USD from Oct27",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
     }
   ],
   "source_receipts": [
@@ -567,6 +707,42 @@
       "result_urls": [
         "https://www.binance.com/en-AE/support/announcement/detail/c30e6891afa54651ba950f8af144f861"
       ]
+    },
+    {
+      "lane": "early_nft",
+      "checked_at": "2026-10-22T02:26:06.095Z",
+      "query_or_url": "https://www.globenewswire.com/news-release/2026/10/21/3385425/0/en/dogecoin-labs-unites-dogecoin-s-product-teams-technology-and-applications-to-lead-a-new-chapter-for-doge.html",
+      "status": "checked",
+      "result_urls": [
+        "https://www.globenewswire.com/news-release/2026/10/21/3385425/0/en/dogecoin-labs-unites-dogecoin-s-product-teams-technology-and-applications-to-lead-a-new-chapter-for-doge.html"
+      ]
+    },
+    {
+      "lane": "capital_flows",
+      "checked_at": "2026-10-22T02:26:06.095Z",
+      "query_or_url": "https://farside.co.uk/eth/",
+      "status": "checked",
+      "result_urls": [
+        "https://farside.co.uk/eth/"
+      ]
+    },
+    {
+      "lane": "macro",
+      "checked_at": "2026-10-22T02:26:06.095Z",
+      "query_or_url": "https://www.reuters.com/world/india/gold-dips-fourth-session-oil-rally-fans-inflation-concerns-2026-10-21/",
+      "status": "checked",
+      "result_urls": [
+        "https://www.reuters.com/world/india/gold-dips-fourth-session-oil-rally-fans-inflation-concerns-2026-10-21/"
+      ]
+    },
+    {
+      "lane": "forward_catalysts",
+      "checked_at": "2026-10-22T02:26:06.095Z",
+      "query_or_url": "https://www.binance.com/en-IN/support/announcement/detail/ad54863d7b0446ebae48bbf3b868ee20",
+      "status": "checked",
+      "result_urls": [
+        "https://www.binance.com/en-IN/support/announcement/detail/ad54863d7b0446ebae48bbf3b868ee20"
+      ]
     }
   ],
   "market_core": [
@@ -590,13 +766,6 @@
     }
   ],
   "empty_section_reasons": [
-    {
-      "section": 8,
-      "reason": "Jack Butcher official Exchange page produced inconsistent dynamic live figures and no separately verified new NFT mint or auction entitlement; therefore no reliable new user-visible item.",
-      "checked_lanes": [
-        "early_nft"
-      ]
-    },
     {
       "section": 9,
       "reason": "Targeted October 21 crypto security, wallet and exchange searches plus official venue notice returned no independently confirmed new exploit within the sampled source window; broader specialist/X coverage remains incomplete.",
@@ -926,6 +1095,76 @@
       "published_at": "2026-10-20",
       "material_delta": "none since 2026-10-21 corrected report",
       "reason": "Already sent and read back in corrected Gmail 1a15c6d25715d6ca; no distinct new TXID verified"
+    },
+    {
+      "event_key": "binance:spot-7day-core:2026-10-22",
+      "family_key": "binance:spot-7day-core",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://api.binance.com/api/v3/klines",
+      "published_at": "2026-10-22",
+      "material_delta": "Binance UTC daily candle comparison for BTC ETH SOL across 7d",
+      "reason": "New independent source or a completed previous-day primary ETF table"
+    },
+    {
+      "event_key": "farside:btc-etf:2026-10-20:completed",
+      "family_key": "farside:btc-etf",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://farside.co.uk/btc/",
+      "published_at": "2026-10-20",
+      "material_delta": "Oct20 BTC ETF formerly incomplete now reports +23.2m including IBIT 29.9m",
+      "reason": "New independent source or a completed previous-day primary ETF table"
+    },
+    {
+      "event_key": "farside:eth-etf:2026-10-20:completed",
+      "family_key": "farside:eth-etf",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://farside.co.uk/eth/",
+      "published_at": "2026-10-20",
+      "material_delta": "Oct20 ETH ETF formerly incomplete now reports -26.1m with ETHA -33m",
+      "reason": "New independent source or a completed previous-day primary ETF table"
+    },
+    {
+      "event_key": "dogecoin:labs-launch:2026-10-21",
+      "family_key": "dogecoin:labs-launch",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://www.globenewswire.com/news-release/2026/10/21/3385425/0/en/dogecoin-labs-unites-dogecoin-s-product-teams-technology-and-applications-to-lead-a-new-chapter-for-doge.html",
+      "published_at": "2026-10-21T07:45:00-04:00",
+      "material_delta": "Dogecoin Labs formed consolidating MyDoge DogeOS Such App teams",
+      "reason": "New independent source or a completed previous-day primary ETF table"
+    },
+    {
+      "event_key": "gold:spot-close:2026-10-21",
+      "family_key": "gold:spot-close",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://www.reuters.com/world/india/gold-dips-fourth-session-oil-rally-fans-inflation-concerns-2026-10-21/",
+      "published_at": "2026-10-21",
+      "material_delta": "Spot gold recovered 0.3pct to 4137.94 USD/oz as yields eased",
+      "reason": "New independent source or a completed previous-day primary ETF table"
+    },
+    {
+      "event_key": "binance:spot-pair-removal:2026-10-23",
+      "family_key": "binance:spot-pair-removal",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://www.binance.com/en-IN/support/announcement/detail/ad54863d7b0446ebae48bbf3b868ee20",
+      "published_at": "2026-10-20",
+      "material_delta": "Binance removes BONK/FDUSD JUP/FDUSD LDO/FDUSD WAL/BNB Oct23 03 UTC",
+      "reason": "New independent source or a completed previous-day primary ETF table"
+    },
+    {
+      "event_key": "binance:small-margin-debt-cleanup:2026-10-27",
+      "family_key": "binance:small-margin-debt-cleanup",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/4de277a9d372407f85c05ae3e7e54e03",
+      "published_at": "2026-10-21",
+      "material_delta": "Binance will daily clear dormant cross-margin liabilities under 1 USD from Oct27",
+      "reason": "New independent source or a completed previous-day primary ETF table"
     }
   ],
   "internal_notes": {
@@ -941,6 +1180,8 @@
     "old_space_surf_standx_qubic_cysic_jpmd_suppressed": true,
     "code_gate_runtime": "NOT_EXECUTED_YET_CI_PENDING",
     "primary_rules_blob_sha": "df26ea064cc6feae99e345f6efaf402485b0482c",
-    "pipeline_contract_blob_sha": "1b3efb8943786d48c4cf370e17bebacc6978c5f0"
+    "pipeline_contract_blob_sha": "1b3efb8943786d48c4cf370e17bebacc6978c5f0",
+    "last_substantive_revision_at": "2026-10-22T02:26:06.095Z",
+    "new_revisions_added": 7
   }
 }
