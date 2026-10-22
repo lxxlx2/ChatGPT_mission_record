@@ -22247,7 +22247,16 @@
         "observed_sell_WBNB_quote_out_wei": "146394754236798148",
         "sell_pre_swap_WBNB_reserve_wei": "23519999999451199994",
         "next_block_end_WBNB_reserve_wei": "23373605245214401846",
-        "pre_sell_reserve_exceeds_frozen_2_WBNB": true
+        "pre_sell_reserve_exceeds_frozen_2_WBNB": true,
+        "actual_next_block_sell_execution_route": {
+          "idx": 247622,
+          "from": "0x88109ffd4b6b774a61ad191a36f935b2a86d458a",
+          "to": "0x7faa9143f9eef51ac872568e72c26d9c2a5bc656",
+          "selector": "0xac9650d8",
+          "kind": "CUSTOM_DEPLOYED_CONTRACT_CALL",
+          "code_at_sell_block": "NONEMPTY_CODE_PREFIX_ONLY_TRUNCATED",
+          "router_standard_approach": false
+        }
       },
       {
         "index": 247633,
@@ -22267,7 +22276,19 @@
         "observed_sell_WBNB_quote_out_wei": "300070460751183867",
         "sell_pre_swap_WBNB_reserve_wei": "26519999999451199994",
         "next_block_end_WBNB_reserve_wei": "26769929538700016127",
-        "pre_sell_reserve_exceeds_frozen_2_WBNB": true
+        "pre_sell_reserve_exceeds_frozen_2_WBNB": true,
+        "actual_next_block_sell_execution_route": {
+          "idx": 247633,
+          "from": "0x5361d8af3d841e1e858abafb4643a7bbe3c1b5a7",
+          "to": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+          "selector": "0x18cbafe5",
+          "kind": "STANDARD_PANCAKESWAP_V2_ROUTER_SWAP_EXACT_TOKENS_FOR_ETH",
+          "router_standard_approach": true,
+          "path_token_to_WBNB_verified": true,
+          "receipt_destination_matches_sender": true,
+          "minWBNBOut_wei": "45010569112677580",
+          "amountIn_token_raw": "2035623305795748000000000"
+        }
       },
       {
         "index": 247672,
@@ -22287,7 +22308,16 @@
         "observed_sell_WBNB_quote_out_wei": "198424069571668611",
         "sell_pre_swap_WBNB_reserve_wei": "24569999999451199994",
         "next_block_end_WBNB_reserve_wei": "24476969738172763432",
-        "pre_sell_reserve_exceeds_frozen_2_WBNB": true
+        "pre_sell_reserve_exceeds_frozen_2_WBNB": true,
+        "actual_next_block_sell_execution_route": {
+          "idx": 247672,
+          "from": "0xda99261e6802283c20cae2d2c1a77a9bf8d2f576",
+          "to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+          "selector": "0x1c25dd39",
+          "kind": "CUSTOM_DEPLOYED_CONTRACT_CALL",
+          "code_at_sell_block": "NONEMPTY_FULL_CODE_RECEIVED",
+          "router_standard_approach": false
+        }
       },
       {
         "index": 247708,
@@ -22307,7 +22337,16 @@
         "observed_sell_WBNB_quote_out_wei": "29941403750398179781",
         "sell_pre_swap_WBNB_reserve_wei": "54436916362204566290",
         "next_block_end_WBNB_reserve_wei": "24594512611806386509",
-        "pre_sell_reserve_exceeds_frozen_2_WBNB": true
+        "pre_sell_reserve_exceeds_frozen_2_WBNB": true,
+        "actual_next_block_sell_execution_route": {
+          "idx": 247708,
+          "from": "0xf25054507ac92c740cd3cb1027110558d2fe0346",
+          "to": "0x89c050cd95c73a9354fcf02dca36e70d3cc8d200",
+          "selector": "0x58cc30c0",
+          "kind": "CUSTOM_DEPLOYED_CONTRACT_CALL",
+          "code_at_sell_block": "NONEMPTY_CODE_PREFIX_ONLY_TRUNCATED",
+          "router_standard_approach": false
+        }
       },
       {
         "index": 247733,
@@ -22327,13 +22366,37 @@
         "observed_sell_WBNB_quote_out_wei": "246482939595807014",
         "sell_pre_swap_WBNB_reserve_wei": "24019999999451199994",
         "next_block_end_WBNB_reserve_wei": "23773517059855392980",
-        "pre_sell_reserve_exceeds_frozen_2_WBNB": true
+        "pre_sell_reserve_exceeds_frozen_2_WBNB": true,
+        "actual_next_block_sell_execution_route": {
+          "idx": 247733,
+          "from": "0x5361d8af3d841e1e858abafb4643a7bbe3c1b5a7",
+          "to": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+          "selector": "0x18cbafe5",
+          "kind": "STANDARD_PANCAKESWAP_V2_ROUTER_SWAP_EXACT_TOKENS_FOR_ETH",
+          "router_standard_approach": true,
+          "path_token_to_WBNB_verified": true,
+          "receipt_destination_matches_sender": true,
+          "minWBNBOut_wei": "36972440939371052",
+          "amountIn_token_raw": "2035623404884137000000000"
+        }
       }
     ],
     "P0": "INSUFFICIENT_COVERAGE",
     "P1": "BLOCKED",
     "G4": "UNKNOWN",
     "G6": "NO_GO",
-    "no_payment_no_model_no_merge_no_deploy_no_gmail_no_trade": true
+    "no_payment_no_model_no_merge_no_deploy_no_gmail_no_trade": true,
+    "seller_path_summary": {
+      "source": "SINGLE_PROVIDER_HISTORICAL_ETH_GETTRANSACTIONBYHASH_AND_ETH_GETCODE",
+      "standard_V2_Router_exactTokensForETH_sells": 2,
+      "standard_router_both_same_EOA": "0x5361d8af3d841e1e858abafb4643a7bbe3c1b5a7",
+      "router_path_and_return_recipient_verified": 2,
+      "router_amountOutMin_nonzero_confirmed": 2,
+      "sells_via_other_deployed_custom_contracts": 3,
+      "custom_contract_call_meaning_wallet_costs_and_actual_control": "UNKNOWN",
+      "distinct_tx_from_EOA": 4,
+      "five_sells_do_not_mean_five_independent_retail_exits": true,
+      "predictive_and_uniform_amount_exit_gate": "NOT_SCORABLE"
+    }
   }
 }
