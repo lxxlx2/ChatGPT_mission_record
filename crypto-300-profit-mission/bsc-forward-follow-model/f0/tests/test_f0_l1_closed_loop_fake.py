@@ -41,7 +41,7 @@ class ThreeSlotClosedLoopFakeTests(unittest.TestCase):
         self.assertGreaterEqual(r["min_global_start_gap_ms"],250)
         self.assertEqual(r["pending_after_stop"],0)
         self.assertEqual(r["contiguous_parent_verified_blocks"],
-                         r["block_responses_accepted"])
+                         r["block_responses_parsed_full"])
         ids=set()
         for row in rows:
             if row["event"]=="RESERVE_UNKNOWN":
@@ -101,8 +101,8 @@ class ThreeSlotClosedLoopFakeTests(unittest.TestCase):
         result,_=self.one(SyntheticBscOracle(bad_parent_blocks=[first+1]))
         self.assertEqual(result["stop_state"],"BLOCK_FAULT_STOP_NO_RETRY")
         self.assertEqual(result["contiguous_parent_verified_blocks"],1)
-        self.assertLess(result["block_responses_accepted"],
-                        normal["block_responses_accepted"])
+        self.assertLess(result["block_responses_parsed_full"],
+                        normal["block_responses_parsed_full"])
 
     def test_head_refresh_failure_no_longer_dispatches_new_blocks(self):
         initial,_=self.one()
@@ -155,6 +155,47 @@ class ThreeSlotClosedLoopFakeTests(unittest.TestCase):
                     self.assertGreaterEqual(report["synthetic_oracle_tip_at_exit_not_real_network"],
                                             report["last_confirmed_synthetic_head"])
                     self.assertEqual(report["pending_after_stop"],0)
+
+    def test_out_of_order_full_blocks_commit_only_as_contiguous_chain(self):
+        # The first block takes 2.5s but later reservations complete sooner.
+        # Received block count may rise before any contiguous COMMIT record.
+        delayed = timing()
+        delayed["eth_getBlockByNumber"] = [2500.0, 300.0, 400.0, 350.0]
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d) / "private"
+            root.mkdir(mode=0o700)
+            r = run_closed_loop(
+                delayed, root / "ledger.jsonl",
+                oracle=SyntheticBscOracle(growth_bps=5.0))
+            rows = [json.loads(x) for x in
+                    (root/"ledger.jsonl").read_text().splitlines()]
+        block_res = [e for e in r["trace"]
+                     if e["event"] == "RESERVE_UNKNOWN"
+                     and e["category"] == "BLOCK"]
+        block_done = [e for e in r["trace"]
+                      if e["event"] == "SETTLE"
+                      and e["category"] == "BLOCK"]
+        self.assertGreaterEqual(len(block_res), 3)
+        first = block_res[0]["id"]
+        first_done = next(e["at_ms"] for e in block_done if e["id"] == first)
+        self.assertTrue(any(e["id"] > first and
+                            e["at_ms"] < first_done for e in block_done))
+        committed = [e for e in rows if e["event"] == "COMMIT_CONTIGUOUS"]
+        self.assertTrue(committed)
+        self.assertEqual([e["height"] for e in committed],
+                         list(range(block_res[0]["height"],
+                                    block_res[0]["height"] + len(committed))))
+        self.assertTrue(all(e["at_ms"] >= first_done for e in committed))
+        self.assertEqual(len(committed),
+                         r["contiguous_parent_verified_blocks"])
+        self.assertGreaterEqual(r["block_responses_parsed_full"],
+                                r["contiguous_parent_verified_blocks"])
+
+    def test_short_ttl_checkpoint_does_not_inherit_wait_age_validation(self):
+        r, _ = self.one(policy="checkpoint", head_ttl_ms=800)
+        self.assertLessEqual(r["max_inflight_including_head"],3)
+        self.assertEqual(r["pending_after_stop"],0)
+        self.assertLessEqual(r["head_refreshes"],6)
 
     def test_legacy_parent_and_new_closed_loop_are_separate(self):
         src=(F0/"f0_l1_closed_loop_fake.py").read_text()

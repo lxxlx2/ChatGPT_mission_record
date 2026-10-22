@@ -130,7 +130,9 @@ def run_closed_loop(durations: dict, ledger_path: Path, *,
     require(type(oracle) is SyntheticBscOracle and
             policy in ("checkpoint", "availability_wait") and
             type(min_head_refresh_age_ms) is int and
-            250 <= min_head_refresh_age_ms < head_ttl_ms and
+            250 <= min_head_refresh_age_ms and
+            (policy == "checkpoint" or
+             min_head_refresh_age_ms < head_ttl_ms) and
             type(head_ttl_ms) is int and 250 <= head_ttl_ms <= 10000 and
             type(spacing_ms) is int and spacing_ms >= 250 and
             type(slots) is int and slots == 3 and
@@ -282,6 +284,12 @@ def run_closed_loop(durations: dict, ledger_path: Path, *,
                         if last_committed_hash is not None:
                             linked += 1
                         last_committed_hash = bh
+                        ledger.append({"event":"COMMIT_CONTIGUOUS",
+                                       "height":next_commit,
+                                       "at_ms":round(now, 3)})
+                        sample_events.append({"event":"COMMIT_CONTIGUOUS",
+                                              "height":next_commit,
+                                              "at_ms":round(now, 3)})
                         next_commit += 1
                         committed += 1
             except (TypeError, KeyError, ValueError, OverflowError) as exc:
@@ -437,7 +445,7 @@ def run_closed_loop(durations: dict, ledger_path: Path, *,
         "method_attempt_counts":{k:started_by_method[k] for k in METHODS},
         "head_refreshes":head_refreshes,
         "block_attempts":started_by_method["eth_getBlockByNumber"],
-        "block_responses_accepted":received,
+        "block_responses_parsed_full":received,
         "contiguous_parent_verified_blocks":committed,
         "internal_parent_links":linked,
         "first_block_independently_anchored":False,
