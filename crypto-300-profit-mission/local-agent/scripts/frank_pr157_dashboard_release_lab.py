@@ -64,6 +64,14 @@ def approved_manifest():
         raise RuntimeError("APPROVED_SOURCE_COMMIT_MISSING")
     if git("status", "--porcelain"):
         raise RuntimeError("RELEASE_LAB_WORKTREE_DIRTY")
+    expected_delta = {
+        ".github/workflows/frank-pr157-dashboard-release-lab-20261022.yml",
+        "crypto-300-profit-mission/local-agent/scripts/frank_pr157_dashboard_release_lab.py",
+        "docs/MONITORING/frank-release-20261022/PR157_READONLY_DASHBOARD_RELEASE_DECISION.md",
+    }
+    actual_delta = set(filter(None, git("diff", "--name-only", APPROVED, "HEAD").splitlines()))
+    if actual_delta != expected_delta:
+        raise RuntimeError("UNREVIEWED_ADDITIONAL_FILES_IN_RELEASE_LAB")
     out = {}
     for file in FILES:
         path = ROOT / AGENT / file
