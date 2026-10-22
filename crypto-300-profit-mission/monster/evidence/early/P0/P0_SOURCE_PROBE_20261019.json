@@ -15300,4 +15300,882 @@
     "g6": "NO_GO",
     "no_ci_no_paid_calls_no_deploy_no_email_no_mac_install_no_wallet_signing": true
   }
+,
+  "bsc_fourmeme_p0_all538_frozen_day_end_curve_state_20261022": {
+    "schema": "MONSTER_P0_FOURMEME_HISTORIC_END_OF_DAY_CURVE_STATE_FROZEN538_V1",
+    "review_date_utc": "2026-10-22",
+    "frozen_day_utc": "2025-07-01",
+    "block": 52555482,
+    "manager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+    "multicall3": "0xca11bde05977b3631167028862be2a173976ca11",
+    "underlying_abi_fn": "_tokenInfos(address)",
+    "selector": "0xe684626b",
+    "return_word_count": 13,
+    "population_frozen_index_range": [
+      247596,
+      248133
+    ],
+    "total_frozen_addresses": 538,
+    "index_addresses_original_roster_unchanged": true,
+    "source": "EXISTING_FREE_ALCHEMY_BNB_ARCHIVE_READ_ONLY_NORMALIZED_ETH_CALL",
+    "batch_size": 7,
+    "provider_response_max_approximately_8kb": true,
+    "states": "IN_PROGRESS",
+    "processed": 70,
+    "batch_rpc_calls": 10,
+    "semantics": "HISTORIC_END_OF_DAY_STORAGE_SNAPSHOT_NOT_CREATION_TIME_OR_NEXT_BLOCK_PIT",
+    "funds_zero_does_not_prove_no_historical_trades": true,
+    "funds_positive_does_not_prove_PIT_EXECUTABLE_SELL": true,
+    "launchTime_unvalidated_as_event_timestamp": true,
+    "quote_asset_zero_address_means_native_BNB_curve": true,
+    "nonzero_quote_raw_token_decimals_UNVERIFIED": true,
+    "public_available_at": "UNKNOWN",
+    "fixed_research_trade_notional": "NOT_SELECTED",
+    "real_gas_tax_router_payout": "NOT_SCORABLE",
+    "phase_P0": "INSUFFICIENT_COVERAGE",
+    "phase_P1": "BLOCKED",
+    "G6": "NO_GO",
+    "chunks": [
+      {
+        "first_index": 247596,
+        "one_call_block": 52555482,
+        "response_hex_chars": 7746,
+        "rows": [
+          {
+            "index": 247596,
+            "token_ca": "0x1e395d5edb51e7e7c6b1203912d0d0b6f87f4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751328029",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247597,
+            "token_ca": "0x23f0a28925ad389330a6621432ec5fcecb3f4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751328034",
+            "offers_raw": "797913705955172490000000000",
+            "funds_raw": "15997612943421121",
+            "status_raw": "0"
+          },
+          {
+            "index": 247598,
+            "token_ca": "0xecd88b362297a20f2a531d8079cbbbb820464444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751328",
+            "offers_raw": "799999999055058047000000000",
+            "funds_raw": "7231698627",
+            "status_raw": "0"
+          },
+          {
+            "index": 247599,
+            "token_ca": "0xdf5b32eb63ac2361a7422fb00926da8e96554444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751328034",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247600,
+            "token_ca": "0xc9fedd0b97a6bcd2c6160dd10ab9f8b3ff7a4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751328",
+            "offers_raw": "799999999999999298000000000",
+            "funds_raw": "5373",
+            "status_raw": "0"
+          },
+          {
+            "index": 247601,
+            "token_ca": "0x6be211e4549307d9d89a300945038255a5094444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751328035",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247602,
+            "token_ca": "0x0007fc358ad8888d3302bba621f01dcae63e4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751328036",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          }
+        ]
+      },
+      {
+        "first_index": 247603,
+        "one_call_block": 52555482,
+        "response_hex_chars": 7746,
+        "rows": [
+          {
+            "index": 247603,
+            "token_ca": "0x8065eaf37b8989fbd527ffaccf624733f58e4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751328",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247604,
+            "token_ca": "0x573de602629a7600eeb46b959131ae2e2a554444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751328046",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247605,
+            "token_ca": "0xc46b6d8049e38121fa6c653ecd5eb94aea624444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751328092",
+            "offers_raw": "799999999797463268000000000",
+            "funds_raw": "1550026011",
+            "status_raw": "0"
+          },
+          {
+            "index": 247606,
+            "token_ca": "0xd97c0f82e62c5d05dd554ce6349fe4a572e14444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751328016",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247607,
+            "token_ca": "0x3279a5c2110084b53ca1b5824c6673247a5b4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751328906",
+            "offers_raw": "799999999999999298000000000",
+            "funds_raw": "5373",
+            "status_raw": "0"
+          },
+          {
+            "index": 247608,
+            "token_ca": "0x2d43582cf60ce2cb736c8e0eeb1f30b591c14444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751328970",
+            "offers_raw": "799999999999999501000000000",
+            "funds_raw": "3819",
+            "status_raw": "0"
+          },
+          {
+            "index": 247609,
+            "token_ca": "0x1a2afc812885c9f8df709b92f9ef770ec81d4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751329479",
+            "offers_raw": "799999999999999340000000000",
+            "funds_raw": "5051",
+            "status_raw": "0"
+          }
+        ]
+      },
+      {
+        "first_index": 247610,
+        "one_call_block": 52555482,
+        "response_hex_chars": 7746,
+        "rows": [
+          {
+            "index": 247610,
+            "token_ca": "0x7fba6efa377b62642457a3b1b44bb9d5c2044444",
+            "quote_address": "0x8d0d000ee44948fc98c9b98a4fa4921476f08b0d",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "12000000000000000000000",
+            "launchTime_raw": "1751329624",
+            "offers_raw": "799999999999999034000000000",
+            "funds_raw": "3696429",
+            "status_raw": "0"
+          },
+          {
+            "index": 247611,
+            "token_ca": "0xbbc26abb221b46c905431cc61cd9f4c376354444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751329789",
+            "offers_raw": "725285371816132730000000000",
+            "funds_raw": "614548845253467023",
+            "status_raw": "0"
+          },
+          {
+            "index": 247612,
+            "token_ca": "0xdb55d2060f7bd6948216686779c6855089d64444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751330274",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247613,
+            "token_ca": "0xa0672ddd123f45f6083ee9945b6d9789cf5f4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751331263",
+            "offers_raw": "799999999999999635000000000",
+            "funds_raw": "2794",
+            "status_raw": "0"
+          },
+          {
+            "index": 247614,
+            "token_ca": "0xeada003af9d18981fdaadfa7c1075045044a4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751331413",
+            "offers_raw": "799999999999999341000000000",
+            "funds_raw": "5044",
+            "status_raw": "0"
+          },
+          {
+            "index": 247615,
+            "token_ca": "0xfc0005de9cd1dc5190e629bbde65128c88d04444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751331609",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247616,
+            "token_ca": "0xd1e38d9fd1b66f2c81a88000faf68513d3d34444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751331610",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          }
+        ]
+      },
+      {
+        "first_index": 247617,
+        "one_call_block": 52555482,
+        "response_hex_chars": 7746,
+        "rows": [
+          {
+            "index": 247617,
+            "token_ca": "0xa8ad89d5d85929ff03e5d13ecc6dab408dd64444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751331507",
+            "offers_raw": "799999999999999350000000000",
+            "funds_raw": "4975",
+            "status_raw": "0"
+          },
+          {
+            "index": 247618,
+            "token_ca": "0x7f4aaa95fd235e34b72d680a23686710fe0b4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751331583",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247619,
+            "token_ca": "0x6bee095c51ce114ccb7bd95557126dcc00234444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751331708",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247620,
+            "token_ca": "0x00da18ab316ced48022c5b3768c0a3cc85744444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751331",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247621,
+            "token_ca": "0x5ead74bd21386d8f2c0a6c232140ae95598c4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751331681",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247622,
+            "token_ca": "0x05008b299d880eeb424f1dd84d3b85a0381b4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751332603",
+            "offers_raw": "0",
+            "funds_raw": "23999999999439999992",
+            "status_raw": "3"
+          },
+          {
+            "index": 247623,
+            "token_ca": "0xe27767425e7ade39e3743407ccdb02bd6fb04444",
+            "quote_address": "0x8d0d000ee44948fc98c9b98a4fa4921476f08b0d",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "12000000000000000000000",
+            "launchTime_raw": "1751333097",
+            "offers_raw": "799999999999999226000000000",
+            "funds_raw": "2961735",
+            "status_raw": "0"
+          }
+        ]
+      },
+      {
+        "first_index": 247624,
+        "one_call_block": 52555482,
+        "response_hex_chars": 7746,
+        "rows": [
+          {
+            "index": 247624,
+            "token_ca": "0xb59ec87614c15e9e3be1296c71414d84cd204444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751334006",
+            "offers_raw": "799612021398198530000000000",
+            "funds_raw": "2970297029702962",
+            "status_raw": "0"
+          },
+          {
+            "index": 247625,
+            "token_ca": "0xd9e8e8cf97110be119ca87259e0d27b6b0cd4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751334036",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247626,
+            "token_ca": "0x562ebdfe2b4700ad98b91dcff8bde1f4e5fd4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751334063",
+            "offers_raw": "799929999999999296000000000",
+            "funds_raw": "535749205075005",
+            "status_raw": "0"
+          },
+          {
+            "index": 247627,
+            "token_ca": "0x289bd28fefa1fbdea6e3f4379b70cf3218af4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751334256",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247628,
+            "token_ca": "0x05c43685d2538ee531678f7a5b99e2abad1d4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751334",
+            "offers_raw": "694953104062079574000000000",
+            "funds_raw": "891089108911112076",
+            "status_raw": "0"
+          },
+          {
+            "index": 247629,
+            "token_ca": "0x3bff62e46a0fe2104820fe037b51cbe05f4c4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751334257",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247630,
+            "token_ca": "0x665e7f660bb328bb7bb26f66c54fde5ea4a14444",
+            "quote_address": "0x8d0d000ee44948fc98c9b98a4fa4921476f08b0d",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "12000000000000000000000",
+            "launchTime_raw": "1751334871",
+            "offers_raw": "793530892669375615000000000",
+            "funds_raw": "24904248750410819408",
+            "status_raw": "0"
+          }
+        ]
+      },
+      {
+        "first_index": 247631,
+        "one_call_block": 52555482,
+        "response_hex_chars": 7746,
+        "rows": [
+          {
+            "index": 247631,
+            "token_ca": "0x3aab4cf57d90b443bd34a0216a5a2cda206d4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751335161",
+            "offers_raw": "799999999687292886000000000",
+            "funds_raw": "2393166690",
+            "status_raw": "0"
+          },
+          {
+            "index": 247632,
+            "token_ca": "0xec2c9722c9a0859b5813643a17ddf0fb74f54444",
+            "quote_address": "0x8d0d000ee44948fc98c9b98a4fa4921476f08b0d",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "12000000000000000000000",
+            "launchTime_raw": "1751336317",
+            "offers_raw": "795553738205664412000000000",
+            "funds_raw": "17084486883875541226",
+            "status_raw": "0"
+          },
+          {
+            "index": 247633,
+            "token_ca": "0x2314f7ec7c490f2435d7b7f1c45352ef3fd04444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751336541",
+            "offers_raw": "0",
+            "funds_raw": "23999999999439999992",
+            "status_raw": "3"
+          },
+          {
+            "index": 247634,
+            "token_ca": "0x1f68fb6d5110e4efd9bd434d18c9f8a8522e4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751336654",
+            "offers_raw": "799999999999999999000000000",
+            "funds_raw": "8",
+            "status_raw": "0"
+          },
+          {
+            "index": 247635,
+            "token_ca": "0xaedd3a9f75c1673001e0e7854ecae62ac5e94444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751336697",
+            "offers_raw": "799999999999999642000000000",
+            "funds_raw": "2740",
+            "status_raw": "0"
+          },
+          {
+            "index": 247636,
+            "token_ca": "0xd540ba1526ec31283e069cfca4ba32fce2f74444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751337220",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247637,
+            "token_ca": "0x31c97ac266afed4c5bdd08bdf0aa40d584624444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751337222",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          }
+        ]
+      },
+      {
+        "first_index": 247638,
+        "one_call_block": 52555482,
+        "response_hex_chars": 7746,
+        "rows": [
+          {
+            "index": 247638,
+            "token_ca": "0xe84977fbf71d069a81dcd0b2ec76113a5bc24444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751337329",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247639,
+            "token_ca": "0xb9bd9250a4294c70a4f2b0092bd0e884981e4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751338631",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247640,
+            "token_ca": "0x26dc2bc709bf618aedc917875e74e2f025d34444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751338703",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247641,
+            "token_ca": "0x775b58e1febe418d5068e26280fc283305e84444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751339492",
+            "offers_raw": "799999999309423976000000000",
+            "funds_raw": "5285020596",
+            "status_raw": "0"
+          },
+          {
+            "index": 247642,
+            "token_ca": "0xab6c17083eb7a54a5f6e29d3cb00369a41da4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751339952",
+            "offers_raw": "739558405494344644000000000",
+            "funds_raw": "490148031748511486",
+            "status_raw": "0"
+          },
+          {
+            "index": 247643,
+            "token_ca": "0xcbaaa14716f98bbebee97ce6d5d1b54c0b664444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751320800",
+            "offers_raw": "788541195725494121000000000",
+            "funds_raw": "88640686902128304",
+            "status_raw": "0"
+          },
+          {
+            "index": 247644,
+            "token_ca": "0x94c9efb800618d271991de1fe907385100eb4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751340546",
+            "offers_raw": "799999999999999296000000000",
+            "funds_raw": "5388",
+            "status_raw": "0"
+          }
+        ]
+      },
+      {
+        "first_index": 247645,
+        "one_call_block": 52555482,
+        "response_hex_chars": 7746,
+        "rows": [
+          {
+            "index": 247645,
+            "token_ca": "0xe147a51fc6e96ac83b599bb3e43920188c604444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751341071",
+            "offers_raw": "787371816107950915000000000",
+            "funds_raw": "97794165982128371",
+            "status_raw": "0"
+          },
+          {
+            "index": 247646,
+            "token_ca": "0xb46d8447494ba625a5549c976c7010efaaeb4444",
+            "quote_address": "0x8d0d000ee44948fc98c9b98a4fa4921476f08b0d",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "12000000000000000000000",
+            "launchTime_raw": "1751341437",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247647,
+            "token_ca": "0xab8b3caf3dbab7b6095335cf5c5fc503e0964444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751341917",
+            "offers_raw": "798610590814283146000000000",
+            "funds_raw": "10647007705140215",
+            "status_raw": "0"
+          },
+          {
+            "index": 247648,
+            "token_ca": "0xa2dc87788bff9bee6c0f51331fa54ea44b684444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751342126",
+            "offers_raw": "799999999992029365000000000",
+            "funds_raw": "60999758",
+            "status_raw": "0"
+          },
+          {
+            "index": 247649,
+            "token_ca": "0x588b75e90076f764abc586a9058f852793fd4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751342173",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247650,
+            "token_ca": "0x82106fd260add43391980dfaefc9f8e49bae4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751342202",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247651,
+            "token_ca": "0xd5a2edb2f405ee8924f1648412f52d2bd3644444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751342441",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          }
+        ]
+      },
+      {
+        "first_index": 247652,
+        "one_call_block": 52555482,
+        "response_hex_chars": 7746,
+        "rows": [
+          {
+            "index": 247652,
+            "token_ca": "0x8aa40bc798285fbb1a0f547aeb7a9a5943c04444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751342356",
+            "offers_raw": "799999999356152540000000000",
+            "funds_raw": "4927404034",
+            "status_raw": "0"
+          },
+          {
+            "index": 247653,
+            "token_ca": "0xdff1e5138f8810af8915d5a49ed89117213a4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751342350",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247654,
+            "token_ca": "0xbffcee20c6f812cac117e3955c3fcf36c6e54444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751342447",
+            "offers_raw": "799999999999999296000000000",
+            "funds_raw": "5388",
+            "status_raw": "0"
+          },
+          {
+            "index": 247655,
+            "token_ca": "0x6f40ef21246e90c65c964dfc62193fcf80af4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751342856",
+            "offers_raw": "799999999999999573000000000",
+            "funds_raw": "3268",
+            "status_raw": "0"
+          },
+          {
+            "index": 247656,
+            "token_ca": "0xf1bb762a0cf15cd6144b75f0984d4dddc6c04444",
+            "quote_address": "0x8d0d000ee44948fc98c9b98a4fa4921476f08b0d",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "12000000000000000000000",
+            "launchTime_raw": "1751343027",
+            "offers_raw": "745825917747423757000000000",
+            "funds_raw": "218310980320128639711",
+            "status_raw": "0"
+          },
+          {
+            "index": 247657,
+            "token_ca": "0xfb7a18dfc84d1e12f1bcac310b9bf2c38f6d4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751344051",
+            "offers_raw": "743506485727923240000000000",
+            "funds_raw": "456353609172942589",
+            "status_raw": "0"
+          },
+          {
+            "index": 247658,
+            "token_ca": "0x0ed6defcb08d1cc167a4d3cff7cec932acb04444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751344928",
+            "offers_raw": "798600368655848680000000000",
+            "funds_raw": "10725442066436350",
+            "status_raw": "0"
+          }
+        ]
+      },
+      {
+        "first_index": 247659,
+        "one_call_block": 52555482,
+        "response_hex_chars": 7746,
+        "rows": [
+          {
+            "index": 247659,
+            "token_ca": "0xd8d842318b8fad57375b83edf61af5a8db414444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751345123",
+            "offers_raw": "684536082471822298000000000",
+            "funds_raw": "990099009900990097",
+            "status_raw": "0"
+          },
+          {
+            "index": 247660,
+            "token_ca": "0x63b8d1080fbe51299d1e9809f471b4afafaa4444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751345379",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247661,
+            "token_ca": "0x4ff4242b1b265584ea517a70d4112ed8df394444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751345940",
+            "offers_raw": "467031597005516566000000000",
+            "funds_raw": "3693267326732680615",
+            "status_raw": "0"
+          },
+          {
+            "index": 247662,
+            "token_ca": "0x8441a99bc9b0e5caa2d494edf4cb3c7ba5e24444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751346171",
+            "offers_raw": "799963957987571315000000000",
+            "funds_raw": "275840984857058",
+            "status_raw": "0"
+          },
+          {
+            "index": 247663,
+            "token_ca": "0x346d5e44f500d5e201b66b81c9e9d40f492d4444",
+            "quote_address": "0x8d0d000ee44948fc98c9b98a4fa4921476f08b0d",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "12000000000000000000000",
+            "launchTime_raw": "1751347727",
+            "offers_raw": "748280086702467170000000000",
+            "funds_raw": "207920792079210977097",
+            "status_raw": "0"
+          },
+          {
+            "index": 247664,
+            "token_ca": "0xefe2fd09bba7b1d4f9d62afab9bf4ba086834444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751348",
+            "offers_raw": "800000000000000000000000000",
+            "funds_raw": "0",
+            "status_raw": "0"
+          },
+          {
+            "index": 247665,
+            "token_ca": "0xd7b5effacdc7d0cc4584d71212bdc4942b954444",
+            "quote_address": "0x0000000000000000000000000000000000000000",
+            "maxOffers_raw": "800000000000000000000000000",
+            "maxRaising_raw": "24000000000000000000",
+            "launchTime_raw": "1751349231",
+            "offers_raw": "773286515017014556000000000",
+            "funds_raw": "209654789863563266",
+            "status_raw": "0"
+          }
+        ]
+      }
+    ]
+  }
 }
