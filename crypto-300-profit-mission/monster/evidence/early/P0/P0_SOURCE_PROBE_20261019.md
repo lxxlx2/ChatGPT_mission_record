@@ -2,7 +2,7 @@
 
 ## 2026-10-22：前向本地时钟证据试验——离线原型已入Git，未运行Mac
 
-依据用户同意继续**准备**前向只读验证、未授权后台运行/生产部署的范围，提交新[ADR-002](../../adr/ADR-002-forward-only-observation-pilot-20261022.md)，**只为此项新增研究路径记录边界**，不取代ADR-001或历史P0冻结24/30、18/30门槛。原2025-07-01 BSC V2 30例、Four.meme 538例、当前source-stop`2026-11-02`仍未修改。新工具不是新Stage、自动买币信号或P1模型。
+依据用户同意继续**准备**前向只读验证、未授权后台运行/生产部署的范围，提交新[ADR-002](../../../adr/ADR-002-forward-only-observation-pilot-20261022.md)，**只为此项新增研究路径记录边界**，不取代ADR-001或历史P0冻结24/30、18/30门槛。原2025-07-01 BSC V2 30例、Four.meme 538例、当前source-stop`2026-11-02`仍未修改。新工具不是新Stage、自动买币信号或P1模型。
 
 **真正实现**：`local-agent/mission_agent/early/forward_observation.py`，复用已存在的`fourmeme_index_source_probe.JsonRPC`（HTTPS/无重定向、禁回显秘钥、限制响应大小），一次`--manual-once`调用只采两个BSC主网`eth_blockNumber`快照与对应区块头、同块`PancakeSwap V2 Factory allPairsLength`；若Factory索引增长，至多验证3个`allPairs(index)`池地址、`token0/token1`。请求白名单仅`eth_chainId/eth_blockNumber/eth_getBlockByNumber/eth_call`，最多20个RPC，快照间隔0–3秒；相邻父hash、重读原区块hash与索引单调性失败即生成`failure.json`并拒绝标`manifest.json`成功。新目录仅写一次，逐次保存原始RPC响应体字节、SHA256、调用开始UTC、处理完成UTC与单调耗时；输出不含完整RPC URL/API key，不生成交易、不调钱包、不设购买名义额。
 
