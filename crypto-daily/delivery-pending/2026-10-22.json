@@ -1,0 +1,946 @@
+{
+  "schema": "CRYPTO_DAILY_EDITORIAL_MANIFEST_V1",
+  "report_date": "2026-10-22",
+  "body": "Crypto Daily Brief｜2026-10-22\nAsia/Bangkok。Binance现货滚动24小时快照截至2026-10-22 09:24:42，基金流量按美国10月21日交易日，新闻按各自实际发布日期。来源缺报不视为零；此报告不代表个人账户持仓或资格。\n\n一、今日最重要的5件事\n（1）美国OCC于10月21日发布实施GENIUS法案的支付稳定币最终规则，涵盖储备、赎回、托管与监管；生效日为2027年1月18日，反洗钱与制裁细则另行制定。来源：OCC官方。\n（2）Grayscale于10月21日宣布将实物申购扩展至10只加密投资产品，符合资格的投资者可用底层代币换取产品份额，最低门槛约8.03万至36.48万美元；不等于所有散户可直接申购。来源：Grayscale发行方公告。\n\n二、BTC/ETH/SOL及主要资产\n（1）BTC/USDT：83,000.01美元，滚动24小时+0.307%，区间82,635.32至84,898.00，该交易对24小时成交额约15.09亿美元；报价截至曼谷2026-10-22 09:24:42。来源：Binance官方现货API。\n（2）ETH/USDT：2,444.66美元，滚动24小时-0.096%，区间2,436.87至2,526.62，该交易对24小时成交额约8.72亿美元；报价截至曼谷2026-10-22 09:24:38。来源：Binance官方现货API。\n（3）SOL/USDT：105.58美元，滚动24小时-0.621%，区间105.35至109.20，该交易对24小时成交额约2.05亿美元；报价截至曼谷2026-10-22 09:24:42。来源：Binance官方现货API。\n（4）BNB/USDT：741.31美元，24小时+0.101%，高低751.86 / 739.89美元，24小时计价成交额约85.47百万美元。来源：Binance官方现货API。\n（5）HYPE/USDT：79.67美元，24小时-2.365%，高低82.54 / 79.50美元，24小时计价成交额约45.27百万美元。来源：Binance官方现货API。\n（6）ZEC/USDT：1,297.14美元，24小时+2.678%，高低1,368.40 / 1,250.66美元，24小时计价成交额约243.92百万美元。来源：Binance官方现货API。\n\n三、二级市场剧烈波动与持续趋势\n（1）Binance USDⓈ-M永续单点未平仓量：BTC 93,980.458 BTC、ETH 2,259,301.692 ETH，观测于曼谷2026-10-22 09:24:39。这是合约数量，不能由单点OI推断净多头增加、资金流入或爆仓金额。来源：Binance Futures官方API。\n（2）Binance公告称美国一家夜间交易ATS在10月21日03:46至06:30 UTC发生间歇连接故障，因此在08:00 UTC的美股标的TradFi永续资金费率计算中剔除受影响时段的溢价指数。属于已发生的计价调整，不能据此推断加密现货遭攻击。来源：Binance官方。\n\n四、监管与政策\n（1）OCC正式文本明确新规2027年1月18日生效，适用受其管辖的合格支付稳定币发行机构，包含储备资产、赎回、风险管理、审计、托管及境外发行商监管。银行保密法、AML和OFAC部分将另行协调制定，不应误称本次已全部落地。来源：OCC 2026-92及Bulletin 2026-50。\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）美国10月21日BTC现货ETF，Farside当前显示已报列合计净流入2.898亿美元，其中FBTC +2.127亿、BITB +1,920万、ARKB +980万、GBTC +3,260万；IBIT列仍为缺失，合计暂不可认作最终全市场净流入。来源：Farside当日基金表。\n（2）10月21日ETH现货ETF，Farside已报部分合计+4,420万美元，包含FETH +1,300万、Grayscale ETH +2,810万；ETHA和ETHB未报数，不能将缺失视为零或认定ETH ETF已经整体净流入。来源：Farside。\n（3）10月21日SOL现货ETF，Farside显示MSOL净流入60万美元，其余已列基金为0，汇总+60万美元；10月20日为净流出260万美元。单日小幅回流不构成持续资金趋势确认。来源：Farside。\n（4）Grayscale 10月21日发行方公告列出10只实物申购产品，含BTC、ETH、SOL、HYPE、ZEC等，最低申购门槛GSOL约80,300美元、BTC Mini约364,800美元；这是产品申购渠道变化，未提供当日实际代币净买入量。来源：Grayscale。\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n（1）Zcash开发仓库于10月21日合并NU7主网激活高度3,543,405的ZIP PR #1405；计划将目标区块间隔由75秒缩短至25秒，并修改手续费储备等共识规则。具体日历日期受实际出块影响，节点运营者应核查兼容版本。来源：zcash/zips原始合并PR。\n（2）BitGo 10月21日正式成立BitGo Labs，先从AI与加密支付/金融基础设施交叉领域推进，并公布首个Gokubu应用。属于公司产品布局，尚不能由发布会推导代币发行、空投或营收。来源：BitGo投资者关系公告。\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n（1）Binance于10月21日公布RLUSD持仓活动，10月23日00:00 UTC至11月20日00:00 UTC，合格用户共同分配60万XRP；参与须符合KYC、地区与账户限制并在活动期确认参加。日最低余额按每小时快照计算，最低0.01 RLUSD，实际收益率待后续公布，不能把公告示例APR当作承诺。来源：Binance官方。\n（2）NeoSoul DNA于10月20日另获Binance Alpha交易竞赛：首期10月20日13:00 UTC至27日13:00 UTC，第二期至11月3日13:00 UTC；须先在App活动页点Join，只有之后的合规买入成交量计入排名，前2,000名分享51万DNA（每人255枚）。这与此前尚未核实的StandX社区专项分配是不同活动，不代表个人已有补偿资格。来源：Binance官方。\n\n八、Early / Meme / NFT / 新生态热点\n无高置信新增。\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n无高置信新增。\n\n十、全球局势与跨市场冲击\n（1）10月21日美股收盘，道指+0.69%、标普500 +0.58%、纳指+1.05%，SpaceX与Super Micro相关业绩提振AI风险偏好。美股上行与加密价格短线同向并不证明存在直接因果；后续仍需看美债收益率与流动性。来源：Reuters。\n（2）10月21日Brent结算约108.82美元/桶，WTI约97.15美元/桶；地缘油运风险仍与潜在和谈消息交错。高油价可能通过通胀预期影响实际利率与风险资产折现，方向需结合后续通胀和利率数据判断。来源：Reuters。\n\n十一、未来24至72小时催化\n（1）10月23日09:00 UTC（曼谷16:00），Binance将自动结算并下架PTBUSDT、MITOUSDT U本位永续，10月21日09:30 UTC起已限制新开非只减仓订单；持有相关合约者应在截止前自行核查仓位与强平风险。来源：Binance官方。\n\n十二、持续趋势与跨市场机会观察清单\n（1）ZEC/USDT截至曼谷2026-10-22 09:24:42报1,297.14美元，相比Binance 10月15日UTC日线收盘1,221.40约+5.90%，相比9月22日收盘1,630.05约-20.65%。短线反弹与较长窗口回撤并存；观察NU7节点升级进度及价格是否守住最近24小时低点1,250.66，跌破则短线强势假设失效。来源：Binance日线与现货API、zcash/zips。\n\n十三、今日行动与风险结论\n（1）若使用Binance全仓或组合保证金，10月23日06:00 UTC（曼谷13:00）将调整POL、SHIB、XLM抵押率50%→60%，COW、NEXO、RVN、SAND 10%→30%，部分PM Pro档位同步调整；提前核对统一维持保证金率uniMMR，避免抵押参数变化导致非预期借贷/转出额度与清算风险。未确认用户实际持有这些保证金仓位。来源：Binance官方。\n\n主要英文一手来源：OCC、Grayscale发行公告、Farside BTC/ETH/SOL、Binance官方现货/期货与活动公告、zcash/zips PR #1405、BitGo投资者关系。相关新闻背景：Reuters。原始URL及检查记录保留在Git待发清单。\n",
+  "items": [
+    {
+      "section": 1,
+      "item_number": 1,
+      "event_key": "occ:genius-final-rule:2026-10-21",
+      "role": "highlight",
+      "text": "美国OCC于10月21日发布实施GENIUS法案的支付稳定币最终规则，涵盖储备、赎回、托管与监管；生效日为2027年1月18日，反洗钱与制裁细则另行制定。来源：OCC官方。"
+    },
+    {
+      "section": 1,
+      "item_number": 2,
+      "event_key": "grayscale:in-kind-ten-products:2026-10-21",
+      "role": "highlight",
+      "text": "Grayscale于10月21日宣布将实物申购扩展至10只加密投资产品，符合资格的投资者可用底层代币换取产品份额，最低门槛约8.03万至36.48万美元；不等于所有散户可直接申购。来源：Grayscale发行方公告。"
+    },
+    {
+      "section": 2,
+      "item_number": 1,
+      "event_key": "binance:spot:BTC:2026-10-22T02:24",
+      "role": "detail",
+      "text": "BTC/USDT：83,000.01美元，滚动24小时+0.307%，区间82,635.32至84,898.00，该交易对24小时成交额约15.09亿美元；报价截至曼谷2026-10-22 09:24:42。来源：Binance官方现货API。"
+    },
+    {
+      "section": 2,
+      "item_number": 2,
+      "event_key": "binance:spot:ETH:2026-10-22T02:24",
+      "role": "detail",
+      "text": "ETH/USDT：2,444.66美元，滚动24小时-0.096%，区间2,436.87至2,526.62，该交易对24小时成交额约8.72亿美元；报价截至曼谷2026-10-22 09:24:38。来源：Binance官方现货API。"
+    },
+    {
+      "section": 2,
+      "item_number": 3,
+      "event_key": "binance:spot:SOL:2026-10-22T02:24",
+      "role": "detail",
+      "text": "SOL/USDT：105.58美元，滚动24小时-0.621%，区间105.35至109.20，该交易对24小时成交额约2.05亿美元；报价截至曼谷2026-10-22 09:24:42。来源：Binance官方现货API。"
+    },
+    {
+      "section": 2,
+      "item_number": 4,
+      "event_key": "binance:spot:BNB:2026-10-22T02:24",
+      "role": "detail",
+      "text": "BNB/USDT：741.31美元，24小时+0.101%，高低751.86 / 739.89美元，24小时计价成交额约85.47百万美元。来源：Binance官方现货API。"
+    },
+    {
+      "section": 2,
+      "item_number": 5,
+      "event_key": "binance:spot:HYPE:2026-10-22T02:24",
+      "role": "detail",
+      "text": "HYPE/USDT：79.67美元，24小时-2.365%，高低82.54 / 79.50美元，24小时计价成交额约45.27百万美元。来源：Binance官方现货API。"
+    },
+    {
+      "section": 2,
+      "item_number": 6,
+      "event_key": "binance:spot:ZEC:2026-10-22T02:24",
+      "role": "detail",
+      "text": "ZEC/USDT：1,297.14美元，24小时+2.678%，高低1,368.40 / 1,250.66美元，24小时计价成交额约243.92百万美元。来源：Binance官方现货API。"
+    },
+    {
+      "section": 3,
+      "item_number": 1,
+      "event_key": "binance:futures-oi:2026-10-22T02:24",
+      "role": "detail",
+      "text": "Binance USDⓈ-M永续单点未平仓量：BTC 93,980.458 BTC、ETH 2,259,301.692 ETH，观测于曼谷2026-10-22 09:24:39。这是合约数量，不能由单点OI推断净多头增加、资金流入或爆仓金额。来源：Binance Futures官方API。"
+    },
+    {
+      "section": 3,
+      "item_number": 2,
+      "event_key": "binance:tradfi-perp-ats-adjustment:2026-10-21",
+      "role": "detail",
+      "text": "Binance公告称美国一家夜间交易ATS在10月21日03:46至06:30 UTC发生间歇连接故障，因此在08:00 UTC的美股标的TradFi永续资金费率计算中剔除受影响时段的溢价指数。属于已发生的计价调整，不能据此推断加密现货遭攻击。来源：Binance官方。"
+    },
+    {
+      "section": 4,
+      "item_number": 1,
+      "event_key": "occ:genius-final-rule:2026-10-21",
+      "role": "detail",
+      "text": "OCC正式文本明确新规2027年1月18日生效，适用受其管辖的合格支付稳定币发行机构，包含储备资产、赎回、风险管理、审计、托管及境外发行商监管。银行保密法、AML和OFAC部分将另行协调制定，不应误称本次已全部落地。来源：OCC 2026-92及Bulletin 2026-50。"
+    },
+    {
+      "section": 5,
+      "item_number": 1,
+      "event_key": "farside:btc-etf:2026-10-21",
+      "role": "detail",
+      "text": "美国10月21日BTC现货ETF，Farside当前显示已报列合计净流入2.898亿美元，其中FBTC +2.127亿、BITB +1,920万、ARKB +980万、GBTC +3,260万；IBIT列仍为缺失，合计暂不可认作最终全市场净流入。来源：Farside当日基金表。"
+    },
+    {
+      "section": 5,
+      "item_number": 2,
+      "event_key": "farside:eth-etf:2026-10-21",
+      "role": "detail",
+      "text": "10月21日ETH现货ETF，Farside已报部分合计+4,420万美元，包含FETH +1,300万、Grayscale ETH +2,810万；ETHA和ETHB未报数，不能将缺失视为零或认定ETH ETF已经整体净流入。来源：Farside。"
+    },
+    {
+      "section": 5,
+      "item_number": 3,
+      "event_key": "farside:sol-etf:2026-10-21",
+      "role": "detail",
+      "text": "10月21日SOL现货ETF，Farside显示MSOL净流入60万美元，其余已列基金为0，汇总+60万美元；10月20日为净流出260万美元。单日小幅回流不构成持续资金趋势确认。来源：Farside。"
+    },
+    {
+      "section": 5,
+      "item_number": 4,
+      "event_key": "grayscale:in-kind-ten-products:2026-10-21",
+      "role": "detail",
+      "text": "Grayscale 10月21日发行方公告列出10只实物申购产品，含BTC、ETH、SOL、HYPE、ZEC等，最低申购门槛GSOL约80,300美元、BTC Mini约364,800美元；这是产品申购渠道变化，未提供当日实际代币净买入量。来源：Grayscale。"
+    },
+    {
+      "section": 6,
+      "item_number": 1,
+      "event_key": "zec:nu7:height-3543405:2026-10-21",
+      "role": "detail",
+      "text": "Zcash开发仓库于10月21日合并NU7主网激活高度3,543,405的ZIP PR #1405；计划将目标区块间隔由75秒缩短至25秒，并修改手续费储备等共识规则。具体日历日期受实际出块影响，节点运营者应核查兼容版本。来源：zcash/zips原始合并PR。"
+    },
+    {
+      "section": 6,
+      "item_number": 2,
+      "event_key": "bitgo:labs-ai-crypto:2026-10-21",
+      "role": "detail",
+      "text": "BitGo 10月21日正式成立BitGo Labs，先从AI与加密支付/金融基础设施交叉领域推进，并公布首个Gokubu应用。属于公司产品布局，尚不能由发布会推导代币发行、空投或营收。来源：BitGo投资者关系公告。"
+    },
+    {
+      "section": 7,
+      "item_number": 1,
+      "event_key": "binance:rlusd-xrp-campaign:2026-10-21",
+      "role": "detail",
+      "text": "Binance于10月21日公布RLUSD持仓活动，10月23日00:00 UTC至11月20日00:00 UTC，合格用户共同分配60万XRP；参与须符合KYC、地区与账户限制并在活动期确认参加。日最低余额按每小时快照计算，最低0.01 RLUSD，实际收益率待后续公布，不能把公告示例APR当作承诺。来源：Binance官方。"
+    },
+    {
+      "section": 7,
+      "item_number": 2,
+      "event_key": "binance:dna-trading-contest:2026-10-20",
+      "role": "detail",
+      "text": "NeoSoul DNA于10月20日另获Binance Alpha交易竞赛：首期10月20日13:00 UTC至27日13:00 UTC，第二期至11月3日13:00 UTC；须先在App活动页点Join，只有之后的合规买入成交量计入排名，前2,000名分享51万DNA（每人255枚）。这与此前尚未核实的StandX社区专项分配是不同活动，不代表个人已有补偿资格。来源：Binance官方。"
+    },
+    {
+      "section": 10,
+      "item_number": 1,
+      "event_key": "us:equity-close:2026-10-21",
+      "role": "detail",
+      "text": "10月21日美股收盘，道指+0.69%、标普500 +0.58%、纳指+1.05%，SpaceX与Super Micro相关业绩提振AI风险偏好。美股上行与加密价格短线同向并不证明存在直接因果；后续仍需看美债收益率与流动性。来源：Reuters。"
+    },
+    {
+      "section": 10,
+      "item_number": 2,
+      "event_key": "oil:brent-wti-close:2026-10-21",
+      "role": "detail",
+      "text": "10月21日Brent结算约108.82美元/桶，WTI约97.15美元/桶；地缘油运风险仍与潜在和谈消息交错。高油价可能通过通胀预期影响实际利率与风险资产折现，方向需结合后续通胀和利率数据判断。来源：Reuters。"
+    },
+    {
+      "section": 11,
+      "item_number": 1,
+      "event_key": "binance:ptb-mito-perp-delist:2026-10-23",
+      "role": "detail",
+      "text": "10月23日09:00 UTC（曼谷16:00），Binance将自动结算并下架PTBUSDT、MITOUSDT U本位永续，10月21日09:30 UTC起已限制新开非只减仓订单；持有相关合约者应在截止前自行核查仓位与强平风险。来源：Binance官方。"
+    },
+    {
+      "section": 12,
+      "item_number": 1,
+      "event_key": "zec:trend:2026-10-22",
+      "role": "detail",
+      "text": "ZEC/USDT截至曼谷2026-10-22 09:24:42报1,297.14美元，相比Binance 10月15日UTC日线收盘1,221.40约+5.90%，相比9月22日收盘1,630.05约-20.65%。短线反弹与较长窗口回撤并存；观察NU7节点升级进度及价格是否守住最近24小时低点1,250.66，跌破则短线强势假设失效。来源：Binance日线与现货API、zcash/zips。"
+    },
+    {
+      "section": 13,
+      "item_number": 1,
+      "event_key": "binance:margin-collateral-ratios:2026-10-23",
+      "role": "detail",
+      "text": "若使用Binance全仓或组合保证金，10月23日06:00 UTC（曼谷13:00）将调整POL、SHIB、XLM抵押率50%→60%，COW、NEXO、RVN、SAND 10%→30%，部分PM Pro档位同步调整；提前核对统一维持保证金率uniMMR，避免抵押参数变化导致非预期借贷/转出额度与清算风险。未确认用户实际持有这些保证金仓位。来源：Binance官方。"
+    }
+  ],
+  "events": [
+    {
+      "event_key": "occ:genius-final-rule:2026-10-21",
+      "material_version": "v1",
+      "kind": "MAJOR_POLICY",
+      "primary_section": 4,
+      "source_url": "https://www.occ.treas.gov/news-issuances/news-releases/2026/nr-occ-2026-92.html",
+      "published_at": "2026-10-21",
+      "actual_delta": "OCC issued final payment stablecoin rule, effective Jan 18 2027",
+      "impact": "MAJOR",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "HIGH",
+      "impact_breadth": "sector-wide",
+      "top5_basis": "The US national bank regulator has issued the final rule for payment-stablecoin issuers, reserve assets, redemption, supervision and custody, changing a major sector-wide compliance framework.",
+      "top5_evidence_url": "https://www.occ.treas.gov/news-issuances/news-releases/2026/nr-occ-2026-92.html"
+    },
+    {
+      "event_key": "grayscale:in-kind-ten-products:2026-10-21",
+      "material_version": "v1",
+      "kind": "INSTITUTIONAL_FLOW",
+      "primary_section": 5,
+      "source_url": "https://www.globenewswire.com/fr/news-release/2026/10/21/3385595/0/en/grayscale-expands-access-to-in-kind-transfers-across-its-digital-asset-investment-platform.html",
+      "published_at": "2026-10-21T09:00:00-04:00",
+      "actual_delta": "Issuer expanded in-kind subscriptions to ten crypto investment products",
+      "impact": "MAJOR",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "HIGH",
+      "impact_breadth": "sector-wide",
+      "top5_basis": "A major US digital-asset manager enabled in-kind contributions across ten separate crypto investment products, a sector-wide institutional access and custody channel change.",
+      "top5_evidence_url": "https://www.globenewswire.com/fr/news-release/2026/10/21/3385595/0/en/grayscale-expands-access-to-in-kind-transfers-across-its-digital-asset-investment-platform.html"
+    },
+    {
+      "event_key": "binance:spot:BTC:2026-10-22T02:24",
+      "material_version": "1792635882003",
+      "kind": "CORE_QUOTE",
+      "primary_section": 2,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-22T02:24:42.003Z",
+      "actual_delta": "Binance spot rolling 24h snapshot BTC",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL",
+      "version": "1792635882003"
+    },
+    {
+      "event_key": "binance:spot:ETH:2026-10-22T02:24",
+      "material_version": "1792635878996",
+      "kind": "CORE_QUOTE",
+      "primary_section": 2,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-22T02:24:38.996Z",
+      "actual_delta": "Binance spot rolling 24h snapshot ETH",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL",
+      "version": "1792635878996"
+    },
+    {
+      "event_key": "binance:spot:SOL:2026-10-22T02:24",
+      "material_version": "1792635882752",
+      "kind": "CORE_QUOTE",
+      "primary_section": 2,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-22T02:24:42.752Z",
+      "actual_delta": "Binance spot rolling 24h snapshot SOL",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL",
+      "version": "1792635882752"
+    },
+    {
+      "event_key": "binance:spot:BNB:2026-10-22T02:24",
+      "material_version": "1792635883064",
+      "kind": "CORE_QUOTE",
+      "primary_section": 2,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-22T02:24:43.064Z",
+      "actual_delta": "Binance 24h quote BNB",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL",
+      "version": "1792635883064"
+    },
+    {
+      "event_key": "binance:spot:HYPE:2026-10-22T02:24",
+      "material_version": "1792635882532",
+      "kind": "CORE_QUOTE",
+      "primary_section": 2,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-22T02:24:42.532Z",
+      "actual_delta": "Binance 24h quote HYPE",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL",
+      "version": "1792635882532"
+    },
+    {
+      "event_key": "binance:spot:ZEC:2026-10-22T02:24",
+      "material_version": "1792635882443",
+      "kind": "CORE_QUOTE",
+      "primary_section": 2,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-22T02:24:42.443Z",
+      "actual_delta": "Binance 24h quote ZEC",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL",
+      "version": "1792635882443"
+    },
+    {
+      "event_key": "binance:futures-oi:2026-10-22T02:24",
+      "material_version": "v1",
+      "kind": "TREND_DERIVATIVES",
+      "primary_section": 3,
+      "source_url": "https://fapi.binance.com/fapi/v1/openInterest",
+      "published_at": "2026-10-22T02:24:39.355Z",
+      "actual_delta": "BTC and ETH futures open interest snapshot",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "binance:tradfi-perp-ats-adjustment:2026-10-21",
+      "material_version": "v1",
+      "kind": "TREND_DERIVATIVES",
+      "primary_section": 3,
+      "source_url": "https://www.binance.com/en/support/announcement/detail/0308cba2eb53446e8207e7b227106fc5",
+      "published_at": "2026-10-21T07:17:00Z",
+      "actual_delta": "Binance excluded impacted premium index window from TradFi perp funding",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "zec:nu7:height-3543405:2026-10-21",
+      "material_version": "v1",
+      "kind": "MAJOR_INFRASTRUCTURE",
+      "primary_section": 6,
+      "source_url": "https://github.com/zcash/zips/pull/1405",
+      "published_at": "2026-10-21",
+      "actual_delta": "NU7 activation height 3543405 merged into Zcash ZIP main",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "HIGH"
+    },
+    {
+      "event_key": "bitgo:labs-ai-crypto:2026-10-21",
+      "material_version": "v1",
+      "kind": "MAJOR_INFRASTRUCTURE",
+      "primary_section": 6,
+      "source_url": "https://investors.bitgo.com/news/news-details/2026/BitGo-Labs-Launches-to-Innovate-Cryptos-Next-Breakout-Applications/default.aspx",
+      "published_at": "2026-10-21",
+      "actual_delta": "BitGo launched BitGo Labs and Gokubu AI/crypto application",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "farside:btc-etf:2026-10-21",
+      "material_version": "v1",
+      "kind": "INSTITUTIONAL_FLOW",
+      "primary_section": 5,
+      "source_url": "https://farside.co.uk/btc/",
+      "published_at": "2026-10-21",
+      "actual_delta": "Farside BTC ETF Oct21 partial sum 289.8m, IBIT missing",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "farside:eth-etf:2026-10-21",
+      "material_version": "v1",
+      "kind": "INSTITUTIONAL_FLOW",
+      "primary_section": 5,
+      "source_url": "https://farside.co.uk/eth/",
+      "published_at": "2026-10-21",
+      "actual_delta": "Farside ETH ETF Oct21 partial 44.2m, ETHA and ETHB missing",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "farside:sol-etf:2026-10-21",
+      "material_version": "v1",
+      "kind": "INSTITUTIONAL_FLOW",
+      "primary_section": 5,
+      "source_url": "https://farside.co.uk/sol/",
+      "published_at": "2026-10-21",
+      "actual_delta": "Farside SOL ETF Oct21 0.6m MSOL and other reported zero",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "binance:rlusd-xrp-campaign:2026-10-21",
+      "material_version": "v1",
+      "kind": "TGE_PUBLIC_SALE",
+      "primary_section": 7,
+      "source_url": "https://www.binance.com/en/support/announcement/detail/c453734d8dcc42d9af49c8f0627d67f7",
+      "published_at": "2026-10-21",
+      "actual_delta": "Binance announced RLUSD balance campaign sharing 600k XRP from Oct23",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "binance:dna-trading-contest:2026-10-20",
+      "material_version": "v1",
+      "kind": "TGE_PUBLIC_SALE",
+      "primary_section": 7,
+      "source_url": "https://www.binance.com/en/support/announcement/detail/be80d09944a54957986154f4b990bb6f",
+      "published_at": "2026-10-20",
+      "actual_delta": "NeoSoul DNA new Binance Alpha trading contest with join requirement",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "us:equity-close:2026-10-21",
+      "material_version": "v1",
+      "kind": "MACRO_CROSS_MARKET",
+      "primary_section": 10,
+      "source_url": "https://www.reuters.com/legal/transactional/nasdaq-futures-lead-gains-spacex-super-micro-results-lift-ai-trade-2026-10-21/",
+      "published_at": "2026-10-21",
+      "actual_delta": "US stocks closed higher on AI earnings",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "oil:brent-wti-close:2026-10-21",
+      "material_version": "v1",
+      "kind": "MACRO_CROSS_MARKET",
+      "primary_section": 10,
+      "source_url": "https://www.reuters.com/business/energy/oil-rises-middle-east-supply-worries-2026-10-21/",
+      "published_at": "2026-10-21",
+      "actual_delta": "Brent closed 108.82, WTI 97.15 amid geopolitics",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "binance:ptb-mito-perp-delist:2026-10-23",
+      "material_version": "v1",
+      "kind": "FUTURE_CATALYST",
+      "primary_section": 11,
+      "source_url": "https://www.binance.com/en-AE/support/announcement/detail/c30e6891afa54651ba950f8af144f861",
+      "published_at": "2026-10-21",
+      "actual_delta": "PTBUSDT and MITOUSDT perpetuals auto settle Oct23 09:00 UTC",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "zec:trend:2026-10-22",
+      "material_version": "v1",
+      "kind": "PERSISTENT_WATCH",
+      "primary_section": 12,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-22T02:24:42.443Z",
+      "actual_delta": "ZEC 7d +5.9pct vs Oct15 UTC close, 30d -20.6pct vs Sep22 close",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "binance:margin-collateral-ratios:2026-10-23",
+      "material_version": "v1",
+      "kind": "ACTION_CONCLUSION",
+      "primary_section": 13,
+      "source_url": "https://www.binance.com/en/support/announcement/detail/7d76e6a921024e09a91523f983503014",
+      "published_at": "2026-10-20",
+      "actual_delta": "Binance cross/portfolio margin collateral ratios change Oct23 06:00 UTC",
+      "impact": "LIMITED",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "NORMAL"
+    }
+  ],
+  "source_receipts": [
+    {
+      "lane": "spot",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "query_or_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "status": "checked",
+      "result_urls": [
+        "https://api.binance.com/api/v3/ticker/24hr"
+      ]
+    },
+    {
+      "lane": "derivatives",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "query_or_url": "https://fapi.binance.com/fapi/v1/openInterest",
+      "status": "checked",
+      "result_urls": [
+        "https://fapi.binance.com/fapi/v1/openInterest"
+      ]
+    },
+    {
+      "lane": "capital_flows",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "query_or_url": "https://farside.co.uk/btc/",
+      "status": "checked",
+      "result_urls": [
+        "https://farside.co.uk/btc/"
+      ]
+    },
+    {
+      "lane": "onchain",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "query_or_url": "https://info.arkm.com/research",
+      "status": "source_gap",
+      "error": "Indexed Arkham research and BTC whale searches did not establish complete last-24h primary labelled BTC TX discovery; no new TXID independently decoded"
+    },
+    {
+      "lane": "policy",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "query_or_url": "https://www.occ.treas.gov/news-issuances/news-releases/2026/nr-occ-2026-92.html",
+      "status": "checked",
+      "result_urls": [
+        "https://www.occ.treas.gov/news-issuances/news-releases/2026/nr-occ-2026-92.html"
+      ]
+    },
+    {
+      "lane": "infrastructure",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "query_or_url": "https://investors.bitgo.com/news/news-details/2026/BitGo-Labs-Launches-to-Innovate-Cryptos-Next-Breakout-Applications/default.aspx",
+      "status": "checked",
+      "result_urls": [
+        "https://investors.bitgo.com/news/news-details/2026/BitGo-Labs-Launches-to-Innovate-Cryptos-Next-Breakout-Applications/default.aspx"
+      ]
+    },
+    {
+      "lane": "tge",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "query_or_url": "https://www.binance.com/en/support/announcement/detail/c453734d8dcc42d9af49c8f0627d67f7",
+      "status": "checked",
+      "result_urls": [
+        "https://www.binance.com/en/support/announcement/detail/c453734d8dcc42d9af49c8f0627d67f7"
+      ]
+    },
+    {
+      "lane": "early_nft",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "query_or_url": "https://jack.art/exchange/",
+      "status": "source_gap",
+      "error": "Live auction/current project state inconsistent across cached dynamic page renders; direct X social source not readable; no verified new BALANCE action"
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "query_or_url": "https://www.binance.com/en/support/announcement/detail/0308cba2eb53446e8207e7b227106fc5",
+      "status": "checked",
+      "result_urls": [
+        "https://www.binance.com/en/support/announcement/detail/0308cba2eb53446e8207e7b227106fc5"
+      ]
+    },
+    {
+      "lane": "macro",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "query_or_url": "https://www.reuters.com/legal/transactional/nasdaq-futures-lead-gains-spacex-super-micro-results-lift-ai-trade-2026-10-21/",
+      "status": "checked",
+      "result_urls": [
+        "https://www.reuters.com/legal/transactional/nasdaq-futures-lead-gains-spacex-super-micro-results-lift-ai-trade-2026-10-21/"
+      ]
+    },
+    {
+      "lane": "forward_catalysts",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "query_or_url": "https://www.binance.com/en-AE/support/announcement/detail/c30e6891afa54651ba950f8af144f861",
+      "status": "checked",
+      "result_urls": [
+        "https://www.binance.com/en-AE/support/announcement/detail/c30e6891afa54651ba950f8af144f861"
+      ]
+    }
+  ],
+  "market_core": [
+    {
+      "symbol": "BTC",
+      "price": 83000.01,
+      "observed_at": "2026-10-22T02:24:42.003Z",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr"
+    },
+    {
+      "symbol": "ETH",
+      "price": 2444.66,
+      "observed_at": "2026-10-22T02:24:38.996Z",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr"
+    },
+    {
+      "symbol": "SOL",
+      "price": 105.58,
+      "observed_at": "2026-10-22T02:24:42.752Z",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr"
+    }
+  ],
+  "empty_section_reasons": [
+    {
+      "section": 8,
+      "reason": "Jack Butcher official Exchange page produced inconsistent dynamic live figures and no separately verified new NFT mint or auction entitlement; therefore no reliable new user-visible item.",
+      "checked_lanes": [
+        "early_nft"
+      ]
+    },
+    {
+      "section": 9,
+      "reason": "Targeted October 21 crypto security, wallet and exchange searches plus official venue notice returned no independently confirmed new exploit within the sampled source window; broader specialist/X coverage remains incomplete.",
+      "checked_lanes": [
+        "security"
+      ]
+    }
+  ],
+  "previous_events": [
+    {
+      "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
+      "material_version": "incident_reported_2026-10-20_v1",
+      "aliases": [
+        "Qubic"
+      ]
+    },
+    {
+      "event_key": "cysic:bridge_mint_exploit:2026-10-17",
+      "material_version": "incident_reported_2026-10-20_v1",
+      "aliases": [
+        "Cysic"
+      ]
+    },
+    {
+      "event_key": "jpm:jpm-coin-ethereum-expansion:2026-10-19",
+      "material_version": "issuer_launch_2026-10-19",
+      "aliases": [
+        "JPMD",
+        "JPM Coin"
+      ]
+    },
+    {
+      "event_key": "bitget:restricted-counterparty-htx:2026-10-16",
+      "material_version": "bitget_delta_2026-10-16",
+      "aliases": [
+        "HTX",
+        "Huobi Global SA"
+      ]
+    },
+    {
+      "event_key": "cambria:blast-abstract-transition:2026-10-19",
+      "material_version": "secondary_unverified_2026-10-17",
+      "aliases": [
+        "Cambria"
+      ]
+    },
+    {
+      "event_key": "neosoul:dna-standx-beneficiary:2026-10-15",
+      "material_version": "secondary_unverified_2026-10-15",
+      "aliases": [
+        "NeoSoul"
+      ]
+    },
+    {
+      "event_key": "btc:clifton-collins:2026-10-20:tranche-5",
+      "material_version": "tx:eb0bde50049e924590a1812af2d2699c13d513415d3f03bbe3d10f316b3d6756",
+      "aliases": [
+        "Clifton Collins"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "lane": "labeled_btc",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "status": "source_gap",
+      "source_url": "https://info.arkm.com/research"
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "status": "checked",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/0308cba2eb53446e8207e7b227106fc5"
+    },
+    {
+      "lane": "cex_policy",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "status": "checked",
+      "source_url": "https://www.bitget.com/support/articles/12560603892077"
+    },
+    {
+      "lane": "etf_flows",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "status": "checked",
+      "source_url": "https://farside.co.uk/btc/"
+    },
+    {
+      "lane": "tge_rights",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "status": "checked",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/c453734d8dcc42d9af49c8f0627d67f7"
+    },
+    {
+      "lane": "nft_social",
+      "checked_at": "2026-10-22T02:24:42.483Z",
+      "status": "source_gap",
+      "source_url": "https://jack.art/exchange/"
+    }
+  ],
+  "candidates": [
+    {
+      "event_key": "occ:genius-final-rule:2026-10-21",
+      "family_key": "occ:genius-final-rule",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://www.occ.treas.gov/news-issuances/news-releases/2026/nr-occ-2026-92.html",
+      "published_at": "2026-10-21",
+      "material_delta": "OCC issued final payment stablecoin rule, effective Jan 18 2027",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "grayscale:in-kind-ten-products:2026-10-21",
+      "family_key": "grayscale:in-kind-ten-products",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://www.globenewswire.com/fr/news-release/2026/10/21/3385595/0/en/grayscale-expands-access-to-in-kind-transfers-across-its-digital-asset-investment-platform.html",
+      "published_at": "2026-10-21T09:00:00-04:00",
+      "material_delta": "Issuer expanded in-kind subscriptions to ten crypto investment products",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "binance:spot:BTC:2026-10-22T02:24",
+      "family_key": "binance:spot",
+      "material_version": "1792635882003",
+      "decision": "include",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-22T02:24:42.003Z",
+      "material_delta": "Binance spot rolling 24h snapshot BTC",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "binance:spot:ETH:2026-10-22T02:24",
+      "family_key": "binance:spot",
+      "material_version": "1792635878996",
+      "decision": "include",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-22T02:24:38.996Z",
+      "material_delta": "Binance spot rolling 24h snapshot ETH",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "binance:spot:SOL:2026-10-22T02:24",
+      "family_key": "binance:spot",
+      "material_version": "1792635882752",
+      "decision": "include",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-22T02:24:42.752Z",
+      "material_delta": "Binance spot rolling 24h snapshot SOL",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "binance:spot:BNB:2026-10-22T02:24",
+      "family_key": "binance:spot",
+      "material_version": "1792635883064",
+      "decision": "include",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-22T02:24:43.064Z",
+      "material_delta": "Binance 24h quote BNB",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "binance:spot:HYPE:2026-10-22T02:24",
+      "family_key": "binance:spot",
+      "material_version": "1792635882532",
+      "decision": "include",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-22T02:24:42.532Z",
+      "material_delta": "Binance 24h quote HYPE",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "binance:spot:ZEC:2026-10-22T02:24",
+      "family_key": "binance:spot",
+      "material_version": "1792635882443",
+      "decision": "include",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-22T02:24:42.443Z",
+      "material_delta": "Binance 24h quote ZEC",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "binance:futures-oi:2026-10-22T02:24",
+      "family_key": "binance:futures-oi",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://fapi.binance.com/fapi/v1/openInterest",
+      "published_at": "2026-10-22T02:24:39.355Z",
+      "material_delta": "BTC and ETH futures open interest snapshot",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "binance:tradfi-perp-ats-adjustment:2026-10-21",
+      "family_key": "binance:tradfi-perp-ats-adjustment",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/0308cba2eb53446e8207e7b227106fc5",
+      "published_at": "2026-10-21T07:17:00Z",
+      "material_delta": "Binance excluded impacted premium index window from TradFi perp funding",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "zec:nu7:height-3543405:2026-10-21",
+      "family_key": "zec:nu7",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://github.com/zcash/zips/pull/1405",
+      "published_at": "2026-10-21",
+      "material_delta": "NU7 activation height 3543405 merged into Zcash ZIP main",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "bitgo:labs-ai-crypto:2026-10-21",
+      "family_key": "bitgo:labs-ai-crypto",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://investors.bitgo.com/news/news-details/2026/BitGo-Labs-Launches-to-Innovate-Cryptos-Next-Breakout-Applications/default.aspx",
+      "published_at": "2026-10-21",
+      "material_delta": "BitGo launched BitGo Labs and Gokubu AI/crypto application",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "farside:btc-etf:2026-10-21",
+      "family_key": "farside:btc-etf",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://farside.co.uk/btc/",
+      "published_at": "2026-10-21",
+      "material_delta": "Farside BTC ETF Oct21 partial sum 289.8m, IBIT missing",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "farside:eth-etf:2026-10-21",
+      "family_key": "farside:eth-etf",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://farside.co.uk/eth/",
+      "published_at": "2026-10-21",
+      "material_delta": "Farside ETH ETF Oct21 partial 44.2m, ETHA and ETHB missing",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "farside:sol-etf:2026-10-21",
+      "family_key": "farside:sol-etf",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://farside.co.uk/sol/",
+      "published_at": "2026-10-21",
+      "material_delta": "Farside SOL ETF Oct21 0.6m MSOL and other reported zero",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "binance:rlusd-xrp-campaign:2026-10-21",
+      "family_key": "binance:rlusd-xrp-campaign",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/c453734d8dcc42d9af49c8f0627d67f7",
+      "published_at": "2026-10-21",
+      "material_delta": "Binance announced RLUSD balance campaign sharing 600k XRP from Oct23",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "binance:dna-trading-contest:2026-10-20",
+      "family_key": "binance:dna-trading-contest",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/be80d09944a54957986154f4b990bb6f",
+      "published_at": "2026-10-20",
+      "material_delta": "NeoSoul DNA new Binance Alpha trading contest with join requirement",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "us:equity-close:2026-10-21",
+      "family_key": "us:equity-close",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://www.reuters.com/legal/transactional/nasdaq-futures-lead-gains-spacex-super-micro-results-lift-ai-trade-2026-10-21/",
+      "published_at": "2026-10-21",
+      "material_delta": "US stocks closed higher on AI earnings",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "oil:brent-wti-close:2026-10-21",
+      "family_key": "oil:brent-wti-close",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://www.reuters.com/business/energy/oil-rises-middle-east-supply-worries-2026-10-21/",
+      "published_at": "2026-10-21",
+      "material_delta": "Brent closed 108.82, WTI 97.15 amid geopolitics",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "binance:ptb-mito-perp-delist:2026-10-23",
+      "family_key": "binance:ptb-mito-perp-delist",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://www.binance.com/en-AE/support/announcement/detail/c30e6891afa54651ba950f8af144f861",
+      "published_at": "2026-10-21",
+      "material_delta": "PTBUSDT and MITOUSDT perpetuals auto settle Oct23 09:00 UTC",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "zec:trend:2026-10-22",
+      "family_key": "zec:trend",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-22T02:24:42.443Z",
+      "material_delta": "ZEC 7d +5.9pct vs Oct15 UTC close, 30d -20.6pct vs Sep22 close",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "binance:margin-collateral-ratios:2026-10-23",
+      "family_key": "binance:margin-collateral-ratios",
+      "material_version": "v1",
+      "decision": "include",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/7d76e6a921024e09a91523f983503014",
+      "published_at": "2026-10-20",
+      "material_delta": "Binance cross/portfolio margin collateral ratios change Oct23 06:00 UTC",
+      "reason": "New source fact or new date-stamped market observation"
+    },
+    {
+      "event_key": "btc:clifton-collins:2026-10-20:tranche-5",
+      "family_key": "btc:clifton-collins",
+      "material_version": "tx:eb0bde50049e924590a1812af2d2699c13d513415d3f03bbe3d10f316b3d6756",
+      "decision": "exclude",
+      "source_url": "https://info.arkm.com/research/clifton-collins-fifth-500-btc-40m-transfer-from-drug-dealers-lost-stack",
+      "published_at": "2026-10-20",
+      "material_delta": "none since 2026-10-21 corrected report",
+      "reason": "Already sent and read back in corrected Gmail 1a15c6d25715d6ca; no distinct new TXID verified"
+    }
+  ],
+  "internal_notes": {
+    "checked_at": "2026-10-22T02:24:42.483Z",
+    "source_gaps": [
+      "onchain",
+      "early_nft"
+    ],
+    "missing_08_prebuild": true,
+    "not_claiming_exhaustive_coverage": true,
+    "previous_sent_last_7_days_checked": true,
+    "existing_tge_known_events_checked": true,
+    "old_space_surf_standx_qubic_cysic_jpmd_suppressed": true,
+    "code_gate_runtime": "NOT_EXECUTED_YET_CI_PENDING",
+    "primary_rules_blob_sha": "df26ea064cc6feae99e345f6efaf402485b0482c",
+    "pipeline_contract_blob_sha": "1b3efb8943786d48c4cf370e17bebacc6978c5f0"
+  }
+}
