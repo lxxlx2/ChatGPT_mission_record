@@ -65,3 +65,17 @@ test('BALANCE Early project in public-sale section without separate CCA event fa
  });
  assert.ok(r.errors.some(e=>e.startsWith('WRONG_PRIMARY_SECTION:balance-project')));
 });
+
+test('two independently checked ETF receipts are accepted within same coverage lane',()=>{
+  const r=run(x=>{x.source_receipts.push({lane:'capital_flows',status:'checked',checked_at:'2026-10-22T02:00:00Z',query_or_url:'https://farside.co.uk/eth/',result_urls:['https://farside.co.uk/eth/']})});
+  assert.equal(r.passed,true);
+});
+test('one verified security receipt plus one inaccessible specialist source is honest partial, not a hard fail',()=>{
+  const r=run(x=>{x.source_receipts.push({lane:'security',status:'source_gap',checked_at:'2026-10-22T02:00:00Z',query_or_url:'English X specialist security source',error:'HTTP_403'})});
+  assert.equal(r.passed,true);
+  assert.ok(r.warnings.includes('SOURCE_GAP:security'));
+});
+test('malformed additional receipt is never waived by a good receipt in same lane',()=>{
+  const r=run(x=>{x.source_receipts.push({lane:'capital_flows',status:'checked',checked_at:'2026-10-22T02:00:00Z',query_or_url:'https://farside.co.uk/eth/',result_urls:[]})});
+  assert.ok(r.errors.some(x=>x.startsWith('CHECKED_WITHOUT_SOURCE_RESULT')));
+});
