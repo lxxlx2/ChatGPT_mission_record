@@ -1,5 +1,18 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-22：独立PIT代码复核——阻止链下公告携带未来链上时钟
+
+本轮没有扩展事后筛出的5个Four.meme迁池样本，没有重复计算同一30例历史收益，也没有把新源码视为P1通行证。固定原`monster_early_records_v1.schema.json`的`chain_event_at` **可为null**及公共来源分级合同，发现新增的离线`pit_asof.py`存在两项真正影响主线的缺陷：
+
+1. **链下公告的正常缺失时钟：**Alpha/Spot/USD-M的`ANNOUNCED/LISTED`类事件，允许仅有可验证的公告`published_at/available_at`而没有链上事件时间。旧实现无条件解析`chain_event_at`导致输入null时报错。新版为上述明确的链下事件保留null，同时要求真正链上部署、建池、Swap类事件有链上时钟，否则不评分。
+2. **提前公告中的未来链上时间泄漏：**旧实现对`ALPHA_ANNOUNCED`等允许`available_at < chain_event_at`，但仍会将尚未发生的`chain_event_at`字段放进历史`asof`输出。新版只允许返回`chain_event_at <= decision_at`的事件；未来可见时间也会被过滤。必要的`available_at < chain_event_at`链上时间矛盾仍抛错，不得因新过滤逻辑吞掉源数据不一致。
+
+**实际执行，不仅是Git提交：**本次在独立本地Python 3.13.5环境，按GitHub源码逐字建立隔离文件（不连接RPC）；本地`git hash-object`与新远端源码Blob **`8cbf3a0fbde612e6457960a93785ac73cf184666`**相符，测试Blob **`10f8301e46d66d9136f0846b35aa79b8f1f8582c`**相符。运行`python3 -m unittest discover -s /tmp/monster_p0_verify/tests -p 'test_monster_pit_asof.py' -v`：**Ran 24 tests, OK，24/24 PASS，0 FAIL/ERROR/SKIP**。新增4项验证链下null时钟、未来链上事件时间不泄漏、链上事件null不可评分及无链上时钟不可通过历史假设补造。还保留原20项中的不一致来源时钟必须拒绝测试。测试只证明这两份源码在离线mock输入下表现，不证明外部`PIT_VERIFIED`输入标签真实性或P0数据源满足要求；`p1_gate_passed=false`始终维持。
+
+**独立外部来源替代排查（免费且只读）：**Blockscout连接器当前可用链目录用`BNB Smart Chain`精确检索无匹配，服务明确提示2026-10开始PRO API授权限制，不把它视为有效的第二BSC RPC来源，也没有购买key。BscScan两个已有实际交易哈希在本会话网络读取路径不可访问，**没有**把网页访问失败记作源数据无交易或第二提供商验证通过。官方2025年公开到达时间/原HTTP字节、完整V3与其他launchpad分母、事前统一研究金额和实际用户卖出费后结果仍未解决。
+
+**阶段与权限仍为**`P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO`；原研究stop日`2026-11-02`不变。没有CI Actions、Mac后台、付费查询、生产部署、签名、交易或邮件；未修改冻结研究合约、母体及名义额。下次主要应直接验证可得的真实来源/开放时钟证据或诚实止损，不进行新的微小建池事件追逐。
+
 ## 2026-10-22：历史PIT的离线asof严格门禁与20/20回归
 
 **本轮不再扩大已知5个迁池币的短窗交易查询，也不选获利赢家。**依据原架构`MONSTER_EARLY_ARCHITECTURE_CONTRACT_V1.md`第5节与`monster_early_records_v1.schema.json`的`events`时间/来源字段，增加**一份纯离线P0证据as-of裁剪实现**：
