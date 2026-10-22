@@ -3,6 +3,9 @@
 The authoritative outbox and frozen Gmail send/verification states are unchanged.
 """
 
+import hashlib
+import json
+
 GMAIL_EXPIRED_BEFORE_SEND = "GMAIL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND"
 LOCAL_EXPIRED_BEFORE_SEND = "LOCAL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND"
 
@@ -16,6 +19,8 @@ def summarize_manual_reviews(rows):
     historical = {"gmail": 0, "local": 0}
     actionable = {"gmail": 0, "local": 0, "other": 0}
     pending = {"gmail": 0, "local": 0, "other": 0}
+    historic_identity_keys = []
+    historic_identity_complete = True
     for row in rows:
         channel = row.get("channel")
         channel = channel if channel in ("gmail", "local") else "other"
@@ -53,8 +58,23 @@ def summarize_manual_reviews(rows):
             )
         target = historical if expired_unsent else actionable
         target[channel] += 1
+        if expired_unsent:
+            # Stable identity rather than just count; different expired entries
+            # must become visible even if the total stays unchanged.
+            decision_id = row.get("decision_id")
+            if not isinstance(decision_id, str) or not decision_id.strip():
+                historic_identity_complete = False
+            else:
+                historic_identity_keys.append([channel, decision_id])
     return {
         "manual_review_breakdown_available": True,
+        # Browser acknowledgement token; not an outbox/database archive or
+        # delivery approval. Never expose the raw decision identities.
+        "manual_review_expired_unsent_fingerprint": (
+            hashlib.sha256(json.dumps(sorted(historic_identity_keys),
+                separators=(",", ":"), ensure_ascii=True).encode("utf-8")).hexdigest()
+            if historic_identity_complete and historic_identity_keys else None
+        ),
         "manual_review_expired_unsent_count": sum(historical.values()),
         "manual_review_expired_unsent_gmail_count": historical["gmail"],
         "manual_review_expired_unsent_local_count": historical["local"],
