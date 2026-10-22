@@ -1,3 +1,11 @@
+# 2026-10-23 PR167 P1 ownership/accounting correction — pending independent Mac review
+
+- Independent reviewer `REQUEST_CHANGES` for old PR167 SHA `e863e7ecf897c90a99bcb911fe5ee5fe139e62af` despite Mac 360/360 passing: during out-of-order completions, buffering only hashes caused parent mismatch on height 1005 to be misattributed to triggering clean RPC for height 1004, then repeated for later 1008/1012 settlements. Old SHA remains rejected.
+- Narrow correction: buffered full blocks retain original source RPC ID and height; successful RPC `SETTLE` is recorded independently before internal parent-chain checks. A bad buffered parent produces a single `CHAIN_INTEGRITY_FAULT` with the **original owner request ID / invalid height**, and an explicit `invalid_parent_height`; already committed 1004 stays successful, valid in-flight settlements remain truthful and no heights beyond the gap commit. One exact deterministic regression uses independent reviewer timings [2500,300,400,350]ms, synthetic growth 5 blocks/s and bad parent at height 1005. Full CI and independent exact-new-SHA Mac replay still required.
+- Parent PR163 remains independently approved and unchanged. Three shared virtual slots, 250ms global start gap, 32/24/6 attempt budget, 4000ms HEAD TTL, fsynced reservation, no retries or live senders/permits, no merged/deployed changes. Previous one-use 30-call network permit consumed; F0_NOT_PASSED / PRODUCTION_NO_GO.
+
+---
+
 # 2026-10-23 PR167 latest independently-reviewable OFFLINE gate (after directed fixes)
 
 - PREVIOUS PR163 independent Mac `APPROVE_OFFLINE_CODE` pinned `0f6ed49b2675b04328be7adb7f1296622e1fccc2`. Parent unchanged. This **CHILD DRAFT** includes the separate response-driven 3-slot fake collector, 14 tests, design doc and HANDOFF updates only. Full GitHub Actions CI on code HEAD `9917c33a545076b2719d9486ab427590c2487ba0` was **360/360 PASS zero skip**, 14/14 new tests. The first child SHA `df37865...` failed 18 tests due to strict `type(ledger_path) is Path`; fixed at `d299761...`. A later targeted commit `9917c33...` added explicit COMMIT_CONTIGUOUS 0600 fsynced events, out-of-order block completion regression, truthful `block_responses_parsed_full` (different from parent-linked `contiguous_parent_verified_blocks`) and checkpoint 800ms TTL compatibility.

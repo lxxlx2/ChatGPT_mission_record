@@ -191,6 +191,68 @@ class ThreeSlotClosedLoopFakeTests(unittest.TestCase):
         self.assertGreaterEqual(r["block_responses_parsed_full"],
                                 r["contiguous_parent_verified_blocks"])
 
+    def test_delayed_1004_reveals_1005_bad_parent_with_correct_owner(self):
+        # Independent Mac PR167 P1: 1005 finishes first, 1004 arrives late
+        # and unlocks its validation. 1004 is clean and must never be FAILED.
+        delayed = {
+            "eth_chainId": [350.0],
+            "eth_blockNumber": [425.0, 420.0, 500.0],
+            "eth_getBlockByNumber": [2500.0, 300.0, 400.0, 350.0],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "private"
+            root.mkdir(mode=0o700)
+            r = run_closed_loop(
+                delayed, root / "ledger.jsonl",
+                oracle=SyntheticBscOracle(
+                    growth_bps=5, bad_parent_blocks=[1005]))
+            ledger = [json.loads(x) for x in
+                      (root/"ledger.jsonl").read_text().splitlines()]
+        reservations = {
+            row["height"]:row["id"] for row in ledger
+            if row["event"] == "RESERVE_UNKNOWN"
+            and row["category"] == "BLOCK"}
+        self.assertTrue({1004, 1005, 1008, 1012}.issubset(reservations))
+        settlements = {
+            row["id"]:row for row in ledger if row["event"] == "SETTLE"}
+        self.assertEqual(
+            len(settlements),
+            len([row for row in ledger
+                 if row["event"] == "RESERVE_UNKNOWN"]))
+        self.assertEqual(r["pending_after_stop"], 0)
+        self.assertEqual(r["stop_state"], "BLOCK_FAULT_STOP_NO_RETRY")
+        for height in (1004, 1005, 1008, 1012):
+            self.assertEqual(settlements[reservations[height]]["state"],
+                             "RPC_RESPONSE")
+        self.assertEqual(r["last_contiguously_committed_height"], 1004)
+        self.assertEqual(r["invalid_parent_height"], 1005)
+        self.assertEqual(r["attempted_missing_heights"], [1005])
+        defects = [x for x in r["faults"]
+                   if x["reason"] == "CLOSED_LOOP_PARENT_HASH_MISMATCH"]
+        self.assertEqual(len(defects), 1)
+        self.assertEqual(defects[0]["id"], reservations[1005])
+        self.assertEqual(defects[0]["height"], 1005)
+        self.assertEqual(defects[0]["fault_type"], "CHAIN_INTEGRITY")
+        integrity_events = [x for x in ledger
+                            if x["event"] == "CHAIN_INTEGRITY_FAULT"]
+        self.assertEqual(len(integrity_events), 1)
+        self.assertEqual(integrity_events[0]["id"], reservations[1005])
+        commits = [x for x in ledger
+                   if x["event"] == "COMMIT_CONTIGUOUS"]
+        self.assertIn(
+            (reservations[1004], 1004),
+            {(x["id"], x["height"]) for x in commits})
+        self.assertNotIn(1005, [x["height"] for x in commits])
+        self.assertEqual(len(commits),
+                         r["contiguous_parent_verified_blocks"])
+        self.assertGreaterEqual(r["block_responses_parsed_full"],
+                                r["contiguous_parent_verified_blocks"])
+        self.assertLessEqual(r["max_inflight_including_head"], 3)
+        self.assertGreaterEqual(r["min_global_start_gap_ms"], 250)
+        self.assertLessEqual(r["attempts"], 32)
+        self.assertLessEqual(r["block_attempts"], 24)
+        self.assertLessEqual(r["head_refreshes"], 6)
+
     def test_short_ttl_checkpoint_does_not_inherit_wait_age_validation(self):
         r, _ = self.one(policy="checkpoint", head_ttl_ms=800)
         self.assertLessEqual(r["max_inflight_including_head"],3)

@@ -1,3 +1,18 @@
+## 2026-10-23 PR167 P1：乱序缓冲父哈希故障归属的定向修正（等待独立复审）
+
+独立 Mac 审核对原 SHA `e863e7ecf897c90a99bcb911fe5ee5fe139e62af` 给出 `REQUEST_CHANGES`：高度 1005 的假完整响应先于 1004 收到，随后 1004 正常到达并提交，但在检测缓冲的 1005 父哈希错误时错误地把 1004 请求标为 FAILED/缺失；正常的 1008、1012 在途请求又被重复污染。旧 SHA 的 360/360 测试通过不等于 P1 关闭。
+
+本阶段只改变**已解析响应与链完整性事件的归属边界**：
+- 乱序缓冲 `buffered[height] = (original_request_id, block_hash, parent_hash)`。
+- 每次 RPC 响应先独立落盘 `SETTLE`。合法完整区块维持 `RPC_RESPONSE` 和已解析计数，之后检查可连续提交的缓存；遇到错误父哈希，另记一次 `CHAIN_INTEGRITY_FAULT`，`id` 和 `height` 都来自实际损坏的缓冲块，并单独报告 `invalid_parent_height`；不会反向修改触发本次检查的正常请求。
+- `attempted_missing_heights` 此处表示缺失的**可用于连续提交的有效高度**，既包括 RPC 失败/超时，也包括父哈希验证失败的块；后者可能在 `block_responses_parsed_full` 中已经计数。完整解析不等于有效链成员。
+- 故障发现后禁止新派发、停止跨缺口提交，并正常结算其他在途请求；同一坏块后续不重复记失败。历史父版本代码及所有预算、HEAD 新鲜度和发起间隔均不变。
+- 新增由独立审核发现的精确组合反例：首块 2500ms、后续 300/400/350ms，`growth_bps=5`，`bad_parent_blocks=[1005]`，断言 1004 成功提交、1005 为**唯一父哈希完整性故障**、1008/1012 响应保持真实成功结算且无重试，并分别核对 JSONL、请求 ID、响应与连续提交数。
+
+修正提交必须另行独立 Mac 固定 SHA 复审；旧 SHA 不追溯批准。原始 journal / permit / nonce 只留 Mac，不上传 GitHub，零新增 RPC/WS，保持 `F0_NOT_PASSED / PRODUCTION_NO_GO`。
+
+---
+
 ## 本轮核心口径加固
 
 - 收到合法完整区块但内部 parentHash 不匹配时，这条完整区块仍属于已解析响应，不属于连续有效提交。将指标正式命名为 `block_responses_parsed_full`，避免“收到”与“验证通过”混淆。

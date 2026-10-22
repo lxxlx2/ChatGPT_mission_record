@@ -173,6 +173,7 @@ def run_closed_loop(durations: dict, ledger_path: Path, *,
     faults = []
     received = committed = linked = 0
     buffered = {}
+    invalid_parent_height = None
     buffer_peak = 0
     requested_missing = []
     head_samples = []
@@ -225,6 +226,7 @@ def run_closed_loop(durations: dict, ledger_path: Path, *,
         nonlocal chain_valid, last_head, last_head_finished
         nonlocal next_height, next_commit, head_inflight, stop
         nonlocal received, committed, linked, last_committed_hash, buffer_peak
+        nonlocal invalid_parent_height
         category, rid, height = call["category"], call["id"], call["height"]
         require(rid in pending, "CLOSED_LOOP_SETTLE_WITHOUT_RESERVATION")
         del pending[rid]
@@ -233,6 +235,7 @@ def run_closed_loop(durations: dict, ledger_path: Path, *,
         completion_order.append(rid)
         state = "RPC_RESPONSE"
         fault = None
+        parsed_block = None
         if category == "BLOCK" and height in oracle.timeout_blocks:
             state, fault = "TIMEOUT", "SCRIPTED_SOURCE_TIMEOUT"
         else:
@@ -272,26 +275,10 @@ def run_closed_loop(durations: dict, ledger_path: Path, *,
                             "CLOSED_LOOP_DUPLICATE_OR_BACKWARD")
                     block_hash = parsed["block_hash"]
                     parent_hash = hexb(value["parentHash"], 32)
-                    buffered[height] = (block_hash, parent_hash)
-                    received += 1
-                    buffer_peak = max(buffer_peak, len(buffered))
-                    while next_commit in buffered:
-                        bh, ph = buffered[next_commit]
-                        if last_committed_hash is not None:
-                            require(ph == last_committed_hash,
-                                    "CLOSED_LOOP_PARENT_HASH_MISMATCH")
-                        del buffered[next_commit]
-                        if last_committed_hash is not None:
-                            linked += 1
-                        last_committed_hash = bh
-                        ledger.append({"event":"COMMIT_CONTIGUOUS",
-                                       "height":next_commit,
-                                       "at_ms":round(now, 3)})
-                        sample_events.append({"event":"COMMIT_CONTIGUOUS",
-                                              "height":next_commit,
-                                              "at_ms":round(now, 3)})
-                        next_commit += 1
-                        committed += 1
+                    # Parse only here. Chain integrity is checked AFTER this
+                    # request has its own SETTLE outcome persisted, so an
+                    # earlier buffered block cannot turn this RPC into FAILED.
+                    parsed_block = (block_hash, parent_hash)
             except (TypeError, KeyError, ValueError, OverflowError) as exc:
                 state, fault = "FAILED", str(exc)[:100]
         if category in ("INITIAL_HEAD", "HEAD_REFRESH"):
@@ -314,10 +301,55 @@ def run_closed_loop(durations: dict, ledger_path: Path, *,
             else:
                 stop = stop or "SOURCE_IDENTITY_OR_HEAD_FAULT_STOP"
         if category == "BLOCK" and state == "RPC_RESPONSE":
+            require(parsed_block is not None,
+                    "CLOSED_LOOP_PARSED_BLOCK_MISSING")
+            # The buffer retains the owning request ID, not only its hash.
+            # A later request may unlock this earlier out-of-order block.
+            buffered[height] = (rid, *parsed_block)
+            received += 1
+            buffer_peak = max(buffer_peak, len(buffered))
             ledger.append({"event":"COMPLETION_ACCEPTED", "id":rid,
-                           "height":height,"at_ms":round(now, 3)})
+                           "height":height, "at_ms":round(now, 3)})
+            # A bad buffered parent is a CHAIN_INTEGRITY fault belonging to
+            # the BUFFERED block. It does not change any already recorded
+            # RPC_RESPONSE state, and is reported only once during draining.
+            while invalid_parent_height is None and next_commit in buffered:
+                owner_id, block_hash, parent_hash = buffered[next_commit]
+                if (last_committed_hash is not None and
+                        parent_hash != last_committed_hash):
+                    invalid_parent_height = next_commit
+                    evidence = {
+                        "id":owner_id, "height":next_commit,
+                        "category":"BLOCK",
+                        "reason":"CLOSED_LOOP_PARENT_HASH_MISMATCH",
+                        "fault_type":"CHAIN_INTEGRITY",
+                    }
+                    faults.append(evidence)
+                    requested_missing.append(next_commit)
+                    integrity_event = {
+                        "event":"CHAIN_INTEGRITY_FAULT",
+                        "id":owner_id, "height":next_commit,
+                        "reason":"CLOSED_LOOP_PARENT_HASH_MISMATCH",
+                        "at_ms":round(now, 3),
+                    }
+                    ledger.append(integrity_event)
+                    sample_events.append(integrity_event)
+                    stop = stop or "BLOCK_FAULT_STOP_NO_RETRY"
+                    break
+                del buffered[next_commit]
+                if last_committed_hash is not None:
+                    linked += 1
+                last_committed_hash = block_hash
+                ledger.append({"event":"COMMIT_CONTIGUOUS",
+                               "id":owner_id, "height":next_commit,
+                               "at_ms":round(now, 3)})
+                sample_events.append({"event":"COMMIT_CONTIGUOUS",
+                                      "id":owner_id, "height":next_commit,
+                                      "at_ms":round(now, 3)})
+                next_commit += 1
+                committed += 1
         # A terminal error does not cancel or falsely settle already in-flight
-        # requests: remaining events will drain with their real fake outcomes.
+        # requests: remaining events will drain with their own outcomes.
 
     with OfflineLedger(ledger_path) as ledger:
         for _ in range(20000):
@@ -451,7 +483,8 @@ def run_closed_loop(durations: dict, ledger_path: Path, *,
         "first_block_independently_anchored":False,
         "block_response_rate_bps":round(received/elapsed_s,3) if elapsed_s else 0,
         "contiguous_commit_rate_bps":round(committed/elapsed_s,3) if elapsed_s else 0,
-        "attempted_missing_heights":sorted(requested_missing),
+        "attempted_missing_heights":sorted(set(requested_missing)),
+        "invalid_parent_height":invalid_parent_height,
         "known_unattempted_from_last_sampled_head":known_unattempted,
         "last_confirmed_synthetic_head":last_head,
         "last_contiguously_committed_height":last_height,
