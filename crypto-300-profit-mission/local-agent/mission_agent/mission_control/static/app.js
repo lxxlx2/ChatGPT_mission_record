@@ -1591,7 +1591,14 @@ async function pollClusterJob(jobId, failures=0) {
       $('cluster-submit').textContent='重新查询';
       localStorage.setItem('mission-meme-last-cluster-ca',mint);
       const loaded=await loadLatestCluster(mint,true);
-      if (!loaded) clusterStatus('error','分析结束，但保存的报告暂时无法读取');
+      if (!loaded) {
+        clusterStatus('error','分析结束，但保存的报告暂时无法读取');
+      } else {
+        // latest.json is keyed by mint, not job ID. Do not claim the saved
+        // report came from this specific completed worker without provenance.
+        clusterStatus('running','原分析任务已结束，已读取最新保存报告',
+          '该报告不包含任务编号，无法独立证明与本次分析一一对应');
+      }
       return;
     }
     if (job.status==='ERROR') {
