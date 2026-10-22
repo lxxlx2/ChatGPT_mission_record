@@ -28,8 +28,8 @@
 
 ```zsh
 umask 077
-mkdir -m 700 "$HOME/Library/Application Support/MissionEvidence/20261022-f0-head-policy-comparison"
-python3 crypto-300-profit-mission/bsc-forward-follow-model/f0/f0_l1_head_policy_compare.py --journal "$HOME/Library/Application Support/MissionEvidence/20261021-adaptive-sampled-head/archive/journal.json" --expected-sha256 e069b7cd38c2ad3c8a3af3a1b1c220efab1714fe4de0bb7a9e2b814a2302d61a --output-dir "$HOME/Library/Application Support/MissionEvidence/20261022-f0-head-policy-comparison"
+mkdir -m 700 "$HOME/Library/Application Support/MissionEvidence/20261022-f0-head-policy-comparison-r2"
+python3 crypto-300-profit-mission/bsc-forward-follow-model/f0/f0_l1_head_policy_compare.py --journal "$HOME/Library/Application Support/MissionEvidence/20261021-adaptive-sampled-head/archive/journal.json" --expected-sha256 e069b7cd38c2ad3c8a3af3a1b1c220efab1714fe4de0bb7a9e2b814a2302d61a --output-dir "$HOME/Library/Application Support/MissionEvidence/20261022-f0-head-policy-comparison-r2"
 ```
 
 只发布脱敏的合成对比表，原始Journal/响应/permit/nonce不上传。先独立审核固定新SHA，跑全部旧测试和8个新回归，再实际Mac读取私有日志。若策略改动导致更差积压、更少有效提交或恶化提前发现新币的时效性，则拒绝切换，勿因“节省HEAD”而选择。
