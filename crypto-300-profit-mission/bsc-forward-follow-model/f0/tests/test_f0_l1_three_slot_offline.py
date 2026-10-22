@@ -125,6 +125,48 @@ class ThreeSlotOfflineTests(unittest.TestCase):
         self.assertEqual(res["head_refreshes_requested"], 1)
         self.assertEqual(res["inflight_outcome_unknown_after_stop"], 0)
 
+    def test_slow_head_refresh_never_dispatches_blocks_past_freshness(self):
+        # Repro of the independently reviewed P1: third HEAD read takes 5s,
+        # while the previously confirmed HEAD expires after 4s.
+        timings = {
+            "eth_chainId": [10.0],
+            "eth_blockNumber": [10.0, 10.0, 5000.0],
+            "eth_getBlockByNumber": [700.0],
+        }
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d) / "private"
+            root.mkdir(mode=0o700)
+            result = mod.simulate(
+                timings, root / "events.jsonl", head_values=[1000, 1100, 1200],
+                head_freshness_ms=4000, refresh_after=8, max_blocks=16)
+        events = result["trace"]
+        refreshes = [item for item in events
+                     if item["event"] == "RESERVE_UNKNOWN"
+                     and item["category"] == "HEAD_REFRESH"]
+        self.assertGreaterEqual(len(refreshes), 2)
+        slow_head = refreshes[1]
+        previous_head_settles = [item for item in events
+                                 if item["event"] == "SETTLE"
+                                 and item["category"] in ("INITIAL_HEAD", "HEAD_REFRESH")
+                                 and item["at_ms"] <= slow_head["at_ms"]]
+        self.assertTrue(previous_head_settles)
+        last_head_finished = previous_head_settles[-1]["at_ms"]
+        slow_head_settle = next(item for item in events
+                                if item["event"] == "SETTLE"
+                                and item["id"] == slow_head["id"])
+        self.assertGreater(slow_head_settle["at_ms"] - last_head_finished, 4000)
+        during = [item for item in events
+                  if item["event"] == "RESERVE_UNKNOWN"
+                  and item["category"] == "BLOCK"
+                  and slow_head["at_ms"] < item["at_ms"] < slow_head_settle["at_ms"]]
+        self.assertTrue(during, "test must exercise block dispatch during pending HEAD")
+        late = [item for item in during if item["at_ms"] - last_head_finished >= 4000]
+        self.assertEqual(late, [], "no block reservation allowed after HEAD stale")
+        self.assertLessEqual(result["max_observed_inflight"], 3)
+        self.assertLessEqual(result["requested_total"], 32)
+        self.assertGreaterEqual(result["global_min_start_gap_ms"], 250)
+        self.assertEqual(result["inflight_outcome_unknown_after_stop"], 0)
+
     def test_global_capacity_honours_slower_source_and_expiry(self):
         normal, _ = self.run_case()
         slow, _ = self.run_case(slowdown=2.0)

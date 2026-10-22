@@ -180,7 +180,12 @@ def simulate(durations, ledger_path, *, inflight_slots=3, refresh_after=4,
         due = (next_height > confirmed_head or blocks_since_head >= refresh_after
                or now - head_finished_ms >= head_freshness_ms)
         if refreshing_id is not None:
-            if next_height <= confirmed_head and blocks_since_head < refresh_after:
+            # A pending HEAD refresh does not extend validity of the last
+            # completed HEAD. Stop new block dispatch at the freshness bound;
+            # already-reserved in-flight blocks may still settle normally.
+            if (now - head_finished_ms < head_freshness_ms and
+                    next_height <= confirmed_head and
+                    blocks_since_head < refresh_after):
                 return ("eth_getBlockByNumber", next_height, "BLOCK")
             return None
         if due:

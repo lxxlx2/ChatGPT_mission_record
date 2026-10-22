@@ -1,3 +1,11 @@
+# 2026-10-22 PR160 HEAD-freshness P1 targeted fix pending independent review
+
+- Independent offline reviewer returned **REQUEST_CHANGES** for PR160 SHA `55969eb63d7f64bc29cc9853ce19b3a0ff544141` after 324/324 tests PASS but a direct adversarial counterexample: when a third HEAD request lasted 5000ms, the scheduler dispatched three new BLOCK reservations after the previously completed HEAD had become >=4000ms old (IDs 18/19/20, heights 1014–1016). The prior SHA retains its historical rejected conclusion.
+- This descendant changes ONLY the branch controlling BLOCK dispatch while a HEAD refresh is in flight, requiring `now - head_finished_ms < head_freshness_ms`. Previously reserved/in-flight requests still settle normally; stale HEAD no longer permits new block dispatch. Adds explicit 5000ms slow-HEAD regression, checking actual virtual reservation timestamps between pending refresh and HEAD completion. No extra concurrency architecture or live transport.
+- Gate: new full GitHub CI and **independent exact-new-SHA** review + actual Mac private Journal six-scenario replay are still required. Historic 30-call real permit is consumed; no RPC/WS or real permit from this change. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-22 three-slot offline scheduler development (F0 mainline)
 
 - **Independent PR #159 APPROVE_OFFLINE_CODE** at SHA `111059087257e792a76516fdd684a127cda52772`: [Mac actual private replay and reviewer report](https://github.com/lxxlx2/ChatGPT_mission_record/pull/159#issuecomment-6335034540). 312/312 independent PASS zero skip, private saved30 Journal SHA256 matched, 1/2/3-slot *ideal* six-scenario replay complete. Three-slot ideal rate 2.753–2.976 blocks/s versus sampled BSC HEAD growth 2.178; NOT real provider concurrency.
