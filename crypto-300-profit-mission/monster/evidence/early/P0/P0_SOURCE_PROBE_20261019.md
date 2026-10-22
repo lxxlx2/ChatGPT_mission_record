@@ -1,5 +1,19 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-22：前向本地时钟证据试验——离线原型已入Git，未运行Mac
+
+依据用户同意继续**准备**前向只读验证、未授权后台运行/生产部署的范围，提交新[ADR-002](../../adr/ADR-002-forward-only-observation-pilot-20261022.md)，**只为此项新增研究路径记录边界**，不取代ADR-001或历史P0冻结24/30、18/30门槛。原2025-07-01 BSC V2 30例、Four.meme 538例、当前source-stop`2026-11-02`仍未修改。新工具不是新Stage、自动买币信号或P1模型。
+
+**真正实现**：`local-agent/mission_agent/early/forward_observation.py`，复用已存在的`fourmeme_index_source_probe.JsonRPC`（HTTPS/无重定向、禁回显秘钥、限制响应大小），一次`--manual-once`调用只采两个BSC主网`eth_blockNumber`快照与对应区块头、同块`PancakeSwap V2 Factory allPairsLength`；若Factory索引增长，至多验证3个`allPairs(index)`池地址、`token0/token1`。请求白名单仅`eth_chainId/eth_blockNumber/eth_getBlockByNumber/eth_call`，最多20个RPC，快照间隔0–3秒；相邻父hash、重读原区块hash与索引单调性失败即生成`failure.json`并拒绝标`manifest.json`成功。新目录仅写一次，逐次保存原始RPC响应体字节、SHA256、调用开始UTC、处理完成UTC与单调耗时；输出不含完整RPC URL/API key，不生成交易、不调钱包、不设购买名义额。
+
+**核心证明限制**：`local_response_completed_at_utc`只是**本地处理完此RPC返回的UTC时间**，不是全网首次公开时间，也不是可交易的`T_entry`或经过第三方可信签名的时间。旧2025`available_at=UNKNOWN`不会自动填补。BSC V2 Factory index增长并不等于新代币数量、有效流动性、买入/卖出或可达5x；若零增长，只能说这两个观察区块的Factory计数无增加；超出3个身份时必须保留`PARTIAL`。只适用于V2，不假装覆盖V3、Four.meme全部launchpad或整个BSC。
+
+**实际执行与复核**：独立Python 3.13.5离线运行`python3 -m unittest discover -s tests -p test_monster_forward_observation.py -v`：**15/15 PASS，0 skip/error/fail**，覆盖2次完整快照、原始SHA、20次调用上限、过载部分覆盖、错链、同高计数矛盾、链头倒退、Factory倒退、重组、无效地址、输出不覆盖、原响应矛盾和时钟声明。GitHub远端`forward_observation.py` blob SHA=`696846648e12fc6308857b3fad8d0d39df87736f`，测试文件blob SHA=`dedd847cb33e7758dbbea10795a89767025db4f9`，两者均与独立本地执行时`git hash-object`一致（大小分别10,988与9,063字节）。**未运行旧Monster全套测试、独立第二AI审核或用户Mac真实前台采样**，测试结果仅说明固定源码的离线行为。
+
+**现有免费连接器真实小范围技术检查**：2026-10-22，已选定的原Alchemy免费`bnb-mainnet`应用实际返回`eth_chainId=0x38`及链头`0x7b2afc1`；在相同高度只读调用Factory `0x574f2ba3` 得`0x35e3aa=3,531,690` 个历来创建的池索引。**这只是连接器实测Factory计数，不是上述Mac采集器的实际运行、不是一次真实检测到新Pair，也不是公开可观察时间的独立可信来源**。
+
+**门禁保持**`P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO`。没有Mac部署、定时任务、CI Action、GMGN、付费RPC、交易、邮件或合并。下一次合格工作是先独立代码/源协议审查，再单独取得用户对**一次性Mac前台调用**的明确授权、核实原响应完整性和系统时钟可信度；绝不能自动升级为常驻监听。
+
 ## 2026-10-22：独立BSC历史源复核的真实能力结论（未通过）
 
 **本次只复核P0来源门禁，不更改冻结样本或开始P1/模型。**目标是找一条独立于现有Alchemy免费BNB主网RPC、可以对**已冻结2025-07-01**历史交易或PoolCreated原事件完成真实读取的第二通道。结论绑定本轮PR固定前置SHA `f5a0ae21d13fb44bd09bfff904ba871ac7623678`；查询均为只读，未使用账号充值、付费API、私钥或链上写入。
