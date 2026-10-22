@@ -50,6 +50,19 @@ class MonsterAsOfGateTests(unittest.TestCase):
         self.assertEqual((r["pit_status"], len(r["events"])),
                          ("PIT_VERIFIED", 1))
         self.assertFalse(r["source_provenance_independently_verified"])
+        self.assertFalse(r["p1_gate_passed"])
+
+    def test_reconstructed_and_no_verifiable_views_never_approve_p1(self):
+        e = record(pit_status="PIT_RECONSTRUCTED_ONLY",
+                   availability_basis="RECONSTRUCTED_DELAY_ASSUMPTION",
+                   available_at=None)
+        r = projected([e], policy="RECONSTRUCTED_CONSERVATIVE",
+                      historical_delay_ms=1000,
+                      historical_delay_policy_sha256=POLICY_SHA)
+        self.assertFalse(r["p1_gate_passed"])
+        self.assertFalse(r["source_provenance_independently_verified"])
+        unknown = projected([record()], policy="NO_VERIFIABLE_ASOF")
+        self.assertFalse(unknown["p1_gate_passed"])
 
     def test_future_visible_event_is_excluded(self):
         r = projected([record(available_at="2025-07-01T00:00:03Z",
