@@ -1,6 +1,7 @@
 # Meme CA 链上尽调统一查询：准确性改造与验收标准
 
-Status: PRODUCT REQUIREMENTS / IMPLEMENTATION NOT DONE / PRODUCTION UNCHANGED
+Original 2026-10-11 status (historical): PRODUCT REQUIREMENTS / IMPLEMENTATION NOT DONE / PRODUCTION UNCHANGED
+2026-10-22 review state: **ORIGINAL_SINGLE_MODE_REQUIREMENT_STILL_BINDING / PARTIAL_CA_CODE_INSTALLED / REAL_DEEP_QUERY_FAILED / COMPLETE_REAL_RESULT_NOT_ACCEPTED** — see section 8
 Date: 2026-10-11 Asia/Bangkok
 Owner: Mission 300-3000 overarching product governance. Engineering handoff: Frank/Meme module.
 Authority: `WALLET_CLUSTER_ANALYSIS_SPEC.md`, `../MISSION_SPEC.md`, `../local-agent/config/follow_policy_v1.approved.json` (Frank *follow-decision only*).
@@ -104,3 +105,39 @@ No unapproved wallet action, monitor, scheduler, Gmail delivery, trade or paid d
 **Current state: `REQUIREMENTS_RECORDED / CODE_NOT_CHANGED / TESTS_NOT_RUN_FOR_THIS_SPEC / NOT_DEPLOYED`.**
 
 The module implementation conversation should first reconcile this requirement against actual head and propose an evidence-oriented design; then implement, independent review, test and request rollout approval. The 300-3000 general-governance conversation will review evidence, completion gates, provenance and priority, not pretend the engineering milestone has been executed. No new automation, Gmail, runtime task or Git PR was created by this requirements record.
+
+---
+
+## 8. 2026-10-22 CA 单模式方案修订与真实故障验收门槛（待 Claude 审核）
+
+本节是在原 CA 准确性规范原文内追加现状，不修改其已确定的“**一个 CA 输入、一个分析按钮，内部渐进深入、全面准确的统一结果**”原则。原文出现“仍保留快速/标准/深度选择”相关文字时，属于对旧实现的缺陷描述而非 V3 产品允许保留三个按钮。V3 草稿曾误认为应该继续保留三档，现已在原 V2 文档第 10/14 节明确纠正。
+
+### 8.1 现状不能误报为完成
+
+2026-10-22 用户实际 Mac（运行 PR157 产品 SHA 31dd598df248ca15f731913a5cbf82e88b981874）在一个 Mint 的 Deep 模式先看到基础行情/部分 token 权限/Top10 提示，随后出现“查询状态读取失败 / Failed to fetch”。基础信息出现在页面**不等于**资金链追踪完成，前端 fetch 报错也**不证明**免费 RPC 429。尚未读到这次失败的浏览器 Network、后端 job ID、worker 错误、实际报告保存证据，根因状态为 REGRESSION_OPEN、NOT_REPRODUCED_CAUSE。
+
+当前 ClusterJobManager 的队列/结果状态主要在 Dashboard 进程内存保存，进程重启可能令轮询无法找到工作；历史已完成报告另存 control_root/cluster-reports/Mint/latest.json。不能把丢失的内存 job 当作“完整扫描失败”，也不能用已有历史报告冒充正在执行完成。报告只呈现经验证的部分数据和其原时点，不补填无来源的市场价。
+
+### 8.2 维持原权威要求，恢复“可用而准确”的单入口
+
+- 用户只提交一个明确 Mint 并点一次分析，页面返回一个稳定可查询 job ID；服务内部可经过 BASE、TOKEN_AUTHORITIES、HOLDERS、FUNDING、REPORT 阶段，只有完整性验收过关才称 COMPLETE
+- 每个阶段结果附上源标识、采集/事件时间、Solana slot、返回覆盖/分页、独立核验状态；行情还需 Mint/chain/pair/quote 与报价时点，不能用历史参考价冒充现价
+- 若浏览器轮询 GET 中断，保留原 job ID 和已验证部分，前端“继续读取”只恢复 GET，不自动再次 POST/发起昂贵扫描；页面状态显示“分析请求已提交，读取结果中断”而非泛化 Failed to fetch
+- 若 server/worker 重启，需有可审计的最小持久元数据及报告引用，明确 JOB_INTERRUPTED、已有阶段保存情况和可续读范围；生产写入/新 schema 需要独立代码与用户明确授权，不能本设计直接启动
+- RPC 403/429、超时、请求内容不全、owner账户/Top10 证据不足、结果持久化写入失败是不同错误；保留已完成阶段，同时把未完成部分标为 INCOMPLETE_EVIDENCE，**不得出现全量完成绿灯**
+- 市场基础信息可用不代表精确排除 LP 后 Top10、控制关联、首次真正买入、Token-2022 扩展风险和 X 叙事已经核实；这些原第 3–4 节准确性要求绝不降低
+- 真正查询必须以数据正确性与最终报告为目标；不得假设每个持有人只能属于一个控制者，不得用交易所公共资金源误连鲸鱼，未核实关系不输出具体风险概率
+
+### 8.3 先调查再开发（Issue #165），每步给定业务验收
+
+| 顺序 | 一次有界真实证据 | 结束条件 |
+|---|---|---|
+| A Mac 只读根因 | 固定真实 CA 和任务，截取浏览器请求地址/HTTP 码/耗时、job ID、8766 PID/启动时间及 worker/保存阶段；只保留脱敏结论 | 找到主失败阶段，不重跑无限次数 |
+| B 隔离复现 | 使用真实 server Handler 与真实前端轮询在临时端口演练断连、404 job、后端 ERROR、历史报告命中和旧结果过期 | 不把 GET 失败误判链上失败，不自动重复 POST |
+| C 最小修复 | 修正证实的根因，持久任务最小证据合同和已确认部分恢复；优先复用既有 report 缓存 | 真正的同 CA 可读出完整报告，或具体原因/来源的 INCOMPLETE_EVIDENCE |
+| D 核心准确性 | 一例真实 CA 的 owner/LP、Token-2022、资金来源和独立市场/叙事核对按本文件 A/B 门禁追溯 | 错误 Top10/未知关系绝不误标安全、完成 |
+| E 其他 AI + Mac | 固定 SHA Claude 复核，CI+Mac 一次真实完整和一次可恢复失败场景 | G3 通过、用户独立批准后才能部署 |
+
+所有真实新 Solana RPC 读取必须另经用户批准调用预算、节点、最大次数、预期费用和超限停止条件；不得因此新增本机常驻扫描或影响旧 V1、MC Loop、邮件、数据库、钱包执行。部署权限与本设计审核权限独立。
+
+本节状态：**DESIGN_REVIEW_ONLY / USER_REAL_FAILURE_OPEN / NO_NEW_RPC / NO_PRODUCTION_WRITES / NO_DEPLOY**。
