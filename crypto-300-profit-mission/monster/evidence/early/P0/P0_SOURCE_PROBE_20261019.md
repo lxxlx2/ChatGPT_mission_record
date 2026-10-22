@@ -1,5 +1,19 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-22：历史PIT的离线asof严格门禁与20/20回归
+
+**本轮不再扩大已知5个迁池币的短窗交易查询，也不选获利赢家。**依据原架构`MONSTER_EARLY_ARCHITECTURE_CONTRACT_V1.md`第5节与`monster_early_records_v1.schema.json`的`events`时间/来源字段，增加**一份纯离线P0证据as-of裁剪实现**：
+- `local-agent/mission_agent/early/pit_asof.py`：`asof(token_key, decision_at, information_policy, *, events, historical_delay_ms=None, historical_delay_policy_sha256=None)`。只返回对应token_key、决策时点前合格的经过字段白名单裁剪的事件，不直接向下游暴露未来成交量、持仓、Alpha、未来收益标签；同事件重复回放幂等、同ID相互矛盾fail-closed。
+- `LIVE_OBSERVED`只接受明确`PIT_VERIFIED`且按`ACTUAL_LIVE_OBSERVER_RECEIPT`或`ACTUAL_HISTORICAL_PUBLICATION`**有时间字段声称**的输入；没有`available_at`直接不进入视图。程序本身**并不能审验原始签名/第三方历史来源真实性**，因此所有返回结果固定`source_provenance_independently_verified=false`、`p1_gate_passed=false`。这里的`PIT_VERIFIED`仅是输入证据声明经过时间一致性筛选，**不得误当独立来源认证或批准P1**。
+- `RECONSTRUCTED_CONSERVATIVE`额外允许预先明确给定`historical_delay_ms>0`及`historical_delay_policy_sha256`的延迟假设，任何该模式输出的汇总等级**最高`PIT_RECONSTRUCTED_ONLY`**；SHA只是被记录的引用，不证明假设本身得到审批。此阶段**未冻结具体延迟值**、未设置默认值；不会用此前5例链上750ms出块间隔伪装普通用户收到通知的延迟。
+- `NO_VERIFIABLE_ASOF`永远返回`NOT_SCORABLE`且无事件，未来数据、未知来源及时间异常fail-closed。所有模式只用于P0源码防泄漏负例验证，**未接入生产交易、训练、日常监控、邮件或Mac后台服务**。
+
+**真实执行的离线测试与字节核对**：独立本地Python运行`python3 -m unittest discover -s /tmp/monster_p0_offline/tests -p test_monster_pit_asof.py -v`，**20/20 PASS，0 SKIP、0 ERROR、0 FAIL**。本机两份镜像文件的`git blob` SHA1分别为`884973b93bef0fbe1483d04176d22fd53020c2e4`（模块，6694字节）和`882115e5e887b129b4c571a2c9e493539ad7e583`（测试，8967字节），与GitHub最终所写入内容blob一一相等。测试内容包括时区/毫秒时钟边界、未来事件与未来结果污染反例、未知来源/时间、跨CA的同名混淆、矛盾重复事件、强制预冻结延迟参数及P1默认拒绝。**没有调用真实网络、运行Mac、运行完整Monster旧套件、启动CI或取得独立AI源码审查**，故结论仅限固定代码的该20项测试。
+
+**P0真实业务差距仍未消失：**原冻结BSC V2 30个身份已核对30/30，已有29份独立代币部署交易、24个样本有报价侧资金门槛证据、22个样本有独立后续买入交易、18个有后续卖出活动；这些计数各自代表不同业务事实，不是可按相同名义订单即时双向成交的18/30。原538 Four.meme历史索引有5个日末完成迁池样本、5个N+1块真实卖出，但这是**事后筛出的已迁池子集**，也没有证明2025同期`available_at`。**以仓库现有资料，没有任何一个上述样本可以因这个新增纯函数便升级为真正的`PIT_VERIFIED+可执行收益`；新工具不生成任何真实观测证据或训练标签**。真正阻断仍是完整历史来源/原始字节与验证、足够场所覆盖、公开可见时点、统一事前研究名义额的真实买卖及费用。不能以输入字符串自称`PIT_VERIFIED`就绕过源审查。
+
+**研发决策**：维持`P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO`。历史重建敏感性只能在事前冻结参数与独立审查后作为独立`RECONSTRUCTED`研究，不能替换2025同期实测回执。维持原2026-11-02来源终止判断日期，未批准任何新预算、CI、部署、交易、邮件或自动化。
+
 ## 2026-10-22：Five个Four.meme迁池池的下一块真实SELL和750毫秒链头时间
 
 使用已冻结2025-07-01 UTC、Four.meme一日538个索引中的**全部5个经TokenManager2状态3+Helper3证实迁池的代币**，在前次已确认的Pancake V2 PairCreated/Mint/Sync创建区块后，单独读取**紧接着的第一个区块**的原池`Swap`和`Sync`单主题日志，逐个按V2的4个Swap金额字解码买入/卖出方向，并与同交易Sync、区块末getReserves及两侧历史区块头交叉核验。
