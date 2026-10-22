@@ -1,3 +1,11 @@
+# 2026-10-22 F0 HEAD-budget forensic diagnostic (offline-only)
+
+- User reports independent **APPROVE_OFFLINE_CODE** for PR160 fixed `20c1df5ed69200ff24fbd60084c5553111d1eded`: 325/325 Mac tests, 13/13 targeted tests and adversarial HEAD freshness P1 cleared. Actual saved Journal SHA256 `e069b7cd38c2ad3c8a3af3a1b1c220efab1714fe4de0bb7a9e2b814a2302d61a` rechecked, six synthetic scenarios all < 2.178 blocks/s and five of six stopped on HEAD refresh cap.
+- This branch **does not change approved PR160**. New pure-offline trace diagnosis attributes six HEAD refreshes to no eligible source-confirmed height vs periodic checkpoint vs stale TTL; reports per-refresh newly confirmed block heights, remaining block budget, HEAD cost share, slot occupancy, and intact missing/unattempted denominators. Original Mac evidence stays private; GitHub only code & sanitized reports.
+- Next decide whether the short-run six HEAD refresh quota truncates what appears to be a throughput test; do NOT claim 3-way real provider success or automatically build live adapter. Next real run requires separately audited code, independent exact permit approval and fresh user authorization. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-22 PR160 HEAD-freshness P1 targeted fix pending independent review
 
 - Independent offline reviewer returned **REQUEST_CHANGES** for PR160 SHA `55969eb63d7f64bc29cc9853ce19b3a0ff544141` after 324/324 tests PASS but a direct adversarial counterexample: when a third HEAD request lasted 5000ms, the scheduler dispatched three new BLOCK reservations after the previously completed HEAD had become >=4000ms old (IDs 18/19/20, heights 1014–1016). The prior SHA retains its historical rejected conclusion.
