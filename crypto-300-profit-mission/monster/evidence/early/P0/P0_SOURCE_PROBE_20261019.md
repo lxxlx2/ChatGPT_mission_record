@@ -1,5 +1,36 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-22：Four.meme 538个历史日末曲线状态全量复查，以及5个真实迁池样本
+
+本轮以原冻结 **2025-07-01 UTC**、原日终BSC区块 **52,555,482**、既有538个地址母体作只读来源测试，没有增加/删去原有Pancake V2 30币，亦不改变用户未设定交易金额的规则。直接对Four.meme TokenManager2（`0x5c952063c7fc8610ffdb798152d69f0b9550762b`）的历史`_tokenInfos(address)`（selector `0xe684626b`），通过当日已部署的Multicall3 `aggregate3` **最多7个地址一批，共77次历史RPC** 取得 **538/538条、每条13字段**。按原index→CA逐条核查无重复、无跳号、字段长度准确和子调用成功，规范化结果全部保存在同一P0 JSON键`bsc_fourmeme_p0_all538_frozen_day_end_curve_state_20261022`。中途一次RPC断开未提交新数据，缩小批次后只补剩余区间，最后远端完成538/538。
+
+**来源分层，绝非538个可盈利新币：**
+
+| 历史日末曲线计价资产 | 一日发行索引数量 | `funds>0` 账面状态 | `funds=0` 账面状态 |
+| --- | ---: | ---: | ---: |
+| BNB原生报价（`quote=0x0`） | 463 | 294 | 169 |
+| USD1（`0x8d0d000ee44948fc98c9b98a4fa4921476f08b0d`） | 74 | 69 | 5 |
+| BSC-USDT（`0x55d398326f99059ff775485246999027b3197955`） | 1 | 1 | 0 |
+| **合计** | **538** | **364** | **174** |
+
+USD1和BSC-USDT两合约均通过**2025当日历史`decimals()`调用**验证为18位小数。原生BNB组`funds`账面合计 **162.489358576115452492 BNB**，USD1组 **4,346.346267470955042275 USD1**，USDT组 **1.510590016007912637 USDT**；**这些是各代币独立曲线内部统计字段的数学求和，不是钱包/LP可提现资产合计、不是当天成交量/利润，且不能把不同报价资产相加。**正余额中很多极小值：BNB正余额组中位数仅`0.000289542551425689 BNB`，USD1正余额组中位数`0.000000000084528062 USD1`。因此`funds>0`只表示日末净曲线状态，不证明有当时可成交额度或存在正收益。相反`funds=0`也**不能**证明历史上完全没有过买卖（可能发生了完整的买卖往返）。绝不能用364/538当作`18/30`双向执行验收。
+
+**真实迁池/DEX路由证据**：538条TokenManager2快照中`status=3`恰有 **5个**，其余533个`status=0`。按[Four.meme公开Helper3贸易文档](https://github.com/four-meme-community/fourmeme-docs/blob/main/docs/trade-guide.md)，状态3是`COMPLETED`，`liquidityAdded=true`表示交易应从曲线转向外部DEX。对这5个token本轮**逐个**在2025历史末块执行`TokenManagerHelper3.getTokenInfo(token)`，5/5返回`version=2`、经理合约及`funds`与原快照一致，`liquidityAdded=true`。另外对3个`status=0`控制代币核查Helper3，均为false。再通过PancakeSwap V2 Factory历史`getPair(token,WBNB)`取得5个确切Pair地址，以历史`token0()`方向和`getReserves()`真实存储值确认五个V2池**日末WBNB报价储备均为正**，且**全都超过本研究原冻结的2 WBNB储备观察门槛**（门槛不是用户订单金额）：
+
+| Four.meme Index | Pancake V2历史池 | 2025-07-01日末WBNB储备 |
+| --- | --- | ---: |
+| 247622 | `0x1ac2b4e97114b1b9527868cc53ea77312a93bbf7` | 50.485614251043559073 |
+| 247633 | `0xbc8d85dcf331db9bde9263c214c9cb05ab370cd2` | 5.257126062980039271 |
+| 247672 | `0x6f866815c5143db6a1718469a285a1608d5527d1` | 27.874518494003645776 |
+| 247708 | `0xf1e6edf686e9c2bad83891d0125db8ad0e06e4fa` | 30.035378217701950723 |
+| 247733 | `0x67922f7079bd77944e7b70e33ff9c782e7831610` | 5.267590176672389017 |
+
+这五条是完整母体上的**日末真实“发射平台已经完成→V2真实有储备”**证据，但并非已经还原了首次流动性到达的**精确时钟**，不等于当时所有用户均能安全买卖、无转账税、能按任何金额退出，亦非5个可卖出10倍标签。源数据跨日期、完整独立流动性事件证明和标准订单成本仍缺。
+
+**实质时钟风险**：538条中**41条`launchTime`早于本冻结日UTC开始**，其中**40条原始数值小于10亿秒**（典型`1751328`，不可能表示2025年Unix秒的实际创建日期）。`launchTime`为发行设置字段，不得当作`TokenCreate.chain_event_at`、真实创建块或2025公众`available_at`；应以实际链事件为锚，再独立核查当时可查询时钟。这个发现不通过增加主观时间窗口来修补。用户目标不变，下一阶段仍是来源完整性和真实T_entry前向可行性。
+
+**验证边界**：538行及五个Pair只来自现有Alchemy单一规范化免费BSC历史RPC，没有保存此次连接器真实HTTP原字节，没有第二独立来源，也没有跑完整538个创建事件日志；不存在已完成Mac真实47RPC原始档案复算的结论。没有新代码或单测/CI/独立Reviewer；本轮没有下载或重试之前拒绝的付费/403/429源，没买卖、部署、发送邮件或修改其它模块。整体仍 `P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO`，保留硬源停止日**2026-11-02**。
+
 ## 2026-10-21：Four.meme精准Git SHA离线测试11/11与冻结V2同日30币对比
 
 **这次不是“编写测试”而是已对两份真实Git源码的逐字节一致副本执行了完整的离线回归。** 当前PR #30当时固定 HEAD `a35d463d8b5654ace54b3f202bd763ef977ef8a3`；通过GitHub直接读取`local-agent/mission_agent/early/fourmeme_index_source_probe.py`和`local-agent/tests/test_fourmeme_index_source_probe.py`，在隔离Linux（Python **3.13.5**）原样存入对应包目录。源文件14,477字节、本地`git hash-object`为`7ddf0c2bcb4738cc4bc3c5c2df9e0002ed292546`，测试文件10,687字节、Git blob SHA为`b579074872d13792db4d229d23b94c5f1fbd6b4f`，**两个SHA均和远端GitHub同文件blob SHA精确一致**。在隔离运行环境执行：
