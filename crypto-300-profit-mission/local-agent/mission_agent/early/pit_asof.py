@@ -93,8 +93,6 @@ def asof(token_key, decision_at, information_policy, *, events,
         # never be disclosed in a past as-of view.
         if chain_at is None and e["event_type"] not in _OFFCHAIN_EVENTS:
             continue
-        if chain_at is not None and chain_at > decision:
-            continue
         basis = e.get("availability_basis")
         status = e.get("pit_status")
         effective = None
@@ -122,6 +120,8 @@ def asof(token_key, decision_at, information_policy, *, events,
                 raise PITAsOfError("DELAY_OVERFLOWS_CLOCK") from None
             grade = "PIT_RECONSTRUCTED_ONLY"
         else:
+            continue
+        if chain_at is not None and chain_at > decision:
             continue
         if effective > decision:
             continue
