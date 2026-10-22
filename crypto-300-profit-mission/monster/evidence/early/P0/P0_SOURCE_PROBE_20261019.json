@@ -21795,6 +21795,144 @@
       }
     ],
     "all_538_contract_storage_state_non_truncated": true,
-    "all_538_index_identity_matches_frozen_source": true
+    "all_538_index_identity_matches_frozen_source": true,
+    "summary": {
+      "snapshot_state": "538_OF_538_RECONSTRUCTED_AT_SINGLE_HISTORIC_BLOCK",
+      "classification": "END_OF_DAY_TOKEN_MANAGER_CURVE_ACCOUNTING_NOT_NET_BUY_SELL_FLOW",
+      "day_end_snapshot_block": 52555482,
+      "quote_groups": [
+        {
+          "quote_ca": "0x0000000000000000000000000000000000000000",
+          "asset": "BNB_NATIVE",
+          "count": 463,
+          "day_end_funds_nonzero": 294,
+          "day_end_funds_zero": 169,
+          "day_end_funds_total_raw": "162489358576115452492",
+          "quote_decimals_at_2025_end_day": 18,
+          "day_end_funds_nonzero_median_raw": "289542551425689"
+        },
+        {
+          "quote_ca": "0x8d0d000ee44948fc98c9b98a4fa4921476f08b0d",
+          "asset": "USD1",
+          "count": 74,
+          "day_end_funds_nonzero": 69,
+          "day_end_funds_zero": 5,
+          "day_end_funds_total_raw": "4346346267470955042275",
+          "quote_decimals_at_2025_end_day": 18,
+          "day_end_funds_nonzero_median_raw": "84528062"
+        },
+        {
+          "quote_ca": "0x55d398326f99059ff775485246999027b3197955",
+          "asset": "BSC_USDT",
+          "count": 1,
+          "day_end_funds_nonzero": 1,
+          "day_end_funds_zero": 0,
+          "day_end_funds_total_raw": "1510590016007912637",
+          "quote_decimals_at_2025_end_day": 18,
+          "day_end_funds_nonzero_median_raw": "1510590016007912637"
+        }
+      ],
+      "positive_funds_total": 364,
+      "zero_funds_total": 174,
+      "all_538_status_raw_distribution": {
+        "0": 533,
+        "3": 5
+      },
+      "manager_status3_same_day_count": 5,
+      "liquidityAdded_confirmation": "ALL_FIVE_HELPER3_GETTOKENINFO_RETURN_TRUE_AT_SAME_BLOCK",
+      "status0_control_examples_liquidityAdded_false": 3,
+      "day_end_quote_reserves_at_dex_for_five_status3_pairs": "PROVEN_BY_PANCAKE_V2_FACTORY_GETPAIR_PLUS_PAIR_TOKEN0_AND_GETRESERVES_AT_SAME_BLOCK",
+      "each_pair_passed_original_frozen_2_WBNB_quote_reserve_research_floor": true,
+      "pair_liquidity_proof_is_not_trade_execution_or_contemporaneous_PIT": true,
+      "launchTime_raw_before_day_start": 41,
+      "launchTime_raw_less_than_1e9": 40,
+      "launchTime_not_authoritative_for_first_creation_event": true,
+      "launchtime_weird_example": [
+        {
+          "index": 247598,
+          "raw": "1751328"
+        },
+        {
+          "index": 247600,
+          "raw": "1751328"
+        },
+        {
+          "index": 247603,
+          "raw": "1751328"
+        }
+      ],
+      "verified_migrations": [
+        {
+          "index": 247622,
+          "token_ca": "0x05008b299d880eeb424f1dd84d3b85a0381b4444",
+          "eth_call_helper3_liquidityAdded_true": true,
+          "helper3_version": 2,
+          "helper3_manager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "pair": "0x1ac2b4e97114b1b9527868cc53ea77312a93bbf7",
+          "paired_quote": "WBNB",
+          "pool_quote_reserve_wei": "50485614251043559073",
+          "quote_floor_2_WBNB_met_at_day_end": true
+        },
+        {
+          "index": 247633,
+          "token_ca": "0x2314f7ec7c490f2435d7b7f1c45352ef3fd04444",
+          "eth_call_helper3_liquidityAdded_true": true,
+          "helper3_version": 2,
+          "helper3_manager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "pair": "0xbc8d85dcf331db9bde9263c214c9cb05ab370cd2",
+          "paired_quote": "WBNB",
+          "pool_quote_reserve_wei": "5257126062980039271",
+          "quote_floor_2_WBNB_met_at_day_end": true
+        },
+        {
+          "index": 247672,
+          "token_ca": "0xd6cf4c65571c1e05d48ff6496f42bb6148cf4444",
+          "eth_call_helper3_liquidityAdded_true": true,
+          "helper3_version": 2,
+          "helper3_manager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "pair": "0x6f866815c5143db6a1718469a285a1608d5527d1",
+          "paired_quote": "WBNB",
+          "pool_quote_reserve_wei": "27874518494003645776",
+          "quote_floor_2_WBNB_met_at_day_end": true
+        },
+        {
+          "index": 247708,
+          "token_ca": "0x2ec32f7d8c8edf0d3027ea22867d7fe122824444",
+          "eth_call_helper3_liquidityAdded_true": true,
+          "helper3_version": 2,
+          "helper3_manager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "pair": "0xf1e6edf686e9c2bad83891d0125db8ad0e06e4fa",
+          "paired_quote": "WBNB",
+          "pool_quote_reserve_wei": "30035378217701950723",
+          "quote_floor_2_WBNB_met_at_day_end": true
+        },
+        {
+          "index": 247733,
+          "token_ca": "0x0cea1826d38a1d124bffbe510142f58c11a64444",
+          "eth_call_helper3_liquidityAdded_true": true,
+          "helper3_version": 2,
+          "helper3_manager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "pair": "0x67922f7079bd77944e7b70e33ff9c782e7831610",
+          "paired_quote": "WBNB",
+          "pool_quote_reserve_wei": "5267590176672389017",
+          "quote_floor_2_WBNB_met_at_day_end": true
+        }
+      ],
+      "quote_decimals_on_chain_at_day_end": {
+        "USD1": 18,
+        "BSC_USDT": 18
+      },
+      "missing_source_truths": [
+        "RECEIPT_OR_RAW_HTTP_BODY_ARCHIVE_NOT_SAVED_FOR_THIS_NORMALIZED_CONNECTOR_BATCH",
+        "OTHER_CHAIN_PROVIDERS_NOT_CROSSCHECKED",
+        "NO_2025_REAL_TIME_PUBLIC_AVAILABLE_AT",
+        "NO_FULL_CHAIN_ALL_V3_LAUNCHPADS_DENOMINATOR",
+        "NO_REPLAY_OF_EACH_TOKEN_FIRST_TRADE_OR_END_TO_END_SELL_NET_PNL"
+      ],
+      "P0": "INSUFFICIENT_COVERAGE",
+      "P1": "BLOCKED",
+      "G4": "UNKNOWN",
+      "G6": "NO_GO"
+    }
   }
 }
