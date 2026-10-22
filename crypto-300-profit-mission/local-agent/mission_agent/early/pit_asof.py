@@ -63,7 +63,8 @@ def asof(token_key, decision_at, information_policy, *, events,
     if information_policy == "NO_VERIFIABLE_ASOF":
         return {"token_key": token_key, "decision_at": decision.isoformat(),
                 "policy": information_policy, "pit_status": "NOT_SCORABLE",
-                "events": [], "source_provenance_independently_verified": False}
+                "events": [], "source_provenance_independently_verified": False,
+                "p1_gate_passed": False}
 
     seen = {}
     for e in events:
@@ -130,7 +131,8 @@ def asof(token_key, decision_at, information_policy, *, events,
              "PIT_VERIFIED" if ordered else "NOT_SCORABLE")
     result = {"token_key": token_key, "decision_at": decision.isoformat(),
               "policy": information_policy, "pit_status": grade,
-              "events": ordered, "source_provenance_independently_verified": False}
+              "events": ordered, "source_provenance_independently_verified": False,
+                "p1_gate_passed": False}
     if information_policy == "RECONSTRUCTED_CONSERVATIVE":
         result["assumption_ms"] = historical_delay_ms
         result["delay_policy_sha256"] = historical_delay_policy_sha256.lower()
