@@ -3,6 +3,7 @@ import datetime as dt
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -19,9 +20,13 @@ def block(height, h, parent):
             'timestamp': hex(1792600000 + height)}
 
 
-A = '0x' + 'a' * 64
-B = '0x' + 'b' * 64
-P = '0x' + '1' * 64
+def block_hash(height):
+    return '0x' + hashlib.sha256(('offline-block-' + str(height)).encode()).hexdigest()
+
+
+A = block_hash(100)
+B = block_hash(101)
+P = block_hash(99)
 TOKEN0 = '0x' + '1' * 40
 TOKEN1 = '0x' + '2' * 40
 PAIR = '0x' + '3' * 40
@@ -36,7 +41,10 @@ class FakeRPC:
 
     def __init__(self, *, first_height=100, second_height=101,
                  before=500, after=501, chain=56, changed_hash=False,
-                 bad_pair=False, bad_token=False, broken_raw=False):
+                 bad_pair=False, bad_token=False, broken_raw=False,
+                 duplicate_pool=False, duplicate_tokens=False,
+                 reversed_tokens=False, broken_parent_height=None,
+                 short_count=False):
         self.first_height = first_height
         self.second_height = second_height
         self.before = before
@@ -46,37 +54,56 @@ class FakeRPC:
         self.bad_pair = bad_pair
         self.bad_token = bad_token
         self.broken_raw = broken_raw
+        self.duplicate_pool = duplicate_pool
+        self.duplicate_tokens = duplicate_tokens
+        self.reversed_tokens = reversed_tokens
+        self.broken_parent_height = broken_parent_height
+        self.short_count = short_count
         self.calls = []
         self.head_reads = 0
         self.count_reads = 0
         self.first_header_reads = 0
+        self.pool_offsets = {}
 
     def request(self, method, params):
         self.calls.append((method, params))
         if method == 'eth_chainId':
-            value = hex(self.chain)
+            value = hex(self.chain) if type(self.chain) is int else self.chain
         elif method == 'eth_blockNumber':
             self.head_reads += 1
             value = hex(self.first_height if self.head_reads == 1 else self.second_height)
         elif method == 'eth_getBlockByNumber':
             height = int(params[0], 16)
+            h = block_hash(height)
             if height == self.first_height:
                 self.first_header_reads += 1
-                h = B if self.changed_hash and self.first_header_reads >= 3 else A
-                value = block(height, h, P)
-            else:
-                value = block(height, B, A)
+                if self.changed_hash and self.first_header_reads >= 3:
+                    h = '0x' + 'e' * 64
+            parent = ('0x' + 'f' * 64 if height == self.broken_parent_height
+                      else block_hash(height - 1))
+            value = block(height, h, parent)
         elif method == 'eth_call':
             data = params[0]['data']
             if data == m.COUNT_SELECTOR:
                 self.count_reads += 1
-                value = hex(self.before if self.count_reads == 1 else self.after)
+                count = self.before if self.count_reads == 1 else self.after
+                value = hex(count) if self.short_count else '0x' + format(count, '064x')
             elif data.startswith(m.PAIRS_SELECTOR):
-                value = '0x' + '0' * 64 if self.bad_pair else padded(PAIR)
-            elif data == m.TOKEN0_SELECTOR:
-                value = padded(TOKEN0)
-            elif data == m.TOKEN1_SELECTOR:
-                value = padded(TOKEN0 if self.bad_token else TOKEN1)
+                offset = int(data[len(m.PAIRS_SELECTOR):], 16) - self.before
+                pair = '0x' + format(int(PAIR, 16) + (0 if self.duplicate_pool else offset), '040x')
+                self.pool_offsets[pair] = offset
+                value = '0x' + '0' * 64 if self.bad_pair else padded(pair)
+            elif data in (m.TOKEN0_SELECTOR, m.TOKEN1_SELECTOR):
+                offset = self.pool_offsets[params[0]['to']]
+                if self.duplicate_tokens:
+                    offset = 0
+                tokens = ('0x' + format(int(TOKEN0, 16) + offset, '040x'),
+                          '0x' + format(int(TOKEN1, 16) + offset, '040x'))
+                if self.reversed_tokens:
+                    tokens = tuple(reversed(tokens))
+                if self.bad_token:
+                    tokens = (tokens[0], tokens[0])
+                value = padded(tokens[0 if data == m.TOKEN0_SELECTOR else 1])
             else:
                 raise AssertionError('unexpected eth_call selector: ' + data)
         else:
@@ -89,17 +116,28 @@ class FakeRPC:
 
 
 class Clock:
-    def __init__(self):
+    def __init__(self, *, step_ms=1, utc_jump_at=None, utc_jump_seconds=0):
         self.tick = 0
         self.mono = 0
+        self.step_ms = step_ms
+        self.advance_ns = 0
+        self.utc_jump_at = utc_jump_at
+        self.utc_jump_seconds = utc_jump_seconds
 
     def now(self):
         self.tick += 1
-        return dt.datetime(2026, 10, 22, tzinfo=dt.timezone.utc) + dt.timedelta(milliseconds=self.tick)
+        jump = (self.utc_jump_seconds if self.utc_jump_at is not None
+                and self.tick >= self.utc_jump_at else 0)
+        return dt.datetime(2026, 10, 22, tzinfo=dt.timezone.utc) + dt.timedelta(
+            milliseconds=self.tick * self.step_ms,
+            microseconds=self.advance_ns // 1000, seconds=jump)
 
     def monotonic(self):
-        self.mono += 1000000
-        return self.mono
+        self.mono += self.step_ms * 1000000
+        return self.mono + self.advance_ns
+
+    def sleep(self, seconds):
+        self.advance_ns += int(seconds * 1000000000)
 
 
 def run(root, **fake_overrides):

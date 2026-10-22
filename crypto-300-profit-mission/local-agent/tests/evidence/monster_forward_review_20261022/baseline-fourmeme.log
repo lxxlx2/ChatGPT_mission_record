@@ -1,0 +1,16 @@
+test_any_hole_fails_closed_does_not_write_success_manifest (test_fourmeme_index_source_probe.FourmemeIndexProbeTests.test_any_hole_fails_closed_does_not_write_success_manifest) ... ok
+test_duplicate_token_address_fails_closed (test_fourmeme_index_source_probe.FourmemeIndexProbeTests.test_duplicate_token_address_fails_closed) ... ok
+test_exact_538_addresses_and_two_real_event_shapes_archived (test_fourmeme_index_source_probe.FourmemeIndexProbeTests.test_exact_538_addresses_and_two_real_event_shapes_archived) ... ok
+test_multicall_codec_rejects_bad_result_and_failed_subcall (test_fourmeme_index_source_probe.FourmemeIndexProbeTests.test_multicall_codec_rejects_bad_result_and_failed_subcall) ... ok
+test_no_more_than_15_inner_calls_per_multicall (test_fourmeme_index_source_probe.FourmemeIndexProbeTests.test_no_more_than_15_inner_calls_per_multicall) ... ok
+test_padded_address_word_validation (test_fourmeme_index_source_probe.FourmemeIndexProbeTests.test_padded_address_word_validation) ... ok
+test_reject_existing_output_directory (test_fourmeme_index_source_probe.FourmemeIndexProbeTests.test_reject_existing_output_directory) ... ok
+test_request_budget_is_hard_limited (test_fourmeme_index_source_probe.FourmemeIndexProbeTests.test_request_budget_is_hard_limited) ... ok
+test_unsafe_endpoint_rejected_without_network (test_fourmeme_index_source_probe.FourmemeIndexProbeTests.test_unsafe_endpoint_rejected_without_network) ... ok
+test_wrong_chain_fails_before_enumeration (test_fourmeme_index_source_probe.FourmemeIndexProbeTests.test_wrong_chain_fails_before_enumeration) ... ok
+test_wrong_manager_create_event_fails_after_538_rows (test_fourmeme_index_source_probe.FourmemeIndexProbeTests.test_wrong_manager_create_event_fails_after_538_rows) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.024s
+
+OK

@@ -1,3 +1,17 @@
+## 2026-10-23 独立 Mac 离线审核与修复（待完整负例复验）
+
+基线 `89868fa08c90f91d8983cebce850631faa9f05ba`，远端初查相同。真实 Mac Darwin arm64 / Python 3.14.7，隔离 checkout `/private/tmp/monster-forward-review-20261022`，独立 venv，无真实 RPC。主工作区 x-revenue 脏文件未动。
+
+基线结论 REQUEST_CHANGES：P1 实际计数窗口可达40秒仍成功、跨RPC UTC回拨、socket timeout并非总deadline、Content-Length截断被接受；P2 query凭据回显/默认文件权限、跳块祖先未验证、重复池未拒绝。独立审阅由本会话三个子agent实际完成基线负例；修复后二审因额度中断，不能宣称已完成。
+
+本次最小修复位于 forward_observation.py：专用只读 transport、20秒整个请求deadline、HTTP长度核验、凭据回显拦截、0700/0600；实际count完成间隔最多3秒、整capture耗时独立记录、本地UTC/monotonic一致性、跳块祖先核对并在20次内动态减少身份覆盖、重复池拒绝、ABI计数word核验。历史shared transport、PIT定义、冻结样本和ADR均未修改。
+
+实际命令在 local-agent 目录：`/private/tmp/monster-forward-review-env-20261022/bin/python -m unittest discover -s tests -p PATTERN -v`。PATTERN及结果：基线 test_monster_forward_observation.py 15 PASS；test_monster_pit_asof.py 24 PASS；test_fourmeme_index_source_probe.py 11 PASS；test_monster_early*.py 38 PASS；修复后 test_monster_forward*.py 33 PASS，0 skip。测试仅fake/in-memory/127.0.0.1，未接外部RPC。原始输出在 local-agent/tests/evidence/monster_forward_review_20261022。初次修复后transport fixture缺status导致21 errors，补齐真实HTTP fixture字段后33通过，保留最终输出。尚未完成修复后新增时窗/时钟/祖先全部独立负例回归，因此最终 REQUEST_CHANGES，不能以33项通过替代未覆盖项。
+
+环境：当前进程 MONSTER_BSC_ARCHIVE_RPC_URL 未设置，主checkout根目录和local-agent均无.env；连接器已有免费应用不代表Mac CLI已配置，免费额度未联网核实。已建私有目录 `/Users/jerson/Library/Application Support/MonsterResearch/forward-observation`，权限0700，无采样数据。最多20次RPC，单次总deadline20秒，无重试，真实运行需独立授权且仅一次前台。16核Mac初查load 2.69/2.24/2.34，空闲盘437GiB；这是瞬时快照，真实运行前须重新查看CPU/内存，不停止任何现有进程。没有安装launchd/cron或修改生产服务。
+
+最终：REQUEST_CHANGES / MANUAL_FORWARD_READONLY_PILOT_BLOCKED。剩余阻断为修复后时钟/祖先/实际窗口负例复验与独立二审，以及Mac RPC安全配置。历史2025 available_at仍UNKNOWN；本机收包时刻不是全网首次公开时间，Factory增长不证明流动性、税、可买可卖、固定金额容量或利润。NO_MERGE / NO_DEPLOY / NO_TRADE / NO_GMAIL，P1仍BLOCKED。
+
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
 ## 2026-10-22：前向本地时钟证据试验——离线原型已入Git，未运行Mac
