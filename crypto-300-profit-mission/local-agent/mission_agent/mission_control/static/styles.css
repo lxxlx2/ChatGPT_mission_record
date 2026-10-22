@@ -448,6 +448,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d7dce3}
 }
 
 .cluster-status[hidden],.cluster-result[hidden],.cluster-preview[hidden]{display:none}
+.cluster-recovery{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:0 0 12px;padding:10px 12px;border:1px solid #354254;border-radius:6px;background:#111820}
+.cluster-recovery span{font-size:11px;color:#8e98a5}
+.cluster-recovery[hidden]{display:none}
 
 /* Transaction-first presentation. Forensic details are available on demand. */
 #coverage-details{margin-bottom:9px}
