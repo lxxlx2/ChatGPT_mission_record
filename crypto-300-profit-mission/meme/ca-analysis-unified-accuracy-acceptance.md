@@ -1,6 +1,7 @@
 # Meme CA 链上尽调统一查询：准确性改造与验收标准
 
-Status: PRODUCT REQUIREMENTS / IMPLEMENTATION NOT DONE / PRODUCTION UNCHANGED
+**Current 2026-10-22 status: ORIGINAL_SINGLE_MODE_REQUIREMENT_STILL_BINDING / PARTIAL_CA_CODE_INSTALLED / REAL_DEEP_QUERY_FAILED / COMPLETE_REAL_RESULT_NOT_ACCEPTED / DOCS_REVIEW_ONLY** — see section 8
+Original 2026-10-11 status (archival, not a claim about today): PRODUCT REQUIREMENTS / IMPLEMENTATION NOT DONE / PRODUCTION UNCHANGED
 Date: 2026-10-11 Asia/Bangkok
 Owner: Mission 300-3000 overarching product governance. Engineering handoff: Frank/Meme module.
 Authority: `WALLET_CLUSTER_ANALYSIS_SPEC.md`, `../MISSION_SPEC.md`, `../local-agent/config/follow_policy_v1.approved.json` (Frank *follow-decision only*).
@@ -66,10 +67,12 @@ No unapproved wallet action, monitor, scheduler, Gmail delivery, trade or paid d
 ## 5. $30 quote removal and module isolation
 
 - **Remove `$30 实际可成交价`, `$30 可成交报价` and `execution_quote_30_usdc` from the generic manual CA analysis output and job execution path.** No expired snapshot in a headline. If price exists, show dated market reference and main-pool metrics. Contract transfer restrictions, tradability and pool depth may be displayed as independent risk evidence without a user-invented order amount.
-- Leave `follow_policy_v1.approved.json` and the **Frank signals/follow-decision $30 Jupiter quote** untouched. That historical user-approved separate follow strategy is outside this CA product correction. No silent change to Frank frozen policy.
+- **Historical-vs-current authority correction (2026-10-22):** the old `follow_policy_v1.approved.json` and its $30 Jupiter quote existed in the prior runtime; that is **NOT a currently user-authorized default amount**. The user expressly rejected predefined trade size, and frozen G1 PR #114 supersedes that old assumption. This CA requirements change grants **no permission** to preserve $30 as a live new-decision default, to activate it, or to change the running V1/MC policy or delivery. Any separate removal/deactivation of obsolete live fixed-amount MC behavior requires a tightly scoped source/notification audit, independent review, and explicit user authorization; no unreviewed policy mutation here.
 - If a future user explicitly asks a concrete trade size, a separate on-demand trade quote can use that size; it is not a default CA requirement.
 
 ## 6. Milestones and pass/fail gates (in this order)
+
+**Release authority vs development increments:** Gates A–D below remain the **full product correctness/acceptance contract**, not an instruction to repeat every adversarial CA case, market scenario, external comparison, or browser screenshot for each bugfix. Section 8.3 is the **current bounded implementation ordering within this same contract**: diagnose one real failed job first, fix the proven critical path, add independent factual checks required for that path, and only then complete any remaining Gate A–D coverage relevant to declaring the *whole CA product* COMPLETE. Passing an 8.3 incremental milestone cannot waive an unpassed Gate A–D requirement or authorize production deployment. If required external sources or access are unavailable, record the concrete missing evidence and stop with PARTIAL/BLOCKED, rather than chasing every nonblocking P3 case or falsely claiming COMPLETE.
 
 ### Gate A: source/data semantics
 
@@ -104,3 +107,43 @@ No unapproved wallet action, monitor, scheduler, Gmail delivery, trade or paid d
 **Current state: `REQUIREMENTS_RECORDED / CODE_NOT_CHANGED / TESTS_NOT_RUN_FOR_THIS_SPEC / NOT_DEPLOYED`.**
 
 The module implementation conversation should first reconcile this requirement against actual head and propose an evidence-oriented design; then implement, independent review, test and request rollout approval. The 300-3000 general-governance conversation will review evidence, completion gates, provenance and priority, not pretend the engineering milestone has been executed. No new automation, Gmail, runtime task or Git PR was created by this requirements record.
+
+---
+
+## 8. 2026-10-22 CA 单模式方案修订与真实故障验收门槛（待 Claude 审核）
+
+本节沿用第 1、3、6 节的**一个 CA 输入、一个分析按钮、内部渐进深入、统一完整性验收**，不另起查询模式。第 5 节现已直接修正 $30 权限用语，原始历史事实另在 Git 旧版保存，不赋予现时固定金额权限。Issue #165 在重述 10 月 13–14 日问题时提到“快速/标准/深度”，描述的是当时**已有三个界面档位的使用诉求/故障范围**，并非一条附有用户明确批准、可推翻第 1 节单模式产品决策的正式变更记录。最近用户明确要求“原来确定的原则不要变”，因此本次**暂沿用原 CA 单模式规范**；如 Claude 找到真实更晚的用户明确批准档位变更，应单列证据并暂停相关 UI 实现，由用户作架构/需求变更决定。无论界面档位，Issue #165 的只读失败原因定位都不受影响。
+
+### 8.1 现状不能误报为完成
+
+2026-10-22 用户实际 Mac（运行 PR157 产品 SHA 31dd598df248ca15f731913a5cbf82e88b981874）在一个 Mint 的 Deep 模式先看到基础行情/部分 token 权限/Top10 提示，随后出现“查询状态读取失败 / Failed to fetch”。基础信息出现在页面**不等于**资金链追踪完成，前端 fetch 报错也**不证明**免费 RPC 429。尚未读到这次失败的浏览器 Network、后端 job ID、worker 错误、实际报告保存证据，根因状态为 REGRESSION_OPEN、NOT_REPRODUCED_CAUSE。
+
+当前 ClusterJobManager 的队列/结果状态主要在 Dashboard 进程内存保存，进程重启可能令轮询无法找到工作；历史已完成报告另存 control_root/cluster-reports/Mint/latest.json。不能把丢失的内存 job 当作“完整扫描失败”，也不能用已有历史报告冒充正在执行完成。报告只呈现经验证的部分数据和其原时点，不补填无来源的市场价。
+
+### 8.2 维持原权威要求，恢复“可用而准确”的单入口
+
+- 用户只提交一个明确 Mint 并点一次分析，页面返回一个稳定可查询 job ID；服务内部可经过 BASE、TOKEN_AUTHORITIES、HOLDERS、FUNDING、REPORT 阶段，只有完整性验收过关才称 COMPLETE
+- 每个阶段结果附上源标识、采集/事件时间、Solana slot、返回覆盖/分页、独立核验状态；行情还需 Mint/chain/pair/quote 与报价时点，不能用历史参考价冒充现价
+- 若浏览器轮询 GET 中断，保留原 job ID 和已验证部分，前端“继续读取”只恢复 GET，不自动再次 POST/发起昂贵扫描；页面状态显示“分析请求已提交，读取结果中断”而非泛化 Failed to fetch
+- 若 server/worker 重启，需有可审计的最小持久元数据及报告引用，明确 JOB_INTERRUPTED、已有阶段保存情况和可续读范围；生产写入/新 schema 需要独立代码与用户明确授权，不能本设计直接启动
+- RPC 403/429、超时、请求内容不全、owner账户/Top10 证据不足、结果持久化写入失败是不同错误；保留已完成阶段，同时把未完成部分标为 INCOMPLETE_EVIDENCE，**不得出现全量完成绿灯**
+- 市场基础信息可用不代表精确排除 LP 后 Top10、控制关联、首次真正买入、Token-2022 扩展风险和 X 叙事已经核实；这些原第 3–4 节准确性要求绝不降低
+- 真正查询必须以数据正确性与最终报告为目标；不得假设每个持有人只能属于一个控制者，不得用交易所公共资金源误连鲸鱼，未核实关系不输出具体风险概率
+
+### 8.3 先调查再开发（Issue #165），每步给定业务验收
+
+**唯一门禁映射**：第 6 节 Gate A–D = CA 整体产品最终验收；下表 A–E = 本轮开发动作的局部次序，**不是另外一套能绕过 Gate A–D 的产品验收**。本轮第一优先级只要求 A 的一份真实只读故障诊断；B/C 只针对已证实的根因；D 补回 Gate A/B 的数据完整性，E 走 Gate C/D 与冻结 G1 的 G3 独立审查。必须完成的 CA 完整性范围没有因为先修 Failed to fetch 而降低。未获允许的额外案例/外部来源在当前局部诊断阶段先标待验收，不进行无界补采。
+
+**前置来源可行性门（仅设计和现有证据审计）**：先列出已经可用的 owner 全账户/双 Token Program 数据与 slot/供应商、分页完备性和免费额度；任何为证明完整余额或资金源而新增的实际 RPC/索引器调用，须先提交节点、预计请求数、上限、成本和失败停止条件，获独立用户批准后才准探测。未经验证的 RPC 可行性只能标 BLOCKED_BY_SOURCE，不能写已完成。
+
+| 顺序 | 一次有界真实证据 | 授权与写入边界 | 结束条件 / 第 6 节映射 |
+|---|---|---|---|
+| A Mac 只读根因 | 已有失败 CA/job 的请求地址、HTTP 码/耗时、Dashboard/worker 状态及已存报告；不新发 CA 分析 POST | 已有本地信息只读，不增加 RPC 或修改生产状态 | 找到主要失败阶段或精确缺少的单一证据；Gate A 前置 |
+| B 隔离复现 | 使用旧 Handler 与轮询在临时端口验证断线、job 丢失、worker/source/保存错误 | 仅私有临时 fixture；不连接生产 writer/DB/未批 RPC | GET 失败不等于链 RPC 失败且不自动重 POST；Gate C 故障部分 |
+| C 最小根因修复 | 按可复现失败修复轮询与状态读回，优先重用现有报告缓存；设计持久 job 元数据 | 任何真实 control-root/SQLite 新写入、schema、定时任务或 Dashboard 重启另行审批；先隔离 dry-run | 同 CA 真浏览器得到有完整度区分的报告或明确 INCOMPLETE_EVIDENCE；Gate C 局部 |
+| D 核心数据正确性 | 真实 CA 的 owner/LP、Token-2022、资金来源和市场叙事，按同一币种与来源口径复验 | 新 RPC 或外站数据读取的预算/请求上限先经用户批准；无授权不调用，记录来源 blocker | 满足第 6 节 Gate A/B 与未做的必要覆盖；不能靠单例宣布全产品 COMPLETE |
+| E 独立审查与 Mac | 固定 SHA 独立 AI、CI 与 Mac 真实成功和断线恢复 | 新代码安装/运行、生产数据写入、任何投递修改须分别取得对应用户授权；不自动合并 | Gate C/D 与 G1 G3 通过后可请求单独部署许可；未通过则 NO_GO |
+
+所有真实新 Solana RPC 读取必须另经用户批准调用预算、节点、最大次数、预期费用和超限停止条件；不得因此新增本机常驻扫描或影响旧 V1、MC Loop、邮件、数据库、钱包执行。部署权限与本设计审核权限独立。
+
+本节状态：**DESIGN_REVIEW_ONLY / USER_REAL_FAILURE_OPEN / NO_NEW_RPC / NO_PRODUCTION_WRITES / NO_DEPLOY**。
