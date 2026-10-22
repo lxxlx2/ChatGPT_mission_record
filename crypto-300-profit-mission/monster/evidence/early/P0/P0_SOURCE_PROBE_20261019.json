@@ -21986,7 +21986,9 @@
         "same_block_swap_count": 0,
         "same_block_swap_events": [],
         "no_public_available_at_proof": true,
-        "source_original_http_bytes_sha256": null
+        "source_original_http_bytes_sha256": null,
+        "same_block_quote_asset": "WBNB",
+        "same_block_swap_quote_legs": []
       },
       {
         "fourmeme_index": 247633,
@@ -22028,7 +22030,26 @@
           }
         ],
         "no_public_available_at_proof": true,
-        "source_original_http_bytes_sha256": null
+        "source_original_http_bytes_sha256": null,
+        "same_block_quote_asset": "WBNB",
+        "same_block_swap_quote_legs": [
+          {
+            "tx_hash": "0x68e5bcfddf85536a8ff495d171cf5995655a3fe2d04ae28c54f9b17c2c9c67e0",
+            "log_index": 17,
+            "quote_in_wei": "2500000000000000000",
+            "quote_out_wei": "0",
+            "quote_leg_direction": "WBNB_IN_TOKEN_BUY",
+            "verification": "V2_POOL_SWAP_ABI_FOUR_AMOUNT_WORDS_AND_SAME_BLOCK_HISTORICAL_TOKEN0_ETH_CALL"
+          },
+          {
+            "tx_hash": "0x2cbfc2c99672dd9b5ad109fb1559637d9c1ecd5e0ef8db77ddf47185ab6f715a",
+            "log_index": 648,
+            "quote_in_wei": "500000000000000000",
+            "quote_out_wei": "0",
+            "quote_leg_direction": "WBNB_IN_TOKEN_BUY",
+            "verification": "V2_POOL_SWAP_ABI_FOUR_AMOUNT_WORDS_AND_SAME_BLOCK_HISTORICAL_TOKEN0_ETH_CALL"
+          }
+        ]
       },
       {
         "fourmeme_index": 247672,
@@ -22065,7 +22086,18 @@
           }
         ],
         "no_public_available_at_proof": true,
-        "source_original_http_bytes_sha256": null
+        "source_original_http_bytes_sha256": null,
+        "same_block_quote_asset": "WBNB",
+        "same_block_swap_quote_legs": [
+          {
+            "tx_hash": "0x0fe8d675749aecdac0d68a2afa66a9b52e05bcf857601aa16ed07aee9cf974fa",
+            "log_index": 675,
+            "quote_in_wei": "500000000000000000",
+            "quote_out_wei": "0",
+            "quote_leg_direction": "WBNB_IN_TOKEN_BUY",
+            "verification": "V2_POOL_SWAP_ABI_FOUR_AMOUNT_WORDS_AND_SAME_BLOCK_HISTORICAL_TOKEN0_ETH_CALL"
+          }
+        ]
       },
       {
         "fourmeme_index": 247708,
@@ -22102,7 +22134,18 @@
           }
         ],
         "no_public_available_at_proof": true,
-        "source_original_http_bytes_sha256": null
+        "source_original_http_bytes_sha256": null,
+        "same_block_quote_asset": "WBNB",
+        "same_block_swap_quote_legs": [
+          {
+            "tx_hash": "0x3879d63c39bf23f5964cdd80fa45c4042a19cf6a380bcc07309b029ca9113ec2",
+            "log_index": 423,
+            "quote_in_wei": "500000000000000000",
+            "quote_out_wei": "0",
+            "quote_leg_direction": "WBNB_IN_TOKEN_BUY",
+            "verification": "V2_POOL_SWAP_ABI_FOUR_AMOUNT_WORDS_AND_SAME_BLOCK_HISTORICAL_TOKEN0_ETH_CALL"
+          }
+        ]
       },
       {
         "fourmeme_index": 247733,
@@ -22139,12 +22182,30 @@
           }
         ],
         "no_public_available_at_proof": true,
-        "source_original_http_bytes_sha256": null
+        "source_original_http_bytes_sha256": null,
+        "same_block_quote_asset": "WBNB",
+        "same_block_swap_quote_legs": [
+          {
+            "tx_hash": "0x924e3cacb3518d8f779ed17af5b82b73a25825c9b38789bd8054268992b65b2b",
+            "log_index": 530,
+            "quote_in_wei": "500000000000000000",
+            "quote_out_wei": "0",
+            "quote_leg_direction": "WBNB_IN_TOKEN_BUY",
+            "verification": "V2_POOL_SWAP_ABI_FOUR_AMOUNT_WORDS_AND_SAME_BLOCK_HISTORICAL_TOKEN0_ETH_CALL"
+          }
+        ]
       }
     ],
     "phase_P0": "INSUFFICIENT_COVERAGE",
     "phase_P1": "BLOCKED",
     "G6": "NO_GO",
-    "no_model_no_purchase_no_trade_no_deploy_no_gmail": true
+    "no_model_no_purchase_no_trade_no_deploy_no_gmail": true,
+    "same_block_verified_WBNB_buy_legs": 5,
+    "same_block_verified_WBNB_sell_legs": 0,
+    "sum_observed_same_block_swap_WBNB_quote_in_wei": "4500000000000000000",
+    "swap_direction_source": "READ_ONLY_ALCHEMY_ETH_GETLOGS_SWAP_ABI_PLUS_HISTORIC_PAIR_TOKEN0_ETH_CALL",
+    "same_block_quote_swaps_not_full_daily_volume": true,
+    "same_block_buys_do_not_prove_reactive_public_entry": true,
+    "same_block_buys_do_not_prove_any_later_sell": true
   }
 }
