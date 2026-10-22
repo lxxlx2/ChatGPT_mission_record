@@ -1,0 +1,28 @@
+name: Frank PR157 dashboard-only temp release lab
+on:
+  push:
+    branches: [planning/frank-pr157-readonly-dashboard-release-20261022]
+    paths:
+      - '.github/workflows/frank-pr157-dashboard-release-lab-20261022.yml'
+      - 'crypto-300-profit-mission/local-agent/scripts/frank_pr157_dashboard_release_lab.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  temp-rehearsal-no-production:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check syntax using AST without writing compiled files
+        run: |
+          python -B -c "import ast,pathlib; p=pathlib.Path('crypto-300-profit-mission/local-agent/scripts/frank_pr157_dashboard_release_lab.py'); ast.parse(p.read_text())"
+      - name: Simulate only staged source hashes and temporary symlink rollback
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/frank_pr157_dashboard_release_lab.py --simulate
