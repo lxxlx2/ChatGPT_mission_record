@@ -93,7 +93,9 @@ def simulate(durations, ledger_path, *, inflight_slots=3, refresh_after=4,
              slow_heights=None, failed_heights=None, timeout_heights=None,
              bad_parent_heights=None, duplicate_heights=None,
              wrong_id_heights=None, head_values=None,
-             crash_after_reservations=None):
+             crash_after_reservations=None,
+             head_policy="checkpoint", min_head_refresh_age_ms=2500,
+             prefetch_available_heights=1):
     """Deterministic single-coordinator scenario; no real sender is invoked.
 
     Fake work-slot completion events are generated from sequential observed
@@ -110,7 +112,12 @@ def simulate(durations, ledger_path, *, inflight_slots=3, refresh_after=4,
             type(max_duration_ms) is int and 1000 <= max_duration_ms <= 60000 and
             type(initial_height) is int and initial_height > 0 and
             type(source_growth_bps) in (float, int) and 0 < source_growth_bps <= 10 and
-            type(slowdown) in (float, int) and 0 < slowdown <= 10,
+            type(slowdown) in (float, int) and 0 < slowdown <= 10 and
+            head_policy in ("checkpoint", "availability_wait") and
+            type(min_head_refresh_age_ms) is int and
+            250 <= min_head_refresh_age_ms < head_freshness_ms and
+            type(prefetch_available_heights) is int and
+            0 <= prefetch_available_heights <= 3,
             "OFFLINE_SIMULATION_SCOPE_INVALID")
     require(isinstance(durations, dict) and all(
         isinstance(durations.get(method), list) and durations[method] and
@@ -164,9 +171,11 @@ def simulate(durations, ledger_path, *, inflight_slots=3, refresh_after=4,
     blocks_since_head = 0
     response_durations = []
     settlement_states = Counter()
+    head_hold_until_ms = None
 
     def choose_action():
-        nonlocal stop
+        nonlocal stop, head_hold_until_ms
+        head_hold_until_ms = None
         if not chain_done:
             return ("eth_chainId", None, "CHAIN") if not chain_issued else None
         if not first_head_done:
@@ -177,20 +186,43 @@ def simulate(durations, ledger_path, *, inflight_slots=3, refresh_after=4,
         if len(attempts) >= max_total_attempts:
             stop = "TOTAL_ATTEMPT_BUDGET_EXHAUSTED"
             return None
-        due = (next_height > confirmed_head or blocks_since_head >= refresh_after
-               or now - head_finished_ms >= head_freshness_ms)
+        age_ms = now - head_finished_ms
+        available = max(0, confirmed_head - next_height + 1)
+        if head_policy == "availability_wait":
+            # Decisions use ONLY the latest completed HEAD, monotonic time,
+            # and reserved heights. Never peek at future synthetic source HEAD.
+            due = (available <= prefetch_available_heights or
+                   age_ms >= head_freshness_ms)
+        else:
+            due = (next_height > confirmed_head or
+                   blocks_since_head >= refresh_after or
+                   age_ms >= head_freshness_ms)
         if refreshing_id is not None:
-            # A pending HEAD refresh does not extend validity of the last
-            # completed HEAD. Stop new block dispatch at the freshness bound;
-            # already-reserved in-flight blocks may still settle normally.
-            if (now - head_finished_ms < head_freshness_ms and
+            # Pending refresh does NOT extend the most recent completed HEAD.
+            # The availability policy has no fixed block-count checkpoint.
+            if (age_ms < head_freshness_ms and
                     next_height <= confirmed_head and
-                    blocks_since_head < refresh_after):
+                    (head_policy == "availability_wait" or
+                     blocks_since_head < refresh_after)):
                 return ("eth_getBlockByNumber", next_height, "BLOCK")
             return None
         if due:
             if counts["HEAD_REFRESH"] >= max_refreshes:
+                # Under the alternative policy, do not discard the last
+                # already-confirmed fresh block merely because no more HEAD
+                # polls are permitted. Never read above confirmed HEAD.
+                if (head_policy == "availability_wait" and available > 0 and
+                        age_ms < head_freshness_ms):
+                    return ("eth_getBlockByNumber", next_height, "BLOCK")
                 stop = "HEAD_REFRESH_BUDGET_EXHAUSTED"
+                return None
+            if (head_policy == "availability_wait" and
+                    age_ms < min_head_refresh_age_ms):
+                if available > 0 and age_ms < head_freshness_ms:
+                    return ("eth_getBlockByNumber", next_height, "BLOCK")
+                # With no eligible height, remain idle until a deliberate
+                # poll time. We cannot infer new blocks without sampling HEAD.
+                head_hold_until_ms = head_finished_ms + min_head_refresh_age_ms
                 return None
             return ("eth_blockNumber", None, "HEAD_REFRESH")
         return ("eth_getBlockByNumber", next_height, "BLOCK")
@@ -355,6 +387,9 @@ def simulate(durations, ledger_path, *, inflight_slots=3, refresh_after=4,
             if stop is not None and not events:
                 break
             next_times = [events[0][0]] if events else []
+            if (stop is None and head_hold_until_ms is not None and
+                    head_hold_until_ms > now):
+                next_times.append(head_hold_until_ms)
             if stop is None and len(outstanding) < inflight_slots and next_start > now:
                 next_times.append(next_start)
             if stop is None and now < max_duration_ms:
@@ -384,6 +419,11 @@ def simulate(durations, ledger_path, *, inflight_slots=3, refresh_after=4,
         "actual_network_requests": 0, "live_source_concurrency_verified": False,
         "real_provider_capacity_claim": "UNVERIFIED",
         "original_live_permit": "CONSUMED_NOT_REUSABLE",
+        "head_policy": head_policy,
+        "min_head_refresh_age_ms": min_head_refresh_age_ms if
+            head_policy == "availability_wait" else None,
+        "prefetch_available_heights": prefetch_available_heights if
+            head_policy == "availability_wait" else None,
         "stop_state": stop, "virtual_elapsed_ms": round(now, 3),
         "requested_total": len(attempts), "method_counts": method_counts,
         "head_refreshes_requested": counts["HEAD_REFRESH"],
