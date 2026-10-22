@@ -1532,7 +1532,7 @@ function renderClusterReport(report) {
     '<p>目前仅展示市场资料附带的链接；不抓取实时官方帖子，也不提供官方认领或叙事打分。</p></div>' +
     '<div class="narrative-links">' + (websites || socials ? websites + socials : '<span class="muted">当前市场资料没有可展示的官网/社交链接</span>') + '</div>';
 
-  clusterStatus('done','分析已更新', '数据时间 ' + observedAge + (rpcFailures ? ' · 有部分链上请求失败，详情见证据' : ''));
+  clusterStatus(strictComplete ? 'done' : 'running',strictComplete ? '报告已读取' : '报告已读取，持有人归一化尚未完成', '数据时间 ' + observedAge + (rpcFailures ? ' · 有部分链上请求失败，详情见证据' : ''));
 }
 
 
@@ -1612,6 +1612,8 @@ async function pollClusterJob(jobId, failures=0) {
   } catch (e) {
     if (clusterPollVersion!==version) return;
     const message=String(e?.message||'');
+    // Only a short non-identifying job prefix is retained in browser diagnostics
+    console.warn('CA_JOB_GET_READ_INTERRUPTED', {job:jobId.slice(0,8), at:new Date().toISOString(), detail:clusterGetErrorReason(e), failed_get_attempt:failures+1});
     const terminal=message.includes(' 404') || message==='CLUSTER_JOB_IDENTITY_MISMATCH' || message==='CLUSTER_JOB_STATUS_UNKNOWN';
     clusterShowRecovery(true);
     $('cluster-submit').disabled=true;
