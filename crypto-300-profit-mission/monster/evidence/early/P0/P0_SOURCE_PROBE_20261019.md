@@ -1,5 +1,23 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-22：五个Four.meme迁池代币的真实首池Mint和第一批BUY交易
+
+**新增业务证据（未启用模型）：**沿用冻结2025-07-01 UTC、同日538个Four.meme TokenManager2索引里的**全部5个日末状态3且Helper3证实`liquidityAdded=true`**代币，不重选获利赢家。读取Pancake V2 Factory在目标日首/末状态，再对5个固定`token_ca+WBNB`历史`getPair()`二分确定首次非零区块；同一块逐个核Factory `PairCreated`、对应Pair的`Sync/Mint/Swap`事件及`getReserves()`最终储备。5/5准确的Factory事件/池地址/创建交易/同交易`Mint+Sync`成立，5/5首次注入WBNB为**23.519999999451199994 WBNB**，均高于原冻结的2 WBNB观察门槛。最后一条同块`Sync`与该块末`getReserves`各自严格相符，不能把后续Swap后的块末储备当初始储备。
+
+| Four.meme Index | 精确V2池创建区块 | 创建同区块的真实Swap | 方向（WBNB报价腿） |
+| --- | ---: | ---: | --- |
+| 247622 | 52,449,009 | 0 | 未在**该区块**观察到Swap，后续未知 |
+| 247633 | 52,474,140 | 2 | BUY、BUY（2.5 + 0.5 WBNB流入） |
+| 247672 | 52,470,447 | 1 | BUY（0.5 WBNB流入） |
+| 247708 | 52,511,487 | 1 | BUY（0.5 WBNB流入） |
+| 247733 | 52,480,580 | 1 | BUY（0.5 WBNB流入） |
+
+**重要交易边界：**以上5笔真实Swap是**4/5池在创建同一块内、但与最初Mint不同交易**的WBNB流入买单，**没有证明一个卖出腿**。不能从同区块内交易先后推定普通用户收到新区块后还能追上；不能将其计为4个公开可反应的`T_entry`、或5次已经实现的双向买卖。初始23.52 WBNB是迁池的标准化历史池储备事实，不能推导转账税/Router fill、用户持币净额或统一研究名义额收益。日末五池储备已记录在上节，是不同时点的状态，不能作为建池时的可卖出量。
+
+**来源/纠错：**标准化Alchemy免费BSC历史RPC单提供商`getPair`状态、1块`PairCreated`、Pair日志、`token0`与`getReserves`交叉读取。一次手动复制#247708 CA时误少一位，产生了错误的候选块查询；发现长度41不满足42字符CA约束后从冻结JSON重新读取完整地址，重新二分并以真实Factory事件纠正为**52,511,487**，错误临时值未写入Git。所有5个准确行的token/pair/初始储备、事件tx和logIndex、每笔Swap报价方向和哈希在原P0 JSON键`bsc_fourmeme_p0_five_graduated_pairs_historical_mint_swap_20261022`。仍缺连接器原始完整HTTP响应字节、原样SHA和独立节点，2025年当时公众`available_at`均未知。不得把完整10区块查询的**截断回包**当日志零条/证明整段无交易。
+
+**门禁不变：**这是Four.meme的**事后限定来源5个已迁池样本**，不是538币全部可交易资格，也不修改原30个Pancake V2冻结技术候选。P0`INSUFFICIENT_COVERAGE` / P1`BLOCKED` / G4`UNKNOWN` / G6`NO_GO`，2026-11-02原来源决策日继续有效。未运行Mac原始HTTP归档，未用真实或默认研究交易金额、未付费、未部署、未交易、未发送邮件。
+
 ## 2026-10-22：Four.meme 538个历史日末曲线状态全量复查，以及5个真实迁池样本
 
 本轮以原冻结 **2025-07-01 UTC**、原日终BSC区块 **52,555,482**、既有538个地址母体作只读来源测试，没有增加/删去原有Pancake V2 30币，亦不改变用户未设定交易金额的规则。直接对Four.meme TokenManager2（`0x5c952063c7fc8610ffdb798152d69f0b9550762b`）的历史`_tokenInfos(address)`（selector `0xe684626b`），通过当日已部署的Multicall3 `aggregate3` **最多7个地址一批，共77次历史RPC** 取得 **538/538条、每条13字段**。按原index→CA逐条核查无重复、无跳号、字段长度准确和子调用成功，规范化结果全部保存在同一P0 JSON键`bsc_fourmeme_p0_all538_frozen_day_end_curve_state_20261022`。中途一次RPC断开未提交新数据，缩小批次后只补剩余区间，最后远端完成538/538。
