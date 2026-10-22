@@ -35,6 +35,8 @@
       "tge",
       "early_nft",
       "security",
+      "web_pki_tls",
+      "web_runtime_rce",
       "macro",
       "forward_catalysts"
     ],
@@ -46,7 +48,17 @@
       13
     ],
     "checked_source_lanes_minimum": 2,
-    "prices_must_appear_in_market_section_with_numbers": true
+    "prices_must_appear_in_market_section_with_numbers": true,
+    "global_systemic_security": {
+      "mandatory_discovery": [
+        "web_runtime_rce",
+        "web_pki_tls"
+      ],
+      "importance": "Public unauthenticated RCE in core web runtime / CA intermediate private-key compromise / global TLS trust-store revocation is HIGH candidate regardless of whether a crypto exchange is named.",
+      "forbidden_shortcut": "One generic old crypto security article or no result from one X/social search cannot justify no new security events.",
+      "source_requirements": "Cite at least one current English original advisory in each mandatory lane, with published_at and checked_at. If genuinely inaccessible, SOURCE_GAP with failed URL and meaningful fallback; do not report clear.",
+      "output": "Deduplicate by CVE group or compromised CA incident. Each distinct major event receives one primary Section 9 detail, optional Section 1 top item only when global verified breadth, explicit defensive action and a stated impact constraint."
+    }
   },
   "top_highlights": {
     "section": 1,
