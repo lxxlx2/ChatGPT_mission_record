@@ -1,28 +1,30 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-22 05:58:01 Asia/Bangkok, latest durable PARTIAL final-retry
+Updated: 2026-10-22 12:04:05 Asia/Bangkok — latest VERIFIED durable PARTIAL terminal (13:01 attempt has no checked terminal)
 Timezone: Asia/Bangkok
-- expected_schedule: hourly :00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-22 05:58:01 Asia/Bangkok (off-minute invocation; not scheduler HH:00 proof)
-- latest_actual_run_status: partial
-- latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-22/055801-final-retry.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-22/055707-attempt.md
-- latest_scheduled_shard: 1
-- latest_executed_shard: 1
+- expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
+- latest_actual_run: 2026-10-22 12:04:05 Asia/Bangkok
+- latest_actual_run_status: PARTIAL
+- latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged, no newer full scan verified)
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-22/120405-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-22/120323-attempt.md
+- later_unfinalized_attempt: airdrop-tge-monitor/runs/2026-10-22/130143-attempt.md (does NOT establish complete coverage)
+- latest_scheduled_shard: 0
+- latest_executed_shard: 0
 - stale_shard_recovery: false
-- latest_candidate_count: 7
+- latest_candidate_count: 5
 - latest_triggered_events: 0
 - latest_identity_failures: 0
 - latest_source_failures: 6
-- latest_notification_decision: NO_ACTION_WITH_PARTIAL_COVERAGE
+- latest_notification_decision: SILENT_NO_NEW_ACTION
 - latest_notification_status: SILENT
 - latest_gmail_attempted: false
-- latest_source_gaps: Concrete_extra_USDC, StandX_X_original, NeoSoul_StandX_original, Cambria_migration, Theo_current, Neutrl_redemption
+- latest_source_gaps: Concrete_extra_USDC_TierA, NeoSoul_StandX_specific_TierA, Cambria_migration_original_TierA, StandX_original_X_full_text, Block_Stranding_canonical_current, Perena_TurboFlow_Makina_Rho_current_primary
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
-- last_meaningful_attempt_at_shard1: 2026-10-22 05:58:01 Asia/Bangkok
-- last_meaningful_attempt_at_shard2: 2026-10-22 02:03:01 Asia/Bangkok
+- last_meaningful_attempt_at_shard0: 2026-10-22 12:04:05 Asia/Bangkok
+- last_meaningful_attempt_at_shard1: 2026-10-22 11:00 BKK or earlier (see true terminal; do not promote shard completeness)
+- last_meaningful_attempt_at_shard2: 2026-10-22 11:00:34 Asia/Bangkok
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok
-- last_four_terminal_executed_shards: [0, 1, 2, 1]
+- last_four_terminal_executed_shards: [1,1,2,0]
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
