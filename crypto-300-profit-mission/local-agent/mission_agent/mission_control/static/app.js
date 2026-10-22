@@ -245,6 +245,27 @@ document.addEventListener('click', (event) => {
     showToast('已带入 CA，可直接开始查询');
     return;
   }
+  const historyControl = event.target.closest('[data-review-expiry]');
+  if (historyControl) {
+    const fingerprint = historyControl.dataset.reviewKey || '';
+    const op = historyControl.dataset.reviewExpiry;
+    try {
+      if (op === 'hide' && /^[a-f0-9]{64}$/.test(fingerprint)) {
+        localStorage.setItem('frank.expired-review.ack.v1',fingerprint);
+        showToast('这批过期历史已在本浏览器收起，原审计记录未删除');
+      } else if (op === 'show') {
+        localStorage.removeItem('frank.expired-review.ack.v1');
+        showToast('已恢复显示历史过期通知');
+      } else {
+        showToast('缺少可核对的历史记录身份，不能收起');
+        return;
+      }
+      refresh();
+    } catch (_) {
+      showToast('浏览器无法保存查看状态，历史记录保持显示');
+    }
+    return;
+  }
   const button = event.target.closest('[data-copy]');
   if (!button) return;
   copyText(button.dataset.copy,button);
@@ -294,7 +315,21 @@ function renderRuntime(runtime, control) {
   if (Number.isFinite(expired) && expired > 0) {
     const gmail = Number(control?.manual_review_expired_unsent_gmail_count) || 0;
     const local = Number(control?.manual_review_expired_unsent_local_count) || 0;
-    reviewParts.push(`<span title="SQLite 记录显示首次投递前已过期、未记录发送尝试；未独立核实 Gmail Sent；审计记录保留，不会自动重发">· 历史过期拦截 ${esc(expired)}（邮件 ${esc(gmail)}，本地 ${esc(local)}；数据库无发送尝试记录）</span>`);
+    const fingerprint = String(control?.manual_review_expired_unsent_fingerprint || '');
+    const canAcknowledge = /^[a-f0-9]{64}$/.test(fingerprint);
+    let alreadyHidden = false;
+    if (canAcknowledge) {
+      try { alreadyHidden = localStorage.getItem('frank.expired-review.ack.v1') === fingerprint; }
+      catch (_) { alreadyHidden = false; }
+    }
+    if (alreadyHidden) {
+      reviewParts.push(`<button type="button" class="link-btn" data-review-expiry="show" title="只在当前浏览器收起过期记录；从不修改 SQLite 或发送状态">· 历史过期记录 ${esc(expired)} 条已收起（查看）</button>`);
+    } else {
+      reviewParts.push(`<span title="这批是 SQLite 中首次投递前过期且无发送尝试/回执的记录，并非 Gmail 已发送数；保留原审计记录，不会重发">· 历史过期拦截 ${esc(expired)}（邮件 ${esc(gmail)}，本地 ${esc(local)}；数据库无发送尝试记录）</span>`);
+      if (canAcknowledge) {
+        reviewParts.push(`<button type="button" class="link-btn" data-review-expiry="hide" data-review-key="${esc(fingerprint)}" title="仅在这个浏览器把当前这批过期历史移出顶部；不删库、不解除拦截、不影响邮件发送">收起已过期历史</button>`);
+      }
+    }
   }
   const reviewText = reviewParts.join('');
 
