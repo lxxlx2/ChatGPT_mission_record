@@ -64,6 +64,41 @@ class MonsterAsOfGateTests(unittest.TestCase):
         unknown = projected([record()], policy="NO_VERIFIABLE_ASOF")
         self.assertFalse(unknown["p1_gate_passed"])
 
+    def test_public_offchain_announcement_with_null_chain_clock(self):
+        e = record(event_id="announcement", event_type="ALPHA_ANNOUNCED",
+                   chain_event_at=None,
+                   availability_basis="ACTUAL_HISTORICAL_PUBLICATION",
+                   available_at="2025-07-01T00:00:01Z",
+                   published_at="2025-07-01T00:00:01Z")
+        r = projected([e])
+        self.assertEqual(r["pit_status"], "PIT_VERIFIED")
+        self.assertIsNone(r["events"][0]["chain_event_at"])
+        self.assertFalse(r["p1_gate_passed"])
+
+    def test_future_optional_chain_clock_cannot_leak_into_past(self):
+        e = record(event_id="future-anchor",
+                   event_type="ALPHA_ANNOUNCED",
+                   chain_event_at="2025-07-03T00:00:00Z",
+                   availability_basis="ACTUAL_HISTORICAL_PUBLICATION",
+                   available_at="2025-07-01T00:00:01Z",
+                   published_at="2025-07-01T00:00:01Z")
+        self.assertEqual(projected([e])["events"], [])
+        self.assertEqual(projected([record(), e]), projected([record()]))
+
+    def test_missing_onchain_clock_is_not_scored(self):
+        self.assertEqual(projected([record(chain_event_at=None)])["events"], [])
+
+    def test_offchain_clock_not_synthesized_from_block_delay(self):
+        e = record(event_type="ALPHA_ANNOUNCED", chain_event_at=None,
+                   pit_status="PIT_RECONSTRUCTED_ONLY",
+                   availability_basis="RECONSTRUCTED_DELAY_ASSUMPTION",
+                   available_at=None)
+        r = projected([e], policy="RECONSTRUCTED_CONSERVATIVE",
+                      historical_delay_ms=1000,
+                      historical_delay_policy_sha256=POLICY_SHA)
+        self.assertEqual(r["events"], [])
+        self.assertEqual(r["pit_status"], "NOT_SCORABLE")
+
     def test_future_visible_event_is_excluded(self):
         r = projected([record(available_at="2025-07-01T00:00:03Z",
                               observed_at="2025-07-01T00:00:03Z")])
