@@ -1,3 +1,7 @@
+## 2026-10-23 Mac验收关闭代码遗留问题
+
+固定c646d438本轮实际115/115测试通过，新增9项全部通过，独立子agent二审实际完成：APPROVE_OFFLINE_CODE。RPC环境变量未配置，MANUAL_FORWARD_READONLY_PILOT_BLOCKED。完整命令、日志和边界见 local-agent/tests/evidence/monster_forward_review_20261022/acceptance-c646-review.md。本轮无源码修复、无真实RPC。以下为此前历史记录。
+
 ## 2026-10-23 独立 Mac 离线审核与修复（待完整负例复验）
 
 基线 `89868fa08c90f91d8983cebce850631faa9f05ba`，远端初查相同。真实 Mac Darwin arm64 / Python 3.14.7，隔离 checkout `/private/tmp/monster-forward-review-20261022`，独立 venv，无真实 RPC。主工作区 x-revenue 脏文件未动。

@@ -1,0 +1,29 @@
+test_2026_ingested_at_not_reinterpreted_as_2025_observation (test_monster_pit_asof.MonsterAsOfGateTests.test_2026_ingested_at_not_reinterpreted_as_2025_observation) ... ok
+test_actual_receipt_visible_by_decision (test_monster_pit_asof.MonsterAsOfGateTests.test_actual_receipt_visible_by_decision) ... ok
+test_conflicting_duplicate_rejected (test_monster_pit_asof.MonsterAsOfGateTests.test_conflicting_duplicate_rejected) ... ok
+test_fake_reconstruction_basis_rejected (test_monster_pit_asof.MonsterAsOfGateTests.test_fake_reconstruction_basis_rejected) ... ok
+test_foreign_token_same_ticker_stays_separate (test_monster_pit_asof.MonsterAsOfGateTests.test_foreign_token_same_ticker_stays_separate) ... ok
+test_future_optional_chain_clock_cannot_leak_into_past (test_monster_pit_asof.MonsterAsOfGateTests.test_future_optional_chain_clock_cannot_leak_into_past) ... ok
+test_future_visible_event_is_excluded (test_monster_pit_asof.MonsterAsOfGateTests.test_future_visible_event_is_excluded) ... ok
+test_identical_duplicate_idempotent (test_monster_pit_asof.MonsterAsOfGateTests.test_identical_duplicate_idempotent) ... ok
+test_inconsistent_chain_clock_rejected (test_monster_pit_asof.MonsterAsOfGateTests.test_inconsistent_chain_clock_rejected) ... ok
+test_later_holder_and_outcome_fields_not_visible (test_monster_pit_asof.MonsterAsOfGateTests.test_later_holder_and_outcome_fields_not_visible) ... ok
+test_missing_available_at_excluded (test_monster_pit_asof.MonsterAsOfGateTests.test_missing_available_at_excluded) ... ok
+test_missing_onchain_clock_is_not_scored (test_monster_pit_asof.MonsterAsOfGateTests.test_missing_onchain_clock_is_not_scored) ... ok
+test_missing_source_hash_rejected (test_monster_pit_asof.MonsterAsOfGateTests.test_missing_source_hash_rejected) ... ok
+test_naive_or_invalid_clock_rejected (test_monster_pit_asof.MonsterAsOfGateTests.test_naive_or_invalid_clock_rejected) ... ok
+test_offchain_clock_not_synthesized_from_block_delay (test_monster_pit_asof.MonsterAsOfGateTests.test_offchain_clock_not_synthesized_from_block_delay) ... ok
+test_poisoned_future_event_cannot_change_prior_asof (test_monster_pit_asof.MonsterAsOfGateTests.test_poisoned_future_event_cannot_change_prior_asof) ... ok
+test_public_offchain_announcement_with_null_chain_clock (test_monster_pit_asof.MonsterAsOfGateTests.test_public_offchain_announcement_with_null_chain_clock) ... ok
+test_publication_later_than_claimed_availability_rejected (test_monster_pit_asof.MonsterAsOfGateTests.test_publication_later_than_claimed_availability_rejected) ... ok
+test_reconstructed_and_no_verifiable_views_never_approve_p1 (test_monster_pit_asof.MonsterAsOfGateTests.test_reconstructed_and_no_verifiable_views_never_approve_p1) ... ok
+test_reconstructed_boundary_and_never_verified (test_monster_pit_asof.MonsterAsOfGateTests.test_reconstructed_boundary_and_never_verified) ... ok
+test_reconstructed_requires_explicit_frozen_parameters (test_monster_pit_asof.MonsterAsOfGateTests.test_reconstructed_requires_explicit_frozen_parameters) ... ok
+test_reconstruction_cannot_claim_verification_in_mixed_view (test_monster_pit_asof.MonsterAsOfGateTests.test_reconstruction_cannot_claim_verification_in_mixed_view) ... ok
+test_unknown_policy_fail_closed (test_monster_pit_asof.MonsterAsOfGateTests.test_unknown_policy_fail_closed) ... ok
+test_wrong_status_or_basis_excluded (test_monster_pit_asof.MonsterAsOfGateTests.test_wrong_status_or_basis_excluded) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 0.001s
+
+OK

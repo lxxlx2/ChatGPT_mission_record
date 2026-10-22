@@ -1,0 +1,11 @@
+usage: python -m mission_agent.early.forward_observation [-h] [--manual-once]
+                                                         --out-dir OUT_DIR
+                                                         [--pause-ms PAUSE_MS]
+
+Monster bounded manual BSC V2 forward-only receipt pilot
+
+options:
+  -h, --help           show this help message and exit
+  --manual-once
+  --out-dir OUT_DIR
+  --pause-ms PAUSE_MS

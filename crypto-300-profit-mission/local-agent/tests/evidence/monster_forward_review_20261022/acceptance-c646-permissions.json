@@ -1,0 +1,22 @@
+{
+  "directory_mode": "0o700",
+  "file_modes": {
+    "rpc-09.json": "0o600",
+    "rpc-05.json": "0o600",
+    "rpc-13.json": "0o600",
+    "rpc-12.json": "0o600",
+    "rpc-04.json": "0o600",
+    "rpc-08.json": "0o600",
+    "rpc-03.json": "0o600",
+    "rpc-14.json": "0o600",
+    "rpc-02.json": "0o600",
+    "rpc-01.json": "0o600",
+    "manifest.json": "0o600",
+    "rpc-11.json": "0o600",
+    "rpc-07.json": "0o600",
+    "rpc-06.json": "0o600",
+    "rpc-10.json": "0o600"
+  },
+  "rpc_calls_fake": 14,
+  "external_rpc_requests": 0
+}

@@ -1,0 +1,29 @@
+test_address_padded_required (test_monster_forward_observation.ForwardObservationTests.test_address_padded_required) ... ok
+test_ancestor_depth_exhausting_request_budget_fails_closed (test_monster_forward_observation.ForwardObservationTests.test_ancestor_depth_exhausting_request_budget_fails_closed) ... ok
+test_broken_intermediate_parent_fails_closed (test_monster_forward_observation.ForwardObservationTests.test_broken_intermediate_parent_fails_closed) ... ok
+test_counter_regression_fails (test_monster_forward_observation.ForwardObservationTests.test_counter_regression_fails) ... ok
+test_duplicate_pair_across_indices_fails_closed (test_monster_forward_observation.ForwardObservationTests.test_duplicate_pair_across_indices_fails_closed) ... ok
+test_duplicate_token_pair_across_indices_fails_closed (test_monster_forward_observation.ForwardObservationTests.test_duplicate_token_pair_across_indices_fails_closed) ... ok
+test_duplicate_token_pair_rejected (test_monster_forward_observation.ForwardObservationTests.test_duplicate_token_pair_rejected) ... ok
+test_existing_output_directory_never_overwritten (test_monster_forward_observation.ForwardObservationTests.test_existing_output_directory_never_overwritten) ... ok
+test_head_regression_fails (test_monster_forward_observation.ForwardObservationTests.test_head_regression_fails) ... ok
+test_more_than_cap_is_partial_not_complete (test_monster_forward_observation.ForwardObservationTests.test_more_than_cap_is_partial_not_complete) ... ok
+test_no_future_proof_from_timestamps (test_monster_forward_observation.ForwardObservationTests.test_no_future_proof_from_timestamps) ... ok
+test_pause_limit (test_monster_forward_observation.ForwardObservationTests.test_pause_limit) ... ok
+test_positive_exact_two_snapshots_and_raw_hashes (test_monster_forward_observation.ForwardObservationTests.test_positive_exact_two_snapshots_and_raw_hashes) ... ok
+test_raw_must_exactly_replay_parsed_rpc (test_monster_forward_observation.ForwardObservationTests.test_raw_must_exactly_replay_parsed_rpc) ... ok
+test_reorg_first_anchor_fails (test_monster_forward_observation.ForwardObservationTests.test_reorg_first_anchor_fails) ... ok
+test_reversed_pool_token_order_fails_closed (test_monster_forward_observation.ForwardObservationTests.test_reversed_pool_token_order_fails_closed) ... ok
+test_same_height_count_disagreement_fails (test_monster_forward_observation.ForwardObservationTests.test_same_height_count_disagreement_fails) ... ok
+test_slow_second_count_enforces_actual_three_second_window (test_monster_forward_observation.ForwardObservationTests.test_slow_second_count_enforces_actual_three_second_window) ... ok
+test_two_intermediate_ancestors_are_verified (test_monster_forward_observation.ForwardObservationTests.test_two_intermediate_ancestors_are_verified) ... ok
+test_utc_jump_without_monotonic_jump_fails_closed (test_monster_forward_observation.ForwardObservationTests.test_utc_jump_without_monotonic_jump_fails_closed) ... ok
+test_utc_rewind_between_calls_fails_closed (test_monster_forward_observation.ForwardObservationTests.test_utc_rewind_between_calls_fails_closed) ... ok
+test_wrong_chain_fails_and_preserves_error (test_monster_forward_observation.ForwardObservationTests.test_wrong_chain_fails_and_preserves_error) ... ok
+test_zero_delta_not_market_empty (test_monster_forward_observation.ForwardObservationTests.test_zero_delta_not_market_empty) ... ok
+test_zero_pair_address_fails (test_monster_forward_observation.ForwardObservationTests.test_zero_pair_address_fails) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 0.032s
+
+OK
