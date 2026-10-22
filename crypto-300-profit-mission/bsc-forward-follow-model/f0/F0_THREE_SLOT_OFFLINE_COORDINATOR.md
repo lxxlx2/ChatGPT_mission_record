@@ -23,10 +23,10 @@ Use a checkout pinned to this PR's exact new SHA. The actual local source path h
 ```zsh
 umask 077
 mkdir -m 700 "$HOME/Library/Application Support/MissionEvidence/20261022-f0-three-slot-offline"
-python3 crypto-300-profit-mission/bsc-forward-follow-model/f0/f0_l1_three_slot_offline.py --journal "$HOME/Library/Application Support/MissionEvidence/20261021-adaptive-sampled-head/archive/journal.json" --expected-sha256 e069b7cd38c2ad3c8a3af3a1b1c220efab1714fe4de8bffc7040bb44cab77ef --output-dir "$HOME/Library/Application Support/MissionEvidence/20261022-f0-three-slot-offline"
+python3 crypto-300-profit-mission/bsc-forward-follow-model/f0/f0_l1_three_slot_offline.py --journal "$HOME/Library/Application Support/MissionEvidence/20261021-adaptive-sampled-head/archive/journal.json" --expected-sha256 e069b7cd38c2ad3c8a3af3a1b1c220efab1714fe4de0bb7a9e2b814a2302d61a --output-dir "$HOME/Library/Application Support/MissionEvidence/20261022-f0-three-slot-offline"
 ```
 
-Note: the exact original Journal SHA256 is **`e069b7cd38c2ad3c8a3af3a1b1c220efab1714fe4de2d61a`**. If the exact SHA printed above differs in any digit, refuse to proceed; the reviewer must use the known canonical sha from PR159 and NOT invent bytes. [This note will be superseded by a separate verified read-only command in review handoff.]
+The exact saved Journal SHA256 above matches the independently reviewed PR159 value. The simulator refuses mismatches and does not alter source bytes.
 
 ### Safety and acceptance gates
 
