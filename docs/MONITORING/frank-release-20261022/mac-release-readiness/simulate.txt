@@ -1,0 +1,1 @@
+FRANK_PR157_RELEASE_LAB={"actual_running_dashboard_restarted": false, "email_sent": false, "mode": "TEMP_ONLY_ROLL_FORWARD_FAULT_ROLLBACK", "production_write": false, "real_release_rollback_proven": false, "source_sha": "31dd598df248ca15f731913a5cbf82e88b981874", "staged_approved_files": 8, "synthetic_switch_and_revert": "PASS"}

@@ -1,0 +1,26 @@
+{
+  "manifest_expected_sha": "52d43d18ee5a6d87408bc68d4832869fce8817a9",
+  "manifest_sha256": "8f3f4336d9581b5fb8fb509517773088b630e27d7e3a78375ea1a86325c25086",
+  "manifest_matches": 148,
+  "manifest_mismatches": [],
+  "release_directory_is_git_checkout": false,
+  "capture_unix": 1792655044.099154,
+  "/api/runtime": {
+    "status": "LIVE",
+    "runtime_reason": "OK",
+    "pid": 52300,
+    "pid_alive": true,
+    "heartbeat_age_seconds": 23.255995988845825,
+    "last_successful_poll": "2026-10-22T07:43:40.852060+00:00",
+    "last_poll_at": "2026-10-22T07:43:38.529500+00:00",
+    "consecutive_errors": 0,
+    "lag_seconds": 0,
+    "production_db_readable": true,
+    "code_commit": "858ef37bbabcfe2f2baeaaeeb95f3478e044defb",
+    "source_drift": false
+  },
+  "/api/control-health": {
+    "status": "OK",
+    "updated_at": "2026-10-22T07:43:59.065460+00:00"
+  }
+}

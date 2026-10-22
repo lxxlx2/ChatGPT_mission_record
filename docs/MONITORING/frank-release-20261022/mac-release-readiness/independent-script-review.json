@@ -1,0 +1,11 @@
+{
+  "status": "OK",
+  "verdict": "PASS",
+  "summary": "Review complete for QA-only offline deployment rehearsal commit 69dfeafbdd05f73dd9d66e0bfacdaf35b2352248. The script operates strictly in isolated temporary directories using fixture data, binds exclusively to loopback addresses on OS-assigned ephemeral ports, enforces socket-level network restriction guards, writes no production or old-source data, and cleanly stops its own child process instances.",
+  "findings": [],
+  "model": "gemini-3.5-flash",
+  "latency_seconds": 16.082,
+  "privacy": "PUBLIC",
+  "redactions": [],
+  "egress_material_sha256": "24321ae7ec11dc973b6372ad0379901b0e67a11c1daeac5139f92a6bb924c2aa"
+}

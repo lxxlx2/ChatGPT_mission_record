@@ -1,0 +1,11 @@
+{
+  "status": "OK",
+  "verdict": "PASS",
+  "summary": "The proposed Dashboard-only release decision, scope separation, and future rollout plan adhere to strict safety boundaries. Shared immutable code roots are preserved, rollback baselines are pinned, Loop and policy files remain isolated, and production authorization boundaries are explicitly maintained without unverified assumptions.",
+  "findings": [],
+  "model": "gemini-3.7-flash",
+  "latency_seconds": 6.598,
+  "privacy": "PUBLIC",
+  "redactions": [],
+  "egress_material_sha256": "dad6699159da0c4fc65b0e93a53297707c02ec49e5dfbd67b754c3d05187f3da"
+}
