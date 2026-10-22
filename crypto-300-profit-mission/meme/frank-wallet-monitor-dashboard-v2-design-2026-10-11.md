@@ -223,7 +223,7 @@ Invariants: unique tx signature, immutable raw hash, versioned parser, normalize
 | 智能分析及买卖观察 | PR #146/#157 产品 SHA 31dd598df248ca15f731913a5cbf82e88b981874，8766 真 Mac Dashboard-only 上线验证 | 这不等于链上完整余额、可靠新鲜市场价或 V3 五区导航 | PRODUCTION_ACCEPTED（只读子集） |
 | 签名流水/观察池 | 可看已索引 BUY/SELL、转入和 ATA，历史模型存在 | 交易分类混合枚举不清楚、多个模块重复、源非完整链 | PARTIAL_PRODUCT_DEPLOYED |
 | 历史持仓快照 | PR #110 2026-10-11 32 Mint 样本，10 非零/22 零 | 无法证明 2026-10-22 当前余额，双 Token Program 全账户完整性未达 | EVIDENCE_ONLY / BLOCKED_BY_SOURCE |
-| G2 正式集成候选 | PR #119 原范围的代码/CI 曾有验证 | Draft 未部署；不得当作已安装 | CODE_REVIEWED_NOT_DEPLOYED |
+| G2 正式集成候选 | PR #119 本身仍 Draft、未合并、未以该 PR 精确 HEAD 单独部署；其中 D1 钱包活动读取模块、签名流水 API/UI 及相关 D2 读取逻辑已复用于正式安装的 PR #157 集成产品 `31dd598df248ca15f731913a5cbf82e88b981874` | PR #119 整体功能未因此通过验收；D2 历史证据文件是否实际安装、来源导入是否完整，以及现时全钱包余额核验仍须分别提供证据 | D1_PARTIAL_PRODUCT_DEPLOYED / PR119_DRAFT_NOT_MERGED / D2_EVIDENCE_NOT_YET_PROVEN |
 | CA 查询 | 用户 Mac 截图先得到部分基础行情，随后 Failed to fetch | POST/轮询/Worker/RPC/报告保存失败阶段尚未定位，见 Issue #165 | REGRESSION_OPEN |
 | 清理“历史过期 15” | 旧显示源于历史未发 outbox；PR #164 有浏览器收起代码 | 尚未审核部署；逐条与 Gmail 对账及跨浏览器审计归档未实现 | CODE_ONLY / BLOCKED |
 | 价格与盈利 | 仅有原始历史交易、部分市场样本 | 无完整新鲜同口径价格，不能显示当前价格变化或真实可跟收益 | BLOCKED_BY_SOURCE / NEED_MORE_DATA |
