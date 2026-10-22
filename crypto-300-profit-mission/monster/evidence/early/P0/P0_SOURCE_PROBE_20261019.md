@@ -1,5 +1,21 @@
 # Monster P0 — 免费历史源实测：BSC V2工厂存储枚举方案（2026-10-19）
 
+## 2026-10-22：独立BSC历史源复核的真实能力结论（未通过）
+
+**本次只复核P0来源门禁，不更改冻结样本或开始P1/模型。**目标是找一条独立于现有Alchemy免费BNB主网RPC、可以对**已冻结2025-07-01**历史交易或PoolCreated原事件完成真实读取的第二通道。结论绑定本轮PR固定前置SHA `f5a0ae21d13fb44bd09bfff904ba871ac7623678`；查询均为只读，未使用账号充值、付费API、私钥或链上写入。
+
+| 路径 | 本轮实际行为 | 结果 / 不能推断 |
+| --- | --- | --- |
+| BNB Chain官方公共主网RPC | 官网核对ChainID 56和RPC限制（https://docs.bnbchain.org/bnb-smart-chain/developers/json_rpc/json-rpc-endpoint/） | 官方列明公共节点**禁用eth_getLogs**；即使单笔`eth_getTransactionReceipt`将来能返回，也不支持本研究的完整Factory事件分母；本轮在可用容器网络尝试官方RPC域名DNS失败，因此**没有拿到第二来源的真实2025收据** |
+| Blockscout已连接数据插件 | 新session实际`get_chains_list("BNB")`仅返回Matchain ChainID 698；`get_chains_list("BSC")`为空；用2025-07-01实际交易`0xf3891e0391d6704401e2788ee6f09dc75b2b1e2e722fe86be74f437fa0823e0c`直接调用`get_transaction_info(chain_id="56")` | 明确返回`Chain ID '56' is not supported by the Blockscout API.`。**UNSUPPORTED_CHAIN**，不能误记BSC主网已二次验证 |
+| BscScan和BSCTrace浏览器交易页、bnbscan.com交易页 | 对上述已冻结交易tx访问页面 | web工具均返回网页不可访问，不是「未上链」「0笔交易」或已复核 |
+| Binplorer独立BNB索引 | 检索其公开API合同（https://github.com/amilabs/Binplorer/wiki/Binplorer-API），尝试同笔实际历史tx的免费`getTxInfo/{hash}?apiKey=freekey` HTTPS GET | 官方文档有接口及免费开发key，但其公共`freekey`限定请求速率和`Max allowed timestamp age: 30 days`；**2025年历史覆盖未经证实**。本轮web连接器对具体请求返回不可访问，`NOT_TESTED_HISTORIC_ACCESS`，不宣称有历史收据/完整Factory扫描，更不通过绕限额多号/付费方式验证 |
+| Alchemy现有单提供商 | 复核冻结P0原记录：30/30原V2 Pool身份、29份独立部署交易、24份报价侧深度证据、22笔后续BUY、18笔SELL；另538 Four.meme索引的5个事后已迁池池 | 有**单提供商的历史链上存在性**与部分买卖事实；无原始完整HTTP bytes/独立RPC复核，**2025公众`available_at`仍全未知**，没有事前固定同名义金额的真实费后可卖出收益 |
+
+**必须分离3个成功条件**：①能拿到某个2025年交易的独立`txHash/blockHash/receipt`（本轮**未完成**）；②能连续枚举BSC V2/V3以及预定launchpad的**完整历史母体，无漏页/缺块**（本轮**未完成**）；③当时公众**可观察的接收时间`available_at`**和普通用户在该时点的可执行买卖路径（**未完成**）。①即使以后通过也**不能替代**②③。现在切换RPC或继续研究5个被事后筛出的迁池成功案例，不能合理提高P0正式通过率。
+
+**执行上的止损**：严格沿用既有一页P0决策`bsc_v2_p0_frozen30_one_page_source_pit_trade_gap_decision_20261020`的`STOP_FURTHER_FREE_RPC_ENDPOINT_CHURN_AND_P0_REPORT_LOOPS`；不继续按所谓免费provider挨个盲试、不触发本研究仅有的2次手动CI预算，也不部署Mac/生产shadow。仅有**真实新增、可核验、合法免费、覆盖原冻结日期且有原字节的来源**才允许重新审查该阻断。原`2026-11-02`source stop日不变。若到期仍不可证，依旧P0`INSUFFICIENT_COVERAGE`、P1`BLOCKED`、G4`UNKNOWN`、G6`NO_GO`；任何独立forward-only观察需要另外决定，不能默认授权开启。
+
 ## 2026-10-22：独立PIT代码复核——阻止链下公告携带未来链上时钟
 
 本轮没有扩展事后筛出的5个Four.meme迁池样本，没有重复计算同一30例历史收益，也没有把新源码视为P1通行证。固定原`monster_early_records_v1.schema.json`的`chain_event_at` **可为null**及公共来源分级合同，发现新增的离线`pit_asof.py`存在两项真正影响主线的缺陷：
