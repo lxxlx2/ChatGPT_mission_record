@@ -1,3 +1,13 @@
+## 2026-10-22 PR162 3500 ms absolute-wakeup P1 (independent re-review required)
+
+Independent macOS reviewer gave `REQUEST_CHANGES` for old SHA `dc2c6cbf2b4e228225d936a278b25dcde2ae1872`: 337/337 tests passed but replaying the actual 30-call saved Journal revealed a float subtraction mismatch. At HEAD completion ~872.774417 ms, absolute due ~4372.774417 ms; `due - head_complete = 3499.9999999999995` incorrectly passed `age < 3500`, while the event loop had already reached `due`. It then advanced to the 60000ms virtual deadline with only 2 requests / 0 blocks. The invalid 1.0x / 3500ms / HEAD4 and HEAD8 output must NOT be used as a measured policy conclusion.
+
+**Targeted descendant correction:** in availability_wait's minimum-age gate compare `now < head_finished_ms + min_head_refresh_age_ms`, exactly the absolute deadline already scheduled by the event loop. No HEAD TTL change, request-budget change, scheduling redesign or transport code. New regression with actual reported saved-Journal timing sample 447.326375ms chain and 425.448042ms initial HEAD, and adjacent 3499/3500/3501ms holds, validates first refresh at the expected absolute deadline and real fake block dispatch rather than virtual expiry. Baseline checkpoint unchanged.
+
+Full GitHub CI and independent Mac fixed-SHA checkout + SHA256-verified private saved-Journal **new 24-scenario replay** remain mandatory. Keep earlier comparison files intact and do not retroactively approve rejected SHA. Historical live permission fully spent; no new RPC/WS, permit or production. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-22 F0 HEAD-refresh offline policy comparison (new isolated PR, pending review)
 
 - PR161 fixed parent `9f28b741a2e83de0c3b72d2106dba47d4db4f381`, user-supplied independent Mac `APPROVE_OFFLINE_CODE`, 329/329 zero-skip suite. Mac saved30 HEAD budget diagnosis: among 35 synthetic refreshes, 32 NO_ELIGIBLE_HEIGHT, 3 DISPATCH_CHECKPOINT, zero HEAD_STALE primary. In six scenarios HEAD cap (6) stopped 5 before 24-block cap. This is simulator-only, not real RPC evidence.

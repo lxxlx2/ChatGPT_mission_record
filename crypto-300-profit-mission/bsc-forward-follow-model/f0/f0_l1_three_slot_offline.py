@@ -219,7 +219,10 @@ def simulate(durations, ledger_path, *, inflight_slots=3, refresh_after=4,
                 stop = "HEAD_REFRESH_BUDGET_EXHAUSTED"
                 return None
             if (head_policy == "availability_wait" and
-                    age_ms < min_head_refresh_age_ms):
+                    now < head_finished_ms + min_head_refresh_age_ms):
+                # Compare the same absolute deadline used by the event loop.
+                # Subtracting two floats can round a 3500ms age just below
+                # threshold after the event clock reached the exact deadline.
                 if available > 0 and age_ms < head_freshness_ms:
                     return ("eth_getBlockByNumber", next_height, "BLOCK")
                 # With no eligible height, remain idle until a deliberate

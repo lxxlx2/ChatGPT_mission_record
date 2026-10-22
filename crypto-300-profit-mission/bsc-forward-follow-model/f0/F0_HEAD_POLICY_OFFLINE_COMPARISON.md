@@ -1,3 +1,11 @@
+## 2026-10-22 3500 ms 定时器 P1 修复（新的固定 SHA 仍须独立审核）
+
+独立 Mac 审核在旧 SHA `dc2c6cbf2b4e228225d936a278b25dcde2ae1872` 找到等待绝对截止时刻与浮点相减的差异：1.0× × 3500 ms 的两组被错误地报告为只有2次请求和0区块，且等到60s到期。旧24组结果中这两格**无效**，不能视为等待策略真实性能退化。
+
+定向改动仅将最短等待的条件由 `now - head_finished_ms < min_head_refresh_age_ms` 改为 `now < head_finished_ms + min_head_refresh_age_ms`。事件循环已有的 `head_hold_until_ms` 采用相同的绝对截止计算，因此不存在到达截止时却再次判定“尚未到”的矛盾；**HEAD 的 4000 ms 新鲜度门禁不变**。新增包含已报告真实串行耗时样本的 3499/3500/3501 ms 邻界回归，核对 HEAD 到期唤醒、随后派发合成区块、请求和三槽位预算。此分支运行前的新鲜度已审核父代码无需改动。
+
+独立审核与 Mac 重算必须使用**新 SHA**，使用新的私有输出目录，例如 `20261022-f0-head-policy-comparison-r2`；不能复用之前生成的24组 JSONL。旧 SHA `dc2c6cbf2b4e228225d936a278b25dcde2ae1872` 仍保留 `REQUEST_CHANGES`。不得把新版本离线对照说成真实并发供应商测量。
+
 # F0 三槽位离线 HEAD 策略对照：固定检查点 vs 可用高度余量＋延迟刷新
 
 **固定基线:** PR #161 `9f28b741a2e83de0c3b72d2106dba47d4db4f381` 由用户报告独立 Mac 审核 `APPROVE_OFFLINE_CODE`，完整329/329及新增4/4通过；对实际保存在 Mac 私有 Journal 的合成 HEAD 六组诊断：35次刷新中32次主因为 `NO_ELIGIBLE_HEIGHT`、3次为检查点，0次单独因陈旧 TTL；2次检查点/无高度重叠。原始私有 Journal SHA256 `e069b7cd38c2ad3c8a3af3a1b1c220efab1714fe4de0bb7a9e2b814a2302d61a`。真实此前30次网络授权已消耗。

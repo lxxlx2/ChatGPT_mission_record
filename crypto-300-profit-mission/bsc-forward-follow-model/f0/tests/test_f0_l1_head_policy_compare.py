@@ -66,6 +66,46 @@ class HeadWaitPolicyTests(unittest.TestCase):
         self.assertGreaterEqual(refresh_age(new), 2500)
         self.assertLessEqual(new["requested_total"], 32)
 
+    def test_saved30_float_head_wakeup_3499_3500_3501_ms(self):
+        # Independent PR162 P1: real saved-Journal samples reached the
+        # absolute wakeup timestamp, but subtraction rounded the age below
+        # 3500ms, causing an otherwise idle scheduler to jump to 60000ms.
+        actual = {
+            "eth_chainId": [447.326375],
+            "eth_blockNumber": [425.448042, 425.448042],
+            "eth_getBlockByNumber": [750.038],
+        }
+        for hold in (3499, 3500, 3501):
+            for period in (4, 8):
+                with self.subTest(hold=hold, refresh_after=period):
+                    with tempfile.TemporaryDirectory() as directory:
+                        root = Path(directory) / "private"
+                        root.mkdir(mode=0o700)
+                        result = simulate(
+                            actual, root / "new.jsonl",
+                            head_policy="availability_wait",
+                            min_head_refresh_age_ms=hold,
+                            refresh_after=period,
+                            head_freshness_ms=4000)
+                    events = result["trace"]
+                    init = next(row for row in events
+                                if row["event"] == "SETTLE"
+                                and row["category"] == "INITIAL_HEAD")
+                    refresh = next(row for row in events
+                                   if row["event"] == "RESERVE_UNKNOWN"
+                                   and row["category"] == "HEAD_REFRESH")
+                    self.assertAlmostEqual(
+                        refresh["at_ms"] - init["at_ms"], hold, delta=0.002)
+                    self.assertGreater(result["head_refreshes_requested"], 0)
+                    self.assertGreater(result["block_attempts"], 0)
+                    self.assertNotEqual(result["stop_state"],
+                                        "VIRTUAL_DURATION_CAP_EXPIRED")
+                    self.assertLessEqual(result["max_observed_inflight"], 3)
+                    self.assertLessEqual(result["requested_total"], 32)
+                    self.assertLessEqual(result["head_refreshes_requested"], 6)
+                    self.assertGreaterEqual(result["global_min_start_gap_ms"], 250)
+                    self.assertEqual(result["inflight_outcome_unknown_after_stop"], 0)
+
     def test_pending_slow_head_5000ms_still_cannot_dispatch_stale_blocks(self):
         r = self.one("slow", head_values=[1000,1100,1200],
                      refresh_after=8, max_blocks=16,
