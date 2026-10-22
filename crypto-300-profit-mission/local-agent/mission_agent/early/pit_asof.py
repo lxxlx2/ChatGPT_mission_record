@@ -23,6 +23,11 @@ _EVENTS = frozenset((
     "SPOT_ANNOUNCED", "SPOT_LISTED", "LIQ_REMOVED", "POOL_MIGRATED",
     "DELISTED"))
 
+_OFFCHAIN_EVENTS = frozenset((
+    "ALPHA_ANNOUNCED", "ALPHA_LISTED",
+    "USDM_ANNOUNCED", "USDM_LISTED",
+    "SPOT_ANNOUNCED", "SPOT_LISTED"))
+
 
 def _time(raw):
     if not isinstance(raw, str):
@@ -81,7 +86,15 @@ def asof(token_key, decision_at, information_policy, *, events,
                 or not isinstance(e.get("venue"), str)
                 or not e["venue"]):
             raise PITAsOfError("EVENT_ID_TYPE_OR_SOURCE_INVALID")
-        chain_at = _time(e.get("chain_event_at"))
+        chain_raw = e.get("chain_event_at")
+        chain_at = _time(chain_raw) if chain_raw is not None else None
+        # Off-chain announcements and listings have no required chain clock
+        # under the frozen schema. A *future* optional chain timestamp must
+        # never be disclosed in a past as-of view.
+        if chain_at is None and e["event_type"] not in _OFFCHAIN_EVENTS:
+            continue
+        if chain_at is not None and chain_at > decision:
+            continue
         basis = e.get("availability_basis")
         status = e.get("pit_status")
         effective = None
@@ -90,8 +103,8 @@ def asof(token_key, decision_at, information_policy, *, events,
             if e.get("available_at") is None:
                 continue
             effective = _time(e["available_at"])
-            if effective < chain_at and e["event_type"] not in (
-                    "ALPHA_ANNOUNCED", "USDM_ANNOUNCED", "SPOT_ANNOUNCED"):
+            if chain_at is not None and effective < chain_at and (
+                    e["event_type"] not in _OFFCHAIN_EVENTS):
                 raise PITAsOfError("AVAILABLE_BEFORE_CHAIN_EVENT")
             time_key = ("observed_at" if basis == "ACTUAL_LIVE_OBSERVER_RECEIPT"
                         else "published_at")
@@ -101,7 +114,8 @@ def asof(token_key, decision_at, information_policy, *, events,
         elif (information_policy == "RECONSTRUCTED_CONSERVATIVE"
               and status == "PIT_RECONSTRUCTED_ONLY"
               and basis == "RECONSTRUCTED_DELAY_ASSUMPTION"
-              and e.get("available_at") is None):
+              and e.get("available_at") is None
+              and chain_at is not None):
             try:
                 effective = chain_at + timedelta(milliseconds=historical_delay_ms)
             except OverflowError:
@@ -116,7 +130,8 @@ def asof(token_key, decision_at, information_policy, *, events,
         row = {
             "event_id": event_id, "token_key": token_key,
             "event_type": e["event_type"], "venue": e["venue"],
-            "chain_event_at": chain_at.isoformat(),
+            "chain_event_at": (
+                chain_at.isoformat() if chain_at is not None else None),
             "effective_available_at": effective.isoformat(),
             "pit_status": grade, "source_sha256": source_hash.lower(),
             "origin_kind": e.get("origin_kind"),
