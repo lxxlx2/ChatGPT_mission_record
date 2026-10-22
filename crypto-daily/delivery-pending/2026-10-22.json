@@ -743,6 +743,23 @@
       "result_urls": [
         "https://www.binance.com/en-IN/support/announcement/detail/ad54863d7b0446ebae48bbf3b868ee20"
       ]
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-22T03:26:25.613Z",
+      "query_or_url": "English search: crypto exploit security advisory wallet exchange hack October 21 2026 October 22 2026; Ledger hardware wallet official response October 2026",
+      "status": "checked",
+      "result_urls": [
+        "https://www.ledger.com/blog-response-hardware-implant-attack",
+        "https://www.ledger.com/blog"
+      ]
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-22T03:26:25.613Z",
+      "query_or_url": "English search: site:certik.com OR site:slowmist.com OR site:blog.chainalysis.com October 21 2026 security exploit; direct X/Reddit specialist realtime feeds",
+      "status": "source_gap",
+      "error": "Bounded English web search performed; no verified fresh Oct21-22 specialist incident surfaced in returned results; direct real-time X/Reddit feeds not read, so cannot claim comprehensive security coverage."
     }
   ],
   "market_core": [
@@ -838,7 +855,7 @@
       "lane": "security",
       "checked_at": "2026-10-22T02:24:42.483Z",
       "status": "checked",
-      "source_url": "https://www.binance.com/en/support/announcement/detail/0308cba2eb53446e8207e7b227106fc5"
+      "source_url": "https://www.ledger.com/blog-response-hardware-implant-attack"
     },
     {
       "lane": "cex_policy",
@@ -1178,10 +1195,19 @@
     "previous_sent_last_7_days_checked": true,
     "existing_tge_known_events_checked": true,
     "old_space_surf_standx_qubic_cysic_jpmd_suppressed": true,
-    "code_gate_runtime": "NOT_EXECUTED_YET_CI_PENDING",
+    "code_gate_runtime": "CURRENT_MANIFEST_SHA_REQUIRES_NEW_CI_RECEIPT",
     "primary_rules_blob_sha": "df26ea064cc6feae99e345f6efaf402485b0482c",
     "pipeline_contract_blob_sha": "1b3efb8943786d48c4cf370e17bebacc6978c5f0",
     "last_substantive_revision_at": "2026-10-22T02:26:06.095Z",
-    "new_revisions_added": 7
+    "new_revisions_added": 7,
+    "security_recovery_check": {
+      "checked_at": "2026-10-22T03:26:25.613Z",
+      "source_status": "PARTIAL_COVERAGE",
+      "issuer_primary": "https://www.ledger.com/blog-response-hardware-implant-attack",
+      "issuer_published_at": "2026-10-15",
+      "already_user_known": "2026-10-20 Gmail Sent 1a157ff300a8a5c0",
+      "new_delta_confirmed": false,
+      "specialist_live_gap": true
+    }
   }
 }
