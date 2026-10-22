@@ -107,11 +107,17 @@ class ThreeSlotOfflineTests(unittest.TestCase):
         self.assertLessEqual(res["requested_total"], 32)
 
     def test_parent_mismatch_blocks_contiguous_commit(self):
-        res, _ = self.run_case(bad_parent_heights={1002})
+        # Explicit initial HEAD 1000 makes height1001 the unanchored first
+        # observed block, while height1002 must link to 1001 internally.
+        res, _ = self.run_case(head_values=[1000], bad_parent_heights={1002})
         self.assertEqual(res["stop_state"], "PARENT_HASH_MISMATCH")
         self.assertEqual(res["blocks_committed_contiguous"], 1)
         self.assertIn(1002, res["parent_mismatch_heights"])
         self.assertEqual(res["inflight_outcome_unknown_after_stop"], 0)
+
+    def test_first_unanchored_block_parent_cannot_be_called_verified(self):
+        res, _ = self.run_case(bad_parent_heights={1002})
+        self.assertNotIn(1002, res["parent_mismatch_heights"])
 
     def test_head_regression_stops_without_retry(self):
         res, _ = self.run_case(head_values=[1001, 1000])
