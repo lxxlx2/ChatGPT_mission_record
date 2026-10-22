@@ -246,6 +246,85 @@ class ForwardObservationTests(unittest.TestCase):
         with self.assertRaisesRegex(m.ForwardProbeError, 'BAD_ETH_CALL_ADDRESS_PADDING'):
             m.word_address('0x' + 'f' * 64)
 
+    def test_slow_second_count_enforces_actual_three_second_window(self):
+        rpc = FakeRPC()
+        clk = Clock()
+        original = rpc.request
+
+        def delayed(method, params):
+            result = original(method, params)
+            if (method == 'eth_call' and params[0]['data'] == m.COUNT_SELECTOR
+                    and rpc.count_reads == 2):
+                clk.advance_ns += 8_000_000_000
+            return result
+
+        rpc.request = delayed
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'ACTUAL_SNAPSHOT_INTERVAL_EXCEEDS_3_SECONDS'):
+            m.capture(rpc, self.dir, pause_seconds=0, clock=clk.now,
+                      monotonic_ns=clk.monotonic, sleep=clk.sleep)
+        self.assertFalse((self.dir / 'manifest.json').exists())
+        failure = json.loads((self.dir / 'failure.json').read_text())
+        self.assertEqual(failure['status'], 'UNUSABLE_NOT_PIT_EVIDENCE')
+
+    def test_utc_rewind_between_calls_fails_closed(self):
+        rpc = FakeRPC()
+        clk = Clock(utc_jump_at=9, utc_jump_seconds=-4)
+        with self.assertRaisesRegex(m.ForwardProbeError, 'LOCAL_CLOCK_REVERSED'):
+            m.capture(rpc, self.dir, pause_seconds=0, clock=clk.now,
+                      monotonic_ns=clk.monotonic, sleep=clk.sleep)
+        self.assertFalse((self.dir / 'manifest.json').exists())
+
+    def test_utc_jump_without_monotonic_jump_fails_closed(self):
+        rpc = FakeRPC()
+        clk = Clock(utc_jump_at=9, utc_jump_seconds=4)
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'LOCAL_CLOCK_MONOTONIC_DISAGREEMENT'):
+            m.capture(rpc, self.dir, pause_seconds=0, clock=clk.now,
+                      monotonic_ns=clk.monotonic, sleep=clk.sleep)
+        self.assertFalse((self.dir / 'manifest.json').exists())
+
+    def test_two_intermediate_ancestors_are_verified(self):
+        result, rpc = run(self.dir, second_height=103)
+        self.assertEqual([x['number'] for x in result['verified_intermediate_headers']],
+                         [102, 101])
+        self.assertEqual(result['new_factory_pair_index_count'], 1)
+        self.assertEqual(result['unread_new_pair_count'], 0)
+        self.assertEqual(len(rpc.calls), 16)
+        self.assertFalse(result['p1_gate_passed'])
+
+    def test_broken_intermediate_parent_fails_closed(self):
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'NONCONTIGUOUS_PARENT_HASH'):
+            run(self.dir, second_height=103, broken_parent_height=102)
+        self.assertFalse((self.dir / 'manifest.json').exists())
+        self.assertTrue((self.dir / 'failure.json').is_file())
+
+    def test_ancestor_depth_exhausting_request_budget_fails_closed(self):
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'ANCESTRY_EXCEEDS_RPC_BUDGET'):
+            run(self.dir, second_height=112)
+        self.assertFalse((self.dir / 'manifest.json').exists())
+        self.assertTrue((self.dir / 'failure.json').is_file())
+
+    def test_duplicate_pair_across_indices_fails_closed(self):
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'DUPLICATE_FACTORY_POOL_IDENTITY'):
+            run(self.dir, after=502, duplicate_pool=True)
+        self.assertFalse((self.dir / 'manifest.json').exists())
+
+    def test_duplicate_token_pair_across_indices_fails_closed(self):
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'DUPLICATE_FACTORY_POOL_IDENTITY'):
+            run(self.dir, after=502, duplicate_tokens=True)
+        self.assertFalse((self.dir / 'manifest.json').exists())
+
+    def test_reversed_pool_token_order_fails_closed(self):
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'POOL_TOKEN_ORDER_INVALID'):
+            run(self.dir, reversed_tokens=True)
+        self.assertFalse((self.dir / 'manifest.json').exists())
+
     def test_no_future_proof_from_timestamps(self):
         result, _ = run(self.dir)
         self.assertEqual(result['time_basis'],
