@@ -1,7 +1,8 @@
 # Frank 链上观察台 V2：真实账本、持续观察池与 GMGN 功能对照技术设计
 
 Date: 2026-10-11 Asia/Bangkok
-Status: **DATA_AND_ARCHITECTURE_DESIGN_COMPLETED / IMPLEMENTATION_NOT_STARTED / REAL_REPLAY_NOT_PASSED / PRODUCTION_UNCHANGED**
+Original 2026-10-11 status (historical): **DATA_AND_ARCHITECTURE_DESIGN_COMPLETED / IMPLEMENTATION_NOT_STARTED / REAL_REPLAY_NOT_PASSED / PRODUCTION_UNCHANGED**
+2026-10-22 scoped status: **READONLY_DASHBOARD_PARTIALLY_DEPLOYED / CURRENT_WALLET_INVENTORY_NOT_COMPLETE / CA_QUERY_REGRESSION_OPEN / V3_NOT_IMPLEMENTED** — see sections 10–16
 Parent task: $300 → $3000 Mission, Frank/Meme lane.
 Inputs: `frank-wallet-ui-data-audit-2026-10-11.md` (real read-only chain samples, screenshot discrepancies and first-party GMGN research); `ca-analysis-unified-accuracy-acceptance.md` (manual CA comprehensive research); `FRANK_LOCAL_SIGNAL_V1_POLICY.md` (frozen production alert semantics).
 Objective: **user can see and understand every materially relevant Frank trade, wallet position and token under observation, while the existing production BUY/WAIT and Gmail rules stay strictly unchanged.** A read-only local dashboard; no signed swap execution or paid GMGN requirement.
@@ -110,7 +111,7 @@ Do not suppress legitimate delegate-authorized actions by blindly assuming Frank
 
 ## 5. Dashboard redesign: fit-for-decision, not empty “current following only”
 
-The UI has **three top-level navigation views**, with no extra trading buttons:
+**Historical 2026-10-11 proposal**: three top-level views. Section 12 replaces only that UI navigation layout with five views, without changing any source, safety or watchlist obligations:
 
 ### A. 「Frank 观察池」 (default, the primary task)
 
@@ -193,4 +194,138 @@ Invariants: unique tx signature, immutable raw hash, versioned parser, normalize
 
 ## 9. Delivery boundaries and current execution state
 
-**Design decisions and requirements in this document have been specified, not coded or operationally accepted.** The 300-3000 governing conversation owns data definition and design gate; a separate implementation effort must perform D0→D4 in order. No unrelated code refactor, no automatic duplicate monitor, no paid GMGN API, no local RPC transaction signing, no unapproved runtime modification. Preserve existing user-approved frozen Frank signals and notification conditions unchanged.
+**Historical statement valid on 2026-10-11 only:** Design decisions and requirements in this document have been specified, not coded or operationally accepted. The 300-3000 governing conversation owns data definition and design gate; a separate implementation effort must perform D0→D4 in order. No unrelated code refactor, no automatic duplicate monitor, no paid GMGN API, no local RPC transaction signing, no unapproved runtime modification. Preserve existing user-approved frozen Frank signals and notification conditions unchanged.
+
+---
+
+## 10. 2026-10-22 V3 修订：先遵守已批准原则
+
+本节修订现有 V2 产品原文档，不另开平行需求；严格依照已冻结的 [G1 五层架构 PR #114](https://github.com/lxxlx2/ChatGPT_mission_record/pull/114)（原批准正文 SHA e4d61d1c8f246a7b04ea46ba674855346625a243）、Mission 规范、既有 D0→D4 开发主线和用户已明确排除的固定交易金额。若任何设计触及冻结 G1 的硬边界，需先经用户对架构差异重新审批；本轮仅供 Claude 独立复核，非实施或部署许可。
+
+**一处需纠正的旧 V3 草案冲突**：CA 已有 [统一准确性文档](ca-analysis-unified-accuracy-acceptance.md) 明确规定用户只有一个 CA 查询入口，内部渐进深入，不再让用户选择快速、标准或深度。上次 V3 草案中的“三档继续保留”与原用户批准的准确性原则冲突，以原文档的**单模式**为准。
+
+**里程碑不改名**：V2 D0→D4 是业务开发顺序；G1 G0→G4 是研究、审查、独立验收及上线门禁；Option 3 P0→P5 属智能通知子项目。V3 仅调整既有 A/B 数据完整性与 D 层可用性，**不是新开第四套开发流程**。
+
+### 10.1 功能完成状态必须按证据分级
+
+- PRODUCTION_ACCEPTED：精确代码 SHA、运行产物及 Mac 实际验收明确通过，仅对该功能范围
+- CODE_REVIEWED_NOT_DEPLOYED：代码和独立审查存在，但未证明当前生产安装
+- EVIDENCE_ONLY：历史样本、快照、离线回放，不是当前在线功能
+- DESIGNED_NOT_BUILT：仅有设计，尚无代码及真实功能验收
+- BLOCKED_BY_SOURCE：真实源、授权、时效、完整性或价格可比条件缺失
+- REGRESSION_OPEN：用户截图证实出现问题，但真实故障归因、修复验收未完成
+
+| 原阶段及功能 | 已经实现且有证据 | 未实现或阻断 | 状态 |
+|---|---|---|---|
+| V1 原信号及提醒 | 原 ACCUMULATION/MULTIPLE 继续按既有授权运行 | 不批准本轮改信号和真实通知 | PRODUCTION_ACCEPTED（旧 V1） |
+| 智能分析及买卖观察 | PR #146/#157 产品 SHA 31dd598df248ca15f731913a5cbf82e88b981874，8766 真 Mac Dashboard-only 上线验证 | 这不等于链上完整余额、可靠新鲜市场价或 V3 五区导航 | PRODUCTION_ACCEPTED（只读子集） |
+| 签名流水/观察池 | 可看已索引 BUY/SELL、转入和 ATA，历史模型存在 | 交易分类混合枚举不清楚、多个模块重复、源非完整链 | PARTIAL_PRODUCT_DEPLOYED |
+| 历史持仓快照 | PR #110 2026-10-11 32 Mint 样本，10 非零/22 零 | 无法证明 2026-10-22 当前余额，双 Token Program 全账户完整性未达 | EVIDENCE_ONLY / BLOCKED_BY_SOURCE |
+| G2 正式集成候选 | PR #119 原范围的代码/CI 曾有验证 | Draft 未部署；不得当作已安装 | CODE_REVIEWED_NOT_DEPLOYED |
+| CA 查询 | 用户 Mac 截图先得到部分基础行情，随后 Failed to fetch | POST/轮询/Worker/RPC/报告保存失败阶段尚未定位，见 Issue #165 | REGRESSION_OPEN |
+| 清理“历史过期 15” | 旧显示源于历史未发 outbox；PR #164 有浏览器收起代码 | 尚未审核部署；逐条与 Gmail 对账及跨浏览器审计归档未实现 | CODE_ONLY / BLOCKED |
+| 价格与盈利 | 仅有原始历史交易、部分市场样本 | 无完整新鲜同口径价格，不能显示当前价格变化或真实可跟收益 | BLOCKED_BY_SOURCE / NEED_MORE_DATA |
+| 新智能风险消息 | 历史 fake unsent 示例 | 未完成送达/去重/通道审批，不允许真发 | DESIGNED_NOT_BUILT |
+| V3 32 条交互改进 | 本节架构和页面验收规则 | 均未按 V3 完整 Mac 测试和发布，不得称 32/32 完成 | DESIGNED_NOT_BUILT |
+| 旧 MC 的 30 美元报价及“小仓跟”邮件 | 旧 MC Loop 仍在原进程，曾有真实 Gmail 旧式内容 | 属独立通知/策略治理，Dashboard-only 未修复 | 独立风险 OPEN |
+
+[PR #157 生产证据](https://github.com/lxxlx2/ChatGPT_mission_record/blob/cb6187a8df2c611693d4030555b194501006b24d/docs/MONITORING/frank-release-20261022/production-cutover/REPORT.md) 和 [Issue #165](https://github.com/lxxlx2/ChatGPT_mission_record/issues/165) 为本次状态快照依据。生产样本中的买卖数量和旧 PID 只对当天有效，不能当作恒定值。
+
+## 11. 架构：严格复用 G1 A/B/C1/C2/D/E
+
+| 层 | 真正职责 | 保持不变 |
+|---|---|---|
+| A 收集与原始证据 | 原钱包身份、签名/slot、原始响应 hash、获取时间、两类 Token Program 覆盖 | 原采集/原始数据不可被 UI 或衍生规则改写；无审批不加 RPC/常驻任务 |
+| B 可审计事实 | 原始交易腿、主动 swap、被动收付、ATA、余额快照、价格时点和来源、纠错版本 | 同一签名可多腿，不能把转账冒充买卖；新纠错以版本/supersedes 留痕 |
+| C1 研究/回放 | GMGN/FOMO/OKX 同窗对照、覆盖率、价格和潜在回报、独立 OOS | 未达到 G0-B 前为 NEED_MORE_DATA，不暗示获利 |
+| C2 原信号引擎 | 原 V1 信号/轮次/通知生成与发送身份 | 不因 V3 页面改变阈值、出买卖建议或重发 |
+| D 已有 Dashboard | 中文表示、来源链接、模块导航、筛选/分页、数据问题中心 | 前端不能自行生成 BUY/SELL、余额、收益或修复缺失的链上事实 |
+| E 用户决策 | 买、卖、交易金额、实际操作 | 无默认金额、交易签名或自动执行 |
+
+复用实际 FrankReader、wallet_activity、wallet_watch、wallet_inventory、CA cluster 的已有能力，先做源契约对齐，不复制新的并行账本。最小事实合同：
+
+- 交易：wallet、Mint、signature、slot、事件时间、首次索引时间、原始 hash、解析器版本、分类、方向、token/quote 数量、交易腿序号、完整度
+- 持仓：Frank owner、Mint、SPL 与 Token-2022 的全部相关账户、raw integer amount、decimals、获取时点、实际返回 slots、finalized 状态及账户覆盖
+- 市场价：Mint/chain/pool/quote asset、价格种类、来源、价格时点、抓取时点、失效规则；实际 Frank 成交价、池子参考价和可执行报价不可混用
+- 来源信号：触发签名、信号 ID、episode、冻结策略 hash、生成时间和另行证明的送达 ID；生成不等于收件
+- CA 作业：job ID、CA、提交与阶段时间、已保存阶段、轮询错误/来源错误/保存错误、可读回报告
+- 历史清理：原 decision ID、渠道、尝试/回执事实、另行追加的归档动作和可回查审计；原 outbox 不删改
+
+不能证明账户在统一 slot 读取，就不能虚构一个共同 slot 余额。必须记录各程序读回 slot 与一致性差异；当前余额只能在**真实完整证据和适当时效**下有数值，历史 10 月 11 日快照不得升格为当前值。没有来源不等于零，余额为零不等于卖出，交易卖出不等于已清仓。
+
+## 12. D 层布局：五个独立页面，保留 V2 业务能力
+
+| 一级导航 | 首屏回答 | 合并旧模块 / 数据规则 |
+|---|---|---|
+| 当前机会 | 现在有无真实可查看的源信号 | 旧跟单候选与历史 WAIT/NO_BUY 分离，现有信号不因缺报价被消去；无执行报价时不可叫“可以成交” |
+| Frank 持仓 | 截至哪一个证实 slot 持币多少 | 合并智能卡/持续观察池资产视图，历史模型只在历史详情，余额缺口集中一次列出 |
+| 交易流水 | 哪天买卖、转入转出、创建账户或交易失败 | 合并买卖观察、最近交易、签名活动；只把源证明的 swap 称为买卖 |
+| CA 分析 | 该代币基础、权限、持有人、LP、资金关系和外部叙事是否真正完成 | 一个 CA + 分析入口，内部渐进阶段；局部结果不是完成 |
+| 历史与通知 | 历史退出/决策、邮件已发送/待确认、过期已拦截 | 原最近结束数量只出现一次，归档和收件分开审计 |
+
+五页有可辨识标题/留白/表格，Tab 直达、统一 Mint 联动、返回顶端和移动端菜单，不再把多个同质模块排成长页。旧 V2 观察池独立于当前信号：即使没有 ACC/MULT，也必须继续保留持仓/历史/收藏，退出历史不能因 24h 窗口消失。
+
+首页只显示真实有用的字段：Mint、动作/时间、真正信号及证据，不用历史 WAIT/NO_BUY、“重新建仓观察”长段占首屏。价格缺失不隐去原信号，但不能生产假定可执行结论。持仓只显示可靠 slot 数量或单处“当前余额尚未完成同步”及数据问题入口，不在每张卡片重复未核实。列表支持筛选、匹配总数和加载更多；技术限制写在帮助面板。
+
+## 13. 中文词典、零假事实和简明文案
+
+| 内部状态 | 展示 | 硬性条件 |
+|---|---|---|
+| ACTIVE_TRADE | 已确认买入 / 已确认卖出 | 签名、钱包与 swap 资产方向可复核 |
+| PASSIVE_TRANSFER | 收到代币 / 转出代币 | 不当作主动买卖 |
+| ATA_CREATE | 创建代币账户 | 不代表买入 |
+| FAILED_TX | 交易失败 | 不计入成功买卖 |
+| UNKNOWN_NEEDS_REVIEW | 待核查的账户活动 | 不算确认买卖 |
+| MATCHED_OR_NOT_APPLICABLE | 不显示合并代码 | 必须拆成“交易记录一致”和“无需匹配交易”，不能默认匹配成功 |
+| SELL_POSITION_UNRESOLVED | 已确认卖出，剩余持有数量待查 | 单独的真实余额才能证明卖后数量 |
+| MODEL_OPEN | 历史模型记录为持有 | 不能作为当前链上持仓 |
+| PRICE_UNAVAILABLE | 暂无符合要求的当前行情 | 不能填零、虚构涨幅或盈亏 |
+
+“已识别经济腿”改成“代币买卖明细”，转入/转出另表述；只有真实买卖腿时才显示。所有面向用户的标题、说明、Toast、列表状态**句末不加句号**；英文 enum 不进主表格。删除同样的“研究提醒”及自我免责声明，不能删除其背后的权限校验或来源证据。缺口统一进入可展开“数据问题”，逐项记源、时点和未完成原因；不能因为用户希望页面干净就把未知填成 0、已清仓或可以买。
+
+## 14. CA 统一准确性与故障恢复
+
+原 CA 文档仍为权威：单入口+内部进度（基础、权限、持有人/LP、钱包资金源、报告），完成须保留 Token-2022、真正 Owner Top10、资金归因、可信外部叙事、完整度验收。当前 Issue #165 的浏览器 Failed to fetch 必须先一次性只读核对 POST 接受、GET 轮询状态、Dashboard PID/worker、源 RPC、现有缓存/报告是否写入，不能没证据就判 RPC 429。
+
+目标为有凭据的阶段性部分结果、持久任务身份和可读回已完成报告，区分连接中断、轮询中断、worker 错误、源 RPC 限额、报告保存错误。GET 失败不能触发新 POST 或无上限 RPC 重试；任何新增生产持久写入须单独授权，离线临时 fixture 先验收。同一真实 CA 在 Mac 完成一次从失败复现到根因、恢复后完整结果或有证据的 INCOMPLETE_EVIDENCE，不能仅把“Failed to fetch”换成“稍后重试”。
+
+## 15. 顶部状态与真正的清理
+
+顶栏只放 Frank 心跳、最后同步、当前异常和待处理通知、通知中心/清理入口。过去未发的“过期拦截15”放到历史通知，不能一直污染“监控正常”。成功发送的 V1/MC 邮件与历史 15 是不同集合，逐 ID 对账前不抵扣。
+
+短期是经严格身份识别的、可逆浏览器级收起（PR #164 仍 Draft，尚未上线），不得视为数据库清理；长期归档先对账过期原因、attempts、回执和 Gmail message identity，经用户单独许可追加审计归档，不删除/重写原 outbox、不重放旧通知。旧 MC $30/小仓跟路径必须在独立通知授权范围处理，不能因 UI 隐藏而自称修复。
+
+## 16. 用户 32 项逐条对应（状态均为 V3 未完成）
+
+| 编号 | 承诺及原阶段 |
+|---|---|
+| 1、23 | 顶栏明确健康/异常与可逆清理，历史与当前分开 — D/通知审计 |
+| 2、3、4 | 旧 WAIT、NO_BUY、重复结论不占“当前机会” — D |
+| 5、6、8、9、11、13、14 | 删除冗长副标题/研究提醒/无用自述而保留后台规则 — D |
+| 7、10、26、27 | 当前持仓和价差须可靠余额/slot/市场来源，历史模型进历史 — A/B |
+| 12 | 五导航、明显分区和 Mint 联动 — D |
+| 15、16、17 | 卖出事实 vs 卖后余额、分页而非每行“未核实” — B/D |
+| 18 | 中文文案/Toast 句末无句号 — D |
+| 19、24 | 统一钱包签名与交易流水、加载更多/帮助替代实现阈值长句 — B/D |
+| 20、21、22 | 经济腿/混合核验状态/ATA/PASSIVE 中文化且分型严格 — B/D |
+| 25、28、29 | 持仓与观察池整合、转账与市场交易分开 — B/D |
+| 30、31 | 结束次数去重，历史和待核交易合并 — D |
+| 32 | CA 单模式可恢复的真实失败处理 — CA/A/B |
+
+这些是**设计归属**，不是宣称32项已编码或已验收。每一项最后须有固定源码 SHA、源证据和 Mac 实际结果，缺数据时应标 BLOCKED_BY_SOURCE。
+
+## 17. D0→D4 开发顺序、业务出口与停止规则不变
+
+| 单轮交付 | 实际用户问题 / 最小证据 | 对应原门禁 |
+|---|---|---|
+| 1 CA 真故障调查 | Mac 一次复现并取得 Failed to fetch 发生阶段与真实原因 | D0 + G2 |
+| 2 CA 完整可恢复查询 | 单模式完成一例真实 Mint，断线能读回已有结果，不重复昂贵调用 | D3 + G2/G3 |
+| 3 钱包当前真实余额 | 一个 Mint 两类 Token Program 全账户与 slots/时间、真实数量；若无获批来源则明确 blocker | D1/D2 + G2 |
+| 4 交易事实修正 | 同一真实签名准确区分买卖/转账/ATA/混合状态 | D1/D2 + G2 |
+| 5 V3 页面 | 五区导航与可信字段、中文/分页/去重，真实 Mac 一次有界验收 | D2/D3 + G3 |
+| 6 通知历史清理 | 真实邮件对账、可逆收起；真归档另行授权和复核 | D/通知独立门禁 |
+| 7 整体验收 | 固定 SHA、Claude 独立审查、生产依赖/回滚、用户单独授权后再安装 | D4 + G3 |
+
+业务源事实的 P0/P1 缺口优先于视觉微调，P5 新风险真发送暂后置；已验收的 PR157 只读页面不能因本轮设计自动被替换。不得扩 RPC/付费 GMGN/增常驻服务、变更 V1/Loop/Gmail/outbox、签名或下单。
+
+本节状态：DOCS_ONLY_FOR_CLAUDE_REVIEW / NO_MERGE / NO_DEPLOY / NO_NEW_RPC / NO_TRADES
