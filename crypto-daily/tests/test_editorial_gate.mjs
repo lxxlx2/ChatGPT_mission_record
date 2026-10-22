@@ -79,3 +79,17 @@ test('malformed additional receipt is never waived by a good receipt in same lan
   const r=run(x=>{x.source_receipts.push({lane:'capital_flows',status:'checked',checked_at:'2026-10-22T02:00:00Z',query_or_url:'https://farside.co.uk/eth/',result_urls:[]})});
   assert.ok(r.errors.some(x=>x.startsWith('CHECKED_WITHOUT_SOURCE_RESULT')));
 });
+
+test('critical web runtime RCE original-source lane cannot be omitted',()=>{
+  const r=run(x=>{x.source_receipts=x.source_receipts.filter(c=>c.lane!=='web_runtime_rce')});
+  assert.ok(r.errors.some(e=>e.startsWith('DISCOVERY_LANE_RECEIPT_MISSING:web_runtime_rce')));
+});
+test('global WebPKI/CA trust emergency original-source lane cannot be omitted',()=>{
+  const r=run(x=>{x.source_receipts=x.source_receipts.filter(c=>c.lane!=='web_pki_tls')});
+  assert.ok(r.errors.some(e=>e.startsWith('DISCOVERY_LANE_RECEIPT_MISSING:web_pki_tls')));
+});
+test('two independent real global security receipts can coexist with original crypto security checks',()=>{
+ const r=run(x=>{x.source_receipts.push({lane:'web_runtime_rce',status:'checked',checked_at:'2026-10-22T03:30:00Z',query_or_url:'https://www.php.net/archive/2026.php',result_urls:['https://www.php.net/archive/2026.php']});
+ x.source_receipts.push({lane:'web_pki_tls',status:'checked',checked_at:'2026-10-22T03:30:00Z',query_or_url:'https://blog.mozilla.org/security/',result_urls:['https://blog.mozilla.org/security/']});});
+ assert.equal(r.passed,true);
+});
