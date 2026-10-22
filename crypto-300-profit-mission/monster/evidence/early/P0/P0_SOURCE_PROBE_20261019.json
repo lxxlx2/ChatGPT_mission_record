@@ -21934,5 +21934,217 @@
       "G4": "UNKNOWN",
       "G6": "NO_GO"
     }
+  },
+  "bsc_fourmeme_p0_five_graduated_pairs_historical_mint_swap_20261022": {
+    "schema": "MONSTER_BSC_FOURMEME_SCOPED_FIVE_MIGRATION_CREATION_AND_FIRST_BLOCK_EVENTS_V1",
+    "observed_date_utc": "2026-10-22",
+    "fixed_snapshot_day": "2025-07-01",
+    "previous_evidence_key": "bsc_fourmeme_p0_all538_frozen_day_end_curve_state_20261022",
+    "origin_kind": "CHAIN_EVENTS_VIA_CONNECTED_FREE_ALCHEMY_NORMALIZED_RPC",
+    "derivation_kind": "DIRECT_LOG_PLUS_STORAGE_JOIN_AND_RECONSTRUCTED_CREATION_BLOCK_BOUNDARY",
+    "five_cohort_selection": "ALL_FIVE_OF_FROZEN_538_DAY_END_STATUS3_NOT_A_FULL_LAUNCHPAD_TRADE_COHORT",
+    "source_same_provider_crosschecks": "V2_FACTORY_GETPAIR_ABSENT_PREVIOUS_BLOCK_AND_PRESENT_CREATION_BLOCK;SINGLE_BLOCK_PAIRCREATED;PAIR_SAME_TX_MINT_SYNC;PAIR_GETRESERVES_EQUALS_LAST_SYNC_IN_SAME_BLOCK",
+    "zero_padded_or_manual_ca_alias_allowed": false,
+    "source_original_http_bytes_archived": false,
+    "second_provider_check": false,
+    "exact_receipt_fee_and_router_payout_checked": false,
+    "contemporaneous_2025_public_available_at": "UNKNOWN",
+    "same_block_other_tx_swaps_cannot_be_assumed_PUBLIC_REACTIVE": true,
+    "real_user_size_buy_sell_and_tax": "NOT_SCORABLE",
+    "observed_same_block_independent_swap_pools": 4,
+    "observed_same_block_independent_swap_events": 5,
+    "created_pairs_and_same_tx_mint_sync": 5,
+    "all_5_initial_WBNB_quote_over_frozen_2_WBNB_floor": true,
+    "all_5_block_end_getReserves_verified_against_last_same_block_sync": true,
+    "rows": [
+      {
+        "fourmeme_index": 247622,
+        "token_ca": "0x05008b299d880eeb424f1dd84d3b85a0381b4444",
+        "pair": "0x1ac2b4e97114b1b9527868cc53ea77312a93bbf7",
+        "first_pair_exists_at_block": 52449009,
+        "prior_block_getPair_was_zero_verified_in_separate_bounded_probes": true,
+        "factory_paircreated": {
+          "tx_hash": "0x5c836f3ff42db371ebae399e43be6adb1ab80816a1a60cfc863dd8d3a2555408",
+          "log_index": 26,
+          "block_hash": "0x62df0a59b3d0fbd123627fc4a756bf26585ae07f0092ca58742b2140d5135c40",
+          "factory_sequence_id": 1874213
+        },
+        "initial_same_creation_transaction_mint_sync": true,
+        "creation_tx_initial_quote_WBNB_wei": "23519999999451199994",
+        "first_mint_sync": {
+          "sync_log_index": 33,
+          "mint_log_index": 34,
+          "reserve0_raw": "200000000000000000000000000",
+          "reserve1_raw": "23519999999451199994"
+        },
+        "block_end_reserves_verified_against_last_sync": {
+          "reserve0": "200000000000000000000000000",
+          "reserve1": "23519999999451199994",
+          "WBNB_quote_wei": "23519999999451199994"
+        },
+        "block_timestamp_last_sync_utc": "2025-07-01T01:49:01.000Z",
+        "same_block_swap_count": 0,
+        "same_block_swap_events": [],
+        "no_public_available_at_proof": true,
+        "source_original_http_bytes_sha256": null
+      },
+      {
+        "fourmeme_index": 247633,
+        "token_ca": "0x2314f7ec7c490f2435d7b7f1c45352ef3fd04444",
+        "pair": "0xbc8d85dcf331db9bde9263c214c9cb05ab370cd2",
+        "first_pair_exists_at_block": 52474140,
+        "prior_block_getPair_was_zero_verified_in_separate_bounded_probes": true,
+        "factory_paircreated": {
+          "tx_hash": "0xf984e2ef674cc74704de9c9883af2d9ea5a79e82204915aa18256d4f98e2c28a",
+          "log_index": 2,
+          "block_hash": "0xdf77a69773217ca23d24c9c4a20c13467009a72f774b5fdb075e8c5ffa1801db",
+          "factory_sequence_id": 1874335
+        },
+        "initial_same_creation_transaction_mint_sync": true,
+        "creation_tx_initial_quote_WBNB_wei": "23519999999451199994",
+        "first_mint_sync": {
+          "sync_log_index": 9,
+          "mint_log_index": 10,
+          "reserve0_raw": "200000000000000000000000000",
+          "reserve1_raw": "23519999999451199994"
+        },
+        "block_end_reserves_verified_against_last_sync": {
+          "reserve0": "177426544295319508457526163",
+          "reserve1": "26519999999451199994",
+          "WBNB_quote_wei": "26519999999451199994"
+        },
+        "block_timestamp_last_sync_utc": "2025-07-01T07:03:11.000Z",
+        "same_block_swap_count": 2,
+        "same_block_swap_events": [
+          {
+            "tx_hash": "0x68e5bcfddf85536a8ff495d171cf5995655a3fe2d04ae28c54f9b17c2c9c67e0",
+            "log_index": 17,
+            "separate_tx_from_initial_mint": true
+          },
+          {
+            "tx_hash": "0x2cbfc2c99672dd9b5ad109fb1559637d9c1ecd5e0ef8db77ddf47185ab6f715a",
+            "log_index": 648,
+            "separate_tx_from_initial_mint": true
+          }
+        ],
+        "no_public_available_at_proof": true,
+        "source_original_http_bytes_sha256": null
+      },
+      {
+        "fourmeme_index": 247672,
+        "token_ca": "0xd6cf4c65571c1e05d48ff6496f42bb6148cf4444",
+        "pair": "0x6f866815c5143db6a1718469a285a1608d5527d1",
+        "first_pair_exists_at_block": 52470447,
+        "prior_block_getPair_was_zero_verified_in_separate_bounded_probes": true,
+        "factory_paircreated": {
+          "tx_hash": "0x652a60e1bbedb918171a27f19a674944d818ae2e407febf21f71ff68ca814121",
+          "log_index": 50,
+          "block_hash": "0x2f224803268d4f54d553ccf4f1e3a014680f68110933404c90f9b6a361ffa380",
+          "factory_sequence_id": 1874309
+        },
+        "initial_same_creation_transaction_mint_sync": true,
+        "creation_tx_initial_quote_WBNB_wei": "23519999999451199994",
+        "first_mint_sync": {
+          "sync_log_index": 57,
+          "mint_log_index": 58,
+          "reserve0_raw": "23519999999451199994",
+          "reserve1_raw": "200000000000000000000000000"
+        },
+        "block_end_reserves_verified_against_last_sync": {
+          "reserve0": "24019999999451199994",
+          "reserve1": "195846994535424234424194548",
+          "WBNB_quote_wei": "24019999999451199994"
+        },
+        "block_timestamp_last_sync_utc": "2025-07-01T06:17:01.000Z",
+        "same_block_swap_count": 1,
+        "same_block_swap_events": [
+          {
+            "tx_hash": "0x0fe8d675749aecdac0d68a2afa66a9b52e05bcf857601aa16ed07aee9cf974fa",
+            "log_index": 675,
+            "separate_tx_from_initial_mint": true
+          }
+        ],
+        "no_public_available_at_proof": true,
+        "source_original_http_bytes_sha256": null
+      },
+      {
+        "fourmeme_index": 247708,
+        "token_ca": "0x2ec32f7d8c8edf0d3027ea22867d7fe122824444",
+        "pair": "0xf1e6edf686e9c2bad83891d0125db8ad0e06e4fa",
+        "first_pair_exists_at_block": 52511487,
+        "prior_block_getPair_was_zero_verified_in_separate_bounded_probes": true,
+        "factory_paircreated": {
+          "tx_hash": "0xb6997bcc7c6b29aaf290b3439a64a503eace573d76d1ac2a6e265b5d5d8b6672",
+          "log_index": 33,
+          "block_hash": "0x1997a278c792472f51a42ddbcc6afa45dc1b63ee11cb2af65410798ab442c498",
+          "factory_sequence_id": 1874662
+        },
+        "initial_same_creation_transaction_mint_sync": true,
+        "creation_tx_initial_quote_WBNB_wei": "23519999999451199994",
+        "first_mint_sync": {
+          "sync_log_index": 40,
+          "mint_log_index": 41,
+          "reserve0_raw": "200000000000000000000000000",
+          "reserve1_raw": "23519999999451199994"
+        },
+        "block_end_reserves_verified_against_last_sync": {
+          "reserve0": "195846994535424234424194548",
+          "reserve1": "24019999999451199994",
+          "WBNB_quote_wei": "24019999999451199994"
+        },
+        "block_timestamp_last_sync_utc": "2025-07-01T14:50:01.000Z",
+        "same_block_swap_count": 1,
+        "same_block_swap_events": [
+          {
+            "tx_hash": "0x3879d63c39bf23f5964cdd80fa45c4042a19cf6a380bcc07309b029ca9113ec2",
+            "log_index": 423,
+            "separate_tx_from_initial_mint": true
+          }
+        ],
+        "no_public_available_at_proof": true,
+        "source_original_http_bytes_sha256": null
+      },
+      {
+        "fourmeme_index": 247733,
+        "token_ca": "0x0cea1826d38a1d124bffbe510142f58c11a64444",
+        "pair": "0x67922f7079bd77944e7b70e33ff9c782e7831610",
+        "first_pair_exists_at_block": 52480580,
+        "prior_block_getPair_was_zero_verified_in_separate_bounded_probes": true,
+        "factory_paircreated": {
+          "tx_hash": "0x17ac2e6c4a72195333abaee239fc36a6038d7664a60e6efb69e5a12e18f65982",
+          "log_index": 34,
+          "block_hash": "0x9ea5928aa628fc4563546ff35c1827bb509a2091923904013e537d77b8e618a1",
+          "factory_sequence_id": 1874372
+        },
+        "initial_same_creation_transaction_mint_sync": true,
+        "creation_tx_initial_quote_WBNB_wei": "23519999999451199994",
+        "first_mint_sync": {
+          "sync_log_index": 41,
+          "mint_log_index": 42,
+          "reserve0_raw": "200000000000000000000000000",
+          "reserve1_raw": "23519999999451199994"
+        },
+        "block_end_reserves_verified_against_last_sync": {
+          "reserve0": "195846994535424234424194548",
+          "reserve1": "24019999999451199994",
+          "WBNB_quote_wei": "24019999999451199994"
+        },
+        "block_timestamp_last_sync_utc": "2025-07-01T08:23:41.000Z",
+        "same_block_swap_count": 1,
+        "same_block_swap_events": [
+          {
+            "tx_hash": "0x924e3cacb3518d8f779ed17af5b82b73a25825c9b38789bd8054268992b65b2b",
+            "log_index": 530,
+            "separate_tx_from_initial_mint": true
+          }
+        ],
+        "no_public_available_at_proof": true,
+        "source_original_http_bytes_sha256": null
+      }
+    ],
+    "phase_P0": "INSUFFICIENT_COVERAGE",
+    "phase_P1": "BLOCKED",
+    "G6": "NO_GO",
+    "no_model_no_purchase_no_trade_no_deploy_no_gmail": true
   }
 }
