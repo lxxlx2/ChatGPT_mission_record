@@ -1,8 +1,8 @@
 # Frank 链上观察台 V2：真实账本、持续观察池与 GMGN 功能对照技术设计
 
 Date: 2026-10-11 Asia/Bangkok
-Original 2026-10-11 status (historical): **DATA_AND_ARCHITECTURE_DESIGN_COMPLETED / IMPLEMENTATION_NOT_STARTED / REAL_REPLAY_NOT_PASSED / PRODUCTION_UNCHANGED**
-2026-10-22 scoped status: **READONLY_DASHBOARD_PARTIALLY_DEPLOYED / CURRENT_WALLET_INVENTORY_NOT_COMPLETE / CA_QUERY_REGRESSION_OPEN / V3_NOT_IMPLEMENTED** — see sections 10–16
+**Current review status (2026-10-22): READONLY_DASHBOARD_SUBSET_DEPLOYED / CURRENT_WALLET_PROOF_BLOCKED / CA_QUERY_REGRESSION_OPEN / V3_DESIGN_ONLY** — see sections 10–17
+Original 2026-10-11 status, archival only: **DATA_AND_ARCHITECTURE_DESIGN_COMPLETED / IMPLEMENTATION_NOT_STARTED / REAL_REPLAY_NOT_PASSED / PRODUCTION_UNCHANGED**
 Parent task: $300 → $3000 Mission, Frank/Meme lane.
 Inputs: `frank-wallet-ui-data-audit-2026-10-11.md` (real read-only chain samples, screenshot discrepancies and first-party GMGN research); `ca-analysis-unified-accuracy-acceptance.md` (manual CA comprehensive research); `FRANK_LOCAL_SIGNAL_V1_POLICY.md` (frozen production alert semantics).
 Objective: **user can see and understand every materially relevant Frank trade, wallet position and token under observation, while the existing production BUY/WAIT and Gmail rules stay strictly unchanged.** A read-only local dashboard; no signed swap execution or paid GMGN requirement.
@@ -15,7 +15,7 @@ A. **Wallet fact ledger**: all address-touching finalized signatures and decoded
 
 B. **Wallet position and observation portfolio**: every relevant mint seen in A (including still-held and exited history) has an inventory ledger, acquisition/disposal facts, duration, watch reason, current market snapshot, optional PnL if cost is reconstructible, review status, last activity and persistence. This layer answers **what tokens must we still look at**.
 
-C. **Frozen follow-signal engine**: consumes only its existing independently confirmed active-swap facts and frozen ACCUMULATION/MULTIPLE/reentry/WAIT/NO_BUY gates, maintains existing $30 sizing *only in this separate strategy*, live notification, outcome and dedupe. This layer answers **would a bounded Frank-follow policy trigger**. **No code or threshold change to C without separately approved review.**
+C. **Frozen follow-signal engine**: consumes only its existing independently confirmed active-swap facts and frozen ACCUMULATION/MULTIPLE/reentry/WAIT/NO_BUY gates, at that historical date recorded a separate $30-sized quote in the older strategy; **this old default is superseded by the user's later no-preset-amount decision and G1 authority**, while actual live sender/policy changes remain subject to separate approval; preserves signal/notification provenance, outcome and dedupe. This layer answers **would a bounded Frank-follow policy trigger**. **No code or threshold change to C without separately approved review.**
 
 A zero in C is not a zero in A or B. Runtime health for the writer/outbox is not data-completeness health. No candidate due to a strategy veto must never delete the observed wallet position from B.
 
@@ -70,7 +70,7 @@ The current `FrankReader` production `forward.sqlite` remains **read-only** to t
 - Token authority and mint state via finalized RPC; compare with available public explorer/indexer outputs, exact mint and slot where possible.
 - GMGN public wallet/token pages, official GMGN documentation, FOMO and OKX Wallet publicly displayed views for **manual independent parity** where accessible. Never equate names alone, or silently assume profit formula/window equality.
 - External narrative research belongs to comprehensive single-mode CA detail; Watch list shows the latest sourced summary and a link, never an invented official call.
-- Quotes for an exact trade amount must be user-requested separately; the generic CA page has no forced $30 quote. Existing frozen follow engine's $30 Jupiter hypothetical executable quote is a **separate, unchanged system**.
+- Quotes for an exact trade amount must be user-requested separately; the generic CA page has no forced $30 quote. The historical follow engine contained a **separate $30 Jupiter quote**, but that is an archived description, **not current user approval or a required default**. No change to its running policy or sender is authorized by this design revision.
 
 ## 4. Exact normalized data contracts
 
@@ -203,6 +203,8 @@ Invariants: unique tx signature, immutable raw hash, versioned parser, normalize
 本节修订现有 V2 产品原文档，不另开平行需求；严格依照已冻结的 [G1 五层架构 PR #114](https://github.com/lxxlx2/ChatGPT_mission_record/pull/114)（原批准正文 SHA e4d61d1c8f246a7b04ea46ba674855346625a243）、Mission 规范、既有 D0→D4 开发主线和用户已明确排除的固定交易金额。若任何设计触及冻结 G1 的硬边界，需先经用户对架构差异重新审批；本轮仅供 Claude 独立复核，非实施或部署许可。
 
 **一处需纠正的旧 V3 草案冲突**：CA 已有 [统一准确性文档](ca-analysis-unified-accuracy-acceptance.md) 明确规定用户只有一个 CA 查询入口，内部渐进深入，不再让用户选择快速、标准或深度。上次 V3 草案中的“三档继续保留”与原用户批准的准确性原则冲突，以原文档的**单模式**为准。
+
+**术语澄清**：G1 所说的五个一级层为 A 来源 / B 事实 / C 研究与原信号 / D 展示与授权通知 / E 用户决策，其中 **C1、C2 是 C 层两个分支，不是第六层**。原 CA Gate A–D 是该功能完整验收矩阵，新增 CA 第 8.3 节 A–E 只是内部开发步骤，不与 G0–G4 或 D0–D4 重命名或竞争。
 
 **里程碑不改名**：V2 D0→D4 是业务开发顺序；G1 G0→G4 是研究、审查、独立验收及上线门禁；Option 3 P0→P5 属智能通知子项目。V3 仅调整既有 A/B 数据完整性与 D 层可用性，**不是新开第四套开发流程**。
 
