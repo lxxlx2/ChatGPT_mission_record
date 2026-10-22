@@ -90,6 +90,7 @@ test('two transient connection failures retry only GET and retain the exact job'
   assert.equal(h.elements('cluster-recovery').hidden,true);
   assert.equal(await h.next(),1200);
   assert.equal(h.storage.has('mission-meme-cluster-pending-v1'),false);
+  assert.match(h.statuses.at(-1).join(' '),/无法独立证明与本次分析一一对应/);
   assert.equal(h.elements('cluster-submit').disabled,false);
   assert.equal(h.calls.length,4);
   assert.ok(h.calls.every(path=>path==='/api/cluster-analysis?job_id='+id));
