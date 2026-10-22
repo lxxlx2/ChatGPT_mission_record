@@ -115,7 +115,9 @@ def simulate(durations, ledger_path, *, inflight_slots=3, refresh_after=4,
             type(slowdown) in (float, int) and 0 < slowdown <= 10 and
             head_policy in ("checkpoint", "availability_wait") and
             type(min_head_refresh_age_ms) is int and
-            250 <= min_head_refresh_age_ms < head_freshness_ms and
+            250 <= min_head_refresh_age_ms and
+            (head_policy == "checkpoint" or
+             min_head_refresh_age_ms < head_freshness_ms) and
             type(prefetch_available_heights) is int and
             0 <= prefetch_available_heights <= 3,
             "OFFLINE_SIMULATION_SCOPE_INVALID")
