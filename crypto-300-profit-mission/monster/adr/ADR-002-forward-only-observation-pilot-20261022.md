@@ -39,3 +39,11 @@ curl --proto '=https' --tlsv1.2 --silent --show-error --fail --connect-timeout 5
 成功前置条件是：实际返回带`jsonrpc:"2.0"`、`id:1`、`result:"0x38"`的有效JSON。HTTP 200本身、网页结果或其他chainId都不算通过；连接中断、限流、缺陷或付费要求一律标`MAC_PUBLIC_RPC_PREFLIGHT_BLOCKED`，不得扩容、充值或降级真实数据门禁。本命令尚**未在Mac执行**，不允许填写假回执。
 
 **通过预检查后也不得直接采样。**如用户另行明确授权一次性前台捕获，在隔离worktree和私有新目录、重新确认Mac CPU/内存以及Git固定SHA后，才可以在该唯一进程内临时传入公用无钥URL：`MONSTER_BSC_ARCHIVE_RPC_URL='https://bnb-mainnet.g.alchemy.com/public'`。不能默认执行`--manual-once`、定时器、CI、launchd、交易、邮件或模型训练。原15/24项离线测试、2025母体、`2026-11-02`历史止损日、`P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO`均不被本环境准备改变。
+
+## 2026-10-23：Mac公开BSC RPC第一道链身份检查已通过（用户回传）
+
+用户在Mac执行本ADR上一节唯一`curl`连通性命令后，回传原样单行JSON：`{"jsonrpc":"2.0","id":1,"result":"0x38"}`，末尾`%`是zsh shell提示符。**将该用户实际回传记为`MAC_PUBLIC_RPC_CHAIN_ID_56_PASS_USER_REPORTED`**，不是我方直接读取Mac原始HTTP/TLS流量，也未验证来源IP、签名或内部应用密钥。根据该回执只确认：在这一次请求中，公开端点有响应并声称正确的BSC主网Chain ID 56。不能把它等同`eth_blockNumber`、固定区块`eth_getBlockByNumber`或历史/当前`eth_call`的成功，更不能提升为两次前向计数采样。
+
+**下一顺序**：仅用该相同无钥HTTPS端点做`eth_blockNumber`获取一个块高、在**同一块高**做`eth_getBlockByNumber`和Factory`eth_call(allPairsLength)`，分别验证JSON-RPC envelope、固定高度、Factory ABI整数、无凭据和HTTP错误；这是有限的环境预检查**不是**`--manual-once`的两快照试验。预检查用户实际返回前保持`MAC_PUBLIC_RPC_PINNED_READ_UNVERIFIED`，也不填造Factory计数。公开端点通过单次chainId不保证后续调用限流或零费用用户账户额度，禁止在失败时循环试其他无名供应商。真实`MANUAL_FORWARD_READONLY_PILOT_BLOCKED`保持，除非环境核查完整且用户**另外单独明确批准**一次性真实采样。
+
+不修改2025样本、P0/P1门槛、Free $0预算和`2026-11-02`历史来源终止日；不部署、不定时、不自动交易。
