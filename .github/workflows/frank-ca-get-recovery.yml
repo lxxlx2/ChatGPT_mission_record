@@ -1,0 +1,23 @@
+name: Frank CA GET-only recovery
+on:
+  push:
+    branches: [feature/frank-ca-get-resume-20261023]
+  pull_request:
+    branches: [feature/frank-option3-activity-feed-20261020]
+permissions:
+  contents: read
+jobs:
+  offline-ca-read-recovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check shipped JavaScript syntax
+        run: node --check crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js
+      - name: Run GET-only recovery cases without RPC or production state
+        run: node --test crypto-300-profit-mission/local-agent/tests/test_frank_ca_get_resume.mjs
