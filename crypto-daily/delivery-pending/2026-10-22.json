@@ -1195,7 +1195,7 @@
     "previous_sent_last_7_days_checked": true,
     "existing_tge_known_events_checked": true,
     "old_space_surf_standx_qubic_cysic_jpmd_suppressed": true,
-    "code_gate_runtime": "CURRENT_MANIFEST_SHA_REQUIRES_NEW_CI_RECEIPT",
+    "code_gate_runtime": "2026-10-22 gate fix local full manifest QA PASS, awaiting SHA-bound GitHub CI receipt",
     "primary_rules_blob_sha": "df26ea064cc6feae99e345f6efaf402485b0482c",
     "pipeline_contract_blob_sha": "1b3efb8943786d48c4cf370e17bebacc6978c5f0",
     "last_substantive_revision_at": "2026-10-22T02:26:06.095Z",
@@ -1208,6 +1208,7 @@
       "already_user_known": "2026-10-20 Gmail Sent 1a157ff300a8a5c0",
       "new_delta_confirmed": false,
       "specialist_live_gap": true
-    }
+    },
+    "source_receipt_cardinality_bug_fixed": "Before fix the gate rejected truthful multiple sources in capital_flows, early_nft, security, macro, forward_catalysts; after fix all 17 receipts individually checked and source gaps retained."
   }
 }
