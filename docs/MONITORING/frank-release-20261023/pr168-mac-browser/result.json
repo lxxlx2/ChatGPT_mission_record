@@ -1,0 +1,80 @@
+{
+  "verdict": "MAC_ISOLATED_BROWSER_FAIL",
+  "sourceSHA": "cfa789fa23c9c331f0d3015d188c77ec5a923a33",
+  "port": 54929,
+  "platform": "darwin",
+  "results": [
+    {
+      "evidence": "A_retry_intervals_ms",
+      "values": [
+        1515,
+        3005,
+        6003
+      ],
+      "initialAndRetryGETs": 4,
+      "manualGETSameId": true
+    },
+    {
+      "case": "A",
+      "result": "PASS"
+    },
+    {
+      "case": "B",
+      "result": "PASS"
+    },
+    {
+      "case": "C",
+      "result": "FAIL",
+      "error": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#cluster-status').filter({ hasText: '原分析任务已结束' }) to be visible\u001b[22m\n"
+    },
+    {
+      "case": "D",
+      "result": "FAIL",
+      "error": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#cluster-status').filter({ hasText: '已读取最新保存报告' }) to be visible\u001b[22m\n"
+    },
+    {
+      "case": "E",
+      "result": "PASS"
+    },
+    {
+      "case": "F",
+      "result": "FAIL",
+      "error": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#cluster-status').filter({ hasText: '已读取已有历史报告' }) to be visible\u001b[22m\n"
+    }
+  ],
+  "safety": {
+    "REAL_RPC": 0,
+    "PRODUCTION_8766_REQUESTS": 0,
+    "REAL_CA_POST": 0,
+    "REAL_NOTIFICATIONS": 0,
+    "REAL_TRADES": 0,
+    "fixtureMockPOSTs": 2,
+    "deniedNonFixtureAttempts": 43
+  },
+  "staticUnchanged": true,
+  "console": {
+    "expectedNetworkErrors": 6,
+    "unexpectedErrors": [
+      {
+        "scene": "C",
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "at": "2026-10-23T04:49:11.808Z"
+      },
+      {
+        "scene": "E",
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "at": "2026-10-23T04:50:12.485Z"
+      }
+    ],
+    "pageErrors": []
+  },
+  "cleanup": {
+    "browserClosed": true,
+    "fixtureClosed": true,
+    "proxyClosed": true,
+    "temporaryProfileRemoved": true
+  },
+  "endedAt": "2026-10-23T04:50:43.474Z"
+}

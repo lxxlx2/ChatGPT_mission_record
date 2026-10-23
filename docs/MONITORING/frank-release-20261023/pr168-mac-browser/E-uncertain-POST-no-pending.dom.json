@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:54929/#cluster",
+  "status": "提交状态未核实\n请求未取得可核对的任务编号，请先核查已有任务或报告，不会自动重发",
+  "statusClass": "cluster-status error",
+  "input": "33333333333333333333333333333333",
+  "summary": "",
+  "reportVisible": false,
+  "recoveryVisible": true,
+  "resumeVisible": false,
+  "resumeText": "继续读取原任务",
+  "submitDisabled": false,
+  "pending": null
+}

@@ -1,0 +1,92 @@
+[
+  {
+    "scene": "A",
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_CONNECTION_RESET",
+    "at": "2026-10-23T04:48:58.592Z"
+  },
+  {
+    "scene": "A",
+    "type": "warning",
+    "text": "CA_JOB_GET_READ_INTERRUPTED {job: aaaaaaaa, at: 2026-10-23T04:48:58.588Z, detail: 读取本地服务时连接中断，不代表分析任务失败, failed_get_attempt: 1}",
+    "at": "2026-10-23T04:48:58.592Z"
+  },
+  {
+    "scene": "A",
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_CONNECTION_RESET",
+    "at": "2026-10-23T04:49:00.093Z"
+  },
+  {
+    "scene": "A",
+    "type": "warning",
+    "text": "CA_JOB_GET_READ_INTERRUPTED {job: aaaaaaaa, at: 2026-10-23T04:49:00.093Z, detail: 读取本地服务时连接中断，不代表分析任务失败, failed_get_attempt: 2}",
+    "at": "2026-10-23T04:49:00.093Z"
+  },
+  {
+    "scene": "A",
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_CONNECTION_RESET",
+    "at": "2026-10-23T04:49:03.099Z"
+  },
+  {
+    "scene": "A",
+    "type": "warning",
+    "text": "CA_JOB_GET_READ_INTERRUPTED {job: aaaaaaaa, at: 2026-10-23T04:49:03.098Z, detail: 读取本地服务时连接中断，不代表分析任务失败, failed_get_attempt: 3}",
+    "at": "2026-10-23T04:49:03.099Z"
+  },
+  {
+    "scene": "A",
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_CONNECTION_RESET",
+    "at": "2026-10-23T04:49:09.101Z"
+  },
+  {
+    "scene": "A",
+    "type": "warning",
+    "text": "CA_JOB_GET_READ_INTERRUPTED {job: aaaaaaaa, at: 2026-10-23T04:49:09.101Z, detail: 读取本地服务时连接中断，不代表分析任务失败, failed_get_attempt: 4}",
+    "at": "2026-10-23T04:49:09.101Z"
+  },
+  {
+    "scene": "C",
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "at": "2026-10-23T04:49:11.808Z"
+  },
+  {
+    "scene": "C",
+    "type": "warning",
+    "text": "CA_JOB_GET_READ_INTERRUPTED {job: aaaaaaaa, at: 2026-10-23T04:49:11.806Z, detail: 原任务当前不存在，可能已随服务重启或清理, failed_get_attempt: 1}",
+    "at": "2026-10-23T04:49:11.808Z"
+  },
+  {
+    "scene": "D",
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_CONNECTION_RESET",
+    "at": "2026-10-23T04:49:42.235Z"
+  },
+  {
+    "scene": "E",
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "at": "2026-10-23T04:50:12.485Z"
+  },
+  {
+    "scene": "E",
+    "type": "warning",
+    "text": "CA_JOB_GET_READ_INTERRUPTED {job: aaaaaaaa, at: 2026-10-23T04:50:12.484Z, detail: 原任务当前不存在，可能已随服务重启或清理, failed_get_attempt: 1}",
+    "at": "2026-10-23T04:50:12.485Z"
+  },
+  {
+    "scene": "E",
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_CONNECTION_RESET",
+    "at": "2026-10-23T04:50:12.541Z"
+  },
+  {
+    "scene": "F",
+    "type": "warning",
+    "text": "CA_JOB_GET_READ_INTERRUPTED {job: aaaaaaaa, at: 2026-10-23T04:50:13.187Z, detail: 任务编号或代币与已提交任务不一致, failed_get_attempt: 1}",
+    "at": "2026-10-23T04:50:13.187Z"
+  }
+]

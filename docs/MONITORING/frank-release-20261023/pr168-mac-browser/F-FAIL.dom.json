@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:54929/#cluster",
+  "status": "历史缓存读取失败\n没有可核对的同 CA 报告",
+  "statusClass": "cluster-status error",
+  "input": "22222222222222222222222222222222",
+  "summary": "代币\nFIXTURE_A\nQA\nCA\n22222222222222222222222222222222\n复制 CA\n参考价\n不可用\n市值\n暂无\n流动性\n暂无",
+  "reportVisible": true,
+  "recoveryVisible": true,
+  "resumeVisible": true,
+  "resumeText": "继续读取原任务",
+  "submitDisabled": false,
+  "pending": "{\"id\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"mint\":\"22222222222222222222222222222222\"}"
+}

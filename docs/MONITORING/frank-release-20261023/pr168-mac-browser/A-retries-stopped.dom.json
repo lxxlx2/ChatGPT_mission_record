@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:54929/#cluster",
+  "status": "任务状态暂时无法读取\n读取本地服务时连接中断，不代表分析任务失败 · 自动重试已停止",
+  "statusClass": "cluster-status error",
+  "input": "22222222222222222222222222222222",
+  "summary": "",
+  "reportVisible": false,
+  "recoveryVisible": true,
+  "resumeVisible": true,
+  "resumeText": "继续读取原任务",
+  "submitDisabled": false,
+  "pending": "{\"id\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"mint\":\"22222222222222222222222222222222\"}"
+}

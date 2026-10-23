@@ -1,0 +1,3059 @@
+[
+  {
+    "kind": "PROXY_DENIED",
+    "method": "GET",
+    "url": "http://clients2.google.com/time/1/current?[background-query-redacted]"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.gstatic.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "accounts.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "accounts.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "update.googleapis.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 1,
+    "at": "2026-10-23T04:48:58.561Z",
+    "ms": 1792730938561,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 2,
+    "at": "2026-10-23T04:48:58.568Z",
+    "ms": 1792730938568,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/styles.css",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 3,
+    "at": "2026-10-23T04:48:58.569Z",
+    "ms": 1792730938569,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/app.js",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 4,
+    "at": "2026-10-23T04:48:58.574Z",
+    "ms": 1792730938574,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 5,
+    "at": "2026-10-23T04:48:58.575Z",
+    "ms": 1792730938575,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 6,
+    "at": "2026-10-23T04:48:58.575Z",
+    "ms": 1792730938575,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 7,
+    "at": "2026-10-23T04:48:58.575Z",
+    "ms": 1792730938575,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 8,
+    "at": "2026-10-23T04:48:58.575Z",
+    "ms": 1792730938575,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 9,
+    "at": "2026-10-23T04:48:58.575Z",
+    "ms": 1792730938575,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 10,
+    "at": "2026-10-23T04:48:58.576Z",
+    "ms": 1792730938576,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 11,
+    "at": "2026-10-23T04:48:58.576Z",
+    "ms": 1792730938576,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 12,
+    "at": "2026-10-23T04:48:58.576Z",
+    "ms": 1792730938576,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-signed-activity?days=1",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 13,
+    "at": "2026-10-23T04:48:58.576Z",
+    "ms": 1792730938576,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-intelligence",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 14,
+    "at": "2026-10-23T04:48:58.576Z",
+    "ms": 1792730938576,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-activity-watch",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 15,
+    "at": "2026-10-23T04:48:58.577Z",
+    "ms": 1792730938577,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-analysis?job_id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "status": null,
+    "action": "SIMULATED_CONNECTION_RESET"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "accounts.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "android.clients.google.com:443"
+  },
+  {
+    "seq": 16,
+    "at": "2026-10-23T04:49:00.092Z",
+    "ms": 1792730940092,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-analysis?job_id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "status": null,
+    "action": "SIMULATED_CONNECTION_RESET"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "accounts.google.com:443"
+  },
+  {
+    "seq": 17,
+    "at": "2026-10-23T04:49:03.097Z",
+    "ms": 1792730943097,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-analysis?job_id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "status": null,
+    "action": "SIMULATED_CONNECTION_RESET"
+  },
+  {
+    "seq": 18,
+    "at": "2026-10-23T04:49:03.578Z",
+    "ms": 1792730943578,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 19,
+    "at": "2026-10-23T04:49:03.580Z",
+    "ms": 1792730943580,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 20,
+    "at": "2026-10-23T04:49:03.581Z",
+    "ms": 1792730943581,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 21,
+    "at": "2026-10-23T04:49:03.581Z",
+    "ms": 1792730943581,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 22,
+    "at": "2026-10-23T04:49:03.581Z",
+    "ms": 1792730943581,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 23,
+    "at": "2026-10-23T04:49:03.582Z",
+    "ms": 1792730943582,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 24,
+    "at": "2026-10-23T04:49:03.582Z",
+    "ms": 1792730943582,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 25,
+    "at": "2026-10-23T04:49:03.582Z",
+    "ms": 1792730943582,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 26,
+    "at": "2026-10-23T04:49:08.577Z",
+    "ms": 1792730948577,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 27,
+    "at": "2026-10-23T04:49:08.577Z",
+    "ms": 1792730948577,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 28,
+    "at": "2026-10-23T04:49:08.577Z",
+    "ms": 1792730948577,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 29,
+    "at": "2026-10-23T04:49:08.577Z",
+    "ms": 1792730948577,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 30,
+    "at": "2026-10-23T04:49:08.579Z",
+    "ms": 1792730948579,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 31,
+    "at": "2026-10-23T04:49:08.580Z",
+    "ms": 1792730948580,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 32,
+    "at": "2026-10-23T04:49:08.580Z",
+    "ms": 1792730948580,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 33,
+    "at": "2026-10-23T04:49:08.580Z",
+    "ms": 1792730948580,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 34,
+    "at": "2026-10-23T04:49:09.100Z",
+    "ms": 1792730949100,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-analysis?job_id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "status": null,
+    "action": "SIMULATED_CONNECTION_RESET"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "accounts.google.com:443"
+  },
+  {
+    "seq": 35,
+    "at": "2026-10-23T04:49:11.306Z",
+    "ms": 1792730951306,
+    "scene": "A",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-analysis?job_id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 36,
+    "at": "2026-10-23T04:49:11.448Z",
+    "ms": 1792730951448,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 37,
+    "at": "2026-10-23T04:49:11.455Z",
+    "ms": 1792730951455,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/styles.css",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 38,
+    "at": "2026-10-23T04:49:11.456Z",
+    "ms": 1792730951456,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/app.js",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 39,
+    "at": "2026-10-23T04:49:11.460Z",
+    "ms": 1792730951460,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 40,
+    "at": "2026-10-23T04:49:11.461Z",
+    "ms": 1792730951461,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 41,
+    "at": "2026-10-23T04:49:11.461Z",
+    "ms": 1792730951461,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 42,
+    "at": "2026-10-23T04:49:11.461Z",
+    "ms": 1792730951461,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 43,
+    "at": "2026-10-23T04:49:11.461Z",
+    "ms": 1792730951461,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 44,
+    "at": "2026-10-23T04:49:11.461Z",
+    "ms": 1792730951461,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 45,
+    "at": "2026-10-23T04:49:11.461Z",
+    "ms": 1792730951461,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 46,
+    "at": "2026-10-23T04:49:11.461Z",
+    "ms": 1792730951461,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 47,
+    "at": "2026-10-23T04:49:11.462Z",
+    "ms": 1792730951462,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-signed-activity?days=1",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 48,
+    "at": "2026-10-23T04:49:11.462Z",
+    "ms": 1792730951462,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-intelligence",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 49,
+    "at": "2026-10-23T04:49:11.462Z",
+    "ms": 1792730951462,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-activity-watch",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 50,
+    "at": "2026-10-23T04:49:11.462Z",
+    "ms": 1792730951462,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-analysis?job_id=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 51,
+    "at": "2026-10-23T04:49:11.489Z",
+    "ms": 1792730951489,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 52,
+    "at": "2026-10-23T04:49:11.613Z",
+    "ms": 1792730951613,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/styles.css",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 53,
+    "at": "2026-10-23T04:49:11.613Z",
+    "ms": 1792730951613,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/app.js",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 54,
+    "at": "2026-10-23T04:49:11.622Z",
+    "ms": 1792730951622,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 55,
+    "at": "2026-10-23T04:49:11.622Z",
+    "ms": 1792730951622,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 56,
+    "at": "2026-10-23T04:49:11.622Z",
+    "ms": 1792730951622,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 57,
+    "at": "2026-10-23T04:49:11.622Z",
+    "ms": 1792730951622,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 58,
+    "at": "2026-10-23T04:49:11.622Z",
+    "ms": 1792730951622,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 59,
+    "at": "2026-10-23T04:49:11.622Z",
+    "ms": 1792730951622,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 60,
+    "at": "2026-10-23T04:49:11.625Z",
+    "ms": 1792730951625,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 61,
+    "at": "2026-10-23T04:49:11.626Z",
+    "ms": 1792730951626,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 62,
+    "at": "2026-10-23T04:49:11.626Z",
+    "ms": 1792730951626,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-signed-activity?days=1",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 63,
+    "at": "2026-10-23T04:49:11.626Z",
+    "ms": 1792730951626,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-intelligence",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 64,
+    "at": "2026-10-23T04:49:11.626Z",
+    "ms": 1792730951626,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-activity-watch",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 65,
+    "at": "2026-10-23T04:49:11.626Z",
+    "ms": 1792730951626,
+    "scene": "B",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-analysis?job_id=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 66,
+    "at": "2026-10-23T04:49:11.753Z",
+    "ms": 1792730951753,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 67,
+    "at": "2026-10-23T04:49:11.759Z",
+    "ms": 1792730951759,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/styles.css",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 68,
+    "at": "2026-10-23T04:49:11.759Z",
+    "ms": 1792730951759,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/app.js",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 69,
+    "at": "2026-10-23T04:49:11.785Z",
+    "ms": 1792730951785,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 70,
+    "at": "2026-10-23T04:49:11.785Z",
+    "ms": 1792730951785,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 71,
+    "at": "2026-10-23T04:49:11.785Z",
+    "ms": 1792730951785,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 72,
+    "at": "2026-10-23T04:49:11.786Z",
+    "ms": 1792730951786,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 73,
+    "at": "2026-10-23T04:49:11.786Z",
+    "ms": 1792730951786,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 74,
+    "at": "2026-10-23T04:49:11.786Z",
+    "ms": 1792730951786,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 75,
+    "at": "2026-10-23T04:49:11.786Z",
+    "ms": 1792730951786,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 76,
+    "at": "2026-10-23T04:49:11.786Z",
+    "ms": 1792730951786,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 77,
+    "at": "2026-10-23T04:49:11.786Z",
+    "ms": 1792730951786,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-signed-activity?days=1",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 78,
+    "at": "2026-10-23T04:49:11.786Z",
+    "ms": 1792730951786,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-intelligence",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 79,
+    "at": "2026-10-23T04:49:11.786Z",
+    "ms": 1792730951786,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-activity-watch",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 80,
+    "at": "2026-10-23T04:49:11.805Z",
+    "ms": 1792730951805,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-analysis?job_id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "status": 404,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 81,
+    "at": "2026-10-23T04:49:11.955Z",
+    "ms": 1792730951955,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-latest?mint=22222222222222222222222222222222"
+  },
+  {
+    "seq": 82,
+    "at": "2026-10-23T04:49:11.990Z",
+    "ms": 1792730951990,
+    "scene": "C",
+    "method": "POST",
+    "url": "http://127.0.0.1:54929/api/cluster-analysis",
+    "status": 202,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 83,
+    "at": "2026-10-23T04:49:12.004Z",
+    "ms": 1792730952004,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-analysis?job_id=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 84,
+    "at": "2026-10-23T04:49:12.007Z",
+    "ms": 1792730952007,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-latest?mint=33333333333333333333333333333333",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 85,
+    "at": "2026-10-23T04:49:16.790Z",
+    "ms": 1792730956790,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 86,
+    "at": "2026-10-23T04:49:16.791Z",
+    "ms": 1792730956791,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 87,
+    "at": "2026-10-23T04:49:16.793Z",
+    "ms": 1792730956793,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 88,
+    "at": "2026-10-23T04:49:16.794Z",
+    "ms": 1792730956794,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 89,
+    "at": "2026-10-23T04:49:16.794Z",
+    "ms": 1792730956794,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 90,
+    "at": "2026-10-23T04:49:16.794Z",
+    "ms": 1792730956794,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 91,
+    "at": "2026-10-23T04:49:16.795Z",
+    "ms": 1792730956795,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 92,
+    "at": "2026-10-23T04:49:16.795Z",
+    "ms": 1792730956795,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "android.clients.google.com:443"
+  },
+  {
+    "seq": 93,
+    "at": "2026-10-23T04:49:21.794Z",
+    "ms": 1792730961794,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 94,
+    "at": "2026-10-23T04:49:21.795Z",
+    "ms": 1792730961795,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 95,
+    "at": "2026-10-23T04:49:21.796Z",
+    "ms": 1792730961796,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 96,
+    "at": "2026-10-23T04:49:21.796Z",
+    "ms": 1792730961796,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 97,
+    "at": "2026-10-23T04:49:21.796Z",
+    "ms": 1792730961796,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 98,
+    "at": "2026-10-23T04:49:21.796Z",
+    "ms": 1792730961796,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 99,
+    "at": "2026-10-23T04:49:21.796Z",
+    "ms": 1792730961796,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 100,
+    "at": "2026-10-23T04:49:21.797Z",
+    "ms": 1792730961797,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 101,
+    "at": "2026-10-23T04:49:26.790Z",
+    "ms": 1792730966790,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 102,
+    "at": "2026-10-23T04:49:26.790Z",
+    "ms": 1792730966791,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 103,
+    "at": "2026-10-23T04:49:26.791Z",
+    "ms": 1792730966791,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 104,
+    "at": "2026-10-23T04:49:26.792Z",
+    "ms": 1792730966792,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 105,
+    "at": "2026-10-23T04:49:26.792Z",
+    "ms": 1792730966792,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 106,
+    "at": "2026-10-23T04:49:26.793Z",
+    "ms": 1792730966793,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 107,
+    "at": "2026-10-23T04:49:26.793Z",
+    "ms": 1792730966793,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 108,
+    "at": "2026-10-23T04:49:26.794Z",
+    "ms": 1792730966794,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 109,
+    "at": "2026-10-23T04:49:31.790Z",
+    "ms": 1792730971790,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 110,
+    "at": "2026-10-23T04:49:31.791Z",
+    "ms": 1792730971791,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 111,
+    "at": "2026-10-23T04:49:31.793Z",
+    "ms": 1792730971793,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 112,
+    "at": "2026-10-23T04:49:31.794Z",
+    "ms": 1792730971794,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 113,
+    "at": "2026-10-23T04:49:31.795Z",
+    "ms": 1792730971795,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 114,
+    "at": "2026-10-23T04:49:31.795Z",
+    "ms": 1792730971795,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 115,
+    "at": "2026-10-23T04:49:31.795Z",
+    "ms": 1792730971795,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 116,
+    "at": "2026-10-23T04:49:31.796Z",
+    "ms": 1792730971796,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "accounts.google.com:443"
+  },
+  {
+    "seq": 117,
+    "at": "2026-10-23T04:49:36.789Z",
+    "ms": 1792730976789,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 118,
+    "at": "2026-10-23T04:49:36.791Z",
+    "ms": 1792730976791,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 119,
+    "at": "2026-10-23T04:49:36.792Z",
+    "ms": 1792730976792,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 120,
+    "at": "2026-10-23T04:49:36.792Z",
+    "ms": 1792730976792,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 121,
+    "at": "2026-10-23T04:49:36.792Z",
+    "ms": 1792730976792,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 122,
+    "at": "2026-10-23T04:49:36.792Z",
+    "ms": 1792730976792,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 123,
+    "at": "2026-10-23T04:49:36.793Z",
+    "ms": 1792730976793,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 124,
+    "at": "2026-10-23T04:49:36.793Z",
+    "ms": 1792730976793,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 125,
+    "at": "2026-10-23T04:49:41.786Z",
+    "ms": 1792730981786,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 126,
+    "at": "2026-10-23T04:49:41.786Z",
+    "ms": 1792730981786,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 127,
+    "at": "2026-10-23T04:49:41.787Z",
+    "ms": 1792730981787,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 128,
+    "at": "2026-10-23T04:49:41.787Z",
+    "ms": 1792730981787,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 129,
+    "at": "2026-10-23T04:49:41.787Z",
+    "ms": 1792730981787,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 130,
+    "at": "2026-10-23T04:49:41.787Z",
+    "ms": 1792730981787,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 131,
+    "at": "2026-10-23T04:49:41.787Z",
+    "ms": 1792730981787,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 132,
+    "at": "2026-10-23T04:49:41.788Z",
+    "ms": 1792730981788,
+    "scene": "C",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 133,
+    "at": "2026-10-23T04:49:42.169Z",
+    "ms": 1792730982169,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 134,
+    "at": "2026-10-23T04:49:42.188Z",
+    "ms": 1792730982188,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/styles.css",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 135,
+    "at": "2026-10-23T04:49:42.188Z",
+    "ms": 1792730982188,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/app.js",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 136,
+    "at": "2026-10-23T04:49:42.209Z",
+    "ms": 1792730982209,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 137,
+    "at": "2026-10-23T04:49:42.209Z",
+    "ms": 1792730982209,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 138,
+    "at": "2026-10-23T04:49:42.209Z",
+    "ms": 1792730982209,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 139,
+    "at": "2026-10-23T04:49:42.209Z",
+    "ms": 1792730982209,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 140,
+    "at": "2026-10-23T04:49:42.209Z",
+    "ms": 1792730982209,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 141,
+    "at": "2026-10-23T04:49:42.209Z",
+    "ms": 1792730982209,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 142,
+    "at": "2026-10-23T04:49:42.209Z",
+    "ms": 1792730982209,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 143,
+    "at": "2026-10-23T04:49:42.209Z",
+    "ms": 1792730982209,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 144,
+    "at": "2026-10-23T04:49:42.209Z",
+    "ms": 1792730982209,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-signed-activity?days=1",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 145,
+    "at": "2026-10-23T04:49:42.209Z",
+    "ms": 1792730982209,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-intelligence",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 146,
+    "at": "2026-10-23T04:49:42.210Z",
+    "ms": 1792730982210,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-activity-watch",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 147,
+    "at": "2026-10-23T04:49:42.212Z",
+    "ms": 1792730982212,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-analysis?job_id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 148,
+    "at": "2026-10-23T04:49:42.233Z",
+    "ms": 1792730982233,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-latest?mint=22222222222222222222222222222222",
+    "status": null,
+    "action": "SIMULATED_CONNECTION_RESET"
+  },
+  {
+    "seq": 149,
+    "at": "2026-10-23T04:49:42.326Z",
+    "ms": 1792730982326,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-latest?mint=22222222222222222222222222222222",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 150,
+    "at": "2026-10-23T04:49:47.214Z",
+    "ms": 1792730987214,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 151,
+    "at": "2026-10-23T04:49:47.215Z",
+    "ms": 1792730987215,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 152,
+    "at": "2026-10-23T04:49:47.216Z",
+    "ms": 1792730987216,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 153,
+    "at": "2026-10-23T04:49:47.216Z",
+    "ms": 1792730987216,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 154,
+    "at": "2026-10-23T04:49:47.217Z",
+    "ms": 1792730987217,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 155,
+    "at": "2026-10-23T04:49:47.218Z",
+    "ms": 1792730987218,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 156,
+    "at": "2026-10-23T04:49:47.219Z",
+    "ms": 1792730987219,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 157,
+    "at": "2026-10-23T04:49:47.219Z",
+    "ms": 1792730987219,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 158,
+    "at": "2026-10-23T04:49:52.212Z",
+    "ms": 1792730992212,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 159,
+    "at": "2026-10-23T04:49:52.212Z",
+    "ms": 1792730992212,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 160,
+    "at": "2026-10-23T04:49:52.212Z",
+    "ms": 1792730992212,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 161,
+    "at": "2026-10-23T04:49:52.214Z",
+    "ms": 1792730992214,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 162,
+    "at": "2026-10-23T04:49:52.215Z",
+    "ms": 1792730992215,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 163,
+    "at": "2026-10-23T04:49:52.215Z",
+    "ms": 1792730992215,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 164,
+    "at": "2026-10-23T04:49:52.215Z",
+    "ms": 1792730992215,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 165,
+    "at": "2026-10-23T04:49:52.215Z",
+    "ms": 1792730992215,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 166,
+    "at": "2026-10-23T04:49:57.212Z",
+    "ms": 1792730997212,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 167,
+    "at": "2026-10-23T04:49:57.214Z",
+    "ms": 1792730997214,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 168,
+    "at": "2026-10-23T04:49:57.215Z",
+    "ms": 1792730997215,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 169,
+    "at": "2026-10-23T04:49:57.215Z",
+    "ms": 1792730997215,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 170,
+    "at": "2026-10-23T04:49:57.215Z",
+    "ms": 1792730997215,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 171,
+    "at": "2026-10-23T04:49:57.215Z",
+    "ms": 1792730997215,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 172,
+    "at": "2026-10-23T04:49:57.216Z",
+    "ms": 1792730997216,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 173,
+    "at": "2026-10-23T04:49:57.216Z",
+    "ms": 1792730997216,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "update.googleapis.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.gstatic.com:443"
+  },
+  {
+    "seq": 174,
+    "at": "2026-10-23T04:50:02.212Z",
+    "ms": 1792731002212,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 175,
+    "at": "2026-10-23T04:50:02.213Z",
+    "ms": 1792731002213,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 176,
+    "at": "2026-10-23T04:50:02.213Z",
+    "ms": 1792731002213,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 177,
+    "at": "2026-10-23T04:50:02.214Z",
+    "ms": 1792731002214,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 178,
+    "at": "2026-10-23T04:50:02.214Z",
+    "ms": 1792731002214,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 179,
+    "at": "2026-10-23T04:50:02.214Z",
+    "ms": 1792731002214,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 180,
+    "at": "2026-10-23T04:50:02.215Z",
+    "ms": 1792731002215,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 181,
+    "at": "2026-10-23T04:50:02.215Z",
+    "ms": 1792731002215,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "android.clients.google.com:443"
+  },
+  {
+    "seq": 182,
+    "at": "2026-10-23T04:50:07.211Z",
+    "ms": 1792731007211,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 183,
+    "at": "2026-10-23T04:50:07.211Z",
+    "ms": 1792731007211,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 184,
+    "at": "2026-10-23T04:50:07.212Z",
+    "ms": 1792731007212,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 185,
+    "at": "2026-10-23T04:50:07.213Z",
+    "ms": 1792731007213,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 186,
+    "at": "2026-10-23T04:50:07.213Z",
+    "ms": 1792731007213,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 187,
+    "at": "2026-10-23T04:50:07.214Z",
+    "ms": 1792731007214,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 188,
+    "at": "2026-10-23T04:50:07.214Z",
+    "ms": 1792731007214,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 189,
+    "at": "2026-10-23T04:50:07.214Z",
+    "ms": 1792731007214,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 190,
+    "at": "2026-10-23T04:50:12.211Z",
+    "ms": 1792731012211,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 191,
+    "at": "2026-10-23T04:50:12.212Z",
+    "ms": 1792731012212,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 192,
+    "at": "2026-10-23T04:50:12.212Z",
+    "ms": 1792731012212,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 193,
+    "at": "2026-10-23T04:50:12.212Z",
+    "ms": 1792731012212,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 194,
+    "at": "2026-10-23T04:50:12.213Z",
+    "ms": 1792731012213,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 195,
+    "at": "2026-10-23T04:50:12.213Z",
+    "ms": 1792731012213,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 196,
+    "at": "2026-10-23T04:50:12.213Z",
+    "ms": 1792731012213,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 197,
+    "at": "2026-10-23T04:50:12.214Z",
+    "ms": 1792731012214,
+    "scene": "D",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 198,
+    "at": "2026-10-23T04:50:12.459Z",
+    "ms": 1792731012459,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 199,
+    "at": "2026-10-23T04:50:12.465Z",
+    "ms": 1792731012465,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/styles.css",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 200,
+    "at": "2026-10-23T04:50:12.465Z",
+    "ms": 1792731012465,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/app.js",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 201,
+    "at": "2026-10-23T04:50:12.470Z",
+    "ms": 1792731012470,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 202,
+    "at": "2026-10-23T04:50:12.471Z",
+    "ms": 1792731012471,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 203,
+    "at": "2026-10-23T04:50:12.471Z",
+    "ms": 1792731012471,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 204,
+    "at": "2026-10-23T04:50:12.471Z",
+    "ms": 1792731012471,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 205,
+    "at": "2026-10-23T04:50:12.471Z",
+    "ms": 1792731012471,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 206,
+    "at": "2026-10-23T04:50:12.471Z",
+    "ms": 1792731012471,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 207,
+    "at": "2026-10-23T04:50:12.471Z",
+    "ms": 1792731012471,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 208,
+    "at": "2026-10-23T04:50:12.471Z",
+    "ms": 1792731012471,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 209,
+    "at": "2026-10-23T04:50:12.471Z",
+    "ms": 1792731012471,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-signed-activity?days=1",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 210,
+    "at": "2026-10-23T04:50:12.471Z",
+    "ms": 1792731012471,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-intelligence",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 211,
+    "at": "2026-10-23T04:50:12.471Z",
+    "ms": 1792731012471,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-activity-watch",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 212,
+    "at": "2026-10-23T04:50:12.472Z",
+    "ms": 1792731012472,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-analysis?job_id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "status": 404,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 213,
+    "at": "2026-10-23T04:50:12.536Z",
+    "ms": 1792731012536,
+    "scene": "E",
+    "method": "POST",
+    "url": "http://127.0.0.1:54929/api/cluster-analysis",
+    "status": null,
+    "action": "SIMULATED_CONNECTION_RESET"
+  },
+  {
+    "seq": 214,
+    "at": "2026-10-23T04:50:12.621Z",
+    "ms": 1792731012621,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 215,
+    "at": "2026-10-23T04:50:12.626Z",
+    "ms": 1792731012626,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/styles.css",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 216,
+    "at": "2026-10-23T04:50:12.626Z",
+    "ms": 1792731012626,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/app.js",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 217,
+    "at": "2026-10-23T04:50:12.635Z",
+    "ms": 1792731012635,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 218,
+    "at": "2026-10-23T04:50:12.635Z",
+    "ms": 1792731012636,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 219,
+    "at": "2026-10-23T04:50:12.636Z",
+    "ms": 1792731012636,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 220,
+    "at": "2026-10-23T04:50:12.636Z",
+    "ms": 1792731012636,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 221,
+    "at": "2026-10-23T04:50:12.636Z",
+    "ms": 1792731012636,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 222,
+    "at": "2026-10-23T04:50:12.636Z",
+    "ms": 1792731012636,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 223,
+    "at": "2026-10-23T04:50:12.636Z",
+    "ms": 1792731012636,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 224,
+    "at": "2026-10-23T04:50:12.636Z",
+    "ms": 1792731012636,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 225,
+    "at": "2026-10-23T04:50:12.636Z",
+    "ms": 1792731012636,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-signed-activity?days=1",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 226,
+    "at": "2026-10-23T04:50:12.636Z",
+    "ms": 1792731012636,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-intelligence",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 227,
+    "at": "2026-10-23T04:50:12.636Z",
+    "ms": 1792731012636,
+    "scene": "E",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-activity-watch",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 228,
+    "at": "2026-10-23T04:50:13.127Z",
+    "ms": 1792731013127,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 229,
+    "at": "2026-10-23T04:50:13.133Z",
+    "ms": 1792731013133,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/styles.css",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 230,
+    "at": "2026-10-23T04:50:13.134Z",
+    "ms": 1792731013134,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/static/app.js",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 231,
+    "at": "2026-10-23T04:50:13.155Z",
+    "ms": 1792731013155,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 232,
+    "at": "2026-10-23T04:50:13.155Z",
+    "ms": 1792731013155,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 233,
+    "at": "2026-10-23T04:50:13.156Z",
+    "ms": 1792731013156,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 234,
+    "at": "2026-10-23T04:50:13.156Z",
+    "ms": 1792731013156,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 235,
+    "at": "2026-10-23T04:50:13.156Z",
+    "ms": 1792731013156,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 236,
+    "at": "2026-10-23T04:50:13.156Z",
+    "ms": 1792731013156,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 237,
+    "at": "2026-10-23T04:50:13.156Z",
+    "ms": 1792731013156,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 238,
+    "at": "2026-10-23T04:50:13.156Z",
+    "ms": 1792731013156,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 239,
+    "at": "2026-10-23T04:50:13.156Z",
+    "ms": 1792731013156,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-signed-activity?days=1",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 240,
+    "at": "2026-10-23T04:50:13.156Z",
+    "ms": 1792731013156,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-intelligence",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 241,
+    "at": "2026-10-23T04:50:13.156Z",
+    "ms": 1792731013156,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-activity-watch",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 242,
+    "at": "2026-10-23T04:50:13.175Z",
+    "ms": 1792731013175,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-analysis?job_id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 243,
+    "at": "2026-10-23T04:50:13.210Z",
+    "ms": 1792731013210,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/cluster-latest?mint=22222222222222222222222222222222",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 244,
+    "at": "2026-10-23T04:50:18.157Z",
+    "ms": 1792731018157,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 245,
+    "at": "2026-10-23T04:50:18.158Z",
+    "ms": 1792731018158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 246,
+    "at": "2026-10-23T04:50:18.158Z",
+    "ms": 1792731018158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 247,
+    "at": "2026-10-23T04:50:18.158Z",
+    "ms": 1792731018158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 248,
+    "at": "2026-10-23T04:50:18.158Z",
+    "ms": 1792731018158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 249,
+    "at": "2026-10-23T04:50:18.158Z",
+    "ms": 1792731018158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 250,
+    "at": "2026-10-23T04:50:18.158Z",
+    "ms": 1792731018158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 251,
+    "at": "2026-10-23T04:50:18.158Z",
+    "ms": 1792731018158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 252,
+    "at": "2026-10-23T04:50:23.157Z",
+    "ms": 1792731023157,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 253,
+    "at": "2026-10-23T04:50:23.157Z",
+    "ms": 1792731023157,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 254,
+    "at": "2026-10-23T04:50:23.157Z",
+    "ms": 1792731023157,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 255,
+    "at": "2026-10-23T04:50:23.158Z",
+    "ms": 1792731023158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 256,
+    "at": "2026-10-23T04:50:23.158Z",
+    "ms": 1792731023158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 257,
+    "at": "2026-10-23T04:50:23.158Z",
+    "ms": 1792731023158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 258,
+    "at": "2026-10-23T04:50:23.158Z",
+    "ms": 1792731023158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 259,
+    "at": "2026-10-23T04:50:23.158Z",
+    "ms": 1792731023158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 260,
+    "at": "2026-10-23T04:50:28.158Z",
+    "ms": 1792731028158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 261,
+    "at": "2026-10-23T04:50:28.158Z",
+    "ms": 1792731028158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 262,
+    "at": "2026-10-23T04:50:28.158Z",
+    "ms": 1792731028158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 263,
+    "at": "2026-10-23T04:50:28.158Z",
+    "ms": 1792731028158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 264,
+    "at": "2026-10-23T04:50:28.158Z",
+    "ms": 1792731028158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 265,
+    "at": "2026-10-23T04:50:28.158Z",
+    "ms": 1792731028158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 266,
+    "at": "2026-10-23T04:50:28.158Z",
+    "ms": 1792731028158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 267,
+    "at": "2026-10-23T04:50:28.158Z",
+    "ms": 1792731028158,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "update.googleapis.com:443"
+  },
+  {
+    "seq": 268,
+    "at": "2026-10-23T04:50:33.162Z",
+    "ms": 1792731033162,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 269,
+    "at": "2026-10-23T04:50:33.163Z",
+    "ms": 1792731033163,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 270,
+    "at": "2026-10-23T04:50:33.163Z",
+    "ms": 1792731033163,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 271,
+    "at": "2026-10-23T04:50:33.163Z",
+    "ms": 1792731033163,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 272,
+    "at": "2026-10-23T04:50:33.163Z",
+    "ms": 1792731033163,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 273,
+    "at": "2026-10-23T04:50:33.163Z",
+    "ms": 1792731033163,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 274,
+    "at": "2026-10-23T04:50:33.164Z",
+    "ms": 1792731033164,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 275,
+    "at": "2026-10-23T04:50:33.165Z",
+    "ms": 1792731033165,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 276,
+    "at": "2026-10-23T04:50:38.159Z",
+    "ms": 1792731038159,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 277,
+    "at": "2026-10-23T04:50:38.160Z",
+    "ms": 1792731038160,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 278,
+    "at": "2026-10-23T04:50:38.160Z",
+    "ms": 1792731038160,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 279,
+    "at": "2026-10-23T04:50:38.160Z",
+    "ms": 1792731038161,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 280,
+    "at": "2026-10-23T04:50:38.161Z",
+    "ms": 1792731038161,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 281,
+    "at": "2026-10-23T04:50:38.161Z",
+    "ms": 1792731038161,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 282,
+    "at": "2026-10-23T04:50:38.162Z",
+    "ms": 1792731038162,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 283,
+    "at": "2026-10-23T04:50:38.162Z",
+    "ms": 1792731038162,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "accounts.google.com:443"
+  },
+  {
+    "seq": 284,
+    "at": "2026-10-23T04:50:43.162Z",
+    "ms": 1792731043162,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 285,
+    "at": "2026-10-23T04:50:43.162Z",
+    "ms": 1792731043162,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 286,
+    "at": "2026-10-23T04:50:43.163Z",
+    "ms": 1792731043163,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 287,
+    "at": "2026-10-23T04:50:43.163Z",
+    "ms": 1792731043163,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 288,
+    "at": "2026-10-23T04:50:43.163Z",
+    "ms": 1792731043163,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 289,
+    "at": "2026-10-23T04:50:43.164Z",
+    "ms": 1792731043164,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 290,
+    "at": "2026-10-23T04:50:43.164Z",
+    "ms": 1792731043164,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 291,
+    "at": "2026-10-23T04:50:43.165Z",
+    "ms": 1792731043165,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:54929/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  }
+]

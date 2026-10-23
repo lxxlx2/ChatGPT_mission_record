@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:54929/#cluster",
+  "status": "正在扫描链上数据\nTop20 owner 已解析 1 个，开始历史浅扫",
+  "statusClass": "cluster-status running",
+  "input": "33333333333333333333333333333333",
+  "summary": "",
+  "reportVisible": false,
+  "recoveryVisible": false,
+  "resumeVisible": false,
+  "resumeText": "继续读取原任务",
+  "submitDisabled": false,
+  "pending": "{\"id\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"mint\":\"33333333333333333333333333333333\"}"
+}

@@ -1,0 +1,13 @@
+{
+  "sourceSHA": "cfa789fa23c9c331f0d3015d188c77ec5a923a33",
+  "port": 54929,
+  "origin": "http://127.0.0.1:54929",
+  "platform": "darwin",
+  "browser": "155.0.8059.86",
+  "staticSHA256": {
+    "index.html": "4cbe85a413569533fa82b0fbcb67e44a5342473cff356980f203327bff771dc5",
+    "app.js": "9db60153a70873dc91d599394a14395ca6b47303a88147b5b694471b32e8edcf",
+    "styles.css": "c3456b3a0efa23d0c77d03211730ea974c1b5aab44ea68e97c13e2b462dcfabc"
+  },
+  "independentTemporaryProfile": true
+}

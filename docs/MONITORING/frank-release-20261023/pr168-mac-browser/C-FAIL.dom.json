@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:54929/#cluster",
+  "status": "任务已结束，报告读取中断\n可只重试读取已有报告，不会重新扫描",
+  "statusClass": "cluster-status error",
+  "input": "33333333333333333333333333333333",
+  "summary": "代币\nFIXTURE_B\nQA\nCA\n33333333333333333333333333333333\n复制 CA\n参考价\n不可用\n市值\n暂无\n流动性\n暂无",
+  "reportVisible": true,
+  "recoveryVisible": true,
+  "resumeVisible": true,
+  "resumeText": "重试读取报告",
+  "submitDisabled": true,
+  "pending": "{\"id\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"mint\":\"33333333333333333333333333333333\"}"
+}
