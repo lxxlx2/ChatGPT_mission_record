@@ -96,7 +96,7 @@ def verify_test_inventory_attestation(permit_raw, expected_sha,
           "D1_ATTEST_INVALID_ARGUMENT")
     try:
         statement = json.loads(raw_statement, object_pairs_hook=_unique_json)
-    except (ValueError, UnicodeDecodeError) as exc:
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
         raise ValueError("D1_ATTEST_JSON_INVALID") from exc
     check(type(statement) is dict and
           set(statement) == EXACT_FIELDS and
