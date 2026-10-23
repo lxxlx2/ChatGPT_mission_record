@@ -93,3 +93,21 @@ test('two independent real global security receipts can coexist with original cr
  x.source_receipts.push({lane:'web_pki_tls',status:'checked',checked_at:'2026-10-22T03:30:00Z',query_or_url:'https://blog.mozilla.org/security/',result_urls:['https://blog.mozilla.org/security/']});});
  assert.equal(r.passed,true);
 });
+
+test('AI package supply-chain original-source receipt is mandatory',()=>{
+ const r=run(x=>{x.source_receipts=x.source_receipts.filter(y=>y.lane!=='ai_package_supply_chain')});
+ assert.ok(r.errors.some(e=>e.startsWith('DISCOVERY_LANE_RECEIPT_MISSING:ai_package_supply_chain')));
+});
+test('cloud secret/OAuth original-source receipt is mandatory',()=>{
+ const r=run(x=>{x.source_receipts=x.source_receipts.filter(y=>y.lane!=='cloud_secrets_identity')});
+ assert.ok(r.errors.some(e=>e.startsWith('DISCOVERY_LANE_RECEIPT_MISSING:cloud_secrets_identity')));
+});
+test('Node Laravel framework authentication original-source receipt is mandatory',()=>{
+ const r=run(x=>{x.source_receipts=x.source_receipts.filter(y=>y.lane!=='backend_framework_auth')});
+ assert.ok(r.errors.some(e=>e.startsWith('DISCOVERY_LANE_RECEIPT_MISSING:backend_framework_auth')));
+});
+test('SaaS source-gap may warn but does not fabricate no-new-news or block other reliable content',()=>{
+ const r=run(x=>{const y=x.source_receipts.find(t=>t.lane==='cloud_secrets_identity');y.status='source_gap';y.error='HTTP_403';y.result_urls=[];});
+ assert.equal(r.passed,true);
+ assert.ok(r.warnings.includes('SOURCE_GAP:cloud_secrets_identity'));
+});
