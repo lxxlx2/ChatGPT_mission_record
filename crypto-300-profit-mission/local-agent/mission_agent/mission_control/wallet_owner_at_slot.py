@@ -189,8 +189,8 @@ def project_replayed_owner(snapshot, watch, *, target_mints=(),
                            key=lambda m: (by_mint.get(m, {}).get("raw", 0) == 0, m))
     outsiders = sorted((m for m, item in by_mint.items()
                        if m not in watch_by_mint and m not in targets and item["raw"] > 0))
-    outsider_limit = min(outsider_reserve, len(outsiders))
     retained = ordered_target[:max_visible]
+    outsider_limit = min(outsider_reserve, len(outsiders), max_visible - len(retained))
     retained += ordered_watch[:max_visible - len(retained) - outsider_limit]
     retained += outsiders[:max_visible - len(retained)]
     selected = [preview_row(m) for m in retained]
