@@ -122,3 +122,15 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 - 测试 `local-agent/tests/test_monster_v4_spot511_closed_minute_feed.py` Blob `e3331775aa168802f82699a4ed8f4557fa47f2ce`；隔离Linux/Python 3.13.5 使用不变的Stage166验证器、合成真实1440行发布方格式和对应ZIP SHA/ASCII CHECKSUM，实际 `5/5 OK` （正常连续两日首39个tick、前一分钟与未来分钟、SHA坏源、2026-10-18零点跨日单tick、未结束UTC日、全9日缺源、名单/时区拒绝）。没有联网、交易、部署和邮件。
 - 已将新增源/测试接入既有 `monster-spot511-manual-source-batch-ci.yml` 纯离线工作流（仅push、PR及显式手动，无schedule），但**当前GitHub Actions运行回执没有取得**，因此本地 `5/5`不能写成GitHub CI PASS，也不能算其他AI独立review。
 - **尚未开发/运行真正511币统一SQLite时间顺序D0→D1/Fair8回放**：需要全量资格过滤及发布方完整档案，同时明确上述24h代理与实际快照差异；原正式G0 PARTIAL / G1 NOT_SCORABLE / G2-G3 NOT_PASSED / G4 UNKNOWN / G6 NO_GO不变。下一可操作研发应以同一原模型状态机和原Stage162 Fair8恢复单一SQLite队列，从`READY`与`CENSORED`联合输入逐tick构造合法已闭合5m D1，不根据事后高价或已曝光赢家优化规则。
+
+## 11. 2026-10-23：已校验1m同时生成D0和D1六根闭合5m同源输入
+
+本轮处理主线代码的一个实际阻断：先前已提交的Spot511`closed_minute_feed.py`只有每分钟close/quote，没有包含D1原始接口所需的5m完整`open/high/low/close/volume/quote`字段，不能把不完整重构冒充原D1输入。延续原V4 D0/D1和Stage162 Fair8冻结阈值不动，现新增：
+
+- `local-agent/scripts/monster_v4_spot511_d0_d1_tape.py`：Git Blob `31bbbf852e0f125aadea7c718c57505a2ff1388a`，对**单个已冻结Spot511 symbol**顺序读取9个UTC日的原Binance Publisher ZIP与CHECKSUM，逐日调用既有Stage166校验器并保留完整OHLC/volume/quote分钟字段；最多9×1440分钟进内存（不同时缓存511币）。损坏、未提供、未结束日期各自保留不可评估状态。**没有发HTTP或建立后台服务**。
+- 相同MinuteTape对象提供`d0_at(tick_ms)`和`d1_fetch(venue,symbol,tick_ms)`：D0只读`[T-24h,T)`闭合分钟收盘价和1440根分钟quote之和，**仅为历史24h ticker代理**；D1按5m UTC栅格聚合6根完全闭合5m原OHLC/volume/quote，输出兼容原`monster_v4_shadow.evaluate_closed_5m`的8字段顺序，边界点不能读取正在形成的5m bar，缺档不能填0冒充已验证。当D0因缺24h warmup不可评估、而D1本身已有完整30min时，分别记录，不误删独立D1来源事实。形式为原队列`process_queue(fetch_candles)`的只读回调，但**尚未执行原队列的SQLite完整回放**。
+- 新测试`local-agent/tests/test_monster_v4_spot511_d0_d1_tape.py` Git Blob `036aef57edf0f6f13bd7d689e72b0cc0c357186e`，独立隔离Linux/Python实际`6/6 PASS`，加旧`closed_minute_feed`原5项`5/5 PASS`。包括昨天到今天UTC转日、当时最后一根5m收盘、3分钟后尚未闭合的K线不能被读到、SHA校验错误、缺前一天24h窗、未来日期ZIP即使在目录内也不可用、零成交额不造正值、symbol/venue/时钟拒绝。测试源均为合成官方格式ZIP+SHA，不是实际511币完整Publisher证据。
+- 已将源码/测试文件加入原`monster-spot511-manual-source-batch-ci.yml`的离线测试路径，只执行push/PR/显式手工事件，不含schedule；**当前GitHub Actions状态与独立其他AI复核仍UNVERIFIED**，不能将本地11/11变成仓库CI PASS或独立review PASS。
+- **下一唯一高价值节点**：构建同一份minute tape驱动原`monster_v4_shadow.py`统一SQLite D0 `observe_snapshot`、原D1 `process_queue`及隔离Fair8规则的事件/队列成对回放；需要跨所有511 symbol按原tick整合候选并审计无WATCH漏掉，不得为性能方便各币各自跑队列后再拼接。当前仅是D0/D1输入的研究级准备，**不是原策略的paired 511样本外验收**。
+
+正式验收状态：`G0 PARTIAL / G1 NOT_SCORABLE / G2-G3 NOT_PASSED / G4 UNKNOWN / G6 NO_GO`，`NO_MERGE / NO_DEPLOY / NO_PAID / NO_GMAIL / NO_TRADES / NO_AUTOMATIONS`不变。BSC来源受限研究仍按原止损规定独立，不阻断CEX D0/D1主线。
