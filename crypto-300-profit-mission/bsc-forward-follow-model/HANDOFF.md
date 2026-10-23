@@ -1,3 +1,11 @@
+# 2026-10-23 D1 source inventory / sealed fake HTTPS child PR173 — independent Mac audit pending
+
+- Approved parent: PR172 SHA `76618f44ca685251e4c7c827083d3d6a93849ac2`, `APPROVE_OFFLINE_CODE — D1_BUNDLE_SCOPE_ONLY`, Mac 411/411 full and 50/50 D1 tests, 9/9 new; parent untouched.
+- Child PR173 adds an independent all-tracked-F0 Git byte scanner and installed `cryptography` RECORD check (not externally trusted), an exact-type in-memory HTTPS source connected to shared three-thread coordinator, a fake POST instant-start gate after TLS prep, failed-inflight-stop priority correction, and bundle integration tests. All source and identity inputs are local test data; `send_live` still always denies. This is NOT real HTTP nor permission or full G-02 attestation.
+- Review specific functions/tests and remaining G/J/M BLOCKED controls in `f0/F0_L2_D1_SOURCE_HTTPS_GATE.md`. New PR173 exact SHA and independent Mac approval pending, no merge/deploy/trades/RPC/WS or background task. Old real 30 requests consumed. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-23 D1 continuation PR172 — OFFLINE bundle integration, new independent audit pending
 
 - Approved parent PR171 fixed SHA `c86b7dbf7b8f714ee68a793823dda18e9346be22`; independent Mac `APPROVE_OFFLINE_CODE — D1_CONTINUATION_SCOPE_ONLY`, full 402/402, D1 41/41, no P0/P1; older PR171 SHA `9e4b66e...` remains rejected.
