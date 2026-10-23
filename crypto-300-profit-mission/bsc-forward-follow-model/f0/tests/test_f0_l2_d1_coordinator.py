@@ -92,6 +92,66 @@ class D1ConcurrentFakeTests(unittest.TestCase):
                                     max_blocks=3,max_refreshes=2,
                                     head_min_poll_age_ms=250)
 
+    def test_out_of_order_parent_fault_owned_by_bad_buffered_response(self):
+        # Real workers: first block is slow, second bad-parent block arrives
+        # earlier. Unlocking the first block must not become RPC FAILED.
+        source=FakeSource(
+            growth_bps=10.0, delay_ms=30,
+            block_delay_by_ordinal={1:1400,2:30,3:60},
+            bad_parent_ordinal=2)
+        r,rows=self.scenario(source=source,window_ms=9000)
+        self.assertEqual(r["stop"],"CHAIN_FAULT")
+        broken=[x for x in rows if x["event"]=="CHAIN_INTEGRITY_FAULT"]
+        self.assertEqual(len(broken),1)
+        self.assertEqual(broken[0]["reason"],"D1_CHAIN_PARENT_MISMATCH")
+        block_res=[x for x in rows if x["event"]=="RESERVE_UNKNOWN"
+                   and x["category"]=="BLOCK"]
+        self.assertGreaterEqual(len(block_res),3)
+        first_id,second_id=block_res[0]["id"],block_res[1]["id"]
+        self.assertEqual(broken[0]["id"],second_id)
+        self.assertEqual(broken[0]["height"],block_res[1]["height"])
+        responses={x["id"]:x for x in rows if x["event"]=="SETTLE"}
+        self.assertEqual(responses[first_id]["state"],"RPC_RESPONSE")
+        self.assertEqual(responses[second_id]["state"],"RPC_RESPONSE")
+        self.assertIn(first_id,[x["id"] for x in rows
+                                if x["event"]=="COMMIT_CONTIGUOUS"])
+        self.assertNotIn(second_id,[x["id"] for x in rows
+                                    if x["event"]=="COMMIT_CONTIGUOUS"])
+        self.assertLess(r["contiguous_commits"],r["parsed_full_blocks"])
+        self.assertEqual(r["settled"],r["reserved"])
+
+    def test_global_gate_rejects_stale_head_at_actual_fake_send_time(self):
+        # Three queued work items may wait for the global rate gate.
+        # If HEAD goes stale while queued, no fake sender invocation starts.
+        from f0_l2_d1_coordinator import GlobalStartGate
+        import time
+        gate=GlobalStartGate(250)
+        source=FakeSource(delay_ms=0)
+        req={"jsonrpc":"2.0","id":1,"method":"eth_getBlockByNumber",
+             "params":["0x3ea", True]}
+        outcome=gate.run(req,source,
+                         block_head_deadline=time.monotonic()-1,
+                         dispatch_deadline=time.monotonic()+2)
+        self.assertEqual(outcome["state"],"PRESTART_STALE_HEAD")
+        self.assertEqual(len(gate.starts),0)
+        self.assertEqual(source.block_count,0)
+
+    def test_presend_fsync_exception_never_invokes_fake_source(self):
+        from unittest.mock import patch
+        from f0_l2_d1_coordinator import ExclusiveEvidence
+        source=FakeSource(delay_ms=0)
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)/"private"
+            root.mkdir(mode=0o700)
+            with patch.object(ExclusiveEvidence,"add",
+                              side_effect=OSError("forced fsync failure")):
+                with self.assertRaises(OSError):
+                    run_fake_concurrent(source,root,max_total=6,max_blocks=2,
+                                        max_refreshes=2,
+                                        head_min_poll_age_ms=250)
+        self.assertEqual(source.head_count,0)
+        self.assertEqual(source.block_count,0)
+
     def test_no_arbitrary_real_sender_or_live_authorization(self):
         class AttemptedCallback:
             pass

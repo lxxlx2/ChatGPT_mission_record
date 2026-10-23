@@ -92,7 +92,8 @@ class FakeSource:
     def __init__(self, *, first_head=1000, growth_bps=5.0,
                  delay_ms=280, fail_heights=(), parent_fault_heights=(),
                  timeout_heights=(), wrong_ids=(), fail_head_after=0,
-                 bad_json_heights=()):
+                 bad_json_heights=(), block_delay_by_ordinal=None,
+                 bad_parent_ordinal=0):
         need(type(first_head) is int and first_head > 0
              and type(growth_bps) in (int, float) and 0 <= growth_bps <= 10
              and type(delay_ms) is int and 0 <= delay_ms <= 1000,
@@ -106,15 +107,30 @@ class FakeSource:
         self.wrong_ids = set(wrong_ids)
         self.fail_head_after = fail_head_after
         self.bad_json_heights = set(bad_json_heights)
+        need(block_delay_by_ordinal is None or
+             (type(block_delay_by_ordinal) is dict and
+              all(type(k) is int and k > 0 and type(v) is int
+                  and 0 <= v <= 3000
+                  for k,v in block_delay_by_ordinal.items())),
+             "D1_FAKE_DELAYS_INVALID")
+        self.block_delay_by_ordinal = block_delay_by_ordinal or {}
+        self.bad_parent_ordinal = bad_parent_ordinal
         self.epoch = time.monotonic()
+        self.block_count = 0
         self.head_count = 0
         self.lock = threading.Lock()
 
     def reply(self, request):
         """This method does NOT call a socket, and cannot accept a callback."""
         valid_rpc_payload(request)
-        time.sleep(self.delay_ms / 1000)
         method, rid = request["method"], request["id"]
+        ordinal = None
+        if method == "eth_getBlockByNumber":
+            with self.lock:
+                self.block_count += 1
+                ordinal = self.block_count
+        delay_ms = self.block_delay_by_ordinal.get(ordinal, self.delay_ms)
+        time.sleep(delay_ms / 1000)
         status = 200
         if method == "eth_chainId":
             result = "0x38"
@@ -138,7 +154,9 @@ class FakeSource:
             result = {
                 "number": hex(height),
                 "hash": "0x" + _synthetic_hash(height),
-                "parentHash": ("0x" + "ab"*32 if height in self.parent_fault_heights
+                "parentHash": ("0x" + "ab"*32 if (
+                    height in self.parent_fault_heights or
+                    ordinal == self.bad_parent_ordinal)
                                else "0x" + _synthetic_hash(height-1)),
                 "transactions": [],
             }
