@@ -105,7 +105,10 @@ def verify_fixed_checkout_offline(root, reviewed_sha, reviewed_files):
             and type(reviewed_files) is dict and bool(reviewed_files),
             "D1_CHECKOUT_ARGUMENT_INVALID")
     actual_root = Path(_git(root, "rev-parse", "--show-toplevel").decode().strip())
-    require(actual_root == root and actual_root.resolve() == root,
+    # macOS commonly exposes /var as a symlink to /private/var.
+    # Compare their physical location; require the supplied root itself to
+    # exist without a terminal symlink, and never accept any linked artifact.
+    require(actual_root.resolve() == root.resolve(),
             "D1_CHECKOUT_ROOT_MISMATCH")
     actual_sha = _git(root, "rev-parse", "HEAD").decode().strip()
     require(actual_sha == reviewed_sha, "D1_CHECKOUT_HEAD_MISMATCH")
