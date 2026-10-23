@@ -7,6 +7,8 @@ from __future__ import annotations
 import unittest
 
 from mission_agent.mission_control.server import Handler
+from mission_agent.mission_control.wallet_d2_ingress import D2IngressError
+from mission_agent.mission_control.wallet_owner_at_slot import _mint_key
 
 MINT = "So11111111111111111111111111111111111111112"
 
@@ -16,6 +18,9 @@ class State:
         self.calls = []
 
     def frank_d2_at_slot(self, *, mint=None, page=0):
+        # Mirror the actual query_d2 validation prior to disk read.
+        if mint is not None and not _mint_key(mint):
+            raise D2IngressError("INVALID_D2_MINT")
         self.calls.append((mint,page))
         return {"status":"SOURCE_NOT_IMPORTED", "rows":[]}
 
