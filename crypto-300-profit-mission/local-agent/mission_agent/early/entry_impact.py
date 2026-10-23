@@ -7,7 +7,7 @@ class EntryImpactError(ValueError):
 
 
 def impact_microbps(amount_raw, reserve_raw, fee_bps=25):
-    """Ceiling micro-bps of fee-inclusive V2 average impact vs pre-buy mid."""
+    """Ceiling micro-bps of fee-inclusive V2 execution-price premium vs pre-buy mid."""
     if (not isinstance(amount_raw, str) or not isinstance(reserve_raw, str)
             or not re.fullmatch(r'[0-9]+', amount_raw)
             or not re.fullmatch(r'[0-9]+', reserve_raw)
@@ -16,7 +16,7 @@ def impact_microbps(amount_raw, reserve_raw, fee_bps=25):
     q, r = int(amount_raw), int(reserve_raw)
     if q <= 0 or r <= 0:
         raise EntryImpactError('INVALID_INPUT')
-    den = 10000 * r + (10000 - fee_bps) * q
+    den = (10000 - fee_bps) * r
     num = fee_bps * r + (10000 - fee_bps) * q
     return (10**10 * num + den - 1) // den
 
