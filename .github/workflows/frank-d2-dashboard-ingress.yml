@@ -1,0 +1,41 @@
+name: Frank D2 Dashboard private ingress (offline)
+on:
+  push:
+    branches:
+      - feature/frank-d2-dashboard-ingress-20261023
+  pull_request:
+    branches:
+      - feature/frank-d2-owner-at-slot-preview-20261023
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-and-dashboard-get:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify Python and shipped JavaScript syntax
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_d2_ingress.py crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py crypto-300-profit-mission/local-agent/scripts/frank_d2_export_ingress.py crypto-300-profit-mission/local-agent/tests/test_frank_d2_ingress.py
+          node --check crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js
+      - name: Offline original projection regressions and private ingress source rules
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_frank_d2_owner_at_slot.py -v
+          python -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_frank_d2_ingress.py -v
+          python -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_frank_d2_http_route.py -v
+          python -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_frank_d2_private_output.py -v
+      - name: DOM-and-handler scoped GET-only frontend regression
+        run: |
+          node --test crypto-300-profit-mission/local-agent/tests/test_frank_d2_ingress_ui.mjs

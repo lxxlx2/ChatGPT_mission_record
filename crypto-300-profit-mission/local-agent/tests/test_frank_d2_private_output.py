@@ -92,6 +92,21 @@ class PrivateOutputPlacementTests(unittest.TestCase):
         self.assertEqual(target.read_text(encoding="utf-8"),
                          "SYNTHETIC_PRIVATE_BALANCE")
 
+    def test_private_json_export_reuses_git_external_file_guard(self):
+        target = self.root / "private-json" / "owner-source.json"
+        saved = script._private_create(target, '{"synthetic":true}', suffix=".json")
+        self.assertEqual(saved,target)
+        self.assertEqual(stat.S_IMODE(target.stat().st_mode), 0o600)
+        self.assertEqual(stat.S_IMODE(target.parent.stat().st_mode), 0o700)
+        with self.assertRaises(FileExistsError):
+            script._private_create(target, "overwrite", suffix=".json")
+
+    def test_private_json_export_refuses_independent_git_checkout(self):
+        target=self.repo2 / "out" / "owner-source.json"
+        with self.assertRaisesRegex(ValueError,"PUBLIC_GIT_HTML_OUTPUT_FORBIDDEN"):
+            script._private_create(target, '{"synthetic":true}', suffix=".json")
+        self.assertFalse((self.repo2 / "out").exists())
+
     def test_symlink_component_refused_even_to_private_external_directory(self):
         outside = self.root / "private-target"
         outside.mkdir(mode=0o700)
