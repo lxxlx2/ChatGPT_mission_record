@@ -88,3 +88,8 @@ Module `tests/test_f0_l2_d1_os_crash_survival.py` exercises isolated POSIX child
 ## PR179 — G-02 offline reviewer pins
 
 PR176 Mac approved `OS_PROCESS_SIGKILL_FAKE_PASS` at `a1d33ab0fd7f68db01b67d3d7da6603af1fd6797` (430 full / 69 focused). PR179 independently supplied code, permit, inventory digests and user/reviewer fingerprints are checked against local signed files. External authenticity of the pins and complete runtime dependencies remain unverified. G-02 is PARTIAL and real permission/transport are BLOCKED. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+
+## PR180 — UTC check at actual sealed fake POST after thread/TLS prep (Mac approval pending)
+
+G-03/J-02/J-04: `OfflinePostUTCWindow` validates the exact signed TEST permit UTC bytes and candidate source SHA at the in-memory HTTPS POST start, after fake TLS preparation and pacing wait. The coordinator checks its monotonic start deadline and HEAD TTL at the same gate, records a failed settlement rather than fake start on UTC expiry, and drains previously reserved requests. Bundle and spent offline one-use registry can use this strict test-only sender clock. New tests in `tests/test_f0_l2_d1_post_utc.py`. This is **OFFLINE_FAKE_TIME_OF_USE_ONLY**, not trusted wall-clock or real TLS socket. Parent PR179 independently Mac approved: 436 full, 75 focused, and no P0/P1. D2/D3 remain prohibited. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
