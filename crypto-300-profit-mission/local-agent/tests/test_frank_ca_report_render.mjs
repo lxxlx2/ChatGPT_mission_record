@@ -84,5 +84,5 @@ test('full script DONE -> existing report GET -> pending cleared without phantom
   assert.equal(h.store.has('session:mission-meme-cluster-pending-v1'),false);
   assert.equal(h.element('cluster-submit').disabled,false);
   assert.equal(h.element('cluster-recovery').hidden,true);
-  assert.match(h.element('cluster-status').innerHTML,/身份关联/);
+  assert.match(h.element('cluster-status').innerHTML,/无法独立证明与本次分析一一对应/);
 });
