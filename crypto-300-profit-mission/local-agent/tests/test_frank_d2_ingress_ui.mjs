@@ -88,7 +88,7 @@ test('late older request cannot overwrite a newer Mint or source failure state',
   await h.ctx.frankD2Read({mint});
   older.resolve(doc);
   await old;
-  assert.match(h.el('frank-d2-summary').textContent,/SOURCE_REJECTED/);
+  assert.match(h.el('frank-d2-summary').textContent,/BAD_HASH/);
   assert.doesNotMatch(h.el('frank-d2-rows').innerHTML,/12 枚/);
 });
 test('exact decimal formatting never uses JS floating point',()=>{
