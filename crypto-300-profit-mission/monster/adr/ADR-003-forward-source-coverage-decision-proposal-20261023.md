@@ -57,6 +57,18 @@
 - **资源/授权**：任何连续观测必须单独批准运行时间、环境/提供商、存储位置、请求频率/总预算、关闭和撤销方法；不能将一次`--manual-once`执行授权视作新的7天授权。默认零付费、不强占用户高负载Mac、不进入Frank/交易/邮件/生产。
 - **产品价值**：若数据只能证明V2计数，长期也拿不到可交易/退出容量，则停止收益方向代码，不再反复追同一Factory的短窗口或补造“已发现10×”示例。
 
+## 6A. 2026-10-23 官方资料补充：优先候选为 WebSocket 推送+小窗口回补（非运行实测）
+
+**实际核查来源**：
+- [Alchemy BNB 网络页](https://www.alchemy.com/rpc/bnb)明确区分无钥的公开HTTP `https://bnb-mainnet.g.alchemy.com/public` 和**需要API Key**的应用专有 `wss://bnb-mainnet.g.alchemy.com/v2/<api-key>`。之前Mac上的12次成功读取仅使用前者，并**没有**验证后者握手、订阅、延迟、流量或可靠性。
+- [Alchemy BNB API目录](https://www.alchemy.com/docs/bnb-smart-chain/bnb-smart-chain-api-overview)列有`eth_subscribe`；[Alchemy订阅类型说明](https://www.alchemy.com/docs/reference/subscription-api-endpoints)列出`newHeads`和按address/topics过滤的`logs`，并明确订阅按**传输数据量计费/计量**；[日志订阅语义](https://www.alchemy.com/docs/reference/logs)说明reorg后旧链日志可能以`removed=true`重发，不可拿首次通知当最终确定。
+- [Alchemy BNB eth_getLogs](https://www.alchemy.com/docs/chains/bnb-smart-chain/bnb-smart-chain-api-endpoints/eth-get-logs)当前对Free层公布**每请求10块窗口**、60 CUs/次。BNB官方[公共RPC说明](https://docs.bnbchain.org/bnb-smart-chain/developers/json_rpc/json-rpc-endpoint/)说官方列出的mainnet公网节点禁用`eth_getLogs`，但**不等于**Alchemy专有、符合免费层限制的节点也全面禁用。现有此前10块零星历史成功不等于前向连续`logs`可用。
+- 对于每约3秒一个块的粗略情景，24h可能接近28,800块；**单工厂**如果完全依赖10块窗口回补至少需约2,880次查询（乘以Alchemy文档每次60CU约172,800CU，另有headers、index、liquidity等查询）。这是容量预算计算**不是实际链上测量或当前账户收费保证**，因此应优先推送、仅对明确缺口小段回补，禁止先开启无上限抓取。
+
+**候选工程设计**：一个带连接状态与区块连续游标的单进程（未来审批后才运行），按**明确预登记的工厂地址和事件topic**订阅`logs`与必要的`newHeads`，本地/被批准的远端即时落原字节和接收UTC/单调时钟；重组日志做`removed`失效且不删除历史raw；断开后使用只读HTTP的**10块分段**恢复block+日志并单独标记`BACKFILLED_NOT_LIVE_OBSERVED`，不能在恢复后把历史数据算作当时真实接收。V2所有索引用`allPairsLength`有限抽检和Factory序号核对；V3/launchpad必须分别有自己的真实源证明。真实终端上是否能订阅这些具体BSC Factory地址、是否准确无漏仍为`NOT_TESTED`。
+
+**运行位置和授权关键缺口**：用户Mac当前负载任务多，不接受未经批准的常驻负载；用户已消费的一次性无钥HTTP授权**不包含**应用专有WebSocket、凭据提取、在远端存钥、后台服务或连续运行。用户现有Alchemy app的`BNB_MAINNET`能力和当月显示$0不等于证实可免费持续收`logs`；无现成获批且保证零新增成本的非Mac计算宿主。必须先有独立额度上限、可撤销权限、凭据储存/清理、流量速率、终止机制和场所源覆盖计划，才能请求单独的D1短时验证批准；不自行安装或试运行。
+
 ## 7. 当前明确决议与最小下一步
 
 本ADR仅获准作为**研究设计草案**提交Git，下一次有意义工作是基于实际可用的免费来源与目标venue，给出**是否存在合理的非Mac常驻、全来源无漏的获取路径**的成本/覆盖评估；若无合规零付费方案，则明确`FORWARD_CONTINUOUS_SOURCE_BLOCKED`并停止扩充采样器代码。是否同意实际运行任何D1/D2、接受V2单源范围缩减、研究notional及生产部署，全部**未批准**，不可推定。
