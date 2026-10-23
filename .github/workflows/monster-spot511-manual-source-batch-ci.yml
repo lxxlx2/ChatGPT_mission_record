@@ -59,3 +59,87 @@ jobs:
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_closed_minute_feed.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_d0_d1_tape.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_paired_sqlite.py" -v
+
+  one-shot-spot511-remaining447-official-20261022:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/research/monster-v4-local-discovery-20261010' && contains(github.event.head_commit.message, '[MONSTER_ONESHOT_SPOT511_REMAINING447_20261022]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      max-parallel: 7
+      matrix:
+        include:
+          - {start: 64, count: 64}
+          - {start: 128, count: 64}
+          - {start: 192, count: 64}
+          - {start: 256, count: 64}
+          - {start: 320, count: 64}
+          - {start: 384, count: 64}
+          - {start: 448, count: 63}
+    env:
+      SOURCE_START: ${{ matrix.start }}
+      SOURCE_COUNT: ${{ matrix.count }}
+    steps:
+      - name: Checkout original frozen T0 Monster
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Fetch bounded original Binance Spot ZIP and SHA256 CHECKSUM, record all outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="$RUNNER_TEMP/monster-spot511-slice-$SOURCE_START"
+          mkdir -p "$target"
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_spot511_manual_publisher_batch.py --day 2026-10-22 --start-index "$SOURCE_START" --count "$SOURCE_COUNT" --dest "$target/source" --out "$target/attempts.json" --download
+          python - <<'PY'
+          from collections import Counter
+          import json, os
+          from pathlib import Path
+          start, count = int(os.environ["SOURCE_START"]), int(os.environ["SOURCE_COUNT"])
+          folder = Path(os.environ["RUNNER_TEMP"]) / f"monster-spot511-slice-{start}"
+          manifest = json.loads((folder / "attempts.json").read_text())
+          rows = manifest["source_records"]
+          if (manifest["schema"] != "MONSTER_SPOT511_MANUAL_PUBLISHER_BATCH_V1"
+              or manifest["execution"] != "MANUAL_DOWNLOAD"
+              or manifest["frozen_total"] != 511
+              or manifest["day_utc"] != "2026-10-22"
+              or manifest["start_index"] != start
+              or manifest["batch_size"] != count
+              or len(rows) != count
+              or len({r["symbol"] for r in rows}) != count
+              or manifest["G6"] != "NO_GO"):
+              raise SystemExit("MONSTER_REMAINING447_BATCH_IDENTITY_INVALID")
+          counts = Counter(x["status"] for x in rows)
+          verified = counts["VERIFIED_FULL_DAY_1440"]
+          if manifest["verified_downloads"] != verified:
+              raise SystemExit("MONSTER_REMAINING447_ADMISSION_COUNT_INVALID")
+          for x in rows:
+              if x["status"] == "VERIFIED_FULL_DAY_1440":
+                  if x["closed_one_minute_rows"] != 1440 or len(x["zip_sha256"]) != 64:
+                      raise SystemExit("MONSTER_REMAINING447_FALSE_VERIFIED")
+          summary = {
+              "schema": "MONSTER_SPOT511_REMAINING447_20261022_PUBLISHER_BATCH_V1",
+              "day_utc": "2026-10-22",
+              "slice_start": start, "attempted": count, "verified": verified,
+              "status_counts": dict(sorted(counts.items())),
+              "entire_511_coverage_claim": False,
+              "original_publisher_zip_and_checksum_by_valid_symbol": True,
+              "real_d0_d1_replay": "NOT_DONE",
+              "historical_ticker_available_at": "UNKNOWN",
+              "G0": "PARTIAL", "G4": "UNKNOWN", "G6": "NO_GO",
+              "NO_DEPLOY": True, "NO_MAC": True, "NO_PAID": True,
+              "NO_TRADES": True, "NO_GMAIL": True, "NO_SCHEDULE": True,
+          }
+          (folder / "summary.json").write_text(json.dumps(summary,indent=2,sort_keys=True)+"\n")
+          print("MONSTER_SPOT511_SLICE_EVIDENCE",json.dumps(summary,sort_keys=True))
+          PY
+      - name: Archive original source and manifest even when some files are unavailable
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-spot511-20261022-original-slice-${{ matrix.start }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/monster-spot511-slice-${{ matrix.start }}/
+          retention-days: 30
+          if-no-files-found: error
