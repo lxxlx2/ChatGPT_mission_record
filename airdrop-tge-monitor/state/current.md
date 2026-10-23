@@ -1,33 +1,33 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-23 18:07:14 Asia/Bangkok — latest VERIFIED durable PARTIAL terminal; existing HH:00 task invocation
+Updated: 2026-10-23 18:59:28 Asia/Bangkok — latest VERIFIED durable PARTIAL terminal with new ACTION, Gmail FORBIDDEN
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-23 18:07:14 Asia/Bangkok
-- latest_actual_run_status: PARTIAL
+- latest_actual_run: 2026-10-23 18:59:28 Asia/Bangkok
+- latest_actual_run_status: PARTIAL_ACTION_DELIVERY_BLOCKED
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-23/180714-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-23/180546-attempt.md
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-23/185928-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-23/185713-attempt.md
 - latest_scheduled_shard: 2
 - latest_executed_shard: 2
 - stale_shard_recovery: false
 - latest_candidate_count: 8
-- latest_triggered_events: 0
+- latest_triggered_events: 1 (verified action, not delivered)
 - latest_identity_failures: 0
 - latest_source_failures: 7
-- latest_notification_decision: SILENT_NO_GATE_PASS
-- latest_notification_status: SILENT
-- latest_gmail_attempted: false
-- latest_source_gaps: Concrete_extra_USDC,NeoSoul_StandX_batch1_original_X_Discord,StandX_X_original,SurfBoard_raffle_English_rules,Cambria_migration,01_Exchange_mapped_personal_rights,OhBabyGames_JS_shell
+- latest_notification_decision: PENDING_DELIVERY_GMAIL_FORBIDDEN
+- latest_notification_status: NOT_DELIVERED_NO_SENT_ID
+- latest_gmail_attempted: true (send FORBIDDEN, Sent readback no match)
+- latest_source_gaps: Concrete_extra_USDC,StandX_original_X,SurfBoard_raffle_dated_rules,Cambria_migration,01_Exchange_mapped_personal_rights,OhBabyGames_JS_shell,NeoSoul_Discord_form_JS_only
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
-- last_meaningful_attempt_at_shard2: 2026-10-23 18:07:14 Asia/Bangkok
+- last_meaningful_attempt_at_shard2: 2026-10-23 18:59:28 Asia/Bangkok
 - last_meaningful_attempt_at_shard1: 2026-10-23 17:02:00 Asia/Bangkok
 - last_meaningful_attempt_at_shard3: 2026-10-23 11:58:03 Asia/Bangkok
 - last_meaningful_attempt_at_shard0: 2026-10-23 16:03:21 Asia/Bangkok
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_primary_final_write: VERIFIED_DURABLE 180714-final.md
+- latest_primary_final_write: VERIFIED_DURABLE 185928-final.md
 - latest_terminal_readback: VERIFIED
-- off_minute_task_run: false (18:05:46 attempt from existing scheduled invocation; punctual HH:00 trigger second unverified)
-- user_alert: NONE; 0 new verified Tier A/B actionable rights
+- off_minute_task_run: true (18:57 attempt; no punctual HH:00 proof)
+- user_alert: NeoSoul StandX Batch1 BNB wallet registration Tier A issuer rules verified; Gmail FORBIDDEN, PENDING_DELIVERY; no App push
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
@@ -121,3 +121,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-23 17:02:00 BKK: readback-verified terminal 170200-final.md, attempt 170106-attempt.md; scheduled/executed shard1; urgent5 + Surf/StandX + shard1 (14 unique projects) and bounded cross-shard lifecycle; 7 candidates, 0 Tier A/B new ACTION, 7 unresolved original/rights source gaps. Prior stable keys suppressed, Gmail inbox mapped-rights search found no new eligible ACTION. Gmail/App silent. shard1 last_meaningful_attempt_at updated PARTIAL; verified-complete remains 2026-10-10 07:52:16. No schedule/scope/task change.
 
 - 2026-10-23 18:07:14 BKK: existing monitor invocation, 180546-attempt.md and readback-verified 180714-final.md persisted; scheduled/executed shard2 with urgent5 plus Surf/StandX and bounded cross-shard lifecycle; 15 unique registered projects attempted, 8 candidate families, 0 new Tier A/B ACTION, 7 unresolved source/rights gaps. NEW HIGH-MATERIALITY NeoSoul StandX batch1 wallet-registration lead found in English secondary mirror quoting @NeoSoulAI; issuer original X/Discord announcement inaccessible, registration/deadline and user applicability not independently Tier A/B verified, NO_GMAIL pending original source. Prior SurfBoard/StandX/Space/Concrete/HEEBOO/MetaMask stable keys suppressed. Gmail rights search found no new mapped TierB. Shard2 meaningful attempt updated PARTIAL; last fully verified complete remains 2026-10-10 07:52:16. Recent final-backed shards [1,2,0,1,2], no override. Task ID/name/schedule/scope/recipient unchanged.
+
+- 2026-10-23 18:59:28 BKK: existing task off-minute invocation; 185713-attempt.md and readback-verified 185928-final.md durable. Urgent5 + Surf/StandX + scheduled shard2; 8 candidate families, 1 verified issuer TierA Gate1B new NeoSoul StandX Batch1 wallet-registration ACTION, 7 source/form gaps. Registration issuer Medium rules first-party, Oct14 23:59 UTC snapshot, deadline Nov3 15:59 UTC; personal eligibility unknown. Gmail send FORBIDDEN, Sent search no matching message; event NOT delivered and no archive fabricated. Durable pending event recorded in known-events.md, must retry on next existing run after Sent dedupe and current first-party proof. Full verified complete remains Oct10 07:52:16; shard2 meaningful attempt advanced PARTIAL. No App notification, task/scope/schedule/recipient changes.
