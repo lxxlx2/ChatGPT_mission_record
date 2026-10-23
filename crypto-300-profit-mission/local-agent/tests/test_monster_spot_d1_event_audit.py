@@ -51,6 +51,24 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(result['recomputed_setup_count'],1)
         self.assertFalse(result['fair8_outcomes_independently_recomputed'])
 
+    def test_right_censored_pending_is_not_mislabeled_as_failure(self):
+        x=deepcopy(self.base)
+        x['fifo_episodes'][1]['status']='PENDING'
+        x['fair8_episodes'][1]['status']='PENDING'
+        y=deepcopy(self.independent)
+        y['derived']['late_queue_ids']=[]
+        y['derived']['unresolved_pending_queue_ids']=[2]
+        result=audit_recomputed_d1(x,y)
+        self.assertEqual(result['unresolved_pending_ids'],[2])
+        self.assertEqual(result['nonsetup_evaluated_ids'],[])
+
+    def test_right_censored_pending_requires_explicit_census(self):
+        x=deepcopy(self.base)
+        x['fifo_episodes'][1]['status']='PENDING'
+        x['fair8_episodes'][1]['status']='PENDING'
+        y=deepcopy(self.independent);y['derived']['late_queue_ids']=[]
+        with self.assertRaises(EventAuditError):audit_recomputed_d1(x,y)
+
     def test_false_day_summary_rejected(self):
         x=deepcopy(self.independent);x['derived']['raw_setups_by_complete_utc_day']={'1970-01-04':1}
         with self.assertRaises(EventAuditError):audit_recomputed_d1(self.base,x)
