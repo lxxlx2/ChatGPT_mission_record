@@ -13,6 +13,7 @@ to promote this test result to a live authorization by changing inputs.
 from __future__ import annotations
 
 from f0_l2_d1_coordinator import SealedMemoryHTTPSSource
+from f0_l2_d1_concrete_https import SealedConcreteOfflineSource
 from f0_l2_d1_grant import PINNED_LIVE_TRUST_ROOTS
 from f0_l2_d1_inventory_gate import consume_then_run_fake_once
 from f0_l2_d1_review_pins import (
@@ -64,7 +65,8 @@ def run_offline_integrated_fake_with_pins(
     request sender, production root, execution mode, or trusted real clock.
     Even valid caller-supplied pins/keys cannot grant network permission.
     """
-    if type(source) is not SealedMemoryHTTPSSource:
+    if type(source) not in (SealedMemoryHTTPSSource,
+                            SealedConcreteOfflineSource):
         raise ValueError("D1_INTEGRATED_SEALED_MEMORY_SOURCE_ONLY")
     if (type(externally_provided_test_pins) is not OfflineReviewerPins
             or not callable(test_only_fake_post_utc_clock)):

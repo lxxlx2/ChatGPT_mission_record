@@ -244,7 +244,8 @@ class GlobalStartGate:
 
     def run(self, request, source, *, block_head_deadline, dispatch_deadline,
             timeout_ms, fake_post_utc_window=None):
-        if type(source) is SealedMemoryHTTPSSource:
+        from f0_l2_d1_concrete_https import SealedConcreteOfflineSource
+        if type(source) in (SealedMemoryHTTPSSource, SealedConcreteOfflineSource):
             # Prepare the fake TLS connection before acquiring the global
             # start lock. Gate the actual in-memory POST, not worker entry.
             began = [None]
@@ -336,7 +337,9 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
     Any invalid input is rejected; concurrent workers cannot allocate IDs,
     modify budgets, write the evidence log, or retry.
     """
-    need(type(source) in (FakeSource, SealedMemoryHTTPSSource)
+    from f0_l2_d1_concrete_https import SealedConcreteOfflineSource
+    need(type(source) in (FakeSource, SealedMemoryHTTPSSource,
+                          SealedConcreteOfflineSource)
          and "reply" not in getattr(source, "__dict__", {})
          and "reply_over_memory_https" not in getattr(source, "__dict__", {})
          and type(slots) is int and slots == 3
@@ -355,7 +358,8 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
         # Import only at run-time: post_utc consumes the bundle's strict
         # permit reader; module imports must remain free of cyclic imports.
         from f0_l2_d1_post_utc import OfflinePostUTCWindow
-        need(type(source) is SealedMemoryHTTPSSource and
+        need(type(source) in (SealedMemoryHTTPSSource,
+                              SealedConcreteOfflineSource) and
              type(fake_post_utc_window) is OfflinePostUTCWindow,
              "D1_POST_UTC_FAKE_ONLY")
     begin = time.monotonic()
@@ -574,10 +578,13 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
     need(len(reservations) <= 32 and number_blocks <= 24
          and number_refreshes <= 6 and peak_slots <=3,
          "D1_SCOPE_LIMIT_EXCEEDED")
+    mode = ("D1_OFFLINE_CONCRETE_HTTPS_SEALED_NO_SOCKET"
+            if type(source) is SealedConcreteOfflineSource else
+            "D1_OFFLINE_MEMORY_HTTPS_ONLY"
+            if type(source) is SealedMemoryHTTPSSource else
+            "D1_OFFLINE_FAKE_ONLY")
     return {
-        "schema":SCHEMA, "mode":("D1_OFFLINE_MEMORY_HTTPS_ONLY"
-                                     if type(source) is SealedMemoryHTTPSSource
-                                     else "D1_OFFLINE_FAKE_ONLY"),
+        "schema":SCHEMA, "mode":mode,
         "network_requests":0, "no_live_sender":True,
         "fake_post_utc_checks":(fake_post_utc_window.checked_fake_posts
                                 if fake_post_utc_window is not None else None),
