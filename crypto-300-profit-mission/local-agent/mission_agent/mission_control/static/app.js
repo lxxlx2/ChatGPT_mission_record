@@ -1099,11 +1099,22 @@ const clusterEdgeLabel = {
 };
 
 let clusterLastAutoLoaded=false;
+const CLUSTER_PENDING_KEY = 'mission-meme-cluster-pending-v1';
+const CLUSTER_GET_MAX_RETRIES = 3;
+let clusterPollTimer = null;
+let clusterActiveJob = null;
+let clusterPollVersion = 0;
 
-async function loadLatestCluster(mint, silent=false) {
+async function loadLatestCluster(mint, silent=false, expectedVersion=clusterPollVersion, expectedJob=clusterActiveJob?.id||null) {
   if (!mint) return false;
   try {
+    const inputBefore=$('cluster-mint').value.trim();
     const report=await get('/api/cluster-latest?mint=' + encodeURIComponent(mint));
+    if (clusterPollVersion!==expectedVersion ||
+        (clusterActiveJob?.id||null)!==expectedJob ||
+        (clusterActiveJob && clusterActiveJob.mint!==mint) ||
+        $('cluster-mint').value.trim()!==inputBefore ||
+        report?.mint!==mint) return false;
     $('cluster-mint').value=mint;
     renderClusterReport(report);
     if (!silent) showToast('已加载上次查询结果');
@@ -1126,7 +1137,12 @@ function setView(name) {
   if (view==='cluster' && !clusterLastAutoLoaded) {
     clusterLastAutoLoaded=true;
     const mint=localStorage.getItem('mission-meme-last-cluster-ca') || '';
-    if (mint) loadLatestCluster(mint,true);
+    // Pending session restoration takes precedence over a different last-CA cache.
+    let pending=null;
+    try { pending=JSON.parse(sessionStorage.getItem(CLUSTER_PENDING_KEY)||'null'); } catch (_) {}
+    const validPending=pending && /^[0-9a-f]{32}$/.test(pending.id) &&
+      /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(pending.mint);
+    if (mint && !validPending) loadLatestCluster(mint,true);
   }
 }
 
@@ -1539,12 +1555,6 @@ function renderClusterReport(report) {
 $('watch-filter').addEventListener('change', () => renderFrankWatchlist(walletWatchData));
 $('watch-search').addEventListener('input', () => renderFrankWatchlist(walletWatchData));
 
-
-const CLUSTER_PENDING_KEY = 'mission-meme-cluster-pending-v1';
-const CLUSTER_GET_MAX_RETRIES = 3;
-let clusterPollTimer = null;
-let clusterActiveJob = null;
-let clusterPollVersion = 0;
 
 function clusterShowRecovery(show) {
   $('cluster-recovery').hidden = !show;
