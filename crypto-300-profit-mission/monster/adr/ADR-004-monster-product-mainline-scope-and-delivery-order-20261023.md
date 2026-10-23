@@ -85,3 +85,9 @@
 8项合成、无网络回归测试已经**提交到Git，当前尚无可核验的实际GitHub Actions运行结果/独立其他AI审查**，因此状态`CODE_COMMITTED / TEST_EXECUTION_UNVERIFIED`，不能声称新脚本已获外审。另已提交仅含`pull_request`和手动`workflow_dispatch`触发器、**无schedule和无市场HTTP的离线CI**：`.github/workflows/monster-spot511-manual-source-batch-ci.yml`。该CI本身不会采集真实档案，其`workflow_dispatch`若尚未登记在默认分支不应宣传为现成可单击云端下载入口。下一次真正网络采集需有可用被授权的一次性网络执行环境，再根据正确Git固定版本和官方源限制进行有界分批获取，不在用户高负载Mac上部署或长期运行。
 
 **本轮实证限制**：当前容器及普通网页工具无法取得Binance ZIP/CHECKSUM真实字节（DNS错误/不支持二进制读取）；没有真实官方归档下载、没有真实511x9验收、没有D0/D1 paired replay、没有G4净收益。下一个最有价值动作是先对已结束日期做**一个真实来源受限批次验证**，确认云端能连通数据源及发布方SHA，同时保留所有失败样本；在数据通路成功之前不批量请求9×511，也不把准备工作当进度验收通过。G0 PARTIAL/G1 NOT_SCORABLE/G2-G3 NOT_PASSED/G4 UNKNOWN/G6 NO_GO，Frank/邮件/交易及Mac任务不动。
+
+## 8. 2026-10-23 历史Spot分钟连接器可达性单币试验（REST_ONLY）
+
+现有已连接Binance只读Spot历史K线接口，对**2026-10-22 UTC**、原511冻结T0中的`BONKUSDT`，以UTC毫秒`1792627200000`至`1792713599999`的完整单日窗口分2次请求（1000条+440条，源时间皆早于本次阅读），实际返回 **1440/1440 条**分钟K线，源分钟索引与收盘毫秒序列**0处缺口**，ohlc/12字段初步结构检测**0处错误**，首分钟开盘UTC毫秒`1792627200000`、最后一分钟收盘UTC毫秒`1792713599999`。这证明此时现有Binance连接器对该币、该日的**结构化历史Spot分钟数据可获取**，可用作D0/D1接入链路的一项真实活样，不是旧Stage历史汇总替代。此批未保留原HTTP body，没有Publisher ZIP/CHECKSUM SHA，不能标Stage166 `VERIFIED_FULL_DAY_1440`；分钟close不是买卖盘口，quoteVolume合计不是原时点24h ticker的等价回执，也不证明原T0以后该币每分钟真实买卖资格。不能凭这1币推到511全部或新上市币。
+
+真实可复验来源请求：Binance Spot Klines连接器，`symbol=BONKUSDT, interval=1m, UTC first 1792627200000, UTC inclusive end 1792713599999, limits=[1000,500]`，只使用`structuredContent.result`核验，没有冒称Publisher字节或SHA。单币仅作通路验证，未来策略样本与G0–G6门槛不提升。
