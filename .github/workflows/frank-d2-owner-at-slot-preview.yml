@@ -29,3 +29,4 @@ jobs:
           PYTHONDONTWRITEBYTECODE: '1'
         run: |
           python -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_frank_d2_owner_at_slot.py -v
+          python -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_frank_d2_private_output.py -v
