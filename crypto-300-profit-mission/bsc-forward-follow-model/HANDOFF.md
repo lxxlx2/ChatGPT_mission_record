@@ -1,3 +1,11 @@
+# 2026-10-23 PR175 D1 OFFLINE signed local inventory + one-use fake gate; NEW SHA review pending
+
+- Parent PR173 independently Mac-approved SHA `3db12aa9a0e91b37a68061312764336620d871df` (`APPROVE_OFFLINE_CODE — D1_SOURCE_HTTPS_FAKE_SCOPE_ONLY`, 420/420 full, 59/59 D1, 145 F0 files, no P0/P1). Parent stays intact.
+- PR175 child isolates F0 source + installed cryptography wheel + Python executable digest into exact permit-bound two-role **ephemeral TEST-only** signatures, then uses reviewed `OfflineGrantRegistry` O_EXCL/fsync consume BEFORE any 3-thread fake HTTPS response, preserving consumed ID after failure or different output directory. This is not a trusted whole-dependency provenance proof nor real fixed-root authorization. New code and tests only; NO REAL SOCKET, D2 grant, production identity, nonce, deploy, merge, scheduled task.
+- See `f0/F0_L2_D1_INVENTORY_ONEUSE.md`, D1 gate tracker. Independent fixed SHA and Mac test review required. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-23 D1 source inventory / sealed fake HTTPS child PR173 — independent Mac audit pending
 
 - Approved parent: PR172 SHA `76618f44ca685251e4c7c827083d3d6a93849ac2`, `APPROVE_OFFLINE_CODE — D1_BUNDLE_SCOPE_ONLY`, Mac 411/411 full and 50/50 D1 tests, 9/9 new; parent untouched.

@@ -69,3 +69,12 @@ J-08/J-10: hard in-flight failures override earlier budget-only stop labels, and
 G-03/G-04: `run_gated_fake_session` now admits exact sealed fake HTTPS class after ephemeral Ed25519, UTC budget and injected Git checksum checks. Strictly test-only; real identities, actual UTC send-time and trust root **BLOCKED**.
 
 See `F0_L2_D1_SOURCE_HTTPS_GATE.md` for exact tests and claims. Mac approval for PR172 does not transfer to PR173.
+
+
+## PR175 — D1 test-signed source/wheel inventory + test one-use fake gate (review pending)
+
+G-02: `f0_l2_d1_inventory_gate.offline_inventory_statement` and `verify_test_inventory_attestation` bind complete **tracked F0 subtree** SHA inventory, installed wheel bytes, Python executable digest and exact raw permit SHA256 into independent ephemeral test-only role signatures; `test_signed_inventory_rejects_mutation_missing_or_extra_fields` etc. **TEST_INVENTORY_ONLY**: not source-independent provenance, no stdlib/import-closure signed proof, no production root.
+
+G-03...G-06: `consume_then_run_fake_once` composes already approved signed UTC/checkout validation, independent test-only inventory commitment and **injected private disposable** OfflineGrantRegistry marker O_EXCL/fsync before FakeSource; `test_registry_consumes_once_before_memory_https_and_no_retry`, `test_consumed_marker_survives_fake_failure_and_new_output_root`, `test_bad_inputs_do_not_consume_or_start_fake`. **OFFLINE_TEST_ONLY**, not permanent production registry/real grant.
+
+J-01..J-10: parent sealed **memory-only** HTTPS three-slot coordinator + response raw audit unchanged; no live socket/physical provider throughput. M-02/M-03 BLOCKED_REAL_DATA.
