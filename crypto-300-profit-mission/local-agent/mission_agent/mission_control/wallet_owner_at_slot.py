@@ -11,14 +11,13 @@ from decimal import Decimal
 from hashlib import sha256
 from html import escape
 import json
-import re
+from .person_registry import _solana_pubkey_32_bytes
 
 FRANK_WALLET = "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ"
 PROGRAMS = (
     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
     "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
 )
-B58 = re.compile(r"[1-9A-HJ-NP-Za-km-z]{32,44}\Z")
 CAPTURE_STATUS = "BOTH_PROGRAMS_OBSERVED_NON_ATOMIC"
 
 
@@ -48,7 +47,7 @@ def _fingerprint(snapshot):
 
 
 def _mint_key(mint):
-    return isinstance(mint, str) and bool(B58.fullmatch(mint))
+    return isinstance(mint, str) and _solana_pubkey_32_bytes(mint)
 
 
 def project_replayed_owner(snapshot, watch, *, target_mints=(),
