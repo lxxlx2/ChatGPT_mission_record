@@ -253,6 +253,8 @@ test('P2-3: failed new POST B cannot resurrect previous pending job A after refr
   await h.listeners['cluster-form']({preventDefault(){}});
   assert.equal(h.storage.has('mission-meme-cluster-pending-v1'),false);
   assert.match(h.statuses.at(-1).join(' '),/提交状态未核实/);
+  assert.equal(h.elements('cluster-recovery').hidden,false);
+  assert.equal(h.elements('cluster-resume-get').hidden,true);
   assert.equal(h.elements('cluster-mint').value,mintB);
   h.context.clusterRestorePending();
   assert.equal(h.calls.length,1);
