@@ -64,6 +64,8 @@ class PairedReplayTests(unittest.TestCase):
             self.assertEqual(report['censored_d0_ticks'],3352)
             self.assertTrue(report['same_d0_watch_id_and_time'])
             self.assertEqual(report['d0_watch_count'],2)
+            self.assertEqual(report['d0_watch_3m_baseline_audit']['strict_3m_event_count'],2)
+            self.assertEqual(report['watch_with_lagged_baseline_not_strict_3m'],0)
             self.assertEqual(report['fifo_setups'],2)
             self.assertEqual(report['fifo_setups'],report['fair8_setups'])
             self.assertEqual(report['fifo_first_service']['watched_queue_episodes'],2)
@@ -108,6 +110,11 @@ class PairedReplayTests(unittest.TestCase):
                 self.assertEqual(events['BTCUSDT'],pair.feed.START_MS+pair.TICK_MS)
                 self.assertEqual(events['ETHUSDT'],pair.feed.START_MS+2*pair.TICK_MS)
             self.assertEqual(report['d0_watch_count'],2)
+            self.assertEqual(report['d0_watch_3m_baseline_audit']['watch_chosen_3m_research_window'],2)
+            # Original core correctly reports raw lag=6m even though the
+            # frozen trigger_3m_5pct label may still be set on ETH.
+            self.assertEqual(report['watch_with_lagged_baseline_not_strict_3m'],1)
+            self.assertEqual(len(report['d0_watch_3m_baseline_audit']['lagged_event_ids']),1)
             self.assertEqual(report['fifo']['d0_new_watch'],2)
             self.assertEqual(report['fair8']['d0_new_watch'],2)
             self.assertTrue(report['same_d0_watch_id_and_time'])
