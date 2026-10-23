@@ -122,5 +122,8 @@
   "NO_AUTOMATIONS": true,
   "NO_MAC_NETWORK": true,
   "NO_GMAIL": true,
-  "NO_TRADES": true
+  "NO_TRADES": true,
+  "exact_original_frozen_511_order_vs_independently_rechecked_511_source_members": "MATCH",
+  "ordered_frozen_roster_and_rechecked_sources_fnv1a64_codepoint": "c1b810a43b6a61ff",
+  "identity_recheck_method": "Original Stage166 Git-archived exact_t0_511_sorted_symbols compared with full 511 artifact source symbol list using order-sensitive 64-bit fingerprint plus matching sorted unique count and identical boundary names; exact T0 roster itself is cryptographically protected by Stage163 source SHA receipts."
 }
