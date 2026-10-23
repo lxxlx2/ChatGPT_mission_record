@@ -18,7 +18,7 @@ PROGRAMS = (
     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
     "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
 )
-B58 = re.compile(r"[1-9A-HJ-NP-Za-km-z]{32,44}\\Z")
+B58 = re.compile(r"[1-9A-HJ-NP-Za-km-z]{32,44}\Z")
 ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 CAPTURE_STATUS = "BOTH_PROGRAMS_OBSERVED_NON_ATOMIC"
 
