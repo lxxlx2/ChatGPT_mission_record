@@ -146,6 +146,55 @@ class D2IngressTests(unittest.TestCase):
         with self.assertRaisesRegex(D2IngressError,"D2_MINT_ACCOUNT_AGGREGATES_INVALID"):
             validate_d2_document(doc)
 
+    def test_rehashed_hidden_private_metadata_is_rejected(self):
+        # Self-hash can always be recomputed; it never authorizes extra fields.
+        for location in ("coverage", "top_level"):
+            doc=deepcopy(self.doc)
+            if location == "coverage":
+                doc["program_coverage"][0]["accounts"]=[
+                    {"private_account":str(i)} for i in range(1000)]
+            else:
+                doc["private_account_dump"]=["account"]*1000
+            doc["document_sha256"]=_digest(doc)
+            with self.subTest(location=location),self.assertRaisesRegex(
+                    D2IngressError,
+                    "D2_PROGRAM_PROVENANCE_INVALID" if location == "coverage"
+                    else "D2_DOCUMENT_FIELDS_INVALID"):
+                validate_d2_document(doc)
+            self._import_private(doc)
+            self.assertEqual(query_d2(self.root,page=0)["status"],
+                             "SOURCE_REJECTED")
+
+    def test_rehashed_swapped_program_counts_rejected(self):
+        doc=deepcopy(self.doc)
+        self.assertEqual([row["account_count"] for row in
+                          doc["program_coverage"]],[3,1])
+        # Global count remains four, but split is no longer source-consistent.
+        doc["program_coverage"][0]["account_count"]=0
+        doc["program_coverage"][1]["account_count"]=4
+        doc["document_sha256"]=_digest(doc)
+        with self.assertRaisesRegex(
+                D2IngressError,"D2_PROGRAM_ACCOUNT_AGGREGATES_INVALID"):
+            validate_d2_document(doc)
+
+    def test_ambiguous_cross_program_mint_is_fail_closed(self):
+        # A Mint with one token account cannot be attributed to two programs.
+        doc=deepcopy(self.doc)
+        row=next(r for r in doc["mints"] if r["account_count"] == 1)
+        row["program_ids"]=[x["program_id"] for x in doc["program_coverage"]]
+        row["slot_min"]=doc["program_coverage"][0]["slot"]
+        row["slot_max"]=doc["program_coverage"][1]["slot"]
+        doc["document_sha256"]=_digest(doc)
+        with self.assertRaisesRegex(D2IngressError,"D2_MINT_PROGRAM_INVALID"):
+            validate_d2_document(doc)
+
+    def test_single_program_multi_account_aggregates_still_pass(self):
+        self.assertEqual([x["account_count"] for x in
+                          self.doc["program_coverage"]],[3,1])
+        self.assertEqual(next(r for r in self.doc["mints"]
+                              if r["mint"] == MINT_A)["account_count"],2)
+        self.assertIs(validate_d2_document(self.doc),self.doc)
+
     def test_noncanonical_zero_string_fails_closed_even_with_new_digest(self):
         doc=deepcopy(self.doc)
         zero=next(r for r in doc["mints"] if r["raw_amount"] == "0")
