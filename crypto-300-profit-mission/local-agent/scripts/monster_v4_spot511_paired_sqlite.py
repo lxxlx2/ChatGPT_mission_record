@@ -188,6 +188,9 @@ def paired_replay(index_path, *, lane_dir=None, allow_synthetic_cohort=False):
                 lanes[name]=production.open_store(path)
             totals=Counter()
             lane_totals={name:Counter() for name in lanes}
+            # Persistent per-episode observability only; no strategy state edits.
+            first_selected={name:{} for name in lanes}
+            first_evaluated={name:{} for name in lanes}
             for tick in range(feed.START_MS,feed.END_MS,TICK_MS):
                 rows=src.execute('''SELECT symbol,price,quote24 FROM price_ticks
                     WHERE tick_ms=? ORDER BY symbol''',(tick,)).fetchall()
@@ -219,8 +222,30 @@ def paired_replay(index_path, *, lane_dir=None, allow_synthetic_cohort=False):
                     else:
                         production.mark_source_health(db,'spot',tick,
                             f'REPLAY_PARTIAL_SPOT_POPULATION:{len(rows)}/{len(roster)}')
+                    eligible=[dict(r) for r in db.execute('''SELECT id,venue,symbol,
+                        first_seen_ms,deadline_ms,status,retry_after_ms,
+                        last_evaluated_bar_ms FROM candidate_queue
+                        WHERE status='PENDING' AND retry_after_ms<=?
+                        ORDER BY first_seen_ms,id''',(tick,))]
+                    chosen=(plan_eligible_eight(eligible,tick,CAPACITY)
+                            if name=='FAIR8' else eligible[:CAPACITY])
+                    prior={q['id']:q['last_evaluated_bar_ms'] for q in chosen}
                     outcome=(_fair_process(db,tick,fetch) if name=='FAIR8'
                              else production.process_queue(db,tick,fetch,limit=CAPACITY))
+                    if outcome['selected']!=len(chosen):
+                        raise RuntimeError('PAIR_SELECTED_IDS_OR_CAPACITY_DRIFT')
+                    for q in chosen:
+                        ident=q['id']
+                        first_selected[name].setdefault(ident,tick)
+                        row=db.execute('''SELECT last_evaluated_bar_ms FROM candidate_queue
+                            WHERE id=?''',(ident,)).fetchone()
+                        if row is None:
+                            raise RuntimeError('PAIR_SELECTED_CANDIDATE_LOST')
+                        after=row['last_evaluated_bar_ms']
+                        before=prior[ident]
+                        if (after is not None and
+                                (before is None or after>before)):
+                            first_evaluated[name].setdefault(ident,tick)
                     for k in ('completed','deferred','late','selected'):
                         lane_totals[name]['d1_'+k]+=outcome[k]
             if totals['ticks']!=3360:
@@ -236,6 +261,36 @@ def paired_replay(index_path, *, lane_dir=None, allow_synthetic_cohort=False):
             b=events(lanes['FAIR8'],'SETUP_ACTIVE')
             def status_counts(db):
                 return dict(db.execute('SELECT status,COUNT(*) FROM candidate_queue GROUP BY status'))
+            def service_trace(name,db):
+                episode=[]
+                for row in db.execute('''SELECT id,venue,symbol,first_seen_ms,
+                    deadline_ms,status FROM candidate_queue ORDER BY id'''):
+                    ident=row['id']
+                    selected=first_selected[name].get(ident)
+                    evaluated=first_evaluated[name].get(ident)
+                    episode.append({
+                        'id':ident,'venue':row['venue'],'symbol':row['symbol'],
+                        'first_seen_ms':row['first_seen_ms'],
+                        'deadline_ms':row['deadline_ms'],
+                        'status':row['status'],
+                        'first_selected_ms':selected,'first_valid_eval_ms':evaluated,
+                        'selected_before_deadline':selected is not None and
+                            selected<=row['deadline_ms'],
+                        'evaluated_before_deadline':evaluated is not None and
+                            evaluated<=row['deadline_ms'],
+                        'first_eval_delay_minutes':None if evaluated is None else
+                            (evaluated-row['first_seen_ms'])/60000})
+                return episode
+            fifo_trace=service_trace('FIFO8',lanes['FIFO8'])
+            fair_trace=service_trace('FAIR8',lanes['FAIR8'])
+            def service_summary(episode):
+                return {'watched_queue_episodes':len(episode),
+                    'first_selected':sum(x['first_selected_ms'] is not None for x in episode),
+                    'first_valid_5m_evaluated':sum(x['first_valid_eval_ms'] is not None for x in episode),
+                    'selected_before_deadline':sum(x['selected_before_deadline'] for x in episode),
+                    'evaluated_before_deadline':sum(x['evaluated_before_deadline'] for x in episode),
+                    'never_selected':sum(x['first_selected_ms'] is None for x in episode),
+                    'never_valid_evaluated':sum(x['first_valid_eval_ms'] is None for x in episode)}
             # Minute-derived tick coverage is NOT equivalent to all 4599
             # whole UTC archives having publisher SHA verification. The
             # first/last day can have unused minutes outside the tick grid.
@@ -256,6 +311,9 @@ def paired_replay(index_path, *, lane_dir=None, allow_synthetic_cohort=False):
                 'fifo':dict(lane_totals['FIFO8']), 'fair8':dict(lane_totals['FAIR8']),
                 'fifo_queue_status':status_counts(lanes['FIFO8']),
                 'fair8_queue_status':status_counts(lanes['FAIR8']),
+                'fifo_first_service':service_summary(fifo_trace),
+                'fair8_first_service':service_summary(fair_trace),
+                'fifo_episodes':fifo_trace,'fair8_episodes':fair_trace,
                 'same_d0_watch_id_and_time':aw==bw,'d0_watch_count':len(aw),
                 'fifo_setups':len(a),'fair8_setups':len(b),
                 'lost_setup_ids':sorted(a.keys()-b.keys()),
