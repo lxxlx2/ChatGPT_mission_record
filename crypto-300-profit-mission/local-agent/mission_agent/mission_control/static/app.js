@@ -1104,22 +1104,30 @@ const CLUSTER_GET_MAX_RETRIES = 3;
 let clusterPollTimer = null;
 let clusterActiveJob = null;
 let clusterPollVersion = 0;
+let clusterReportLoadError = 'GET';
 
 async function loadLatestCluster(mint, silent=false, expectedVersion=clusterPollVersion, expectedJob=clusterActiveJob?.id||null) {
   if (!mint) return false;
+  const inputBefore=$('cluster-mint').value.trim();
+  let report;
   try {
-    const inputBefore=$('cluster-mint').value.trim();
-    const report=await get('/api/cluster-latest?mint=' + encodeURIComponent(mint));
-    if (clusterPollVersion!==expectedVersion ||
-        (clusterActiveJob?.id||null)!==expectedJob ||
-        (clusterActiveJob && clusterActiveJob.mint!==mint) ||
-        $('cluster-mint').value.trim()!==inputBefore ||
-        report?.mint!==mint) return false;
-    $('cluster-mint').value=mint;
+    report=await get('/api/cluster-latest?mint=' + encodeURIComponent(mint));
+  } catch (_) {
+    if (clusterPollVersion===expectedVersion) clusterReportLoadError='GET';
+    return false;
+  }
+  if (clusterPollVersion!==expectedVersion ||
+      (clusterActiveJob?.id||null)!==expectedJob ||
+      (clusterActiveJob && clusterActiveJob.mint!==mint) ||
+      $('cluster-mint').value.trim()!==inputBefore ||
+      report?.mint!==mint) return false;
+  try {
     renderClusterReport(report);
     if (!silent) showToast('已加载上次查询结果');
     return true;
-  } catch (_) {
+  } catch (e) {
+    clusterReportLoadError='RENDER';
+    console.error('CA_REPORT_RENDER_FAILED', {kind:String(e?.name||'Error')});
     return false;
   }
 }
@@ -1485,7 +1493,6 @@ function renderClusterReport(report) {
   const renderConcentration = key =>
     '<div class="cluster-metric"><span>' + esc(clusterMetricLabel[key] || key) + '</span><strong>' +
     clusterMetricValue(metrics[key]) + '</strong></div>';
-  caScheduleQuoteExpiry(quote, 'cluster-final-quote');
   $('cluster-metrics').innerHTML = primary.map(renderConcentration).join('') +
     '<details class="cluster-extra-metrics"><summary>查看其余集中度指标</summary><div class="cluster-metrics-extra">' +
     extra.map(renderConcentration).join('') + '</div></details>';
@@ -1608,7 +1615,8 @@ async function pollClusterJob(jobId, failures=0) {
       const loaded=await loadLatestCluster(mint,true,version,jobId);
       if (clusterPollVersion!==version || clusterActiveJob?.id!==jobId) return;
       if (!loaded) {
-        clusterStatus('error','任务已结束，报告读取中断','可只重试读取已有报告，不会重新扫描');
+        clusterStatus('error',clusterReportLoadError==='RENDER'?'任务已结束，报告显示失败':'任务已结束，报告读取中断',
+          clusterReportLoadError==='RENDER'?'报告已经收到，但页面显示异常，请保留此任务并检查浏览器错误':'可只重试读取已有报告，不会重新扫描');
       } else {
         clusterFinishJob();
         $('cluster-submit').disabled=false;
@@ -1664,12 +1672,15 @@ async function clusterLoadHistoricalCache() {
   const version=clusterPollVersion;
   const jobId=clusterActiveJob?.id || null;
   const input=$('cluster-mint').value.trim();
+  let phase='GET';
   try {
     const report=await get('/api/cluster-latest?mint='+encodeURIComponent(mint));
     if (clusterPollVersion!==version ||
         (clusterActiveJob?.id||null)!==jobId ||
         $('cluster-mint').value.trim()!==input) return;
     if (report?.mint!==mint) throw new Error('CACHE_MINT_MISMATCH');
+    // A successful report GET does not guarantee that the HTML renderer succeeded.
+    phase='RENDER';
     renderClusterReport(report);
     const observed=Number(report.observed_at);
     const when=Number.isFinite(observed)&&observed>0 ? new Date(observed*1000).toLocaleString('zh-CN') : '时间未知';
@@ -1680,7 +1691,12 @@ async function clusterLoadHistoricalCache() {
     if (clusterPollVersion!==version ||
         (clusterActiveJob?.id||null)!==jobId ||
         $('cluster-mint').value.trim()!==input) return;
-    clusterStatus('error','历史缓存读取失败','没有可核对的同 CA 报告');
+    if (phase==='RENDER') {
+      console.error('CA_REPORT_RENDER_FAILED',{kind:'ReportDisplayError'});
+      clusterStatus('error','历史报告显示失败','报告已收到，但页面无法显示');
+    } else {
+      clusterStatus('error','历史缓存读取失败','没有可核对的同 CA 报告');
+    }
   }
   if (clusterPollVersion===version && (clusterActiveJob?.id||null)===jobId) {
     clusterShowRecovery(!!clusterActiveJob);
@@ -1700,7 +1716,8 @@ $('cluster-resume-get').addEventListener('click',()=>{
       if (clusterPollVersion!==version || clusterActiveJob?.id!==id) return;
       if (!loaded) {
         clusterShowRecovery(true);
-        clusterStatus('error','报告读取仍然中断','可再次尝试读取已有报告');
+        clusterStatus('error',clusterReportLoadError==='RENDER'?'报告显示仍然失败':'报告读取仍然中断',
+          clusterReportLoadError==='RENDER'?'报告已收到，请检查页面显示异常':'可再次尝试读取已有报告');
       } else {
         clusterFinishJob();
         $('cluster-submit').disabled=false;
