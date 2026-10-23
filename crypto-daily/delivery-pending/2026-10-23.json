@@ -1,0 +1,1591 @@
+{
+  "schema": "CRYPTO_DAILY_EDITORIAL_V1",
+  "report_date": "2026-10-23",
+  "timezone": "Asia/Bangkok",
+  "report_type": "daily",
+  "body": "Crypto Daily Brief｜2026-10-23（正式补发）\n时间：2026-10-23曼谷上午约11:38。币价使用Binance单交易对24小时滚动窗口，非全球合计；美国股票10月22日完整收盘、ETF最近已完整10月21日交易日。重大安全细节一手来源分别来自LiteLLM、Railway、Node.js、Laravel和微软。被挡官方X/专业链上来源属于SOURCE_GAP，不是无事件证据。\n\n一、今日最重要的5件事\n（1）全球AI供应链警报：LiteLLM官方证实1.107.0发布包和Docker标签短暂带恶意凭据窃取与远控载荷；实际运行该版本的AI/API系统必须按官方执行密钥轮换，不能只等待旧镜像消失。\n（2）云端密钥风险：Railway承认部分客户环境变量明文可能被未授权读取，要求轮换API和数据库等凭据；平台后续主动重置部分连接令牌，需检查部署和异常访问。\n（3）跨租户权限入侵：微软确认ConnectWise云备份第三方OAuth应用被滥用、AI工具加速M365客户环境访问尝试；需按具体集成与日志核查，并非全部微软用户泄密。\n（4）美股风险：10月22日纳指-2.6%、半导体指数约-6.7%，而道指大致平收；AI资本开支与信用融资压力的结构性冲击需要和BTC行情同时观察。\n\n二、BTC/ETH/SOL及主要资产\n（1）BTC/USDT Binance滚动24小时现货报价81,756.00美元，-1.197%，区间80,939.54—82,991.57，计价成交额约14.58亿美元；截至10月23日曼谷上午约11:38。\n（2）ETH/USDT Binance报价2,402.69美元，24小时-1.529%，区间2,360.32—2,448.38，成交额约7.46亿美元；与BTC相同滚动口径，非全市场总额。\n（3）SOL/USDT Binance报价104.07美元，24小时-1.177%，区间103.04—105.72，成交额约1.73亿美元；价格是11:38 BKK快照。\n（4）同一交易所滚动24小时：BNB 740.27美元（+0.031%），XRP 1.3198美元（-1.771%）。BNB短线相对抗跌，但不能仅凭快照推断鲸鱼长期买入。\n（5）ZEC 1,217.18美元（-5.211%），HYPE 78.09美元（-0.989%）；ZEC的24小时区间1,187.50—1,294.04美元，成交额约2.52亿美元，振幅较大且流动性风险需复核。\n\n三、二级市场剧烈波动与持续趋势\n（1）10月22日美股科技风险集中释放：AP纳指收26,008.86点（-2.6%）、标普7,663.43（-1.21%），道指约持平；费城半导体指数约-6.7%。Meta股价约-7%且自由现金流转负、AI资本支出高企，是与Crypto波动联动的宏观风险变量，非‘美国全部资产同幅暴跌’。\n（2）Binance USDⓈ-M BTCUSDT合约单点未平仓量约94,886.756 BTC（10月23日曼谷上午），属于数量不是美元资金流，也不能据此说明交易所全部多头增加或出现确定爆仓规模。\n（3）ETH滚动24小时较BTC弱约0.33个百分点，ZEC跌幅显著大于BTC；要证明多日轮动须比较连续成交、现货深度、Funding与OI，而不能据此称机构已经清仓。\n\n四、监管与政策\n（1）美国OCC10月21日稳定币新规此前已在10月22日正式日报说明；本轮未找到新的已生效条款或发行人资格变化，不重复把旧宣布写为当日新政策。实际出入金仍须检查各平台最新正式政策与资金来源审查。\n（2）英国国家网络安全中心公开敦促组织修复PHP2Shell，但此项属于10月21日已通知的持续紧急修补事项，今日不重新报两个CVE的新闻详情；PHP企业合规处理与加密交易所限制为不同类别。\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）Farside目前可核实美国10月21日BTC现货ETF最终表合计+5.248亿美元，IBIT +2.350亿、FBTC +2.127亿，其余净流也计入；这是10月21日的旧交易日完整流量，不冒充尚未全部披露的10月22日流量。\n（2）截至本次网页回读，Farside来源没有可完整确认的10月22日全部基金逐只净额；不把最新一日页面空白列当成0，也不报未经核实的所谓全日机构抛售。\n（3）宏观上Meta信用利差上行和科技ETF权重抛售是已核实的风险价格信号，但没有直接的交易所净提币、链上自托管钱包归属或全市场做市商净仓证明，不能推出鲸鱼单边买卖。\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n（1）LiteLLM与Railway体现AI基础设施依赖公开组件和CI/CD供应链风险；本期安全第九章给出具体事故，商业层面的增量是企业采购、API代理托管和第三方依赖权限需纳入风险模型，但不能二次描述具体已知漏洞。\n（2）机构稳定币/存款代币需分清银行存款权与零售可赎回稳定币，JPMD以太坊扩展属于10月19日已报告的历史项目，本期未发现新的机构结算总量官方披露，不重复当新发行。\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n（1）BALANCE CCA的官方白皮书10月19日仅规划约24小时竞价、结算及可能独立领取退款；今天已经超过目标拍卖窗口，实际结算区块、是否可领取和个人获配尚缺本轮可复算链上证据。仅建议在官方合约确认实际状态后操作，绝不因个人参与抬入全球Top5。\n（2）TGE独立监控10月23日11:01真实终态仍PARTIAL：8候选、0通过Tier A/B的用户新ACTION、7来源缺口；这不是全面扫描成功，因此不发送伪造的空投领奖链接。\n\n八、Early / Meme / NFT / 新生态热点\n（1）Jack Butcher《Exchange》涉及Credits/Statements/Balances三层链上艺术，这是早期艺术项目领域而非系统性市场大事件。今日没有验证新一轮独立NFT铸造、合约身份与成交数据，因此保持研究观察，不重播已知艺术介绍。\n（2）本次未能读取足够完整的X原创帖互动、独立新合约及可用流动性深度，不能提供‘确定下一枚妖币’或安全铸造链接。该覆盖缺口保留内部并提示不能当作市场不存在新项目。\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n（1）LiteLLM发行方确认10月21日恶意开源1.107.0正式包在PyPI 11:39—13:23 UTC出现；Docker若干标签11:46—14:20 UTC指向投毒镜像。攻击者经3位维护者GitHub凭据入侵发布流程，载荷包括窃取云/API密钥及远控。若实际安装/运行，隔离受污染环境、从可信镜像重建，并轮换宿主可访问的全部密钥；不应直接在受污染Python环境执行pip。已移除受害包但不能反推曾运行者自动安全。\n（2）Railway10月21日原始公告承认第三方可能读取部分客户环境变量的明文内容，含API Key、数据库及私有镜像仓库凭据。官方建议所有受影响平台使用者轮换环境密钥并核查日志；10月22日平台进一步说明部分GitHub和存储桶凭据已被主动重置，服务可能需重新连接/部署。影响实际账户需以官方个别通知和审计日志确认。\n（3）微软10月21日原始威胁研究称Storm-0940使用ARTEX自动化攻击并滥用ConnectWise Cloud Backup的OAuth应用身份，曾在2,250多个M365租户产生访问尝试，涉及部分客户云内持久化权限操作。微软强调成功登录或受影响应用存在不等于数据已被窃取；使用该集成的组织需检查Service Principal授权、凭据增添和Graph审计。此为软件供应链/身份权限事件，和LiteLLM恶意包不是同一事件。\n（4）Node.js官方10月21日补丁覆盖Brotli解码器越界写入可能远程执行代码（CVE-2026-111497）、TLS主机名验证绕过（CVE-2026-105483、CVE-2026-106069）及DNS等多个问题。受维护版本升级到22.23.4、24.22.1或26.12.1；该问题影响满足具体处理路径的应用，不等于所有Node服务器已遭入侵。\n（5）Laravel官方10月19日发布TokenGuard认证绕过GHSA-f9x3-7vq9-cph6，CVSS 9.2：在标准令牌API Guard配合特定MySQL/MariaDB配置时，攻击者可能无需合法API token伪装现存用户。修复版本Laravel 12.68.0或13.29.0及更新版本；未启用该Guard的应用不应笼统认定受影响。\n\n十、全球局势与跨市场冲击\n（1）Reuters10月23日亚洲早盘报道布伦特约114美元/桶、亚洲股市承压，国债收益率前一日显著回落；油价通胀压力和AI信用融资风险同时存在，不能由单一价差推出Crypto必跌。\n（2）美国10月22日纳指-2.6%、半导体-6.7%但道指接近平盘。风险来自高估值科技权重及信用，而非所有资产被统一平仓；Crypto交易全天候，应观察美国周五开盘前后的波动传导。\n\n十一、未来24至72小时催化\n（1）未来24—72小时：10月23日美国股市周五开盘与周线收盘，检测科技与半导体抛售是否延续；期权结算、周末原油地缘新闻可能影响Crypto全天候价格，但尚未发生的收盘不可提前填写。\n（2）关注LiteLLM持续事故复盘、Railway受影响账号正式通知、Node补丁扩散和ConnectWise应用恢复权限公告；只有官方新事实和新的受影响范围才作为下次日报实质增量，旧事故名称不每天重播。\n\n十二、持续趋势与跨市场机会观察清单\n（1）BTC观察Binance 24小时80,939.54—82,991.57美元区间与OI是否持续变化；只有多个真实采样并验证流动性后才构成趋势证据，区间不自动成为限价交易建议。\n（2）ETH参考2,360.32—2,448.38美元、SOL参考103.04—105.72美元近24小时区间，后续ETF完整数据与DEX深度有待核查，不能由单交易所快照给出确定下一阶段涨跌。\n（3）若使用开源AI代理、Python虚拟环境、CI/CD或托管推理服务，除了软件版本还应维护API密钥权限与审计日志；这属于行业长期防御主题，只有出现具体权限新变化时才进入突发新闻。\n\n十三、今日行动与风险结论\n（1）实际使用过LiteLLM 1.107.0时按官方流程隔离环境、可信重建、轮换其可访问的供应商API、数据库与云凭据；不要在疑似污染环境继续运行pip。未使用相关版本者不能直接认定感染。\n（2）在Railway存储过环境变量/私有密钥的账号优先从官方仪表盘执行轮换并核查异常调用；同时关注被平台自动重置的GitHub/存储桶凭据和重新连接要求。\n（3）当日BTC/ETH/SOL回落、纳指波动与AI基础设施事故并存，优先保障账户密钥和交易所资金可用性。安全事故不是立即做空某币的充分证据，维持预算纪律和真实可验证的止损条件。\n\n可靠英文与发行方原文：\nbinance: https://api.binance.com/api/v3/ticker/24hr\noi: https://fapi.binance.com/fapi/v1/openInterest\nfarside: https://farside.co.uk/btc/\nap: https://apnews.com/article/1970e79d013cbddcae89c53b4b98f384\nreuters: https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/\nlitellm: https://docs.litellm.ai/blog/security-incident-oct-21-2026\nrailway: https://blog.railway.com/p/security-disclosure-wednesday-october-21st\nnode: https://nodejs.org/en/blog/vulnerability/october-2026-security-releases\nlaravel: https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6\nms: https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/\njack: https://jack.art/credits/whitepaper\nnocl: https://www.ncsc.gov.uk/news/critical-security-issue-affecting-php\ngoogle: https://blog.google/security/protecting-chrome-and-android-users-from-compromised-emudhra-intermediate-ca-certificates/\n",
+  "items": [
+    {
+      "section": 1,
+      "item_number": 1,
+      "event_key": "security:litellm:2026-10-21:poisoned-1.107.0",
+      "role": "highlight",
+      "text": "全球AI供应链警报：LiteLLM官方证实1.107.0发布包和Docker标签短暂带恶意凭据窃取与远控载荷；实际运行该版本的AI/API系统必须按官方执行密钥轮换，不能只等待旧镜像消失。"
+    },
+    {
+      "section": 1,
+      "item_number": 2,
+      "event_key": "security:railway:2026-10-21:env-secrets",
+      "role": "highlight",
+      "text": "云端密钥风险：Railway承认部分客户环境变量明文可能被未授权读取，要求轮换API和数据库等凭据；平台后续主动重置部分连接令牌，需检查部署和异常访问。"
+    },
+    {
+      "section": 1,
+      "item_number": 3,
+      "event_key": "security:connectwise:2026-10-21:microsoft-art-ex",
+      "role": "highlight",
+      "text": "跨租户权限入侵：微软确认ConnectWise云备份第三方OAuth应用被滥用、AI工具加速M365客户环境访问尝试；需按具体集成与日志核查，并非全部微软用户泄密。"
+    },
+    {
+      "section": 1,
+      "item_number": 4,
+      "event_key": "market:nasdaq:2026-10-22:ai-selloff",
+      "role": "highlight",
+      "text": "美股风险：10月22日纳指-2.6%、半导体指数约-6.7%，而道指大致平收；AI资本开支与信用融资压力的结构性冲击需要和BTC行情同时观察。"
+    },
+    {
+      "section": 2,
+      "item_number": 1,
+      "event_key": "price:BTC:2026-10-23T0438",
+      "role": "detail",
+      "text": "BTC/USDT Binance滚动24小时现货报价81,756.00美元，-1.197%，区间80,939.54—82,991.57，计价成交额约14.58亿美元；截至10月23日曼谷上午约11:38。"
+    },
+    {
+      "section": 2,
+      "item_number": 2,
+      "event_key": "price:ETH:2026-10-23T0438",
+      "role": "detail",
+      "text": "ETH/USDT Binance报价2,402.69美元，24小时-1.529%，区间2,360.32—2,448.38，成交额约7.46亿美元；与BTC相同滚动口径，非全市场总额。"
+    },
+    {
+      "section": 2,
+      "item_number": 3,
+      "event_key": "price:SOL:2026-10-23T0438",
+      "role": "detail",
+      "text": "SOL/USDT Binance报价104.07美元，24小时-1.177%，区间103.04—105.72，成交额约1.73亿美元；价格是11:38 BKK快照。"
+    },
+    {
+      "section": 2,
+      "item_number": 4,
+      "event_key": "price:BNB-XRP:2026-10-23T0438",
+      "role": "detail",
+      "text": "同一交易所滚动24小时：BNB 740.27美元（+0.031%），XRP 1.3198美元（-1.771%）。BNB短线相对抗跌，但不能仅凭快照推断鲸鱼长期买入。"
+    },
+    {
+      "section": 2,
+      "item_number": 5,
+      "event_key": "price:ZEC-HYPE:2026-10-23T0438",
+      "role": "detail",
+      "text": "ZEC 1,217.18美元（-5.211%），HYPE 78.09美元（-0.989%）；ZEC的24小时区间1,187.50—1,294.04美元，成交额约2.52亿美元，振幅较大且流动性风险需复核。"
+    },
+    {
+      "section": 3,
+      "item_number": 1,
+      "event_key": "market:nasdaq:2026-10-22:ai-selloff",
+      "role": "detail",
+      "text": "10月22日美股科技风险集中释放：AP纳指收26,008.86点（-2.6%）、标普7,663.43（-1.21%），道指约持平；费城半导体指数约-6.7%。Meta股价约-7%且自由现金流转负、AI资本支出高企，是与Crypto波动联动的宏观风险变量，非‘美国全部资产同幅暴跌’。"
+    },
+    {
+      "section": 3,
+      "item_number": 2,
+      "event_key": "derivatives:BTC-OI:2026-10-23",
+      "role": "detail",
+      "text": "Binance USDⓈ-M BTCUSDT合约单点未平仓量约94,886.756 BTC（10月23日曼谷上午），属于数量不是美元资金流，也不能据此说明交易所全部多头增加或出现确定爆仓规模。"
+    },
+    {
+      "section": 3,
+      "item_number": 3,
+      "event_key": "trend:relative:2026-10-23",
+      "role": "detail",
+      "text": "ETH滚动24小时较BTC弱约0.33个百分点，ZEC跌幅显著大于BTC；要证明多日轮动须比较连续成交、现货深度、Funding与OI，而不能据此称机构已经清仓。"
+    },
+    {
+      "section": 4,
+      "item_number": 1,
+      "event_key": "policy:occ-follow-up:2026-10-23",
+      "role": "detail",
+      "text": "美国OCC10月21日稳定币新规此前已在10月22日正式日报说明；本轮未找到新的已生效条款或发行人资格变化，不重复把旧宣布写为当日新政策。实际出入金仍须检查各平台最新正式政策与资金来源审查。"
+    },
+    {
+      "section": 4,
+      "item_number": 2,
+      "event_key": "policy:php-apply:2026-10-23",
+      "role": "detail",
+      "text": "英国国家网络安全中心公开敦促组织修复PHP2Shell，但此项属于10月21日已通知的持续紧急修补事项，今日不重新报两个CVE的新闻详情；PHP企业合规处理与加密交易所限制为不同类别。"
+    },
+    {
+      "section": 5,
+      "item_number": 1,
+      "event_key": "flows:btc-etf:2026-10-21:final",
+      "role": "detail",
+      "text": "Farside目前可核实美国10月21日BTC现货ETF最终表合计+5.248亿美元，IBIT +2.350亿、FBTC +2.127亿，其余净流也计入；这是10月21日的旧交易日完整流量，不冒充尚未全部披露的10月22日流量。"
+    },
+    {
+      "section": 5,
+      "item_number": 2,
+      "event_key": "flows:btc-etf:2026-10-22:gap",
+      "role": "detail",
+      "text": "截至本次网页回读，Farside来源没有可完整确认的10月22日全部基金逐只净额；不把最新一日页面空白列当成0，也不报未经核实的所谓全日机构抛售。"
+    },
+    {
+      "section": 5,
+      "item_number": 3,
+      "event_key": "flows:market-liquidity:2026-10-23",
+      "role": "detail",
+      "text": "宏观上Meta信用利差上行和科技ETF权重抛售是已核实的风险价格信号，但没有直接的交易所净提币、链上自托管钱包归属或全市场做市商净仓证明，不能推出鲸鱼单边买卖。"
+    },
+    {
+      "section": 6,
+      "item_number": 1,
+      "event_key": "infra:litellm-business:2026-10-23",
+      "role": "detail",
+      "text": "LiteLLM与Railway体现AI基础设施依赖公开组件和CI/CD供应链风险；本期安全第九章给出具体事故，商业层面的增量是企业采购、API代理托管和第三方依赖权限需纳入风险模型，但不能二次描述具体已知漏洞。"
+    },
+    {
+      "section": 6,
+      "item_number": 2,
+      "event_key": "infra:banking-rails:2026-10-23",
+      "role": "detail",
+      "text": "机构稳定币/存款代币需分清银行存款权与零售可赎回稳定币，JPMD以太坊扩展属于10月19日已报告的历史项目，本期未发现新的机构结算总量官方披露，不重复当新发行。"
+    },
+    {
+      "section": 7,
+      "item_number": 1,
+      "event_key": "tge:balance-checkpoint:2026-10-23",
+      "role": "detail",
+      "text": "BALANCE CCA的官方白皮书10月19日仅规划约24小时竞价、结算及可能独立领取退款；今天已经超过目标拍卖窗口，实际结算区块、是否可领取和个人获配尚缺本轮可复算链上证据。仅建议在官方合约确认实际状态后操作，绝不因个人参与抬入全球Top5。"
+    },
+    {
+      "section": 7,
+      "item_number": 2,
+      "event_key": "tge:rights-current:2026-10-23",
+      "role": "detail",
+      "text": "TGE独立监控10月23日11:01真实终态仍PARTIAL：8候选、0通过Tier A/B的用户新ACTION、7来源缺口；这不是全面扫描成功，因此不发送伪造的空投领奖链接。"
+    },
+    {
+      "section": 8,
+      "item_number": 1,
+      "event_key": "early:nft-balance-2026-10-23",
+      "role": "detail",
+      "text": "Jack Butcher《Exchange》涉及Credits/Statements/Balances三层链上艺术，这是早期艺术项目领域而非系统性市场大事件。今日没有验证新一轮独立NFT铸造、合约身份与成交数据，因此保持研究观察，不重播已知艺术介绍。"
+    },
+    {
+      "section": 8,
+      "item_number": 2,
+      "event_key": "early:social-gap:2026-10-23",
+      "role": "detail",
+      "text": "本次未能读取足够完整的X原创帖互动、独立新合约及可用流动性深度，不能提供‘确定下一枚妖币’或安全铸造链接。该覆盖缺口保留内部并提示不能当作市场不存在新项目。"
+    },
+    {
+      "section": 9,
+      "item_number": 1,
+      "event_key": "security:litellm:2026-10-21:poisoned-1.107.0",
+      "role": "detail",
+      "text": "LiteLLM发行方确认10月21日恶意开源1.107.0正式包在PyPI 11:39—13:23 UTC出现；Docker若干标签11:46—14:20 UTC指向投毒镜像。攻击者经3位维护者GitHub凭据入侵发布流程，载荷包括窃取云/API密钥及远控。若实际安装/运行，隔离受污染环境、从可信镜像重建，并轮换宿主可访问的全部密钥；不应直接在受污染Python环境执行pip。已移除受害包但不能反推曾运行者自动安全。"
+    },
+    {
+      "section": 9,
+      "item_number": 2,
+      "event_key": "security:railway:2026-10-21:env-secrets",
+      "role": "detail",
+      "text": "Railway10月21日原始公告承认第三方可能读取部分客户环境变量的明文内容，含API Key、数据库及私有镜像仓库凭据。官方建议所有受影响平台使用者轮换环境密钥并核查日志；10月22日平台进一步说明部分GitHub和存储桶凭据已被主动重置，服务可能需重新连接/部署。影响实际账户需以官方个别通知和审计日志确认。"
+    },
+    {
+      "section": 9,
+      "item_number": 3,
+      "event_key": "security:connectwise:2026-10-21:microsoft-art-ex",
+      "role": "detail",
+      "text": "微软10月21日原始威胁研究称Storm-0940使用ARTEX自动化攻击并滥用ConnectWise Cloud Backup的OAuth应用身份，曾在2,250多个M365租户产生访问尝试，涉及部分客户云内持久化权限操作。微软强调成功登录或受影响应用存在不等于数据已被窃取；使用该集成的组织需检查Service Principal授权、凭据增添和Graph审计。此为软件供应链/身份权限事件，和LiteLLM恶意包不是同一事件。"
+    },
+    {
+      "section": 9,
+      "item_number": 4,
+      "event_key": "security:node:2026-10-21:patch-train",
+      "role": "detail",
+      "text": "Node.js官方10月21日补丁覆盖Brotli解码器越界写入可能远程执行代码（CVE-2026-111497）、TLS主机名验证绕过（CVE-2026-105483、CVE-2026-106069）及DNS等多个问题。受维护版本升级到22.23.4、24.22.1或26.12.1；该问题影响满足具体处理路径的应用，不等于所有Node服务器已遭入侵。"
+    },
+    {
+      "section": 9,
+      "item_number": 5,
+      "event_key": "security:laravel:2026-10-19:tokenguard",
+      "role": "detail",
+      "text": "Laravel官方10月19日发布TokenGuard认证绕过GHSA-f9x3-7vq9-cph6，CVSS 9.2：在标准令牌API Guard配合特定MySQL/MariaDB配置时，攻击者可能无需合法API token伪装现存用户。修复版本Laravel 12.68.0或13.29.0及更新版本；未启用该Guard的应用不应笼统认定受影响。"
+    },
+    {
+      "section": 10,
+      "item_number": 1,
+      "event_key": "macro:oil-bond:2026-10-23",
+      "role": "detail",
+      "text": "Reuters10月23日亚洲早盘报道布伦特约114美元/桶、亚洲股市承压，国债收益率前一日显著回落；油价通胀压力和AI信用融资风险同时存在，不能由单一价差推出Crypto必跌。"
+    },
+    {
+      "section": 10,
+      "item_number": 2,
+      "event_key": "macro:us-close:2026-10-22",
+      "role": "detail",
+      "text": "美国10月22日纳指-2.6%、半导体-6.7%但道指接近平盘。风险来自高估值科技权重及信用，而非所有资产被统一平仓；Crypto交易全天候，应观察美国周五开盘前后的波动传导。"
+    },
+    {
+      "section": 11,
+      "item_number": 1,
+      "event_key": "catalyst:us-friday:2026-10-23",
+      "role": "detail",
+      "text": "未来24—72小时：10月23日美国股市周五开盘与周线收盘，检测科技与半导体抛售是否延续；期权结算、周末原油地缘新闻可能影响Crypto全天候价格，但尚未发生的收盘不可提前填写。"
+    },
+    {
+      "section": 11,
+      "item_number": 2,
+      "event_key": "catalyst:security-followups:2026-10-23",
+      "role": "detail",
+      "text": "关注LiteLLM持续事故复盘、Railway受影响账号正式通知、Node补丁扩散和ConnectWise应用恢复权限公告；只有官方新事实和新的受影响范围才作为下次日报实质增量，旧事故名称不每天重播。"
+    },
+    {
+      "section": 12,
+      "item_number": 1,
+      "event_key": "watch:btc-threshold:2026-10-23",
+      "role": "detail",
+      "text": "BTC观察Binance 24小时80,939.54—82,991.57美元区间与OI是否持续变化；只有多个真实采样并验证流动性后才构成趋势证据，区间不自动成为限价交易建议。"
+    },
+    {
+      "section": 12,
+      "item_number": 2,
+      "event_key": "watch:eth-sol:2026-10-23",
+      "role": "detail",
+      "text": "ETH参考2,360.32—2,448.38美元、SOL参考103.04—105.72美元近24小时区间，后续ETF完整数据与DEX深度有待核查，不能由单交易所快照给出确定下一阶段涨跌。"
+    },
+    {
+      "section": 12,
+      "item_number": 3,
+      "event_key": "watch:secrets:2026-10-23",
+      "role": "detail",
+      "text": "若使用开源AI代理、Python虚拟环境、CI/CD或托管推理服务，除了软件版本还应维护API密钥权限与审计日志；这属于行业长期防御主题，只有出现具体权限新变化时才进入突发新闻。"
+    },
+    {
+      "section": 13,
+      "item_number": 1,
+      "event_key": "action:safe-ai-dependency:2026-10-23",
+      "role": "detail",
+      "text": "实际使用过LiteLLM 1.107.0时按官方流程隔离环境、可信重建、轮换其可访问的供应商API、数据库与云凭据；不要在疑似污染环境继续运行pip。未使用相关版本者不能直接认定感染。"
+    },
+    {
+      "section": 13,
+      "item_number": 2,
+      "event_key": "action:safe-railway:2026-10-23",
+      "role": "detail",
+      "text": "在Railway存储过环境变量/私有密钥的账号优先从官方仪表盘执行轮换并核查异常调用；同时关注被平台自动重置的GitHub/存储桶凭据和重新连接要求。"
+    },
+    {
+      "section": 13,
+      "item_number": 3,
+      "event_key": "action:crypto-risk:2026-10-23",
+      "role": "detail",
+      "text": "当日BTC/ETH/SOL回落、纳指波动与AI基础设施事故并存，优先保障账户密钥和交易所资金可用性。安全事故不是立即做空某币的充分证据，维持预算纪律和真实可验证的止损条件。"
+    }
+  ],
+  "events": [
+    {
+      "event_key": "security:litellm:2026-10-21:poisoned-1.107.0",
+      "material_version": "obs-2026-10-23",
+      "kind": "MAJOR_SECURITY",
+      "primary_section": 9,
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+      "published_at": "2026-10-21",
+      "actual_delta": "LiteLLM发行方确认10月21日恶意开源1.107.0正式包在PyPI 11:39—13:23 UTC出现；Docker若干标签11:46—14:20 UTC指向投毒镜像。攻击者经3位维护者GitHub凭据入侵发布流程，载荷包括窃取云/API密钥及远控。若实际安装/运行，隔离受污染环境、从可信镜像重建，并轮换宿主可",
+      "impact": "SYSTEMIC",
+      "impact_breadth": "sector-wide",
+      "status": "verified",
+      "priority": "HIGH",
+      "source_confirmed": true,
+      "date": "2026-10-21",
+      "breadth": "sector-wide",
+      "top5_basis": "Compromised official widely installed Python AI proxy packages and official container tags exposed provider API credentials, cloud keys and remote execution to enterprises and developers across cloud providers.",
+      "top5_evidence_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026"
+    },
+    {
+      "event_key": "security:railway:2026-10-21:env-secrets",
+      "material_version": "obs-2026-10-23",
+      "kind": "MAJOR_SECURITY",
+      "primary_section": 9,
+      "source_url": "https://blog.railway.com/p/security-disclosure-wednesday-october-21st",
+      "published_at": "2026-10-21",
+      "actual_delta": "Railway10月21日原始公告承认第三方可能读取部分客户环境变量的明文内容，含API Key、数据库及私有镜像仓库凭据。官方建议所有受影响平台使用者轮换环境密钥并核查日志；10月22日平台进一步说明部分GitHub和存储桶凭据已被主动重置，服务可能需重新连接/部署。影响实际账户需以官方个别通知和审计日志确认。",
+      "impact": "SYSTEMIC",
+      "impact_breadth": "sector-wide",
+      "status": "verified",
+      "priority": "HIGH",
+      "source_confirmed": true,
+      "date": "2026-10-21",
+      "breadth": "sector-wide",
+      "top5_basis": "The cloud deployment platform disclosed possible plaintext access to customer secret environment variables containing AI inference API credentials and databases, and advised platform-wide rotation and reconnection.",
+      "top5_evidence_url": "https://blog.railway.com/p/security-disclosure-wednesday-october-21st"
+    },
+    {
+      "event_key": "security:connectwise:2026-10-21:microsoft-art-ex",
+      "material_version": "obs-2026-10-23",
+      "kind": "MAJOR_SECURITY",
+      "primary_section": 9,
+      "source_url": "https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/",
+      "published_at": "2026-10-21",
+      "actual_delta": "微软10月21日原始威胁研究称Storm-0940使用ARTEX自动化攻击并滥用ConnectWise Cloud Backup的OAuth应用身份，曾在2,250多个M365租户产生访问尝试，涉及部分客户云内持久化权限操作。微软强调成功登录或受影响应用存在不等于数据已被窃取；使用该集成的组织需检查Service Pr",
+      "impact": "SYSTEMIC",
+      "impact_breadth": "multi-venue",
+      "status": "verified",
+      "priority": "HIGH",
+      "source_confirmed": true,
+      "date": "2026-10-21",
+      "breadth": "multi-venue",
+      "top5_basis": "Microsoft documented multi-tenant enterprise supply chain OAuth credential abuse accelerated by agentic AI across more than 2,250 Microsoft 365 tenants, requiring identity and access reviews.",
+      "top5_evidence_url": "https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/"
+    },
+    {
+      "event_key": "security:node:2026-10-21:patch-train",
+      "material_version": "obs-2026-10-23",
+      "kind": "MAJOR_SECURITY",
+      "primary_section": 9,
+      "source_url": "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases",
+      "published_at": "2026-10-21",
+      "actual_delta": "Node.js官方10月21日补丁覆盖Brotli解码器越界写入可能远程执行代码（CVE-2026-111497）、TLS主机名验证绕过（CVE-2026-105483、CVE-2026-106069）及DNS等多个问题。受维护版本升级到22.23.4、24.22.1或26.12.1；该问题影响满足具体处理路径的应用，",
+      "impact": "MAJOR",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "HIGH",
+      "source_confirmed": true,
+      "date": "2026-10-21"
+    },
+    {
+      "event_key": "security:laravel:2026-10-19:tokenguard",
+      "material_version": "obs-2026-10-23",
+      "kind": "MAJOR_SECURITY",
+      "primary_section": 9,
+      "source_url": "https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6",
+      "published_at": "2026-10-19",
+      "actual_delta": "Laravel官方10月19日发布TokenGuard认证绕过GHSA-f9x3-7vq9-cph6，CVSS 9.2：在标准令牌API Guard配合特定MySQL/MariaDB配置时，攻击者可能无需合法API token伪装现存用户。修复版本Laravel 12.68.0或13.29.0及更新版本；未启用该Gua",
+      "impact": "MAJOR",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "HIGH",
+      "source_confirmed": true,
+      "date": "2026-10-19"
+    },
+    {
+      "event_key": "market:nasdaq:2026-10-22:ai-selloff",
+      "material_version": "obs-2026-10-23",
+      "kind": "SYSTEMIC_MARKET",
+      "primary_section": 3,
+      "source_url": "https://apnews.com/article/1970e79d013cbddcae89c53b4b98f384",
+      "published_at": "2026-10-22",
+      "actual_delta": "10月22日美股科技风险集中释放：AP纳指收26,008.86点（-2.6%）、标普7,663.43（-1.21%），道指约持平；费城半导体指数约-6.7%。Meta股价约-7%且自由现金流转负、AI资本支出高企，是与Crypto波动联动的宏观风险变量，非‘美国全部资产同幅暴跌’。",
+      "impact": "MAJOR",
+      "impact_breadth": "market-wide",
+      "status": "verified",
+      "priority": "HIGH",
+      "source_confirmed": true,
+      "date": "2026-10-22",
+      "breadth": "market-wide",
+      "top5_basis": "This completed US market session saw the Nasdaq decline 2.6% and semiconductors nearly 6.7% while the Dow stayed roughly flat, a major cross-market repricing of AI capital expenditure.",
+      "top5_evidence_url": "https://apnews.com/article/1970e79d013cbddcae89c53b4b98f384"
+    },
+    {
+      "event_key": "price:BTC:2026-10-23T0438",
+      "material_version": "obs-2026-10-23",
+      "kind": "CORE_QUOTE",
+      "primary_section": 2,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:38:55Z",
+      "actual_delta": "BTC/USDT Binance滚动24小时现货报价81,756.00美元，-1.197%，区间80,939.54—82,991.57，计价成交额约14.58亿美元；截至10月23日曼谷上午约11:38。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true,
+      "date": "2026-10-23T04:38:55Z"
+    },
+    {
+      "event_key": "price:ETH:2026-10-23T0438",
+      "material_version": "obs-2026-10-23",
+      "kind": "CORE_QUOTE",
+      "primary_section": 2,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "ETH/USDT Binance报价2,402.69美元，24小时-1.529%，区间2,360.32—2,448.38，成交额约7.46亿美元；与BTC相同滚动口径，非全市场总额。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "price:SOL:2026-10-23T0438",
+      "material_version": "obs-2026-10-23",
+      "kind": "CORE_QUOTE",
+      "primary_section": 2,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "SOL/USDT Binance报价104.07美元，24小时-1.177%，区间103.04—105.72，成交额约1.73亿美元；价格是11:38 BKK快照。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "price:BNB-XRP:2026-10-23T0438",
+      "material_version": "obs-2026-10-23",
+      "kind": "CORE_QUOTE",
+      "primary_section": 2,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "同一交易所滚动24小时：BNB 740.27美元（+0.031%），XRP 1.3198美元（-1.771%）。BNB短线相对抗跌，但不能仅凭快照推断鲸鱼长期买入。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "price:ZEC-HYPE:2026-10-23T0438",
+      "material_version": "obs-2026-10-23",
+      "kind": "CORE_QUOTE",
+      "primary_section": 2,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "ZEC 1,217.18美元（-5.211%），HYPE 78.09美元（-0.989%）；ZEC的24小时区间1,187.50—1,294.04美元，成交额约2.52亿美元，振幅较大且流动性风险需复核。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "derivatives:BTC-OI:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "TREND_DERIVATIVES",
+      "primary_section": 3,
+      "source_url": "https://fapi.binance.com/fapi/v1/openInterest",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "Binance USDⓈ-M BTCUSDT合约单点未平仓量约94,886.756 BTC（10月23日曼谷上午），属于数量不是美元资金流，也不能据此说明交易所全部多头增加或出现确定爆仓规模。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "trend:relative:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "TREND_DERIVATIVES",
+      "primary_section": 3,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "ETH滚动24小时较BTC弱约0.33个百分点，ZEC跌幅显著大于BTC；要证明多日轮动须比较连续成交、现货深度、Funding与OI，而不能据此称机构已经清仓。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "policy:occ-follow-up:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "MAJOR_POLICY",
+      "primary_section": 4,
+      "source_url": "https://www.ncsc.gov.uk/news/critical-security-issue-affecting-php",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "美国OCC10月21日稳定币新规此前已在10月22日正式日报说明；本轮未找到新的已生效条款或发行人资格变化，不重复把旧宣布写为当日新政策。实际出入金仍须检查各平台最新正式政策与资金来源审查。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "policy:php-apply:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "MAJOR_POLICY",
+      "primary_section": 4,
+      "source_url": "https://www.ncsc.gov.uk/news/critical-security-issue-affecting-php",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "英国国家网络安全中心公开敦促组织修复PHP2Shell，但此项属于10月21日已通知的持续紧急修补事项，今日不重新报两个CVE的新闻详情；PHP企业合规处理与加密交易所限制为不同类别。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "flows:btc-etf:2026-10-21:final",
+      "material_version": "obs-2026-10-23",
+      "kind": "INSTITUTIONAL_FLOW",
+      "primary_section": 5,
+      "source_url": "https://farside.co.uk/btc/",
+      "published_at": "2026-10-21",
+      "actual_delta": "Farside目前可核实美国10月21日BTC现货ETF最终表合计+5.248亿美元，IBIT +2.350亿、FBTC +2.127亿，其余净流也计入；这是10月21日的旧交易日完整流量，不冒充尚未全部披露的10月22日流量。",
+      "impact": "MAJOR",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true,
+      "date": "2026-10-21"
+    },
+    {
+      "event_key": "flows:btc-etf:2026-10-22:gap",
+      "material_version": "obs-2026-10-23",
+      "kind": "INSTITUTIONAL_FLOW",
+      "primary_section": 5,
+      "source_url": "https://farside.co.uk/btc/",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "截至本次网页回读，Farside来源没有可完整确认的10月22日全部基金逐只净额；不把最新一日页面空白列当成0，也不报未经核实的所谓全日机构抛售。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "flows:market-liquidity:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "INSTITUTIONAL_FLOW",
+      "primary_section": 5,
+      "source_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "宏观上Meta信用利差上行和科技ETF权重抛售是已核实的风险价格信号，但没有直接的交易所净提币、链上自托管钱包归属或全市场做市商净仓证明，不能推出鲸鱼单边买卖。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "infra:litellm-business:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "MAJOR_INFRASTRUCTURE",
+      "primary_section": 6,
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "LiteLLM与Railway体现AI基础设施依赖公开组件和CI/CD供应链风险；本期安全第九章给出具体事故，商业层面的增量是企业采购、API代理托管和第三方依赖权限需纳入风险模型，但不能二次描述具体已知漏洞。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "infra:banking-rails:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "MAJOR_INFRASTRUCTURE",
+      "primary_section": 6,
+      "source_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "机构稳定币/存款代币需分清银行存款权与零售可赎回稳定币，JPMD以太坊扩展属于10月19日已报告的历史项目，本期未发现新的机构结算总量官方披露，不重复当新发行。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "tge:balance-checkpoint:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "TGE_PUBLIC_SALE",
+      "primary_section": 7,
+      "source_url": "https://jack.art/credits/whitepaper",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "BALANCE CCA的官方白皮书10月19日仅规划约24小时竞价、结算及可能独立领取退款；今天已经超过目标拍卖窗口，实际结算区块、是否可领取和个人获配尚缺本轮可复算链上证据。仅建议在官方合约确认实际状态后操作，绝不因个人参与抬入全球Top5。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "tge:rights-current:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "TGE_PUBLIC_SALE",
+      "primary_section": 7,
+      "source_url": "https://jack.art/credits/whitepaper",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "TGE独立监控10月23日11:01真实终态仍PARTIAL：8候选、0通过Tier A/B的用户新ACTION、7来源缺口；这不是全面扫描成功，因此不发送伪造的空投领奖链接。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "early:nft-balance-2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "EARLY_NFT_MEME",
+      "primary_section": 8,
+      "source_url": "https://jack.art/credits/whitepaper",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "Jack Butcher《Exchange》涉及Credits/Statements/Balances三层链上艺术，这是早期艺术项目领域而非系统性市场大事件。今日没有验证新一轮独立NFT铸造、合约身份与成交数据，因此保持研究观察，不重播已知艺术介绍。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "early:social-gap:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "EARLY_NFT_MEME",
+      "primary_section": 8,
+      "source_url": "https://jack.art/credits/whitepaper",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "本次未能读取足够完整的X原创帖互动、独立新合约及可用流动性深度，不能提供‘确定下一枚妖币’或安全铸造链接。该覆盖缺口保留内部并提示不能当作市场不存在新项目。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "macro:oil-bond:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "MACRO_CROSS_MARKET",
+      "primary_section": 10,
+      "source_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "Reuters10月23日亚洲早盘报道布伦特约114美元/桶、亚洲股市承压，国债收益率前一日显著回落；油价通胀压力和AI信用融资风险同时存在，不能由单一价差推出Crypto必跌。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "macro:us-close:2026-10-22",
+      "material_version": "obs-2026-10-23",
+      "kind": "MACRO_CROSS_MARKET",
+      "primary_section": 10,
+      "source_url": "https://apnews.com/article/1970e79d013cbddcae89c53b4b98f384",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "美国10月22日纳指-2.6%、半导体-6.7%但道指接近平盘。风险来自高估值科技权重及信用，而非所有资产被统一平仓；Crypto交易全天候，应观察美国周五开盘前后的波动传导。",
+      "impact": {
+        "date": "2026-10-22"
+      },
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "catalyst:us-friday:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "FUTURE_CATALYST",
+      "primary_section": 11,
+      "source_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "未来24—72小时：10月23日美国股市周五开盘与周线收盘，检测科技与半导体抛售是否延续；期权结算、周末原油地缘新闻可能影响Crypto全天候价格，但尚未发生的收盘不可提前填写。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "catalyst:security-followups:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "FUTURE_CATALYST",
+      "primary_section": 11,
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "关注LiteLLM持续事故复盘、Railway受影响账号正式通知、Node补丁扩散和ConnectWise应用恢复权限公告；只有官方新事实和新的受影响范围才作为下次日报实质增量，旧事故名称不每天重播。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "watch:btc-threshold:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "PERSISTENT_WATCH",
+      "primary_section": 12,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "BTC观察Binance 24小时80,939.54—82,991.57美元区间与OI是否持续变化；只有多个真实采样并验证流动性后才构成趋势证据，区间不自动成为限价交易建议。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "watch:eth-sol:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "PERSISTENT_WATCH",
+      "primary_section": 12,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "ETH参考2,360.32—2,448.38美元、SOL参考103.04—105.72美元近24小时区间，后续ETF完整数据与DEX深度有待核查，不能由单交易所快照给出确定下一阶段涨跌。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "watch:secrets:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "PERSISTENT_WATCH",
+      "primary_section": 12,
+      "source_url": "https://blog.railway.com/p/security-disclosure-wednesday-october-21st",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "若使用开源AI代理、Python虚拟环境、CI/CD或托管推理服务，除了软件版本还应维护API密钥权限与审计日志；这属于行业长期防御主题，只有出现具体权限新变化时才进入突发新闻。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "action:safe-ai-dependency:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "ACTION_CONCLUSION",
+      "primary_section": 13,
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "实际使用过LiteLLM 1.107.0时按官方流程隔离环境、可信重建、轮换其可访问的供应商API、数据库与云凭据；不要在疑似污染环境继续运行pip。未使用相关版本者不能直接认定感染。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "action:safe-railway:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "ACTION_CONCLUSION",
+      "primary_section": 13,
+      "source_url": "https://blog.railway.com/p/security-disclosure-wednesday-october-21st",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "在Railway存储过环境变量/私有密钥的账号优先从官方仪表盘执行轮换并核查异常调用；同时关注被平台自动重置的GitHub/存储桶凭据和重新连接要求。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "action:crypto-risk:2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "kind": "ACTION_CONCLUSION",
+      "primary_section": 13,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "actual_delta": "当日BTC/ETH/SOL回落、纳指波动与AI基础设施事故并存，优先保障账户密钥和交易所资金可用性。安全事故不是立即做空某币的充分证据，维持预算纪律和真实可验证的止损条件。",
+      "impact": "LIMITED",
+      "impact_breadth": "limited",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    }
+  ],
+  "source_receipts": [
+    {
+      "lane": "spot",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "status": "checked",
+      "result_urls": [
+        "https://api.binance.com/api/v3/ticker/24hr"
+      ]
+    },
+    {
+      "lane": "derivatives",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://fapi.binance.com/fapi/v1/openInterest",
+      "status": "checked",
+      "result_urls": [
+        "https://fapi.binance.com/fapi/v1/openInterest"
+      ]
+    },
+    {
+      "lane": "capital_flows",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://farside.co.uk/btc/",
+      "status": "checked",
+      "result_urls": [
+        "https://farside.co.uk/btc/"
+      ]
+    },
+    {
+      "lane": "onchain",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://info.arkm.com/research",
+      "status": "source_gap",
+      "error": "Original X / latest issuer or full onchain source unavailable for comprehensive time-scoped check",
+      "result_urls": []
+    },
+    {
+      "lane": "policy",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://www.ncsc.gov.uk/news/critical-security-issue-affecting-php",
+      "status": "checked",
+      "result_urls": [
+        "https://www.ncsc.gov.uk/news/critical-security-issue-affecting-php"
+      ]
+    },
+    {
+      "lane": "infrastructure",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+      "status": "checked",
+      "result_urls": [
+        "https://docs.litellm.ai/blog/security-incident-oct-21-2026"
+      ]
+    },
+    {
+      "lane": "tge",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://jack.art/credits/whitepaper",
+      "status": "checked",
+      "result_urls": [
+        "https://jack.art/credits/whitepaper"
+      ]
+    },
+    {
+      "lane": "early_nft",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://jack.art/credits/whitepaper",
+      "status": "source_gap",
+      "error": "Original X / latest issuer or full onchain source unavailable for comprehensive time-scoped check",
+      "result_urls": []
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+      "status": "checked",
+      "result_urls": [
+        "https://docs.litellm.ai/blog/security-incident-oct-21-2026"
+      ]
+    },
+    {
+      "lane": "web_pki_tls",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://blog.google/security/protecting-chrome-and-android-users-from-compromised-emudhra-intermediate-ca-certificates/",
+      "status": "checked",
+      "result_urls": [
+        "https://blog.google/security/protecting-chrome-and-android-users-from-compromised-emudhra-intermediate-ca-certificates/"
+      ]
+    },
+    {
+      "lane": "web_runtime_rce",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://www.ncsc.gov.uk/news/critical-security-issue-affecting-php",
+      "status": "checked",
+      "result_urls": [
+        "https://www.ncsc.gov.uk/news/critical-security-issue-affecting-php"
+      ]
+    },
+    {
+      "lane": "macro",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/",
+      "status": "checked",
+      "result_urls": [
+        "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/"
+      ]
+    },
+    {
+      "lane": "forward_catalysts",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/",
+      "status": "checked",
+      "result_urls": [
+        "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/"
+      ]
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://blog.railway.com/p/security-disclosure-wednesday-october-21st",
+      "status": "checked",
+      "result_urls": [
+        "https://blog.railway.com/p/security-disclosure-wednesday-october-21st"
+      ]
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases",
+      "status": "checked",
+      "result_urls": [
+        "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases"
+      ]
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6",
+      "status": "checked",
+      "result_urls": [
+        "https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6"
+      ]
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/",
+      "status": "checked",
+      "result_urls": [
+        "https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/"
+      ]
+    },
+    {
+      "lane": "macro",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "query_or_url": "https://apnews.com/article/1970e79d013cbddcae89c53b4b98f384",
+      "status": "checked",
+      "result_urls": [
+        "https://apnews.com/article/1970e79d013cbddcae89c53b4b98f384"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "lane": "spot",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr"
+    },
+    {
+      "lane": "derivatives",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://fapi.binance.com/fapi/v1/openInterest"
+    },
+    {
+      "lane": "capital_flows",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://farside.co.uk/btc/"
+    },
+    {
+      "lane": "onchain",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "source_gap",
+      "source_url": "https://info.arkm.com/research"
+    },
+    {
+      "lane": "policy",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://www.ncsc.gov.uk/news/critical-security-issue-affecting-php"
+    },
+    {
+      "lane": "infrastructure",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026"
+    },
+    {
+      "lane": "tge",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://jack.art/credits/whitepaper"
+    },
+    {
+      "lane": "early_nft",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "source_gap",
+      "source_url": "https://jack.art/credits/whitepaper"
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026"
+    },
+    {
+      "lane": "web_pki_tls",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://blog.google/security/protecting-chrome-and-android-users-from-compromised-emudhra-intermediate-ca-certificates/"
+    },
+    {
+      "lane": "web_runtime_rce",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://www.ncsc.gov.uk/news/critical-security-issue-affecting-php"
+    },
+    {
+      "lane": "macro",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/"
+    },
+    {
+      "lane": "forward_catalysts",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/"
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://blog.railway.com/p/security-disclosure-wednesday-october-21st"
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases"
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6"
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/"
+    },
+    {
+      "lane": "macro",
+      "checked_at": "2026-10-23T04:40:00Z",
+      "status": "checked",
+      "source_url": "https://apnews.com/article/1970e79d013cbddcae89c53b4b98f384"
+    }
+  ],
+  "market_core": [
+    {
+      "symbol": "BTC",
+      "price": 81756,
+      "observed_at": "2026-10-23T04:38:55Z",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr"
+    },
+    {
+      "symbol": "ETH",
+      "price": 2402.69,
+      "observed_at": "2026-10-23T04:38:55Z",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr"
+    },
+    {
+      "symbol": "SOL",
+      "price": 104.07,
+      "observed_at": "2026-10-23T04:38:55Z",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr"
+    }
+  ],
+  "previous_events": [
+    {
+      "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
+      "material_version": "incident_reported_2026-10-20_v1",
+      "aliases": [
+        "Qubic"
+      ]
+    },
+    {
+      "event_key": "cysic:bridge_mint_exploit:2026-10-17",
+      "material_version": "incident_reported_2026-10-20_v1",
+      "aliases": [
+        "Cysic"
+      ]
+    },
+    {
+      "event_key": "jpm:jpm-coin-ethereum-expansion:2026-10-19",
+      "material_version": "issuer_launch_2026-10-19",
+      "aliases": [
+        "JPMD",
+        "JPM Coin"
+      ]
+    },
+    {
+      "event_key": "bitget:restricted-counterparty-htx:2026-10-16",
+      "material_version": "bitget_delta_2026-10-16",
+      "aliases": [
+        "HTX",
+        "Huobi Global SA"
+      ]
+    },
+    {
+      "event_key": "cambria:blast-abstract-transition:2026-10-19",
+      "material_version": "secondary_unverified_2026-10-17",
+      "aliases": [
+        "Cambria"
+      ]
+    },
+    {
+      "event_key": "neosoul:dna-standx-beneficiary:2026-10-15",
+      "material_version": "secondary_unverified_2026-10-15",
+      "aliases": [
+        "NeoSoul"
+      ]
+    },
+    {
+      "event_key": "btc:clifton-collins:2026-10-20:tranche-5",
+      "material_version": "tx:eb0bde50049e924590a1812af2d2699c13d513415d3f03bbe3d10f316b3d6756",
+      "aliases": [
+        "Clifton Collins"
+      ]
+    },
+    {
+      "event_key": "php:php2shell:2026-10-21",
+      "material_version": "cve-2026-109618-109619:fix-2026-10-21",
+      "aliases": [
+        "PHP2Shell",
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ]
+    },
+    {
+      "event_key": "pki:emudhra:2026-10-20",
+      "material_version": "8_intermediate_ca_keys_exposed:removal-2026-10-20",
+      "aliases": [
+        "eMudhra",
+        "emSign ECC Root CA"
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "event_key": "security:litellm:2026-10-21:poisoned-1.107.0",
+      "family_key": "security:litellm",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "security:litellm:2026-10-21:poisoned-1.107.0"
+      ],
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+      "published_at": "2026-10-21",
+      "material_delta": "LiteLLM发行方确认10月21日恶意开源1.107.0正式包在PyPI 11:39—13:23 UTC出现；Docker若干标签11:46—14:20 UTC指向投毒镜像。攻击者经3位维护者GitHub凭据入侵发布流程，载荷包括窃取云/API密钥及远控。若实际安装/运行，隔离受污染环境、从可信镜像重建，并轮换宿主可",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "security:railway:2026-10-21:env-secrets",
+      "family_key": "security:railway",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "security:railway:2026-10-21:env-secrets"
+      ],
+      "source_url": "https://blog.railway.com/p/security-disclosure-wednesday-october-21st",
+      "published_at": "2026-10-21",
+      "material_delta": "Railway10月21日原始公告承认第三方可能读取部分客户环境变量的明文内容，含API Key、数据库及私有镜像仓库凭据。官方建议所有受影响平台使用者轮换环境密钥并核查日志；10月22日平台进一步说明部分GitHub和存储桶凭据已被主动重置，服务可能需重新连接/部署。影响实际账户需以官方个别通知和审计日志确认。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "security:connectwise:2026-10-21:microsoft-art-ex",
+      "family_key": "security:connectwise",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "security:connectwise:2026-10-21:microsoft-art-ex"
+      ],
+      "source_url": "https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/",
+      "published_at": "2026-10-21",
+      "material_delta": "微软10月21日原始威胁研究称Storm-0940使用ARTEX自动化攻击并滥用ConnectWise Cloud Backup的OAuth应用身份，曾在2,250多个M365租户产生访问尝试，涉及部分客户云内持久化权限操作。微软强调成功登录或受影响应用存在不等于数据已被窃取；使用该集成的组织需检查Service Pr",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "security:node:2026-10-21:patch-train",
+      "family_key": "security:node",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "security:node:2026-10-21:patch-train"
+      ],
+      "source_url": "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases",
+      "published_at": "2026-10-21",
+      "material_delta": "Node.js官方10月21日补丁覆盖Brotli解码器越界写入可能远程执行代码（CVE-2026-111497）、TLS主机名验证绕过（CVE-2026-105483、CVE-2026-106069）及DNS等多个问题。受维护版本升级到22.23.4、24.22.1或26.12.1；该问题影响满足具体处理路径的应用，",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "security:laravel:2026-10-19:tokenguard",
+      "family_key": "security:laravel",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "security:laravel:2026-10-19:tokenguard"
+      ],
+      "source_url": "https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6",
+      "published_at": "2026-10-19",
+      "material_delta": "Laravel官方10月19日发布TokenGuard认证绕过GHSA-f9x3-7vq9-cph6，CVSS 9.2：在标准令牌API Guard配合特定MySQL/MariaDB配置时，攻击者可能无需合法API token伪装现存用户。修复版本Laravel 12.68.0或13.29.0及更新版本；未启用该Gua",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "market:nasdaq:2026-10-22:ai-selloff",
+      "family_key": "market:nasdaq",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "market:nasdaq:2026-10-22:ai-selloff"
+      ],
+      "source_url": "https://apnews.com/article/1970e79d013cbddcae89c53b4b98f384",
+      "published_at": "2026-10-22",
+      "material_delta": "10月22日美股科技风险集中释放：AP纳指收26,008.86点（-2.6%）、标普7,663.43（-1.21%），道指约持平；费城半导体指数约-6.7%。Meta股价约-7%且自由现金流转负、AI资本支出高企，是与Crypto波动联动的宏观风险变量，非‘美国全部资产同幅暴跌’。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "price:BTC:2026-10-23T0438",
+      "family_key": "price:BTC",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "price:BTC:2026-10-23T0438"
+      ],
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:38:55Z",
+      "material_delta": "BTC/USDT Binance滚动24小时现货报价81,756.00美元，-1.197%，区间80,939.54—82,991.57，计价成交额约14.58亿美元；截至10月23日曼谷上午约11:38。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "price:ETH:2026-10-23T0438",
+      "family_key": "price:ETH",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "price:ETH:2026-10-23T0438"
+      ],
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "ETH/USDT Binance报价2,402.69美元，24小时-1.529%，区间2,360.32—2,448.38，成交额约7.46亿美元；与BTC相同滚动口径，非全市场总额。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "price:SOL:2026-10-23T0438",
+      "family_key": "price:SOL",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "price:SOL:2026-10-23T0438"
+      ],
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "SOL/USDT Binance报价104.07美元，24小时-1.177%，区间103.04—105.72，成交额约1.73亿美元；价格是11:38 BKK快照。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "price:BNB-XRP:2026-10-23T0438",
+      "family_key": "price:BNB-XRP",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "price:BNB-XRP:2026-10-23T0438"
+      ],
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "同一交易所滚动24小时：BNB 740.27美元（+0.031%），XRP 1.3198美元（-1.771%）。BNB短线相对抗跌，但不能仅凭快照推断鲸鱼长期买入。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "price:ZEC-HYPE:2026-10-23T0438",
+      "family_key": "price:ZEC-HYPE",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "price:ZEC-HYPE:2026-10-23T0438"
+      ],
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "ZEC 1,217.18美元（-5.211%），HYPE 78.09美元（-0.989%）；ZEC的24小时区间1,187.50—1,294.04美元，成交额约2.52亿美元，振幅较大且流动性风险需复核。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "derivatives:BTC-OI:2026-10-23",
+      "family_key": "derivatives:BTC-OI",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "derivatives:BTC-OI:2026-10-23"
+      ],
+      "source_url": "https://fapi.binance.com/fapi/v1/openInterest",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "Binance USDⓈ-M BTCUSDT合约单点未平仓量约94,886.756 BTC（10月23日曼谷上午），属于数量不是美元资金流，也不能据此说明交易所全部多头增加或出现确定爆仓规模。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "trend:relative:2026-10-23",
+      "family_key": "trend:relative",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "trend:relative:2026-10-23"
+      ],
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "ETH滚动24小时较BTC弱约0.33个百分点，ZEC跌幅显著大于BTC；要证明多日轮动须比较连续成交、现货深度、Funding与OI，而不能据此称机构已经清仓。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "policy:occ-follow-up:2026-10-23",
+      "family_key": "policy:occ-follow-up",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "policy:occ-follow-up:2026-10-23"
+      ],
+      "source_url": "https://www.ncsc.gov.uk/news/critical-security-issue-affecting-php",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "美国OCC10月21日稳定币新规此前已在10月22日正式日报说明；本轮未找到新的已生效条款或发行人资格变化，不重复把旧宣布写为当日新政策。实际出入金仍须检查各平台最新正式政策与资金来源审查。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "policy:php-apply:2026-10-23",
+      "family_key": "policy:php-apply",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "policy:php-apply:2026-10-23"
+      ],
+      "source_url": "https://www.ncsc.gov.uk/news/critical-security-issue-affecting-php",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "英国国家网络安全中心公开敦促组织修复PHP2Shell，但此项属于10月21日已通知的持续紧急修补事项，今日不重新报两个CVE的新闻详情；PHP企业合规处理与加密交易所限制为不同类别。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "flows:btc-etf:2026-10-21:final",
+      "family_key": "flows:btc-etf",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "flows:btc-etf:2026-10-21:final"
+      ],
+      "source_url": "https://farside.co.uk/btc/",
+      "published_at": "2026-10-21",
+      "material_delta": "Farside目前可核实美国10月21日BTC现货ETF最终表合计+5.248亿美元，IBIT +2.350亿、FBTC +2.127亿，其余净流也计入；这是10月21日的旧交易日完整流量，不冒充尚未全部披露的10月22日流量。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "flows:btc-etf:2026-10-22:gap",
+      "family_key": "flows:btc-etf",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "flows:btc-etf:2026-10-22:gap"
+      ],
+      "source_url": "https://farside.co.uk/btc/",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "截至本次网页回读，Farside来源没有可完整确认的10月22日全部基金逐只净额；不把最新一日页面空白列当成0，也不报未经核实的所谓全日机构抛售。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "flows:market-liquidity:2026-10-23",
+      "family_key": "flows:market-liquidity",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "flows:market-liquidity:2026-10-23"
+      ],
+      "source_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "宏观上Meta信用利差上行和科技ETF权重抛售是已核实的风险价格信号，但没有直接的交易所净提币、链上自托管钱包归属或全市场做市商净仓证明，不能推出鲸鱼单边买卖。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "infra:litellm-business:2026-10-23",
+      "family_key": "infra:litellm-business",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "infra:litellm-business:2026-10-23"
+      ],
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "LiteLLM与Railway体现AI基础设施依赖公开组件和CI/CD供应链风险；本期安全第九章给出具体事故，商业层面的增量是企业采购、API代理托管和第三方依赖权限需纳入风险模型，但不能二次描述具体已知漏洞。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "infra:banking-rails:2026-10-23",
+      "family_key": "infra:banking-rails",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "infra:banking-rails:2026-10-23"
+      ],
+      "source_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "机构稳定币/存款代币需分清银行存款权与零售可赎回稳定币，JPMD以太坊扩展属于10月19日已报告的历史项目，本期未发现新的机构结算总量官方披露，不重复当新发行。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "tge:balance-checkpoint:2026-10-23",
+      "family_key": "tge:balance-checkpoint",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "tge:balance-checkpoint:2026-10-23"
+      ],
+      "source_url": "https://jack.art/credits/whitepaper",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "BALANCE CCA的官方白皮书10月19日仅规划约24小时竞价、结算及可能独立领取退款；今天已经超过目标拍卖窗口，实际结算区块、是否可领取和个人获配尚缺本轮可复算链上证据。仅建议在官方合约确认实际状态后操作，绝不因个人参与抬入全球Top5。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "tge:rights-current:2026-10-23",
+      "family_key": "tge:rights-current",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "tge:rights-current:2026-10-23"
+      ],
+      "source_url": "https://jack.art/credits/whitepaper",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "TGE独立监控10月23日11:01真实终态仍PARTIAL：8候选、0通过Tier A/B的用户新ACTION、7来源缺口；这不是全面扫描成功，因此不发送伪造的空投领奖链接。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "early:nft-balance-2026-10-23",
+      "family_key": "early:nft-balance-2026-10-23",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "early:nft-balance-2026-10-23"
+      ],
+      "source_url": "https://jack.art/credits/whitepaper",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "Jack Butcher《Exchange》涉及Credits/Statements/Balances三层链上艺术，这是早期艺术项目领域而非系统性市场大事件。今日没有验证新一轮独立NFT铸造、合约身份与成交数据，因此保持研究观察，不重播已知艺术介绍。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "early:social-gap:2026-10-23",
+      "family_key": "early:social-gap",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "early:social-gap:2026-10-23"
+      ],
+      "source_url": "https://jack.art/credits/whitepaper",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "本次未能读取足够完整的X原创帖互动、独立新合约及可用流动性深度，不能提供‘确定下一枚妖币’或安全铸造链接。该覆盖缺口保留内部并提示不能当作市场不存在新项目。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "macro:oil-bond:2026-10-23",
+      "family_key": "macro:oil-bond",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "macro:oil-bond:2026-10-23"
+      ],
+      "source_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "Reuters10月23日亚洲早盘报道布伦特约114美元/桶、亚洲股市承压，国债收益率前一日显著回落；油价通胀压力和AI信用融资风险同时存在，不能由单一价差推出Crypto必跌。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "macro:us-close:2026-10-22",
+      "family_key": "macro:us-close",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "macro:us-close:2026-10-22"
+      ],
+      "source_url": "https://apnews.com/article/1970e79d013cbddcae89c53b4b98f384",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "美国10月22日纳指-2.6%、半导体-6.7%但道指接近平盘。风险来自高估值科技权重及信用，而非所有资产被统一平仓；Crypto交易全天候，应观察美国周五开盘前后的波动传导。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "catalyst:us-friday:2026-10-23",
+      "family_key": "catalyst:us-friday",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "catalyst:us-friday:2026-10-23"
+      ],
+      "source_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "未来24—72小时：10月23日美国股市周五开盘与周线收盘，检测科技与半导体抛售是否延续；期权结算、周末原油地缘新闻可能影响Crypto全天候价格，但尚未发生的收盘不可提前填写。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "catalyst:security-followups:2026-10-23",
+      "family_key": "catalyst:security-followups",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "catalyst:security-followups:2026-10-23"
+      ],
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "关注LiteLLM持续事故复盘、Railway受影响账号正式通知、Node补丁扩散和ConnectWise应用恢复权限公告；只有官方新事实和新的受影响范围才作为下次日报实质增量，旧事故名称不每天重播。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "watch:btc-threshold:2026-10-23",
+      "family_key": "watch:btc-threshold",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "watch:btc-threshold:2026-10-23"
+      ],
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "BTC观察Binance 24小时80,939.54—82,991.57美元区间与OI是否持续变化；只有多个真实采样并验证流动性后才构成趋势证据，区间不自动成为限价交易建议。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "watch:eth-sol:2026-10-23",
+      "family_key": "watch:eth-sol",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "watch:eth-sol:2026-10-23"
+      ],
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "ETH参考2,360.32—2,448.38美元、SOL参考103.04—105.72美元近24小时区间，后续ETF完整数据与DEX深度有待核查，不能由单交易所快照给出确定下一阶段涨跌。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "watch:secrets:2026-10-23",
+      "family_key": "watch:secrets",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "watch:secrets:2026-10-23"
+      ],
+      "source_url": "https://blog.railway.com/p/security-disclosure-wednesday-october-21st",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "若使用开源AI代理、Python虚拟环境、CI/CD或托管推理服务，除了软件版本还应维护API密钥权限与审计日志；这属于行业长期防御主题，只有出现具体权限新变化时才进入突发新闻。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "action:safe-ai-dependency:2026-10-23",
+      "family_key": "action:safe-ai-dependency",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "action:safe-ai-dependency:2026-10-23"
+      ],
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "实际使用过LiteLLM 1.107.0时按官方流程隔离环境、可信重建、轮换其可访问的供应商API、数据库与云凭据；不要在疑似污染环境继续运行pip。未使用相关版本者不能直接认定感染。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "action:safe-railway:2026-10-23",
+      "family_key": "action:safe-railway",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "action:safe-railway:2026-10-23"
+      ],
+      "source_url": "https://blog.railway.com/p/security-disclosure-wednesday-october-21st",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "在Railway存储过环境变量/私有密钥的账号优先从官方仪表盘执行轮换并核查异常调用；同时关注被平台自动重置的GitHub/存储桶凭据和重新连接要求。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    },
+    {
+      "event_key": "action:crypto-risk:2026-10-23",
+      "family_key": "action:crypto-risk",
+      "material_version": "obs-2026-10-23",
+      "aliases": [
+        "action:crypto-risk:2026-10-23"
+      ],
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "published_at": "2026-10-23T04:35:00Z",
+      "material_delta": "当日BTC/ETH/SOL回落、纳指波动与AI基础设施事故并存，优先保障账户密钥和交易所资金可用性。安全事故不是立即做空某币的充分证据，维持预算纪律和真实可验证的止损条件。",
+      "decision": "include",
+      "reason": "new dated quote, observed market state or distinct material security event"
+    }
+  ],
+  "empty_section_reasons": [],
+  "internal_notes": {
+    "source_truth": "Actual BKK Oct23 11:38 binance, firstparty Oct21 security, AP Oct22 completed US closing",
+    "exchange_oi": "BTCUSDT 94886.756 BTC point in time",
+    "source_gap": [
+      "onchain",
+      "early_nft"
+    ],
+    "metadata": "Do not reclassify a personal CCA as global top5"
+  }
+}
