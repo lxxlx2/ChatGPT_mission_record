@@ -17,7 +17,7 @@ Required decisions:
 - Raw `getTokenLargestAccounts` returns only 20 **token accounts**. If LP/vault/public addresses are removed, computing an exact *eligible owner Top10* generally requires additional holder ranks beyond those initial 20 and owner aggregation. Partial known-label figures must be disclosed as partial; no false complete Top10 percentages.
 - `0` probable-control estimate means no qualifying evidence *within the searched sample*; unknown wallet attribution and shared-infrastructure links must be separately reported.
 - **External narrative research is mandatory**, citing exact-CA public evidence, distinguishing market chatter, claimed official support and verified official recognition. Merely showing website/X links is incomplete.
-- Remove the inherited `$30` Jupiter quote from **generic CA analysis**. The existing standalone Frank follow policy and $30 quote are **not changed or revoked**.
+- Remove all inherited preset Jupiter executable quotes from generic CA analysis and from the Frank follow policy. The user alone selects whether, how and how much to trade; monitoring cannot infer an order size.
 - Do not label an incomplete job `ANALYSIS_COMPLETE`. Return `PARTIAL` while collecting, or `INCOMPLETE_EVIDENCE` with specific blockers and attempted alternative sources after collection, while preserving verified facts.
 - Never deploy, restart or modify production as part of documenting this change. Independent review and real Mac evidence are required before authorizing implementation rollout.
 

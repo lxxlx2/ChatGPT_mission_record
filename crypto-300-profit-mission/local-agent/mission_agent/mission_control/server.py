@@ -15,7 +15,6 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from decimal import Decimal
 from urllib.parse import parse_qs, urlparse
 
 from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
@@ -109,42 +108,6 @@ def _atomic_write_text(path: Path, text_value: str):
             pass
 
 
-CA_QUOTE_TTL_SECONDS = 30
-
-
-def _annotate_ca_quote(quote: dict, *, now: float | None = None, archived: bool = False) -> dict:
-    """An archived quote is never certified current; HTTP consumers get a live expiry check."""
-    result = dict(quote)
-    try:
-        observed = float(result.get("observed_at"))
-        if not math.isfinite(observed) or observed <= 0:
-            observed = None
-    except (TypeError, ValueError):
-        observed = None
-    valid_until = observed + CA_QUOTE_TTL_SECONDS if observed is not None else None
-    result["valid_until"] = valid_until
-    result["quote_record_type"] = "HISTORICAL_SNAPSHOT"
-    result["freshness_ttl_seconds"] = CA_QUOTE_TTL_SECONDS
-    if archived:
-        result["freshness_status"] = "ARCHIVED_NOT_LIVE"
-        result["is_current_at_response"] = False
-    else:
-        checked_at = time.time() if now is None else float(now)
-        fresh = (
-            result.get("status") == "OK" and result.get("route_exists") is True
-            and result.get("execution_price_usdc") is not None
-            and result.get("price_impact_pct") is not None
-            and valid_until is not None
-            and observed <= checked_at <= valid_until
-        )
-        result["freshness_checked_at"] = checked_at
-        result["freshness_status"] = ("CURRENT_AT_RESPONSE" if fresh else
-                                       "EXPIRED" if valid_until is not None and checked_at > valid_until else
-                                       "UNAVAILABLE")
-        result["is_current_at_response"] = bool(fresh)
-    return result
-
-
 SOLANA_PUBKEY_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
 CLUSTER_PRESETS = {
     "quick": {
@@ -208,10 +171,10 @@ class ClusterJobManager:
         public = {k: v for k, v in job.items() if k not in {"future"}}
         preview = job.get("preview")
         if isinstance(preview, dict):
-            public["preview"] = dict(preview)
-            quote = preview.get("execution_quote_30_usdc")
-            if isinstance(quote, dict):
-                public["preview"]["execution_quote_30_usdc"] = _annotate_ca_quote(quote)
+            # Old quote snapshots were made for a non-user-authorized preset.
+            # Do not resurface them as current executable prices.
+            public["preview"] = {k: v for k, v in preview.items()
+                                 if k != "execution_quote_30_usdc"}
         return public
 
     def _prune_jobs_locked(self):
@@ -312,40 +275,6 @@ class ClusterJobManager:
                 elif stage=="HOLDERS_READY" and isinstance(job.get("preview"),dict):
                     job["preview"]["raw_top10_resolved_pct"]=details.get("raw_top10_resolved_pct")
                     job["preview"]["top_accounts_resolved"]=details.get("top_accounts_resolved")
-        # BASE_READY is emitted before slow Top20/funding history. Fetch a
-        # read-only, time-stamped execution quote now so the trader sees it
-        # while history scans. The final report still refreshes the quote
-        # after history completes; an early quote must not be reused as fresh.
-        if stage=="BASE_READY":
-            profile=details.get("token_profile") or {}
-            decimals=profile.get("decimals")
-            if profile.get("status")!="OK" or type(decimals) is not int or not 0 <= decimals <= 18:
-                early_quote={
-                    "status":"UNAVAILABLE","reason":"TOKEN_DECIMALS_UNKNOWN",
-                    "source":"JUPITER_OFFICIAL","observed_at":time.time(),
-                }
-            else:
-                try:
-                    response=self.jupiter.quote_usdc_to_token(
-                        self.jobs[job_id]["mint"],decimals,
-                        usdc_amount=Decimal("30"),slippage_bps=100,
-                    )
-                    early_quote={
-                        key:response.get(key) for key in (
-                            "status","reason","source","observed_at","route_exists",
-                            "execution_price_usdc","price_impact_pct",
-                        )
-                    }
-                except Exception as exc:
-                    early_quote={
-                        "status":"UNAVAILABLE","reason":type(exc).__name__,
-                        "source":"JUPITER_OFFICIAL","observed_at":time.time(),
-                    }
-            with self.lock:
-                job=self.jobs.get(job_id)
-                if job is not None and job.get("status")=="RUNNING" and isinstance(job.get("preview"),dict):
-                    job["preview"]["execution_quote_30_usdc"]=early_quote
-
     @staticmethod
     def _extension_semantic_config(value):
         accounting_only={"withheldamount"}
@@ -552,23 +481,7 @@ class ClusterJobManager:
                 market_client=self.market_client,
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
-            try:
-                report["execution_quote_30_usdc"]=self.jupiter.quote_usdc_to_token(
-                    mint,
-                    int(report["decimals"]),
-                    usdc_amount=Decimal("30"),
-                    slippage_bps=100,
-                )
-            except Exception as exc:
-                report["execution_quote_30_usdc"]={
-                    "status":"UNAVAILABLE",
-                    "source":"JUPITER_OFFICIAL",
-                    "reason":type(exc).__name__,
-                }
             self._set_progress(job_id,"REPORT_PERSISTING",{"deep_holders_scanned":(report.get("coverage") or {}).get("deep_holders_scanned"),"adaptive_deepened":len((report.get("coverage") or {}).get("adaptive_deepened_owners") or [])})
-            report["execution_quote_30_usdc"] = _annotate_ca_quote(
-                report.get("execution_quote_30_usdc") or {}, archived=True,
-            )
             stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
             out = self.report_root / mint
             out.mkdir(parents=True, exist_ok=True)
@@ -620,9 +533,9 @@ class ClusterJobManager:
             return None
         try:
             report = json.loads(path.read_text())
-            quote = report.get("execution_quote_30_usdc")
-            if isinstance(quote, dict):
-                report["execution_quote_30_usdc"] = _annotate_ca_quote(quote)
+            # Previously saved fixed-notional quotes are stale historical
+            # research and must not appear in fresh CA analysis.
+            report.pop("execution_quote_30_usdc", None)
             return report
         except (OSError, ValueError):
             return None

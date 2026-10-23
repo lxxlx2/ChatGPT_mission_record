@@ -62,9 +62,23 @@ class JupiterQuoteClient:
         mint: str,
         token_decimals: int,
         *,
-        usdc_amount: Decimal = Decimal("30"),
+        usdc_amount: Decimal | None = None,
         slippage_bps: int = 100,
     ) -> dict:
+        # Only caller-requested amounts are quotable. There is no preset
+        # transaction size and this method never chooses how much to buy.
+        if usdc_amount is None:
+            return {"status": "UNAVAILABLE", "reason": "USER_ORDER_AMOUNT_NOT_SPECIFIED",
+                    "source": "JUPITER_OFFICIAL", "observed_at": time.time()}
+        try:
+            usdc_amount = Decimal(str(usdc_amount))
+            if not usdc_amount.is_finite() or usdc_amount <= 0:
+                raise ValueError("INVALID_USER_ORDER_AMOUNT")
+            if usdc_amount * Decimal(10**6) != (usdc_amount * Decimal(10**6)).to_integral_value():
+                raise ValueError("USDC_PRECISION_UNSUPPORTED")
+        except (InvalidOperation, TypeError, ValueError):
+            return {"status": "UNAVAILABLE", "reason": "INVALID_USER_ORDER_AMOUNT",
+                    "source": "JUPITER_OFFICIAL", "observed_at": time.time()}
         now = time.monotonic()
         not_before = max(
             self._last_request_monotonic + self.minimum_interval_seconds,
