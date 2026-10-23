@@ -259,6 +259,30 @@ def paired_replay(index_path, *, lane_dir=None, allow_synthetic_cohort=False):
                 raise RuntimeError('PAIR_D0_WATCH_EVENT_OR_TIMESTAMP_DRIFT')
             a=events(lanes['FIFO8'],'SETUP_ACTIVE')
             b=events(lanes['FAIR8'],'SETUP_ACTIVE')
+            def event_inventory(db,kind):
+                # Actual immutable original-core events; these are historical
+                # proxy signals, not live PIT receipts or executable orders.
+                return [
+                    {'event_id':row['event_id'],'venue':row['venue'],
+                     'symbol':row['symbol'],'event_type':kind,
+                     'observed_ms':row['observed_ms'],
+                     'details':json.loads(row['payload'])}
+                    for row in db.execute(
+                        'SELECT event_id,venue,symbol,observed_ms,payload '
+                        'FROM events WHERE event_type=? '
+                        'ORDER BY observed_ms,event_id',(kind,))]
+            fifo_watch_events=event_inventory(lanes['FIFO8'],'WATCH_EARLY')
+            fair_watch_events=event_inventory(lanes['FAIR8'],'WATCH_EARLY')
+            fifo_setup_events=event_inventory(lanes['FIFO8'],'SETUP_ACTIVE')
+            fair_setup_events=event_inventory(lanes['FAIR8'],'SETUP_ACTIVE')
+            if fifo_watch_events!=fair_watch_events:
+                raise RuntimeError('PAIR_D0_WATCH_PAYLOAD_DRIFT')
+            for rows,by_id in ((fifo_watch_events,aw),
+                               (fair_watch_events,bw),
+                               (fifo_setup_events,a),
+                               (fair_setup_events,b)):
+                if {row['event_id']:row['observed_ms'] for row in rows}!=by_id:
+                    raise RuntimeError('PAIR_EVENT_INVENTORY_OR_COUNT_DRIFT')
             def d0_baseline_lag_audit(db):
                 # Original D0 permits up to 10m between observed snapshots.
                 # A 3m-classified WATCH after a gap may actually use a 6m or
@@ -345,6 +369,11 @@ def paired_replay(index_path, *, lane_dir=None, allow_synthetic_cohort=False):
                 'd0_watch_3m_baseline_audit':fifo_lag,
                 'watch_with_lagged_baseline_not_strict_3m':fifo_lag[
                     'watch_chosen_3m_but_actual_baseline_not_3m'],
+                'fifo_watch_events':fifo_watch_events,
+                'fair8_watch_events':fair_watch_events,
+                'fifo_setup_events':fifo_setup_events,
+                'fair8_setup_events':fair_setup_events,
+                'setup_event_source_grade':'POSTHOC_OFFICIAL_1M_TICKER_PROXY_NOT_PIT_EXECUTION',
                 'fifo_setups':len(a),'fair8_setups':len(b),
                 'lost_setup_ids':sorted(a.keys()-b.keys()),
                 'new_setup_ids':sorted(b.keys()-a.keys()),
