@@ -90,7 +90,8 @@ def validate_offline_bundle(permit_raw, expected_sha, proofs,
 
 def run_gated_fake_session(source, evidence_root, *, permit_raw,
                            expected_sha, proofs, test_only_trust_roots,
-                           checkout_root, reviewed_files, now):
+                           checkout_root, reviewed_files, now,
+                           test_only_fake_post_utc_clock=None):
     """Fake-only end-to-end rehearsal: checks -> fake dispatch -> raw audit.
 
     The only worker type accepted is the original in-memory FakeSource.
@@ -111,6 +112,15 @@ def run_gated_fake_session(source, evidence_root, *, permit_raw,
     # dynamically scoped raw limits require a separate source review.
     if permit["max_response_bytes"] != 2_000_000:
         raise ValueError("D1_BUNDLE_RAW_LIMIT_NOT_ENFORCEABLE")
+    post_gate=None
+    if test_only_fake_post_utc_clock is not None:
+        if type(source) is not SealedMemoryHTTPSSource:
+            raise ValueError("D1_BUNDLE_POST_UTC_REQUIRES_SEALED_FAKE")
+        # The test clock cannot grant actual network permission.
+        # Real UTC is independently required at D2 and the actual socket.
+        from f0_l2_d1_post_utc import OfflinePostUTCWindow
+        post_gate=OfflinePostUTCWindow(
+            permit_raw,expected_sha,test_only_fake_post_utc_clock)
     # The approved coordinator stays the sole owner of the 3 shared slots,
     # request IDs and globally spaced fake starts; no alternate sender path.
     result = run_fake_concurrent(
@@ -123,6 +133,7 @@ def run_gated_fake_session(source, evidence_root, *, permit_raw,
         head_ttl_ms=permit["head_ttl_ms"],
         window_ms=permit["max_dispatch_seconds"] * 1000,
         max_block_response_ms=permit["request_timeout_ms"],
+        fake_post_utc_window=post_gate,
     )
     audited = reconcile_saved_attempts(evidence_root)
     return {
