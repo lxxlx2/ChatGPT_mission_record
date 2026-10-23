@@ -1,0 +1,151 @@
+#!/usr/bin/env python3
+"""D1 concrete HTTPS client code for OFFLINE injected-socket review only.
+
+There is intentionally NO public network-capable entrypoint. send_live()
+always denies, and this private review function is NOT a production grant
+gate. Tests replace http.client.HTTPSConnection before every invocation.
+A later D2 review must bind the concrete sender to a trustworthy fixed
+runtime, audited identity, permanently consumed grant and global scheduler.
+"""
+from __future__ import annotations
+
+import hashlib
+import http.client
+import ssl
+import time
+
+from f0_l1_http_wire import MAX_BODY_BYTES, json_body, parse_http_response
+from f0_l2_d1_https import HOST, PORT
+
+MAX_REQUEST_BYTES = 2000
+
+
+def send_live(*_args, **_kwargs):
+    raise ValueError("D1_CONCRETE_HTTPS_LIVE_DISABLED_REQUIRES_D2")
+
+
+def _review_concrete_https_once(request, *, final_post_guard,
+                                timeout_s=5.0, max_bytes=MAX_BODY_BYTES):
+    """Review concrete connection lifecycle with constructor PATCHED in tests.
+
+    This PRIVATE primitive, like any low-level network library, is callable by
+    arbitrary Python code. It is NOT an authorization mechanism and must NOT
+    be invoked with a real constructor while D2 is blocked.
+
+    TLS connect can already send packets BEFORE final_post_guard. A
+    post_attempted_at timestamp is the Python conn.request() call boundary,
+    NOT proven physical HTTPS byte emission. All attempted POSTs are
+    irrevocably uncertain on write/read exceptions and NEVER retryable.
+    """
+    if (not callable(final_post_guard) or
+            type(timeout_s) not in (int, float) or isinstance(timeout_s, bool) or
+            not 0 < timeout_s <= 5 or type(max_bytes) is not int or
+            not 0 < max_bytes <= MAX_BODY_BYTES):
+        raise ValueError("D1_CONCRETE_HTTP_CONFIG_INVALID")
+    body = json_body(request)
+    if len(body) > MAX_REQUEST_BYTES:
+        raise ValueError("D1_CONCRETE_HTTP_BODY_TOO_LARGE")
+
+    context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+    if not context.check_hostname or context.verify_mode != ssl.CERT_REQUIRED:
+        raise ValueError("D1_CONCRETE_HTTP_TLS_VERIFY_REQUIRED")
+
+    conn = None
+    phase = "BEFORE_CONNECT"
+    connect_attempted_at = None
+    connected_at = None
+    post_attempted_at = None
+    completed_at = None
+    raw_frame = None
+    failure = None
+    raw_prefix_sha256 = None
+    try:
+        # The ONLY concrete constructor. No URL, arbitrary host, proxy,
+        # tunnel, credential, environment-based routing or HTTP redirect.
+        conn = http.client.HTTPSConnection(
+            HOST, port=PORT, timeout=float(timeout_s), context=context)
+        phase = "CONNECT_ATTEMPTED"
+        connect_attempted_at = time.monotonic()
+        conn.connect()
+        if getattr(conn, "sock", None) is None:
+            raise ValueError("D1_CONCRETE_HTTP_NO_TLS_SOCKET")
+        connected_at = time.monotonic()
+        phase = "CONNECTED"
+        # A true production guard must be immutable, independently
+        # authenticated and shared with the coordinator. D1 lacks it.
+        final_post_guard(request)
+        post_attempted_at = time.monotonic()
+        phase = "POST_ATTEMPTED"
+        conn.request("POST", "/", body=body, headers={
+            "Host": HOST,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Accept-Encoding": "identity",
+            "Connection": "close",
+        })
+        response = conn.getresponse()
+        status = response.status
+        hdrs = response.getheaders()
+        if (type(status) is not int or type(hdrs) is not list or
+                not all(type(k) is str and type(v) is str for k, v in hdrs)):
+            raise ValueError("D1_CONCRETE_HTTP_RESPONSE_METADATA_INVALID")
+        header_names = [name.lower() for name, _ in hdrs]
+        if len(header_names) != len(set(header_names)):
+            raise ValueError("D1_CONCRETE_HTTP_DUPLICATE_HEADER")
+        headers = {name.lower(): value for name, value in hdrs}
+        # Status 503 or 302 must preserve the RAW frame for audit, but
+        # parsing a successful RPC is a SEPARATE later decision.
+        data = response.read(max_bytes + 1)
+        completed_at = time.monotonic()
+        if type(data) is not bytes or len(data) > max_bytes:
+            if type(data) is bytes:
+                raw_prefix_sha256 = hashlib.sha256(data).hexdigest()
+            raise ValueError("D1_CONCRETE_HTTP_OVERSIZED_OR_INVALID_RAW")
+        raw_frame = (status, headers, data)
+        phase = "RAW_RECEIVED"
+        if 300 <= status < 400:
+            failure = "D1_CONCRETE_HTTP_REDIRECT_REFUSED"
+        elif headers.get("content-encoding", "identity").lower() != "identity":
+            failure = "D1_CONCRETE_HTTP_COMPRESSED_REFUSED"
+    except Exception as exc:
+        if phase == "CONNECTED":
+            failure = "D1_CONCRETE_HTTP_PREPOST_GUARD_DENIED"
+        elif isinstance(exc, ValueError) and str(exc).startswith(
+                "D1_CONCRETE_HTTP_"):
+            failure = str(exc)
+        else:
+            failure = "D1_CONCRETE_HTTP_" + phase + "_UNCERTAIN"
+    finally:
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:
+                if failure is None:
+                    failure = "D1_CONCRETE_HTTP_CLOSE_UNCERTAIN"
+
+    return {
+        "mode": "D1_CONCRETE_SOURCE_CODE_OFFLINE_REVIEW_ONLY",
+        "state": "RAW" if failure is None else "FAILED",
+        "failure": failure,
+        "phase": phase,
+        "connect_attempted_at": connect_attempted_at,
+        "connected_at": connected_at,
+        "post_attempted_at": post_attempted_at,
+        "response_completed_at": completed_at,
+        "raw_frame": raw_frame,
+        "raw_prefix_sha256": raw_prefix_sha256,
+        "retry_allowed": False,
+        "trusted_prepost_guard": False,
+        "trusted_user_or_reviewer": False,
+        "real_production_grant_available": False,
+        "physical_socket_send_time_proven": False,
+        "production": "NO_GO",
+    }
+
+
+def _parse_review_frame_offline(result, request):
+    if (type(result) is not dict or result.get("state") != "RAW"
+            or result.get("mode") !=
+            "D1_CONCRETE_SOURCE_CODE_OFFLINE_REVIEW_ONLY"):
+        raise ValueError("D1_CONCRETE_HTTP_NOT_SUCCESSFUL_FRAME")
+    return parse_http_response(*result["raw_frame"], request)
