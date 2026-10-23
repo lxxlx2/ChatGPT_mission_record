@@ -1,3 +1,11 @@
+# 2026-10-24 F0 D1 PR181 — TLS connect / POST attempt separation, Mac review PENDING
+
+- Frozen parent PR180 `e0af79fcf564aa3d5de826003e8ec0b5f6b49469` independently Mac `APPROVE_OFFLINE_CODE — D1_POST_UTC_FAKE_SCOPE_ONLY` (442/442 full, **81/81 D1 focused**, 6 UTC tests); no new P0/P1.
+- New child PR181 adds `f0/f0_l2_d1_tls_phases.py`, 7 focused regression tests and `f0/F0_L2_D1_TLS_PHASE_MOCK.md`: separate **TLS connect attempted** from **HTTP POST call attempted**, require final test-only gate AFTER mock connect, preserve no-retry failure/unknown and 503 RAW response, close on error. Exact injected fake connection factory only, no default actual HTTPS factory. Physical POST bytes are **NOT** measured and this is NOT the real HTTPS sender. Existing `send_live()` still denies.
+- Update D1 matrix J-06 only to `TLS_PHASE_MOCK_CI_PASS / MAC_REVIEW_PENDING`. Independent fixed SHA Mac audit required; no new actual RPC/WS, production signers, permit/nonce, merge/deploy, monitoring task or trading. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-24 — F0 D1 PR180: signed UTC at in-memory HTTPS POST, review pending
 
 - Frozen approved parent PR179 SHA `e65e8bf3ceca4436e8adce9db6a1ce9c037e8e88`, Mac `APPROVE_OFFLINE_CODE — D1_REVIEW_PIN_SCOPE_ONLY` (436/436 full, 75/75 D1 focused, six pinned-reference tests), no mainline P0/P1.
