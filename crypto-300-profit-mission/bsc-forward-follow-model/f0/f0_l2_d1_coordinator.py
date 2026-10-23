@@ -243,7 +243,7 @@ class GlobalStartGate:
         self.starts = []
 
     def run(self, request, source, *, block_head_deadline, dispatch_deadline,
-            timeout_ms):
+            timeout_ms, fake_post_utc_window=None):
         if type(source) is SealedMemoryHTTPSSource:
             # Prepare the fake TLS connection before acquiring the global
             # start lock. Gate the actual in-memory POST, not worker entry.
@@ -259,6 +259,21 @@ class GlobalStartGate:
                     if (block_head_deadline is not None and
                             when >= block_head_deadline):
                         raise _FakeHTTPSStartDenied("PRESTART_STALE_HEAD")
+                    # LAST UTC check happens after fake TLS/context setup and
+                    # the global spacing wait, directly at in-memory POST.
+                    # An invalid/expired test permit never starts FakeSource.
+                    if fake_post_utc_window is not None:
+                        try:
+                            fake_post_utc_window.check_at_fake_post(request)
+                        except (ValueError, TypeError):
+                            raise _FakeHTTPSStartDenied(
+                                "PRESTART_OFFLINE_PERMIT_UTC_DENIED")
+                    when = time.monotonic()
+                    if when >= dispatch_deadline or (
+                        block_head_deadline is not None and
+                        when >= block_head_deadline
+                    ):
+                        raise _FakeHTTPSStartDenied("PRESTART_WINDOW_EXPIRED")
                     self.last = when
                     self.starts.append((request["id"], request["method"], when))
                     began[0] = when
@@ -314,7 +329,8 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
                         max_blocks=24, max_refreshes=6, spacing_ms=250,
                         slots=3, head_ttl_ms=4000, window_ms=60000,
                         max_block_response_ms=5000,
-                        head_min_poll_age_ms=1000):
+                        head_min_poll_age_ms=1000,
+                        fake_post_utc_window=None):
     """No permit or live network entry. Thread workers are fake only.
 
     Any invalid input is rejected; concurrent workers cannot allocate IDs,
@@ -335,6 +351,13 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
          250 <= head_min_poll_age_ms < head_ttl_ms
          and max_total <= max_blocks + max_refreshes + 2,
          "D1_SCOPE_INVALID")
+    if fake_post_utc_window is not None:
+        # Import only at run-time: post_utc consumes the bundle's strict
+        # permit reader; module imports must remain free of cyclic imports.
+        from f0_l2_d1_post_utc import OfflinePostUTCWindow
+        need(type(source) is SealedMemoryHTTPSSource and
+             type(fake_post_utc_window) is OfflinePostUTCWindow,
+             "D1_POST_UTC_FAKE_ONLY")
     begin = time.monotonic()
     dispatch_deadline = begin + window_ms / 1000
     gate = GlobalStartGate(spacing_ms)
@@ -392,7 +415,8 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
         fut = executor.submit(gate.run, payload, source,
                               block_head_deadline=dead_head,
                               dispatch_deadline=dispatch_deadline,
-                              timeout_ms=max_block_response_ms)
+                              timeout_ms=max_block_response_ms,
+                              fake_post_utc_window=fake_post_utc_window)
         pending[fut] = entry
         peak_slots = max(peak_slots, len(pending))
 
@@ -555,6 +579,8 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
                                      if type(source) is SealedMemoryHTTPSSource
                                      else "D1_OFFLINE_FAKE_ONLY"),
         "network_requests":0, "no_live_sender":True,
+        "fake_post_utc_checks":(fake_post_utc_window.checked_fake_posts
+                                if fake_post_utc_window is not None else None),
         "real_user_grant_active":False,
         "stop":stop,
         "reserved":len(reservations), "physically_started_fake":len(starts),
