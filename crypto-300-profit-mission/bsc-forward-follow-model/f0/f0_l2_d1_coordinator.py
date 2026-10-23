@@ -396,6 +396,15 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
         pending[fut] = entry
         peak_slots = max(peak_slots, len(pending))
 
+    def record_hard_stop(reason):
+        nonlocal stop
+        # The finite request budget can be reached before responses finish.
+        # A later in-flight 503/bad JSON/chain integrity failure must remain
+        # visible in the final stop reason and performance decision.
+        if stop in (None,"BLOCK_BUDGET","HEAD_BUDGET","TOTAL_BUDGET",
+                    "DISPATCH_TIME_CAP"):
+            stop = reason
+
     def completion(future):
         nonlocal head, head_completed, next_height, next_commit, chain_ok
         nonlocal head_pending, received_full, last_committed_hash, stop
@@ -442,7 +451,7 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
             log.settle(rid,settlement,raw)
         except (OSError,ValueError) as exc:
             # If raw bytes cannot be persisted, do not claim success.
-            stop = stop or "RAW_OR_SETTLEMENT_FSYNC_FAILED"
+            record_hard_stop("RAW_OR_SETTLEMENT_FSYNC_FAILED")
             faults.append({"id":rid,"height":height,
                            "reason":"D1_ARCHIVE_NOT_DURABLE"})
             settles.append({"id":rid,"state":"UNKNOWN",
@@ -452,7 +461,7 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
         if state != "RPC_RESPONSE":
             faults.append({"id":rid, "height":height,
                            "reason":reason, "category":category})
-            stop = stop or "RPC_OR_HEAD_FAULT"
+            record_hard_stop("RPC_OR_HEAD_FAULT")
             if category in ("HEAD","INITIAL_HEAD"):
                 head_pending = False
             return
@@ -485,7 +494,7 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
                              "kind":"CHAIN_INTEGRITY"}
                     faults.append(fault)
                     log.add({"event":"CHAIN_INTEGRITY_FAULT",**fault})
-                    stop = stop or "CHAIN_FAULT"
+                    record_hard_stop("CHAIN_FAULT")
                     break
                 del parsed_blocks[next_commit]
                 log.add({"event":"COMMIT_CONTIGUOUS",
