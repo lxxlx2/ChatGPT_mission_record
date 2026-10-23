@@ -9,8 +9,8 @@ import re
 from f0_l2_d1_grant import _public_key_fingerprint
 from f0_l2_d1_inventory_gate import verify_test_inventory_attestation
 
-HEX40 = re.compile(r"[0-9a-f]{40}\\Z")
-HEX64 = re.compile(r"[0-9a-f]{64}\\Z")
+HEX40 = re.compile(r"[0-9a-f]{40}")
+HEX64 = re.compile(r"[0-9a-f]{64}")
 
 
 @dataclass(frozen=True)
