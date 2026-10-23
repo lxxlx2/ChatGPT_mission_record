@@ -1,0 +1,130 @@
+{
+  "outcome": "BLOCKED",
+  "interpreter_provenance": "UNRESOLVED_OWNER_ACCEPTED_FOR_OFFLINE_IMPORT_ONLY",
+  "safety": {
+    "REAL_RPC": 0,
+    "PROD_HTTP_GET": 0,
+    "RESTARTS": 0,
+    "DEPLOYS": 0,
+    "MERGES": 0,
+    "NOTIFICATIONS": 0,
+    "TRADES": 0,
+    "SQLITE_READS": 0,
+    "SQLITE_WRITES": 0
+  },
+  "fixed_refs": {
+    "60": "e4529ba7069e5499d12323a7160ceac08c481fae",
+    "174": "a14846f16e68fd0899ab5506d8c2f0c91272df48",
+    "178": "ea9a7715beb4d2a55ae956bf993828cbddcb50e5"
+  },
+  "source_manifests": [
+    {
+      "sha": "e4529ba7069e5499d12323a7160ceac08c481fae",
+      "files": 457,
+      "manifest_sha256": "e81c0488f9d97367fbfc716d9cc3303c1dc19d2acfadb33bd4288b5619418bc2"
+    },
+    {
+      "sha": "ea9a7715beb4d2a55ae956bf993828cbddcb50e5",
+      "files": 446,
+      "manifest_sha256": "d4f83d27fb91630fe3c67aefa287ca3bfee8af98470632634cce7b7ef4b9862c"
+    }
+  ],
+  "original_raw_hashes": {
+    "manifest.json": "f06df53ccfb8b96e1b92f428620311cf62bd6bb44f9b83fd7e126f2ee5b1f88b",
+    "spl-token.json": "f77120c050a6d014dd53d41fd9d0e8392f34ab31b91155bfa30e18334ab3b682",
+    "token-2022.json": "a327bf34f0e5bf10994662e937704d74098464cc5fddeb2ab4ce77e9ac2c58c2"
+  },
+  "installed_sha": "656ed2c96f4210d106d7b1129ec6cf8d7c4586f3",
+  "failure": {
+    "gate": "B02_POST_PERMISSION_ACCESS",
+    "reason": "BLOCKED_SHARED_CONTROL_PERMISSION_IMPACT",
+    "expected": "Open-file consumer is recognized service",
+    "observed": "UNRECOGNIZED_OPEN_FILE_CONSUMER"
+  },
+  "rollback": {
+    "attempted": true,
+    "new_file_removed": false,
+    "mode_restored": true,
+    "status": "RESTORED_0755_TARGET_ABSENT_SERVICE_IDENTITY_READBACK_PASSED"
+  },
+  "gates": [
+    {
+      "gate": "A01_SOURCE_PIN",
+      "status": "PASS",
+      "evidence": {
+        "fixed_remote_and_detached_bytes": true,
+        "original_three_hashes": true
+      }
+    },
+    {
+      "gate": "A02_LIVE_SERVICE",
+      "status": "PASS",
+      "evidence": {
+        "three_current_services_identified": true,
+        "entry_flags_listener_match": true,
+        "installed_files": 437,
+        "runner_hash_matches": true,
+        "interpreter_origin": "UNRESOLVED_NONBLOCKING_ONLY_PER_NEW_AUTHORIZATION"
+      }
+    },
+    {
+      "gate": "A03_EXACT_SHARED_DIRECTORY",
+      "status": "PASS",
+      "evidence": {
+        "physical_owner_identity_verified": true,
+        "mode_before": "0755",
+        "not_git": true,
+        "derived_from_runner_and_live_flag": true
+      }
+    },
+    {
+      "gate": "A04_OTHER_SERVICE_IMPACT",
+      "status": "PASS",
+      "evidence": {
+        "known_service_count": 3,
+        "observed_consumer_count": 3,
+        "recognized_config_references": 2,
+        "effective_uids_equal_owner": true,
+        "no_acl_or_flags": true,
+        "observed_unknown_or_cross_uid_consumers": 0,
+        "future_unobserved_consumers_not_proven": true
+      }
+    },
+    {
+      "gate": "A05_NO_OVERWRITE",
+      "status": "PASS",
+      "evidence": {
+        "target_absent_nonfollowing": true
+      }
+    },
+    {
+      "gate": "B01_SINGLE_DIRECTORY_MODE",
+      "status": "PASS",
+      "evidence": {
+        "one_directory_fchmod": "0755_TO_0700",
+        "same_owner_device_inode": true,
+        "recursive": false
+      }
+    },
+    {
+      "gate": "B02_POST_PERMISSION_ACCESS",
+      "status": "FAIL",
+      "evidence": {
+        "gate": "B02_POST_PERMISSION_ACCESS",
+        "reason": "BLOCKED_SHARED_CONTROL_PERMISSION_IMPACT",
+        "expected": "Open-file consumer is recognized service",
+        "observed": "UNRECOGNIZED_OPEN_FILE_CONSUMER"
+      }
+    }
+  ],
+  "exporter_invocations": 0,
+  "directory_mode_changed": true,
+  "finished_at_utc": "2026-10-23T23:28:22.838117+00:00",
+  "closeout_readback": {
+    "control_mode": "0755",
+    "target_absent": true,
+    "control_owner_is_executor": true,
+    "directory_flags": 0
+  },
+  "diagnostic_limitation": "B02 inventory did not allowlist executor own directory descriptor opened by B01; unknown PID was not retained, cannot classify it conclusively or infer a legitimate-service access failure."
+}
