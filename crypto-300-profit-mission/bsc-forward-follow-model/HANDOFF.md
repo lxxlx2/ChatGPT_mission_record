@@ -1,3 +1,12 @@
+# 2026-10-23 D1 continuation PR171 — independent review required
+
+- Parent PR170 fixed SHA 022f6a4668014af051fc3a1e98a254f5149cc3f7 independently Mac APPROVE_OFFLINE_CODE — D1_PARTIAL_SCOPE_ONLY, 383/383 full, 22/22 focused PASS, two prior P1 closed.
+- Child PR171 implements offline fixed HEAD/manifest and UTC scope validators, default-denied HTTPS seam with fake-connection safety tests, and read-only crash/duplicate/raw-hash reconciliation. Original parent code unchanged; no new live activation.
+- Detailed mapping and unresolved G-02/G-03/G-04/J-06/J-08/J-10/M-02/M-03 in f0/F0_L2_D1_CONTINUATION.md. Production user/reviewer identities, exact signed live permit, full trusted dependency closure, actual TLS sender integration, and authentic real HEAD sample NOT done. Do not call these gates PASSED.
+- Final PR171 SHA Mac independent source/test review pending, no new RPC/WS, no permit/nonce, no merge/deploy/daemon. Old actual 30-call grant consumed. F0_NOT_PASSED / PRODUCTION_NO_GO.
+
+---
+
 # 2026-10-23 PR170 P1 review r2 — exact new SHA to be checked
 
 - Prior PR170 fixed SHA `c72331c4c9bf12d5ded02e8c976bbf65683e0a21` independent Mac **REQUEST_CHANGES** despite Linux CI 379/379 PASS: Mac `/usr/bin/openssl` is LibreSSL 3.3.6 (Ed25519 unsupported), causing 378 PASS + 1 ERROR; and slow HEAD fsync of 4.2s let expired sample incorrectly become fresh at post-archive `time.monotonic()`.

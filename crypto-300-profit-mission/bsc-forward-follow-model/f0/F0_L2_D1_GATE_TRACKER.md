@@ -47,3 +47,13 @@ python3 -m venv "$TMPDIR/mission170-d1-ed25519-r2-venv"
 没有真实网络、未注册生产用户或审核公钥、不调用原串行真实发送器；不要生成真实 permit 或任何运行批准文件。检查本 PR 文件Git blobs、CI、不覆盖PRIVATE Journal、不修改旧 PR169。独立审核结论需针对新固定SHA明确 `APPROVE_OFFLINE_CODE` / `REQUEST_CHANGES`；若某关键矩阵行未完成则明确说明 **D1_PARTIAL**，不能签发真实运行许可。
 
 **下一门禁**：补齐 D1 的明确未完成项（真实传输源码、固定SHA全依赖校验和生产信任根通过独立方式预先登记的可验证绑定），重新独立复审；D2 用户明确给出**全新精确**运行许可后才可执行D3。原30请求授权耗尽，F0_NOT_PASSED / PRODUCTION_NO_GO。
+
+
+## PR171 continuation: G/J delta and new offline tests
+
+G-02 offline: verify_fixed_checkout_offline / test_exact_git_head_clean_files_and_symlink_denial; trusted full static manifest binding remains PENDING.
+G-03 offline: validate_window_contract / test_utc_contract_exact_bounds_and_unknown_authority / test_utc_contract_resource_and_destination_fail_closed; signed approval and real-run UTC gate remain PENDING.
+J-06 fake only: _exchange_with_factory / test_f0_l2_d1_https.py (7 focused tests); send_live unconditionally DENIED, no real origin access.
+J-08 offline only: reconcile_saved_attempts / test_duplicate_settle_and_orphan_settle_rejected / test_parent_fault_owner_and_no_cross_gap. Real duplicate packets not tested.
+J-10 offline only: test_crash_preserves_unknown_and_never_auto_retries / test_failed_rpc_settlement_is_not_valid_performance_sample / test_raw_mutation_and_truncated_jsonl_rejected. No OS interruption proof.
+Every new statement requires independent Mac review of new child SHA; previously approved PR170 does not approve child PR171.
