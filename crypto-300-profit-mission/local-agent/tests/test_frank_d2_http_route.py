@@ -5,9 +5,16 @@ Actual route methods, no socket listener, no real production DB, RPC, secrets.
 from __future__ import annotations
 
 import unittest
+import json
+from pathlib import Path
+import tempfile
 
 from mission_agent.mission_control.server import Handler
-from mission_agent.mission_control.wallet_d2_ingress import D2IngressError
+from mission_agent.mission_control.wallet_d2_ingress import (
+    D2IngressError, SOURCE_NAME, build_d2_document_from_verified_pr60_replay,
+    query_d2,
+)
+from test_frank_d2_owner_at_slot import source
 from mission_agent.mission_control.wallet_owner_at_slot import _mint_key
 
 MINT = "So11111111111111111111111111111111111111112"
@@ -97,6 +104,32 @@ class D2HttpSecurityTests(unittest.TestCase):
                 "X-Frank-D2-Read":"1","Host":"127.0.0.1:8766"})
             self.assertEqual(req.go()[0],400,url)
             self.assertEqual(req.state.calls,[],url)
+
+    def test_actual_handler_http_payload_only_exposes_scalar_coverage(self):
+        # Real handler route, real disk-backed synthetic source, no socket or RPC.
+        with tempfile.TemporaryDirectory(prefix="frank-d2-http-") as tmp:
+            root=Path(tmp)
+            root.chmod(0o700)
+            src=root/SOURCE_NAME
+            doc=build_d2_document_from_verified_pr60_replay(source())
+            src.write_text(json.dumps(doc),encoding="utf-8")
+            src.chmod(0o600)
+
+            class DiskState:
+                def frank_d2_at_slot(self,*,mint=None,page=0):
+                    return query_d2(root,mint=mint,page=page)
+
+            req=Request("/api/frank-d2-at-slot?page=0",headers={
+                "X-Frank-D2-Read":"1", "Host":"127.0.0.1:8766",
+                "Sec-Fetch-Site":"same-origin"})
+            req.state=DiskState()
+            status,body=req.go()
+            self.assertEqual(status,200)
+            self.assertEqual(len(body["rows"]),3)
+            self.assertEqual([set(c) for c in body["program_coverage"]],
+                             [{"program_id","slot","account_count"}]*2)
+            self.assertNotIn("token_accounts",json.dumps(body))
+            self.assertNotIn("accounts",json.dumps(body["program_coverage"]))
 
     def test_non_loopback_host_gate_runs_before_d2_source(self):
         req=Request("/api/frank-d2-at-slot?page=0",headers={
