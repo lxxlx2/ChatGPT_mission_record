@@ -1,4 +1,9 @@
 import copy
+import json
+from pathlib import Path
+import tempfile
+import subprocess
+import sys
 from datetime import date, datetime, timedelta, timezone
 import unittest
 from monster_v4_spot511_replay_preflight import preflight, DATES
@@ -95,6 +100,21 @@ class PreflightTests(unittest.TestCase):
         x["full_7d_exchange_listing_changes_proven"]=True
         with self.assertRaisesRegex(ValueError,"COHORT_OR_WINDOW_DRIFT"):
             preflight(x)
+
+    def test_cli_report_written_once_without_network(self):
+        with tempfile.TemporaryDirectory() as root:
+            source = Path(root) / "stage166.json"
+            dest = Path(root) / "derived.json"
+            source.write_text(json.dumps(fixture()), encoding="utf-8")
+            script = Path(__file__).with_name("monster_v4_spot511_replay_preflight.py")
+            cmd = [sys.executable, str(script), "--stage166-report", str(source),
+                   "--out", str(dest)]
+            done = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            self.assertIn("SPOT511_PREFLIGHT_ONLY", done.stdout)
+            self.assertEqual(json.loads(dest.read_text())["source_ready_symbol_ticks"], 0)
+            again = subprocess.run(cmd, capture_output=True, text=True)
+            self.assertNotEqual(again.returncode, 0)
+            self.assertIn("REFUSE_EXISTING_PREFLIGHT_OUTPUT", again.stderr)
 
     def test_aggregate_tamper_and_future_labels_ignored(self):
         x=fixture()
