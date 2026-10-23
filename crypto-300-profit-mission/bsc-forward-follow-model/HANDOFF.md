@@ -1,3 +1,12 @@
+# 2026-10-23 D1 continuation PR172 — OFFLINE bundle integration, new independent audit pending
+
+- Approved parent PR171 fixed SHA `c86b7dbf7b8f714ee68a793823dda18e9346be22`; independent Mac `APPROVE_OFFLINE_CODE — D1_CONTINUATION_SCOPE_ONLY`, full 402/402, D1 41/41, no P0/P1; older PR171 SHA `9e4b66e...` remains rejected.
+- Child Draft PR172 adds `f0/f0_l2_d1_bundle.py` and its regression tests: composed test-only two-role cryptographic verification of exact permit bytes, no duplicate/extra keys, UTC/budget+exact Git source SHA binding, before-only fake three-worker session, then persisted RAW and ordered-commit recovery audit. Actual network 0, no real keys or executable permit. Previously approved modules untouched.
+- **Important**: signing test keys, SHA manifest and UTC wall time are injected into a no-network test-only function, NOT independent production authority; the real HTTPS sender still unconditionally denies. Registry and HTTPS sender are not wired into the fake session. This is D1_PARTIAL, not D2/D3.
+- See `f0/F0_L2_D1_BUNDLE_INTEGRATION.md`; new exact SHA, CI readback and Mac independent review required. Existing user no-deploy/no-merge/no-background/no-real-RPC restrictions hold; old 30-call grant consumed. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-23 PR171 first-commit audit P1 r2 (NEW fixed SHA review pending)
 
 - Previous PR171 SHA `9e4b66e9bd119b0752a64dd37504e94b9b68d2ca`: independent Mac `REQUEST_CHANGES`. 400/400 suite and 39/39 D1 passed but real fake-coordinator ledger accepted a deleted first `COMMIT_CONTIGUOUS` as a clean suffix, core J-08/J-10 P1.
