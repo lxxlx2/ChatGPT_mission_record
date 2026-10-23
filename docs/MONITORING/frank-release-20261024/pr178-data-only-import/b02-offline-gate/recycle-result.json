@@ -1,0 +1,8 @@
+{
+  "case": "UNMANAGED_CLOSE_REOPEN_SAME_INODE",
+  "fd_number_reused": true,
+  "old_proof_accepted_after_recycle": true,
+  "assessment": "UNRESOLVED_NOT_PRODUCTION_APPROVED",
+  "metadata_limitation": "PID/start/FD/device/inode/directory type do not encode descriptor-generation identity. Managed lifecycle tests cannot prove arbitrary same-inode descriptor recycle rejection.",
+  "cleanup_synthetic_dir_removed": true
+}

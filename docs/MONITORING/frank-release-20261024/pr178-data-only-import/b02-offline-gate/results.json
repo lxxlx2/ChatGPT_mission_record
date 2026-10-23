@@ -1,0 +1,104 @@
+{
+  "verdict": "OFFLINE_B02_SELF_FD_SYNTHETIC_PASS",
+  "platform": "darwin",
+  "results": [
+    {
+      "name": "exact_self_fd_real_os_inventory",
+      "result": "PASS",
+      "evidence": {
+        "status": "PASS",
+        "counts": {
+          "EXPECTED_EXECUTOR_SELF_BOUND_DIRECTORY_FD": 1,
+          "APPROVED_SERVICE_EXACT_REFERENCE": 0,
+          "UNEXPECTED_CONSUMER": 0
+        },
+        "self_fd_exact_identity_matched": true,
+        "unexpected_consumer_count": 0
+      }
+    },
+    {
+      "name": "unrelated_process_fd_blocks",
+      "result": "PASS",
+      "evidence": {
+        "unknown_child_blocked": true,
+        "same_uid_not_whitelisted": true,
+        "separately_approved_exact_reference_works": true,
+        "counts": {
+          "EXPECTED_EXECUTOR_SELF_BOUND_DIRECTORY_FD": 1,
+          "APPROVED_SERVICE_EXACT_REFERENCE": 0,
+          "UNEXPECTED_CONSUMER": 1
+        }
+      }
+    },
+    {
+      "name": "additional_executor_fd_not_blanket_allowed",
+      "result": "PASS",
+      "evidence": {
+        "extra_fd_same_executor_blocked": true,
+        "counts": {
+          "EXPECTED_EXECUTOR_SELF_BOUND_DIRECTORY_FD": 1,
+          "APPROVED_SERVICE_EXACT_REFERENCE": 0,
+          "UNEXPECTED_CONSUMER": 1
+        }
+      }
+    },
+    {
+      "name": "synthetic_directory_permission_roundtrip",
+      "result": "PASS",
+      "evidence": {
+        "modes": [
+          "0755",
+          "0700",
+          "0755"
+        ],
+        "only_synthetic_directory": true,
+        "same_dev_inode": true
+      }
+    },
+    {
+      "name": "repeat_does_not_expand_allowlist",
+      "result": "PASS",
+      "evidence": {
+        "same_proven_live_fd_repeated": true
+      }
+    },
+    {
+      "name": "managed_close_and_recycled_same_directory_fail_closed",
+      "result": "PASS",
+      "evidence": {
+        "after_close_rejected": true,
+        "reopen_same_directory_old_proof_rejected": true
+      }
+    },
+    {
+      "name": "changed_or_missing_fd_fail_closed",
+      "result": "PASS",
+      "evidence": {
+        "changed_inode_fd_rejected": true,
+        "missing_fd_rejected": true
+      }
+    }
+  ],
+  "cleanup": {
+    "synthetic_dir_removed": true,
+    "second_dir_removed": true,
+    "final_synthetic_mode": "0755",
+    "test_child_stopped": true
+  },
+  "limitations": [
+    "Single-thread controlled Bound lifecycle; all close/reopen must use managed close. Arbitrary external close+reopen to same inode cannot be disproved from stat alone and is unsupported.",
+    "No production integration; known-service per-FD references require independent approval.",
+    "Historical B02 consumer identity remains unknown."
+  ],
+  "safety": {
+    "PROD_WRITES": 0,
+    "EXPORTER": 0,
+    "RPC": 0,
+    "PROD_HTTP": 0,
+    "RESTARTS": 0,
+    "DEPLOYS": 0,
+    "MERGES": 0,
+    "NOTIFICATIONS": 0,
+    "TRADES": 0
+  }
+}
