@@ -11,13 +11,15 @@ from decimal import Decimal
 from hashlib import sha256
 from html import escape
 import json
-from .person_registry import _solana_pubkey_32_bytes
+import re
 
 FRANK_WALLET = "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ"
 PROGRAMS = (
     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
     "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
 )
+B58 = re.compile(r"[1-9A-HJ-NP-Za-km-z]{32,44}\\Z")
+ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 CAPTURE_STATUS = "BOTH_PROGRAMS_OBSERVED_NON_ATOMIC"
 
 
@@ -47,7 +49,15 @@ def _fingerprint(snapshot):
 
 
 def _mint_key(mint):
-    return isinstance(mint, str) and _solana_pubkey_32_bytes(mint)
+    # Exact decoded 32-byte width. This adapter is deployable without PR60's
+    # research-only person_registry module (loaded separately by the CLI).
+    if not isinstance(mint, str) or not B58.fullmatch(mint):
+        return False
+    n = 0
+    for char in mint:
+        n = n * 58 + ALPHABET.index(char)
+    leading_zero_bytes = len(mint) - len(mint.lstrip("1"))
+    return leading_zero_bytes + (n.bit_length() + 7) // 8 == 32
 
 
 def project_replayed_owner(snapshot, watch, *, target_mints=(),
