@@ -130,7 +130,8 @@ class D1ConcurrentFakeTests(unittest.TestCase):
              "params":["0x3ea", True]}
         outcome=gate.run(req,source,
                          block_head_deadline=time.monotonic()-1,
-                         dispatch_deadline=time.monotonic()+2)
+                         dispatch_deadline=time.monotonic()+2,
+                         timeout_ms=5000)
         self.assertEqual(outcome["state"],"PRESTART_STALE_HEAD")
         self.assertEqual(len(gate.starts),0)
         self.assertEqual(source.block_count,0)
@@ -150,6 +151,18 @@ class D1ConcurrentFakeTests(unittest.TestCase):
                                         head_min_poll_age_ms=250)
         self.assertEqual(source.head_count,0)
         self.assertEqual(source.block_count,0)
+
+    def test_late_fake_frame_is_archived_but_not_accepted(self):
+        source=FakeSource(growth_bps=10.0,delay_ms=15,
+                          block_delay_by_ordinal={1:450})
+        r,rows=self.scenario(source=source,max_block_response_ms=250)
+        self.assertEqual(r["stop"],"RPC_OR_HEAD_FAULT")
+        failed=[e for e in rows if e["event"]=="SETTLE"
+                and e.get("reason")=="FAKE_TIMEOUT_LATE_RESPONSE"]
+        self.assertTrue(failed)
+        self.assertTrue(all("raw_name" in e for e in failed))
+        self.assertEqual(r["settled"],r["reserved"])
+        self.assertLess(r["contiguous_commits"],r["block_attempts"])
 
     def test_no_arbitrary_real_sender_or_live_authorization(self):
         class AttemptedCallback:

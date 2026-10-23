@@ -161,6 +161,18 @@ def validate_live_trust_roots_not_enrolled():
     raise ValueError("D1_LIVE_SENDER_NOT_IMPLEMENTED")
 
 
+class FixedLocalGrantRegistry:
+    """The only D1 registry factory with a non-injectable fixed Mac path.
+
+    Still OFFLINE only. Actual signed live activation is absent in D1.
+    """
+    def __init__(self):
+        self.delegate = OfflineGrantRegistry(PRIVATE_FIXED_REGISTRY)
+
+    def consume(self, grant_id: str, permit_sha256: str):
+        return self.delegate.consume(grant_id, permit_sha256)
+
+
 class OfflineGrantRegistry:
     """Fake-only lease registrar. Shared grant IDs remain spent across outputs.
 

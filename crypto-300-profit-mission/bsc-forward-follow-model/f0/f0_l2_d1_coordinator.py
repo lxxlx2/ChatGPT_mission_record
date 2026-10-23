@@ -181,7 +181,8 @@ class GlobalStartGate:
         self.last = None
         self.starts = []
 
-    def run(self, request, source, *, block_head_deadline, dispatch_deadline):
+    def run(self, request, source, *, block_head_deadline, dispatch_deadline,
+            timeout_ms):
         with self.lock:
             when = time.monotonic()
             if self.last is not None and when < self.last + self.gap:
@@ -197,6 +198,11 @@ class GlobalStartGate:
             self.starts.append((request["id"], request["method"], when))
         try:
             frame = source.reply(request)
+            # OFFLINE policy timeout: a late completed fake response must
+            # not be counted as accepted even when it contains valid JSON.
+            if (time.monotonic() - when) * 1000 > timeout_ms:
+                return {"state":"FAKE_TIMEOUT_LATE_RESPONSE",
+                        "frame":frame,"start":when}
             return {"state":"FRAME", "frame":frame, "start":when}
         except Exception as exc:
             return {"state":"EXCEPTION", "frame":None, "start":when,
@@ -281,7 +287,8 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
         dead_head = head_completed + head_ttl_ms/1000 if category == "BLOCK" else None
         fut = executor.submit(gate.run, payload, source,
                               block_head_deadline=dead_head,
-                              dispatch_deadline=dispatch_deadline)
+                              dispatch_deadline=dispatch_deadline,
+                              timeout_ms=max_block_response_ms)
         pending[fut] = entry
         peak_slots = max(peak_slots, len(pending))
 

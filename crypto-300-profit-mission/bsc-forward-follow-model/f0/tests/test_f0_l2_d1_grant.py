@@ -55,6 +55,16 @@ class D1GrantGateTests(unittest.TestCase):
                 OfflineGrantRegistry(root).consume(GRANT, "f"*64)
             self.assertEqual(len(list(root.glob("*.consumed.json"))),1)
 
+    def test_fixed_registry_factory_ignores_operator_output_directory(self):
+        from unittest.mock import patch
+        from f0_l2_d1_grant import FixedLocalGrantRegistry
+        context,root=self.private()
+        with context:
+            with patch("f0_l2_d1_grant.PRIVATE_FIXED_REGISTRY", root):
+                FixedLocalGrantRegistry().consume(GRANT,sha(sample()))
+                with self.assertRaisesRegex(ValueError,"ALREADY_CONSUMED"):
+                    FixedLocalGrantRegistry().consume(GRANT,sha(sample()))
+
     def test_two_processes_compete_and_only_one_consumes(self):
         context,root=self.private()
         with context:
