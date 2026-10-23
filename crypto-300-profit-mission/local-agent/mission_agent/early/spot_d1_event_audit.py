@@ -22,7 +22,7 @@ def _day(utc_ms):
     return datetime.fromtimestamp(utc_ms / 1000, timezone.utc).date().isoformat()
 
 
-def audit_recomputed_d1(original, independent):
+def audit_recomputed_d1(original, independent, *, require_equal_lanes=False):
     if not isinstance(original, dict) or not isinstance(independent, dict):
         _fail('OBJECTS_REQUIRED')
     original_episodes = original.get('fifo_episodes')
@@ -32,10 +32,12 @@ def audit_recomputed_d1(original, independent):
         _fail('EPISODE_ARRAY_REQUIRED')
     if original.get('same_d0_watch_id_and_time') is not True:
         _fail('D0_ID_TIME_UNCONFIRMED')
-    if original.get('fifo_setups') != original.get('fair8_setups'):
-        _fail('LANE_SETUP_COUNT_DRIFT')
-    if original.get('new_setup_ids') or original.get('lost_setup_ids') or original.get('shared_setup_time_changed_ids'):
-        _fail('LANE_SETUP_EVENT_DRIFT')
+    if require_equal_lanes:
+        if original.get('fifo_setups') != original.get('fair8_setups'):
+            _fail('LANE_SETUP_COUNT_DRIFT')
+        if (original.get('new_setup_ids') or original.get('lost_setup_ids') or
+            original.get('shared_setup_time_changed_ids')):
+            _fail('LANE_SETUP_EVENT_DRIFT')
     n = original.get('d0_watch_count')
     if type(n) is not int or n < 1 or len(original_episodes) != n or len(other_episodes) != n or len(pairs) != n:
         _fail('WATCH_DENOMINATOR_MISMATCH')
@@ -44,9 +46,15 @@ def audit_recomputed_d1(original, independent):
         if not isinstance(ep, dict) or type(ep.get('id')) is not int or ep['id'] in by_id:
             _fail('DUPLICATE_OR_BAD_QUEUE_ID')
         by_id[ep['id']] = ep
+    fair_seen = set()
     for ep in other_episodes:
-        if ep.get('id') not in by_id or any(ep.get(k) != by_id[ep['id']].get(k)
-            for k in ('symbol', 'venue', 'first_seen_ms', 'deadline_ms', 'status', 'first_valid_eval_ms')):
+        if not isinstance(ep, dict) or ep.get('id') in fair_seen or ep.get('id') not in by_id:
+            _fail('FIFO_FAIR_QUEUE_ID_DRIFT')
+        fair_seen.add(ep['id'])
+        fields = ('symbol', 'venue', 'first_seen_ms', 'deadline_ms')
+        if require_equal_lanes:
+            fields += ('status', 'first_valid_eval_ms')
+        if any(ep.get(k) != by_id[ep['id']].get(k) for k in fields):
             _fail('FIFO_FAIR_QUEUE_EPISODE_DRIFT')
     actual_ids = set()
     by_day = Counter()
@@ -102,6 +110,8 @@ def audit_recomputed_d1(original, independent):
             'nonsetup_evaluated_ids': sorted(evaluated_nonsetup),
             'late_ids': sorted(late), 'setup_counts_by_utc_day': dict(sorted(by_day.items())),
             'reconstructed_setup_events': sorted(matched, key=lambda x:(x['reconstructed_observed_ms'],x['queue_id'])),
+            'fair8_outcomes_independently_recomputed': False,
+            'require_equal_lanes': require_equal_lanes,
             'original_sqlite_event_ids_readback': False, 'historical_live_PIT': 'UNPROVEN',
             'crypto_only_identity': 'UNKNOWN', 'g4_net_executable_pnl': 'UNKNOWN',
             'G6': 'NO_GO'}
@@ -112,9 +122,12 @@ def main():
     ap = argparse.ArgumentParser(description='Read-only verification of frozen D1 event ledgers')
     ap.add_argument('--original-replay-json', required=True, type=Path)
     ap.add_argument('--independent-json', required=True, type=Path)
+    ap.add_argument('--require-equal-lanes', action='store_true',
+                    help='Only when the frozen baseline explicitly expected FIFO8/Fair8 identical')
     args = ap.parse_args()
     report = audit_recomputed_d1(json.loads(args.original_replay_json.read_text()),
-                                 json.loads(args.independent_json.read_text()))
+                                 json.loads(args.independent_json.read_text()),
+                                 require_equal_lanes=args.require_equal_lanes)
     print(json.dumps(report, sort_keys=True, ensure_ascii=False, indent=2))
 
 
