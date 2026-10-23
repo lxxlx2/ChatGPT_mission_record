@@ -1,3 +1,13 @@
+# 2026-10-23 D1 implementation checkpoint — Draft PR170, OFFLINE only
+
+- Independently approved D0 [PR169](https://github.com/lxxlx2/ChatGPT_mission_record/pull/169) exact SHA `29157cbc4aaf9165d4401ed695ec8902d4a0b7b7`, `APPROVE_DESIGN / DESIGN_APPROVED_ONLY`; source unchanged.
+- Current **D1** Draft adds signed two-role fake approval gate, canonical unique Ed25519 pubkey proof, fixed-path factory and atomic single-use registry (0600/O_EXCL/dirFD/fsync), a three-shared-slot REAL-THREAD **FAKE** coordinator, global 250ms fake send starts, exclusive presend UNKNOWN append-only ledger, raw bytes-before-SETTLE, true owner-tagged block parent integrity and stop/drain, and focused failure-injection tests. The only private keys are generated in a temporary unit-test directory and never committed; `PINNED_LIVE_TRUST_ROOTS={}` intentionally forbids actual live authorization.
+- D1 matrix with explicit PASS/PARTIAL/BLOCKED rows: `f0/F0_L2_D1_GATE_TRACKER.md` (G-01..G-06/J-01..J-10/M-01..M-03). This PR currently **does NOT implement live network sender or signed production authority enrollment**; running Mac tests does not constitute permission or real provider throughput proof. There is no merge/deploy, schedule, trading, permit signing or BSC RPC.
+- Independent fixed-SHA Mac offline audit is **PENDING**. Future D1 work after code review should prioritize actual transport safety and binding signed approvals to fixed audited SHA/immutable authority roots, with no network invocation. Only separate future explicit D2 user grant + independent code/permit review could permit manual D3 RPC.
+- Old actual 30-call grant consumed. F0_NOT_PASSED / PRODUCTION_NO_GO.
+
+---
+
 # 2026-10-23 D0 REAL HTTP + ONE-USE GRANT DESIGN ONLY
 
 - [PR167 approved code](https://github.com/lxxlx2/ChatGPT_mission_record/commit/566a0851da059427fe05b7ce833469a942e687bd): user-reported independent Mac APPROVE_OFFLINE_CODE at SHA `566a0851da059427fe05b7ce833469a942e687bd` with 361/361 full, 15/15 focused, 1004/1005 buffered-parent P1 closed; approved parent unchanged. Six saved30 timing-based scenarios & 0.5/1/2.178/5 synthetic source stress remain synthetic; 2.178 source growth vs 1.740 contiguous commit blocks/s in finite window. No real provider three-slot observation.
