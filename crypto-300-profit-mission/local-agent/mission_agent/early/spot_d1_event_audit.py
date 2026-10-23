@@ -103,6 +103,40 @@ def audit_recomputed_d1(original, independent, *, require_equal_lanes=False):
             _fail('UNKNOWN_QUEUE_STATUS')
     if actual_ids != set(by_id):
         _fail('EPISODE_POPULATION_MISMATCH')
+    # New paired_sqlite exports these rows verbatim from the original-core
+    # FIFO SQLite events table. The old historical replay does not; absence
+    # must remain an explicit evidence gap rather than being imputed as PASS.
+    engine_export = original.get('fifo_setup_events')
+    engine_events_matched = False
+    if 'fifo_setup_events' in original:
+        if not isinstance(engine_export, list):
+            _fail('ORIGINAL_ENGINE_EVENT_EXPORT_NOT_ARRAY')
+        expected = {r['reconstructed_event_id']: r for r in matched}
+        if len(engine_export) != len(expected):
+            _fail('ORIGINAL_ENGINE_EVENT_EXPORT_COUNT_DRIFT')
+        seen_engine_ids = set()
+        for event in engine_export:
+            if not isinstance(event, dict):
+                _fail('ORIGINAL_ENGINE_EVENT_INVALID_ROW')
+            event_id = event.get('event_id')
+            if not isinstance(event_id, str) or event_id in seen_engine_ids:
+                _fail('ORIGINAL_ENGINE_EVENT_DUPLICATE_OR_BAD_ID')
+            seen_engine_ids.add(event_id)
+            want = expected.get(event_id)
+            if want is None:
+                _fail('ORIGINAL_ENGINE_EVENT_ID_MISMATCH')
+            if (event.get('venue') != 'spot' or
+                event.get('event_type') != 'SETUP_ACTIVE' or
+                event.get('symbol') != want['symbol'] or
+                type(event.get('observed_ms')) is not int or
+                event['observed_ms'] != want['reconstructed_observed_ms']):
+                _fail('ORIGINAL_ENGINE_EVENT_SYMBOL_OR_TIME_MISMATCH')
+            details = event.get('details')
+            if not isinstance(details, dict) or details.get('setup_candidate') is not True:
+                _fail('ORIGINAL_ENGINE_EVENT_PAYLOAD_MISMATCH')
+        if seen_engine_ids != set(expected):
+            _fail('ORIGINAL_ENGINE_EVENT_POPULATION_MISMATCH')
+        engine_events_matched = True
     if len(matched) != original['fifo_setups']:
         _fail('INDEPENDENT_D1_COUNT_DIFFERS_FROM_ORIGINAL')
     derived = independent['derived']
@@ -118,6 +152,9 @@ def audit_recomputed_d1(original, independent, *, require_equal_lanes=False):
             'late_ids': sorted(late), 'unresolved_pending_ids': sorted(pending),
             'setup_counts_by_utc_day': dict(sorted(by_day.items())),
             'reconstructed_setup_events': sorted(matched, key=lambda x:(x['reconstructed_observed_ms'],x['queue_id'])),
+            'original_core_fifo_setup_export_present': 'fifo_setup_events' in original,
+            'original_core_fifo_setup_export_event_count': len(engine_export) if engine_events_matched else None,
+            'original_core_fifo_setup_export_ids_and_times_matched': engine_events_matched,
             'fair8_outcomes_independently_recomputed': False,
             'require_equal_lanes': require_equal_lanes,
             'original_sqlite_event_ids_readback': False, 'historical_live_PIT': 'UNPROVEN',
