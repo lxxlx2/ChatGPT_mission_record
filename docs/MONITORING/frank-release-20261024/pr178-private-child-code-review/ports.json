@@ -1,0 +1,94 @@
+{
+  "captured_utc": "2026-10-23T23:45:39.734426+00:00",
+  "captured_bangkok": "2026-10-24T06:45:39.734426+07:00",
+  "socket_rows": 15,
+  "unique_processes": 8,
+  "unique_tcp_ports": 12,
+  "lsof_exit": 0,
+  "lsof_warnings": false,
+  "groups": [
+    {
+      "ports": [
+        8766
+      ],
+      "bind": "127.0.0.1",
+      "process": "Python",
+      "role": "Frank formal Dashboard",
+      "classification": "REQUIRED_KEEP",
+      "job": "com.jerson.frank-meme.dashboard"
+    },
+    {
+      "ports": [
+        8765
+      ],
+      "bind": "127.0.0.1",
+      "process": "python3.13",
+      "entry": "dashboard_server.py",
+      "ancestors": [
+        "python3",
+        "uv",
+        "launchd"
+      ],
+      "classification": "OTHER_DASHBOARD_NECESSITY_UNRESOLVED_KEEP"
+    },
+    {
+      "ports": [
+        48721
+      ],
+      "bind": "127.0.0.1",
+      "process": "python3.13",
+      "classification": "UNKNOWN_KEEP"
+    },
+    {
+      "ports": [
+        5000,
+        7000
+      ],
+      "bind": "*",
+      "process": "ControlCenter",
+      "classification": "SYSTEM_APP_KEEP_FUNCTION_NOT_PROBED"
+    },
+    {
+      "ports": [
+        58720
+      ],
+      "bind": "*",
+      "process": "rapportd",
+      "classification": "SYSTEM_KEEP"
+    },
+    {
+      "ports": [
+        20017
+      ],
+      "bind": "127.0.0.1",
+      "process": "NeteaseMusic",
+      "classification": "USER_APP_KEEP"
+    },
+    {
+      "ports": [
+        53998,
+        53999,
+        54027
+      ],
+      "bind": "127.0.0.1",
+      "process": "Antigravity",
+      "classification": "DEV_APP_KEEP"
+    },
+    {
+      "ports": [
+        54000,
+        54001
+      ],
+      "bind": "127.0.0.1",
+      "process": "language_server",
+      "classification": "DEV_APP_KEEP"
+    }
+  ],
+  "confirmed_redundant_listeners": 0,
+  "old_frank178_fixtures_64103_64738_listening": false,
+  "limitations": [
+    "Only visible LISTEN snapshot; IPv4/IPv6 produce duplicate rows.",
+    "No HTTP probes; unknown purpose does not prove redundant.",
+    "No services or ports stopped/moved/changed."
+  ]
+}

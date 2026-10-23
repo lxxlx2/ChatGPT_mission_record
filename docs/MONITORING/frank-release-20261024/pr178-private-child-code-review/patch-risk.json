@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "patch": {
+    "repository": "https://github.com/lxxlx2/ChatGPT_mission_record",
+    "sourceType": "commit_range",
+    "base": "ea9a7715beb4d2a55ae956bf993828cbddcb50e5",
+    "head": "06cb3597c70a68ee8b3ba91b74fcfa98cc08a828",
+    "changedFiles": [
+      "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_d2_ingress.py",
+      "crypto-300-profit-mission/local-agent/tests/test_frank_d2_ingress.py",
+      "crypto-300-profit-mission/local-agent/tests/test_frank_d2_http_route.py",
+      "docs/MONITORING/frank-release-20261024/PR178_PRIVATE_CHILD_PORT_STABILITY_CODE_ONLY.md"
+    ],
+    "sha256": "4e93e18010ce4fb5abf271f41c208a377de3abe1bf2a2ca0f1821a69af2af072"
+  },
+  "recommendation": "revise",
+  "workflowLabel": "revise",
+  "impact": {
+    "rating": "moderate",
+    "rationale": "Future private balance reader path/ownership boundary and operator-facing import contract; no present deployment."
+  },
+  "regressionLikelihood": {
+    "rating": "moderate",
+    "rationale": "New child-path mainline passes, but new documentation promises read-side Git rejection absent in code."
+  },
+  "regressionProtection": {
+    "rating": "partial",
+    "rationale": "55 Python and 6 JS exact-head tests passed on Darwin; independent actual Git probe contradicts documented reader property. Owner variations separately mocked, not actual chown.",
+    "exactHeadChecksPassed": true
+  },
+  "recoverability": {
+    "rating": "managed",
+    "rationale": "Code-only candidate currently uninstalled; future source location changes require approved private-file handling on rollback."
+  },
+  "confidence": {
+    "rating": "high",
+    "rationale": "Exact four-file diff, call paths, Mac tests and concrete filesystem counterexample inspected."
+  },
+  "applicability": {
+    "status": "confirmed",
+    "rationale": "DashboardState.frank_d2_at_slot calls query_d2/read_d2_source; candidate not yet installed."
+  },
+  "statusQuoRisk": {
+    "rating": "low",
+    "rationale": "No data imported or production rollout authorized; delaying this candidate leaves current Dashboard unchanged."
+  },
+  "autoMergeExclusions": [
+    "privileged_boundary",
+    "persistent_state",
+    "public_contract"
+  ],
+  "affectedRuntimeRoots": [
+    "DashboardState.frank_d2_at_slot",
+    "Handler.do_GET /api/frank-d2-at-slot",
+    "read_d2_source"
+  ],
+  "importantCallers": [
+    "query_d2",
+    "frank_d2_export_ingress.py original unchanged"
+  ],
+  "riskDrivers": [
+    "New read/write Git guarantee contradicts implementation"
+  ],
+  "protectiveFactors": [
+    "Owner-only private child and file",
+    "Shared root not changed by reader",
+    "No legacy root fallback",
+    "No new listener/server/LaunchAgent",
+    "Exporter blob unchanged"
+  ],
+  "materialBoundaries": [
+    {
+      "id": "private_child",
+      "invariant": "Shared root0755 plus owner-only child/file and same owner; invalid source unavailable.",
+      "runtimeRoot": "read_d2_source",
+      "counterexample": "Symlink finalchild, wrongowner root/child/file, world-writable root.",
+      "legitimateControl": "Real filesystem tests and selective wrongowner stat mocks reject; valid3row source passes.",
+      "result": "supported"
+    },
+    {
+      "id": "git_contract",
+      "invariant": "New design line13 promises readers and writers reject Git/worktree.",
+      "runtimeRoot": "read_d2_source and new design document",
+      "counterexample": "Actual unrelated git init repo containing valid child0700/source0600 is accepted by query_d2.",
+      "legitimateControl": "Unchanged writer _reject_git_output refuses Git; reader has no equivalent check.",
+      "result": "contradicted"
+    },
+    {
+      "id": "same_origin_no_new_port",
+      "invariant": "D2 reuses existing Dashboard GET and creates no dedicated listener.",
+      "runtimeRoot": "Handler.do_GET",
+      "counterexample": "Would need new bind/start/LaunchAgent or POST to expand scope.",
+      "legitimateControl": "Four-file diff contains none; all subject tests executed under deny-network with bind disabled.",
+      "result": "supported"
+    }
+  ],
+  "validation": [
+    {
+      "name": "4 Python unittest modules",
+      "status": "passed",
+      "protects": "55 tests, zero skipped; original Handler direct GET, schema, private-output Git/linkedworktree, exact amounts and dated states."
+    },
+    {
+      "name": "UI Node tests",
+      "status": "passed",
+      "protects": "6 tests; explicit GET, no automatic fetch, race isolation and integer precision."
+    },
+    {
+      "name": "Independent Git-reader probe",
+      "status": "failed",
+      "protects": "Demonstrates missing promised Git read rejection."
+    },
+    {
+      "name": "Ancestor-symlink probe",
+      "status": "passed",
+      "protects": "Characterizes existing limitation: alias ancestor accepted, not claimed new regression."
+    },
+    {
+      "name": "Real private import/browser acceptance at candidate",
+      "status": "skipped",
+      "protects": "Separately authorized next-stage gate; not needed for bounded code-review result."
+    }
+  ],
+  "unknowns": [
+    {
+      "summary": "Future private-source import and candidate real browser acceptance not executed.",
+      "decisionCritical": false
+    },
+    {
+      "summary": "No proven redundant listener;8765/48721 ownership purpose insufficient for shutdown.",
+      "decisionCritical": false
+    }
+  ],
+  "evidencePlan": []
+}

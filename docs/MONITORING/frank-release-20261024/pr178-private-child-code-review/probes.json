@@ -1,0 +1,10 @@
+{
+  "legitimate_0755_0700_0600": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+  "wrong_owner_root": "SOURCE_REJECTED",
+  "wrong_owner_child": "SOURCE_REJECTED",
+  "wrong_owner_source": "SOURCE_REJECTED",
+  "ancestor_symlink": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+  "inside_real_git_checkout": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+  "shared_mode_after": "0755",
+  "no_socket_or_production": true
+}

@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"status\": \"OK\",\n  \"verdict\": \"NEEDS_CHANGES\",\n  \"summary\": \"The runtime code changes in wallet_d2_ingress.py successfully implement the private child directory structure (0700 within 0755 root) with robust filesystem permission checks. However, there is a documentation contract discrepancy in the newly added markdown file regarding Git checkout restrictions.\",\n  \"findings\": [\n    {\n      \"severity\": \"MEDIUM\",\n      \"scope\": \"FILE\",\n      \"file\": \"docs/MONITORING/frank-release-20261024/PR178_PRIVATE_CHILD_PORT_STABILITY_CODE_ONLY.md\",\n      \"evidence\": \"Doc line 13 states: '读写均拒绝 Git/worktree' (readers and writers reject Git/worktree), but the reader implementation in wallet_d2_ingress.py (read_d2_source) only checks parent and root directory permissions/owners/symlinks and does not perform any Git repository/worktree checks.\",\n      \"recommended_fix\": \"Update PR178_PRIVATE_CHILD_PORT_STABILITY_CODE_ONLY.md to clarify that Git/worktree rejection is enforced by the exporter/writer rather than the ingress reader, or update read_d2_source if Git detection was intended at runtime.\"\n    }\n  ],\n  \"model\": \"gemini-3.6-flash\",\n  \"latency_seconds\": 24.404,\n  \"privacy\": \"PUBLIC\",\n  \"redactions\": [],\n  \"egress_material_sha256\": \"edd8549d62988dcca72e8e307327aeb194b487e338abbc407c2ea54a1c9be508\"\n}"
+    }
+  ],
+  "isError": false
+}

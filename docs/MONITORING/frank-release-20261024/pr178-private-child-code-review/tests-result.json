@@ -1,0 +1,18 @@
+{
+  "sha": "06cb3597c70a68ee8b3ba91b74fcfa98cc08a828",
+  "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 21.0.0 (clang-2100.3.34.2)]",
+  "platform": "darwin",
+  "tests_run": 55,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "successful": true,
+  "socket_bind_disabled": true,
+  "process_network_denied": true,
+  "modules": [
+    "test_frank_d2_ingress",
+    "test_frank_d2_http_route",
+    "test_frank_d2_private_output",
+    "test_frank_d2_owner_at_slot"
+  ]
+}
