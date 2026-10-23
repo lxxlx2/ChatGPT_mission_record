@@ -201,3 +201,16 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 **总源进度**：本批3,066 + 先前2026-10-22的511 = **3,577/4,599独立交易对×日期档案（77.78%）**。尚余2026-10-23和24各511合计**1,022份**。以2026-10-24曼谷凌晨的采集时点，两天目标来源尚未全部UTC闭日并出版，不允许标成功、回填未来时刻或追求上限造成造假。
 
 **边界**：这里验证的是事后Publisher原源和完整UTC 1m时间栅格，**不证明2026-10-17至24原交易时点的网络响应`available_at`、真实24h ticker逐时回执、盘口深度、历史身份与可买卖状态、L2执行成本、任何可实现回报或完整G1**。下一高价值事项是在不使用未来两日补造缺档的条件下，拿七个已证UTC源跑部分窗口原D0/FIFO8/Fair8实源同源回放；最终仍必须等原正式完整9日、独立其他AI Review和G0–G6全部达标才可讨论部署。6日云端采集Job已按一次性约束从原CI workflow撤除，不允许恢复为schedule/后台/本地常驻；Frank、邮件、交易与实盘权限全保持不变。
+
+
+## 18. 2026-10-24：原版D0/D1真实Publisher七源日阶段回放：46 WATCH、42 SETUP、Fair8无增益
+
+**本轮第一次在真实Publisher实际原字节来源上运行原生产SQLite D0/D1与Stage162 Fair8，解决前轮只能拿合成源跑CI的问题。** 先核验 [官方来源六日期3,066档案](../evidence/MONSTER_SPOT511_20261016_21_ACTUAL3066_PUBLISHER_GITHUB48_ARCHIVES_20261024.json) 与早先10月22日511档案，共`3,577`真实symbol-day ZIP与原Publisher CHECKSUM；在[一次性只读Github Actions #40028725264](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40028725264)把全部56批原始官方Artifact装入隔离Runner，每个symbol最多9个日档案逐个由原Stage166校验、再统一构建源SQLite及分离FIFO8/Fair8状态SQLite，使用未改的原`monster_v4_shadow.py`状态机和冻结Fair8顺序。Run SHA `a88d894ff6c60bef801fd49d92ff5a508fd0587a`，两个Job均`SUCCESS`，该Job还有原**35/35**离线回归。完整回放原报告sha256 `d3aef422dfc6be7c5b04b7935ef6b8b4c456293ee47bfb4ede7f8084f552a18a`，原报告Artifact ID `12533588861`；再次下载外层Artifact sha256 `aed92adb6ef16d4e39758fcc74588f4ea35159ee78fcc2fad19620e0f7b91973`并核内报告与Runner摘要一致。永久机器摘要已存 [实际回放来源/结果JSON](../evidence/MONSTER_SPOT511_REAL3577_SOURCE_PARTIAL_FIFO8_FAIR8_20261024.json)。
+
+- 冻结`3360`个3分钟轮次，**2439轮**511/511完整来源，**921轮**因UTC 10月23–24档案未提供被严格删失；已准备`1,246,329`个真实来源symbol-tick，其余`470,631`禁止冒充为0个WATCH。
+- 原D0真实分钟源历史代理扫描产生`46`个WATCH episode（可以有重复symbol新episode），其中严格3m基线的`17`个、错误把>3m基线冒充3m的`0`个。两个队列候选身份及时间逐条相等，没有在已提供有效数据上漏掉WATCH。
+- **FIFO8=Fair8**：首次选中46/46，deadline前真正完成闭合5m D1 44/46，**LATE 2**（MRNABUSDT、SMCIBUSDT），`SETUP_ACTIVE 42`，相同SETUP ID与时间全部一致；两组`D1 selected 130 / deferred 84 / completed 44`，不同排序在该源切片**新增SETUP数=0、缩短first valid eval数=0**。44个有效首次评估延迟中位数3分钟、p90 6分钟；没有理由对这批已曝光实源继续调Fair8参数。
+- **不能将42个SETUP称为实际可买妖币**：来源`quoteVolume`来自1440根闭合1m的24h后验数学代理，不是交易所T时点原24h ticker网络回执；历史日Publisher验收时刻晚于原目标交易时刻，缺上市/退市、股票映射及单位资格PIT，缺真实当时BBO、执行单量、税费、滑点/流动性、未来退出以及可实现净收益。历史结果用于查系统链路和候选数量，不是独立7日OOS / G1 / G4成功、更不构成投顾买单。
+- **下一主线**：等待10月23、24日原Publisher各自真实完成/发布后，补充最后1022份并重新固定来源SHA运行完整3360轮次原D0 FIFO/Fair8；同期以事先冻结的品类/历史上市身份排除伪加密权益标的，并利用D2当时可得盘口深度检验42个SETUP的实际可成交净值。若全样本仍无FIFO8/Fair8可证差异，应接受“无改善”而不人为优化阈值或宣称Fair8优越。此前独立其他AI审查尚未实际完成，G0 PARTIAL/G1 NOT_SCORABLE/G2-G3 NOT_PASSED/G4 UNKNOWN/G6 NO_GO，NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADES/NO_AUTOMATIONS不变。
+
+本轮临时云端source/replay Job均已从原工作流**删除**，仅保留纯离线35项CI；不存在新持续监控/后台跑批，Mac与Frank状态不受影响。
