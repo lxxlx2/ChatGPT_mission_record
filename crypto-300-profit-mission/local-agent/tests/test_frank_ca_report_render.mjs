@@ -45,6 +45,8 @@ function harness() {
       requests.push({url,method:options.method||'GET'});
       if(url==='/api/cluster-latest?mint='+encodeURIComponent(mint))
         return {ok:true,status:200,json:async()=>fixture};
+      if(url==='/api/cluster-analysis?job_id='+jobId)
+        return {ok:true,status:200,json:async()=>({job_id:jobId,mint,status:'DONE'})};
       // Other startup polling must not hit any real external service
       return await new Promise(()=>{});
     },
@@ -74,9 +76,13 @@ test('full script DONE -> existing report GET -> pending cleared without phantom
   const h=harness();
   h.element('cluster-mint').value=mint;
   vm.runInContext('clusterSetJob(__id,__mint)',Object.assign(h.context,{__id:jobId,__mint:mint}),{timeout:2500});
-  const result=await vm.runInContext('loadLatestCluster(__mint,true,clusterPollVersion,__id)',h.context,{timeout:2500});
-  assert.equal(result,true);
+  await vm.runInContext('pollClusterJob(__id)',h.context,{timeout:2500});
   assert.match(h.element('cluster-summary').innerHTML,/FIXTURE_REPORT/);
+  assert.equal(h.requests.filter(x=>x.url.startsWith('/api/cluster-analysis?job_id=')).length,1);
   assert.equal(h.requests.filter(x=>x.url.startsWith('/api/cluster-latest')).length,1);
   assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
+  assert.equal(h.store.has('session:mission-meme-cluster-pending-v1'),false);
+  assert.equal(h.element('cluster-submit').disabled,false);
+  assert.equal(h.element('cluster-recovery').hidden,true);
+  assert.match(h.element('cluster-status').innerHTML,/身份关联/);
 });
