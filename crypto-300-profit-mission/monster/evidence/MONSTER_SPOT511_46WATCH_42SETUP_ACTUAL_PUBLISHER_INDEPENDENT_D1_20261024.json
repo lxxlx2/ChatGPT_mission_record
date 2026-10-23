@@ -395,5 +395,101 @@
     "NO_GMAIL": true,
     "NO_TRADES": true,
     "NO_AUTOMATIONS": true
+  },
+  "posthoc_setup_horizon_diagnostic": {
+    "observed_utc_research_date": "2026-10-24",
+    "status": "DESCRIPTIVE_POSTHOC_OFFICIAL_PRICE_PATH_NOT_EXECUTABLE_PNL_OR_MODEL_SUCCESS",
+    "baselines": {
+      "original_d0_d1_real_replay_run": 40028725264,
+      "original_replay_artifact_id": 12533588861,
+      "independent_d1_parent_source_42_setups": 42,
+      "original_publisher_archive_runs": [
+        40027484781,
+        40006012284,
+        40007027318
+      ],
+      "all_42_setup_source_symbol_days_sha256_passed": true,
+      "all_42_have_complete_future_closed_one_minute_bars_through_60m": true,
+      "local_full_42_signal_machine_report_sha256": "64dd60fca39f34721a0209819b7469b568310b50550fe7e0e7a41386a8073a17",
+      "local_full_42_signal_machine_report_bytes": 104764,
+      "local_research_recalculation_script_sha256": "e57899278c472722f65ad622e49074d68e00695efc9aa03f358014eb2c7f177d",
+      "original_minute_source_time_unit": "microseconds",
+      "source_sha256_per_symbol_day_preserved_in_original_official_artifact_and_local_machine_report": true
+    },
+    "measurement": "For each independently reconstructed setup at T, theoretical reference entry = Binance official published next minute's 1m OPEN (T+60000ms). Fixed-horizon 5,15,30,60 minute EXIT = close of the final full future minute; theoretical intrahorizon worst LOW and best HIGH are extrema across all that horizon's future 1m bars, relative to that same OPEN. Decimal arithmetic, no lookahead in signal creation (but all future labels are explicitly posthoc). This is NOT contemporaneous executable bid/ask or fill.",
+    "all_42_unclassified": {
+      "n": 42,
+      "unique_coin_date": 40,
+      "median_fixed_60m_percent": -1.8261854951185494,
+      "negative_fixed_60m_count": 26,
+      "minimum_low_below_entry_by_at_least_5percent_within_60m": 20
+    },
+    "known_tokenized_stocks_excluded": [
+      "SHAZBUSDT",
+      "IBMBUSDT"
+    ],
+    "remaining_40_not_crypto_certified": {
+      "n": 40,
+      "unique_spot_symbols": 30,
+      "unique_coin_utc_days": 38,
+      "fixed_close_median_pct": {
+        "5m": -0.4143023420009624,
+        "15m": -0.933549406788133,
+        "30m": -1.1569639652356274,
+        "60m": -2.147603802871556
+      },
+      "fixed_60m_close_negative_count": 26,
+      "fixed_60m_close_positive_count": 14,
+      "intraminute_low_at_or_below_95percent_of_reference_within_60m_count": 20,
+      "future_max_high_at_or_above_105percent_of_reference_within_60m_count": 11,
+      "by_utc_day_40_events": {
+        "2026-10-18": 8,
+        "2026-10-19": 6,
+        "2026-10-20": 7,
+        "2026-10-21": 9,
+        "2026-10-22": 10
+      }
+    },
+    "first_only_unique_coin_day_38": {
+      "n": 38,
+      "negative_60m_close_count": 25,
+      "median_60m_fixed_close_pct": -2.147603802871556,
+      "intraminute_low_below_minus_5percent_count": 19,
+      "by_utc_day": {
+        "2026-10-18": 8,
+        "2026-10-19": 6,
+        "2026-10-20": 7,
+        "2026-10-21": 8,
+        "2026-10-22": 9
+      }
+    },
+    "first_only_unique_coin_30": {
+      "n": 30,
+      "negative_60m_close_count": 22,
+      "median_60m_fixed_close_pct": -2.318,
+      "intraminute_low_below_minus_5percent_count": 16,
+      "by_first_signal_utc_day": {
+        "2026-10-18": 8,
+        "2026-10-19": 5,
+        "2026-10-20": 5,
+        "2026-10-21": 6,
+        "2026-10-22": 6
+      }
+    },
+    "constraints": [
+      "Repeated watch episodes and coin-date observations are statistically dependent; n=40 must not be called 40 independent projects.",
+      "42 SETUP timestamps are a prior independent D1 reconstruction, NOT readback of original SQLite SETUP_ACTIVE event identities; exact event-level engine proof pending.",
+      "Historical Publisher daily 1m downloaded after decision time; no live ticker/bid/ask/fee/slippage/tax/identity lifecycle/real fill data. First future 1m OPEN is not guaranteed tradable or known at decision time.",
+      "No amount authorized and no actual commission-adjusted return, profitability, optimal entry, or exit-rule validation is provided.",
+      "Only two positive historical bStock identities were excluded; other 40 events are NOT independently certified crypto-only.",
+      "This is a retrospective descriptive risk diagnostic on an exposed partial source cohort, NOT an OOS result, recommendation, threshold-fitted strategy, or G1/G4/G6 success.",
+      "No new HTTP, Binance market data, Mac deployment, schedule, Gmail or order was created; only existing saved publisher artifacts re-read."
+    ],
+    "next_decision": "Prioritize per-event crypto-only identity, contemporaneous execution price evidence and real D1 false-positive economics before spending effort optimizing the FIFO8/Fair8 priority ordering. Do not change frozen G0-G6 or D0/D1 parameters based on this exposed diagnostic.",
+    "G0": "PARTIAL",
+    "G1": "NOT_SCORABLE",
+    "G3": "NOT_PASSED",
+    "G4": "UNKNOWN",
+    "G6": "NO_GO"
   }
 }
