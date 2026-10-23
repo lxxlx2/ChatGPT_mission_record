@@ -13,12 +13,12 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from f0_l2_d1_grant import _public_key_fingerprint
 from f0_l2_d1_inventory_gate import inventory_attestation_message
 from f0_l2_d1_review_pins import OfflineReviewerPins, verify_pinned_offline_evidence
-from test_f0_l2_d1_inventory_gate import D1InventoryGateTests
+import test_f0_l2_d1_inventory_gate as fixture_module
 
 
 class D1ReviewerPinsTests(unittest.TestCase):
     def setUp(self):
-        self.fixture=D1InventoryGateTests(
+        self.fixture=fixture_module.D1InventoryGateTests(
             "test_independent_fake_signed_inventory_and_permit_are_bound")
         self.fixture.setUp()
         self.addCleanup(self.fixture.doCleanups)
