@@ -1,33 +1,36 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-23 18:59:28 Asia/Bangkok — latest VERIFIED durable PARTIAL terminal with new ACTION, Gmail FORBIDDEN
+Updated: 2026-10-23 20:06:21 Asia/Bangkok — latest VERIFIED durable PARTIAL terminal; new ACTION delivered via Gmail
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-23 18:59:28 Asia/Bangkok
-- latest_actual_run_status: PARTIAL_ACTION_DELIVERY_BLOCKED
+- latest_actual_run: 2026-10-23 20:06:21 Asia/Bangkok
+- latest_actual_run_status: PARTIAL_ACTION_DELIVERED
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-23/185928-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-23/185713-attempt.md
-- latest_scheduled_shard: 2
-- latest_executed_shard: 2
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-23/200621-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-23/200420-attempt.md
+- latest_scheduled_shard: 0
+- latest_executed_shard: 0
 - stale_shard_recovery: false
-- latest_candidate_count: 8
-- latest_triggered_events: 1 (verified action, not delivered)
+- latest_candidate_count: 6
+- latest_triggered_events: 1 (verified and delivered)
 - latest_identity_failures: 0
-- latest_source_failures: 7
-- latest_notification_decision: PENDING_DELIVERY_GMAIL_FORBIDDEN
-- latest_notification_status: NOT_DELIVERED_NO_SENT_ID
-- latest_gmail_attempted: true (send FORBIDDEN, Sent readback no match)
-- latest_source_gaps: Concrete_extra_USDC,StandX_original_X,SurfBoard_raffle_dated_rules,Cambria_migration,01_Exchange_mapped_personal_rights,OhBabyGames_JS_shell,NeoSoul_Discord_form_JS_only
+- latest_source_failures: 6
+- latest_notification_decision: GMAIL_DELIVERED_APP_SILENT
+- latest_notification_status: DELIVERED_GMAIL_SENT_READBACK_AND_EVENT_ARCHIVE
+- latest_gmail_attempted: true
+- latest_gmail_message_id: 1a168dd4a732eab4
+- latest_event_archive: airdrop-tge-monitor/reports/events/2026/2026-10/2026-10-23/200501-standx-neosoul-dna-batch1-wallet-registration.md
+- latest_source_gaps: Concrete_extra_USDC,Block_Stranding_JS,StandX_original_X,SurfBoard_raffle_dated_rules,Cambria_migration,NeoSoul_Discord_form_JS_only
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
-- last_meaningful_attempt_at_shard2: 2026-10-23 18:59:28 Asia/Bangkok
+- last_meaningful_attempt_at_shard0: 2026-10-23 20:06:21 Asia/Bangkok
 - last_meaningful_attempt_at_shard1: 2026-10-23 17:02:00 Asia/Bangkok
+- last_meaningful_attempt_at_shard2: 2026-10-23 18:59:28 Asia/Bangkok
 - last_meaningful_attempt_at_shard3: 2026-10-23 11:58:03 Asia/Bangkok
-- last_meaningful_attempt_at_shard0: 2026-10-23 16:03:21 Asia/Bangkok
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_primary_final_write: VERIFIED_DURABLE 185928-final.md
-- latest_terminal_readback: VERIFIED
-- off_minute_task_run: true (18:57 attempt; no punctual HH:00 proof)
-- user_alert: NeoSoul StandX Batch1 BNB wallet registration Tier A issuer rules verified; Gmail FORBIDDEN, PENDING_DELIVERY; no App push
+- latest_primary_final_write: VERIFIED_DURABLE 200621-final.md
+- latest_terminal_readback: PENDING_REAL_READBACK
+- latest_four_executed_shards_prior: [0,1,2,2]
+- off_minute_task_run: true (20:04 attempt; punctual HH:00 proof not independently verified)
+- user_alert: NeoSoul StandX Batch1 BNB wallet registration delivered by Gmail; personal eligibility UNKNOWN; no App push
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
