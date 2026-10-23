@@ -191,7 +191,7 @@ class D2AtSlotSourceTests(unittest.TestCase):
     def test_visible_bound_and_search_priority(self):
         doc=source()
         # Give the watchlist enough distinct valid-base58 synthetics.
-        others=[{"mint":("2"*(31-len(str(i)))) + str(i).replace("0","A") + "9",
+        others=[{"mint":("Z"*(31-len(str(i)))) + str(i).replace("0","A") + "9",
                  "local_model_state":"UNKNOWN"} for i in range(100)]
         watch={"rows":WATCH["rows"]+others}
         result=projected(watch=watch,max_visible=60,outsider_reserve=10)
