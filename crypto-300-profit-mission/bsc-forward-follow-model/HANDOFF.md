@@ -1,3 +1,11 @@
+# 2026-10-24 F0 D1 PR182 — concrete fixed-host HTTPS code and consolidated exit decision, new SHA review pending
+
+- Approved frozen parent PR181 `35e1cba6cc4b4e841ff6f096bf6ed0af22b2ac8d`: user-reported independent Mac `APPROVE_OFFLINE_CODE — D1_TLS_PHASE_MOCK_SCOPE_ONLY` (449/449 complete, **88/88 D1 focused**, seven new tests, no P0/P1). Approval recorded to PR181. Do not change approved source.
+- New Draft PR182 introduces `f0/f0_l2_d1_concrete_https.py`, tests, and `f0/F0_L2_D1_CONCRETE_TRANSPORT_EXIT.md`. Specific fixed-host verified `http.client.HTTPSConnection` source, tight read limits, raw HTTP503, no retry/redirect/proxy, connect versus POST **call** distinction. Tests patch concrete HTTPS constructor, **zero real network**. Public `send_live()` raises unconditionally, and private code requires a **non-cryptographic test-only token**; it is NOT production authorization.
+- This is D1 **source code readiness only**: no independently trusted complete Python/wheel closure, production identity, authentic pins/trusted UTC, production one-use registry integration, physical POST-start gap evidence, real TLS peer or live send/ledger atomicity. Read new exit matrix before new stage; no endless isolated fake border PRs. D1_PARTIAL, D2/D3 unapproved; old real grant consumed. NO_MERGE/NO_DEPLOY/NO_NEW_RPC/NO_TRADES/NO_BACKGROUND. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-24 F0 D1 PR181 — TLS connect / POST attempt separation, Mac review PENDING
 
 - Frozen parent PR180 `e0af79fcf564aa3d5de826003e8ec0b5f6b49469` independently Mac `APPROVE_OFFLINE_CODE — D1_POST_UTC_FAKE_SCOPE_ONLY` (442/442 full, **81/81 D1 focused**, 6 UTC tests); no new P0/P1.
