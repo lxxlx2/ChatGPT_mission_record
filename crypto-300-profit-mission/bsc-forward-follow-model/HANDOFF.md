@@ -1,3 +1,11 @@
+# 2026-10-24 — F0 D1 PR180: signed UTC at in-memory HTTPS POST, review pending
+
+- Frozen approved parent PR179 SHA `e65e8bf3ceca4436e8adce9db6a1ce9c037e8e88`, Mac `APPROVE_OFFLINE_CODE — D1_REVIEW_PIN_SCOPE_ONLY` (436/436 full, 75/75 D1 focused, six pinned-reference tests), no mainline P0/P1.
+- This child Draft PR180 adds a strict signed UTC window recheck **after fake TLS/context creation and 250ms pacing immediately before sealed MEMORY POST**; out-of-window/clock rollback/naive test time refuse the fake start and preserve failed-settlement evidence. A spent isolated test grant is never refunded. Existing parent code stays frozen.
+- `f0/F0_L2_D1_POST_UTC_GATE.md` defines test scope and remaining true user/time/dependency/HTTPS roots. `send_live` remains unconditional deny; no true provider request, production keys, permit, merge/deploy, daemon or scheduler. New fixed SHA, CI, and independent Mac audit still required. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # PR179 — D1 offline review pins, independently audited HEAD pending
 
 - Parent approved: PR176 `a1d33ab0fd7f68db01b67d3d7da6603af1fd6797`. Mac `APPROVE_OFFLINE_CODE — D1_OS_CRASH_FAKE_SCOPE_ONLY`: 430/430 complete, 69/69 focused, 3 SIGKILL tests; old runtime untouched.
