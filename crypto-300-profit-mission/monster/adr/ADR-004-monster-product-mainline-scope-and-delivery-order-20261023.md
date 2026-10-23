@@ -111,3 +111,14 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 **原仓库11/11实际PASS，Ran 11 tests in 0.041s / OK；Python `py_compile` 对三份原文件全部通过。** 测试含默认不联网、已结束日期、有界来源、完整1440根、HASH不匹配、坏ZIP不阻断后续币、竞态拒绝覆盖、目标软链接拒绝、重复执行原文件SHA不改变，以及第三方重定向拒绝。所有源来自mock byte arrays，无真实Publisher HTTP交易和实际Binance完整数据。独立审查状态仍 `NOT_DONE`；GitHub Actions在本会话已能访问的接口中尚无相应可核验run/Job日志，故**不能把本地PASS写成GitHub CI PASS**。本轮没有修改新策略参数、Mac程序、后台、Gmail、Frank、交易或BSC。
 
 本项源工具 `OFFLINE_CODE_TEST_PASS`，正式 `G0 PARTIAL/G1 NOT_SCORABLE/G4 UNKNOWN/G6 NO_GO` 不变。下一主线不是再扩同类坏包测试，而是把历史/正式原始Minute publisher完整来源实际纳入现有原D0与Fair8的同源因果回放，区分用户能得到的有效SETUP与只有更快审核的伪提升。
+
+## 10. 2026-10-23：Spot511真实发布方分钟源→D0已闭合3分钟输入适配（离线）
+
+落实ADR-004工作包A→B的**输入桥接**，而不是继续做旧BSC、改原D0/D1阈值或重复Fair8历史445的结论。
+
+- 新增 `local-agent/scripts/monster_v4_spot511_closed_minute_feed.py`，Git blob `05b36b2e28cc88d4636dc865329e1f1cb0667586`；原 Stage166 校验器保持不变，针对冻结Spot T0名单中**每个单独symbol**读取 `2026-10-16..24` 官方日级ZIP + 原Publisher .CHECKSUM，逐日调用 Stage166 1440根/微秒/源SHA完整验证。避免载入整511个交易对的9天数据到内存，只处理单symbol的12960分钟。只接受已结束UTC日，未提供/损坏/未结束分别记录，不能把缺源当0个WATCH。
+- 确定性计算3360个 `[2026-10-17T22:06Z,2026-10-24T22:06Z)` 三分钟tick；每个时刻 `T` 的价格只能取`T-1分钟`已经闭合K线的收盘价，24h成交额为`[T-24h,T)`恰好1440根已闭合1m `quoteVolume` 前缀和。**它与Binance 实际发在T的24h滚动ticker不是同一原始source，必须始终标`CLOSED_1M_SUM_1440_PROXY_NOT_LIVE_TICKER`**；不能把此代理直接当正式原V4因果实时行情，也不能在官方ZIP事后发布的情况下虚报原2026年T时网络`available_at`。
+- 全3360个tick即使未来源也各有`CENSORED_SOURCE_MISSING_OR_REJECTED`占位和完整身份/时钟；`READY_RECONSTRUCTED_TICKER_PROXY`仅表示这一单币分钟源和历史计算在数学上有效，**不表示实时可见、完整511人口PIT、当时真正Spot资格、D1已复算、G1通过或收益**。
+- 测试 `local-agent/tests/test_monster_v4_spot511_closed_minute_feed.py` Blob `e3331775aa168802f82699a4ed8f4557fa47f2ce`；隔离Linux/Python 3.13.5 使用不变的Stage166验证器、合成真实1440行发布方格式和对应ZIP SHA/ASCII CHECKSUM，实际 `5/5 OK` （正常连续两日首39个tick、前一分钟与未来分钟、SHA坏源、2026-10-18零点跨日单tick、未结束UTC日、全9日缺源、名单/时区拒绝）。没有联网、交易、部署和邮件。
+- 已将新增源/测试接入既有 `monster-spot511-manual-source-batch-ci.yml` 纯离线工作流（仅push、PR及显式手动，无schedule），但**当前GitHub Actions运行回执没有取得**，因此本地 `5/5`不能写成GitHub CI PASS，也不能算其他AI独立review。
+- **尚未开发/运行真正511币统一SQLite时间顺序D0→D1/Fair8回放**：需要全量资格过滤及发布方完整档案，同时明确上述24h代理与实际快照差异；原正式G0 PARTIAL / G1 NOT_SCORABLE / G2-G3 NOT_PASSED / G4 UNKNOWN / G6 NO_GO不变。下一可操作研发应以同一原模型状态机和原Stage162 Fair8恢复单一SQLite队列，从`READY`与`CENSORED`联合输入逐tick构造合法已闭合5m D1，不根据事后高价或已曝光赢家优化规则。
