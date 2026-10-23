@@ -9,7 +9,8 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from f0_l2_d1_concrete_https import (
-    _review_concrete_https_once, _parse_review_frame_offline, send_live)
+    _review_concrete_https_once, _parse_review_frame_offline,
+    _REVIEW_TEST_ONLY_CAPABILITY, send_live)
 from f0_l2_d1_https import HOST, PORT
 
 
@@ -85,7 +86,8 @@ class D1ConcreteHTTPSReviewTests(unittest.TestCase):
                 guard(payload)
         with patch("http.client.HTTPSConnection",side_effect=new_connection) as ctor:
             result=_review_concrete_https_once(
-                rpc(),final_post_guard=prepost,**opts)
+                rpc(),final_post_guard=prepost,
+                _test_capability=_REVIEW_TEST_ONLY_CAPABILITY,**opts)
         self.assertEqual(ctor.call_count,1)
         return result
 
@@ -103,6 +105,16 @@ class D1ConcreteHTTPSReviewTests(unittest.TestCase):
         self.assertFalse(out["physical_socket_send_time_proven"])
         self.assertFalse(out["retry_allowed"])
         self.assertEqual(out["production"],"NO_GO")
+
+
+    def test_private_review_call_without_test_token_cannot_open_socket(self):
+        with patch("http.client.HTTPSConnection",
+                   side_effect=AssertionError("NO_NETWORK")) as ctor:
+            with self.assertRaisesRegex(ValueError,
+                                        "REVIEW_CAPABILITY_REQUIRED"):
+                _review_concrete_https_once(
+                    rpc(),final_post_guard=lambda _:None)
+            ctor.assert_not_called()
 
     def test_live_entry_denied_before_any_http_constructor(self):
         with patch("http.client.HTTPSConnection",
@@ -187,10 +199,12 @@ class D1ConcreteHTTPSReviewTests(unittest.TestCase):
         self.assertIsNone(out["raw_frame"])
         with self.assertRaisesRegex(ValueError,"CONFIG_INVALID"):
             _review_concrete_https_once(rpc(),
-                final_post_guard=lambda _:None, timeout_s=8)
+                final_post_guard=lambda _:None,
+                _test_capability=_REVIEW_TEST_ONLY_CAPABILITY,timeout_s=8)
         with self.assertRaisesRegex(ValueError,"CONFIG_INVALID"):
             _review_concrete_https_once(rpc(),
-                final_post_guard=lambda _:None, max_bytes=2_000_001)
+                final_post_guard=lambda _:None,
+                _test_capability=_REVIEW_TEST_ONLY_CAPABILITY,max_bytes=2_000_001)
 
     def test_tls_certificate_verification_must_be_enabled(self):
         class InsecureContext:
@@ -201,7 +215,8 @@ class D1ConcreteHTTPSReviewTests(unittest.TestCase):
                        side_effect=AssertionError("NO_NETWORK")) as ctor:
                 with self.assertRaisesRegex(ValueError,"TLS_VERIFY_REQUIRED"):
                     _review_concrete_https_once(
-                        rpc(),final_post_guard=lambda _:None)
+                        rpc(),final_post_guard=lambda _:None,
+                        _test_capability=_REVIEW_TEST_ONLY_CAPABILITY)
                 ctor.assert_not_called()
 
 if __name__=="__main__":
