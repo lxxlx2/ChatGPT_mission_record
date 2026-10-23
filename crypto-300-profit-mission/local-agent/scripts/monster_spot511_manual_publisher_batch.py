@@ -15,7 +15,7 @@ import re
 import tempfile
 import zipfile
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlsplit
+from urllib.parse import quote, urlsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 import monster_v4_stage166_spot511_official_1m_intake as stage166
@@ -26,7 +26,7 @@ END = date(2026, 10, 24)
 MAX_BATCH = 64
 MAX_ZIP_BYTES = 3_000_000
 BASE = "https://data.binance.vision/data/spot/daily/klines"
-HASH_RE = re.compile(r"([0-9a-fA-F]{64})\s+\*?([A-Z0-9]+-1m-\d{4}-\d{2}-\d{2}\.zip)\Z")
+HASH_RE = re.compile(r"([0-9a-fA-F]{64})\s+\*?([^\s/\\]+\.zip)\Z")
 
 
 class SourceRejected(Exception):
@@ -81,7 +81,8 @@ def batch(day, destination, *, start_index=0, count=32, now=None,
     actual = stage166.frozen_roster() if roster is None else roster
     if (not isinstance(actual, list) or len(actual) != 511
             or actual != sorted(set(actual))
-            or any(not re.fullmatch(r"[A-Z0-9]+USDT", s) for s in actual)):
+            or any(not isinstance(s, str) or not s.isalnum()
+                   or not s.endswith("USDT") for s in actual)):
         raise ValueError("ORIGINAL_T0_FROZEN_511_REQUIRED")
     selected = actual[start_index:start_index+count]
     destination = Path(destination)
@@ -89,7 +90,7 @@ def batch(day, destination, *, start_index=0, count=32, now=None,
     rows = []
     for symbol in selected:
         target_zip, target_checksum = stage166.daily_paths(destination, symbol, day)
-        url = f"{BASE}/{symbol}/1m/{target_zip.name}"
+        url = f"{BASE}/{quote(symbol, safe='')}/1m/{quote(target_zip.name, safe='')}"
         row = {"symbol": symbol, "day_utc": day.isoformat(),
                "source_url": url, "status": "PLANNED_NO_NETWORK",
                "zip_sha256": None, "closed_one_minute_rows": None}
