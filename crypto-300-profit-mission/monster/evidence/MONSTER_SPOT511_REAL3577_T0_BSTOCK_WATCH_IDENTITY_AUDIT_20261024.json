@@ -1,0 +1,146 @@
+{
+  "schema": "MONSTER_SPOT511_SOURCE_LOCKED_OFFICIAL_BSTOCK_WATCH_IDENTITY_AUDIT_V1",
+  "audit_utc_date": "2026-10-24",
+  "scope": "D0/D1 real original-core 3577 verified symbol-days partial replay; no parameter/trigger change; official T0 Spot exchangeInfo identity crosswalk",
+  "origin_inputs": {
+    "spot_t0_http": {
+      "source_run": 39073557939,
+      "artifact_id": 12116091492,
+      "inner_zip_name": "source_raw_http.zip",
+      "inner_zip_sha256": "b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b",
+      "member": "exchangeInfo.response.raw.json",
+      "member_sha256": "4c04abd88caeae5613977e0f5e2a5044efaeb557dc7e7fbd5bba0d03a5794493",
+      "spot_t0_exchangeinfo_server_time_utc": "2026-10-17T22:04:40.094Z",
+      "actual_unique_watch_symbols_joined_to_original_symbol_rows": 35,
+      "joins_missing": 0,
+      "t0_status_all_35": "TRADING",
+      "t0_quote_all_35": "USDT",
+      "t0_is_spot_trading_allowed_all_35": true,
+      "later_episode_trading_status_proven": false
+    },
+    "real_replay": {
+      "run": 40028725264,
+      "artifact_id": 12533588861,
+      "artifact_zip_sha256": "aed92adb6ef16d4e39758fcc74588f4ea35159ee78fcc2fad19620e0f7b91973",
+      "member": "paired-partial.json",
+      "member_sha256": "d3aef422dfc6be7c5b04b7935ef6b8b4c456293ee47bfb4ede7f8084f552a18a",
+      "publisher_verified_symbol_days": 3577,
+      "full_d0_ticks": 2439,
+      "source_censored_ticks": 921
+    }
+  },
+  "actual_episode_summary": {
+    "watch_episodes": 46,
+    "unique_watch_symbols": 35,
+    "watch_by_utc_first_seen_day": {
+      "2026-10-18": 8,
+      "2026-10-19": 8,
+      "2026-10-20": 8,
+      "2026-10-21": 10,
+      "2026-10-22": 12
+    },
+    "evaluated_queue_episodes": 44,
+    "late_queue_episodes": 2,
+    "total_setup_events_not_exposed_individually_in_original_replay": 42,
+    "assessed_complete_source_utc_calendar_days": 5,
+    "raw_setup_rate_per_complete_source_day": 8.4,
+    "stage77_g3_target_mean_per_day": 5,
+    "stage77_g3_target_peak_per_day": 12,
+    "g3_result": "NOT_PASSED_UNVERIFIED_CRYPTO_ONLY_CLASSIFICATION"
+  },
+  "binance_official_published_bstock_identities": [
+    {
+      "spot_symbol": "BEBUSDT",
+      "t0_base_asset": "BEB",
+      "security": "Bloom Energy",
+      "watch_queue_id": 46,
+      "first_seen_ms": 1792699920000,
+      "queue_state": "EVALUATED",
+      "actual_original_setup_event": "UNKNOWN_UNTIL_EVENT_LEVEL_REPLAY",
+      "classification": "OUT_OF_SCOPE_TOKENIZED_SECURITY",
+      "official_announcement_published_utc_date": "2026-07-29",
+      "official_announcement": "https://www.binance.com/en-AE/support/announcement/detail/fd3c0f17a7504eb5be1cb1911c6da0cd"
+    },
+    {
+      "spot_symbol": "IBMBUSDT",
+      "t0_base_asset": "IBMB",
+      "security": "IBM",
+      "watch_queue_id": 43,
+      "first_seen_ms": 1792675980000,
+      "queue_state": "EVALUATED",
+      "actual_original_setup_event": "UNKNOWN_UNTIL_EVENT_LEVEL_REPLAY",
+      "classification": "OUT_OF_SCOPE_TOKENIZED_SECURITY",
+      "official_announcement_published_utc_date": "2026-08-06",
+      "official_announcement": "https://www.binance.com/en/support/announcement/detail/a400bab019a543f98cdec55c2ecca537"
+    },
+    {
+      "spot_symbol": "SHAZBUSDT",
+      "t0_base_asset": "SHAZB",
+      "security": "SharonAI",
+      "watch_queue_id": 13,
+      "first_seen_ms": 1792416780000,
+      "queue_state": "EVALUATED",
+      "actual_original_setup_event": "UNKNOWN_UNTIL_EVENT_LEVEL_REPLAY",
+      "classification": "OUT_OF_SCOPE_TOKENIZED_SECURITY",
+      "official_announcement_published_utc_date": "2026-09-30",
+      "official_announcement": "https://www.binance.com/en/support/announcement/detail/172e44302d6143578e40acc48570a2e5"
+    },
+    {
+      "spot_symbol": "MRNABUSDT",
+      "t0_base_asset": "MRNAB",
+      "security": "Moderna",
+      "watch_queue_id": 12,
+      "first_seen_ms": 1792416780000,
+      "queue_state": "LATE",
+      "actual_original_setup_event": "NO_D1_EVALUATION_RECORDED",
+      "classification": "OUT_OF_SCOPE_TOKENIZED_SECURITY",
+      "official_announcement_published_utc_date": "2026-09-02",
+      "official_announcement": "https://www.binance.com/en/support/announcement/detail/8f5c893fa654432883f481b120b0a016"
+    },
+    {
+      "spot_symbol": "SMCIBUSDT",
+      "t0_base_asset": "SMCIB",
+      "security": "Super Micro Computer",
+      "watch_queue_id": 23,
+      "first_seen_ms": 1792528380000,
+      "queue_state": "LATE",
+      "actual_original_setup_event": "NO_D1_EVALUATION_RECORDED",
+      "classification": "OUT_OF_SCOPE_TOKENIZED_SECURITY",
+      "official_announcement_published_utc_date": "2026-08-05",
+      "official_announcement": "https://www.binance.com/en/support/announcement/detail/ae96da838d754f91bced1501de728f03"
+    }
+  ],
+  "known_bstock_watch_episodes": 5,
+  "known_bstock_evaluated_d1_episodes": 3,
+  "known_bstock_late_d1_episodes": 2,
+  "remaining_watch_episodes_without_this_bstock_match": 41,
+  "remaining_unique_watch_symbols_without_this_bstock_match": 30,
+  "other_remaining_symbols_crypto_identity_verified_by_this_audit": false,
+  "observed_42_setups_containing_known_bstocks_minimum": 1,
+  "observed_42_setups_containing_known_bstocks_maximum": 3,
+  "lower_bound_setups_not_from_these_five_bstocks": 39,
+  "lower_bound_setup_rate_not_from_these_five_bstocks_per_day": 7.8,
+  "official_crypto_only_setup_count": "UNKNOWN",
+  "method": "Join actual FIFO8 queue episodes by venue+symbol to exact frozen Spot T0 original exchangeInfo symbol rows. Positive bStock matches require Binance publisher's dated security-specific English announcements strictly earlier than the 2026-10-18..22 replay window; never use a ticker suffix heuristic and never rewrite/remove original WATCH.",
+  "limitations": [
+    "T0 market TRADING status cannot prove symbol status at subsequent individual WATCH time.",
+    "44 evaluated queue episodes are not the same as 42 SETUP events. Which of the three evaluated bStock episodes actually SETUP remains UNKNOWN until original-core event-level ledger replays.",
+    "Other 30 unique Watch symbols are not certified crypto-only by this five-asset positive match audit.",
+    "Publisher daily 1m ZIP retrieved after historical tick; 24h quote reconstructed proxy not live market ticker/PIT proof.",
+    "G3 target assessment formally requires complete eligible crypto-only set, all true setup episode IDs, and completed relevant window; five complete calendar days here are descriptive only.",
+    "No order notional, historical L2 bid/ask execution or fee-adjusted net-profit is inferred."
+  ],
+  "follow_up": "Consume newly added fifo_setup_events and fair8_setup_events from a fresh source-verified same-core replay. Match official published eligible crypto-only identities before evaluating Stage77 G3; no change to frozen D0/D1 or approved Fair8.",
+  "release_gates": {
+    "G0": "PARTIAL",
+    "G1": "NOT_SCORABLE",
+    "G2": "NOT_PASSED",
+    "G3": "NOT_PASSED",
+    "G4": "UNKNOWN",
+    "G6": "NO_GO",
+    "NO_DEPLOY": true,
+    "NO_GMAIL": true,
+    "NO_TRADES": true,
+    "NO_AUTOMATIONS": true
+  }
+}
