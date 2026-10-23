@@ -149,6 +149,7 @@ def validate_d2_document(doc):
               "D2_MINT_IDENTITY_DUPLICATE_OR_INVALID")
         seen.add(mint)
         _need(isinstance(raw, str) and raw.isascii() and raw.isdecimal() and
+              (raw == "0" or not raw.startswith("0")) and
               type(row["decimals"]) is int and 0 <= row["decimals"] <= 18 and
               type(row["account_count"]) is int and row["account_count"] > 0,
               "D2_MINT_QUANTITY_INVALID")
