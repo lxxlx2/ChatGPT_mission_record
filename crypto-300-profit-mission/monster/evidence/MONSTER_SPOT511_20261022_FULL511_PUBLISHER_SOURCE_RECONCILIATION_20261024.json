@@ -1,0 +1,126 @@
+{
+  "schema": "MONSTER_SPOT511_20261022_OFFICIAL_1M_ALL511_SOURCE_READBACK_V1",
+  "source": "Binance Data Vision official Spot daily 1m Publisher ZIP plus each original .CHECKSUM",
+  "frozen_t0_source": "Stage163 verified original Spot exchangeInfo T0 2026-10-17T22:04:40.094Z; Stage166 frozen_roster",
+  "day_utc": "2026-10-22",
+  "attempted": 511,
+  "publisher_verified": 511,
+  "source_failed": 0,
+  "actual_unique_symbols": 511,
+  "official_one_minute_rows_per_symbol": 1440,
+  "independently_timestamp_grid_validated": 735840,
+  "original_publisher_zip_sha_and_checksum_reverified_locally": 511,
+  "artifact_run_ids": [
+    40006012284,
+    40007027318
+  ],
+  "runner_validation": "GitHub Actions read-only; each of eight jobs limited to <=64 frozen symbols for one ended UTC day",
+  "actual_artifact_download_readback": "SUCCESS; eight outer artifact ZIPs downloaded; each original source ZIP SHA matches attempts.json and publisher CHECKSUM; each inner CSV has one member, 1440 ordered UTC microsecond rows",
+  "source_artifacts": [
+    {
+      "start": 0,
+      "count": 64,
+      "run": 40006012284,
+      "id": 12524421938,
+      "size": 2186014,
+      "sha": "b78fc21cdbb79fe076e89850711d584af2a51c8dd13ae4621002271b5355d5f3",
+      "artifact_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40006012284/artifacts/12524421938"
+    },
+    {
+      "start": 64,
+      "count": 64,
+      "run": 40007027318,
+      "id": 12524741899,
+      "size": 2118209,
+      "sha": "538514bb498d7762a26d99cac77fd3936b58879e55e1b13e0cdfcacd84ff64fc",
+      "artifact_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40007027318/artifacts/12524741899"
+    },
+    {
+      "start": 128,
+      "count": 64,
+      "run": 40007027318,
+      "id": 12523858677,
+      "size": 2228998,
+      "sha": "07cf8a8044ccb30c130b9e21472a36270e72ce661b6f0d1ed0bf08b300636d12",
+      "artifact_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40007027318/artifacts/12523858677"
+    },
+    {
+      "start": 192,
+      "count": 64,
+      "run": 40007027318,
+      "id": 12524392382,
+      "size": 2089067,
+      "sha": "a502d4e7a47b648ae5ceeb4c957cc17adb3026ed1e97cbe5c284290e86b2bb81",
+      "artifact_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40007027318/artifacts/12524392382"
+    },
+    {
+      "start": 256,
+      "count": 64,
+      "run": 40007027318,
+      "id": 12525066017,
+      "size": 2267914,
+      "sha": "fc24df740dbadca62f310dbf76cd0ca16ed635c0e089eaad00f5de1396bc6ae3",
+      "artifact_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40007027318/artifacts/12525066017"
+    },
+    {
+      "start": 320,
+      "count": 64,
+      "run": 40007027318,
+      "id": 12525190524,
+      "size": 2179807,
+      "sha": "78347a20c46d0941065612b3c7bf3dffc323819aaf043b72058799a601dfaa29",
+      "artifact_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40007027318/artifacts/12525190524"
+    },
+    {
+      "start": 384,
+      "count": 64,
+      "run": 40007027318,
+      "id": 12524981109,
+      "size": 2215681,
+      "sha": "8819abc5527c5355e70ab2c8a5f59d180fdc45b94d35c0b3fbfad80b92d4710d",
+      "artifact_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40007027318/artifacts/12524981109"
+    },
+    {
+      "start": 448,
+      "count": 63,
+      "run": 40007027318,
+      "id": 12524202871,
+      "size": 2110278,
+      "sha": "ca81a93465da95e706c62394adf69add3a36491a0b7c705696c71ffa40267365",
+      "artifact_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40007027318/artifacts/12524202871"
+    }
+  ],
+  "canonical_independent_full511_sha_ledger_sha256": "c59162f95cbb1921141dcca8d7e6bf0c3479eecd360ba63cc5099f86077f1556",
+  "canonical_independent_full511_sha_ledger_bytes": 48130,
+  "full511_ledger_contains": "511 symbol => original ZIP SHA256, 8 artifacts outer SHA256, attempts/summary hashes and validation description; local user-downloadable file generated in this chat.",
+  "two_completed_workflow_runs": {
+    "first64": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40006012284",
+    "remaining447": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40007027318"
+  },
+  "offline_ci_latest": "35/35 PASS across four test suites, including real original D0/D1 modules with synthetic market sources; no real full-window strategy evaluation",
+  "artifact_expiry_note": "30-day retention; GitHub original archived source artifacts are not permanent, retain source SHA ledger and download archival artifacts before expiry",
+  "original_9_days_required": 9,
+  "original_symbol_day_sources_required": 4599,
+  "original_symbol_day_sources_verified_this_turn": 511,
+  "remaining_symbol_day_sources_not_verified": 4088,
+  "current_full_market_one_day_source_coverage": "511/511, 2026-10-22 UTC only",
+  "complete_historical_7d_d0_d1_replay": false,
+  "original_historical_tick_available_at_proven": false,
+  "historical_dynamic_listing_pit_proven": false,
+  "all_511_tick_ticker_24h_rolling_equivalence_proven": false,
+  "independent_other_ai_review": "NOT_DONE",
+  "actual_net_executable_return": "UNKNOWN",
+  "G0": "PARTIAL",
+  "G1": "NOT_SCORABLE",
+  "G2": "NOT_PASSED",
+  "G3": "NOT_PASSED",
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_MERGE": true,
+  "NO_DEPLOY": true,
+  "NO_PAID": true,
+  "NO_AUTOMATIONS": true,
+  "NO_MAC_NETWORK": true,
+  "NO_GMAIL": true,
+  "NO_TRADES": true
+}
