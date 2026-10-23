@@ -102,7 +102,7 @@ class SealedMemoryHTTPSIntegrationTests(unittest.TestCase):
                 with patch("http.client.HTTPSConnection",
                            side_effect=AssertionError("network denied")):
                     report=run_fake_concurrent(
-                        src,root,max_total=5,max_blocks=1,
+                        src,root,max_total=3,max_blocks=1,
                         max_refreshes=0,window_ms=5000,
                         head_ttl_ms=500,head_min_poll_age_ms=250)
             self.assertEqual(report["block_attempts"],1)
