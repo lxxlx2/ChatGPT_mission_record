@@ -11,6 +11,8 @@ on:
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_spot511_closed_minute_feed.py"
       - "crypto-300-profit-mission/local-agent/scripts/monster_v4_spot511_d0_d1_tape.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_spot511_d0_d1_tape.py"
+      - "crypto-300-profit-mission/local-agent/scripts/monster_v4_spot511_paired_sqlite.py"
+      - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_spot511_paired_sqlite.py"
       - ".github/workflows/monster-spot511-manual-source-batch-ci.yml"
   pull_request:
     paths:
@@ -20,6 +22,8 @@ on:
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_spot511_closed_minute_feed.py"
       - "crypto-300-profit-mission/local-agent/scripts/monster_v4_spot511_d0_d1_tape.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_spot511_d0_d1_tape.py"
+      - "crypto-300-profit-mission/local-agent/scripts/monster_v4_spot511_paired_sqlite.py"
+      - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_spot511_paired_sqlite.py"
       - ".github/workflows/monster-spot511-manual-source-batch-ci.yml"
   workflow_dispatch:
 
@@ -45,6 +49,8 @@ jobs:
           python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_v4_spot511_closed_minute_feed.py
           python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_spot511_d0_d1_tape.py
           python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_v4_spot511_d0_d1_tape.py
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_spot511_paired_sqlite.py
+          python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_v4_spot511_paired_sqlite.py
       - name: Synthetic official-format publisher intake tests (no HTTP)
         env:
           PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
@@ -52,3 +58,4 @@ jobs:
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_spot511_manual_publisher_batch.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_closed_minute_feed.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_d0_d1_tape.py" -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_paired_sqlite.py" -v
