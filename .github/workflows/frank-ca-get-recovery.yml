@@ -20,4 +20,4 @@ jobs:
       - name: Check shipped JavaScript syntax
         run: node --check crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js
       - name: Run GET-only recovery cases without RPC or production state
-        run: node --test crypto-300-profit-mission/local-agent/tests/test_frank_ca_get_resume.mjs
+        run: node --test crypto-300-profit-mission/local-agent/tests/test_frank_ca_get_resume.mjs crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs
