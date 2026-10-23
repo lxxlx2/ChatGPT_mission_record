@@ -10,14 +10,14 @@ import json
 import os
 from pathlib import Path
 import re
-import subprocess
-import tempfile
+from importlib.metadata import PackageNotFoundError, version
 
 SCHEMA = "bsc-f0-d1-two-role-approval-offline-v1"
 HEX64 = re.compile(r"[0-9a-f]{64}\Z")
 HEX40 = re.compile(r"[0-9a-f]{40}\Z")
 GRANT_ID = re.compile(r"[a-zA-Z0-9_-]{12,80}\Z")
-OPENSSL = "/usr/bin/openssl"
+ED25519_BACKEND = "cryptography"
+ED25519_BACKEND_VERSION = "46.0.4"
 # INTENTIONALLY NO REAL TRUST ROOTS: cannot produce a live authorization.
 PINNED_LIVE_TRUST_ROOTS = {}
 PRIVATE_FIXED_REGISTRY = (Path.home() / "Library" / "Application Support" /
@@ -41,47 +41,60 @@ def approval_message(role, digest, commit):
             commit + "\n").encode("ascii")
 
 
+def require_ed25519_backend():
+    """Use the exact audited cross-platform Ed25519 backend, or fail closed.
+
+    Mac /usr/bin/openssl is LibreSSL 3.3.6 and does not support Ed25519.
+    D1 never downgrades to weaker or skipped validation.
+    """
+    try:
+        installed = version(ED25519_BACKEND)
+    except PackageNotFoundError as exc:
+        raise ValueError("D1_ED25519_BACKEND_UNAVAILABLE") from exc
+    if installed != ED25519_BACKEND_VERSION:
+        raise ValueError("D1_ED25519_BACKEND_VERSION_MISMATCH")
+    try:
+        from cryptography.exceptions import InvalidSignature
+        from cryptography.hazmat.primitives.serialization import (
+            load_pem_public_key, Encoding, PublicFormat)
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+            Ed25519PublicKey)
+    except (ImportError, OSError) as exc:
+        raise ValueError("D1_ED25519_BACKEND_UNAVAILABLE") from exc
+    return InvalidSignature, load_pem_public_key, Encoding, PublicFormat, Ed25519PublicKey
+
+
+def _ed25519_public_key(pubkey):
+    _need(type(pubkey) is bytes and
+          pubkey.startswith(b"-----BEGIN PUBLIC KEY-----") and
+          len(pubkey) <= 4096, "D1_PUBLIC_KEY_PARSE_FAILED")
+    _, loader, _, _, key_type = require_ed25519_backend()
+    try:
+        key = loader(pubkey)
+    except (ValueError, TypeError, IndexError) as exc:
+        raise ValueError("D1_PUBLIC_KEY_PARSE_FAILED") from exc
+    _need(isinstance(key, key_type), "D1_PUBLIC_KEY_NOT_ED25519")
+    return key
+
+
 def _verify_signature(pubkey, message, signature):
-    """Use vetted OpenSSL Ed25519; no handwritten cryptographic verification."""
-    _need(type(pubkey) is bytes and pubkey.startswith(b"-----BEGIN PUBLIC KEY-----")
-          and type(signature) is bytes and len(signature) == 64,
+    """Same pinned Ed25519 backend for both test signatures and verification."""
+    _need(type(signature) is bytes and len(signature) == 64,
           "D1_SIGNED_PROOF_INVALID")
-    _need(Path(OPENSSL).is_file(), "D1_OPENSSL_NOT_INSTALLED")
-    with tempfile.TemporaryDirectory(prefix="f0-d1-verify-") as dirname:
-        base = Path(dirname)
-        files = [(base / "k.pem", pubkey), (base / "msg", message),
-                 (base / "sig", signature)]
-        for location, blob in files:
-            with os.fdopen(os.open(location, os.O_CREAT | os.O_EXCL |
-                                  os.O_WRONLY | getattr(os, "O_NOFOLLOW", 0),
-                                  0o600), "wb") as out:
-                out.write(blob)
-                out.flush()
-                os.fsync(out.fileno())
-        try:
-            run = subprocess.run(
-                [OPENSSL, "pkeyutl", "-verify", "-pubin",
-                 "-inkey", str(files[0][0]), "-rawin",
-                 "-in", str(files[1][0]), "-sigfile", str(files[2][0])],
-                check=False, capture_output=True, timeout=5,
-                env={"PATH": "/usr/bin:/bin", "HOME": str(base)})
-        except (OSError, subprocess.TimeoutExpired) as exc:
-            raise ValueError("D1_VERIFIER_UNAVAILABLE") from exc
-        return run.returncode == 0
+    invalid_signature, _, _, _, _ = require_ed25519_backend()
+    key = _ed25519_public_key(pubkey)
+    try:
+        key.verify(signature, message)
+    except invalid_signature:
+        return False
+    return True
 
 
 def _public_key_fingerprint(pubkey):
-    """Canonical DER fingerprint: distinct aliases for one key are NOT two roles."""
-    try:
-        res = subprocess.run(
-            [OPENSSL, "pkey", "-pubin", "-outform", "DER"],
-            input=pubkey, capture_output=True, check=False,
-            timeout=5, env={"PATH":"/usr/bin:/bin"})
-    except (OSError, subprocess.TimeoutExpired) as exc:
-        raise ValueError("D1_PUBLIC_KEY_PARSE_FAILED") from exc
-    _need(res.returncode == 0 and len(res.stdout) > 0,
-          "D1_PUBLIC_KEY_PARSE_FAILED")
-    return sha(res.stdout)
+    """Canonical raw Ed25519 bytes disallow same key under two PEM aliases."""
+    key = _ed25519_public_key(pubkey)
+    _, _, encoding, public_format, _ = require_ed25519_backend()
+    return sha(key.public_bytes(encoding.Raw, public_format.Raw))
 
 
 def validate_approvals_offline(permit_raw, expected_sha, proofs, trust_roots):

@@ -2,7 +2,6 @@
 import json
 import os
 from pathlib import Path
-import subprocess
 import sys
 import tempfile
 import unittest
@@ -106,64 +105,79 @@ class D1GrantGateTests(unittest.TestCase):
             validate_live_trust_roots_not_enrolled()
 
     def test_cryptographic_signatures_are_role_bound_and_cannot_swap(self):
-        with tempfile.TemporaryDirectory() as d:
-            root=Path(d)
-            anchors={}
-            proofs={}
-            permit=sample()
-            for role in ("user","reviewer"):
-                priv=root/(role+".priv.pem")
-                pub=root/(role+".pub.pem")
-                data=root/(role+".msg")
-                sig=root/(role+".sig")
-                subprocess.run(["/usr/bin/openssl","genpkey","-algorithm","ED25519",
-                                "-out",str(priv)],check=True,capture_output=True)
-                subprocess.run(["/usr/bin/openssl","pkey","-in",str(priv),
-                                "-pubout","-out",str(pub)],check=True,capture_output=True)
-                data.write_bytes(approval_message(role,sha(permit),SHA))
-                subprocess.run(["/usr/bin/openssl","pkeyutl","-sign",
-                                "-inkey",str(priv),"-rawin",
-                                "-in",str(data),"-out",str(sig)],
-                               check=True,capture_output=True)
-                anchors[role]={"key_id":role+"-test-only",
-                               "public_pem":pub.read_bytes()}
-                proofs[role]={"key_id":role+"-test-only",
-                              "signature":sig.read_bytes()}
-            ok=validate_approvals_offline(permit,SHA,proofs,anchors)
-            self.assertEqual(ok["verified_for"],"OFFLINE_FAKE_TEST_ONLY_NO_NETWORK")
-            with self.assertRaises(ValueError):
-                validate_approvals_offline(permit,SHA,
-                    {"user":proofs["reviewer"],"reviewer":proofs["user"]},anchors)
-            with self.assertRaisesRegex(ValueError,"SIGNED_PROOF_INVALID"):
-                changed=dict(proofs)
-                changed["reviewer"]=dict(proofs["reviewer"])
-                changed["reviewer"]["signature"]=b"x"*64
-                validate_approvals_offline(permit,SHA,changed,anchors)
-            with self.assertRaisesRegex(ValueError,"SIGNED_PROOF_INVALID"):
-                tampered=json.loads(permit)
-                tampered["grant_id"]="a-different-offline-grant"
-                validate_approvals_offline(
-                    json.dumps(tampered,sort_keys=True,
-                               separators=(",",":")).encode(),
-                    SHA,proofs,anchors)
-            # An attacker cannot relabel the SAME public key as an
-            # independent reviewer, even if an alias key ID differs.
-            with self.assertRaisesRegex(ValueError,"SAME_SIGNER_FORBIDDEN"):
-                aliased={k:dict(v) for k,v in anchors.items()}
-                aliased["reviewer"]["public_pem"]=aliased["user"]["public_pem"]
-                forged={k:dict(v) for k,v in proofs.items()}
-                forged["reviewer"]["signature"]=proofs["user"]["signature"]
-                validate_approvals_offline(permit,SHA,forged,aliased)
-            with self.assertRaisesRegex(ValueError,"PERMIT_SCOPE_INVALID"):
-                tampered=json.loads(permit)
-                tampered["max_total_attempts"]=33
-                validate_approvals_offline(json.dumps(tampered).encode(),
-                                           SHA,proofs,anchors)
-            with self.assertRaisesRegex(ValueError,"PERMIT_SCOPE_INVALID"):
-                tampered=json.loads(permit)
-                tampered["approved_commit_sha"]="2"*40
-                validate_approvals_offline(json.dumps(tampered).encode(),
-                                           SHA,proofs,anchors)
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+            Ed25519PrivateKey)
+        from cryptography.hazmat.primitives.serialization import (
+            Encoding, PublicFormat)
+        from f0_l2_d1_grant import require_ed25519_backend
+        require_ed25519_backend()
+        anchors, proofs = {}, {}
+        permit = sample()
+        for role in ("user", "reviewer"):
+            tempkey = Ed25519PrivateKey.generate()
+            pub = tempkey.public_key().public_bytes(
+                Encoding.PEM, PublicFormat.SubjectPublicKeyInfo)
+            signature = tempkey.sign(approval_message(role, sha(permit), SHA))
+            anchors[role] = {"key_id":role+"-test-only","public_pem":pub}
+            proofs[role] = {"key_id":role+"-test-only","signature":signature}
+        ok = validate_approvals_offline(permit,SHA,proofs,anchors)
+        self.assertEqual(ok["verified_for"],"OFFLINE_FAKE_TEST_ONLY_NO_NETWORK")
+        with self.assertRaises(ValueError):
+            validate_approvals_offline(permit,SHA,
+                {"user":proofs["reviewer"],"reviewer":proofs["user"]},anchors)
+        with self.assertRaisesRegex(ValueError,"SIGNED_PROOF_INVALID"):
+            changed={k:dict(v) for k,v in proofs.items()}
+            changed["reviewer"]["signature"]=b"x"*64
+            validate_approvals_offline(permit,SHA,changed,anchors)
+        with self.assertRaisesRegex(ValueError,"SIGNED_PROOF_INVALID"):
+            tampered=json.loads(permit)
+            tampered["grant_id"]="a-different-offline-grant"
+            validate_approvals_offline(
+                json.dumps(tampered,sort_keys=True,
+                           separators=(",",":")).encode(),SHA,proofs,anchors)
+        with self.assertRaisesRegex(ValueError,"SAME_SIGNER_FORBIDDEN"):
+            aliased={k:dict(v) for k,v in anchors.items()}
+            aliased["reviewer"]["public_pem"]=aliased["user"]["public_pem"]
+            forged={k:dict(v) for k,v in proofs.items()}
+            forged["reviewer"]["signature"]=proofs["user"]["signature"]
+            validate_approvals_offline(permit,SHA,forged,aliased)
+        with self.assertRaisesRegex(ValueError,"PERMIT_SCOPE_INVALID"):
+            tampered=json.loads(permit)
+            tampered["max_total_attempts"]=33
+            validate_approvals_offline(json.dumps(tampered).encode(),
+                                       SHA,proofs,anchors)
+        with self.assertRaisesRegex(ValueError,"PERMIT_SCOPE_INVALID"):
+            tampered=json.loads(permit)
+            tampered["approved_commit_sha"]="2"*40
+            validate_approvals_offline(json.dumps(tampered).encode(),
+                                       SHA,proofs,anchors)
+
+    def test_backend_missing_or_wrong_version_denies_not_skips(self):
+        from unittest.mock import patch
+        from importlib.metadata import PackageNotFoundError
+        from f0_l2_d1_grant import require_ed25519_backend
+        with patch("f0_l2_d1_grant.version",return_value="0.0.0"):
+            with self.assertRaisesRegex(ValueError,
+                                        "D1_ED25519_BACKEND_VERSION_MISMATCH"):
+                require_ed25519_backend()
+        with patch("f0_l2_d1_grant.version",
+                   side_effect=PackageNotFoundError("cryptography")):
+            with self.assertRaisesRegex(ValueError,
+                                        "D1_ED25519_BACKEND_UNAVAILABLE"):
+                require_ed25519_backend()
+
+    def test_other_algorithm_and_corrupted_ed25519_key_denied(self):
+        from cryptography.hazmat.primitives.asymmetric import ec
+        from cryptography.hazmat.primitives.serialization import (
+            Encoding, PublicFormat)
+        from f0_l2_d1_grant import _public_key_fingerprint
+        another = ec.generate_private_key(
+            ec.SECP256R1()).public_key().public_bytes(
+                Encoding.PEM,PublicFormat.SubjectPublicKeyInfo)
+        with self.assertRaisesRegex(ValueError,"D1_PUBLIC_KEY_NOT_ED25519"):
+            _public_key_fingerprint(another)
+        with self.assertRaisesRegex(ValueError,"D1_PUBLIC_KEY_PARSE_FAILED"):
+            _public_key_fingerprint(b"-----BEGIN PUBLIC KEY-----\nnot-a-key\n")
 
 
 if __name__=="__main__":
