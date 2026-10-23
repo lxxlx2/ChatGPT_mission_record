@@ -56,10 +56,13 @@
       "watch_queue_id": 46,
       "first_seen_ms": 1792699920000,
       "queue_state": "EVALUATED",
-      "actual_original_setup_event": "UNKNOWN_UNTIL_EVENT_LEVEL_REPLAY",
+      "actual_original_setup_event": "INDEPENDENT_FROZEN_RULE_RECOMPUTE_NO",
       "classification": "OUT_OF_SCOPE_TOKENIZED_SECURITY",
       "official_announcement_published_utc_date": "2026-07-29",
-      "official_announcement": "https://www.binance.com/en-AE/support/announcement/detail/fd3c0f17a7504eb5be1cb1911c6da0cd"
+      "official_announcement": "https://www.binance.com/en-AE/support/announcement/detail/fd3c0f17a7504eb5be1cb1911c6da0cd",
+      "source_artifact_id": 12524741899,
+      "recomputed_first_valid_eval_ms": 1792700100000,
+      "reconstructed_expected_original_core_event_id": null
     },
     {
       "spot_symbol": "IBMBUSDT",
@@ -68,10 +71,13 @@
       "watch_queue_id": 43,
       "first_seen_ms": 1792675980000,
       "queue_state": "EVALUATED",
-      "actual_original_setup_event": "UNKNOWN_UNTIL_EVENT_LEVEL_REPLAY",
+      "actual_original_setup_event": "INDEPENDENT_FROZEN_RULE_RECOMPUTE_YES",
       "classification": "OUT_OF_SCOPE_TOKENIZED_SECURITY",
       "official_announcement_published_utc_date": "2026-08-06",
-      "official_announcement": "https://www.binance.com/en/support/announcement/detail/a400bab019a543f98cdec55c2ecca537"
+      "official_announcement": "https://www.binance.com/en/support/announcement/detail/a400bab019a543f98cdec55c2ecca537",
+      "source_artifact_id": 12524392382,
+      "recomputed_first_valid_eval_ms": 1792676160000,
+      "reconstructed_expected_original_core_event_id": "17c2a96cab2a0b3a45ff15268c0cd41f44ad4860de93f5a08949c1639c928b1e"
     },
     {
       "spot_symbol": "SHAZBUSDT",
@@ -80,10 +86,13 @@
       "watch_queue_id": 13,
       "first_seen_ms": 1792416780000,
       "queue_state": "EVALUATED",
-      "actual_original_setup_event": "UNKNOWN_UNTIL_EVENT_LEVEL_REPLAY",
+      "actual_original_setup_event": "INDEPENDENT_FROZEN_RULE_RECOMPUTE_YES",
       "classification": "OUT_OF_SCOPE_TOKENIZED_SECURITY",
       "official_announcement_published_utc_date": "2026-09-30",
-      "official_announcement": "https://www.binance.com/en/support/announcement/detail/172e44302d6143578e40acc48570a2e5"
+      "official_announcement": "https://www.binance.com/en/support/announcement/detail/172e44302d6143578e40acc48570a2e5",
+      "source_artifact_id": 12533841417,
+      "recomputed_first_valid_eval_ms": 1792416960000,
+      "reconstructed_expected_original_core_event_id": "4be01b4328f10b128fe1ed31854f06ef3260157916805944d24c57595173e9d9"
     },
     {
       "spot_symbol": "MRNABUSDT",
@@ -116,10 +125,10 @@
   "remaining_watch_episodes_without_this_bstock_match": 41,
   "remaining_unique_watch_symbols_without_this_bstock_match": 30,
   "other_remaining_symbols_crypto_identity_verified_by_this_audit": false,
-  "observed_42_setups_containing_known_bstocks_minimum": 1,
-  "observed_42_setups_containing_known_bstocks_maximum": 3,
-  "lower_bound_setups_not_from_these_five_bstocks": 39,
-  "lower_bound_setup_rate_not_from_these_five_bstocks_per_day": 7.8,
+  "observed_42_setups_containing_known_bstocks_minimum": 2,
+  "observed_42_setups_containing_known_bstocks_maximum": 2,
+  "lower_bound_setups_not_from_these_five_bstocks": 40,
+  "lower_bound_setup_rate_not_from_these_five_bstocks_per_day": 8,
   "official_crypto_only_setup_count": "UNKNOWN",
   "method": "Join actual FIFO8 queue episodes by venue+symbol to exact frozen Spot T0 original exchangeInfo symbol rows. Positive bStock matches require Binance publisher's dated security-specific English announcements strictly earlier than the 2026-10-18..22 replay window; never use a ticker suffix heuristic and never rewrite/remove original WATCH.",
   "limitations": [
@@ -130,7 +139,7 @@
     "G3 target assessment formally requires complete eligible crypto-only set, all true setup episode IDs, and completed relevant window; five complete calendar days here are descriptive only.",
     "No order notional, historical L2 bid/ask execution or fee-adjusted net-profit is inferred."
   ],
-  "follow_up": "Consume newly added fifo_setup_events and fair8_setup_events from a fresh source-verified same-core replay. Match official published eligible crypto-only identities before evaluating Stage77 G3; no change to frozen D0/D1 or approved Fair8.",
+  "follow_up": "At future full 511 original-core source replay, require per-SETUP event ID and source-backed asset type. The two reconstructed tokenized-equity SETUP IDs for SHAZB/IBMB must match the original engine ledger, and BEB must remain no-SETUP. Other remaining 40 SETUP identities are not yet independently certified crypto-only.",
   "release_gates": {
     "G0": "PARTIAL",
     "G1": "NOT_SCORABLE",
@@ -142,5 +151,67 @@
     "NO_GMAIL": true,
     "NO_TRADES": true,
     "NO_AUTOMATIONS": true
+  },
+  "independent_d1_recomputation": {
+    "source": "3 targeted original Binance official publisher single-day 1m ZIP with adjacent CHECKSUMs preserved in prior approved once-only CI artifact",
+    "direct_original_event_sqlite_readback": false,
+    "source_each_symbol_verified_rows": 1440,
+    "source_microsecond_timestamp_consecutive_each": true,
+    "official_zip_sha256_equal_official_adjacent_checksum_each": true,
+    "original_core_semantics": "six closed UTC 5m OHLC quote-volume bars, latest closed at each 3m selection tick, positive close steps among final3 >=2 and median(last3 5m quote) / median(first3 5m quote)>=1.5 and last_close>=middle_reference_close; preserve retry + final deadline",
+    "rows": [
+      {
+        "symbol": "SHAZBUSDT",
+        "artifact_id": 12533841417,
+        "source_archive_day": "2026-10-19",
+        "verified_zip_sha256": "f90b7e8bb529a69b9e04d79ac506b8ab14dc899f6f2908b37f9879e35e94ddca",
+        "first_valid_eval_ms": 1792416960000,
+        "closed_5m_latest_open_ms": 1792416600000,
+        "positive_steps_last3": 2,
+        "quote_ratio": "6.010304092423325389890094270",
+        "setup_first_valid": true,
+        "setup_by_deadline": true,
+        "expected_sha256_event_id": "4be01b4328f10b128fe1ed31854f06ef3260157916805944d24c57595173e9d9"
+      },
+      {
+        "symbol": "IBMBUSDT",
+        "artifact_id": 12524392382,
+        "source_archive_day": "2026-10-22",
+        "verified_zip_sha256": "6ba368e995e92dd9ec977d51f5494a4159bc7faf45c29bc0cf8e03621ce1bcab",
+        "first_valid_eval_ms": 1792676160000,
+        "closed_5m_latest_open_ms": 1792675800000,
+        "positive_steps_last3": 3,
+        "quote_ratio": "2.587916238808428342790036166",
+        "setup_first_valid": true,
+        "setup_by_deadline": true,
+        "expected_sha256_event_id": "17c2a96cab2a0b3a45ff15268c0cd41f44ad4860de93f5a08949c1639c928b1e"
+      },
+      {
+        "symbol": "BEBUSDT",
+        "artifact_id": 12524741899,
+        "source_archive_day": "2026-10-22",
+        "verified_zip_sha256": "3731b9ce78b7c87a90504a4068cd151de2cc9ca7b717629981bb2b28e5a19014",
+        "first_valid_eval_ms": 1792700100000,
+        "closed_5m_latest_open_ms": 1792699800000,
+        "positive_steps_last3": 2,
+        "quote_ratio": "5.041377153401541747731402155",
+        "setup_first_valid": false,
+        "setup_by_deadline": false,
+        "deadline_candidate_ticks_ms": [
+          1792700100000,
+          1792700280000,
+          1792700460000,
+          1792700640000,
+          1792700820000
+        ]
+      }
+    ],
+    "classified_setup_from_five_verified_bstock_episodes": 2,
+    "classified_late_episodes_excluded_from_setups": 2,
+    "other_completed_known_bstock_episode_without_setup": 1,
+    "raw_42_setup_minus_verified_two_bstock_setup": 40,
+    "qualifying_remaining_40_crypto_only_proven": false,
+    "model_thresholds_changed": false,
+    "full_3577_replay_rerun": false
   }
 }
