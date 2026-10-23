@@ -68,6 +68,25 @@ class PairedReplayTests(unittest.TestCase):
             self.assertEqual(report['watch_with_lagged_baseline_not_strict_3m'],0)
             self.assertEqual(report['fifo_setups'],2)
             self.assertEqual(report['fifo_setups'],report['fair8_setups'])
+            # Do not collapse D2 work items into only a SETUP count.
+            # Every research signal must have a stable core-generated ID,
+            # symbol, source-clock observation and original D1 details.
+            self.assertEqual(len(report['fifo_watch_events']),2)
+            self.assertEqual(report['fifo_watch_events'],report['fair8_watch_events'])
+            self.assertEqual(len(report['fifo_setup_events']),2)
+            self.assertEqual(report['fifo_setup_events'],report['fair8_setup_events'])
+            self.assertEqual({row['symbol'] for row in report['fifo_setup_events']},
+                             {'BTCUSDT','ETHUSDT'})
+            self.assertTrue(all(row['venue']=='spot' and
+                                row['event_type']=='SETUP_ACTIVE' and
+                                isinstance(row['observed_ms'],int) and
+                                row['details'].get('setup_candidate') is True
+                                for row in report['fifo_setup_events']))
+            self.assertTrue(all(row['event_type']=='WATCH_EARLY' and
+                                row['details'].get('snapshot_lag_ms')==pair.TICK_MS
+                                for row in report['fifo_watch_events']))
+            self.assertEqual(report['setup_event_source_grade'],
+                             'POSTHOC_OFFICIAL_1M_TICKER_PROXY_NOT_PIT_EXECUTION')
             self.assertEqual(report['fifo_first_service']['watched_queue_episodes'],2)
             self.assertEqual(report['fair8_first_service']['watched_queue_episodes'],2)
             self.assertEqual(report['fifo_first_service']['first_selected'],2)
