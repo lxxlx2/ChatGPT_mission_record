@@ -13,8 +13,8 @@ from f0_l2_d1_bundle import run_gated_fake_session
 from f0_l2_d1_coordinator import SealedMemoryHTTPSSource
 from f0_l2_d1_inventory_gate import consume_then_run_fake_once
 from f0_l2_d1_post_utc import OfflinePostUTCWindow
-from test_f0_l2_d1_bundle import D1BundleTests
-from test_f0_l2_d1_inventory_gate import D1InventoryGateTests
+import test_f0_l2_d1_bundle as bundle_fixture_module
+import test_f0_l2_d1_inventory_gate as inventory_fixture_module
 
 
 class MutableUTC:
@@ -26,7 +26,7 @@ class MutableUTC:
 
 class D1PostUTCTests(unittest.TestCase):
     def setUp(self):
-        self.fixture=D1BundleTests("test_composed_signed_scope_and_source_are_bound")
+        self.fixture=bundle_fixture_module.D1BundleTests("test_composed_signed_scope_and_source_are_bound")
         self.fixture.setUp()
         self.addCleanup(self.fixture.doCleanups)
         self.clock=MutableUTC(self.fixture.now)
@@ -140,7 +140,7 @@ class D1PostUTCTests(unittest.TestCase):
                     now=f.now,test_only_fake_post_utc_clock=self.clock)
 
     def test_expired_post_preserves_consumed_offline_marker(self):
-        fixture=D1InventoryGateTests(
+        fixture=inventory_fixture_module.D1InventoryGateTests(
             "test_independent_fake_signed_inventory_and_permit_are_bound")
         fixture.setUp()
         self.addCleanup(fixture.doCleanups)
