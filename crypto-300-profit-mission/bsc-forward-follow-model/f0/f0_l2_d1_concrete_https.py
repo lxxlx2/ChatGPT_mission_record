@@ -19,13 +19,17 @@ from f0_l2_d1_https import HOST, PORT
 
 MAX_REQUEST_BYTES = 2000
 
+# Private module-local test barrier. NOT cryptographic or production auth.
+_REVIEW_TEST_ONLY_CAPABILITY = object()
+
 
 def send_live(*_args, **_kwargs):
     raise ValueError("D1_CONCRETE_HTTPS_LIVE_DISABLED_REQUIRES_D2")
 
 
 def _review_concrete_https_once(request, *, final_post_guard,
-                                timeout_s=5.0, max_bytes=MAX_BODY_BYTES):
+                                _test_capability=None, timeout_s=5.0,
+                                max_bytes=MAX_BODY_BYTES):
     """Review concrete connection lifecycle with constructor PATCHED in tests.
 
     This PRIVATE primitive, like any low-level network library, is callable by
@@ -37,6 +41,8 @@ def _review_concrete_https_once(request, *, final_post_guard,
     NOT proven physical HTTPS byte emission. All attempted POSTs are
     irrevocably uncertain on write/read exceptions and NEVER retryable.
     """
+    if _test_capability is not _REVIEW_TEST_ONLY_CAPABILITY:
+        raise ValueError("D1_CONCRETE_HTTP_REVIEW_CAPABILITY_REQUIRED")
     if (not callable(final_post_guard) or
             type(timeout_s) not in (int, float) or isinstance(timeout_s, bool) or
             not 0 < timeout_s <= 5 or type(max_bytes) is not int or
