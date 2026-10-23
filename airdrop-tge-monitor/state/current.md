@@ -1,36 +1,38 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-23 20:06:21 Asia/Bangkok — latest VERIFIED durable PARTIAL terminal; new ACTION delivered via Gmail
+Updated: 2026-10-23 20:59:28 Asia/Bangkok — readback-verified durable PARTIAL terminal, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-23 20:06:21 Asia/Bangkok
-- latest_actual_run_status: PARTIAL_ACTION_DELIVERED
+- latest_actual_run: 2026-10-23 20:59:28 Asia/Bangkok
+- latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-23/200621-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-23/200420-attempt.md
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-23/205928-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-23/205823-attempt.md
 - latest_scheduled_shard: 0
-- latest_executed_shard: 0
-- stale_shard_recovery: false
+- latest_executed_shard: 3
+- stale_shard_recovery: true (one fairness override; shard3 oldest attempted)
 - latest_candidate_count: 6
-- latest_triggered_events: 1 (verified and delivered)
+- latest_triggered_events: 0
 - latest_identity_failures: 0
 - latest_source_failures: 6
-- latest_notification_decision: GMAIL_DELIVERED_APP_SILENT
-- latest_notification_status: DELIVERED_GMAIL_SENT_READBACK_AND_EVENT_ARCHIVE
-- latest_gmail_attempted: true
-- latest_gmail_message_id: 1a168dd4a732eab4
-- latest_event_archive: airdrop-tge-monitor/reports/events/2026/2026-10/2026-10-23/200501-standx-neosoul-dna-batch1-wallet-registration.md
-- latest_source_gaps: Concrete_extra_USDC,Block_Stranding_JS,StandX_original_X,SurfBoard_raffle_dated_rules,Cambria_migration,NeoSoul_Discord_form_JS_only
+- latest_notification_decision: SILENT_NO_NEW_ACTION
+- latest_notification_status: NO_ACTION_NO_EMAIL_APP_SILENT
+- latest_gmail_attempted: false
+- latest_gmail_message_id: none_for_this_run
+- latest_event_archive: none_for_this_run
+- latest_source_gaps: Concrete_extra_USDC,StandX_original_X,SurfBoard_raffle_rules,Cambria_migration,Crusoe_SPV_Gmail_blocked,Republic_rTTOK_Gmail_blocked
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-10-23 20:06:21 Asia/Bangkok
 - last_meaningful_attempt_at_shard1: 2026-10-23 17:02:00 Asia/Bangkok
 - last_meaningful_attempt_at_shard2: 2026-10-23 18:59:28 Asia/Bangkok
-- last_meaningful_attempt_at_shard3: 2026-10-23 11:58:03 Asia/Bangkok
+- last_meaningful_attempt_at_shard3: 2026-10-23 20:59:28 Asia/Bangkok
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_primary_final_write: VERIFIED_DURABLE 200621-final.md
-- latest_terminal_readback: PENDING_REAL_READBACK
-- latest_four_executed_shards_prior: [0,1,2,2]
-- off_minute_task_run: true (20:04 attempt; punctual HH:00 proof not independently verified)
-- user_alert: NeoSoul StandX Batch1 BNB wallet registration delivered by Gmail; personal eligibility UNKNOWN; no App push
+- latest_primary_final_write: VERIFIED_DURABLE 205928-final.md commit e3ca02e528ef77bad203c93ccaf201c0958d442d
+- latest_terminal_readback: VERIFIED blob caf7c1d72cb581cd894f3ac6e006b3e195c29fb7
+- latest_four_executed_shards_prior: [1,2,2,0]
+- off_minute_task_run: true (20:58; not proof of punctual HH:00 scheduler trigger)
+- last_delivered_event_key: neosoul:dna_standx_batch1_wallet_registration:2026-10-20
+- last_delivered_gmail_message_id: 1a168dd4a732eab4 (2026-10-23 20:04 BKK; prior run, suppressed unchanged)
+- user_alert: none for this run
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
