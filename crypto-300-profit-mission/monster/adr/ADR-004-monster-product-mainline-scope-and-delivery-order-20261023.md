@@ -93,3 +93,21 @@
 真实可复验来源请求：Binance Spot Klines连接器，`symbol=BONKUSDT, interval=1m, UTC first 1792627200000, UTC inclusive end 1792713599999, limits=[1000,500]`，只使用`structuredContent.result`核验，没有冒称Publisher字节或SHA。单币仅作通路验证，未来策略样本与G0–G6门槛不提升。
 
 **同一轮采集入口安全性修复与验证状态（2026-10-23）**：针对刚新增的`monster_spot511_manual_publisher_batch.py`发现（1）原始写入使用`os.replace`可能在检查与提交间竞态覆盖另一执行方文件，且系统临时目录与目标目录可能分盘；（2）`zipfile.BadZipFile`未归入逐币失败，可能中断后续批次；（3）软链目标应拒绝跟随。本轮对应源码commit `afe9fb72aec3faf2368b9e34ad2cab7e53752b1b`、增加3个合成反例测试commit `195c36a64c3260cec140a487eb762d3284fce0b1`。修正使用目标目录内临时源文件和`os.link`独占提交，捕获损坏ZIP并显式阻止现存软链，失败保留缺失、不覆盖原有源。**已提交并Git blob读回；当前CI返回无可核验run，11项测试为已编写、未宣称运行PASS。**
+
+## 9. 2026-10-23：Monster官方Spot511采集代码首次隔离运行验收（11/11）
+
+**本轮新增真实执行证据，替换上一节旧时点“11项测试已写但未运行”的状态；不是回填到之前的CI/独立Review记录。** 从PR #30 HEAD `6dea402159a037289e6c2cc62bccf19429a11a7c` 按GitHub文件完整内容恢复以下固定Blob源码至隔离Linux工作区，分别使用Git原生对象算法 `sha1("blob "+len+"\\0"+原字节)` 读回与远端SHA一致，确认没有复制时改写测试代码：
+
+- `local-agent/scripts/monster_spot511_manual_publisher_batch.py` = `64454bcc8a755f8d2932dc159c013b1b701623be`
+- `local-agent/tests/test_monster_spot511_manual_publisher_batch.py` = `aa7162eb553a1b3035b719f2995f45966843a322`
+- `local-agent/scripts/monster_v4_stage166_spot511_official_1m_intake.py` = `517fe5f06ac912230c8bb033798995b580f8332c`
+
+运行环境 `Linux x86_64 / Python 3.13.5`；以原测试的显式合成511-roster代替未调用的Stage163历史T0档案加载依赖，**Stage166校验函数和新采集器源码均未替换**，并未把合成roster冒充原真实511名册。实际命令：
+
+```sh
+PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot511_manual_publisher_batch.py' -q
+```
+
+**原仓库11/11实际PASS，Ran 11 tests in 0.041s / OK；Python `py_compile` 对三份原文件全部通过。** 测试含默认不联网、已结束日期、有界来源、完整1440根、HASH不匹配、坏ZIP不阻断后续币、竞态拒绝覆盖、目标软链接拒绝、重复执行原文件SHA不改变，以及第三方重定向拒绝。所有源来自mock byte arrays，无真实Publisher HTTP交易和实际Binance完整数据。独立审查状态仍 `NOT_DONE`；GitHub Actions在本会话已能访问的接口中尚无相应可核验run/Job日志，故**不能把本地PASS写成GitHub CI PASS**。本轮没有修改新策略参数、Mac程序、后台、Gmail、Frank、交易或BSC。
+
+本项源工具 `OFFLINE_CODE_TEST_PASS`，正式 `G0 PARTIAL/G1 NOT_SCORABLE/G4 UNKNOWN/G6 NO_GO` 不变。下一主线不是再扩同类坏包测试，而是把历史/正式原始Minute publisher完整来源实际纳入现有原D0与Fair8的同源因果回放，区分用户能得到的有效SETUP与只有更快审核的伪提升。
