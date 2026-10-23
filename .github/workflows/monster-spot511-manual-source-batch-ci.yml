@@ -61,7 +61,7 @@ jobs:
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_paired_sqlite.py" -v
 
   one-shot-official-publisher-bonk:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/research/monster-v4-local-discovery-20261010' && contains(github.event.head_commit.message, '[MONSTER_ONE_SHOT_PUBLISHER_BONK_20261022]') }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/research/monster-v4-local-discovery-20261010' && contains(github.event.head_commit.message, '[MONSTER_ONE_SHOT_PUBLISHER_BONK_20261022_V2]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
