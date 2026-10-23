@@ -59,3 +59,49 @@ jobs:
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_closed_minute_feed.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_d0_d1_tape.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_paired_sqlite.py" -v
+
+  one-shot-official-publisher-bonk:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/research/monster-v4-local-discovery-20261010' && contains(github.event.head_commit.message, '[MONSTER_ONE_SHOT_PUBLISHER_BONK_20261022]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout fixed research branch
+        uses: actions/checkout@v4
+      - name: Python for exactly one publisher archive
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Read-only one BONK Spot 1m ZIP and official CHECKSUM
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/monster-spot511-pilot"
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_spot511_manual_publisher_batch.py --day 2026-10-22 --start-index 93 --count 1 --dest "$RUNNER_TEMP/monster-spot511-pilot/source" --out "$RUNNER_TEMP/monster-spot511-pilot/manifest.json" --download
+          python - <<'PY'
+          import json
+          import pathlib
+          import os
+          import sys
+          root = pathlib.Path(os.environ["RUNNER_TEMP"]) / "monster-spot511-pilot"
+          manifest = json.loads((root / "manifest.json").read_text())
+          rows = manifest["source_records"]
+          if (manifest["execution"] != "MANUAL_DOWNLOAD" or manifest["frozen_total"] != 511
+              or manifest["day_utc"] != "2026-10-22" or len(rows) != 1
+              or rows[0]["symbol"] != "BONKUSDT"
+              or rows[0]["status"] != "VERIFIED_FULL_DAY_1440"
+              or rows[0]["closed_one_minute_rows"] != 1440
+              or manifest["verified_downloads"] != 1
+              or manifest["G6"] != "NO_GO"):
+              print("PUBLISHER_PILOT_NO_PASS: source unavailable or insufficient proof")
+              sys.exit(1)
+          print("PUBLISHER_PILOT_VALIDATED", rows[0]["symbol"],
+                rows[0]["day_utc"], rows[0]["zip_sha256"])
+          PY
+      - name: Save public source bytes and manifest for independent verification
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-spot511-bonk-20261022-publisher-one-shot-${{ github.run_id }}
+          path: ${{ runner.temp }}/monster-spot511-pilot/
+          retention-days: 7
+          if-no-files-found: warn
