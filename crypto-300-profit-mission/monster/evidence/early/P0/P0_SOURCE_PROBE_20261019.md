@@ -1078,3 +1078,11 @@ The Graph 官方 [Managing API keys](https://thegraph.com/docs/en/subgraphs/prov
 **P0整体：`SOURCE_PARTIALLY_FEASIBLE_NOT_GATE_PASS`**。现已取得V2前30个历史池身份，但仍未取得30/30`PairCreated`原事件和准确首次出现/可交易时间证据，也未做24/30部署/首池与18/30首次双向可卖模拟覆盖，故原`COVERAGE_RATE=NOT_SCORABLE`、`G4 UNKNOWN / G6 NO_GO`保持。既不因为小规模正面源证据就直接启动十周建模，也不因为HTTP网络条件把链上源永久判死。
 
 **下一次有意义交付**只接受：在实际Mac前台、免费、可限额/可中断的read-only枚举中复现既定30个顺序候选并留原始SHA归档；随后对随机预定样本查原创建交易、首次真实Swap/流动性（包含失效样本），达到24/30与18/30才进入P1。对V3和launchpad缺失需在同一P0结果中明确范围，不能偷换成“全BSC完整母体”。
+
+## 2026-10-24：冻结 V2 30例 P0 证据的跨表独立一致性核验（无新链上来源）
+
+- 核验 Git blob `978f437788689eef265b47511fa963490c3e9c96` 的完整 JSON（1,056,161 字符）。实际通过 GitHub blob 接口读取，再按 rank/token_ca/pool 关联 `bsc_v2_p0_current_frozen30_p0_gate_matrix_20261020.rows`、`bsc_v2_p0_all24_next_block_reserve_source_read_20261020.rows`、`bsc_v2_p0_uploaded20_actual_buy_and_indexed_real_sell_replay_20261020.case_results`、`bsc_v2_p0_ranks16_17_post_atomic_distinct_buy_and_partial_sell_pilot_20261020.cases`。执行方式为连接器内一次性只读 JS 校验；未执行本机 Python/CI/独立其他 AI Review，也未新增任何 RPC。
+- 实际集合结果：**30/30 唯一 CA + 30/30 唯一 Pool；30个历史 runtime code state、24个下一块末尾历史储备、20+2=22个已记录后续历史买入、18个已记录合格深度附近历史卖出、7个精确相同收到Token数量的同接收地址回售**。本轮 30/24/22/18 四组按rank与CA/Pool的交叉关系无冲突，卖出18例均属于买入22例与储备24例；历史精确回售7例已包含在18例内，不能重复相加。
+- **具体缺口与下一来源优先级**：未证实达到预冻结报价侧深度的rank为 `[5,8,15,18,20,28]`；已有合格深度但缺少后续独立买入证明的rank为 `[14,26]`；已有历史买入与储备却缺少满足同类门槛的卖出证明的rank为 `[2,6,10,22]`。这些仅表示当前既存证据缺口，不能当成链上永远没流动性/无人买卖/不可卖或四种独立负例。
+- **正式门禁**：30例 `first_actual_public_available_at` 全为 `UNKNOWN`；30例 `complete_PIT_gate_credit=false`；30例 `uniform_research_notional_sellability=NOT_SCORABLE`。即便历史交易存在，**24/30同时代PIT和18/30统一研究量级双向执行仍然均未通过**。2025链上时间与2026回溯取得时间不能代替当时接收时间。未补原始HTTP完整body或第二独立来源，未得到历史成交时点真实Gas/税及公平价格保护的可复制保证。
+- 上述是**既有证据的独立关联验证，无新增业务观察结果**。遵守ADR-004：不因这次交叉检查继续编写边界修复或自动扩扫描；仅当存在有界、免费、可真正解决PIT或真实退出证据缺口的新来源时再追查对应rank，否则保留原 `2026-11-02` 来源止损。状态维持 `P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO`。
