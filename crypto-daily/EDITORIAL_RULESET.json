@@ -35,6 +35,9 @@
       "tge",
       "early_nft",
       "security",
+      "backend_framework_auth",
+      "cloud_secrets_identity",
+      "ai_package_supply_chain",
       "web_pki_tls",
       "web_runtime_rce",
       "macro",
@@ -58,6 +61,40 @@
       "forbidden_shortcut": "One generic old crypto security article or no result from one X/social search cannot justify no new security events.",
       "source_requirements": "Cite at least one current English original advisory in each mandatory lane, with published_at and checked_at. If genuinely inaccessible, SOURCE_GAP with failed URL and meaningful fallback; do not report clear.",
       "output": "Deduplicate by CVE group or compromised CA incident. Each distinct major event receives one primary Section 9 detail, optional Section 1 top item only when global verified breadth, explicit defensive action and a stated impact constraint."
+    },
+    "mandatory_cloud_dev_security_sweep": {
+      "lanes": [
+        "ai_package_supply_chain",
+        "cloud_secrets_identity",
+        "backend_framework_auth"
+      ],
+      "source_groups": {
+        "ai_package_supply_chain": [
+          "https://docs.litellm.ai/blog/",
+          "https://securitylabs.datadoghq.com/",
+          "https://github.com/advisories"
+        ],
+        "cloud_secrets_identity": [
+          "https://blog.railway.com/",
+          "https://status.railway.com/",
+          "https://www.microsoft.com/en-us/security/blog/",
+          "https://www.connectwise.com/company/trust/advisories"
+        ],
+        "backend_framework_auth": [
+          "https://nodejs.org/en/blog/vulnerability/",
+          "https://github.com/laravel/framework/security/advisories",
+          "https://www.cert-in.org.in/"
+        ]
+      },
+      "high_material_examples": [
+        "Official AI Python package malicious wheels/docker images",
+        "Cloud secret store environment variable access and token rotation",
+        "OAuth third-party app compromise across tenants",
+        "Node.js runtime high severity RCE/TLS host validation errors",
+        "Laravel TokenGuard authentication bypass"
+      ],
+      "decision": "Sources must be dated, actually fetched and have checked_at or SOURCE_GAP; all verified high-impact candidates need event version and primary Section 9 and may qualify for independent Top5. A generic old wallet article never discharges these independent security lanes.",
+      "disclosure_rules": "Do not overclaim exfiltration for each customer or assume the user runs any affected software. Do not automatically repeat PHP/eMudhra after prior day without material delta."
     }
   },
   "top_highlights": {
