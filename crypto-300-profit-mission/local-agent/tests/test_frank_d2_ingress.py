@@ -141,7 +141,6 @@ class D2IngressTests(unittest.TestCase):
         doc=deepcopy(self.doc)
         doc["mints"][0]["raw_amount"]="0"
         doc["document_sha256"]=_digest(doc)
-        got,bad=read_d2_source(self.root) if False else (None,None)
         # Changing raw + self-hash cannot prove original PR60 provenance, but
         # the validator must still detect mismatched aggregate nonzero count.
         with self.assertRaisesRegex(D2IngressError,"D2_MINT_ACCOUNT_AGGREGATES_INVALID"):
