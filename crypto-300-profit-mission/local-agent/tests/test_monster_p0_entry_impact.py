@@ -30,6 +30,7 @@ class ImpactTests(unittest.TestCase):
         self.assertEqual(impact_microbps("1", "100000000000000000", fee_bps=0), 1)
         self.assertGreater(impact_microbps("1", "100000000000000000"), 25*1000000)
         self.assertGreater(impact_microbps("100", "10000"), 100*1000000)
+        self.assertEqual(impact_microbps("100", "10000"), 125062657)
 
     def test_invalid_inputs_fail_closed(self):
         for bad in (True, -1, 0, "0", "1.0", None):
