@@ -1,30 +1,30 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-22 12:04:05 Asia/Bangkok — latest VERIFIED durable PARTIAL terminal (13:01 attempt has no checked terminal)
+Updated: 2026-10-23 11:01:09 Asia/Bangkok — latest VERIFIED durable PARTIAL terminal; later runs not inferred
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-22 12:04:05 Asia/Bangkok
+- latest_actual_run: 2026-10-23 11:01:09 Asia/Bangkok
 - latest_actual_run_status: PARTIAL
-- latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged, no newer full scan verified)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-22/120405-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-22/120323-attempt.md
-- later_unfinalized_attempt: airdrop-tge-monitor/runs/2026-10-22/130143-attempt.md (does NOT establish complete coverage)
-- latest_scheduled_shard: 0
-- latest_executed_shard: 0
-- stale_shard_recovery: false
-- latest_candidate_count: 5
+- latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-23/110109-final-retry.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-23/105939-attempt.md
+- latest_scheduled_shard: 2
+- latest_executed_shard: 2
+- stale_shard_recovery: not_proven
+- latest_candidate_count: 8
 - latest_triggered_events: 0
 - latest_identity_failures: 0
-- latest_source_failures: 6
+- latest_source_failures: 7
 - latest_notification_decision: SILENT_NO_NEW_ACTION
 - latest_notification_status: SILENT
 - latest_gmail_attempted: false
-- latest_source_gaps: Concrete_extra_USDC_TierA, NeoSoul_StandX_specific_TierA, Cambria_migration_original_TierA, StandX_original_X_full_text, Block_Stranding_canonical_current, Perena_TurboFlow_Makina_Rho_current_primary
+- latest_source_gaps: Concrete_extra_USDC,NeoSoul_StandX,StandX_X_original,Cambria_migration,OhBabyGames_current,01_individual_rights,SurfBoard_raffle_terms_and_user_eligibility
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
-- last_meaningful_attempt_at_shard0: 2026-10-22 12:04:05 Asia/Bangkok
-- last_meaningful_attempt_at_shard1: 2026-10-22 11:00 BKK or earlier (see true terminal; do not promote shard completeness)
-- last_meaningful_attempt_at_shard2: 2026-10-22 11:00:34 Asia/Bangkok
+- last_meaningful_attempt_at_shard2: 2026-10-23 11:01:09 Asia/Bangkok
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok
-- last_four_terminal_executed_shards: [1,1,2,0]
+- latest_primary_final_write: BLOCKED_WITH_REASON platform safety
+- latest_compact_final_retry: VERIFIED_DURABLE 110109-final-retry.md
+- off_minute_task_run: true (actual start around 10:59:39; not exact HH:00 success)
+- user_alert: NONE; no validated new Tier A/B rights found in checked subset
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
