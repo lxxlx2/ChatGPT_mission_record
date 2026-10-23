@@ -60,6 +60,7 @@ def audit_recomputed_d1(original, independent, *, require_equal_lanes=False):
     by_day = Counter()
     matched = []
     late = []
+    pending = []
     evaluated_nonsetup = []
     for entry in pairs:
         if not isinstance(entry, list) or len(entry) != 3:
@@ -79,6 +80,11 @@ def audit_recomputed_d1(original, independent, *, require_equal_lanes=False):
             if at is not None or first_valid is not None:
                 _fail('LATE_MUST_NOT_SET_UP')
             late.append(ident)
+        elif ep.get('status') == 'PENDING':
+            if at is not None or (first_valid is not None and
+                (type(first_valid) is not int or not start <= first_valid <= deadline)):
+                _fail('PENDING_MUST_NOT_BECOME_SETTLED')
+            pending.append(ident)
         elif ep.get('status') == 'EVALUATED':
             if type(first_valid) is not int or first_valid < start or first_valid > deadline:
                 _fail('FIRST_VALID_OUTSIDE_EPISODE')
@@ -103,12 +109,14 @@ def audit_recomputed_d1(original, independent, *, require_equal_lanes=False):
     if (derived.get('recomputed_setups') != len(matched) or
         derived.get('raw_setups_by_complete_utc_day') != dict(sorted(by_day.items())) or
         sorted(derived.get('evaluated_but_no_setup_queue_ids', [])) != sorted(evaluated_nonsetup) or
-        sorted(derived.get('late_queue_ids', [])) != sorted(late)):
+        sorted(derived.get('late_queue_ids', [])) != sorted(late) or
+        sorted(derived.get('unresolved_pending_queue_ids', [])) != sorted(pending)):
         _fail('INDEPENDENT_LEDGER_INTERNAL_DRIFT')
     return {'scope': 'OFFLINE_POSTHOC_D1_RECOMPUTATION_ONLY',
             'original_episode_count': n, 'recomputed_setup_count': len(matched),
             'nonsetup_evaluated_ids': sorted(evaluated_nonsetup),
-            'late_ids': sorted(late), 'setup_counts_by_utc_day': dict(sorted(by_day.items())),
+            'late_ids': sorted(late), 'unresolved_pending_ids': sorted(pending),
+            'setup_counts_by_utc_day': dict(sorted(by_day.items())),
             'reconstructed_setup_events': sorted(matched, key=lambda x:(x['reconstructed_observed_ms'],x['queue_id'])),
             'fair8_outcomes_independently_recomputed': False,
             'require_equal_lanes': require_equal_lanes,
