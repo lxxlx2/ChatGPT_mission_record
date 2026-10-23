@@ -368,5 +368,32 @@
     "github_actions_ci_for_latest_source_commit": "NOT_YET_VERIFIED",
     "independent_other_ai_review": "NOT_DONE",
     "current_permission": "NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADES / NO_AUTOMATIONS / NO_MAC"
+  },
+  "engine_fifo_setup_export_exact_match_gate": {
+    "current_code_commit": "fefc4e3c8c6364ecd1bdcb083e573300217a2be2",
+    "current_test_commit": "4293c90fb16fc4fb26f745e0d9eec6accf77aea3",
+    "audited_source_blob": "e13caccc04f7a6a35a70500f3e5b7c6358e10484",
+    "audited_test_blob": "58a5817e94e6ed634862110de4046919bff00c24",
+    "test_runtime": "isolated Linux Python 3.13.5",
+    "actual_test_result": "19/19 PASS, original source and test Git blob exact match",
+    "prior_legacy_3577_original_replay_artifact_id": 12533588861,
+    "prior_legacy_real_46_episode_reconciliation": "PASS 46 events, 42 reconstructed SETUP, two non-SETUP [34,46], two LATE [12,23], source 2026-10-18..22 counts [8,7,7,9,11]",
+    "old_archive_has_original_core_fifo_setup_events": false,
+    "old_archive_result": "ORIGINAL_CORE_SETUP_EVENT_EXPORT_NOT_PRESENT; no actual original SQLite SETUP ID/time readback",
+    "behavior_when_new_replay_exports_fifo_setup_events": "fail closed unless every event_id matches original-core deterministic SETUP_ACTIVE hash of venue/symbol/queue_id, venue=spot, symbol, exact observed_ms, event_type, and details.setup_candidate; duplicate, omission or count-only agreement rejected",
+    "synthetic_positive_export_replay_test": "PASS",
+    "synthetic_negative_export_tests": "wrong event ID, symbol, timestamp, missing events, false setup payload, null export rejected",
+    "actual_replay_new_per_event_export_test": "NOT_RUN_OR_VERIFIED",
+    "original_direct_sqlite_readback": false,
+    "new_CI_job_logs": "UNVERIFIED; GitHub fetch_commit_workflow_runs only exposes PR-triggered and returned no runs for this commit",
+    "independent_other_ai_review": "NOT_DONE",
+    "G0": "PARTIAL",
+    "G1": "NOT_SCORABLE",
+    "G4": "UNKNOWN",
+    "G6": "NO_GO",
+    "NO_DEPLOY": true,
+    "NO_GMAIL": true,
+    "NO_TRADES": true,
+    "NO_AUTOMATIONS": true
   }
 }
