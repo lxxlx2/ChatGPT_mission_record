@@ -138,6 +138,9 @@ def validate_approvals_offline(permit_raw, expected_sha, proofs, trust_roots):
               "D1_SIGNER_TRUST_ID_MISMATCH")
         names.append(proof["key_id"])
         key_fingerprints.append(_public_key_fingerprint(trust["public_pem"]))
+        if len(key_fingerprints) == 2:
+            _need(key_fingerprints[0] != key_fingerprints[1],
+                  "D1_SAME_SIGNER_FORBIDDEN")
         _need(_verify_signature(trust["public_pem"],
                                 approval_message(role, digest, expected_sha),
                                 proof["signature"]),
