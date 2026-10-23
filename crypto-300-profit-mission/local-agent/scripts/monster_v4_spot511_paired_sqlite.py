@@ -162,6 +162,12 @@ def paired_replay(index_path, *, lane_dir=None, allow_synthetic_cohort=False):
             raise ValueError('INDEX_FROZEN_POPULATION_REQUIRED')
         if metadata.get('source_kind')!='OFFICIAL_PUBLISHER_1M_RECONSTRUCTED_PROXY':
             raise ValueError('INDEX_UNAPPROVED_SOURCE_KIND')
+        if not allow_synthetic_cohort:
+            if roster != feed.stage166.frozen_roster():
+                raise ValueError('INDEX_ORIGINAL_T0_ROSTER_IDENTITY_DRIFT')
+            count=src.execute('SELECT COUNT(*) FROM day_provenance').fetchone()[0]
+            if count!=511*9:
+                raise ValueError('INDEX_4599_PUBLISHER_DAY_CENSUS_DRIFT')
         if lane_dir is None:
             import tempfile
             temporary=tempfile.TemporaryDirectory(prefix='monster-spot511-paired-')
@@ -221,11 +227,11 @@ def paired_replay(index_path, *, lane_dir=None, allow_synthetic_cohort=False):
             # whole UTC archives having publisher SHA verification. The
             # first/last day can have unused minutes outside the tick grid.
             verified_whole_days = None
-            if len(roster)==511:
+            if len(roster)==511 and not allow_synthetic_cohort:
                 verified_whole_days=src.execute('''SELECT COUNT(*) FROM day_provenance
                     WHERE status='VERIFIED_FULL_DAY_1440'
                     AND zip_sha256 IS NOT NULL''').fetchone()[0]
-            return {'schema':SCHEMA,'mode':'OFFLINE_SYNTHETIC_TEST' if len(roster)!=511 else 'OFFLINE_HISTORICAL_RESEARCH',
+            return {'schema':SCHEMA,'mode':'OFFLINE_SYNTHETIC_TEST' if allow_synthetic_cohort else 'OFFLINE_HISTORICAL_RESEARCH',
                 'frozen_roster':len(roster),'ticks':totals['ticks'],
                 'source_ready_symbol_ticks':totals['ready_symbol_ticks'],
                 'source_censored_symbol_ticks':totals['source_censored_symbol_ticks'],
@@ -240,9 +246,9 @@ def paired_replay(index_path, *, lane_dir=None, allow_synthetic_cohort=False):
                 'new_setup_ids':sorted(b.keys()-a.keys()),
                 'shared_setup_time_changed_ids':sorted(k for k in a.keys()&b.keys() if a[k]!=b[k]),
                 'verified_full_publisher_symbol_days':verified_whole_days,
-                'required_full_publisher_symbol_days':511*9 if len(roster)==511 else None,
+                'required_full_publisher_symbol_days':511*9 if not allow_synthetic_cohort else None,
                 'all_511_historical_sources_verified':(
-                    len(roster)==511 and verified_whole_days==511*9
+                    not allow_synthetic_cohort and len(roster)==511 and verified_whole_days==511*9
                     and totals['censored_d0_ticks']==0),
                 'first_seen_listing_pit_proven':False,
                 'publisher_original_tick_available_at_proven':False,
