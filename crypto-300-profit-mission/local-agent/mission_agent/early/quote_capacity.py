@@ -13,10 +13,13 @@ def max_input_for_average_impact(reserve_in_raw, reserve_out_raw,
                                  max_total_impact_bps, *, swap_fee_bps=25):
     """Largest integer input with average price impact incl. AMM fee <= budget.
 
-    Assumes a fee-on-input, constant-product V2 pool with unchanging reserves:
-      effective_fraction = (10000-fee)/10000
-      average_execution_vs_spot = effective_fraction * reserve_in /
-          (reserve_in + effective_fraction * input)
+    This uses the effective *execution price premium* versus the pretrade
+    pool mid-price, consistent with entry_impact. For input x and reserve R:
+      gamma = (10000 - fee) / 10000
+      premium = fee / (10000 - fee) + x / R
+    (The reciprocal output-quantity shortfall is a different metric.)
+    Continuous ideal-AMM math only. Integer AMM rounding can produce zero
+    output for dust reserves; this is NOT a real executable order guarantee.
     No tax, gas, MEV, quote expiry, price move, or ERC20 transfer semantics.
     """
     if (type(reserve_in_raw) is not int or type(reserve_out_raw) is not int
@@ -29,8 +32,13 @@ def max_input_for_average_impact(reserve_in_raw, reserve_out_raw,
         raise QuoteCapacityError("FEE_BPS_OUT_OF_RANGE")
     if max_total_impact_bps <= swap_fee_bps:
         return 0
-    return (reserve_in_raw * (max_total_impact_bps - swap_fee_bps) * 10000
-            // ((10000 - swap_fee_bps) * (10000 - max_total_impact_bps)))
+    # premium <= budget: 10000 * (fee*R + (10000-fee)*x)
+    #                   <= budget * (10000-fee) * R
+    headroom = (max_total_impact_bps * (10000 - swap_fee_bps)
+                - 10000 * swap_fee_bps)
+    if headroom <= 0:
+        return 0
+    return (reserve_in_raw * headroom // (10000 * (10000 - swap_fee_bps)))
 
 
 def historical_v2_snapshot_capacity(*, block_number, quote_reserve_raw,
