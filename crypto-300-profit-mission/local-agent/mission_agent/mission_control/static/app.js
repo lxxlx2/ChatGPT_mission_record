@@ -459,6 +459,89 @@ function renderFrankWatchlist(payload) {
   }).join('') || '<tr><td colspan="6">当前筛选没有记录。尝试选择「全部观察」。</td></tr>';
 }
 
+// D1: source-indexed signed wallet facts from PR #111. Independent of decision refresh.
+let signedActivity = {status:'LOADING', rows:[]};
+let signedActivityLastFetch = 0;
+let signedActivityRequest = 0;
+
+function renderSignedActivity() {
+  const payload = signedActivity;
+  const rows = Array.isArray(payload.rows) ? payload.rows : [];
+  const sourceOK = payload.status === 'INDEXED_LOCAL_ONLY';
+  if (!sourceOK) {
+    $('signed-activity-summary').textContent =
+      '签名索引不可读取：' + String(payload.reason || 'SOURCE_UNAVAILABLE') +
+      '。这不是“没有交易”，也不影响现有信号。';
+    $('signed-activity-rows').innerHTML =
+      '<tr><td colspan="5">暂无可验证的本地签名数据，不能按零交易处理。</td></tr>';
+    return;
+  }
+  const query = ($('signed-activity-search').value || '').trim().toLowerCase();
+  const matched = rows.filter(x => {
+    const legs = Array.isArray(x.trades) ? x.trades : [];
+    return !query || [x.sig, x.class, x.status,
+      ...legs.flatMap(t => [t.mint, t.side])].join(' ').toLowerCase().includes(query);
+  });
+  const display = matched.slice(0,200);
+  const categories = payload.categories || {};
+  $('signed-activity-summary').textContent =
+    '已索引 ' + String(payload.signatures) + ' 条签名 / ' +
+    String(payload.trade_legs ?? '未知') + ' 个交易记录 · 主动类 ' +
+    String(categories.ACTIVE_TRADE || 0) + ' · 被动 ' +
+    String(categories.PASSIVE_TRANSFER || 0) + ' · 未知 ' +
+    String(categories.UNKNOWN_NEEDS_REVIEW || 0) + ' · 筛选匹配 ' +
+    String(matched.length) +
+    (matched.length > display.length ? '（仅显示前 ' + String(display.length) + ' 条）' : '') +
+    ' · 非完整链史';
+  $('signed-activity-rows').innerHTML = display.map(x => {
+    const sig = typeof x.sig === 'string' ? x.sig : '';
+    const at = Number(x.at);
+    const when = Number.isFinite(at) && at > 0
+      ? new Date(at * 1000).toLocaleString('zh-CN')
+      : '时间未核实';
+    const signature = sig
+      ? '<a href="https://solscan.io/tx/' + encodeURIComponent(sig) +
+        '" target="_blank" rel="noopener noreferrer"><code>' + esc(short(sig,10,7)) + '</code> ↗</a>'
+      : '签名未核实';
+    const legs = Array.isArray(x.trades) ? x.trades : [];
+    const tradeText = legs.length ? legs.map(t => {
+      const mint = typeof t.mint === 'string' ? t.mint : '';
+      const txLink = mint
+        ? '<a href="https://solscan.io/token/' + encodeURIComponent(mint) +
+          '" target="_blank" rel="noopener noreferrer">' + esc(short(mint,8,6)) + ' ↗</a>'
+        : 'Mint 未核实';
+      return '<div>' + esc(t.side || 'UNKNOWN') + ' · ' + txLink + '</div>';
+    }).join('') : '没有已识别主动经济腿';
+    const state = String(x.status || 'UNRESOLVED');
+    return '<tr><td>' + esc(when) + '</td><td>' + signature +
+      '</td><td>' + esc(x.class || 'OTHER_OR_UNKNOWN') + '</td><td>' +
+      tradeText + '</td><td>' + esc(state) + '</td></tr>';
+  }).join('') || '<tr><td colspan="5">当前筛选没有本地签名记录；不代表链上无交易。</td></tr>';
+}
+
+async function refreshSignedActivity(force=false) {
+  const now = Date.now();
+  if (!force && now-signedActivityLastFetch < 55000) return;
+  signedActivityLastFetch = now;
+  const request = ++signedActivityRequest;
+  const days = $('signed-activity-days').value;
+  try {
+    const response = await get('/api/frank-signed-activity?days=' + encodeURIComponent(days));
+    if (request !== signedActivityRequest || days !== $('signed-activity-days').value) return;
+    signedActivity = response;
+    $('signed-activity-updated').textContent = '读取于 ' + new Date().toLocaleTimeString('zh-CN');
+  } catch (e) {
+    if (request !== signedActivityRequest) return;
+    signedActivity = {status:'UNAVAILABLE',reason:'ACTIVITY_GET_FAILED',rows:[]};
+    $('signed-activity-updated').textContent = '来源不可用';
+  }
+  renderSignedActivity();
+}
+
+$('signed-activity-days').addEventListener('change', () => refreshSignedActivity(true));
+$('signed-activity-search').addEventListener('input', renderSignedActivity);
+$('signed-activity-reload').addEventListener('click', () => refreshSignedActivity(true));
+
 function renderCoverage(coverage) {
   const node = $('coverage');
   if (!node) return;
@@ -706,7 +789,7 @@ async function refresh() {
       get('/api/candidates'),
       get('/api/trades'),
       get('/api/review-activity'),
-      get('/api/decisions'),
+      get('/api/decisions').catch(() => null),
       get('/api/coverage'),
       get('/api/frank-observed-watchlist').catch(() => ({status:'SOURCE_UNAVAILABLE',rows:[],summary:{}}))
     ]);
@@ -721,7 +804,11 @@ async function refresh() {
     renderEnded(endedCandidates);
     renderTrades(trades);
     renderReviewActivity(reviewActivity);
-    renderDecisions(decisions);
+    if (decisions !== null) {
+      renderDecisions(decisions);
+    } else {
+      $('decisions').innerHTML = '<div class="empty">历史判断记录暂时不可用，不影响钱包活动及观察池。</div>';
+    }
     $('updated').textContent = `更新于 ${new Date().toLocaleTimeString('zh-CN')}`;
   } catch (e) {
     $('runtime').className = 'runtime offline';
@@ -730,7 +817,9 @@ async function refresh() {
 }
 
 refresh();
+refreshSignedActivity(true);
 setInterval(refresh,5000);
+setInterval(refreshSignedActivity,60000);
 
 
 const clusterPresetHelp = {
