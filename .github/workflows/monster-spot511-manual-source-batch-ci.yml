@@ -1,0 +1,33 @@
+name: Monster Spot511 Manual Publisher Batch Offline CI
+
+on:
+  pull_request:
+    paths:
+      - "crypto-300-profit-mission/local-agent/scripts/monster_spot511_manual_publisher_batch.py"
+      - "crypto-300-profit-mission/local-agent/tests/test_monster_spot511_manual_publisher_batch.py"
+      - ".github/workflows/monster-spot511-manual-source-batch-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-batch-offline-regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout research-only code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Syntax check
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_spot511_manual_publisher_batch.py
+          python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_spot511_manual_publisher_batch.py
+      - name: Synthetic official-format publisher intake tests (no HTTP)
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_spot511_manual_publisher_batch.py" -v
