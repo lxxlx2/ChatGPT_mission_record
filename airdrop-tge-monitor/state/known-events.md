@@ -210,3 +210,21 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - next_action: SUPPRESS_UNCHANGED_EVENT_PERMANENTLY; re-alert only on new material first-party change. Personal eligibility remains UNKNOWN; do not send repeated registration reminders.
 - last_checked_at: 2026-10-23 18:58 Asia/Bangkok
 - delivery_verified_at: 2026-10-23T20:04:00+07:00
+
+
+## 2026-10-24 verified Cambria post-migration Duel Arena reclaim and login access
+
+### Cambria Blast/Abstract Duel Arena old-stake claim and AGW login protection
+- event_key: cambria:duel_arena_blast_abstract_post_sweep_claim_and_login:2026-10-19
+- project_id: cambria (existing Registry Shard 3; bounded cross-shard material rights discovery)
+- issuer_first_party_claim: https://docs.cambria.gg/archive/duel-arena/duel-arena-blast-and-abstract-wind-down
+- issuer_first_party_login: https://docs.cambria.gg/dungeons/patch-notes/patch-v0.6.4
+- verified_issuer_claim: on 2026-10-19 Cambria withdrew remaining unclaimed Blast/Abstract Duel Arena escrow stakes, recorded a wallet snapshot; affected users may still submit a Discord ticket, verify by original wallet message signature, and request ETH payout on Ethereum mainnet (issuer says within 30 business days after verification).
+- related_login_access: issuer advises accounts relying only on Abstract Global Wallet + Privy to add an alternate wallet/social login before Abstract 2026-12-15 shutdown risk.
+- actual_user_old_duel_stake_or_AGW_only_login: UNKNOWN; no personal allocation or eligibility was claimed in alert; check only if applicable.
+- evidence_tier: A official Cambria docs, read 2026-10-24 Asia/Bangkok; docs explicitly describe an ongoing post-Oct19 ticket process, but exact document publication timestamp unverified.
+- delivery_status: DELIVERED_2026-10-24_GMAIL_SENT_READBACK_ARCHIVED
+- gmail_message_id: 1a16a27a9e5b557c
+- event_archive: airdrop-tge-monitor/reports/events/2026/2026-10/2026-10-24/020558-cambria-duel-arena-blast-abstract-reclaim.md
+- stable_key_policy: suppress unchanged old-stake reclaim/login reminder; re-alert only for newly verified material deadline, route, eligibility or rights change.
+- prior_cambria_rsgp_opt_in: separate event, already delivered; no duplicate.
