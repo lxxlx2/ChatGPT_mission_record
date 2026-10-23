@@ -107,8 +107,12 @@ def _closed5_fetch(source_db, venue, symbol, tick):
         FROM closed5 WHERE symbol=? AND open_ms<?
         ORDER BY open_ms DESC LIMIT 6''',(symbol,limit)).fetchall()
     rows.reverse()
-    if len(rows)!=6 or any(rows[i+1][0]-rows[i][0]!=FIVE_MS for i in range(5)):
-        raise ValueError('D1_MISSING_CONTIGUOUS_VERIFIED_5M')
+    # Six consecutive but stale candles are not a valid current evaluation.
+    # The last bar must be the most recently CLOSED UTC 5m bar at this tick.
+    # Do not search backward past source outages and reuse old momentum.
+    if (len(rows)!=6 or rows[-1][0]!=limit-FIVE_MS
+            or any(rows[i+1][0]-rows[i][0]!=FIVE_MS for i in range(5))):
+        raise ValueError('D1_MISSING_CURRENT_CONTIGUOUS_VERIFIED_5M')
     return [[r[0],r[1],r[2],r[3],r[4],r[5],r[0]+FIVE_MS-1,r[6]] for r in rows]
 
 
