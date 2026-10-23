@@ -137,3 +137,29 @@ def preflight(report):
         "G3": "NOT_PASSED", "G4": "UNKNOWN", "G6": "NO_GO",
         "NO_DEPLOY": True, "NO_GMAIL": True, "NO_TRADE": True,
     }
+
+
+def main():
+    """Local report-to-report CLI; never downloads or starts monitoring."""
+    import argparse
+    from pathlib import Path
+    parser = argparse.ArgumentParser(description="Offline Monster Spot511 3m source preflight")
+    parser.add_argument("--stage166-report", type=Path, required=True)
+    parser.add_argument("--out", type=Path, required=True)
+    args = parser.parse_args()
+    if args.out.exists() or args.out.is_symlink():
+        raise ValueError("REFUSE_EXISTING_PREFLIGHT_OUTPUT")
+    with args.stage166_report.open(encoding="utf-8") as stream:
+        result = preflight(json.load(stream))
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    with args.out.open("x", encoding="utf-8") as stream:
+        json.dump(result, stream, sort_keys=True, ensure_ascii=False, indent=2)
+        stream.write("\n")
+    print(json.dumps({"status":"SPOT511_PREFLIGHT_ONLY",
+                      "source_ready_symbol_ticks":result["source_ready_symbol_ticks"],
+                      "total_symbol_ticks":result["total_symbol_ticks"],
+                      "G6":result["G6"]}, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()
