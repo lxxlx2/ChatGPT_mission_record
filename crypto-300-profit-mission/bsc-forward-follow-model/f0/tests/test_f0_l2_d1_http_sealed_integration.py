@@ -83,6 +83,40 @@ class SealedMemoryHTTPSIntegrationTests(unittest.TestCase):
         self.assertTrue(any(r.get("raw_sha256") for r in rows
                             if r["event"]=="SETTLE"))
 
+    def test_head_ttl_checked_at_fake_post_after_delayed_tls_setup(self):
+        # The actual POST begins only after TLS/context preparation. A
+        # previously fresh HEAD can expire while preparing, and must not
+        # authorize a BLOCK when the HTTP fake's request method starts.
+        import time
+        from f0_l2_d1_https import _exchange_with_factory as reviewed_exchange
+        src=SealedMemoryHTTPSSource(growth_bps=10.0,delay_ms=10)
+        def delayed_tls(request, factory, **config):
+            if request["method"]=="eth_getBlockByNumber":
+                time.sleep(0.65)
+            return reviewed_exchange(request,factory,**config)
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d).absolute()/"private"
+            root.mkdir(mode=0o700)
+            with patch("f0_l2_d1_coordinator._exchange_with_factory",
+                       side_effect=delayed_tls):
+                with patch("http.client.HTTPSConnection",
+                           side_effect=AssertionError("network denied")):
+                    report=run_fake_concurrent(
+                        src,root,max_total=5,max_blocks=1,
+                        max_refreshes=0,window_ms=5000,
+                        head_ttl_ms=500,head_min_poll_age_ms=250)
+            self.assertEqual(report["block_attempts"],1)
+            self.assertEqual(report["contiguous_commits"],0)
+            self.assertEqual(src.block_count,0)
+            events=[json.loads(line) for line in
+                    (root/"attempts.jsonl").read_text().splitlines()]
+            failures=[x for x in events if x["event"]=="SETTLE"
+                      and x["category"]=="BLOCK"]
+            self.assertEqual(len(failures),1)
+            self.assertIn("PRESTART_STALE_HEAD",failures[0]["reason"])
+            self.assertFalse(failures[0]["started"])
+            self.assertNotEqual(report["stop"],"BLOCK_BUDGET")
+
     def test_pretend_source_callback_cannot_replace_sealed_method(self):
         src=SealedMemoryHTTPSSource(growth_bps=10.0,delay_ms=0)
         src.reply_over_memory_https=lambda *args, **kw: FakeSource.reply(src,args[0])
