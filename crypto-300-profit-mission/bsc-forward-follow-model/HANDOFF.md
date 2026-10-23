@@ -1,3 +1,11 @@
+# PR179 — D1 offline review pins, independently audited HEAD pending
+
+- Parent approved: PR176 `a1d33ab0fd7f68db01b67d3d7da6603af1fd6797`. Mac `APPROVE_OFFLINE_CODE — D1_OS_CRASH_FAKE_SCOPE_ONLY`: 430/430 complete, 69/69 focused, 3 SIGKILL tests; old runtime untouched.
+- Child PR179: added offline reference validator `f0/f0_l2_d1_review_pins.py`, six tests and `f0/F0_L2_D1_EXTERNAL_REVIEW_PINS.md`. It matches externally predeclared candidate SHA, raw permit digest, inventory digest and separate signer public-key fingerprints against locally remeasured signed evidence. Caller-supplied pins **are not independently authenticated**; live trust roots remain empty, complete dependency closure unproven.
+- New fixed SHA and independent Mac review required. D1_PARTIAL; D2/D3 remain prohibited. No real RPC/WS, production permit/nonce, merge/deploy or background process. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-23 F0 D1 PR176 — OS SIGKILL durability, NEW SHA independent Mac audit pending
 
 - Approved frozen parent PR175 `17964d878424834ec04535c3866f115cb6f34fe7` (`APPROVE_OFFLINE_CODE — D1_INVENTORY_ONEUSE_FAKE_SCOPE_ONLY`, Mac 427/427 full and **66/66** focused D1 [previous GitHub log name-count 65]). 5 parent file blobs and private Mac evidence independently reviewed; approved parent unchanged.
