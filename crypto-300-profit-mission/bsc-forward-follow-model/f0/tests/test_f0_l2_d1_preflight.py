@@ -95,12 +95,17 @@ class D1PreflightTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"BYTE_MISMATCH"):
                 verify_fixed_checkout_offline(root,sha,{"src/coordinator.py":"f"*64})
             alias=root/"link"
-            alias.symlink_to(script,is_directory=True)
+            alias.symlink_to(script,target_is_directory=True)
+            git(root,"add","link")
+            git(root,"commit","-qm","tracked symlink fixture")
+            tracked_sha=subprocess.run(["git","-C",str(root),"rev-parse","HEAD"],
+                                      capture_output=True,check=True,
+                                      text=True).stdout.strip()
             with self.assertRaisesRegex(ValueError,"SYMLINK_DISALLOWED"):
-                verify_fixed_checkout_offline(root,sha,
+                verify_fixed_checkout_offline(root,tracked_sha,
                     {"link/coordinator.py":manifest["src/coordinator.py"]})
             with self.assertRaisesRegex(ValueError,"MANIFEST_INVALID"):
-                verify_fixed_checkout_offline(root,sha,{"../bad":"a"*64})
+                verify_fixed_checkout_offline(root,tracked_sha,{"../bad":"a"*64})
 
 if __name__=="__main__":
     unittest.main()

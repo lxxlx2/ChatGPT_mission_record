@@ -38,6 +38,7 @@ def reconcile_saved_attempts(root):
     commits=[]
     invalid=set()
     rpc_parsed=set()
+    failed_requests=set()
     raw_hashes={}
     last_id=0
     for line_no,line in enumerate(content.splitlines(),1):
@@ -86,6 +87,8 @@ def reconcile_saved_attempts(root):
             elif row["state"]=="RPC_RESPONSE":
                 raise ValueError("D1_RECOVERY_SUCCESS_WITHOUT_RAW_FRAME")
             settled.add(rid)
+            if row["state"] != "RPC_RESPONSE":
+                failed_requests.add(rid)
             if row["category"]=="BLOCK" and row["state"]=="RPC_RESPONSE":
                 rpc_parsed.add(rid)
         elif kind=="COMMIT_CONTIGUOUS":
@@ -115,15 +118,15 @@ def reconcile_saved_attempts(root):
     pending=sorted(set(reserved)-settled)
     # No automated recovery. Even if every request settled, a fault invalidates
     # the performance sample; do not infer sustainable source speed.
-    integrity_ok=not pending and not invalid and all(
-        row.get("state")=="RPC_RESPONSE" for row in [])
     return {
         "audit_status":("INVALID_FOR_PERFORMANCE_CLAIM"
-                        if pending or invalid else "OFFLINE_ACCOUNTED_NOT_LIVE"),
+                        if pending or invalid or failed_requests
+                        else "OFFLINE_ACCOUNTED_NOT_LIVE"),
         "network_retries":0,
         "automatic_recovery_permitted":False,
         "reserved":len(reserved), "settled":len(settled),
         "unknown_request_ids":pending,
+        "failed_request_ids":sorted(failed_requests),
         "parsed_full_block_responses":len(rpc_parsed),
         "contiguous_commits":len(commits),
         "first_parent_independently_anchored":False,
