@@ -1,29 +1,31 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-23 11:01:09 Asia/Bangkok — latest VERIFIED durable PARTIAL terminal; later runs not inferred
+Updated: 2026-10-23 14:57:16 Asia/Bangkok — latest VERIFIED durable PARTIAL terminal; off-minute invocation
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-23 11:01:09 Asia/Bangkok
+- latest_actual_run: 2026-10-23 14:57:16 Asia/Bangkok
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-23/110109-final-retry.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-23/105939-attempt.md
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-23/145716-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-23/145628-attempt.md
 - latest_scheduled_shard: 2
 - latest_executed_shard: 2
-- stale_shard_recovery: not_proven
-- latest_candidate_count: 8
+- stale_shard_recovery: false
+- latest_candidate_count: 7
 - latest_triggered_events: 0
 - latest_identity_failures: 0
 - latest_source_failures: 7
 - latest_notification_decision: SILENT_NO_NEW_ACTION
 - latest_notification_status: SILENT
 - latest_gmail_attempted: false
-- latest_source_gaps: Concrete_extra_USDC,NeoSoul_StandX,StandX_X_original,Cambria_migration,OhBabyGames_current,01_individual_rights,SurfBoard_raffle_terms_and_user_eligibility
+- latest_source_gaps: Concrete_extra_USDC,NeoSoul_StandX,StandX_X_original,SurfBoard_raffle_English_rules,Cambria_migration,01_individual_rights,OhBabyGames_current
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
-- last_meaningful_attempt_at_shard2: 2026-10-23 11:01:09 Asia/Bangkok
+- last_meaningful_attempt_at_shard2: 2026-10-23 14:57:16 Asia/Bangkok
+- last_meaningful_attempt_at_shard1: 2026-10-23 13:57:42 Asia/Bangkok
+- last_meaningful_attempt_at_shard3: 2026-10-23 11:58:03 Asia/Bangkok
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_primary_final_write: BLOCKED_WITH_REASON platform safety
-- latest_compact_final_retry: VERIFIED_DURABLE 110109-final-retry.md
-- off_minute_task_run: true (actual start around 10:59:39; not exact HH:00 success)
+- latest_primary_final_write: VERIFIED_DURABLE 145716-final.md
+- latest_terminal_readback: VERIFIED
+- off_minute_task_run: true (14:56:28 actual start; not exact HH:00 success)
 - user_alert: NONE; no validated new Tier A/B rights found in checked subset
 
 ## Durable known-events
