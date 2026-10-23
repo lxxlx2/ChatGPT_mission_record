@@ -1,0 +1,31 @@
+{
+  "dashboardSHA": "656ed2c96f4210d106d7b1129ec6cf8d7c4586f3",
+  "pid": 88897,
+  "installedFilesVerified": 437,
+  "scope": "LOCAL_INDEX_ONLY_NOT_COMPLETE_CHAIN",
+  "data_source": "READ_ONLY_FORWARD_SQLITE",
+  "updated_at_utc": "2026-10-23T10:15:57+00:00",
+  "snapshot_status": "SNAPSHOT_NOT_PRESENT",
+  "snapshot_origin": "NOT_RETURNED_NO_SNAPSHOT",
+  "snapshot_date": null,
+  "slots": null,
+  "chain_completeness_verified": false,
+  "current_chain_balance_verified_true": 0,
+  "current_chain_balance_null": 1355,
+  "summary": {
+    "total_observed": 1355,
+    "model_open": 3,
+    "inventory_needs_review": 4,
+    "historical_exit": 24,
+    "unresolved_history": 20,
+    "original_trade_or_model_observed": 51,
+    "passive_receipt_only": 157,
+    "other_account_activity_only": 1147,
+    "unpriced_new_activity": 1304
+  },
+  "manual_import_exists": false,
+  "manual_import_hash": null,
+  "manual_import_mtime": null,
+  "manual_import_source": "ABSENT",
+  "repo_fallback_file_in_installed_layout": false
+}

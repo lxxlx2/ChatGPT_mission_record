@@ -1,0 +1,418 @@
+[
+  {
+    "mint_sha256": "5e83acc43c039d10461a0a8df051311bb6614b0b9f15d5c763c6f164c3eb0def",
+    "account_count": 1,
+    "accounts_sha256": [
+      "7282e8dc51a7fe769c3455d2036bb3fa1cb27fad888aabea9bc0d15b14dea7a2"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132317,
+    "slot_max": 457132317,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "f3e91760ad21b7dc803286f1dd76aad4599e304d70a3c16475e749429f971ee5",
+    "account_count": 1,
+    "accounts_sha256": [
+      "72f42e55b880ff95dd5e2b9e9d76d5931c664d484d97e017ad240fd521fd23ba"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 9,
+    "slot_min": 457132317,
+    "slot_max": 457132317,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 9
+  },
+  {
+    "mint_sha256": "2980a1f1bcd7307ff6b9084a435357d5cb8d30cbf9473b3786c97a500eb63543",
+    "account_count": 1,
+    "accounts_sha256": [
+      "b63bf2eda95da876bb9cb2847e8429f4c089e3073f4357fac163077bd9f957ed"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132317,
+    "slot_max": 457132317,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "42370c25ac86ff93e284e1830a7927bd645273f78d30c029a52cdb8a64fd6865",
+    "account_count": 1,
+    "accounts_sha256": [
+      "08ae713d3ebc1f2e4ba31d203b68b63cf4838189323b795d5f27fcabfc3dde11"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "c70d3f5012191bafdbb7486132f94870f67280d33b3abcbd471cfcd11e548c8f",
+    "account_count": 1,
+    "accounts_sha256": [
+      "2cb07c1a7ed6d75852d94193b3441bfbf98464956d96607ec4029250ee6e84f8"
+    ],
+    "raw_amount_observed_sum": "7263953506555",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "3767258429ec0a7717e6d96b7e9be45ee36f5997bf4383e06824998566309a5f",
+    "account_count": 1,
+    "accounts_sha256": [
+      "d3bdc219def44ad12a407d64319eb891bb0ba8c903038421674ee615efc9b0e6"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "d527f0555369d1f30df3d10d4ea6c62ec093133d2190e456b4fab59ad50ae28d",
+    "account_count": 1,
+    "accounts_sha256": [
+      "da3ebe6e56d60d3c45b082c777c22308b644270546fc92a3ed9653e7dc0e769c"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132317,
+    "slot_max": 457132317,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "f12b8928ba72af48636862f360ed1c6fa14af086df7d60574b0f212af3338d01",
+    "account_count": 1,
+    "accounts_sha256": [
+      "0701ba736a16565befe04b7178cfcd424b754a8b91209895b1f14a1a72aeb208"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "eab478af01ca9c9e238b0ffda8096b4aa167b20e04b6364a2b6cc530f9a12007",
+    "account_count": 1,
+    "accounts_sha256": [
+      "df0314316e97a003dfdc691b40d83bcc510d4d4182db0caeac0a3a35e3c91cc3"
+    ],
+    "raw_amount_observed_sum": "22246999",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "8e68a07f56a38a0e8a4d3f3d35c9332ebbf44fc2fa6e8f7656f9345b90d64e9a",
+    "account_count": 1,
+    "accounts_sha256": [
+      "997c217dc495d4fe4448a3599c59f136709fe60db6b2c311b11a407b86113fd5"
+    ],
+    "raw_amount_observed_sum": "29551841",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "cdf80fe14d81fad77f577971b3cdf188729436db5677bfc5d6dadc0be7e809c8",
+    "account_count": 1,
+    "accounts_sha256": [
+      "00eaa5bd855f194326bac66352c0e84681aa6acb971cd1ab40fc3960d54f84d7"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "a422964cc1ea43c81e41af55244ff008178847cd9e4597c2436ead19da81bf55",
+    "account_count": 1,
+    "accounts_sha256": [
+      "aef142801e43c0a5f36556a6eb2696333e2712d2d3ae8e07b3b36e314076aea4"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "1bf7ae1570ed0901ea9e71eab63486b82fbce4956feb465d5a32ac457854c724",
+    "account_count": 1,
+    "accounts_sha256": [
+      "7ebe684dacccf1c3dfc806ae73057bc164ece49e76dbba15cd0652f742d143e3"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "6c61a8e69f81cc20919baae6ac03b614d29bc21f379407a04a0822f45bb4522b",
+    "account_count": 1,
+    "accounts_sha256": [
+      "c1394f0693d95f3cdea912b1084ed4d9969ad63cfdbe973e0ef7d3cbb25e3af5"
+    ],
+    "raw_amount_observed_sum": "12043213758361",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "627ac0f2a75c36b84b2be86bcc352ed472d734cfefa9c10b639175f9b4734380",
+    "account_count": 1,
+    "accounts_sha256": [
+      "6aba56f422f49afc7b2ce9e1d3207e225428b1a02fd1989fe5748d1e4868d62e"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "7175dcb95b3832c5ba5d4676e46356a85de75e2a11b30a4d1f0d7809b0cadf03",
+    "account_count": 1,
+    "accounts_sha256": [
+      "efb1c3ec6a285d102a0feb3b7fbed7018efa5d18cc583ce15587d4074e813076"
+    ],
+    "raw_amount_observed_sum": "766517842433",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "039455d3cdd101cbc5dfef7cb8d545b7140fce1d23fe48e2b3a679908a2e3acd",
+    "account_count": 1,
+    "accounts_sha256": [
+      "c28359792006477f3fb4c1db64a9395361e82bbe3fdea5bf92b9537e90209c80"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 9,
+    "slot_min": 457132317,
+    "slot_max": 457132317,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 9
+  },
+  {
+    "mint_sha256": "9e040ad5ed06c367f64ffd601d7ec91194ad4dbfddfbb704e54d8bddadccc103",
+    "account_count": 1,
+    "accounts_sha256": [
+      "8fc8b593ebb35cecf11b2d0cf09ac58766f923cdb901a3696dc98f7034902afd"
+    ],
+    "raw_amount_observed_sum": "52736752",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "dfd42fb00c17a2d172bae00770770814bb8ef271276980e87cb1c1be81dac623",
+    "account_count": 1,
+    "accounts_sha256": [
+      "b943d2ae9d7897ee32aa59745ecacba1e41db3c797d943dab7278935359199ec"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "88fad0dfe5228cdc2877ab7fb818cbb47d53a13019a13e899eb51353687d70a5",
+    "account_count": 1,
+    "accounts_sha256": [
+      "d5c575023736c5e7829c8c3ba4c32ff8cb1cbf8ad4f690fc897ae3be865bea14"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "7e834b723ba7044b04fc58306be8904160aef626dab7687a2b49f7fb3abcc126",
+    "account_count": 1,
+    "accounts_sha256": [
+      "a0c7361fe119be8edb6989fd9c61c2a59d864e2050cdee8ebd9b7d7fbc8f0cba"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "b893d3daa49967c15219c2d94fd98bbf868a5880d62a01ad7fe532d2fa696c7c",
+    "account_count": 1,
+    "accounts_sha256": [
+      "5931f1ba5384fcab4774e48fd21584b3539b1326aff3f7062f45acb7b97fa6ac"
+    ],
+    "raw_amount_observed_sum": "9090666",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "1032be2a4eb8b4a4a14719959bb4f22d39435b2404e9cb3b39ecb7c00fb8a15f",
+    "account_count": 1,
+    "accounts_sha256": [
+      "2d1f5f31b67cf614a06d0cc71cd51461208903b779500b92e1827d0da26e10ca"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "e225a43e974d28e889a56139200ca125f68c8a7a4e530dcaf1641aff5113f659",
+    "account_count": 1,
+    "accounts_sha256": [
+      "a135d5ce657465910259328a88a768a1ff9c6b616a4298b9f3ba17d5422d3cec"
+    ],
+    "raw_amount_observed_sum": "50017498",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "c80ba527afdbe4c31aac6f1bbefe328d0b511e0ef301eaa47b8a891bd60a2374",
+    "account_count": 1,
+    "accounts_sha256": [
+      "cf74106f1354ccbd70a9f729affb48c33cb7dd12d1cc3ff296d19c14ccbaa23f"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "36aa002a6fdf5091d918f6cce44863863e989474b57714879dbc82f3e38024d3",
+    "account_count": 1,
+    "accounts_sha256": [
+      "78447e6dd8b6415f7d904115973d2407b6b2364c2fc376eea0f2b07b6c66a046"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "0b877749a3f806781ce38dc3867a70f7126354aa54d49c688687f162de5b3785",
+    "account_count": 1,
+    "accounts_sha256": [
+      "0fa19000d5e044e3e95e7f24d1d1d9dab65804aa45f1fdaccc8068cffc651b9c"
+    ],
+    "raw_amount_observed_sum": "3411999978741",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "2b2a4c3dafcf684761309806f8cf803fa3e4286e7c96137b47a8be013c49285a",
+    "account_count": 1,
+    "accounts_sha256": [
+      "2f28e67bf142417ae5200d609e5acb3948b922ca79e51e22e711b64d472104fe"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "9bdd899388ae84e8789168e3d8ba69685e88733a35e2c528adba44e84833e088",
+    "account_count": 1,
+    "accounts_sha256": [
+      "6dc952b7934835885b71a1036b6d40b10bb4b3c68b026562deee49ae29b6e4df"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "432c049d3cd062dae57f9c0b3009b6684abcf8424e469b800e8c60b9c472d106",
+    "account_count": 1,
+    "accounts_sha256": [
+      "55abb3522647292780fdcf5c0743ba30e1a4125221108e15b808ad8908fa96b1"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132319,
+    "slot_max": 457132319,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "142e500c3320d637ab437359b2513e2d8fa818f56700360f6c346d0d7a59cf06",
+    "account_count": 1,
+    "accounts_sha256": [
+      "bdc99f3ad8a439be27e5ab959ae94a5859f3d3016fe208144a1f0d20d8284ab3"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132317,
+    "slot_max": 457132317,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  },
+  {
+    "mint_sha256": "06a4ac1b17c1e56cdfc729998fa5f1d72a0f789c13d46aaaaf36e3540d99224f",
+    "account_count": 1,
+    "accounts_sha256": [
+      "4d8c5a1b2fe9eec134925ca11570f6e9542beab6ea66981c6f644dda03f3ca47"
+    ],
+    "raw_amount_observed_sum": "0",
+    "decimals": 6,
+    "slot_min": 457132317,
+    "slot_max": 457132317,
+    "basis": "ACCOUNT_ROWS_PRESENT",
+    "historical_oct11_decimals": 6
+  }
+]

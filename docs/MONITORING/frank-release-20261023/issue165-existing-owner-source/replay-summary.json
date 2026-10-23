@@ -1,0 +1,137 @@
+[
+  {
+    "bundleID": "owner-6736f9a173b847e19644b78f0614c194",
+    "status": "OFFLINE_REPLAY_VERIFIED",
+    "ownerMatchesFixedRegistry": true,
+    "owner_sha256": "7b894caa66d7af7feed2e805ac936bdfb30ac0193c29c68f89527cd56eb38915",
+    "observed_at_utc": "2026-10-15T06:10:01.348696+00:00",
+    "slot_min": 457132317,
+    "slot_max": 457132319,
+    "same_slot_atomic": false,
+    "account_count": 3276,
+    "mint_count": 3276,
+    "nonzero_accounts": 2414,
+    "nonzero_mints": 2414,
+    "programs": [
+      {
+        "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "slot": 457132317,
+        "account_count": 1788,
+        "raw_bytes": 946908,
+        "raw_sha256": "f1fb230eb782a22a6954b8b93a87920d22afc6ccaad5b6a633e078d12a79fce6"
+      },
+      {
+        "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "slot": 457132319,
+        "account_count": 1488,
+        "raw_bytes": 872204,
+        "raw_sha256": "1b1ba3815a4cfc5f180c5b145ba0d769e18413d8a808e2f78a067b0db0c3fa37"
+      }
+    ],
+    "manifest_sha256": "afaa96a417edc57fe2176fb8a0d0b9da7a8c152e704e200c6ce7546aad8f51f6",
+    "capture_sha256": "a5964a093a1d6bffe7b2334480825c90af478d3c38d7336fc71cec767b81a25e",
+    "target32": {
+      "nonzero_mints": 9,
+      "zero_or_no_accounts": 23,
+      "mints_with_account_rows": 32,
+      "total_target_accounts": 32
+    },
+    "receipt_hashes_unchanged": true,
+    "raw_file_mtimes_utc": {
+      "manifest.json": "2026-10-15T06:10:02.273969+00:00",
+      "spl-token.json": "2026-10-15T06:10:01.784515+00:00",
+      "token-2022.json": "2026-10-15T06:10:02.209437+00:00"
+    },
+    "wallet_total_balance_verified": false
+  },
+  {
+    "bundleID": "owner-6951760af67d4adbb1479d7348053dac",
+    "status": "OFFLINE_REPLAY_VERIFIED",
+    "ownerMatchesFixedRegistry": true,
+    "owner_sha256": "7b894caa66d7af7feed2e805ac936bdfb30ac0193c29c68f89527cd56eb38915",
+    "observed_at_utc": "2026-10-17T22:19:21.466690+00:00",
+    "slot_min": 458199733,
+    "slot_max": 458199735,
+    "same_slot_atomic": false,
+    "account_count": 3548,
+    "mint_count": 3548,
+    "nonzero_accounts": 2680,
+    "nonzero_mints": 2680,
+    "programs": [
+      {
+        "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "slot": 458199733,
+        "account_count": 1820,
+        "raw_bytes": 964252,
+        "raw_sha256": "7f286019b18015a11d2f9c83a87a8d24243ad33a56f5fa37b02d71e4c991cec6"
+      },
+      {
+        "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "slot": 458199735,
+        "account_count": 1728,
+        "raw_bytes": 1011132,
+        "raw_sha256": "0b54d365c823f76ce7b17705ab9db39aa0acfc5c713a3c0aa5d71f70d3a8a05a"
+      }
+    ],
+    "manifest_sha256": "75fad7f94df122a3371a7a9f58e998e5e5705ee4b89e1ba3be85c6c94219628f",
+    "capture_sha256": "e8a8a6bdb9f6899efa3a68a0f17f8fae0dcca651ed28e96251f091c1f693dc58",
+    "target32": {
+      "nonzero_mints": 8,
+      "zero_or_no_accounts": 24,
+      "mints_with_account_rows": 32,
+      "total_target_accounts": 32
+    },
+    "receipt_hashes_unchanged": true,
+    "raw_file_mtimes_utc": {
+      "manifest.json": "2026-10-17T22:19:22.366546+00:00",
+      "spl-token.json": "2026-10-17T22:19:21.885139+00:00",
+      "token-2022.json": "2026-10-17T22:19:22.305710+00:00"
+    },
+    "wallet_total_balance_verified": false
+  },
+  {
+    "bundleID": "owner-f537013b8a094e608cf9657622b627d6",
+    "status": "OFFLINE_REPLAY_VERIFIED",
+    "ownerMatchesFixedRegistry": true,
+    "owner_sha256": "7b894caa66d7af7feed2e805ac936bdfb30ac0193c29c68f89527cd56eb38915",
+    "observed_at_utc": "2026-10-14T15:54:15.873036+00:00",
+    "slot_min": 456895319,
+    "slot_max": 456895320,
+    "same_slot_atomic": false,
+    "account_count": 3233,
+    "mint_count": 3233,
+    "nonzero_accounts": 2372,
+    "nonzero_mints": 2372,
+    "programs": [
+      {
+        "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "slot": 456895319,
+        "account_count": 1785,
+        "raw_bytes": 945282,
+        "raw_sha256": "c89e78f5936912d6121da208fbf81a62790266df4ece4d0987e1011397fcf2f9"
+      },
+      {
+        "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "slot": 456895320,
+        "account_count": 1448,
+        "raw_bytes": 848980,
+        "raw_sha256": "dc0f275405da87843516978f8e76df7bf7976755d31da5a5f6d5b3fe5d0b2fb4"
+      }
+    ],
+    "manifest_sha256": "26968b4645b1fda49c797465491bf98436c236e8c19d82b4066a938e1ca03742",
+    "capture_sha256": "a91fed6fae63f51557ab88fb9ae892247cc32deccd26c631d765ff27aff03261",
+    "target32": {
+      "nonzero_mints": 9,
+      "zero_or_no_accounts": 23,
+      "mints_with_account_rows": 32,
+      "total_target_accounts": 32
+    },
+    "receipt_hashes_unchanged": true,
+    "raw_file_mtimes_utc": {
+      "manifest.json": "2026-10-14T15:54:16.762915+00:00",
+      "spl-token.json": "2026-10-14T15:54:16.293910+00:00",
+      "token-2022.json": "2026-10-14T15:54:16.700149+00:00"
+    },
+    "wallet_total_balance_verified": false
+  }
+]
