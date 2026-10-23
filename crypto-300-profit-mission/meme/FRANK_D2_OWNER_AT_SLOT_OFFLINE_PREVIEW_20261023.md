@@ -28,7 +28,7 @@ Example invocation after filling in true local paths:
 PYTHONDONTWRITEBYTECODE=1 python3 crypto-300-profit-mission/local-agent/scripts/frank_d2_owner_preview.py --pr60-checkout "$PR60_CHECKOUT" --bundle "$PRIVATE_OWNER_BUNDLE" --watchlist-json "$PRIVATE_WATCHLIST_JSON" --output "$HOME/.local/share/frank-d2-preview/owner-at-slot.html"
 ```
 
-The script requires `--pr60-checkout` and a private output directory, refuses existing output, and never prints per-Mint quantities/paths to stdout. Optional `--targets-json` overrides the repository fixed Oct11 target file. The offline HTML is **sensitive wallet observation data** and should never be uploaded to the public GitHub repository. Never put RPC URLs/API keys in CLI arguments.
+The script requires `--pr60-checkout` and a private output directory, refuses existing output, and never prints per-Mint quantities/paths to stdout. **Any Git repository, its linked worktrees and its `.git` metadata are forbidden as preview output locations**, including a different clone from the code checkout. Output paths are lexically normalized before creating files; path components which are symlinks are rejected. On macOS, `/tmp` and `/var` are normally aliases into `/private`; use a resolved actual directory under `/private/…` or a canonical private `~/.local/share/…` directory instead. Git detection failures block output rather than making a guess. The output file is mode 0600 under a mode-0700 private parent. Optional `--targets-json` overrides the repository fixed Oct11 target file. The offline HTML is **sensitive wallet observation data** and should never be uploaded to the public GitHub repository. Never put RPC URLs/API keys in CLI arguments.
 
 ## Mandatory gates before any Dashboard UI/production integration
 
