@@ -1567,9 +1567,9 @@ let frankD2TotalPages = 0;
 
 function frankD2Decimal(raw, decimals) {
   // Exact decimal arithmetic: never convert on-chain base units to JS Number.
-  if (!/^\\d+$/.test(String(raw)) || !Number.isInteger(decimals) ||
+  if (!/^\d+$/.test(String(raw)) || !Number.isInteger(decimals) ||
       decimals < 0 || decimals > 18) return '未知';
-  let number = String(raw).replace(/^0+(?=\\d)/, '');
+  let number = String(raw).replace(/^0+(?=\d)/, '');
   if (!decimals) return number;
   number = number.padStart(decimals + 1, '0');
   const integer = number.slice(0, -decimals);
