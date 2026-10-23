@@ -43,7 +43,13 @@ class AuditTests(unittest.TestCase):
 
     def test_fifo_fair_status_drift_rejected(self):
         x=deepcopy(self.base);x['fair8_episodes'][1]['status']='EVALUATED'
-        with self.assertRaises(EventAuditError):audit_recomputed_d1(x,self.independent)
+        with self.assertRaises(EventAuditError):audit_recomputed_d1(x,self.independent,require_equal_lanes=True)
+
+    def test_fair8_divergence_does_not_block_fifo_only_audit(self):
+        x=deepcopy(self.base);x['fair8_episodes'][1]['status']='EVALUATED'
+        result=audit_recomputed_d1(x,self.independent)
+        self.assertEqual(result['recomputed_setup_count'],1)
+        self.assertFalse(result['fair8_outcomes_independently_recomputed'])
 
     def test_false_day_summary_rejected(self):
         x=deepcopy(self.independent);x['derived']['raw_setups_by_complete_utc_day']={'1970-01-04':1}
