@@ -1,5 +1,5 @@
 import unittest
-from quote_capacity import (
+from mission_agent.early.quote_capacity import (
     QuoteCapacityError, max_input_for_average_impact,
     historical_v2_snapshot_capacity,
 )
