@@ -99,7 +99,7 @@ class D1ConcurrentFakeTests(unittest.TestCase):
             growth_bps=10.0, delay_ms=30,
             block_delay_by_ordinal={1:1400,2:30,3:60},
             bad_parent_ordinal=2)
-        r,rows=self.scenario(source=source,window_ms=9000)
+        r,rows=self.scenario(source=source)
         self.assertEqual(r["stop"],"CHAIN_FAULT")
         broken=[x for x in rows if x["event"]=="CHAIN_INTEGRITY_FAULT"]
         self.assertEqual(len(broken),1)
