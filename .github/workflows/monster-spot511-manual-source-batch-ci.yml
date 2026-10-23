@@ -59,3 +59,90 @@ jobs:
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_closed_minute_feed.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_d0_d1_tape.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_paired_sqlite.py" -v
+
+  one-shot-six-dates-official-spot511:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/research/monster-v4-local-discovery-20261010' && contains(github.event.head_commit.message, '[MONSTER_ONESHOT_6DAYS_511_20261016_21]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        day: ["2026-10-16", "2026-10-17", "2026-10-18", "2026-10-19", "2026-10-20", "2026-10-21"]
+        slice:
+          - {start: 0, count: 64}
+          - {start: 64, count: 64}
+          - {start: 128, count: 64}
+          - {start: 192, count: 64}
+          - {start: 256, count: 64}
+          - {start: 320, count: 64}
+          - {start: 384, count: 64}
+          - {start: 448, count: 63}
+    env:
+      SOURCE_DAY: ${{ matrix.day }}
+      SOURCE_START: ${{ matrix.slice.start }}
+      SOURCE_COUNT: ${{ matrix.slice.count }}
+    steps:
+      - name: Checkout original Monster frozen T0
+        uses: actions/checkout@v4
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Obtain bounded publisher files and verify all available original checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          dir="$RUNNER_TEMP/monster-spot511-$SOURCE_DAY-$SOURCE_START"
+          mkdir -p "$dir"
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_spot511_manual_publisher_batch.py --day "$SOURCE_DAY" --start-index "$SOURCE_START" --count "$SOURCE_COUNT" --dest "$dir/source" --out "$dir/attempts.json" --download
+          python - <<'PY'
+          import json, os
+          from collections import Counter
+          from pathlib import Path
+          day, start, count = os.environ["SOURCE_DAY"], int(os.environ["SOURCE_START"]), int(os.environ["SOURCE_COUNT"])
+          folder = Path(os.environ["RUNNER_TEMP"]) / f"monster-spot511-{day}-{start}"
+          manifest = json.loads((folder / "attempts.json").read_text())
+          rows = manifest["source_records"]
+          if (manifest["schema"]!="MONSTER_SPOT511_MANUAL_PUBLISHER_BATCH_V1"
+              or manifest["execution"]!="MANUAL_DOWNLOAD"
+              or manifest["day_utc"]!=day
+              or manifest["frozen_total"]!=511
+              or manifest["start_index"]!=start
+              or manifest["batch_size"]!=count
+              or len(rows)!=count
+              or len({r["symbol"] for r in rows})!=count
+              or manifest["G6"]!="NO_GO"):
+              raise SystemExit("MONSTER_BOUND_SOURCE_COHORT_OR_SCOPE_INVALID")
+          counts=Counter(r["status"] for r in rows)
+          n=counts["VERIFIED_FULL_DAY_1440"]
+          if n!=manifest["verified_downloads"]:
+              raise SystemExit("MONSTER_OFFICIAL_ADMISSION_COUNT_DRIFT")
+          for row in rows:
+              if row["status"]=="VERIFIED_FULL_DAY_1440":
+                  if (row["closed_one_minute_rows"]!=1440
+                      or not isinstance(row["zip_sha256"],str)
+                      or len(row["zip_sha256"])!=64):
+                      raise SystemExit("MONSTER_UNBACKED_SUCCESS")
+          summary={
+              "schema":"MONSTER_SPOT511_OFFICIAL_6DAY_SLICE_V1",
+              "day_utc":day,"source_start_index":start,"attempted":count,
+              "publisher_sha_and_minutes_verified":n,
+              "status_counts":dict(sorted(counts.items())),
+              "source_missing_not_zero_watch":True,
+              "historical_live_available_at":"UNKNOWN",
+              "full_7d_replay":"NOT_DONE",
+              "G0":"PARTIAL","G1":"NOT_SCORABLE","G4":"UNKNOWN","G6":"NO_GO",
+              "NO_MAC":True,"NO_SCHEDULE":True,"NO_PAID":True,"NO_GMAIL":True,"NO_TRADES":True,
+          }
+          (folder/"summary.json").write_text(json.dumps(summary,indent=2,sort_keys=True)+"\n")
+          print("MONSTER_SIXDAY_OFFICIAL_SLICE",json.dumps(summary,sort_keys=True))
+          PY
+      - name: Archive both success and failure source receipts and original publisher ZIPs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-spot511-${{ matrix.day }}-slice-${{ matrix.slice.start }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/monster-spot511-${{ matrix.day }}-${{ matrix.slice.start }}/
+          retention-days: 30
+          if-no-files-found: error
