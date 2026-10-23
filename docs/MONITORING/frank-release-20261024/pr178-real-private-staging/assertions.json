@@ -1,0 +1,93 @@
+{
+  "in_process": "PASS",
+  "sources": [
+    {
+      "sha": "ea9a7715beb4d2a55ae956bf993828cbddcb50e5",
+      "files": 446,
+      "manifest_sha256": "d4f83d27fb91630fe3c67aefa287ca3bfee8af98470632634cce7b7ef4b9862c"
+    },
+    {
+      "sha": "e4529ba7069e5499d12323a7160ceac08c481fae",
+      "files": 457,
+      "manifest_sha256": "e81c0488f9d97367fbfc716d9cc3303c1dc19d2acfadb33bd4288b5619418bc2"
+    }
+  ],
+  "raw_sha256": {
+    "manifest.json": "f06df53ccfb8b96e1b92f428620311cf62bd6bb44f9b83fd7e126f2ee5b1f88b",
+    "spl-token.json": "f77120c050a6d014dd53d41fd9d0e8392f34ab31b91155bfa30e18334ab3b682",
+    "token-2022.json": "a327bf34f0e5bf10994662e937704d74098464cc5fddeb2ab4ce77e9ac2c58c2"
+  },
+  "derived_sha256": "d24d73d13a5ab9740eed7d1f06a6226aa9650004ccd756458b579c9e2ee2e284",
+  "document_self_digest": "273058a9961d017fa170e86a593e3f621f5ddb31f322e40ce1846ccd66c1581b",
+  "self_digest_is_authentication": false,
+  "provenance_capture_digest": "016b99ff42c3b155316bd46bec5850ff9dbfb9437bbfd5c3c28414d58fef4f08",
+  "observed_at_utc": "2026-10-23T14:46:32.787921+00:00",
+  "program_accounts": [
+    1875,
+    2273
+  ],
+  "slots": [
+    460482174,
+    460482176
+  ],
+  "accounts": 4148,
+  "mints": 4148,
+  "nonzero_mints": 3275,
+  "pages": 42,
+  "page_sizes": [
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    48
+  ],
+  "all_rows_unique_and_integer_strings": true,
+  "exact_positive_zero_absent": true,
+  "source_dir_mode": "0700",
+  "source_file_mode": "0600",
+  "source_bytes": 893189,
+  "target32_crosscheck": {
+    "present": 32,
+    "nonzero": 8,
+    "zero": 24
+  },
+  "non_atomic": true,
+  "current_balance_verified": false
+}

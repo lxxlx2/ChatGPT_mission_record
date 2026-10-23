@@ -1,0 +1,370 @@
+{
+  "verdict": "BLOCKED",
+  "sha": "ea9a7715beb4d2a55ae956bf993828cbddcb50e5",
+  "port": 64738,
+  "platform": "darwin",
+  "browser": "Chrome 155 (actual executable; full version recorded next if available)",
+  "results": [
+    {
+      "name": "initial_no_automatic_D2",
+      "result": "PASS",
+      "evidence": {
+        "automaticD2": 0
+      }
+    },
+    {
+      "name": "real_dated_source_render",
+      "result": "PASS",
+      "evidence": {
+        "rows": 100,
+        "datedNonAtomicUnverified": true
+      }
+    },
+    {
+      "name": "last_page_and_back",
+      "result": "PASS",
+      "evidence": {
+        "lastRows": 48,
+        "backRows": 100
+      }
+    },
+    {
+      "name": "exact_outside_first_page_positive_zero_absent",
+      "result": "PASS",
+      "evidence": {
+        "outsideFirstPage": true,
+        "positive": true,
+        "zero": true,
+        "absentDistinct": true
+      }
+    }
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/static/styles.css",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/static/app.js",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/runtime",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/control-health",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/candidates",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/trades",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/review-activity",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/decisions",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/coverage",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-observed-watchlist",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-signed-activity",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-intelligence",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-activity-watch",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "mint"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "mint"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "mint"
+    }
+  ],
+  "consoleRecords": [],
+  "errors": [],
+  "blockedAttempts": 13,
+  "blockedKinds": {
+    "DENY_PROXY_HTTP": 1,
+    "DENY_PROXY_CONNECT": 12
+  },
+  "externalRequestsForwarded": 0,
+  "REAL_RPC": 0,
+  "PRODUCTION_8766_REQUESTS": 0,
+  "REAL_CA_POST": 0,
+  "REAL_NOTIFICATIONS": 0,
+  "REAL_TRADES": 0,
+  "staticUnchanged": true,
+  "cleanup": {
+    "chromeClosed": true,
+    "profileRemoved": true,
+    "proxyClosed": true,
+    "fixtureStopped": true,
+    "privateDerivedRemoved": true,
+    "originalRawHashesUnchanged": true,
+    "fixturePortAbsent": true
+  },
+  "endedAt": "2026-10-23T18:39:52.400Z",
+  "browser_checks_passed_before_stop": true,
+  "blocker": "Additional exact-byte PR174 lineage assertion failed during closeout; no source modification or rerun."
+}
