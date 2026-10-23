@@ -1,0 +1,119 @@
+{
+  "schema": "MONSTER_SPOT511_20261016_22_SEVENDAY_PUBLISHER_PARTIAL_ORIGINALCORE_FIFO8_FAIR8_ACTUAL_V1",
+  "status": "RESEARCH_ONLY_PARTIAL_WINDOW_PASS_NOT_G6",
+  "source_run": {
+    "id": 40028725264,
+    "sha": "a88d894ff6c60bef801fd49d92ff5a508fd0587a",
+    "url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40028725264",
+    "conclusion": "success"
+  },
+  "source_artifacts_reused": [
+    {
+      "run": 40027484781,
+      "archived_utc_dates": [
+        "2026-10-16",
+        "2026-10-17",
+        "2026-10-18",
+        "2026-10-19",
+        "2026-10-20",
+        "2026-10-21"
+      ],
+      "file_count": 3066
+    },
+    {
+      "runs": [
+        40006012284,
+        40007027318
+      ],
+      "archived_utc_dates": [
+        "2026-10-22"
+      ],
+      "file_count": 511
+    }
+  ],
+  "official_publisher_symbol_days_verified": 3577,
+  "expected_whole_9day_source_symbol_days": 4599,
+  "remaining_future_symbol_days_unverified": 1022,
+  "frozen_symbol_ids": 511,
+  "replay_tick_count": 3360,
+  "full_market_source_ready_ticks": 2439,
+  "source_censored_full_market_ticks": 921,
+  "source_ready_symbol_ticks": 1246329,
+  "source_censored_symbol_ticks": 470631,
+  "actual_derived_d0_watch_episodes": 46,
+  "strict_3minute_window_watch_events": 17,
+  "watch_3minute_events_using_non3minute_baseline": 0,
+  "fifo8": {
+    "first_selected": 46,
+    "first_valid_5m_evaluated": 44,
+    "expired_unscored_episodes": 2,
+    "setups": 42,
+    "queue_state": {
+      "EVALUATED": 44,
+      "LATE": 2
+    },
+    "d1_completed": 44,
+    "d1_deferred": 84,
+    "d1_selected": 130
+  },
+  "fair8": {
+    "first_selected": 46,
+    "first_valid_5m_evaluated": 44,
+    "expired_unscored_episodes": 2,
+    "setups": 42,
+    "queue_state": {
+      "EVALUATED": 44,
+      "LATE": 2
+    },
+    "d1_completed": 44,
+    "d1_deferred": 84,
+    "d1_selected": 130
+  },
+  "fifo8_vs_fair8": {
+    "same_d0_watch_id_and_time": true,
+    "new_setup_ids": [],
+    "lost_setup_ids": [],
+    "shared_setup_time_changed_ids": [],
+    "result": "NO_DIFFERENCE_IN_THIS_SOURCE_SLICE",
+    "causal_advantage_proven": false
+  },
+  "first_valid_eval_delay_median_minutes": 3,
+  "first_valid_eval_delay_p90_minutes": 6,
+  "late_episodes_symbols": [
+    "MRNABUSDT",
+    "SMCIBUSDT"
+  ],
+  "original_core_module": "monster_v4_shadow.py",
+  "original_fair8_source": "monster_v4_445_stage162_first_valid_fair8_research.py",
+  "frozen_original_d0_d1_rules_modified_for_test": false,
+  "source_quote24_kind": "RECONSTRUCTED_1440_CLOSED_1M_QUOTE_VOLUME_NOT_ORIGINAL_LIVE_24H_TICKER",
+  "asof_utc": "2026-10-23T21:39:27Z",
+  "publisher_full_9day_availability": false,
+  "original_tick_historical_publisher_available_at_proven": false,
+  "historical_dynamic_listing_and_crypto_only_identity_proven": false,
+  "original_realtime_ticker_PIT_proven": false,
+  "full_market_and_future_unknown_days_claimed_as_zero": false,
+  "executable_entry_exit_costs_and_PnL": "UNKNOWN",
+  "independent_other_ai_review": "NOT_DONE",
+  "partial_replay_artifact": {
+    "id": 12533588861,
+    "url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40028725264/artifacts/12533588861",
+    "outer_zip_sha256": "aed92adb6ef16d4e39758fcc74588f4ea35159ee78fcc2fad19620e0f7b91973",
+    "paired_partials_json_sha256": "d3aef422dfc6be7c5b04b7935ef6b8b4c456293ee47bfb4ede7f8084f552a18a",
+    "description": "Original source replay machine JSON with all 46 WATCH episode-level service records for FIFO8 and Fair8 and complete data censor counters",
+    "readback": "Artifact zip independently downloaded and SHA recomputed; report JSON SHA matched published run"
+  },
+  "G0": "PARTIAL",
+  "G1": "NOT_SCORABLE",
+  "G2": "NOT_PASSED",
+  "G3": "NOT_PASSED",
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_MERGE": true,
+  "NO_DEPLOY": true,
+  "NO_PAID": true,
+  "NO_MAC_NETWORK": true,
+  "NO_AUTOMATIONS": true,
+  "NO_GMAIL": true,
+  "NO_TRADES": true
+}
