@@ -1,0 +1,67 @@
+{
+  "status": "FRESH_DUAL_PROGRAM_SOURCE_REPLAY_VERIFIED_DATED",
+  "fixed_code_sha": "e4529ba7069e5499d12323a7160ceac08c481fae",
+  "rpc_calls": 2,
+  "validated_calls": 2,
+  "start_utc": "2026-10-23T14:46:32.787853+00:00",
+  "finish_utc": "2026-10-23T14:46:34.008872+00:00",
+  "both_programs_observed": true,
+  "same_slot_atomic": false,
+  "snapshot_observed_at_utc": "2026-10-23T14:46:32.787921+00:00",
+  "slot_min": 460482174,
+  "slot_max": 460482176,
+  "accounts": 4148,
+  "mint_count": 4148,
+  "nonzero_mints": 3275,
+  "request_records": [
+    {
+      "request_id": 1,
+      "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "request_started_utc": "2026-10-23T14:46:32.788099+00:00",
+      "minContextSlot": null,
+      "response_received_utc": "2026-10-23T14:46:33.226647+00:00",
+      "bytes": 994150,
+      "sha256": "f77120c050a6d014dd53d41fd9d0e8392f34ab31b91155bfa30e18334ab3b682",
+      "slot": 460482174,
+      "account_count": 1875,
+      "validated": true
+    },
+    {
+      "request_id": 2,
+      "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "request_started_utc": "2026-10-23T14:46:33.285807+00:00",
+      "minContextSlot": 460482174,
+      "response_received_utc": "2026-10-23T14:46:33.773530+00:00",
+      "bytes": 1326616,
+      "sha256": "a327bf34f0e5bf10994662e937704d74098464cc5fddeb2ab4ce77e9ac2c58c2",
+      "slot": 460482176,
+      "account_count": 2273,
+      "validated": true
+    }
+  ],
+  "capture_sha256": "016b99ff42c3b155316bd46bec5850ff9dbfb9437bbfd5c3c28414d58fef4f08",
+  "manifest_sha256": "f06df53ccfb8b96e1b92f428620311cf62bd6bb44f9b83fd7e126f2ee5b1f88b",
+  "old_comparison": {
+    "observed_at_utc": "2026-10-17T22:19:21.466690+00:00",
+    "accounts": 3548,
+    "mints": 3548,
+    "nonzero_mints": 2680,
+    "accounts_added": 601,
+    "accounts_removed": 1,
+    "accounts_common": 3547,
+    "accounts_changed_among_common": 15,
+    "raw_changed_among_common": 15,
+    "decimals_changed_among_common": 0
+  },
+  "target32": {
+    "count": 32,
+    "old_nonzero": 8,
+    "new_nonzero": 8,
+    "changed_raw": 2,
+    "new_missing_account_rows": 0
+  },
+  "no_production_import": true,
+  "no_service_restart": true,
+  "no_notifications": true,
+  "no_trades": true
+}

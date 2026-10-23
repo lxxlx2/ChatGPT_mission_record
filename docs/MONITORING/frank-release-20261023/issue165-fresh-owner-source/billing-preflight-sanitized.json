@@ -1,0 +1,20 @@
+{
+  "zero_extra_cost_gate": true,
+  "plan": "Free",
+  "monthly_cu_limit": 30000000,
+  "used_cu": 1663912,
+  "remaining_cu": 28336088,
+  "verified_unix": 1792766792.667843,
+  "full_key_sha256_matched_browser_app": true,
+  "app_id": "h6m5pairkgzet7vz",
+  "provider_host": "solana-mainnet.g.alchemy.com",
+  "payg_active": false,
+  "free_monthly_cap_verified": true,
+  "upgrade_required_for_paid_spending": true,
+  "billing_settings_modified": false,
+  "expected_rpc_calls": 2,
+  "published_cu_per_call": 10,
+  "expected_cu": 20,
+  "incremental_usd": 0,
+  "source": "Authenticated Mac Alchemy Billing + Usage UI; exact full-key SHA256 matches app UI; official compute-unit-costs reference"
+}

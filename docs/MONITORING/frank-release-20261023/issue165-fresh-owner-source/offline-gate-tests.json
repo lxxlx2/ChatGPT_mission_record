@@ -1,0 +1,58 @@
+{
+  "offline_gate_tests": [
+    {
+      "case": "transport_error",
+      "pass": true,
+      "transport_calls": 1,
+      "second_call": false
+    },
+    {
+      "case": "bad_json",
+      "pass": true,
+      "transport_calls": 1,
+      "second_call": false
+    },
+    {
+      "case": "rpc_error",
+      "pass": true,
+      "transport_calls": 1,
+      "second_call": false
+    },
+    {
+      "case": "wrong_id",
+      "pass": true,
+      "transport_calls": 1,
+      "second_call": false
+    },
+    {
+      "case": "missing_context",
+      "pass": true,
+      "transport_calls": 1,
+      "second_call": false
+    },
+    {
+      "case": "owner_mismatch",
+      "pass": true,
+      "transport_calls": 1,
+      "second_call": false
+    },
+    {
+      "case": "program_mismatch",
+      "pass": true,
+      "transport_calls": 1,
+      "second_call": false
+    },
+    {
+      "case": "duplicate_account",
+      "pass": true,
+      "transport_calls": 1,
+      "second_call": false
+    },
+    {
+      "case": "two_success_order_and_third_denied",
+      "pass": true,
+      "transport_calls": 2
+    }
+  ],
+  "real_rpc": 0
+}

@@ -1,0 +1,8 @@
+{
+  "second_network_blocked_replay_match": true,
+  "raw_files_unchanged": true,
+  "private_files_mode": "0600",
+  "private_directory_mode": "0700",
+  "rpc_calls": 2,
+  "no_third_call": true
+}
