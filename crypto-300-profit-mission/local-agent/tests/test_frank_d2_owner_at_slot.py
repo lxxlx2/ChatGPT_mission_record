@@ -82,7 +82,7 @@ AS_OF = datetime(2026,10,23,15,0,tzinfo=timezone.utc)
 def projected(doc=None, watch=None, targets=(MINT_A,MINT_B,MINT_C,MINT_ABSENT), **options):
     return project_replayed_owner(doc if doc is not None else source(),
                                   watch if watch is not None else WATCH,
-                                  target_mints=targets, as_of=AS_OF, **options)
+                                  target_mints=targets, as_of=options.pop('as_of', AS_OF), **options)
 
 
 def changed(mutator):
@@ -190,10 +190,9 @@ class D2AtSlotSourceTests(unittest.TestCase):
 
     def test_visible_bound_and_search_priority(self):
         doc=source()
-        more=[{"mint":chr(65+(i%5))*32,"local_model_state":"UNKNOWN"} for i in range(5)]
-        # Give the watchlist enough other unique base58 synthetics.
-        others=[{"mint":("2"*(31-len(str(i)))) + str(i) + "9", "local_model_state":"UNKNOWN"}
-                for i in range(100)]
+        # Give the watchlist enough distinct valid-base58 synthetics.
+        others=[{"mint":("2"*(31-len(str(i)))) + str(i).replace("0","A") + "9",
+                 "local_model_state":"UNKNOWN"} for i in range(100)]
         watch={"rows":WATCH["rows"]+others}
         result=projected(watch=watch,max_visible=60,outsider_reserve=10)
         self.assertLessEqual(len(result["preview_rows"]),60)
