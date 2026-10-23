@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import re
 import tempfile
+import zipfile
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
@@ -93,7 +94,9 @@ def batch(day, destination, *, start_index=0, count=32, now=None,
                "source_url": url, "status": "PLANNED_NO_NETWORK",
                "zip_sha256": None, "closed_one_minute_rows": None}
         if download:
-            if target_zip.exists() or target_checksum.exists():
+            if target_zip.is_symlink() or target_checksum.is_symlink():
+                row["status"] = "LOCAL_SOURCE_SYMLINK_REJECTED_NO_OVERWRITE"
+            elif target_zip.exists() or target_checksum.exists():
                 if target_zip.is_file() and target_checksum.is_file():
                     try:
                         proof = stage166.validate_daily_zip(
@@ -118,7 +121,12 @@ def batch(day, destination, *, start_index=0, count=32, now=None,
                     if digest != match.group(1).lower():
                         raise SourceRejected("OFFICIAL_CHECKSUM_MISMATCH")
                     # Stage166's exact official ZIP parser runs on temporary bytes.
-                    with tempfile.TemporaryDirectory(prefix="monster-src-") as tmp:
+                    # Stage on the destination volume to avoid EXDEV, and use
+                    # exclusive hard links: an existence-check followed by
+                    # os.replace() could silently overwrite a competing writer.
+                    target_zip.parent.mkdir(parents=True, exist_ok=True)
+                    with tempfile.TemporaryDirectory(
+                            prefix=".monster-src-", dir=target_zip.parent) as tmp:
                         temp_zip = Path(tmp) / target_zip.name
                         temp_sum = Path(tmp) / target_checksum.name
                         temp_zip.write_bytes(original)
@@ -128,15 +136,17 @@ def batch(day, destination, *, start_index=0, count=32, now=None,
                         if target_zip.exists() or target_checksum.exists():
                             raise SourceRejected("CONCURRENT_LOCAL_FILE_NO_OVERWRITE")
                         target_zip.parent.mkdir(parents=True, exist_ok=True)
-                        # If interrupted between two file moves, the next run
-                        # detects an incomplete pair and refuses to overwrite it.
-                        os.replace(temp_sum, target_checksum)
-                        os.replace(temp_zip, target_zip)
+                        # If interrupted between two exclusive links, the next
+                        # run observes a partial pair and refuses to overwrite it.
+                        # Never count partial pairs as source-admitted.
+                        os.link(temp_sum, target_checksum)
+                        os.link(temp_zip, target_zip)
                     row.update(status="VERIFIED_FULL_DAY_1440",
                                zip_sha256=proof["zip_sha256"],
                                closed_one_minute_rows=proof["closed_one_minute_rows"])
                 except (HTTPError, URLError, TimeoutError, OSError,
-                        UnicodeError, ValueError, SourceRejected) as exc:
+                        UnicodeError, ValueError, zipfile.BadZipFile,
+                        zipfile.LargeZipFile, SourceRejected) as exc:
                     row.update(status="SOURCE_UNAVAILABLE_OR_REJECTED",
                                error=type(exc).__name__ + ":" + str(exc)[:150])
         rows.append(row)
