@@ -63,3 +63,79 @@ def historical_v2_snapshot_capacity(*, block_number, quote_reserve_raw,
         "uniform_notional_sellability": "NOT_SCORABLE",
         "p0_gate_passed": False,
     }
+
+def frozen30_capacity_audit(evidence, *, max_total_impact_bps,
+                            swap_fee_bps=25):
+    """Join all frozen V2 CA identities to end-of-block reserve evidence.
+
+    Missing reserves remain missing. The output contains no label, profitability,
+    original public observation clock, or default study order notional.
+    """
+    if not isinstance(evidence, dict):
+        raise QuoteCapacityError("EVIDENCE_OBJECT_REQUIRED")
+    try:
+        identities = evidence["bsc_v2_p0_current_frozen30_p0_gate_matrix_20261020"]["rows"]
+        reserves = evidence["bsc_v2_p0_all24_next_block_reserve_source_read_20261020"]["rows"]
+    except (KeyError, TypeError):
+        raise QuoteCapacityError("FROZEN_P0_SOURCE_ROWS_MISSING") from None
+    if not isinstance(identities, list) or not isinstance(reserves, list):
+        raise QuoteCapacityError("FROZEN_P0_ROWS_NOT_ARRAYS")
+    ranks = [row.get("rank") for row in identities if isinstance(row, dict)]
+    if (len(identities) != 30 or ranks != list(range(1, 31))
+            or len({row.get("token_ca") for row in identities}) != 30
+            or len({row.get("pool") for row in identities}) != 30):
+        raise QuoteCapacityError("FROZEN_30_IDENTITY_MISMATCH")
+    by_rank = {}
+    for row in reserves:
+        if not isinstance(row, dict) or type(row.get("rank")) is not int:
+            raise QuoteCapacityError("RESERVE_ROW_INVALID")
+        rank = row["rank"]
+        if rank in by_rank or rank < 1 or rank > 30:
+            raise QuoteCapacityError("RESERVE_RANK_DUPLICATE_OR_OUT_OF_RANGE")
+        ident = identities[rank - 1]
+        if any(row.get(field) != ident.get(field) for field in
+               ("token_ca", "pool", "quote_asset")):
+            raise QuoteCapacityError("RESERVE_IDENTITY_NOT_FROZEN")
+        by_rank[rank] = row
+    output = []
+    for row in identities:
+        rank = row["rank"]
+        item = {
+            "rank": rank,
+            "token_ca": row["token_ca"],
+            "pool": row["pool"],
+            "quote_asset": row["quote_asset"],
+        }
+        if rank not in by_rank:
+            item.update({"capacity_status": "NOT_SCORABLE_NO_HISTORIC_RESERVES",
+                         "max_quote_in_raw_at_snapshot": None,
+                         "max_token_in_raw_at_snapshot": None})
+        else:
+            src = by_rank[rank]
+            try:
+                quote = int(src["quote_reserve_raw_at_next_block_end"])
+                token = int(src["token_reserve_raw_at_next_block_end"])
+                block = src["asof_end_block"]
+            except (KeyError, TypeError, ValueError):
+                raise QuoteCapacityError("RESERVE_FIELD_MALFORMED") from None
+            if (type(src.get("first_confirmed_depth_block")) is not int
+                    or type(block) is not int
+                    or block <= src["first_confirmed_depth_block"]
+                    or not src.get("token_reserve_positive")):
+                raise QuoteCapacityError("RESERVE_SNAPSHOT_SCOPE_INVALID")
+            item.update({"capacity_status": "AMM_MATH_ONLY", **
+                         historical_v2_snapshot_capacity(
+                             block_number=block, quote_reserve_raw=quote,
+                             token_reserve_raw=token,
+                             max_total_impact_bps=max_total_impact_bps,
+                             swap_fee_bps=swap_fee_bps)})
+        output.append(item)
+    return {
+        "frozen_population": 30,
+        "available_end_block_snapshots": len(by_rank),
+        "missing_reserve_snapshots": 30 - len(by_rank),
+        "rows": output,
+        "historical_public_available_at": "UNKNOWN",
+        "uniform_notional_sellability": "NOT_SCORABLE",
+        "p0_gate_passed": False,
+    }
