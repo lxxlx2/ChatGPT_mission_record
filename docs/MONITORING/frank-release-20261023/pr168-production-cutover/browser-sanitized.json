@@ -1,0 +1,81 @@
+{
+  "browser": "155.0.8059.86",
+  "dom": {
+    "title": "Meme 研究控制台",
+    "caFormVisible": true,
+    "mintEmpty": true,
+    "resumeButtonExists": true,
+    "resumeText": "继续读取原任务",
+    "historicalButtonExists": true,
+    "historicalText": "查看已有历史报告",
+    "recoveryHidden": true,
+    "status": "",
+    "pending": null,
+    "bodyHasRecoveryExplanation": false
+  },
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "method": "GET",
+      "path": "/static/styles.css"
+    },
+    {
+      "method": "GET",
+      "path": "/static/app.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/runtime"
+    },
+    {
+      "method": "GET",
+      "path": "/api/control-health"
+    },
+    {
+      "method": "GET",
+      "path": "/api/candidates"
+    },
+    {
+      "method": "GET",
+      "path": "/api/trades"
+    },
+    {
+      "method": "GET",
+      "path": "/api/review-activity"
+    },
+    {
+      "method": "GET",
+      "path": "/api/decisions"
+    },
+    {
+      "method": "GET",
+      "path": "/api/coverage"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-observed-watchlist"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-signed-activity"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-intelligence"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-activity-watch"
+    }
+  ],
+  "errors": [],
+  "blockedBackgroundAttempts": 14,
+  "realCAPost": 0,
+  "realRPC": 0,
+  "notificationsInvoked": 0,
+  "trades": 0,
+  "note": "Recovery controls exist; hidden normally without pending job. Actual recovery behavior accepted in isolated CDF; not fabricated or triggered against production."
+}

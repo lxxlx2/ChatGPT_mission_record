@@ -1,0 +1,131 @@
+{
+  "agents": {
+    "dashboard": {
+      "pid": 88897,
+      "start": "Fri Oct 23 17:01:10 2026",
+      "sameStartAndPID": false,
+      "sameSourceDirectory": false,
+      "plistUnchanged": true,
+      "runnerSHA256": "a7cf3df2308535a3de8f5b723a4a373eaece5f8ac54a2f7350db28e3adf3c4b0"
+    },
+    "loop": {
+      "pid": 36070,
+      "start": "Tue Oct 13 17:32:13 2026",
+      "sameStartAndPID": true,
+      "sameSourceDirectory": true,
+      "plistUnchanged": true,
+      "runnerSHA256": "5f5f39965a84c0e5bb17b9b7e4cb10af458cd9def95f6476b8955f3339281466"
+    },
+    "v1": {
+      "pid": 80447,
+      "start": "Fri Oct 23 07:44:52 2026",
+      "sameStartAndPID": true,
+      "sameSourceDirectory": true,
+      "plistUnchanged": true,
+      "runnerSHA256": "f2bb9677ea7661fcf4703fa704c2049d7b7066dc4a1ffb0cfd1ceceed3b2a79c"
+    }
+  },
+  "protectedFilesUnchanged": true,
+  "oldAndNewFullManifestsReverified": true,
+  "v1Health": {
+    "status": "LIVE",
+    "reason": "OK",
+    "heartbeatAgeSeconds": 25.684367895126343,
+    "consecutiveErrors": 0
+  },
+  "runtimeCounters": {
+    "gmail_sent_verified": {
+      "before": 2,
+      "after": 2
+    },
+    "gmail_sent_unverified": {
+      "before": 0,
+      "after": 0
+    },
+    "gmail_pending": {
+      "before": 0,
+      "after": 0
+    },
+    "gmail_failed": {
+      "before": 0,
+      "after": 0
+    },
+    "gmail_blocked": {
+      "before": 0,
+      "after": 0
+    },
+    "local_pending": {
+      "before": 0,
+      "after": 0
+    }
+  },
+  "loopHealth": {
+    "status": "OK",
+    "updatedAt": "2026-10-23T10:02:22.313667+00:00"
+  },
+  "control-healthCounters": {
+    "manual_review_gmail_count": {
+      "before": 15,
+      "after": 15
+    },
+    "manual_review_local_count": {
+      "before": 0,
+      "after": 0
+    },
+    "manual_review_total_count": {
+      "before": 15,
+      "after": 15
+    },
+    "manual_review_expired_unsent_count": {
+      "before": 15,
+      "after": 15
+    },
+    "manual_review_expired_unsent_gmail_count": {
+      "before": 15,
+      "after": 15
+    },
+    "manual_review_expired_unsent_local_count": {
+      "before": 0,
+      "after": 0
+    },
+    "manual_review_actionable_count": {
+      "before": 0,
+      "after": 0
+    },
+    "manual_review_actionable_gmail_count": {
+      "before": 0,
+      "after": 0
+    },
+    "manual_review_actionable_local_count": {
+      "before": 0,
+      "after": 0
+    },
+    "manual_review_actionable_other_count": {
+      "before": 0,
+      "after": 0
+    },
+    "manual_review_pending_count": {
+      "before": 0,
+      "after": 0
+    },
+    "manual_review_pending_gmail_count": {
+      "before": 0,
+      "after": 0
+    },
+    "manual_review_pending_local_count": {
+      "before": 0,
+      "after": 0
+    },
+    "manual_review_pending_other_count": {
+      "before": 0,
+      "after": 0
+    },
+    "manual_review_visible_total_count": {
+      "before": 15,
+      "after": 15
+    }
+  },
+  "policyHashesUnchanged": true,
+  "rollbackExecuted": false,
+  "protectedFileCount": 13
+}

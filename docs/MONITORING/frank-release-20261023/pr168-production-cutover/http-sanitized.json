@@ -1,0 +1,62 @@
+{
+  "pid": 88897,
+  "start": "Fri Oct 23 17:01:10 2026",
+  "sourceSHA": "656ed2c96f4210d106d7b1129ec6cf8d7c4586f3",
+  "listenerOnlyDashboard": true,
+  "checks": [
+    {
+      "route": "/",
+      "status": 200,
+      "bytes": 15131,
+      "sha256": "4cbe85a413569533fa82b0fbcb67e44a5342473cff356980f203327bff771dc5"
+    },
+    {
+      "route": "/static/app.js",
+      "status": 200,
+      "bytes": 91123,
+      "sha256": "7892af913b3c252f632164995170072473d8715e1db7b259a0efc8dec0e4ecf6"
+    },
+    {
+      "route": "/static/styles.css",
+      "status": 200,
+      "bytes": 25833,
+      "sha256": "c3456b3a0efa23d0c77d03211730ea974c1b5aab44ea68e97c13e2b462dcfabc"
+    },
+    {
+      "route": "/api/runtime",
+      "status": 200,
+      "bytes": 2001,
+      "sha256": "b1fcb5a2f298c51a8edf8badaf29a85a92b43dff2bfc20ab85d4ce8bbd07731d"
+    },
+    {
+      "route": "/api/candidates",
+      "status": 200,
+      "bytes": 23692,
+      "sha256": "dc525949212356de70011ce3c3fd0fea299093bc06e7267fc5e1897d454f1681"
+    },
+    {
+      "route": "/api/trades",
+      "status": 200,
+      "bytes": 108122,
+      "sha256": "a9bb868016d58caa75dc007f67273a7e12d7323c3bec3f7249a79e57a34988b0"
+    },
+    {
+      "route": "/api/frank-intelligence",
+      "status": 200,
+      "bytes": 5058,
+      "sha256": "46e208af13c78e5eee090e32c6739ec95ee1502958aac9bc9c4d4f5b3aa83bbe"
+    },
+    {
+      "route": "/api/frank-activity-watch",
+      "status": 200,
+      "bytes": 51844,
+      "sha256": "741516f7694d56ee7d991bbdce0521fbe2b155bb22ff1bd61ee7bdc77c46faa6"
+    },
+    {
+      "route": "/api/control-health",
+      "status": 200,
+      "bytes": 1356,
+      "sha256": "34d2370d5b65bf954b47f4b81b33b3042d1195105dcf2f6920922d22e0e85ddb"
+    }
+  ]
+}

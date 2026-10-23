@@ -1,0 +1,32 @@
+{
+  "capture_unix": 1792749570.9538932,
+  "agents": {
+    "dashboard": {
+      "label": "com.jerson.frank-meme.dashboard",
+      "pid": 69009,
+      "start": "Thu Oct 22 21:58:09 2026",
+      "plist_sha256": "97fcfe41d5640bad85a5b0eadc5e4c9bac35bc28b67e53df649463a3c3fa9683",
+      "runner_sha256": "0b4af41dda31f2a45985019fdfec427a1bc74cb8d6ab44ddc1424949691f243a"
+    },
+    "loop": {
+      "label": "com.jerson.frank-meme.loop",
+      "pid": 36070,
+      "start": "Tue Oct 13 17:32:13 2026",
+      "plist_sha256": "2d7f1742a08ce00e5789c4b9e6022f3b0e5932d15b4849dc63b35506aff2aadc",
+      "runner_sha256": "5f5f39965a84c0e5bb17b9b7e4cb10af458cd9def95f6476b8955f3339281466"
+    },
+    "v1": {
+      "label": "com.jerson.crypto-monitor-frank-local",
+      "pid": 80447,
+      "start": "Fri Oct 23 07:44:52 2026",
+      "plist_sha256": "32319b998113d296a548cf83a24ca4af51332aaf02618519f2ca5024ee59233b",
+      "runner_sha256": "f2bb9677ea7661fcf4703fa704c2049d7b7066dc4a1ffb0cfd1ceceed3b2a79c"
+    }
+  },
+  "dashboard_and_loop_separate": true,
+  "listener_verified": true,
+  "v1_live": true,
+  "v1_heartbeat_age_seconds": 3.3678600788116455,
+  "loop_health_status": "OK",
+  "loop_updated_at": "2026-10-23T09:59:29.894288+00:00"
+}

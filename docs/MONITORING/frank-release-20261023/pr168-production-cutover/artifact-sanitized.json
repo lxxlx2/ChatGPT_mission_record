@@ -1,0 +1,16 @@
+{
+  "oldSHA": "31dd598df248ca15f731913a5cbf82e88b981874",
+  "newSHA": "656ed2c96f4210d106d7b1129ec6cf8d7c4586f3",
+  "oldFiles": 435,
+  "oldManifestSHA256": "568c02201905377e83c4fd126ecb37fa02c6baa6f672b6ab62a40c80d155ff5a",
+  "sharedOldManifestFilesVerified": 148,
+  "sharedOldGitFilesVerified": 420,
+  "candidateFiles": 437,
+  "candidateManifestSHA256": "867ac626f5cec190d3c77621a3b0aaab6ed7fd30a8014367103c1adde01cd3ab",
+  "fullGitBlobMatch": true,
+  "installedReadonly": true,
+  "rollbackCopyVerified": true,
+  "runnerReversalExact": true,
+  "runnerBeforeSHA256": "0b4af41dda31f2a45985019fdfec427a1bc74cb8d6ab44ddc1424949691f243a",
+  "runnerCandidateSHA256": "a7cf3df2308535a3de8f5b723a4a373eaece5f8ac54a2f7350db28e3adf3c4b0"
+}
