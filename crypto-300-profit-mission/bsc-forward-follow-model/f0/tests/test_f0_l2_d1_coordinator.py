@@ -182,6 +182,63 @@ class D1ConcurrentFakeTests(unittest.TestCase):
         self.assertEqual(result["contiguous_commits"],0)
         self.assertLessEqual(result["reserved"],6)
 
+    def test_slow_initial_head_archive_cannot_refresh_expired_head(self):
+        from unittest.mock import patch
+        from f0_l2_d1_coordinator import ExclusiveEvidence
+        import time
+        normal_settle = ExclusiveEvidence.settle
+        def slow_head(log, rid, event, frame):
+            if event["category"] == "INITIAL_HEAD":
+                time.sleep(4.2)
+            return normal_settle(log, rid, event, frame)
+        source=FakeSource(delay_ms=10,growth_bps=5.0)
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)/"private"
+            root.mkdir(mode=0o700)
+            with patch.object(ExclusiveEvidence,"settle",slow_head):
+                report=run_fake_concurrent(
+                    source,root,max_total=4,max_blocks=2,
+                    max_refreshes=0,head_ttl_ms=4000,window_ms=9000,
+                    head_min_poll_age_ms=250)
+        self.assertEqual(report["stop"],"HEAD_BUDGET")
+        self.assertEqual(report["block_attempts"],0)
+        self.assertEqual(report["contiguous_commits"],0)
+        self.assertEqual(source.block_count,0)
+        head=report["source_head_samples"][0]
+        self.assertEqual(head["clock_basis"],"WORKER_RESPONSE_COMPLETED")
+        self.assertGreater(head["accepted_at_monotonic"] -
+                           head["at_monotonic"],4.0)
+        self.assertFalse(any(x["method"]=="eth_getBlockByNumber"
+                             for x in report["start_records"]))
+
+    def test_delayed_head_completion_queue_cannot_rejuvenate_old_sample(self):
+        from unittest.mock import patch
+        from concurrent.futures import wait as normal_wait
+        import time
+        source=FakeSource(delay_ms=10,growth_bps=5.0)
+        delayed=[False]
+        def delayed_dequeue(futures, **kwargs):
+            done,remaining=normal_wait(futures,**kwargs)
+            if done and source.head_count > 0 and not delayed[0]:
+                delayed[0]=True
+                time.sleep(4.1)
+            return done,remaining
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)/"private"
+            root.mkdir(mode=0o700)
+            with patch("f0_l2_d1_coordinator.wait",delayed_dequeue):
+                report=run_fake_concurrent(
+                    source,root,max_total=4,max_blocks=2,
+                    max_refreshes=0,head_ttl_ms=4000,window_ms=9000,
+                    head_min_poll_age_ms=250)
+        self.assertTrue(delayed[0])
+        self.assertEqual(report["stop"],"HEAD_BUDGET")
+        self.assertEqual(report["block_attempts"],0)
+        self.assertEqual(source.block_count,0)
+        head=report["source_head_samples"][0]
+        self.assertGreater(head["accepted_at_monotonic"] -
+                           head["at_monotonic"],4.0)
+
     def test_no_arbitrary_real_sender_or_live_authorization(self):
         class AttemptedCallback:
             pass

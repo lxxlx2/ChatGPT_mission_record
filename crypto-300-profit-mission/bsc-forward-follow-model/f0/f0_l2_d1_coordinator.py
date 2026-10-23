@@ -198,14 +198,17 @@ class GlobalStartGate:
             self.starts.append((request["id"], request["method"], when))
         try:
             frame = source.reply(request)
-            # OFFLINE policy timeout: a late completed fake response must
-            # not be counted as accepted even when it contains valid JSON.
-            if (time.monotonic() - when) * 1000 > timeout_ms:
+            completed_at = time.monotonic()
+            # Only the worker knows when the response finished. The
+            # coordinator/queue/fsync can be arbitrarily delayed afterward.
+            if (completed_at - when) * 1000 > timeout_ms:
                 return {"state":"FAKE_TIMEOUT_LATE_RESPONSE",
-                        "frame":frame,"start":when}
-            return {"state":"FRAME", "frame":frame, "start":when}
+                        "frame":frame,"start":when,"completed_at":completed_at}
+            return {"state":"FRAME", "frame":frame, "start":when,
+                    "completed_at":completed_at}
         except Exception as exc:
             return {"state":"EXCEPTION", "frame":None, "start":when,
+                    "completed_at":time.monotonic(),
                     "error":type(exc).__name__}
 
 
@@ -356,12 +359,17 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
             chain_ok = True
         elif category in ("HEAD","INITIAL_HEAD"):
             head = h
-            head_completed = time.monotonic()
+            head_completed = outcome["completed_at"]
+            need(type(head_completed) is float and
+                 head_completed <= time.monotonic(),
+                 "D1_HEAD_RESPONSE_COMPLETION_UNRECORDED")
             head_pending = False
             if next_height is None:
                 next_height = next_commit = head + 1
             head_samples.append({"sampled_head":head,
-                                 "at_monotonic":head_completed})
+                                 "at_monotonic":head_completed,
+                                 "accepted_at_monotonic":time.monotonic(),
+                                 "clock_basis":"WORKER_RESPONSE_COMPLETED"})
         else:
             parsed_blocks[height] = (rid,parsed["block_hash"],parent)
             received_full += 1
