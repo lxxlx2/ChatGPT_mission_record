@@ -1,3 +1,11 @@
+# 2026-10-23 PR171 first-commit audit P1 r2 (NEW fixed SHA review pending)
+
+- Previous PR171 SHA `9e4b66e9bd119b0752a64dd37504e94b9b68d2ca`: independent Mac `REQUEST_CHANGES`. 400/400 suite and 39/39 D1 passed but real fake-coordinator ledger accepted a deleted first `COMMIT_CONTIGUOUS` as a clean suffix, core J-08/J-10 P1.
+- Narrow change only to `f0/f0_l2_d1_recovery.py`, focused tests, continuation document and HANDOFF: anchor first commit to first BLOCK reservation, cross-validate archived initial HEAD when present, reject initial missing COMMIT and reservation gaps. No rerun of real providers/approved old grant; new fixed SHA and independent Mac review required. Existing parent PR170 `022f6a4668014af051fc3a1e98a254f5149cc3f7` independently approved and untouched.
+- Stage remains **D1_OFFLINE_PARTIAL**, production keys/trust roots missing, `send_live` always denies, `F0_NOT_PASSED / PRODUCTION_NO_GO`. No RPC/WS, signing/trading, permit/nonce, merge/deploy/background task.
+
+---
+
 # 2026-10-23 D1 continuation PR171 — independent review required
 
 - Parent PR170 fixed SHA 022f6a4668014af051fc3a1e98a254f5149cc3f7 independently Mac APPROVE_OFFLINE_CODE — D1_PARTIAL_SCOPE_ONLY, 383/383 full, 22/22 focused PASS, two prior P1 closed.

@@ -117,6 +117,75 @@ class D1RecoveryTests(unittest.TestCase):
                              "INVALID_FOR_PERFORMANCE_CLAIM")
             self.assertEqual(result["network_retries"],0)
 
+
+    def test_real_fake_coordinator_first_commit_deletion_is_denied(self):
+        """P1: mutate a genuine coordinator journal, not a hand-built success."""
+        from f0_l2_d1_coordinator import FakeSource,run_fake_concurrent
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)/"private"
+            root.mkdir(mode=0o700)
+            fake=FakeSource(delay_ms=25,growth_bps=10.0)
+            original=run_fake_concurrent(
+                fake,root,max_total=11,max_blocks=3,max_refreshes=6,
+                window_ms=10000,head_min_poll_age_ms=250)
+            self.assertGreaterEqual(original["contiguous_commits"],2)
+            events=[json.loads(line) for line in
+                    (root/"attempts.jsonl").read_text().splitlines()]
+            block_reservations=[x for x in events
+                                if x["event"]=="RESERVE_UNKNOWN"
+                                and x["category"]=="BLOCK"]
+            commits=[x for x in events if x["event"]=="COMMIT_CONTIGUOUS"]
+            self.assertEqual(commits[0]["height"],
+                             block_reservations[0]["height"])
+            self.assertEqual(commits[1]["height"],commits[0]["height"]+1)
+            valid=reconcile_saved_attempts(root)
+            self.assertEqual(valid["expected_first_block_height"],
+                             commits[0]["height"])
+            self.assertEqual(valid["audit_status"],"OFFLINE_ACCOUNTED_NOT_LIVE")
+            # Keep every RESERVE, SETTLE and exact raw response byte/hash.
+            mutated=[x for x in events if x is not commits[0]]
+            self.save(root,mutated)
+            with self.assertRaisesRegex(ValueError,
+                                        "D1_RECOVERY_FIRST_COMMIT_START_GAP"):
+                reconcile_saved_attempts(root)
+            # Removing ALL COMMIT records must not be a clean 0-block audit.
+            self.save(root,[x for x in events
+                            if x["event"]!="COMMIT_CONTIGUOUS"])
+            empty=reconcile_saved_attempts(root)
+            self.assertEqual(empty["audit_status"],
+                             "INVALID_FOR_PERFORMANCE_CLAIM")
+            self.assertTrue(empty["first_commit_missing"])
+            self.assertEqual(empty["expected_first_block_height"],
+                             commits[0]["height"])
+
+    def test_initial_head_and_block_reservation_must_share_start(self):
+        holder,root,events=self.fixture()
+        with holder:
+            body=b'{"jsonrpc":"2.0","id":1,"result":"0x3ea"}'
+            raw=root/"raw_responses"/"001.body"
+            raw.write_bytes(body)
+            initial={"event":"RESERVE_UNKNOWN","id":1,
+                     "category":"INITIAL_HEAD","method":"eth_blockNumber",
+                     "height":None}
+            headsettle={"event":"SETTLE","id":1,"category":"INITIAL_HEAD",
+                        "height":None,"state":"RPC_RESPONSE",
+                        "raw_name":"001.body",
+                        "raw_sha256":hashlib.sha256(body).hexdigest()}
+            reserve=dict(events[0],id=2,height=1004)
+            payload=b'{"jsonrpc":"2.0","id":2,"result":{}}'
+            raw2=root/"raw_responses"/"002.body"
+            raw2.write_bytes(payload)
+            raw2.chmod(0o600)
+            settlement=dict(events[1],id=2,height=1004,
+                            raw_name="002.body",
+                            raw_sha256=hashlib.sha256(payload).hexdigest())
+            commit=dict(events[2],id=2,height=1004)
+            # 0x3ea=1002, therefore expected first block is 1003, not 1004.
+            self.save(root,[initial,headsettle,reserve,settlement,commit])
+            with self.assertRaisesRegex(ValueError,
+                                        "D1_RECOVERY_INITIAL_HEAD_START_MISMATCH"):
+                reconcile_saved_attempts(root)
+
     def test_missing_raw_and_dirty_mode_denied(self):
         holder,root,events=self.fixture()
         with holder:
