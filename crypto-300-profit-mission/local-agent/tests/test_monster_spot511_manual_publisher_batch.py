@@ -7,6 +7,7 @@ import unittest
 import zipfile
 from datetime import date, datetime, timezone
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import monster_spot511_manual_publisher_batch as m
@@ -95,6 +96,59 @@ class BatchTests(unittest.TestCase):
                       fetcher=fetch,roster=ROSTER)
             self.assertEqual(x["source_records"][0]["status"],"SOURCE_UNAVAILABLE_OR_REJECTED")
             self.assertIn("INCOMPLETE_1440",x["source_records"][0]["error"])
+
+    def test_corrupt_zip_with_matching_checksum_records_failure_and_continues(self):
+        bad_zip = b"not a ZIP archive"
+        bad_sum = (hashlib.sha256(bad_zip).hexdigest()
+                   + "  " + ROSTER[0] + "-1m-" + DAY.isoformat() + ".zip\n").encode()
+        good_zip, good_sum = synthetic_publisher(symbol=ROSTER[1])
+        def fetch(url, _limit):
+            first = "/" + ROSTER[0] + "/"
+            is_first = first in url
+            if is_first:
+                return bad_sum if url.endswith(".CHECKSUM") else bad_zip
+            return good_sum if url.endswith(".CHECKSUM") else good_zip
+        with tempfile.TemporaryDirectory() as d:
+            result = m.batch(DAY, d, count=2, download=True, now=NOW,
+                             fetcher=fetch, roster=ROSTER)
+            self.assertEqual([x["status"] for x in result["source_records"]],
+                             ["SOURCE_UNAVAILABLE_OR_REJECTED", "VERIFIED_FULL_DAY_1440"])
+            self.assertIn("BadZipFile", result["source_records"][0]["error"])
+            self.assertEqual(result["verified_downloads"], 1)
+
+    def test_concurrent_writer_never_overwritten_by_source_commit(self):
+        data, checksum = synthetic_publisher()
+        def fetch(url, _limit):
+            return checksum if url.endswith(".CHECKSUM") else data
+        with tempfile.TemporaryDirectory() as d:
+            _, dest_checksum = m.stage166.daily_paths(d, ROSTER[0], DAY)
+            link = m.os.link
+            def concurrent_link(src, dst):
+                if Path(dst) == dest_checksum and not dest_checksum.exists():
+                    dest_checksum.write_bytes(b"competing evidence")
+                return link(src, dst)
+            with patch.object(m.os, "link", side_effect=concurrent_link):
+                result = m.batch(DAY, d, count=1, download=True, now=NOW,
+                                 fetcher=fetch, roster=ROSTER)
+            self.assertEqual(result["source_records"][0]["status"],
+                             "SOURCE_UNAVAILABLE_OR_REJECTED")
+            target_zip, _ = m.stage166.daily_paths(d, ROSTER[0], DAY)
+            self.assertFalse(target_zip.exists())
+            self.assertEqual(dest_checksum.read_bytes(), b"competing evidence")
+
+    def test_symlink_target_is_never_followed_or_overwritten(self):
+        with tempfile.TemporaryDirectory() as d:
+            original = Path(d) / "other-evidence.zip"
+            original.write_bytes(b"important original bytes")
+            target_zip, _ = m.stage166.daily_paths(d, ROSTER[0], DAY)
+            target_zip.parent.mkdir(parents=True)
+            target_zip.symlink_to(original)
+            result = m.batch(DAY, d, count=1, download=True, now=NOW,
+                             roster=ROSTER,
+                             fetcher=lambda *_: self.fail("unexpected network"))
+            self.assertEqual(result["source_records"][0]["status"],
+                             "LOCAL_SOURCE_SYMLINK_REJECTED_NO_OVERWRITE")
+            self.assertEqual(original.read_bytes(), b"important original bytes")
 
     def test_future_utc_day_never_downloaded(self):
         with tempfile.TemporaryDirectory() as d:
