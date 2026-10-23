@@ -155,6 +155,48 @@ class PairedReplayTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError,'4599_PUBLISHER_DAY_CENSUS'):
                     pair.paired_replay(p)
 
+    def test_real_d1_rejects_six_stale_but_contiguous_bars(self):
+        with tempfile.TemporaryDirectory() as temp:
+            p=Path(temp)/'stale.sqlite'
+            synthetic_index(p, active_ticks=0)
+            src=sqlite3.connect(p)
+            src.row_factory=sqlite3.Row
+            try:
+                tick=pair.feed.START_MS+60*60_000
+                with self.assertRaisesRegex(ValueError,
+                                            'D1_MISSING_CURRENT_CONTIGUOUS'):
+                    pair._closed5_fetch(src,'spot','BTCUSDT',tick)
+            finally:
+                src.close()
+
+    def test_real_d1_rejects_missing_most_recent_closed_bar(self):
+        with tempfile.TemporaryDirectory() as temp:
+            p=Path(temp)/'recent-gap.sqlite'
+            synthetic_index(p)
+            tick=pair.feed.START_MS+2*pair.TICK_MS
+            expected_last_open=(tick//pair.FIVE_MS)*pair.FIVE_MS-pair.FIVE_MS
+            with sqlite3.connect(p) as db:
+                db.execute('DELETE FROM closed5 WHERE symbol=? AND open_ms=?',
+                           ('BTCUSDT',expected_last_open))
+            src=sqlite3.connect(p)
+            src.row_factory=sqlite3.Row
+            try:
+                with self.assertRaisesRegex(ValueError,
+                                            'D1_MISSING_CURRENT_CONTIGUOUS'):
+                    pair._closed5_fetch(src,'spot','BTCUSDT',tick)
+            finally:
+                src.close()
+
+    def test_real_original_core_required_for_both_replay_lanes(self):
+        # Intentionally no patch of production.observe_snapshot/process_queue:
+        # tests execute the original Git-blob core through both lane paths.
+        self.assertEqual(pair.production.observe_snapshot.__module__,
+                         'monster_v4_shadow')
+        self.assertEqual(pair.production.process_queue.__module__,
+                         'monster_v4_shadow')
+        self.assertEqual(pair.plan_eligible_eight.__module__,
+                         'monster_v4_445_stage162_first_valid_fair8_research')
+
     def test_missing_db_or_partial_index_cannot_run(self):
         with tempfile.TemporaryDirectory() as temp:
             source=Path(temp)/'source.sqlite';synthetic_index(source)
