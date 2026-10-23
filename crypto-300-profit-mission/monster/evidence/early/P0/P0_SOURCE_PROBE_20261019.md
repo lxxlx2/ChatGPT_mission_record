@@ -1,3 +1,59 @@
+## 2026-10-23 已授权唯一一次 Mac 前台真实采样
+
+MANUAL_FORWARD_READONLY_PILOT_PASS。授权评论6357433481。本次真实执行恰好1次，无重试。旧隔离目录HEAD为6403be09，故旧脚本目标c646校验失败；未reset或删除，改用全新detached worktree精确c646。运行源码blob及Python模块实际导入位置全部匹配批准checkout。Mac Python3.14.7 / arm64；load4.41/3.30/2.73，memory_pressure可用85%，磁盘437GiB，私有父目录原为空且0700。未接触私钥或私人API key，使用已批准公开无密钥端点，仅对子进程传环境变量。
+
+12次RPC，Chain56，两计数均3535217；区块129259581→129259583，中间129259582 hash/parent连续，固定块前后及首尾anchor回读通过。NEW_FACTORY_PAIRS=0，身份读0，未读0；只代表这两个Factory快照之间零增长。实际计数完成间隔1.039858708秒；capture2.934009458秒（到manifest写入前）。UTC调用起点04:40:46.573513Z，最后响应完成04:40:49.506294Z；本地日期2026-10-23 Asia/Bangkok。12份正文SHA256逐份读取字节重算全部通过，目录0700、原始文件及manifest0600，无failure.json。原始正文仅保存在Mac私有目录，未上传Git。
+
+单提供商本地收包不是全网首次公开时间/独立认证，未证明finality、V3/launchpad完整分母或任何交易容量/税费/可买可卖/收益。历史available_at UNKNOWN、P0 INSUFFICIENT_COVERAGE、P1 BLOCKED、2026-11-02截止不变。技术采集链路值得保留，但零增长短窗口不足以支持扩大研究或模型；任何额外采样/长期观察均需新授权。本次授权已经消耗，不自动复跑。无部署/调度/邮件/交易/生产变更。
+
+脱敏可核摘要（不含完整HTTP归档或私人端点）：
+
+```json
+{
+  "snapshots": [
+    {
+      "all_pairs_length": 3535217,
+      "block": {
+        "chain_timestamp_seconds": 1792730446,
+        "hash": "0x819a2aea91f319460fab3706242514762cc4a0662c8b02a3826fc00855f76c74",
+        "number": 129259581,
+        "parent_hash": "0xc63e4635aa5b54adf08fb580cf9a7b87ecc0909c16c05de659f68531a7396996"
+      },
+      "count_observed_at_utc": "2026-10-23T04:40:47.452511+00:00",
+      "count_response_monotonic_offset_ns": 879018125
+    },
+    {
+      "all_pairs_length": 3535217,
+      "block": {
+        "chain_timestamp_seconds": 1792730447,
+        "hash": "0x78c2d2a858edcfd0457724103e9f8d8b444aced4ee148aa874a25927230a5089",
+        "number": 129259583,
+        "parent_hash": "0xb38361313dba5a8a876307a1560a86abc6a2d05c1784b1c5ac7d717a29274171"
+      },
+      "count_observed_at_utc": "2026-10-23T04:40:48.492376+00:00",
+      "count_response_monotonic_offset_ns": 1918876833
+    }
+  ],
+  "rpc_attempt_count": 12,
+  "new_factory_pair_index_count": 0,
+  "new_pairs_read": [],
+  "unread_new_pair_count": 0,
+  "count_response_interval_monotonic_ns": 1039858708,
+  "capture_elapsed_monotonic_ns": 2934009458,
+  "capture_started_at_utc": "2026-10-23T04:40:46.573308+00:00",
+  "capture_completed_at_utc": "2026-10-23T04:40:49.507512+00:00",
+  "status": "MANUAL_FORWARD_READONLY_PILOT_PASS",
+  "runtime_commit": "c646d438ebdd33183e047e47323315d78aab2869",
+  "runtime_blob": "5e41458eb199599a861498260bda895f525fb1b6",
+  "authorization": "6357433481",
+  "execution_count": 1,
+  "raw_sha256_recomputed_pass": 12,
+  "archive": "~/Library/Application Support/MonsterResearch/forward-observation/authorization-6357433481-once",
+  "manifest_sha256": "7c56cdb160815d0e01440ceb08517ca8dc4a7cc4c5a7f44d89926ed55eb4d5d0",
+  "permissions_verified": true
+}
+```
+
 ## 2026-10-23 Mac验收关闭代码遗留问题
 
 固定c646d438本轮实际115/115测试通过，新增9项全部通过，独立子agent二审实际完成：APPROVE_OFFLINE_CODE。RPC环境变量未配置，MANUAL_FORWARD_READONLY_PILOT_BLOCKED。完整命令、日志和边界见 local-agent/tests/evidence/monster_forward_review_20261022/acceptance-c646-review.md。本轮无源码修复、无真实RPC。以下为此前历史记录。
