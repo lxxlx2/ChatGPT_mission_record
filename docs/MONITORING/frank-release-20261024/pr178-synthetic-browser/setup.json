@@ -1,0 +1,16 @@
+{
+  "sha": "ea9a7715beb4d2a55ae956bf993828cbddcb50e5",
+  "port": 64103,
+  "static_sha256": {
+    "index.html": "6b01e38f8847b42fa76660e8be9b161dee20b2c951824a16bf487c6ae0dfa2c4",
+    "app.js": "97fb88193fb7b37fd68166714a1a4e814aca25b6bd58e303499a7cb18f381604",
+    "styles.css": "c3456b3a0efa23d0c77d03211730ea974c1b5aab44ea68e97c13e2b462dcfabc"
+  },
+  "synthetic_mints": 213,
+  "synthetic_accounts": 214,
+  "source_mode": "0700 directory / 0600 file on creation",
+  "production_classes_instantiated": false,
+  "all_local_agent_files_git_verified": 446,
+  "local_agent_manifest_sha256": "d4f83d27fb91630fe3c67aefa287ca3bfee8af98470632634cce7b7ef4b9862c",
+  "final_source_tree_clean": true
+}

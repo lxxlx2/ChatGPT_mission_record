@@ -1,0 +1,389 @@
+[
+  {
+    "method": "GET",
+    "path": "/api/runtime",
+    "query_kind": "none",
+    "http": 200,
+    "payload_status": "UNKNOWN",
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/control-health",
+    "query_kind": "none",
+    "http": 200,
+    "payload_status": "SOURCE_UNAVAILABLE",
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/review-activity",
+    "query_kind": "none",
+    "http": 200,
+    "payload_status": null,
+    "result_count": null,
+    "coverage_fields": null
+  },
+  {
+    "method": "GET",
+    "path": "/api/trades",
+    "query_kind": "none",
+    "http": 200,
+    "payload_status": null,
+    "result_count": null,
+    "coverage_fields": null
+  },
+  {
+    "method": "GET",
+    "path": "/api/candidates",
+    "query_kind": "none",
+    "http": 200,
+    "payload_status": null,
+    "result_count": null,
+    "coverage_fields": null
+  },
+  {
+    "method": "GET",
+    "path": "/api/decisions",
+    "query_kind": "none",
+    "http": 200,
+    "payload_status": null,
+    "result_count": null,
+    "coverage_fields": null
+  },
+  {
+    "method": "GET",
+    "path": "/api/coverage",
+    "query_kind": "none",
+    "http": 200,
+    "payload_status": "SOURCE_UNAVAILABLE",
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-observed-watchlist",
+    "query_kind": "none",
+    "http": 200,
+    "payload_status": "SOURCE_UNAVAILABLE",
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-signed-activity",
+    "query_kind": "none",
+    "http": 200,
+    "payload_status": "SOURCE_UNAVAILABLE",
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-intelligence",
+    "query_kind": "none",
+    "http": 200,
+    "payload_status": "SOURCE_UNAVAILABLE",
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-activity-watch",
+    "query_kind": "none",
+    "http": 200,
+    "payload_status": "SOURCE_UNAVAILABLE",
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "page",
+    "http": 200,
+    "payload_status": "SOURCE_NOT_IMPORTED",
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "page",
+    "http": 200,
+    "payload_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+    "result_count": 100,
+    "coverage_fields": [
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ],
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ]
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "page",
+    "http": 200,
+    "payload_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+    "result_count": 100,
+    "coverage_fields": [
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ],
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ]
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "page",
+    "http": 200,
+    "payload_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+    "result_count": 100,
+    "coverage_fields": [
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ],
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ]
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "page",
+    "http": 200,
+    "payload_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+    "result_count": 13,
+    "coverage_fields": [
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ],
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ]
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "page",
+    "http": 200,
+    "payload_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+    "result_count": 100,
+    "coverage_fields": [
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ],
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ]
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "mint",
+    "http": 200,
+    "payload_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+    "result_count": 1,
+    "coverage_fields": [
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ],
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ]
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "mint",
+    "http": 200,
+    "payload_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+    "result_count": 0,
+    "coverage_fields": [
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ],
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ]
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "page",
+    "http": 400,
+    "payload_status": null,
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "page",
+    "http": 400,
+    "payload_status": null,
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "mint",
+    "http": 400,
+    "payload_status": null,
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "mint",
+    "http": 400,
+    "payload_status": null,
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "page",
+    "http": 403,
+    "payload_status": null,
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "page",
+    "http": 403,
+    "payload_status": null,
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "page",
+    "http": 403,
+    "payload_status": null,
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "page",
+    "http": 200,
+    "payload_status": "SOURCE_REJECTED",
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "page",
+    "http": 200,
+    "payload_status": "SOURCE_REJECTED",
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "page",
+    "http": 200,
+    "payload_status": "SOURCE_REJECTED",
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "page",
+    "http": 200,
+    "payload_status": "SOURCE_REJECTED",
+    "result_count": null,
+    "coverage_fields": []
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "mint",
+    "http": 200,
+    "payload_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+    "result_count": 1,
+    "coverage_fields": [
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ],
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ]
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/frank-d2-at-slot",
+    "query_kind": "mint",
+    "http": 200,
+    "payload_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+    "result_count": 1,
+    "coverage_fields": [
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ],
+      [
+        "account_count",
+        "program_id",
+        "slot"
+      ]
+    ]
+  }
+]

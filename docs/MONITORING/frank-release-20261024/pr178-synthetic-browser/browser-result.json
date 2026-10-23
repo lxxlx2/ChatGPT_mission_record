@@ -1,0 +1,229 @@
+{
+  "verdict": "MAC_SYNTHETIC_CHROME_PASS",
+  "sha": "ea9a7715beb4d2a55ae956bf993828cbddcb50e5",
+  "port": 64103,
+  "platform": "darwin",
+  "browser": "Google Chrome 155.0.8059.86",
+  "results": [
+    {
+      "name": "initial_no_automatic_D2",
+      "result": "PASS",
+      "evidence": {
+        "D2_GETs": 0
+      }
+    },
+    {
+      "name": "missing_source_unknown_not_zero",
+      "result": "PASS",
+      "evidence": {
+        "status": "SOURCE_NOT_IMPORTED"
+      }
+    },
+    {
+      "name": "valid_multi_account_exact_integer_and_metadata",
+      "result": "PASS",
+      "evidence": {
+        "rows": 100,
+        "rawPrecisionExact": true,
+        "accountsForMintA": 2,
+        "datedNonAtomic": true
+      }
+    },
+    {
+      "name": "pagination_100_100_13_and_buttons",
+      "result": "PASS",
+      "evidence": {
+        "pageRows": [
+          100,
+          100,
+          13
+        ]
+      }
+    },
+    {
+      "name": "exact_mint_outside_page_and_zero_vs_absent",
+      "result": "PASS",
+      "evidence": {
+        "outsideFirstPageFound": true,
+        "actualZeroDistinctFromAbsent": true
+      }
+    },
+    {
+      "name": "malformed_and_origin_guards",
+      "result": "PASS",
+      "evidence": {
+        "invalidUIRequests": 0,
+        "badQueries400": true,
+        "headerAndOrigin403": true
+      }
+    },
+    {
+      "name": "hidden_coverage_and_program_count_rejected",
+      "result": "PASS",
+      "evidence": {
+        "hidden1000RejectedNoEcho": true,
+        "contradictoryProgramSubtotalsRejected": true
+      }
+    },
+    {
+      "name": "late_response_generation_isolation",
+      "result": "PASS",
+      "evidence": {
+        "oldNonzeroCannotReplaceNewZero": true,
+        "method": "Original frankD2Read called programmatically for overlap because normal buttons lock while pending; no replacement of functions/fetch/DOM"
+      }
+    }
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/static/styles.css",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/static/app.js",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/runtime",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/control-health",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/candidates",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/trades",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/review-activity",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/decisions",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/coverage",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-observed-watchlist",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-signed-activity",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-intelligence",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-activity-watch",
+      "queryKind": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "mint"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "mint"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "mint"
+    },
+    {
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "queryKind": "mint"
+    }
+  ],
+  "consoleRecords": [],
+  "errors": [],
+  "blockedAttempts": 12,
+  "blockedKinds": {
+    "DENY_PROXY_HTTP": 1,
+    "DENY_PROXY_CONNECT": 11
+  },
+  "externalRequestsForwarded": 0,
+  "REAL_RPC": 0,
+  "PRODUCTION_8766_REQUESTS": 0,
+  "REAL_CA_POST": 0,
+  "REAL_NOTIFICATIONS": 0,
+  "REAL_TRADES": 0,
+  "staticUnchanged": true,
+  "cleanup": {
+    "chromeClosed": true,
+    "profileRemoved": true,
+    "proxyClosed": true,
+    "fixtureClosedAndPortAbsent": true,
+    "fixtureProcessStopped": true,
+    "syntheticSourceDirectoryRemoved": true
+  },
+  "endedAt": "2026-10-23T18:26:25.834Z",
+  "os": "27.0.1",
+  "syntheticPrivateModesVerified": true
+}
