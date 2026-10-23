@@ -155,10 +155,10 @@ def consume_then_run_fake_once(source, evidence_root, *, permit_raw,
         permit_raw, expected_sha, checkout_root, raw_inventory_statement,
         inventory_signatures, test_only_trust_roots)
     permit = _strict_permit(permit_raw)
-    check(type(evidence_root) is Path and evidence_root.is_absolute()
+    check(isinstance(evidence_root, Path) and evidence_root.is_absolute()
           and evidence_root.is_dir() and not evidence_root.is_symlink()
           and evidence_root.stat().st_mode & 0o077 == 0
-          and type(offline_test_registry_root) is Path and
+          and isinstance(offline_test_registry_root, Path) and
           offline_test_registry_root.is_absolute() and
           evidence_root.resolve() != offline_test_registry_root.resolve(),
           "D1_TEST_EVIDENCE_OR_REGISTRY_ROOT_INVALID")
