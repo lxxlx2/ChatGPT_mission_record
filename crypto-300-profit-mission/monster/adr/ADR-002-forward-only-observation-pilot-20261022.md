@@ -68,3 +68,16 @@ STATUS: PINNED_READ_PASS
 - 固定区块静态读取能力成功，不等于前向采样器在Mac完成了真实原字节采集、时钟/延迟验证和20请求预算验证。
 
 **更新的准入判断**：无钥公共端点`eth_chainId`与Mac`eth_blockNumber + eth_getBlockByNumber + eth_call`前置检查已按用户回报通过，因`MONSTER_BSC_ARCHIVE_RPC_URL`缺失造成的**静态读取能力阻断已消除**；正式运行时仍只能通过一次性进程内环境变量传入公开无钥URL，不需要创建`.env`、配置私钥或改变现有Alchemy账户。但真实一次性前向`--manual-once`仍**尚未授权、尚未执行**；开始前必须重新检查当时Mac CPU/内存与私有数据目录、确认限流/失败止损，并由用户明确单独批准。因此状态为`APPROVE_OFFLINE_CODE / PINNED_RPC_PREFLIGHT_PASS_USER_REPORTED / MANUAL_PILOT_AWAITING_EXPLICIT_AUTHORIZATION`；不能声称`PIT_VERIFIED`、P0来源已过门槛或P1可启动。历史`2026-11-02`终止日、免费$0预算与`NO_DEPLOY/NO_SCHEDULE/NO_TRADE`不变。
+
+## 2026-10-23：用户明确授权恰好一次 Mac 前台真实只读采样（待Mac实际执行）
+
+用户在知悉两次 Mac 公共 RPC 预检查分别已回报 `eth_chainId=0x38`、固定块 `129174690` 与 V2 Factory计数`3,532,598`，并在上一轮被明确询问“是否授权执行这一次 Monster 前台只读采样”后，**明确回复“授权”**。因此本条将前次`MANUAL_PILOT_AWAITING_EXPLICIT_AUTHORIZATION`限定性更新为`ONE_MANUAL_FOREGROUND_PILOT_USER_AUTHORIZED_NOT_EXECUTED`，不是常驻监控、扩大母体采集或自行多次重试的授权。
+
+**唯一许可的执行边界**：
+- 固定已实际通过115项Mac离线测试且独立二审APPROVE的运行源码提交：`c646d438ebdd33183e047e47323315d78aab2869`（`forward_observation.py` blob `5e41458eb199599a861498260bda895f525fb1b6`）；不使用后续未经审核的代码替换它。
+- Mac 终端中**一次**`python3 -m mission_agent.early.forward_observation --manual-once --out-dir <新建且不存在的私有子目录> --pause-ms 0`；进程专用、无需API Key的公开URL `MONSTER_BSC_ARCHIVE_RPC_URL=https://bnb-mainnet.g.alchemy.com/public`。0ms仅表示两次快照之间不额外休眠，实际采集会计算并强制不超过3秒的计数响应间隔；无后台daemon、无重试，无其他Provider fallback。
+- 最多20个白名单`eth_chainId/eth_blockNumber/eth_getBlockByNumber/eth_call`调用；单次HTTP请求完整截止20秒。只接受正确链、同块状态与祖先一致性；链重组、实际窗口超限、HTTP限流或响应缺损应明确生成`failure.json`，**绝不**因此默许重试第二次采样。
+- Mac运行前重新检查CPU/内存/剩余磁盘，保证只读且不干扰现有项目；归档写入`~/Library/Application Support/MonsterResearch/forward-observation/`之下独占新目录（0700）和私有原响应（0600）。不将原HTTP响应文件、全部manifest或任何RPC凭据直接推Git；仅在检查完全不含秘密后贴脱敏计数与失败代码。
+- 不安装/更改launchd或cron，不付费，不签名/交易，不转账，不合并，不部署、不重启任何生产服务，不修改历史P0样本或买入金额。失败则结束，继续分析现有证据，不因本条授权再次实跑。
+
+**重要真实性状态**：截至记录本段时，由于ChatGPT会话无法直接控制用户Mac，**尚未执行**上述采样命令，也没有任何真实本地原HTTP响应归档得到验证。用户随后实际回传的单次运行产物（成功或失败）必须按固定SHA、每请求sha256、接收完成UTC与单调间隔离线审查；任何`Factory`计数变化只能解释为此次短窗的单源观察，不得冒充可交易新币、完整母体或PIT来源终审。历史2025`available_at`仍UNKNOWN，`P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO`及2026-11-02历史来源停止日不变。
