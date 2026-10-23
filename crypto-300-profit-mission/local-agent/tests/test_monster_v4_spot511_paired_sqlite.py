@@ -4,6 +4,7 @@ from pathlib import Path
 import sqlite3
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import monster_v4_spot511_paired_sqlite as pair
 
@@ -20,8 +21,13 @@ def synthetic_index(dest, *, symbols=('BTCUSDT','ETHUSDT'), active_ticks=8,
       CREATE TABLE closed5(symbol TEXT NOT NULL,open_ms INTEGER NOT NULL,
            op TEXT NOT NULL,hi TEXT NOT NULL,lo TEXT NOT NULL,cl TEXT NOT NULL,
            volume TEXT NOT NULL,quote TEXT NOT NULL,PRIMARY KEY(symbol,open_ms));
+      CREATE TABLE day_provenance(symbol TEXT,day TEXT,status TEXT,zip_sha256 TEXT,
+           PRIMARY KEY(symbol,day));
     ''')
     con.executemany('INSERT INTO roster VALUES(?)',[(x,) for x in symbols])
+    con.executemany('INSERT INTO day_provenance VALUES(?,?,?,?)',
+                    [(sym,f'2026-10-{day:02d}','SOURCE_NOT_SUPPLIED',None)
+                     for sym in symbols for day in range(16,25)])
     con.executemany('INSERT INTO metadata VALUES(?,?)',[
         ('schema',pair.SCHEMA),('completed','YES'),
         ('source_kind','OFFICIAL_PUBLISHER_1M_RECONSTRUCTED_PROXY')])
@@ -96,6 +102,34 @@ class PairedReplayTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'PAIR_LANE_DB_OVERWRITE_REFUSED'):
                 pair.paired_replay(p,lane_dir=lanes,allow_synthetic_cohort=True)
             self.assertEqual(original.read_bytes(),b'preserve original')
+
+
+    def test_burst_more_than_eight_keeps_all_watch_identities(self):
+        with tempfile.TemporaryDirectory() as temp:
+            p=Path(temp)/'burst.sqlite'
+            synthetic_index(p,symbols=[f'Q{i:03d}USDT' for i in range(12)])
+            report=pair.paired_replay(p,allow_synthetic_cohort=True)
+            self.assertEqual(report['d0_watch_count'],12)
+            self.assertTrue(report['same_d0_watch_id_and_time'])
+            self.assertEqual(report['fifo']['d0_new_watch'],12)
+            self.assertEqual(report['fair8']['d0_new_watch'],12)
+            self.assertEqual(report['G6'],'NO_GO')
+
+    def test_511_count_alone_cannot_spoof_t0_roster_or_archive_census(self):
+        with tempfile.TemporaryDirectory() as temp:
+            p=Path(temp)/'spoof.sqlite'
+            symbols=[f'Q{i:03d}USDT' for i in range(511)]
+            synthetic_index(p,symbols=symbols,active_ticks=0)
+            with patch.object(pair.feed.stage166,'frozen_roster',return_value=['ACTUALUSDT']):
+                with self.assertRaisesRegex(ValueError,'ORIGINAL_T0_ROSTER'):
+                    pair.paired_replay(p)
+            con=sqlite3.connect(p)
+            con.execute('DELETE FROM day_provenance WHERE symbol=? AND day=?',
+                        (symbols[0],'2026-10-16'))
+            con.commit();con.close()
+            with patch.object(pair.feed.stage166,'frozen_roster',return_value=symbols):
+                with self.assertRaisesRegex(ValueError,'4599_PUBLISHER_DAY_CENSUS'):
+                    pair.paired_replay(p)
 
     def test_missing_db_or_partial_index_cannot_run(self):
         with tempfile.TemporaryDirectory() as temp:
