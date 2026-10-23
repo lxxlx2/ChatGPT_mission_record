@@ -1,0 +1,2503 @@
+{
+  "schema": "mission-address-analysis-cross-batch-signed-screen-001-100-v1",
+  "as_of": "2026-10-18",
+  "original_source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "source_count": 449,
+  "coverage_rows": [
+    1,
+    100
+  ],
+  "scope": "BSC, Ethereum, Base historical signed nonces only, same frozen UTC 2026-09-17 to 2026-10-17 height windows",
+  "batch_artifacts": [
+    {
+      "batch": 1,
+      "source_rows": [
+        1,
+        20
+      ],
+      "signed_wallets": 15,
+      "source_artifact": "batch-001-three-chain-30d-nonce-screen.json",
+      "sha": "ffb3acaef1771a9c2deee883291eba3f3682ce02"
+    },
+    {
+      "batch": 2,
+      "source_rows": [
+        21,
+        40
+      ],
+      "signed_wallets": 13,
+      "source_artifact": "batch-002-three-chain-30d-nonce-screen.json",
+      "sha": "40a75b47bd59703a71d5925c64ec8e3ff4ffefee"
+    },
+    {
+      "batch": 3,
+      "source_rows": [
+        41,
+        60
+      ],
+      "signed_wallets": 6,
+      "source_artifact": "batch-003-three-chain-30d-nonce-screen.json",
+      "sha": "d598b611d13909513f8f83362c6039b74cde6746"
+    },
+    {
+      "batch": 4,
+      "source_rows": [
+        61,
+        80
+      ],
+      "signed_wallets": 18,
+      "source_artifact": "batch-004-three-chain-30d-nonce-screen.json",
+      "sha": "e4ccd6cf8f00649044459a5c45b22bf4d1b30e4a"
+    },
+    {
+      "batch": 5,
+      "source_rows": [
+        81,
+        100
+      ],
+      "signed_wallets": 6,
+      "source_artifact": "batch-005-three-chain-30d-nonce-screen.json",
+      "sha": "3c9054d1a9736fa19be9fdb3f64f6b0125f78aec"
+    }
+  ],
+  "stats": {
+    "addresses_screened": 100,
+    "addresses_total": 449,
+    "batches_screened": 5,
+    "three_chain_union_signed_active": 58,
+    "three_chain_all_signed_zero": 42,
+    "per_chain": {
+      "bsc": {
+        "signed_wallets": 49,
+        "signed_transactions": 33939
+      },
+      "ethereum": {
+        "signed_wallets": 48,
+        "signed_transactions": 6373
+      },
+      "base": {
+        "signed_wallets": 43,
+        "signed_transactions": 6094
+      }
+    },
+    "audited_positive_token_roundtrips": 3,
+    "audited_negative_token_roundtrips": 0,
+    "complete_wallet_pnl_30d": 0,
+    "complete_wallet_pnl_lifetime": 0
+  },
+  "wallets": [
+    {
+      "source_row": 1,
+      "address": "0x0006d09df7b0e8dce98463b95439475fcec29111",
+      "source_label_unverified": "eca小号",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 3,
+        "ethereum": 114,
+        "base": 91
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 2,
+      "address": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+      "source_label_unverified": "eca小号",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 11,
+        "ethereum": 58,
+        "base": 108
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": [
+        "evidence/batch-001-rows-002-004-sauce-roundtrips.json#row002"
+      ]
+    },
+    {
+      "source_row": 3,
+      "address": "0x45004af18692aac16840c807d8980ad215d58dad",
+      "source_label_unverified": "eca小号",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 3,
+        "ethereum": 94,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 4,
+      "address": "0x00077705952c90b728c6d7dc450beb4429331111",
+      "source_label_unverified": "eca小号",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 17,
+        "ethereum": 124,
+        "base": 90
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": [
+        "evidence/batch-001-rows-002-004-sauce-roundtrips.json#row004"
+      ]
+    },
+    {
+      "source_row": 5,
+      "address": "0x4d75b19b27db424effc711d046e62bb3a713299a",
+      "source_label_unverified": "eca小号",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 89,
+        "base": 76
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 6,
+      "address": "0x000ae1e2ba3624208300605d7919d6c4803c6111",
+      "source_label_unverified": "eca小号",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 3,
+        "ethereum": 107,
+        "base": 87
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 7,
+      "address": "0x3f63c175ff9746cf0e0e6095d0568180f9d92fa5",
+      "source_label_unverified": "早期",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 3,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 8,
+      "address": "0x13a4059646875645b2db4592aa224ea79fb74287",
+      "source_label_unverified": "早期derwold",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 9,
+      "address": "0x049823701eef27e235d4c1271bc4410c7974e4f8",
+      "source_label_unverified": "早期derwold",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 10,
+      "address": "0x716ed41f601012139490802f9aec155e736a2f02",
+      "source_label_unverified": "早期derwold",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 11,
+      "address": "0x9fb8412d79ea66b8f2c747b9457b2b1d5d78ff9d",
+      "source_label_unverified": "早期derwold",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 12,
+      "address": "0x2fc9478c3858733b6e9b87458d71044a2071a300",
+      "source_label_unverified": "早期",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 3,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 13,
+      "address": "0x9bd3a92c231893278c2fa654fc8d152ae6dc86b5",
+      "source_label_unverified": "早期高手",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 14,
+      "address": "0x40e56fa7759c1bdc67764fcd76c8ee7bc9486c08",
+      "source_label_unverified": "早期高手",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 2307,
+        "ethereum": 465,
+        "base": 965
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 15,
+      "address": "0xd68def46b1114f51b7e676e6dde89069a2f3fe1a",
+      "source_label_unverified": "早期alpha高手",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 5,
+        "ethereum": 4,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 16,
+      "address": "0x29935ef1417e1c3b1fec68dd666ea9baac31d4ed",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 1982,
+        "ethereum": 157,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": [
+        "evidence/batch-001-row-016-rtx5090-roundtrip.json"
+      ]
+    },
+    {
+      "source_row": 17,
+      "address": "0x89c030914b562628618e68bcda49f8ed617dae08",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 207,
+        "ethereum": 13,
+        "base": 7
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 18,
+      "address": "0x4d9644d05fe2123b4eafa8d7fd31b0ea430726f3",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 4183,
+        "ethereum": 92,
+        "base": 82
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 19,
+      "address": "0xe7086669436e90d6a2a0a6aeb23c71188057e7e6",
+      "source_label_unverified": "敏锐",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 38,
+        "ethereum": 0,
+        "base": 1
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 20,
+      "address": "0x0209aa08dd3f5a1057cd66771a6009854144eb94",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 520,
+        "ethereum": 11,
+        "base": 8
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": false,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 21,
+      "address": "0x9d56610c9fdabd06a19486ced80cccca00a2866a",
+      "source_label_unverified": "Reljoo 小号",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 611,
+        "ethereum": 95,
+        "base": 20
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 22,
+      "address": "0xead3f93ff737a1be0c8a11529f3c034b44549bb1",
+      "source_label_unverified": "keyng小号",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 5338,
+        "ethereum": 477,
+        "base": 428
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 23,
+      "address": "0xf60633d02690e2a15a54ab919925f3d038df163e",
+      "source_label_unverified": "banker创始人1",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 3,
+        "base": 274
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 24,
+      "address": "0x237c79c93c3eb8c61a2a2a7465a851b0381b8ba3",
+      "source_label_unverified": "banker关联地址",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 25,
+      "address": "0xcc475ea8d95bf43f25473640b1f901de2a7f2d8c",
+      "source_label_unverified": "早期背景埋伏9",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 6,
+        "ethereum": 0,
+        "base": 29
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 26,
+      "address": "0x699d731048f2f1b40af3a3736a33c11288237512",
+      "source_label_unverified": "keyNG 小号",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 27,
+      "address": "0x45fd36c9cdd500c1b372d99ba3bd79da0d358504",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 5628,
+        "ethereum": 600,
+        "base": 460
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 28,
+      "address": "0xcb1cffdce993397b03c439c68f93c1ad6463cf8d",
+      "source_label_unverified": "keyNG 小号",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 29,
+      "address": "0xb0b8a1ec009684a5739f94b7378aaeb55be09698",
+      "source_label_unverified": "keyNG 小号",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 5383,
+        "ethereum": 479,
+        "base": 429
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 30,
+      "address": "0x29909b9c97845d5eb998b4aa41664a46c5dc35c6",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 54,
+        "ethereum": 81,
+        "base": 77
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 31,
+      "address": "0x2a6a385cb65e85031ba62b12f5bef2b6a1130737",
+      "source_label_unverified": "早期背景埋伏5",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 254,
+        "ethereum": 18,
+        "base": 19
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 32,
+      "address": "0x8797a47a9200b52ee90b4c5b5fa5a0ded56dd5f5",
+      "source_label_unverified": "早期背景埋伏3",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 35,
+        "ethereum": 10,
+        "base": 6
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 33,
+      "address": "0x6b00720a39013bd19cc1f8ba32cde21c1ea727da",
+      "source_label_unverified": "早期背景埋伏2",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 34,
+      "address": "0x54bca12bed24db253e47db098a91b787ac57a990",
+      "source_label_unverified": "早期背景埋伏1",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 5,
+        "ethereum": 5,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 35,
+      "address": "0x977347bc6020db1e0bec0d52b8e7bbfed5bc6f5f",
+      "source_label_unverified": "阴谋早期",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 36,
+      "address": "0x6c03f1c2940c2949b370b6d5db65575f8329202a",
+      "source_label_unverified": "早期埋伏5",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 37,
+      "address": "0xa6849a40f57c26b48069146105f7da9e024f62b6",
+      "source_label_unverified": "早期埋伏3",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 14,
+        "ethereum": 24,
+        "base": 105
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 38,
+      "address": "0x02b0c14d2c03852ccebd1b2e66ab3c075a57711d",
+      "source_label_unverified": "早期埋伏2",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 548,
+        "ethereum": 1000,
+        "base": 1402
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 39,
+      "address": "0x97060ace26a732a255d7fca4658837be047ccf07",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 890,
+        "ethereum": 92,
+        "base": 162
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 40,
+      "address": "0x5a0d8fcbdba47c78772dcf27753e7614cfd35e52",
+      "source_label_unverified": "早期埋伏1",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 41,
+      "address": "0x1d78fb87cc62febe02ca05befcc30e71ca04810c",
+      "source_label_unverified": "O1创始人地址",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 42,
+      "address": "0x897cff3326b37a1e1ce858f77d68b46ec7d2769b",
+      "source_label_unverified": "noxafi新地址",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 43,
+      "address": "0xc6792e3b1277d37cb2108e0de9c4603c211cc7e2",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 268,
+        "ethereum": 249,
+        "base": 32
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 44,
+      "address": "0xde078309d8260fa4caf3baa6852b0561b645b710",
+      "source_label_unverified": "p选手",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 1
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 45,
+      "address": "0xf89f3858bc7bac05a83ec284e3e9acdb58bf892a",
+      "source_label_unverified": "pons创始人？",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 1
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 46,
+      "address": "0x6a30c5f11f564fe6f793f8b418e43ff6bfcd9617",
+      "source_label_unverified": "robin又官方？",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 47,
+      "address": "0xa7a9ae5b0aabb8c3f53d26bc88a5ccb319626104",
+      "source_label_unverified": "老阴谋聪明钱3",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 48,
+      "address": "0x0d188418381587003b9dab5c98faf62ec85ef687",
+      "source_label_unverified": "老阴谋聪明钱2",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 49,
+      "address": "0xf68b8bb8b2fa7e96f90b297d323439ef80dd5bda",
+      "source_label_unverified": "老阴谋聪明钱",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 50,
+      "address": "0x95ce1f0a243261821d7785715f19024ec149355b",
+      "source_label_unverified": "ape台子dev",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 1,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 51,
+      "address": "0x624c6dbb5d1aae291c788ef116e69a59552b17c4",
+      "source_label_unverified": "疑似robin官方",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 1,
+        "base": 9
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 52,
+      "address": "0xb999055cdd532632e8715f4f8f60e607db16a6fb",
+      "source_label_unverified": "疑似robin官方？",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 53,
+      "address": "0xcbb4e8f3e97f68047540b4247ff0ff1884d201a7",
+      "source_label_unverified": "真robin官方地址",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 54,
+      "address": "0x40cb329cc0d1ddb75239a60593a87ae0572c3986",
+      "source_label_unverified": "robin视频演示地址",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 55,
+      "address": "0x6e23a5ae714451058553d85a932f7f18869f8956",
+      "source_label_unverified": "阴谋6",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 56,
+      "address": "0xecc43e2c7a031870726b2a6a6563caef04540e10",
+      "source_label_unverified": "阴谋5",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 57,
+      "address": "0x98c24faeb891ee206d05245ada45084339d87afa",
+      "source_label_unverified": "阴谋4",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 58,
+      "address": "0x7e035fb048a31e0481b88074557415b1c187242b",
+      "source_label_unverified": "noxa项目方钱包？",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 59,
+      "address": "0x1f605cc439ff432b8a09db963c9cc08dbf83f3bb",
+      "source_label_unverified": "早期alpha",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 60,
+      "address": "0xa02d58211389430bf47d273c8de4fe79e2173dcc",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 4,
+        "ethereum": 0,
+        "base": 1
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 61,
+      "address": "0xcbdf630a858e7d87b5b08d92968ca14ca0f8f556",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 62,
+      "address": "0x4d9302846c057507d32405ba77055473d33beb26",
+      "source_label_unverified": "vlad钱包？",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 63,
+      "address": "0xee8559530e585ddcc2f8a3c4656ebe747ff740f4",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 30,
+        "ethereum": 0,
+        "base": 1
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 64,
+      "address": "0xacd7793d92cd870e56db2372b36e41c59ae4fb40",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 1217,
+        "ethereum": 268,
+        "base": 394
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 65,
+      "address": "0x4bd8598cdca1b218f2f964f3832ebbea354383b8",
+      "source_label_unverified": "高盈利地址5",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 24,
+        "ethereum": 297,
+        "base": 49
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 66,
+      "address": "0x417c19056b8ef9f6af6dd36928332b6337b4843f",
+      "source_label_unverified": "高盈利地址4",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 7,
+        "ethereum": 8,
+        "base": 1
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 67,
+      "address": "0xcf7607ff3164df3e1e285d2d798724a929bede0d",
+      "source_label_unverified": "高盈利地址3",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 18,
+        "ethereum": 2,
+        "base": 1
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 68,
+      "address": "0x5388668c4fa8da7f756ef8498ff24d7999999999",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 18,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 69,
+      "address": "0xe28601398a5448d1147e6e8b0e0c6d686f0d216d",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 3124,
+        "ethereum": 650,
+        "base": 276
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 70,
+      "address": "0xd5ff53f48f14e9409b581e41a4cddfe0e97dc724",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 7,
+        "ethereum": 4,
+        "base": 6
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 71,
+      "address": "0x04b436555dc69ea4bf8ba50d8c591e60443b3ff9",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 12,
+        "ethereum": 2,
+        "base": 1
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 72,
+      "address": "0x5fa57fcaf86e137cb8185c4cb2c01ea7b5b14cfb",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 73,
+      "address": "0x86b9ad8fc7bec77c85913b0f80f69c2cfa129c3e",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 7,
+        "ethereum": 2,
+        "base": 2
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 74,
+      "address": "0xbd6b8d8fa94f7307840252548549b56a33c98054",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 5,
+        "ethereum": 2,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 75,
+      "address": "0xca1a2fb7f3179d887504966b25d1606978adcd42",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 24,
+        "ethereum": 6,
+        "base": 23
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 76,
+      "address": "0x54d209d9d224a615e0e5f0476644886897b75e45",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 250,
+        "ethereum": 28,
+        "base": 21
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 77,
+      "address": "0x1e8ae0385f8a8fcc96008fdbc25fa31049e52af0",
+      "source_label_unverified": "高盈利地址2",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 4,
+        "ethereum": 18,
+        "base": 19
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 78,
+      "address": "0x1e59145625236d3663fc63d000a31d42d3393cee",
+      "source_label_unverified": "高盈利地址1",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 9,
+        "ethereum": 2,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 79,
+      "address": "0xf41e3186861afb9840ea3c87f00366440a648320",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 9,
+        "ethereum": 2,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 80,
+      "address": "0x000461a73d3985eef4923655782aa5d0de75c111",
+      "source_label_unverified": "eca地址",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 99,
+        "ethereum": 267,
+        "base": 162
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 81,
+      "address": "0xce370ebcbc655f845df7dfb8c079e75b5ea17d93",
+      "source_label_unverified": "banker创始人",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 14,
+        "base": 142
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 82,
+      "address": "0x2631736631a133a56af3f035fbb5ca25e210a325",
+      "source_label_unverified": "阴谋呢？",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 21,
+        "ethereum": 0,
+        "base": 1
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 83,
+      "address": "0x756e1d965114fdb4759abc914521f9f4fb1db369",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 5,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 84,
+      "address": "0xd874259110c6e086f1d2fee474b73e69b8f5dab0",
+      "source_label_unverified": "Killua 小号？",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 85,
+      "address": "0xb4829baf3c6d92c943425feb493e40bf7f0100d8",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 86,
+      "address": "0xc222624e3da4e98dc6fdf5703b9e7d7253b24eda",
+      "source_label_unverified": "Superman （黑牛dev）",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 271,
+        "ethereum": 1,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 87,
+      "address": "0x0dc45ad16ae4e0d7fafcda804267603aa5eebe57",
+      "source_label_unverified": "heyi地址？",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 88,
+      "address": "0xbb06a2675b5403effc196a934cb5b4975a8d34f3",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 89,
+      "address": "0xb6b467de3eb377197a7cb63440a012a9b319cbd9",
+      "source_label_unverified": "noxa官方感谢的dev钱包",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 90,
+      "address": "0x542718c390ef1e4beb46ce2023ffaa627db8aa33",
+      "source_label_unverified": "创始人地址",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 91,
+      "address": "0x42607b2e4fde22e83822d4a86ddac58d847dc289",
+      "source_label_unverified": "vlad罗宾汉创始人地址",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 461,
+        "ethereum": 316,
+        "base": 25
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 92,
+      "address": "0x63cb29fd3eb538c969f73aee6f3d78befd041c95",
+      "source_label_unverified": "wifl预售钱包？",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 93,
+      "address": "0x713d0c63492b156e5d7b59ab96a3895312a6939a",
+      "source_label_unverified": "不丹政府？",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 94,
+      "address": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "source_label_unverified": "",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 13,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": true,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 95,
+      "address": "0xa4f79033bcb17c50e4c6f073d54de23904bca07c",
+      "source_label_unverified": "momo地址",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 96,
+      "address": "0x1bff8f0ade179dfa1beddb54fa5d7d6dc814191a",
+      "source_label_unverified": "CZ dev",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 97,
+      "address": "0x42812c3ad1eb9fbf7d385cbfd997b608acbec4c7",
+      "source_label_unverified": "打币dev4",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 98,
+      "address": "0x376b3b20c129bd9e6fa35fa470aa0cbc33a523cc",
+      "source_label_unverified": "打币dev3",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 99,
+      "address": "0xdfd9e986852d3e0bf9cbbafbbe3093670dcd5565",
+      "source_label_unverified": "打币dev2",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    },
+    {
+      "source_row": 100,
+      "address": "0x7f91971cfb13b94109c50153c201b84e35de3936",
+      "source_label_unverified": "宝二爷",
+      "screened_chains": [
+        "bsc",
+        "ethereum",
+        "base"
+      ],
+      "nonce_signed_delta": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 0
+      },
+      "signed_active_on_checked_chains": false,
+      "exact_nonce_pairs_available": {
+        "bsc": true,
+        "ethereum": true,
+        "base": true
+      },
+      "wallet_30d_pnl_status": "UNRESOLVED",
+      "wallet_lifetime_pnl_status": "UNRESOLVED",
+      "audited_closed_token_position_refs": []
+    }
+  ],
+  "limitations": [
+    "This is a cohort screen not a wallet PnL table; wallet profit/loss missing for all 100",
+    "3 positive token closes are not an audited wallet ranking; negative examples not completed",
+    "Batch001 BSC supports signed deltas only in its three-chain JSON; raw start/end BSC nonce pairs must be checked in its original prior BSC census before claiming full nonce-pair replay",
+    "Other EVM chains and passive events remain unexamined",
+    "Source personal identifications and labels are unverified"
+  ]
+}

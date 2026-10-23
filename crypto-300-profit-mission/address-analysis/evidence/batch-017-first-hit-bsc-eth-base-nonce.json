@@ -1,0 +1,634 @@
+{
+  "schema": "mission-address-analysis-first-hit-fixed-nonce-screen-v1",
+  "as_of": "2026-10-19",
+  "read_only": true,
+  "source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "batch": 17,
+  "source_rows": [
+    321,
+    340
+  ],
+  "frozen_block_bounds": {
+    "bsc": {
+      "from": {
+        "height": "0x74cf256",
+        "hash": "0x77cbf3d8a37e5995f27cc48fffe9a1df3bfc48808e64a769e940caec3cecfc1d",
+        "utc": "2026-09-17T21:12:12Z"
+      },
+      "to": {
+        "height": "0x7a4ca36",
+        "hash": "0x17d7dd95285a23d69c726943ac985f8deff2d987ee559ce5ec97ea1f2f513311",
+        "utc": "2026-10-17T21:12:13Z"
+      }
+    },
+    "ethereum": {
+      "from": {
+        "height": "0x18cb9c8",
+        "hash": "0xc1c05110c8c372d5aae38462af53f2f6da78e078d5410f785ee3c5b6bbf7ac0b",
+        "utc": "2026-09-17T21:12:11Z"
+      },
+      "to": {
+        "height": "0x19001e3",
+        "hash": "0xa91aed9ba16471265db54a53db4b4946b48a4a171eb1bdd7e1c65c1b3f6c3e67",
+        "utc": "2026-10-17T21:12:11Z"
+      }
+    },
+    "base": {
+      "from": {
+        "height": "0x310fd64",
+        "hash": "0x87c67d4f90a11a75a68c685418de161b0231734a0098200aee0c103193c28abf",
+        "utc": "2026-09-17T21:12:11Z"
+      },
+      "to": {
+        "height": "0x324c3e5",
+        "hash": "0x9d641df1460ba9c2108e8c38f16c8f19222ccc63a93d54f7abb9b269769affe5",
+        "utc": "2026-10-17T21:12:13Z"
+      }
+    }
+  },
+  "method": "BSC historical nonce start/end, then Ethereum and Base only if preceding chain zero. At first positive signed nonce, stop.",
+  "chains_checked_by_design": [
+    "bsc",
+    "ethereum",
+    "base"
+  ],
+  "interpretation": "Signed activity on checked networks only. This does not establish all-chain inactivity, incoming token absence or profit.",
+  "summary": {
+    "total": 20,
+    "active": 2,
+    "three_chain_signed_zero": 18,
+    "active_source_rows": [
+      323,
+      324
+    ],
+    "signed_zero_source_rows": [
+      321,
+      322,
+      325,
+      326,
+      327,
+      328,
+      329,
+      330,
+      331,
+      332,
+      333,
+      334,
+      335,
+      336,
+      337,
+      338,
+      339,
+      340
+    ],
+    "bsc_positive": 2,
+    "ethereum_rescued": 0,
+    "base_rescued": 0
+  },
+  "records": [
+    {
+      "source_row": 321,
+      "address": "0x088b79aaeb498d30dd32589681ac4e9b00e96f04",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 92,
+          "nonce_after": 92,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 322,
+      "address": "0x6240abcbf569cc36949ab310a99c8b7c53c75180",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 22,
+          "nonce_after": 22,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 323,
+      "address": "0xdcfe5bdb95e6191fc03c2fed400d7c0ca7c2859d",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 645,
+          "nonce_after": 651,
+          "signed_delta": 6
+        },
+        "ethereum": {
+          "checked": false,
+          "nonce_before": null,
+          "nonce_after": null,
+          "signed_delta": null,
+          "reason": "EARLY_EXIT_AFTER_BSC_ACTIVE"
+        },
+        "base": {
+          "checked": false,
+          "nonce_before": null,
+          "nonce_after": null,
+          "signed_delta": null,
+          "reason": "EARLY_EXIT_AFTER_BSC_ACTIVE"
+        }
+      },
+      "activity": "ACTIVE",
+      "first_positive_chain": "bsc",
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 324,
+      "address": "0xd41feaa24dede516a501862cf1f376defb811772",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 79962,
+          "nonce_after": 85458,
+          "signed_delta": 5496
+        },
+        "ethereum": {
+          "checked": false,
+          "nonce_before": null,
+          "nonce_after": null,
+          "signed_delta": null,
+          "reason": "EARLY_EXIT_AFTER_BSC_ACTIVE"
+        },
+        "base": {
+          "checked": false,
+          "nonce_before": null,
+          "nonce_after": null,
+          "signed_delta": null,
+          "reason": "EARLY_EXIT_AFTER_BSC_ACTIVE"
+        }
+      },
+      "activity": "ACTIVE",
+      "first_positive_chain": "bsc",
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 325,
+      "address": "0x2886d6792503e04b19640c1f1430d23219af177f",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 560,
+          "nonce_after": 560,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 339,
+          "nonce_after": 339,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 9,
+          "nonce_after": 9,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 326,
+      "address": "0x1e3157ead0f498d814495d228f6ea4f041a3dc40",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 120,
+          "nonce_after": 120,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 73,
+          "nonce_after": 73,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 43,
+          "nonce_after": 43,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 327,
+      "address": "0x302456be8c1e4cfd78f06fb56886f8409d95bb3e",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 461,
+          "nonce_after": 461,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 328,
+      "address": "0x8888422667f8d00bb3243c7ecacc4b886f2cf7bd",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 587,
+          "nonce_after": 587,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 329,
+      "address": "0xf43df6c54184def858b7aec3d66f10e33983e507",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 541,
+          "nonce_after": 541,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 330,
+      "address": "0x2de9094c745a5229a24c8ecb7e99203f00e4e466",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 351,
+          "nonce_after": 351,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 331,
+      "address": "0x2f90ad0979ba7c5687d90d2c1532df7ab7ac6202",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 548,
+          "nonce_after": 548,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 332,
+      "address": "0xbf22e6933a1f069546978cc4dfd0b0ec6f1136d7",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 12,
+          "nonce_after": 12,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 333,
+      "address": "0xe0865c2d0a3cd459fba5391637ba02a817a33710",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 85,
+          "nonce_after": 85,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 10,
+          "nonce_after": 10,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 334,
+      "address": "0x4ef81bc15075d58572e959177d2a42b205c05901",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 478,
+          "nonce_after": 478,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 156,
+          "nonce_after": 156,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 28,
+          "nonce_after": 28,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 335,
+      "address": "0xba44a340e8ec7a5049f7f6a182d03f20b4b80da1",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 3,
+          "nonce_after": 3,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 336,
+      "address": "0xf45392f3526c21488efe6a1b1e7cf58ee9760f75",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 19,
+          "nonce_after": 19,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 337,
+      "address": "0x4924ab7157f6e90701037fd49bc4e16a8e4bc08a",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 65,
+          "nonce_after": 65,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 338,
+      "address": "0x68112126102eddab3d731f373fb0d027aad66c78",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 86,
+          "nonce_after": 86,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 339,
+      "address": "0x361bb19587ed0bacb0f1e07f8c84ebfbe0c31f25",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 1499,
+          "nonce_after": 1499,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 1,
+          "nonce_after": 1,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 4,
+          "nonce_after": 4,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    },
+    {
+      "source_row": 340,
+      "address": "0x4535e74a33bb6b1897a21efd1d0c7f04fd6fbef5",
+      "chains": {
+        "bsc": {
+          "checked": true,
+          "nonce_before": 1,
+          "nonce_after": 1,
+          "signed_delta": 0
+        },
+        "ethereum": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        },
+        "base": {
+          "checked": true,
+          "nonce_before": 0,
+          "nonce_after": 0,
+          "signed_delta": 0
+        }
+      },
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "first_positive_chain": null,
+      "wallet_pnl": "NOT_ANALYZED"
+    }
+  ]
+}

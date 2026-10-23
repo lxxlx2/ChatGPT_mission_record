@@ -1,0 +1,78 @@
+{
+  "schema": "mission-address-analysis-pnl-source-reconciliation-20261018-v1",
+  "as_of": "2026-10-18",
+  "evidence_class": "SAVED_SOURCE_REPLAY_NO_NEW_RPC",
+  "fixed_source_blob": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "inputs": [
+    {
+      "path": "crypto-300-profit-mission/address-analysis/sources/oooooyoung-evm-449-source-snapshot.json",
+      "blob_sha": "faadca141a7cc2a99a35cd6d9fb8b82ce3f005b2"
+    },
+    {
+      "path": "crypto-300-profit-mission/address-analysis/evidence/batch-001-row-016-rtx5090-roundtrip.json",
+      "blob_sha": "6d4575b37e9363a1c1832b4a9e58218de86f6f0a"
+    },
+    {
+      "path": "crypto-300-profit-mission/address-analysis/evidence/batch-001-rows-002-004-sauce-roundtrips.json",
+      "blob_sha": "83eee8f0699c650b0faad550776163146f524f51"
+    }
+  ],
+  "closed_token_positions": 3,
+  "gain_positions": 3,
+  "loss_positions": 0,
+  "whole_wallet_30d_pnl_complete": 0,
+  "whole_wallet_lifetime_pnl_complete": 0,
+  "records": [
+    {
+      "source_row": 2,
+      "wallet": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+      "network": "bnb-mainnet",
+      "token": "0xd7ccd29b6fd1464edb425f24b01115556e737777",
+      "symbol": "sauce",
+      "precision": "INTEGER_WEI_REPLAY",
+      "buy_wei": "54313975000000000",
+      "sell_wei": "211142080278687674",
+      "net_wei": "156828105278687674",
+      "classification": "GAIN",
+      "whole_wallet_pnl_status": "UNRESOLVED",
+      "source_artifact": "evidence/batch-001-rows-002-004-sauce-roundtrips.json",
+      "evidence_provenance": "saved successful receipt and balanceOf assertions; no new chain reads"
+    },
+    {
+      "source_row": 4,
+      "wallet": "0x00077705952c90b728c6d7dc450beb4429331111",
+      "network": "bnb-mainnet",
+      "token": "0xd7ccd29b6fd1464edb425f24b01115556e737777",
+      "symbol": "sauce",
+      "precision": "INTEGER_WEI_REPLAY",
+      "buy_wei": "54313975000000000",
+      "sell_wei": "208529773043203099",
+      "net_wei": "154215798043203099",
+      "classification": "GAIN",
+      "whole_wallet_pnl_status": "UNRESOLVED",
+      "source_artifact": "evidence/batch-001-rows-002-004-sauce-roundtrips.json",
+      "evidence_provenance": "saved successful receipt and balanceOf assertions; no new chain reads"
+    },
+    {
+      "source_row": 16,
+      "wallet": "0x29935ef1417e1c3b1fec68dd666ea9baac31d4ed",
+      "network": "bnb-mainnet",
+      "token": "0x5601a422986034521330bb4c799a8a3f29137777",
+      "symbol": "RTX5090",
+      "precision": "FLOAT_SOURCE_APPROXIMATE",
+      "buy_bnb": "0.10648116447421963",
+      "sell_bnb": "0.3325804975900688",
+      "net_bnb": "0.22609933311584918",
+      "classification": "GAIN",
+      "whole_wallet_pnl_status": "UNRESOLVED",
+      "source_artifact": "evidence/batch-001-row-016-rtx5090-roundtrip.json",
+      "evidence_provenance": "saved successful receipt and cashflow assertions; no new chain reads"
+    }
+  ],
+  "limitations": [
+    "Replay validates saved JSON arithmetic and identity only; it does not independently re-fetch receipts",
+    "RTX stored floating-point amounts cannot support exact integer-wei assertion",
+    "An unobserved losing position must never be counted as zero",
+    "The Python replay prototype has synthetic unit test pass, but its CLI has not been executed against these Git-hosted sources in this session"
+  ]
+}
