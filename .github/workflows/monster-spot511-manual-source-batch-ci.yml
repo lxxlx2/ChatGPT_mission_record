@@ -1,6 +1,13 @@
 name: Monster Spot511 Manual Publisher Batch Offline CI
 
 on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - "crypto-300-profit-mission/local-agent/scripts/monster_spot511_manual_publisher_batch.py"
+      - "crypto-300-profit-mission/local-agent/tests/test_monster_spot511_manual_publisher_batch.py"
+      - ".github/workflows/monster-spot511-manual-source-batch-ci.yml"
   pull_request:
     paths:
       - "crypto-300-profit-mission/local-agent/scripts/monster_spot511_manual_publisher_batch.py"
