@@ -63,6 +63,8 @@ class PairedReplayTests(unittest.TestCase):
             self.assertEqual(report['full_d0_ticks'],8)
             self.assertEqual(report['censored_d0_ticks'],3352)
             self.assertTrue(report['same_d0_watch_id_and_time'])
+            self.assertEqual(report['d0_watch_count'],2)
+            self.assertEqual(report['fifo_setups'],2)
             self.assertEqual(report['fifo_setups'],report['fair8_setups'])
             self.assertEqual(report['lost_setup_ids'],[])
             self.assertFalse(report['all_511_historical_sources_verified'])
