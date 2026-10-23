@@ -105,6 +105,18 @@ class D1RecoveryTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"TRUNCATED_LOG"):
                 reconcile_saved_attempts(root)
 
+    def test_failed_rpc_settlement_is_not_valid_performance_sample(self):
+        holder,root,events=self.fixture()
+        with holder:
+            bad=[events[0],dict(events[1],state="FAILED")]
+            self.save(root,bad)
+            result=reconcile_saved_attempts(root)
+            self.assertEqual(result["unknown_request_ids"],[])
+            self.assertEqual(result["failed_request_ids"],[1])
+            self.assertEqual(result["audit_status"],
+                             "INVALID_FOR_PERFORMANCE_CLAIM")
+            self.assertEqual(result["network_retries"],0)
+
     def test_missing_raw_and_dirty_mode_denied(self):
         holder,root,events=self.fixture()
         with holder:
