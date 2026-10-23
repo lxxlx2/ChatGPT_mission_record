@@ -92,7 +92,7 @@ class SealedMemoryHTTPSIntegrationTests(unittest.TestCase):
         src=SealedMemoryHTTPSSource(growth_bps=10.0,delay_ms=10)
         def delayed_tls(request, factory, **config):
             if request["method"]=="eth_getBlockByNumber":
-                time.sleep(0.65)
+                time.sleep(1.2)
             return reviewed_exchange(request,factory,**config)
         with tempfile.TemporaryDirectory() as d:
             root=Path(d).absolute()/"private"
@@ -102,9 +102,9 @@ class SealedMemoryHTTPSIntegrationTests(unittest.TestCase):
                 with patch("http.client.HTTPSConnection",
                            side_effect=AssertionError("network denied")):
                     report=run_fake_concurrent(
-                        src,root,max_total=3,max_blocks=1,
-                        max_refreshes=0,window_ms=5000,
-                        head_ttl_ms=500,head_min_poll_age_ms=250)
+                        src,root,max_total=4,max_blocks=1,
+                        max_refreshes=1,window_ms=6000,
+                        head_ttl_ms=1000,head_min_poll_age_ms=250)
             self.assertEqual(report["block_attempts"],1)
             self.assertEqual(report["contiguous_commits"],0)
             self.assertEqual(src.block_count,0)
