@@ -134,3 +134,18 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 - **下一唯一高价值节点**：构建同一份minute tape驱动原`monster_v4_shadow.py`统一SQLite D0 `observe_snapshot`、原D1 `process_queue`及隔离Fair8规则的事件/队列成对回放；需要跨所有511 symbol按原tick整合候选并审计无WATCH漏掉，不得为性能方便各币各自跑队列后再拼接。当前仅是D0/D1输入的研究级准备，**不是原策略的paired 511样本外验收**。
 
 正式验收状态：`G0 PARTIAL / G1 NOT_SCORABLE / G2-G3 NOT_PASSED / G4 UNKNOWN / G6 NO_GO`，`NO_MERGE / NO_DEPLOY / NO_PAID / NO_GMAIL / NO_TRADES / NO_AUTOMATIONS`不变。BSC来源受限研究仍按原止损规定独立，不阻断CEX D0/D1主线。
+
+## 12. 2026-10-23：Spot511原SQLite FIFO8/Fair8全市场同源回放代码交付（研究级）
+
+本轮接续第11节已具备的逐symbol Stage166 Publisher核验OHLC tape，不新开BSC/外部模型，不更改原`monster_v4_shadow.py` D0 WATCH阈值、5m SETUP阈值或已审Stage162`plan_eligible_eight`的排序规则。
+
+**交付代码**：
+- `local-agent/scripts/monster_v4_spot511_paired_sqlite.py`，Git Blob `4a83e50fbc3401ee0c0cce460e4fb89672106138`。离线 `build_source_index` **每次只在内存加载一个symbol的9天12960分钟**，从现有`VerifiedClosedMinuteTape`形成统一源SQLite内`price_ticks(tick_ms,symbol)`以及`closed5(symbol,open_ms)`，每个合法5m仅存一次；保留全511×9=4599条文件准入/缺档/未来日回执，不冒称覆盖所有交易所全部新上市币。输入索引拒绝覆盖，不联网；逐symbol的源缺失不会被悄悄填0。
+- `paired_replay`严格按原3360个3m tick走一条**所有511 symbol共用的市场事件序列**，但为真实FIFO8和Fair8各自开独立、隔离的**全市场SQLite队列**；**不是每币自建队列后拼装**。仅当当轮511/511源有效时调用原`production.observe_snapshot`，不满足时`mark_source_health`标记全市场不可判、该轮不在D0生成假WATCH；已有D1队列仍可用此前30分钟已闭合且来源完整的6根5m行情调用原`production.process_queue`。两组的D1`limit=8`、原5m判定、retry/backlog和原始回执一致；Fair8唯一可变的是复用冻结Stage162`plan_eligible_eight`的服务顺序（未选中PENDING临时掩蔽retry，异常也恢复、读回核对）。
+- 验证输出包含`3360`完整轮次、可用/删失symbol-tick、FIFO8和Fair8源内队列状态、WATCH完整事件ID+时间**逐值相等断言**、SETUP event ID新增/丢失/时间改变集合、D1重复/延期统计。默认真实运行需原Stage166的**精确511 T0名单**及**4599个symbol-day准入回执**，不能仅捏造511个名字冒充。即使3360个tick全部输入齐全，也不等于全部9个UTC日原ZIP已校验；单独按4599份完整Publisher原源证明判断。
+- `local-agent/tests/test_monster_v4_spot511_paired_sqlite.py` Git Blob `e3e4e328c57bf635d615b357e5cc61ed42ddf56f`，7项确定性无网络测试：原2-symbol明确非零 WATCH=2/SETUP=2且两组相等、来源缺一币删失、不接受非冻结小样本冒充511、原输出拒绝覆盖、未完整落库不能运行、12候选同tick全部WATCH身份不丢、伪造511人口与缺4599回执拒绝。**隔离容器7/7 PASS但依赖模拟D0/D1与Stage162 planner接口验证编排，不等于实际原生产模块集成PASS**；本轮静态Python编译通过。
+- 以上源码/测试已纳入原 `.github/workflows/monster-spot511-manual-source-batch-ci.yml` 的纯离线测试；只在push/PR/显式手动触发，不包含`schedule`，没有真实行情请求、Mac监控、通知或交易。**真实GitHub CI Job日志及独立其他AI审核尚未取得，不得写成正式PASS**。
+
+当前本机/云端会话没有取得完整的**真实511个交易对9日官方ZIP/CHECKSUM**，因此**未执行511币新前瞻窗口完整同源FIFO/Fair8回放，不存在正式新增SETUP数或模型获利实测**。当前代码先补的是从数据源→D0→原SQLite D1服务调度→A/B准确对账的可复用基础，而不是许诺实际净收益。
+
+**下一主线**：先在真实Git完整工作区运行新7项用**原`monster_v4_shadow.py`与Stage162源**的集成回归，核对Git CI与固定SHA的审查；之后按官方实际发布状况做有界批次511历史源准入、运行统一SQLite数据回放，列出失败分母与新SETUP（未来源则不能得出模型劣/优结论）。若没有新真实输入，不再反复迭代旧445的Fair8优先级，也不在Mac安装常驻任务。G0 PARTIAL / G1 NOT_SCORABLE / G2-G3 NOT_PASSED / G4 UNKNOWN / G6 NO_GO；NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADES / NO_AUTOMATIONS。
