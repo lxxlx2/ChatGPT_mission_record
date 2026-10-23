@@ -19,6 +19,7 @@ from .wallet_owner_at_slot import (
     project_replayed_owner,
 )
 
+SOURCE_SUBDIR = "frank-d2-private"
 SOURCE_NAME = "frank-d2-owner-at-slot.json"
 SOURCE_KIND = "PR60_OFFLINE_VERIFIED_FULL_OWNER_TWO_PROGRAMS"
 STATUS = "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE"
@@ -199,8 +200,31 @@ def _unavailable(reason):
 
 
 def read_d2_source(control_root: Path):
-    """Read only one allowlisted private file. No scanning, fallback or writes."""
-    path = Path(control_root) / SOURCE_NAME
+    """Read only the fixed private-child source, never the shared-root path.
+
+    The existing shared control directory may be 0755 but must not be
+    group/world writable. D2's direct parent is owner-only (0700).
+    """
+    root = Path(control_root)
+    private_dir = root / SOURCE_SUBDIR
+    path = private_dir / SOURCE_NAME
+    try:
+        root_info = root.lstat()
+        if (not stat.S_ISDIR(root_info.st_mode) or
+                root_info.st_mode & 0o022 or
+                root_info.st_uid != os.geteuid()):
+            return None, _unavailable("D2_SHARED_ROOT_UNSAFE")
+        dir_info = private_dir.lstat()
+    except FileNotFoundError:
+        return None, _unavailable("SOURCE_NOT_IMPORTED")
+    except OSError:
+        return None, _unavailable("D2_PRIVATE_PARENT_UNREADABLE")
+    if not stat.S_ISDIR(dir_info.st_mode):
+        return None, _unavailable("D2_PARENT_SYMLINK_INVALID")
+    if dir_info.st_uid != root_info.st_uid:
+        return None, _unavailable("D2_PARENT_OWNER_INVALID")
+    if dir_info.st_mode & 0o077:
+        return None, _unavailable("D2_PARENT_NOT_PRIVATE")
     try:
         info = path.lstat()
     except FileNotFoundError:
@@ -209,19 +233,21 @@ def read_d2_source(control_root: Path):
         return None, _unavailable("D2_PRIVATE_SOURCE_UNREADABLE")
     if not stat.S_ISREG(info.st_mode) or info.st_mode & 0o077:
         return None, _unavailable("D2_SOURCE_TYPE_OR_PERMISSIONS_INVALID")
-    if path.parent.is_symlink():
-        return None, _unavailable("D2_PARENT_SYMLINK_INVALID")
+    if info.st_uid != dir_info.st_uid:
+        return None, _unavailable("D2_SOURCE_OWNER_INVALID")
     try:
-        if path.parent.stat().st_mode & 0o077:
-            return None, _unavailable("D2_PARENT_NOT_PRIVATE")
         if not 0 < info.st_size <= MAX_SOURCE_BYTES:
             return None, _unavailable("D2_SIZE_INVALID")
         flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
         fd = os.open(path, flags)
         with os.fdopen(fd, "rb") as handle:
             current = os.fstat(handle.fileno())
-            if not stat.S_ISREG(current.st_mode) or current.st_mode & 0o077:
-                return None, _unavailable("D2_CHANGED_FILE_PERMISSIONS")
+            if (current.st_dev != info.st_dev or
+                    current.st_ino != info.st_ino or
+                    not stat.S_ISREG(current.st_mode) or
+                    current.st_mode & 0o077 or
+                    current.st_uid != dir_info.st_uid):
+                return None, _unavailable("D2_CHANGED_FILE_IDENTITY_OR_PERMISSIONS")
             raw = handle.read(MAX_SOURCE_BYTES + 1)
         if len(raw) > MAX_SOURCE_BYTES:
             return None, _unavailable("D2_SIZE_INVALID")
@@ -230,7 +256,6 @@ def read_d2_source(control_root: Path):
         return parsed, None
     except (OSError, ValueError, TypeError, OverflowError, KeyError):
         return None, _unavailable("D2_INVALID_PRIVATE_DOCUMENT")
-
 
 def query_d2(control_root: Path, *, mint=None, page=0):
     """Explicit exact Mint or one bounded page; never stream entire inventory."""
