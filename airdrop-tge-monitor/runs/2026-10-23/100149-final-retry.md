@@ -1,0 +1,12 @@
+run_time: 2026-10-23T10:01:49+07:00
+run_status: PARTIAL
+scheduled_shard: 2
+executed_shard: 2
+candidate_count: 8
+triggered_events: 0
+source_failures: 6
+identity_failures: 0
+gmail_attempted: false
+notification_decision: SILENT
+primary_final: BLOCKED_WITH_REASON
+last_verified_complete_at: 2026-10-10T07:52:16+07:00
