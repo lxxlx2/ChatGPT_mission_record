@@ -12,14 +12,14 @@ class CapacityTests(unittest.TestCase):
             quote_reserve_raw=2500000000000000000,
             token_reserve_raw=1000000000000000000000,
             max_total_impact_bps=100)
-        self.assertEqual(r["max_quote_in_raw_at_snapshot"], "18986861092124250")
+        self.assertEqual(r["max_quote_in_raw_at_snapshot"], "18734335839598997")
         self.assertEqual(r["evidence_grade"], "AMM_MATH_ONLY")
         self.assertFalse(r["p0_gate_passed"])
         self.assertEqual(r["real_sell_path"], "UNKNOWN")
 
     def test_10k_usdt_snapshot(self):
         n = max_input_for_average_impact(10**22, 1600 * 10**18, 100)
-        self.assertEqual(n, 75947444368497000075)
+        self.assertEqual(n, 74937343358395989974)
 
     def test_no_arbitrary_trade_size(self):
         r = historical_v2_snapshot_capacity(
@@ -27,7 +27,7 @@ class CapacityTests(unittest.TestCase):
             token_reserve_raw=50000, max_total_impact_bps=50)
         self.assertEqual(r["uniform_notional_sellability"], "NOT_SCORABLE")
         self.assertEqual(r["historical_public_available_at"], "UNKNOWN")
-        self.assertEqual(r["max_quote_in_raw_at_snapshot"], "25")
+        self.assertEqual(r["max_quote_in_raw_at_snapshot"], "24")
 
     def test_fee_budget_is_not_a_zero_tradeability_claim(self):
         self.assertEqual(max_input_for_average_impact(10**18, 100, 25), 0)
@@ -38,10 +38,17 @@ class CapacityTests(unittest.TestCase):
         cap = max_input_for_average_impact(q, 10**20, 100)
         fee = 25
         def meets(n):
-            # gamma * q / (q + gamma*n) >= 0.99, cross-multiplied
-            return (10000-fee)*q*10000 >= (10000-100)*(10000*q+(10000-fee)*n)
+            # effective execution-price premium <= 100bps, exact fraction.
+            return 10000 * (fee*q + (10000-fee)*n) <= 100 * (10000-fee)*q
         self.assertTrue(meets(cap))
         self.assertFalse(meets(cap+1))
+
+    def test_same_price_premium_definition_as_entry_impact(self):
+        from mission_agent.early.entry_impact import impact_microbps
+        reserve = 10**18
+        cap = max_input_for_average_impact(reserve, 10**24, 100)
+        self.assertLessEqual(impact_microbps(str(cap), str(reserve)), 100*10**6)
+        self.assertGreater(impact_microbps(str(cap+1), str(reserve)), 100*10**6)
 
     def test_invalid_types_bounds_and_negative_reserve(self):
         for inval in [True, 0, -1, 1.1, "1000"]:
