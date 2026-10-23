@@ -64,3 +64,13 @@
 
 立即验收本ADR：已有CEX D0/D1/D2脚本与来源锁存在、已有Spot未来样本具体成熟边界、BSC单链源独立止损、无触碰生产；**本ADR仅表示产品主线范围和交付顺序已经纠正，不是新模型、历史获利或前瞻回测已经通过**。
 
+
+## 6. 2026-10-23 实际D0/D1工程进展：Spot 511分钟源到3m轮次的离线准入检查
+
+- **已提交并逐字节读回**：`local-agent/scripts/monster_v4_spot511_replay_preflight.py`（Git blob `fde068908f53ae50d07b5a7d6cf78b4a88551d38`）与`local-agent/tests/test_monster_v4_spot511_replay_preflight.py`（Git blob `a0659dd9295bb1bf2f672cf6703186573dd7af5b`）。未修改此前已获独立审核的Stage163/Stage166/Stage162或原V4核心交易阈值。
+- **新增实际能力**：离线读取Stage166的**完整**4599条尝试JSON，锁定511个原T0 symbol ×3360个三分钟轮次=1,716,960个symbol-tick；精确要求每个轮次`[T-24h,T)`全部已闭合分钟所属UTC日的1440根来源通过发行方SHA准入，累计`source_ready`与按原因`source_blocked`、每symbol删失数。00:00轮次不能误读当天尚未闭合的未来分钟。拒绝缺行、重复symbol+date、伪造VERIFIED状态、跨时钟未来可用性和错误聚合；未来价格标签不参与准入。
+- **可用命令（仅在手动获取真实完整Stage166原报告后）**：`python3 crypto-300-profit-mission/local-agent/scripts/monster_v4_spot511_replay_preflight.py --stage166-report /path/to/stage166-full.json --out /path/to/spot511-preflight.json`。输出路径存在则拒绝覆盖，不做HTTP、监控、定时、发信或交易。该命令**不是**要求用户此时去下载未来Publisher ZIP或安装Mac服务。
+- **实际验证**：同Git blob源的隔离Python 9/9 unittest PASS（合成511人口与档案状态、真实时间网格、CLI执行及拒绝覆盖），本轮没有触发新的仓库CI或其他AI独立审核。原Stage166长期Git机器JSON仅是**汇总文件**、不含4599条完整attempt，完整原attempt曾保存于指定旧Actions Artifact；所以**未把旧汇总文件冒充可供新工具直接消费的全部原证据**，本轮没有真实511新窗口已验收的publisher分钟档案。
+- **严格含义**：此模块仅为`SOURCE_PREFLIGHT`，**不是**实际D0信号回放、源原字节重新校验、24h ticker与1m源数学等价证明，也没有历史动态上市身份PIT、单笔金额、盘口及真实净利润证据。即便输入全部标为已准入，仍固定`G0 PARTIAL / G1 NOT_SCORABLE / G2-G3 NOT_PASSED / G4 UNKNOWN / G6 NO_GO`。
+- **下一唯一主线**：待2026-10-24T22:06Z七日窗和官方后续Publisher真实档案成熟，并有用户明确手动采集要求后，沿现有已审核Stage166生成完整来源attempt，再运行新检查器；只在实际可评价的分钟历史与动态上市缺失已公开记录后，对原D0/Stage162 Fair8做同源全市场因果paired回放。需要固定24h退出路径的研究还须独立等2026-10-25T22:06Z以后对应档案，不能先作真实ROI声明。不能以本次离线测试替代官方新源或真实OOS。
+
