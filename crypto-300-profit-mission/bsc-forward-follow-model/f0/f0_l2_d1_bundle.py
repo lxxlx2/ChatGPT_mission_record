@@ -103,6 +103,12 @@ def run_gated_fake_session(source, evidence_root, *, permit_raw,
         permit_raw, expected_sha, proofs, test_only_trust_roots,
         checkout_root, reviewed_files, now)
     permit = _strict_permit(permit_raw)
+    # The already-reviewed FakeSource evidence writer has a fixed 2 MB
+    # body cap. An otherwise valid *smaller* signed permit would not
+    # actually constrain it. DENY instead of silently relaxing the grant;
+    # dynamically scoped raw limits require a separate source review.
+    if permit["max_response_bytes"] != 2_000_000:
+        raise ValueError("D1_BUNDLE_RAW_LIMIT_NOT_ENFORCEABLE")
     # The approved coordinator stays the sole owner of the 3 shared slots,
     # request IDs and globally spaced fake starts; no alternate sender path.
     result = run_fake_concurrent(

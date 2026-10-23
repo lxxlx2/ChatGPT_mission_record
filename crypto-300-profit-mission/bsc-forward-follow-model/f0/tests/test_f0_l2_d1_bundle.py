@@ -191,6 +191,25 @@ class D1BundleTests(unittest.TestCase):
         self.assertEqual(source.block_count,0)
         self.assertFalse((output/"attempts.jsonl").exists())
 
+    def test_tighter_signed_raw_limit_is_not_silently_ignored(self):
+        # Parent coordinator's raw archive size is fixed at 2 MB, so a
+        # signed 128-byte body limit cannot be asserted as enforced.
+        tightened=dict(self.permit,max_response_bytes=128)
+        raw,proofs=self.signed(tightened)
+        output=Path(self.tmp.name).absolute()/"evidence"
+        output.mkdir(mode=0o700)
+        source=FakeSource(delay_ms=0)
+        with self.assertRaisesRegex(ValueError,
+                                    "D1_BUNDLE_RAW_LIMIT_NOT_ENFORCEABLE"):
+            run_gated_fake_session(
+                source,output,permit_raw=raw,expected_sha=self.sha,
+                proofs=proofs,test_only_trust_roots=self.trust,
+                checkout_root=self.repo,reviewed_files=self.manifest,
+                now=self.now)
+        self.assertEqual(source.head_count,0)
+        self.assertEqual(source.block_count,0)
+        self.assertFalse((output/"attempts.jsonl").exists())
+
     def test_fake_callable_override_is_not_an_approved_source(self):
         raw,proofs=self.signed()
         root=Path(self.tmp.name).absolute()/"evidence"
