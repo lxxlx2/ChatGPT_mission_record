@@ -1,3 +1,18 @@
+## 2026-10-23：原冻结V2三十例的历史池容量上界（AMM_MATH_ONLY）
+
+本轮从Git远端已存P0 JSON blob `978f437788689eef265b47511fa963490c3e9c96`，以精确CA/Pair/rank核对完整30例与24份下一完整区块末端储备：30个唯一身份、24个有历史储备、6个无足够储备证据（保留`NOT_SCORABLE`）。复核既有29个准确部署receipt、22个达标后历史买入、18个储备达标的真实历史卖出，集合身份/子集关系没有发现冲突。此为既有规范化证据离线重新计算，并未新增链上RPC或独立原始HTTP字节。
+
+为在**不预设用户下单金额**的前提下量化静态池大小，使用只针对PancakeSwap V2恒定乘积的整数数学上界：假设一侧输入收取25bps AMM费，在历史`getReserves`快照上，将相对池中间价的平均成交价格影响（包括该AMM费）限制在100bps，则`max_input_raw = floor(reserve_in_raw × (100-25) × 10000 / ((10000-25) × (10000-100)))`。100bps是**敏感性演示参数**，不是获批研究入场阈值、投资建议、历史实际成交，也不改变已有合同或固定入场判定。
+
+| 冻结历史报价资产 | 有储备快照的池 | 单池最大AMM数学买入量（原报价资产，100bps含池费） |
+| --- | ---: | --- |
+| WBNB | 23 | 最低约0.018987 WBNB；中位约0.113921 WBNB；最高约0.456368 WBNB |
+| BSC-USDT | 1 | 约75.947444 USDT |
+
+正反方向独立给出理论输入容量，但**不能**把历史同一瞬间的买侧与卖侧上界拼成可执行往返；缺失币的容量留空，不填0。代币手续费/转账税、路由约束、Gas、MEV、交易时点前向变化及历史公众`available_at`仍然UNKNOWN。因此正式`24/30 PIT`与`18/30同研究金额双向可交易`均`NOT_SCORABLE`，`P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G6 NO_GO`不变。
+
+实现复算逻辑复用同一个`local-agent/mission_agent/early/quote_capacity.py`包文件，从原30条冻结身份精确关联历史24条储备并保留其余6条UNKNOWN，另有`local-agent/tests/test_monster_p0_quote_capacity.py`。两份远端blob与本次隔离执行过的Python源文件逐字节一致，分别`97b4e477400d35681fd3b2a3971ded78dc770ea5`和`44fe9717f0d299858a443ab58c0c569a9b22cfe2`。隔离Python只运行该模块**8项离线unittest，8 PASS、0 FAIL**；没有声称整个仓库测试已通过、Mac运行、CI或其他AI独立Review。模块没有网络、默认投资名义额、订单或监控。
+
 ## 2026-10-23 已授权唯一一次 Mac 前台真实采样
 
 MANUAL_FORWARD_READONLY_PILOT_PASS。授权评论6357433481。本次真实执行恰好1次，无重试。旧隔离目录HEAD为6403be09，故旧脚本目标c646校验失败；未reset或删除，改用全新detached worktree精确c646。运行源码blob及Python模块实际导入位置全部匹配批准checkout。Mac Python3.14.7 / arm64；load4.41/3.30/2.73，memory_pressure可用85%，磁盘437GiB，私有父目录原为空且0700。未接触私钥或私人API key，使用已批准公开无密钥端点，仅对子进程传环境变量。
