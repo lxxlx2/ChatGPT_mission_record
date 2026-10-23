@@ -27,6 +27,7 @@ from .frank_activity_watch import summarize_activity
 from .payment_evidence import latest_buy_payment_evidence
 from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
+from .wallet_d2_ingress import D2IngressError, query_d2
 from .wallet_activity import activity as read_signed_activity
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .jupiter import JupiterQuoteClient
@@ -805,6 +806,10 @@ class DashboardState:
             observed["snapshot_status"] = "SNAPSHOT_INVALID_READ_ONLY_IGNORED"
             return observed
 
+    def frank_d2_at_slot(self, *, mint=None, page=0):
+        """Separate private D2 GET lane; never changes the old watchlist."""
+        return query_d2(self.control_root, mint=mint, page=page)
+
     def recent_trades(self):
         return self.frank.recent_trades(100)
 
@@ -830,6 +835,17 @@ class Handler(BaseHTTPRequestHandler):
 
     def _allowed_host(self):
         return _host_header_is_loopback(self.headers.get("Host"))
+
+    def _d2_same_origin_read(self):
+        # Browser same-origin fetch uses a custom header. A cross-origin page
+        # cannot set it without a preflight, which this server never enables.
+        # Also reject cross-origin Sec-Fetch-Site and Origin when present.
+        if self.headers.get("X-Frank-D2-Read") != "1":
+            return False
+        if self.headers.get("Sec-Fetch-Site", "same-origin") not in ("same-origin", "none"):
+            return False
+        origin = self.headers.get("Origin")
+        return not origin or origin == "http://" + (self.headers.get("Host") or "")
 
     def _json(self, payload, status=200):
         data = json.dumps(payload, ensure_ascii=False, default=str).encode()
@@ -872,6 +888,28 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.state.frank_activity_watch())
         if path == "/api/frank-observed-watchlist":
             return self._json(self.state.frank_observed_watchlist())
+        if path == "/api/frank-d2-at-slot":
+            if not self._d2_same_origin_read():
+                return self._json({"error": "D2_SAME_ORIGIN_READ_REQUIRED"}, 403)
+            raw_query = urlparse(self.path).query
+            try:
+                params = parse_qs(raw_query, keep_blank_values=True, max_num_fields=2)
+                if len(params) > 1 or any(len(items) != 1 for items in params.values()):
+                    raise D2IngressError("INVALID_D2_QUERY")
+                if not params:
+                    result = self.state.frank_d2_at_slot(page=0)
+                elif set(params) == {"mint"}:
+                    result = self.state.frank_d2_at_slot(mint=params["mint"][0])
+                elif set(params) == {"page"}:
+                    value = params["page"][0]
+                    if not value.isascii() or not value.isdecimal() or len(value) > 3:
+                        raise D2IngressError("INVALID_D2_PAGE")
+                    result = self.state.frank_d2_at_slot(page=int(value))
+                else:
+                    raise D2IngressError("INVALID_D2_QUERY")
+            except (ValueError, D2IngressError):
+                return self._json({"error": "INVALID_D2_QUERY"}, 400)
+            return self._json(result)
         if path == "/api/frank-signed-activity":
             values = parse_qs(urlparse(self.path).query)
             if set(values) - {"days"} or len(values.get("days", ["1"])) != 1:
