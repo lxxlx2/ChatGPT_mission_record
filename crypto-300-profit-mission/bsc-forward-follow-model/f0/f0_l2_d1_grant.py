@@ -70,6 +70,20 @@ def _verify_signature(pubkey, message, signature):
         return run.returncode == 0
 
 
+def _public_key_fingerprint(pubkey):
+    """Canonical DER fingerprint: distinct aliases for one key are NOT two roles."""
+    try:
+        res = subprocess.run(
+            [OPENSSL, "pkey", "-pubin", "-outform", "DER"],
+            input=pubkey, capture_output=True, check=False,
+            timeout=5, env={"PATH":"/usr/bin:/bin"})
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise ValueError("D1_PUBLIC_KEY_PARSE_FAILED") from exc
+    _need(res.returncode == 0 and len(res.stdout) > 0,
+          "D1_PUBLIC_KEY_PARSE_FAILED")
+    return sha(res.stdout)
+
+
 def validate_approvals_offline(permit_raw, expected_sha, proofs, trust_roots):
     """Return signed offline verification evidence, NEVER a live run permit.
 
@@ -112,6 +126,7 @@ def validate_approvals_offline(permit_raw, expected_sha, proofs, trust_roots):
           len(proofs) == 2, "D1_PERMIT_BUDGET_INVALID")
     digest = sha(permit_raw)
     names = []
+    key_fingerprints = []
     for role in ("user", "reviewer"):
         proof = proofs[role]
         trust = trust_roots[role]
@@ -122,11 +137,14 @@ def validate_approvals_offline(permit_raw, expected_sha, proofs, trust_roots):
               type(trust["public_pem"]) is bytes,
               "D1_SIGNER_TRUST_ID_MISMATCH")
         names.append(proof["key_id"])
+        key_fingerprints.append(_public_key_fingerprint(trust["public_pem"]))
         _need(_verify_signature(trust["public_pem"],
                                 approval_message(role, digest, expected_sha),
                                 proof["signature"]),
               "D1_SIGNED_PROOF_INVALID")
-    _need(names[0] != names[1], "D1_SAME_SIGNER_FORBIDDEN")
+    _need(names[0] != names[1] and
+          key_fingerprints[0] != key_fingerprints[1],
+          "D1_SAME_SIGNER_FORBIDDEN")
     return {"verified_for": "OFFLINE_FAKE_TEST_ONLY_NO_NETWORK",
             "permit_sha256": digest,
             "commit_sha": expected_sha,
@@ -163,28 +181,38 @@ class OfflineGrantRegistry:
               "D1_REGISTRY_NOT_PRIVATE")
         # One marker per grant ID; changing output root or permit content
         # cannot make the original identity available again.
-        target = self.root / (sha(grant_id.encode()) + ".consumed.json")
+        filename = sha(grant_id.encode()) + ".consumed.json"
         flags = os.O_CREAT | os.O_EXCL | os.O_WRONLY | getattr(os, "O_NOFOLLOW", 0)
         try:
-            fd = os.open(target, flags, 0o600)
-        except FileExistsError as exc:
-            raise ValueError("D1_GRANT_ALREADY_CONSUMED") from exc
-        try:
-            with os.fdopen(fd, "wb") as out:
-                out.write((json.dumps({"grant_id_sha256": sha(grant_id.encode()),
-                                       "permit_sha256": permit_sha256,
-                                       "outcome": "CONSUMED_OR_UNKNOWN"},
-                                      sort_keys=True) + "\n").encode())
-                out.flush()
-                os.fsync(out.fileno())
-            dfd = os.open(self.root, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
-            try:
-                os.fsync(dfd)
-            finally:
-                os.close(dfd)
+            # Use a single already-opened directory fd for BOTH atomic create
+            # and directory fsync: directory name replacement mid-operation
+            # cannot redirect either call to a different path.
+            dfd = os.open(self.root, os.O_RDONLY |
+                          getattr(os, "O_DIRECTORY", 0) |
+                          getattr(os, "O_NOFOLLOW", 0))
         except OSError as exc:
-            # The O_EXCL marker, even incomplete, must never be removed/reused.
-            raise ValueError("D1_GRANT_CONSUMPTION_UNCERTAIN_STOP") from exc
+            raise ValueError("D1_REGISTRY_OPEN_DENIED") from exc
+        try:
+            try:
+                fd = os.open(filename, flags, 0o600, dir_fd=dfd)
+            except FileExistsError as exc:
+                raise ValueError("D1_GRANT_ALREADY_CONSUMED") from exc
+            try:
+                with os.fdopen(fd, "wb") as out:
+                    out.write((json.dumps({
+                        "grant_id_sha256":sha(grant_id.encode()),
+                        "permit_sha256":permit_sha256,
+                        "outcome":"CONSUMED_OR_UNKNOWN",
+                    }, sort_keys=True) + "\n").encode())
+                    out.flush()
+                    os.fsync(out.fileno())
+                os.fsync(dfd)
+            except OSError as exc:
+                # O_EXCL marker remains consumed even if its durability is
+                # uncertain. Never remove it or retry automatically.
+                raise ValueError("D1_GRANT_CONSUMPTION_UNCERTAIN_STOP") from exc
+        finally:
+            os.close(dfd)
         return {"grant_id_sha256": sha(grant_id.encode()),
                 "permit_sha256": permit_sha256,
                 "status": "CONSUMED_NOT_A_NETWORK_AUTHORIZATION"}

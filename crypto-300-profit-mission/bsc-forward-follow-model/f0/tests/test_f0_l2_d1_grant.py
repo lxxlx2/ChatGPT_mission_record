@@ -79,6 +79,18 @@ class D1GrantGateTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"NOT_PRIVATE"):
                 OfflineGrantRegistry(root)
 
+    def test_registry_fsync_error_keeps_single_use_marker_consumed(self):
+        from unittest.mock import patch
+        context,root=self.private()
+        with context:
+            with patch("f0_l2_d1_grant.os.fsync",
+                       side_effect=OSError("fault injection")):
+                with self.assertRaisesRegex(ValueError,"CONSUMPTION_UNCERTAIN"):
+                    OfflineGrantRegistry(root).consume(GRANT,sha(sample()))
+            self.assertEqual(len(list(root.glob("*.consumed.json"))),1)
+            with self.assertRaisesRegex(ValueError,"ALREADY_CONSUMED"):
+                OfflineGrantRegistry(root).consume(GRANT,sha(sample()))
+
     def test_d1_has_no_enrolled_live_trust_roots(self):
         with self.assertRaisesRegex(ValueError,"NO_LIVE_TRUST_ROOT"):
             validate_live_trust_roots_not_enrolled()
@@ -117,6 +129,21 @@ class D1GrantGateTests(unittest.TestCase):
                 changed["reviewer"]=dict(proofs["reviewer"])
                 changed["reviewer"]["signature"]=b"x"*64
                 validate_approvals_offline(permit,SHA,changed,anchors)
+            with self.assertRaisesRegex(ValueError,"SIGNED_PROOF_INVALID"):
+                tampered=json.loads(permit)
+                tampered["grant_id"]="a-different-offline-grant"
+                validate_approvals_offline(
+                    json.dumps(tampered,sort_keys=True,
+                               separators=(",",":")).encode(),
+                    SHA,proofs,anchors)
+            # An attacker cannot relabel the SAME public key as an
+            # independent reviewer, even if an alias key ID differs.
+            with self.assertRaisesRegex(ValueError,"SAME_SIGNER_FORBIDDEN"):
+                aliased={k:dict(v) for k,v in anchors.items()}
+                aliased["reviewer"]["public_pem"]=aliased["user"]["public_pem"]
+                forged={k:dict(v) for k,v in proofs.items()}
+                forged["reviewer"]["signature"]=proofs["user"]["signature"]
+                validate_approvals_offline(permit,SHA,forged,aliased)
             with self.assertRaisesRegex(ValueError,"PERMIT_SCOPE_INVALID"):
                 tampered=json.loads(permit)
                 tampered["max_total_attempts"]=33
