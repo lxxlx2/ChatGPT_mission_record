@@ -1,3 +1,12 @@
+# 2026-10-24 — F0 D1 PR183 integrated offline exit, fixed-SHA Mac review PENDING
+
+- Immutable approved PR182 parent SHA `980121f75626df53508155b09d0776841b2c4f67`, independent Mac `APPROVE_OFFLINE_CODE — D1_CONCRETE_HTTPS_CODE_SCOPE_ONLY` (**459/459 full, 98/98 D1 targeted, 10/10 new, no P0/P1**). Parent code remains untouched.
+- New child PR183: `f0/f0_l2_d1_integrated_exit.py` + focused tests compose original raw permit digest / reviewed commit / reviewer public key TEST pins -> signed fake scope and local runtime remeasure -> one private test O_EXCL/fsync marker -> sealed MEMORY-HTTPS single 3-slot coordinator -> original RAW + SETTLE -> independent read-only recovery audit. All invalid pins must fail before any evidence/marker; grant consumed once even after failure. No actual HTTPS connection.
+- **Current mandatory production decision: `D1_BLOCKED_AUTHORITY`**. Authentic independently-published signer reference, complete Python/stdlib/wheel/dynamic closure, trusted clock, real fixed-root marker and real HTTPS/scheduler/journal binding still missing. The module public `send_live()` unconditionally refuses even with caller-supplied fake approval. This is not true D1 completion. `f0/F0_L2_D1_INTEGRATED_EXIT_GATE.md` is the authoritative new gate-to-code mapping and F0 source GO/NO_GO rule.
+- Do NOT create more unrelated tiny mock PRs. The next actual release step requires one externally trustworthy bootstrap+permit review at a separate SHA, then a new user-authorized D2 exact permit, and another separate D3 real short sampling authorization; otherwise stop `D1_BLOCKED_AUTHORITY`. Previous 30-call real grant consumed. NO_MERGE / NO_DEPLOY / NO_NEW_RPC / NO_TRADES / NO_BACKGROUND. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-24 F0 D1 PR182 — concrete fixed-host HTTPS code and consolidated exit decision, new SHA review pending
 
 - Approved frozen parent PR181 `35e1cba6cc4b4e841ff6f096bf6ed0af22b2ac8d`: user-reported independent Mac `APPROVE_OFFLINE_CODE — D1_TLS_PHASE_MOCK_SCOPE_ONLY` (449/449 complete, **88/88 D1 focused**, seven new tests, no P0/P1). Approval recorded to PR181. Do not change approved source.
