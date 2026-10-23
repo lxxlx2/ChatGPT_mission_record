@@ -187,7 +187,7 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - standx_contributor_specific_entitlement: UNVERIFIED; generic checker does not explicitly confirm a StandX beneficiary set. Cannot promote existing \`neosoul:dna_standx_community_allocation:2026-10-15\` into Tier A user-rights action based on this alone.
 - relationship_scope: informational evidence for already-monitored StandX beneficiary check, not new full-watch NeoSoul project or independent urgent notification.
 
-## 2026-10-23 verified new StandX beneficiary action, Gmail delivery blocked
+## 2026-10-23 verified StandX beneficiary action, delivered
 
 ### NeoSoul DNA Batch 1 StandX BNB wallet registration
 - event_key: neosoul:dna_standx_batch1_wallet_registration:2026-10-20
@@ -202,10 +202,11 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - user_eligibility: UNKNOWN; individual allocation, wallet inclusion and Discord form submission NOT VERIFIED
 - rights_relevance: eligible existing StandX community users need to submit prior BNB Chain wallet; no key, seed or signature requested by issuer article
 - prior_dedupe: prior StandX winddown and generic NeoSoul checker are distinct; Gmail Sent searched for NeoSoul StandX formal alert on 2026-10-23 and found NONE
-- delivery_status: PENDING_DELIVERY_GMAIL_FORBIDDEN
-- gmail_attempted: true
-- gmail_error: FORBIDDEN GmailApiError Failed to send email
-- gmail_sent_readback: NONE; second Sent search found no matching new formal alert
-- event_archive: NOT_CREATED_NO_GMAIL_SENT_ID
-- next_action: on next existing scheduled run revalidate first-party still-open registration and Gmail Sent, retry exactly once under existing gate if platform allows; do not use ChatGPT App as alternate delivery and do not duplicate after successful Sent
+- delivery_status: DELIVERED_2026-10-23_GMAIL_SENT_READBACK_ARCHIVED
+- gmail_attempted: true (initial attempt FORBIDDEN; subsequent 20:04 BKK attempt SENT)
+- initial_gmail_error: FORBIDDEN GmailApiError Failed to send email (historical first attempt only)
+- gmail_sent_readback: VERIFIED; Gmail id 1a168dd4a732eab4, SENT label, recipient and complete body readback at 2026-10-23 20:04 BKK
+- event_archive: airdrop-tge-monitor/reports/events/2026/2026-10/2026-10-23/200501-standx-neosoul-dna-batch1-wallet-registration.md
+- next_action: SUPPRESS_UNCHANGED_EVENT_PERMANENTLY; re-alert only on new material first-party change. Personal eligibility remains UNKNOWN; do not send repeated registration reminders.
 - last_checked_at: 2026-10-23 18:58 Asia/Bangkok
+- delivery_verified_at: 2026-10-23T20:04:00+07:00
