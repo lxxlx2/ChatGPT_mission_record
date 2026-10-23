@@ -1595,17 +1595,23 @@ async function pollClusterJob(jobId, failures=0) {
       throw new Error('CLUSTER_JOB_IDENTITY_MISMATCH');
     }
     if (job.status==='DONE') {
+      // Retain the exact identity until a matching report GET succeeds.
+      // A failure must not force the user to submit another expensive POST.
+      clusterActiveJob.status='DONE';
       const mint=clusterActiveJob.mint;
-      clusterFinishJob();
-      $('cluster-submit').disabled=false;
-      $('cluster-submit').textContent='重新查询';
-      localStorage.setItem('mission-meme-last-cluster-ca',mint);
-      const loaded=await loadLatestCluster(mint,true);
+      $('cluster-submit').disabled=true;
+      clusterShowRecovery(true);
+      $('cluster-resume-get').textContent='重试读取报告';
+      const loaded=await loadLatestCluster(mint,true,version,jobId);
+      if (clusterPollVersion!==version || clusterActiveJob?.id!==jobId) return;
       if (!loaded) {
-        clusterStatus('error','分析结束，但保存的报告暂时无法读取');
+        clusterStatus('error','任务已结束，报告读取中断','可只重试读取已有报告，不会重新扫描');
       } else {
-        // latest.json is keyed by mint, not job ID. Do not claim the saved
-        // report came from this specific completed worker without provenance.
+        clusterFinishJob();
+        $('cluster-submit').disabled=false;
+        $('cluster-submit').textContent='重新查询';
+        localStorage.setItem('mission-meme-last-cluster-ca',mint);
+        // latest.json is keyed by mint, not by job ID.
         clusterStatus('running','原分析任务已结束，已读取最新保存报告',
           '该报告不包含任务编号，无法独立证明与本次分析一一对应');
       }
@@ -1623,6 +1629,7 @@ async function pollClusterJob(jobId, failures=0) {
       throw new Error('CLUSTER_JOB_STATUS_UNKNOWN');
     }
     clusterShowRecovery(false);
+    $('cluster-resume-get').textContent='继续读取原任务';
     renderClusterPreview(job);
     clusterStatus('running',job.status==='QUEUED'?'等待开始分析':'正在扫描链上数据',clusterProgressDetail(job));
     clusterPollTimer=setTimeout(()=>pollClusterJob(jobId,0),1200);
@@ -1651,29 +1658,57 @@ async function clusterLoadHistoricalCache() {
   if (!mint) return clusterStatus('error','请先输入代币 CA');
   clusterPollVersion += 1;
   clearTimeout(clusterPollTimer);
+  const version=clusterPollVersion;
+  const jobId=clusterActiveJob?.id || null;
+  const input=$('cluster-mint').value.trim();
   try {
     const report=await get('/api/cluster-latest?mint='+encodeURIComponent(mint));
+    if (clusterPollVersion!==version ||
+        (clusterActiveJob?.id||null)!==jobId ||
+        $('cluster-mint').value.trim()!==input) return;
     if (report?.mint!==mint) throw new Error('CACHE_MINT_MISMATCH');
     renderClusterReport(report);
     const observed=Number(report.observed_at);
     const when=Number.isFinite(observed)&&observed>0 ? new Date(observed*1000).toLocaleString('zh-CN') : '时间未知';
     const complete=report.coverage?.special_normalization_complete===true;
     clusterStatus('running','已读取已有历史报告',
-      '数据时间 '+when+' · '+(complete?'覆盖标记已完成':'覆盖仍不完整')+' · 与当前任务的关联未经核实');
+      '数据时间 '+when+' · '+(complete?'部分覆盖标记已完成':'覆盖仍不完整')+' · 与当前任务的关联未经核实');
   } catch (_) {
+    if (clusterPollVersion!==version ||
+        (clusterActiveJob?.id||null)!==jobId ||
+        $('cluster-mint').value.trim()!==input) return;
     clusterStatus('error','历史缓存读取失败','没有可核对的同 CA 报告');
   }
-  clusterShowRecovery(!!clusterActiveJob);
+  if (clusterPollVersion===version && (clusterActiveJob?.id||null)===jobId) {
+    clusterShowRecovery(!!clusterActiveJob);
+  }
 }
 
 $('cluster-resume-get').addEventListener('click',()=>{
   if (!clusterActiveJob) return;
   clusterPollVersion += 1;
   clearTimeout(clusterPollTimer);
+  const version=clusterPollVersion, id=clusterActiveJob.id, mint=clusterActiveJob.mint;
   clusterShowRecovery(false);
   $('cluster-submit').disabled=true;
+  if (clusterActiveJob.status==='DONE') {
+    clusterStatus('running','重试读取已结束任务的报告','仅发送报告 GET，不会重新扫描');
+    void loadLatestCluster(mint,true,version,id).then(loaded=>{
+      if (clusterPollVersion!==version || clusterActiveJob?.id!==id) return;
+      if (!loaded) {
+        clusterShowRecovery(true);
+        clusterStatus('error','报告读取仍然中断','可再次尝试读取已有报告');
+      } else {
+        clusterFinishJob();
+        $('cluster-submit').disabled=false;
+        $('cluster-submit').textContent='重新查询';
+        clusterStatus('running','已读取最新保存报告','报告与本次任务的身份关联仍未独立核实');
+      }
+    });
+    return;
+  }
   clusterStatus('running','继续读取原分析任务','不会重新提交链上查询');
-  pollClusterJob(clusterActiveJob.id,0);
+  pollClusterJob(id,0);
 });
 $('cluster-read-cached').addEventListener('click',clusterLoadHistoricalCache);
 
@@ -1692,9 +1727,10 @@ $('cluster-form').addEventListener('submit', async (event) => {
   event.preventDefault();
   const mint = $('cluster-mint').value.trim();
   const preset = $('cluster-preset').value;
-  clusterPollVersion += 1;
-  clearTimeout(clusterPollTimer);
-  clusterActiveJob = null;
+  // Explicit submission retires the old task and the old pending session
+  // before the network attempt. A rejected POST has UNKNOWN submission status.
+  clusterFinishJob();
+  const submitVersion=clusterPollVersion;
   if (!mint) {
     clusterStatus('error','请输入 Solana CA');
     return;
@@ -1712,15 +1748,19 @@ $('cluster-form').addEventListener('submit', async (event) => {
       body:JSON.stringify({mint,preset}),
     });
     const payload = await r.json();
+    if (clusterPollVersion!==submitVersion) return;
     if (!r.ok) throw new Error(payload.error || ('HTTP ' + r.status));
-    if (!/^[0-9a-f]{32}$/.test(String(payload.job_id||''))) throw new Error('无有效任务编号');
+    if (!/^[0-9a-f]{32}$/.test(String(payload.job_id||'')) ||
+        (payload.mint!=null && payload.mint!==mint)) throw new Error('无有效任务编号或代币不符');
     localStorage.setItem('mission-meme-last-cluster-ca',mint);
     clusterSetJob(payload.job_id,mint);
     pollClusterJob(payload.job_id,0);
   } catch (e) {
+    if (clusterPollVersion!==submitVersion) return;
     $('cluster-submit').disabled = false;
-    $('cluster-submit').textContent = '开始查询';
-    clusterStatus('error','无法开始查询',e.message);
+    $('cluster-submit').textContent = '开始新的分析';
+    clusterStatus('error','提交状态未核实','请求未取得可核对的任务编号，请先核查已有任务或报告，不会自动重发');
+    clusterShowRecovery(true);
   }
 });
 
