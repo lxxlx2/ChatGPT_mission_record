@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-10-22",
-  "status": "OCT22_FINAL_SECURITY_CORRECTION_DELIVERED_ALL_NEW_INCIDENTS_VERSIONED",
-  "note": "Exact authoritative October22 corrected Gmail id 1a16279bdb00ea34 contains PHP2Shell and eMudhra. First Oct22 sent 1a1625138e98951e lacked both; current Git canonical replaces it with preserved original via Git history. No repeated mentions tomorrow absent a material new patch/exploitation incident or client revocation delta. User actions are recommendations, not proof user's server or browser is compromised.",
+  "updated_at": "2026-10-23",
+  "status": "OCT23_FULL_SECURITY_NEWS_DELIVERED_AND_DEDUPED",
+  "note": "Last confirmed full Crypto Gmail Sent Oct23 1a1671914359ade4, canonical Git fully read back. Security events LiteLLM/Railway/ConnectWise/Node/Laravel delivered, do not print without independently verified new version. Rule set upgraded later on Oct23 to include independent source lanes, so receipt for already sent body cites the matching earlier rule SHA.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -110,6 +110,81 @@
       "source_url": "https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/",
       "event_status": "INTERMEDIATE_CERTS_BLOCKED_MAINSTREAM_BROWSERS_DOWNSTREAM_UPDATE_PENDING",
       "new_user_action": "Keep browser OS and non-browser TLS trust stores updated; do not override invalid TLS certificate warnings."
+    },
+    {
+      "event_key": "security:litellm:2026-10-21:poisoned-1.107.0",
+      "family_key": "ai:litellm:release-poison",
+      "material_version": "obs-2026-10-23",
+      "primary_version": "official-malicious-release-1.107.0",
+      "aliases": [
+        "litellm"
+      ],
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4",
+      "delivered_edition": "official_backfill",
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+      "classification": "MAJOR_SECURITY",
+      "new_delta_required_for_repeat": true
+    },
+    {
+      "event_key": "security:railway:2026-10-21:env-secrets",
+      "family_key": "cloud:railway:secrets",
+      "material_version": "obs-2026-10-23",
+      "primary_version": "official-2026-10-21-disclosure",
+      "aliases": [
+        "railway"
+      ],
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4",
+      "delivered_edition": "official_backfill",
+      "source_url": "https://blog.railway.com/p/security-disclosure-wednesday-october-21st",
+      "classification": "MAJOR_SECURITY",
+      "new_delta_required_for_repeat": true
+    },
+    {
+      "event_key": "security:connectwise:2026-10-21:microsoft-art-ex",
+      "family_key": "oauth:connectwise:storm0940",
+      "material_version": "obs-2026-10-23",
+      "primary_version": "microsoft-threat-intel-2026-10-21",
+      "aliases": [
+        "connectwise"
+      ],
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4",
+      "delivered_edition": "official_backfill",
+      "source_url": "https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/",
+      "classification": "MAJOR_SECURITY",
+      "new_delta_required_for_repeat": true
+    },
+    {
+      "event_key": "security:node:2026-10-21:patch-train",
+      "family_key": "runtime:node:2026-10",
+      "material_version": "obs-2026-10-23",
+      "primary_version": "official-fixes-22.23.4-24.22.1-26.12.1",
+      "aliases": [
+        "node"
+      ],
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4",
+      "delivered_edition": "official_backfill",
+      "source_url": "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases",
+      "classification": "MAJOR_SECURITY",
+      "new_delta_required_for_repeat": true
+    },
+    {
+      "event_key": "security:laravel:2026-10-19:tokenguard",
+      "family_key": "framework:laravel:tokenguard",
+      "material_version": "obs-2026-10-23",
+      "primary_version": "patched-12.68.0-13.29.0",
+      "aliases": [
+        "laravel"
+      ],
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4",
+      "delivered_edition": "official_backfill",
+      "source_url": "https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6",
+      "classification": "MAJOR_SECURITY",
+      "new_delta_required_for_repeat": true
     }
   ],
   "open_missed_candidates": []
