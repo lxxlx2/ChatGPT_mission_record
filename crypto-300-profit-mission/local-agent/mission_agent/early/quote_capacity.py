@@ -64,6 +64,7 @@ def historical_v2_snapshot_capacity(*, block_number, quote_reserve_raw,
         "p0_gate_passed": False,
     }
 
+
 def frozen30_capacity_audit(evidence, *, max_total_impact_bps,
                             swap_fee_bps=25):
     """Join all frozen V2 CA identities to end-of-block reserve evidence.
