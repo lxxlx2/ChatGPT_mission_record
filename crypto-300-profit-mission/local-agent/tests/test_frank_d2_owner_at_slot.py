@@ -13,11 +13,20 @@ from mission_agent.mission_control.wallet_owner_at_slot import (
     project_replayed_owner, render_offline_html,
 )
 
-MINT_A = "2" * 32
-MINT_B = "3" * 32
-MINT_C = "4" * 32
-MINT_ABSENT = "5" * 32
-ACCOUNTS = ("6" * 32, "7" * 32, "8" * 32, "9" * 32)
+def pubkey(byte):
+    """Deterministic base58 encoding of a real 32-byte synthetic Solana key."""
+    raw = bytes([byte]) * 32
+    alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+    num = int.from_bytes(raw, "big")
+    chars = []
+    while num:
+        num, digit = divmod(num, 58)
+        chars.append(alphabet[digit])
+    return "".join(reversed(chars))
+
+
+MINT_A, MINT_B, MINT_C, MINT_ABSENT = (pubkey(i) for i in (11,12,13,14))
+ACCOUNTS = tuple(pubkey(i) for i in (21,22,23,24))
 
 
 def row(token_account, mint, program, slot, raw, decimals=6):
@@ -190,9 +199,8 @@ class D2AtSlotSourceTests(unittest.TestCase):
 
     def test_visible_bound_and_search_priority(self):
         doc=source()
-        # Give the watchlist enough distinct valid-base58 synthetics.
-        others=[{"mint":("Z"*(31-len(str(i)))) + str(i).replace("0","A") + "9",
-                 "local_model_state":"UNKNOWN"} for i in range(100)]
+        # Test true 32-byte Solana identifiers, not only a loose base58 regex.
+        others=[{"mint":pubkey(i),"local_model_state":"UNKNOWN"} for i in range(100,200)]
         watch={"rows":WATCH["rows"]+others}
         result=projected(watch=watch,max_visible=60,outsider_reserve=10)
         self.assertLessEqual(len(result["preview_rows"]),60)
