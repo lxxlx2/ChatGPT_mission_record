@@ -26,6 +26,8 @@ The new **`f0_l2_d1_bundle.py`** composes the independently tested primitives ra
 | J-06 | Approved separate fake HTTPS connection semantics still available | **BLOCKED**: `send_live()` always DENIES, no real connection factory or socket, and HTTPS seam NOT connected to the coordinator |
 | M-02/M-03 | No new real performance measurement | **BLOCKED**: same-window BSC source growth/commits, persistence and independent first parent anchor unknown |
 
+**Signed raw-frame cap binding:** The approved fake coordinator's raw writer has a fixed 2,000,000-byte archive cap. A signed permit requesting a *smaller* cap is therefore explicitly denied by this fake-only bundle (`D1_BUNDLE_RAW_LIMIT_NOT_ENFORCEABLE`), rather than silently granting the coordinator 2 MB. Future variable response caps must be added and independently reviewed in the actual coordinator/sender. The negative test `test_tighter_signed_raw_limit_is_not_silently_ignored` verifies zero fake requests and no evidence file before denial.
+
 **Trust boundary:** `validate_offline_bundle(..., test_only_trust_roots, reviewed_files, now)` accepts **caller-supplied** keys, manifest and time. It is NOT a secure live authorization gateway; no code in D1 may use its returned success label to unlock the disabled sender. Changing `PINNED_LIVE_TRUST_ROOTS` or adding a live entrypoint requires separately fixed code SHA and independent review, then independent D2 explicit user permit. A test fixture that signs its own permit is not user authorization.
 
 ## Independent Mac review requested for new SHA
