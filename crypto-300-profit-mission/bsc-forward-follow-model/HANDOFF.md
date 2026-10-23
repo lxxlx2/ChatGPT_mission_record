@@ -1,3 +1,12 @@
+# 2026-10-23 PR170 P1 review r2 — exact new SHA to be checked
+
+- Prior PR170 fixed SHA `c72331c4c9bf12d5ded02e8c976bbf65683e0a21` independent Mac **REQUEST_CHANGES** despite Linux CI 379/379 PASS: Mac `/usr/bin/openssl` is LibreSSL 3.3.6 (Ed25519 unsupported), causing 378 PASS + 1 ERROR; and slow HEAD fsync of 4.2s let expired sample incorrectly become fresh at post-archive `time.monotonic()`.
+- Narrow corrective code in original D1 Draft PR170: pin `cryptography==46.0.4` for signing tests and verification via same Ed25519 backend on Linux/Mac, version/absence explicit FAIL CLOSED; all test signing keys kept transient in memory, production trust roots still EMPTY. GitHub offline workflow installs exact pinned requirements. Source HEAD sample start is now `GlobalStartGate.run` worker `completed_at` just after fake response completes; accounting accepts only after fsynced SETTLE, but TTL does NOT reset at acceptance. Separate r2 regressions inject 4.2s HEAD raw-archive fsync delay and 4.1s coordinator dequeue delay, both deny any BLOCK using stale 4000ms HEAD.
+- New GitHub Actions [#39904518543](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39904518543) **383/383 PASS zero SKIP/ERROR**, verified raw job `120253275125`, 22 focused D1 tests. **Mac independent review NOT YET DONE**; checkout and SHA must be separately rechecked after this HANDOFF update. Old SHA stays REQUEST_CHANGES; other D1 G/J/M gaps stay PARTIAL.
+- Mac: clean pinned checkout, isolated venv using `f0/requirements-d1-offline.txt`, execute all tests and focused tests, independently reproduce P1 timing and bad/missing backend. Only fake networking; no actual BSC RPC/WS, live sender or approved keys/permits. Existing original 30-call real grant remains CONSUMED. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-23 D1 implementation checkpoint — Draft PR170, OFFLINE only
 
 - Independently approved D0 [PR169](https://github.com/lxxlx2/ChatGPT_mission_record/pull/169) exact SHA `29157cbc4aaf9165d4401ed695ec8902d4a0b7b7`, `APPROVE_DESIGN / DESIGN_APPROVED_ONLY`; source unchanged.

@@ -4,9 +4,9 @@
 
 ## 代码范围
 
-- `f0_l2_d1_grant.py`：Ed25519 user/reviewer 两角色签名验证（OpenSSL，固定角色、许可字节SHA256和代码 SHA）；规范化 DER 公钥去重、双进程 O_EXCL grant 登记、0600文件与fsync目录，固定注册根工厂 `FixedLocalGrantRegistry`。**真正的生产信任公钥仍为空（主动禁止真实授权）**，任何变更须新的单独许可与代码审核。
+- `f0_l2_d1_grant.py`：Ed25519 user/reviewer 两角色签名验证（固定 cryptography 46.0.4 后端、固定角色、许可字节SHA256和代码 SHA）；规范化 Ed25519 raw 公钥去重、双进程 O_EXCL grant 登记、0600文件与fsync目录，固定注册根工厂 `FixedLocalGrantRegistry`。**真正的生产信任公钥仍为空（主动禁止真实授权）**，任何变更须新的单独许可与代码审核。
 - `f0_l2_d1_coordinator.py`：只接受内存 `FakeSource`，真实3-worker、3共享槽、全部方法共用 ≥250ms 单调时钟假发送开头；唯一协调者分配请求 ID、预算、HEAD 和调度；0600 `RESERVE_UNKNOWN` 持久化后才允许发；原始假HTTP字节0600独占持久化后写 `SETTLE`；坏parent归属原请求ID；无重试，停止派发后结算在途，原始归档失败产生UNKNOWN。
-- `tests/test_f0_l2_d1_grant.py`、`tests/test_f0_l2_d1_coordinator.py`：离线反例。临时测试用 Ed25519 私钥**只在测试进程的临时目录生成，并不提交到Git或变成生产信任根**。
+- `tests/test_f0_l2_d1_grant.py`、`tests/test_f0_l2_d1_coordinator.py`：离线反例。临时测试用 Ed25519 私钥**只在测试进程内存生成，不落盘、不提交Git、不变成生产信任根**。
 
 ## 与D0的 G/J/M 矩阵逐项绑定（未达到的不能算 PASS）
 
@@ -15,13 +15,13 @@
 | G-01 | `grant.validate_live_trust_roots_not_enrolled`; `test_d1_has_no_enrolled_live_trust_roots`; fake协调器拒绝任意sender | OFFLINE_DENY_PASS；无真实执行入口 |
 | G-02 | D0定义 Git fixedSHA全依赖门禁；现只有签名绑定 `approved_commit_sha` | **PENDING：真实入口的 checkout clean/blob SHA 核验未实现** |
 | G-03 | `grant.validate_approvals_offline` 检查网络方法、端点、限额、字段类型、sha；相应签名反例 | PARTIAL；UTC窗口、真实启动合同未来D2 |
-| G-04 | `_verify_signature`、`_public_key_fingerprint`、`test_cryptographic_signatures_are_role_bound_and_cannot_swap`，真正区分两把钥匙且绑定许可hash和代码SHA | OFFLINE_PASS；**真实身份信任根未登记，D2_BLOCKED** |
+| G-04 | 固定 `cryptography==46.0.4` 的 `_verify_signature` / `_public_key_fingerprint`；`test_cryptographic_signatures_are_role_bound_and_cannot_swap`、`test_backend_missing_or_wrong_version_denies_not_skips`、`test_other_algorithm_and_corrupted_ed25519_key_denied`；不再调用 Mac LibreSSL，签名校验缺依赖即拒绝 | **CI_OFFLINE_PASS / MAC_REVIEW_PENDING**；真实身份信任根仍未登记、D2_BLOCKED |
 | G-05 | `OfflineGrantRegistry.consume` / `FixedLocalGrantRegistry`、`test_two_processes_compete_and_only_one_consumes`、`test_fixed_registry_factory_ignores_operator_output_directory` | OFFLINE_PASS；真实固定入口未接入 |
 | G-06 | O_EXCL/O_NOFOLLOW、目录FD/文件+目录 fsync、`test_registry_fsync_error_keeps_single_use_marker_consumed`、权限/symlink测试 | OFFLINE_PASS；人工删库/跨机器不作唯一性承诺 |
 | J-01 | `run_fake_concurrent` 3-slot共享HEAD/BLOCK；`test_global_actual_fake_starts_share_250ms_and_slots_and_budget` | FAKE_PASS |
 | J-02 | `GlobalStartGate.run` 单锁约束真实线程 fake sender 开始时间，monotonic 记录；全局250ms测试 | FAKE_PASS；真实HTTP sender开始时刻未验证 |
 | J-03 | `ExclusiveEvidence.add` 在 executor.submit 前fsync；`test_presend_fsync_exception_never_invokes_fake_source` | FAKE_PASS |
-| J-04 | reserve及 worker实际开始前对已完成HEAD加4000ms门禁；`test_global_gate_rejects_stale_head_at_actual_fake_send_time` | FAKE_PASS |
+| J-04 | HEAD 时间从 worker 真实响应完成起算；`test_global_gate_rejects_stale_head_at_actual_fake_send_time`、`test_slow_initial_head_archive_cannot_refresh_expired_head`（4.2秒归档）、`test_delayed_head_completion_queue_cannot_rejuvenate_old_sample`（4.1秒排队） | **CI_FAKE_PASS / MAC_REVIEW_PENDING** |
 | J-05 | HEAD先核链ID、阻止越过最后成功HEAD；`test_initial_head_http_error_does_not_dispatch_blocks` | FAKE_PASS；真实来源独立锚未验证 |
 | J-06 | 注入HTTP503、坏JSON、迟到超时帧，`test_http_503_stops_new_dispatch_and_charges_attempt`、`test_bad_json_denies_parse_without_false_commit`、`test_late_fake_frame_is_archived_but_not_accepted` | PARTIAL；真实TLS/代理/重定向/压缩需另审 |
 | J-07 | `parsed_blocks[height]` 保存 `rid`；`test_out_of_order_parent_fault_owned_by_bad_buffered_response` | FAKE_PASS |
@@ -37,8 +37,11 @@
 新隔离 checkout 固定在PR170最终SHA并核对原设计父SHA；不用分支名代替固定SHA。全套测试从 repo 根目录运行：
 
 ```zsh
-python3 -m unittest discover -s crypto-300-profit-mission/bsc-forward-follow-model/f0/tests -p 'test_*.py' -v
-python3 -m unittest discover -s crypto-300-profit-mission/bsc-forward-follow-model/f0/tests -p 'test_f0_l2_d1_*.py' -v
+python3 -m venv "$TMPDIR/mission170-d1-ed25519-r2-venv"
+"$TMPDIR/mission170-d1-ed25519-r2-venv/bin/python" -m pip install -r crypto-300-profit-mission/bsc-forward-follow-model/f0/requirements-d1-offline.txt
+"$TMPDIR/mission170-d1-ed25519-r2-venv/bin/python" -c 'import cryptography; print(cryptography.__version__)'
+"$TMPDIR/mission170-d1-ed25519-r2-venv/bin/python" -m unittest discover -s crypto-300-profit-mission/bsc-forward-follow-model/f0/tests -p 'test_*.py' -v
+"$TMPDIR/mission170-d1-ed25519-r2-venv/bin/python" -m unittest discover -s crypto-300-profit-mission/bsc-forward-follow-model/f0/tests -p 'test_f0_l2_d1_*.py' -v
 ```
 
 没有真实网络、未注册生产用户或审核公钥、不调用原串行真实发送器；不要生成真实 permit 或任何运行批准文件。检查本 PR 文件Git blobs、CI、不覆盖PRIVATE Journal、不修改旧 PR169。独立审核结论需针对新固定SHA明确 `APPROVE_OFFLINE_CODE` / `REQUEST_CHANGES`；若某关键矩阵行未完成则明确说明 **D1_PARTIAL**，不能签发真实运行许可。
