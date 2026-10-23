@@ -98,7 +98,9 @@ def run_gated_fake_session(source, evidence_root, *, permit_raw,
     No HTTPS connection factory, transport callback, nonce consume or real
     authority can be injected through this function.
     """
-    if (type(source) not in (FakeSource, SealedMemoryHTTPSSource) or
+    from f0_l2_d1_concrete_https import SealedConcreteOfflineSource
+    if (type(source) not in (FakeSource, SealedMemoryHTTPSSource,
+                             SealedConcreteOfflineSource) or
             "reply" in getattr(source, "__dict__", {}) or
             "reply_over_memory_https" in getattr(source, "__dict__", {})):
         raise ValueError("D1_BUNDLE_FAKE_SOURCE_ONLY")
@@ -114,7 +116,8 @@ def run_gated_fake_session(source, evidence_root, *, permit_raw,
         raise ValueError("D1_BUNDLE_RAW_LIMIT_NOT_ENFORCEABLE")
     post_gate=None
     if test_only_fake_post_utc_clock is not None:
-        if type(source) is not SealedMemoryHTTPSSource:
+        if type(source) not in (SealedMemoryHTTPSSource,
+                                SealedConcreteOfflineSource):
             raise ValueError("D1_BUNDLE_POST_UTC_REQUIRES_SEALED_FAKE")
         # The test clock cannot grant actual network permission.
         # Real UTC is independently required at D2 and the actual socket.

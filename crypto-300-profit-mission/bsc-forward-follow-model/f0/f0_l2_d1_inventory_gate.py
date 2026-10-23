@@ -166,7 +166,9 @@ def consume_then_run_fake_once(source, evidence_root, *, permit_raw,
     # Strict source whitelist and static signed fake archive cap BEFORE
     # consuming. The wrapped bundle repeats those checks; no live callback.
     from f0_l2_d1_coordinator import FakeSource, SealedMemoryHTTPSSource
-    check(type(source) in (FakeSource, SealedMemoryHTTPSSource)
+    from f0_l2_d1_concrete_https import SealedConcreteOfflineSource
+    check(type(source) in (FakeSource, SealedMemoryHTTPSSource,
+                           SealedConcreteOfflineSource)
           and "reply" not in getattr(source, "__dict__", {})
           and "reply_over_memory_https" not in getattr(source, "__dict__", {})
           and permit["max_response_bytes"] == 2_000_000,

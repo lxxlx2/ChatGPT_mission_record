@@ -13,6 +13,7 @@ to promote this test result to a live authorization by changing inputs.
 from __future__ import annotations
 
 from f0_l2_d1_coordinator import SealedMemoryHTTPSSource
+from f0_l2_d1_concrete_https import SealedConcreteOfflineSource
 from f0_l2_d1_grant import PINNED_LIVE_TRUST_ROOTS
 from f0_l2_d1_inventory_gate import consume_then_run_fake_once
 from f0_l2_d1_review_pins import (
@@ -25,13 +26,15 @@ def production_d1_exit_verdict():
     # The test "pins" are *not* independent user authentication and the
     # installed wheel/Python inventory explicitly claims incomplete closure.
     # A registered public key alone could not satisfy D1: there must also be
-    # independent source provenance, issuer authority, trusted time, and a
-    # real sender joined to fsync-before-network and raw-before-settle.
+    # source/provenance checks, the user's explicit scoped approval, Codex
+    # fixed-SHA review, local UTC checks and a real sender bound to fsync-before-
+    # network and raw-before-settle. PR185 replaces two-human production PKI
+    # with supervised user/Codex authority for this narrow read-only F0 trial.
     blockers = (
-        "G02_INDEPENDENT_FULL_RUNTIME_CLOSURE_UNPROVEN",
-        "G03_G04_INDEPENDENT_HUMAN_IDENTITIES_AND_TRUSTED_UTC_ABSENT",
-        "G05_G06_PRODUCTION_ONCE_REGISTRY_NOT_BOUND_TO_SENDER",
-        "J02_J03_J06_REAL_THREE_SLOT_TLS_AND_JOURNAL_NOT_INTEGRATED",
+        "G02_MAC_RUNNABLE_BYTES_AND_CODEX_REVIEW_NOT_YET_BOUND_TO_ENTRY",
+        "G03_G04_EXACT_USER_APPROVAL_AND_CLOCK_NOT_BOUND_TO_REAL_ENTRY",
+        "G05_G06_FIXED_ONCE_REGISTRY_NOT_BOUND_TO_REAL_TLS_CONNECT",
+        "J02_J03_J06_REAL_SOCKET_THREE_SLOT_AND_DURABLE_JOURNAL_UNREVIEWED",
         "J10_REAL_SOCKET_CRASH_RECOVERY_UNVERIFIED",
         "M02_M03_REAL_PROVIDER_CAPACITY_UNMEASURED",
     )
@@ -64,7 +67,8 @@ def run_offline_integrated_fake_with_pins(
     request sender, production root, execution mode, or trusted real clock.
     Even valid caller-supplied pins/keys cannot grant network permission.
     """
-    if type(source) is not SealedMemoryHTTPSSource:
+    if type(source) not in (SealedMemoryHTTPSSource,
+                            SealedConcreteOfflineSource):
         raise ValueError("D1_INTEGRATED_SEALED_MEMORY_SOURCE_ONLY")
     if (type(externally_provided_test_pins) is not OfflineReviewerPins
             or not callable(test_only_fake_post_utc_clock)):
