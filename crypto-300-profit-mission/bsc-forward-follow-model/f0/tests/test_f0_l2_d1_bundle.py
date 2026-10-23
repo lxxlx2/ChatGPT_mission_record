@@ -175,6 +175,22 @@ class D1BundleTests(unittest.TestCase):
         self.assertLessEqual(result["fake"]["max_shared_slots"],3)
         self.assertEqual(result["production"],"NO_GO")
 
+    def test_expired_valid_signed_bundle_stops_before_evidence_or_fake(self):
+        from datetime import timedelta
+        raw,proofs=self.signed()
+        output=Path(self.tmp.name).absolute()/"evidence"
+        output.mkdir(mode=0o700)
+        source=FakeSource(delay_ms=0)
+        with self.assertRaisesRegex(ValueError,"D1_UTC_WINDOW_INACTIVE"):
+            run_gated_fake_session(
+                source,output,permit_raw=raw,expected_sha=self.sha,
+                proofs=proofs,test_only_trust_roots=self.trust,
+                checkout_root=self.repo,reviewed_files=self.manifest,
+                now=self.now+timedelta(hours=1))
+        self.assertEqual(source.head_count,0)
+        self.assertEqual(source.block_count,0)
+        self.assertFalse((output/"attempts.jsonl").exists())
+
     def test_fake_callable_override_is_not_an_approved_source(self):
         raw,proofs=self.signed()
         root=Path(self.tmp.name).absolute()/"evidence"
