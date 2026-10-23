@@ -1,0 +1,9 @@
+run_time: 2026-10-23T13:03:24+07:00
+status: started
+scheduled_shard: 1
+executed_shard_plan: 1
+scope: existing_urgent5_plus_Surf_StandX_plus_shard1
+known_events_read: true
+last_durable_terminal_seen: runs/2026-10-23/110109-final-retry.md
+last_verified_complete_at: 2026-10-10T07:52:16+07:00
+notification_policy: EMAIL_ONLY_NEW_ACTION
