@@ -1,3 +1,11 @@
+# 2026-10-24 — F0 用户为最终授权者，Codex 为独立代码审核者（设计修订提案）
+
+- User clarified this turn: **the user authorizes and Codex is the independent code reviewer**. A third independent human as the review role is **not required**. Prior requirement of two external humans holding authenticated Ed25519 production PKI plus a fully cryptographically attested OS dependency closure as the sole path for this small capped public read-only F0 experiment was disproportionate. This is a **PROPOSED D0/D1 trust-model amendment**, not currently effective release permission.
+- New child Draft PR185 design: `f0/F0_D0_USER_CODEX_AUTHORITY_AMENDMENT.md` proposes exact user chat approval for each separately scoped real trial, fixed SHA detached Codex review, Mac vetted runtime/sha, fixed 0700 once registry with fsync before TLS, independent RAW journal, max 32 calls/60s/3 threads/250ms all hard-enforced, fail-closed UTC+monotonic with its limits declared. No external CA identities required for code review. **Do not silently bypass previous D0 rules:** amendment must be independently reviewed/accepted before implementation.
+- Approved parent PR184 `0d35f0d8679b98795ae74905deeeac7d73bf8cc6` design review status `APPROVE_DESIGN — D1_TRUST_BOOTSTRAP_BLOCKED_SCOPE_ONLY`; parent untouched. Current runtime still `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`. No production grant, real RPC, on-chain action, merge/deploy, daemon or scheduling. Prior consumed real-call grant cannot be reused.
+
+---
+
 # 2026-10-24 F0 D1 — PR183 independently approved, external trust bootstrap feasibility STILL BLOCKED
 
 - Frozen approved PR183 SHA `4e12e4f43ca2cc466e6c20b79fcdbc23228dd28f`, Mac verdict `APPROVE_OFFLINE_CODE — D1_INTEGRATED_FAKE_EXIT_BLOCKED_SCOPE_ONLY`; full **464/464**, focused D1 **103/103**, five new passing, zero SKIP/no new P0/P1. Approved parent running code untouched.
