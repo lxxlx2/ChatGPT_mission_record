@@ -93,7 +93,8 @@ class FakeSource:
                  delay_ms=280, fail_heights=(), parent_fault_heights=(),
                  timeout_heights=(), wrong_ids=(), fail_head_after=0,
                  bad_json_heights=(), block_delay_by_ordinal=None,
-                 bad_parent_ordinal=0):
+                 bad_parent_ordinal=0, bad_json_ordinal=0,
+                 fail_block_ordinal=0):
         need(type(first_head) is int and first_head > 0
              and type(growth_bps) in (int, float) and 0 <= growth_bps <= 10
              and type(delay_ms) is int and 0 <= delay_ms <= 1000,
@@ -115,6 +116,8 @@ class FakeSource:
              "D1_FAKE_DELAYS_INVALID")
         self.block_delay_by_ordinal = block_delay_by_ordinal or {}
         self.bad_parent_ordinal = bad_parent_ordinal
+        self.bad_json_ordinal = bad_json_ordinal
+        self.fail_block_ordinal = fail_block_ordinal
         self.epoch = time.monotonic()
         self.block_count = 0
         self.head_count = 0
@@ -147,9 +150,9 @@ class FakeSource:
             height = int(request["params"][0], 16)
             if height in self.timeout_heights:
                 raise TimeoutError("FAKE_SOURCE_TIMEOUT")
-            if height in self.fail_heights:
+            if height in self.fail_heights or ordinal == self.fail_block_ordinal:
                 status = 503
-            if height in self.bad_json_heights:
+            if height in self.bad_json_heights or ordinal == self.bad_json_ordinal:
                 return (200, {"content-type": "application/json"}, b"{")
             result = {
                 "number": hex(height),
