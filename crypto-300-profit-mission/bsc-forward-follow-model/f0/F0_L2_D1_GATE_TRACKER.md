@@ -83,3 +83,8 @@ J-01..J-10: parent sealed **memory-only** HTTPS three-slot coordinator + respons
 ## PR176 — J-10 genuine OS SIGKILL at three OFFLINE fsync boundaries (Mac review pending)
 
 Module `tests/test_f0_l2_d1_os_crash_survival.py` exercises isolated POSIX child-process SIGKILL after O_EXCL grant marker+dir fsync; after CHAIN `RESERVE_UNKNOWN` journal flush+fsync **before fake send**; and after BLOCK RAW body+dir fsync **before SETTLE**. Parent process verifies 0600 file/0700 directories, raw orphan vs UNKNOWN ID, invalid audit, zero retries and marker spent across output-root changes. Linux GitHub full CI 430/430 PASS. This upgrades J-10 **OS_PROCESS_SIGKILL_FAKE_ONLY**, not power loss and not real TLS provider crash recovery. No parent coordinator, registry or recovery source changed. Mac fixed-SHA independent audit required. See `F0_L2_D1_OS_CRASH_REVIEW.md`.
+
+
+## PR179 — G-02 offline reviewer pins
+
+PR176 Mac approved `OS_PROCESS_SIGKILL_FAKE_PASS` at `a1d33ab0fd7f68db01b67d3d7da6603af1fd6797` (430 full / 69 focused). PR179 independently supplied code, permit, inventory digests and user/reviewer fingerprints are checked against local signed files. External authenticity of the pins and complete runtime dependencies remain unverified. G-02 is PARTIAL and real permission/transport are BLOCKED. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
