@@ -14,7 +14,7 @@ import tempfile
 import unittest
 
 from mission_agent.mission_control.wallet_d2_ingress import (
-    PAGE_SIZE, SOURCE_NAME, D2IngressError, _digest,
+    PAGE_SIZE, SOURCE_NAME, SOURCE_SUBDIR, D2IngressError, _digest,
     build_d2_document_from_verified_pr60_replay,
     query_d2, read_d2_source, validate_d2_document,
 )
@@ -27,14 +27,19 @@ class D2IngressTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory(prefix="frank-d2-ingress-")
         self.root = Path(self.tmp.name).resolve()
-        self.root.chmod(0o700)
+        self.root.chmod(0o755)
         self.doc = build_d2_document_from_verified_pr60_replay(source())
 
     def tearDown(self):
         self.tmp.cleanup()
 
+    def _private_dir(self):
+        return self.root / SOURCE_SUBDIR
+
     def _import_private(self, doc=None):
-        file = self.root / SOURCE_NAME
+        private_dir = self._private_dir()
+        private_dir.mkdir(mode=0o700, exist_ok=True)
+        file = private_dir / SOURCE_NAME
         file.write_text(json.dumps(doc if doc is not None else self.doc),
                         encoding="utf-8")
         file.chmod(0o600)
@@ -241,11 +246,11 @@ class D2IngressTests(unittest.TestCase):
 
     def test_bad_private_parent_and_oversized_source_rejected(self):
         self._import_private()
-        self.root.chmod(0o755)
+        self._private_dir().chmod(0o755)
         _,bad=read_d2_source(self.root)
         self.assertEqual(bad["reason"],"D2_PARENT_NOT_PRIVATE")
-        self.root.chmod(0o700)
-        file=self.root/SOURCE_NAME
+        self._private_dir().chmod(0o700)
+        file=self._private_dir()/SOURCE_NAME
         file.write_bytes(b"x"*4_000_001)
         file.chmod(0o600)
         _,bad=read_d2_source(self.root)
@@ -265,6 +270,52 @@ class D2IngressTests(unittest.TestCase):
             for account in row["accounts"]:
                 self.assertNotIn(account["token_account"],raw)
 
+    def test_existing_shared_root_0755_and_private_child_0700(self):
+        self._import_private()
+        self.assertEqual(stat.S_IMODE(self.root.stat().st_mode), 0o755)
+        self.assertEqual(stat.S_IMODE(self._private_dir().stat().st_mode), 0o700)
+        self.assertEqual(query_d2(self.root, page=0)["result_count"], 3)
+
+    def test_old_root_file_does_not_act_as_fallback(self):
+        legacy=self.root/SOURCE_NAME
+        legacy.write_text(json.dumps(self.doc), encoding="utf-8")
+        legacy.chmod(0o600)
+        self.assertEqual(query_d2(self.root,page=0)["status"],
+                         "SOURCE_NOT_IMPORTED")
+        self._import_private()
+        self.assertEqual(query_d2(self.root,page=0)["result_count"],3)
+
+    def test_symlink_child_directory_refused(self):
+        actual=self.root/"different-private"
+        actual.mkdir(mode=0o700)
+        src=actual/SOURCE_NAME
+        src.write_text(json.dumps(self.doc), encoding="utf-8")
+        src.chmod(0o600)
+        self._private_dir().symlink_to(actual, target_is_directory=True)
+        _,bad=read_d2_source(self.root)
+        self.assertEqual(bad["reason"],"D2_PARENT_SYMLINK_INVALID")
+
+    def test_shared_root_group_or_world_writable_refused(self):
+        self._import_private()
+        self.root.chmod(0o757)
+        _,bad=read_d2_source(self.root)
+        self.assertEqual(bad["reason"],"D2_SHARED_ROOT_UNSAFE")
+
+    def test_shared_root_symlink_refused(self):
+        self._import_private()
+        alias=self.root.parent/(self.root.name+"-alias")
+        alias.symlink_to(self.root, target_is_directory=True)
+        try:
+            _,bad=read_d2_source(alias)
+            self.assertEqual(bad["reason"],"D2_SHARED_ROOT_UNSAFE")
+        finally:
+            alias.unlink()
+
+    def test_missing_private_child_is_unknown_not_zero(self):
+        self.assertFalse(self._private_dir().exists())
+        result=query_d2(self.root,mint=MINT_A)
+        self.assertEqual(result["status"],"SOURCE_NOT_IMPORTED")
+        self.assertEqual(result["rows"],[])
 
 if __name__ == "__main__":
     unittest.main()
