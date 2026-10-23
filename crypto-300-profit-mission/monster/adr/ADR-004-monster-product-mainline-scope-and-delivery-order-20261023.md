@@ -74,3 +74,14 @@
 - **严格含义**：此模块仅为`SOURCE_PREFLIGHT`，**不是**实际D0信号回放、源原字节重新校验、24h ticker与1m源数学等价证明，也没有历史动态上市身份PIT、单笔金额、盘口及真实净利润证据。即便输入全部标为已准入，仍固定`G0 PARTIAL / G1 NOT_SCORABLE / G2-G3 NOT_PASSED / G4 UNKNOWN / G6 NO_GO`。
 - **下一唯一主线**：待2026-10-24T22:06Z七日窗和官方后续Publisher真实档案成熟，并有用户明确手动采集要求后，沿现有已审核Stage166生成完整来源attempt，再运行新检查器；只在实际可评价的分钟历史与动态上市缺失已公开记录后，对原D0/Stage162 Fair8做同源全市场因果paired回放。需要固定24h退出路径的研究还须独立等2026-10-25T22:06Z以后对应档案，不能先作真实ROI声明。不能以本次离线测试替代官方新源或真实OOS。
 
+
+
+## 7. 2026-10-23：不等待正式七日结束的手动官方分钟源获取入口
+
+当日（截至2026-10-23 UTC约14:08）10月16–22日为已结束UTC日，官方日级文件按Binance出版政策通常在次日上线；**具体每币文件是否成功取到/哈希是否匹配尚未通过当前网络实测**。10月23/24日尚未完成，不能伪造未来分钟。Binance官方说明：https://github.com/binance/binance-public-data 。
+
+新增手动分批采集脚本 `local-agent/scripts/monster_spot511_manual_publisher_batch.py` Git blob `92b96c8abcb9542ccfe49219439330628fbf9f7a`，测试 `local-agent/tests/test_monster_spot511_manual_publisher_batch.py` Git blob `7182f027adfd8305542af2ba2203c9720ef71aed`。代码**不采用现时全市场交易所名单**，而是调用已审Stage166冻结的原Spot T0 511 symbol，只允许2026-10-16至24一个**已完整结束**的UTC日、一次最大64个symbol（可用start-index遍历）；默认`PLAN_ONLY`，仅显式`--download`才发到 `data.binance.vision` 的HTTPS，不递归重试、无无人值守服务。对每份ZIP先验官方相邻CHECKSUM、SHA，再调用原Stage166验证1440根1m/微秒时钟，成功后才持久化原ZIP和CHECKSUM。已有文件仅核验/跳过，不覆盖异常旧原字节；失败记录原因、保持未知而非零WATCH，止损网络响应字节数与重定向hostname。严格禁止跨HTTP站点源。
+
+8项合成、无网络回归测试已经**提交到Git，当前尚无可核验的实际GitHub Actions运行结果/独立其他AI审查**，因此状态`CODE_COMMITTED / TEST_EXECUTION_UNVERIFIED`，不能声称新脚本已获外审。另已提交仅含`pull_request`和手动`workflow_dispatch`触发器、**无schedule和无市场HTTP的离线CI**：`.github/workflows/monster-spot511-manual-source-batch-ci.yml`。该CI本身不会采集真实档案，其`workflow_dispatch`若尚未登记在默认分支不应宣传为现成可单击云端下载入口。下一次真正网络采集需有可用被授权的一次性网络执行环境，再根据正确Git固定版本和官方源限制进行有界分批获取，不在用户高负载Mac上部署或长期运行。
+
+**本轮实证限制**：当前容器及普通网页工具无法取得Binance ZIP/CHECKSUM真实字节（DNS错误/不支持二进制读取）；没有真实官方归档下载、没有真实511x9验收、没有D0/D1 paired replay、没有G4净收益。下一个最有价值动作是先对已结束日期做**一个真实来源受限批次验证**，确认云端能连通数据源及发布方SHA，同时保留所有失败样本；在数据通路成功之前不批量请求9×511，也不把准备工作当进度验收通过。G0 PARTIAL/G1 NOT_SCORABLE/G2-G3 NOT_PASSED/G4 UNKNOWN/G6 NO_GO，Frank/邮件/交易及Mac任务不动。
