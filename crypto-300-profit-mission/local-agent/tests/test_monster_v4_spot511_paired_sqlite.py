@@ -78,8 +78,30 @@ class PairedReplayTests(unittest.TestCase):
             report=pair.paired_replay(p,allow_synthetic_cohort=True)
             self.assertEqual(report['full_d0_ticks'],7)
             self.assertEqual(report['censored_d0_ticks'],3353)
+            self.assertEqual(report['partial_d0_ticks_scanned'],1)
+            self.assertEqual(report['zero_source_ticks'],3352)
             self.assertEqual(report['source_censored_symbol_ticks'],
                              3352*2+1)
+            self.assertTrue(report['same_d0_watch_id_and_time'])
+            self.assertEqual(report['G6'],'NO_GO')
+
+    def test_partial_on_watch_burst_keeps_healthy_symbol(self):
+        with tempfile.TemporaryDirectory() as temp:
+            p=Path(temp)/'missing-at-burst.sqlite'
+            synthetic_index(p,partial_at=1)
+            lanes=Path(temp)/'lanes'
+            report=pair.paired_replay(p,lane_dir=lanes,allow_synthetic_cohort=True)
+            self.assertEqual(report['full_d0_ticks'],7)
+            self.assertEqual(report['partial_d0_ticks_scanned'],1)
+            # BTC is present at t=1; it must not wait for ETH recovery at t=2.
+            for lane in ('fifo8','fair8'):
+                with sqlite3.connect(lanes/(lane+'.sqlite')) as db:
+                    events=dict(db.execute("SELECT symbol,observed_ms FROM events WHERE event_type='WATCH_EARLY'"))
+                self.assertEqual(events['BTCUSDT'],pair.feed.START_MS+pair.TICK_MS)
+                self.assertEqual(events['ETHUSDT'],pair.feed.START_MS+2*pair.TICK_MS)
+            self.assertEqual(report['d0_watch_count'],2)
+            self.assertEqual(report['fifo']['d0_new_watch'],2)
+            self.assertEqual(report['fair8']['d0_new_watch'],2)
             self.assertTrue(report['same_d0_watch_id_and_time'])
             self.assertEqual(report['G6'],'NO_GO')
 
