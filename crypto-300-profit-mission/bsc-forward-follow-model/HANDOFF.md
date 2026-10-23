@@ -1,3 +1,22 @@
+# 2026-10-23 PR170 P1 review r2 — exact new SHA to be checked
+
+- Prior PR170 fixed SHA `c72331c4c9bf12d5ded02e8c976bbf65683e0a21` independent Mac **REQUEST_CHANGES** despite Linux CI 379/379 PASS: Mac `/usr/bin/openssl` is LibreSSL 3.3.6 (Ed25519 unsupported), causing 378 PASS + 1 ERROR; and slow HEAD fsync of 4.2s let expired sample incorrectly become fresh at post-archive `time.monotonic()`.
+- Narrow corrective code in original D1 Draft PR170: pin `cryptography==46.0.4` for signing tests and verification via same Ed25519 backend on Linux/Mac, version/absence explicit FAIL CLOSED; all test signing keys kept transient in memory, production trust roots still EMPTY. GitHub offline workflow installs exact pinned requirements. Source HEAD sample start is now `GlobalStartGate.run` worker `completed_at` just after fake response completes; accounting accepts only after fsynced SETTLE, but TTL does NOT reset at acceptance. Separate r2 regressions inject 4.2s HEAD raw-archive fsync delay and 4.1s coordinator dequeue delay, both deny any BLOCK using stale 4000ms HEAD.
+- New GitHub Actions [#39904518543](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/39904518543) **383/383 PASS zero SKIP/ERROR**, verified raw job `120253275125`, 22 focused D1 tests. **Mac independent review NOT YET DONE**; checkout and SHA must be separately rechecked after this HANDOFF update. Old SHA stays REQUEST_CHANGES; other D1 G/J/M gaps stay PARTIAL.
+- Mac: clean pinned checkout, isolated venv using `f0/requirements-d1-offline.txt`, execute all tests and focused tests, independently reproduce P1 timing and bad/missing backend. Only fake networking; no actual BSC RPC/WS, live sender or approved keys/permits. Existing original 30-call real grant remains CONSUMED. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
+# 2026-10-23 D1 implementation checkpoint — Draft PR170, OFFLINE only
+
+- Independently approved D0 [PR169](https://github.com/lxxlx2/ChatGPT_mission_record/pull/169) exact SHA `29157cbc4aaf9165d4401ed695ec8902d4a0b7b7`, `APPROVE_DESIGN / DESIGN_APPROVED_ONLY`; source unchanged.
+- Current **D1** Draft adds signed two-role fake approval gate, canonical unique Ed25519 pubkey proof, fixed-path factory and atomic single-use registry (0600/O_EXCL/dirFD/fsync), a three-shared-slot REAL-THREAD **FAKE** coordinator, global 250ms fake send starts, exclusive presend UNKNOWN append-only ledger, raw bytes-before-SETTLE, true owner-tagged block parent integrity and stop/drain, and focused failure-injection tests. The only private keys are generated in a temporary unit-test directory and never committed; `PINNED_LIVE_TRUST_ROOTS={}` intentionally forbids actual live authorization.
+- D1 matrix with explicit PASS/PARTIAL/BLOCKED rows: `f0/F0_L2_D1_GATE_TRACKER.md` (G-01..G-06/J-01..J-10/M-01..M-03). This PR currently **does NOT implement live network sender or signed production authority enrollment**; running Mac tests does not constitute permission or real provider throughput proof. There is no merge/deploy, schedule, trading, permit signing or BSC RPC.
+- Independent fixed-SHA Mac offline audit is **PENDING**. Future D1 work after code review should prioritize actual transport safety and binding signed approvals to fixed audited SHA/immutable authority roots, with no network invocation. Only separate future explicit D2 user grant + independent code/permit review could permit manual D3 RPC.
+- Old actual 30-call grant consumed. F0_NOT_PASSED / PRODUCTION_NO_GO.
+
+---
+
 # 2026-10-23 D0 REAL HTTP + ONE-USE GRANT DESIGN ONLY
 
 - [PR167 approved code](https://github.com/lxxlx2/ChatGPT_mission_record/commit/566a0851da059427fe05b7ce833469a942e687bd): user-reported independent Mac APPROVE_OFFLINE_CODE at SHA `566a0851da059427fe05b7ce833469a942e687bd` with 361/361 full, 15/15 focused, 1004/1005 buffered-parent P1 closed; approved parent unchanged. Six saved30 timing-based scenarios & 0.5/1/2.178/5 synthetic source stress remain synthetic; 2.178 source growth vs 1.740 contiguous commit blocks/s in finite window. No real provider three-slot observation.
