@@ -150,6 +150,31 @@ class BatchTests(unittest.TestCase):
                              "LOCAL_SOURCE_SYMLINK_REJECTED_NO_OVERWRITE")
             self.assertEqual(original.read_bytes(), b"important original bytes")
 
+    def test_original_t0_unicode_symbols_are_admitted_without_network(self):
+        # Original Stage163 T0 includes two Chinese-named Binance pairs.
+        # The previous ASCII-only regex incorrectly blocked ALL 511 sources.
+        with tempfile.TemporaryDirectory() as d:
+            result = m.batch(DAY,d,count=1,now=NOW,
+                             fetcher=lambda *_: self.fail("Plan performed HTTP"))
+            self.assertEqual(result["frozen_total"],511)
+            self.assertEqual(result["source_records"][0]["symbol"],"0GUSDT")
+
+    def test_official_unicode_symbol_checksum_and_percent_encoded_url(self):
+        symbol="币安人生USDT"
+        roster=sorted(ROSTER[:-1]+[symbol])
+        self.assertEqual(len(roster),511)
+        original, checksum=synthetic_publisher(symbol=symbol)
+        def fetch(url, _limit):
+            self.assertIn("%E5%B8%81%E5%AE%89%E4%BA%BA%E7%94%9FUSDT",url)
+            return checksum if url.endswith(".CHECKSUM") else original
+        with tempfile.TemporaryDirectory() as d:
+            result=m.batch(DAY,d,start_index=510,count=1,now=NOW,
+                           download=True,roster=roster,fetcher=fetch)
+            self.assertEqual(result["verified_downloads"],1)
+            self.assertEqual(result["source_records"][0]["status"],
+                             "VERIFIED_FULL_DAY_1440")
+            self.assertEqual(result["source_records"][0]["symbol"],symbol)
+
     def test_future_utc_day_never_downloaded(self):
         with tempfile.TemporaryDirectory() as d:
             with self.assertRaisesRegex(ValueError,"DAY_NOT_YET_ENDED"):
