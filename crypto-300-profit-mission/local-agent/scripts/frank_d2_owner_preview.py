@@ -107,15 +107,66 @@ def _target_mints(data):
     return [row["mint"] if isinstance(row, dict) else row for row in data]
 
 
+def _reject_git_output(parent):
+    """Fail closed for *any* Git checkout, linked worktree, or bare repository.
+
+    Checking REPO_ROOT alone is insufficient: operators normally run this CLI
+    from a detached checkout and could otherwise write private balances into
+    their main Mission clone. Both .git directories and worktree .git FILES
+    are checked; Git discovers any surrounding worktree/bare repository.
+    """
+    current = parent
+    while True:
+        marker = current / ".git"
+        if marker.exists() or marker.is_symlink() or current.name == ".git":
+            raise ValueError("PUBLIC_GIT_HTML_OUTPUT_FORBIDDEN")
+        if current == current.parent:
+            break
+        current = current.parent
+    # Inherit regular executable PATH but never implicit external GIT_DIR or
+    # GIT_WORK_TREE overrides that could invalidate the containment decision.
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    try:
+        check = subprocess.run(
+            ["git", "-C", str(parent), "rev-parse",
+             "--is-inside-work-tree", "--is-bare-repository"],
+            capture_output=True, text=True, timeout=10, env=env,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise ValueError("OUTPUT_GIT_BOUNDARY_CHECK_UNAVAILABLE") from exc
+    if check.returncode == 0:
+        # A successful git discovery is never an acceptable location for
+        # private evidence, even when Git reports a worktree-less gitdir.
+        raise ValueError("PUBLIC_GIT_HTML_OUTPUT_FORBIDDEN")
+    if check.returncode != 128 or "not a git repository" not in check.stderr.lower():
+        raise ValueError("OUTPUT_GIT_BOUNDARY_CHECK_UNAVAILABLE")
+
+
 def _private_create(path, html):
-    path = path.expanduser().absolute()
-    if not path.is_absolute() or path.suffix.lower() != ".html":
+    # abspath is a *lexical* normalized absolute path: '..' is eliminated
+    # before all containment checks AND before the actual open. Avoid
+    # Path.absolute(), which leaves '..' intact on several Python versions.
+    path = Path(os.path.abspath(os.path.expanduser(os.fspath(path))))
+    if path.suffix.lower() != ".html":
         raise ValueError("PRIVATE_PREVIEW_PATH_INVALID")
     if path == REPO_ROOT or REPO_ROOT in path.parents:
         raise ValueError("PUBLIC_GIT_HTML_OUTPUT_FORBIDDEN")
+    # Explicit policy: no symlink in the canonical-to-be path. On macOS /tmp
+    # (and /var) may be an alias into /private; callers must use /private/tmp
+    # (or their already-resolved real temporary directory) instead.
     if path.is_symlink() or any(parent.is_symlink() for parent in path.parents):
         raise ValueError("PRIVATE_PREVIEW_SYMLINK_FORBIDDEN")
+    nearest = path.parent
+    while not nearest.is_dir():
+        if nearest.exists():
+            raise ValueError("PRIVATE_PREVIEW_PARENT_INVALID")
+        nearest = nearest.parent
+    _reject_git_output(nearest)  # before creating any output directories
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    if path.parent.is_symlink() or path.is_symlink():
+        raise ValueError("PRIVATE_PREVIEW_SYMLINK_FORBIDDEN")
+    _reject_git_output(path.parent)  # re-check the actual created parent
     if path.parent.stat().st_mode & 0o077:
         raise ValueError("PRIVATE_PREVIEW_PARENT_NOT_PRIVATE")
     flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
