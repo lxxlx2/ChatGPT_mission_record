@@ -11,7 +11,7 @@ import tempfile
 
 from mission_agent.mission_control.server import Handler
 from mission_agent.mission_control.wallet_d2_ingress import (
-    D2IngressError, SOURCE_NAME, build_d2_document_from_verified_pr60_replay,
+    D2IngressError, SOURCE_NAME, SOURCE_SUBDIR, build_d2_document_from_verified_pr60_replay,
     query_d2,
 )
 from test_frank_d2_owner_at_slot import source
@@ -109,8 +109,10 @@ class D2HttpSecurityTests(unittest.TestCase):
         # Real handler route, real disk-backed synthetic source, no socket or RPC.
         with tempfile.TemporaryDirectory(prefix="frank-d2-http-") as tmp:
             root=Path(tmp)
-            root.chmod(0o700)
-            src=root/SOURCE_NAME
+            root.chmod(0o755)
+            private=root/SOURCE_SUBDIR
+            private.mkdir(mode=0o700)
+            src=private/SOURCE_NAME
             doc=build_d2_document_from_verified_pr60_replay(source())
             src.write_text(json.dumps(doc),encoding="utf-8")
             src.chmod(0o600)
