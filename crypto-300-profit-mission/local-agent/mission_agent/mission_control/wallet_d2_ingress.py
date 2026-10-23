@@ -96,6 +96,14 @@ def validate_d2_document(doc):
           doc.get("status") == STATUS and
           doc.get("wallet") == FRANK_WALLET,
           "D2_SCHEMA_OR_OWNER_INVALID")
+    # Do not admit hidden private metadata under a self-recomputed checksum.
+    _need(set(doc) == {
+        "schema_version", "source_kind", "status", "wallet",
+        "source_capture_sha256", "observed_at_utc", "program_coverage",
+        "same_slot_atomic", "current_chain_balance_verified",
+        "usd_value_verified", "pnl_verified", "account_count",
+        "mint_count", "nonzero_mint_count", "mints", "document_sha256",
+    }, "D2_DOCUMENT_FIELDS_INVALID")
     _need(doc.get("same_slot_atomic") is False and
           doc.get("current_chain_balance_verified") is False and
           doc.get("usd_value_verified") is False and
@@ -118,7 +126,9 @@ def validate_d2_document(doc):
     slot_by_program = {}
     count = 0
     for program, row in zip(PROGRAMS, covers):
-        _need(isinstance(row, dict) and row.get("program_id") == program and
+        _need(isinstance(row, dict) and
+              set(row) == {"program_id", "slot", "account_count"} and
+              row.get("program_id") == program and
               type(row.get("slot")) is int and row["slot"] > 0 and
               type(row.get("account_count")) is int and
               0 <= row["account_count"] <= MAX_MINTS,
@@ -137,6 +147,7 @@ def validate_d2_document(doc):
           type(doc.get("nonzero_mint_count")) is int,
           "D2_SUMMARY_COUNT_INVALID")
     seen, unique_accounts, observed_nonzero = set(), 0, 0
+    accounts_by_program = {p: 0 for p in PROGRAMS}
     for row in mints:
         _need(isinstance(row, dict) and
               set(row) == {"mint", "raw_amount", "decimals", "account_count",
@@ -153,8 +164,9 @@ def validate_d2_document(doc):
               type(row["decimals"]) is int and 0 <= row["decimals"] <= 18 and
               type(row["account_count"]) is int and row["account_count"] > 0,
               "D2_MINT_QUANTITY_INVALID")
-        _need(isinstance(programs, list) and programs and len(programs) <= 2 and
-              len(set(programs)) == len(programs) and
+        # A Solana Mint account belongs to one token program; ambiguous
+        # cross-program aggregates lack a verifiable per-program allocation.
+        _need(isinstance(programs, list) and len(programs) == 1 and
               all(p in slot_by_program for p in programs),
               "D2_MINT_PROGRAM_INVALID")
         declared_slots = sorted(slot_by_program[p] for p in programs)
@@ -164,10 +176,14 @@ def validate_d2_document(doc):
               row["slot_max"] == declared_slots[-1],
               "D2_MINT_SLOT_INVALID")
         unique_accounts += row["account_count"]
+        accounts_by_program[programs[0]] += row["account_count"]
         observed_nonzero += int(int(raw) > 0)
     _need(unique_accounts == count and
           observed_nonzero == doc["nonzero_mint_count"],
           "D2_MINT_ACCOUNT_AGGREGATES_INVALID")
+    _need(all(accounts_by_program[p] == cover["account_count"]
+              for p, cover in zip(PROGRAMS, covers)),
+          "D2_PROGRAM_ACCOUNT_AGGREGATES_INVALID")
     return doc
 
 
@@ -238,7 +254,12 @@ def query_d2(control_root: Path, *, mint=None, page=0):
         "observed_at_bangkok": observed.astimezone(
             __import__("zoneinfo").ZoneInfo("Asia/Bangkok")).isoformat(),
         "age_seconds_at_response": max(0, int(time.time() - observed.timestamp())),
-        "program_coverage": doc["program_coverage"],
+        # Defense in depth: never serialize unchecked source objects.
+        "program_coverage": [
+            {"program_id": p, "slot": row["slot"],
+             "account_count": row["account_count"]}
+            for p, row in zip(PROGRAMS, doc["program_coverage"])
+        ],
         "same_slot_atomic": False,
         "current_chain_balance_verified": False,
         "usd_value_verified": False,
