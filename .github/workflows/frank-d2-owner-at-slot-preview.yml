@@ -1,0 +1,31 @@
+name: Frank D2 offline owner at-slot preview
+on:
+  push:
+    branches:
+      - feature/frank-d2-owner-at-slot-preview-20261023
+  pull_request:
+    branches:
+      - feature/frank-ca-get-resume-20261023
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-source-and-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Full Python syntax check (no third-party dependencies)
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_owner_at_slot.py crypto-300-profit-mission/local-agent/scripts/frank_d2_owner_preview.py crypto-300-profit-mission/local-agent/tests/test_frank_d2_owner_at_slot.py
+      - name: Zero-network deterministic source provenance and HTML tests
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_frank_d2_owner_at_slot.py -v
