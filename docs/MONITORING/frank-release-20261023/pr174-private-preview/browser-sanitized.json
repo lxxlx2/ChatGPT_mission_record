@@ -1,0 +1,55 @@
+{
+  "status": "REAL_MAC_CHROME_PRIVATE_FILE_PASS",
+  "browserVersion": "155.0.8059.86",
+  "assertions": {
+    "title": "Frank D2 本地余额证据预览",
+    "renderedRows": 200,
+    "utcVisible": true,
+    "bangkokVisible": true,
+    "ageVisible": true,
+    "slot1Visible": true,
+    "slot2Visible": true,
+    "nonAtomicVisible": true,
+    "notLiveVisible": true,
+    "outsideCountVisible": true,
+    "boundedSearchVisible": true,
+    "zeroVsMissingExplained": true,
+    "noUnverifiedPnLClaim": true,
+    "noExternalURLs": true,
+    "nonzeroRows": 176,
+    "zeroRows": 24,
+    "outsideSampleRows": 40,
+    "modelAndSideSeparate": true
+  },
+  "search": {
+    "exactMintMatches": 1,
+    "substringZEROKeywordMatches": 200,
+    "nonzeroStateMatches": 176,
+    "noMatchRows": 0,
+    "clearRestoresRows": 200
+  },
+  "requests": [
+    {
+      "method": "GET",
+      "resource": "PRIVATE_LOCAL_HTML",
+      "action": "LOCAL_FILE_ALLOWED"
+    }
+  ],
+  "errors": [],
+  "blockedAttempts": 10,
+  "blockedAttemptKinds": {
+    "PROXY_HTTP_DENIED": 1,
+    "PROXY_CONNECT_DENIED": 9
+  },
+  "externalRequestsForwarded": 0,
+  "realRPC": 0,
+  "productionRequests": 0,
+  "rawScreenshotCaptured": false,
+  "rawDOMPublished": false,
+  "cleanup": {
+    "temporaryChromeClosed": true,
+    "profileRemoved": true,
+    "denyProxyClosed": true,
+    "fixtureServiceCreated": false
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "verdict": "MAC_D2_PRIVATE_OFFLINE_PREVIEW_PASS",
+  "completed_utc": "2026-10-23T15:48:08.581896+00:00",
+  "raw_bundle_hashes_before": {
+    "token-2022.json": "a327bf34f0e5bf10994662e937704d74098464cc5fddeb2ab4ce77e9ac2c58c2",
+    "spl-token.json": "f77120c050a6d014dd53d41fd9d0e8392f34ab31b91155bfa30e18334ab3b682",
+    "manifest.json": "f06df53ccfb8b96e1b92f428620311cf62bd6bb44f9b83fd7e126f2ee5b1f88b"
+  },
+  "raw_bundle_hashes_after": {
+    "token-2022.json": "a327bf34f0e5bf10994662e937704d74098464cc5fddeb2ab4ce77e9ac2c58c2",
+    "spl-token.json": "f77120c050a6d014dd53d41fd9d0e8392f34ab31b91155bfa30e18334ab3b682",
+    "manifest.json": "f06df53ccfb8b96e1b92f428620311cf62bd6bb44f9b83fd7e126f2ee5b1f88b"
+  },
+  "raw_bundle_unchanged": true,
+  "html_unchanged": true,
+  "html_parent_mode": "0700",
+  "html_mode": "0600",
+  "watch_file_mode": "0o600",
+  "production_release_437_files_unchanged": true,
+  "fixed_sources": [
+    {
+      "sha": "a14846f16e68fd0899ab5506d8c2f0c91272df48",
+      "tracked_local_agent_files": 441,
+      "manifest_sha256": "08f9e5f32ddb487de73e17b367bf7619b8080eefcc483d959d11dc75fcb8f36c",
+      "bytes_match_fixed_git": true
+    },
+    {
+      "sha": "e4529ba7069e5499d12323a7160ceac08c481fae",
+      "tracked_local_agent_files": 457,
+      "manifest_sha256": "e81c0488f9d97367fbfc716d9cc3303c1dc19d2acfadb33bd4288b5619418bc2",
+      "bytes_match_fixed_git": true
+    }
+  ],
+  "saved_watch_provenance": {
+    "rows": 1355,
+    "updated_at_utc": "2026-10-23T10:15:57+00:00",
+    "data_source": "READ_ONLY_FORWARD_SQLITE",
+    "sha256": "faa61e937831b4096d8526289875553c667229256b74a226b2dde0cf0e891897",
+    "new_production_GET": false
+  },
+  "actual_watch_mints_without_active_account": 1,
+  "missing_real_mint_in_memory_projection_raw_is_null": true,
+  "missing_state_in_original_200_row_browser_subset": false,
+  "rendered_nonzero_with_CLOSED_or_SELL_local_history_count": 2,
+  "realRPC": 0,
+  "productionDBWrites": 0,
+  "productionServiceChanges": 0,
+  "notifications": 0,
+  "trades": 0,
+  "sourceCheckoutsCleanBeforeRemoval": true,
+  "privateHTMLPreserved": true,
+  "rawScreenshotsCaptured": false,
+  "rawHTMLorMintListPublished": false,
+  "temporary_source_checkouts_removed": true
+}

@@ -1,0 +1,12 @@
+{
+  "status": "REAL_MAC_CHROME_PRIVATE_FILE_FAIL",
+  "errorType": "AssertionError",
+  "errorMessageSanitized": "BROWSER_ASSERTION_OR_DEPENDENCY_FAILED",
+  "errors": [],
+  "cleanup": {
+    "temporaryChromeClosed": true,
+    "profileRemoved": true,
+    "denyProxyClosed": true,
+    "fixtureServiceCreated": false
+  }
+}

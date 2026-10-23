@@ -1,0 +1,39 @@
+{
+  "source_sha": "a14846f16e68fd0899ab5506d8c2f0c91272df48",
+  "replay_sha": "e4529ba7069e5499d12323a7160ceac08c481fae",
+  "original_cli_exit": 0,
+  "original_html_matches_independent_projection": true,
+  "source_accounts": 4148,
+  "source_mints": 4148,
+  "source_finalized_slots": [
+    460482174,
+    460482176
+  ],
+  "same_slot_atomic": false,
+  "target_mints": 32,
+  "target_nonzero": 8,
+  "target_zero": 24,
+  "target_without_accounts": 0,
+  "all_mint_raw_sums_recomputed": true,
+  "multi_account_mints_in_private_source": 0,
+  "multi_account_private_example_status": "NOT_PRESENT_IN_SOURCE; original synthetic aggregation test already approved, not rerun",
+  "outside_watchlist_mints": 2794,
+  "preview_rows": 200,
+  "preview_state_counts": {
+    "NONZERO_AT_SLOT": 176,
+    "ZERO_AT_SLOT": 24,
+    "NO_ACTIVE_OWNER_TOKEN_ACCOUNT_OBSERVED_AT_SLOTS": 0
+  },
+  "source_observed_at_utc": "2026-10-23T14:46:32.787921+00:00",
+  "source_observed_at_bangkok": "2026-10-23T21:46:32.787921+07:00",
+  "age_seconds_at_render": 3525,
+  "html_sha256": "ee938eb1fe6a3e526d51e0824a6c7fc259ab45efd813df840aa5b6b534a9facf",
+  "html_bytes": 41642,
+  "html_mode": "0600",
+  "parent_mode": "0700",
+  "current_balance_verified": false,
+  "usd_value_verified": false,
+  "full_account_pubkeys_in_html": false,
+  "new_rpc": 0,
+  "new_dashboard_gets": 0
+}
