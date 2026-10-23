@@ -1559,6 +1559,137 @@ function renderClusterReport(report) {
 }
 
 
+// D2: MANUAL/EXPLICIT local GET only. Never POST, poll RPC, write source, or
+// replace legacy watchlist status. Race-safe against late prior page/Mint GETs.
+let frankD2Epoch = 0;
+let frankD2Page = 0;
+let frankD2TotalPages = 0;
+
+function frankD2Decimal(raw, decimals) {
+  // Exact decimal arithmetic: never convert on-chain base units to JS Number.
+  if (!/^\\d+$/.test(String(raw)) || !Number.isInteger(decimals) ||
+      decimals < 0 || decimals > 18) return '未知';
+  let number = String(raw).replace(/^0+(?=\\d)/, '');
+  if (!decimals) return number;
+  number = number.padStart(decimals + 1, '0');
+  const integer = number.slice(0, -decimals);
+  const fraction = number.slice(-decimals).replace(/0+$/, '');
+  return fraction ? integer + '.' + fraction : integer;
+}
+
+function frankD2Paint(payload) {
+  const rows = Array.isArray(payload.rows) ? payload.rows : [];
+  const observed = payload.observed_at_bangkok || payload.observed_at_utc || '未知';
+  const coverage = Array.isArray(payload.program_coverage)
+    ? payload.program_coverage.map(p => esc(p.program_id === 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+        ? 'SPL slot ' + p.slot : 'Token-2022 slot ' + p.slot)).join(' / ') : '来源 slot 未核实';
+  const description = payload.lookup_mint
+    ? (' · 精确查询 ' + esc(payload.lookup_state || '未知'))
+    : (' · 第 ' + (Number(payload.page) + 1) + '/' + payload.total_pages + ' 页');
+  $('frank-d2-summary').textContent = '来源采集时间 ' + observed +
+    ' · 数据年龄 ' + payload.age_seconds_at_response + ' 秒' +
+    ' · ' + (payload.account_count ?? '—') + ' Token 账户 / ' +
+    (payload.mint_count ?? '—') + ' Mint' +
+    ' · 两个独立 finalized slot，非原子快照' +
+    ' · 美元估值及盈亏均未核实' +
+    ' · 当前余额不是自动持续核验' +
+    (payload.lookup_mint ? ' · ' + (payload.lookup_state || 'UNKNOWN') :
+    ' · 第 ' + (Number(payload.page) + 1) + '/' + payload.total_pages + ' 页');
+  $('frank-d2-updated').textContent = observed + ' · ' +
+    (Array.isArray(payload.program_coverage)
+     ? payload.program_coverage.map(p => String(p.slot)).join(' / ') : 'slot 未核实');
+  $('frank-d2-rows').innerHTML = rows.map(row => {
+    const historical = (walletWatchData.rows || []).find(w => w.mint === row.mint);
+    const note = historical
+      ? '本地模型 ' + esc(historical.local_model_state || 'UNKNOWN') +
+        ' · 最后记录 ' + esc(historical.last_event_side || 'UNRESOLVED')
+      : '不在本地观察池，历史信号未核实';
+    const atSlot = row.raw_amount === '0' ? 'ZERO_AT_SLOT' : 'NONZERO_AT_SLOT';
+    const balance = frankD2Decimal(row.raw_amount, row.decimals);
+    return '<tr><td><code title="' + esc(row.mint) + '">' +
+      esc(short(row.mint,9,6)) + '</code> ' + copyButton(row.mint,'复制 Mint') +
+      '</td><td>' + esc(balance) + ' 枚 · ' + atSlot +
+      '</td><td>' + esc(row.account_count) + '</td><td>' +
+      esc(String(row.slot_min) + (row.slot_min === row.slot_max
+         ? '' : ' / ' + row.slot_max)) + '</td><td>' + note + '</td></tr>';
+  }).join('') || (payload.lookup_mint
+    ? '<tr><td colspan="5">该 Mint 在指定双程序观测 slot 没有活跃 owner Token Account；不是余额 0，也不代表从未持有。</td></tr>'
+    : '<tr><td colspan="5">此页没有已观察到的 Token Account。</td></tr>');
+  frankD2TotalPages = Number(payload.total_pages || 0);
+  frankD2Page = Number(payload.page || 0);
+  $('frank-d2-page-prev').disabled = !!payload.lookup_mint || frankD2Page <= 0;
+  $('frank-d2-page-next').disabled = !!payload.lookup_mint ||
+    frankD2Page + 1 >= frankD2TotalPages;
+}
+
+async function frankD2Read({mint=null, page=0}={}) {
+  const epoch = ++frankD2Epoch;
+  $('frank-d2-read').disabled = true;
+  $('frank-d2-find').disabled = true;
+  $('frank-d2-page-prev').disabled = true;
+  $('frank-d2-page-next').disabled = true;
+  $('frank-d2-summary').textContent = '正在读取已手动导入的本机 D2 时点证据…（没有 RPC）';
+  const path = '/api/frank-d2-at-slot' +
+    (mint === null ? '?page=' + encodeURIComponent(String(page))
+      : '?mint=' + encodeURIComponent(mint));
+  try {
+    const response = await fetch(path, {
+      method:'GET',cache:'no-store',credentials:'same-origin',
+      headers:{'X-Frank-D2-Read':'1'}
+    });
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    const body = await response.json();
+    if (epoch !== frankD2Epoch) return;
+    if (body.status !== 'BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE') {
+      $('frank-d2-summary').textContent =
+        body.status === 'SOURCE_NOT_IMPORTED'
+          ? '尚未经单独批准导入 D2 私有来源；当前余额未知'
+          : '私有 D2 来源未通过校验，未展示任何余额（' +
+            (body.reason || 'SOURCE_REJECTED') + '）';
+      $('frank-d2-rows').innerHTML =
+        '<tr><td colspan="5">没有可展示的经核实余额；不能按零仓位处理。</td></tr>';
+      $('frank-d2-updated').textContent='未核实';
+      frankD2Page=0; frankD2TotalPages=0;
+      return;
+    }
+    frankD2Paint(body);
+  } catch (_) {
+    if (epoch !== frankD2Epoch) return;
+    $('frank-d2-summary').textContent =
+      '本地 D2 读取失败，余额保持未知；不会重试或发起链上采集';
+    $('frank-d2-rows').innerHTML =
+      '<tr><td colspan="5">本次 GET 无法核验数据来源。</td></tr>';
+    frankD2Page=0;frankD2TotalPages=0;
+  } finally {
+    if (epoch === frankD2Epoch) {
+      $('frank-d2-read').disabled = false;
+      $('frank-d2-find').disabled = false;
+      $('frank-d2-page-prev').disabled = frankD2Page <= 0 || frankD2TotalPages === 0;
+      $('frank-d2-page-next').disabled = frankD2TotalPages === 0 ||
+        frankD2Page + 1 >= frankD2TotalPages;
+    }
+  }
+}
+$('frank-d2-read').addEventListener('click', () => {
+  $('frank-d2-mint').value='';
+  void frankD2Read({page:0});
+});
+$('frank-d2-find').addEventListener('click', () => {
+  const mint = $('frank-d2-mint').value.trim();
+  if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint)) {
+    $('frank-d2-summary').textContent='请输入完整的 Solana Mint 地址';
+    return;
+  }
+  void frankD2Read({mint});
+});
+$('frank-d2-page-prev').addEventListener('click', () => {
+  if (frankD2Page > 0) void frankD2Read({page:frankD2Page-1});
+});
+$('frank-d2-page-next').addEventListener('click', () => {
+  if (frankD2Page+1 < frankD2TotalPages)
+    void frankD2Read({page:frankD2Page+1});
+});
+
 $('watch-filter').addEventListener('change', () => renderFrankWatchlist(walletWatchData));
 $('watch-search').addEventListener('input', () => renderFrankWatchlist(walletWatchData));
 
