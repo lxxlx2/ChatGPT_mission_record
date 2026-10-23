@@ -1,5 +1,6 @@
 """Offline negative cases; no publisher HTTP and no notifications."""
 from copy import deepcopy
+import hashlib
 import unittest
 from mission_agent.early.spot_d1_event_audit import audit_recomputed_d1, EventAuditError
 
@@ -68,6 +69,64 @@ class AuditTests(unittest.TestCase):
         x['fair8_episodes'][1]['status']='PENDING'
         y=deepcopy(self.independent);y['derived']['late_queue_ids']=[]
         with self.assertRaises(EventAuditError):audit_recomputed_d1(x,y)
+
+    def _with_original_engine_export(self):
+        x=deepcopy(self.base)
+        event_id=hashlib.sha256(
+            b'MONSTER_V4|spot|AUSDT|SETUP_ACTIVE|1').hexdigest()
+        x['fifo_setup_events']=[
+            {'event_id':event_id,'venue':'spot','symbol':'AUSDT',
+             'event_type':'SETUP_ACTIVE','observed_ms':180180000,
+             'details':{'setup_candidate':True, 'classification':'RESEARCH_ONLY_UNVALIDATED'}}]
+        return x
+
+    def test_real_core_event_export_all_ids_and_times_match(self):
+        x=self._with_original_engine_export()
+        result=audit_recomputed_d1(x,self.independent)
+        self.assertTrue(result['original_core_fifo_setup_export_ids_and_times_matched'])
+        self.assertEqual(result['original_core_fifo_setup_export_event_count'],1)
+        self.assertFalse(result['original_sqlite_event_ids_readback'])
+
+    def test_legacy_old_report_does_not_claim_engine_event_export(self):
+        result=audit_recomputed_d1(self.base,self.independent)
+        self.assertFalse(result['original_core_fifo_setup_export_present'])
+        self.assertFalse(result['original_core_fifo_setup_export_ids_and_times_matched'])
+
+    def test_equal_count_but_wrong_original_event_timestamp_is_rejected(self):
+        x=self._with_original_engine_export()
+        x['fifo_setup_events'][0]['observed_ms']+=180000
+        with self.assertRaisesRegex(EventAuditError,'ORIGINAL_ENGINE_EVENT_SYMBOL_OR_TIME'):
+            audit_recomputed_d1(x,self.independent)
+
+    def test_equal_count_but_wrong_engine_event_id_is_rejected(self):
+        x=self._with_original_engine_export()
+        x['fifo_setup_events'][0]['event_id']='0'*64
+        with self.assertRaisesRegex(EventAuditError,'ORIGINAL_ENGINE_EVENT_ID_MISMATCH'):
+            audit_recomputed_d1(x,self.independent)
+
+    def test_equal_count_but_wrong_original_symbol_is_rejected(self):
+        x=self._with_original_engine_export()
+        x['fifo_setup_events'][0]['symbol']='FAKEUSDT'
+        with self.assertRaisesRegex(EventAuditError,'ORIGINAL_ENGINE_EVENT_SYMBOL_OR_TIME'):
+            audit_recomputed_d1(x,self.independent)
+
+    def test_incomplete_core_event_export_is_rejected(self):
+        x=self._with_original_engine_export()
+        x['fifo_setup_events']=[]
+        with self.assertRaisesRegex(EventAuditError,'ORIGINAL_ENGINE_EVENT_EXPORT_COUNT'):
+            audit_recomputed_d1(x,self.independent)
+
+    def test_core_event_payload_must_be_actual_setup(self):
+        x=self._with_original_engine_export()
+        x['fifo_setup_events'][0]['details']['setup_candidate']=False
+        with self.assertRaisesRegex(EventAuditError,'ORIGINAL_ENGINE_EVENT_PAYLOAD'):
+            audit_recomputed_d1(x,self.independent)
+
+    def test_null_core_event_export_is_fail_closed(self):
+        x=self._with_original_engine_export()
+        x['fifo_setup_events']=None
+        with self.assertRaisesRegex(EventAuditError,'ORIGINAL_ENGINE_EVENT_EXPORT_NOT_ARRAY'):
+            audit_recomputed_d1(x,self.independent)
 
     def test_false_day_summary_rejected(self):
         x=deepcopy(self.independent);x['derived']['raw_setups_by_complete_utc_day']={'1970-01-04':1}
