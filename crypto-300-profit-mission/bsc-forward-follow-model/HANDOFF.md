@@ -1,3 +1,11 @@
+# 2026-10-23 F0 D1 PR176 — OS SIGKILL durability, NEW SHA independent Mac audit pending
+
+- Approved frozen parent PR175 `17964d878424834ec04535c3866f115cb6f34fe7` (`APPROVE_OFFLINE_CODE — D1_INVENTORY_ONEUSE_FAKE_SCOPE_ONLY`, Mac 427/427 full and **66/66** focused D1 [previous GitHub log name-count 65]). 5 parent file blobs and private Mac evidence independently reviewed; approved parent unchanged.
+- This child Draft PR176 **adds only a test** for a disposable in-memory-HTTPS fake session terminated by real OS SIGKILL after O_EXCL registry fsync, RESERVE_UNKNOWN fsync, or RAW response fsync before SETTLE. Restart audit remains INVALID with UNKNOWN; same fake grant marker cannot be reused, even if output directory changes. Linux CI 430/430 tests; Mac independent verification PENDING.
+- This is J-10 **process-kill fake** evidence, not physical power-loss durability, production identity/registry/trusted runtime, real HTTPS or source throughput. Full G/J/M remaining gates in `f0/F0_L2_D1_OS_CRASH_REVIEW.md`; no live RPC/WS, permit, nonce, trading, merge/deploy or background service. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-23 PR175 D1 OFFLINE signed local inventory + one-use fake gate; NEW SHA review pending
 
 - Parent PR173 independently Mac-approved SHA `3db12aa9a0e91b37a68061312764336620d871df` (`APPROVE_OFFLINE_CODE — D1_SOURCE_HTTPS_FAKE_SCOPE_ONLY`, 420/420 full, 59/59 D1, 145 F0 files, no P0/P1). Parent stays intact.

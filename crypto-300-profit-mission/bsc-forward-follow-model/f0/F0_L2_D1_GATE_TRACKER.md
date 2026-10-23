@@ -78,3 +78,8 @@ G-02: `f0_l2_d1_inventory_gate.offline_inventory_statement` and `verify_test_inv
 G-03...G-06: `consume_then_run_fake_once` composes already approved signed UTC/checkout validation, independent test-only inventory commitment and **injected private disposable** OfflineGrantRegistry marker O_EXCL/fsync before FakeSource; `test_registry_consumes_once_before_memory_https_and_no_retry`, `test_consumed_marker_survives_fake_failure_and_new_output_root`, `test_bad_inputs_do_not_consume_or_start_fake`. **OFFLINE_TEST_ONLY**, not permanent production registry/real grant.
 
 J-01..J-10: parent sealed **memory-only** HTTPS three-slot coordinator + response raw audit unchanged; no live socket/physical provider throughput. M-02/M-03 BLOCKED_REAL_DATA.
+
+
+## PR176 — J-10 genuine OS SIGKILL at three OFFLINE fsync boundaries (Mac review pending)
+
+Module `tests/test_f0_l2_d1_os_crash_survival.py` exercises isolated POSIX child-process SIGKILL after O_EXCL grant marker+dir fsync; after CHAIN `RESERVE_UNKNOWN` journal flush+fsync **before fake send**; and after BLOCK RAW body+dir fsync **before SETTLE**. Parent process verifies 0600 file/0700 directories, raw orphan vs UNKNOWN ID, invalid audit, zero retries and marker spent across output-root changes. Linux GitHub full CI 430/430 PASS. This upgrades J-10 **OS_PROCESS_SIGKILL_FAKE_ONLY**, not power loss and not real TLS provider crash recovery. No parent coordinator, registry or recovery source changed. Mac fixed-SHA independent audit required. See `F0_L2_D1_OS_CRASH_REVIEW.md`.
