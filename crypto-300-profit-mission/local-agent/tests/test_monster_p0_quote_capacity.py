@@ -60,3 +60,51 @@ class CapacityTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FrozenCohortCapacityTests(unittest.TestCase):
+    def _fixture(self):
+        identities = [dict(rank=i, token_ca="0x" + format(i, "040x"),
+                           pool="0x" + format(i+100, "040x"),
+                           quote_asset="0x" + "b"*40)
+                      for i in range(1, 31)]
+        reserve = dict(identities[0], first_confirmed_depth_block=10,
+                       asof_end_block=11,
+                       quote_reserve_raw_at_next_block_end=str(2 * 10**18),
+                       token_reserve_raw_at_next_block_end=str(100 * 10**18),
+                       token_reserve_positive=True)
+        return {
+            "bsc_v2_p0_current_frozen30_p0_gate_matrix_20261020": {"rows": identities},
+            "bsc_v2_p0_all24_next_block_reserve_source_read_20261020": {"rows": [reserve]},
+        }
+
+    def test_identity_preserved_unknowns_never_become_zeros(self):
+        from mission_agent.early.quote_capacity import frozen30_capacity_audit
+        data = self._fixture()
+        got = frozen30_capacity_audit(data, max_total_impact_bps=100)
+        self.assertEqual((got["frozen_population"], got["available_end_block_snapshots"],
+                          got["missing_reserve_snapshots"]), (30, 1, 29))
+        self.assertEqual(got["rows"][0]["capacity_status"], "AMM_MATH_ONLY")
+        self.assertIsNone(got["rows"][1]["max_quote_in_raw_at_snapshot"])
+        self.assertEqual(got["rows"][1]["capacity_status"],
+                         "NOT_SCORABLE_NO_HISTORIC_RESERVES")
+        self.assertFalse(got["p0_gate_passed"])
+        data["future_90d_outcomes"] = {"win": "10x"}
+        self.assertEqual(got, frozen30_capacity_audit(data, max_total_impact_bps=100))
+
+    def test_rejects_unmatched_pool_duplicate_rank_and_wrong_snapshot_block(self):
+        from mission_agent.early.quote_capacity import (
+            QuoteCapacityError, frozen30_capacity_audit)
+        data = self._fixture()
+        data["bsc_v2_p0_all24_next_block_reserve_source_read_20261020"]["rows"][0]["pool"] = "0x"+"f"*40
+        with self.assertRaisesRegex(QuoteCapacityError, "IDENTITY_NOT_FROZEN"):
+            frozen30_capacity_audit(data, max_total_impact_bps=100)
+        data = self._fixture()
+        reserves = data["bsc_v2_p0_all24_next_block_reserve_source_read_20261020"]["rows"]
+        reserves.append(dict(reserves[0]))
+        with self.assertRaisesRegex(QuoteCapacityError, "RANK_DUPLICATE"):
+            frozen30_capacity_audit(data, max_total_impact_bps=100)
+        data = self._fixture()
+        data["bsc_v2_p0_all24_next_block_reserve_source_read_20261020"]["rows"][0]["asof_end_block"] = 9
+        with self.assertRaisesRegex(QuoteCapacityError, "SNAPSHOT_SCOPE"):
+            frozen30_capacity_audit(data, max_total_impact_bps=100)
