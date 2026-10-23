@@ -49,7 +49,7 @@ def _exercise_tls_post_with_mock(request, fake_factory, fake_prepost_guard,
     conn=None
     phase="BEFORE_CONNECT"
     connected_at=None
-    post_started_at=None
+    post_attempted_at=None
     response_completed_at=None
     frame=None
     failure=None
@@ -67,7 +67,8 @@ def _exercise_tls_post_with_mock(request, fake_factory, fake_prepost_guard,
         connected_at=time.monotonic()
         phase="CONNECTED"
         fake_prepost_guard(request)
-        post_started_at=time.monotonic()
+        # This is the CALL-to-request boundary, not a measured wire-byte time.
+        post_attempted_at=time.monotonic()
         phase="POST_ATTEMPTED"
         conn.request("POST","/",body=body,headers={
             "Host":HOST,"Content-Type":"application/json",
@@ -113,13 +114,13 @@ def _exercise_tls_post_with_mock(request, fake_factory, fake_prepost_guard,
         "stage":phase,
         "connect_attempted":phase!="BEFORE_CONNECT",
         "connected_at_monotonic":connected_at,
-        "post_started_at_monotonic":post_started_at,
+        "post_attempted_at_monotonic":post_attempted_at,
         "response_completed_at_monotonic":response_completed_at,
-        "post_started_or_unknown":post_started_at is not None,
+        "post_attempted_or_unknown":post_attempted_at is not None,
         "frame":frame if failure is None else None,
         "retry_allowed":False,
         "live_authorized":False,
-        "actual_rpc_requests_by_test_contract":0,
+        "network_provenance":"UNVERIFIED_INJECTED_FAKE_FACTORY",
         "production":"NO_GO",
     }
 
