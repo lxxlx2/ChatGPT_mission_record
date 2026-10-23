@@ -16,6 +16,7 @@ import threading
 import time
 
 from f0_l1_http_wire import parse_http_response, valid_rpc_payload
+from f0_l2_d1_https import _exchange_with_factory
 from f0_l1_three_slot_offline import _synthetic_hash
 from f0_rpc_adapter import block_candidates, hexb
 
@@ -170,6 +171,66 @@ class FakeSource:
                            separators=(",", ":"), sort_keys=True).encode())
 
 
+class _FakeHTTPSStartDenied(Exception):
+    def __init__(self, state):
+        self.state = state
+
+
+class SealedMemoryHTTPSSource(FakeSource):
+    """Only in-process HTTPS transcript; never a socket or external factory.
+
+    All connection/request/response objects are constructed privately and
+    there are no caller-injected transport callbacks. FakeSource generates
+    the response body only AFTER the global gate authorizes the actual fake
+    HTTP POST. This class has no live-capable counterpart.
+    """
+    def reply_over_memory_https(self, request, begin_fake_post, timeout_s):
+        outer = self
+
+        class MemoryResponse:
+            def __init__(self, frame):
+                self.status, headers, self.data = frame
+                self.headers = list(headers.items())
+            def getheaders(self):
+                return self.headers
+            def read(self, size):
+                return self.data[:size]
+
+        class MemoryConnection:
+            def __init__(self):
+                self.response = None
+                self.closed = False
+            def request(self, method, path, *, body, headers):
+                need(not self.closed and self.response is None and
+                     method == "POST" and path == "/" and
+                     headers.get("Host") ==
+                     "bsc-dataseed.bnbchain.org" and
+                     headers.get("Accept-Encoding") == "identity",
+                     "D1_MEMORY_HTTPS_REQUEST_SCOPE")
+                parsed = json.loads(body)
+                need(parsed == request, "D1_MEMORY_HTTPS_BODY_IDENTITY")
+                # Records the actual fake HTTP POST start (not TLS setup
+                # or a pre-SSL worker entry timestamp).
+                begin_fake_post()
+                self.response = MemoryResponse(FakeSource.reply(outer, parsed))
+            def getresponse(self):
+                need(not self.closed and self.response is not None,
+                     "D1_MEMORY_HTTPS_RESPONSE_NOT_READY")
+                return self.response
+            def close(self):
+                self.closed = True
+
+        def factory(host, *, port, timeout, context):
+            need(host == "bsc-dataseed.bnbchain.org" and port == 443 and
+                 0 < timeout <= 5 and context.check_hostname and
+                 context.verify_mode == __import__("ssl").CERT_REQUIRED,
+                 "D1_MEMORY_HTTPS_ORIGIN_OR_TLS_INVALID")
+            return MemoryConnection()
+        return _exchange_with_factory(
+            request, factory, timeout_s=timeout_s,
+            max_bytes=2_000_000)
+
+
 class GlobalStartGate:
     """One shared lock controls actual fake send start across every worker."""
 
@@ -183,6 +244,43 @@ class GlobalStartGate:
 
     def run(self, request, source, *, block_head_deadline, dispatch_deadline,
             timeout_ms):
+        if type(source) is SealedMemoryHTTPSSource:
+            # Prepare the fake TLS connection before acquiring the global
+            # start lock. Gate the actual in-memory POST, not worker entry.
+            began = [None]
+            def begin_fake_post():
+                with self.lock:
+                    when = time.monotonic()
+                    if self.last is not None and when < self.last + self.gap:
+                        time.sleep(self.last + self.gap - when)
+                    when = time.monotonic()
+                    if when >= dispatch_deadline:
+                        raise _FakeHTTPSStartDenied("PRESTART_WINDOW_EXPIRED")
+                    if (block_head_deadline is not None and
+                            when >= block_head_deadline):
+                        raise _FakeHTTPSStartDenied("PRESTART_STALE_HEAD")
+                    self.last = when
+                    self.starts.append((request["id"], request["method"], when))
+                    began[0] = when
+            try:
+                frame = source.reply_over_memory_https(
+                    request, begin_fake_post, timeout_ms / 1000)
+                completed = time.monotonic()
+                need(began[0] is not None,
+                     "D1_MEMORY_HTTPS_POST_START_UNOBSERVED")
+                if (completed - began[0]) * 1000 > timeout_ms:
+                    return {"state":"FAKE_TIMEOUT_LATE_RESPONSE",
+                            "frame":frame, "start":began[0],
+                            "completed_at":completed}
+                return {"state":"FRAME", "frame":frame,
+                        "start":began[0], "completed_at":completed}
+            except _FakeHTTPSStartDenied as exc:
+                return {"state":exc.state, "frame":None, "start":None,
+                        "completed_at":time.monotonic()}
+            except Exception as exc:
+                return {"state":"EXCEPTION", "frame":None,
+                        "start":began[0], "completed_at":time.monotonic(),
+                        "error":type(exc).__name__}
         with self.lock:
             when = time.monotonic()
             if self.last is not None and when < self.last + self.gap:
@@ -222,7 +320,10 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
     Any invalid input is rejected; concurrent workers cannot allocate IDs,
     modify budgets, write the evidence log, or retry.
     """
-    need(type(source) is FakeSource and type(slots) is int and slots == 3
+    need(type(source) in (FakeSource, SealedMemoryHTTPSSource)
+         and "reply" not in getattr(source, "__dict__", {})
+         and "reply_over_memory_https" not in getattr(source, "__dict__", {})
+         and type(slots) is int and slots == 3
          and type(max_total) is int and 2 <= max_total <= 32
          and type(max_blocks) is int and 1 <= max_blocks <= 24
          and type(max_refreshes) is int and 0 <= max_refreshes <= 6
@@ -295,6 +396,15 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
         pending[fut] = entry
         peak_slots = max(peak_slots, len(pending))
 
+    def record_hard_stop(reason):
+        nonlocal stop
+        # The finite request budget can be reached before responses finish.
+        # A later in-flight 503/bad JSON/chain integrity failure must remain
+        # visible in the final stop reason and performance decision.
+        if stop in (None,"BLOCK_BUDGET","HEAD_BUDGET","TOTAL_BUDGET",
+                    "DISPATCH_TIME_CAP"):
+            stop = reason
+
     def completion(future):
         nonlocal head, head_completed, next_height, next_commit, chain_ok
         nonlocal head_pending, received_full, last_committed_hash, stop
@@ -341,7 +451,7 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
             log.settle(rid,settlement,raw)
         except (OSError,ValueError) as exc:
             # If raw bytes cannot be persisted, do not claim success.
-            stop = stop or "RAW_OR_SETTLEMENT_FSYNC_FAILED"
+            record_hard_stop("RAW_OR_SETTLEMENT_FSYNC_FAILED")
             faults.append({"id":rid,"height":height,
                            "reason":"D1_ARCHIVE_NOT_DURABLE"})
             settles.append({"id":rid,"state":"UNKNOWN",
@@ -351,7 +461,7 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
         if state != "RPC_RESPONSE":
             faults.append({"id":rid, "height":height,
                            "reason":reason, "category":category})
-            stop = stop or "RPC_OR_HEAD_FAULT"
+            record_hard_stop("RPC_OR_HEAD_FAULT")
             if category in ("HEAD","INITIAL_HEAD"):
                 head_pending = False
             return
@@ -384,7 +494,7 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
                              "kind":"CHAIN_INTEGRITY"}
                     faults.append(fault)
                     log.add({"event":"CHAIN_INTEGRITY_FAULT",**fault})
-                    stop = stop or "CHAIN_FAULT"
+                    record_hard_stop("CHAIN_FAULT")
                     break
                 del parsed_blocks[next_commit]
                 log.add({"event":"COMMIT_CONTIGUOUS",
@@ -441,7 +551,9 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
          and number_refreshes <= 6 and peak_slots <=3,
          "D1_SCOPE_LIMIT_EXCEEDED")
     return {
-        "schema":SCHEMA, "mode":"D1_OFFLINE_FAKE_ONLY",
+        "schema":SCHEMA, "mode":("D1_OFFLINE_MEMORY_HTTPS_ONLY"
+                                     if type(source) is SealedMemoryHTTPSSource
+                                     else "D1_OFFLINE_FAKE_ONLY"),
         "network_requests":0, "no_live_sender":True,
         "real_user_grant_active":False,
         "stop":stop,

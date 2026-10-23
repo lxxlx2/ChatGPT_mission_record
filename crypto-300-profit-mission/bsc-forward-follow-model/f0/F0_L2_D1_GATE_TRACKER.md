@@ -57,3 +57,15 @@ J-06 fake only: _exchange_with_factory / test_f0_l2_d1_https.py (7 focused tests
 J-08 offline only: reconcile_saved_attempts / test_duplicate_settle_and_orphan_settle_rejected / test_parent_fault_owner_and_no_cross_gap. Real duplicate packets not tested.
 J-10 offline only: test_crash_preserves_unknown_and_never_auto_retries / test_failed_rpc_settlement_is_not_valid_performance_sample / test_raw_mutation_and_truncated_jsonl_rejected. No OS interruption proof.
 Every new statement requires independent Mac review of new child SHA; previously approved PR170 does not approve child PR171.
+
+## PR173 addendum — source inventory & sealed memory-HTTPS coordinator
+
+G-02: `tracked_f0_source_manifest_offline` enumerates every tracked F0 path; `installed_ed25519_distribution_inventory_offline` checks local cryptography RECORD/file bytes and Python executable checksum. **OFFLINE_INVENTORY_ONLY**: verified wheel-independent trusted SHA, interpreter, stdlib, imported dependency closure and role-attested manifest **NOT DONE**.
+
+J-02/J-04/J-06: `SealedMemoryHTTPSSource.reply_over_memory_https` calls fixed in-memory HTTPS factory; `GlobalStartGate.run` gates the fake POST itself (after fake TLS setup), preserving 250ms shared start spacing and fresh HEAD. `test_f0_l2_d1_http_sealed_integration.py` covers normal, HTTP503, bad JSON, no live sender or mutable callback. Fake transport **PASS pending independent Mac**; actual socket starts **BLOCKED**.
+
+J-08/J-10: hard in-flight failures override earlier budget-only stop labels, and existing recovery audit still checks pre-send reservation, raw-before-settle, original request ID and contiguous commit. No automatic grant retry; real crash proof **BLOCKED**.
+
+G-03/G-04: `run_gated_fake_session` now admits exact sealed fake HTTPS class after ephemeral Ed25519, UTC budget and injected Git checksum checks. Strictly test-only; real identities, actual UTC send-time and trust root **BLOCKED**.
+
+See `F0_L2_D1_SOURCE_HTTPS_GATE.md` for exact tests and claims. Mac approval for PR172 does not transfer to PR173.

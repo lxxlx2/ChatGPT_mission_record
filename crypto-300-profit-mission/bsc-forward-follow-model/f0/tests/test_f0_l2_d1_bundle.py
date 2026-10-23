@@ -11,7 +11,7 @@ import unittest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from f0_l2_d1_bundle import (run_gated_fake_session,
                              validate_offline_bundle)
-from f0_l2_d1_coordinator import FakeSource
+from f0_l2_d1_coordinator import FakeSource,SealedMemoryHTTPSSource
 from f0_l2_d1_grant import approval_message
 
 
@@ -209,6 +209,31 @@ class D1BundleTests(unittest.TestCase):
         self.assertEqual(source.head_count,0)
         self.assertEqual(source.block_count,0)
         self.assertFalse((output/"attempts.jsonl").exists())
+
+    def test_signed_bundle_seals_in_memory_https_to_real_thread_start_gate(self):
+        from unittest.mock import patch
+        raw,proofs=self.signed()
+        evidence=Path(self.tmp.name).absolute()/"https_fake"
+        evidence.mkdir(mode=0o700)
+        source=SealedMemoryHTTPSSource(growth_bps=10.0,delay_ms=15)
+        with patch("http.client.HTTPSConnection",
+                   side_effect=AssertionError("real HTTP prohibited")):
+            report=run_gated_fake_session(
+                source,evidence,permit_raw=raw,expected_sha=self.sha,
+                proofs=proofs,test_only_trust_roots=self.trust,
+                checkout_root=self.repo,reviewed_files=self.manifest,
+                now=self.now)
+        self.assertEqual(report["fake"]["mode"],
+                         "D1_OFFLINE_MEMORY_HTTPS_ONLY")
+        self.assertEqual(report["actual_rpc_requests"],0)
+        self.assertEqual(report["audit"]["audit_status"],
+                         "OFFLINE_ACCOUNTED_NOT_LIVE")
+        self.assertEqual(report["fake"]["contiguous_commits"],3)
+        self.assertGreaterEqual(
+            report["fake"]["min_actual_fake_start_gap_ms"],248.5)
+        self.assertLessEqual(report["fake"]["max_shared_slots"],3)
+        self.assertEqual(report["fake"]["reserved"],
+                         report["fake"]["settled"])
 
     def test_fake_callable_override_is_not_an_approved_source(self):
         raw,proofs=self.signed()

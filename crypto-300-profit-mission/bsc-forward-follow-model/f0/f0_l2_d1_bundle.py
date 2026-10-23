@@ -11,7 +11,8 @@ from datetime import datetime
 import json
 from pathlib import Path
 
-from f0_l2_d1_coordinator import FakeSource, run_fake_concurrent
+from f0_l2_d1_coordinator import (FakeSource, SealedMemoryHTTPSSource,
+                                      run_fake_concurrent)
 from f0_l2_d1_grant import (require_ed25519_backend,
                             validate_approvals_offline)
 from f0_l2_d1_preflight import (validate_window_contract,
@@ -96,8 +97,9 @@ def run_gated_fake_session(source, evidence_root, *, permit_raw,
     No HTTPS connection factory, transport callback, nonce consume or real
     authority can be injected through this function.
     """
-    if (type(source) is not FakeSource or
-            "reply" in getattr(source, "__dict__", {})):
+    if (type(source) not in (FakeSource, SealedMemoryHTTPSSource) or
+            "reply" in getattr(source, "__dict__", {}) or
+            "reply_over_memory_https" in getattr(source, "__dict__", {})):
         raise ValueError("D1_BUNDLE_FAKE_SOURCE_ONLY")
     verified = validate_offline_bundle(
         permit_raw, expected_sha, proofs, test_only_trust_roots,
