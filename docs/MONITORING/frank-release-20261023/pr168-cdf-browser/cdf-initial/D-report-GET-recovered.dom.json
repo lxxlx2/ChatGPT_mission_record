@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:64470/#cluster",
+  "status": "已读取最新保存报告\n报告与本次任务的身份关联仍未独立核实",
+  "statusClass": "cluster-status running",
+  "input": "22222222222222222222222222222222",
+  "summary": "代币\nFIXTURE_A\nQA\nCA\n22222222222222222222222222222222\n复制 CA\n参考价\n不可用\n市值\n暂无\n流动性\n暂无",
+  "reportVisible": true,
+  "recoveryVisible": false,
+  "resumeVisible": false,
+  "resumeText": "重试读取报告",
+  "submitDisabled": false,
+  "pending": null
+}

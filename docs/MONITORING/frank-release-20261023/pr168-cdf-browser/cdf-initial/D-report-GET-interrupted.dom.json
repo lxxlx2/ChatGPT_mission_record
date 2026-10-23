@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:64470/#cluster",
+  "status": "任务已结束，报告读取中断\n可只重试读取已有报告，不会重新扫描",
+  "statusClass": "cluster-status error",
+  "input": "22222222222222222222222222222222",
+  "summary": "",
+  "reportVisible": false,
+  "recoveryVisible": true,
+  "resumeVisible": true,
+  "resumeText": "重试读取报告",
+  "submitDisabled": true,
+  "pending": "{\"id\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"mint\":\"22222222222222222222222222222222\"}"
+}

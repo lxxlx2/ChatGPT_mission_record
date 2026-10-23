@@ -1,0 +1,43 @@
+{
+  "verdict": "MAC_ISOLATED_BROWSER_FAIL",
+  "sourceSHA": "656ed2c96f4210d106d7b1129ec6cf8d7c4586f3",
+  "port": 64470,
+  "platform": "darwin",
+  "results": [
+    {
+      "case": "C",
+      "result": "PASS"
+    },
+    {
+      "case": "D",
+      "result": "PASS"
+    },
+    {
+      "case": "F",
+      "result": "FAIL",
+      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#cluster-read-cached')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" class=\"link-btn\" id=\"cluster-read-cached\">查看已有历史报告</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    58 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+    }
+  ],
+  "safety": {
+    "REAL_RPC": 0,
+    "PRODUCTION_8766_REQUESTS": 0,
+    "REAL_CA_POST": 0,
+    "REAL_NOTIFICATIONS": 0,
+    "REAL_TRADES": 0,
+    "fixtureMockPOSTs": 1,
+    "deniedNonFixtureAttempts": 26
+  },
+  "staticUnchanged": true,
+  "console": {
+    "expectedNetworkErrors": 2,
+    "unexpectedErrors": [],
+    "pageErrors": []
+  },
+  "cleanup": {
+    "browserClosed": true,
+    "fixtureClosed": true,
+    "proxyClosed": true,
+    "temporaryProfileRemoved": true
+  },
+  "endedAt": "2026-10-23T09:49:37.026Z"
+}

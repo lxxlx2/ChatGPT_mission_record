@@ -1,0 +1,212 @@
+[
+  {
+    "kind": "PROXY_DENIED",
+    "method": "GET",
+    "url": "http://clients2.google.com/time/1/current?[background-query-redacted]"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.gstatic.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "accounts.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "update.googleapis.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 1,
+    "at": "2026-10-23T09:49:49.717Z",
+    "ms": 1792748989717,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 2,
+    "at": "2026-10-23T09:49:49.725Z",
+    "ms": 1792748989725,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/static/styles.css",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "seq": 3,
+    "at": "2026-10-23T09:49:49.725Z",
+    "ms": 1792748989725,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/static/app.js",
+    "action": "LOCAL_STATIC"
+  },
+  {
+    "seq": 4,
+    "at": "2026-10-23T09:49:49.731Z",
+    "ms": 1792748989731,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/api/runtime",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 5,
+    "at": "2026-10-23T09:49:49.732Z",
+    "ms": 1792748989732,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/api/control-health",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 6,
+    "at": "2026-10-23T09:49:49.732Z",
+    "ms": 1792748989732,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/api/candidates",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 7,
+    "at": "2026-10-23T09:49:49.732Z",
+    "ms": 1792748989732,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/api/trades",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 8,
+    "at": "2026-10-23T09:49:49.732Z",
+    "ms": 1792748989732,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/api/review-activity",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 9,
+    "at": "2026-10-23T09:49:49.732Z",
+    "ms": 1792748989732,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/api/decisions",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 10,
+    "at": "2026-10-23T09:49:49.732Z",
+    "ms": 1792748989732,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/api/coverage",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 11,
+    "at": "2026-10-23T09:49:49.732Z",
+    "ms": 1792748989732,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/api/frank-observed-watchlist",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 12,
+    "at": "2026-10-23T09:49:49.733Z",
+    "ms": 1792748989733,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/api/frank-signed-activity?days=1",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 13,
+    "at": "2026-10-23T09:49:49.733Z",
+    "ms": 1792748989733,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/api/frank-intelligence",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 14,
+    "at": "2026-10-23T09:49:49.733Z",
+    "ms": 1792748989733,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/api/frank-activity-watch",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 15,
+    "at": "2026-10-23T09:49:49.743Z",
+    "ms": 1792748989743,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/api/cluster-analysis?job_id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "status": 404,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "seq": 16,
+    "at": "2026-10-23T09:49:49.791Z",
+    "ms": 1792748989791,
+    "scene": "F",
+    "method": "GET",
+    "url": "http://127.0.0.1:64577/api/cluster-latest?mint=22222222222222222222222222222222",
+    "status": 200,
+    "action": "FIXTURE_JSON"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "www.google.com:443"
+  },
+  {
+    "kind": "PROXY_CONNECT_DENIED",
+    "url": "update.googleapis.com:443"
+  }
+]

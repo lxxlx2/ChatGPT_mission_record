@@ -1,0 +1,29 @@
+{
+  "verdict": "MAC_ISOLATED_BROWSER_PASS",
+  "sourceSHA": "656ed2c96f4210d106d7b1129ec6cf8d7c4586f3",
+  "cases": {
+    "C": "PASS",
+    "D": "PASS",
+    "F": "PASS"
+  },
+  "ports": [
+    64470,
+    64577,
+    64600
+  ],
+  "staticSHA256BeforeAndAfter": {
+    "index.html": "4cbe85a413569533fa82b0fbcb67e44a5342473cff356980f203327bff771dc5",
+    "app.js": "7892af913b3c252f632164995170072473d8715e1db7b259a0efc8dec0e4ecf6",
+    "styles.css": "c3456b3a0efa23d0c77d03211730ea974c1b5aab44ea68e97c13e2b462dcfabc"
+  },
+  "staticUnchangedAllAttempts": true,
+  "realRPC": 0,
+  "production8766Requests": 0,
+  "realCAPost": 0,
+  "realNotifications": 0,
+  "realTrades": 0,
+  "fixtureOnlyPOST": 1,
+  "unforwardedBackgroundAttempts": 52,
+  "cleanup": "all three browsers, profiles and fixture/proxy listeners closed; lsof ports empty, profile pgrep empty",
+  "gate": "BROWSER_RELEASE_GATE_PASS / DASHBOARD_PRODUCTION_AUTHORIZATION_STILL_REQUIRED"
+}

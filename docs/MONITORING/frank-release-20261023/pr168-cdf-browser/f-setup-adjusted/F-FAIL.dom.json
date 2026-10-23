@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:64577/#cluster",
+  "status": "已读取已有历史报告\n数据时间 2026/10/22 22:40:06 · 覆盖仍不完整 · 与当前任务的关联未经核实",
+  "statusClass": "cluster-status running",
+  "input": "22222222222222222222222222222222",
+  "summary": "代币\nFIXTURE_A\nQA\nCA\n22222222222222222222222222222222\n复制 CA\n参考价\n不可用\n市值\n暂无\n流动性\n暂无",
+  "reportVisible": true,
+  "recoveryVisible": true,
+  "resumeVisible": true,
+  "resumeText": "继续读取原任务",
+  "submitDisabled": false,
+  "pending": "{\"id\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"mint\":\"22222222222222222222222222222222\"}"
+}

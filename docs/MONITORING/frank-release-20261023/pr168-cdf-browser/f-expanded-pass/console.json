@@ -1,0 +1,14 @@
+[
+  {
+    "scene": "F",
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "at": "2026-10-23T09:50:05.601Z"
+  },
+  {
+    "scene": "F",
+    "type": "warning",
+    "text": "CA_JOB_GET_READ_INTERRUPTED {job: aaaaaaaa, at: 2026-10-23T09:50:05.598Z, detail: 原任务当前不存在，可能已随服务重启或清理, failed_get_attempt: 1}",
+    "at": "2026-10-23T09:50:05.601Z"
+  }
+]

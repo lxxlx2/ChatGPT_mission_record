@@ -1,0 +1,35 @@
+{
+  "verdict": "MAC_ISOLATED_BROWSER_FAIL",
+  "sourceSHA": "656ed2c96f4210d106d7b1129ec6cf8d7c4586f3",
+  "port": 64577,
+  "platform": "darwin",
+  "results": [
+    {
+      "case": "F",
+      "result": "FAIL",
+      "error": "The input did not match the regular expression /归一化尚未完成/. Input:\n\n''\n"
+    }
+  ],
+  "safety": {
+    "REAL_RPC": 0,
+    "PRODUCTION_8766_REQUESTS": 0,
+    "REAL_CA_POST": 0,
+    "REAL_NOTIFICATIONS": 0,
+    "REAL_TRADES": 0,
+    "fixtureMockPOSTs": 0,
+    "deniedNonFixtureAttempts": 13
+  },
+  "staticUnchanged": true,
+  "console": {
+    "expectedNetworkErrors": 1,
+    "unexpectedErrors": [],
+    "pageErrors": []
+  },
+  "cleanup": {
+    "browserClosed": true,
+    "fixtureClosed": true,
+    "proxyClosed": true,
+    "temporaryProfileRemoved": true
+  },
+  "endedAt": "2026-10-23T09:49:50.125Z"
+}
