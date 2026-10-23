@@ -1,0 +1,24 @@
+{
+  "schema": "CRYPTO_DAILY_EDITORIAL_CI_RECEIPT_V1",
+  "report_date": "2026-10-23",
+  "manifest_path": "crypto-daily/delivery-pending/2026-10-23.json",
+  "manifest_blob_sha": "863cc047c0e0eb97480098f2022f186389a1a1d8",
+  "rules_blob_sha": "ced4ab6a6c43e8c8050edf1b6a3d7694679e1b66",
+  "editorial_gate_blob_sha": "5761607601d0934bb87c33124e4a9c69676a127c",
+  "git_trigger_commit": "b43aa321597efe8cf759d5b08e20ddd139276ccd",
+  "status": "EDITORIAL_QA_PASS",
+  "validated_at": "2026-10-23T04:48:44.179Z",
+  "metrics": {
+    "blank_sections": 0,
+    "headings": 13,
+    "numbered_items": 38,
+    "highlight_count": 4,
+    "source_lanes": 18,
+    "event_count": 34
+  },
+  "warnings": [
+    "SOURCE_GAP:onchain",
+    "SOURCE_GAP:early_nft"
+  ],
+  "scope_note": "Checks classification, declared original-source receipts, text/metadata consistency, known event versions and minimum market evidence. It does NOT independently confirm external news freshness, all source recall or Gmail delivery."
+}
