@@ -141,7 +141,8 @@ def consume_then_run_fake_once(source, evidence_root, *, permit_raw,
                                expected_sha, proofs, test_only_trust_roots,
                                checkout_root, reviewed_files, now,
                                raw_inventory_statement, inventory_signatures,
-                               offline_test_registry_root):
+                               offline_test_registry_root,
+                               test_only_fake_post_utc_clock=None):
     """Sole sequence: verify all test inputs -> O_EXCL consume -> FAKE only.
 
     This is NOT an implementation of production authorization. Because roots,
@@ -179,7 +180,8 @@ def consume_then_run_fake_once(source, evidence_root, *, permit_raw,
         expected_sha=expected_sha, proofs=proofs,
         test_only_trust_roots=test_only_trust_roots,
         checkout_root=checkout_root, reviewed_files=reviewed_files,
-        now=now)
+        now=now,
+        test_only_fake_post_utc_clock=test_only_fake_post_utc_clock)
     return {
         "mode": "OFFLINE_TEST_ONLY_ONE_USE_FAKE_SESSION",
         "marker": marker,
