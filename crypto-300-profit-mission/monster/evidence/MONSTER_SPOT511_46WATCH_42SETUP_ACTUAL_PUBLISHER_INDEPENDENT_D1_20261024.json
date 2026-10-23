@@ -1,0 +1,348 @@
+{
+  "schema": "MONSTER_SPOT511_REAL3577_46WATCH_OFFICIAL_ZIP_INDEPENDENT_D1_RECOMPUTATION_V1",
+  "research_date": "2026-10-24",
+  "baseline_before_new_work_commit": "d3f7f02c2da7698190f71a11b1a61c1d58d4e8f4",
+  "provenance": {
+    "replay_run": 40028725264,
+    "replay_artifact_id": 12533588861,
+    "replay_artifact_zip_sha256": "aed92adb6ef16d4e39758fcc74588f4ea35159ee78fcc2fad19620e0f7b91973",
+    "replay_json": "paired-partial.json",
+    "replay_json_sha256": "d3aef422dfc6be7c5b04b7935ef6b8b4c456293ee47bfb4ede7f8084f552a18a",
+    "publisher_source_runs": [
+      40027484781,
+      40006012284,
+      40007027318
+    ],
+    "independently_retrieved_original_artifact_day_slices": 27,
+    "independently_verified_unique_symbol_utc_day_zips": 42,
+    "each_original_zip_publisher_checksum_match": true,
+    "each_verified_original_day_continuous_minutes": 1440,
+    "each_verified_original_day_spot_time_unit": "microseconds",
+    "frozen_spot_t0_511_market_snapshot_run": 39073557939,
+    "archive_scope": "only exact actual WATCH symbols/day and one necessary 2026-10-20 prior-day SCUSDT for D1 cross UTC boundary; no new 511-wide source claim",
+    "source_ledger_refs": [
+      "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_20261016_21_ACTUAL3066_PUBLISHER_GITHUB48_ARCHIVES_20261024.json",
+      "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_20261022_FULL511_PUBLISHER_SOURCE_RECONCILIATION_20261024.json"
+    ]
+  },
+  "method": {
+    "first_valid_time_input": "Original runner first_valid_eval_ms anchors each episode. Independent recomputation asserts six required bars truly available and all 44 initial source-valid observations; not a proof of earliest scheduler service in isolation.",
+    "quote_volume": "Decimal sum of five actual closed 1m publisher quoteVolume fields per UTC-aligned 5m bar; no market ticker proxy is upgraded to true contemporaneous REST receipt",
+    "original_d1_frozen_rule": "last 6 fully closed 5m, last3 positive close moves >=2; median(last3 quote volume)/median(first3 quote volume)>=1.5; last_close>=close[2]; latest closed 5m bar AFTER original first_seen_ms; retry at successive 3m replay ticks, no duplicate5m bar evaluation",
+    "setup_timestamp_status": "Independently inferred from archived minute bars within each queue episode's original deadline; each value still requires comparison against actual original SQLite SETUP_ACTIVE event ledger, which was not exported by the old artifact.",
+    "source_verification": "SHA256 original publisher ZIP equals adjacent original .CHECKSUM; CSV exact 1440 1m open+close UTC microsecond grid; all inputs from prior authorized one-time GitHub source artifacts",
+    "category_rule": "Only pre-event publisher-announced tokenized securities are marked OUT_OF_SCOPE. Remaining candidates are NOT formally certified crypto-only.",
+    "historical_available_at": "NOT_PROVEN, posthoc source acquisition",
+    "historical_live_24h_quote_snapshot": "NOT_CAPTURED",
+    "historical_d2_bid_ask_depth_exit_net_pnl": "UNKNOWN"
+  },
+  "actual_replay_anchor": {
+    "watch_episodes": 46,
+    "first_valid_evaluated": 44,
+    "late": 2,
+    "reported_setups": 42
+  },
+  "derived": {
+    "recomputed_setups": 42,
+    "exact_count_match": true,
+    "evaluated_but_no_setup_queue_ids": [
+      34,
+      46
+    ],
+    "late_queue_ids": [
+      12,
+      23
+    ],
+    "reported_first_valid_5m_bar_reproducible_for_all_evaluated": 44,
+    "initial_same_day_only_cross_utc_missing_fixed_with_original_oct20_scusdt": true,
+    "setup_symbols_unique": 32,
+    "raw_setups_by_complete_utc_day": {
+      "2026-10-18": 8,
+      "2026-10-19": 7,
+      "2026-10-20": 7,
+      "2026-10-21": 9,
+      "2026-10-22": 11
+    },
+    "verified_out_of_scope_tokenized_stock_setup_queue_ids": [
+      13,
+      43
+    ],
+    "verified_out_of_scope_tokenized_stock_setup_symbols": [
+      "SHAZBUSDT",
+      "IBMBUSDT"
+    ],
+    "remaining_after_two_verified_stock_setups": 40,
+    "remaining_unique_setup_symbols_after_two_verified_stocks": 30,
+    "remaining_setups_by_utc_day": {
+      "2026-10-18": 8,
+      "2026-10-19": 6,
+      "2026-10-20": 7,
+      "2026-10-21": 9,
+      "2026-10-22": 10
+    },
+    "remaining_mean_per_complete_source_day": 8,
+    "original_frozen_stage77_max_average_setup_per_day": 5,
+    "provisional_attention_noise_issue": true,
+    "remaining_40_all_crypto_only_proven": false,
+    "true_seven_day_g3_status": "NOT_PASSED_NEEDS_COMPLETE_WINDOW_AND_IDENTITY",
+    "setup_rows_legend": [
+      "original_queue_id",
+      "spot_t0_symbol",
+      "independently_recomputed_setup_observed_ms_or_null"
+    ],
+    "setup_rows": [
+      [
+        1,
+        "ERAUSDT",
+        1792307520000
+      ],
+      [
+        2,
+        "AMPUSDT",
+        1792317420000
+      ],
+      [
+        3,
+        "ACMUSDT",
+        1792317960000
+      ],
+      [
+        4,
+        "QKCUSDT",
+        1792330920000
+      ],
+      [
+        5,
+        "BARUSDT",
+        1792333260000
+      ],
+      [
+        6,
+        "QUICKUSDT",
+        1792344420000
+      ],
+      [
+        7,
+        "EPICUSDT",
+        1792348560000
+      ],
+      [
+        8,
+        "MANTRAUSDT",
+        1792360260000
+      ],
+      [
+        9,
+        "AMPUSDT",
+        1792391220000
+      ],
+      [
+        10,
+        "OSMOUSDT",
+        1792398060000
+      ],
+      [
+        11,
+        "NILUSDT",
+        1792411920000
+      ],
+      [
+        12,
+        "MRNABUSDT",
+        null
+      ],
+      [
+        13,
+        "SHAZBUSDT",
+        1792416960000
+      ],
+      [
+        14,
+        "AVAUSDT",
+        1792422900000
+      ],
+      [
+        15,
+        "GTCUSDT",
+        1792425600000
+      ],
+      [
+        16,
+        "GNSUSDT",
+        1792434420000
+      ],
+      [
+        17,
+        "AUSDT",
+        1792460700000
+      ],
+      [
+        18,
+        "ALTUSDT",
+        1792467900000
+      ],
+      [
+        19,
+        "GNSUSDT",
+        1792482120000
+      ],
+      [
+        20,
+        "ERAUSDT",
+        1792487160000
+      ],
+      [
+        21,
+        "IDUSDT",
+        1792493820000
+      ],
+      [
+        22,
+        "COMPUSDT",
+        1792515960000
+      ],
+      [
+        23,
+        "SMCIBUSDT",
+        null
+      ],
+      [
+        24,
+        "IOSTUSDT",
+        1792530360000
+      ],
+      [
+        25,
+        "SCUSDT",
+        1792542600000
+      ],
+      [
+        26,
+        "PARTIUSDT",
+        1792550700000
+      ],
+      [
+        27,
+        "IOSTUSDT",
+        1792552320000
+      ],
+      [
+        28,
+        "IOSTUSDT",
+        1792575720000
+      ],
+      [
+        29,
+        "BMTUSDT",
+        1792576620000
+      ],
+      [
+        30,
+        "REQUSDT",
+        1792579500000
+      ],
+      [
+        31,
+        "ATUSDT",
+        1792583820000
+      ],
+      [
+        32,
+        "VTHOUSDT",
+        1792592460000
+      ],
+      [
+        33,
+        "ALTUSDT",
+        1792599120000
+      ],
+      [
+        34,
+        "IOSTUSDT",
+        null
+      ],
+      [
+        35,
+        "DGBUSDT",
+        1792649160000
+      ],
+      [
+        36,
+        "LUMIAUSDT",
+        1792650960000
+      ],
+      [
+        37,
+        "ATMUSDT",
+        1792655460000
+      ],
+      [
+        38,
+        "BMTUSDT",
+        1792656720000
+      ],
+      [
+        39,
+        "MASKUSDT",
+        1792664460000
+      ],
+      [
+        40,
+        "AIUSDT",
+        1792665000000
+      ],
+      [
+        41,
+        "MITOUSDT",
+        1792666620000
+      ],
+      [
+        42,
+        "AVAUSDT",
+        1792671120000
+      ],
+      [
+        43,
+        "IBMBUSDT",
+        1792676160000
+      ],
+      [
+        44,
+        "OSMOUSDT",
+        1792686060000
+      ],
+      [
+        45,
+        "BMTUSDT",
+        1792693620000
+      ],
+      [
+        46,
+        "BEBUSDT",
+        null
+      ]
+    ]
+  },
+  "caveats": [
+    "Original source replay had 921 source-censored future 3m ticks; do not score as negative or fill 0.",
+    "Source later published: quote24 is minute-derived ticker proxy, not the REST response available at historical tick.",
+    "No new full 511 unified SQLite paired replay was run; these are fixed-original FIFO queue episode local re-evaluations.",
+    "42 predicted setup time anchors need event-by-event match with future original-core SQLite FIFO/Fair8 event inventory; count agreement alone does not prove exact event timestamp agreement.",
+    "Original daily 1m source integrity is not historical asset listing lifecycle identity or L2 execution proof; user order notional remains UNKNOWN.",
+    "Stage77 G1 requires independent >=20 2x and >=3 separated windows; no G1/G4/G6 upgrade."
+  ],
+  "release": {
+    "G0": "PARTIAL",
+    "G1": "NOT_SCORABLE",
+    "G2": "NOT_PASSED",
+    "G3": "NOT_PASSED",
+    "G4": "UNKNOWN",
+    "G6": "NO_GO",
+    "NO_MERGE": true,
+    "NO_DEPLOY": true,
+    "NO_PAID": true,
+    "NO_AUTOMATIONS": true,
+    "NO_GMAIL": true,
+    "NO_TRADES": true
+  }
+}
