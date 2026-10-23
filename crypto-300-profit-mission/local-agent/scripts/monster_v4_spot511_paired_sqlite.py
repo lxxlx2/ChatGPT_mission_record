@@ -259,6 +259,33 @@ def paired_replay(index_path, *, lane_dir=None, allow_synthetic_cohort=False):
                 raise RuntimeError('PAIR_D0_WATCH_EVENT_OR_TIMESTAMP_DRIFT')
             a=events(lanes['FIFO8'],'SETUP_ACTIVE')
             b=events(lanes['FAIR8'],'SETUP_ACTIVE')
+            def d0_baseline_lag_audit(db):
+                # Original D0 permits up to 10m between observed snapshots.
+                # A 3m-classified WATCH after a gap may actually use a 6m or
+                # 9m baseline. Keep original signal logic unchanged, but do
+                # not misreport such events as strict 3m momentum discovery.
+                three_min_events = []
+                lagged_ids = []
+                for eid, raw in db.execute(
+                        "SELECT event_id,payload FROM events "
+                        "WHERE event_type='WATCH_EARLY' ORDER BY observed_ms,event_id"):
+                    p = json.loads(raw)
+                    if p.get('research_window_ms') != TICK_MS:
+                        continue
+                    three_min_events.append(eid)
+                    lag = p.get('snapshot_lag_ms')
+                    if type(lag) is not int or lag != TICK_MS:
+                        lagged_ids.append(eid)
+                return {
+                    'watch_chosen_3m_research_window': len(three_min_events),
+                    'watch_chosen_3m_but_actual_baseline_not_3m': len(lagged_ids),
+                    'lagged_event_ids': lagged_ids,
+                    'strict_3m_event_count': len(three_min_events)-len(lagged_ids),
+                }
+            fifo_lag = d0_baseline_lag_audit(lanes['FIFO8'])
+            fair_lag = d0_baseline_lag_audit(lanes['FAIR8'])
+            if fifo_lag != fair_lag:
+                raise RuntimeError('PAIR_SAME_D0_BASELINE_LAG_AUDIT_DRIFT')
             def status_counts(db):
                 return dict(db.execute('SELECT status,COUNT(*) FROM candidate_queue GROUP BY status'))
             def service_trace(name,db):
@@ -315,6 +342,9 @@ def paired_replay(index_path, *, lane_dir=None, allow_synthetic_cohort=False):
                 'fair8_first_service':service_summary(fair_trace),
                 'fifo_episodes':fifo_trace,'fair8_episodes':fair_trace,
                 'same_d0_watch_id_and_time':aw==bw,'d0_watch_count':len(aw),
+                'd0_watch_3m_baseline_audit':fifo_lag,
+                'watch_with_lagged_baseline_not_strict_3m':fifo_lag[
+                    'watch_chosen_3m_but_actual_baseline_not_3m'],
                 'fifo_setups':len(a),'fair8_setups':len(b),
                 'lost_setup_ids':sorted(a.keys()-b.keys()),
                 'new_setup_ids':sorted(b.keys()-a.keys()),
