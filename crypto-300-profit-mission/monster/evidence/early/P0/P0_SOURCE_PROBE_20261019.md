@@ -1,3 +1,45 @@
+## 2026-10-23：P0历史来源完整性审计及免费V3扫描预算决策（NO_SCAN）
+
+固定基线：PR #30 OPEN/Draft，审计前HEAD `ddacb786e843c0e3d8bf4d3d4d9cd2629de121e6`；本次只对现有原证据JSON blob `978f437788689eef265b47511fa963490c3e9c96`做来源可达性、完整覆盖、时钟与计算资源分类，**没有重新扫描历史V2买卖、未触碰已有30例身份或538个Four.meme索引，也未变更前向批准范围**。
+
+### 1. 真实已得证据与真正欠缺
+
+| 预冻结来源 | 已有真实性与采样范围 | 尚缺什么（严禁自动PASS） | 本轮结论 |
+| --- | --- | --- | --- |
+| Pancake V2 Factory | 2025-07-01 UTC 首30对CA/Pair；29笔准确部署receipt、24份独立完整区块后合格储备、22笔独立后真实买入、18个合格池实际卖出；2026-10-23 Mac唯一已授权一次性前向短窗口12次RPC且Pair计数0增长 | 历史2025 contemporaneous `available_at`与完整BSC多场所分母、同统一预冻结研究名义额完整双向净执行 | `V2_HISTORICAL_SCOPED_ONLY`，PIT `NOT_SCORABLE` |
+| Pancake V3 Factory | **预登记三日、各首10块**（2025-05-01、07-01、09-01）Alchemy `eth_getLogs` 3/3响应成功，其中仅五月窗口有1个`PoolCreated`，明确与历史receipt及getPool交叉；2025-07-01第一窗口事件0 | 三日**其余区块全覆盖**、所有V3原事件无漏分母、统一集中流动性真实in-range报价与买卖能力、当年真实可见回执 | `BOUNDED_10_BLOCK_WINDOWS_ONLY`，`FULL_DAY_NOT_COVERED`；不能把7月首10块0推成全日0 |
+| Four.meme TokenManager2 | 2025-07-01合约索引差为538，后续Multicall3逐个读出538/538唯一非零Token地址，及538份**日末**TokenInfo储存状态；3个真实创建事件锚点；日末已迁池的5个另有局部Mint/Swap实证 | 每一TokenCreate确切事件的**原始全日日志覆盖**、creation时点真实接收、曲线实时准入、税费与全币种可卖能力 | `538_INDEXED_END_DAY_STATE_COMPLETE_IN_SCOPE`，`CREATE_EVENT_COVERAGE_UNVERIFIED`；不能用迁池5例作无偏总体 |
+| 现有第二供应商 | The Graph V3用户Mac受限首次查询此前实得`HTTP_403`；OnFinality 2025历史2000与10区块`eth_getLogs`此前均`HTTP_429`；公共BSC RPC官方列出endpoint明确禁用logs | 可合法免费导出、完整且可重放的独立BSC历史原生事件/索引 | `SECOND_SOURCE_NOT_QUALIFIED` |
+
+**本轮独立连接器试验（不涉及付费）**：既有Blockscout MCP连接初始化后，对预冻结五月V3阳性锚点tx `0xdc17cf044b461178d0ba629239e9935c3a9c9d941e88848fab9c654479d7c2a4`调用只读`get_transaction_info(chain_id=56)`，服务明确响应`Chain ID '56' is not supported by the Blockscout API`；其`get_chains_list(query='BNB')`仅返回Matchain (Chain 698)，不包含BSC。**只证明此时此连接方式不可读取BSC，不能外推为Blockscout网站或所有索引永远不支持BSC。**其当前服务提示2026-10-08起要求PRO授权；没有添加/购买密钥、没有尝试绕过限额、没有转入其他计费计划。官方文档：https://mcp.blockscout.com/ 。
+
+### 2. 免费V3单日完整扫描的可量化最低成本与防误判
+
+原冻结2025-07-01 UTC链高度`52440287..52555482`（含两端115196块），Alchemy官方现行**BNB Free eth_getLogs 每次至多10块、每调用60CU**。仅扫描一个固定V3 Factory `PoolCreated` topic、**不计**首末区块校验、重复/失败重试、Pair状态、V3 ticks/Swap、Four.meme或其它场所，最低需要：
+
+- `ceil(115196/10)=11520`次日志查询；
+- `11520×60=691200 CU`；这占供应商公开Free每月30M额度的约2.304%，**不是现有用户实际订阅、剩余额度、月账单或成功率确认**；
+- 官网当前标示单应用最多500CU/秒，则仅这些请求的纯吞吐数学下界为`691200/500=1382.4秒`，约23.04分钟，未计任何网络等待、退避/429、归档、跨源校验；原每扫描日≤30分钟只是性能目标，无法预先声称通过。
+
+当前官方来源（2026-10-23已读）：
+- https://www.alchemy.com/docs/chains/bnb-smart-chain/bnb-smart-chain-api-endpoints/eth-get-logs
+- https://support.alchemy.com/articles/5827006872-what-is-included-in-the-free-tier
+- https://docs.bnbchain.org/bnb-smart-chain/developers/json_rpc/json-rpc-endpoint/
+- https://thegraph.com/docs/en/subgraphs/querying/introduction/ 需有效API key，已有用户Mac授权受限查询返回403，其根因尚未被实际证明。
+- https://mcp.blockscout.com/ 当前连接接口Chain 56不支持，不能作独立BSC交叉源。
+
+结论并非“历史V3扫描在金额上不可能”，而是**仅证明标称CU量低于供应商宣传月度Free总额**，不证明旧块的完整响应、全局来源一致性和原始HTTP归档；更重要的是，2026年今日回读2025年事件**无法补造2025年当时的公众收包时间**。若预期输出仍是原合同24/30 `PIT_VERIFIED`，批量读取11,520个窗口不能独自清除PIT障碍。避免为了表面“扩数据规模”去消耗请求配额后仍无法过门。
+
+### 3. 原路线与具体执行决定
+
+**本轮决定`NO_BULK_V3_SCAN`、`NO_GRAPH_RETRY`、`NO_PROVIDER_CHURN`**。它们是基于未解的PIT与账户访问缺口暂缓大规模无价值调用，**不是判定V3永远不存在免费源，更不是用户拒绝未来前向方案**。不新增Stage脚本、隐藏定时、用户Mac读/后台持续读取或新API账号；没有读取私人API key。沿架构合同三步回答：
+
+1. **来源与时钟**：BSC V2仅限历史冻结样本; V3限三个真实10块窗口; Four.meme限538个日末索引状态。每个场所独立`SOURCE_SCOPE`和`PIT_STATUS`，不能拼成“全BSC高覆盖率”。历史真实`available_at=UNKNOWN`仍必须fail closed；采用未来冻结延迟时也只能标`PIT_RECONSTRUCTED_ONLY`。
+2. **真实双向交易**：已证实际历史部分买卖；统一研究金额、税、V3区间流动性、曲线与卖单保护均欠缺，不给缺失样本赋0盈利/0成本；不要从上述5个已毕业Four.meme池或V2七组回售得出策略信号。
+3. **停损与后续**：原2026-11-02历史P0源止损时间保持；截止前仅在有**新的、可实际验证**的合法免费完整事件源或历史收包档案时重新评估历史方向。若无则按架构停止历史P0，`P1 BLOCKED/G6 NO_GO`，未来若用户**另行明确授权**前向观察的执行环境、时间、配额、存储与成本，可独立评估ADR-003的D1来源覆盖试验；**不得用前向结果倒签2025的历史PIT PASS**。
+
+权限/审查：本轮仅Git合同内既有P0 MD追加、既有远端数据与只读供应商能力确认，无真实交易、部署/调度、邮件、Mac进程、付费源、全面历史扫描。未执行新增Python单测/全仓CI/独立Review，本次不声称Phase门禁提升。维持`P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO`。
+
 ## 2026-10-23：七组已冻结历史同接收地址买卖的真实链上回执再次核验
 
 固定证据来源：既有P0机器JSON Git blob `978f437788689eef265b47511fa963490c3e9c96`，只使用原冻结2025-07-01 UTC BSC V2 **30个CA**中早先找到的#3/#7/#12/#13/#21/#23/#30，不增删样本、不按胜者筛选新母体。本轮重新通过**用户既有Alchemy BNB mainnet app**只读取得上述七组买入、卖出的14份真实`eth_getTransactionReceipt`规范化响应，核对成功status、同一代币的Transfer方向与数量、Pair的Swap方向及数量、先买后卖的区块顺序。实际**14/14 receipt成功、14/14 Swap与Token Transfer对应、7/7买入后同一接收地址向同一池卖回精确相同Token原始数量**。原先来源包含单供应商规范化结果；**本次只是再读相同Alchemy供应商，不是跨节点独立证明，不保存原始完整HTTP响应或2025年实时观察回执。**
