@@ -149,3 +149,13 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 当前本机/云端会话没有取得完整的**真实511个交易对9日官方ZIP/CHECKSUM**，因此**未执行511币新前瞻窗口完整同源FIFO/Fair8回放，不存在正式新增SETUP数或模型获利实测**。当前代码先补的是从数据源→D0→原SQLite D1服务调度→A/B准确对账的可复用基础，而不是许诺实际净收益。
 
 **下一主线**：先在真实Git完整工作区运行新7项用**原`monster_v4_shadow.py`与Stage162源**的集成回归，核对Git CI与固定SHA的审查；之后按官方实际发布状况做有界批次511历史源准入、运行统一SQLite数据回放，列出失败分母与新SETUP（未来源则不能得出模型劣/优结论）。若没有新真实输入，不再反复迭代旧445的Fair8优先级，也不在Mac安装常驻任务。G0 PARTIAL / G1 NOT_SCORABLE / G2-G3 NOT_PASSED / G4 UNKNOWN / G6 NO_GO；NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADES / NO_AUTOMATIONS。
+
+## 13. 2026-10-23：修复全局回放的部分行情漏报（保留健康币WATCH）
+
+**实际影响D0产品目标的修复，不调整策略阈值**。第12节原版 `monster_v4_spot511_paired_sqlite.py` 对同一个3m tick内“只有510/511来源可用”的情况，直接跳过所有symbol的`observe_snapshot`，仅标`SOURCE_DEGRADED`。这样尽管数据覆盖声明保守，却错误地令另510个有效数据symbol在该tick完全没有检测WATCH，与原生产`monster_v4_shadow.scan_once`面对部分行情仍分析有效币、另行保留source degraded告警的语义不一致，构成重要漏报风险。
+
+本轮Git修复：`a8c38078daedb48a50bdc0f1f0cae9bbff5d7865`（源码Blob `e5d09b68b4667aaae4c6b6227de1b58593678c9f`），**只在非空来源时将当tick可用全部symbol交给原`production.observe_snapshot`**；严格保留`full_d0_ticks`（511/511时）、`censored_d0_ticks`（低于全人口时）、新增`partial_d0_ticks_scanned`（有部分行情实际仍扫描）、`zero_source_ticks`、`source_ready_symbol_ticks`、`source_censored_symbol_ticks`，并对不完整当轮原样记录 `REPLAY_PARTIAL_SPOT_POPULATION:x/511` 源故障，不把部分覆盖包装成正式G0 PASS。若完全没有价格源，继续不调用`observe_snapshot`，绝不伪造零WATCH。前一个币恢复后仅依据生产引擎有效既往基线触发；不要自动生成此前丢失tick的真实时点WATCH。
+
+新增回归测试 `test_partial_on_watch_burst_keeps_healthy_symbol`（测试Blob `f2b1531452f04ef12bf66b1f57bcff8956d78fa5`，commit `2e66deea3a6161c344db7bd53438364881926d82`）：在双symbol合成行情中`t=1`时ETH源缺失、BTC正常涨价，冻结同时间轴在隔离两队列各自验证BTC WATCH在`t=1`按时出现，而ETH恢复后在`t=2`单独触发。两队列的WATCH事件身份和时间严格一致。**Linux Python 3.13.5，编排测试使用标明TEST-ONLY的D0/D1及Stage162接口模拟模块，8/8 PASS（29.09s）；Git blob读回与该实际测试的本地源码、测试文件逐字节一致。** 该证据确认的是编排部分行情路径的反例修复，不应称为完整原`monster_v4_shadow.py`集成PASS或Stage162独立外审通过；GitHub原仓库CI仍需取得run+job日志才可确认。
+
+**下一步**：在真实GitHub runner完整依赖下运行新版8项测试和原`test_monster_v4_shadow.py`回归，重点核对部分覆盖时真实原`observe_snapshot`的失败/去重和原`process_queue`的`SETUP`数量，再尝试有界取得真实Publisher ZIP作完整前向样本。若CI运行反例与模拟不同，先修实际不一致，不能提前签发批准。正式状态G0 PARTIAL/G1 NOT_SCORABLE/G4 UNKNOWN/G6 NO_GO、NO_DEPLOY/NO_TRADES/NO_GMAIL/NO_AUTOMATIONS不变。
