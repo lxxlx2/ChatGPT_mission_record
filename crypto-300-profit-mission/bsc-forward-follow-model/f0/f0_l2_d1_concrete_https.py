@@ -10,11 +10,13 @@ runtime, audited identity, permanently consumed grant and global scheduler.
 from __future__ import annotations
 
 import hashlib
+import json
 import http.client
 import ssl
 import time
 
-from f0_l1_http_wire import MAX_BODY_BYTES, json_body, parse_http_response
+from f0_l1_http_wire import MAX_BODY_BYTES, json_body, parse_http_response, valid_rpc_payload
+from f0_l2_d1_coordinator import FakeSource
 from f0_l2_d1_https import HOST, PORT
 
 MAX_REQUEST_BYTES = 2000
@@ -29,7 +31,8 @@ def send_live(*_args, **_kwargs):
 
 def _review_concrete_https_once(request, *, final_post_guard,
                                 _test_capability=None, timeout_s=5.0,
-                                max_bytes=MAX_BODY_BYTES):
+                                max_bytes=MAX_BODY_BYTES,
+                                _sealed_offline_factory=None):
     """Review concrete connection lifecycle with constructor PATCHED in tests.
 
     This PRIVATE primitive, like any low-level network library, is callable by
@@ -43,6 +46,9 @@ def _review_concrete_https_once(request, *, final_post_guard,
     """
     if _test_capability is not _REVIEW_TEST_ONLY_CAPABILITY:
         raise ValueError("D1_CONCRETE_HTTP_REVIEW_CAPABILITY_REQUIRED")
+    if (_sealed_offline_factory is not None and
+            type(_sealed_offline_factory) is not _SealedMemoryTLSFactory):
+        raise ValueError("D1_CONCRETE_HTTP_UNREVIEWED_FACTORY")
     if (not callable(final_post_guard) or
             type(timeout_s) not in (int, float) or isinstance(timeout_s, bool) or
             not 0 < timeout_s <= 5 or type(max_bytes) is not int or
@@ -68,8 +74,9 @@ def _review_concrete_https_once(request, *, final_post_guard,
     try:
         # The ONLY concrete constructor. No URL, arbitrary host, proxy,
         # tunnel, credential, environment-based routing or HTTP redirect.
-        conn = http.client.HTTPSConnection(
-            HOST, port=PORT, timeout=float(timeout_s), context=context)
+        ctor = (http.client.HTTPSConnection if _sealed_offline_factory is None
+                else _sealed_offline_factory)
+        conn = ctor(HOST, port=PORT, timeout=float(timeout_s), context=context)
         phase = "CONNECT_ATTEMPTED"
         connect_attempted_at = time.monotonic()
         conn.connect()
@@ -155,3 +162,86 @@ def _parse_review_frame_offline(result, request):
             "D1_CONCRETE_SOURCE_CODE_OFFLINE_REVIEW_ONLY"):
         raise ValueError("D1_CONCRETE_HTTP_NOT_SUCCESSFUL_FRAME")
     return parse_http_response(*result["raw_frame"], request)
+
+
+class _SealedMemoryTLSFactory:
+    """Exact private constructor; no transport callbacks or real sockets."""
+    def __init__(self, source):
+        if type(source) is not SealedConcreteOfflineSource:
+            raise ValueError("D1_REVIEWED_TLS_NOT_SEALED_SOURCE")
+        self.source = source
+
+    def __call__(self, host, *, port, timeout, context):
+        if (host != HOST or port != PORT or not 0 < timeout <= 5 or
+                not context.check_hostname or
+                context.verify_mode != ssl.CERT_REQUIRED):
+            raise ValueError("D1_REVIEWED_TLS_DESTINATION_MISMATCH")
+        source = self.source
+
+        class MemoryResponse:
+            def __init__(self, frame):
+                self.status, hdr, self.body = frame
+                self.headers = list(hdr.items())
+            def getheaders(self):
+                return self.headers
+            def read(self, size):
+                return self.body[:size]
+
+        class MemoryTLSConnection:
+            def __init__(self):
+                self.sock = None
+                self.frame = None
+                self.closed = False
+            def connect(self):
+                if self.closed:
+                    raise ValueError("D1_REVIEWED_TLS_CLOSED")
+                self.sock = object()
+            def request(self, method, path, *, body, headers):
+                if (self.closed or self.sock is None or self.frame is not None
+                        or method != "POST" or path != "/"
+                        or headers.get("Host") != HOST
+                        or headers.get("Accept-Encoding") != "identity"):
+                    raise ValueError("D1_REVIEWED_TLS_REQUEST_SCOPE")
+                rpc = json.loads(body)
+                valid_rpc_payload(rpc)
+                # Call the SAME request bytes only after shared gate permits.
+                self.frame = MemoryResponse(FakeSource.reply(source, rpc))
+            def getresponse(self):
+                if self.frame is None or self.closed:
+                    raise ValueError("D1_REVIEWED_TLS_RESPONSE_MISSING")
+                return self.frame
+            def close(self):
+                self.closed = True
+                self.sock = None
+
+        return MemoryTLSConnection()
+
+
+class SealedConcreteOfflineSource(FakeSource):
+    """Fixed HTTPSConnection CODE path with an unchangeable memory-only socket.
+
+    This source is allowed into the approved three-slot fake coordinator. It
+    does NOT attach live HTTPS or permit the caller to inject a transport.
+    """
+    def reply_over_memory_https(self, request, begin_fake_post, timeout_s):
+        if type(self) is not SealedConcreteOfflineSource:
+            raise ValueError("D1_REVIEWED_TLS_SOURCE_NOT_EXACT")
+        denial = [None]
+        def final_guard(validated_request):
+            if validated_request != request:
+                raise ValueError("D1_REVIEWED_TLS_REQUEST_CHANGED")
+            try:
+                begin_fake_post()
+            except Exception as exc:
+                denial[0] = exc
+                raise
+        result = _review_concrete_https_once(
+            request, final_post_guard=final_guard,
+            _test_capability=_REVIEW_TEST_ONLY_CAPABILITY,
+            timeout_s=timeout_s, max_bytes=MAX_BODY_BYTES,
+            _sealed_offline_factory=_SealedMemoryTLSFactory(self))
+        if denial[0] is not None:
+            raise denial[0]
+        if result["state"] != "RAW" or result["raw_frame"] is None:
+            raise ValueError("D1_REVIEWED_TLS_FAILED_NO_AUTO_RETRY")
+        return result["raw_frame"]
