@@ -146,6 +146,14 @@ class D2IngressTests(unittest.TestCase):
         with self.assertRaisesRegex(D2IngressError,"D2_MINT_ACCOUNT_AGGREGATES_INVALID"):
             validate_d2_document(doc)
 
+    def test_noncanonical_zero_string_fails_closed_even_with_new_digest(self):
+        doc=deepcopy(self.doc)
+        zero=next(r for r in doc["mints"] if r["raw_amount"] == "0")
+        zero["raw_amount"]="00"
+        doc["document_sha256"]=_digest(doc)
+        with self.assertRaisesRegex(D2IngressError,"D2_MINT_QUANTITY_INVALID"):
+            validate_d2_document(doc)
+
     def test_duplicate_mint_with_recalculated_checksum_rejected(self):
         doc=deepcopy(self.doc)
         doc["mints"].append(deepcopy(doc["mints"][0]))
