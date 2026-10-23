@@ -1099,16 +1099,35 @@ const clusterEdgeLabel = {
 };
 
 let clusterLastAutoLoaded=false;
+const CLUSTER_PENDING_KEY = 'mission-meme-cluster-pending-v1';
+const CLUSTER_GET_MAX_RETRIES = 3;
+let clusterPollTimer = null;
+let clusterActiveJob = null;
+let clusterPollVersion = 0;
+let clusterReportLoadError = 'GET';
 
-async function loadLatestCluster(mint, silent=false) {
+async function loadLatestCluster(mint, silent=false, expectedVersion=clusterPollVersion, expectedJob=clusterActiveJob?.id||null) {
   if (!mint) return false;
+  const inputBefore=$('cluster-mint').value.trim();
+  let report;
   try {
-    const report=await get('/api/cluster-latest?mint=' + encodeURIComponent(mint));
-    $('cluster-mint').value=mint;
+    report=await get('/api/cluster-latest?mint=' + encodeURIComponent(mint));
+  } catch (_) {
+    if (clusterPollVersion===expectedVersion) clusterReportLoadError='GET';
+    return false;
+  }
+  if (clusterPollVersion!==expectedVersion ||
+      (clusterActiveJob?.id||null)!==expectedJob ||
+      (clusterActiveJob && clusterActiveJob.mint!==mint) ||
+      $('cluster-mint').value.trim()!==inputBefore ||
+      report?.mint!==mint) return false;
+  try {
     renderClusterReport(report);
     if (!silent) showToast('已加载上次查询结果');
     return true;
-  } catch (_) {
+  } catch (e) {
+    clusterReportLoadError='RENDER';
+    console.error('CA_REPORT_RENDER_FAILED', {kind:String(e?.name||'Error')});
     return false;
   }
 }
@@ -1126,7 +1145,12 @@ function setView(name) {
   if (view==='cluster' && !clusterLastAutoLoaded) {
     clusterLastAutoLoaded=true;
     const mint=localStorage.getItem('mission-meme-last-cluster-ca') || '';
-    if (mint) loadLatestCluster(mint,true);
+    // Pending session restoration takes precedence over a different last-CA cache.
+    let pending=null;
+    try { pending=JSON.parse(sessionStorage.getItem(CLUSTER_PENDING_KEY)||'null'); } catch (_) {}
+    const validPending=pending && /^[0-9a-f]{32}$/.test(pending.id) &&
+      /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(pending.mint);
+    if (mint && !validPending) loadLatestCluster(mint,true);
   }
 }
 
@@ -1469,7 +1493,6 @@ function renderClusterReport(report) {
   const renderConcentration = key =>
     '<div class="cluster-metric"><span>' + esc(clusterMetricLabel[key] || key) + '</span><strong>' +
     clusterMetricValue(metrics[key]) + '</strong></div>';
-  caScheduleQuoteExpiry(quote, 'cluster-final-quote');
   $('cluster-metrics').innerHTML = primary.map(renderConcentration).join('') +
     '<details class="cluster-extra-metrics"><summary>查看其余集中度指标</summary><div class="cluster-metrics-extra">' +
     extra.map(renderConcentration).join('') + '</div></details>';
@@ -1532,49 +1555,202 @@ function renderClusterReport(report) {
     '<p>目前仅展示市场资料附带的链接；不抓取实时官方帖子，也不提供官方认领或叙事打分。</p></div>' +
     '<div class="narrative-links">' + (websites || socials ? websites + socials : '<span class="muted">当前市场资料没有可展示的官网/社交链接</span>') + '</div>';
 
-  clusterStatus('done','分析已更新', '数据时间 ' + observedAge + (rpcFailures ? ' · 有部分链上请求失败，详情见证据' : ''));
+  clusterStatus(strictComplete ? 'done' : 'running',strictComplete ? '报告已读取' : '报告已读取，持有人归一化尚未完成', '数据时间 ' + observedAge + (rpcFailures ? ' · 有部分链上请求失败，详情见证据' : ''));
 }
 
 
 $('watch-filter').addEventListener('change', () => renderFrankWatchlist(walletWatchData));
 $('watch-search').addEventListener('input', () => renderFrankWatchlist(walletWatchData));
 
-let clusterPollTimer = null;
 
-async function pollClusterJob(jobId) {
+function clusterShowRecovery(show) {
+  $('cluster-recovery').hidden = !show;
+  // A failed POST without an acknowledged job can show existing cache,
+  // but must never offer a no-op "resume original task" button.
+  $('cluster-resume-get').hidden = !show || !clusterActiveJob;
+}
+
+function clusterSetJob(jobId,mint) {
   clearTimeout(clusterPollTimer);
+  clusterPollVersion += 1;
+  clusterActiveJob = {id:jobId,mint};
+  try { sessionStorage.setItem(CLUSTER_PENDING_KEY,JSON.stringify(clusterActiveJob)); } catch (_) {}
+  clusterShowRecovery(false);
+}
+
+function clusterFinishJob() {
+  clearTimeout(clusterPollTimer);
+  clusterPollVersion += 1;
+  clusterActiveJob = null;
+  try { sessionStorage.removeItem(CLUSTER_PENDING_KEY); } catch (_) {}
+  clusterShowRecovery(false);
+}
+
+function clusterGetErrorReason(error) {
+  const message=String(error?.message || '');
+  if (message.includes(' 404')) return '原任务当前不存在，可能已随服务重启或清理';
+  if (message.includes(' 4') || message.includes(' 5')) return '本地服务返回错误，请检查任务状态';
+  if (message==='CLUSTER_JOB_IDENTITY_MISMATCH') return '任务编号或代币与已提交任务不一致';
+  return '读取本地服务时连接中断，不代表分析任务失败';
+}
+
+async function pollClusterJob(jobId, failures=0) {
+  clearTimeout(clusterPollTimer);
+  if (clusterActiveJob?.id!==jobId) return;
+  const version=clusterPollVersion;
   try {
-    const job = await get('/api/cluster-analysis?job_id=' + encodeURIComponent(jobId));
-    if (job.status === 'DONE') {
-      $('cluster-submit').disabled = false;
-      $('cluster-submit').textContent = '重新查询';
-      localStorage.setItem('mission-meme-last-cluster-ca',job.mint);
-      const loaded=await loadLatestCluster(job.mint,true);
-      if (!loaded) clusterStatus('error','查询已完成，但结果文件读取失败');
+    const job=await get('/api/cluster-analysis?job_id='+encodeURIComponent(jobId));
+    if (clusterPollVersion!==version) return;
+    if (job.job_id!==jobId || job.mint!==clusterActiveJob.mint) {
+      throw new Error('CLUSTER_JOB_IDENTITY_MISMATCH');
+    }
+    if (job.status==='DONE') {
+      // Retain the exact identity until a matching report GET succeeds.
+      // A failure must not force the user to submit another expensive POST.
+      clusterActiveJob.status='DONE';
+      const mint=clusterActiveJob.mint;
+      $('cluster-submit').disabled=true;
+      clusterShowRecovery(true);
+      $('cluster-resume-get').textContent='重试读取报告';
+      const loaded=await loadLatestCluster(mint,true,version,jobId);
+      if (clusterPollVersion!==version || clusterActiveJob?.id!==jobId) return;
+      if (!loaded) {
+        clusterStatus('error',clusterReportLoadError==='RENDER'?'任务已结束，报告显示失败':'任务已结束，报告读取中断',
+          clusterReportLoadError==='RENDER'?'报告已经收到，但页面显示异常，请保留此任务并检查浏览器错误':'可只重试读取已有报告，不会重新扫描');
+      } else {
+        clusterFinishJob();
+        $('cluster-submit').disabled=false;
+        $('cluster-submit').textContent='重新查询';
+        localStorage.setItem('mission-meme-last-cluster-ca',mint);
+        // latest.json is keyed by mint, not by job ID.
+        clusterStatus('running','原分析任务已结束，已读取最新保存报告',
+          '该报告不包含任务编号，无法独立证明与本次分析一一对应');
+      }
       return;
     }
-    if (job.status === 'ERROR') {
+    if (job.status==='ERROR') {
       renderClusterPreview(job);
-      $('cluster-submit').disabled = false;
-      $('cluster-submit').textContent = '重新查询';
-      clusterStatus('error','查询失败',clusterErrorMessage(job.error));
+      clusterFinishJob();
+      $('cluster-submit').disabled=false;
+      $('cluster-submit').textContent='重新查询';
+      clusterStatus('error','分析任务失败',clusterErrorMessage(job.error));
       return;
     }
+    if (job.status!=='QUEUED' && job.status!=='RUNNING') {
+      throw new Error('CLUSTER_JOB_STATUS_UNKNOWN');
+    }
+    clusterShowRecovery(false);
+    $('cluster-resume-get').textContent='继续读取原任务';
     renderClusterPreview(job);
-    clusterStatus('running',
-      job.status === 'QUEUED' ? '等待开始分析' : '正在扫描链上数据',
-      clusterProgressDetail(job));
-    clusterPollTimer = setTimeout(() => pollClusterJob(jobId), 1200);
+    clusterStatus('running',job.status==='QUEUED'?'等待开始分析':'正在扫描链上数据',clusterProgressDetail(job));
+    clusterPollTimer=setTimeout(()=>pollClusterJob(jobId,0),1200);
   } catch (e) {
-    $('cluster-submit').disabled = false;
-    clusterStatus('error','查询状态读取失败',e.message);
+    if (clusterPollVersion!==version) return;
+    const message=String(e?.message||'');
+    // Only a short non-identifying job prefix is retained in browser diagnostics
+    console.warn('CA_JOB_GET_READ_INTERRUPTED', {job:jobId.slice(0,8), at:new Date().toISOString(), detail:clusterGetErrorReason(e), failed_get_attempt:failures+1});
+    const terminal=message.includes(' 404') || message==='CLUSTER_JOB_IDENTITY_MISMATCH' || message==='CLUSTER_JOB_STATUS_UNKNOWN';
+    clusterShowRecovery(true);
+    $('cluster-submit').disabled=true;
+    if (!terminal && failures<CLUSTER_GET_MAX_RETRIES) {
+      const ms=1500*(2**failures);
+      clusterStatus('running','任务状态读取中断，正在恢复',clusterGetErrorReason(e));
+      clusterPollTimer=setTimeout(()=>pollClusterJob(jobId,failures+1),ms);
+    } else {
+      clusterStatus('error','任务状态暂时无法读取',clusterGetErrorReason(e)+' · 自动重试已停止');
+      $('cluster-submit').disabled=false;
+      $('cluster-submit').textContent='开始新的分析';
+    }
   }
+}
+
+async function clusterLoadHistoricalCache() {
+  const mint=clusterActiveJob?.mint || $('cluster-mint').value.trim();
+  if (!mint) return clusterStatus('error','请先输入代币 CA');
+  clusterPollVersion += 1;
+  clearTimeout(clusterPollTimer);
+  const version=clusterPollVersion;
+  const jobId=clusterActiveJob?.id || null;
+  const input=$('cluster-mint').value.trim();
+  let phase='GET';
+  try {
+    const report=await get('/api/cluster-latest?mint='+encodeURIComponent(mint));
+    if (clusterPollVersion!==version ||
+        (clusterActiveJob?.id||null)!==jobId ||
+        $('cluster-mint').value.trim()!==input) return;
+    if (report?.mint!==mint) throw new Error('CACHE_MINT_MISMATCH');
+    // A successful report GET does not guarantee that the HTML renderer succeeded.
+    phase='RENDER';
+    renderClusterReport(report);
+    const observed=Number(report.observed_at);
+    const when=Number.isFinite(observed)&&observed>0 ? new Date(observed*1000).toLocaleString('zh-CN') : '时间未知';
+    const complete=report.coverage?.special_normalization_complete===true;
+    clusterStatus('running','已读取已有历史报告',
+      '数据时间 '+when+' · '+(complete?'部分覆盖标记已完成':'覆盖仍不完整')+' · 与当前任务的关联未经核实');
+  } catch (_) {
+    if (clusterPollVersion!==version ||
+        (clusterActiveJob?.id||null)!==jobId ||
+        $('cluster-mint').value.trim()!==input) return;
+    if (phase==='RENDER') {
+      console.error('CA_REPORT_RENDER_FAILED',{kind:'ReportDisplayError'});
+      clusterStatus('error','历史报告显示失败','报告已收到，但页面无法显示');
+    } else {
+      clusterStatus('error','历史缓存读取失败','没有可核对的同 CA 报告');
+    }
+  }
+  if (clusterPollVersion===version && (clusterActiveJob?.id||null)===jobId) {
+    clusterShowRecovery(!!clusterActiveJob);
+  }
+}
+
+$('cluster-resume-get').addEventListener('click',()=>{
+  if (!clusterActiveJob) return;
+  clusterPollVersion += 1;
+  clearTimeout(clusterPollTimer);
+  const version=clusterPollVersion, id=clusterActiveJob.id, mint=clusterActiveJob.mint;
+  clusterShowRecovery(false);
+  $('cluster-submit').disabled=true;
+  if (clusterActiveJob.status==='DONE') {
+    clusterStatus('running','重试读取已结束任务的报告','仅发送报告 GET，不会重新扫描');
+    void loadLatestCluster(mint,true,version,id).then(loaded=>{
+      if (clusterPollVersion!==version || clusterActiveJob?.id!==id) return;
+      if (!loaded) {
+        clusterShowRecovery(true);
+        clusterStatus('error',clusterReportLoadError==='RENDER'?'报告显示仍然失败':'报告读取仍然中断',
+          clusterReportLoadError==='RENDER'?'报告已收到，请检查页面显示异常':'可再次尝试读取已有报告');
+      } else {
+        clusterFinishJob();
+        $('cluster-submit').disabled=false;
+        $('cluster-submit').textContent='重新查询';
+        clusterStatus('running','已读取最新保存报告','报告与本次任务的身份关联仍未独立核实');
+      }
+    });
+    return;
+  }
+  clusterStatus('running','继续读取原分析任务','不会重新提交链上查询');
+  pollClusterJob(id,0);
+});
+$('cluster-read-cached').addEventListener('click',clusterLoadHistoricalCache);
+
+function clusterRestorePending() {
+  try {
+    const j=JSON.parse(sessionStorage.getItem(CLUSTER_PENDING_KEY)||'null');
+    if (!j || !/^[0-9a-f]{32}$/.test(j.id) || !/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(j.mint)) return;
+    clusterSetJob(j.id,j.mint);
+    $('cluster-mint').value=j.mint;
+    clusterStatus('running','恢复读取原任务','使用此前保存的任务编号，只发送 GET');
+    pollClusterJob(j.id,0);
+  } catch (_) {}
 }
 
 $('cluster-form').addEventListener('submit', async (event) => {
   event.preventDefault();
   const mint = $('cluster-mint').value.trim();
   const preset = $('cluster-preset').value;
+  // Explicit submission retires the old task and the old pending session
+  // before the network attempt. A rejected POST has UNKNOWN submission status.
+  clusterFinishJob();
+  const submitVersion=clusterPollVersion;
   if (!mint) {
     clusterStatus('error','请输入 Solana CA');
     return;
@@ -1592,12 +1768,21 @@ $('cluster-form').addEventListener('submit', async (event) => {
       body:JSON.stringify({mint,preset}),
     });
     const payload = await r.json();
+    if (clusterPollVersion!==submitVersion) return;
     if (!r.ok) throw new Error(payload.error || ('HTTP ' + r.status));
+    if (!/^[0-9a-f]{32}$/.test(String(payload.job_id||'')) ||
+        (payload.mint!=null && payload.mint!==mint)) throw new Error('无有效任务编号或代币不符');
     localStorage.setItem('mission-meme-last-cluster-ca',mint);
-    pollClusterJob(payload.job_id);
+    clusterSetJob(payload.job_id,mint);
+    pollClusterJob(payload.job_id,0);
   } catch (e) {
+    if (clusterPollVersion!==submitVersion) return;
     $('cluster-submit').disabled = false;
-    $('cluster-submit').textContent = '开始查询';
-    clusterStatus('error','无法开始查询',e.message);
+    $('cluster-submit').textContent = '开始新的分析';
+    clusterStatus('error','提交状态未核实','请求未取得可核对的任务编号，请先核查已有任务或报告，不会自动重发');
+    clusterShowRecovery(true);
   }
 });
+
+// A browser reload may only resume GET for an already submitted job
+setTimeout(clusterRestorePending,0);
