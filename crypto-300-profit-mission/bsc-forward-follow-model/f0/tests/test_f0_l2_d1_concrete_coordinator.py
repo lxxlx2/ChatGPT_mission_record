@@ -189,8 +189,9 @@ class D1ActualModuleOriginAuditTests(unittest.TestCase):
                 review_loaded_runtime_offline(self.root,self.sha)
 
     def test_missing_module_or_edited_sha_cannot_pass(self):
-        self.modules.pop(CRITICAL_MODULES[0])
-        with patch.dict(sys.modules,self.modules):
+        # patch.dict merges missing keys with existing sys.modules; use a
+        # None sentinel to model a genuinely absent critical import.
+        with patch.dict(sys.modules,{CRITICAL_MODULES[0]:None}):
             with self.assertRaisesRegex(ValueError,
                                         "CRITICAL_MODULE_NOT_LOADED"):
                 review_loaded_runtime_offline(self.root,self.sha)
