@@ -1,3 +1,11 @@
+# 2026-10-23 PR177 — independently pinned review-reference verifier (NO production root)
+
+- **Approved immutable parent PR176 SHA** `a1d33ab0fd7f68db01b67d3d7da6603af1fd6797`, independently Mac `APPROVE_OFFLINE_CODE — D1_OS_CRASH_FAKE_SCOPE_ONLY`: full **430/430**, focused D1 **69/69**, actual SIGKILL **3/3**, no mainline P0/P1; prior GitHub CI name count 68 superseded by Mac discovery 69. Parent runtime unchanged.
+- **New child Draft PR177** creates a default-deny reviewer attestation verifier comparing EXACT externally signed bytes against locally regenerated F0 Git tree, cryptography wheel RECORD and Python executable plus raw test permit SHA. No caller-injected trust roots; both `PINNED_REVIEW_AUTHORITY_*` are `None`. Unit tests only use ephemeral pinned fixture keys. This does **NOT** prove externally sourced trust, whole-runtime attestation, production identity, real grant consent or allow a sender; `send_live` still refuses.
+- See `f0/F0_L2_D1_EXTERNAL_REVIEW_REFERENCE.md`, review exact new SHA and CI independently on Mac. D1 remains partial; no real RPC/WS, production permit/nonce, transaction, merge/deploy, or scheduled process. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-23 F0 D1 PR176 — OS SIGKILL durability, NEW SHA independent Mac audit pending
 
 - Approved frozen parent PR175 `17964d878424834ec04535c3866f115cb6f34fe7` (`APPROVE_OFFLINE_CODE — D1_INVENTORY_ONEUSE_FAKE_SCOPE_ONLY`, Mac 427/427 full and **66/66** focused D1 [previous GitHub log name-count 65]). 5 parent file blobs and private Mac evidence independently reviewed; approved parent unchanged.

@@ -83,3 +83,10 @@ J-01..J-10: parent sealed **memory-only** HTTPS three-slot coordinator + respons
 ## PR176 — J-10 genuine OS SIGKILL at three OFFLINE fsync boundaries (Mac review pending)
 
 Module `tests/test_f0_l2_d1_os_crash_survival.py` exercises isolated POSIX child-process SIGKILL after O_EXCL grant marker+dir fsync; after CHAIN `RESERVE_UNKNOWN` journal flush+fsync **before fake send**; and after BLOCK RAW body+dir fsync **before SETTLE**. Parent process verifies 0600 file/0700 directories, raw orphan vs UNKNOWN ID, invalid audit, zero retries and marker spent across output-root changes. Linux GitHub full CI 430/430 PASS. This upgrades J-10 **OS_PROCESS_SIGKILL_FAKE_ONLY**, not power loss and not real TLS provider crash recovery. No parent coordinator, registry or recovery source changed. Mac fixed-SHA independent audit required. See `F0_L2_D1_OS_CRASH_REVIEW.md`.
+
+
+## PR177 — independent review signature anchor interface, OFFLINE ONLY
+
+G-02: `f0_l2_d1_external_review.verify_independently_signed_reference_offline` requires a **pre-pinned** reviewer Ed25519 key (public API does not accept caller-created trust roots), raw JSON exact signature, strict schema, Git F0 tree/source hash and code SHA, installed cryptography RECORD/byte summary, Python executable SHA, original permit byte digest. Both pinned constants intentionally **None**: unconfigured production denies before disk work. Only unit tests patch ephemeral pins. `complete_runtime_closure_attested=false` mandatory. Never mark as independently proven entire runtime, neither does it establish authentic human enrollment. J-06 real HTTP still disabled, G-03..G-06 production consent/grant/root blocked, M-02/M-03 no new data. Mac fixed-SHA independent offline review pending. Detailed reference: `F0_L2_D1_EXTERNAL_REVIEW_REFERENCE.md`.
+
+PR176 independent Mac `APPROVE_OFFLINE_CODE — D1_OS_CRASH_FAKE_SCOPE_ONLY` at `a1d33ab0fd7f68db01b67d3d7da6603af1fd6797`, full 430/430, focused 69/69, 3 OS SIGKILL. This replaces prior 'pending' in PR176 addendum for that **frozen** SHA, not automatic approval of PR177.
