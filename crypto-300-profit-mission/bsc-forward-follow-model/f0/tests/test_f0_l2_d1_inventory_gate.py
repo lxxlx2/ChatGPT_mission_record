@@ -95,7 +95,7 @@ class D1InventoryGateTests(unittest.TestCase):
             self.statement if statement is None else statement,
             self.inv_proofs if proofs is None else proofs,self.trust)
 
-    def run(self, source=None, raw=None, inv_proofs=None, now=None):
+    def execute_fake(self, source=None, raw=None, inv_proofs=None, now=None):
         return consume_then_run_fake_once(
             SealedMemoryHTTPSSource(delay_ms=10,growth_bps=10.0)
             if source is None else source,
@@ -149,7 +149,7 @@ class D1InventoryGateTests(unittest.TestCase):
     def test_registry_consumes_once_before_memory_https_and_no_retry(self):
         with patch("http.client.HTTPSConnection",
                    side_effect=AssertionError("real socket forbidden")):
-            result=self.run()
+            result=self.execute_fake()
         self.assertEqual(result["actual_rpc_requests"],0)
         self.assertEqual(result["mode"],
                          "OFFLINE_TEST_ONLY_ONE_USE_FAKE_SESSION")
@@ -162,7 +162,7 @@ class D1InventoryGateTests(unittest.TestCase):
         self.assertEqual(len(entries),1)
         self.assertEqual(entries[0].stat().st_mode & 0o077,0)
         with self.assertRaisesRegex(ValueError,"GRANT_ALREADY_CONSUMED"):
-            self.run()
+            self.execute_fake()
         self.assertEqual(len(list(self.registry.iterdir())),1)
 
     def test_bad_inputs_do_not_consume_or_start_fake(self):
@@ -179,7 +179,7 @@ class D1InventoryGateTests(unittest.TestCase):
                     fake["user"]=dict(fake["user"],signature=b"0"*64)
                     kwargs["inv_proofs"]=fake
                 with self.assertRaises(ValueError):
-                    self.run(source=source,**kwargs)
+                    self.execute_fake(source=source,**kwargs)
                 self.assertEqual(source.block_count,0)
                 self.assertEqual(source.head_count,0)
                 self.assertFalse(list(self.registry.iterdir()))
@@ -191,13 +191,13 @@ class D1InventoryGateTests(unittest.TestCase):
         # creation is deliberately impossible due to existing raw directory.
         (self.out/"raw_responses").mkdir(mode=0o700)
         with self.assertRaisesRegex(ValueError,"D1_RAW_DIRECTORY_ALREADY_EXISTS"):
-            self.run(source=source)
+            self.execute_fake(source=source)
         self.assertEqual(len(list(self.registry.iterdir())),1)
         self.assertEqual(source.head_count,0)
         self.out=Path(self.temp.name).absolute()/"fresh_output"
         self.out.mkdir(mode=0o700)
         with self.assertRaisesRegex(ValueError,"GRANT_ALREADY_CONSUMED"):
-            self.run(source=source)
+            self.execute_fake(source=source)
         self.assertFalse(list(self.out.iterdir()))
 
 if __name__=="__main__":
