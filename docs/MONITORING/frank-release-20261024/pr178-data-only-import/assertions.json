@@ -1,0 +1,20 @@
+{
+  "outcome": "BLOCKED",
+  "REAL_RPC": 0,
+  "PROD_DASHBOARD_RESTARTS": 0,
+  "MERGES": 0,
+  "DEPLOYS": 0,
+  "REAL_NOTIFICATIONS": 0,
+  "TRADES": 0,
+  "production_HTTP_requests": 0,
+  "fixed_HEADs": {
+    "60": "e4529ba7069e5499d12323a7160ceac08c481fae",
+    "174": "a14846f16e68fd0899ab5506d8c2f0c91272df48",
+    "178": "ea9a7715beb4d2a55ae956bf993828cbddcb50e5"
+  },
+  "failure_class": "AssertionError",
+  "failure_gate": "ASSERTION_OR_ENVIRONMENT_GATE_FAILED",
+  "PRODUCTION_DATA_FILES_CREATED": 0,
+  "exporter_invocations": 0,
+  "rollback": false
+}
