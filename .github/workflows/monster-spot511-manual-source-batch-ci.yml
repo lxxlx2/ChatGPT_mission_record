@@ -61,7 +61,7 @@ jobs:
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_paired_sqlite.py" -v
 
   one-shot-spot511-first64-official-20261022:
-    if: \${{ github.event_name == 'push' && github.ref == 'refs/heads/research/monster-v4-local-discovery-20261010' && contains(github.event.head_commit.message, '[MONSTER_ONESHOT_SPOT511_20261022_SLICE0_64]') }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/research/monster-v4-local-discovery-20261010' && contains(github.event.head_commit.message, '[MONSTER_ONESHOT_SPOT511_20261022_SLICE0_64_RETRY_ARTIFACT]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -127,7 +127,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: monster-spot511-20261022-first64-original-publisher-\${{ github.run_id }}
-          path: \${{ runner.temp }}/monster-spot511-first64/
+          name: monster-spot511-20261022-first64-original-publisher-${{ github.run_id }}
+          path: ${{ runner.temp }}/monster-spot511-first64/
           retention-days: 30
-          if-no-files-found: warn
+          if-no-files-found: error
