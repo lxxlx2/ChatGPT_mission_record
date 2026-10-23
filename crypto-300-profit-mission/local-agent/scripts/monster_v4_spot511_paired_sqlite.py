@@ -194,18 +194,27 @@ def paired_replay(index_path, *, lane_dir=None, allow_synthetic_cohort=False):
                 totals['ready_symbol_ticks']+=len(rows)
                 totals['source_censored_symbol_ticks']+=len(roster)-len(rows)
                 totals['full_d0_ticks' if complete else 'censored_d0_ticks']+=1
+                if rows and not complete:
+                    totals['partial_d0_ticks_scanned']+=1
+                if not rows:
+                    totals['zero_source_ticks']+=1
                 def fetch(venue,symbol,now):
                     return _closed5_fetch(src,venue,symbol,now)
                 for name,db in lanes.items():
-                    if complete:
+                    # Preserve observable candidates during partial source failure.
+                    # Never turn a missing symbol into an empty / zero signal,
+                    # and never label partial input as a full-market poll.
+                    if rows:
                         result=production.observe_snapshot(db,'spot',tick,[
                             {'symbol':r['symbol'],'lastPrice':r['price'],
                              'quoteVolume':r['quote24']} for r in rows])
                         lane_totals[name]['d0_new_watch']+=result['watch_new']
+                        lane_totals[name]['d0_symbol_rows_scanned']+=len(rows)
+                    if complete:
                         production.mark_source_health(db,'spot',tick)
                     else:
                         production.mark_source_health(db,'spot',tick,
-                            f'REPLAY_CENSORED_SPOT_POPULATION:{len(rows)}/{len(roster)}')
+                            f'REPLAY_PARTIAL_SPOT_POPULATION:{len(rows)}/{len(roster)}')
                     outcome=(_fair_process(db,tick,fetch) if name=='FAIR8'
                              else production.process_queue(db,tick,fetch,limit=CAPACITY))
                     for k in ('completed','deferred','late','selected'):
@@ -237,6 +246,9 @@ def paired_replay(index_path, *, lane_dir=None, allow_synthetic_cohort=False):
                 'source_censored_symbol_ticks':totals['source_censored_symbol_ticks'],
                 'full_d0_ticks':totals['full_d0_ticks'],
                 'censored_d0_ticks':totals['censored_d0_ticks'],
+                'partial_d0_ticks_scanned':totals['partial_d0_ticks_scanned'],
+                'zero_source_ticks':totals['zero_source_ticks'],
+                'partial_d0_keeps_verified_symbols_not_full_market':True,
                 'fifo':dict(lane_totals['FIFO8']), 'fair8':dict(lane_totals['FAIR8']),
                 'fifo_queue_status':status_counts(lanes['FIFO8']),
                 'fair8_queue_status':status_counts(lanes['FAIR8']),
