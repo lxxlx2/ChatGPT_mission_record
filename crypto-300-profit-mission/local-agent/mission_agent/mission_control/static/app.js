@@ -1558,6 +1558,9 @@ $('watch-search').addEventListener('input', () => renderFrankWatchlist(walletWat
 
 function clusterShowRecovery(show) {
   $('cluster-recovery').hidden = !show;
+  // A failed POST without an acknowledged job can show existing cache,
+  // but must never offer a no-op "resume original task" button.
+  $('cluster-resume-get').hidden = !show || !clusterActiveJob;
 }
 
 function clusterSetJob(jobId,mint) {
