@@ -164,6 +164,24 @@ class D1ConcurrentFakeTests(unittest.TestCase):
         self.assertEqual(r["settled"],r["reserved"])
         self.assertLess(r["contiguous_commits"],r["block_attempts"])
 
+    def test_archive_write_failure_never_claims_success_or_retries(self):
+        from unittest.mock import patch
+        from f0_l2_d1_coordinator import ExclusiveEvidence
+        source=FakeSource(delay_ms=0)
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)/"private"
+            root.mkdir(mode=0o700)
+            with patch.object(ExclusiveEvidence,"settle",
+                              side_effect=OSError("forced archive failure")):
+                result=run_fake_concurrent(
+                    source,root,max_total=6,max_blocks=2,
+                    max_refreshes=2,window_ms=3000,
+                    head_min_poll_age_ms=250)
+        self.assertEqual(result["stop"],"RAW_OR_SETTLEMENT_FSYNC_FAILED")
+        self.assertGreaterEqual(result["unknown_after_stop"],1)
+        self.assertEqual(result["contiguous_commits"],0)
+        self.assertLessEqual(result["reserved"],6)
+
     def test_no_arbitrary_real_sender_or_live_authorization(self):
         class AttemptedCallback:
             pass
