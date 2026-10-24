@@ -17,6 +17,35 @@ from f0_l2_d1_recovery import reconcile_saved_attempts
 from f0_l2_d1_hard_stop_once import run_bounded_offline_once
 
 
+def _direct_child_pid(parent_pid):
+    """Locate the exact one OS child before terminating the supervisor."""
+    ps = subprocess.run(
+        ["ps", "-axo", "pid=,ppid=,stat="],
+        capture_output=True, text=True, check=True, timeout=3)
+    matches = []
+    for line in ps.stdout.splitlines():
+        pieces = line.split()
+        if len(pieces) >= 3 and pieces[0].isdigit() and pieces[1].isdigit():
+            if int(pieces[1]) == parent_pid:
+                matches.append((int(pieces[0]), pieces[2]))
+    if len(matches) != 1 or matches[0][1].startswith("Z"):
+        raise AssertionError("D1_EXPECT_ONE_RUNNING_DIRECT_CHILD: " + repr(matches))
+    return matches[0][0]
+
+
+def _child_state(pid):
+    """Return RUNNING, ZOMBIE_EXITED or GONE; zombies have exited."""
+    ps = subprocess.run(
+        ["ps", "-p", str(pid), "-o", "stat="],
+        capture_output=True, text=True, timeout=2)
+    if ps.returncode not in (0, 1):
+        raise AssertionError("D1_PS_CHILD_STATE_FAILED: " + ps.stderr)
+    state = ps.stdout.strip().split()
+    if ps.returncode == 1 or not state:
+        return "GONE"
+    return "ZOMBIE_EXITED" if state[0].startswith("Z") else "RUNNING"
+
+
 class ChildLifetimeOfflineTests(unittest.TestCase):
     def test_supervisor_sigkill_makes_blocked_child_self_exit(self):
         """Kill actual parent after preconnect reservation; no auto replay."""
@@ -55,15 +84,32 @@ class ChildLifetimeOfflineTests(unittest.TestCase):
                         break
                     time.sleep(0.025)
                 self.assertTrue(observed, "NO_CHILD_DURABLE_RESERVATION")
+                child_pid = _direct_child_pid(supervisor.pid)
+                self.assertEqual(_child_state(child_pid), "RUNNING")
                 # Parent process dies abruptly without calling proc.kill().
                 supervisor.kill()
                 supervisor.communicate(timeout=3)
                 deadline = time.monotonic() + 4
-                while time.monotonic() < deadline and not watchdog.is_file():
+                report = None
+                state = "RUNNING"
+                while time.monotonic() < deadline:
+                    # O_EXCL creates the diagnostic before its JSON is
+                    # written/fsynced. File existence is NOT a completion
+                    # barrier. A finished record AND dead child are required.
+                    if watchdog.is_file():
+                        try:
+                            report = json.loads(watchdog.read_text())
+                        except (OSError, UnicodeError, json.JSONDecodeError):
+                            report = None
+                    state = _child_state(child_pid)
+                    if report is not None and state in ("GONE", "ZOMBIE_EXITED"):
+                        break
                     time.sleep(0.025)
-                self.assertTrue(watchdog.is_file(),
-                                "CHILD_DID_NOT_DETECT_PARENT_LOSS")
-                report = json.loads(watchdog.read_text())
+                self.assertIsNotNone(report, "CHILD_DIAGNOSTIC_NOT_COMPLETE")
+                self.assertIn(state, ("GONE", "ZOMBIE_EXITED"),
+                              "CHILD_STILL_RUNNING_AFTER_PARENT_LOSS")
+                # ZOMBIE_EXITED has no executing code; some Linux CI init
+                # processes do not promptly reap orphan zombies.
                 self.assertEqual(report["reason"], "PARENT_PIPE_CLOSED")
                 self.assertIs(report["real_network"], False)
                 audit = reconcile_saved_attempts(evidence)
@@ -83,6 +129,10 @@ class ChildLifetimeOfflineTests(unittest.TestCase):
                 if supervisor.poll() is None:
                     supervisor.kill()
                     supervisor.communicate(timeout=3)
+                if "child_pid" in locals() and _child_state(child_pid) == "RUNNING":
+                    # Failure cleanup only: the real test watches the child's
+                    # own exit, not a test-initiated kill of that child.
+                    os.kill(child_pid, signal.SIGKILL)
 
     def test_guard_cli_requires_inherited_read_pipe(self):
         from f0_l2_d1_hard_stop_once import _main
