@@ -1,3 +1,11 @@
+# 2026-10-25 — D1 receipt-before-HTTPS-constructor and same guarded mock child; NEW MAC REVIEW PENDING
+
+- **Reviewed parent:** PR194 exact SHA `3470cd841a5b4d0cfc625bd4bf88a2abad37cfb4`, independently Mac-approved for D2/D3 **candidate contract only** (F0 512, D1 151, contract 10, Mac preview 7 all PASS). [Mac reviewer archive](https://github.com/lxxlx2/ChatGPT_mission_record/pull/194#issuecomment-6389334567). Parent remains Draft/unmerged; old authority gate unchanged.
+- **Current child increment:** existing `f0_l2_d1_concrete_https._review_concrete_https_once` now checks the coordinator's durable RID pre-connect receipt **BEFORE** invoking `HTTPSConnection` constructor (rather than only before `connect()`). The original physical constructor failure test now expects constructor count zero. Existing protected Mac entry optionally verifies a D3 intent against the **same** preflight's reviewed source/manifest and D2 bytes **before** consuming a disposable test marker, and then invokes the existing single guarded 3-slot *patched HTTPS* child; neither added a scheduler nor live transport. Three new tests cover successful one-path wiring, invalid candidate before any marker, timeout/UNKNOWN and zero production writes. Review `f0/F0_D1_PRECONSTRUCTOR_RECEIPT_REVIEW.md`.
+- **Still BLOCKED:** real sender isn't authorized/enrolled; production D2 trusted signatures, independently signed D3 one-shot user grant and physical source activation need new exact-SHA code audits and **separate explicit authorization**; actual BSC provider throughput and F0 signal remain untested. No real RPC/WS, no grant/nonce production consumption, private journal, trade, merge, deploy or background monitoring. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-25 — D1 protected real-sender D2/D3 contract; release DENIED, new review PENDING
 
 - **Approved parent:** PR193 `267f25bb6d0d3e16b53a231d770ac957f2ce6c98`, independent user-supplied Mac verdict `APPROVE_OFFLINE_CODE — D1_MAC_PREVIEW_ENTRY_COMPOSED_TEST_ONLY` (502/502 full, 141/141 D1, 7/7 isolated). Approval archive [PR193](https://github.com/lxxlx2/ChatGPT_mission_record/pull/193#issuecomment-6389121419). No merge, production deployment or live RPC authorized.

@@ -74,6 +74,9 @@ def _review_concrete_https_once(request, *, final_post_guard,
     failure = None
     raw_prefix_sha256 = None
     try:
+        phase = "PRECONNECT_RESERVATION_GUARD"
+        if pre_connect_guard is not None:
+            pre_connect_guard(request)
         # The ONLY concrete constructor. No URL, arbitrary host, proxy,
         # tunnel, credential, environment-based routing or HTTP redirect.
         ctor = (http.client.HTTPSConnection if _sealed_offline_factory is None
@@ -82,9 +85,6 @@ def _review_concrete_https_once(request, *, final_post_guard,
         # One-coordinator proof is generated only after pre-send journal fsync.
         # In production the reviewed release must also bind the one-use marker
         # and exact D2/D3 user permission *before this constructor*.
-        phase = "PRECONNECT_RESERVATION_GUARD"
-        if pre_connect_guard is not None:
-            pre_connect_guard(request)
         phase = "CONNECT_ATTEMPTED"
         connect_attempted_at = time.monotonic()
         conn.connect()
