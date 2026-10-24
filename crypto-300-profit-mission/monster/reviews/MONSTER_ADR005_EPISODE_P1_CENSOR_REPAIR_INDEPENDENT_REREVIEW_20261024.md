@@ -37,3 +37,11 @@ PYTHONPATH=crypto-300-profit-mission/local-agent:crypto-300-profit-mission/local
 - P1复审：`PENDING_INDEPENDENT_AUDIT`，不自动采用旧固定SHA的APPROVE。
 - Episode: 真实原 WATCH 来源需从原SQLite读取并验证（哈希算法不是完整的真实性证明），原原Core与新研究账本独立；缺少同时间线的4,088或4,599份官方Minute replay和Fair8 comparison。即使P1修复全部通过，这些仍为未完成。
 - G0=`PARTIAL`、G1=`NOT_SCORABLE`、新G2=`UNKNOWN`、新G3=`UNKNOWN`、G4=`UNKNOWN`、G5本模块`REQUEST_CHANGES_FIX_PENDING_REREVIEW`、G6=`NO_GO`。继续 `NO_MERGE/NO_DEPLOY/NO_MAC/NO_SCHEDULE/NO_GMAIL/NO_TRADES`。
+
+## 独立复审结果：APPROVE @ `3d79beaa30ef859fd914823837d50df99f501e02`（用户转交，2026-10-25曼谷时间）
+
+- **旧审核结论永久保留**：`REQUEST_CHANGES @ da4862c604a254008ba488f7948124d9ecb6e77f`。本轮其他AI实际复审结论为**`APPROVE`，只关闭上述 P1 来源删失 episode 截止终结分类缺陷**；固定审核版本是修复代码 `3d79beaa30ef859fd914823837d50df99f501e02`，不是其后的文档 HEAD `9c915811dd22966eb1d031b28bea35f54b64d119`。
+- **审核身份/环境**：用户转交 Codex 主代理、独立 detached worktree、用户 Mac macOS 27.0.1 arm64 / Python 3.14.7；底层模型型号为 `UNVERIFIED`；无代理委托，未改写或推送源码、未访问生产数据库或真实市场接口。
+- **实际执行**：固定SHA本地 episode 回归 `18 PASS / 0 FAIL / 0 ERROR / 0 SKIP`，并另构造不同于新增fixture的临时SQLite，验证四条路径及全部重启持久化：①早期BTC缺档+deadline有效负→`SOURCE_UNSCORED`，②全程未记录缺档+deadline有效负→`NO_SETUP`，③早期缺档+deadline有效正→`RESEARCH_SETUP`，④早期缺档+超过deadline→`SOURCE_UNSCORED`，四条重开后均一致。日志由审核方留在其Mac `/private/tmp/monster-censor-3d79-tests.log`，不冒称日志已上传Git或本助手亲自在Mac重跑。
+- **diff/核心代码不变性**：`dee1a3170bc456270fbead41f98bc8474cba4b1f` 仅修正部分缺档后的负例终结，`3d79beaa30ef859fd914823837d50df99f501e02` 增加3项SQLite负/正及重启测试；原 `monster_v4_shadow.py`、`monster_v4_spot511_paired_sqlite.py`、RBTC15比较器和ADR-005的行为/预注册阈值没有变化。原P1=`CLOSED`，本轮范围未发现新的可操作P0/P1/P2。
+- **严格范围**：`P1_SOURCE_CENSOR_TERMINAL_CLASSIFICATION=APPROVE` 不是 `G5_OVERALL=PASS`。公开算法可重算的WATCH ID不是原Core SQLite真实性证据；没有真实511币时间线接线/历史PIT、独立2×召回G2、研究SETUP负载G3、双侧订单经济性G4。G0 PARTIAL / G1 NOT_SCORABLE / G2 NEW UNKNOWN / G3 NEW UNKNOWN / G4 UNKNOWN / G5 INTEGRATION NOT_DONE / G6 NO_GO；`NO_MERGE/NO_DEPLOY/NO_TRADES/NO_GMAIL/NO_AUTOMATIONS`。
