@@ -68,12 +68,13 @@ jobs:
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_spot_d1_event_audit.py" -v
 
   one-shot-3577-exact-event-ledger:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/research/monster-v4-local-discovery-20261010' && contains(github.event.head_commit.message, '[MONSTER_ONESHOT_VERIFY_EVENT_LEDGER_3577]') }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/research/monster-v4-local-discovery-20261010' && contains(github.event.head_commit.message, '[MONSTER_ONESHOT_VERIFY_EVENT_LEDGER_3577_V2]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
       contents: read
       actions: read
+      issues: write
     steps:
       - name: Checkout exact pinned Monster research code
         uses: actions/checkout@v4
@@ -111,6 +112,7 @@ jobs:
           run-id: 40028725264
           github-token: ${{ secrets.GITHUB_TOKEN }}
           pattern: monster-spot511-official7dates-partial-fifo8-fair8-40028725264
+          merge-multiple: true
           path: ${{ runner.temp }}/monster-original
       - name: Replay exactly original source with new original-SQLite event export and strict independent matching
         shell: bash
@@ -180,3 +182,15 @@ jobs:
             ${{ runner.temp }}/monster-ledger-verify/summary.json
           retention-days: 30
           if-no-files-found: warn
+      - name: Record this exact one-shot run result on Monster PR30
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -s "$RUNNER_TEMP/monster-ledger-verify/summary.json" ]; then
+            STATUS="PASS — original 3577 verified symbol-days replayed, strict SETUP event ID/time evidence uploaded"
+          else
+            STATUS="NOT_PASSED — see the immutable run logs; do not advance gates"
+          fi
+          BODY="Monster Spot511 exact original-core FIFO8/Fair8 event ledger: $STATUS. Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID. Fixed SHA: $GITHUB_SHA. Research only; no deployments, schedules, trades or Gmail. Any G0/G1/G4/G6 status upgrade is prohibited."
+          gh api "repos/$GITHUB_REPOSITORY/issues/30/comments" -f "body=$BODY"
