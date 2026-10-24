@@ -46,3 +46,15 @@
 > 云端参考证据：[GitHub Actions #40103975065](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40103975065)，job `120901708104`，11组总`150/150 PASS`，包含 preflight 9/9、shadow 31/31、RBTC15 18/18；但不能引用云端PASS代替实际独立复审。重点确认 CLI首次创建JSON成功，第二次拒绝覆盖并返回错误。
 >
 > 请输出 `APPROVE | REQUEST_CHANGES | BLOCKED`，明确新固定SHA、审核者模型和版本、实测环境、每组真实结果、P0/P1/P2问题及文件/行号与复现步骤，并明确**`P2原阻断是否关闭`**。如修复通过，只批准测试路径/回归覆盖修复；**不批准新D1完整 episode生命周期、原 D0/D1产品G2/G3、历史盘口G4、样本外验证与上线G6**。未知写UNKNOWN。最后重申 `NO_MERGE/NO_DEPLOY/NO_TRADES/NO_GMAIL/NO_AUTOMATIONS`。
+
+## 独立复审后续结果：APPROVE @ `9b049dd32bee0a34940fa61f73791377ae883cd9`（2026-10-24 用户转交）
+
+**新增真实外部审核结论**：`APPROVE`，但只批准**上一轮唯一P2 preflight CLI脚本定位缺陷关闭，以及CI增加两组回归**；审查固定源码 `9b049dd32bee0a34940fa61f73791377ae883cd9`。先前固定 `06aa72fceeb63c73375b556e7f8d44509452207a` 的 `REQUEST_CHANGES` 历史结论**原样保留**，不重写成已批准。
+
+- **审核身份**：由用户提交的“Codex 主代理、独立只读复审”回执；明确未提供可核验底层模型型号，记录 `reviewer=Codex 主代理（用户提供）` / `underlying_model=UNVERIFIED`。这一身份不能被写成ChatGPT已亲自运行用户Mac。
+- **审核方法**：在用户Mac `macOS 27.0.1 arm64 / Python 3.14.7` 创建隔离detached worktree，确认固定SHA并在review结束时worktree clean，未更改/push任何仓库文件，无交易、邮件、真实市场接口、生产改动。
+- **复核的实际diff**：`849c76e2be7751d26b770cf5b85ba1fd7f593365` 只将 preflight CLI 测试从 `tests/` 错误相对定位修成 `scripts/` 精确定位；`9b049dd32bee0a34940fa61f73791377ae883cd9` 给原CI增加 preflight、原shadow测试和相应触发/语法检查，**无 schedule**。从旧 `06aa72...` 到新固定 SHA，`local-agent/scripts/`运行源码和ADR-005**没有差异**，所以研究D1公式、原D0/D1和三个预注册未来窗口均未改。
+- **用户Mac实跑结果**：`test_monster_v4_spot511_replay_preflight.py` **9/9 PASS**，`test_monster_v4_shadow.py` **31/31 PASS**，`test_monster_v4_d1_rbtc15_last5_research.py` **18/18 PASS**，合计 **58 PASS / 0 FAIL / 0 ERROR / 0 SKIP**。含真Python CLI子进程的`test_cli_report_written_once_without_network`确定首次报告写入及第二次 `REFUSE_EXISTING_PREFLIGHT_OUTPUT` 拒绝覆盖均按预期通过。原shadow有1条不影响结果的`ResourceWarning`，照实保留。Mac日志路径由审核者提供`/private/tmp/monster-rereview-9b049dd3-logs`，仓库未包含其原始日志字节，不能把该路径冒称Git持久Artifact。
+- **独立审核新增阻断**：本轮修复范围未发现新P0/P1/P2，原 P2 `CLOSED`。Mac只跑上述58项，不称独立审核者在Mac跑完150项；云端真实150项见先前Actions #40103975065。
+- **审核明确未批准**：`D1_RBTC15_LAST5_V1`依旧只是比较函数，无完整原全市场FIFO8/Fair8队列/episode持久化、G2>=80%真实2×提前召回、新G3关注负载、G4真实双侧执行证据或任一未来OOS结果；`G5_CODE_P2_REREVIEW_SCOPE=APPROVE`而整体`G5=NOT_PASSED`，`G6=NO_GO`。
+- **后续要求**：如果接入研究队列或更改实际原运行研究代码，**那是新审查范围**，不得援引本次仅限P2的`APPROVE`替代真正的集成/策略独立评审。`NO_MERGE / NO_DEPLOY / NO_TRADES / NO_GMAIL / NO_AUTOMATIONS`持续有效。
