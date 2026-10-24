@@ -2,24 +2,23 @@
   "schema": "CRYPTO_DAILY_EDITORIAL_CI_RECEIPT_V1",
   "report_date": "2026-10-24",
   "manifest_path": "crypto-daily/delivery-pending/2026-10-24.json",
-  "manifest_blob_sha": "d4168cb5b0595559e29af11f9e91f90cd335f555",
+  "manifest_blob_sha": "205d3b8d8b8d725075dab0a808164ac140ca7cb6",
   "rules_blob_sha": "ad3488769052a1cea5dda4bbf7fd6f1f9092046f",
   "editorial_gate_blob_sha": "5761607601d0934bb87c33124e4a9c69676a127c",
-  "git_trigger_commit": "308aad53a7e7f576c0b4ea7f41afdf40107eef3e",
+  "git_trigger_commit": "3e57dd9fb662c995334e8af9c817845bf2c427d0",
   "status": "EDITORIAL_QA_PASS",
-  "validated_at": "2026-10-24T01:22:29.055Z",
+  "validated_at": "2026-10-24T01:24:22.600Z",
   "metrics": {
-    "blank_sections": 3,
+    "blank_sections": 2,
     "headings": 13,
-    "numbered_items": 27,
+    "numbered_items": 32,
     "highlight_count": 4,
     "source_lanes": 16,
-    "event_count": 23
+    "event_count": 28
   },
   "warnings": [
     "SOURCE_GAP:onchain",
-    "SOURCE_GAP:early_nft",
-    "SOURCE_GAP:forward_catalysts"
+    "SOURCE_GAP:early_nft"
   ],
   "scope_note": "Checks classification, declared original-source receipts, text/metadata consistency, known event versions and minimum market evidence. It does NOT independently confirm external news freshness, all source recall or Gmail delivery."
 }
