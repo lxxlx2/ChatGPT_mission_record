@@ -144,6 +144,89 @@ def inspect_supervised_mac_scope_offline(
     }
 
 
+def rehearse_supervised_mac_entry_offline(
+        checkout_root: Path, expected_sha: str, permit_raw: bytes, *,
+        evidence_root: Path, test_registry: Path, test_evidence: Path,
+        test_grant_id: str, scenario: str = "complete",
+        hard_seconds: float = 8.0):
+    """Bind real Mac preflight to the SAME bounded three-slot test child.
+
+    This is a strict offline rehearsal, never an alternative way of sending
+    RPC. The fixed production registry is only *inspected*, not consumed.
+    Actual one-shot consumption occurs solely in a separately supplied,
+    disposable /tmp test registry. A candidate scope is not D2/D3 authority.
+    """
+    # Reject accidental future release-switch changes rather than silently
+    # promoting an existing rehearsal call to a live sender.
+    if (_REAL_SENDER_RELEASED is not False or
+            _D2_REVIEWED_PERMIT_SHA256 is not None or
+            _D3_REVIEWED_EXECUTION_RECORD_SHA256 is not None):
+        raise ValueError("D1_MAC_REHEARSAL_RELEASE_CONSTANTS_NOT_FROZEN")
+    if (type(test_grant_id) is not str or
+            not test_grant_id.startswith("offline-rehearsal-")
+            or type(hard_seconds) not in (int, float)
+            or isinstance(hard_seconds, bool) or
+            type(scenario) is not str or
+            scenario not in ("complete", "hang_after_reserve")):
+        raise ValueError("D1_MAC_REHEARSAL_SCOPE_INVALID")
+    if any(not isinstance(p, Path) or not p.is_absolute()
+           for p in (evidence_root, test_registry, test_evidence)):
+        raise ValueError("D1_MAC_REHEARSAL_ROOT_INVALID")
+    # PRE-FLIGHT first; an expired/mismatched scope spends NO test marker.
+    checked = inspect_supervised_mac_scope_offline(
+        checkout_root, expected_sha, permit_raw, evidence_root=evidence_root)
+    if (checked["decision"] != "D1_BLOCKED_AUTHORITY"
+            or checked["reviewed_sha"] != expected_sha
+            or checked["fixed_registry_state"]["marker_consumed"] is not False
+            or checked["network_requests"] != 0):
+        raise ValueError("D1_MAC_REHEARSAL_PREFLIGHT_NOT_DENIED")
+    if (not 0.2 <= hard_seconds <= 15 or
+            hard_seconds > checked["scope"]["dispatch_seconds_cap"]):
+        raise ValueError("D1_MAC_REHEARSAL_DEADLINE_INVALID")
+    # Prevent test artifacts from ever overlapping the candidate Mac
+    # evidence directory inspected above, including ancestor/child aliases.
+    roots = [p.resolve() for p in
+             (evidence_root, test_registry, test_evidence)]
+    production = Path(
+        checked["fixed_registry_state"]["fixed_private_registry"]).resolve()
+    for test_root in roots[1:]:
+        if test_root == production or test_root in production.parents or (
+                production in test_root.parents):
+            # This must use the same production path verified by Mac
+            # preflight. The hard-stop module alone cannot know its
+            # independently inspected OS-user-home registry, especially
+            # in tests or if /tmp aliases a separately bound path.
+            raise ValueError("D1_MAC_REHEARSAL_PRODUCTION_ROOT_FORBIDDEN")
+        if test_root == roots[0] or test_root in roots[0].parents or (
+                roots[0] in test_root.parents):
+            raise ValueError("D1_MAC_REHEARSAL_EVIDENCE_ROOT_OVERLAP")
+
+    # Import only after independently established Mac preflight. Reuse the
+    # approved single OS supervisor and its sole bounded 3-slot coordinator.
+    # That child substitutes a memory HTTPS constructor; real socket disabled.
+    from f0_l2_d1_hard_stop_once import run_bounded_offline_once
+    run = run_bounded_offline_once(
+        test_registry, test_evidence, grant_id=test_grant_id,
+        permit_sha256=checked["permit_raw_sha256"],
+        scenario=scenario, hard_seconds=hard_seconds)
+    return {
+        "schema": "f0-d1-mac-entry-bound-offline-rehearsal-v1",
+        "reviewed_sha": checked["reviewed_sha"],
+        "permit_sha256": checked["permit_raw_sha256"],
+        "scope": checked["scope"],
+        "source_manifest_sha256": checked["source"].get(
+            "tracked_source_manifest_sha256"),
+        "fixed_production_registry_inspected_only": True,
+        "fixed_production_registry_marker_consumed": False,
+        "test_child": run,
+        "real_sender_enabled": False,
+        "d2_granted": False, "d3_granted": False,
+        "network_requests": 0,
+        "decision": "D1_BLOCKED_AUTHORITY",
+        "production": "PRODUCTION_NO_GO",
+    }
+
+
 def send_live(*_args, **_kwargs):
     """Must deny before checking or mutating registry, evidence or sockets."""
     raise ValueError("D1_MAC_PROTECTED_SEND_DISABLED_D2_D3_REQUIRED")
