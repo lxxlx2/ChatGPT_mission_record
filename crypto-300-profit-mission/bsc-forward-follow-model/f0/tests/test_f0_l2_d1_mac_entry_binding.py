@@ -109,8 +109,10 @@ class MacEntryTransportBindingTests(unittest.TestCase):
         self.assertEqual(list(self.registry.iterdir()), [])
 
     def test_real_registry_and_mac_evidence_cannot_be_test_outputs(self):
-        with self.assertRaisesRegex(ValueError, "ROOT|DISPOSABLE"):
+        with self.assertRaisesRegex(ValueError, "PRODUCTION_ROOT_FORBIDDEN"):
             self.perform(test_registry=self.registry)
+        with self.assertRaisesRegex(ValueError, "PRODUCTION_ROOT_FORBIDDEN"):
+            self.perform(test_evidence=self.registry)
         self.assertEqual(list(self.registry.iterdir()), [])
         with self.assertRaisesRegex(ValueError, "EVIDENCE_ROOT_OVERLAP"):
             self.perform(test_evidence=self.out)
