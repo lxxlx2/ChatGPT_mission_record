@@ -1,0 +1,11 @@
+# Crypto Daily collector attempt
+- date_bkk: 2026-10-25
+- observed_at_bkk: 2026-10-25 06:21:54 +07:00
+- slot: 06:20 ordinary bounded collection, no email
+- automation_id: 6a8600b9d12481919bc43ebc800c9916
+- rules: PIPELINE_CONTRACT 5365fb29bb00f20101d4190737468da845b4a0e2; EDITORIAL_RULESET ad3488769052a1cea5dda4bbf7fd6f1f9092046f; REPORT_SPEC 809a5c1cbcd6503d42305c842f37826b74a4741f; REPORT_ACCEPTANCE 37789b7274aec766e4ac4975111602bccc11a7d2; COLLECTOR_SPEC 834e0e3c05f5e894f31474a7b4d7fd0e90d8c08f; SECURITY_SOURCE_POLICY 86b36f208220e90a52caa1cb8acaeec47add9628; AUTOMATION_RUNTIME 59318705a3a238e5798f5ee7a1c7098eb49ae514; DELIVERY_RUNBOOK and ledger fetched in same run.
+- source collection: underway; verified Binance BTC/ETH/SOL spot, futures mark/funding/OI, Farside ETFs, vendor security, Arkham research and cross-domain English search.
+- prior_two_completed_shards: UNRESOLVED (directory listing unsupported; no invented shard history)
+- fallback_planned_shard: 2
+- gmail_attempted: false; daily_report_attempted: false; app_notification: none
+- status: ATTEMPT_ONLY, not completion.
