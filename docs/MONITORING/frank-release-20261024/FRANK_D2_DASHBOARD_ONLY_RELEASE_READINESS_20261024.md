@@ -61,3 +61,28 @@ GitHub `compare 656ed2c96f4210d106d7b1129ec6cf8d7c4586f3...914e9e47fed2e60bc2469
 `NO_DEPLOY / NO_MERGE / NO_DASHBOARD_RESTART / NO_LAUNCHCTL_CHANGE / NO_NEW_RPC / NO_TRADE / NO_EMAIL_OR_NOTIFICATION / NO_SCHEDULER / NO_NEW_LISTENER / NO_PORT_MIGRATION / NO_SHARED_ROOT_CHMOD / NO_PRIVATE_DATA_REIMPORT / NO_PROD_SQLITE_WRITES`。
 
 **本文件所在仅是发布规划分支**；所有实际生产变更与未来服务中断均需独立授权，且不能用用户此前仅允许历史数据导入的权限替代。
+
+## 2026-10-24 R1/R2 实机反馈 — R1 PASS，Chrome IPC 限制导致 R2 阻断
+
+固定产品 SHA 仍是 `914e9e47fed2e60bc24690fcb083413a64d4e681`，不是下述文档提交。证据：[PR #178 执行报告 #6383051314](https://github.com/lxxlx2/ChatGPT_mission_record/pull/178#issuecomment-6383051314)，脱敏提交 `cfc5c1b2fe62ab57ce5b61be20e334ac8c3c6f62`。
+
+- **R1 已完成，无需重复**：446 Git 文件完全一致，完整规范化 manifest SHA256 `9a06f5f29fce05ccade8caa2b90d6d6c0c4248d2e6ab4e45aa26fa9d3f401062`；当前 Mac Python3.14.7 import-only、原 PR168 437文件及服务、0755/0700/0600 已导入 JSON SHA 均 PASS。
+- **R2 仍未执行任何页面用例**。原 Chrome profile 是新建的；阻断并非确定“Chrome profile 被占用”，而是 Chrome 进程在 `(allow default)(deny network*)` 下连自己的 ProcessSingleton **AF_UNIX** `bind()` 都被拒绝，exit21、无 page。原 R2 `BLOCKED/COVERAGE_LIMIT` 记录不可改成 PASS。
+- R1 的 446 文件临时候选包已清理，若后续检查使用必须从固定 SHA 重新组装并比对已经证实的 manifest。不得再次执行 importer/exporter 或读取原始私有回执。
+
+### 本轮唯一建议补测：先证明“只准独立临时路径的本地 AF_UNIX，禁止所有 IP 网络”，再试一次 R2
+
+这是一份**设计/交接**，不等于用户授权放宽沙箱或运行第二次 Mac 浏览器。后续须由用户明确认可**这一条最小 R2 离线补测**；仍不授权生产部署、重启、新服务/端口或 RPC。
+
+1. **准备隔离和检验策略**。Mac 执行器使用新建 owner-only `0700` Git 外临时根，同时放置全新的 Chrome `user-data-dir`、`TMPDIR`、合成 JSON、pipe/本地 IPC 及私有测试证据。设置受限且不泄露真实 profile/path 的环境。**只在这个规范化临时根下面许可 AF_UNIX 创建与连接**，不许可对 `/var/run`、ssh-agent、Docker、其他用户/应用本地 socket 的连接；不随便 `(allow network*)` 或 `(allow network-outbound)`。
+2. **Seatbelt 候选应精确区分网络族**：保留原来的对所有 IP `network*` 拒绝，仅增加 `(allow system-socket (socket-domain AF_UNIX))`，并用 `network-bind (local unix-socket (subpath ...))` 和 `network-outbound (remote unix-socket (subpath ...))` 限定到**此单次临时根**；如 Chrome 实际 `listen/accept` 也被拒绝，只有在受控 AF_UNIX 合成实验证明必要且同样 path-scoped 时才考虑 `network-inbound`。Seatbelt SBPL 语法及路径匹配具体以**当前 Mac 实际编译和 deny 日志为准**，不得基于外部示例推定已经生效。可以参考 [OpenAI Codex Seatbelt path-scoped Unix-socket generation](https://github.com/openai/codex/blob/main/codex-rs/sandboxing/src/seatbelt.rs)。绝不全域放行 Unix-socket bind/connect。
+3. **最少四个策略实测断言**（合成短进程，非 Chrome，安全清理）：(a) 允许在这次私有临时根创建 AF_UNIX 并 bind/listen/connect；(b) 对另一个独立合成目录的 AF_UNIX bind/connect 均拒绝；(c) AF_INET/AF_INET6 bind 和对隔离验证端点 connect 被内核策略拒绝，**不请求正式 8766**；(d) 所有子进程继承同样拒绝 IP 的沙箱，结束后不存在额外 TCP LISTEN/持久 Unix 端点。必须记录内核实际拒绝/允许证据；不以 `ECONNREFUSED`/DNS失败冒充策略拒绝。如果连策略语法或四断言无法通过，`BLOCKED_IPC_POLICY_NOT_PROVEN`，停止，不启动 Chrome。
+4. **仅在 1–3 PASS 后，重建最小 R2 synthetic browser harness**，最多一次新鲜 Chrome launch；实际 Chrome ProcessSingleton Socket 路径必须在单次临时允许根内，否则 `BLOCKED_CHROME_IPC_OUTSIDE_ALLOWLIST`。保留原候选 `index.html/app.js` byte-for-byte（以及 CSS）；Browser 所有请求先行拦截，静态 asset 全部取自固定构件，D2 GET 请求通过**现有 stdin/stdout pipe**送到原始 `Handler.do_GET` 加**合成 reader**；未列入白名单请求一律 abort。HTML 使用合成 origin、无真实网卡通信；禁止让浏览器向现有 `127.0.0.1:8766` 发送任何 HTTP 请求。若浏览器原始 Host/same-origin 校验在这种 in-memory route 下不能真实覆盖，则如实标明 `COVERAGE_LIMIT`，不能模拟一个过强的 PASS。
+5. **R2 一次性验收范围**：真实 Chrome 创建 page 成功；初始加载 D2 GET=0；点击后才同源 GET，最多100条/页、page0/page41、精确 Mint 的非零/零/缺失；2026-10-23 曼谷时间和两个 finalized slot 的非原子/非实时声明；丢包/坏 JSON/无私有来源、旧请求竞态；原 CA Quick/Standard/Deep 和 Frank 信号面板 DOM/渲染无退化。检查 GET/POST/RPC/通知尝试账本和 browser console；如有产品功能真实缺陷，则 `REQUEST_CHANGES` 并记录最小复现，不修改产品/重试以硬凑 PASS。
+6. **严格一次收尾**：关闭本次 Chrome、pipe、子进程和合成源，清理临时 Unix socket/Chrome profile，固定 manifest 比对不变；只提交脱敏 scalar 状态、经过证实的所覆盖用例和安全否定证据。原 `R1_PASS` 与这次 `R2_BLOCKED` 都保留不可重写，后续新增独立 `R2_BROWSER_SYNTHETIC_PASS` 或清楚的 `BLOCKED`。此为离线合成 UI 验收，不是正式生产 D2 HTTP/Chrome 通过，也不提升 `G03B_INTERPRETER_ORIGIN=UNRESOLVED`。
+
+### 强约束与时间盒
+
+**只修复一个已识别的 Chrome 本地 IPC 环境阻断；不重新调查 446-file/R1/D2 数据导入。** 拒绝任何额外 TCP 监听、额外端口、持续进程、后台调度或测试服务器。若此唯一策略修正后的有界运行仍无法启动 Chrome，则停止并报告具体原因，不围绕沙箱进行无止境迭代；再作产品主线取舍，不为了技术边界问题反复拖延功能交付。
+
+`R1_PASS / R2_BROWSER_NOT_TESTED / IPC_PATH_SCOPED_RETRY_DESIGN_READY / MAC_NEW_RETRY_NOT_AUTHORIZED / PROD_UNCHANGED / KEEP_8766 / NO_NEW_TCP_LISTENER / NO_DEPLOY`。
