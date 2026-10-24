@@ -1,3 +1,12 @@
+# 2026-10-24 — D1 real-constructor call-site rehearsal, OFFLINE child review pending
+
+- Parent PR187 APPROVE only covers Mac `--verify-only`; no D2/D3 authorization.
+- This continuation branch now routes the **specific concrete HTTPSConnection constructor call site** (under a hard test-patched, no-socket constructor) through the original unique 3-slot offline coordinator and its RESERVE/RAW/SETTLE journal. Changes are limited to `f0_l2_d1_concrete_https.py`, `f0_l2_d1_coordinator.py`, one new focused test, review note and this handoff. This is not a new production sender or live network support.
+- NEW CODE **PENDING independent fixed-SHA tests and review**. Read `f0/F0_D1_PHYSICAL_CTOR_INTEGRATION_REVIEW.md` for exact boundaries, test command, missing user approval and whole-operation deadline. No original direct `send_live()` gate is relaxed. Full F0 verification and independent Mac audit are still required; do not infer success from file creation.
+- Primary remaining blocker: protect a true production sender with exact independently reviewed D2 user scope, separate D3 explicit one-shot consent, fixed permanently consumed once marker and per-request presend fsync before physical TLS connect, globally bounded actual POST start and whole-operation timeout, RAW-before-SETTLE and no uncertain replay. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`. NO_RPC/WS/MERGE/DEPLOY/BACKGROUND/TRADES.
+
+---
+
 # 2026-10-24 — verified handoff after independent PR187 Mac approval
 
 - **GitHub readback, not a fresh Mac test:** PR113 HEAD `9134fcd41df49ef836b81c8a040974ad89c1fde1` (Draft), PR116 HEAD `cf88cd9f6568502f5c052ae3befc9cc16cbab98b` (Draft), PR118 HEAD `78e4d26ff7cd1074b7c8de44109b4356e5d0409d` (Draft), PR187 HEAD **`23f41ea2f984cb652cc07bbf28d9366d18b61701`** (Draft); all unmerged at readback. PR118 was independently approved in an attributed conversation comment (36+103 checks), not a native submitted review. Keep PR113 as separate architecture authority and PR116's approved cohort frozen.
