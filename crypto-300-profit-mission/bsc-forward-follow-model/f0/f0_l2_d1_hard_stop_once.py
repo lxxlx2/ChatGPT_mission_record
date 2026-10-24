@@ -36,7 +36,7 @@ def send_live(*_args, **_kwargs):
 
 
 def _private_test_dir(path):
-    if (type(path) is not Path or not path.is_absolute() or path.is_symlink()
+    if (not isinstance(path, Path) or not path.is_absolute() or path.is_symlink()
             or not path.is_dir() or path.stat().st_mode & 0o077):
         raise ValueError("D1_HARD_STOP_TEST_ROOT_NOT_PRIVATE")
     # The disposable test registry must have no possible overlap with the
