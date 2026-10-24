@@ -38,11 +38,35 @@ class Final7ScopeTests(unittest.TestCase):
                           v["verified_tokenized_stock_setups"],
                           v["asset_identity_unresolved_setups"]),(46,41,3,2,0))
         self.assertEqual(v["full_seven_day_G3_attention_ceiling"],35)
-        self.assertEqual((v["core_if_all_monitor_tag_deferred"],
-                          v["core_plus_fans_if_all_monitor_tag_deferred"]),(35,38))
+        self.assertEqual(v["G3_crypto_type_signal_lower_bound"],41)
+        self.assertTrue(v["G3_raw_upgrade_events_are_attention_not_trade_orders"])
+        self.assertTrue(v["G3_over_ceiling_even_if_remaining_source_has_zero_new_setups"])
+        self.assertEqual(v["G3_historical_subset_attention_ceiling_status"],
+                         "EXCEEDED_WITH_CRYPTO_TYPE_POSITIVE_EVIDENCE")
+        self.assertEqual(v["G3_full_4599_publisher_source_and_PIT"],"NOT_PROVEN")
+        self.assertEqual(v["G3"],"NOT_PASSED_G3_ATTENTION_LOWER_BOUND_EXCEEDED_BUT_FULL_SOURCE_AND_PIT_PENDING")
         self.assertEqual(v["G6"],"NO_GO")
         self.assertEqual(v["fan_token_in_scope_formal_decision"],
                          "UNRESOLVED_FROZEN_SCOPE_INTERPRETATION")
+
+    def test_monitoring_tag_applies_only_to_g4_account_quiz(self):
+        result=self.audit()
+        sensitivity=result["G4_monitoring_tag_account_permission_sensitivity"]
+        self.assertEqual(sensitivity["affected_crypto_type_setup_events"],6)
+        self.assertEqual(sensitivity["if_all_accounts_cannot_trade_tagged_core_events"],35)
+        self.assertEqual(sensitivity["if_fan_tokens_included_and_all_tagged_unavailable"],38)
+        self.assertTrue(sensitivity["cannot_subtract_from_G3_attention_events"])
+        self.assertNotIn("core_if_all_monitor_tag_deferred",result)
+        self.assertNotIn("core_plus_fans_if_all_monitor_tag_deferred",result)
+        self.assertEqual(result["G3_crypto_type_signal_lower_bound"],41)
+
+    def test_even_excluding_all_three_fans_attention_exceeds_cap(self):
+        result=self.audit()
+        self.assertEqual(result["crypto_protocol_utility_setups"],41)
+        self.assertEqual(result["separately_scoped_chiliz_fan_token_setups"],3)
+        self.assertGreater(result["crypto_protocol_utility_setups"],
+                           result["full_seven_day_G3_attention_ceiling"])
+        self.assertEqual(result["G3_full_4599_publisher_source_and_PIT"],"NOT_PROVEN")
 
     def test_original_event_ids_timestamps_and_input_unchanged(self):
         prior=deepcopy(self.replay)
