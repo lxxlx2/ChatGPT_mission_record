@@ -1,0 +1,59 @@
+{
+  "schema": "BSC_P4B_2026_239E_DRAGON_4_ORIGINAL_TX_TIMESTAMP_PRECOMMIT_V1",
+  "date_bangkok": "2026-10-18",
+  "base": "879a7aa119a432cdffd5ca394d060f4eabcd684a",
+  "purpose": "Determine 239E REAL original signer buy and sell timestamps to classify original signer position status at buy_timestamp +1/+5/+15 minutes; no follower trade, no claim public signal arrival.",
+  "source_pins": {
+    "real_signed_rounds": "46e90123b98d5324e05388b17b8a3bbb77cb5361",
+    "historical_new_math_readback": "cc09edff6a464b21ab1609980becc1afa4548ad1",
+    "original_frozen_239e_endblock_balance": "7e930c57fb5ba3a3dfd795575c059ade9f8a387d"
+  },
+  "network": "bnb-mainnet",
+  "method": "eth_getTransactionByHash",
+  "calls": [
+    {
+      "case": "R1",
+      "role": "ORIGINAL_FIRST_BUY",
+      "hash": "0x43a76faa30a37a7028cb82f75a6bc3340bd6ef6e50230126d4d40f2700606a81",
+      "expected_block": 85954137
+    },
+    {
+      "case": "R1",
+      "role": "ORIGINAL_FINAL_SELL",
+      "hash": "0x3e64fc9233617942d8c23edccd55c2273da16e8d32543178d1f9e9795544ba93",
+      "expected_block": 85957578
+    },
+    {
+      "case": "R2",
+      "role": "ORIGINAL_FIRST_BUY",
+      "hash": "0x7aa4b9daf5bdcafbd6453dbb5d86957d8ce1336c897c8b308570be54ce7d9e6c",
+      "expected_block": 85959961
+    },
+    {
+      "case": "R2",
+      "role": "ORIGINAL_FINAL_SELL",
+      "hash": "0x5f7d389c874b47509989190287fdd57cf6d4a2a5f252110d1cdd71783faa6bf1",
+      "expected_block": 85961371
+    }
+  ],
+  "max_calls": 4,
+  "no_retries": true,
+  "no_reselection": true,
+  "cutoffs_seconds_after_actual_owner_first_signed_buy": [
+    60,
+    300,
+    900
+  ],
+  "time_rule": "If two separate original eth_getTransactionByHash tools have parseable onchain blockTimestamp, determine whether actual owner final successful sell happened <= cutoff; if sell same instant as cutoff, status EXITED; if later, NOT_YET_EXITED_WITHIN_SELECTED_SIGNED_SET. This is NOT a public observer delivery timestamp.",
+  "historical_evidence_grade": "ALCHEMY_TOOL_TRANSACTION_FIELDS_NOT_FULL_PROVIDER_NETWORK_TRANSCRIPT",
+  "gates": {
+    "original_owner_balance_at_arbitrary_cutoff": "NOT_CHAIN_BALANCE_REQUERIED",
+    "public_signal_arrival": "UNRESOLVED",
+    "follower_real_buy_and_exit": "UNRESOLVED",
+    "follower_profit_at_1_5_15": "UNRESOLVED",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P4_B": "PARTIAL",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "schema": "BSC_MEME_P4_OBSERVED_POOLS_HISTORICAL_FACTORY_IDENTITY",
+  "status": "CONFIRMED_VENUE_FACTORY_IDENTITIES_NOT_LAUNCH_TIMESTAMPS",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-factory11-historical-part1-2026-10-13.json",
+      "git_blob_sha": "29061482790df8dc0605bb5def953acfeab6f42a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-factory11-historical-part2-2026-10-13.json",
+      "git_blob_sha": "e7b9bb206471b5fad4cd31f6769bcc5e059a2830"
+    }
+  ],
+  "source_precommit_git_blob_sha": "039e19fe13f98fcdbde6abc0d004599de4f4df07",
+  "scope": "All 11 pools tied to 23 verified September-October owner Swap candidates from frozen 19CA, but only 11 observed pools, not full market opportunity U",
+  "factories": {
+    "0xca143ce32fe78f1f7019d7d551a6402fc5350c73": 8,
+    "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865": 3
+  },
+  "all_11_historical_factory_reads_complete": true,
+  "observed_pools": [
+    {
+      "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "target_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "first_verified_owner_swap_block": 121786352,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "read_status": "DIRECT_HISTORICAL_CALL"
+    },
+    {
+      "pool": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "target_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "first_verified_owner_swap_block": 122015238,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "read_status": "DIRECT_HISTORICAL_CALL"
+    },
+    {
+      "pool": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+      "target_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "first_verified_owner_swap_block": 122185934,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "read_status": "DIRECT_HISTORICAL_CALL"
+    },
+    {
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "target_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "first_verified_owner_swap_block": 121966513,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "read_status": "DIRECT_HISTORICAL_CALL"
+    },
+    {
+      "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+      "target_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "first_verified_owner_swap_block": 126467804,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "read_status": "DIRECT_HISTORICAL_CALL"
+    },
+    {
+      "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "target_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "first_verified_owner_swap_block": 122582898,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "read_status": "DIRECT_HISTORICAL_CALL"
+    },
+    {
+      "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+      "target_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "first_verified_owner_swap_block": 126468121,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "read_status": "DIRECT_HISTORICAL_CALL"
+    },
+    {
+      "pool": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+      "target_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "first_verified_owner_swap_block": 126468394,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "read_status": "DIRECT_HISTORICAL_CALL"
+    },
+    {
+      "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "target_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "first_verified_owner_swap_block": 123398349,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "read_status": "DIRECT_HISTORICAL_CALL"
+    },
+    {
+      "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+      "target_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "first_verified_owner_swap_block": 122742452,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "read_status": "DIRECT_HISTORICAL_CALL"
+    },
+    {
+      "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "target_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "first_verified_owner_swap_block": 122367977,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "read_status": "DIRECT_HISTORICAL_CALL"
+    }
+  ],
+  "first_tradable_event_for_any_CA": "UNRESOLVED",
+  "market_opportunity_denominator": "UNRESOLVED",
+  "eligible_missed_profitable_buy": "UNRESOLVED",
+  "production": "NO_GO"
+}

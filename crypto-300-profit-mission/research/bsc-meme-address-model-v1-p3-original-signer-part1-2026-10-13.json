@@ -1,0 +1,142 @@
+{
+  "schema": "BSC_MEME_P3_ORIGINAL_TRANSACTION_SIGNER_SOURCE",
+  "part": 1,
+  "range": [
+    0,
+    7
+  ],
+  "precommit_sha": "9364abfbeedb9201afa0036df849dc9c43101d4f",
+  "records": [
+    {
+      "hash": "0x00d5eabcd78fa629f2f9036d74bfbac889cea475f8617111c32db45fae5413ed",
+      "wallets": [
+        "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8"
+      ],
+      "transfer_blocks": [
+        123355289
+      ],
+      "original_tx_read_state": "ORIGINAL_TX_PARSED",
+      "full_response": true,
+      "from": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "block": 123355289,
+      "to": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "value_wei": "0",
+      "input_selector": "0x84da2c7b"
+    },
+    {
+      "hash": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+      "wallets": [
+        "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8"
+      ],
+      "transfer_blocks": [
+        123398349
+      ],
+      "original_tx_read_state": "ORIGINAL_TX_PARSED",
+      "full_response": true,
+      "from": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "block": 123398349,
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "input_selector": "0x4d819a2a"
+    },
+    {
+      "hash": "0x40dd73581cb30270e2609e7c6db71104769d9d306914f7987d59f28070177ce5",
+      "wallets": [
+        "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8"
+      ],
+      "transfer_blocks": [
+        125384733
+      ],
+      "original_tx_read_state": "TRUNCATED_UNREADABLE_ORIGINAL",
+      "full_response": false,
+      "from": null,
+      "block": null,
+      "to": null,
+      "value_wei": null,
+      "input_selector": null
+    },
+    {
+      "hash": "0xf9d57b0971395dc6f59a0317ba4bcbee3d4c0920e34474cf6f153300f76275d9",
+      "wallets": [
+        "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8"
+      ],
+      "transfer_blocks": [
+        126605440
+      ],
+      "original_tx_read_state": "ORIGINAL_TX_PARSED",
+      "full_response": true,
+      "from": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "block": 126605440,
+      "to": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "value_wei": "0",
+      "input_selector": "0x84da2c7b"
+    },
+    {
+      "hash": "0xae1def223a10ca11bf4e13f716f475b99693047e4e541c465e9dde0a30b24189",
+      "wallets": [
+        "0x2adf961b40951736bcff3b36b7fb1cd5775475ba"
+      ],
+      "transfer_blocks": [
+        122582898
+      ],
+      "original_tx_read_state": "ORIGINAL_TX_PARSED",
+      "full_response": true,
+      "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122582898,
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "input_selector": "0x4d819a2a"
+    },
+    {
+      "hash": "0xcab3ab44e62796268d5817e67b89823b0e14cd199b5b9100f4bfc38fe2689f7f",
+      "wallets": [
+        "0x2adf961b40951736bcff3b36b7fb1cd5775475ba"
+      ],
+      "transfer_blocks": [
+        122582910
+      ],
+      "original_tx_read_state": "ORIGINAL_TX_PARSED",
+      "full_response": true,
+      "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122582910,
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "input_selector": "0x4d819a2a"
+    },
+    {
+      "hash": "0x31d00d5cd9f1f65f38b2f44529dc39bc94c2271464fc381febb8ae3f45889ac8",
+      "wallets": [
+        "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+        "0xa83b73f5644cde337b61da79589f10ea15548811"
+      ],
+      "transfer_blocks": [
+        122986050
+      ],
+      "original_tx_read_state": "ORIGINAL_TX_PARSED",
+      "full_response": true,
+      "from": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+      "block": 122986050,
+      "to": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "value_wei": "0",
+      "input_selector": "0x84da2c7b"
+    },
+    {
+      "hash": "0xed280439fe38101ab1065564f1245fc689de6ea50276e42f0871cb55d6cf4414",
+      "wallets": [
+        "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+        "0xa83b73f5644cde337b61da79589f10ea15548811"
+      ],
+      "transfer_blocks": [
+        122987489
+      ],
+      "original_tx_read_state": "ORIGINAL_TX_PARSED",
+      "full_response": true,
+      "from": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+      "block": 122987489,
+      "to": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "value_wei": "0",
+      "input_selector": "0x84da2c7b"
+    }
+  ],
+  "production": "NO_GO"
+}

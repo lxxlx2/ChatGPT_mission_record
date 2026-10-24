@@ -1,0 +1,98 @@
+{
+  "schema": "BSC_P4C_NEXT_FOUR_BALANCED_OWNER_NATIVE_BALANCE_SNAPSHOT",
+  "part": 2,
+  "source_precommit_sha": "2575b2d34d9e7b4607a37096558b577df8058df5",
+  "rows": [
+    {
+      "round": 37,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 112633681,
+      "prior": 112633680,
+      "pre": {
+        "status": "COMPLETE",
+        "wei": "18949152016563775184"
+      },
+      "post": {
+        "status": "COMPLETE",
+        "wei": "18398934275083775184"
+      },
+      "delta_wei": "-550217741480000000"
+    },
+    {
+      "round": 37,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 112633772,
+      "prior": 112633771,
+      "pre": {
+        "status": "COMPLETE",
+        "wei": "18398934275083775184"
+      },
+      "post": {
+        "status": "COMPLETE",
+        "wei": "18798865340172219516"
+      },
+      "delta_wei": "399931065088444332"
+    },
+    {
+      "round": 37,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 112633805,
+      "prior": 112633804,
+      "pre": {
+        "status": "COMPLETE",
+        "wei": "18798865340172219516"
+      },
+      "post": {
+        "status": "COMPLETE",
+        "wei": "19203766098720264027"
+      },
+      "delta_wei": "404900758548044511"
+    },
+    {
+      "round": 38,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 112634149,
+      "prior": 112634148,
+      "pre": {
+        "status": "COMPLETE",
+        "wei": "19203766098720264027"
+      },
+      "post": {
+        "status": "COMPLETE",
+        "wei": "17453529457480264027"
+      },
+      "delta_wei": "-1750236641240000000"
+    },
+    {
+      "round": 38,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 112634161,
+      "prior": 112634160,
+      "pre": {
+        "status": "COMPLETE",
+        "wei": "17453529457480264027"
+      },
+      "post": {
+        "status": "COMPLETE",
+        "wei": "18282283572919141413"
+      },
+      "delta_wei": "828754115438877386"
+    },
+    {
+      "round": 38,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 112634184,
+      "prior": 112634183,
+      "pre": {
+        "status": "COMPLETE",
+        "wei": "18282283572919141413"
+      },
+      "post": {
+        "status": "COMPLETE",
+        "wei": "19130639071019424059"
+      },
+      "delta_wei": "848355498100282646"
+    }
+  ],
+  "production": "NO_GO"
+}

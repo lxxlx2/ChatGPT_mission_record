@@ -1,0 +1,57 @@
+{
+  "schema": "BSC_P4B_5E60_2026_966415_INHERITED_DRAGON_OLDER_50K_NO_TOKEN_TRANSFER_V1",
+  "date": "2026-10-18",
+  "source_prefreeze": "bsc-meme-address-model-v1-p4b-5e60-inherited-966415-prior-50k-block-window-prefreeze-2026-10-18.json",
+  "provider": "Alchemy existing free bnb-mainnet",
+  "calls": 3,
+  "retries": 0,
+  "opening_balance": {
+    "block": 85849999,
+    "hex": "0x00000000000000000000000000000000000000000000cca5806d3a3112311c08",
+    "raw": "966415729394361448864776",
+    "source_grade": "COMPLETE_32BYTE_HISTORICAL_BALANCEOF_TOOL_PARSED"
+  },
+  "older_range": {
+    "from_block": 85850000,
+    "to_block": 85899999,
+    "category": [
+      "erc20"
+    ],
+    "contractAddress": "0xeccbb861c0dda7efd964010085488b69317e4444",
+    "wallet": "0x5e600e259e3cff0757e3736223685958665866c6"
+  },
+  "transfers_received": {
+    "order": "desc",
+    "maxCount": "0xa",
+    "response_chars": 21,
+    "returned_count": 0,
+    "pageKey": null,
+    "complete_scope_empty": true
+  },
+  "transfers_sent": {
+    "order": "desc",
+    "maxCount": "0xa",
+    "response_chars": 21,
+    "returned_count": 0,
+    "pageKey": null,
+    "complete_scope_empty": true
+  },
+  "reconciliation": {
+    "balance_at_85849999_raw": "966415729394361448864776",
+    "balance_at_85899999_raw": "966415729394361448864776",
+    "actual_50k_window_Dragon_in_raw": "0",
+    "actual_50k_window_Dragon_out_raw": "0",
+    "same_inventory_across_50k_blocks": true
+  },
+  "limits": [
+    "Empty transfers support only no matching ERC20 Dragon Transfer events to/from this wallet in the fixed 50k-block scope; wallet could have transactions in other tokens and earlier token acquisition.",
+    "Wallet's real 966415 Dragon opening tokens existed before block 85850000; cost basis remains unverified, cannot equate 8399 USDT proceeds minus 1000 USDT incremental buy with profit.",
+    "No paid API and no next scans without new explicit prefreeze; avoid indefinite expanding prehistorical queries."
+  ],
+  "status": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}

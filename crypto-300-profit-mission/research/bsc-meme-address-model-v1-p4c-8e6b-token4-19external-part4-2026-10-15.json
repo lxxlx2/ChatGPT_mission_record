@@ -1,0 +1,120 @@
+{
+  "schema": "BSC_P4C_8E6B_ORIGINAL_OWNER_EXTERNAL_EXCLUSIVITY",
+  "part": 4,
+  "precommit_sha": "d93d67e5e5c3af951eea9eafbdb56a714291faea",
+  "rows": [
+    {
+      "hash": "0x4c30211d8372ee683b9b20eaa7b965b317be21e8285f98e0215598061a78c5b1",
+      "block": 63328710,
+      "p2_index": 17,
+      "dir": "out",
+      "directions": [
+        {
+          "direction": "OUT",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": [
+            {
+              "hash": "0x4c30211d8372ee683b9b20eaa7b965b317be21e8285f98e0215598061a78c5b1",
+              "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+              "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+              "value": 0,
+              "asset": "BNB"
+            }
+          ]
+        },
+        {
+          "direction": "IN",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": []
+        }
+      ]
+    },
+    {
+      "hash": "0x2f6a73dc8d4009595ffa1da7f5a2be1a0a2dac9a57ad7d7c759f8d74347eda0f",
+      "block": 63335246,
+      "p2_index": 17,
+      "dir": "out",
+      "directions": [
+        {
+          "direction": "OUT",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": [
+            {
+              "hash": "0x2f6a73dc8d4009595ffa1da7f5a2be1a0a2dac9a57ad7d7c759f8d74347eda0f",
+              "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+              "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+              "value": 0,
+              "asset": "BNB"
+            }
+          ]
+        },
+        {
+          "direction": "IN",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": []
+        }
+      ]
+    },
+    {
+      "hash": "0x7a464040b2d448505a0fa8b7e61ebc35e7384903f2097f3fb32bfea5d1e7eb84",
+      "block": 63901440,
+      "p2_index": 17,
+      "dir": "out",
+      "directions": [
+        {
+          "direction": "OUT",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": [
+            {
+              "hash": "0x7a464040b2d448505a0fa8b7e61ebc35e7384903f2097f3fb32bfea5d1e7eb84",
+              "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+              "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+              "value": 0,
+              "asset": "BNB"
+            }
+          ]
+        },
+        {
+          "direction": "IN",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": []
+        }
+      ]
+    },
+    {
+      "hash": "0x0e51e0e953ed22e8635665a05fb93bd28202d6e7cfd92b5de3b29c9d382d4462",
+      "block": 64458294,
+      "p2_index": 17,
+      "dir": "out",
+      "directions": [
+        {
+          "direction": "OUT",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": [
+            {
+              "hash": "0x0e51e0e953ed22e8635665a05fb93bd28202d6e7cfd92b5de3b29c9d382d4462",
+              "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+              "to": "0xd9c500dff816a1da21a48a732d3498bf09dc9aeb",
+              "value": 0,
+              "asset": "BNB"
+            }
+          ]
+        },
+        {
+          "direction": "IN",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": []
+        }
+      ]
+    }
+  ],
+  "production": "NO_GO"
+}

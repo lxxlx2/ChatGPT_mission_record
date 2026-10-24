@@ -1,0 +1,198 @@
+{
+  "schema": "BSC_P4C_SEVEN_WALLET_ORIGINAL_MINED_RECEIPT_PROOFS",
+  "source_precommit_sha": "a88dd45852ae32d70b4c32bea5cf52fa42607a37",
+  "part": 1,
+  "rows": [
+    {
+      "source": {
+        "round": "8E6B_HAJIMI_R1",
+        "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "token": "哈基米 / HAJIMI",
+        "tx": "0x379a9f56fa6b47182c30a5854240aeb08a599b61d530ea969a446adfbfa09231",
+        "block": 74741352
+      },
+      "status": "SUCCESS_FULL_RECEIPT",
+      "receipt": {
+        "hash": "0x379a9f56fa6b47182c30a5854240aeb08a599b61d530ea969a446adfbfa09231",
+        "block": "0x4747668",
+        "status": "0x1",
+        "gasUsed": "0x28443",
+        "effectiveGasPrice": "0x7aef40a00",
+        "logCount": 7,
+        "selected_token_transfer_logs": [
+          {
+            "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc",
+              "0x000000000000000000000000c33bacff9141da689875e6381c1932348ab4c5cb"
+            ],
+            "data": "0x00000000000000000000000000000000000000000000000044b1eec6162f0000"
+          },
+          {
+            "address": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x000000000000000000000000c33bacff9141da689875e6381c1932348ab4c5cb",
+              "0x0000000000000000000000008e6b3c9c72ca592bbab470f761fa869c174e9ea0"
+            ],
+            "data": "0x000000000000000000000000000000000000000000001b5f186f248def4e4b97"
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "round": "8E6B_HAJIMI_R1",
+        "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "token": "哈基米 / HAJIMI",
+        "tx": "0x7e6c7bfecd6815c38ad53af6d15faef516f6aec40ca5d5ee7ca2200053357efe",
+        "block": 74741573
+      },
+      "status": "SUCCESS_FULL_RECEIPT",
+      "receipt": {
+        "hash": "0x7e6c7bfecd6815c38ad53af6d15faef516f6aec40ca5d5ee7ca2200053357efe",
+        "block": "0x4747745",
+        "status": "0x1",
+        "gasUsed": "0x201ac",
+        "effectiveGasPrice": "0x77359400",
+        "logCount": 6,
+        "selected_token_transfer_logs": [
+          {
+            "address": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x0000000000000000000000008e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+              "0x000000000000000000000000c33bacff9141da689875e6381c1932348ab4c5cb"
+            ],
+            "data": "0x000000000000000000000000000000000000000000000daf8c379246f7a725cb"
+          },
+          {
+            "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x000000000000000000000000c33bacff9141da689875e6381c1932348ab4c5cb",
+              "0x00000000000000000000000013f4ea83d0bd40e75c8222255bc855a974568dd4"
+            ],
+            "data": "0x0000000000000000000000000000000000000000000000002474dc4026ef14e2"
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "round": "8E6B_HAJIMI_R1",
+        "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "token": "哈基米 / HAJIMI",
+        "tx": "0x3055cbb9f252a4b20a8cb2a127011fea8fc3c4ccaa24464a7f4bd75881d0e95e",
+        "block": 74741587
+      },
+      "status": "SUCCESS_FULL_RECEIPT",
+      "receipt": {
+        "hash": "0x3055cbb9f252a4b20a8cb2a127011fea8fc3c4ccaa24464a7f4bd75881d0e95e",
+        "block": "0x4747753",
+        "status": "0x1",
+        "gasUsed": "0x217e0",
+        "effectiveGasPrice": "0x77359400",
+        "logCount": 6,
+        "selected_token_transfer_logs": [
+          {
+            "address": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x0000000000000000000000008e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+              "0x000000000000000000000000c33bacff9141da689875e6381c1932348ab4c5cb"
+            ],
+            "data": "0x000000000000000000000000000000000000000000000daf8c379246f7a725cc"
+          },
+          {
+            "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x000000000000000000000000c33bacff9141da689875e6381c1932348ab4c5cb",
+              "0x00000000000000000000000013f4ea83d0bd40e75c8222255bc855a974568dd4"
+            ],
+            "data": "0x00000000000000000000000000000000000000000000000024be3005f9d0250b"
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "round": "8E6B_DRAGON_R2",
+        "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "token": "龙虾",
+        "tx": "0xe96df53014497d00b74d6a08fb903661b35a4ceea42851bcb31de80fca223f34",
+        "block": 93584281
+      },
+      "status": "SUCCESS_FULL_RECEIPT",
+      "receipt": {
+        "hash": "0xe96df53014497d00b74d6a08fb903661b35a4ceea42851bcb31de80fca223f34",
+        "block": "0x593fb99",
+        "status": "0x1",
+        "gasUsed": "0x2aebf",
+        "effectiveGasPrice": "0x7270e00",
+        "logCount": 7,
+        "selected_token_transfer_logs": [
+          {
+            "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc",
+              "0x00000000000000000000000022af7297243c4eef12e2d5a4f888b92e56bf127c"
+            ],
+            "data": "0x00000000000000000000000000000000000000000000000029378f43a6e90000"
+          },
+          {
+            "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x00000000000000000000000022af7297243c4eef12e2d5a4f888b92e56bf127c",
+              "0x0000000000000000000000008e6b3c9c72ca592bbab470f761fa869c174e9ea0"
+            ],
+            "data": "0x000000000000000000000000000000000000000000002dcd1a385db1285307c6"
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "round": "8E6B_DRAGON_R2",
+        "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "token": "龙虾",
+        "tx": "0xd3b7eafb4d5193be7f7ff9dd62b968a65fae16b37c430726e13207ed51c71530",
+        "block": 94208823
+      },
+      "status": "SUCCESS_FULL_RECEIPT",
+      "receipt": {
+        "hash": "0xd3b7eafb4d5193be7f7ff9dd62b968a65fae16b37c430726e13207ed51c71530",
+        "block": "0x59d8337",
+        "status": "0x1",
+        "gasUsed": "0x21806",
+        "effectiveGasPrice": "0x3b9aca00",
+        "logCount": 6,
+        "selected_token_transfer_logs": [
+          {
+            "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x0000000000000000000000008e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+              "0x00000000000000000000000022af7297243c4eef12e2d5a4f888b92e56bf127c"
+            ],
+            "data": "0x000000000000000000000000000000000000000000002dcd1a385db1285307c6"
+          },
+          {
+            "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x00000000000000000000000022af7297243c4eef12e2d5a4f888b92e56bf127c",
+              "0x00000000000000000000000013f4ea83d0bd40e75c8222255bc855a974568dd4"
+            ],
+            "data": "0x0000000000000000000000000000000000000000000000002d269b5c358b7083"
+          }
+        ]
+      }
+    }
+  ],
+  "production": "NO_GO"
+}

@@ -1,0 +1,102 @@
+{
+  "schema": "BSC_P4_FACTORY190_QUERY_PART",
+  "part": 12,
+  "range": [
+    130,
+    144
+  ],
+  "precommit_sha": "c9b0be420a3e456e2927953288fdd17f6e78036d",
+  "records": [
+    {
+      "index": 130,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "raw": "0x000000000000000000000000a651c8deb3ff9f8d56a26e72042b7a8a1f433480"
+    },
+    {
+      "index": 131,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x0000000000000000000000000000000000000000",
+      "raw": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "index": 132,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x5f44e294432dc0119e15cd31704c149cd8e28e98",
+      "raw": "0x0000000000000000000000005f44e294432dc0119e15cd31704c149cd8e28e98"
+    },
+    {
+      "index": 133,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x516936aa71f93a3763c9cc7464943ee50e958648",
+      "raw": "0x000000000000000000000000516936aa71f93a3763c9cc7464943ee50e958648"
+    },
+    {
+      "index": 134,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x287dda17c0dfec97fe7b89adf8bfb4cccc409f58",
+      "raw": "0x000000000000000000000000287dda17c0dfec97fe7b89adf8bfb4cccc409f58"
+    },
+    {
+      "index": 135,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x95548d0d974283237b65136bbf10c3e9dd74bd13",
+      "raw": "0x00000000000000000000000095548d0d974283237b65136bbf10c3e9dd74bd13"
+    },
+    {
+      "index": 136,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x0000000000000000000000000000000000000000",
+      "raw": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "index": 137,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x301cfebcaf33038b90a76ed8db8082120b8e80d3",
+      "raw": "0x000000000000000000000000301cfebcaf33038b90a76ed8db8082120b8e80d3"
+    },
+    {
+      "index": 138,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x8c9021fd2c3ab6d0b71048ddbfba71cf51eceea1",
+      "raw": "0x0000000000000000000000008c9021fd2c3ab6d0b71048ddbfba71cf51eceea1"
+    },
+    {
+      "index": 139,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xb6bf78211bec35385dc663d37ea41118205c1303",
+      "raw": "0x000000000000000000000000b6bf78211bec35385dc663d37ea41118205c1303"
+    },
+    {
+      "index": 140,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "raw": "0x00000000000000000000000022af7297243c4eef12e2d5a4f888b92e56bf127c"
+    },
+    {
+      "index": 141,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x0000000000000000000000000000000000000000",
+      "raw": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "index": 142,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x0000000000000000000000000000000000000000",
+      "raw": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "index": 143,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x23ecb1266df4ad88a63f64456f530a997627a5b1",
+      "raw": "0x00000000000000000000000023ecb1266df4ad88a63f64456f530a997627a5b1"
+    },
+    {
+      "index": 144,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xe4f63d4fc45ff997308da38f7c15e1a9250e1642",
+      "raw": "0x000000000000000000000000e4f63d4fc45ff997308da38f7c15e1a9250e1642"
+    }
+  ],
+  "production": "NO_GO"
+}

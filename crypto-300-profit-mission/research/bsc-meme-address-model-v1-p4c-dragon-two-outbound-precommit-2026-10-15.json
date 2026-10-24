@@ -1,0 +1,30 @@
+{
+  "schema": "BSC_P4C_DRAGON_DDAC_TWO_EXIT_TX_RECEIPT_AND_FOUR_SALE_PRECOMMIT",
+  "network": "bnb-mainnet",
+  "original_outbound_blob_sha": "30425f9ee554bdf8f883b1c85e01261f1cf438df",
+  "topic_reference": "four-meme-community/fourmeme-docs abi/TokenManager2.lite.json",
+  "target": "龙虾",
+  "token_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "source_signed_buy_block": 83635776,
+  "selection": "The exact two full-page asc original EOA outbound transfers from buy through latest. Original signers and quote receiving events must be revalidated. One transfer TO token manager is only a sell candidate.",
+  "selected": [
+    {
+      "block": 83635800,
+      "txhash": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+      "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "to": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "raw_amount": "99069253510299993000000000",
+      "unique": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219:log:170"
+    },
+    {
+      "block": 84007473,
+      "txhash": "0xb6e9bf6e4f9ceb0e39b5665bfb1b15345e383670f13d98689e8767401e438fe8",
+      "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "raw_amount": "195581662531433206271053",
+      "unique": "0xb6e9bf6e4f9ceb0e39b5665bfb1b15345e383670f13d98689e8767401e438fe8:log:850"
+    }
+  ],
+  "production": "NO_GO"
+}

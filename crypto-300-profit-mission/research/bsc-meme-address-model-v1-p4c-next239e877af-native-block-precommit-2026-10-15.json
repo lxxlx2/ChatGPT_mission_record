@@ -1,0 +1,75 @@
+{
+  "schema": "BSC_P4C_FIXED_NEXT_FOUR_ROUND_EOA_BNB_PRE_POST_BLOCK_BALANCE_PLAN",
+  "precommit_blob_sha": "5c9608d13e92f4e36a9fa0950fb065abb9869a0b",
+  "network": "bnb-mainnet",
+  "queries": [
+    {
+      "round": 29,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "block": 85954137,
+      "prior": 85954136
+    },
+    {
+      "round": 29,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "block": 85954824,
+      "prior": 85954823
+    },
+    {
+      "round": 29,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "block": 85957578,
+      "prior": 85957577
+    },
+    {
+      "round": 30,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "block": 85959961,
+      "prior": 85959960
+    },
+    {
+      "round": 30,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "block": 85961371,
+      "prior": 85961370
+    },
+    {
+      "round": 37,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 112633681,
+      "prior": 112633680
+    },
+    {
+      "round": 37,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 112633772,
+      "prior": 112633771
+    },
+    {
+      "round": 37,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 112633805,
+      "prior": 112633804
+    },
+    {
+      "round": 38,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 112634149,
+      "prior": 112634148
+    },
+    {
+      "round": 38,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 112634161,
+      "prior": 112634160
+    },
+    {
+      "round": 38,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 112634184,
+      "prior": 112634183
+    }
+  ],
+  "scope": "Original exactly 11 distinct wallet block heights, pre and post BNB wallet balance, no duplicate block claims; sign cannot alone certify attributable net PnL. Pair receipts and actual WBNB or quote token exit and successful gas; only source closed original round can pass.",
+  "production": "NO_GO"
+}

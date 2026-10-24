@@ -1,0 +1,265 @@
+{
+  "schema": "BSC_P4B_2026_5E60_PAST_DRAGON_IN_PAGE2_AND_OUT_PAGE1_PAGINATED_READBACK_V1",
+  "precommit": "bsc-meme-address-model-v1-p4b-5e60-prior-cost-inbound-page2-outbound-page1-prefreeze-2026-10-18.json",
+  "methods": "getAssetTransfers",
+  "network": "bnb-mainnet",
+  "provider": "Alchemy existing free",
+  "reads_executed": 2,
+  "retries": 0,
+  "source_grade": "TWO_FULL_TOOL_PARSED_10_RECORD_PAGES_WITH_PAGINATION_PENDING_NOT_RAW_WIRE",
+  "fixed_token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "window": {
+    "fromBlock": "0x51ebae0",
+    "toBlock": "0x51fa519"
+  },
+  "results": {
+    "INBOUND_PAGE2": {
+      "original_cursor": "a93be65e-cfe0-4ec1-ab42-8dc1739fef16",
+      "next_pageKey": "d7e9f66e-6047-4d9a-957b-67e3ed89967f",
+      "returned_count": 10,
+      "rows": [
+        {
+          "rank": 11,
+          "block_hex": "0x51f4715",
+          "block": 85935893,
+          "hash": "0x27b3143e046b332dcfcf6af9fb7bd5e2511c0a69abae3dc6111497761544f567",
+          "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "raw_amount_hex": "0xcf5f4e95c721c90654c",
+          "raw_amount_uint": "61205497830754585961804",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 12,
+          "block_hex": "0x51f4719",
+          "block": 85935897,
+          "hash": "0x66e990ac125a77a29fd9499b1b06ce72e4f38765c598dee864f83198d60aa18c",
+          "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "raw_amount_hex": "0xcec7e13f1aa7337ec29",
+          "raw_amount_uint": "61030914266418912947241",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 13,
+          "block_hex": "0x51f8c49",
+          "block": 85953609,
+          "hash": "0x755e0e413481221164cca5439535dc547fce65dabea56061ef7fcc039bd934f2",
+          "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "raw_amount_hex": "0x160ff2d86c2316b8592e",
+          "raw_amount_uint": "104186262639487946873134",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 14,
+          "block_hex": "0x51f8c4c",
+          "block": 85953612,
+          "hash": "0x80adab0c099702f250cd5dd2ee7352cb0e0d0df340c869e5e9ed4ec7eb9dc71c",
+          "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "raw_amount_hex": "0x15f7bdc1fb23bb4b7c3b",
+          "raw_amount_uint": "103739715412543366986811",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 15,
+          "block_hex": "0x51f8c5f",
+          "block": 85953631,
+          "hash": "0xaae1cf33f17621618834ed82fd3c58f5125c7b4ca041f6967ffbbae1dd27ce9b",
+          "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "raw_amount_hex": "0x157899ca4142a2efbb25",
+          "raw_amount_uint": "101394387170695251475237",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 16,
+          "block_hex": "0x51f90f7",
+          "block": 85954807,
+          "hash": "0xba4727839d7cb5f3e9cf64baea9b323dd9a997509c637085ca1c49adbe581171",
+          "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "raw_amount_hex": "0x139eeb21f4073083e0b8",
+          "raw_amount_uint": "92656491829754228629688",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 17,
+          "block_hex": "0x51f90fc",
+          "block": 85954812,
+          "hash": "0x5fd909f2817e527be3fc3b60c05828ecf9d96f97ac2ca23adb575972e2d01baa",
+          "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "raw_amount_hex": "0x1389f9155e62fc8f5b36",
+          "raw_amount_uint": "92270115468290659670838",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 18,
+          "block_hex": "0x51f9103",
+          "block": 85954819,
+          "hash": "0xd78f4512efebc0d80c88453475f1f473649a11361f0e2b1178391427a8439765",
+          "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "raw_amount_hex": "0x137db614dccc0f079bbd",
+          "raw_amount_uint": "92043926538120373705661",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 19,
+          "block_hex": "0x51f9109",
+          "block": 85954825,
+          "hash": "0x65afc93db74407b5fb4c91cff7a52b7ec5eb3685f7ee709fb91a4257fbbb3aa5",
+          "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "raw_amount_hex": "0x13a5202f0d1c89421ea4",
+          "raw_amount_uint": "92770995033434667228836",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 20,
+          "block_hex": "0x51f9323",
+          "block": 85955363,
+          "hash": "0x086e439959fea351224dcb950c173ed9dc3d972c088751bd95707f63c83bebc3",
+          "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "raw_amount_hex": "0x135853f662c48e8b225b",
+          "raw_amount_uint": "91354326784755463037531",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        }
+      ],
+      "completeness": "CENSORED_MORE_PAGES"
+    },
+    "OUTBOUND_PAGE1": {
+      "original_cursor": null,
+      "next_pageKey": "5882faae-d342-4646-9854-dae55162846e",
+      "returned_count": 10,
+      "rows": [
+        {
+          "rank": 1,
+          "block_hex": "0x51f7aa4",
+          "block": 85949092,
+          "hash": "0xecb2aa5e220c68c8b653b9be710cd833aa4dd51af73c081fa34f5a759167d2d2",
+          "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "raw_amount_hex": "0xb1331d7f45d11ed6e000",
+          "raw_amount_uint": "836801776910000000000000",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 2,
+          "block_hex": "0x51f7ab0",
+          "block": 85949104,
+          "hash": "0xbce92be6a97932542202ac8623870968b1e4cea149b0fa532632a79635f241fe",
+          "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "raw_amount_hex": "0xb1331d7f490146e09d4f",
+          "raw_amount_uint": "836801776913505365040463",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 3,
+          "block_hex": "0x51f8de1",
+          "block": 85954017,
+          "hash": "0xb8d1186669a4ec247cb3256f0630b8ab3c1952aed552862a361a50037c208fff",
+          "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "raw_amount_hex": "0x13a67cb7cf0e1c7a2000",
+          "raw_amount_uint": "92796109570000000000000",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 4,
+          "block_hex": "0x51f8df7",
+          "block": 85954039,
+          "hash": "0x9a08c6a8cfe49c7b831d960c4e47970ed385dc7ecdf32e7ed8e0f80aa1557d07",
+          "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "raw_amount_hex": "0x495c7c480729ae02000",
+          "raw_amount_uint": "21652425570000000000000",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 5,
+          "block_hex": "0x51f8dfc",
+          "block": 85954044,
+          "hash": "0xd82cb8e845e6eee1e964f5ded8b041abd92ed3bef9e0d9f2dc3555afd8dd943b",
+          "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "raw_amount_hex": "0x42066fda4130d742000",
+          "raw_amount_uint": "19487183010000000000000",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 6,
+          "block_hex": "0x51f8dfd",
+          "block": 85954045,
+          "hash": "0xfd1d58a3ab91a17fe3bcb2d5124911017767c600d003f3e7474a3fa0cf3da34e",
+          "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "raw_amount_hex": "0x42066fda4130d742000",
+          "raw_amount_uint": "19487183010000000000000",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 7,
+          "block_hex": "0x51f8e05",
+          "block": 85954053,
+          "hash": "0xb8cde8cde9b72ce777e04dd4e1d16a7b4f0be53c96bf6fbedf77909663c42982",
+          "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "raw_amount_hex": "0x34d1f3151e0e740a000",
+          "raw_amount_uint": "15589746410000000000000",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 8,
+          "block_hex": "0x51f8e22",
+          "block": 85954082,
+          "hash": "0x4c2b5fe0564f6307aa98704ea5ca851bead776d1a1bbd62bf3c21de3f24a55f4",
+          "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "raw_amount_hex": "0x8e9d43856b49fde4000",
+          "raw_amount_uint": "42092315300000000000000",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 9,
+          "block_hex": "0x51f8e23",
+          "block": 85954083,
+          "hash": "0xb7dc5ce6de44a4b6e339fcda041d8559a2d2a1f7d072ff55623933073f44596d",
+          "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "raw_amount_hex": "0x8e9d43856b49fde4000",
+          "raw_amount_uint": "42092315300000000000000",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        },
+        {
+          "rank": 10,
+          "block_hex": "0x51f8e26",
+          "block": 85954086,
+          "hash": "0xfc4d9299ead39bf0af4a76ec7c48bfd21a6f292fed3e82c0524a5c5dcbc60a26",
+          "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "raw_amount_hex": "0x390bb49bc483ff28000",
+          "raw_amount_uint": "16836926120000000000000",
+          "token": "0xeccbb861c0dda7efd964010085488b69317e4444"
+        }
+      ],
+      "completeness": "CENSORED_MORE_PAGES"
+    }
+  },
+  "explicit_limits": [
+    "Record counts on both sides incomplete due to nonempty next_pageKey.",
+    "Transfer to Pair may be sale but not confirmed absent original signed tx and payment token.",
+    "This cannot establish cost basis; must reconcile opening inventory and same historical timeframe and actual tokenIn USDT payment.",
+    "No successful follower signal, no net PNL or P5."
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}

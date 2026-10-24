@@ -1,0 +1,142 @@
+{
+  "schema": "BSC_MEME_P3_OWNER37_SWAP_EVENT_FROM_TRANSFER_COUNTERPARTIES",
+  "part": 3,
+  "range": [
+    14,
+    20
+  ],
+  "source_precommit_sha": "b78ef9fc1824283ba82f522ff0363a33762b40f7",
+  "topics_used": [
+    "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+    "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83"
+  ],
+  "records": [
+    {
+      "hash": "0x0245294448b6197e70660a0fdc5fb9186f8c5b98919567d22915c552dbca9be6",
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 126840114,
+      "query_state": "FULL_MATCHING_SWAP_EVENT_QUERY",
+      "source_venue_addresses": [
+        "0xe13cae07364a57304ea71efca0f4638fed9a8923",
+        "0xe3d43c02e3c7102035e04002b024a7a9ce133570"
+      ],
+      "events": [],
+      "error": null
+    },
+    {
+      "hash": "0x8421eb9bd2bc261f6b7c2562668c3c7f2a5912894f91634d5bbc26e7effabeb8",
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 126840130,
+      "query_state": "FULL_MATCHING_SWAP_EVENT_QUERY",
+      "source_venue_addresses": [
+        "0xb558b790aa640d97b83be9f55e8c53be6d45c876"
+      ],
+      "events": [],
+      "error": null
+    },
+    {
+      "hash": "0x41d1b44d7f17218ed671609bab4cbd6dbe9eb613ed79540ff9d0be0d905fd230",
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 126840137,
+      "query_state": "FULL_MATCHING_SWAP_EVENT_QUERY",
+      "source_venue_addresses": [
+        "0x63ea8724874989c4763bf765709b3854412bff88"
+      ],
+      "events": [],
+      "error": null
+    },
+    {
+      "hash": "0x72cd4f7d896f045680cbbaf70eb2377e4f534d1939df05f68c26ed75535e12f1",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "block": 121966513,
+      "query_state": "FULL_MATCHING_SWAP_EVENT_QUERY",
+      "source_venue_addresses": [
+        "0x66f289de31eef70d52186729d2637ac978cfc56b"
+      ],
+      "events": [
+        {
+          "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+          "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc",
+            "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+          ],
+          "raw_data": "0x0000000000000000000000000000000000000000000000021d904e211e2bf5e900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005b032d5af90332",
+          "log_index": 398
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0x886381944f0c7171f808dda40930dea262236b9af08af6195b430352e54e57b4",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 122185934,
+      "query_state": "FULL_MATCHING_SWAP_EVENT_QUERY",
+      "source_venue_addresses": [
+        "0x595d70977dff3c841df0bc0138ce89f80c7c9423"
+      ],
+      "events": [
+        {
+          "pool": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+          "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc",
+            "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+          ],
+          "raw_data": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006c9782a5ea21e65ca00000000000000000000000000000000000000000000000000462e6ee708dd820000000000000000000000000000000000000000000000000000000000000000",
+          "log_index": 1282
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0x38a46891ba00fa6ffeff72ed90f2ae3f291f4c36245d7aef416739ce73e45663",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 122987878,
+      "query_state": "FULL_MATCHING_SWAP_EVENT_QUERY",
+      "source_venue_addresses": [
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "events": [
+        {
+          "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+          "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc",
+            "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+          ],
+          "raw_data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002831e9f3403a85d8c50000000000000000000000000000000000000000000000000697aee346dbd6050000000000000000000000000000000000000000000000000000000000000000",
+          "log_index": 26
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0x04cad9f0aae0cb0224e49b4b19434d2ff607edba5527d614571cc3eb4fb1b3ba",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 123019626,
+      "query_state": "FULL_MATCHING_SWAP_EVENT_QUERY",
+      "source_venue_addresses": [
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "events": [
+        {
+          "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+          "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc",
+            "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+          ],
+          "raw_data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000663f19856b66b716000000000000000000000000000000000000000000000000001000ac1f91b567e0000000000000000000000000000000000000000000000000000000000000000",
+          "log_index": 86
+        }
+      ],
+      "error": null
+    }
+  ],
+  "production": "NO_GO"
+}

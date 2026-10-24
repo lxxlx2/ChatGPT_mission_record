@@ -1,0 +1,153 @@
+{
+  "schema": "BSC_P4C_POSTAPPROVE_WBNB_10_TX_PART_B_4_TX_8_QUERIES_V1",
+  "source_scope_blob_sha": "7576ae8dd73ae46169d7baa25b9073fa8042a2a7",
+  "source_scope_path": "bsc-meme-address-model-v1-p4c-postapprove4-wallets10-wbnb-event-query-scope-2026-10-16.json",
+  "source_offsets": [
+    4,
+    8
+  ],
+  "cases": [
+    {
+      "hash": "0xeb77015b8189b7dde56ed6cd98d313c5a8e17cf13b254fb9378abe5e9e091d31",
+      "block": 112634184,
+      "p2_index": 38,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "scope": "NEGATIVE_NATIVE_SCOPE",
+      "events": [
+        {
+          "type": "Deposit",
+          "full_block_filter_reply": true,
+          "total_block_logs": 7,
+          "response_text_length": 4566,
+          "selected_tx_events": [],
+          "unreadable_excerpt": null
+        },
+        {
+          "type": "Withdrawal",
+          "full_block_filter_reply": true,
+          "total_block_logs": 5,
+          "response_text_length": 3260,
+          "selected_tx_events": [
+            {
+              "transactionHash": "0xeb77015b8189b7dde56ed6cd98d313c5a8e17cf13b254fb9378abe5e9e091d31",
+              "logIndex": "0x16",
+              "topics": [
+                "0x7fcf532c15f0a6db0bd6d0e038bea71d30d808c7d98cb3bf7268a95bf5081b65",
+                "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+              ],
+              "data": "0x0000000000000000000000000000000000000000000000000be5f22054193278",
+              "amount_wei": "857357524747760248"
+            }
+          ],
+          "unreadable_excerpt": null
+        }
+      ]
+    },
+    {
+      "hash": "0xf83f69d2d411b237bc10c7be7f16bfc57ae0567bdd00bf245e576688be3b4549",
+      "block": 116099537,
+      "p2_index": 46,
+      "owner": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "scope": "POSITIVE_NATIVE_SCOPE",
+      "events": [
+        {
+          "type": "Deposit",
+          "full_block_filter_reply": true,
+          "total_block_logs": 12,
+          "response_text_length": 7811,
+          "selected_tx_events": [
+            {
+              "transactionHash": "0xf83f69d2d411b237bc10c7be7f16bfc57ae0567bdd00bf245e576688be3b4549",
+              "logIndex": "0x77",
+              "topics": [
+                "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+                "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+              ],
+              "data": "0x000000000000000000000000000000000000000000000000015fb7f9b8c38000",
+              "amount_wei": "99000000000000000"
+            }
+          ],
+          "unreadable_excerpt": null
+        },
+        {
+          "type": "Withdrawal",
+          "full_block_filter_reply": true,
+          "total_block_logs": 7,
+          "response_text_length": 4560,
+          "selected_tx_events": [],
+          "unreadable_excerpt": null
+        }
+      ]
+    },
+    {
+      "hash": "0xff6b642aa397450042ddbbb3010cd622dbb617b0479f5a2769aa93a8c1b03dc4",
+      "block": 116109420,
+      "p2_index": 46,
+      "owner": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "scope": "POSITIVE_NATIVE_SCOPE",
+      "events": [
+        {
+          "type": "Deposit",
+          "full_block_filter_reply": true,
+          "total_block_logs": 7,
+          "response_text_length": 4562,
+          "selected_tx_events": [],
+          "unreadable_excerpt": null
+        },
+        {
+          "type": "Withdrawal",
+          "full_block_filter_reply": false,
+          "total_block_logs": null,
+          "response_text_length": 8098,
+          "selected_tx_events": null,
+          "unreadable_excerpt": "[\n  {\n    \"address\": \"0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c\",\n    \"topics\": [\n      \"0x7fcf532c15f0a6db0bd6d0e038bea71d30d808c7d98cb3bf7268a95bf5081b65\",\n      \"0x00000000000000000000000040a1fe39"
+        }
+      ]
+    },
+    {
+      "hash": "0x1e5aea53c25c41c0a9c84472f89774d0c93ff19be721ae8333fb0aafd264e366",
+      "block": 116211969,
+      "p2_index": 46,
+      "owner": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "scope": "POSITIVE_NATIVE_SCOPE",
+      "events": [
+        {
+          "type": "Deposit",
+          "full_block_filter_reply": true,
+          "total_block_logs": 2,
+          "response_text_length": 1306,
+          "selected_tx_events": [],
+          "unreadable_excerpt": null
+        },
+        {
+          "type": "Withdrawal",
+          "full_block_filter_reply": true,
+          "total_block_logs": 8,
+          "response_text_length": 5212,
+          "selected_tx_events": [
+            {
+              "transactionHash": "0x1e5aea53c25c41c0a9c84472f89774d0c93ff19be721ae8333fb0aafd264e366",
+              "logIndex": "0xc3",
+              "topics": [
+                "0x7fcf532c15f0a6db0bd6d0e038bea71d30d808c7d98cb3bf7268a95bf5081b65",
+                "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+              ],
+              "data": "0x000000000000000000000000000000000000000000000000011fc9ff16667ff2",
+              "amount_wei": "81005415745617906"
+            }
+          ],
+          "unreadable_excerpt": null
+        }
+      ]
+    }
+  ],
+  "chain": "bnb-mainnet",
+  "contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "source_method": "ethGetLogs one exact block per original tx, WBNB Deposit/Withdrawal, zeros retained",
+  "PnL": "UNRESOLVED",
+  "production": "NO_GO"
+}

@@ -1,0 +1,305 @@
+{
+  "schema": "BSC_P4_FROZEN22_COMPETING_V2V3_LIQUIDITY_PRECOMMIT",
+  "source": {
+    "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-19ca-competing171-presence-2026-10-14.json",
+    "blob_sha": "b5ae3b0f1d3d48f7b5398554b47f4748eb32ef89"
+  },
+  "frozen_universe": "22 nonzero historical alternative pools at the first confirmed V2/WBNB positive reserve block for each of 19 CAs",
+  "protocol_methods": {
+    "V2": {
+      "selector": "0x0902f1ac",
+      "claim": "both reserves >0 at source block"
+    },
+    "V3": {
+      "liquidity_selector": "0x1a686502",
+      "slot0_selector": "0x3850c7bd",
+      "claim": "sqrtPriceX96>0 and liquidity() >0 implies initialized active pool at this block; not executable tax/slippage proof"
+    }
+  },
+  "source_status": "FROZEN_BEFORE_ETH_CALL",
+  "cases": [
+    {
+      "token": "TST",
+      "CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "at_block": 46421401,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+          "method": "liquidity_and_slot0"
+        }
+      ]
+    },
+    {
+      "token": "CHEEMS",
+      "CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "at_block": 42638444,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "pool": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+          "method": "liquidity_and_slot0"
+        }
+      ]
+    },
+    {
+      "token": "MUBARAK",
+      "CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "at_block": 47442143,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "pool": "0x90a54475d512b8f3852351611c38fad30a513491",
+          "method": "liquidity_and_slot0"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "pool": "0x8be0d063873f68a08c8b5bca2fe981618bbf5047",
+          "method": "getReserves"
+        }
+      ]
+    },
+    {
+      "token": "TUT",
+      "CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "at_block": 46521964,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+          "method": "liquidity_and_slot0"
+        }
+      ]
+    },
+    {
+      "token": "BROCCOLI714",
+      "CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "at_block": 46627714,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+          "method": "liquidity_and_slot0"
+        }
+      ]
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "at_block": 46628416,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+          "method": "liquidity_and_slot0"
+        }
+      ]
+    },
+    {
+      "token": "SIREN",
+      "CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "at_block": 46828822,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+          "method": "liquidity_and_slot0"
+        }
+      ]
+    },
+    {
+      "token": "BANANAS31",
+      "CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "at_block": 46871948,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "method": "liquidity_and_slot0"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0xe736f1b0e809ff648e557dd3ea591580f416c2ed",
+          "method": "liquidity_and_slot0"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "method": "liquidity_and_slot0"
+        }
+      ]
+    },
+    {
+      "token": "BOB",
+      "CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "at_block": 44007572,
+      "pools": []
+    },
+    {
+      "token": "BULLA",
+      "CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "at_block": 50982326,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "pool": "0x26b5508768c049d930f0b3c15337b74ed7d244a0",
+          "method": "liquidity_and_slot0"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+          "method": "liquidity_and_slot0"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "pool": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+          "method": "liquidity_and_slot0"
+        }
+      ]
+    },
+    {
+      "token": "4",
+      "CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "at_block": 63056879,
+      "pools": []
+    },
+    {
+      "token": "GIGGLE",
+      "CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "at_block": 61963725,
+      "pools": []
+    },
+    {
+      "token": "币安人生",
+      "CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "at_block": 63454407,
+      "pools": []
+    },
+    {
+      "token": "我踏马来了",
+      "CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "at_block": 73658906,
+      "pools": []
+    },
+    {
+      "token": "龙虾",
+      "CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "at_block": 83636128,
+      "pools": []
+    },
+    {
+      "token": "牛来",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "at_block": 116314917,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "pool": "0xc461d52be79a3ad77bca0f2e8a7d38c3ad7a6f82",
+          "method": "liquidity_and_slot0"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0xab388f885f0bd58d8f98ea8134c67507d67188aa",
+          "method": "liquidity_and_slot0"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "pool": "0x57143fffeba8aecfe31d18bcbdc9ed590990dc1a",
+          "method": "getReserves"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+          "method": "liquidity_and_slot0"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "pool": "0xab058332a7279f1e64162be08f59ac0cd9601759",
+          "method": "liquidity_and_slot0"
+        }
+      ]
+    },
+    {
+      "token": "MARSCOIN",
+      "CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "at_block": 112668701,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "pool": "0x4a4bea953813c118c260be9a26b2321e57aa62e5",
+          "method": "liquidity_and_slot0"
+        }
+      ]
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "at_block": 63838943,
+      "pools": []
+    },
+    {
+      "token": "BUBB",
+      "CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "at_block": 47620838,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "pool": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "method": "liquidity_and_slot0"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0x6a1d472628d9279c53e9d9002c2dae5fff224035",
+          "method": "liquidity_and_slot0"
+        }
+      ]
+    }
+  ],
+  "qualified_opportunities": "UNRESOLVED",
+  "follower_alpha": "UNRESOLVED",
+  "production": "NO_GO"
+}

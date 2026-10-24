@@ -1,0 +1,189 @@
+{
+  "schema": "BSC_P4B_2026_DRAGON_FIVE_EXTERNAL_REAL_SIGNED_ALCHEMY_TX_TOOL_RETURNS_V1",
+  "source_precommit": {
+    "file": "bsc-meme-address-model-v1-p4b-dragon-five-external-signer-original-tx-alchemy-free-precommit-2026-10-18.json",
+    "git_blob_sha": "47225db058589e131132ac6b308280b81c0cb4ff",
+    "pre_frozen_before_calls": true
+  },
+  "recorded_at_bangkok": "2026-10-18",
+  "network": "bnb-mainnet",
+  "provider": "Alchemy existing free read-only app",
+  "method": "eth_getTransactionByHash",
+  "request_count": 5,
+  "executed_count": 5,
+  "retries": 0,
+  "results": [
+    {
+      "id": "D503_BUY_1",
+      "expected": {
+        "case": "D503_BUY_1",
+        "hash": "0xd099d33a83c217e47f21b618483ae48de6018fb7fd26d093924f2eb25d219118",
+        "expected_block": 83636000,
+        "owner": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+        "expected_value_wei": "190000000000000000"
+      },
+      "read_success": true,
+      "tool_json_parseable": true,
+      "tool_response_chars": 2109,
+      "receipt_gas_used": "UNRESOLVED_NOT_PART_OF_ETH_GET_TRANSACTION_BY_HASH",
+      "returned": {
+        "hash": "0xd099d33a83c217e47f21b618483ae48de6018fb7fd26d093924f2eb25d219118",
+        "blockNumber": "0x4fc2f20",
+        "blockHash": "0x850767f9ab17846f94abca74a821b2fecf232581deb5a88305f0e60fce1e7bb6",
+        "blockTimestamp": "0x69a15aa6",
+        "from": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "value": "0x2a303fe4b530000",
+        "gas": "0x927c0",
+        "gasPrice": "0xb2d05e00",
+        "transactionIndex": "0x1",
+        "nonce": "0x7a5",
+        "chainId": "0x38",
+        "type": "0x0",
+        "eth_call_data_head": "0x0b3f5cf9",
+        "input_hex_length": 1418
+      }
+    },
+    {
+      "id": "D503_SELL_1",
+      "expected": {
+        "case": "D503_SELL_1",
+        "hash": "0x854ce4c5edc725bf9d763c043e29e0d8ef8a9ab89a3c39bdf7fba31dda98416d",
+        "expected_block": 83636018,
+        "owner": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+        "expected_value_wei": "0"
+      },
+      "read_success": true,
+      "tool_json_parseable": true,
+      "tool_response_chars": 2095,
+      "receipt_gas_used": "UNRESOLVED_NOT_PART_OF_ETH_GET_TRANSACTION_BY_HASH",
+      "returned": {
+        "hash": "0x854ce4c5edc725bf9d763c043e29e0d8ef8a9ab89a3c39bdf7fba31dda98416d",
+        "blockNumber": "0x4fc2f32",
+        "blockHash": "0x411938c189ad4b1667e369cdc2cb1f4037b3f59cd73f03aa47631312508a0e17",
+        "blockTimestamp": "0x69a15aaf",
+        "from": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "value": "0x0",
+        "gas": "0xc3500",
+        "gasPrice": "0x77359400",
+        "transactionIndex": "0x2",
+        "nonce": "0x7a7",
+        "chainId": "0x38",
+        "type": "0x0",
+        "eth_call_data_head": "0x0b3f5cf9",
+        "input_hex_length": 1418
+      }
+    },
+    {
+      "id": "D503_BUY_2",
+      "expected": {
+        "case": "D503_BUY_2",
+        "hash": "0xbc1622bb9a1850b5966f7c056d0344e586c3ffcf7b882df84cb07673bd13bfb5",
+        "expected_block": 83636084,
+        "owner": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+        "expected_value_wei": "220000000000000000"
+      },
+      "read_success": true,
+      "tool_json_parseable": true,
+      "tool_response_chars": 2112,
+      "receipt_gas_used": "UNRESOLVED_NOT_PART_OF_ETH_GET_TRANSACTION_BY_HASH",
+      "returned": {
+        "hash": "0xbc1622bb9a1850b5966f7c056d0344e586c3ffcf7b882df84cb07673bd13bfb5",
+        "blockNumber": "0x4fc2f74",
+        "blockHash": "0x65daeb0004d7510f70adbae493df2352504d1fbd223c966a761510c01b5ddcae",
+        "blockTimestamp": "0x69a15acc",
+        "from": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "value": "0x30d98d59a960000",
+        "gas": "0x927c0",
+        "gasPrice": "0x1a13b8600",
+        "transactionIndex": "0x37",
+        "nonce": "0x7a8",
+        "chainId": "0x38",
+        "type": "0x0",
+        "eth_call_data_head": "0x0b3f5cf9",
+        "input_hex_length": 1418
+      }
+    },
+    {
+      "id": "D503_SELL_2",
+      "expected": {
+        "case": "D503_SELL_2",
+        "hash": "0x25122e07f529fc935856f99cc948f442587ac09d1e339a859eb86537e93eca0a",
+        "expected_block": 83636094,
+        "owner": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+        "expected_value_wei": "0"
+      },
+      "read_success": true,
+      "tool_json_parseable": true,
+      "tool_response_chars": 2096,
+      "receipt_gas_used": "UNRESOLVED_NOT_PART_OF_ETH_GET_TRANSACTION_BY_HASH",
+      "returned": {
+        "hash": "0x25122e07f529fc935856f99cc948f442587ac09d1e339a859eb86537e93eca0a",
+        "blockNumber": "0x4fc2f7e",
+        "blockHash": "0x00deb0a4c1643e3b3dcac30ff7809c6df43f1f9cd6c0e9cef7bd10a56c9bd8b2",
+        "blockTimestamp": "0x69a15ad1",
+        "from": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "value": "0x0",
+        "gas": "0xc3500",
+        "gasPrice": "0x77359400",
+        "transactionIndex": "0xd",
+        "nonce": "0x7aa",
+        "chainId": "0x38",
+        "type": "0x0",
+        "eth_call_data_head": "0x0b3f5cf9",
+        "input_hex_length": 1418
+      }
+    },
+    {
+      "id": "E11B_BUY_1",
+      "expected": {
+        "case": "E11B_BUY_1",
+        "hash": "0xc0262a91f9e2036a5700f88753aec82496104410b8d8a02610f33c8a2d5a6c7a",
+        "expected_block": 83636000,
+        "owner": "0xe11b917d591db3bf40ecb5bf7ea4ea5af503460c",
+        "expected_value_wei": "12000000000000000"
+      },
+      "read_success": true,
+      "tool_json_parseable": true,
+      "tool_response_chars": 3774,
+      "receipt_gas_used": "UNRESOLVED_NOT_PART_OF_ETH_GET_TRANSACTION_BY_HASH",
+      "returned": {
+        "hash": "0xc0262a91f9e2036a5700f88753aec82496104410b8d8a02610f33c8a2d5a6c7a",
+        "blockNumber": "0x4fc2f20",
+        "blockHash": "0x850767f9ab17846f94abca74a821b2fecf232581deb5a88305f0e60fce1e7bb6",
+        "blockTimestamp": "0x69a15aa6",
+        "from": "0xe11b917d591db3bf40ecb5bf7ea4ea5af503460c",
+        "to": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+        "value": "0x2aa1efb94e0000",
+        "gas": "0x7bc99",
+        "gasPrice": "0x36ddc97",
+        "transactionIndex": "0x43",
+        "nonce": "0x1714",
+        "chainId": "0x38",
+        "type": "0x0",
+        "eth_call_data_head": "0x810c705b",
+        "input_hex_length": 3082
+      }
+    }
+  ],
+  "source_grade": "TOOL_PARSED_FULL_TRANSACTION_FIELDS_NOT_COMPLETE_PROVIDER_NETWORK_WIRE_REQUEST_AND_RESPONSE",
+  "assumptions": [
+    "gas is transaction gas LIMIT, NOT actual gasUsed",
+    "gasPrice can be original sender price but real fee requires receipt gasUsed/effectiveGasPrice",
+    "tx value is only top-level BNB sent, refunds/internal routing may change wallet native debit",
+    "E11B is buy-only selected scope and has no confirmed exit; do not classify loss or net PnL",
+    "D503 selected later signed buy is after DDAC's original signed full sell; causality not shown"
+  ],
+  "gates": {
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "no_merge": true,
+    "no_deploy": true,
+    "no_gmail": true,
+    "no_trade": true
+  }
+}

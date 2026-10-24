@@ -1,0 +1,58 @@
+{
+  "schema": "BSC_MEME_P4_FIRST_RECENT_SWAP_FUNDING_FROZEN_PRECOMMIT",
+  "version": 1,
+  "network": "bnb-mainnet",
+  "production": "NO_GO",
+  "basis": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-p2p3-readiness-matrix-2026-10-13.json",
+      "git_blob_sha": "3252e05c3ef1a4de14a5e10aed3e5ba80566154f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-recent30d-precommit-2026-10-13.json",
+      "git_blob_sha": "18cc2246135b381044403e09dc73eb1c0d436597"
+    }
+  ],
+  "scope": "all four P4 research priority wallets, earliest verified own successful 19-CA pool Swap in immutable 2026-09-13 to 2026-10-13 window; the first observed recent Swap can be a SELL, not the economic first BUY",
+  "frozen_start_block": 121372023,
+  "cutoff_block": 127372023,
+  "addresses": [
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "first_confirmed_swap_tx": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+      "first_swap_block": 121786352,
+      "pre_swap_block": 121786351
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "first_confirmed_swap_tx": "0x72cd4f7d896f045680cbbaf70eb2377e4f534d1939df05f68c26ed75535e12f1",
+      "first_swap_block": 121966513,
+      "pre_swap_block": 121966512
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "first_confirmed_swap_tx": "0xae1def223a10ca11bf4e13f716f475b99693047e4e541c465e9dde0a30b24189",
+      "first_swap_block": 122582898,
+      "pre_swap_block": 122582897
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "first_confirmed_swap_tx": "0xa9eabce653ba2cfd6ec10656da7da32a9d929f0d45d6cf040693e36c97f6bc47",
+      "first_swap_block": 126050553,
+      "pre_swap_block": 126050552
+    }
+  ],
+  "method": [
+    "eth_getBalance at pre_swap_block and first_swap_block; historical wallet native BNB balance, NOT trade capital or economic profit",
+    "eth_getTransactionCount at same historical pre_swap_block (activity clue only)",
+    "eth_call WBNB 0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c and BSC USDT 0x55d398326f99059ff775485246999027b3197955 balanceOf(wallet) at pre_swap_block for quote inventory",
+    "alchemy_getAssetTransfers: external native inbound from frozen_start_block to pre_swap_block, paginated, maxCount=100; exclude zero; only supported external, internal category unsupported on BNB; ZERO reported is not proof no funding",
+    "Separate from common sender => common control: UNKNOWN; absent recent inbound => funding unknown, do not label cashless"
+  ],
+  "blocked_inferences": [
+    "Not full wallet provenance from one-month native inflow",
+    "Not first time tradable",
+    "Not automatic count as qualified eligible miss",
+    "Not a follower buy decision"
+  ]
+}

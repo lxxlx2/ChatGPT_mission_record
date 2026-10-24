@@ -1,0 +1,406 @@
+{
+  "schema": "BSC_MEME_P3_DIRECT_POOL_HISTORICAL_IDENTITY_PRECOMMIT",
+  "status": "BEFORE_HISTORICAL_CALLS",
+  "sources": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-transfer-log-part1-2026-10-13.json",
+      "sha": "f7f8d43e0fbe54b9e022d0d3c171e8e075d2620c"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-transfer-log-part2-2026-10-13.json",
+      "sha": "a6025d52c265900c9a9dc5db71ad2afb461c1321"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-transfer-log-part3-2026-10-13.json",
+      "sha": "9be666a859d2e2ec8137831d8de1f24c6fc23ff6"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-transfer-log-part4-2026-10-13.json",
+      "sha": "a64e16cfb129ba593f107852e0a37429d4604261"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-transfer-log-part5-2026-10-13.json",
+      "sha": "855e0f12787d2d19584689aeead0ee404b1d74a9"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-transfer-log-part6-2026-10-13.json",
+      "sha": "3960c577f0292fa70d1f65f4d19a6fa39ba39899"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-venue-swap-log-part1-2026-10-13.json",
+      "sha": "65dd14dd798e70bcac7cee4b2ae74034800406ac"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-venue-swap-log-part2-2026-10-13.json",
+      "sha": "4480961c6a790e4a3038414f83749067e2552db4"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-venue-swap-log-part3-2026-10-13.json",
+      "sha": "ebbca4ccb8dc94716a13d4f2ac1a36b36cfabcfc"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-venue-swap-log-part4-2026-10-13.json",
+      "sha": "d5a38a161d91660f19d4e5ec6c561ebd2d3f655a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-venue-swap-log-part5-2026-10-13.json",
+      "sha": "6f2c57e22e897c1620b09effb6058fd1cc6e558f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-venue-swap-log-part6-2026-10-13.json",
+      "sha": "2fd36f10c9ed8131ac7703c5208e240b68f4a3b1"
+    }
+  ],
+  "network": "bnb-mainnet",
+  "model": "Read token0, token1 and if present fee() at representative earliest historical block for each of 11 observed pool contracts; validate target CA is one constituent. Token identity/receipt grade/causal profit are independent gates.",
+  "summary": {
+    "observed_matching_swaps": 23,
+    "pool_contracts": 11
+  },
+  "pool_queries": [
+    {
+      "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "earliest_block": 121786352,
+      "reference_hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+      "target_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "event_topic": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "occurrences": 2
+    },
+    {
+      "pool": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "earliest_block": 122015238,
+      "reference_hash": "0x87176f7f43cd9b1e48832683a706238b1beecf072bb590709d85bd2988fa2514",
+      "target_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "event_topic": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "occurrences": 1
+    },
+    {
+      "pool": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+      "earliest_block": 122185934,
+      "reference_hash": "0x886381944f0c7171f808dda40930dea262236b9af08af6195b430352e54e57b4",
+      "target_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "event_topic": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "occurrences": 3
+    },
+    {
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "earliest_block": 121966513,
+      "reference_hash": "0x72cd4f7d896f045680cbbaf70eb2377e4f534d1939df05f68c26ed75535e12f1",
+      "target_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "event_topic": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "occurrences": 3
+    },
+    {
+      "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+      "earliest_block": 126467804,
+      "reference_hash": "0x0688c737243ad718ab3f9fae4ee4d1fbcf3208dd092fb5af3f7a66e47bc61929",
+      "target_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "event_topic": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+      "occurrences": 1
+    },
+    {
+      "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "earliest_block": 122582898,
+      "reference_hash": "0xae1def223a10ca11bf4e13f716f475b99693047e4e541c465e9dde0a30b24189",
+      "target_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "event_topic": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "occurrences": 5
+    },
+    {
+      "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+      "earliest_block": 126468121,
+      "reference_hash": "0xe651156fb79e04c22e6e3740e1930e657ba106c0134dd79fcc59563711de1db1",
+      "target_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "event_topic": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+      "occurrences": 1
+    },
+    {
+      "pool": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+      "earliest_block": 126468394,
+      "reference_hash": "0x6875c13bfba6382f1078ea29d26a5e261ba662c52a00131583017f4b326ef7b6",
+      "target_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "event_topic": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "occurrences": 1
+    },
+    {
+      "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "earliest_block": 123398349,
+      "reference_hash": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+      "target_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "event_topic": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "occurrences": 2
+    },
+    {
+      "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+      "earliest_block": 122742452,
+      "reference_hash": "0x158c28e5efafde2a93fa1549d328082b2357369f666fd4cbd48eec0e54ff222b",
+      "target_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "event_topic": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+      "occurrences": 2
+    },
+    {
+      "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "earliest_block": 122367977,
+      "reference_hash": "0x8ecd40fddcdc93ee3c90328166f098ec412ad4d80f50c00ed98601b0e9bb4fa2",
+      "target_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "event_topic": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "occurrences": 2
+    }
+  ],
+  "linked": [
+    {
+      "hash": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "block": 123398349,
+      "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "direction": "SELL",
+      "token_log_index": 165,
+      "swap_log_index": 168
+    },
+    {
+      "hash": "0xae1def223a10ca11bf4e13f716f475b99693047e4e541c465e9dde0a30b24189",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122582898,
+      "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "direction": "SELL",
+      "token_log_index": 439,
+      "swap_log_index": 444
+    },
+    {
+      "hash": "0xcab3ab44e62796268d5817e67b89823b0e14cd199b5b9100f4bfc38fe2689f7f",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122582910,
+      "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "direction": "SELL",
+      "token_log_index": 62,
+      "swap_log_index": 65
+    },
+    {
+      "hash": "0xc81eadbe91ba27a418a7e574e327d3cc4d47eea8ec13221a42b746795ca4bb72",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122988185,
+      "pool": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "direction": "SELL",
+      "token_log_index": 1341,
+      "swap_log_index": 1346
+    },
+    {
+      "hash": "0x118dd6d6d2c4766660342cf7e67518753928ea441943cedd8ff7a6f4f66a5756",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122995918,
+      "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "direction": "SELL",
+      "token_log_index": 649,
+      "swap_log_index": 654
+    },
+    {
+      "hash": "0x8ecd40fddcdc93ee3c90328166f098ec412ad4d80f50c00ed98601b0e9bb4fa2",
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "block": 122367977,
+      "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "direction": "SELL",
+      "token_log_index": 292,
+      "swap_log_index": 295
+    },
+    {
+      "hash": "0x158c28e5efafde2a93fa1549d328082b2357369f666fd4cbd48eec0e54ff222b",
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "block": 122742452,
+      "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+      "topic0": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+      "token_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "direction": "SELL",
+      "token_log_index": 158,
+      "swap_log_index": 162
+    },
+    {
+      "hash": "0x49748cf3ec185c54bc3b46dc4bb6c92e225d2bcbf0a1aadf1a49c0fb093f53ca",
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "block": 123506149,
+      "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "direction": "SELL",
+      "token_log_index": 1109,
+      "swap_log_index": 1114
+    },
+    {
+      "hash": "0x72cd4f7d896f045680cbbaf70eb2377e4f534d1939df05f68c26ed75535e12f1",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "block": 121966513,
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "direction": "SELL",
+      "token_log_index": 395,
+      "swap_log_index": 398
+    },
+    {
+      "hash": "0x886381944f0c7171f808dda40930dea262236b9af08af6195b430352e54e57b4",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 122185934,
+      "pool": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "direction": "SELL",
+      "token_log_index": 1277,
+      "swap_log_index": 1282
+    },
+    {
+      "hash": "0x38a46891ba00fa6ffeff72ed90f2ae3f291f4c36245d7aef416739ce73e45663",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 122987878,
+      "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "direction": "SELL",
+      "token_log_index": 21,
+      "swap_log_index": 26
+    },
+    {
+      "hash": "0x04cad9f0aae0cb0224e49b4b19434d2ff607edba5527d614571cc3eb4fb1b3ba",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 123019626,
+      "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "direction": "SELL",
+      "token_log_index": 81,
+      "swap_log_index": 86
+    },
+    {
+      "hash": "0x5c853608c3bc8793e3ea53e25289bc3fbeadc377a04e266d05c6cfdebef23849",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 123682058,
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "direction": "BUY",
+      "token_log_index": 9,
+      "swap_log_index": 11
+    },
+    {
+      "hash": "0xe276fb4ca7b1d0c8eed1eb7fed6f0ff44a8afd3cee5c4edb0eb0ed41926da503",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 123685688,
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "direction": "SELL",
+      "token_log_index": 2,
+      "swap_log_index": 5
+    },
+    {
+      "hash": "0x0688c737243ad718ab3f9fae4ee4d1fbcf3208dd092fb5af3f7a66e47bc61929",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 126467804,
+      "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+      "topic0": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+      "token_ca": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "direction": "SELL",
+      "token_log_index": 39,
+      "swap_log_index": 40
+    },
+    {
+      "hash": "0xaa57afb7da6d5bb86ce2eacedec42abf6e99749972321d85adc0f352ef1c4065",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 126467931,
+      "pool": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "direction": "SELL",
+      "token_log_index": 51,
+      "swap_log_index": 56
+    },
+    {
+      "hash": "0xd581b586b41038a4a0d3ea573a65a4a2c06b9b7674d7f5f84a5e768809209dab",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 126468036,
+      "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "direction": "SELL",
+      "token_log_index": 2,
+      "swap_log_index": 5
+    },
+    {
+      "hash": "0xe651156fb79e04c22e6e3740e1930e657ba106c0134dd79fcc59563711de1db1",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 126468121,
+      "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+      "topic0": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+      "token_ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "direction": "SELL",
+      "token_log_index": 146,
+      "swap_log_index": 147
+    },
+    {
+      "hash": "0x6875c13bfba6382f1078ea29d26a5e261ba662c52a00131583017f4b326ef7b6",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 126468394,
+      "pool": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "direction": "SELL",
+      "token_log_index": 11,
+      "swap_log_index": 14
+    },
+    {
+      "hash": "0x6cbb4a85cdbeaf6066f5e860a96ae4f85d90f8710723dbcedb94dfef7b6c7915",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 126468527,
+      "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "direction": "SELL",
+      "token_log_index": 81,
+      "swap_log_index": 84
+    },
+    {
+      "hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "block": 121786352,
+      "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "direction": "SELL",
+      "token_log_index": 26,
+      "swap_log_index": 29
+    },
+    {
+      "hash": "0x87176f7f43cd9b1e48832683a706238b1beecf072bb590709d85bd2988fa2514",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "block": 122015238,
+      "pool": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "token_ca": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "direction": "SELL",
+      "token_log_index": 1028,
+      "swap_log_index": 1032
+    },
+    {
+      "hash": "0xa9eabce653ba2cfd6ec10656da7da32a9d929f0d45d6cf040693e36c97f6bc47",
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "block": 126050553,
+      "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+      "topic0": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+      "token_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "direction": "SELL",
+      "token_log_index": 262,
+      "swap_log_index": 266
+    }
+  ],
+  "production": "NO_GO"
+}

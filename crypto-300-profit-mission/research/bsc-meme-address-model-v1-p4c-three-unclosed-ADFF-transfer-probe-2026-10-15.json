@@ -1,0 +1,71 @@
+{
+  "schema": "BSC_P4C_THREE_UNCLOSED_OWNER_CA_LOG_PROOF_PART",
+  "part": "ADFF_DRAGON",
+  "precommit_sha": "dummyprecommit",
+  "sources": "original 7tx precommit",
+  "res": [
+    {
+      "block": 83656622,
+      "direction": "IN",
+      "status": "COMPLETE",
+      "logs": [
+        {
+          "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "topics": [
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x00000000000000000000000022af7297243c4eef12e2d5a4f888b92e56bf127c",
+            "0x000000000000000000000000adffbebbd2d9141cff80f8a905846ba8f9e3946d"
+          ],
+          "data": "0x0000000000000000000000000000000000000000000018ae30b8d809cfb3179b",
+          "blockHash": "0x1b768d44c911fe41e81786762d1f56b69af38987b38376e119cba65521acc899",
+          "blockNumber": "0x4fc7fae",
+          "blockTimestamp": "0x69a17ee7",
+          "transactionHash": "0xf295cea8ca007cf8bbf00889acf7be78d9d035300be51da67a194fe50c33a3e3",
+          "transactionIndex": "0x3",
+          "logIndex": "0xa",
+          "removed": false
+        }
+      ],
+      "error": null
+    },
+    {
+      "block": 83656622,
+      "direction": "OUT",
+      "status": "COMPLETE",
+      "logs": [],
+      "error": null
+    },
+    {
+      "block": 83656734,
+      "direction": "IN",
+      "status": "COMPLETE",
+      "logs": [],
+      "error": null
+    },
+    {
+      "block": 83656734,
+      "direction": "OUT",
+      "status": "COMPLETE",
+      "logs": [
+        {
+          "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "topics": [
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x000000000000000000000000adffbebbd2d9141cff80f8a905846ba8f9e3946d",
+            "0x00000000000000000000000022af7297243c4eef12e2d5a4f888b92e56bf127c"
+          ],
+          "data": "0x0000000000000000000000000000000000000000000018ae30b8d809cfb3179b",
+          "blockHash": "0xb6c63bfbfdf6d0105163ef2859f093b5729693431f92adab7c3b8e25973a6ad2",
+          "blockNumber": "0x4fc801e",
+          "blockTimestamp": "0x69a17f19",
+          "transactionHash": "0xcbd78ec6eed55dba0f9f90bdfa342c48644d3d626d975aa77e931ad0ffe69045",
+          "transactionIndex": "0x2",
+          "logIndex": "0x2",
+          "removed": false
+        }
+      ],
+      "error": null
+    }
+  ],
+  "production": "NO_GO"
+}

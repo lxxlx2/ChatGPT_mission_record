@@ -1,0 +1,94 @@
+{
+  "schema": "BSC_P4C_SEVEN_WALLET_ORIGINAL_MINED_RECEIPT_PROOFS",
+  "source_precommit_sha": "a88dd45852ae32d70b4c32bea5cf52fa42607a37",
+  "part": 2,
+  "rows": [
+    {
+      "source": {
+        "round": "ADFF_DRAGON_R4",
+        "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+        "token": "龙虾",
+        "tx": "0xf295cea8ca007cf8bbf00889acf7be78d9d035300be51da67a194fe50c33a3e3",
+        "block": 83656622
+      },
+      "status": "SUCCESS_FULL_RECEIPT",
+      "receipt": {
+        "hash": "0xf295cea8ca007cf8bbf00889acf7be78d9d035300be51da67a194fe50c33a3e3",
+        "block": "0x4fc7fae",
+        "status": "0x1",
+        "gasUsed": "0x28433",
+        "effectiveGasPrice": "0x2756cd00",
+        "logCount": 7,
+        "selected_token_transfer_logs": [
+          {
+            "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc",
+              "0x00000000000000000000000022af7297243c4eef12e2d5a4f888b92e56bf127c"
+            ],
+            "data": "0x00000000000000000000000000000000000000000000000002bf6ff371870000"
+          },
+          {
+            "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x00000000000000000000000022af7297243c4eef12e2d5a4f888b92e56bf127c",
+              "0x000000000000000000000000adffbebbd2d9141cff80f8a905846ba8f9e3946d"
+            ],
+            "data": "0x0000000000000000000000000000000000000000000018ae30b8d809cfb3179b"
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "round": "ADFF_DRAGON_R4",
+        "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+        "token": "龙虾",
+        "tx": "0xcbd78ec6eed55dba0f9f90bdfa342c48644d3d626d975aa77e931ad0ffe69045",
+        "block": 83656734
+      },
+      "status": "TRUNCATED_NO_FULL_RECEIPT",
+      "raw_head": "{\n  \"type\": \"0x0\",\n  \"status\": \"0x1\",\n  \"cumulativeGasUsed\": \"0x3912d\",\n  \"logs\": [\n    {\n      \"address\": \"0xeccbb861c0dda7efd964010085488b69317e4444\",\n      \"topics\": [\n        \"0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925\",\n        \"0x00000000000000000000",
+      "receipt_header_status": "0x1"
+    },
+    {
+      "source": {
+        "round": "2ADF_NIULAI_R3",
+        "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+        "token": "牛来",
+        "tx": "0x5b9f98b8feff8b9589b9a229bd64485689d11f7aa08d7973d7553fd18ba35e1e",
+        "block": 116038180
+      },
+      "status": "TRUNCATED_NO_FULL_RECEIPT",
+      "raw_head": "{\n  \"type\": \"0x0\",\n  \"status\": \"0x1\",\n  \"cumulativeGasUsed\": \"0xf681f\",\n  \"logs\": [\n    {\n      \"address\": \"0x1de460f363af910f51726def188f9004276bf4bc\",\n      \"topics\": [\n        \"0x205442d60b70af1203d43cab62352c3b69b94f091be32fe683198057282b5c92\",\n        \"0x00000000000000000000",
+      "receipt_header_status": "0x1"
+    },
+    {
+      "source": {
+        "round": "2ADF_NIULAI_R3",
+        "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+        "token": "牛来",
+        "tx": "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f",
+        "block": 116087810
+      },
+      "status": "TRUNCATED_NO_FULL_RECEIPT",
+      "raw_head": "{\n  \"type\": \"0x0\",\n  \"status\": \"0x1\",\n  \"cumulativeGasUsed\": \"0xab9f7e\",\n  \"logs\": [\n    {\n      \"address\": \"0xbeea1d618e533a387d941f58a7d4c9b7bd377777\",\n      \"topics\": [\n        \"0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925\",\n        \"0x0000000000000000000",
+      "receipt_header_status": "0x1"
+    },
+    {
+      "source": {
+        "round": "A83B_NIULAI_R2",
+        "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+        "token": "牛来",
+        "tx": "0x8a22a65a977409a7e82266d05ceaf1e98074d1f6b50e942486600dacdc672716",
+        "block": 116113193
+      },
+      "status": "TRUNCATED_NO_FULL_RECEIPT",
+      "raw_head": "{\n  \"type\": \"0x0\",\n  \"status\": \"0x1\",\n  \"cumulativeGasUsed\": \"0x89c8e\",\n  \"logs\": [\n    {\n      \"address\": \"0x1de460f363af910f51726def188f9004276bf4bc\",\n      \"topics\": [\n        \"0x205442d60b70af1203d43cab62352c3b69b94f091be32fe683198057282b5c92\",\n        \"0x00000000000000000000",
+      "receipt_header_status": "0x1"
+    }
+  ],
+  "production": "NO_GO"
+}

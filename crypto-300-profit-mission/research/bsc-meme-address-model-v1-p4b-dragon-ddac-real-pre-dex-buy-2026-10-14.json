@@ -1,0 +1,74 @@
+{
+  "schema": "BSC_P4B_DRAGON_DDAC_EARLY_FOURMEME_OWNER_SIGNED_BUY",
+  "scope": "One source-selected DDAC original signed buy of exact major CA 龙虾 on Four.meme TokenManager2 before known first liquid DEX, with actual original token purchase event and ERC20 transfer. Not proof earliest buy, profitable closed position, or outsider copy execution.",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-dragon-fourmeme-first-events-precommit-2026-10-14.json",
+      "git_blob_sha": "0d2951839e1f78b4a8a94f97218b6820bed5a98b"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-dragon-fourmeme-first-events-raw-2026-10-14.json",
+      "git_blob_sha": "0ddf8b88ebf1bdc81439eb259a693a588ab770b7"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-2026-major3-first-txs-part1-2026-10-14.json",
+      "git_blob_sha": "1bae5d79e34728f4e303f3ed03773ce78c49384c"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-first10-erc20-pre-dex-part4-2026-10-14.json",
+      "git_blob_sha": "ed68cd1ae0245132ec1eafa8d7803d12c802d685"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-19ca-fourmeme-helper3-origin-2026-10-14.json",
+      "git_blob_sha": "d9425bb3a9c5e8e23c737b7bfd00df41be6b940d"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-19ca-early-launch-origin-2026-10-14.json",
+      "git_blob_sha": "847c83fb1e1c523ebebc152f6fddacdcf128a5b7"
+    }
+  ],
+  "summary": {
+    "original_signed_DDAC_buys_in_this_fixed_sample": 1,
+    "pre_scoped_DEX_purchases_evidenced": 1,
+    "proven_realized_profit": 0,
+    "qualified_first_global_U": 0,
+    "production": "NO_GO"
+  },
+  "fact": {
+    "token": "龙虾",
+    "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+    "launchpad": "FOUR_MEME_V2_CANONICAL",
+    "manager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+    "original_launch_time_unix": 1772182078,
+    "original_launch_time_UTC": "2026-02-27T08:47:58.000Z",
+    "tokenCreate_block": 83635770,
+    "tokenCreate_tx": "0x822621d8b11dc2d0e36ffaf8219a6c79564ad707d885e450ac73e80554c7b616",
+    "tokenCreate_UTC": "2026-02-27T08:47:59.000Z",
+    "buyer_EOA": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+    "buyer_original_tx": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+    "buyer_original_tx_block": 83635776,
+    "buyer_original_tx_time_UTC": "2026-02-27T08:48:02.000Z",
+    "buyer_original_tx_value_wei": "800000000000000000",
+    "buyer_original_tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+    "TokenPurchase_account": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+    "TokenPurchase_amount_token_raw": "99069253510299993000000000",
+    "TokenPurchase_cost_quote_wei": "784158415841584155",
+    "TokenPurchase_protocol_fee_wei": "7841584158415841",
+    "original_erc20_transfer_recipient": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+    "original_erc20_transfer_raw_amount": "99069253510299993000000000",
+    "creation_to_purchase_delay_blocks": 6,
+    "launchTime_to_purchase_seconds": 4,
+    "earliest_scoped_DEX_active_block": 83636128,
+    "DEX_liquidity_after_purchase_blocks": 352,
+    "market_window_classification": "ACTUAL_SIGNED_PRE_DEX_LAUNCHPAD_BUY_OBSERVED",
+    "receipt_response_status": "UNRESOLVED_TRUNCATED",
+    "gas_fee": "UNRESOLVED",
+    "cost_plus_fee_not_assumed_equal_tx_value": true,
+    "sell_status": "UNRESOLVED",
+    "gross_cashflow_after_sell": "UNRESOLVED",
+    "realized_net_PnL": "UNRESOLVED",
+    "third_party_follower_1_5_15m": "UNRESOLVED",
+    "first_global_any_venue_buy": "UNRESOLVED",
+    "production": "NO_GO"
+  }
+}

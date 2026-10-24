@@ -1,0 +1,54 @@
+{
+  "schema": "BSC_P4_PRIORITY4_V2_WBNB_FACTORY_CREATION_BINARY_PRECOMMIT",
+  "status": "FROZEN_BEFORE_BINARY_PROBES",
+  "provenance": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-19ca-factory190-discovery-2026-10-13.json",
+      "sha": "2c8682c0ddd14f3c8f0683e970d0523177a7602e"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-p2p3-readiness-matrix-2026-10-13.json",
+      "sha": "3252e05c3ef1a4de14a5e10aed3e5ba80566154f"
+    }
+  ],
+  "network": "bnb-mainnet",
+  "method": "V2 factory getPair(token,WBNB) is 0 before pair created and fixed nonzero after; binary search on original immutable factory historical state range [0, snapshot_block], then verify boundary at b-1/b and matching PairCreated, original pool bytecode and first liquidity separately. Historical first factory pool creation is NOT first tradable time or first positive liquidity.",
+  "bounds": {
+    "lower_block": 0,
+    "upper_block": 127372023
+  },
+  "factory_selector": "0xe6a43905",
+  "quote": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "targets": [
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "币安人生",
+      "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "MARSCOIN",
+      "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "pool": "0x9f286c9bd510150c62a08da72af797ac45311ae0",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "pool": "0xbfc26980d8068ae744f5405d3abf6e7df02e11b3",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    }
+  ],
+  "gate": "NO_PROFIT_NO_ALPHA_NO_MISS",
+  "production": "NO_GO"
+}

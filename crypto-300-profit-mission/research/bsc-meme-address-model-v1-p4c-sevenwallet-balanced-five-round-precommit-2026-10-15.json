@@ -1,0 +1,214 @@
+{
+  "schema": "BSC_P4C_SEVEN_RECENT_WALLET_BALANCED_SIGNED_ROUND_BATCH_FROZEN",
+  "frozen_UTC": "2026-10-15",
+  "status": "FROZEN_BEFORE_FRESH_RPC",
+  "network": "bnb-mainnet",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-7wallet-latest-verified-swap-utc-2026-10-13.json",
+      "git_blob_sha": "b4a58cd285941a9f99dacbcad4d5a9865f75bfdb"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-p2p3-readiness-matrix-2026-10-13.json",
+      "git_blob_sha": "3252e05c3ef1a4de14a5e10aed3e5ba80566154f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE23_8E6B_REPEAT_WINNER_HAJIMI_LOBSTER_IFML_CROSS_MAJOR_ROUNDS_2026-10-13.json",
+      "git_blob_sha": "6227e69fabd6c0d991add0d7ff5c6e406babd40b"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage3-adff-2adf-owner-closed-rounds-2026-10-13.json",
+      "git_blob_sha": "a1e3b6b50ae29cc91f1db5f0708c1f42ef771996"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json",
+      "git_blob_sha": "5d3b64a96f6ae59585953a620e9414154ee44985"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json",
+      "git_blob_sha": "51a41aebe7931c242910470a6907e4c93d217568"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-dragon-ddac-closed-native-loss-2026-10-15.json",
+      "git_blob_sha": "4e76eea4d7ab001360af82f15de5eefc8509c501"
+    }
+  ],
+  "seven_original_wallets": [
+    "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+    "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+    "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+    "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+    "0xa83b73f5644cde337b61da79589f10ea15548811",
+    "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+    "0xddac928a240bdace3994c2cc0783d4e29a002127"
+  ],
+  "selection_basis": "Strict P3 recent signed owner swap; fixed 5 signed buyer/seller rounds from 4 distinct P3-active owners (3 positives, one better-grade two-token pair, one negative); one preaudited DDAC actual negative; 2 P3 signed-swap-only controls. Do NOT rerank and do NOT call prior native delta full-wallet profit. Freeze hashes before requery.",
+  "sample_rounds": [
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "key": "8E6B_HAJIMI_R1",
+      "token": "哈基米 / HAJIMI",
+      "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "expected": "POSITIVE_NATIVE_SETTLEMENT",
+      "transactions": [
+        {
+          "tx": "0x379a9f56fa6b47182c30a5854240aeb08a599b61d530ea969a446adfbfa09231",
+          "block": 74741352,
+          "original_delta_wei": "-5005442723000000000",
+          "dir": "in"
+        },
+        {
+          "tx": "0x7e6c7bfecd6815c38ad53af6d15faef516f6aec40ca5d5ee7ca2200053357efe",
+          "block": 74741573,
+          "original_delta_wei": "2626703650753062114",
+          "dir": "out"
+        },
+        {
+          "tx": "0x3055cbb9f252a4b20a8cb2a127011fea8fc3c4ccaa24464a7f4bd75881d0e95e",
+          "block": 74741587,
+          "original_delta_wei": "2647332065164567819",
+          "dir": "out"
+        }
+      ],
+      "ref_index": 2,
+      "first_block": 74741352,
+      "last_block": 74741587,
+      "source_2016_age": "2026",
+      "read_only": true
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "key": "8E6B_DRAGON_R2",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "expected": "POSITIVE_NATIVE_SETTLEMENT",
+      "transactions": [
+        {
+          "tx": "0xe96df53014497d00b74d6a08fb903661b35a4ceea42851bcb31de80fca223f34",
+          "block": 93584281,
+          "dir": "in"
+        },
+        {
+          "tx": "0xd3b7eafb4d5193be7f7ff9dd62b968a65fae16b37c430726e13207ed51c71530",
+          "block": 94208823,
+          "dir": "out"
+        }
+      ],
+      "ref_index": 2,
+      "first_block": 93584281,
+      "last_block": 94208823,
+      "source_2016_age": "2026",
+      "read_only": true
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "key": "ADFF_DRAGON_R4",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "expected": "POSITIVE_NATIVE_SCOPE",
+      "transactions": [
+        {
+          "tx": "0xf295cea8ca007cf8bbf00889acf7be78d9d035300be51da67a194fe50c33a3e3",
+          "block": 83656622,
+          "original_delta_wei": "-200108843900000000"
+        },
+        {
+          "tx": "0xcbd78ec6eed55dba0f9f90bdfa342c48644d3d626d975aa77e931ad0ffe69045",
+          "block": 83656734,
+          "original_delta_wei": "204631281755804654"
+        }
+      ],
+      "ref_index": 3,
+      "first_block": 83656622,
+      "last_block": 83656734,
+      "source_2016_age": "2026",
+      "read_only": true
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "key": "2ADF_NIULAI_R3",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "expected": "POSITIVE_NATIVE_SCOPE",
+      "transactions": [
+        {
+          "tx": "0x5b9f98b8feff8b9589b9a229bd64485689d11f7aa08d7973d7553fd18ba35e1e",
+          "block": 116038180,
+          "original_delta_wei": null
+        },
+        {
+          "tx": "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f",
+          "block": 116087810,
+          "original_delta_wei": null
+        }
+      ],
+      "ref_index": 5,
+      "first_block": 116038180,
+      "last_block": 116087810,
+      "source_2016_age": "2026",
+      "read_only": true
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "key": "A83B_NIULAI_R2",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "expected": "NEGATIVE_NATIVE_SCOPE",
+      "transactions": [
+        {
+          "tx": "0x8a22a65a977409a7e82266d05ceaf1e98074d1f6b50e942486600dacdc672716",
+          "block": 116113193
+        },
+        {
+          "tx": "0x3e8b50350c8d2cf87d9662434ad205d08a33595eaf253dac04996134a35e2971",
+          "block": 116113193
+        },
+        {
+          "tx": "0xd0bc93c086a44affed01a7bfb25022cd51e18513401b15d2fbb3692ec1bde9a4",
+          "block": 116113197
+        }
+      ],
+      "ref_index": 4,
+      "first_block": 116113193,
+      "last_block": 116113197,
+      "source_2016_age": "2026",
+      "read_only": true
+    }
+  ],
+  "preaudited_closed_negative": [
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "entry_tx": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+      "exit_tx": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+      "net_wei": "-92169615514614272",
+      "source_ref": "bsc-meme-address-model-v1-p4c-dragon-ddac-closed-native-loss-2026-10-15.json"
+    }
+  ],
+  "activity_only_controls": [
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "tx": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+      "block": 123398349,
+      "observed_P3_time": "2026-09-22T15:37:36.000Z",
+      "economic_state": "UNASSESSED_NOT_CLOSED"
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "tx": "0x158c28e5efafde2a93fa1549d328082b2357369f666fd4cbd48eec0e54ff222b",
+      "block": 122742452,
+      "observed_P3_time": "2026-09-19T05:36:37.000Z",
+      "economic_state": "UNASSESSED_NOT_CLOSED"
+    }
+  ],
+  "canonical_19_major_count": 19,
+  "required_challenge": [
+    "original sender/tx success",
+    "per unique block historical BNB N-1 and N",
+    "raw quantity/token inventory",
+    "onchain output quote asset and routing taxes",
+    "avoid BNB-only profitability claims when other quote legs unresolved"
+  ],
+  "production": "NO_GO"
+}

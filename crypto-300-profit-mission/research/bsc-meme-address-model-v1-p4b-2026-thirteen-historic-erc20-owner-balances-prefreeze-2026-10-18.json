@@ -1,0 +1,150 @@
+{
+  "schema": "BSC_P4B_2026_13_HISTORICAL_REAL_ERC20_BALANCEOF_PRE_RPC_FROZEN_V1",
+  "date_bangkok": "2026-10-18",
+  "pr_base_head": "09abbf85d2e252cfb481816d0be69cecabdf40c3",
+  "objective": "Check FULL historical ERC20 balanceOf(wallet) at already researched signed-entry/exit points and an actual unrelated post-owner buyer's first block; compare only to selected signed-event reconstruction without converting either to causal follower profit.",
+  "network": "bnb-mainnet",
+  "function": "ERC20 balanceOf(address)",
+  "selector": "0x70a08231",
+  "sender": "UNSPECIFIED_ETH_CALL",
+  "gas": "UNSPECIFIED_ETH_CALL",
+  "source_pins": {
+    "ddac_2026_source": {
+      "file": "bsc-meme-address-model-v1-p4c-dragon-ddac-closed-native-loss-2026-10-15.json",
+      "blob": "4e76eea4d7ab001360af82f15de5eefc8509c501"
+    },
+    "e239_source": {
+      "file": "bsc-meme-address-model-v1-p4c-239e-dragon-two-owner-native-settlements-2026-10-15.json",
+      "blob": "46e90123b98d5324e05388b17b8a3bbb77cb5361"
+    },
+    "e8_source": {
+      "file": "bsc-meme-address-model-v1-p4c-8e6b-hajimi-dragon-two-verified-native-positive-2026-10-15.json",
+      "blob": "dc144d9d259ef1392478d1e25d48f2f649744f20"
+    },
+    "d503_source": {
+      "file": "bsc-meme-address-model-v1-p4b-dragon-postowner-original-seven-txs-2026-10-16.json",
+      "blob": "b06b2ef565ebd74bc7f83ad4a2ea731eeb5cb2b9"
+    },
+    "lifecycle_replay": {
+      "file": "bsc_meme_address_model_v1_p4b_original_owner_signal_lifecycle.py",
+      "blob": "SOURCE_SCRIPT_CHECKED_BUT_NO_BLOB_REQUIRED_HERE"
+    }
+  },
+  "fixed_cases": [
+    {
+      "label": "DDAC_DRAGON",
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "checkpoints": [
+        {
+          "block": 83635776,
+          "reason": "OWNER_EARLY_SIGNED_BUY_BLOCK_END"
+        },
+        {
+          "block": 83635800,
+          "reason": "OWNER_ALL_TOKENS_SOLD_BLOCK_END"
+        },
+        {
+          "block": 83636000,
+          "reason": "D503_SUCCESSFUL_FIRST_EXTERNAL_SIGNED_BUY_BLOCK_END"
+        }
+      ]
+    },
+    {
+      "label": "239E_DRAGON",
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "checkpoints": [
+        {
+          "block": 85954137,
+          "reason": "OWNER_SIGNED_R1_FIRST_BUY_BLOCK_END"
+        },
+        {
+          "block": 85954824,
+          "reason": "OWNER_SIGNED_R1_ADD_BUY_BLOCK_END"
+        },
+        {
+          "block": 85957578,
+          "reason": "OWNER_SIGNED_R1_FULL_SELL_BLOCK_END"
+        },
+        {
+          "block": 85959960,
+          "reason": "R1_EXPIRED_ONE_BLOCK_BEFORE_R2_REENTRY"
+        },
+        {
+          "block": 85959961,
+          "reason": "OWNER_SIGNED_NEW_R2_BUY_BLOCK_END"
+        },
+        {
+          "block": 85961371,
+          "reason": "OWNER_SIGNED_NEW_R2_FULL_SELL_BLOCK_END"
+        }
+      ]
+    },
+    {
+      "label": "8E6B_HAJIMI",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "checkpoints": [
+        {
+          "block": 74741573,
+          "reason": "FIRST_OWNER_SIGNED_PARTIAL_SELL_BLOCK_END"
+        },
+        {
+          "block": 74741587,
+          "reason": "SECOND_OWNER_SIGNED_FULL_SELL_BLOCK_END"
+        }
+      ]
+    },
+    {
+      "label": "8E6B_DRAGON",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "checkpoints": [
+        {
+          "block": 93584281,
+          "reason": "OWNER_SIGNED_BUY_BLOCK_END"
+        },
+        {
+          "block": 94208823,
+          "reason": "OWNER_SIGNED_FULL_SELL_BLOCK_END"
+        }
+      ]
+    }
+  ],
+  "frozen_rpc_calls": 13,
+  "zero_retries": true,
+  "max_fresh_queries": 13,
+  "execution_order": "COMMIT THIS PRECOMMIT BEFORE ANY BALANCEOF ETH_CALL",
+  "predeclared_expected_bounded_reconstructed_raw": {
+    "DDAC_DRAGON:83635776": "99069253510299993000000000",
+    "DDAC_DRAGON:83635800": "0",
+    "DDAC_DRAGON:83636000": "0",
+    "239E_DRAGON:85954137": "2756988984252717159259",
+    "239E_DRAGON:85954824": "5733541559033810010318",
+    "239E_DRAGON:85957578": "0",
+    "239E_DRAGON:85959960": "0",
+    "239E_DRAGON:85959961": "9324059273385582494656",
+    "239E_DRAGON:85961371": "0",
+    "8E6B_HAJIMI:74741573": "64629048195327088600524",
+    "8E6B_HAJIMI:74741587": "0",
+    "8E6B_DRAGON:93584281": "216289963627303641745350",
+    "8E6B_DRAGON:94208823": "0"
+  },
+  "important_non_equivalence": "selected event-summed raw quantity is NOT full ERC20 balanceOf: unsolicited transfers, interim activity or external non-signed routes can differ. Mismatch is researched as true evidence, no overwriting or sample replacement.",
+  "limits": [
+    "No historical block hash consistency from bare block-tag request without independent provider log / finality",
+    "Historical block-end state includes entire block, not observer real-time ordering",
+    "BalanceOf only on original owner, not automatically on any follower or at exact 1/5/15-min entry time",
+    "No actual follower gas/slippage/route/tax or realized profit",
+    "No claim current 2026-10-18 latest wallet holdings"
+  ],
+  "gates": {
+    "qualified_causal_observer_U": "UNRESOLVED",
+    "follower_profit_1_5_15_min": "UNRESOLVED",
+    "P4_B": "PARTIAL",
+    "P5": "BLOCKED",
+    "production": "NO_GO",
+    "permission": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  }
+}
