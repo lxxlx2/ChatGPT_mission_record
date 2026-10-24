@@ -363,3 +363,17 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 **仍未完成**：需要把已验证的53个原WATCH按各自`observed_ms`在原3m全3360轮逐次喂给隔离SQLite队列，同时读取币种与BTC原Publisher 5m真闭合输入、执行FIFO8/必要Fair8、处理原441轮缺档影响并与不变的原46条SETUP对照；只在确定包含完整G1/G2标签的额外样本时才能评分召回。上述完整研究回放现在**没有发生**，不能把独立准入或177项合成回归当成G2/G3产品证据。2026-10-24 UTC日档案最后511份仍不得在尚未实际Publisher整日发布及校验前计入；原历史Publisher源本身**不证明当时网络行情PIT**、历史账户权限、真实bid/ask及净成本。
 
 状态：`G0 PARTIAL; G1 NOT_SCORABLE; G2/G3 NEW UNKNOWN; G4 UNKNOWN; G5 NEW_SOURCE_GATE_AUDIT_NOT_DONE; G6 NO_GO`。保持`NO_MERGE / NO_DEPLOY / NO_MAC / NO_SCHEDULE / NO_GMAIL / NO_TRADES`；Frank、BSC不变。
+
+## 31. 2026-10-25：原53 WATCH提取端来源绑定P1已修，185项云端测试通过，其他AI独立复审待做
+
+**上一轮独立真实审核**：用户转交Codex主代理对固定代码SHA `6dc096e196ba0d9f4d3efca35b8764870abc06e1` 在macOS27.0.1 arm64 / Python3.14.7 detached只读审核，结论**`REQUEST_CHANGES`**，P1：前一轮 `load_pinned_original_watch_tape` 的原报告字节SHA是正确的，但其返回dict和53元素tuple可被调用者篡改；`watches_at_tick()`只检查公开 `schema/SHA/integrity_checked=True` 和tuple长度，不检查tuple与原固定53项指纹的内容绑定。审核者在真实原Artifact`12557911034`已实际验证 ZIP SHA `e395e610c0280a9ba53f6bf716b1711f93623d460d4f6dfae14bc5b3c3938568`、原paired JSON SHA `453ee2e740578121b0734d61e6eb357be7bb34859b90878eb314f7d3dc1690f5`，53个原WATCH在39币种中正常提取；构造公开trust flags+53个`FAKEUSDT`或合法loader后替换一条则可伪造研究episode输入。**这是下游来源内容绑定P1，不是原ZIP SHA被破坏，也不影响原Core事件本身。** 旧SHA审核结论永久保持REQUEST_CHANGES。
+
+**最小工程修复**：[源码 `bf64e7e`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/bf64e7e150bef9c6e5adacd6949da97dac718416)新增`_verify_pinned_extraction_rows()`：每次调用`watches_at_tick()`前对完整53个原tuple做严格类型/3m UTC时间/事件原哈希/唯一性/原顺序校验并重算全清单 SHA256，必须等于固定值`afeba23efc9e8b561ee7fa41d9e2267551d2a6b17c8f324df1e37e7f81042f9f`才能提取。任一伪造、增删、改序、改时钟均fail closed。正常正式来源仍需先读取**原始字节SHA完全匹配**的`paired-4088.json`，不是任意声明trust flags的dict；研究提取路径不写原Core。
+
+**实际回归**：[新8项反例测试 `73732fc`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/73732fc647d588e9de33281d6aea8ac3e58763f4)扩展来源准入专项为17例；测试覆盖53项伪造、真实表一项合法重算事件哈希后的替换、重复ID、换序、3m合法改时并重算哈希、行结构错误、固定53事件正常逐tick提取，以及**本地单元测试fixture**通过loader后改dict仍被拒绝。此最后一项仅在测试fixture范围内临时替换原报告SHA做链路检查，**不声称该新SHA已经由本助手或CI从真正GitHub Artifact上复跑loader**。原真实Artifact loader正常运行是上轮独立审核者在旧SHA证实，须等新SHA其他AI实际复审。
+
+[GitHub Actions #40129464849](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40129464849)，固定代码提交`73732fc647d588e9de33281d6aea8ac3e58763f4`，实际`completed/SUCCESS`，13组`13+5+6+11+19+12+12+14+18+18+17+9+31=185/185 PASS`、新来源准入专项17/17，旧原shadow/RBTC15/episode测试无回归失败。**新修复尚无其他AI独立`APPROVE`**，已准备[完整P1审核记录、复审固定SHA和可复制指令](../reviews/MONSTER_ADR005_WATCH_TAPE_P1_CONTENT_BINDING_REPAIR_20261025.md)，继续`G5_NEW_SOURCE_GATE_REVIEW=NOT_DONE`。
+
+**下一项有效产品工作**不是更换阈值或再包装已曝光的收益，而是按真实原始3m时间线将已验的53原WATCH持续导入独立episode，并用真实币种/BTC已闭合5m及原441轮来源删失运行一遍可复验的新旧FIFO8比较；在具体原报告SHA和原Publisher来源完全满足前，不能把原53个哈希形式正确的dict直接视为原Core已认证事件。新D1的G2提前2×召回、G3关注密度、G4双边可执行性、独立未来窗口仍`UNKNOWN`。完整七日原T0尚差2026-10-24 UTC整日511份Publisher归档，必须等UTC闭日及真实ZIP+CHECKSUM验收。
+
+**门禁/权限不变**：G0 PARTIAL / G1 NOT_SCORABLE / G2新候选UNKNOWN / G3新候选UNKNOWN / G4 UNKNOWN / G5新来源准入审查待完成 / G6 NO_GO；NO_MERGE / NO_DEPLOY / NO_MAC / NO_AUTOMATIONS / NO_GMAIL / NO_TRADES；原D0/D1/Frank/BSC未变。
