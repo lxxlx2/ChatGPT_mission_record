@@ -243,7 +243,7 @@ class GlobalStartGate:
         self.starts = []
 
     def run(self, request, source, *, block_head_deadline, dispatch_deadline,
-            timeout_ms, fake_post_utc_window=None):
+            timeout_ms, fake_post_utc_window=None, reservation_guard=None):
         from f0_l2_d1_concrete_https import (SealedConcreteOfflineSource,
                                                      PatchedConstructorOfflineSource)
         if type(source) in (SealedMemoryHTTPSSource, SealedConcreteOfflineSource,
@@ -281,8 +281,15 @@ class GlobalStartGate:
                     self.starts.append((request["id"], request["method"], when))
                     began[0] = when
             try:
-                frame = source.reply_over_memory_https(
-                    request, begin_fake_post, timeout_ms / 1000)
+                if type(source) is PatchedConstructorOfflineSource:
+                    need(callable(reservation_guard),
+                         "D1_PATCHED_CTOR_PRESEND_PROOF_REQUIRED")
+                    frame = source.reply_over_memory_https(
+                        request, begin_fake_post, timeout_ms / 1000,
+                        reservation_guard=reservation_guard)
+                else:
+                    frame = source.reply_over_memory_https(
+                        request, begin_fake_post, timeout_ms / 1000)
                 completed = time.monotonic()
                 need(began[0] is not None,
                      "D1_MEMORY_HTTPS_POST_START_UNOBSERVED")
@@ -420,12 +427,19 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
         # f-sync serially BEFORE handing task to any fake worker.
         log.add(entry)
         reservations.append(entry)
+        # This coordinator-owned closure can only be minted after the journal
+        # successfully flushes+fsyncs the exact RID. It is an OFFLINE test
+        # ordering invariant, NOT a user or production network permit.
+        def verified_reservation(actual, expected=payload, reserved_id=rid):
+            need(actual == expected and actual.get("id") == reserved_id,
+                 "D1_PATCHED_CTOR_RESERVED_REQUEST_MISMATCH")
         dead_head = head_completed + head_ttl_ms/1000 if category == "BLOCK" else None
         fut = executor.submit(gate.run, payload, source,
                               block_head_deadline=dead_head,
                               dispatch_deadline=dispatch_deadline,
                               timeout_ms=max_block_response_ms,
-                              fake_post_utc_window=fake_post_utc_window)
+                              fake_post_utc_window=fake_post_utc_window,
+                              reservation_guard=verified_reservation)
         pending[fut] = entry
         peak_slots = max(peak_slots, len(pending))
 
