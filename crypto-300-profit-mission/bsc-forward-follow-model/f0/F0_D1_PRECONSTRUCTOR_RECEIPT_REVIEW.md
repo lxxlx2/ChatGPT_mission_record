@@ -16,8 +16,12 @@ New `tests/test_f0_l2_d1_bound_wire_rehearsal.py` covers successful one-path can
 
 This is **not a live transport**. Existing production keys for D2 and signed D3 one-shot authority are still missing. Code deliberately cannot enable a real socket or consume a fixed production nonce. Unit tests patch the HTTPS constructor and allow no real RPC/WS. Real sender admission into the **same** one coordinator must be developed in a future exact-SHA audited commit *after* distinct-role trust roots / separate user D3 execution and immutable Mac runtime release prerequisites are independently reviewed; avoid creating a second coordinator or unsupported source type.
 
-Mac reviewer: verify fixed child PR SHA/base and four changed paths (including docs), actual imports; test full F0, focused D1, **new three tests isolated**, and `test_f0_l2_d1_physical_ctor_integration.py` 7 isolated. Independently simulate a constructor with eager side effects and a refused preconnect reservation, verify zero ctor, zero socket and journal unchanged, plus normal and hard-stop child. Confirm neither simulated preflight nor unsigned candidate can activate network, no production/private root reads, no merge/deploy/service/trades.
+Mac reviewer: verify fixed child PR SHA/base and six changed paths (including docs), actual imports; test full F0, focused D1, **new three tests isolated**, and `test_f0_l2_d1_physical_ctor_integration.py` 7 isolated. Independently simulate a constructor with eager side effects and a refused preconnect reservation, verify zero ctor, zero socket and journal unchanged, plus normal and hard-stop child. Confirm neither simulated preflight nor unsigned candidate can activate network, no production/private root reads, no merge/deploy/service/trades.
 
 **Verdict target:** `APPROVE_OFFLINE_CODE — D1_PRECONSTRUCTOR_RECEIPT_BOUND_REHEARSAL_ONLY` at exact new SHA, or `REQUEST_CHANGES`. No D2/D3 approval or F0 stage promotion.
 
 **`D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.**
+
+## Verified first-code CI on PR196
+
+At code SHA `bc21b4f9a560b0d98e9019b92d2a48708bd9db79`, [workflow 40131737062](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40131737062), job `120984688412`, completed SUCCESS. Decoded raw log reports **`Ran 515 tests in 73.488s` / `OK`**; all three new bound-wire rehearsal tests and seven existing physical-constructor tests are included and passing. This is Linux CI, NOT independent Mac approval, and no real network was contacted. The source SHA remains immutable; any subsequent document-only SHA needs its own final CI readback.
