@@ -547,5 +547,32 @@
       "official_positive_source": "https://www.binance.com/en/support/announcement/detail/5511fc0281c1459bbb8b9f0d2f1297dc",
       "monitoring_tag_sensitivity": false
     }
-  ]
+  ],
+  "gate_separation_correction_20261024": {
+    "status": "CLARIFIED_FROM_FROZEN_STAGE77_NOT_A_MODEL_CHANGE",
+    "reason": "Stage77 G3 measures raw D1 upgrade attention; Stage77 G4 separately measures venue and account trade eligibility. Binance Monitoring Tag requires quiz but does not negate already generated D0/D1 signals.",
+    "immutable_stage77_contract_path": "crypto-300-profit-mission/monster/MONSTER_STAGE77_CORE_MODEL_ACCEPTANCE_AND_BOUNDARY_FREEZE_20261013.md",
+    "official_monitoring_tag_definition": "https://www.binance.com/en/academy/glossary/monitoring-tag",
+    "official_quiz_rule_published_2026_06_18": "https://www.binance.com/en/support/announcement/detail/2ce2c4973d85405a9bb5fffc475c99dc",
+    "original_core_setup_events": 46,
+    "scope": "POSITIVE_PRE_EVENT_CRYPTO_TYPE_ONLY; FAN_TOKENS_AS_SEPARATE; SECURITIES_EXCLUDED",
+    "G3_confirmed_crypto_type_attention_events": 41,
+    "G3_frozen_seven_day_max": 35,
+    "G3_historical_observed_subset_excess": 6,
+    "G3_attention_breach_given_existing_41_events": true,
+    "last_511_full_day_source_missing": true,
+    "formal_G0": "PARTIAL",
+    "formal_G3": "NOT_PASSED_G3_ATTENTION_LOWER_BOUND_EXCEEDED_BUT_FULL_SOURCE_AND_PIT_PENDING",
+    "G4_account_quiz_PIT": "UNKNOWN",
+    "G4_six_monitoring_tag_events_may_need_account_quiz": true,
+    "G4_if_all_six_unavailable_core_eligible_trades_sensitivity": 35,
+    "G4_sensitivity_cannot_be_used_to_reduce_G3_attention": true,
+    "G6": "NO_GO",
+    "direct_observation_vs_trade": "D0/D1 signal record != permission to submit trades != executable two-sided net return",
+    "code_fix_commit": "e25e8a95210221ed2cfd5e575e9a5bee9e5d5901",
+    "regression_test_commit": "4540a77336b405502aecb80f63a0a332005ce115",
+    "ci_run_id": 40092372863,
+    "ci_result": "92/92_PASS",
+    "no_optimization_on_exposed_sample": true
+  }
 }
