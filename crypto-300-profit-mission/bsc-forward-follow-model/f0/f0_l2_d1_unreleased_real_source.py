@@ -12,12 +12,22 @@ source in the single coordinator during OFFLINE TESTS only.
 """
 from __future__ import annotations
 
+import http.client
 from f0_l2_d1_coordinator import FakeSource
 from f0_l2_d1_concrete_https import (
     _REVIEW_TEST_ONLY_CAPABILITY, _review_concrete_https_once,
 )
 
 _D1_OFFLINE_UNRELEASED_TRANSPORT_TICKET = object()
+_UNPATCHED_HTTPS_CONNECTION = http.client.HTTPSConnection
+
+
+def _require_intercepted_http_for_offline_review():
+    # The private code-review route cannot reach unpatched HTTPSConnection,
+    # even if someone imports the test ticket. This is NOT a production
+    # authorization mechanism or a general network sandbox.
+    if http.client.HTTPSConnection is _UNPATCHED_HTTPS_CONNECTION:
+        raise ValueError("D1_REVIEW_REAL_HTTPS_CONSTRUCTOR_NOT_INTERCEPTED")
 
 
 class UnreleasedRealHTTPSCodeSource(FakeSource):
@@ -47,6 +57,7 @@ class UnreleasedRealHTTPSCodeSource(FakeSource):
 
         # Code under review: no injected constructor here. In tests the
         # *actual stdlib HTTPSConnection symbol* is patched BEFORE invocation.
+        _require_intercepted_http_for_offline_review()
         result = _review_concrete_https_once(
             request, final_post_guard=guarded_post,
             _test_capability=_REVIEW_TEST_ONLY_CAPABILITY,

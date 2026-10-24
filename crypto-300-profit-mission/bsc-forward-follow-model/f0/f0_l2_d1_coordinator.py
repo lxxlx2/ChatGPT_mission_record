@@ -655,6 +655,9 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
 
 def _review_unreleased_real_concurrent(source, output_root, *,
                                        _offline_review_ticket=None,
+                                       _offline_test_registry=None,
+                                       _offline_test_grant_id=None,
+                                       _offline_test_permit_sha256=None,
                                        max_total=32,
                                        max_blocks=24, max_refreshes=6,
                                        spacing_ms=250, slots=3,
@@ -672,10 +675,21 @@ def _review_unreleased_real_concurrent(source, output_root, *,
         UnreleasedRealHTTPSCodeSource,
         _D1_OFFLINE_UNRELEASED_TRANSPORT_TICKET,
     )
+    from f0_l2_d1_unreleased_real_source import (
+        _require_intercepted_http_for_offline_review,
+    )
+    from f0_l2_d1_grant import OfflineGrantRegistry
     if (type(source) is not UnreleasedRealHTTPSCodeSource or
             _offline_review_ticket is not
             _D1_OFFLINE_UNRELEASED_TRANSPORT_TICKET):
         raise ValueError("D1_UNRELEASED_REAL_CODE_REVIEW_DENIED")
+    _require_intercepted_http_for_offline_review()
+    if type(_offline_test_registry) is not OfflineGrantRegistry:
+        raise ValueError("D1_UNRELEASED_TEST_REGISTRY_REQUIRED")
+    # The one-use TEST consumption is part of this same execution path,
+    # before any worker thread or TLS constructor. No refund on failures.
+    _offline_test_registry.consume(_offline_test_grant_id,
+                                   _offline_test_permit_sha256)
     return _run_single_coordinator(
         source, output_root, max_total=max_total, max_blocks=max_blocks,
         max_refreshes=max_refreshes, spacing_ms=spacing_ms, slots=slots,
