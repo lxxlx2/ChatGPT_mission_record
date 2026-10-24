@@ -1,0 +1,102 @@
+{
+  "schema": "MONSTER_SPOT511_20261023_REAL511_PUBLISHER_INDEPENDENT_CENSUS_V1",
+  "asof_research_date": "2026-10-24",
+  "publisher_day_utc": "2026-10-23",
+  "frozen_t0_spot_population": 511,
+  "prior_verified_2026_10_16_through_22": 3577,
+  "new_unique_verified_spot_symbol_days": 511,
+  "new_one_minute_rows": 735840,
+  "total_verified_spot_symbol_days": 4088,
+  "required_nine_UTC_days": 4599,
+  "remaining_date": "2026-10-24",
+  "source_run_id": 40086780992,
+  "source_run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40086780992",
+  "source_run_commit": "1033117f35ea5ce67baa9a8dd953550b691c25be",
+  "source_job_census": "1 preflight success, 8/8 bounded slice jobs success, offline regressions success, none scheduled",
+  "independent_recheck": "Downloaded every one of eight GitHub artifact ZIPs into isolated workspace; opened attempts.json and rehashed all nested source ZIP against its original adjacent .CHECKSUM and attempts.json zip_sha256; verified unique 511 symbol names and each archive exactly 1,440 consecutive microsecond 1m UTC opens starting 2026-10-23T00:00Z, correct CSV 12 fields; checked all 735,840 rows.",
+  "independent_full_511_per_symbol_hash_ledger_local_sha256": "abd2ce930dff180b82438c13c59e64596e8b9d9ad8181b740d3894e3635ee3cc",
+  "artifact_slices": [
+    {
+      "start_index": 0,
+      "count": 64,
+      "artifact_id": 12557077666,
+      "artifact_zip_sha256": "32abd15762bc4952f9427f48cadfa0305b034e8ce2135b808622a265e23338b0",
+      "artifact_name": "monster-spot511-2026-10-23-slice-0-40086780992"
+    },
+    {
+      "start_index": 64,
+      "count": 64,
+      "artifact_id": 12557268225,
+      "artifact_zip_sha256": "a5908121f2e96f7f6c0c9ae005307d42f265f88bb929c53765d64417cda52c67",
+      "artifact_name": "monster-spot511-2026-10-23-slice-64-40086780992"
+    },
+    {
+      "start_index": 128,
+      "count": 64,
+      "artifact_id": 12556914987,
+      "artifact_zip_sha256": "9917a874a54cf3a1caacf65bbfc01fb16302eb18b113b91fcff1f2dddc1cf7c2",
+      "artifact_name": "monster-spot511-2026-10-23-slice-128-40086780992"
+    },
+    {
+      "start_index": 192,
+      "count": 64,
+      "artifact_id": 12557427098,
+      "artifact_zip_sha256": "4383325db74b5f48181969590c151dcba876ae22994bb1acceef1fa6884b0242",
+      "artifact_name": "monster-spot511-2026-10-23-slice-192-40086780992"
+    },
+    {
+      "start_index": 256,
+      "count": 64,
+      "artifact_id": 12558025088,
+      "artifact_zip_sha256": "7112438b274e5c6f9c6855753d7d6fc815be2c3af9d938a6f8cabe1503c0e47d",
+      "artifact_name": "monster-spot511-2026-10-23-slice-256-40086780992"
+    },
+    {
+      "start_index": 320,
+      "count": 64,
+      "artifact_id": 12556369878,
+      "artifact_zip_sha256": "949aac0524b731525486f23ce8814bf20901260acb6be431763128cede175e68",
+      "artifact_name": "monster-spot511-2026-10-23-slice-320-40086780992"
+    },
+    {
+      "start_index": 384,
+      "count": 64,
+      "artifact_id": 12557412242,
+      "artifact_zip_sha256": "500da728e1698b57201cfcfff6e0736c3f1f2d6e0bd04beb43a83f11b7781aca",
+      "artifact_name": "monster-spot511-2026-10-23-slice-384-40086780992"
+    },
+    {
+      "start_index": 448,
+      "count": 63,
+      "artifact_id": 12557551644,
+      "artifact_zip_sha256": "bac673ed83adbe1c63e5cb0523fdd4daa721e1769ab22fc02243dba31d191280",
+      "artifact_name": "monster-spot511-2026-10-23-slice-448-40086780992"
+    }
+  ],
+  "count_integrity": {
+    "distinct_symbols": 511,
+    "downloaded_and_matched_original_sha": 511,
+    "missing_or_rejected": 0,
+    "minute_timegrid_pass": 735840,
+    "duplicate_symbol": 0
+  },
+  "explicit_limitations": [
+    "Spot frozen roster at original T0; later real-time listing eligibility/asset category NOT confirmed.",
+    "Publisher original one-minute sources available ex-post; not original market REST tick response or historical available_at.",
+    "No 2026-10-24 UTC full-day publisher archive credited, that date was still ongoing.",
+    "No new D0/D1 shared-state research replay completed by this source-only job; do not claim incremental SETUP outcomes.",
+    "No money, notional, orders, notifications, Mac process, persistent workflow or new RPC."
+  ],
+  "gates": {
+    "G0": "PARTIAL",
+    "G1": "NOT_SCORABLE",
+    "G3": "NOT_PASSED",
+    "G4": "UNKNOWN",
+    "G6": "NO_GO",
+    "NO_MERGE": true,
+    "NO_DEPLOY": true,
+    "NO_GMAIL": true,
+    "NO_TRADES": true,
+    "NO_AUTOMATIONS": true
+  }
+}
