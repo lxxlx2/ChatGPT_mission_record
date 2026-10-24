@@ -18,3 +18,7 @@ The test registry and evidence roots must be preexisting private 0700 directorie
 - This is a bounded hard-deadline implementation, not L1/L2 or F0 feasibility PASS. No project merge, deployment, automation, alerts, wallet signing or trading.
 
 Current `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+## Actual GitHub CI result and inherited limitation
+
+At original source SHA `36284a73397dc8bf16055eb477a77d1ef94df506`, [CI 40091909927](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40091909927) failed (2 FAIL, 2 ERROR in 493 tests) because `type(path) is Path` rejected `PosixPath`; a one-line type test fix to `isinstance(path, Path)` was committed at `5a9e98426a2ba2b6ad6b84cce6a7fbf10ca9aa7f`. New [CI 40092039866](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40092039866) succeeded with raw log `Ran 493 tests in 60.742s / OK` (all five targeted hard-stop tests OK). This is **GitHub Linux CI**, not independent Mac/Codex approval. The parent supervisor is the OS wall-clock enforcer in this version; if the parent itself is killed unexpectedly, a surviving child has no independent deadline watchdog. This is a **remaining release limitation**, not a proven whole-host crash guarantee. The child is restricted to synthetic/mock sockets, and real authorization remains blocked.
