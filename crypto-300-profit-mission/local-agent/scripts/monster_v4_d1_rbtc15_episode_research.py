@@ -146,8 +146,13 @@ def poll_episodes(db,tick_ms,closed5_by_symbol,*,limit=MAX_SERVICE):
         if state not in ("RESEARCH_SETUP","RESEARCH_NO_SETUP_YET"):
             raise RuntimeError("RESEARCH_UNEXPECTED_COMPARATOR_STATE")
         last_bar=details["latest_5m_open_ms"]
+        # A valid negative at the deadline cannot retroactively prove
+        # that an earlier source-censored evaluation was negative.
+        # Censored opportunities remain unresolved without explicit backfill.
+        # A later positive can still complete this episode as RESEARCH_SETUP.
         terminal=("RESEARCH_SETUP" if state=="RESEARCH_SETUP" else
-                  "NO_SETUP" if tick_ms>=row["deadline_ms"] else "PENDING")
+                  ("SOURCE_UNSCORED" if row["source_censored_count"] else "NO_SETUP")
+                  if tick_ms>=row["deadline_ms"] else "PENDING")
         with db:
             db.execute("""UPDATE episode SET status=?,retry_after_ms=?,
                 last_reviewed_open_ms=?,attempts=attempts+1 WHERE watch_event_id=?""",
