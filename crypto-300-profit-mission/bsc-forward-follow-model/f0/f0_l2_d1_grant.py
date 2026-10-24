@@ -235,7 +235,8 @@ class FixedLocalGrantRegistry:
               "D1_PRODUCTION_REGISTRY_REPLACED")
         # OfflineGrantRegistry uses O_NOFOLLOW/O_EXCL, file fsync and the
         # SAME opened directory fd for final fsync. It cannot refund a grant.
-        return OfflineGrantRegistry(root).consume(grant_id, permit_sha256)
+        return OfflineGrantRegistry(root).consume(
+            grant_id, permit_sha256, expected_dev_inode=(dev, inode))
 
 
 class OfflineGrantRegistry:
@@ -251,7 +252,14 @@ class OfflineGrantRegistry:
               "D1_REGISTRY_NOT_PRIVATE")
         self.root = root
 
-    def consume(self, grant_id: str, permit_sha256: str):
+    def consume(self, grant_id: str, permit_sha256: str, *,
+                expected_dev_inode=None):
+        _need(expected_dev_inode is None or
+              (type(expected_dev_inode) is tuple and
+               len(expected_dev_inode) == 2 and
+               all(type(x) is int and x >= 0
+                   for x in expected_dev_inode)),
+              "D1_REGISTRY_DEVICE_IDENTITY_INVALID")
         _need(type(grant_id) is str and GRANT_ID.fullmatch(grant_id)
               and type(permit_sha256) is str and
               HEX64.fullmatch(permit_sha256),
@@ -273,6 +281,10 @@ class OfflineGrantRegistry:
         except OSError as exc:
             raise ValueError("D1_REGISTRY_OPEN_DENIED") from exc
         try:
+            opened = os.fstat(dfd)
+            if (expected_dev_inode is not None and
+                    (opened.st_dev, opened.st_ino) != expected_dev_inode):
+                raise ValueError("D1_REGISTRY_OPEN_DIR_IDENTITY_CHANGED_STOP")
             try:
                 fd = os.open(filename, flags, 0o600, dir_fd=dfd)
             except FileExistsError as exc:
