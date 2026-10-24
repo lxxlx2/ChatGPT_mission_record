@@ -31,7 +31,7 @@ class BoundWireRehearsalTests(unittest.TestCase):
         self.evidence.mkdir(mode=0o700)
 
     def rehearse(self, *, intent=None, grant_id="offline-rehearsal-bound-0001",
-                 scenario="complete", seconds=5.0):
+                 scenario="complete", seconds=5.0, test_evidence=None):
         f = self.f
 
         class FixedUTC:
@@ -60,7 +60,8 @@ class BoundWireRehearsalTests(unittest.TestCase):
             result = rehearse_supervised_mac_entry_offline(
                 f.f.repo, f.f.sha, f.f.raw,
                 evidence_root=f.out, test_registry=self.registry,
-                test_evidence=self.evidence, test_grant_id=grant_id,
+                test_evidence=(test_evidence if test_evidence is not None
+                               else self.evidence), test_grant_id=grant_id,
                 scenario=scenario, hard_seconds=seconds,
                 one_shot_intent_raw=f.bytes(intent))
             constructor.assert_not_called()
@@ -89,7 +90,7 @@ class BoundWireRehearsalTests(unittest.TestCase):
         retry = self.base / "retry"
         retry.mkdir(mode=0o700)
         with self.assertRaisesRegex(ValueError, "ALREADY_CONSUMED"):
-            self.rehearse()
+            self.rehearse(test_evidence=retry)
         self.assertEqual(list(self.f.registry.iterdir()), [])
 
     def test_invalid_candidate_never_spends_disposable_marker(self):
