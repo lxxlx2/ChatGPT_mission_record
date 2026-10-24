@@ -1,3 +1,11 @@
+# 2026-10-24 — D1 whole-operation OS hard-stop child, pending CI and independent Mac review
+
+- Approved frozen source: PR190 SHA `30642f27c1d647ff2d961cd3ce18397b3a07dae0`; independent Mac user-supplied reviewer report `APPROVE_OFFLINE_CODE — D1_PATCHED_PHYSICAL_CTOR_INTEGRATION_SCOPE_ONLY` (488 full, 127 D1, 7 new); review archived at [PR190 comment](https://github.com/lxxlx2/ChatGPT_mission_record/pull/190#issuecomment-6383757461).
+- This new child branch adds **test-only** bounded OS process orchestration and isolated one-use grant consumption before spawning the **same** patched physical-constructor / 3-slot coordinator (no new scheduler). A parent hard deadline terminates and reaps an intentionally stalled child. Its durable pre-send requests remain UNKNOWN, the test grant stays consumed, and no retries/auto-resume occur. This code is not yet independently approved; inspect `f0/F0_D1_HARD_STOP_ONCE_REVIEW.md` for tests, prerequisites and exact limitations.
+- **Still blocked:** actual production Mac protected approval-to-registry-to-real TLS once coordination; no approved D2 exact user scope, no separate D3 execution authority, no real provider capacity evidence. The new test-only process deadline must not be treated as a real sender release. Do not spend old 4/24/62/30-call grants, touch private previous samples, trade, merge, deploy, schedule, notify or start a real RPC/WS. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-24 — D1 real-constructor call-site rehearsal, OFFLINE child review pending
 
 - Parent PR187 APPROVE only covers Mac `--verify-only`; no D2/D3 authorization.
