@@ -148,7 +148,7 @@ def rehearse_supervised_mac_entry_offline(
         checkout_root: Path, expected_sha: str, permit_raw: bytes, *,
         evidence_root: Path, test_registry: Path, test_evidence: Path,
         test_grant_id: str, scenario: str = "complete",
-        hard_seconds: float = 8.0):
+        hard_seconds: float = 8.0, one_shot_intent_raw=None):
     """Bind real Mac preflight to the SAME bounded three-slot test child.
 
     This is a strict offline rehearsal, never an alternative way of sending
@@ -183,6 +183,23 @@ def rehearse_supervised_mac_entry_offline(
     if (not 0.2 <= hard_seconds <= 15 or
             hard_seconds > checked["scope"]["dispatch_seconds_cap"]):
         raise ValueError("D1_MAC_REHEARSAL_DEADLINE_INVALID")
+    # Optional D3 candidate is bound to this SAME exact preflight
+    # before ANY disposable test marker, not after a transport attempt.
+    # The resulting object has NO live authorization or release capability.
+    contract = None
+    if one_shot_intent_raw is not None:
+        if type(one_shot_intent_raw) is not bytes:
+            raise ValueError("D1_MAC_REHEARSAL_INTENT_BYTES_REQUIRED")
+        from datetime import datetime as NativeDatetime
+        from f0_l2_d1_real_sender_contract import (
+            bind_real_https_candidate_offline)
+        contract = bind_real_https_candidate_offline(
+            permit_raw, one_shot_intent_raw, expected_sha,
+            NativeDatetime.fromisoformat(checked["checked_at_utc"]),
+            actual_source_manifest_sha256=checked["source"][
+                "tracked_source_manifest_sha256"])
+        if contract.to_diagnostic()["real_https_enabled"] is not False:
+            raise ValueError("D1_MAC_REHEARSAL_LIVE_CONTRACT_FORBIDDEN")
     # Prevent test artifacts from ever overlapping the candidate Mac
     # evidence directory inspected above, including ancestor/child aliases.
     roots = [p.resolve() for p in
@@ -216,6 +233,8 @@ def rehearse_supervised_mac_entry_offline(
         "scope": checked["scope"],
         "source_manifest_sha256": checked["source"].get(
             "tracked_source_manifest_sha256"),
+        "real_sender_candidate": (
+            contract.to_diagnostic() if contract is not None else None),
         "fixed_production_registry_inspected_only": True,
         "fixed_production_registry_marker_consumed": False,
         "test_child": run,
