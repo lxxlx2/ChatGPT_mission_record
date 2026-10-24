@@ -100,6 +100,67 @@ class DurableEpisodeTests(unittest.TestCase):
         got=poll_episodes(self.db,T+180_000,source())
         self.assertEqual(got[0][1],"RESEARCH_SETUP")
 
+    def test_partial_censor_then_deadline_valid_negative_is_unscored_after_restart(self):
+        # Reproduces independent review P1: an earlier missing BTC check
+        # cannot be treated as a confirmed negative from a later valid bar.
+        admit_original_watch(self.db,make_watch())
+        self.assertEqual(poll_episodes(self.db,T,source(btc_missing=True))[0][1],
+                         "SOURCE_CENSORED")
+        deadline=WATCH+900_000
+
+        def negative_on_deadline(symbol,now):
+            candles=source()(symbol,now)
+            if symbol=="COINUSDT":
+                # Force a valid last 5m down-close; OHLC invariants stay valid.
+                candles[-1][4]="90"
+                candles[-1][3]="89"
+            return candles
+
+        result=poll_episodes(self.db,deadline,negative_on_deadline)
+        self.assertEqual(result[0][1],"SOURCE_UNSCORED")
+        row=summary(self.db)["rows"][0]
+        self.assertEqual(row["status"],"SOURCE_UNSCORED")
+        self.assertEqual(row["source_censored_count"],1)
+        self.assertIsNone(row["research_event_id"])
+        self.assertIsNone(row["research_observed_ms"])
+        self.assertEqual(poll_episodes(self.db,deadline+180_000,source()),[])
+        self.db.close()
+        self.db=reopen_ledger(self.path)
+        self.assertEqual(summary(self.db)["status_counts"],{"SOURCE_UNSCORED":1})
+        self.assertEqual(summary(self.db)["rows"][0]["source_censored_count"],1)
+        self.assertEqual(poll_episodes(self.db,deadline+360_000,source()),[])
+
+    def test_no_censor_deadline_valid_negative_is_true_no_setup(self):
+        admit_original_watch(self.db,make_watch())
+        deadline=WATCH+900_000
+
+        def negative_at_deadline(symbol,now):
+            candles=source()(symbol,now)
+            if symbol=="COINUSDT":
+                candles[-1][4]="90"
+                candles[-1][3]="89"
+            return candles
+
+        result=poll_episodes(self.db,deadline,negative_at_deadline)
+        self.assertEqual(result[0][1],"NO_SETUP")
+        ledger=summary(self.db)
+        self.assertEqual(ledger["status_counts"],{"NO_SETUP":1})
+        self.assertEqual(ledger["rows"][0]["source_censored_count"],0)
+        self.assertIsNone(ledger["rows"][0]["research_event_id"])
+
+    def test_partial_censor_then_deadline_positive_still_generates_setup(self):
+        admit_original_watch(self.db,make_watch())
+        self.assertEqual(poll_episodes(self.db,T,source(btc_missing=True))[0][1],
+                         "SOURCE_CENSORED")
+        deadline=WATCH+900_000
+        self.assertEqual(poll_episodes(self.db,deadline,source())[0][1],
+                         "RESEARCH_SETUP")
+        ledger=summary(self.db)
+        self.assertEqual(ledger["status_counts"],{"RESEARCH_SETUP":1})
+        self.assertEqual(ledger["rows"][0]["source_censored_count"],1)
+        self.assertIsNotNone(ledger["rows"][0]["research_event_id"])
+        self.assertEqual(poll_episodes(self.db,deadline+180_000,source()),[])
+
     def test_always_missing_source_ends_as_unscored(self):
         admit_original_watch(self.db,make_watch())
         for tick in (T,T+180_000,NEXT,WATCH+900_000):
