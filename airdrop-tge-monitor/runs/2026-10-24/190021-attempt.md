@@ -1,6 +1,6 @@
 ---
 report_type: hourly_monitor_attempt
-run_time: 2026-10-24T19:00:21.922+0
+run_time: 2026-10-24T19:00:21.922+07:00
 timezone: Asia/Bangkok
 automation_id: 6a85fff710e0819190ffcf8c1145a170
 status: started
