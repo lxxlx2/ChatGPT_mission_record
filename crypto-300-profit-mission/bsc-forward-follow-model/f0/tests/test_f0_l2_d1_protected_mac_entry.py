@@ -24,7 +24,7 @@ class MacEntryNoNetworkTests(unittest.TestCase):
         f.setUp()
         self.addCleanup(f.doCleanups)
         self.f=f
-        self.home=Path(f.temp.name).absolute()
+        self.home=Path(f.temp.name).resolve()
         self.registry=(self.home/"Library"/"Application Support"/
                        "MissionEvidence"/"f0-grant-registry")
         self.registry.mkdir(mode=0o700,parents=True)
