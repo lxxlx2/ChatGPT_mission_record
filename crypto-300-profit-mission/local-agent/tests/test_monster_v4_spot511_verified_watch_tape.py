@@ -1,9 +1,14 @@
 """Replay-anchored real 53 original WATCH IDs, no HTTP or SQLite mutating I/O."""
 from copy import deepcopy
+import hashlib
 import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest import mock
+
+import monster_v4_shadow as original
+import monster_v4_spot511_verified_watch_tape as watch_module
 
 from monster_v4_spot511_verified_watch_tape import (
     PINNED_PAIRED_REPORT_SHA256, PINNED_WATCH_CANONICAL_SHA256,
@@ -96,6 +101,93 @@ class VerifiedOriginalWatchTests(unittest.TestCase):
         p["fair8_watch_events"]=deepcopy(p["fifo_watch_events"])
         with self.assertRaisesRegex(SourceIdentityError,"SORT_ORDER_DRIFT"):
             verify_original_watch_inventory(p)
+
+
+    def marked_tape(self, rows=None):
+        # The flags are intentionally ordinary, PUBLIC, attacker-settable fields.
+        inventory=verify_original_watch_inventory(self.source_fixture())
+        return {
+            "schema":watch_module.SCHEMA,
+            "original_paired_json_sha256":PINNED_PAIRED_REPORT_SHA256,
+            "original_watch_ledger_integrity_checked":True,
+            "watch_identity_rows":inventory if rows is None else rows,
+        }
+
+    def test_complete_forged_flags_with_repeated_fake_events_rejected(self):
+        first=self.entries[0]
+        ms=first["observed_ms"]
+        fake_id=original.event_key("spot","FAKEUSDT","WATCH_EARLY",ms)
+        forged=(("FAKEUSDT",ms,fake_id),)*53
+        with self.assertRaisesRegex(SourceIdentityError,"DUPLICATE_EVENT_ID"):
+            watches_at_tick(self.marked_tape(forged),ms)
+
+    def test_same_length_one_rehashed_forged_event_rejected(self):
+        rows=list(self.marked_tape()["watch_identity_rows"])
+        symbol,ms,_=rows[0]
+        rows[0]=("FAKEUSDT",ms,original.event_key("spot","FAKEUSDT","WATCH_EARLY",ms))
+        with self.assertRaisesRegex(SourceIdentityError,"CANONICAL_SHA_MISMATCH"):
+            watches_at_tick(self.marked_tape(tuple(rows)),ms)
+
+    def test_repeated_original_id_rejected_even_if_length_53(self):
+        rows=list(self.marked_tape()["watch_identity_rows"])
+        rows[1]=rows[0]
+        with self.assertRaisesRegex(SourceIdentityError,"DUPLICATE_EVENT_ID"):
+            watches_at_tick(self.marked_tape(tuple(rows)),rows[0][1])
+
+    def test_event_reordering_rejected_even_if_all_ids_valid(self):
+        rows=list(self.marked_tape()["watch_identity_rows"])
+        rows[0],rows[1]=rows[1],rows[0]
+        with self.assertRaisesRegex(SourceIdentityError,"EVENT_ORDER_DRIFT"):
+            watches_at_tick(self.marked_tape(tuple(rows)),rows[0][1])
+
+    def test_shift_to_another_valid_tick_and_rehash_still_rejected(self):
+        rows=list(self.marked_tape()["watch_identity_rows"])
+        symbol,ms,_=rows[0]
+        tick=ms-180_000
+        rows[0]=(symbol,tick,original.event_key("spot",symbol,"WATCH_EARLY",tick))
+        with self.assertRaisesRegex(SourceIdentityError,"CANONICAL_SHA_MISMATCH"):
+            watches_at_tick(self.marked_tape(tuple(rows)),tick)
+
+    def test_non_tuple_row_and_non_integer_tick_rejected(self):
+        original_rows=self.marked_tape()["watch_identity_rows"]
+        rows=list(original_rows)
+        rows[0]=list(rows[0])
+        with self.assertRaisesRegex(SourceIdentityError,"ROW_SHAPE_DRIFT"):
+            watches_at_tick(self.marked_tape(tuple(rows)),original_rows[0][1])
+        rows=list(original_rows)
+        symbol,ms,eid=rows[0]
+        rows[0]=(symbol,float(ms),eid)
+        with self.assertRaisesRegex(SourceIdentityError,"ROW_INVALID"):
+            watches_at_tick(self.marked_tape(tuple(rows)),ms)
+
+    def test_real_pinned_identity_inventory_emits_exact_original_at_each_tick(self):
+        rows=self.marked_tape()["watch_identity_rows"]
+        selected=[]
+        for tick in sorted({ms for _,ms,_ in rows}):
+            selected.extend(watches_at_tick(self.marked_tape(),tick))
+        self.assertEqual(len(selected),53)
+        self.assertEqual({r["event_id"] for r in selected},{e[2] for e in rows})
+        self.assertEqual(len(set(e["symbol"] for e in selected)),39)
+
+    def test_loader_return_mutation_refused_even_with_true_flags(self):
+        # An isolated fixture substitutes the paired-report SHA ONLY inside
+        # this test. Production accepts ONLY the original fixed byte SHA.
+        payload=json.dumps(self.source_fixture(),sort_keys=True).encode()
+        with tempfile.TemporaryDirectory() as directory:
+            p=Path(directory)/"paired-4088-fixture.json"
+            p.write_bytes(payload)
+            synthetic_sha=hashlib.sha256(payload).hexdigest()
+            with mock.patch.object(watch_module,"PINNED_PAIRED_REPORT_SHA256",synthetic_sha):
+                verified=load_pinned_original_watch_tape(p)
+                self.assertEqual(verified["watch_count"],53)
+                original_rows=verified["watch_identity_rows"]
+                self.assertTrue(watches_at_tick(verified,original_rows[0][1]))
+                changed=list(original_rows)
+                symbol,ms,_=changed[0]
+                changed[0]=("FAKEUSDT",ms,original.event_key("spot","FAKEUSDT","WATCH_EARLY",ms))
+                verified["watch_identity_rows"]=tuple(changed)
+                with self.assertRaisesRegex(SourceIdentityError,"CANONICAL_SHA_MISMATCH"):
+                    watches_at_tick(verified,ms)
 
     def test_unverified_tape_cannot_pretend_to_be_original(self):
         p=self.source_fixture()
