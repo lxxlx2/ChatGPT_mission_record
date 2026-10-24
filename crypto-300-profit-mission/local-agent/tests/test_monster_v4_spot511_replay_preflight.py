@@ -106,7 +106,8 @@ class PreflightTests(unittest.TestCase):
             source = Path(root) / "stage166.json"
             dest = Path(root) / "derived.json"
             source.write_text(json.dumps(fixture()), encoding="utf-8")
-            script = Path(__file__).with_name("monster_v4_spot511_replay_preflight.py")
+            script = (Path(__file__).resolve().parents[1] / "scripts"
+                      / "monster_v4_spot511_replay_preflight.py")
             cmd = [sys.executable, str(script), "--stage166-report", str(source),
                    "--out", str(dest)]
             done = subprocess.run(cmd, capture_output=True, text=True, check=True)
