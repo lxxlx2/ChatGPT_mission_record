@@ -1,3 +1,12 @@
+# 2026-10-25 — D1 protected real-sender D2/D3 contract; release DENIED, new review PENDING
+
+- **Approved parent:** PR193 `267f25bb6d0d3e16b53a231d770ac957f2ce6c98`, independent user-supplied Mac verdict `APPROVE_OFFLINE_CODE — D1_MAC_PREVIEW_ENTRY_COMPOSED_TEST_ONLY` (502/502 full, 141/141 D1, 7/7 isolated). Approval archive [PR193](https://github.com/lxxlx2/ChatGPT_mission_record/pull/193#issuecomment-6389121419). No merge, production deployment or live RPC authorized.
+- **Current child scope:** add `f0_l2_d1_real_sender_contract.py` with strict separate D2 candidate scope / D3 one-shot execution intent linked to the **same** exact approved source SHA, D2 permit bytes SHA256, run ID, preflight manifest digest, fixed BSC endpoint, precisely three slots, 250–5000ms global POST pacing, per-RPC timeout and immutable bounded counts. Explicit `send_live` and release entry remain unconditionally denied; no way to swap in a real HTTPSConnection from this PR. Existing `f0_l2_d1_protected_mac_entry.py` now exposes only a **read-only** `inspect_real_https_sender_candidate_offline` composition, using the preflight actual source manifest rather than accepting one from user. No marker, network, child, journal or sender instantiated. Ten negative/positive contract tests and `f0/F0_D1_REAL_SENDER_CONTRACT_REVIEW.md` describe scope.
+- **Not yet delivered:** independently enrolled D2 trust roots, cryptographically verified and distinct role signatures, D3 independently authenticated explicit one-shot operator execution, real production fixed one-use registry, actual real HTTP sender dispatch under the same coordinator and full parent/child supervision. Do not imply a passing candidate check is production approval. New SHA CI and independent Mac review still required. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+- No real RPC/WS, old private evidence reads, trades, merges, deploys, daemons, notifications or background monitoring.
+
+---
+
 # 2026-10-25 — Mac exact-SHA preflight + one protected offline HTTPS child (CI PASS; Mac review pending)
 
 - **Approved frozen parent:** PR192 HEAD `dee62174d382654fa89042c72ad62fd0ddd5eb2d`, Mac independent APPROVE_OFFLINE_CODE for parent-loss child only: full 495, D1 134, isolated 2 all PASS, archived [PR192](https://github.com/lxxlx2/ChatGPT_mission_record/pull/192#issuecomment-6388944759). Old `eb6992e96a7663ff03f27531e7a7a6a34bc377cb` still REQUEST_CHANGES. No merge/deployment occurred.

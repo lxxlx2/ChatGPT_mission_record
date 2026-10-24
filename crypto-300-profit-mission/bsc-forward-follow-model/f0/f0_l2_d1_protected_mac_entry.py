@@ -227,6 +227,62 @@ def rehearse_supervised_mac_entry_offline(
     }
 
 
+def inspect_real_https_sender_candidate_offline(
+        checkout_root: Path, expected_sha: str, permit_raw: bytes,
+        one_shot_intent_raw: bytes, *, evidence_root: Path):
+    """Inspect a candidate REAL-sender release contract WITHOUT release.
+
+    This is linked to the *existing* Mac preflight, immutable runtime
+    inventory, fixed production registry inspection and one 3-slot
+    coordinator contract. It neither consumes a grant nor starts a child or
+    opens an HTTPSConnection. D2/D3 signed user authority is NOT installed.
+    """
+    if (_REAL_SENDER_RELEASED is not False or
+            _D2_REVIEWED_PERMIT_SHA256 is not None or
+            _D3_REVIEWED_EXECUTION_RECORD_SHA256 is not None):
+        raise ValueError("D1_MAC_REAL_CANDIDATE_RELEASE_CONSTANTS_INVALID")
+    reviewed = inspect_supervised_mac_scope_offline(
+        checkout_root, expected_sha, permit_raw, evidence_root=evidence_root)
+    if (reviewed["decision"] != "D1_BLOCKED_AUTHORITY"
+            or reviewed["reviewed_sha"] != expected_sha
+            or reviewed["fixed_registry_state"]["marker_consumed"] is not False
+            or reviewed["network_requests"] != 0
+            or reviewed["source"]["source_commit_sha"] != expected_sha):
+        raise ValueError("D1_MAC_REAL_CANDIDATE_PREFLIGHT_UNTRUSTED")
+    actual_manifest = reviewed["source"].get(
+        "tracked_source_manifest_sha256")
+    # Use only the exact source-inventory digest produced by the independently
+    # reviewed preflight; never accept a user-selected manifest root.
+    from f0_l2_d1_real_sender_contract import (
+        bind_real_https_candidate_offline,)
+    # Fetch the stdlib datetime class independently of the preflight's
+    # test-controlled datetime.now. Keep the SAME observed UTC instant.
+    from datetime import datetime as _NativeDatetime
+    cand = bind_real_https_candidate_offline(
+        permit_raw, one_shot_intent_raw, expected_sha,
+        _NativeDatetime.fromisoformat(reviewed["checked_at_utc"]),
+        actual_source_manifest_sha256=actual_manifest)
+    diagnostic = cand.to_diagnostic()
+    if (diagnostic["decision"] != "D1_BLOCKED_AUTHORITY"
+            or diagnostic["real_https_enabled"] is not False
+            or diagnostic["actual_rpc_calls"] != 0):
+        raise ValueError("D1_MAC_REAL_CANDIDATE_UNEXPECTED_RELEASE")
+    return {
+        "schema": "f0-d1-mac-real-sender-candidate-NO-LIVE-v1",
+        "source": reviewed["source"],
+        "fixed_production_registry_state": reviewed["fixed_registry_state"],
+        "candidate": diagnostic,
+        "coordinator_binding": "EXISTING_SINGLE_GLOBAL_3_SLOT_ONLY",
+        "live_sender_created": False,
+        "d2_signed_approval_verified": False,
+        "d3_signed_execution_approved": False,
+        "production_marker_consumed": False,
+        "network_requests": 0,
+        "decision": "D1_BLOCKED_AUTHORITY",
+        "production": "PRODUCTION_NO_GO",
+    }
+
+
 def send_live(*_args, **_kwargs):
     """Must deny before checking or mutating registry, evidence or sockets."""
     raise ValueError("D1_MAC_PROTECTED_SEND_DISABLED_D2_D3_REQUIRED")
