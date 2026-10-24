@@ -245,3 +245,16 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 - **历史类别**：四条新增SETUP依据**发生前**Binance官方英文公告分别属于Sophon `SOPH`（2025-05-28）、Ark `ARK`（2017-11-01）、Open Campus `EDU`（2023-04-28）、Caldera `ERA`（2025-07-17），是加密项目而非bStock；此前42条中2条已有事前官方证据确认tokenized stocks，应排除正式crypto-only成绩，其余40条老SETUP未完成全量历史身份认证。当前已知证券排除后**44条/六个完整输入UTC信号日≈7.33条/日**，高于冻结Stage77原目标≤5/日，但这是部分窗口+身份未完备的描述性负载，非正式G3门禁通过或被拒绝。不能看结果再更改D0/D1阈值；也不能以用户默认订单金额偷换D2/可卖性。
 - **运行及权限边界**：两个一次性作业的触发定义均已从主研究分支删除，原 `.github/workflows/monster-spot511-manual-source-batch-ci.yml` Git Blob恢复 `da19e8491858c209ae8fe5383b20799d7741d697`，保留常规离线CI、无计划调度。未操作Mac、Frank、私钥、邮件、交易和生产；未Merge/Deploy；无永久网络采集。
 - **最短下一步**：**等2026-10-24 UTC原日彻底结束、Binance真正发布全部511份ZIP+CHECKSUM后**，用同一有限云端只读批次校验补齐4599/4599，最终跑3360/3360全市场真实源统一D0→D1；再对完整七日crypto-only有效母体审计G3和历史身份/PIT，随后才有资格讨论D2实际盘口可成交净收益。不扩展不相关BSC边界。当前G0=PARTIAL/G1=NOT_SCORABLE/G3=NOT_PASSED/G4=UNKNOWN/G6=NO_GO。
+
+## 22. 2026-10-24：Spot511完整母体首轮证券身份分层有真实来源、可复现程序与云端测试
+
+**优先级依旧是主线G3，并非新模型或BSC旁支。** 用2026-10-17原Binance Spot T0冻结的511个现货/USDT活跃交易对，同Binance原英文官方、回放开始前即已发布的[2026-08-28 bStocks列表](https://www.binance.bh/en/support/announcement/detail/4fea39f8b6e54e1b88e388fc90ce323e)（其2026-09-30修订亦早于回放）、[2026-09-02新增](https://www.binance.com/en-BH/support/announcement/detail/b3ba5cf68daf4264a1260c8da11eef6d)、[2026-09-30新增](https://www.binance.com/en/support/announcement/detail/172e44302d6143578e40acc48570a2e5)做**79个精确且无重复的事前阳性证券类型证据**（68+4+7），不依赖后缀B、实时CoinGecko分类或旧标签的猜测。该79个确实属于原511名单，且原T0源均列为Spot TRADING；后者不是回放后各信号发生时刻动态上架资格的PIT证明。Binance官方定义bStocks为**代币化证券**，首版Monster crypto-only不能把它们冒称可投资妖币。
+
+新交付：
+- [79个官方证券符号及出处的机器清单](../evidence/MONSTER_SPOT511_OFFICIAL_POSITIVE_BSTOCKS_20261024.json)（每项URL、原公告时间、更新时间）。
+- 离线只读程序 `local-agent/mission_agent/early/spot_asset_scope.py`：取冻结511名单和原D0/D1 FIFO8事件副本，按**原始事件时刻之前**的有据证券名单逐项贴标签，原WATCH/SETUP及event_id/time不变；原符号没有命中官方证券名单的默认`UNKNOWN`，绝不自动`CRYPTO`或给G3 PASS，不改变冻结阈值/Fair8服务顺序，也绝不直接交易、部署或发邮件。
+- [4,088来源回放的真实证券事件分层结果](../evidence/MONSTER_SPOT511_REAL4088_OFFICIAL_BSTOCK_SCOPE_OVERLAY_20261024.json)，输入固定原SQLite报告SHA256 `453ee2e740578121b0734d61e6eb357be7bb34859b90878eb314f7d3dc1690f5`：**53条WATCH中5条证券、46条SETUP中2条证券**（`SHAZBUSDT`与`IBMBUSDT`），二者7条事件的原Core `event_id/symbol/observed_ms`全部留痕。其余48 WATCH、44 SETUP是**未完成类别确认的信号**，并非认证crypto-only；整个511母体剩余432交易对类别仍未完成证明。
+- Stage77 G3 的六个输入完整UTC信号日，原始46 SETUP / 6 = **7.67条/日**；剔除两条已证证券后，44条剩余未知资格 SETUP / 6 = **7.33条/日**，仍高于注意力≤5条/日目标。两者是**描述性负载，非7d窗口、非全量crypto-only正式分母**。峰值原11条/日未越≤12，但平均目标仍有风险。不能事后改变参数或静默丢弃D0以造好看成绩。
+- 代码/测试/清单/证据已在原PR #30研究分支，常规无网络[GitHub Actions #40089465602](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40089465602)云端实际**SUCCESS**，日志六段回归 `13+5+6+11+19+12 = 66/66 PASS`，新增资产分层12项包括伪造域名、重复官方符号、未来公布不能回填历史、原事件身份漂移、未知不能当crypto。源代码与新增测试的本地实测Git Blob分别为 `f67d66a1d496ccf4bb5390d72e27ac5ecebc8866`、`43b43db5a8931b8fb069f6d62e64aecf7e3f3d8c`，已远端回读逐值一致。未创建定时任务。
+
+**实际下一步**：2026-10-24 UTC整日结束后，待511份官方日ZIP真正发布并逐项CHECKSUM校验，再做4599/4599、全3360轮同原Core一次性对照；先把余下432个T0交易对按发生前正式来源完成历史类别/上架资格证据，G3不以“无证券匹配”充当crypto认证。D2还缺当时可见买卖盘、交易限制、金额与净手续费/滑点/退出证明，G4 UNKNOWN。BSC旧P0截至11-02的来源止损与Frank不变。**G0 PARTIAL / G1 NOT_SCORABLE / G2-G3 NOT_PASSED / G4 UNKNOWN / G6 NO_GO; NO_MERGE / NO_DEPLOY / NO_MAC / NO_PAID / NO_GMAIL / NO_TRADES / NO_AUTOMATIONS**。
