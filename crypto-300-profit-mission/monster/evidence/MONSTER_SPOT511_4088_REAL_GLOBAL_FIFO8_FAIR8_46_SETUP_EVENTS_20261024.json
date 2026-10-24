@@ -1,0 +1,467 @@
+{
+  "schema": "MONSTER_SPOT511_4088_REAL_SOURCE_ORIGINAL_SQLITE_D0D1_FIFO_FAIR8_EVENT_LEDGER_V1",
+  "replay_date_utc": "2026-10-24",
+  "code_fixed_sha": "da1e784de3d0a377265d35415748f2ab56e72d7f",
+  "run_id": 40087231856,
+  "run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40087231856",
+  "replay_artifact_id": 12557911034,
+  "artifact_outer_zip_sha256": "e395e610c0280a9ba53f6bf716b1711f93623d460d4f6dfae14bc5b3c3938568",
+  "replay_inner_json_sha256": "453ee2e740578121b0734d61e6eb357be7bb34859b90878eb314f7d3dc1690f5",
+  "replay_summary_sha256": "a56e341316d14ca7e52b8615f9bb73e8fc7473cd6096bb1f6842091c4d3f81bb",
+  "source_provenance": {
+    "original_t0_frozen_population": 511,
+    "official_publisher_days": 4088,
+    "target_publisher_days": 4599,
+    "dates_admitted_utc": "2026-10-16..2026-10-23",
+    "unfinished_day_not_credited": "2026-10-24",
+    "oct23_source_run": 40086780992,
+    "oct23_census_evidence": "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_20261023_REAL511_PUBLISHER_INDEPENDENT_CENSUS_20261024.json",
+    "prior_3577_original_core_artifact_id": 12555698022,
+    "prior_3577_report_sha256": "91f5cbf8b76118b1376d0f51bcfac83a57f9e020ac39f7ee7a5136bcd7838635"
+  },
+  "replay_results": {
+    "global_3minute_ticks": 3360,
+    "full_source_3minute_ticks": 2919,
+    "source_censored_3minute_ticks": 441,
+    "old_watch": 46,
+    "current_watch": 53,
+    "new_watch": 7,
+    "old_setup": 42,
+    "current_setup_fifo": 46,
+    "current_setup_fair8": 46,
+    "new_setup": 4,
+    "fair8_only_setup_ids": [],
+    "fair8_lost_setup_ids": [],
+    "shared_setup_time_changed_ids": [],
+    "old_42_original_core_events_exactly_preserved": true,
+    "fifo_fair_setup_id_and_time_equal": true,
+    "complete_calendar_day_raw_setup_events_utc": {
+      "2026-10-18": 8,
+      "2026-10-19": 7,
+      "2026-10-20": 7,
+      "2026-10-21": 9,
+      "2026-10-22": 11,
+      "2026-10-23": 4
+    },
+    "known_2_bstock_setup_excluded_unadjusted_sixday_count": 44,
+    "six_complete_day_raw_mean": 7.666666666666667,
+    "sixday_excluding_only_two_official_bstocks_mean": 7.333333333333333,
+    "frozen_stage77_mean_setup_per_day_target": 5,
+    "g3_formal_crypto_only_gate": "NOT_PASSED_UNFINISHED_SOURCE_WINDOW_AND_OLDER_ASSET_IDENTITIES"
+  },
+  "new_oct23_watch_events": [
+    {
+      "symbol": "EPICUSDT",
+      "observed_ms": 1792731780000,
+      "event_id": "4ceed254eb17797a4ecba0ff541bcda01e064922c59eab0ee9c3399cfe5917cb",
+      "upgraded_to_setup": false
+    },
+    {
+      "symbol": "SOPHUSDT",
+      "observed_ms": 1792740600000,
+      "event_id": "42217cf90f8bfbce5db0882fed3f059b3d7f68feae4d0236033f26e6038f0973",
+      "upgraded_to_setup": true
+    },
+    {
+      "symbol": "ARKUSDT",
+      "observed_ms": 1792759860000,
+      "event_id": "5559aba5da777e5000a3c6584f8bcfcc17a7295e9d06af4fb910fe876ea2de36",
+      "upgraded_to_setup": true
+    },
+    {
+      "symbol": "INITUSDT",
+      "observed_ms": 1792769940000,
+      "event_id": "af55f2bccc2aab96f50773a07968a177022c494cddce3ba6567b648ee052da8b",
+      "upgraded_to_setup": false
+    },
+    {
+      "symbol": "EDUUSDT",
+      "observed_ms": 1792783440000,
+      "event_id": "970aeefb226e614847e9f5e7c6bba3eabfd5d2a7db23af1fe322cb48d10253e3",
+      "upgraded_to_setup": true
+    },
+    {
+      "symbol": "QUICKUSDT",
+      "observed_ms": 1792784880000,
+      "event_id": "e1ae2fc8b7c0d3559881dd78f1ceb7dad602557f90607e46e265d5bdae0be183",
+      "upgraded_to_setup": false
+    },
+    {
+      "symbol": "ERAUSDT",
+      "observed_ms": 1792787040000,
+      "event_id": "a620854f6c87ead686fabb8cb9044e8138d8438160c859931ac2d3404d0ed501",
+      "upgraded_to_setup": true
+    }
+  ],
+  "new_oct23_setup_events": [
+    {
+      "symbol": "SOPHUSDT",
+      "observed_ms": 1792740960000,
+      "event_id": "1cddb28f1929811ed4f56e096c183455de322885fc9356bc85942a569614d0dc",
+      "stage": "EXACT_4088_ORIGINAL_CORE_NEW_20261023",
+      "quote15m_ratio": 523.2599,
+      "positive_steps_last3": 2
+    },
+    {
+      "symbol": "ARKUSDT",
+      "observed_ms": 1792760220000,
+      "event_id": "dd32d30a8f6fce814a4f27716bd20d80c6eef7aa620ad1e6311f9ad17e6f875a",
+      "stage": "EXACT_4088_ORIGINAL_CORE_NEW_20261023",
+      "quote15m_ratio": 29.7859,
+      "positive_steps_last3": 3
+    },
+    {
+      "symbol": "EDUUSDT",
+      "observed_ms": 1792783800000,
+      "event_id": "cb3f9a8c7ec3dd5e45344a313776c04a41d4f14d4434fc05b545998706bf2926",
+      "stage": "EXACT_4088_ORIGINAL_CORE_NEW_20261023",
+      "quote15m_ratio": 45.3951,
+      "positive_steps_last3": 2
+    },
+    {
+      "symbol": "ERAUSDT",
+      "observed_ms": 1792787220000,
+      "event_id": "e95ba0d576ad73af52f4cee94894d217d9e0453567556036b7683445bb273d8b",
+      "stage": "EXACT_4088_ORIGINAL_CORE_NEW_20261023",
+      "quote15m_ratio": 8.8294,
+      "positive_steps_last3": 3
+    }
+  ],
+  "historical_official_pre_event_asset_type_positive_4": [
+    {
+      "symbol": "SOPHUSDT",
+      "issuer": "Sophon",
+      "published": "2025-05-28",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/8ef18cf913ce42278b67f4cbe161a062",
+      "asset_type": "CRYPTO_TOKEN"
+    },
+    {
+      "symbol": "ARKUSDT",
+      "issuer": "ARK",
+      "published": "2017-11-01",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/115002520852",
+      "asset_type": "CRYPTO_ASSET"
+    },
+    {
+      "symbol": "EDUUSDT",
+      "issuer": "Open Campus",
+      "published": "2023-04-28",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/f344e1bdfbe24f3ab067c22ec6d0b1a9",
+      "asset_type": "CRYPTO_TOKEN"
+    },
+    {
+      "symbol": "ERAUSDT",
+      "issuer": "Caldera",
+      "published": "2025-07-17",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/5511fc0281c1459bbb8b9f0d2f1297dc",
+      "asset_type": "CRYPTO_TOKEN"
+    }
+  ],
+  "legacy_42_original_core_setups_source": "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_3577_REAL_ORIGINAL_SQLITE_42_EVENT_LEDGER_VERIFIED_20261024.json",
+  "complete_46_original_core_setups": [
+    {
+      "symbol": "ERAUSDT",
+      "observed_ms": 1792307520000,
+      "event_id": "a7b9daf09be1222b01bc315234cd835781b97320b65742b9854c5914dd266fd6",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "AMPUSDT",
+      "observed_ms": 1792317420000,
+      "event_id": "d5ee6b8fdca66dade3196e6f874005f768a0ed9909af45f6b2521fc25f0962f3",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "ACMUSDT",
+      "observed_ms": 1792317960000,
+      "event_id": "848ea83add5fdd477557a2ac39023bff6a2022ebfcb43808df1b2dfea36f8df1",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "QKCUSDT",
+      "observed_ms": 1792330920000,
+      "event_id": "90e39fddee77e23aefa82f5833367263fbedf232e2e38a4b355151965c28e802",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "BARUSDT",
+      "observed_ms": 1792333260000,
+      "event_id": "3e28497482aeeb38a841201a49553a1e7be5c7bd7a23450a0c83ab96a4f3da74",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "QUICKUSDT",
+      "observed_ms": 1792344420000,
+      "event_id": "c37f09689f94eea32090e95a5577139e99999f18f5f0cb0708820d4d904879e0",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "EPICUSDT",
+      "observed_ms": 1792348560000,
+      "event_id": "a82d485c369dbcc0ab92d16bbf435287162125b02c1ddaa2b794347276b77316",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "MANTRAUSDT",
+      "observed_ms": 1792360260000,
+      "event_id": "added729933e6a20a32fc26de90578aedeaa457415f8d37a1e494abf94b23787",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "AMPUSDT",
+      "observed_ms": 1792391220000,
+      "event_id": "ab90be63b044cf419bad8ce71f69351fd9bedcbccd93c0dfc301afcda793d225",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "OSMOUSDT",
+      "observed_ms": 1792398060000,
+      "event_id": "d2ccf5ceb9d2490249fae50cd6765f407fa3bd286c179fc517eccb66f2de459d",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "NILUSDT",
+      "observed_ms": 1792411920000,
+      "event_id": "141b6671a3e01d0f181f7034643271afedef76d94290d2fb6ee8721038035a8b",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "SHAZBUSDT",
+      "observed_ms": 1792416960000,
+      "event_id": "4be01b4328f10b128fe1ed31854f06ef3260157916805944d24c57595173e9d9",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "AVAUSDT",
+      "observed_ms": 1792422900000,
+      "event_id": "f959f59ae86ba0ef1e18294495fcd4d6e2d161d01fda66a022398d3d24fbf108",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "GTCUSDT",
+      "observed_ms": 1792425600000,
+      "event_id": "71e29c88893f9aa35aea6efad5be51d3075cc0af47ec349a2b01946a5ca1f313",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "GNSUSDT",
+      "observed_ms": 1792434420000,
+      "event_id": "a25499a0066a71d992d41f31b5589114c79c0d3fe2ea5f080ab22f01e36fa844",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "AUSDT",
+      "observed_ms": 1792460700000,
+      "event_id": "556744f378c53bcd8d9ced3d85f21a7bca2a8eefc0d362601c0c8a1c675fdb17",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "ALTUSDT",
+      "observed_ms": 1792467900000,
+      "event_id": "54cb10ad2a66619c3fa4a9a32d85f086973f9c1452b0e48dcd86c46035a3bb8f",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "GNSUSDT",
+      "observed_ms": 1792482120000,
+      "event_id": "86770d96b356d416ab6b0258e158f6d1f6e0abec1113259b2c59f13951e29ec1",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "ERAUSDT",
+      "observed_ms": 1792487160000,
+      "event_id": "5be094a08f875f21d646b93fcd9e4ec382a2603c175e191250bebd70c652cfec",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "IDUSDT",
+      "observed_ms": 1792493820000,
+      "event_id": "a66780509cb22bd472bd854ad60ed7e59b5d8b7c265f7bb200102cf0a8d5297a",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "COMPUSDT",
+      "observed_ms": 1792515960000,
+      "event_id": "a4766238baade4e25ecb9e9eb3a563631afd67f406f1a8b2e59194eb283c1a56",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "IOSTUSDT",
+      "observed_ms": 1792530360000,
+      "event_id": "33d7e80580462684fe944d7a1f0532a18edca3075689114d66548c7fcb57151f",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "SCUSDT",
+      "observed_ms": 1792542600000,
+      "event_id": "95b31dcda2d6e5e6188c7fa2b3ba008bf46c575aa66f6edbc4c9b462ec62dbf8",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "PARTIUSDT",
+      "observed_ms": 1792550700000,
+      "event_id": "282ce4b03c5d03dc4f95472b11a129046cd56b61ae69278ba039c72d96674c90",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "IOSTUSDT",
+      "observed_ms": 1792552320000,
+      "event_id": "f67b03c24bae6fd2242a2cc71f0abc938771568c9682fcdf28b1bedec52f0720",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "IOSTUSDT",
+      "observed_ms": 1792575720000,
+      "event_id": "7ff60fc566e21ae72241ef73d6fe525cb7f028a803ba1a737d8abfbcfa5bd8dc",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "BMTUSDT",
+      "observed_ms": 1792576620000,
+      "event_id": "4c13450da1a914dc45d2004a75a00a4860912151ab471bfdc7ebc57faef21b7e",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "REQUSDT",
+      "observed_ms": 1792579500000,
+      "event_id": "c2622d553f8aabe57bb00d4c7373ff456eb10a5f7fe3fe8a019a8ee5f4b2a05c",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "ATUSDT",
+      "observed_ms": 1792583820000,
+      "event_id": "ed6c8474402d66d52969340c03005f4072a4900a9d2691647bcd998f4ee74f89",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "VTHOUSDT",
+      "observed_ms": 1792592460000,
+      "event_id": "cb5a68991568c3108babc2b11c1d010b74f73659c6748de1aae4bac2eb0e9cd4",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "ALTUSDT",
+      "observed_ms": 1792599120000,
+      "event_id": "257dfc14d4415bc4c32e466049d122e16d2daac3d41d92ba9af61e54ad700a82",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "DGBUSDT",
+      "observed_ms": 1792649160000,
+      "event_id": "b48b79700e3379dd30758262b51d8fb99a8222810812c354b18b1be66ba69282",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "LUMIAUSDT",
+      "observed_ms": 1792650960000,
+      "event_id": "dc55207c955e2c02cb89ed77e6320b5f4b08afb616ed06c406ad6ec739115a2d",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "ATMUSDT",
+      "observed_ms": 1792655460000,
+      "event_id": "8f8a19e35a68e8b3b5bb8334925f06e10da467a38dd8cda6850f34a7c18cdb7b",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "BMTUSDT",
+      "observed_ms": 1792656720000,
+      "event_id": "39926e1eb5e2bb3d788dec30f35b677c5ef63bcc92572075283e4ce41d5a6a24",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "MASKUSDT",
+      "observed_ms": 1792664460000,
+      "event_id": "ccad8020d56711d8d315bef764deec6d5bde6c2bbe89f3e31b976ae5f3ffb4c6",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "AIUSDT",
+      "observed_ms": 1792665000000,
+      "event_id": "faa0e7c9257becbcb3baecc3f09313c4f8c424a41a10bf8819844bb2e6c3d6fd",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "MITOUSDT",
+      "observed_ms": 1792666620000,
+      "event_id": "6f1e6ebdd3aea8ed01aba65ae648edca955c4a3dd6494ecfc62f046b1b469fbb",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "AVAUSDT",
+      "observed_ms": 1792671120000,
+      "event_id": "9b911925b40fe5aecb5cded6ad1479c56ae8b54e17104618b90201d9049ae552",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "IBMBUSDT",
+      "observed_ms": 1792676160000,
+      "event_id": "17c2a96cab2a0b3a45ff15268c0cd41f44ad4860de93f5a08949c1639c928b1e",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "OSMOUSDT",
+      "observed_ms": 1792686060000,
+      "event_id": "6e90db5ae2f72871e0d05bdad4274ab7b9a1c87f9af3e82cb00508b959e9ebe6",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "BMTUSDT",
+      "observed_ms": 1792693620000,
+      "event_id": "3843f8b21ff8e74f7051fac0119597881e514ebb57766248c435cc9b9af0d24a",
+      "stage": "EXACT_3577_ORIGINAL_CORE_PREVIOUS_VERIFIED"
+    },
+    {
+      "symbol": "SOPHUSDT",
+      "observed_ms": 1792740960000,
+      "event_id": "1cddb28f1929811ed4f56e096c183455de322885fc9356bc85942a569614d0dc",
+      "stage": "EXACT_4088_ORIGINAL_CORE_NEW_20261023",
+      "quote15m_ratio": 523.2599,
+      "positive_steps_last3": 2
+    },
+    {
+      "symbol": "ARKUSDT",
+      "observed_ms": 1792760220000,
+      "event_id": "dd32d30a8f6fce814a4f27716bd20d80c6eef7aa620ad1e6311f9ad17e6f875a",
+      "stage": "EXACT_4088_ORIGINAL_CORE_NEW_20261023",
+      "quote15m_ratio": 29.7859,
+      "positive_steps_last3": 3
+    },
+    {
+      "symbol": "EDUUSDT",
+      "observed_ms": 1792783800000,
+      "event_id": "cb3f9a8c7ec3dd5e45344a313776c04a41d4f14d4434fc05b545998706bf2926",
+      "stage": "EXACT_4088_ORIGINAL_CORE_NEW_20261023",
+      "quote15m_ratio": 45.3951,
+      "positive_steps_last3": 2
+    },
+    {
+      "symbol": "ERAUSDT",
+      "observed_ms": 1792787220000,
+      "event_id": "e95ba0d576ad73af52f4cee94894d217d9e0453567556036b7683445bb273d8b",
+      "stage": "EXACT_4088_ORIGINAL_CORE_NEW_20261023",
+      "quote15m_ratio": 8.8294,
+      "positive_steps_last3": 3
+    }
+  ],
+  "limitations": [
+    "Confirmed 4 new SETUP are crypto-category projects from issuer official announcements published BEFORE events; eligibility of whole 511-pair population at each historical minute is not proven.",
+    "Two previous SETUP identified as tokenized equities from official published Binance notices; cannot count as valid crypto-only G3, and remaining 40 older SETUP asset identities not yet exhaustively established.",
+    "8 complete archive dates 2026-10-16..23 do not cover 2026-10-24; full 7-day research replay needs 2026-10-24 complete publisher data as well.",
+    "Even 46 exact historical SQL events are posthoc minute-based quote proxies, not live historical REST ticker receipt/PIT; no liquidity depth, order amounts, trading fee or executable round-trip PnL.",
+    "No original signal tuning, no production action, no user-funded market activity. No long-running jobs, schedules, mail, Mac or Frank changes."
+  ],
+  "gates": {
+    "G0": "PARTIAL",
+    "G1": "NOT_SCORABLE",
+    "G2": "NOT_PASSED",
+    "G3": "NOT_PASSED",
+    "G4": "UNKNOWN",
+    "G6": "NO_GO",
+    "NO_DEPLOY": true,
+    "NO_AUTOMATIONS": true,
+    "NO_GMAIL": true,
+    "NO_TRADES": true,
+    "NO_MERGE": true
+  }
+}
