@@ -1,0 +1,116 @@
+{
+  "schema": "MONSTER_SPOT511_POSITIVE_ASSET_TYPE_EVENT_OVERLAY_V1",
+  "research_day_utc": "2026-10-24",
+  "source_run": 40087231856,
+  "artifact_zip_sha256": "e395e610c0280a9ba53f6bf716b1711f93623d460d4f6dfae14bc5b3c3938568",
+  "paired_original_sqlite_report_sha256": "453ee2e740578121b0734d61e6eb357be7bb34859b90878eb314f7d3dc1690f5",
+  "earlier_source_3577_original_SQLite_42_event_match_run": 40083267351,
+  "T0_official_exchangeInfo_run": 39073557939,
+  "T0_official_exchangeInfo_artifact": 12116091492,
+  "historical_identity_manifest": "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_OFFICIAL_POSITIVE_BSTOCKS_20261024.json",
+  "evidence_manifest_positive_official_sources": 3,
+  "proof_announcement_dates_all_pre_event": true,
+  "frozen_511_spot_usdt_roster_count": 511,
+  "frozen_roster_true_original_T0_source": true,
+  "positive_bstock_symbols_in_roster": 79,
+  "unresolved_symbol_identity_count": 432,
+  "watch": {
+    "raw": 53,
+    "official_bstock_out_of_scope": 5,
+    "unresolved_identity": 48
+  },
+  "setup": {
+    "raw": 46,
+    "official_bstock_out_of_scope": 2,
+    "unresolved_identity": 44,
+    "by_utc_day": {
+      "2026-10-18": 8,
+      "2026-10-19": 7,
+      "2026-10-20": 7,
+      "2026-10-21": 9,
+      "2026-10-22": 11,
+      "2026-10-23": 4
+    },
+    "partial_6days_after_two_positive_bstocks": 44,
+    "partial_6days_raw_mean": 7.666666666666667,
+    "partial_6days_nonbstock_mean": 7.333333333333333,
+    "stage77_mean_per_day_target": 5,
+    "stage77_single_day_target": 12,
+    "formal_g3_verdict": "NOT_PASSED_NEEDS_POSITIVE_CRYPTO_IDENTITY_AND_FINAL_DAY"
+  },
+  "excluded_events": [
+    {
+      "event_id": "49d534d898647516b270feced3a6a57699fe2ebf40de61bf6035a6f760674f26",
+      "event_type": "WATCH",
+      "symbol": "MRNABUSDT",
+      "observed_ms": 1792416780000,
+      "identity": "OUT_OF_SCOPE_TOKENIZED_SECURITY",
+      "proof_url": "https://www.binance.com/en-BH/support/announcement/detail/b3ba5cf68daf4264a1260c8da11eef6d"
+    },
+    {
+      "event_id": "ee103b94976565b45c01a699715a4e0f7dc3e1561bc62f6fc7b6dc6608b473e8",
+      "event_type": "WATCH",
+      "symbol": "SHAZBUSDT",
+      "observed_ms": 1792416780000,
+      "identity": "OUT_OF_SCOPE_TOKENIZED_SECURITY",
+      "proof_url": "https://www.binance.com/en/support/announcement/detail/172e44302d6143578e40acc48570a2e5"
+    },
+    {
+      "event_id": "4be01b4328f10b128fe1ed31854f06ef3260157916805944d24c57595173e9d9",
+      "event_type": "SETUP",
+      "symbol": "SHAZBUSDT",
+      "observed_ms": 1792416960000,
+      "identity": "OUT_OF_SCOPE_TOKENIZED_SECURITY",
+      "proof_url": "https://www.binance.com/en/support/announcement/detail/172e44302d6143578e40acc48570a2e5"
+    },
+    {
+      "event_id": "092917e3b29f1dd568f4336ae95db1d56963531328c0c7d9039b2395834013e8",
+      "event_type": "WATCH",
+      "symbol": "SMCIBUSDT",
+      "observed_ms": 1792528380000,
+      "identity": "OUT_OF_SCOPE_TOKENIZED_SECURITY",
+      "proof_url": "https://www.binance.bh/en/support/announcement/detail/4fea39f8b6e54e1b88e388fc90ce323e"
+    },
+    {
+      "event_id": "3803006df1c6c92423f190c4fe1004f58bb0465ce2deedab4d6d9e8ca202b211",
+      "event_type": "WATCH",
+      "symbol": "IBMBUSDT",
+      "observed_ms": 1792675980000,
+      "identity": "OUT_OF_SCOPE_TOKENIZED_SECURITY",
+      "proof_url": "https://www.binance.bh/en/support/announcement/detail/4fea39f8b6e54e1b88e388fc90ce323e"
+    },
+    {
+      "event_id": "17c2a96cab2a0b3a45ff15268c0cd41f44ad4860de93f5a08949c1639c928b1e",
+      "event_type": "SETUP",
+      "symbol": "IBMBUSDT",
+      "observed_ms": 1792676160000,
+      "identity": "OUT_OF_SCOPE_TOKENIZED_SECURITY",
+      "proof_url": "https://www.binance.bh/en/support/announcement/detail/4fea39f8b6e54e1b88e388fc90ce323e"
+    },
+    {
+      "event_id": "728fb1cbc135fdbae9bc846f95a9b9ffe0f0c51624cafb2ed46fce68da0a086e",
+      "event_type": "WATCH",
+      "symbol": "BEBUSDT",
+      "observed_ms": 1792699920000,
+      "identity": "OUT_OF_SCOPE_TOKENIZED_SECURITY",
+      "proof_url": "https://www.binance.bh/en/support/announcement/detail/4fea39f8b6e54e1b88e388fc90ce323e"
+    }
+  ],
+  "event_count_preserved": true,
+  "cohort_source_censored_ticks": 441,
+  "crypto_only_identity_proven_for_unmatched_432": false,
+  "historical_listing_lifecycle_PIT_proven": false,
+  "first_observable_price_PIT_proven": false,
+  "executable_L2_fees_net_PnL": "UNKNOWN",
+  "G0": "PARTIAL",
+  "G1": "NOT_SCORABLE",
+  "G2": "NOT_PASSED",
+  "G3": "NOT_PASSED",
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_MERGE": true,
+  "NO_DEPLOY": true,
+  "NO_AUTOMATIONS": true,
+  "NO_GMAIL": true,
+  "NO_TRADES": true
+}
