@@ -187,7 +187,16 @@ def rehearse_supervised_mac_entry_offline(
     # evidence directory inspected above, including ancestor/child aliases.
     roots = [p.resolve() for p in
              (evidence_root, test_registry, test_evidence)]
+    production = Path(
+        checked["fixed_registry_state"]["fixed_private_registry"]).resolve()
     for test_root in roots[1:]:
+        if test_root == production or test_root in production.parents or (
+                production in test_root.parents):
+            # This must use the same production path verified by Mac
+            # preflight. The hard-stop module alone cannot know its
+            # independently inspected OS-user-home registry, especially
+            # in tests or if /tmp aliases a separately bound path.
+            raise ValueError("D1_MAC_REHEARSAL_PRODUCTION_ROOT_FORBIDDEN")
         if test_root == roots[0] or test_root in roots[0].parents or (
                 roots[0] in test_root.parents):
             raise ValueError("D1_MAC_REHEARSAL_EVIDENCE_ROOT_OVERLAP")
