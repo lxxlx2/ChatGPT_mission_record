@@ -1,0 +1,1083 @@
+{
+  "schema": "CRYPTO_DAILY_EDITORIAL_V1",
+  "report_date": "2026-10-24",
+  "timezone": "Asia/Bangkok",
+  "report_type": "daily",
+  "prebuild_at": "2026-10-24T08:20:14+07:00",
+  "delivery_status": "NOT_SENT",
+  "qa_status": "PREBUILD_REQUIRES_CI_AND_24H_INPUT_RECONCILIATION",
+  "rule_blobs": {
+    "PIPELINE_CONTRACT": "5365fb29bb00f20101d4190737468da845b4a0e2",
+    "EDITORIAL_RULESET": "ad3488769052a1cea5dda4bbf7fd6f1f9092046f",
+    "REPORT_SPEC": "809a5c1cbcd6503d42305c842f37826b74a4741f",
+    "REPORT_ACCEPTANCE": "37789b7274aec766e4ac4975111602bccc11a7d2",
+    "COLLECTOR_SPEC": "834e0e3c05f5e894f31474a7b4d7fd0e90d8c08f",
+    "SECURITY_SOURCE_POLICY": "86b36f208220e90a52caa1cb8acaeec47add9628",
+    "DELIVERY_RUNBOOK": "181c0448dddd2586e6082faaa1f51f7556eaa795",
+    "LEDGER": "d7806bb407a95a9d1a5ba8e5d76a39cbf433c759"
+  },
+  "body": "Crypto Daily Brief｜2026-10-24（08:20预构建，未发送）\n快照：Asia/Bangkok 2026-10-24 08:20。币价来自Binance现货滚动24小时，ETF为美国10月22日已完整交易日，10月23日基金数据仍有缺列。事件按各自发行日期；来源缺口不代表没有事件。\n\n一、今日最重要的5件事\n（1）LiteLLM 10月23日21:00 UTC发布新的权威攻击链复盘：5月泄露但未轮换的内部主密钥在10月10日被滥用，进一步泄露GitHub组织Owner与维护者令牌，最终污染10月21日PyPI/Docker正式发布；属于前日报未涵盖的实质根因更新。\n（2）Railway 10月22日初步事故报告首次量化范围：最多1.85%工作区（约10万个）部分环境变量可能泄露，第三方供应商批量撤销的凭据范围可能更广；这是潜在暴露上限，不能等同于10万账户已被盗。\n（3）eMudhra 10月22日官方宣布退出全球SSL/TLS证书业务，后续需协助现有客户迁移证书；这是10月20日已报道中间CA弱密钥事故后的新业务决策，不重复旧事故细节。\n（4）Farside可逐只回读的10月22日美国BTC现货ETF净流出6.356亿美元，前一完整交易日10月21日净流入5.248亿美元；这是跨发行人资金方向反转，10月23日基金仍有缺列，暂不算全日净额。\n\n二、BTC/ETH/SOL及主要资产\n（1）BTC/USDT：Binance现货滚动24小时80830.01美元（-0.683%），高82060.88、低80513.00美元，USDT计价成交额约9.5105亿美元；截至2026-10-24 08:20:14曼谷。\n（2）ETH/USDT：2379.67美元（-0.372%），高2417.77、低2351.55美元，成交额约5.1661亿美元；Binance 2026-10-24 08:20:12曼谷。\n（3）SOL/USDT：102.64美元（-1.146%），高105.24、低101.73美元，成交额约1.6174亿美元；Binance 2026-10-24 08:20:11曼谷。\n（4）同源同刻：BNB/USDT 738.31美元（+0.972%），HYPE/USDT 76.80美元（-0.967%）；单交易所24小时滚动报价，不是全球加权价。\n\n三、二级市场剧烈波动与持续趋势\n（1）Binance USDⓈ-M单点未平仓量：BTCUSDT 93287.951 BTC、ETHUSDT 2321062.477 ETH、SOLUSDT 8539370.25 SOL，截至曼谷08:20:07左右。仅有当前持仓数量，缺连续OI、Funding及清算数据，不能据此认定新增多空方向。\n（2）滚动24小时SOL -1.146%弱于BTC -0.683%，BNB +0.972%相对更强；这种短窗分化未构成7日/30日趋势证据，后续需同源时序成交量和衍生品核实。\n\n四、监管与政策\n（1）Bitget 10月23日16:47（公告页面时间）宣布因钱包维护暂停USDC在BSC网络的提现，开始时间为10月24日00:47（UTC+8），即曼谷10月23日23:47，恢复日期待官方后续公告。只涉及所述币种及链路，不等于所有USDC被冻结。\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）美国BTC现货ETF：Farside 10月22日逐只基金净额合计-6.356亿美元，其中IBIT -2.541亿、FBTC -2.175亿、ARKB -1.094亿；10月23日IBIT/HODL仍为空列，页面小计-2760万美元不得冒充最终全市场。\n（2）美国ETH ETF同一完整10月22日交易日净流出1.106亿美元，Farside显示ETHA -7550万美元、ETHB -1720万美元等；流量是基金申赎估算，不能直接认定这些BTC/ETH当日全部在链上卖出。\n（3）SOL ETF 10月22日Farside净流出890万美元（BSOL -570万、GSOL -320万），与BTC/ETH基金同向；不同ETF基金的流量和现货成交额不应相加为单一链上交易。\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n无高置信新增。\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n（1）NeoSoul DNA：Kraken 10月22日发布英文官方上市说明，确认DNA交易实际自10月19日开放。这是独立交易所一手确认，不等于NeoSoul StandX专项补偿获配、Alpha空投资格或新TGE。\n（2）Binance Alpha官方10月23日移除PTB、AA、OWL、DORA、ELIZAOS、MEMES及哭哭马的Alpha展示，明确相关代币仍可经支持路径卖出或提取；Alpha移除不等于现货全站退市或所有链上资产作废。\n\n八、Early / Meme / NFT / 新生态热点\n无高置信新增。\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n（1）LiteLLM官方10月23日根因更新修正此前假设：5月27日误公开的Agent Platform主密钥未轮换，攻击者10月10日获得Owner级GitHub CLI OAuth令牌，并利用临时CI分支导出维护者令牌，10月21日经伪装源码仓库发布恶意1.107.0。已报告恶意包本身不再重复当新事件；使用者仍需按官方原事故清单检查污染版本、隔离重建并轮换密钥。\n（2）Railway 10月22日初步报告：攻击者曾查询加密环境变量，部分可能被解密；官方确认最多1.85%工作区有变量潜在暴露，约10万个工作区；供应商预防性大规模撤销并不证明每一被撤销凭据都泄漏。官方建议10月21日前注册且存放敏感变量的用户轮换密钥并查审计日志。\n（3）eMudhra官方10月22日宣布主动退出全球SSL/TLS证书签发，称受影响CA未签发终端证书且其他业务独立。此为发行方声明，尚不能由此证明所有旧设备信任库已更新；证书持有人应按浏览器/发行方正规渠道更换，禁止忽略TLS警告。\n（4）PHP官方10月23日新提示：在下一常规修复版前，可关闭session.upload_progress.enabled以降低特殊序列化配置组合下的罕见RCE路径（CVE-2026-115560）；这项后续公告不同于10月21日已报的两项严重PHP2Shell修补。\n\n十、全球局势与跨市场冲击\n（1）美国10月23日收盘（AP）：标普500为7623.68（-0.52%）、道指52215.16（-1.23%）、纳指25955.34（-0.21%）；10年美债收益率约4.99%，油价和科技资本开支压力共同影响风险偏好。\n（2）路透10月23日记录布伦特原油收116.72美元/桶、WTI收103.27美元/桶；中东供应扰动抬高能源通胀风险。油价、利率与加密资产相关性会变化，不能用单日新闻预测必然跌幅。\n\n十一、未来24至72小时催化\n无高置信新增。\n\n十二、持续趋势与跨市场机会观察清单\n（1）未来复核BTC 80513—82060.88美元本次24小时区间是否被放量突破，同时比较10月22日BTC ETF净流出6.356亿美元与下一完整交易日的真实基金数据；若价格重新站稳上沿且ETF净流改善，短期压力判断应下调。\n（2）若布伦特原油继续上行且10年美债收益率维持约5%附近，风险资产估值可能继续受压；若油价与收益率持续回落，则该通胀压力链条减弱。缺7日/30日同源趋势、Funding和清算数据，暂不提供确定交易方向。\n\n十三、今日行动与风险结论\n（1）今日不因单点BTC/ETH/SOL回落或ETF净流出直接追空；先补连续OI/Funding、下一个完整ETF交易日和链上真实流向，再判断是否出现持续机构抛压。\n（2）涉及USDC跨平台提现先核对交易所官方网络维护状态及地址/网络，旧HTX受限对手名单无新官方增量，避免不明来源跨平台转账和绕过合规筛查。\n（3）仅在实际部署了相关AI包、云托管或TLS证书时，核对官方公告与实际版本/密钥权限，必要时从可信环境轮换凭据；尚无证据表明用户个人钱包因此受到影响。\n\n英文原始来源：\nbtc: https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT\neth: https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT\nsol: https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT\nbnb: https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT\nhype: https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT\noi: https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT\nfarside: https://farside.co.uk/btc/\nethflow: https://farside.co.uk/eth/\nsolflow: https://farside.co.uk/sol/\nlitellm: https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain\nrailway: https://blog.railway.com/p/preliminary-report-october-security-incident\nemudhra: https://emudhra.com/en/press-release/emudhra-to-exit-global-ssl-tls-certificate-business\nphp: https://www.php.net/archive/2026.php\nbitget: https://www.bitget.com/support/articles/12560603898707\nbitgetold: https://www.bitget.com/support/articles/12560603892077\nbinanceold: https://www.binance.com/en/support/announcement/detail/af2be67dc03c4673b4f56c42db948253\nalpha: https://www.binance.com/en/support/announcement/detail/ab3a0eac9e614819b7b6fa0c03504b1f\nkraken: https://blog.kraken.com/product/asset-listings/dna-is-available-for-trading\nap: https://apnews.com/article/e07c72bc5cbe5dffe352ddf30054e35f\nreuters: https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/\nnode: https://nodejs.org/en/blog/vulnerability/october-2026-security-releases\nlaravel: https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6\nms: https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise\nmozilla: https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/\narkham: https://info.arkm.com/research/who-owns-the-most-bitcoin-top-btc-holders-2026",
+  "items": [
+    {
+      "section": 1,
+      "item_number": 1,
+      "event_key": "litellm:root-cause:2026-10-23",
+      "role": "highlight",
+      "text": "LiteLLM 10月23日21:00 UTC发布新的权威攻击链复盘：5月泄露但未轮换的内部主密钥在10月10日被滥用，进一步泄露GitHub组织Owner与维护者令牌，最终污染10月21日PyPI/Docker正式发布；属于前日报未涵盖的实质根因更新。"
+    },
+    {
+      "section": 1,
+      "item_number": 2,
+      "event_key": "railway:preliminary-impact:2026-10-22",
+      "role": "highlight",
+      "text": "Railway 10月22日初步事故报告首次量化范围：最多1.85%工作区（约10万个）部分环境变量可能泄露，第三方供应商批量撤销的凭据范围可能更广；这是潜在暴露上限，不能等同于10万账户已被盗。"
+    },
+    {
+      "section": 1,
+      "item_number": 3,
+      "event_key": "emudhra:tls-exit:2026-10-22",
+      "role": "highlight",
+      "text": "eMudhra 10月22日官方宣布退出全球SSL/TLS证书业务，后续需协助现有客户迁移证书；这是10月20日已报道中间CA弱密钥事故后的新业务决策，不重复旧事故细节。"
+    },
+    {
+      "section": 1,
+      "item_number": 4,
+      "event_key": "etf:btc:2026-10-22",
+      "role": "highlight",
+      "text": "Farside可逐只回读的10月22日美国BTC现货ETF净流出6.356亿美元，前一完整交易日10月21日净流入5.248亿美元；这是跨发行人资金方向反转，10月23日基金仍有缺列，暂不算全日净额。"
+    },
+    {
+      "section": 2,
+      "item_number": 1,
+      "event_key": "market:btc:2026-10-24-0820",
+      "role": "detail",
+      "text": "BTC/USDT：Binance现货滚动24小时80830.01美元（-0.683%），高82060.88、低80513.00美元，USDT计价成交额约9.5105亿美元；截至2026-10-24 08:20:14曼谷。"
+    },
+    {
+      "section": 2,
+      "item_number": 2,
+      "event_key": "market:eth:2026-10-24-0820",
+      "role": "detail",
+      "text": "ETH/USDT：2379.67美元（-0.372%），高2417.77、低2351.55美元，成交额约5.1661亿美元；Binance 2026-10-24 08:20:12曼谷。"
+    },
+    {
+      "section": 2,
+      "item_number": 3,
+      "event_key": "market:sol:2026-10-24-0820",
+      "role": "detail",
+      "text": "SOL/USDT：102.64美元（-1.146%），高105.24、低101.73美元，成交额约1.6174亿美元；Binance 2026-10-24 08:20:11曼谷。"
+    },
+    {
+      "section": 2,
+      "item_number": 4,
+      "event_key": "market:bnb-hype:2026-10-24-0820",
+      "role": "detail",
+      "text": "同源同刻：BNB/USDT 738.31美元（+0.972%），HYPE/USDT 76.80美元（-0.967%）；单交易所24小时滚动报价，不是全球加权价。"
+    },
+    {
+      "section": 3,
+      "item_number": 1,
+      "event_key": "derivatives:btc-eth-sol-oi:2026-10-24-0820",
+      "role": "detail",
+      "text": "Binance USDⓈ-M单点未平仓量：BTCUSDT 93287.951 BTC、ETHUSDT 2321062.477 ETH、SOLUSDT 8539370.25 SOL，截至曼谷08:20:07左右。仅有当前持仓数量，缺连续OI、Funding及清算数据，不能据此认定新增多空方向。"
+    },
+    {
+      "section": 3,
+      "item_number": 2,
+      "event_key": "market:relative-strength:2026-10-24-0820",
+      "role": "detail",
+      "text": "滚动24小时SOL -1.146%弱于BTC -0.683%，BNB +0.972%相对更强；这种短窗分化未构成7日/30日趋势证据，后续需同源时序成交量和衍生品核实。"
+    },
+    {
+      "section": 4,
+      "item_number": 1,
+      "event_key": "bitget:usdc-bsc-withdrawal-pause:2026-10-24",
+      "role": "detail",
+      "text": "Bitget 10月23日16:47（公告页面时间）宣布因钱包维护暂停USDC在BSC网络的提现，开始时间为10月24日00:47（UTC+8），即曼谷10月23日23:47，恢复日期待官方后续公告。只涉及所述币种及链路，不等于所有USDC被冻结。"
+    },
+    {
+      "section": 5,
+      "item_number": 1,
+      "event_key": "etf:btc:2026-10-22",
+      "role": "detail",
+      "text": "美国BTC现货ETF：Farside 10月22日逐只基金净额合计-6.356亿美元，其中IBIT -2.541亿、FBTC -2.175亿、ARKB -1.094亿；10月23日IBIT/HODL仍为空列，页面小计-2760万美元不得冒充最终全市场。"
+    },
+    {
+      "section": 5,
+      "item_number": 2,
+      "event_key": "etf:eth:2026-10-22",
+      "role": "detail",
+      "text": "美国ETH ETF同一完整10月22日交易日净流出1.106亿美元，Farside显示ETHA -7550万美元、ETHB -1720万美元等；流量是基金申赎估算，不能直接认定这些BTC/ETH当日全部在链上卖出。"
+    },
+    {
+      "section": 5,
+      "item_number": 3,
+      "event_key": "etf:sol:2026-10-22",
+      "role": "detail",
+      "text": "SOL ETF 10月22日Farside净流出890万美元（BSOL -570万、GSOL -320万），与BTC/ETH基金同向；不同ETF基金的流量和现货成交额不应相加为单一链上交易。"
+    },
+    {
+      "section": 7,
+      "item_number": 1,
+      "event_key": "neosoul:dna:kraken-listing:2026-10-22",
+      "role": "detail",
+      "text": "NeoSoul DNA：Kraken 10月22日发布英文官方上市说明，确认DNA交易实际自10月19日开放。这是独立交易所一手确认，不等于NeoSoul StandX专项补偿获配、Alpha空投资格或新TGE。"
+    },
+    {
+      "section": 7,
+      "item_number": 2,
+      "event_key": "binance:alpha-removal:2026-10-23",
+      "role": "detail",
+      "text": "Binance Alpha官方10月23日移除PTB、AA、OWL、DORA、ELIZAOS、MEMES及哭哭马的Alpha展示，明确相关代币仍可经支持路径卖出或提取；Alpha移除不等于现货全站退市或所有链上资产作废。"
+    },
+    {
+      "section": 9,
+      "item_number": 1,
+      "event_key": "litellm:root-cause:2026-10-23",
+      "role": "detail",
+      "text": "LiteLLM官方10月23日根因更新修正此前假设：5月27日误公开的Agent Platform主密钥未轮换，攻击者10月10日获得Owner级GitHub CLI OAuth令牌，并利用临时CI分支导出维护者令牌，10月21日经伪装源码仓库发布恶意1.107.0。已报告恶意包本身不再重复当新事件；使用者仍需按官方原事故清单检查污染版本、隔离重建并轮换密钥。"
+    },
+    {
+      "section": 9,
+      "item_number": 2,
+      "event_key": "railway:preliminary-impact:2026-10-22",
+      "role": "detail",
+      "text": "Railway 10月22日初步报告：攻击者曾查询加密环境变量，部分可能被解密；官方确认最多1.85%工作区有变量潜在暴露，约10万个工作区；供应商预防性大规模撤销并不证明每一被撤销凭据都泄漏。官方建议10月21日前注册且存放敏感变量的用户轮换密钥并查审计日志。"
+    },
+    {
+      "section": 9,
+      "item_number": 3,
+      "event_key": "emudhra:tls-exit:2026-10-22",
+      "role": "detail",
+      "text": "eMudhra官方10月22日宣布主动退出全球SSL/TLS证书签发，称受影响CA未签发终端证书且其他业务独立。此为发行方声明，尚不能由此证明所有旧设备信任库已更新；证书持有人应按浏览器/发行方正规渠道更换，禁止忽略TLS警告。"
+    },
+    {
+      "section": 9,
+      "item_number": 4,
+      "event_key": "php:session-upload:2026-10-23",
+      "role": "detail",
+      "text": "PHP官方10月23日新提示：在下一常规修复版前，可关闭session.upload_progress.enabled以降低特殊序列化配置组合下的罕见RCE路径（CVE-2026-115560）；这项后续公告不同于10月21日已报的两项严重PHP2Shell修补。"
+    },
+    {
+      "section": 10,
+      "item_number": 1,
+      "event_key": "macro:us-close:2026-10-23",
+      "role": "detail",
+      "text": "美国10月23日收盘（AP）：标普500为7623.68（-0.52%）、道指52215.16（-1.23%）、纳指25955.34（-0.21%）；10年美债收益率约4.99%，油价和科技资本开支压力共同影响风险偏好。"
+    },
+    {
+      "section": 10,
+      "item_number": 2,
+      "event_key": "macro:brent-oil:2026-10-23",
+      "role": "detail",
+      "text": "路透10月23日记录布伦特原油收116.72美元/桶、WTI收103.27美元/桶；中东供应扰动抬高能源通胀风险。油价、利率与加密资产相关性会变化，不能用单日新闻预测必然跌幅。"
+    },
+    {
+      "section": 12,
+      "item_number": 1,
+      "event_key": "risk:etf-flow-and-spot-2026-10-24",
+      "role": "detail",
+      "text": "未来复核BTC 80513—82060.88美元本次24小时区间是否被放量突破，同时比较10月22日BTC ETF净流出6.356亿美元与下一完整交易日的真实基金数据；若价格重新站稳上沿且ETF净流改善，短期压力判断应下调。"
+    },
+    {
+      "section": 12,
+      "item_number": 2,
+      "event_key": "risk:energy-yields-2026-10-24",
+      "role": "detail",
+      "text": "若布伦特原油继续上行且10年美债收益率维持约5%附近，风险资产估值可能继续受压；若油价与收益率持续回落，则该通胀压力链条减弱。缺7日/30日同源趋势、Funding和清算数据，暂不提供确定交易方向。"
+    },
+    {
+      "section": 13,
+      "item_number": 1,
+      "event_key": "action:crypto-risk:2026-10-24",
+      "role": "detail",
+      "text": "今日不因单点BTC/ETH/SOL回落或ETF净流出直接追空；先补连续OI/Funding、下一个完整ETF交易日和链上真实流向，再判断是否出现持续机构抛压。"
+    },
+    {
+      "section": 13,
+      "item_number": 2,
+      "event_key": "action:cex-access:2026-10-24",
+      "role": "detail",
+      "text": "涉及USDC跨平台提现先核对交易所官方网络维护状态及地址/网络，旧HTX受限对手名单无新官方增量，避免不明来源跨平台转账和绕过合规筛查。"
+    },
+    {
+      "section": 13,
+      "item_number": 3,
+      "event_key": "action:security-operations:2026-10-24",
+      "role": "detail",
+      "text": "仅在实际部署了相关AI包、云托管或TLS证书时，核对官方公告与实际版本/密钥权限，必要时从可信环境轮换凭据；尚无证据表明用户个人钱包因此受到影响。"
+    }
+  ],
+  "events": [
+    {
+      "event_key": "litellm:root-cause:2026-10-23",
+      "kind": "MAJOR_SECURITY",
+      "material_version": "official-2026-10-23-root-cause",
+      "published_at": "2026-10-23T21:00:00Z",
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain",
+      "actual_delta": "发行方10月23日新发布权威攻击链复盘，确认5月暴露且未轮换的主密钥引出10月10日组织Owner GitHub令牌被盗，后续CI凭据外泄并导致10月21日恶意正式包。",
+      "impact": "MAJOR",
+      "status": "verified",
+      "priority": "HIGH",
+      "source_confirmed": true,
+      "version": "official-2026-10-23-root-cause",
+      "impact_breadth": "sector-wide",
+      "top5_basis": "官方新证据证明开源AI组件的长期未轮换密钥与GitHub组织最高权限、CI审批链可形成跨企业供应链传播风险，明显超出单个代码仓库。",
+      "top5_evidence_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain"
+    },
+    {
+      "event_key": "railway:preliminary-impact:2026-10-22",
+      "kind": "MAJOR_SECURITY",
+      "material_version": "official-2026-10-22-preliminary-1.85pct",
+      "published_at": "2026-10-22",
+      "source_url": "https://blog.railway.com/p/preliminary-report-october-security-incident",
+      "actual_delta": "Railway新初步报告给出最多1.85%工作区、约10万个工作区部分环境变量可能受影响的范围上限，说明用户账户未被登录且第三方密钥重置规模可能更广。",
+      "impact": "MAJOR",
+      "status": "verified",
+      "priority": "HIGH",
+      "source_confirmed": true,
+      "version": "official-2026-10-22-preliminary-1.85pct",
+      "impact_breadth": "sector-wide",
+      "top5_basis": "云托管平台首次给出多租户密钥暴露的数量级上限及第三方供应商批量撤销机制，直接影响云部署、AI API密钥和多家服务集成。",
+      "top5_evidence_url": "https://blog.railway.com/p/preliminary-report-october-security-incident"
+    },
+    {
+      "event_key": "emudhra:tls-exit:2026-10-22",
+      "kind": "MAJOR_SECURITY",
+      "material_version": "official-2026-10-22-global-tls-exit",
+      "published_at": "2026-10-22",
+      "source_url": "https://emudhra.com/en/press-release/emudhra-to-exit-global-ssl-tls-certificate-business",
+      "actual_delta": "eMudhra官方董事会宣布退出全球SSL/TLS证书业务并协助现有客户更换证书，属于此前CA密钥事件之后独立的业务及证书迁移实质增量。",
+      "impact": "MAJOR",
+      "status": "verified",
+      "priority": "HIGH",
+      "source_confirmed": true,
+      "version": "official-2026-10-22-global-tls-exit",
+      "impact_breadth": "sector-wide",
+      "top5_basis": "全球受信任CA发行方因八个中间签名密钥事故宣布整体退出TLS证书业务，影响证书更新、迁移和下游软件信任链，属于跨行业重大后续。",
+      "top5_evidence_url": "https://emudhra.com/en/press-release/emudhra-to-exit-global-ssl-tls-certificate-business"
+    },
+    {
+      "event_key": "etf:btc:2026-10-22",
+      "kind": "INSTITUTIONAL_FLOW",
+      "material_version": "us-session-2026-10-22-final",
+      "published_at": "2026-10-23",
+      "source_url": "https://farside.co.uk/btc/",
+      "actual_delta": "Farside 10月22日美国现货BTC ETF已完整列出净流出6.356亿美元，10月23日仍有空列不可按完整日汇总。",
+      "impact": "MAJOR",
+      "status": "verified",
+      "priority": "HIGH",
+      "source_confirmed": true,
+      "version": "us-session-2026-10-22-final",
+      "impact_breadth": "multi-venue",
+      "top5_basis": "美国多个现货BTC基金在同一完整交易日出现可逐只复核的大规模净赎回，跨多家发行人，资金方向与此前一日5.248亿美元净流入形成鲜明反转。",
+      "top5_evidence_url": "https://farside.co.uk/btc/"
+    },
+    {
+      "event_key": "etf:eth:2026-10-22",
+      "kind": "INSTITUTIONAL_FLOW",
+      "material_version": "us-session-2026-10-22-final",
+      "published_at": "2026-10-23",
+      "source_url": "https://farside.co.uk/eth/",
+      "actual_delta": "Farside 10月22日美国ETH ETF净流出1.106亿美元，逐只基金记录可回读。",
+      "impact": "MAJOR",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true,
+      "version": "us-session-2026-10-22-final"
+    },
+    {
+      "event_key": "etf:sol:2026-10-22",
+      "kind": "INSTITUTIONAL_FLOW",
+      "material_version": "us-session-2026-10-22-final",
+      "published_at": "2026-10-23",
+      "source_url": "https://farside.co.uk/sol/",
+      "actual_delta": "Farside 10月22日SOL ETF净流出890万美元，和BTC、ETH同日流向对照。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true,
+      "version": "us-session-2026-10-22-final"
+    },
+    {
+      "event_key": "bitget:usdc-bsc-withdrawal-pause:2026-10-24",
+      "kind": "MAJOR_POLICY",
+      "material_version": "official-suspend-2026-10-24-0047-utc8",
+      "published_at": "2026-10-23T16:47:00+08:00",
+      "source_url": "https://www.bitget.com/support/articles/12560603898707",
+      "actual_delta": "Bitget官方宣布USDC在BSC网络的提现自2026-10-24 00:47 UTC+8因钱包维护暂停，恢复时间另行公布；仅此链此币提现功能。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "HIGH",
+      "source_confirmed": true,
+      "version": "official-suspend-2026-10-24-0047-utc8"
+    },
+    {
+      "event_key": "binance:alpha-removal:2026-10-23",
+      "kind": "TGE_PUBLIC_SALE",
+      "material_version": "alpha-removal-2026-10-23",
+      "published_at": "2026-10-23T09:30:00Z",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/ab3a0eac9e614819b7b6fa0c03504b1f",
+      "actual_delta": "Binance Alpha官方10月23日移除PTB、AA、OWL、DORA、ELIZAOS、MEMES和哭哭马展示名单，官方称原持仓仍可按渠道卖出或提取。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true,
+      "version": "alpha-removal-2026-10-23"
+    },
+    {
+      "event_key": "neosoul:dna:kraken-listing:2026-10-22",
+      "kind": "TGE_PUBLIC_SALE",
+      "material_version": "kraken-official-post-2026-10-22",
+      "published_at": "2026-10-22",
+      "source_url": "https://blog.kraken.com/product/asset-listings/dna-is-available-for-trading",
+      "actual_delta": "Kraken 10月22日英文正式刊发DNA上市说明，注明交易于10月19日已开放，属新增一手交易所核验，非新TGE或StandX补偿。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true,
+      "version": "kraken-official-post-2026-10-22"
+    },
+    {
+      "event_key": "php:session-upload:2026-10-23",
+      "kind": "MAJOR_SECURITY",
+      "material_version": "php-official-2026-10-23-cve-2026-115560",
+      "published_at": "2026-10-23",
+      "source_url": "https://www.php.net/archive/2026.php",
+      "actual_delta": "PHP官方10月23日新增低概率组合配置的session upload progress建议，建议在下个常规修复版前设置session.upload_progress.enabled=0；与已报告两项严重CVE不同。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true,
+      "version": "php-official-2026-10-23-cve-2026-115560"
+    },
+    {
+      "event_key": "macro:us-close:2026-10-23",
+      "kind": "MACRO_CROSS_MARKET",
+      "material_version": "us-session-2026-10-23",
+      "published_at": "2026-10-23",
+      "source_url": "https://apnews.com/article/e07c72bc5cbe5dffe352ddf30054e35f",
+      "actual_delta": "美股10月23日正式收盘：标普7623.68跌0.52%，道指52215.16跌1.23%，纳指25955.34跌0.21%；油价上涨、10年美债收益率约4.99%。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true,
+      "version": "us-session-2026-10-23"
+    },
+    {
+      "event_key": "macro:brent-oil:2026-10-23",
+      "kind": "MACRO_CROSS_MARKET",
+      "material_version": "brent-close-2026-10-23",
+      "published_at": "2026-10-23",
+      "source_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/",
+      "actual_delta": "路透10月23日布伦特原油收116.72美元/桶、WTI 103.27，受中东供应风险影响；能源通胀压力和高收益率影响风险资产。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true,
+      "version": "brent-close-2026-10-23"
+    },
+    {
+      "event_key": "market:btc:2026-10-24-0820",
+      "kind": "CORE_QUOTE",
+      "material_version": "observed_2026-10-24_0820_bkk",
+      "published_at": "2026-10-24T08:20:14+07:00",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "actual_delta": "Binance BTCUSDT滚动24小时实时采样，价80830.01美元、-0.683%、高82060.88低80513.00、成交额9.5105亿美元。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "market:eth:2026-10-24-0820",
+      "kind": "CORE_QUOTE",
+      "material_version": "observed_2026-10-24_0820_bkk",
+      "published_at": "2026-10-24T08:20:12+07:00",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
+      "actual_delta": "Binance ETHUSDT滚动24小时采样，价2379.67美元、-0.372%、高2417.77低2351.55、成交额5.1661亿美元。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "market:sol:2026-10-24-0820",
+      "kind": "CORE_QUOTE",
+      "material_version": "observed_2026-10-24_0820_bkk",
+      "published_at": "2026-10-24T08:20:11+07:00",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
+      "actual_delta": "Binance SOLUSDT滚动24小时采样，价102.64美元、-1.146%、高105.24低101.73、成交额1.6174亿美元。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "market:bnb-hype:2026-10-24-0820",
+      "kind": "CORE_QUOTE",
+      "material_version": "observed_2026-10-24_0820_bkk",
+      "published_at": "2026-10-24T08:20:13+07:00",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT",
+      "actual_delta": "Binance BNB 738.31美元+0.972%，HYPE 76.80美元-0.967%，同为滚动24小时采样。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "derivatives:btc-eth-sol-oi:2026-10-24-0820",
+      "kind": "TREND_DERIVATIVES",
+      "material_version": "observed_2026-10-24_0820_bkk",
+      "published_at": "2026-10-24T08:20:07+07:00",
+      "source_url": "https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT",
+      "actual_delta": "Binance USDⓈ-M未平仓量单点BTC 93287.951 BTC、ETH 2321062.477 ETH、SOL 8539370.25 SOL，未获得同口径历史序列，不能推断方向。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "market:relative-strength:2026-10-24-0820",
+      "kind": "TREND_DERIVATIVES",
+      "material_version": "observed_2026-10-24_0820_bkk",
+      "published_at": "2026-10-24T08:20:11+07:00",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
+      "actual_delta": "同刻SOL滚动24h -1.146%弱于BTC -0.683%、BNB +0.972%，需连续采样检验持续性。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "risk:etf-flow-and-spot-2026-10-24",
+      "kind": "PERSISTENT_WATCH",
+      "material_version": "observed_2026-10-24_0820_bkk",
+      "published_at": "2026-10-24T08:20:00+07:00",
+      "source_url": "https://farside.co.uk/btc/",
+      "actual_delta": "以10月22日BTC ETF流出及10月24日现货价格对照，后续以新交易日逐只基金数据和BTC 80513—82061区间作为可证伪观察点。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "risk:energy-yields-2026-10-24",
+      "kind": "PERSISTENT_WATCH",
+      "material_version": "observed_2026-10-24_0820_bkk",
+      "published_at": "2026-10-23",
+      "source_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/",
+      "actual_delta": "观察油价、10年美债收益率和风险资产波动的同向持续性，若油价与收益率回落则通胀压力假设减弱。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "action:crypto-risk:2026-10-24",
+      "kind": "ACTION_CONCLUSION",
+      "material_version": "observed_2026-10-24_0820_bkk",
+      "published_at": "2026-10-24T08:20:00+07:00",
+      "source_url": "https://farside.co.uk/btc/",
+      "actual_delta": "资金风险优先级：ETF净流出与现货疲弱仅为压力信号，不把单点OI当净空头或保证下跌，不因无核验新币强行交易。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "action:cex-access:2026-10-24",
+      "kind": "ACTION_CONCLUSION",
+      "material_version": "observed_2026-10-24_0820_bkk",
+      "published_at": "2026-10-23T16:47:00+08:00",
+      "source_url": "https://www.bitget.com/support/articles/12560603898707",
+      "actual_delta": "若需要跨平台USDC流动性，先以官方当前钱包状态核验支持链和网络，不将旧HTX资金来源限制解释成10月24日新规则。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "action:security-operations:2026-10-24",
+      "kind": "ACTION_CONCLUSION",
+      "material_version": "observed_2026-10-24_0820_bkk",
+      "published_at": "2026-10-23T21:00:00Z",
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain",
+      "actual_delta": "仅实际使用受影响组件或平台时按官方公告核对版本、凭据与部署日志；不推断个人资产已被盗，不点未经核实的迁移/领取链接。",
+      "impact": "LOCAL",
+      "status": "verified",
+      "priority": "NORMAL",
+      "source_confirmed": true
+    }
+  ],
+  "source_receipts": [
+    {
+      "lane": "spot",
+      "query_or_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT"
+      ]
+    },
+    {
+      "lane": "derivatives",
+      "query_or_url": "https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [
+        "https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT"
+      ]
+    },
+    {
+      "lane": "capital_flows",
+      "query_or_url": "https://farside.co.uk/btc/",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [
+        "https://farside.co.uk/btc/",
+        "https://farside.co.uk/eth/",
+        "https://farside.co.uk/sol/"
+      ]
+    },
+    {
+      "lane": "onchain",
+      "query_or_url": "site:info.arkm.com/research October 23 2026 BTC whale transfer; site:lookonchain.com October 23 2026 whale BTC",
+      "status": "source_gap",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [],
+      "error": "未取得近24小时带可核验TXID及归属的Arkham/Lookonchain一手大额转账回执；仅有较旧索引或二手材料，不能声明无转账"
+    },
+    {
+      "lane": "policy",
+      "query_or_url": "https://www.bitget.com/support/articles/12560603898707",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [
+        "https://www.bitget.com/support/articles/12560603898707",
+        "https://www.bitget.com/support/articles/12560603892077",
+        "https://www.binance.com/en/support/announcement/detail/af2be67dc03c4673b4f56c42db948253"
+      ]
+    },
+    {
+      "lane": "infrastructure",
+      "query_or_url": "site:sec.gov October 23 2026 digital assets infrastructure",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [
+        "https://www.sec.gov/newsroom/press-releases/2026-100-sec-proposal-would-address-how-investment-advisers-funds-can-custody-crypto-assets-under-federal"
+      ]
+    },
+    {
+      "lane": "tge",
+      "query_or_url": "https://blog.kraken.com/product/asset-listings/dna-is-available-for-trading",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [
+        "https://blog.kraken.com/product/asset-listings/dna-is-available-for-trading",
+        "https://www.binance.com/en/support/announcement/detail/ab3a0eac9e614819b7b6fa0c03504b1f"
+      ]
+    },
+    {
+      "lane": "early_nft",
+      "query_or_url": "site:opensea.io/blog October 23 2026 NFT mint; site:info.arkm.com/research October 23",
+      "status": "source_gap",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [],
+      "error": "未取得最近24小时的原始NFT/Meme铸造、交易深度与官方社交公告组合证据；搜索结果大多是历史指南"
+    },
+    {
+      "lane": "security",
+      "query_or_url": "https://www.php.net/archive/2026.php",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [
+        "https://www.php.net/archive/2026.php",
+        "https://blog.railway.com/p/preliminary-report-october-security-incident"
+      ]
+    },
+    {
+      "lane": "backend_framework_auth",
+      "query_or_url": "https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [
+        "https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6"
+      ]
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "query_or_url": "https://blog.railway.com/p/preliminary-report-october-security-incident",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [
+        "https://blog.railway.com/p/preliminary-report-october-security-incident",
+        "https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise"
+      ]
+    },
+    {
+      "lane": "ai_package_supply_chain",
+      "query_or_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [
+        "https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain"
+      ]
+    },
+    {
+      "lane": "web_pki_tls",
+      "query_or_url": "https://emudhra.com/en/press-release/emudhra-to-exit-global-ssl-tls-certificate-business",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [
+        "https://emudhra.com/en/press-release/emudhra-to-exit-global-ssl-tls-certificate-business",
+        "https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/"
+      ]
+    },
+    {
+      "lane": "web_runtime_rce",
+      "query_or_url": "https://www.php.net/archive/2026.php",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [
+        "https://www.php.net/archive/2026.php",
+        "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases"
+      ]
+    },
+    {
+      "lane": "macro",
+      "query_or_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [
+        "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/",
+        "https://apnews.com/article/e07c72bc5cbe5dffe352ddf30054e35f"
+      ]
+    },
+    {
+      "lane": "forward_catalysts",
+      "query_or_url": "2026-10-24 through 2026-10-27 official dated catalyst search",
+      "status": "source_gap",
+      "checked_at": "2026-10-24T08:20:14+07:00",
+      "result_urls": [],
+      "error": "尚未取得未来72小时内发行方或官方交易日历核验的新增重大TGE、解锁或监管生效时点；不填推测日期"
+    }
+  ],
+  "market_core": [
+    {
+      "symbol": "BTC",
+      "price": 80830.01,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "observed_at": "2026-10-24T08:20:14+07:00"
+    },
+    {
+      "symbol": "ETH",
+      "price": 2379.67,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
+      "observed_at": "2026-10-24T08:20:12+07:00"
+    },
+    {
+      "symbol": "SOL",
+      "price": 102.64,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
+      "observed_at": "2026-10-24T08:20:11+07:00"
+    }
+  ],
+  "empty_section_reasons": [
+    {
+      "section": 6,
+      "reason": "已检查发行方、美国SEC监管和近期基础设施报道，但未发现2026-10-23至24新的可独立一手证实、且未在前7天发送过的融资或主网落地事件；避免重复JPMD历史报道。",
+      "checked_lanes": [
+        "infrastructure",
+        "policy"
+      ]
+    },
+    {
+      "section": 8,
+      "reason": "已进行英文NFT/Meme/早期项目发现检索，原始社交互动与合约流动性未能核验；本轮没有足够证据确认新发行或新可执行机会，不能把旧BALANCE艺术机制重复充数。",
+      "checked_lanes": [
+        "early_nft",
+        "tge"
+      ]
+    },
+    {
+      "section": 11,
+      "reason": "核对10月23日收盘和周末日期，但缺未来72小时内具有独立发行方确认且新增可执行动作的事件；不将过去的TGE日期或已知事故后续猜测作为催化。",
+      "checked_lanes": [
+        "forward_catalysts",
+        "macro"
+      ]
+    }
+  ],
+  "previous_events": [
+    {
+      "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
+      "family_key": "qubic:weak_seed_wallet_drain",
+      "material_version": "incident_reported_2026-10-20_v1",
+      "aliases": [
+        "Qubic"
+      ],
+      "delivered_date": "2026-10-20"
+    },
+    {
+      "event_key": "cysic:bridge_mint_exploit:2026-10-17",
+      "family_key": "cysic:bridge_mint_exploit",
+      "material_version": "incident_reported_2026-10-20_v1",
+      "aliases": [
+        "Cysic"
+      ],
+      "delivered_date": "2026-10-20"
+    },
+    {
+      "event_key": "jpm:jpm-coin-ethereum-expansion:2026-10-19",
+      "family_key": "jpm:jpm-coin-ethereum-expansion",
+      "material_version": "issuer_launch_2026-10-19",
+      "aliases": [
+        "JPMD",
+        "JPM Coin"
+      ],
+      "delivered_date": "2026-10-20"
+    },
+    {
+      "event_key": "bitget:restricted-counterparty-htx:2026-10-16",
+      "family_key": "cex:htx-source-of-funds-restrictions",
+      "material_version": "bitget_delta_2026-10-16",
+      "aliases": [
+        "HTX",
+        "Huobi Global SA"
+      ],
+      "delivered_date": "2026-10-17"
+    },
+    {
+      "event_key": "cambria:blast-abstract-transition:2026-10-19",
+      "family_key": "cambria:blast-abstract-transition",
+      "material_version": "secondary_unverified_2026-10-17",
+      "aliases": [
+        "Cambria"
+      ],
+      "delivered_date": "2026-10-18",
+      "source_status": "SOURCE_GAP_NOT_USER_ACTION"
+    },
+    {
+      "event_key": "neosoul:dna-standx-beneficiary:2026-10-15",
+      "family_key": "neosoul:dna-standx-beneficiary",
+      "material_version": "secondary_unverified_2026-10-15",
+      "aliases": [
+        "NeoSoul"
+      ],
+      "delivered_date": "2026-10-17",
+      "source_status": "BENEFICIARY_NOT_FIRST_PARTY_VERIFIED"
+    },
+    {
+      "event_key": "btc:clifton-collins:2026-10-20:tranche-5",
+      "family_key": "btc:clifton-collins",
+      "material_version": "tx:eb0bde50049e924590a1812af2d2699c13d513415d3f03bbe3d10f316b3d6756",
+      "aliases": [
+        "Clifton Collins"
+      ],
+      "delivered_date": "2026-10-21",
+      "delivered_edition": "official_corrected",
+      "gmail_message_id": "1a15c6d25715d6ca",
+      "source_tier": "ARKHAM_PRIMARY_ANALYTICS",
+      "source_url": "https://info.arkm.com/research/clifton-collins-fifth-500-btc-40m-transfer-from-drug-dealers-lost-stack",
+      "unresolved": [
+        "ultimate_recipient_beneficial_owner",
+        "government_announcement_for_fifth",
+        "btc_spot_sale"
+      ]
+    },
+    {
+      "event_key": "php:php2shell:2026-10-21",
+      "family_key": "php:php2shell",
+      "material_version": "cve-2026-109618-109619:fix-2026-10-21",
+      "aliases": [
+        "PHP2Shell",
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "delivered_date": "2026-10-22",
+      "delivered_edition": "official_security_corrected",
+      "gmail_message_id": "1a16279bdb00ea34",
+      "source_url": "https://www.php.net/archive/2026.php",
+      "event_status": "PATCHED_UPGRADE_URGENT",
+      "new_user_action": "Upgrade affected PHP web-server deployment via official distributor packages; monitor for signs of prior compromise."
+    },
+    {
+      "event_key": "pki:emudhra:2026-10-20",
+      "family_key": "pki:emudhra",
+      "material_version": "8_intermediate_ca_keys_exposed:removal-2026-10-20",
+      "aliases": [
+        "eMudhra",
+        "emSign ECC Root CA"
+      ],
+      "delivered_date": "2026-10-22",
+      "delivered_edition": "official_security_corrected",
+      "gmail_message_id": "1a16279bdb00ea34",
+      "source_url": "https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/",
+      "event_status": "INTERMEDIATE_CERTS_BLOCKED_MAINSTREAM_BROWSERS_DOWNSTREAM_UPDATE_PENDING",
+      "new_user_action": "Keep browser OS and non-browser TLS trust stores updated; do not override invalid TLS certificate warnings."
+    },
+    {
+      "event_key": "security:litellm:2026-10-21:poisoned-1.107.0",
+      "family_key": "ai:litellm:release-poison",
+      "material_version": "obs-2026-10-23",
+      "primary_version": "official-malicious-release-1.107.0",
+      "aliases": [
+        "litellm"
+      ],
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4",
+      "delivered_edition": "official_backfill",
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+      "classification": "MAJOR_SECURITY",
+      "new_delta_required_for_repeat": true
+    },
+    {
+      "event_key": "security:railway:2026-10-21:env-secrets",
+      "family_key": "cloud:railway:secrets",
+      "material_version": "obs-2026-10-23",
+      "primary_version": "official-2026-10-21-disclosure",
+      "aliases": [
+        "railway"
+      ],
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4",
+      "delivered_edition": "official_backfill",
+      "source_url": "https://blog.railway.com/p/security-disclosure-wednesday-october-21st",
+      "classification": "MAJOR_SECURITY",
+      "new_delta_required_for_repeat": true
+    },
+    {
+      "event_key": "security:connectwise:2026-10-21:microsoft-art-ex",
+      "family_key": "oauth:connectwise:storm0940",
+      "material_version": "obs-2026-10-23",
+      "primary_version": "microsoft-threat-intel-2026-10-21",
+      "aliases": [
+        "connectwise"
+      ],
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4",
+      "delivered_edition": "official_backfill",
+      "source_url": "https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/",
+      "classification": "MAJOR_SECURITY",
+      "new_delta_required_for_repeat": true
+    },
+    {
+      "event_key": "security:node:2026-10-21:patch-train",
+      "family_key": "runtime:node:2026-10",
+      "material_version": "obs-2026-10-23",
+      "primary_version": "official-fixes-22.23.4-24.22.1-26.12.1",
+      "aliases": [
+        "node"
+      ],
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4",
+      "delivered_edition": "official_backfill",
+      "source_url": "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases",
+      "classification": "MAJOR_SECURITY",
+      "new_delta_required_for_repeat": true
+    },
+    {
+      "event_key": "security:laravel:2026-10-19:tokenguard",
+      "family_key": "framework:laravel:tokenguard",
+      "material_version": "obs-2026-10-23",
+      "primary_version": "patched-12.68.0-13.29.0",
+      "aliases": [
+        "laravel"
+      ],
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4",
+      "delivered_edition": "official_backfill",
+      "source_url": "https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6",
+      "classification": "MAJOR_SECURITY",
+      "new_delta_required_for_repeat": true
+    }
+  ],
+  "coverage": [
+    {
+      "lane": "labeled_btc",
+      "status": "source_gap",
+      "checked_at": "2026-10-24T08:20:14+07:00"
+    },
+    {
+      "lane": "security",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00"
+    },
+    {
+      "lane": "cex_policy",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00"
+    },
+    {
+      "lane": "etf_flows",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00"
+    },
+    {
+      "lane": "tge_rights",
+      "status": "checked",
+      "checked_at": "2026-10-24T08:20:14+07:00"
+    },
+    {
+      "lane": "nft_social",
+      "status": "source_gap",
+      "checked_at": "2026-10-24T08:20:14+07:00"
+    }
+  ],
+  "candidates": [
+    {
+      "event_key": "litellm:root-cause:2026-10-23",
+      "family_key": "ai:litellm:release-poison",
+      "material_version": "official-2026-10-23-root-cause",
+      "aliases": [
+        "LiteLLM 10月23日"
+      ],
+      "decision": "include",
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain",
+      "published_at": "2026-10-23T21:00:00Z",
+      "material_delta": "发行方10月23日新发布权威攻击链复盘，确认5月暴露且未轮换的主密钥引出10月10日组织Owner GitHub令牌被盗，后续CI凭据外泄并导致10月21日恶意正式包。",
+      "reason": "已取得新的发行方原始资料，和前7天旧版本有实质差异；纳入所属主章节。"
+    },
+    {
+      "event_key": "railway:preliminary-impact:2026-10-22",
+      "family_key": "cloud:railway:secrets",
+      "material_version": "official-2026-10-22-preliminary-1.85pct",
+      "aliases": [
+        "Railway 10月22日"
+      ],
+      "decision": "include",
+      "source_url": "https://blog.railway.com/p/preliminary-report-october-security-incident",
+      "published_at": "2026-10-22",
+      "material_delta": "Railway新初步报告给出最多1.85%工作区、约10万个工作区部分环境变量可能受影响的范围上限，说明用户账户未被登录且第三方密钥重置规模可能更广。",
+      "reason": "已取得新的发行方原始资料，和前7天旧版本有实质差异；纳入所属主章节。"
+    },
+    {
+      "event_key": "emudhra:tls-exit:2026-10-22",
+      "family_key": "pki:emudhra",
+      "material_version": "official-2026-10-22-global-tls-exit",
+      "aliases": [
+        "eMudhra 10月22日"
+      ],
+      "decision": "include",
+      "source_url": "https://emudhra.com/en/press-release/emudhra-to-exit-global-ssl-tls-certificate-business",
+      "published_at": "2026-10-22",
+      "material_delta": "eMudhra官方董事会宣布退出全球SSL/TLS证书业务并协助现有客户更换证书，属于此前CA密钥事件之后独立的业务及证书迁移实质增量。",
+      "reason": "已取得新的发行方原始资料，和前7天旧版本有实质差异；纳入所属主章节。"
+    },
+    {
+      "event_key": "etf:btc:2026-10-22",
+      "family_key": "etf:btc:daily",
+      "material_version": "us-session-2026-10-22-final",
+      "aliases": [
+        "10月22日美国BTC现货ETF"
+      ],
+      "decision": "include",
+      "source_url": "https://farside.co.uk/btc/",
+      "published_at": "2026-10-23",
+      "material_delta": "Farside 10月22日美国现货BTC ETF已完整列出净流出6.356亿美元，10月23日仍有空列不可按完整日汇总。",
+      "reason": "已取得新的发行方原始资料，和前7天旧版本有实质差异；纳入所属主章节。"
+    },
+    {
+      "event_key": "bitget:usdc-bsc-withdrawal-pause:2026-10-24",
+      "family_key": "bitget:usdc-bsc",
+      "material_version": "official-suspend-2026-10-24-0047-utc8",
+      "aliases": [
+        "Bitget 10月23日16:47"
+      ],
+      "decision": "include",
+      "source_url": "https://www.bitget.com/support/articles/12560603898707",
+      "published_at": "2026-10-23T16:47:00+08:00",
+      "material_delta": "Bitget官方宣布USDC在BSC网络的提现自2026-10-24 00:47 UTC+8因钱包维护暂停，恢复时间另行公布；仅此链此币提现功能。",
+      "reason": "已取得新的发行方原始资料，和前7天旧版本有实质差异；纳入所属主章节。"
+    },
+    {
+      "event_key": "php:session-upload:2026-10-23",
+      "family_key": "php:session-upload",
+      "material_version": "php-official-2026-10-23-cve-2026-115560",
+      "aliases": [
+        "PHP官方10月23日"
+      ],
+      "decision": "include",
+      "source_url": "https://www.php.net/archive/2026.php",
+      "published_at": "2026-10-23",
+      "material_delta": "PHP官方10月23日新增低概率组合配置的session upload progress建议，建议在下个常规修复版前设置session.upload_progress.enabled=0；与已报告两项严重CVE不同。",
+      "reason": "已取得新的发行方原始资料，和前7天旧版本有实质差异；纳入所属主章节。"
+    },
+    {
+      "event_key": "binance:alpha-removal:2026-10-23",
+      "family_key": "binance:alpha-removal",
+      "material_version": "alpha-removal-2026-10-23",
+      "aliases": [
+        "Binance Alpha官方10月23日"
+      ],
+      "decision": "include",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/ab3a0eac9e614819b7b6fa0c03504b1f",
+      "published_at": "2026-10-23T09:30:00Z",
+      "material_delta": "Binance Alpha官方10月23日移除PTB、AA、OWL、DORA、ELIZAOS、MEMES和哭哭马展示名单，官方称原持仓仍可按渠道卖出或提取。",
+      "reason": "已取得新的发行方原始资料，和前7天旧版本有实质差异；纳入所属主章节。"
+    },
+    {
+      "event_key": "neosoul:dna:kraken-listing:2026-10-22",
+      "family_key": "neosoul:dna:kraken-listing",
+      "material_version": "kraken-official-post-2026-10-22",
+      "aliases": [
+        "NeoSoul DNA：Kraken"
+      ],
+      "decision": "include",
+      "source_url": "https://blog.kraken.com/product/asset-listings/dna-is-available-for-trading",
+      "published_at": "2026-10-22",
+      "material_delta": "Kraken 10月22日英文正式刊发DNA上市说明，注明交易于10月19日已开放，属新增一手交易所核验，非新TGE或StandX补偿。",
+      "reason": "已取得新的发行方原始资料，和前7天旧版本有实质差异；纳入所属主章节。"
+    },
+    {
+      "event_key": "cambria:blast-abstract-transition:2026-10-19",
+      "family_key": "cambria:blast-abstract-transition",
+      "material_version": "already-delivered-no-new-delta",
+      "aliases": [
+        "Cambria"
+      ],
+      "decision": "exclude",
+      "source_url": "https://info.arkm.com/research/who-owns-the-most-bitcoin-top-btc-holders-2026",
+      "published_at": "2026-10-19",
+      "material_delta": "无已核验新实质变化",
+      "reason": "前7天已以未确认来源缺口形式披露，当前无新发行方迁移、资产或签名指令一手增量，避免旧事件重播"
+    },
+    {
+      "event_key": "security:node:2026-10-21:patch-train",
+      "family_key": "runtime:node:2026-10",
+      "material_version": "already-delivered-no-new-delta",
+      "aliases": [
+        "Node.js"
+      ],
+      "decision": "exclude",
+      "source_url": "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases",
+      "published_at": "2026-10-21",
+      "material_delta": "本轮无新版本",
+      "reason": "Node.js 10月21日Brotli/TLS官方修补已于10月23日完整发送；当前未取得新增官方修补版本或影响范围变化"
+    },
+    {
+      "event_key": "security:laravel:2026-10-19:tokenguard",
+      "family_key": "framework:laravel:tokenguard",
+      "material_version": "already-delivered-no-new-delta",
+      "aliases": [
+        "Laravel"
+      ],
+      "decision": "exclude",
+      "source_url": "https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6",
+      "published_at": "2026-10-19",
+      "material_delta": "本轮无新版本",
+      "reason": "Laravel TokenGuard认证绕过已于10月23日发送，当前官方公告无新受影响范围或补丁版本，严格跨日去重"
+    }
+  ],
+  "input_manifest": {
+    "prior_24h_collector_listing": "SOURCE_GAP",
+    "detail": "GitHub fetch_file cannot list run/research directories; direct guesses for 03:20 and 06:20 exact HHMMSS returned 404. Do not claim hourly finals absent; source recall partially independently reconstructed.",
+    "gmail_sent_today": "none at 08:17",
+    "gmail_last_delivered": "2026-10-23 message 1a1671914359ade4 read back",
+    "source_scan_status": "PARTIAL",
+    "onchain_labeled_tx": "SOURCE_GAP",
+    "social_nft": "SOURCE_GAP",
+    "ci": "CI_NOT_PROVEN"
+  }
+}
