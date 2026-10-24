@@ -1,0 +1,71 @@
+[
+  {
+    "gate": "R1_PINS_AND_DIFF",
+    "status": "PASS",
+    "evidence": {
+      "product_sha": "914e9e47fed2e60bc24690fcb083413a64d4e681",
+      "plan_sha": "42ccc55da850b701be395df2f62e2aaa5fadc901",
+      "changed_files": 17,
+      "stacked_commits": 43
+    }
+  },
+  {
+    "gate": "R1_FULL_IMMUTABLE_PACKAGE",
+    "status": "PASS",
+    "evidence": {
+      "full_local_agent_files": 446,
+      "normalized_manifest_sha256": "9a06f5f29fce05ccade8caa2b90d6d6c0c4248d2e6ab4e45aa26fa9d3f401062",
+      "readonly_and_executable_bits_verified": true,
+      "runtime_blobs": {
+        "mission_agent/mission_control/server.py": {
+          "old_blob": "68a034d9588a798a5fe823597d87562cc4521bec",
+          "new_blob": "e136119d0b350bad2569c75120d849c91e5e2685"
+        },
+        "mission_agent/mission_control/static/app.js": {
+          "old_blob": "d326111813d0366b218514f1cc16f8e3a22ab7d9",
+          "new_blob": "b165dbc6ce0589ecc2ec871464a8968cf011a6a4"
+        },
+        "mission_agent/mission_control/static/index.html": {
+          "old_blob": "4878cfad630ac27160d43b34d29ee74e2dd78ccb",
+          "new_blob": "f7b8e7734b6117d49ef627b7f6069ce3334942e3"
+        },
+        "mission_agent/mission_control/wallet_d2_ingress.py": {
+          "old_blob": null,
+          "new_blob": "eadfe0f765c400b4aa2e839c8604a6e4fa080b9b"
+        },
+        "mission_agent/mission_control/wallet_owner_at_slot.py": {
+          "old_blob": null,
+          "new_blob": "65ae5d89683d5f52af8e8e728e2101dd4ea3a1c4"
+        }
+      },
+      "entry_installer_css_blobs_unchanged": true
+    }
+  },
+  {
+    "gate": "R1_INSTALLED_AND_PRIVATE_METADATA",
+    "status": "PASS",
+    "evidence": {
+      "current437files_runner_and_listener_match": true,
+      "three_protected_service_identities_captured_privately": true,
+      "imported_source_stat_hash_only": true,
+      "modes": [
+        "0755",
+        "0700",
+        "0600"
+      ],
+      "source_bytes": 893189,
+      "source_sha256": "d24d73d13a5ab9740eed7d1f06a6226aa9650004ccd756458b579c9e2ee2e284",
+      "interpreter_origin": "UNRESOLVED_RELEASE_QUALIFICATION"
+    }
+  },
+  {
+    "gate": "R1_EXISTING_ENV_IMPORT_ABI",
+    "status": "PASS",
+    "evidence": {
+      "server_reader_entry_import_only": true,
+      "exact_private_child_binding": true,
+      "no_state_backend_constructed": true,
+      "python": "3.14.7"
+    }
+  }
+]

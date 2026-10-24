@@ -1,0 +1,32 @@
+{
+  "verdict": "COVERAGE_LIMIT_BLOCKED",
+  "reason_code": "CHROME_UNIX_SINGLETON_BIND_DENIED",
+  "failure_stage": "BEFORE_BROWSER_PAGE_CREATED",
+  "underlying_evidence": "macOS denied Chrome ProcessSingleton Unix-domain socket bind; browser exited21. Fresh isolated profile, not evidence of an actually reused profile.",
+  "browser_cases_executed": 0,
+  "cases_not_tested": [
+    "manual_GET",
+    "page0_page41",
+    "exact_Mint_zero_absent",
+    "Oct23_timestamp_non_atomic_slots",
+    "late_request_race",
+    "missing_corrupt_HTTP_JSON_error",
+    "legacy_signal_CA_controls_render"
+  ],
+  "production_HTTP_requests": 0,
+  "RPC": 0,
+  "new_TCP_listeners": 0,
+  "new_test_HTTP_ports": 0,
+  "permissions_or_sandbox_relaxed": false,
+  "retry_count": 0,
+  "fallback_HTTP_server_started": false,
+  "cleanup": {
+    "chromeClosed": true,
+    "profileRemoved": true,
+    "bridgeExited": true,
+    "syntheticDirectoryRemoved": true
+  },
+  "remaining_test_Chrome_processes": 0,
+  "immutable_package_446_files_unchanged": true,
+  "existing_import_not_modified": true
+}
