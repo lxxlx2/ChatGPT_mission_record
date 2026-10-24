@@ -150,8 +150,52 @@ class PatchedPhysicalConstructorTests(unittest.TestCase):
                 source.reply_over_memory_https(
                     {"jsonrpc": "2.0", "id": 1,
                      "method": "eth_chainId", "params": []},
-                    lambda: called.append(True), 2.0)
+                    lambda: called.append(True), 2.0,
+                    reservation_guard=lambda _payload: None)
         self.assertEqual(called, [])
+
+    def test_patched_constructor_refuses_missing_coordinator_receipt(self):
+        source = PatchedConstructorOfflineSource(delay_ms=0)
+        payload = {"jsonrpc": "2.0", "id": 1,
+                   "method": "eth_chainId", "params": []}
+        with patch("http.client.HTTPSConnection",
+                   side_effect=AssertionError("NO_CONNECT_EXPECTED")) as ctor:
+            with self.assertRaisesRegex(
+                    ValueError, "COORDINATOR_RESERVATION_REQUIRED"):
+                source.reply_over_memory_https(payload, lambda: None, 2.0)
+        self.assertEqual(ctor.call_count, 0)
+
+    def test_invalid_reserved_request_cannot_reach_connect(self):
+        source = PatchedConstructorOfflineSource(delay_ms=0)
+        payload = {"jsonrpc": "2.0", "id": 1,
+                   "method": "eth_chainId", "params": []}
+        opened = []
+        closed = []
+
+        class Connection:
+            sock = None
+            def connect(self):
+                opened.append(True)
+                self.sock = object()
+            def close(self):
+                closed.append(True)
+
+        def constructor(host, *, port, timeout, context):
+            return Connection()
+
+        def deny_reserved(_payload):
+            raise ValueError("SAVED_RID_NOT_DURABLE")
+
+        with patch("http.client.HTTPSConnection",
+                   side_effect=constructor) as ctor:
+            with self.assertRaisesRegex(
+                    ValueError, "FAILED_NO_AUTO_RETRY"):
+                source.reply_over_memory_https(
+                    payload, lambda: None, 2.0,
+                    reservation_guard=deny_reserved)
+        self.assertEqual(ctor.call_count, 1)
+        self.assertFalse(opened)
+        self.assertEqual(closed, [True])
 
     def test_connect_fault_is_charged_once_and_never_retried(self):
         r, rows, records, _ = self.scenario(fail_connect=True)
