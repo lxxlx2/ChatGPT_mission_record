@@ -66,3 +66,102 @@ jobs:
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_d0_d1_tape.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_paired_sqlite.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_spot_d1_event_audit.py" -v
+
+  one-shot-publisher-20261023-probe:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/research/monster-v4-local-discovery-20261010' && contains(github.event.head_commit.message, '[MONSTER_ONESHOT_OFFICIAL_20261023]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      published: ${{ steps.probe.outputs.published }}
+    steps:
+      - name: Checkout frozen T0 research source
+        uses: actions/checkout@v4
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Probe official 2026-10-23 BTCUSDT daily ZIP plus original CHECKSUM once
+        id: probe
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os
+          from datetime import date
+          from pathlib import Path
+          import monster_spot511_manual_publisher_batch as batch
+          import monster_v4_stage166_spot511_official_1m_intake as stage166
+          roster=stage166.frozen_roster()
+          if len(roster)!=511 or 'BTCUSDT' not in roster:
+              raise SystemExit('MONSTER_ORIGINAL_511_BTC_IDENTITY_MISSING')
+          result=batch.batch(date(2026,10,23),Path(os.environ['RUNNER_TEMP'])/'monster-23-probe',
+                             start_index=roster.index('BTCUSDT'),count=1,download=True)
+          row=result['source_records'][0]
+          ready=row['status']=='VERIFIED_FULL_DAY_1440'
+          print('MONSTER_OCT23_OFFICIAL_PUBLISHER_PROBE',row['symbol'],row['status'],
+                row.get('error',''),row.get('zip_sha256',''))
+          with open(os.environ['GITHUB_OUTPUT'],'a') as fp:
+              fp.write('published='+('true' if ready else 'false')+'\n')
+          PY
+
+  one-shot-publisher-20261023-frozen-511:
+    needs: one-shot-publisher-20261023-probe
+    if: ${{ needs.one-shot-publisher-20261023-probe.outputs.published == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
+          - {offset: 0, count: 64}
+          - {offset: 64, count: 64}
+          - {offset: 128, count: 64}
+          - {offset: 192, count: 64}
+          - {offset: 256, count: 64}
+          - {offset: 320, count: 64}
+          - {offset: 384, count: 64}
+          - {offset: 448, count: 63}
+    steps:
+      - name: Checkout frozen original source intake only
+        uses: actions/checkout@v4
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: One bounded publisher original-ZIP and CHECKSUM batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$RUNNER_TEMP/monster-oct23-slice"
+          mkdir -p "$ROOT"
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_spot511_manual_publisher_batch.py \
+            --day 2026-10-23 --start-index ${{ matrix.offset }} --count ${{ matrix.count }} \
+            --dest "$ROOT/source" --out "$ROOT/attempts.json" --download
+          python - "$ROOT/attempts.json" ${{ matrix.count }} <<'PY'
+          import json,sys
+          r=json.load(open(sys.argv[1],encoding='utf-8'))
+          expect=int(sys.argv[2])
+          rows=r['source_records']
+          good=[x for x in rows if x['status']=='VERIFIED_FULL_DAY_1440']
+          print('MONSTER_20261023_ORIGINAL_PUBLISHER_SOURCE',r['start_index'],
+                len(good),'/',expect,'no_unsupplied_zeros')
+          if len(rows)!=expect or len(good)!=expect:
+              print('MONSTER_INCOMPLETE_DAILY_ARCHIVES_NOT_SCORABLE',
+                    [(x['symbol'],x['status'],x.get('error','')) for x in rows if x['status']!='VERIFIED_FULL_DAY_1440'])
+              raise SystemExit('MONSTER_OCT23_INCOMPLETE_SLICE')
+          PY
+      - name: Retain only one-shot source and integrity manifest for later joint census
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-spot511-2026-10-23-slice-${{ matrix.offset }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/monster-oct23-slice
+          retention-days: 30
+          if-no-files-found: warn
