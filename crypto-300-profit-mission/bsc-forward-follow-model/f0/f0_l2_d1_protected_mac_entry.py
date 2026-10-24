@@ -255,9 +255,12 @@ def inspect_real_https_sender_candidate_offline(
     # reviewed preflight; never accept a user-selected manifest root.
     from f0_l2_d1_real_sender_contract import (
         bind_real_https_candidate_offline,)
+    # Fetch the stdlib datetime class independently of the preflight's
+    # test-controlled datetime.now. Keep the SAME observed UTC instant.
+    from datetime import datetime as _NativeDatetime
     cand = bind_real_https_candidate_offline(
         permit_raw, one_shot_intent_raw, expected_sha,
-        datetime.fromisoformat(reviewed["checked_at_utc"]),
+        _NativeDatetime.fromisoformat(reviewed["checked_at_utc"]),
         actual_source_manifest_sha256=actual_manifest)
     diagnostic = cand.to_diagnostic()
     if (diagnostic["decision"] != "D1_BLOCKED_AUTHORITY"
