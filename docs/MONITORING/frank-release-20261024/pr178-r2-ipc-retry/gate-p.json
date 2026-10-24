@@ -1,0 +1,37 @@
+{
+  "gate": "GATE_P_SANDBOX_POLICY_PROOFS",
+  "status": "PASS",
+  "policy_sb": "(version 1)\n(allow default)\n(deny network*)\n(allow system-socket (socket-domain AF_UNIX))\n(allow network-bind (local unix-socket (subpath \"/private/tmp/frank178-r2-ipc-retry-20261024\")))\n(allow network-outbound (remote unix-socket (subpath \"/private/tmp/frank178-r2-ipc-retry-20261024\")))\n(allow network-inbound (local unix-socket (subpath \"/private/tmp/frank178-r2-ipc-retry-20261024\")))\n",
+  "temp_root": "/private/tmp/frank178-r2-ipc-retry-20261024",
+  "results": {
+    "in_root_uds": {
+      "status": "PASS",
+      "detail": "bind_listen_connect_accept_success"
+    },
+    "out_root_uds_bind": {
+      "status": "PASS",
+      "detail": "denied_by_policy: [Errno 1] Operation not permitted"
+    },
+    "out_root_uds_connect": {
+      "status": "PASS",
+      "detail": "denied_by_policy: [Errno 1] Operation not permitted"
+    },
+    "af_inet_bind": {
+      "status": "PASS",
+      "detail": "denied_by_policy: [Errno 1] Operation not permitted"
+    },
+    "af_inet_connect_loopback": {
+      "status": "PASS",
+      "detail": "denied_by_policy: [Errno 1] Operation not permitted"
+    },
+    "af_inet6_bind": {
+      "status": "PASS",
+      "detail": "denied_by_policy: [Errno 1] Operation not permitted"
+    },
+    "child_inheritance": {
+      "status": "PASS",
+      "detail": "PASS_DENIED: [Errno 1] Operation not permitted"
+    }
+  },
+  "verdict": "PASS"
+}

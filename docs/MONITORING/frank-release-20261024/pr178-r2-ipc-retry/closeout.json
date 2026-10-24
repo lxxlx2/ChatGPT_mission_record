@@ -1,0 +1,49 @@
+{
+  "timestamp": "2026-10-24T11:04:35Z",
+  "verdict": "BLOCKED_AT_FIRST_FAILURE",
+  "first_failing_gate": "R2_BROWSER_LAUNCH: CHROME_UNIX_SINGLETON_BIND_DENIED_DARWIN_TEMP_DIR",
+  "installed_dashboard": {
+    "pid": 88897,
+    "lstart": "Fri Oct 23 17:01:10 2026",
+    "listener": "127.0.0.1:8766",
+    "runner_hash": "a7cf3df2308535a3de8f5b723a4a373eaece5f8ac54a2f7350db28e3adf3c4b0",
+    "plist_hash": "97fcfe41d5640bad85a5b0eadc5e4c9bac35bc28b67e53df649463a3c3fa9683"
+  },
+  "observed_listeners": {
+    "8766": "dashboard (PR168 installed)",
+    "8765": "dashboard_server.py (UNKNOWN_NECESSITY_KEEP)",
+    "48721": "litellm (UNKNOWN_NECESSITY_KEEP)"
+  },
+  "private_source": {
+    "path_pattern": "control_root/frank-d2-private/frank-d2-owner-at-slot.json",
+    "modes": [
+      "0755",
+      "0700",
+      "0600"
+    ],
+    "bytes": 893189,
+    "sha256": "d24d73d13a5ab9740eed7d1f06a6226aa9650004ccd756458b579c9e2ee2e284",
+    "status": "UNCHANGED"
+  },
+  "hard_negatives": {
+    "new_tcp_udp_listeners": 0,
+    "new_http_test_ports": 0,
+    "production_get_post": 0,
+    "new_rpc": 0,
+    "exporter_runs": 0,
+    "source_reimports": 0,
+    "deployments": 0,
+    "merges": 0,
+    "restarts": 0,
+    "port_changes": 0,
+    "notifications": 0,
+    "trades": 0,
+    "schedulers": 0
+  },
+  "cleanup": {
+    "chrome_processes_running": 0,
+    "bridge_running": false,
+    "temp_sockets_cleaned": true,
+    "profiles_cleaned": true
+  }
+}

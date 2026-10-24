@@ -1,0 +1,44 @@
+{
+  "verdict": "COVERAGE_LIMIT_BLOCKED",
+  "reason_code": "CHROME_UNIX_SINGLETON_BIND_DENIED_DARWIN_TEMP_DIR",
+  "failure_stage": "BEFORE_BROWSER_PAGE_CREATED",
+  "gate_p": {
+    "status": "PASS",
+    "proofs": {
+      "in_root_uds": "PASS (bind_listen_connect_accept_success)",
+      "out_root_uds_bind": "PASS (denied_by_policy: Operation not permitted)",
+      "out_root_uds_connect": "PASS (denied_by_policy: Operation not permitted)",
+      "af_inet_bind": "PASS (denied_by_policy: Operation not permitted)",
+      "af_inet_connect_loopback": "PASS (denied_by_policy: Operation not permitted)",
+      "af_inet6_bind": "PASS (denied_by_policy: Operation not permitted)",
+      "child_inheritance": "PASS (denied_by_policy: Operation not permitted)"
+    }
+  },
+  "underlying_evidence": "Gate P sandbox proofs passed with path-scoped AF_UNIX restricted to disposable 0700 root. Despite TMPDIR/TMP/TEMP exported to disposable root, macOS Chrome resolved its temporary directory via Darwin system call (confstr/NSTemporaryDirectory) to /var/folders/.../T/, where ProcessSingleton socket bind was denied by kernel policy with Operation not permitted (1). Exactly one launch attempted, exited 21, fail first gate -> STOP per contract; no second launch, no sandbox loosening, 0 TCP ports.",
+  "browser_cases_executed": 0,
+  "cases_not_tested": [
+    "manual_GET",
+    "page0_page41",
+    "exact_Mint_zero_absent",
+    "Oct23_timestamp_non_atomic_slots",
+    "late_request_race",
+    "missing_corrupt_HTTP_JSON_error",
+    "legacy_signal_CA_controls_render"
+  ],
+  "production_HTTP_requests": 0,
+  "RPC": 0,
+  "new_TCP_listeners": 0,
+  "new_test_HTTP_ports": 0,
+  "permissions_or_sandbox_relaxed": false,
+  "retry_count": 0,
+  "fallback_HTTP_server_started": false,
+  "cleanup": {
+    "chromeClosed": true,
+    "profileRemoved": true,
+    "bridgeExited": true,
+    "syntheticDirectoryRemoved": true
+  },
+  "remaining_test_Chrome_processes": 0,
+  "immutable_package_446_files_unchanged": true,
+  "existing_import_not_modified": true
+}
