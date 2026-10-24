@@ -310,3 +310,15 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 - **后续优先顺序**：先按原模型及原Stage166完成UTC10月24最后511份Publisher整日ZIP/CHECKSUM真实准入、4599/4599和3360/3360原Core回放；随后在独立不改变原输出的研究旁路集成新比较器，并用原已曝光的10月数据做可证伪的回归（不得称样本外），再用预注册的未来三段数据检验D0召回、D1 G2保留率、G3 <=5/日/峰值<=12、真实D2资格和净经济性。任何“降噪以损失早期2×保留率为代价”均按Stage77 G2失败弃用；不能凭18项规则测试说改善已被证实。
 
 权限不变：`G0 PARTIAL / G1 NOT_SCORABLE / G2-G3 NOT_PASSED / G4 UNKNOWN / G5 NOT_DONE / G6 NO_GO`；`NO_MERGE / NO_DEPLOY / NO_MAC / NO_SCHEDULE / NO_GMAIL / NO_TRADES`，不触碰Frank与BSC。
+
+## 27. 2026-10-24：ADR-005独立外审REQUEST_CHANGES的P2已修复并跑150项云端回归，等待新SHA独立复审
+
+本轮接受**用户实际转交的独立 detached worktree 审核报告**，严格保留其结果：固定审查SHA `06aa72fceeb63c73375b556e7f8d44509452207a`，审核结论`REQUEST_CHANGES`，没有发现新增D1比较器的六根5m时钟、BTC相对强弱公式、SOURCE_CENSORED的P0/P1；原其他AI审核者模型具体名称未核实，标`REVIEWER_MODEL_UNVERIFIED`。该审查在用户Mac Python 3.14.7实际完成原CI 110/110、原shadow 31/31，但扩展 `test_monster_v4_spot511*.py` 31项时`30 PASS + 1 ERROR`，单项P2是旧 preflight CLI测试 `test_monster_v4_spot511_replay_preflight.py:109` 用`Path(__file__).with_name(...)`错误寻找`tests/`目录，实际CLI在`scripts/`。
+
+**最小修复** `849c76e2be7751d26b770cf5b85ba1fd7f593365`：只改该测试的CLI目标为`Path(__file__).resolve().parents[1]/"scripts"/"monster_v4_spot511_replay_preflight.py"`，原D0/D1、ADR-005研究候选、旧事件台账和预注册未来验证日均不改。**常规CI范围补齐** `9b049dd32bee0a34940fa61f73791377ae883cd9`：在原 `.github/workflows/monster-spot511-manual-source-batch-ci.yml` 纳入此preflight脚本/测试及`test_monster_v4_shadow.py`的push/PR触发、语法检查和真实回归，继续无schedule/无后台采集。
+
+[GitHub Actions #40103975065](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40103975065)（Job `120901708104`）真实`SUCCESS`，11组`13+5+6+11+19+12+12+14+18+9+31=150/150 PASS`；preflight新纳入组 **9/9 PASS**、原shadow **31/31 PASS**、研究比较器 **18/18 PASS**，`test_cli_report_written_once_without_network`确实通过第一次离线JSON输出与第二次拒绝覆盖断言。该云端Runner使用Python3.11，不冒称由独立审核者已在Mac Python3.14.7上复测新版。
+
+[审核结论、修复证据及可直接交Claude网页的再次复审提示词](../reviews/MONSTER_ADR005_INDEPENDENT_REVIEW_REQUEST_CHANGES_P2_RESOLUTION_20261024.md)全部保存原PR。**历史审核 SHA 的结论永远是REQUEST_CHANGES**；新版修复代码SHA `9b049dd32bee0a34940fa61f73791377ae883cd9` 的P2是否真正被独立审核者关闭，仍须取得其实际 `APPROVE/REQUEST_CHANGES/BLOCKED` 回执。不得以本机助手或GitHub自测替换其他AI Review，不得写G5 PASS。当前新D1仅为旁路比较函数，尚未接入全局持久episode状态机、未证明去重/重试/截止、G2>=80%早期召回、新G3日均<=5或历史G4真实费后可交易收益；原10/24日档案未实际验到511/511仍不能称G0完整。
+
+**状态**：`P2_FIX_COMMITTED_AND_CLOUD_CI_150_PASS / NEW_SHA_OTHER_AI_REREVIEW_PENDING / G0 PARTIAL / G1 NOT_SCORABLE / G2 NOT_PASSED / G3_NEW_VERSION_UNKNOWN / G4 UNKNOWN / G5 REQUEST_CHANGES_PENDING_REREVIEW / G6 NO_GO`。维持`NO_MERGE / NO_DEPLOY / NO_MAC / NO_AUTOMATIONS / NO_GMAIL / NO_TRADES / FRANK_UNCHANGED`。
