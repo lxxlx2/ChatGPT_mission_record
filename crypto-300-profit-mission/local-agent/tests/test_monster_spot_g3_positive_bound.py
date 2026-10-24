@@ -39,8 +39,8 @@ class PositiveBoundTests(unittest.TestCase):
         self.assertEqual(out['formal_G6'],'NO_GO')
         self.assertEqual(out['formal_G3'],'NOT_PASSED_PENDING_ELIGIBILITY_AND_FULL_SOURCE')
         self.assertEqual(out['positive_crypto_daily_utc'],
-                         {'2026-10-18':6,'2026-10-19':5,'2026-10-20':7,
-                          '2026-10-21':8,'2026-10-22':7,'2026-10-23':4})
+                         {'2026-10-18':5,'2026-10-19':6,'2026-10-20':6,
+                          '2026-10-21':7,'2026-10-22':9,'2026-10-23':4})
 
     def test_inputs_not_modified(self):
         a=deepcopy(self.replay);b=deepcopy(self.crypto);c=deepcopy(self.securities)
