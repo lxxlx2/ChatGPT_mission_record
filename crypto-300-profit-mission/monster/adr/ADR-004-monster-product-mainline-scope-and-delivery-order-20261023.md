@@ -285,3 +285,14 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 - **未结项严格分离**：①来源4599/4599仍差2026-10-24 UTC整日511份，必须等整日结束、官方ZIP与CHECKSUM真正发布后再计入；②原Ticker历史PIT`available_at`、动态交易对合法状态/账户资格未知；③D2没有当时盘口和真实双侧可成交成本、订单金额，净利润为UNKNOWN；④独立另一AI模型审核还未得到真实审核结论。
 
 本节不是新D1候选、不是样本外回测，不变更Stage77与G6。**G0 PARTIAL / G1 NOT_SCORABLE / G2-G3 NOT_PASSED / G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_MAC / NO_SCHEDULE / NO_GMAIL / NO_TRADES**。
+
+## 25. 2026-10-24：纠正G3关注负载与G4账户交易资格混用，已暴露41条最小超限
+
+**这是对第23–24节「Monitoring Tag六条若不能交易可使普通crypto SETUP从41减到35」的口径纠正，不是修改冻结模型、认定任何用户风险测验通过，亦非新样本。** 重新读取[Stage77标准](../MONSTER_STAGE77_CORE_MODEL_ACCEPTANCE_AND_BOUNDARY_FREEZE_20261013.md)：**G3验收对象是D1升级/关注事件数量**（完整日均≤5、单日≤12，所有原始D0留存），**G4**才要求历史账户/场所下单资格、bid/ask、手续费、成交量与退出净值。Binance [Monitoring Tag官方定义](https://www.binance.com/en/academy/glossary/monitoring-tag)及[2026-06-18风险测验规则](https://www.binance.com/en/support/announcement/detail/2ce2c4973d85405a9bb5fffc475c99dc)明确高风险标签代币交易前可能需每90天完成测验，但**标签既不使已记录SETUP凭空消失，也不能当作D1注意力净减6条的合法理由**。第23–24节那组`41-6=35`只能保留为**G4账户权限极端敏感性分析**，**不能**用于声称G3满足上限。
+
+**Stage77 G3历史注意力结论（基于真实4,088份Publisher回放，不是全七日来源验收）**：
+- 原Core从2026-10-18到23的6个UTC SETUP日期已产生46条，按事前官方身份资料对应**普通加密/协议token 41条**、Chiliz足球粉丝token 3条、代币化证券2条；最保守先不将粉丝token视为首版范围，41条D1研究提醒已经超过冻结七日上限`5×7=35`，多**6条**。这不是每币唯一赢家/G1 coin-date标签，而是G3按原始SETUP事件衡量注意力。峰值日2026-10-22普通crypto为9条、含粉丝和证券原始总量11条，未超≤12；均值负载是问题核心。
+- **后续来源不会通过「新增或零信号」逆转原有41条的已发生记录**；要反驳现有超量下界，只能提出对该41条事件ID、发生前加密身份或源准入的具体可复验证据缺陷，而不能事后删标签、把风险答题计入G3降噪、过滤重复真实提醒或调整已冻结阈值。T0为Spot USDT TRADING且原日期1m Publisher源已校验，但**各事件发生时刻历史动态上市/交易许可和Ticker历史网络`available_at`还未通过完整PIT复核**，所以不把该条件性超限冒充全系统的G3最终验收结案。
+- 代码直接修复`local-agent/mission_agent/early/spot_g3_final7_scope.py`：G3显式显示已知普通crypto注意力下界41及7日上限35，另用`G4_monitoring_tag_account_permission_sensitivity`单列6条对账号交易资格影响，杜绝原`core_if_all_monitor_tag_deferred`模糊字段；不改变原46条事件，不更改D0/D1/Fair8实际状态机。原分类报告 [46条事件的机器证据](../evidence/MONSTER_SPOT511_4088_G3_ALL46_PRE_EVENT_ASSET_CLASSIFIED_20261024.json)补写明确的`gate_separation_correction_20261024`，保留原记录与解释而非篡改事件历史。
+- [GitHub Actions #40092372863](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40092372863)已**实际完成SUCCESS**，8组`13+5+6+11+19+12+12+14=92/92 PASS`。新增两个回归针对「不能把6条从G3扣掉」和「完全排除3粉丝代币仍超35」，并保持所有历史原始事件ID/时间一致。
+- 生产状态`G0 PARTIAL; G1 NOT_SCORABLE; G2 NOT_PASSED; G3 NOT_PASSED (historical attention overload observed, final window source/PIT pending); G4 UNKNOWN; G6 NO_GO`。已曝光样本的D1负载超限应当影响**下一段未看过的样本上预注册的新D1候选**研究优先级，不能在本轮样本即场调参后宣称OOS通过。最后10/24 UTC完整日511份仍须等待真正闭日和Publisher可取再补；其他USD-M、BSC、Frank/邮件/Mac生产不动。**NO_MERGE / NO_DEPLOY / NO_SCHEDULE / NO_GMAIL / NO_TRADES**。
