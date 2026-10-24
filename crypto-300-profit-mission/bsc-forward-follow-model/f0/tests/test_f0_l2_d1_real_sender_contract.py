@@ -144,6 +144,19 @@ class RealSenderContractTests(unittest.TestCase):
                     self.inspect(intent=dict(self.intent, **update))
         self.assertFalse(list(self.registry.iterdir()))
 
+    def test_d2_grant_id_invalid_even_if_matching_d3_is_refused(self):
+        for invalid_grant in (123, "bad", "x" * 81):
+            with self.subTest(grant=invalid_grant):
+                permit = dict(self.permit, grant_id=invalid_grant)
+                raw = json.dumps(permit, sort_keys=True).encode()
+                intent = dict(self.intent, grant_id=invalid_grant,
+                              permit_sha256=sha256(raw).hexdigest())
+                with self.assertRaisesRegex(ValueError, "D2_GRANT_ID_INVALID"):
+                    bind_real_https_candidate_offline(
+                        raw, self.bytes(intent), self.f.sha, self.f.now,
+                        actual_source_manifest_sha256=self.manifest)
+        self.assertFalse(list(self.registry.iterdir()))
+
     def test_runtime_manifest_or_code_sha_mismatch_denied(self):
         original = self.fixture.mock_runtime["tracked_source_manifest_sha256"]
         self.fixture.mock_runtime["tracked_source_manifest_sha256"] = "f" * 64
