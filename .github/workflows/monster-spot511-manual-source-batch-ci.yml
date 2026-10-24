@@ -23,6 +23,8 @@ on:
       - "crypto-300-profit-mission/local-agent/tests/test_monster_spot_g3_final7_scope.py"
       - "crypto-300-profit-mission/local-agent/scripts/monster_v4_d1_rbtc15_last5_research.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_d1_rbtc15_last5_research.py"
+      - "crypto-300-profit-mission/local-agent/scripts/monster_v4_d1_rbtc15_episode_research.py"
+      - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_d1_rbtc15_episode_research.py"
       - "crypto-300-profit-mission/local-agent/scripts/monster_v4_spot511_replay_preflight.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_spot511_replay_preflight.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_shadow.py"
@@ -51,6 +53,8 @@ on:
       - "crypto-300-profit-mission/local-agent/tests/test_monster_spot_g3_final7_scope.py"
       - "crypto-300-profit-mission/local-agent/scripts/monster_v4_d1_rbtc15_last5_research.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_d1_rbtc15_last5_research.py"
+      - "crypto-300-profit-mission/local-agent/scripts/monster_v4_d1_rbtc15_episode_research.py"
+      - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_d1_rbtc15_episode_research.py"
       - "crypto-300-profit-mission/local-agent/scripts/monster_v4_spot511_replay_preflight.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_spot511_replay_preflight.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_shadow.py"
@@ -95,6 +99,8 @@ jobs:
           python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_spot_g3_final7_scope.py
           python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_d1_rbtc15_last5_research.py
           python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_v4_d1_rbtc15_last5_research.py
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_d1_rbtc15_episode_research.py
+          python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_v4_d1_rbtc15_episode_research.py
           python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_spot511_replay_preflight.py
           python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_v4_spot511_replay_preflight.py
           python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_v4_shadow.py
@@ -111,5 +117,6 @@ jobs:
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_spot_g3_positive_bound.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_spot_g3_final7_scope.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_d1_rbtc15_last5_research.py" -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_d1_rbtc15_episode_research.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_replay_preflight.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_shadow.py" -v
