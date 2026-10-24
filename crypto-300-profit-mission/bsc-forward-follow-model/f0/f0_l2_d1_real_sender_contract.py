@@ -119,6 +119,9 @@ def bind_real_https_candidate_offline(
             or now_utc.utcoffset() != timezone.utc.utcoffset(now_utc)):
         raise ValueError("D1_REAL_BINDING_REFERENCE_INVALID")
     permit = _strict_permit(permit_raw)
+    if (type(permit["grant_id"]) is not str or
+            not GRANT_ID.fullmatch(permit["grant_id"])):
+        raise ValueError("D1_REAL_BINDING_D2_GRANT_ID_INVALID")
     if permit["approved_commit_sha"] != expected_sha:
         raise ValueError("D1_REAL_BINDING_CODE_SHA_MISMATCH")
     # Scope check is local-time dependent, never an authoritative clock.
