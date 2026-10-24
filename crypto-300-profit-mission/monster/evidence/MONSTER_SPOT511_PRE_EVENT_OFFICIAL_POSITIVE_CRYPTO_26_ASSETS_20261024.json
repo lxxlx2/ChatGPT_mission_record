@@ -1,0 +1,205 @@
+{
+  "schema": "MONSTER_SPOT511_PRE_EVENT_OFFICIAL_POSITIVE_CRYPTO_ASSET_ID_V1",
+  "freeze_replay_sha": "453ee2e740578121b0734d61e6eb357be7bb34859b90878eb314f7d3dc1690f5",
+  "source_event_file": "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_4088_REAL_GLOBAL_FIFO8_FAIR8_46_SETUP_EVENTS_20261024.json",
+  "source_bstocks_manifest": "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_OFFICIAL_POSITIVE_BSTOCKS_20261024.json",
+  "frozen_replay_window_utc": "2026-10-17T22:06:00Z/2026-10-24T22:06:00Z",
+  "research_date": "2026-10-24",
+  "positive_crypto_type_symbols": 26,
+  "known_positive_crypto_type_setup_events": 37,
+  "full_event_count": 46,
+  "published_date_conservative_rule": "Positive source published full UTC day BEFORE frozen replay start; no day-of ambiguity. Links were individually retrieved from Binance announcement/research results, not trading recommendations.",
+  "verified_crypto_type_only": true,
+  "verified_venue_listing_at_each_event_time": false,
+  "verified_account_eligibility_monitoring_tag": false,
+  "verified_historical_bid_ask_executable": false,
+  "g3_max_events_for_7_days": 35,
+  "g3_lower_bound_status": "POTENTIAL_UNRECOVERABLE_OVERLOAD_IF_ALL_37_POSITIVE_TYPE_SIGNALS_ELIGIBLE",
+  "remainder_after_37_crypto_plus_2_security": 7,
+  "future_day_maximum_cannot_reduce_existing_counts": true,
+  "policy": "No new strategy threshold, no silent delete of WATCH/SETUP, no trade, no order notional, do not call formal G3 rejected before full PIT eligibility and full-source audit.",
+  "rows": [
+    {
+      "symbol": "BMTUSDT",
+      "published_utc_date": "2025-03-18",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/6539265e571540298fa4b7943140469d",
+      "interpretation": "Bubblemaps token listing/contract",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "ERAUSDT",
+      "published_utc_date": "2025-07-16",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/5511fc0281c1459bbb8b9f0d2f1297dc",
+      "interpretation": "Caldera token listing/contract",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "IOSTUSDT",
+      "published_utc_date": "2019-10-31",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/360035735871",
+      "interpretation": "IOST token spot trading promotion",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "AMPUSDT",
+      "published_utc_date": "2021-11-23",
+      "source_url": "https://www.binance.com/en/support/articles/a84409552a2e4e5bb8f0a0459facd3bd",
+      "interpretation": "Amp token spot listing",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "ALTUSDT",
+      "published_utc_date": "2024-01-17",
+      "source_url": "https://www.binance.com/en-PH/support/announcement/detail/8415d71c5cce481fb8bdec3651972366",
+      "interpretation": "AltLayer token Launchpool/spot listing",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "AVAUSDT",
+      "published_utc_date": "2020-08-05",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/1564ca1ec5bb4d93bd4a2b3718b8a116",
+      "interpretation": "Travala crypto token spot listing",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "GNSUSDT",
+      "published_utc_date": "2023-02-17",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/879934f2ae8c40b8a6fab68f713bb73a",
+      "interpretation": "Gains Network governance token spot listing",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "OSMOUSDT",
+      "published_utc_date": "2022-10-28",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/0c5d8ebc2ce1441ebb86c350a9950b65",
+      "interpretation": "Osmosis L1 governance token spot listing",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "PARTIUSDT",
+      "published_utc_date": "2025-03-24",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/3ec6cdfea3394ffa9ce6bfeabe8191e5",
+      "interpretation": "Particle Network native token/spot listing",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "NILUSDT",
+      "published_utc_date": "2025-03-20",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/2608d3a348a44a33b04a133b90d45dc2",
+      "interpretation": "Nillion token Launchpool/spot",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "MASKUSDT",
+      "published_utc_date": "2021-05-25",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/36bf2dc22d544ee09bc8760011bdebd3",
+      "interpretation": "Mask Network Web3 governance token",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "IDUSDT",
+      "published_utc_date": "2023-03-22",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/0f491ef6e9be4e34bdbad7a609201a77",
+      "interpretation": "Space ID token Launchpad/spot",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "AIUSDT",
+      "published_utc_date": "2024-01-08",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/4667a7247a3e4e899bd11a7b10fae837",
+      "interpretation": "Sleepless AI Web3 gaming token",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "LUMIAUSDT",
+      "published_utc_date": "2024-10-18",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/a6d2ae0b765c4bb79b192f3904fc5757",
+      "interpretation": "Lumia crypto token spot services",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "MITOUSDT",
+      "published_utc_date": "2025-08-29",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/1fba64507b1a4f9082bfbe6b4a23eb74",
+      "interpretation": "Mitosis crypto token spot services",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "QKCUSDT",
+      "published_utc_date": "2026-06-18",
+      "source_url": "https://www.binance.com/en-IN/support/announcement/detail/2ce2c4973d85405a9bb5fffc475c99dc",
+      "interpretation": "QuarkChain crypto project Monitoring Tag; account quiz unproven",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "GTCUSDT",
+      "published_utc_date": "2021-06-10",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/df28017f9ea34d2f9d58c4ad467e0b88",
+      "interpretation": "Gitcoin governance token spot listing",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "SCUSDT",
+      "published_utc_date": "2021-02-02",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/328b114bd6884d5891ceaaa56c87a1ef",
+      "interpretation": "Siacoin native network token",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "VTHOUSDT",
+      "published_utc_date": "2020-07-17",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/f7b1e975bb4d42dbb026114588accfed",
+      "interpretation": "VeThor native network token spot listing",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "EPICUSDT",
+      "published_utc_date": "2025-03-13",
+      "source_url": "https://www.binance.com/en-IN/support/announcement/detail/53d4f5fd4d9a49ec917d712b1d1fb58e",
+      "interpretation": "Epic Chain crypto token swap and spot",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "QUICKUSDT",
+      "published_utc_date": "2023-07-21",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/47e2f3d1110044a9964edee05308bc34",
+      "interpretation": "QuickSwap native token contract swap (post-redomination)",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "EDUUSDT",
+      "published_utc_date": "2023-04-28",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/f344e1bdfbe24f3ab067c22ec6d0b1a9",
+      "interpretation": "Open Campus blockchain token Launchpad/spot",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "SOPHUSDT",
+      "published_utc_date": "2025-05-28",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/df7fe0571e074bfa8ebd0a2757537461",
+      "interpretation": "Sophon blockchain token spot",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "ARKUSDT",
+      "published_utc_date": "2017-11-01",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/115002520852",
+      "interpretation": "ARK blockchain cryptocurrency spot",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "COMPUSDT",
+      "published_utc_date": "2020-06-25",
+      "source_url": "https://www.binance.com/en/research/projects/compound",
+      "interpretation": "Compound DeFi governance token pre-event research",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    },
+    {
+      "symbol": "DGBUSDT",
+      "published_utc_date": "2020-06-22",
+      "source_url": "https://www.binance.com/en/research/projects/digibyte",
+      "interpretation": "DigiByte native UTXO cryptocurrency pre-event research",
+      "classification": "CRYPTO_ASSET_IDENTITY_POSITIVE_ONLY"
+    }
+  ]
+}
