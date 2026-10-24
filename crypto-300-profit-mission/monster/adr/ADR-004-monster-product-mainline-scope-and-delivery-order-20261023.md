@@ -335,3 +335,15 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 - 新代码需单独独立其他AI审核，已准备完整[按固定源码SHA的新审核包](../reviews/MONSTER_ADR005_ISOLATED_EPISODE_RESEARCH_INDEPENDENT_REVIEW_REQUEST_20261024.md)，范围是隔离episode状态机、SQLite持久重启、原WATCH绑定和15分钟因果，不可引用上轮P2的APPROVE给新模块“背书”。`G5_NEW_QUEUE_REVIEW=NOT_DONE`。
 - 最有价值的下一步不是再增加合成测试：**把当前已证实原D0实际53条WATCH及原4,088份Publisher分钟源的原始SQLite索引作为固定只读输入**，实施一次真实按时钟的旁路FIFO8研究episode回放；逐事件列出新版setup、失效、删失及G3每日密度，与原不变46SETUP并排对账，并专门统计因新附加条件损失原提前2×标签的机会（无有效标签记UNKNOWN）。实盘和PIT网络可见性仍不证明。真正独立未来检验必须保留ADR-005锁定的三个11/12月UTC窗口。
 - 截至本轮 **只以UTC来源日验收为准**，完整2026-10-24 UTC日最后511份Publisher档案仍未闭日并逐项ZIP/CHECKSUM通过，不可提前升级`4599/4599`。工程继续以G0 PARTIAL/G1 NOT_SCORABLE/G2 NOT_PASSED/G3新研究UNKNOWN/G4 UNKNOWN/G5_NEW_QUEUE_NOT_DONE/G6 NO_GO，`NO_MERGE/NO_DEPLOY/NO_MAC/NO_TRADES/NO_GMAIL/NO_AUTOMATIONS`。
+
+## 29. 2026-10-24：独立审核发现并复现episode来源删失P1，最小修复168项离线CI通过、独立复审待做
+
+用户转交的Codex主代理对[原隔离研究SQLite队列固定SHA `da4862c604a254008ba488f7948124d9ecb6e77f`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/da4862c604a254008ba488f7948124d9ecb6e77f)进行了真实只读Mac Python3.14.7审核：原15项队列测试全过，但独立组合重现唯一**P1**：早期某3m评估缺BTC或币种行情并累积`source_censored_count=1`，截止tick恰好收到完整但未通过的K线，却把整个episode写`NO_SETUP`。这是有证据的负例污染，会让G2/G3研究统计错误地把未观察机会当成确认失败；结论必须永久保留`REQUEST_CHANGES@da4862...`，不得被合成测试通过掩盖。真实WATCH身份哈希也是字段检查而非从原Core证据账本鉴真，尚不可用于真实统计宣称。
+
+**已执行修复（源码数学/原始模型均未动）**：[P1源码修复 `dee1a317`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/dee1a3170bc456270fbead41f98bc8474cba4b1f) 仅修改研究队列截止负判定，先保留`RESEARCH_SETUP`，若负且episode曾删失则`SOURCE_UNSCORED`（不能据后来一次完整负值推出早期也负），没删失的完整截止负例才`NO_SETUP`，并保持deadline/3m/原核心WATCH和SETUP/新BTC相对强弱数学原样。[新增3项实际SQLite回归 `3d79bea`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/3d79beaa30ef859fd914823837d50df99f501e02) 覆盖：早期缺档→截止有效负→SOURCE_UNSCORED并重启状态不变；无历史删失→截止有效负→NO_SETUP；早期删失但最终有效正→RESEARCH_SETUP永久锁定。
+
+[GitHub Actions #40105768989](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40105768989)，固定提交 `3d79beaa30ef859fd914823837d50df99f501e02`，Job `120907019330`，**completed/SUCCESS**；全12组`13+5+6+11+19+12+12+14+18+18+9+31=168/168 PASS`，原15项+新增3项episode专项`18/18 PASS`，日志中三项新增测试均为`ok`。此结果只代表离线合成数据工程回归通过，不能冒充独立其他AI审核、全市场同源回放或历史可买卖收益。
+
+**独立审核包已经入库**：[新固定SHA `3d79bea` 的REQUEST_CHANGES/P1修复与Codex复审任务](../reviews/MONSTER_ADR005_EPISODE_P1_CENSOR_REPAIR_INDEPENDENT_REREVIEW_20261024.md)。下一步应让另一AI对`3d79beaa30ef859fd914823837d50df99f501e02`在隔离detached worktree重点复查两条deadline终结路径及重启后不污染负例；旧SHA审核REQUEST_CHANGES不变。并行主线仍须从**真实原Core SQLite 53条WATCH读取并鉴真**后，再把隔离episode用来源完整的现有4,088份Publisher数据和BTC同时间线跑一次研究回放；当前新episode仍尚未与原511真实队列同步，不允许提前汇报新G2/G3改善。官方UTC10/24来源最后511份日档案必须整日结束并实际Publisher ZIP/CHECKSUM验证后才能进入完整4599/4599。
+
+**门禁：** G0 PARTIAL / G1 NOT_SCORABLE / G2新候选UNKNOWN / G3新候选UNKNOWN / G4 UNKNOWN / G5新队列REQUEST_CHANGES修复后等待独立复审 / G6 NO_GO；NO_MERGE / NO_DEPLOY / NO_MAC / NO_SCHEDULE / NO_GMAIL / NO_TRADES，Frank/BSC未动。
