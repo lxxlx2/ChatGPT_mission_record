@@ -1,0 +1,75 @@
+{
+  "status": "PREPARED_NOT_CUTOVER",
+  "gates": [
+    {
+      "gate": "A01_PINNED_SOURCE",
+      "status": "PASS",
+      "evidence": {
+        "product_sha": "914e9e47fed2e60bc24690fcb083413a64d4e681",
+        "source_clean_and_pinned": true,
+        "original_PR_unmodified": true
+      }
+    },
+    {
+      "gate": "A02_CURRENT_RUNTIME_AND_COUNTERS",
+      "status": "PASS",
+      "evidence": {
+        "old437_manifest_and_bytes_verified": true,
+        "real_runner_script_flags_listener_verified": true,
+        "three_current_service_identities_and_counter_baseline": true,
+        "counter_values": {
+          "runtime": {
+            "gmail_sent_verified": 2,
+            "gmail_sent_unverified": 0,
+            "gmail_pending": 0,
+            "gmail_failed": 0,
+            "gmail_blocked": 0,
+            "local_pending": 0
+          },
+          "control-health": {
+            "manual_review_gmail_count": 15,
+            "manual_review_local_count": 0,
+            "manual_review_total_count": 15,
+            "manual_review_expired_unsent_count": 15,
+            "manual_review_expired_unsent_gmail_count": 15,
+            "manual_review_expired_unsent_local_count": 0,
+            "manual_review_actionable_count": 0,
+            "manual_review_actionable_gmail_count": 0,
+            "manual_review_actionable_local_count": 0,
+            "manual_review_actionable_other_count": 0,
+            "manual_review_pending_count": 0,
+            "manual_review_pending_gmail_count": 0,
+            "manual_review_pending_local_count": 0,
+            "manual_review_pending_other_count": 0,
+            "manual_review_visible_total_count": 15
+          }
+        },
+        "private_source_hash_modes_match": true,
+        "interpreter_origin": "UNRESOLVED_EXPLICIT_QUALIFICATION"
+      }
+    },
+    {
+      "gate": "A03_BROWSER_NETWORK_POLICY_PREPARSED",
+      "status": "PASS",
+      "evidence": {
+        "normal_local_Unix_IPC_allowed_per_production_authorization": true,
+        "only_loopback8766_IP_outbound_allowed": true,
+        "new_IP_bind_not_allowed": true,
+        "no_proxy_listener": true,
+        "Chrome_not_started_in_preflight": true
+      }
+    },
+    {
+      "gate": "A04_IMMUTABLE_CANDIDATE_AND_ROLLBACK",
+      "status": "PASS",
+      "evidence": {
+        "full446_readonly_release_installed_not_started": true,
+        "manifest_sha256": "9a06f5f29fce05ccade8caa2b90d6d6c0c4248d2e6ab4e45aa26fa9d3f401062",
+        "one_LOCAL_AGENT_line_exact_reverse_verified": true,
+        "private_backup_verified": true,
+        "existing_env_import_only": true,
+        "no_service_cutover_yet": true
+      }
+    }
+  ]
+}

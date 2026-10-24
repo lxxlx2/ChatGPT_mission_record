@@ -1,0 +1,112 @@
+{
+  "old_safe_GETs": 9,
+  "D2_case_GETs": 7,
+  "ledger": [
+    {
+      "path": "/",
+      "method": "GET",
+      "http": 200,
+      "original_static_bytes_match": true
+    },
+    {
+      "path": "/static/app.js",
+      "method": "GET",
+      "http": 200,
+      "original_static_bytes_match": true
+    },
+    {
+      "path": "/static/styles.css",
+      "method": "GET",
+      "http": 200,
+      "original_static_bytes_match": true
+    },
+    {
+      "path": "/api/runtime",
+      "method": "GET",
+      "http": 200,
+      "json_shape": "object"
+    },
+    {
+      "path": "/api/candidates",
+      "method": "GET",
+      "http": 200,
+      "json_shape": "array"
+    },
+    {
+      "path": "/api/trades",
+      "method": "GET",
+      "http": 200,
+      "json_shape": "array"
+    },
+    {
+      "path": "/api/frank-intelligence",
+      "method": "GET",
+      "http": 200,
+      "json_shape": "object"
+    },
+    {
+      "path": "/api/frank-activity-watch",
+      "method": "GET",
+      "http": 200,
+      "json_shape": "object"
+    },
+    {
+      "path": "/api/control-health",
+      "method": "GET",
+      "http": 200,
+      "json_shape": "object"
+    },
+    {
+      "path": "/api/frank-d2-at-slot",
+      "query_kind": "page",
+      "page": 0,
+      "method": "GET",
+      "http": 200,
+      "rows": 100,
+      "provenance_and_nonlive_flags": true
+    },
+    {
+      "path": "/api/frank-d2-at-slot",
+      "query_kind": "page",
+      "page": 41,
+      "method": "GET",
+      "http": 200,
+      "rows": 48,
+      "provenance_and_nonlive_flags": true
+    },
+    {
+      "path": "/api/frank-d2-at-slot",
+      "query_kind": "exact_mint_redacted",
+      "method": "GET",
+      "http": 200,
+      "lookup_state": "ZERO_AT_SLOT"
+    },
+    {
+      "path": "/api/frank-d2-at-slot",
+      "query_kind": "exact_mint_redacted",
+      "method": "GET",
+      "http": 200,
+      "lookup_state": "NONZERO_AT_SLOT"
+    },
+    {
+      "path": "/api/frank-d2-at-slot",
+      "query_kind": "exact_mint_redacted",
+      "method": "GET",
+      "http": 200,
+      "lookup_state": "NO_ACTIVE_OWNER_TOKEN_ACCOUNT_OBSERVED_AT_SLOTS"
+    },
+    {
+      "path": "/api/frank-d2-at-slot",
+      "query_kind": "negative_header_or_page",
+      "method": "GET",
+      "http": 403
+    },
+    {
+      "path": "/api/frank-d2-at-slot",
+      "query_kind": "negative_header_or_page",
+      "method": "GET",
+      "http": 400
+    }
+  ],
+  "notification_counters_policy_unchanged": true
+}

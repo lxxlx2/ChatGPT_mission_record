@@ -1,0 +1,102 @@
+{
+  "status": "PRODUCTION_D2_DASHBOARD_PASS_WITH_EXPLICIT_R2_WAIVER",
+  "product_sha": "914e9e47fed2e60bc24690fcb083413a64d4e681",
+  "old_sha": "656ed2c96f4210d106d7b1129ec6cf8d7c4586f3",
+  "candidate_files": 446,
+  "candidate_manifest_sha256": "9a06f5f29fce05ccade8caa2b90d6d6c0c4248d2e6ab4e45aa26fa9d3f401062",
+  "old_files": 437,
+  "old_manifest_sha256": "867ac626f5cec190d3c77621a3b0aaab6ed7fd30a8014367103c1adde01cd3ab",
+  "old_manifest_algorithm": "SHA256(json.dumps(filename_to_sha256, sort_keys=True).encode())",
+  "new_manifest_algorithm": "SHA256(json.dumps(filename_to_sha256_git_mode, sort_keys=True,separators=(comma,colon)).encode())",
+  "times_utc": {
+    "runner_swap_utc": "2026-10-24T20:05:08.062600+00:00",
+    "bootout_requested_utc": "2026-10-24T20:05:08.063385+00:00",
+    "observed_port_down_utc": "2026-10-24T20:05:08.108551+00:00",
+    "observed_port_up_utc": "2026-10-24T20:05:09.164621+00:00"
+  },
+  "observed_down_to_up_seconds": 1.05607,
+  "bootout_request_to_observed_up_seconds": 1.101236,
+  "interruption_measurement_note": "Bounds from actual OS listener observations; not a packet-level availability trace.",
+  "offline_R2": "NOT_TESTED_EXPLICIT_OWNER_WAIVER",
+  "interpreter_origin": "UNRESOLVED_RELEASE_QUALIFICATION",
+  "rollback_executed": false,
+  "Dashboard_PID_changed": true,
+  "Loop_V1_PID_start_unchanged": true,
+  "policy_notification_counters_unchanged": true,
+  "final_counters": {
+    "runtime": {
+      "gmail_sent_verified": 2,
+      "gmail_sent_unverified": 0,
+      "gmail_pending": 0,
+      "gmail_failed": 0,
+      "gmail_blocked": 0,
+      "local_pending": 0
+    },
+    "control-health": {
+      "manual_review_gmail_count": 15,
+      "manual_review_local_count": 0,
+      "manual_review_total_count": 15,
+      "manual_review_expired_unsent_count": 15,
+      "manual_review_expired_unsent_gmail_count": 15,
+      "manual_review_expired_unsent_local_count": 0,
+      "manual_review_actionable_count": 0,
+      "manual_review_actionable_gmail_count": 0,
+      "manual_review_actionable_local_count": 0,
+      "manual_review_actionable_other_count": 0,
+      "manual_review_pending_count": 0,
+      "manual_review_pending_gmail_count": 0,
+      "manual_review_pending_local_count": 0,
+      "manual_review_pending_other_count": 0,
+      "manual_review_visible_total_count": 15
+    }
+  },
+  "private_source_retained_unchanged": true,
+  "existing_other_listeners_unchanged": true,
+  "real_Chrome_case_results": [
+    {
+      "name": "formal8766_original_page_manual_only",
+      "result": "PASS"
+    },
+    {
+      "name": "real_manual_click_page0_and_dated_non_atomic_labels",
+      "result": "PASS"
+    },
+    {
+      "name": "real_next_page41_and_previous",
+      "result": "PASS"
+    },
+    {
+      "name": "real_exact_positive_zero_absent",
+      "result": "PASS"
+    },
+    {
+      "name": "original_Frank_CA_controls_no_scan_or_POST",
+      "result": "PASS"
+    }
+  ],
+  "page_errors": 0,
+  "console_errors": 0,
+  "remaining_test_Chrome_processes": 0,
+  "browser_profile_removed": true,
+  "safety": {
+    "NEW_PORT": 0,
+    "LOOP_V1_RESTART": 0,
+    "NEW_RPC": 0,
+    "CA_POST": 0,
+    "PRIVATE_IMPORT_OR_EXPORT": 0,
+    "PRIVATE_SOURCE_CHANGE": 0,
+    "SQLITE_WRITES_BY_EXECUTOR": 0,
+    "NOTIFICATIONS_SENT_BY_EXECUTOR": 0,
+    "TRADES": 0,
+    "MERGES": 0,
+    "SCHEDULER_CHANGE": 0
+  },
+  "production_attempts": 1,
+  "Dashboard_bootout_bootstrap_pairs": 1,
+  "private_rollback_backup_verified_and_retained": true,
+  "old_and_new_immutable_releases_retained": true,
+  "Dashboard_start_changed": true,
+  "runner_before_sha256": "a7cf3df2308535a3de8f5b723a4a373eaece5f8ac54a2f7350db28e3adf3c4b0",
+  "runner_after_sha256": "db52d9331437ed5dfceea102d6722c32957616fac2bf7b67b2dbe2bb75fe480e",
+  "Dashboard_plist_unchanged_sha256": "97fcfe41d5640bad85a5b0eadc5e4c9bac35bc28b67e53df649463a3c3fa9683"
+}

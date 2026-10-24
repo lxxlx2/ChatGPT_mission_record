@@ -1,0 +1,19 @@
+{
+  "status": "CUTOVER_BLOCKED_NO_CHANGE",
+  "gates": [
+    {
+      "gate": "A01_PINNED_SOURCE",
+      "status": "PASS",
+      "evidence": {
+        "product_sha": "914e9e47fed2e60bc24690fcb083413a64d4e681",
+        "source_clean_and_pinned": true,
+        "original_PR_unmodified": true
+      }
+    },
+    {
+      "gate": "A02_CURRENT_RUNTIME_AND_COUNTERS",
+      "status": "FAIL",
+      "reason": "FileNotFoundError"
+    }
+  ]
+}

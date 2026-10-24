@@ -1,0 +1,97 @@
+{
+  "status": "PRODUCTION_D2_DASHBOARD_PASS_WITH_EXPLICIT_R2_WAIVER",
+  "offline_R2": "NOT_TESTED_EXPLICIT_OWNER_WAIVER",
+  "interpreter_origin": "UNRESOLVED_RELEASE_QUALIFICATION",
+  "rollback_executed": false,
+  "final_counters": {
+    "runtime": {
+      "gmail_sent_verified": 2,
+      "gmail_sent_unverified": 0,
+      "gmail_pending": 0,
+      "gmail_failed": 0,
+      "gmail_blocked": 0,
+      "local_pending": 0
+    },
+    "control-health": {
+      "manual_review_gmail_count": 15,
+      "manual_review_local_count": 0,
+      "manual_review_total_count": 15,
+      "manual_review_expired_unsent_count": 15,
+      "manual_review_expired_unsent_gmail_count": 15,
+      "manual_review_expired_unsent_local_count": 0,
+      "manual_review_actionable_count": 0,
+      "manual_review_actionable_gmail_count": 0,
+      "manual_review_actionable_local_count": 0,
+      "manual_review_actionable_other_count": 0,
+      "manual_review_pending_count": 0,
+      "manual_review_pending_gmail_count": 0,
+      "manual_review_pending_local_count": 0,
+      "manual_review_pending_other_count": 0,
+      "manual_review_visible_total_count": 15
+    }
+  },
+  "product_sha": "914e9e47fed2e60bc24690fcb083413a64d4e681",
+  "old_sha": "656ed2c96f4210d106d7b1129ec6cf8d7c4586f3",
+  "new_manifest": "9a06f5f29fce05ccade8caa2b90d6d6c0c4248d2e6ab4e45aa26fa9d3f401062",
+  "old_manifest": "867ac626f5cec190d3c77621a3b0aaab6ed7fd30a8014367103c1adde01cd3ab",
+  "gates": [
+    {
+      "gate": "B00_FINAL_CURRENT_GATE",
+      "status": "PASS",
+      "evidence": {
+        "old_new_trees_runner_port_protected_services_counters_verified": true
+      }
+    },
+    {
+      "gate": "B01_DASHBOARD_ONLY_SWITCH",
+      "status": "PASS",
+      "evidence": {
+        "new_unique8766_candidate_cwd_runner_plist_verified": true,
+        "only_dashboard_label_transitioned": true
+      }
+    },
+    {
+      "gate": "C01_REAL_HTTP_GET_SMOKE",
+      "status": "PASS",
+      "evidence": {
+        "original_GETs": 9,
+        "D2_bounded_GETs": 7,
+        "all_static_bytes_and_shapes_match": true,
+        "policy_notification_counters_unchanged": true
+      }
+    },
+    {
+      "gate": "C02_REAL_CHROME_READ_ONLY",
+      "status": "PASS",
+      "evidence": {
+        "real_Chrome_cases_passed": 5,
+        "no_CA_submit_or_POST": true,
+        "normal_OS_Unix_IPC_Chrome_only8766_IP_access": true
+      }
+    },
+    {
+      "gate": "C03_PROTECTED_CLOSEOUT",
+      "status": "PASS",
+      "evidence": {
+        "Loop_V1_original_IDs_sources_config_policy_counters_unchanged": true,
+        "private_import_hash_modes_unchanged": true,
+        "old_new_full_manifests_verified": true,
+        "other_listeners_unchanged": true,
+        "rollback_ready_not_exercised": true
+      }
+    }
+  ],
+  "times": {
+    "runner_swap_utc": "2026-10-24T20:05:08.062600+00:00",
+    "bootout_requested_utc": "2026-10-24T20:05:08.063385+00:00",
+    "observed_port_down_utc": "2026-10-24T20:05:08.108551+00:00",
+    "observed_port_up_utc": "2026-10-24T20:05:09.164621+00:00"
+  },
+  "runner_mutated": true,
+  "private_source_retained": true,
+  "NO_MERGE": true,
+  "NO_NEW_RPC": true,
+  "NO_NOTIFICATIONS": true,
+  "NO_TRADES": true,
+  "NO_LOOP_V1_RESTART": true
+}
