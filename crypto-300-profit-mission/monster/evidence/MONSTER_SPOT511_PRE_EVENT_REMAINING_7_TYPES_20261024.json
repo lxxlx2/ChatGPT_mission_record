@@ -1,0 +1,80 @@
+{
+  "schema": "MONSTER_SPOT511_SEVEN_PRE_EVENT_REMAINING_ASSET_IDENTITIES_V1",
+  "research_date_utc": "2026-10-24",
+  "prior_26_crypto_asset_manifest": "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_PRE_EVENT_OFFICIAL_POSITIVE_CRYPTO_26_ASSETS_20261024.json",
+  "original_46_setups": "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_4088_REAL_GLOBAL_FIFO8_FAIR8_46_SETUP_EVENTS_20261024.json",
+  "fixed_original_replay_sha256": "453ee2e740578121b0734d61e6eb357be7bb34859b90878eb314f7d3dc1690f5",
+  "status_definition": {
+    "CRYPTO_NETWORK_PROTOCOL_UTILITY": "Positive Binance pre-event evidence of blockchain/native/protocol utility token; historical spot account/order eligibility remains UNKNOWN",
+    "FAN_TOKEN_SCOPE_REQUIRES_DECISION": "Positive Binance pre-event evidence of Chiliz football fan utility token; do NOT infer tokenized stock/bStock, and do NOT silently include/exclude in frozen G3 crypto-only scope"
+  },
+  "confirmed_additional_original_setup_events": 7,
+  "positive_network_protocol_token_events": 4,
+  "separately_classified_fan_token_events": 3,
+  "official_positive_identity_rows": [
+    {
+      "symbol": "AUSDT",
+      "asset_name": "Vaulta (former EOS)",
+      "category": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "source_published_utc": "2025-05-28T09:00:00Z",
+      "official_url": "https://www.binance.com/en/support/announcement/detail/f5a19fab8c5d4078a1235a17f542dfc5",
+      "source_meaning": "Exact A/USDT spot pair opened 2025-05-28 after EOS-to-A blockchain token swap"
+    },
+    {
+      "symbol": "ATUSDT",
+      "asset_name": "APRO (AT)",
+      "category": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "source_published_utc": "2025-11-27T13:30:00Z",
+      "official_url": "https://www.binance.com/en/support/announcement/detail/2f67d968fb744180b09a3ee01fc75feb",
+      "source_meaning": "Oracle protocol token, AT/USDT spot and token utility reported before replay"
+    },
+    {
+      "symbol": "MANTRAUSDT",
+      "asset_name": "MANTRA (former OM)",
+      "category": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "source_published_utc": "2026-03-04T08:30:00Z",
+      "official_url": "https://www.binance.com/en-AE/support/announcement/detail/a65e70f8431a40e8b5ce809bbb61ed59",
+      "source_meaning": "2026-03-04 spot MANTRA/USDT opened after OM token denomination rebrand, not an equity proxy"
+    },
+    {
+      "symbol": "REQUSDT",
+      "asset_name": "Request Network (REQ)",
+      "category": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "source_published_utc": "2020-05-21T00:00:00Z",
+      "official_url": "https://www.binance.com/en/research/projects/request-network",
+      "source_meaning": "Binance Research pre-event project report describes Ethereum REQ utility token; not contemporaneous spot listing status"
+    },
+    {
+      "symbol": "ACMUSDT",
+      "asset_name": "AC Milan Fan Token",
+      "category": "FAN_TOKEN_SCOPE_REQUIRES_DECISION",
+      "source_published_utc": "2026-05-08T07:00:00Z",
+      "official_url": "https://www.binance.com/en/support/announcement/detail/74dabe8f1e844dcb9136d1a987472ce6",
+      "source_meaning": "Chiliz CAP20 football fan utility token; contract swap affects blockchain asset mapping"
+    },
+    {
+      "symbol": "ATMUSDT",
+      "asset_name": "Atletico de Madrid Fan Token",
+      "category": "FAN_TOKEN_SCOPE_REQUIRES_DECISION",
+      "source_published_utc": "2026-05-08T07:00:00Z",
+      "official_url": "https://www.binance.com/en/support/announcement/detail/74dabe8f1e844dcb9136d1a987472ce6",
+      "source_meaning": "Chiliz CAP20 football fan utility token; not equity"
+    },
+    {
+      "symbol": "BARUSDT",
+      "asset_name": "FC Barcelona Fan Token",
+      "category": "FAN_TOKEN_SCOPE_REQUIRES_DECISION",
+      "source_published_utc": "2026-05-08T07:00:00Z",
+      "official_url": "https://www.binance.com/en/support/announcement/detail/74dabe8f1e844dcb9136d1a987472ce6",
+      "source_meaning": "Chiliz CAP20 football fan utility token; not equity"
+    }
+  ],
+  "caveats": [
+    "All source dates precede frozen original 2026-10-17T22:06Z; page historical revisions and account permissions not independently PIT-frozen.",
+    "Fan tokens are genuine Chiliz blockchain utility tokens but whether they count within frozen first-version Monster crypto-only research scope must be adjudicated before treating as formal G3 eligible.",
+    "Crypto TYPE validation does not establish historical dynamic spot availability, Monitoring Tag quiz completion, bid/ask depth, user order amount, fee-adjusted exit or deploy readiness.",
+    "Source is research-only, no model parameter changes, no external order, scheduler, service or monitoring integration."
+  ],
+  "G3": "NOT_PASSED",
+  "G6": "NO_GO"
+}
