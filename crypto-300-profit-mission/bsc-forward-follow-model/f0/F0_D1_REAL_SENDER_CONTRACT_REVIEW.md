@@ -21,7 +21,7 @@ The *existing* `f0_l2_d1_protected_mac_entry.py` adds `inspect_real_https_sender
 
 ## Tests and review scope
 
-`tests/test_f0_l2_d1_real_sender_contract.py`: nine negative/positive diagnostics validating code/D2/D3/source manifest binding, narrower budgets and slower starts, no elevation by mock/injected D2 roots, zero real connection, no registry writes, missing/extra/duplicate fields, time expiry, D3 identity mismatch, fixed response cap, and protected Mac route under synthetic test-only provenance. They are **contract tests, not real HTTP tests**. GitHub CI runs full F0 test discovery. The independent Mac auditor must pin the exact new PR SHA, check all files/blobs/source imports and run complete F0, D1 and the nine tests in isolation. Existing PR193 standalone seven and PR192 two must continue passing.
+`tests/test_f0_l2_d1_real_sender_contract.py`: ten negative/positive diagnostics validating code/D2/D3/source manifest binding, narrower budgets and slower starts, no elevation by mock/injected D2 roots, zero real connection, no registry writes, missing/extra/duplicate fields, time expiry, D3 identity mismatch, fixed response cap, and protected Mac route under synthetic test-only provenance. They are **contract tests, not real HTTP tests**. GitHub CI runs full F0 test discovery. The independent Mac auditor must pin the exact new PR SHA, check all files/blobs/source imports and run complete F0, D1 and the nine tests in isolation. Existing PR193 standalone seven and PR192 two must continue passing.
 
 ## Next necessary independent release work — not in this PR
 
