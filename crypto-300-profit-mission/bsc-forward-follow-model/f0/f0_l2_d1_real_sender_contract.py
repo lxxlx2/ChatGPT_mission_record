@@ -151,8 +151,10 @@ def bind_real_https_candidate_offline(
         raise ValueError("D1_REAL_BINDING_WINDOW_MISMATCH")
     # Explicitly compare exact types: booleans are integers in Python.
     for key in _ALLOWED_SUBSET:
-        if type(intent[key]) is not int or intent[key] < 1 or (
-                type(permit[key]) is not int or intent[key] > permit[key]):
+        low = 0 if key == "max_head_refreshes" else 1
+        if (type(intent[key]) is not int or intent[key] < low or
+                type(permit[key]) is not int or
+                intent[key] > permit[key]):
             raise ValueError("D1_REAL_BINDING_BUDGET_RELAXED:" + key)
     for key in ("max_inflight",):
         if (type(intent[key]) is not int or intent[key] != 3
