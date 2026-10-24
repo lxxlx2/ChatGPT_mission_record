@@ -193,9 +193,11 @@ class PatchedPhysicalConstructorTests(unittest.TestCase):
                 source.reply_over_memory_https(
                     payload, lambda: None, 2.0,
                     reservation_guard=deny_reserved)
-        self.assertEqual(ctor.call_count, 1)
+        # Even a constructor that performs I/O eagerly must not be
+        # invoked when the coordinator's durable RID proof refuses.
+        self.assertEqual(ctor.call_count, 0)
         self.assertFalse(opened)
-        self.assertEqual(closed, [True])
+        self.assertEqual(closed, [])
 
     def test_connect_fault_is_charged_once_and_never_retried(self):
         r, rows, records, _ = self.scenario(fail_connect=True)
