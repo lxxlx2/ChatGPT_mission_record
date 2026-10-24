@@ -1,39 +1,39 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-25 00:56:26 Asia/Bangkok — readback-verified durable PARTIAL terminal, NO_NEW_ACTION
+Updated: 2026-10-25 02:04:37 Asia/Bangkok — readback-verified durable PARTIAL terminal, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-25 00:56:26 Asia/Bangkok (off-minute invocation; not HH:00 scheduler proof)
+- latest_actual_run: 2026-10-25 02:04:37 Asia/Bangkok (actual HH:00 scheduled context)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-25/005626-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-25/005539-attempt.md
-- latest_scheduled_shard: 0
-- latest_executed_shard: 0
-- stale_shard_recovery: false (hour0 modulo4, one shard)
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-25/020437-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-25/020330-attempt.md
+- latest_scheduled_shard: 2
+- latest_executed_shard: 2
+- stale_shard_recovery: false (hour2 modulo4, one shard)
 - latest_candidate_count: 7
 - latest_triggered_events: 0
 - latest_identity_failures: 0
-- latest_source_failures: 4
+- latest_source_failures: 5
 - latest_notification_decision: SILENT_NO_NEW_ACTION
 - latest_notification_status: NO_GMAIL_NO_APP
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_additional_USDC,SurfBoard_PONS_raffle_specific_issuer_terms,StandX_original_X_full_milestone_text,Block_Stranding_current_canonical
+- latest_source_gaps: Concrete_additional_USDC,SurfBoard_PONS_raffle_terms,StandX_original_X_full_milestones,01_Exchange_private_mapped_rights,OhBabyGames_current_issuer
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-10-25 00:56:26 Asia/Bangkok (PARTIAL, not verified complete)
 - last_meaningful_attempt_at_shard1: 2026-10-24 21:57:09 Asia/Bangkok
-- last_meaningful_attempt_at_shard2: 2026-10-24 22:57:08 Asia/Bangkok
+- last_meaningful_attempt_at_shard2: 2026-10-25 02:04:37 Asia/Bangkok (PARTIAL, not verified complete)
 - last_meaningful_attempt_at_shard3: 2026-10-24 19:59:01 Asia/Bangkok
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_primary_final_write: VERIFIED_DURABLE 005626-final.md commit 48784fd4bf3b0b1bcba3740a8dc0a4f8efb5c3f8
-- latest_terminal_readback: VERIFIED content/fields 005626-final.md
-- latest_four_executed_shards_prior: [0,1,2,0]
-- latest_four_executed_shards: [1,2,0,0]
+- latest_primary_final_write: VERIFIED_DURABLE 020437-final.md commit 582bffdce81f8725805f14274ae9cc30ccf1a384
+- latest_terminal_readback: VERIFIED content/fields 020437-final.md
+- latest_four_executed_shards_prior: [1,2,0,0]
+- latest_four_executed_shards: [2,0,0,2]
 - last_delivered_event_key: cambria:duel_arena_blast_abstract_post_sweep_claim_and_login:2026-10-19 (prior run)
 - last_delivered_gmail_message_id: 1a16a27a9e5b557c (prior run; no new email)
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-25 00:56:26 BKK PARTIAL shard0, 7 candidates, 4 source gaps, 0 new ACTION, 0 Gmail/App; last full verified Oct10 unchanged.
+- latest_terminal_sync: 2026-10-25 02:04:37 BKK PARTIAL shard2, 7 candidates, 5 source/rights gaps, 0 new ACTION, 0 Gmail/App; last full verified Oct10 unchanged.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
@@ -160,3 +160,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-25 00:04:28 BKK: 000335-attempt.md and readback-verified 000428-final.md persisted; scheduled/executed shard0, urgent5 + Surf/StandX + shard0 (15 distinct active registry projects), bounded cross-shard lifecycle; 7 candidate families, 0 new Tier A/B ACTION, 5 SOURCE_GAP (Concrete extra USDC, Surf PONS raffle eligibility, StandX original X, Block Stranding canonical, TurboFlow georestricted). Gmail mapped-rights and Sent checked, only previously delivered alerts; no Gmail/App. Shard0 meaningful attempt advanced PARTIAL; last fully verified complete 2026-10-10 07:52 unchanged. Recent final-backed shards [0,1,2,0], no override. Existing task/schedule/scope/recipient unchanged.
 
 - 2026-10-25 00:56:26 BKK: off-minute existing task invocation; 005539-attempt.md and readback-verified 005626-final.md persisted; urgent5 + dynamic Surf/StandX + shard0 (15 unique registered identities), bounded cross-shard lifecycle; 7 candidate families, 0 new Tier A/B ACTION, 4 SOURCE_GAP (Concrete additional USDC, Surf PONS raffle, StandX original X milestone text, Block Stranding current issuer). TurboFlow canonical source reachable this run. Gmail Inbox/Sent no new mapped TierB; existing NeoSoul/Cambria alerts suppressed. No Gmail/App. Shard0 meaningful attempt advanced PARTIAL, second consecutive shard0, next invocation rotate away from shard0; last verified full completion 2026-10-10 07:52 unchanged. No schedule/task/scope/recipient changes.
+
+- 2026-10-25 02:04:37 BKK: existing HH:00 task invocation; 020330-attempt.md and readback-verified 020437-final.md durable; scheduled/executed shard2, urgent5 + Surf/StandX + one shard2 (15 distinct registered projects), bounded cross-shard lifecycle; 7 candidate families, 0 new Tier A/B ACTION, 5 SOURCE_GAP (Concrete extra USDC, Surf PONS raffle, StandX original X, 01 private mapped rights, OhBabyGames issuer). Gmail Inbox/Sent after Oct23 found only previously delivered NeoSoul/Cambria; no Gmail/App. shard2 meaningful attempt advanced PARTIAL; last full verified success 2026-10-10 07:52:16 unchanged. Last four executed [2,0,0,2], no override. Original task/schedule/scope/recipient unchanged.
