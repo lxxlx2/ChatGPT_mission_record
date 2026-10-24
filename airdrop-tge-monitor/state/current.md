@@ -29,7 +29,7 @@ Timezone: Asia/Bangkok
 - latest_primary_final_write: VERIFIED_DURABLE 065853-final.md commit 6f8f5f314658cf09ea81be33ace8ab7db32da080
 - latest_terminal_readback: VERIFIED 065853-final.md blob 7fcb4b8a7df989bf9469df825f3ad510f7483ecb
 - latest_four_executed_shards: [0,1,1,2]
-- latest_four_executed_shards: [3,0,1,1]
+- latest_four_executed_shards_prior: [3,0,1,1]
 - last_delivered_event_key: cambria:duel_arena_blast_abstract_post_sweep_claim_and_login:2026-10-19 (prior run)
 - last_delivered_gmail_message_id: 1a16a27a9e5b557c (prior run; no new email)
 - user_alert: email only on fresh ACTION, App silent
