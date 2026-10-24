@@ -258,3 +258,17 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 - 代码/测试/清单/证据已在原PR #30研究分支，常规无网络[GitHub Actions #40089465602](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40089465602)云端实际**SUCCESS**，日志六段回归 `13+5+6+11+19+12 = 66/66 PASS`，新增资产分层12项包括伪造域名、重复官方符号、未来公布不能回填历史、原事件身份漂移、未知不能当crypto。源代码与新增测试的本地实测Git Blob分别为 `f67d66a1d496ccf4bb5390d72e27ac5ecebc8866`、`43b43db5a8931b8fb069f6d62e64aecf7e3f3d8c`，已远端回读逐值一致。未创建定时任务。
 
 **实际下一步**：2026-10-24 UTC整日结束后，待511份官方日ZIP真正发布并逐项CHECKSUM校验，再做4599/4599、全3360轮同原Core一次性对照；先把余下432个T0交易对按发生前正式来源完成历史类别/上架资格证据，G3不以“无证券匹配”充当crypto认证。D2还缺当时可见买卖盘、交易限制、金额与净手续费/滑点/退出证明，G4 UNKNOWN。BSC旧P0截至11-02的来源止损与Frank不变。**G0 PARTIAL / G1 NOT_SCORABLE / G2-G3 NOT_PASSED / G4 UNKNOWN / G6 NO_GO; NO_MERGE / NO_DEPLOY / NO_MAC / NO_PAID / NO_GMAIL / NO_TRADES / NO_AUTOMATIONS**。
+
+## 23. 2026-10-24：G3提前得到可证伪的身份阳性超量边界，正式门禁仍未结案
+
+本轮不增加源分母、不修改原 D0/D1/Fair8 或已冻结 G3 目标，而是在已经完成真实源4,088/4,599准入的 Spot 全局 SQLite `46 SETUP` 原Core事件集上，用**仅限该SETUP母体的26个历史正面加密身份**优先消除G3分母不明。全部26份来源为**回放窗口前**Binance官方英文历史公告或研究，例如Bubblemaps BMT(2025-03-18)、Caldera ERA(2025-07-16)、IOST(2019-10-31)、Amp(2021-11-23)、AltLayer ALT(2024-01-17)、Gains Network GNS(2023-02-17)、Osmosis OSMO(2022-10-28)、DigiByte DGB(2020-06-22)、Compound COMP(2020-06-25)。**这些是币种属于区块链/加密token的事前身份资料，绝非历史账户具备Spot交易权限或订单能完成的证明。** 仍要尊重当时真实币种身份变化、网络迁移和交易暂停。
+
+新成果：
+- [26个事前Binance加密类型阳性证据](../evidence/MONSTER_SPOT511_PRE_EVENT_OFFICIAL_POSITIVE_CRYPTO_26_ASSETS_20261024.json)：每项精确 `symbol / published_utc_date / source_url / 解释`，不使用「没有在bStocks名单」的负面推断。来源页面经本轮外部检索审阅，但未声称逐页源站历史Web/PIT签名；证据日期至少在全七日开始前。
+- `local-agent/mission_agent/early/spot_g3_positive_bound.py`：只读从原 [46条实际SQLite SETUP事件](../evidence/MONSTER_SPOT511_4088_REAL_GLOBAL_FIFO8_FAIR8_46_SETUP_EVENTS_20261024.json) 中核对精确 event ID/time、固定重放源码/报告SHA、7日窗口，拒绝证券/加密重叠、后验来源、重复事件和改写原46条；输出`G3`条件边界。测试 `local-agent/tests/test_monster_spot_g3_positive_bound.py`，已纳入无网络常规CI。
+- [真实原Core逐事件37/2/7分层+监控标签敏感性](../evidence/MONSTER_SPOT511_G3_OFFICIAL_CRYPTO_37_SIGNAL_7DAY_BOUND_20261024.json)：**37条正面有据的加密身份SETUP（26币种）**、**2条已证实bStocks证券SETUP**、**7条其他类别或身份仍未完成证明**（ACM、BAR、MANTRA、A、REQ、AT、ATM）。37条加密身份事件发生在UTC 10/18至10/23，分日 **5/6/6/7/9/4**，都已计入固定七日窗口，不是从不存在的10/24数据推算。
+- Stage77 G3关注上限`5 SETUP/日 × 7日 = 35`。**条件结论**：如果这37条已证实加密资产类型的原Core信号全部满足历史账户/币种适格性，最终全七日哪怕余下时间没有SETUP，也无法把37降到35，故`G3_MEAN_OVERLOAD_CONDITIONAL`。无需为了判断这个风险等待其余432币逐一做无价值的类别穷举。
+- **必须保留反例/敏感性**：在37条中，AVA×2、GNS×2、QKC×1、SOPH×1在发生前官方公告附带`Monitoring Tag`及答题门槛；**6条是否满足实际账户条件UNKNOWN**。把它们全部暂不计入可执行，只有31条身份阳性SETUP，**31/7=4.43**，不足以单独得出G3必超。Monitoring Tag并不等于不可交易，不能自动排除；并且其他7条未知类型也不能自动归入加密。已知EPIC/QUICK随后2026-10-28拟下架的公告，不能倒推其10/18不可交易。因而**不将上述条件结论偷换成正式G3 REJECTED**，保留`G3=NOT_PASSED_PENDING_FINAL_DAY_AND_HISTORICAL_ELIGIBILITY`。
+- [GitHub Actions #40090852080](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40090852080) `SUCCESS`，云端测试七组 `13+5+6+11+19+12+12 = 78/78 PASS`，新增12例使用真实46个event ID验算，并对伪造来源URL、出版日倒填、证券重叠、事件数和回放SHA篡改 fail closed。这是工程可复现，不是G1/G2/G3/G4策略通过。
+
+**接下来的核心问题只有两个有价值的分叉**：（A）最终UTC 10/24整日Publisher原ZIP真正发布后补511个SHA并运行全4599/4599、3360/3360原规则回放；（B）检查这37条的当时上架/监控测验及合规交易资格，确定G3是否确实因关注负载超过上限而`REJECTED`。若正式不合格，则把结果作为D1重新设计输入，单独预注册新的模型和未知验证窗口，**绝不可用这一暴露样本调参再声称样本外成功**。后续再处理D2当时盘口和买卖可成交性，用户没有给出交易金额，统一`UNKNOWN`。BSC来源止损与Frank不动。**G0 PARTIAL / G1 NOT_SCORABLE / G2/G3 NOT_PASSED / G4 UNKNOWN / G6 NO_GO；NO_MERGE/NO_DEPLOY/NO_MAC/NO_SCHEDULE/NO_GMAIL/NO_TRADES**。
