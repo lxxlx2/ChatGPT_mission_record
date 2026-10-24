@@ -65,17 +65,26 @@ class MockedNetworkReviewTests(unittest.TestCase):
             def connect(self):
                 self.sock=object()
                 contents=(case.evidence/"attempts.jsonl").read_bytes()
+                self.journal_at_connect = contents
                 self_id=len(case.connects)+1
                 self_reserved=b'"event":"RESERVE_UNKNOWN"' in contents
                 case.assertTrue(self_reserved, "TLS connect before durable journal")
-                if case.mark:
-                    case.assertTrue(case.mark.exists(),
-                                    "TLS connect before one-use marker")
+                markers=list(case.registry.glob("*.consumed.json"))
+                case.assertEqual(len(markers),1,
+                                 "TLS connect before one-use marker")
                 with case.lock:
                     case.connects.append(self_id)
             def request(self, method, path, *,body,headers):
                 case.assertEqual((method,path),("POST","/"))
                 request=json.loads(body)
+                preconnect=[json.loads(line) for line in
+                            self.journal_at_connect.splitlines()]
+                case.assertTrue(
+                    any(e.get("event")=="RESERVE_UNKNOWN"
+                        and e.get("id")==request["id"]
+                        and e.get("method")==request["method"]
+                        for e in preconnect),
+                    "Request-specific RESERVE must predate TLS connect")
                 with case.lock:
                     case.methods.append(request["method"])
                 if case.write_timeout and request["method"]=="eth_blockNumber":
@@ -93,20 +102,16 @@ class MockedNetworkReviewTests(unittest.TestCase):
                 self.sock=None
         return M()
 
-    def reviewed(self, *, max_total=8, max_blocks=3, max_refreshes=3,
-                 marker=True):
-        if marker:
-            consume=OfflineGrantRegistry(self.registry).consume(
-                "single-run-f0-test", "a"*64)
-            self.assertEqual(consume["status"],
-                             "CONSUMED_NOT_A_NETWORK_AUTHORIZATION")
-            self.mark=next(self.registry.iterdir())
+    def reviewed(self, *, max_total=8, max_blocks=3, max_refreshes=3):
         source=UnreleasedRealHTTPSCodeSource(
             _offline_review_ticket=REVIEW_TICKET)
         with patch("http.client.HTTPSConnection",side_effect=self.factory) as ctor:
             result=_review_unreleased_real_concurrent(
                 source, self.evidence,
                 _offline_review_ticket=REVIEW_TICKET,
+                _offline_test_registry=OfflineGrantRegistry(self.registry),
+                _offline_test_grant_id="single-run-f0-test",
+                _offline_test_permit_sha256="a"*64,
                 max_total=max_total,max_blocks=max_blocks,
                 max_refreshes=max_refreshes,slots=3,spacing_ms=250,
                 window_ms=6000,head_ttl_ms=4000)
@@ -133,6 +138,34 @@ class MockedNetworkReviewTests(unittest.TestCase):
                        "INVALID_FOR_PERFORMANCE_CLAIM"))
         self.assertEqual(set(self.methods)-{
             "eth_chainId","eth_blockNumber","eth_getBlockByNumber"},set())
+
+
+    def test_no_unpatched_constructor_even_with_importable_review_ticket(self):
+        source=UnreleasedRealHTTPSCodeSource(
+            _offline_review_ticket=REVIEW_TICKET)
+        with self.assertRaisesRegex(ValueError,
+                                    "CONSTRUCTOR_NOT_INTERCEPTED"):
+            _review_unreleased_real_concurrent(
+                source,self.evidence,
+                _offline_review_ticket=REVIEW_TICKET,
+                _offline_test_registry=OfflineGrantRegistry(self.registry),
+                _offline_test_grant_id="single-run-f0-test",
+                _offline_test_permit_sha256="a"*64)
+        self.assertFalse(list(self.registry.iterdir()))
+        self.assertFalse(list(self.evidence.iterdir()))
+
+    def test_no_registry_cannot_begin_even_under_intercepted_constructor(self):
+        source=UnreleasedRealHTTPSCodeSource(
+            _offline_review_ticket=REVIEW_TICKET)
+        with patch("http.client.HTTPSConnection",
+                   side_effect=AssertionError("NETWORK_FORBIDDEN")) as ctor:
+            with self.assertRaisesRegex(ValueError,
+                                        "TEST_REGISTRY_REQUIRED"):
+                _review_unreleased_real_concurrent(
+                    source,self.evidence,
+                    _offline_review_ticket=REVIEW_TICKET)
+            ctor.assert_not_called()
+        self.assertFalse(list(self.evidence.iterdir()))
 
     def test_503_on_real_transport_code_preserves_raw_no_retry(self):
         self.head_status=503
