@@ -17,6 +17,7 @@ from hashlib import sha256
 import importlib
 import json
 import os
+import pwd
 from pathlib import Path
 import platform
 import stat
@@ -54,11 +55,20 @@ def _private_directory(path: Path, *, allow_missing=False):
     return True
 
 
+def _os_user_home():
+    """OS account home, not a caller-adjustable HOME environment variable."""
+    return Path(pwd.getpwuid(os.getuid()).pw_dir)
+
+
 def _inspect_fixed_registry():
     """Observes but never creates, changes or consumes the fixed Mac root."""
     path = PRIVATE_FIXED_REGISTRY
     if not isinstance(path, Path) or not path.is_absolute():
         raise ValueError("D1_MAC_FIXED_REGISTRY_NOT_ABSOLUTE")
+    expected = (_os_user_home() / "Library" / "Application Support"
+                / "MissionEvidence" / "f0-grant-registry")
+    if path != expected:
+        raise ValueError("D1_MAC_FIXED_REGISTRY_PATH_ENV_MISMATCH")
     # Verify pre-existing components; do not resolve or accept symlink swaps.
     cursor = Path(path.anchor)
     for piece in path.parts[1:]:
@@ -90,8 +100,12 @@ def inspect_supervised_mac_scope_offline(
         raise ValueError("D1_MAC_EVIDENCE_ROOT_INVALID")
     if not _private_directory(evidence_root):
         raise ValueError("D1_MAC_EVIDENCE_ROOT_NOT_PRIVATE")
-    if evidence_root.resolve() == PRIVATE_FIXED_REGISTRY.resolve():
-        raise ValueError("D1_MAC_EVIDENCE_CANNOT_BE_REGISTRY")
+    evidence_resolved = evidence_root.resolve()
+    registry_resolved = PRIVATE_FIXED_REGISTRY.resolve()
+    if (evidence_resolved == registry_resolved
+            or evidence_resolved in registry_resolved.parents
+            or registry_resolved in evidence_resolved.parents):
+        raise ValueError("D1_MAC_EVIDENCE_CANNOT_OVERLAP_REGISTRY")
     permit = _strict_permit(permit_raw)
     if permit["approved_commit_sha"] != expected_sha:
         raise ValueError("D1_MAC_PERMIT_CODE_SHA_MISMATCH")
@@ -147,6 +161,8 @@ def main(argv=None):
     candidate = args.candidate_scope
     if (not candidate.is_absolute() or candidate.is_symlink()
             or not candidate.is_file()
+            or not candidate.stat().st_mode & 0o170000 == 0o100000
+            or candidate.stat().st_mode & 0o077
             or candidate.stat().st_size > 8192):
         raise ValueError("D1_MAC_UNSAFE_CANDIDATE_SCOPE_FILE")
     # No output-file option, service mode, real-socket or '--run' flag exists.

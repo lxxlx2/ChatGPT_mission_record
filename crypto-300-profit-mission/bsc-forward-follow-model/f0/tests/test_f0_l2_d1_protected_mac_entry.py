@@ -24,8 +24,10 @@ class MacEntryNoNetworkTests(unittest.TestCase):
         f.setUp()
         self.addCleanup(f.doCleanups)
         self.f=f
-        self.registry=Path(f.temp.name).absolute()/"only-registrar"
-        self.registry.mkdir(mode=0o700)
+        self.home=Path(f.temp.name).absolute()
+        self.registry=(self.home/"Library"/"Application Support"/
+                       "MissionEvidence"/"f0-grant-registry")
+        self.registry.mkdir(mode=0o700,parents=True)
         self.mock_runtime={
             "status":"REVIEWED_LOCAL_BYTES_MATCH_NOT_LIVE_AUTHORIZATION",
             "source_commit_sha":f.sha,
@@ -49,9 +51,11 @@ class MacEntryNoNetworkTests(unittest.TestCase):
                     "f0_l2_d1_protected_mac_entry.PRIVATE_FIXED_REGISTRY",
                     overrides.get("registry",self.registry)
                 ):
-                    with patch("f0_l2_d1_protected_mac_entry."
-                               "review_loaded_runtime_offline",
-                               return_value=self.mock_runtime) as provenance:
+                    with patch("f0_l2_d1_protected_mac_entry._os_user_home",
+                               return_value=self.home):
+                        with patch("f0_l2_d1_protected_mac_entry."
+                                   "review_loaded_runtime_offline",
+                                   return_value=self.mock_runtime) as provenance:
                         with patch("http.client.HTTPSConnection",
                                    side_effect=AssertionError(
                                        "REAL_HTTPS_NOT_ALLOWED")) as network:
@@ -112,7 +116,7 @@ class MacEntryNoNetworkTests(unittest.TestCase):
     def test_fixed_registry_symlink_and_bad_mode_refused(self):
         sym=Path(self.f.temp.name).absolute()/"fake-link"
         sym.symlink_to(self.registry,target_is_directory=True)
-        with self.assertRaisesRegex(ValueError,"FIXED_REGISTRY_SYMLINK"):
+        with self.assertRaisesRegex(ValueError,"FIXED_REGISTRY_PATH_ENV_MISMATCH"):
             self.inspect(registry=sym)
         self.registry.chmod(0o777)
         self.addCleanup(lambda:self.registry.chmod(0o700))
@@ -120,8 +124,9 @@ class MacEntryNoNetworkTests(unittest.TestCase):
             self.inspect()
 
     def test_fixed_registry_can_be_missing_without_creating_it(self):
-        missing=Path(self.f.temp.name).absolute()/"not-created"
-        result=self.inspect(registry=missing)
+        missing=self.registry
+        self.registry.rmdir()
+        result=self.inspect()
         self.assertFalse(result["fixed_registry_state"][
                          "registry_exists_and_private"])
         self.assertFalse(missing.exists())
