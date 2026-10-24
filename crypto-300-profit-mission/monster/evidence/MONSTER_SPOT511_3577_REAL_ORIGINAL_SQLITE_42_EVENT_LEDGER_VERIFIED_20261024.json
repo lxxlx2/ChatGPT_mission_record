@@ -1,0 +1,281 @@
+{
+  "schema": "MONSTER_SPOT511_ORIGINAL_SQLITE_FROZEN_FIFO_FAIR8_SETUP_EVENT_VERIFIED_V1",
+  "observed_research_date": "2026-10-24",
+  "fixed_sha": "c0e34ab9932fc861b10f040a81cac0e631a22c63",
+  "research_only": true,
+  "run_1": {
+    "id": 40083119727,
+    "job_id": 120840557267,
+    "result": "FAILED_AFTER_REPLAY_ORIGINAL_ARTIFACT_PATH_MISSING",
+    "source_replay_ran": true,
+    "setup_count": 42
+  },
+  "run_2": {
+    "id": 40083267351,
+    "job_id": 120840976205,
+    "conclusion": "FAILURE_BECAUSE_POST_VALIDATION_ISSUE_COMMENT_HTTP_403",
+    "data_replay_passed": true,
+    "exact_fifo_event_ledger_passed": true,
+    "old_baseline_25_fields_equal": true,
+    "run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40083267351",
+    "archive_artifact_id": 12555698022,
+    "artifact_expiry_utc": "2026-11-23T09:49:59Z",
+    "artifact_sha256": "70093dedf146e0535574df9ff2ea34e0046c859e9e144305682a4eb6af641b1a",
+    "original_core_report_sha256": "91f5cbf8b76118b1376d0f51bcfac83a57f9e020ac39f7ee7a5136bcd7838635",
+    "original_core_event_comparison_sha256": "2505250d2cefe3773a2495c895d227c5bdcdab284338e2e990977bea4224db36",
+    "original_report_sha256": "d3aef422dfc6be7c5b04b7935ef6b8b4c456293ee47bfb4ede7f8084f552a18a"
+  },
+  "data": {
+    "publisher_symbol_days_verified": 3577,
+    "total_symbol_days_9day": 4599,
+    "full_3minute_market_ticks": 2439,
+    "censored_3minute_market_ticks": 921,
+    "actual_d0_watch_events": 46,
+    "actual_d1_setup_events": 42,
+    "original_core_fifo_equals_fair8": true,
+    "all_42_actual_core_setup_id_symbol_observed_ms_match_independent_reconstruction": true,
+    "known_tokenized_securities": [
+      "SHAZBUSDT",
+      "IBMBUSDT"
+    ],
+    "remaining_identity_unverified": true
+  },
+  "core_ci": {
+    "separate_run": 40083496134,
+    "conclusion": "success",
+    "offline_suite_test_counts": [
+      11,
+      5,
+      6,
+      11,
+      19
+    ],
+    "total_offline_tests": 52
+  },
+  "data_quality": "Publisher original ZIP+CHECKSUM validated by Stage166; original historical live 24h ticker and eligibility timeline remain unproven, and this is not an executable market-depth or fee-adjusted PnL test.",
+  "gate": {
+    "G0": "PARTIAL",
+    "G1": "NOT_SCORABLE",
+    "G2": "NOT_PASSED",
+    "G3": "NOT_PASSED",
+    "G4": "UNKNOWN",
+    "G6": "NO_GO",
+    "NO_MERGE": true,
+    "NO_DEPLOY": true,
+    "NO_GMAIL": true,
+    "NO_TRADES": true,
+    "NO_AUTOMATIONS": true
+  },
+  "actual_setup_events": [
+    {
+      "symbol": "ERAUSDT",
+      "observed_ms": 1792307520000,
+      "event_id": "a7b9daf09be1222b01bc315234cd835781b97320b65742b9854c5914dd266fd6"
+    },
+    {
+      "symbol": "AMPUSDT",
+      "observed_ms": 1792317420000,
+      "event_id": "d5ee6b8fdca66dade3196e6f874005f768a0ed9909af45f6b2521fc25f0962f3"
+    },
+    {
+      "symbol": "ACMUSDT",
+      "observed_ms": 1792317960000,
+      "event_id": "848ea83add5fdd477557a2ac39023bff6a2022ebfcb43808df1b2dfea36f8df1"
+    },
+    {
+      "symbol": "QKCUSDT",
+      "observed_ms": 1792330920000,
+      "event_id": "90e39fddee77e23aefa82f5833367263fbedf232e2e38a4b355151965c28e802"
+    },
+    {
+      "symbol": "BARUSDT",
+      "observed_ms": 1792333260000,
+      "event_id": "3e28497482aeeb38a841201a49553a1e7be5c7bd7a23450a0c83ab96a4f3da74"
+    },
+    {
+      "symbol": "QUICKUSDT",
+      "observed_ms": 1792344420000,
+      "event_id": "c37f09689f94eea32090e95a5577139e99999f18f5f0cb0708820d4d904879e0"
+    },
+    {
+      "symbol": "EPICUSDT",
+      "observed_ms": 1792348560000,
+      "event_id": "a82d485c369dbcc0ab92d16bbf435287162125b02c1ddaa2b794347276b77316"
+    },
+    {
+      "symbol": "MANTRAUSDT",
+      "observed_ms": 1792360260000,
+      "event_id": "added729933e6a20a32fc26de90578aedeaa457415f8d37a1e494abf94b23787"
+    },
+    {
+      "symbol": "AMPUSDT",
+      "observed_ms": 1792391220000,
+      "event_id": "ab90be63b044cf419bad8ce71f69351fd9bedcbccd93c0dfc301afcda793d225"
+    },
+    {
+      "symbol": "OSMOUSDT",
+      "observed_ms": 1792398060000,
+      "event_id": "d2ccf5ceb9d2490249fae50cd6765f407fa3bd286c179fc517eccb66f2de459d"
+    },
+    {
+      "symbol": "NILUSDT",
+      "observed_ms": 1792411920000,
+      "event_id": "141b6671a3e01d0f181f7034643271afedef76d94290d2fb6ee8721038035a8b"
+    },
+    {
+      "symbol": "SHAZBUSDT",
+      "observed_ms": 1792416960000,
+      "event_id": "4be01b4328f10b128fe1ed31854f06ef3260157916805944d24c57595173e9d9"
+    },
+    {
+      "symbol": "AVAUSDT",
+      "observed_ms": 1792422900000,
+      "event_id": "f959f59ae86ba0ef1e18294495fcd4d6e2d161d01fda66a022398d3d24fbf108"
+    },
+    {
+      "symbol": "GTCUSDT",
+      "observed_ms": 1792425600000,
+      "event_id": "71e29c88893f9aa35aea6efad5be51d3075cc0af47ec349a2b01946a5ca1f313"
+    },
+    {
+      "symbol": "GNSUSDT",
+      "observed_ms": 1792434420000,
+      "event_id": "a25499a0066a71d992d41f31b5589114c79c0d3fe2ea5f080ab22f01e36fa844"
+    },
+    {
+      "symbol": "AUSDT",
+      "observed_ms": 1792460700000,
+      "event_id": "556744f378c53bcd8d9ced3d85f21a7bca2a8eefc0d362601c0c8a1c675fdb17"
+    },
+    {
+      "symbol": "ALTUSDT",
+      "observed_ms": 1792467900000,
+      "event_id": "54cb10ad2a66619c3fa4a9a32d85f086973f9c1452b0e48dcd86c46035a3bb8f"
+    },
+    {
+      "symbol": "GNSUSDT",
+      "observed_ms": 1792482120000,
+      "event_id": "86770d96b356d416ab6b0258e158f6d1f6e0abec1113259b2c59f13951e29ec1"
+    },
+    {
+      "symbol": "ERAUSDT",
+      "observed_ms": 1792487160000,
+      "event_id": "5be094a08f875f21d646b93fcd9e4ec382a2603c175e191250bebd70c652cfec"
+    },
+    {
+      "symbol": "IDUSDT",
+      "observed_ms": 1792493820000,
+      "event_id": "a66780509cb22bd472bd854ad60ed7e59b5d8b7c265f7bb200102cf0a8d5297a"
+    },
+    {
+      "symbol": "COMPUSDT",
+      "observed_ms": 1792515960000,
+      "event_id": "a4766238baade4e25ecb9e9eb3a563631afd67f406f1a8b2e59194eb283c1a56"
+    },
+    {
+      "symbol": "IOSTUSDT",
+      "observed_ms": 1792530360000,
+      "event_id": "33d7e80580462684fe944d7a1f0532a18edca3075689114d66548c7fcb57151f"
+    },
+    {
+      "symbol": "SCUSDT",
+      "observed_ms": 1792542600000,
+      "event_id": "95b31dcda2d6e5e6188c7fa2b3ba008bf46c575aa66f6edbc4c9b462ec62dbf8"
+    },
+    {
+      "symbol": "PARTIUSDT",
+      "observed_ms": 1792550700000,
+      "event_id": "282ce4b03c5d03dc4f95472b11a129046cd56b61ae69278ba039c72d96674c90"
+    },
+    {
+      "symbol": "IOSTUSDT",
+      "observed_ms": 1792552320000,
+      "event_id": "f67b03c24bae6fd2242a2cc71f0abc938771568c9682fcdf28b1bedec52f0720"
+    },
+    {
+      "symbol": "IOSTUSDT",
+      "observed_ms": 1792575720000,
+      "event_id": "7ff60fc566e21ae72241ef73d6fe525cb7f028a803ba1a737d8abfbcfa5bd8dc"
+    },
+    {
+      "symbol": "BMTUSDT",
+      "observed_ms": 1792576620000,
+      "event_id": "4c13450da1a914dc45d2004a75a00a4860912151ab471bfdc7ebc57faef21b7e"
+    },
+    {
+      "symbol": "REQUSDT",
+      "observed_ms": 1792579500000,
+      "event_id": "c2622d553f8aabe57bb00d4c7373ff456eb10a5f7fe3fe8a019a8ee5f4b2a05c"
+    },
+    {
+      "symbol": "ATUSDT",
+      "observed_ms": 1792583820000,
+      "event_id": "ed6c8474402d66d52969340c03005f4072a4900a9d2691647bcd998f4ee74f89"
+    },
+    {
+      "symbol": "VTHOUSDT",
+      "observed_ms": 1792592460000,
+      "event_id": "cb5a68991568c3108babc2b11c1d010b74f73659c6748de1aae4bac2eb0e9cd4"
+    },
+    {
+      "symbol": "ALTUSDT",
+      "observed_ms": 1792599120000,
+      "event_id": "257dfc14d4415bc4c32e466049d122e16d2daac3d41d92ba9af61e54ad700a82"
+    },
+    {
+      "symbol": "DGBUSDT",
+      "observed_ms": 1792649160000,
+      "event_id": "b48b79700e3379dd30758262b51d8fb99a8222810812c354b18b1be66ba69282"
+    },
+    {
+      "symbol": "LUMIAUSDT",
+      "observed_ms": 1792650960000,
+      "event_id": "dc55207c955e2c02cb89ed77e6320b5f4b08afb616ed06c406ad6ec739115a2d"
+    },
+    {
+      "symbol": "ATMUSDT",
+      "observed_ms": 1792655460000,
+      "event_id": "8f8a19e35a68e8b3b5bb8334925f06e10da467a38dd8cda6850f34a7c18cdb7b"
+    },
+    {
+      "symbol": "BMTUSDT",
+      "observed_ms": 1792656720000,
+      "event_id": "39926e1eb5e2bb3d788dec30f35b677c5ef63bcc92572075283e4ce41d5a6a24"
+    },
+    {
+      "symbol": "MASKUSDT",
+      "observed_ms": 1792664460000,
+      "event_id": "ccad8020d56711d8d315bef764deec6d5bde6c2bbe89f3e31b976ae5f3ffb4c6"
+    },
+    {
+      "symbol": "AIUSDT",
+      "observed_ms": 1792665000000,
+      "event_id": "faa0e7c9257becbcb3baecc3f09313c4f8c424a41a10bf8819844bb2e6c3d6fd"
+    },
+    {
+      "symbol": "MITOUSDT",
+      "observed_ms": 1792666620000,
+      "event_id": "6f1e6ebdd3aea8ed01aba65ae648edca955c4a3dd6494ecfc62f046b1b469fbb"
+    },
+    {
+      "symbol": "AVAUSDT",
+      "observed_ms": 1792671120000,
+      "event_id": "9b911925b40fe5aecb5cded6ad1479c56ae8b54e17104618b90201d9049ae552"
+    },
+    {
+      "symbol": "IBMBUSDT",
+      "observed_ms": 1792676160000,
+      "event_id": "17c2a96cab2a0b3a45ff15268c0cd41f44ad4860de93f5a08949c1639c928b1e"
+    },
+    {
+      "symbol": "OSMOUSDT",
+      "observed_ms": 1792686060000,
+      "event_id": "6e90db5ae2f72871e0d05bdad4274ab7b9a1c87f9af3e82cb00508b959e9ebe6"
+    },
+    {
+      "symbol": "BMTUSDT",
+      "observed_ms": 1792693620000,
+      "event_id": "3843f8b21ff8e74f7051fac0119597881e514ebb57766248c435cc9b9af0d24a"
+    }
+  ]
+}
