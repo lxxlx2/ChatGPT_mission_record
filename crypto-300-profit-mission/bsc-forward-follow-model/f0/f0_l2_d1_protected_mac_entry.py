@@ -40,7 +40,7 @@ OFFLINE_REPORT_SCHEMA = "f0-d1-mac-supervised-preflight-NO-LIVE-v1"
 
 
 def _private_directory(path: Path, *, allow_missing=False):
-    if (type(path) is not Path or not path.is_absolute()
+    if (not isinstance(path, Path) or not path.is_absolute()
             or path.is_symlink()):
         raise ValueError("D1_MAC_PRIVATE_DIRECTORY_INVALID")
     if not path.exists():
@@ -57,7 +57,7 @@ def _private_directory(path: Path, *, allow_missing=False):
 def _inspect_fixed_registry():
     """Observes but never creates, changes or consumes the fixed Mac root."""
     path = PRIVATE_FIXED_REGISTRY
-    if type(path) is not Path or not path.is_absolute():
+    if not isinstance(path, Path) or not path.is_absolute():
         raise ValueError("D1_MAC_FIXED_REGISTRY_NOT_ABSOLUTE")
     # Verify pre-existing components; do not resolve or accept symlink swaps.
     cursor = Path(path.anchor)
@@ -84,9 +84,9 @@ def inspect_supervised_mac_scope_offline(
     """
     if platform.system() != "Darwin":
         raise ValueError("D1_MAC_ONLY_NO_NETWORK_OR_GRANT")
-    if type(checkout_root) is not Path or not checkout_root.is_absolute():
+    if not isinstance(checkout_root, Path) or not checkout_root.is_absolute():
         raise ValueError("D1_MAC_CHECKOUT_ROOT_INVALID")
-    if type(evidence_root) is not Path or not evidence_root.is_absolute():
+    if not isinstance(evidence_root, Path) or not evidence_root.is_absolute():
         raise ValueError("D1_MAC_EVIDENCE_ROOT_INVALID")
     if not _private_directory(evidence_root):
         raise ValueError("D1_MAC_EVIDENCE_ROOT_NOT_PRIVATE")
