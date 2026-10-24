@@ -130,6 +130,46 @@ def load_pinned_original_watch_tape(path):
     }
 
 
+
+def _verify_pinned_extraction_rows(rows):
+    """Fail closed on the ENTIRE 53-event tuple, not public trust flags.
+
+    The loader has already validated the complete original paired-4088.json
+    SHA. A caller may mutate or fabricate the returned dict afterwards.
+    The exact canonical SHA must be checked again at every extraction; each
+    tuple element is checked BEFORE interpolation, hashing, or filtering.
+    """
+    if not isinstance(rows, tuple) or len(rows) != EXPECTED_WATCH_COUNT:
+        raise SourceIdentityError("WATCH_TAPE_EVENT_COUNT_DRIFT")
+    seen = set()
+    prior = None
+    encoded = []
+    for record in rows:
+        if not isinstance(record, tuple) or len(record) != 3:
+            raise SourceIdentityError("WATCH_TAPE_ROW_SHAPE_DRIFT")
+        symbol, observed_ms, eid = record
+        if (not isinstance(symbol, str) or not symbol.endswith("USDT")
+                or symbol == "BTCUSDT"
+                or type(observed_ms) is not int or observed_ms < 0
+                or observed_ms % TICK_MS
+                or not isinstance(eid, str) or len(eid) != 64):
+            raise SourceIdentityError("WATCH_TAPE_ROW_INVALID")
+        if original.event_key("spot", symbol, "WATCH_EARLY", observed_ms) != eid:
+            raise SourceIdentityError("WATCH_TAPE_EVENT_HASH_MISMATCH")
+        if eid in seen:
+            raise SourceIdentityError("WATCH_TAPE_DUPLICATE_EVENT_ID")
+        seen.add(eid)
+        key = (observed_ms, eid)
+        if prior is not None and key < prior:
+            raise SourceIdentityError("WATCH_TAPE_EVENT_ORDER_DRIFT")
+        prior = key
+        encoded.append(f"{symbol}\t{observed_ms}\t{eid}\n")
+    digest = hashlib.sha256("".join(encoded).encode("utf-8")).hexdigest()
+    if digest != PINNED_WATCH_CANONICAL_SHA256:
+        raise SourceIdentityError("WATCH_TAPE_CANONICAL_SHA_MISMATCH")
+    return rows
+
+
 def watches_at_tick(verified_tape, tick_ms):
     """Select all real D0 WATCHs at a tick without inferring source zeros.
 
@@ -142,9 +182,9 @@ def watches_at_tick(verified_tape, tick_ms):
             verified_tape.get("original_watch_ledger_integrity_checked") is not True or
             type(tick_ms) is not int or tick_ms % TICK_MS):
         raise SourceIdentityError("WATCH_TICK_OR_PROVENANCE_REQUIRED")
-    rows = verified_tape.get("watch_identity_rows")
-    if (not isinstance(rows, tuple) or len(rows) != EXPECTED_WATCH_COUNT):
-        raise SourceIdentityError("WATCH_TAPE_EVENT_COUNT_DRIFT")
+    rows = _verify_pinned_extraction_rows(
+        verified_tape.get("watch_identity_rows")
+    )
     return tuple({
         "event_id": eid, "venue": "spot", "symbol": symbol,
         "event_type": "WATCH_EARLY", "observed_ms": observed_ms
