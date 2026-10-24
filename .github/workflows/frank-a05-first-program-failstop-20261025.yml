@@ -1,0 +1,29 @@
+name: Frank A05 first-program stop after source failure (isolated code gate)
+on:
+  push:
+    branches:
+      - research/frank-a05-first-program-failstop-20261025
+permissions:
+  contents: read
+jobs:
+  source-replay-unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test-only dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pip install -e '.[dev]' numpy==2.3.3 pyflakes==3.4.0
+      - name: Syntax and static file checks
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m compileall -q mission_agent/mission_control/wallet_full_rpc_evidence.py scripts/frank_capture_owner_full_receipts.py tests/test_frank_a05_complete_rpc_receipts.py
+          python -m pyflakes mission_agent/mission_control/wallet_full_rpc_evidence.py scripts/frank_capture_owner_full_receipts.py tests/test_frank_a05_complete_rpc_receipts.py
+      - name: Deterministic owner RPC failure-stop and source replay tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -B -m pytest -q -p no:cacheprovider tests/test_frank_a05_complete_rpc_receipts.py tests/test_frank_a04_a05_chain_capture.py
