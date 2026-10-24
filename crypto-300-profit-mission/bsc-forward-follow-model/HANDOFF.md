@@ -1,3 +1,21 @@
+# 2026-10-24 — PR192 Mac REQUEST_CHANGES: diagnostic-read race, test-only fix
+
+- **Independent Mac verdict for prior exact SHA `eb6992e96a7663ff03f27531e7a7a6a34bc377cb`: `REQUEST_CHANGES`**, one P1 test acceptance blocker. Reviewer reports 495/495 full and 134/134 D1 PASS with zero skips, but the new child-lifetime test **run alone** produced 1 PASS and 1 ERROR (`JSONDecodeError`) when `is_file()` became true before JSON had been fully written/fsynced. The original Mac error remains historical evidence; no retroactive approval. Review independently also observed parent SIGKILL -> child EOF/self-exit, and verified missing PID via `ps`.
+- **Bounded targeted source repair `9d26aae567a806e8caa416afede6599f2d518512`:** only `f0/tests/test_f0_l2_d1_child_lifetime.py` changed. The test now discovers the exact child PID before parent SIGKILL using `ps`, then waits for **both parseable complete watchdog JSON and process exit** with a hard cap. `GONE` and `ZOMBIE_EXITED` are distinguished from `RUNNING`; an orphan zombie is exited but may await reaping. Existing UNKNOWN[1], zero settlement, marker-consumed and grant replay refusal remain. No runtime, transport, grant, watchdog, or scheduler source was changed.
+- **GitHub source CI verified:** [workflow 40106155306](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40106155306) at `9d26aae567a806e8caa416afede6599f2d518512` completed success, raw job reports **Ran 495 tests in 61.008s / OK**. It ran the complete Linux suite including both child-lifetime tests; separate standalone test and independent Mac re-review of the new SHA are still **PENDING**. No `APPROVE_OFFLINE_CODE` applies to this revised SHA yet.
+- **Gate unchanged:** `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`. No real RPC/WS, production roots, permits/nonce, merge, deploy, daemon or trades.
+
+---
+
+# 2026-10-24 — D1 parent SIGKILL lifetime child, OFFLINE only; review pending
+
+- **Parent approval verified:** PR191 exact source `8baa185b00c1a69b1caaf46144122b91aafc1a41`, Draft/unmerged, supplied independent Mac audit `APPROVE_OFFLINE_CODE — D1_ONEUSE_HARD_STOP_TEST_ONLY`, 493/493 full, 132/132 D1 and 5/5 focused PASS. See [PR191 archived reviewer report](https://github.com/lxxlx2/ChatGPT_mission_record/pull/191#issuecomment-6385600295). The approval is only for the frozen SHA.
+- **This child branch increment:** reuse exactly the existing disposable-lease, mock HTTPS and one unique 3-slot coordinator. An inherited anonymous pipe tracks **parent process death**; the child has an independent watcher that exits on EOF while mock `connect()` is blocked, and retains a monotonic bound. Private test diagnostic records reason when possible. Durable UNKNOWN remains UNKNOWN, marker spent, no replay. See `f0/F0_D1_CHILD_LIFETIME_REVIEW.md`.
+- **CI verified, independent Mac still PENDING:** code SHA `22569efb399ca2eff17953a08c00236bf43e3f14` [workflow 40104487410](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40104487410) completed SUCCESS; raw job `120903229018` reports **Ran 495 tests in 66.823s / OK**, including both new parent-SIGKILL and guard-FD cases. This is Linux GitHub CI only. Verify same final reviewed SHA on actual Mac, no orphan fake child and no real socket. Parent watchdog still does not establish hardware power-loss semantics, real provider timing, or protected live network authorization. D2/D3 remain absent.
+- **NO GO:** no real RPC/WS, new production grant, preexisting journal access, merge, deployment, background service, alerting or trades. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-24 — D1 whole-operation OS hard-stop child, CI PASS; independent Mac review pending
 
 - Approved frozen source: PR190 SHA `30642f27c1d647ff2d961cd3ce18397b3a07dae0`; independent Mac user-supplied reviewer report `APPROVE_OFFLINE_CODE — D1_PATCHED_PHYSICAL_CTOR_INTEGRATION_SCOPE_ONLY` (488 full, 127 D1, 7 new); review archived at [PR190 comment](https://github.com/lxxlx2/ChatGPT_mission_record/pull/190#issuecomment-6383757461).

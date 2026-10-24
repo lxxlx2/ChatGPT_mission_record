@@ -17,7 +17,10 @@ import http.client
 import json
 import os
 from pathlib import Path
+import select
 import socket
+import stat
+import threading
 import subprocess
 import sys
 import tempfile
@@ -50,6 +53,51 @@ def _private_test_dir(path):
     return real
 
 
+def _child_watchdog_exit(evidence: Path, reason: str):
+    """Write private diagnostic then stop this *mock-only* child immediately."""
+    try:
+        p = evidence / "child_watchdog_termination.json"
+        fd = os.open(p, os.O_CREAT | os.O_EXCL | os.O_WRONLY |
+                     getattr(os, "O_NOFOLLOW", 0), 0o600)
+        with os.fdopen(fd, "wb") as f:
+            f.write((json.dumps({"reason": reason, "real_network": False},
+                                sort_keys=True) + "\n").encode("ascii"))
+            f.flush()
+            os.fsync(f.fileno())
+        dfd = os.open(evidence, os.O_RDONLY |
+                      getattr(os, "O_DIRECTORY", 0))
+        try:
+            os.fsync(dfd)
+        finally:
+            os.close(dfd)
+    except (OSError, ValueError):
+        # Diagnostic may be absent on hardware/storage failure; do not
+        # wait, resume workers, clear UNKNOWN or retry the grant.
+        pass
+    os._exit(90 if reason == "PARENT_PIPE_CLOSED" else 91)
+
+
+def _child_lifetime_watch(read_fd: int, deadline: float, evidence: Path):
+    """Parent-loss detection via inherited pipe; independent monotonic cap.
+
+    A surviving parent owns the only write end. A crashed/KILLed parent
+    closes that end in the kernel, waking this watcher even if the main
+    child thread is wedged in a synchronous mock connect.
+    """
+    while True:
+        remaining = deadline + 0.75 - time.monotonic()
+        if remaining <= 0:
+            _child_watchdog_exit(evidence, "CHILD_ABSOLUTE_DEADLINE")
+        try:
+            ready, _, _ = select.select([read_fd], [], [], remaining)
+            if ready:
+                if os.read(read_fd, 1) == b"":
+                    _child_watchdog_exit(evidence, "PARENT_PIPE_CLOSED")
+                _child_watchdog_exit(evidence, "UNEXPECTED_PARENT_PIPE_DATA")
+        except (OSError, ValueError):
+            _child_watchdog_exit(evidence, "PARENT_LIVENESS_UNCERTAIN")
+
+
 def run_bounded_offline_once(registry: Path, evidence: Path, *,
                              grant_id: str, permit_sha256: str,
                              scenario: str = "complete",
@@ -76,23 +124,33 @@ def run_bounded_offline_once(registry: Path, evidence: Path, *,
         raise ValueError("D1_HARD_STOP_SCOPE_INVALID")
     # Durable, one-use TEST grant must be spent before even creating a child.
     lease = OfflineGrantRegistry(reg).consume(grant_id, permit_sha256)
+    # The kernel pipe is a parent-lifetime lease, NOT a D2/D3 grant.
+    # Pass only its read end into the mock child; its single write end stays
+    # exclusively with the supervisor. Any parent SIGKILL closes it.
+    read_fd, write_fd = os.pipe()
+    start = time.monotonic()
     cmd = (sys.executable, "-B", str(Path(__file__).resolve()),
            "--offline-child", str(out), str(reg), grant_id,
-           permit_sha256, scenario)
-    start = time.monotonic()
-    proc = subprocess.Popen(
-        cmd, stdin=subprocess.DEVNULL,
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-        text=True, close_fds=True)
+           permit_sha256, scenario, str(read_fd),
+           repr(start + hard_seconds))
+    try:
+        proc = subprocess.Popen(
+            cmd, stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            text=True, close_fds=True, pass_fds=(read_fd,))
+    finally:
+        os.close(read_fd)
     timed_out = False
     try:
-        stdout, stderr = proc.communicate(timeout=hard_seconds)
-    except subprocess.TimeoutExpired:
-        timed_out = True
-        # Subprocess creates no grandchildren. SIGKILL bounds the whole
-        # OS child regardless of blocked Python threads or socket timeouts.
-        proc.kill()
-        stdout, stderr = proc.communicate()
+        try:
+            stdout, stderr = proc.communicate(timeout=hard_seconds)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            # Child-side guardian remains active even if parent crashes.
+            proc.kill()
+            stdout, stderr = proc.communicate()
+    finally:
+        os.close(write_fd)
     elapsed = time.monotonic() - start
     if (out / "attempts.jsonl").exists():
         try:
@@ -201,10 +259,23 @@ def _offline_child(evidence: Path, registry: Path, grant_id: str,
 
 def _main(argv):
     # This entry exists solely to run a supervised synthetic child.
-    if len(argv) != 7 or argv[1] != "--offline-child":
+    if len(argv) != 9 or argv[1] != "--offline-child":
         raise ValueError("D1_HARD_STOP_NO_PUBLIC_LIVE_CLI")
     evidence = Path(argv[2])
     registry = Path(argv[3])
+    read_fd = int(argv[7])
+    deadline = float(argv[8])
+    # Reject absent/forged inherited descriptors before any coordinator
+    # work. The pipe is intentionally a liveness proof, not a network grant.
+    if (read_fd < 3 or not stat.S_ISFIFO(os.fstat(read_fd).st_mode)
+            or deadline <= time.monotonic()
+            or deadline - time.monotonic() > _MAX_TEST_SECONDS + 1):
+        raise ValueError("D1_HARD_STOP_CHILD_GUARD_INVALID")
+    _private_test_dir(evidence)
+    guardian = threading.Thread(
+        target=_child_lifetime_watch, args=(read_fd, deadline, evidence),
+        daemon=True, name="d1-offline-parent-loss-watch")
+    guardian.start()
     result = _offline_child(evidence, registry, argv[4], argv[5], argv[6])
     print(json.dumps(result, sort_keys=True), flush=True)
 
