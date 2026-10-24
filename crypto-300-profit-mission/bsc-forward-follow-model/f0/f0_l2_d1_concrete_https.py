@@ -245,3 +245,43 @@ class SealedConcreteOfflineSource(FakeSource):
         if result["state"] != "RAW" or result["raw_frame"] is None:
             raise ValueError("D1_REVIEWED_TLS_FAILED_NO_AUTO_RETRY")
         return result["raw_frame"]
+
+
+# This identity comparison blocks accidental direct use of the real constructor
+# in the OFFLINE rehearsal. A Python monkeypatch is never a production grant.
+_ORIGINAL_HTTPS_CONNECTION = http.client.HTTPSConnection
+
+
+class PatchedConstructorOfflineSource(FakeSource):
+    """Exercise the exact concrete HTTPSConnection call site under a test patch.
+
+    No live entrypoint constructs this class. The original HTTPSConnection is
+    forbidden, even if all request constraints happen to look correct. This
+    is a constructor-level INTEGRATION TEST, never D2/D3 user authority.
+    """
+
+    def reply_over_memory_https(self, request, begin_fake_post, timeout_s):
+        if type(self) is not PatchedConstructorOfflineSource:
+            raise ValueError("D1_PATCHED_CTOR_SOURCE_NOT_EXACT")
+        if http.client.HTTPSConnection is _ORIGINAL_HTTPS_CONNECTION:
+            raise ValueError("D1_PATCHED_CTOR_REQUIRED_NO_REAL_NETWORK")
+        denied = [None]
+
+        def final_post_guard(payload):
+            if payload != request:
+                raise ValueError("D1_PATCHED_CTOR_PAYLOAD_CHANGED")
+            try:
+                begin_fake_post()
+            except Exception as exc:
+                denied[0] = exc
+                raise
+
+        result = _review_concrete_https_once(
+            request, final_post_guard=final_post_guard,
+            _test_capability=_REVIEW_TEST_ONLY_CAPABILITY,
+            timeout_s=timeout_s, max_bytes=MAX_BODY_BYTES)
+        if denied[0] is not None:
+            raise denied[0]
+        if result["state"] != "RAW" or result["raw_frame"] is None:
+            raise ValueError("D1_PATCHED_CTOR_FAILED_NO_AUTO_RETRY")
+        return result["raw_frame"]
