@@ -29,7 +29,7 @@ D3_REQUIRED = frozenset({
     "schema", "approved_commit_sha", "permit_sha256", "grant_id", "run_id",
     "source_manifest_sha256", "window_start_utc", "window_end_utc",
     "endpoint", "chain_id", "methods", "read_only", "no_ws", "no_retries",
-    "background", "free_only", "execute_once", "max_total_attempts",
+    "no_proxy", "no_redirects", "background", "free_only", "execute_once", "max_total_attempts",
     "max_block_reads", "max_head_refreshes", "max_inflight",
     "min_start_gap_ms", "head_ttl_ms", "request_timeout_ms",
     "max_response_bytes", "max_dispatch_seconds",
@@ -139,6 +139,8 @@ def bind_real_https_candidate_offline(
             or intent["read_only"] is not True
             or intent["no_ws"] is not True
             or intent["no_retries"] is not True
+            or intent["no_proxy"] is not True
+            or intent["no_redirects"] is not True
             or intent["free_only"] is not True
             or intent["background"] is not False
             or intent["execute_once"] is not True):
