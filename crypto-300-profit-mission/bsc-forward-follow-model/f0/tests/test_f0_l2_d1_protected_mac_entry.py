@@ -1,6 +1,7 @@
 """One Mac launch surface: exact-SHA preflight, NO real network access."""
 from datetime import timedelta
 from hashlib import sha256
+import json
 import http.client
 from pathlib import Path
 import sys
@@ -88,8 +89,10 @@ class MacEntryNoNetworkTests(unittest.TestCase):
     def test_wrong_commit_and_modified_raw_permit_reject_before_any_marker(self):
         with self.assertRaisesRegex(ValueError,"PERMIT_CODE_SHA_MISMATCH"):
             self.inspect(sha="f"*40)
-        with self.assertRaises(ValueError):
-            self.inspect(permit=self.f.raw+b" ")
+        tampered=json.loads(self.f.raw)
+        tampered["max_inflight"]=2
+        with self.assertRaisesRegex(ValueError,"RESOURCE_SCOPE_INVALID"):
+            self.inspect(permit=json.dumps(tampered).encode())
         self.assertEqual(list(self.registry.iterdir()),[])
         self.assertEqual(list(self.f.out.iterdir()),[])
 
