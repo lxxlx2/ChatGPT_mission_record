@@ -8,6 +8,9 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import platform
+import pwd
+import stat
 from pathlib import Path
 import re
 from importlib.metadata import PackageNotFoundError, version
@@ -174,16 +177,66 @@ def validate_live_trust_roots_not_enrolled():
     raise ValueError("D1_LIVE_SENDER_NOT_IMPLEMENTED")
 
 
-class FixedLocalGrantRegistry:
-    """The only D1 registry factory with a non-injectable fixed Mac path.
+def _mac_os_account_home():
+    """Actual POSIX account home, not HOME or pathlib.Path.home()."""
+    return Path(pwd.getpwuid(os.getuid()).pw_dir)
 
-    Still OFFLINE only. Actual signed live activation is absent in D1.
+
+def _verified_fixed_mac_grant_root():
+    """Inspect the actual fixed root; never create it or follow a symlink.
+
+    Scoped to the current macOS account. This blocks HOME/output/permit
+    redirection and common path-swap mistakes. It is NOT protection against
+    a malicious root administrator or deleting the entire OS account store.
+    """
+    _need(platform.system() == "Darwin",
+          "D1_PRODUCTION_REGISTRY_MAC_ONLY")
+    home = _mac_os_account_home()
+    expected = (home / "Library" / "Application Support" /
+                "MissionEvidence" / "f0-grant-registry")
+    actual = PRIVATE_FIXED_REGISTRY
+    _need(type(actual) is type(expected) and actual.is_absolute() and
+          not actual.is_symlink() and actual == expected,
+          "D1_PRODUCTION_REGISTRY_NOT_OS_HOME_BOUND")
+    # Reject symlink aliases including macOS /var, starting at the path
+    # root. For ancestor directories require the account owns all mutable
+    # user components, and none may be writable by group/other.
+    cursor = Path(expected.anchor)
+    for piece in expected.parts[1:]:
+        cursor = cursor / piece
+        try:
+            st = cursor.lstat()
+        except OSError as exc:
+            raise ValueError("D1_PRODUCTION_REGISTRY_MISSING_OR_UNREADABLE") from exc
+        _need(stat.S_ISDIR(st.st_mode) and not stat.S_ISLNK(st.st_mode),
+              "D1_PRODUCTION_REGISTRY_SYMLINK_OR_NONDIR")
+        if cursor == home or home in cursor.parents:
+            _need(st.st_uid == os.getuid() and st.st_mode & 0o022 == 0,
+                  "D1_PRODUCTION_REGISTRY_OWNER_OR_PARENT_MODE")
+    root_stat = expected.lstat()
+    _need(root_stat.st_mode & 0o077 == 0,
+          "D1_PRODUCTION_REGISTRY_NOT_PRIVATE_0700")
+    return expected, root_stat.st_dev, root_stat.st_ino
+
+
+class FixedLocalGrantRegistry:
+    """Mac OS-account-root single-use marker; no caller-chosen path.
+
+    Caller-supplied candidate approvals never make this a real network
+    authority. The fixed registry is only consumed under a separately
+    approved D2/D3 future sender; this release's live entrypoints still deny.
     """
     def __init__(self):
-        self.delegate = OfflineGrantRegistry(PRIVATE_FIXED_REGISTRY)
+        self.root, self.device, self.inode = _verified_fixed_mac_grant_root()
 
     def consume(self, grant_id: str, permit_sha256: str):
-        return self.delegate.consume(grant_id, permit_sha256)
+        root, dev, inode = _verified_fixed_mac_grant_root()
+        _need(root == self.root and dev == self.device and inode == self.inode,
+              "D1_PRODUCTION_REGISTRY_REPLACED")
+        # OfflineGrantRegistry uses O_NOFOLLOW/O_EXCL, file fsync and the
+        # SAME opened directory fd for final fsync. It cannot refund a grant.
+        return OfflineGrantRegistry(root).consume(
+            grant_id, permit_sha256, expected_dev_inode=(dev, inode))
 
 
 class OfflineGrantRegistry:
@@ -199,7 +252,14 @@ class OfflineGrantRegistry:
               "D1_REGISTRY_NOT_PRIVATE")
         self.root = root
 
-    def consume(self, grant_id: str, permit_sha256: str):
+    def consume(self, grant_id: str, permit_sha256: str, *,
+                expected_dev_inode=None):
+        _need(expected_dev_inode is None or
+              (type(expected_dev_inode) is tuple and
+               len(expected_dev_inode) == 2 and
+               all(type(x) is int and x >= 0
+                   for x in expected_dev_inode)),
+              "D1_REGISTRY_DEVICE_IDENTITY_INVALID")
         _need(type(grant_id) is str and GRANT_ID.fullmatch(grant_id)
               and type(permit_sha256) is str and
               HEX64.fullmatch(permit_sha256),
@@ -221,6 +281,10 @@ class OfflineGrantRegistry:
         except OSError as exc:
             raise ValueError("D1_REGISTRY_OPEN_DENIED") from exc
         try:
+            opened = os.fstat(dfd)
+            if (expected_dev_inode is not None and
+                    (opened.st_dev, opened.st_ino) != expected_dev_inode):
+                raise ValueError("D1_REGISTRY_OPEN_DIR_IDENTITY_CHANGED_STOP")
             try:
                 fd = os.open(filename, flags, 0o600, dir_fd=dfd)
             except FileExistsError as exc:

@@ -1,3 +1,12 @@
+# 2026-10-24 F0 D1 — PR #187 Mac APPROVED; PR #189 protected OS-account grant registry, independent review pending
+
+- PR #187 fixed SHA `23f41ea2f984cb652cc07bbf28d9366d18b61701` independent Mac verdict `APPROVE_OFFLINE_CODE — D1_MAC_PROTECTED_PREFLIGHT_SCOPE_ONLY`, **481/481 full, 120/120 D1, 8/8 new**; 173 F0 tracked files / 11 loaded modules checked, no new P0/P1. This review is ALREADY ARCHIVED at [PR187 #6383190096](https://github.com/lxxlx2/ChatGPT_mission_record/pull/187#issuecomment-6383190096), do not repost duplicates. Old SHA `9d352bb2...` REQUEST_CHANGES unchanged.
+- Draft sibling PR #188 adds unreleased concrete HTTPS source connected to SAME coordinator; separate Draft PR #189 (this child) hardens the original **fixed OS account one-use grant registry**: platform Darwin, passwd-account home, non-symlink/non-group-write owners/0700 root, no HOME/output redirect, O_EXCL+file and directory fsync, open fd inode identity check, 0600 consumed marker, no replay. Tests use disposable synthetic OS homes; live entrypoints still default DENY.
+- These two parallel source increments are **not** a finished real sender. Required future next checkpoint is a *single fixed SHA* incorporating approved sibling patches plus the protected Mac exact D2 approval/preconnect RESERVE, actual three-slot HTTPS with UTC/monotonic/real absolute time/budget, RAW-before-SETTLE and socket UNKNOWN; independently Codex-reviewed BEFORE asking the user to approve any exact real experiment. Do not restart old 30-call grant or run an unattended agent.
+- Current unchanged `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`, no real RPC/WS/production nonce/permit/merge/deploy/trade/background. See `f0/F0_D1_FIXED_MAC_REGISTRY_PRECONNECT_REVIEW.md`.
+
+---
+
 # 2026-10-24 — F0 D1 PR187 protected Mac preflight (new fixed-SHA code review PENDING)
 
 - Frozen parent PR186 independently Mac approved exact `08adde4ef8be33d846645d9bd50b479e19f7a3b0`: `APPROVE_OFFLINE_CODE — D1_CONCRETE_SINGLE_COORDINATOR_SCOPE_ONLY`, actual **473/473 full, 112/112 D1-focused**, 9/9 new, 170 F0 tracked bytes and 11 loaded modules independently reviewed; no P0/P1. User+Codex lightweight supervised F0 authority design PR185 already approved, no third-person PKI required.
