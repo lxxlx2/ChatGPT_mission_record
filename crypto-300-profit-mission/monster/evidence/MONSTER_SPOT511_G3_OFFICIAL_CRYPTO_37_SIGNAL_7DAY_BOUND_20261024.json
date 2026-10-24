@@ -6,7 +6,6 @@
   "replay_inner_report_sha256": "453ee2e740578121b0734d61e6eb357be7bb34859b90878eb314f7d3dc1690f5",
   "pre_event_crypto_manifest_file": "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_PRE_EVENT_OFFICIAL_POSITIVE_CRYPTO_26_ASSETS_20261024.json",
   "official_securities_manifest_file": "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_OFFICIAL_POSITIVE_BSTOCKS_20261024.json",
-  "source_sha_verified_Publisher_data_not_real_time_live": false,
   "original_core_setup_events": 46,
   "confirmed_crypto_type_from_pre_event_official_sources": {
     "signals": 37,
@@ -491,5 +490,7 @@
     "Monitoring-tag quiz conservative subtraction is a sensitivity scenario, not proof that flagged account could not trade.",
     "All original events preserved. There are repeated events for some symbols; raw G3 attention counts differ from coin-date-independent discovery outcome units.",
     "No changed threshold, strategy fitting, real profit claim, deploy or trading authorization."
-  ]
+  ],
+  "original_Publisher_1m_ZIP_and_CHECKSUM_source_already_verified_by_replay": true,
+  "historical_realtime_venue_tick_received_PIT_proven": false
 }
