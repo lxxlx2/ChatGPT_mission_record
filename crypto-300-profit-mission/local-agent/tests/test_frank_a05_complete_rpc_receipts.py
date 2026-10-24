@@ -75,6 +75,54 @@ def test_complete_large_original_rpc_beyond_connector_8k_is_archived_and_replaye
     assert reconstructed["wallet_nav_usd"] is None
 
 
+@pytest.mark.parametrize("failure", [
+    "transport", "invalid-json", "wrong-id", "low-slot", "wrong-program",
+])
+def test_first_program_failure_must_not_attempt_second_rpc(tmp_path, failure):
+    """Fail-closed source ordering: at most ONE read when SPL is unverified."""
+    calls = []
+    def reader(method, params, expected_id):
+        calls.append(expected_id)
+        assert method == "getTokenAccountsByOwner"
+        assert expected_id == 1, "Token-2022 must never be queried after SPL fails"
+        assert params[1]["programId"] == SPL_TOKEN_PROGRAM
+        if failure == "transport":
+            raise TimeoutError("synthetic provider timeout")
+        if failure == "invalid-json":
+            return b'{"jsonrpc":"2.0","id":1,"result":'
+        if failure == "wrong-id":
+            return _wire(2, 2000, [])
+        if failure == "low-slot":
+            return _wire(1, 9, [])
+        return _wire(1, 2000, [
+            entry(OWNER_A, MINT, ATA_A, TOKEN_2022_PROGRAM)
+        ])
+
+    result = collect_owner_full_receipts(
+        wallet=OWNER_A, evidence_root=tmp_path / failure,
+        read_raw=reader, min_context_slot=100,
+        observed_at_utc="2026-10-25T00:00:00+00:00",
+    )
+    manifest = result["manifest"]
+    assert calls == [1]
+    assert manifest["complete"] is False
+    assert result["snapshot"] is None
+    assert manifest["receipts"] == []
+    assert manifest["capture_sha256"] is None
+    assert [row["program_id"] for row in manifest["missing"]] == [
+        SPL_TOKEN_PROGRAM, TOKEN_2022_PROGRAM,
+    ]
+    assert manifest["missing"][0]["reason"] == "COMPLETE_OWNER_RPC_RESPONSE_UNAVAILABLE"
+    assert manifest["missing"][1]["reason"] == "NOT_QUERIED_PREVIOUS_PROGRAM_UNVERIFIED"
+    from pathlib import Path
+    bundle = Path(result["bundle"])
+    assert (bundle / "manifest.json").is_file()
+    assert not (bundle / "spl-token.json").exists()
+    assert not (bundle / "token-2022.json").exists()
+    with pytest.raises(ValueError, match="OWNER_SOURCE_NOT_FULLY_VERIFIED"):
+        replay_owner_full_receipts(bundle, expected_wallet=OWNER_A)
+
+
 def test_partial_truncated_program_never_yields_complete_or_importable_snapshot(tmp_path):
     spl = _wire(1, 1300, [
         entry(OWNER_A, MINT, ATA_A, SPL_TOKEN_PROGRAM)])
@@ -324,7 +372,7 @@ def test_real_https_transport_incomplete_or_downgraded_must_be_partial(
     receipt = collect_owner_full_receipts(
         wallet=OWNER_A, evidence_root=tmp_path / mode,
         read_raw=_wire_rpc(url))
-    assert state["https_requests"] == [("POST", 1), ("POST", 2)]
+    assert state["https_requests"] == [("POST", 1)]
     assert state["http_requests"] == []
     assert receipt["manifest"]["complete"] is False
     assert receipt["manifest"]["capture_sha256"] is None
