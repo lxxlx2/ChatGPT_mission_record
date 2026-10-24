@@ -1,0 +1,430 @@
+{
+  "schema": "MONSTER_SPOT511_OFFICIAL_PUBLISHER_42SETUP_MATCHED_BTC_60M_V1",
+  "research_date_utc": "2026-10-24",
+  "purpose": "Independent matched-BTC time-control of prior official-publisher-minute SETUP posthoc price-path diagnostic, not a new selection model",
+  "input_event_source": {
+    "original_replay_run": 40028725264,
+    "independent_46_watch_42_setup_git_report": "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_46WATCH_42SETUP_ACTUAL_PUBLISHER_INDEPENDENT_D1_20261024.json",
+    "full_local_42_signal_price_path_report_sha256": "64dd60fca39f34721a0209819b7469b568310b50550fe7e0e7a41386a8073a17",
+    "full_local_new_matched_btc_event_report_sha256": "0f720f35249980c162ff0dbb9c380dd497ce9f1452e830f978398edded606171",
+    "full_local_new_matched_report_bytes": 59879
+  },
+  "original_publisher_btc_archive": {
+    "source_runs": [
+      40027484781,
+      40007027318
+    ],
+    "day_btc_sha256": {
+      "2026-10-18": "7b4d9784e2034cb7a05860d2b67ceb74368eb5d71d8f2e16a04e00e2045cb784",
+      "2026-10-19": "b2fdee20be764f88cd640d933a492bcdfe833452fff1d6fb87b9ede081e8061b",
+      "2026-10-20": "d580973ba32d82a94f3669a3472b7a81a4ac598777df8bab88e9ff26d7924c75",
+      "2026-10-21": "1627cc21691c046cf16fc63011e6d929fcead8dd5509f3fa4e81f630bd9ad5ef",
+      "2026-10-22": "579980a81a1f58e14dfa66463232b7078aa561077d44e943cd3070ebee2ba900"
+    },
+    "symbol": "BTCUSDT",
+    "each_zip_verified_against_original_adjacent_publisher_checksum": true,
+    "each_full_1440_microsecond_time_grid_verified": true,
+    "total_minute_bars_verified": 7200
+  },
+  "method": "Each reconstructed D1 SETUP T: entry proxy is its token and BTC official 1m OPEN at T+60s; fixed 60m exit proxy is corresponding 1m CLOSE at T+3600s, i.e. 60 full post-signal 1m bars. Relative difference (bps) = 10000*(token_exit/token_entry-1) - 10000*(btc_exit/btc_entry-1). Median of paired differences, not difference of two standalone medians. All 42 rows preserved; summary excludes only known bStocks SHAZBUSDT, IBMBUSDT. Full source report retains unrounded calculations and 5/15/30/60m.",
+  "unit": "bps; per-event 60m numbers rounded to 0.01bps for Git concise ledger; use unrounded full report for aggregates",
+  "reconstructed_by_event_core_exact_id_status": "NOT_YET_VERIFIED_FROM_ORIGINAL_SQLITE",
+  "tokenized_security_positive_exclusions": [
+    "SHAZBUSDT",
+    "IBMBUSDT"
+  ],
+  "summary": {
+    "all42": {
+      "n": 42,
+      "median_token_60m_bps": -182.61855,
+      "median_matched_btc_60m_bps": -9.86463,
+      "median_paired_delta_60m_bps": -150.99429,
+      "underperformed_btc": 27
+    },
+    "remaining40_after_two_positive_bstock_exclusions": {
+      "n": 40,
+      "unique_symbols": 30,
+      "unique_symbol_day": 38,
+      "median_token_60m_bps": -214.76038,
+      "median_btc_60m_bps": -8.04041,
+      "median_paired_delta_60m_bps": -172.71593,
+      "underperformed_btc": 27,
+      "outperformed_btc": 13,
+      "median_paired_delta_5m_bps": -39.80464,
+      "median_paired_delta_15m_bps": -98.67049,
+      "median_paired_delta_30m_bps": -107.25351
+    },
+    "one_first_setup_per_symbol30": {
+      "n": 30,
+      "median_token_60m_bps": -231.78684,
+      "median_matched_btc_60m_bps": -7.13123,
+      "median_paired_delta_60m_bps": -203.06359,
+      "underperformed_btc": 23,
+      "outperformed_btc": 7
+    },
+    "one_first_setup_per_symbol_day38": {
+      "n": 38,
+      "median_paired_delta_60m_bps": -172.71593,
+      "underperformed_btc": 26,
+      "outperformed_btc": 12
+    }
+  },
+  "rows_60m_rounded": [
+    {
+      "queue_id": 1,
+      "symbol": "ERAUSDT",
+      "date": "2026-10-18",
+      "coin_bps": 892.61,
+      "btc_bps": -11.15,
+      "delta_bps": 903.76
+    },
+    {
+      "queue_id": 2,
+      "symbol": "AMPUSDT",
+      "date": "2026-10-18",
+      "coin_bps": 198.68,
+      "btc_bps": -8.58,
+      "delta_bps": 207.25
+    },
+    {
+      "queue_id": 3,
+      "symbol": "ACMUSDT",
+      "date": "2026-10-18",
+      "coin_bps": -596.49,
+      "btc_bps": -6.76,
+      "delta_bps": -589.73
+    },
+    {
+      "queue_id": 4,
+      "symbol": "QKCUSDT",
+      "date": "2026-10-18",
+      "coin_bps": -51.81,
+      "btc_bps": -47.53,
+      "delta_bps": -4.28
+    },
+    {
+      "queue_id": 5,
+      "symbol": "BARUSDT",
+      "date": "2026-10-18",
+      "coin_bps": -284.7,
+      "btc_bps": -28.69,
+      "delta_bps": -256.01
+    },
+    {
+      "queue_id": 6,
+      "symbol": "QUICKUSDT",
+      "date": "2026-10-18",
+      "coin_bps": -42.43,
+      "btc_bps": -1.57,
+      "delta_bps": -40.86
+    },
+    {
+      "queue_id": 7,
+      "symbol": "EPICUSDT",
+      "date": "2026-10-18",
+      "coin_bps": -229.36,
+      "btc_bps": -22.96,
+      "delta_bps": -206.4
+    },
+    {
+      "queue_id": 8,
+      "symbol": "MANTRAUSDT",
+      "date": "2026-10-18",
+      "coin_bps": -354.61,
+      "btc_bps": 79.55,
+      "delta_bps": -434.16
+    },
+    {
+      "queue_id": 9,
+      "symbol": "AMPUSDT",
+      "date": "2026-10-19",
+      "coin_bps": -739.18,
+      "btc_bps": 13,
+      "delta_bps": -752.18
+    },
+    {
+      "queue_id": 10,
+      "symbol": "OSMOUSDT",
+      "date": "2026-10-19",
+      "coin_bps": 410.96,
+      "btc_bps": 13.18,
+      "delta_bps": 397.78
+    },
+    {
+      "queue_id": 11,
+      "symbol": "NILUSDT",
+      "date": "2026-10-19",
+      "coin_bps": -2.28,
+      "btc_bps": 14.8,
+      "delta_bps": -17.08
+    },
+    {
+      "queue_id": 13,
+      "symbol": "SHAZBUSDT",
+      "date": "2026-10-19",
+      "coin_bps": 105.34,
+      "btc_bps": -43.8,
+      "delta_bps": 149.14
+    },
+    {
+      "queue_id": 14,
+      "symbol": "AVAUSDT",
+      "date": "2026-10-19",
+      "coin_bps": 181.12,
+      "btc_bps": -23.86,
+      "delta_bps": 204.99
+    },
+    {
+      "queue_id": 15,
+      "symbol": "GTCUSDT",
+      "date": "2026-10-19",
+      "coin_bps": 271.14,
+      "btc_bps": 6.64,
+      "delta_bps": 264.5
+    },
+    {
+      "queue_id": 16,
+      "symbol": "GNSUSDT",
+      "date": "2026-10-19",
+      "coin_bps": -672.65,
+      "btc_bps": 21.76,
+      "delta_bps": -694.41
+    },
+    {
+      "queue_id": 17,
+      "symbol": "AUSDT",
+      "date": "2026-10-20",
+      "coin_bps": -156.9,
+      "btc_bps": -3.08,
+      "delta_bps": -153.82
+    },
+    {
+      "queue_id": 18,
+      "symbol": "ALTUSDT",
+      "date": "2026-10-20",
+      "coin_bps": -502.85,
+      "btc_bps": 10.71,
+      "delta_bps": -513.55
+    },
+    {
+      "queue_id": 19,
+      "symbol": "GNSUSDT",
+      "date": "2026-10-20",
+      "coin_bps": 938.17,
+      "btc_bps": -12.25,
+      "delta_bps": 950.42
+    },
+    {
+      "queue_id": 20,
+      "symbol": "ERAUSDT",
+      "date": "2026-10-20",
+      "coin_bps": 325.95,
+      "btc_bps": 9.3,
+      "delta_bps": 316.65
+    },
+    {
+      "queue_id": 21,
+      "symbol": "IDUSDT",
+      "date": "2026-10-20",
+      "coin_bps": -701.22,
+      "btc_bps": -7.51,
+      "delta_bps": -693.71
+    },
+    {
+      "queue_id": 22,
+      "symbol": "COMPUSDT",
+      "date": "2026-10-20",
+      "coin_bps": -990.17,
+      "btc_bps": -16.4,
+      "delta_bps": -973.77
+    },
+    {
+      "queue_id": 24,
+      "symbol": "IOSTUSDT",
+      "date": "2026-10-20",
+      "coin_bps": -468.05,
+      "btc_bps": 19.28,
+      "delta_bps": -487.33
+    },
+    {
+      "queue_id": 25,
+      "symbol": "SCUSDT",
+      "date": "2026-10-21",
+      "coin_bps": -221.19,
+      "btc_bps": -29.58,
+      "delta_bps": -191.61
+    },
+    {
+      "queue_id": 26,
+      "symbol": "PARTIUSDT",
+      "date": "2026-10-21",
+      "coin_bps": -86.96,
+      "btc_bps": -2.83,
+      "delta_bps": -84.13
+    },
+    {
+      "queue_id": 27,
+      "symbol": "IOSTUSDT",
+      "date": "2026-10-21",
+      "coin_bps": -654.12,
+      "btc_bps": 3.62,
+      "delta_bps": -657.74
+    },
+    {
+      "queue_id": 28,
+      "symbol": "IOSTUSDT",
+      "date": "2026-10-21",
+      "coin_bps": 340.28,
+      "btc_bps": -11.74,
+      "delta_bps": 352.02
+    },
+    {
+      "queue_id": 29,
+      "symbol": "BMTUSDT",
+      "date": "2026-10-21",
+      "coin_bps": 25.93,
+      "btc_bps": -0.92,
+      "delta_bps": 26.85
+    },
+    {
+      "queue_id": 30,
+      "symbol": "REQUSDT",
+      "date": "2026-10-21",
+      "coin_bps": -548.45,
+      "btc_bps": 0.45,
+      "delta_bps": -548.9
+    },
+    {
+      "queue_id": 31,
+      "symbol": "ATUSDT",
+      "date": "2026-10-21",
+      "coin_bps": 515.17,
+      "btc_bps": -5.51,
+      "delta_bps": 520.68
+    },
+    {
+      "queue_id": 32,
+      "symbol": "VTHOUSDT",
+      "date": "2026-10-21",
+      "coin_bps": 29.03,
+      "btc_bps": 66.79,
+      "delta_bps": -37.77
+    },
+    {
+      "queue_id": 33,
+      "symbol": "ALTUSDT",
+      "date": "2026-10-21",
+      "coin_bps": 3185.38,
+      "btc_bps": -22.68,
+      "delta_bps": 3208.06
+    },
+    {
+      "queue_id": 35,
+      "symbol": "DGBUSDT",
+      "date": "2026-10-22",
+      "coin_bps": -1097.26,
+      "btc_bps": -48.53,
+      "delta_bps": -1048.72
+    },
+    {
+      "queue_id": 36,
+      "symbol": "LUMIAUSDT",
+      "date": "2026-10-22",
+      "coin_bps": -234.22,
+      "btc_bps": -34.48,
+      "delta_bps": -199.73
+    },
+    {
+      "queue_id": 37,
+      "symbol": "ATMUSDT",
+      "date": "2026-10-22",
+      "coin_bps": -274.51,
+      "btc_bps": -27.66,
+      "delta_bps": -246.85
+    },
+    {
+      "queue_id": 38,
+      "symbol": "BMTUSDT",
+      "date": "2026-10-22",
+      "coin_bps": -208.33,
+      "btc_bps": -60.17,
+      "delta_bps": -148.16
+    },
+    {
+      "queue_id": 39,
+      "symbol": "MASKUSDT",
+      "date": "2026-10-22",
+      "coin_bps": -775.51,
+      "btc_bps": -18.16,
+      "delta_bps": -757.35
+    },
+    {
+      "queue_id": 40,
+      "symbol": "AIUSDT",
+      "date": "2026-10-22",
+      "coin_bps": -566.04,
+      "btc_bps": -18.77,
+      "delta_bps": -547.27
+    },
+    {
+      "queue_id": 41,
+      "symbol": "MITOUSDT",
+      "date": "2026-10-22",
+      "coin_bps": -469.92,
+      "btc_bps": -30.98,
+      "delta_bps": -438.94
+    },
+    {
+      "queue_id": 42,
+      "symbol": "AVAUSDT",
+      "date": "2026-10-22",
+      "coin_bps": 68.72,
+      "btc_bps": -25.93,
+      "delta_bps": 94.65
+    },
+    {
+      "queue_id": 43,
+      "symbol": "IBMBUSDT",
+      "date": "2026-10-22",
+      "coin_bps": 75.79,
+      "btc_bps": -30.89,
+      "delta_bps": 106.69
+    },
+    {
+      "queue_id": 44,
+      "symbol": "OSMOUSDT",
+      "date": "2026-10-22",
+      "coin_bps": 880.63,
+      "btc_bps": -31.13,
+      "delta_bps": 911.76
+    },
+    {
+      "queue_id": 45,
+      "symbol": "BMTUSDT",
+      "date": "2026-10-22",
+      "coin_bps": -821.36,
+      "btc_bps": 39.56,
+      "delta_bps": -860.92
+    }
+  ],
+  "limitations": [
+    "Pre-event historical crypto-only asset identity not certified for the remaining 40 signals, despite excluding two positively identified bStocks.",
+    "BTC is a simple contemporaneous market-control, NOT beta/volatility/capitalization/execution/venue-matched causal counterfactual; underperformance does not imply predictive alpha.",
+    "The publisher ZIPs were obtained after the original signal time, so this cannot prove real-time network observations, executable market data or subsequent decision availability.",
+    "Historic candidate and BTC 1m OPEN/CLOSE reference prices are retrospective path proxies, not executable bid/ask or actual account fee-adjusted profit. Notional, spread, liquidity/size, slippage, taxes and future exit fills UNKNOWN.",
+    "Only five UTC calendar days from the partial 3577 symbol-day source archive; seven-day main window 2026-10-17T22:06Z to Oct24T22:06Z remains incomplete. Multiple repeated symbols mean events are correlated.",
+    "Do not tune existing D0/D1/Fair8 on this exposed cohort. Preserve Stage77 G0-G6 frozen acceptance criteria and independent other-AI review requirements."
+  ],
+  "stage_gates": {
+    "G0": "PARTIAL",
+    "G1": "NOT_SCORABLE",
+    "G2": "NOT_PASSED",
+    "G3": "NOT_PASSED",
+    "G4": "UNKNOWN",
+    "G6": "NO_GO",
+    "NO_DEPLOY": true,
+    "NO_AUTOMATIONS": true,
+    "NO_GMAIL": true,
+    "NO_TRADES": true
+  }
+}
