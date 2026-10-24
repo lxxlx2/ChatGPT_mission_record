@@ -272,3 +272,16 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 - [GitHub Actions #40090852080](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40090852080) `SUCCESS`，云端测试七组 `13+5+6+11+19+12+12 = 78/78 PASS`，新增12例使用真实46个event ID验算，并对伪造来源URL、出版日倒填、证券重叠、事件数和回放SHA篡改 fail closed。这是工程可复现，不是G1/G2/G3/G4策略通过。
 
 **接下来的核心问题只有两个有价值的分叉**：（A）最终UTC 10/24整日Publisher原ZIP真正发布后补511个SHA并运行全4599/4599、3360/3360原规则回放；（B）检查这37条的当时上架/监控测验及合规交易资格，确定G3是否确实因关注负载超过上限而`REJECTED`。若正式不合格，则把结果作为D1重新设计输入，单独预注册新的模型和未知验证窗口，**绝不可用这一暴露样本调参再声称样本外成功**。后续再处理D2当时盘口和买卖可成交性，用户没有给出交易金额，统一`UNKNOWN`。BSC来源止损与Frank不动。**G0 PARTIAL / G1 NOT_SCORABLE / G2/G3 NOT_PASSED / G4 UNKNOWN / G6 NO_GO；NO_MERGE/NO_DEPLOY/NO_MAC/NO_SCHEDULE/NO_GMAIL/NO_TRADES**。
+
+## 24. 2026-10-24：G3剩余七例身份完成，所有原始46 SETUP分类闭环；历史可交易资格仍阻断
+
+本轮只推进**实际产品G3有效身份母体**，没有追逐BSC支路、篡改原始模型或在已暴露样本调参。固定的原4,088份Publisher回放`46`条原Core `SETUP_ACTIVE`及 event ID/time 严格不变，正面检索到此前7条身份未决的Binance事前公告：[Vaulta A（原EOS）](https://www.binance.com/en/support/announcement/detail/f5a19fab8c5d4078a1235a17f542dfc5)（2025-05-28）、[APRO AT](https://www.binance.com/en/support/announcement/detail/2f67d968fb744180b09a3ee01fc75feb)（2025-11-27）、[MANTRA（原OM）](https://www.binance.com/en-AE/support/announcement/detail/a65e70f8431a40e8b5ce809bbb61ed59)（2026-03-04）、[Request REQ](https://www.binance.com/en/research/projects/request-network)（2020-05-21），另有[Binance Chiliz CAP20公告](https://www.binance.com/en/support/announcement/detail/74dabe8f1e844dcb9136d1a987472ce6)（2026-05-08）明确ACM、ATM、BAR均为**足球粉丝效用代币**，不是此前正面匹配的bStocks代币化股票。
+
+[七项新增历史身份来源](../evidence/MONSTER_SPOT511_PRE_EVENT_REMAINING_7_TYPES_20261024.json)与之前26币正面列表、79 bStocks证据合并，形成[真实46个原Core SETUP按event_id及UTC日期逐一分类台账](../evidence/MONSTER_SPOT511_4088_G3_ALL46_PRE_EVENT_ASSET_CLASSIFIED_20261024.json)，严格守恒**41个普通区块链/协议代币信号 + 3个Chiliz粉丝代币信号 + 2个bStocks证券信号 = 46，资产类型UNKNOWN 0**。粉丝代币真实属于链上代币，但是**冻结Stage77对体育粉丝代币是否自动在首版Monster crypto-only范围内没有明确列举**，应单列`FAN_TOKEN_SCOPE_REQUIRES_DECISION`，不能基于事后绩效擅自排除或自动认定适格；无论怎样原D0/D1原日志全部保留。
+
+- 冻结G3七日总关注量目标`<=35`。按身份类型普通crypto已观测41条`>35`，如果均有历史Spot/账户交易资格，10/24 UTC最后一天零新增也无法消除超量；计入Chiliz则44条，潜在风险更高。但**币种类型不等于真实历史下单资格**，不能把本结论称为正式G3 REJECTED。
+- 已有6条普通crypto SETUP（AVA×2、GNS×2、QKC×1、SOPH×1）有事前Binance`Monitoring Tag`及潜在账户测验限制。不应将标记本身当成不可交易证明；在**把这六条一概暂缓资格确认**的极端敏感性情景下，普通crypto为`41-6=35`，恰触G3七日上限，若粉丝token均纳入则`44-6=38`仍超标。还要进一步验证其他交易对的事件时点动态上市状态，不能靠T0一次性TRADING证明下单能力。该问题决定策略下一阶段是否必须重做D1，不应为了赶下一次回放增加随意规则。
+- 本轮新只读`local-agent/mission_agent/early/spot_g3_final7_scope.py`调用既有固定37/2/7 G3审核，把新7项做事前公告URL/发布时间/符号精确交叉核对，新增12个负向回归测试；[GitHub Actions #40091778304](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40091778304)云端实际`SUCCESS`，8组`13+5+6+11+19+12+12+12 = 90/90 PASS`。本次不触发额外Publisher HTTP任务和任何Mac操作。
+- **未结项严格分离**：①来源4599/4599仍差2026-10-24 UTC整日511份，必须等整日结束、官方ZIP与CHECKSUM真正发布后再计入；②原Ticker历史PIT`available_at`、动态交易对合法状态/账户资格未知；③D2没有当时盘口和真实双侧可成交成本、订单金额，净利润为UNKNOWN；④独立另一AI模型审核还未得到真实审核结论。
+
+本节不是新D1候选、不是样本外回测，不变更Stage77与G6。**G0 PARTIAL / G1 NOT_SCORABLE / G2-G3 NOT_PASSED / G4 UNKNOWN / G6 NO_GO / NO_MERGE / NO_DEPLOY / NO_MAC / NO_SCHEDULE / NO_GMAIL / NO_TRADES**。
