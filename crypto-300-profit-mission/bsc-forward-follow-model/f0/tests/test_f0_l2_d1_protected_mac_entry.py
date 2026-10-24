@@ -56,19 +56,19 @@ class MacEntryNoNetworkTests(unittest.TestCase):
                         with patch("f0_l2_d1_protected_mac_entry."
                                    "review_loaded_runtime_offline",
                                    return_value=self.mock_runtime) as provenance:
-                        with patch("http.client.HTTPSConnection",
-                                   side_effect=AssertionError(
-                                       "REAL_HTTPS_NOT_ALLOWED")) as network:
-                            result=inspect_supervised_mac_scope_offline(
-                                overrides.get("checkout",f.repo),
-                                overrides.get("sha",f.sha),
-                                overrides.get("permit",f.raw),
-                                evidence_root=overrides.get("evidence",f.out))
-                            network.assert_not_called()
-                            provenance.assert_called_once_with(
-                                overrides.get("checkout",f.repo),
-                                overrides.get("sha",f.sha))
-                            return result
+                            with patch("http.client.HTTPSConnection",
+                                       side_effect=AssertionError(
+                                           "REAL_HTTPS_NOT_ALLOWED")) as network:
+                                result=inspect_supervised_mac_scope_offline(
+                                    overrides.get("checkout",f.repo),
+                                    overrides.get("sha",f.sha),
+                                    overrides.get("permit",f.raw),
+                                    evidence_root=overrides.get("evidence",f.out))
+                                network.assert_not_called()
+                                provenance.assert_called_once_with(
+                                    overrides.get("checkout",f.repo),
+                                    overrides.get("sha",f.sha))
+                                return result
 
     def test_actual_mac_entry_scope_has_no_grant_or_send_and_fixed_root(self):
         result=self.inspect()
