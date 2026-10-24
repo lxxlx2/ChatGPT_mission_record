@@ -28,3 +28,9 @@ Independent Mac reviewer must pin this child HEAD, inspect all diffs/source blob
 **Approval target:** `APPROVE_OFFLINE_CODE — D1_MAC_PREVIEW_ENTRY_COMPOSED_TEST_ONLY` at an independently verified exact new SHA. Otherwise `REQUEST_CHANGES`. Parent approval does not carry to the child automatically.
 
 `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+## Actual CI and PR193 correction
+
+The initial PR193 code SHA `c4c7cb865c5deaebe2245d45013bc0928720d495` was **not passing**. [Run 40128707512](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40128707512) ran 502 tests, **1 FAIL** in `test_real_registry_and_mac_evidence_cannot_be_test_outputs`. Root cause: the hard-stop module alone only recognized its own fixed registry path; the Mac preflight could independently inspect a different (e.g. mocked or canonicalized) production root that still happened to be under the temp filesystem. The test rightly found it could be used as a disposable mock grant registry.
+
+Source fix `92340347990151487d2626a41cdd2dec4cf1bc97` explicitly excludes the fixed registry **returned by the exact Mac preflight** from both test registry and test evidence paths, including ancestor/descendant aliases, before test marker consumption. [CI 40128871097](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40128871097) completed SUCCESS, 502/502. A regression assertion was added at `6e5180227b86ecbf2241429db7343d38405e1333` for both placements; [CI 40128899044](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40128899044) completed SUCCESS and raw job log reports `Ran 502 tests in 71.730s / OK`; all seven new entry-integration tests pass. The one original failure remains recorded. **Neither Linux CI nor doc changes constitute independent Mac approval**; latest exact PR HEAD must be retested and reviewed on Mac. Runtime sources remain deliberately mock-only, production gate NO_GO.
