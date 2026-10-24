@@ -39,7 +39,8 @@ class RealSenderContractTests(unittest.TestCase):
             key: self.permit[key] for key in (
                 "approved_commit_sha", "grant_id", "window_start_utc",
                 "window_end_utc", "endpoint", "chain_id", "methods",
-                "read_only", "free_only", "no_retries", "no_ws", "background",
+                "read_only", "free_only", "no_retries", "no_ws",
+                "no_proxy", "no_redirects", "background",
                 "max_total_attempts", "max_block_reads",
                 "max_head_refreshes", "max_inflight", "min_start_gap_ms",
                 "head_ttl_ms", "request_timeout_ms", "max_response_bytes",
