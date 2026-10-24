@@ -1043,7 +1043,7 @@
       "family_key": "cloud:railway:secrets",
       "material_version": "official-2026-10-22-preliminary-1.85pct",
       "aliases": [
-        "Railway 10月22日"
+        "Railway官方10月22日"
       ],
       "decision": "include",
       "source_url": "https://blog.railway.com/p/preliminary-report-october-security-incident",
