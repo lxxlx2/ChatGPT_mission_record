@@ -24,3 +24,7 @@ A private `child_watchdog_termination.json` diagnostic is O_EXCL-created and fsy
 **Next mainline:** integrate this reviewed lifetime primitive into an independently reviewed **real protected Mac entry** that binds exact D2 scope and separate D3 user intent, immutable code/runtime provenance, fixed OS-home-based one-use marker, per-RID fsync-before-real-TLS-connect, true single 3-slot coordinator, full RAW-before-SETTLE, no retries and a whole-session hard limit. No real network without separate explicit user authorization.
 
 **Gate:** `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+## Actual CI for first code SHA
+
+New source SHA `22569efb399ca2eff17953a08c00236bf43e3f14`: [GitHub Actions run 40104487410](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40104487410), job `120903229018`, completed SUCCESS. Decoded log ends with `Ran 495 tests in 66.823s` / `OK`. The actual nested-parent SIGKILL test and direct-CLI guard-denial test were executed. This is Linux CI, **not Mac evidence**. The final child-branch SHA (after documentation-only status updates) requires its own CI readback. No independent Mac approval yet.
