@@ -57,12 +57,27 @@ class D1GrantGateTests(unittest.TestCase):
     def test_fixed_registry_factory_ignores_operator_output_directory(self):
         from unittest.mock import patch
         from f0_l2_d1_grant import FixedLocalGrantRegistry
-        context,root=self.private()
+        context,output_root=self.private()
         with context:
-            with patch("f0_l2_d1_grant.PRIVATE_FIXED_REGISTRY", root):
+            # The fixed production root now binds to OS account home. Never
+            # patch only PRIVATE_FIXED_REGISTRY to an arbitrary output root.
+            fake_home=Path(context.name).resolve()/"simulated_mac_home"
+            root=(fake_home/"Library"/"Application Support"/
+                  "MissionEvidence"/"f0-grant-registry")
+            root.mkdir(mode=0o700,parents=True)
+            for folder in (fake_home, fake_home/"Library",
+                           fake_home/"Library"/"Application Support",
+                           root.parent):
+                folder.chmod(0o700)
+            with patch("f0_l2_d1_grant.platform.system",
+                       return_value="Darwin"), patch(
+                    "f0_l2_d1_grant._mac_os_account_home",
+                    return_value=fake_home), patch(
+                    "f0_l2_d1_grant.PRIVATE_FIXED_REGISTRY",root):
                 FixedLocalGrantRegistry().consume(GRANT,sha(sample()))
                 with self.assertRaisesRegex(ValueError,"ALREADY_CONSUMED"):
                     FixedLocalGrantRegistry().consume(GRANT,sha(sample()))
+                self.assertFalse(list(output_root.iterdir()))
 
     def test_two_processes_compete_and_only_one_consumes(self):
         context,root=self.private()
