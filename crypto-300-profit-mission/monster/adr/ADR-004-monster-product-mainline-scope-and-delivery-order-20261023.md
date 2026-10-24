@@ -296,3 +296,17 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 - 代码直接修复`local-agent/mission_agent/early/spot_g3_final7_scope.py`：G3显式显示已知普通crypto注意力下界41及7日上限35，另用`G4_monitoring_tag_account_permission_sensitivity`单列6条对账号交易资格影响，杜绝原`core_if_all_monitor_tag_deferred`模糊字段；不改变原46条事件，不更改D0/D1/Fair8实际状态机。原分类报告 [46条事件的机器证据](../evidence/MONSTER_SPOT511_4088_G3_ALL46_PRE_EVENT_ASSET_CLASSIFIED_20261024.json)补写明确的`gate_separation_correction_20261024`，保留原记录与解释而非篡改事件历史。
 - [GitHub Actions #40092372863](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40092372863)已**实际完成SUCCESS**，8组`13+5+6+11+19+12+12+14=92/92 PASS`。新增两个回归针对「不能把6条从G3扣掉」和「完全排除3粉丝代币仍超35」，并保持所有历史原始事件ID/时间一致。
 - 生产状态`G0 PARTIAL; G1 NOT_SCORABLE; G2 NOT_PASSED; G3 NOT_PASSED (historical attention overload observed, final window source/PIT pending); G4 UNKNOWN; G6 NO_GO`。已曝光样本的D1负载超限应当影响**下一段未看过的样本上预注册的新D1候选**研究优先级，不能在本轮样本即场调参后宣称OOS通过。最后10/24 UTC完整日511份仍须等待真正闭日和Publisher可取再补；其他USD-M、BSC、Frank/邮件/Mac生产不动。**NO_MERGE / NO_DEPLOY / NO_SCHEDULE / NO_GMAIL / NO_TRADES**。
+
+## 26. 2026-10-24：G3历史关注负载已超标后，预注册一个新D1候选并实现独立纯研究比较器
+
+**唯一主线原因**：既有4,088份官方Publisher Spot来源和同一原Core 3,360轮中的2,919轮完整输入，取得53 WATCH、46原D1 SETUP（普通加密41、足球粉丝3、证券2）。已有41条普通crypto D1关注事件本身超过Stage77七日关注上限35，且事后配对BTC的1小时路径反映短时弱势；此前针对G3误扣G4 Monitoring Tag答题的口径已修复。本节不重复证券分类、不篡改原事件、不宣称原模型已经通过。
+
+**先冻结、后实现，顺序可追溯**：
+- **预注册ADR-005**：[BTC相对强弱+最新5m确认的唯一候选](ADR-005-spot-d1-btc-relative-confirmation-preregister-20261024.md)，Git `9375f1e107f64c60211f9b19daabf9494304dd91`，在未取得未来11月/12月窗口数据前提交。保持原D0、原D1/FIFO8/Fair8为baseline，添加独立研究条件：原6根5m D1必须先通过、币最近3根已闭合5m的回报（末/第3根收盘）>=同期BTC回报、末5m收盘不低于前5m。不设G3每天配额、不延长原15min期限、源缺失不标负例、BTC不作目标。
+- **三段预先锁定的未来UTC七日窗口**：2026-11-02..09、11-16..23、12-01..08。每次必须冻结各自T0、独立完整普通负样本、前1日上下文、后7日未来发现标签与来源失败样本，不能事后更改窗口换有利结果。日期规划不能保证G1>=20独立2×事件，样本不足`UNDERPOWERED`。
+- **真实纯函数实现**：`local-agent/scripts/monster_v4_d1_rbtc15_last5_research.py`，Git `f3ee7e74126b0a34370ad90db12153eabe8cd2bb`，直接调用原未改的`monster_v4_shadow.evaluate_closed_5m`，加密资产和BTC必须各有六根**完全闭合、连续、同一时钟**5m；所有未来/过时/缺档`SOURCE_CENSORED`，不偷拿部分形成K线或默认为BTC零回报。当前是**独立比较器**，没有接入原真实SQLite/完整8槽重试引擎，不改原原Core blob `bc958b3d90a8a52afa51515cb53f7e5fafaffaaa`，不能声称新策略历史胜率或完整流程已实现。
+- **实际回归测试**：新增`local-agent/tests/test_monster_v4_d1_rbtc15_last5_research.py` 18项；[GitHub Actions #40093380416](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40093380416)，固定源码+新测试+工作流 SHA `06aa72fceeb63c73375b556e7f8d44509452207a`；云端9组`13+5+6+11+19+12+12+14+18=110/110 PASS`。是**只用合成5m数据的规则测试**；还未拿原4,088份币/BTC真实源进行新候选全局一致回放，也没跑未来窗口及真实D2盘口。
+- **独立外审包按用户要求同步**：[可直接交给Claude网页的审核提示词](../reviews/MONSTER_ADR005_D1_RBTC15_LAST5_INDEPENDENT_AI_REVIEW_REQUEST_20261024.md) 锁定`06aa72fceeb63c73375b556e7f8d44509452207a`及完整源路径、Stage77 G0–G6、已曝数据、真实CI、因果/统计和Mac/Frank安全问题，要求`APPROVE/REQUEST_CHANGES/BLOCKED`、P0–P2、可复现行号。**尚未有外部其他AI实际review结果，G5=NOT_DONE**；审核请求不能替代Review。
+- **后续优先顺序**：先按原模型及原Stage166完成UTC10月24最后511份Publisher整日ZIP/CHECKSUM真实准入、4599/4599和3360/3360原Core回放；随后在独立不改变原输出的研究旁路集成新比较器，并用原已曝光的10月数据做可证伪的回归（不得称样本外），再用预注册的未来三段数据检验D0召回、D1 G2保留率、G3 <=5/日/峰值<=12、真实D2资格和净经济性。任何“降噪以损失早期2×保留率为代价”均按Stage77 G2失败弃用；不能凭18项规则测试说改善已被证实。
+
+权限不变：`G0 PARTIAL / G1 NOT_SCORABLE / G2-G3 NOT_PASSED / G4 UNKNOWN / G5 NOT_DONE / G6 NO_GO`；`NO_MERGE / NO_DEPLOY / NO_MAC / NO_SCHEDULE / NO_GMAIL / NO_TRADES`，不触碰Frank与BSC。
