@@ -347,3 +347,19 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 **独立审核包已经入库**：[新固定SHA `3d79bea` 的REQUEST_CHANGES/P1修复与Codex复审任务](../reviews/MONSTER_ADR005_EPISODE_P1_CENSOR_REPAIR_INDEPENDENT_REREVIEW_20261024.md)。下一步应让另一AI对`3d79beaa30ef859fd914823837d50df99f501e02`在隔离detached worktree重点复查两条deadline终结路径及重启后不污染负例；旧SHA审核REQUEST_CHANGES不变。并行主线仍须从**真实原Core SQLite 53条WATCH读取并鉴真**后，再把隔离episode用来源完整的现有4,088份Publisher数据和BTC同时间线跑一次研究回放；当前新episode仍尚未与原511真实队列同步，不允许提前汇报新G2/G3改善。官方UTC10/24来源最后511份日档案必须整日结束并实际Publisher ZIP/CHECKSUM验证后才能进入完整4599/4599。
 
 **门禁：** G0 PARTIAL / G1 NOT_SCORABLE / G2新候选UNKNOWN / G3新候选UNKNOWN / G4 UNKNOWN / G5新队列REQUEST_CHANGES修复后等待独立复审 / G6 NO_GO；NO_MERGE / NO_DEPLOY / NO_MAC / NO_SCHEDULE / NO_GMAIL / NO_TRADES，Frank/BSC未动。
+
+## 30. 2026-10-25：新episode P1独立复审已APPROVE，真实原Core 53 WATCH来源固定、导入前置校验177项通过
+
+**独立审查结果范围**：用户转交的Codex主代理对修复源码固定SHA `3d79beaa30ef859fd914823837d50df99f501e02` 进行了用户Mac macOS 27.0.1 arm64 / Python 3.14.7 detached只读独立复审，结论`APPROVE`，**只关闭P1“历史source censored+截止点完整负结果被误判NO_SETUP”**。本机实测18个episode测试全过，另外四条独立SQLite分支（缺档→deadline负、无缺档→deadline负、缺档→deadline正、缺档→deadline后）均与重新打开的持久结果一致。旧版本`da4862...`的`REQUEST_CHANGES`永久保留。详细[审核回执与限定范围](../reviews/MONSTER_ADR005_EPISODE_P1_CENSOR_REPAIR_INDEPENDENT_REREVIEW_20261024.md)，审查底层模型型号未核实，不能泛化为G5整体通过。
+
+**本轮新主线成果不是继续增加模型过滤，而是关闭真实WATCH来源审计入口的一环**：从已经验收的GitHub Actions [#40087231856](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40087231856) 原始 Artifact ID `12557911034` 下载并读取`paired-4088.json`，按原始ZIP SHA `e395e610c0280a9ba53f6bf716b1711f93623d460d4f6dfae14bc5b3c3938568`、原内部JSON字节SHA `453ee2e740578121b0734d61e6eb357be7bb34859b90878eb314f7d3dc1690f5`双层检查；该文件包括真实原Core `fifo_watch_events=fair8_watch_events`全事件字段、**53条原WATCH、39个不同symbol**（包括同币多次WATCH），和原`2919`完整+ `441`删失3m输入轮次；已校验Publisher日档案`4088/4599`。对原事件`symbol\tobserved_ms\tevent_id\n`的按原排序SHA是`afeba23efc9e8b561ee7fa41d9e2267551d2a6b17c8f324df1e37e7f81042f9f`。
+
+新增并提交：
+- [原Core53条WATCH源身份机器清单](../evidence/MONSTER_SPOT511_4088_REAL_ORIGINAL_CORE_53_WATCH_IDENTITIES_20261025.json)，存储每条原始事件SHA/symbol/time与完整报告来源指纹、失效边界。它不是替代完整原报告的认证来源，绝不能用此精简事件表或公开event_key算法的吻合就冒充原Core原始报告已验收。
+- 只读 `local-agent/scripts/monster_v4_spot511_verified_watch_tape.py`：`load_pinned_original_watch_tape(path)`只接收原始paired JSON字节完整SHA完全匹配、原D0 53条FIFO/Fair8载荷相同、每条event键/时钟/顺序/币与原回放分母匹配的样本；无法验证直接fail-closed。输出按3m UTC tick抽取原WATCH的只读接口，**没有把53条直接一次性加入Pending**。没有改旧D0/D1 `candidate_queue`、原SQLite/outbox，原shadow、原RBTC15候选保持不变。
+- `local-agent/tests/test_monster_v4_spot511_verified_watch_tape.py` 增加**9项**包括真实53条事件逐个哈希/整体指纹、lane漂移、时间与来源改写、仅伪造JSON即使有53条正确事件也不得取得原完整字节SHA信任。常规[GitHub Actions #40128789247](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40128789247)在固定有新源码的SHA `6dc096e196ba0d9f4d3efca35b8764870abc06e1` 真正`SUCCESS`，13组`13+5+6+11+19+12+12+14+18+18+9+9+31=177/177 PASS`，无新定时/HTTP。
+- [新来源准入独立复审说明](../reviews/MONSTER_ADR005_53_REAL_WATCH_ORIGINAL_REPORT_ADMISSION_REVIEW_REQUEST_20261025.md)已固定源码SHA `6dc096e...`，明确检查是否可绕过完整原报告SHA、真实53清单与原Core身份的约束。该新代码**尚无其他AI实际回执**，不得套用早前P1修复的APPROVE。
+
+**仍未完成**：需要把已验证的53个原WATCH按各自`observed_ms`在原3m全3360轮逐次喂给隔离SQLite队列，同时读取币种与BTC原Publisher 5m真闭合输入、执行FIFO8/必要Fair8、处理原441轮缺档影响并与不变的原46条SETUP对照；只在确定包含完整G1/G2标签的额外样本时才能评分召回。上述完整研究回放现在**没有发生**，不能把独立准入或177项合成回归当成G2/G3产品证据。2026-10-24 UTC日档案最后511份仍不得在尚未实际Publisher整日发布及校验前计入；原历史Publisher源本身**不证明当时网络行情PIT**、历史账户权限、真实bid/ask及净成本。
+
+状态：`G0 PARTIAL; G1 NOT_SCORABLE; G2/G3 NEW UNKNOWN; G4 UNKNOWN; G5 NEW_SOURCE_GATE_AUDIT_NOT_DONE; G6 NO_GO`。保持`NO_MERGE / NO_DEPLOY / NO_MAC / NO_SCHEDULE / NO_GMAIL / NO_TRADES`；Frank、BSC不变。
