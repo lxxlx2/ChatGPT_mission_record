@@ -1,0 +1,551 @@
+{
+  "schema": "MONSTER_SPOT511_REAL_4088_ORIGINAL_CORE_46_SETUP_ALL_ASSET_IDENTITIES_V1",
+  "created_utc_date": "2026-10-24",
+  "source_run": 40087231856,
+  "source_raw_replay_sha256": "453ee2e740578121b0734d61e6eb357be7bb34859b90878eb314f7d3dc1690f5",
+  "original_core_event_count": 46,
+  "exact_event_id_time_copy_only": true,
+  "unknown_asset_type_events": 0,
+  "identity_classes": {
+    "CRYPTO_NETWORK_PROTOCOL_UTILITY": 41,
+    "FAN_TOKEN_SCOPE_REQUIRES_DECISION": 3,
+    "TOKENIZED_STOCK_OUT_OF_SCOPE": 2
+  },
+  "daily_utc": {
+    "2026-10-18": {
+      "crypto": 6,
+      "fan": 2,
+      "security": 0,
+      "monitoring": 1
+    },
+    "2026-10-19": {
+      "crypto": 6,
+      "fan": 0,
+      "security": 1,
+      "monitoring": 2
+    },
+    "2026-10-20": {
+      "crypto": 7,
+      "fan": 0,
+      "security": 0,
+      "monitoring": 1
+    },
+    "2026-10-21": {
+      "crypto": 9,
+      "fan": 0,
+      "security": 0,
+      "monitoring": 0
+    },
+    "2026-10-22": {
+      "crypto": 9,
+      "fan": 1,
+      "security": 1,
+      "monitoring": 1
+    },
+    "2026-10-23": {
+      "crypto": 4,
+      "fan": 0,
+      "security": 0,
+      "monitoring": 1
+    }
+  },
+  "conservative_g3": {
+    "frozen_7day_total_max": 35,
+    "default_never_silently_drops_fan_tokens": true,
+    "nonfan_crypto_identity_only_total": 41,
+    "nonfan_plus_fan_type_total": 44,
+    "flagged_monitoring_tag_event_count": 6,
+    "nonfan_crypto_assuming_six_flagged_not_eligible": 35,
+    "including_fan_assuming_six_flagged_not_eligible": 38,
+    "positive_type_overload_conditional_not_formal_g3_rejection": true,
+    "historical_monitoring_quiz_account_entitlement": "NOT_ESTABLISHED",
+    "historically_spot_venue_pair_lifecycle_PIT": "NOT_ESTABLISHED"
+  },
+  "meanings": [
+    "FAN_TOKEN_SCOPE_REQUIRES_DECISION refers to actual CAP20 football utility tokens, not securities. Whether these are included in frozen first-version eligible crypto-only G3 requires a separate precommitted policy decision; raw events remain.",
+    "Official publisher archived 1m trading bars and a T0 exchangeInfo snapshot do not independently demonstrate that each event was publicly observable at the decision time.",
+    "Bstocks are positively excluded. No other crypto token is excluded based solely on a suffix, market drawdown or subsequent performance.",
+    "No real-time bid/ask depth, size, account order permission, fee-adjusted PnL, buy/sell action or user investment amount.",
+    "The Monitoring Tag six-event exclusion is a sensitivity scenario, not a factual restriction on all Binance accounts.",
+    "All 46 original event IDs and observed_ms remain read-only unchanged."
+  ],
+  "run_ci": {
+    "id": 40091778304,
+    "url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40091778304",
+    "passed_tests": 90,
+    "workflow_conclusion": "success"
+  },
+  "G0": "PARTIAL",
+  "G1": "NOT_SCORABLE",
+  "G2": "NOT_PASSED",
+  "G3": "NOT_PASSED_PENDING_REAL_ELIGIBILITY",
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "NO_MERGE": true,
+  "NO_DEPLOY": true,
+  "NO_AUTOMATIONS": true,
+  "NO_GMAIL": true,
+  "NO_TRADES": true,
+  "original_setup_events": [
+    {
+      "event_id": "a7b9daf09be1222b01bc315234cd835781b97320b65742b9854c5914dd266fd6",
+      "symbol": "ERAUSDT",
+      "observed_ms": 1792307520000,
+      "utc_day": "2026-10-18",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/5511fc0281c1459bbb8b9f0d2f1297dc",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "d5ee6b8fdca66dade3196e6f874005f768a0ed9909af45f6b2521fc25f0962f3",
+      "symbol": "AMPUSDT",
+      "observed_ms": 1792317420000,
+      "utc_day": "2026-10-18",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/articles/a84409552a2e4e5bb8f0a0459facd3bd",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "848ea83add5fdd477557a2ac39023bff6a2022ebfcb43808df1b2dfea36f8df1",
+      "symbol": "ACMUSDT",
+      "observed_ms": 1792317960000,
+      "utc_day": "2026-10-18",
+      "identity": "FAN_TOKEN_SCOPE_REQUIRES_DECISION",
+      "classification": "7_ADDITIONAL",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/74dabe8f1e844dcb9136d1a987472ce6",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "90e39fddee77e23aefa82f5833367263fbedf232e2e38a4b355151965c28e802",
+      "symbol": "QKCUSDT",
+      "observed_ms": 1792330920000,
+      "utc_day": "2026-10-18",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en-IN/support/announcement/detail/2ce2c4973d85405a9bb5fffc475c99dc",
+      "monitoring_tag_sensitivity": true
+    },
+    {
+      "event_id": "3e28497482aeeb38a841201a49553a1e7be5c7bd7a23450a0c83ab96a4f3da74",
+      "symbol": "BARUSDT",
+      "observed_ms": 1792333260000,
+      "utc_day": "2026-10-18",
+      "identity": "FAN_TOKEN_SCOPE_REQUIRES_DECISION",
+      "classification": "7_ADDITIONAL",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/74dabe8f1e844dcb9136d1a987472ce6",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "c37f09689f94eea32090e95a5577139e99999f18f5f0cb0708820d4d904879e0",
+      "symbol": "QUICKUSDT",
+      "observed_ms": 1792344420000,
+      "utc_day": "2026-10-18",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/47e2f3d1110044a9964edee05308bc34",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "a82d485c369dbcc0ab92d16bbf435287162125b02c1ddaa2b794347276b77316",
+      "symbol": "EPICUSDT",
+      "observed_ms": 1792348560000,
+      "utc_day": "2026-10-18",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en-IN/support/announcement/detail/53d4f5fd4d9a49ec917d712b1d1fb58e",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "added729933e6a20a32fc26de90578aedeaa457415f8d37a1e494abf94b23787",
+      "symbol": "MANTRAUSDT",
+      "observed_ms": 1792360260000,
+      "utc_day": "2026-10-18",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "7_ADDITIONAL",
+      "official_positive_source": "https://www.binance.com/en-AE/support/announcement/detail/a65e70f8431a40e8b5ce809bbb61ed59",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "ab90be63b044cf419bad8ce71f69351fd9bedcbccd93c0dfc301afcda793d225",
+      "symbol": "AMPUSDT",
+      "observed_ms": 1792391220000,
+      "utc_day": "2026-10-19",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/articles/a84409552a2e4e5bb8f0a0459facd3bd",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "d2ccf5ceb9d2490249fae50cd6765f407fa3bd286c179fc517eccb66f2de459d",
+      "symbol": "OSMOUSDT",
+      "observed_ms": 1792398060000,
+      "utc_day": "2026-10-19",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/0c5d8ebc2ce1441ebb86c350a9950b65",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "141b6671a3e01d0f181f7034643271afedef76d94290d2fb6ee8721038035a8b",
+      "symbol": "NILUSDT",
+      "observed_ms": 1792411920000,
+      "utc_day": "2026-10-19",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/2608d3a348a44a33b04a133b90d45dc2",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "4be01b4328f10b128fe1ed31854f06ef3260157916805944d24c57595173e9d9",
+      "symbol": "SHAZBUSDT",
+      "observed_ms": 1792416960000,
+      "utc_day": "2026-10-19",
+      "identity": "TOKENIZED_STOCK_OUT_OF_SCOPE",
+      "classification": "OFFICIAL_SECURITIES",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/172e44302d6143578e40acc48570a2e5",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "f959f59ae86ba0ef1e18294495fcd4d6e2d161d01fda66a022398d3d24fbf108",
+      "symbol": "AVAUSDT",
+      "observed_ms": 1792422900000,
+      "utc_day": "2026-10-19",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/1564ca1ec5bb4d93bd4a2b3718b8a116",
+      "monitoring_tag_sensitivity": true
+    },
+    {
+      "event_id": "71e29c88893f9aa35aea6efad5be51d3075cc0af47ec349a2b01946a5ca1f313",
+      "symbol": "GTCUSDT",
+      "observed_ms": 1792425600000,
+      "utc_day": "2026-10-19",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/df28017f9ea34d2f9d58c4ad467e0b88",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "a25499a0066a71d992d41f31b5589114c79c0d3fe2ea5f080ab22f01e36fa844",
+      "symbol": "GNSUSDT",
+      "observed_ms": 1792434420000,
+      "utc_day": "2026-10-19",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/879934f2ae8c40b8a6fab68f713bb73a",
+      "monitoring_tag_sensitivity": true
+    },
+    {
+      "event_id": "556744f378c53bcd8d9ced3d85f21a7bca2a8eefc0d362601c0c8a1c675fdb17",
+      "symbol": "AUSDT",
+      "observed_ms": 1792460700000,
+      "utc_day": "2026-10-20",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "7_ADDITIONAL",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/f5a19fab8c5d4078a1235a17f542dfc5",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "54cb10ad2a66619c3fa4a9a32d85f086973f9c1452b0e48dcd86c46035a3bb8f",
+      "symbol": "ALTUSDT",
+      "observed_ms": 1792467900000,
+      "utc_day": "2026-10-20",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en-PH/support/announcement/detail/8415d71c5cce481fb8bdec3651972366",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "86770d96b356d416ab6b0258e158f6d1f6e0abec1113259b2c59f13951e29ec1",
+      "symbol": "GNSUSDT",
+      "observed_ms": 1792482120000,
+      "utc_day": "2026-10-20",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/879934f2ae8c40b8a6fab68f713bb73a",
+      "monitoring_tag_sensitivity": true
+    },
+    {
+      "event_id": "5be094a08f875f21d646b93fcd9e4ec382a2603c175e191250bebd70c652cfec",
+      "symbol": "ERAUSDT",
+      "observed_ms": 1792487160000,
+      "utc_day": "2026-10-20",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/5511fc0281c1459bbb8b9f0d2f1297dc",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "a66780509cb22bd472bd854ad60ed7e59b5d8b7c265f7bb200102cf0a8d5297a",
+      "symbol": "IDUSDT",
+      "observed_ms": 1792493820000,
+      "utc_day": "2026-10-20",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/0f491ef6e9be4e34bdbad7a609201a77",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "a4766238baade4e25ecb9e9eb3a563631afd67f406f1a8b2e59194eb283c1a56",
+      "symbol": "COMPUSDT",
+      "observed_ms": 1792515960000,
+      "utc_day": "2026-10-20",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/research/projects/compound",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "33d7e80580462684fe944d7a1f0532a18edca3075689114d66548c7fcb57151f",
+      "symbol": "IOSTUSDT",
+      "observed_ms": 1792530360000,
+      "utc_day": "2026-10-20",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/360035735871",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "95b31dcda2d6e5e6188c7fa2b3ba008bf46c575aa66f6edbc4c9b462ec62dbf8",
+      "symbol": "SCUSDT",
+      "observed_ms": 1792542600000,
+      "utc_day": "2026-10-21",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/328b114bd6884d5891ceaaa56c87a1ef",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "282ce4b03c5d03dc4f95472b11a129046cd56b61ae69278ba039c72d96674c90",
+      "symbol": "PARTIUSDT",
+      "observed_ms": 1792550700000,
+      "utc_day": "2026-10-21",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/3ec6cdfea3394ffa9ce6bfeabe8191e5",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "f67b03c24bae6fd2242a2cc71f0abc938771568c9682fcdf28b1bedec52f0720",
+      "symbol": "IOSTUSDT",
+      "observed_ms": 1792552320000,
+      "utc_day": "2026-10-21",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/360035735871",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "7ff60fc566e21ae72241ef73d6fe525cb7f028a803ba1a737d8abfbcfa5bd8dc",
+      "symbol": "IOSTUSDT",
+      "observed_ms": 1792575720000,
+      "utc_day": "2026-10-21",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/360035735871",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "4c13450da1a914dc45d2004a75a00a4860912151ab471bfdc7ebc57faef21b7e",
+      "symbol": "BMTUSDT",
+      "observed_ms": 1792576620000,
+      "utc_day": "2026-10-21",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/6539265e571540298fa4b7943140469d",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "c2622d553f8aabe57bb00d4c7373ff456eb10a5f7fe3fe8a019a8ee5f4b2a05c",
+      "symbol": "REQUSDT",
+      "observed_ms": 1792579500000,
+      "utc_day": "2026-10-21",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "7_ADDITIONAL",
+      "official_positive_source": "https://www.binance.com/en/research/projects/request-network",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "ed6c8474402d66d52969340c03005f4072a4900a9d2691647bcd998f4ee74f89",
+      "symbol": "ATUSDT",
+      "observed_ms": 1792583820000,
+      "utc_day": "2026-10-21",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "7_ADDITIONAL",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/2f67d968fb744180b09a3ee01fc75feb",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "cb5a68991568c3108babc2b11c1d010b74f73659c6748de1aae4bac2eb0e9cd4",
+      "symbol": "VTHOUSDT",
+      "observed_ms": 1792592460000,
+      "utc_day": "2026-10-21",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/f7b1e975bb4d42dbb026114588accfed",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "257dfc14d4415bc4c32e466049d122e16d2daac3d41d92ba9af61e54ad700a82",
+      "symbol": "ALTUSDT",
+      "observed_ms": 1792599120000,
+      "utc_day": "2026-10-21",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en-PH/support/announcement/detail/8415d71c5cce481fb8bdec3651972366",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "b48b79700e3379dd30758262b51d8fb99a8222810812c354b18b1be66ba69282",
+      "symbol": "DGBUSDT",
+      "observed_ms": 1792649160000,
+      "utc_day": "2026-10-22",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/research/projects/digibyte",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "dc55207c955e2c02cb89ed77e6320b5f4b08afb616ed06c406ad6ec739115a2d",
+      "symbol": "LUMIAUSDT",
+      "observed_ms": 1792650960000,
+      "utc_day": "2026-10-22",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/a6d2ae0b765c4bb79b192f3904fc5757",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "8f8a19e35a68e8b3b5bb8334925f06e10da467a38dd8cda6850f34a7c18cdb7b",
+      "symbol": "ATMUSDT",
+      "observed_ms": 1792655460000,
+      "utc_day": "2026-10-22",
+      "identity": "FAN_TOKEN_SCOPE_REQUIRES_DECISION",
+      "classification": "7_ADDITIONAL",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/74dabe8f1e844dcb9136d1a987472ce6",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "39926e1eb5e2bb3d788dec30f35b677c5ef63bcc92572075283e4ce41d5a6a24",
+      "symbol": "BMTUSDT",
+      "observed_ms": 1792656720000,
+      "utc_day": "2026-10-22",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/6539265e571540298fa4b7943140469d",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "ccad8020d56711d8d315bef764deec6d5bde6c2bbe89f3e31b976ae5f3ffb4c6",
+      "symbol": "MASKUSDT",
+      "observed_ms": 1792664460000,
+      "utc_day": "2026-10-22",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/36bf2dc22d544ee09bc8760011bdebd3",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "faa0e7c9257becbcb3baecc3f09313c4f8c424a41a10bf8819844bb2e6c3d6fd",
+      "symbol": "AIUSDT",
+      "observed_ms": 1792665000000,
+      "utc_day": "2026-10-22",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/4667a7247a3e4e899bd11a7b10fae837",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "6f1e6ebdd3aea8ed01aba65ae648edca955c4a3dd6494ecfc62f046b1b469fbb",
+      "symbol": "MITOUSDT",
+      "observed_ms": 1792666620000,
+      "utc_day": "2026-10-22",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/1fba64507b1a4f9082bfbe6b4a23eb74",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "9b911925b40fe5aecb5cded6ad1479c56ae8b54e17104618b90201d9049ae552",
+      "symbol": "AVAUSDT",
+      "observed_ms": 1792671120000,
+      "utc_day": "2026-10-22",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/1564ca1ec5bb4d93bd4a2b3718b8a116",
+      "monitoring_tag_sensitivity": true
+    },
+    {
+      "event_id": "17c2a96cab2a0b3a45ff15268c0cd41f44ad4860de93f5a08949c1639c928b1e",
+      "symbol": "IBMBUSDT",
+      "observed_ms": 1792676160000,
+      "utc_day": "2026-10-22",
+      "identity": "TOKENIZED_STOCK_OUT_OF_SCOPE",
+      "classification": "OFFICIAL_SECURITIES",
+      "official_positive_source": "https://www.binance.bh/en/support/announcement/detail/4fea39f8b6e54e1b88e388fc90ce323e",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "6e90db5ae2f72871e0d05bdad4274ab7b9a1c87f9af3e82cb00508b959e9ebe6",
+      "symbol": "OSMOUSDT",
+      "observed_ms": 1792686060000,
+      "utc_day": "2026-10-22",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/0c5d8ebc2ce1441ebb86c350a9950b65",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "3843f8b21ff8e74f7051fac0119597881e514ebb57766248c435cc9b9af0d24a",
+      "symbol": "BMTUSDT",
+      "observed_ms": 1792693620000,
+      "utc_day": "2026-10-22",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/6539265e571540298fa4b7943140469d",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "1cddb28f1929811ed4f56e096c183455de322885fc9356bc85942a569614d0dc",
+      "symbol": "SOPHUSDT",
+      "observed_ms": 1792740960000,
+      "utc_day": "2026-10-23",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/df7fe0571e074bfa8ebd0a2757537461",
+      "monitoring_tag_sensitivity": true
+    },
+    {
+      "event_id": "dd32d30a8f6fce814a4f27716bd20d80c6eef7aa620ad1e6311f9ad17e6f875a",
+      "symbol": "ARKUSDT",
+      "observed_ms": 1792760220000,
+      "utc_day": "2026-10-23",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/115002520852",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "cb3f9a8c7ec3dd5e45344a313776c04a41d4f14d4434fc05b545998706bf2926",
+      "symbol": "EDUUSDT",
+      "observed_ms": 1792783800000,
+      "utc_day": "2026-10-23",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/f344e1bdfbe24f3ab067c22ec6d0b1a9",
+      "monitoring_tag_sensitivity": false
+    },
+    {
+      "event_id": "e95ba0d576ad73af52f4cee94894d217d9e0453567556036b7683445bb273d8b",
+      "symbol": "ERAUSDT",
+      "observed_ms": 1792787220000,
+      "utc_day": "2026-10-23",
+      "identity": "CRYPTO_NETWORK_PROTOCOL_UTILITY",
+      "classification": "26_POSITIVE",
+      "official_positive_source": "https://www.binance.com/en/support/announcement/detail/5511fc0281c1459bbb8b9f0d2f1297dc",
+      "monitoring_tag_sensitivity": false
+    }
+  ]
+}
