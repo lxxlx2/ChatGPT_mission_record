@@ -1,3 +1,12 @@
+# 2026-10-24 — PR192 Mac REQUEST_CHANGES: diagnostic-read race, test-only fix
+
+- **Independent Mac verdict for prior exact SHA `eb6992e96a7663ff03f27531e7a7a6a34bc377cb`: `REQUEST_CHANGES`**, one P1 test acceptance blocker. Reviewer reports 495/495 full and 134/134 D1 PASS with zero skips, but the new child-lifetime test **run alone** produced 1 PASS and 1 ERROR (`JSONDecodeError`) when `is_file()` became true before JSON had been fully written/fsynced. The original Mac error remains historical evidence; no retroactive approval. Review independently also observed parent SIGKILL -> child EOF/self-exit, and verified missing PID via `ps`.
+- **Bounded targeted source repair `9d26aae567a806e8caa416afede6599f2d518512`:** only `f0/tests/test_f0_l2_d1_child_lifetime.py` changed. The test now discovers the exact child PID before parent SIGKILL using `ps`, then waits for **both parseable complete watchdog JSON and process exit** with a hard cap. `GONE` and `ZOMBIE_EXITED` are distinguished from `RUNNING`; an orphan zombie is exited but may await reaping. Existing UNKNOWN[1], zero settlement, marker-consumed and grant replay refusal remain. No runtime, transport, grant, watchdog, or scheduler source was changed.
+- **GitHub source CI verified:** [workflow 40106155306](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40106155306) at `9d26aae567a806e8caa416afede6599f2d518512` completed success, raw job reports **Ran 495 tests in 61.008s / OK**. It ran the complete Linux suite including both child-lifetime tests; separate standalone test and independent Mac re-review of the new SHA are still **PENDING**. No `APPROVE_OFFLINE_CODE` applies to this revised SHA yet.
+- **Gate unchanged:** `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`. No real RPC/WS, production roots, permits/nonce, merge, deploy, daemon or trades.
+
+---
+
 # 2026-10-24 — D1 parent SIGKILL lifetime child, OFFLINE only; review pending
 
 - **Parent approval verified:** PR191 exact source `8baa185b00c1a69b1caaf46144122b91aafc1a41`, Draft/unmerged, supplied independent Mac audit `APPROVE_OFFLINE_CODE — D1_ONEUSE_HARD_STOP_TEST_ONLY`, 493/493 full, 132/132 D1 and 5/5 focused PASS. See [PR191 archived reviewer report](https://github.com/lxxlx2/ChatGPT_mission_record/pull/191#issuecomment-6385600295). The approval is only for the frozen SHA.
