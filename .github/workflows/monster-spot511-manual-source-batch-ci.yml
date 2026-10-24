@@ -19,6 +19,9 @@ on:
       - "crypto-300-profit-mission/local-agent/tests/test_monster_spot_asset_scope.py"
       - "crypto-300-profit-mission/local-agent/mission_agent/early/spot_g3_positive_bound.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_spot_g3_positive_bound.py"
+      - "crypto-300-profit-mission/local-agent/mission_agent/early/spot_g3_final7_scope.py"
+      - "crypto-300-profit-mission/local-agent/tests/test_monster_spot_g3_final7_scope.py"
+      - "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_PRE_EVENT_REMAINING_7_TYPES_20261024.json"
       - "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_PRE_EVENT_OFFICIAL_POSITIVE_CRYPTO_26_ASSETS_20261024.json"
       - "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_OFFICIAL_POSITIVE_BSTOCKS_20261024.json"
       - ".github/workflows/monster-spot511-manual-source-batch-ci.yml"
@@ -38,6 +41,9 @@ on:
       - "crypto-300-profit-mission/local-agent/tests/test_monster_spot_asset_scope.py"
       - "crypto-300-profit-mission/local-agent/mission_agent/early/spot_g3_positive_bound.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_spot_g3_positive_bound.py"
+      - "crypto-300-profit-mission/local-agent/mission_agent/early/spot_g3_final7_scope.py"
+      - "crypto-300-profit-mission/local-agent/tests/test_monster_spot_g3_final7_scope.py"
+      - "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_PRE_EVENT_REMAINING_7_TYPES_20261024.json"
       - "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_PRE_EVENT_OFFICIAL_POSITIVE_CRYPTO_26_ASSETS_20261024.json"
       - "crypto-300-profit-mission/monster/evidence/MONSTER_SPOT511_OFFICIAL_POSITIVE_BSTOCKS_20261024.json"
       - ".github/workflows/monster-spot511-manual-source-batch-ci.yml"
@@ -73,6 +79,8 @@ jobs:
           python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_spot_asset_scope.py
           python -B -m py_compile crypto-300-profit-mission/local-agent/mission_agent/early/spot_g3_positive_bound.py
           python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_spot_g3_positive_bound.py
+          python -B -m py_compile crypto-300-profit-mission/local-agent/mission_agent/early/spot_g3_final7_scope.py
+          python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_spot_g3_final7_scope.py
       - name: Synthetic official-format publisher intake tests (no HTTP)
         env:
           PYTHONPATH: crypto-300-profit-mission/local-agent:crypto-300-profit-mission/local-agent/scripts
@@ -84,3 +92,4 @@ jobs:
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_spot_d1_event_audit.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_spot_asset_scope.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_spot_g3_positive_bound.py" -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_spot_g3_final7_scope.py" -v
