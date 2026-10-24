@@ -1,3 +1,12 @@
+# 2026-10-24 — F0 D1 PR187 protected Mac preflight (new fixed-SHA code review PENDING)
+
+- Frozen parent PR186 independently Mac approved exact `08adde4ef8be33d846645d9bd50b479e19f7a3b0`: `APPROVE_OFFLINE_CODE — D1_CONCRETE_SINGLE_COORDINATOR_SCOPE_ONLY`, actual **473/473 full, 112/112 D1-focused**, 9/9 new, 170 F0 tracked bytes and 11 loaded modules independently reviewed; no P0/P1. User+Codex lightweight supervised F0 authority design PR185 already approved, no third-person PKI required.
+- PR187 child `f0/f0_l2_d1_protected_mac_entry.py` supplies *an actual Mac-only CLI preflight* accepting ONLY `--verify-only`, candidate scope bytes and frozen checkout SHA, checking existing strict method/budget/UTC, all tracked F0 Git/module origins/Python+cryptography digest, fixed 0700 registry identity against OS passwd home (not HOME/env/permit), candidate evidence root non-overlap, and reporting exact raw digest + `D1_BLOCKED_AUTHORITY`. `send_live()` always denies; no production grant/nonce, no registry changes and no real socket.
+- New `tests/test_f0_l2_d1_protected_mac_entry.py` is an isolated test-only fixture; all actual HTTPS constructors are forbidden. See `f0/F0_D1_PROTECTED_MAC_ENTRY_REVIEW.md` for positive/negative Mac checks and limits. This is a real entry-preflight capability, **not yet a real sender/registry/coordinator release**.
+- D1 next real gate: protected exact user-approved D2 permit + second explicit D3 execution, an OS-home-bound fixed registrar O_EXCL/fsync before TLS connect, coordinator RESERVE_UNKNOWN before any connection, RAW-before-SETTLE, actual bounded 3-slot HTTPS, no retry/UNKNOWN and absolute operation timeout. This release remains NO_GO and was not run on Mac. Do not re-run exhausted historical 30-call permit or broaden to Frank/Monster/address modules. NO_MERGE/NO_DEPLOY/NO_NEW_RPC/NO_TRADES/NO_BACKGROUND; `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-24 — F0 D1 unified concrete HTTP code rehearsal, PR186 Mac review PENDING
 
 - Approved **user-authorized/Codex-reviewed lightweight F0 D0/D1 design** PR185 SHA `a469019b596045d8d4cea9afe9a8393e40a10981`, verdict `APPROVE_DESIGN — F0_USER_CODEX_LIGHTWEIGHT_AUTHORITY_MODEL_ONLY`. Exact design result archived as [PR185 approval comment](https://github.com/lxxlx2/ChatGPT_mission_record/pull/185#issuecomment-6376971286). Code is NOT yet authorized for real network and prior real grant remains spent.
