@@ -245,7 +245,9 @@ class GlobalStartGate:
     def run(self, request, source, *, block_head_deadline, dispatch_deadline,
             timeout_ms, fake_post_utc_window=None):
         from f0_l2_d1_concrete_https import SealedConcreteOfflineSource
-        if type(source) in (SealedMemoryHTTPSSource, SealedConcreteOfflineSource):
+        from f0_l2_d1_unreleased_real_source import UnreleasedRealHTTPSCodeSource
+        if type(source) in (SealedMemoryHTTPSSource, SealedConcreteOfflineSource,
+                            UnreleasedRealHTTPSCodeSource):
             # Prepare the fake TLS connection before acquiring the global
             # start lock. Gate the actual in-memory POST, not worker entry.
             began = [None]
@@ -279,8 +281,12 @@ class GlobalStartGate:
                     self.starts.append((request["id"], request["method"], when))
                     began[0] = when
             try:
-                frame = source.reply_over_memory_https(
-                    request, begin_fake_post, timeout_ms / 1000)
+                if type(source) is UnreleasedRealHTTPSCodeSource:
+                    frame = source.reply_over_unreleased_real_https(
+                        request, begin_fake_post, timeout_ms / 1000)
+                else:
+                    frame = source.reply_over_memory_https(
+                        request, begin_fake_post, timeout_ms / 1000)
                 completed = time.monotonic()
                 need(began[0] is not None,
                      "D1_MEMORY_HTTPS_POST_START_UNOBSERVED")
@@ -326,20 +332,28 @@ class GlobalStartGate:
                     "error":type(exc).__name__}
 
 
-def run_fake_concurrent(source, output_root, *, max_total=32,
-                        max_blocks=24, max_refreshes=6, spacing_ms=250,
-                        slots=3, head_ttl_ms=4000, window_ms=60000,
-                        max_block_response_ms=5000,
-                        head_min_poll_age_ms=1000,
-                        fake_post_utc_window=None):
+def _run_single_coordinator(source, output_root, *, max_total=32,
+                            max_blocks=24, max_refreshes=6, spacing_ms=250,
+                            slots=3, head_ttl_ms=4000, window_ms=60000,
+                            max_block_response_ms=5000,
+                            head_min_poll_age_ms=1000,
+                            fake_post_utc_window=None,
+                            _real_review_ticket=None):
     """No permit or live network entry. Thread workers are fake only.
 
     Any invalid input is rejected; concurrent workers cannot allocate IDs,
     modify budgets, write the evidence log, or retry.
     """
     from f0_l2_d1_concrete_https import SealedConcreteOfflineSource
-    need(type(source) in (FakeSource, SealedMemoryHTTPSSource,
-                          SealedConcreteOfflineSource)
+    from f0_l2_d1_unreleased_real_source import (
+        UnreleasedRealHTTPSCodeSource,
+        _D1_OFFLINE_UNRELEASED_TRANSPORT_TICKET,
+    )
+    real_review = (
+        type(source) is UnreleasedRealHTTPSCodeSource
+        and _real_review_ticket is _D1_OFFLINE_UNRELEASED_TRANSPORT_TICKET)
+    need((type(source) in (FakeSource, SealedMemoryHTTPSSource,
+                          SealedConcreteOfflineSource) or real_review)
          and "reply" not in getattr(source, "__dict__", {})
          and "reply_over_memory_https" not in getattr(source, "__dict__", {})
          and type(slots) is int and slots == 3
@@ -359,8 +373,9 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
         # permit reader; module imports must remain free of cyclic imports.
         from f0_l2_d1_post_utc import OfflinePostUTCWindow
         need(type(source) in (SealedMemoryHTTPSSource,
-                              SealedConcreteOfflineSource) and
-             type(fake_post_utc_window) is OfflinePostUTCWindow,
+                              SealedConcreteOfflineSource) or real_review,
+             "D1_POST_UTC_FAKE_ONLY")
+        need(type(fake_post_utc_window) is OfflinePostUTCWindow,
              "D1_POST_UTC_FAKE_ONLY")
     begin = time.monotonic()
     dispatch_deadline = begin + window_ms / 1000
@@ -578,14 +593,18 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
     need(len(reservations) <= 32 and number_blocks <= 24
          and number_refreshes <= 6 and peak_slots <=3,
          "D1_SCOPE_LIMIT_EXCEEDED")
-    mode = ("D1_OFFLINE_CONCRETE_HTTPS_SEALED_NO_SOCKET"
+    mode = ("D1_REAL_HTTP_CODE_UNRELEASED_NO_AUTHORITY"
+            if real_review else
+            "D1_OFFLINE_CONCRETE_HTTPS_SEALED_NO_SOCKET"
             if type(source) is SealedConcreteOfflineSource else
             "D1_OFFLINE_MEMORY_HTTPS_ONLY"
             if type(source) is SealedMemoryHTTPSSource else
             "D1_OFFLINE_FAKE_ONLY")
     return {
         "schema":SCHEMA, "mode":mode,
-        "network_requests":0, "no_live_sender":True,
+        "network_requests":None if real_review else 0,
+        "no_live_sender":not real_review,
+        "unreleased_transport_review_only":real_review,
         "fake_post_utc_checks":(fake_post_utc_window.checked_fake_posts
                                 if fake_post_utc_window is not None else None),
         "real_user_grant_active":False,
@@ -608,10 +627,74 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
         "known_unattempted":(
             max(0,head-(next_height-1)) if
             head is not None and next_height is not None else None),
-        "synthetic_source_growth_bps":source.growth_bps,
+        "synthetic_source_growth_bps":None if real_review else source.growth_bps,
         "full_ledger_filename":"attempts.jsonl",
         "start_records":[{"id":i,"method":m,"monotonic":t}
                          for i,m,t in starts],
         "source_head_samples":head_samples,
         "f0_status":"NOT_PASSED", "production":"NO_GO",
     }
+
+
+
+def run_fake_concurrent(source, output_root, *, max_total=32,
+                        max_blocks=24, max_refreshes=6, spacing_ms=250,
+                        slots=3, head_ttl_ms=4000, window_ms=60000,
+                        max_block_response_ms=5000,
+                        head_min_poll_age_ms=1000,
+                        fake_post_utc_window=None):
+    """Previously approved public fake coordinator: never accepts real TLS."""
+    return _run_single_coordinator(
+        source, output_root, max_total=max_total, max_blocks=max_blocks,
+        max_refreshes=max_refreshes, spacing_ms=spacing_ms, slots=slots,
+        head_ttl_ms=head_ttl_ms, window_ms=window_ms,
+        max_block_response_ms=max_block_response_ms,
+        head_min_poll_age_ms=head_min_poll_age_ms,
+        fake_post_utc_window=fake_post_utc_window)
+
+
+def _review_unreleased_real_concurrent(source, output_root, *,
+                                       _offline_review_ticket=None,
+                                       _offline_test_registry=None,
+                                       _offline_test_grant_id=None,
+                                       _offline_test_permit_sha256=None,
+                                       max_total=32,
+                                       max_blocks=24, max_refreshes=6,
+                                       spacing_ms=250, slots=3,
+                                       head_ttl_ms=4000, window_ms=60000,
+                                       max_block_response_ms=5000,
+                                       head_min_poll_age_ms=1000,
+                                       fake_post_utc_window=None):
+    """Same coordinator with concrete HTTP code, NO authorized live entry.
+
+    The review ticket is importable by Python callers and is NOT an
+    authentication mechanism. Invoke ONLY in controlled offline tests with
+    the global HTTPSConnection symbol patched before this call.
+    """
+    from f0_l2_d1_unreleased_real_source import (
+        UnreleasedRealHTTPSCodeSource,
+        _D1_OFFLINE_UNRELEASED_TRANSPORT_TICKET,
+    )
+    from f0_l2_d1_unreleased_real_source import (
+        _require_intercepted_http_for_offline_review,
+    )
+    from f0_l2_d1_grant import OfflineGrantRegistry
+    if (type(source) is not UnreleasedRealHTTPSCodeSource or
+            _offline_review_ticket is not
+            _D1_OFFLINE_UNRELEASED_TRANSPORT_TICKET):
+        raise ValueError("D1_UNRELEASED_REAL_CODE_REVIEW_DENIED")
+    _require_intercepted_http_for_offline_review()
+    if type(_offline_test_registry) is not OfflineGrantRegistry:
+        raise ValueError("D1_UNRELEASED_TEST_REGISTRY_REQUIRED")
+    # The one-use TEST consumption is part of this same execution path,
+    # before any worker thread or TLS constructor. No refund on failures.
+    _offline_test_registry.consume(_offline_test_grant_id,
+                                   _offline_test_permit_sha256)
+    return _run_single_coordinator(
+        source, output_root, max_total=max_total, max_blocks=max_blocks,
+        max_refreshes=max_refreshes, spacing_ms=spacing_ms, slots=slots,
+        head_ttl_ms=head_ttl_ms, window_ms=window_ms,
+        max_block_response_ms=max_block_response_ms,
+        head_min_poll_age_ms=head_min_poll_age_ms,
+        fake_post_utc_window=fake_post_utc_window,
+        _real_review_ticket=_offline_review_ticket)

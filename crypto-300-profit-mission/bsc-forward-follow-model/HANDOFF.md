@@ -1,3 +1,12 @@
+# 2026-10-24 — F0 D1 PR188 single real-HTTPS CODE path, still no authorized live run
+
+- Independently approved frozen PR187 exact SHA `23f41ea2f984cb652cc07bbf28d9366d18b61701`, Mac `APPROVE_OFFLINE_CODE — D1_MAC_PROTECTED_PREFLIGHT_SCOPE_ONLY`: full **481/481**, D1 **120/120**, 8 new, zero SKIP, actual Mac fixed checkout **173 Git-tracked F0 files / 11 loaded modules**. The old SHA `9d352bb2...` REQUEST_CHANGES remains historical; fix was test-only Mac /var normalization and approved SHA preserved.
+- New child **Draft PR188**: original coordinator factored into one core used by old fake entry AND an **UNRELEASED** real HTTPS source code-review route. New adapter invokes existing `http.client.HTTPSConnection` source under patched in-process constructor, with shared 3-slot budget, global POST-call throttle, source UTC, durable RESERVE before mock TLS connect, RAW before SETTLE, no retry/UNKNOWN. No separate scheduler or production sender. Private review route requires a TEST-only once-marker (consumed before core) and refuses unpatched stdlib constructor. The review ticket is importable: explicitly NOT real authorization. No actual sockets in tests.
+- Tests and review contract `f0/F0_D1_SINGLE_COORDINATOR_REAL_CODE_AUDIT.md` emphasize per-request ID reservation at connect, 503 raw, POST-write unknown, spent test grant across evidence roots, false network/performance claim prevention. **Do not claim real packet start pacing, full absolute timeout or live throughput.**
+- Actual Mac `--verify-only` from PR187 remains intact; user/Codex lightweight model PR185 approved. Current runtime still `D1_BLOCKED_AUTHORITY`, because actual protected production once registry, externally reviewed exact D2 user permit and separately authorized D3 run, live sender/ledger failure controls and physical socket validation remain unapproved. Older real 30-call grant is spent. No merge/deploy/RPC/WS/trade/background. `F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-24 — F0 D1 PR187 protected Mac preflight (new fixed-SHA code review PENDING)
 
 - Frozen parent PR186 independently Mac approved exact `08adde4ef8be33d846645d9bd50b479e19f7a3b0`: `APPROVE_OFFLINE_CODE — D1_CONCRETE_SINGLE_COORDINATOR_SCOPE_ONLY`, actual **473/473 full, 112/112 D1-focused**, 9/9 new, 170 F0 tracked bytes and 11 loaded modules independently reviewed; no P0/P1. User+Codex lightweight supervised F0 authority design PR185 already approved, no third-person PKI required.
