@@ -74,11 +74,11 @@ def _assert_directory(path: Path) -> Path:
 def collect_owner_full_receipts(*, wallet: str, evidence_root: Path,
                                 read_raw, min_context_slot: int | None = None,
                                 observed_at_utc: str | None = None) -> dict:
-    """Make exactly two explicit finalized token-program owner RPC calls.
+    """Attempt at most two ordered finalized token-program owner RPC calls.
 
+    The second query is forbidden unless the first raw reply is validated and
+    durably archived. Partial sources are always marked non-importable.
     read_raw(method,params,expected_id) -> raw HTTPS response body bytes.
-    The resulting manifest is saved even if a program fails, in which case
-    'complete' is false and importing economic holdings is forbidden.
     """
     if not isinstance(wallet, str) or not _solana_pubkey_32_bytes(wallet):
         raise ValueError("RESEARCH_WALLET_INVALID")
@@ -117,7 +117,16 @@ def collect_owner_full_receipts(*, wallet: str, evidence_root: Path,
                 "reason": "COMPLETE_OWNER_RPC_RESPONSE_UNAVAILABLE",
                 "error_type": type(exc).__name__,
             })
-            continue
+            # The owner-approved two-query budget is a MAXIMUM, not a target.
+            # Do not send Token-2022 RPC if the preceding SPL response failed
+            # HTTP/JSON/source/slot validation. Mark it explicitly unqueried.
+            if index == 1:
+                missing.append({
+                    "program_id": PROGRAMS[1],
+                    "reason": "NOT_QUERIED_PREVIOUS_PROGRAM_UNVERIFIED",
+                    "error_type": "Skipped",
+                })
+            break
         _write_exclusive(bundle / filename, wire)
         receipts.append({
             "program_id": program,
