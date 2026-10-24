@@ -30,6 +30,7 @@ def send_live(*_args, **_kwargs):
 
 
 def _review_concrete_https_once(request, *, final_post_guard,
+                                pre_connect_guard=None,
                                 _test_capability=None, timeout_s=5.0,
                                 max_bytes=MAX_BODY_BYTES,
                                 _sealed_offline_factory=None):
@@ -50,6 +51,7 @@ def _review_concrete_https_once(request, *, final_post_guard,
             type(_sealed_offline_factory) is not _SealedMemoryTLSFactory):
         raise ValueError("D1_CONCRETE_HTTP_UNREVIEWED_FACTORY")
     if (not callable(final_post_guard) or
+            (pre_connect_guard is not None and not callable(pre_connect_guard)) or
             type(timeout_s) not in (int, float) or isinstance(timeout_s, bool) or
             not 0 < timeout_s <= 5 or type(max_bytes) is not int or
             not 0 < max_bytes <= MAX_BODY_BYTES):
@@ -77,6 +79,12 @@ def _review_concrete_https_once(request, *, final_post_guard,
         ctor = (http.client.HTTPSConnection if _sealed_offline_factory is None
                 else _sealed_offline_factory)
         conn = ctor(HOST, port=PORT, timeout=float(timeout_s), context=context)
+        # One-coordinator proof is generated only after pre-send journal fsync.
+        # In production the reviewed release must also bind the one-use marker
+        # and exact D2/D3 user permission *before this constructor*.
+        phase = "PRECONNECT_RESERVATION_GUARD"
+        if pre_connect_guard is not None:
+            pre_connect_guard(request)
         phase = "CONNECT_ATTEMPTED"
         connect_attempted_at = time.monotonic()
         conn.connect()
@@ -244,4 +252,53 @@ class SealedConcreteOfflineSource(FakeSource):
             raise denial[0]
         if result["state"] != "RAW" or result["raw_frame"] is None:
             raise ValueError("D1_REVIEWED_TLS_FAILED_NO_AUTO_RETRY")
+        return result["raw_frame"]
+
+
+# This identity comparison blocks accidental direct use of the real constructor
+# in the OFFLINE rehearsal. A Python monkeypatch is never a production grant.
+_ORIGINAL_HTTPS_CONNECTION = http.client.HTTPSConnection
+
+
+class PatchedConstructorOfflineSource(FakeSource):
+    """Exercise the exact concrete HTTPSConnection call site under a test patch.
+
+    No live entrypoint constructs this class. The original HTTPSConnection is
+    forbidden, even if all request constraints happen to look correct. This
+    is a constructor-level INTEGRATION TEST, never D2/D3 user authority.
+    """
+
+    def reply_over_memory_https(self, request, begin_fake_post, timeout_s,
+                                *, reservation_guard=None):
+        if type(self) is not PatchedConstructorOfflineSource:
+            raise ValueError("D1_PATCHED_CTOR_SOURCE_NOT_EXACT")
+        if http.client.HTTPSConnection is _ORIGINAL_HTTPS_CONNECTION:
+            raise ValueError("D1_PATCHED_CTOR_REQUIRED_NO_REAL_NETWORK")
+        if not callable(reservation_guard):
+            raise ValueError("D1_PATCHED_CTOR_COORDINATOR_RESERVATION_REQUIRED")
+        denied = [None]
+
+        def pre_connect_check(payload):
+            if payload != request:
+                raise ValueError("D1_PATCHED_CTOR_PRECONNECT_PAYLOAD_CHANGED")
+            reservation_guard(payload)
+
+        def final_post_guard(payload):
+            if payload != request:
+                raise ValueError("D1_PATCHED_CTOR_PAYLOAD_CHANGED")
+            try:
+                begin_fake_post()
+            except Exception as exc:
+                denied[0] = exc
+                raise
+
+        result = _review_concrete_https_once(
+            request, final_post_guard=final_post_guard,
+            pre_connect_guard=pre_connect_check,
+            _test_capability=_REVIEW_TEST_ONLY_CAPABILITY,
+            timeout_s=timeout_s, max_bytes=MAX_BODY_BYTES)
+        if denied[0] is not None:
+            raise denied[0]
+        if result["state"] != "RAW" or result["raw_frame"] is None:
+            raise ValueError("D1_PATCHED_CTOR_FAILED_NO_AUTO_RETRY")
         return result["raw_frame"]
