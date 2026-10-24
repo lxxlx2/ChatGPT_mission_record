@@ -1,0 +1,36 @@
+{
+  "verdict": "BLOCKED_NETWORK_POLICY_NOT_PROVEN",
+  "child": false,
+  "cases": [
+    {
+      "case": "ENV_FOUR_VARIABLES_UNDER_ALLOWLIST",
+      "result": "PASS"
+    },
+    {
+      "case": "IN_ROOT_UDS_BIND_LISTEN_CONNECT_ECHO",
+      "result": "PASS"
+    },
+    {
+      "case": "OUT_ROOT_UDS_BIND",
+      "result": "PASS",
+      "errno": 1,
+      "symbol": "EPERM",
+      "stage": "bind"
+    },
+    {
+      "case": "OUT_ROOT_UDS_CONNECT",
+      "result": "FAIL",
+      "errno": 2,
+      "symbol": "ENOENT",
+      "stage": "connect"
+    },
+    {
+      "case": "STOP_FIRST_FAILURE",
+      "result": "FAIL",
+      "reason": "RuntimeError"
+    }
+  ],
+  "production_targets_used": false,
+  "all_IP_connect_targets_TEST_NET_port9": true,
+  "socket_policy_errors_required": "EPERM not timeout/refusal"
+}

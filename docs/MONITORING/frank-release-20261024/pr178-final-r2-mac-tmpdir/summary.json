@@ -1,0 +1,78 @@
+{
+  "outcome": "BLOCKED_NETWORK_POLICY_NOT_PROVEN",
+  "first_failed_gate": "GATE_P_OUT_ROOT_UDS_CONNECT",
+  "reason": "EXPECTED_POLICY_EPERM_OBSERVED_ENOENT",
+  "Chrome_launches": 0,
+  "browser_cases_executed": 0,
+  "source_sha": "914e9e47fed2e60bc24690fcb083413a64d4e681",
+  "prior_R1_manifest": "9a06f5f29fce05ccade8caa2b90d6d6c0c4248d2e6ab4e45aa26fa9d3f401062",
+  "R1_repeated": false,
+  "gate_P": {
+    "verdict": "BLOCKED_NETWORK_POLICY_NOT_PROVEN",
+    "child": false,
+    "cases": [
+      {
+        "case": "ENV_FOUR_VARIABLES_UNDER_ALLOWLIST",
+        "result": "PASS"
+      },
+      {
+        "case": "IN_ROOT_UDS_BIND_LISTEN_CONNECT_ECHO",
+        "result": "PASS"
+      },
+      {
+        "case": "OUT_ROOT_UDS_BIND",
+        "result": "PASS",
+        "errno": 1,
+        "symbol": "EPERM",
+        "stage": "bind"
+      },
+      {
+        "case": "OUT_ROOT_UDS_CONNECT",
+        "result": "FAIL",
+        "errno": 2,
+        "symbol": "ENOENT",
+        "stage": "connect"
+      },
+      {
+        "case": "STOP_FIRST_FAILURE",
+        "result": "FAIL",
+        "reason": "RuntimeError"
+      }
+    ],
+    "production_targets_used": false,
+    "all_IP_connect_targets_TEST_NET_port9": true,
+    "socket_policy_errors_required": "EPERM not timeout/refusal"
+  },
+  "closeout": {
+    "three_protected_services_unchanged": true,
+    "imported_private_hash_size_modes_unchanged": true,
+    "existing_TCP_LISTEN_snapshot_unchanged": true,
+    "test_sockets_remaining": 0,
+    "Chrome_launches": 0,
+    "bridge_launches": 0,
+    "exporter": 0,
+    "R1_repeated": false
+  },
+  "missing_proof": [
+    "Out-of-root UDS connect policy denial (ENOENT is not proof)",
+    "All8 IPv4/IPv6 TCP/UDP bind/connect checks NOT_EXECUTED after first failure",
+    "Inherited-child matrix NOT_EXECUTED",
+    "Chrome env inheritance/actual SingletonSocket use NOT_EXECUTED",
+    "All browser R2 UI cases NOT_TESTED"
+  ],
+  "safety": {
+    "NEW_TCP_UDP_LISTEN": 0,
+    "IP_NETWORK_REQUESTS": 0,
+    "PROD_HTTP": 0,
+    "RPC": 0,
+    "EXPORTER": 0,
+    "PROD_WRITES": 0,
+    "RESTARTS": 0,
+    "DEPLOYS": 0,
+    "MERGES": 0,
+    "NOTIFICATIONS": 0,
+    "TRADES": 0,
+    "PORT_CHANGES": 0
+  },
+  "end_utc": "2026-10-24T14:46:11.038520+00:00"
+}

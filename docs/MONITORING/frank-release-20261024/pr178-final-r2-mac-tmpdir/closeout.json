@@ -1,0 +1,10 @@
+{
+  "three_protected_services_unchanged": true,
+  "imported_private_hash_size_modes_unchanged": true,
+  "existing_TCP_LISTEN_snapshot_unchanged": true,
+  "test_sockets_remaining": 0,
+  "Chrome_launches": 0,
+  "bridge_launches": 0,
+  "exporter": 0,
+  "R1_repeated": false
+}

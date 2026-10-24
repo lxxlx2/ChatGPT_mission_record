@@ -1,0 +1,8 @@
+{
+  "product_sha": "914e9e47fed2e60bc24690fcb083413a64d4e681",
+  "prior_R1_manifest": "9a06f5f29fce05ccade8caa2b90d6d6c0c4248d2e6ab4e45aa26fa9d3f401062",
+  "R1_repeated": false,
+  "canonical_short_root_0700": true,
+  "expected_singleton_path_under_104_bytes": true,
+  "original_five_runtime_asset_bytes_match": true
+}
