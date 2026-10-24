@@ -37,6 +37,7 @@
 **需要下一次另行批准的最小采集（本文件不是授权）**
 
 - 从精确固定 SHA 的 PR60 干净离线 checkout、固定 Frank owner，使用现有被允许的 RPC provider（不得额外安装／换新 provider）发送恰好最多两次独立 finalized getTokenAccountsByOwner：SPL Token 与 Token-2022 各一次。不得失败重试、不得建立新常驻服务，不扫描历史交易或新 CA，不查询任意其它地址。
+- **新发现必须修正的门禁：**固定 PR60 的 `wallet_full_rpc_evidence.py::collect_owner_full_receipts` 对第一条程序查询的异常使用 `continue`，所以直接运行 `frank_capture_owner_full_receipts.py --execute` 时，第一条失败后仍可能调用第二条。未来单次 RPC 授权必须采用经过独立代码审查的外层**逐条确认**执行器：第一条 HTTP 完整性、来源、program、owner、slot、原始回执保存与校验**全部成功**后才允许第二条；任何失败立即停止、不重试、不执行第二条、不补发、不以部分归档冒充完整覆盖。这只是研发设计门禁，绝不据此修改或执行当前 PR60 采集器；采集脚本实现与固定 SHA 必须先接受离线测试及独立复核。
 - 仅保存本机私有 owner-only 0700目录中的 0600原始回执；校验响应 HTTP framing、大小、id/program/owner/account 唯一性、SHA256、客户端采集时间及两程序各自 finalized slot。若任一失败则整个新数据集标 SOURCE_INCOMPLETE，不混用旧证据。
 - 只使用原 PR60 replay_owner_full_receipts 对两份原始回复离线 replay，禁止调用链上；单独记录收集时间、slot、owner 覆盖、结果非原子性，标明不含原生 SOL、其他 Token Program、美元估值与完整 PnL。
 - 后续快照解释保留 NONZERO_AT_SLOT、ZERO_AT_SLOT、NO_ACTIVE_OWNER_TOKEN_ACCOUNT_OBSERVED_AT_SLOTS、SOURCE_INCOMPLETE、SOURCE_STALE 和 UNSUPPORTED_PROGRAM；严格区分本地 BUY/SELL 与被动转入，不将非零账户误称主动买入/值得投资。
