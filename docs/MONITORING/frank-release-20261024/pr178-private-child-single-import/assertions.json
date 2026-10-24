@@ -1,0 +1,169 @@
+{
+  "outcome": "MAC_D2_PRIVATE_CHILD_SINGLE_IMPORT_PASS",
+  "interpreter_provenance": "UNRESOLVED_DISCLOSED_OFFLINE_DATA_ONLY_LIMITATION",
+  "safety": {
+    "SHARED_ROOT_CHMOD": 0,
+    "NEW_RPC": 0,
+    "PROD_HTTP_GET": 0,
+    "RESTARTS": 0,
+    "DEPLOYS": 0,
+    "MERGES": 0,
+    "NOTIFICATIONS": 0,
+    "TRADES": 0,
+    "SQLITE_READS": 0,
+    "SQLITE_WRITES": 0,
+    "NEW_LISTENERS": 0,
+    "PORT_CHANGES": 0
+  },
+  "candidate_sha": "914e9e47fed2e60bc24690fcb083413a64d4e681",
+  "fixed_prs": {
+    "60": "e4529ba7069e5499d12323a7160ceac08c481fae",
+    "174": "a14846f16e68fd0899ab5506d8c2f0c91272df48",
+    "178": "ea9a7715beb4d2a55ae956bf993828cbddcb50e5"
+  },
+  "source_manifests": [
+    {
+      "sha": "e4529ba7069e5499d12323a7160ceac08c481fae",
+      "files": 457,
+      "manifest_sha256": "e81c0488f9d97367fbfc716d9cc3303c1dc19d2acfadb33bd4288b5619418bc2"
+    },
+    {
+      "sha": "914e9e47fed2e60bc24690fcb083413a64d4e681",
+      "files": 446,
+      "manifest_sha256": "667ed1b1af6be163b4a8d18b87a849a6146e67bd6b8d8ebec6f4d299abd33068"
+    }
+  ],
+  "original_hashes": {
+    "manifest.json": "f06df53ccfb8b96e1b92f428620311cf62bd6bb44f9b83fd7e126f2ee5b1f88b",
+    "spl-token.json": "f77120c050a6d014dd53d41fd9d0e8392f34ab31b91155bfa30e18334ab3b682",
+    "token-2022.json": "a327bf34f0e5bf10994662e937704d74098464cc5fddeb2ab4ce77e9ac2c58c2"
+  },
+  "installed_sha": "656ed2c96f4210d106d7b1129ec6cf8d7c4586f3",
+  "filesystem_outcome": "CHILD_AND_FILE_CREATED_RETAINED",
+  "rollback": false,
+  "gates": [
+    {
+      "gate": "A01_SOURCE_PIN",
+      "status": "PASS",
+      "evidence": {
+        "frozen_heads_and_blobs_match": true,
+        "two_clean_detached_archives_match": true,
+        "three_original_Oct23_hashes_match": true
+      }
+    },
+    {
+      "gate": "A02_LIVE_SERVICE",
+      "status": "PASS",
+      "evidence": {
+        "three_current_services_identified": true,
+        "entry_flags_listener_match": true,
+        "installed_files": 437,
+        "runner_hash_matches": true,
+        "interpreter_origin": "UNRESOLVED_NONBLOCKING_ONLY_PER_NEW_AUTHORIZATION"
+      }
+    },
+    {
+      "gate": "A03_EXACT_SHARED_ROOT",
+      "status": "PASS",
+      "evidence": {
+        "root_mode": "0755",
+        "canonical_no_symlink": true,
+        "owner_verified": true,
+        "no_acl_or_flags": true,
+        "not_git": true,
+        "existing_pointer_provenance_matches": true,
+        "shared_root_never_chmod": true
+      }
+    },
+    {
+      "gate": "A04_CHILD_AND_SOURCE_ABSENT",
+      "status": "PASS",
+      "evidence": {
+        "new_child_and_target_absent": true,
+        "legacy_root_file_absent": true,
+        "services_listener_unchanged": true
+      }
+    },
+    {
+      "gate": "B01_SINGLE_PRIVATE_CHILD",
+      "status": "PASS",
+      "evidence": {
+        "atomic_single_level_mkdir": true,
+        "new_child_mode": "0700",
+        "parent_mode_unchanged": "0755",
+        "same_owner_and_bound_identity": true,
+        "port_services_unchanged": true
+      }
+    },
+    {
+      "gate": "C01_FINAL_PREWRITE",
+      "status": "PASS",
+      "evidence": {
+        "fixed_sources_original_hashes_child0700_parent0755_target_absent": true,
+        "runtime_identity_and_port_unchanged": true
+      }
+    },
+    {
+      "gate": "C02_EXPORT_ONCE",
+      "status": "PASS",
+      "evidence": {
+        "invocations": 1,
+        "exit": 0,
+        "parent_child_process_network_denied": true,
+        "cli_constant_not_used_as_destination_evidence": true
+      }
+    },
+    {
+      "gate": "C03_PRIVATE_READER_ACCEPTANCE",
+      "status": "PASS",
+      "evidence": {
+        "bytes": 893189,
+        "sha256": "d24d73d13a5ab9740eed7d1f06a6226aa9650004ccd756458b579c9e2ee2e284",
+        "internal_checksum_not_signature": "273058a9961d017fa170e86a593e3f621f5ddb31f322e40ce1846ccd66c1581b",
+        "capture_digest": "016b99ff42c3b155316bd46bec5850ff9dbfb9437bbfd5c3c28414d58fef4f08",
+        "mode": "0600",
+        "accounts": 4148,
+        "mints": 4148,
+        "nonzero": 3275,
+        "program_counts": [
+          1875,
+          2273
+        ],
+        "slots": [
+          460482174,
+          460482176
+        ],
+        "observed_at_utc": "2026-10-23T14:46:32.787921+00:00",
+        "pages": 42,
+        "page_sizes": "41x100+48",
+        "target32": {
+          "present": 32,
+          "nonzero": 8,
+          "zero": 24
+        },
+        "zero_absent_distinct": true,
+        "same_slot_atomic": false,
+        "current_balance_verified": false,
+        "usd_value_verified": false,
+        "pnl_verified": false
+      }
+    },
+    {
+      "gate": "D01_CLOSEOUT",
+      "status": "PASS",
+      "evidence": {
+        "parent0755_child0700_file0600": true,
+        "known_services_pid_start_uid_cwd_argv_runner_plist_unchanged": true,
+        "8766_listener_unchanged": true,
+        "installed437files_unchanged": true,
+        "original_raw_hashes_unchanged": true,
+        "only_child_and_one_file_created": true,
+        "D2_ENDPOINT_NOT_DEPLOYED": true,
+        "rollback": false
+      }
+    }
+  ],
+  "exporter_invocations": 1,
+  "child_created": true,
+  "finished_utc": "2026-10-24T10:02:33.657151+00:00"
+}
