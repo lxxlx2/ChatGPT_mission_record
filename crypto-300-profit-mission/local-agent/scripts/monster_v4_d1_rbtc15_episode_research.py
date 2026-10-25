@@ -13,7 +13,7 @@ import sqlite3
 import monster_v4_shadow as original
 from monster_v4_d1_rbtc15_last5_research import FIVE_MS, evaluate_research_candidate
 
-RESEARCH_SCHEMA = "MONSTER_ADR005_ISOLATED_EPISODE_LEDGER_V1"
+RESEARCH_SCHEMA = "MONSTER_ADR005_ISOLATED_EPISODE_LEDGER_V2"
 TICK_MS = 180_000
 MAX_SERVICE = 8
 FINAL = frozenset({"RESEARCH_SETUP", "NO_SETUP", "SOURCE_UNSCORED", "LATE_UNSCORED"})
@@ -32,6 +32,9 @@ def _schema(db):
         first_seen_ms INTEGER NOT NULL, deadline_ms INTEGER NOT NULL,
         status TEXT NOT NULL DEFAULT 'PENDING',
         retry_after_ms INTEGER NOT NULL, last_reviewed_open_ms INTEGER,
+        first_reviewed_open_ms INTEGER,
+        reviewed_closed5_count INTEGER NOT NULL DEFAULT 0,
+        missed_closed5_count INTEGER NOT NULL DEFAULT 0,
         attempts INTEGER NOT NULL DEFAULT 0, source_censored_count INTEGER NOT NULL DEFAULT 0
     );
     CREATE UNIQUE INDEX one_research_pending_per_spot_symbol
@@ -100,15 +103,21 @@ def admit_original_watch(db, event):
 
 
 def _negative_fully_reviewed_through_deadline(row):
-    """No known final-bar opportunity missed (no inference from an early negative).
+    """Every eligible post-WATCH 5m bar was reviewed, with no missed opportunity.
 
-    The last eligible closed 5m bar at the original 3m deadline has an open
-    time strictly before floor(deadline / 5m). A stale earlier bar can never
-    establish NO_SETUP, even if one or more earlier reviews were negative.
+    One negative bar, or the final negative bar alone, cannot establish a
+    negative episode. Successful reviews MUST cover the complete consecutive
+    5m sequence from the bar containing WATCH to the last bar closed at the
+    fixed deadline. The first watched bar itself only becomes eligible once
+    it has closed after the original WATCH clock.
     """
-    deadline=row["deadline_ms"]
-    expected_open=(deadline//FIVE_MS)*FIVE_MS-FIVE_MS
-    return row["last_reviewed_open_ms"] == expected_open
+    start=(row["first_seen_ms"]//FIVE_MS)*FIVE_MS
+    final=(row["deadline_ms"]//FIVE_MS)*FIVE_MS-FIVE_MS
+    expected=(final-start)//FIVE_MS+1
+    return (row["first_reviewed_open_ms"] == start
+            and row["last_reviewed_open_ms"] == final
+            and row["reviewed_closed5_count"] == expected
+            and row["missed_closed5_count"] == 0)
 
 
 def _expiry_status(row, *, source_censored_count=None):
@@ -176,17 +185,39 @@ def poll_episodes(db,tick_ms,closed5_by_symbol,*,limit=MAX_SERVICE):
         if state not in ("RESEARCH_SETUP","RESEARCH_NO_SETUP_YET"):
             raise RuntimeError("RESEARCH_UNEXPECTED_COMPARATOR_STATE")
         last_bar=details["latest_5m_open_ms"]
+        # A gap is durable: a later negative cannot erase a missed positive.
+        # The current bar may be scored (including as RESEARCH_SETUP), but an
+        # unobserved intermediate closed bar prevents a confirmed NO_SETUP.
+        first_expected=(row["first_seen_ms"]//FIVE_MS)*FIVE_MS
+        next_expected=(first_expected if row["last_reviewed_open_ms"] is None
+                       else row["last_reviewed_open_ms"]+FIVE_MS)
+        if last_bar<next_expected or (last_bar-next_expected)%FIVE_MS:
+            raise RuntimeError("RESEARCH_MONOTONE_CLOSED5_COVERAGE_DRIFT")
+        skipped=(last_bar-next_expected)//FIVE_MS
+        reviewed=row["reviewed_closed5_count"]+1
+        missed=row["missed_closed5_count"]+skipped
+        first_reviewed=(row["first_reviewed_open_ms"]
+                        if row["first_reviewed_open_ms"] is not None else last_bar)
         # A valid negative at the deadline cannot retroactively prove
         # that an earlier source-censored evaluation was negative.
         # Censored opportunities remain unresolved without explicit backfill.
         # A later positive can still complete this episode as RESEARCH_SETUP.
+        complete=(first_reviewed==first_expected
+                  and last_bar==(row["deadline_ms"]//FIVE_MS)*FIVE_MS-FIVE_MS
+                  and reviewed==((row["deadline_ms"]//FIVE_MS)*FIVE_MS
+                                -FIVE_MS-first_expected)//FIVE_MS+1
+                  and missed==0)
         terminal=("RESEARCH_SETUP" if state=="RESEARCH_SETUP" else
-                  ("SOURCE_UNSCORED" if row["source_censored_count"] else "NO_SETUP")
+                  ("SOURCE_UNSCORED" if row["source_censored_count"] else
+                   "NO_SETUP" if complete else "LATE_UNSCORED")
                   if tick_ms>=row["deadline_ms"] else "PENDING")
         with db:
             db.execute("""UPDATE episode SET status=?,retry_after_ms=?,
-                last_reviewed_open_ms=?,attempts=attempts+1 WHERE watch_event_id=?""",
-                (terminal,tick_ms+TICK_MS,last_bar,identity))
+                last_reviewed_open_ms=?,first_reviewed_open_ms=?,
+                reviewed_closed5_count=?,missed_closed5_count=?,
+                attempts=attempts+1 WHERE watch_event_id=?""",
+                (terminal,tick_ms+TICK_MS,last_bar,first_reviewed,
+                 reviewed,missed,identity))
             if terminal=="RESEARCH_SETUP":
                 eid=hashlib.sha256(("MONSTER_ADR005|spot|"+row["symbol"]+"|"+
                                     identity+"|RESEARCH_SETUP").encode()).hexdigest()
@@ -201,7 +232,8 @@ def summary(db):
     original_count=sum(status.values())
     rows=[dict(row) for row in db.execute("""SELECT e.watch_event_id,e.symbol,e.first_seen_ms,
           e.deadline_ms,e.status,e.attempts,e.source_censored_count,
-          e.last_reviewed_open_ms,
+          e.last_reviewed_open_ms,e.first_reviewed_open_ms,
+          e.reviewed_closed5_count,e.missed_closed5_count,
           r.event_id AS research_event_id,r.observed_ms AS research_observed_ms
           FROM episode e LEFT JOIN research_setup r
           ON r.watch_event_id=e.watch_event_id
