@@ -6,7 +6,7 @@ Use existing Stage166 original ZIP + publisher-checksum verifier unchanged.
 """
 from collections import Counter
 from datetime import date, datetime, timedelta, timezone
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 import csv
 import zipfile
@@ -75,7 +75,7 @@ def symbol_tick_feed(source_dir, symbol, *, asof_utc, roster=None):
                     for j, (price, turnover) in enumerate(observed):
                         closes[offset * DAY_MINUTES + j] = price
                         quotes[offset * DAY_MINUTES + j] = turnover
-            except (ValueError, OSError, zipfile.BadZipFile, UnicodeError):
+            except (ValueError, OSError, zipfile.BadZipFile, UnicodeError, InvalidOperation):
                 rejected.add(day.isoformat())
         day += timedelta(days=1)
     pref_quote = [Decimal(0)]
