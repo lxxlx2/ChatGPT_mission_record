@@ -14,7 +14,7 @@ The original coordinator execution loop containing the ONE `ThreadPoolExecutor(m
 
 **Crucial:** the fake source, D2-A/B/C test signatures, production roots, OS fixed-marker paths, Mac protected entry, hard-stop child, `send_live` and D3 production authorization are **UNCHANGED**. This PR does NOT implement a physical live sender, enrollment or user approval. It is an entirely TEST-PATCHED integration of the **same physical HTTPS client call site** with a distinct source type in the same coordinator. Actual live real-source promotion must be a separate independently reviewed code change, authenticated production D2/D3 + OS one-use marker and separate user-approved bounded read-only pilot.
 
-## New seven offline tests
+## New nine offline tests
 
 `tests/test_f0_l2_d2_physical_slot_offline.py` exercises:
 1. Public fake entry rejects staged physical type *before writer, journal or constructor*.
@@ -33,7 +33,7 @@ Positive tests use ephemeral synthetic JSON-RPC responses created by a separate 
 - Ensure **only one** `ThreadPoolExecutor`, `GlobalStartGate`, `ExclusiveEvidence`; no `run_real_concurrent`, second worker pool, queue or ledger. Validate no spoofed source subclass, instance-level `reply_transport_evidence_offline` injection, no direct staged test path reaching genuine HTTPS constructor.
 - Ensure no actual socket can be reached under intended offline tests; a patched constructor that secretly delegates to real sockets is NOT proof of authorization and MUST never be used outside fixture-controlled CI.
 - Previous D1 hard-stop, unknown/no-retry, one-use TEST marker, 700ms fake UTC gate, headers/Content-Length and D2-A/B/C test-only denial all pass. No new time injection or factory permitted in the production entry.
-- Independently compare exact source diff against approved PR209, hash actual source modules, run full F0 (566 expected), D1-only (171 expected), physical constructor (16 expected), new staged slot (7 expected), D2-A/B/C/UTC/budget/hard-stop/child lifetime, inspect actual Mac ARM64 system. Linux CI is separate from independent Mac approval.
+- Independently compare exact source diff against approved PR209, hash actual source modules, run full F0 (568 expected), D1-only (171 expected), physical constructor (16 expected), new staged slot (7 expected), D2-A/B/C/UTC/budget/hard-stop/child lifetime, inspect actual Mac ARM64 system. Linux CI is separate from independent Mac approval.
 - Do not claim this private staged method is production-safe merely because the original ctor identity is checked. Real producer authorization remains unfinished.
 
 Potential verdict at new fixed SHA: `APPROVE_OFFLINE_CODE — D2_SINGLE_COORDINATOR_PHYSICAL_SLOT_PATCHED_ONLY` or `REQUEST_CHANGES`. Neither grants real source startup, network pilot, signer enrollment, nonce, deployment, merge or trading.
@@ -46,3 +46,15 @@ The first Linux run [40239652434](https://github.com/lxxlx2/ChatGPT_mission_reco
 
 Source fix commit `10847a3a6f7e3f5028289e85daa4a6ddbef9b655`: the common coordinator keeps the original field and original values for fake-only classes but emits `synthetic_source_growth_bps: null` when the staged source is used, explicitly **not inventing a physical source growth estimate**. Test revision commit `705346ce37b47be9bf5e8636c1c5f83c0bf4eb9f` asserts the honest null. An exact new-head complete CI and fresh independent review are mandatory; the initial failed SHA is not approved. No source, trust-root, scheduler, SDK, RPC or signing capability was added by this repair.
 
+
+
+## Prevent direct staged source dispatch without a durable RID receipt
+
+Additional source-level review identified a genuine test-boundary weakness **before independent Mac review**: the lower `GlobalStartGate.run` and staged source method originally accepted arbitrary callable `reservation_guard` when the constructor was patched. That allowed a direct transport-shaped test to skip `ExclusiveEvidence.add(RESERVE_UNKNOWN)` entirely. Even though no real socket was intentionally opened, this violated the single-coordinator RID ownership invariant.
+
+Narrow correction commits `a985f9d6839190740c6b047424e714de2d52ab2c` and `6cdde5b8f40d591b2bc0812cd26924b3a13d763e`:
+- Add `_StagedOnlyReservationGuard`, an exact in-process TEST receipt. Only the original `reserve()` path constructs it **AFTER the durable original RID journal write**, wrapping the unchanged `verified_reservation` closure and exact JSON payload digest. Its construction seal is an internal Python test token, **not cryptographic production consent**.
+- Both `GlobalStartGate.run` and `StagedPhysicalHTTPSReadOnlySource.reply_transport_evidence_offline` require that exact receipt rather than any caller-injected lambda; source also verifies its payload before any constructor. The existing four fake source paths are untouched.
+- Two new negative tests (`f2de79d4185cfffeb3104b7b039d6c04188e9657`) call the lower gate and staged source directly under replaced HTTPS constructors with arbitrary lambda proof: **reject before constructor and start**. Old direct-gate test updated to the precise new predispatch error. The staged offline tests now number **nine**; full F0 **568 expected** until new final CI. This does not pretend arbitrary Python monkeypatching or access to a private test token is a production security boundary.
+
+The old initial failing CI and its report fix above remain in history; the new revision requires **another exact-SHA CI and independent Mac review**. In the new review independently attempt to bypass RID via direct staged source or lower gate with a patched constructor: must be denied. Production `PRODUCTION_NO_GO` remains.
