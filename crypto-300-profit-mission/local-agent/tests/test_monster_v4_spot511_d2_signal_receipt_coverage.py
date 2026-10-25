@@ -75,6 +75,76 @@ class FrozenReal69D2ReceiptTests(unittest.TestCase):
         self.assertEqual(m.classify_receipt_time(signal,signal+1),
             "ARCHIVED_QUOTE_NOT_YET_RECEIVED_AT_EVENT_CLOCK")
 
+    def test_real_analyze_microsecond_after_signal_is_future_receipt(self):
+        signal=1_792_320_000_000
+        snapshot=self.snapshot(signal)
+        for offset_us,expected in (
+                (0,"ARCHIVED_NON_ATOMIC_BBO_WITHOUT_EXCHANGE_QUOTE_EVENT_TIME"),
+                (1,"ARCHIVED_QUOTE_NOT_YET_RECEIVED_AT_EVENT_CLOCK"),
+                (-1,"ARCHIVED_NON_ATOMIC_BBO_WITHOUT_EXCHANGE_QUOTE_EVENT_TIME")):
+            dt=(datetime.fromtimestamp(signal/1000,timezone.utc)
+                +timedelta(microseconds=offset_us))
+            snapshot["quote_bundle_not_available_until_client_receipt_utc"]=(
+                dt.isoformat(timespec="microseconds").replace("+00:00","Z"))
+            report=m.analyze(self.rows(signal),snapshot)
+            self.assertEqual(report["events"][0]["watch_quote_receipt_status"],
+                             expected)
+            self.assertEqual(report["archived_receipt_availability_us_exact"],
+                             signal*1000+offset_us)
+            self.assertEqual(report["events"][0][
+                "archived_quote_available_at_client_receipt_ms"],
+                signal+(1 if offset_us>0 else 0))
+            self.assertEqual(report["events"][0][
+                "watch_vs_archived_receipt_age_us_exact"],-offset_us)
+            self.assertFalse(report["events"][0]["can_confirm_g4"])
+
+    def test_real_analyze_threshold_exact_and_one_microsecond_both_sides(self):
+        signal=1_792_320_000_000
+        for age_us,expected in (
+                (180_000_000,"ARCHIVED_NON_ATOMIC_BBO_WITHOUT_EXCHANGE_QUOTE_EVENT_TIME"),
+                (180_000_001,"ARCHIVED_QUOTE_STALE_AT_EVENT_CLOCK"),
+                (179_999_999,"ARCHIVED_NON_ATOMIC_BBO_WITHOUT_EXCHANGE_QUOTE_EVENT_TIME")):
+            dt=(datetime.fromtimestamp(signal/1000,timezone.utc)
+                -timedelta(microseconds=age_us))
+            snapshot=self.snapshot(signal)
+            snapshot["quote_bundle_not_available_until_client_receipt_utc"]=(
+                dt.isoformat(timespec="microseconds").replace("+00:00","Z"))
+            report=m.analyze(self.rows(signal),snapshot)
+            self.assertEqual(report["events"][0]["watch_quote_receipt_status"],
+                             expected)
+            self.assertEqual(report["events"][0][
+                "watch_vs_archived_receipt_age_us_exact"],age_us)
+            self.assertEqual(report["G4"],"UNKNOWN")
+
+    def test_d1_microsecond_after_setup_is_not_yet_received(self):
+        signal=1_792_320_000_000
+        # D1 first setup clock is WATCH + one 3-minute tick.
+        first_setup_ms=signal+180_000
+        snapshot=self.snapshot(first_setup_ms)
+        dt=(datetime.fromtimestamp(first_setup_ms/1000,timezone.utc)
+            +timedelta(microseconds=1))
+        snapshot["quote_bundle_not_available_until_client_receipt_utc"]=(
+            dt.isoformat(timespec="microseconds").replace("+00:00","Z"))
+        report=m.analyze(self.rows(signal),snapshot)
+        self.assertEqual(report["events"][0]["d1_quote_receipt_status"],
+            "ARCHIVED_QUOTE_NOT_YET_RECEIVED_AT_EVENT_CLOCK")
+        self.assertEqual(report["events"][0]["watch_quote_receipt_status"],
+            "ARCHIVED_QUOTE_NOT_YET_RECEIVED_AT_EVENT_CLOCK")
+        self.assertEqual(report["G4_signal_time_bidask_proven"],0)
+
+    def test_microsecond_parser_exact_including_stage163_saved_receipt(self):
+        exact="2026-10-17T22:04:46.929464Z"
+        timestamp=s163.parse_utc(exact)
+        expected=((timestamp-datetime(1970,1,1,tzinfo=timezone.utc)).days*86400
+                  +(timestamp-datetime(1970,1,1,tzinfo=timezone.utc)).seconds
+                  )*1_000_000+timestamp.microsecond
+        self.assertEqual(m._micros(exact),expected)
+        self.assertEqual(m._micros("2026-10-18T10:40:00.000001Z"),
+                         1_792_320_000_000*1000+1)
+        self.assertEqual(m.classify_receipt_time_us(
+            1_792_320_000_000,m._micros("2026-10-18T10:40:00.000001Z")),
+            "ARCHIVED_QUOTE_NOT_YET_RECEIVED_AT_EVENT_CLOCK")
+
     def test_missing_symbol_is_not_silently_omitted(self):
         signal=1_792_320_000_000
         rows=self.rows(signal)
