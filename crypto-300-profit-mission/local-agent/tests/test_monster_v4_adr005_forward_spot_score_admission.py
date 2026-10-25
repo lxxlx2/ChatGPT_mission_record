@@ -14,7 +14,7 @@ class ForwardScoreSourceAdmissionTests(unittest.TestCase):
     WINDOW="2026-11-02T00:00:00Z"
     FUTURE_ASOF="2026-11-16T00:00:00Z"
 
-    def fixture(self,symbols=("AAAUSDT","BBBUSDT"),missing=()):
+    def fixture(self,symbols=("AAAUSDT","BBBUSDT","BTCUSDT"),missing=()):
         """Synthetic source census with valid accounting; NOT original issuer ZIPs."""
         population=len(symbols)
         calendar=daily.source_calendar(self.WINDOW)
@@ -46,14 +46,21 @@ class ForwardScoreSourceAdmissionTests(unittest.TestCase):
             "source_attempts":rows,
         }
 
-    def test_synthetic_two_coin_30_day_source_complete_not_real_model_score(self):
+    def test_synthetic_two_targets_plus_btc_45day_complete_does_not_score_model(self):
         data=gate.join_census(self.fixture())
-        self.assertEqual(data["original_t0_symbols_total"],2)
+        self.assertEqual(data["original_t0_symbols_total"],3)
         self.assertEqual(data["frozen_source_days_per_symbol"],15)
+        self.assertEqual(data["technical_original_d0_source_complete_symbols"],2)
+        self.assertEqual(data["technical_rbtc_d1_source_complete_symbols"],2)
         self.assertEqual(data["technical_offline_replay_source_complete_symbols"],2)
         self.assertEqual(data["technical_future_label_source_complete_symbols"],2)
-        self.assertEqual(data["source_stage_status_counts"],
-                         {"SOURCE_COMPLETE_OFFLINE_REPLAY_ONLY":2})
+        self.assertEqual(data["source_stage_status_counts"],{
+            "SOURCE_COMPLETE_OFFLINE_REPLAY_ONLY":2,
+            "BTC_BENCHMARK_SOURCE_COMPLETE":1})
+        self.assertTrue(data["btc_benchmark_research_d1_source_ready"])
+        btc=next(x for x in data["symbols"] if x["symbol"]=="BTCUSDT")
+        self.assertFalse(btc["research_d1_target"])
+        self.assertFalse(btc["technically_eligible_for_offline_rbtc_d1_source_replay"])
         self.assertTrue(data["all_source_15days_complete"])
         self.assertEqual(data["G1"],"NOT_SCORABLE")
         self.assertEqual(data["G2"],"UNKNOWN")
@@ -74,6 +81,7 @@ class ForwardScoreSourceAdmissionTests(unittest.TestCase):
         self.assertEqual(d["source_stage_status_counts"],{
             "D0_D1_SOURCE_READY_GT_LABELS_BLOCKED":1,
             "SOURCE_COMPLETE_OFFLINE_REPLAY_ONLY":1,
+            "BTC_BENCHMARK_SOURCE_COMPLETE":1,
         })
         self.assertTrue(statuses["AAAUSDT"]["technically_eligible_for_offline_d0_d1_source_replay"])
         self.assertFalse(statuses["AAAUSDT"]["technically_eligible_for_retrospective_gt_labels"])
@@ -94,6 +102,86 @@ class ForwardScoreSourceAdmissionTests(unittest.TestCase):
         row=next(x for x in d["symbols"] if x["symbol"]=="AAAUSDT")
         self.assertIn("BASELINE_24H_MISSING_OR_INVALID",row["source_blockers"])
         self.assertFalse(row["technically_eligible_for_offline_d0_d1_source_replay"])
+
+    def test_codex_p2_btc_observation_missing_aaa_d0_ready_but_research_d1_blocked(self):
+        bad=self.fixture(symbols=("AAAUSDT","BTCUSDT"),
+                         missing={("BTCUSDT","2026-11-04")})
+        result=gate.join_census(bad)
+        aaa=next(x for x in result["symbols"] if x["symbol"]=="AAAUSDT")
+        self.assertTrue(aaa["technically_eligible_for_offline_original_d0_source_replay"])
+        self.assertTrue(aaa["technically_eligible_for_original_d0_gt2x_label_sources"])
+        self.assertFalse(aaa["technically_eligible_for_offline_rbtc_d1_source_replay"])
+        self.assertFalse(aaa["technically_eligible_for_offline_d0_d1_source_replay"])
+        self.assertFalse(aaa["technically_eligible_for_retrospective_gt_labels"])
+        self.assertEqual(aaa["status"],"D0_SOURCE_READY_RBTC_D1_BLOCKED")
+        self.assertIn("BTC_OBSERVATION_7D_MISSING_OR_INVALID",aaa["source_blockers"])
+        self.assertEqual(result["technical_original_d0_source_complete_symbols"],1)
+        self.assertEqual(result["technical_rbtc_d1_source_complete_symbols"],0)
+        self.assertEqual(result["technical_offline_replay_source_complete_symbols"],0)
+        self.assertEqual(result["technical_future_label_source_complete_symbols"],0)
+        self.assertFalse(result["btc_benchmark_research_d1_source_ready"])
+        self.assertEqual(result["G2"],"UNKNOWN")
+        self.assertFalse(result["metrics_from_future_labels_computed"])
+        self.assertFalse(result["replay_engine_executed"])
+
+    def test_btc_missing_from_frozen_roster_does_not_remove_candidate_or_fake_btc(self):
+        data=gate.join_census(self.fixture(symbols=("AAAUSDT","BBBUSDT")))
+        self.assertEqual(data["original_t0_symbols_total"],2)
+        self.assertEqual(data["technical_original_d0_source_complete_symbols"],2)
+        self.assertEqual(data["technical_offline_replay_source_complete_symbols"],0)
+        self.assertEqual(data["technical_future_label_source_complete_symbols"],0)
+        self.assertFalse(data["btc_benchmark_in_t0_source_census"])
+        self.assertEqual(data["source_stage_status_counts"],
+                         {"D0_SOURCE_READY_RBTC_D1_BLOCKED":2})
+        for row in data["symbols"]:
+            self.assertIn("BTC_BENCHMARK_NOT_IN_T0_SOURCE_CENSUS",
+                          row["source_blockers"])
+            self.assertTrue(row["technically_eligible_for_offline_original_d0_source_replay"])
+            self.assertFalse(row["technically_eligible_for_offline_rbtc_d1_source_replay"])
+
+    def test_btc_complete_restores_research_d1_without_new_model_or_gt_event(self):
+        data=gate.join_census(self.fixture(symbols=("AAAUSDT","BTCUSDT")))
+        aaa=next(x for x in data["symbols"] if x["symbol"]=="AAAUSDT")
+        self.assertTrue(aaa["technically_eligible_for_offline_original_d0_source_replay"])
+        self.assertTrue(aaa["technically_eligible_for_offline_rbtc_d1_source_replay"])
+        self.assertEqual(aaa["status"],"SOURCE_COMPLETE_OFFLINE_REPLAY_ONLY")
+        self.assertEqual(aaa["source_blockers"],[])
+        self.assertEqual(data["technical_rbtc_d1_source_complete_symbols"],1)
+        self.assertTrue(data["btc_benchmark_research_d1_source_ready"])
+        self.assertIsNone(aaa["original_d0_watch_event_id"])
+        self.assertIsNone(aaa["original_d1_research_event_id"])
+        self.assertEqual(data["G1"],"NOT_SCORABLE")
+        self.assertEqual(data["G6"],"NO_GO")
+
+    def test_btc_missing_baseline_blocks_rbtc_d1_without_erasing_d0(self):
+        d=gate.join_census(self.fixture(
+            symbols=("AAAUSDT","BTCUSDT"),
+            missing={("BTCUSDT","2026-11-01")}))
+        aaa=next(x for x in d["symbols"] if x["symbol"]=="AAAUSDT")
+        self.assertTrue(aaa["technically_eligible_for_offline_original_d0_source_replay"])
+        self.assertFalse(aaa["technically_eligible_for_offline_rbtc_d1_source_replay"])
+        self.assertIn("BTC_BASELINE_24H_MISSING_OR_INVALID",aaa["source_blockers"])
+
+    def test_btc_future_gt_label_missing_does_not_block_same_time_research_d1(self):
+        d=gate.join_census(self.fixture(
+            symbols=("AAAUSDT","BTCUSDT"),
+            missing={("BTCUSDT","2026-11-11")}))
+        aaa=next(x for x in d["symbols"] if x["symbol"]=="AAAUSDT")
+        self.assertTrue(aaa["technically_eligible_for_offline_rbtc_d1_source_replay"])
+        self.assertTrue(aaa["technically_eligible_for_retrospective_gt_labels"])
+        self.assertFalse(d["all_source_15days_complete"])
+        self.assertFalse(d["btc_benchmark_research_d1_source_ready"] is False)
+
+    def test_same_btc_observation_gap_blocks_all_targets_not_just_first(self):
+        d=gate.join_census(self.fixture(
+            missing={("BTCUSDT","2026-11-04")}))
+        self.assertEqual(d["original_t0_symbols_total"],3)
+        self.assertEqual(d["technical_original_d0_source_complete_symbols"],2)
+        self.assertEqual(d["technical_rbtc_d1_source_complete_symbols"],0)
+        self.assertEqual(d["source_stage_status_counts"][
+            "D0_SOURCE_READY_RBTC_D1_BLOCKED"],2)
+        self.assertEqual(d["source_stage_status_counts"][
+            "BTC_BENCHMARK_SOURCE_INCOMPLETE"],1)
 
     def test_single_missing_attempt_while_pretending_complete_is_rejected(self):
         f=self.fixture()
@@ -140,6 +228,9 @@ class ForwardScoreSourceAdmissionTests(unittest.TestCase):
             self.assertIsNone(d["original_t0_symbols_total"])
             self.assertEqual(len(d["publisher_day_states"]),15)
             self.assertEqual(d["G0"],"POPULATION_UNKNOWN")
+            self.assertIsNone(d["btc_benchmark_research_d1_source_ready"])
+            self.assertIsNone(d["technical_original_d0_source_complete_symbols"])
+            self.assertIsNone(d["technical_rbtc_d1_source_complete_symbols"])
             self.assertEqual(d["G1"],"NOT_SCORABLE")
             self.assertFalse(d["metrics_from_future_labels_computed"])
             self.assertEqual(d["G6"],"NO_GO")
