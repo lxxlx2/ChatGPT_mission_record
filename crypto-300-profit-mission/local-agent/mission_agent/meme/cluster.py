@@ -224,6 +224,13 @@ class RPCJobBudgetExceeded(RPCError):
     """Job-level network-attempt/time budget exhausted; never downgrade to partial DONE."""
 
 
+class _NoRPCRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Never follow a JSON-RPC redirect to another host/method behind one counted attempt."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise RPCError("RPC_REDIRECT_FORBIDDEN")
+
+
 class RpcCache:
     def __init__(self, path: Path):
         self.path = Path(path)
@@ -255,7 +262,7 @@ class SolanaReadOnlyRPC:
         endpoint=DEFAULT_RPC,
         *,
         fallback_endpoints=None,
-        open_url=urllib.request.urlopen,
+        open_url=None,
         sleep=time.sleep,
         min_interval=.45,
         cache:RpcCache|None=None,
@@ -276,7 +283,9 @@ class SolanaReadOnlyRPC:
                 raise ValueError("RPC_ENDPOINT_INVALID")
             if value not in self.endpoints:self.endpoints.append(value)
         self.endpoint=self.endpoints[0]
-        self.open_url=open_url
+        # The shipped transport must reject redirects before any second wire request.
+        # Injected open_url is for controlled offline testing only.
+        self.open_url=open_url if open_url is not None else urllib.request.build_opener(_NoRPCRedirectHandler()).open
         self.sleep=sleep
         self.min_interval=float(min_interval)
         self.cache=cache
@@ -290,6 +299,7 @@ class SolanaReadOnlyRPC:
         self.max_elapsed_seconds=float(max_elapsed_seconds) if max_elapsed_seconds is not None else None
         self._monotonic=monotonic
         self._budget_started_at=self._monotonic()
+        self._budget_terminal_reason=None
         self.endpoint_calls=defaultdict(int)
         self.endpoint_failures=defaultdict(int)
         self._last_by_endpoint=defaultdict(float)
@@ -333,14 +343,24 @@ class SolanaReadOnlyRPC:
         message=str(error.get("message") or "").lower()
         return code in {-32005,-32429,429} or "rate limit" in message or "too many request" in message
 
+    def _stop_job_budget(self, reason):
+        self._budget_terminal_reason=reason
+        raise RPCJobBudgetExceeded(reason)
+
     def _check_job_deadline(self):
+        if self._budget_terminal_reason:
+            raise RPCJobBudgetExceeded(self._budget_terminal_reason)
         if self.max_elapsed_seconds is not None and self._monotonic()-self._budget_started_at >= self.max_elapsed_seconds:
-            raise RPCJobBudgetExceeded("RPC_JOB_TIME_BUDGET_EXHAUSTED")
+            self._stop_job_budget("RPC_JOB_TIME_BUDGET_EXHAUSTED")
 
     def _check_job_budget(self):
         self._check_job_deadline()
         if self.max_wire_attempts is not None and self.calls >= self.max_wire_attempts:
-            raise RPCJobBudgetExceeded("RPC_JOB_WIRE_BUDGET_EXHAUSTED")
+            self._stop_job_budget("RPC_JOB_WIRE_BUDGET_EXHAUSTED")
+
+    def assert_can_publish(self):
+        """Successful last allowed wire response is valid; failed/expired jobs are not."""
+        self._check_job_deadline()
 
     def call(self, method, params, *, ttl=0):
         if method not in self.ALLOWED:raise ValueError("READ_ONLY_METHOD_ALLOWLIST")
@@ -382,27 +402,33 @@ class SolanaReadOnlyRPC:
                             self._monotonic()+min(30.0,1.5*(2**min(attempt,4))),
                         )
                         last_error=RPCError("RPC_RATE_LIMITED")
+                        self._check_job_budget()
                         continue
                     raise RPCError("RPC_"+str(error.get("code","ERROR")))
                 if "result" not in value:raise RPCError("RPC_ENVELOPE_INVALID")
                 result=value["result"]
                 if method=="getTransaction" and result is None and len(self.endpoints)>1 and null_seen<1:
                     null_seen+=1
+                    self._check_job_budget()
                     continue
                 if ttl and self.cache and result is not None:
                     self.cache.put(method,params,result,ttl,time.time())
                 return result
             except urllib.error.HTTPError as exc:
                 last_error=RPCError("HTTP_"+str(exc.code));self.endpoint_failures[endpoint]+=1
+                self._check_job_budget()
                 if exc.code not in self.RETRYABLE_HTTP:raise last_error
                 retry=max(self._retry_after(exc),min(30.0,1.5*(2**min(attempt,4))))
                 self._cooldown_until[endpoint]=max(self._cooldown_until[endpoint],self._monotonic()+retry)
             except (urllib.error.URLError,TimeoutError,OSError,ValueError) as exc:
                 last_error=RPCError(type(exc).__name__);self.endpoint_failures[endpoint]+=1
+                self._check_job_budget()
                 self._cooldown_until[endpoint]=max(
                     self._cooldown_until[endpoint],
                     self._monotonic()+min(10.0,1.0*(2**min(attempt,3))),
                 )
+        # The final permitted failed attempt must not escape as recoverable RPCError.
+        self._check_job_budget()
         raise last_error or RPCError("RPC_FAILED")
 
 
