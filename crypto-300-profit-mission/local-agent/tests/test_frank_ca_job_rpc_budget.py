@@ -174,9 +174,11 @@ class TestCannotSwallowJobBudget(unittest.TestCase):
                     pass
                 def analyze(self):
                     raise RPCJobBudgetExceeded("RPC_JOB_WIRE_BUDGET_EXHAUSTED")
-            with patch.object(server, "SolanaReadOnlyRPC", FailingRPC), \\
-                 patch.object(server, "WalletClusterAnalyzer", FailingAnalyzer), \\
-                 patch.object(server, "load_registry", return_value={}):
+            with (
+                patch.object(server, "SolanaReadOnlyRPC", FailingRPC),
+                patch.object(server, "WalletClusterAnalyzer", FailingAnalyzer),
+                patch.object(server, "load_registry", return_value={}),
+            ):
                 worker._run("job")
             job = worker.jobs["job"]
             self.assertEqual(job["status"], "ERROR")
