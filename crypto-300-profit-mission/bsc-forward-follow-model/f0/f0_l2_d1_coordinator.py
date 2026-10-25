@@ -244,8 +244,24 @@ class GlobalStartGate:
 
     def run(self, request, source, *, block_head_deadline, dispatch_deadline,
             timeout_ms, fake_post_utc_window=None, reservation_guard=None):
+        from f0_l2_d2a_physical_admission import UnreleasedPhysicalHTTPSProposal
+        if type(source) is UnreleasedPhysicalHTTPSProposal:
+            # A direct lower-level gate call cannot dispatch a candidate.
+            request_physical_source_admission(source)
         from f0_l2_d1_concrete_https import (SealedConcreteOfflineSource,
                                                      PatchedConstructorOfflineSource)
+        # This lower-level shared lock formerly accepted arbitrary duck-typed
+        # objects via its fallback .reply(). Keep even direct invocations
+        # restricted to the four reviewed, EXACT memory-only source types.
+        need(type(source) in (FakeSource, SealedMemoryHTTPSSource,
+                              SealedConcreteOfflineSource,
+                              PatchedConstructorOfflineSource)
+             and "reply" not in getattr(source, "__dict__", {})
+             and "reply_over_memory_https" not in
+                 getattr(source, "__dict__", {})
+             and "reply_transport_evidence_offline" not in
+                 getattr(source, "__dict__", {}),
+             "D2A_GATE_NON_FAKE_SOURCE_REFUSED")
         if type(source) in (SealedMemoryHTTPSSource, SealedConcreteOfflineSource,
                             PatchedConstructorOfflineSource):
             # Prepare the fake TLS connection before acquiring the global
@@ -348,6 +364,21 @@ class GlobalStartGate:
                     "error":type(exc).__name__}
 
 
+def request_physical_source_admission(source_proposal):
+    """Future true source's ONLY coordinator admission seam: D2-A DENY.
+
+    The old scheduler, RID journal and start gate are the intended owners,
+    but they must never run a physical sender without independently pinned
+    D2 and separately authenticated D3 authority. The structured proposal
+    itself can be forged; not even exact type/shape is permission.
+    Fail BEFORE evidence output, reservation, lease or HTTPS constructor.
+    """
+    from f0_l2_d2a_physical_admission import UnreleasedPhysicalHTTPSProposal
+    need(type(source_proposal) is UnreleasedPhysicalHTTPSProposal,
+         "D2A_PHYSICAL_SOURCE_EXACT_PROPOSAL_REQUIRED")
+    raise ValueError("D2A_PHYSICAL_SOURCE_ADMISSION_BLOCKED_D2_D3")
+
+
 def run_fake_concurrent(source, output_root, *, max_total=32,
                         max_blocks=24, max_refreshes=6, spacing_ms=250,
                         slots=3, head_ttl_ms=4000, window_ms=60000,
@@ -359,6 +390,11 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
     Any invalid input is rejected; concurrent workers cannot allocate IDs,
     modify budgets, write the evidence log, or retry.
     """
+    from f0_l2_d2a_physical_admission import UnreleasedPhysicalHTTPSProposal
+    if type(source) is UnreleasedPhysicalHTTPSProposal:
+        # Explicit early physical-source denial BEFORE the fake coordinator
+        # starts its clock, creates evidence, or hands work to its pool.
+        request_physical_source_admission(source)
     from f0_l2_d1_concrete_https import (SealedConcreteOfflineSource,
                                                      PatchedConstructorOfflineSource)
     need(type(source) in (FakeSource, SealedMemoryHTTPSSource,
@@ -366,6 +402,8 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
                           PatchedConstructorOfflineSource)
          and "reply" not in getattr(source, "__dict__", {})
          and "reply_over_memory_https" not in getattr(source, "__dict__", {})
+         and "reply_transport_evidence_offline" not in
+             getattr(source, "__dict__", {})
          and type(slots) is int and slots == 3
          and type(max_total) is int and 2 <= max_total <= 32
          and type(max_blocks) is int and 1 <= max_blocks <= 24
