@@ -11,12 +11,12 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from f0_l2_d1_hard_stop_once import run_bounded_offline_once
-from test_f0_l2_d1_bound_wire_rehearsal import BoundWireRehearsalTests
+import test_f0_l2_d1_bound_wire_rehearsal as bound_fixture
 
 
 class D1CandidateActualBudgetTests(unittest.TestCase):
     def base(self):
-        fixture = BoundWireRehearsalTests(
+        fixture = bound_fixture.BoundWireRehearsalTests(
             "test_candidate_bind_and_same_supervised_three_slot_ledger")
         fixture.setUp()
         self.addCleanup(fixture.doCleanups)
