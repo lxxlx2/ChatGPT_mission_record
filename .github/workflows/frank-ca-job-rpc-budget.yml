@@ -1,0 +1,33 @@
+name: Frank CA C1 offline job RPC budget
+on:
+  push:
+    branches: [feature/frank-p1a-c1-job-rpc-budget-20261025]
+  pull_request:
+    branches: [research/frank-p1a-c1-installed-baseline-20261025]
+permissions:
+  contents: read
+jobs:
+  offline-c1-budget:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install existing test dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pip install -e '.[dev]'
+      - name: Syntax check Python and JS
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile mission_agent/meme/cluster.py mission_agent/mission_control/server.py tests/test_frank_ca_job_rpc_budget.py
+          node --check mission_agent/mission_control/static/app.js
+      - name: C1 synthetic-only RPC failstop and regression tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pytest -q tests/test_frank_ca_job_rpc_budget.py tests/test_meme_wallet_cluster.py
+      - name: JS GET recovery and budget UI tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: node --test tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_report_render.mjs
