@@ -4,6 +4,7 @@ import sys
 import tempfile
 import unittest
 import zipfile
+from unittest.mock import patch
 from datetime import date, datetime, timezone
 from pathlib import Path
 
@@ -69,6 +70,20 @@ class MinuteFeedTests(unittest.TestCase):
                 asof_utc=datetime(2026,10,18,12,tzinfo=timezone.utc))
             self.assertIn('2026-10-18',report['source_future_days'])
             self.assertEqual(report['counts']['READY_RECONSTRUCTED_TICKER_PROXY'],39)
+
+    def test_corrupt_decimal_after_admission_race_is_censored_not_crash(self):
+        with tempfile.TemporaryDirectory() as p:
+            day=date(2026,10,16)
+            publisher_day(p,day)
+            z,_=m.stage166.daily_paths(p,'BTCUSDT',day)
+            with zipfile.ZipFile(z,'w',zipfile.ZIP_DEFLATED) as f:
+                f.writestr('BTCUSDT-1m-2026-10-16.csv',
+                           '1792108800000000,1,2,1,NANX,1,1792108859999999,3,1,1,1,0\n')
+            with patch.object(m.stage166,'validate_daily_zip',return_value={}):
+                report=m.symbol_tick_feed(p,'BTCUSDT',roster=ROSTER,
+                    asof_utc=datetime(2026,10,26,tzinfo=timezone.utc))
+            self.assertIn('2026-10-16',report['source_rejected_days'])
+            self.assertEqual(report['counts']['CENSORED_SOURCE_MISSING_OR_REJECTED'],3360)
 
     def test_missing_all_days_preserves_frozen_denominator(self):
         with tempfile.TemporaryDirectory() as p:
