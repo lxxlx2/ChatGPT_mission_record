@@ -1,39 +1,39 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-25 12:59:12 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-25 14:02:28 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-25 12:59:12 Asia/Bangkok (off-minute 12:57 invocation, not proof of HH:00 trigger)
+- latest_actual_run: 2026-10-25 14:02:28 Asia/Bangkok (actual HH:00 invocation, completed 14:02)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-25/125912-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-25/125747-attempt.md
-- latest_scheduled_shard: 0
-- latest_executed_shard: 0
-- stale_shard_recovery: false (hour12 modulo4, no override)
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-25/140228-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-25/140122-attempt.md
+- latest_scheduled_shard: 2
+- latest_executed_shard: 2
+- stale_shard_recovery: false (hour14 modulo4; fair rotation)
 - latest_candidate_count: 7
 - latest_triggered_events: 0
 - latest_identity_failures: 0
-- latest_source_failures: 6
+- latest_source_failures: 5
 - latest_notification_decision: SILENT_NO_NEW_ACTION
 - latest_notification_status: NO_GMAIL_NO_APP
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_additional_USDC,SurfBoard_PONS_raffle,StandX_original_X_checker,Block_Stranding_current_issuer,TurboFlow_region_specific,Makina_recovery_NFT
+- latest_source_gaps: Concrete_additional_USDC,SurfBoard_PONS_raffle,StandX_original_X_checker,01_Exchange_private_mapped_rights,OhBabyGames_current_issuer
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-10-25 12:59:12 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard1: 2026-10-25 10:00:23 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard2: 2026-10-25 10:58:51 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard2: 2026-10-25 14:02:28 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-10-25 11:57:52 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_primary_final_write: VERIFIED_DURABLE 125912-final.md commit 2630fe49aee3464ea117289b0111af822029585f
-- latest_terminal_readback: VERIFIED 125912-final.md blob 51d7acc84dd81ee51c0852ef99d05e53199bc20e
-- latest_four_executed_shards: [1,2,3,0]
-- latest_four_executed_shards_prior: [0,1,2,3]
+- latest_primary_final_write: VERIFIED_DURABLE 140228-final.md commit fe8132aa0b94ff61e6d38fa8d01896b635497eaa
+- latest_terminal_readback: VERIFIED 140228-final.md blob 9d32b0b62593f8e26553b55c97fda71423aeaf8f
+- latest_four_executed_shards: [2,3,0,2]
+- latest_four_executed_shards_prior: [1,2,3,0]
 - last_delivered_event_key: cambria:duel_arena_blast_abstract_post_sweep_claim_and_login:2026-10-19 (prior run)
 - last_delivered_gmail_message_id: 1a16a27a9e5b557c (prior run; no new email)
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-25 12:59:12 BKK off-minute PARTIAL shard0, 7 candidates, 6 source/rights gaps, 0 new ACTION, 0 Gmail/App; last full verified Oct10 unchanged.
+- latest_terminal_sync: 2026-10-25 14:02:28 BKK PARTIAL shard2, 7 candidates, 5 source/rights gaps, 0 new ACTION, no Gmail/App; last full verified Oct10 unchanged.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
@@ -174,3 +174,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-25 11:57:52 BKK: Existing monitor off-minute invocation, 115649-attempt.md and readback-verified 115752-final.md durable; urgent5 + Surf/StandX + shard3 (15 distinct active registry identities) and bounded cross-shard lifecycle. 7 candidate families, 0 Tier A/B new ACTION, 6 source/rights gaps (Concrete extra USDC, Surf PONS raffle, StandX original X/checker, Crusoe private SPV, Republic rTTOK private rights, Fortytwo issuer). Gmail Inbox/Sent checked; no new mapped TierB; prior Cambria and NeoSoul delivered keys suppressed. No Gmail/App. Shard3 meaningful attempt advanced PARTIAL; last verified full success 2026-10-10 07:52:16 unchanged. Recent executed [0,1,2,3], no override. Original task/schedule/scope/recipient unchanged.
 
 - 2026-10-25 12:59:12 BKK: existing task off-minute invocation; 125747-attempt.md and readback-verified 125912-final.md persisted; scheduled/executed shard0, urgent5 + Surf/StandX + one shard0, 15 distinct active registered projects attempted and bounded lifecycle. Seven candidate families, 0 new Tier A/B ACTION, six SOURCE_GAP (Concrete extra USDC, Surf PONS raffle, StandX original X/checker, Block Stranding, TurboFlow geo restriction, Makina recovery NFT). Gmail Inbox/Sent no new mapped TierB; only prior Cambria/NeoSoul delivered keys. No Gmail/App. Shard0 meaningful attempt advanced PARTIAL, last fully verified 2026-10-10 07:52:16 unchanged; last four executed [1,2,3,0]. No task/schedule/scope/recipient change.
+
+- 2026-10-25 14:02:28 BKK: actual existing HH:00 run; 140122-attempt.md and readback-verified 140228-final.md durable. Urgent5 + dynamic Surf/StandX + exactly shard2 (15 unique registered identities), bounded English cross-shard lifecycle; 7 candidate families, 0 new Tier A/B ACTION, 5 SOURCE_GAP (Concrete extra USDC, Surf PONS raffle, StandX original X/checker, 01 private mapped rights, OhBabyGames issuer). Gmail Inbox/Sent searched, only previously delivered Cambria/NeoSoul; no Gmail/App. Shard2 meaningful attempt advanced PARTIAL; verified-complete still 2026-10-10 07:52:16. Recent terminal-backed shards [2,3,0,2], no stale override. No task/schedule/scope/recipient changes.
