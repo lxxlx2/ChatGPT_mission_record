@@ -121,6 +121,22 @@ class FrozenNovemberSpotT0Tests(unittest.TestCase):
         self.assertEqual(sum(r["eligible_spot_usdt_t0"]
                              for r in result["all_market_original_rows"]),1100)
 
+    def test_exact_request_boundary_one_microsecond_never_backdates_t0(self):
+        self.fake_bundle(first_seconds_before=11)
+        self.assertEqual(gate.admit_window(self.start,self.zip,self.receipts)[
+            "request_last_us"],gate.parse_us(self.start))
+        self.fake_bundle(first_seconds_before=10.999999)
+        with self.assertRaisesRegex(ValueError,"PRESTART_15MIN"):
+            gate.admit_window(self.start,self.zip,self.receipts)
+
+    def test_first_request_one_microsecond_too_old_is_rejected(self):
+        self.fake_bundle(first_seconds_before=900)
+        self.assertTrue(gate.admit_window(self.start,self.zip,self.receipts)[
+            "captured_within_15m_and_completed_before_window"])
+        self.fake_bundle(first_seconds_before=900.000001)
+        with self.assertRaisesRegex(ValueError,"PRESTART_15MIN"):
+            gate.admit_window(self.start,self.zip,self.receipts)
+
     def test_synthetic_after_start_cannot_be_backdated_as_prestart_t0(self):
         self.fake_bundle(after_start=True)
         with self.assertRaisesRegex(ValueError,"PRESTART_15MIN"):
