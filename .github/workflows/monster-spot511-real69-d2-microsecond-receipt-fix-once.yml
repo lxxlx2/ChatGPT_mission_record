@@ -1,0 +1,78 @@
+name: Monster Spot511 real69 D2 integer-microsecond receipt P2 fix once
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-spot511-real69-d2-microsecond-receipt-fix-once.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  offline-real69-d2-chronology:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run negative controls and no-trade G4 provenance tests
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_spot511_d2_signal_receipt_coverage.py -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_stage163_spot_t0_quote_friction.py -v
+      - name: Download actual fixed historical V2 research episode artifact without recomputing trading signals
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/real69" "$RUNNER_TEMP/research-out"
+          gh run download 40191914954 --name monster-adr005-real69-codex-full-5m-coverage-v2 --repo "$GITHUB_REPOSITORY" --dir "$RUNNER_TEMP/real69"
+          test -s "$RUNNER_TEMP/real69/real69.json"
+      - name: Independently load source-verified frozen original 69 with original Binance Spot T0 HTTP receipt
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_spot511_d2_signal_receipt_coverage.py --real69-v2-json "$RUNNER_TEMP/real69/real69.json" --output "$RUNNER_TEMP/research-out/real69-d2-time-receipt-coverage.json" --max-receipt-age-ms 180000
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"research-out/real69-d2-time-receipt-coverage.json"
+          r=json.loads(p.read_text())
+          assert r["original_watch_total"]==69 and r["original_d1_research_setup_total"]==47
+          assert r["watch_receipt_status_counts"]=={"ARCHIVED_QUOTE_STALE_AT_EVENT_CLOCK":69}
+          assert r["d1_receipt_status_counts"]=={
+              "ARCHIVED_QUOTE_STALE_AT_EVENT_CLOCK":47,
+              "NO_D1_RESEARCH_SETUP":22
+          }
+          assert len(r["events"])==69
+          assert r["G4_signal_time_bidask_proven"]==0
+          assert r["G4"]=="UNKNOWN" and r["G6"]=="NO_GO"
+          assert r["nominal_amount"]=="UNSPECIFIED"
+          assert r["archived_receipt_time_comparison_precision"]=="INTEGER_MICROSECONDS"
+          assert r["archived_receipt_ms_display_rounding"]=="CEIL_NEVER_ROUND_RECEIPT_EARLIER"
+          assert type(r["archived_receipt_availability_us_exact"]) is int
+          assert all(x["archived_quote_available_at_client_receipt_us_exact"]==
+                     r["archived_receipt_availability_us_exact"] for x in r["events"])
+          assert all(not x["can_confirm_g4"] and x["executable_net_return"] is None for x in r["events"])
+          print("REAL69_47SETUP_STAGE163_T0_RECEIPT_TEMPORAL_D2_BRIDGE_PASS",
+                json.dumps({"watch":r["watch_receipt_status_counts"],
+                "d1":r["d1_receipt_status_counts"],
+                "G4":r["G4"],"G6":r["G6"]},sort_keys=True))
+          PY
+      - name: Keep source-locked G4 unknown ledger only, never send alerts
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-original-real69-d2-exact-microsecond-receipt-p2-proof
+          path: ${{ runner.temp }}/research-out/real69-d2-time-receipt-coverage.json
+          retention-days: 30
+          if-no-files-found: error
