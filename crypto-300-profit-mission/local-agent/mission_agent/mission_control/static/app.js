@@ -1321,6 +1321,9 @@ function renderClusterPreview(job) {
 
 function clusterErrorMessage(error) {
   const raw=((error?.type || '') + ' ' + (error?.message || '')).toUpperCase();
+  if (raw.includes('RPC_JOB_BUDGET_EXHAUSTED') || raw.includes('CLUSTER_ANALYSIS_INCOMPLETE_BUDGET_EXHAUSTED')) {
+    return '分析未完成：本次任务已达到 RPC 请求或耗时上限，系统已停止追加请求。历史缓存不是本次完整分析结果；请勿直接据此交易。';
+  }
   if (raw.includes('429') || raw.includes('RATE_LIMIT')) {
     return '免费 Solana RPC 触发限流（HTTP 429）。系统已经自动降速并切换备用免费节点；如果仍失败，稍后重试，或先用“快速”档。';
   }
