@@ -1,0 +1,183 @@
+name: Monster ADR005 reviewed deadline P1 exact real69 replay once
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-adr005-reviewed-deadline-p1-replay-once.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  original-69-ephemeral-research:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Synthetic frozen event SHA, census and source-failure regressions
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent:crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_adr005_real69_original_sqlite_replay.py
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_real69_original_sqlite_replay.py -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_real53_original_sqlite_replay.py -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_d1_rbtc15_episode_research.py -v
+      - name: Fetch existing immutable source shards and original replay reports only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/monster-adr005-real69"
+          mkdir -p "$root/shards" "$root/original" "$root/complete"
+          n=0
+          while IFS='|' read -r run_id artifact_name; do
+            test -n "$run_id" && test -n "$artifact_name"
+            n=$((n + 1))
+            gh run download "$run_id" --name "$artifact_name" --dir "$root/shards/$n" --repo "$GITHUB_REPOSITORY"
+          done <<'PINNED_EXISTING_ONLY'
+          40027484781|monster-spot511-2026-10-18-slice-0-40027484781
+          40027484781|monster-spot511-2026-10-18-slice-128-40027484781
+          40027484781|monster-spot511-2026-10-18-slice-256-40027484781
+          40027484781|monster-spot511-2026-10-18-slice-320-40027484781
+          40027484781|monster-spot511-2026-10-18-slice-64-40027484781
+          40027484781|monster-spot511-2026-10-19-slice-0-40027484781
+          40027484781|monster-spot511-2026-10-19-slice-192-40027484781
+          40027484781|monster-spot511-2026-10-19-slice-256-40027484781
+          40027484781|monster-spot511-2026-10-19-slice-320-40027484781
+          40027484781|monster-spot511-2026-10-19-slice-384-40027484781
+          40027484781|monster-spot511-2026-10-19-slice-64-40027484781
+          40027484781|monster-spot511-2026-10-20-slice-0-40027484781
+          40027484781|monster-spot511-2026-10-20-slice-128-40027484781
+          40027484781|monster-spot511-2026-10-20-slice-192-40027484781
+          40027484781|monster-spot511-2026-10-20-slice-384-40027484781
+          40027484781|monster-spot511-2026-10-20-slice-64-40027484781
+          40027484781|monster-spot511-2026-10-21-slice-0-40027484781
+          40027484781|monster-spot511-2026-10-21-slice-192-40027484781
+          40027484781|monster-spot511-2026-10-21-slice-320-40027484781
+          40027484781|monster-spot511-2026-10-21-slice-384-40027484781
+          40027484781|monster-spot511-2026-10-21-slice-448-40027484781
+          40027484781|monster-spot511-2026-10-21-slice-64-40027484781
+          40006012284|monster-spot511-20261022-first64-original-publisher-40006012284
+          40007027318|monster-spot511-20261022-original-slice-128-40007027318
+          40007027318|monster-spot511-20261022-original-slice-192-40007027318
+          40007027318|monster-spot511-20261022-original-slice-256-40007027318
+          40007027318|monster-spot511-20261022-original-slice-320-40007027318
+          40007027318|monster-spot511-20261022-original-slice-64-40007027318
+          40086780992|monster-spot511-2026-10-23-slice-0-40086780992
+          40086780992|monster-spot511-2026-10-23-slice-128-40086780992
+          40086780992|monster-spot511-2026-10-23-slice-192-40086780992
+          40086780992|monster-spot511-2026-10-23-slice-320-40086780992
+          40086780992|monster-spot511-2026-10-23-slice-384-40086780992
+          40086780992|monster-spot511-2026-10-23-slice-64-40086780992
+          40171792607|monster-spot511-oct24-original-slice-0
+          40171792607|monster-spot511-oct24-original-slice-64
+          40171792607|monster-spot511-oct24-original-slice-128
+          40171792607|monster-spot511-oct24-original-slice-192
+          40171792607|monster-spot511-oct24-original-slice-256
+          40171792607|monster-spot511-oct24-original-slice-320
+          40171792607|monster-spot511-oct24-original-slice-384
+          40171792607|monster-spot511-oct24-original-slice-448
+          PINNED_EXISTING_ONLY
+          gh run download 40087231856 --name monster-spot511-4088-original-global-replay-40087231856 --dir "$root/original" --repo "$GITHUB_REPOSITORY"
+          gh run download 40172014267 --name monster-spot511-original4599-frozen-global-paired-proof --dir "$root/complete" --repo "$GITHUB_REPOSITORY"
+          test -f "$root/original/paired-4088.json"
+          test -f "$root/complete/paired-4599.json"
+      - name: Merge issuer ZIP/CHECKSUM source pairs with no arbitrary metadata overwrites
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import os,shutil
+          root=Path(os.environ["RUNNER_TEMP"])/"monster-adr005-real69"
+          folders=sorted((root/"shards").iterdir(),key=lambda p:int(p.name))
+          if len(folders)!=42:raise SystemExit("REAL69_EXPECTED_PREPINNED_42_ARTIFACT_SHARDS")
+          dst=root/"selected-source"/"source"
+          amount=0
+          for folder in folders:
+              src=folder/"source"
+              if not src.is_dir():raise SystemExit("SOURCE_ARCHIVE_FOLDER_MISSING:"+folder.name)
+              for item in src.rglob("*"):
+                  if item.is_symlink():raise SystemExit("SOURCE_SYMLINK_REJECTED")
+                  if not item.is_file():continue
+                  sub=item.relative_to(src)
+                  if len(sub.parts)!=3 or sub.parts[1]!="1m":
+                      raise SystemExit("SOURCE_PATH_NOT_SPOT_SYMBOL_MINUTE_FILE")
+                  dest=dst/sub
+                  if dest.exists():raise SystemExit("DUPLICATE_ORIGINAL_SOURCE_PAIR_MEMBER:"+str(sub))
+                  dest.parent.mkdir(parents=True,exist_ok=True)
+                  shutil.move(str(item),str(dest))
+                  amount+=1
+          if amount<138 or amount%2:raise SystemExit("REAL69_TOO_FEW_OR_ODD_SOURCE_ITEMS")
+          print("MONSTER_REAL69_42_OLD_OFFICIAL_ARTIFACTS_REUSED",amount)
+          PY
+      - name: Run exact original 69 D0 events through existing isolated SQLite D1
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent:crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/monster-adr005-real69"
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_adr005_real69_original_sqlite_replay.py \
+            --original-4599 "$root/complete/paired-4599.json" \
+            --original-4088 "$root/original/paired-4088.json" \
+            --original53-exploration crypto-300-profit-mission/monster/evidence/MONSTER_ADR005_REAL53_OFFICIAL_MINUTE_INDEPENDENT_EXPLORATION_20261025.json \
+            --publisher-dir "$root/selected-source/source" \
+            --ledger-out "$root/real69.sqlite" \
+            --out "$root/real69.json" \
+            --asof-utc 2026-10-25T07:20:00Z
+      - name: Fail closed on exact reviewed-source state correction and positive asset scope
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path(os.environ["RUNNER_TEMP"])/"monster-adr005-real69"
+          r=json.loads((root/"real69.json").read_bytes())
+          assert r["frozen_original_watch_events"]==69
+          assert r["status_counts"]=={
+              "RESEARCH_SETUP":47,"NO_SETUP":18,"SOURCE_UNSCORED":4
+          },r["status_counts"]
+          assert r["new_original_watch16_research_status_counts"]=={
+              "RESEARCH_SETUP":10,"NO_SETUP":5,"SOURCE_UNSCORED":1
+          },r["new_original_watch16_research_status_counts"]
+          assert r["rechecked_original53_status_counts"]=={
+              "RESEARCH_SETUP":37,"NO_SETUP":13,"SOURCE_UNSCORED":3
+          },r["rechecked_original53_status_counts"]
+          compare=r["exposed_original53_reference_comparison"]
+          assert compare["status"]=="SEMANTIC_DEADLINE_REPAIR_MATCH",compare
+          assert len(compare["explicit_late_to_no_setup_corrected_event_ids"])==6
+          scope=r["research_G3_positive_asset_identity"]
+          assert scope["counts"]=={
+              "CRYPTO_TYPE_POSITIVE":40,
+              "CHILIZ_FAN_TOKEN_SEPARATE":2,
+              "TOKENIZED_EQUITY_EXCLUDED":2,
+              "UNRESOLVED_NOT_DEFAULT_CRYPTO":3
+          },scope
+          assert scope["crypto_type_only_research_G3"]=="EXPOSED_NOT_PASSED"
+          assert r["research_G3_raw_setup_attention"]=="EXPOSED_NOT_PASSED"
+          assert r["G6"]=="NO_GO"
+          assert all(x["status"]!="LATE_UNSCORED" for x in r["sqlite_episode_rows"])
+          print("MONSTER_ADR005_P1_CORRECTED_REAL69",
+                json.dumps({"status_counts":r["status_counts"],
+                  "new16":r["new_original_watch16_research_status_counts"],
+                  "old53_corrections":len(compare["explicit_late_to_no_setup_corrected_event_ids"]),
+                  "positive_identity":scope["counts"],"G6":"NO_GO"},sort_keys=True))
+          PY
+      - name: Preserve researched ledger, comparison and source proof only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-adr005-real69-post-independent-review-p1-corrected
+          path: |
+            ${{ runner.temp }}/monster-adr005-real69/real69.sqlite
+            ${{ runner.temp }}/monster-adr005-real69/real69.json
+          retention-days: 30
+          if-no-files-found: warn
