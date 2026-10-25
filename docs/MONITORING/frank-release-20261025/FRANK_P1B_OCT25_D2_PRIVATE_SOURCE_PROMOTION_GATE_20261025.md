@@ -67,7 +67,7 @@
 - `D2_PRIVATE_SOURCE_SWITCH_PASS`：实际 Mac 执行全部所需预检、单次原子替换、只读 D2 GET/页面接受标准、受保护服务不变、可逆旧源备份同时通过。
 - `D2_PRIVATE_SOURCE_SWITCH_ROLLED_BACK`：曾执行切换但失败且已证实旧字节与原始展示恢复。
 - `PRODUCTION_SWITCH_NOT_AUTHORIZED` / `RUNTIME_DRIFT_BLOCKED` / `OLD_SOURCE_DRIFT_BLOCKED` / `NEW_CANDIDATE_BYTES_UNVERIFIED` / `SINGLE_WRITER_NOT_PROVEN_BLOCKED` / `PRE_SWAP_SOURCE_DRIFT_BLOCKED` / `BROWSER_NOT_VERIFIED`：原样记录，不将不执行/未验证翻译为 PASS。
-- **残余竞争风险（明确非零）**：既有 reader 每次 GET 安全重读，不构成独占写锁；`os.replace` 只能保证读者看见旧文件或新文件，而不能对旧目标 inode/哈希作原子条件替换。即使 G2-1 连续检查全通过，若未知/未协调写者在最后一次检查之后提交，仍有 TOCTOU 覆盖风险；操作性单写者约束是必备前提。若实际环境无法建立这样的受控窗口，应返回 BLOCKED 并重新设计有所有写者参与的协作锁/版本化入口，而不是在本轮扩展写权限或声称竞态消失。
+- **残余竞争风险（明确非零）**：既有 reader 每次 GET 安全重读，不构成独占写锁；`os.replace` 保证路径替换不暴露半写入的 JSON，但并发中的 reader 可能因 `lstat`/`fstat` 身份不符而 fail closed，不能保证每个并发 GET 均成功；它也不能对旧目标 inode/哈希作原子条件替换。即使 G2-1 连续检查全通过，若未知/未协调写者在最后一次检查之后提交，仍有 TOCTOU 覆盖风险；操作性单写者约束是必备前提。若实际环境无法建立这样的受控窗口，应返回 BLOCKED 并重新设计有所有写者参与的协作锁/版本化入口，而不是在本轮扩展写权限或声称竞态消失。
 
 只向 Issue #165 发公开**脱敏摘要**：执行时间、固定 Git SHA、旧/新 source/document/file digest、聚合数量、读回状态及有无回滚。Mint 地址、owner、数量明细、原始 JSON、绝对私有路径、凭证以及 UI 原始响应均不能进入 Git。发布后通过 GitHub API 读回确认。
 
