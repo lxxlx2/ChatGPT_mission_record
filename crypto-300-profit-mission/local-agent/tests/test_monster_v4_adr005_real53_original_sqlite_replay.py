@@ -40,6 +40,10 @@ def synthetic_ledger(reference):
             "symbol": item["symbol"],
             "first_seen_ms": item["original_watch_observed_ms"],
             "deadline_ms": item["original_watch_observed_ms"] + 900_000,
+            "first_reviewed_open_ms": None,
+            "last_reviewed_open_ms": None,
+            "reviewed_closed5_count": 0,
+            "missed_closed5_count": 0,
             "status": item["status"],
             "source_censored_count": item["source_censored_evaluations"],
             "research_observed_ms": (
@@ -130,7 +134,12 @@ class PinnedOriginalResearchReplayTests(unittest.TestCase):
         for row in ledger["rows"]:
             if row["status"] == "LATE_UNSCORED":
                 row["status"] = "NO_SETUP"
-                row["last_reviewed_open_ms"] = (row["deadline_ms"]//300_000)*300_000-300_000
+                first=(row["first_seen_ms"]//300_000)*300_000
+                last=(row["deadline_ms"]//300_000)*300_000-300_000
+                row["first_reviewed_open_ms"]=first
+                row["last_reviewed_open_ms"]=last
+                row["reviewed_closed5_count"]=(last-first)//300_000+1
+                row["missed_closed5_count"]=0
                 repaired.append(row["watch_event_id"])
         self.assertEqual(len(repaired), 6)
         self.assertEqual(replay.compare_exposed_exploration(ledger,reference)["status"],
@@ -157,8 +166,32 @@ class PinnedOriginalResearchReplayTests(unittest.TestCase):
         self.assertEqual(replay.compare_exposed_exploration(
             ledger,reference,allow_semantic_deadline_repair=True)["status"],
             "DIFFERENCE_FAIL_CLOSED")
-        row["last_reviewed_open_ms"]=(row["deadline_ms"]//300_000)*300_000-300_000
+        first=(row["first_seen_ms"]//300_000)*300_000
+        last=(row["deadline_ms"]//300_000)*300_000-300_000
+        row["first_reviewed_open_ms"]=first
+        row["last_reviewed_open_ms"]=last
+        row["reviewed_closed5_count"]=(last-first)//300_000+1
+        row["missed_closed5_count"]=1
+        self.assertEqual(replay.compare_exposed_exploration(
+            ledger,reference,allow_semantic_deadline_repair=True)["status"],
+            "DIFFERENCE_FAIL_CLOSED")
+        row["missed_closed5_count"]=0
         row["source_censored_count"]=1
+        self.assertEqual(replay.compare_exposed_exploration(
+            ledger,reference,allow_semantic_deadline_repair=True)["status"],
+            "DIFFERENCE_FAIL_CLOSED")
+
+    def test_full_endpoint_coverage_without_middle_review_count_is_rejected(self):
+        reference=exploration()
+        ledger=synthetic_ledger(reference)
+        row=next(x for x in ledger["rows"] if x["status"]=="LATE_UNSCORED")
+        row["status"]="NO_SETUP"
+        first=(row["first_seen_ms"]//300_000)*300_000
+        last=(row["deadline_ms"]//300_000)*300_000-300_000
+        row["first_reviewed_open_ms"]=first
+        row["last_reviewed_open_ms"]=last
+        row["reviewed_closed5_count"]=(last-first)//300_000
+        row["missed_closed5_count"]=0
         self.assertEqual(replay.compare_exposed_exploration(
             ledger,reference,allow_semantic_deadline_repair=True)["status"],
             "DIFFERENCE_FAIL_CLOSED")
