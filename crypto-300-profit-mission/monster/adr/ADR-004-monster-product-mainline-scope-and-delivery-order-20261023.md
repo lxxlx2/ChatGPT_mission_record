@@ -437,3 +437,13 @@ Artifact **`12599195855`** 中`real69-d2-time-receipt-coverage.json`是实际69�
 **下一个真正有业务价值的研究支线**：只在用户主动手动采集/真实前瞻合法观察时，搜集绑定信号时间、同场所、受时钟证明的完整买入ask+之后退出bid、订单簿深度、手动提供的报价金额与费率，累积>=30个独立买入与退出证据后才对G4展开定量判断；同时不要忽略G1/G2漏掉2×赢家和已曝光G3`47/7>5`失败。不得将过期旧snapshot或者分钟最高价当作“当时可以低价买入”的证据。
 
 [其他AI可复制的固定SHA审查包/完整提示词](../reviews/MONSTER_SPOT511_REAL69_D2_RECEIPT_TIME_BRIDGE_INDEPENDENT_REVIEW_REQUEST_20261025.md)已在本PR保存，**未有实际独立review输出，本轮新桥接G5=NOT_DONE**；前一项V2漏评修复`d743acb...`独立APPROVE保持有效但不覆盖这个新桥接。继续`G0 PARTIAL / G1 NOT_SCORABLE / G2 UNKNOWN / G3 EXPOSED_NOT_PASSED / G4 UNKNOWN / G5 V2_PATCH_APPROVED_AND_NEW_D2_BRIDGE_REVIEW_PENDING / G6 NO_GO`，无合并/部署/Mac/Frank/自动任务/Gmail/交易。
+
+## 37. 2026-10-25：D2历史盘口HTTP回执的微秒精度P2修复实测
+
+其他AI（Codex主代理，底层模型UNVERIFIED，用户Mac Python3.14.7）对前一固定D2桥源码 `342fc476a49c25640e6c8c47302338b56c69316a` 给出**REQUEST_CHANGES**。其唯一P2源于Stage163真实客户端HTTP回执有微秒级（例如 `2026-10-18T10:40:00.000001Z`），但旧分析`int(timestamp.timestamp()*1000)`提前向下截断到毫秒，因此可能把**晚到1微秒**的原回执错判为信号时已收到。其实际独立审查认可原69条事件报表来源锁定、WATCH/SETUP关系与G4仍UNKNOWN边界。
+
+**本轮修复固定源码SHA：`c4a8f1e701b3a34d404db6f352d7b02591ce65c1`**。仅调整D2时钟分类，采用纯整数`datetime UTC delta days/seconds/microseconds`获取精确us，在整数微秒精度比较WATCH/D1事件（原ms×1000）与HTTP接收回执（us），有效年龄阈值180000ms也×1000，明示这是**工程时效诊断而非冻结交易阈值**。输出Schema更新V2；兼容毫秒显示只向上取整（CEIL），保留全精度us原值及年龄，禁止提前显示回执可见时间。受审旧时间边界（信号等时、回执+1us晚到、年龄=180000ms及超出仅1us、D1 SETUP +1us）全部新增回归测试；既有D1 V2、Stage163原ZIP和原发策略未动。
+
+**真实证据**：[GitHub Actions #40213575043](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40213575043)完成**SUCCESS / 25 PASS**（13新D2加12原Stage163），下载GitHub旧研究Artifact `12597793739`，再通过Stage163封存的原始Binance Spot HTTP ZIP + source_receipts校验重跑69 WATCH/47 D1时间桥，新原生Artifact **`12606896190`**，JSON文件SHA256 **`736eb55f43ae50b1d8b111b30edd1f08f5a863ec4c45b453d5b9c4f5f9d62f6e`**。旧原生Artifact `12599195855` JSON SHA256 `9bd81c0303d082885c79c8d282c53eb879e4eea712dbe1840be03001d708c077`。本会话额外下载两份独立压缩包逐行比较，**69个事件的ID/原D1状态/全部G4分类与字段都保持不变**：WATCH旧T0回执69/69 STALE，D1原SETUP47/47 STALE，22条没有D1 SETUP；所有`can_confirm_g4=False`，G4 UNKNOWN、G6 NO_GO。只因精度修复，新增exact_us和毫秒显示从旧`.929`向上为`.930`，**JSON并非字节相同**，属预期。
+
+新文档及可复制其他AI审核范围为 [Codex微秒P2修复记录](../reviews/MONSTER_SPOT511_REAL69_D2_MICROSECOND_RECEIPT_P2_FIX_REREVIEW_20261025.md)；这只是本项目**内部代码+真实资料回放通过**，**新增D2微秒P2修复仍等待其他AI针对固定新SHA独立复审**。D1 V2此前Codex受限APPROVE仍有效，但不是整体Monster产品批准。下步仅继续G1/G2未来独立窗口、G3在暴露历史数值已失败、G4信号同期真实买入盘口/退出盘口与费用可追溯，不拿旧T0的一次BBO报价虚构可执行盈亏。保持`G0 PARTIAL/G1 NOT_SCORABLE/G2 UNKNOWN/G3 EXPOSED_NOT_PASSED/G4 UNKNOWN/G5 D2_P2_REVIEW_PENDING/G6 NO_GO`；严格`NO_MERGE/NO_DEPLOY/NO_MAC/NO_AUTOMATIONS/NO_GMAIL/NO_TRADES/NO_NEW_RPC`。
