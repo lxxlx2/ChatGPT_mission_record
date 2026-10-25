@@ -134,61 +134,61 @@ jobs:
                   }):
               raise SystemExit("PROVENANCE_OR_REVIEWED_P1_REPAIR_RESULT_DRIFT")
           instructions="""MONSTER / CLAUDE HAIKU 5.5 INDEPENDENT P1 RE-REVIEW KIT
-
-Fixed repaired SHA: 3fd5cab30324acd75c4f6f00f86bc264abdf943c
-Original reviewed SHA: cbce0ddef40ab23ba86ba27e31e3d93bfaa62362
-Public repo: lxxlx2/ChatGPT_mission_record, Draft PR #30
-Original Claude Haiku 5.5 conclusion: REQUEST_CHANGES (not APPROVE).
-Scope: NO_MERGE NO_DEPLOY NO_MAC NO_CRON NO_GMAIL NO_TRADES NO_NEW_RPC.
-
-This package supplies a real shallow Git checkout at the fixed REPAIRED commit,
-all tracked worktree files and Git tree/blob objects, archived original replay
-and corrected replay JSON/SQLite, 6 original Actions job logs, and 12 official
-Oct24 ZIP + CHECKSUM pairs. Internet access is not needed.
-
-Verification in the extracted folder:
-  python3 VERIFY_KIT.py
-  mkdir -p checkout
-  tar -xzf repo_at_3fd5cab30324acd75c4f6f00f86bc264abdf943c_shallow_git_checkout.tar.gz -C checkout
-  git -C checkout rev-parse HEAD
-  git -C checkout status --porcelain
-  git -C checkout show -s --format=fuller HEAD
-
-HEAD must equal 3fd5cab30324acd75c4f6f00f86bc264abdf943c; worktree must be clean. Then:
-  cd checkout
-  export PYTHONPATH=crypto-300-profit-mission/local-agent:crypto-300-profit-mission/local-agent/scripts
-  python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_d1_rbtc15_episode_research.py
-  python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_real53_original_sqlite_replay.py
-  python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_real69_original_sqlite_replay.py
-
-Read this fixed commit's:
-  crypto-300-profit-mission/monster/reviews/MONSTER_ADR005_CLAUDE_HAIKU55_REQUEST_CHANGES_REMEDIATION_20261025.md
-  crypto-300-profit-mission/monster/adr/ADR-005-spot-d1-btc-relative-confirmation-preregister-20261024.md
-
-BEFORE: 47 RS / 10 NO_SETUP / 4 SOURCE_UNSCORED / 8 LATE_UNSCORED.
-AFTER:  47 RS / 18 NO_SETUP / 4 SOURCE_UNSCORED / 0 LATE_UNSCORED.
-Six old53 statuses and two new16 statuses were corrected. P1-1 must
-independently be verified for SAME_BAR at deadline, after-deadline capacity,
-no prior evaluation, prior/source-censored, restart, and no new RS.
-Old53 historical reference is intentionally unchanged and the new status is
-SEMANTIC_DEADLINE_REPAIR_MATCH rather than the old misleading MATCH.
-Asset identity positive type: 40; Chiliz fan 2; tokenized equity 2;
-unresolved (TREE,LA,ANIME) 3. P1-3 is not a claim of actual historical
-exchange spot listing or account permission. Check all official manifest
-URLs and publication date constraints separately. 47 raw SETUP and 40
-positive crypto TYPE exceed original G3 35 in seven days; formal historical
-eligibility PIT, G1 G2 and executable G4 remain unresolved. G6 NO_GO.
-
-Important limitation: this handoff contains just twelve official raw ZIP +
-CHECKSUM pairs for 2026-10-24, not all 4599 source pairs. Treat independent
-verification of all raw source bytes as BLOCKED absent those files. Archived
-minute candles are not original historical network arrival receipts.
-
-Respond APPROVE / REQUEST_CHANGES / BLOCKED for the FIXED SHA's reviewed
-incremental source code, explicit P0/P1/P2 with exact line numbers and
-executed evidence, G0-G6 status, and unverified scope. No deploying,
-merging, scheduling, trading, notifications, or changing Frank.
-"""
+          
+          Fixed repaired SHA: 3fd5cab30324acd75c4f6f00f86bc264abdf943c
+          Original reviewed SHA: cbce0ddef40ab23ba86ba27e31e3d93bfaa62362
+          Public repo: lxxlx2/ChatGPT_mission_record, Draft PR #30
+          Original Claude Haiku 5.5 conclusion: REQUEST_CHANGES (not APPROVE).
+          Scope: NO_MERGE NO_DEPLOY NO_MAC NO_CRON NO_GMAIL NO_TRADES NO_NEW_RPC.
+          
+          This package supplies a real shallow Git checkout at the fixed REPAIRED commit,
+          all tracked worktree files and Git tree/blob objects, archived original replay
+          and corrected replay JSON/SQLite, 6 original Actions job logs, and 12 official
+          Oct24 ZIP + CHECKSUM pairs. Internet access is not needed.
+          
+          Verification in the extracted folder:
+            python3 VERIFY_KIT.py
+            mkdir -p checkout
+            tar -xzf repo_at_3fd5cab30324acd75c4f6f00f86bc264abdf943c_shallow_git_checkout.tar.gz -C checkout
+            git -C checkout rev-parse HEAD
+            git -C checkout status --porcelain
+            git -C checkout show -s --format=fuller HEAD
+          
+          HEAD must equal 3fd5cab30324acd75c4f6f00f86bc264abdf943c; worktree must be clean. Then:
+            cd checkout
+            export PYTHONPATH=crypto-300-profit-mission/local-agent:crypto-300-profit-mission/local-agent/scripts
+            python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_d1_rbtc15_episode_research.py
+            python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_real53_original_sqlite_replay.py
+            python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_real69_original_sqlite_replay.py
+          
+          Read this fixed commit's:
+            crypto-300-profit-mission/monster/reviews/MONSTER_ADR005_CLAUDE_HAIKU55_REQUEST_CHANGES_REMEDIATION_20261025.md
+            crypto-300-profit-mission/monster/adr/ADR-005-spot-d1-btc-relative-confirmation-preregister-20261024.md
+          
+          BEFORE: 47 RS / 10 NO_SETUP / 4 SOURCE_UNSCORED / 8 LATE_UNSCORED.
+          AFTER:  47 RS / 18 NO_SETUP / 4 SOURCE_UNSCORED / 0 LATE_UNSCORED.
+          Six old53 statuses and two new16 statuses were corrected. P1-1 must
+          independently be verified for SAME_BAR at deadline, after-deadline capacity,
+          no prior evaluation, prior/source-censored, restart, and no new RS.
+          Old53 historical reference is intentionally unchanged and the new status is
+          SEMANTIC_DEADLINE_REPAIR_MATCH rather than the old misleading MATCH.
+          Asset identity positive type: 40; Chiliz fan 2; tokenized equity 2;
+          unresolved (TREE,LA,ANIME) 3. P1-3 is not a claim of actual historical
+          exchange spot listing or account permission. Check all official manifest
+          URLs and publication date constraints separately. 47 raw SETUP and 40
+          positive crypto TYPE exceed original G3 35 in seven days; formal historical
+          eligibility PIT, G1 G2 and executable G4 remain unresolved. G6 NO_GO.
+          
+          Important limitation: this handoff contains just twelve official raw ZIP +
+          CHECKSUM pairs for 2026-10-24, not all 4599 source pairs. Treat independent
+          verification of all raw source bytes as BLOCKED absent those files. Archived
+          minute candles are not original historical network arrival receipts.
+          
+          Respond APPROVE / REQUEST_CHANGES / BLOCKED for the FIXED SHA's reviewed
+          incremental source code, explicit P0/P1/P2 with exact line numbers and
+          executed evidence, G0-G6 status, and unverified scope. No deploying,
+          merging, scheduling, trading, notifications, or changing Frank.
+          """
           (root/"READ_FIRST_FOR_CLAUDE.txt").write_text(instructions,encoding="utf-8")
           manifest={}
           for f in sorted(root.rglob("*")):
