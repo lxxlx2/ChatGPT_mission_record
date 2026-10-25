@@ -281,16 +281,29 @@ class GlobalStartGate:
                     self.starts.append((request["id"], request["method"], when))
                     began[0] = when
             try:
+                transport = None
                 if type(source) is PatchedConstructorOfflineSource:
                     need(callable(reservation_guard),
                          "D1_PATCHED_CTOR_PRESEND_PROOF_REQUIRED")
-                    frame = source.reply_over_memory_https(
+                    transport = source.reply_transport_evidence_offline(
                         request, begin_fake_post, timeout_ms / 1000,
                         reservation_guard=reservation_guard)
+                    frame = transport["frame"]
                 else:
                     frame = source.reply_over_memory_https(
                         request, begin_fake_post, timeout_ms / 1000)
                 completed = time.monotonic()
+                if transport is not None and transport["state"] != "RAW":
+                    # A complete rejected HTTP response may still have
+                    # durable RAW bytes. Archive them in SETTLE before
+                    # declaring RPC failure; never parse or COMMIT it.
+                    return {
+                        "state": ("TRANSPORT_REJECTED_RAW" if frame is not None
+                                  else "TRANSPORT_FAILED_NO_RAW"),
+                        "frame": frame, "start": began[0],
+                        "completed_at": completed,
+                        "error": transport["failure"],
+                    }
                 need(began[0] is not None,
                      "D1_MEMORY_HTTPS_POST_START_UNOBSERVED")
                 if (completed - began[0]) * 1000 > timeout_ms:

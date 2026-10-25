@@ -1,3 +1,12 @@
+# 2026-10-25 — D1 rejected concrete HTTP RAW -> same durable coordinator ledger (NEW REVIEW PENDING)
+
+- **Approved base:** PR197 `7957a3508bc784be393f11a8b500156251eafde9`, supplied independent Mac `APPROVE_OFFLINE_CODE — D1_CANDIDATE_BUDGET_ENFORCEMENT_TEST_ONLY`, F0 519/519 unique, D1 158/158, new 4/4 and original 3/7/5/2 tests PASS; archived [here](https://github.com/lxxlx2/ChatGPT_mission_record/pull/197#issuecomment-6394611042).
+- **Mainline new change:** Existing patched physical `HTTPSConnection` source receives completed HTTP 302/compressed bounded RAW, but previously raised and lost those bytes before `ExclusiveEvidence.settle` could fsync the RAW. Source now returns separate failure state+bounded RAW to **the same** original one 3-slot coordinator; coordinator classifies REJECTED_RAW as FAILED, saves original RAW digest, then fsyncs SETTLE and stops without a success COMMIT or retry. A read/POST/connect failure with incomplete RAW stays FAILED with no invented RAW file/digest. Source constructor and preconnect RID verification, one OS parent-loss/hard-stop child, candidate budgets, fixed Mac registry and all public live senders remain unchanged/closed.
+- **Tests/review:** three new physical-constructor cases (302, compressed headers, post-response read exception) added to existing module; see `f0/F0_D1_REJECTED_HTTP_RAW_REVIEW.md`. New exact SHA needs GitHub CI and independent Mac checks; no native Mac work claimed for this new code.
+- **NO LIVE:** no D2 production trust roots or D3 separately authenticated run, no production marker, real RPC/WS or provider measurements. No merge, deployment, background service, private journal access or trading. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-25 — D1 D3-candidate budgets actually enforced by SAME offline OS child; NEW MAC REVIEW PENDING
 
 - **Reviewed frozen parent:** PR196 SHA `b0b7b1dfda7dd537bcfc1b3ed2e1a8405ec37f72`, user-supplied independent Mac `APPROVE_OFFLINE_CODE — D1_PRECONSTRUCTOR_RECEIPT_BOUND_REHEARSAL_ONLY` (F0 515/515, D1 154/154, bound-wire 3/3, physical ctor 7/7, original Mac entry 7/7 and contract 10/10), archived [on PR196](https://github.com/lxxlx2/ChatGPT_mission_record/pull/196#issuecomment-6394440515). No production authorization inherited.

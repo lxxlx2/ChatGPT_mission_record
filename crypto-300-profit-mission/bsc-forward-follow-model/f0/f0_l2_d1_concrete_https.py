@@ -268,8 +268,15 @@ class PatchedConstructorOfflineSource(FakeSource):
     is a constructor-level INTEGRATION TEST, never D2/D3 user authority.
     """
 
-    def reply_over_memory_https(self, request, begin_fake_post, timeout_s,
-                                *, reservation_guard=None):
+    def reply_transport_evidence_offline(
+            self, request, begin_fake_post, timeout_s,
+            *, reservation_guard=None):
+        """Return bounded RAW even when its HTTP transport is rejected.
+
+        A completed 302/compressed response has actual bytes, but MUST
+        NEVER be parsed as a successful RPC or silently discarded.
+        This is a mock-only transport result, NOT a live release.
+        """
         if type(self) is not PatchedConstructorOfflineSource:
             raise ValueError("D1_PATCHED_CTOR_SOURCE_NOT_EXACT")
         if http.client.HTTPSConnection is _ORIGINAL_HTTPS_CONNECTION:
@@ -298,7 +305,26 @@ class PatchedConstructorOfflineSource(FakeSource):
             _test_capability=_REVIEW_TEST_ONLY_CAPABILITY,
             timeout_s=timeout_s, max_bytes=MAX_BODY_BYTES)
         if denied[0] is not None:
+            # Preserve exact fake POST prestart denial as a denial, not as
+            # an HTTP response or an attempted transport failure.
             raise denied[0]
-        if result["state"] != "RAW" or result["raw_frame"] is None:
+        raw = result["raw_frame"]
+        if result["state"] == "RAW":
+            if raw is None:
+                raise ValueError("D1_PATCHED_CTOR_SUCCESS_MISSING_RAW")
+            return {"state": "RAW", "frame": raw, "failure": None}
+        if raw is not None:
+            return {"state": "REJECTED_RAW", "frame": raw,
+                    "failure": result["failure"]}
+        return {"state": "FAILED_NO_RAW", "frame": None,
+                "failure": result["failure"]}
+
+    def reply_over_memory_https(self, request, begin_fake_post, timeout_s,
+                                *, reservation_guard=None):
+        """Backwards compatible frame-only test API; never return bad RAW."""
+        result = self.reply_transport_evidence_offline(
+            request, begin_fake_post, timeout_s,
+            reservation_guard=reservation_guard)
+        if result["state"] != "RAW":
             raise ValueError("D1_PATCHED_CTOR_FAILED_NO_AUTO_RETRY")
-        return result["raw_frame"]
+        return result["frame"]
