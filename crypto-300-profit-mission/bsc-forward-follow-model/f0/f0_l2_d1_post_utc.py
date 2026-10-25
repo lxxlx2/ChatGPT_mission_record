@@ -30,6 +30,40 @@ class OfflinePostUTCWindow:
         self.permit_sha256=sha256(raw_permit).hexdigest()
         self.checked_fake_posts=0
 
+    @classmethod
+    def from_prevalidated_child_scope(
+            cls, *, window_start_utc, window_end_utc,
+            checked_at_utc, expected_sha, permit_sha256, virtual_clock):
+        """Bind test-only child to a preflight-checked candidate window.
+
+        Values pass through the already validated D3 candidate, then a
+        bounded child command. They are NOT independently signed here.
+        Child checks every mock POST after global spacing, and cannot
+        authenticate actual user time or grant any real HTTPS authority.
+        """
+        from f0_l2_d1_preflight import HEX40, HEX64
+        if (type(expected_sha) is not str or
+                not HEX40.fullmatch(expected_sha) or
+                type(permit_sha256) is not str or
+                not HEX64.fullmatch(permit_sha256) or
+                not callable(virtual_clock)):
+            raise ValueError("D1_CHILD_UTC_IDENTITY_INVALID")
+        start = parse_utc_timestamp(window_start_utc)
+        end = parse_utc_timestamp(window_end_utc)
+        checked = parse_utc_timestamp(checked_at_utc)
+        if (not timedelta(0) < end-start <= timedelta(minutes=10)
+                or not start <= checked <= end):
+            raise ValueError("D1_CHILD_UTC_BOUND_WINDOW_INVALID")
+        instance = object.__new__(cls)
+        instance.start = start
+        instance.end = end
+        instance._clock = virtual_clock
+        instance._last = None
+        instance.source_sha = expected_sha
+        instance.permit_sha256 = permit_sha256
+        instance.checked_fake_posts = 0
+        return instance
+
     def check_at_fake_post(self, payload):
         valid_rpc_payload(payload)
         now=self._clock()

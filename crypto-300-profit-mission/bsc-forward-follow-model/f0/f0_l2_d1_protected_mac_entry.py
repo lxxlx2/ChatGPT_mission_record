@@ -202,6 +202,15 @@ def rehearse_supervised_mac_entry_offline(
         if contract.to_diagnostic()["real_https_enabled"] is not False:
             raise ValueError("D1_MAC_REHEARSAL_LIVE_CONTRACT_FORBIDDEN")
         from f0_l2_d1_real_sender_contract import _strict_d3_intent
+        # Mac provenance uses datetime.isoformat() (+00:00); the existing
+        # strict D1 scope parser uses trailing Z only. Canonicalize the
+        # trusted preflight instant without weakening either parser.
+        from datetime import datetime as _NativeDatetime
+        checked_iso = _NativeDatetime.fromisoformat(
+            checked["checked_at_utc"]).isoformat()
+        if not checked_iso.endswith("+00:00"):
+            raise ValueError("D1_MAC_REHEARSAL_CHECKED_UTC_NOT_Z")
+        checked_z = checked_iso[:-6] + "Z"
         # Candidate was already bound against actual preflight SHA/manifest.
         # Restrict the same sole coordinator to BOTH that candidate's caps
         # and pre-existing stricter offline fixture caps. Never widen them.
@@ -220,6 +229,13 @@ def rehearse_supervised_mac_entry_offline(
                 5000, int(hard_seconds * 1000),
                 intent["max_dispatch_seconds"] * 1000),
             "timeout_ms": min(5000, intent["request_timeout_ms"]),
+            "post_utc": {
+                "window_start_utc": intent["window_start_utc"],
+                "window_end_utc": intent["window_end_utc"],
+                "checked_at_utc": checked_z,
+                "approved_commit_sha": expected_sha,
+                "permit_sha256": checked["permit_raw_sha256"],
+            },
         }
         if effective_test_scope["window_ms"] < 1000:
             raise ValueError("D1_MAC_REHEARSAL_CANDIDATE_WINDOW_TOO_SHORT")
