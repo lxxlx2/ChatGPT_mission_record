@@ -496,6 +496,9 @@ class ClusterJobManager:
                 market_client=self.market_client,
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
+            # Do not persist/publish a successful job after an exhausted RPC deadline
+            # or a terminal failed attempt, even if a future analyzer catches an error.
+            rpc.assert_can_publish()
             self._set_progress(job_id,"REPORT_PERSISTING",{"deep_holders_scanned":(report.get("coverage") or {}).get("deep_holders_scanned"),"adaptive_deepened":len((report.get("coverage") or {}).get("adaptive_deepened_owners") or [])})
             stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
             out = self.report_root / mint
