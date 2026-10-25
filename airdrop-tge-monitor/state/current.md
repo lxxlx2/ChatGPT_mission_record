@@ -1,39 +1,39 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-25 17:58:06 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-25 19:04:25 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-25 17:58:06 Asia/Bangkok (off-minute invocation; final persisted; not HH:00 scheduler proof)
+- latest_actual_run: 2026-10-25 19:04:25 Asia/Bangkok (off-minute invocation; final persisted; not independent HH:00 scheduler proof)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-25/175806-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-25/175645-attempt.md
-- latest_scheduled_shard: 1
-- latest_executed_shard: 1
-- stale_shard_recovery: false (local hour17 modulo4; fairness default)
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-25/190425-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-25/190307-attempt.md
+- latest_scheduled_shard: 3
+- latest_executed_shard: 3
+- stale_shard_recovery: false (local hour19 modulo4; fair default)
 - latest_candidate_count: 5
 - latest_triggered_events: 0
-- latest_identity_failures: 1
-- latest_source_failures: 5
+- latest_identity_failures: 0
+- latest_source_failures: 4
 - latest_notification_decision: SILENT_NO_NEW_ACTION
 - latest_notification_status: NO_GMAIL_NO_APP
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_additional_USDC,SurfBoard_PONS_raffle,StandX_original_X_future_checker,ForecastFDN_current_issuer,Neutrl_individual_redemption
+- latest_source_gaps: Concrete_additional_USDC,SurfBoard_PONS_raffle,StandX_original_X_future_checker,Republic_rTTOK_private_distribution
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-10-25 16:01:18 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard1: 2026-10-25 17:58:06 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard2: 2026-10-25 14:57:18 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard3: 2026-10-25 11:57:52 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard3: 2026-10-25 19:04:25 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 175806-final.md commit 3f2074e240410b9d5349c0ecc62e168cdfa11ecc
-- latest_terminal_readback: VERIFIED 175806-final.md blob 7d5c95eea84d1eff6dd2cbeae880e5b37fd7d526
-- latest_four_executed_shards: [2,0,1,1]
-- latest_four_executed_shards_prior: [2,2,0,1]
+- latest_primary_final_write: VERIFIED_DURABLE 190425-final.md commit fb1f0053444fbe0cd4f22040fe7f3279ee6907d7
+- latest_terminal_readback: VERIFIED 190425-final.md content readback on main
+- latest_four_executed_shards: [0,1,1,3]
+- latest_four_executed_shards_prior: [2,0,1,1]
 - last_delivered_event_key: cambria:duel_arena_blast_abstract_post_sweep_claim_and_login:2026-10-19 (prior run)
 - last_delivered_gmail_message_id: 1a16a27a9e5b557c (prior run; no new email)
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-25 17:58:06 BKK PARTIAL shard1, 5 candidates, 5 source/rights gaps, 1 Neutrl canonical-handle identity conflict, 0 new ACTION, no Gmail/App; last full verified Oct10 unchanged
+- latest_terminal_sync: 2026-10-25 19:04:25 BKK PARTIAL shard3, 5 candidates, 4 source/private-rights gaps, 0 identity conflicts, 0 new ACTION, no Gmail/App; last full verified Oct10 unchanged
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
