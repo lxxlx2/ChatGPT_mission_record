@@ -1,3 +1,11 @@
+# 2026-10-25 — PR202 D2-A P1 source method injection repaired; new exact-SHA review REQUIRED
+
+- Superseded PR202 SHA `72b3d2b3967725473f767e76899ad837b8b09b68` received independent ARM64 Mac **`REQUEST_CHANGES`** for one P1: precise `PatchedConstructorOfflineSource` instance can override the actually dispatched `reply_transport_evidence_offline` method. Original 8 new negative tests and 534 full F0 tests all passed but did not cover this injection; independent local-sentinel repro executed two injected callbacks in main coordinator and one directly in lower gate. [Reviewer-supplied evidence archived in GitHub](https://github.com/lxxlx2/ChatGPT_mission_record/pull/202#issuecomment-6397603374). Superseded SHA not approved.
+- Narrow source fix `f96d2c4b9230c3e318d3883cae8c5420d0ed3169` forbids per-instance `reply_transport_evidence_offline` in **both** `run_fake_concurrent` and `GlobalStartGate.run`, before evidence and start; new test `50c205a87e7c8fa6b264dd1a75ec1b2eba27a5f6` adds separate high-level and direct-gate injection regressions using only local callbacks. See `f0/F0_D2A_CLOSED_PHYSICAL_SOURCE_ADMISSION_REVIEW.md`. All changes remain on PR202 original branch.
+- New complete GitHub CI must prove F0 536/536 and 10/10 D2-A regressions; independent exact-head Mac re-review still REQUIRED. No alternate scheduler/source, no production signer, grants or real RPC/WS. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-25 — D2-A real-source admission remains CLOSED in existing F0 coordinator, independent review PENDING
 
 - **Parent:** PR201 PLAN_ONLY SHA `b3e8fb1e6f6811b7599d86cb26c4d81a0c5bde12`, full Linux F0 526/526 PASS, stacked on approved PR199 exact SHA `15ac0ed4dbb839d785546d71b3accd5b232df942` ([attributed independent Mac audit](https://github.com/lxxlx2/ChatGPT_mission_record/pull/199#issuecomment-6397222150)). No live D2/D3 authority inherited.
