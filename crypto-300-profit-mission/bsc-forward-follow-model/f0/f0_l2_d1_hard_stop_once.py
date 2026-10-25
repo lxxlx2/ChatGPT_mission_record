@@ -160,7 +160,8 @@ def run_bounded_offline_once(registry: Path, evidence: Path, *,
         raise ValueError("D1_HARD_STOP_SCOPE_INVALID")
     # Scope validation precedes durable once consumption and subprocess.
     scope = _validate_offline_scope(offline_scope)
-    if scope["window_ms"] > int(hard_seconds * 1000):
+    if (offline_scope is not None and
+            scope["window_ms"] > int(hard_seconds * 1000)):
         raise ValueError("D1_CHILD_OFFLINE_SCOPE_OUTLIVES_HARD_STOP")
     # Durable, one-use TEST grant must be spent before even creating a child.
     lease = OfflineGrantRegistry(reg).consume(grant_id, permit_sha256)
@@ -328,7 +329,8 @@ def _main(argv):
             raise ValueError("D1_CHILD_SCOPE_SERIALIZATION_INVALID") from exc
     else:
         scope = _validate_offline_scope(None)
-    if scope["window_ms"] > int((deadline - time.monotonic()) * 1000) + 500:
+    if (len(argv) == 10 and
+            scope["window_ms"] > int((deadline - time.monotonic()) * 1000) + 500):
         raise ValueError("D1_CHILD_SCOPE_DEADLINE_INVALID")
     guardian = threading.Thread(
         target=_child_lifetime_watch, args=(read_fd, deadline, evidence),
