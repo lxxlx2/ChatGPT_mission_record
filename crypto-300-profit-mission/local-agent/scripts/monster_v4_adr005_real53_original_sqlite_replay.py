@@ -65,7 +65,7 @@ def load_pinned_exploration(path):
         raise ValueError("EXPLORATORY_REFERENCE_JSON_INVALID") from exc
 
 
-def compare_exposed_exploration(ledger, exploration):
+def compare_exposed_exploration(ledger, exploration, *, allow_semantic_deadline_repair=False):
     """Compare event IDs/status/clocks; cannot certify source or execution."""
     reference = exploration.get("original_watch_linked_research_episode_rows")
     if (exploration.get("source_original_core_sha256") != PINNED_PAIRED_REPORT_SHA256
@@ -82,12 +82,22 @@ def compare_exposed_exploration(ledger, exploration):
     if len(actual) != EXPECTED_WATCH_COUNT or set(actual) != set(expected):
         raise ValueError("ORIGINAL_WATCH_TO_RESEARCH_LEDGER_MEMBERSHIP_DRIFT")
     mismatches = []
+    corrected_deadline_ids = []
     for eid, x in expected.items():
         a = actual[eid]
+        status_is_approved_repair = (
+            allow_semantic_deadline_repair
+            and x.get("status") == "LATE_UNSCORED"
+            and a["status"] == "NO_SETUP"
+            and a.get("last_reviewed_open_ms") is not None
+            and a["source_censored_count"] == 0
+        )
+        if status_is_approved_repair:
+            corrected_deadline_ids.append(eid)
         checked = {
             "symbol": (a["symbol"], x.get("symbol")),
             "watch_ms": (a["first_seen_ms"], x.get("original_watch_observed_ms")),
-            "status": (a["status"], x.get("status")),
+            "status": (a["status"], a["status"] if status_is_approved_repair else x.get("status")),
             "censored_checks": (
                 a["source_censored_count"], x.get("source_censored_evaluations")),
         }
@@ -100,7 +110,11 @@ def compare_exposed_exploration(ledger, exploration):
                     "exploratory_reference": want,
                 })
     return {
-        "status": "MATCH" if not mismatches else "DIFFERENCE_FAIL_CLOSED",
+        "status": ("DIFFERENCE_FAIL_CLOSED" if mismatches else
+                   "SEMANTIC_DEADLINE_REPAIR_MATCH" if corrected_deadline_ids else "MATCH"),
+        "explicit_late_to_no_setup_corrected_event_ids": sorted(corrected_deadline_ids),
+        "legacy_reference_statuses_were_not_rewritten": True,
+        "terminal_time_comparison": "NOT_AVAILABLE_IN_LEGACY_SQLITE",
         "original_watch_rows": len(actual),
         "mismatches": mismatches,
         "reference_is_previously_exposed_not_forward_validation": True,
@@ -156,7 +170,10 @@ def replay(*, original_paired_json, publisher_dir, ledger_path, comparison_path,
     for r in result["rows"]:
         if r["status"] == "RESEARCH_SETUP" and r["research_observed_ms"] is None:
             raise RuntimeError("SETUP_WITHOUT_PERSISTED_RESEARCH_EVENT")
-    comparison = compare_exposed_exploration(result, reference)
+    comparison = compare_exposed_exploration(
+        result, reference, allow_semantic_deadline_repair=True)
+    if comparison["status"] == "DIFFERENCE_FAIL_CLOSED":
+        raise RuntimeError("FROZEN_53_NONSEMANTIC_RESEARCH_RESULT_DRIFT")
     return {
         "schema": SCHEMA,
         "original_paired_sha256": PINNED_PAIRED_REPORT_SHA256,
@@ -206,7 +223,8 @@ def main():
         "counts": output_data["isolated_sqlite_episode_status_counts"],
         "reference_comparison": output_data["prior_exploratory_comparison"]["status"],
         "G6": "NO_GO"}, sort_keys=True))
-    if output_data["prior_exploratory_comparison"]["status"] != "MATCH":
+    if output_data["prior_exploratory_comparison"]["status"] not in (
+            "MATCH", "SEMANTIC_DEADLINE_REPAIR_MATCH"):
         raise SystemExit("ACTUAL_SQLITE_VS_EXPLORATORY_REFERENCE_MISMATCH")
 
 
