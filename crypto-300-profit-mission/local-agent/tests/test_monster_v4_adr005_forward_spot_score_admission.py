@@ -170,7 +170,7 @@ class ForwardScoreSourceAdmissionTests(unittest.TestCase):
         self.assertTrue(aaa["technically_eligible_for_offline_rbtc_d1_source_replay"])
         self.assertTrue(aaa["technically_eligible_for_retrospective_gt_labels"])
         self.assertFalse(d["all_source_15days_complete"])
-        self.assertFalse(d["btc_benchmark_research_d1_source_ready"] is False)
+        self.assertTrue(d["btc_benchmark_research_d1_source_ready"])
 
     def test_same_btc_observation_gap_blocks_all_targets_not_just_first(self):
         d=gate.join_census(self.fixture(
