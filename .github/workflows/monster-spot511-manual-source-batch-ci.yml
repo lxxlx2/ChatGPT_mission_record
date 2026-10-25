@@ -24,6 +24,8 @@ on:
       - "crypto-300-profit-mission/local-agent/scripts/monster_v4_d1_rbtc15_last5_research.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_d1_rbtc15_last5_research.py"
       - "crypto-300-profit-mission/local-agent/scripts/monster_v4_d1_rbtc15_episode_research.py"
+      - "crypto-300-profit-mission/local-agent/scripts/monster_v4_adr005_real53_original_sqlite_replay.py"
+      - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_adr005_real53_original_sqlite_replay.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_d1_rbtc15_episode_research.py"
       - "crypto-300-profit-mission/local-agent/scripts/monster_v4_spot511_verified_watch_tape.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_spot511_verified_watch_tape.py"
@@ -57,6 +59,8 @@ on:
       - "crypto-300-profit-mission/local-agent/scripts/monster_v4_d1_rbtc15_last5_research.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_d1_rbtc15_last5_research.py"
       - "crypto-300-profit-mission/local-agent/scripts/monster_v4_d1_rbtc15_episode_research.py"
+      - "crypto-300-profit-mission/local-agent/scripts/monster_v4_adr005_real53_original_sqlite_replay.py"
+      - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_adr005_real53_original_sqlite_replay.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_d1_rbtc15_episode_research.py"
       - "crypto-300-profit-mission/local-agent/scripts/monster_v4_spot511_verified_watch_tape.py"
       - "crypto-300-profit-mission/local-agent/tests/test_monster_v4_spot511_verified_watch_tape.py"
@@ -106,6 +110,8 @@ jobs:
           python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_d1_rbtc15_last5_research.py
           python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_v4_d1_rbtc15_last5_research.py
           python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_d1_rbtc15_episode_research.py
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_adr005_real53_original_sqlite_replay.py
+          python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_v4_adr005_real53_original_sqlite_replay.py
           python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_v4_d1_rbtc15_episode_research.py
           python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_spot511_verified_watch_tape.py
           python -B -m py_compile crypto-300-profit-mission/local-agent/tests/test_monster_v4_spot511_verified_watch_tape.py
@@ -126,6 +132,7 @@ jobs:
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_spot_g3_final7_scope.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_d1_rbtc15_last5_research.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_d1_rbtc15_episode_research.py" -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_adr005_real53_original_sqlite_replay.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_verified_watch_tape.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_spot511_replay_preflight.py" -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "test_monster_v4_shadow.py" -v
