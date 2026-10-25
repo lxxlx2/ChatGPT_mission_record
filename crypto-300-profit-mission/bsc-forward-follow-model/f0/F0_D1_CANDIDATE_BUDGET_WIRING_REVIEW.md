@@ -23,3 +23,10 @@ PR196 validates a D3 one-shot **candidate** before spending an offline marker, b
 Independent Mac review: pin child PR HEAD detached, inspect changed blobs/source imports and `cryptography==46.0.4`; run F0 full, D1 only and **four new budget tests alone**, existing parent lifetime / bound-wire and preconstructor tests alone; independently replay a stricter D3 scope then read back the actual journal, markers and start-record gap, and test failure/unknown, no real socket.
 
 **Target verdict:** `APPROVE_OFFLINE_CODE — D1_CANDIDATE_BUDGET_ENFORCEMENT_TEST_ONLY` or `REQUEST_CHANGES`, never a real sender release. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+
+## Actual GitHub CI history
+
+First implementation SHA `efd8adcde5789b401052c8f1f62738fc9018ff98`, [CI 40169933993](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40169933993) SUCCESS, raw log 522/522 OK. **This was not 522 unique tests:** the new test file imported an existing three-test `unittest.TestCase` directly, causing the three existing bound-wire tests to be rediscovered and rerun. A TEST-only import fix `26f67e45c4bfd0497e7f240e33390320ceb92396` removes the duplicate without changing runtime code. [CI 40170074581](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40170074581), job `121098947745`, completed SUCCESS, original decoded log **`Ran 519 tests in 75.939s / OK`**, including **four new scope enforcement tests all PASS**. Count 519, not 522.
+
+GitHub Linux verification is not native Mac independent approval. Final HEAD (after docs) requires its own CI and fixed-SHA detached Mac review. Tests do **not** prove real network behavior or signed D2/D3 authority; all source/transmission remains synthetic.
