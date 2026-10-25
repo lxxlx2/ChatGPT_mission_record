@@ -147,7 +147,7 @@ def join_census(census):
             "research_d1_target":is_target,
             "t0_listing_and_crypto_identity_independently_proven":False,
             "baseline_24h_source_verified":baseline,
-            "original_d0_d1_7d_source_verified":observation,
+            "candidate_own_observation_7d_source_verified":observation,
             "future_gt2x_7d_source_verified":labels,
             "btc_benchmark_in_t0_source_census":btc_in_census,
             "btc_benchmark_baseline_24h_source_verified":btc_baseline,
