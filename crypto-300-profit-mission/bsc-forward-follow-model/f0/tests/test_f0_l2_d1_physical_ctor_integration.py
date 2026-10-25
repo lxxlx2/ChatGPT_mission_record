@@ -95,6 +95,19 @@ class PatchedPhysicalConstructorTests(unittest.TestCase):
                         headers["content-encoding"] = "gzip"
                     elif http_failure == "read_failure":
                         raise TimeoutError("MEMORY_RESPONSE_READ_FAULT")
+                    elif http_failure == "complete_declared_length":
+                        headers = dict(headers, **{"content-length": str(len(body))})
+                    elif http_failure == "short_body":
+                        headers = dict(headers, **{"content-length": str(len(body) + 6)})
+                        body = body[:-4]
+                    elif http_failure == "wrong_declared_length":
+                        headers = dict(headers, **{"content-length": str(len(body) - 1)})
+                    elif http_failure == "oversized_declared_length":
+                        headers = dict(headers, **{"content-length": "2000001"})
+                    elif http_failure == "oversized_header":
+                        headers = dict(headers, **{"x-untrusted": "x" * 8200})
+                    elif http_failure == "transfer_encoding":
+                        headers = dict(headers, **{"transfer-encoding": "chunked"})
                     return Response((status, headers, body))
 
                 def close(self):
@@ -285,6 +298,83 @@ class PatchedPhysicalConstructorTests(unittest.TestCase):
         self.assertNotIn("raw_sha256", row)
         self.assertEqual(self.last_raw_bodies, {})
         self.assertEqual(modes, [])
+
+    def test_complete_declared_content_length_keeps_original_success(self):
+        report, rows, records, modes = self.scenario(
+            http_failure="complete_declared_length")
+        self.assertTrue(records)
+        self.assertEqual(report["reserved"], report["settled"])
+        self.assertTrue(any(x["event"] == "SETTLE"
+                            and x["state"] == "RPC_RESPONSE" for x in rows))
+        self.assertGreater(len(self.last_raw_bodies), 0)
+        self.assertTrue(all(mode == 0 for mode in modes))
+        self.assertEqual(report["network_requests"], 0)
+
+    def test_short_payload_declared_longer_has_no_invented_raw(self):
+        report, rows, records, modes = self.scenario(
+            http_failure="short_body")
+        self.assertEqual(report["reserved"], 1)
+        self.assertEqual(report["settled"], 1)
+        self.assertEqual(report["contiguous_commits"], 0)
+        row = next(x for x in rows if x["event"] == "SETTLE")
+        self.assertEqual(row["state"], "FAILED")
+        self.assertIn("BODY_LENGTH_MISMATCH", row["reason"])
+        self.assertNotIn("raw_sha256", row)
+        self.assertEqual(self.last_raw_bodies, {})
+        self.assertEqual(modes, [])
+
+    def test_declared_shorter_than_body_has_no_invented_raw(self):
+        report, rows, _records, modes = self.scenario(
+            http_failure="wrong_declared_length")
+        self.assertEqual(report["reserved"], 1)
+        self.assertEqual(report["settled"], 1)
+        self.assertEqual(report["contiguous_commits"], 0)
+        row = next(x for x in rows if x["event"] == "SETTLE")
+        self.assertEqual(row["state"], "FAILED")
+        self.assertIn("BODY_LENGTH_MISMATCH", row["reason"])
+        self.assertNotIn("raw_sha256", row)
+        self.assertEqual(self.last_raw_bodies, {})
+        self.assertEqual(modes, [])
+
+    def test_oversize_announced_length_refused_without_body_or_raw(self):
+        report, rows, _records, modes = self.scenario(
+            http_failure="oversized_declared_length")
+        self.assertEqual(report["reserved"], 1)
+        self.assertEqual(report["settled"], 1)
+        self.assertEqual(report["contiguous_commits"], 0)
+        row = next(x for x in rows if x["event"] == "SETTLE")
+        self.assertEqual(row["state"], "FAILED")
+        self.assertIn("LENGTH_DECLARATION_INVALID", row["reason"])
+        self.assertNotIn("raw_sha256", row)
+        self.assertEqual(self.last_raw_bodies, {})
+        self.assertEqual(modes, [])
+
+    def test_oversize_header_refused_before_archiving(self):
+        report, rows, _records, modes = self.scenario(
+            http_failure="oversized_header")
+        self.assertEqual(report["reserved"], 1)
+        self.assertEqual(report["settled"], 1)
+        self.assertEqual(report["contiguous_commits"], 0)
+        row = next(x for x in rows if x["event"] == "SETTLE")
+        self.assertEqual(row["state"], "FAILED")
+        self.assertIn("HEADERS_NOT_BOUNDED", row["reason"])
+        self.assertNotIn("raw_sha256", row)
+        self.assertEqual(self.last_raw_bodies, {})
+        self.assertEqual(modes, [])
+
+    def test_transfer_encoding_completed_raw_archived_but_failed(self):
+        report, rows, _records, modes = self.scenario(
+            http_failure="transfer_encoding")
+        self.assertEqual(report["reserved"], 1)
+        self.assertEqual(report["settled"], 1)
+        self.assertEqual(report["contiguous_commits"], 0)
+        row = next(x for x in rows if x["event"] == "SETTLE")
+        self.assertEqual(row["state"], "FAILED")
+        self.assertIn("TRANSFER_ENCODING_REFUSED", row["reason"])
+        self.assertEqual(row["raw_sha256"],
+                         hashlib.sha256(self.last_raw_bodies[
+                             row["raw_name"]]).hexdigest())
+        self.assertEqual(modes, [0])
 
     def test_public_concrete_live_entry_remains_closed(self):
         with self.assertRaisesRegex(ValueError, "LIVE_DISABLED"):
