@@ -432,7 +432,7 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 
 [一次性实际GitHub Actions #40193435581](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40193435581) **SUCCESS**，9项新测试+原Stage163 12项，**21/21 PASS**。真实固定源69条原D0 WATCH和47条新D1研究SETUP全量核对：使用独立**3分钟工程年龄诊断**（不是冻结交易策略阈值），旧T0 quote整包距离WATCH的实际回看间隔最小`32653071ms`最大`588673071ms`，69/69 WATCH的旧报价已过期；47/47实际D1 SETUP的旧报价同样过期，另外22条自然无升级。故本次旧价格证据**无一能证明信号当时的可用成交盘口**，但也不能推导69个币当时真实不能成交。原G4同样`UNKNOWN`，不能因为缺证据就归为真实流动性0。
 
-Artifact **`12599195855`** 中`real69-d2-time-receipt-coverage.json`是实际69行证据，SHA256 `9bd81c0303d082885c79c8d282c53eb879e4eea712dbe1840be03001d708c077`。分类严格区分`SOURCE_RECEIPT_AFTER_SIGNAL`（未来不可用）、`STALE_PRE_SIGNAL_RECEIPT`（过期）和`NON_ATOMIC_L1_RECEIPT_ONLY`（即便年龄足够也不证明真实交易所quote事件时间）。字段明示旧历史信号是**事后事件时钟**，缺历史live收取`available_at`、真实订单簿深度与卖出退出Bid、账户资格/费率/实际金额，所有`can_confirm_g4=False`、`actual_return=None`；不以历史OHLC冒充成交或费用后收益。
+Artifact **`12599195855`** 中`real69-d2-time-receipt-coverage.json`是实际69行证据，SHA256 `9bd81c0303d082885c79c8d282c53eb879e4eea712dbe1840be03001d708c077`。分类严格区分`ARCHIVED_QUOTE_NOT_YET_RECEIVED_AT_EVENT_CLOCK`（未来才收到）、`ARCHIVED_QUOTE_STALE_AT_EVENT_CLOCK`（过期）和`ARCHIVED_NON_ATOMIC_BBO_WITHOUT_EXCHANGE_QUOTE_EVENT_TIME`（即便年龄足够也不证明真实交易所quote事件时间）。字段明示旧历史信号是**事后事件时钟**，缺历史live收取`available_at`、真实订单簿深度与卖出退出Bid、账户资格/费率/实际金额，所有`can_confirm_g4=False`、`actual_return=None`；不以历史OHLC冒充成交或费用后收益。
 
 **下一个真正有业务价值的研究支线**：只在用户主动手动采集/真实前瞻合法观察时，搜集绑定信号时间、同场所、受时钟证明的完整买入ask+之后退出bid、订单簿深度、手动提供的报价金额与费率，累积>=30个独立买入与退出证据后才对G4展开定量判断；同时不要忽略G1/G2漏掉2×赢家和已曝光G3`47/7>5`失败。不得将过期旧snapshot或者分钟最高价当作“当时可以低价买入”的证据。
 
