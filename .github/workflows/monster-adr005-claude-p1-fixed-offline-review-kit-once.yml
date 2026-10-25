@@ -1,0 +1,213 @@
+name: Monster ADR005 Claude P1 fixed SHA offline rereview kit once
+
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-adr005-claude-p1-fixed-offline-review-kit-once.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  pack-original-review-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 3fd5cab30324acd75c4f6f00f86bc264abdf943c
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Prove exact Git commit SHA, tree and no credentials
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "3fd5cab30324acd75c4f6f00f86bc264abdf943c"
+          test "$(git rev-parse --is-shallow-repository)" = true
+          test -z "$(git status --porcelain)"
+          python - <<'PY'
+          from pathlib import Path
+          s=Path(".git/config").read_text().lower()
+          if any(t in s for t in ("extraheader", "authorization:", "password =", "token =")):
+              raise SystemExit("GIT_CONFIG_SECRET_FIELD_FOUND")
+          print("IMMUTABLE_REVIEW_SHA_AND_CLEAN_WORKTREE_OK")
+          PY
+      - name: Obtain original four research outputs by pinned Actions run and name
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/monster-claude-kit"
+          mkdir -p "$root/artifacts/oct24" "$root/artifacts/old4088" "$root/artifacts/new4599" "$root/artifacts/adr005-real69" "$root/artifacts/adr005-p1-fixed" "$root/logs"
+          gh run download 40171792607 --name monster-spot511-oct24-final-day-511-identity-readback --dir "$root/artifacts/oct24" --repo "$GITHUB_REPOSITORY"
+          gh run download 40087231856 --name monster-spot511-4088-original-global-replay-40087231856 --dir "$root/artifacts/old4088" --repo "$GITHUB_REPOSITORY"
+          gh run download 40172014267 --name monster-spot511-original4599-frozen-global-paired-proof --dir "$root/artifacts/new4599" --repo "$GITHUB_REPOSITORY"
+          gh run download 40172786657 --name monster-adr005-real69-exposed-original-sqlite-offline --dir "$root/artifacts/adr005-real69" --repo "$GITHUB_REPOSITORY"
+          gh run download 40176149293 --name monster-adr005-real69-post-independent-review-p1-corrected --dir "$root/artifacts/adr005-p1-fixed" --repo "$GITHUB_REPOSITORY"
+      - name: Download four original successful GitHub Actions job logs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/monster-claude-kit"
+          for pair in 40171792607:121103976729 40171792607:121104330384 40172014267:121104653193 40172786657:121106985029 40176149293:121117146255 40176372171:121117826302; do
+            run_id="$(echo "$pair" | cut -d: -f1)"
+            job_id="$(echo "$pair" | cut -d: -f2)"
+            gh run view "$run_id" --job "$job_id" --log --repo "$GITHUB_REPOSITORY" > "$root/logs/job-$job_id.txt"
+            test "$(wc -c < "$root/logs/job-$job_id.txt")" -gt 2000
+          done
+          echo ORIGINAL_ACTIONS_JOB_LOGS_FOUR_OF_FOUR
+      - name: Include twelve genuine official ZIP and publisher checksum samples
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh run download 40171792607 --pattern 'monster-spot511-oct24-original-slice-*' --dir "$RUNNER_TEMP/monster-claude-samples-all" --repo "$GITHUB_REPOSITORY"
+          python - <<'PY'
+          import os,shutil
+          from pathlib import Path
+          root=Path(os.environ["RUNNER_TEMP"])
+          src=root/"monster-claude-samples-all"
+          dest=root/"monster-claude-kit/raw_issuer_oct24_selected_12"
+          for sym in "BTCUSDT BMTUSDT EPICUSDT QUICKUSDT AVAUSDT TREEUSDT LAUSDT ERAUSDT ANIMEUSDT STRAXUSDT KATUSDT WOOUSDT".split():
+              name=f"{sym}-1m-2026-10-24.zip"
+              for ext in ("",".CHECKSUM"):
+                  matches=list(src.rglob(name+ext))
+                  if len(matches)!=1 or not matches[0].is_file() or matches[0].is_symlink():
+                      raise SystemExit("EXPECTED_EXACTLY_ONE_ISSUER_ARTIFACT_PATH:"+sym+ext)
+                  s=matches[0]
+                  if s.parent.name!="1m" or s.parent.parent.name!=sym:
+                      raise SystemExit("UNEXPECTED_PUBLISHER_SOURCE_LAYOUT:"+str(s))
+                  dst=dest/sym/"1m"/(name+ext)
+                  dst.parent.mkdir(parents=True,exist_ok=True)
+                  shutil.copyfile(s,dst)
+          print("TWELVE_ORIGINAL_ISSUER_ZIP_CHECKSUM_PAIRS_COPIED")
+          PY
+      - name: Export verifiable actual shallow Git commit plus complete worktree
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/monster-claude-kit"
+          tar -czf "$root/repo_at_3fd5cab30324acd75c4f6f00f86bc264abdf943c_shallow_git_checkout.tar.gz" --exclude='./.git/hooks' -C "$GITHUB_WORKSPACE" .
+          git rev-parse HEAD > "$root/PINNED_GIT_COMMIT_SHA.txt"
+          git rev-parse HEAD^{tree} > "$root/ORIGINAL_GIT_TREE_SHA.txt"
+      - name: Check original study hashes and make one verified transfer ZIP
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json,os
+          root=Path(os.environ["RUNNER_TEMP"])/"monster-claude-kit"
+          pins={
+            "artifacts/old4088/paired-4088.json":"453ee2e740578121b0734d61e6eb357be7bb34859b90878eb314f7d3dc1690f5",
+            "artifacts/new4599/paired-4599.json":"bf8d1a1fd9916257fe39b0da1ae008fbe77e7ef35e09e1d61b24fe05641adbc1",
+          }
+          for path,sha in pins.items():
+              src=root/path
+              if not src.is_file() or hashlib.sha256(src.read_bytes()).hexdigest()!=sha:
+                  raise SystemExit("INVALID_FIXED_ORIGINAL_REPLAY_SOURCE:"+path)
+          full=json.loads((root/"artifacts/new4599/paired-4599.json").read_bytes())
+          study=json.loads((root/"artifacts/adr005-real69/real69.json").read_bytes())
+          fixed=json.loads((root/"artifacts/adr005-p1-fixed/real69.json").read_bytes())
+          last=json.loads((root/"artifacts/oct24/oct24-source-report.json").read_bytes())
+          if not (full["verified_full_publisher_symbol_days"]==4599
+                  and full["ticks"]==3360 and full["d0_watch_count"]==69
+                  and full["fifo_setups"]==59 and full["fair8_setups"]==59
+                  and last["oct24_verified"]==511
+                  and study["frozen_original_watch_events"]==69
+                  and study["status_counts"]=={"RESEARCH_SETUP":47,
+                                               "NO_SETUP":10,"SOURCE_UNSCORED":4,
+                                               "LATE_UNSCORED":8}
+                  and study["exposed_original53_reference_comparison"]["status"]=="MATCH"
+                  and fixed["status_counts"]=={"RESEARCH_SETUP":47,
+                      "NO_SETUP":18,"SOURCE_UNSCORED":4}
+                  and fixed["exposed_original53_reference_comparison"]["status"]=="SEMANTIC_DEADLINE_REPAIR_MATCH"
+                  and len(fixed["exposed_original53_reference_comparison"]["explicit_late_to_no_setup_corrected_event_ids"])==6
+                  and fixed["research_G3_positive_asset_identity"]["counts"]=={
+                    "CRYPTO_TYPE_POSITIVE":40,
+                    "CHILIZ_FAN_TOKEN_SEPARATE":2,
+                    "TOKENIZED_EQUITY_EXCLUDED":2,
+                    "UNRESOLVED_NOT_DEFAULT_CRYPTO":3
+                  }):
+              raise SystemExit("PROVENANCE_OR_REVIEWED_P1_REPAIR_RESULT_DRIFT")
+          instructions="""MONSTER / CLAUDE HAIKU 5.5 INDEPENDENT P1 RE-REVIEW KIT
+
+Fixed repaired SHA: 3fd5cab30324acd75c4f6f00f86bc264abdf943c
+Original reviewed SHA: cbce0ddef40ab23ba86ba27e31e3d93bfaa62362
+Public repo: lxxlx2/ChatGPT_mission_record, Draft PR #30
+Original Claude Haiku 5.5 conclusion: REQUEST_CHANGES (not APPROVE).
+Scope: NO_MERGE NO_DEPLOY NO_MAC NO_CRON NO_GMAIL NO_TRADES NO_NEW_RPC.
+
+This package supplies a real shallow Git checkout at the fixed REPAIRED commit,
+all tracked worktree files and Git tree/blob objects, archived original replay
+and corrected replay JSON/SQLite, 6 original Actions job logs, and 12 official
+Oct24 ZIP + CHECKSUM pairs. Internet access is not needed.
+
+Verification in the extracted folder:
+  python3 VERIFY_KIT.py
+  mkdir -p checkout
+  tar -xzf repo_at_3fd5cab30324acd75c4f6f00f86bc264abdf943c_shallow_git_checkout.tar.gz -C checkout
+  git -C checkout rev-parse HEAD
+  git -C checkout status --porcelain
+  git -C checkout show -s --format=fuller HEAD
+
+HEAD must equal 3fd5cab30324acd75c4f6f00f86bc264abdf943c; worktree must be clean. Then:
+  cd checkout
+  export PYTHONPATH=crypto-300-profit-mission/local-agent:crypto-300-profit-mission/local-agent/scripts
+  python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_d1_rbtc15_episode_research.py
+  python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_real53_original_sqlite_replay.py
+  python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_real69_original_sqlite_replay.py
+
+Read this fixed commit's:
+  crypto-300-profit-mission/monster/reviews/MONSTER_ADR005_CLAUDE_HAIKU55_REQUEST_CHANGES_REMEDIATION_20261025.md
+  crypto-300-profit-mission/monster/adr/ADR-005-spot-d1-btc-relative-confirmation-preregister-20261024.md
+
+BEFORE: 47 RS / 10 NO_SETUP / 4 SOURCE_UNSCORED / 8 LATE_UNSCORED.
+AFTER:  47 RS / 18 NO_SETUP / 4 SOURCE_UNSCORED / 0 LATE_UNSCORED.
+Six old53 statuses and two new16 statuses were corrected. P1-1 must
+independently be verified for SAME_BAR at deadline, after-deadline capacity,
+no prior evaluation, prior/source-censored, restart, and no new RS.
+Old53 historical reference is intentionally unchanged and the new status is
+SEMANTIC_DEADLINE_REPAIR_MATCH rather than the old misleading MATCH.
+Asset identity positive type: 40; Chiliz fan 2; tokenized equity 2;
+unresolved (TREE,LA,ANIME) 3. P1-3 is not a claim of actual historical
+exchange spot listing or account permission. Check all official manifest
+URLs and publication date constraints separately. 47 raw SETUP and 40
+positive crypto TYPE exceed original G3 35 in seven days; formal historical
+eligibility PIT, G1 G2 and executable G4 remain unresolved. G6 NO_GO.
+
+Important limitation: this handoff contains just twelve official raw ZIP +
+CHECKSUM pairs for 2026-10-24, not all 4599 source pairs. Treat independent
+verification of all raw source bytes as BLOCKED absent those files. Archived
+minute candles are not original historical network arrival receipts.
+
+Respond APPROVE / REQUEST_CHANGES / BLOCKED for the FIXED SHA's reviewed
+incremental source code, explicit P0/P1/P2 with exact line numbers and
+executed evidence, G0-G6 status, and unverified scope. No deploying,
+merging, scheduling, trading, notifications, or changing Frank.
+"""
+          (root/"READ_FIRST_FOR_CLAUDE.txt").write_text(instructions,encoding="utf-8")
+          manifest={}
+          for f in sorted(root.rglob("*")):
+              if f.is_file() and f.name not in ("KIT_SHA256_MANIFEST.json","VERIFY_KIT.py"):
+                  manifest[str(f.relative_to(root))]={"bytes":f.stat().st_size,
+                                  "sha256":hashlib.sha256(f.read_bytes()).hexdigest()}
+          (root/"KIT_SHA256_MANIFEST.json").write_text(json.dumps(manifest,sort_keys=True,indent=2)+"\n")
+          verifier="import json,hashlib\nfrom pathlib import Path\nr=Path(__file__).resolve().parent\nj=json.loads((r/'KIT_SHA256_MANIFEST.json').read_text())\nfor rel,v in j.items():\n p=r/rel\n if not p.is_file() or p.stat().st_size!=v['bytes'] or hashlib.sha256(p.read_bytes()).hexdigest()!=v['sha256']:\n  raise SystemExit('BAD_OR_MISSING_REVIEW_KIT_FILE:'+rel)\nprint('SHA256_REVIEW_KIT_OK',len(j))\n"
+          (root/"VERIFY_KIT.py").write_text(verifier)
+          print("KIT_VERIFIED_FILE_COUNT",len(manifest))
+          PY
+          (cd "$RUNNER_TEMP/monster-claude-kit" && python3 VERIFY_KIT.py)
+          cd "$RUNNER_TEMP"
+          zip -q -r -9 MONSTER_CLAUDE_OFFLINE_P1_FIX_3FD5_20261025.zip monster-claude-kit
+          ls -lh MONSTER_CLAUDE_OFFLINE_P1_FIX_3FD5_20261025.zip
+      - name: Upload one no-network self-contained reviewer ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-claude-offline-p1-fixed-3fd5
+          path: ${{ runner.temp }}/MONSTER_CLAUDE_OFFLINE_P1_FIX_3FD5_20261025.zip
+          retention-days: 30
+          if-no-files-found: error
