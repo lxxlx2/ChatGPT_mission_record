@@ -11,7 +11,7 @@ import json
 import sqlite3
 
 import monster_v4_shadow as original
-from monster_v4_d1_rbtc15_last5_research import evaluate_research_candidate
+from monster_v4_d1_rbtc15_last5_research import FIVE_MS, evaluate_research_candidate
 
 RESEARCH_SCHEMA = "MONSTER_ADR005_ISOLATED_EPISODE_LEDGER_V1"
 TICK_MS = 180_000
@@ -99,6 +99,27 @@ def admit_original_watch(db, event):
     return True
 
 
+def _negative_fully_reviewed_through_deadline(row):
+    """No known final-bar opportunity missed (no inference from an early negative).
+
+    The last eligible closed 5m bar at the original 3m deadline has an open
+    time strictly before floor(deadline / 5m). A stale earlier bar can never
+    establish NO_SETUP, even if one or more earlier reviews were negative.
+    """
+    deadline=row["deadline_ms"]
+    expected_open=(deadline//FIVE_MS)*FIVE_MS-FIVE_MS
+    return row["last_reviewed_open_ms"] == expected_open
+
+
+def _expiry_status(row, *, source_censored_count=None):
+    censored=(row["source_censored_count"] if source_censored_count is None
+              else source_censored_count)
+    if censored:
+        return "SOURCE_UNSCORED"
+    return ("NO_SETUP" if _negative_fully_reviewed_through_deadline(row)
+            else "LATE_UNSCORED")
+
+
 def poll_episodes(db,tick_ms,closed5_by_symbol,*,limit=MAX_SERVICE):
     """Advance independent FIFO queue once at an exact 3m UTC poll.
 
@@ -117,9 +138,9 @@ def poll_episodes(db,tick_ms,closed5_by_symbol,*,limit=MAX_SERVICE):
     for row in selected:
         identity=row["watch_event_id"]
         if tick_ms>row["deadline_ms"]:
-            terminal=("SOURCE_UNSCORED" if row["source_censored_count"] else
-                      "NO_SETUP" if row["last_reviewed_open_ms"] is not None else
-                      "LATE_UNSCORED")
+            # Do not certify a historical negative if the deadline's last
+            # observable 5m bar was never assessed (e.g. scheduler outage).
+            terminal=_expiry_status(row)
             with db:
                 db.execute("UPDATE episode SET status=? WHERE watch_event_id=?",
                            (terminal,identity))
@@ -144,9 +165,7 @@ def poll_episodes(db,tick_ms,closed5_by_symbol,*,limit=MAX_SERVICE):
             censored = row["source_censored_count"] + int(state=="SOURCE_CENSORED")
             terminal = "PENDING"
             if tick_ms >= row["deadline_ms"]:
-                terminal = ("SOURCE_UNSCORED" if censored else
-                            "NO_SETUP" if row["last_reviewed_open_ms"] is not None else
-                            "LATE_UNSCORED")
+                terminal = _expiry_status(row,source_censored_count=censored)
             with db:
                 db.execute("""UPDATE episode SET status=?,retry_after_ms=?,
                     attempts=attempts+1,source_censored_count=?
