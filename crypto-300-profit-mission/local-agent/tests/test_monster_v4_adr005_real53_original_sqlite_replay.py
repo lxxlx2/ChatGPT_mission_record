@@ -129,7 +129,7 @@ class PinnedOriginalResearchReplayTests(unittest.TestCase):
         for row in ledger["rows"]:
             if row["status"] == "LATE_UNSCORED":
                 row["status"] = "NO_SETUP"
-                row["last_reviewed_open_ms"] = row["first_seen_ms"] + 300_000
+                row["last_reviewed_open_ms"] = (row["deadline_ms"]//300_000)*300_000-300_000
                 repaired.append(row["watch_event_id"])
         self.assertEqual(len(repaired), 6)
         self.assertEqual(replay.compare_exposed_exploration(ledger,reference)["status"],
@@ -153,6 +153,10 @@ class PinnedOriginalResearchReplayTests(unittest.TestCase):
             ledger,reference,allow_semantic_deadline_repair=True)["status"],
             "DIFFERENCE_FAIL_CLOSED")
         row["last_reviewed_open_ms"]=row["first_seen_ms"]+300_000
+        self.assertEqual(replay.compare_exposed_exploration(
+            ledger,reference,allow_semantic_deadline_repair=True)["status"],
+            "DIFFERENCE_FAIL_CLOSED")
+        row["last_reviewed_open_ms"]=(row["deadline_ms"]//300_000)*300_000-300_000
         row["source_censored_count"]=1
         self.assertEqual(replay.compare_exposed_exploration(
             ledger,reference,allow_semantic_deadline_repair=True)["status"],
