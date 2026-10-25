@@ -1,3 +1,27 @@
+# 2026-10-26 — PR211 staged direct-lower-gate RID bypass prevented before fixed-SHA review
+
+- After first CI report mismatch was fixed, [second Linux CI 40239913498](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40239913498) passed 566/566. Further pre-freeze source review found the staged source could be invoked directly via `GlobalStartGate.run` or `reply_transport_evidence_offline` with arbitrary callback while HTTP constructor was patched, bypassing durable coordinator RID reservation. No real network incident; nevertheless violates the single-writer/test integration invariant.
+- Fix `a985f9d6839190740c6b047424e714de2d52ab2c` adds exact `_StagedOnlyReservationGuard` minted only inside original `reserve()` **after fsync**, with exact payload digest and original verified closure; both lower gate and staged source require it. Fix `6cdde5b8f40d591b2bc0812cd26924b3a13d763e` prevents direct staged method from trusting an arbitrary lambda. Two new focused negative tests `f2de79d4185cfffeb3104b7b039d6c04188e9657` assert direct gate/source denial before patched ctor/start. Expected full F0 568, staged 9, new HEAD CI/independent Mac review still mandatory. Python-private seal is **not** actual signed authority; `send_live` still denies.
+- New PR211 fixed SHA must be taken after all docs update; do not rely on previous passing 566/566 SHA for current 568-test scope. [Issue #207](https://github.com/lxxlx2/ChatGPT_mission_record/issues/207). `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
+# 2026-10-26 — PR211 first CI revealed staged-source report attribute mismatch, repaired same PR
+
+- Initial PR211 GitHub CI [40239652434](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40239652434) ran **566 tests with 2 ERROR**: common report read `source.growth_bps`, but distinct physical-source slot must not pretend to be FakeSource. The source-side correction `10847a3a6f7e3f5028289e85daa4a6ddbef9b655` writes null only for staged `synthetic_source_growth_bps` while preserving all existing fake report values; focused regression `705346ce37b47be9bf5e8636c1c5f83c0bf4eb9f` asserts null. Keep failure provenance; do not claim first SHA PASS.
+- Review note added to `f0/F0_D2_SINGLE_COORDINATOR_PHYSICAL_SLOT_REVIEW.md`. Exact final HEAD Linux CI, source proof and independent ARM64 Mac review still needed. Production `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
+# 2026-10-26 — Issue #207: distinct physical HTTPS source slot in ONE original 3-slot coordinator, offline only
+
+- **Last approved baseline** PR209 exact `a23e58f7a5c28095befec2165c3af611b863e5d0`. External independent ARM64 Mac `APPROVE_OFFLINE_CODE — D2_PHYSICAL_HTTPS_RESPONSE_BOUNDARIES_PATCHED_ONLY` [attributed GitHub archive](https://github.com/lxxlx2/ChatGPT_mission_record/pull/209#issuecomment-6404067631): full F0 559/559; D1 new count 171 (not old 165), physical ctor 16, D2-A 10, D2-B 10, D2-C 7, UTC 4, budgets 4, hard-stop 5 and child 2, 0 skips.
+- **New D2 code increment, not yet approved:** `f0/f0_l2_d2_physical_source_offline.py` introduces exact non-FakeSource zero-state physical HTTPS source type, restricted to mock-replaced HTTPS constructor. `f0/f0_l2_d1_coordinator.py` factors the ORIGINAL single executor/RID/RAW/3-slot scheduling body once into `_run_single_shared_coordinator`; unchanged public signature `run_fake_concurrent` remains fake-only, while private `_run_staged_physical_patched_offline` calls the SAME body for offline mocked transport. `GlobalStartGate.run` adds exact fifth staged class under original shared lock. No new worker pool, source host, signer, trust root, OS grant or live ability; standard physical constructor causes denial before writer/journal.
+- **Seven new tests** demonstrate pre-ledger real-constructor denial, identical shared fake-first request/order, RID RESERVE before patched physical ctor, 250ms POST pacing, 0600 RAW-before-SETTLE, completed 302 RAW-but-FAILED, no direct live gate, no callback injection/subclasses and disabled `send_live`. See `f0/F0_D2_SINGLE_COORDINATOR_PHYSICAL_SLOT_REVIEW.md`; expected full F0 566 pending verified CI and independent source/Mac review.
+- **Warning:** private Python test token + monkeypatching is never production cryptographic authority or sandboxing against arbitrary Python. The real source remains NO_GO until separate actual human D2/D3 signatures, fixed production OS account marker, authenticated pilot scope and explicit user consent. [Issue #207](https://github.com/lxxlx2/ChatGPT_mission_record/issues/207). No real RPC/WS, production nonce, merge, deploy, daemon, trading or background tasks. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-26 — Issue #207 true HTTPS prerequisite: bounded response headers/body framing (OFFLINE; REVIEW PENDING)
 
 - **Frozen independent-approved source:** PR206 exact `68e02323288a1909f6f9c0b6d96d487b9c0a5da5`, Mac `APPROVE_OFFLINE_CODE — D2C_SIGNED_TEST_PROOF_CLOSED_ADMISSION_ONLY` (full F0 553/553); [archived attribution](https://github.com/lxxlx2/ChatGPT_mission_record/pull/206#issuecomment-6403827434). This approval is synthetic/offline only; no live D2/D3 signer exists.
