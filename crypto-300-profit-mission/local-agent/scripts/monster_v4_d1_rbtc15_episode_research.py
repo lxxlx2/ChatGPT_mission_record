@@ -117,7 +117,9 @@ def poll_episodes(db,tick_ms,closed5_by_symbol,*,limit=MAX_SERVICE):
     for row in selected:
         identity=row["watch_event_id"]
         if tick_ms>row["deadline_ms"]:
-            terminal="SOURCE_UNSCORED" if row["source_censored_count"] else "LATE_UNSCORED"
+            terminal=("SOURCE_UNSCORED" if row["source_censored_count"] else
+                      "NO_SETUP" if row["last_reviewed_open_ms"] is not None else
+                      "LATE_UNSCORED")
             with db:
                 db.execute("UPDATE episode SET status=? WHERE watch_event_id=?",
                            (terminal,identity))
@@ -136,12 +138,21 @@ def poll_episodes(db,tick_ms,closed5_by_symbol,*,limit=MAX_SERVICE):
                      "research_setup_candidate":None}
         state=details["state"]
         if state in ("SOURCE_CENSORED","WAIT_POST_WATCH_CLOSED_5M","SAME_BAR_NO_DUPLICATE"):
+            # Closing poll may reuse the previous 5m bar. A prior valid
+            # negative remains NO_SETUP, rather than being mislabelled LATE
+            # at the next 3m tick. Missing evidence remains SOURCE_UNSCORED.
+            censored = row["source_censored_count"] + int(state=="SOURCE_CENSORED")
+            terminal = "PENDING"
+            if tick_ms >= row["deadline_ms"]:
+                terminal = ("SOURCE_UNSCORED" if censored else
+                            "NO_SETUP" if row["last_reviewed_open_ms"] is not None else
+                            "LATE_UNSCORED")
             with db:
-                db.execute("""UPDATE episode SET retry_after_ms=?,attempts=attempts+1,
-                    source_censored_count=source_censored_count+?
+                db.execute("""UPDATE episode SET status=?,retry_after_ms=?,
+                    attempts=attempts+1,source_censored_count=?
                     WHERE watch_event_id=?""",
-                    (tick_ms+TICK_MS, int(state=="SOURCE_CENSORED"),identity))
-            outcomes.append((identity,state))
+                    (terminal,tick_ms+TICK_MS,censored,identity))
+            outcomes.append((identity,terminal if terminal!="PENDING" else state))
             continue
         if state not in ("RESEARCH_SETUP","RESEARCH_NO_SETUP_YET"):
             raise RuntimeError("RESEARCH_UNEXPECTED_COMPARATOR_STATE")
@@ -171,6 +182,7 @@ def summary(db):
     original_count=sum(status.values())
     rows=[dict(row) for row in db.execute("""SELECT e.watch_event_id,e.symbol,e.first_seen_ms,
           e.deadline_ms,e.status,e.attempts,e.source_censored_count,
+          e.last_reviewed_open_ms,
           r.event_id AS research_event_id,r.observed_ms AS research_observed_ms
           FROM episode e LEFT JOIN research_setup r
           ON r.watch_event_id=e.watch_event_id
