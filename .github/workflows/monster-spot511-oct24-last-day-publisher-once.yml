@@ -1,0 +1,178 @@
+name: Monster Spot511 Oct24 final publisher-day manual one-shot
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-spot511-oct24-last-day-publisher-once.yml
+
+permissions:
+  contents: read
+
+jobs:
+  official-publisher-one-symbol-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Read one actual frozen BTCUSDT daily publisher archive only
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent:crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_spot511_manual_publisher_batch.py \
+            --day 2026-10-24 \
+            --dest "$RUNNER_TEMP/monster24-probe/source" \
+            --start-index 96 --count 1 --download \
+            --out "$RUNNER_TEMP/monster24-probe/probe.json"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"monster24-probe/probe.json"
+          j=json.loads(p.read_text())
+          if not (j["frozen_total"]==511 and j["start_index"]==96
+                  and j["source_records"][0]["symbol"]=="BTCUSDT"
+                  and j["verified_downloads"]==1):
+              raise SystemExit("OCT24_SOURCE_NOT_YET_AVAILABLE_OR_FAILED_VALIDATION_STOP")
+          print("OCT24_REAL_BTC_PUBLISHER_1440_VERIFIED_ELIGIBLE_FOR_BOUNDED_COHORT")
+          PY
+
+  bounded-511-shards:
+    needs: official-publisher-one-symbol-gate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        start: [0, 64, 128, 192, 256, 320, 384, 448]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Bounded read-only official issuer originals for one immutable roster slice
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent:crypto-300-profit-mission/local-agent/scripts
+          SLICE: ${{ matrix.start }}
+        run: |
+          set -euo pipefail
+          count=64
+          if test "$SLICE" -eq 448; then count=63; fi
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_spot511_manual_publisher_batch.py \
+            --day 2026-10-24 \
+            --dest "$RUNNER_TEMP/monster24/source" \
+            --start-index "$SLICE" --count "$count" --download \
+            --out "$RUNNER_TEMP/monster24/manifest-$SLICE.json"
+      - name: Preserve exact source pairs and failures for independently reviewable admission
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-spot511-oct24-original-slice-${{ matrix.start }}
+          path: ${{ runner.temp }}/monster24/
+          retention-days: 60
+          if-no-files-found: warn
+
+  exact-511-integrity-reconciliation:
+    needs: bounded-511-shards
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-spot511-oct24-original-slice-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/monster24-merged
+      - name: Revalidate each 511 day source and distinguish verified from missing
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent:crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from datetime import date, datetime, timezone
+          import json, os
+          from pathlib import Path
+          import monster_v4_stage166_spot511_official_1m_intake as stage166
+          root=Path(os.environ["RUNNER_TEMP"])/"monster24-merged"
+          roster=stage166.frozen_roster()
+          day=date(2026,10,24)
+          all_rows=[]
+          for start in range(0,511,64):
+              manifest=root/f"manifest-{start}.json"
+              if not manifest.is_file():raise SystemExit("OCT24_MISSING_SLICE_MANIFEST:"+str(start))
+              j=json.loads(manifest.read_bytes())
+              expected=roster[start:min(511,start+64)]
+              if (j.get("schema")!="MONSTER_SPOT511_MANUAL_PUBLISHER_BATCH_V1"
+                  or j.get("day_utc")!="2026-10-24" or j.get("frozen_total")!=511
+                  or j.get("execution")!="MANUAL_DOWNLOAD"
+                  or j.get("start_index")!=start or j.get("batch_size")!=len(expected)
+                  or [x.get("symbol") for x in j.get("source_records",[])]!=expected):
+                  raise SystemExit("OCT24_ROSTER_SOURCE_MANIFEST_DRIFT:"+str(start))
+              all_rows.extend(j["source_records"])
+          if len(all_rows)!=511 or len(set(x["symbol"] for x in all_rows))!=511:
+              raise SystemExit("OCT24_511_SOURCE_DENOMINATOR_INVALID")
+          verified=0
+          failures=[]
+          for row in all_rows:
+              symbol=row["symbol"]
+              zip_path,sum_path=stage166.daily_paths(root/"source",symbol,day)
+              if row["status"] in ("VERIFIED_FULL_DAY_1440","ALREADY_VERIFIED_LOCAL"):
+                  proof=stage166.validate_daily_zip(zip_path,sum_path,symbol,day)
+                  if (proof["closed_one_minute_rows"]!=1440
+                      or proof["zip_sha256"]!=row["zip_sha256"]):
+                      raise SystemExit("OCT24_PUBLISHER_REVERIFY_DRIFT:"+symbol)
+                  verified+=1
+              else:
+                  if zip_path.exists() or sum_path.exists():
+                      raise SystemExit("OCT24_INVALID_SOURCE_PAIR_RETAINED:"+symbol)
+                  failures.append({"symbol":symbol,"status":row["status"],
+                                   "error":row.get("error")})
+          report={
+              "schema":"MONSTER_SPOT511_OCT24_FINAL_PUBLISHER_DAY_ONE_SHOT_V1",
+              "original_t0_frozen_roster":511,
+              "expected_original_older_day_verified":4088,
+              "older_day_provenance":"SEPARATE_PREVIOUSLY_VERIFIED_ACTIONS_40087231856",
+              "oct24_utc_date":day.isoformat(),
+              "oct24_verified":verified,
+              "oct24_not_verified":511-verified,
+              "cumulative_previously_verified_plus_new_source_days":4088+verified,
+              "complete_4599_official_publisher_days":verified==511,
+              "source_failures":failures,
+              "all_rows":all_rows,
+              "publisher_zip_originals_in_artifact_not_git":True,
+              "historical_live_available_at":"UNKNOWN",
+              "historical_dynamic_spot_listing_pit":"UNKNOWN",
+              "not_original_full_market_d0_d1_replay":True,
+              "G0":"PARTIAL", "G1":"NOT_SCORABLE",
+              "G2":"UNKNOWN", "G3":"UNKNOWN", "G4":"UNKNOWN",
+              "G5":"NOT_DONE", "G6":"NO_GO",
+              "NO_MERGE":True, "NO_DEPLOY":True, "NO_MAC":True,
+              "NO_SCHEDULE":True, "NO_GMAIL":True, "NO_TRADES":True
+          }
+          out=root/"oct24-source-report.json"
+          out.write_text(json.dumps(report,sort_keys=True,indent=2,ensure_ascii=False)+"\n")
+          print("OCT24_REAL_ISSUER_511_SOURCE_RECONCILIATION",
+                json.dumps({"verified":verified,"unknown":511-verified,
+                            "cumulative":4088+verified,"G6":"NO_GO"}))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-spot511-oct24-final-day-511-identity-readback
+          path: ${{ runner.temp }}/monster24-merged/oct24-source-report.json
+          retention-days: 60
+          if-no-files-found: error
