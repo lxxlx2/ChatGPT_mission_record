@@ -231,6 +231,35 @@ class SealedMemoryHTTPSSource(FakeSource):
             max_bytes=2_000_000)
 
 
+_STAGED_RESERVATION_TEST_SEAL = object()
+
+
+class _StagedOnlyReservationGuard:
+    """In-process TEST receipt minted after the coordinator fsyncs its RID.
+
+    This is NOT a production key, permit, signature or sandbox capability.
+    Exact type checking prevents accidental direct lower-gate dispatch with
+    an arbitrary callback; Python code with module mutation is untrusted.
+    """
+    __slots__ = ("_rid", "_digest", "_guard")
+
+    def __init__(self, request, guard, *, _seal=None):
+        need(_seal is _STAGED_RESERVATION_TEST_SEAL and
+             type(request) is dict and callable(guard),
+             "D2_STAGED_RESERVATION_SEAL_REQUIRED")
+        self._rid = request["id"]
+        self._digest = hashlib.sha256(json.dumps(
+            request, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        self._guard = guard
+
+    def __call__(self, actual):
+        need(type(actual) is dict and actual.get("id") == self._rid
+             and hashlib.sha256(json.dumps(
+                 actual, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+             == self._digest, "D2_STAGED_RESERVED_PAYLOAD_MISMATCH")
+        self._guard(actual)
+
+
 class GlobalStartGate:
     """One shared lock controls actual fake send start across every worker."""
 
@@ -264,6 +293,12 @@ class GlobalStartGate:
              and "reply_transport_evidence_offline" not in
                  getattr(source, "__dict__", {}),
              "D2A_GATE_NON_FAKE_SOURCE_REFUSED")
+        if type(source) is StagedPhysicalHTTPSReadOnlySource:
+            # The staged source cannot be directly dispatched with a
+            # user-injected lambda that has not passed the RID journal.
+            need(type(reservation_guard) is _StagedOnlyReservationGuard,
+                 "D2_STAGED_DURABLE_RESERVATION_PROOF_REQUIRED")
+            reservation_guard(request)
         if type(source) in (SealedMemoryHTTPSSource, SealedConcreteOfflineSource,
                             PatchedConstructorOfflineSource,
                             StagedPhysicalHTTPSReadOnlySource):
@@ -507,12 +542,20 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
             need(actual == expected and actual.get("id") == reserved_id,
                  "D1_PATCHED_CTOR_RESERVED_REQUEST_MISMATCH")
         dead_head = head_completed + head_ttl_ms/1000 if category == "BLOCK" else None
+        # Exactly the same durable RID closure; the staged physical-shaped
+        # source additionally requires an internal post-fsync TEST receipt.
+        # Never interpret this receipt as real D2/D3 production authority.
+        reservation_proof = (
+            _StagedOnlyReservationGuard(
+                payload, verified_reservation,
+                _seal=_STAGED_RESERVATION_TEST_SEAL)
+            if staged else verified_reservation)
         fut = executor.submit(gate.run, payload, source,
                               block_head_deadline=dead_head,
                               dispatch_deadline=dispatch_deadline,
                               timeout_ms=max_block_response_ms,
                               fake_post_utc_window=fake_post_utc_window,
-                              reservation_guard=verified_reservation)
+                              reservation_guard=reservation_proof)
         pending[fut] = entry
         peak_slots = max(peak_slots, len(pending))
 
