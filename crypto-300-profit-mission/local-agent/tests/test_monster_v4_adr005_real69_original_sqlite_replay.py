@@ -1,6 +1,7 @@
 """No-network guardrails for frozen 69 WATCH original-source research replay."""
 from datetime import datetime, timezone
 import hashlib
+import shutil
 import json
 from pathlib import Path
 import tempfile
@@ -65,6 +66,34 @@ class Frozen69Tests(unittest.TestCase):
             file.write_text('{"d0_watch_count":69}')
             with self.assertRaisesRegex(ValueError,"ORIGINAL_4599_FULL_REPORT_SHA_MISMATCH"):
                 full.load_pinned_69(file,{"watch_identity_rows":()})
+
+    def test_official_pre_event_asset_types_do_not_default_unknown_to_crypto(self):
+        t=1_792_818_000_000
+        def row(sym):
+            return {"symbol":sym,"status":"RESEARCH_SETUP",
+                    "research_observed_ms":t}
+        classification=full.exposed_g3_positive_identity_partition([
+            row("BMTUSDT"), row("EPICUSDT"), row("AUSDT"),
+            row("ACMUSDT"), row("SHAZBUSDT"), row("ANIMEUSDT")
+        ],ROOT/"monster"/"evidence")
+        self.assertEqual(classification["seven_day_crypto_type_positive_setup_count"],3)
+        self.assertEqual(classification["unresolved_symbols"],["ANIMEUSDT"])
+        self.assertEqual(classification["counts"],{
+            "CHILIZ_FAN_TOKEN_SEPARATE":1,"CRYPTO_TYPE_POSITIVE":3,
+            "TOKENIZED_EQUITY_EXCLUDED":1,"UNRESOLVED_NOT_DEFAULT_CRYPTO":1})
+        self.assertTrue(classification["does_not_certify_actually_trade_eligible_events"])
+
+    def test_immutable_asset_identity_manifest_tampering_fails_closed(self):
+        original_dir=ROOT/"monster"/"evidence"
+        with tempfile.TemporaryDirectory() as tmp:
+            for name,_ in full.OFFICIAL_PRE_EVENT_MANIFEST_BLOBS.values():
+                shutil.copyfile(original_dir/name,Path(tmp)/name)
+            file=Path(tmp)/full.OFFICIAL_PRE_EVENT_MANIFEST_BLOBS["crypto"][0]
+            file.write_bytes(file.read_bytes()+b" ")
+            with self.assertRaisesRegex(ValueError,"GIT_BLOB_DRIFT"):
+                full.exposed_g3_positive_identity_partition(
+                    [{"symbol":"BMTUSDT","status":"RESEARCH_SETUP",
+                      "research_observed_ms":1_792_818_000_000}],tmp)
 
     def test_early_source_asof_refused_without_creating_sqlite(self):
         with tempfile.TemporaryDirectory() as tmp:
