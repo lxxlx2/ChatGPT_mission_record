@@ -11,7 +11,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from mission_agent.meme.cluster import (
-    Holder, RPCJobBudgetExceeded, SolanaReadOnlyRPC, WalletClusterAnalyzer,
+    Holder, RPCError, RPCJobBudgetExceeded, SolanaReadOnlyRPC, WalletClusterAnalyzer,
 )
 from mission_agent.mission_control import server
 
@@ -253,6 +253,41 @@ class TestReviewP1Regressions(unittest.TestCase):
         self.assertEqual(rpc.call("getTokenSupply", ["mint"]), {"ok": True})
         self.assertEqual(rpc.calls, 1)
         rpc.assert_can_publish()  # count==limit is NOT itself an error after success.
+
+    def test_last_failed_transport_crosses_deadline_after_final_retry(self):
+        clock = Clock()
+        count = []
+        def failed_transport(request, timeout):
+            count.append(timeout)
+            clock.sleep(10 if len(count) < 6 else 85)
+            raise TimeoutError("SYNTHETIC_OFFLINE_TRANSPORT_ERROR")
+        rpc = SolanaReadOnlyRPC(
+            "https://only.example", fallback_endpoints=[],
+            open_url=failed_transport, sleep=clock.sleep, monotonic=clock.monotonic,
+            max_wire_attempts=20, max_elapsed_seconds=180, min_interval=0,
+        )
+        with self.assertRaisesRegex(RPCJobBudgetExceeded, "RPC_JOB_TIME_BUDGET_EXHAUSTED"):
+            rpc.call("getTokenSupply", ["mint"])
+        self.assertEqual(rpc.calls, 6)
+        self.assertEqual(len(count), 6)
+        with self.assertRaises(RPCJobBudgetExceeded):
+            rpc.assert_can_publish()
+
+    def test_nonretryable_final_rpc_error_cannot_be_published_as_success(self):
+        clock = Clock()
+        rpc = SolanaReadOnlyRPC(
+            "https://only.example", fallback_endpoints=[],
+            open_url=lambda request, timeout: Response({"error": {"code": -32000}}),
+            monotonic=clock.monotonic, sleep=clock.sleep,
+            max_wire_attempts=1, max_elapsed_seconds=100, min_interval=0,
+        )
+        # This is a genuine RPCError, unlike a retryable 429; a best-effort
+        # holder/funder handler could otherwise suppress it.
+        with self.assertRaises(RPCError):
+            rpc.call("getTokenSupply", ["mint"])
+        self.assertEqual(rpc.calls, 1)
+        with self.assertRaisesRegex(RPCJobBudgetExceeded, "RPC_JOB_WIRE_BUDGET_EXHAUSTED"):
+            rpc.assert_can_publish()
 
     def test_real_funding_analyzer_and_worker_final_failure_never_save_or_publish(self):
         # Real RPC adapter, real _scan_funding, real analyze and real _run;
