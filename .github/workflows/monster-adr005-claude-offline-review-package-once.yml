@@ -70,14 +70,17 @@ jobs:
           import os,shutil
           from pathlib import Path
           root=Path(os.environ["RUNNER_TEMP"])
-          src=root/"monster-claude-samples-all/source"
+          src=root/"monster-claude-samples-all"
           dest=root/"monster-claude-kit/raw_issuer_oct24_selected_12"
           for sym in "BTCUSDT BMTUSDT EPICUSDT QUICKUSDT AVAUSDT TREEUSDT LAUSDT ERAUSDT ANIMEUSDT STRAXUSDT KATUSDT WOOUSDT".split():
               name=f"{sym}-1m-2026-10-24.zip"
               for ext in ("",".CHECKSUM"):
-                  s=src/sym/"1m"/(name+ext)
-                  if not s.is_file() or s.is_symlink():
-                      raise SystemExit("ACTUAL_OFFICIAL_ZIP_OR_CHECKSUM_MISSING:"+str(s))
+                  matches=list(src.rglob(name+ext))
+                  if len(matches)!=1 or not matches[0].is_file() or matches[0].is_symlink():
+                      raise SystemExit("EXPECTED_EXACTLY_ONE_ISSUER_ARTIFACT_PATH:"+sym+ext)
+                  s=matches[0]
+                  if s.parent.name!="1m" or s.parent.parent.name!=sym:
+                      raise SystemExit("UNEXPECTED_PUBLISHER_SOURCE_LAYOUT:"+str(s))
                   dst=dest/sym/"1m"/(name+ext)
                   dst.parent.mkdir(parents=True,exist_ok=True)
                   shutil.copyfile(s,dst)
