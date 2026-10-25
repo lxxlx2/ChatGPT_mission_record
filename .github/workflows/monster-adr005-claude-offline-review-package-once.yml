@@ -118,55 +118,55 @@ jobs:
               raise SystemExit("PROVENANCE_OR_69_SOURCE_RESEARCH_CENSUS_DRIFT")
           instructions="""MONSTER / CLAUDE INDEPENDENT OFFLINE REVIEW KIT
           
-Fixed SHA: cbce0ddef40ab23ba86ba27e31e3d93bfaa62362
-Public repo: lxxlx2/ChatGPT_mission_record
-PR #30; branch research/monster-v4-local-discovery-20261010.
-Review mode: READONLY; NO_MERGE NO_DEPLOY NO_MAC NO_CRON NO_GMAIL NO_TRADES.
+          Fixed SHA: cbce0ddef40ab23ba86ba27e31e3d93bfaa62362
+          Public repo: lxxlx2/ChatGPT_mission_record
+          PR #30; branch research/monster-v4-local-discovery-20261010.
+          Review mode: READONLY; NO_MERGE NO_DEPLOY NO_MAC NO_CRON NO_GMAIL NO_TRADES.
           
-Your previous Claude review was BLOCKED because the repository and raw outputs
-were unavailable. This kit supplies the actual Git commit object and complete
-tracked worktree as a shallow repository; previous Git history is omitted.
+          Your previous Claude review was BLOCKED because the repository and raw outputs
+          were unavailable. This kit supplies the actual Git commit object and complete
+          tracked worktree as a shallow repository; previous Git history is omitted.
           
-In an offline bash directory after unzipping this outer kit:
-  python3 VERIFY_KIT.py
-  mkdir -p checkout
-  tar -xzf repo_at_cbce0ddef40ab23ba86ba27e31e3d93bfaa62362_shallow_git_checkout.tar.gz -C checkout
-  git -C checkout rev-parse HEAD
-  git -C checkout status --porcelain
-  git -C checkout cat-file -t HEAD
-The printed SHA must exactly match the fixed SHA above; status must be empty.
-No git clone, fetch or GitHub access is needed. The tracked worktree includes
-G0-G6 definitions, source code, tests, and original reference evidence.
+          In an offline bash directory after unzipping this outer kit:
+          python3 VERIFY_KIT.py
+          mkdir -p checkout
+          tar -xzf repo_at_cbce0ddef40ab23ba86ba27e31e3d93bfaa62362_shallow_git_checkout.tar.gz -C checkout
+          git -C checkout rev-parse HEAD
+          git -C checkout status --porcelain
+          git -C checkout cat-file -t HEAD
+          The printed SHA must exactly match the fixed SHA above; status must be empty.
+          No git clone, fetch or GitHub access is needed. The tracked worktree includes
+          G0-G6 definitions, source code, tests, and original reference evidence.
           
-Optional offline regression, Python 3.11:
-  cd checkout
-  export PYTHONPATH=crypto-300-profit-mission/local-agent:crypto-300-profit-mission/local-agent/scripts
-  python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_real69_original_sqlite_replay.py
-  python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_real53_original_sqlite_replay.py
+          Optional offline regression, Python 3.11:
+          cd checkout
+          export PYTHONPATH=crypto-300-profit-mission/local-agent:crypto-300-profit-mission/local-agent/scripts
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_real69_original_sqlite_replay.py
+          python3 -B -m unittest discover -v -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_real53_original_sqlite_replay.py
           
-Four actual successful Actions jobs are in logs/, and the unmodified inner
-JSON/SQLite report bytes from four previous Actions runs are in artifacts/.
-The 12 zipped official publisher files in raw_issuer_oct24_selected_12/
-each have their actual .CHECKSUM; they can be independently parsed and verified.
+          Four actual successful Actions jobs are in logs/, and the unmodified inner
+          JSON/SQLite report bytes from four previous Actions runs are in artifacts/.
+          The 12 zipped official publisher files in raw_issuer_oct24_selected_12/
+          each have their actual .CHECKSUM; they can be independently parsed and verified.
           
-IMPORTANT LIMIT: This compact transfer does NOT contain all 4599 original
-publisher ZIP byte pairs. Independent revalidation of 4599 distinct original
-ZIPs remains BLOCKED unless the reviewer obtains the 72+ original raw Actions
-shards. Do not convert source sample success or official SHA claims to full
-independent confirmation. User-provided reported results, including original
-53/46 and 69/59, still require independent recomputation and an explicit
-scope-limited verdict. Official historical minute archives cannot prove when
-each file became actually public or historical account tradability.
+          IMPORTANT LIMIT: This compact transfer does NOT contain all 4599 original
+          publisher ZIP byte pairs. Independent revalidation of 4599 distinct original
+          ZIPs remains BLOCKED unless the reviewer obtains the 72+ original raw Actions
+          shards. Do not convert source sample success or official SHA claims to full
+          independent confirmation. User-provided reported results, including original
+          53/46 and 69/59, still require independent recomputation and an explicit
+          scope-limited verdict. Official historical minute archives cannot prove when
+          each file became actually public or historical account tradability.
           
-Perform independent P0/P1/P2 review, event ID/timestamp/closed-bar lookahead,
-53 prior vs 69 new, FIFO/Fair8, 47 setup/10 no setup/4 source-censored/
-8 late-censored, G3 attention and asset identity proof (at least 40 crypto
-positive ID events), G1/G2 limitations, G4 exact bid/ask/fees/sellability,
-G5 separate-AI review, G6 no production. Do not retune the frozen strategy.
+          Perform independent P0/P1/P2 review, event ID/timestamp/closed-bar lookahead,
+          53 prior vs 69 new, FIFO/Fair8, 47 setup/10 no setup/4 source-censored/
+          8 late-censored, G3 attention and asset identity proof (at least 40 crypto
+          positive ID events), G1/G2 limitations, G4 exact bid/ask/fees/sellability,
+          G5 separate-AI review, G6 no production. Do not retune the frozen strategy.
           
-Return APPROVE / REQUEST_CHANGES / BLOCKED with exact code SHA, reviewer model,
-executed commands, evidence, file:line, G0-G6 assessments and boundaries.
-"""
+          Return APPROVE / REQUEST_CHANGES / BLOCKED with exact code SHA, reviewer model,
+          executed commands, evidence, file:line, G0-G6 assessments and boundaries.
+          """
           (root/"READ_FIRST_FOR_CLAUDE.txt").write_text(instructions,encoding="utf-8")
           manifest={}
           for f in sorted(root.rglob("*")):
