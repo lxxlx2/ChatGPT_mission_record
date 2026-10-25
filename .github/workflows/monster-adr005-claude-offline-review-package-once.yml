@@ -53,8 +53,10 @@ jobs:
         run: |
           set -euo pipefail
           root="$RUNNER_TEMP/monster-claude-kit"
-          for job_id in 121103976729 121104330384 121104653193 121106985029; do
-            gh api "/repos/$GITHUB_REPOSITORY/actions/jobs/$job_id/logs" > "$root/logs/job-$job_id.txt"
+          for pair in 40171792607:121103976729 40171792607:121104330384 40172014267:121104653193 40172786657:121106985029; do
+            run_id="$(echo "$pair" | cut -d: -f1)"
+            job_id="$(echo "$pair" | cut -d: -f2)"
+            gh run view "$run_id" --job "$job_id" --log --repo "$GITHUB_REPOSITORY" > "$root/logs/job-$job_id.txt"
             test "$(wc -c < "$root/logs/job-$job_id.txt")" -gt 2000
           done
           echo ORIGINAL_ACTIONS_JOB_LOGS_FOUR_OF_FOUR
