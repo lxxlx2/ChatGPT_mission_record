@@ -4,6 +4,7 @@ These tests never call a real HTTPS or socket constructor. No D2/D3 permit.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 import socket
@@ -24,7 +25,8 @@ from f0_l2_d1_https import HOST, PORT
 
 
 class PatchedPhysicalConstructorTests(unittest.TestCase):
-    def scenario(self, *, source=None, fail_connect=False):
+    def scenario(self, *, source=None, fail_connect=False,
+                 http_failure=None):
         source = source or PatchedConstructorOfflineSource(
             delay_ms=12, growth_bps=10.0)
         if type(source) is not PatchedConstructorOfflineSource:
@@ -83,7 +85,17 @@ class PatchedPhysicalConstructorTests(unittest.TestCase):
                     self.events.append("response")
                     if self.payload is None:
                         raise AssertionError("RESPONSE_WITHOUT_POST")
-                    return Response(FakeSource.reply(source, self.payload))
+                    status, headers, body = FakeSource.reply(source, self.payload)
+                    if http_failure == "redirect":
+                        status = 302
+                        headers = {"location": "https://invalid.test/other",
+                                   "content-type": "application/json"}
+                    elif http_failure == "compression":
+                        headers = dict(headers)
+                        headers["content-encoding"] = "gzip"
+                    elif http_failure == "read_failure":
+                        raise TimeoutError("MEMORY_RESPONSE_READ_FAULT")
+                    return Response((status, headers, body))
 
                 def close(self):
                     self.events.append("close")
@@ -114,6 +126,7 @@ class PatchedPhysicalConstructorTests(unittest.TestCase):
                     (evidence / "attempts.jsonl").read_text().splitlines()]
             raw_files = sorted((evidence / "raw_responses").glob("*.body"))
             raw_modes = [p.stat().st_mode & 0o077 for p in raw_files]
+            self.last_raw_bodies = {p.name: p.read_bytes() for p in raw_files}
             return report, rows, records, raw_modes
 
     def test_patched_concrete_constructor_one_coordinator_three_slots(self):
@@ -219,6 +232,59 @@ class PatchedPhysicalConstructorTests(unittest.TestCase):
         self.assertEqual(r["stop"], "RPC_OR_HEAD_FAULT")
         self.assertEqual(r["reserved"], r["settled"])
         self.assertTrue(records)
+
+    def test_http_302_raw_saved_before_failed_settle_no_follow(self):
+        report, rows, records, modes = self.scenario(http_failure="redirect")
+        self.assertEqual(report["stop"], "RPC_OR_HEAD_FAULT")
+        self.assertEqual(report["reserved"], 1)
+        self.assertEqual(report["settled"], 1)
+        self.assertEqual(report["contiguous_commits"], 0)
+        self.assertEqual(report["network_requests"], 0)
+        self.assertEqual(len(records), 1)
+        self.assertEqual(records[0][1],
+                         ("connect", "post", "response", "close"))
+        reserve = [x for x in rows if x["event"] == "RESERVE_UNKNOWN"]
+        settle = [x for x in rows if x["event"] == "SETTLE"]
+        self.assertEqual(len(reserve), 1)
+        self.assertEqual(len(settle), 1)
+        self.assertLess(rows.index(reserve[0]), rows.index(settle[0]))
+        row = settle[0]
+        self.assertEqual(row["state"], "FAILED")
+        self.assertIn("TRANSPORT_REJECTED_RAW", row["reason"])
+        self.assertEqual(row["http_status"], 302)
+        self.assertEqual(self.last_raw_bodies[row["raw_name"]],
+                         self.last_raw_bodies["001.body"])
+        self.assertEqual(row["raw_sha256"],
+                         hashlib.sha256(self.last_raw_bodies[row["raw_name"]]).hexdigest())
+        self.assertEqual(modes, [0])
+
+    def test_compressed_http_raw_archived_but_never_accepted(self):
+        report, rows, records, modes = self.scenario(http_failure="compression")
+        self.assertEqual(report["stop"], "RPC_OR_HEAD_FAULT")
+        self.assertEqual(report["reserved"], 1)
+        self.assertEqual(report["settled"], 1)
+        self.assertEqual(report["contiguous_commits"], 0)
+        row = next(x for x in rows if x["event"] == "SETTLE")
+        self.assertEqual(row["state"], "FAILED")
+        self.assertIn("COMPRESSED_REFUSED", row["reason"])
+        self.assertEqual(row["http_status"], 200)
+        self.assertEqual(row["raw_sha256"],
+                         hashlib.sha256(self.last_raw_bodies[row["raw_name"]]).hexdigest())
+        self.assertEqual(len(self.last_raw_bodies), 1)
+        self.assertEqual(modes, [0])
+
+    def test_post_response_uncertainty_has_no_fabricated_raw(self):
+        report, rows, records, modes = self.scenario(http_failure="read_failure")
+        self.assertEqual(report["stop"], "RPC_OR_HEAD_FAULT")
+        self.assertEqual(report["reserved"], 1)
+        self.assertEqual(report["settled"], 1)
+        self.assertEqual(report["contiguous_commits"], 0)
+        row = next(x for x in rows if x["event"] == "SETTLE")
+        self.assertEqual(row["state"], "FAILED")
+        self.assertIn("TRANSPORT_FAILED_NO_RAW", row["reason"])
+        self.assertNotIn("raw_sha256", row)
+        self.assertEqual(self.last_raw_bodies, {})
+        self.assertEqual(modes, [])
 
     def test_public_concrete_live_entry_remains_closed(self):
         with self.assertRaisesRegex(ValueError, "LIVE_DISABLED"):
