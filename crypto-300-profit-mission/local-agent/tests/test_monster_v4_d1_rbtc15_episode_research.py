@@ -165,9 +165,66 @@ class DurableEpisodeTests(unittest.TestCase):
         admit_original_watch(self.db,make_watch())
         for tick in (T,T+180_000,NEXT,WATCH+900_000):
             poll_episodes(self.db,tick,source(btc_missing=True))
-        done=poll_episodes(self.db,WATCH+900_000+180_000,source(btc_missing=True))
-        self.assertEqual(done[0][1],"SOURCE_UNSCORED")
+        done=summary(self.db)["rows"][0]
+        self.assertEqual(done["status"],"SOURCE_UNSCORED")
+        self.assertEqual(poll_episodes(self.db,WATCH+900_000+180_000,source(btc_missing=True)),[])
         self.assertNotIn("NO_SETUP",summary(self.db)["status_counts"])
+
+    def test_deadline_same_bar_prior_valid_negative_closes_no_setup(self):
+        admit_original_watch(self.db,make_watch())
+        deadline=WATCH+900_000
+
+        def negative(symbol, now):
+            bars=source()(symbol,now)
+            if symbol=="COINUSDT":
+                bars[-1][4]="90"
+                bars[-1][3]="89"
+            return bars
+
+        prior=deadline-180_000
+        self.assertEqual(poll_episodes(self.db,prior,negative)[0][1],
+                         "RESEARCH_NO_SETUP_YET")
+        self.assertEqual(poll_episodes(self.db,deadline,negative)[0][1],
+                         "NO_SETUP")
+        item=summary(self.db)["rows"][0]
+        self.assertEqual(item["attempts"],2)
+        self.assertIsNotNone(item["last_reviewed_open_ms"])
+        self.assertEqual(item["source_censored_count"],0)
+        self.assertEqual(poll_episodes(self.db,deadline+180_000,negative),[])
+
+    def test_deadline_same_bar_with_prior_censor_remains_source_unscored(self):
+        admit_original_watch(self.db,make_watch())
+        deadline=WATCH+900_000
+        def negative(symbol, now):
+            bars=source()(symbol,now)
+            if symbol=="COINUSDT":
+                bars[-1][4]="90"
+                bars[-1][3]="89"
+            return bars
+        poll_episodes(self.db,T,source(btc_missing=True))
+        poll_episodes(self.db,deadline-180_000,negative)
+        self.assertEqual(poll_episodes(self.db,deadline,negative)[0][1],
+                         "SOURCE_UNSCORED")
+        self.assertEqual(summary(self.db)["rows"][0]["source_censored_count"],1)
+
+    def test_overdue_valid_negative_cannot_be_marked_late(self):
+        admit_original_watch(self.db,make_watch())
+        deadline=WATCH+900_000
+        def negative(symbol, now):
+            bars=source()(symbol,now)
+            if symbol=="COINUSDT":
+                bars[-1][4]="90"
+                bars[-1][3]="89"
+            return bars
+        poll_episodes(self.db,deadline-180_000,negative)
+        self.assertEqual(poll_episodes(self.db,deadline+180_000,negative)[0][1],
+                         "NO_SETUP")
+
+    def test_unserved_episode_after_deadline_is_late_unscored(self):
+        admit_original_watch(self.db,make_watch())
+        self.assertEqual(poll_episodes(self.db,WATCH+900_000+180_000,source())[0][1],
+                         "LATE_UNSCORED")
+        self.assertEqual(summary(self.db)["rows"][0]["attempts"],0)
 
     def test_original_watch_at_poll_must_wait_postwatch_bar(self):
         admit_original_watch(self.db,make_watch(T))
