@@ -17,7 +17,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
+from ..meme.cluster import RpcCache, RPCJobBudgetExceeded, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
 from ..meme.market import DexScreenerMarketClient
 from .db import open_control_ro
 from .delivery_review import summarize_manual_reviews
@@ -113,6 +113,15 @@ def _atomic_write_text(path: Path, text_value: str):
 
 
 SOLANA_PUBKEY_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
+# C1 code-only proposal. These are hard on-wire attempt ceilings, including fallback
+# and retries (not logical requests); deployment and real CA POST are NOT authorized.
+# Historical Deep report used 1,733 RPC attempts; budgets require independent review.
+CLUSTER_RPC_JOB_BUDGETS = {
+    "quick": {"max_wire_attempts": 300, "max_elapsed_seconds": 600},
+    "standard": {"max_wire_attempts": 1200, "max_elapsed_seconds": 1800},
+    "deep": {"max_wire_attempts": 2500, "max_elapsed_seconds": 3600},
+}
+
 CLUSTER_PRESETS = {
     "quick": {
         "deep_holders": 6, "history_per_holder": 8, "funding_lookback": 4,
@@ -466,13 +475,15 @@ class ClusterJobManager:
             preset = job["preset"]
         cache = RpcCache(self.cache_path)
         try:
+            opts = CLUSTER_PRESETS[preset]
+            wire_budget = CLUSTER_RPC_JOB_BUDGETS[preset]
             rpc = SolanaReadOnlyRPC(
                 self.rpc_endpoint,
                 fallback_endpoints=self.rpc_endpoints[1:],
                 cache=cache,
+                **wire_budget,
             )
             registry = load_registry(self.registry_path)
-            opts = CLUSTER_PRESETS[preset]
             report = WalletClusterAnalyzer(
                 mint,
                 rpc=rpc,
@@ -508,6 +519,26 @@ class ClusterJobManager:
                 job["status"] = "DONE"
                 job["finished_at"] = time.time()
                 job["progress"] = {"stage":"DONE","updated_at":job["finished_at"]}
+                self._prune_jobs_locked()
+        except RPCJobBudgetExceeded as exc:
+            # A budget stop is not a successful report. Preserve existing latest.json;
+            # neither persist a partial report nor publish a DONE notification.
+            with self.lock:
+                job = self.jobs[job_id]
+                job["status"] = "ERROR"
+                job["finished_at"] = time.time()
+                job["error"] = {
+                    "type": "RPC_JOB_BUDGET_EXHAUSTED",
+                    "reason": str(exc),  # Only our fixed non-sensitive error codes.
+                    "message": "CLUSTER_ANALYSIS_INCOMPLETE_BUDGET_EXHAUSTED",
+                }
+                job["progress"] = {
+                    "stage": "RPC_BUDGET_EXHAUSTED",
+                    "updated_at": job["finished_at"],
+                    "wire_attempts": rpc.calls,
+                    "wire_attempt_limit": wire_budget["max_wire_attempts"],
+                    "elapsed_seconds_limit": wire_budget["max_elapsed_seconds"],
+                }
                 self._prune_jobs_locked()
         except Exception as exc:
             with self.lock:
