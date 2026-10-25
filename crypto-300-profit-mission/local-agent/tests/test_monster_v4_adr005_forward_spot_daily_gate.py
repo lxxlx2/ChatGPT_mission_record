@@ -102,7 +102,7 @@ class ForwardSpotPublisherFifteenDaysTests(unittest.TestCase):
         self.write_day("COIN0USDT",date(2026,11,1),break_checksum=True)
         d=gate.census(self.accepted_fake_t0(),self.root,self.stamp)
         self.assertEqual(d["actual_status_counts"]["SOURCE_REJECTED_OR_INCOMPLETE"],1)
-        self.assertEqual(d["actual_status_counts"]["VERIFIED_1440_OFFICIAL_1M"],0)
+        self.assertEqual(d["actual_status_counts"].get("VERIFIED_1440_OFFICIAL_1M",0),0)
         self.assertEqual(d["G6"],"NO_GO")
 
     def test_future_daily_data_not_loaded_as_early_current_source(self):
