@@ -39,6 +39,7 @@ def synthetic_ledger(reference):
             "watch_event_id": item["original_watch_event_id"],
             "symbol": item["symbol"],
             "first_seen_ms": item["original_watch_observed_ms"],
+            "deadline_ms": item["original_watch_observed_ms"] + 900_000,
             "status": item["status"],
             "source_censored_count": item["source_censored_evaluations"],
             "research_observed_ms": (
