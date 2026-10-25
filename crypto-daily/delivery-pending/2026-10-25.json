@@ -2,7 +2,7 @@
   "report_date": "2026-10-25",
   "timezone": "Asia/Bangkok",
   "automation_id": "6a8600b9d12481919bc43ebc800c9916",
-  "body": "Crypto Daily Brief｜2026-10-25\n快照：Asia/Bangkok 2026-10-25约08:20。币价来自Binance现货滚动24小时，ETF为美国10月23日发行人尚有缺列的暂计。首次补录的旧公告标注原始日期；未核实处明确PARTIAL或SOURCE_GAP。\n\n一、今日最重要的5件事\n（1）Blockaid 10月24日通报X100治理被劫持、约485万USDT转出；原始链上交易在本轮无法直读，金额按安全机构披露标记ATTRIBUTED。\n（2）Keystone 10月24日声明官网客户订单与配送资料外泄，可能导致定向诈骗；公司称助记词、私钥及支付卡信息未列入已披露范围。\n（3）Railway 10月24日13:57 UTC澄清：部分更换后的AI密钥被预防性撤销，官方称并无新一轮攻击。\n（4）ConnectWise 10月24日14:00 UTC更新Cloud Backup恢复计划，目标10月26日先恢复已有备份数据访问，仍待安全验证。\n（5）HSBC香港10月23日官方宣布RedCoin港元稳定币经PayMe上线；330万PayMe用户是潜在触达基数，并非已持币人数。\n\n二、BTC/ETH/SOL及主要资产\n（1）BTC/USDT 80796.00 USDT，滚动24小时-0.007%，高81097.47、低79220.74 USDT，成交额约916.31百万USDT；Binance原始时间2026-10-25T01:20:53.001Z。\n（2）ETH/USDT 2356.83 USDT，滚动24小时-0.910%，高2390.24、低2282.46 USDT，成交额约460.34百万USDT；Binance原始时间2026-10-25T01:20:53.997Z。\n（3）SOL/USDT 102.28 USDT，滚动24小时-0.312%，高103.13、低98.62 USDT，成交额约171.28百万USDT；Binance原始时间2026-10-25T01:20:53.774Z。\n（4）BNB/USDT 741.46 USDT，滚动24小时+0.446%，高742.81、低718 USDT，成交额约84.13百万USDT；Binance原始时间2026-10-25T01:20:53.819Z。\n（5）HYPE/USDT 76.64 USDT，滚动24小时-0.182%，高77.51、低74.45 USDT，成交额约20.6百万USDT；Binance原始时间2026-10-25T01:20:53.470Z。\n\n三、二级市场剧烈波动与持续趋势\n（1）BTC永续：标记价80761.68、指数价80795.38 USDT，最近资金费率+0.009684%，单点未平仓95032.778 BTC；无连续OI与清算资料，不推断新增净多空。\n（2）ETH永续：标记价2355.74、指数价2356.79 USDT，最近资金费率+0.004519%，单点未平仓2274006.198 ETH；无连续OI与清算资料，不推断新增净多空。\n（3）SOL永续：标记价102.26、指数价102.283 USDT，最近资金费率+0.009211%，单点未平仓8574083.06 SOL；无连续OI与清算资料，不推断新增净多空。\n\n四、监管与政策\n（1）Bitget 10月24日03:24官方页面宣布USDC在BSC链提现恢复，属于此前暂停之后的新生命周期；账户实际可用性仍须以交易所界面为准。其他交易所对受限资金来源及交易对手的最新原文存在SOURCE_GAP，不推定限制已解除。\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）美国BTC现货ETF 10月23日Farside已显示基金小计-137.9百万美元，但HODL发行人列仍缺值；只能称已披露列暂计，不能当成全市场最终净流或实际链上卖出。\n（2）美国ETH现货ETF 10月23日Farside已显示基金小计+4.4百万美元，但ETHV发行人列仍缺值；只能称已披露列暂计，不能当成全市场最终净流或实际链上卖出。\n（3）美国SOL现货ETF 10月23日Farside已显示基金小计0.0百万美元，但VSOL发行人列仍缺值；只能称已披露列暂计，不能当成全市场最终净流或实际链上卖出。\n（4）Arkham 10月22日研究称其标记的Drift攻击相关地址在10月20至21日将约1.223亿美元ETH转入Tornado Cash；本轮未逐笔回读TX和标签证据，属于分析平台归因，不能视为已卖出或已追回。\n（5）Lookonchain报告约93,184 ETH多头仓位的两个清算价为2256.45和2226.53美元；后续保证金可能改变阈值，本轮未独立确认实时仓位，不能说已强平。\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n（1）Zeabur停服（补录10月17日旧官方公告）：12月1日服务调整、12月31日共享与专用集群关闭的时间节点需现有用户按官方说明准备迁移；没有证据证明用户本人使用。\n（2）HSBC官方10月23日披露RedCoin（RCHKD）在PayMe的发行与接入进展，潜在触达约330万PayMe用户，不等于330万真实持有人，也不能直接推导公开链流通量。\n（3）Circle 10月23日英文原始索引显示Gateway扩展cirBTC与EURC；原文直连受限，标记ISSUER_INDEXED/SOURCE_GAP，不能将此解释为所有链都能无风险即时兑换。\n（4）Reuters 10月23日报道OKX与ICE代币化股票计划又有6家发行人反对，累计22家，包括Wells Fargo、Arm和Intuit；监管文件本轮未直接回读，不能扩大成所有代币化股票被禁止。\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n无高置信新增。\n\n八、Early / Meme / NFT / 新生态热点\n无高置信新增。\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n（1）X100安全事件：Blockaid称攻击者夺取三席治理中的两席并挪动储备及Uniswap V3流动性，约485万USDT已转移；Etherscan本轮无法直读，保留ATTRIBUTED并等待项目方报告。\n（2）Keystone公司称10月20日发现官网异常、10月23日确认订单配送数据被获取、10月24日披露。姓名、联系方式、地址和订单信息可能被用于假退款或换机骗局；公司未报告助记词和私钥泄露。\n（3）Railway 10月24日官方进一步说明，10月22日03:32 UTC移除攻击者访问后仍有部分新换密钥被预防性撤销；仅密钥实际被撤销的客户需按官方指引重建并更新，不代表新的密钥一定泄露。\n（4）ConnectWise 10月24日Cloud Backup更新：恢复数据访问预计10月26日启动但取决于测试通过；受影响应用连接应维持禁用直至正式指导，不能推定用户微软租户已受侵。\n（5）Zeabur安全事件（补录10月19日旧初报）：官方称10月14至15日共享集群及部分云环境存在未授权访问，环境变量可能暴露；实际使用者按原公告核对并轮换凭据，不能认定每个客户被盗。\n（6）Electrum 4.8.3安全更新线索已由前轮定位至官方发行说明，本轮具体漏洞及精确发布时间仍缺复核；仅实际使用者从项目官网核对签名和版本，勿使用私信更新包。\n\n十、全球局势与跨市场冲击\n（1）Reuters与AP 10月24日报道美国因涉伊朗安全威胁调整部分外交人员安排，能源供应和风险偏好不确定性上升；这不能证明BTC单日下跌全部由该消息造成。\n\n十一、未来24至72小时催化\n（1）美联储官方日程确认10月27至28日FOMC会议，会议开始落在未来72小时窗口；决议与记者会尚未发生，不预判降息或加息。\n（2）ConnectWise预告下一次Cloud Backup进度更新不迟于10月25日14:00 UTC（曼谷21:00）；重点看实际恢复验证和连接重授权说明，预计不等于完成。\n\n十二、持续趋势与跨市场机会观察清单\n（1）BTC滚动24小时低点79,220.74美元，当前约80,796美元；若再失守低点，须同时核对真实成交量、ETF完整数据与连续OI，不能只按单点判断趋势。\n（2）ETH约2356.83美元，与Lookonchain所报清算价存在距离；仓位可追加保证金，本轮缺实时链上仓位确认，不能据此预测必然爆仓。\n（3）未来72小时关注油价、美债收益率与FOMC会前预期；能源和利率同时上行可能增加波动，这只是条件分析。\n\n十三、今日行动与风险结论\n（1）如曾购买相关硬件钱包，警惕带真实订单信息的短信、邮件、电话和邮寄诈骗；只从手动输入的官方入口核对，绝不泄露助记词。未证明用户个人受影响。\n（2）只有实际使用受影响云平台或备份服务，才按发行方指引核查密钥、日志、恢复流程；不要接受第三方“密钥检测”授权。\n（3）BTC/ETH/SOL即时行情、单点OI及ETF缺列暂计不足以确认持续机构卖压或抄底信号，补齐数据前不据此增加杠杆。\n（4）来源完整性PARTIAL：ETF发行人缺列、部分原始链上TX及项目X不可直读、TGE/NFT新权益核验不足；来源缺口不等于相关事件不存在。\n\n英文原始来源与核查入口（并非每个URL都成功直连）：\nx: https://x.com/blockaid_/status/2114006384735916278\nk: https://www.sotwe.com/KeystoneWallet\nr: https://status.railway.com/\nw: https://www.connectwise.com/company/trust/advisories\nh: https://www.about.hsbc.com.hk/news-and-media/hsbc-redcoin-launches-today\nzs: https://zeabur.com/blogs/zeabur-is-shutting-down\nzi: https://dash-new.zeabur.com/blogs/october-2026-security-incident\nc: https://www.circle.com/blog/circle-gateway-now-supports-cirbtc-and-eurc\no: https://www.reuters.com/legal/government/wells-fargo-intuit-others-object-their-shares-being-tokenized-regulatory-2026-10-23/\nb: https://www.bitget.com/support/articles/12560603898714\na: https://info.arkm.com/research/drift-protocol-hacker-moves-122-million-into-tornado-cash\nl: https://lookonchain.com/feeds/78511\ne: https://github.com/spesmilo/electrum/blob/master/RELEASE-NOTES\nm: https://www.reuters.com/world/middle-east/iran-has-ramped-up-efforts-target-us-personnel-intelligence-memo-warns-2026-10-24/\nf: https://www.federalreserve.gov/monetarypolicy.htm\neb: https://farside.co.uk/btc/\nee: https://farside.co.uk/eth/\nes: https://farside.co.uk/sol/\nBTC: https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT\nETH: https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT\nSOL: https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT\n安全家族旧公告核查入口：\nPHP https://www.php.net/archive/2026.php\nMozilla https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/\nLiteLLM https://docs.litellm.ai/blog\nNode https://nodejs.org/en/blog/vulnerability/october-2026-security-releases\nLaravel https://github.com/laravel/framework/security/advisories\n",
+  "body": "Crypto Daily Brief｜2026-10-25\n快照：Asia/Bangkok 2026-10-25约09:25（永续指标约08:20）。币价来自Binance现货滚动24小时，ETF为美国10月23日发行人尚有缺列的暂计。首次补录的旧公告标注原始日期；未核实处明确PARTIAL或SOURCE_GAP。\n\n一、今日最重要的5件事\n（1）Blockaid 10月24日通报X100治理被劫持、约485万USDT转出；原始链上交易在本轮无法直读，金额按安全机构披露标记ATTRIBUTED。\n（2）Keystone 10月24日声明官网客户订单与配送资料外泄，可能导致定向诈骗；公司称助记词、私钥及支付卡信息未列入已披露范围。\n（3）Railway 10月24日13:57 UTC澄清：部分更换后的AI密钥被预防性撤销，官方称并无新一轮攻击。\n（4）ConnectWise 10月24日14:00 UTC更新Cloud Backup恢复计划，目标10月26日先恢复已有备份数据访问，仍待安全验证。\n（5）HSBC香港10月23日官方宣布RedCoin港元稳定币经PayMe上线；330万PayMe用户是潜在触达基数，并非已持币人数。\n\n二、BTC/ETH/SOL及主要资产\n（1）BTC/USDT 80819.94 USDT，滚动24小时-0.093%，高81097.47、低79220.74 USDT，成交额约927.14百万USDT；Binance原始时间2026-10-25T02:25:06.008Z。\n（2）ETH/USDT 2362.49 USDT，滚动24小时-0.774%，高2390.24、低2282.46 USDT，成交额约462.36百万USDT；Binance原始时间2026-10-25T02:25:05.010Z。\n（3）SOL/USDT 102.32 USDT，滚动24小时-0.215%，高103.13、低98.62 USDT，成交额约170.70百万USDT；Binance原始时间2026-10-25T02:25:05.722Z。\n（4）BNB/USDT 743.06 USDT，滚动24小时+0.416%，高744.85、低718.00 USDT，成交额约85.95百万USDT；Binance原始时间2026-10-25T02:25:05.927Z。\n（5）HYPE/USDT 76.67 USDT，滚动24小时-0.558%，高77.51、低74.45 USDT，成交额约20.84百万USDT；Binance原始时间2026-10-25T02:25:06.741Z。\n\n三、二级市场剧烈波动与持续趋势\n（1）BTC永续：标记价80761.68、指数价80795.38 USDT，最近资金费率+0.009684%，单点未平仓95032.778 BTC；无连续OI与清算资料，不推断新增净多空。\n（2）ETH永续：标记价2355.74、指数价2356.79 USDT，最近资金费率+0.004519%，单点未平仓2274006.198 ETH；无连续OI与清算资料，不推断新增净多空。\n（3）SOL永续：标记价102.26、指数价102.283 USDT，最近资金费率+0.009211%，单点未平仓8574083.06 SOL；无连续OI与清算资料，不推断新增净多空。\n\n四、监管与政策\n（1）Bitget 10月24日03:24官方页面宣布USDC在BSC链提现恢复，属于此前暂停之后的新生命周期；账户实际可用性仍须以交易所界面为准。其他交易所对受限资金来源及交易对手的最新原文存在SOURCE_GAP，不推定限制已解除。\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）美国BTC现货ETF 10月23日Farside已显示基金小计-137.9百万美元，但HODL发行人列仍缺值；只能称已披露列暂计，不能当成全市场最终净流或实际链上卖出。\n（2）美国ETH现货ETF 10月23日Farside已显示基金小计+4.4百万美元，但ETHV发行人列仍缺值；只能称已披露列暂计，不能当成全市场最终净流或实际链上卖出。\n（3）美国SOL现货ETF 10月23日Farside已显示基金小计0.0百万美元，但VSOL发行人列仍缺值；只能称已披露列暂计，不能当成全市场最终净流或实际链上卖出。\n（4）Arkham 10月22日研究称其标记的Drift攻击相关地址在10月20至21日将约1.223亿美元ETH转入Tornado Cash；本轮未逐笔回读TX和标签证据，属于分析平台归因，不能视为已卖出或已追回。\n（5）Lookonchain报告约93,184 ETH多头仓位的两个清算价为2256.45和2226.53美元；后续保证金可能改变阈值，本轮未独立确认实时仓位，不能说已强平。\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n（1）Zeabur停服（补录10月17日旧官方公告）：12月1日服务调整、12月31日共享与专用集群关闭的时间节点需现有用户按官方说明准备迁移；没有证据证明用户本人使用。\n（2）HSBC官方10月23日披露RedCoin（RCHKD）在PayMe的发行与接入进展，潜在触达约330万PayMe用户，不等于330万真实持有人，也不能直接推导公开链流通量。\n（3）Circle 10月23日英文原始索引显示Gateway扩展cirBTC与EURC；原文直连受限，标记ISSUER_INDEXED/SOURCE_GAP，不能将此解释为所有链都能无风险即时兑换。\n（4）Reuters 10月23日报道OKX与ICE代币化股票计划又有6家发行人反对，累计22家，包括Wells Fargo、Arm和Intuit；监管文件本轮未直接回读，不能扩大成所有代币化股票被禁止。\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n无高置信新增。\n\n八、Early / Meme / NFT / 新生态热点\n无高置信新增。\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n（1）X100安全事件：Blockaid称攻击者夺取三席治理中的两席并挪动储备及Uniswap V3流动性，约485万USDT已转移；Etherscan本轮无法直读，保留ATTRIBUTED并等待项目方报告。\n（2）Keystone公司称10月20日发现官网异常、10月23日确认订单配送数据被获取、10月24日披露。姓名、联系方式、地址和订单信息可能被用于假退款或换机骗局；公司未报告助记词和私钥泄露。\n（3）Railway 10月24日官方进一步说明，10月22日03:32 UTC移除攻击者访问后仍有部分新换密钥被预防性撤销；仅密钥实际被撤销的客户需按官方指引重建并更新，不代表新的密钥一定泄露。\n（4）ConnectWise 10月24日Cloud Backup更新：恢复数据访问预计10月26日启动但取决于测试通过；受影响应用连接应维持禁用直至正式指导，不能推定用户微软租户已受侵。\n（5）Zeabur安全事件（补录10月19日旧初报）：官方称10月14至15日共享集群及部分云环境存在未授权访问，环境变量可能暴露；实际使用者按原公告核对并轮换凭据，不能认定每个客户被盗。\n（6）Electrum 4.8.3安全更新线索已由前轮定位至官方发行说明，本轮具体漏洞及精确发布时间仍缺复核；仅实际使用者从项目官网核对签名和版本，勿使用私信更新包。\n\n十、全球局势与跨市场冲击\n（1）Reuters与AP 10月24日报道美国因涉伊朗安全威胁调整部分外交人员安排，能源供应和风险偏好不确定性上升；这不能证明BTC单日下跌全部由该消息造成。\n\n十一、未来24至72小时催化\n（1）美联储官方日程确认10月27至28日FOMC会议，会议开始落在未来72小时窗口；决议与记者会尚未发生，不预判降息或加息。\n（2）ConnectWise预告下一次Cloud Backup进度更新不迟于10月25日14:00 UTC（曼谷21:00）；重点看实际恢复验证和连接重授权说明，预计不等于完成。\n\n十二、持续趋势与跨市场机会观察清单\n（1）BTC滚动24小时低点79,220.74美元，09:25现货约80,819.94美元；若再失守低点，须同时核对真实成交量、ETF完整数据与连续OI，不能只按单点判断趋势。\n（2）未来72小时关注油价、美债收益率与FOMC会前预期；能源和利率同时上行可能增加波动，这只是条件分析。\n\n十三、今日行动与风险结论\n（1）如曾购买相关硬件钱包，警惕带真实订单信息的短信、邮件、电话和邮寄诈骗；只从手动输入的官方入口核对，绝不泄露助记词。未证明用户个人受影响。\n（2）只有实际使用受影响云平台或备份服务，才按发行方指引核查密钥、日志、恢复流程；不要接受第三方“密钥检测”授权。\n（3）BTC/ETH/SOL即时行情、单点OI及ETF缺列暂计不足以确认持续机构卖压或抄底信号，补齐数据前不据此增加杠杆。\n\n英文原始来源与核查入口（并非每个URL都成功直连）：\nx: https://x.com/blockaid_/status/2114006384735916278\nk: https://www.sotwe.com/KeystoneWallet\nr: https://status.railway.com/\nw: https://www.connectwise.com/company/trust/advisories\nh: https://www.about.hsbc.com.hk/news-and-media/hsbc-redcoin-launches-today\nzs: https://zeabur.com/blogs/zeabur-is-shutting-down\nzi: https://dash-new.zeabur.com/blogs/october-2026-security-incident\nc: https://www.circle.com/blog/circle-gateway-now-supports-cirbtc-and-eurc\no: https://www.reuters.com/legal/government/wells-fargo-intuit-others-object-their-shares-being-tokenized-regulatory-2026-10-23/\nb: https://www.bitget.com/support/articles/12560603898714\na: https://info.arkm.com/research/drift-protocol-hacker-moves-122-million-into-tornado-cash\nl: https://lookonchain.com/feeds/78511\ne: https://github.com/spesmilo/electrum/blob/master/RELEASE-NOTES\nm: https://www.reuters.com/world/middle-east/iran-has-ramped-up-efforts-target-us-personnel-intelligence-memo-warns-2026-10-24/\nf: https://www.federalreserve.gov/monetarypolicy.htm\neb: https://farside.co.uk/btc/\nee: https://farside.co.uk/eth/\nes: https://farside.co.uk/sol/\nBTC: https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT\nETH: https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT\nSOL: https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT\n安全家族旧公告核查入口：\nPHP https://www.php.net/archive/2026.php\nMozilla https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/\nLiteLLM https://docs.litellm.ai/blog\nNode https://nodejs.org/en/blog/vulnerability/october-2026-security-releases\nLaravel https://github.com/laravel/framework/security/advisories\n",
   "items": [
     {
       "section": 1,
@@ -42,37 +42,37 @@
     {
       "section": 2,
       "item_number": 1,
-      "event_key": "spot:BTC:2026-10-25-0820",
+      "event_key": "spot:BTC:2026-10-25-0925",
       "role": "detail",
-      "text": "BTC/USDT 80796.00 USDT，滚动24小时-0.007%，高81097.47、低79220.74 USDT，成交额约916.31百万USDT；Binance原始时间2026-10-25T01:20:53.001Z。"
+      "text": "BTC/USDT 80819.94 USDT，滚动24小时-0.093%，高81097.47、低79220.74 USDT，成交额约927.14百万USDT；Binance原始时间2026-10-25T02:25:06.008Z。"
     },
     {
       "section": 2,
       "item_number": 2,
-      "event_key": "spot:ETH:2026-10-25-0820",
+      "event_key": "spot:ETH:2026-10-25-0925",
       "role": "detail",
-      "text": "ETH/USDT 2356.83 USDT，滚动24小时-0.910%，高2390.24、低2282.46 USDT，成交额约460.34百万USDT；Binance原始时间2026-10-25T01:20:53.997Z。"
+      "text": "ETH/USDT 2362.49 USDT，滚动24小时-0.774%，高2390.24、低2282.46 USDT，成交额约462.36百万USDT；Binance原始时间2026-10-25T02:25:05.010Z。"
     },
     {
       "section": 2,
       "item_number": 3,
-      "event_key": "spot:SOL:2026-10-25-0820",
+      "event_key": "spot:SOL:2026-10-25-0925",
       "role": "detail",
-      "text": "SOL/USDT 102.28 USDT，滚动24小时-0.312%，高103.13、低98.62 USDT，成交额约171.28百万USDT；Binance原始时间2026-10-25T01:20:53.774Z。"
+      "text": "SOL/USDT 102.32 USDT，滚动24小时-0.215%，高103.13、低98.62 USDT，成交额约170.70百万USDT；Binance原始时间2026-10-25T02:25:05.722Z。"
     },
     {
       "section": 2,
       "item_number": 4,
-      "event_key": "spot:BNB:2026-10-25-0820",
+      "event_key": "spot:BNB:2026-10-25-0925",
       "role": "detail",
-      "text": "BNB/USDT 741.46 USDT，滚动24小时+0.446%，高742.81、低718 USDT，成交额约84.13百万USDT；Binance原始时间2026-10-25T01:20:53.819Z。"
+      "text": "BNB/USDT 743.06 USDT，滚动24小时+0.416%，高744.85、低718.00 USDT，成交额约85.95百万USDT；Binance原始时间2026-10-25T02:25:05.927Z。"
     },
     {
       "section": 2,
       "item_number": 5,
-      "event_key": "spot:HYPE:2026-10-25-0820",
+      "event_key": "spot:HYPE:2026-10-25-0925",
       "role": "detail",
-      "text": "HYPE/USDT 76.64 USDT，滚动24小时-0.182%，高77.51、低74.45 USDT，成交额约20.6百万USDT；Binance原始时间2026-10-25T01:20:53.470Z。"
+      "text": "HYPE/USDT 76.67 USDT，滚动24小时-0.558%，高77.51、低74.45 USDT，成交额约20.84百万USDT；Binance原始时间2026-10-25T02:25:06.741Z。"
     },
     {
       "section": 3,
@@ -233,18 +233,11 @@
       "item_number": 1,
       "event_key": "watch:btc:2026-10-25",
       "role": "detail",
-      "text": "BTC滚动24小时低点79,220.74美元，当前约80,796美元；若再失守低点，须同时核对真实成交量、ETF完整数据与连续OI，不能只按单点判断趋势。"
+      "text": "BTC滚动24小时低点79,220.74美元，09:25现货约80,819.94美元；若再失守低点，须同时核对真实成交量、ETF完整数据与连续OI，不能只按单点判断趋势。"
     },
     {
       "section": 12,
       "item_number": 2,
-      "event_key": "watch:eth:2026-10-25",
-      "role": "detail",
-      "text": "ETH约2356.83美元，与Lookonchain所报清算价存在距离；仓位可追加保证金，本轮缺实时链上仓位确认，不能据此预测必然爆仓。"
-    },
-    {
-      "section": 12,
-      "item_number": 3,
       "event_key": "watch:macro:2026-10-25",
       "role": "detail",
       "text": "未来72小时关注油价、美债收益率与FOMC会前预期；能源和利率同时上行可能增加波动，这只是条件分析。"
@@ -269,13 +262,6 @@
       "event_key": "action:market:2026-10-25",
       "role": "detail",
       "text": "BTC/ETH/SOL即时行情、单点OI及ETF缺列暂计不足以确认持续机构卖压或抄底信号，补齐数据前不据此增加杠杆。"
-    },
-    {
-      "section": 13,
-      "item_number": 4,
-      "event_key": "action:source:2026-10-25",
-      "role": "detail",
-      "text": "来源完整性PARTIAL：ETF发行人缺列、部分原始链上TX及项目X不可直读、TGE/NFT新权益核验不足；来源缺口不等于相关事件不存在。"
     }
   ],
   "events": [
@@ -358,11 +344,11 @@
       "version": "hsbc-official-launch-2026-10-23"
     },
     {
-      "event_key": "spot:BTC:2026-10-25-0820",
-      "material_version": "binance-close-1792891253001",
+      "event_key": "spot:BTC:2026-10-25-0925",
+      "material_version": "binance-close-1792895106008",
       "kind": "CORE_QUOTE",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
-      "published_at": "2026-10-25T01:20:53.001Z",
+      "published_at": "2026-10-25T02:25:06.008Z",
       "actual_delta": "Official Binance 24h rolling spot ticker snapshot",
       "impact": "MEDIUM",
       "status": "verified",
@@ -370,11 +356,11 @@
       "version": "binance-close-1792891253001"
     },
     {
-      "event_key": "spot:ETH:2026-10-25-0820",
-      "material_version": "binance-close-1792891253997",
+      "event_key": "spot:ETH:2026-10-25-0925",
+      "material_version": "binance-close-1792895105010",
       "kind": "CORE_QUOTE",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
-      "published_at": "2026-10-25T01:20:53.997Z",
+      "published_at": "2026-10-25T02:25:05.010Z",
       "actual_delta": "Official Binance 24h rolling spot ticker snapshot",
       "impact": "MEDIUM",
       "status": "verified",
@@ -382,11 +368,11 @@
       "version": "binance-close-1792891253997"
     },
     {
-      "event_key": "spot:SOL:2026-10-25-0820",
-      "material_version": "binance-close-1792891253774",
+      "event_key": "spot:SOL:2026-10-25-0925",
+      "material_version": "binance-close-1792895105722",
       "kind": "CORE_QUOTE",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
-      "published_at": "2026-10-25T01:20:53.774Z",
+      "published_at": "2026-10-25T02:25:05.722Z",
       "actual_delta": "Official Binance 24h rolling spot ticker snapshot",
       "impact": "MEDIUM",
       "status": "verified",
@@ -394,11 +380,11 @@
       "version": "binance-close-1792891253774"
     },
     {
-      "event_key": "spot:BNB:2026-10-25-0820",
-      "material_version": "binance-close-1792891253819",
+      "event_key": "spot:BNB:2026-10-25-0925",
+      "material_version": "binance-close-1792895105927",
       "kind": "CORE_QUOTE",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT",
-      "published_at": "2026-10-25T01:20:53.819Z",
+      "published_at": "2026-10-25T02:25:05.927Z",
       "actual_delta": "Official Binance 24h rolling spot ticker snapshot",
       "impact": "MEDIUM",
       "status": "verified",
@@ -406,11 +392,11 @@
       "version": "binance-close-1792891253819"
     },
     {
-      "event_key": "spot:HYPE:2026-10-25-0820",
-      "material_version": "binance-close-1792891253470",
+      "event_key": "spot:HYPE:2026-10-25-0925",
+      "material_version": "binance-close-1792895106741",
       "kind": "CORE_QUOTE",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT",
-      "published_at": "2026-10-25T01:20:53.470Z",
+      "published_at": "2026-10-25T02:25:06.741Z",
       "actual_delta": "Official Binance 24h rolling spot ticker snapshot",
       "impact": "MEDIUM",
       "status": "verified",
@@ -630,17 +616,6 @@
       "priority": "MEDIUM"
     },
     {
-      "event_key": "watch:eth:2026-10-25",
-      "material_version": "2026-10-25 prebuild",
-      "kind": "PERSISTENT_WATCH",
-      "source_url": "https://lookonchain.com/feeds/78511",
-      "published_at": "2026-10-25 prebuild",
-      "actual_delta": "Fresh conditional risk watch from checked source",
-      "impact": "MEDIUM",
-      "status": "analysis",
-      "priority": "MEDIUM"
-    },
-    {
       "event_key": "watch:macro:2026-10-25",
       "material_version": "2026-10-25 prebuild",
       "kind": "PERSISTENT_WATCH",
@@ -675,17 +650,6 @@
     },
     {
       "event_key": "action:market:2026-10-25",
-      "material_version": "2026-10-25 prebuild",
-      "kind": "ACTION_CONCLUSION",
-      "source_url": "https://farside.co.uk/btc/",
-      "published_at": "2026-10-25 prebuild",
-      "actual_delta": "Decision-oriented risk conclusion with provenance gap",
-      "impact": "MEDIUM",
-      "status": "analysis",
-      "priority": "MEDIUM"
-    },
-    {
-      "event_key": "action:source:2026-10-25",
       "material_version": "2026-10-25 prebuild",
       "kind": "ACTION_CONCLUSION",
       "source_url": "https://farside.co.uk/btc/",
@@ -962,6 +926,34 @@
       "published_at": "2026-10-15",
       "material_delta": "Secondary claim unresolved pending original source verification",
       "source_tier": "official_or_attributed"
+    },
+    {
+      "event_key": "onchain:eth-leverage-margin:2026-10-25-early",
+      "family_key": "onchain:eth-perp-whale",
+      "material_version": "lookonchain-78520-2026-10-25-new-margin",
+      "aliases": [
+        "ETH高杠杆仓位"
+      ],
+      "decision": "exclude",
+      "reason": "10月25日Lookonchain转引@EmberCN称补充921万USDC保证金、ETH仓位变为115473枚；原始X因403无法核对、实时合约仓位与是否和前日93184枚属同一主体均未验证，先VERIFYING，不能把新清算价当作已证实时阈值。",
+      "source_url": "https://lookonchain.com/feeds/78520",
+      "published_at": "2026-10-25 (source says about one hour before 09:25 Bangkok, exact timestamp unverified)",
+      "material_delta": "New attributed margin addition and changed liquidation levels, primary X 403",
+      "source_tier": "ATTRIBUTED_SECONDARY"
+    },
+    {
+      "event_key": "onchain:arthur-hayes-altcoin-transfers:2026-10-25",
+      "family_key": "onchain:arthur-hayes-altcoin-transfers",
+      "material_version": "lookonchain-78519-2026-10-25",
+      "aliases": [
+        "Arthur Hayes"
+      ],
+      "decision": "exclude",
+      "reason": "Lookonchain转引@EmberCN称约2881万美元多资产转入交易对手或交易所，原始X为403且未独立取得TXID；转入交易所与真正成交卖出不同，先VERIFYING，不将二手说法提升为已确认卖出。",
+      "source_url": "https://lookonchain.com/feeds/78519",
+      "published_at": "2026-10-25 (source says about one hour before 09:25 Bangkok, exact timestamp unverified)",
+      "material_delta": "New attributed multi-asset transfers, raw chain proof unavailable",
+      "source_tier": "ATTRIBUTED_SECONDARY"
     }
   ],
   "previous_events": [
@@ -1259,14 +1251,16 @@
   "source_receipts": [
     {
       "lane": "spot",
-      "checked_at": "2026-10-25T08:23:00+07:00",
+      "checked_at": "2026-10-25T09:25:07+07:00",
       "query_or_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
       "status": "checked",
-      "source_published_at": "exchange 2026-10-25T01:20:53Z",
+      "source_published_at": "Binance exchange 2026-10-25T02:25:05-06Z",
       "result_urls": [
         "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
         "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
-        "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT"
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT",
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT"
       ]
     },
     {
@@ -1293,14 +1287,17 @@
     },
     {
       "lane": "onchain",
-      "checked_at": "2026-10-25T08:23:00+07:00",
+      "checked_at": "2026-10-25T09:26:00+07:00",
       "query_or_url": "https://lookonchain.com/feeds/78511",
       "status": "checked",
       "source_published_at": "Lookonchain relative nine hours, Arkham Oct22",
       "result_urls": [
         "https://lookonchain.com/feeds/78511",
-        "https://info.arkm.com/research/drift-protocol-hacker-moves-122-million-into-tornado-cash"
-      ]
+        "https://info.arkm.com/research/drift-protocol-hacker-moves-122-million-into-tornado-cash",
+        "https://lookonchain.com/feeds/78520",
+        "https://lookonchain.com/feeds/78519"
+      ],
+      "error": "Two new attributed candidate primary X posts 403 and onchain live state unverified; candidates excluded pending independent evidence."
     },
     {
       "lane": "policy",
@@ -1432,20 +1429,20 @@
   "market_core": [
     {
       "symbol": "BTC",
-      "price": 80796,
-      "observed_at": "2026-10-25T01:20:53.001Z",
+      "price": 80819.94,
+      "observed_at": "2026-10-25T02:25:06.008Z",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT"
     },
     {
       "symbol": "ETH",
-      "price": 2356.83,
-      "observed_at": "2026-10-25T01:20:53.997Z",
+      "price": 2362.49,
+      "observed_at": "2026-10-25T02:25:05.010Z",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT"
     },
     {
       "symbol": "SOL",
-      "price": 102.28,
-      "observed_at": "2026-10-25T01:20:53.774Z",
+      "price": 102.32,
+      "observed_at": "2026-10-25T02:25:05.722Z",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT"
     }
   ],
@@ -1503,6 +1500,7 @@
   "notes": [
     "Actual 2026-10-24/25 collector finals and research read, all PARTIAL; six security families independently checked, older material versions suppressed.",
     "Seven Gmail Sent actual bodies dated 2026-10-18..24 and seven Git canonical reports checked; ledger blob b8f5c1fdf707e9217820e414c52e55c3f60bae21 read.",
-    "No email in 08:20 PREBUILD_ONLY; X/Etherscan access gap, ETF issuer missing, TGE/NFT incomplete; CI must validate editorial gate."
+    "No email in 08:20 PREBUILD_ONLY; X/Etherscan access gap, ETF issuer missing, TGE/NFT incomplete; CI must validate editorial gate.",
+    "09:25 refresh: official Binance five spot tickers updated; Lookonchain two new high-amount attributed claims explicitly EXCLUDED/VERIFYING due to original X 403 and missing chain proof; no inferred liquidation/sale. §13 internal QA prose removed, §12 duplicate removed."
   ]
 }
