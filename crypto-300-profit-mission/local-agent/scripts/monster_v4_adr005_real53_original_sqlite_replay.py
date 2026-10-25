@@ -14,6 +14,7 @@ from pathlib import Path
 
 from monster_v4_d1_rbtc15_episode_research import (
     admit_original_watch, create_ledger, poll_episodes, summary,
+    _negative_fully_reviewed_through_deadline,
 )
 from monster_v4_spot511_d0_d1_tape import VerifiedClosedMinuteTape
 from monster_v4_spot511_verified_watch_tape import (
@@ -89,7 +90,7 @@ def compare_exposed_exploration(ledger, exploration, *, allow_semantic_deadline_
             allow_semantic_deadline_repair
             and x.get("status") == "LATE_UNSCORED"
             and a["status"] == "NO_SETUP"
-            and a.get("last_reviewed_open_ms") is not None
+            and _negative_fully_reviewed_through_deadline(a)
             and a["source_censored_count"] == 0
         )
         if status_is_approved_repair:
