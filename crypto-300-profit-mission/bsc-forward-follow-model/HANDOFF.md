@@ -1,3 +1,11 @@
+# 2026-10-26 — PR204 D2-B ARM64 Mac APPROVE; D2-C signed TEST proof to SAME closed source gate, NEW REVIEW PENDING
+
+- **Frozen approved parent PR204:** `8a0037f7d2c2ab8aa1308fa7be18e62e5e76f7dc`, independently user-reported Mac `APPROVE_OFFLINE_CODE — D2B_THREE_ROLE_TEST_SIGNATURE_BINDING_ONLY`, full F0 546/546, D1 165, D2-B 10, D2-A 10, UTC 4, physical constructor 10, candidate budgets 4, hard-stop 5, child lifetime 2 all PASS/0 skips. 17 independent crypto negatives including raw serialization/signature-role mismatch. [Attributable reviewer report archived on PR204](https://github.com/lxxlx2/ChatGPT_mission_record/pull/204#issuecomment-6400602183). Old test public roots remain caller injected, no real consent.
+- **New D2-C child:** `f0/f0_l2_d2c_test_proof_admission_offline.py` composes existing D2-B TEST-only triple-role verifier with the existing D2-A immutable non-executable source proposal, and calls the **SAME always-blocked `f0_l2_d1_coordinator.request_physical_source_admission`**. No separate dispatcher and no candidate-to-real-permit promotion. Even if the gate erroneously returned, D2-C raises; both production root maps must stay empty. Seven tests include valid test signature still denied before writer/socket/marker, altered D2/D3 before gate, repeated key, forged authorization diagnostics and unexpected gate return. See `f0/F0_D2C_TEST_PROOF_CLOSED_SOURCE_REVIEW.md`; new exact HEAD CI and independent review still required.
+- **Hard stop:** No real authority/trust enrollment, human D3 authorization, production one-use grant, real HTTPS/RPC, prior private BSC journal, merge, deploy, background service or trades. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-25 — D2-B offline three-role D2/D3 signed candidate fixture, never live; INDEPENDENT REVIEW PENDING
 
 - **Approved frozen base:** PR202 SHA `7068312f7e5c1a1bb54fd5c0ab004be74189647c`, external ARM64 Mac `APPROVE_OFFLINE_CODE — D2A_CLOSED_REAL_SOURCE_ADMISSION_ONLY` (536/536 full F0 and 10/10 D2-A, all isolated D1/UTC/constructor/budget/hard-stop/child-lifetime passed), reviewer-supplied evidence [archived here](https://github.com/lxxlx2/ChatGPT_mission_record/pull/202#issuecomment-6400407343). Former PR202 SHA `72b3d2...` retains scoped REQUEST_CHANGES; new D2-B code is not approved by that Mac audit.
