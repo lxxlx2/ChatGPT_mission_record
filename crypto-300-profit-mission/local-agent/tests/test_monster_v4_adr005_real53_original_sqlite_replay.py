@@ -122,6 +122,42 @@ class PinnedOriginalResearchReplayTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "PINNED_EXPLORATORY_REFERENCE_FILE_REQUIRED"):
                 replay.load_pinned_exploration(linked)
 
+    def test_reviewed_same_bar_late_to_no_setup_allowed_only_with_valid_bar(self):
+        reference = exploration()
+        ledger = synthetic_ledger(reference)
+        repaired = []
+        for row in ledger["rows"]:
+            if row["status"] == "LATE_UNSCORED":
+                row["status"] = "NO_SETUP"
+                row["last_reviewed_open_ms"] = row["first_seen_ms"] + 300_000
+                repaired.append(row["watch_event_id"])
+        self.assertEqual(len(repaired), 6)
+        self.assertEqual(replay.compare_exposed_exploration(ledger,reference)["status"],
+                         "DIFFERENCE_FAIL_CLOSED")
+        result = replay.compare_exposed_exploration(
+            ledger, reference, allow_semantic_deadline_repair=True)
+        self.assertEqual(result["status"],"SEMANTIC_DEADLINE_REPAIR_MATCH")
+        self.assertEqual(set(result["explicit_late_to_no_setup_corrected_event_ids"]),
+                         set(repaired))
+        ledger["rows"][0]["symbol"]="IMPOSSIBLEUSDT"
+        self.assertEqual(replay.compare_exposed_exploration(
+            ledger,reference,allow_semantic_deadline_repair=True)["status"],
+            "DIFFERENCE_FAIL_CLOSED")
+
+    def test_unproven_late_to_no_setup_is_never_accepted(self):
+        reference=exploration()
+        ledger=synthetic_ledger(reference)
+        row=next(x for x in ledger["rows"] if x["status"]=="LATE_UNSCORED")
+        row["status"]="NO_SETUP"
+        self.assertEqual(replay.compare_exposed_exploration(
+            ledger,reference,allow_semantic_deadline_repair=True)["status"],
+            "DIFFERENCE_FAIL_CLOSED")
+        row["last_reviewed_open_ms"]=row["first_seen_ms"]+300_000
+        row["source_censored_count"]=1
+        self.assertEqual(replay.compare_exposed_exploration(
+            ledger,reference,allow_semantic_deadline_repair=True)["status"],
+            "DIFFERENCE_FAIL_CLOSED")
+
     def test_aware_mature_utc_asof_required_before_any_read(self):
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp)
