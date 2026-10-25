@@ -109,8 +109,8 @@ def replay(*, original_paired_json, publisher_dir, ledger_path, comparison_path,
     if missing:
         raise ValueError("REQUIRED_57_PUBLISHER_DAY_SOURCE_NOT_VERIFIED: " +
                          json.dumps(missing, separators=(",", ":")))
-    if Path(comparison_path).exists() or Path(comparison_path).is_symlink():
-        raise ValueError("REPLAY_REPORT_REFUSE_EXISTING_OUTPUT")
+    if not Path(comparison_path).is_file() or Path(comparison_path).is_symlink():
+        raise ValueError("PINNED_EXPLORATORY_REFERENCE_FILE_REQUIRED")
     if Path(ledger_path).exists() or Path(ledger_path).is_symlink():
         raise ValueError("REPLAY_LEDGER_REFUSE_EXISTING_OUTPUT")
     if Path(comparison_path).resolve() == Path(ledger_path).resolve():
