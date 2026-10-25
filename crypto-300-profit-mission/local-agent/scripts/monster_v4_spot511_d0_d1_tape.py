@@ -5,7 +5,7 @@ live ticker snapshots. Stage166 publisher checksum validates every admitted UTC
 file. No network, orders, mail, daemon, scheduler, changes to original D0/D1.
 """
 from datetime import datetime, timedelta, timezone
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 import csv
 import io
@@ -58,7 +58,7 @@ class VerifiedClosedMinuteTape:
                         bars = [tuple(Decimal(row[x]) for x in FIELDS) for row in reader]
                 if len(bars) != d0.DAY_MINUTES:
                     raise ValueError("VERIFIED_DAY_ROW_COUNT_CHANGED")
-            except (ValueError, OSError, UnicodeError, zipfile.BadZipFile) as exc:
+            except (ValueError, OSError, UnicodeError, zipfile.BadZipFile, InvalidOperation) as exc:
                 self.day_states[day.isoformat()] = "SOURCE_REJECTED_OR_INCOMPLETE"
                 continue
             self.minutes[i*d0.DAY_MINUTES:(i+1)*d0.DAY_MINUTES] = bars
