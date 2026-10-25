@@ -20,6 +20,11 @@ from f0_l2_d1_coordinator import FakeSource
 from f0_l2_d1_https import HOST, PORT
 
 MAX_REQUEST_BYTES = 2000
+# Bound response metadata as well as the already bounded response body. The
+# complete raw header list is collected by http.client; never trust metadata
+# size or announced body length without explicit validation.
+MAX_RESPONSE_HEADERS = 40
+MAX_RESPONSE_HEADER_BYTES = 8192
 
 # Private module-local test barrier. NOT cryptographic or production auth.
 _REVIEW_TEST_ONLY_CAPABILITY = object()
@@ -107,13 +112,31 @@ def _review_concrete_https_once(request, *, final_post_guard,
         response = conn.getresponse()
         status = response.status
         hdrs = response.getheaders()
-        if (type(status) is not int or type(hdrs) is not list or
-                not all(type(k) is str and type(v) is str for k, v in hdrs)):
+        if (type(status) is not int or status < 100 or status > 599
+                or type(hdrs) is not list
+                or not all(type(k) is str and type(v) is str for k, v in hdrs)):
             raise ValueError("D1_CONCRETE_HTTP_RESPONSE_METADATA_INVALID")
+        if (len(hdrs) > MAX_RESPONSE_HEADERS or
+                any(not k or any(ord(ch) < 33 or ord(ch) > 126
+                                 or ch == ":" for ch in k)
+                    or any(ord(ch) < 32 and ch != "\t" or ord(ch) == 127
+                           for ch in v) for k, v in hdrs) or
+                sum(len(k.encode("utf-8")) + len(v.encode("utf-8")) + 4
+                    for k, v in hdrs) > MAX_RESPONSE_HEADER_BYTES):
+            raise ValueError("D1_CONCRETE_HTTP_HEADERS_NOT_BOUNDED")
         header_names = [name.lower() for name, _ in hdrs]
         if len(header_names) != len(set(header_names)):
             raise ValueError("D1_CONCRETE_HTTP_DUPLICATE_HEADER")
         headers = {name.lower(): value for name, value in hdrs}
+        content_length = headers.get("content-length")
+        if content_length is not None:
+            if (not content_length.isascii()
+                    or not content_length.isdecimal()
+                    or len(content_length) > 7
+                    or int(content_length) > max_bytes):
+                # Declared oversize/malformed payload is never read or
+                # fabricated into a complete RAW response.
+                raise ValueError("D1_CONCRETE_HTTP_LENGTH_DECLARATION_INVALID")
         # Status 503 or 302 must preserve the RAW frame for audit, but
         # parsing a successful RPC is a SEPARATE later decision.
         data = response.read(max_bytes + 1)
@@ -122,12 +145,22 @@ def _review_concrete_https_once(request, *, final_post_guard,
             if type(data) is bytes:
                 raw_prefix_sha256 = hashlib.sha256(data).hexdigest()
             raise ValueError("D1_CONCRETE_HTTP_OVERSIZED_OR_INVALID_RAW")
+        if content_length is not None and len(data) != int(content_length):
+            # A short response or inconsistent declared length cannot be
+            # archived as if it were a complete, authenticated RPC frame.
+            raw_prefix_sha256 = hashlib.sha256(data).hexdigest()
+            raise ValueError("D1_CONCRETE_HTTP_BODY_LENGTH_MISMATCH")
         raw_frame = (status, headers, data)
         phase = "RAW_RECEIVED"
         if 300 <= status < 400:
             failure = "D1_CONCRETE_HTTP_REDIRECT_REFUSED"
         elif headers.get("content-encoding", "identity").lower() != "identity":
             failure = "D1_CONCRETE_HTTP_COMPRESSED_REFUSED"
+        elif "transfer-encoding" in headers:
+            # Do not let content transfer/framing transformations silently
+            # become RPC success; complete bounded original RAW is retained
+            # for FAILED settlement, with no retry or COMMIT.
+            failure = "D1_CONCRETE_HTTP_TRANSFER_ENCODING_REFUSED"
     except Exception as exc:
         if phase == "CONNECTED":
             failure = "D1_CONCRETE_HTTP_PREPOST_GUARD_DENIED"
