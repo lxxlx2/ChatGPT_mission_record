@@ -258,6 +258,8 @@ class GlobalStartGate:
                               PatchedConstructorOfflineSource)
              and "reply" not in getattr(source, "__dict__", {})
              and "reply_over_memory_https" not in
+                 getattr(source, "__dict__", {})
+             and "reply_transport_evidence_offline" not in
                  getattr(source, "__dict__", {}),
              "D2A_GATE_NON_FAKE_SOURCE_REFUSED")
         if type(source) in (SealedMemoryHTTPSSource, SealedConcreteOfflineSource,
@@ -400,6 +402,8 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
                           PatchedConstructorOfflineSource)
          and "reply" not in getattr(source, "__dict__", {})
          and "reply_over_memory_https" not in getattr(source, "__dict__", {})
+         and "reply_transport_evidence_offline" not in
+             getattr(source, "__dict__", {})
          and type(slots) is int and slots == 3
          and type(max_total) is int and 2 <= max_total <= 32
          and type(max_blocks) is int and 1 <= max_blocks <= 24
