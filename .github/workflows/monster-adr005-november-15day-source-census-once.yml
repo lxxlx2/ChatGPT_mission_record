@@ -49,6 +49,11 @@ jobs:
               assert t["G0"]=="POPULATION_UNKNOWN"
               assert s["calendar_days"]==15
               assert len(s["calendar"])==15
+              assert s["calendar"][0]["segment"]=="BASELINE_24H"
+              assert s["calendar"][1]["segment"]=="D0_D1_OBSERVATION_7D"
+              assert s["calendar"][8]["segment"]=="FUTURE_2X_LABEL_7D"
+              assert [sum(x["segment"]==name for x in s["calendar"]) for name in
+                      ("BASELINE_24H","D0_D1_OBSERVATION_7D","FUTURE_2X_LABEL_7D")]==[1,7,7]
               assert all(x["source_status"]=="UTC_DAY_NOT_YET_ENDED" for x in s["calendar"])
               assert s["G1"]=="NOT_SCORABLE" and s["G6"]=="NO_GO"
               assert "baseline_symbol_population" not in s
