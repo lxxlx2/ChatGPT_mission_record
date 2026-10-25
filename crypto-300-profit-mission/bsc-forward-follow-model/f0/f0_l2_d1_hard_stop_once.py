@@ -58,8 +58,10 @@ def _validate_offline_scope(candidate):
             set(candidate) not in (
                 _OFFLINE_SCOPE_KEYS, _OFFLINE_SCOPE_KEYS | {"post_utc"})):
         raise ValueError("D1_CHILD_OFFLINE_SCOPE_FIELDS_INVALID")
-    utc = candidate.get("post_utc")
-    if utc is not None:
+    if "post_utc" in candidate:
+        utc = candidate["post_utc"]
+        # Presence must imply a complete nested UTC record. An explicit
+        # JSON null must fail BEFORE the one-use test marker is consumed.
         if type(utc) is not dict or set(utc) != _CHILD_UTC_KEYS:
             raise ValueError("D1_CHILD_POST_UTC_FIELDS_INVALID")
         from f0_l2_d1_post_utc import OfflinePostUTCWindow
