@@ -104,6 +104,24 @@ class PinnedOriginalResearchReplayTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "EXPLORATION_SOURCE"):
             replay.compare_exposed_exploration(synthetic_ledger(exploration()), ref)
 
+    def test_reference_pinned_git_blob_tampering_rejected(self):
+        reference = replay.load_pinned_exploration(REFERENCE)
+        self.assertEqual(reference["original_watch_events"], 53)
+        with tempfile.TemporaryDirectory() as tmp:
+            modified = Path(tmp) / "exploration.json"
+            modified.write_text(
+                json.dumps(reference, ensure_ascii=False, sort_keys=True),
+                encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "EXPLORATORY_REFERENCE_GIT_BLOB_DRIFT"):
+                replay.load_pinned_exploration(modified)
+
+    def test_symlink_to_reference_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            linked = Path(tmp) / "exploration.json"
+            linked.symlink_to(REFERENCE)
+            with self.assertRaisesRegex(ValueError, "PINNED_EXPLORATORY_REFERENCE_FILE_REQUIRED"):
+                replay.load_pinned_exploration(linked)
+
     def test_aware_mature_utc_asof_required_before_any_read(self):
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp)
