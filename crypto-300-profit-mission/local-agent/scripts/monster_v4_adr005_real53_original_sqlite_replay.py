@@ -90,6 +90,8 @@ def compare_exposed_exploration(ledger, exploration, *, allow_semantic_deadline_
             allow_semantic_deadline_repair
             and x.get("status") == "LATE_UNSCORED"
             and a["status"] == "NO_SETUP"
+            and a.get("last_reviewed_open_ms") is not None
+            and a.get("deadline_ms") is not None
             and _negative_fully_reviewed_through_deadline(a)
             and a["source_censored_count"] == 0
         )
