@@ -244,6 +244,10 @@ class GlobalStartGate:
 
     def run(self, request, source, *, block_head_deadline, dispatch_deadline,
             timeout_ms, fake_post_utc_window=None, reservation_guard=None):
+        from f0_l2_d2a_physical_admission import UnreleasedPhysicalHTTPSProposal
+        if type(source) is UnreleasedPhysicalHTTPSProposal:
+            # A direct lower-level gate call cannot dispatch a candidate.
+            request_physical_source_admission(source)
         from f0_l2_d1_concrete_https import (SealedConcreteOfflineSource,
                                                      PatchedConstructorOfflineSource)
         if type(source) in (SealedMemoryHTTPSSource, SealedConcreteOfflineSource,
