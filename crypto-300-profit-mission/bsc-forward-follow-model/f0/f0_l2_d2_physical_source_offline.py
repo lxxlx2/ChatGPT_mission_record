@@ -30,8 +30,13 @@ class StagedPhysicalHTTPSReadOnlySource:
         # Check before the existing transport's TLS context/constructor.
         if http.client.HTTPSConnection is _ORIGINAL_HTTPS_CONNECTION:
             raise ValueError("D2_STAGED_SOURCE_REAL_NETWORK_FORBIDDEN")
-        if not callable(reservation_guard) or not callable(begin_offline_post):
+        # A standalone direct source call with a caller's arbitrary lambda
+        # cannot impersonate the single RID writer's post-fsync receipt.
+        from f0_l2_d1_coordinator import _StagedOnlyReservationGuard
+        if (type(reservation_guard) is not _StagedOnlyReservationGuard
+                or not callable(begin_offline_post)):
             raise ValueError("D2_STAGED_SOURCE_COORDINATOR_PROOF_REQUIRED")
+        reservation_guard(request)
         denied = [None]
 
         def pre_connect(payload):
