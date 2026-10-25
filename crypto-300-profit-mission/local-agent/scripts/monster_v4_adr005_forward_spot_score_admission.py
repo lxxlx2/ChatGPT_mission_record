@@ -8,8 +8,7 @@ explicit score vetoes. This is not a score and does not call USD-M Stage92.
 """
 import argparse
 from collections import Counter
-from datetime import datetime, timezone
-import hashlib
+from datetime import timedelta
 import json
 from pathlib import Path
 
@@ -140,7 +139,7 @@ def join_census(census):
         "schema":SCHEMA,
         "window_start_utc":census["window_start_utc"],
         "window_end_exclusive_utc":(
-            (t0.EPOCH+__import__("datetime").timedelta(
+            (t0.EPOCH+timedelta(
                 microseconds=t0.frozen_window(census["window_start_utc"])+
                 t0.WINDOW_MS*1000)).isoformat().replace("+00:00","Z")),
         "source_from_admitted_t0_archive_sha256":census.get("t0_archive_sha256"),
