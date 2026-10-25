@@ -26,3 +26,16 @@ At PR final exact SHA:
 - Review target: `APPROVE_OFFLINE_CODE — D2A_CLOSED_REAL_SOURCE_ADMISSION_ONLY` or `REQUEST_CHANGES`; report the exact SHA/environment and evidence. Neither verdict is permission to send real RPC.
 
 **Status:** `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`. Never merge, deploy, trade or consume production nonce under this review.
+
+
+## 2026-10-25 exact-SHA independent Mac REQUEST_CHANGES and P1 repair
+
+**Superseded fixed reviewed SHA `72b3d2b3967725473f767e76899ad837b8b09b68`: `REQUEST_CHANGES`**, archived with external reviewer attribution at [PR202 comment 6397603374](https://github.com/lxxlx2/ChatGPT_mission_record/pull/202#issuecomment-6397603374). The Mac reviewer independently ran F0 534 unique tests, D1 165, D2-A eight, UTC four, physical ctor ten, budgets four, hard-stop five, child-lifetime two, all PASS/zero skips; discovered a separately reproduced **P1 not covered by original 8 tests**.
+
+The precise missing guard was an instance-level override of `PatchedConstructorOfflineSource.reply_transport_evidence_offline` (the **actual** transport method used in `GlobalStartGate.run`). Both `run_fake_concurrent` and lower-level `GlobalStartGate.run` rejected instances overriding `reply` and `reply_over_memory_https`, but failed to reject the real called name. In the reviewer’s network-free sentinel-only reproduction, the high-level entry invoked the injected method twice and wrote 2 RIDs + attempts.jsonl/RAW; direct lower gate invoked it once and recorded `FRAME`. The overriding method skips the original test constructor safeguards. This is P1 in the offline exact-source admission contract, **not evidence of a real BSC network send**.
+
+**Narrow repair only (same Draft PR202 branch):**
+- Source commit `f96d2c4b9230c3e318d3883cae8c5420d0ed3169` adds the **third, actually invoked instance method name** to both checks, before evidence/RID/HTTPS on the high-level path and before callback/start record on the lower-level gate. Does not change scheduler, owner, transport, grant or authorization logic.
+- Regression commit `50c205a87e7c8fa6b264dd1a75ec1b2eba27a5f6` adds **two** network-free tests using a patched exact-class `PatchedConstructorOfflineSource` with a local-sentinel callback returning a forged but never-executed RAW-shaped frame. High-level expects `D1_SCOPE_INVALID`, uncalled writer/HTTPS/socket, empty evidence and empty sentinels; direct gate expects `D2A_GATE_NON_FAKE_SOURCE_REFUSED`, zero starts and no callback/constructor. D2-A isolated count increases from **8 to 10**, full F0 from **534 to 536** if no regressions. These counts are expectations until the new SHA’s actual CI logs confirm.
+
+**New approval MUST** pin the revised final 40-character Git commit and compare against approved PLAN_ONLY PR201 `b3e8fb1e6f6811b7599d86cb26c4d81a0c5bde12`. Preserve the old `REQUEST_CHANGES`, validate both synthetic injections independently, re-run full F0/D1/new D2-A and four valid source controls on real Mac ARM64 or state Mac not verified; check other established mock hard-stop/UTC invariants. Github Linux CI success alone cannot retroactively approve old code. **`D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`**.
