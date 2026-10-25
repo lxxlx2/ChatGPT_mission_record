@@ -173,8 +173,10 @@ def run_bounded_offline_once(registry: Path, evidence: Path, *,
     cmd = (sys.executable, "-B", str(Path(__file__).resolve()),
            "--offline-child", str(out), str(reg), grant_id,
            permit_sha256, scenario, str(read_fd),
-           repr(start + hard_seconds),
-           json.dumps(scope, sort_keys=True, separators=(",", ":")).encode().hex())
+           repr(start + hard_seconds))
+    if offline_scope is not None:
+        cmd += (json.dumps(scope, sort_keys=True,
+                           separators=(",", ":")).encode().hex(),)
     try:
         proc = subprocess.Popen(
             cmd, stdin=subprocess.DEVNULL,
