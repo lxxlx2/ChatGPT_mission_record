@@ -412,3 +412,14 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 **新D1的G3原始日均未达到冻结限额，且剔除已确认的证券/粉丝代币后仍超标**：旧37个新研究SETUP中33条是事前有资产类型正面证据的普通Crypto，2条Chiliz fan、2条bStocks；新10个SETUP中有7条明确在原已冻结Binance官方26币Crypto身份资料，分别 `BMT1 EPIC2 AVA1 QUICK2 ERA1`，其他`TREE/LA/ANIME`三条仍属于未核实类型。于是新D1最低**40/7=5.71条/天普通Crypto正面类型**，仍多于35/7=5/天；单日峰值10满足数值峰限但不足以抵消日均超标。动态交易资格/当时上市PIT另记`UNKNOWN`，不能称40个可执行BUY。继续执行原预注册2026-11-02、11-16、12-01三个独立窗口，不使用曝光10月数据优化RBTC15阈值。严格不虚称G1首次2×召回、G2对早5m前移保留率、G4任何费后净收益。
 
 **独立审查与下一选择**：[已提交完整可直接交其他AI的固定代码SHA `cbce0ddef40ab23ba86ba27e31e3d93bfaa62362`审核包](../reviews/MONSTER_ADR005_FULL4599_REAL69_INDEPENDENT_REVIEW_REQUEST_20261025.md)，截至此时只完成本人源码和真实GitHub CI/Artifact复核，**尚未收到另一个AI的实际APPROVE/REQUEST_CHANGES/BLOCKED**。下一个高价值方向应独立复核4,599来源和真实69队列，然后在已事先冻结的未来时窗实际检验候选是否G2/G3合格；当前已曝光历史G3提示为负，不能先调参后宣称前瞻改进。标记 `G0 SOURCE_4599_COMPLETE_BUT_PRODUCT_PARTIAL / G1 NOT_SCORABLE / G2 UNKNOWN / G3 OLD_EXPOSED_FAIL_AND_NEW_EXPOSED_FAIL_PENDING_HISTORIC_LISTING_PIT / G4 UNKNOWN / G5 INDEPENDENT_REVIEW_NOT_DONE / G6 NO_GO`。绝无Mac、Frank、后台、Automations、schedule、Gmail、交易、合并、部署。
+
+
+## 35. 2026-10-25：Monster ADR-005 的原生研究队列 V2 漏评修复取得独立代码审查批准
+
+固定已审核源码SHA **`d743acb6746cde869eb78d321cea98dc94e7b860`**。用户带回Codex主代理（具体模型UNVERIFIED，在用户Mac Python3.14.7上以detached checkout只读审查）的真实结论 **`APPROVE`**，其批准仅限原V2研究SQLite队列**完整5m覆盖、漏评终态分类和旧53例比较器**。原中间K线漏评阳性、截止K线阴性仍误入NO_SETUP的P1，审查方用原有静态历史脚本重放，已修复，真正晚未评归LATE_UNSCORED，已记录来源缺口归SOURCE_UNSCORED；系统不在过期后补发SETUP。审查Mac执行211+8项离线回归全过；原GitHub [#40191821423](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40191821423)的211项回归与 [#40191914954](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40191914954)的69条实际官方分钟回放均SUCCESS。
+
+研究新Artifact `12597793739`：`47 RESEARCH_SETUP/18 NO_SETUP/4 SOURCE_UNSCORED/0 LATE_UNSCORED`；真实旧69事件与47条SETUP payload无变化，18条NO_SETUP在新V2账本全部完整覆盖3根应评估K线且漏评数0。审查独立比对GitHub前后Artifact、新旧SQLite、SHA256、5种3m/5m边界、limit1容量、持久化重启，未发现本次代码范围新的P0/P1/P2。
+
+完整审查范围、SHA和限制见 [独立批准记录](../reviews/MONSTER_ADR005_CODEX_FULL_5M_WINDOW_FIX_INDEPENDENT_APPROVE_20261025.md)；先前第三轮拒绝与代码修复见 [问题及修复证据](../reviews/MONSTER_ADR005_CODEX_MIDDLE_GAP_P1_FULL_WINDOW_FIX_20261025.md)。**不可把这一范围受限的G5补丁批准称为Monster整体质量/盈利/生产批准**。
+
+**后续中心问题已回到市场有效性而非继续追逐本次漏评边界**：G0历史来源取得4599/4599，但当时真实可见时间和上市身份仍PARTIAL；G1提前2×与G2留存率无未来独立标签；G3旧十月曝光研究47/7>5且正面Crypto分类40/7>5，明确历史数值未过；G4双侧报价、费用、实际可执行退出UNKNOWN。下一步只应按预注册三个未来7日独立窗口取证，或在不碰冻结策略下做实际D2/通知可用性只读工程，**不能把历史窗口调参充当样本外改善**。保持**G5=V2_PATCH_APPROVED_ONLY、G6=NO_GO**，无合并/部署、Monster与Frank运行修改、GitHub schedule、用户Mac后台任务、真实邮件或交易。
