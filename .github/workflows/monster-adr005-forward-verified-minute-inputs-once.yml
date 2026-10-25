@@ -1,0 +1,61 @@
+name: Monster ADR005 November verified D0 D1 minute inputs once
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-adr005-forward-verified-minute-inputs-once.yml
+
+permissions:
+  contents: read
+
+jobs:
+  source-locked-spot-core-inputs:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Approved source layers, BTC dependency, and actual core-input integration tests
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_forward_spot_t0_gate.py -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_forward_spot_daily_gate.py -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_forward_spot_score_admission.py -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_forward_verified_minute_tape.py -v
+      - name: Verify real Oct Stage163 archive cannot masquerade as future T0 and no November population exists yet
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/november-source-inputs"
+          for day in 2026-11-02 2026-11-16 2026-12-01; do
+            python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_adr005_forward_spot_score_admission.py --window-start-utc "${day}T00:00:00Z" --asof-utc 2026-10-26T00:00:00Z --out "$RUNNER_TEMP/november-source-inputs/${day}.json"
+          done
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path(os.environ["RUNNER_TEMP"])/"november-source-inputs"
+          for day in ("2026-11-02","2026-11-16","2026-12-01"):
+              d=json.loads((root/(day+".json")).read_text())
+              assert d["original_t0_symbols_total"] is None
+              assert d["technical_rbtc_d1_source_complete_symbols"] is None
+              assert d["G1"]=="NOT_SCORABLE" and d["G6"]=="NO_GO"
+              assert d["replay_engine_executed"] is False
+              assert d["NO_AUTOMATIONS"] and d["NO_TRADES"]
+          print("ADR005_FUTURE_T0_MISSING_NO_REAL_D0_OR_D1_CORE_EXECUTION_CLAIM_PASS")
+          PY
+      - name: Publish only real three-window missing-source states
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-adr005-future-verified-minute-input-no-pit
+          path: ${{ runner.temp }}/november-source-inputs/*.json
+          retention-days: 30
+          if-no-files-found: error
