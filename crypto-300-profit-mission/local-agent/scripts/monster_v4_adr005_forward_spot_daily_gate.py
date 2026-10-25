@@ -22,7 +22,7 @@ SEGMENTS=("BASELINE_24H", "D0_D1_OBSERVATION_7D", "FUTURE_2X_LABEL_7D")
 
 def source_calendar(window_start_utc):
     epoch=t0.frozen_window(window_start_utc)
-    start=datetime.fromtimestamp(epoch/1_000_000,timezone.utc)
+    start=t0.EPOCH+timedelta(microseconds=epoch)
     if start.time()!=datetime.min.time():
         raise ValueError("ADR005_DAILY_WINDOW_NOT_UTC_MIDNIGHT")
     days=[]
@@ -39,7 +39,7 @@ def source_calendar(window_start_utc):
 
 def _asof(asof_utc):
     stamp=t0.parse_us(asof_utc)
-    return datetime.fromtimestamp(stamp/1_000_000,timezone.utc)
+    return t0.EPOCH+timedelta(microseconds=stamp)
 
 
 def planned_source_readiness(window_start_utc,asof_utc):
