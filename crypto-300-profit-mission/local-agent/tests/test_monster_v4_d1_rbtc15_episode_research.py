@@ -45,6 +45,36 @@ def source(*,btc_strong=False, btc_missing=False, later_coin_spike=False):
     return candles
 
 
+def static_middle_winner_then_last_negative():
+    """Immutable per-symbol, per-UTC-5m-open OHLC/quote history.
+
+    At 3420000 target is negative; at 3600000 skipped target would SETUP;
+    at deadline 4140000 the most recent bar is negative again.
+    No bar is generated from call order or rewritten by the test.
+    """
+    coin_closes={2_700_000:110,3_000_000:120,3_300_000:140,3_600_000:90}
+    high_quote={3_000_000,3_300_000,3_600_000}
+    def candles(symbol,now):
+        if symbol not in ("COINUSDT","ALTUSDT","BTCUSDT"):
+            raise ValueError("UNKNOWN_SYMBOL")
+        first=(now//FIVE)*FIVE-6*FIVE
+        result=[]
+        for i in range(6):
+            opening=first+i*FIVE
+            if symbol=="COINUSDT":
+                close=coin_closes.get(opening,100)
+                prior=coin_closes.get(opening-FIVE,100)
+                q=30 if opening in high_quote else 10
+            else:
+                close=prior=100
+                q=10
+            result.append([opening,str(prior),str(max(close,prior)+1),
+                           str(min(close,prior)-1),str(close),"100",
+                           opening+FIVE-1,str(q)])
+        return result
+    return candles
+
+
 class DurableEpisodeTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory()
@@ -141,6 +171,9 @@ class DurableEpisodeTests(unittest.TestCase):
                 candles[-1][3]="89"
             return candles
 
+        for tick in (3_420_000,3_600_000,3_960_000):
+            self.assertEqual(poll_episodes(self.db,tick,negative_at_deadline)[0][1],
+                             "RESEARCH_NO_SETUP_YET")
         result=poll_episodes(self.db,deadline,negative_at_deadline)
         self.assertEqual(result[0][1],"NO_SETUP")
         ledger=summary(self.db)
@@ -181,13 +214,15 @@ class DurableEpisodeTests(unittest.TestCase):
                 bars[-1][3]="89"
             return bars
 
-        prior=deadline-180_000
-        self.assertEqual(poll_episodes(self.db,prior,negative)[0][1],
-                         "RESEARCH_NO_SETUP_YET")
+        for tick in (3_420_000,3_600_000,3_960_000):
+            self.assertEqual(poll_episodes(self.db,tick,negative)[0][1],
+                             "RESEARCH_NO_SETUP_YET")
         self.assertEqual(poll_episodes(self.db,deadline,negative)[0][1],
                          "NO_SETUP")
         item=summary(self.db)["rows"][0]
-        self.assertEqual(item["attempts"],2)
+        self.assertEqual(item["attempts"],4)
+        self.assertEqual(item["reviewed_closed5_count"],3)
+        self.assertEqual(item["missed_closed5_count"],0)
         self.assertIsNotNone(item["last_reviewed_open_ms"])
         self.assertEqual(item["source_censored_count"],0)
         self.assertEqual(poll_episodes(self.db,deadline+180_000,negative),[])
@@ -216,7 +251,8 @@ class DurableEpisodeTests(unittest.TestCase):
                 bars[-1][4]="90"
                 bars[-1][3]="89"
             return bars
-        poll_episodes(self.db,deadline-180_000,negative)
+        for tick in (3_420_000,3_600_000,3_960_000):
+            poll_episodes(self.db,tick,negative)
         self.assertEqual(poll_episodes(self.db,deadline+180_000,negative)[0][1],
                          "NO_SETUP")
 
@@ -291,12 +327,89 @@ class DurableEpisodeTests(unittest.TestCase):
                 bars[-1][3]="89"
             return bars
         poll_episodes(self.db,T,negative)
-        # At the deadline a current fresh closed bar is valid and negative;
-        # this is an actual evaluation, not an early-review inference.
+        # The newest deadline bar alone does not erase a missing earlier bar.
         got=poll_episodes(self.db,deadline,negative)
-        self.assertEqual(got[0][1],"NO_SETUP")
+        self.assertEqual(got[0][1],"LATE_UNSCORED")
         row=summary(self.db)["rows"][0]
         self.assertEqual(row["last_reviewed_open_ms"],3_600_000)
+        self.assertEqual(row["first_reviewed_open_ms"],3_300_000)
+        self.assertEqual(row["missed_closed5_count"],1)
+
+    def test_fixed_history_middle_success_missed_then_last_negative_is_late_after_restart(self):
+        fixed=static_middle_winner_then_last_negative()
+        deadline=WATCH+900_000
+        admit_original_watch(self.db,make_watch())
+        self.assertEqual(poll_episodes(self.db,3_420_000,fixed)[0][1],
+                         "RESEARCH_NO_SETUP_YET")
+        from monster_v4_d1_rbtc15_last5_research import evaluate_research_candidate
+        would_have=evaluate_research_candidate(
+            symbol="COINUSDT",observed_ms=3_600_000,
+            watch_ms=WATCH,deadline_ms=deadline,
+            coin_closed5=fixed("COINUSDT",3_600_000),
+            btc_closed5=fixed("BTCUSDT",3_600_000),
+            last_reviewed_open_ms=3_000_000)
+        self.assertEqual(would_have["state"],"RESEARCH_SETUP")
+        actual=poll_episodes(self.db,deadline,fixed)
+        self.assertEqual(actual[0][1],"LATE_UNSCORED")
+        info=summary(self.db)["rows"][0]
+        self.assertEqual(info["first_reviewed_open_ms"],3_000_000)
+        self.assertEqual(info["last_reviewed_open_ms"],3_600_000)
+        self.assertEqual(info["reviewed_closed5_count"],2)
+        self.assertEqual(info["missed_closed5_count"],1)
+        self.assertEqual(info["source_censored_count"],0)
+        self.assertIsNone(info["research_event_id"])
+        self.db.close()
+        self.db=reopen_ledger(self.path)
+        self.assertEqual(summary(self.db)["status_counts"],{"LATE_UNSCORED":1})
+        self.assertEqual(poll_episodes(self.db,deadline+180_000,fixed),[])
+
+    def test_real_capacity_limit_can_miss_middle_bar_and_keep_late(self):
+        fixed=static_middle_winner_then_last_negative()
+        deadline=WATCH+900_000
+        admit_original_watch(self.db,make_watch())
+        admit_original_watch(self.db,make_watch(WATCH-180_000,"ALTUSDT"))
+        with self.db:
+            self.db.execute("UPDATE episode SET retry_after_ms=? WHERE symbol='ALTUSDT'",
+                            (3_600_000,))
+        # Target is first served on the earliest post-watch close.
+        self.assertEqual(poll_episodes(self.db,3_420_000,fixed,limit=1)[0][1],
+                         "RESEARCH_NO_SETUP_YET")
+        # Older ALT consumes the only service slot at 3600000, at the
+        # target's real fixed-historical SETUP opportunity.
+        self.assertEqual(poll_episodes(self.db,3_600_000,fixed,limit=1)[0][0],
+                         original.event_key("spot","ALTUSDT","WATCH_EARLY",WATCH-180_000))
+        for tick in (3_780_000,3_960_000):
+            poll_episodes(self.db,tick,fixed,limit=1)
+        got=poll_episodes(self.db,deadline,fixed,limit=1)
+        self.assertEqual(got[0][1],"LATE_UNSCORED")
+        target=next(x for x in summary(self.db)["rows"] if x["symbol"]=="COINUSDT")
+        self.assertEqual(target["missed_closed5_count"],1)
+        self.assertEqual(target["status"],"LATE_UNSCORED")
+        self.assertIsNone(target["research_event_id"])
+
+    def test_complete_fixed_history_all_three_bars_can_confirm_no_setup(self):
+        def negative(symbol,now):
+            rows=static_middle_winner_then_last_negative()(symbol,now)
+            if symbol=="COINUSDT":
+                for row in rows:
+                    row[4]="100"
+                    row[1]="100"
+                    row[2]="101"
+                    row[3]="99"
+                    row[7]="10"
+            return rows
+        admit_original_watch(self.db,make_watch())
+        for t in (3_420_000,3_600_000,3_960_000):
+            self.assertEqual(poll_episodes(self.db,t,negative)[0][1],
+                             "RESEARCH_NO_SETUP_YET")
+        self.assertEqual(poll_episodes(self.db,WATCH+900_000,negative)[0][1],
+                         "NO_SETUP")
+        row=summary(self.db)["rows"][0]
+        self.assertEqual((row["first_reviewed_open_ms"],row["last_reviewed_open_ms"]),
+                         (3_000_000,3_600_000))
+        self.assertEqual(row["reviewed_closed5_count"],3)
+        self.assertEqual(row["missed_closed5_count"],0)
+        self.assertEqual(row["source_censored_count"],0)
 
     def test_unserved_episode_after_deadline_is_late_unscored(self):
         admit_original_watch(self.db,make_watch())
