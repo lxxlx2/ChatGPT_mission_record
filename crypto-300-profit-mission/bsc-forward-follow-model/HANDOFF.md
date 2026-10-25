@@ -1,3 +1,11 @@
+# 2026-10-26 — PR211 staged direct-lower-gate RID bypass prevented before fixed-SHA review
+
+- After first CI report mismatch was fixed, [second Linux CI 40239913498](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40239913498) passed 566/566. Further pre-freeze source review found the staged source could be invoked directly via `GlobalStartGate.run` or `reply_transport_evidence_offline` with arbitrary callback while HTTP constructor was patched, bypassing durable coordinator RID reservation. No real network incident; nevertheless violates the single-writer/test integration invariant.
+- Fix `a985f9d6839190740c6b047424e714de2d52ab2c` adds exact `_StagedOnlyReservationGuard` minted only inside original `reserve()` **after fsync**, with exact payload digest and original verified closure; both lower gate and staged source require it. Fix `6cdde5b8f40d591b2bc0812cd26924b3a13d763e` prevents direct staged method from trusting an arbitrary lambda. Two new focused negative tests `f2de79d4185cfffeb3104b7b039d6c04188e9657` assert direct gate/source denial before patched ctor/start. Expected full F0 568, staged 9, new HEAD CI/independent Mac review still mandatory. Python-private seal is **not** actual signed authority; `send_live` still denies.
+- New PR211 fixed SHA must be taken after all docs update; do not rely on previous passing 566/566 SHA for current 568-test scope. [Issue #207](https://github.com/lxxlx2/ChatGPT_mission_record/issues/207). `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-26 — PR211 first CI revealed staged-source report attribute mismatch, repaired same PR
 
 - Initial PR211 GitHub CI [40239652434](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40239652434) ran **566 tests with 2 ERROR**: common report read `source.growth_bps`, but distinct physical-source slot must not pretend to be FakeSource. The source-side correction `10847a3a6f7e3f5028289e85daa4a6ddbef9b655` writes null only for staged `synthetic_source_growth_bps` while preserving all existing fake report values; focused regression `705346ce37b47be9bf5e8636c1c5f83c0bf4eb9f` asserts null. Keep failure provenance; do not claim first SHA PASS.
