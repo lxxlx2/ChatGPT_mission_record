@@ -15,6 +15,7 @@ from __future__ import annotations
 import hashlib
 import http.client
 import json
+from datetime import datetime, timedelta
 import os
 from pathlib import Path
 import select
@@ -43,16 +44,39 @@ _DEFAULT_OFFLINE_SCOPE = {
     "spacing_ms": 250, "slots": 3, "head_ttl_ms": 4000,
     "window_ms": 5000, "timeout_ms": 5000,
 }
+_CHILD_UTC_KEYS = frozenset({
+    "window_start_utc", "window_end_utc", "checked_at_utc",
+    "approved_commit_sha", "permit_sha256",
+})
 
 
 def _validate_offline_scope(candidate):
     """Validate before any test marker, then repeat in isolated child."""
     if candidate is None:
         return dict(_DEFAULT_OFFLINE_SCOPE)
-    if type(candidate) is not dict or set(candidate) != _OFFLINE_SCOPE_KEYS:
+    if (type(candidate) is not dict or
+            set(candidate) not in (
+                _OFFLINE_SCOPE_KEYS, _OFFLINE_SCOPE_KEYS | {"post_utc"})):
         raise ValueError("D1_CHILD_OFFLINE_SCOPE_FIELDS_INVALID")
+    utc = candidate.get("post_utc")
+    if utc is not None:
+        if type(utc) is not dict or set(utc) != _CHILD_UTC_KEYS:
+            raise ValueError("D1_CHILD_POST_UTC_FIELDS_INVALID")
+        from f0_l2_d1_post_utc import OfflinePostUTCWindow
+        # Validate before spending a marker; clock never authorizes live.
+        from f0_l2_d1_preflight import parse_utc_timestamp
+        parsed = parse_utc_timestamp(utc["checked_at_utc"])
+        OfflinePostUTCWindow.from_prevalidated_child_scope(
+            window_start_utc=utc["window_start_utc"],
+            window_end_utc=utc["window_end_utc"],
+            checked_at_utc=utc["checked_at_utc"],
+            expected_sha=utc["approved_commit_sha"],
+            permit_sha256=utc["permit_sha256"],
+            virtual_clock=lambda: parsed)
     cap = _DEFAULT_OFFLINE_SCOPE
     for name, value in candidate.items():
+        if name == "post_utc":
+            continue
         low = 0 if name == "max_refreshes" else 1
         if (type(value) is not int or value < low or
                 (name not in ("spacing_ms",) and value > cap[name])):
@@ -163,6 +187,8 @@ def run_bounded_offline_once(registry: Path, evidence: Path, *,
     if (offline_scope is not None and
             scope["window_ms"] > int(hard_seconds * 1000)):
         raise ValueError("D1_CHILD_OFFLINE_SCOPE_OUTLIVES_HARD_STOP")
+    if "post_utc" in scope and scope["post_utc"]["permit_sha256"] != permit_sha256:
+        raise ValueError("D1_CHILD_POST_UTC_PERMIT_DIGEST_MISMATCH")
     # Durable, one-use TEST grant must be spent before even creating a child.
     lease = OfflineGrantRegistry(reg).consume(grant_id, permit_sha256)
     # The kernel pipe is a parent-lifetime lease, NOT a D2/D3 grant.
@@ -239,6 +265,9 @@ def _offline_child(evidence: Path, registry: Path, grant_id: str,
     if scenario not in _SCENARIOS:
         raise ValueError("D1_HARD_STOP_BAD_SCENARIO")
     scope = _validate_offline_scope(scope)
+    if ("post_utc" in scope and
+            scope["post_utc"]["permit_sha256"] != digest):
+        raise ValueError("D1_CHILD_POST_UTC_PERMIT_DIGEST_MISMATCH")
     _private_test_dir(evidence)
     reg = _private_test_dir(registry)
     marker = reg / (hashlib.sha256(grant_id.encode()).hexdigest()
@@ -255,6 +284,24 @@ def _offline_child(evidence: Path, registry: Path, grant_id: str,
         raise AssertionError("D1_HARD_STOP_REAL_SOCKET_FORBIDDEN")
 
     source = PatchedConstructorOfflineSource(delay_ms=15, growth_bps=10.0)
+    post_window = None
+    if "post_utc" in scope:
+        from f0_l2_d1_post_utc import OfflinePostUTCWindow
+        from f0_l2_d1_preflight import parse_utc_timestamp
+        utc = scope["post_utc"]
+        anchor = parse_utc_timestamp(utc["checked_at_utc"])
+        start_mono = time.monotonic()
+        def virtual_child_utc():
+            # OFFLINE: emulates elapsed UTC since parent's checked instant,
+            # never substitutes for a real independent wall-clock authority.
+            return anchor + timedelta(seconds=time.monotonic() - start_mono)
+        post_window = OfflinePostUTCWindow.from_prevalidated_child_scope(
+            window_start_utc=utc["window_start_utc"],
+            window_end_utc=utc["window_end_utc"],
+            checked_at_utc=utc["checked_at_utc"],
+            expected_sha=utc["approved_commit_sha"],
+            permit_sha256=utc["permit_sha256"],
+            virtual_clock=virtual_child_utc)
     class Response:
         def __init__(self, frame):
             self.status, headers, self.body = frame
@@ -302,7 +349,8 @@ def _offline_child(evidence: Path, registry: Path, grant_id: str,
             head_ttl_ms=scope["head_ttl_ms"],
             window_ms=scope["window_ms"],
             max_block_response_ms=scope["timeout_ms"],
-            head_min_poll_age_ms=250)
+            head_min_poll_age_ms=250,
+            fake_post_utc_window=post_window)
     finally:
         http.client.HTTPSConnection = original_ctor
         socket.create_connection = original_socket
