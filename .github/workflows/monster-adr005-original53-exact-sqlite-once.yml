@@ -36,10 +36,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/monster-adr005/source-bundles" "$RUNNER_TEMP/monster-adr005/original"
+          mkdir -p "$RUNNER_TEMP/monster-adr005/shards" "$RUNNER_TEMP/monster-adr005/original"
+          shard_index=0
           while IFS='|' read -r run_id artifact_name; do
             test -n "$run_id" && test -n "$artifact_name"
-            gh run download "$run_id" --name "$artifact_name" --dir "$RUNNER_TEMP/monster-adr005/source-bundles" --repo "$GITHUB_REPOSITORY"
+            shard_index=$((shard_index + 1))
+            gh run download "$run_id" --name "$artifact_name" --dir "$RUNNER_TEMP/monster-adr005/shards/$shard_index" --repo "$GITHUB_REPOSITORY"
           done <<'PINNED_EXISTING_ONLY'
           40027484781|monster-spot511-2026-10-18-slice-0-40027484781
           40027484781|monster-spot511-2026-10-18-slice-128-40027484781
@@ -76,6 +78,33 @@ jobs:
           40086780992|monster-spot511-2026-10-23-slice-384-40086780992
           40086780992|monster-spot511-2026-10-23-slice-64-40086780992
           PINNED_EXISTING_ONLY
+          python - <<'PY'
+          from pathlib import Path
+          import os
+          import shutil
+          root=Path(os.environ["RUNNER_TEMP"])/"monster-adr005"
+          sources=root/"source-bundles"/"source"
+          shards=sorted((root/"shards").iterdir(),key=lambda p:int(p.name))
+          if len(shards)!=34: raise SystemExit("EXPECTED_34_PINNED_SHARDS")
+          count=0
+          for folder in shards:
+              src=folder/"source"
+              if not src.is_dir():raise SystemExit("PINNED_ARTIFACT_SOURCE_DIRECTORY_MISSING:"+folder.name)
+              for item in src.rglob("*"):
+                  if item.is_symlink():raise SystemExit("SOURCE_ARTIFACT_SYMLINK_REJECTED")
+                  if not item.is_file():continue
+                  relative=item.relative_to(src)
+                  if len(relative.parts)!=3 or relative.parts[1]!="1m":
+                      raise SystemExit("UNEXPECTED_SOURCE_FILE_STRUCTURE:"+str(relative))
+                  dest=sources/relative
+                  if dest.exists():raise SystemExit("SOURCE_ARTIFACT_COLLISION:"+str(relative))
+                  dest.parent.mkdir(parents=True,exist_ok=True)
+                  shutil.move(str(item),str(dest))
+                  count+=1
+          if count<114 or count%2:
+              raise SystemExit("INSUFFICIENT_OR_ODD_PUBLISHER_INPUT_FILE_COUNT")
+          print("MONSTER_PINNED_EXISTING_34_ARCHIVES_ISOLATED_AND_MERGED",count)
+          PY
           gh run download 40087231856 --name monster-spot511-4088-original-global-replay-40087231856 --dir "$RUNNER_TEMP/monster-adr005/original" --repo "$GITHUB_REPOSITORY"
           test -f "$RUNNER_TEMP/monster-adr005/original/paired-4088.json"
           test -d "$RUNNER_TEMP/monster-adr005/source-bundles/source"
