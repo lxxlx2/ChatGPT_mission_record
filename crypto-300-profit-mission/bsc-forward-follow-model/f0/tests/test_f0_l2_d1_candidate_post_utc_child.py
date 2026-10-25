@@ -68,6 +68,46 @@ class CandidateChildPostUTCTests(unittest.TestCase):
             self.assertEqual(run["audit"]["unknown_request_ids"], [])
             self.assertEqual(run["live_network_requests"], 0)
 
+    def test_utc_expires_during_global_fake_post_pacing(self):
+        # The prior expiry test only denies at the FIRST fake POST. Here
+        # chainId starts within the synthetic window, but the 700ms shared
+        # pacing makes the second (initial HEAD) fake POST too late.
+        with tempfile.TemporaryDirectory(prefix="d1-post-utc-gap-") as d:
+            root = Path(d).resolve()
+            reg, out = root / "registry", root / "evidence"
+            reg.mkdir(mode=0o700)
+            out.mkdir(mode=0o700)
+            digest = "a" * 64
+            scope = self.scope(digest)
+            scope["spacing_ms"] = 700
+            scope["window_ms"] = 3000
+            scope["post_utc"]["checked_at_utc"] = (
+                "2026-10-25T05:59:59.500000Z")
+            run = run_bounded_offline_once(
+                reg, out, grant_id="offline-gap-expiry-utc-test-001",
+                permit_sha256=digest, hard_seconds=5.0,
+                offline_scope=scope)
+            self.assertEqual(run["state"], "OFFLINE_CHILD_EXITED_ACCOUNTED")
+            child = run["offline_child"]
+            self.assertEqual(child["reserved"], 2)
+            self.assertEqual(child["settled"], 2)
+            self.assertEqual(child["physically_started_fake"], 1)
+            self.assertEqual(child["fake_post_utc_checks"], 1)
+            self.assertEqual(child["contiguous_commits"], 0)
+            self.assertEqual(child["stop"], "RPC_OR_HEAD_FAULT")
+            rows = [json.loads(x) for x in
+                    (out / "attempts.jsonl").read_text().splitlines()]
+            self.assertEqual([r["event"] for r in rows],
+                             ["RESERVE_UNKNOWN", "SETTLE",
+                              "RESERVE_UNKNOWN", "SETTLE"])
+            self.assertEqual(rows[1]["state"], "RPC_RESPONSE")
+            self.assertEqual(rows[3]["state"], "FAILED")
+            self.assertIn("PRESTART_OFFLINE_PERMIT_UTC_DENIED",
+                          rows[3]["reason"])
+            bodies = sorted((out / "raw_responses").glob("*.body"))
+            self.assertEqual([b.name for b in bodies], ["001.body"])
+            self.assertEqual(run["live_network_requests"], 0)
+
     @staticmethod
     def scope(digest):
         return {
@@ -89,7 +129,7 @@ class CandidateChildPostUTCTests(unittest.TestCase):
             reg, out = root / "registry", root / "evidence"
             reg.mkdir(mode=0o700)
             out.mkdir(mode=0o700)
-            for case in ("digest", "window", "fields"):
+            for case in ("digest", "window", "fields", "null"):
                 with self.subTest(case=case):
                     scope = self.scope("a" * 64)
                     if case == "digest":
@@ -97,8 +137,12 @@ class CandidateChildPostUTCTests(unittest.TestCase):
                     elif case == "window":
                         scope["post_utc"]["checked_at_utc"] = (
                             "2026-10-25T06:00:01Z")
-                    else:
+                    elif case == "fields":
                         scope["post_utc"]["unexpected"] = True
+                    else:
+                        # Previously accepted by the parent even though
+                        # the child later crashed, losing the one-use marker.
+                        scope["post_utc"] = None
                     with self.assertRaisesRegex(ValueError,
                                                 "D1_CHILD_"):
                         run_bounded_offline_once(
