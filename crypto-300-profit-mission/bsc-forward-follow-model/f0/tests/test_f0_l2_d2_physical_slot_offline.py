@@ -196,15 +196,45 @@ class StagedPhysicalHTTPSOneCoordinatorTests(unittest.TestCase):
 
     def test_direct_gate_with_real_ctor_cannot_start_any_send(self):
         gate = GlobalStartGate(250)
-        out = gate.run(
-            {"jsonrpc": "2.0", "id": 1,
-             "method": "eth_chainId", "params": []},
-            self.source(), block_head_deadline=None,
-            dispatch_deadline=__import__("time").monotonic() + 5,
-            timeout_ms=1000, reservation_guard=lambda _req: None)
-        self.assertEqual(out["state"], "EXCEPTION")
+        with self.assertRaisesRegex(
+                ValueError, "D2_STAGED_DURABLE_RESERVATION_PROOF_REQUIRED"):
+            gate.run(
+                {"jsonrpc": "2.0", "id": 1,
+                 "method": "eth_chainId", "params": []},
+                self.source(), block_head_deadline=None,
+                dispatch_deadline=__import__("time").monotonic() + 5,
+                timeout_ms=1000, reservation_guard=lambda _req: None)
         self.assertEqual(gate.starts, [])
-        self.assertIn("ValueError", out["error"])
+
+    def test_direct_lower_gate_rejects_lambda_even_with_patched_https(self):
+        gate = GlobalStartGate(250)
+        with patch(
+                "http.client.HTTPSConnection",
+                side_effect=AssertionError("CONSTRUCTOR_MUST_NOT_OPEN")
+                ) as ctor:
+            with self.assertRaisesRegex(
+                    ValueError, "D2_STAGED_DURABLE_RESERVATION_PROOF_REQUIRED"):
+                gate.run(
+                    {"jsonrpc": "2.0", "id": 1,
+                     "method": "eth_chainId", "params": []},
+                    self.source(), block_head_deadline=None,
+                    dispatch_deadline=__import__("time").monotonic() + 5,
+                    timeout_ms=1000, reservation_guard=lambda _req: None)
+            ctor.assert_not_called()
+        self.assertEqual(gate.starts, [])
+
+    def test_direct_staged_transport_rejects_lambda_before_patched_tls(self):
+        with patch(
+                "http.client.HTTPSConnection",
+                side_effect=AssertionError("CONSTRUCTOR_MUST_NOT_OPEN")
+                ) as ctor:
+            with self.assertRaisesRegex(
+                    ValueError, "D2_STAGED_SOURCE_COORDINATOR_PROOF_REQUIRED"):
+                self.source().reply_transport_evidence_offline(
+                    {"jsonrpc": "2.0", "id": 1,
+                     "method": "eth_chainId", "params": []},
+                    lambda: None, 1.0, reservation_guard=lambda _req: None)
+            ctor.assert_not_called()
 
     def test_public_live_entry_refuses_even_patched_test_source(self):
         with self.assertRaisesRegex(ValueError, "NOT_RELEASED_D2_D3"):
