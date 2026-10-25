@@ -264,7 +264,7 @@ class TestReviewP1Regressions(unittest.TestCase):
         rpc = SolanaReadOnlyRPC(
             "https://only.example", fallback_endpoints=[],
             open_url=failed_transport, sleep=clock.sleep, monotonic=clock.monotonic,
-            max_wire_attempts=20, max_elapsed_seconds=180, min_interval=0,
+            max_wire_attempts=20, max_elapsed_seconds=140, min_interval=0,
         )
         with self.assertRaisesRegex(RPCJobBudgetExceeded, "RPC_JOB_TIME_BUDGET_EXHAUSTED"):
             rpc.call("getTokenSupply", ["mint"])
