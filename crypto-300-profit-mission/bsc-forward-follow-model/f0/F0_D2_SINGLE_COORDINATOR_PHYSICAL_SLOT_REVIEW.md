@@ -39,3 +39,10 @@ Positive tests use ephemeral synthetic JSON-RPC responses created by a separate 
 Potential verdict at new fixed SHA: `APPROVE_OFFLINE_CODE — D2_SINGLE_COORDINATOR_PHYSICAL_SLOT_PATCHED_ONLY` or `REQUEST_CHANGES`. Neither grants real source startup, network pilot, signer enrollment, nonce, deployment, merge or trading.
 
 **STOP:** `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+## Initial CI defect and correction on the same Draft PR
+
+The first Linux run [40239652434](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40239652434) executed 566 tests and reported **two ERROR**, not an approval: the staged source completed coordinator work but the returned diagnostic read `source.growth_bps`, a synthetic-only `FakeSource` field absent on a real-source-shaped object. This proves why refactoring the original executor must preserve source-specific report semantics.
+
+Source fix commit `10847a3a6f7e3f5028289e85daa4a6ddbef9b655`: the common coordinator keeps the original field and original values for fake-only classes but emits `synthetic_source_growth_bps: null` when the staged source is used, explicitly **not inventing a physical source growth estimate**. Test revision commit `705346ce37b47be9bf5e8636c1c5f83c0bf4eb9f` asserts the honest null. An exact new-head complete CI and fresh independent review are mandatory; the initial failed SHA is not approved. No source, trust-root, scheduler, SDK, RPC or signing capability was added by this repair.
+
