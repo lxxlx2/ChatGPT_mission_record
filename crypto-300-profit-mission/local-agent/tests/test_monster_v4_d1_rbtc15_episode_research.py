@@ -220,6 +220,84 @@ class DurableEpisodeTests(unittest.TestCase):
         self.assertEqual(poll_episodes(self.db,deadline+180_000,negative)[0][1],
                          "NO_SETUP")
 
+    def test_early_valid_negative_then_missed_latest_positive_is_late_not_no_setup(self):
+        # Independent Codex REQUEST_CHANGES @ 3fd5cab3: old review 3300000,
+        # unseen deadline's last eligible 5m bar 3600000 would be positive.
+        # Do not backfill an expired trade, but do not fabricate a negative.
+        from monster_v4_d1_rbtc15_last5_research import evaluate_research_candidate
+        self.assertEqual(WATCH, 3_240_000)
+        deadline=WATCH+900_000
+        self.assertEqual(deadline, 4_140_000)
+        admit_original_watch(self.db,make_watch())
+
+        def early_negative(symbol, now):
+            bars=source()(symbol,now)
+            if symbol=="COINUSDT":
+                bars[-1][4]="90"
+                bars[-1][3]="89"
+            return bars
+
+        outcome=poll_episodes(self.db,T,early_negative)
+        self.assertEqual(outcome[0][1],"RESEARCH_NO_SETUP_YET")
+        before=summary(self.db)["rows"][0]
+        self.assertEqual(before["last_reviewed_open_ms"],3_300_000)
+        self.assertEqual(before["attempts"],1)
+        comparator=evaluate_research_candidate(
+            symbol="COINUSDT",observed_ms=deadline,
+            watch_ms=WATCH,deadline_ms=deadline,
+            coin_closed5=source()("COINUSDT",deadline),
+            btc_closed5=source()("BTCUSDT",deadline),
+            last_reviewed_open_ms=before["last_reviewed_open_ms"])
+        self.assertEqual(comparator["state"],"RESEARCH_SETUP")
+        self.assertEqual(comparator["latest_5m_open_ms"],3_600_000)
+        # The queue did not run at the deadline, unlike the comparator.
+        self.db.close()
+        self.db=reopen_ledger(self.path)
+        after=poll_episodes(self.db,deadline+180_000,source())
+        self.assertEqual(after[0][1],"LATE_UNSCORED")
+        last=summary(self.db)["rows"][0]
+        self.assertEqual(last["source_censored_count"],0)
+        self.assertEqual(last["attempts"],1)
+        self.assertEqual(last["status"],"LATE_UNSCORED")
+        self.assertIsNone(last["research_event_id"])
+        self.assertEqual(poll_episodes(self.db,deadline+360_000,source()),[])
+
+    def test_early_valid_negative_then_missed_latest_censor_precedence(self):
+        admit_original_watch(self.db,make_watch())
+        deadline=WATCH+900_000
+        def negative(symbol, now):
+            bars=source()(symbol,now)
+            if symbol=="COINUSDT":
+                bars[-1][4]="90"
+                bars[-1][3]="89"
+            return bars
+        poll_episodes(self.db,T,negative)
+        self.assertEqual(poll_episodes(self.db,T+180_000,
+                                       source(btc_missing=True))[0][1],
+                         "SOURCE_CENSORED")
+        result=poll_episodes(self.db,deadline+180_000,source())
+        self.assertEqual(result[0][1],"SOURCE_UNSCORED")
+        row=summary(self.db)["rows"][0]
+        self.assertEqual(row["source_censored_count"],1)
+        self.assertEqual(row["status"],"SOURCE_UNSCORED")
+
+    def test_earlier_reviewed_bar_does_not_certify_negative_at_deadline(self):
+        admit_original_watch(self.db,make_watch())
+        deadline=WATCH+900_000
+        def negative(symbol, now):
+            bars=source()(symbol,now)
+            if symbol=="COINUSDT":
+                bars[-1][4]="90"
+                bars[-1][3]="89"
+            return bars
+        poll_episodes(self.db,T,negative)
+        # At the deadline a current fresh closed bar is valid and negative;
+        # this is an actual evaluation, not an early-review inference.
+        got=poll_episodes(self.db,deadline,negative)
+        self.assertEqual(got[0][1],"NO_SETUP")
+        row=summary(self.db)["rows"][0]
+        self.assertEqual(row["last_reviewed_open_ms"],3_600_000)
+
     def test_unserved_episode_after_deadline_is_late_unscored(self):
         admit_original_watch(self.db,make_watch())
         self.assertEqual(poll_episodes(self.db,WATCH+900_000+180_000,source())[0][1],
