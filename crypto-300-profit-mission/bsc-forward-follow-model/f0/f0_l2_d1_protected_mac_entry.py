@@ -220,6 +220,13 @@ def rehearse_supervised_mac_entry_offline(
                 5000, int(hard_seconds * 1000),
                 intent["max_dispatch_seconds"] * 1000),
             "timeout_ms": min(5000, intent["request_timeout_ms"]),
+            "post_utc": {
+                "window_start_utc": intent["window_start_utc"],
+                "window_end_utc": intent["window_end_utc"],
+                "checked_at_utc": checked["checked_at_utc"],
+                "approved_commit_sha": expected_sha,
+                "permit_sha256": checked["permit_raw_sha256"],
+            },
         }
         if effective_test_scope["window_ms"] < 1000:
             raise ValueError("D1_MAC_REHEARSAL_CANDIDATE_WINDOW_TOO_SHORT")
