@@ -23,7 +23,8 @@ from f0_l2_d2a_physical_admission import (
 from f0_l2_d1_coordinator import (
     ExclusiveEvidence, FakeSource, GlobalStartGate, run_fake_concurrent,
     request_physical_source_admission)
-from f0_l2_d1_concrete_https import send_live as concrete_send_live
+from f0_l2_d1_concrete_https import (
+    PatchedConstructorOfflineSource, send_live as concrete_send_live)
 from f0_l2_d1_real_sender_contract import (
     send_live as contract_send_live,
     require_real_sender_release)
@@ -171,6 +172,67 @@ class PhysicalSourceAdmissionClosedTests(unittest.TestCase):
                              dispatch_deadline=time.monotonic() + 5,
                              timeout_ms=5000)
                 self.assertEqual(gate.starts, [])
+
+    def test_patched_transport_callback_injection_denied_before_main_ledger(self):
+        # The actual physical-constructor fake branch calls
+        # reply_transport_evidence_offline, not reply_over_memory_https.
+        # A pure local sentinel must never run or mint any RID/RAW.
+        invoked = []
+        source = PatchedConstructorOfflineSource(delay_ms=0)
+        def injected(_request, _begin, _timeout, *, reservation_guard=None):
+            invoked.append("MUST_NOT_EXECUTE")
+            return {"state": "RAW",
+                    "frame": (200, {"content-type": "application/json"},
+                              b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'),
+                    "failure": None}
+        source.reply_transport_evidence_offline = injected
+        with tempfile.TemporaryDirectory() as d:
+            evidence = Path(d).resolve() / "evidence"
+            evidence.mkdir(mode=0o700)
+            with patch.object(
+                    ExclusiveEvidence, "__init__",
+                    side_effect=AssertionError("WRITER_MUST_NOT_OPEN")
+                    ) as writer, patch(
+                    "http.client.HTTPSConnection",
+                    side_effect=AssertionError("HTTPS_MUST_NOT_CONSTRUCT")
+                    ) as https, patch.object(
+                    socket, "create_connection",
+                    side_effect=AssertionError("NETWORK_MUST_NOT_CONNECT")
+                    ) as sock:
+                with self.assertRaisesRegex(ValueError, "D1_SCOPE_INVALID"):
+                    run_fake_concurrent(source, evidence)
+                writer.assert_not_called()
+                https.assert_not_called()
+                sock.assert_not_called()
+            self.assertEqual(invoked, [])
+            self.assertEqual(list(evidence.iterdir()), [])
+
+    def test_patched_transport_callback_injection_denied_at_lower_gate(self):
+        invoked = []
+        source = PatchedConstructorOfflineSource(delay_ms=0)
+        def injected(_request, _begin, _timeout, *, reservation_guard=None):
+            invoked.append("MUST_NOT_EXECUTE")
+            return {"state": "RAW",
+                    "frame": (200, {"content-type": "application/json"},
+                              b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'),
+                    "failure": None}
+        source.reply_transport_evidence_offline = injected
+        gate = GlobalStartGate(250)
+        with patch("http.client.HTTPSConnection",
+                   side_effect=AssertionError("HTTPS_MUST_NOT_CONSTRUCT")
+                   ) as ctor:
+            with self.assertRaisesRegex(
+                    ValueError, "D2A_GATE_NON_FAKE_SOURCE_REFUSED"):
+                gate.run(
+                    {"jsonrpc": "2.0", "id": 1,
+                     "method": "eth_chainId", "params": []},
+                    source, block_head_deadline=None,
+                    dispatch_deadline=time.monotonic() + 5,
+                    timeout_ms=5000,
+                    reservation_guard=lambda _payload: None)
+            ctor.assert_not_called()
+        self.assertEqual(invoked, [])
+        self.assertEqual(gate.starts, [])
 
     def test_no_valid_candidate_or_test_token_can_open_any_live_entry(self):
         for live in (
