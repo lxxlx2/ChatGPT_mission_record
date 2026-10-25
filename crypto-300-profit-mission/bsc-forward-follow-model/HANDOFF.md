@@ -1,3 +1,11 @@
+# 2026-10-25 — D1 D3-candidate budgets actually enforced by SAME offline OS child; NEW MAC REVIEW PENDING
+
+- **Reviewed frozen parent:** PR196 SHA `b0b7b1dfda7dd537bcfc1b3ed2e1a8405ec37f72`, user-supplied independent Mac `APPROVE_OFFLINE_CODE — D1_PRECONSTRUCTOR_RECEIPT_BOUND_REHEARSAL_ONLY` (F0 515/515, D1 154/154, bound-wire 3/3, physical ctor 7/7, original Mac entry 7/7 and contract 10/10), archived [on PR196](https://github.com/lxxlx2/ChatGPT_mission_record/pull/196#issuecomment-6394440515). No production authorization inherited.
+- **Current child work:** PR196's mock HTTPS child was still using hard-coded 6-requests/250ms even when a narrower D3 candidate had been validated. New code propagates the **minimum** of already accepted D3 limits and stricter existing mock limits as a fixed, revalidated 8-key scope into the **same** single hard-stop/parent-loss OS child -> **unchanged unique three-slot coordinator**, BEFORE disposable test marker consumption. No candidate may widen its request/block/head budgets, shorten POST interval, widen TTL/timeout/dispatch, or escape the parent deadline. Old no-candidate test behavior unchanged. Actual enforcement tests inspect 2-attempt and slower pacing results, not just a diagnostic; review `f0/F0_D1_CANDIDATE_BUDGET_WIRING_REVIEW.md`.
+- **Still BLOCKED:** real HTTPS source is NOT available via these entrypoints; no D2 independently trusted keys or separate D3 actual run authorization, no real production once marker, physical HTTP/chain samples, provider capacity or F0 performance. Must pass new exact-SHA Linux CI + independent Mac tests before carrying this mock-only increment. No original private journal reads, RPC/WS, deploy, merge, daemon, notifications or trades. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-25 — D1 receipt-before-HTTPS-constructor and same guarded mock child; NEW MAC REVIEW PENDING
 
 - **Reviewed parent:** PR194 exact SHA `3470cd841a5b4d0cfc625bd4bf88a2abad37cfb4`, independently Mac-approved for D2/D3 **candidate contract only** (F0 512, D1 151, contract 10, Mac preview 7 all PASS). [Mac reviewer archive](https://github.com/lxxlx2/ChatGPT_mission_record/pull/194#issuecomment-6389334567). Parent remains Draft/unmerged; old authority gate unchanged.
