@@ -30,6 +30,7 @@ jobs:
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_forward_spot_daily_gate.py -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_forward_spot_score_admission.py -v
           python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_forward_verified_minute_tape.py -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_d1_rbtc15_last5_research.py -v
       - name: Verify real Oct Stage163 archive cannot masquerade as future T0 and no November population exists yet
         env:
           PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
