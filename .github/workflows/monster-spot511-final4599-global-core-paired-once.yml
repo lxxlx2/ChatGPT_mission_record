@@ -1,0 +1,182 @@
+name: Monster Spot511 final4599 original paired replay once
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-spot511-final4599-global-core-paired-once.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  full-source-verified-original-d0-d1:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 27
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 40027484781
+          github-token: ${{ github.token }}
+          repository: lxxlx2/ChatGPT_mission_record
+          pattern: monster-spot511-2026-10-*-slice-*-40027484781
+          merge-multiple: true
+          path: ${{ runner.temp }}/monster-final4599
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 40006012284
+          github-token: ${{ github.token }}
+          repository: lxxlx2/ChatGPT_mission_record
+          pattern: monster-spot511-20261022-first64-original-publisher-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/monster-final4599
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 40007027318
+          github-token: ${{ github.token }}
+          repository: lxxlx2/ChatGPT_mission_record
+          pattern: monster-spot511-20261022-original-slice-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/monster-final4599
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 40086780992
+          github-token: ${{ github.token }}
+          repository: lxxlx2/ChatGPT_mission_record
+          pattern: monster-spot511-2026-10-23-slice-*-40086780992
+          merge-multiple: true
+          path: ${{ runner.temp }}/monster-final4599
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 40171792607
+          github-token: ${{ github.token }}
+          repository: lxxlx2/ChatGPT_mission_record
+          pattern: monster-spot511-oct24-original-slice-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/monster-final4599
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 40087231856
+          github-token: ${{ github.token }}
+          repository: lxxlx2/ChatGPT_mission_record
+          name: monster-spot511-4088-original-global-replay-40087231856
+          path: ${{ runner.temp }}/monster-final4599-old
+      - name: Require 4599 distinct archived source pairs and exact old report SHA
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,os
+          root=Path(os.environ["RUNNER_TEMP"])/"monster-final4599"
+          sources=root/"source"
+          archives=list(sources.glob("*/1m/*.zip"))
+          checks=list(sources.glob("*/1m/*.zip.CHECKSUM"))
+          if len(archives)!=4599 or len(checks)!=4599:
+              raise SystemExit(f"OCT24_FROZEN_4599_ARCHIVE_PAIR_CENSUS_DRIFT:{len(archives)}:{len(checks)}")
+          if len({str(x.relative_to(sources)) for x in archives})!=4599:
+              raise SystemExit("PUBLISHER_ZIP_ID_DUPLICATE")
+          if any(not x.with_name(x.name+".CHECKSUM").is_file() for x in archives):
+              raise SystemExit("MISSING_SOURCE_PUBLISHER_CHECKSUM")
+          old=Path(os.environ["RUNNER_TEMP"])/"monster-final4599-old/paired-4088.json"
+          if hashlib.sha256(old.read_bytes()).hexdigest()!="453ee2e740578121b0734d61e6eb357be7bb34859b90878eb314f7d3dc1690f5":
+              raise SystemExit("PINNED_4088_REPORT_SHA_MISMATCH")
+          print("ORIGINAL_PUBLISHER_4599_PAIRS_READY_ALL_DATES_OCT16_TO_OCT24")
+          PY
+      - name: Run unchanged original SQLite global FIFO8/Fair8 on all 4599 sources
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent:crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_spot511_paired_sqlite.py \
+            --source-dir "$RUNNER_TEMP/monster-final4599/source" \
+            --index "$RUNNER_TEMP/monster-final4599-index.sqlite" \
+            --output "$RUNNER_TEMP/monster-final4599-result/paired-4599.json" \
+            --asof 2026-10-25T00:00:00Z
+      - name: Reconcile 3360 tick complete population and original 4088 event preservation
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from collections import Counter
+          from datetime import datetime,timezone
+          import json,hashlib,os
+          root=Path(os.environ["RUNNER_TEMP"])
+          source=root/"monster-final4599-result/paired-4599.json"
+          oldpath=root/"monster-final4599-old/paired-4088.json"
+          new=json.loads(source.read_bytes())
+          old=json.loads(oldpath.read_bytes())
+          if (new["frozen_roster"]!=511 or new["ticks"]!=3360
+              or new["verified_full_publisher_symbol_days"]!=4599
+              or new["required_full_publisher_symbol_days"]!=4599
+              or new["full_d0_ticks"]!=3360 or new["censored_d0_ticks"]!=0
+              or new["source_censored_symbol_ticks"]!=0
+              or not new["all_511_historical_sources_verified"]
+              or not new["same_d0_watch_id_and_time"]
+              or new["G0"]!="PARTIAL" or new["G1"]!="NOT_SCORABLE"
+              or new["G4"]!="UNKNOWN" or new["G6"]!="NO_GO"):
+              raise SystemExit("ORIGINAL_CORE_FULL_SOURCE_GATES_NOT_MET")
+          event_deltas={}
+          for lane in ("fifo","fair8"):
+              for typ in ("watch","setup"):
+                  key=f"{lane}_{typ}_events"
+                  prior={(x["event_id"],x["symbol"],x["observed_ms"]) for x in old[key]}
+                  current={(x["event_id"],x["symbol"],x["observed_ms"]) for x in new[key]}
+                  lost=sorted(prior-current)
+                  if lost:raise SystemExit(f"OLD_ORIGINAL_EVENT_DISAPPEARED:{key}:{len(lost)}")
+                  event_deltas[key]={"previous":len(prior),"current":len(current),
+                                     "new":len(current-prior),"lost":len(lost)}
+          if any(new[k]!=old[k] for k in
+                 ("mode","schema","frozen_roster","ticks")):
+              raise SystemExit("ORIGINAL_ENGINE_OR_COHORT_IDENTITY_DRIFT")
+          by_type={}
+          by_day={}
+          for typ in ("watch","setup"):
+              ev=new[f"fifo_{typ}_events"]
+              by_day[typ]=dict(sorted(Counter(datetime.fromtimestamp(
+                  x["observed_ms"]/1000,timezone.utc).date().isoformat()
+                  for x in ev).items()))
+          recap={
+            "schema":"MONSTER_SPOT511_ORIGINAL_LAST_DAY_4599_GLOBAL_REPLAY_AUDIT_V1",
+            "source_original_previous_oct16_23_sha256":hashlib.sha256(oldpath.read_bytes()).hexdigest(),
+            "source_new_oct16_24_sha256":hashlib.sha256(source.read_bytes()).hexdigest(),
+            "official_publisher_full_day_1m_symbol_dates_verified":4599,
+            "frozen_t0_roster_count":511, "full_3m_ticks":3360,
+            "censored_3m_ticks":0,
+            "event_deltas":event_deltas,
+            "daily_fifo_events_utc":by_day,
+            "fifo_fair8":{k:new[k] for k in ("fifo_setups","fair8_setups",
+                         "d0_watch_count","new_setup_ids","lost_setup_ids",
+                         "shared_setup_time_changed_ids")},
+            "frozen_original_core_changed":False,
+            "historical_live_receipt_PIT":"UNKNOWN",
+            "historical_dynamic_listing_status":"UNKNOWN",
+            "historical_executable_net_return":"UNKNOWN",
+            "sample_window_pre_exposed_not_independent_adr005_oos":True,
+            "G0":"PARTIAL","G1":"NOT_SCORABLE","G2":"UNKNOWN","G3":"UNKNOWN",
+            "G4":"UNKNOWN","G5":"NOT_DONE","G6":"NO_GO",
+            "NO_MAC":True,"NO_SCHEDULE":True,"NO_DEPLOY":True,
+            "NO_MERGE":True,"NO_GMAIL":True,"NO_TRADES":True
+          }
+          dest=root/"monster-final4599-result/summary.json"
+          dest.write_text(json.dumps(recap,sort_keys=True,ensure_ascii=False,indent=2)+"\n")
+          print("MONSTER_FINAL4599_VERIFIED_ORIGINAL_CORE",
+                json.dumps({"source":4599,"ticks":3360,
+                           "events":event_deltas,
+                           "setups":recap["fifo_fair8"],"G6":"NO_GO"},sort_keys=True))
+          PY
+      - name: Save full original replay event proof without repeating issuer source files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-spot511-original4599-frozen-global-paired-proof
+          path: ${{ runner.temp }}/monster-final4599-result/
+          if-no-files-found: warn
+          retention-days: 60
