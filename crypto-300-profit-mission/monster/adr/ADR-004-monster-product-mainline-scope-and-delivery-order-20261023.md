@@ -465,3 +465,18 @@ Artifact **`12599195855`** 中`real69-d2-time-receipt-coverage.json`是实际69�
 - 与先前真实Codex独立批准的`d743acb...` D1 V2以及`c4a8f1...` D2微秒源的Git Blob逐个比较**完全未改动**。详细固定SHA、原始来源证明限制、脚本入口、真实运行证据和审查需求见 [新源码实测交接文档](../reviews/MONSTER_ADR005_NOVEMBER_SPOT_T0_AND_15DAY_SOURCE_GATE_REAL_CI_20261026.md)。
 
 **下一研发真正目标**仍是三个未曝光窗口当时客观来源取得→完整有效原同源D0/D1及GT2×标签→G1/G2/G3按冻结规则评分；目前不能宣称已经取得新来源/市场前瞻样本，也无后台用户授权，**G5新T0+daily代码需独立只读复核、G6 NO_GO**。Spot与USD-M两套既有预注册窗口不混用，BSC/Frank不动。无GitHub cron、macOS运行、交易所新查询、Monster真实邮件或交易。
+
+## 40. 2026-10-26：前瞻Spot D0/D1→G1/G2/G3评分来源逐币准入已落地
+
+用户带回的独立Codex主代理受限`APPROVE @ 48bf87fd0721071d8347f7f47df71253f2a835fc`，批准仅为前次新增Spot T0原HTTP ZIP+SHA/时间回执及15日发行方日源准入代码。真实Mac Python3.14.7运行14+10=24项全部PASS，另用明确合成的2币×15日完整源及最后闭日-1微秒独立边界检查，确证“源齐但尚不能假称G1/G6通过”。真实Artifact `12607271877`与三窗无源输出一致。审查记录在[独立APPROVE文档](../reviews/MONSTER_ADR005_FORWARD_T0_DAILY_CODEX_SCOPED_APPROVE_20261026.md)；该批准不得称Monster整体G5 PASS。
+
+**本轮在该批准上继续直接开发，而非只等11月2日**：新增 `local-agent/scripts/monster_v4_adr005_forward_spot_score_admission.py`、对应14项测试和只执行一次的纯离线CI，**固定代码审核SHA `3cab91ba45e68ce2e05e963b9d75da7e2afb4ff3`**。真正命令入口再次调用已获批`t0.preflight`核对**原始HTTP ZIP/回执**，再调用`daily.census`对原始官方发行方1m ZIP/.CHECKSUM独立复验，逐币建立完整15日原分母，明确技术完整度三档：
+- `D0_D1_SOURCE_BLOCKED`：缺最初24h或7日实时回看源，不允许回放／生成伪WATCH；
+- `D0_D1_SOURCE_READY_GT_LABELS_BLOCKED`：仅基线与观察7日完整，允许以后真正离线D0/D1核心回放，但**不能打G1/G2或把没观察到的未来赢家记零**；
+- `SOURCE_COMPLETE_OFFLINE_REPLAY_ONLY`：全部15日完整，**仍仅说明来源形式可供离线研究，不证明旧自报回执真实性/动态上市/新2×赢家，也未实际执行模型、评分或交易**。
+
+保留原T0每个symbol、15日的每次attempt状态和缺档原因，不允许缺符号、伪计数、重复或跨窗补填；阶段字段显式`replay_engine_executed=False`、`metrics_from_future_labels_computed=False`、`G1 NOT_SCORABLE/G2 UNKNOWN/G3 NOT_SCORABLE/G6 NO_GO`，不将旧USD-M Stage92或10月曝光研究计数套进此Spot前瞻。无真实T0则不产生虚假511名单或分母，只输出三窗冻结日历。
+
+**真实云端运行**：[Actions #40237630315](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40237630315)固定SHA **SUCCESS 14+10+14=38项全部PASS**，新增14个状态分层、合成完整源仍不可评分、历史真实10月T0拒绝、日级覆盖完整性及伪造count拒绝测试。真实Artifact `12614699385` 由本会话下载且对3个JSON原生解包核查：三窗均处`WAITING_FOR_PRESTART_SOURCE_WINDOW`、真实市场人口null、来源15日未来未闭、G0人口未知，仍G1不可评分/G6 NO_GO；外包SHA256 `b524376353e02cba090fa041dc6110722dce93ff7be7284737084aed2b50a5f0`。D1 V2/D2 microsecond原已审批Git Blob完全未变。
+
+**新模块的独立G5尚待其他AI只读审查**，审查内容、真实CI和源码Blob固定清单记录在[完整提交与下一次审核说明](../reviews/MONSTER_ADR005_NOVEMBER_SPOT_SCORE_ADMISSION_ACTUAL_CI_AND_CODEX_REVIEW_20261026.md)；不能写成这一轮Codex已经批准。下一工程任务是把经过完整源码核验的15日分钟档案对接真正原D0与固定研究D1 core作逐3m/闭合5m离线回放，再由未来真实GT来源做G1/G2/G3评分；**用户未单独授权真实11月采集或部署后台**。保持G0 PARTIAL/G1 NOT_SCORABLE/G2 UNKNOWN/G3十月EXPOSED_NOT_PASSED、未来NOT_SCORABLE/G4 UNKNOWN/G5新模块待审/G6 NO_GO。NO_MERGE/NO_DEPLOY/NO_MAC/NO_AUTOMATIONS/NO_GMAIL/NO_TRADES/NO_NEW_RPC。
