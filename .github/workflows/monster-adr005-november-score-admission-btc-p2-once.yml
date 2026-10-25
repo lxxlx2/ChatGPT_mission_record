@@ -1,0 +1,68 @@
+name: Monster ADR005 November Spot BTC-dependent D1 source P2 gate once
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-adr005-november-score-admission-btc-p2-once.yml
+
+permissions:
+  contents: read
+
+jobs:
+  source-to-score-offline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Regress T0, publisher 15day, and scoring source admission
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_forward_spot_t0_gate.py -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_forward_spot_daily_gate.py -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_forward_spot_score_admission.py -v
+      - name: Emit exactly three unscored November readiness manifests
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/adr005-score-admission"
+          for day in 2026-11-02 2026-11-16 2026-12-01; do
+            python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_adr005_forward_spot_score_admission.py --window-start-utc "${day}T00:00:00Z" --asof-utc 2026-10-26T00:00:00Z --out "$RUNNER_TEMP/adr005-score-admission/${day}.json"
+          done
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path(os.environ["RUNNER_TEMP"])/"adr005-score-admission"
+          for day in ("2026-11-02","2026-11-16","2026-12-01"):
+              doc=json.loads((root/(day+".json")).read_text())
+              assert doc["window_start_utc"]==day+"T00:00:00Z"
+              assert doc["original_t0_symbols_total"] is None
+              assert doc["technical_future_label_source_complete_symbols"] is None
+              assert doc["technical_original_d0_source_complete_symbols"] is None
+              assert doc["technical_rbtc_d1_source_complete_symbols"] is None
+              assert doc["btc_benchmark_research_d1_source_ready"] is None
+              assert doc["replay_engine_executed"] is False
+              assert doc["metrics_from_future_labels_computed"] is False
+              assert doc["G0"]=="POPULATION_UNKNOWN"
+              assert doc["G1"]=="NOT_SCORABLE"
+              assert doc["G2"]=="UNKNOWN" and doc["G3"]=="NOT_SCORABLE"
+              assert doc["G4"]=="UNKNOWN" and doc["G6"]=="NO_GO"
+              assert doc["NO_AUTOMATIONS"] and doc["NO_TRADES"]
+          print("MONSTER_ADR005_BTC_DEPENDENCY_AND_3_FORWARD_WINDOWS_NO_FAKE_SCORE_PASS")
+          PY
+      - name: Publish offline source-not-ready envelopes only
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-adr005-3window-btc-d1-score-admission-p2-verified
+          path: ${{ runner.temp }}/adr005-score-admission/*.json
+          retention-days: 30
+          if-no-files-found: error
