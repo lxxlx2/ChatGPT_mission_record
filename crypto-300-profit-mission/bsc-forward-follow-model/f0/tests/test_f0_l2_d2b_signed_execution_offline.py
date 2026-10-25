@@ -80,14 +80,14 @@ class ThreeRoleOfflineSignatureTests(unittest.TestCase):
 
     def test_three_distinct_ephemeral_test_signers_verify_without_io(self):
         from f0_l2_d1_grant import OfflineGrantRegistry
-        with patch("http.client.HTTPSConnection",
-                   side_effect=AssertionError("HTTPS_FORBIDDEN")) as conn, (
-             patch.object(socket, "create_connection",
-                          side_effect=AssertionError("SOCKET_FORBIDDEN"))
-                          as sock), (
-             patch.object(OfflineGrantRegistry, "consume",
-                          side_effect=AssertionError("LEASE_FORBIDDEN"))
-                          as marker):
+        with (
+            patch("http.client.HTTPSConnection",
+                  side_effect=AssertionError("HTTPS_FORBIDDEN")) as conn,
+            patch.object(socket, "create_connection",
+                         side_effect=AssertionError("SOCKET_FORBIDDEN")) as sock,
+            patch.object(OfflineGrantRegistry, "consume",
+                         side_effect=AssertionError("LEASE_FORBIDDEN")) as marker,
+        ):
             result = self.check()
             conn.assert_not_called()
             sock.assert_not_called()
