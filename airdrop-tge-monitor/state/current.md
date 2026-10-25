@@ -9,7 +9,7 @@ Timezone: Asia/Bangkok
 - latest_attempt_path: airdrop-tge-monitor/runs/2026-10-25/095945-attempt.md
 - latest_scheduled_shard: 1
 - latest_executed_shard: 1
-- stale_shard_recovery: false (hour8 modulo4, one shard)
+- stale_shard_recovery: false (invocation hour9 modulo4, one shard1)
 - latest_candidate_count: 5
 - latest_triggered_events: 0
 - latest_identity_failures: 0
