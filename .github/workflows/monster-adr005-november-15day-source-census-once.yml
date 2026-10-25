@@ -1,0 +1,63 @@
+name: Monster ADR005 Nov Spot T0 and 15day publisher offline census once
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-adr005-november-15day-source-census-once.yml
+
+permissions:
+  contents: read
+
+jobs:
+  frozen-november-t0-publisher-offline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: T0 original-source exact receipt + publisher daily checks
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_forward_spot_t0_gate.py -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_forward_spot_daily_gate.py -v
+      - name: Output all three real future windows source-free, never fake population or labels
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/adr005-spot-source-preflight"
+          for day in 2026-11-02 2026-11-16 2026-12-01; do
+            python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_adr005_forward_spot_t0_gate.py --window-start-utc "${day}T00:00:00Z" --asof-utc 2026-10-26T00:00:00Z --out "$RUNNER_TEMP/adr005-spot-source-preflight/${day}-t0.json"
+            python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_adr005_forward_spot_daily_gate.py --window-start-utc "${day}T00:00:00Z" --asof-utc 2026-10-26T00:00:00Z --out "$RUNNER_TEMP/adr005-spot-source-preflight/${day}-publisher-days.json"
+          done
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"adr005-spot-source-preflight"
+          for day in ["2026-11-02","2026-11-16","2026-12-01"]:
+              t=json.loads((p/(day+"-t0.json")).read_text())
+              s=json.loads((p/(day+"-publisher-days.json")).read_text())
+              assert t["source_ready_state"]=="WAITING_FOR_PRESTART_SOURCE_WINDOW"
+              assert t["G0"]=="POPULATION_UNKNOWN"
+              assert s["calendar_days"]==15
+              assert len(s["calendar"])==15
+              assert all(x["source_status"]=="UTC_DAY_NOT_YET_ENDED" for x in s["calendar"])
+              assert s["G1"]=="NOT_SCORABLE" and s["G6"]=="NO_GO"
+              assert "baseline_symbol_population" not in s
+          print("ADR005_FROZEN_3WINDOW_15DAY_SOURCE_READINESS_NO_FAKE_PIT_PASS")
+          PY
+      - name: Upload static offline preflight only
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-adr005-3window-15day-no-source-preflight
+          path: ${{ runner.temp }}/adr005-spot-source-preflight/*.json
+          retention-days: 30
+          if-no-files-found: error
