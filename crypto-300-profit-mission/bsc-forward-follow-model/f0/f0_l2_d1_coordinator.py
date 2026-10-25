@@ -704,7 +704,11 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
         "known_unattempted":(
             max(0,head-(next_height-1)) if
             head is not None and next_height is not None else None),
-        "synthetic_source_growth_bps":source.growth_bps,
+        # The distinct physical HTTPS source has no synthetic head-growth
+        # generator. Preserve the existing field for all four fake classes,
+        # but explicitly mark it inapplicable for the staged test slot.
+        "synthetic_source_growth_bps":(
+            None if staged else source.growth_bps),
         "full_ledger_filename":"attempts.jsonl",
         "start_records":[{"id":i,"method":m,"monotonic":t}
                          for i,m,t in starts],
