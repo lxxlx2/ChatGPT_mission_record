@@ -423,3 +423,17 @@ PYTHONPATH=scripts python -B -m unittest discover -s tests -p 'test_monster_spot
 完整审查范围、SHA和限制见 [独立批准记录](../reviews/MONSTER_ADR005_CODEX_FULL_5M_WINDOW_FIX_INDEPENDENT_APPROVE_20261025.md)；先前第三轮拒绝与代码修复见 [问题及修复证据](../reviews/MONSTER_ADR005_CODEX_MIDDLE_GAP_P1_FULL_WINDOW_FIX_20261025.md)。**不可把这一范围受限的G5补丁批准称为Monster整体质量/盈利/生产批准**。
 
 **后续中心问题已回到市场有效性而非继续追逐本次漏评边界**：G0历史来源取得4599/4599，但当时真实可见时间和上市身份仍PARTIAL；G1提前2×与G2留存率无未来独立标签；G3旧十月曝光研究47/7>5且正面Crypto分类40/7>5，明确历史数值未过；G4双侧报价、费用、实际可执行退出UNKNOWN。下一步只应按预注册三个未来7日独立窗口取证，或在不碰冻结策略下做实际D2/通知可用性只读工程，**不能把历史窗口调参充当样本外改善**。保持**G5=V2_PATCH_APPROVED_ONLY、G6=NO_GO**，无合并/部署、Monster与Frank运行修改、GitHub schedule、用户Mac后台任务、真实邮件或交易。
+
+## 36. 2026-10-25：原真实69条新D1与T0原始Spot盘口回执时序连接正式可核验
+
+从**G1/G2/G3/G4早报→买卖盘口可成交证据**主线出发，本次新增独立Spot D1→D2时序桥（严格只读，无抓新市场行情、无账户、无下单、无默认名义额）`local-agent/scripts/monster_v4_spot511_d2_signal_receipt_coverage.py`，并配套9项特殊时序/来源/覆盖反例测试、一次性无schedule验收工作流。**固定源码及代码审核待审SHA `342fc476a49c25640e6c8c47302338b56c69316a`**；后续文档仅记录研究，不改模型、旧SQLite、原D0/D1阈值。
+
+真实唯一旧输入是原GitHub Action #40191914954的Artifact `12597793739`内`real69.json`（SHA256 `2f5e27d37c2b7ae333079b08155e392d78413212571bc681d149b4e91a1cf84c`）及同仓库Stage163已封存**原始Binance Spot API JSON ZIP+SHA256、发送/接收回执与客户端/交易所时钟约束**；源原ZIP SHA256 `b47e206345c0a04b16b37c38795d726553ef83ca679f443f9fba89805483216b`，绝不以模型时间覆盖来源时间或伪造最新盘口。该旧历史Spot T0全币bookTicker报价整包最早可完整取得时刻（用户端回执UTC）`2026-10-17T22:04:46.929464Z`。
+
+[一次性实际GitHub Actions #40193435581](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40193435581) **SUCCESS**，9项新测试+原Stage163 12项，**21/21 PASS**。真实固定源69条原D0 WATCH和47条新D1研究SETUP全量核对：使用独立**3分钟工程年龄诊断**（不是冻结交易策略阈值），旧T0 quote整包距离WATCH的实际回看间隔最小`32653071ms`最大`588673071ms`，69/69 WATCH的旧报价已过期；47/47实际D1 SETUP的旧报价同样过期，另外22条自然无升级。故本次旧价格证据**无一能证明信号当时的可用成交盘口**，但也不能推导69个币当时真实不能成交。原G4同样`UNKNOWN`，不能因为缺证据就归为真实流动性0。
+
+Artifact **`12599195855`** 中`real69-d2-time-receipt-coverage.json`是实际69行证据，SHA256 `9bd81c0303d082885c79c8d282c53eb879e4eea712dbe1840be03001d708c077`。分类严格区分`SOURCE_RECEIPT_AFTER_SIGNAL`（未来不可用）、`STALE_PRE_SIGNAL_RECEIPT`（过期）和`NON_ATOMIC_L1_RECEIPT_ONLY`（即便年龄足够也不证明真实交易所quote事件时间）。字段明示旧历史信号是**事后事件时钟**，缺历史live收取`available_at`、真实订单簿深度与卖出退出Bid、账户资格/费率/实际金额，所有`can_confirm_g4=False`、`actual_return=None`；不以历史OHLC冒充成交或费用后收益。
+
+**下一个真正有业务价值的研究支线**：只在用户主动手动采集/真实前瞻合法观察时，搜集绑定信号时间、同场所、受时钟证明的完整买入ask+之后退出bid、订单簿深度、手动提供的报价金额与费率，累积>=30个独立买入与退出证据后才对G4展开定量判断；同时不要忽略G1/G2漏掉2×赢家和已曝光G3`47/7>5`失败。不得将过期旧snapshot或者分钟最高价当作“当时可以低价买入”的证据。
+
+[其他AI可复制的固定SHA审查包/完整提示词](../reviews/MONSTER_SPOT511_REAL69_D2_RECEIPT_TIME_BRIDGE_INDEPENDENT_REVIEW_REQUEST_20261025.md)已在本PR保存，**未有实际独立review输出，本轮新桥接G5=NOT_DONE**；前一项V2漏评修复`d743acb...`独立APPROVE保持有效但不覆盖这个新桥接。继续`G0 PARTIAL / G1 NOT_SCORABLE / G2 UNKNOWN / G3 EXPOSED_NOT_PASSED / G4 UNKNOWN / G5 V2_PATCH_APPROVED_AND_NEW_D2_BRIDGE_REVIEW_PENDING / G6 NO_GO`，无合并/部署/Mac/Frank/自动任务/Gmail/交易。
