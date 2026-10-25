@@ -1,0 +1,60 @@
+name: Monster ADR005 November Spot T0 offline raw source gate once
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-adr005-november-t0-raw-source-preflight-once.yml
+
+permissions:
+  contents: read
+
+jobs:
+  offline-november-source-readiness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify source admission and fail-closed tests without HTTP
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_forward_spot_t0_gate.py -v
+      - name: Check all registered future dates have no supplied contemporaneous T0
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/november-t0-readiness"
+          for date in 2026-11-02 2026-11-16 2026-12-01; do
+            python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_adr005_forward_spot_t0_gate.py --window-start-utc "${date}T00:00:00Z" --asof-utc "2026-10-26T00:00:00Z" --out "$RUNNER_TEMP/november-t0-readiness/${date}.json"
+          done
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path(os.environ["RUNNER_TEMP"])/"november-t0-readiness"
+          days=["2026-11-02","2026-11-16","2026-12-01"]
+          for day in days:
+              d=json.loads((root/(day+".json")).read_text())
+              assert d["window_start_utc"]==day+"T00:00:00Z"
+              assert d["source_ready_state"]=="WAITING_FOR_PRESTART_SOURCE_WINDOW"
+              assert d["G0"]=="POPULATION_UNKNOWN"
+              assert d["G1"]=="NOT_SCORABLE" and d["G6"]=="NO_GO"
+              assert d["NO_AUTOMATIONS"] and d["NO_TRADES"]
+              assert "t0_spot_usdt_symbol_ids" not in d
+          print("ADR005_NOVEMBER_3_FROZEN_WINDOWS_T0_PRESTART_NO_FAKE_SOURCE_PASS",len(days))
+          PY
+      - name: Keep only offline source-unavailable evidence; no collector or schedule
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-adr005-november-spot-t0-preflight-no-source
+          path: ${{ runner.temp }}/november-t0-readiness/*.json
+          retention-days: 30
+          if-no-files-found: error
