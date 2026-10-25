@@ -4,6 +4,7 @@ import sys
 import tempfile
 import unittest
 import zipfile
+from unittest.mock import patch
 from datetime import date, datetime, timezone
 from decimal import Decimal
 from pathlib import Path
@@ -74,6 +75,19 @@ class TapeTests(unittest.TestCase):
             self.assertIn("SOURCE_REJECTED_OR_INCOMPLETE",t.readiness()["day_counts"])
             self.assertIsNone(t.d0_at(m.d0.START_MS))
             self.assertEqual(len(t.six_closed_5m(m.d0.START_MS)),6)
+
+    def test_corrupt_decimal_after_validation_is_rejected_not_crash(self):
+        with tempfile.TemporaryDirectory() as root:
+            day=date(2026,10,16)
+            official_day(root,day)
+            z,_=m.d0.stage166.daily_paths(root,'BTCUSDT',day)
+            with zipfile.ZipFile(z,'w',zipfile.ZIP_DEFLATED) as f:
+                f.writestr('BTCUSDT-1m-2026-10-16.csv',
+                           '1792108800000000,1,2,1,NANX,1,1792108859999999,3,1,1,1,0\n')
+            with patch.object(m.d0.stage166,'validate_daily_zip',return_value={'zip_sha256':'x'}):
+                tape=self.load(root,asof='2026-10-26T12:00:00+00:00')
+            self.assertEqual(tape.day_states['2026-10-16'],'SOURCE_REJECTED_OR_INCOMPLETE')
+            self.assertIsNone(tape.d0_at(m.d0.START_MS))
 
     def test_future_date_bytes_must_not_appear(self):
         with tempfile.TemporaryDirectory() as root:
