@@ -255,7 +255,10 @@ class GlobalStartGate:
         # restricted to the four reviewed, EXACT memory-only source types.
         need(type(source) in (FakeSource, SealedMemoryHTTPSSource,
                               SealedConcreteOfflineSource,
-                              PatchedConstructorOfflineSource),
+                              PatchedConstructorOfflineSource)
+             and "reply" not in getattr(source, "__dict__", {})
+             and "reply_over_memory_https" not in
+                 getattr(source, "__dict__", {}),
              "D2A_GATE_NON_FAKE_SOURCE_REFUSED")
         if type(source) in (SealedMemoryHTTPSSource, SealedConcreteOfflineSource,
                             PatchedConstructorOfflineSource):
