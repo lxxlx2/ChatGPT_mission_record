@@ -1,0 +1,103 @@
+name: Monster ADR005 one-shot exact real53 original SQLite research replay
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - ".github/workflows/monster-adr005-original53-exact-sqlite-once.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  frozen-original53-replay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout pinned research source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Offline-only code and admission regression
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent:crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_adr005_real53_original_sqlite_replay.py
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_adr005_real53_original_sqlite_replay.py -v
+      - name: Fetch ONLY frozen existing 34 GitHub source archives plus exact original paired report
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/monster-adr005/source-bundles" "$RUNNER_TEMP/monster-adr005/original"
+          while IFS='|' read -r run_id artifact_name; do
+            test -n "$run_id" && test -n "$artifact_name"
+            gh run download "$run_id" --name "$artifact_name" --dir "$RUNNER_TEMP/monster-adr005/source-bundles" --repo "$GITHUB_REPOSITORY"
+          done <<'PINNED_EXISTING_ONLY'
+          40027484781|monster-spot511-2026-10-18-slice-0-40027484781
+          40027484781|monster-spot511-2026-10-18-slice-128-40027484781
+          40027484781|monster-spot511-2026-10-18-slice-256-40027484781
+          40027484781|monster-spot511-2026-10-18-slice-320-40027484781
+          40027484781|monster-spot511-2026-10-18-slice-64-40027484781
+          40027484781|monster-spot511-2026-10-19-slice-0-40027484781
+          40027484781|monster-spot511-2026-10-19-slice-192-40027484781
+          40027484781|monster-spot511-2026-10-19-slice-256-40027484781
+          40027484781|monster-spot511-2026-10-19-slice-320-40027484781
+          40027484781|monster-spot511-2026-10-19-slice-384-40027484781
+          40027484781|monster-spot511-2026-10-19-slice-64-40027484781
+          40027484781|monster-spot511-2026-10-20-slice-0-40027484781
+          40027484781|monster-spot511-2026-10-20-slice-128-40027484781
+          40027484781|monster-spot511-2026-10-20-slice-192-40027484781
+          40027484781|monster-spot511-2026-10-20-slice-384-40027484781
+          40027484781|monster-spot511-2026-10-20-slice-64-40027484781
+          40027484781|monster-spot511-2026-10-21-slice-0-40027484781
+          40027484781|monster-spot511-2026-10-21-slice-192-40027484781
+          40027484781|monster-spot511-2026-10-21-slice-320-40027484781
+          40027484781|monster-spot511-2026-10-21-slice-384-40027484781
+          40027484781|monster-spot511-2026-10-21-slice-448-40027484781
+          40027484781|monster-spot511-2026-10-21-slice-64-40027484781
+          40006012284|monster-spot511-20261022-first64-original-publisher-40006012284
+          40007027318|monster-spot511-20261022-original-slice-128-40007027318
+          40007027318|monster-spot511-20261022-original-slice-192-40007027318
+          40007027318|monster-spot511-20261022-original-slice-256-40007027318
+          40007027318|monster-spot511-20261022-original-slice-320-40007027318
+          40007027318|monster-spot511-20261022-original-slice-64-40007027318
+          40086780992|monster-spot511-2026-10-23-slice-0-40086780992
+          40086780992|monster-spot511-2026-10-23-slice-128-40086780992
+          40086780992|monster-spot511-2026-10-23-slice-192-40086780992
+          40086780992|monster-spot511-2026-10-23-slice-320-40086780992
+          40086780992|monster-spot511-2026-10-23-slice-384-40086780992
+          40086780992|monster-spot511-2026-10-23-slice-64-40086780992
+          PINNED_EXISTING_ONLY
+          gh run download 40087231856 --name monster-spot511-4088-original-global-replay-40087231856 --dir "$RUNNER_TEMP/monster-adr005/original" --repo "$GITHUB_REPOSITORY"
+          test -f "$RUNNER_TEMP/monster-adr005/original/paired-4088.json"
+          test -d "$RUNNER_TEMP/monster-adr005/source-bundles/source"
+          echo "MONSTER_ADR005_EXISTING_ARTIFACTS_ONLY_NO_NEW_EXCHANGE_HTTP"
+      - name: Run exact source-verified 53 WATCH / 3360 tick / original SQLite
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent:crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_adr005_real53_original_sqlite_replay.py \
+            --original-paired-json "$RUNNER_TEMP/monster-adr005/original/paired-4088.json" \
+            --publisher-dir "$RUNNER_TEMP/monster-adr005/source-bundles/source" \
+            --exploratory-reference crypto-300-profit-mission/monster/evidence/MONSTER_ADR005_REAL53_OFFICIAL_MINUTE_INDEPENDENT_EXPLORATION_20261025.json \
+            --research-ledger-out "$RUNNER_TEMP/monster-adr005/research-original.sqlite" \
+            --out "$RUNNER_TEMP/monster-adr005/research-report.json"
+      - name: Upload research report and isolated SQLite, never republish issuer bytes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-adr005-original53-pinned-research-sqlite
+          path: |
+            ${{ runner.temp }}/monster-adr005/research-original.sqlite
+            ${{ runner.temp }}/monster-adr005/research-report.json
+          if-no-files-found: warn
+          retention-days: 30
