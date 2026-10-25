@@ -480,3 +480,15 @@ Artifact **`12599195855`** 中`real69-d2-time-receipt-coverage.json`是实际69�
 **真实云端运行**：[Actions #40237630315](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40237630315)固定SHA **SUCCESS 14+10+14=38项全部PASS**，新增14个状态分层、合成完整源仍不可评分、历史真实10月T0拒绝、日级覆盖完整性及伪造count拒绝测试。真实Artifact `12614699385` 由本会话下载且对3个JSON原生解包核查：三窗均处`WAITING_FOR_PRESTART_SOURCE_WINDOW`、真实市场人口null、来源15日未来未闭、G0人口未知，仍G1不可评分/G6 NO_GO；外包SHA256 `b524376353e02cba090fa041dc6110722dce93ff7be7284737084aed2b50a5f0`。D1 V2/D2 microsecond原已审批Git Blob完全未变。
 
 **新模块的独立G5尚待其他AI只读审查**，审查内容、真实CI和源码Blob固定清单记录在[完整提交与下一次审核说明](../reviews/MONSTER_ADR005_NOVEMBER_SPOT_SCORE_ADMISSION_ACTUAL_CI_AND_CODEX_REVIEW_20261026.md)；不能写成这一轮Codex已经批准。下一工程任务是把经过完整源码核验的15日分钟档案对接真正原D0与固定研究D1 core作逐3m/闭合5m离线回放，再由未来真实GT来源做G1/G2/G3评分；**用户未单独授权真实11月采集或部署后台**。保持G0 PARTIAL/G1 NOT_SCORABLE/G2 UNKNOWN/G3十月EXPOSED_NOT_PASSED、未来NOT_SCORABLE/G4 UNKNOWN/G5新模块待审/G6 NO_GO。NO_MERGE/NO_DEPLOY/NO_MAC/NO_AUTOMATIONS/NO_GMAIL/NO_TRADES/NO_NEW_RPC。
+
+## 41. 2026-10-26：前瞻研究D1的BTC源依赖P2已修复，D0与RBTC D1独立就绪
+
+用户提供第三方Codex主代理针对固定研究评分准入层`3cab91ba45e68ce2e05e963b9d75da7e2afb4ff3`的独立审核 **REQUEST_CHANGES**，原始38项测试与真实无来源Artifact均能复算，只有一项新增P2：`join_census()`原本仅看候选币自己的基线/7日观察源，就认为`D1_RBTC15_LAST5_V1`可离线回放，未检查同时期BTCUSDT的六根闭合5m来源。审查方独立构造自洽合成币种AAA全源、BTC于11月4日缺一观察日，复现AAA误标D0/D1全部ready。原T0/daily/D1 episode/D2微秒的历史独立批准均不受影响。
+
+**代码实际修复并上线至原Draft PR（不合并）**：固定本轮新审核**源码SHA `08340771a46e37856bad0b2b58cc4bdc97f37813`**。新版source→score准入Schema V2，分开 `technically_eligible_for_offline_original_d0_source_replay`（只需候选币自身24h基线＋7天完整观察）与`technically_eligible_for_offline_rbtc_d1_source_replay`（候选D0源就绪且**同场所BTCUSDT必须在原T0名单并有完整1天基线＋7天观察**）。旧组合字段 `technically_eligible_for_offline_d0_d1_source_replay` 改为**严格联合来源就绪**；再单独列候选币原D0未来2×标签与研究D1完整标签技术数量；BTC自己是基准不当Monster研究目标，不删除其市场人口或逐日源attempt。
+
+BTC缺观察或基线使原币`D0_SOURCE_READY_RBTC_D1_BLOCKED`，报告`BTC_OBSERVATION_7D_MISSING_OR_INVALID`／`BTC_BASELINE_24H_MISSING_OR_INVALID`，若BTC不在T0名单明确`BTC_BENCHMARK_NOT_IN_T0_SOURCE_CENSUS`；不以合成BTC价格、后验补来的名单或其它币替代。BTC的未来七日2×价格标签**不是其研究D1输入**，所以只缺BTC未来标签时D1仍可就绪，全集15日source标记单独反映不完整。任何技术source complete仍不计算真实D0/D1或G1/G2/G3，也不影响G4／G6。
+
+**真实CI**：[GitHub Actions #40238490187](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40238490187)绑定固定新SHA，已**SUCCESS，14(T0)+10(Publisher)+20(score)=44/44 PASS**。其中确实覆盖Codex原反例、BTC完全不在T0、BTC源恢复、BTC基线缺失、BTC未来label缺失非阻断、多个候选同受影响；真实无11月来源Artifact `12615773413` 本会话直接下载ZIP+CRC+解析3份JSON核验；ZIP SHA256 `7bb131f94639446253afb297084c1f58624efbac2cbd831c654b802e445cf8cf`，三窗仍没有T0名单或BTC来源，G1不可评分/G6 NO_GO。原T0/daily/D1 V2/D2时间桥代码Git Blob逐个核对均未变。
+
+完整可执行审查和源文件SHA见[本轮P2修复与独立复核交接](../reviews/MONSTER_ADR005_CODEX_P2_BTC_DEPENDENCY_SOURCE_SCORE_FIX_AND_REREVIEW_20261026.md)。**本新SHA暂无其他AI正式APPROVE，G5修复增量仍待独立复审**，不得把44测试通过或此前T0源门禁受限APPROVE扩充为本新score层获批。下一模块还是原Spot同源D0/D1真实闭合K线离线桥接与真实未来GT2×标签核验，不动预注册参数或作回测择优。保持`G0 PARTIAL / G1 NOT_SCORABLE / G2 UNKNOWN / G3旧十月EXPOSED_NOT_PASSED、未来NOT_SCORABLE / G4 UNKNOWN / G5 BTC_FIX_RE_REVIEW_PENDING / G6 NO_GO`。NO_MERGE/NO_DEPLOY/NO_MAC/NO_AUTOMATIONS/NO_GMAIL/NO_TRADES/NO_NEW_RPC。
