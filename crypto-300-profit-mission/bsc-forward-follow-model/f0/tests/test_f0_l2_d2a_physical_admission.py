@@ -149,6 +149,29 @@ class PhysicalSourceAdmissionClosedTests(unittest.TestCase):
                         run_fake_concurrent(source, evidence)
                     self.assertEqual(list(evidence.iterdir()), [])
 
+    def test_lower_level_gate_refuses_duck_typed_and_mutated_sources(self):
+        payload = {"jsonrpc": "2.0", "id": 1,
+                   "method": "eth_chainId", "params": []}
+        class DuckTypedNetworkSource:
+            def reply(self, _request):
+                raise AssertionError("UNTRUSTED_DUCK_REPLY_CALLED")
+        subclass = type("InjectedSubclass", (FakeSource,), {
+            "reply": lambda self, _r: (_ for _ in ()).throw(
+                AssertionError("SUBCLASS_CALLED"))})
+        instance = FakeSource(delay_ms=0)
+        instance.reply = lambda _r: (_ for _ in ()).throw(
+            AssertionError("INSTANCE_CALLED"))
+        for source in (DuckTypedNetworkSource(),
+                       subclass(delay_ms=0), instance):
+            with self.subTest(source=type(source).__name__):
+                gate = GlobalStartGate(250)
+                with self.assertRaisesRegex(
+                        ValueError, "D2A_GATE_NON_FAKE_SOURCE_REFUSED"):
+                    gate.run(payload, source, block_head_deadline=None,
+                             dispatch_deadline=time.monotonic() + 5,
+                             timeout_ms=5000)
+                self.assertEqual(gate.starts, [])
+
     def test_no_valid_candidate_or_test_token_can_open_any_live_entry(self):
         for live in (
                 candidate_send_live, concrete_send_live, contract_send_live,
