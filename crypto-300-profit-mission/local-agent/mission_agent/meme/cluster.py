@@ -300,6 +300,7 @@ class SolanaReadOnlyRPC:
         self._monotonic=monotonic
         self._budget_started_at=self._monotonic()
         self._budget_terminal_reason=None
+        self._last_wire_succeeded=None
         self.endpoint_calls=defaultdict(int)
         self.endpoint_failures=defaultdict(int)
         self._last_by_endpoint=defaultdict(float)
@@ -359,8 +360,14 @@ class SolanaReadOnlyRPC:
             self._stop_job_budget("RPC_JOB_WIRE_BUDGET_EXHAUSTED")
 
     def assert_can_publish(self):
-        """Successful last allowed wire response is valid; failed/expired jobs are not."""
+        """No successful report after a failed final wire attempt or an expired deadline."""
         self._check_job_deadline()
+        # Covers non-retryable RPC errors swallowed upstream by legacy best-effort
+        # holder/funding handlers. Exhausting calls alone is allowed on success.
+        if (self.max_wire_attempts is not None
+                and self.calls >= self.max_wire_attempts
+                and self._last_wire_succeeded is False):
+            self._stop_job_budget("RPC_JOB_WIRE_BUDGET_EXHAUSTED")
 
     def call(self, method, params, *, ttl=0):
         if method not in self.ALLOWED:raise ValueError("READ_ONLY_METHOD_ALLOWLIST")
@@ -391,6 +398,7 @@ class SolanaReadOnlyRPC:
             try:
                 self._last_by_endpoint[endpoint]=self._monotonic()
                 self.calls+=1;self.endpoint_calls[endpoint]+=1
+                self._last_wire_succeeded=False
                 with self.open_url(req,timeout=timeout) as response:value=json.loads(response.read())
                 self._check_job_deadline()
                 if value.get("error"):
@@ -413,6 +421,7 @@ class SolanaReadOnlyRPC:
                     continue
                 if ttl and self.cache and result is not None:
                     self.cache.put(method,params,result,ttl,time.time())
+                self._last_wire_succeeded=True
                 return result
             except urllib.error.HTTPError as exc:
                 last_error=RPCError("HTTP_"+str(exc.code));self.endpoint_failures[endpoint]+=1
