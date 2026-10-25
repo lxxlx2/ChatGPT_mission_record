@@ -187,6 +187,7 @@ def rehearse_supervised_mac_entry_offline(
     # before ANY disposable test marker, not after a transport attempt.
     # The resulting object has NO live authorization or release capability.
     contract = None
+    effective_test_scope = None
     if one_shot_intent_raw is not None:
         if type(one_shot_intent_raw) is not bytes:
             raise ValueError("D1_MAC_REHEARSAL_INTENT_BYTES_REQUIRED")
@@ -200,6 +201,28 @@ def rehearse_supervised_mac_entry_offline(
                 "tracked_source_manifest_sha256"])
         if contract.to_diagnostic()["real_https_enabled"] is not False:
             raise ValueError("D1_MAC_REHEARSAL_LIVE_CONTRACT_FORBIDDEN")
+        from f0_l2_d1_real_sender_contract import _strict_d3_intent
+        # Candidate was already bound against actual preflight SHA/manifest.
+        # Restrict the same sole coordinator to BOTH that candidate's caps
+        # and pre-existing stricter offline fixture caps. Never widen them.
+        intent = _strict_d3_intent(one_shot_intent_raw)
+        blocks = min(3, intent["max_block_reads"])
+        refreshes = min(1, intent["max_head_refreshes"])
+        effective_test_scope = {
+            "max_total": min(
+                6, intent["max_total_attempts"], blocks + refreshes + 2),
+            "max_blocks": blocks,
+            "max_refreshes": refreshes,
+            "spacing_ms": intent["min_start_gap_ms"],
+            "slots": 3,
+            "head_ttl_ms": min(4000, intent["head_ttl_ms"]),
+            "window_ms": min(
+                5000, int(hard_seconds * 1000),
+                intent["max_dispatch_seconds"] * 1000),
+            "timeout_ms": min(5000, intent["request_timeout_ms"]),
+        }
+        if effective_test_scope["window_ms"] < 1000:
+            raise ValueError("D1_MAC_REHEARSAL_CANDIDATE_WINDOW_TOO_SHORT")
     # Prevent test artifacts from ever overlapping the candidate Mac
     # evidence directory inspected above, including ancestor/child aliases.
     roots = [p.resolve() for p in
@@ -225,7 +248,8 @@ def rehearse_supervised_mac_entry_offline(
     run = run_bounded_offline_once(
         test_registry, test_evidence, grant_id=test_grant_id,
         permit_sha256=checked["permit_raw_sha256"],
-        scenario=scenario, hard_seconds=hard_seconds)
+        scenario=scenario, hard_seconds=hard_seconds,
+        offline_scope=effective_test_scope)
     return {
         "schema": "f0-d1-mac-entry-bound-offline-rehearsal-v1",
         "reviewed_sha": checked["reviewed_sha"],

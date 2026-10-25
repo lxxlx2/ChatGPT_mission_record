@@ -33,6 +33,41 @@ SCHEMA = "bsc-f0-d1-hard-stop-offline-once-v1"
 _SCENARIOS = ("complete", "hang_after_reserve")
 _MAX_TEST_SECONDS = 15.0
 
+# Caps on synthetic replay. A supplied D3 candidate may only reduce these.
+_OFFLINE_SCOPE_KEYS = frozenset({
+    "max_total", "max_blocks", "max_refreshes", "spacing_ms",
+    "slots", "head_ttl_ms", "window_ms", "timeout_ms",
+})
+_DEFAULT_OFFLINE_SCOPE = {
+    "max_total": 6, "max_blocks": 3, "max_refreshes": 1,
+    "spacing_ms": 250, "slots": 3, "head_ttl_ms": 4000,
+    "window_ms": 5000, "timeout_ms": 5000,
+}
+
+
+def _validate_offline_scope(candidate):
+    """Validate before any test marker, then repeat in isolated child."""
+    if candidate is None:
+        return dict(_DEFAULT_OFFLINE_SCOPE)
+    if type(candidate) is not dict or set(candidate) != _OFFLINE_SCOPE_KEYS:
+        raise ValueError("D1_CHILD_OFFLINE_SCOPE_FIELDS_INVALID")
+    cap = _DEFAULT_OFFLINE_SCOPE
+    for name, value in candidate.items():
+        low = 0 if name == "max_refreshes" else 1
+        if (type(value) is not int or value < low or
+                (name not in ("spacing_ms",) and value > cap[name])):
+            raise ValueError("D1_CHILD_OFFLINE_SCOPE_BUDGET_INVALID:" + name)
+    if (not 2 <= candidate["max_total"] <=
+            candidate["max_blocks"] + candidate["max_refreshes"] + 2
+            or candidate["max_blocks"] < 1
+            or candidate["slots"] != 3
+            or not 250 <= candidate["spacing_ms"] <= 5000
+            or not 500 <= candidate["head_ttl_ms"] <= 4000
+            or not 1000 <= candidate["window_ms"] <= 5000
+            or not 250 <= candidate["timeout_ms"] <= 5000):
+        raise ValueError("D1_CHILD_OFFLINE_SCOPE_INCOHERENT")
+    return dict(candidate)
+
 
 def send_live(*_args, **_kwargs):
     raise ValueError("D1_HARD_STOP_LIVE_NOT_AUTHORIZED")
@@ -101,7 +136,8 @@ def _child_lifetime_watch(read_fd: int, deadline: float, evidence: Path):
 def run_bounded_offline_once(registry: Path, evidence: Path, *,
                              grant_id: str, permit_sha256: str,
                              scenario: str = "complete",
-                             hard_seconds: float = 8.0):
+                             hard_seconds: float = 8.0,
+                             offline_scope=None):
     """Exactly one disposable OFFLINE process, no network or automatic retry.
 
     This is deliberately not a production entry: no user D2/D3 approval may
@@ -122,6 +158,11 @@ def run_bounded_offline_once(registry: Path, evidence: Path, *,
             or any((out / x).exists() for x in
                    ("attempts.jsonl", "raw_responses"))):
         raise ValueError("D1_HARD_STOP_SCOPE_INVALID")
+    # Scope validation precedes durable once consumption and subprocess.
+    scope = _validate_offline_scope(offline_scope)
+    if (offline_scope is not None and
+            scope["window_ms"] > int(hard_seconds * 1000)):
+        raise ValueError("D1_CHILD_OFFLINE_SCOPE_OUTLIVES_HARD_STOP")
     # Durable, one-use TEST grant must be spent before even creating a child.
     lease = OfflineGrantRegistry(reg).consume(grant_id, permit_sha256)
     # The kernel pipe is a parent-lifetime lease, NOT a D2/D3 grant.
@@ -133,6 +174,9 @@ def run_bounded_offline_once(registry: Path, evidence: Path, *,
            "--offline-child", str(out), str(reg), grant_id,
            permit_sha256, scenario, str(read_fd),
            repr(start + hard_seconds))
+    if offline_scope is not None:
+        cmd += (json.dumps(scope, sort_keys=True,
+                           separators=(",", ":")).encode().hex(),)
     try:
         proc = subprocess.Popen(
             cmd, stdin=subprocess.DEVNULL,
@@ -178,6 +222,7 @@ def run_bounded_offline_once(registry: Path, evidence: Path, *,
         "child_exit_code": proc.returncode,
         "test_grant_id_sha256": hashlib.sha256(grant_id.encode()).hexdigest(),
         "lease": lease["status"],
+        "effective_offline_scope": scope,
         "audit": audit,
         "offline_child": parsed if completed else None,
         "live_network_requests": 0,
@@ -187,12 +232,13 @@ def run_bounded_offline_once(registry: Path, evidence: Path, *,
 
 
 def _offline_child(evidence: Path, registry: Path, grant_id: str,
-                   digest: str, scenario: str):
+                   digest: str, scenario: str, scope=None):
     """Private subprocess fixture; never a real socket/production runner."""
     from f0_l2_d1_concrete_https import PatchedConstructorOfflineSource
     from f0_l2_d1_coordinator import FakeSource, run_fake_concurrent
     if scenario not in _SCENARIOS:
         raise ValueError("D1_HARD_STOP_BAD_SCENARIO")
+    scope = _validate_offline_scope(scope)
     _private_test_dir(evidence)
     reg = _private_test_dir(registry)
     marker = reg / (hashlib.sha256(grant_id.encode()).hexdigest()
@@ -248,8 +294,14 @@ def _offline_child(evidence: Path, registry: Path, grant_id: str,
         http.client.HTTPSConnection = Connection
         socket.create_connection = forbidden
         result = run_fake_concurrent(
-            source, evidence, max_total=6, max_blocks=3, max_refreshes=1,
-            spacing_ms=250, slots=3, window_ms=5000,
+            source, evidence,
+            max_total=scope["max_total"],
+            max_blocks=scope["max_blocks"],
+            max_refreshes=scope["max_refreshes"],
+            spacing_ms=scope["spacing_ms"], slots=scope["slots"],
+            head_ttl_ms=scope["head_ttl_ms"],
+            window_ms=scope["window_ms"],
+            max_block_response_ms=scope["timeout_ms"],
             head_min_poll_age_ms=250)
     finally:
         http.client.HTTPSConnection = original_ctor
@@ -259,7 +311,7 @@ def _offline_child(evidence: Path, registry: Path, grant_id: str,
 
 def _main(argv):
     # This entry exists solely to run a supervised synthetic child.
-    if len(argv) != 9 or argv[1] != "--offline-child":
+    if len(argv) not in (9, 10) or argv[1] != "--offline-child":
         raise ValueError("D1_HARD_STOP_NO_PUBLIC_LIVE_CLI")
     evidence = Path(argv[2])
     registry = Path(argv[3])
@@ -272,11 +324,22 @@ def _main(argv):
             or deadline - time.monotonic() > _MAX_TEST_SECONDS + 1):
         raise ValueError("D1_HARD_STOP_CHILD_GUARD_INVALID")
     _private_test_dir(evidence)
+    if len(argv) == 10:
+        try:
+            scope = _validate_offline_scope(json.loads(bytes.fromhex(argv[9])))
+        except (ValueError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise ValueError("D1_CHILD_SCOPE_SERIALIZATION_INVALID") from exc
+    else:
+        scope = _validate_offline_scope(None)
+    if (len(argv) == 10 and
+            scope["window_ms"] > int((deadline - time.monotonic()) * 1000) + 500):
+        raise ValueError("D1_CHILD_SCOPE_DEADLINE_INVALID")
     guardian = threading.Thread(
         target=_child_lifetime_watch, args=(read_fd, deadline, evidence),
         daemon=True, name="d1-offline-parent-loss-watch")
     guardian.start()
-    result = _offline_child(evidence, registry, argv[4], argv[5], argv[6])
+    result = _offline_child(
+        evidence, registry, argv[4], argv[5], argv[6], scope)
     print(json.dumps(result, sort_keys=True), flush=True)
 
 
