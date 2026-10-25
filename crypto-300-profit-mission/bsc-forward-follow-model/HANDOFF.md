@@ -1,3 +1,11 @@
+# 2026-10-25 — PR199 original SHA source review REQUEST_CHANGES; explicit-null UTC pre-marker denial fixed, MAC RE-REVIEW PENDING
+
+- Frozen old PR199 SHA `6859a497de0d7d34aa122e6325dfc9245786e604` passed Linux CI 525/525 but source-level review found `post_utc: null` bypassed parent scope validation and consumed a disposable TEST marker before child crashed. [Review finding on old SHA](https://github.com/lxxlx2/ChatGPT_mission_record/pull/199#issuecomment-6395015358). This is a scoped `REQUEST_CHANGES` on old SHA, not a Mac independent review.
+- Source SHA `50b0531a3ec19c5b37cb19b235606fa63c212fb1` now rejects **present** `post_utc` unless it is an exact nested dict; absent key still permits legacy mock-only calls. Test SHA `853ddf4c7a267ad16890644f25e6fe11f6c3650b` adds explicit-null no-marker regression and a mid-global-pacing expiry test: first fake POST accepted, second after 700 ms pacing refused with zero second POST/RAW/COMMIT. Both are purely offline and use a virtual replay clock.
+- Original five-error `+00:00` versus `Z` CI run remains archived; fix `9cafafcd7a8198a9bec9bbd7e49094a82a4f823d` is preserved. Latest new code and document-only HEAD require final CI readback and detached independent Mac review. No real D2/D3 grant, source activation, production nonce, real RPC/WS, merge/deploy/background service or trades. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-25 — D1 final mocked POST UTC bound into SAME protected child; MAC REVIEW PENDING
 
 - **Approved frozen parent PR198:** SHA `ee8528fb7de98efd40de3ac5035dc29a56cf644b`, independent Mac `APPROVE_OFFLINE_CODE — D1_REJECTED_HTTP_RAW_DURABLE_FAILURE_ONLY` (F0 522 unique, D1 161, patched ctor 10, budget 4, hard-stop 5, child-lifetime 2 all PASS), [archived source report](https://github.com/lxxlx2/ChatGPT_mission_record/pull/198#issuecomment-6394745053). No production trust or network approval inherited.
