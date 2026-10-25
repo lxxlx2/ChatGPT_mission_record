@@ -148,6 +148,7 @@ class StagedPhysicalHTTPSOneCoordinatorTests(unittest.TestCase):
         self.assertEqual(report["mode"],
                          "D2_STAGED_PHYSICAL_HTTPS_PATCHED_NO_SOCKET_TEST_ONLY")
         self.assertEqual(report["network_requests"], 0)
+        self.assertIsNone(report["synthetic_source_growth_bps"])
         self.assertEqual(report["reserved"], 2)
         self.assertEqual(report["settled"], 2)
         self.assertEqual(report["max_shared_slots"], 1)
