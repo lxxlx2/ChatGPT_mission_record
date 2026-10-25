@@ -1,3 +1,11 @@
+# 2026-10-25 — PR199 independent ARM64 Mac approval archived; D2 real-source design PLAN_ONLY
+
+- **Frozen approved parent PR199:** `15ac0ed4dbb839d785546d71b3accd5b232df942`, independent external ARM64 Mac verdict `APPROVE_OFFLINE_CODE — D1_CHILD_FINAL_FAKE_POST_UTC_ONLY` (526/526 full F0 unique, D1 165/165, UTC 4/4, physical HTTPS ctor 10/10, candidate budget 4/4, hard-stop 5/5, child-lifetime 2/2, all no skips). Mac evidence reportedly at `/tmp/mission199-review.KQKJoV`, not available from GitHub. [Attribution and audit archived here](https://github.com/lxxlx2/ChatGPT_mission_record/pull/199#issuecomment-6397222150). Old SHA `6859a497...` remains scoped REQUEST_CHANGES; new SHA HEAD was verified Draft/unmerged, [Linux CI 40174074110](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40174074110) SUCCESS.
+- **Next milestone (this child PR):** `f0/F0_D2_REAL_SOURCE_ONE_COORDINATOR_DESIGN.md` freezes ordered true HTTPS-source implementation requirements and stop conditions. First implement an unconditionally closed D2-A source admission seam and negative tests; then independent D2 two-role signature trust and separate D3 human one-shot authority; only after that adapt the existing single three-slot coordinator/one OS child to physical HTTPS with the same durable RID journal, RAW failure accounting, UTC-after-spacing and no-retry hard-stop. No duplicate dispatcher, fake test-capability promotion or signer generation.
+- **No code/runtime modifications in this child:** docs and HANDOFF only; nothing authorizes a live source, production registry, real BSC request, deployment, merge, daemon or trading. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-25 — PR199 original SHA source review REQUEST_CHANGES; explicit-null UTC pre-marker denial fixed, MAC RE-REVIEW PENDING
 
 - Frozen old PR199 SHA `6859a497de0d7d34aa122e6325dfc9245786e604` passed Linux CI 525/525 but source-level review found `post_utc: null` bypassed parent scope validation and consumed a disposable TEST marker before child crashed. [Review finding on old SHA](https://github.com/lxxlx2/ChatGPT_mission_record/pull/199#issuecomment-6395015358). This is a scoped `REQUEST_CHANGES` on old SHA, not a Mac independent review.
