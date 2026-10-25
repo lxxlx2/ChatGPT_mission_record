@@ -20,3 +20,12 @@ New `tests/test_f0_l2_d1_candidate_post_utc_child.py` covers: a good bound D3 ca
 Review changed modules `f0_l2_d1_post_utc.py`, `f0_l2_d1_hard_stop_once.py`, `f0_l2_d1_protected_mac_entry.py`, new tests and docs at exact SHA. Run full F0, D1 filtered, three new tests separately and prior 10 physical ctor, four budget, hard-stop five/child-lifetime two. On independent Mac detached checkout re-run a real OS child with a historical synthetic candidate and verify the journal, outgoing mock start list, terminal state and marker. Confirm original real `http.client.HTTPSConnection` and socket network remain **forbidden**, fixed production registry never touched, no extra coordinator or background task. UTC here uses a **virtual replay clock**, not a validated live clock or actual HTTPS dispatch.
 
 **Only possible new verdict:** `APPROVE_OFFLINE_CODE — D1_CHILD_FINAL_FAKE_POST_UTC_ONLY` or `REQUEST_CHANGES`. No D2 signed user+reviewer authority, distinct signed D3 human one-shot, real sender release or live provider tests have occurred. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+
+## Actual first CI failure, narrow correction and raw evidence
+
+The first child SHA `0fbb1b382de0d317f783b462a2e142f06a9f5bfc` [GitHub CI 40172389195](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40172389195) **FAILED**: `Ran 525 tests`, **5 ERROR**, all rooted in `ValueError: D1_UTC_REQUIRED`. The native Mac preflight's `checked_at_utc` diagnostic uses `datetime.isoformat()` with `+00:00`, while the reviewed scope helper `parse_utc_timestamp` intentionally only accepts trailing `Z`. No safety gate failed open, and the failed original CI evidence must not be replaced or deleted.
+
+At source fix SHA `9cafafcd7a8198a9bec9bbd7e49094a82a4f823d`, only `f0_l2_d1_protected_mac_entry.py` is changed: parse the already checked native ISO instant and strictly require UTC offset, then normalize `+00:00` to `Z` before the child scope. The original strict parser and unique coordinator are unchanged.
+
+[GitHub CI 40172532590](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40172532590), job `121106218864`, **completed SUCCESS**, decoded original log: `Ran 525 tests in 78.276s / OK`. Three new candidate-final-POST tests all explicitly PASS. This is Linux only; a later document-only HEAD and independent Mac approval still require their own verification. No real network was involved.
