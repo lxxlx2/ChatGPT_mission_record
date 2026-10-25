@@ -250,6 +250,13 @@ class GlobalStartGate:
             request_physical_source_admission(source)
         from f0_l2_d1_concrete_https import (SealedConcreteOfflineSource,
                                                      PatchedConstructorOfflineSource)
+        # This lower-level shared lock formerly accepted arbitrary duck-typed
+        # objects via its fallback .reply(). Keep even direct invocations
+        # restricted to the four reviewed, EXACT memory-only source types.
+        need(type(source) in (FakeSource, SealedMemoryHTTPSSource,
+                              SealedConcreteOfflineSource,
+                              PatchedConstructorOfflineSource),
+             "D2A_GATE_NON_FAKE_SOURCE_REFUSED")
         if type(source) in (SealedMemoryHTTPSSource, SealedConcreteOfflineSource,
                             PatchedConstructorOfflineSource):
             # Prepare the fake TLS connection before acquiring the global
