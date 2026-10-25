@@ -455,3 +455,13 @@ Artifact **`12599195855`** 中`real69-d2-time-receipt-coverage.json`是实际69�
 - 目前只写入Git文件和验证门禁，**没有创建自动化、没有运行新11月源采集**。如果用户不在首窗T0主动授权一次前台只读采样，记录`T0_MISSING/G0_POPULATION_UNKNOWN`，绝不假设后台已经捕获，也不能以历史下载补报全市场即时状态。合并/部署/Gmail/交易、生产和Frank全部禁止。
 
 固定状态：`G0 PARTIAL / G1 NOT_SCORABLE / G2 UNKNOWN / G3 EXPOSED_NOT_PASSED(已曝光十月) / G4 UNKNOWN / G5 D1_V2_AND_D2_MICROSECOND_PATCH_SCOPED_APPROVED_ONLY / G6 NO_GO`。
+
+## 39. 2026-10-26：Monster首个11月OOS已完成T0及15日官方分钟来源离线准入代码
+
+本轮响应用户“继续干活”的明确主线开发指令，**不等新数据也不反复修旧已批准P1/P2**，实际在原Draft PR #30完成Spot ADR-005独立研究三窗口（UTC 11/02、11/16、12/01）的可执行来源接入前置两部分：
+1. `local-agent/scripts/monster_v4_adr005_forward_spot_t0_gate.py`，复用Stage163真实Binance Spot六个HTTP原始body ZIP、内外manifest/receipt/逐端点SHA、源时钟，严格整数微秒限定窗口前15分钟至T0的完整原响应，旧10/17真实T0必须拒绝作为11月T0；返回旧来源缺失/尚未开始/已经错过T0状态，不制造新历史市场分母。
+2. `local-agent/scripts/monster_v4_adr005_forward_spot_daily_gate.py`，复用Stage166官方发行方每日1m ZIP+CHECKSUM 1440根微秒栅格/合法行情核验，按新T0已承认的USDT交易币名单准备**每币15个UTC日来源attempt**，分别是前24h 1日、D0+D1信号7日、未来2×标签7日，坏checksum/未闭日/缺档严格区分。不能用事后取源伪造当时可见时间，不能把缺失降为零信号或盈利。
+- **固定代码/测试审核SHA** `48bf87fd0721071d8347f7f47df71253f2a835fc`，包含两个新脚本、2组共24项专项测试、两份仅针对自己workflow文件push触发的单次CI入口，**无schedule**。GitHub真实第一次T0专项 [#40215340393](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40215340393) 12/12 PASS；每日源首次集成 [#40215653388](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40215653388) 发现一个测试断言`KeyError`已修复；最终完整 [#40215810493](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40215810493) **SUCCESS 14+10 = 24/24 PASS**。实际纯离线资料Artifact`12607271877`六份JSON已独立核对：三窗T0均处在尚未临近可采集时段，3×15个未来日均无官方完成源，**没有虚构已采集**。
+- 与先前真实Codex独立批准的`d743acb...` D1 V2以及`c4a8f1...` D2微秒源的Git Blob逐个比较**完全未改动**。详细固定SHA、原始来源证明限制、脚本入口、真实运行证据和审查需求见 [新源码实测交接文档](../reviews/MONSTER_ADR005_NOVEMBER_SPOT_T0_AND_15DAY_SOURCE_GATE_REAL_CI_20261026.md)。
+
+**下一研发真正目标**仍是三个未曝光窗口当时客观来源取得→完整有效原同源D0/D1及GT2×标签→G1/G2/G3按冻结规则评分；目前不能宣称已经取得新来源/市场前瞻样本，也无后台用户授权，**G5新T0+daily代码需独立只读复核、G6 NO_GO**。Spot与USD-M两套既有预注册窗口不混用，BSC/Frank不动。无GitHub cron、macOS运行、交易所新查询、Monster真实邮件或交易。
