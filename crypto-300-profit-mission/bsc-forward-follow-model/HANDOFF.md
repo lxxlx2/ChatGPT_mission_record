@@ -1,3 +1,10 @@
+# 2026-10-26 — PR211 first CI revealed staged-source report attribute mismatch, repaired same PR
+
+- Initial PR211 GitHub CI [40239652434](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40239652434) ran **566 tests with 2 ERROR**: common report read `source.growth_bps`, but distinct physical-source slot must not pretend to be FakeSource. The source-side correction `10847a3a6f7e3f5028289e85daa4a6ddbef9b655` writes null only for staged `synthetic_source_growth_bps` while preserving all existing fake report values; focused regression `705346ce37b47be9bf5e8636c1c5f83c0bf4eb9f` asserts null. Keep failure provenance; do not claim first SHA PASS.
+- Review note added to `f0/F0_D2_SINGLE_COORDINATOR_PHYSICAL_SLOT_REVIEW.md`. Exact final HEAD Linux CI, source proof and independent ARM64 Mac review still needed. Production `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-26 — Issue #207: distinct physical HTTPS source slot in ONE original 3-slot coordinator, offline only
 
 - **Last approved baseline** PR209 exact `a23e58f7a5c28095befec2165c3af611b863e5d0`. External independent ARM64 Mac `APPROVE_OFFLINE_CODE — D2_PHYSICAL_HTTPS_RESPONSE_BOUNDARIES_PATCHED_ONLY` [attributed GitHub archive](https://github.com/lxxlx2/ChatGPT_mission_record/pull/209#issuecomment-6404067631): full F0 559/559; D1 new count 171 (not old 165), physical ctor 16, D2-A 10, D2-B 10, D2-C 7, UTC 4, budgets 4, hard-stop 5 and child 2, 0 skips.
