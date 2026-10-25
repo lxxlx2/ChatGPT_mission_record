@@ -8,6 +8,7 @@ This file performs no download, network access, trading, scheduling, or mailing.
 import argparse
 from collections import Counter
 from datetime import datetime, timezone
+import hashlib
 import json
 from pathlib import Path
 
@@ -26,6 +27,7 @@ TICK_MS = 180_000
 FIVE_MS = 300_000
 EXPECTED_REQUIRED_SOURCE_DAYS = 57
 SCHEMA = "MONSTER_ADR005_REAL53_ORIGINAL_SQLITE_OFFLINE_REPLAY_V1"
+PINNED_EXPLORATORY_REFERENCE_GIT_BLOB = "4bb360a376223da1ba594c320f31ceccc335202a"
 
 
 def required_source_days(identity_rows):
@@ -45,6 +47,22 @@ def required_source_days(identity_rows):
                     day = datetime.fromtimestamp(day_ms / 1000, timezone.utc).date().isoformat()
                     result.add((sym, day))
     return tuple(sorted(result))
+
+
+def load_pinned_exploration(path):
+    """Exact immutable repo Git blob; exploratory rows cannot self-certify."""
+    source = Path(path)
+    if not source.is_file() or source.is_symlink():
+        raise ValueError("PINNED_EXPLORATORY_REFERENCE_FILE_REQUIRED")
+    raw = source.read_bytes()
+    # Git blob SHA-1 hashes the header as well as raw file bytes.
+    header = b"blob " + str(len(raw)).encode("ascii") + b"\0"
+    if hashlib.sha1(header + raw).hexdigest() != PINNED_EXPLORATORY_REFERENCE_GIT_BLOB:
+        raise ValueError("EXPLORATORY_REFERENCE_GIT_BLOB_DRIFT")
+    try:
+        return json.loads(raw)
+    except (ValueError, UnicodeError) as exc:
+        raise ValueError("EXPLORATORY_REFERENCE_JSON_INVALID") from exc
 
 
 def compare_exposed_exploration(ledger, exploration):
@@ -97,6 +115,7 @@ def replay(*, original_paired_json, publisher_dir, ledger_path, comparison_path,
     if asof_utc.astimezone(timezone.utc) < datetime(
             2026, 10, 25, tzinfo=timezone.utc):
         raise ValueError("PUBLISHER_DAY_2026_10_24_NOT_YET_CLOSED")
+    reference = load_pinned_exploration(comparison_path)
     verified = load_pinned_original_watch_tape(original_paired_json)
     required = required_source_days(verified["watch_identity_rows"])
     if len(required) != EXPECTED_REQUIRED_SOURCE_DAYS:
@@ -109,8 +128,6 @@ def replay(*, original_paired_json, publisher_dir, ledger_path, comparison_path,
     if missing:
         raise ValueError("REQUIRED_57_PUBLISHER_DAY_SOURCE_NOT_VERIFIED: " +
                          json.dumps(missing, separators=(",", ":")))
-    if not Path(comparison_path).is_file() or Path(comparison_path).is_symlink():
-        raise ValueError("PINNED_EXPLORATORY_REFERENCE_FILE_REQUIRED")
     if Path(ledger_path).exists() or Path(ledger_path).is_symlink():
         raise ValueError("REPLAY_LEDGER_REFUSE_EXISTING_OUTPUT")
     if Path(comparison_path).resolve() == Path(ledger_path).resolve():
@@ -139,7 +156,6 @@ def replay(*, original_paired_json, publisher_dir, ledger_path, comparison_path,
     for r in result["rows"]:
         if r["status"] == "RESEARCH_SETUP" and r["research_observed_ms"] is None:
             raise RuntimeError("SETUP_WITHOUT_PERSISTED_RESEARCH_EVENT")
-    reference = json.loads(Path(comparison_path).read_bytes())
     comparison = compare_exposed_exploration(result, reference)
     return {
         "schema": SCHEMA,
