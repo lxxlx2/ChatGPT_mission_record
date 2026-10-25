@@ -32,7 +32,7 @@ class ForwardSourceVerifiedTapeTests(unittest.TestCase):
     def day_file(self,symbol,day,*,changed=False):
         zip_path,checksum=publisher.daily_paths(self.root,symbol,day)
         zip_path.parent.mkdir(parents=True,exist_ok=True)
-        begin=int(datetime.combine(day,datetime.min.time,timezone.utc).timestamp())*1_000_000
+        begin=int(datetime.combine(day,datetime.min.time(),timezone.utc).timestamp())*1_000_000
         initial=Decimal(100) if symbol=="AAAUSDT" else Decimal(200)
         lines=[]
         for j in range(1440):
