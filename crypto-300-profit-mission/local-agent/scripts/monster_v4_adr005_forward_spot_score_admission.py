@@ -15,7 +15,8 @@ from pathlib import Path
 import monster_v4_adr005_forward_spot_t0_gate as t0
 import monster_v4_adr005_forward_spot_daily_gate as daily
 
-SCHEMA="MONSTER_ADR005_SPOT_NOV_FORWARD_D0_D1_G1_G2_G3_SCORE_ADMISSION_V1"
+SCHEMA="MONSTER_ADR005_SPOT_NOV_FORWARD_D0_D1_G1_G2_G3_SCORE_ADMISSION_V2"
+BENCHMARK_SYMBOL="BTCUSDT"
 BASELINE="BASELINE_24H"
 OBSERVATION="D0_D1_OBSERVATION_7D"
 FUTURE="FUTURE_2X_LABEL_7D"
@@ -96,6 +97,13 @@ def join_census(census):
     grouping={s:{seg:Counter() for seg in daily.SEGMENTS} for s in symbols}
     for item in rows:
         grouping[item["symbol"]][item["segment"]][item["source_status"]]+=1
+    # RBTC15 requires the benchmark's first 24h/7d observations independent
+    # of the candidate's own bars. BTC is never itself a Monster target.
+    btc_in_census=BENCHMARK_SYMBOL in symbols
+    btc_counts=grouping[BENCHMARK_SYMBOL] if btc_in_census else None
+    btc_baseline=bool(btc_counts and btc_counts[BASELINE][COMPLETE]==1)
+    btc_observation=bool(btc_counts and btc_counts[OBSERVATION][COMPLETE]==7)
+    btc_ready=btc_baseline and btc_observation
     out=[]
     stage_counts=Counter()
     for symbol in sorted(symbols):
@@ -103,24 +111,53 @@ def join_census(census):
         baseline=counts[BASELINE][COMPLETE]==1
         observation=counts[OBSERVATION][COMPLETE]==7
         labels=counts[FUTURE][COMPLETE]==7
-        can_replay=baseline and observation
-        complete=can_replay and labels
+        is_target=symbol!=BENCHMARK_SYMBOL
+        d0_ready=is_target and baseline and observation
+        research_d1_ready=d0_ready and btc_ready
+        d0_gt_ready=d0_ready and labels
+        d1_gt_ready=research_d1_ready and labels
         blockers=[]
         if not baseline: blockers.append("BASELINE_24H_MISSING_OR_INVALID")
         if not observation: blockers.append("OBSERVATION_7D_MISSING_OR_INVALID")
         if not labels: blockers.append("FUTURE_2X_LABEL_7D_MISSING_OR_INVALID")
-        if complete: stage="SOURCE_COMPLETE_OFFLINE_REPLAY_ONLY"
-        elif can_replay: stage="D0_D1_SOURCE_READY_GT_LABELS_BLOCKED"
-        else: stage="D0_D1_SOURCE_BLOCKED"
+        if is_target and d0_ready:
+            if not btc_in_census:
+                blockers.append("BTC_BENCHMARK_NOT_IN_T0_SOURCE_CENSUS")
+            else:
+                if not btc_baseline:
+                    blockers.append("BTC_BASELINE_24H_MISSING_OR_INVALID")
+                if not btc_observation:
+                    blockers.append("BTC_OBSERVATION_7D_MISSING_OR_INVALID")
+        if not is_target:
+            # BTC remains in the complete source population and can supply
+            # benchmark data; it never becomes a Monster research D1 candidate.
+            stage=("BTC_BENCHMARK_SOURCE_COMPLETE" if baseline and observation and labels
+                   else "BTC_BENCHMARK_SOURCE_INCOMPLETE")
+        elif not d0_ready:
+            stage="D0_D1_SOURCE_BLOCKED"
+        elif not research_d1_ready:
+            stage="D0_SOURCE_READY_RBTC_D1_BLOCKED"
+        elif not labels:
+            stage="D0_D1_SOURCE_READY_GT_LABELS_BLOCKED"
+        else:
+            stage="SOURCE_COMPLETE_OFFLINE_REPLAY_ONLY"
         stage_counts[stage]+=1
         out.append({
             "symbol":symbol,
+            "research_d1_target":is_target,
             "t0_listing_and_crypto_identity_independently_proven":False,
             "baseline_24h_source_verified":baseline,
             "original_d0_d1_7d_source_verified":observation,
             "future_gt2x_7d_source_verified":labels,
-            "technically_eligible_for_offline_d0_d1_source_replay":can_replay,
-            "technically_eligible_for_retrospective_gt_labels":complete,
+            "btc_benchmark_in_t0_source_census":btc_in_census,
+            "btc_benchmark_baseline_24h_source_verified":btc_baseline,
+            "btc_benchmark_observation_7d_source_verified":btc_observation,
+            "btc_benchmark_research_d1_source_ready":btc_ready,
+            "technically_eligible_for_offline_original_d0_source_replay":d0_ready,
+            "technically_eligible_for_offline_rbtc_d1_source_replay":research_d1_ready,
+            "technically_eligible_for_offline_d0_d1_source_replay":research_d1_ready,
+            "technically_eligible_for_original_d0_gt2x_label_sources":d0_gt_ready,
+            "technically_eligible_for_retrospective_gt_labels":d1_gt_ready,
             "status":stage,
             "source_blockers":blockers,
             "original_d0_watch_event_id":None,
@@ -145,16 +182,26 @@ def join_census(census):
         "source_from_admitted_t0_archive_sha256":census.get("t0_archive_sha256"),
         "original_market_census_venue":"BINANCE_SPOT",
         "original_t0_symbols_total":len(out),
+        "btc_benchmark_symbol":BENCHMARK_SYMBOL,
+        "btc_benchmark_in_t0_source_census":btc_in_census,
+        "btc_benchmark_baseline_24h_source_verified":btc_baseline,
+        "btc_benchmark_observation_7d_source_verified":btc_observation,
+        "btc_benchmark_research_d1_source_ready":btc_ready,
         "frozen_source_days_per_symbol":len(calendar),
         "source_stage_status_counts":dict(sorted(stage_counts.items())),
         "actual_market_source_is_exchange_signed":False,
         "t0_issuer_identity_and_dynamic_listing_complete":False,
+        "technical_original_d0_source_complete_symbols":
+            sum(r["technically_eligible_for_offline_original_d0_source_replay"] for r in out),
+        "technical_rbtc_d1_source_complete_symbols":
+            sum(r["technically_eligible_for_offline_rbtc_d1_source_replay"] for r in out),
         "technical_offline_replay_source_complete_symbols":
             sum(r["technically_eligible_for_offline_d0_d1_source_replay"] for r in out),
+        "technical_original_d0_gt_label_source_complete_symbols":
+            sum(r["technically_eligible_for_original_d0_gt2x_label_sources"] for r in out),
         "technical_future_label_source_complete_symbols":
             sum(r["technically_eligible_for_retrospective_gt_labels"] for r in out),
-        "all_source_15days_complete":all(
-            r["technically_eligible_for_retrospective_gt_labels"] for r in out),
+        "all_source_15days_complete":census["verified_complete_all_15days"],
         "preregistered_research_D1_model":RESEARCH_MODEL,
         "G1_min_independent_gt2x":MIN_INDEPENDENT_GT2X,
         "G1_min_windows":MIN_WINDOWS_FOR_G1,
@@ -193,7 +240,13 @@ def run(start,asof,source_zip=None,receipts=None,official_dir=None):
             "source_status":window["source_ready_state"],
             "publisher_day_states":calendar["calendar"],
             "original_t0_symbols_total":None,
+            "btc_benchmark_symbol":BENCHMARK_SYMBOL,
+            "btc_benchmark_in_t0_source_census":None,
+            "btc_benchmark_research_d1_source_ready":None,
+            "technical_original_d0_source_complete_symbols":None,
+            "technical_rbtc_d1_source_complete_symbols":None,
             "technical_offline_replay_source_complete_symbols":None,
+            "technical_original_d0_gt_label_source_complete_symbols":None,
             "technical_future_label_source_complete_symbols":None,
             "replay_engine_executed":False,
             "metrics_from_future_labels_computed":False,
