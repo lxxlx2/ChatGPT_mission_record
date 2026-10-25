@@ -1,3 +1,11 @@
+# 2026-10-25 — D2-A real-source admission remains CLOSED in existing F0 coordinator, independent review PENDING
+
+- **Parent:** PR201 PLAN_ONLY SHA `b3e8fb1e6f6811b7599d86cb26c4d81a0c5bde12`, full Linux F0 526/526 PASS, stacked on approved PR199 exact SHA `15ac0ed4dbb839d785546d71b3accd5b232df942` ([attributed independent Mac audit](https://github.com/lxxlx2/ChatGPT_mission_record/pull/199#issuecomment-6397222150)). No live D2/D3 authority inherited.
+- **Code:** new `f0/f0_l2_d2a_physical_admission.py` holds immutable, **non-executable** fixed-endpoint/code/manifest/D2-D3 digests; any matching candidate remains untrusted. In the existing `f0_l2_d1_coordinator.py`, exact proposed physical source is rejected unconditionally BEFORE any journal, TLS or dispatch. Its low-level `GlobalStartGate.run` additionally rejects duck-typed, subclassed or instance-overridden fake sources; the **same one** reviewed shared pacing lock, RID owner, three slots, original RAW and UNKNOWN are otherwise unchanged. New eight-test negative suite; see `f0/F0_D2A_CLOSED_PHYSICAL_SOURCE_ADMISSION_REVIEW.md`.
+- **No actual physical sender implemented or enabled.** No production trust root enrollment, D3 independent signature, real HTTPS source, production marker/nonce, private historical journal, RPC/WS, merge, deployment, background monitor or trade. GitHub CI and independently attributable source/Mac review required for new exact SHA. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-25 — PR199 independent ARM64 Mac approval archived; D2 real-source design PLAN_ONLY
 
 - **Frozen approved parent PR199:** `15ac0ed4dbb839d785546d71b3accd5b232df942`, independent external ARM64 Mac verdict `APPROVE_OFFLINE_CODE — D1_CHILD_FINAL_FAKE_POST_UTC_ONLY` (526/526 full F0 unique, D1 165/165, UTC 4/4, physical HTTPS ctor 10/10, candidate budget 4/4, hard-stop 5/5, child-lifetime 2/2, all no skips). Mac evidence reportedly at `/tmp/mission199-review.KQKJoV`, not available from GitHub. [Attribution and audit archived here](https://github.com/lxxlx2/ChatGPT_mission_record/pull/199#issuecomment-6397222150). Old SHA `6859a497...` remains scoped REQUEST_CHANGES; new SHA HEAD was verified Draft/unmerged, [Linux CI 40174074110](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40174074110) SUCCESS.
