@@ -6,6 +6,53 @@ State: `USER_INTENDS_TO_PARTICIPATE / WAIT_FOR_FINAL_AUCTION_TERMS / NO_FUNDS_CO
 Decision classification: `WATCH` (not SETUP or ACTIVE).
 Execution: `NO_GO`; the user has expressed interest only, with no authorization for funding, wallet signature, live trading, scheduling or monitoring.
 
+## 2026-10-27 direct Base RPC historical UMIA auction fills and spot-pool backtest + SLOP CA check
+
+**Research objective:** User asks if SLOP token is already silently deployed in Umia UI/source code, and wants prior Umia self-launch **historical actual participant costs, opening price, maximum, and time-to-peak with onchain evidence**. No asset operations requested.
+
+### A. $SLOP canonical token contract identity
+
+- First-party https://app.umia.finance/p/slop-cash **literally says** `Contract address: (added at deploy)` and `Existing token: no`; as of this dated check https://app.umia.finance/p/slop-cash/auction shows `Upcoming`, $0 commitments. **Canonical Robinhood mainnet SLOP ERC20 CA, specific CCA instance and v4 poolId = UNVERIFIED / NOT PRESENT IN FIRST-PARTY DOCUMENTATION**. Does not prove no confidential/precomputed deployment exists.
+- Direct latest public `SlopDotCash/slopdotcash` GitHub default branch code search for `0x`, `SLOP token` and review of public EVM contracts finds payment escrow/fee workers, Robinhood **testnet** integration and `contracts/evm/integration/MockReferralToken.sol` (explicit mock); no project-first-party-identified **official** token deployment address. Umia protocol repo search `Slop` returned no identity mapping. Do not mistake Slop's **Ethereum Cyber Corp** `0x6d2e…15e2` legal entity address, Robinhood canonical **USDG** `0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168`, auction factories, or a fake SLOP for actual SLOP CA. A stray address in a bundle alone is insufficient to authorize spending.
+- Current CAs may be added before opening on **2026-11-05 17:00 UTC** gated stage; verify via issuer address and direct `eth_getCode`, `name/symbol/totalSupply` and original deploy tx. Until then state remains `SLOP_CA_UNCONFIRMED`.
+
+### B. UMIA predecessor: auction onchain verified at Base CCA
+
+Primary source https://umia.finance/docs/contract-addresses/base (Umia venture and official pool), plus original sale https://app.umia.finance/p/umia/auction and https://umia.finance/blog/umia-auction-recap .
+- Base (8453) `UMIA ERC20 = 0x56ab53b77F07DA3af732150E8aeC4783eB5BbA7D` (18 decimals), USDC `0x833589fcd6edb6e08f4c7c32d4f71b54bda02913` (6 decimals). Original CCA `0x2DDaFa49cdd62864ab2E2aad66CC294CC7ef4A9b`.
+- **Direct historical CCA eth_call latest**: `startBlock()=50485328`, `endBlock()=50780530`, `claimBlock()=50780560`, `totalSupply()=17,299,999.308 UMIA`, `remainingSupply()=0`, `totalCleared()=17,299,999.308`, `currencyRaised()=6,112,005.046962 USDC`, `nextBidId()=751`, `isGraduated()=true`, `clearingPrice()=0.36 USDC/UMIA`. `nextBidId=751` is **751 bid IDs not necessarily unique individuals**.
+- Direct implied *aggregate VWAP* `6,112,005.046962 / 17,299,999.308 = $0.353295104/UMIA`, ~1.862% below the final $0.36 clearing quote. **Final clearing price not the exact weighted cost basis of every participant**.
+- Archived `bids(uint256)` and real `BidExited` logs event topic `0x054fe6469466a0b4d2a6ae4b100e5f9c494c958f04b4000f44d470088dd97930` reveal tokens, refunds and effective costs. Examples:
+  | Bid ID | Phase based on start block | Gross budget | Received UMIA | USDC spent | Effective USDC/UMIA | Exit tx |
+  | #0 | first gated phase | 5,000 | 14,296.9660 | 4,999.01708 | **0.3496557992** | `0x54185b85fa72a4b7ff7871eb0c5c0c5d51467b3013a856287a63057ae5516ad8` |
+  | #100 | first gated phase | 100,000 | 285,939.3204 | 99,980.341586 | **0.3496557991** | `0xb88523e1866b76abf464055317c09df134eec8b186362357fb8f04098c6b33c9` |
+  | #200 | public phase | 5,000 | 13,887.2425 | 4,998.965300 | **0.3599681726** | `0x6a74c6699e37fc80cabc662e288915b2e7f3d48eb56b0b2a037b13bf1b9bda98` |
+  | #350 | public phase | 5,000 | 13,886.9206 | 4,998.965239 | **0.3599765112** | `0xec2a57b4b38f269111374ce73c4a0257a275518f04bc2e736065228b3e48f06c` |
+  | #500 | public phase | 5,000 | 13,886.3879 | 4,998.965079 | **0.3599903087** | `0xcc5e93cd2962fee5214961139c5c9e6c44e934b388fb664644979b9d1fe28cac` |
+  | #650 | public phase | 5,000 | 13,886.0722 | 4,998.964894 | **0.3599984795** | `0x80e66fa2c55cc5a1bfbf5d087f391dfdfe31355a05b62d366ab2d404aec83a3d` |
+  | #748 | public phase | 1,999.8 | 5,553.84985 | 1,999.385948 | **0.3600000001** | `0xa5827fc59eb8ee96f7cd7fa1f2b0beafca50576853b54845da8ef6b20bb46751` |
+  | #749/#750 | public late | 5,000 each | 13,886.013236 each | 4,998.964766 each | **0.3600000001** | respective verified chain events |
+  Early sample cost ~$0.34966, not a universal "$0.12 early presale price"; late public sample ~$0.36. **Sample selected by bid ID, not representative sample of all bids.** No user-specific UMIA holding claimed.
+
+### C. Actual Base onchain spot opening and subsequent price
+
+- Official **Uniswap v4 poolId** `0xbc6683f3fed27bbfdfb6d9f342a29c5f2c2f02de9f9d65fb35d77d4f43a7b51e`, `PoolManager=0x498581ff718922c3f8e6a244956af099b2652b2b`; `StateView=0xA3c0c9b65baD0b08107Aa264b0f3dB444b867A71`; sourced from https://umia.finance/docs/contract-addresses/base .
+- CCA `endBlock=50,780,530` corresponds ~2026-09-02 **12:00:07 UTC**. Direct `getSlot0(poolId)` is zero/uninitialized at Base block **50,780,829** and initialized at **50,780,830**, ~**12:10:07 UTC** (10-min interval after CCA closes). First pool Initialize event topic `0xdd466e674ea557f56295e2d0218a125ea4b4f0f6f3307b95f85e6110838d6438` from mainnet transaction `0x626782219eca0cd8119726c0a2030bdcfb7de06fc42cb4316a22315a6c737e67` confirms **initial pool price $0.36/UMIA** (sqrtPriceX96 converted accounting for 18/6 decimals) **onchain**, independent of marketing claims.
+- Same block's closing state already ~$0.58224 due to intra-block swaps. 2026-09-02 at UTC **12:12 ~$0.54581**, **12:15 ~$0.72616** (more than 2x $0.36 launch within ~5 mins), **12:30 ~$0.65117**, **13:00 ~$0.78828** (2.19x), **14:00 ~$0.60694**, **18:00 ~$0.70375**, Sep03 **00:00 ~$0.62778**. These are **sparse timestamp point samples of actual archived onchain pool state**, not OHLC intraperiod H/L nor guaranteed execution prices. Onchain settlement can occur before v4 pool init; claiming liquidity opportunity may still require user transaction and timing.
+- External historical **CoinMarketCap** https://coinmarketcap.com/currencies/umia/ lists market aggregate all-time high **$0.9044 on 2026-10-08**, ~**2.512×** $0.36 final clearing, reached about **36 days after 2026-09-02 launch**. **NOT DIRECTLY CHAIN-VERIFIED AS THE ABSOLUTE PEAK OF THE OFFICIAL V4 POOL.** Date is cross-supported by other third-party price sources.
+- Direct archived Oct08 pool `getSlot0`: **00:00 UTC ~$0.77788**, **08:00 ~$0.80820**, **11:30 ~$0.88859**, **11:35 ~$0.89043**, **12:00 ~$0.88310**, **14:00 ~$0.87430**, **18:00 ~$0.79943**. Highest observed sampled onchain ~**$0.89043**, and precise intra-swap highest/lowest cannot be proven from sampling alone. Third-party OHLC peak $0.9044 could refer to short-lived or another venue, do not mislabel as verified from onchain.
+- Opportunity costs hypothetical: a $1,000 *real filled cost* at early sample $0.3496558 → at reference $0.9044 would mark at ~$2,586.54 (**+158.65%**); late public $0.36 → ~$2,512.22 (**+151.22%**), before fees and sell slippage. Marking assumes token transferable and liquidity for that size, does not prove real sell profit. Early advantage ~$0.01034/token, only ~2.87% lower than $0.36 final.
+- **Practical SLOP lesson**: winning first ICO $UMIA did not make first-day sale final price available to all: visible public fill in ~7 minutes, sampled public actual $0.36, not an automatic $0.12; verify Slop early eligibility and public clearing price at Nov08 opening, preserve personal FDV cap rather than chase the sale ceiling. Lower SLOP LP quote-side reserves and weaker revenue vs UMIA means no comparable ROI assumed.
+
+### Evidence limits and operational rules
+
+- Direct Base mainnet RPC via Alchemy eth_call archive and exact small-range eth_getLogs, user funds untouched.
+- Blockscout PRO API returned **HTTP 402 credits exhausted**; we DID NOT use its output as successful verification. Web source CMC is secondary for exact ATH; docs/source official for deployment addresses.
+- Do not infer all 751 bidders have same cost; no exhaustive 751-bid PnL scan, no actual personal wallet attribution. Full max price high-water mark requires exhaustive v4 Swap log indexing, not supported by per-request **10 block eth_getLogs** limit; preserve this limitation.
+- User remains `SLOP_1000_USDG_INTENT_ONLY / NO_SLOP_CA_AUTH / NO_BID / NO_AUTOMATION`. Research record only; do not change positions, trading gates or existing monitoring tasks.
+
+---
+
 ## 2026-10-27 price discipline for the Nov8 public round (conditional research model)
 
 **User goal**: capital budget **1000 USDG**, public auction from **2026-11-08 00:00 Asia/Bangkok** (November 7 17:00 UTC). Do not mistake intended budget for a bid or actual investment. **No account action performed.** This is a pre-auction *conditional price plan*, subject to actually observable clearing and bidder eligibility at open.
