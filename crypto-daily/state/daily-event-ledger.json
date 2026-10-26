@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-10-25",
-  "status": "OCT25_FULL_REPORT_DELIVERED_AND_ARCHIVED_PARTIAL_SOURCE_GAPS",
-  "note": "2026-10-25 13-section Gmail Sent 1a170e1f82549e41 readback verified, Git canonical identical; CI SHA-bound editorial PASS; onchain real-time verification and TGE/NFT source gaps remain PARTIAL. Newly discovered unverified Lookonchain whale and Hayes claims excluded with reasons in pending.",
+  "updated_at": "2026-10-26",
+  "status": "OCT26_FULL_REPORT_DELIVERED_AND_ARCHIVED_PARTIAL_SOURCE_GAPS",
+  "note": "2026-10-26 13-section Gmail Sent 1a176097e267ed98 full text/plain readback and exact canonical Git readback PASS; SHA-bound CI editorial QA PASS for manifest 0aeb69d2cf8c2069e8642717b6afed7a0b2985f5. StandX/Ducat original X 403 and whale original TXID unavailable, explicitly PARTIAL; no old incident replay.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -516,6 +516,116 @@
       "delivered_date": "2026-10-25",
       "gmail_message_id": "1a170e1f82549e41",
       "source_url": "https://farside.co.uk/sol/",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "blast:ui-withdrawal-cutoff:2026-10-26",
+      "family_key": "blast:ui-withdrawal-cutoff",
+      "material_version": "2026-10-26-official-live-bridge-ui",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://blast.io/en/bridge",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "binance:predict-perp:2026-10-25",
+      "family_key": "binance:predict-perp:2026-10-25",
+      "material_version": "binance-predict-2026-10-25-0815UTC",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/5ef55cf8358e4a48b2512a156e89c8e5",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "onchain:wld-aave:2026-10-26",
+      "family_key": "onchain:wld-aave",
+      "material_version": "lookonchain-78592",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://lookonchain.com/feeds/78592",
+      "verification": "secondary_unverified"
+    },
+    {
+      "event_key": "onchain:hayes-usdc:2026-10-26",
+      "family_key": "onchain:hayes-usdc",
+      "material_version": "lookonchain-78582",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://lookonchain.com/feeds/78582",
+      "verification": "secondary_unverified"
+    },
+    {
+      "event_key": "ethereum:hoodi-postponed:2026-10-22",
+      "family_key": "ethereum:hoodi-postponed:2026-10-22",
+      "material_version": "ethereum-official-hoodi-delay-2026-10-22",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://blog.ethereum.org/en/2026/10/22/glamsterdam-hoodi-delay",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "hyperliquid:eqx-equities:2026-10-26",
+      "family_key": "hyperliquid:eqx-equities",
+      "material_version": "lookonchain-78573",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://lookonchain.com/feeds/78573",
+      "verification": "secondary_unverified"
+    },
+    {
+      "event_key": "standx:dusd-checker:2026-10-26",
+      "family_key": "standx:dusd-checker",
+      "material_version": "standx-2026-10-26-checker-secondary",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://lookonchain.com/feeds/78590",
+      "verification": "secondary_unverified"
+    },
+    {
+      "event_key": "ducat:redemption-shutdown:2026-10-26",
+      "family_key": "ducat:redemption-shutdown",
+      "material_version": "ducat-2026-10-26-shutdown-secondary",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://lookonchain.com/feeds/78601",
+      "verification": "secondary_unverified"
+    },
+    {
+      "event_key": "ethereum:acdt102:2026-10-26",
+      "family_key": "ethereum:acdt102",
+      "material_version": "ethereum-pm-2281-oct26",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://github.com/ethereum/pm/issues/2281",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "connectwise:update-due:2026-10-26",
+      "family_key": "connectwise:update-due",
+      "material_version": "connectwise-oct25-update-oct26-next",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://www.connectwise.com/company/trust/advisories",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "bnbchain:newl1-devnet-docs:2026-10-26",
+      "family_key": "bnbchain:newl1",
+      "material_version": "official-docs-checked-2026-10-26-devnet-no-public-endpoint",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://docs.bnbchain.org/newl1/",
       "verification": "official_or_attributed"
     }
   ],
