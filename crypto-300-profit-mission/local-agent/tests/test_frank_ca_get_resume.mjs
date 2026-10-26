@@ -291,7 +291,7 @@ test('DONE job MUST NOT display a newer different-job same-Mint latest report',a
   assert.equal(h.elements('cluster-recovery').hidden,false);
   assert.equal(h.elements('cluster-submit').disabled,true);
   assert.ok(h.storage.get('mission-meme-cluster-pending-v1').includes(id));
-  assert.equal(h.context.clusterReportLoadError,'IDENTITY');
+  assert.equal(vm.runInContext('clusterReportLoadError',h.context),'IDENTITY');
   assert.equal(h.calls.length,2);
   assert.equal(h.calls.filter(p=>p.startsWith('POST:')).length,0);
 });
