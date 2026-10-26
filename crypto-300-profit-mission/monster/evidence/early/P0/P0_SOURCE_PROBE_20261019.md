@@ -1,3 +1,15 @@
+## 2026-10-26：用户Mac确认AWS BNB第一层目录；零下载有界日期核验器已提交（P0 SOURCE_CANDIDATE_ONLY）
+
+**用户Mac终端输出（USER_PASTED_MAC_TERMINAL_STDOUT，非本会话独立读取S3对象）**：对AWS官方公开桶 aws-public-blockchain.s3.us-east-2.amazonaws.com 使用匿名 ListObjectsV2，prefix=v1.1/bnb/、delimiter=/、max-keys=100，返回 Prefixes=['v1.1/bnb/blocks/','v1.1/bnb/transactions/']，Objects=[]。Objects=[] 仅代表此层没有直接列出文件；delimiter分组后的两个子目录可有大量对象，不能据此记0条交易。该枚举只显示两个第一层子前缀，**日志/receipt是否嵌套、是否包含2025-07-01历史数据完全未确认**。
+
+**本轮完成离线代码和测试**：原 local-agent/mission_agent/early/ 增加 aws_bnb_public_source_probe.py，测试在原 local-agent/tests/test_aws_bnb_public_source_probe.py。匿名最多10个ListObjectsV2请求，每次最多10项、限制XML响应128KiB；枚举blocks/transactions各自第一层与2025-07-01四种常见分区前缀（date=YYYY-MM-DD、YYYY-MM-DD、YYYY/MM/DD、year=YYYY/month=MM/day=DD）。仅打印JSON stdout，无文件写入、无Parquet下载、无RPC/密钥/云资源/交易。结果严格将目录发现与Parquet列验证、历史公众可见时间、PIT、G4可卖性分离。空列举不证明数据不存在，错误保留为错误。
+
+**实际离线验证**：Python标准库离线4/4 PASS，分别涵盖XML命名空间/上限、prefix伪装拒绝、来源错误保留、出现日期对象仍不能虚报日志和PIT。经过Git Blob SHA比对，本会话测试过的源码与GitHub已提交源码逐字相同。两个代码提交分别为 bc784de3413793f4ffb3244cd5231b1e017ffbc2、883f40776934f34a3930360a6cf3b9599e684b2d。**本轮未在Mac或CI运行新探针，也未取得AWS任何Parquet内容、日志/receipt、schema、原始日期分片字节/哈希；独立AI审核未做**。本会话容器对AWS依然DNS解析失败。
+
+**唯一有效下一数据门禁**：Mac前台运行已提交的匿名目录探针；先看确切历史日期对象与命名结构。之后如有数据才检查文件实际字段和Factory日志/receipt能力，并用固定30例交叉核验。即使块时间可回溯仍不等于2025当时公众真实接收时间。继续 P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO；24/30 PIT、18/30统一名义额可卖都未达到正式通过，2026-11-02止损不变。
+
+---
+
 ## 2026-10-26：AWS官方公开BNB数据桶，2025年P0完整日志覆盖待查（SOURCE_CANDIDATE_ONLY）
 
 新增**官方可核实候选源**：AWS Registry of Open Data 官方当前明确列出由BNB Chain维护的匿名公开S3前缀 `s3://aws-public-blockchain/v1.1/bnb/`（区域us-east-2），官方登记允许`aws s3 ls --no-sign-request`，公开数据不要求AWS账户或订阅。来源：https://registry.opendata.aws/aws-public-blockchain/ 及 https://aws.amazon.com/marketplace/pp/prodview-w2rxwj7aw6mt6 。它可能提供免付费历史原始数据的另一条Plan B路线，避免继续对Alchemy支付才有的历史debug trace消耗预算。
