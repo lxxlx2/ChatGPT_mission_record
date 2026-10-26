@@ -1,39 +1,39 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-26 13:07:33 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-26 14:03:13 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-26 13:07:33 Asia/Bangkok (13:04 existing automation invocation; off-minute, not exact 13:00 scheduler proof)
+- latest_actual_run: 2026-10-26 14:03:13 Asia/Bangkok (14:02 actual attempt; off-minute start, not exact 14:00 scheduler proof)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-26/130733-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-26/130544-attempt.md
-- latest_scheduled_shard: 1
-- latest_executed_shard: 1
-- stale_shard_recovery: false (default hour13 modulo4; last four [1,2,3,1])
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-26/140313-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-26/140213-attempt.md
+- latest_scheduled_shard: 2
+- latest_executed_shard: 2
+- stale_shard_recovery: false (fair hour14 modulo4; last four [2,3,1,2])
 - latest_candidate_count: 5
 - latest_triggered_events: 0
-- latest_identity_failures: 1
+- latest_identity_failures: 0
 - latest_source_failures: 5
 - latest_notification_decision: SILENT_NO_NEW_ACTION
 - latest_notification_status: NO_GMAIL_NO_APP
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_additional_USDC,Surf_PONS_raffle_English_rules,StandX_official_checker_live,ForecastFDN_current_whitelist,Neutrl_private_redemption_and_identity
+- latest_source_gaps: Concrete_additional_USDC,Surf_PONS_raffle_English_rules,StandX_official_checker_live,01_Exchange_private_mapped_rights,OhBabyGames_current_issuer
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-10-26 08:03:05 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard1: 2026-10-26 13:07:33 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard2: 2026-10-26 10:58:19 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard2: 2026-10-26 14:03:13 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-10-26 12:07:05 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 130733-final.md commit dfc5f30e36728037826269926840885f35a24c24
-- latest_terminal_readback: VERIFIED 130733-final.md
-- latest_four_executed_shards: [1,2,3,1]
-- latest_four_executed_shards_prior: [1,1,2,3]
+- latest_primary_final_write: VERIFIED_DURABLE 140313-final.md commit c6f4791c182de16f891aa6de3384524a42b576e6
+- latest_terminal_readback: VERIFIED 140313-final.md
+- latest_four_executed_shards: [2,3,1,2]
+- latest_four_executed_shards_prior: [1,2,3,1]
 - last_delivered_event_key: cambria:duel_arena_blast_abstract_post_sweep_claim_and_login:2026-10-19 (prior run)
 - last_delivered_gmail_message_id: 1a16a27a9e5b557c (prior run; no new email)
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-26 13:07:33 BKK PARTIAL shard1, 5 candidates, 5 source/rights gaps, 1 Neutrl identity conflict, 0 new ACTION, no Gmail/App; StandX checker LIVE not Tier A/B verified. Last full verified Oct10 unchanged.
+- latest_terminal_sync: 2026-10-26 14:03:13 BKK PARTIAL shard2, 5 candidates, 5 source/rights gaps, 0 identity conflicts, 0 new ACTION, no Gmail/App; StandX checker LIVE not Tier A/B verified. Last full verified Oct10 unchanged.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
@@ -208,3 +208,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-26 12:07:05 BKK: existing monitor off-minute invocation; 120515-attempt.md and readback-verified 120705-final.md persisted. Urgent5 + dynamic Surf/StandX + exactly recovered shard3 (15 distinct registry identities) and bounded cross-shard lifecycle. 6 candidate families, 0 Tier A/B new ACTION, 5 SOURCE_GAP (Concrete extra USDC, Surf PONS raffle English terms, StandX official live checker, Crusoe private SPV, Republic rTTOK private rights). Gmail Inbox/Sent searched; only previously delivered Cambria/NeoSoul formal alerts. No Gmail/App. Shard3 meaningful attempt advanced PARTIAL; last verified full remains 2026-10-10 07:52:16. Last four executed [1,1,2,3], bounded stale override; next run resume fair default rotation. Original task/schedule/scope/recipient unchanged.
 
 - 2026-10-26 13:07:33 BKK: Existing monitor 130544-attempt.md and readback-verified 130733-final.md persisted; urgent5 + Surf/StandX + scheduled/executed shard1 (14 distinct registry projects) and bounded English cross-shard lifecycle. Five candidate families, zero new Tier A/B ACTION, five source/rights gaps (Concrete extra USDC, Surf PONS raffle issuer rules, StandX Oct26 official live checker, ForecastFDN whitelist, Neutrl redemption/identity). Neutrl @neutrl_labs vs issuer @Neutrl conflict hard-failed. Gmail Inbox/Sent search no new mapped TierB; only prior Cambria/NeoSoul delivered alerts. No Gmail/App. Shard1 meaningful attempt PARTIAL; last fully verified complete 2026-10-10 07:52:16 unchanged. Recent executed [1,2,3,1], no override. Original task/schedule/scope/recipient unchanged.
+
+- 2026-10-26 14:03:13 BKK: Existing hourly monitor 140213-attempt.md and readback-verified 140313-final.md persisted; urgent5 + dynamic Surf/StandX + scheduled/executed shard2, 15 distinct registered projects attempted with bounded English cross-shard lifecycle. Five candidate families, zero new Tier A/B ACTION, five SOURCE_GAP (Concrete additional USDC, Surf PONS raffle English rules, StandX live official checker, 01 mapped private rights, OhBabyGames current issuer). Gmail Inbox/Sent checked; no new mapped TierB; only previously delivered Cambria/NeoSoul StandX formal alerts. No Gmail/App. Shard2 last meaningful attempt advanced PARTIAL; last verified complete 2026-10-10 07:52:16 unchanged. Last four executed [2,3,1,2], no override. Task/schedule/scope/recipient unchanged.
