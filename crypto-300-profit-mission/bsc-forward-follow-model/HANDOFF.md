@@ -1,3 +1,10 @@
+# 2026-10-26 — PR213 repeated 578-test failure root caused: Path vs PosixPath
+
+- Initial CI 40271388939 and second CI [40271757595](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40271757595) both **578 tests / 17 failures / 17 errors**. Further analysis proved source bug `type(PRIVATE_FIXED_REGISTRY) is not Path` rejects every normal `PosixPath`. Fixed in `f1c974f5951206df066d0d1a0baf415ff1eb068b` to `not isinstance(PRIVATE_FIXED_REGISTRY, Path)`, preserving exact OS-account fixed-path equality. Older synthetic OS-home test consistency repairs remain.
+- New exact-SHA GitHub CI and ARM64 Mac independent review must verify the actual code, not attribute failed runs to approval. No actual production registry read/write, live network or signer. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-26 — PR213 initial Mac fixture incompatibility, repaired same PR, NO LIVE
 
 - Initial PR213 SHA `7c4f96d0100289b78c6ce42527899451a8c17111` [Linux CI 40271388939](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40271388939): 578 tests, **17 FAIL/17 ERROR**, traced to old isolated Mac test fixtures patching protected entry's `_os_user_home`/registry path without patching new stronger `pwd.getpwuid`-derived account root. Errors incorrectly masked expected identity mismatch tests; no live behavior occurred.
