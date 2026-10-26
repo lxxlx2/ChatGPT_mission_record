@@ -61,26 +61,20 @@ def _os_user_home():
 
 
 def _inspect_fixed_registry():
-    """Observes but never creates, changes or consumes the fixed Mac root."""
-    path = PRIVATE_FIXED_REGISTRY
-    if not isinstance(path, Path) or not path.is_absolute():
-        raise ValueError("D1_MAC_FIXED_REGISTRY_NOT_ABSOLUTE")
-    expected = (_os_user_home() / "Library" / "Application Support"
-                / "MissionEvidence" / "f0-grant-registry")
-    if path != expected:
-        raise ValueError("D1_MAC_FIXED_REGISTRY_PATH_ENV_MISMATCH")
-    # Verify pre-existing components; do not resolve or accept symlink swaps.
-    cursor = Path(path.anchor)
-    for piece in path.parts[1:]:
-        cursor /= piece
-        if cursor.is_symlink():
-            raise ValueError("D1_MAC_FIXED_REGISTRY_SYMLINK")
-    ready = _private_directory(path, allow_missing=True)
+    """Use the same OS-home + ownership/dir-fd audit; never spend a marker."""
+    from f0_l2_d2_os_registry_readonly import (
+        inspect_fixed_production_registry_readonly,
+    )
+    audit = inspect_fixed_production_registry_readonly()
     return {
-        "fixed_private_registry": str(path),
-        "registry_exists_and_private": ready,
-        "registry_opened": False,
+        "fixed_private_registry": audit["fixed_registry"],
+        "registry_exists_and_private": audit["filesystem_ready"],
+        # Read-only directory fd inspection may occur, but never markers.
+        "registry_opened": audit["registry_opened_readonly"],
         "marker_consumed": False,
+        "production_authorized": False,
+        "os_account_bound": True,
+        "path_audit": audit["reason"],
     }
 
 
