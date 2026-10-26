@@ -1,3 +1,17 @@
+## 2026-10-26：P0 30例历史归档可复算核验器落地，不升级来源证明或门禁
+
+**已提交并逐字核验**：`local-agent/mission_agent/early/p0_evidence_audit.py`，Git blob `0fb625bebcac75318fc3709650152b876ce601b7`，提交`6522e10ff59b18452d3df2566403620fb9dbd981`；原`mission_agent/cli.py`只加`early-p0-audit --input`的无副作用、优先返回入口，提交`8301d66f7f980df906ec1d196ac56eb5c19c4e4e`。测试源码`local-agent/tests/test_monster_p0_evidence_audit.py`，Git blob `c76ed9cdc62a379efdefac2653d6ec922fb5ab8c`，最终测试提交`d318459ca73f7cca14a7dac025670dbce18f7608`。本会话本地离线Python实际`14/14 PASS`，并且GitHub读回源码/测试Blob与执行版本SHA完全匹配；无远端CI或用户Mac执行，本机不曾获取用户的1.1MB原档案原字节，不能冒充实际Python全源归档回归PASS。
+
+**使用入口**：从`crypto-300-profit-mission/local-agent/`执行`python3 -m mission_agent.cli early-p0-audit --input ../monster/evidence/early/P0/P0_SOURCE_PROBE_20261019.json`。只读JSON，硬上限4MiB，要求输入文件Git Blob等于`1a6940290d03cc79ca86fd2c7f22ff4a0982c7a6`，固定原30 rank和22 SELL / 7同量回售 rank集合；跨表核对精确CA、交易Hash、深度布尔、标准V2 Router的最低输出原整数、历史实际Wei池端差额及子集；突变或缺表显式拒绝，不删失败或0样本。输出`selected_sell_count, sell_depth_floor_count, roundtrip_count, positive_min_out_ranks, full_roundtrip_and_positive_min_out_ranks`及明确未通过的门禁。历史交易成交只可证明对应成交事实，不能证明公共可用时间、普通钱包成本、税费、统一名义额退出或策略净收益；任何档案`available_at`自填不自动晋升PIT_VERIFIED。
+
+**现有Git机器档案的独立关联运算已核验**：冻结30身份、22对已选SELL路由/深度均可正确关联、7同量回售；历史已选SELL中18笔原研究深度合格，正数已解析`amountOutMin`仅rank1，7回售与正数minimum-output交集空；4笔EOA标准Router回售的minimum-output均0，3笔为同一自定义合约通道；7笔池端报价差额5正2负，不能转化为用户收益。**此次交付新增的是可执行、拒绝篡改的归档机械核对，非新增链上交易证据**。
+
+**免费BSC原始事件补源复核限制**：公开Pinax BNB logs演示页面目前显示2026-09-25后近期区间，未核实支持2025-07-01完整历史导出（`HISTORIC_P0_NOT_VERIFIED`）；Bitquery BSC历史Parquet Event/Call/DEX在公开页面是需要支付的打包数据，当前预算$0不能用。AWS已核blocks/transactions维持`AUXILIARY_ONLY`。以上均不能视为原BSC工厂事件日期全量覆盖、历史公众可用时间或完整可卖验证。
+
+**决定**：保持2026-11-02 P0来源止损日、历史源零预算与2次手动CI预算不变；不新增预测模型、不更改冻结样本/门槛、不merge/deploy，不进行新RPC、链上交易、Mac后台、Gmail或Frank操作。P0 INSUFFICIENT_COVERAGE，P1 BLOCKED，G4 UNKNOWN，G6 NO_GO。
+
+---
+
 ## 2026-10-26：P0固定30例G4跨表核对，完整回售与正数minOut证据交集为0（旧档案再验证）
 
 **本轮完成的是既有原始机器证据的独立关联运算，不是链上新采集。** 从Git blob `1a6940290d03cc79ca86fd2c7f22ff4a0982c7a6` 完整解析已有P0 JSON，按冻结 rank、精确小写token CA、SELL交易hash联合核对以下四表：`bsc_v2_p0_current_frozen30_p0_gate_matrix_20261020.rows`、`bsc_v2_p0_22_sell_transaction_route_price_protection_20261026.rows`、`bsc_v2_p0_22_actual_sell_pool_quote_depletion_20261026.rows`、`bsc_v2_p0_seven_same_recipient_full_token_roundtrip_execution_route_20261020.rows`。实算唯一rank分别为30/22/22/7；交叉CA/rank不一致0，关联22笔SELL交易hash不一致0；7笔都属于22笔已存真实SELL，不增加样本或独立交易者数量。
