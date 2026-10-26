@@ -1,15 +1,15 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-27 05:05:53 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-27 05:57:25 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-27 05:05:53 Asia/Bangkok (actual attempt 05:03:59)
+- latest_actual_run: 2026-10-27 05:57:25 Asia/Bangkok (actual attempt 05:56:31, off-minute invocation)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-27/050553-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-27/050359-attempt.md
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-27/055725-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-27/055631-attempt.md
 - latest_scheduled_shard: 1
 - latest_executed_shard: 1
-- stale_shard_recovery: false (fair hour5 modulo4; previous [1,2,3,0])
+- stale_shard_recovery: false (hour5 modulo4, second consecutive shard1, no override)
 - latest_candidate_count: 5
 - latest_triggered_events: 0
 - latest_identity_failures: 1
@@ -19,21 +19,21 @@ Timezone: Asia/Bangkok
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_additional_USDC,Surf_PONS_raffle_English_terms,StandX_DUSD_checker_first_party,ForecastFDN_current_whitelist_issuer,Neutrl_individual_redemption_rights
+- latest_source_gaps: Concrete_additional_USDC,Surf_PONS_raffle_English_terms,StandX_DUSD_checker_first_party,ForecastFDN_current_issuer,Neutrl_private_redemption_rights
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-10-27 04:07:13 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard1: 2026-10-27 05:05:53 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard1: 2026-10-27 05:57:25 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard2: 2026-10-27 02:04:13 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-10-27 03:04:35 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 050553-final.md commit be09b00ba11e8ed0e758784436b8b9c757d99c5d
-- latest_terminal_readback: VERIFIED 050553-final.md blob bfe7ccf1c8e68e5a259864cf81d412f3ebca5091
-- latest_four_executed_shards: [2,3,0,1]
-- latest_four_executed_shards_prior: [1,2,3,0]
+- latest_primary_final_write: VERIFIED_DURABLE 055725-final.md commit 5ad9ae1f78f97bfe2ddc78a159f92e8d6a226a2c
+- latest_terminal_readback: VERIFIED 055725-final.md blob a459bd165a258f2351099c4254a95522c44a424e
+- latest_four_executed_shards: [3,0,1,1]
+- latest_four_executed_shards_prior: [2,3,0,1]
 - last_delivered_event_key: cambria:duel_arena_blast_abstract_post_sweep_claim_and_login:2026-10-19 (prior run)
 - last_delivered_gmail_message_id: 1a16a27a9e5b557c (prior run; no new email)
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-27 05:05:53 BKK PARTIAL shard1, 5 candidates, 5 source/rights gaps, 1 identity conflict, 0 new ACTION, no Gmail/App; last full verified Oct10 unchanged
+- latest_terminal_sync: 2026-10-27 05:57:25 BKK PARTIAL shard1, 5 candidates, 5 source/rights gaps, 1 identity conflict, 0 new ACTION, no Gmail/App; last full verified Oct10 unchanged
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
