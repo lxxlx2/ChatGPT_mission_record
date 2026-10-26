@@ -61,11 +61,20 @@ def _os_user_home():
 
 
 def _inspect_fixed_registry():
-    """Use the same OS-home + ownership/dir-fd audit; never spend a marker."""
+    """Preserve Mac entry's pinned path; strengthen OS UID/inode inspection."""
     from f0_l2_d2_os_registry_readonly import (
         inspect_fixed_production_registry_readonly,
     )
-    audit = inspect_fixed_production_registry_readonly()
+    expected = (_os_user_home() / "Library" / "Application Support" /
+                "MissionEvidence" / "f0-grant-registry")
+    if PRIVATE_FIXED_REGISTRY != expected:
+        raise ValueError("D1_MAC_FIXED_REGISTRY_PATH_ENV_MISMATCH")
+    try:
+        audit = inspect_fixed_production_registry_readonly()
+    except ValueError as exc:
+        if str(exc) == "D2_OS_REGISTRY_NOT_PRIVATE":
+            raise ValueError("D1_MAC_PRIVATE_DIRECTORY_PERMISSIONS") from exc
+        raise
     return {
         "fixed_private_registry": audit["fixed_registry"],
         "registry_exists_and_private": audit["filesystem_ready"],
