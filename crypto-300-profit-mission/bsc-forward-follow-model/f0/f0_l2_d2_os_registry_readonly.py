@@ -41,7 +41,7 @@ def inspect_fixed_production_registry_readonly():
     """
     home = _actual_os_home()
     expected = home.joinpath(*_REGISTRY_COMPONENTS)
-    if (type(PRIVATE_FIXED_REGISTRY) is not Path
+    if (not isinstance(PRIVATE_FIXED_REGISTRY, Path)
             or PRIVATE_FIXED_REGISTRY != expected):
         raise ValueError("D2_OS_FIXED_REGISTRY_ENV_OR_PATH_MISMATCH")
 
