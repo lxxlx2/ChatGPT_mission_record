@@ -125,7 +125,11 @@ class OSFixedRegistryReadOnlyTests(unittest.TestCase):
 
     def test_existing_mac_preflight_uses_same_readonly_audit(self):
         self.make_ready()
-        result = _inspect_fixed_registry()
+        with patch("f0_l2_d1_protected_mac_entry.PRIVATE_FIXED_REGISTRY",
+                   self.fixed), patch(
+                   "f0_l2_d1_protected_mac_entry._os_user_home",
+                   return_value=self.home):
+            result = _inspect_fixed_registry()
         self.assertEqual(result["fixed_private_registry"], str(self.fixed))
         self.assertTrue(result["registry_exists_and_private"])
         self.assertTrue(result["registry_opened"])
