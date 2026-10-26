@@ -40,10 +40,12 @@ def rehearse_held_test_registry_once_offline(
     actual = test_root.resolve()
     if actual != test_root:
         raise ValueError("D2_ONCE_TEST_ROOT_ALIAS_REFUSED")
-    passwd_home = Path(pwd.getpwuid(os.getuid()).pw_dir).resolve()
+    # Compare already known fixed paths lexically: do NOT resolve/stat the
+    # actual prospective production registry or any marker during a test.
+    passwd_home = Path(pwd.getpwuid(os.getuid()).pw_dir)
     prod = passwd_home / "Library" / "Application Support" / (
         "MissionEvidence") / "f0-grant-registry"
-    frozen = PRIVATE_FIXED_REGISTRY.resolve()
+    frozen = PRIVATE_FIXED_REGISTRY
     if (actual == prod or actual in prod.parents or prod in actual.parents
             or actual == frozen or actual in frozen.parents or
             frozen in actual.parents):
