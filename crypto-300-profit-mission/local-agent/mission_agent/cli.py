@@ -31,7 +31,12 @@ def main(argv=None):
     sub.add_parser('cycle');sub.add_parser('health')
     demo=sub.add_parser('synthetic-e2e');demo.add_argument('--events',type=int,default=60);demo.add_argument('--seed',type=int,default=1729)
     sub.add_parser('cleanup')
+    p0_audit=sub.add_parser('early-p0-audit')
+    p0_audit.add_argument('--input',required=True,type=Path)
     args=parser.parse_args(argv)
+    if args.command=='early-p0-audit':
+        from .early.p0_evidence_audit import audit_file
+        print(json.dumps(audit_file(args.input),sort_keys=True));return 0
     os.umask(0o077)
     config=Config(args.runtime_root)
     config.runtime_root.mkdir(parents=True,exist_ok=True,mode=0o700)
