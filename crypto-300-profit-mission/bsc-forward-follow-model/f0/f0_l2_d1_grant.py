@@ -174,6 +174,54 @@ def validate_live_trust_roots_not_enrolled():
     raise ValueError("D1_LIVE_SENDER_NOT_IMPLEMENTED")
 
 
+
+
+def _consume_once_using_open_dirfd(dfd: int, grant_id: str,
+                                   permit_sha256: str):
+    """ONE existing D1 atomic marker algorithm, using an already-open dir FD.
+
+    Does not authenticate a signer, grant live rights or choose a path.
+    The caller must secure ownership/identity of the open directory FD.
+    Marker never auto-deleted, even if durability is uncertain.
+    """
+    import stat
+    _need(type(dfd) is int and dfd >= 0
+          and type(grant_id) is str and GRANT_ID.fullmatch(grant_id)
+          and type(permit_sha256) is str and HEX64.fullmatch(permit_sha256),
+          "D1_GRANT_ID_OR_DIGEST_INVALID")
+    try:
+        info = os.fstat(dfd)
+    except OSError as exc:
+        raise ValueError("D1_REGISTRY_FD_INVALID") from exc
+    _need(stat.S_ISDIR(info.st_mode) and info.st_uid == os.getuid()
+          and info.st_mode & 0o077 == 0,
+          "D1_REGISTRY_OPENED_DIR_NOT_PRIVATE")
+    filename = sha(grant_id.encode()) + ".consumed.json"
+    flags = (os.O_CREAT | os.O_EXCL | os.O_WRONLY |
+             getattr(os, "O_NOFOLLOW", 0) |
+             getattr(os, "O_CLOEXEC", 0))
+    try:
+        fd = os.open(filename, flags, 0o600, dir_fd=dfd)
+    except FileExistsError as exc:
+        raise ValueError("D1_GRANT_ALREADY_CONSUMED") from exc
+    try:
+        with os.fdopen(fd, "wb") as out:
+            out.write((json.dumps({
+                "grant_id_sha256": sha(grant_id.encode()),
+                "permit_sha256": permit_sha256,
+                "outcome": "CONSUMED_OR_UNKNOWN",
+            }, sort_keys=True) + "\n").encode())
+            out.flush()
+            os.fsync(out.fileno())
+        os.fsync(dfd)
+    except OSError as exc:
+        # O_EXCL marker remains spent even if durability is uncertain.
+        # Fail closed; no cleanup and never automatic retry.
+        raise ValueError("D1_GRANT_CONSUMPTION_UNCERTAIN_STOP") from exc
+    return {"grant_id_sha256": sha(grant_id.encode()),
+            "permit_sha256": permit_sha256,
+            "status": "CONSUMED_NOT_A_NETWORK_AUTHORIZATION"}
+
 class FixedLocalGrantRegistry:
     """The only D1 registry factory with a non-injectable fixed Mac path.
 
@@ -207,40 +255,16 @@ class OfflineGrantRegistry:
         _need(not self.root.is_symlink() and
               self.root.is_dir() and (self.root.stat().st_mode & 0o077) == 0,
               "D1_REGISTRY_NOT_PRIVATE")
-        # One marker per grant ID; changing output root or permit content
-        # cannot make the original identity available again.
-        filename = sha(grant_id.encode()) + ".consumed.json"
-        flags = os.O_CREAT | os.O_EXCL | os.O_WRONLY | getattr(os, "O_NOFOLLOW", 0)
         try:
-            # Use a single already-opened directory fd for BOTH atomic create
-            # and directory fsync: directory name replacement mid-operation
-            # cannot redirect either call to a different path.
             dfd = os.open(self.root, os.O_RDONLY |
                           getattr(os, "O_DIRECTORY", 0) |
                           getattr(os, "O_NOFOLLOW", 0))
         except OSError as exc:
             raise ValueError("D1_REGISTRY_OPEN_DENIED") from exc
         try:
-            try:
-                fd = os.open(filename, flags, 0o600, dir_fd=dfd)
-            except FileExistsError as exc:
-                raise ValueError("D1_GRANT_ALREADY_CONSUMED") from exc
-            try:
-                with os.fdopen(fd, "wb") as out:
-                    out.write((json.dumps({
-                        "grant_id_sha256":sha(grant_id.encode()),
-                        "permit_sha256":permit_sha256,
-                        "outcome":"CONSUMED_OR_UNKNOWN",
-                    }, sort_keys=True) + "\n").encode())
-                    out.flush()
-                    os.fsync(out.fileno())
-                os.fsync(dfd)
-            except OSError as exc:
-                # O_EXCL marker remains consumed even if its durability is
-                # uncertain. Never remove it or retry automatically.
-                raise ValueError("D1_GRANT_CONSUMPTION_UNCERTAIN_STOP") from exc
+            # SAME one-use implementation as the D2 held-FD rehearsal:
+            # opened directory inode, O_EXCL child, file+directory fsync.
+            return _consume_once_using_open_dirfd(
+                dfd, grant_id, permit_sha256)
         finally:
             os.close(dfd)
-        return {"grant_id_sha256": sha(grant_id.encode()),
-                "permit_sha256": permit_sha256,
-                "status": "CONSUMED_NOT_A_NETWORK_AUTHORIZATION"}
