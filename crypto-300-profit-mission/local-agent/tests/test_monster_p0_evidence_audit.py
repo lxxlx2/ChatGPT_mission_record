@@ -1,6 +1,8 @@
 """Pure offline tests of the archived-evidence joining gate."""
 import copy
 import importlib.util
+import json
+import tempfile
 import pathlib
 import unittest
 
@@ -114,6 +116,26 @@ class TestP0EvidenceReconciliation(unittest.TestCase):
         x[audit.KEY_SELL_ROUTE]['rows'].pop()
         x[audit.KEY_SELL_DEPTH]['rows'].pop()
         with self.assertRaisesRegex(audit.EvidenceAuditError, 'FROZEN_SELECTED_CASES_CHANGED'):
+            audit.reconcile(x)
+
+    def test_modified_json_rejected_by_git_blob_pin(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = pathlib.Path(folder) / 'evidence.json'
+            path.write_text(json.dumps(dossier()))
+            with self.assertRaisesRegex(audit.EvidenceAuditError, 'UNPINNED_EVIDENCE_BLOB'):
+                audit.audit_file(path)
+
+    def test_large_file_rejected_without_parse(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = pathlib.Path(folder) / 'evidence.json'
+            path.write_bytes(b'x' * (audit.MAX_INPUT_BYTES + 1))
+            with self.assertRaisesRegex(audit.EvidenceAuditError, 'INPUT_TOO_LARGE'):
+                audit.audit_file(path)
+
+    def test_duplicate_pool_identity_rejected(self):
+        x = dossier()
+        x[audit.KEY_ROSTER]['rows'][1]['pool'] = x[audit.KEY_ROSTER]['rows'][0]['pool']
+        with self.assertRaisesRegex(audit.EvidenceAuditError, 'DUPLICATE_OR_MISSING_POOL'):
             audit.reconcile(x)
 
     def test_rerun_is_deterministic(self):
