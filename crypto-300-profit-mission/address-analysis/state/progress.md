@@ -1,3 +1,12 @@
+## 2026-10-27 主线恢复：449 地址 × 历史代币真实经济证据交叉复算
+
+- **这不是 Monster 或 Frank。** 地址建模保留两条独立历史来源：PR #40 的 **23 BSC 钱包 × 19 exact-CA = 437 钱包币对**，与本 PR #97 的 **449 原始 EVM 地址**。449 已做完整固定窗口三链活动筛查（237 有签名活动／212 无该窗口签名），237 活跃候选只完成出账事件首页，仍有 171 个队列位置的分页缺口；**完整钱包30天及长期审计 0/449**。
+- 本轮**不调用新 RPC**，只复算仓库保存的 **5 个 Token 数量闭合回合（4 地址）**和其中 **3 个买卖 hash 匹配的 WBNB Router 报价事件**。已分别计算钱包执行区块 BNB 变化与 WBNB 事件 spread 的残差：#227 BOARDSEAT `-0.013792578099635178 BNB`、#227 BTCLIFE `-0.010002713892967094 BNB`、#400 BOARDSEAT `-0.016825277937507272 BNB`。这**不是 Gas 的确认值，也不是 PnL**；#002/#004 sauce 的 WBNB 匹配报价仍缺失。
+- [用户可读经济证据复算表](../batches/pnl-closed-token-five-round-quote-gap-reconciliation-20261027.md)；[只读精确Wei审计脚本](../tools/reconcile_closed_token_quote_gap_offline.py)及[9个防误报测试](../tests/test_reconcile_closed_token_quote_gap_offline.py)。脚本会检查三个冻结输入的 Git blob、449 完整来源分母及 source row/CA/hash/quote 差额，不读取生产 F0，也不增添链上证据。**没有新增已审核 Token Net PnL；Pnl0/449 不变**。
+- 下一项应为 **有真实钱包直接报价资产收付与 Gas/历史买入成本的闭合 Token 回合**，优先补正反样本；确需新链上查询应按已有冻结查询/授权范围另行执行，不因缺 Trace 而把区块余额冒充收益。PR #97 仍 Draft、不合并、不部署、不交易、不触发新自动化。
+
+---
+
 # 地址分析 / 449 个 EVM 地址研究队列与分批进度
 
 Updated: 2026-10-19 Asia/Bangkok
