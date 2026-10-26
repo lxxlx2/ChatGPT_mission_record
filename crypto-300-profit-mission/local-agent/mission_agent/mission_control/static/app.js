@@ -1105,6 +1105,7 @@ let clusterPollTimer = null;
 let clusterActiveJob = null;
 let clusterPollVersion = 0;
 let clusterReportLoadError = 'GET';
+let clusterLastReportJobVerified = false;
 
 async function loadLatestCluster(mint, silent=false, expectedVersion=clusterPollVersion, expectedJob=clusterActiveJob?.id||null) {
   if (!mint) return false;
@@ -1121,6 +1122,13 @@ async function loadLatestCluster(mint, silent=false, expectedVersion=clusterPoll
       (clusterActiveJob && clusterActiveJob.mint!==mint) ||
       $('cluster-mint').value.trim()!==inputBefore ||
       report?.mint!==mint) return false;
+  // latest.json is keyed by mint. A different explicit job ID is not the
+  // finished job being resumed; never render it as that job's report.
+  if (expectedJob !== null && report.ca_job_id != null && report.ca_job_id !== expectedJob) {
+    clusterReportLoadError='IDENTITY';
+    return false;
+  }
+  clusterLastReportJobVerified = expectedJob !== null && report.ca_job_id === expectedJob;
   try {
     renderClusterReport(report);
     if (!silent) showToast('已加载上次查询结果');
@@ -1758,7 +1766,8 @@ async function pollClusterJob(jobId, failures=0) {
         localStorage.setItem('mission-meme-last-cluster-ca',mint);
         // latest.json is keyed by mint, not by job ID.
         clusterStatus('running','原分析任务已结束，已读取最新保存报告',
-          '该报告不包含任务编号，无法独立证明与本次分析一一对应');
+          clusterLastReportJobVerified ? '保存报告中的任务编号与已结束任务一致；覆盖与完整性仍须另行核实' :
+            '该报告缺少可核对的本次任务编号，无法独立证明与本次分析一一对应');
       }
       return;
     }
@@ -1856,7 +1865,9 @@ $('cluster-resume-get').addEventListener('click',()=>{
         clusterFinishJob();
         $('cluster-submit').disabled=false;
         $('cluster-submit').textContent='重新查询';
-        clusterStatus('running','已读取最新保存报告','报告与本次任务的身份关联仍未独立核实');
+        clusterStatus('running','已读取最新保存报告',
+          clusterLastReportJobVerified ? '保存报告中的任务编号已与本次任务核对；覆盖与完整性仍未证明' :
+            '报告与本次任务的身份关联仍未独立核实');
       }
     });
     return;
