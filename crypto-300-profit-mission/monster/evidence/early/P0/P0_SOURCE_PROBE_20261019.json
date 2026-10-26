@@ -22777,6 +22777,77 @@
       "model_independent_positive_count": "NOT_SCORABLE",
       "all_cohort_22_buy_receivers_fully_joined": false,
       "no_post_hoc_eligible_token_exclusion": true
+    },
+    "historical_22_buy_sell_participant_reconciliation": {
+      "scope": "20 previously archived original BUY and earliest-indexed SELL cases + ranks16/17 separate post-atomic BUY and partial SELL cases",
+      "previously_stored_source20_key": "bsc_v2_p0_uploaded20_actual_buy_and_indexed_real_sell_replay_20261020.case_results",
+      "other2_source_key": "bsc_v2_p0_ranks16_17_post_atomic_distinct_buy_and_partial_sell_pilot_20261020.cases",
+      "other2_reverified_with_existing_alchemy_readonly_method": "eth_getTransactionReceipt",
+      "other2_reverification_date_utc": "2026-10-26",
+      "other2_actual_sell_transfer_topic": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "other2_direct_receipt_matched_to_archived_sell_tx_pool_token_and_exact_transfer_amount": true,
+      "source_original_http_bytes_archived_for_new_read": false,
+      "independent_source_provider": false,
+      "distinct_qualifying_later_block_historical_buy_pool_cases": 22,
+      "distinct_historical_buy_token_receivers": 16,
+      "distinct_historical_first_indexed_sell_token_senders": 16,
+      "exact_same_token_buy_receiver_and_first_indexed_sell_sender": 13,
+      "observed_creator_identity_role_links": [
+        {
+          "rank": 1,
+          "role": "BUY_TOKEN_RECEIVER",
+          "creator_rank": 1
+        },
+        {
+          "rank": 4,
+          "role": "BUY_TOKEN_RECEIVER",
+          "creator_rank": 24
+        },
+        {
+          "rank": 9,
+          "role": "SELL_TOKEN_SENDER",
+          "creator_rank": 9
+        },
+        {
+          "rank": 19,
+          "role": "SELL_TOKEN_SENDER",
+          "creator_rank": 19
+        },
+        {
+          "rank": 27,
+          "role": "SELL_TOKEN_SENDER",
+          "creator_rank": 27
+        }
+      ],
+      "readback_new_receipt_rank16_17": [
+        {
+          "rank": 16,
+          "sell_tx": "0x800b881d4fa835eaee2f536ca719e7639721e42d376c9660306d65c36b9c0112",
+          "verified_token_sender": "0x2e3102bef68f6d8ac51ccc19c0df3970201ef88f",
+          "verified_token_in_raw": "9178033000000000000000000",
+          "receipt_status": "0x1",
+          "source": "ALCHEMY_NORMALIZED_HISTORICAL_TX_RECEIPT",
+          "wallet_net_quote_payout": "UNKNOWN"
+        },
+        {
+          "rank": 17,
+          "sell_tx": "0x349a4c278ffcee0be6bf34ea7309d0b203dfe3dd85194ec4732b4c3ad150d484",
+          "verified_token_sender": "0x60473ee37f303518c202c98d03afdd1b9baba274",
+          "verified_token_in_raw": "9184589000000000000000000",
+          "receipt_status": "0x1",
+          "source": "ALCHEMY_NORMALIZED_HISTORICAL_TX_RECEIPT",
+          "wallet_net_quote_payout": "UNKNOWN"
+        }
+      ],
+      "cohort_identity_not_pruned": true,
+      "independent_beneficial_owner_count": "UNKNOWN",
+      "project_independent_10x_positives": "NOT_SCORABLE",
+      "real_2025_public_available_at": "UNKNOWN",
+      "fixed_notional_sellability": "NOT_SCORABLE",
+      "p0": "INSUFFICIENT_COVERAGE",
+      "p1": "BLOCKED",
+      "g4": "UNKNOWN",
+      "g6": "NO_GO"
     }
   }
 }
