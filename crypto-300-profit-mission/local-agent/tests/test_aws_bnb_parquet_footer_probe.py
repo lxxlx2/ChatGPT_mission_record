@@ -93,6 +93,61 @@ class FooterProbeTests(unittest.TestCase):
                          opener=lambda request, timeout: Reply(
                              raw[-8:], len(raw) - 8, len(raw) - 1, len(raw)))
 
+    def test_oversized_footer_reads_bounded_prefix_only(self):
+        raw = sample()
+        original_len = struct.unpack("<I", raw[-8:-4])[0]
+        prefix_data = raw[-8-original_len:-8]
+        fake_footer_size = m.CAP + 1024
+        fake_total = fake_footer_size + 8192
+        prefix = prefix_data + b"\x00" * (m.SCHEMA_PREFIX_CAP-len(prefix_data))
+        calls = []
+        def opener(request, timeout):
+            header = request.get_header("Range")
+            calls.append(header)
+            if header == "bytes=-8":
+                return Reply(struct.pack("<I", fake_footer_size) + b"PAR1",
+                             fake_total-8, fake_total-1, fake_total)
+            start, end = map(int, header[6:].split("-"))
+            self.assertEqual(end-start+1, m.SCHEMA_PREFIX_CAP)
+            self.assertEqual(request.get_header("If-match"), '"same"')
+            return Reply(prefix, start, end, fake_total)
+        result = m.probe_file("transactions/date=2025-07-01/transactions.parquet",
+                              fake_total, opener=opener)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(result["schema_paths"], ["schema", "schema.block_number"])
+        self.assertEqual(result["num_rows_declared"], 10)
+        self.assertEqual(result["footer_bytes"], fake_footer_size)
+        self.assertIsNone(result["row_groups_declared"])
+        self.assertIsNone(result["footer_sha256"])
+        self.assertEqual(result["metadata_prefix_bytes"], m.SCHEMA_PREFIX_CAP)
+        self.assertEqual(result["scope"], "OVERSIZED_FOOTER_SCHEMA_PREFIX_ONLY")
+        self.assertFalse(result["footer_fully_verified"])
+        self.assertFalse(result["pit_verified"])
+
+    def test_oversized_footer_invalid_schema_fails_closed(self):
+        fake_footer_size = m.CAP + 1
+        fake_total = fake_footer_size + 8192
+        def opener(request, timeout):
+            header = request.get_header("Range")
+            if header == "bytes=-8":
+                return Reply(struct.pack("<I", fake_footer_size) + b"PAR1",
+                             fake_total-8, fake_total-1, fake_total)
+            start, end = map(int, header[6:].split("-"))
+            return Reply(b"\x00" * (end-start+1), start, end, fake_total)
+        with self.assertRaisesRegex(m.SourceError, "SCHEMA_PREFIX_MISSING_FIELDS"):
+            m.probe_file("transactions/date=2025-07-01/transactions.parquet",
+                         fake_total, opener=opener)
+
+    def test_impossible_footer_length_rejected_without_download(self):
+        fake_total = 100
+        def opener(request, timeout):
+            self.assertEqual(request.get_header("Range"), "bytes=-8")
+            return Reply(struct.pack("<I", 1000) + b"PAR1", 92, 99, 100)
+        with self.assertRaisesRegex(m.SourceError, "FOOTER_INVALID_LENGTH"):
+            m.probe_file("transactions/date=2025-07-01/transactions.parquet",
+                         fake_total, opener=opener)
+
+
 
 if __name__ == "__main__":
     unittest.main()
