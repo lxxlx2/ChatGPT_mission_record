@@ -20,9 +20,11 @@
 - G2：模拟切换前二次旧状态一致性、一次 `bootout` 结果与一次 `bootstrap` 已有结果；**不执行任何命令**。从 bootout 尝试开始，状态可能改变，故任何失败/异常都必须安排一次独立模拟恢复，不能只因为错误是非零就声称生产已停/已启。
 - F1/F1b：仅当模拟 bootstrap 返回非零整数时，使用已经审核过的私有 F1 证据保存，且证据失败**不阻断 F1b 单次恢复 spy**。未采集 stderr/stdout、超时、异常不得伪造成功证据或 returncode。模拟恢复后必须以旧 SHA、旧 manifest、旧 runner、原 8766、完整 Loop/V1/D2/通知/其它监听指纹校验，**非字面 True/异常不能冒充完成回滚**。
 - G3：即使模拟 `bootstrap` 返回 0，若目标来源/manifest/runner 不匹配、Dashboard 无健康证明、旧 Frank GET/D2 GET/Chrome 只读界面任一标注失败、受保护指纹漂移，也**模拟回滚**。此次不伪造 bootstrap 错误日志：`NO_BOOTSTRAP_RESULT` 表示后置验收失败没有新的失败 bootstrap 结果，**不代表没有历史启动事件**。
-- G4：模拟关闭前复核受保护指纹一致，全部通过才得到 **`FIXTURE_RELEASE_PASS`**。此标签**不是** `C2A_DASHBOARD_CODE_ONLY_RELEASE_PASS`、真实浏览器/GET PASS、恢复保证或生产授权。
+- G4：使用由 fixture **在 G3 GET／浏览器验收之后独立提供**的 `protected_after_g3: Protected | None` 最终保护快照，而**不是复用** `candidate_after.protected` 或 `old_before_switch.protected` 充当新观测；该快照与 G0 原始的 Loop、V1、D2、通知和其它监听指纹逐字段比较。最终快照缺失或只有 G4 时刻出现漂移 → `G4_PROTECTED`，恰好一次 F1b 模拟回滚，按旧 runner/manifest/来源的恢复读回判定成功、失败或不可验证。只有独立最终快照存在且全部一致，才记录 G4 PASS 并可能得到 **`FIXTURE_RELEASE_PASS`**。两次观测均是外部注入的合成数据，不是实际系统读取；本标签**不是** `C2A_DASHBOARD_CODE_ONLY_RELEASE_PASS`、真实浏览器/GET PASS、恢复保证或生产授权。
 
-对应 `tests/test_frank_c2a_f1c_offline_supervisor.py` 的矩阵覆盖预检漂移、候选未就绪、二次校验失效、bootout/bootstrap 返回异常、stderr 未采集、TimeoutExpired、G3 HTTP/Chrome 或来源/受保护身份变化、一次恢复失败、一次恢复后旧来源身份/通知/D2 校验失败、成功条件及完全禁止 subprocess 创建。全量 CI 组合 F1 24 项、F1b 29 项与 F1c 新测试。**通过只能证明传入数据下代码判定与模拟回调顺序，不证明系统真实事实。**
+对应 `tests/test_frank_c2a_f1c_offline_supervisor.py` 的矩阵覆盖预检漂移、候选未就绪、二次校验失效、bootout/bootstrap 返回异常、stderr 未采集、TimeoutExpired、G3 HTTP/Chrome 或来源/受保护身份变化，以及**G3 正常、验收后的 G4 才独立改变 Loop/V1/D2/通知/其它监听五个指纹**、G4 最终快照缺失、G4 漂移时恢复操作失败／恢复旧 runner 核验失败、**独立最终快照一致时完整通过**、完全禁止 subprocess 创建。全量 CI 组合 F1 24 项、F1b 29 项与 F1c 新测试。**通过只能证明传入数据下代码判定与模拟回调顺序，不证明系统真实事实。**
+
+**P2-1 独立复审修复范围：** 旧固定 HEAD `1875b8b241cd59610b844c2be237b5e9deae1f57` 的 [独立 `REQUEST_CHANGES` #6417266822](https://github.com/lxxlx2/ChatGPT_mission_record/pull/215#issuecomment-6417266822) 正确指出旧 G4 是 G2/G3 等式的重复比较，永远无法独立失败。本次只改 F1c 数据模型、G4 比较、测试与本文件；原 F1/F1b 模块与产品源码不变。旧 SHA 审核结论不追溯改写，新固定 SHA 必须重新独立审核，合成 CI 通过并不等于批准或生产上线。
 
 ## 生产集成仍缺少的硬条件（不能省略）
 
