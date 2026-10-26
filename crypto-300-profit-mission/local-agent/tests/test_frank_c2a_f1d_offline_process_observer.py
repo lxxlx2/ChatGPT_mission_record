@@ -202,7 +202,8 @@ def test_safe_status_has_no_secrets_or_raw_payload():
     assert summary["returncode_known"] is True
     assert summary["output_bytes_published"] is False
     assert secret.decode() not in str(summary)
-    assert "stdout" not in str(summary)
+    assert "captured_base64" not in str(summary)
+    assert "PRIVATE_CREDENTIAL" not in str(summary)
 
 
 def test_no_actual_service_or_network_execution(tmp_path):
