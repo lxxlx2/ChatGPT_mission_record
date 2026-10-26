@@ -22435,205 +22435,348 @@
         "rank": 1,
         "sender": "0x7499885e0195c957af71ec108c9fac8d58949826",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0xfb6ffc397a75cdc6d254a5941ad7fbc38479d57b650fe9c9210e945a2a48253d",
+        "creation_block": 52439978
       },
       {
         "rank": 2,
         "sender": "0xe867a7f8b24976572123aa3bfcf90d75dce17098",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x8a5d1f9e6005c462c78714da8c1a32c3cc85de62f69438f82715c162da12cf68",
+        "creation_block": 52440593
       },
       {
         "rank": 3,
         "sender": "0x6c0207dc997db215de684b154547dfea262ce007",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x822ec9b4e4c2f25279e21a76eaf5f10307b3ff5178e45f192de96ff22d72ce98",
+        "creation_block": 52440672
       },
       {
         "rank": 4,
         "sender": "0x850a078ca2c99853009c4aa8066e872ac180e130",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x2d3079be5347408f33455c2633b0723dde96c796b6e00b1c6d0f04bda0f7e96c",
+        "creation_block": 52440725
       },
       {
         "rank": 6,
         "sender": "0xe93ee66bbbf1f8b55253a0d0e93115d95e2c8733",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x675abfd0911fafe9d333f95039746226387a40c3f7492a0def0515e8b17240c2",
+        "creation_block": 52441208
       },
       {
         "rank": 7,
         "sender": "0x4a3b6cb63a90427be542c2d010c07006d340003a",
         "source_method": "eth_getTransactionByHash",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x94806bdfd2350e9ab0f9cde9bb65021a12e0d829e0f79950a4ce7b5a4af5574e",
+        "creation_block": 52441121
       },
       {
         "rank": 8,
         "sender": "0x2000957aa90f6b8dba1e1af7b3d8bd0a7fd20a7d",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0xbb10edf0a2cd60d1bc8c361877d3d111554e398a2969b567ff93d19f5e44a75d",
+        "creation_block": 52367708
       },
       {
         "rank": 9,
         "sender": "0x2d37bc16112a5d4e84c5a8fda46788a8a372d5a7",
         "source_method": "eth_getTransactionByHash",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0xb89d1396e362ec5981c05c7a0439413395d910bd0b509c6dfe072a075274c0a8",
+        "creation_block": 52442035
       },
       {
         "rank": 10,
         "sender": "0x8c7434783391dc88ef4947a1a5c396906cafa8f9",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0xf3b004795fb1cd88bd22150bdf70a2ef3fed8537a1469222dd215791c983b71d",
+        "creation_block": 52442413
       },
       {
         "rank": 11,
         "sender": "0xe315547d3e1c78842ab113867522200bafd08fc5",
         "source_method": "eth_getTransactionByHash",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0xf7251d78854f878c29e4cd69874ba5d299434dbc297e02253563119eab51b9c3",
+        "creation_block": 52442436
       },
       {
         "rank": 12,
         "sender": "0xc18f6f07ff654429d0d7f4d22f27b810acd9b2cf",
         "source_method": "eth_getTransactionByHash",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x7a026f9b44ee9e7f1d8b51506b4b4de0126069ffded982078490e0a47a25199e",
+        "creation_block": 52442588
       },
       {
         "rank": 13,
         "sender": "0xf8b5c14a986553caafcf1405c8f3d6a6afc00333",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x0270a0c3a101ab3e5df7a5fb2ae471e26825bc49d80dd704e8865dec4d3e34c3",
+        "creation_block": 52443473
       },
       {
         "rank": 14,
         "sender": "0xf431fb49e95cc32a878f96af5d44ce28b4c11a51",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x25a3cf913a06f513b37b971af7f19aefe418e8a4c64398f6163dd07b4962a2e1",
+        "creation_block": 52443568
       },
       {
         "rank": 15,
         "sender": "0x0dab8151527f987670976b57d8ccf62b27321b90",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0xe30d7d61e6f0c4a405b7a9b35571bf4c93a84ff79aaaefe58f7d517c80d21e73",
+        "creation_block": 50452465
       },
       {
         "rank": 16,
         "sender": "0x41fea3c273406854e14eb867b870463f0388a105",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x080fe7cbf8dc20ad60073685ba79b5b96d632a884a7d14e9c927d605e1c7bb04",
+        "creation_block": 52444037
       },
       {
         "rank": 17,
         "sender": "0x294a8a20a61d5a6fc1ed7a270c7c65f791f9a402",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x43c5512219441e5187461905bf2c4781251d9b3143c1802d475d1939d20cee9a",
+        "creation_block": 52444121
       },
       {
         "rank": 18,
         "sender": "0x1ed573bd10b9f43c8c926a74263260d411342f07",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x97e4c878644d1ecc56a1cba1f0a69f576f9514c0a16f805f9c6f378c18d961e9",
+        "creation_block": 52444292
       },
       {
         "rank": 19,
         "sender": "0x4f60422403b255bd2e43a361da2e034e05acb226",
         "source_method": "eth_getTransactionByHash",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0xfcacbbe2b80598899b2cf5d60734873b89d4fb79a75ba5e6d04d9050f843d3ca",
+        "creation_block": 52444256
       },
       {
         "rank": 20,
         "sender": "0xad4974d761a8f854985c0d51672c3d56b61434d9",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0xc512d1ee24ee026535b9b62e2e7bcc5ddd0595e7c4bfbe59446a183a615d5e2d",
+        "creation_block": 52441994
       },
       {
         "rank": 21,
         "sender": "0x1a8ab3923bf8d6196d07e75d6d2d13237395dda0",
         "source_method": "eth_getTransactionByHash",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x908c392c214272fb1559087dc8b3325c96700be7b5b927cbb2bab094dc85ebae",
+        "creation_block": 52444843
       },
       {
         "rank": 22,
         "sender": "0xc9731936f759c531d2c2f2a6d7beaab8c8e3f0ba",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x5b18ea411eb1272d3243b2bd06e4e2ebceffcbd3147c740dc232c75e67acfcb7",
+        "creation_block": 52445026
       },
       {
         "rank": 23,
         "sender": "0x85139372d71ca4fe7152ca67e4613843599030ec",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x99e2200bdd455f7c2d6a45297dfd9a2a6c0c01280c0706a7e52b10303a2e2dc4",
+        "creation_block": 52446052
       },
       {
         "rank": 24,
         "sender": "0x616be5e6b610c99d93663993e3236f0621ed1633",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x2ea0279242760224933d4ad2dbb06c8d9120b10b49d96c659c19c1168afebeb7",
+        "creation_block": 52445813
       },
       {
         "rank": 25,
         "sender": "0xe08b1ba1ab40d5584a50b9a36888df9ff8deed04",
         "source_method": "eth_getTransactionByHash",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x783b0d50d4824d144b63e7e68674de496635d25855757fbd87d068c44b7b9df5",
+        "creation_block": 52446101
       },
       {
         "rank": 26,
         "sender": "0x11c4738dcd7e8180f2ebf349ed5a07667d77d095",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0xcda90b8e14b775fa2e0f09cb81e8f6b16740e4e4da9df1dd879b34c1a6282d9b",
+        "creation_block": 52446484
       },
       {
         "rank": 27,
         "sender": "0x95ffc56b4d26deb92dfc8bf9b3b143351ca09612",
         "source_method": "eth_getTransactionByHash",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x8f0fac72564a053f36a1fdb543f19f4b447f3d22223ef1e536d9229edc79891c",
+        "creation_block": 52446842
       },
       {
         "rank": 28,
         "sender": "0xcb492cca6122f4dd102d11f76fe1cad609600563",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x927d9cb731dd49a9626dcaac0ca3c8111457a22ed2960466986decb32ef27a50",
+        "creation_block": 52444009
       },
       {
         "rank": 29,
         "sender": "0x7ecfc8015d85cce7360637201aeb1dcedb633e4b",
         "source_method": "eth_getTransactionReceipt",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x25142a2cad7f58dc157e77edb1e4697a5c53d9ef24b311884dc8112a67de8658",
+        "creation_block": 52447070
       },
       {
         "rank": 30,
         "sender": "0xb5fa429ef42c6ee7a5c9280debbc1d6414ebe82c",
         "source_method": "eth_getTransactionByHash",
-        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
-        "original_creator_tx_identity_crosschecked": true
+        "original_creator_tx_identity_crosschecked": true,
+        "creation_transaction_hash": "0x55fc29c7c1da3462fd02d72edb8648242a78ebe2b3b201821533049f59e9e608",
+        "creation_block": 52447562
       }
-    ]
+    ],
+    "selected_historical_trade_participant_scope": {
+      "cohort_scope": "20 archived selected historical BUY and first indexed later SELL pairs, not all 22 observed BUY and not all future trades",
+      "trade_evidence_key": "bsc_v2_p0_uploaded20_actual_buy_and_indexed_real_sell_replay_20261020.case_results",
+      "covered_trade_case_count": 20,
+      "distinct_selected_buy_transfer_receivers": 14,
+      "distinct_first_indexed_sell_transfer_senders": 14,
+      "selected_buy_receiver_reused_across_tokens": [
+        {
+          "address": "0xfbc84d40a37e43fa7d002d5c0029a95b6c48f50c",
+          "ranks": [
+            2,
+            6,
+            10,
+            22
+          ]
+        },
+        {
+          "address": "0x7347a30460516c8451687d9b1fc61efec6f8dae6",
+          "ranks": [
+            3,
+            13,
+            23
+          ]
+        },
+        {
+          "address": "0x764ad4f30a5d124fa53a7cbb33c82e687450939b",
+          "ranks": [
+            7,
+            19
+          ]
+        }
+      ],
+      "selected_sell_sender_reused_across_tokens": [
+        {
+          "address": "0xfbc84d40a37e43fa7d002d5c0029a95b6c48f50c",
+          "ranks": [
+            2,
+            6,
+            10,
+            22
+          ]
+        },
+        {
+          "address": "0x7347a30460516c8451687d9b1fc61efec6f8dae6",
+          "ranks": [
+            3,
+            13,
+            23
+          ]
+        },
+        {
+          "address": "0x1de4986946f0d8787340d9c97e34aff314ead72b",
+          "ranks": [
+            25,
+            30
+          ]
+        }
+      ],
+      "deployer_participant_cross_links": [
+        {
+          "token_rank": 1,
+          "participant_role": "BUY_TOKEN_RECEIVER",
+          "participant_is_deployer_of_rank": 1,
+          "transaction_hash": "0x2d0361e427bc0feaf9e316f6a79b3a9f935777043d13cb4084c9adfeed2f9ae7",
+          "same_token_deployer": true
+        },
+        {
+          "token_rank": 4,
+          "participant_role": "BUY_TOKEN_RECEIVER",
+          "participant_is_deployer_of_rank": 24,
+          "transaction_hash": "0x575d249666a5a2a6aab20de68552bf06aa8468f07e63d2dd4ae3e2ce115d5ec6",
+          "same_token_deployer": false
+        },
+        {
+          "token_rank": 9,
+          "participant_role": "FIRST_INDEXED_SELL_TOKEN_SENDER",
+          "participant_is_deployer_of_rank": 9,
+          "transaction_hash": "0x4139f9ffc3b5b6b659e469825d25837b7c6b70106e1a724cf5e6b672b7bc7057",
+          "same_token_deployer": true
+        },
+        {
+          "token_rank": 19,
+          "participant_role": "FIRST_INDEXED_SELL_TOKEN_SENDER",
+          "participant_is_deployer_of_rank": 19,
+          "transaction_hash": "0x6fd55dc004b11dd69d900433f190de67501cf79b2d3a50d598a54375f1fd2cef",
+          "same_token_deployer": true
+        },
+        {
+          "token_rank": 27,
+          "participant_role": "FIRST_INDEXED_SELL_TOKEN_SENDER",
+          "participant_is_deployer_of_rank": 27,
+          "transaction_hash": "0x6929a09e7caa15f6f7fba8ae1a86ed3c2bbb5d7a033c03da8d19ae8a72290e99",
+          "same_token_deployer": true
+        }
+      ],
+      "selected_same_token_deployer_is_buy_receiver_ranks": [
+        1
+      ],
+      "selected_same_token_deployer_is_first_indexed_sell_sender_ranks": [
+        9,
+        19,
+        27
+      ],
+      "selected_other_cohort_deployer_is_buy_receiver_pairs": [
+        {
+          "buy_token_rank": 4,
+          "deployer_token_rank": 24
+        }
+      ],
+      "common_beneficial_controller_or_wash_trading": "UNVERIFIED_NO_CLAIM",
+      "model_independent_positive_count": "NOT_SCORABLE",
+      "all_cohort_22_buy_receivers_fully_joined": false,
+      "no_post_hoc_eligible_token_exclusion": true
+    }
   }
 }
