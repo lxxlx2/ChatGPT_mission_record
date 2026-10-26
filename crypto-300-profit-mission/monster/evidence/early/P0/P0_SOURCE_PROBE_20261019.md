@@ -1,3 +1,17 @@
+## 2026-10-26：AWS BNB 2025-07-01 两份Parquet Schema实证结项；Plan B仅作辅助交易与区块锚点
+
+**证据类型和不可扩大范围：USER_PASTED_MAC_TERMINAL_STDOUT。** 用户Mac执行已固定的匿名S3 Range Schema探针，取得同日两对象真实尾部/元数据前缀，随后将原JSON结果粘贴到本会话。此次助手没有直接读取AWS对象行内容或交易回执，以下数字来自该实际终端输出，不提升为独立第二来源复验。
+
+- Blocks key `v1.1/bnb/blocks/date=2025-07-01/blocks.parquet`，对象147077458字节，Footer 973289字节已完整读取，SHA256 `5d04b0f7be64590ec7df61ae97c296b2f01fd3d08022e7d23980899b936cddd4`，ETag `"c04114ca2a9e3002cb478423dad7eb26-3"`，Parquet metadata version 2，宣称115196行/185 row groups。115196恰与冻结区块范围52440287..52555482的包含端点计数一致，但仍未对行值作高度连续性、哈希、重复行或链上独立验证。Schema含number/hash/parent_hash/logs_bloom/receipts_root/timestamp/gas等，`logs_bloom`与`receipts_root`仅为摘要/承诺，均不能直接恢复完整事件/回执。
+- Transactions key `v1.1/bnb/transactions/date=2025-07-01/transactions.parquet`，对象4826591204字节，声明Footer 50032995字节，ETag `"e26eda033147035c9cdda46164ee4632-72"`，读取前262144字节元数据成功解析Parquet v2 Schema，声明13841255行。完整Footer**没有**读取/验SHA，RowGroups数UNKNOWN。Schema包含hash、nonce、block_hash、block_number、transaction_index、from_address、to_address、value、gas、gas_price、input、block_timestamp和EIP-1559/blob费字段；并**未列出**receipt.status、receipt.logs、event topics、log_index或事件data列。
+- 上轮`FOOTER_TOO_LARGE_OR_INVALID`系旧8MiB安全上限触发，本轮读取确认Footer约50.03MB，该错误不能作为文件损坏证据；旧探针新增有界前缀分支已经在本PR提交。用户本轮输出验证该分支可以解析交易Schema，但不证明完整交易数据无缺页、也没有取得原始交易行值/Parquet数据页。
+
+**P0来源结论和资源决定：** 将AWS此两个已检查文件定为`PLAN_B_AWS_BLOCKS_TRANSACTIONS_AUXILIARY_ONLY`，用于未来核对历史块/交易身份、 calldata 与时钟代理；在当前已核两份文件范围内，**没有可直接提供Factory/Pool原生PairCreated/Mint/Sync/Swap全部日志和完整交易执行回执的列**。不能由调用input推出合约内部Swap结果、实际token到手/税费或卖出成功，更不能由block_timestamp推出2025同时代实际公众接收回执。`LOG_RECEIPT_SOURCE_SUFFICIENCY=NOT_VERIFIED`，但不夸称AWS其他产品/路径永远缺少日志。停止对同两份Parquet继续开发探针或下载大文件，回到已有P0冻结30例真实Swap/LP/双向可卖与第三方可核来源缺口。没有升级正式24/30部署及公众PIT、18/30统一名义额双向可卖门槛，均`NOT_SCORABLE`；P1不启动，`G4 UNKNOWN/G6 NO_GO`，2026-11-02止损日不变。
+
+**本轮执行范围：** 只将本次Mac真实结果与资源取舍记录回原P0报告；不改原30例名单、合同、Schema、研究金额、核心模型或生产配置，无新探针、无CI或Mac新执行、无GitHub Action调度、无付费、无交易，旧批准范围不变。
+
+---
+
 ## 2026-10-26：AWS BNB区块Parquet真实Footer可读；交易文件超8MiB元数据限制，修复为有界Schema前缀探针
 
 **用户Mac前台实际输出（USER_PASTED_MAC_TERMINAL_STDOUT）**：指定日期blocks对象原文件长度147077458字节，ETag "c04114ca2a9e3002cb478423dad7eb26-3"，8字节尾标符合Parquet，实际取得其973289字节完整Footer，SHA256为5d04b0f7be64590ec7df61ae97c296b2f01fd3d08022e7d23980899b936cddd4。声明num_rows=115196、row_groups=185。115196与先前冻结高度52440287..52555482含两端的理论块数恰好一致，但**未读取行值，尚未证明每个高度确有一条、无重复或真实区块哈希对应一致**。块Schema显示number/hash/parent_hash/logs_bloom/receipts_root/timestamp/transaction_count/gas等；**logs_bloom和receipts_root是摘要/承诺，无法代替可解码原生EVM日志或回执**。timestamp是区块时间，不是2025同时代真实客户端接收回执，不升级PIT_VERIFIED。
