@@ -1,3 +1,11 @@
+# 2026-10-26 — PR211 staged physical slot ARM64 Mac APPROVED, OS account registry preflight read-only child PR pending
+
+- **Last independently approved source:** PR211 `5b7116047fb6db4b16f6d9eb0878cff2e2c37b5b`, external ARM64 Mac `APPROVE_OFFLINE_CODE — D2_SINGLE_COORDINATOR_PHYSICAL_SLOT_PATCHED_ONLY`, full F0 568/568, D1 171, staged 9, HTTPS ctor 16, D2-A 10, D2-B 10, D2-C 7, UTC 4 all PASS/zero skips. [Source-attributed approval](https://github.com/lxxlx2/ChatGPT_mission_record/pull/211#issuecomment-6408463627). No actual BSC source network allowed.
+- **Next concrete authority prerequisite, new Draft child:** `f0/f0_l2_d2_os_registry_readonly.py` checks the exact prospective production marker directory derived from real `pwd.getpwuid(os.getuid())` home instead of injected `HOME`. Verifies uid ownership, no symlink components, private MissionEvidence/registry, read-only NOFOLLOW fd inode. Missing root NOT READY and no auto-creation. The existing `f0_l2_d1_protected_mac_entry._inspect_fixed_registry` delegates this audit. Ten tests operate ONLY on /tmp fixtures with patched OS-home mapping and never touch a real production marker. Review `f0/F0_D2_OS_ACCOUNT_REGISTRY_READONLY_REVIEW.md`. Exact SHA/Linux CI + independent Mac review still pending.
+- **Not implemented:** actual authenticated production D2 signer roots, separate D3 real human approval, OS-user-fixed one-shot production O_EXCL marker consumption with held directory fd, live HTTPS constructor release, bounded first real read-only pilot. These require distinct reviews and fresh user authorization, not synthetic test signals. Issue #207 open. All PRs Draft, no merge/deploy/background/trades. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-26 — PR211 staged direct-lower-gate RID bypass prevented before fixed-SHA review
 
 - After first CI report mismatch was fixed, [second Linux CI 40239913498](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40239913498) passed 566/566. Further pre-freeze source review found the staged source could be invoked directly via `GlobalStartGate.run` or `reply_transport_evidence_offline` with arbitrary callback while HTTP constructor was patched, bypassing durable coordinator RID reservation. No real network incident; nevertheless violates the single-writer/test integration invariant.
