@@ -63,6 +63,9 @@ class Fixture:
     bootout_completed: bool
     bootstrap_outcome: subprocess.CompletedProcess | BaseException | None
     candidate_after: Runtime | None
+    # Independent FINAL protection observation supplied after G3 GET/browser checks.
+    # This must not be inferred from candidate_after or old_before_switch.
+    protected_after_g3: Protected | None
     legacy_get_pass: bool
     d2_get_pass: bool
     chrome_readonly_pass: bool
@@ -203,9 +206,11 @@ def rehearse_release(
             or scenario.chrome_readonly_pass is not True):
         return restore_failure("G3_GET_OR_BROWSER", None)
     gates.append("G3")
-    # Independently reverify protection after G3; a fixture field is only
-    # a claim by the test input, not evidence of real production integrity.
-    if scenario.candidate_after.protected != scenario.old_before_switch.protected:
+    # G4 uses its OWN later synthetic observation; comparing the G3 value again
+    # would be tautological after G2_RECHECK and G3_RUNTIME_OR_PROTECTED.
+    # Missing or changed closing-state data is fail-closed even if G3 passed.
+    if (scenario.protected_after_g3 is None
+            or scenario.protected_after_g3 != old.protected):
         return restore_failure("G4_PROTECTED", None)
     gates.append("G4")
 
