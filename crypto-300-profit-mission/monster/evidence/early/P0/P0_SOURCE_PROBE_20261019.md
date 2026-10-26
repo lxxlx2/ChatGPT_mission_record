@@ -1,3 +1,11 @@
+## 2026-10-26：AWS官方公开BNB数据桶，2025年P0完整日志覆盖待查（SOURCE_CANDIDATE_ONLY）
+
+新增**官方可核实候选源**：AWS Registry of Open Data 官方当前明确列出由BNB Chain维护的匿名公开S3前缀 `s3://aws-public-blockchain/v1.1/bnb/`（区域us-east-2），官方登记允许`aws s3 ls --no-sign-request`，公开数据不要求AWS账户或订阅。来源：https://registry.opendata.aws/aws-public-blockchain/ 及 https://aws.amazon.com/marketplace/pp/prodview-w2rxwj7aw6mt6 。它可能提供免付费历史原始数据的另一条Plan B路线，避免继续对Alchemy支付才有的历史debug trace消耗预算。
+
+**实际证据边界**：本轮尝试在当前隔离运行环境匿名列出该前缀，但网络DNS解析失败；网页浏览接口也无法列出S3对象。**没有读到任何真实S3对象、Parquet列、2025-07-01分区、块号范围、日志/receipt行、对象SHA或下载字节。** 因此只能记`PLAN_B_AWS_PUBLIC_BNB_CANDIDATE / DIRECTORY_NOT_READ / HISTORICAL_2025_COVERAGE_UNVERIFIED`，**绝不计为可用来源、PIT当时可见时间、V3/Four.meme全量或P0 PASS**；AWS登记的“daily update”不能推出历史全量或观察时钟。原无账户读取允许但AWS Athena/Glue付费计算未授权，不创建云资源、不下载数据、不启动Mac或新增CI。
+
+单次最小后续验证入口：能够访问公开S3目录时，首先只列`v1.1/bnb/`的子前缀与`2025-07-01`分区；只有找到实际历史Parquet对象后，再核对字段是否包含原Factory/launchpad全部事件、真实来源时钟、行数和无分页截断，再进入最多一个有界日期范围的独立交叉验证。若该源只有链上`block_time`，仍不符合历史`available_at`的`PIT_VERIFIED`，不升级当前24/30、18/30门禁。2026-11-02原历史来源止损日期不变。
+
 ## 2026-10-26：22笔历史SELL的真实交易路由与最低输出保护核查（P0执行质量）
 
 为了直接检验“曾经卖出”是否代表普通投资者可**合理受保护地卖出**，本轮按原冻结30个CA中已存的20+2笔代表性历史SELL交易hash，经用户既有Alchemy BNB mainnet**只读`eth_getTransactionByHash`完整读取22/22历史交易的实际`to/from/input/selector`**；不补取未来赢家、不改变选择规则或原代码。对可以按PancakeSwap V2标准ABI解释的交易，只以真实函数选择器和 ABI 字节精确解析`path / amountOutMin / deadline`，并核对全部标准路径均为**对应冻结Token CA→对应WBNB/USDT报价资产**、2个地址、原V2 Router目标地址，未以token Symbol猜测身份。
