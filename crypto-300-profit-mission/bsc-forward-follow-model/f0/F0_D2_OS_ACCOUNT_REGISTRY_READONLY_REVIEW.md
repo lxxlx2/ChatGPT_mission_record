@@ -21,3 +21,10 @@ Expected full F0 578/578 if all ten isolated tests pass. Report exact actual Lin
 Verdict for this increment only: `APPROVE_OFFLINE_CODE — D2_OS_BOUND_REGISTRY_READONLY_PREFLIGHT_ONLY` or `REQUEST_CHANGES`. Even approval does not create a production authority. No automatic run, no grant consumption, no authenticated production signer enrollment.
 
 **Status:** `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+## Initial CI failure: legacy isolated Mac fixture disagreed with OS passwd-home fixture
+
+The initial new PR revision `7c4f96d0100289b78c6ce42527899451a8c17111` had real [GitHub workflow 40271388939](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40271388939) failure: **578 tests, 17 FAIL + 17 ERROR**. A previously reviewed test fixture for `f0_l2_d1_protected_mac_entry` only monkeypatched the old **module-scoped path and `_os_user_home`**; the new stronger read-only audit independently read `pwd.getpwuid(os.getuid())` and the grant-module fixed registry path. The old fixture did not establish a consistent fake OS-account home, and its parent MissionEvidence directory was not explicitly owner-private. This caused early `D2_OS_FIXED_REGISTRY_ENV_OR_PATH_MISMATCH` and masked the intended test errors, not a real-network attempt.
+
+**Same-PR bounded correction:** `f0_l2_d1_protected_mac_entry._inspect_fixed_registry` retains its original exact Mac path check and previous error codes, *then* calls the stronger OS ownership/no-follow audit, mapping loose private-mode errors back to the old compatibility code. The existing **test-only** `MacEntryNoNetworkTests` fixture now patches the simulated OS passwd-home and new read-only module constant to the same disposable /tmp directory and explicitly chmods fake `MissionEvidence` to 0700. The new direct integration test patches the original Mac entry fixed path and `_os_user_home` to the identical simulated account home. **No production path selection or authorizing parameter was added to runtime**, and no actual local user registry was read or modified. Old fail result remains provenance; a fresh final exact-SHA full CI is mandatory before independent approval.
+
