@@ -43,7 +43,8 @@ def _require_private_dir(directory: Path) -> int:
 
 def _bytes(value: bytes | str | None) -> bytes:
     if value is None:
-        return b""
+        # CompletedProcess(None) means no capture; it is not a captured empty stream.
+        raise EvidenceGateError("EVIDENCE_STREAM_NOT_CAPTURED")
     if isinstance(value, bytes):
         return value
     if isinstance(value, str):
