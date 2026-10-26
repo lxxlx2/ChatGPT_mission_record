@@ -1,3 +1,12 @@
+# 2026-10-26 — PR217 proposal Mac APPROVED; Issue207 production release threat model / human decision gate (DOCS ONLY)
+
+- **Frozen approved baseline PR217:** `8362b4048d45b0bd13be4a6e4b6be35ad737819b`, ARM64 Mac independently supplied `APPROVE_OFFLINE_CODE — D2_PRODUCTION_SIGNATURE_PROTOCOL_PROPOSAL_ONLY`, F0 598/598, D1 171, new proposed spec 10, 0 skips. [Attributable audit archive](https://github.com/lxxlx2/ChatGPT_mission_record/pull/217#issuecomment-6418113738). Scope is deterministic PROPOSED message bytes, not real-signature authorisation or production keys.
+- **New DOCS-ONLY Issue #207 child:** `f0/F0_D2D3_PRODUCTION_RELEASE_THREAT_MODEL_ADR_20261026.md` maps approved source behavior to production attack scenarios, especially SAME-UID ability to delete/swap an OS private directory/marker between sessions. A held FD and `0700` temp tests cannot defend against the registry owner changing an entire directory across separate launches. Documents real D2 user, independent D2 reviewer and one-shot D3 operator identity/ownership, normative domain, revocation, OS UID/launcher, trusted replay anchor, final SHA/source and separate explicit user pilot approval as **A1–A8 UNDECIDED/NOT AUTHORIZED**. No executable code, tests, trust roots or launch path modified. Further repeating mock signature/marker PRs will not close the human authority blocker.
+- **Required next step:** independent DOCS-ONLY review at new PR HEAD. Only after humans and independent reviewer select an acceptable threat model/key ownership and source-release protocol may a distinct code PR for enrollment/release be scoped. Never solicit actual signatures against PR217 PROPOSAL. Issue #207 remains OPEN; no production public keys/marker, private journal, RPC/WS, deployment, merge, background task or trades.
+- **State remains:** `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`; `NO_DEPLOY / NO_RESTART / NO_RPC / NO_TRADES`.
+
+---
+
 # 2026-10-26 — PR216 approved; real D2/D3 signing protocol PROPOSAL only (new child review pending)
 
 - Frozen base PR216 SHA 8aa21a04fead8e6a6db326ed8dfa244f9f76192c: external independently reported ARM64 Mac APPROVE_OFFLINE_CODE / D2_SINGLE_FD_HELD_ONCE_TEST_MARKER_ONLY; F0 588/588, D1 171, FD-held 10, OS readonly 10, staged 9, patched ctor 16, D2-A/B/C 10/10/7. [Attributable Mac audit archive](https://github.com/lxxlx2/ChatGPT_mission_record/pull/216#issuecomment-6417376330). This is TEST marker approval only, never production signer/nonce or RPC permission.
