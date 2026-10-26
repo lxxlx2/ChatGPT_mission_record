@@ -1,39 +1,39 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-26 06:59:36 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-26 08:03:05 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-26 06:58:56 Asia/Bangkok (06:57:14 existing automation context; off-minute final persisted; no independent HH:00 scheduler proof)
+- latest_actual_run: 2026-10-26 08:03:05 Asia/Bangkok (08:01:28 existing automation invocation context)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-26/065856-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-26/065747-attempt.md
-- latest_scheduled_shard: 2
-- latest_executed_shard: 2
-- stale_shard_recovery: false (hour06 modulo4; second consecutive shard2; next rotate away)
-- latest_candidate_count: 6
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-26/080305-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-26/080149-attempt.md
+- latest_scheduled_shard: 0
+- latest_executed_shard: 0
+- stale_shard_recovery: false (hour08 modulo4; fair rotation away from consecutive shard2)
+- latest_candidate_count: 7
 - latest_triggered_events: 0
 - latest_identity_failures: 0
-- latest_source_failures: 5
+- latest_source_failures: 6
 - latest_notification_decision: SILENT_NO_NEW_ACTION
 - latest_notification_status: NO_GMAIL_NO_APP
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_additional_USDC,Surf_PONS_raffle_English_terms,StandX_original_X_checker_pre_open,01_Exchange_private_rights,OhBabyGames_current_issuer
+- latest_source_gaps: Concrete_additional_USDC,Surf_PONS_raffle_English_terms,StandX_original_X_checker_live_unverified,Block_Stranding_current_canonical,TurboFlow_current_issuer,Makina_recovery_NFT_terms
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
-- last_meaningful_attempt_at_shard0: 2026-10-26 04:58:53 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard0: 2026-10-26 08:03:05 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard1: 2026-10-26 01:59:05 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard2: 2026-10-26 06:58:56 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-10-26 03:56:29 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 065856-final.md commit c0c06ecc649ad3370e602bf977a2fc5ae3954899
-- latest_terminal_readback: VERIFIED 065856-final.md content readback on main
-- latest_four_executed_shards: [3,0,2,2]
-- latest_four_executed_shards_prior: [3,3,0,2]
+- latest_primary_final_write: VERIFIED_DURABLE 080305-final.md commit 53ad2c9e7a26e5c9b9a517a6c8ce62ce84d0694e
+- latest_terminal_readback: VERIFIED 080305-final.md content readback on main
+- latest_four_executed_shards: [0,2,2,0]
+- latest_four_executed_shards_prior: [3,0,2,2]
 - last_delivered_event_key: cambria:duel_arena_blast_abstract_post_sweep_claim_and_login:2026-10-19 (prior run)
 - last_delivered_gmail_message_id: 1a16a27a9e5b557c (prior run; no new email)
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-26 06:58:56 BKK PARTIAL shard2, 6 candidate families, 5 source/rights gaps, 0 identity failures, 0 new ACTION, no Gmail/App; last full verified Oct10 unchanged.
+- latest_terminal_sync: 2026-10-26 08:03:05 BKK PARTIAL shard0, 7 candidate families, 6 source/rights gaps, 0 identity failures, 0 new ACTION, no Gmail/App; StandX checker scheduled 07:00 BKK but LIVE first-party readback blocked; last full verified Oct10 unchanged.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
