@@ -43,7 +43,7 @@ function harness() {
     sessionStorage:{getItem:k=>store.get('session:'+k)||null,setItem:(k,v)=>store.set('session:'+k,v),removeItem:k=>store.delete('session:'+k)},
     fetch:async(url,options={})=>{
       requests.push({url,method:options.method||'GET'});
-      if(url==='/api/cluster-latest?mint='+encodeURIComponent(mint))
+      if(url==='/api/cluster-latest?mint='+encodeURIComponent(mint)+'&job_id='+jobId)
         return {ok:true,status:200,json:async()=>fixture};
       if(url==='/api/cluster-analysis?job_id='+jobId)
         return {ok:true,status:200,json:async()=>({job_id:jobId,mint,status:'DONE'})};
