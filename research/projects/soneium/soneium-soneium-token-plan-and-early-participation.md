@@ -57,7 +57,7 @@
 
 - Canonical source: `crypto-300-profit-mission/portfolio/current.md`; 钱包为 `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`。此前对话提及的其他 0x 地址不能替代这一 canonical 身份。
 - Soneium Mainnet chain ID 1868：Blockscout get_address_info 显示该地址最早链上活动时间 **2025-03-01T04:09:47Z**（block 3,833,718）。主网正式上线始于 2025-01-14，所以不能把主网历史追溯到 2022。
-- Soneium 的 get_transactions_by_address 曾按时间段取回四组 **10 个独立链上 Tx Hash/组**，去掉同 Tx 的 internal native transfer 重复，**直接核实至少 40 笔彼此不同的上链交易**；覆盖 2025-03 至 2026-07 的若干时间窗口。2025-03 初、中旬及其他未读取分页仍存在，因 Blockscout 免费会话 API 额度耗尽，**40 是已读样本下限，绝非完整 Soneium Tx 总数**。
+- Soneium 的 get_transactions_by_address 曾按时间段取回四组交易查询分别有 **9、9、9、10 个独立 Tx Hash**，去掉同 Tx 的 internal native transfer 重复，**直接核实至少 37 笔彼此不同的上链交易**；覆盖 2025-03 至 2026-07 的若干时间窗口。2025-03 初、中旬及其他未读取分页仍存在，因 Blockscout 免费会话 API 额度耗尽，**37 是已读样本下限，绝非完整 Soneium Tx 总数**。
 - 已核实的 Soneium 方法类型有 mint/mintSigned、batchBuyWithETH、Seaport fulfill/matchAdvancedOrders、approve/setApprovalForAll、withdraw/depositNative、claim、externalDelegateCall、transferAndMulticall，以及未解码的四字节 selector。没有独立的 verified contract linkage 时，不可将 selector 猜为某指定项目。
 - Soneium get_nft_tokens_by_address 实际读取 **两页各 10 个集合**，合计至少 **20 个 ERC721 collection / 23 枚持有中的 NFT**（2026-10-26 读到的分页截面）。第三页显示仍存在，**20 / 23 均为已核实下限而非完整 holdings，且不包含历史已卖出 NFT**。
 
@@ -89,5 +89,5 @@
 - **与 2026-10-26 官方文章点名案例核对**：前两页 NFT 持仓没有 Moriusa、DayOneDream、WAVIST 的可识别项目；由于分页尚未结束、交易记录不完整且没有官方指定的项目合约地址，三者的历史交互状态须标 **UNVERIFIED**，不能判定无互动。
 - **与生态历史凭证核对**：确认持有 2P2E Ecosystem Badge、Layer3 Soneium Quest CUBE、Sony aibo、B!RU、Sonova ACS、RŌHKI 音乐 NFT、YOAKE 七大罪动漫 IP NFT，说明钱包具有多类链上娱乐/生态活动记录；并不能推出 $SONEIUM 空投资格。
 - **Soneium 统一 OG Badge / Score 12 季 SBT**：在这 20 个当前持仓系列中没有直接辨识出官方统一 OG/Score SBT，第三页和历史 NFT 转移记录未读完，**持有/历史申领/空投资格 UNVERIFIED**。TiltPlay OG 和 2P2E Pioneer 绝不可当作统一的 Soneium OG Badge。
-- **多链 2022–2026 完整统计**：Ethereum、Base、Arbitrum、Optimism、BNB、Polygon、Unichain、Ink、Linea、Monad、Robinhood 等其他 EVM 链未在本轮形成全量逐链交易分页；**全链交易总数、项目总数 UNVERIFIED**，不得用这 40 笔 Soneium 已读交易代替多链汇总。
+- **多链 2022–2026 完整统计**：Ethereum、Base、Arbitrum、Optimism、BNB、Polygon、Unichain、Ink、Linea、Monad、Robinhood 等其他 EVM 链未在本轮形成全量逐链交易分页；**全链交易总数、项目总数 UNVERIFIED**，不得用这 37 笔 Soneium 已读交易代替多链汇总。
 - Blockscout 会话限额显示 8 次免费数据调用，之后 quota 为 0。所有以上数据只读；未执行钱包签名、资金转移、监控修改。
