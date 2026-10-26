@@ -35,7 +35,9 @@ def fixture(tmp_path):
         bootstrap_outcome=subprocess.CompletedProcess(
             ["SYNTHETIC_BOOTSTRAP"], 0, stdout=b"", stderr=b"",
         ),
-        candidate_after=new, legacy_get_pass=True, d2_get_pass=True,
+        candidate_after=new,
+        protected_after_g3=replace(protected),  # later, independently supplied snapshot
+        legacy_get_pass=True, d2_get_pass=True,
         chrome_readonly_pass=True, rollback_operation_ok=True,
         old_after_rollback=old,
     )
@@ -200,6 +202,88 @@ def test_never_runs_real_child_or_network_or_launchctl(tmp_path):
          patch("os.system", side_effect=AssertionError("NO_SHELL")):
         res = rehearse_release(pins, case, evidence_dir=private)
     assert res.status == "FIXTURE_RELEASE_PASS"
+
+
+
+@pytest.mark.parametrize("field,new_value", [
+    ("loop_fingerprint", "LOOP_CHANGED_ONLY_AT_G4"),
+    ("v1_fingerprint", "V1_CHANGED_ONLY_AT_G4"),
+    ("notification_fingerprint", "NOTIFICATIONS_CHANGED_ONLY_AT_G4"),
+    ("d2_whole_file_sha256", "f"*64),
+    ("other_listeners_fingerprint", "PORTS_CHANGED_ONLY_AT_G4"),
+])
+def test_g3_pass_but_independent_g4_protected_drift_rolls_back_once(
+    tmp_path, field, new_value,
+):
+    def only_final_snapshot_changes(pins, case):
+        final = replace(case.protected_after_g3, **{field: new_value})
+        assert case.candidate_after.protected == case.old_before.protected
+        return pins, replace(case, protected_after_g3=final)
+
+    verdict, private = run(tmp_path, only_final_snapshot_changes)
+    assert verdict.failed_gate == "G4_PROTECTED"
+    assert verdict.status == "FIXTURE_ROLLED_BACK"
+    assert "G3" in verdict.gates_passed
+    assert "G4" not in verdict.gates_passed
+    assert verdict.evidence_status == "NO_BOOTSTRAP_RESULT"
+    assert (verdict.simulated_switches, verdict.simulated_restores,
+            verdict.simulated_verifies) == (1, 1, 1)
+    assert not list(private.iterdir())  # No fabricated failing-bootstrap record.
+
+
+def test_g4_final_observation_missing_fails_closed_and_restores_once(tmp_path):
+    verdict, private = run(
+        tmp_path, lambda p, c: (p, replace(c, protected_after_g3=None)),
+    )
+    assert verdict.status == "FIXTURE_ROLLED_BACK"
+    assert verdict.failed_gate == "G4_PROTECTED"
+    assert "G3" in verdict.gates_passed
+    assert "G4" not in verdict.gates_passed
+    assert (verdict.simulated_restores, verdict.simulated_verifies) == (1, 1)
+    assert not list(private.iterdir())
+
+
+def test_distinct_unchanged_final_snapshot_allows_g4_pass(tmp_path):
+    pins, case, private = fixture(tmp_path)
+    assert case.protected_after_g3 == case.candidate_after.protected
+    assert case.protected_after_g3 is not case.candidate_after.protected
+    verdict = rehearse_release(pins, case, evidence_dir=private)
+    assert verdict.status == "FIXTURE_RELEASE_PASS"
+    assert verdict.failed_gate is None
+    assert verdict.gates_passed[-2:] == ("G3", "G4")
+    assert verdict.simulated_restores == 0
+
+
+def test_g4_drift_with_bad_old_runner_fails_rollback_verification(tmp_path):
+    def damaged_rollback(pins, case):
+        return pins, replace(
+            case,
+            protected_after_g3=replace(
+                case.protected_after_g3, notification_fingerprint="CHANGED_AFTER_G3",
+            ),
+            old_after_rollback=replace(
+                case.old_after_rollback, runner_sha256="f"*64,
+            ),
+        )
+    verdict, _ = run(tmp_path, damaged_rollback)
+    assert verdict.failed_gate == "G4_PROTECTED"
+    assert verdict.status == "FIXTURE_ROLLBACK_UNVERIFIED_STOP"
+    assert verdict.simulated_restores == 1
+    assert verdict.simulated_verifies == 1
+
+
+def test_g4_drift_restore_action_failure_never_retries(tmp_path):
+    def failed_restore(pins, case):
+        return pins, replace(
+            case, protected_after_g3=replace(
+                case.protected_after_g3, d2_whole_file_sha256="f"*64,
+            ), rollback_operation_ok=False,
+        )
+    verdict, _ = run(tmp_path, failed_restore)
+    assert verdict.failed_gate == "G4_PROTECTED"
+    assert verdict.status == "FIXTURE_ROLLBACK_FAILED_STOP"
+    assert verdict.simulated_restores == 1
+    assert verdict.simulated_verifies == 0
 
 
 def test_g3_failure_does_not_fabricate_bootstrap_stderr(tmp_path):
