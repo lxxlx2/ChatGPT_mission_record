@@ -57,6 +57,7 @@ jobs:
               assert d["replay_engine_executed"] is False
               assert d["metrics_from_future_labels_computed"] is False
           print("MONSTER_NOVEMBER_FUTURE_REAL_COHORT_UNKNOWN_NO_G1_NO_G2_SCORE_PASS")
+          assert len(list(root.glob("*.json")))==3
           PY
       - name: Save actual future no-source reports only, NOT synthetic WATCH counts
         uses: actions/upload-artifact@v4
