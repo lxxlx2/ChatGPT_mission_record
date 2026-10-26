@@ -63,7 +63,7 @@ def test_normal_capture_really_persisted_before_restore(tmp_path):
 
 
 @pytest.mark.parametrize("stdout,stderr", [
-    (None, None), (None, b"failed"), (b"", None), (None, b""), (b"", None),
+    (None, None), (None, b"failed"), (b"", None), (None, b""), (b"diagnostic", None),
 ])
 def test_f1_none_capture_fails_but_restore_still_happens(tmp_path, stdout, stderr):
     directory = evidence_directory(tmp_path)
@@ -105,7 +105,9 @@ def test_full_disk_fails_pre_record_and_restore_proceeds(tmp_path):
 
 def test_capture_keyboard_interrupt_and_system_exit_do_not_suppress_restore(tmp_path):
     for failure in (KeyboardInterrupt, SystemExit):
-        directory = evidence_directory(tmp_path / failure.__name__ if False else tmp_path)
+        parent = tmp_path / failure.__name__
+        parent.mkdir()
+        directory = evidence_directory(parent)
         def interrupted(*args, **kwargs):
             raise failure("SYNTHETIC_INTERRUPTION")
         outcome, calls = run(result(), directory, recorder=interrupted)
