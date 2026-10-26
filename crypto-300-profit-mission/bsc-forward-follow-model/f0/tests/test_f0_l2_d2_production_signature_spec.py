@@ -78,7 +78,7 @@ class ProposedProductionSignatureBytesTests(unittest.TestCase):
         domain, rows = self.unpack_without_using_source_encoder(raw)
         fields = dict(rows)
         self.assertEqual(domain, spec.D3_PROPOSED_DOMAIN)
-        self.assertEqual(len(rows), 9)
+        self.assertEqual(len(rows), 10)
         self.assertEqual(fields["role"], b"operator")
         self.assertEqual(fields["intent_raw_sha256"], b"d" * 64)
         self.assertEqual(fields["permit_raw_sha256"], b"a" * 64)
