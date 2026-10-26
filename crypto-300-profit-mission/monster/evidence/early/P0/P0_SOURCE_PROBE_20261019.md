@@ -1,3 +1,17 @@
+## 2026-10-26：P0固定30例G4跨表核对，完整回售与正数minOut证据交集为0（旧档案再验证）
+
+**本轮完成的是既有原始机器证据的独立关联运算，不是链上新采集。** 从Git blob `1a6940290d03cc79ca86fd2c7f22ff4a0982c7a6` 完整解析已有P0 JSON，按冻结 rank、精确小写token CA、SELL交易hash联合核对以下四表：`bsc_v2_p0_current_frozen30_p0_gate_matrix_20261020.rows`、`bsc_v2_p0_22_sell_transaction_route_price_protection_20261026.rows`、`bsc_v2_p0_22_actual_sell_pool_quote_depletion_20261026.rows`、`bsc_v2_p0_seven_same_recipient_full_token_roundtrip_execution_route_20261020.rows`。实算唯一rank分别为30/22/22/7；交叉CA/rank不一致0，关联22笔SELL交易hash不一致0；7笔都属于22笔已存真实SELL，不增加样本或独立交易者数量。
+
+**得到的业务组合事实（并非新经验阈值）**：
+- 22笔存档SELL中18笔卖出前原研究报价侧深度合格；22笔中仅rank1的标准V2交易能直接证实`amountOutMin>0`，并在合格深度内。其历史SELL由**另一代币发送者**完成，不能把该笔计为已证的买入接收地址同量回售。
+- 7笔同地址同数量完整回售是rank `[3,7,12,13,21,23,30]`。4笔普通EOA Router（rank `[7,12,21,30]`）实际卖出`amountOutMin=0`；3笔rank `[3,13,23]`经过同一个自定义收款合约，标准Router的最低输出语义不适用，最终外部受益人可得金额`UNKNOWN`。所以**在已有档案中，同时具备已证同量回售与可解码正数minimum-out的交集=0**；这不是0笔可卖出的证明，更不能反推未审自定义交易无保护。
+- 用链上池端原始Wei大整数，7笔中买卖报价腿差额为正的rank `[3,13,21,23,30]` 共5笔、负的rank `[7,12]` 共2笔；它不是个人最终钱包利润，未包含完整钱包链外/内部资金往来、交易全部成本、税费或资金归属。旧有7笔里同一自定义合约收款3笔也不等于3位独立普通投资者。
+- 30例中的`first_actual_public_available_at`全部为`UNKNOWN`，`uniform_research_notional_sellability`全部为`NOT_SCORABLE`，无法把历史买卖事实升级成原冻结的24/30同时代完整PIT或18/30同量级可卖门禁。
+
+**研究决定**：此组合分析确认继续追加同类历史SELL成功事件的边际价值很低；若要满足P0，下一来源必须直接补齐当时信息可得时钟与合理同研究金额下的真实双向净执行。此轮没有构建新训练/收益标签、没有采用`amountOutMin>0`作为新硬研究阈值；只是将实际风险边界显式分层。没有运行新的Python unittest、CI、Mac采集、RPC或独立其他AI Review，只有连接器内只读JS源证据关联与原报告Git写入。AWS维持AUXILIARY_ONLY，P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO，截止2026-11-02且无新授权不变。
+
+---
+
 ## 2026-10-26：AWS BNB 2025-07-01 两份Parquet Schema实证结项；Plan B仅作辅助交易与区块锚点
 
 **证据类型和不可扩大范围：USER_PASTED_MAC_TERMINAL_STDOUT。** 用户Mac执行已固定的匿名S3 Range Schema探针，取得同日两对象真实尾部/元数据前缀，随后将原JSON结果粘贴到本会话。此次助手没有直接读取AWS对象行内容或交易回执，以下数字来自该实际终端输出，不提升为独立第二来源复验。
