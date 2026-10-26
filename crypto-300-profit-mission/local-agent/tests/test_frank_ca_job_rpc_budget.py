@@ -387,7 +387,7 @@ class TestCompletedCAReportIdentity(unittest.TestCase):
             worker.lock = threading.Lock()
             worker.jobs = {
                 "a" * 32: {
-                    "job_id": "a" * 32, "mint": "synthetic-mint",
+                    "job_id": "a" * 32, "mint": "So11111111111111111111111111111111111111112",
                     "preset": "quick", "status": "QUEUED",
                     "created_at": 1, "started_at": None,
                     "finished_at": None, "progress": {"stage": "QUEUED"},
@@ -415,7 +415,7 @@ class TestCompletedCAReportIdentity(unittest.TestCase):
                     pass
 
                 def analyze(self):
-                    return {"mint": "synthetic-mint", "coverage": {},
+                    return {"mint": "So11111111111111111111111111111111111111112", "coverage": {},
                             "observed_at": 100}
 
             with (
@@ -428,10 +428,48 @@ class TestCompletedCAReportIdentity(unittest.TestCase):
                 worker._run("a" * 32)
 
             self.assertEqual(worker.jobs["a" * 32]["status"], "DONE")
-            report_dir = root / "reports" / "synthetic-mint"
+            report_dir = root / "reports" / "So11111111111111111111111111111111111111112"
             stored = json.loads((report_dir / "latest.json").read_text())
             self.assertEqual(stored["ca_job_id"], "a" * 32)
-            self.assertEqual(stored["mint"], "synthetic-mint")
+            self.assertEqual(stored["mint"], "So11111111111111111111111111111111111111112")
             dated = list(report_dir.glob("20*.json"))
             self.assertEqual(len(dated), 1)
             self.assertEqual(json.loads(dated[0].read_text())["ca_job_id"], "a" * 32)
+            by_id = root / "reports" / "_jobs" / ("a" * 32 + ".json")
+            self.assertEqual(json.loads(by_id.read_text())["ca_job_id"], "a" * 32)
+            worker.jobs.clear()
+            recovered = worker.get("a" * 32)
+            self.assertEqual(recovered["status"], "DONE")
+            self.assertTrue(recovered["restored_from_saved_report"])
+            self.assertEqual(worker.latest(recovered["mint"], job_id="a" * 32)["ca_job_id"], "a" * 32)
+            self.assertIsNone(worker.get("b" * 32))
+            self.assertIsNone(worker.latest(recovered["mint"], job_id="b" * 32))
+            with self.assertRaises(ValueError):
+                worker.latest(recovered["mint"], job_id="../invalid")
+
+            # New B on the same mint overwrites latest while A stays by-ID.
+            worker.jobs["b" * 32] = {
+                "job_id": "b" * 32, "mint": recovered["mint"],
+                "preset": "quick", "status": "QUEUED", "created_at": 2,
+                "started_at": None, "finished_at": None,
+                "progress": {"stage": "QUEUED"}, "error": None,
+            }
+            with (
+                patch.object(server, "SolanaReadOnlyRPC", StubRPC),
+                patch.object(server, "WalletClusterAnalyzer", StubAnalyzer),
+                patch.object(server, "load_registry", return_value={}),
+                patch.object(server, "markdown", return_value="synthetic report\\n"),
+                patch.object(worker, "_attach_assessment_history", return_value=None),
+            ):
+                worker._run("b" * 32)
+            self.assertEqual(worker.jobs["b" * 32]["status"], "DONE")
+            self.assertEqual(worker.latest(recovered["mint"])["ca_job_id"], "b" * 32)
+            self.assertEqual(worker.latest(recovered["mint"], job_id="a" * 32)["ca_job_id"], "a" * 32)
+            self.assertEqual(worker.latest(recovered["mint"], job_id="b" * 32)["ca_job_id"], "b" * 32)
+            self.assertIsNone(worker.latest("11111111111111111111111111111111", job_id="a" * 32))
+            worker.jobs.clear()
+            self.assertEqual(worker.get("a" * 32)["status"], "DONE")
+            self.assertEqual(worker.get("b" * 32)["status"], "DONE")
+            by_id.write_text(json.dumps({"mint": recovered["mint"], "ca_job_id": "b" * 32}))
+            self.assertIsNone(worker.get("a" * 32))
+            self.assertIsNone(worker.latest(recovered["mint"], job_id="a" * 32))

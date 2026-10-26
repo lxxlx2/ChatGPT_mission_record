@@ -510,6 +510,9 @@ class ClusterJobManager:
             payload = json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True)
             _atomic_write_text(out / f"{stamp}.json", payload)
             _atomic_write_text(out / f"{stamp}.md", markdown(report))
+            by_job = self.report_root / "_jobs"
+            by_job.mkdir(parents=True, exist_ok=True)
+            _atomic_write_text(by_job / f"{job_id}.json", payload)
             _atomic_write_text(out / "latest.json", payload)
             if self.evidence_enabled:
                 try:
@@ -562,25 +565,66 @@ class ClusterJobManager:
         finally:
             cache.close()
 
-    def get(self, job_id: str) -> dict | None:
-        with self.lock:
-            job = self.jobs.get(job_id)
-            return None if job is None else self._public_job(job)
+    @staticmethod
+    def _valid_job_id(job_id: str) -> bool:
+        return isinstance(job_id, str) and re.fullmatch(r"[0-9a-f]{32}", job_id) is not None
 
-    def latest(self, mint: str) -> dict | None:
-        mint = self.validate_mint(mint)
-        path = self.report_root / mint / "latest.json"
-        if not path.is_file():
+    def _saved_job_report(self, job_id: str) -> dict | None:
+        if not self._valid_job_id(job_id):
             return None
         try:
-            report = json.loads(path.read_text())
-            # Previously saved fixed-notional quotes are stale historical
-            # research and must not appear in fresh CA analysis.
+            report = json.loads((self.report_root / "_jobs" / f"{job_id}.json").read_text())
+            if not isinstance(report, dict) or report.get("ca_job_id") != job_id:
+                return None
+            mint = report.get("mint")
+            if not isinstance(mint, str):
+                return None
+            self.validate_mint(mint)
             report.pop("execution_quote_30_usdc", None)
             return report
         except (OSError, ValueError):
             return None
 
+    def get(self, job_id: str) -> dict | None:
+        with self.lock:
+            job = self.jobs.get(job_id)
+            if job is not None:
+                return self._public_job(job)
+        # Only a previously completed, durable exact-ID report can restore DONE.
+        report = self._saved_job_report(job_id)
+        if report is None:
+            return None
+        return {
+            "job_id": job_id, "mint": report["mint"], "status": "DONE",
+            "created_at": None, "started_at": None, "finished_at": None,
+            "error": None,
+            "progress": {"stage": "DONE", "source": "SAVED_CA_REPORT"},
+            "restored_from_saved_report": True,
+        }
+
+    def latest(self, mint: str, job_id: str | None = None) -> dict | None:
+        mint = self.validate_mint(mint)
+        if job_id is not None:
+            if not self._valid_job_id(job_id):
+                raise ValueError("INVALID_CA_JOB_ID")
+            saved = self._saved_job_report(job_id)
+            if saved is not None:
+                return saved if saved["mint"] == mint else None
+        path = self.report_root / mint / "latest.json"
+        if not path.is_file():
+            return None
+        try:
+            report = json.loads(path.read_text())
+            if not isinstance(report, dict) or report.get("mint") != mint:
+                return None
+            # A by-ID lookup must not silently substitute a newer job.
+            # Old ID-less cache stays readable with unverified identity.
+            if job_id is not None and report.get("ca_job_id") is not None:
+                return None
+            report.pop("execution_quote_30_usdc", None)
+            return report
+        except (OSError, ValueError):
+            return None
 
 class DashboardState:
     def __init__(self, production_root: Path, control_root: Path):
@@ -969,12 +1013,15 @@ class Handler(BaseHTTPRequestHandler):
             job = self.state.cluster_jobs.get(job_id)
             return self._json(job if job is not None else {"error":"CLUSTER_JOB_NOT_FOUND"}, 200 if job is not None else 404)
         if path == "/api/cluster-latest":
-            query = parse_qs(urlparse(self.path).query)
-            mint = (query.get("mint") or [""])[0]
             try:
-                report = self.state.cluster_jobs.latest(mint)
+                query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=2)
+                if set(query) - {"mint", "job_id"} or any(len(v) != 1 for v in query.values()):
+                    raise ValueError("INVALID_REPORT_QUERY")
+                mint = (query.get("mint") or [""])[0]
+                job_id = (query.get("job_id") or [None])[0]
+                report = self.state.cluster_jobs.latest(mint, job_id=job_id)
             except ValueError:
-                return self._json({"error":"INVALID_SOLANA_CA"},400)
+                return self._json({"error":"INVALID_CLUSTER_REPORT_QUERY"},400)
             return self._json(report if report is not None else {"error":"CLUSTER_REPORT_NOT_FOUND"}, 200 if report is not None else 404)
         if path in {"/", "/index.html"}:
             return self._file(self.static_root / "index.html")

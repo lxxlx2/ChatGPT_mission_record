@@ -238,8 +238,8 @@ test('P2-2: DONE report GET fails and manual recovery retries only report GET',a
   h.listeners['cluster-resume-get']();
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal(h.calls.length,3);
-  assert.equal(h.calls[1],'/api/cluster-latest?mint='+mint);
-  assert.equal(h.calls[2],'/api/cluster-latest?mint='+mint);
+  assert.equal(h.calls[1],'/api/cluster-latest?mint='+mint+'&job_id='+id);
+  assert.equal(h.calls[2],'/api/cluster-latest?mint='+mint+'&job_id='+id);
   assert.equal(h.elements('cluster-submit').disabled,false);
   assert.equal(h.storage.has('mission-meme-cluster-pending-v1'),false);
   assert.equal(h.rendered.length,1);
@@ -273,6 +273,7 @@ test('DONE job renders same-ID persisted report with verified identity, not blan
   await h.context.pollClusterJob(id);
   assert.equal(h.rendered.length,1);
   assert.equal(h.rendered[0].ca_job_id,id);
+  assert.equal(h.calls[1],'/api/cluster-latest?mint='+mint+'&job_id='+id);
   assert.equal(h.storage.has('mission-meme-cluster-pending-v1'),false);
   assert.match(h.statuses.at(-1).join(' '),/任务编号与已结束任务一致/);
   assert.match(h.statuses.at(-1).join(' '),/完整性仍须另行核实/);
@@ -309,4 +310,23 @@ test('legacy report without ca_job_id remains explicit unverified historical rea
   assert.equal(h.rendered.length,1);
   assert.match(h.statuses.at(-1).join(' '),/缺少可核对的本次任务编号/);
   assert.doesNotMatch(h.statuses.at(-1).join(' '),/任务编号与已结束任务一致/);
+});
+
+
+test('completed A recovers its durable report after same-Mint B became latest',async()=>{
+  const h=makeHarness([
+    {job_id:id,mint,status:'DONE',restored_from_saved_report:true},
+    {mint,ca_job_id:id,observed_at:1792708806,coverage:{}},
+  ],{id,mint},{realCache:true});
+  h.elements('cluster-mint').value=mint;
+  h.context.clusterRestorePending();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(h.rendered.length,1);
+  assert.equal(h.rendered[0].ca_job_id,id);
+  assert.deepEqual(h.calls,[
+    '/api/cluster-analysis?job_id='+id,
+    '/api/cluster-latest?mint='+mint+'&job_id='+id,
+  ]);
+  assert.equal(h.storage.has('mission-meme-cluster-pending-v1'),false);
+  assert.ok(h.calls.every(path=>!path.startsWith('POST:')));
 });

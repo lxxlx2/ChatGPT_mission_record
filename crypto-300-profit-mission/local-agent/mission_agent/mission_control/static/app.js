@@ -1112,7 +1112,8 @@ async function loadLatestCluster(mint, silent=false, expectedVersion=clusterPoll
   const inputBefore=$('cluster-mint').value.trim();
   let report;
   try {
-    report=await get('/api/cluster-latest?mint=' + encodeURIComponent(mint));
+    report=await get('/api/cluster-latest?mint=' + encodeURIComponent(mint) +
+      (expectedJob !== null ? '&job_id=' + encodeURIComponent(expectedJob) : ''));
   } catch (_) {
     if (clusterPollVersion===expectedVersion) clusterReportLoadError='GET';
     return false;
@@ -1122,8 +1123,8 @@ async function loadLatestCluster(mint, silent=false, expectedVersion=clusterPoll
       (clusterActiveJob && clusterActiveJob.mint!==mint) ||
       $('cluster-mint').value.trim()!==inputBefore ||
       report?.mint!==mint) return false;
-  // latest.json is keyed by mint. A different explicit job ID is not the
-  // finished job being resumed; never render it as that job's report.
+  // Exact job recovery uses the durable by-ID artifact. Reject mismatches
+  // even if a server or cache accidentally returns another job.
   if (expectedJob !== null && report.ca_job_id != null && report.ca_job_id !== expectedJob) {
     clusterReportLoadError='IDENTITY';
     return false;
@@ -1766,7 +1767,7 @@ async function pollClusterJob(jobId, failures=0) {
         $('cluster-submit').disabled=false;
         $('cluster-submit').textContent='重新查询';
         localStorage.setItem('mission-meme-last-cluster-ca',mint);
-        // latest.json is keyed by mint, not by job ID.
+        // Completed-job report GET is scoped to its original job ID.
         clusterStatus('running','原分析任务已结束，已读取最新保存报告',
           clusterLastReportJobVerified ? '保存报告中的任务编号与已结束任务一致；覆盖与完整性仍须另行核实' :
             '该报告缺少可核对的本次任务编号，无法独立证明与本次分析一一对应');

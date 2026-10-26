@@ -20,3 +20,17 @@
 **本轮禁止：** 新 CA POST、真实 Solana RPC、额外生产 GET、Dashboard 部署/重启、Loop/V1/D2 变动、监控通知、邮件、交易、合并 Draft PR。若要真实验收该修复，须先另行批准可靠的 Dashboard-only 发布器和一次性 Mac 操作，再另行批准有界真实 CA Query。
 
 **门禁：`CA_JOB_REPORT_CODE_CANDIDATE / BASE_C1_APPROVED_OFFLINE / INDEPENDENT_REVIEW_PENDING / C2A_ROLLED_BACK / C2B_NOT_AUTHORIZED`**。
+
+
+## 2026-10-27 后续增量：按 job_id 恢复完成任务
+
+本轮在已审核固定 SHA `0abe7a1467ff61a87b5dd0beb210ec5528cd0498` 的**同一 Draft PR #220** 中实现候选增量。前述旧 SHA 的独立批准不自动适用于新 HEAD，新版本仍须独立复审。
+
+- 已完成任务在 DONE 前额外保存本地原子文件 `cluster-reports/_jobs/<uuid-hex>.json`。原 Mint 时间戳报告和 latest.json 保留；预算失败不保存伪造的成功报告。
+- GET `/api/cluster-latest?mint=...&job_id=...` 按经过验证的任务 ID 返回对应报告，不会因同 Mint 后续 B 覆盖 latest 而把 B 当成 A。无 ID 的老历史缓存继续只读兼容，明确关联未经核实。
+- GET `/api/cluster-analysis?job_id=...` 可在内存任务不存在时通过真实持久化成功报告恢复 DONE；不存在或失效的原任务继续 404，不能把失败和未完成任务伪装成完成。
+- 前端已结束任务和手动恢复使用精确 ID GET；主动读取历史缓存仍按 Mint。新测试覆盖 A/B 顺序、重启恢复、ID 及 Mint 不匹配、篡改拒绝、纯 GET 恢复。
+
+限制：没有对历史无 ID 报告补身份；没有保证 RPC 全覆盖、真实 Mac Chrome/HTTP/CA POST、当前持仓或盈利；C2A bootstrap 根因依然 UNRESOLVED；没有新的 RPC、部署、服务重启、通知或交易授权。
+
+状态：`CODE_CANDIDATE_REQUIRES_CI_AND_NEW_SHA_INDEPENDENT_REVIEW / NO_DEPLOY`。
