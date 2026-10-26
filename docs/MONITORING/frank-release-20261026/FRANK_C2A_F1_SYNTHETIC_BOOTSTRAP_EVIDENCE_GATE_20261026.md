@@ -15,6 +15,8 @@
 
 1. `crypto-300-profit-mission/local-agent/scripts/frank_c2a_f1_evidence.py`：**只接受外部注入的 `subprocess.CompletedProcess`**，模块自身绝不调用 `subprocess.run/Popen`、`launchctl`、服务、网络或 CA。内置唯一允许的 `DASHBOARD_BOOTSTRAP` 事件类型。只在失败返回码（非零整数）时写证据。**不记录原始 argv**，避免记录 plist 私有绝对路径、敏感 CLI 参数；只记录固定命令类别、UTC 时间、退出码及两路输出。
 2. stdout/stderr 最多各保留首 **8192 bytes** 的原始 bytes，以 base64 编码保存至**本机私有证据文件**；记录每路完整输出的 byte 长度、SHA256、是否截断。**不代表超过截断长度时保留了全部正文。** 证据文件中可能有敏感值，绝不可上传 Git/日志，公示只能给哈希、长度、类别、固定 SHA 和脱敏片段。
+**独立审核 P2-1 修正（旧 SHA `694bc2e117690f2ab350ace773fd92431009d58c`）：** `subprocess.CompletedProcess.stdout/stderr is None` 表示该路**未采集**，不得写成 `total_bytes=0`、空串 SHA 或已采集空输出。本次采用**严格拒绝**方案：任一路 `None` → 固定非敏感异常 `EVIDENCE_STREAM_NOT_CAPTURED`，在写文件/执行离线模拟回调前停止；只有明确提供 `b""` 才记录真实已采集空串（长度 0 与空串 SHA）。补齐两路缺失、单路缺失、真实空串与非法类型对照测试。**严格拒绝意味着本离线组件不会保存不完整证据或调用模拟回滚；绝不能照搬到生产，真实生产须保留独立紧急 Dashboard-only 恢复路径。** 原始返回码／stderr 丢失故障依然没有得到历史复原，本修复不证明 bootstrap 根因。
+
 3. 证据目录必须事先存在，owner 为当前用户且 mode **0700**，最终证据文件 mode **0600**；拒绝 symlink 证据根和已存在的记录。通过目录 fd 与 `O_NOFOLLOW/O_EXCL` 创建临时文件，文件 `fsync` 后原子 no-replace 链接成最终单次记录，目录 `fsync` 并 readback 字节比较之后，才允许离线模拟回滚回调。任何持久化错误触发明确异常，不能记为保存 PASS。
 4. `tests/test_frank_c2a_f1_evidence.py` 使用临时 0700 目录和**假的 CompletedProcess**、模拟 callback，测试：有 stderr/空 stdout、精确失败退出码、fsync 在回调之前、磁盘同步失败、拒绝覆盖/符号链接、拒绝不安全权限、输出边界截断、成功时无错误记录/无回滚、非 UTC/无效返回码、全局 subprocess.run 被封禁仍可离线运行。
 5. `.github/workflows/frank-c2a-f1-offline-evidence.yml` 只安装 pytest 并运行本测试。CI 是 GitHub 合成环境，**不是用户 Mac、真实 launchctl、生产 bootstrap 或真实启动失败重现。**
