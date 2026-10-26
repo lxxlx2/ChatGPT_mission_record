@@ -113,6 +113,67 @@ def test_long_streams_bounded_and_truncation_disclosed(tmp_path):
     assert content["stdout"]["sha256"] == content["stderr"]["sha256"]
 
 
+@pytest.mark.parametrize(
+    "stdout,stderr",
+    [
+        (None, None),
+        (None, b""),
+        (b"", None),
+        (None, b"diagnostics"),
+        (b"diagnostics", None),
+    ],
+)
+def test_uncaptured_streams_rejected_without_saved_record_or_mock_rollback(
+    tmp_path, stdout, stderr,
+):
+    root = private_dir(tmp_path)
+    called = []
+    completed = failure(stdout=stdout, stderr=stderr)
+    # A missing capture is not a known empty stream. Fail before the first write,
+    # and do not call the mock callback (not an actual production rollback).
+    with patch("os.fsync", wraps=os.fsync) as fsync:
+        with pytest.raises(EvidenceGateError, match="EVIDENCE_STREAM_NOT_CAPTURED"):
+            checkpoint_then_simulate_rollback(root, completed, called.append)
+    assert fsync.call_count == 0
+    assert called == []
+    assert list(root.iterdir()) == []
+
+
+def test_default_completed_process_without_capture_is_not_empty(tmp_path):
+    root = private_dir(tmp_path)
+    completed = subprocess.CompletedProcess(args=["SYNTHETIC_ONLY"], returncode=5)
+    assert completed.stdout is None and completed.stderr is None
+    with pytest.raises(EvidenceGateError, match="EVIDENCE_STREAM_NOT_CAPTURED"):
+        persist_failed_bootstrap(root, completed)
+    assert not list(root.iterdir())
+
+
+def test_explicitly_captured_empty_streams_get_known_zero_length_and_digest(tmp_path):
+    root = private_dir(tmp_path)
+    saved = persist_failed_bootstrap(root, failure(stdout=b"", stderr=b""))
+    data = json.loads(saved.read_text())
+    import hashlib
+    for name in ("stdout", "stderr"):
+        assert data[name] == {
+            "total_bytes": 0,
+            "sha256": hashlib.sha256(b"").hexdigest(),
+            "captured_bytes": 0,
+            "truncated": False,
+            "captured_base64": "",
+        }
+
+
+def test_invalid_stream_type_does_not_write_or_call_mock_rollback(tmp_path):
+    root = private_dir(tmp_path)
+    called = []
+    with pytest.raises(EvidenceGateError, match="EVIDENCE_STREAM_INVALID"):
+        checkpoint_then_simulate_rollback(
+            root, failure(stdout=b"", stderr=object()), called.append,
+        )
+    assert called == []
+    assert not list(root.iterdir())
+
+
 def test_success_never_writes_or_calls_rollback(tmp_path):
     root = private_dir(tmp_path)
     called = []
