@@ -34,3 +34,17 @@
 限制：没有对历史无 ID 报告补身份；没有保证 RPC 全覆盖、真实 Mac Chrome/HTTP/CA POST、当前持仓或盈利；C2A bootstrap 根因依然 UNRESOLVED；没有新的 RPC、部署、服务重启、通知或交易授权。
 
 状态：`CODE_CANDIDATE_REQUIRES_CI_AND_NEW_SHA_INDEPENDENT_REVIEW / NO_DEPLOY`。
+
+
+## 2026-10-27 失败恢复 P1/P2 修复候选（独立审核待定）
+
+上一固定 SHA `81302a12d937d1eb05f0d132020d96683ef0d277` 的独立 [REQUEST_CHANGES #6424709263](https://github.com/lxxlx2/ChatGPT_mission_record/pull/220#issuecomment-6424709263) 确认一项 P1（ERROR 因部分落盘在重启后被当作 DONE）和一项 P2（仅 Mint/ID 两键 JSON 仍恢复 DONE）。
+
+本次限于同一 PR 中的 CA worker、按 ID 读取与测试：
+- `_jobs/<job_id>.json` 不再表示成功终态。新原子文件 `_jobs/<job_id>.done.json` 作为 commit marker，全部 mandatory dated/markdown/by-job/latest 输出和提交前清理成功后才写入。失败后的孤立文件不能恢复 DONE。
+- 采用报告 UTF-8 字节的 SHA256 连接提交记录和报告；读取时检查 marker 状态、Mint/ID、哈希及结构。哈希只用于检测意外修改，未宣称独立签名或抵抗同权限恶意写入。
+- worker 成功报告以及按 ID 读取共同执行最小结构验证：固定分析器 schema/source、有效观测时间、holders/coverage/metrics/assessment/token_profile/limitations 类型；真实报告仍可能数据不完整，不能以此推断覆盖完整。
+- marker 发布后，后续可选 Git 证据同步或内存 bookkeeping 异常不可把已提交成功改成 ERROR。
+- 新定向测试注入 by-job、latest、marker 原子写入失败及提交前异常，验证原失败任务无法按 ID 恢复 DONE；测试内容缺失、错误字段类型、错误 source、摘要不符和 marker 消失时安全拒绝。保留同 Mint A/B、GET only 与旧历史无 ID 兼容路径。
+
+**发布边界仍是 NO_GO。** 新 SHA 的 CI 与独立复审均需先通过。未授权 Mac 发布、launchctl 重启、真实 CA POST/RPC、当前钱包持仓读取、通知、邮件、合并和交易。原 C2A bootstrap 根因仍未解决。
