@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import ipaddress
+import hashlib
 import json
 import mimetypes
 import math
@@ -466,6 +467,25 @@ class ClusterJobManager:
             "current_extension_audit_details":extension_audit_snapshot,
         }
 
+    @classmethod
+    def _valid_completed_report(cls, report: dict, job_id: str, mint: str) -> bool:
+        # Required structure of an analyzer report, not a completeness verdict.
+        if not isinstance(report, dict) or not cls._valid_job_id(job_id):
+            return False
+        if report.get("ca_job_id") != job_id or report.get("mint") != mint:
+            return False
+        if report.get("schema_version") != 2 or report.get("source") != "SOLANA_FINALIZED_JSON_RPC":
+            return False
+        observed = report.get("observed_at")
+        if isinstance(observed, bool) or not isinstance(observed, (int, float)) or not math.isfinite(observed) or observed <= 0:
+            return False
+        return (isinstance(report.get("coverage"), dict)
+                and isinstance(report.get("holders"), list)
+                and isinstance(report.get("metrics"), dict)
+                and isinstance(report.get("assessment"), dict)
+                and isinstance(report.get("token_profile"), dict)
+                and isinstance(report.get("limitations"), list))
+
     def _run(self, job_id: str):
         with self.lock:
             job = self.jobs[job_id]
@@ -502,6 +522,8 @@ class ClusterJobManager:
             # Bind a successful saved CA report to the actual submitted job.
             # Historical reports without this field remain unverified by job ID.
             report["ca_job_id"] = job_id
+            if not self._valid_completed_report(report, job_id, mint):
+                raise ValueError("CA_COMPLETED_REPORT_SCHEMA_INVALID")
             self._set_progress(job_id,"REPORT_PERSISTING",{"deep_holders_scanned":(report.get("coverage") or {}).get("deep_holders_scanned"),"adaptive_deepened":len((report.get("coverage") or {}).get("adaptive_deepened_owners") or [])})
             stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
             out = self.report_root / mint
@@ -514,22 +536,40 @@ class ClusterJobManager:
             by_job.mkdir(parents=True, exist_ok=True)
             _atomic_write_text(by_job / f"{job_id}.json", payload)
             _atomic_write_text(out / "latest.json", payload)
-            if self.evidence_enabled:
-                try:
-                    self.evidence_spool.ca_done(mint=mint, job_id=job_id, report=report)
-                    self.evidence_executor.submit(
-                        GitEvidencePublisher(self.evidence_spool).sync
-                    )
-                except (OSError, ValueError, RuntimeError):
-                    # Finished CA report remains valid even if export fails.
-                    pass
+            # Only a separately committed terminal marker authorizes later
+            # recovery. Orphan reports from failed writes are never DONE.
+            with self.lock:
+                self._prune_jobs_locked()
+            marker = {
+                "version": 1, "status": "DONE", "ca_job_id": job_id,
+                "mint": mint,
+                "report_sha256": hashlib.sha256(payload.encode("utf-8")).hexdigest(),
+            }
+            _atomic_write_text(by_job / f"{job_id}.done.json",
+                               json.dumps(marker, sort_keys=True))
+            # Marker is the irreversible success boundary. No later failure
+            # may turn a committed result into a persisted ERROR.
             with self.lock:
                 job = self.jobs[job_id]
                 job["status"] = "DONE"
                 job["finished_at"] = time.time()
                 job["progress"] = {"stage":"DONE","updated_at":job["finished_at"]}
-                self._prune_jobs_locked()
+            if self.evidence_enabled:
+                try:
+                    self.evidence_spool.ca_done(mint=mint, job_id=job_id, report=report)
+                    self.evidence_executor.submit(GitEvidencePublisher(self.evidence_spool).sync)
+                except Exception:
+                    # This optional export cannot revoke the DONE commit.
+                    pass
         except RPCJobBudgetExceeded as exc:
+            if self._saved_job_report(job_id) is not None:
+                with self.lock:
+                    job = self.jobs[job_id]
+                    job["status"] = "DONE"
+                    job["error"] = None
+                    job["finished_at"] = job.get("finished_at") or time.time()
+                    job["progress"] = {"stage": "DONE", "updated_at": job["finished_at"]}
+                return
             # A budget stop is not a successful report. Preserve existing latest.json;
             # neither persist a partial report nor publish a DONE notification.
             with self.lock:
@@ -550,6 +590,14 @@ class ClusterJobManager:
                 }
                 self._prune_jobs_locked()
         except Exception as exc:
+            if self._saved_job_report(job_id) is not None:
+                with self.lock:
+                    job = self.jobs[job_id]
+                    job["status"] = "DONE"
+                    job["error"] = None
+                    job["finished_at"] = job.get("finished_at") or time.time()
+                    job["progress"] = {"stage": "DONE", "updated_at": job["finished_at"]}
+                return
             with self.lock:
                 job = self.jobs[job_id]
                 job["status"] = "ERROR"
@@ -573,16 +621,26 @@ class ClusterJobManager:
         if not self._valid_job_id(job_id):
             return None
         try:
-            report = json.loads((self.report_root / "_jobs" / f"{job_id}.json").read_text())
-            if not isinstance(report, dict) or report.get("ca_job_id") != job_id:
+            folder = self.report_root / "_jobs"
+            marker = json.loads((folder / f"{job_id}.done.json").read_text())
+            if not isinstance(marker, dict) or marker.get("version") != 1 or marker.get("status") != "DONE" or marker.get("ca_job_id") != job_id:
                 return None
-            mint = report.get("mint")
+            mint = marker.get("mint")
             if not isinstance(mint, str):
                 return None
             self.validate_mint(mint)
+            digest = marker.get("report_sha256")
+            if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+                return None
+            raw = (folder / f"{job_id}.json").read_bytes()
+            if hashlib.sha256(raw).hexdigest() != digest:
+                return None
+            report = json.loads(raw)
+            if not self._valid_completed_report(report, job_id, mint):
+                return None
             report.pop("execution_quote_30_usdc", None)
             return report
-        except (OSError, ValueError):
+        except (OSError, ValueError, UnicodeDecodeError):
             return None
 
     def get(self, job_id: str) -> dict | None:
