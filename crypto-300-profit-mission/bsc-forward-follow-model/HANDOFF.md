@@ -1,3 +1,26 @@
+# 2026-10-26 — PR213 repeated 578-test failure root caused: Path vs PosixPath
+
+- Initial CI 40271388939 and second CI [40271757595](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40271757595) both **578 tests / 17 failures / 17 errors**. Further analysis proved source bug `type(PRIVATE_FIXED_REGISTRY) is not Path` rejects every normal `PosixPath`. Fixed in `f1c974f5951206df066d0d1a0baf415ff1eb068b` to `not isinstance(PRIVATE_FIXED_REGISTRY, Path)`, preserving exact OS-account fixed-path equality. Older synthetic OS-home test consistency repairs remain.
+- New exact-SHA GitHub CI and ARM64 Mac independent review must verify the actual code, not attribute failed runs to approval. No actual production registry read/write, live network or signer. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
+# 2026-10-26 — PR213 initial Mac fixture incompatibility, repaired same PR, NO LIVE
+
+- Initial PR213 SHA `7c4f96d0100289b78c6ce42527899451a8c17111` [Linux CI 40271388939](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40271388939): 578 tests, **17 FAIL/17 ERROR**, traced to old isolated Mac test fixtures patching protected entry's `_os_user_home`/registry path without patching new stronger `pwd.getpwuid`-derived account root. Errors incorrectly masked expected identity mismatch tests; no live behavior occurred.
+- Same-PR correction: preserve original Mac `_inspect_fixed_registry` pinned path and prior error labels, then perform additional read-only owner/no-follow inspection; update ONLY disposable /tmp Mac fixtures to align fake OS passwd-home, leaf path, owner-private MissionEvidence, and direct integration simulated root. This maintains the strict production path matching **rather than weakening validation**. New exact SHA GitHub CI and independent Mac review still required. [Issue #207](https://github.com/lxxlx2/ChatGPT_mission_record/issues/207).
+- Production root untouched, no marker, signer enrollment, live RPC/WS, merge, deployment, background task or trades. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
+# 2026-10-26 — PR211 staged physical slot ARM64 Mac APPROVED, OS account registry preflight read-only child PR pending
+
+- **Last independently approved source:** PR211 `5b7116047fb6db4b16f6d9eb0878cff2e2c37b5b`, external ARM64 Mac `APPROVE_OFFLINE_CODE — D2_SINGLE_COORDINATOR_PHYSICAL_SLOT_PATCHED_ONLY`, full F0 568/568, D1 171, staged 9, HTTPS ctor 16, D2-A 10, D2-B 10, D2-C 7, UTC 4 all PASS/zero skips. [Source-attributed approval](https://github.com/lxxlx2/ChatGPT_mission_record/pull/211#issuecomment-6408463627). No actual BSC source network allowed.
+- **Next concrete authority prerequisite, new Draft child:** `f0/f0_l2_d2_os_registry_readonly.py` checks the exact prospective production marker directory derived from real `pwd.getpwuid(os.getuid())` home instead of injected `HOME`. Verifies uid ownership, no symlink components, private MissionEvidence/registry, read-only NOFOLLOW fd inode. Missing root NOT READY and no auto-creation. The existing `f0_l2_d1_protected_mac_entry._inspect_fixed_registry` delegates this audit. Ten tests operate ONLY on /tmp fixtures with patched OS-home mapping and never touch a real production marker. Review `f0/F0_D2_OS_ACCOUNT_REGISTRY_READONLY_REVIEW.md`. Exact SHA/Linux CI + independent Mac review still pending.
+- **Not implemented:** actual authenticated production D2 signer roots, separate D3 real human approval, OS-user-fixed one-shot production O_EXCL marker consumption with held directory fd, live HTTPS constructor release, bounded first real read-only pilot. These require distinct reviews and fresh user authorization, not synthetic test signals. Issue #207 open. All PRs Draft, no merge/deploy/background/trades. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-26 — PR211 staged direct-lower-gate RID bypass prevented before fixed-SHA review
 
 - After first CI report mismatch was fixed, [second Linux CI 40239913498](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40239913498) passed 566/566. Further pre-freeze source review found the staged source could be invoked directly via `GlobalStartGate.run` or `reply_transport_evidence_offline` with arbitrary callback while HTTP constructor was patched, bypassing durable coordinator RID reservation. No real network incident; nevertheless violates the single-writer/test integration invariant.

@@ -28,6 +28,20 @@ class MacEntryNoNetworkTests(unittest.TestCase):
         self.registry=(self.home/"Library"/"Application Support"/
                        "MissionEvidence"/"f0-grant-registry")
         self.registry.mkdir(mode=0o700,parents=True)
+        # Account-home production preflight now checks ownership and
+        # private MissionEvidence ancestry, not only the leaf mode.
+        self.registry.parent.chmod(0o700)
+        import f0_l2_d2_os_registry_readonly as os_registry
+        from types import SimpleNamespace
+        self._os_registry_pwd_patch = patch.object(
+            os_registry.pwd, "getpwuid",
+            return_value=SimpleNamespace(pw_dir=str(self.home)))
+        self._os_registry_path_patch = patch.object(
+            os_registry, "PRIVATE_FIXED_REGISTRY", self.registry)
+        self._os_registry_pwd_patch.start()
+        self._os_registry_path_patch.start()
+        self.addCleanup(self._os_registry_path_patch.stop)
+        self.addCleanup(self._os_registry_pwd_patch.stop)
         self.mock_runtime={
             "status":"REVIEWED_LOCAL_BYTES_MATCH_NOT_LIVE_AUTHORIZATION",
             "source_commit_sha":f.sha,
