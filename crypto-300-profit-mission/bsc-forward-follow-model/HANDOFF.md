@@ -1,3 +1,11 @@
+# 2026-10-26 — PR213 initial Mac fixture incompatibility, repaired same PR, NO LIVE
+
+- Initial PR213 SHA `7c4f96d0100289b78c6ce42527899451a8c17111` [Linux CI 40271388939](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40271388939): 578 tests, **17 FAIL/17 ERROR**, traced to old isolated Mac test fixtures patching protected entry's `_os_user_home`/registry path without patching new stronger `pwd.getpwuid`-derived account root. Errors incorrectly masked expected identity mismatch tests; no live behavior occurred.
+- Same-PR correction: preserve original Mac `_inspect_fixed_registry` pinned path and prior error labels, then perform additional read-only owner/no-follow inspection; update ONLY disposable /tmp Mac fixtures to align fake OS passwd-home, leaf path, owner-private MissionEvidence, and direct integration simulated root. This maintains the strict production path matching **rather than weakening validation**. New exact SHA GitHub CI and independent Mac review still required. [Issue #207](https://github.com/lxxlx2/ChatGPT_mission_record/issues/207).
+- Production root untouched, no marker, signer enrollment, live RPC/WS, merge, deployment, background task or trades. `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`.
+
+---
+
 # 2026-10-26 — PR211 staged physical slot ARM64 Mac APPROVED, OS account registry preflight read-only child PR pending
 
 - **Last independently approved source:** PR211 `5b7116047fb6db4b16f6d9eb0878cff2e2c37b5b`, external ARM64 Mac `APPROVE_OFFLINE_CODE — D2_SINGLE_COORDINATOR_PHYSICAL_SLOT_PATCHED_ONLY`, full F0 568/568, D1 171, staged 9, HTTPS ctor 16, D2-A 10, D2-B 10, D2-C 7, UTC 4 all PASS/zero skips. [Source-attributed approval](https://github.com/lxxlx2/ChatGPT_mission_record/pull/211#issuecomment-6408463627). No actual BSC source network allowed.
