@@ -292,6 +292,8 @@ test('DONE job MUST NOT display a newer different-job same-Mint latest report',a
   assert.equal(h.elements('cluster-submit').disabled,true);
   assert.ok(h.storage.get('mission-meme-cluster-pending-v1').includes(id));
   assert.equal(vm.runInContext('clusterReportLoadError',h.context),'IDENTITY');
+  assert.match(h.statuses.at(-1).join(' '),/已有报告属于另一任务/);
+  assert.match(h.statuses.at(-1).join(' '),/不会重新扫描/);
   assert.equal(h.calls.length,2);
   assert.equal(h.calls.filter(p=>p.startsWith('POST:')).length,0);
 });
