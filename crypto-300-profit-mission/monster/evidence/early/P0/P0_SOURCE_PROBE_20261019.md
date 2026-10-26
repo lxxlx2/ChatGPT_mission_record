@@ -1,3 +1,15 @@
+## 2026-10-26：AWS BNB两份指定日期Parquet对象实际存在，Schema及原生日志仍待核实
+
+**Mac实际运行输出（USER_PASTED_MAC_TERMINAL_STDOUT）**：对冻结的2025-07-01 UTC，通过先前已Git固定的匿名S3目录探针查询成功，blocks/date=2025-07-01/blocks.parquet=147077458字节；transactions/date=2025-07-01/transactions.parquet=4826591204字节。两个对象date_objects_observed=true，目录查询无错误，均有具体完整Key及Size；四种预探日期命名中仅date=YYYY-MM-DD/路径命中。两个顶层列举均truncated=true，仅说明其列出的10个子目录不是整个历史月份全集。**首次证实这一日期分区两类文件存在**，先前SOURCE_CANDIDATE_ONLY升级为OBJECTS_LISTED_CONFIRMED，而不是SOURCE_FULL_COVERAGE_PASS。
+
+**未能证实**：Parquet列字段、完整block高度覆盖、原生logs/receipts、同刻Sync/Swap、2025-07-01 public receive-time；目录无logs/子目录并不证明transactions文件中也没有嵌套日志。即使Parquet行总数较大，仍不能认定数据无漏，也不能用block_timestamp补出真实公众available_at。P0的24/30 PIT和18/30同名义额可卖均继续NOT_SCORABLE。
+
+**本轮实际代码交付**：在同一PR #30下新增local-agent/mission_agent/early/aws_bnb_parquet_footer_probe.py，固定两Key和上述对象长度，通过每对象仅两次HTTPS匿名Range GET读取尾8字节及Apache Parquet CompactProtocol footer（单对象≤8MiB元数据），强制HTTP 206及Content-Range完全匹配，并对两个请求校验ETag/Size一致；只输出Schema路径、文件元数据声明的行数、RowGroups、命中日志/回执候选字段、footer SHA256及错误状态。完全不下载147MB/4.8GB主体，不写文件，不部署，不涉及钱包、RPC或云端付费计算。Schema字段名不等于实际日志可用性，更不等于PIT。提交代码 9f5febbb4d1c5468602c7536837f8b3626a451cb；离线回归 9757f20b407890e5144c47e197bc4c803d60abf8。GitHub读回确认两个文件确实存在，Blob分别为45ba8845d2a0bba599bcba8e4bcb5463d10bda5d、eeb490757991d547334a63738b2150269509ce32。
+
+**测试边界**：同等功能本地草稿经真实Python离线5/5 PASS并用Thrift CompactProtocol合法结构进行了独立合成元数据解析核查；已提交的两个文件仍未通过真实CI或Mac上的命令执行，不把草稿测试冒充已推送源码的完整端到端测试。待Mac首次运行真实SourceProbe输出后决定是否需要只取最小列块/receipt；若Schema明确缺乏事件日志，本AWS Plan B只能作为blocks/transactions辅助事实，不升级PIT。2026-11-02来源止损保持。
+
+---
+
 ## 2026-10-26：用户Mac确认AWS BNB第一层目录；零下载有界日期核验器已提交（P0 SOURCE_CANDIDATE_ONLY）
 
 **用户Mac终端输出（USER_PASTED_MAC_TERMINAL_STDOUT，非本会话独立读取S3对象）**：对AWS官方公开桶 aws-public-blockchain.s3.us-east-2.amazonaws.com 使用匿名 ListObjectsV2，prefix=v1.1/bnb/、delimiter=/、max-keys=100，返回 Prefixes=['v1.1/bnb/blocks/','v1.1/bnb/transactions/']，Objects=[]。Objects=[] 仅代表此层没有直接列出文件；delimiter分组后的两个子目录可有大量对象，不能据此记0条交易。该枚举只显示两个第一层子前缀，**日志/receipt是否嵌套、是否包含2025-07-01历史数据完全未确认**。
