@@ -1,0 +1,32 @@
+name: Frank C2A F1 offline bootstrap evidence fixture
+
+on:
+  push:
+    branches: [feature/frank-c2a-f1-offline-bootstrap-evidence-20261026]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  offline-evidence-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install test-only dependency
+        run: python -m pip install pytest==8.3.5
+      - name: Validate offline module and fixture syntax
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -B -m py_compile scripts/frank_c2a_f1_evidence.py tests/test_frank_c2a_f1_evidence.py
+      - name: Run synthetic rollback/evidence cases (no launchctl, RPC or prod)
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          PYTHONPATH: .
+        run: python -m pytest -q -p no:cacheprovider tests/test_frank_c2a_f1_evidence.py
