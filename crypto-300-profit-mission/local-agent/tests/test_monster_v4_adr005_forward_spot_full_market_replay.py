@@ -31,6 +31,22 @@ class SyntheticFrozenTape:
         ]
 
 
+class ScheduledRearmTape(SyntheticFrozenTape):
+    """Real original D0 invalidation/rearm price trace; source is synthetic."""
+    def __init__(self,symbol,start_ms,changes):
+        super().__init__(symbol,start_ms)
+        self.changes=changes
+
+    def original_d0_context(self,tick):
+        if tick<self.start_ms or (tick-self.start_ms)%scan.TICK_MS:
+            raise ValueError("FAKE_TAPE_POLL_GRID")
+        index=(tick-self.start_ms)//scan.TICK_MS
+        levels=self.changes.get(self.symbol,{0:"100"})
+        latest=max(t for t in levels if t<=index)
+        return {"symbol":self.symbol,
+                "lastPrice":levels[latest],"quoteVolume":"200000"}
+
+
 class FrozenSourceProxyCohortTests(unittest.TestCase):
     START="2026-11-02T00:00:00Z"
 
@@ -84,6 +100,97 @@ class FrozenSourceProxyCohortTests(unittest.TestCase):
         self.assertEqual(doc["G6"],"NO_GO")
         self.assertTrue(doc["NO_TRADES"])
         self.assertTrue(doc["NO_AUTOMATIONS"])
+
+    def test_codex_p1_invalidation_rearm_keeps_both_watches_and_scans_full_window(self):
+        # Exact independent Codex P1: 00:00=100, 00:03=110 WATCH 1,
+        # 00:06=90 INVALIDATED, 00:09=96 WATCH 2 before D1 deadline=00:18.
+        levels={"AAAUSDT":{0:"100",1:"110",2:"90",3:"96"},
+                "BTCUSDT":{0:"100"}}
+        def factory(symbol):
+            return ScheduledRearmTape(symbol,self.start_ms,levels)
+        doc=scan.replay_with_source_tapes(self.report(),factory,self.root)
+        self.assertEqual(doc["utc_3minute_full_cohort_polls"],3360)
+        self.assertEqual(doc["source_proxy_context_rows"],6720)
+        self.assertEqual(doc["proxy_original_d0_watch_count"],2)
+        self.assertEqual(doc["proxy_nonbtc_original_d0_watch_count"],2)
+        watches=doc["proxy_original_d0_watch_rows"]
+        self.assertEqual([w["observed_ms"] for w in watches],
+                         [self.start_ms+scan.TICK_MS,self.start_ms+3*scan.TICK_MS])
+        self.assertEqual(len({w["event_id"] for w in watches}),2)
+        self.assertEqual(len(doc["proxy_original_d0_invalidated_rows"]),1)
+        self.assertEqual(doc["proxy_original_d0_invalidated_rows"][0]["observed_ms"],
+                         self.start_ms+2*scan.TICK_MS)
+        self.assertEqual(doc["proxy_research_D1_admitted_episode_count"],1)
+        self.assertEqual(doc["proxy_research_D1_overlap_pending_unscored_watch_count"],1)
+        self.assertEqual(doc["isolated_proxy_research_D1_episode_count"],1)
+        bridge=doc["proxy_research_D1_original_watch_bridge_rows"]
+        self.assertEqual([row["original_watch_event_id"] for row in bridge],
+                         [w["event_id"] for w in watches])
+        self.assertEqual(bridge[0]["research_admission_status"],"ADMITTED_EPISODE")
+        self.assertEqual(bridge[1]["research_admission_status"],"OVERLAP_PENDING_UNSCORED")
+        self.assertEqual(bridge[1]["blocking_pending_episode_watch_event_id"],
+                         bridge[0]["original_watch_event_id"])
+        self.assertIn(bridge[1]["blocking_episode_status_at_window_end"],
+                      ("NO_SETUP","LATE_UNSCORED","SOURCE_UNSCORED","RESEARCH_SETUP"))
+        self.assertFalse(doc["overlap_pending_watches_are_research_negative_labels"])
+        self.assertFalse(doc["overlap_pending_watches_are_research_setups"])
+        self.assertEqual(doc["G1"],"NOT_SCORABLE")
+        self.assertEqual(doc["G2"],"UNKNOWN")
+        self.assertEqual(doc["G6"],"NO_GO")
+
+    def test_rearm_after_original_episode_terminal_admits_second_independent_watch(self):
+        # Same actual D0 lifecycle, but the new WATCH is after the first
+        # fixed 15-minute research episode has become terminal.
+        levels={"AAAUSDT":{0:"100",1:"110",2:"90",7:"96"},
+                "BTCUSDT":{0:"100"}}
+        def factory(symbol):
+            return ScheduledRearmTape(symbol,self.start_ms,levels)
+        doc=scan.replay_with_source_tapes(self.report(),factory,self.root)
+        self.assertEqual(doc["utc_3minute_full_cohort_polls"],3360)
+        self.assertEqual(doc["proxy_original_d0_watch_count"],2)
+        self.assertEqual(doc["proxy_research_D1_admitted_episode_count"],2)
+        self.assertEqual(doc["proxy_research_D1_overlap_pending_unscored_watch_count"],0)
+        self.assertEqual(doc["isolated_proxy_research_D1_episode_count"],2)
+        self.assertEqual([x["research_admission_status"]
+                          for x in doc["proxy_research_D1_original_watch_bridge_rows"]],
+                         ["ADMITTED_EPISODE","ADMITTED_EPISODE"])
+
+    def test_overlapping_watches_on_one_coin_do_not_block_another_coin(self):
+        levels={"AAAUSDT":{0:"100",1:"110",2:"90",3:"96"},
+                "BBBUSDT":{0:"100",3:"108"},
+                "BTCUSDT":{0:"100"}}
+        def factory(symbol):
+            return ScheduledRearmTape(symbol,self.start_ms,levels)
+        doc=scan.replay_with_source_tapes(
+            self.report(("AAAUSDT","BBBUSDT","BTCUSDT")),factory,self.root)
+        self.assertEqual(doc["utc_3minute_full_cohort_polls"],3360)
+        self.assertEqual(doc["source_proxy_context_rows"],10080)
+        self.assertEqual(doc["proxy_nonbtc_original_d0_watch_count"],3)
+        self.assertEqual(doc["proxy_research_D1_admitted_episode_count"],2)
+        self.assertEqual(doc["proxy_research_D1_overlap_pending_unscored_watch_count"],1)
+        self.assertEqual(doc["isolated_proxy_research_D1_episode_count"],2)
+        by={(row["symbol"],row["original_watch_ms"]):row for row in
+            doc["proxy_research_D1_original_watch_bridge_rows"]}
+        self.assertEqual(by[("BBBUSDT",self.start_ms+3*scan.TICK_MS)]
+                         ["research_admission_status"],"ADMITTED_EPISODE")
+        self.assertEqual(doc["G6"],"NO_GO")
+
+    def test_multiple_rearms_preserve_distinct_original_ids_and_blocking_parent(self):
+        levels={"AAAUSDT":{0:"100",1:"110",2:"90",3:"96",4:"80",5:"85"},
+                "BTCUSDT":{0:"100"}}
+        def factory(symbol):
+            return ScheduledRearmTape(symbol,self.start_ms,levels)
+        doc=scan.replay_with_source_tapes(self.report(),factory,self.root)
+        self.assertEqual(doc["utc_3minute_full_cohort_polls"],3360)
+        self.assertEqual(doc["proxy_original_d0_watch_count"],3)
+        self.assertEqual(len(doc["proxy_original_d0_invalidated_rows"]),2)
+        self.assertEqual(doc["proxy_research_D1_admitted_episode_count"],1)
+        self.assertEqual(doc["proxy_research_D1_overlap_pending_unscored_watch_count"],2)
+        rows=doc["proxy_research_D1_original_watch_bridge_rows"]
+        self.assertEqual(len({r["original_watch_event_id"] for r in rows}),3)
+        self.assertTrue(all(r["blocking_pending_episode_watch_event_id"]==
+                            rows[0]["original_watch_event_id"] for r in rows[1:]))
+        self.assertEqual(doc["G1"],"NOT_SCORABLE")
 
     def test_missing_btc_from_original_population_fails_before_any_spool(self):
         with self.assertRaisesRegex(ValueError,"BTC_BENCHMARK_SOURCE_REQUIRED"):
