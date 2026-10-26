@@ -375,3 +375,63 @@ class TestReviewP1Regressions(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestCompletedCAReportIdentity(unittest.TestCase):
+    """Actual worker persistence path in temp dir; no RPC or production writes."""
+
+    def test_successful_worker_saves_real_job_id_to_timestamp_and_latest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            worker = object.__new__(server.ClusterJobManager)
+            worker.lock = threading.Lock()
+            worker.jobs = {
+                "a" * 32: {
+                    "job_id": "a" * 32, "mint": "synthetic-mint",
+                    "preset": "quick", "status": "QUEUED",
+                    "created_at": 1, "started_at": None,
+                    "finished_at": None, "progress": {"stage": "QUEUED"},
+                    "error": None,
+                },
+            }
+            worker.max_retained_jobs = 64
+            worker.cache_path = root / "cache.sqlite"
+            worker.report_root = root / "reports"
+            worker.rpc_endpoint = "https://synthetic.example"
+            worker.rpc_endpoints = ["https://synthetic.example"]
+            worker.registry_path = root / "registry.json"
+            worker.market_client = None
+            worker.evidence_enabled = False
+
+            class StubRPC:
+                def __init__(self, *args, **kwargs):
+                    self.calls = 0
+
+                def assert_can_publish(self):
+                    return None
+
+            class StubAnalyzer:
+                def __init__(self, *args, **kwargs):
+                    pass
+
+                def analyze(self):
+                    return {"mint": "synthetic-mint", "coverage": {},
+                            "observed_at": 100}
+
+            with (
+                patch.object(server, "SolanaReadOnlyRPC", StubRPC),
+                patch.object(server, "WalletClusterAnalyzer", StubAnalyzer),
+                patch.object(server, "load_registry", return_value={}),
+                patch.object(server, "markdown", return_value="synthetic report\n"),
+                patch.object(worker, "_attach_assessment_history", return_value=None),
+            ):
+                worker._run("a" * 32)
+
+            self.assertEqual(worker.jobs["a" * 32]["status"], "DONE")
+            report_dir = root / "reports" / "synthetic-mint"
+            stored = json.loads((report_dir / "latest.json").read_text())
+            self.assertEqual(stored["ca_job_id"], "a" * 32)
+            self.assertEqual(stored["mint"], "synthetic-mint")
+            dated = list(report_dir.glob("20*.json"))
+            self.assertEqual(len(dated), 1)
+            self.assertEqual(json.loads(dated[0].read_text())["ca_job_id"], "a" * 32)
