@@ -1,0 +1,15 @@
+# Monster ADR-005 / November Spot verified 1m → original D0 / RBTC15 input bridge: independent scoped APPROVE
+
+**Outcome:** `APPROVE @ 957a04e2f715bb1e376218021b75b99d76a01e19` — **only** for the offline verified original-source 1m input bridge. This is the user-supplied Codex main-agent independent review result; underlying model ID **UNVERIFIED**. It does **not** approve later branch HEAD, 7-day full-market D0 sweep, OOS recall/GT2x, signal availability or deployment.
+
+**Review provenance:** baseline SHA `08340771a46e37856bad0b2b58cc4bdc97f37813`; code reviewed in detached worktree on user Mac macOS 27.0.1 arm64 / Python 3.14.7. The document SHA `27fa3663eca3684ed0e114d5100aff373c4767ec` was not substituted for fixed code. Reviewed original new code/test blob SHAs `bd540a8656805f6d036dd84776d950fe1399758c`, `b5e5b3da28693bf00f4ae1ccb473763e8dafcdb0`. At the review end PR #30 HEAD `563b0858b63da48b318a51db0fb13b0242502bc8` was out of scope. Review worktree was clean; no edit/push/production or data capture.
+
+**Actual local tests:** source T0 14 PASS, daily official 1m intake 10 PASS, BTC-dependent score admission 20 PASS, this new source-verified minute tape 8 PASS, frozen RBTC D1 comparator 18 PASS: **70/70 PASS**, 0 failure/error/skip. Separate independent probes checked exact D0 [T-24h,T) and T-1m close at start/+3m/+6m/across UTC midnight/final legal 3m tick; exact six closed UTC 5m bars, same BTC timestamps; future-minute perturbation not affecting current tick; symlink rejection. They observed no actionable P0/P1/P2.
+
+**GitHub verification:** [Actions #40239537298](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40239537298) success, head SHA precisely fixed reviewed code, 70 local tests correspond to 14+10+20+8+18 logs. Artifact `12616031265` original ZIP SHA256 `c4530440838dc0fdfbdd3eb41246020c293aafd90f932b0b41449a958e58a24c`, valid CRC. Each of 3 source-free November JSON reports independently reproduced from code with `asof=2026-10-26T00:00:00Z`; T0 population and benchmark source readiness are null, G1 NOT_SCORABLE and G6 NO_GO. **No real November WATCH or SETUP**; synthetic input test events are not real signals.
+
+**Source/feature boundary:** the official daily .ZIP/.CHECKSUM is verified but this never proves the archive was available at the historical original tick. `original_d0_context` provides post-hoc reconstructed rolling quote volume, not a historical live ticker; 1m OHLC is not a tradable order book or at-time exchange listing proof. Pure `from_score_admission()` can consume synthetic reports; only the formal `run()` rechecks original T0 ZIP/receipt and daily official source. This approval is not a full cohort-sweep or engine/scoring approval. Oct 4599 raw publisher ZIPs not independently all verified by this audit remain unverified.
+
+**Gates:** G0 PARTIAL; G1 NOT_SCORABLE; G2 UNKNOWN; G3 historical October EXPOSED_NOT_PASSED / November NOT_SCORABLE; G4 UNKNOWN; G5 **this fixed minute-bridge increment independently APPROVED only**; G6 NO_GO.
+
+**Safety:** NO_MERGE, NO_DEPLOY, NO_MAC, NO_AUTOMATIONS, NO_GMAIL, NO_TRADES, NO_NEW_RPC, no Frank changes.
