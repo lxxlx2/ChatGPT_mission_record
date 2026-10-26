@@ -16,6 +16,7 @@ FILES = {
     "transactions": ("transactions/date=2025-07-01/transactions.parquet", 4826591204),
 }
 CAP = 8 * 1024 * 1024
+SCHEMA_PREFIX_CAP = 256 * 1024
 CONTENT_RANGE = re.compile(r"^bytes (\d+)-(\d+)/(\d+)$")
 
 
@@ -243,33 +244,80 @@ def parse_footer(meta):
     }
 
 
+def parse_metadata_prefix(prefix):
+    """Parse leading metadata fields without claiming the full footer is valid.
+
+    Huge Parquet footers can be dominated by row-group column metadata. Only
+    the schema prefix is inspected, and no full footer SHA is claimed.
+    """
+    reader = CompactReader(prefix)
+    values = {}
+    previous = 0
+    for expected in (1, 2, 3):
+        header = reader.byte()
+        if header == 0:
+            raise SourceError("SCHEMA_PREFIX_MISSING_FIELDS")
+        delta, kind = header >> 4, header & 15
+        field = previous + delta if delta else reader.signed()
+        if field != expected:
+            raise SourceError("SCHEMA_PREFIX_NONSTANDARD_ORDER")
+        previous = field
+        if field == 2:
+            values[field] = schema_list(reader, kind, 1)
+        else:
+            values[field] = read_int(reader, kind, 1)
+    if values[3] < 0:
+        raise SourceError("NEGATIVE_NUM_ROWS")
+    return {
+        "schema_paths": flattened_schema(values[2]),
+        "num_rows_declared": values[3],
+        "row_groups_declared": None,
+        "parquet_metadata_version": values[1],
+        "footer_fully_verified": False,
+    }
+
+
 def probe_file(key, listed_size, opener=urllib.request.urlopen):
     url = BASE + key
     tail, size, etag = read_range(url, None, None, listed_size, opener=opener)
     if tail[4:] != b"PAR1":
         raise SourceError("NOT_UNENCRYPTED_PARQUET_V1")
     footer_size = struct.unpack("<I", tail[:4])[0]
-    if not 0 < footer_size <= CAP or footer_size > size - 8:
-        raise SourceError("FOOTER_TOO_LARGE_OR_INVALID")
-    first, last = size - 8 - footer_size, size - 9
-    meta, second_size, new_etag = read_range(
-        url, first, last, size, etag, opener=opener)
+    if not 0 < footer_size <= size - 8:
+        raise SourceError("FOOTER_INVALID_LENGTH")
+    first = size - 8 - footer_size
+    if footer_size > CAP:
+        prefix_bytes = min(SCHEMA_PREFIX_CAP, footer_size)
+        prefix, second_size, new_etag = read_range(
+            url, first, first + prefix_bytes - 1, size, etag, opener=opener)
+        parsed = parse_metadata_prefix(prefix)
+        footer_hash = None
+        metadata_prefix_bytes = len(prefix)
+        scope = "OVERSIZED_FOOTER_SCHEMA_PREFIX_ONLY"
+    else:
+        meta, second_size, new_etag = read_range(
+            url, first, size - 9, size, etag, opener=opener)
+        parsed = parse_footer(meta)
+        parsed["footer_fully_verified"] = True
+        footer_hash = hashlib.sha256(meta).hexdigest()
+        metadata_prefix_bytes = None
+        scope = "PARQUET_FOOTER_ONLY_NO_ROW_VALUES"
     if size != second_size:
         raise SourceError("SIZE_CHANGED_DURING_READ")
-    parsed = parse_footer(meta)
     columns = parsed["schema_paths"]
     parsed.update({
         "key": key,
         "listed_object_size_bytes": listed_size,
         "footer_bytes": footer_size,
-        "footer_sha256": hashlib.sha256(meta).hexdigest(),
+        "footer_sha256": footer_hash,
+        "metadata_prefix_bytes": metadata_prefix_bytes,
         "etag": new_etag,
         "suspected_log_receipt_fields": [
             p for p in columns if any(
                 w in p.lower() for w in (
                     "log", "topic", "receipt", "status", "contract",
                     "timestamp", "gas"))],
-        "scope": "PARQUET_FOOTER_ONLY_NO_ROW_VALUES",
+        "scope": scope,
         "full_day_coverage_verified": False,
         "pit_verified": False,
         "ordinary_user_sellability_verified": False,
