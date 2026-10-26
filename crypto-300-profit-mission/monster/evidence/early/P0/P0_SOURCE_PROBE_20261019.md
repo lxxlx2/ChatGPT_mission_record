@@ -1,3 +1,17 @@
+## 2026-10-26：AWS BNB区块Parquet真实Footer可读；交易文件超8MiB元数据限制，修复为有界Schema前缀探针
+
+**用户Mac前台实际输出（USER_PASTED_MAC_TERMINAL_STDOUT）**：指定日期blocks对象原文件长度147077458字节，ETag "c04114ca2a9e3002cb478423dad7eb26-3"，8字节尾标符合Parquet，实际取得其973289字节完整Footer，SHA256为5d04b0f7be64590ec7df61ae97c296b2f01fd3d08022e7d23980899b936cddd4。声明num_rows=115196、row_groups=185。115196与先前冻结高度52440287..52555482含两端的理论块数恰好一致，但**未读取行值，尚未证明每个高度确有一条、无重复或真实区块哈希对应一致**。块Schema显示number/hash/parent_hash/logs_bloom/receipts_root/timestamp/transaction_count/gas等；**logs_bloom和receipts_root是摘要/承诺，无法代替可解码原生EVM日志或回执**。timestamp是区块时间，不是2025同时代真实客户端接收回执，不升级PIT_VERIFIED。
+
+同日transactions对象长度4826591204字节，在旧固定源码中返回 SourceError:FOOTER_TOO_LARGE_OR_INVALID。该错误将footer长度超出人为8MiB上限和文件无效混在一起；**现有Mac输出无法区分，更不能据此宣告S3对象坏了**。transactions Schema、该日期交易行数、原生log/receipt列仍UNVERIFIED。
+
+**只修复当前数据门禁阻断，没有新建阶段或模型**：在既有aws_bnb_parquet_footer_probe.py加入>8MiB Footer的限额Schema前缀路径，先从末尾8字节获取声明的真实Footer长度，再从Footer开头只读取最多256KiB；要求HTTP 206、Content-Range、Size与ETag配对，且仅在Thrift CompactProtocol的前三个标准顺序字段真实可解析时报告Schema路径和声明num_rows。此分支不读取RowGroup详情、不宣称完整Footer SHA：显式footer_fully_verified=false、row_groups_declared=null、footer_sha256=null、scope=OVERSIZED_FOOTER_SCHEMA_PREFIX_ONLY。若字段结构不匹配/前缀过短，保持source失败并停止，不下载4.83GB正文。<=8MiB路径维持原完整Footer检验及SHA。
+
+**离线验证与Git边界**：本地等价源码+原5个测试+新增3个边界测试，共8/8 PASS（超长Footer仅有限前缀、损坏前缀拒绝、非法Footer长度立即拒绝）。提交新代码1df6462908e19c078ba0bc9fcae467f9c93efc79、测试077d3ee3870ba9805c29c31749c93e5957041a15；本会话GitHub读回验证已写入同一Monster分支。**远端具体提交版本尚未运行新的Mac网络探针/CI，8项本地测试针对等价实现，不能冒充已执行远端逐字节测试**。
+
+下一步只看这份指定日期transactions真实Schema是否含eth_getLogs可复原的topics/address/data/logIndex、逐交易receipt及gas字段。若字段缺失，则AWS计划B最多用作辅助块/普通交易锚点，不为补缺继续下载多GB文件；其余日志/PIT和同研究金额双向真实卖出证据必须由其他已有合法免费源提供。P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO不变；2026-11-02来源止损不变。不付费、不运行Mac后台、不改Frank/Gmail/交易及冻结样本。
+
+---
+
 ## 2026-10-26：AWS BNB两份指定日期Parquet对象实际存在，Schema及原生日志仍待核实
 
 **Mac实际运行输出（USER_PASTED_MAC_TERMINAL_STDOUT）**：对冻结的2025-07-01 UTC，通过先前已Git固定的匿名S3目录探针查询成功，blocks/date=2025-07-01/blocks.parquet=147077458字节；transactions/date=2025-07-01/transactions.parquet=4826591204字节。两个对象date_objects_observed=true，目录查询无错误，均有具体完整Key及Size；四种预探日期命名中仅date=YYYY-MM-DD/路径命中。两个顶层列举均truncated=true，仅说明其列出的10个子目录不是整个历史月份全集。**首次证实这一日期分区两类文件存在**，先前SOURCE_CANDIDATE_ONLY升级为OBJECTS_LISTED_CONFIRMED，而不是SOURCE_FULL_COVERAGE_PASS。
