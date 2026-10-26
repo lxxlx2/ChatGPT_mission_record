@@ -1,3 +1,11 @@
+# 2026-10-26 — PR216 approved; real D2/D3 signing protocol PROPOSAL only (new child review pending)
+
+- Frozen base PR216 SHA 8aa21a04fead8e6a6db326ed8dfa244f9f76192c: external independently reported ARM64 Mac APPROVE_OFFLINE_CODE / D2_SINGLE_FD_HELD_ONCE_TEST_MARKER_ONLY; F0 588/588, D1 171, FD-held 10, OS readonly 10, staged 9, patched ctor 16, D2-A/B/C 10/10/7. [Attributable Mac audit archive](https://github.com/lxxlx2/ChatGPT_mission_record/pull/216#issuecomment-6417376330). This is TEST marker approval only, never production signer/nonce or RPC permission.
+- New Issue #207 increment: f0/f0_l2_d2_production_signature_spec.py defines deterministic length-counted ASCII bytes for proposed domain-separated D2 user/reviewer and independent D3 operator, bound to raw permit/intent digests, fixed source SHA/manifest and BSC fixed endpoint/methods. PROPOSAL domain intentionally differs from TEST-ONLY. No signer, verifier, root enrolment, human identity, filesystem, network or live source. Ten tests; full F0 expected 598 subject to actual CI.
+- See f0/F0_D2D3_PRODUCTION_SIGNATURE_AND_IDENTITY_SPEC_20261026.md for distinct real-person key control, out-of-band verification, revocation/rotation, fixed post-enrollment release SHA, OS bound one-shot grant and later independently authorised foreground read-only pilot. The protocol is not yet approved for use to solicit actual signatures.
+- Issue #207 remains OPEN: D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO. NO_DEPLOY, NO_RESTART, NO_RPC, NO_TRADES, no background process, production marker, enrolment or merge.
+
+---
 # 2026-10-26 — PR213 OS registry READONLY independently ARM64 Mac APPROVED; single FD-held one-use TEST rehearsal pending
 
 - **Frozen approved parent:** PR213 exact `e351ac98c20e60c9dcc890f2d91aaa22b3885910`, external independently supplied ARM64 Mac `APPROVE_OFFLINE_CODE — D2_OS_BOUND_REGISTRY_READONLY_PREFLIGHT_ONLY`, full F0 578/578, D1 171, registry 10, staged 9, HTTPS ctor 16, D2-A/B/C 10/10/7, UTC 4, budgets 4, hard-stop 5, child 2, no skips. [Attributed report archive](https://github.com/lxxlx2/ChatGPT_mission_record/pull/213#issuecomment-6408822982). No real production registry was touched or opened by reviewer.
