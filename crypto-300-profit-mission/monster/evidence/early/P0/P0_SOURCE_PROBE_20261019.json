@@ -22398,5 +22398,242 @@
       "five_sells_do_not_mean_five_independent_retail_exits": true,
       "predictive_and_uniform_amount_exit_gate": "NOT_SCORABLE"
     }
+  },
+  "bsc_v2_p0_29_deployer_sender_identity_readback_20261026": {
+    "schema": "MONSTER_P0_FROZEN30_CREATION_TX_SENDER_RECHECK_V1",
+    "readback_utc_date": "2026-10-26",
+    "scope": "FROZEN_BSC_V2_2025_07_01_FIRST30_RANKS_EXISTING_29_EXACT_CREATION_TX_HASHES_ONLY",
+    "source": "USER_EXISTING_ALCHEMY_BNB_MAINNET_READ_ONLY_NORMALIZED_ETH_GETTRANSACTIONRECEIPT_OR_ETH_GETTRANSACTIONBYHASH",
+    "previous_exact_creation_tx_receipts_evidence_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020",
+    "source_original_http_bytes_archived": false,
+    "third_party_independent_provider_verified": false,
+    "entire_cohort": 30,
+    "previous_exact_creation_tx_proven": 29,
+    "current_tx_sender_readback": 29,
+    "receipt_sender_readback": 20,
+    "full_transaction_sender_readback": 9,
+    "distinct_deployment_sender_addresses": 29,
+    "duplicated_deployment_sender_addresses": 0,
+    "exact_runtime_A_1346_rank_count": 9,
+    "exact_runtime_A_distinct_sender_count": 9,
+    "exact_runtime_B_3553_rank_count": 4,
+    "exact_runtime_B_distinct_sender_count": 4,
+    "rank5_creation_tx": "UNVERIFIED",
+    "rank5_deployment_sender": "UNKNOWN",
+    "corporate_or_common_controller_identity": "UNVERIFIED",
+    "wallet_funding_source_and_interrelationships": "NOT_ANALYZED",
+    "independent_project_count": "NOT_SCORABLE",
+    "candidate_5x_10x_trade_labels": "NOT_STARTED",
+    "contemporary_2025_public_available_at": "UNKNOWN",
+    "study_notional_bidirectional_execution": "NOT_SCORABLE",
+    "p0": "INSUFFICIENT_COVERAGE",
+    "p1": "BLOCKED",
+    "g4": "UNKNOWN",
+    "g6": "NO_GO",
+    "readback_rows": [
+      {
+        "rank": 1,
+        "sender": "0x7499885e0195c957af71ec108c9fac8d58949826",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 2,
+        "sender": "0xe867a7f8b24976572123aa3bfcf90d75dce17098",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 3,
+        "sender": "0x6c0207dc997db215de684b154547dfea262ce007",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 4,
+        "sender": "0x850a078ca2c99853009c4aa8066e872ac180e130",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 6,
+        "sender": "0xe93ee66bbbf1f8b55253a0d0e93115d95e2c8733",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 7,
+        "sender": "0x4a3b6cb63a90427be542c2d010c07006d340003a",
+        "source_method": "eth_getTransactionByHash",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 8,
+        "sender": "0x2000957aa90f6b8dba1e1af7b3d8bd0a7fd20a7d",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 9,
+        "sender": "0x2d37bc16112a5d4e84c5a8fda46788a8a372d5a7",
+        "source_method": "eth_getTransactionByHash",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 10,
+        "sender": "0x8c7434783391dc88ef4947a1a5c396906cafa8f9",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 11,
+        "sender": "0xe315547d3e1c78842ab113867522200bafd08fc5",
+        "source_method": "eth_getTransactionByHash",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 12,
+        "sender": "0xc18f6f07ff654429d0d7f4d22f27b810acd9b2cf",
+        "source_method": "eth_getTransactionByHash",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 13,
+        "sender": "0xf8b5c14a986553caafcf1405c8f3d6a6afc00333",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 14,
+        "sender": "0xf431fb49e95cc32a878f96af5d44ce28b4c11a51",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 15,
+        "sender": "0x0dab8151527f987670976b57d8ccf62b27321b90",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 16,
+        "sender": "0x41fea3c273406854e14eb867b870463f0388a105",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 17,
+        "sender": "0x294a8a20a61d5a6fc1ed7a270c7c65f791f9a402",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 18,
+        "sender": "0x1ed573bd10b9f43c8c926a74263260d411342f07",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 19,
+        "sender": "0x4f60422403b255bd2e43a361da2e034e05acb226",
+        "source_method": "eth_getTransactionByHash",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 20,
+        "sender": "0xad4974d761a8f854985c0d51672c3d56b61434d9",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 21,
+        "sender": "0x1a8ab3923bf8d6196d07e75d6d2d13237395dda0",
+        "source_method": "eth_getTransactionByHash",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 22,
+        "sender": "0xc9731936f759c531d2c2f2a6d7beaab8c8e3f0ba",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 23,
+        "sender": "0x85139372d71ca4fe7152ca67e4613843599030ec",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 24,
+        "sender": "0x616be5e6b610c99d93663993e3236f0621ed1633",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 25,
+        "sender": "0xe08b1ba1ab40d5584a50b9a36888df9ff8deed04",
+        "source_method": "eth_getTransactionByHash",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 26,
+        "sender": "0x11c4738dcd7e8180f2ebf349ed5a07667d77d095",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 27,
+        "sender": "0x95ffc56b4d26deb92dfc8bf9b3b143351ca09612",
+        "source_method": "eth_getTransactionByHash",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 28,
+        "sender": "0xcb492cca6122f4dd102d11f76fe1cad609600563",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 29,
+        "sender": "0x7ecfc8015d85cce7360637201aeb1dcedb633e4b",
+        "source_method": "eth_getTransactionReceipt",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      },
+      {
+        "rank": 30,
+        "sender": "0xb5fa429ef42c6ee7a5c9280debbc1d6414ebe82c",
+        "source_method": "eth_getTransactionByHash",
+        "transaction_hash_key": "bsc_v2_p0_29_direct_creation_tx_receipt_recovery_20261020.rows[rank].creation_transaction_hash",
+        "original_creator_tx_identity_crosschecked": true
+      }
+    ]
   }
 }
