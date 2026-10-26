@@ -1,0 +1,68 @@
+name: Monster ADR005 P1 D0 rearm RBTC overlap offline fixed once
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-adr005-p1-rearm-overlap-ledger-once.yml
+
+permissions:
+  contents: read
+
+jobs:
+  entire-cohort-source-proxy-d0-rbtc:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Confirm all approved source protections then full-cohort D0 and RBTC research queue
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          for pattern in \
+            test_monster_v4_adr005_forward_spot_t0_gate.py \
+            test_monster_v4_adr005_forward_spot_daily_gate.py \
+            test_monster_v4_adr005_forward_spot_score_admission.py \
+            test_monster_v4_adr005_forward_verified_minute_tape.py \
+            test_monster_v4_d1_rbtc15_last5_research.py \
+            test_monster_v4_d1_rbtc15_episode_research.py \
+            test_monster_v4_adr005_forward_spot_full_market_replay.py; do
+            python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p "$pattern" -v
+          done
+      - name: Fail-closed actual November no-T0 readiness, no forecast score
+        env:
+          PYTHONPATH: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/monster-adr005-new-full-cohort"
+          for day in 2026-11-02 2026-11-16 2026-12-01; do
+            python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_adr005_forward_spot_score_admission.py --window-start-utc "${day}T00:00:00Z" --asof-utc 2026-10-26T00:00:00Z --out "$RUNNER_TEMP/monster-adr005-new-full-cohort/${day}.json"
+          done
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path(os.environ["RUNNER_TEMP"])/"monster-adr005-new-full-cohort"
+          for day in ("2026-11-02","2026-11-16","2026-12-01"):
+              d=json.loads((root/(day+".json")).read_text())
+              assert d["original_t0_symbols_total"] is None
+              assert d["btc_benchmark_in_t0_source_census"] is None
+              assert d["G1"]=="NOT_SCORABLE" and d["G6"]=="NO_GO"
+              assert d["replay_engine_executed"] is False
+              assert d["metrics_from_future_labels_computed"] is False
+          print("MONSTER_NOVEMBER_FUTURE_REAL_COHORT_UNKNOWN_NO_G1_NO_G2_SCORE_PASS")
+          assert len(list(root.glob("*.json")))==3
+          PY
+      - name: Save actual future no-source reports only, NOT synthetic WATCH counts
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-adr005-p1-rearm-3window-no-source
+          path: ${{ runner.temp }}/monster-adr005-new-full-cohort/*.json
+          retention-days: 30
+          if-no-files-found: error
