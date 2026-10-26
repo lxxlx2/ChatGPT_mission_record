@@ -1,10 +1,55 @@
 # Slop Cash / SLOP — Umia auction participation research
 
-Updated: 2026-10-27 Asia/Bangkok (official auction price/cap, supply, Robinhood USDG, eligibility stages; exact calendar time/CA still unconfirmed)
+Updated: 2026-10-27 Asia/Bangkok (official Nov5/7/10 UTC dates corrected, precise early eligibility publication rule, freshly checked USDG balance, token vesting contradiction)
 Scope: ICO / pre-launch token auction / Robinhood Chain
 State: `USER_INTENDS_TO_PARTICIPATE / WAIT_FOR_FINAL_AUCTION_TERMS / NO_FUNDS_COMMITTED`
 Decision classification: `WATCH` (not SETUP or ACTIVE).
 Execution: `NO_GO`; the user has expressed interest only, with no authorization for funding, wallet signature, live trading, scheduling or monitoring.
+
+## 2026-10-27 independently reconciled OFFICIAL X timing, Slop-specific Early Bid source and wallet balance
+
+### 1. Dated official X announcement: exact times, UTC vs Bangkok
+
+- **Source: screenshot user provided 2026-10-27 of first-party @umia_finance X** https://x.com/umia_finance/status/2114764262619120103 . The X text itself was blocked by web tooling; screenshot shows unambiguously **pre-bid opens Nov 5 2026 17:00 UTC**, **bidding opens Nov 7 2026 17:00 UTC**, **auction closes Nov 10 2026 17:00 UTC**, bid currency USDG, Robinhood Chain. This supersedes the inaccurate Oct26 countdown-derived date guesses below.
+- **Correct Bangkok UTC+7 conversion**: gated start **Nov 6 00:00**; open/public start **Nov 8 00:00**; close **Nov 11 00:00**. Early **2 days**; public **3 days**; **5-day** aggregate window. Previously indexed Umia '4-day auction' Q4 teaser **STALE/INCONSISTENT** vs later specific first-party X.
+- X Spaces with @SlopCash Oct 29 **14:00 UTC** -> Bangkok **Oct 29 21:00**. Useful for clarifying early cap, exact GitHub proof and legal terms.
+- **TGE/claim/DEX**: Umia mechanism plans auction finalization and immediate seed of treasury-owned Uniswap v4 pool **if** minimum raise reached. Precise claim timestamp and tradable pool creation transaction, routing, gas, chain switch, specific $SLOP CA **not confirmed until deploy/close**, so don't promise tradability the instant clock strikes 00:00.
+
+### 2. Exact original SLOP-specific Early Bid terms recovered in connected authenticated auction page
+
+**First-party authenticated page text** https://app.umia.finance/p/slop-cash/auction, dated original 2026-10-26 browser tab (read-only), section "Early access":
+> "The early bid is not a separate presale. It is the first 2 days of one 5-day auction, reserved for people already doing the work in open source and for Umia ecosystem participants. Open-source eligibility is proved privately on your own device through the Umia extension, using zkTLS proofs over your GitHub activity ... The exact criteria, with their cutoff dates, are published the day the early bid opens. The cutoff was set before any public announcement, so eligibility cannot be farmed after the fact."
+
+Other exact same primary passage:
+- **9m SLOP** for zkTLS contributor/reviewer/maintainer early round = 20% of 45m auction.
+- **6.75m** tokens up to **15% of auction** for whitelisted ecosystem funds, **same clearing price** as everyone, no allocation discount, no side letters.
+- "Other early access criteria, for **UMIA holders**, will be announced soon": **NOT YET ANNOUNCED**, holding UMIA alone not a guaranteed criterion.
+- The precise minimum GitHub merged PRs, accepted reviews, maintainership, repository scope, account age, activity cutoff and wallet individual cap **ARE NOT PUBLIC YET**; the issuer says they are **published the day early bidding begins**. Avoid hallucinating a Sept30 cutoff, fixed number of PRs, or eligibility conclusion for user's GitHub.
+- Per public <https://umia.finance/docs/tailored-auctions>, Umia verification can be through **any ONE** accepted zkTLS credential OR an explicit allowlist. Project-specific compatible provider for GitHub is determined by step configuration. Onchain validation hook enforces credential and bidding limits. Verified-wallet caps and whitelisted-fund individual limits may differ, and some wallet allowlist caps are not public. Public round starts Nov8 00:00 Bangkok and does **not require GitHub credential**; final sale legal/geographic eligibility still applies.
+- Proof steps: install **official** Umia Chrome extension from project or https://umia.finance/docs/zktls-extension ; open signed-in Github in own browser; verify shown accepted credential when live; bind proof to connected wallet and submit permitted USDG bid. Do not provide GitHub password, private keys or screenshots containing bearer tokens. Proof self-validation does NOT count as a confirmed early allocation.
+
+### 3. Wallet balance directly read (updated)
+
+Read-only direct Alchemy RPC Robinhood mainnet chainId 4663 on **2026-10-27** for canonical EVM `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`:
+- Native **0.002152148618870669 ETH** available for gas.
+- Canonical USDG `0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168` has **12.961754 USDG** (6 decimals), corroborates signed-in browser UI "12.96 USDG". **Older earlier same-day RPC reading of 0 USDG was superseded**, do not repeat that historical figure as live status.
+- $1,000 USDG bid capital is currently **short 987.038246 USDG** if the intended amount is exactly 1,000 USDG. Existing ETH may suffice for some network actions but gas sufficiency must be simulated and bridge fees separately budgeted. No bid or transfer performed.
+
+### 4. New important terms contradictions and business quality signal
+
+- Main first-party Slop project page https://app.umia.finance/p/slop-cash currently claims 10m team time-vested **12-month cliff then monthly to month 36**, while longer authenticated auction **"Token terms"** states 10m time-vested **12-month cliff, 25% catch-up then continuous vesting to month 48**, and then 10m separate performance tranche. **OFFICIAL DOCUMENTS DISAGREE**; lock-up schedule remains **INCONSISTENT / VERIFY DEPLOYED META-VEST CONTRACT**. Never silently choose one.
+- Profile also refers to "ecosystem and contributor programs" as **11%** in a descriptive paragraph while its binding-looking table lists 14%. Audit final legal/tokenomics configuration at deploy; percentage table sums to 100%.
+- Slop authenticated auction page says **$35,000 monthly treasury operating budget**, staff $25,000, infrastructure $3,000, marketing $4,000, admin/legal $3,000; treasury funds after 20% LP => $320k at $400k minimum (about **9.14 months** of monthly draws), $800k at $1m raised (about **22.86 months**). **Issuer stated proposed budget**, subject to contract enforcement and income; NOT current audited profit.
+- 2026-10-02 issuer press https://chainwire.org/2026/10/02/umia-opens-its-platform-to-outside-projects-with-slop-cash-from-elizaos-creator-shaw-walters-the-first-to-be-announced/ asserts August 2026 contributor payout **6,005 USDC / 72 transfers**. Independent read-only public index https://record.slop.cash/ explicitly states **August payouts sent outside verified final settlement flow** and cycle still shows August as not formally settled. This is an important real payment versus full product workflow distinction: actual Solana payment signatures exist, but **first complete automated verified settlement cycle remains pending**.
+- IPO pre-TGE style market: **NO independently identified SLOP-specific liquid prediction market** with historical probabilities or TGE FDV settlement. Found Polymarket `Umia FDV above...` relates to **$UMIA platform token**, which has ALREADY launched and settled; **do not transfer those event probabilities to $SLOP**.
+- Geo/legal gate: browser page lists 7 sale terms, including "Eligibility; Sanctions and Geographical Restrictions", but expanded text and specific excluded nations not fully read. The issuer's public page says final T&C published before early bidding. **Thailand eligibility UNVERIFIED**, do not claim permission or restriction without first-party text.
+- Source classification: dates from firsthand user screenshot of official X, detailed gated policy and operating budget from read-only original Umia auction page, USDG/ETH from direct chain RPC, main first-party profile https://app.umia.finance/p/slop-cash, project operations from public GitHub/reconciliation. Future allocation, final claim, listing and live token contracts **UNVERIFIED**.
+
+### Decision and fund protection
+
+`INTENT_1000_USDG / NOT_BID / USDG_BALANCE_12_961754 / EARLY_ELIGIBILITY_PENDING / PUBLIC_OPEN_NOV8_00_BANGKOK / TOKENS_NOT_LIVE / NO_TRADE`. Do not modify active portfolio for merely announced intent; no new alerts/automation requested. This record corrects **dated factual mistakes** and adds durable gating and later primary policy, rather than a redundant project record.
+
+---
 
 ## 2026-10-27 refreshed auction configuration and user $1,000 participation research
 
