@@ -1757,7 +1757,9 @@ async function pollClusterJob(jobId, failures=0) {
       const loaded=await loadLatestCluster(mint,true,version,jobId);
       if (clusterPollVersion!==version || clusterActiveJob?.id!==jobId) return;
       if (!loaded) {
-        clusterStatus('error',clusterReportLoadError==='RENDER'?'任务已结束，报告显示失败':'任务已结束，报告读取中断',
+        clusterStatus('error',clusterReportLoadError==='IDENTITY'?'已有报告属于另一任务，未展示':
+          clusterReportLoadError==='RENDER'?'任务已结束，报告显示失败':'任务已结束，报告读取中断',
+          clusterReportLoadError==='IDENTITY'?'最新保存报告的任务编号与本次任务不一致；原任务已保留，不会重新扫描':
           clusterReportLoadError==='RENDER'?'报告已经收到，但页面显示异常，请保留此任务并检查浏览器错误':'可只重试读取已有报告，不会重新扫描');
       } else {
         clusterFinishJob();
@@ -1859,7 +1861,9 @@ $('cluster-resume-get').addEventListener('click',()=>{
       if (clusterPollVersion!==version || clusterActiveJob?.id!==id) return;
       if (!loaded) {
         clusterShowRecovery(true);
-        clusterStatus('error',clusterReportLoadError==='RENDER'?'报告显示仍然失败':'报告读取仍然中断',
+        clusterStatus('error',clusterReportLoadError==='IDENTITY'?'最新报告属于另一任务':
+          clusterReportLoadError==='RENDER'?'报告显示仍然失败':'报告读取仍然中断',
+          clusterReportLoadError==='IDENTITY'?'任务编号不匹配，已保留原任务；请仅查看历史缓存或稍后重试 GET':
           clusterReportLoadError==='RENDER'?'报告已收到，请检查页面显示异常':'可再次尝试读取已有报告');
       } else {
         clusterFinishJob();
