@@ -1,3 +1,20 @@
+## 2026-10-26：22笔历史SELL的真实交易路由与最低输出保护核查（P0执行质量）
+
+为了直接检验“曾经卖出”是否代表普通投资者可**合理受保护地卖出**，本轮按原冻结30个CA中已存的20+2笔代表性历史SELL交易hash，经用户既有Alchemy BNB mainnet**只读`eth_getTransactionByHash`完整读取22/22历史交易的实际`to/from/input/selector`**；不补取未来赢家、不改变选择规则或原代码。对可以按PancakeSwap V2标准ABI解释的交易，只以真实函数选择器和 ABI 字节精确解析`path / amountOutMin / deadline`，并核对全部标准路径均为**对应冻结Token CA→对应WBNB/USDT报价资产**、2个地址、原V2 Router目标地址，未以token Symbol猜测身份。
+
+| 被抽查的原始实际SELL路由 | 数量 | 价格保护（实际入参） |
+| --- | ---: | --- |
+| 标准 V2 `swapExactTokensForETH`（`0x18cbafe5`） | 13 | **13/13 `amountOutMin=0`** |
+| V2 `swapExactTokensForETHSupportingFeeOnTransferTokens`（`0x5c11d795`） | 2 | **2/2 `amountOutMin=0`** |
+| V2 `swapExactTokensForTokens`（`0x38ed1739`） | 1 | **rank1存在正数`amountOutMin`**，实际报价资产为USDT |
+| 自定义合约/其它选择器（`0xfe061fbb`、`0xe9ae5c53`、`0x3593564c`） | 6 | **保护参数不可从标准V2 ABI推断，标为UNKNOWN** |
+
+因此，**16笔能完整解释为标准V2 Router的历史SELL中，15笔没有设置正数最低输出；不能将另外6笔UNKNOWN也记为零保护**。16笔标准调用里另有11笔的实际`deadline`按合约Unix秒语义在交易发生后仍超过24小时（9笔13位数、2笔11位数）；其余5笔期限在当天，其中rank1距离该交易块时间约1193秒。由此只能断言单笔交易的保护参数及实际期限，不能推断发起者的故意程度或交易所、钱包的通用安全性。
+
+**直接影响P0业务口径**：此前22笔成功卖出的真实回执、18个达标报价深度样本都继续保留为历史**特定成交**。但卖出成功对“普通用户有保护、固定下单金额可重复成交、可净获利”的支撑明显受限；极端99%报价储备耗尽的7笔均属于上述`amountOutMin=0`标准Router，包含rank9/19/27三笔部署者自身卖出。rank1确有非零minOut，也**不是普通投资者完整买入再退出**的实证，不能升级为单例策略PASS。
+
+对应可复算摘要及22个rank逐笔路径分类追加到**原P0 JSON**的`bsc_v2_p0_22_sell_transaction_route_price_protection_20261026`，原引用的交易hash、池及CA没有改动。所有读取来自同一Alchemy规范化RPC，未得到原始HTTP响应SHA、独立供应商证明或2025当时公众收到事件时点。无需继续逐个增加相同来源的交易案例；真正阻断主线的是**完整历史来源/PIT、预冻结统一名义金额、双向税费与最终钱包净到账**。仍为`P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO`，2026-11-02原历史源止损日期不变。本轮无新Python unittest、CI、独立Review、Mac执行、部署、邮件或交易。
+
 ## 2026-10-26：22笔真实SELL的同交易Sync核验与储备耗尽风险（历史执行证据，非PIT或用户净收益）
 
 本轮继续原P0主线，**不换30个冻结CA母体、不读未来5×/10×结果或事后赢家名单**。数据直接使用原P0 JSON中已存20组`case_results`及rank16/17另2组真实后续BUY/SELL；每笔只按原冻结rank+CA+Pool匹配。对**全部22笔历史卖出**通过现有免费Alchemy BNB只读`eth_getTransactionReceipt`实际重新读取，不使用用户Mac、不执行交易。全部22/22 receipt `status=0x1`，对应Pool在原卖出交易中**恰好1条Sync**；按旧冻结Factory token0/token1确认报价资产方向，由这笔真实回执的**Sync成交后Quote储备＋已有真实Quote池侧输出＝已存卖出前Quote储备**，22/22按最小原始整数单位精确一致。对其中最极端7笔另核验WBNB Transfer自池流出与原Swap输出精确一致。实际RPC返回为Alchemy规范化回执，**没有原始HTTP字节SHA或第二独立节点**，本结论仅是指定历史交易/单池执行证据。
