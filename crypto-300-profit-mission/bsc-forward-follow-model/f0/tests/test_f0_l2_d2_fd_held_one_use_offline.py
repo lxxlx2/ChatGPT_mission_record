@@ -5,6 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 from hashlib import sha256
 import json
 import os
+import shutil
 from pathlib import Path
 import socket
 import stat
@@ -122,7 +123,7 @@ class HeldFDOnceOnlyTests(unittest.TestCase):
             self.root.rename(moved)
             self.root.mkdir(mode=0o700)
             return report
-        self.addCleanup(lambda: None)
+        self.addCleanup(shutil.rmtree, moved, ignore_errors=True)
         with patch.object(held, "_consume_once_using_open_dirfd",
                           side_effect=swap_after_real_consume) as writer:
             with self.assertRaisesRegex(
