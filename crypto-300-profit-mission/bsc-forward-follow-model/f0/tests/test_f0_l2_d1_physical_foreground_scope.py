@@ -105,7 +105,7 @@ class PhysicalOnceScopeTests(unittest.TestCase):
     def test_cross_field_incoherence_stops_preflight(self):
         for mutations in (
             {"max_total": 9},
-            {"head_min_poll_age_ms": 4000},
+            {"head_min_poll_age_ms": 3999, "head_ttl_ms": 3500},
             {"window_ms": 25000, "hard_seconds": 25},
         ):
             with self.subTest(mutations=mutations):
