@@ -424,6 +424,7 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
                         max_block_response_ms=5000,
                         head_min_poll_age_ms=1000,
                         fake_post_utc_window=None,
+                        anchor_initial_head=False,
                         _staged_physical_offline=False):
     """No permit or live network entry. Thread workers are fake only.
 
@@ -462,6 +463,8 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
              getattr(source, "__dict__", {})
          and type(slots) is int and slots == 3
          and type(max_total) is int and 2 <= max_total <= 32
+         and type(anchor_initial_head) is bool
+         and (not anchor_initial_head or max_total >= 3)
          and type(max_blocks) is int and 1 <= max_blocks <= 24
          and type(max_refreshes) is int and 0 <= max_refreshes <= 6
          and type(head_ttl_ms) is int and 500 <= head_ttl_ms <= 4000
@@ -470,7 +473,8 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
          250 <= max_block_response_ms <= 5000
          and type(head_min_poll_age_ms) is int and
          250 <= head_min_poll_age_ms < head_ttl_ms
-         and max_total <= max_blocks + max_refreshes + 2,
+         and max_total <= max_blocks + max_refreshes + 2
+             + (1 if anchor_initial_head else 0),
          "D1_SCOPE_INVALID")
     if fake_post_utc_window is not None:
         # Import only at run-time: post_utc consumes the bundle's strict
@@ -491,6 +495,12 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
     faults, parsed_blocks, commits = [], {}, []
     head = head_completed = next_height = next_commit = None
     last_committed_hash = None
+    initial_anchor_started = False
+    initial_anchor_ready = not anchor_initial_head
+    initial_anchor_height = None
+    initial_anchor_hash = None
+    verified_initial_parent_links = 0
+    verified_internal_parent_links = 0
     stop = None
     number_blocks = number_refreshes = 0
     chain_ok = False
@@ -506,6 +516,7 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
     def reserve(category, height=None):
         nonlocal unique_id, number_blocks, number_refreshes
         nonlocal head_pending, initial_head_started, next_height, peak_slots
+        nonlocal initial_anchor_started
         need(len(pending) < 3 and unique_id < max_total,
              "D1_RESERVATION_OVER_BUDGET")
         method = ("eth_chainId" if category == "CHAIN" else
@@ -514,14 +525,20 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
         unique_id += 1
         rid = unique_id
         payload = {"jsonrpc":"2.0", "id":rid, "method":method,
-                   "params":[hex(height),True] if category == "BLOCK" else []}
+                   "params":[hex(height),True] if category in ("BLOCK","ANCHOR") else []}
         valid_rpc_payload(payload)
-        if category == "BLOCK":
+        if category in ("BLOCK","ANCHOR"):
             need(head is not None and height <= head and
                  time.monotonic() < head_completed + head_ttl_ms/1000,
                  "D1_HEAD_LIMIT_INVALID")
-            next_height += 1
-            number_blocks += 1
+            if category == "ANCHOR":
+                need(anchor_initial_head and not initial_anchor_started and
+                     height == head and next_height == head + 1,
+                     "D1_ANCHOR_SCOPE_INVALID")
+                initial_anchor_started = True
+            else:
+                next_height += 1
+                number_blocks += 1
         if category == "HEAD":
             number_refreshes += 1
         if category in ("HEAD", "INITIAL_HEAD"):
@@ -541,7 +558,8 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
         def verified_reservation(actual, expected=payload, reserved_id=rid):
             need(actual == expected and actual.get("id") == reserved_id,
                  "D1_PATCHED_CTOR_RESERVED_REQUEST_MISMATCH")
-        dead_head = head_completed + head_ttl_ms/1000 if category == "BLOCK" else None
+        dead_head = (head_completed + head_ttl_ms/1000
+                     if category in ("BLOCK","ANCHOR") else None)
         # Exactly the same durable RID closure; the staged physical-shaped
         # source additionally requires an internal post-fsync TEST receipt.
         # Never interpret this receipt as real D2/D3 production authority.
@@ -571,7 +589,9 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
     def completion(future):
         nonlocal head, head_completed, next_height, next_commit, chain_ok
         nonlocal head_pending, received_full, last_committed_hash, stop
-        nonlocal bad_parent, last_completed_sample
+        nonlocal bad_parent, last_completed_sample, initial_anchor_ready
+        nonlocal initial_anchor_height, initial_anchor_hash
+        nonlocal verified_initial_parent_links, verified_internal_parent_links
         entry = pending.pop(future)
         rid, category, height = entry["id"], entry["category"], entry["height"]
         outcome = future.result()
@@ -587,7 +607,7 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
             try:
                 req = {"jsonrpc":"2.0", "id":rid,
                        "method":entry["method"],
-                       "params":[hex(height),True] if category == "BLOCK" else []}
+                       "params":[hex(height),True] if category in ("BLOCK","ANCHOR") else []}
                 response = parse_http_response(raw[0],raw[1],raw[2],req)
                 if category == "CHAIN":
                     need(response["result"] == "0x38", "D1_WRONG_CHAIN")
@@ -624,7 +644,8 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
         if state != "RPC_RESPONSE":
             faults.append({"id":rid, "height":height,
                            "reason":reason, "category":category})
-            record_hard_stop("RPC_OR_HEAD_FAULT")
+            record_hard_stop("INITIAL_ANCHOR_FAILED" if category == "ANCHOR"
+                             else "RPC_OR_HEAD_FAULT")
             if category in ("HEAD","INITIAL_HEAD"):
                 head_pending = False
             return
@@ -643,6 +664,15 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
                                  "at_monotonic":head_completed,
                                  "accepted_at_monotonic":time.monotonic(),
                                  "clock_basis":"WORKER_RESPONSE_COMPLETED"})
+        elif category == "ANCHOR":
+            # Successful RAW must already be fsynced via log.settle.
+            # Same source only; not independent canonical/finality proof.
+            need(initial_anchor_started and not initial_anchor_ready and
+                 height == head, "D1_ANCHOR_SETTLEMENT_INVALID")
+            initial_anchor_height = height
+            initial_anchor_hash = parsed["block_hash"]
+            last_committed_hash = initial_anchor_hash
+            initial_anchor_ready = True
         else:
             parsed_blocks[height] = (rid,parsed["block_hash"],parent)
             received_full += 1
@@ -659,6 +689,11 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
                     log.add({"event":"CHAIN_INTEGRITY_FAULT",**fault})
                     record_hard_stop("CHAIN_FAULT")
                     break
+                if initial_anchor_ready and anchor_initial_head and (
+                    next_commit == initial_anchor_height + 1):
+                    verified_initial_parent_links += 1
+                elif last_committed_hash is not None:
+                    verified_internal_parent_links += 1
                 del parsed_blocks[next_commit]
                 log.add({"event":"COMMIT_CONTIGUOUS",
                          "height":next_commit,"id":owner})
@@ -683,7 +718,21 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
                     reserve("INITIAL_HEAD")
                     continue
                 if stop is None and head is not None:
-                    if number_blocks >= max_blocks:
+                    if anchor_initial_head and not initial_anchor_ready:
+                        # No future block/HEAD refresh before the journaled
+                        # initial HEAD full block has settled as valid RAW.
+                        if not initial_anchor_started:
+                            if len(reservations) >= max_total:
+                                stop = "TOTAL_BUDGET"
+                            elif time.monotonic() >= (
+                                    head_completed + head_ttl_ms/1000):
+                                stop = "INITIAL_ANCHOR_STALE_HEAD"
+                            elif not pending:
+                                reserve("ANCHOR", head)
+                                continue
+                        elif not pending:
+                            stop = "INITIAL_ANCHOR_UNVERIFIED"
+                    elif number_blocks >= max_blocks:
                         stop = "BLOCK_BUDGET"
                     elif len(reservations) >= max_total:
                         stop = "TOTAL_BUDGET"
@@ -737,6 +786,16 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
         "min_actual_fake_start_gap_ms":round(min(gaps),3) if gaps else None,
         "parsed_full_blocks":received_full,
         "contiguous_commits":len(commits),
+        "initial_anchor_requested":anchor_initial_head,
+        "initial_anchor_attempts":int(initial_anchor_started),
+        "initial_anchor_height":initial_anchor_height,
+        "initial_anchor_hash":initial_anchor_hash,
+        "initial_anchor_same_source_verified":(
+            initial_anchor_height is not None),
+        "verified_initial_parent_links":verified_initial_parent_links,
+        "verified_internal_parent_links":verified_internal_parent_links,
+        "first_parent_same_source_anchored":(
+            verified_initial_parent_links == 1),
         "first_parent_independently_anchored":False,
         "faults":faults, "bad_parent_height":bad_parent,
         "sampled_head":head, "committed_end_height":(
@@ -767,7 +826,8 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
                         slots=3, head_ttl_ms=4000, window_ms=60000,
                         max_block_response_ms=5000,
                         head_min_poll_age_ms=1000,
-                        fake_post_utc_window=None):
+                        fake_post_utc_window=None,
+                        anchor_initial_head=False):
     """Original public API: exact FAKE-only entry, never live."""
     return _run_single_shared_coordinator(
         source, output_root, max_total=max_total, max_blocks=max_blocks,
@@ -776,6 +836,7 @@ def run_fake_concurrent(source, output_root, *, max_total=32,
         max_block_response_ms=max_block_response_ms,
         head_min_poll_age_ms=head_min_poll_age_ms,
         fake_post_utc_window=fake_post_utc_window,
+        anchor_initial_head=anchor_initial_head,
         _staged_physical_offline=False)
 
 
