@@ -37,7 +37,8 @@ def null_block(height):
 class AdaptiveSourceCoreFakeTests(unittest.TestCase):
     def run_frames(self, root, frames, *, total=12, block_cap=4,
                    head_cap=4, refresh=4, duration=60000, cohort=COHORT,
-                   routers=ROUTERS, interrupt_at=None):
+                   routers=ROUTERS, interrupt_at=None,
+                   anchor_initial_head=False):
         clock=FakeClock()
         calls=[]
         def post(endpoint, body, timeout, cap):
@@ -66,7 +67,8 @@ class AdaptiveSourceCoreFakeTests(unittest.TestCase):
             output_root=root,cohort_raw=cohort,router_raw=routers,
             max_total_attempts=total,max_block_reads=block_cap,
             max_head_polls=head_cap,refresh_after_blocks=refresh,
-            duration_ms=duration)
+            duration_ms=duration,
+            anchor_initial_head=anchor_initial_head)
         return report,calls
 
     def test_two_identity_one_head_two_blocks_are_five_persisted_attempts(self):

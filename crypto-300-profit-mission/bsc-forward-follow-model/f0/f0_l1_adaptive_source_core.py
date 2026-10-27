@@ -39,7 +39,7 @@ def collect_adaptive_injected(
     duration_ms: int = 60000, min_interval_ms: int = 250,
     head_poll_interval_ms: int = 500, max_stagnant_poll_wait_ms: int = 8000,
     refresh_after_blocks: int = 4, max_response_bytes: int = 2_000_000,
-    timeout_ms: int = 5000,
+    timeout_ms: int = 5000, anchor_initial_head: bool = False,
 ):
     """Orchestrate journalled HEAD checkpoints and full-block processing.
 
@@ -56,6 +56,9 @@ def collect_adaptive_injected(
             and type(timeout_ms) is int and 1000 <= timeout_ms <= 8000
             and type(max_response_bytes) is int and 1 <= max_response_bytes <= 2_000_000,
             "ADAPTIVE_SCOPE_INVALID")
+    require(type(anchor_initial_head) is bool and
+            (not anchor_initial_head or max_total_attempts >= 3),
+            "ADAPTIVE_ANCHOR_SCOPE_INVALID")
     require(isinstance(output_root, Path) and output_root.is_dir()
             and not output_root.is_symlink()
             and not any((output_root / x).exists() or (output_root / x).is_symlink()
@@ -100,6 +103,10 @@ def collect_adaptive_injected(
     successful_height = None
     successful_hash = None
     verified_internal_parent_links = 0
+    verified_initial_parent_links = 0
+    initial_anchor_attempts = 0
+    initial_anchor_height = None
+    initial_anchor_hash = None
     parse_failures = 0
     block_failure_streak = 0
 
@@ -141,6 +148,38 @@ def collect_adaptive_injected(
                 "sampled_head_minus_last_received_height": 0,
                 "source_type": "INJECTED_POST_UNVERIFIED",
             })
+
+        # Optional, explicitly budgeted same-source anchor for initial HEAD.
+        # This is NOT an independently verified canonical or finalized block.
+        # It uses the existing Journal / caller-injected post and consumes one
+        # total attempt. It does not count as a prospective watched block,
+        # ordinary Router control, or a successful future-height read.
+        if stop is None and anchor_initial_head:
+            if len(journal.rows) >= max_total_attempts:
+                stop = "TOTAL_ATTEMPT_BUDGET_EXHAUSTED"
+            else:
+                initial_anchor_attempts += 1
+                anchor, fault, _ = take(
+                    "eth_getBlockByNumber", [hex(initial_head), True],
+                    "INITIAL_ANCHOR")
+                if (fault is not None or anchor is None or
+                        (type(anchor) is dict and anchor.get("result") is None)):
+                    stop = "INITIAL_ANCHOR_SOURCE_FAILED"
+                else:
+                    try:
+                        pinned = block_candidates(anchor, watched, routers)
+                        require(pinned["block_number"] == initial_head,
+                                "INITIAL_ANCHOR_HEIGHT_MISMATCH")
+                        candidate = anchor["result"]
+                        ahash = hexb(candidate["hash"], 32)
+                        hexb(candidate["parentHash"], 32)
+                    except (ValueError, TypeError, KeyError):
+                        stop = "INITIAL_ANCHOR_INVALID"
+                    else:
+                        initial_anchor_height = initial_head
+                        initial_anchor_hash = ahash
+                        successful_height = initial_head
+                        successful_hash = ahash
 
         while stop is None:
             remaining = duration_ms - elapsed_ms()
@@ -210,6 +249,9 @@ def collect_adaptive_injected(
                         if successful_height == decision["height"] - 1:
                             if parent_hash != successful_hash:
                                 parent_mismatch = True
+                            elif (successful_height == initial_anchor_height and
+                                  state["blocks_received"] == 0):
+                                verified_initial_parent_links += 1
                             else:
                                 verified_internal_parent_links += 1
                         if not parent_mismatch:
@@ -264,7 +306,16 @@ def collect_adaptive_injected(
         "attempted_missing_heights":
             list(state["missing_heights"]) if state else [],
         "verified_internal_parent_links": verified_internal_parent_links,
-        "initial_saved_block_parent_anchored": False,
+        "verified_initial_parent_links": verified_initial_parent_links,
+        "initial_anchor_requested": anchor_initial_head,
+        "initial_anchor_attempts": initial_anchor_attempts,
+        "initial_anchor_height": initial_anchor_height,
+        "initial_anchor_hash": initial_anchor_hash,
+        "initial_anchor_evidence_scope": (
+            "SAME_SOURCE_NOT_CANONICAL_FINALITY_OR_INDEPENDENT_ANCHOR"
+            if initial_anchor_height is not None else "NOT_ESTABLISHED"),
+        "initial_saved_block_parent_anchored":
+            verified_initial_parent_links == 1,
         "all_received_transactions": total_block_tx,
         "watch_sender_candidates": watch_tx,
         "documentary_router_address_candidates": router_tx,
