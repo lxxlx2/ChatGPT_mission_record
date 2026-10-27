@@ -6,8 +6,38 @@ import json
 from pathlib import Path
 import re
 
+from f0_rpc_adapter import block_candidates, hexb
+
 SHA256 = re.compile(r"[0-9a-f]{64}\Z")
 RAWFILE = re.compile(r"[0-9]{3}\.body\Z")
+
+
+def _no_duplicate_fields(items):
+    result = {}
+    for key, value in items:
+        check(key not in result, "D1_RECOVERY_ANCHOR_DUPLICATE_JSON_FIELD")
+        result[key] = value
+    return result
+
+
+def _anchored_block(raw, rid, height):
+    """Validate an archived same-source full block and its RPC identity.
+
+    This is stronger than merely hashing a caller-owned journal, but remains
+    SAME-SOURCE proof only; never canonical/finalized chain attestation.
+    """
+    try:
+        rpc = json.loads(raw, object_pairs_hook=_no_duplicate_fields)
+        check(type(rpc) is dict and type(rpc.get("id")) is int
+              and rpc["id"] == rid, "D1_RECOVERY_ANCHORED_RPC_ID_INVALID")
+        parsed = block_candidates(rpc, set(), set())
+        check(parsed["block_number"] == height,
+              "D1_RECOVERY_ANCHORED_HEIGHT_INVALID")
+        parent = hexb(rpc["result"]["parentHash"], 32)
+        return parsed["block_hash"], parent
+    except (ValueError, TypeError, KeyError, UnicodeDecodeError) as exc:
+        raise ValueError("D1_RECOVERY_ANCHORED_RAW_INVALID:" + str(exc)) from exc
+
 
 def check(condition, reason):
     if not condition:
@@ -48,6 +78,13 @@ def reconcile_saved_attempts(root):
     # that would silently forgive deletion of the initial commit event.
     first_reserved_block_height=None
     initial_head_height=None
+    anchor_id=None
+    anchor_height=None
+    anchor_hash=None
+    anchored_block_headers={}
+    verified_first_parent=0
+    verified_internal_links=0
+    last_anchored_commit_hash=None
     for line_no,line in enumerate(content.splitlines(),1):
         try:
             row=json.loads(line)
@@ -61,7 +98,7 @@ def reconcile_saved_attempts(root):
             check(type(rid) is int and rid == last_id+1,
                   "D1_RECOVERY_NONMONOTONIC_ID")
             last_id=rid
-            check(row.get("category") in ("CHAIN","HEAD","INITIAL_HEAD","BLOCK")
+            check(row.get("category") in ("CHAIN","HEAD","INITIAL_HEAD","ANCHOR","BLOCK")
                   and row.get("method") in
                   ("eth_chainId","eth_blockNumber","eth_getBlockByNumber"),
                   "D1_RECOVERY_RESERVE_CATEGORY_INVALID")
@@ -79,6 +116,16 @@ def reconcile_saved_attempts(root):
                         if item["category"]=="BLOCK")
                     check(row["height"]==previous_block_height+1,
                           "D1_RECOVERY_BLOCK_RESERVATION_GAP")
+            elif row["category"]=="ANCHOR":
+                check(anchor_id is None and type(row.get("height")) is int
+                      and row["height"] > 0
+                      and row["method"]=="eth_getBlockByNumber"
+                      and initial_head_height is not None
+                      and row["height"]==initial_head_height
+                      and first_reserved_block_height is None,
+                      "D1_RECOVERY_ANCHOR_RESERVATION_INVALID")
+                anchor_id=rid
+                anchor_height=row["height"]
             elif row["category"] in ("INITIAL_HEAD","HEAD"):
                 check(row["method"]=="eth_blockNumber",
                       "D1_RECOVERY_RESERVE_CATEGORY_INVALID")
@@ -108,6 +155,19 @@ def reconcile_saved_attempts(root):
                       sha256(path.read_bytes()).hexdigest()==row["raw_sha256"],
                       "D1_RECOVERY_RAW_HASH_MISMATCH")
                 raw_hashes[filename]=row["raw_sha256"]
+                if (reserved[rid]["category"] in ("ANCHOR","BLOCK")
+                        and anchor_id is not None
+                        and row["state"]=="RPC_RESPONSE"):
+                    block_hash,parent_hash=_anchored_block(
+                        path.read_bytes(),rid,reserved[rid]["height"])
+                    if reserved[rid]["category"]=="ANCHOR":
+                        check(rid==anchor_id and
+                              anchor_hash is None and
+                              reserved[rid]["height"]==initial_head_height,
+                              "D1_RECOVERY_ANCHOR_SETTLEMENT_INVALID")
+                        anchor_hash=block_hash
+                    else:
+                        anchored_block_headers[rid]=(block_hash,parent_hash)
                 if (reserved[rid]["category"]=="INITIAL_HEAD"
                         and row["state"]=="RPC_RESPONSE"):
                     check(initial_head_height is None,
@@ -153,6 +213,23 @@ def reconcile_saved_attempts(root):
                       "D1_RECOVERY_NONCONTIGUOUS_COMMIT")
             check(all(x[1]!=rid for x in commits),
                   "D1_RECOVERY_DUPLICATE_COMMIT")
+            if anchor_id is not None:
+                # A fake coordinator may have committed a block but this
+                # independent recovery audit MUST verify the saved RAW chain.
+                check(anchor_hash is not None and anchor_id in settled
+                      and anchor_height==initial_head_height
+                      and rid in anchored_block_headers,
+                      "D1_RECOVERY_UNVERIFIED_ANCHOR_COMMIT")
+                block_hash,parent_hash=anchored_block_headers[rid]
+                expected_parent=(anchor_hash if not commits
+                                 else last_anchored_commit_hash)
+                check(parent_hash==expected_parent,
+                      "D1_RECOVERY_ANCHORED_PARENT_MISMATCH")
+                if not commits:
+                    verified_first_parent=1
+                else:
+                    verified_internal_links+=1
+                last_anchored_commit_hash=block_hash
             commits.append((row["height"],rid))
         elif kind=="CHAIN_INTEGRITY_FAULT":
             check(type(rid) is int and rid in rpc_parsed and
@@ -174,7 +251,10 @@ def reconcile_saved_attempts(root):
         check(first_reserved_block_height==initial_head_height+1,
               "D1_RECOVERY_INITIAL_HEAD_START_MISMATCH")
     head_gap=(first_reserved_block_height is None or
-              (bool(rpc_parsed) and not commits))
+              (bool(rpc_parsed) and not commits)
+              or (anchor_id is not None and (
+                  anchor_hash is None or
+                  len(commits)!=len(rpc_parsed))))
     # No automated recovery. Even if every request settled, a fault invalidates
     # the performance sample; do not infer sustainable source speed.
     return {
@@ -192,6 +272,12 @@ def reconcile_saved_attempts(root):
         "verified_initial_head_height":initial_head_height,
         "first_commit_missing":bool(rpc_parsed) and not commits,
         "first_parent_independently_anchored":False,
+        "initial_anchor_attempts":int(anchor_id is not None),
+        "initial_anchor_raw_verified":anchor_hash is not None,
+        "initial_anchor_height":anchor_height,
+        "verified_initial_parent_links":verified_first_parent,
+        "verified_internal_parent_links":verified_internal_links,
+        "first_parent_same_source_anchored":bool(verified_first_parent),
         "invalid_parent_heights":sorted(invalid),
         "raw_frames_sha256":raw_hashes,
     }
