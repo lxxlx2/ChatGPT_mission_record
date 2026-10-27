@@ -6,6 +6,10 @@
 1. **运行层**：保存当前 runtime、state、health、alerts、delivery 与 audit。
 2. **研究层**：按项目 / token / Meme / NFT 组织可复用研究。
 
+正式开发与 AI 交接规则（GitHub-first，默认禁止 ZIP 本地转运）：
+- [AGENTS.md](AGENTS.md) — 仓库级 AI 开发指令入口
+- [docs/DEVELOPMENT_RULES.md](docs/DEVELOPMENT_RULES.md) — 开发与 Mac Codex 交接规范
+
 完整结构规则：
 - `docs/REPOSITORY_STRUCTURE.md`
 - `docs/X_TECHNICAL_POST_WRITING_GUIDE.md`
