@@ -162,7 +162,8 @@ def collect_adaptive_injected(
                 anchor, fault, _ = take(
                     "eth_getBlockByNumber", [hex(initial_head), True],
                     "INITIAL_ANCHOR")
-                if fault is not None or anchor is None:
+                if (fault is not None or anchor is None or
+                        (type(anchor) is dict and anchor.get("result") is None)):
                     stop = "INITIAL_ANCHOR_SOURCE_FAILED"
                 else:
                     try:
