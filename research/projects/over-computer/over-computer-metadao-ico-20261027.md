@@ -1,62 +1,75 @@
-# Over.computer / OVER — MetaDAO curated ICO research
+# Over.computer / OVER — MetaDAO ICO: evidence and sale-return research
+
 Updated: 2026-10-27 Asia/Bangkok
-Source snapshot: Mission `main` at research start `92510d263eb08a013ee5fc24c51607b8f8d15ca3`
-State: `WATCH / FUNDRAISE_NOT_LIVE / PRICE_UNVERIFIED / CA_UNVERIFIED / NO_GO`
-Execution: research only. No funds committed, transactions signed, automation created, monitoring enabled, or position modified.
+Supersedes earlier same-day draft: deliberately focuses on user-specified business-metric and ICO-exit ROI research. Prior source snapshot remains inspectable in Git history.
+State: `WATCH / FUNDRAISE_NOT_LIVE / FDV_UNVERIFIED / MINT_UNVERIFIED / PM_NOT_FOUND_IN_CURRENT_PUBLIC_SEARCH`.
+Execution: research only, no ICO commitment, wallet action, monitoring or automation authorized.
 
-## 1. Canonical identity and timing
+## 1. Identity, launch date and participation status
 
-- Project: over.computer, X @overdotcomputer, Solana prop/simulated trading platform. Curated MetaDAO project: https://metadao.fi/companies/over-computer (direct official project-linked canonical URL).
-- Proposed ownership coin `$OVER`, **no independently confirmed Solana mint**, live sale escrow or chain transaction; MetaDAO sale page currently explicitly warns it is **not live**, terms may change, and renders **`Raise opens Date to be announced`**.
-- User-supplied screenshot from verified @overdotcomputer screenshot (2026-10-27) quotes @MetaDAOProject scheduling **October 29, 2026**, a Thursday, as next curated raise; another @overdotcomputer post says “thurs 27th oct”, an internally inconsistent weekday/date (Oct 27 is Tuesday). **Target Oct 29 is announced on social but NOT an authoritative live start timestamp**. Exact hour/UTC/Bangkok, duration and deployment block remain **UNVERIFIED**.
-- Live page minimum **$250,000 USDC raise**; this is the **minimum goal**, NOT fixed accepted amount, final valuation or token FDV. No disclosed project-specific max accepted commitment, spending cap, team package size or investor allocation.
+- Canonical project https://over.computer , X https://x.com/overdotcomputer ; specific MetaDAO curated raise https://metadao.fi/companies/over-computer .
+- Official MetaDAO X screenshot dated 2026-10-27 (supplied by user) announces **October 29, 2026** as proposed launch; screenshot also shows a conflicting "thurs 27th oct" phrasing in another post (2026-10-27 is Tuesday). Official sale landing page initially shows `Raise opens: Date to be announced`. Exact UTC and Bangkok opening time, settlement duration, accepted cap and live sale configuration = **UNVERIFIED**. Do not promote social target date to confirmed live/chain timestamp.
+- MetaDAO preview displays project minimum target **$250,000 USDC**; maximum accepted amount, exact final TGE float and full supply, actual IPO-equivalent FDV, team/angel priority allocation and release price **UNVERIFIED**. No verified canonical `$OVER` SPL mint; avoid ticker collisions.
 
-## 2. Team, financing, legal
+## 2. Real business metrics (HIGHEST PRIORITY)
 
-- MetaDAO issuer page https://metadao.fi/companies/over-computer lists **Li Feyerabend**, co-founder/CEO; **Noah Haufer**, co-founder; **Algimantas Birbilas**, chief scientist. Other headcount not independently established. CEO name may appear as “Lili Feyerabend” in external profiles. Corroborating self-described career https://de.linkedin.com/in/lilifeyerabend; public NFT Berlin trademark record showing Li Feyerabend is owner https://www.trademarkelite.com/europe/trademark/trademark-detail/018706875/NFT-BERLIN (not proof of Over ownership).
-- Noah Haufer also appears as founder at Router Labs / SolRouter per public https://www.linkedin.com/company/routerlabs and received public hackathon awards https://superteam.fun/earn/listing/road-to-colosseum-hackathon-build-your-mvp ; does not prove full-time Over employment or exits.
-- Algimantas Birbilas math/statistics research independently documented in Vilnius Tech journal https://mla.vilniustech.lt/index.php/MMA/article/view/14043 and Vilnius University faculty story https://mif.vu.lt/lt3/kas-vyksta-fakultete/naujienos/fakulteto-naujienos/5581-prof-alfredo-ra%C4%8Dkausko-mokykla-laisv%C4%97-ie%C5%A1koti-atsakomyb%C4%97-%C4%AFrodyti ; exact Over appointment rests on issuer.
-- Issuer lists **Komorebi** and **Monke Ventures** under “Backed by.” Independent March/April social posts of Komorebi show public support for an *earlier Over product*, corroboration of public relationship, **not amount or investment terms**. Financing round size, equity/discount, angel cost, lockups **UNVERIFIED**. Do not confuse launchpad backing with MetaDAO investing in the company.
-- Company legal operator **Over S.A.**, a Panamanian corporation, per original https://www.over.computer/terms last updated Sep 17, 2026; no corporate registration or operational license independently verified.
-- **Decisive legal eligibility block**: operator Terms explicitly exclude persons residing / located in **Thailand** and also include **China** among restricted territories by residence/citizenship. They prohibit VPN evasion. This directly blocks use of Over services from Thailand and may separately block based on nationality. **MetaDAO $OVER ICO investor eligibility is a separate unresolved set of terms**, so do not automatically assert ICO allowed or disallowed. Need final issuer/MetaDAO legal confirmation BEFORE funding.
+| Metric, period | Primary evidence available | Status and what remains to verify |
+| --- | --- | --- |
+| Product publicly operating at scale | Issuer Oct 08 2026 private-beta launch https://www.over.computer/blog/over-private-beta | **Issuer says private beta**; independent verified paid production activity not established |
+| Unique beta traders | MetaDAO project page claims **200+** in private beta | **Issuer-reported**, no attributed signed unique-user/cohort dataset |
+| Waitlist | MetaDAO page claims thousands | **Issuer-reported**, unconverted sign-ups, not active/pay customers |
+| Trade activity | MetaDAO issuer narrative says hundreds of millions of simulated trader-rounds | **Issuer-reported simulated data**; cannot count as executed user orders or fee-paying trade volume |
+| Paying customers / paid desks | No independent published time-bounded paid purchases | **UNVERIFIED**, no unique paying count or ARPPU |
+| Gross billed fees / revenue / GM | Product markets challenge/desk fees; Oct08 issuer blog advertised $38–$649 per one-time challenge | **UNVERIFIED** real collected sales, discounts/refunds/chargebacks; old fees are not confirmed as the current model |
+| Reward USDC payouts | Issuer claims USDC vault and winners; no verifiable canonical payout wallet or payout transaction rollup identified | **UNVERIFIED** count, USDC amount, rate of winners and net fee retention |
+| Retention, DAU/WAU, churn | No independently confirmed | **UNVERIFIED**, do not use waitlist as retention |
+| Costs, burn, runway | No independently confirmed payroll/hosting/payout obligations | **UNVERIFIED**, can't build revenue multiple or sustainably profitable base case |
+| Live protocol program IDs | https://docs.over.computer/deployments and https://docs.over.computer/payout-vault were listed as `Coming soon` | **UNVERIFIED** public deploy/payout proof; read chain only when canonical program IDs published |
 
-## 3. Current stage, product, traction
+**Key economics:** distinguish payments from users (real USD/USDC fees) versus simulated trading exposure; user payouts are business expenses. Ratio of fees collected to validated USDC rewards and repeat subscriptions is a necessary input to assess sustainable cash generation. Without real fee or payout volumes, there is NO defensible quantified operating-profit estimate. Do not use raw numbers from the underlying Hyperliquid/Phoenix market as volume **generated by Over**.
 
-- Official Oct 08 blog https://www.over.computer/blog/over-private-beta announces private beta launch on Oct 08, Season 1 Oct 06, **older one-time fee product** (short-term evaluation and static daily loss). The issuer's current homepage https://www.over.computer/ and docs https://docs.over.computer/desks now describe **daily pay-as-you-go simulated trading desk, no fixed profit target, no evaluation, static floor, 80% payout share, payout-credit and lifetime caps**. These materially different products must not be conflated. Current docs still say published daily rate tables, credit multipliers and payouts are **coming soon**; size $100K at first launch, $1M later.
-- Model: off-chain simulated perp fills using Hyperliquid/Phoenix price references, Solana onchain hashes/proof roots and USDC payout vault; the promised $1M trade power is **simulated not deployed user market capital**, legally verified in service Terms. https://docs.over.computer/architecture
-- Curated page issuer claim **200+ beta traders** and **thousands on waitlist**, “hundreds of millions of simulated trader-rounds.” No independently reconciled user, active paid users, daily fees, vault reserves, aggregate payouts, revenue, retention or actual trading ROI. These are **issuer statements**, not audited production KPIs. “$1B in assets behind the operators” is likewise unspecific, no direct attribution.
-- Product revenue: hourly-billed pro-rated daily fees, payout credit/cap and potential future hosted mission fees; economics require verified paid users, effective fees, claims rate, loss/abuse frequency, payout reserve, marketing CAC and retention. Raising treasury or simulating many rounds does not establish cashflow.
-- Earlier brand **pivot**: BNB Chain's official Apr 27 listing https://www.bnbchain.org/en/blog/newest-dapps-on-bnb-chain-3 described over.computer as an AI trading-agent OS on BNB Chain; now a Solana-focused simulated prop platform. Brand/product continuity likely; exact code or entity continuity **UNVERIFIED**. Public marketing pivot should be included in risk analysis.
+**Product revision evidence:** https://www.over.computer/blog/over-private-beta (Oct08) described one-time mission fee, static drawdown and limited target window; https://docs.over.computer/desks describes a newer pay-as-you-go, no fixed target setup and payout credit limits. Published website/search cache may still show old terms. Version/rollout is **INCONSISTENT / CURRENT PRICE AND ACTUAL ACTIVE PRODUCT NOT VERIFIED**; product economics should be calculated only once live paid terms and transactions are confirmed.
 
-## 4. Contracts, security and token holder rights
+Business maturity: private-beta announced and technical documentation available, but **independent active paid-users, gross/net revenue, payout cash flow, conversion and verified onchain operational state are missing**. Classify as issuer-claimed beta, not proven scaled revenue.
 
-- Over first-party contract deployment page https://docs.over.computer/deployments says **Coming soon** and payout-vault spec https://docs.over.computer/payout-vault also says **Coming soon**. No first-party verifiable registry IDs, vaults, fee treasury addresses, audits or reward transfers; so actual onchain proof and solvency **NOT_VERIFIED**.
-- Architecture claims MissionRegistry and EvidenceRegistry, every ~10m commitment of Merkle trade evidence, offchain scoring, treasury and payout vault in separate Squads multisigs, and **human-approved payouts**. Even perfect immutability of recorded roots does not guarantee truthful price input, correct accounting or sufficient reserves. https://docs.over.computer/architecture
-- Oct 08 issuer blog claims Runtime Verification and VulSight security reviews; **actual signed reports, scope/commit and critical findings not independently located**. Claim stays unverified.
-- `$OVER` is described as ownership coin, MetaDAO governance rails. MetaDAO’s own docs https://docs.metadao.fi/benefits/ownership-coins say oversight via decision markets can control treasury/IP, but **no conventional equity or direct legal claim**; MetaDAO acknowledges a beta-level overriding power. **Over-specific IP assignment, payout linkage/revenue sharing, dividends, buyback and legal structuring NOT_VERIFIED**. Do not assume “trader-owned” guarantees cashflow to token holders.
-- No supported claim for $OVER CEX listing, launch DEX liquidity, vesting, TGE, claim, trading CA or publicly transferable token.
+## 3. Team, financing and actual product history
 
-## 5. ICO mechanics and valuation (generic framework, not confirmed OVER price)
+- MetaDAO lists **Li Feyerabend** (co-founder/CEO), **Noah Haufer** (co-founder), **Algimantas Birbilas** (chief scientist). https://metadao.fi/companies/over-computer .
+- Career leads: Li / Lili professional page https://de.linkedin.com/in/lilifeyerabend ; Noah / Router Labs https://www.linkedin.com/company/routerlabs and event https://superteam.fun/earn/listing/road-to-colosseum-hackathon-build-your-mvp ; Algimantas coauthored math/stats scholarly articles https://mla.vilniustech.lt/index.php/MMA/article/view/14043 . Public role association remains issuer-sourced where no independently matched identity.
+- MetaDAO identifies **Komorebi Collective** and **Monke Ventures** in Backed By; institutional ownership, exact financing amount, investment type, insider token price and unlocks **UNVERIFIED**.
+- BNB Chain Apr27 2026 included an earlier over.computer AI-trading-agent product https://www.bnbchain.org/en/blog/newest-dapps-on-bnb-chain-3 . The present Solana prop product is a pivot or large repositioning; the old product's usage is **not** transferable as new private-beta paid revenue.
+- Contract-design evidence: https://docs.over.computer/architecture explains offchain reference prices and risk-scoring, Solana Merkle commitments and USDC payout vault. Publication of architecture is not proof of deployed contracts or funded vaults.
 
-MetaDAO’s current https://docs.metadao.fi/how-launches-work/sale: 4-day USDC commitments, founder discretionary accepted cap, **time-weighted accumulator**, early commitment boosts, fund/angel guaranteed allocations possible, uniform price for accepted investors, and unaccepted funds refundable. Below goal → refund. After success treasury and LP liquidity allocated; exact OVER-specific configuration must be read at launch. **This is different from SLOP/Umia CCA limit-price bidding; no max FDV limit in this model.**
-- MetaDAO general token issuance: 10M ICO tokens priced against accepted USDC, 2M LP tokens + 0.9M single-sided LP, optional team performance package, other allocations as configured https://www.metadao.com/terms . Therefore `price=final accepted USDC/10M` and hypothetical minimum no-performance FDV = `12.9M*price=1.29*accepted amount`. Extra team/performance/prior investor supply lifts FDV. **These scenarios are mathematical examples, not $OVER confirmed terms:**
-  - Accepted $250k (the announced min) -> $0.025/ICO token and **minimum 12.9M-supply reference FDV $322.5k**, *only if* 10M+2.9M and no additional issuance. With hypothetical 12.9M performance tranche, fully diluted $645k.
-  - Accepted $500k -> $0.05; base reference $645k; hypothetical doubled supply $1.29M.
-  - Accepted $1M -> $0.10; base reference $1.29M; hypothetical doubled supply $2.58M.
-- Founder can accept part of commitments; actual committed gross is not automatically ICO net or final FDV. The 20% LP share conflicts with issuer's uses-of-funds allocation 30% growth/30% reserve/20% team/20% infrastructure if both are asserted on same gross without clarification; request explicit **gross versus post-LP budget basis**.
-- Do not invoke MetaDAO “Bid Wall” as guaranteed floor: official https://docs.metadao.fi/how-launches-work/bid-wall says mechanism is **deprecated**, used in one raise only. No OVER-specific bid wall shown.
-- For peer comparison, general launches like Rip Cars and Credible have very different product traction, dilution and revenue, so **no defensible $OVER fair FDV yet**. Key gating parameters remain unknown (cap, dilution, locked team pool, proceeds, legal/royalty rights, float, LP, organic fee revenue).
+## 4. ICO: effective cost, selling supply and exit math
 
-## 6. Decision gates
+MetaDAO sale mechanism primary source https://docs.metadao.fi/how-launches-work/sale :
+- Gross commitment USDC and **actually accepted** funds may differ. Timing weighting and special prespecified allocations can change an individual bidder's fill. Refund, claim, and first trade price/LP must be verified **for OVER instance**.
+- As a **conditional formula only** if the project actually uses the MetaDAO standard 10M public issuance: `public price = actual accepted USDC / 10,000,000`. Example accepted $250K -> $0.025, $500K -> $0.05, $1M -> $0.10. **NOT a confirmed OVER token price.**
+- Full FDV `= public price × full diluted supply`, initial circulating market cap `= price × actually liquid circulating supply`, and realized round-trip ROI `= (net sell proceeds after LP price impact/fees − actual USDC spent) / actual USDC spent`.
+- To forecast trade PnL, require accepted cap, founder/insider performance supply, any early fund allocations, TGE claim delay, initial LP USD depth, swaps/LP inventory and likely sell pressure. Paper 2x does not establish achievable 2x net proceeds.
+- Do **not** assume the outdated generic MetaDAO Bid Wall creates a protected redemption floor: https://docs.metadao.fi/how-launches-work/bid-wall .
+- Working valuation state: **not enough OVER-specific information for a reliable numeric fair-FDV or net profit forecast**. Once accepted cap/full supply/LP are published, quantify downside/base/upside price, expected exit slippage and budget loss thresholds using OVER's own business economics.
 
-`WATCH`, not `SETUP/ACTIVE`, no trade authorization.
-Before user can consider $OVER ICO:
-1. Official, reconciled Oct29 timeline with **exact UTC and Bangkok start** and immutable sale config.
-2. Final MetaDAO sale legal geography and nationality rules; **explicit resolution of Thailand/China eligibility for buying and holding tokens** separately from use of restricted Over service.
-3. Accepted raise min/max, committed/accepted mechanics, any private guaranteed allocations; token mint, supply, team/insider performance schedule, token IP and revenue value capture.
-4. Inspect live Solana ICO accounts/mint/escrow/treasury/LP before any transaction; no symbol-only token assumptions.
-5. Verified contract program IDs and read-only payout history, audited code, independent signed report, $250k fundraising risk and customer/revenue metrics (actual paid desks and cash payouts rather than synthetic trading notional).
-6. Compare *TGE-stage* projects' early FDV, float, liquidity and return distributions before deciding personal max effective FDV or USD amount.
-7. Commitment and refund transaction only after user's separate authorization; **no automation, monitor, or wallet operations created**.
+## 5. Prediction markets (PM): mandatory search completed 2026-10-27 Bangkok time
 
-Sources: issuer first-party site, legal terms, MetaDAO curated page / ICO docs, BNB Chain first-party listing, linked university research + self-profiles, and user screenshot. Distinguish issuer disclosures from externally verified facts.
+Queried publicly indexed official-platform results and web discovery for target identity `over.computer`, `overdotcomputer`, `OVER MetaDAO`, `Over Computer MetaDAO raise`, FDV and commitment thresholds:
+- Polymarket (https://polymarket.com): **no verifiable live project-specific OVER commitment/FDV/TGE contract found** in this search.
+- Kalshi (https://kalshi.com): **no verifiable project-specific contract found**.
+- Limitless (https://limitless.exchange): **no verifiable project-specific contract found**.
+- Predict.fun (https://predict.fun): **no verifiable project-specific contract found**.
+- MetaDAO project-specific decision markets: no confirmed listed OVER market or live relevant market ID from the available pre-sale record.
+- Search returned **historical other MetaDAO companies' commitment PMs (e.g. Credible and P2P Protocol)**. These are NOT forecasts of OVER and **must not be copied into its model**.
+
+Result: **未检索到可验证的 OVER 项目专属 PM 市场**, not `there are none anywhere`, and no odds or probabilistic forecasts are invented. Recheck after actual raise setup if a user requests status or after a new primary market URL becomes available. If found later, collect market-specific question/resolution, URL, probability, liquidity, volume and timestamp; explicitly separate **gross commitments** from **accepted cap/final FDV**.
+
+## 6. Only material missing gates and verdict
+
+1. Official sale start UTC/Bangkok time + project-specific mint/sale/escrow.
+2. Actual accepted amount cap and live gross committed progress; exact 10M allocation, team/insider tranches, locks and starting liquid supply.
+3. Real paid-desk customers, collected fees, retention and claim payments, auditable program addresses, USDC payouts/reserves and operating burn.
+4. Project-specific PM probability/depth if a verified market appears; otherwise keep no-market status.
+5. Initial Solana DEX pool depth, actual expected execution slip, sale cost basis and realistic ROI/loss scenarios.
+
+Decision **WATCH**, no justified precommitment price or portfolio action on available evidence. Ignore generic MetaDAO beginner explanations, geography/KYC legal sidebar, speculative tokenholder dividend/ownership discussion, and unsolicited comparisons to past ICOs under user-updated analysis policy.
+
+Sources above are linked original project, MetaDAO and primary official documents. Actual paid metrics, project-specific PM odds and deployed mint are unavailable/unverified; preserve these explicit unknowns.
