@@ -169,8 +169,9 @@ class D1AnchorRecoveryTests(unittest.TestCase):
         rows=self.events(root)
         self.save(root,[e for e in rows if not (
             e["event"]=="SETTLE" and e["category"]=="ANCHOR")])
+        # New P1-2 guard refuses future RESERVE even earlier than COMMIT.
         with self.assertRaisesRegex(ValueError,
-                                    "D1_RECOVERY_UNVERIFIED_ANCHOR_COMMIT"):
+                                    "D1_RECOVERY_PREMATURE_AFTER_ANCHOR_RESERVATION"):
             reconcile_saved_attempts(root)
 
     def test_truncated_last_child_commit_is_not_a_clean_pass(self):
