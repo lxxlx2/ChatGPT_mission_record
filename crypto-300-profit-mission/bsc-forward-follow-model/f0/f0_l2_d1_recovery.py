@@ -99,14 +99,13 @@ def reconcile_saved_attempts(root):
                   "D1_RECOVERY_NONMONOTONIC_ID")
             last_id=rid
             if anchor_id is not None:
-                # The real coordinator cannot reserve any next future
-                # BLOCK or refreshed HEAD until the anchor has SETTLED
-                # successfully AND its archived RAW has been validated.
-                # Reordering only SETTLE, without touching bytes/RIDs,
-                # must never pass the independent ledger recovery audit.
-                check(row.get("category") in ("BLOCK","HEAD")
-                      and anchor_id in settled and anchor_hash is not None,
-                      "D1_RECOVERY_PREMATURE_AFTER_ANCHOR_RESERVATION")
+                # Require SETTLE+validated RAW before any next BLOCK or
+                # refreshed HEAD. Keep duplicate ANCHOR diagnosis distinct.
+                if row.get("category") in ("BLOCK","HEAD"):
+                    check(anchor_id in settled and anchor_hash is not None,
+                          "D1_RECOVERY_PREMATURE_AFTER_ANCHOR_RESERVATION")
+                elif row.get("category") in ("CHAIN","INITIAL_HEAD"):
+                    raise ValueError("D1_RECOVERY_POST_ANCHOR_IDENTITY_REPLAY")
             check(row.get("category") in ("CHAIN","HEAD","INITIAL_HEAD","ANCHOR","BLOCK")
                   and row.get("method") in
                   ("eth_chainId","eth_blockNumber","eth_getBlockByNumber"),
