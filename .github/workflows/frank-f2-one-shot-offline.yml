@@ -1,0 +1,27 @@
+name: Frank F2 one-shot adapter offline tests
+on:
+  pull_request:
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/frank_c2a_f2_one_shot.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_c2a_f2_one_shot.py'
+      - '.github/workflows/frank-f2-one-shot-offline.yml'
+  push:
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/frank_c2a_f2_one_shot.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_c2a_f2_one_shot.py'
+      - '.github/workflows/frank-f2-one-shot-offline.yml'
+permissions:
+  contents: read
+jobs:
+  isolated-offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Bounded isolated tests only
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m unittest -v tests/test_frank_c2a_f2_one_shot.py
