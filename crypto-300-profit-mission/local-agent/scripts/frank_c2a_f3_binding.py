@@ -150,6 +150,11 @@ class BoundCaller:
         self.calls+=1
         return self.f2.Identity(expected,expected_runner,spec['label'],'127.0.0.1:8766',True,sample['protected'])
 
+    def _valid_lifecycle(self, lifecycle):
+        return (type(lifecycle) is self.f2.MacDashboardLifecycle and
+                lifecycle.domain==f'gui/{os.getuid()}' and
+                lifecycle.plist==str(self.plan.plist))
+
     def execute(self, lifecycle, *, owner_authorized=False, unknown_f0_risk_accepted=False):
         """Future authorization must exist outside Python; neither bool is a permit.
 
@@ -160,6 +165,7 @@ class BoundCaller:
         p.need(not self.used,'CALLER_ALREADY_USED')
         if not self.prepared:
             self.prepare()
+        p.need(self._valid_lifecycle(lifecycle),'LIFECYCLE_NOT_BOUND')
         self.used=True
         owner=self
         class ScopedLifecycle:

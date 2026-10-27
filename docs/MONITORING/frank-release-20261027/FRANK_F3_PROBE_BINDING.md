@@ -81,7 +81,11 @@ line changed. Original inputs are copied, no caller-supplied Identity accepted.
 `execute` defaults to deny, requires external owner authorization AND explicit F0
 unknown-risk decision; these booleans are preconditions, NOT authentication or
 permission. It invokes unchanged F2 with the bound probe and an explicitly supplied
-lifecycle; it never creates a real lifecycle by default. Tests supply fake lifecycle.
+lifecycle; it never creates a real lifecycle by default. The public entry requires
+the exact fixed F2 MacDashboardLifecycle type, current gui/UID domain and the
+exact prepared plist. Fake lifecycle is allowed only by private test hook patching.
+The missing public binding was independently reproduced in development as an
+accepted unbound protocol object, then closed before this Draft review.
 The wrapper tags recovery independently of whether candidate bootstrap was reached.
 
 Sequence: prepare G0 -> new F2-baseline G0 -> independent G3 -> independent G4.
@@ -140,3 +144,15 @@ separately scoped read-only Mac contract acceptance. Actual restore operability,
 F0 unknown-risk acceptance, a hung-filesystem emergency decision and one-shot
 production authorization remain outstanding. NO_DEPLOY / NO_RESTART / NO_RPC /
 NO_CA_POST / NO_TRADES / NO_NOTIFICATIONS / NO_MERGE.
+
+## Fixed review handoff validation
+
+Mac macOS27.0.1/Python3.14.7: final40/40 offline tests pass, no skips. This includes
+actual self-process Darwin ABI only, the bounded blocked-FIFO worker, random-port
+HTTP transport and actual collector/F2 phase integration with synthetic OS data.
+No production visit was made. The public lifecycle-binding P1 counterexample was
+recorded before remediation in Issue165 #6442659245; it now rejects unbound protocol
+objects before any command. An additional test constructs the fixed F2 lifecycle
+with ONLY a temporary fixture plist (no methods invoked) to check exact domain/
+plist matching. The F2 source remains byte-for-byte unchanged. Development tests
+are not independent approval; request fixed-SHA review of this F3 Draft next.

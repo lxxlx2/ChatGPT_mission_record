@@ -190,7 +190,7 @@ class TestBinding(Fixture):
             def sample(self,phase,seconds):return p.collect(x.contract,phase,h.io)
         x._sampler=Sampler()
         # prepare recreates NativeSampler only after G0; substitute after prepare.
-        x.prepare();x._sampler=Sampler();return x
+        x.prepare();x._sampler=Sampler();x._valid_lifecycle=lambda life:True;return x
     def lifecycle(self,fail=False):
         h=self
         class Lifecycle:
@@ -220,6 +220,20 @@ class TestBinding(Fixture):
         verdict=x.execute(life,owner_authorized=True,unknown_f0_risk_accepted=True)
         self.assertEqual(verdict.status,'ROLLED_BACK_STOP')
         self.assertEqual(x.samples[-1]['phase'],'RESTORE')
+    def test_native_lifecycle_must_match_exact_bound_domain_and_plist(self):
+        x=self.caller();del x._valid_lifecycle
+        # Constructor reads only this fixture plist, never invokes launchctl.
+        with patch.object(f2.os,'uname',return_value=type('U',(),{'sysname':'Darwin'})()):
+            life=f2.MacDashboardLifecycle(x.plan)
+        self.assertTrue(x._valid_lifecycle(life))
+        life.plist=str(self.root/'different.plist');self.assertFalse(x._valid_lifecycle(life))
+        life.plist=str(x.plan.plist);life.domain='gui/999999';self.assertFalse(x._valid_lifecycle(life))
+    def test_public_caller_rejects_unbound_lifecycle_before_any_command(self):
+        x=self.caller();del x._valid_lifecycle;life=self.lifecycle()
+        # This protocol object has no verified F2 domain/plist binding.
+        with self.assertRaisesRegex(p.ProbeError,'LIFECYCLE_NOT_BOUND'):
+            x.execute(life,owner_authorized=True,unknown_f0_risk_accepted=True)
+        self.assertEqual((life.stops,life.starts),(0,0))
     def test_no_authorization_or_risk_acceptance(self):
         x=b.BoundCaller(self.c)
         with self.assertRaisesRegex(p.ProbeError,'NO_OWNER'):x.execute(self.lifecycle())
