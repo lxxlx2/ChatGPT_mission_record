@@ -147,7 +147,7 @@ NO_CA_POST / NO_TRADES / NO_NOTIFICATIONS / NO_MERGE.
 
 ## Fixed review handoff validation
 
-Mac macOS27.0.1/Python3.14.7: final40/40 offline tests pass, no skips. This includes
+Mac macOS27.0.1/Python3.14.7: final41/41 offline tests pass, no skips. This includes
 actual self-process Darwin ABI only, the bounded blocked-FIFO worker, random-port
 HTTP transport and actual collector/F2 phase integration with synthetic OS data.
 No production visit was made. The public lifecycle-binding P1 counterexample was
@@ -156,3 +156,11 @@ objects before any command. An additional test constructs the fixed F2 lifecycle
 with ONLY a temporary fixture plist (no methods invoked) to check exact domain/
 plist matching. The F2 source remains byte-for-byte unchanged. Development tests
 are not independent approval; request fixed-SHA review of this F3 Draft next.
+
+The runtime-data-root P1 was reproduced and recorded in Issue165 #6442758968:
+an identical private D2 copy could previously stand in for the live source.
+F3 now binds Dashboard/Loop production/control roots and V1 root from the exact
+kernel-verified argv, derives the fixed D2/health paths, and rejects copies or
+cross-service root disagreement. Evidence must be outside data/source/runner roots.
+The same-byte copy negative regression now passes. This is data-source binding,
+not a signature, owner permission, or proof of current balances.

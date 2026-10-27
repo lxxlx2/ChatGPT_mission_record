@@ -216,6 +216,20 @@ def validate_contract(c):
         argv=c['services'][service]['argv']
         need(argv.count(flag)==1 and argv.index(flag)+1<len(argv) and
              Path(argv[argv.index(flag)+1])==Path(files[role]['path']),'PROTECTED_ARGV_BINDING')
+    def root_arg(key, flag):
+        argv=c['services'][key]['argv']
+        need(argv.count(flag)==1 and argv.index(flag)+1<len(argv),'RUNTIME_ROOT_ARG')
+        return canonical(argv[argv.index(flag)+1])
+    production=root_arg('dashboard','--production-root');control=root_arg('dashboard','--control-root')
+    need(root_arg('loop','--production-root')==production and root_arg('loop','--control-root')==control and
+         root_arg('v1','--root')==production,'RUNTIME_ROOTS_DISAGREE')
+    need(Path(c['health']['v1'])==production/'health.json' and
+         Path(c['health']['loop'])==control/'mission-control-health.json' and
+         Path(c['d2'])==control/'frank-d2-private/frank-d2-owner-at-slot.json','RUNTIME_DATA_ROOT_BINDING')
+    evidence=canonical(c['evidence_dir'])
+    forbidden=[production,control,canonical(c['old']['root']),canonical(c['new']['root']),
+               canonical(Path(c['services']['dashboard']['runner']).parent)]
+    need(not any(evidence==x or evidence.is_relative_to(x) for x in forbidden),'EVIDENCE_IN_LIVE_PATH')
     if c.get('history'):
         h=c['history']
         need(set(h) <= {'mint','job_id'} and re.fullmatch(r'[1-9A-HJ-NP-Za-km-z]{32,44}',h['mint']) and

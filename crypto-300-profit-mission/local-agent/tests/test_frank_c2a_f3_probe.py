@@ -36,18 +36,20 @@ class Fixture(unittest.TestCase):
         image=self.root/'python-image';image.write_bytes(b'fixture executable');image.chmod(0o555);os.utime(image,(1,1))
         venv=self.root/'venv';(venv/'bin').mkdir(parents=True);(venv/'bin/python').symlink_to(image)
         self.services={}
+        launchers=self.root/'launchers';launchers.mkdir()
+        prod=self.root/'prod';prod.mkdir();control=self.root/'control';control.mkdir()
         for key,label in p.LABELS.items():
-            runner=self.root/(key+'.sh');raw=f'#!/bin/sh\nVENV="{venv}"\nLOCAL_AGENT="{self.sources["old"]["root"]}"\n'.encode();runner.write_bytes(raw);runner.chmod(0o700);os.utime(runner,(1,1))
+            runner=launchers/(key+'.sh');raw=f'#!/bin/sh\nVENV="{venv}"\nLOCAL_AGENT="{self.sources["old"]["root"]}"\n'.encode();runner.write_bytes(raw);runner.chmod(0o700);os.utime(runner,(1,1))
             plist=self.root/(label+'.plist');pl=plistlib.dumps({'Label':label,'ProgramArguments':[str(runner)],'RunAtLoad':True});plist.write_bytes(pl);plist.chmod(0o600);os.utime(plist,(1,1))
             self.services[key]={'label':label,'runner':str(runner),'runner_sha256':p.digest(raw),'runner_mode':0o700,
                 'plist':str(plist),'plist_sha256':p.digest(pl),'plist_mode':0o600,'launch_argv':[str(runner)],
                 'argv':[str(image),key],'executable':str(image),'executable_sha256':p.digest(image.read_bytes()),
                 'interpreter':str(image),'interpreter_sha256':p.digest(image.read_bytes()),'source':self.sources['old']}
         evidence=self.root/'evidence';evidence.mkdir(mode=0o700)
-        private=self.root/'private';private.mkdir(mode=0o700);d2=private/'d2.json';d2.write_bytes(b'fixture dated balances');d2.chmod(0o600)
+        private=control/'frank-d2-private';private.mkdir(mode=0o700);d2=private/'frank-d2-owner-at-slot.json';d2.write_bytes(b'fixture dated balances');d2.chmod(0o600)
         self.health={}
         for key,fields in p.COUNTERS.items():
-            q=self.root/(key+'health.json');health={f:0 for f in fields}
+            q=(prod/'health.json' if key=='v1' else control/'mission-control-health.json');health={f:0 for f in fields}
             health.update({'pid':103 if key=='v1' else 102,'consecutive_errors':0,'candidate_error_count':0,'outcome_error_count':0});q.write_text(json.dumps(health));q.chmod(0o600);self.health[key]=str(q)
         policy=self.root/'policy';policy.write_bytes(b'fixture frozen policy');policy.chmod(0o644)
         self.c={'services':self.services,**self.sources,'protected_files':[{'path':str(policy),'sha256':p.digest(policy.read_bytes()),'mode':0o644}],
@@ -57,6 +59,9 @@ class Fixture(unittest.TestCase):
             file=self.root/role;file.write_bytes(('fixture '+role).encode());file.chmod(0o600)
             self.c['protected_files'].append({'role':role,'path':str(file),'sha256':p.digest(file.read_bytes()),'mode':0o600})
             self.services[key]['argv'] += [flag,str(file)]
+        self.services['dashboard']['argv'] += ['--production-root',str(prod),'--control-root',str(control)]
+        self.services['loop']['argv'] += ['--production-root',str(prod),'--control-root',str(control)]
+        self.services['v1']['argv'] += ['--root',str(prod)]
         self.old_bytes=Path(self.services['dashboard']['runner']).read_bytes()
         self.addCleanup(patch.stopall)
         # Only test trust roots are replaced. Production constants remain fixed in
@@ -171,6 +176,10 @@ class TestCollector(Fixture):
         self.assertEqual(self.snapshot()['source'],p.OLD)
         self.c['old']['physical_profile']='OWNED_SOURCE'
         with self.assertRaisesRegex(p.ProbeError,'DASHBOARD_MUST_BE_IMMUTABLE'):self.snapshot()
+    def test_same_bytes_d2_copy_cannot_replace_actual_control_source(self):
+        copy=self.root/'copy-private';copy.mkdir(mode=0o700);file=copy/'d2.json'
+        file.write_bytes(Path(self.c['d2']).read_bytes());file.chmod(0o600);self.c['d2']=str(file)
+        with self.assertRaisesRegex(p.ProbeError,'RUNTIME_DATA_ROOT_BINDING'):self.snapshot()
     def test_policy_and_authority_sources_cannot_be_omitted(self):
         self.c['protected_files']=[]
         with self.assertRaisesRegex(p.ProbeError,'PROTECTED_FILE_ROLES'):self.snapshot()
