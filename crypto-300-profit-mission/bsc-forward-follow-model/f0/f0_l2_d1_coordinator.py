@@ -280,29 +280,33 @@ class GlobalStartGate:
         from f0_l2_d1_concrete_https import (SealedConcreteOfflineSource,
                                                      PatchedConstructorOfflineSource)
         from f0_l2_d2_physical_source_offline import StagedPhysicalHTTPSReadOnlySource
+        from f0_l2_d1_physical_source_candidate import BoundedPhysicalReadOnlySource
+        physical = type(source) is BoundedPhysicalReadOnlySource
         # This lower-level shared lock formerly accepted arbitrary duck-typed
         # objects via its fallback .reply(). Keep even direct invocations
         # restricted to the four reviewed, EXACT memory-only source types.
         need(type(source) in (FakeSource, SealedMemoryHTTPSSource,
                               SealedConcreteOfflineSource,
                               PatchedConstructorOfflineSource,
-                              StagedPhysicalHTTPSReadOnlySource)
+                              StagedPhysicalHTTPSReadOnlySource,
+                              BoundedPhysicalReadOnlySource)
              and "reply" not in getattr(source, "__dict__", {})
              and "reply_over_memory_https" not in
                  getattr(source, "__dict__", {})
              and "reply_transport_evidence_offline" not in
                  getattr(source, "__dict__", {}),
              "D2A_GATE_NON_FAKE_SOURCE_REFUSED")
-        if type(source) is StagedPhysicalHTTPSReadOnlySource:
-            # The staged source cannot be directly dispatched with a
-            # user-injected lambda that has not passed the RID journal.
+        if type(source) is StagedPhysicalHTTPSReadOnlySource or physical:
+            # Every staged or physical candidate must have the original
+            # coordinator's post-fsync RID, not a caller-injected callback.
             need(type(reservation_guard) is _StagedOnlyReservationGuard,
                  "D2_STAGED_DURABLE_RESERVATION_PROOF_REQUIRED")
             reservation_guard(request)
         if type(source) in (SealedMemoryHTTPSSource, SealedConcreteOfflineSource,
                             PatchedConstructorOfflineSource,
-                            StagedPhysicalHTTPSReadOnlySource):
-            # Prepare the fake TLS connection before acquiring the global
+                            StagedPhysicalHTTPSReadOnlySource,
+                            BoundedPhysicalReadOnlySource):
+            # Prepare the TLS connection before acquiring the global
             # start lock. Gate the actual in-memory POST, not worker entry.
             began = [None]
             def begin_fake_post():
@@ -325,6 +329,12 @@ class GlobalStartGate:
                         except (ValueError, TypeError):
                             raise _FakeHTTPSStartDenied(
                                 "PRESTART_OFFLINE_PERMIT_UTC_DENIED")
+                    if physical:
+                        try:
+                            source.check_at_actual_post()
+                        except (ValueError, TypeError):
+                            raise _FakeHTTPSStartDenied(
+                                "PRESTART_PHYSICAL_POST_UTC_DENIED")
                     when = time.monotonic()
                     if when >= dispatch_deadline or (
                         block_head_deadline is not None and
@@ -337,12 +347,18 @@ class GlobalStartGate:
             try:
                 transport = None
                 if type(source) in (PatchedConstructorOfflineSource,
-                                       StagedPhysicalHTTPSReadOnlySource):
+                                       StagedPhysicalHTTPSReadOnlySource,
+                                       BoundedPhysicalReadOnlySource):
                     need(callable(reservation_guard),
                          "D1_PATCHED_CTOR_PRESEND_PROOF_REQUIRED")
-                    transport = source.reply_transport_evidence_offline(
-                        request, begin_fake_post, timeout_ms / 1000,
-                        reservation_guard=reservation_guard)
+                    if physical:
+                        transport = source.reply_transport_evidence_physical_candidate(
+                            request, begin_fake_post, timeout_ms / 1000,
+                            reservation_guard=reservation_guard)
+                    else:
+                        transport = source.reply_transport_evidence_offline(
+                            request, begin_fake_post, timeout_ms / 1000,
+                            reservation_guard=reservation_guard)
                     frame = transport["frame"]
                 else:
                     frame = source.reply_over_memory_https(
@@ -425,7 +441,8 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
                         head_min_poll_age_ms=1000,
                         fake_post_utc_window=None,
                         anchor_initial_head=False,
-                        _staged_physical_offline=False):
+                        _staged_physical_offline=False,
+                        _physical_source_candidate=False):
     """No permit or live network entry. Thread workers are fake only.
 
     Any invalid input is rejected; concurrent workers cannot allocate IDs,
@@ -433,6 +450,7 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
     """
     from f0_l2_d2a_physical_admission import UnreleasedPhysicalHTTPSProposal
     from f0_l2_d2_physical_source_offline import StagedPhysicalHTTPSReadOnlySource
+    from f0_l2_d1_physical_source_candidate import BoundedPhysicalReadOnlySource
     from f0_l2_d1_concrete_https import (
         SealedConcreteOfflineSource, PatchedConstructorOfflineSource,
         _ORIGINAL_HTTPS_CONNECTION)
@@ -444,6 +462,14 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
         # starts its clock, creates evidence, or hands work to its pool.
         request_physical_source_admission(source)
     staged = type(source) is StagedPhysicalHTTPSReadOnlySource
+    physical = type(source) is BoundedPhysicalReadOnlySource
+    # Genuine HTTPS remains denied in this source-bridge code-only PR. The
+    # future one-owner one-shot foreground launcher must be separately
+    # pinned/reviewed and must consume a fresh operator grant before TLS.
+    need((not physical and _physical_source_candidate is False)
+         or (physical and _physical_source_candidate is True and
+             http.client.HTTPSConnection is not _ORIGINAL_HTTPS_CONNECTION),
+         "F0_REAL_FOREGROUND_PHYSICAL_SOURCE_NOT_RELEASED")
     # NEVER allow this private offline constructor-rehearsal source through
     # the public fake entry; nor permit the genuine physical constructor to
     # reach even a test coordinator when production identity is absent.
@@ -456,10 +482,12 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
     need(type(source) in (FakeSource, SealedMemoryHTTPSSource,
                           SealedConcreteOfflineSource,
                           PatchedConstructorOfflineSource)
-         or staged, "D1_SCOPE_INVALID")
+         or staged or physical, "D1_SCOPE_INVALID")
     need("reply" not in getattr(source, "__dict__", {})
          and "reply_over_memory_https" not in getattr(source, "__dict__", {})
          and "reply_transport_evidence_offline" not in
+             getattr(source, "__dict__", {})
+         and "reply_transport_evidence_physical_candidate" not in
              getattr(source, "__dict__", {})
          and type(slots) is int and slots == 3
          and type(max_total) is int and 2 <= max_total <= 32
@@ -567,7 +595,7 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
             _StagedOnlyReservationGuard(
                 payload, verified_reservation,
                 _seal=_STAGED_RESERVATION_TEST_SEAL)
-            if staged else verified_reservation)
+            if staged or physical else verified_reservation)
         fut = executor.submit(gate.run, payload, source,
                               block_head_deadline=dead_head,
                               dispatch_deadline=dispatch_deadline,
@@ -762,7 +790,9 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
     need(len(reservations) <= 32 and number_blocks <= 24
          and number_refreshes <= 6 and peak_slots <=3,
          "D1_SCOPE_LIMIT_EXCEEDED")
-    mode = ("D2_STAGED_PHYSICAL_HTTPS_PATCHED_NO_SOCKET_TEST_ONLY"
+    mode = ("F0_PHYSICAL_HTTPS_BRIDGE_PATCHED_NOT_RELEASED"
+            if physical else
+            "D2_STAGED_PHYSICAL_HTTPS_PATCHED_NO_SOCKET_TEST_ONLY"
             if staged else
             "D1_OFFLINE_CONCRETE_HTTPS_SEALED_NO_SOCKET"
             if type(source) is SealedConcreteOfflineSource else
@@ -774,6 +804,8 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
     return {
         "schema":SCHEMA, "mode":mode,
         "network_requests":0, "no_live_sender":True,
+        "physical_bridge_code_tested":physical,
+        "physical_source_released":False,
         "fake_post_utc_checks":(fake_post_utc_window.checked_fake_posts
                                 if fake_post_utc_window is not None else None),
         "real_user_grant_active":False,
@@ -810,7 +842,7 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
         # generator. Preserve the existing field for all four fake classes,
         # but explicitly mark it inapplicable for the staged test slot.
         "synthetic_source_growth_bps":(
-            None if staged else source.growth_bps),
+            None if staged or physical else source.growth_bps),
         "full_ledger_filename":"attempts.jsonl",
         "start_records":[{"id":i,"method":m,"monotonic":t}
                          for i,m,t in starts],
