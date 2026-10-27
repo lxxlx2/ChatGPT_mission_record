@@ -1,6 +1,6 @@
 # Project Analysis Evidence Workflow
 
-Updated: 2026-10-06
+Updated: 2026-10-27
 Scope: crypto / Web3 project research, especially pre-TGE, airdrop, points, launchpad, L1/L2, DeFi and early token projects.
 Purpose: define how to determine a project's **actual stage** from verifiable evidence rather than announcements, KOL interpretation or marketing language.
 
@@ -10,6 +10,17 @@ Related authority:
 - `PROJECT_ANALYSIS_FRAMEWORK.md`
 - `token_trading_principles.md`
 - `MISSION_SPEC.md`
+
+## 0. Mandatory initial-ICO evidence order (user scope, 2026-10-27)
+
+For new ICO/raise analysis, assess a **single target project** and prioritize **cash-real business metrics and the public buyer's achievable TGE/early-market return**. The user has extensive experience with MetaDAO launches.
+
+1. **Business proof:** direct paying users, paid orders, active users, fees **collected**, true revenue, repeat/retained cohorts, acquisition cost where available, actual USDC onchain payouts, net reward/expense burden, treasury runway. Keep periods and measurement definitions, independently reproduce when possible, distinguish simulation notional from real money.
+2. **Capital formation:** accepted versus gross committed USDC, raise minimum/max, special allocations, investor costs, sale price calculation, complete initial supply/unlocks/float, market-making LP budget and realistic exit slippage.
+3. **Project-specific PM scan REQUIRED:** search actual current Polymarket, Kalshi, Limitless, Predict.fun and other relevant venues (including a live project-specific MetaDAO futarchy market if one exists). Verify the subject and settlement conditions; report URLs, odds, liquidity/volume and timestamp, **or explicitly which platforms were checked and that no verifiable direct market was found**. Even fast-pass must complete this step.
+4. **Source/status discipline:** CONFIRMED independent evidence, issuer-only statement, inference, forecast and UNVERIFIED unknown must remain separate. Never substitute generic market odds, similarly named coins, idle markets or historical unrelated raises for a target project's PM.
+5. **Scope exclusions:** do not initiate routine jurisdiction/KYC/geographic availability checks, ancillary tokenholder dividends/equity/legal ownership essays, novice platform participation instructions, or cross-project/previous-ICO comparisons. Only flag onchain conditions, sale restrictions, dilution, security, and contract limitations **actually affecting transaction execution or realized ROI**; user can request broader review.
+6. **No execution:** research does not authorize wallet actions, monitoring, automation, production trades or funding.
 
 ## 1. Default stance: claims are leads, not facts
 
@@ -202,9 +213,9 @@ Claim/trading/transfers are executing on-chain.
 
 A project may be T2/T3 for months. Do not convert architecture readiness directly into a date prediction.
 
-## 8. Separate product progress from token progress
+## 8. Separate verified business progress from token launch progress
 
-A chain or application may be fully live while its token is not close to launch.
+A chain or application may be fully live while its token is not close to launch. For ICOs, paid activity and cash flows are the central valuation inputs; testnet, simulated turnover, gross commitments and waitlists are separate categories that cannot count as verified operating revenue.
 
 Evaluate separately:
 
@@ -243,27 +254,23 @@ Classify findings:
 
 Brand assets and a token-themed redesign are useful signals of internal preparation, but they are weaker than live contract integration.
 
-## 10. Prediction markets: use them as a pricing layer, not a fact layer
+## 10. Prediction markets: required independent check for every ICO
 
-For TGE/date/FDV markets record:
+**Mandatory verification step, including fast-pass, new initial projects and pre-TGE.** Check Polymarket, Kalshi, Limitless, Predict.fun plus other relevant venues, directly search target identity/domain and sale title and ensure ticker collisions are excluded.
 
-- exact question;
-- resolution criteria;
-- current probability/price;
-- volume;
-- liquidity/depth/spread if available;
-- observation time;
-- whether the market moved after a new public signal.
+Prioritize markets predicting target-project `gross commitments`, `accepted funds`, `FDV`, `opening/listing/TGE`, `price above sale`, `market-cap thresholds` and credible exit-price milestones. Treat each as a different outcome; do not assume gross subscriptions equal accepted raise.
 
-Prefer larger/liquid venues. When multiple venues exist, compare them rather than defaulting to one platform.
+For each matching market, collect:
+- exact market question, project identity, event/contract identifier and original URL;
+- exact resolution source, deadline and payout condition;
+- current Yes/No or bracket prices, implied probability and timestamp;
+- liquidity, order-book depth/spread, 24h and lifetime volume and open interest if published;
+- update date, last trade, price change, and whether movement follows new information;
+- market status (open, paused, resolved) and sample/liquidity limitations.
 
-Prediction markets answer:
-`What is the market willing to pay for this outcome now?`
+**If direct markets are not found**, explicitly output `未检索到可验证的项目专属 PM 市场`, enumerate platforms checked, and include the check date. Never assert zero probability or infer a specific FDV from absence. Do not use a different ICO's Polymarket commitment market or a project's MetaDAO decision markets to supply an invented prediction for the current raise.
 
-They do not answer:
-`What is objectively true?`
-
-Use them after Git/chain verification, not before.
+Prediction markets are independent pricing/expectations evidence, not onchain confirmation. Update the current analysis using these odds only when liquid and question-aligned. Present author forecasts separately.
 
 ## 11. Detect information-quality traps
 
@@ -352,7 +359,7 @@ When the user asks for `实际进度`, return the answer in this order:
 3. **Git** — canonical repo, commit dates, exact meaning.
 4. **Deployment/chain** — real addresses, bytecode, funding, runtime activity.
 5. **Frontend/backend** — active versus dormant integration.
-6. **Prediction markets** — probability, volume and whether repricing is justified.
+6. **Business evidence + PM** — real paid usage/fees/payouts, first-party-versus-independent status; project-specific PM probability/volume/liquidity or actual no-market search result, and whether repricing is justified.
 7. **What is still missing** — explicit blockers.
 8. **Updated probability/judgment** — clearly marked as analysis, not fact.
 
