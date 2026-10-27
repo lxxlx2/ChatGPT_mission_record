@@ -1,0 +1,26 @@
+name: Frank F3 readonly probes and binding
+on:
+  push:
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/frank_c2a_f3_*.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_c2a_f3_probe.py'
+      - '.github/workflows/frank-f3-readonly-probes.yml'
+  pull_request:
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/frank_c2a_f3_*.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_c2a_f3_probe.py'
+      - '.github/workflows/frank-f3-readonly-probes.yml'
+permissions:
+  contents: read
+jobs:
+  offline-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: F3 synthetic files, fake OS, bounded workers, loopback fixture only
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -B -m unittest -v tests/test_frank_c2a_f3_probe.py
