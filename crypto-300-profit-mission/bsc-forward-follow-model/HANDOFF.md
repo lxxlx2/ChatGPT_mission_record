@@ -1,3 +1,13 @@
+# 2026-10-27 — BSC forward-follow F0 A6 narrowed trust model USER ACCEPTED; independent decision review PENDING
+
+- The user explicitly accepted the **trusted macOS account / no malicious same-UID actor** assumption solely for a future bounded **read-only** BSC F0 foreground feasibility pilot. This resolves the human choice of A6's **narrowed alternative**, **not** independent security review, durable adversarial replay protection, an A8 trial grant or any production release.
+- New fixed-source decision record: `f0/F0_D2D3_TRUSTED_ACCOUNT_A6_DECISION_20261027.md`. Parent PR219 docs-only approved at `1b35156710a860ae579c0e2ff1fd47d8f1052ad5`; approved last implementation PR217 `8362b4048d45b0bd13be4a6e4b6be35ad737819b`. A6 now `USER_ACCEPTED_NARROW_SCOPE / INDEPENDENT_REVIEW_PENDING`; same-UID directory replacement/marker deletion and code monkeypatch remain explicitly unprotected.
+- **Still blocked:** A1 real D2 user identity/key, A2 independent reviewer identity/key, A3 D3 operator identity, A4 normative signed domain/revocation, A5 concrete trusted account and launcher, A7 audited implementation/source manifest; A8 separate real one-shot RPC permission **NOT AUTHORIZED**. No real keys or signer enrollment/production marker/nonce.
+- **Immediate next:** independently review the user-decision record, then prepare a source-pinned **normative protocol / trusted-launch design** within this same BSC address-following F0 line. No additional synthetic marker PRs in lieu of actual identity/provenance decisions; no live RPC, trades, merge, deployment, restart, background runtime, notifications or automation.
+- Operating state remains `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`. Historical PRs #40 and #97 remain separate address-analysis inputs. This project is **BSC wallet/address followability**, not Monster.
+
+---
+
 # 2026-10-26 — PR217 proposal Mac APPROVED; Issue207 production release threat model / human decision gate (DOCS ONLY)
 
 - **Frozen approved baseline PR217:** `8362b4048d45b0bd13be4a6e4b6be35ad737819b`, ARM64 Mac independently supplied `APPROVE_OFFLINE_CODE — D2_PRODUCTION_SIGNATURE_PROTOCOL_PROPOSAL_ONLY`, F0 598/598, D1 171, new proposed spec 10, 0 skips. [Attributable audit archive](https://github.com/lxxlx2/ChatGPT_mission_record/pull/217#issuecomment-6418113738). Scope is deterministic PROPOSED message bytes, not real-signature authorisation or production keys.
