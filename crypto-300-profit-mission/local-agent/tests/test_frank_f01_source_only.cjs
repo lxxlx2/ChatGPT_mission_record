@@ -38,6 +38,8 @@ test('source-only observation keeps NO_BUY historical decision, never execution'
 test('mismatched source, newer SELL and absent candidate fail closed',()=>{
   assert.equal(verify(doc(),[{...row,source_signal_id:'OTHER'}],now),null);
   assert.equal(verify(doc(),[{...row,latest_side:'SELL'}],now),null);
+  assert.equal(verify(doc(),[{...row,decision:'BUY'}],now),null);
+  assert.equal(verify(doc(),[{...row,position_state:'CLOSED'}],now),null);
   assert.equal(verify(doc(),[],now),null);
   assert.equal(verify(doc(),[row,row],now),null);
 });
