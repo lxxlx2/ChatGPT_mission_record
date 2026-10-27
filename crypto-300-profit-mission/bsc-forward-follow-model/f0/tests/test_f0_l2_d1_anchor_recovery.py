@@ -185,6 +185,102 @@ class D1AnchorRecoveryTests(unittest.TestCase):
         self.assertEqual(rec["audit_status"],"INVALID_FOR_PERFORMANCE_CLAIM")
         self.assertEqual(rec["contiguous_commits"],2)
 
+    def test_p1_anchor_claims_rpc_success_but_http_503_refused(self):
+        root,_=self.sample()
+        rows=self.events(root)
+        settle=next(e for e in rows if (
+            e["event"]=="SETTLE" and e["category"]=="ANCHOR"))
+        self.assertEqual(settle["state"],"RPC_RESPONSE")
+        self.assertEqual(settle["http_status"],200)
+        settle["http_status"]=503
+        self.save(root,rows)
+        with self.assertRaisesRegex(
+                ValueError,"D1_RECOVERY_ANCHORED_HTTP_SEND_EVIDENCE_CONFLICT"):
+            reconcile_saved_attempts(root)
+
+    def test_p1_anchor_claims_success_but_recorded_not_started_refused(self):
+        root,_=self.sample()
+        rows=self.events(root)
+        settle=next(e for e in rows if (
+            e["event"]=="SETTLE" and e["category"]=="ANCHOR"))
+        self.assertIs(settle["started"],True)
+        settle["started"]=False
+        self.save(root,rows)
+        with self.assertRaisesRegex(
+                ValueError,"D1_RECOVERY_ANCHORED_HTTP_SEND_EVIDENCE_CONFLICT"):
+            reconcile_saved_attempts(root)
+
+    def test_p1_anchor_success_content_type_must_be_json(self):
+        for wrong in ("text/html",None,"application/jsonp"):
+            with self.subTest(content_type=wrong):
+                root,_=self.sample()
+                rows=self.events(root)
+                settle=next(e for e in rows if (
+                    e["event"]=="SETTLE" and e["category"]=="ANCHOR"))
+                self.assertEqual(settle["response_content_type"],
+                                 "application/json")
+                settle["response_content_type"]=wrong
+                self.save(root,rows)
+                with self.assertRaisesRegex(
+                        ValueError,"D1_RECOVERY_ANCHORED_HTTP_SEND_EVIDENCE_CONFLICT"):
+                    reconcile_saved_attempts(root)
+
+    def test_p1_successful_child_block_cannot_overrule_failed_http_evidence(self):
+        for field,wrong in (("http_status",503),("started",False),
+                            ("response_content_type","text/plain")):
+            with self.subTest(field=field):
+                root,_=self.sample()
+                rows=self.events(root)
+                settle=next(e for e in rows if (
+                    e["event"]=="SETTLE" and e["category"]=="BLOCK"
+                    and e["state"]=="RPC_RESPONSE"))
+                settle[field]=wrong
+                self.save(root,rows)
+                with self.assertRaisesRegex(
+                        ValueError,"D1_RECOVERY_ANCHORED_HTTP_SEND_EVIDENCE_CONFLICT"):
+                    reconcile_saved_attempts(root)
+
+    def test_p1_block_reserved_before_anchor_success_settle_denied(self):
+        root,_=self.sample()
+        rows=self.events(root)
+        anchor_settle=next(i for i,e in enumerate(rows) if (
+            e["event"]=="SETTLE" and e["category"]=="ANCHOR"))
+        child_reserve=next(i for i,e in enumerate(rows) if (
+            e["event"]=="RESERVE_UNKNOWN" and e["category"]=="BLOCK"))
+        self.assertLess(anchor_settle,child_reserve)
+        # Preserve every RID, RAW, hash and JSON object. Reorder only one
+        # existing durable SETTLE event after the first future reservation.
+        original=rows.pop(anchor_settle)
+        child_reserve=next(i for i,e in enumerate(rows) if (
+            e["event"]=="RESERVE_UNKNOWN" and e["category"]=="BLOCK"))
+        rows.insert(child_reserve+1,original)
+        self.save(root,rows)
+        with self.assertRaisesRegex(
+                ValueError,"D1_RECOVERY_PREMATURE_AFTER_ANCHOR_RESERVATION"):
+            reconcile_saved_attempts(root)
+
+    def test_p1_head_refresh_reserved_before_anchor_settle_denied(self):
+        root,_=self.sample()
+        rows=self.events(root)
+        anchor_settle=next(i for i,e in enumerate(rows) if (
+            e["event"]=="SETTLE" and e["category"]=="ANCHOR"))
+        # This is a negative record-shape probe: rewrite first future
+        # reservation into an otherwise valid HEAD refresh. The recovery
+        # MUST reject its causal ordering before any later mismatch.
+        i=next(i for i,e in enumerate(rows) if (
+            e["event"]=="RESERVE_UNKNOWN" and e["category"]=="BLOCK"))
+        row=rows[i]
+        rows[i]=dict(row,category="HEAD",method="eth_blockNumber",height=None)
+        self.assertLess(anchor_settle,i)
+        settle=rows.pop(anchor_settle)
+        i=next(i for i,e in enumerate(rows) if (
+            e["event"]=="RESERVE_UNKNOWN" and e["category"]=="HEAD"))
+        rows.insert(i+1,settle)
+        self.save(root,rows)
+        with self.assertRaisesRegex(
+                ValueError,"D1_RECOVERY_PREMATURE_AFTER_ANCHOR_RESERVATION"):
+            reconcile_saved_attempts(root)
+
     def test_legacy_unanchored_journal_keeps_existing_semantics(self):
         root,report=self.sample(total=7,anchor=False)
         rec=reconcile_saved_attempts(root)
