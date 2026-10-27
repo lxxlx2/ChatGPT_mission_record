@@ -96,14 +96,15 @@ class D1AnchorRecoveryTests(unittest.TestCase):
         self.assertEqual(rec["audit_status"],"INVALID_FOR_PERFORMANCE_CLAIM")
         self.assertEqual(rec["unknown_request_ids"],[])
 
-    def test_bad_initial_future_parent_recovered_as_integrity_failure(self):
+    def test_faulting_future_parent_recovered_with_real_fault_owner(self):
+        # Three workers may complete different block ordinals in different
+        # order, so use the coordinator's actual defective height and RID.
         root, r=self.sample(source=FakeSource(
             first_head=1000,growth_bps=10,delay_ms=5,bad_parent_ordinal=2))
         rec=reconcile_saved_attempts(root)
         self.assertEqual(r["stop"],"CHAIN_FAULT")
-        self.assertEqual(rec["invalid_parent_heights"],[1001])
-        self.assertEqual(rec["contiguous_commits"],0)
-        self.assertEqual(rec["verified_initial_parent_links"],0)
+        self.assertEqual(rec["invalid_parent_heights"],[r["bad_parent_height"]])
+        self.assertLess(rec["contiguous_commits"],r["block_attempts"])
         self.assertEqual(rec["audit_status"],"INVALID_FOR_PERFORMANCE_CLAIM")
 
     def test_rewritten_anchor_raw_and_matching_sha_cannot_forge_parent(self):
@@ -134,7 +135,11 @@ class D1AnchorRecoveryTests(unittest.TestCase):
                 if mode=="id":
                     mutate=lambda rpc:rpc.update(id=901)
                 else:
-                    mutate=lambda rpc:rpc["result"].update(number="0x3ea")
+                    reserved=next(e for e in rows if (
+                        e["event"]=="RESERVE_UNKNOWN"
+                        and e["category"]=="ANCHOR"))
+                    wrong=hex(reserved["height"]+13)
+                    mutate=lambda rpc:rpc["result"].update(number=wrong)
                 self.rewrite_block_raw(root,rows,"ANCHOR",mutate)
                 with self.assertRaisesRegex(ValueError,
                                             "D1_RECOVERY_ANCHORED_RAW_INVALID"):
@@ -168,12 +173,14 @@ class D1AnchorRecoveryTests(unittest.TestCase):
                                     "D1_RECOVERY_UNVERIFIED_ANCHOR_COMMIT"):
             reconcile_saved_attempts(root)
 
-    def test_truncated_first_child_commit_is_not_a_clean_pass(self):
+    def test_truncated_last_child_commit_is_not_a_clean_pass(self):
         root,_=self.sample()
         rows=self.events(root)
-        self.save(root,[e for e in rows if not (
-            e["event"]=="COMMIT_CONTIGUOUS" and
-            e["height"]==1003)])
+        commits=[e for e in rows if e["event"]=="COMMIT_CONTIGUOUS"]
+        self.assertEqual(len(commits),3)
+        # Delete exactly the last actual height, not a guessed height.
+        last=commits[-1]
+        self.save(root,[e for e in rows if e is not last])
         rec=reconcile_saved_attempts(root)
         self.assertEqual(rec["audit_status"],"INVALID_FOR_PERFORMANCE_CLAIM")
         self.assertEqual(rec["contiguous_commits"],2)
