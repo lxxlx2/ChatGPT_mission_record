@@ -205,6 +205,10 @@ def validate_contract(c):
     need(set(c['services']) == set(LABELS), 'SERVICE_SET')
     for key, label in LABELS.items():
         need(c['services'][key]['label'] == label, 'LABEL_AUTHORITY')
+    # The planned one-shot release edits only this Dashboard runner. Refuse
+    # any profile that would launch a different executable before G0/Plan.
+    dashboard = c['services']['dashboard']
+    need(dashboard['launch_argv'] == [dashboard['runner']], 'DASHBOARD_PLIST_RUNNER_REQUIRED')
     for name, sha in [('old',OLD),('new',PRODUCT)]:
         s=c[name]; need(s.get('physical_profile','IMMUTABLE')=='IMMUTABLE','DASHBOARD_MUST_BE_IMMUTABLE'); need((s['sha'],s['count'],s['manifest_sha256']) == (sha,*AUTHORITIES[sha]), 'MANIFEST_AUTHORITY')
     need(c['d2_sha256'] == D2_HASH, 'D2_AUTHORITY')
@@ -272,6 +276,10 @@ def collect(c, phase, io=None):
         need(pl.get('Label')==spec['label'] and pl.get('ProgramArguments')==spec['launch_argv'], 'PLIST_PROGRAM')
         need(pl.get('EnvironmentVariables',{})==spec.get('launch_environment',{}), 'PLIST_ENVIRONMENT')
         launch=pl['ProgramArguments']
+        if key == 'dashboard':
+            # Independently enforce exact runner launch from actual plist bytes.
+            # Interpreter-direct and wrapper profiles cannot use a runner swap.
+            need(launch == [spec['runner']], 'DASHBOARD_PLIST_RUNNER_REQUIRED')
         if spec['runner'] in launch:
             venv=re.findall(rb'^VENV="([^"\r\n]+)"$',runner,re.M)
             need(len(venv)==1 and (Path(venv[0].decode())/'bin/python').resolve()==canonical(spec['interpreter']), 'RUNNER_INTERPRETER_BINDING')

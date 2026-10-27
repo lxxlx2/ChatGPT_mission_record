@@ -75,6 +75,19 @@ are not needed. D2 authority is the previously approved dated Oct25 digest, not 
 new balance claim. A later Mac gate must supply and review the actual private
 contract; none is committed or assumed valid for current production here.
 
+F3 P2 review follow-up: Dashboard supports the exact one-element plist
+`ProgramArguments = [dashboard runner path]` profile only. The one-shot release
+edits that runner's `LOCAL_AGENT` line. Interpreter-direct, wrapper and
+runner-plus-extra-argv configurations must fail **before any Plan/bootout**,
+even when the contract launch arguments and plist digest were updated together.
+`validate_contract` rejects an unsupported declared Dashboard launch profile;
+`collect` also checks the actual plist bytes, independently of the caller
+declaration. The existing direct-interpreter branch remains available for
+appropriate protected services, not Dashboard. Three negative tests exercise
+the reviewer P2, an extra-argument variant and zero service-command/runner
+mutation. This is a code/isolated fix pending an independent new-SHA review,
+not live launchd or rollback acceptance.
+
 `BoundCaller.prepare()` performs real G0 (only when explicitly invoked), then
 constructs F2's Plan from the observed old runner with EXACTLY its LOCAL_AGENT
 line changed. Original inputs are copied, no caller-supplied Identity accepted.

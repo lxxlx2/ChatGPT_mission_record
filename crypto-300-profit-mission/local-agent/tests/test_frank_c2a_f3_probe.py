@@ -155,6 +155,28 @@ class TestCollector(Fixture):
     def test_known_job_report_mismatch_is_rejected(self):
         self.c['history']={'mint':'2'*32,'job_id':'a'*32}
         with self.assertRaisesRegex(p.ProbeError,'CACHE_JOB_MISMATCH'):self.snapshot()
+    def test_dashboard_actual_plist_must_exec_exact_runner(self):
+        # Contract hashes/argv updated alongside a direct-interpreter plist;
+        # G0 must still reject the unused runner without calling launchctl.
+        spec=self.services['dashboard'];q=Path(spec['plist'])
+        direct=[spec['interpreter']]
+        data=plistlib.dumps({'Label':spec['label'],'ProgramArguments':direct,'RunAtLoad':True})
+        q.write_bytes(data);os.utime(q,(1,1))
+        spec['launch_argv']=direct;spec['plist_sha256']=p.digest(data)
+        with self.assertRaisesRegex(p.ProbeError,'DASHBOARD_PLIST_RUNNER_REQUIRED'):
+            self.snapshot()
+        self.assertEqual(self.io.calls,[])
+
+    def test_dashboard_runner_argv_extra_argument_is_rejected(self):
+        spec=self.services['dashboard'];q=Path(spec['plist'])
+        argv=[spec['runner'],'--unreviewed']
+        data=plistlib.dumps({'Label':spec['label'],'ProgramArguments':argv,'RunAtLoad':True})
+        q.write_bytes(data);os.utime(q,(1,1))
+        spec['launch_argv']=argv;spec['plist_sha256']=p.digest(data)
+        with self.assertRaisesRegex(p.ProbeError,'DASHBOARD_PLIST_RUNNER_REQUIRED'):
+            self.snapshot()
+        self.assertEqual(self.io.calls,[])
+
     def test_disabled_existing_service_cannot_be_assumed_restartable(self):
         old=self.io.command
         self.io.command=lambda a,timeout=2:'{ "com.jerson.frank-meme.dashboard" => true }' if a[1]=='print-disabled' else old(a,timeout)
@@ -243,6 +265,20 @@ class TestBinding(Fixture):
         with self.assertRaisesRegex(p.ProbeError,'LIFECYCLE_NOT_BOUND'):
             x.execute(life,owner_authorized=True,unknown_f0_risk_accepted=True)
         self.assertEqual((life.stops,life.starts),(0,0))
+    def test_direct_interpreter_profile_cannot_prepare_plan_or_run_service(self):
+        spec=self.services['dashboard'];q=Path(spec['plist'])
+        direct=[spec['interpreter']]
+        data=plistlib.dumps({'Label':spec['label'],'ProgramArguments':direct,'RunAtLoad':True})
+        q.write_bytes(data);os.utime(q,(1,1))
+        spec['launch_argv']=direct;spec['plist_sha256']=p.digest(data)
+        before=Path(spec['runner']).read_bytes()
+        lifecycle=self.lifecycle()
+        with self.assertRaisesRegex(p.ProbeError,'DASHBOARD_PLIST_RUNNER_REQUIRED'):
+            b.BoundCaller(self.c)
+        self.assertEqual(self.io.calls,[])
+        self.assertEqual((lifecycle.stops,lifecycle.starts),(0,0))
+        self.assertEqual(Path(spec['runner']).read_bytes(),before)
+
     def test_no_authorization_or_risk_acceptance(self):
         x=b.BoundCaller(self.c)
         with self.assertRaisesRegex(p.ProbeError,'NO_OWNER'):x.execute(self.lifecycle())
