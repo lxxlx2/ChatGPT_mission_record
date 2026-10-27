@@ -15,7 +15,7 @@ def quote(price):
         "status":"OK",
         "source":"JUPITER_OFFICIAL",
         "observed_at":time.time(),
-        "input_usdc":"30",
+        "input_usdc":"27.25",
         "execution_price_usdc":price,
         "price_impact_pct":"0.5",
         "route_exists":True,
@@ -307,7 +307,7 @@ def test_cluster_dashboard_explains_presets_and_localizes_rate_limit():
     assert "自动加深到 30 + 12" in js
     assert "Top20 owner 全部深扫" in js
     assert "免费 Solana RPC 触发限流（HTTP 429）" in js
-    assert "execution_quote_30_usdc" in js
+    assert "execution_quote_30_usdc" not in js
     assert "token_profile" in js
     assert "first_acquisition" in js
 

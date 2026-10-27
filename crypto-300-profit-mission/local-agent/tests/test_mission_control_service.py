@@ -43,11 +43,11 @@ def add_candidate(root: Path, *, mint="Mint222", episode="ep2", signal="signal2"
 
 
 def policy(path: Path, *, status="REVIEW_ONLY", live=False):
-    path.write_text(json.dumps({"schema_version":1,"policy_id":"P1","status":status,"live_delivery_approved":live,"decision":{"quote_usdc_amount":"30","observation_retention_seconds":5184000,"slippage_bps":100,"quote_cache_seconds":20,"max_quote_age_seconds":30,"max_frank_buy_age_seconds":600,"initial_notification_max_age_seconds":600,"max_candidates_per_cycle":50,"hard_no_buy_position_states":["CLOSED","INVENTORY_UNDETERMINED"],"buy":{"required_pattern":"MULTIPLE","max_price_deviation_pct":"8","max_price_impact_pct":"1.5"},"small_buy":{"allowed_patterns":["MULTIPLE","ACCUMULATION"],"max_price_deviation_pct":"20","max_price_impact_pct":"3"}}}))
+    path.write_text(json.dumps({"schema_version":1,"policy_id":"P1","status":status,"live_delivery_approved":live,"decision":{"quote_usdc_amount":"27.25","observation_retention_seconds":5184000,"slippage_bps":100,"quote_cache_seconds":20,"max_quote_age_seconds":30,"max_frank_buy_age_seconds":600,"initial_notification_max_age_seconds":600,"max_candidates_per_cycle":50,"hard_no_buy_position_states":["CLOSED","INVENTORY_UNDETERMINED"],"buy":{"required_pattern":"MULTIPLE","max_price_deviation_pct":"8","max_price_impact_pct":"1.5"},"small_buy":{"allowed_patterns":["MULTIPLE","ACCUMULATION"],"max_price_deviation_pct":"20","max_price_impact_pct":"3"}}}))
 
 
 def good_quote():
-    return {"status":"OK","source":"JUPITER_OFFICIAL","observed_at":time.time(),"input_usdc":"30","out_amount_raw":"30000000","token_out":"30","execution_price_usdc":"1.02","price_impact_pct":"0.5","route_exists":True,"route_plan":[{}],"time_taken":0.0123}
+    return {"status":"OK","source":"JUPITER_OFFICIAL","observed_at":time.time(),"input_usdc":"27.25","out_amount_raw":"30000000","token_out":"30","execution_price_usdc":"1.02","price_impact_pct":"0.5","route_exists":True,"route_plan":[{}],"time_taken":0.0123}
 
 
 def test_review_policy_never_allows_live_delivery_and_records_dry_outbox(tmp_path):
@@ -338,7 +338,7 @@ def test_service_preserves_quote_observation_and_uses_frozen_gmail_max_age(tmp_p
         "SELECT body FROM gmail_delivery"
     ).fetchone()[0]
     assert "Jupiter 报价观察时间：" in gmail
-    assert "决策时 $30 报价：" in gmail
+    assert "指定金额的参考报价（不代表实际成交）：" in gmail
     assert "当前可成交价：" not in gmail
     service.close()
 
@@ -416,3 +416,34 @@ def test_optin_export_sqlite_error_never_kills_decision_loop(tmp_path, monkeypat
         assert heartbeat["status"] == "OK"
     finally:
         obj.close()
+
+def test_checked_in_frank_policy_has_no_assumed_order_amount_and_no_quote_call():
+    from mission_agent.mission_control.policy import load_policy, evaluate, live_delivery_policy_authorized
+    file = Path(__file__).parents[1] / "config" / "follow_policy_v1.approved.json"
+    approved, actual_sha = load_policy(file)
+    assert "quote_usdc_amount" not in approved["decision"]
+    assert approved["status"] == "REVIEW_ONLY"
+    assert approved["live_delivery_approved"] is False
+    assert approved["basis"] == "PR112_NO_DEFAULT_AMOUNT_POLICY_PENDING_EXPLICIT_USER_LIVE_APPROVAL"
+    # Even if a caller supplies its own policy content SHA as an attempted
+    # approval, the changed candidate must never permit live delivery.
+    assert live_delivery_policy_authorized(approved, actual_sha, actual_sha) is False
+    assert approved["sizing_authority"] == "USER_DECIDES_AMOUNT_AND_EXECUTION_NO_DEFAULT_NOTIONAL"
+    instance = MissionMemeService.__new__(MissionMemeService)
+    instance.policy = approved
+    class NeverQuote:
+        def quote_usdc_to_token(self, *args, **kwargs):
+            raise AssertionError("UNAUTHORIZED_JUPITER_QUOTE")
+    instance.jupiter = NeverQuote()
+    candidate = {
+        "mint": "Mint111", "runtime_status": "LIVE",
+        "position_state": "OPEN", "latest_side": "BUY", "token_decimals": 6,
+        "current_raw": "100", "pattern": "MULTIPLE",
+        "latest_buy_at": 1000, "latest_buy_price_usdc": "1",
+    }
+    quote = instance._quote(candidate)
+    assert quote["status"] == "SKIPPED"
+    assert quote["reason"] == "USER_ORDER_AMOUNT_NOT_SPECIFIED"
+    result = evaluate(candidate, quote, approved, now=1005)
+    assert result["decision"] == "WAIT"
+    assert "BUY" not in result["reasons"]
