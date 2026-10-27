@@ -1,3 +1,13 @@
+# 2026-10-28 — PR #231 independent Mac approval / environment pins / physical foreground next-step
+
+- **PR #231**: [source bridge, Draft/unmerged](https://github.com/lxxlx2/ChatGPT_mission_record/pull/231), fixed independently reviewed source SHA `b94d6bbd503e839d39c2129520b9c32cd71392f1`, scoped Mac verdict **`APPROVE_OFFLINE_CODE — BSC_F0_PHYSICAL_SOURCE_BRIDGE_UNRELEASED_ONLY`**; read-back-verified [independent review comment](https://github.com/lxxlx2/ChatGPT_mission_record/pull/231#issuecomment-6456338824). Mac Apple Silicon/macOS 27.2/Python 3.14.7: 654/654 full, 8/8 target, independent DNS/socket negative checks. GitHub Linux 654/654 PASS. THIS APPROVAL IS FOR THAT FIXED SHA ONLY.
+- **Mandatory reproducible dependency installation:** use `python3 -m pip install -r crypto-300-profit-mission/bsc-forward-follow-model/f0/requirements-d1-offline.txt` in an isolated Python environment; this pins **`cryptography==46.0.4`**. Unpinned 50.0.2 produced **91 `D1_ED25519_BACKEND_VERSION_MISMATCH` errors** during independent Mac review; those environment errors are not counted as passing code checks or a PR regression. Requirements file exists and is unchanged.
+- **State**: original 3-slot source code candidate is constructor-patched offline ONLY; actual `send_live` denies, no single-owner foreground live launcher, no real RPC or source throughput, BUY/SELL receipts, Router control or executable quote. Don't convert Python-private `_REVIEW_TEST_ONLY_CAPABILITY` or module seal into claimed permission. No actual network run is approved.
+- **Next**: validate an exact once-only Mac foreground **physical** scope before any consent consumption; then connect original supervised child/physical adapter in a separately reviewed fixed-SHA increment. Require a NEW explicit one-run user instruction with exact SHA, endpoint, methods, total/block/head/anchor caps, UTC window, OS user and hard stop. Never reinstate 3-person signature ceremony.
+- `F0_NOT_PASSED / PRODUCTION_NO_GO / NO_RPC / NO_DEPLOY / NO_RESTART / NO_TRADES / NO_BACKGROUND / NO_MERGE`.
+
+---
+
 # 2026-10-28 — BSC F0 physical HTTPS SOURCE BRIDGE in original 3-slot coordinator (code review only, NO LIVE)
 
 - Independently reviewed parent: [PR230](https://github.com/lxxlx2/ChatGPT_mission_record/pull/230#issuecomment-6455839755) `c2e7dd6f8b41ea9eca9e8c6214c70f371d691d31`, Mac ARM64 646/646 tests and a true OS parent-kill/mock-child self-exit. No physical network was permitted.
