@@ -309,9 +309,9 @@ function renderRuntime(runtime, control) {
     </div>`;
 }
 
-function renderStats(candidates, runtime, coverage) {
+function renderStats(candidates, runtime, coverage, f01Verified) {
   const w = coverage?.windows?.['24h'] || {};
-  const action = candidates.filter(x => x.decision === 'BUY' || x.decision === 'SMALL_BUY').length;
+  const action = f01Verified ? 0 : '待核实';
   const items = [
     ['Frank状态', translated(runtimeLabel,runtime.status,'未知')],
     ['24h已索引签名', w.indexed_signatures ?? '—'],
@@ -614,15 +614,12 @@ function renderCandidates(rows) {
     const execPrice = execRaw != null ? `${money(execRaw,8)}` : quoteUnavailableText(x,q);
     const buys = x.buy_count ?? 0;
     const sells = x.sell_count ?? 0;
-    const followable = (decision === 'BUY' || decision === 'SMALL_BUY') && x.position_state === 'OPEN' && !['SELL','EXIT','SELL_POSITION_UNRESOLVED'].includes(x.latest_side);
-    const historyNote = followable
-      ? '模式来自已观察到的建仓序列；实际操作前仍需重新确认价格和 Frank 状态。'
-      : '模型模式与买入金额是历史记录；当前没有可执行的买入结论。';
+    const historyNote = '近期已索引来源 BUY，仅供观察。模型仓位尚未确认为当前链上余额；没有用户指定的交易金额，也没有验证可执行报价。';
 
     return `<article class="candidate-card decision-${esc(decision.toLowerCase().replaceAll('_','-'))}">
       <div class="candidate-head">
         <div class="candidate-title">
-          ${badge(decision)}
+          <span class="badge wait">近期来源信号（仅观察）</span>
           <strong>${esc(translated(patternLabel,x.pattern,'未形成模式'))}</strong>
           <span class="state-text">Frank模型仓位：${esc(translated(stateLabel,x.position_state,'未知'))}</span>
         </div>
@@ -632,7 +629,7 @@ function renderCandidates(rows) {
       ${tokenIdentity(x.mint)}
 
       <div class="decision-reason">
-        <span>当前跟单结论：“${esc(translated(decisionLabel,decision,decision))}”</span>
+        <span>历史模型判断：“${esc(translated(decisionLabel,decision,decision))}”；当前执行资格：未评估</span>
         <strong>${esc(reason)} ${esc(historyNote)}</strong>
       </div>
 
@@ -643,7 +640,50 @@ function renderCandidates(rows) {
         ${metric('Frank 参考买入价',frankPrice,'直接来自 Frank 最近买入事件；即使当前 Decision 因超时提前结束，也尽量展示。')}
       </div>
     </article>`;
-  }).join('') || '<div class="empty">当前没有需要跟踪的 Frank 候选</div>';
+  }).join('') || '<div class="empty">当前没有已核实的近期来源信号；历史候选仍可在下方查看。</div>';
+}
+
+function verifiedF01SourceView(doc, candidates, now=Date.now()/1000) {
+  if (!doc || doc.schema_version !== 2 || doc.status !== 'SOURCE_ONLY' ||
+      doc.scope !== 'FRANK_LOCAL_INDEX_SOURCE_ONLY_NO_EXECUTION_QUOTE' ||
+      !Number.isFinite(doc.as_of_epoch) || now < doc.as_of_epoch ||
+      now - doc.as_of_epoch >= 8 || !Array.isArray(doc.source_recent) ||
+      doc.source_recent_count !== doc.source_recent.length ||
+      !Array.isArray(doc.eligible) || doc.eligible.length !== 0 ||
+      doc.eligible_count !== 0 || !Array.isArray(candidates)) return null;
+  const key = row => JSON.stringify([row.person_id,row.mint,row.episode_id,
+    row.source_signal_id,row.latest_signature,row.latest_buy_at,row.latest_at,row.latest_side]);
+  const actual = new Map();
+  for (const row of candidates) {
+    if (!row || typeof row !== 'object') return null;
+    const k = key(row);
+    if (actual.has(k)) return null;
+    actual.set(k,row);
+  }
+  const selected = new Set();
+  for (const row of doc.source_recent) {
+    const k = key(row);
+    if (selected.has(k) || !actual.has(k) ||
+        row.f01_source_state !== 'RECENT_SOURCE_BUY_ONLY' ||
+        row.execution_eligibility !== 'NOT_ASSESSED_USER_AMOUNT_MISSING' ||
+        row.person_id !== 'frank' || !row.source_signal_id) return null;
+    selected.add(k);
+  }
+  return {recent:doc.source_recent, historical:candidates.filter(x=>!selected.has(key(x)))};
+}
+
+function renderF01History(rows) {
+  const box = $('f01-history-cards');
+  if (!box) return;
+  box.innerHTML = rows.map(x => `<div class="ended-row">
+    <div class="ended-main"><span class="badge no-buy">历史 / 资格未核实</span>
+      <strong>${esc(translated(patternLabel,x.pattern,'来源待核'))}</strong>
+      <span>最近动作：${esc(translated(sideLabel,x.latest_side,'未知'))} · ${esc(age(x.latest_at))}</span>
+    </div>
+    <div class="ended-ca"><code>${esc(x.mint || '未知')}</code>${copyButton(x.mint,'复制 CA')}</div>
+    <div class="ended-note">${esc(reasonFor(x))} 本行不可当作当前跟单资格。</div>
+  </div>`).join('') || '<div class="empty">本次没有历史候选；钱包活动账本仍独立可查。</div>';
+  $('f01-history-count').textContent = rows.length;
 }
 
 function withinHours(ts,hours) {
@@ -991,7 +1031,7 @@ $('frank-activity-reload').addEventListener('click',refreshFrankActivity);
 
 async function refresh() {
   try {
-    const [runtime,control,candidates,trades,reviewActivity,decisions,coverage,watch] = await Promise.all([
+    const [runtime,control,candidates,trades,reviewActivity,decisions,coverage,watch,f01] = await Promise.all([
       get('/api/runtime'),
       get('/api/control-health'),
       get('/api/candidates'),
@@ -999,16 +1039,24 @@ async function refresh() {
       get('/api/review-activity'),
       get('/api/decisions').catch(() => null),
       get('/api/coverage'),
-      get('/api/frank-observed-watchlist').catch(() => ({status:'SOURCE_UNAVAILABLE',rows:[],summary:{}}))
+      get('/api/frank-observed-watchlist').catch(() => ({status:'SOURCE_UNAVAILABLE',rows:[],summary:{}})),
+      get('/api/follow-opportunities').catch(() => null)
     ]);
     const activeCandidates = candidates.filter(x => x.position_state !== 'CLOSED');
     const endedCandidates = candidates.filter(x => x.position_state === 'CLOSED');
+    const view = verifiedF01SourceView(f01, candidates);
+    const recent = view?.recent || [];
+    const history = view?.historical || candidates;
+    $('f01-source-status').textContent = view
+      ? `近期来源信号 ${recent.length} 条；可执行资格 0 条（未提供用户交易金额）；来源窗口 10 分钟。`
+      : 'F01 来源资格暂不可核实或已过期；不展示可跟结论，完整历史候选保留。';
 
     renderRuntime(runtime,control);
-    renderStats(activeCandidates,runtime,coverage);
+    renderStats(activeCandidates,runtime,coverage,!!view);
     renderCoverage(coverage);
     renderFrankWatchlist(watch);
-    renderCandidates(activeCandidates);
+    renderCandidates(recent);
+    renderF01History(history);
     renderEnded(endedCandidates);
     renderTrades(trades);
     renderReviewActivity(reviewActivity);
