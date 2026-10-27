@@ -7,6 +7,29 @@ Action: `WATCH`, `NO_BUY_UNTIL_OFFICIAL_LAUNCH_AND_LIQUIDITY_VERIFIED`.
 Authority: `crypto-300-profit-mission/PROJECT_ANALYSIS_FRAMEWORK.md`, `PROJECT_ANALYSIS_EVIDENCE_WORKFLOW.md`, `token_trading_principles.md`.
 Trading/monitoring: `PRODUCTION_TRADING=NO_GO`; no capital committed or monitoring task created by this note.
 
+## 2026-10-28 platform-first launch thesis: watch actual machine.fun leaders, SXTH not guaranteed
+
+**Trigger:** user explicitly compares platform attention to SXTH and asks whether first truly successful token deserves priority. This user-requested comparison is a one-off factual analysis, not a broad cross-ICO template. Verify with machine.fun first-party and user-connected X, 2026-10-28 Asia/Bangkok.
+
+### Public evidence
+
+- Direct read-only of connected `https://x.com/machinedotfun`: **4,377 X followers**, third-party FrontRun overlay **55 KOL follows** (methodology UNVERIFIED), and X native 2026-10-27 `within next 48 hours` platform announcement had around **8,187 views and 144 likes** at time of tab capture (not a constant or audited metric).
+- Direct read-only of `https://x.com/Sextus_Sensus`: **493 X followers**, third-party overlay **3 KOL follows**, 2026-10-27 SXTH quote-post `See you on Launch Day!` around **357 views and 9 likes** at read time. Approx **8.9x** difference in account follower size. Compare as **dated surface social reach**, not independently verified active real traders, organic growth or identical post cohorts.
+- Official `@solana` openly responded to `@machinedotfun` **2026-09-26** `machine time 👀`, subsequently quoted/reposted by machine.fun (platform account's own timeline archive https://twiscan.com/en/x/machinedotfun). First-party machine.fun partnership announced with `@Raydium` and its LaunchLab on 2026-09-29; `@codecopenflow` and `@peaq` appear as platform supporters on its official profile and its development history. These are **platform-specific signals**. No matching Solana/Raydium first-party SXTH endorsement was found in the inspected public results; absence from a partial search is NOT proof of absolutely zero interaction.
+- Sixth Sense Labs has **one-sided public promotion**: SXTH official X quotes Machine.fun platform launch, owner Todd of linked official Telegram said `To our knowledge we will be the first!`. No matching `@machinedotfun` official first-launch named roster, first-launch mint, launch-specific accepted creator, or unique contract announcement found after targeted searches `site:x.com/machinedotfun "SXTH"` and `"Sixth"` through 2026-10-28. Hence **potential SXTH first place remains a nonbinding issuer claim**. Do not infer deliberate deception or nonexistent affiliation from asymmetric announcements.
+- `https://machine.fun/` directly renders `Phase 2: FIND THE NEXT UNITREE — LOADING...`. `https://foundry.machine.fun/` defines hardware admission and Foundry support but **does not publish a specific selected listing order** at inspection.
+
+### Refined trading thesis / confirmed separation
+
+1. **Top-level event:** machine.fun platform actually live for permissionless token creation/trading, plus first-party vetted Foundry cohort identity (if released). Platform announcement doesn't guarantee SXTH first.
+2. **Actual debut cohort:** discover real first onchain creator(s), exact quote mint, bonding-curve or Raydium LaunchLab identifier, creation slot and transaction; distinguish multiple simultaneous launch candidates, first timestamp, first traded asset and first graduated LP.
+3. **First success / effective leader:** prioritize a first cohort token that shows **substantive organic unique buyers, independent order flow (exclude creator-linked/bundled wallets), buy/sell balance, 5m/30m/2h volume and holder concentration, depth/slippage, fee and price-impact behavior, and successful graduation or durable tradable liquidity**, rather than merely the first indexed mint or highest mark price. Realized investor ROI requires entry timing and exit quote; no automatic first-token 10x.
+4. **SXTH remains a candidate only:** if it is indeed platform's first with independent demand and safer curve/holder conditions, it may be traded under prior conditional risk budget; if another project becomes the actual leader, do not force the SXTH thesis or silently swap analysis while claiming SXTH launch success. Reassess the actual project separately by the Mission research workflow before making a buy decision.
+5. **Critical pitfalls:** platform endorsement of technology is NOT endorsement of any launched project. Launch order may be concurrent or front-run by a permissionless creator, bots may buy all early curve inventory, no first-launch return distribution is established for a brand-new platform. No reliable PM contract exists to quantify SXTH or actual first launch; no probability assigned.
+6. **Status:** `MACHINE_PLATFORM_LAUNCH_PRIORITY / FIRST_SUCCESSFUL_COIN_UNVERIFIED / SXTH_FIRST_UNCONFIRMED / NO_GO`. This is a **research prioritization only**, NOT new monitoring, automation, push alert, wallet action or authorized trading setup.
+
+---
+
 ## 2026-10-28 machine.fun platform identity and 48-hour launch interpretation
 
 **Question resolved:** platform launchpad vs presale ICO, 48-hour message vs SXTH immediate launch, and independent official/community signals. First-party machine.fun sources + upstream Raydium official LaunchLab docs checked 2026-10-28 Asia/Bangkok. Latest prior direct user-connected X evidence of Oct27 machine.fun 48h and SXTH quote is in next section. **No trade, no automation.**
