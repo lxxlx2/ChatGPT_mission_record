@@ -1,3 +1,23 @@
+# 2026-10-28 — BSC F0 PR229 P1 corrections: anchored recovery semantic + causal ledger proof
+
+- Independent Mac review **REQUEST_CHANGES** on prior `9ee5f138706c45d14be67c0fb6c97d9770c9fb1f`, archived at [PR229 comment](https://github.com/lxxlx2/ChatGPT_mission_record/pull/229#issuecomment-6450211473): 636/636 tests passed but **two P1** proved valid-looking invalid anchored journals were accepted.
+- **P1-1 closed in code pending independent re-review:** `SETTLE RPC_RESPONSE` for `ANCHOR` or anchored `BLOCK` only qualifies for raw parent-link proof when `started is True`, `http_status` is integer 200 and content type is `application/json` (optional `; charset` parameter allowed). Reject 503, false send flag or non-JSON despite independently matching RAW+SHA+RID.
+- **P1-2 closed in code pending independent re-review:** after the single `ANCHOR RESERVE_UNKNOWN`, any subsequent `BLOCK` or `HEAD` reservation requires anchor's successful SETTLE already processed and corresponding RAW validated. Duplicate ANCHOR remains separately rejected by original anchor-order guard. A later second identity request is refused. Presend/sender coordinator untouched.
+- Six new negative tests mutate actual saved fake three-slot journals (including *only moving the original anchor SETTLE after child RESERVE*, keeping RAW hashes, RIDs and block parents identical). Normal anchored and legacy unanchored success must remain compatible. Only the original recovery reader and its tests changed beyond this HANDOFF.
+- **No network/RPC, no grant or signing change.** After passing actual fixed-SHA CI and independent Mac review, prioritize real address-source rate qualification under fresh owner-scoped single foreground explicit authorization; no more triple-authority ceremony. `F0_NOT_PASSED / PRODUCTION_NO_GO / NO_RPC / NO_DEPLOY / NO_RESTART / NO_TRADES / NO_BACKGROUND / NO_MERGE`.
+
+---
+
+# 2026-10-28 — BSC F0 SAME-SOURCE ANCHOR: repair ORIGINAL D1 RECOVERY READER (offline only)
+
+- Parent `PR #228` fixed `01d23060469aa66dd5b98e5715aa5553bf3f1768` was independently reviewed on Mac (625/625 PASS; 14 replay cases); see [attributed PR review archive](https://github.com/lxxlx2/ChatGPT_mission_record/pull/228#issuecomment-6449833710). **This next change fixes a real integration gap found by inspecting the next link in the pipeline:** the old `f0_l2_d1_recovery.py` would reject the NEW legitimate `ANCHOR` journal category as `D1_RECOVERY_RESERVE_CATEGORY_INVALID`. Therefore prior PASS was scoped to coordinator/offline code, **not** complete recovery audit.
+- Extend the **same existing read-only recovery** to recognize precisely one `ANCHOR` between the first verified `INITIAL_HEAD` and future `BLOCK`; ensure the exact same RID, height, method, RAW file byte/SHA256, and archived RPC ID. Reconstruct anchor hash and first-child + internal `parentHash` links **from original durable RAW** before accepting contiguous COMMIT; refuse a forged/tampered raw frame even if its journal SHA was updated. An anchor does not count as a future block, valid router control, trader BUY/SELL, real HTTP source qualification or chain finality.
+- Critical failure cases tested on the **existing 3-slot fake coordinator**: correct old ledger now accepted, source-failed anchor remains invalid, anchor-only 3-call receipt not promoted to performance PASS, duplicate/missing anchor journal, changed anchor or child RAW with recomputed SHA, wrong RPC ID/height, missing final COMMIT, first-parent mismatch, old opt-out behavior preserved. No new dispatcher, transaction signer, RPC provider call, registry, production permit, auto monitoring or approval ceremonies.
+- **Next physical milestone:** after independent Mac review of this fixed SHA, complete the single foreground source-launch code review for method/cap/UTC/egress/child exit and request **fresh explicitly scoped user authorization** before any real BSC JSON-RPC. L1 actual feed throughput, watch BUY/SELL, randomized true Router control and +60/300/900 real quotes remain unmeasured.
+- State `F0_NOT_PASSED / PRODUCTION_NO_GO / NO_RPC / NO_DEPLOY / NO_RESTART / NO_TRADES / NO_BACKGROUND / NO_MERGE`.
+
+---
+
 # 2026-10-27 — D1 single original 3-slot coordinator: optional same-source initial HEAD anchor (OFFLINE review pending)
 
 - Parent [PR227](https://github.com/lxxlx2/ChatGPT_mission_record/pull/227#issuecomment-6443135545) at audited `b88ba20f78103e334f0d80c1d38cb241777b5a4b`: independent Mac ARM64 offline 618/618 PASS, 11 replay scenarios, with **no live RPC**. The coordinator now incorporates that **already-reviewed initial-parent concept** using the one existing scheduler, NOT a new sender or consent bureaucracy.
