@@ -56,8 +56,13 @@ def _validate_offline_scope(candidate):
         return dict(_DEFAULT_OFFLINE_SCOPE)
     if (type(candidate) is not dict or
             set(candidate) not in (
-                _OFFLINE_SCOPE_KEYS, _OFFLINE_SCOPE_KEYS | {"post_utc"})):
+                _OFFLINE_SCOPE_KEYS, _OFFLINE_SCOPE_KEYS | {"post_utc"},
+                _OFFLINE_SCOPE_KEYS | {"anchor_initial_head"},
+                _OFFLINE_SCOPE_KEYS | {"anchor_initial_head", "post_utc"})):
         raise ValueError("D1_CHILD_OFFLINE_SCOPE_FIELDS_INVALID")
+    anchored=candidate.get("anchor_initial_head",False)
+    if type(anchored) is not bool:
+        raise ValueError("D1_CHILD_ANCHOR_FLAG_INVALID")
     if "post_utc" in candidate:
         utc = candidate["post_utc"]
         # Presence must imply a complete nested UTC record. An explicit
@@ -77,7 +82,7 @@ def _validate_offline_scope(candidate):
             virtual_clock=lambda: parsed)
     cap = _DEFAULT_OFFLINE_SCOPE
     for name, value in candidate.items():
-        if name == "post_utc":
+        if name in ("post_utc","anchor_initial_head"):
             continue
         low = 0 if name == "max_refreshes" else 1
         if (type(value) is not int or value < low or
@@ -85,6 +90,8 @@ def _validate_offline_scope(candidate):
             raise ValueError("D1_CHILD_OFFLINE_SCOPE_BUDGET_INVALID:" + name)
     if (not 2 <= candidate["max_total"] <=
             candidate["max_blocks"] + candidate["max_refreshes"] + 2
+            + int(anchored)
+            or (anchored and candidate["max_total"] < 3)
             or candidate["max_blocks"] < 1
             or candidate["slots"] != 3
             or not 250 <= candidate["spacing_ms"] <= 5000
@@ -352,7 +359,8 @@ def _offline_child(evidence: Path, registry: Path, grant_id: str,
             window_ms=scope["window_ms"],
             max_block_response_ms=scope["timeout_ms"],
             head_min_poll_age_ms=250,
-            fake_post_utc_window=post_window)
+            fake_post_utc_window=post_window,
+            anchor_initial_head=scope.get("anchor_initial_head",False))
     finally:
         http.client.HTTPSConnection = original_ctor
         socket.create_connection = original_socket
