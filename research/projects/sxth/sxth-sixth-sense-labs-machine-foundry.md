@@ -1,11 +1,42 @@
 # Sixth Sense Labs / Sextus Sensus — SXTH candidate and machine.fun Foundry identity
 
-Updated: 2026-10-09 Asia/Bangkok
+Updated: 2026-10-27 Asia/Bangkok
 Research category: embodied AI / physical-world robot training-data infrastructure; proposed Solana token launch.
-Research status: `PROJECT_IDENTITY_IDENTIFIED / TOKEN_ISSUANCE_UNCONFIRMED / USER_INTENDS_TO_PARTICIPATE`
+Research status: `PROJECT_IDENTITY_IDENTIFIED / SXTH_OFFICIAL_TOKENOMICS_PUBLISHED / SXTH_MINT_AND_ICO_NOT_VERIFIED / USER_INTENDS_TO_PARTICIPATE`
 Action: `WATCH`, `NO_BUY_UNTIL_OFFICIAL_LAUNCH_AND_LIQUIDITY_VERIFIED`.
 Authority: `crypto-300-profit-mission/PROJECT_ANALYSIS_FRAMEWORK.md`, `PROJECT_ANALYSIS_EVIDENCE_WORKFLOW.md`, `token_trading_principles.md`.
 Trading/monitoring: `PRODUCTION_TRADING=NO_GO`; no capital committed or monitoring task created by this note.
+
+## 2026-10-27 official tokenomics, RaaS record and ICO/PM recheck
+
+**Decision: WATCH; no officially verifiable live SXTH ICO/TGE, sale URL, launch date, allocation price, hard cap, accepted raise, mainnet SPL mint or DEX liquidity at time of review.** This dated observation supersedes the 2026-10-09 claim of unconfirmed *published* tokenomics, but does **not** upgrade a website-issued plan to a proven deployed onchain token.
+
+### Official first-party tokenomics now published
+
+- Primary https://sixthsenselabs.xyz/Tokenomics ; current issuer **proposal**: fixed hard cap 1,000,000,000 SXTH; treasury 300m (30%), team 250m (25%), community 200m (20%), marketing 150m (15%), liquidity/listing 100m (10%). These allocations now have first-party documentation; earlier Grok-derived percentages are corroborated as **issuer assertion**, not onchain-confirmed balances.
+- Plan at TGE: marketing 22.5m released for circulation; liquidity 70m planned for DEX pool; 30m unused listing reserve subject to subsequent vesting. Total **potential unlocked/LP inventory is 92.5m (9.25% of fully diluted supply)**, but **70m LP inventory is not automatically seller-owned freely circulating supply**. Team/treasury/community have zero scheduled first-six-month releases; months 7–18 linear release, DEX LP unlock mentioned at month 12. Verify actual lock contracts once mint/LP exist.
+- Site says monthly real product/fee revenue allocation: **50% buyback, 25% treasury, 15% marketing, 10% operations**. Of tokens actually bought, **70% burn / 30% bond**. This is a **program proposal**, not established cash revenue, actual onchain buybacks or minted burn events. Website's $100k/month revenue slider is an **illustrative what-if**, NOT achieved sales or claimed revenue.
+- **Missing key buyer economics:** no stand-alone public-sale allocation in this five-bucket table, no sale contract, ICO token price, investor lockup or hard cap, and no primary documentation tying a live SXTH listing to machine.fun.
+
+### Business reality: more evidence than Oct 09, but no paid sales confirmed
+
+- Main project https://sixthsenselabs.xyz/ now links https://sixthsenselabs.xyz/RaaS ; RaaS currently advertises Booster K1 humanoid rentals by the hour against Solana USDC via Phantom, with operator-run and remote-view sessions; teleoperation "coming soon". The page's booking date/time widget displayed `Failed to fetch` in the read-only web response; no check-out test, wallet access or payment performed.
+- Primary machine record https://machines.peaq.xyz/machine/72070072199752035588865179268289351973289970295321663729669764070389137395940 identifies Booster K1, machine DID `did:peaq:72070072199752035588865179268289351973289970295321663729669764070389137395940`, Solana owner `2xaFTukaVvsp3eyPbPFtm76HGC1dX4U5kjgWWrNpAphq`, Solana machine account `C3iHPJ1T7kJ9bitqcPN6u33ferq1mv1y6hbe9c5mitY5`, Basic bond 4.73 PEAQ, activation **2026-10-12**. The public peaq record exposes onboarding events and a Solana transaction: https://solscan.io/tx/4LtnoUVPKNwg2e3TiRHMVvgxnKumKVMcmH6aXLAofkkK4EfWzixTJmS2ju6VjXfQMEYGaNr4HC3Z3wZ1s6FPU2B2 . This corroborates **onchain machine registration/record existence only**, not real customer rental, operation hour count or business revenue.
+- https://sixthsenselabs.xyz/Modulus describes a ceiling multi-camera/LiDAR capture instrument, with "book a capture cell" sales lead; neither installed customer units, bookings, revenues nor dataset sales verified.
+- **Revenue, paid users, completed rentals, USDC transactions attributable to verified customer bookings, unit economics, DAU/retention, external financing, staff and audited audited operating cash flow = UNVERIFIED.** Keep operational-account registration separate from actual product income. Stage: multiple first-party working-looking product pages + onchain machine identity, **not proven commercial scale**.
+
+### Token-sale / PM verification
+
+- machine.fun main https://machine.fun/ still displays **Phase 1 hardware founder applications**, Phase 2 `FIND THE NEXT UNITREE — LOADING…`. Its https://foundry.machine.fun/ is a **free application for hardware founders** and physical manufacturing assistance, not a token-sale deposit or SXTH allocation. No current SXTH-specific listing on these pages.
+- Checked 2026-10-27 public search of first-party issuer site, litepaper, machine.fun and indexed X; X full account feed was blocked in the available web reader. Could not independently confirm that some inaccessible newest social post had announced future sale, so do NOT assert there is definitively none.
+- Mandatory project-specific PM searched by `SXTH`, `Sextus Sensus`, `Sixth Sense Labs`, launch, FDV, raise and IPO on publicly accessible/indexed **Polymarket, Kalshi, Limitless and Predict.fun**. **No verifiable SXTH-specific live contract, price, probability, resolution terms or liquidity located**. State `未检索到可验证的项目专属 PM 市场`; does not prove absence on unindexed/private venues or that there is zero market expectation.
+- A separate DexScreener `gSense` pool named "Sixth Sense Labs" is **NOT issuer-verified SXTH mint** and must not be presented as official or usable sale access.
+
+**Next material gate:** a first-party signed SXTH token sale URL and Solana mint, actual project-specific launch config and price/accepted cap, initial liquidity and lock proof, then verify real paid rentals/USDC inflows. No wallet transactions or new alerts/monitoring were created.
+
+---
+
+## Historical 2026-10-09 snapshot (superseded where updated above)
 
 ## Canonical identity and first-party sources
 
