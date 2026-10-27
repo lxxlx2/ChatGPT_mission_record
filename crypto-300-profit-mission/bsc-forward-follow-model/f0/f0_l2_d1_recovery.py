@@ -98,6 +98,15 @@ def reconcile_saved_attempts(root):
             check(type(rid) is int and rid == last_id+1,
                   "D1_RECOVERY_NONMONOTONIC_ID")
             last_id=rid
+            if anchor_id is not None:
+                # The real coordinator cannot reserve any next future
+                # BLOCK or refreshed HEAD until the anchor has SETTLED
+                # successfully AND its archived RAW has been validated.
+                # Reordering only SETTLE, without touching bytes/RIDs,
+                # must never pass the independent ledger recovery audit.
+                check(row.get("category") in ("BLOCK","HEAD")
+                      and anchor_id in settled and anchor_hash is not None,
+                      "D1_RECOVERY_PREMATURE_AFTER_ANCHOR_RESERVATION")
             check(row.get("category") in ("CHAIN","HEAD","INITIAL_HEAD","ANCHOR","BLOCK")
                   and row.get("method") in
                   ("eth_chainId","eth_blockNumber","eth_getBlockByNumber"),
@@ -140,6 +149,21 @@ def reconcile_saved_attempts(root):
                   row.get("height")==reserved[rid].get("height") and
                   row.get("state") in ("RPC_RESPONSE","FAILED","UNKNOWN"),
                   "D1_RECOVERY_SETTLEMENT_MISMATCH")
+            # Unlike a claimed RPC_RESPONSE label, these durable fields
+            # are independent local send / HTTP observations. A successful
+            # anchor or any block under that anchor must agree with them.
+            # Legacy unanchored hand-written recovery fixtures remain
+            # compatible; a new anchored ledger is held to strict proof.
+            if row["state"]=="RPC_RESPONSE" and (
+                    row["category"]=="ANCHOR" or
+                    (row["category"]=="BLOCK" and anchor_id is not None)):
+                ct=row.get("response_content_type")
+                check(row.get("started") is True
+                      and type(row.get("http_status")) is int
+                      and row["http_status"]==200
+                      and type(ct) is str
+                      and ct.split(";",1)[0].strip().lower()=="application/json",
+                      "D1_RECOVERY_ANCHORED_HTTP_SEND_EVIDENCE_CONFLICT")
             filename=row.get("raw_name")
             if filename is not None:
                 check(type(filename) is str and RAWFILE.fullmatch(filename)
