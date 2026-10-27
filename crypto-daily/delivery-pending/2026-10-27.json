@@ -1389,5 +1389,100 @@
       "event_key": "etf:lookonchain-2026-10-26-outflows",
       "reason": "Secondary Lookonchain reported BTC -169.47m and ETH -16.07m but Farside issuer table remains incomplete; source numbers not reconciled; do not assert final flow."
     }
-  ]
+  ],
+  "publisher_reverification": {
+    "checked_at": "2026-10-27T02:23:18.402Z",
+    "source_status": "PARTIAL_SOURCE_GAPS",
+    "sent_prefix_checked": true,
+    "sent_match_count": 0,
+    "seven_day_sent_readbacks_checked": 7,
+    "report_body_unchanged": true,
+    "source_checks": [
+      {
+        "lane": "web_runtime_rce",
+        "url": "https://www.php.net/archive/2026.php",
+        "published_at": "2026-10-26",
+        "result": "official Windows Brotli rebuild confirmed"
+      },
+      {
+        "lane": "web_pki_tls",
+        "url": "https://nodejs.org/en/blog/release/v22.23.4",
+        "published_at": "2026-10-21",
+        "result": "official TLS/Brotli security release checked, prior incident no new material delta"
+      },
+      {
+        "lane": "ai_package_supply_chain",
+        "url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain",
+        "published_at": "2026-10-23",
+        "result": "official compromised release root cause checked, prior delivered no new delta"
+      },
+      {
+        "lane": "cloud_secrets_identity",
+        "url": "https://status.connectwise.com/",
+        "published_at": "2026-10-26",
+        "result": "official restoration remains staged, individual tenant impact unconfirmed"
+      },
+      {
+        "lane": "backend_framework_auth",
+        "url": "https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6",
+        "published_at": "2026-10-19",
+        "result": "official prior Laravel TokenGuard advisory checked, no fresh delta"
+      },
+      {
+        "lane": "security",
+        "url": "https://blog.cloudflare.com/kv-cache-exposure-remediation/",
+        "published_at": "2026-10-26",
+        "result": "official 155 cross-tenant responses disclosure verified"
+      },
+      {
+        "lane": "security",
+        "url": "https://bitquery.io/investigations/bloom-trading-bot-hack",
+        "published_at": "2026-10-26",
+        "result": "Bitquery 48 wallets 9408 SOL 9 traders investigation verified; root cause issuer claim not independently reproduced"
+      },
+      {
+        "lane": "capital_flows",
+        "url": "https://farside.co.uk/btc/",
+        "published_at": "2026-10-26",
+        "result": "IBIT still blank, final daily total not verified"
+      },
+      {
+        "lane": "capital_flows",
+        "url": "https://farside.co.uk/eth/",
+        "published_at": "2026-10-26",
+        "result": "ETHA and ETHB blank, total provisional"
+      },
+      {
+        "lane": "capital_flows",
+        "url": "https://farside.co.uk/sol/",
+        "published_at": "2026-10-26",
+        "result": "Farside SOL daily table checked"
+      },
+      {
+        "lane": "tge",
+        "url": "https://www.binance.com/en/support/announcement/detail/aeab048502ff4d3898bcd872fab0354f",
+        "published_at": "2026-10-26",
+        "result": "official AXIS contest confirmed"
+      },
+      {
+        "lane": "macro",
+        "url": "https://www.anthropic.com/news/s1-sec",
+        "published_at": "2026-10-26",
+        "result": "official S-1 announcement confirmed"
+      },
+      {
+        "lane": "onchain",
+        "url": "https://info.arkm.com/research/strategy-pauses-btc-purchase-bitmine-adds-10k-eth",
+        "published_at": "2026-10-26",
+        "result": "original Arkham analysis verified; underlying SEC and chain TX not independently re-read"
+      }
+    ],
+    "unresolved": [
+      "Binance live API blocked for independent refresh; 08:20 original collector quotes retained",
+      "Original social media X posts for MARA, Balancer, Foundation and Bloom not fully accessible",
+      "Latest issuer-complete ETF totals not yet available",
+      "Coinbase Ritual listing time and direct TXID evidence incomplete",
+      "No fresh original Railway incident delta verified"
+    ]
+  }
 }
