@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-10-26",
-  "status": "OCT26_FULL_REPORT_DELIVERED_AND_ARCHIVED_PARTIAL_SOURCE_GAPS",
-  "note": "2026-10-26 13-section Gmail Sent 1a176097e267ed98 full text/plain readback and exact canonical Git readback PASS; SHA-bound CI editorial QA PASS for manifest 0aeb69d2cf8c2069e8642717b6afed7a0b2985f5. StandX/Ducat original X 403 and whale original TXID unavailable, explicitly PARTIAL; no old incident replay.",
+  "updated_at": "2026-10-27",
+  "status": "OCT27_DELIVERED_AND_ARCHIVED_PARTIAL_SOURCE_GAPS",
+  "note": "2026-10-27 full 13-section 37-item text/plain Gmail Sent 1a17b2d317942c5a readback and exact canonical Git readback PASS, canonical blob 407a25cf17db3f476932759de598d60102b13a85, SHA-bound CI PASS manifest 48d7644dcb6b5cfb3cddb02eef0c24d465330561. Original social/TXID and some ETF issuer data remain SOURCE_GAP; no duplicate mail.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -627,6 +627,244 @@
       "gmail_message_id": "1a176097e267ed98",
       "source_url": "https://docs.bnbchain.org/newl1/",
       "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "binance:tradfi-perps:2026-10-26",
+      "family_key": "binance:tradfi-perps",
+      "material_version": "2026-10-26T06:15:00Z",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/02d204fc963f4f8687599fc22a13d538",
+      "verification": "verified"
+    },
+    {
+      "event_key": "php:windows-brotli-builds:2026-10-26",
+      "family_key": "php:windows-brotli-builds",
+      "material_version": "php-windows-brotli-2026-10-26-build-1",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.php.net/archive/2026.php",
+      "verification": "verified"
+    },
+    {
+      "event_key": "connectwise:cloudbackup:oct26-restoration-not-yet",
+      "family_key": "connectwise:cloudbackup:oct26-restoration-not-yet",
+      "material_version": "connectwise-2026-10-26-1400UTC-not-restored",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.connectwise.com/company/trust/advisories",
+      "verification": "verified"
+    },
+    {
+      "event_key": "foundation:passport:phishing-mail:2026-10-27",
+      "family_key": "foundation:passport:phishing-mail",
+      "material_version": "lookonchain-78780-foundation-23k",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://lookonchain.com/feeds/78780",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "etf:BTC:2026-10-26-incomplete",
+      "family_key": "etf:BTC",
+      "material_version": "farside-2026-10-27-0820-IBIT-BTCW-missing",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://farside.co.uk/btc/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "etf:ETH:2026-10-26-incomplete",
+      "family_key": "etf:ETH",
+      "material_version": "farside-2026-10-27-0820-ETHA-ETHB-missing",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://farside.co.uk/eth/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "etf:SOL:2026-10-26-incomplete",
+      "family_key": "etf:SOL",
+      "material_version": "farside-2026-10-27-0820-VSOL-missing",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://farside.co.uk/sol/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "strategy:btc-no-purchase:2026-10-19-25",
+      "family_key": "strategy:btc-no-purchase",
+      "material_version": "strategy-oct26-8k-no-btc-19-25",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://info.arkm.com/research/strategy-pauses-btc-purchase-bitmine-adds-10k-eth",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "bitmine:eth-add:2026-10-26",
+      "family_key": "bitmine:eth-add",
+      "material_version": "arkham-2026-10-26-bitmine-10452eth",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://info.arkm.com/research/strategy-pauses-btc-purchase-bitmine-adds-10k-eth",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "mara:btc-bitgo-transfer:2026-10-27",
+      "family_key": "mara:btc-bitgo-transfer",
+      "material_version": "lookonchain-78787-1000btc-bitgo",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://lookonchain.com/feeds/78787",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "osmosis:proposal1053:passed:2026-10-26",
+      "family_key": "osmosis:proposal1053:passed",
+      "material_version": "lookonchain-78781-proposal1053",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://lookonchain.com/feeds/78781",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "balancer:unclaimed:2026-10-27",
+      "family_key": "balancer:unclaimed",
+      "material_version": "lookonchain-78783-500k-unclaimed",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://lookonchain.com/feeds/78783",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "binance:axis-alpha-competition:2026-10-26",
+      "family_key": "binance:axis-alpha-competition",
+      "material_version": "2026-10-26T11:00:00Z",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/aeab048502ff4d3898bcd872fab0354f",
+      "verification": "verified"
+    },
+    {
+      "event_key": "macro:us-stocks:2026-10-26",
+      "family_key": "macro:us-stocks",
+      "material_version": "2026-10-26T21:00:00Z",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://apnews.com/article/693ac6c4e67da0332045e66804780be7",
+      "verification": "verified"
+    },
+    {
+      "event_key": "macro:anthropic-ipo:2026-10-26",
+      "family_key": "macro:anthropic-ipo",
+      "material_version": "SEC-S1-2026-10-26-ANT-no-offering-price",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.anthropic.com/news/s1-sec",
+      "verification": "verified"
+    },
+    {
+      "event_key": "fomc:oct27-28:calendar",
+      "family_key": "fomc:oct27-28:calendar",
+      "material_version": "fomc-2026-10-27-28-upcoming",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "verification": "verified"
+    },
+    {
+      "event_key": "strategy:shareholder-vote:2026-10-28",
+      "family_key": "strategy:shareholder-vote",
+      "material_version": "2026-10-26T17:45:00Z",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://info.arkm.com/research/strategy-pauses-btc-purchase-bitmine-adds-10k-eth",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "security:cloudflare:workers-ai-glm53-kv-cache-cross-tenant:2026-10-26",
+      "family_key": "security:cloudflare:workers-ai-glm53-kv-cache-cross-tenant",
+      "material_version": "official-disclosure-2026-10-26-155-responses",
+      "aliases": [
+        "GLM-5.3跨租户"
+      ],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://blog.cloudflare.com/kv-cache-exposure-remediation/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "security:bloomtrading:sol-wallet-drain:2026-10-26",
+      "family_key": "security:bloomtrading:sol-wallet-drain",
+      "material_version": "bitquery-2026-10-26-9408sol-48wallets-94sec",
+      "aliases": [
+        "BloomTrading Solana交易机器人重大钱包损失"
+      ],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.bitquery.io/investigations/bloom-trading-bot-hack",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "ritual:mainnet-coinbase-price-page:2026-10-27",
+      "family_key": "ritual:mainnet-coinbase-price-page",
+      "material_version": "coinbase-price-page-available-2026-10-27-0822",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.coinbase.com/price/ritual",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "onchain:hype:coinbase-deposit:2026-10-26:494310",
+      "family_key": "onchain:hype:coinbase-deposit",
+      "material_version": "lookonchain-feed-78602-three-attributed-wallets",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://lookonchain.com/feeds/78602",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "binance:brazil-local-products-effective:2026-10-27",
+      "family_key": "binance:brazil-local-products-effective",
+      "material_version": "official-2026-10-08-notice-effective-2026-10-27",
+      "aliases": [
+        "Binance巴西官方10月8日公告"
+      ],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.binance.com/pt-BR/support/faq/detail/d79576b30c8240118a043129e0c21398",
+      "verification": "verified_official_portuguese"
+    },
+    {
+      "event_key": "bybit:network-deposit-withdrawal-sunset:2026-11-06",
+      "family_key": "bybit:network-deposit-withdrawal-sunset",
+      "material_version": "bybit-official-2026-10-23-effective-2026-11-06",
+      "aliases": [
+        "Bybit官方10月23日公告"
+      ],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://announcements.bybit.com/en/article/bybit-to-end-token-deposits-and-withdrawals-via-select-networks-nov-6-2026--art808530fb81de/",
+      "verification": "verified"
     }
   ],
   "open_missed_candidates": []
