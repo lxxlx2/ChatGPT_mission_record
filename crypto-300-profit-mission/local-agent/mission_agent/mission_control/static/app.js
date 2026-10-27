@@ -652,7 +652,8 @@ function verifiedF01SourceView(doc, candidates, now=Date.now()/1000) {
       !Array.isArray(doc.eligible) || doc.eligible.length !== 0 ||
       doc.eligible_count !== 0 || !Array.isArray(candidates)) return null;
   const key = row => JSON.stringify([row.person_id,row.mint,row.episode_id,
-    row.source_signal_id,row.latest_signature,row.latest_buy_at,row.latest_at,row.latest_side]);
+    row.source_signal_id,row.latest_signature,row.latest_buy_at,row.latest_at,row.latest_side,
+    row.position_state,row.pattern,row.decision,row.candidate_source]);
   const actual = new Map();
   for (const row of candidates) {
     if (!row || typeof row !== 'object') return null;
@@ -681,7 +682,7 @@ function renderF01History(rows) {
       <span>最近动作：${esc(translated(sideLabel,x.latest_side,'未知'))} · ${esc(age(x.latest_at))}</span>
     </div>
     <div class="ended-ca"><code>${esc(x.mint || '未知')}</code>${copyButton(x.mint,'复制 CA')}</div>
-    <div class="ended-note">${esc(reasonFor(x))} 本行不可当作当前跟单资格。</div>
+    <div class="ended-note">历史模型判断：${esc(translated(decisionLabel,x.decision,'未评估'))}；历史说明（不代表当前）：${esc(reasonFor(x))} 本行不可当作当前跟单资格。</div>
   </div>`).join('') || '<div class="empty">本次没有历史候选；钱包活动账本仍独立可查。</div>';
   $('f01-history-count').textContent = rows.length;
 }
