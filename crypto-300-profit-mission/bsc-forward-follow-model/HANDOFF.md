@@ -1,3 +1,13 @@
+# 2026-10-27 — BSC F0 real saved60 input source-rate gate (OFFLINE CODE, review pending)
+
+- Parent: user-approved simplification [PR224](https://github.com/lxxlx2/ChatGPT_mission_record/pull/224) exact `a7fc66ad9601f1bafe7a76a67276cd5c6a1527d6`: 3-human D2/D3 signature architecture no longer mandatory for bounded public-data read-only research, **NO A8 physical RPC permission**. This new increment adds substantive **no-network analysis code**, not another authorization platform.
+- **New** `f0/f0_l1_saved_source_rate_gate.py` + its test suite, deriving an honest source-capacity/coverage fail-closed gate from byte-pinned saved real 2026-10-20 short60 **public redacted summary** blob `ce1d9cb9e19e12e291da1b3e3406f57d6958ad54`. The tool does **not** access private RAW or independently reverify original 62 files. 59 block *intervals*, 26s header timestamps, 58.979s local receipt span: observed sample progress ~2.269 blocks/s versus receive ~1.000 blocks/s; the rate ratio is ~2.268x. This proves only the **old serial sample path** was slower than the header span in that window; not actual independent chain head lag or capacity of the already reviewed concurrent 3-slot source.
+- Gate refuses to claim full parent continuity (first saved block's parent unanchored; prior `REQUEST_CHANGES` preserved), validated Router swaps or randomized control from 40 address/selector hits, or watch success from 0 watched signer hits. Actual +60/+300/+900 quotes, E3 events and follow profitability remain **NOT MEASURED**; `F0_NOT_PASSED`.
+- Next objective remains a new *explicitly separately authorized*, exact-SHA independently audited, bounded one-shot **read-only** L1 source qualification: source HEAD timeline and parent anchor, honest missing heights and watch/Router event denominators, receipt-based swap causality under a separately reviewed method allowance. Then stage L2 actual quoted control/follow delays. No extra key signatures required; no new RPC or WS in this increment.
+- Status `OFFLINE_CODE_REVIEW_PENDING / NO_DEPLOY / NO_RESTART / NO_RPC / NO_TRADES / NO_BACKGROUND / NO_MERGE`.
+
+---
+
 # 2026-10-27 — USER DECISION: stop three-party D2/D3 signing project for bounded BSC read-only address research
 
 - User explicitly agreed the three-human Ed25519 signing/independent operator enrollment infrastructure is unnecessary for **public BSC read-only F0**. **The A1–A5 multi-party production-signature path in prior Draft PRs #217/#219/#221/#223 is historical/optional only, no longer a mandatory prerequisite for this research.** The reviewed code at PR217 remains physically `send_live`-disabled and unchanged; no old approval becomes a real run grant. The new user-policy record is `f0/F0_READONLY_OWNER_CONSENT_SCOPE_DECISION_20261027.md`.
