@@ -113,7 +113,7 @@ class AnchoredForegroundChildTests(unittest.TestCase):
                 registry,evidence,
                 grant_id="d1-anchored-hang-test-003",
                 permit_sha256="d"*64,
-                offline_scope=scoped(),
+                offline_scope=dict(scoped(),window_ms=1000),
                 scenario="hang_after_reserve",
                 hard_seconds=2.0)
             self.assertEqual(r["state"],"HARD_STOP_KILLED_NO_RETRY")
