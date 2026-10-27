@@ -25,6 +25,7 @@ from .delivery_review import summarize_manual_reviews
 from .frank import FrankReader
 from .intelligence_preview import analyze_rows
 from .frank_activity_watch import summarize_activity
+from .f01_source_view import partition_source_only
 from .payment_evidence import latest_buy_payment_evidence
 from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
@@ -816,6 +817,29 @@ class DashboardState:
         candidates.sort(key=lambda x:int(x.get("latest_at") or 0),reverse=True)
         return candidates
 
+    def follow_opportunities(self):
+        """Source-only F01 facts; deliberately no quote, approval, or LIVE delivery."""
+        try:
+            now = time.time()
+            candidates = self.candidates()
+            runtime = self.frank.runtime()
+            if not isinstance(runtime, dict):
+                raise ValueError("F01_INVALID_RUNTIME")
+            return partition_source_only(
+                candidates, now=now, runtime_status=runtime.get("status"))
+        except (OSError, ValueError, TypeError, KeyError, sqlite3.DatabaseError):
+            return {
+                "schema_version": 2,
+                "scope": "FRANK_LOCAL_INDEX_SOURCE_ONLY_NO_EXECUTION_QUOTE",
+                "status": "SOURCE_UNAVAILABLE", "source_recent": None,
+                "source_recent_count": None, "not_followed": None,
+                "excluded_count": None, "eligible": [],
+                "eligible_count": 0, "full_chain_verified": False,
+                "current_balance_verified": False,
+                "execution_eligibility": "NOT_ASSESSED",
+                "live_notification_authorized": False,
+            }
+
     def frank_intelligence(self):
         """Source-only amount-free research observations. No price fetch/sender."""
         observed_at = time.time()
@@ -1017,6 +1041,10 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.state.mission_control_health())
         if path == "/api/candidates":
             return self._json(self.state.candidates())
+        if path == "/api/follow-opportunities":
+            if urlparse(self.path).query:
+                return self._json({"error": "UNSUPPORTED_F01_QUERY"}, 400)
+            return self._json(self.state.follow_opportunities())
         if path == "/api/frank-intelligence":
             if urlparse(self.path).query:
                 return self._json({"error": "UNSUPPORTED_INTELLIGENCE_QUERY"}, 400)
