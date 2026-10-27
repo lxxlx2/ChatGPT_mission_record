@@ -7,6 +7,20 @@ Action: `WATCH`, `NO_BUY_UNTIL_OFFICIAL_LAUNCH_AND_LIQUIDITY_VERIFIED`.
 Authority: `crypto-300-profit-mission/PROJECT_ANALYSIS_FRAMEWORK.md`, `PROJECT_ANALYSIS_EVIDENCE_WORKFLOW.md`, `token_trading_principles.md`.
 Trading/monitoring: `PRODUCTION_TRADING=NO_GO`; no capital committed or monitoring task created by this note.
 
+## 2026-10-27 verified official X announcements and Telegram access boundary
+
+**Source method:** 2026-10-27 read-only of the user's **live, logged-in browser tab** on `https://x.com/Sextus_Sensus`, using the browser's rendered DOM, plus user-supplied Oct 27 screenshots. This is stronger than a web search snippet and confirms the displayed account posts, not any private Telegram messages.
+
+- **Official Telegram link:** 2026-10-15 original issuer X post `https://x.com/Sextus_Sensus/status/2110735046340468988` explicitly: `After tons of requests our Telegram community is now open. This is the only and official telegram!` It links `https://t.co/p5eQhgys0t` with an X preview titled `Sixth Sense Labs Community`. **The shortlink could not be resolved by available public tools; group permalink, participant count and message history NOT_VERIFIED.** Do not falsely claim reading the chat, and do not fabricate Telegram quotes. The project source vouches for the link, subject to freshness.
+- **Explicit fake SXTH warning:** On 2026-10-20 original first-party `https://x.com/Sextus_Sensus/status/2112557952897077553`, the issuer warned: `A fake $SXTH token has appeared on @Raydium claiming to be us. We have not launched any token. This is not legitimate. Do not buy or interact with it. We'll only ever announce an official launch from this account.` This **direct issuer announcement** is material to token canonical identity; confirmed official claim as of Oct20, but not proof that no later issuer deployment occurred.
+- **Fresh 2026-10-27 teaser:** Official pinned `https://x.com/Sextus_Sensus/status/2114825308046340135`: `The Machines are coming!` with **11-second prerecorded countdown video**. User screenshot shows frame `T-41:49:54`, but the video is prerecorded, **not an anchored live block timestamp**. A public reply guessed `29th 2 pm UTC?` = October 29 **21:00 Bangkok** if correct, **unconfirmed by issuer**. Do not interpret countdown alone as token sale, fixed launch day or a guaranteed mint time.
+- **Current sale outcome from checked public first-party sources remains** `TGE/ICO_DATE_UNCONFIRMED / OFFICIAL_SXTH_MINT_UNCONFIRMED / PUBLIC_PRICE_UNCONFIRMED`. Future issuer announcement must be verified on original X + canonical official mint/launch transaction before considering a trade. `machine.fun` may be partner/tag but an account tag does not verify an issuance date.
+- **Telegram verification:** We located the official source post but did **not** actually access or review individual Telegram messages. Public search on `t.me` and Telegram directories produced no reliable indexed matching chat; the short URL was blocked in public web tools. If an authenticated group tab becomes accessible in the user's connected browser, read its on-screen messages read-only, separate admin statements versus participant claims, and then reassess.
+
+This incremental record changes only fact provenance, fake-token risk and official-community discovery; it does not authorize new scheduled monitoring, wallet actions, token transfers, or production trades.
+
+---
+
 ## 2026-10-27 official tokenomics, RaaS record and ICO/PM recheck
 
 **Decision: WATCH; no officially verifiable live SXTH ICO/TGE, sale URL, launch date, allocation price, hard cap, accepted raise, mainnet SPL mint or DEX liquidity at time of review.** This dated observation supersedes the 2026-10-09 claim of unconfirmed *published* tokenomics, but does **not** upgrade a website-issued plan to a proven deployed onchain token.
