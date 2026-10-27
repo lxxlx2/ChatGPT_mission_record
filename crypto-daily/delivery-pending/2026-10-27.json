@@ -837,7 +837,319 @@
       ]
     }
   ],
-  "previous_events": [],
+  "previous_events": [
+    {
+      "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
+      "material_version": "incident_reported_2026-10-20_v1",
+      "delivered_date": "2026-10-20"
+    },
+    {
+      "event_key": "cysic:bridge_mint_exploit:2026-10-17",
+      "material_version": "incident_reported_2026-10-20_v1",
+      "delivered_date": "2026-10-20"
+    },
+    {
+      "event_key": "jpm:jpm-coin-ethereum-expansion:2026-10-19",
+      "material_version": "issuer_launch_2026-10-19",
+      "delivered_date": "2026-10-20"
+    },
+    {
+      "event_key": "btc:clifton-collins:2026-10-20:tranche-5",
+      "material_version": "tx:eb0bde50049e924590a1812af2d2699c13d513415d3f03bbe3d10f316b3d6756",
+      "delivered_date": "2026-10-21",
+      "gmail_message_id": "1a15c6d25715d6ca"
+    },
+    {
+      "event_key": "php:php2shell:2026-10-21",
+      "material_version": "cve-2026-109618-109619:fix-2026-10-21",
+      "delivered_date": "2026-10-22",
+      "gmail_message_id": "1a16279bdb00ea34"
+    },
+    {
+      "event_key": "pki:emudhra:2026-10-20",
+      "material_version": "8_intermediate_ca_keys_exposed:removal-2026-10-20",
+      "delivered_date": "2026-10-22",
+      "gmail_message_id": "1a16279bdb00ea34"
+    },
+    {
+      "event_key": "security:litellm:2026-10-21:poisoned-1.107.0",
+      "material_version": "obs-2026-10-23",
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4"
+    },
+    {
+      "event_key": "security:railway:2026-10-21:env-secrets",
+      "material_version": "obs-2026-10-23",
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4"
+    },
+    {
+      "event_key": "security:connectwise:2026-10-21:microsoft-art-ex",
+      "material_version": "obs-2026-10-23",
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4"
+    },
+    {
+      "event_key": "security:node:2026-10-21:patch-train",
+      "material_version": "obs-2026-10-23",
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4"
+    },
+    {
+      "event_key": "security:laravel:2026-10-19:tokenguard",
+      "material_version": "obs-2026-10-23",
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4"
+    },
+    {
+      "event_key": "litellm:root-cause:2026-10-23",
+      "material_version": "official-2026-10-23-root-cause",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "railway:preliminary-impact:2026-10-22",
+      "material_version": "official-2026-10-22-preliminary-1.85pct",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "emudhra:tls-exit:2026-10-22",
+      "material_version": "official-2026-10-22-global-tls-exit",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "etf:btc:2026-10-22",
+      "material_version": "us-session-2026-10-22-final",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "bitget:usdc-bsc-withdrawal-pause:2026-10-24",
+      "material_version": "official-suspend-2026-10-24-0047-utc8",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "php:session-upload:2026-10-23",
+      "material_version": "php-official-2026-10-23-cve-2026-115560",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "binance:alpha-removal:2026-10-23",
+      "material_version": "alpha-removal-2026-10-23",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "neosoul:dna:kraken-listing:2026-10-22",
+      "material_version": "kraken-official-post-2026-10-22",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "policy:sec:fy2027-exam-priorities:2026-10-23",
+      "material_version": "sec-2026-109-fy2027-exam",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "tge:extended:xten:2026-10-23-announcement",
+      "material_version": "official-telegram-visible-2026-10-23-time-gap",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "security:initia:2026-10-23:halt-reported",
+      "material_version": "secondary-halt-official-status-operational-source-gap",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "security:connectwise:2026-10-23:recovery-update",
+      "material_version": "connectwise-official-2026-10-23T1400Z-restoration-forecast",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "etf:eth:2026-10-22",
+      "material_version": "us-session-2026-10-22-final",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "etf:sol:2026-10-22",
+      "material_version": "us-session-2026-10-22-final",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "macro:us-close:2026-10-23",
+      "material_version": "us-session-2026-10-23",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "macro:brent-oil:2026-10-23",
+      "material_version": "brent-close-2026-10-23",
+      "delivered_date": "2026-10-24"
+    },
+    {
+      "event_key": "x100:governance:2026-10-24",
+      "material_version": "2026-10-24T14:49:33Z",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "keystone:shopify:2026-10-24",
+      "material_version": "2026-10-24 (official post exact minute unavailable)",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "railway:revoked-replacement-keys:2026-10-24",
+      "material_version": "railway-status-2026-10-24T13:57Z",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "connectwise:cloud-backup:2026-10-24",
+      "material_version": "connectwise-2026-10-24T14Z-oct26-target",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "hsbc:redcoin:payme:2026-10-23",
+      "material_version": "hsbc-official-launch-2026-10-23",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "zeabur:shutdown:2026-10-17",
+      "material_version": "zeabur-official-2026-10-17-shutdown",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "zeabur:cloud-secrets:2026-10-19",
+      "material_version": "zeabur-official-preliminary-2026-10-19",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "circle:gateway:cirbtc-eurc:2026-10-23",
+      "material_version": "circle-official-2026-10-23-cirbtc-eurc",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "okxice:tokenized-stock-objections:2026-10-23",
+      "material_version": "reuters-2026-10-23-22-objections",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "bitget:usdc-bsc:resumed:2026-10-24",
+      "material_version": "bitget-official-2026-10-24-0324",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "arkham:drift:tornado:2026-10-22",
+      "material_version": "arkham-2026-10-22-122.3m",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "lookonchain:eth-whale:2026-10-24",
+      "material_version": "lookonchain-93184-eth",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "electrum:4.8.3:security:2026-10-23",
+      "material_version": "electrum-release-4.8.3",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "macro:iran-diplomatic-staffing:2026-10-24",
+      "material_version": "reuters-ap-oct24",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "etf:BTC:2026-10-23-partial",
+      "material_version": "farside-2026-10-23-partial-HODL",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "etf:ETH:2026-10-23-partial",
+      "material_version": "farside-2026-10-23-partial-ETHV",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "etf:SOL:2026-10-23-partial",
+      "material_version": "farside-2026-10-23-partial-VSOL",
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41"
+    },
+    {
+      "event_key": "blast:ui-withdrawal-cutoff:2026-10-26",
+      "material_version": "2026-10-26-official-live-bridge-ui",
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98"
+    },
+    {
+      "event_key": "binance:predict-perp:2026-10-25",
+      "material_version": "binance-predict-2026-10-25-0815UTC",
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98"
+    },
+    {
+      "event_key": "onchain:wld-aave:2026-10-26",
+      "material_version": "lookonchain-78592",
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98"
+    },
+    {
+      "event_key": "onchain:hayes-usdc:2026-10-26",
+      "material_version": "lookonchain-78582",
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98"
+    },
+    {
+      "event_key": "ethereum:hoodi-postponed:2026-10-22",
+      "material_version": "ethereum-official-hoodi-delay-2026-10-22",
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98"
+    },
+    {
+      "event_key": "hyperliquid:eqx-equities:2026-10-26",
+      "material_version": "lookonchain-78573",
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98"
+    },
+    {
+      "event_key": "standx:dusd-checker:2026-10-26",
+      "material_version": "standx-2026-10-26-checker-secondary",
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98"
+    },
+    {
+      "event_key": "ducat:redemption-shutdown:2026-10-26",
+      "material_version": "ducat-2026-10-26-shutdown-secondary",
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98"
+    },
+    {
+      "event_key": "ethereum:acdt102:2026-10-26",
+      "material_version": "ethereum-pm-2281-oct26",
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98"
+    },
+    {
+      "event_key": "connectwise:update-due:2026-10-26",
+      "material_version": "connectwise-oct25-update-oct26-next",
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98"
+    },
+    {
+      "event_key": "bnbchain:newl1-devnet-docs:2026-10-26",
+      "material_version": "official-docs-checked-2026-10-26-devnet-no-public-endpoint",
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98"
+    }
+  ],
   "collector_history": {
     "status": "UNVERIFIED",
     "reason": "GitHub connector fetch_file confirms runs/2026-10-27 directory exists but has no directory listing action; date search returned no indexed filenames, so prior 00:20/03:20/06:20 final receipt inventory could not be verified. Must resolve before full QA."
