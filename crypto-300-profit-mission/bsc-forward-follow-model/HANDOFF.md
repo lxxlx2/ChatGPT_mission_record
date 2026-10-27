@@ -1,3 +1,13 @@
+# 2026-10-28 — BSC F0 PR229 P1 corrections: anchored recovery semantic + causal ledger proof
+
+- Independent Mac review **REQUEST_CHANGES** on prior `9ee5f138706c45d14be67c0fb6c97d9770c9fb1f`, archived at [PR229 comment](https://github.com/lxxlx2/ChatGPT_mission_record/pull/229#issuecomment-6450211473): 636/636 tests passed but **two P1** proved valid-looking invalid anchored journals were accepted.
+- **P1-1 closed in code pending independent re-review:** `SETTLE RPC_RESPONSE` for `ANCHOR` or anchored `BLOCK` only qualifies for raw parent-link proof when `started is True`, `http_status` is integer 200 and content type is `application/json` (optional `; charset` parameter allowed). Reject 503, false send flag or non-JSON despite independently matching RAW+SHA+RID.
+- **P1-2 closed in code pending independent re-review:** after the single `ANCHOR RESERVE_UNKNOWN`, any subsequent `BLOCK` or `HEAD` reservation requires anchor's successful SETTLE already processed and corresponding RAW validated. Duplicate ANCHOR remains separately rejected by original anchor-order guard. A later second identity request is refused. Presend/sender coordinator untouched.
+- Six new negative tests mutate actual saved fake three-slot journals (including *only moving the original anchor SETTLE after child RESERVE*, keeping RAW hashes, RIDs and block parents identical). Normal anchored and legacy unanchored success must remain compatible. Only the original recovery reader and its tests changed beyond this HANDOFF.
+- **No network/RPC, no grant or signing change.** After passing actual fixed-SHA CI and independent Mac review, prioritize real address-source rate qualification under fresh owner-scoped single foreground explicit authorization; no more triple-authority ceremony. `F0_NOT_PASSED / PRODUCTION_NO_GO / NO_RPC / NO_DEPLOY / NO_RESTART / NO_TRADES / NO_BACKGROUND / NO_MERGE`.
+
+---
+
 # 2026-10-28 — BSC F0 SAME-SOURCE ANCHOR: repair ORIGINAL D1 RECOVERY READER (offline only)
 
 - Parent `PR #228` fixed `01d23060469aa66dd5b98e5715aa5553bf3f1768` was independently reviewed on Mac (625/625 PASS; 14 replay cases); see [attributed PR review archive](https://github.com/lxxlx2/ChatGPT_mission_record/pull/228#issuecomment-6449833710). **This next change fixes a real integration gap found by inspecting the next link in the pipeline:** the old `f0_l2_d1_recovery.py` would reject the NEW legitimate `ANCHOR` journal category as `D1_RECOVERY_RESERVE_CATEGORY_INVALID`. Therefore prior PASS was scoped to coordinator/offline code, **not** complete recovery audit.
