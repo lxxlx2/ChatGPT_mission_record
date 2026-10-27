@@ -1,6 +1,7 @@
 # Crypto Project Analysis Framework
 
-Updated: 2026-09-26
+Updated: 2026-10-27
+ICO execution-priority clarification: user is an experienced participant in MetaDAO and other ICOs; use the single project's measurable business and launch ROI as the default decision frame.
 Scope: ICO / token sale / launchpad / testnet / mainnet / DeFi / perp DEX / infra / RWA / NFT / game / agent competition / early protocol.
 Purpose: provide one reusable research process for future ChatGPT conversations so project analysis is consistent, evidence-driven and auditable.
 
@@ -10,6 +11,17 @@ Related deep-dive authority:
 - `token_trading_principles.md` for token/contract/holder/liquidity analysis.
 - `watchlists/famous-token-launch-radar.md` for discovery.
 - `MISSION_SPEC.md` for Mission-wide policy and execution boundaries.
+
+## 0. User-confirmed ICO analysis priority (2026-10-27)
+
+**Default objective for ICO / curated raise / public token sale research:** estimate the return from paying the public sale price and selling into actual post-TGE liquidity. Prioritize the issuer's verified business metrics, financing and cap, token float/unlocks, expected exit liquidity, market attention, prediction markets, and an evidence-grounded price/FDV and ROI range.
+
+- The user is an experienced ICO participant (including MetaDAO). Skip introductory participation tutorials, KYC/geographic/legal risk screening, and generic explanations of common MetaDAO mechanics unless the user specifically asks. Real contract-enforced eligibility, allocation caps, refunds and irreversible transfer restrictions materially affecting a trade remain in scope.
+- Do **not** treat tokenholder dividends, legal ownership, IP/equity claims, discretionary buybacks, governance rights or other ancillary benefits as required ICO valuation gates. Research any such item only if the user requests it or an **existing, verifiable mechanism materially affects token trading demand, cash flows, dilution or exit liquidity**. Do not presume a benefit exists.
+- Do **not** compare the researched project to the user's previous ICOs, other unrelated projects, or launchpads by default. Keep analysis anchored to the requested project. Only use external peers, industry benchmarks or platform historical ROI when the user asks or when a specific quantitative comparison is essential and explicitly identified; never add comparisons for filler.
+- Perform a **mandatory project-specific prediction-market scan**, including in short/fast-pass reports. If no live relevant market is found after an actual search, state **"未检索到可验证的项目专属 PM 市场（注明平台和检索日期）"**. Do not invent probabilities or import odds from unrelated projects.
+- The central business data must distinguish **verified production metrics / issuer claims / missing data**. Metrics are insufficient if no credible independent source; state what is unverifiable. A speculative ICO ROI scenario is a forecast, never a fact.
+- Existing Mission trading NO_GO, wallet/funding authorizations, and source-integrity rules remain unchanged. Project research does not authorize a trade or automation.
 
 ## 1. Core research principles
 
@@ -165,7 +177,7 @@ Do not infer "investment" from a logo wall, integration, grant, launchpad listin
 
 ## 8. Step 5: product reality and traction
 
-Prefer measurable production evidence.
+**This is the highest-priority substantive section for IPO/ICO initial research.** Start with real operations and revenue before polishing the token narrative. For all metrics record the observation period, source, unit, data grain, and independent verification status.
 
 Depending on project type, collect:
 - TVL;
@@ -186,7 +198,14 @@ Depending on project type, collect:
 - compute capacity;
 - marketplace utilization;
 - retention;
-- growth by week/month.
+- growth by week/month;
+- DAU/WAU/MAU, paying users and activation-to-paid conversion;
+- revenue from paying customers and actually collected fees, separated from GMV/notional volume, incentives and deposits;
+- weekly/monthly growth, retention cohorts, churn and repeat purchase/trade rate;
+- gross margin, payouts/rewards, acquisition/referral expenses, cash burn and runway where observable;
+- trading products: active real funded accounts, simulated versus executed notional, true paid desks, real payout count/USDC transferred, average fee per paying account, net platform revenue and payout-liability coverage.
+
+If the project exposes only demo traffic, historical cumulative simulations, a waitlist, or self-reported user numbers, **do not promote these to paid production business metrics**. Present a compact `metric / period / value / first-party or chain evidence / verification status` table; leave unknown entries explicitly unverified.
 
 For every metric, ask:
 - production or testnet?
@@ -198,7 +217,7 @@ For every metric, ask:
 
 Do not use cumulative volume as a substitute for current activity.
 
-## 9. Step 6: tokenomics / ownership / value capture
+## 9. Step 6: tokenomics / float / insider costs / dilution
 
 Record:
 - total supply;
@@ -216,14 +235,17 @@ Record:
 - unlock schedule;
 - vesting contract;
 - emission schedule;
-- burn/buyback/revenue-share mechanics.
+- buyback/burn mechanics **only when explicitly published and verifiably material to trading supply/demand**.
 
 Then answer:
-- what creates demand for the token?
-- what cash flow or protocol value reaches token holders?
-- what part is narrative only?
-- what can create sell pressure?
-- how quickly can circulating supply expand?
+- what is the public buyer's effective cost basis and implied final FDV?
+- what is the real public unlock and effective post-TGE free float?
+- which insider, team, market-maker and early-bid tranches can sell, and when?
+- how quickly can circulating supply expand and how large is the expected sell pressure?
+- what verifiable market demand or catalyst can absorb selling?
+- what exit price, liquidity and sell slippage are needed for the target ROI?
+
+Do not create a default section about equity/dividend/IP/revenue entitlements; those are optional only under Section 0.
 
 For a chain or infrastructure project, check whether value accrues to:
 - a new token;
@@ -290,7 +312,6 @@ For ICO, mint, testnet, points or competition, record exact mechanics:
 - minimum/maximum contribution;
 - currency/chain;
 - wallet requirements;
-- KYC/geography;
 - refund rules;
 - soft cap;
 - hard cap;
@@ -302,57 +323,22 @@ For ICO, mint, testnet, points or competition, record exact mechanics:
 - gas requirements;
 - lockup;
 - referral effects;
-- eligibility;
+- **actual onchain sale eligibility and per-wallet cap**, when relevant to transaction execution;
 - official link.
+
+Do not require routine jurisdiction/KYC/geographical investigation in the investment report. A verified transaction-level gate that directly changes whether an order can execute may be mentioned without a separate legal essay.
 
 If final ICO price depends on total commitments, do not treat the current implied price as locked.
 
 If participation is free or near-free, quantify time/compute/opportunity cost anyway.
 
-## 13. Step 10: launchpad/platform history
+## 13. Step 10: launchpad mechanics relevant to this sale
 
-If a sale uses a launchpad, analyze the platform's prior launches separately.
+For experienced launchpad users, inspect **this specific sale's** currently effective rules: actual accepted commitment versus gross subscriptions, accepted cap, special allocations, time weights, claim, refund, first tradable liquidity and possible allocation concentration. Do not restate elementary platform mechanics or previous unrelated launch performance unless requested. Mark unavailable live configuration UNVERIFIED.
 
-For comparable past launches capture:
-- sale date;
-- raise;
-- contributor count;
-- ICO price;
-- TGE/opening price;
-- first-day market cap;
-- initial FDV;
-- first-week ATH;
-- time to ATH;
-- post-launch drawdown;
-- liquidity;
-- refunds/failures.
+## 14. Step 11: standalone valuation of the researched project
 
-Do not judge a launchpad only by anti-rug mechanics.
-
-A structurally clean launch can still have poor secondary-market ROI.
-
-## 14. Step 11: comparable valuation
-
-Comparables must match the project's stage.
-
-For projects that already launched, use:
-- TGE day;
-- first 24-48h;
-- or earliest reliable public trading data.
-
-Do not use today's mature market cap as the primary comparison for a new launch.
-
-Control for:
-- stage;
-- circulating ratio;
-- product maturity;
-- revenue;
-- users;
-- TVL/AUM;
-- liquidity;
-- financing;
-- exchange distribution;
-- market regime.
+Build scenarios from **this project's** observed operating performance, actual fundraising range, accepted commitments, complete token supply, expected initial float, listing liquidity and probable market demand. No automatic comparison with previous ICOs or unrelated tokens. External stage-matched benchmarks require a specific user request or an identified evidence need and must be labeled as optional context.
 
 For pre-TGE valuation build at least:
 - downside case;
@@ -388,26 +374,18 @@ Useful ratios may include:
 
 If no real mainnet TVL or revenue exists, say so and avoid fake precision.
 
-## 16. Step 13: prediction markets
+## 16. Step 13: mandatory prediction-market scan (PM)
 
-Search for:
-- TGE timing;
-- FDV;
-- valuation thresholds;
-- launch date;
-- regulatory/event outcomes relevant to the project.
+**Required for EVERY project and EVERY initial ICO analysis, including fast-pass. Never omit without stating an actual search limitation.**
 
-For every prediction market record:
-- market;
-- probability;
-- volume;
-- depth/spread when available;
-- resolution criteria;
-- observation time.
+- Search project names, official domains, token symbols with disambiguation, raise title and issuer on **Polymarket, Kalshi, Limitless, Predict.fun, and other relevant active PM venues**. Also inspect any **actual project-specific MetaDAO decision-market** questions, when launched; do not mistake an unrelated token's futarchy/governance market for a forecast of the user's ICO ROI.
+- Prioritize questions directly linked to public-sale profit: gross commitments (note distinct from accepted funds), accepted raise, implied FDV, TGE/listing timing, post-launch FDV or market cap thresholds, exchange listing, price above sale, and launch completion.
+- For each VERIFIED matching PM: give exact question, immutable URL/market ID, venue, live versus resolved status, probability or priced threshold, volume, liquidity/depth/spread, last trade when possible, UTC and Bangkok observation time, resolution source, and any market-rule caveat.
+- Separate `gross committed`, `net accepted`, `final price`, `FDV`, and `realizable exit`; a large subscription amount does not automatically mean a high final accepted valuation. Different thresholds must not be confused with each other.
+- If search finds only another project or a token with the same ticker, exclude it. **If none verified: explicitly list checked venues and timestamp, write "未检索到可验证的项目专属 PM 市场", and do not fabricate a percentage.**
+- Market prices are sentiment/liquidity signals, not verified TGE outcomes. Thin or stale odds require caution. Any assistant probability forecast must be explicitly separate from an observed PM price.
 
-Thin prediction markets are signals, not truth.
-
-Independent markets with overlapping questions can reveal disagreement or timeline uncertainty.
+This section is a required independent evidence gate, not optional material to skip when results are empty.
 
 ## 17. Step 14: social/KOL quality
 
@@ -464,7 +442,7 @@ For an ICO or early token, calculate:
 - expected sell pressure;
 - potential 2x/5x/10x valuation thresholds;
 - required market cap for each multiple;
-- whether those thresholds are plausible versus stage-matched peers.
+- whether these valuations can be supported by this project's own actual business activity and executable exit liquidity.
 
 For a prize/airdrop:
 - estimate token value from plausible TGE market cap;
@@ -496,28 +474,22 @@ For analysis-only conversations, ACTIVE means "track the thesis and facts"; it d
 
 ## 21. Required final output
 
-A serious project review should answer, in this order:
+A serious ICO/project review should answer, in this order:
 
-1. What exactly is the project?
-2. What stage is it really at?
-3. Who is the team and what have they done?
-4. Who funded it and on what terms?
-5. What is already working in production?
-6. What are the real usage / TVL / revenue / user metrics?
-7. What is the token or ownership model?
-8. What is the current/final sale valuation?
-9. What does initial circulating market cap look like?
-10. What are stage-matched TGE comparables?
-11. What is the current liquidity/exit risk?
-12. What does the launchpad/platform's historical performance look like?
-13. What do prediction markets say, if any?
-14. What does social/KOL activity actually look like?
-15. What security or governance risks exist?
-16. What are the main upside catalysts?
-17. What could permanently break the thesis?
-18. What is the scenario valuation range?
-19. What facts remain unknown?
-20. Current state: SKIP / WATCH / SETUP / ACTIVE.
+1. Project identity, official links, specific sale stage, confirmed opening and closing time (Bangkok).
+2. Actual currently working product and stage, with direct Git/contract/deployment evidence.
+3. **Real business evidence**: period-scoped paying users, fee revenue, costs, payouts, volume quality, retention, growth and independent checks, distinctly labeling issuer claims.
+4. Team, historical record, financing and actual investor terms/cost basis.
+5. Sale mechanics: min/max/accepted raise, participant allocations and true final price formula.
+6. Supply, insider allocations, lock/unlock, public float, new issuance and expected sell pressure.
+7. Current or planned DEX/CEX trading venues, launch liquidity, depth and realistic exit slippage.
+8. **Mandatory PM**: real project-specific prediction markets, implied probabilities, time, volume/liquidity and resolution conditions; or checked venues with explicit no-market finding.
+9. Direct chain data, holder/fund movements, source-verified production security conditions and main risk to the capital.
+10. Real social demand and market attention, separating independent interest from paid promotion.
+11. Standalone downside/base/upside public-sale FDV, token price, sale cost, post-TGE exit potential, net ROI and conditions for each case.
+12. Explicit verified gaps and current SKIP / WATCH / SETUP / ACTIVE decision.
+
+Do not insert default separate sections on geographic/KYC/legal barriers, special tokenholder rights, comparative ICO histories, unrelated launchpads, or beginner MetaDAO tutorials. Refer to Section 0 for rare evidence-relevant exceptions.
 
 Avoid a generic conclusion such as "high risk, DYOR." Explain the actual mechanism producing the risk or opportunity.
 
@@ -540,7 +512,8 @@ When time is short:
 - TGE circulation;
 - current/final implied valuation;
 - liquidity;
-- real product metrics.
+- **verified paid business metrics, operating costs and real cash settlements**;
+- **mandatory project-specific PM scan and explicit no-market result where appropriate**.
 
 ### Pass C: deep verification
 Only if A and B remain interesting:
@@ -548,9 +521,8 @@ Only if A and B remain interesting:
 - holder clusters;
 - launch transactions;
 - security/admin;
-- comparable TGE history;
-- launchpad historical ROI;
-- prediction markets;
+- independent business metric verification;
+- PM market rules, volume and liquidity recheck;
 - social graph/KOL;
 - scenario valuation.
 
@@ -598,6 +570,6 @@ When another conversation takes over a project:
 
 The reusable sequence is:
 
-**identity -> stage -> team -> financing -> product reality -> token/value capture -> chain/security -> market/liquidity -> participation mechanics -> launchpad history -> TGE comparables -> prediction markets -> social quality -> consistency checks -> scenario valuation -> decision state.**
+**identity -> verified paying business/production -> team/financing -> sale price and accepted raise -> insider basis/float/unlocks -> liquidity and executable ROI -> mandatory project-specific PM -> source/chain checks -> social-demand quality -> standalone scenarios -> decision state.**
 
 The goal is to find where the market's price differs from the project's verifiable reality, while avoiding false precision and narrative-only conclusions.
