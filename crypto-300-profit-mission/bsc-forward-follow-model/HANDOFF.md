@@ -1,3 +1,13 @@
+# 2026-10-27 — D2/D3 A4-A5 normative-protocol and trusted-foreground-launch DESIGN CANDIDATE (review pending)
+
+- The independent A6 Mac DOCS_ONLY result supplied by the user was archived to [PR221](https://github.com/lxxlx2/ChatGPT_mission_record/pull/221#issuecomment-6436834523): reported 9/9 targeted Mac checks, GitHub Linux 598/598, exact fixed SHA `9c847bb684681b93dc16c206df917d07cb26ef85`. Archiver did not inspect reviewer-local /tmp; A6 remains a **narrowed honest-macOS-user risk acceptance**, not adversarial same-UID replay defense or pilot consent.
+- New successor **DESIGN-ONLY** increment: `f0/F0_D2D3_NORMATIVE_PROTOCOL_TRUSTED_LAUNCH_DESIGN_20261027.md` under a separate child Draft based on approved PR221 SHA. Specifies **candidate** domain-separated D2 user+reviewer and D3 operator exact raw-byte contracts, human ownership/provenance/revocation review, immutable post-enrollment source SHA and external manifest, account-bound original O_EXCL/RID/RAW/three-slot supervised one-shot foreground launcher. This is the actual **A4/A5 missing design gate**, not another marker/signature mock wrapper or operational key enrollment.
+- A1 real user signer, A2 independent actual reviewer, A3 accountable D3 operator, A4 normative protocol **final adoption**, A5 actual Mac/UID/launcher, A7 final code SHA/inventory and specific budget are **UNDECIDED**. The existing PROPOSAL-v1 is not a production signature domain. A6 user choice is reviewed at document scope; ultimate implementation audit remains pending. A8 **NOT AUTHORIZED**.
+- **Next action:** independently review only the design against PR217/219/221. After docs-only approval, prioritize an actual implementation review plan tied to real accountable humans and final code freeze; stop instead of generating redundant synthetic PRs if those independent authorities are still absent.
+- Project is BSC wallet/address forward-follow L1/L2/L3/L4. Immutable `D1_BLOCKED_AUTHORITY / F0_NOT_PASSED / PRODUCTION_NO_GO`; NO_DEPLOY/NO_RESTART/NO_RPC/NO_TRADES/NO_BACKGROUND/NO_MERGE/NO_GMAIL/NO_NEW_AUTOMATION.
+
+---
+
 # 2026-10-27 — BSC forward-follow F0 A6 narrowed trust model USER ACCEPTED; independent decision review PENDING
 
 - The user explicitly accepted the **trusted macOS account / no malicious same-UID actor** assumption solely for a future bounded **read-only** BSC F0 foreground feasibility pilot. This resolves the human choice of A6's **narrowed alternative**, **not** independent security review, durable adversarial replay protection, an A8 trial grant or any production release.
