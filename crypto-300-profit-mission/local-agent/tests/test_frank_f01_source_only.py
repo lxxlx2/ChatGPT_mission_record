@@ -83,10 +83,11 @@ class F01SourceOnlyTests(unittest.TestCase):
         state = server.DashboardState.__new__(server.DashboardState)
         state.frank = SimpleNamespace(runtime=lambda: {"status": "LIVE"})
         state.candidates = lambda: [candidate()]
-        with patch.object(server, "partition_source_only", wraps=partition_source_only) as gate:
+        with patch.object(server.time, "time", return_value=NOW), \
+             patch.object(server, "partition_source_only", wraps=partition_source_only) as gate:
             result = state.follow_opportunities()
         self.assertEqual(gate.call_count, 1)
-        self.assertEqual(result["source_recent_count"], 0)  # NOW is a historical synthetic timestamp
+        self.assertEqual(result["source_recent_count"], 1)
         self.assertEqual(result["eligible_count"], 0)
 
     def test_dashboard_source_failure_is_unknown_not_empty_verified(self):
