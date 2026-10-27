@@ -1,0 +1,867 @@
+{
+  "report_date": "2026-10-27",
+  "timezone": "Asia/Bangkok",
+  "automation_id": "6a8600b9d12481919bc43ebc800c9916",
+  "prebuild_status": "PREBUILD_PARTIAL_COLLECTOR_HISTORY_UNVERIFIED",
+  "ci_status": "CI_NOT_PROVEN",
+  "snapshot_at": "2026-10-27T08:20:04+07:00",
+  "rule_blob_sha": {
+    "pipeline": "5365fb29bb00f20101d4190737468da845b4a0e2",
+    "editorial": "ad3488769052a1cea5dda4bbf7fd6f1f9092046f",
+    "report_spec": "809a5c1cbcd6503d42305c842f37826b74a4741f",
+    "acceptance": "37789b7274aec766e4ac4975111602bccc11a7d2",
+    "collector": "834e0e3c05f5e894f31474a7b4d7fd0e90d8c08f",
+    "security": "86b36f208220e90a52caa1cb8acaeec47add9628",
+    "runbook": "181c0448dddd2586e6082faaa1f51f7556eaa795",
+    "ledger": "e6f42557f880fd30308d82798e7bf3a1cae87875"
+  },
+  "body": "Crypto Daily Brief｜2026-10-27\n预构建快照：Asia/Bangkok 2026-10-27 08:20。BTC/ETH/SOL为Binance官方现货滚动24小时；ETF为美国10月26日已披露发行人暂计，尚有缺列。未回读官方X、链上TXID及个别原始文件时明确ATTRIBUTED/SOURCE_GAP，不能推定个人受影响。\n\n一、今日最重要的5件事\n（1）PHP官方10月26日新发布Windows依赖重建包，修复Brotli越界写入漏洞；仅启用特定cURL自动解压路径的应用受该路径影响，Windows运维需核查带“-1”后缀安装包。\n\n二、BTC/ETH/SOL及主要资产\n（1）BTC/USDT 80244.01 USDT，滚动24小时 +0.353%，高80844.70、低79368.67，该交易对成交额约1,224.54m USDT；Binance官方现货采样 2026-10-27T01:20:01.012Z。单交易所报价非全球加权。\n（2）ETH/USDT 2328.91 USDT，滚动24小时 +0.340%，高2344.72、低2293.09，该交易对成交额约430.91m USDT；Binance官方现货采样 2026-10-27T01:20:02.007Z。单交易所报价非全球加权。\n（3）SOL/USDT 100.87 USDT，滚动24小时 -0.287%，高102.73、低99.88，该交易对成交额约165.99m USDT；Binance官方现货采样 2026-10-27T01:20:00.684Z。单交易所报价非全球加权。\n（4）BNB/USDT 745.25 USDT，滚动24小时 +0.674%，高747.47、低732.45，该交易对成交额约74.78m USDT；Binance官方现货采样 2026-10-27T01:20:01.089Z。单交易所报价非全球加权。\n（5）HYPE/USDT 78.54 USDT，滚动24小时 +2.707%，高80.65、低74.99，该交易对成交额约17.79m USDT；Binance官方现货采样 2026-10-27T01:20:01.621Z。单交易所报价非全球加权。\n\n三、二级市场剧烈波动与持续趋势\n（1）BTC永续标记价80226.31、指数价80255.27 USDT，最近资金费率+0.007690%，单点未平仓95,569.248 BTC；取样约曼谷08:18，缺连续OI及强平数据，不推定净新增多空。\n（2）ETH永续标记价2328.26、指数价2329.32 USDT，最近资金费率+0.000452%，单点未平仓2,359,225.309 ETH；取样约曼谷08:18，缺连续OI及强平数据，不推定净新增多空。\n（3）SOL永续标记价100.87、指数价100.89 USDT，最近资金费率+0.008016%，单点未平仓8,935,866.15 SOL；取样约曼谷08:18，缺连续OI及强平数据，不推定净新增多空。\n（4）Binance官方10月26日06:15 UTC公告新增EIDO、EQT、STM、ABBV四个传统资产标的USDT永续，09:00至09:15 UTC分批开始，最高20倍杠杆且24/7交易；区域资格受限，价格并非对应股票现货交易。\n\n四、监管与政策\n无高置信新增。\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）Farside美国BTC现货ETF 10月26日交易日已披露列暂计0.0百万美元，但IBIT与BTCW仍标“-”；缺列使全市场净流UNVERIFIED，不能说当日零流入或零流出。\n（2）Farside美国ETH现货ETF 10月26日交易日已披露列暂计+16.1百万美元，其中FETH +16.1；ETHA、ETHB仍缺值，不能将该小计当最终全市场净流。\n（3）Farside美国SOL现货ETF 10月26日交易日已披露列暂计-8.2百万美元，BSOL -7.2、MSOL +0.8、GSOL -1.8；VSOL仍缺值，不能推定最终净额。\n（4）Arkham 10月26日研究援引Strategy 8-K：10月19至25日未买卖BTC，持有848,517 BTC，结束连续五周增持；同期回购约207万股STRC、约2.049亿美元。当前仅回读Arkham研究，SEC原8-K附件未单独验签，标记ATTRIBUTED。停买不等于抛售。\n（5）Arkham 10月26日援引Bitmine披露过去一周新增10,452 ETH，总持有约605万ETH，按其估计约占流通量4.95%，其中约522.7万ETH已质押；归因为机构公告，尚未独立逐笔链上复算。\n（6）Lookonchain约曼谷08:00称MARA标记地址约六小时前向BitGo转移1,000 BTC、约8,019万美元，标注可能卖出；本轮未取得TXID和MARA官方公告，属于ATTRIBUTED/UNVERIFIED。转入托管方不等于实际卖出。\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n（1）Lookonchain引述Osmosis治理提案1053称10月26日以91.07%支持率通过停止OSMO通胀发行，开发者每日约30,440 OSMO释放拟暂停，质押收益转向协议收入；Mintscan原投票页仅加载iframe，当前仍需官方链上执行验证。通过投票不等于参数已经生效，标记ATTRIBUTED。\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n（1）Balancer关闭前未领取资产HIGH候选：Lookonchain今晨转述项目称清查发现超过50万美元第三方LP资产及未领奖励，部分机构已获通知；项目X原文HTTP 403，金额和具体账户未独立核实。官方BIP-928明确多数池10月30日转仅提现，提现渠道之后仍开放。只有实际用过Balancer v2/v3者才需从官方界面核对，不能推定个人有资产或点击转发领取链接。\n（2）Binance官方10月26日公告AXIS Alpha交易竞赛，两轮分别为10月26日13:00 UTC至11月2日13:00 UTC、11月2日至9日同一时间；按有效买入量排名，前2,000名各193 AXIS。资格、交易成本与刷量风险必须独立评估，活动不等于无成本空投，也不证明值得参与。\n\n八、Early / Meme / NFT / 新生态热点\n无高置信新增。\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n（1）PHP官方10月26日发布Windows构建8.5.12-1、8.4.27-1、8.3.36-1、8.2.35-1，纳入Brotli 1.2.1修复CVE-2026-111497。PHP Windows下风险可经cURL自动HTTP响应解压触发，该选项默认关闭但库可开启；此为10月26日新包分发状态，区别于此前已报Node/PHP旧公告。未有证据证明用户部署受影响。\n（2）ConnectWise官方10月26日14:00 UTC更新：Cloud Backup仍在准备分阶段伙伴接入，尚未确认此前预计当天开始的现有备份恢复通道已开放；受影响连接继续保持禁用，直至正式指引。官方称备份档案加密隔离且未见受侵迹象；不能推定任一M365租户已被盗。下一更新不迟于10月27日14:00 UTC。\n（3）硬件钱包Passport开发方Foundation事故新线索：Lookonchain约曼谷08:00转述项目称发现超过23,000次钓鱼邮件尝试，并调查旧WooCommerce迁移残留订单数据及新订单资料可能暴露；项目X原文HTTP 403，数量和具体受害者未独立核实，标记ATTRIBUTED/SOURCE_GAP。转述称暂无设备或私钥受侵证据，不能假定用户个人被影响。\n\n十、全球局势与跨市场冲击\n（1）AP公布美国10月26日收盘：标普500涨0.7%至7,676.77，纳指涨0.8%至26,169.38，道指涨0.3%至52,361.58；AI相关股票和财报预期推动反弹，但不能将美股上涨机械等同BTC上涨。\n（2）Reuters10月26日报道Anthropic IPO申报提振AI相关股票情绪，费城半导体指数约涨2.8%；同时大型AI融资与高资本开支仍是跨市场风险。申报文件本轮未直接回读，具体现金流数字不采用二手汇总，标记ATTRIBUTED。\n\n十一、未来24至72小时催化\n（1）美联储官方日程确认10月27至28日FOMC会议，决议尚未公布；本次需关注政策措辞、利率路径及美元/美债收益率反应，不能提前宣称加息或降息。\n（2）Arkham报道Strategy拟于10月28日举行股东投票，议题涉及优先股每日派息机制；这属于公司融资结构催化，未确认结果，不能把它视为BTC当日必须买卖的信号。\n\n十二、持续趋势与跨市场机会观察清单\n（1）Lookonchain转述Wintermute周报称BTC此前连续第三周回落，关注76,000美元支撑与82,500美元上方重新确认；这些是机构分析阈值，非可保证的价格边界。今日Binance 24小时低点79,368.67，若波动放大，应核对连续OI、成交深度和完整ETF数据。\n\n十三、今日行动与风险结论\n（1）10月26日ETF三类基金仍有发行人缺列，永续仅有单点OI；在数据补齐及FOMC决议前，勿将暂计小计或一次托管转账直接解读为机构全面买卖，更不据此加杠杆。\n（2）只有实际维护受影响Windows PHP+cURL自动解压应用时才检查并升级带-1后缀的官方构建；若收到钱包厂商“订单泄露/退款”邮件，手动进入正规官网核对，绝不输入助记词或给陌生网站签名。\n（3）如确实使用过Balancer流动性池，核对旧LP头寸与未领奖励，并以官方提案和手动访问的界面为准；10月30日多数池转仅提现，官方说明之后仍可退出。未核实任何个人资格或余额。",
+  "items": [
+    {
+      "section": 1,
+      "item_number": 1,
+      "event_key": "php:windows-brotli-builds:2026-10-26",
+      "role": "highlight",
+      "text": "PHP官方10月26日新发布Windows依赖重建包，修复Brotli越界写入漏洞；仅启用特定cURL自动解压路径的应用受该路径影响，Windows运维需核查带“-1”后缀安装包。"
+    },
+    {
+      "section": 2,
+      "item_number": 1,
+      "event_key": "spot:BTC:2026-10-27T0120Z",
+      "role": "detail",
+      "text": "BTC/USDT 80244.01 USDT，滚动24小时 +0.353%，高80844.70、低79368.67，该交易对成交额约1,224.54m USDT；Binance官方现货采样 2026-10-27T01:20:01.012Z。单交易所报价非全球加权。"
+    },
+    {
+      "section": 2,
+      "item_number": 2,
+      "event_key": "spot:ETH:2026-10-27T0120Z",
+      "role": "detail",
+      "text": "ETH/USDT 2328.91 USDT，滚动24小时 +0.340%，高2344.72、低2293.09，该交易对成交额约430.91m USDT；Binance官方现货采样 2026-10-27T01:20:02.007Z。单交易所报价非全球加权。"
+    },
+    {
+      "section": 2,
+      "item_number": 3,
+      "event_key": "spot:SOL:2026-10-27T0120Z",
+      "role": "detail",
+      "text": "SOL/USDT 100.87 USDT，滚动24小时 -0.287%，高102.73、低99.88，该交易对成交额约165.99m USDT；Binance官方现货采样 2026-10-27T01:20:00.684Z。单交易所报价非全球加权。"
+    },
+    {
+      "section": 2,
+      "item_number": 4,
+      "event_key": "spot:BNB:2026-10-27T0120Z",
+      "role": "detail",
+      "text": "BNB/USDT 745.25 USDT，滚动24小时 +0.674%，高747.47、低732.45，该交易对成交额约74.78m USDT；Binance官方现货采样 2026-10-27T01:20:01.089Z。单交易所报价非全球加权。"
+    },
+    {
+      "section": 2,
+      "item_number": 5,
+      "event_key": "spot:HYPE:2026-10-27T0120Z",
+      "role": "detail",
+      "text": "HYPE/USDT 78.54 USDT，滚动24小时 +2.707%，高80.65、低74.99，该交易对成交额约17.79m USDT；Binance官方现货采样 2026-10-27T01:20:01.621Z。单交易所报价非全球加权。"
+    },
+    {
+      "section": 3,
+      "item_number": 1,
+      "event_key": "perp:BTC:2026-10-27T0118Z",
+      "role": "detail",
+      "text": "BTC永续标记价80226.31、指数价80255.27 USDT，最近资金费率+0.007690%，单点未平仓95,569.248 BTC；取样约曼谷08:18，缺连续OI及强平数据，不推定净新增多空。"
+    },
+    {
+      "section": 3,
+      "item_number": 2,
+      "event_key": "perp:ETH:2026-10-27T0118Z",
+      "role": "detail",
+      "text": "ETH永续标记价2328.26、指数价2329.32 USDT，最近资金费率+0.000452%，单点未平仓2,359,225.309 ETH；取样约曼谷08:18，缺连续OI及强平数据，不推定净新增多空。"
+    },
+    {
+      "section": 3,
+      "item_number": 3,
+      "event_key": "perp:SOL:2026-10-27T0118Z",
+      "role": "detail",
+      "text": "SOL永续标记价100.87、指数价100.89 USDT，最近资金费率+0.008016%，单点未平仓8,935,866.15 SOL；取样约曼谷08:18，缺连续OI及强平数据，不推定净新增多空。"
+    },
+    {
+      "section": 3,
+      "item_number": 4,
+      "event_key": "binance:tradfi-perps:2026-10-26",
+      "role": "detail",
+      "text": "Binance官方10月26日06:15 UTC公告新增EIDO、EQT、STM、ABBV四个传统资产标的USDT永续，09:00至09:15 UTC分批开始，最高20倍杠杆且24/7交易；区域资格受限，价格并非对应股票现货交易。"
+    },
+    {
+      "section": 5,
+      "item_number": 1,
+      "event_key": "etf:BTC:2026-10-26-incomplete",
+      "role": "detail",
+      "text": "Farside美国BTC现货ETF 10月26日交易日已披露列暂计0.0百万美元，但IBIT与BTCW仍标“-”；缺列使全市场净流UNVERIFIED，不能说当日零流入或零流出。"
+    },
+    {
+      "section": 5,
+      "item_number": 2,
+      "event_key": "etf:ETH:2026-10-26-incomplete",
+      "role": "detail",
+      "text": "Farside美国ETH现货ETF 10月26日交易日已披露列暂计+16.1百万美元，其中FETH +16.1；ETHA、ETHB仍缺值，不能将该小计当最终全市场净流。"
+    },
+    {
+      "section": 5,
+      "item_number": 3,
+      "event_key": "etf:SOL:2026-10-26-incomplete",
+      "role": "detail",
+      "text": "Farside美国SOL现货ETF 10月26日交易日已披露列暂计-8.2百万美元，BSOL -7.2、MSOL +0.8、GSOL -1.8；VSOL仍缺值，不能推定最终净额。"
+    },
+    {
+      "section": 5,
+      "item_number": 4,
+      "event_key": "strategy:btc-no-purchase:2026-10-19-25",
+      "role": "detail",
+      "text": "Arkham 10月26日研究援引Strategy 8-K：10月19至25日未买卖BTC，持有848,517 BTC，结束连续五周增持；同期回购约207万股STRC、约2.049亿美元。当前仅回读Arkham研究，SEC原8-K附件未单独验签，标记ATTRIBUTED。停买不等于抛售。"
+    },
+    {
+      "section": 5,
+      "item_number": 5,
+      "event_key": "bitmine:eth-add:2026-10-26",
+      "role": "detail",
+      "text": "Arkham 10月26日援引Bitmine披露过去一周新增10,452 ETH，总持有约605万ETH，按其估计约占流通量4.95%，其中约522.7万ETH已质押；归因为机构公告，尚未独立逐笔链上复算。"
+    },
+    {
+      "section": 5,
+      "item_number": 6,
+      "event_key": "mara:btc-bitgo-transfer:2026-10-27",
+      "role": "detail",
+      "text": "Lookonchain约曼谷08:00称MARA标记地址约六小时前向BitGo转移1,000 BTC、约8,019万美元，标注可能卖出；本轮未取得TXID和MARA官方公告，属于ATTRIBUTED/UNVERIFIED。转入托管方不等于实际卖出。"
+    },
+    {
+      "section": 6,
+      "item_number": 1,
+      "event_key": "osmosis:proposal1053:passed:2026-10-26",
+      "role": "detail",
+      "text": "Lookonchain引述Osmosis治理提案1053称10月26日以91.07%支持率通过停止OSMO通胀发行，开发者每日约30,440 OSMO释放拟暂停，质押收益转向协议收入；Mintscan原投票页仅加载iframe，当前仍需官方链上执行验证。通过投票不等于参数已经生效，标记ATTRIBUTED。"
+    },
+    {
+      "section": 7,
+      "item_number": 1,
+      "event_key": "balancer:unclaimed:2026-10-27",
+      "role": "detail",
+      "text": "Balancer关闭前未领取资产HIGH候选：Lookonchain今晨转述项目称清查发现超过50万美元第三方LP资产及未领奖励，部分机构已获通知；项目X原文HTTP 403，金额和具体账户未独立核实。官方BIP-928明确多数池10月30日转仅提现，提现渠道之后仍开放。只有实际用过Balancer v2/v3者才需从官方界面核对，不能推定个人有资产或点击转发领取链接。"
+    },
+    {
+      "section": 7,
+      "item_number": 2,
+      "event_key": "binance:axis-alpha-competition:2026-10-26",
+      "role": "detail",
+      "text": "Binance官方10月26日公告AXIS Alpha交易竞赛，两轮分别为10月26日13:00 UTC至11月2日13:00 UTC、11月2日至9日同一时间；按有效买入量排名，前2,000名各193 AXIS。资格、交易成本与刷量风险必须独立评估，活动不等于无成本空投，也不证明值得参与。"
+    },
+    {
+      "section": 9,
+      "item_number": 1,
+      "event_key": "php:windows-brotli-builds:2026-10-26",
+      "role": "detail",
+      "text": "PHP官方10月26日发布Windows构建8.5.12-1、8.4.27-1、8.3.36-1、8.2.35-1，纳入Brotli 1.2.1修复CVE-2026-111497。PHP Windows下风险可经cURL自动HTTP响应解压触发，该选项默认关闭但库可开启；此为10月26日新包分发状态，区别于此前已报Node/PHP旧公告。未有证据证明用户部署受影响。"
+    },
+    {
+      "section": 9,
+      "item_number": 2,
+      "event_key": "connectwise:cloudbackup:oct26-restoration-not-yet",
+      "role": "detail",
+      "text": "ConnectWise官方10月26日14:00 UTC更新：Cloud Backup仍在准备分阶段伙伴接入，尚未确认此前预计当天开始的现有备份恢复通道已开放；受影响连接继续保持禁用，直至正式指引。官方称备份档案加密隔离且未见受侵迹象；不能推定任一M365租户已被盗。下一更新不迟于10月27日14:00 UTC。"
+    },
+    {
+      "section": 9,
+      "item_number": 3,
+      "event_key": "foundation:passport:phishing-mail:2026-10-27",
+      "role": "detail",
+      "text": "硬件钱包Passport开发方Foundation事故新线索：Lookonchain约曼谷08:00转述项目称发现超过23,000次钓鱼邮件尝试，并调查旧WooCommerce迁移残留订单数据及新订单资料可能暴露；项目X原文HTTP 403，数量和具体受害者未独立核实，标记ATTRIBUTED/SOURCE_GAP。转述称暂无设备或私钥受侵证据，不能假定用户个人被影响。"
+    },
+    {
+      "section": 10,
+      "item_number": 1,
+      "event_key": "macro:us-stocks:2026-10-26",
+      "role": "detail",
+      "text": "AP公布美国10月26日收盘：标普500涨0.7%至7,676.77，纳指涨0.8%至26,169.38，道指涨0.3%至52,361.58；AI相关股票和财报预期推动反弹，但不能将美股上涨机械等同BTC上涨。"
+    },
+    {
+      "section": 10,
+      "item_number": 2,
+      "event_key": "macro:anthropic-ipo:2026-10-26",
+      "role": "detail",
+      "text": "Reuters10月26日报道Anthropic IPO申报提振AI相关股票情绪，费城半导体指数约涨2.8%；同时大型AI融资与高资本开支仍是跨市场风险。申报文件本轮未直接回读，具体现金流数字不采用二手汇总，标记ATTRIBUTED。"
+    },
+    {
+      "section": 11,
+      "item_number": 1,
+      "event_key": "fomc:oct27-28:calendar",
+      "role": "detail",
+      "text": "美联储官方日程确认10月27至28日FOMC会议，决议尚未公布；本次需关注政策措辞、利率路径及美元/美债收益率反应，不能提前宣称加息或降息。"
+    },
+    {
+      "section": 11,
+      "item_number": 2,
+      "event_key": "strategy:shareholder-vote:2026-10-28",
+      "role": "detail",
+      "text": "Arkham报道Strategy拟于10月28日举行股东投票，议题涉及优先股每日派息机制；这属于公司融资结构催化，未确认结果，不能把它视为BTC当日必须买卖的信号。"
+    },
+    {
+      "section": 12,
+      "item_number": 1,
+      "event_key": "watch:btc-weekly-macro:2026-10-27",
+      "role": "detail",
+      "text": "Lookonchain转述Wintermute周报称BTC此前连续第三周回落，关注76,000美元支撑与82,500美元上方重新确认；这些是机构分析阈值，非可保证的价格边界。今日Binance 24小时低点79,368.67，若波动放大，应核对连续OI、成交深度和完整ETF数据。"
+    },
+    {
+      "section": 13,
+      "item_number": 1,
+      "event_key": "action:markets:2026-10-27",
+      "role": "detail",
+      "text": "10月26日ETF三类基金仍有发行人缺列，永续仅有单点OI；在数据补齐及FOMC决议前，勿将暂计小计或一次托管转账直接解读为机构全面买卖，更不据此加杠杆。"
+    },
+    {
+      "section": 13,
+      "item_number": 2,
+      "event_key": "action:security:2026-10-27",
+      "role": "detail",
+      "text": "只有实际维护受影响Windows PHP+cURL自动解压应用时才检查并升级带-1后缀的官方构建；若收到钱包厂商“订单泄露/退款”邮件，手动进入正规官网核对，绝不输入助记词或给陌生网站签名。"
+    },
+    {
+      "section": 13,
+      "item_number": 3,
+      "event_key": "action:balancer:2026-10-27",
+      "role": "detail",
+      "text": "如确实使用过Balancer流动性池，核对旧LP头寸与未领奖励，并以官方提案和手动访问的界面为准；10月30日多数池转仅提现，官方说明之后仍可退出。未核实任何个人资格或余额。"
+    }
+  ],
+  "events": [
+    {
+      "event_key": "spot:BTC:2026-10-27T0120Z",
+      "kind": "CORE_QUOTE",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "published_at": "2026-10-27T01:20:01.012Z",
+      "actual_delta": "Binance 08:20 BKK spot 24h observation 80244.01 USDT",
+      "material_version": "2026-10-27T01:20:01.012Z",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "spot:ETH:2026-10-27T0120Z",
+      "kind": "CORE_QUOTE",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
+      "published_at": "2026-10-27T01:20:02.007Z",
+      "actual_delta": "Binance 08:20 BKK spot 24h observation 2328.91 USDT",
+      "material_version": "2026-10-27T01:20:02.007Z",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "spot:SOL:2026-10-27T0120Z",
+      "kind": "CORE_QUOTE",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
+      "published_at": "2026-10-27T01:20:00.684Z",
+      "actual_delta": "Binance 08:20 BKK spot 24h observation 100.87 USDT",
+      "material_version": "2026-10-27T01:20:00.684Z",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "spot:BNB:2026-10-27T0120Z",
+      "kind": "CORE_QUOTE",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT",
+      "published_at": "2026-10-27T01:20:01.089Z",
+      "actual_delta": "Binance 08:20 BKK spot 24h observation 745.25 USDT",
+      "material_version": "2026-10-27T01:20:01.089Z",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "spot:HYPE:2026-10-27T0120Z",
+      "kind": "CORE_QUOTE",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT",
+      "published_at": "2026-10-27T01:20:01.621Z",
+      "actual_delta": "Binance 08:20 BKK spot 24h observation 78.54 USDT",
+      "material_version": "2026-10-27T01:20:01.621Z",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "perp:BTC:2026-10-27T0118Z",
+      "kind": "TREND_DERIVATIVES",
+      "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+      "published_at": "2026-10-27T01:18:39Z",
+      "actual_delta": "Observed Binance perpetual mark/index/funding and one-point OI",
+      "material_version": "2026-10-27T01:18:39Z",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "perp:ETH:2026-10-27T0118Z",
+      "kind": "TREND_DERIVATIVES",
+      "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=ETHUSDT",
+      "published_at": "2026-10-27T01:18:39Z",
+      "actual_delta": "Observed Binance perpetual mark/index/funding and one-point OI",
+      "material_version": "2026-10-27T01:18:39Z",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "perp:SOL:2026-10-27T0118Z",
+      "kind": "TREND_DERIVATIVES",
+      "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=SOLUSDT",
+      "published_at": "2026-10-27T01:18:39Z",
+      "actual_delta": "Observed Binance perpetual mark/index/funding and one-point OI",
+      "material_version": "2026-10-27T01:18:39Z",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "binance:tradfi-perps:2026-10-26",
+      "kind": "TREND_DERIVATIVES",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/02d204fc963f4f8687599fc22a13d538",
+      "published_at": "2026-10-26T06:15:00Z",
+      "actual_delta": "New 24/7 USDT perpetuals EIDO EQT STM ABBV with max 20x, effective 09:00-09:15 UTC",
+      "material_version": "2026-10-26T06:15:00Z",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "php:windows-brotli-builds:2026-10-26",
+      "kind": "MAJOR_SECURITY",
+      "source_url": "https://www.php.net/archive/2026.php",
+      "published_at": "2026-10-26",
+      "actual_delta": "PHP official issued Windows -1 rebuilds bundling Brotli 1.2.1 to address CVE-2026-111497 reachable via enabled cURL automatic decompression",
+      "material_version": "php-windows-brotli-2026-10-26-build-1",
+      "impact": "MAJOR",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "HIGH",
+      "impact_breadth": "sector-wide",
+      "top5_basis": "PHP Windows distribution has a newly released dependency rebuild for a high-impact Brotli memory corruption affecting applications that enable automatic response decompression; deployment owners need to install the -1 Windows builds.",
+      "top5_evidence_url": "https://www.php.net/archive/2026.php"
+    },
+    {
+      "event_key": "connectwise:cloudbackup:oct26-restoration-not-yet",
+      "kind": "MAJOR_SECURITY",
+      "source_url": "https://www.connectwise.com/company/trust/advisories",
+      "published_at": "2026-10-26T14:00:00Z",
+      "actual_delta": "October 26 official update did not confirm partner restore access and says phased onboarding still being prepared",
+      "material_version": "connectwise-2026-10-26-1400UTC-not-restored",
+      "impact": "MAJOR",
+      "status": "verified",
+      "source_confirmed": true,
+      "priority": "HIGH"
+    },
+    {
+      "event_key": "foundation:passport:phishing-mail:2026-10-27",
+      "kind": "MAJOR_SECURITY",
+      "source_url": "https://lookonchain.com/feeds/78780",
+      "published_at": "2026-10-27T01:00:00Z",
+      "actual_delta": "Lookonchain cites Foundation update of 23000 phishing email attempts and potential historical order personal data exposure; issuer X original HTTP403",
+      "material_version": "lookonchain-78780-foundation-23k",
+      "impact": "MAJOR",
+      "status": "attributed",
+      "source_confirmed": false,
+      "priority": "HIGH",
+      "source_gap": "https://x.com/foundationhq/status/2114743519852069110 403"
+    },
+    {
+      "event_key": "etf:BTC:2026-10-26-incomplete",
+      "kind": "INSTITUTIONAL_FLOW",
+      "source_url": "https://farside.co.uk/btc/",
+      "published_at": "2026-10-27T01:19:00Z",
+      "actual_delta": "Farside Oct26 BTC row displays 0.0 partial with IBIT and BTCW missing",
+      "material_version": "farside-2026-10-27-0820-IBIT-BTCW-missing",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "etf:ETH:2026-10-26-incomplete",
+      "kind": "INSTITUTIONAL_FLOW",
+      "source_url": "https://farside.co.uk/eth/",
+      "published_at": "2026-10-27T01:19:00Z",
+      "actual_delta": "Farside Oct26 ETH 16.1m partial with ETHA ETHB missing",
+      "material_version": "farside-2026-10-27-0820-ETHA-ETHB-missing",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "etf:SOL:2026-10-26-incomplete",
+      "kind": "INSTITUTIONAL_FLOW",
+      "source_url": "https://farside.co.uk/sol/",
+      "published_at": "2026-10-27T01:19:00Z",
+      "actual_delta": "Farside Oct26 SOL -8.2m partial with VSOL missing",
+      "material_version": "farside-2026-10-27-0820-VSOL-missing",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "strategy:btc-no-purchase:2026-10-19-25",
+      "kind": "INSTITUTIONAL_FLOW",
+      "source_url": "https://info.arkm.com/research/strategy-pauses-btc-purchase-bitmine-adds-10k-eth",
+      "published_at": "2026-10-26T17:45:00Z",
+      "actual_delta": "Arkham citing Strategy 8-K: no BTC purchased/sold Oct19-25, holding 848517 BTC, STRC repurchase 2.07m shares",
+      "material_version": "strategy-oct26-8k-no-btc-19-25",
+      "impact": "MAJOR",
+      "status": "attributed",
+      "source_confirmed": false,
+      "priority": "HIGH"
+    },
+    {
+      "event_key": "bitmine:eth-add:2026-10-26",
+      "kind": "INSTITUTIONAL_FLOW",
+      "source_url": "https://info.arkm.com/research/strategy-pauses-btc-purchase-bitmine-adds-10k-eth",
+      "published_at": "2026-10-26T17:45:00Z",
+      "actual_delta": "Arkham cites Bitmine announced additional 10452 ETH, holdings 6.05m ETH",
+      "material_version": "arkham-2026-10-26-bitmine-10452eth",
+      "impact": "MAJOR",
+      "status": "attributed",
+      "source_confirmed": false,
+      "priority": "HIGH"
+    },
+    {
+      "event_key": "mara:btc-bitgo-transfer:2026-10-27",
+      "kind": "INSTITUTIONAL_FLOW",
+      "source_url": "https://lookonchain.com/feeds/78787",
+      "published_at": "2026-10-27T01:00:00Z",
+      "actual_delta": "Lookonchain reported MARA labelled 1000 BTC moved to BitGo; sale suspected but not confirmed",
+      "material_version": "lookonchain-78787-1000btc-bitgo",
+      "impact": "MAJOR",
+      "status": "attributed",
+      "source_confirmed": false,
+      "priority": "HIGH",
+      "source_gap": "Original X HTTP403 and no TXID readback"
+    },
+    {
+      "event_key": "osmosis:proposal1053:passed:2026-10-26",
+      "kind": "MAJOR_INFRASTRUCTURE",
+      "source_url": "https://lookonchain.com/feeds/78781",
+      "published_at": "2026-10-27T01:00:00Z",
+      "actual_delta": "Lookonchain attributes Osmosis proposal 1053 approval Oct26 to stop OSMO inflation and developer unlock",
+      "material_version": "lookonchain-78781-proposal1053",
+      "impact": "NORMAL",
+      "status": "attributed",
+      "source_confirmed": false,
+      "source_gap": "Mintscan proposal body JavaScript iframe unreadable"
+    },
+    {
+      "event_key": "balancer:unclaimed:2026-10-27",
+      "kind": "TGE_PUBLIC_SALE",
+      "source_url": "https://lookonchain.com/feeds/78783",
+      "published_at": "2026-10-27T00:40:00Z",
+      "actual_delta": "Lookonchain relays Balancer issuer claim over $500k unclaimed assets and rewards, before Oct30 withdrawal-only phase",
+      "material_version": "lookonchain-78783-500k-unclaimed",
+      "impact": "MAJOR",
+      "status": "attributed",
+      "source_confirmed": false,
+      "priority": "HIGH",
+      "source_gap": "Issuer X 403; official winddown BIP928 verified"
+    },
+    {
+      "event_key": "binance:axis-alpha-competition:2026-10-26",
+      "kind": "TGE_PUBLIC_SALE",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/aeab048502ff4d3898bcd872fab0354f",
+      "published_at": "2026-10-26T11:00:00Z",
+      "actual_delta": "Binance Alpha AXIS two trading contest windows Oct26-Nov2 and Nov2-Nov9, top2000 193 AXIS each",
+      "material_version": "2026-10-26T11:00:00Z",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "macro:us-stocks:2026-10-26",
+      "kind": "MACRO_CROSS_MARKET",
+      "source_url": "https://apnews.com/article/693ac6c4e67da0332045e66804780be7",
+      "published_at": "2026-10-26T21:00:00Z",
+      "actual_delta": "AP US Oct26 close SP500 +0.7 to 7676.77 Nasdaq +0.8 to 26169.38 Dow +0.3 to 52361.58",
+      "material_version": "2026-10-26T21:00:00Z",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "macro:anthropic-ipo:2026-10-26",
+      "kind": "MACRO_CROSS_MARKET",
+      "source_url": "https://www.reuters.com/business/us-stock-futures-edge-up-oil-falls-heading-into-earnings-barrage-2026-10-26/",
+      "published_at": "2026-10-26",
+      "actual_delta": "Reuters reports Anthropic IPO filing boosted AI-linked equities; SEC filing not independently retrieved",
+      "material_version": "reuters-2026-10-26-anthropic-ipo",
+      "impact": "NORMAL",
+      "status": "attributed",
+      "source_confirmed": false
+    },
+    {
+      "event_key": "fomc:oct27-28:calendar",
+      "kind": "FUTURE_CATALYST",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "published_at": "2026-10-27T01:20:00Z",
+      "actual_delta": "Fed calendar confirms Oct27-28 2026 meeting; no decision yet",
+      "material_version": "fomc-2026-10-27-28-upcoming",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "strategy:shareholder-vote:2026-10-28",
+      "kind": "FUTURE_CATALYST",
+      "source_url": "https://info.arkm.com/research/strategy-pauses-btc-purchase-bitmine-adds-10k-eth",
+      "published_at": "2026-10-26T17:45:00Z",
+      "actual_delta": "Arkham cites Oct28 Strategy shareholder vote about daily dividend preference shares",
+      "material_version": "2026-10-26T17:45:00Z",
+      "impact": "NORMAL",
+      "status": "attributed",
+      "source_confirmed": false
+    },
+    {
+      "event_key": "watch:btc-weekly-macro:2026-10-27",
+      "kind": "PERSISTENT_WATCH",
+      "source_url": "https://lookonchain.com/feeds/78787",
+      "published_at": "2026-10-27T01:00:00Z",
+      "actual_delta": "Wintermute weekly view via Lookonchain notes three weekly BTC declines and FOMC macro sensitivity; not independent forecast",
+      "material_version": "2026-10-27T01:00:00Z",
+      "impact": "NORMAL",
+      "status": "attributed",
+      "source_confirmed": false
+    },
+    {
+      "event_key": "action:markets:2026-10-27",
+      "kind": "ACTION_CONCLUSION",
+      "source_url": "https://farside.co.uk/btc/",
+      "published_at": "2026-10-27T01:20:00Z",
+      "actual_delta": "Given incomplete Oct26 ETF issuer rows and single OI point, avoid assuming institutional outflows or leverage signal",
+      "material_version": "2026-10-27T01:20:00Z",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "action:security:2026-10-27",
+      "kind": "ACTION_CONCLUSION",
+      "source_url": "https://www.php.net/archive/2026.php",
+      "published_at": "2026-10-27T01:20:00Z",
+      "actual_delta": "Only if operating affected Windows PHP build or Passport service, verify vendor source and patch; no inferred exposure",
+      "material_version": "2026-10-27T01:20:00Z",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "action:balancer:2026-10-27",
+      "kind": "ACTION_CONCLUSION",
+      "source_url": "https://forum.balancer.fi/t/bip-928-orderly-winddown-of-balancer-and-distribution-of-the-treasury/7107",
+      "published_at": "2026-10-27T01:20:00Z",
+      "actual_delta": "Only if user had Balancer LP or unclaimed rewards, verify official interface, avoid third-party claims",
+      "material_version": "2026-10-27T01:20:00Z",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "security:old:litellm:2026-10-21",
+      "kind": "MAJOR_SECURITY",
+      "source_url": "https://docs.litellm.ai/blog",
+      "published_at": "2026-10-21",
+      "material_version": "litellm-1.107.0-2026-10-21",
+      "actual_delta": "Previously delivered compromised LiteLLM release; no new material security version found at Oct27 prebuild",
+      "priority": "HIGH",
+      "status": "historical",
+      "no_material_delta": true,
+      "excluded_reason": "CR-21/25 already delivered Oct23/24; current blog Oct26 model support unrelated to incident"
+    },
+    {
+      "event_key": "security:old:emudhra:2026-10-20",
+      "kind": "MAJOR_SECURITY",
+      "source_url": "https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/",
+      "published_at": "2026-10-20",
+      "material_version": "mozilla-2026-10-20",
+      "actual_delta": "Previously delivered CA intermediate compromise with no new official Oct27 delta",
+      "priority": "HIGH",
+      "status": "historical",
+      "no_material_delta": true,
+      "excluded_reason": "Already delivered Oct22, no material version change"
+    }
+  ],
+  "source_receipts": [
+    {
+      "lane": "spot",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "status": "checked",
+      "result_urls": [
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT"
+      ],
+      "published_at": "2026-10-27T01:20:00Z"
+    },
+    {
+      "lane": "derivatives",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+      "status": "checked",
+      "result_urls": [
+        "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+        "https://www.binance.com/en/support/announcement/detail/02d204fc963f4f8687599fc22a13d538"
+      ],
+      "published_at": "2026-10-27T01:18:39Z"
+    },
+    {
+      "lane": "capital_flows",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://farside.co.uk/btc/",
+      "status": "checked",
+      "result_urls": [
+        "https://farside.co.uk/btc/",
+        "https://farside.co.uk/eth/",
+        "https://farside.co.uk/sol/"
+      ],
+      "published_at": "2026-10-27T01:19:00Z"
+    },
+    {
+      "lane": "onchain",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://info.arkm.com/research/strategy-pauses-btc-purchase-bitmine-adds-10k-eth",
+      "status": "checked",
+      "result_urls": [
+        "https://info.arkm.com/research/strategy-pauses-btc-purchase-bitmine-adds-10k-eth",
+        "https://lookonchain.com/feeds/78787"
+      ],
+      "published_at": "2026-10-26"
+    },
+    {
+      "lane": "policy",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://www.binance.com/en/support/announcement/detail/8a61b05a34694eab8e2044b6e005e85a",
+      "status": "checked",
+      "result_urls": [
+        "https://www.binance.com/en/support/announcement/detail/8a61b05a34694eab8e2044b6e005e85a",
+        "https://www.bitget.com/support",
+        "https://www.bybit.com/en/help-center"
+      ],
+      "published_at": "2026-10-26"
+    },
+    {
+      "lane": "infrastructure",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://www.binance.com/en/support/announcement/detail/02d204fc963f4f8687599fc22a13d538",
+      "status": "checked",
+      "result_urls": [
+        "https://www.binance.com/en/support/announcement/detail/02d204fc963f4f8687599fc22a13d538",
+        "https://lookonchain.com/feeds/78781"
+      ],
+      "published_at": "2026-10-26"
+    },
+    {
+      "lane": "tge",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://www.binance.com/en/support/announcement/detail/aeab048502ff4d3898bcd872fab0354f",
+      "status": "checked",
+      "result_urls": [
+        "https://www.binance.com/en/support/announcement/detail/aeab048502ff4d3898bcd872fab0354f"
+      ],
+      "published_at": "2026-10-26"
+    },
+    {
+      "lane": "early_nft",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://www.binance.com/en/support/announcement",
+      "status": "checked",
+      "result_urls": [
+        "https://www.binance.com/en/support/announcement",
+        "https://lookonchain.com/feeds"
+      ],
+      "published_at": "2026-10-26"
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://lookonchain.com/feeds/78780",
+      "status": "checked",
+      "result_urls": [
+        "https://lookonchain.com/feeds/78780",
+        "https://www.connectwise.com/company/trust/advisories"
+      ],
+      "published_at": "2026-10-27"
+    },
+    {
+      "lane": "backend_framework_auth",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://github.com/laravel/framework/security/advisories",
+      "status": "checked",
+      "result_urls": [
+        "https://github.com/laravel/framework/security/advisories"
+      ],
+      "published_at": "2026-10-19"
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://www.connectwise.com/company/trust/advisories",
+      "status": "checked",
+      "result_urls": [
+        "https://www.connectwise.com/company/trust/advisories",
+        "https://status.railway.com/",
+        "https://www.microsoft.com/en-us/security/blog/"
+      ],
+      "published_at": "2026-10-26T14:00:00Z"
+    },
+    {
+      "lane": "ai_package_supply_chain",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://docs.litellm.ai/blog",
+      "status": "checked",
+      "result_urls": [
+        "https://docs.litellm.ai/blog",
+        "https://www.microsoft.com/en-us/security/blog/"
+      ],
+      "published_at": "2026-10-23"
+    },
+    {
+      "lane": "web_pki_tls",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/",
+      "status": "checked",
+      "result_urls": [
+        "https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/"
+      ],
+      "published_at": "2026-10-20"
+    },
+    {
+      "lane": "web_runtime_rce",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://www.php.net/archive/2026.php",
+      "status": "checked",
+      "result_urls": [
+        "https://www.php.net/archive/2026.php",
+        "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases"
+      ],
+      "published_at": "2026-10-26"
+    },
+    {
+      "lane": "macro",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://apnews.com/article/693ac6c4e67da0332045e66804780be7",
+      "status": "checked",
+      "result_urls": [
+        "https://apnews.com/article/693ac6c4e67da0332045e66804780be7",
+        "https://www.reuters.com/business/us-stock-futures-edge-up-oil-falls-heading-into-earnings-barrage-2026-10-26/"
+      ],
+      "published_at": "2026-10-26"
+    },
+    {
+      "lane": "forward_catalysts",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "status": "checked",
+      "result_urls": [
+        "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+      ],
+      "published_at": "2026-10-27"
+    },
+    {
+      "lane": "onchain",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://x.com/lookonchain/status/2114881809175793806",
+      "status": "source_gap",
+      "error": "HTTP 403; original MARA transaction ID not retrieved"
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://x.com/foundationhq/status/2114743519852069110",
+      "status": "source_gap",
+      "error": "HTTP 403 original Foundation Passport notice"
+    },
+    {
+      "lane": "tge",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://x.com/balancer/status/2114744157352894717",
+      "status": "source_gap",
+      "error": "HTTP 403 original Balancer unclaimed assets notice"
+    },
+    {
+      "lane": "infrastructure",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "https://www.mintscan.io/osmosis/proposals/1053",
+      "status": "source_gap",
+      "error": "Mintscan governance content is iframe only; proposal execution not verified"
+    },
+    {
+      "lane": "policy",
+      "checked_at": "2026-10-27T08:20:04+07:00",
+      "query_or_url": "Bitget/Bybit/Binance 2026-10-26 HTX/Huobi restricted-counterparty new notice",
+      "status": "source_gap",
+      "error": "Official help centers loaded but no newly dated specific restricted-counterparty source identified; cannot assert no policy change"
+    }
+  ],
+  "market_core": [
+    {
+      "symbol": "BTC",
+      "price": 80244.01,
+      "observed_at": "2026-10-27T01:20:01.012Z",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT"
+    },
+    {
+      "symbol": "ETH",
+      "price": 2328.91,
+      "observed_at": "2026-10-27T01:20:02.007Z",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT"
+    },
+    {
+      "symbol": "SOL",
+      "price": 100.87,
+      "observed_at": "2026-10-27T01:20:00.684Z",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT"
+    }
+  ],
+  "empty_section_reasons": [
+    {
+      "section": 4,
+      "reason": "Official Binance new-pair regional eligibility and Bitget/Bybit help pages were checked; no verified material new HTX counterparties restriction or fresh jurisdiction-wide policy identified; specific policy original remains SOURCE_GAP.",
+      "checked_lanes": [
+        "policy"
+      ]
+    },
+    {
+      "section": 8,
+      "reason": "Official Binance Alpha and Lookonchain feed were checked for Early/Meme/NFT. No independently verified substantive new art/NFT item with actionable risk/reward evidence qualified; promotional volume contest is classified in section 7.",
+      "checked_lanes": [
+        "early_nft",
+        "tge"
+      ]
+    }
+  ],
+  "previous_events": [],
+  "collector_history": {
+    "status": "UNVERIFIED",
+    "reason": "GitHub connector fetch_file confirms runs/2026-10-27 directory exists but has no directory listing action; date search returned no indexed filenames, so prior 00:20/03:20/06:20 final receipt inventory could not be verified. Must resolve before full QA."
+  },
+  "excluded_candidate_reasons": [
+    {
+      "event_key": "railway:oct26-status",
+      "reason": "Official status October 26 explicitly says monitoring and not a new incident; no independently verified new credential exposure."
+    },
+    {
+      "event_key": "liteLLM:oct26-model-support",
+      "reason": "New Oct26 pricing/provider blog is not a security update nor high-impact crypto event."
+    },
+    {
+      "event_key": "standx:checker:2026-10-26",
+      "reason": "Already delivered in Oct26 Gmail; no new material version found."
+    },
+    {
+      "event_key": "space:claim-old",
+      "reason": "Previously delivered closed notice; no new material version."
+    },
+    {
+      "event_key": "surf:claim-old",
+      "reason": "Previously delivered notice; no new material version."
+    }
+  ]
+}
