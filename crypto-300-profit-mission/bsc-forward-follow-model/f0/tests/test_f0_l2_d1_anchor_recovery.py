@@ -173,7 +173,7 @@ class D1AnchorRecoveryTests(unittest.TestCase):
         rows=self.events(root)
         self.save(root,[e for e in rows if not (
             e["event"]=="COMMIT_CONTIGUOUS" and
-            e["height"]==1002)])
+            e["height"]==1003)])
         rec=reconcile_saved_attempts(root)
         self.assertEqual(rec["audit_status"],"INVALID_FOR_PERFORMANCE_CLAIM")
         self.assertEqual(rec["contiguous_commits"],2)
