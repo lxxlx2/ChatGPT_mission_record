@@ -1380,6 +1380,14 @@
     {
       "event_key": "binance:usdc-futures-apr-promo:2026-10-26",
       "reason": "Conditional promotion with >=2500 USDC-M futures volume and regional restrictions, insufficient general user relevance to justify daily placement."
+    },
+    {
+      "event_key": "railway:eu-west-build-snapshot-degradation:2026-10-26",
+      "reason": "Official Oct26 Railway regional build snapshot latency is unrelated to Oct21 security incident and running deployments not affected; not a material crypto-wide issue."
+    },
+    {
+      "event_key": "etf:lookonchain-2026-10-26-outflows",
+      "reason": "Secondary Lookonchain reported BTC -169.47m and ETH -16.07m but Farside issuer table remains incomplete; source numbers not reconciled; do not assert final flow."
     }
   ]
 }
