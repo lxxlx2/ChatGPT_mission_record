@@ -28,10 +28,10 @@ jobs:
         run: |
           node --check mission_agent/mission_control/static/app.js
           node --test tests/test_frank_f01_source_only.cjs
-      - name: Existing Mission Control focused regressions
+      - name: Scoped existing D1-D2 and watchlist regressions
         working-directory: crypto-300-profit-mission/local-agent
         run: |
           python -m pip install -e '.[dev]'
           python -B -m pytest -q -p no:cacheprovider \
             tests/test_frank_g2_d1_d2_dashboard.py \
-            tests/test_mission_control_dashboard.py
+            tests/test_frank_wallet_watchlist_v2.py
