@@ -7,6 +7,26 @@ Action: `WATCH`, `NO_BUY_UNTIL_OFFICIAL_LAUNCH_AND_LIQUIDITY_VERIFIED`.
 Authority: `crypto-300-profit-mission/PROJECT_ANALYSIS_FRAMEWORK.md`, `PROJECT_ANALYSIS_EVIDENCE_WORKFLOW.md`, `token_trading_principles.md`.
 Trading/monitoring: `PRODUCTION_TRADING=NO_GO`; no capital committed or monitoring task created by this note.
 
+## 2026-10-27 authenticated Telegram General: Wednesday launch acknowledged by group Owner
+
+**Evidence:** read-only through the user's connected, already open Telegram Web at `https://web.telegram.org/a/#-1004432036138`, chat title `Sixth Sense Labs Community`. The visible group header says 58 members, with `General` and `Tech Talk`. Messages below were present under the UI's `Today` heading on **Tuesday 2026-10-27**. UI times are as displayed; the actual timezone of the announcement is not explicitly stated. Only currently rendered chat messages were inspected; this is **not exhaustive history**. The group was authenticated as the official community by issuer X post `https://x.com/Sextus_Sensus/status/2110735046340468988`. Telegram `Owner` badge is evidence of in-group authority, not independent cryptographic identity verification.
+
+**Launch date attribution:**
+- Around 01:38 displayed chat time, group member Benny Bear wrote `Confirmed for a Wednesday Launch!`; `Todd | Sixth Sense Labs` showed Telegram **Owner** role and replied **`Yessirrr`**. This is a strong **owner-endorsed plan for Wednesday** relative to Tuesday Oct27; nominal calendar day **Wednesday Oct28 2026**, but **no exact UTC/local launch clock or confirmation that Bangkok time is also Oct28**, and no issuer public primary post with timestamp or live contract. The earlier unrelated reply `29th 2 pm UTC?` on X is user speculation, not confirmed. Keep `LAUNCH_WEEKDAY_OWNER_ACKNOWLEDGED / UTC_TIME_UNVERIFIED`.
+- About 01:40, Owner wrote `Snipers won’t be able to reap and farm liquidity either. This is a true fair launch with some serious tek behind it`. **Issuer's promise only**: the mechanism/launchpad, anti-sniper transaction rules, code/contract, price curve, tax, delay and routing are **UNVERIFIED**. Do not claim anti-MEV safety or execute a buy from marketing text.
+- A member asked `Will CA be posted here or on X first?`; Owner answered around 01:42 `All official updates regarding will be posted on all official platforms`. No verified SXTH mint shown in these messages.
+- A member asked `what mc is it launching at?` around 01:53; another member answered `Fair launch`; **Owner did not give a numeric opening MC/FDV or price in the visible exchange**. Thus price and accepted-cap remain unverified.
+- Member `I heard that there will be two pools`; Owner around 02:38 replied `not immediately at launch!`, then `Before end of year`. This is **two-pool plan reported in conversation, not two verified live pools**. On being asked `So it’ll start with sol, yeah?`, Owner answered `You’ll find out soon enough!`; opening quote token/SOL pair still **unconfirmed**.
+- Owner also pinned `Sorry for the slow week guys ... Will be powering up ahead of launch ...`, a promotional statement without contract/date or operating metrics.
+- Group member asked `do you guys plan on being the first launch on machine.fun?`; at the time of this read the message was **unanswered in visible history**. `machine.fun launch` is therefore **UNCONFIRMED**, and the Telegram conversations describe a possible Solana spot **fair launch** rather than proven pre-funded public ICO.
+- At this observation there was **no authenticated mint, sale contract, opening price, public allocation, committed USDC, swap quote, or onchain liquidity**. No investment position or monitor state should be upgraded to live.
+
+**Decision impact:** SXTH token launch is now **IMMINENT CLAIMED, OWNER ACKNOWLEDGED**, a substantial upgrade from mere site tokenomics. Keep investment classification `WATCH / NO_GO` pending publicly linked canonical mint + verified pool/launch contract, true price/initial circulating supply, anti-sniper execution rules and actual liquidity. Consider short-window live spot purchase only after separate user decision and actual chain verification. Initial liquidity pool may be single rather than two; number of pools at TGE is unverified.
+
+**Research disclosure:** No Telegram messages were sent, no bots/accounts contacted, no transactions signed, no new monitoring/automation created. Screenshot/DOM did not expose actual onchain launch contract; the research record keeps clear evidence provenance.
+
+---
+
 ## 2026-10-27 verified official X announcements and Telegram access boundary
 
 **Source method:** 2026-10-27 read-only of the user's **live, logged-in browser tab** on `https://x.com/Sextus_Sensus`, using the browser's rendered DOM, plus user-supplied Oct 27 screenshots. This is stronger than a web search snippet and confirms the displayed account posts, not any private Telegram messages.
