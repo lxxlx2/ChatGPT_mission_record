@@ -112,7 +112,8 @@ class SharedCoordinatorInitialAnchorTests(unittest.TestCase):
                               if x["event"] == "RESERVE_UNKNOWN"]), 3)
 
     def test_default_disabled_does_not_add_fourth_identity_call(self):
-        r, rows, _ = self.scenario(anchor=False)
+        # Without the extra anchor, original max_total <= 2+blocks+HEADs.
+        r, rows, _ = self.scenario(anchor=False, total=7)
         self.assertEqual(r["initial_anchor_attempts"], 0)
         self.assertFalse(r["initial_anchor_requested"])
         self.assertIsNone(r["initial_anchor_height"])
