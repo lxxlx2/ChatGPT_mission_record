@@ -347,7 +347,7 @@ class BoundedForwardObservationTests(unittest.TestCase):
         clock = clock or Clock()
         return m.capture_bounded(
             rpc, self.dir, duration_seconds=duration,
-            poll_seconds=12, rpc_budget=budget,
+            poll_seconds=m.BOUNDED_POLL_SECONDS, rpc_budget=budget,
             clock=clock.now, monotonic_ns=clock.monotonic, sleep=clock.sleep)
 
     def test_real_new_pair_across_snapshots_and_original_raw(self):
@@ -370,6 +370,33 @@ class BoundedForwardObservationTests(unittest.TestCase):
             self.assertEqual(len(original), row['raw_bytes'])
             self.assertEqual(row['ordinal'], json.loads(original)['id'])
         self.assertFalse((self.dir/'failure.json').exists())
+
+    def test_450ms_chain_requires_short_polls_not_twelve_seconds(self):
+        clk = Clock()
+        class FastChainRPC(FakeRPC):
+            def request(self, method, params):
+                if method == 'eth_blockNumber':
+                    self.second_height = (
+                        self.first_height + clk.advance_ns // 450_000_000)
+                return super().request(method, params)
+        rpc = FastChainRPC()
+        result = self.bounded(rpc=rpc, clock=clk, duration=22, budget=130)
+        self.assertEqual(m.BOUNDED_POLL_SECONDS, 5)
+        self.assertGreaterEqual(len(result['verified_intervals']), 2)
+        self.assertTrue(all(
+            1 <= part['to_block'] - part['from_block'] <=
+            m.MAX_BOUNDED_ANCESTOR_BLOCKS
+            for part in result['verified_intervals']))
+        self.assertEqual(result['new_factory_pair_index_count'], 1)
+        self.assertEqual(len(result['new_pairs_read']), 1)
+
+    def test_legacy_twelve_second_poll_rejected_as_unsafe(self):
+        rpc = FakeRPC()
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'BOUNDED_CONTRACT_OUT_OF_RANGE'):
+            m.capture_bounded(rpc, self.dir, duration_seconds=36,
+                              poll_seconds=12, rpc_budget=55)
+        self.assertFalse(self.dir.exists())
 
     def test_zero_delta_is_scoped_to_factory_only(self):
         result = self.bounded(rpc=FakeRPC(before=500, after=500))
