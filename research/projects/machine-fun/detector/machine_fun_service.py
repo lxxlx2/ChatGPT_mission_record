@@ -151,11 +151,15 @@ def uninstall() -> int:
     if current.get("Label") != LABEL:
         raise ServiceFailure("REFUSE_UNINSTALL_WRONG_SERVICE")
     result = launchctl("bootout", TARGET)
-    # If previously unloaded already, bootout returns nonzero. Removing this
-    # module's verified plist still prevents restart on next user login.
+    if result.returncode != 0:
+        # Fail closed: if bootout failed but the job still exists, do NOT
+        # claim an uninstall or remove the service's only control plist.
+        still_loaded = launchctl("print", TARGET)
+        if still_loaded.returncode == 0:
+            raise ServiceFailure("LAUNCHCTL_BOOTOUT_FAILED_SERVICE_STILL_LOADED")
     PLIST.unlink(missing_ok=True)
     print("MACHINE_AGENT=UNINSTALLED")
-    print("LAUNCHCTL_BOOTOUT=" + ("OK" if result.returncode == 0 else "ALREADY_UNLOADED_OR_FAILED"))
+    print("LAUNCHCTL_BOOTOUT=" + ("OK" if result.returncode == 0 else "ALREADY_UNLOADED"))
     print("FRANK=UNTOUCHED")
     print("DATABASE_AND_LOGS_PRESERVED=YES")
     return 0
