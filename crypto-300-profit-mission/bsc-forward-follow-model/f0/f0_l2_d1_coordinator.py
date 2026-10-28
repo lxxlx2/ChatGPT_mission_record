@@ -442,7 +442,8 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
                         fake_post_utc_window=None,
                         anchor_initial_head=False,
                         _staged_physical_offline=False,
-                        _physical_source_candidate=False):
+                        _physical_source_candidate=False,
+                        _real_foreground_permit=None):
     """No permit or live network entry. Thread workers are fake only.
 
     Any invalid input is rejected; concurrent workers cannot allocate IDs,
@@ -463,13 +464,24 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
         request_physical_source_admission(source)
     staged = type(source) is StagedPhysicalHTTPSReadOnlySource
     physical = type(source) is BoundedPhysicalReadOnlySource
-    # Genuine HTTPS remains denied in this source-bridge code-only PR. The
-    # future one-owner one-shot foreground launcher must be separately
-    # pinned/reviewed and must consume a fresh operator grant before TLS.
-    need((not physical and _physical_source_candidate is False)
-         or (physical and _physical_source_candidate is True and
-             http.client.HTTPSConnection is not _ORIGINAL_HTTPS_CONNECTION),
-         "F0_REAL_FOREGROUND_PHYSICAL_SOURCE_NOT_RELEASED")
+    physical_live = physical and http.client.HTTPSConnection is _ORIGINAL_HTTPS_CONNECTION
+    # REVIEWED FUTURE LIVE PATH: one original OS child can hold a consumed-once
+    # owner/UID/PID/monotonic-bound permit; Python-private objects are NOT
+    # authentication. The foreground CLI independently requires explicit
+    # operator confirmation and fixed clean Git SHA before issuing this.
+    if physical_live:
+        from f0_l2_d1_physical_once import _LiveOnceChildPermit
+        need(type(_real_foreground_permit) is _LiveOnceChildPermit
+             and _real_foreground_permit.valid()
+             and source._runtime_permit is _real_foreground_permit
+             and _physical_source_candidate is True,
+             "F0_REAL_FOREGROUND_OWNER_ONCE_PERMIT_REQUIRED")
+    else:
+        need(_real_foreground_permit is None and (
+             (not physical and _physical_source_candidate is False)
+             or (physical and _physical_source_candidate is True
+                 and http.client.HTTPSConnection is not _ORIGINAL_HTTPS_CONNECTION)),
+             "F0_REAL_FOREGROUND_PHYSICAL_SOURCE_NOT_RELEASED")
     # NEVER allow this private offline constructor-rehearsal source through
     # the public fake entry; nor permit the genuine physical constructor to
     # reach even a test coordinator when production identity is absent.
@@ -790,7 +802,9 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
     need(len(reservations) <= 32 and number_blocks <= 24
          and number_refreshes <= 6 and peak_slots <=3,
          "D1_SCOPE_LIMIT_EXCEEDED")
-    mode = ("F0_PHYSICAL_HTTPS_BRIDGE_PATCHED_NOT_RELEASED"
+    mode = ("F0_ONCE_FOREGROUND_GENUINE_HTTPS_READ_ONLY"
+            if physical_live else
+            "F0_PHYSICAL_HTTPS_BRIDGE_PATCHED_NOT_RELEASED"
             if physical else
             "D2_STAGED_PHYSICAL_HTTPS_PATCHED_NO_SOCKET_TEST_ONLY"
             if staged else
@@ -803,14 +817,17 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
             "D1_OFFLINE_FAKE_ONLY")
     return {
         "schema":SCHEMA, "mode":mode,
-        "network_requests":0, "no_live_sender":True,
+        "network_requests":len(starts) if physical_live else 0,
+        "no_live_sender":not physical_live,
         "physical_bridge_code_tested":physical,
-        "physical_source_released":False,
+        "physical_source_released":physical_live,
         "fake_post_utc_checks":(fake_post_utc_window.checked_fake_posts
                                 if fake_post_utc_window is not None else None),
-        "real_user_grant_active":False,
+        "real_user_grant_active":physical_live,
         "stop":stop,
-        "reserved":len(reservations), "physically_started_fake":len(starts),
+        "reserved":len(reservations), "physically_started_fake":(
+            None if physical_live else len(starts)),
+        "physical_post_attempted_count":len(starts) if physical_live else 0,
         "settled":len(settles), "unknown_after_stop":
             len([x for x in settles if x["state"] == "UNKNOWN"]),
         "max_shared_slots":peak_slots, "head_refreshes":number_refreshes,
