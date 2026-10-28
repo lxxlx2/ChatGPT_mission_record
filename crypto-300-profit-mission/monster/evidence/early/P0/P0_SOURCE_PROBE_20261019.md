@@ -1,3 +1,25 @@
+## 2026-10-28：SQD Portal — 新的零付费 BSC 2025 原日志**待实测** Plan B 候选
+
+本轮按用户已批准的 ADR-006 做一次有界来源可行性复核，不更改原P0阈值/2026-11-02止损，也不新增脚本/workflow或重复SELL报表。
+
+**供应商一手信息确认、非响应验收**：官方链入口 <https://sqd.dev/chains/binance/> 将 `binance-mainnet` 标为BSC Chain ID 56、从创世块开始提供历史+实时的logs/transactions/blocks/traces，文档提供无API密钥的开发用 `POST https://portal.sqd.dev/datasets/binance-mainnet/stream`，支持链上工厂地址与`topic0`过滤。来源结构、事件查询格式来自 <https://sqd.dev/solutions/dex/> 和 <https://sqd.dev/solutions/risk-monitoring/>。官方 <https://sqd.dev/pricing/> 明示**Public $0、无需密钥、限研发探索、约50MB/月、回溯吞吐约0.1MB/s**；这不证明同一天完整工厂/后续池Swap/真实卖出在免费计划能完成，不授权付费/生产接入。此源与以前的AWS blocks/transactions及Pinax仅2026-09开始的日志有实质不同，可以覆盖2025的**官方能力声称**，不能直接标成真实覆盖PASS。
+
+**冻结已有、不可重新选样本的单事件交叉核对锚**：原P0 JSON Git blob `1a6940290d03cc79ca86fd2c7f22ff4a0982c7a6`、key `bsc_v2_p0_current_frozen30_p0_gate_matrix_20261020.rows[0]`：
+- BSC区块`52440324`、`PancakeSwap V2 Factory=0xca143ce32fe78f1f7019d7d551a6402fc5350c73`；
+- 官方Pancake V2 `PairCreated(address,address,address,uint256)` topic0=`0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9`（原Factory源码 <https://github.com/pancakeswap/pancake-swap-core/blob/master/contracts/PancakeFactory.sol>）；
+- 事前已存交易Hash=`0x26396c2954f8f1ff36449d76454f0706c9cf1564da89b2a4a3f0fdfbac6744dc`、pair=`0x021d84d4d9f88518f74935c61e2cf4b70713bc16`、token CA=`0x9ca24ba11b0f472fdd704849113c93ea0bf0d798`。
+- **最小验证请求**（固定已冻结单个区块，纯公开只读，≤一次，不扩展全日）：
+
+```sh
+curl --fail-with-body --silent --show-error --compressed --max-time 25 -X POST 'https://portal.sqd.dev/datasets/binance-mainnet/stream' -H 'content-type: application/json' --data-binary '{"type":"evm","fromBlock":52440324,"toBlock":52440324,"logs":[{"address":["0xca143ce32fe78f1f7019d7d551a6402fc5350c73"],"topic0":["0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9"]}],"fields":{"block":{"number":true,"timestamp":true},"log":{"address":true,"topics":true,"data":true,"transactionHash":true,"logIndex":true}}}'
+```
+
+**执行状态**：本环境`curl`对`data.pinax.network`与`data.solarchive.org` DNS解析失败；`web`读取`portal.sqd.dev`动态GET资源亦无法提取API原字节，且网页工具不能执行本需要的带Body POST；**上面的SQD请求当前未运行、HTTP状态UNKNOWN、响应SHA/原事件LogIndex UNKNOWN、与旧Alchemy快照交叉结果UNKNOWN**。一条Factory成功匹配只会证实该单事件可读，不证明全日无漏、原历史公众available_at、Pancake V3及Four.meme、同名义额双向成交、连续90日标签。
+
+**下一唯一高价值门禁**：先获取上面这一条实际公开响应、逐字段核对与冻结原档案一致、保存原响应Hash/访问时刻/源版本；不通过或免费服务拒绝则停止这条备选。只有通过后才评估是否有能力满足2025-07-01全部115196区块连续Factory历史与原24/30、18/30指标。**本次仅供应商能力核验，不新增链上覆盖**。维持`P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO`；Plan C依然$0，2026-11-02原时间止损不变。
+
+---
+
 ## 2026-10-28：Pinax 2026-09-25 14文件区间元数据独立重算（非Parquet原字节验证）
 
 依据 https://data.pinax.network/buckets/bsc/logs/date=2026-09-25/ 逐条读取公开页面14个不同Parquet文件的`block_from/block_to/rows`展示值，以不信任页面总计的方式重新升序核对：14条区间完整首尾覆盖**123849166..124041106**（含端点），全部13组相邻边界满足前段终点+1=后段起点，无元数据可见间隙或重叠；合计区间长度**191941区块**，逐文件所宣称的rows独立相加**104646292行**，与页面声明总量一致。最早文件为`part-00000-0e499efb-311f-4627-b80c-c9db0c036e6b-c000.zstd.parquet`，页面显示约123.3MB、区间123849166..123855331、4711465行、最后修改2026-10-03。网站 https://data.pinax.network/datasets/ 明示**压缩整理会替换Parquet文件**，正式查询应读取当时Iceberg快照manifest（https://data.pinax.network/catalog/）；文件路径存在不代表永远稳定，也不代表2026-09-25当日可得。
