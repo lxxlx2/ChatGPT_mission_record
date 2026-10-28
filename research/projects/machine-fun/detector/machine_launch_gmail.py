@@ -6,6 +6,7 @@ Gmail is an at-most-once API action: uncertain sends are NEVER blindly resent.
 from __future__ import annotations
 
 import base64
+from contextlib import contextmanager
 import hashlib
 import json
 import os
@@ -180,8 +181,7 @@ class GmailAlerts:
             raise MailBlocked("ALERT_STATE_DIR_NOT_PRIVATE")
         if self.path.is_symlink():
             raise MailBlocked("ALERT_STATE_SYMLINK_REJECTED")
-        conn = self._db()
-        try:
+        with self._db() as conn:
             conn.execute("""CREATE TABLE IF NOT EXISTS alerts(
                 event_id TEXT PRIMARY KEY,
                 event_json TEXT NOT NULL,
@@ -189,17 +189,22 @@ class GmailAlerts:
                 gmail_id TEXT,
                 created_at INTEGER NOT NULL,
                 updated_at INTEGER NOT NULL)""")
-            conn.commit()
-        finally:
-            conn.close()
 
+    @contextmanager
     def _db(self):
         if self.path.exists() and stat.S_IMODE(self.path.stat().st_mode) & 0o077:
             raise MailBlocked("ALERT_DB_PERMISSIONS_TOO_BROAD")
         conn = sqlite3.connect(self.path)
         os.chmod(self.path, 0o600)
         conn.row_factory = sqlite3.Row
-        return conn
+        try:
+            yield conn
+            conn.commit()
+        except Exception:
+            conn.rollback()
+            raise
+        finally:
+            conn.close()
 
     def enqueue(self, event: dict) -> None:
         if event.get("evidence") != "CHAIN_PLATFORM_CANDIDATE_UNENDORSED":
