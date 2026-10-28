@@ -1,0 +1,40 @@
+name: Frank G0-B 2026-10-28 user-authorized one-shot free GeckoTerminal research
+on:
+  push:
+    branches:
+      - research/frank-g0b-once-20261028
+    paths:
+      - .github/workflows/frank-g0b-gecko-one-shot-20261028.yml
+permissions:
+  contents: read
+concurrency:
+  group: frank-g0b-free-api-one-shot-20261028
+  cancel-in-progress: false
+jobs:
+  once-only-public-research:
+    if: github.ref == 'refs/heads/research/frank-g0b-once-20261028'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - name: Check out pinned research only
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify source, offline freeze and no-network defaults
+        run: |
+          python3 -B -m py_compile crypto-300-profit-mission/meme/g0b/g0b_gecko_one_shot.py
+          python3 -B -m unittest discover -s crypto-300-profit-mission/meme/g0b -p 'test_g0b_gecko_one_shot.py' -v
+          python3 -B crypto-300-profit-mission/meme/g0b/g0b_gecko_one_shot.py --max-http 50 --out-dir /tmp/frank-g0b-offline-check
+      - name: Execute authorized single public research pass
+        run: |
+          python3 -B crypto-300-profit-mission/meme/g0b/g0b_gecko_one_shot.py --execute --max-http 50 --out-dir g0b-once-output
+      - name: Preserve public API evidence and missingness receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frank-g0b-once-public-receipts-20261028
+          path: g0b-once-output/g0b_public_receipts.json
+          if-no-files-found: warn
+          retention-days: 30
