@@ -1141,8 +1141,11 @@ class Handler(BaseHTTPRequestHandler):
             return self._json({"error":"INVALID_JSON_REQUEST"},400)
         try:
             job = self.state.cluster_jobs.submit(body.get("mint",""), body.get("preset","standard"))
-        except ValueError:
-            return self._json({"error":"INVALID_CLUSTER_REQUEST"},400)
+        except ValueError as exc:
+            # Preserve only the known public CA validation code; never reflect
+            # arbitrary exception text, RPC details or internal paths.
+            error = "INVALID_SOLANA_CA" if str(exc) == "INVALID_SOLANA_CA" else "INVALID_CLUSTER_REQUEST"
+            return self._json({"error":error},400)
         return self._json(job,202)
 
 
