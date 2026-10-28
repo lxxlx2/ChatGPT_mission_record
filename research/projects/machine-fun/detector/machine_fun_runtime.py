@@ -70,7 +70,7 @@ def control_root() -> Path:
     raise StartupBlocked("FRANK_GMAIL_EXISTING_CONFIG_NOT_FOUND")
 
 
-def gmail_from_existing() -> tuple[Path, str]:
+def gmail_from_existing() -> tuple[Path, str | None]:
     try:
         source = control_root() / "gmail-existing-source.json"
         if source.is_symlink() or not source.is_file():
@@ -83,15 +83,20 @@ def gmail_from_existing() -> tuple[Path, str]:
         raw_path, recipient = cfg.get("existing_oauth_file"), cfg.get("recipient")
         if not isinstance(raw_path, str) or not raw_path.strip():
             raise StartupBlocked("FRANK_EXISTING_OAUTH_PATH_MISSING")
-        if not isinstance(recipient, str) or not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", recipient):
-            raise StartupBlocked("FRANK_EXISTING_GMAIL_RECIPIENT_MISSING")
+        # Recipient is optional in the existing Frank source configuration.
+        # If absent, the Gmail API profile is the only trusted fallback;
+        # never invent an address or write one back to Frank.
+        if recipient is None or recipient == "":
+            recipient = None
+        elif not isinstance(recipient, str) or not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", recipient.strip()):
+            raise StartupBlocked("FRANK_EXISTING_GMAIL_RECIPIENT_INVALID")
         path = Path(raw_path).expanduser()
         token = private_json(path)
         scopes = token.get("scopes", [])
         scopes = scopes.split() if isinstance(scopes, str) else scopes
         if not {READ_SCOPE, SEND_SCOPE}.issubset(set(scopes)):
             raise StartupBlocked("FRANK_GMAIL_SCOPES_NOT_SEND_AND_READONLY")
-        return path, recipient.strip().lower()
+        return path, recipient.strip().lower() if recipient else None
     except MailBlocked as exc:
         raise StartupBlocked(str(exc)) from None
     except (OSError, ValueError) as exc:
@@ -134,16 +139,20 @@ def main(argv=None) -> int:
     args = p.parse_args(argv)
 
     http_rpc, ws_rpc = rpc_from_existing()
-    oauth_file, recipient = gmail_from_existing()
+    oauth_file, expected_recipient = gmail_from_existing()
     print("MACHINE_CONFIG=PASS; ALCHEMY_RPC=REUSED_READ_ONLY; GMAIL_OAUTH=REUSED_READ_ONLY; FRANK=UNTOUCHED")
     if args.command == "check":
+        print("MACHINE_GMAIL_RECIPIENT=" + ("EXPLICIT_CONFIG" if expected_recipient else "OAUTH_PROFILE_TO_BE_VERIFIED"))
         print("NO_NETWORK_NO_MAIL_NO_DAEMON")
         return 0
 
     # Live read-only credential checks and bounded health RPC before any send.
-    provider = GmailAPI(oauth_file, recipient)
+    provider = GmailAPI(oauth_file, expected_recipient)
     try:
         provider.ready()
+        recipient = provider.recipient
+        if not recipient:
+            raise StartupBlocked("GMAIL_PROFILE_EMAIL_UNAVAILABLE")
         health = Rpc(http_rpc).call("getHealth", [])
         if health != "ok":
             raise StartupBlocked("SOLANA_RPC_HEALTH_NOT_OK")
