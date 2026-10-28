@@ -65,6 +65,14 @@ class FakeRPC:
         self.first_header_reads = 0
         self.pool_offsets = {}
 
+    def request_batch(self, jobs):
+        results, packets = [], []
+        for method, params in jobs:
+            value, raw = self.request(method, params)
+            results.append(value)
+            packets.append(json.loads(raw))
+        return results, json.dumps(packets, separators=(',', ':')).encode()
+
     def request(self, method, params):
         self.calls.append((method, params))
         if method == 'eth_chainId':
@@ -389,6 +397,84 @@ class BoundedForwardObservationTests(unittest.TestCase):
             for part in result['verified_intervals']))
         self.assertEqual(result['new_factory_pair_index_count'], 1)
         self.assertEqual(len(result['new_pairs_read']), 1)
+
+    def test_batch_reduces_http_roundtrips_but_not_rpc_budget(self):
+        rpc = FakeRPC(second_height=115)
+        result = self.bounded(rpc=rpc, budget=115, duration=20)
+        batch_receipts = [r for r in result['rpc_requests']
+                          if 'batch_response_id' in r]
+        self.assertGreater(len(batch_receipts), 8)
+        self.assertEqual(result['rpc_attempt_count'], len(rpc.calls))
+        self.assertEqual(result['rpc_attempt_count'], len(result['rpc_requests']))
+        self.assertLess(result['http_response_file_count'],
+                        result['rpc_attempt_count'])
+        self.assertLessEqual(max(x['batch_subrequest_count']
+                                 for x in batch_receipts), m.MAX_BATCH_HEADERS)
+        self.assertTrue(result['verified_intervals'])
+        files = {r['raw_file'] for r in batch_receipts}
+        for name in files:
+            raw = (self.dir/name).read_bytes()
+            children = json.loads(raw)
+            self.assertIsInstance(children, list)
+            self.assertLessEqual(len(children), m.MAX_BATCH_HEADERS)
+        self.assertEqual(result['new_factory_pair_index_count'], 1)
+
+    def test_batch_reversed_response_order_is_valid(self):
+        class ReverseRPC(FakeRPC):
+            def request_batch(self, jobs):
+                values, raw = super().request_batch(jobs)
+                return values, json.dumps(list(reversed(json.loads(raw)))).encode()
+        result = self.bounded(rpc=ReverseRPC(second_height=103))
+        self.assertEqual(result['new_factory_pair_index_count'], 1)
+        self.assertTrue(result['verified_intervals'])
+
+    def test_batch_missing_child_rejected(self):
+        class MissingRPC(FakeRPC):
+            def request_batch(self, jobs):
+                values, raw = super().request_batch(jobs)
+                return values, json.dumps(json.loads(raw)[:-1]).encode()
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'BATCH_RESPONSE_SHAPE_INVALID'):
+            self.bounded(rpc=MissingRPC(second_height=103))
+        self.assertFalse((self.dir/'manifest.json').exists())
+        self.assertTrue((self.dir/'failure.json').exists())
+
+    def test_batch_duplicate_child_id_rejected(self):
+        class DuplicateRPC(FakeRPC):
+            def request_batch(self, jobs):
+                values, raw = super().request_batch(jobs)
+                children = json.loads(raw)
+                children[1]['id'] = children[0]['id']
+                return values, json.dumps(children).encode()
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'BATCH_INVALID_MEMBER_OR_ID'):
+            self.bounded(rpc=DuplicateRPC(second_height=103))
+        self.assertFalse((self.dir/'manifest.json').exists())
+
+    def test_batch_child_error_rejected(self):
+        class ErrorRPC(FakeRPC):
+            def request_batch(self, jobs):
+                values, raw = super().request_batch(jobs)
+                children = json.loads(raw)
+                children[0].pop('result')
+                children[0]['error'] = {'code': -32000, 'message': 'provider error'}
+                return values, json.dumps(children).encode()
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'BATCH_INVALID_MEMBER_OR_ID'):
+            self.bounded(rpc=ErrorRPC(second_height=103))
+        self.assertFalse((self.dir/'manifest.json').exists())
+
+    def test_batch_wrong_child_result_rejected(self):
+        class MutatedRPC(FakeRPC):
+            def request_batch(self, jobs):
+                values, raw = super().request_batch(jobs)
+                children = json.loads(raw)
+                children[0]['result']['hash'] = '0x'+'9'*64
+                return values, json.dumps(children).encode()
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'BATCH_RESULT_NOT_VERIFIED'):
+            self.bounded(rpc=MutatedRPC(second_height=103))
+        self.assertFalse((self.dir/'manifest.json').exists())
 
     def test_legacy_twelve_second_poll_rejected_as_unsafe(self):
         rpc = FakeRPC()
