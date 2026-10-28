@@ -12,7 +12,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from machine_launch_detector import Journal, Rpc
-from machine_launch_gmail import GmailAlerts, marker_for, message_for
+from machine_launch_gmail import GmailAPI, GmailAlerts, MailBlocked, marker_for, message_for
 from machine_fun_runtime import GmailDetector, StartupBlocked, gmail_from_existing, rpc_from_existing
 from test_machine_launch_detector import FakeRpc, tx_template
 
@@ -174,6 +174,109 @@ class EmailTests(unittest.TestCase):
             with patch("machine_fun_runtime.RPC_FILE", file):
                 with self.assertRaises(StartupBlocked):
                     rpc_from_existing()
+
+    def test_gmail_existing_config_without_recipient_uses_oauth_profile_later(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            oauth = root / "authorized-user.json"
+            original = json.dumps({
+                "scopes": ["https://www.googleapis.com/auth/gmail.send",
+                           "https://www.googleapis.com/auth/gmail.readonly"],
+                "client_id": "cid", "client_secret": "secret",
+                "refresh_token": "r"
+            })
+            oauth.write_text(original)
+            os.chmod(oauth, 0o600)
+            cfg = root / "gmail-existing-source.json"
+            cfg.write_text(json.dumps({"existing_oauth_file": str(oauth)}))
+            hint = root / "control"
+            hint.write_text(str(root))
+            with patch("machine_fun_runtime.ROOT_HINT", hint), patch("machine_fun_runtime.RUNNER_HINT", root / "missing"):
+                path, recipient = gmail_from_existing()
+            self.assertEqual(path, oauth)
+            self.assertIsNone(recipient)
+            self.assertEqual(oauth.read_text(), original)
+            self.assertNotIn("recipient", json.loads(cfg.read_text()))
+
+    def test_verified_google_profile_supplies_missing_email_without_writing_oauth(self):
+        with tempfile.TemporaryDirectory() as folder:
+            oauth = Path(folder) / "authorized-user.json"
+            original = json.dumps({
+                "scopes": ["https://www.googleapis.com/auth/gmail.send",
+                           "https://www.googleapis.com/auth/gmail.readonly"],
+                "client_id": "cid", "client_secret": "secret", "refresh_token": "r"
+            })
+            oauth.write_text(original)
+            os.chmod(oauth, 0o600)
+            calls = []
+            class MockResponse:
+                def __init__(self, payload):
+                    self.payload = json.dumps(payload).encode()
+                def __enter__(self):
+                    return self
+                def __exit__(self, *args):
+                    pass
+                def read(self, *args):
+                    return self.payload
+            def fake_urlopen(req, timeout=12):
+                calls.append(req.full_url)
+                if req.full_url == "https://oauth2.googleapis.com/token":
+                    return MockResponse({"access_token": "test-only"})
+                if req.full_url.endswith("/profile"):
+                    return MockResponse({"emailAddress": "Owner@Example.Test"})
+                if "messages?" in req.full_url:
+                    return MockResponse({"messages": []})
+                raise AssertionError("unexpected URL")
+            provider = GmailAPI(oauth, None, open_url=fake_urlopen)
+            provider.ready()
+            self.assertEqual(provider.recipient, "owner@example.test")
+            self.assertEqual(len(calls), 3)
+            self.assertTrue(all("messages/send" not in call for call in calls))
+            self.assertEqual(oauth.read_text(), original)
+
+    def test_explicit_recipient_mismatch_still_blocks_send(self):
+        with tempfile.TemporaryDirectory() as folder:
+            oauth = Path(folder) / "authorized-user.json"
+            oauth.write_text(json.dumps({
+                "scopes": ["https://www.googleapis.com/auth/gmail.send",
+                           "https://www.googleapis.com/auth/gmail.readonly"],
+                "client_id": "cid", "client_secret": "secret", "refresh_token": "r"
+            }))
+            os.chmod(oauth, 0o600)
+            class MockResponse:
+                def __init__(self, data):
+                    self.data = json.dumps(data).encode()
+                def __enter__(self): return self
+                def __exit__(self, *args): pass
+                def read(self, *args): return self.data
+            urls = []
+            def fake(req, timeout=12):
+                urls.append(req.full_url)
+                if req.full_url.endswith("/profile"):
+                    return MockResponse({"emailAddress": "other@example.test"})
+                return MockResponse({"access_token": "test"})
+            provider = GmailAPI(oauth, "owner@example.test", open_url=fake)
+            with self.assertRaisesRegex(MailBlocked, "GMAIL_IDENTITY_DOES_NOT_MATCH_FRANK_RECIPIENT"):
+                provider.ready()
+            self.assertFalse(any("messages/send" in url for url in urls))
+
+    def test_gmail_existing_config_invalid_recipient_fails_closed(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            oauth = root / "authorized-user.json"
+            oauth.write_text(json.dumps({
+                "scopes": ["https://www.googleapis.com/auth/gmail.send",
+                           "https://www.googleapis.com/auth/gmail.readonly"],
+                "client_id": "cid", "client_secret": "secret", "refresh_token": "r"
+            }))
+            os.chmod(oauth, 0o600)
+            cfg = root / "gmail-existing-source.json"
+            cfg.write_text(json.dumps({"existing_oauth_file": str(oauth), "recipient": "not an email"}))
+            hint = root / "control"
+            hint.write_text(str(root))
+            with patch("machine_fun_runtime.ROOT_HINT", hint), patch("machine_fun_runtime.RUNNER_HINT", root / "missing"):
+                with self.assertRaisesRegex(StartupBlocked, "RECIPIENT_INVALID"):
+                    gmail_from_existing()
 
     def test_gmail_existing_config_read_only(self):
         with tempfile.TemporaryDirectory() as folder:
