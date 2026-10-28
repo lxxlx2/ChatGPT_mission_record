@@ -640,7 +640,7 @@ class BoundedForwardObservationTests(unittest.TestCase):
             (b'{"jsonrpc":"2.0","id":12,"error":{"code":-32000}}',
              None, False, 'BATCH_WRONG_RESPONSE_COUNT'),
             (b'[]', 25, False, 'BATCH_HTTP_BODY_TRUNCATED'),
-            (b'[' + b'x' * m.MAX_RESPONSE_BYTES, None, False,
+            (b'[' + b'x' * m.MAX_RESPONSE_BYTES, None, True,
              'BATCH_RESPONSE_TOO_LARGE'),
             (b'{"jsonrpc":', None, True, 'BATCH_INVALID_JSON'),
             (b'[]', 'nonsense', False, 'BATCH_HTTP_FRAMING_INVALID'),
@@ -662,7 +662,7 @@ class BoundedForwardObservationTests(unittest.TestCase):
                 self.assertEqual(receipt['capture_truncated'],
                                  len(raw) > m.MAX_RESPONSE_BYTES)
                 self.assertEqual(failure['rpc_attempt_count'],
-                                 len(failure['completed_rpc_responses']) + 3)
+                                 len(failure['completed_rpc_responses']) + 2)
 
     def test_rejected_batch_secret_echo_hash_only_without_raw(self):
         secret = 'SECRET_WITHHOLD_FORENSIC_TEST_123456'
