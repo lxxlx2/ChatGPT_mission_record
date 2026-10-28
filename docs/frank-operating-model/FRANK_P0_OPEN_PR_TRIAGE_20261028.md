@@ -114,3 +114,26 @@
 | [#38](https://github.com/lxxlx2/ChatGPT_mission_record/pull/38) | 冻结 | [Frank Dashboard] Collapse long research watch pool and keep live follow opportunities prominent | `main` | 保留历史或潜在栈式依赖；未经复核不得关闭 |
 
 **清理动作当前为 0。** 后续每批最多 10 条，先由独立 reviewer 验证真实依赖，用户授权后再做写入；如标题/分支变化需新快照，不得凭本旧快照推断可安全关闭。
+
+## P0 第二轮：8 个“待清理候选”的真实依赖与文件范围核查（2026-10-29 01:48 Asia/Bangkok）
+
+**结论：8/8 已完成最小只读分类复核；可**直接**关闭数 **0**。P0 文档分类工作到此结项，不展开新 C 类验收或新的清理工程。** 未关闭/合并/改 base/改 label 任何旧 PR；原有 10/85/8 分类是**2026-10-28 固定快照**，不把其“待清理”理解成“已判可删除”。
+
+本次一手读取 8 个 PR 的 metadata、正文和 `GET /pulls/{id}/files` 真实文件清单；并将全仓所有 Open PR 的 `base.ref == 该 PR 的 head.ref` 作为**直接栈式子分支检查**，以及其他 Open PR 正文中 `#PR`／`pull/PR` 引用作为显式引用核查。这不等于完整 commit/文件级反向依赖审计：没有检测到直接子分支**不构成**“可以安全关闭”的正面证据。
+
+| 候选 PR | 实际改动（不是标题推测） | 可追踪的直接依赖与风险 | P0 结果 |
+|---|---|---|---|
+| [#210](https://github.com/lxxlx2/ChatGPT_mission_record/pull/210) | 新增 1 份 C2A 发布失败取证文档 | 明确原 Dashboard `launchctl bootstrap` 失败根因 **UNRESOLVED**；该文档引用 #208 和 #205；服务恢复/回滚风险属于不可跳过的 S 类 | **保留冻结**；不能当普通过期文档关闭 |
+| [#208](https://github.com/lxxlx2/ChatGPT_mission_record/pull/208) | 新增 1 份 Dashboard-only 发布与 Quick CA 许可文档 | **#210 的正文直接引用 #208**；涉及未来 Dashboard 8766 发布和单次 CA POST/RPC 授权 | **保留冻结**；有显式开放 PR 引用 |
+| [#200](https://github.com/lxxlx2/ChatGPT_mission_record/pull/200) | 新增 1 份 D2 私有 source promotion 文档 | 描述私有 D2 文件更换、0600 备份、哈希及回滚；虽无直接子分支，也存在生产私有数据和服务安全约束 | **保留冻结**；不触碰 D2 数据 |
+| [#126](https://github.com/lxxlx2/ChatGPT_mission_record/pull/126) | 新增 1 份 PR112 通知策略发布/迁移准备文档 | **#128 的正文直接引用 #126**；涉及撤销默认 $30、通知审批和不可用脚本的风险 | **保留冻结**；有显式开放 PR 引用 |
+| [#107](https://github.com/lxxlx2/ChatGPT_mission_record/pull/107) | **新增 4 个代码/CI 文件**（Safari 503 QA 与工作流） | stacked base `fix/frank-decisions-partial-refresh-20261019`（#106）；原 503 故障与实际 Mac Safari 验收不可因标题写“QA”而视为已被替代 | **冻结保留**；不执行 Mac/QA |
+| [#96](https://github.com/lxxlx2/ChatGPT_mission_record/pull/96) | **新增 4 个代码/CI 文件**（PR94 合成浏览器、Safari 辅助） | stacked base `fix/frank-pr93-executable-quote-binding-p2-20261018`（#94）；含可执行脚本，不是文档 PR；无证据证明所有源码/验证都已被后续结果取代 | **冻结保留** |
+| [#95](https://github.com/lxxlx2/ChatGPT_mission_record/pull/95) | **改动 1 个 workflow + 新增 1 个测试脚本** | 同 #94 父栈，真实 Playwright WebKit ≠ Safari.app；保留现有历史 QA 证据，不重复运行 | **冻结保留** |
+| [#86](https://github.com/lxxlx2/ChatGPT_mission_record/pull/86) | **改动 2 份审核/实施规则文档 + 新增 3 份运行手册** | stacked base `codex/frank-f02-refresh-progress-20261015`（#67）；实际包含审核规则修改，不是无影响的截图噪音 | **冻结保留**；未来如修改规则须按仓库正式规则审批 |
+
+**实际依赖证据：** 这 8 个 PR 在查询时都是 OPEN/Draft；以它们作为 base.head 的**直接 Open 子 PR 为 0**，但公开 PR 正文存在 **#210→#208**、**#128→#126** 的显式引用。若有人以后建议关闭，必须新作最新 HEAD/base/代码重复性与生产安全检查并取得用户授权；**本次没有形成任何“可安全关闭”名单**。
+
+**最新范围提示：** 2026-10-29 01:48 GitHub Open PR 已是 **201 个、全部 Draft**；按旧的“标题/分支包含 frank”字符串规则会匹配 **105 个**，其中新 [#243](https://github.com/lxxlx2/ChatGPT_mission_record/pull/243) 是 **Machine.fun 独立项目（标题仅写 Frank untouched）**，不得算入 Frank P0。排除该关键词误匹配后，Frank 语义候选为 **104 个**，比原固定 103 快照多 **#242** 本身。**不追溯改写原 199/103、10/85/8 归档快照**；数字随新 PR 创建而变化。Machine.fun 的新后台监控与 Frank 本轮 P0 无关，本轮绝不读取其生产资源、也不操作它。
+
+**P0 本轮收尾：** 已完成 STATUS 入口、103 条固定快照分类、8 个清理候选的只读审查。没有额外盈利数据或可关闭 PR 的结论；P1 已于 2026-10-29 01:45 由用户批准提前 `INVEST_NO_GO` 结项。**不再以 P0 的名义扩展验收、增加子 PR 或等待 10 月 30 日才能算“完成”**。实际后续只保留已存在的钱包只读工具和严格的 S 类边界，任何代码发布/生产访问/PR 关闭仍需独立许可。
