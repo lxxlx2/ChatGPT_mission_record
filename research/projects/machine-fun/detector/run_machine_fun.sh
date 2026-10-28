@@ -15,8 +15,13 @@ if ! python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)';
   exit 2
 fi
 
-if [ "$1" = "check" ]; then
+if [ "${1:-}" = "check" ]; then
   exec python3 machine_fun_runtime.py check
+fi
+
+if [ "$#" -eq 0 ]; then
+  echo "Usage: bash run_machine_fun.sh check|probe|run [--notify-local]" >&2
+  exit 2
 fi
 
 if [ ! -x "$HERE/.venv/bin/python" ]; then
