@@ -33,6 +33,22 @@ export function validateStockNovelty(input){
   if(!ev.family_key||!ev.material_version||!ev.kind||!/^https:\/\//.test(ev.source_url||'')||!ev.published_at)
     fail('MISSING_STABLE_PROVENANCE',ev.event_key);
  }
+ // Mandatory independent original IPO and X-source discovery receipts in the
+ // existing scheduled stock report. Browser access is conditional, not assumed.
+ const ipoReceipts=Array.isArray(input.ipo_status_receipts)?input.ipo_status_receipts:[];
+ if(!ipoReceipts.length)fail('IPO_STATUS_SWEEP_MISSING','no_issuer_pipeline_receipt');
+ for(const a of ipoReceipts){
+  if(!a.issuer_name||!/^https:\/\//.test(a.official_url||'')||!a.checked_at||!a.stage||!['MATERIAL_DELTA','NO_DELTA','SOURCE_GAP'].includes(a.new_delta_or_none))
+    fail('INVALID_IPO_SOURCE_RECEIPT',String(a.issuer_name||'unknown'));
+  if(a.new_delta_or_none==='SOURCE_GAP'&&!a.error)fail('IPO_SOURCE_GAP_WITHOUT_REASON',a.issuer_name);
+ }
+ const xr=input.x_source_receipt||null;
+ if(!xr||!xr.checked_at||!['AVAILABLE','UNAVAILABLE'].includes(xr.browser_session)||
+      !['ORIGINAL_READ','PUBLIC_ORIGINAL_LOOKUP','SOURCE_GAP'].includes(xr.status)||
+      (xr.status==='ORIGINAL_READ'&& (xr.browser_session!=='AVAILABLE'||!/^https:\/\/(x\.com|twitter\.com)\//.test(xr.original_post_url||'')))||
+      (xr.status==='PUBLIC_ORIGINAL_LOOKUP'&&!/^https:\/\//.test(xr.fallback_url||''))||
+      (xr.status==='SOURCE_GAP'&&!xr.error))
+   fail('X_SOURCE_PROVENANCE_MISSING','scheduled_runtime_source_receipt');
  const count=new Map(),history=Array.isArray(input.previous_events)?input.previous_events:[];
  for(let i=0;i<parsed.length;i++){
   const item=items[i],line=parsed[i];
@@ -43,6 +59,7 @@ export function validateStockNovelty(input){
   const event=byKey.get(item.event_key);
   if(item.section!==event.primary_section)fail('WRONG_PRIMARY_HOME',event.event_key+'/'+item.section);
   if(event.kind===legitCalendar && item.section!==9)fail('CALENDAR_REPEATED_OUTSIDE_CALENDAR',event.event_key);
+  if(event.kind==='IPO_ISSUER_STAGE'&&(item.section!==5||!/IPO|Pre-IPO|新股/i.test(String(item.text||''))))fail('IPO_STAGE_NOT_IN_IPO_SECTION',event.event_key);
  }
  for(const [key,n] of count){
   if(n>1)fail('DUPLICATE_SAME_DAY_STORY',key+'/'+n);
