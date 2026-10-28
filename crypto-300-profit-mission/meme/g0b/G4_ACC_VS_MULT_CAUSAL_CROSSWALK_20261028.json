@@ -1,0 +1,405 @@
+{
+  "schema_version": 1,
+  "status": "OFFLINE_CAUSAL_CLOCK_CROSSWALK_NOT_FOLLOWER_BACKTEST",
+  "source_ref": "a5b7bd985ebd44ae2b661188a62898b11fe431bc",
+  "source_blobs": {
+    "m3_study": "a31a2bbcd1fe7c70951152f2a23edca6c934dc40",
+    "selected_root_lots": "b44cc2140927246f9a428c8c455a6793eb80b662",
+    "g0a_inventory": "0f06fbcc5a1cc8896e54fdf4b83b743ca3c928ac",
+    "g0b_pilot_report": "4c138ae3083fbdd0e72c5e34ba096e62189b4d1d"
+  },
+  "population": {
+    "m3_buy_episodes": 188,
+    "m3_buy_signatures": 315,
+    "m3_acc_signal_events": 22,
+    "m3_mult_signal_events": 10,
+    "m3_signal_union_episodes": 22
+  },
+  "stats": {
+    "acc_episode_count": 22,
+    "acc_lag_median_seconds": 13,
+    "acc_within_60_seconds": 12,
+    "acc_over_600_seconds": 6,
+    "acc_over_3600_seconds": 2,
+    "mult_episode_count": 10,
+    "mult_after_acc_median_seconds": 4538,
+    "mult_same_epoch_as_acc": 2,
+    "mult_after_acc_over_600_seconds": 8,
+    "root_lots_total": 6,
+    "acc_lots_matched": 5,
+    "acc_lots_exit_before_24h": 4
+  },
+  "acc_by_episode": [
+    {
+      "mint": "MukLDtJ8Cx9DxLbeyLRSWPSposTMWuwHANbuaudpump",
+      "episode_id": "1a894b5b9f825330170474ae871b6ed2ec053e2c46b350bbef874c5cc705165e",
+      "model_first_buy_epoch": 1788619528,
+      "acc_signal_epoch": 1788642055,
+      "acc_after_model_first_buy_seconds": 22527,
+      "mult_signal_epoch": 1788642055,
+      "mult_after_acc_seconds": 0
+    },
+    {
+      "mint": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+      "episode_id": "ed4e4398ce0f05b838084b443803aaeb7a7231873186cf9b6503ba1b0403d94c",
+      "model_first_buy_epoch": 1788661711,
+      "acc_signal_epoch": 1788661718,
+      "acc_after_model_first_buy_seconds": 7,
+      "mult_signal_epoch": null,
+      "mult_after_acc_seconds": null
+    },
+    {
+      "mint": "HcRLc9VDgjLeK154xDawfb1dmVJ98DoSqcwTHGqiDeJR",
+      "episode_id": "a26e0ae867bade4c29a87b246cf92d21da7ee269d8f570c07ccdb5bda4056f2d",
+      "model_first_buy_epoch": 1788723238,
+      "acc_signal_epoch": 1788723248,
+      "acc_after_model_first_buy_seconds": 10,
+      "mult_signal_epoch": 1788730140,
+      "mult_after_acc_seconds": 6892
+    },
+    {
+      "mint": "8K5X85PAJHAAVSvYaAzgVPPAPsqqHmvx16ZyBiscYF8L",
+      "episode_id": "d71d1b65d505cd20f582b506567c0545378d119fc7729a5b5dc74f173e03313f",
+      "model_first_buy_epoch": 1788834199,
+      "acc_signal_epoch": 1788835337,
+      "acc_after_model_first_buy_seconds": 1138,
+      "mult_signal_epoch": null,
+      "mult_after_acc_seconds": null
+    },
+    {
+      "mint": "E4Ap4icMLwKot8rkkTbq5JkS5kZxt5XCE3yfxbzYBjHx",
+      "episode_id": "93f61181786349f529902926590fe3b5650b32e9d20a22d4f03f4ad7efe6bee0",
+      "model_first_buy_epoch": 1789094071,
+      "acc_signal_epoch": 1789097042,
+      "acc_after_model_first_buy_seconds": 2971,
+      "mult_signal_epoch": null,
+      "mult_after_acc_seconds": null
+    },
+    {
+      "mint": "4MMQY9bwkxxTtsK3W227Q5ABT6yFY8Pmn9Ze7wmAXKY8",
+      "episode_id": "25a8fd116ce885abbc50955c2839e6601997521a455806c085f395af928baeaa",
+      "model_first_buy_epoch": 1789160155,
+      "acc_signal_epoch": 1789160162,
+      "acc_after_model_first_buy_seconds": 7,
+      "mult_signal_epoch": null,
+      "mult_after_acc_seconds": null
+    },
+    {
+      "mint": "PerPsCe2SJ7Q25CN4R5TTX4fmBdmknE2hQmqCt96fHL",
+      "episode_id": "ba70bd2771f97e9b3912181181a3102faeaf0f0799a1965199b735a2bd69bfff",
+      "model_first_buy_epoch": 1789230619,
+      "acc_signal_epoch": 1789231035,
+      "acc_after_model_first_buy_seconds": 416,
+      "mult_signal_epoch": 1789237740,
+      "mult_after_acc_seconds": 6705
+    },
+    {
+      "mint": "CbyTNf7UPzvewHh4Zp6umogM2RWahhmGRJWLJnPwpump",
+      "episode_id": "5cadb05af5e9c082108f7178f155979d0cb448ac925ba1da034b828fe9ca3e0f",
+      "model_first_buy_epoch": 1789403938,
+      "acc_signal_epoch": 1789403948,
+      "acc_after_model_first_buy_seconds": 10,
+      "mult_signal_epoch": null,
+      "mult_after_acc_seconds": null
+    },
+    {
+      "mint": "Hg5Ja55T5wESq4vyFoiVCMeHXtGyVA69X2UHq8hgpump",
+      "episode_id": "ecbae1d4c22018a95ec41f9517a9645229a9873eff719e06d745ec18edac217f",
+      "model_first_buy_epoch": 1789404005,
+      "acc_signal_epoch": 1789404327,
+      "acc_after_model_first_buy_seconds": 322,
+      "mult_signal_epoch": 1789410540,
+      "mult_after_acc_seconds": 6213
+    },
+    {
+      "mint": "98kfF7rmsg1QDUEoCqNE7g7M1FdrTt92TEp2CLzypump",
+      "episode_id": "14439f5c03dae54b422cae5974f1a813bb41d0a515c385010dfdfb94f97b0264",
+      "model_first_buy_epoch": 1789567865,
+      "acc_signal_epoch": 1789567874,
+      "acc_after_model_first_buy_seconds": 9,
+      "mult_signal_epoch": 1789572540,
+      "mult_after_acc_seconds": 4666
+    },
+    {
+      "mint": "Hg5Ja55T5wESq4vyFoiVCMeHXtGyVA69X2UHq8hgpump",
+      "episode_id": "8a5edea6451adea61956fd29b336da0a8b394d150dbfc61c9013902305f00c47",
+      "model_first_buy_epoch": 1789586265,
+      "acc_signal_epoch": 1789586338,
+      "acc_after_model_first_buy_seconds": 73,
+      "mult_signal_epoch": 1789590540,
+      "mult_after_acc_seconds": 4202
+    },
+    {
+      "mint": "GTBxUiw6wJdmmkCGZgRHLyYxqu1vG4KtRpeox6yDpump",
+      "episode_id": "42d6ad9e58abdf01accaaf1970de2c175d1e3f9ff5ddeccc24663c5e79356000",
+      "model_first_buy_epoch": 1789856561,
+      "acc_signal_epoch": 1789856570,
+      "acc_after_model_first_buy_seconds": 9,
+      "mult_signal_epoch": null,
+      "mult_after_acc_seconds": null
+    },
+    {
+      "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+      "episode_id": "a47f853423854cb969e307ddc46e86bcf4d4d43c37ecb2e49a5e595d99f134d7",
+      "model_first_buy_epoch": 1789924581,
+      "acc_signal_epoch": 1789930581,
+      "acc_after_model_first_buy_seconds": 6000,
+      "mult_signal_epoch": 1789930581,
+      "mult_after_acc_seconds": 0
+    },
+    {
+      "mint": "EKtmPPLaCbEEKiwoHHtV7TsRsmPXs5CMGtQtZFSiinsc",
+      "episode_id": "b4d41b7fa8abb3112f82a16818a6524b0cd25f2065ab1dd4851264b354735a2e",
+      "model_first_buy_epoch": 1789947708,
+      "acc_signal_epoch": 1789947715,
+      "acc_after_model_first_buy_seconds": 7,
+      "mult_signal_epoch": null,
+      "mult_after_acc_seconds": null
+    },
+    {
+      "mint": "4K1m7gAMDKzrxQn68yuZAd767w57Fw7Ykw69dG3umeta",
+      "episode_id": "32e5cdb79080580d60f21e728998079c511c218886352bfd3f95065153189f88",
+      "model_first_buy_epoch": 1790097161,
+      "acc_signal_epoch": 1790097169,
+      "acc_after_model_first_buy_seconds": 8,
+      "mult_signal_epoch": 1790101740,
+      "mult_after_acc_seconds": 4571
+    },
+    {
+      "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+      "episode_id": "a48f9a0e5d6227fb62d3d80e4e4a7ecf125b4ed1838b01d6b27e49e341b51a66",
+      "model_first_buy_epoch": 1790205219,
+      "acc_signal_epoch": 1790205235,
+      "acc_after_model_first_buy_seconds": 16,
+      "mult_signal_epoch": 1790209740,
+      "mult_after_acc_seconds": 4505
+    },
+    {
+      "mint": "UpBBfyC75u3kxDGWmmmW2yauk9YY3CqZhdt1KUDkids",
+      "episode_id": "3a666709f0f1edca33435d4e4c1e483473866332c01a779e849de4d3508014a8",
+      "model_first_buy_epoch": 1790215811,
+      "acc_signal_epoch": 1790216860,
+      "acc_after_model_first_buy_seconds": 1049,
+      "mult_signal_epoch": null,
+      "mult_after_acc_seconds": null
+    },
+    {
+      "mint": "98kfF7rmsg1QDUEoCqNE7g7M1FdrTt92TEp2CLzypump",
+      "episode_id": "0fc2c485fe94776708fe3fa98597d675874a0e09f781031bed58d50f9f6e9098",
+      "model_first_buy_epoch": 1790381043,
+      "acc_signal_epoch": 1790381047,
+      "acc_after_model_first_buy_seconds": 4,
+      "mult_signal_epoch": null,
+      "mult_after_acc_seconds": null
+    },
+    {
+      "mint": "CbcyNo7m1amFWqEQm2m4PLv1UNvpcL3C1Ujm6AkzpKoU",
+      "episode_id": "8f1f62ae6a26121781696a4c92a8d9d249f4f82bbad8b1b1ebf514a3a65ebce3",
+      "model_first_buy_epoch": 1790391899,
+      "acc_signal_epoch": 1790393170,
+      "acc_after_model_first_buy_seconds": 1271,
+      "mult_signal_epoch": 1790396940,
+      "mult_after_acc_seconds": 3770
+    },
+    {
+      "mint": "CbcyNo7m1amFWqEQm2m4PLv1UNvpcL3C1Ujm6AkzpKoU",
+      "episode_id": "2a3367bd6f19bc12537367583b170847f736887ca80c4e3b8467477b1c2dd192",
+      "model_first_buy_epoch": 1790452012,
+      "acc_signal_epoch": 1790452015,
+      "acc_after_model_first_buy_seconds": 3,
+      "mult_signal_epoch": null,
+      "mult_after_acc_seconds": null
+    },
+    {
+      "mint": "98kfF7rmsg1QDUEoCqNE7g7M1FdrTt92TEp2CLzypump",
+      "episode_id": "e8023ff4c14194e30ad8757c0a0b96ae376c17d8bdf4978c7acd5511604e55b3",
+      "model_first_buy_epoch": 1790451999,
+      "acc_signal_epoch": 1790452140,
+      "acc_after_model_first_buy_seconds": 141,
+      "mult_signal_epoch": null,
+      "mult_after_acc_seconds": null
+    },
+    {
+      "mint": "CARDSccUMFKoPRZxt5vt3ksUbxEFEcnZ3H2pd3dKxYjp",
+      "episode_id": "54e5898fbda7f750a0770fd41b3b9be4b90221896dc2a9ca80997e9ce141db65",
+      "model_first_buy_epoch": 1790627746,
+      "acc_signal_epoch": 1790627749,
+      "acc_after_model_first_buy_seconds": 3,
+      "mult_signal_epoch": null,
+      "mult_after_acc_seconds": null
+    }
+  ],
+  "mult_by_episode": [
+    {
+      "mint": "MukLDtJ8Cx9DxLbeyLRSWPSposTMWuwHANbuaudpump",
+      "episode_id": "1a894b5b9f825330170474ae871b6ed2ec053e2c46b350bbef874c5cc705165e",
+      "model_first_buy_epoch": 1788619528,
+      "acc_signal_epoch": 1788642055,
+      "acc_after_model_first_buy_seconds": 22527,
+      "mult_signal_epoch": 1788642055,
+      "mult_after_acc_seconds": 0
+    },
+    {
+      "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+      "episode_id": "a47f853423854cb969e307ddc46e86bcf4d4d43c37ecb2e49a5e595d99f134d7",
+      "model_first_buy_epoch": 1789924581,
+      "acc_signal_epoch": 1789930581,
+      "acc_after_model_first_buy_seconds": 6000,
+      "mult_signal_epoch": 1789930581,
+      "mult_after_acc_seconds": 0
+    },
+    {
+      "mint": "CbcyNo7m1amFWqEQm2m4PLv1UNvpcL3C1Ujm6AkzpKoU",
+      "episode_id": "8f1f62ae6a26121781696a4c92a8d9d249f4f82bbad8b1b1ebf514a3a65ebce3",
+      "model_first_buy_epoch": 1790391899,
+      "acc_signal_epoch": 1790393170,
+      "acc_after_model_first_buy_seconds": 1271,
+      "mult_signal_epoch": 1790396940,
+      "mult_after_acc_seconds": 3770
+    },
+    {
+      "mint": "Hg5Ja55T5wESq4vyFoiVCMeHXtGyVA69X2UHq8hgpump",
+      "episode_id": "8a5edea6451adea61956fd29b336da0a8b394d150dbfc61c9013902305f00c47",
+      "model_first_buy_epoch": 1789586265,
+      "acc_signal_epoch": 1789586338,
+      "acc_after_model_first_buy_seconds": 73,
+      "mult_signal_epoch": 1789590540,
+      "mult_after_acc_seconds": 4202
+    },
+    {
+      "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+      "episode_id": "a48f9a0e5d6227fb62d3d80e4e4a7ecf125b4ed1838b01d6b27e49e341b51a66",
+      "model_first_buy_epoch": 1790205219,
+      "acc_signal_epoch": 1790205235,
+      "acc_after_model_first_buy_seconds": 16,
+      "mult_signal_epoch": 1790209740,
+      "mult_after_acc_seconds": 4505
+    },
+    {
+      "mint": "4K1m7gAMDKzrxQn68yuZAd767w57Fw7Ykw69dG3umeta",
+      "episode_id": "32e5cdb79080580d60f21e728998079c511c218886352bfd3f95065153189f88",
+      "model_first_buy_epoch": 1790097161,
+      "acc_signal_epoch": 1790097169,
+      "acc_after_model_first_buy_seconds": 8,
+      "mult_signal_epoch": 1790101740,
+      "mult_after_acc_seconds": 4571
+    },
+    {
+      "mint": "98kfF7rmsg1QDUEoCqNE7g7M1FdrTt92TEp2CLzypump",
+      "episode_id": "14439f5c03dae54b422cae5974f1a813bb41d0a515c385010dfdfb94f97b0264",
+      "model_first_buy_epoch": 1789567865,
+      "acc_signal_epoch": 1789567874,
+      "acc_after_model_first_buy_seconds": 9,
+      "mult_signal_epoch": 1789572540,
+      "mult_after_acc_seconds": 4666
+    },
+    {
+      "mint": "Hg5Ja55T5wESq4vyFoiVCMeHXtGyVA69X2UHq8hgpump",
+      "episode_id": "ecbae1d4c22018a95ec41f9517a9645229a9873eff719e06d745ec18edac217f",
+      "model_first_buy_epoch": 1789404005,
+      "acc_signal_epoch": 1789404327,
+      "acc_after_model_first_buy_seconds": 322,
+      "mult_signal_epoch": 1789410540,
+      "mult_after_acc_seconds": 6213
+    },
+    {
+      "mint": "PerPsCe2SJ7Q25CN4R5TTX4fmBdmknE2hQmqCt96fHL",
+      "episode_id": "ba70bd2771f97e9b3912181181a3102faeaf0f0799a1965199b735a2bd69bfff",
+      "model_first_buy_epoch": 1789230619,
+      "acc_signal_epoch": 1789231035,
+      "acc_after_model_first_buy_seconds": 416,
+      "mult_signal_epoch": 1789237740,
+      "mult_after_acc_seconds": 6705
+    },
+    {
+      "mint": "HcRLc9VDgjLeK154xDawfb1dmVJ98DoSqcwTHGqiDeJR",
+      "episode_id": "a26e0ae867bade4c29a87b246cf92d21da7ee269d8f570c07ccdb5bda4056f2d",
+      "model_first_buy_epoch": 1788723238,
+      "acc_signal_epoch": 1788723248,
+      "acc_after_model_first_buy_seconds": 10,
+      "mult_signal_epoch": 1788730140,
+      "mult_after_acc_seconds": 6892
+    }
+  ],
+  "selected_root_lot_crosswalk": [
+    {
+      "mint": "MukLDtJ8Cx9DxLbeyLRSWPSposTMWuwHANbuaudpump",
+      "episode_id": "1a894b5b9f825330170474ae871b6ed2ec053e2c46b350bbef874c5cc705165e",
+      "case_status": "MINT_AND_SINGLE_ACC_EPISODE_MATCH",
+      "acc_signal_epoch": 1788642055,
+      "mult_signal_epoch": 1788642055,
+      "last_observed_exit_epoch": 1788663280,
+      "acc_to_last_exit_seconds": 21225,
+      "mult_to_last_exit_seconds": 21225,
+      "last_exit_before_acc_plus_24h": true,
+      "frank_root_observed_return_pct": 19.889031,
+      "frank_root_observed_net_usdc": 8452.838215
+    },
+    {
+      "mint": "8K5X85PAJHAAVSvYaAzgVPPAPsqqHmvx16ZyBiscYF8L",
+      "episode_id": "d71d1b65d505cd20f582b506567c0545378d119fc7729a5b5dc74f173e03313f",
+      "case_status": "MINT_AND_SINGLE_ACC_EPISODE_MATCH",
+      "acc_signal_epoch": 1788835337,
+      "mult_signal_epoch": null,
+      "last_observed_exit_epoch": 1788841656,
+      "acc_to_last_exit_seconds": 6319,
+      "mult_to_last_exit_seconds": null,
+      "last_exit_before_acc_plus_24h": true,
+      "frank_root_observed_return_pct": -0.054035,
+      "frank_root_observed_net_usdc": -15.453013
+    },
+    {
+      "mint": "E4Ap4icMLwKot8rkkTbq5JkS5kZxt5XCE3yfxbzYBjHx",
+      "episode_id": "93f61181786349f529902926590fe3b5650b32e9d20a22d4f03f4ad7efe6bee0",
+      "case_status": "MINT_AND_SINGLE_ACC_EPISODE_MATCH",
+      "acc_signal_epoch": 1789097042,
+      "mult_signal_epoch": null,
+      "last_observed_exit_epoch": 1789098474,
+      "acc_to_last_exit_seconds": 1432,
+      "mult_to_last_exit_seconds": null,
+      "last_exit_before_acc_plus_24h": true,
+      "frank_root_observed_return_pct": -18.175367,
+      "frank_root_observed_net_usdc": -9087.683561
+    },
+    {
+      "mint": "PerPsCe2SJ7Q25CN4R5TTX4fmBdmknE2hQmqCt96fHL",
+      "episode_id": "ba70bd2771f97e9b3912181181a3102faeaf0f0799a1965199b735a2bd69bfff",
+      "case_status": "MINT_AND_SINGLE_ACC_EPISODE_MATCH",
+      "acc_signal_epoch": 1789231035,
+      "mult_signal_epoch": 1789237740,
+      "last_observed_exit_epoch": 1789343880,
+      "acc_to_last_exit_seconds": 112845,
+      "mult_to_last_exit_seconds": 106140,
+      "last_exit_before_acc_plus_24h": false,
+      "frank_root_observed_return_pct": 129.333311,
+      "frank_root_observed_net_usdc": 34919.993902
+    },
+    {
+      "mint": "4K1m7gAMDKzrxQn68yuZAd767w57Fw7Ykw69dG3umeta",
+      "episode_id": "32e5cdb79080580d60f21e728998079c511c218886352bfd3f95065153189f88",
+      "case_status": "MINT_AND_SINGLE_ACC_EPISODE_MATCH",
+      "acc_signal_epoch": 1790097169,
+      "mult_signal_epoch": 1790101740,
+      "last_observed_exit_epoch": 1790109842,
+      "acc_to_last_exit_seconds": 12673,
+      "mult_to_last_exit_seconds": 8102,
+      "last_exit_before_acc_plus_24h": true,
+      "frank_root_observed_return_pct": -37.90093,
+      "frank_root_observed_net_usdc": -9475.232407
+    },
+    {
+      "mint": "HzYCHqAN2uoHGRnL9v2ChCfFQX3bvJuJd5zu2Hd5MZQy",
+      "case_status": "NO_ACC_M3",
+      "frank_root_observed_return_pct": 4.702721
+    }
+  ],
+  "interpretation_limits": [
+    "source timestamps are archived model signal event times, not notification receipt or index-ingest times",
+    "first buy is model-episode first BUY, not wallet lifetime first BUY",
+    "closed-lot observed USDC spreads do not equal follower net returns",
+    "matching selected lots is not independent holdout or representative cohort",
+    "no amount-dependent quotes, executable entry/exit, fee-adjusted follower outcomes or additional network calls",
+    "a root exit before ACC+24h makes fixed 24h exit a different strategy from mirroring Frank",
+    "price study uses ACC T0 for eventual MULT labels except coincident M1; no causal formal MULT return for M2-M4"
+  ]
+}
