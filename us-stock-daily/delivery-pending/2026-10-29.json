@@ -1,0 +1,892 @@
+{
+  "schema": "US_STOCK_NOVELTY_MANIFEST_V1",
+  "report_date": "2026-10-29",
+  "timezone": "Asia/Bangkok",
+  "latest_completed_us_session": "2026-10-28",
+  "checked_at": "2026-10-29T05:42:04+07:00",
+  "body": "美股每日晨报｜2026-10-29\n时区：Asia/Bangkok。最近完整美国股票现货交易日：2026-10-28（美东周三）。数据核查截至曼谷2026-10-29清晨；10月29日美国常规交易尚未开始。\n\n一、市场总览\n（1）10月28日美国现货收盘四指数均小幅上涨：标普500收7,743.98点，涨21.38点（约0.28%）；道指52,475.10点，涨97.53点（约0.19%）；纳指综合26,549.85点，涨72.04点（约0.27%）；罗素2000收2,830.51点，涨11.64点（约0.41%）。AP与Reuters的标普末位报价相差0.01点，四指数采用AP同源口径。\n（2）Reuters统计纽交所上涨/下跌家数比1.05:1，纳斯达克2,849家上涨、1,926家下跌，比值1.48:1；标普500创52周新高19只、新低14只，纳指75只新高、198只新低。指数普涨但内部扩散程度不一致。\n（3）全美交易所成交约166.7亿股，低于近20日171.0亿股均量约2.5%；当天指数上涨不能单凭量能推断机构全面增配。\n（4）Reuters在10月28日美联储决定公布前记录美元指数约102.40、美国10年期国债收益率约5.0112%；二者是决议前时点报价，不能当作FOMC后的收盘报价。政策结果已公布，利率曲线需在下一交易日重新定价。\n\n二、正常时段、盘后与异动原因\n（1）Vertiv公布Q3营收43.13亿美元、同比增长61%，调整后EPS为2.21美元、有机订单同比增长超过100%，并提高全年指引；Reuters记录股价收涨16.5%。这是数据中心供电与散热设备需求兑现的公司级证据。\n（2）韩国SK Hynix季度利润同比增长逾七倍，Reuters记录Micron当日上涨5.9%、SK Hynix美股交易证券上涨13.3%。存储芯片盈利改善带动同业定价，后续仍需核实各公司HBM订单和利润率。\n（3）Boston Scientific下调全年利润展望，股价跌5.8%；医疗器械公司盈利预期变化与当日半导体上涨并行，不能把市场上涨解释成所有行业盈利改善。\n（4）Robinhood季度利润不及分析师预期，Reuters将原因部分归于加密资产交易疲软，股价收跌3.3%；经纪平台交易量与加密市场波动之间的盈利弹性需要持续区分。\n（5）常规收盘后Microsoft披露业绩，Reuters记录盘后涨幅超过4%；Alphabet财报后盘后跌幅超过7%，后续报道一度超过10%。这属于10月28日收盘后的价格反应，不能计入当日纳指现货涨跌。\n\n三、行业级异动与结构性主题\n（1）费城半导体指数当日上涨1.8%，连续第四个交易日收涨；结合存储芯片盈利上修，半导体相对标普500取得明显超额收益，但尚需观察订单扩散到设备、网络和非AI终端。\n（2）行业结构呈现数据中心基础设施强、部分医疗器械与加密交易平台弱的分化。已核验的Vertiv、Boston Scientific和Robinhood个股反应无法直接替代全部11个GICS板块收益率，未取得同口径板块全量值时不推算排名。\n（3）10月28日Reuters盘中记录布伦特约115.47美元/桶、WTI约101.33美元/桶，均较前一交易日反弹约1.4%；这是报道时点的合约报价，不能误称最终结算价。上游能源与航空、物流的成本传导方向相反。\n\n四、重大主题专题分析\n（1）Microsoft FY27 Q1正式营收923亿美元、同比增19%，Azure收入331.65亿美元、同比增48%，自由现金流约186亿美元；季度资本开支452亿美元，低于此前约500亿美元预估。云业务增长与现金创造同时存在。\n（2）Alphabet Q3营收1276亿美元，低于LSEG预期1282亿美元；Google Cloud营收307.1亿美元、超过翻倍，但广告收入820.1亿美元、低于预期约14.1亿美元。季度自由现金流为负90.7亿美元，前季为负59亿美元，AI投资现金压力进一步显性化。\n（3）本季两家云平台在资本投入回收上的差距可量化：Microsoft自由现金流约正186亿美元，Alphabet约负90.7亿美元，方向相反、差额约276.7亿美元。由于业务组合和现金流季节性不同，这不是长期胜负判定；应进一步比较云增速、广告现金流、资本开支兑现和下一季指引。\n\n五、AI、科技与一级市场\n（1）Oracle投资者日将FY2030收入目标设为至少2250亿美元，并预计FY2029自由现金流至少300亿美元；同时承诺FY2027至FY2030新增资本市场融资不超过200亿美元（不含旧债再融资），其中拟各半为股权和债务。这些是公司前瞻目标，尚非已实现业绩。\n（2）Alphabet在10月28日财报日发布Gemini 4 Carbon模型，并由CEO在电话会上称其处于模型能力前沿；该竞争力评价属于发行人声明，仍需独立基准测试与企业付费采用数据验证。\nIPO / Pre-IPO / 新股机会：无高置信新增。\n\n六、机构资金与市场观点\n（1）Reuters援引LSEG：截至10月28日已有200家标普500公司公布Q3业绩，其中84%超过市场预期；分析师预计标普500 Q3整体利润同比增长31.8%，较10月1日估计的30.6%上修。该口径是已披露样本与预测，不能推定余下公司必然超预期。\n（2）Reuters援引CME FedWatch：10月28日市场对12月加息25基点的定价概率约85.0%，高于10月27日的78.3%；这是期货隐含概率，不能等同于美联储已承诺12月加息。\n（3）Reuters援引Truist指出Microsoft五年期CDS仍属大型科技企业中最窄的一档，而AI相关企业部分信用利差扩大；该比较是信用风险相对定价，没有同口径实时基点数时不填造数值。\n\n七、政策、监管与全球局势\n（1）美联储10月28日正式维持联邦基金目标区间3.75%至4.00%，投票10比2；Cook与Hammack反对，倾向上调25基点。声明认为经济增长强劲、通胀仍高，政策结果已公布，后续应观察实际数据与12月定价。\n（2）Reuters援引消息人士称美国司法部正询问Nvidia拟以约129.3亿美元收购Hugging Face交易的竞争影响。此为媒体披露的监管问询，尚不等于司法部已作出违法认定或正式禁止交易。\n（3）也门胡塞组织宣称袭击沙特炼油设施，Reuters报道时沙特当局尚未独立确认该次打击；原油风险溢价因此抬升，但必须区分武装组织声明、官方确认及实际产能损失。\n\n八、风险雷达\n（1）Alphabet需重点跟踪下一季度经营现金流能否覆盖数据中心扩张，以及广告收入缺口是否持续。若云收入增长仍无法带来自由现金流修复，不能仅凭盘后股价跌幅认定估值已经便宜。\n（2）Microsoft资本开支低于此前预测的部分原因是第三方产能交付延迟，而非已证实永久削减投资；商业剩余履约义务约6770亿美元，未来关注实际履约、回款及延迟是否延续。\n（3）油价在10月28日再度反弹，若炼厂或航运扰动被官方确认并持续，能源价格可能重新推高通胀预期；若实际供给未中断，风险溢价也可能快速回落。须等待EIA库存和官方设施通报。\n（4）标普500当日涨幅仅约0.28%，纽交所涨跌家数比接近1:1；若后续纳指由少数大型科技股支撑、创新低家数继续超过创新高家数，需下调对指数表面上涨的广度判断。\n\n九、未来24至72小时事件日历\n（1）10月29日周四美东08:30（曼谷19:30）：BEA计划公布美国Q3 GDP初值，并发布9月个人收入与支出/PCE。重点比较实际增长、核心PCE与市场预期，公布前不写成已实现数据。\n（2）10月29日周四：Eli Lilly官方确认公布Q3财报，美东10:00（曼谷21:00）召开电话会议。关注GLP-1销量、毛利、产能和全年指引。\n（3）10月29日周四美东17:00（曼谷10月30日04:00）：Amazon官方安排Q3业绩电话会议。重点核对AWS增速、AI基础设施资本开支、零售利润率与自由现金流；该业绩截至本轮尚未发布。\n（4）10月30日周五是10月最后一个美股常规交易日；重点观察月末收盘的行业相对强弱和长端收益率变化。Fed官方日历当日还安排H.15利率统计与H.8银行资产负债统计，时间以官网实际更新为准。\n\n十、今日买入观察\n（1）MSFT：财报后观察等待。Why-now为Azure增长48%且季度自由现金流186亿美元，显示AI投入出现实际回报；风险是未来资本开支恢复上升、交付延迟和高估值。若Azure增速或现金转换率连续下修，投资逻辑失效；先看美东10月29日常规交易确认盘后涨幅。\n（2）VRT：成长卫星候选但不追涨。Why-now为有机订单增长超过100%及全年指引上修；当日股价已涨16.5%，估值与交付预期较高。若未来订单取消、毛利率回落或业绩不支持高增速，观察逻辑失效。\n（3）GOOGL：仅列观察等待。Why-now是Google Cloud翻倍增长与广告业务出现不同步，盘后显著回撤带来重新估值窗口；风险是自由现金流持续为负、广告收入低于预期和2027年更高资本开支。先等待管理层补充现金流路径，不把跌幅当作买点。\n（4）ORCL：观察等待。Why-now是首次给出FY2029至少300亿美元自由现金流目标及融资上限；风险是远期预测兑现周期长、资本支出与新增债务及股权稀释。若融资超过指引或现金流转正推迟，投资逻辑失效。\n\n十一、漏检复盘与监控修正\n（1）10月28日三大指数常规收盘均上涨，但Microsoft与Alphabet盘后出现相反方向的大幅波动。只用收盘指数解释隔夜组合风险会漏掉财报后的重新定价；隔夜风险应单独查看已发布财报与盘后价格。\n（2）AP记录美联储维持利率后两年期国债收益率先跳升、随后回落。单一盘中时点可能错误概括整场政策反应，利率监控应并列比较决议前、记者会后与下一交易日的两年期及十年期变化。\n\n十二、结论\n（1）10月28日四大美国现货指数小幅收涨，但行业及个股盈利兑现明显分化；半导体指数上涨1.8%、数据中心基础设施表现强劲，医疗器械和交易平台个股承压。指数方向不能替代企业盈利质量判断。\n（2）决策重点转向美联储已公布的3.75%至4.00%利率区间、Microsoft与Alphabet最新现金流差异，以及10月29日GDP/PCE和Amazon实际财报。买入观察保留明确失效条件，等待新交易时段和官方数据验证。\n\n英文与官方主要来源：\nAP 10/28: https://www.ctinsider.com/business/article/how-major-us-stock-indexes-fared-wednesday-22499204.php\nReuters 10/28 US close: https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/\nFed official: https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm\nMicrosoft IR: https://www.microsoft.com/en-us/investor/earnings/fy-2027-q1/press-release-webcast\nMicrosoft Reuters: https://www.reuters.com/business/retail-consumer/microsoft-beats-quarterly-cloud-revenue-estimates-2026-10-28/\nAlphabet Reuters: https://www.reuters.com/business/alphabets-google-cloud-unit-beats-quarterly-revenue-estimates-steady-ai-demand-2026-10-28/\nVertiv issuer release: https://www.prnewswire.com/news-releases/vertiv-reports-strong-third-quarter-2026-with-net-sales-growth-of-61-organic-orders-growth-over-100-and-diluted-eps-growth-of-91-adjusted-diluted-eps-growth-of-78-raises-full-year-2026-guidance-across-all-key-metrics-302921936.html\nOracle IR: https://investor.oracle.com/investor-news/news-details/2026/Oracle-Investor-Day-2026-Accelerating-Value-Creation/default.aspx\nNvidia DOJ Reuters: https://www.reuters.com/world/us-doj-is-inquiring-about-nvidias-purchase-hugging-face-sources-say-2026-10-28/\nOil Reuters: https://www.reuters.com/world/asia-pacific/oil-prices-rise-after-attack-saudi-arabian-refinery-reignites-supply-concerns-2026-10-28/\nFX Reuters: https://www.reuters.com/business/dollar-holds-gains-ahead-fed-policy-signal-rbnz-decision-2026-10-28/\nBEA official: https://www.bea.gov/news/schedule\nAmazon official distribution: https://www.businesswire.com/news/home/20261015676873/en/Amazon.com-to-Webcast-Third-Quarter-2026-Financial-Results-Conference-Call\nLilly IR: https://investor.lilly.com/news-releases/news-release-details/lilly-confirms-date-and-conference-call-third-quarter-2026\n",
+  "items": [
+    {
+      "section": 1,
+      "item_number": 1,
+      "text": "10月28日美国现货收盘四指数均小幅上涨：标普500收7,743.98点，涨21.38点（约0.28%）；道指52,475.10点，涨97.53点（约0.19%）；纳指综合26,549.85点，涨72.04点（约0.27%）；罗素2000收2,830.51点，涨11.64点（约0.41%）。AP与Reuters的标普末位报价相差0.01点，四指数采用AP同源口径。",
+      "event_key": "stock_20261029_s1_i1"
+    },
+    {
+      "section": 1,
+      "item_number": 2,
+      "text": "Reuters统计纽交所上涨/下跌家数比1.05:1，纳斯达克2,849家上涨、1,926家下跌，比值1.48:1；标普500创52周新高19只、新低14只，纳指75只新高、198只新低。指数普涨但内部扩散程度不一致。",
+      "event_key": "stock_20261029_s1_i2"
+    },
+    {
+      "section": 1,
+      "item_number": 3,
+      "text": "全美交易所成交约166.7亿股，低于近20日171.0亿股均量约2.5%；当天指数上涨不能单凭量能推断机构全面增配。",
+      "event_key": "stock_20261029_s1_i3"
+    },
+    {
+      "section": 1,
+      "item_number": 4,
+      "text": "Reuters在10月28日美联储决定公布前记录美元指数约102.40、美国10年期国债收益率约5.0112%；二者是决议前时点报价，不能当作FOMC后的收盘报价。政策结果已公布，利率曲线需在下一交易日重新定价。",
+      "event_key": "stock_20261029_s1_i4"
+    },
+    {
+      "section": 2,
+      "item_number": 1,
+      "text": "Vertiv公布Q3营收43.13亿美元、同比增长61%，调整后EPS为2.21美元、有机订单同比增长超过100%，并提高全年指引；Reuters记录股价收涨16.5%。这是数据中心供电与散热设备需求兑现的公司级证据。",
+      "event_key": "stock_20261029_s2_i1"
+    },
+    {
+      "section": 2,
+      "item_number": 2,
+      "text": "韩国SK Hynix季度利润同比增长逾七倍，Reuters记录Micron当日上涨5.9%、SK Hynix美股交易证券上涨13.3%。存储芯片盈利改善带动同业定价，后续仍需核实各公司HBM订单和利润率。",
+      "event_key": "stock_20261029_s2_i2"
+    },
+    {
+      "section": 2,
+      "item_number": 3,
+      "text": "Boston Scientific下调全年利润展望，股价跌5.8%；医疗器械公司盈利预期变化与当日半导体上涨并行，不能把市场上涨解释成所有行业盈利改善。",
+      "event_key": "stock_20261029_s2_i3"
+    },
+    {
+      "section": 2,
+      "item_number": 4,
+      "text": "Robinhood季度利润不及分析师预期，Reuters将原因部分归于加密资产交易疲软，股价收跌3.3%；经纪平台交易量与加密市场波动之间的盈利弹性需要持续区分。",
+      "event_key": "stock_20261029_s2_i4"
+    },
+    {
+      "section": 2,
+      "item_number": 5,
+      "text": "常规收盘后Microsoft披露业绩，Reuters记录盘后涨幅超过4%；Alphabet财报后盘后跌幅超过7%，后续报道一度超过10%。这属于10月28日收盘后的价格反应，不能计入当日纳指现货涨跌。",
+      "event_key": "stock_20261029_s2_i5"
+    },
+    {
+      "section": 3,
+      "item_number": 1,
+      "text": "费城半导体指数当日上涨1.8%，连续第四个交易日收涨；结合存储芯片盈利上修，半导体相对标普500取得明显超额收益，但尚需观察订单扩散到设备、网络和非AI终端。",
+      "event_key": "stock_20261029_s3_i1"
+    },
+    {
+      "section": 3,
+      "item_number": 2,
+      "text": "行业结构呈现数据中心基础设施强、部分医疗器械与加密交易平台弱的分化。已核验的Vertiv、Boston Scientific和Robinhood个股反应无法直接替代全部11个GICS板块收益率，未取得同口径板块全量值时不推算排名。",
+      "event_key": "stock_20261029_s3_i2"
+    },
+    {
+      "section": 3,
+      "item_number": 3,
+      "text": "10月28日Reuters盘中记录布伦特约115.47美元/桶、WTI约101.33美元/桶，均较前一交易日反弹约1.4%；这是报道时点的合约报价，不能误称最终结算价。上游能源与航空、物流的成本传导方向相反。",
+      "event_key": "stock_20261029_s3_i3"
+    },
+    {
+      "section": 4,
+      "item_number": 1,
+      "text": "Microsoft FY27 Q1正式营收923亿美元、同比增19%，Azure收入331.65亿美元、同比增48%，自由现金流约186亿美元；季度资本开支452亿美元，低于此前约500亿美元预估。云业务增长与现金创造同时存在。",
+      "event_key": "stock_20261029_s4_i1"
+    },
+    {
+      "section": 4,
+      "item_number": 2,
+      "text": "Alphabet Q3营收1276亿美元，低于LSEG预期1282亿美元；Google Cloud营收307.1亿美元、超过翻倍，但广告收入820.1亿美元、低于预期约14.1亿美元。季度自由现金流为负90.7亿美元，前季为负59亿美元，AI投资现金压力进一步显性化。",
+      "event_key": "stock_20261029_s4_i2"
+    },
+    {
+      "section": 4,
+      "item_number": 3,
+      "text": "本季两家云平台在资本投入回收上的差距可量化：Microsoft自由现金流约正186亿美元，Alphabet约负90.7亿美元，方向相反、差额约276.7亿美元。由于业务组合和现金流季节性不同，这不是长期胜负判定；应进一步比较云增速、广告现金流、资本开支兑现和下一季指引。",
+      "event_key": "stock_20261029_s4_i3"
+    },
+    {
+      "section": 5,
+      "item_number": 1,
+      "text": "Oracle投资者日将FY2030收入目标设为至少2250亿美元，并预计FY2029自由现金流至少300亿美元；同时承诺FY2027至FY2030新增资本市场融资不超过200亿美元（不含旧债再融资），其中拟各半为股权和债务。这些是公司前瞻目标，尚非已实现业绩。",
+      "event_key": "stock_20261029_s5_i1"
+    },
+    {
+      "section": 5,
+      "item_number": 2,
+      "text": "Alphabet在10月28日财报日发布Gemini 4 Carbon模型，并由CEO在电话会上称其处于模型能力前沿；该竞争力评价属于发行人声明，仍需独立基准测试与企业付费采用数据验证。",
+      "event_key": "stock_20261029_s5_i2"
+    },
+    {
+      "section": 6,
+      "item_number": 1,
+      "text": "Reuters援引LSEG：截至10月28日已有200家标普500公司公布Q3业绩，其中84%超过市场预期；分析师预计标普500 Q3整体利润同比增长31.8%，较10月1日估计的30.6%上修。该口径是已披露样本与预测，不能推定余下公司必然超预期。",
+      "event_key": "stock_20261029_s6_i1"
+    },
+    {
+      "section": 6,
+      "item_number": 2,
+      "text": "Reuters援引CME FedWatch：10月28日市场对12月加息25基点的定价概率约85.0%，高于10月27日的78.3%；这是期货隐含概率，不能等同于美联储已承诺12月加息。",
+      "event_key": "stock_20261029_s6_i2"
+    },
+    {
+      "section": 6,
+      "item_number": 3,
+      "text": "Reuters援引Truist指出Microsoft五年期CDS仍属大型科技企业中最窄的一档，而AI相关企业部分信用利差扩大；该比较是信用风险相对定价，没有同口径实时基点数时不填造数值。",
+      "event_key": "stock_20261029_s6_i3"
+    },
+    {
+      "section": 7,
+      "item_number": 1,
+      "text": "美联储10月28日正式维持联邦基金目标区间3.75%至4.00%，投票10比2；Cook与Hammack反对，倾向上调25基点。声明认为经济增长强劲、通胀仍高，政策结果已公布，后续应观察实际数据与12月定价。",
+      "event_key": "stock_20261029_s7_i1"
+    },
+    {
+      "section": 7,
+      "item_number": 2,
+      "text": "Reuters援引消息人士称美国司法部正询问Nvidia拟以约129.3亿美元收购Hugging Face交易的竞争影响。此为媒体披露的监管问询，尚不等于司法部已作出违法认定或正式禁止交易。",
+      "event_key": "stock_20261029_s7_i2"
+    },
+    {
+      "section": 7,
+      "item_number": 3,
+      "text": "也门胡塞组织宣称袭击沙特炼油设施，Reuters报道时沙特当局尚未独立确认该次打击；原油风险溢价因此抬升，但必须区分武装组织声明、官方确认及实际产能损失。",
+      "event_key": "stock_20261029_s7_i3"
+    },
+    {
+      "section": 8,
+      "item_number": 1,
+      "text": "Alphabet需重点跟踪下一季度经营现金流能否覆盖数据中心扩张，以及广告收入缺口是否持续。若云收入增长仍无法带来自由现金流修复，不能仅凭盘后股价跌幅认定估值已经便宜。",
+      "event_key": "stock_20261029_s8_i1"
+    },
+    {
+      "section": 8,
+      "item_number": 2,
+      "text": "Microsoft资本开支低于此前预测的部分原因是第三方产能交付延迟，而非已证实永久削减投资；商业剩余履约义务约6770亿美元，未来关注实际履约、回款及延迟是否延续。",
+      "event_key": "stock_20261029_s8_i2"
+    },
+    {
+      "section": 8,
+      "item_number": 3,
+      "text": "油价在10月28日再度反弹，若炼厂或航运扰动被官方确认并持续，能源价格可能重新推高通胀预期；若实际供给未中断，风险溢价也可能快速回落。须等待EIA库存和官方设施通报。",
+      "event_key": "stock_20261029_s8_i3"
+    },
+    {
+      "section": 8,
+      "item_number": 4,
+      "text": "标普500当日涨幅仅约0.28%，纽交所涨跌家数比接近1:1；若后续纳指由少数大型科技股支撑、创新低家数继续超过创新高家数，需下调对指数表面上涨的广度判断。",
+      "event_key": "stock_20261029_s8_i4"
+    },
+    {
+      "section": 9,
+      "item_number": 1,
+      "text": "10月29日周四美东08:30（曼谷19:30）：BEA计划公布美国Q3 GDP初值，并发布9月个人收入与支出/PCE。重点比较实际增长、核心PCE与市场预期，公布前不写成已实现数据。",
+      "event_key": "stock_20261029_s9_i1"
+    },
+    {
+      "section": 9,
+      "item_number": 2,
+      "text": "10月29日周四：Eli Lilly官方确认公布Q3财报，美东10:00（曼谷21:00）召开电话会议。关注GLP-1销量、毛利、产能和全年指引。",
+      "event_key": "stock_20261029_s9_i2"
+    },
+    {
+      "section": 9,
+      "item_number": 3,
+      "text": "10月29日周四美东17:00（曼谷10月30日04:00）：Amazon官方安排Q3业绩电话会议。重点核对AWS增速、AI基础设施资本开支、零售利润率与自由现金流；该业绩截至本轮尚未发布。",
+      "event_key": "stock_20261029_s9_i3"
+    },
+    {
+      "section": 9,
+      "item_number": 4,
+      "text": "10月30日周五是10月最后一个美股常规交易日；重点观察月末收盘的行业相对强弱和长端收益率变化。Fed官方日历当日还安排H.15利率统计与H.8银行资产负债统计，时间以官网实际更新为准。",
+      "event_key": "stock_20261029_s9_i4"
+    },
+    {
+      "section": 10,
+      "item_number": 1,
+      "text": "MSFT：财报后观察等待。Why-now为Azure增长48%且季度自由现金流186亿美元，显示AI投入出现实际回报；风险是未来资本开支恢复上升、交付延迟和高估值。若Azure增速或现金转换率连续下修，投资逻辑失效；先看美东10月29日常规交易确认盘后涨幅。",
+      "event_key": "stock_20261029_s10_i1"
+    },
+    {
+      "section": 10,
+      "item_number": 2,
+      "text": "VRT：成长卫星候选但不追涨。Why-now为有机订单增长超过100%及全年指引上修；当日股价已涨16.5%，估值与交付预期较高。若未来订单取消、毛利率回落或业绩不支持高增速，观察逻辑失效。",
+      "event_key": "stock_20261029_s10_i2"
+    },
+    {
+      "section": 10,
+      "item_number": 3,
+      "text": "GOOGL：仅列观察等待。Why-now是Google Cloud翻倍增长与广告业务出现不同步，盘后显著回撤带来重新估值窗口；风险是自由现金流持续为负、广告收入低于预期和2027年更高资本开支。先等待管理层补充现金流路径，不把跌幅当作买点。",
+      "event_key": "stock_20261029_s10_i3"
+    },
+    {
+      "section": 10,
+      "item_number": 4,
+      "text": "ORCL：观察等待。Why-now是首次给出FY2029至少300亿美元自由现金流目标及融资上限；风险是远期预测兑现周期长、资本支出与新增债务及股权稀释。若融资超过指引或现金流转正推迟，投资逻辑失效。",
+      "event_key": "stock_20261029_s10_i4"
+    },
+    {
+      "section": 11,
+      "item_number": 1,
+      "text": "10月28日三大指数常规收盘均上涨，但Microsoft与Alphabet盘后出现相反方向的大幅波动。只用收盘指数解释隔夜组合风险会漏掉财报后的重新定价；隔夜风险应单独查看已发布财报与盘后价格。",
+      "event_key": "stock_20261029_s11_i1"
+    },
+    {
+      "section": 11,
+      "item_number": 2,
+      "text": "AP记录美联储维持利率后两年期国债收益率先跳升、随后回落。单一盘中时点可能错误概括整场政策反应，利率监控应并列比较决议前、记者会后与下一交易日的两年期及十年期变化。",
+      "event_key": "stock_20261029_s11_i2"
+    },
+    {
+      "section": 12,
+      "item_number": 1,
+      "text": "10月28日四大美国现货指数小幅收涨，但行业及个股盈利兑现明显分化；半导体指数上涨1.8%、数据中心基础设施表现强劲，医疗器械和交易平台个股承压。指数方向不能替代企业盈利质量判断。",
+      "event_key": "stock_20261029_s12_i1"
+    },
+    {
+      "section": 12,
+      "item_number": 2,
+      "text": "决策重点转向美联储已公布的3.75%至4.00%利率区间、Microsoft与Alphabet最新现金流差异，以及10月29日GDP/PCE和Amazon实际财报。买入观察保留明确失效条件，等待新交易时段和官方数据验证。",
+      "event_key": "stock_20261029_s12_i2"
+    }
+  ],
+  "events": [
+    {
+      "event_key": "stock_20261029_s1_i1",
+      "family_key": "us_cash_market_index_close",
+      "material_version": "2026-10-28:routine_market",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 1,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.ctinsider.com/business/article/how-major-us-stock-indexes-fared-wednesday-22499204.php",
+      "source": "AP",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s1_i2",
+      "family_key": "us_cash_market_breadth",
+      "material_version": "2026-10-28:routine_market",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 1,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s1_i3",
+      "family_key": "us_cash_market_volume",
+      "material_version": "2026-10-28:routine_market",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 1,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s1_i4",
+      "family_key": "us_cross_asset_quotes",
+      "material_version": "2026-10-28:routine_quote",
+      "kind": "ROUTINE_QUOTE",
+      "primary_section": 1,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/dollar-holds-gains-ahead-fed-policy-signal-rbnz-decision-2026-10-28/",
+      "source": "FX",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s2_i1",
+      "family_key": "vertiv_q3_2026_results",
+      "material_version": "2026-10-28:earnings_result",
+      "kind": "EARNINGS_RESULT",
+      "primary_section": 2,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.prnewswire.com/news-releases/vertiv-reports-strong-third-quarter-2026-with-net-sales-growth-of-61-organic-orders-growth-over-100-and-diluted-eps-growth-of-91-adjusted-diluted-eps-growth-of-78-raises-full-year-2026-guidance-across-all-key-metrics-302921936.html",
+      "source": "VRT",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s2_i2",
+      "family_key": "micron_skhynix_q3_2026_memory",
+      "material_version": "2026-10-28:earnings_reaction",
+      "kind": "EARNINGS_REACTION",
+      "primary_section": 2,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s2_i3",
+      "family_key": "boston_scientific_q3_2026_guidance",
+      "material_version": "2026-10-28:earnings_reaction",
+      "kind": "EARNINGS_REACTION",
+      "primary_section": 2,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s2_i4",
+      "family_key": "robinhood_q3_2026_profit",
+      "material_version": "2026-10-28:earnings_reaction",
+      "kind": "EARNINGS_REACTION",
+      "primary_section": 2,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s2_i5",
+      "family_key": "msft_googl_afterhours_20261028",
+      "material_version": "2026-10-28:routine_market",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 2,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s3_i1",
+      "family_key": "phlx_sox",
+      "material_version": "2026-10-28:routine_market",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 3,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s3_i2",
+      "family_key": "us_sector_divergence",
+      "material_version": "2026-10-28:routine_market",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 3,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s3_i3",
+      "family_key": "brent_wti_quote",
+      "material_version": "2026-10-28:routine_quote",
+      "kind": "ROUTINE_QUOTE",
+      "primary_section": 3,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/oil-prices-rise-after-attack-saudi-arabian-refinery-reignites-supply-concerns-2026-10-28/",
+      "source": "OIL",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s4_i1",
+      "family_key": "msft_fy27_q1_earnings",
+      "material_version": "2026-10-28:earnings_result",
+      "kind": "EARNINGS_RESULT",
+      "primary_section": 4,
+      "first_published_at": "2026-10-27",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.microsoft.com/en-us/investor/earnings/fy-2027-q1/press-release-webcast",
+      "source": "MSFT",
+      "novelty_status": "MATERIAL_DELTA",
+      "novelty_proof": {
+        "previous_material_version": "2026-10-27:scheduled",
+        "changed_field": "quarterly_earnings_released",
+        "old_value": "尚未公布财报",
+        "new_value": "营收923亿美元",
+        "evidence_url": "https://www.microsoft.com/en-us/investor/earnings/fy-2027-q1/press-release-webcast",
+        "evidence_published_at": "2026-10-28"
+      }
+    },
+    {
+      "event_key": "stock_20261029_s4_i2",
+      "family_key": "alphabet_q3_2026_earnings",
+      "material_version": "2026-10-28:earnings_result",
+      "kind": "EARNINGS_RESULT",
+      "primary_section": 4,
+      "first_published_at": "2026-10-27",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/alphabets-google-cloud-unit-beats-quarterly-revenue-estimates-steady-ai-demand-2026-10-28/",
+      "source": "GOOGL",
+      "novelty_status": "MATERIAL_DELTA",
+      "novelty_proof": {
+        "previous_material_version": "2026-10-27:scheduled",
+        "changed_field": "quarterly_earnings_released",
+        "old_value": "尚未公布财报",
+        "new_value": "自由现金流为负90.7亿美元",
+        "evidence_url": "https://www.reuters.com/business/alphabets-google-cloud-unit-beats-quarterly-revenue-estimates-steady-ai-demand-2026-10-28/",
+        "evidence_published_at": "2026-10-28"
+      }
+    },
+    {
+      "event_key": "stock_20261029_s4_i3",
+      "family_key": "hyperscaler_cashflow_spread_2026q3",
+      "material_version": "2026-10-28:thematic_synthesis",
+      "kind": "THEMATIC_SYNTHESIS",
+      "primary_section": 4,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/retail-consumer/microsoft-beats-quarterly-cloud-revenue-estimates-2026-10-28/",
+      "source": "MSFT_R",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s5_i1",
+      "family_key": "oracle_investor_day_20261028",
+      "material_version": "2026-10-28:official_guidance",
+      "kind": "OFFICIAL_GUIDANCE",
+      "primary_section": 5,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://investor.oracle.com/investor-news/news-details/2026/Oracle-Investor-Day-2026-Accelerating-Value-Creation/default.aspx",
+      "source": "ORCL",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s5_i2",
+      "family_key": "google_gemini4carbon_announcement",
+      "material_version": "2026-10-28:issuer_claim",
+      "kind": "ISSUER_CLAIM",
+      "primary_section": 5,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/alphabets-google-cloud-unit-beats-quarterly-revenue-estimates-steady-ai-demand-2026-10-28/",
+      "source": "GOOGL",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s6_i1",
+      "family_key": "sp500_q3_earnings_season",
+      "material_version": "2026-10-28:routine_quote",
+      "kind": "ROUTINE_QUOTE",
+      "primary_section": 6,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s6_i2",
+      "family_key": "fedwatch_dec2026_hike_odds",
+      "material_version": "2026-10-28:routine_quote",
+      "kind": "ROUTINE_QUOTE",
+      "primary_section": 6,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s6_i3",
+      "family_key": "msft_credit_quality_comparison_20261028",
+      "material_version": "2026-10-28:new_credit_signal",
+      "kind": "NEW_CREDIT_SIGNAL",
+      "primary_section": 6,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/retail-consumer/microsoft-beats-quarterly-cloud-revenue-estimates-2026-10-28/",
+      "source": "MSFT_R",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s7_i1",
+      "family_key": "fomc_20261028_decision",
+      "material_version": "2026-10-28:policy_decision",
+      "kind": "POLICY_DECISION",
+      "primary_section": 7,
+      "first_published_at": "2026-10-27",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+      "source": "FED",
+      "novelty_status": "MATERIAL_DELTA",
+      "novelty_proof": {
+        "previous_material_version": "2026-10-27:pending",
+        "changed_field": "policy_decision_released",
+        "old_value": "预期维持利率不变",
+        "new_value": "维持联邦基金目标区间3.75%至4.00%",
+        "evidence_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+        "evidence_published_at": "2026-10-28"
+      }
+    },
+    {
+      "event_key": "stock_20261029_s7_i2",
+      "family_key": "nvidia_huggingface_doj_inquiry_20261028",
+      "material_version": "2026-10-28:regulatory_report",
+      "kind": "REGULATORY_REPORT",
+      "primary_section": 7,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/us-doj-is-inquiring-about-nvidias-purchase-hugging-face-sources-say-2026-10-28/",
+      "source": "DOJ",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s7_i3",
+      "family_key": "saudi_refinery_attack_claim_20261028",
+      "material_version": "2026-10-28:geopolitical_claim",
+      "kind": "GEOPOLITICAL_CLAIM",
+      "primary_section": 7,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/oil-prices-rise-after-attack-saudi-arabian-refinery-reignites-supply-concerns-2026-10-28/",
+      "source": "OIL",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s8_i1",
+      "family_key": "alphabet_fcf_followthrough_risk_20261028",
+      "material_version": "2026-10-28:decision_risk",
+      "kind": "DECISION_RISK",
+      "primary_section": 8,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/alphabets-google-cloud-unit-beats-quarterly-revenue-estimates-steady-ai-demand-2026-10-28/",
+      "source": "GOOGL",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s8_i2",
+      "family_key": "msft_capex_delay_capacity_risk_20261028",
+      "material_version": "2026-10-28:decision_risk",
+      "kind": "DECISION_RISK",
+      "primary_section": 8,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/retail-consumer/microsoft-beats-quarterly-cloud-revenue-estimates-2026-10-28/",
+      "source": "MSFT_R",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s8_i3",
+      "family_key": "energy_inflation_next_data_risk_20261028",
+      "material_version": "2026-10-28:decision_risk",
+      "kind": "DECISION_RISK",
+      "primary_section": 8,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/oil-prices-rise-after-attack-saudi-arabian-refinery-reignites-supply-concerns-2026-10-28/",
+      "source": "OIL",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s8_i4",
+      "family_key": "breadth_vs_index_risk_20261028",
+      "material_version": "2026-10-28:routine_market",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 8,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s9_i1",
+      "family_key": "bea_20261029_gdp_pce",
+      "material_version": "2026-10-29:calendar",
+      "kind": "CALENDAR",
+      "primary_section": 9,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.bea.gov/news/schedule",
+      "source": "BEA",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "calendar_date": "2026-10-29"
+    },
+    {
+      "event_key": "stock_20261029_s9_i2",
+      "family_key": "lilly_q3_2026_release",
+      "material_version": "2026-10-29:calendar",
+      "kind": "CALENDAR",
+      "primary_section": 9,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://investor.lilly.com/news-releases/news-release-details/lilly-confirms-date-and-conference-call-third-quarter-2026",
+      "source": "LLY",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "calendar_date": "2026-10-29"
+    },
+    {
+      "event_key": "stock_20261029_s9_i3",
+      "family_key": "amazon_q3_2026_release",
+      "material_version": "2026-10-29:calendar",
+      "kind": "CALENDAR",
+      "primary_section": 9,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.businesswire.com/news/home/20261015676873/en/Amazon.com-to-Webcast-Third-Quarter-2026-Financial-Results-Conference-Call",
+      "source": "AMZN",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "calendar_date": "2026-10-29"
+    },
+    {
+      "event_key": "stock_20261029_s9_i4",
+      "family_key": "us_month_end_20261030",
+      "material_version": "2026-10-30:calendar",
+      "kind": "CALENDAR",
+      "primary_section": 9,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-30",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.federalreserve.gov/newsevents.htm",
+      "source": "FEDCAL",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "calendar_date": "2026-10-30"
+    },
+    {
+      "event_key": "stock_20261029_s10_i1",
+      "family_key": "msft_post_earnings_buywatch_20261029",
+      "material_version": "2026-10-28:buy_watch",
+      "kind": "BUY_WATCH",
+      "primary_section": 10,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.microsoft.com/en-us/investor/earnings/fy-2027-q1/press-release-webcast",
+      "source": "MSFT",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s10_i2",
+      "family_key": "vertiv_post_earnings_buywatch_20261029",
+      "material_version": "2026-10-28:buy_watch",
+      "kind": "BUY_WATCH",
+      "primary_section": 10,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.prnewswire.com/news-releases/vertiv-reports-strong-third-quarter-2026-with-net-sales-growth-of-61-organic-orders-growth-over-100-and-diluted-eps-growth-of-91-adjusted-diluted-eps-growth-of-78-raises-full-year-2026-guidance-across-all-key-metrics-302921936.html",
+      "source": "VRT",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s10_i3",
+      "family_key": "googl_post_earnings_buywatch_20261029",
+      "material_version": "2026-10-28:buy_watch",
+      "kind": "BUY_WATCH",
+      "primary_section": 10,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/alphabets-google-cloud-unit-beats-quarterly-revenue-estimates-steady-ai-demand-2026-10-28/",
+      "source": "GOOGL",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s10_i4",
+      "family_key": "orcl_fy29_fcf_buywatch_20261029",
+      "material_version": "2026-10-28:buy_watch",
+      "kind": "BUY_WATCH",
+      "primary_section": 10,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://investor.oracle.com/investor-news/news-details/2026/Oracle-Investor-Day-2026-Accelerating-Value-Creation/default.aspx",
+      "source": "ORCL",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s11_i1",
+      "family_key": "market_close_vs_afterhours_model_gap_20261028",
+      "material_version": "2026-10-28:market_blindspot",
+      "kind": "MARKET_BLINDSPOT",
+      "primary_section": 11,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s11_i2",
+      "family_key": "fed_intraday_curve_model_gap_20261028",
+      "material_version": "2026-10-28:market_blindspot",
+      "kind": "MARKET_BLINDSPOT",
+      "primary_section": 11,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.ctinsider.com/business/article/how-major-us-stock-indexes-fared-wednesday-22499204.php",
+      "source": "AP",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s12_i1",
+      "family_key": "stock_daily_20261029_regime_conclusion",
+      "material_version": "2026-10-28:daily_synthesis",
+      "kind": "DAILY_SYNTHESIS",
+      "primary_section": 12,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s12_i2",
+      "family_key": "stock_daily_20261029_action_conclusion",
+      "material_version": "2026-10-28:daily_synthesis",
+      "kind": "DAILY_SYNTHESIS",
+      "primary_section": 12,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+      "source": "FED",
+      "novelty_status": "NEW"
+    }
+  ],
+  "previous_events": [
+    {
+      "family_key": "us_cash_market_index_close",
+      "material_version": "2026-10-27:close",
+      "observation_date": "2026-10-27"
+    },
+    {
+      "family_key": "us_cash_market_breadth",
+      "material_version": "2026-10-27:breadth",
+      "observation_date": "2026-10-27"
+    },
+    {
+      "family_key": "us_cash_market_volume",
+      "material_version": "2026-10-27:volume",
+      "observation_date": "2026-10-27"
+    },
+    {
+      "family_key": "us_cross_asset_quotes",
+      "material_version": "2026-10-27:quote",
+      "observation_date": "2026-10-27"
+    },
+    {
+      "family_key": "msft_fy27_q1_earnings",
+      "material_version": "2026-10-27:scheduled"
+    },
+    {
+      "family_key": "alphabet_q3_2026_earnings",
+      "material_version": "2026-10-27:scheduled"
+    },
+    {
+      "family_key": "fomc_20261028_decision",
+      "material_version": "2026-10-27:pending"
+    },
+    {
+      "family_key": "brent_wti_quote",
+      "material_version": "2026-10-27:quote",
+      "observation_date": "2026-10-27"
+    }
+  ],
+  "previous_days_checked": [
+    "2026-10-22",
+    "2026-10-23",
+    "2026-10-24",
+    "2026-10-25",
+    "2026-10-26",
+    "2026-10-27",
+    "2026-10-28"
+  ],
+  "previous_sent_ids": [
+    "1a1624d4f0c25b08",
+    "1a1671833f467233",
+    "1a16b90883482131",
+    "1a17082e447b78ef",
+    "1a175a8875794e7e",
+    "1a17ace257d35937",
+    "1a17ff534fa52261"
+  ],
+  "ipo_status_receipts": [
+    {
+      "issuer_name": "Anthropic PBC",
+      "official_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/0001628280-26-067168-index.html",
+      "issuer_news_url": "https://www.anthropic.com/news/s1-sec",
+      "stage": "PUBLIC_S1_NOT_EFFECTIVE",
+      "last_official_stage_changed_at": "2026-10-26",
+      "checked_at": "2026-10-29T05:42:04+07:00",
+      "new_delta_or_none": "NO_DELTA",
+      "confirmed_symbol": "ANT",
+      "shares": "NOT_DETERMINED",
+      "price_range": "NOT_DETERMINED",
+      "exchange_mediated_equity_access": "NOT_CONFIRMED"
+    }
+  ],
+  "x_source_receipt": {
+    "checked_at": "2026-10-29T05:42:04+07:00",
+    "browser_session": "UNAVAILABLE",
+    "status": "SOURCE_GAP",
+    "error": "Browser list_tabs failed: Browser access requires originating browser context. Public site:x.com/AnthropicAI/status search yielded no readable new original Oct28 IPO post.",
+    "fallback_url": "https://www.anthropic.com/news/s1-sec"
+  },
+  "novelty_evidence": {
+    "material_deltas": [
+      "Microsoft FY27Q1 scheduled -> official results",
+      "Alphabet Q3 scheduled -> official results",
+      "FOMC Oct28 pending -> official 10-2 hold"
+    ],
+    "excluded_unchanged": [
+      "Anthropic Oct26 S-1 filing remains unchanged as of bounded Oct29 check; no fresh IPO headline",
+      "Meta older AI financing/capex generalities",
+      "Static CSPX/QQQM ETF overlap",
+      "Pre-decision FOMC countdown"
+    ],
+    "source_gaps": [
+      "BROWSER_UNAVAILABLE",
+      "X_SOURCE_GAP",
+      "Post-FOMC 10-year yield and DXY close not verified; used timestamped predecision Reuters",
+      "Full 11-GICS sector matrix unavailable"
+    ],
+    "history": "Seven actual Gmail Sent bodies and Git canonicals checked; Oct24 differs by a trailing newline only."
+  },
+  "qa_status": "PREBUILD_LOCAL_PASS_STK01_25_WITH_DELIVERY_GATES_PENDING"
+}
