@@ -135,9 +135,11 @@ def _save_raw(rawdir, rid, body):
 class Sender:
     """Direct HTTPS, one TLS connection/request; global lock at ACTUAL HTTP POST."""
 
-    def __init__(self, *, end_utc, stop_mono, timeout_s, spacing_s, post_factory=None):
+    def __init__(self, *, end_utc, stop_mono, timeout_s, spacing_s,
+                 response_cap=MAX_BODY, post_factory=None):
         self.end_utc, self.stop_mono = end_utc, stop_mono
         self.timeout_s, self.spacing_s = timeout_s, spacing_s
+        self.response_cap = response_cap
         self.lock = threading.Lock()
         self.last_start = None
         # Test-only injected connection factory, NEVER supplied by real CLI.
@@ -171,7 +173,7 @@ class Sender:
             if len(headers) > 64 or sum(len(k)+len(v) for k,v in headers) > 32768:
                 return {"state":"HEADERS_OVERSIZE","raw":None,
                         "post_ns":started,"end_ns":time.monotonic_ns()}
-            body = response.read(MAX_BODY+1)
+            body = response.read(self.response_cap+1)
             return {"state":"RAW", "status":response.status,
                     "headers":dict(headers), "raw":body,
                     "post_ns":started, "end_ns":time.monotonic_ns(),
@@ -251,16 +253,17 @@ class Capture:
                            "end_ns":time.monotonic_ns()}
             raw=transport.get("raw")
             rawpath=None
-            if type(raw) is bytes and len(raw)<=MAX_BODY:
+            if type(raw) is bytes and len(raw)<=self.scope["max_response_bytes"]:
                 rawpath=_save_raw(self.rawdir,req["id"],raw)
             result=None
             failure=None
-            if transport["state"]!="RAW" or type(raw) is not bytes or len(raw)>MAX_BODY:
-                failure=transport["state"] if len(raw or b"")<=MAX_BODY else "RAW_OVERSIZE"
+            cap=self.scope["max_response_bytes"]
+            if transport["state"]!="RAW" or type(raw) is not bytes or len(raw)>cap:
+                failure=transport["state"] if len(raw or b"")<=cap else "RAW_OVERSIZE"
             else:
                 try:
                     result=parse_http_response(transport["status"],transport["headers"],
-                                               raw,req,max_bytes=MAX_BODY)
+                                               raw,req,max_bytes=cap)
                 except (TypeError,KeyError,ValueError):
                     failure="INVALID_HTTP_OR_RPC"
             if transport.get("post_ns") is not None:
@@ -348,7 +351,8 @@ def run_probe(scope, watched, routers, root, *, sender=None, clock=now_utc,
     sender=sender or Sender(
         end_utc=timestamp(scope["window_end_utc"]),stop_mono=stop,
         timeout_s=scope["timeout_ms"]/1000,
-        spacing_s=scope["spacing_ms"]/1000)
+        spacing_s=scope["spacing_ms"]/1000,
+        response_cap=scope["max_response_bytes"])
     probe=Capture(root,scope,sender=sender,mono=mono)
     try:
         with ThreadPoolExecutor(max_workers=3,thread_name_prefix="f0-bsc-read") as pool:
