@@ -213,7 +213,7 @@ def _child(root: Path, evidence: Path, raw: bytes, reviewed_sha: str,
 def run_owner_approved_once(scope_path: Path, reviewed_sha: str,
                             confirmation: str):
     """One genuine read-only OS child, ONLY from explicit Mac CLI invocation."""
-    if type(scope_path) is not Path or not scope_path.is_absolute():
+    if not isinstance(scope_path, Path) or not scope_path.is_absolute():
         raise ValueError("F0_PHYSICAL_OWNER_SCOPE_PATH_ABSOLUTE_REQUIRED")
     if scope_path.is_symlink() or not scope_path.is_file():
         raise ValueError("F0_PHYSICAL_OWNER_SCOPE_FILE_INVALID")
