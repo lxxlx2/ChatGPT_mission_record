@@ -32,4 +32,8 @@ if ! "$HERE/.venv/bin/python" -c 'import websockets; assert websockets.__version
   "$HERE/.venv/bin/python" -m pip install --disable-pip-version-check -r "$HERE/requirements.txt"
 fi
 
+if [ "$1" = "run" ]; then
+  "$HERE/.venv/bin/python" -m unittest -q test_machine_launch_detector test_machine_launch_ws test_machine_launch_gmail
+fi
+
 exec "$HERE/.venv/bin/python" machine_fun_runtime.py "$@"
