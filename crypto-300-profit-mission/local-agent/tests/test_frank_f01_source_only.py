@@ -1,5 +1,6 @@
 """F01 source-only, no quote/amount/API/network/production changes."""
 import unittest
+from io import BytesIO
 from types import SimpleNamespace
 from unittest.mock import patch
 
@@ -108,6 +109,48 @@ class F01SourceOnlyTests(unittest.TestCase):
         self.assertEqual(handler.do_GET(), ({"status":"SOURCE_ONLY"}, 200))
         handler.path = "/api/follow-opportunities?mint=abc"
         self.assertEqual(handler.do_GET()[1], 400)
+
+    def test_event_age_and_remaining_window_are_chain_based_not_index_lag(self):
+        out = self.view([
+            candidate(latest_buy_at=NOW-12, latest_at=NOW-12),
+            candidate(latest_buy_at=NOW-700, latest_at=NOW-700),
+            candidate(latest_buy_at=None),
+        ])
+        self.assertEqual(out["event_time_basis"], "ONCHAIN_BLOCK_TIME_SECONDS")
+        self.assertEqual(out["index_ingest_timestamp_status"],
+                         "UNAVAILABLE_IN_EXISTING_CANDIDATE_SCHEMA")
+        self.assertIsNone(out["index_ingest_latency_seconds"])
+        self.assertEqual(out["source_recent"][0]["chain_buy_age_seconds_at_observation"], 12)
+        self.assertEqual(out["source_recent"][0]["source_window_remaining_seconds"], 588)
+        self.assertEqual(out["newest_indexed_buy_age_seconds"], 12)
+        self.assertEqual(out["excluded_reason_counts"], {"SOURCE_BUY_STALE_OR_UNVERIFIED":2})
+        self.assertEqual(out["eligible_count"], 0)
+
+    def test_late_indexed_buy_does_not_get_falsely_marked_fresh(self):
+        out = self.view([candidate(latest_buy_at=NOW-1000, latest_at=NOW-1000)])
+        self.assertEqual(out["source_recent_count"], 0)
+        self.assertEqual(out["newest_indexed_buy_age_seconds"], 1000)
+        self.assertEqual(out["not_followed"][0]["exclusion_reason"],
+                         "SOURCE_BUY_STALE_OR_UNVERIFIED")
+
+    def test_ca_post_error_codes_are_safe_and_do_not_start_jobs(self):
+        handler = server.Handler.__new__(server.Handler)
+        handler._allowed_host = lambda: True
+        handler._json = lambda payload, status=200: (payload, status)
+        handler.path = "/api/cluster-analysis"
+        handler.headers = {"Origin":"http://127.0.0.1:8765",
+                           "Content-Type":"application/json",
+                           "Content-Length":"38"}
+        raw = b'{"mint":"not-a-ca","preset":"standard"}'
+        handler.headers["Content-Length"] = str(len(raw))
+        handler.rfile = BytesIO(raw)
+        handler.state = SimpleNamespace(cluster_jobs=SimpleNamespace(
+            submit=lambda *args: (_ for _ in ()).throw(ValueError("INVALID_SOLANA_CA"))))
+        self.assertEqual(handler.do_POST(), ({"error":"INVALID_SOLANA_CA"},400))
+        handler.rfile = BytesIO(raw)
+        handler.state.cluster_jobs.submit = lambda *args: (
+            _ for _ in ()).throw(ValueError("secret-rpc-query-api-key"))
+        self.assertEqual(handler.do_POST(), ({"error":"INVALID_CLUSTER_REQUEST"},400))
 
     def test_source_only_contract_not_executable_at_any_amount(self):
         for decision in ("BUY", "SMALL_BUY", "WAIT", "NO_BUY", "UNASSESSED"):
