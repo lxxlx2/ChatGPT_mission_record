@@ -39,7 +39,8 @@ def _unique_keys(pairs):
 
 
 def check_physical_foreground_scope(raw: bytes, *,
-                                    independently_reviewed_sha: str) -> dict:
+                                    independently_reviewed_sha: str,
+                                    clock=None) -> dict:
     """Reject invalid experiment requests WITHOUT network or consent writes.
 
     SHA must come from the independent fixed review, not from the candidate
@@ -96,7 +97,12 @@ def check_physical_foreground_scope(raw: bytes, *,
 
     start = parse_utc_timestamp(doc["window_start_utc"])
     end = parse_utc_timestamp(doc["window_end_utc"])
-    now = datetime.now(timezone.utc)
+    # Only test callers inject a clock; the real foreground runner ALWAYS
+    # omits this parameter and observes the wall clock on every preflight.
+    now = datetime.now(timezone.utc) if clock is None else clock()
+    if type(now) is not datetime or now.tzinfo is None:
+        raise ValueError("F0_PHYSICAL_SCOPE_CLOCK_INVALID")
+    now = now.astimezone(timezone.utc)
     if (not timedelta(0) < end - start <= timedelta(seconds=60)
             or not now - timedelta(seconds=2) <= start <=
             now + timedelta(minutes=10)

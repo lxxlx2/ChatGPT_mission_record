@@ -272,7 +272,8 @@ class GlobalStartGate:
         self.starts = []
 
     def run(self, request, source, *, block_head_deadline, dispatch_deadline,
-            timeout_ms, fake_post_utc_window=None, reservation_guard=None):
+            timeout_ms, fake_post_utc_window=None, reservation_guard=None,
+            physical_once_permit=None):
         from f0_l2_d2a_physical_admission import UnreleasedPhysicalHTTPSProposal
         if type(source) is UnreleasedPhysicalHTTPSProposal:
             # A direct lower-level gate call cannot dispatch a candidate.
@@ -332,6 +333,11 @@ class GlobalStartGate:
                     if physical:
                         try:
                             source.check_at_actual_post()
+                            # The final monotonic permit/deadline check lives
+                            # UNDER the shared lock, after pacing and UTC.
+                            if (physical_once_permit is not None
+                                    and not physical_once_permit.valid()):
+                                raise ValueError("F0_REAL_ONCE_FINAL_POST_EXPIRED")
                         except (ValueError, TypeError):
                             raise _FakeHTTPSStartDenied(
                                 "PRESTART_PHYSICAL_POST_UTC_DENIED")
@@ -442,7 +448,8 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
                         fake_post_utc_window=None,
                         anchor_initial_head=False,
                         _staged_physical_offline=False,
-                        _physical_source_candidate=False):
+                        _physical_source_candidate=False,
+                        _real_foreground_permit=None):
     """No permit or live network entry. Thread workers are fake only.
 
     Any invalid input is rejected; concurrent workers cannot allocate IDs,
@@ -463,13 +470,24 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
         request_physical_source_admission(source)
     staged = type(source) is StagedPhysicalHTTPSReadOnlySource
     physical = type(source) is BoundedPhysicalReadOnlySource
-    # Genuine HTTPS remains denied in this source-bridge code-only PR. The
-    # future one-owner one-shot foreground launcher must be separately
-    # pinned/reviewed and must consume a fresh operator grant before TLS.
-    need((not physical and _physical_source_candidate is False)
-         or (physical and _physical_source_candidate is True and
-             http.client.HTTPSConnection is not _ORIGINAL_HTTPS_CONNECTION),
-         "F0_REAL_FOREGROUND_PHYSICAL_SOURCE_NOT_RELEASED")
+    physical_live = physical and http.client.HTTPSConnection is _ORIGINAL_HTTPS_CONNECTION
+    # REVIEWED FUTURE LIVE PATH: one original OS child can hold a consumed-once
+    # owner/UID/PID/monotonic-bound permit; Python-private objects are NOT
+    # authentication. The foreground CLI independently requires explicit
+    # operator confirmation and fixed clean Git SHA before issuing this.
+    if physical_live:
+        from f0_l2_d1_physical_once import _LiveOnceChildPermit
+        need(type(_real_foreground_permit) is _LiveOnceChildPermit
+             and _real_foreground_permit.valid()
+             and source._runtime_permit is _real_foreground_permit
+             and _physical_source_candidate is True,
+             "F0_REAL_FOREGROUND_PHYSICAL_SOURCE_NOT_RELEASED")
+    else:
+        need(_real_foreground_permit is None and (
+             (not physical and _physical_source_candidate is False)
+             or (physical and _physical_source_candidate is True
+                 and http.client.HTTPSConnection is not _ORIGINAL_HTTPS_CONNECTION)),
+             "F0_REAL_FOREGROUND_PHYSICAL_SOURCE_NOT_RELEASED")
     # NEVER allow this private offline constructor-rehearsal source through
     # the public fake entry; nor permit the genuine physical constructor to
     # reach even a test coordinator when production identity is absent.
@@ -601,7 +619,8 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
                               dispatch_deadline=dispatch_deadline,
                               timeout_ms=max_block_response_ms,
                               fake_post_utc_window=fake_post_utc_window,
-                              reservation_guard=reservation_proof)
+                              reservation_guard=reservation_proof,
+                              physical_once_permit=_real_foreground_permit)
         pending[fut] = entry
         peak_slots = max(peak_slots, len(pending))
 
@@ -658,6 +677,12 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
                       "category":category, "height":height,
                       "state":state, "reason":reason,
                       "started":outcome.get("start") is not None}
+        if physical_live:
+            # REAL Python POST attempt boundary, NOT proven TCP byte send.
+            # The raw, owner-private journal permits offline latency audit.
+            settlement["post_attempt_monotonic"] = outcome.get("start")
+            settlement["response_worker_complete_monotonic"] = outcome.get(
+                "completed_at")
         try:
             log.settle(rid,settlement,raw)
         except (OSError,ValueError) as exc:
@@ -688,10 +713,13 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
             head_pending = False
             if next_height is None:
                 next_height = next_commit = head + 1
-            head_samples.append({"sampled_head":head,
-                                 "at_monotonic":head_completed,
-                                 "accepted_at_monotonic":time.monotonic(),
-                                 "clock_basis":"WORKER_RESPONSE_COMPLETED"})
+            sample = {"sampled_head":head,
+                      "at_monotonic":head_completed,
+                      "accepted_at_monotonic":time.monotonic(),
+                      "clock_basis":"WORKER_RESPONSE_COMPLETED"}
+            if physical_live:
+                sample["rpc_id"] = rid
+            head_samples.append(sample)
         elif category == "ANCHOR":
             # Successful RAW must already be fsynced via log.settle.
             # Same source only; not independent canonical/finality proof.
@@ -790,7 +818,9 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
     need(len(reservations) <= 32 and number_blocks <= 24
          and number_refreshes <= 6 and peak_slots <=3,
          "D1_SCOPE_LIMIT_EXCEEDED")
-    mode = ("F0_PHYSICAL_HTTPS_BRIDGE_PATCHED_NOT_RELEASED"
+    mode = ("F0_ONCE_FOREGROUND_GENUINE_HTTPS_READ_ONLY"
+            if physical_live else
+            "F0_PHYSICAL_HTTPS_BRIDGE_PATCHED_NOT_RELEASED"
             if physical else
             "D2_STAGED_PHYSICAL_HTTPS_PATCHED_NO_SOCKET_TEST_ONLY"
             if staged else
@@ -803,14 +833,17 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
             "D1_OFFLINE_FAKE_ONLY")
     return {
         "schema":SCHEMA, "mode":mode,
-        "network_requests":0, "no_live_sender":True,
+        "network_requests":len(starts) if physical_live else 0,
+        "no_live_sender":not physical_live,
         "physical_bridge_code_tested":physical,
-        "physical_source_released":False,
+        "physical_source_released":physical_live,
         "fake_post_utc_checks":(fake_post_utc_window.checked_fake_posts
                                 if fake_post_utc_window is not None else None),
-        "real_user_grant_active":False,
+        "real_user_grant_active":physical_live,
         "stop":stop,
-        "reserved":len(reservations), "physically_started_fake":len(starts),
+        "reserved":len(reservations), "physically_started_fake":(
+            None if physical_live else len(starts)),
+        "physical_post_attempted_count":len(starts) if physical_live else 0,
         "settled":len(settles), "unknown_after_stop":
             len([x for x in settles if x["state"] == "UNKNOWN"]),
         "max_shared_slots":peak_slots, "head_refreshes":number_refreshes,
