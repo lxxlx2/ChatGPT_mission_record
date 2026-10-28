@@ -1,3 +1,13 @@
+## 2026-10-28：Pinax 2026-09-25 14文件区间元数据独立重算（非Parquet原字节验证）
+
+依据 https://data.pinax.network/buckets/bsc/logs/date=2026-09-25/ 逐条读取公开页面14个不同Parquet文件的`block_from/block_to/rows`展示值，以不信任页面总计的方式重新升序核对：14条区间完整首尾覆盖**123849166..124041106**（含端点），全部13组相邻边界满足前段终点+1=后段起点，无元数据可见间隙或重叠；合计区间长度**191941区块**，逐文件所宣称的rows独立相加**104646292行**，与页面声明总量一致。最早文件为`part-00000-0e499efb-311f-4627-b80c-c9db0c036e6b-c000.zstd.parquet`，页面显示约123.3MB、区间123849166..123855331、4711465行、最后修改2026-10-03。网站 https://data.pinax.network/datasets/ 明示**压缩整理会替换Parquet文件**，正式查询应读取当时Iceberg快照manifest（https://data.pinax.network/catalog/）；文件路径存在不代表永远稳定，也不代表2026-09-25当日可得。
+
+**数据级别**：`INDEX_RANGE_ARITHMETIC_CONSISTENT_ONLY / ROW_BYTES_NOT_READ / OBJECT_HASH_NOT_VERIFIED / RAW_LOG_FIELDS_NOT_VERIFIED / PUBLISHER_AVAILABLE_AT_UNKNOWN`。当前执行容器访问`parquet.riv-dev1.pinax.io`报`curl: (6) Could not resolve host`，网页直接访问返回`Unsupported content-type: binary/octet-stream`。因此**没有**下载原Parquet、没有提取Factory/Swap样例、没有验证任何一块的全部日志；网页列的schema结构也不是对该目标BSC文件原字节的独立读取。不能把`index no gaps`提升为真实事件覆盖PASS，更不能从后来文件的last_modified推断真实区块首次公开时间。
+
+**研究决策**：Pinax可作为2026-09-25以后第三方回溯来源的待实测候选，单日仅日志压缩体积约3.3GB，零费用的实际下载、计算、完整重算性能尚未证实；仍无法服务2025-07-01原冻结30例或实证实时`T_entry`。不为继续核索引开新代码、workflow或审核文档；如无能访问原字节且符合冻结原范围的新来源，**2026-11-02按ADR-006止损**。本轮无链上RPC/付费/交易/Mac后台或通知动作。原P0`INSUFFICIENT_COVERAGE`/P1`BLOCKED`/G4`UNKNOWN`/G6`NO_GO`不变。
+
+---
+
 ## 2026-10-28：ADR-006 下新公开来源只读核验（仅目录/官方限制，非链上原字节验收）
 
 依 [ADR-006](../../../adr/ADR-006-early-sellable-multiples-primary-goal-and-research-stop-20261028.md) 不扩模型、Stage或workflow。本轮**新信息**是Pinax公开只读 BSC 日志 Parquet 分区索引：<https://data.pinax.network/buckets/bsc/logs/> 显示当前可见最早`2026-09-25`、最新2026-10、该首日14文件/104,646,292行/区块123849166–124041106；按其 <https://data.pinax.network/config/?bucket=bsc> 公开S3说明不需凭证。但**只有目录元数据被网页核对**，未下载原Parquet/RowGroup、未自行查2025-07-01分区是否存在、未验证连续2025 Factory/Swap样本或当时真实`available_at`。故仅标`PINAX_PUBLIC_POST_2026_SOURCE_CANDIDATE_NOT_HISTORIC_P0_PASS`，可作为另一个未来研究方向的来源候选，绝不能计本轮冻结2025 P0的24/30、18/30。
