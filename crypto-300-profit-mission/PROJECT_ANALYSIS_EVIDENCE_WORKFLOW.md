@@ -1,6 +1,6 @@
 # Project Analysis Evidence Workflow
 
-Updated: 2026-10-27
+Updated: 2026-10-29
 Scope: crypto / Web3 project research, especially pre-TGE, airdrop, points, launchpad, L1/L2, DeFi and early token projects.
 Purpose: define how to determine a project's **actual stage** from verifiable evidence rather than announcements, KOL interpretation or marketing language.
 
@@ -21,6 +21,20 @@ For new ICO/raise analysis, assess a **single target project** and prioritize **
 4. **Source/status discipline:** CONFIRMED independent evidence, issuer-only statement, inference, forecast and UNVERIFIED unknown must remain separate. Never substitute generic market odds, similarly named coins, idle markets or historical unrelated raises for a target project's PM.
 5. **Scope exclusions:** do not initiate routine jurisdiction/KYC/geographic availability checks, ancillary tokenholder dividends/equity/legal ownership essays, novice platform participation instructions, or cross-project/previous-ICO comparisons. Only flag onchain conditions, sale restrictions, dilution, security, and contract limitations **actually affecting transaction execution or realized ROI**; user can request broader review.
 6. **No execution:** research does not authorize wallet actions, monitoring, automation, production trades or funding.
+
+## 0A. Chain-first adversarial rule for issuer misconduct and launch integrity (2026-10-29)
+
+**User directive:** when assessing alleged insider sniping, wash trading, bundle manipulation, fake fair launch, wallet clustering, project-linked minting, liquidity movements, admin or multisig activity, use **reproduced onchain transactions and program logs as the decision basis**. Treat **all issuer, founder, partner and launchpad oral/written statements as untrusted hypotheses**. A denial (e.g. "we are not live") or a website still loading **cannot** rebut an onchain mint, buy, sale, admin approval, program close or transfer. An issuer claim about operational/public availability is a separate question from onchain activity and does not negate it.
+
+1. First reconstruct transaction and slot ordering, instruction + inner CPI logs, exact signer/payer/authority roles, connected multisig/proposal, program account/ProgramData authority, mint/curve and reserve movement, onchain flows to clustered buyer wallets, Jito bundles with independently fetched transaction membership, and **realized** net SOL/USDC P&L inclusive of fees. Prefer read-only RPC and original archived transaction IDs; keep query timestamp and slot.
+2. **Source attribution is its own proof obligation:** a same-name `MACHX` program, memo containing "Machine Launch", Squads transaction, shared funding address, or publisher-reported team wallet is a strong link/cluster clue, but organizational control is only VERIFIED if supported by canonical program reference, admin signature history, repeated operational use or other independently matched ownership proof. State link strength and exact boundary.
+3. Cross-source conflict rules: **issuer statements cannot be promoted into independent CONFIRMED evidence** and cannot outweigh direct successful chain execution. Program notes or social claims are still useful to find addresses and test falsifiable assertions, **not exculpatory evidence**.
+4. Distinguish a proven mint/buy/sell and program administration from allegations of **same controller / insider status / malicious intent / realized profit**. Do not infer common control from bundle membership alone, and do not infer profit from a zero ending token balance alone. If bundle API or ledger parsing unavailable, mark unverified rather than repeat a third-party number.
+5. After significant newly discovered evidence, **supersede prior speculative or official-statement-based verdicts in the same project file** and preserve chain signatures for independent review. No claim to exhaustive onchain coverage if the RPC truncates transactions or history endpoints limit results.
+
+This is an investigation and evidence standard only; it creates no monitoring/trading authorization.
+
+---
 
 ## 1. Default stance: claims are leads, not facts
 
