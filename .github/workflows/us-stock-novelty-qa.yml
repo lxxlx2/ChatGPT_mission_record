@@ -27,8 +27,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p us-stock-daily/delivery-qa
           for f in $(git diff --name-only HEAD^ HEAD -- 'us-stock-daily/delivery-pending/*.json'); do
-            if [[ -f "$f" ]]; then node us-stock-daily/scripts/novelty_gate.mjs "$f"; fi
+            if [[ -f "$f" ]]; then
+              node us-stock-daily/scripts/novelty_gate.mjs "$f"
+              day=$(basename "$f" .json)
+              manifest_sha=$(git hash-object "$f")
+              gate_sha=$(git hash-object us-stock-daily/scripts/novelty_gate.mjs)
+              printf '{"schema":"US_STOCK_NOVELTY_CI_V1","status":"NOVELTY_QA_PASS","report_date":"%s","manifest_blob_sha":"%s","gate_blob_sha":"%s","limitation":"Does not verify external facts or Gmail delivery"}\n' "$day" "$manifest_sha" "$gate_sha" > "us-stock-daily/delivery-qa/$day.json"
+            fi
           done
       - name: Persist GitHub Node self-test proof (not report receipt)
         shell: bash
@@ -37,7 +44,7 @@ jobs:
           mkdir -p us-stock-daily/delivery-qa
           gate_sha=$(git hash-object us-stock-daily/scripts/novelty_gate.mjs)
           printf '{"status":"NODE_TESTS_PASSED_NOT_A_DAILY_REPORT","gate_sha":"%s"}\n' "$gate_sha" > us-stock-daily/delivery-qa/_ci-selftest.json
-          git add us-stock-daily/delivery-qa/_ci-selftest.json
+          git add -- us-stock-daily/delivery-qa/
           if git diff --cached --quiet; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
