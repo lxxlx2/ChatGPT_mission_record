@@ -164,3 +164,11 @@ At the next *existing* shard-2 rotation, attempt these bounded, canonical fallba
 - status: HIGH_MATERIALITY_VERIFYING_PARTNER_RIGHTS, no separate project/full scan and no ACTION without authoritative proof
 - reject_identity_collision: legacy NEO cryptocurrency/Neo blockchain is not NeoSoul DNA; Binance Alpha Points claim is separate from proposed StandX compensation.
 - required_existing_lane: StandX hourly urgent relationship headline plus normal scheduled Shard 0; on discovery of official first-party source apply ACTION_GATE before any Gmail.
+
+## Cambria cross-chain TGE rights mapping — 2026-10-28
+
+Cambria / @playcambria is ALREADY registered in Shard 3. Monitor **the game's user entitlements over every actual reward distribution chain**, including Game activity on Abstract/Blast/Ronin with token delivery on Base, without adding Abstract/ABS as an independent monitored coin. Canonical official issuer https://cambria.gg/ , token docs https://docs.cambria.gg/genesis/usdrsgp , official token/season Journey https://lobby.cambria.gg/token/ , original X https://x.com/playcambria . Cambria $RSGP on Base is a distinct family from old Duel Arena stake/AGW migration and earlier Genesis opt-in.
+
+The Base TGE milestone (Oct29 15:00 UTC, 22:00 BKK) was already email-delivered on Oct28, id `1a1812a1f6802ecb`. It MUST be present in `state/known-events.md`. Do not re-alert unchanged TGE date. New claim eligibility, user allocation, official claim-open or time/chain/contract change may be a distinct actionable version, subject to Tier A issuer evidence and ACTION_GATE. No personal wallet amount may be inferred without actual authenticated eligibility/wallet proof.
+
+Scoping is *existing Cambria*; do not widen registry or change shard scheduling. A change of **settlement chain** never suppresses rights already earned in another supported game chain.
