@@ -94,6 +94,31 @@ export function validateEditorial(input, rules) {
     const ones=declared.filter(x=>x.event_key===key);
     if(ones.length===2 && !(ones.some(x=>x.section===1)&&ones.some(x=>x.section!==1)))fail('REPEATED_EVENT_WITHOUT_HIGHLIGHT_DETAIL',key);
   }
+  // Distinct daily keys are NOT proof of distinct news. Only recurring market tape
+  // may use a fresh time-window without a narrative state-change receipt.
+  const narrativeKinds=new Set(['MAJOR_SECURITY','MAJOR_POLICY','MAJOR_INFRASTRUCTURE','TGE_PUBLIC_SALE','EARLY_NFT_MEME','INSTITUTIONAL_FLOW','FUTURE_CATALYST']);
+  const older=Array.isArray(input.previous_events)?input.previous_events:[];
+  for(const ev of input.events||[]){
+    if(!counts.has(ev.event_key)||!narrativeKinds.has(ev.kind))continue;
+    const candidate=(input.candidates||[]).find(c=>c.event_key===ev.event_key);
+    const family=ev.family_key||candidate?.family_key;
+    if(!family)continue; // existing historic manifest may not have all family identifiers; emit below.
+    const previous=older.filter(x=>x.family_key===family);
+    if(previous.length===0)continue;
+    const exactVersion=previous.find(x=>x.material_version===ev.material_version);
+    if(exactVersion){fail('REPEATED_FAMILY_VERSION',family+'/'+ev.material_version);continue;}
+    const proof=ev.novelty_proof;
+    const fieldsOk=proof&&typeof proof==='object'
+      && previous.some(x=>x.material_version===proof.previous_material_version)
+      && String(proof.changed_field||'').length>=4
+      && String(proof.old_value||'').trim().length>=3
+      && String(proof.new_value||'').trim().length>=3
+      && String(proof.old_value).trim().toLowerCase()!==String(proof.new_value).trim().toLowerCase()
+      && /^https:\/\//.test(proof.evidence_url||'')
+      && String(proof.evidence_published_at||'').length>=10;
+    const inBody=(input.items||[]).some(i=>i.event_key===ev.event_key && String(i.text||'').toLowerCase().includes(String(proof?.new_value||'').trim().toLowerCase()));
+    if(!fieldsOk||!inBody)fail('FAMILY_REPLAY_WITHOUT_MATERIAL_STATE_CHANGE',family+'/'+ev.event_key);
+  }
   for(const ev of input.events||[]){
     if(ev.priority==='HIGH'&&ev.status==='verified'&&!counts.has(ev.event_key) && !ev.excluded_reason)fail('UNACCOUNTED_HIGH_EVENT',ev.event_key);
     if(ev.no_material_delta===true && counts.has(ev.event_key))fail('OLD_EVENT_REPLAY',ev.event_key);
