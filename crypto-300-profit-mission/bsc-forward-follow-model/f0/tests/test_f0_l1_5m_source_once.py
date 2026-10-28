@@ -1,0 +1,182 @@
+"""New actual-once source probe: OFFLINE adversarial tests, ZERO real TCP/DNS."""
+import json
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
+import socket
+import sys
+import tempfile
+import time
+import unittest
+from unittest.mock import patch
+
+ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
+from f0_l1_5m_source_once import (
+    SCHEMA, ENDPOINT, METHODS, MAX_BODY, validate_scope, run_probe, Sender,
+    now_utc, main)
+from f0_l1_window import load_frozen_cohort,cohort_watchlist
+from f0_l1_preflight import official_router_addresses
+
+SHA="a"*40
+
+
+def permit():
+    n=now_utc()
+    return dict(
+        schema=SCHEMA,user_authorized=True,independent_review_required=True,
+        endpoint=ENDPOINT,chain_id=56,methods=METHODS,free_only=True,
+        read_only=True,no_retries=True,no_ws=True,no_proxy=True,
+        no_redirects=True,background=False,
+        approved_commit_sha=SHA,approved_script_sha256="b"*64,
+        run_nonce="c"*64,storage_root="/tmp/f0-source-once-TEST",
+        window_start_utc=(n-timedelta(seconds=2)).isoformat().replace("+00:00","Z"),
+        window_end_utc=(n+timedelta(seconds=301)).isoformat().replace("+00:00","Z"),
+        max_total_attempts=770,max_block_reads=730,max_head_polls=31,
+        duration_ms=300000,head_poll_interval_ms=10000,slots=3,
+        spacing_ms=250,timeout_ms=5000,max_response_bytes=MAX_BODY)
+
+
+def valid_rpc(req):
+    return json.dumps({"jsonrpc":"2.0","id":req["id"],
+                       "result":"0x38" if req["method"]=="eth_chainId"
+                       else "0x64" if req["method"]=="eth_blockNumber"
+                       else {"number":req["params"][0],
+                             "hash":hex(int(req["params"][0],16))[2:].zfill(64),
+                             "parentHash":"0x"+format(
+                                 int(req["params"][0],16)-1,"064x"),
+                             "transactions":[]}}).encode()
+
+
+class MemorySource:
+    def __init__(self):
+        self.calls=[]
+        self.anchor=100
+    def send(self,encoded):
+        req=json.loads(encoded)
+        self.calls.append(req)
+        time.sleep(0.001)
+        if req["method"]=="eth_blockNumber":
+            self.anchor+=6
+            value=hex(self.anchor)
+        elif req["method"]=="eth_chainId":
+            value="0x38"
+        else:
+            h=int(req["params"][0],16)
+            value={"number":hex(h),"hash":"0x"+format(h,"064x"),
+                   "parentHash":"0x"+format(h-1,"064x"),
+                   "transactions":[]}
+        data=json.dumps({"jsonrpc":"2.0","id":req["id"],"result":value}).encode()
+        return {"state":"RAW","status":200,
+                "headers":{"Content-Type":"application/json"},
+                "raw":data,"post_ns":time.monotonic_ns(),
+                "end_ns":time.monotonic_ns()}
+
+
+class FiveMinuteSourceTests(unittest.TestCase):
+    def test_exact_valid_maximum_scope_and_no_permission(self):
+        p=permit()
+        self.assertIs(validate_scope(p),p)
+        self.assertFalse(hasattr(validate_scope,"execute_live"))
+
+    def test_late_and_method_and_budget_scope_denied(self):
+        for key,value in (
+            ("methods",METHODS+["eth_sendRawTransaction"]),
+            ("endpoint","https://evil.com"),
+            ("slots",True),("max_total_attempts",801),
+            ("max_block_reads",741),("max_head_polls",32),
+            ("head_poll_interval_ms",2000),
+            ("duration_ms",300001),
+            ("user_authorized",1),
+            ("approved_commit_sha","z"*40),
+        ):
+            with self.subTest(key=key):
+                q=permit()
+                q[key]=value
+                with self.assertRaisesRegex(ValueError,"ONCE_SCOPE_"):
+                    validate_scope(q)
+
+    def test_incoherent_reservation_rejected_before_network(self):
+        q=permit()
+        q["max_total_attempts"]=731
+        with patch("socket.getaddrinfo",
+                   side_effect=AssertionError("DNS_FORBIDDEN")) as dns:
+            with self.assertRaisesRegex(ValueError,"INCOHERENT"):
+                validate_scope(q)
+            dns.assert_not_called()
+
+    def test_no_implicit_live_entry(self):
+        with (patch.object(sys,"argv",["runner"]),
+              patch("socket.create_connection",
+                    side_effect=AssertionError("REAL_TCP_FORBIDDEN")) as tcp,
+              patch("socket.getaddrinfo",
+                    side_effect=AssertionError("REAL_DNS_FORBIDDEN")) as dns):
+            with self.assertRaises(SystemExit):
+                main()
+            tcp.assert_not_called()
+            dns.assert_not_called()
+
+    def test_fake_source_three_slot_and_durable_raw_no_real_network(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp).resolve()
+            q=permit()
+            q.update(max_total_attempts=48,max_block_reads=32,
+                     max_head_polls=10,duration_ms=1200,
+                     head_poll_interval_ms=100)
+            source=MemorySource()
+            cohort_raw=(ROOT/"F0_COHORT_PRESELECTION.json").read_bytes()
+            watches,_=cohort_watchlist(load_frozen_cohort(cohort_raw))
+            registry=json.loads((ROOT/"F0_ROUTER_SOURCE_CANDIDATES.json").read_bytes())
+            routers=set(official_router_addresses(registry))
+            with (patch("socket.getaddrinfo",
+                        side_effect=AssertionError("REAL_DNS_FORBIDDEN")) as dns,
+                  patch("socket.create_connection",
+                        side_effect=AssertionError("REAL_TCP_FORBIDDEN")) as tcp):
+                result=run_probe(q,watches,routers,path,sender=source)
+                tcp.assert_not_called()
+                dns.assert_not_called()
+            self.assertGreater(result["heads_requested"],1)
+            self.assertGreater(result["blocks_requested"],1)
+            self.assertGreater(result["last_contiguous_height"],106)
+            self.assertEqual(result["failed"],0)
+            self.assertEqual(result["attempts"],len(source.calls))
+            self.assertEqual(result["post_started"],len(source.calls))
+            self.assertLessEqual(result["max_inflight"],3)
+            self.assertIsNone(result["buy_confirmed"])
+            rows=[json.loads(x) for x in (path/"attempts.jsonl").read_text().splitlines()]
+            self.assertEqual(len(rows),2*len(source.calls))
+            for i in range(0,len(rows),2):
+                self.assertEqual(rows[i]["event"],"RESERVE_UNKNOWN")
+                self.assertEqual(rows[i+1]["event"],"SETTLE")
+                raw=(path/"raw_responses"/rows[i+1]["raw_file"]).read_bytes()
+                import hashlib
+                self.assertEqual(rows[i+1]["response_sha256"],
+                                 hashlib.sha256(raw).hexdigest())
+
+    def test_real_sender_post_clock_denied_after_fake_tls_connection(self):
+        calls=[]
+        class FakeConnection:
+            def __init__(self,*args,**kwargs):
+                calls.append("ctor")
+            def connect(self):
+                calls.append("connect")
+            def request(self,*args,**kwargs):
+                calls.append("POST")
+            def close(self):
+                calls.append("close")
+        sender=Sender(end_utc=now_utc()-timedelta(seconds=1),
+                      stop_mono=time.monotonic()+1,
+                      timeout_s=1,spacing_s=0.25,
+                      post_factory=FakeConnection)
+        with (patch("socket.getaddrinfo",
+                    side_effect=AssertionError("REAL_DNS_FORBIDDEN")) as dns,
+              patch("socket.create_connection",
+                    side_effect=AssertionError("REAL_TCP_FORBIDDEN")) as tcp):
+            result=sender.send(b"{}")
+            dns.assert_not_called()
+            tcp.assert_not_called()
+        self.assertEqual(result["state"],"PRE_POST_WINDOW_DENIED")
+        self.assertEqual(calls,["ctor","connect","close"])
+
+
+if __name__=="__main__":
+    unittest.main()
