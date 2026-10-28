@@ -144,13 +144,22 @@ class FiveMinuteSourceTests(unittest.TestCase):
             self.assertIsNone(result["buy_confirmed"])
             rows=[json.loads(x) for x in (path/"attempts.jsonl").read_text().splitlines()]
             self.assertEqual(len(rows),2*len(source.calls))
-            for i in range(0,len(rows),2):
-                self.assertEqual(rows[i]["event"],"RESERVE_UNKNOWN")
-                self.assertEqual(rows[i+1]["event"],"SETTLE")
-                raw=(path/"raw_responses"/rows[i+1]["raw_file"]).read_bytes()
-                import hashlib
-                self.assertEqual(rows[i+1]["response_sha256"],
-                                 hashlib.sha256(raw).hexdigest())
+            first={}
+            settled={}
+            for index,row in enumerate(rows):
+                if row["event"]=="RESERVE_UNKNOWN":
+                    first[row["rid"]]=index
+                elif row["event"]=="SETTLE":
+                    settled[row["rid"]]=index
+                    self.assertLess(first[row["rid"]],index)
+                    raw=(path/"raw_responses"/row["raw_file"]).read_bytes()
+                    import hashlib
+                    self.assertEqual(row["response_sha256"],
+                                     hashlib.sha256(raw).hexdigest())
+            self.assertEqual(set(first),set(settled))
+            self.assertGreaterEqual(result["contiguous_full_blocks_post_anchor"],1)
+            self.assertGreaterEqual(result["contiguous_rate_blocks_per_s"],0)
+            self.assertGreater(len(result["head_samples"]),1)
 
     def test_real_sender_post_clock_denied_after_fake_tls_connection(self):
         calls=[]
