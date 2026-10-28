@@ -1,6 +1,8 @@
 """Offline-only fake-RPC checks: no remote calls or background observer."""
 import datetime as dt
 import hashlib
+import http.client
+import io
 from email.message import Message
 import importlib.util
 import json
@@ -594,7 +596,8 @@ class BoundedForwardObservationTests(unittest.TestCase):
 
 
     def _run_rejected_http_batch(self, body, *, declared_length=None,
-                                 chunked=False, status=200,
+                                 chunked=False, status=200, http_error=False,
+                                 raw_http_response=None,
                                  endpoint="https://bsc-dataseed.bnbchain.org"):
         """Offline real ForwardRPC HTTP-validation through a fake opener."""
         class Response:
@@ -611,8 +614,20 @@ class BoundedForwardObservationTests(unittest.TestCase):
             def __exit__(self, *args): return False
             def read(self, limit): return body[:limit]
 
+        class OfflineSocket:
+            def makefile(self, *args, **kwargs):
+                return io.BytesIO(raw_http_response)
+
         class Opener:
             def open(self, req, timeout):
+                if raw_http_response is not None:
+                    response = http.client.HTTPResponse(OfflineSocket())
+                    response.begin()
+                    return response
+                if http_error:
+                    raise m.urllib.error.HTTPError(
+                        endpoint, status, "offline failure", Message(),
+                        io.BytesIO(body))
                 return Response()
 
         class RPC(FakeRPC):
@@ -622,8 +637,12 @@ class BoundedForwardObservationTests(unittest.TestCase):
                 self.forward = m.ForwardRPC(
                     endpoint, min_interval=0, max_requests=180, opener=Opener())
 
+            def request(self, method, params):
+                result = super().request(method, params)
+                self.forward.calls += 1
+                return result
+
             def request_batch(self, jobs):
-                self.forward.calls = len(self.calls)
                 self.calls.extend(jobs)
                 return self.forward.request_batch(jobs)
 
@@ -632,6 +651,7 @@ class BoundedForwardObservationTests(unittest.TestCase):
             self.bounded(rpc=rpc)
         self.assertFalse((self.dir/'manifest.json').exists())
         self.assertTrue((self.dir/'failure.json').exists())
+        self.assertEqual(rpc.forward.calls, len(rpc.calls))
         return caught.exception, json.loads((self.dir/'failure.json').read_text())
 
     def test_rejected_batch_transport_bytes_and_sha_are_private(self):
@@ -705,6 +725,62 @@ class BoundedForwardObservationTests(unittest.TestCase):
         raw = (self.dir/receipt['raw_file']).read_bytes()
         self.assertEqual(receipt['raw_sha256'], hashlib.sha256(raw).hexdigest())
         self.assertEqual(json.loads(raw)[0]['result']['hash'], '0x' + '8' * 64)
+
+    def test_real_httpclient_chunked_truncation_keeps_partial_body(self):
+        # Bytes are parsed by the stdlib HTTPResponse chunked decoder,
+        # not simulated by a Response.read() method.
+        partial = b'{"jsonrpc":"2.0","id":12,"result":{}'
+        wire = (b'HTTP/1.1 200 OK\r\n'
+                b'Transfer-Encoding: chunked\r\n'
+                b'\r\n' + format(len(partial), 'x').encode() +
+                b'\r\n' + partial + b'\r\n')
+        _, failure = self._run_rejected_http_batch(
+            b'', raw_http_response=wire)
+        self.assertEqual(failure['reason'], 'RPC_NETWORK_UNAVAILABLE')
+        receipt = failure['rejected_response']
+        self.assertEqual(receipt['privacy'], 'PRIVATE_RAW_SAVED')
+        self.assertFalse(receipt['capture_truncated'])
+        self.assertEqual(receipt['raw_bytes'], len(partial))
+        data = (self.dir/receipt['raw_file']).read_bytes()
+        self.assertEqual(data, partial)
+        self.assertEqual(receipt['raw_sha256'], hashlib.sha256(partial).hexdigest())
+        self.assertEqual((self.dir/receipt['raw_file']).stat().st_mode & 0o777,
+                         0o600)
+
+    def test_real_httperror_503_keeps_actual_error_body(self):
+        raw = b'{"error":"backend unavailable"}'
+        _, failure = self._run_rejected_http_batch(
+            raw, status=503, http_error=True)
+        self.assertEqual(failure['reason'], 'RPC_HTTP_503')
+        receipt = failure['rejected_response']
+        self.assertEqual(receipt['privacy'], 'PRIVATE_RAW_SAVED')
+        self.assertEqual((self.dir/receipt['raw_file']).read_bytes(), raw)
+        self.assertEqual(receipt['raw_sha256'], hashlib.sha256(raw).hexdigest())
+
+    def test_public_rpc_documentation_host_does_not_mask_evidence(self):
+        raw = b'{"error":"see https://bsc-dataseed.bnbchain.org/docs"}'
+        _, failure = self._run_rejected_http_batch(raw)
+        self.assertEqual(failure['reason'], 'BATCH_WRONG_RESPONSE_COUNT')
+        receipt = failure['rejected_response']
+        self.assertEqual(receipt['privacy'], 'PRIVATE_RAW_SAVED')
+        self.assertEqual((self.dir/receipt['raw_file']).read_bytes(), raw)
+
+    def test_post_batch_header_failure_refs_last_completed_batch(self):
+        rpc = FakeRPC(second_height=103, broken_parent_height=102)
+        with self.assertRaisesRegex(
+                m.ForwardProbeError, 'NONCONTIGUOUS_PARENT_HASH'):
+            self.bounded(rpc=rpc)
+        failure = json.loads((self.dir/'failure.json').read_text())
+        self.assertEqual(failure['reason'], 'NONCONTIGUOUS_PARENT_HASH')
+        self.assertNotIn('rejected_response', failure)
+        receipt = failure['last_completed_batch_response']
+        saved = self.dir / receipt['raw_file']
+        self.assertTrue(saved.is_file())
+        self.assertEqual(receipt['raw_sha256'],
+                         hashlib.sha256(saved.read_bytes()).hexdigest())
+        self.assertEqual(receipt['raw_bytes'], len(saved.read_bytes()))
+        self.assertIn('batch_response_id', receipt)
+        self.assertFalse((self.dir/'manifest.json').exists())
 
     def test_legacy_twelve_second_poll_rejected_as_unsafe(self):
         rpc = FakeRPC()

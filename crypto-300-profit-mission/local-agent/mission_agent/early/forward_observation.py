@@ -209,6 +209,8 @@ class ForwardRPC(JsonRPC):
             status = int(exc.code)
             try:
                 raw = exc.read(MAX_RESPONSE_BYTES + 1)
+            except http.client.IncompleteRead as incomplete:
+                raw = incomplete.partial
             except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException):
                 raw = None
             finally:
@@ -217,6 +219,15 @@ class ForwardRPC(JsonRPC):
             if isinstance(raw, bytes):
                 error.rejected_raw = raw
                 error.rejected_secret = _rpc_response_echoes_secret(self.url, raw)
+            raise error from None
+        except http.client.IncompleteRead as exc:
+            # HTTPResponse.read() may fail mid-chunk, but partial is the actual
+            # received, de-chunked body prefix and must survive fail-closed.
+            error = ForwardProbeError("RPC_NETWORK_UNAVAILABLE")
+            if isinstance(exc.partial, bytes):
+                error.rejected_raw = exc.partial[:MAX_RESPONSE_BYTES + 1]
+                error.rejected_secret = _rpc_response_echoes_secret(
+                    self.url, error.rejected_raw)
             raise error from None
         except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException):
             raise ForwardProbeError("RPC_NETWORK_UNAVAILABLE") from None
@@ -242,11 +253,14 @@ def _rpc_response_echoes_secret(endpoint, raw):
     if not isinstance(endpoint, str) or not isinstance(raw, bytes):
         return False
     url = urllib.parse.urlsplit(endpoint)
-    markers = [endpoint, urllib.parse.unquote(endpoint)]
-    markers.extend(v for _, v in urllib.parse.parse_qsl(url.query) if v)
+    # Hostname and public URL alone are not credentials: providers may echo
+    # their documentation URLs in ordinary errors. Only private query values
+    # and non-public path segments are candidate secret markers.
+    markers = [v for _, v in urllib.parse.parse_qsl(url.query) if v]
     markers.extend(urllib.parse.unquote(v) for v in url.path.split("/")
                    if v and v.lower() not in
-                   ("v1", "v2", "v3", "rpc", "bsc", "mainnet"))
+                   ("v1", "v2", "v3", "rpc", "bsc", "mainnet",
+                    "public", "docs", "api", "jsonrpc"))
     decoded = raw.decode("utf-8", errors="replace")
     try:
         decoded += json.dumps(json.loads(raw), ensure_ascii=False)
@@ -778,6 +792,19 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
         failure = {"status": "UNUSABLE_NOT_PIT_EVIDENCE", "reason": code,
                    "rpc_attempt_count": attempted,
                    "completed_rpc_responses": calls}
+        # A successfully saved batch may later fail header/parent validation.
+        # Reference its original file explicitly without mislabeling it as
+        # the rejected HTTP response or assuming it caused this failure.
+        previous_batch = next((row for row in reversed(calls)
+                               if "batch_subrequest_count" in row), None)
+        if previous_batch is not None:
+            failure["last_completed_batch_response"] = {
+                "raw_file": previous_batch["raw_file"],
+                "raw_sha256": previous_batch["raw_sha256"],
+                "raw_bytes": previous_batch["raw_bytes"],
+                "batch_response_id": previous_batch["batch_response_id"],
+                "relation": "LAST_COMPLETED_BATCH_NOT_NECESSARILY_FAILURE_CAUSE",
+            }
         rejected = getattr(exc, "rejected_raw", None)
         if rejected is None:
             rejected = pending_batch_raw
