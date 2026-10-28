@@ -81,3 +81,13 @@ STATUS: PINNED_READ_PASS
 - 不安装/更改launchd或cron，不付费，不签名/交易，不转账，不合并，不部署、不重启任何生产服务，不修改历史P0样本或买入金额。失败则结束，继续分析现有证据，不因本条授权再次实跑。
 
 **重要真实性状态**：截至记录本段时，由于ChatGPT会话无法直接控制用户Mac，**尚未执行**上述采样命令，也没有任何真实本地原HTTP响应归档得到验证。用户随后实际回传的单次运行产物（成功或失败）必须按固定SHA、每请求sha256、接收完成UTC与单调间隔离线审查；任何`Factory`计数变化只能解释为此次短窗的单源观察，不得冒充可交易新币、完整母体或PIT来源终审。历史2025`available_at`仍UNKNOWN，`P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO`及2026-11-02历史来源停止日不变。
+
+## 2026-10-28：用户批准下一次有界前台只读BSC新池观察研究（非持续监控）
+
+用户上传本日Mac的15份原始RPC回执，15/15响应SHA一致，130232809→130232814五块父hash连续，两次Factory累计Pair均3575553，2.210秒有效计数窗delta=0。用户获知2秒短窗不足以积累新池证据，并同意下一轮固定时长、固定RPC预算、手动启动的前瞻试验。本次授权限于**在现有模块准备该一次性前台研究与离线验收**；不授权本助手访问/后台运行用户Mac、自动定时、生产部署、交易、邮件、付费或改变旧2025历史P0。之前2026-10-22的审批历史事实原文保留。
+
+**硬上限**：原 `forward_observation.py --manual-once` 仍是20请求/两快照的旧模式。新增 `--manual-bounded` 为一次前台、最多180秒目标观察、最多180个只读RPC调用、每12秒轮询、最多12条Pair身份且每相邻区间最多3条。沿用原有 `eth_chainId`/`eth_blockNumber`/`eth_getBlockByNumber`/`eth_call` 白名单，无钱包签名交易。单次HTTP最长20秒，所以最后一次在途请求可能使实际进程超过180秒；原始单调时钟与完成UTC必须真实记录，不能宣传严格180秒绝对截止。免费公开RPC若限流，停止且不换来源、不自动重试。
+
+**有效性**：同块计数与header两次检查、上一观察块在下一周期再次核对、两块之间逐区块parentHash关联（间隔超过24块直接 fail-closed）。新增Factory索引身份仅在后一观察的固定块上读取 `allPairs(index)`、`token0()`、`token1()`。每个原始RPC响应体以私有权限保存，伴SHA256、调用UTC、完成UTC、单调时钟；任何错链、重组、超预算、时钟异常和截断只留下 `failure.json` 而非可评分manifest。超出身份额度的索引**保留未读起止与计数**，不能把未读计为零；索引范围采用常数空间记录，不展开大列表。原raw只存用户Mac，不上传Git。
+
+**阶段状态**：代码与离线假RPC反例已在既有 `mission_agent/early/forward_observation.py` 和 `tests/test_monster_forward_observation.py` 增量提交；尚未取得该新模式的真实Mac单测PASS、独立外部审核或真实前台新池样本。不得把已写代码当作上线成功。其专用子类请求上限不会放宽原Four.meme共享传输的50调用限制。旧2025-07-01历史P0仍 `INSUFFICIENT_COVERAGE`，P1 `BLOCKED`，Monster `G6 NO_GO`，Frank不动。
