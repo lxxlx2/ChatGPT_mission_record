@@ -8,6 +8,16 @@ This is an engineering candidate, not standing permission to run it.
 ONE coordinator owns the durable request log, three bounded workers may only
 perform a preapproved CHAIN/HEAD/full-block request. HEAD/parent evidence
 is from the SAME source; no global first-seen or BUY/SELL/ROI is claimed.
+
+TIMEOUT CONTRACT: the main coordinator enforces a result acceptance deadline,
+fsyncs FAILED/UNKNOWN on an expired Future, and NEVER waits for native DNS,
+TCP or SSL calls to return. A Python thread cannot forcibly preempt such
+native calls. After the summary is durably saved, the foreground CLI exits
+the OS process with status 93 if an unjoined worker survives. The separate
+whole-process watchdog exits status 92 on the global 310-second hard stop.
+No response after its deadline is accepted; no second request is retried.
+HTTP Connection: close EOF without CL/chunked framing is accepted as a
+standard close-delimited response only when HTTPResponse.will_close is true.
 """
 from __future__ import annotations
 
@@ -241,6 +251,7 @@ class Sender:
         self.timeout_s, self.spacing_s = timeout_s, spacing_s
         self.response_cap = response_cap
         self.lock = threading.Lock()
+        self.stop_event = threading.Event()
         self.last_start = None
         # Test-only injected connection factory; real CLI never supplies it.
         self._test_connection_factory = post_factory
@@ -279,6 +290,8 @@ class Sender:
         watcher.start()
 
         def check_deadline(partial=b""):
+            if self.stop_event.is_set():
+                raise _FramingFailure("RUN_STOPPED_UNKNOWN_NO_RETRY", partial)
             if timeout_event.is_set() or time.monotonic() >= deadline:
                 raise _FramingFailure("REQUEST_DEADLINE_EXCEEDED", partial)
 
@@ -641,6 +654,10 @@ def run_probe(scope, watched, routers, root, *, sender=None, clock=now_utc,
                     time.sleep(0.03)
                 if probe.total>=scope["max_total_attempts"]:
                     probe.stop_reason="GLOBAL_ATTEMPT_LIMIT"
+            # Once the coordinator stops, no worker still waiting for
+            # connect() or the global POST lock may begin a NEW POST.
+            if isinstance(sender,Sender):
+                sender.stop_event.set()
             # Never wait indefinitely on native DNS/TCP/TLS. Completed
             # outcomes are recorded if timely; the rest become explicit
             # ABORTED_UNKNOWN_NO_RETRY and cannot be used for observations.
@@ -688,7 +705,9 @@ def run_probe(scope, watched, routers, root, *, sender=None, clock=now_utc,
             "unjoined_worker_count":sum(
                 not f.done() for f in probe.unjoined_futures),
             "native_dns_or_tls_uninterruptible":True,
-            "timeout_contract":"main_thread_settles_expired_futures_as_UNKNOWN_without_join; process_hard_stop_covers_native_dns",
+            "post_started_is_known_lower_bound_if_unknown":bool(
+                probe.unjoined_futures or probe.aborted_unknown_outcomes),
+            "timeout_contract":"main_thread_settles_expired_futures_as_UNKNOWN_without_join; successful_result_requires_completion_before_deadline; foreground_OS_exit_93_after_fsync_if_worker_unjoined; process_hard_stop_92",
             "last_contiguous_height":probe.last_contiguous,
             "latest_source_head":probe.latest_head,
             "source_backlog":None if probe.latest_head is None or
