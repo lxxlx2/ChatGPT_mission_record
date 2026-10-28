@@ -820,6 +820,79 @@ class BoundedForwardObservationTests(unittest.TestCase):
         self.assertFalse((self.dir/'manifest.json').exists())
         self.assertTrue((self.dir/'failure.json').exists())
 
+    def test_failed_26_block_gap_retains_unverified_factory_plus_one(self):
+        rpc = FakeRPC(second_height=126, before=500, after=501)
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'ANCESTRY_EXCEEDS_BOUNDED_DEPTH'):
+            self.bounded(rpc=rpc)
+        failure = json.loads((self.dir/'failure.json').read_text())
+        interval = failure['uncommitted_counter_interval']
+        self.assertEqual((interval['from_block'], interval['to_block']), (100, 126))
+        self.assertEqual(interval['gap_blocks'], 26)
+        self.assertEqual(interval['max_verified_gap_blocks'], 24)
+        self.assertEqual((interval['factory_count_before'],
+                          interval['factory_count_after']), (500, 501))
+        self.assertEqual(interval['factory_counter_delta'], 1)
+        self.assertEqual((interval['candidate_index_start'],
+                          interval['candidate_index_end_exclusive']), (500, 501))
+        self.assertEqual(interval['ancestry_and_pair_identity'], 'NOT_VERIFIED')
+        self.assertEqual(interval['tradability_and_profit'], 'NOT_TESTED')
+        self.assertNotIn('completed_verified_prefix_intervals', failure)
+        self.assertFalse((self.dir/'manifest.json').exists())
+        self.assertFalse(any(method == 'eth_call' and
+                             params[0]['data'].startswith(m.PAIRS_SELECTOR)
+                             for method, params in rpc.calls))
+        for row in failure['completed_rpc_responses']:
+            raw = (self.dir / row['raw_file']).read_bytes()
+            self.assertEqual(hashlib.sha256(raw).hexdigest(), row['raw_sha256'])
+
+    def test_valid_prefix_survives_failure_without_upgrading_next_gap(self):
+        class OneValidThenTooLong(FakeRPC):
+            def request(self, method, params):
+                if method == 'eth_blockNumber':
+                    self.second_height = 101 if self.head_reads == 1 else 127
+                if method == 'eth_call' and params[0]['data'] == m.COUNT_SELECTOR:
+                    self.after = 500 if self.count_reads == 1 else 501
+                return super().request(method, params)
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'ANCESTRY_EXCEEDS_BOUNDED_DEPTH'):
+            self.bounded(rpc=OneValidThenTooLong(), budget=100)
+        failure = json.loads((self.dir/'failure.json').read_text())
+        verified = failure['completed_verified_prefix_intervals']
+        self.assertEqual(len(verified), 1)
+        self.assertEqual((verified[0]['from_block'], verified[0]['to_block']),
+                         (100, 101))
+        self.assertEqual(verified[0]['factory_counter_delta'], 0)
+        self.assertEqual(verified[0]['p0_pit_gate'], 'NOT_PASSED')
+        unverified = failure['uncommitted_counter_interval']
+        self.assertEqual((unverified['from_block'], unverified['to_block']),
+                         (101, 127))
+        self.assertEqual(unverified['factory_counter_delta'], 1)
+        self.assertEqual(unverified['candidate_index_start'], 500)
+        self.assertFalse((self.dir/'manifest.json').exists())
+
+    def test_untrusted_counts_do_not_create_uncommitted_candidate(self):
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'FACTORY_COUNTER_DECREASED'):
+            self.bounded(rpc=FakeRPC(before=501, after=500))
+        failure = json.loads((self.dir/'failure.json').read_text())
+        self.assertNotIn('uncommitted_counter_interval', failure)
+        self.assertFalse((self.dir/'manifest.json').exists())
+
+    def test_one_second_poll_is_bounded_and_offline(self):
+        clk = Clock()
+        rpc = FakeRPC(before=500, after=500)
+        result = m.capture_bounded(
+            rpc, self.dir, duration_seconds=12, poll_seconds=1,
+            rpc_budget=55, clock=clk.now, monotonic_ns=clk.monotonic,
+            sleep=clk.sleep)
+        self.assertEqual(result['poll_seconds_requested'], 1)
+        self.assertTrue(result['verified_intervals'])
+        self.assertLessEqual(result['rpc_attempt_count'], 55)
+        self.assertFalse(result['p1_gate_passed'])
+        self.assertFalse(result['trading_authorized'])
+        self.assertTrue((self.dir/'manifest.json').exists())
+
     def test_reorg_refused_instead_of_using_stale_counter(self):
         with self.assertRaisesRegex(m.ForwardProbeError, 'FIRST_ANCHOR_CHANGED'):
             self.bounded(rpc=FakeRPC(changed_hash=True))

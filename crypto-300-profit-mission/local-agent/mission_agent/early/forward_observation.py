@@ -523,6 +523,7 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
     calls, snapshots, intervals, new_pairs = [], [], [], []
     attempted = 0
     pending_batch_raw = None
+    uncommitted_counter_interval = None
 
     def checkpoint():
         nonlocal last_clock, last_mono
@@ -686,6 +687,28 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
                     and b["all_pairs_length"] != a["all_pairs_length"]):
                 raise ForwardProbeError("SAME_HEIGHT_INCONSISTENT_STATE")
             gap = b["block"]["number"] - a["block"]["number"]
+            # Both snapshots have their own pinned block/count receipts, but
+            # this interval has not yet passed the intervening ancestry test.
+            # Never promote a Factory counter difference to a Pair identity.
+            uncommitted_counter_interval = {
+                "status": "UNCOMMITTED_COUNTER_OBSERVATION_NOT_PIT",
+                "source_scope": "SINGLE_PROVIDER_PANCAKE_V2_FACTORY_ONLY",
+                "from_block": a["block"]["number"],
+                "from_block_hash": a["block"]["hash"],
+                "to_block": b["block"]["number"],
+                "to_block_hash": b["block"]["hash"],
+                "gap_blocks": gap,
+                "max_verified_gap_blocks": MAX_BOUNDED_ANCESTOR_BLOCKS,
+                "factory_count_before": a["all_pairs_length"],
+                "factory_count_after": b["all_pairs_length"],
+                "factory_counter_delta": b["all_pairs_length"]-a["all_pairs_length"],
+                "candidate_index_start": a["all_pairs_length"],
+                "candidate_index_end_exclusive": b["all_pairs_length"],
+                "from_count_received_utc": a["count_observed_at_utc"],
+                "to_count_received_utc": b["count_observed_at_utc"],
+                "ancestry_and_pair_identity": "NOT_VERIFIED",
+                "tradability_and_profit": "NOT_TESTED",
+            }
             if gap > MAX_BOUNDED_ANCESTOR_BLOCKS:
                 raise ForwardProbeError("ANCESTRY_EXCEEDS_BOUNDED_DEPTH")
             if rpc_budget - attempted < gap + 2:
@@ -748,6 +771,7 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
                 "unread_count": delta-len(read),
                 "source_scope": "BSC_PANCAKE_V2_FACTORY_ONLY",
                 "interval_contiguous_headers_verified": True})
+            uncommitted_counter_interval = None
             snapshots.append(b)
             a = b
         finish, finish_mono = checkpoint()
@@ -792,6 +816,21 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
         failure = {"status": "UNUSABLE_NOT_PIT_EVIDENCE", "reason": code,
                    "rpc_attempt_count": attempted,
                    "completed_rpc_responses": calls}
+        # Preserve earlier *completed* ancestry-verified intervals as scoped
+        # diagnostic evidence, not as a successful full-run manifest/PIT pass.
+        if intervals:
+            failure["completed_verified_prefix_intervals"] = [
+                {"from_block": segment["from_block"],
+                 "to_block": segment["to_block"],
+                 "factory_counter_delta": segment["new_factory_pair_index_count"],
+                 "identities_read_indices": segment["identities_read_indices"],
+                 "unread_count": segment["unread_count"],
+                 "ancestry_and_anchors": "VERIFIED_IN_THIS_LOCAL_RUN",
+                 "market_scope": "SINGLE_PROVIDER_PANCAKE_V2_FACTORY_ONLY",
+                 "p0_pit_gate": "NOT_PASSED"}
+                for segment in intervals]
+        if uncommitted_counter_interval is not None:
+            failure["uncommitted_counter_interval"] = uncommitted_counter_interval
         # A successfully saved batch may later fail header/parent validation.
         # Reference its original file explicitly without mislabeling it as
         # the rejected HTTP response or assuming it caused this failure.
@@ -837,13 +876,17 @@ def main():
     modes.add_argument("--manual-bounded", action="store_true")
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--pause-ms", type=int, default=1000)
+    parser.add_argument("--poll-seconds", type=int, default=BOUNDED_POLL_SECONDS)
     args = parser.parse_args()
     if args.manual_bounded:
         if args.pause_ms != 1000:
             parser.error("--pause-ms is only valid with --manual-once")
+        if not 1 <= args.poll_seconds <= BOUNDED_POLL_SECONDS:
+            parser.error("--poll-seconds must be an integer from 1 to 5")
         rpc = ForwardRPC(os.getenv("MONSTER_BSC_ARCHIVE_RPC_URL"),
                          max_requests=MAX_BOUNDED_CALLS)
-        result = capture_bounded(rpc, args.out_dir)
+        result = capture_bounded(rpc, args.out_dir,
+                                 poll_seconds=args.poll_seconds)
         print(json.dumps({"status": "READ_ONLY_BOUNDED_OBSERVED",
             "manifest_path": str(args.out_dir / "manifest.json"),
             "snapshots": len(result["snapshots"]),
@@ -853,6 +896,8 @@ def main():
             "stop_reason": result["stop_reason"],
             "p0_gate": "UNCHANGED", "p1_gate": "BLOCKED"}, sort_keys=True))
     else:
+        if args.poll_seconds != BOUNDED_POLL_SECONDS:
+            parser.error("--poll-seconds is only valid with --manual-bounded")
         if not 0 <= args.pause_ms <= 3000:
             parser.error("--manual-once and --pause-ms from 0 to 3000 required")
         rpc = ForwardRPC(os.getenv("MONSTER_BSC_ARCHIVE_RPC_URL"), max_requests=MAX_CALLS)
