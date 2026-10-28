@@ -10,11 +10,15 @@ const js = fs.readFileSync(path.join(__dirname,
 const first = js.indexOf('function verifiedF01SourceView(');
 const last = js.indexOf('function renderF01History(', first);
 assert.ok(first > 0 && last > first, 'actual F01 UI verifier must exist');
+const now = 1800000000;
 const context = {Date};
 vm.createContext(context);
-vm.runInContext(js.slice(first, last) + '\nthis.verify = verifiedF01SourceView;', context);
+vm.runInContext(`const f01PageOpenedAtEpoch = ${now-100};
+const f01FirstSeenKeys = new Set();
+const f01ObservedLagSeconds = [];
+` + js.slice(first, last) +
+  '\nthis.verify = verifiedF01SourceView; this.observe = recordF01PageObservation; this.epoch = f01EventEpoch;', context);
 const verify = context.verify;
-const now = 1800000000;
 const row = Object.freeze({
   person_id:'frank', mint:'7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump',
   episode_id:'E1', source_signal_id:'S1', latest_signature:'SIG1',
@@ -59,4 +63,26 @@ test('historical rows remain visible even if no recent signal',()=>{
   const result = verify(doc({source_recent:[],source_recent_count:0}),[row],now);
   assert.equal(result.recent.length,0);
   assert.equal(result.historical.length,1);
+});
+
+test('chain epoch parser handles numeric seconds and timezone-bearing timestamps only',()=>{
+  assert.equal(context.epoch(now-1),now-1);
+  assert.equal(context.epoch(String(now-1)),now-1);
+  assert.equal(context.epoch(new Date((now-1)*1000).toISOString()),now-1);
+  assert.equal(context.epoch('2026-10-28T08:00:00'),null);
+  assert.equal(context.epoch('garbage'),null);
+});
+test('first-browser observation is counted once and clearly not index ingest time',()=>{
+  const view={recent:[row],historical:[]};
+  assert.match(context.observe(view,now),/初见样本 1 条/);
+  assert.match(context.observe(view,now+2),/初见样本 1 条/);
+  const historicBeforeOpen={...row,latest_signature:'older',latest_buy_at:now-120,latest_at:now-120};
+  assert.match(context.observe({recent:[],historical:[historicBeforeOpen]},now+3),/初见样本 1 条/);
+});
+test('late FIRST observation of a post-open source BUY is detected from history',()=>{
+  const late={...row,latest_signature:'fresh-but-late',latest_side:'BUY'};
+  const result=context.observe({recent:[],historical:[late]},now+601);
+  assert.match(result,/初见样本 2 条/);
+  assert.match(result,/1 条超过10分钟/);
+  assert.match(result,/不能拆分为纯索引延迟/);
 });
