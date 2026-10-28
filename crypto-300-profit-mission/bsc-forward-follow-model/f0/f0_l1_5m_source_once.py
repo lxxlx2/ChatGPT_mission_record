@@ -378,6 +378,9 @@ class Capture:
         self.post_attempts, self.errors = 0,0
         self.raw_bytes=0
         self.pending={}
+        self.unjoined_futures=set()
+        self.deadline_outcomes=0
+        self.aborted_unknown_outcomes=0
         self.replies={}
         self.block_timings={k:[] for k in (
             "tls_connect", "pacing_wait", "post_to_response",
@@ -406,29 +409,73 @@ class Capture:
             require(self.heads < cap["max_head_polls"],"ONCE_HEAD_EXHAUSTED")
             self.heads+=1
         rid=self.total+1
+        # The MAIN coordination thread owns a monotonic deadline. A blocked
+        # DNS/connect worker cannot enforce its own completion deadline.
+        deadline_ns=time.monotonic_ns()+self.scope["timeout_ms"]*1_000_000
         req={"jsonrpc":"2.0","id":rid,"method":method,"params":params}
         body=json_body(req)
         self.total=rid
         _append(self.ledger_fd,{"event":"RESERVE_UNKNOWN","rid":rid,
                                 "method":method,"category":category,
-                                "height":height,"UTC":now_utc().isoformat()})
+                                "height":height,"UTC":now_utc().isoformat(),
+                                "deadline_monotonic_ns":deadline_ns})
         fut=pool.submit(self.sender.send,body)
-        self.pending[fut]=(req,category,height)
+        self.pending[fut]=(req,category,height,deadline_ns)
         self.max_inflight=max(self.max_inflight,len(self.pending))
         return fut
 
-    def drain(self, *, timeout=0.1):
+    def drain(self, *, timeout=0.1, abort=False):
+        """Never join a stalled connector; fail closed on the main thread.
+
+        A Python worker blocked inside native DNS/TCP/SSL cannot be killed by
+        Future.cancel() or socket.close() before connect() returns. Only the
+        foreground process watchdog / operator-owned process exit can preempt
+        that OS thread. The journal always settles its RID as FAILED/UNKNOWN,
+        ignores any later worker result, and does not schedule another request.
+        """
         if not self.pending:
             return []
-        ready,_=wait(tuple(self.pending),timeout=timeout,return_when=FIRST_COMPLETED)
+        if not abort:
+            nearest=min(item[3] for item in self.pending.values())
+            remaining=max(0,(nearest-time.monotonic_ns())/1e9)
+            wait(tuple(self.pending),timeout=min(timeout,remaining),
+                 return_when=FIRST_COMPLETED)
+        now_ns=time.monotonic_ns()
         rows=[]
-        for future in ready:
-            req,kind,height=self.pending.pop(future)
-            try:
-                transport=future.result()
-            except Exception:
-                transport={"state":"WORKER_UNHANDLED","raw":None,"post_ns":None,
-                           "end_ns":time.monotonic_ns()}
+        for future, (req,kind,height,deadline_ns) in tuple(self.pending.items()):
+            completed=future.done()
+            if not completed and not abort and now_ns<deadline_ns:
+                continue
+            del self.pending[future]
+            if completed:
+                try:
+                    transport=future.result()
+                except Exception:
+                    transport={"state":"WORKER_UNHANDLED","raw":None,
+                               "post_ns":None,"end_ns":time.monotonic_ns()}
+                end_ns=transport.get("end_ns")
+                # Even if a late RAW result is delivered immediately before
+                # drain(), it CANNOT become a valid RPC after the reservation
+                # deadline. Record UNKNOWN, never incorporate the late RAW.
+                if (type(end_ns) is not int or
+                        end_ns > deadline_ns):
+                    transport={"state":"REQUEST_DEADLINE_EXCEEDED",
+                               "raw":None, "post_ns":None,
+                               "end_ns":now_ns,
+                               "late_result_discarded":True}
+            elif abort:
+                future.cancel()
+                self.unjoined_futures.add(future)
+                self.aborted_unknown_outcomes+=1
+                transport={"state":"ABORTED_UNKNOWN_NO_RETRY",
+                           "raw":None,"post_ns":None,"end_ns":now_ns}
+            else:
+                future.cancel()
+                self.unjoined_futures.add(future)
+                transport={"state":"REQUEST_DEADLINE_EXCEEDED",
+                           "raw":None,"post_ns":None,"end_ns":now_ns}
+            if transport["state"]=="REQUEST_DEADLINE_EXCEEDED":
+                self.deadline_outcomes+=1
             raw=transport.get("raw")
             rawpath=None
             if type(raw) is bytes and len(raw)<=self.scope["max_response_bytes"]:
@@ -453,6 +500,9 @@ class Capture:
                    "category":kind, "height":height,
                    "state":"RPC_RESPONSE" if result is not None else "FAILED",
                    "failure":failure,
+                   "outcome_unknown":(not completed or
+                                      transport.get("late_result_discarded",False)),
+                   "deadline_monotonic_ns":deadline_ns,
                    "post_monotonic_ns":transport.get("post_ns"),
                    "complete_monotonic_ns":transport.get("end_ns"),
                    "response_sha256":fingerprint(raw) if type(raw) is bytes else None,
