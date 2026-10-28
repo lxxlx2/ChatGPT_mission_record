@@ -78,7 +78,7 @@ bash run_machine_fun.sh probe
 bash run_machine_fun.sh run --notify-local
 ~~~
 
-`check` 只读本地两个现有凭据并检查权限，不联网、不发邮件、不启用监听；`probe` 通过现有 RPC 实际执行一次 getHealth，并用现有 Gmail OAuth 刷新短期 token，核对 Google 账户身份与 Sent 读取权限，**不发邮件**；`run` 在前台运行已知 Machine.fun PlatformConfig 的链上监听器，对**新检测到的真实候选**发送 Gmail 通知，另可选本地桌面通知。首次启动只设置现有链上状态为 checkpoint，不会给历史代币补发邮件。终端保持运行才能持续监控，Ctrl-C 停止；无 LaunchAgent、cron、定时任务。
+`check` 只读本地两个现有凭据并检查权限，不联网、不发邮件、不启用监听；`probe` 通过现有 RPC 实际执行一次 getHealth，并用现有 Gmail OAuth 刷新短期 token，核对 Google 账户身份与 Sent 读取权限，**不发邮件**；`run` 首先自动执行本模块全部 28 项离线/本机回环测试；任意失败则不启动真实监听和 Gmail 发送。测试成功后，`run` 在前台监听已知 Machine.fun PlatformConfig，对**新检测到的真实候选**发送 Gmail 通知，另可选本地桌面通知。首次启动只设置现有链上状态为 checkpoint，不会给历史代币补发邮件。终端保持运行才能持续监控，Ctrl-C 停止；无 LaunchAgent、cron、定时任务。
 
 完整独立测试命令：
 
