@@ -272,7 +272,8 @@ class GlobalStartGate:
         self.starts = []
 
     def run(self, request, source, *, block_head_deadline, dispatch_deadline,
-            timeout_ms, fake_post_utc_window=None, reservation_guard=None):
+            timeout_ms, fake_post_utc_window=None, reservation_guard=None,
+            physical_once_permit=None):
         from f0_l2_d2a_physical_admission import UnreleasedPhysicalHTTPSProposal
         if type(source) is UnreleasedPhysicalHTTPSProposal:
             # A direct lower-level gate call cannot dispatch a candidate.
@@ -334,7 +335,8 @@ class GlobalStartGate:
                             source.check_at_actual_post()
                             # The final monotonic permit/deadline check lives
                             # UNDER the shared lock, after pacing and UTC.
-                            if physical_live and not _real_foreground_permit.valid():
+                            if (physical_once_permit is not None
+                                    and not physical_once_permit.valid()):
                                 raise ValueError("F0_REAL_ONCE_FINAL_POST_EXPIRED")
                         except (ValueError, TypeError):
                             raise _FakeHTTPSStartDenied(
@@ -479,7 +481,7 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
              and _real_foreground_permit.valid()
              and source._runtime_permit is _real_foreground_permit
              and _physical_source_candidate is True,
-             "F0_REAL_FOREGROUND_OWNER_ONCE_PERMIT_REQUIRED")
+             "F0_REAL_FOREGROUND_PHYSICAL_SOURCE_NOT_RELEASED")
     else:
         need(_real_foreground_permit is None and (
              (not physical and _physical_source_candidate is False)
@@ -617,7 +619,8 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
                               dispatch_deadline=dispatch_deadline,
                               timeout_ms=max_block_response_ms,
                               fake_post_utc_window=fake_post_utc_window,
-                              reservation_guard=reservation_proof)
+                              reservation_guard=reservation_proof,
+                              physical_once_permit=_real_foreground_permit)
         pending[fut] = entry
         peak_slots = max(peak_slots, len(pending))
 
