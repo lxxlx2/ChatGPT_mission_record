@@ -1,6 +1,6 @@
 # Machine.fun 首发代币独立检测器
 
-Status (2026-10-29): 独立源码已实现，17/17 离线单元测试通过；真实 WebSocket、Mac 通知投递及长期覆盖未经验证；未安装、未启用常驻任务。
+Status (2026-10-29): 独立源码已实现，18/18 本地测试通过（含本机回环 WS）；真实 WebSocket、Mac 通知投递及长期覆盖未经验证；未安装、未启用常驻任务。
 
 本工具完全独立，不导入、不修改、不重启 Frank、Monster、Mission Control 或原有生产数据库、LaunchAgent。只处理 Machine.fun 已知的 Raydium LaunchLab PlatformConfig 下新币初始化事件，不绑定 SXTH。
 
@@ -19,11 +19,11 @@ Status (2026-10-29): 独立源码已实现，17/17 离线单元测试通过；�
 在本目录运行：
 
 ~~~sh
-python3 -m unittest -v test_machine_launch_detector
+python3 -m unittest -v test_machine_launch_detector test_machine_launch_ws
 python3 -m py_compile machine_launch_detector.py
 ~~~
 
-17 项测试覆盖解析、CPI、v0 Address Lookup、错误及重复过滤、首次 checkpoint、断线补漏、RPC 暂不可用、通知状态及错误分支。测试是合成数据，不能当成真实 WS 或 macOS 通知验收。
+18 项测试覆盖解析、CPI、v0 Address Lookup、错误及重复过滤、首次 checkpoint、断线补漏、RPC 暂不可用、通知状态及错误分支。测试使用合成交易及本机回环 WebSocket。已验证协议订阅、消息接收与 JSON 输出的离线端到端路径，但不能当成真实 Solana RPC 或 macOS 通知送达验收。
 
 ## 隔离手工运行说明
 
