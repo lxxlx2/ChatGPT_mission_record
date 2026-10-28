@@ -1,16 +1,16 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-29 01:05:48 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-29 01:59:27 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-29 01:05:48 Asia/Bangkok (01:04:16 attempt)
+- latest_actual_run: 2026-10-29 01:59:27 Asia/Bangkok (01:58:35 attempt; off-minute invocation)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-29/010548-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-29/010416-attempt.md
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-29/015927-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-29/015835-attempt.md
 - latest_scheduled_shard: 1
 - latest_executed_shard: 1
-- stale_shard_recovery: false; fair 01%4=1, no override; prior 00 final not verified
-- latest_candidate_count: 5
+- stale_shard_recovery: false; off-minute duplicate shard1, next fair HH:00 shard2
+- latest_candidate_count: 6
 - latest_triggered_events: 0
 - latest_identity_failures: 0
 - latest_source_failures: 5
@@ -19,20 +19,20 @@ Timezone: Asia/Bangkok
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_additional_USDC,Surf_PONS_raffle_English_terms,StandX_DUSD_checker_original,ForecastFDN_current_issuer,Neutrl_personal_redemption
+- latest_source_gaps: Concrete_extra_USDC,Surf_PONS_raffle,StandX_DUSD_checker,ForecastFDN_current_issuer,Neutrl_personal_redemption
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-10-28 20:05:36 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard1: 2026-10-29 01:05:48 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard1: 2026-10-29 01:59:27 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard2: 2026-10-28 22:02:21 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-10-28 23:59:35 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 010548-final.md commit 2ff1931645afdc697a9b31aaf0928a4cae31a10b
-- latest_terminal_readback: VERIFIED 010548-final.md blob 313895c617a08e01aee0aaafd6320f8c0f4135f4
-- latest_four_executed_shards: [2,3,3,1]
+- latest_primary_final_write: VERIFIED_DURABLE 015927-final.md commit 7064f95353f05a6f140acc1516ad3a75a32b05d7
+- latest_terminal_readback: VERIFIED 015927-final.md blob 42f38d0177bc3e15c022658794f504121043c2a0
+- latest_four_executed_shards: [3,3,1,1]
 - last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (prior delivered 2026-10-28; no new email)
 - last_delivered_gmail_message_id: 1a1812a1f6802ecb
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-29 01:05:48 BKK PARTIAL shard1; 14 distinct identities attempted, five source/rights gaps, zero ACTION, Browser originating context unavailable; prior Cambria RSGP Gmail Sent deduped; no Gmail/App; verified-complete timestamp unchanged
+- latest_terminal_sync: 2026-10-29 01:59:27 BKK PARTIAL shard1; 14 distinct identities attempted, five source/rights gaps, zero ACTION, Browser originating context unavailable; prior Cambria RSGP Gmail Sent readback deduped; no Gmail/App; verified-complete unchanged. Off-minute invocation, not HH:00 proof.
 - receipt_time_note: attempt 01:04:16 and final 01:05:48 BKK; exact per-URL seconds not independently captured.
 
 ## Durable known-events
