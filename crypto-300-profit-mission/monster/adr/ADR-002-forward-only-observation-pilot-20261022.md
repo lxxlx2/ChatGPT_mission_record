@@ -91,3 +91,13 @@ STATUS: PINNED_READ_PASS
 **有效性**：同块计数与header两次检查、上一观察块在下一周期再次核对、两块之间逐区块parentHash关联（间隔超过24块直接 fail-closed）。新增Factory索引身份仅在后一观察的固定块上读取 `allPairs(index)`、`token0()`、`token1()`。每个原始RPC响应体以私有权限保存，伴SHA256、调用UTC、完成UTC、单调时钟；任何错链、重组、超预算、时钟异常和截断只留下 `failure.json` 而非可评分manifest。超出身份额度的索引**保留未读起止与计数**，不能把未读计为零；索引范围采用常数空间记录，不展开大列表。原raw只存用户Mac，不上传Git。
 
 **阶段状态**：代码与离线假RPC反例已在既有 `mission_agent/early/forward_observation.py` 和 `tests/test_monster_forward_observation.py` 增量提交；尚未取得该新模式的真实Mac单测PASS、独立外部审核或真实前台新池样本。不得把已写代码当作上线成功。其专用子类请求上限不会放宽原Four.meme共享传输的50调用限制。旧2025-07-01历史P0仍 `INSUFFICIENT_COVERAGE`，P1 `BLOCKED`，Monster `G6 NO_GO`，Frank不动。
+
+## 2026-10-28：Mac 35/35 PASS 后发现并纠正 BSC Fermi 0.45s 出块速率与预算冲突
+
+用户实际在Mac对首次有界模式固定SHA `89427e1644d0eec23bbe72bf3cf509c1dd610dbf` 执行35项离线测试，提供逐项 `ok` 与 `Ran 35 tests in 0.055s / OK`。这是用户原终端报告，不代表本助手独立执行测试，也不覆盖真实链上出块频率压力测试。
+
+来源一手核验：BNB Chain Fermi 主网已采用约0.45秒出块间隔，官方 https://docs.bnbchain.org/bnb-smart-chain/overview/ 与 https://www.bnbchain.org/en/blog/fermi-hard-fork-accelerates-bsc-to-0-45-second-block-times 公开说明。此前默认12秒采样会跨约27个区块（不含网络延迟），与 `MAX_BOUNDED_ANCESTOR_BLOCKS=24` 直接冲突，故 **35/35 不能授予真实3分钟采样运行放行**。
+
+不削弱实际跨区块父哈希完整性条件的限量修复：`--manual-bounded` 默认间隔从12秒缩短为 **5秒**，24区块祖先最大深度、180总RPC/180秒最大目标观察时长、12个Pair身份与单段3个身份限制不变，显式拒绝传入12秒间隔。根据0.45秒估算5秒内约11块，但节点请求耗时及限流可能超24块，届时依然必须 fail closed。**重要：180次读取无法保证完整核验3分钟内约400个区块，必须允许在 `RPC_BUDGET_SAFETY_RESERVE` 触发时提前停止，并如实展示已验收区间、实际耗时与未覆盖尾段；不能宣传‘已经持续覆盖3分钟’，也不能借此放宽PIT。**
+
+新代码固定提交 `31f875e2b31c4f9e48002958e1020286266a1914`，专项测试数量增加为37，新增模拟0.45秒出块与拒绝旧12秒间隔。**截至本文撰写，新37项尚未有Mac真实运行PASS；不得启动新实测，也不得因GitHub其他Baseline CI PASS冒充这37项成功。** 该修复属于来源覆盖完整性的必要定向改动，待本地专项测试与必要独立审查，不新增workflow、调度或交易。
