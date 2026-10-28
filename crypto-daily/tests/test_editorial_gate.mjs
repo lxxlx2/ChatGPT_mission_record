@@ -8,7 +8,7 @@ import { validateEditorial } from '../scripts/editorial_gate.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const rules=JSON.parse(fs.readFileSync(path.join(root,'EDITORIAL_RULESET.json'),'utf8'));
 const headings=['一、今日最重要的5件事','二、BTC/ETH/SOL及主要资产','三、二级市场剧烈波动与持续趋势','四、监管与政策','五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作','六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态','七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会','八、Early / Meme / NFT / 新生态热点','九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁','十、全球局势与跨市场冲击','十一、未来24至72小时催化','十二、持续趋势与跨市场机会观察清单','十三、今日行动与风险结论'];
-const mkEvent=(id,kind,impact='NICHE',rest={})=>({event_key:id,material_version:'v1',kind,source_url:'https://issuer.example/original',published_at:'2026-10-21T02:00:00Z',actual_delta:'A freshly verified event with a material new fact',impact,source_confirmed:true,status:'verified',...rest});
+const mkEvent=(id,kind,impact='NICHE',rest={})=>({event_key:id,family_key:id,material_version:'v1',kind,source_url:'https://issuer.example/original',published_at:'2026-10-21T02:00:00Z',actual_delta:'A freshly verified event with a material new fact',impact,source_confirmed:true,status:'verified',...rest});
 const base=()=>({
  market_core:['BTC','ETH','SOL'].map(symbol=>({symbol,price:82000,source_url:'https://api.binance.com/api/v3/ticker/24hr',observed_at:'2026-10-21T02:00:00Z'})),
  source_receipts:rules.full_report.minimum_domain_receipts.map(lane=>({lane,status:'checked',checked_at:'2026-10-21T02:00:00Z',query_or_url:'English original-source lookup',result_urls:['https://issuer.example/index']})),
@@ -110,4 +110,43 @@ test('SaaS source-gap may warn but does not fabricate no-new-news or block other
  const r=run(x=>{const y=x.source_receipts.find(t=>t.lane==='cloud_secrets_identity');y.status='source_gap';y.error='HTTP_403';y.result_urls=[];});
  assert.equal(r.passed,true);
  assert.ok(r.warnings.includes('SOURCE_GAP:cloud_secrets_identity'));
+});
+
+test('dated event key cannot bypass historical same-family version',()=>{
+ const r=run(x=>{
+   x.previous_events=[{event_key:'old-restore-Oct27',family_key:'systemic-security',material_version:'v1',delivered_date:'2026-10-27'}];
+   x.events.find(e=>e.event_key==='systemic-security').event_key='new-restore-Oct28';
+   x.events.find(e=>e.event_key==='new-restore-Oct28').family_key='systemic-security';
+   x.items.filter(i=>i.event_key==='systemic-security').forEach(i=>i.event_key='new-restore-Oct28');
+ });
+ assert.ok(r.errors.some(e=>e.startsWith('REPEATED_FAMILY_VERSION:systemic-security')));
+});
+test('same incident reworded as a new dated key must prove concrete changed state',()=>{
+ const r=run(x=>{
+   x.previous_events=[{event_key:'security-yesterday',family_key:'systemic-security',material_version:'prior-restore-state'}];
+   x.events.find(e=>e.event_key==='systemic-security').material_version='oct28-new-wording';
+ });
+ assert.ok(r.errors.some(e=>e.startsWith('FAMILY_REPLAY_WITHOUT_MATERIAL_STATE_CHANGE:systemic-security')));
+});
+test('genuine independently dated issuer restoration change passes family gate',()=>{
+ const r=run(x=>{
+   x.previous_events=[{event_key:'security-yesterday',family_key:'systemic-security',material_version:'restoration-pending'}];
+   const ev=x.events.find(e=>e.event_key==='systemic-security');
+   ev.material_version='restoration-live';
+   ev.novelty_proof={previous_material_version:'restoration-pending',changed_field:'restore_state',old_value:'pending validation',new_value:'restoration is now live',evidence_url:'https://issuer.example/restoration-notice',evidence_published_at:'2026-10-28T08:01:00Z'};
+   x.items.find(i=>i.event_key==='systemic-security'&&i.section===9).text+=' restoration is now live';
+ });
+ assert.equal(r.passed,true);
+});
+test('fake new state only in metadata but missing from email must not pass',()=>{
+ const r=run(x=>{
+   x.previous_events=[{event_key:'security-yesterday',family_key:'systemic-security',material_version:'pending'}];
+   const e=x.events.find(e=>e.event_key==='systemic-security');e.material_version='new';
+   e.novelty_proof={previous_material_version:'pending',changed_field:'restore_state',old_value:'pending',new_value:'fully restored',evidence_url:'https://issuer.example/real',evidence_published_at:'2026-10-28'};
+ });
+ assert.ok(r.errors.some(e=>e.startsWith('FAMILY_REPLAY_WITHOUT_MATERIAL_STATE_CHANGE')));
+});
+test('missing family key is hard error for narrative news',()=>{
+ const r=run(x=>{delete x.events.find(e=>e.event_key==='systemic-security').family_key});
+ assert.ok(r.errors.some(e=>e.startsWith('NEWS_EVENT_MISSING_FAMILY_KEY')));
 });
