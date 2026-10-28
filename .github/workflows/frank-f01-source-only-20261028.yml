@@ -28,6 +28,7 @@ jobs:
         run: |
           node --check mission_agent/mission_control/static/app.js
           node --test tests/test_frank_f01_source_only.cjs
+          node --test tests/test_frank_f01_failure_state.cjs
       - name: Full affected Dashboard, D1-D2 and wallet-watch regressions
         working-directory: crypto-300-profit-mission/local-agent
         run: |

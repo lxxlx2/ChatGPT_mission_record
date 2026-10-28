@@ -1094,6 +1094,7 @@ async function refresh() {
     renderFrankWatchlist(watch);
     renderCandidates(recent);
     renderF01History(history);
+    { const note = $('f01-history-cache-note'); if (note) note.textContent = ''; }
     renderEnded(endedCandidates);
     renderTrades(trades);
     renderReviewActivity(reviewActivity);
@@ -1106,9 +1107,31 @@ async function refresh() {
   } catch (e) {
     $('runtime').className = 'runtime offline';
     $('runtime').innerHTML = `<strong>控制台读取失败</strong><span>${esc(e.message)}</span>`;
-    // Required feed failed: do not leave the last successful F01 summary on screen.
-    $('f01-source-status').textContent = 'F01 来源资格暂不可核实（本轮读取失败，旧结果已作废）；不展示可跟结论，完整历史候选保留。';
-    $('f01-timing-status').textContent = '本轮来源核验失败；不产生延迟观测样本。';
+    invalidateF01OnFailure(e);
+  }
+}
+
+// A failed required F01 feed must not leave any last-good "current" F01 evidence
+// on screen. Only F01-owned surfaces are touched; D1, watchlist, trades, ledger
+// and decisions are rendered by their own functions and are left alone here.
+function invalidateF01OnFailure(e) {
+  const reason = esc(e?.message || 'UNKNOWN');
+  $('f01-source-status').textContent =
+    'F01 来源资格暂不可核实（本轮读取失败，旧结果已作废）；不展示可跟结论，完整历史候选保留。';
+  $('f01-timing-status').textContent = '本轮来源核验失败；不产生延迟观测样本。';
+  $('candidates').innerHTML =
+    `<div class="empty">近期来源信号已失效：本轮 F01 数据读取失败（${reason}），不得作为当前机会。</div>`;
+  const note = $('f01-history-cache-note');
+  if (note) note.textContent = '以下历史内容为上次成功读取的缓存，本轮未核实，不代表当前状态。';
+  const stats = $('stats');
+  if (stats) {
+    stats.querySelectorAll('.stat').forEach(node => {
+      const label = node.querySelector('span')?.textContent || '';
+      if (label === 'Frank状态' || label === '当前可跟候选') {
+        const value = node.querySelector('strong');
+        if (value) value.textContent = '待核实';
+      }
+    });
   }
 }
 
