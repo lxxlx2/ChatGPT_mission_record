@@ -61,7 +61,7 @@ class OncePhysicalForegroundTests(unittest.TestCase):
         d=scope()
         raw=json.dumps(d,sort_keys=True).encode()
         fixed=datetime.fromisoformat(
-            d["window_start_utc"].replace("Z","+00:00"))+timedelta(seconds=3)
+            d["window_start_utc"].replace("Z","+00:00"))+timedelta(seconds=1)
         ok=check_physical_foreground_scope(
             raw,independently_reviewed_sha=SHA,clock=lambda:fixed)
         self.assertFalse(ok["real_rpc_permitted"])
@@ -154,7 +154,7 @@ class OncePhysicalForegroundTests(unittest.TestCase):
                 (now+timedelta(seconds=30)).strftime("%Y-%m-%dT%H:%M:%SZ"),
                 _unreleased_review_seal=_UNRELEASED_SOURCE_CODE_SEAL,
                 _runtime_permit=token)
-            fake=FakeSource(first_head=1000,growth_bps=15.0,delay_ms=0)
+            fake=FakeSource(first_head=1000,growth_bps=15.0,delay_ms=1)
             posts=[]
 
             class Response:
@@ -228,7 +228,7 @@ class OncePhysicalForegroundTests(unittest.TestCase):
             with patch("socket.create_connection",
                        side_effect=AssertionError("TCP_FORBIDDEN")) as tcp:
                 with self.assertRaisesRegex(
-                        ValueError,"OWNER_ONCE_PERMIT_REQUIRED"):
+                        ValueError,"FOREGROUND_PHYSICAL_SOURCE_NOT_RELEASED"):
                     _run_single_shared_coordinator(
                         source,output,_physical_source_candidate=True,
                         anchor_initial_head=True)
