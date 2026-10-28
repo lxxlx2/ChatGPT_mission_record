@@ -13,6 +13,28 @@ BUY_SIDES = frozenset({"BUY", "ADD", "REENTRY"})
 PATTERNS = frozenset({"ACCUMULATION", "MULTIPLE"})
 WINDOW_SECONDS = 600
 
+# Only source observations and historical Frank payment facts are admitted to
+# this response. Old amount-dependent execution quotes, economic metrics,
+# stored route assessments and opaque overlay inputs must never be serialized
+# into the new F01 source-only API as current follow evidence.
+SOURCE_ONLY_FIELDS = frozenset({
+    "person_id", "mint", "episode_id", "source_signal_id",
+    "source_signal_type", "source_signal_at", "candidate_source",
+    "pattern", "position_state", "latest_side", "latest_signature",
+    "latest_at", "latest_buy_at", "latest_buy_price_usdc",
+    "latest_buy_price_status", "latest_buy_quote_asset",
+    "latest_buy_quote_quantity", "latest_buy_original_quote_asset",
+    "latest_buy_original_quote_quantity", "latest_buy_quote_was_normalized",
+    "latest_buy_usdc_equivalent", "latest_buy_amount_predicate",
+    "latest_buy_amount_predicate_reason", "token_decimals",
+    "buy_count", "sell_count", "decision", "decision_created_at",
+    "reasons", "missing", "invalidation",
+})
+
+
+def _source_only_row(row):
+    return {key: row[key] for key in SOURCE_ONLY_FIELDS if key in row}
+
 
 def _epoch(value):
     if isinstance(value, bool) or value is None:
@@ -76,14 +98,14 @@ def partition_source_only(rows, *, now, runtime_status):
             if newest_chain_buy_age_seconds is None or buy_age < newest_chain_buy_age_seconds:
                 newest_chain_buy_age_seconds = buy_age
         if reason is None:
-            recent.append({**row, "f01_source_state": "RECENT_SOURCE_BUY_ONLY",
+            recent.append({**_source_only_row(row), "f01_source_state": "RECENT_SOURCE_BUY_ONLY",
                            "chain_buy_age_seconds_at_observation": buy_age,
                            "source_window_remaining_seconds": max(0.0, WINDOW_SECONDS - buy_age),
                            "execution_eligibility": "NOT_ASSESSED_USER_AMOUNT_MISSING",
                            "current_chain_balance_verified": False})
         else:
             reasons[reason] = reasons.get(reason, 0) + 1
-            other.append({**row, "f01_source_state": "HISTORICAL_OR_UNVERIFIED",
+            other.append({**_source_only_row(row), "f01_source_state": "HISTORICAL_OR_UNVERIFIED",
                           "exclusion_reason": reason})
     return {
         "schema_version": 2,
