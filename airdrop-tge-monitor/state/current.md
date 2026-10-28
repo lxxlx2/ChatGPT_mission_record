@@ -1,39 +1,39 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-28 20:05:36 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-28 21:06:59 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-28 20:05:36 Asia/Bangkok (20:04:25 attempt)
+- latest_actual_run: 2026-10-28 21:06:59 Asia/Bangkok (21:05:06 attempt)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-28/200536-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-28/200425-attempt.md
-- latest_scheduled_shard: 0
-- latest_executed_shard: 0
-- stale_shard_recovery: false; fair hour20 modulo4; prior terminal-backed shards [0,1,2,3]
-- latest_candidate_count: 6
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-28/210659-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-28/210506-attempt.md
+- latest_scheduled_shard: 1
+- latest_executed_shard: 1
+- stale_shard_recovery: false; fair hour21 modulo4; prior terminal-backed shards [1,2,3,0]
+- latest_candidate_count: 5
 - latest_triggered_events: 0
 - latest_identity_failures: 0
-- latest_source_failures: 6
+- latest_source_failures: 5
 - latest_notification_decision: SILENT_NO_ACTION_EMAIL_ONLY
-- latest_notification_status: NO_GMAIL_NO_APP; Gmail Sent prior Cambria RSGP verified
+- latest_notification_status: NO_GMAIL_NO_APP; prior Cambria RSGP Gmail Sent readback verified
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_additional_USDC,Surf_PONS_raffle_English_terms,StandX_DUSD_checker_original,Block_Stranding_current_canonical,TurboFlow_restricted_current_source,Makina_recovery_NFT_rights
+- latest_source_gaps: Concrete_additional_USDC,Surf_PONS_raffle_English_terms,StandX_DUSD_checker_original,ForecastFDN_current_canonical,Neutrl_recovery_portal_current
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-10-28 20:05:36 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard1: 2026-10-28 17:05:29 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard1: 2026-10-28 21:06:59 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard2: 2026-10-28 18:01:49 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-10-28 19:04:38 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 200536-final.md commit 2c3d1ae2bc45440032802c05a1699f974c4b8860
-- latest_terminal_readback: VERIFIED 200536-final.md blob 2dab98f7c1a1e6cba3ed5c84d9f581000ac622f6
-- latest_four_executed_shards: [1,2,3,0]
+- latest_primary_final_write: VERIFIED_DURABLE 210659-final.md commit 3e3ccc39e6c7abc797c00a761baa1e1575f1fc49
+- latest_terminal_readback: VERIFIED 210659-final.md blob dad840758be474d699ab98d0c5237e1b5c0d8ad4
+- latest_four_executed_shards: [2,3,0,1]
 - last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (delivered 2026-10-28; no new email this run)
 - last_delivered_gmail_message_id: 1a1812a1f6802ecb (prior delivered; no new email this run)
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-28 20:05:36 BKK PARTIAL shard0; 15 distinct registry identities attempted; 6 candidates/source-rights gaps; 0 new ACTION; Browser originating context unavailable; prior Cambria Gmail Sent verified; no Gmail/App; last full verified Oct10 unchanged
-- receipt_time_note: attempt 20:04:25 and final 20:05:36 BKK; per-URL seconds not independently captured.
+- latest_terminal_sync: 2026-10-28 21:06:59 BKK PARTIAL shard1; 14 distinct registry identities attempted; 5 source/right gaps; 0 new ACTION; Browser originating context unavailable; prior Cambria Gmail Sent verified; no Gmail/App; last full verified Oct10 unchanged
+- receipt_time_note: attempt 21:05:06 and final 21:06:59 BKK; per-URL seconds not independently captured.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
