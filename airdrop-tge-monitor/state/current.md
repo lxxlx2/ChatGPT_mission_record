@@ -1,15 +1,15 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-28 06:05:27 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-28 07:04:45 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-28 06:05:27 Asia/Bangkok (actual 06:04:20 attempt)
+- latest_actual_run: 2026-10-28 07:04:45 Asia/Bangkok (actual 07:04:07 attempt)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-28/060527-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-28/060420-attempt.md
-- latest_scheduled_shard: 2
-- latest_executed_shard: 2
-- stale_shard_recovery: false; fair hour6 shard2, no override
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-28/070445-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-28/070407-attempt.md
+- latest_scheduled_shard: 3
+- latest_executed_shard: 3
+- stale_shard_recovery: false; fair hour7 shard3, no override
 - latest_candidate_count: 5
 - latest_triggered_events: 0
 - latest_identity_failures: 0
@@ -19,21 +19,21 @@ Timezone: Asia/Bangkok
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_additional_USDC,Surf_PONS_raffle_English_terms,StandX_DUSD_checker_original,01_Exchange_mapped_private_rights,OhBabyGames_current_issuer_rights
+- latest_source_gaps: Concrete_additional_USDC,Surf_PONS_raffle_English_terms,StandX_DUSD_checker_original,Crusoe_private_SPV_rights,Republic_rTTOK_private_settlement
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-10-28 04:00:53 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard1: 2026-10-28 05:04:36 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard2: 2026-10-28 06:05:27 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard3: 2026-10-28 03:04:13 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard3: 2026-10-28 07:04:45 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 060527-final.md commit 8782692d1b58c181b68fd082db7483c62f6e820e
-- latest_terminal_readback: VERIFIED 060527-final.md
-- latest_four_executed_shards: [3,0,1,2]
+- latest_primary_final_write: VERIFIED_DURABLE 070445-final.md commit 056c73f4e0f8437ecdc09d1a216a1758d1134abc
+- latest_terminal_readback: VERIFIED 070445-final.md
+- latest_four_executed_shards: [0,1,2,3]
 - last_delivered_event_key: cambria:duel_arena_blast_abstract_post_sweep_claim_and_login:2026-10-19 (prior run)
 - last_delivered_gmail_message_id: 1a16a27a9e5b557c (prior run; no new email)
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-28 06:05:27 BKK PARTIAL shard2; 5 candidates, 5 source/rights gaps, 0 identity failures, 0 new ACTION; no Gmail/App; last fully verified Oct10 unchanged
-- receipt_time_note: actual bounded attempt 06:04:20–06:05:27 BKK; scheduler trigger alone is not completion proof.
+- latest_terminal_sync: 2026-10-28 07:04:45 BKK PARTIAL shard3; 5 candidates, 5 source/rights gaps, 0 identity failures, 0 new ACTION; no Gmail/App; last fully verified Oct10 unchanged
+- receipt_time_note: actual bounded attempt 07:04:07–07:04:45 BKK; scheduler trigger alone is not completion proof.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
@@ -266,3 +266,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-28 05:04:36 BKK: existing hourly monitor 050318-attempt.md and readback-verified 050436-final.md durable; urgent5 + Surf/StandX + fair shard1 (14 distinct active Registry identities), bounded English lifecycle/StandX beneficiary; five candidates, zero new Tier A/B ACTION, five SOURCE_GAP (Concrete additional USDC, Surf PONS English terms, StandX original checker, ForecastFDN current issuer, Neutrl portal/personal rights), one legacy Neutrl handle identity conflict. Gmail mapped rights Inbox searched, no new mapped TierB. No Gmail/App. Shard1 meaningful attempt PARTIAL, last fully verified complete remains 2026-10-10 07:52:16. Last four [2,3,0,1], no override. Original task/schedule/scope/recipient unchanged.
 
 - 2026-10-28 06:05:27 BKK: existing HH:00 monitor 060420-attempt.md and readback-verified 060527-final.md persisted; urgent5 + Surf/StandX + fair shard2 (15 distinct active Registry identities), bounded English lifecycle/StandX beneficiary. Five candidates, zero new Tier A/mapped Tier B ACTION, five SOURCE_GAP (Concrete additional USDC, Surf PONS English terms, StandX original checker, 01 mapped private rights, OhBabyGames current issuer). Gmail Inbox mapped rights and formal Sent checked; no Gmail/App. Shard2 meaningful attempt PARTIAL, last verified full completion 2026-10-10 07:52:16 unchanged. Recent terminal-backed [3,0,1,2], no override. Task/schedule/scope/recipient unchanged.
+
+- 2026-10-28 07:04:45 BKK: existing hourly monitor 070407-attempt.md and readback-verified 070445-final.md durable; urgent5 + dynamic Surf/StandX + fair shard3 (15 distinct Registry identities), bounded English cross-shard lifecycle/StandX beneficiary. Five candidate families, zero new Tier A/B ACTION, five SOURCE_GAP (Concrete additional USDC, Surf PONS issuer English terms, StandX official DUSD checker, Crusoe mapped private SPV rights, Republic rTTOK private settlement). Gmail mapped-rights Inbox and formal Sent checked; no new mapped Tier B. No Gmail/App. Shard3 meaningful attempt PARTIAL; last fully verified complete 2026-10-10 07:52:16 unchanged. Last four terminal-backed [0,1,2,3], no override. Existing task/schedule/scope/recipient unchanged.
