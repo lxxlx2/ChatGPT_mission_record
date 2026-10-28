@@ -1,3 +1,13 @@
+## 2026-10-28 07:50:41（Asia/Bangkok）：SQD 第二次 529，按预设停止门禁关闭本轮候选
+
+**证据类型：用户 Mac 前台 curl HTTP 原始响应头+JSON（USER_PASTED_TERMINAL_OUTPUT），非本会话直连重算。** 供应商响应 `date: Wed, 28 Oct 2026 00:50:41 GMT`，即曼谷 **2026-10-28 07:50:41**；`HTTP/2 529`、`HTTP_STATUS=529`、`retry-after: 10`、`x-sqd-data-source: network`、`x-request-id: 07b229a7cbf38dbc973947a507fa9bea`、`cf-ray: a515f2a08cc2f82a-BKK`；返回 `{"error":{"type":"rate_limit_error","code":"overloaded","message":"Service is overloaded, please try again later","request_id":"07b229a7cbf38dbc973947a507fa9bea"}}`。与第一次单区块返回529、`request_id=5ea90d441966433a03cec671f673a78a`一起，构成**两次同一固定查询均无事件行**的证据。`Retry-After: 10`仅是服务端建议的最低等待秒数，**不是保证成功，也不是用户再次重试的授权**。`x-sqd-data-source: network`仅按原文字段保存，不推导历史事件源可用或参数通过。
+
+**本轮冻结判决：`SQD_PUBLIC_ENDPOINT_REACHABLE / TWO_ATTEMPTS_HTTP_529_OVERLOADED / SQD_NO_RAW_EVENT_PROOF / SOURCE_NOT_ACCEPTED_FOR_P0 / STOP_FURTHER_RETRIES`。** 不能把两次529说成“查无该事件”、“已成功验证Factory topic”、“免费层永久不可用”或“证明整个供应商没有2025历史数据”；但该公开入口本次实测不足以提供原始历史证据。按 ADR-006 与前一轮约定，**不自动或手动继续重试、切源、提高并发、申请付费账户、展开模型开发**。后续除非出现独立实证的新可用来源或用户另授权新的限定范围试验，否则此候选在当前P0关闭。
+
+**不变门禁**：2025-07-01历史BSC`available_at`仍UNKNOWN，原24/30与18/30均未通过，`P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO`；Plan C=$0，2026-11-02来源止损日期不变。本次只追加原P0报告记录，不修改旧原始证据、冻结样本、业务代码、工作流、调度、生产或10-28 USD-M单次手动采集状态。
+
+---
+
 ## 2026-10-28：SQD Portal 单块实测返回 HTTP 529（用户Mac原始curl回执）
 
 用户复制执行上轮固定 2025-07-01 BSC Pancake V2 Factory、区块`52440324`、`PairCreated`的单区块公开HTTP POST后，提供**用户终端输出**（本会话未独立调用该POST）：
