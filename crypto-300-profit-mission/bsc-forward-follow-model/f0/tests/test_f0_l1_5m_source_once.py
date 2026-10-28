@@ -284,7 +284,7 @@ class FiveMinuteSourceTests(unittest.TestCase):
         class SlowRaw(io.RawIOBase):
             def __init__(self, payload):
                 self.buffer=io.BytesIO(payload)
-                self.body_at=payload.find(b"\\r\\n\\r\\n")+4
+                self.body_at=payload.find(b"\r\n\r\n")+4
             def readable(self):
                 return True
             def readinto(self, b):
@@ -338,9 +338,9 @@ class FiveMinuteSourceTests(unittest.TestCase):
 
     def test_stdlib_httpresponse_declared_length_truncation_partial_is_failed(self):
         valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
-        wire=(b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
+        wire=(b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n"
               +b"Content-Length: "+str(len(valid)+100).encode()
-              +b"\\r\\nConnection: close\\r\\n\\r\\n"+valid)
+              +b"\r\nConnection: close\r\n\r\n"+valid)
         out=self._run_wire(wire)
         self.assertEqual(out["state"],"HTTP_TRUNCATED_CONTENT_LENGTH")
         self.assertEqual(out["raw"],valid)
@@ -348,19 +348,19 @@ class FiveMinuteSourceTests(unittest.TestCase):
 
     def test_stdlib_httpresponse_conflicting_duplicate_cl_is_failed(self):
         valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
-        wire=(b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
+        wire=(b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n"
               +b"Content-Length: "+str(len(valid)+100).encode()
-              +b"\\r\\nContent-Length: "+str(len(valid)).encode()
-              +b"\\r\\nConnection: close\\r\\n\\r\\n"+valid)
+              +b"\r\nContent-Length: "+str(len(valid)).encode()
+              +b"\r\nConnection: close\r\n\r\n"+valid)
         out=self._run_wire(wire)
         self.assertEqual(out["state"],"HTTP_DUPLICATE_FRAMING_HEADER")
         self.assertNotEqual(out["state"],"RAW")
 
     def test_stdlib_chunked_complete_and_truncated(self):
         valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
-        prefix=b"HTTP/1.1 200 OK\\r\\nTransfer-Encoding: chunked\\r\\nContent-Type: application/json\\r\\nConnection: close\\r\\n\\r\\n"
-        body=("%x"%len(valid)).encode()+b"\\r\\n"+valid+b"\\r\\n"
-        accepted=self._run_wire(prefix+body+b"0\\r\\n\\r\\n")
+        prefix=b"HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\nContent-Type: application/json\r\nConnection: close\r\n\r\n"
+        body=("%x"%len(valid)).encode()+b"\r\n"+valid+b"\r\n"
+        accepted=self._run_wire(prefix+body+b"0\r\n\r\n")
         self.assertEqual(accepted["state"],"RAW")
         self.assertEqual(accepted["raw"],valid)
         trunc=self._run_wire(prefix+body)
@@ -370,26 +370,26 @@ class FiveMinuteSourceTests(unittest.TestCase):
     def test_stdlib_valid_content_length_success(self):
         valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
         out=self._run_wire(
-            b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
-            +b"Content-Length: "+str(len(valid)).encode()+b"\\r\\n"
-            +b"Connection: close\\r\\n\\r\\n"+valid)
+            b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n"
+            +b"Content-Length: "+str(len(valid)).encode()+b"\r\n"
+            +b"Connection: close\r\n\r\n"+valid)
         self.assertEqual(out["state"],"RAW")
         self.assertEqual(out["raw"],valid)
 
     def test_header_latency_counts_against_one_request_deadline(self):
         valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
-        wire=(b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
+        wire=(b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n"
               +b"Content-Length: "+str(len(valid)).encode()
-              +b"\\r\\nConnection: close\\r\\n\\r\\n"+valid)
+              +b"\r\nConnection: close\r\n\r\n"+valid)
         result=self._run_wire(wire,timeout=0.06,slow_headers=0.0015)
         self.assertEqual(result["state"],"REQUEST_DEADLINE_EXCEEDED")
         self.assertNotEqual(result["state"],"RAW")
 
     def test_trickle_body_stream_deadline_preserves_partial_bytes(self):
         valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
-        wire=(b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
+        wire=(b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n"
               +b"Content-Length: "+str(len(valid)).encode()
-              +b"\\r\\nConnection: close\\r\\n\\r\\n"+valid)
+              +b"\r\nConnection: close\r\n\r\n"+valid)
         out=self._run_wire(wire,timeout=0.26,slow_body=0.02)
         self.assertEqual(out["state"],"REQUEST_DEADLINE_EXCEEDED")
         self.assertTrue(valid.startswith(out["raw"]))
@@ -397,9 +397,9 @@ class FiveMinuteSourceTests(unittest.TestCase):
 
     def test_header_and_body_cumulative_request_deadline(self):
         valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
-        wire=(b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
+        wire=(b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n"
               +b"Content-Length: "+str(len(valid)).encode()
-              +b"\\r\\nConnection: close\\r\\n\\r\\n"+valid)
+              +b"\r\nConnection: close\r\n\r\n"+valid)
         out=self._run_wire(wire,timeout=0.22,
                            slow_headers=0.0012,slow_body=0.01)
         self.assertEqual(out["state"],"REQUEST_DEADLINE_EXCEEDED")
@@ -407,9 +407,9 @@ class FiveMinuteSourceTests(unittest.TestCase):
 
     def test_slow_stream_elapsed_over_deadline_rejected_even_if_json_valid(self):
         valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
-        wire=(b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
+        wire=(b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n"
               +b"Content-Length: "+str(len(valid)).encode()
-              +b"\\r\\nConnection: close\\r\\n\\r\\n"+valid)
+              +b"\r\nConnection: close\r\n\r\n"+valid)
         result=self._run_wire(wire,timeout=0.06,latency=0.09)
         self.assertEqual(result["state"],"REQUEST_DEADLINE_EXCEEDED")
         self.assertNotEqual(result["state"],"RAW")
