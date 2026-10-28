@@ -1,6 +1,7 @@
 """Offline-only fake-RPC checks: no remote calls or background observer."""
 import datetime as dt
 import hashlib
+from email.message import Message
 import importlib.util
 import json
 import os
@@ -397,6 +398,84 @@ class BoundedForwardObservationTests(unittest.TestCase):
             for part in result['verified_intervals']))
         self.assertEqual(result['new_factory_pair_index_count'], 1)
         self.assertEqual(len(result['new_pairs_read']), 1)
+
+    def test_real_batch_transport_http_shape_and_reverse_id_order(self):
+        class Response:
+            status = 200
+            def __init__(self, raw):
+                self.raw = raw
+                self.headers = Message()
+                self.headers['Content-Length'] = str(len(raw))
+            def __enter__(self): return self
+            def __exit__(self, *args): return False
+            def read(self, cap): return self.raw[:cap]
+
+        class Opener:
+            def __init__(self): self.requests = []
+            def open(self, req, timeout):
+                self.requests.append(req)
+                payload = json.loads(req.data)
+                self_ids = [p['id'] for p in payload]
+                if self_ids != [1, 2]:
+                    raise AssertionError('noncontiguous batched JSON-RPC IDs')
+                children = []
+                for row in reversed(payload):
+                    height = int(row['params'][0], 16)
+                    children.append({'jsonrpc': '2.0', 'id': row['id'],
+                                     'result': block(height, block_hash(height),
+                                                     block_hash(height-1))})
+                return Response(json.dumps(children).encode())
+
+        opener = Opener()
+        rpc = m.ForwardRPC('https://bsc-dataseed.bnbchain.org',
+                           max_requests=180, opener=opener)
+        values, raw = rpc.request_batch([
+            ('eth_getBlockByNumber', ['0x64', False]),
+            ('eth_getBlockByNumber', ['0x65', False])])
+        self.assertEqual(rpc.calls, 2)
+        self.assertEqual(len(opener.requests), 1)
+        self.assertEqual([int(v['number'], 16) for v in values], [100, 101])
+        self.assertEqual([x['id'] for x in json.loads(raw)], [2, 1])
+        self.assertEqual(values[1]['parentHash'], values[0]['hash'])
+
+    def test_real_batch_transport_rejects_duplicate_child_id(self):
+        class Response:
+            status = 200
+            def __init__(self, raw):
+                self.raw = raw
+                self.headers = Message()
+                self.headers['Content-Length'] = str(len(raw))
+            def __enter__(self): return self
+            def __exit__(self, *args): return False
+            def read(self, cap): return self.raw[:cap]
+
+        class Opener:
+            def open(self, req, timeout):
+                inputs = json.loads(req.data)
+                children = [{'jsonrpc':'2.0', 'id': inputs[0]['id'],
+                             'result': block(100, block_hash(100), block_hash(99))}
+                            for _ in inputs]
+                return Response(json.dumps(children).encode())
+        rpc = m.ForwardRPC('https://bsc-dataseed.bnbchain.org',
+                           max_requests=180, opener=Opener())
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'BATCH_INVALID_MEMBER_OR_ID'):
+            rpc.request_batch([('eth_getBlockByNumber', ['0x64', False]),
+                               ('eth_getBlockByNumber', ['0x65', False])])
+        self.assertEqual(rpc.calls, 2)
+
+    def test_real_batch_transport_rejects_invalid_methods_or_size(self):
+        rpc = m.ForwardRPC('https://bsc-dataseed.bnbchain.org',
+                           max_requests=180)
+        for jobs in ([],
+                     [('eth_sendRawTransaction', ['0x12'])],
+                     [('eth_getBlockByNumber', ['0x64', True])],
+                     [('eth_getBlockByNumber', [hex(i), False]) for i in range(5)]):
+            with self.subTest(jobs=jobs):
+                with self.assertRaisesRegex(m.ForwardProbeError,
+                                            'BATCH_INVALID_HEADER_JOB'):
+                    rpc.request_batch(jobs)
+        self.assertEqual(rpc.calls, 0)
 
     def test_batch_reduces_http_roundtrips_but_not_rpc_budget(self):
         rpc = FakeRPC(second_height=115)
