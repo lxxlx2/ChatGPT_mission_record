@@ -1,11 +1,47 @@
 # Sixth Sense Labs / Sextus Sensus — SXTH candidate and machine.fun Foundry identity
 
-Updated: 2026-10-27 Asia/Bangkok
+Updated: 2026-10-28 Asia/Bangkok
 Research category: embodied AI / physical-world robot training-data infrastructure; proposed Solana token launch.
 Research status: `PROJECT_IDENTITY_IDENTIFIED / SXTH_OFFICIAL_TOKENOMICS_PUBLISHED / SXTH_MINT_AND_ICO_NOT_VERIFIED / USER_INTENDS_TO_PARTICIPATE`
 Action: `WATCH`, `NO_BUY_UNTIL_OFFICIAL_LAUNCH_AND_LIQUIDITY_VERIFIED`.
 Authority: `crypto-300-profit-mission/PROJECT_ANALYSIS_FRAMEWORK.md`, `PROJECT_ANALYSIS_EVIDENCE_WORKFLOW.md`, `token_trading_principles.md`.
 Trading/monitoring: `PRODUCTION_TRADING=NO_GO`; no capital committed or monitoring task created by this note.
+
+## 2026-10-28 evening cross-source recheck: Machine peaq CodecFlow X, website, and Telegram limits
+
+**Check time:** October 28 2026 around 19:20–20:00 Asia/Bangkok. Primary issuer X read through user-shared connected browser, official project sites via public web; user-authenticated Sixth Telegram General read-only; independent verbatim peaq representative interview of Oct13 as primary-speaker source. This update specifically answers cross-platform launch status and conflicts.
+
+### Machine.fun issuer X and schedule
+
+- Direct current connected X account `https://x.com/machinedotfun`: **4,721 followers**, overlay FrontRun **56 KOL follows** (plugin-defined and not independent buyers); latest top-level post Oct28 `https://x.com/machinedotfun/status/2115405990891758043` highlights **peaq support** and points to new peaq writeup; quotes @peaq saying `@solana as the home of robotics`, `Robots and machines running peaqOS`, `Access to projects from the very first day`. **This is PE AQ/Machine platform-wide launch support, not a source naming SXTH as the first coin.**
+- Oct28 Machine `https://x.com/machinedotfun/status/2115353308785148064` quote-replied `Robots` to official @solana's generic `_____ should be on Solana.` It is **general ecosystem engagement, NOT issuer certification of SXTH.**
+- Oct27 Machine explicit launch `https://x.com/machinedotfun/status/2115110031754703022` said `goes live within next 48 hours`. Twitter snowflake ID independently decodes original **2026-10-27 15:55:03 UTC** (Bangkok **2026-10-27 22:55**). A literal 48-hour upper bound would be **Oct29 15:55 UTC = Oct29 22:55 Bangkok**, **issuer's projected timeframe, not guaranteed trading timestamp**. Current official main website https://machine.fun/ directly still says `Phase 2: FIND THE NEXT UNITREE — LOADING…`; no visible live pool, issuer listing roster or contract. Foundry https://foundry.machine.fun/ remains hardware **application and incubator**, not a live token purchase list.
+- Peer founder CodecFlow new original X statement mirrored in read-only `https://www.sotwe.com/Machinedotfun` and `https://teapawt.net/machinedotfun`: joined Machine.fun and peaq for a Solana robotics launchpad, integrated/collaborates with Solana, Raydium, Sunrise and peaq, onchain tradability possible from project day one and launches in 48h. **Not a Sixth-specific commitment, nor a guarantee which mint launches first.**
+
+### Very high-value primary representative explanation: platform is permissionless, Foundry is selective
+
+- **Martin El-Khouri of peaq** (first-person video interview dated **Oct13**) at `https://blockwest.co/interviews/building-the-machine-economy-peaqs-martin-el-khouri/` approximately 31:22: Machine.fun is a **fair-launch launchpad**, **any project can launch / they cannot really prevent it / you might see memes or random projects**; peaqOS/verification and Foundry can help **genuine machine builders show evidence**.
+- This **distinguishes permissionless launch tokens from curated Foundry applicants**. Earlier SXTH Telegram community statement `every machine.fun token is thoroughly vetted before launch` is **INCONSISTENT WITH platform partner's explanation** if meant universally; a founder-only application vetting statement is plausible, but not blanket coin authentication. Protect from unknown first-created spoof or unreviewed token. The **first chronological token** may differ from a **first featured, successfully traded or Foundry-vetted token**.
+- Do not imply Solana/Raydium/peaq endorsement of the SXTH token. Their direct confirmed partner target remains **Machine.fun platform and tech**.
+
+### SXTH issuer and two-way engagement
+
+- Connected official `https://x.com/Sextus_Sensus` tab remained showing **493 followers, 3 KOL overlay** and yesterday's posted `https://x.com/Sextus_Sensus/status/2115110356687151501` `See you on Launch Day!`, plus `https://x.com/Sextus_Sensus/status/2115125225486422255` Lumina 1.0 end-of-month/product incentive roadmap. User X tab may show cached age labels; **do not assert this is a complete fresh Oct28 timeline**.
+- NEW correction to prior `one-way clout chasing` narrative: Machine.fun official account **did reply directly to @Sextus_Sensus** with `Can't wait!` in the first-party reply timeline, verifiable from `https://www.sotwe.com/Machinedotfun` near section with `@Sextus_Sensus`; **two-way engagement EXISTS**. This endorses excitement/awareness, **NOT formal first-in-line allocation, mint, price, launch time or signed partnership**. Previous `no official machine.fun direct interaction` claim is **superseded**; prior unverified first-listing **remains unverified**.
+- Official SXTH tokenomics read `https://sixthsenselabs.xyz/Tokenomics`: **1bn proposed max SXTH**, liquidity 100m total of which 70m assumed DEX seed; marketing 22.5m nominal immediate release; monthly from month seven; LP planned locked to month twelve. Official RaaS `https://sixthsenselabs.xyz/RaaS` says Booster K1 rent via USDC, but booking returns `Failed to fetch` and no verified paid customer/payout; no onchain new genuine SXTH mint or LaunchLab initializer located in official site or retrieved platform feed. These remain **issuer docs/claims**, not verified deployed sale parameters.
+
+### Telegram General currently NOT at newest messages
+
+- Authenticated user browser `https://web.telegram.org/a/#-1004432036138_1`, Sixth Sense Labs Community General (chat interface shows **68 members** and `General 80 messages`); page content **only displays Yesterday Oct27 messages ending at 23:55** and a `Go to bottom` control / unread **42**, i.e. later messages **were not present in the read DOM**. Browser connector is **read-only** and cannot scroll or click in current chat mode.
+- Latest actually read Owner Todd content remains Oct27 about RaaS backend test pending, 70 SOL promised LP, 6-month cliff/12-month vest, and marketing efforts, plus pinned Lumina 1.0. **Cannot claim to have read or ruled out any newly arrived Oct28 admin announcement**. Older chat screenshot mention of Wednesday launch was an Owner acknowledged weekday and not a chain-confirmed time. Platform X now offers clearer 48h bound.
+- User can scroll Telegram chat to bottom so fresh messages become rendered; until then **TELEGRAM_NEWER_UNREAD_UNVERIFIED**. No automated TG export, messages, or account actions.
+
+### Mandatory PM / execution gates
+
+- The project-specific PM check previously recorded no verified SXTH direct market on Polymarket, Kalshi, Limitless, Predict.fun. Today's web index search `SXTH Sixth Sense Labs` Polymarket surfaced unrelated 'sixth Starship test' not an SXTH market; **no verified project-specific PM odds**, so no numeric probability.
+- **STATUS:** `MACHINE_PLATFORM_GO_LIVE_48H_OFFICIAL_WINDOW / WEBSITE_PHASE2_NOT_LIVE / HARDWARE_COHORT_UNKNOWN / SXTH_PLATFORM_TWO_WAY_SOCIAL_CONTACT / SXTH_FIRST_LAUNCH_UNCONFIRMED / TG_UNREAD_42_NOT_REVIEWED / SXTH_MINT_UNKNOWN / WATCH`. The launchpad platform story is stronger than SXTH's independent launch eligibility/traction. Do not buy unverified name match, do not create automated monitor or unauthorized trades.
+
+---
 
 ## 2026-10-28 platform-first launch thesis: watch actual machine.fun leaders, SXTH not guaranteed
 
