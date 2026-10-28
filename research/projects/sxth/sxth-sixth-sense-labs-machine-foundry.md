@@ -7,6 +7,27 @@ Action: `WATCH`, `NO_BUY_UNTIL_OFFICIAL_LAUNCH_AND_LIQUIDITY_VERIFIED`.
 Authority: `crypto-300-profit-mission/PROJECT_ANALYSIS_FRAMEWORK.md`, `PROJECT_ANALYSIS_EVIDENCE_WORKFLOW.md`, `token_trading_principles.md`.
 Trading/monitoring: `PRODUCTION_TRADING=NO_GO`; no capital committed or monitoring task created by this note.
 
+## 2026-10-29 chain-first superseding finding: verified Machine Launch program closure
+
+**Supersedes prior statement that issuer "we are not live!" is strong counterevidence.** User insists issuer claims and denials are untrusted. Primary chain transactions, signers, logs and flows govern findings. Direct Solana mainnet read-only Alchemy RPC checks Oct29 2026 Asia/Bangkok.
+
+### Verifiable timeline and identity link
+
+1. **Oct28 20:18:19 Bangkok (13:18:19 UTC)**: Tx XSsPNb1TM8J7rEsWgr9ujus6TABVx45UhqaARaN454LWhr9qwM3aJg5qELDGzV9LNYimk1bShPpaeuKWLA2nmXE, slot 462490424, succeeded; created mint sYUJLvHEVQofSBehcUQiYLZA967BLqX8CZbUdCWMACH, decimals 6, called Raydium LaunchLab. Funding source 7LJoZL5GHDmJoxczmM1P1hzrARCUWa7uyxVT5jBwsd9d. Direct mint read as of RPC slot 462553659 showed 999,996,108.037488 tokens and both mint/freeze authorities null. This does not establish authorized front-end launch.
+2. **Oct28 21:29 Bangkok**: @thetrenchfiles X allegation published (https://x.com/thetrenchfiles/status/2115450980804526090), used only as a date reference/hypothesis, not chain proof.
+3. **Oct28 22:33:59 Bangkok (15:33:59 UTC)**: Same source address 7LJoZL5GHDmJoxczmM1P1hzrARCUWa7uyxVT5jBwsd9d is an actual signer of Squads v4 ProposalApprove tx 4wQq8LR5p1Qyy8L6jiXCn1RNhvgHLAtkiomF2geQzQEctVneWUU6Qq9fezYziC5PmCHdUc5kPk9ZozDCJxf1xjsy, slot 462528557; real multisig address GkvU4WqWVFz34pQnLfem3GqW57s2nEFGpqjkz4b3aTue, proposal account 2km41yhxW1Pa4SU7i4Dza5gJ9JZZLhy35gftBrTqBNZk.
+4. **Oct28 22:34:00 Bangkok (15:34:00 UTC)**: Same signer executes successful Squads v4 VaultTransactionExecute tx 4k7Hdv7diFSxAc9SUWT6NPnN2z5WCdLvirvBPLv66GFFrsf1H47vnL3Lcfub8JwsFh5bBwZKXsBriimBzJDzcLvL, slot 462528562. Actual inner program logs:
+   - Onchain Memo: "Machine Launch: permanently close config and program"
+   - Calls executable program MACHX97ggsHjPyrZErp5mGr7uq5jVmqgCnN7Hd2213g, instruction CloseMachineConfig, success.
+   - Calls BPFLoaderUpgradeab1e11111111111111111111111, parsed type close, programAccount MACHX97ggsHjPyrZErp5mGr7uq5jVmqgCnN7Hd2213g, ProgramData Ak3fwDLN8s7GgAvetccEiyLN2LSo6xUUbta2L2itgq1B, authority 2G5fgukpFZezPqMKW1S2hMvw4w8kqi1nK9hyzqr2cwPU, recipient FmoGkvumFhRo8jiJfuV9VgVhDL5gNQrzS9YaecaaDUhn. Runtime log: "Closed Program MACHX97ggsHjPyrZErp5mGr7uq5jVmqgCnN7Hd2213g". Direct program account shows executable flag and points to that ProgramData; after closure getAccountInfo(ProgramData) returned value null, consistent with close.
+5. Program close took place **about 136 minutes after mint and 65 minutes after X accusation**. Sequence is confirmed, motive is unknown: do NOT assert the close was cover-up or was routine cleanup without evidence.
+
+**Material reassessment:** The creator funding address approved and executed a multisig operation administrating a **self-labelled Machine Launch program**. This is substantially stronger than ordinary Squads interaction and raises concern about operational link to Machine-branded launch infrastructure. Independent proof of the program's corporate ownership by Machine.fun, actual human controller, three buyers' common controller, Jito Bundle member signatures, realized profits of $2300/$1500/$800, and alleged second Machine coin creation remains absent. Do not claim onchain issuer team attribution proven. Issuer denial or an unfinished website does not rebut the mint or program close.
+
+**Status:** CHAIN_LAUNCH_VERIFIED / SQUADS_APPROVE_EXECUTE_VERIFIED / MACHINE_LAUNCH_CONFIG_AND_PROGRAM_CLOSED / REAL_WORLD_TEAM_ATTRIBUTION_UNVERIFIED / BUYER_BUNDLE_PNL_UNVERIFIED / SXTH_NO_GO. Research only: no new monitor, wallet activity or trade.
+
+---
+
 ## 2026-10-28 23:xx The Trench Files allegation: official denial plus direct Solana RPC evidence
 
 **Read-only evidence window:** Oct28 2026 ~23:00–24:00 Asia/Bangkok. Direct original full five-post X thread via user's authenticated shared browser `https://x.com/thetrenchfiles/status/2115450980804526090`, comments, and original `https://x.com/machinedotfun` profile. Solana mainnet queried with user's connected read-only Alchemy RPC. **Allegations ≠ verified attribution**.
