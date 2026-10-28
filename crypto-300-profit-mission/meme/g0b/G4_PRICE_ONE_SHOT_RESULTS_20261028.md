@@ -5,7 +5,7 @@
 ## 1. 执行与来源
 
 - 一次性 [GitHub Actions Run #40663663748](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40663663748)：`event=push`、`run_attempt=1`，workflow 总结果 `SUCCESS`；执行代码固定 SHA `0815303604f61e77e2962fc4bdb25cb380afcfbc`，job `122732652001`。
-- [Artifact #12805017729](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40663663748/artifacts/12805017729)：`g4_price_once_receipts.json`，保留 HTTP attempts、响应 SHA256、原始池发现和 OHLCV JSON、冻结选择及全部逐档结果。Artifact 由 GitHub Actions 实际上传，**本次审核通过 job log 与 artifact 元数据确认存在；尚未独立下载并重放原始 ZIP**，不能冒称独立 raw 复算完成。
+- [Artifact #12805017729](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40663663748/artifacts/12805017729)：`g4_price_once_receipts.json`，保留 HTTP attempts、响应 SHA256、原始池发现和 OHLCV JSON、冻结选择及全部逐档结果。Artifact 由 GitHub Actions 实际上传；其原始 JSON 随后已被另一轮**纯 GitHub Artifact 只读离线重算**读取并验证（见第 4 节）。这不是独立第三方模型审查。
 - 原始研究：Git blob `a31a2bbcd1fe7c70951152f2a23edca6c934dc40`；精选历史 USDC 收支 blob `b44cc2140927246f9a428c8c455a6793eb80b662`。6 案例在采集前冻结于 `G4_PRICE_ONCE_PREREG_20261028.md`；本次 manifest SHA256：`5407db116ce0b755e0b38b1ce67331e6ac4b87a875e60665f63f75e351fe38ed`。
 - **实际 18 次公开 HTTPS GET、18 次 HTTP 200、HTTP429 0、0 重试**；单通道有源码 `>=12.5s` 间隔限制。仓库 workflow 不提供 schedule/workflow_dispatch，且通过第一次提交父 SHA 与 `run_attempt=1` 保护。本结果提交不再触发公开 API。
 - 离线单元测试 **6/6 PASS**、无网络默认模式及严格单次提交门禁均通过。无 Mac/V1/Loop/生产 SQLite 读写、Solana RPC、钱包、Gmail、交易、通知、定时任务或默认跟单金额。
@@ -37,9 +37,29 @@
 4. **8K5 到 Frank 最终退出附近的五档全缺失**；E4Ap 只有 +30s 档的粗价格代理 **−8.749709%**，+3600s 时 Frank 已退出。不能只保留成功样本。
 5. **C3/H1kX** 无信号、价格代理 +300s 至 24h **−67.520742%**，仅为从重建 UNKNOWN BUY 挑出的偏样本；它的负收益不能证明 ACC 策略优于无信号。
 6. **总体覆盖：3/6 完整五档（含 C3 对照），另外 3/6 不完整。仅研究的五个信号案例总共 11/25 个延迟档有分钟价格代理**；能证明特定金额、路线、时间与入/出场费用的可执行跟单报价配对仍然 **0**。
-7. Artifact 内有原始 1m 成交额字段，但**此报告尚未独立取得原始 ZIP 与分钟成交额复算**；不能将仅见数值上涨的价格代理晋升为有历史深度或真实跟单收益。数据源当前排行选池仍有幸存者偏差。
+7. Artifact 内的原始 1m 成交额现已被纯离线重算核对（详见第 4 节），但**分钟成交额不等于历史可交易深度**；不能将仅见数值上涨的价格代理晋升为可执行净收益。数据源当前排行选池仍有幸存者偏差。
 
-## 4. 后续策略判定与门禁
+## 4. 已保存 raw Artifact 的独立算术复核与流动性风险
+
+- 第二个**纯离线** [GitHub Actions #40664687654](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40664687654) 成功，`run_attempt=1`，SHA `aa061b215334ed29617746b2a4ef91704c97c5e7`。仅使用 GitHub 自身的 `actions/download-artifact@v4` 下载前一次固定 Run #40663663748 的既有 JSON，**新 GeckoTerminal/第三方 RPC GET 0 次**。
+- 离线核查脚本 `g4_raw_artifact_reaudit.py` 独立解码原始分钟 K 线、匹配目标时间与非零成交收盘值，逐档重算 30 个状态和 16 个有价代理结果；**30/30 一致**，状态 `RAW_OFFLINE_RECOMPUTE_PASS`。
+- [离线重算 Artifact #12805122680](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40664687654/artifacts/12805122680) 保存所有 30 档的收盘价计算、分钟成交额和 candle 时间。代码、数据及两次 GitHub Run 已固定，可复核。依然不是 Claude/Codex 外部独立模型签收。
+
+**重点分钟成交额（美元；仅所选历史池的该根 1m K 线，不是深度或路由报价）：**
+
+| 案例与延迟 | 历史收盘价代理变化 | 入场 K 线成交额 | 退出 K 线成交额 | 含义 |
+|---|---:|---:|---:|---|
+| HcRL 正式 MULT +300 秒 → +24h | +2.194465% | $12,958.25 | $3,132.42 | 有交易，但不知道跟单者可成交规模、真实滑点或收益 |
+| PerPs 正式 MULT +300 秒 → +24h | +95.608658% | $3,419.78 | **$961.84** | 有价格上涨，但退出分钟成交额偏小；不能保证成交 |
+| PerPs 正式 MULT +3600 秒 → +24h | +100.635778% | **$11.50** | $961.84 | 极低入场分钟成交额严重削弱可执行可信度 |
+| E4Ap ACC +30 秒 → Frank 最后退出时点 | −8.749709% | **$0.93** | **$1.00** | 价格代理数学成立，但经济上几乎没有可验证成交承载能力 |
+| H1kX 无信号 BUY +300 秒 → +24h | −67.520742% | $246,780.35 | **$5.19** | 对照组退出分钟成交额接近零，不能假设及时平仓 |
+
+在全部 **16/30** 个有数值的价格代理档中，**6/16** 档任一入场或退出分钟成交额低于 $10；**12/16** 低于 $1,000。两个金额只是透明的描述性分组，**不是**已验证的最小可执行订单规模或交易容量门槛。所有带金额假设的跟单入场/退出报价仍为 **0**。
+
+这意味着从价格观测可确认 PerPs 正式 MULT 后仍有上涨，但从交易证据**无法确认跟单者可捕获该涨幅**，更不能按这个百分比计算用户实际应获利金额。新的离线复核不补充任何历史路由/报价/失败率，也不修改样本或交易规则。
+
+## 5. 后续策略判定与门禁
 
 `G4_HISTORIC_PRICE_PROXY_COLLECTION_COMPLETED / FORMAL_MULT_CLOCK_PROXIES_AVAILABLE_FOR_M2_M3 / LIQUIDITY_EXECUTION_NOT_VALIDATED / STRATEGY_NEED_MORE_DATA / NO_PRODUCTION_TRADE`。
 
