@@ -220,6 +220,16 @@ def _read_complete_http_body(response, headers, cap, deadline, timeout_event,
     except http.client.IncompleteRead as exc:
         raise _FramingFailure("HTTP_INCOMPLETE_CHUNKED_OR_FRAMING",
                               (b"".join(parts) + exc.partial)[:cap]) from exc
+    except (OSError, TimeoutError) as exc:
+        # Preserve earlier full chunks even when the next socket read fails.
+        reason=("REQUEST_DEADLINE_EXCEEDED"
+                if timeout_event.is_set() or time.monotonic() >= deadline
+                else "HTTP_STREAM_INTERRUPTED")
+        raise _FramingFailure(reason, b"".join(parts)[:cap]) from exc
+    except (ValueError, http.client.HTTPException) as exc:
+        # Invalid/missing chunk delimiters must never yield an accepted RPC.
+        raise _FramingFailure("HTTP_INVALID_CHUNK_TERMINATION",
+                              b"".join(parts)[:cap]) from exc
 
 
 class Sender:
