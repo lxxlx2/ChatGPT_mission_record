@@ -30,7 +30,7 @@ MAX_NEW_PAIRS = 3
 MAX_CALLS = 20
 MAX_BOUNDED_CALLS = 180
 MAX_BOUNDED_SECONDS = 180
-BOUNDED_POLL_SECONDS = 12
+BOUNDED_POLL_SECONDS = 5
 MAX_BOUNDED_IDENTITIES = 12
 MAX_BOUNDED_PAIR_PER_INTERVAL = 3
 MAX_BOUNDED_ANCESTOR_BLOCKS = 24
@@ -359,8 +359,11 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
                     clock=utc_now, monotonic_ns=time.monotonic_ns, sleep=time.sleep):
     """One foreground finite V2 Factory observation, not a live trading/PIT approval.
 
-    Default contract: <=180s requested observation, <=180 read-only RPC calls,
-    <=12 pair identities, interval ancestry <=24 blocks. An in-flight HTTP
+    Default contract: <=180s maximum target, <=180 read-only RPC calls,
+    <=12 pair identities, interval ancestry <=24 blocks. Typical ~0.45s BSC
+    blocks require ~5s polling, not 12s. Budget may stop observation
+    before the 180s ceiling; only actually verified intervals are covered.
+    An in-flight HTTP
     request may extend completion by the existing 20-second request timeout.
     """
     if (type(duration_seconds) is not int or not 12 <= duration_seconds <= MAX_BOUNDED_SECONDS
