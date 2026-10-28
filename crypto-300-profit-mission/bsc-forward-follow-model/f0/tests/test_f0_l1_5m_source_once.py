@@ -12,7 +12,7 @@ from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from f0_l1_5m_source_once import (
-    SCHEMA, ENDPOINT, METHODS, MAX_BODY, validate_scope, run_probe, Sender,
+    SCHEMA, ENDPOINT, METHODS, MAX_BODY, validate_scope, run_probe, Sender, Capture,
     now_utc, main)
 from f0_l1_window import load_frozen_cohort,cohort_watchlist
 from f0_l1_preflight import official_router_addresses
@@ -160,6 +160,36 @@ class FiveMinuteSourceTests(unittest.TestCase):
             self.assertGreaterEqual(result["contiguous_full_blocks_post_anchor"],1)
             self.assertGreaterEqual(result["contiguous_rate_blocks_per_s"],0)
             self.assertGreater(len(result["head_samples"]),1)
+
+    def test_orphan_parent_block_does_not_count_wallet_signed_transactions(self):
+        cohort_raw=(ROOT/"F0_COHORT_PRESELECTION.json").read_bytes()
+        watched,_=cohort_watchlist(load_frozen_cohort(cohort_raw))
+        router_raw=(ROOT/"F0_ROUTER_SOURCE_CANDIDATES.json").read_bytes()
+        routers=set(official_router_addresses(json.loads(router_raw)))
+        w=sorted(watched)[0]
+        target=sorted(routers)[0]
+        def rpc(height,parent,txs):
+            return {"jsonrpc":"2.0","id":1,
+                    "result":{"number":hex(height),
+                              "hash":"0x"+format(height,"064x"),
+                              "parentHash":"0x"+format(parent,"064x"),
+                              "transactions":txs}}
+        with tempfile.TemporaryDirectory() as td:
+            cp=Capture(Path(td),permit(),sender=None)
+            try:
+                cp.ingest("ANCHOR",100,rpc(100,99,[]),None,
+                          {"post_ns":1,"end_ns":2},watched,routers)
+                tx={"hash":"0x"+format(987654,"064x"),
+                    "from":w,"to":target,"value":"0x0",
+                    "blockNumber":hex(101)}
+                cp.ingest("BLOCK",101,rpc(101,55,[tx]),None,
+                          {"post_ns":1,"end_ns":2},watched,routers)
+                self.assertEqual(cp.stop_reason,"BLOCK_IDENTITY_OR_PARENT_INVALID")
+                self.assertEqual(cp.watch_signed,0)
+                self.assertEqual(cp.router_candidates,0)
+                self.assertEqual(cp.last_contiguous,100)
+            finally:
+                cp.finish()
 
     def test_real_sender_post_clock_denied_after_fake_tls_connection(self):
         calls=[]
