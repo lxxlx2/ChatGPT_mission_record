@@ -694,6 +694,13 @@ function recordF01PageObservation(view, now=Date.now()/1000) {
   return `本页新 BUY 初见样本 ${samples.length} 条；事件到页面首次观察最长 ${maximum.toFixed(1)} 秒，${overdue} 条超过10分钟。该数值包含链上确认、索引、轮询和页面刷新，不能拆分为纯索引延迟，也不代表成交速度。`;
 }
 
+function f01ExcludedReasonCount(doc, reason) {
+  const counts = doc?.excluded_reason_counts;
+  if (!counts || typeof counts !== 'object' || Array.isArray(counts)) return '未知';
+  const value = counts[reason] ?? 0;
+  return Number.isSafeInteger(value) && value >= 0 ? value : '未知';
+}
+
 function renderF01History(rows) {
   const box = $('f01-history-cards');
   if (!box) return;
@@ -1073,7 +1080,7 @@ async function refresh() {
     const ageLabel = f01?.newest_indexed_buy_age_seconds != null &&
       Number.isFinite(newestAge) ? `最近已索引 BUY 距链上事件 ${Math.round(newestAge)} 秒；`
       : '最近已索引 BUY 的事件时间未知；';
-    const staleCount = f01?.excluded_reason_counts?.SOURCE_BUY_STALE_OR_UNVERIFIED ?? '未知';
+    const staleCount = f01ExcludedReasonCount(f01, 'SOURCE_BUY_STALE_OR_UNVERIFIED');
     $('f01-source-status').textContent = view
       ? `近期来源信号 ${recent.length} 条；过期或时间待核 ${staleCount} 条；${ageLabel}当前执行资格 0 条；来源窗口 10 分钟。`
       : 'F01 来源资格暂不可核实或已过期；不展示可跟结论，完整历史候选保留。';
