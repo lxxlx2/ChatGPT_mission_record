@@ -233,10 +233,12 @@ class FiveMinuteSourceTests(unittest.TestCase):
                                result["tls_connect_ms"])
             self.assertGreaterEqual(result["pacing_wait_ms"],0.0)
             # Four observed segments are never presented as the same latency.
-            self.assertAlmostEqual(
-                result["full_attempt_ms"],
+            # Full attempt also includes HTTPS constructor and SSL context
+            # setup; it is NOT identical to the three narrower intervals.
+            self.assertGreaterEqual(
+                result["full_attempt_ms"]+0.1,
                 result["tls_connect_ms"]+result["pacing_wait_ms"]+
-                result["post_to_response_ms"], delta=10.0)
+                result["post_to_response_ms"])
             self.assertNotIn("connect_ms",result)
         self.assertGreater(second["pacing_wait_ms"],25)
         self.assertLess(second["tls_connect_ms"],
