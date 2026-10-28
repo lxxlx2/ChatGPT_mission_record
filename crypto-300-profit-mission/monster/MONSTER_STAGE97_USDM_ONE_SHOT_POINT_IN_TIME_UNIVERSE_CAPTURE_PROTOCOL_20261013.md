@@ -27,13 +27,13 @@ Binance官方[USD-M REST Market Data](https://developers.binance.info/en/docs/ca
 
 ```text
 STAGE97_REAL_HTTPS_FROZEN_UNIVERSE_CAPTURED {"source": "RECORDED_HTTPS_BINANCE_REQUEST_AND_RESPONSE_CLOCK_PROOF", "symbols": {"population_all_exchange_symbols": 936, "usd_m_usdt_perpetual_asof_candidates": 523}, "window": "2026-10-28T06:00:00Z"}
-6e3d955a7a826c017f5c1579df14036b0f5044f4e0cfb09bd65da24602327bd3  /Users/jerson/Desktop/monster_usdm_2026-10-28_t0.json
+6e3d955a7a826c017f5c1579df14036b0f5044f4e0cfb09bd65da24602327bd3  $HOME/Desktop/monster_usdm_2026-10-28_t0.json
 ```
 
 - **实际回执所证明**：Mac 程序正常打印成功标记；该代码成功分支必须已经完成固定窗口、前后官方 `/fapi/v1/time`、`exchangeInfo` 响应 SHA/时钟一致性检查和全体 `symbols` 冻结；用户终端宣称 **936** 全合约行、**523** 符合条件的 USDT 永续合约候选。此 523 不等于独立代币、早期机会数量或可盈利数。
 - **独立读取尚缺**：本会话没有 Mac 文件的原始字节，因此尚未复算整文件SHA、逐条检查 clock/source/runtime provenance、symbol 身份重数与候选母体、原始包哈希，也未将原始 JSON 归档 Git/Artifact；绝不能标为 `SOURCE_ARCHIVE_VERIFIED` 或 `G0 PASS`。用户提供的文件 SHA-256 暂记 `USER_REPORTED_HASH`。
 - **云端失败与纠偏**：首次用户授权的Git触发 `27b6b474...` 在 <https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40639999746> 离线门禁成功，但GitHub托管runner首个 Binance `/fapi/v1/time` 遭 **HTTP 451**，capture job失败、无云端产物。Mac 成功路径与该CI失败不能互相替代或混写。
 - **一次性权限已消费**：为避免重复触发，专用 `monster_stage97_one_shot_capture_request.json` 已恢复 `authorized_one_shot=false`；未加 schedule、重试器、真实通知或交易。原 Mac 文件不应在2026-10-28 13:00窗口后重新联网覆盖生成；只可对当时生成的原始文件进行离线校验与归档。
-- **下一验证门槛**：实际读取用户原 JSON，先用字节级 SHA `6e3d955a7a826c017f5c1579df14036b0f5044f4e0cfb09bd65da24602327bd3` 校验，审查原时间序列与938/523等字段必须以**实际文件**为准（当前终端声明是**936/523**），成功后按已有 Stage97 evidence 位置存一份不可变公开市场数据原文或至少带源位置的可核验归档；不得伪造云端 CI Artifact。
+- **下一验证门槛**：实际读取用户原 JSON，先用字节级 SHA `6e3d955a7a826c017f5c1579df14036b0f5044f4e0cfb09bd65da24602327bd3` 校验，审查原时间序列与936/523等字段必须以**实际文件**为准（当前仅有用户终端声明），成功后按已有 Stage97 evidence 位置存一份不可变公开市场数据原文或至少带源位置的可核验归档；不得伪造云端 CI Artifact。
 - **模型边界**：ADR-006 将旧 CEX 动量盈利模型冻结为对照。此历史T0只读归档不代表重启旧 D1、任何未来7天行情完整性、2026-10-28本日新增上市覆盖、可执行利润或者 Monster `G6` 通过。
 
