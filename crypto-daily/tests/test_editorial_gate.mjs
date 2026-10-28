@@ -150,3 +150,28 @@ test('missing family key is hard error for narrative news',()=>{
  const r=run(x=>{delete x.events.find(e=>e.event_key==='systemic-security').family_key});
  assert.ok(r.errors.some(e=>e.startsWith('NEWS_EVENT_MISSING_FAMILY_KEY')));
 });
+
+test('new ETF trading date with unique observation id is legitimate routine institutional flow',()=>{
+ const r=run(x=>{
+   x.previous_events=[{event_key:'prior-fund-day',family_key:'fifth-500-btc',material_version:'old',observation_type:'dated_fund_flow',observation_id:'ETF-2026-10-27-BTC',observation_date:'2026-10-27'}];
+   const e=x.events.find(e=>e.event_key==='fifth-500-btc');
+   e.observation_type='dated_fund_flow';e.observation_id='ETF-2026-10-28-BTC';e.observation_date='2026-10-28';
+ });
+ assert.equal(r.passed,true);
+});
+test('same ETF trading day under renamed id cannot pass flow exception',()=>{
+ const r=run(x=>{
+   x.previous_events=[{event_key:'prior-fund-day',family_key:'fifth-500-btc',material_version:'old',observation_type:'dated_fund_flow',observation_id:'ETF-2026-10-28-BTC',observation_date:'2026-10-28'}];
+   const e=x.events.find(e=>e.event_key==='fifth-500-btc');
+   e.observation_type='dated_fund_flow';e.observation_id='ETF-2026-10-28-BTC-updated';e.observation_date='2026-10-28';
+ });
+ assert.ok(r.errors.some(e=>e.startsWith('REPEATED_OR_UNPROVEN_FLOW_OBSERVATION')));
+});
+test('fresh distinct onchain txid may be new without repeating older transfer',()=>{
+ const r=run(x=>{
+   x.previous_events=[{event_key:'prior-tx',family_key:'fifth-500-btc',material_version:'old',observation_id:'0x0123456789abcdef',observation_date:'2026-10-27'}];
+   const e=x.events.find(e=>e.event_key==='fifth-500-btc');
+   e.observation_type='onchain_tx';e.observation_id='0xfedcba9876543210';e.observation_date='2026-10-28';
+ });
+ assert.equal(r.passed,true);
+});
