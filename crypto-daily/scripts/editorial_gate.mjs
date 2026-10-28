@@ -105,6 +105,16 @@ export function validateEditorial(input, rules) {
     if(!family){fail('NEWS_EVENT_MISSING_FAMILY_KEY',ev.event_key);continue;}
     const previous=older.filter(x=>x.family_key===family);
     if(previous.length===0)continue;
+    // Actual new ETF trading days and new uniquely identified onchain TX are fresh data,
+    // but only with a stable observation_id/date, primary-source URL and a body detail.
+    if(ev.kind==='INSTITUTIONAL_FLOW' && ['dated_fund_flow','onchain_tx'].includes(ev.observation_type)){
+      const id=String(ev.observation_id||'');
+      const observed=String(ev.observation_date||'');
+      const uniq=previous.every(x=>x.observation_id!==id && !(ev.observation_type==='dated_fund_flow'&&x.observation_date===observed));
+      const valid=/^https:\/\//.test(ev.source_url||'') && id.length>=8 && /^\d{4}-\d{2}-\d{2}$/.test(observed) && uniq;
+      if(!valid)fail('REPEATED_OR_UNPROVEN_FLOW_OBSERVATION',family+'/'+id);
+      continue;
+    }
     const exactVersion=previous.find(x=>x.material_version===ev.material_version);
     if(exactVersion){fail('REPEATED_FAMILY_VERSION',family+'/'+ev.material_version);continue;}
     const proof=ev.novelty_proof;
