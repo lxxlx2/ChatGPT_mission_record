@@ -29,7 +29,7 @@ def init_plan(*, initial_head, max_head_polls, max_block_reads,
     """
     require(type(initial_head) is int and initial_head > 0 and
             type(max_head_polls) is int and 1 <= max_head_polls <= 1000 and
-            type(max_block_reads) is int and 1 <= max_block_reads <= 1000 and
+            type(max_block_reads) is int and 1 <= max_block_reads <= 4600 and
             type(refresh_after_blocks) is int and 1 <= refresh_after_blocks <= 100 and
             type(head_poll_interval_ms) is int and 250 <= head_poll_interval_ms <= 60000 and
             type(min_request_interval_ms) is int and 250 <= min_request_interval_ms <= 60000 and

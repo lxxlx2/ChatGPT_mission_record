@@ -24,7 +24,10 @@ from f0_l1_preflight import official_router_addresses
 from f0_rpc_adapter import block_candidates, hexb
 
 SCHEMA = "bsc-f0-adaptive-source-core-v1"
-MAX_BUDGET = 128
+MAX_BUDGET = 5000
+MAX_BLOCK_READS = 4600
+MAX_HEAD_POLLS = 181
+MAX_DURATION_MS = 1_800_000
 
 
 def require(value, code):
@@ -50,9 +53,9 @@ def collect_adaptive_injected(
     require(callable(post) and callable(clock) and callable(mono) and callable(sleep),
             "ADAPTIVE_EXPLICIT_DEPENDENCIES_REQUIRED")
     require(type(max_total_attempts) is int and 2 <= max_total_attempts <= MAX_BUDGET
-            and type(max_block_reads) is int and 1 <= max_block_reads <= MAX_BUDGET
-            and type(max_head_polls) is int and 1 <= max_head_polls <= MAX_BUDGET
-            and type(duration_ms) is int and 1000 <= duration_ms <= 600000
+            and type(max_block_reads) is int and 1 <= max_block_reads <= MAX_BLOCK_READS
+            and type(max_head_polls) is int and 1 <= max_head_polls <= MAX_HEAD_POLLS
+            and type(duration_ms) is int and 1000 <= duration_ms <= MAX_DURATION_MS
             and type(timeout_ms) is int and 1000 <= timeout_ms <= 8000
             and type(max_response_bytes) is int and 1 <= max_response_bytes <= 2_000_000,
             "ADAPTIVE_SCOPE_INVALID")

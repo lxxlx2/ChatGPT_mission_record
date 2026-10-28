@@ -173,6 +173,48 @@ class AdaptiveSourceCoreFakeTests(unittest.TestCase):
                              "ATTEMPTED_OUTCOME_UNKNOWN")
             self.assertFalse((root/"report.json").exists())
 
+    def test_30m_5000_attempt_4600_block_181_head_bound_admitted_offline(self):
+        # Proves config admission only. No 5000-call fake benchmark or live
+        # endpoint is implied; the injected wrong-chain response stops at RID1.
+        wrong={"method":"eth_chainId","params":[],"result":"0x1"}
+        with tempfile.TemporaryDirectory() as d:
+            r,calls=self.run_frames(
+                Path(d),[wrong],total=5000,block_cap=4600,
+                head_cap=181,duration=1_800_000)
+            self.assertEqual(r["stop_state"],"CHAIN_ID_NOT_BSC")
+            self.assertEqual(r["total_attempts"],1)
+            self.assertEqual(len(calls),1)
+
+    def test_above_trial_caps_denied_before_fake_sender_or_journal(self):
+        bad=(
+            {"total":5001,"block_cap":4600,"head_cap":181,
+             "duration":1_800_000},
+            {"total":5000,"block_cap":4601,"head_cap":181,
+             "duration":1_800_000},
+            {"total":5000,"block_cap":4600,"head_cap":182,
+             "duration":1_800_000},
+            {"total":5000,"block_cap":4600,"head_cap":181,
+             "duration":1_800_001},
+        )
+        for config in bad:
+            with self.subTest(config=config):
+                with tempfile.TemporaryDirectory() as d:
+                    root=Path(d)
+                    with self.assertRaisesRegex(
+                            ValueError,"ADAPTIVE_SCOPE_INVALID"):
+                        self.run_frames(root,[],**config)
+                    self.assertFalse((root/"journal.json").exists())
+                    self.assertFalse((root/"raw_responses").exists())
+
+    def test_planner_4600_block_cap_only_boundary_no_state_change(self):
+        from f0_l1_adaptive_head_plan import init_plan
+        values=dict(initial_head=100,max_head_polls=181,
+                    max_block_reads=4600)
+        state=init_plan(**values)
+        self.assertEqual(state["max_block_reads"],4600)
+        with self.assertRaisesRegex(ValueError,"ADAPTIVE_INVALID_PLAN"):
+            init_plan(**dict(values,max_block_reads=4601))
+
     def test_mutated_registry_rejected_before_any_source_and_journal(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d)
