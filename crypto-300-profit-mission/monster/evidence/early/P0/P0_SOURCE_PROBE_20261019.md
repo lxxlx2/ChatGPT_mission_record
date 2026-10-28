@@ -1,3 +1,16 @@
+## 2026-10-28：SQD Portal 单块实测返回 HTTP 529（用户Mac原始curl回执）
+
+用户复制执行上轮固定 2025-07-01 BSC Pancake V2 Factory、区块`52440324`、`PairCreated`的单区块公开HTTP POST后，提供**用户终端输出**（本会话未独立调用该POST）：
+```text
+curl: (22) The requested URL returned error: 529
+{"error":{"type":"rate_limit_error","code":"overloaded","message":"Service is overloaded, please try again later","request_id":"5ea90d441966433a03cec671f673a78a"}}
+```
+SQD 官方流API文档 <https://docs.sqd.dev/en/api/evm/stream> 明确列出529的`rate_limit_error/overloaded`回执；并将格式不合规请求单列400。故归类`PUBLIC_ENDPOINT_REACHABLE / TRANSIENT_PROVIDER_OVERLOAD / NO_EVENT_ROWS_RETURNED`。并非已证明合约/topic与目标交易匹配，也不把529误判为数据不存在、账号余额不足、429个人配额用尽，**参数校验成功也尚未证明**。允许以后在用户主动指令下，仅有限一次同区块重试并同时记录HTTP响应码与Retry-After；不得启用自动重试、定时任务或扩大批次。若重复失败，以`SQD_NO_RAW_EVENT_PROOF`结项该候选。
+
+**保持原P0**：`P0 INSUFFICIENT_COVERAGE / P1 BLOCKED / G4 UNKNOWN / G6 NO_GO`；Plan C = $0；2026-11-02冻结停止日不变。未新增数据、代码、workflow、购买或生产操作。
+
+---
+
 ## 2026-10-28：SQD Portal — 新的零付费 BSC 2025 原日志**待实测** Plan B 候选
 
 本轮按用户已批准的 ADR-006 做一次有界来源可行性复核，不更改原P0阈值/2026-11-02止损，也不新增脚本/workflow或重复SELL报表。
