@@ -1,17 +1,40 @@
 """One Frank-only local signal authority; scanner/model/notifier never depend on GPT."""
 import argparse,fcntl,hashlib,json,os,signal,subprocess,time
 from pathlib import Path
+from urllib.parse import urlsplit
 from mission_agent.signals.registry import load
 from mission_agent.signals.policy import load_policy,POLICY_SHA256
 from mission_agent.signals.store import Ledger
 from mission_agent.signals.engine import Engine
-from mission_agent.signals.scanner import Scanner
+from mission_agent.signals.scanner import Scanner,WalletRPC
 from mission_agent.signals.delivery import LocalNotifier,drain
 from mission_agent.signals.runtime_io import atomic_json,utc
 from mission_agent.signals.gmail import summary_from_db
 from mission_agent.signals.gmail_health import health_from_summary
 
 IDENTIFIER='com.jerson.crypto-monitor-frank-local'
+
+# The existing FrankMeme RPC file is private and shared with Mission Control.
+# Select the first already-configured endpoint only; never publish or log its URL.
+def configured_scanner_rpc(path=None):
+    path = Path.home() / "Library/Application Support/FrankMeme/solana_rpc_urls" if path is None else Path(path)
+    try:
+        if path.is_symlink() or not path.is_file():
+            raise ValueError("missing or unsafe file")
+        if path.stat().st_mode & 0o077:
+            raise ValueError("unsafe file permissions")
+        values = [value.strip() for value in path.read_text(encoding="utf-8").strip().split(",")]
+        if not values or not values[0]:
+            raise ValueError("empty RPC config")
+        endpoint = values[0]
+        parsed = urlsplit(endpoint)
+        if (parsed.scheme != "https" or not parsed.hostname or parsed.username
+                or parsed.password or parsed.fragment or any(c.isspace() for c in endpoint)):
+            raise ValueError("invalid RPC endpoint")
+        return endpoint
+    except (OSError, UnicodeError, ValueError):
+        raise RuntimeError("FRANK_RPC_CONFIG_UNAVAILABLE_OR_INVALID") from None
+
 
 def source_hash():
     root=Path(__file__).resolve().parents[1];h=hashlib.sha256()
@@ -21,6 +44,7 @@ def source_hash():
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--registry',type=Path,required=True);p.add_argument('--policy',type=Path,required=True);p.add_argument('--authority-lock',type=Path,required=True);p.add_argument('--check',action='store_true');a=p.parse_args()
+    endpoint=configured_scanner_rpc()
     policy=load_policy(a.policy);_,wallets=load(a.registry)
     ledger=Ledger(a.root/'forward.sqlite');engine=Engine(ledger,policy,dry_run=False)
     if any(ledger.cursor(w) is None for w in wallets):raise ValueError('CHECKPOINT_REQUIRED_NO_INITIAL_CURSOR_RESET')
@@ -36,7 +60,7 @@ def main():
         nonlocal stopped
         stopped=True
     for sig in [signal.SIGTERM,signal.SIGINT]:signal.signal(sig,stop)
-    scanner=Scanner(ledger,wallets,a.root/'raw',mode='LIVE');notifier=LocalNotifier(receipt_root=a.root/'local-receipts')
+    scanner=Scanner(ledger,wallets,a.root/'raw',rpcs={w:WalletRPC(w,endpoint=endpoint) for w in wallets},mode='LIVE');notifier=LocalNotifier(receipt_root=a.root/'local-receipts')
     path=a.root/'health.json';old=json.loads(path.read_text()) if path.exists() else {};before={w:ledger.cursor(w) for w in wallets};first=True
     git_root=Path(__file__).resolve().parents[3];commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=git_root,text=True).strip();source=source_hash()
     health={'system':'FRANK_ONLY','policy':'FRANK_LOCAL_SIGNAL_V1','policy_hash':POLICY_SHA256,'identifier':IDENTIFIER,'pid':os.getpid(),'started_at':utc(),'first_started_at':old.get('first_started_at',utc()),'restart_count':old.get('restart_count',-1)+1,'code_commit':commit,'loaded_source_sha256':source,'poll_count':old.get('poll_count',0),'consecutive_errors':0,'poll_interval_seconds':30,'delivery_authority':'LOCAL_DETERMINISTIC_SIGNAL','gpt_in_critical_path':False,'production_trading':'NO_GO','other_persons':'DEFERRED','new_automation':False,'status':'STARTING'}
