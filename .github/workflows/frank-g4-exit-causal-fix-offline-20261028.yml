@@ -1,0 +1,55 @@
+name: Frank G4 exit causal-fix exact-raw offline verification once
+on:
+  push:
+    branches:
+      - research/frank-g4-price-one-shot-20261028
+    paths:
+      - .github/workflows/frank-g4-exit-causal-fix-offline-20261028.yml
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: frank-g4-exit-causal-fix-offline-20261028
+  cancel-in-progress: false
+jobs:
+  fixed-causal-offline-validation:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/research/frank-g4-price-one-shot-20261028' && github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - name: Read-only frozen checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Enforce original source lineage and one-only offline workflow commit
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "a326224b79bd2e0dc6ac45640e600a140d86a221"
+          test "$(git diff-tree --no-commit-id --name-only -r HEAD)" = ".github/workflows/frank-g4-exit-causal-fix-offline-20261028.yml"
+      - name: Offline causal counterexamples and no-network default
+        run: |
+          set -euo pipefail
+          python3 -B -m unittest discover -s crypto-300-profit-mission/meme/g0b -p 'test_g4_price_one_shot.py' -v
+          python3 -B crypto-300-profit-mission/meme/g0b/g4_price_one_shot.py --max-http 18
+      - name: Download frozen ORIGINAL GitHub artifact only
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 40663663748
+          name: frank-g4-price-one-shot-20261028
+          github-token: ${{ github.token }}
+          path: frozen-original-raw
+      - name: Independent offline recompute strict rejection and separate pre-anchor sensitivity
+        run: |
+          set -euo pipefail
+          python3 -B crypto-300-profit-mission/meme/g0b/g4_raw_artifact_reaudit.py --receipt frozen-original-raw/g4_price_once_receipts.json --out frozen-original-raw/g4_exit_causal_fixed_recompute.json
+      - name: Preserve corrected offline-only result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frank-g4-exit-causal-fixed-offline-20261028
+          path: frozen-original-raw/g4_exit_causal_fixed_recompute.json
+          if-no-files-found: warn
+          retention-days: 30
