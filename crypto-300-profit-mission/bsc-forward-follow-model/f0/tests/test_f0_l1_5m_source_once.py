@@ -411,9 +411,9 @@ class FiveMinuteSourceTests(unittest.TestCase):
 
     def test_bad_frame_cannot_become_successful_chain_head_in_capture(self):
         valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
-        wire=(b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
+        wire=(b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n"
               +b"Content-Length: "+str(len(valid)+100).encode()
-              +b"\\r\\nConnection: close\\r\\n\\r\\n"+valid)
+              +b"\r\nConnection: close\r\n\r\n"+valid)
         # Actual standard-library HTTPResponse to Sender, then original
         # durable Capture SETTLE and ingest: valid JSON is NOT sufficient.
         outcome=self._run_wire(wire)
