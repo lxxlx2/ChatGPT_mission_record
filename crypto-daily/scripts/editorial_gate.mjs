@@ -102,7 +102,7 @@ export function validateEditorial(input, rules) {
     if(!counts.has(ev.event_key)||!narrativeKinds.has(ev.kind))continue;
     const candidate=(input.candidates||[]).find(c=>c.event_key===ev.event_key);
     const family=ev.family_key||candidate?.family_key;
-    if(!family)continue; // existing historic manifest may not have all family identifiers; emit below.
+    if(!family){fail('NEWS_EVENT_MISSING_FAMILY_KEY',ev.event_key);continue;}
     const previous=older.filter(x=>x.family_key===family);
     if(previous.length===0)continue;
     const exactVersion=previous.find(x=>x.material_version===ev.material_version);
