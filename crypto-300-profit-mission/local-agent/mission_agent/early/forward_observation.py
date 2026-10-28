@@ -529,15 +529,18 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
                 "factory_index_after": b["all_pairs_length"],
                 "new_factory_pair_index_count": delta,
                 "identities_read_indices": read,
-                "unread_factory_indices": list(range(
-                    a["all_pairs_length"]+len(read), b["all_pairs_length"])),
+                "unread_factory_index_start": a["all_pairs_length"]+len(read),
+                "unread_factory_index_end_exclusive": b["all_pairs_length"],
+                "unread_count": delta-len(read),
                 "source_scope": "BSC_PANCAKE_V2_FACTORY_ONLY",
                 "interval_contiguous_headers_verified": True})
             snapshots.append(b)
             a = b
         finish, finish_mono = checkpoint()
         first, last = snapshots[0], snapshots[-1]
-        unread = sum(len(s["unread_factory_indices"]) for s in intervals)
+        if not intervals:
+            raise ForwardProbeError("BOUNDED_NO_VALID_INTERVAL")
+        unread = sum(s["unread_count"] for s in intervals)
         result = {
             "schema": "MONSTER_FORWARD_BSC_V2_MANUAL_BOUNDED_V1",
             "network_chain_id": CHAIN, "factory": FACTORY,
