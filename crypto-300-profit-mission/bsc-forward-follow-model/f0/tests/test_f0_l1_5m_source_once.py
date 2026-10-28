@@ -1,5 +1,7 @@
 """New actual-once source probe: OFFLINE adversarial tests, ZERO real TCP/DNS."""
 import json
+import io
+import http.client
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 import socket
@@ -195,11 +197,19 @@ class FiveMinuteSourceTests(unittest.TestCase):
         # No TCP/DNS: distinct fake connect, throttle wait and body read.
         class Response:
             status=200
+            chunked=False
+            length=44
+            will_close=False
+            closed=False
             def getheaders(self):
-                return [("Content-Type","application/json")]
-            def read(self,n):
+                return [("Content-Type","application/json"),
+                        ("Content-Length","44")]
+            def read1(self,n):
                 time.sleep(0.003)
+                self.closed=True
                 return b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
+            def isclosed(self):
+                return self.closed
 
         class FakeConnection:
             def __init__(self,*args,**kwargs):
@@ -266,6 +276,117 @@ class FiveMinuteSourceTests(unittest.TestCase):
             self.assertIsNotNone(result["post_to_response_p95_ms"])
             self.assertNotIn("block_response_p50_ms",result)
             self.assertIn("global lock",result["timing_definition"]["pacing_wait"])
+
+    def _run_wire(self, wire: bytes, *, timeout=1.0, latency=0,
+                  slow_headers=0):
+        class SlowRaw(io.RawIOBase):
+            def __init__(self, payload):
+                self.buffer=io.BytesIO(payload)
+            def readable(self):
+                return True
+            def readinto(self, b):
+                n=min(len(b),1)
+                data=self.buffer.read(n)
+                if data:
+                    time.sleep(slow_headers)
+                b[:len(data)]=data
+                return len(data)
+
+        class FakeSocket:
+            def __init__(self, content):
+                self.content=content
+            def makefile(self,*args,**kwargs):
+                if slow_headers:
+                    return io.BufferedReader(SlowRaw(self.content),
+                                             buffer_size=1)
+                return io.BytesIO(self.content)
+
+        class RealHTTPResponseConnection:
+            def __init__(self,*args,**kwargs):
+                self.sock=None
+            def connect(self):
+                pass
+            def request(self,*args,**kwargs):
+                pass
+            def getresponse(self):
+                response=http.client.HTTPResponse(FakeSocket(wire))
+                response.begin()
+                if latency:
+                    time.sleep(latency)
+                return response
+            def close(self):
+                pass
+
+        sender=Sender(end_utc=now_utc()+timedelta(seconds=10),
+                      stop_mono=time.monotonic()+10,
+                      timeout_s=timeout,spacing_s=0.25,
+                      post_factory=RealHTTPResponseConnection)
+        with (patch("socket.create_connection",
+                    side_effect=AssertionError("REAL_TCP_FORBIDDEN")) as tcp,
+              patch("socket.getaddrinfo",
+                    side_effect=AssertionError("REAL_DNS_FORBIDDEN")) as dns):
+            result=sender.send(b"{}")
+            dns.assert_not_called()
+            tcp.assert_not_called()
+        return result
+
+    def test_stdlib_httpresponse_declared_length_truncation_partial_is_failed(self):
+        valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
+        wire=(b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
+              +b"Content-Length: "+str(len(valid)+100).encode()
+              +b"\\r\\nConnection: close\\r\\n\\r\\n"+valid)
+        out=self._run_wire(wire)
+        self.assertEqual(out["state"],"HTTP_TRUNCATED_CONTENT_LENGTH")
+        self.assertEqual(out["raw"],valid)
+        self.assertFalse(out["framing_valid"])
+
+    def test_stdlib_httpresponse_conflicting_duplicate_cl_is_failed(self):
+        valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
+        wire=(b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
+              +b"Content-Length: "+str(len(valid)+100).encode()
+              +b"\\r\\nContent-Length: "+str(len(valid)).encode()
+              +b"\\r\\nConnection: close\\r\\n\\r\\n"+valid)
+        out=self._run_wire(wire)
+        self.assertEqual(out["state"],"HTTP_DUPLICATE_FRAMING_HEADER")
+        self.assertNotEqual(out["state"],"RAW")
+
+    def test_stdlib_chunked_complete_and_truncated(self):
+        valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
+        prefix=b"HTTP/1.1 200 OK\\r\\nTransfer-Encoding: chunked\\r\\nContent-Type: application/json\\r\\nConnection: close\\r\\n\\r\\n"
+        body=("%x"%len(valid)).encode()+b"\\r\\n"+valid+b"\\r\\n"
+        accepted=self._run_wire(prefix+body+b"0\\r\\n\\r\\n")
+        self.assertEqual(accepted["state"],"RAW")
+        self.assertEqual(accepted["raw"],valid)
+        trunc=self._run_wire(prefix+body)
+        self.assertNotEqual(trunc["state"],"RAW")
+        self.assertTrue(trunc["state"].startswith("HTTP_"))
+
+    def test_stdlib_valid_content_length_success(self):
+        valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
+        out=self._run_wire(
+            b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
+            +b"Content-Length: "+str(len(valid)).encode()+b"\\r\\n"
+            +b"Connection: close\\r\\n\\r\\n"+valid)
+        self.assertEqual(out["state"],"RAW")
+        self.assertEqual(out["raw"],valid)
+
+    def test_header_latency_counts_against_one_request_deadline(self):
+        valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
+        wire=(b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
+              +b"Content-Length: "+str(len(valid)).encode()
+              +b"\\r\\nConnection: close\\r\\n\\r\\n"+valid)
+        result=self._run_wire(wire,timeout=0.06,slow_headers=0.0015)
+        self.assertEqual(result["state"],"REQUEST_DEADLINE_EXCEEDED")
+        self.assertNotEqual(result["state"],"RAW")
+
+    def test_slow_stream_elapsed_over_deadline_rejected_even_if_json_valid(self):
+        valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
+        wire=(b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
+              +b"Content-Length: "+str(len(valid)).encode()
+              +b"\\r\\nConnection: close\\r\\n\\r\\n"+valid)
+        result=self._run_wire(wire,timeout=0.06,latency=0.09)
+        self.assertEqual(result["state"],"REQUEST_DEADLINE_EXCEEDED")
+        self.assertNotEqual(result["state"],"RAW")
 
     def test_real_sender_post_clock_denied_after_fake_tls_connection(self):
         calls=[]
