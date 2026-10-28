@@ -25,6 +25,7 @@ import ssl
 import subprocess
 import threading
 import time
+import statistics
 
 from f0_l1_live_short import verify_checkout, timestamp
 from f0_l1_http_wire import ENDPOINT, json_body, parse_http_response, _parse_quantity
@@ -114,7 +115,8 @@ def validate_scope(doc, *, now=None):
 
 def _append(fd, payload):
     b = (json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n").encode()
-    os.write(fd, b)
+    if os.write(fd, b) != len(b):
+        raise OSError("DURABLE_LEDGER_SHORT_WRITE")
     os.fsync(fd)
 
 
@@ -208,6 +210,8 @@ class Capture:
         self.head_samples=[]
         self.latest_head=None
         self.max_inflight=0
+        self.initial_anchor_height=None
+        self.initial_anchor_mono=None
         self.unresolved_heights=[]
         self.stop_reason=None
         self.started_mono=mono()
@@ -306,6 +310,8 @@ class Capture:
                 bhash=hexb(obj["hash"],32)
                 parent=hexb(obj["parentHash"],32)
                 if kind=="ANCHOR":
+                    self.initial_anchor_height=height
+                    self.initial_anchor_mono=self.mono()
                     self.last_contiguous=height
                     self.last_hash=bhash
                     self.next_needed=height+1
@@ -394,6 +400,10 @@ def run_probe(scope, watched, routers, root, *, sender=None, clock=now_utc,
     finally:
         probe.finish()
     response_ms=sorted(probe.block_latency_ms)
+    elapsed=max(0.001,mono()-probe.started_mono)
+    contiguous_added=(probe.last_contiguous-probe.initial_anchor_height
+                      if probe.initial_anchor_height is not None and
+                      probe.last_contiguous is not None else 0)
     def percentile(q):
         if not response_ms:
             return None
@@ -412,6 +422,11 @@ def run_probe(scope, watched, routers, root, *, sender=None, clock=now_utc,
             "source_backlog":None if probe.latest_head is None or
             probe.last_contiguous is None else probe.latest_head-probe.last_contiguous,
             "backlog_delta_same_source":backlog_delta,
+            "head_samples":samples,
+            "elapsed_seconds":round(elapsed,3),
+            "contiguous_full_blocks_post_anchor":contiguous_added,
+            "contiguous_rate_blocks_per_s":round(
+                contiguous_added/max(0.001,elapsed),3),
             "block_response_p50_ms":percentile(0.5),
             "block_response_p95_ms":percentile(0.95),
             "watch_signed_tx_candidates":probe.watch_signed,
@@ -437,6 +452,21 @@ def main():
     doc=validate_scope(json.loads(raw))
     script=Path(__file__).resolve()
     verify_checkout(script,doc)
+    # verify_checkout() was written for the OLD main script and its DEPENDENCIES
+    # list omits that script, which is NOW imported by this new entrypoint.
+    # Verify this imported module and all tracked/untracked worktree paths too.
+    repo=Path(subprocess.run(
+        ["git","-C",str(script.parent),"rev-parse","--show-toplevel"],
+        capture_output=True,text=True,check=True,timeout=5).stdout.strip()).resolve()
+    legacy=script.parent/"f0_l1_live_short.py"
+    rel=legacy.relative_to(repo).as_posix()
+    reviewed=subprocess.run(["git","-C",str(repo),"show","HEAD:"+rel],
+                            capture_output=True,check=True,timeout=5).stdout
+    require(legacy.read_bytes()==reviewed,"ONCE_LEGACY_IMPORT_CHANGED")
+    status=subprocess.run(["git","-C",str(repo),"status","--porcelain",
+                           "--untracked-files=all"],
+                          capture_output=True,text=True,check=True,timeout=5)
+    require(not status.stdout.strip(),"ONCE_DIRTY_CHECKOUT")
     approval=args.review_approval
     require(approval.is_file() and not approval.is_symlink() and
             approval.stat().st_mode & 0o077 == 0 and
