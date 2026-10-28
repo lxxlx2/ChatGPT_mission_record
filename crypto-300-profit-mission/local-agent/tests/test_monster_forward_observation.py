@@ -415,6 +415,16 @@ class BoundedForwardObservationTests(unittest.TestCase):
             self.bounded(clock=Clock(utc_jump_at=9, utc_jump_seconds=4))
         self.assertFalse((self.dir/'manifest.json').exists())
 
+    def test_transport_180_calls_stays_within_subclass_but_not_fourmeme(self):
+        forward = m.ForwardRPC("https://bsc-dataseed.bnbchain.org",
+                               max_requests=m.MAX_BOUNDED_CALLS)
+        self.assertEqual(forward.max_requests, 180)
+        self.assertEqual(forward.calls, 0)
+        self.assertEqual(m.MAX_CALLS, 20)
+        from mission_agent.early.fourmeme_index_source_probe import JsonRPC, ProbeError
+        with self.assertRaisesRegex(ProbeError, "FOURMEME_UNSAFE_REQUEST_BUDGET"):
+            JsonRPC("https://bsc-dataseed.bnbchain.org", max_requests=180)
+
     def test_bounds_reject_unlimited_duration_and_request_budget(self):
         for kw in ({'duration_seconds': 181, 'rpc_budget': 55},
                    {'duration_seconds': 36, 'rpc_budget': 181},
