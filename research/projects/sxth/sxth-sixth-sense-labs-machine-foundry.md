@@ -7,6 +7,50 @@ Action: `WATCH`, `NO_BUY_UNTIL_OFFICIAL_LAUNCH_AND_LIQUIDITY_VERIFIED`.
 Authority: `crypto-300-profit-mission/PROJECT_ANALYSIS_FRAMEWORK.md`, `PROJECT_ANALYSIS_EVIDENCE_WORKFLOW.md`, `token_trading_principles.md`.
 Trading/monitoring: `PRODUCTION_TRADING=NO_GO`; no capital committed or monitoring task created by this note.
 
+## 2026-10-29 direct chain reconstruction: 3 buys in mint slot, A exact full roundtrip, B/C onward wallets
+
+**Research only, no swaps, no alerts, no automation.** Primary source = directly executed Solana mainnet Alchemy read-only RPC `solana_getSignaturesForAddress`, `solana_getTransaction`, `getTokenAccountsByOwner` on 2026-10-29 Asia/Bangkok. Original posted allegations/issuer statements are leads, not deciding evidence. Owner identity remains to be independently proven.
+
+### Proven common-slot bulk buys
+
+Slot `462490424`, timestamp **2026-10-28T13:18:19Z (20:18:19 Asia/Bangkok)** contains the LaunchLab mint creation `sYUJLvHEVQofSBehcUQiYLZA967BLqX8CZbUdCWMACH` in transaction `XSsPNb1TM8J7rEsWgr9ujus6TABVx45UhqaARaN454LWhr9qwM3aJg5qELDGzV9LNYimk1bShPpaeuKWLA2nmXE`, **and three separate successful first buys in THE SAME SLOT**:
+
+| signer / buyer | buy tx | Input quote (WSOL) | Obtained token | slot |
+| --- | --- | ---: | ---: | ---: |
+| `dCyMosm628KwGbBGy8vdwMWiCFEYfjXNAuies9XAnLG` (A) | `tfz5rKQUCJ5Hmny9WwKXVtfCfiR5swvvXHYY9ncTbCLaHYVLDhQ8ehqibMYnX6WUrFNV4TS9fJvrAyzrymeFkBu` | 0.9 SOL | 44,904,660.289745 | 462490424 |
+| `3UA2JLNowMaWvVJDEPaWavmCoNzWAuG9rjosD1MpRkpX` (B) | `3fJUH7DkjjPtVeeKv5snKnc9to3votnaLnLKheGZMfYwTL8uovxqPX2dGdggToYePgtjLTuGqAQfTCpmDskJzz8M` | 3 SOL | 106,095,361.250121 | 462490424 |
+| `FqmQi1RZ9gebJWKzGwMNxS154nJK8NabRz9VmDK7vgrt` (C) | `2UaYfeq99ciiDbPPnZwQ9DCU2ueqNPziamCAR4WwzRYqARY3p7xSd1GgqriRtw68mB8Je3vhsZmwRD3qn3qGqiuH` | 2 SOL | 87,354,113.938068 | 462490424 |
+
+**Total 5.9 SOL exchanged for exactly 238,354,135.477934 tokens (23.8354% of the near-1bn minted supply).** The three txs show LaunchLab call, actual WSOL transfer and sYUJ token receipt, not inferred from KOL chart. This establishes same-slot cohort concentration, NOT independently authenticated Jito Bundle membership or shared owner.
+
+Note B also signed an independent native transfer of 0.01 SOL within that same slot, signature `4pHMV1jWBk9T2J8QYZTZeLQ3wA3ZanJEDYq6RqbT3Ce62VrRoNeobMuBAzdVnbStvmEXcNiqP6dGpPNfuHdecBdk`; **this transaction is NOT B's purchase**, which is the `3fJU...` transaction above. Distinguish those despite same slot.
+
+### A: exact closed roundtrip and realized SOL inflows
+
+A first buy `44,904,660.289745` sYUJ for `0.9` WSOL (additional `0.009` and `0.0009` SOL transfers visible in first transaction as fee-like charges). Five `Raydium CPMM` swap sell instructions returned WSOL to A-owned temporary account, followed by close-account to A:
+- Tx `3C1w8ey4tPXGv5QgpKH7GUDWPbxj8S4GNbr3m1cajHzu5BSW6m78Lt3dSKpg9rXRL16qu8Dxe7bfxw5EUkGzidwk`: 11,226,165.072436 tokens -> 6.401216717 SOL.
+- Tx `2o1SgQ3EqMkLHZMmEc9qTK2ggfhVV8krkVEQ2NjrGtkaJL8QV68cka1wyAWY9eSzoU3x41kas6oNjog2AFPDvC8T`: 6,735,699.043461 -> 5.765064068 SOL.
+- Tx `2e5nWy3JL6EgvPp9jRMXNfUtgvZVqiy8YZfLQNA2DP98ETMr8ywAhG66pcFvbEdgz1jijSkNh4qmsrC8r54kEGSc`: 6,735,699.043461 -> 5.160563020 SOL.
+- Tx `3MhvDg5VDqDrf8oVoYeLUzPUn4sSgPkGTThFFQfW68GAEeNWcETcChEPTmeXt9GNuhzvx6cTqn6XtTYHQoUxXSsr`: 4,041,419.426077 -> 2.844476264 SOL.
+- Tx `gNwNqJnVXcKG28cgdvkdtHxGe7DoZjGfqfMJAL5Gpnf7fHShxFWDECMMUhvzuQvPV28PKCZYkJiSaRyNLAeAn1a`: 16,165,677.704310 -> 3.717325946 SOL.
+
+**Exact sum sold = 44,904,660.289745 = initial buy**, five receipts total **23.888646015 SOL**. Nominal proceeds minus direct 0.9 SOL buy = **+22.988646015 SOL before other explicit taxes/fees**. Selling transactions show fee-like transfers of 1% of gross WSOL receipts; if all apply as observed and initial 0.009+0.0009 fee-like transfers, then provisional **net = 22.739859555 SOL before network fees, priority tips and rent/other wallet activity**. Do not call this finalized comprehensive wallet P&L or assert exact USD $2,300 until all costs and historic SOL/USD conversion are reconciled. **The gross profitable closed trade is independently verified.**
+
+### B/C: onward token custody means zero balances ≠ fully sold
+
+- B bought `106,095,361.250121` sYUJ in slot 462490424. At 2026-10-28T13:18:37Z, tx `2e6KfRWSVjQhckSMNU3sqRGCrGFct5iwhPZJccGEGurbTuGRaFcy9kkCURawqrfWnBBAZp2jqxuAuieD3Htf7VuY` (involving `FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9`) moved **21,230,933.244592 sYUJ** out from B-owned token account and into a newly created token account of **`252GnHQ6av1zzXBDSnBcv6wvyTeFvbGTXmouH6R6ad9L`**, as verified by pre/post TokenBalance. This is **token transfer/custody expansion**, NOT directly realized SOL profit. Separate actual CPMM swaps by B after launch included `5DhdZVu9tBCMTJD2vS98kVXzAfAtY1VwFyR5Cem4BnPGBsRmehJuZ5zdB6Pam9gkYJRq4aACoMXs6Hw9RzcJYJGt` (~4.139m tokens -> 3.0024 SOL) and `5ExEiHU2EMDHzG7jJ9tq83bPhc18BXw7pp7XyXgtix5g7j7teGFKo36oeU1n2vrJjFuy2ZnTQFUaLox8RtKhdVP4` (~4.139m -> 3.2064 SOL), plus other sales. Full B cluster P&L is NOT reconciled.
+- C bought `87,354,113.938068`. At 13:18:26Z tx `5vCuu67eFZcB2JK3YbsteK6aynGwU1jtt81A9cTdQc5dbNocDcVDU3q2jzrq7Y8VZ65GP6kh8pB9VBbKAdUTn766` (FLASHX8) moved **28,508,726.478122** sYUJ to newly created token account owned by **`5G6JZ37esub2xMzPd4dX51e3U21n8vgkYqfp8ZUkG2yG`**, also supported by before/after token balance. Separate real CPMM swap `3hv72MsWLdPcngzbXpFmachwJfYsNpw5foxG4L6C1akJko5EePwhT8h4Eq2K1DsGfVwVjis5ZTsZfC16rcQyggry`: ~5.70m sYUJ -> 5.2925 SOL, plus several other swaps. Need full cluster attribution and realized proceeds for linked wallet and any subsequent transfers.
+- All first-buy cohorts used LaunchLab; subsequent sells often invoke `FLASHX8Dr... ` and `CPMMoo8...`. Shared code path increases **coordination suspicion**, but public use of shared trading tools is not proof of single signing authority.
+- **Do not claim the initial three wallet TokenAccount balances of zero prove B/C fully exited economically**: token holdings were moved into separate token accounts with different owners; trace those recipients and ultimate swaps first. Also cannot claim exact Jito bundle from same-slot timing alone. Jito Explorer original `https://explorer.jito.wtf/bundle/66860b72f77b93f94f8e0e49a8d76dbf71229851a1e4909599e7fff45d3533cb` was still inaccessible with public web tooling; status BUNDLE_NOT_VERIFIED.
+
+### Administrator / platform linkage status remains
+
+Direct earlier read established the **same source wallet paying for mint launch** `7LJoZL5GHDmJoxczmM1P1hzrARCUWa7uyxVT5jBwsd9d` signed Squads v4 ProposalApprove at 15:33:59Z and VaultTransactionExecute at 15:34Z closing a program with onchain memo `Machine Launch: permanently close config and program`, instruction `CloseMachineConfig`, program `MACHX97ggsHjPyrZErp5mGr7uq5jVmqgCnN7Hd2213g`, loader `Closed Program MACHX97...`. This supplies a strong operational connection to a **Machine Launch-branded program**, but no independent corporate ownership identity for Machine.fun or shared Jito-wallet key proof. Issuer denial does not rebut onchain successful transactions.
+
+**Decision:** `THREE_SAME_SLOT_BUYS_CHAIN_VERIFIED / 23_835_PERCENT_SUPPLY_CAPTURED / A_FULL_ROUNDTRIP_22_99_SOL_GROSS_PROFIT_VERIFIED / B_C_SECONDARY_CUSTODY / SQDS_CLOSE_VERIFIED / CONTROLLER_AND_BUNDLE_NOT_VERIFIED / RESEARCH_NO_TRADE`.
+
+---
+
 ## 2026-10-29 chain-first superseding finding: verified Machine Launch program closure
 
 **Supersedes prior statement that issuer "we are not live!" is strong counterevidence.** User insists issuer claims and denials are untrusted. Primary chain transactions, signers, logs and flows govern findings. Direct Solana mainnet read-only Alchemy RPC checks Oct29 2026 Asia/Bangkok.
