@@ -2,6 +2,50 @@
 Updated: 2026-10-28 Asia/Bangkok
 Scope: user requested specific RSGP token chain, launch date, and PM risk/FDV. Existing Mission ICO framework applies; research-only / NO_TRADE / NO_MONITOR.
 
+## 2026-10-28 user-airdrop recovery and direct Base mainnet RPC
+
+**Scope change:** user explicitly clarifies they are an existing Cambria **airdrop beneficiary** deciding if/when to claim after checking value, NOT a prospective public buyer. Supersedes previous report's "opening-buy FDV recommendation" for this user's decision. No trade or claim authorization.
+
+### Personal participation evidence restored
+
+- User's confirmed prior participation from earlier user conversations: **Cambria 1 Epic Loot Chest + 3 Common Loot Chests**, historically earned through the July/Aug 2026 Loot Drop. These are **chest counts, not fungible RSGP amounts**; precise contents cannot be inferred from rarity alone. Prior first-party issuer https://blog.cambria.gg/rsgp-is-coming/ says chest contents revealed at TGE.
+- Separate **Genesis Points Airdrop** possible; no proven historical user points, Genesis opt-in completion, primary Cambria game login/wallet match, exact individual allocation or claimed token count. Mission delivered **reminder** on Sept27, not proof user opted in: `airdrop-tge-monitor/reports/events/2026/2026-09/2026-09-27/121517-cambria-rsgp-genesis-opt-in-recovery.md`; `state/known-events.md` only tracks reminder deduplication.
+- User browser tab https://lobby.cambria.gg/token/ **at this review was displaying Login/signup modal** (not an authenticated personal allocation view). Browser DOM included unusually long opaque fields; NO authentication token contents copied to this report or made public. Do not claim account's eligibility was read. First-party issuer official portal remains correct route for read-only My Cambria Journey after user login.
+- Cambria issuer's `My Cambria Journey` announced Oct25; third-party English report https://www.blockchaingamer.biz/news/43115/cambria-rsgp-29-october-2026-tge/ says points/chests/NFTs visible now; https://airdrops.io/cambria/ claims RSGP allocation checker activates on **Oct29**. This website distinguishes Oct29 *allocation reveal* from still-unannounced TGE, while Aero first-party-related and gaming press reports Oct29 actual Base launch. **Treat allocation reveal and tradable launch as separate events pending actual issuer/venue execution**; do not claim an unlocked amount exists today. Official July Loot Drop chest-claim window (~14d) was separate and already elapsed in August; previously claimed chests would be *redeemed/revealed*, not re-farmed via a new chest qualification.
+
+### Live direct onchain verification
+
+**Source:** 2026-10-28 around 12:15+ Asia/Bangkok, authenticated existing read-only Alchemy **Base mainnet** `eth_getCode`, `alchemy_getTokenMetadata`, `eth_call` totalSupply, `alchemy_getAssetTransfers`, transaction receipts, `getTokenBalances`. Blockscout tool was attempted and returned 402 credits exhausted; its output NOT counted as chain evidence.
+
+- Official first-party source https://lobby.cambria.gg/genesis/ identifies ERC20 Base `0x44B63aF715D5ef02CC3646a6CE96875e11d69E85`. **eth_getCode=nonempty; metadata `name:Cambria`, `symbol:RSGP`, `decimals:18`.**
+- Current `totalSupply()` **262,500,000.000000000000000000 RSGP** from raw `0x000000000000000000000000000000000000000000d92289838d21a996800000` (18 decimals). This is **CURRENT MINTED SUPPLY, NOT VERIFIED FULLY DILUTED MAX SUPPLY OR CIRCULATING TRADE FLOAT**. Other community presale calculators use **5bn** hypothetical target max supply, NOT issuer-verified final onchain cap. No confidence to divide PM FDV by 262.5m.
+- Exact mint **1 RSGP** tx https://basescan.org/tx/0xc78ac6f58b115820ee3e6efdae3a2303bde9ec62e10e8fe107ea90de25ecb3dc timestamp **2026-10-11 04:32:29 UTC**, **225,000,000 RSGP** https://basescan.org/tx/0x0eef95705ef1bb89b3a0c96f2fa9de3ad8f06551c6e5587f19477894e80563cf and **37,500,000 RSGP** https://basescan.org/tx/0x2067f88a5520c2ba130c3911d1b1ac01caf1cb3f0a65c798768362d30619af37 timestamp **2026-10-27 02:37:17 UTC**. Accounts show a 1-token test followed by aggregate 262.5m bulk issuance (the test 1 is included within aggregate and may affect exact post-burn accounting). Do not mis-add test to current totalSupply.
+- Mint receiver `0x1ae605b51bb36be453de15cad9a63ebd2cf8ac82` currently holds **0 RSGP**; traced outbound transfers and verified current balances of 8 receiving addresses:
+  | Address | Approx current RSGP | Code type |
+  | --- | ---: | --- |
+  | `0x80f7153d9bc853a9bf8bc21f2517c0acee2fdf75` | 7,500,000 | CONTRACT |
+  | `0x4ad4efa871b9a9d943cd69fd779c4d0230eb021f` | 30,000,000 | CONTRACT |
+  | `0x2064a9264e8697a2b3fa34286ada730d6d3fecf3` | 25,000,000 | EOA |
+  | `0xd1cb2bfc3d491413a1efa24bde41654a19ac77bb` | 50,000,000 | EOA |
+  | `0x0bbade90d98f89283447f3ccd809f8f158840609` | 48,756,521 | EOA |
+  | `0xd7dc7483288c753bd3d19f2df948cfbc2ad7ffa5` | 7,426,183 | EOA |
+  | `0x89779ca04ce1b778779da7958a3efcfe98090f50` | 43,817,296 | EOA |
+  | `0x6f12ae1895c92b318febeaaba89d887c81dd5c00` | 50,000,000 | EOA |
+  **Sum = 262.5m** modulo 1-wei dust. These are **8 traceable current balance addresses covering minted supply**, not proof all belong to same party, permanently locked, or 8 independent humans. Vesting nature and signatures of two contract addresses remain **UNVERIFIED**. No evidence of broad public distribution in inspected movement; actual future claim contract not identified.
+- Existing user's previously documented EVM account `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c` queried via token balance: **0 RSGP as of read**. This is **NOT proof no airdrop**: Cambria might use a different linked account/wallet, TGE/claim isn't finished, or tokens are not transferred to wallet yet. No user wallet signature performed.
+- Alchemy current price-by-contract query returned `Price not found`; no verified RSGP Base secondary market sale/spot price or LP depth. We explicitly do **NOT** use unrelated ticker RSGP on Solana/Robinhood (OSRS Gold).
+- Mint transactions interacted through `0x16e577f1724ae2598f9b43a52c19e6f67ee13808` and contract includes `MINTER_ROLE` accessor. Does not prove whether further mint ability is restricted. Review full deployed source, cap and role admins before determining fully diluted supply and future issuance risk.
+
+### Claim-side investment value and next decision gate
+
+- Coin valuation: **net extractable airdrop = actual RSGP claimable tokens × actual executable selling price – gas – transaction/service costs – realized slippage**. Need first-party wallet-authenticated allocation and separate Loot / Genesis amounts.
+- **Illustration ONLY** based on third-party nonauthoritative `https://cambria-calculator.vercel.app/` using **5,000,000,000 fully diluted tokens**: at $20m/$30m/$50m FDV, theoretical price **$0.004/$0.006/$0.010**. E.g., 10,000 tokens = $40/$60/$100 not executable expected payoff; 1,000 tokens = $4/$6/$10; 100,000 tokens = $400/$600/$1000. **Do not claim 5bn full supply issuer verified, true expected reward, or current market price.**
+- When official portal reveals the claim amount, read exact claimant wallet, claim route/expiration, any claim fee/gas and token vesting, confirm actual Aero pool and executable sell quote for the real size. Avoid selling or claiming before user-specific instruction. If truly free/small Base gas and tokens are valid, rational claim decision depends on deadlines and net tradeable value; never suggest paying an arbitrary "unlock fee" to a third party.
+- Mandatory PM already documented in this file: Polymarket https://polymarket.com/event/cambria-fdv-above-one-day-after-launch ; Predict.fun https://predict.fun/market/cambria-fdv-above-one-day-after-launch, with quotes only **stale index snapshots**; not a live spot price or proof of user allocation.
+- State: `CLAIM_QUANTITY_UNKNOWN / ACCOUNT_NOT_AUTHENTICATED / BASE_CONTRACT_DEPLOYED / CURRENT_MINT_262_5M / EIGHT_BALANCES_VERIFIED / 0_RSGP_KNOWN_MAIN_WALLET / SPOT_PRICE_UNKNOWN / NO_CLAIM / NO_TRADE`. No monitor/schedule modifications or new tasks created.
+
+---
+
 ## Quick answer
 
 - **Base mainnet chain ID 8453**, not Solana. In the screenshot of original Aero (@aeroxyz) token-launch X repost by Aero Chinese and separately readable BEN.ZZZ founder repost (https://teapawt.net/cyberpunk), Aero says `RSGP is set to launch on Oct 29 at 11 AM EST`; Aero TGE incentives already scheduled to stream, and **sAERO holders** can allocate to pool to share incentives. External blockchain-focused Oct26 2026 report https://www.blockchaingamer.biz/news/43115/cambria-rsgp-29-october-2026-tge/ confirms Base and date; Oct12 https://www.blockchaingamer.biz/amp/news/43054/cambria-rsgp-token-launching-base/ confirms founder Base announcement. Pool pair RSGP/USDC mentioned in user's secondary X screenshot; pool ID, live reserve, real price and executable opening timestamp **NOT CHAIN VERIFIED**.
