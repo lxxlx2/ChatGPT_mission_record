@@ -592,6 +592,110 @@ class BoundedForwardObservationTests(unittest.TestCase):
         self.assertFalse((self.dir/'manifest.json').exists())
         self.assertTrue((self.dir/'failure.json').exists())
 
+
+    def _run_rejected_http_batch(self, body, *, declared_length=None,
+                                 chunked=False, endpoint="https://bsc-dataseed.bnbchain.org"):
+        """Offline real ForwardRPC HTTP-validation through a fake opener."""
+        class Response:
+            status = 200
+            def __init__(self):
+                self.headers = Message()
+                if declared_length is not None:
+                    self.headers['Content-Length'] = str(declared_length)
+                elif not chunked:
+                    self.headers['Content-Length'] = str(len(body))
+                if chunked:
+                    self.headers['Transfer-Encoding'] = 'chunked'
+            def __enter__(self): return self
+            def __exit__(self, *args): return False
+            def read(self, limit): return body[:limit]
+
+        class Opener:
+            def open(self, req, timeout):
+                return Response()
+
+        class RPC(FakeRPC):
+            def __init__(self):
+                super().__init__(second_height=103)
+                self.url = endpoint
+                self.forward = m.ForwardRPC(
+                    endpoint, min_interval=0, max_requests=180, opener=Opener())
+
+            def request_batch(self, jobs):
+                self.forward.calls = len(self.calls)
+                self.calls.extend(jobs)
+                return self.forward.request_batch(jobs)
+
+        rpc = RPC()
+        with self.assertRaises(m.ForwardProbeError) as caught:
+            self.bounded(rpc=rpc)
+        self.assertFalse((self.dir/'manifest.json').exists())
+        self.assertTrue((self.dir/'failure.json').exists())
+        return caught.exception, json.loads((self.dir/'failure.json').read_text())
+
+    def test_rejected_batch_transport_bytes_and_sha_are_private(self):
+        cases = (
+            (b'[{"jsonrpc":"2.0","id":12,"result":', None, False,
+             'BATCH_INVALID_JSON'),
+            (b'{"jsonrpc":"2.0","id":12,"error":{"code":-32000}}',
+             None, False, 'BATCH_WRONG_RESPONSE_COUNT'),
+            (b'[]', 25, False, 'BATCH_HTTP_BODY_TRUNCATED'),
+            (b'[' + b'x' * m.MAX_RESPONSE_BYTES, None, False,
+             'BATCH_RESPONSE_TOO_LARGE'),
+            (b'{"jsonrpc":', None, True, 'BATCH_INVALID_JSON'),
+            (b'[]', 'nonsense', False, 'BATCH_HTTP_FRAMING_INVALID'),
+        )
+        for i, (raw, declared, chunked, expected) in enumerate(cases):
+            with self.subTest(case=i):
+                self.dir = Path(self.tmp.name) / ('bad-batch-' + str(i))
+                _, failure = self._run_rejected_http_batch(
+                    raw, declared_length=declared, chunked=chunked)
+                self.assertEqual(failure['reason'], expected)
+                receipt = failure['rejected_response']
+                self.assertEqual(receipt['privacy'], 'PRIVATE_RAW_SAVED')
+                self.assertTrue(receipt['raw_file'].startswith('rejected-batch-'))
+                saved = self.dir / receipt['raw_file']
+                self.assertEqual(saved.read_bytes(), raw[:m.MAX_RESPONSE_BYTES])
+                self.assertEqual(saved.stat().st_mode & 0o777, 0o600)
+                self.assertEqual(receipt['raw_sha256'],
+                                 hashlib.sha256(saved.read_bytes()).hexdigest())
+                self.assertEqual(receipt['capture_truncated'],
+                                 len(raw) > m.MAX_RESPONSE_BYTES)
+                self.assertEqual(failure['rpc_attempt_count'],
+                                 len(failure['completed_rpc_responses']) + 3)
+
+    def test_rejected_batch_secret_echo_hash_only_without_raw(self):
+        secret = 'SECRET_WITHHOLD_FORENSIC_TEST_123456'
+        endpoint = 'https://bsc-dataseed.bnbchain.org/?key=' + secret
+        raw = ('{"jsonrpc":"2.0","id":12,"note":"' + secret + '"}').encode()
+        _, failure = self._run_rejected_http_batch(raw, endpoint=endpoint)
+        self.assertEqual(failure['reason'], 'RPC_SECRET_ECHO_REJECTED')
+        receipt = failure['rejected_response']
+        self.assertEqual(receipt['privacy'], 'SECRET_WITHHELD_HASH_ONLY')
+        self.assertIsNone(receipt['raw_file'])
+        self.assertEqual(receipt['raw_sha256'], hashlib.sha256(raw).hexdigest())
+        self.assertEqual(list(self.dir.glob('rejected-*')), [])
+        self.assertNotIn(secret, (self.dir/'failure.json').read_text())
+
+    def test_bounded_batch_verification_failure_archives_exact_raw(self):
+        class MutatedRPC(FakeRPC):
+            def request_batch(self, jobs):
+                values, raw = super().request_batch(jobs)
+                children = json.loads(raw)
+                children[0]['result']['hash'] = '0x' + '8' * 64
+                return values, json.dumps(children).encode()
+
+        rpc = MutatedRPC(second_height=103)
+        with self.assertRaisesRegex(
+                m.ForwardProbeError, 'BATCH_RESULT_NOT_VERIFIED'):
+            self.bounded(rpc=rpc)
+        failure = json.loads((self.dir/'failure.json').read_text())
+        receipt = failure['rejected_response']
+        self.assertEqual(receipt['privacy'], 'PRIVATE_RAW_SAVED')
+        raw = (self.dir/receipt['raw_file']).read_bytes()
+        self.assertEqual(receipt['raw_sha256'], hashlib.sha256(raw).hexdigest())
+        self.assertEqual(json.loads(raw)[0]['result']['hash'], '0x' + '8' * 64)
+
     def test_legacy_twelve_second_poll_rejected_as_unsafe(self):
         rpc = FakeRPC()
         with self.assertRaisesRegex(m.ForwardProbeError,

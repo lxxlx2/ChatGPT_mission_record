@@ -156,6 +156,7 @@ class ForwardRPC(JsonRPC):
 
         previous = signal.signal(signal.SIGALRM, expired)
         signal.setitimer(signal.ITIMER_REAL, REQUEST_TIMEOUT_SECONDS)
+        raw = None
         try:
             delay = self.min_interval - (time.monotonic() - self.last)
             if delay > 0:
@@ -175,25 +176,20 @@ class ForwardRPC(JsonRPC):
                 if response.status != 200:
                     raise ForwardProbeError("BATCH_HTTP_STATUS_NOT_200")
                 lengths = response.headers.get_all("Content-Length", [])
-                if (len(lengths) > 1 or
-                        (lengths and not lengths[0].isdigit()) or
-                        (lengths and int(lengths[0]) > MAX_RESPONSE_BYTES) or
-                        (lengths and response.headers.get("Transfer-Encoding"))):
-                    raise ForwardProbeError("BATCH_HTTP_FRAMING_INVALID")
+                invalid_framing = (
+                    len(lengths) > 1 or
+                    (lengths and not lengths[0].isdigit()) or
+                    (lengths and int(lengths[0]) > MAX_RESPONSE_BYTES) or
+                    (lengths and response.headers.get("Transfer-Encoding")))
                 raw = response.read(MAX_RESPONSE_BYTES + 1)
+                if invalid_framing:
+                    raise ForwardProbeError("BATCH_HTTP_FRAMING_INVALID")
                 if lengths and len(raw) != int(lengths[0]):
                     raise ForwardProbeError("BATCH_HTTP_BODY_TRUNCATED")
             if len(raw) > MAX_RESPONSE_BYTES:
                 raise ForwardProbeError("BATCH_RESPONSE_TOO_LARGE")
             parsed = json.loads(raw)
-            endpoint = urllib.parse.urlsplit(self.url)
-            markers = [self.url, urllib.parse.unquote(self.url)]
-            markers += [v for _, v in urllib.parse.parse_qsl(endpoint.query) if v]
-            markers += [urllib.parse.unquote(v) for v in endpoint.path.split("/")
-                        if v and v.lower() not in
-                        ("v1", "v2", "v3", "rpc", "bsc", "mainnet")]
-            decoded = json.dumps(parsed, ensure_ascii=False)
-            if any(v in decoded or v.encode() in raw for v in markers):
+            if _rpc_response_echoes_secret(self.url, raw):
                 raise ForwardProbeError("RPC_SECRET_ECHO_REJECTED")
             if not isinstance(parsed, list) or len(parsed) != len(jobs):
                 raise ForwardProbeError("BATCH_WRONG_RESPONSE_COUNT")
@@ -210,17 +206,53 @@ class ForwardRPC(JsonRPC):
                 first_id, first_id+len(jobs))], raw
         except urllib.error.HTTPError as exc:
             status = int(exc.code)
-            exc.close()
-            raise ForwardProbeError("RPC_HTTP_" + str(status)) from None
+            try:
+                raw = exc.read(MAX_RESPONSE_BYTES + 1)
+            except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException):
+                raw = None
+            finally:
+                exc.close()
+            error = ForwardProbeError("RPC_HTTP_" + str(status))
+            if isinstance(raw, bytes):
+                error.rejected_raw = raw
+                error.rejected_secret = _rpc_response_echoes_secret(self.url, raw)
+            raise error from None
         except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException):
             raise ForwardProbeError("RPC_NETWORK_UNAVAILABLE") from None
-        except (ValueError, UnicodeDecodeError) as exc:
-            if isinstance(exc, ForwardProbeError):
-                raise
-            raise ForwardProbeError("BATCH_INVALID_JSON") from None
+        except ForwardProbeError as exc:
+            if isinstance(raw, bytes):
+                exc.rejected_raw = raw
+                exc.rejected_secret = _rpc_response_echoes_secret(self.url, raw)
+            raise
+        except (ValueError, UnicodeDecodeError):
+            error = ForwardProbeError("BATCH_INVALID_JSON")
+            if isinstance(raw, bytes):
+                error.rejected_raw = raw
+                error.rejected_secret = _rpc_response_echoes_secret(self.url, raw)
+            raise error from None
         finally:
             signal.setitimer(signal.ITIMER_REAL, 0)
             signal.signal(signal.SIGALRM, previous)
+
+
+
+def _rpc_response_echoes_secret(endpoint, raw):
+    """Conservatively suppress private rejected bodies echoing endpoint secrets."""
+    if not isinstance(endpoint, str) or not isinstance(raw, bytes):
+        return False
+    url = urllib.parse.urlsplit(endpoint)
+    markers = [endpoint, urllib.parse.unquote(endpoint)]
+    markers.extend(v for _, v in urllib.parse.parse_qsl(url.query) if v)
+    markers.extend(urllib.parse.unquote(v) for v in url.path.split("/")
+                   if v and v.lower() not in
+                   ("v1", "v2", "v3", "rpc", "bsc", "mainnet"))
+    decoded = raw.decode("utf-8", errors="replace")
+    try:
+        decoded += json.dumps(json.loads(raw), ensure_ascii=False)
+    except (ValueError, UnicodeDecodeError):
+        pass
+    return any(value and (value in decoded or value.encode() in raw)
+               for value in markers)
 
 
 def _write_private(path, raw):
@@ -475,6 +507,7 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
     end_mono = start_mono + duration_seconds * 1_000_000_000
     calls, snapshots, intervals, new_pairs = [], [], [], []
     attempted = 0
+    pending_batch_raw = None
 
     def checkpoint():
         nonlocal last_clock, last_mono
@@ -527,7 +560,7 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
 
     def ask_batch_header(heights):
         """All per-child metadata point to one saved exact HTTP response body."""
-        nonlocal attempted
+        nonlocal attempted, pending_batch_raw
         if (not isinstance(heights, list) or not heights or
                 len(heights) > MAX_BATCH_HEADERS or
                 len(set(heights)) != len(heights)):
@@ -542,7 +575,9 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
             raise ForwardProbeError("BOUNDED_GLOBAL_DEADLINE_EXCEEDED")
         # The total subrequest count, not the HTTP call count, owns the quota.
         attempted += len(jobs)
+        pending_batch_raw = None
         values, raw = rpc.request_batch(jobs)
+        pending_batch_raw = raw
         recv, m_end = checkpoint()
         if type(raw) is not bytes or len(raw) > MAX_RESPONSE_BYTES:
             raise ForwardProbeError("ORIGINAL_RPC_BYTES_INVALID")
@@ -582,6 +617,7 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
                    "response_completed_monotonic_offset_ns": m_end-start_mono}
             calls.append(row)
             receipt_rows.append(row)
+        pending_batch_raw = None
         return values, receipt_rows
 
     def pinned_snapshot():
@@ -738,11 +774,31 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
         return result
     except Exception as exc:
         code = str(exc) if isinstance(exc, ForwardProbeError) else type(exc).__name__
+        failure = {"status": "UNUSABLE_NOT_PIT_EVIDENCE", "reason": code,
+                   "rpc_attempt_count": attempted,
+                   "completed_rpc_responses": calls}
+        rejected = getattr(exc, "rejected_raw", None)
+        if rejected is None:
+            rejected = pending_batch_raw
+        if isinstance(rejected, bytes):
+            captured = rejected[:MAX_RESPONSE_BYTES]
+            secret = (getattr(exc, "rejected_secret", False) or
+                      _rpc_response_echoes_secret(getattr(rpc, "url", None), captured))
+            receipt = {
+                "raw_sha256": hashlib.sha256(captured).hexdigest(),
+                "raw_bytes": len(captured),
+                "response_body_bytes_observed": len(rejected),
+                "capture_truncated": len(rejected) > MAX_RESPONSE_BYTES,
+                "raw_file": None,
+                "privacy": "SECRET_WITHHELD_HASH_ONLY" if secret else "PRIVATE_RAW_SAVED",
+            }
+            if not secret:
+                filename = f"rejected-batch-{attempted:03d}.bin"
+                _write_private(directory/filename, captured)
+                receipt["raw_file"] = filename
+            failure["rejected_response"] = receipt
         _write_private(directory/"failure.json",
-                       (json.dumps({"status": "UNUSABLE_NOT_PIT_EVIDENCE", "reason": code,
-                                    "rpc_attempt_count": attempted,
-                                    "completed_rpc_responses": calls},
-                                   indent=2, sort_keys=True)+"\n").encode())
+                       (json.dumps(failure, indent=2, sort_keys=True)+"\n").encode())
         raise
 
 
