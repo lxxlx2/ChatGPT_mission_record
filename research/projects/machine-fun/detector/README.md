@@ -93,3 +93,33 @@ bash run_machine_fun.sh run --notify-local
 - https://www.alchemy.com/docs/reference/solana-subscription-api-endpoints
 - https://www.alchemy.com/docs/reference/logs-subscribe
 - https://developers.google.com/workspace/gmail/api/guides/sending
+
+## 2026-10-29：独立 LaunchAgent 后台服务（用户明确授权）
+
+**该版本新增 `install_machine_fun_background.sh`、`machine_fun_service.py` 与 `test_machine_fun_service.py`，不需要把终端留开。** macOS LaunchAgent 是用户登录后运行的后台进程，而不是系统级常驻守护程序；Mac 关机、睡眠、退出登录时无法持续收集链上新币。无云端监控或保证 24/7 全覆盖。
+
+安装器明确顺序：只读 `check` 旧 Alchemy/Gmail → 独立虚拟环境 → 所有 35 项合成及 loopback 本地测试 → `py_compile` → 只读 RPC getHealth、Gmail profile 和 Sent 权限 `probe`（**不发邮件**）→ 创建仅属 Machine.fun 的 LaunchAgent 并加载。任一门禁失败，**不会安装后台任务**。不能把合成测试视为真实 Solana 链或 Gmail Sent 的验收结果。
+
+从独立项目的 `detector/` 目录运行一次：
+
+~~~sh
+bash install_machine_fun_background.sh
+~~~
+
+安装成功后有独立标识 `com.<macOS username>.machine-fun-first-launch`，路径 `~/Library/LaunchAgents/com.<username>.machine-fun-first-launch.plist`，配置 `RunAtLoad=true`、`KeepAlive={SuccessfulExit:false}`、`ThrottleInterval=120`、`Umask=077`，默认只发 **Gmail 事件提醒**，无需 macOS 图形通知权限。launchctl 启动日志单独写入 `~/.local/state/machine-fun/service.stdout.log` 和 `service.stderr.log`。配置不保存 API Key 或 OAuth，只有程序读取现有 Frank 本地源文件，SQLite 同样独立于 Frank。卸载保留本地 DB 以防重装后历史事件重复推送。
+
+管理命令：
+
+~~~sh
+python3 machine_fun_service.py status
+python3 machine_fun_service.py logs
+python3 machine_fun_service.py uninstall
+~~~
+
+- `status` 只读取自己的 launchd service label，显示 PID / state 等（如果 launchd 未加载则报告）。
+- `logs` 读取独立日志尾部，不触碰 Frank。
+- `uninstall` 只对精确匹配本模块 Label 的 plist 执行 bootout 并删除；若 bootout 失败且服务仍存在，则拒绝假装卸载成功。**不删除任何 Frank 数据、LaunchAgent、源码或凭据。**
+
+当前交付限于代码与测试，**尚未在用户 Mac 上实际执行安装或真实邮件送达验证**。它只覆盖已知平台配置 `3hVbfgB77tL1qDKhtMQoe4Gv7qPN2dGmKpD2KxWP2sPb`，不保证 Machine.fun 以后不会换配置；真实新币首先以 `CHAIN_PLATFORM_CANDIDATE_UNENDORSED` 发送，不冒充官方认证首发，不进行交易。
+
+背景依据：Apple LaunchAgents official documentation https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html 及 Alchemy streaming WS https://www.alchemy.com/docs/reference/solana-subscription-api-endpoints。
