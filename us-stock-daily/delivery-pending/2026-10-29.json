@@ -640,7 +640,9 @@
       "source_url": "https://www.bea.gov/news/schedule",
       "source": "BEA",
       "novelty_status": "ROUTINE_DATED_FACT",
-      "calendar_date": "2026-10-29"
+      "calendar_date": "2026-10-29",
+      "source_published_at_status": "NOT_VERIFIED",
+      "published_at_basis": "calendar_event_date"
     },
     {
       "event_key": "stock_20261029_s9_i2",
@@ -648,13 +650,14 @@
       "material_version": "2026-10-29:calendar",
       "kind": "CALENDAR",
       "primary_section": 9,
-      "first_published_at": "2026-10-28",
-      "published_at": "2026-10-29",
+      "first_published_at": "2026-10-15",
+      "published_at": "2026-10-15",
       "observed_at": "2026-10-29T05:42:04+07:00",
       "source_url": "https://investor.lilly.com/news-releases/news-release-details/lilly-confirms-date-and-conference-call-third-quarter-2026",
       "source": "LLY",
       "novelty_status": "ROUTINE_DATED_FACT",
-      "calendar_date": "2026-10-29"
+      "calendar_date": "2026-10-29",
+      "source_published_at_status": "VERIFIED"
     },
     {
       "event_key": "stock_20261029_s9_i3",
@@ -662,13 +665,14 @@
       "material_version": "2026-10-29:calendar",
       "kind": "CALENDAR",
       "primary_section": 9,
-      "first_published_at": "2026-10-28",
-      "published_at": "2026-10-29",
+      "first_published_at": "2026-10-15",
+      "published_at": "2026-10-15",
       "observed_at": "2026-10-29T05:42:04+07:00",
       "source_url": "https://www.businesswire.com/news/home/20261015676873/en/Amazon.com-to-Webcast-Third-Quarter-2026-Financial-Results-Conference-Call",
       "source": "AMZN",
       "novelty_status": "ROUTINE_DATED_FACT",
-      "calendar_date": "2026-10-29"
+      "calendar_date": "2026-10-29",
+      "source_published_at_status": "VERIFIED"
     },
     {
       "event_key": "stock_20261029_s9_i4",
@@ -682,7 +686,9 @@
       "source_url": "https://www.federalreserve.gov/newsevents.htm",
       "source": "FEDCAL",
       "novelty_status": "ROUTINE_DATED_FACT",
-      "calendar_date": "2026-10-30"
+      "calendar_date": "2026-10-30",
+      "source_published_at_status": "NOT_VERIFIED",
+      "published_at_basis": "calendar_event_date"
     },
     {
       "event_key": "stock_20261029_s10_i1",
