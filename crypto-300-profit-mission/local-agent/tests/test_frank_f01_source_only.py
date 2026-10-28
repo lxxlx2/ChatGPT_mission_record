@@ -152,6 +152,36 @@ class F01SourceOnlyTests(unittest.TestCase):
             _ for _ in ()).throw(ValueError("secret-rpc-query-api-key"))
         self.assertEqual(handler.do_POST(), ({"error":"INVALID_CLUSTER_REQUEST"},400))
 
+    def test_source_api_never_serializes_stale_execution_quote_or_amount_metrics(self):
+        from json import dumps
+        input_row = candidate(
+            metrics={"execution_price_usdc":"3.45", "price_impact_pct":"1.5",
+                     "user_trade_amount_usdc":"custom_amount_should_not_leak"},
+            decision_quote={"status":"OK", "execution_price_usdc":"3.45",
+                            "route_exists":True, "internal_amount":"stale"},
+            user_trade_amount_usdc="fake_runtime_amount",
+            latest_buy_original_quote_asset="USDC",
+            latest_buy_original_quote_quantity="5000",
+            latest_buy_price_usdc="0.002"
+        )
+        for result_row in (
+            self.view([input_row])["source_recent"][0],
+            self.view([dict(input_row, latest_at=NOW-700,
+                latest_buy_at=NOW-700)])["not_followed"][0]
+        ):
+            output = dumps(result_row, sort_keys=True)
+            self.assertNotIn("decision_quote", output)
+            self.assertNotIn("metrics", output)
+            self.assertNotIn("execution_price_usdc", output)
+            self.assertNotIn("price_impact_pct", output)
+            self.assertNotIn("user_trade_amount_usdc", output)
+            self.assertNotIn("fake_runtime_amount", output)
+            self.assertNotIn("custom_amount_should_not_leak", output)
+            self.assertEqual(result_row["latest_buy_original_quote_quantity"],"5000")
+            self.assertEqual(result_row["latest_buy_price_usdc"],"0.002")
+            self.assertEqual(result_row["decision"],"NO_BUY")
+        self.assertEqual(self.view([input_row])["eligible_count"],0)
+
     def test_source_only_contract_not_executable_at_any_amount(self):
         for decision in ("BUY", "SMALL_BUY", "WAIT", "NO_BUY", "UNASSESSED"):
             with self.subTest(decision=decision):
