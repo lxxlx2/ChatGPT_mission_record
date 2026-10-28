@@ -149,11 +149,19 @@ class Sender:
         conn = None
         started = None
         start_ns = time.monotonic_ns()
+        tls_connect_ms = None
+        pacing_wait_ms = None
+        full_attempt_ms = None
+        connected_ns = None
         try:
             ctor = self._test_connection_factory or http.client.HTTPSConnection
             conn = ctor(HOST, port=443, timeout=self.timeout_s,
                         context=ssl.create_default_context())
+            tls_start_ns = time.monotonic_ns()
             conn.connect()
+            connected_ns = time.monotonic_ns()
+            # Strictly the conn.connect() call, excluding constructor/setup.
+            tls_connect_ms = round((connected_ns-tls_start_ns)/1e6,3)
             with self.lock:
                 if self.last_start is not None:
                     delay = self.spacing_s - (time.monotonic()-self.last_start)
@@ -164,6 +172,8 @@ class Sender:
                             "post_ns":None,"end_ns":time.monotonic_ns()}
                 self.last_start = time.monotonic()
                 started = time.monotonic_ns()
+                # Includes acquiring the global POST lock and pacing sleep.
+                pacing_wait_ms = round((started-connected_ns)/1e6,3)
                 conn.request("POST", "/", body=encoded, headers={
                     "Host":HOST, "Content-Type":"application/json",
                     "Accept":"application/json", "Accept-Encoding":"identity",
@@ -174,14 +184,27 @@ class Sender:
                 return {"state":"HEADERS_OVERSIZE","raw":None,
                         "post_ns":started,"end_ns":time.monotonic_ns()}
             body = response.read(self.response_cap+1)
+            end_ns = time.monotonic_ns()
+            # One complete attempt: constructor + TLS + lock/pacing + HTTP
+            # POST-to-body-read; not only remote server processing time.
             return {"state":"RAW", "status":response.status,
                     "headers":dict(headers), "raw":body,
-                    "post_ns":started, "end_ns":time.monotonic_ns(),
-                    "connect_ms":round((started-start_ns)/1e6,3)}
+                    "post_ns":started, "end_ns":end_ns,
+                    "tls_connect_ms":tls_connect_ms,
+                    "pacing_wait_ms":pacing_wait_ms,
+                    "post_to_response_ms":round((end_ns-started)/1e6,3),
+                    "full_attempt_ms":round((end_ns-start_ns)/1e6,3)}
         except (OSError, TimeoutError, ValueError, ssl.SSLError) as exc:
+            end_ns = time.monotonic_ns()
             return {"state":"NETWORK_OR_SOURCE_ERROR",
                     "class":type(exc).__name__, "raw":None,
-                    "post_ns":started,"end_ns":time.monotonic_ns()}
+                    "post_ns":started,"end_ns":end_ns,
+                    "tls_connect_ms":tls_connect_ms,
+                    "pacing_wait_ms":pacing_wait_ms,
+                    "post_to_response_ms":(
+                        round((end_ns-started)/1e6,3)
+                        if started is not None else None),
+                    "full_attempt_ms":round((end_ns-start_ns)/1e6,3)}
         finally:
             if conn is not None:
                 conn.close()
@@ -204,7 +227,9 @@ class Capture:
         self.raw_bytes=0
         self.pending={}
         self.replies={}
-        self.block_latency_ms=[]
+        self.block_timings={k:[] for k in (
+            "tls_connect", "pacing_wait", "post_to_response",
+            "full_attempt")}
         self.watch_signed=0
         self.router_candidates=0
         self.last_contiguous=None
@@ -279,7 +304,11 @@ class Capture:
                    "post_monotonic_ns":transport.get("post_ns"),
                    "complete_monotonic_ns":transport.get("end_ns"),
                    "response_sha256":fingerprint(raw) if type(raw) is bytes else None,
-                   "raw_file":rawpath})
+                   "raw_file":rawpath,
+                   "tls_connect_ms":transport.get("tls_connect_ms"),
+                   "pacing_wait_ms":transport.get("pacing_wait_ms"),
+                   "post_to_response_ms":transport.get("post_to_response_ms"),
+                   "full_attempt_ms":transport.get("full_attempt_ms")})
             rows.append((kind,height,result,failure,transport))
         return rows
 
@@ -331,7 +360,15 @@ class Capture:
                     post=transport.get("post_ns")
                     end=transport.get("end_ns")
                     if post is not None and end is not None:
-                        self.block_latency_ms.append((end-post)/1e6)
+                        value=transport.get("post_to_response_ms")
+                        if value is None:
+                            # Older injected test sources only have POST/end.
+                            value=round((end-post)/1e6,3)
+                        self.block_timings["post_to_response"].append(value)
+                    for key in ("tls_connect","pacing_wait","full_attempt"):
+                        value=transport.get(key+"_ms")
+                        if type(value) in (int,float) and value >= 0:
+                            self.block_timings[key].append(value)
                     while self.next_needed in self.replies:
                         chash,cparent,watch_count,control_count=(
                             self.replies.pop(self.next_needed))
@@ -410,16 +447,23 @@ def run_probe(scope, watched, routers, root, *, sender=None, clock=now_utc,
             probe.stop_reason=probe.stop_reason or "FIVE_MINUTE_WINDOW_DONE"
     finally:
         probe.finish()
-    response_ms=sorted(probe.block_latency_ms)
     elapsed=max(0.001,mono()-probe.started_mono)
     contiguous_added=(probe.last_contiguous-probe.initial_anchor_height
                       if probe.initial_anchor_height is not None and
                       probe.last_contiguous is not None else 0)
-    def percentile(q):
-        if not response_ms:
+    def percentile(values, q):
+        if not values:
             return None
-        return round(response_ms[min(len(response_ms)-1,
-                          int((len(response_ms)-1)*q))],2)
+        ordered=sorted(values)
+        return round(ordered[min(len(ordered)-1,
+                       int((len(ordered)-1)*q))],2)
+    # These are successful, parent-linked eligible block responses only;
+    # sample counts disclose missing/errored timing observations explicitly.
+    timing_summary={}
+    for field,values in probe.block_timings.items():
+        timing_summary[field+"_sample_count"]=len(values)
+        timing_summary[field+"_p50_ms"]=percentile(values,0.5)
+        timing_summary[field+"_p95_ms"]=percentile(values,0.95)
     samples=probe.head_samples
     backlog_delta=(samples[-1]["backlog"]-samples[1]["backlog"]
                    if len(samples)>=3 and samples[-1]["backlog"] is not None
@@ -439,8 +483,13 @@ def run_probe(scope, watched, routers, root, *, sender=None, clock=now_utc,
             "contiguous_full_blocks_post_anchor":contiguous_added,
             "contiguous_rate_blocks_per_s":round(
                 contiguous_added/max(0.001,elapsed),3),
-            "block_response_p50_ms":percentile(0.5),
-            "block_response_p95_ms":percentile(0.95),
+            "timing_definition":{
+                "tls_connect":"conn.connect() only; includes DNS/TCP/TLS",
+                "pacing_wait":"after conn.connect() until POST starts; includes global lock wait and throttling sleep",
+                "post_to_response":"POST starts through complete response body read, excludes TLS/pacing",
+                "full_attempt":"sender entry through complete response body read, includes constructor/TLS/pacing/HTTP",
+                "sample_population":"full BLOCK responses passing RPC and structural validation; excludes anchor/failures; not necessarily parent contiguous"},
+            **timing_summary,
             "watch_signed_tx_candidates":probe.watch_signed,
             "router_to_candidates_unverified":probe.router_candidates,
             "buy_confirmed":None, "receipt_count":0,
