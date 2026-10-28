@@ -209,6 +209,8 @@ class FiveMinuteSourceTests(unittest.TestCase):
                 self.assertEqual(result["per_request_deadline_outcomes"],1)
                 self.assertEqual(result["unjoined_worker_count"],1)
                 self.assertEqual(result["post_started"],0)
+                self.assertTrue(sender.stop_event.is_set())
+                self.assertTrue(result["post_started_is_known_lower_bound_if_unknown"])
                 self.assertEqual(result["stop"],
                                  "SOURCE_REQUEST_DEADLINE_EXCEEDED")
                 self.assertIsNone(result["latest_source_head"])
@@ -230,6 +232,33 @@ class FiveMinuteSourceTests(unittest.TestCase):
                         (root/"attempts.jsonl").read_text().splitlines()]
             self.assertEqual(rows,rows_after)
             self.assertEqual(called_post,[])
+
+    def test_coordinator_stop_event_prevents_post_after_slow_connect(self):
+        entered=threading.Event()
+        release=threading.Event()
+        sent=[]
+        class PausedConnect:
+            def __init__(self,*args,**kwargs):
+                self.sock=None
+            def connect(self):
+                entered.set()
+                release.wait(timeout=2)
+            def request(self,*args,**kwargs):
+                sent.append(True)
+            def close(self):
+                pass
+        sender=Sender(end_utc=now_utc()+timedelta(seconds=5),
+                      stop_mono=time.monotonic()+5,
+                      timeout_s=2,spacing_s=0.25,
+                      post_factory=PausedConnect)
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            fut=pool.submit(sender.send,b"{}")
+            self.assertTrue(entered.wait(1))
+            sender.stop_event.set()
+            release.set()
+            result=fut.result(timeout=1)
+        self.assertEqual(result["state"],"RUN_STOPPED_UNKNOWN_NO_RETRY")
+        self.assertEqual(sent,[])
 
     def test_late_finished_valid_json_cannot_be_accepted_at_coordination(self):
         # Worker completes with valid JSON but AFTER the reservation
