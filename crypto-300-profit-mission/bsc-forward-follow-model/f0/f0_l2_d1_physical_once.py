@@ -153,6 +153,12 @@ def _child(root: Path, evidence: Path, raw: bytes, reviewed_sha: str,
             or deadline - time.monotonic() > 76):
         raise ValueError("F0_PHYSICAL_CHILD_LIFETIME_INVALID")
     _same_reviewed_checkout(reviewed_sha)
+    fixed = _private_root()
+    if root != fixed or evidence != fixed / "evidence" / grant_sha:
+        raise ValueError("F0_PHYSICAL_CHILD_FIXED_OWNER_ROOT_MISMATCH")
+    for private in (fixed / "registry", fixed / "evidence", evidence):
+        fd = _open_private_dir(private)
+        os.close(fd)
     verified = check_physical_foreground_scope(
         raw, independently_reviewed_sha=reviewed_sha)
     doc = json.loads(raw)
@@ -248,6 +254,8 @@ def run_owner_approved_once(scope_path: Path, reviewed_sha: str,
     evidence_base = root / "evidence"
     if not evidence_base.exists():
         _new_private_dir(evidence_base)
+    evidence_fd = _open_private_dir(evidence_base)
+    os.close(evidence_fd)
     evidence = _new_private_dir(evidence_base / v["grant_id_sha256"])
     read_fd, write_fd = os.pipe()
     start = time.monotonic()
@@ -260,6 +268,10 @@ def run_owner_approved_once(scope_path: Path, reviewed_sha: str,
             cmd, stdin=subprocess.DEVNULL,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE,
             close_fds=True, pass_fds=(read_fd,), text=True)
+    except Exception:
+        # The O_EXCL marker remains permanently spent; never retry.
+        os.close(write_fd)
+        raise
     finally:
         os.close(read_fd)
     timed_out = False
