@@ -437,6 +437,18 @@ def run_probe(scope, watched, routers, root, *, sender=None, clock=now_utc,
             "raw_only_local":True,"automatic_retries":0}
 
 
+def _hard_foreground_stop(root, deadline):
+    """Last-resort same-process hard exit; durable pre-send UNKNOWN survives."""
+    remaining=deadline-time.monotonic()
+    if remaining>0:
+        time.sleep(remaining)
+    try:
+        atomic_json(root/"hard_stop.json",{"status":"HARD_STOP_NO_RETRY",
+                    "outstanding_rpc_outcomes":"UNKNOWN_IF_UNSETTLED"})
+    finally:
+        os._exit(92)
+
+
 def main():
     parser=argparse.ArgumentParser(description="5m BSC source feasibility ONE SHOT")
     parser.add_argument("--execute-live",action="store_true")
@@ -501,6 +513,13 @@ def main():
         out.flush()
         os.fsync(out.fileno())
     fsync_directory(root)
+    # One foreground process; parent SIGKILL also kills ALL its worker
+    # threads. A deadline daemon forces even stuck TLS reads to stop.
+    deadline=time.monotonic()+min(310.0,
+                (timestamp(doc["window_end_utc"])-now_utc()).total_seconds()+5)
+    guard=threading.Thread(target=_hard_foreground_stop,
+                           args=(root,deadline),daemon=True)
+    guard.start()
     result=run_probe(doc,watched,routers,root)
     atomic_json(root/"summary.json",result)
     print(json.dumps({"stop":result["stop"],"attempts":result["attempts"],
