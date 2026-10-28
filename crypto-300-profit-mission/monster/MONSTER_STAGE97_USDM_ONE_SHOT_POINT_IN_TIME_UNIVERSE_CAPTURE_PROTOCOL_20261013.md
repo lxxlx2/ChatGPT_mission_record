@@ -37,3 +37,18 @@ STAGE97_REAL_HTTPS_FROZEN_UNIVERSE_CAPTURED {"source": "RECORDED_HTTPS_BINANCE_R
 - **下一验证门槛**：实际读取用户原 JSON，先用字节级 SHA `6e3d955a7a826c017f5c1579df14036b0f5044f4e0cfb09bd65da24602327bd3` 校验，审查原时间序列与936/523等字段必须以**实际文件**为准（当前仅有用户终端声明），成功后按已有 Stage97 evidence 位置存一份不可变公开市场数据原文或至少带源位置的可核验归档；不得伪造云端 CI Artifact。
 - **模型边界**：ADR-006 将旧 CEX 动量盈利模型冻结为对照。此历史T0只读归档不代表重启旧 D1、任何未来7天行情完整性、2026-10-28本日新增上市覆盖、可执行利润或者 Monster `G6` 通过。
 
+
+## 2026-10-28：上传原始 JSON 已独立验算、真实 Git 原始字节归档完成（覆盖前一节待复验状态）
+
+**判决：`PASS_OFFLINE_FILE_SOURCE_HASH_AND_WINDOW_INTEGRITY / RAW_ARCHIVE_BYTE_IDENTICAL / G0_PARTIAL / G1_G2_G3_NOT_EVALUATED / G6_NO_GO`。** 这项结论仅适用于已固定的 2026-10-28 单次 Binance USD-M `exchangeInfo` 原始市场快照，不等于 Binance 签名的独立来源认证、已完成持续 OOS、可盈利信号或实盘部署。
+
+**真实上传及逐字节归档**：
+- 用户上传了原 Mac 文件，而非重新联网下载或合成快照；本轮容器独立读取 **1,348,957 字节**。SHA256=`6e3d955a7a826c017f5c1579df14036b0f5044f4e0cfb09bd65da24602327bd3`，与用户先前 `shasum -a 256` 完全一致；
+- 归档路径：[2026-10-28 原始 HTTPS USD-M 文件](evidence/monster_stage97_point_in_time_usdm_2026-10-28_raw_https.json)。真正 Git 文件提交 `14a6d8c3e8a68a32332e4b4984ccef5b16469779`；上传前独立计算的 Git blob SHA1=`056108a6472844f4dae37419b8ad5e4db01e5554`，归档后 GitHub `fetch_file`返回**相同** blob SHA，证实完整文件字节一致。GitHub云端的原自动采集 HTTP451 仍为失败，不能将用户Mac归档谎称该失败run的Artifact。
+- 原 `raw_market_packet.raw_exchangeInfo_json` 直接按字节字符串计算 SHA256=`c7d2810c3cc48bb9ea4287e9857b0a6b4eee9e9aef1ecbb1a5810f9ef147a6d2`，与 `raw_market_packet.raw_sha256`、`exchange_info_http_capture.raw_sha256` 两字段一致，内部原始包 **1,161,997 字节**。独立JSON解码可读，全市 `symbols` 936 行，symbol 唯一 936/936，无重复。
+- 单次请求时间完整有序：前 `/fapi/v1/time` UTC `05:48:34.685..34.838`，`/fapi/v1/exchangeInfo` UTC `05:48:34.839..35.524`，后 `/fapi/v1/time` UTC `05:48:35.550..35.676`。两次官方`serverTime`各自原始SHA独立一致，与本地请求响应中点偏差分别为 **+30ms/+16ms**；`exchangeInfo.serverTime` 不被用作时间权威。采集完成时刻 UTC **05:48:35.524** / Asia/Bangkok **12:48:35.524**，距固定 UTC 06:00 间隔 **11分24.476秒**，符合硬冻结的合法前15分钟窗口。
+- 按冻结 Stage105 谓词重新从 **936 全行**计算：`status=TRADING && contractType=PERPETUAL && quoteAsset=USDT && onboardDate<=capture_ms`，得到 **523**（与回执一致）。这523根据供应商 `underlyingType` 分为 **520 COIN / 2 INDEX / 1 PREMARKET**；**这些不是523个已独立验证的加密token**，指数/盘前不能直接并作币种。其他全市场行包含 `TRADIFI_PERPETUAL` **229**；保持完整母体不删除。全市场状态分布 `TRADING=799, SETTLING=136, PENDING_TRADING=1`，不同维度不可简单相加理解为可交易Crypto数。
+- 文件原 `provenance_ci_env` 四项 `GITHUB_REF/GITHUB_RUN_ATTEMPT/GITHUB_RUN_ID/GITHUB_SHA` 为null，因为是**Mac本地**运行，不能冒称GitHub CI runner来源。文件原风险标注按原样保留：`G0_full_venue_OOS=PARTIAL`、`crypto_only_classification=NOT_VERIFIED`、`intrawindow_new_listings=NOT_VERIFIED`、`G1_G2_G3=NOT_EVALUATED`、`D1_G3_HISTORICAL=REJECTED`、`actual_trades=NONE`、`gmail=OFF`、`monster_deploy=NO_GO`、`autotrade=NO_GO`。
+- 完成归档只代表当前 **T0 单点快照的原始保存与内部时间/文件完整性**；没有完成真实未来连续7天报价、全量新增/退市、双向可执行收益、crypto身份独立验证。遵守 ADR-006 的 CEX 对照定位、不再追加旧动量变体。采集授权文件仍为 `authorized_one_shot=false`，无新增任务/付款/实盘。
+
+本节为对上文“用户终端成功回执、原始数据待复验”的**后续验收更新**，不删除历史过程，也不回填 GitHub CI 自动采集结果。以后只在已冻结的业务问题确有新实证时推进；单点全量快照不能将 `G6 NO_GO` 提升为通过。
