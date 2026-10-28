@@ -34,6 +34,7 @@ BOUNDED_POLL_SECONDS = 5
 MAX_BOUNDED_IDENTITIES = 12
 MAX_BOUNDED_PAIR_PER_INTERVAL = 3
 MAX_BOUNDED_ANCESTOR_BLOCKS = 24
+MAX_BATCH_HEADERS = 4
 MAX_RESPONSE_BYTES = 262144
 REQUEST_TIMEOUT_SECONDS = 20
 MAX_SNAPSHOT_INTERVAL_NS = 3_000_000_000
@@ -124,6 +125,99 @@ class ForwardRPC(JsonRPC):
             if isinstance(exc, ForwardProbeError):
                 raise
             raise ForwardProbeError("RPC_INVALID_JSON") from None
+        finally:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+            signal.signal(signal.SIGALRM, previous)
+
+
+    def request_batch(self, jobs):
+        """One HTTPS batch, with every element counted as one RPC subrequest.
+
+        Accept only bounded, anchored header reads. Never count a batch as one
+        unit of the 180-subrequest quota or discard child errors/duplicate IDs.
+        """
+        if (not isinstance(jobs, list) or
+                not 1 <= len(jobs) <= MAX_BATCH_HEADERS or
+                any(not isinstance(job, tuple) or len(job) != 2 or
+                    job[0] != "eth_getBlockByNumber" or
+                    not isinstance(job[1], list) or len(job[1]) != 2 or
+                    not isinstance(job[1][0], str) or
+                    not re.fullmatch(r"0x[0-9a-fA-F]+", job[1][0]) or
+                    job[1][1] is not False for job in jobs)):
+            raise ForwardProbeError("BATCH_INVALID_HEADER_JOB")
+        if self.calls + len(jobs) > self.max_requests:
+            raise ForwardProbeError("RPC_CALL_LIMIT")
+        if (threading.current_thread() is not threading.main_thread()
+                or signal.getitimer(signal.ITIMER_REAL) != (0.0, 0.0)):
+            raise ForwardProbeError("FOREGROUND_WITHOUT_EXISTING_ALARM_REQUIRED")
+
+        def expired(*_):
+            raise ForwardProbeError("RPC_TOTAL_DEADLINE_EXCEEDED")
+
+        previous = signal.signal(signal.SIGALRM, expired)
+        signal.setitimer(signal.ITIMER_REAL, REQUEST_TIMEOUT_SECONDS)
+        try:
+            delay = self.min_interval - (time.monotonic() - self.last)
+            if delay > 0:
+                time.sleep(delay)
+            self.last = time.monotonic()
+            first_id = self.calls + 1
+            self.calls += len(jobs)
+            body = [{"jsonrpc": "2.0", "id": first_id+i,
+                     "method": method, "params": params}
+                    for i, (method, params) in enumerate(jobs)]
+            req = urllib.request.Request(
+                self.url, data=json.dumps(body, separators=(",", ":")).encode(),
+                method="POST", headers={
+                    "Content-Type": "application/json",
+                    "User-Agent": "MonsterForwardReadonly/1"})
+            with self.opener.open(req, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+                if response.status != 200:
+                    raise ForwardProbeError("BATCH_HTTP_STATUS_NOT_200")
+                lengths = response.headers.get_all("Content-Length", [])
+                if (len(lengths) > 1 or
+                        (lengths and not lengths[0].isdigit()) or
+                        (lengths and int(lengths[0]) > MAX_RESPONSE_BYTES) or
+                        (lengths and response.headers.get("Transfer-Encoding"))):
+                    raise ForwardProbeError("BATCH_HTTP_FRAMING_INVALID")
+                raw = response.read(MAX_RESPONSE_BYTES + 1)
+                if lengths and len(raw) != int(lengths[0]):
+                    raise ForwardProbeError("BATCH_HTTP_BODY_TRUNCATED")
+            if len(raw) > MAX_RESPONSE_BYTES:
+                raise ForwardProbeError("BATCH_RESPONSE_TOO_LARGE")
+            parsed = json.loads(raw)
+            endpoint = urllib.parse.urlsplit(self.url)
+            markers = [self.url, urllib.parse.unquote(self.url)]
+            markers += [v for _, v in urllib.parse.parse_qsl(endpoint.query) if v]
+            markers += [urllib.parse.unquote(v) for v in endpoint.path.split("/")
+                        if v and v.lower() not in
+                        ("v1", "v2", "v3", "rpc", "bsc", "mainnet")]
+            decoded = json.dumps(parsed, ensure_ascii=False)
+            if any(v in decoded or v.encode() in raw for v in markers):
+                raise ForwardProbeError("RPC_SECRET_ECHO_REJECTED")
+            if not isinstance(parsed, list) or len(parsed) != len(jobs):
+                raise ForwardProbeError("BATCH_WRONG_RESPONSE_COUNT")
+            by_id = {}
+            for item in parsed:
+                if (not isinstance(item, dict) or item.get("jsonrpc") != "2.0"
+                        or type(item.get("id")) is not int or
+                        item["id"] not in range(first_id, first_id+len(jobs)) or
+                        item["id"] in by_id or "result" not in item or
+                        "error" in item or not isinstance(item["result"], dict)):
+                    raise ForwardProbeError("BATCH_INVALID_MEMBER_OR_ID")
+                by_id[item["id"]] = item
+            return [by_id[i]["result"] for i in range(
+                first_id, first_id+len(jobs))], raw
+        except urllib.error.HTTPError as exc:
+            status = int(exc.code)
+            exc.close()
+            raise ForwardProbeError("RPC_HTTP_" + str(status)) from None
+        except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException):
+            raise ForwardProbeError("RPC_NETWORK_UNAVAILABLE") from None
+        except (ValueError, UnicodeDecodeError) as exc:
+            if isinstance(exc, ForwardProbeError):
+                raise
+            raise ForwardProbeError("BATCH_INVALID_JSON") from None
         finally:
             signal.setitimer(signal.ITIMER_REAL, 0)
             signal.signal(signal.SIGALRM, previous)
@@ -428,6 +522,64 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
     def call(to, data, height):
         return ask("eth_call", [{"to": to, "data": data}, hex(height)])
 
+
+    def ask_batch_header(heights):
+        """All per-child metadata point to one saved exact HTTP response body."""
+        nonlocal attempted
+        if (not isinstance(heights, list) or not heights or
+                len(heights) > MAX_BATCH_HEADERS or
+                len(set(heights)) != len(heights)):
+            raise ForwardProbeError("BATCH_HEADER_RANGE_INVALID")
+        if attempted+len(heights) > rpc_budget:
+            raise ForwardProbeError("BOUNDED_RPC_LIMIT")
+        if not callable(getattr(rpc, "request_batch", None)):
+            raise ForwardProbeError("BOUNDED_BATCH_TRANSPORT_REQUIRED")
+        jobs = [("eth_getBlockByNumber", [hex(h), False]) for h in heights]
+        begin, m_begin = checkpoint()
+        # The total subrequest count, not the HTTP call count, owns the quota.
+        attempted += len(jobs)
+        values, raw = rpc.request_batch(jobs)
+        recv, m_end = checkpoint()
+        if type(raw) is not bytes or len(raw) > MAX_RESPONSE_BYTES:
+            raise ForwardProbeError("ORIGINAL_RPC_BYTES_INVALID")
+        try:
+            packet = json.loads(raw)
+        except (ValueError, UnicodeDecodeError):
+            raise ForwardProbeError("ORIGINAL_RPC_JSON_INVALID") from None
+        if (not isinstance(packet, list) or len(packet) != len(jobs) or
+                not isinstance(values, list) or len(values) != len(jobs)):
+            raise ForwardProbeError("BATCH_RESPONSE_SHAPE_INVALID")
+        first_id = attempted-len(jobs)+1
+        by_id = {}
+        for child in packet:
+            if (not isinstance(child, dict) or child.get("jsonrpc") != "2.0"
+                    or type(child.get("id")) is not int
+                    or not first_id <= child["id"] < first_id+len(jobs)
+                    or child["id"] in by_id or "result" not in child
+                    or "error" in child):
+                raise ForwardProbeError("BATCH_INVALID_MEMBER_OR_ID")
+            by_id[child["id"]] = child
+        if (len(by_id) != len(jobs) or
+                any(by_id[first_id+i]["result"] != values[i]
+                    for i in range(len(jobs)))):
+            raise ForwardProbeError("BATCH_RESULT_NOT_VERIFIED")
+        filename = f"rpc-batch-{first_id:03d}.json"
+        _write_private(directory/filename, raw)
+        digest = hashlib.sha256(raw).hexdigest()
+        receipt_rows = []
+        for i, (method, params) in enumerate(jobs):
+            row = {"ordinal": first_id+i, "method": method, "params": params,
+                   "batch_subrequest_count": len(jobs),
+                   "batch_response_id": first_id+i,
+                   "raw_file": filename, "raw_sha256": digest,
+                   "raw_bytes": len(raw), "call_invoked_at_utc": iso(begin),
+                   "local_response_completed_at_utc": iso(recv),
+                   "elapsed_monotonic_ns": m_end-m_begin,
+                   "response_completed_monotonic_offset_ns": m_end-start_mono}
+            calls.append(row)
+            receipt_rows.append(row)
+        return values, receipt_rows
+
     def pinned_snapshot():
         height_raw, _ = ask("eth_blockNumber", [])
         height = hex_int(height_raw)
@@ -488,13 +640,17 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
                 raise ForwardProbeError("FIRST_ANCHOR_CHANGED")
             parent = b["block"]["parent_hash"]
             ancestors = []
-            for height in range(b["block"]["number"]-1, a["block"]["number"], -1):
-                raw, _ = ask("eth_getBlockByNumber", [hex(height), False])
-                hdr = _validate_header(raw, height)
-                if hdr["hash"] != parent:
-                    raise ForwardProbeError("NONCONTIGUOUS_PARENT_HASH")
-                ancestors.append(hdr)
-                parent = hdr["parent_hash"]
+            heights = list(range(b["block"]["number"]-1,
+                                 a["block"]["number"], -1))
+            for offset in range(0, len(heights), MAX_BATCH_HEADERS):
+                segment = heights[offset:offset+MAX_BATCH_HEADERS]
+                raw_headers, _ = ask_batch_header(segment)
+                for height, raw in zip(segment, raw_headers):
+                    hdr = _validate_header(raw, height)
+                    if hdr["hash"] != parent:
+                        raise ForwardProbeError("NONCONTIGUOUS_PARENT_HASH")
+                    ancestors.append(hdr)
+                    parent = hdr["parent_hash"]
             if gap > 0 and parent != a["block"]["hash"]:
                 raise ForwardProbeError("NONCONTIGUOUS_PARENT_HASH")
             delta = b["all_pairs_length"] - a["all_pairs_length"]
@@ -561,7 +717,9 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
             "capture_started_at_utc": iso(start_clock),
             "capture_completed_at_utc": iso(finish),
             "elapsed_monotonic_ns": finish_mono-start_mono,
-            "rpc_attempt_count": attempted, "rpc_requests": calls,
+            "rpc_attempt_count": attempted,
+            "http_response_file_count": len(set(row["raw_file"] for row in calls)),
+            "rpc_requests": calls,
             "time_basis": "LOCAL_RESPONSE_COMPLETED_UTC_NOT_FIRST_PUBLIC_AVAILABLE_AT",
             "clock_attestation": "LOCAL_SYSTEM_CLOCK_NOT_EXTERNALLY_ATTESTED",
             "source_scope": "SINGLE_PROVIDER_PANCAKE_V2_ONLY",
