@@ -7,6 +7,7 @@ from g4_price_one_shot import (
     CASES, LAGS, MAX_HTTP, MIN_SPACING_SECONDS, assess_lags,
     get_manifest, run,
 )
+from g4_raw_artifact_reaudit import preanchor_close
 
 
 class TestG4OneShot(unittest.TestCase):
@@ -66,6 +67,23 @@ class TestG4OneShot(unittest.TestCase):
                     row = result[str(lag)]
                     self.assertEqual(row["status"], "EXIT_CANDLE_KNOWN_AFTER_EXIT")
                     self.assertIsNone(row["gross_candle_close_proxy_pct"])
+
+    def test_secondary_preanchor_uses_completed_bar_only(self):
+        rows = [(2110, 11, 100), (2230, 12, 0),
+                (2280, 13, 20), (2340, 14, 20),
+                (2400, 99, 900)]
+        # Closing at 2400 is at anchor and cannot be considered known before.
+        self.assertEqual(preanchor_close(rows, 2400), (2280, 13, 20))
+        # Reject if the only earlier print is more than 180s stale.
+        self.assertIsNone(preanchor_close([(1900, 11, 10)], 2400))
+        self.assertIsNone(preanchor_close([(2400, 11, 10)], 2400))
+
+    def test_original_lookahead_counterexample_never_produces_primary_return(self):
+        entry = [{"t": 1050, "c": 10, "v": 100}]
+        exiting = [{"t": 2400, "c": 20, "v": 100}]
+        result = assess_lags(entry, exiting, 1000, 2400)["30"]
+        self.assertEqual(result["status"], "EXIT_CANDLE_KNOWN_AFTER_EXIT")
+        self.assertIsNone(result["gross_candle_close_proxy_pct"])
 
     def test_missing_exit_candle_stays_missing(self):
         entry = [{"t": 1050, "c": 10, "v": 100}]
