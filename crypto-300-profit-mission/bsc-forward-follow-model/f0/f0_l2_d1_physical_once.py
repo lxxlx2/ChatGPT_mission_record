@@ -98,20 +98,28 @@ def _sync_exclusive_marker(directory, name, data: bytes):
 class _LiveOnceChildPermit:
     """Process-local guard, not authentication or operator consent."""
 
-    __slots__ = ("_pid", "_uid", "_deadline", "_marker", "_grant_sha")
+    __slots__ = ("_pid", "_uid", "_deadline", "_marker", "_grant_sha",
+                 "_parent_pipe")
 
-    def __init__(self, marker: Path, grant_sha: str, deadline: float):
+    def __init__(self, marker: Path, grant_sha: str, deadline: float,
+                 parent_pipe=None):
         self._pid = os.getpid()
         self._uid = os.getuid()
         self._deadline = deadline
         self._marker = marker
         self._grant_sha = grant_sha
+        self._parent_pipe = parent_pipe
 
     def valid(self):
         try:
             p = self._marker
             return (os.getpid() == self._pid and os.getuid() == self._uid
                     and time.monotonic() < self._deadline
+                    # Actively fail closed at EVERY pre-connect/final POST
+                    # if the owner's process has died, not merely when
+                    # the asynchronous guardian thread is next scheduled.
+                    and (self._parent_pipe is None
+                         or not select.select([self._parent_pipe], [], [], 0)[0])
                     and not p.is_symlink() and p.is_file()
                     and p.stat().st_uid == self._uid
                     and p.stat().st_mode & 0o077 == 0
@@ -190,7 +198,8 @@ def _child(root: Path, evidence: Path, raw: bytes, reviewed_sha: str,
     from f0_l2_d1_coordinator import _run_single_shared_coordinator
     from f0_l2_d1_physical_source_candidate import (
         BoundedPhysicalReadOnlySource, _UNRELEASED_SOURCE_CODE_SEAL)
-    grant = _LiveOnceChildPermit(marker, grant_sha, deadline)
+    grant = _LiveOnceChildPermit(
+        marker, grant_sha, deadline, parent_pipe=parent_pipe)
     if not grant.valid():
         raise ValueError("F0_PHYSICAL_CHILD_PERMIT_NOT_LIVE")
     source = BoundedPhysicalReadOnlySource(
