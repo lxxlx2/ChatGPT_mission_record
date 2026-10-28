@@ -661,11 +661,11 @@ function verifiedF01SourceView(doc, candidates, now=Date.now()/1000) {
 function f01EventEpoch(value) {
   if (typeof value === 'number' && Number.isFinite(value)) return value;
   if (typeof value !== 'string' || !value.trim()) return null;
-  if (/^\\d+(?:\\.\\d+)?$/.test(value)) {
+  if (/^\d+(?:\.\d+)?$/.test(value)) {
     const n = Number(value);
     return Number.isFinite(n) ? n : null;
   }
-  if (!/^\\d{4}-\\d{2}-\\d{2}T.*(?:Z|[+-]\\d{2}:\\d{2})$/.test(value)) return null;
+  if (!/^\d{4}-\d{2}-\d{2}T.*(?:Z|[+-]\d{2}:\d{2})$/.test(value)) return null;
   const valueMs = Date.parse(value);
   return Number.isFinite(valueMs) ? valueMs / 1000 : null;
 }
