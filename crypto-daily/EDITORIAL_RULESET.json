@@ -42,7 +42,8 @@
       "web_runtime_rce",
       "macro",
       "forward_catalysts",
-      "third_party_ipo_access"
+      "third_party_ipo_access",
+      "official_x"
     ],
     "allow_source_gap_with_reason": true,
     "empty_sections_must_document_research": true,
@@ -135,7 +136,56 @@
         "fees, lockup, refund and conversion if disclosed"
       ],
       "unknown_status": "UNCONFIRMED_MONITORING",
-      "dedupe_family": "ipoaccess:anthropic:<venue>:<instrument_kind>"
+      "dedupe_family": "ipoaccess:anthropic:<venue>:<instrument_kind>",
+      "eligible_offer_status": [
+        "INDICATION_OF_INTEREST_OPEN",
+        "SUBSCRIPTION_OPEN",
+        "ALLOCATION_CONFIRMED",
+        "TOKENIZED_EQUITY_AVAILABLE"
+      ],
+      "eligible_product_types": [
+        "IPO_ALLOCATION",
+        "BACKED_TOKENIZED_EQUITY",
+        "NONBINDING_INTEREST"
+      ],
+      "synthetics_prohibited_from_ipo_access": [
+        "PRE_IPO_PERPETUAL",
+        "CASH_SETTLED_DERIVATIVE",
+        "UNBACKED_FANTASY_TOKEN"
+      ],
+      "official_venue_hosts": {
+        "Kraken": [
+          "kraken.com"
+        ],
+        "Binance": [
+          "binance.com"
+        ],
+        "Bitget": [
+          "bitget.com"
+        ],
+        "Bybit": [
+          "bybit.com"
+        ],
+        "Gate": [
+          "gate.com",
+          "gate.io"
+        ],
+        "OKX": [
+          "okx.com"
+        ]
+      },
+      "trigger": "Official issuer-named new action / application / actual legally backed tokenized equity, NOT a generic issuer filing, anticipated platform offer, or synthetic listing."
+    },
+    "official_x_source_policy": {
+      "required": true,
+      "execution": "CONDITIONAL_SCHEDULED_BROWSER_ACCESS_WITH_PUBLIC_X_AND_OFFICIAL_SITE_FALLBACK",
+      "policy_path": "docs/MONITORING/X_FIRST_PARTY_SOURCE_POLICY.md",
+      "accepted_states": [
+        "checked",
+        "source_gap"
+      ],
+      "never_assume_interactive_tab_available_to_schedule": true,
+      "not_valid_for_action_without_issuer_crosscheck": true
     }
   },
   "top_highlights": {
