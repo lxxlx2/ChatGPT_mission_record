@@ -181,10 +181,14 @@ def run(*, execute=False, max_http=MAX_HTTP, out_dir=None):
             case = {**item, "pool": None, "state": "NO_POOL",
                     "lags": {}, "entry_bars": None, "exit_bars": None}
             result["cases"].append(case)
+            raw_record = {"id": item["id"], "pool_discovery_raw": None,
+                          "entry_ohlcv_raw": None, "exit_ohlcv_raw": None}
+            result["raw_provider_responses"].append(raw_record)
             pool_doc = transport.get(
                 "/networks/solana/tokens/" + item["mint"] + "/pools",
                 {"page": 1}
             )
+            raw_record["pool_discovery_raw"] = pool_doc
             if pool_doc is None:
                 case["state"] = "POOL_DISCOVERY_HTTP_MISSING"
                 continue
@@ -201,21 +205,19 @@ def run(*, execute=False, max_http=MAX_HTTP, out_dir=None):
             entry_doc = transport.get(path, {**options,
                 "before_timestamp": item["entry_time"] + 75 * 60,
                 "limit": 120})
+            raw_record["entry_ohlcv_raw"] = entry_doc
             if entry_doc is None:
                 case["state"] = "ENTRY_OHLCV_HTTP_MISSING"
                 continue
             exit_doc = transport.get(path, {**options,
                 "before_timestamp": item["exit_target"] + 6 * 60,
                 "limit": 30})
+            raw_record["exit_ohlcv_raw"] = exit_doc
             if exit_doc is None:
                 case["state"] = "EXIT_OHLCV_HTTP_MISSING"
                 continue
             entry_bars = extract_bars(entry_doc)
             exit_bars = extract_bars(exit_doc)
-            result["raw_provider_responses"].append({
-                "id": item["id"], "pool_discovery_raw": pool_doc,
-                "entry_ohlcv_raw": entry_doc, "exit_ohlcv_raw": exit_doc,
-            })
             case["entry_bars"] = len(entry_bars)
             case["exit_bars"] = len(exit_bars)
             case["lags"] = assess_lags(entry_bars, exit_bars,
