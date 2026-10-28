@@ -37,7 +37,7 @@ def scope():
         max_total=6,max_blocks=2,max_refreshes=1,slots=3,spacing_ms=250,
         head_ttl_ms=4000,head_min_poll_age_ms=250,window_ms=5000,
         timeout_ms=2000,max_body_bytes=MAX_BODY_BYTES,hard_seconds=10,
-        window_start_utc=(now-timedelta(seconds=2)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        window_start_utc=(now+timedelta(seconds=3)).strftime("%Y-%m-%dT%H:%M:%SZ"),
         window_end_utc=(now+timedelta(seconds=30)).strftime("%Y-%m-%dT%H:%M:%SZ"))
 
 
@@ -154,7 +154,7 @@ class OncePhysicalForegroundTests(unittest.TestCase):
                 (now+timedelta(seconds=30)).strftime("%Y-%m-%dT%H:%M:%SZ"),
                 _unreleased_review_seal=_UNRELEASED_SOURCE_CODE_SEAL,
                 _runtime_permit=token)
-            fake=FakeSource(first_head=1000,growth_bps=15.0,delay_ms=1)
+            fake=FakeSource(first_head=1000,growth_bps=10.0,delay_ms=1)
             posts=[]
 
             class Response:
