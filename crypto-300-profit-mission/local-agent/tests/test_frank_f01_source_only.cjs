@@ -17,7 +17,7 @@ vm.runInContext(`const f01PageOpenedAtEpoch = ${now-100};
 const f01FirstSeenKeys = new Set();
 const f01ObservedLagSeconds = [];
 ` + js.slice(first, last) +
-  '\nthis.verify = verifiedF01SourceView; this.observe = recordF01PageObservation; this.epoch = f01EventEpoch;', context);
+  '\nthis.verify = verifiedF01SourceView; this.observe = recordF01PageObservation; this.epoch = f01EventEpoch; this.excludedCount = f01ExcludedReasonCount;', context);
 const verify = context.verify;
 const row = Object.freeze({
   person_id:'frank', mint:'7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump',
@@ -63,6 +63,26 @@ test('historical rows remain visible even if no recent signal',()=>{
   const result = verify(doc({source_recent:[],source_recent_count:0}),[row],now);
   assert.equal(result.recent.length,0);
   assert.equal(result.historical.length,1);
+});
+
+test('missing stale exclusion category is a true zero when other reasons exist',()=>{
+  const counts = context.excludedCount;
+  assert.equal(counts({excluded_reason_counts:{MODEL_POSITION_NOT_OPEN:4}},
+    'SOURCE_BUY_STALE_OR_UNVERIFIED'),0);
+  assert.equal(counts({excluded_reason_counts:{}},
+    'SOURCE_BUY_STALE_OR_UNVERIFIED'),0);
+  assert.equal(counts({excluded_reason_counts:{SOURCE_BUY_STALE_OR_UNVERIFIED:3}},
+    'SOURCE_BUY_STALE_OR_UNVERIFIED'),3);
+});
+test('invalid or missing reason-count map must remain unknown rather than fabricated zero',()=>{
+  const counts = context.excludedCount;
+  for (const x of [null,{}, {excluded_reason_counts:null},
+      {excluded_reason_counts:[]},
+      {excluded_reason_counts:{SOURCE_BUY_STALE_OR_UNVERIFIED:-1}},
+      {excluded_reason_counts:{SOURCE_BUY_STALE_OR_UNVERIFIED:3.5}},
+      {excluded_reason_counts:{SOURCE_BUY_STALE_OR_UNVERIFIED:'3'}}]) {
+    assert.equal(counts(x,'SOURCE_BUY_STALE_OR_UNVERIFIED'),'未知');
+  }
 });
 
 test('chain epoch parser handles numeric seconds and timezone-bearing timestamps only',()=>{
