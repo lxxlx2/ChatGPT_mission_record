@@ -191,6 +191,80 @@ class FiveMinuteSourceTests(unittest.TestCase):
             finally:
                 cp.finish()
 
+    def test_sender_tls_pacing_post_response_and_full_are_distinct(self):
+        # No TCP/DNS: distinct fake connect, throttle wait and body read.
+        class Response:
+            status=200
+            def getheaders(self):
+                return [("Content-Type","application/json")]
+            def read(self,n):
+                time.sleep(0.003)
+                return b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
+
+        class FakeConnection:
+            def __init__(self,*args,**kwargs):
+                pass
+            def connect(self):
+                time.sleep(0.005)
+            def request(self,*args,**kwargs):
+                pass
+            def getresponse(self):
+                return Response()
+            def close(self):
+                pass
+
+        sender=Sender(end_utc=now_utc()+timedelta(seconds=10),
+                      stop_mono=time.monotonic()+10,
+                      timeout_s=1,spacing_s=0.06,
+                      post_factory=FakeConnection)
+        with (patch("socket.create_connection",
+                    side_effect=AssertionError("TCP_FORBIDDEN")) as tcp,
+              patch("socket.getaddrinfo",
+                    side_effect=AssertionError("DNS_FORBIDDEN")) as dns):
+            first=sender.send(b"{}")
+            second=sender.send(b"{}")
+            tcp.assert_not_called()
+            dns.assert_not_called()
+        for result in (first,second):
+            self.assertEqual(result["state"],"RAW")
+            self.assertGreaterEqual(result["tls_connect_ms"],4.0)
+            self.assertGreaterEqual(result["post_to_response_ms"],2.0)
+            self.assertGreater(result["full_attempt_ms"],
+                               result["tls_connect_ms"])
+            self.assertGreaterEqual(result["pacing_wait_ms"],0.0)
+            # Four observed segments are never presented as the same latency.
+            self.assertAlmostEqual(
+                result["full_attempt_ms"],
+                result["tls_connect_ms"]+result["pacing_wait_ms"]+
+                result["post_to_response_ms"], delta=10.0)
+            self.assertNotIn("connect_ms",result)
+        self.assertGreater(second["pacing_wait_ms"],25)
+        self.assertLess(second["tls_connect_ms"],
+                        second["pacing_wait_ms"])
+        self.assertGreater(second["full_attempt_ms"],
+                           second["post_to_response_ms"])
+
+    def test_fake_report_has_defined_timing_population_and_missing_samples(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td).resolve()
+            doc=permit()
+            doc.update(max_total_attempts=48,max_block_reads=32,
+                       max_head_polls=10,duration_ms=1200,
+                       head_poll_interval_ms=100)
+            raw=(ROOT/"F0_COHORT_PRESELECTION.json").read_bytes()
+            watches,_=cohort_watchlist(load_frozen_cohort(raw))
+            routers=set(official_router_addresses(json.loads(
+                (ROOT/"F0_ROUTER_SOURCE_CANDIDATES.json").read_bytes())))
+            result=run_probe(doc,watches,routers,root,sender=MemorySource())
+            self.assertEqual(result["tls_connect_sample_count"],0)
+            self.assertIsNone(result["tls_connect_p50_ms"])
+            self.assertEqual(result["pacing_wait_sample_count"],0)
+            self.assertEqual(result["full_attempt_sample_count"],0)
+            self.assertGreater(result["post_to_response_sample_count"],0)
+            self.assertIsNotNone(result["post_to_response_p95_ms"])
+            self.assertNotIn("block_response_p50_ms",result)
+            self.assertIn("global lock",result["timing_definition"]["pacing_wait"])
+
     def test_real_sender_post_clock_denied_after_fake_tls_connection(self):
         calls=[]
         class FakeConnection:
