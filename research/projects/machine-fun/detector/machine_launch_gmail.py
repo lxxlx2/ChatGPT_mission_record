@@ -10,6 +10,7 @@ from contextlib import contextmanager
 import hashlib
 import json
 import os
+import re
 import sqlite3
 import stat
 import time
@@ -78,9 +79,9 @@ def message_for(event: dict, recipient: str) -> bytes:
 
 
 class GmailAPI:
-    def __init__(self, oauth_path: Path, recipient: str, timeout: int = 12, open_url=None):
+    def __init__(self, oauth_path: Path, recipient: str | None, timeout: int = 12, open_url=None):
         self.oauth_path = Path(oauth_path)
-        self.recipient = recipient.strip().lower()
+        self.recipient = recipient.strip().lower() if recipient else None
         self.open_url = open_url or urllib.request.urlopen
         self.timeout = timeout
         self.token: str | None = None
@@ -114,8 +115,15 @@ class GmailAPI:
                 raise MailBlocked("OAUTH_REFRESH_TOKEN_REJECTED")
             self.token = token
             profile = self.get("profile")
-            if profile.get("emailAddress", "").strip().lower() != self.recipient:
+            email_address = profile.get("emailAddress")
+            if not isinstance(email_address, str) or not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email_address.strip()):
+                raise MailBlocked("GMAIL_PROFILE_EMAIL_UNAVAILABLE")
+            verified_email = email_address.strip().lower()
+            if self.recipient and verified_email != self.recipient:
                 raise MailBlocked("GMAIL_IDENTITY_DOES_NOT_MATCH_FRANK_RECIPIENT")
+            # If the old Frank config omits recipient, use the authenticated
+            # Google account itself as To/From. Do not write back to Frank.
+            self.recipient = verified_email
             # Require Sent read permission before enabling messages/send.
             self.get("messages?" + urllib.parse.urlencode({"q": "in:sent", "maxResults": 1}))
         except (OSError, urllib.error.URLError, ValueError, KeyError, TypeError) as exc:
