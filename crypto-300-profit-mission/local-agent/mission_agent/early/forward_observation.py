@@ -54,8 +54,12 @@ class ForwardRPC(JsonRPC):
     def __init__(self, endpoint, *, min_interval=0.25, max_requests=MAX_CALLS, opener=None):
         if type(max_requests) is not int or not 0 <= max_requests <= MAX_BOUNDED_CALLS:
             raise ForwardProbeError("RPC_CALL_LIMIT")
+        # Four.meme's shared transport constructor is capped at 50. Keep
+        # that module untouched; this subclass enforces its own fixed <=180
+        # allowance, and the bounded observer checks the same attempt budget.
         super().__init__(endpoint, min_interval=min_interval,
-                         max_requests=max_requests, opener=opener)
+                         max_requests=min(max_requests, 50), opener=opener)
+        self.max_requests = max_requests
 
     def request(self, method, params):
         if method not in READ_METHODS:
