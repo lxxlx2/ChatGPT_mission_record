@@ -1,0 +1,50 @@
+name: Frank G4 archived price RAW offline review once
+on:
+  push:
+    branches:
+      - research/frank-g4-price-one-shot-20261028
+    paths:
+      - .github/workflows/frank-g4-offline-raw-audit-20261028.yml
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: frank-g4-archived-raw-offline-once-20261028
+  cancel-in-progress: false
+jobs:
+  single-offline-existing-artifact-review:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/research/frank-g4-price-one-shot-20261028' && github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - name: Read-only repo checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Verify first exact offline-audit workflow commit
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "1c53c5396ceaccf1684db0ca4810d621941f1162"
+          test "$(git diff-tree --no-commit-id --name-only -r HEAD)" = ".github/workflows/frank-g4-offline-raw-audit-20261028.yml"
+      - name: Download PREVIOUS GitHub artifact only — NO provider request
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 40663663748
+          name: frank-g4-price-one-shot-20261028
+          github-token: ${{ github.token }}
+          path: prior-artifact
+      - name: Independently reparse existing RAW minute bars and evaluate entry/exit volumes
+        run: |
+          set -euo pipefail
+          python3 -B crypto-300-profit-mission/meme/g0b/g4_raw_artifact_reaudit.py --receipt prior-artifact/g4_price_once_receipts.json --out prior-artifact/g4_raw_audit_result.json
+      - name: Archive only offline-derived volume and price evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frank-g4-raw-offline-review-20261028
+          path: prior-artifact/g4_raw_audit_result.json
+          if-no-files-found: warn
+          retention-days: 30
