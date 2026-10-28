@@ -73,7 +73,13 @@ def control_root() -> Path:
 def gmail_from_existing() -> tuple[Path, str]:
     try:
         source = control_root() / "gmail-existing-source.json"
-        cfg = private_json(source)
+        if source.is_symlink() or not source.is_file():
+            raise StartupBlocked("FRANK_GMAIL_CONFIG_SYMLINK_OR_MISSING")
+        # Frank's config file contains only a credential path and recipient;
+        # it is not itself a refresh token. The OAuth file still requires 0600.
+        cfg = json.loads(source.read_text(encoding="utf-8"))
+        if not isinstance(cfg, dict):
+            raise StartupBlocked("FRANK_GMAIL_CONFIG_INVALID")
         raw_path, recipient = cfg.get("existing_oauth_file"), cfg.get("recipient")
         if not isinstance(raw_path, str) or not raw_path.strip():
             raise StartupBlocked("FRANK_EXISTING_OAUTH_PATH_MISSING")
