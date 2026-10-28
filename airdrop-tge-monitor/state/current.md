@@ -29,8 +29,8 @@ Timezone: Asia/Bangkok
 - latest_primary_final_write: VERIFIED_DURABLE 140306-final.md commit e5e26a763ad8c17d16172b8cc9fe53bb860158f2
 - latest_terminal_readback: VERIFIED 140306-final.md blob 104ca846aa4d7f465868dfb92fd931f377da3a0f
 - latest_four_executed_shards: [3,0,1,2]
-- last_delivered_event_key: cambria:duel_arena_blast_abstract_post_sweep_claim_and_login:2026-10-19 (prior run)
-- last_delivered_gmail_message_id: 1a16a27a9e5b557c (prior run; no new email)
+- last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (delivered 2026-10-28; no new email this run)
+- last_delivered_gmail_message_id: 1a1812a1f6802ecb (prior delivered; no new email this run)
 - user_alert: email only on fresh ACTION, App silent
 - latest_terminal_sync: 2026-10-28 14:03:06 BKK PARTIAL fair shard2; 5 candidates, 5 rights/source gaps, 0 new ACTION; no Gmail/App; Browser originating-context unavailable; last fully verified Oct10 unchanged
 - receipt_time_note: actual attempt 14:01:12 and final 14:03:06 BKK; per-URL seconds not independently captured.
