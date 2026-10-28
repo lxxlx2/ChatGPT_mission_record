@@ -28,6 +28,12 @@ TOKEN0_SELECTOR = "0x0dfe1681"  # token0()
 TOKEN1_SELECTOR = "0xd21220a7"  # token1()
 MAX_NEW_PAIRS = 3
 MAX_CALLS = 20
+MAX_BOUNDED_CALLS = 180
+MAX_BOUNDED_SECONDS = 180
+BOUNDED_POLL_SECONDS = 12
+MAX_BOUNDED_IDENTITIES = 12
+MAX_BOUNDED_PAIR_PER_INTERVAL = 3
+MAX_BOUNDED_ANCESTOR_BLOCKS = 24
 MAX_RESPONSE_BYTES = 262144
 REQUEST_TIMEOUT_SECONDS = 20
 MAX_SNAPSHOT_INTERVAL_NS = 3_000_000_000
@@ -46,7 +52,7 @@ class ForwardRPC(JsonRPC):
     """Foreground-only transport; keep historical Four.meme behavior unchanged."""
 
     def __init__(self, endpoint, *, min_interval=0.25, max_requests=MAX_CALLS, opener=None):
-        if type(max_requests) is not int or not 0 <= max_requests <= MAX_CALLS:
+        if type(max_requests) is not int or not 0 <= max_requests <= MAX_BOUNDED_CALLS:
             raise ForwardProbeError("RPC_CALL_LIMIT")
         super().__init__(endpoint, min_interval=min_interval,
                          max_requests=max_requests, opener=opener)
@@ -343,22 +349,264 @@ def capture(rpc, out_dir, *, pause_seconds=1.0, clock=utc_now,
         raise
 
 
+
+def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
+                    poll_seconds=BOUNDED_POLL_SECONDS, rpc_budget=MAX_BOUNDED_CALLS,
+                    clock=utc_now, monotonic_ns=time.monotonic_ns, sleep=time.sleep):
+    """One foreground finite V2 Factory observation, not a live trading/PIT approval.
+
+    Default contract: <=180s requested observation, <=180 read-only RPC calls,
+    <=12 pair identities, interval ancestry <=24 blocks. An in-flight HTTP
+    request may extend completion by the existing 20-second request timeout.
+    """
+    if (type(duration_seconds) is not int or not 12 <= duration_seconds <= MAX_BOUNDED_SECONDS
+            or type(poll_seconds) is not int or not 1 <= poll_seconds <= BOUNDED_POLL_SECONDS
+            or type(rpc_budget) is not int or not 40 <= rpc_budget <= MAX_BOUNDED_CALLS):
+        raise ForwardProbeError("BOUNDED_CONTRACT_OUT_OF_RANGE")
+    if (not hasattr(rpc, "request") or not isinstance(getattr(rpc, "source_sha256", None), str)):
+        raise ForwardProbeError("RPC_SOURCE_ID_REQUIRED")
+    directory = Path(out_dir)
+    if directory.exists():
+        raise ForwardProbeError("OUTPUT_DIRECTORY_MUST_NOT_EXIST")
+    directory.mkdir(mode=0o700, parents=True, exist_ok=False)
+    start_clock, start_mono = clock(), monotonic_ns()
+    last_clock, last_mono = start_clock, start_mono
+    end_mono = start_mono + duration_seconds * 1_000_000_000
+    calls, snapshots, intervals, new_pairs = [], [], [], []
+    attempted = 0
+
+    def checkpoint():
+        nonlocal last_clock, last_mono
+        now, mono = clock(), monotonic_ns()
+        iso(now)
+        if now < last_clock or mono < last_mono:
+            raise ForwardProbeError("LOCAL_CLOCK_REVERSED")
+        delta_wall_ns = int((now - start_clock).total_seconds() * 1_000_000_000)
+        if abs(delta_wall_ns - (mono - start_mono)) > CLOCK_DRIFT_TOLERANCE_NS:
+            raise ForwardProbeError("LOCAL_CLOCK_MONOTONIC_DISAGREEMENT")
+        last_clock, last_mono = now, mono
+        return now, mono
+
+    def ask(method, params):
+        nonlocal attempted
+        if method not in READ_METHODS:
+            raise ForwardProbeError("DISALLOWED_RPC_METHOD")
+        if attempted >= rpc_budget:
+            raise ForwardProbeError("BOUNDED_RPC_LIMIT")
+        begin, m_begin = checkpoint()
+        attempted += 1
+        value, raw = rpc.request(method, params)
+        recv, m_end = checkpoint()
+        if type(raw) is not bytes or len(raw) > MAX_RESPONSE_BYTES:
+            raise ForwardProbeError("ORIGINAL_RPC_BYTES_INVALID")
+        try:
+            parsed = json.loads(raw)
+        except (ValueError, UnicodeDecodeError):
+            raise ForwardProbeError("ORIGINAL_RPC_JSON_INVALID") from None
+        if (not isinstance(parsed, dict) or parsed.get("result") != value
+                or parsed.get("error") or parsed.get("jsonrpc") != "2.0"
+                or parsed.get("id") != attempted or type(parsed.get("id")) is not int):
+            raise ForwardProbeError("ORIGINAL_RPC_RESULT_NOT_VERIFIED")
+        name = f"rpc-{len(calls)+1:03d}.json"
+        _write_private(directory / name, raw)
+        row = {"ordinal": len(calls)+1, "method": method, "params": params,
+               "raw_file": name, "raw_sha256": hashlib.sha256(raw).hexdigest(),
+               "raw_bytes": len(raw), "call_invoked_at_utc": iso(begin),
+               "local_response_completed_at_utc": iso(recv),
+               "elapsed_monotonic_ns": m_end-m_begin,
+               "response_completed_monotonic_offset_ns": m_end-start_mono}
+        calls.append(row)
+        return value, row
+
+    def call(to, data, height):
+        return ask("eth_call", [{"to": to, "data": data}, hex(height)])
+
+    def pinned_snapshot():
+        height_raw, _ = ask("eth_blockNumber", [])
+        height = hex_int(height_raw)
+        header_raw, _ = ask("eth_getBlockByNumber", [hex(height), False])
+        header = _validate_header(header_raw, height)
+        count_raw, count_row = call(FACTORY, COUNT_SELECTOR, height)
+        if not isinstance(count_raw, str) or not re.fullmatch(r"0x[0-9a-fA-F]{64}", count_raw):
+            raise ForwardProbeError("FACTORY_COUNT_NOT_ABI_WORD")
+        count = hex_int(count_raw)
+        again, _ = ask("eth_getBlockByNumber", [hex(height), False])
+        if _validate_header(again, height) != header:
+            raise ForwardProbeError("BLOCK_REORG_DURING_OBSERVATION")
+        result = {"block": header, "all_pairs_length": count,
+                  "count_observed_at_utc": count_row["local_response_completed_at_utc"],
+                  "count_response_monotonic_offset_ns":
+                      count_row["response_completed_monotonic_offset_ns"]}
+        return result
+
+    try:
+        chain, _ = ask("eth_chainId", [])
+        if hex_int(chain) != CHAIN:
+            raise ForwardProbeError("NOT_BSC_MAINNET_CHAIN_56")
+        a = pinned_snapshot()
+        snapshots.append(a)
+        stop_reason = "DURATION_LIMIT"
+        while True:
+            _, now_mono = checkpoint()
+            if now_mono >= end_mono:
+                break
+            # Reserve enough calls to prove one entire short gap and a head
+            # recheck. Never capture an unverified segment merely to use budget.
+            if rpc_budget - attempted < 32:
+                stop_reason = "RPC_BUDGET_SAFETY_RESERVE"
+                break
+            remaining = (end_mono - now_mono) / 1_000_000_000
+            sleep(min(float(poll_seconds), remaining))
+            _, now_mono = checkpoint()
+            if now_mono >= end_mono:
+                break
+            b = pinned_snapshot()
+            if b["block"]["number"] < a["block"]["number"]:
+                raise ForwardProbeError("HEAD_MOVED_BACKWARDS")
+            if b["all_pairs_length"] < a["all_pairs_length"]:
+                raise ForwardProbeError("FACTORY_COUNTER_DECREASED")
+            if (b["block"]["number"] == a["block"]["number"]
+                    and b["block"] != a["block"]):
+                raise ForwardProbeError("SAME_HEIGHT_REORG")
+            if (b["block"]["number"] == a["block"]["number"]
+                    and b["all_pairs_length"] != a["all_pairs_length"]):
+                raise ForwardProbeError("SAME_HEIGHT_INCONSISTENT_STATE")
+            gap = b["block"]["number"] - a["block"]["number"]
+            if gap > MAX_BOUNDED_ANCESTOR_BLOCKS:
+                raise ForwardProbeError("ANCESTRY_EXCEEDS_BOUNDED_DEPTH")
+            if rpc_budget - attempted < gap + 2:
+                raise ForwardProbeError("ANCESTRY_EXCEEDS_RPC_BUDGET")
+            anchor, _ = ask("eth_getBlockByNumber", [hex(a["block"]["number"]), False])
+            if _validate_header(anchor, a["block"]["number"]) != a["block"]:
+                raise ForwardProbeError("FIRST_ANCHOR_CHANGED")
+            parent = b["block"]["parent_hash"]
+            ancestors = []
+            for height in range(b["block"]["number"]-1, a["block"]["number"], -1):
+                raw, _ = ask("eth_getBlockByNumber", [hex(height), False])
+                hdr = _validate_header(raw, height)
+                if hdr["hash"] != parent:
+                    raise ForwardProbeError("NONCONTIGUOUS_PARENT_HASH")
+                ancestors.append(hdr)
+                parent = hdr["parent_hash"]
+            if gap > 0 and parent != a["block"]["hash"]:
+                raise ForwardProbeError("NONCONTIGUOUS_PARENT_HASH")
+            delta = b["all_pairs_length"] - a["all_pairs_length"]
+            read = []
+            capacity = min(delta, MAX_BOUNDED_PAIR_PER_INTERVAL,
+                           MAX_BOUNDED_IDENTITIES-len(new_pairs),
+                           max(0, (rpc_budget-attempted-2)//3))
+            for index in range(a["all_pairs_length"], a["all_pairs_length"]+capacity):
+                index_word = format(index, "064x")
+                pair_raw, t_pair = call(FACTORY, PAIRS_SELECTOR+index_word, b["block"]["number"])
+                pool = word_address(pair_raw)
+                t0_raw, t0 = call(pool, TOKEN0_SELECTOR, b["block"]["number"])
+                t1_raw, t1 = call(pool, TOKEN1_SELECTOR, b["block"]["number"])
+                token0, token1 = word_address(t0_raw), word_address(t1_raw)
+                if token0 == token1 or int(token0, 16) > int(token1, 16):
+                    raise ForwardProbeError("POOL_INVALID_TOKEN_ORDER_OR_IDENTITY")
+                if any(p["pool"] == pool or (p["token0"], p["token1"]) == (token0, token1)
+                       for p in new_pairs):
+                    raise ForwardProbeError("DUPLICATE_FACTORY_POOL_IDENTITY")
+                row = {"factory_index": index, "pool": pool,
+                       "token0": token0, "token1": token1,
+                       "pair_response_completed_at_utc": t_pair["local_response_completed_at_utc"],
+                       "token0_response_completed_at_utc": t0["local_response_completed_at_utc"],
+                       "token1_response_completed_at_utc": t1["local_response_completed_at_utc"],
+                       "identity_evidence_is_at_block": b["block"]["number"]}
+                new_pairs.append(row)
+                read.append(index)
+            latest, _ = ask("eth_getBlockByNumber", [hex(b["block"]["number"]), False])
+            if _validate_header(latest, b["block"]["number"]) != b["block"]:
+                raise ForwardProbeError("SECOND_ANCHOR_CHANGED")
+            intervals.append({
+                "from_block": a["block"]["number"], "to_block": b["block"]["number"],
+                "verified_intermediate_headers": ancestors,
+                "factory_index_before": a["all_pairs_length"],
+                "factory_index_after": b["all_pairs_length"],
+                "new_factory_pair_index_count": delta,
+                "identities_read_indices": read,
+                "unread_factory_indices": list(range(
+                    a["all_pairs_length"]+len(read), b["all_pairs_length"])),
+                "source_scope": "BSC_PANCAKE_V2_FACTORY_ONLY",
+                "interval_contiguous_headers_verified": True})
+            snapshots.append(b)
+            a = b
+        finish, finish_mono = checkpoint()
+        first, last = snapshots[0], snapshots[-1]
+        unread = sum(len(s["unread_factory_indices"]) for s in intervals)
+        result = {
+            "schema": "MONSTER_FORWARD_BSC_V2_MANUAL_BOUNDED_V1",
+            "network_chain_id": CHAIN, "factory": FACTORY,
+            "provider_url_sha256_only": rpc.source_sha256,
+            "requested_duration_seconds": duration_seconds,
+            "poll_seconds_requested": poll_seconds,
+            "max_rpc_attempts": rpc_budget,
+            "stop_reason": stop_reason,
+            "snapshots": snapshots, "verified_intervals": intervals,
+            "new_factory_pair_index_count": last["all_pairs_length"]-first["all_pairs_length"],
+            "new_pairs_read": new_pairs,
+            "unread_new_pair_count": unread,
+            "factory_index_identity_coverage":
+                "PARTIAL" if unread else "WITHIN_OBSERVED_FACTORY_COUNTER_DELTA_ONLY",
+            "capture_started_at_utc": iso(start_clock),
+            "capture_completed_at_utc": iso(finish),
+            "elapsed_monotonic_ns": finish_mono-start_mono,
+            "rpc_attempt_count": attempted, "rpc_requests": calls,
+            "time_basis": "LOCAL_RESPONSE_COMPLETED_UTC_NOT_FIRST_PUBLIC_AVAILABLE_AT",
+            "clock_attestation": "LOCAL_SYSTEM_CLOCK_NOT_EXTERNALLY_ATTESTED",
+            "source_scope": "SINGLE_PROVIDER_PANCAKE_V2_ONLY",
+            "reorg_finality": "NOT_PROVEN_FINALIZED",
+            "zero_delta_does_not_imply_whole_market_zero": True,
+            "trade_execution_or_liquidity": "NOT_TESTED",
+            "p0_historical_2025_available_at": "UNKNOWN_NOT_RETROACTIVELY_RECONSTRUCTED",
+            "p1_gate_passed": False, "trading_authorized": False,
+        }
+        _write_private(directory/"manifest.json",
+                       (json.dumps(result, indent=2, sort_keys=True)+"\n").encode())
+        return result
+    except Exception as exc:
+        code = str(exc) if isinstance(exc, ForwardProbeError) else type(exc).__name__
+        _write_private(directory/"failure.json",
+                       (json.dumps({"status": "UNUSABLE_NOT_PIT_EVIDENCE", "reason": code,
+                                    "rpc_attempt_count": attempted,
+                                    "completed_rpc_responses": calls},
+                                   indent=2, sort_keys=True)+"\n").encode())
+        raise
+
+
 def main():
     parser = argparse.ArgumentParser(description="Monster bounded manual BSC V2 forward-only receipt pilot")
-    parser.add_argument("--manual-once", action="store_true")
+    modes = parser.add_mutually_exclusive_group(required=True)
+    modes.add_argument("--manual-once", action="store_true")
+    modes.add_argument("--manual-bounded", action="store_true")
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--pause-ms", type=int, default=1000)
     args = parser.parse_args()
-    if not args.manual_once or not 0 <= args.pause_ms <= 3000:
-        parser.error("--manual-once and --pause-ms from 0 to 3000 required")
-    rpc = ForwardRPC(os.getenv("MONSTER_BSC_ARCHIVE_RPC_URL"), max_requests=MAX_CALLS)
-    result = capture(rpc, args.out_dir, pause_seconds=args.pause_ms / 1000)
-    print(json.dumps({"status": "READ_ONLY_PILOT_OBSERVED",
-        "manifest_path": str(args.out_dir / "manifest.json"),
-        "snapshots": len(result["snapshots"]),
-        "pair_count_delta": result["new_factory_pair_index_count"],
-        "listed_pairs": len(result["new_pairs_read"]),
-        "p0_gate": "UNCHANGED", "p1_gate": "BLOCKED"}, sort_keys=True))
+    if args.manual_bounded:
+        if args.pause_ms != 1000:
+            parser.error("--pause-ms is only valid with --manual-once")
+        rpc = ForwardRPC(os.getenv("MONSTER_BSC_ARCHIVE_RPC_URL"),
+                         max_requests=MAX_BOUNDED_CALLS)
+        result = capture_bounded(rpc, args.out_dir)
+        print(json.dumps({"status": "READ_ONLY_BOUNDED_OBSERVED",
+            "manifest_path": str(args.out_dir / "manifest.json"),
+            "snapshots": len(result["snapshots"]),
+            "pair_count_delta": result["new_factory_pair_index_count"],
+            "listed_pairs": len(result["new_pairs_read"]),
+            "unread_new_pairs": result["unread_new_pair_count"],
+            "stop_reason": result["stop_reason"],
+            "p0_gate": "UNCHANGED", "p1_gate": "BLOCKED"}, sort_keys=True))
+    else:
+        if not 0 <= args.pause_ms <= 3000:
+            parser.error("--manual-once and --pause-ms from 0 to 3000 required")
+        rpc = ForwardRPC(os.getenv("MONSTER_BSC_ARCHIVE_RPC_URL"), max_requests=MAX_CALLS)
+        result = capture(rpc, args.out_dir, pause_seconds=args.pause_ms / 1000)
+        print(json.dumps({"status": "READ_ONLY_PILOT_OBSERVED",
+            "manifest_path": str(args.out_dir / "manifest.json"),
+            "snapshots": len(result["snapshots"]),
+            "pair_count_delta": result["new_factory_pair_index_count"],
+            "listed_pairs": len(result["new_pairs_read"]),
+            "p0_gate": "UNCHANGED", "p1_gate": "BLOCKED"}, sort_keys=True))
 
 
 if __name__ == "__main__":
