@@ -115,3 +115,13 @@ STATUS: PINNED_READ_PASS
 **操作侧独立错误**：先前给Mac打包命令用了 `status=$?`，而zsh的 `status` 为只读特殊参数，故另见 `zsh: read-only variable: status`；这与链上RPC失败没有因果关系，今后用 `capture_exit_code=$?`。保留失败ZIP、不重采伪造成成功。
 
 **不变门禁**：旧历史P0 `INSUFFICIENT_COVERAGE`，P1 `BLOCKED`，G6 `NO_GO`；新模式 `LIVE_BOUNDED_FAILURE_CONFIRMED / BATCH_PROVIDER_SUPPORT_UNVERIFIED`。不启动定时、付费、生产邮件/交易，不改Frank。
+
+## 2026-10-28：BSC 公共端点双头 JSON-RPC batch 真实预检通过，批量祖先验证进入一次性前台候选
+
+**独立读取用户上传原字节**：用户 Mac 对 `https://bsc-dataseed.bnbchain.org` 一次只读 batch POST `eth_getBlockByNumber(130241878,false)` 与 `(130241879,false)`，终端报告 HTTP200、BATCH_VERIFIED=YES。用户上传 `monster-bsc-batch-preflight.json`，本次独立按文件原字节复算 **17,964 bytes**、SHA-256 `4ae90e5a2d2461be6757db0ebf5d64523cfac2773aee17c1773bbf3e00a40124`，JSON array恰2条，ID精确1和2、无错误，区块号130241878与130241879，blockHash分别 `0x09ad56b3e88eaa7d823f04ed9a8c383df2eb73b40aca70dfd351898312e33e08`、`0x948e8e7df695c76afb6a66a2ebb81978f397b17c7c0a9b50a0da23eb6b4c9f3b`，后一个parentHash与前一hash完全一致，且与此前失败ZIP固定区块身份一致。**HTTP 200仅来自用户终端回执**，原生JSON不含签名/TLS证明；不能推广为所有区块高流量请求、任意大batch可用或PIT源认证完成。遵循raw不入Git合同，仅SHA和结果留本ADR。
+
+**源码修复范围**：复用 `mission_agent/early/forward_observation.py`，仅 bounded 前台模式新增 `ForwardRPC.request_batch` 批量头读取；每批最多4个 `eth_getBlockByNumber`、且强制false不含完整交易对象。限制原始HTTP体<=262144字节、20秒超时、HTTPS URL、拒绝重定向继承原连接策略。对每个子请求的连续正整数ID、`jsonrpc=2.0`、原response数组条数、唯一ID、无错误、结果对象、按ID重新排列，严格验证；额外按本机收包时间、原batch字节SHA以及每个子请求的method/params保存同一原始 batch JSON，且**4个子请求计为4个180 RPC预算，不是一次**。祖先分块查询保持每个块、前后anchor和parentHash连续验证；没有使用缺块、区块头时间戳代替收包时刻。BSC 0.45秒目标出块、poll=5秒、最大24块祖先、180请求/180秒上限与缺页fail-closed语义不变，可能提前以RPC预算停止，实际覆盖与未覆盖必须由manifest判定。
+
+**自动离线回归实际通过**：固定提交 `cf7b7be7f2a75ad2a96ae40acb53e87c74f6bfa1` 的旧/新43测试扩至46项，接入现有 `.github/workflows/monster-v4-research-baseline.yml`（没有新增workflow）。GitHub Actions [Run 40652188556](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/40652188556) 运行 `Test finite BSC V2 forward observer and RPC batch fail-closed` 实际 **46/46 PASS (0.103s)**，全job `success`。包含 mock HTTP 批量传输、响应顺序反转、重复/缺失ID、错误子项、篡改结果、子请求预算、错误链、区块父hash失败等；**不是**实时多区块成功样本，也不是独立其他AI审查。
+
+**阶段门禁**：`BATCH_TWO_BLOCK_PROVIDER_PREFLIGHT_PASS / BOUNDED_BATCH_CODE_OFFLINE_46_PASS / LIVE_BATCH_CAPTURE_NOT_RUN / PIT_SOURCE_INDEPENDENT_REVIEW_PENDING / TRADE_SELLABILITY_UNVERIFIED / G6_NO_GO`。用户原先的下一次一次性前台只读研究方向保持不延伸为日常定时/付费/自动交易/发邮件；再次实测必须用新的固定代码SHA与新目录，保留真实原始包，失败不自动重跑。旧2025历史P0门槛与11月2日停止日仍不动。
