@@ -99,6 +99,22 @@ class OncePhysicalForegroundTests(unittest.TestCase):
             wrong=_LiveOnceChildPermit(p,"b"*64,time.monotonic()+4)
             self.assertFalse(wrong.valid())
 
+    def test_live_once_permit_denies_after_parent_pipe_eof(self):
+        with tempfile.TemporaryDirectory() as td:
+            p,ident=self.make_marker(td)
+            readfd,writefd=os.pipe()
+            try:
+                token=_LiveOnceChildPermit(
+                    p,ident,time.monotonic()+5,parent_pipe=readfd)
+                self.assertTrue(token.valid())
+                os.close(writefd)
+                writefd=None
+                self.assertFalse(token.valid())
+            finally:
+                os.close(readfd)
+                if writefd is not None:
+                    os.close(writefd)
+
     def test_invalid_confirmation_refused_before_marker_and_spawn(self):
         d=scope()
         raw=json.dumps(d,sort_keys=True).encode()
