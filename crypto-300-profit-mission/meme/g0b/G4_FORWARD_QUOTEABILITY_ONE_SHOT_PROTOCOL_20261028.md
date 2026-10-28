@@ -51,7 +51,7 @@
 
 每个实际前向信号及可报档：在 t_visible + lag **之后、接近该目标**请求 USDC → Mint 的按金额 BUY quote，记录原始返回值、路由、金额最小单位、状态、出入金额、全部费项、请求/响应/到期时间、证据 SHA256。报价未及时成功则记 MISSED_LAG/NO_ROUTE/HTTP_FAILED/QUOTE_STALE，不能用未来分钟价格补齐。
 
-退出时用该次入场 quote 返回的**假想代币数量**作为反向 Mint → USDC quote 的输入，而非 Frank 自己的持仓。每档两种退出方案独立记录。没有真实 BUY quote 就不能构造虚拟持仓与 SELL quote。到实验绝对截止后，未发生的退出记 CENSORED_AT_STOP，不进行追补。
+退出时用该次入场 quote 返回的**假想代币数量**作为反向 Mint → USDC quote 的输入，而非 Frank 自己的持仓。每档两种退出方案独立记录。**Frank SELL 必须晚于该档入场 quote 被实际收到的时刻**；若先卖出后获得入场报价则标 SELL_BEFORE_ENTRY，不允许倒序计算。没有真实 BUY quote 就不能构造虚拟持仓与 SELL quote。到实验绝对截止后，未发生的退出记 CENSORED_AT_STOP，不进行追补。
 
 报价代表服务在响应时给出的条件性意向，并不是已签名、可落地或保证成交。没有用户钱包，quote-only 还无法验证余额、ATA、SOL gas 和真实路由落地风险。可能的 RFQ 报价也有有效期和 last-look 风险。完整交易手续费、滑点、gas/priority、失败成本若缺失，则只能展示条件性**报价差额**，不允许报“可实现净利润”。
 
