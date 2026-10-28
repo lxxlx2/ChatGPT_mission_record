@@ -7,6 +7,38 @@ Action: `WATCH`, `NO_BUY_UNTIL_OFFICIAL_LAUNCH_AND_LIQUIDITY_VERIFIED`.
 Authority: `crypto-300-profit-mission/PROJECT_ANALYSIS_FRAMEWORK.md`, `PROJECT_ANALYSIS_EVIDENCE_WORKFLOW.md`, `token_trading_principles.md`.
 Trading/monitoring: `PRODUCTION_TRADING=NO_GO`; no capital committed or monitoring task created by this note.
 
+## 2026-10-29 Telegram crosscheck and second MACHINE mint: SXTH remains unverified (no buy)
+
+**Goal:** user supplied detailed user-browser Telegram read from Sixth Sense Labs Community General on Oct28 evening through Oct29 00:53 Bangkok. This section cross-checks against fresh primary Solana mainnet RPC reads made on Oct29; Telegram content below is user-supplied observation (not independently archived as complete chat history), **not chain proof**. No new scheduled monitor or trading instruction.
+
+### Telegram intelligence vs independently verified chain
+
+- At ~Oct28 20:50 Bangkok, group owner Todd represented that “Launch Partners” expected Machine.fun platform to go live that day. This is an **unverified forward-looking claim**, not a launch transaction, production frontend status or SXTH mint.
+- Group member Nova supplied an apparent “Machine.fun launchpad program address”, NOT an SXTH **token mint**. Todd reportedly said Sixth Sense did not use that specific address and requested no further CA messages; subsequently shared an issuer statement warning of fake SXTH. **Critical logical correction:** whether the Machine-branded platform program belongs to a launchpad does NOT prove Sixth Sense used it, and Todd’s denial of *SXTH association* does NOT disprove its existence or actual mainnet machine-labelled platform activity.
+- Cited X posts supplied by user: `https://x.com/sextus_sensus/status/2115443378322305300` (Oct28 purported fake SXTH alert); `https://x.com/Sextus_Sensus/status/2112557952897077553` (Oct20 purported similar warning); `https://x.com/sextus_sensus/status/2115434401932652889` (Lumina intro). Project-owner assertions are untrusted, useful only as leads. No verified SXTH mint or onchain issuance has yet been independently tied to Sixth Sense within evidence inspected.
+- The user-supplied TG page only loaded messages Oct28 20:08-23:45 plus two user-join events after midnight. Its 725 message count is cumulative, **not complete Oct28 coverage**.
+
+### New directly read onchain data (Oct29, finalized RPC)
+
+- Re-queried verified platform config `3hVbfgB77tL1qDKhtMQoe4Gv7qPN2dGmKpD2KxWP2sPb` via Alchemy `solana_getSignaturesForAddress(limit=8)`: most recent success in returned set was **2026-10-28T16:51:41Z / 23:51:41 Bangkok**, signature `3pcmk9tZvmv9af9TM2woCQRXgWiL2RsSK7PyNruWi3U2EFhj8br8PvE2nqjAZAQdoLcV32p6Q55aKRR6sSqKKZdr`, slot `462550577`. The `getTransaction` parsed inner SPL token flows show swap **60,000,000.012629** units of a different mint `3m4MAtoeJ1LA82peNBmzP3FGfbzpAxVqZj6ch5xtPcQc` against **1.752917671 WSOL** received, under LaunchLab. This is a successful trading event, not proof new mint was created at that time. Six subsequent prior failed same-config trades in preceding minute were program 5kZmv… error 111. Do not treat failed swaps as mint events.
+- **Mint verified** `3m4MAtoeJ1LA82peNBmzP3FGfbzpAxVqZj6ch5xtPcQc`. Metaplex PDA derived with `[b"metadata", TokenMetadataProgram, mint]`: `2SgU2ruX21n4ZFJkzDYVp6L4GQBao2aYDUDH6k4z8jXT`. Direct `getAccountInfo(base64)` returned owner `metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s`, 607 bytes, decoded padded fields **name=`MACHINE`, symbol=`MACHINE`**, URI `https://gateway.pinata.cloud/ipfs/bafkreibrutctdsg66zyaaduhzptjpfl6dpwrydc3r6r7m2f3zncxcosqiq`. This is NOT a verified `SXTH` mint, even though it used same platform configuration.
+- **Pool PDA independently derived** using Raydium LaunchLab `[b"pool",baseMint,WSOL]` under `LanMV9sAd7wArD4vJFi2qDdfnVhFxYSUg6eADduJ3uj`: `3VV43iWWPUe7o9QAkBHzGdu8rezpcZGYGK3WyytqPdAt`. `getAccountInfo(base64)` returned LaunchLab-owned 429-byte `PoolState`. Official SDK layout offsets decoded: `globalConfig=6s1xP3hpbAfFoNtUNF8mfHsjr2Bd97JxFJRWLbL6aHuX`, **platformConfig=3hVbfgB77tL1qDKhtMQoe4Gv7qPN2dGmKpD2KxWP2sPb**, `mint=3m4MAtoe...`, `quote=So11111111111111111111111111111111111111112`, **creator=8HVQQRJiHji5JwFDpFEtsPWD5M42yyiA4Tkh8Ggryw8s**, status=**0** (Fund/bonding curve) at RPC slot 462569637. This pool creator differs from earlier dubious `sYUJ...` pool creator `7LJoZL5GHDmJoxczmM1P1hzrARCUWa7uyxVT5jBwsd9d`.
+- Therefore Machine.fun-branded `PlatformConfig` is actually being referenced by **at least two distinct known pools and different recorded creators**, including a token literally named MACHINE. One legitimate platform-config match is a **venue-level association, not issuer-level authenticity**. No blanket rule that a Machine-config mint is SXTH.
+- The initial `sYUJ...` launch at Oct28 20:18:19 Bangkok came after this same config was **created by successful Squads → MACHX → Raydium CreatePlatformConfig CPI Oct28 01:33:59 Bangkok (18h44m20s lead)**. This establishes a pre-CA alert surface in the historical event; strong technical onchain chain tying program manager and same configuration. It does **not by itself identify corporate ultimate key controllers** or prove SXTH.
+- DAS `getAsset` metadata query attempted, **rejected for Free plan**; independently derived Metaplex metadata account plus direct read resolved MACHINE ticker without paying or increasing plan. GitHub/other public source checks do not supersede raw chain.
+
+### Strict actionable decision
+
+- **Machine-branded LaunchLab setup exists onchain and was active at least through Oct28 23:51 Bangkok**: HIGH-confidence chain fact.
+- **SXTH project intends to issue on Machine.fun**: supported only by project own public venue statement and cross-posts; first-Garage priority or sequence not verified.
+- **No independently verified SXTH token / endorsed first launch / matching project creator multisig or quote/pool** in present evidence: **DO NOT BUY** any `SXTH`, `MACHINE` or random platform-config match as presumed Sixth Sense genuine. This is a lack-of-proof statement, not a claim that no SXTH mint exists on the whole chain at all.
+- **When to re-evaluate**: a candidate SXTH mint and its **actual pool** must be anchored to known project-controlled key(s) or independently cross-bound source signatures; match platform config (or explain other config), decode first-slot execution, funding clusters, initial liquidity + executable sell output and risks. The first-slot concentration exploit investigation (5.9 SOL bought ~23.835% of sYUJ supply and A +22.9886 SOL realized pre-fees) warns that venue identity alone does NOT imply a fair launch.
+- No exact TGE slot, pre-mint first-Garage full roster, first-round price, or allocation is verified here. Telegram statement "platform tonight" must NOT be treated as usable slot/time.
+
+**Verdict:** `MACHINE_BRANDED_PLATFORM_CHAIN_VERIFIED / PREMINT_SQUADS_MACHINE_CONFIG_CPI_VERIFIED / SECOND_DISTINCT_MACHINE_TOKEN_POOL_CHAIN_VERIFIED / SXTH_NO_AUTHENTICATED_MINT / NO_GO_BUY / NO_NEW_AUTOMATION`. Substantive update supersedes earlier speculation that the first disputed `sYUJ...` token is the only launch on the config.
+
+---
+
 ## 2026-10-29 critical onchain breakthrough: Machine-branded PlatformConfig created 18h44m BEFORE first mint
 
 **Directly verified** with user's read-only Alchemy Solana mainnet RPC, by *decoding actual original accounts*, not trusting either issuer announcement or token ticker. This supersedes all previous records saying no Machine.fun `PlatformConfig` candidate has been found. **No live monitor, cron, wallet trade, or auto order was authorized or created.**
