@@ -33,7 +33,7 @@ Timezone: Asia/Bangkok
 - last_delivered_gmail_message_id: 1a16a27a9e5b557c (prior run; no new email)
 - user_alert: email only on fresh ACTION, App silent
 - latest_terminal_sync: 2026-10-28 11:02:26 BKK PARTIAL shard3; 5 candidates, 5 source/rights gaps, 0 identity conflicts, 0 new ACTION; no Gmail/App; last fully verified Oct10 unchanged
-- receipt_time_note: actual bounded attempt 10:00:07–10:01:11 BKK; scheduler trigger alone is not completion proof.
+- receipt_time_note: actual bounded attempt 11:01:56–11:02:26 BKK; scheduler trigger alone is not completion proof.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
