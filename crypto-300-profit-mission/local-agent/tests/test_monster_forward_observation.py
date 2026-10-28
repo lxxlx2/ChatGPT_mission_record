@@ -384,8 +384,9 @@ class BoundedForwardObservationTests(unittest.TestCase):
         self.assertEqual(len(result['new_pairs_read']), 3)
         self.assertEqual(result['unread_new_pair_count'], 7)
         self.assertEqual(result['factory_index_identity_coverage'], 'PARTIAL')
-        self.assertEqual(result['verified_intervals'][0]['unread_factory_indices'],
-                         [503, 504, 505, 506, 507, 508, 509])
+        self.assertEqual(result['verified_intervals'][0]['unread_factory_index_start'], 503)
+        self.assertEqual(result['verified_intervals'][0]['unread_factory_index_end_exclusive'], 510)
+        self.assertEqual(result['verified_intervals'][0]['unread_count'], 7)
 
     def test_wrong_chain_writes_failure_without_manifest(self):
         with self.assertRaisesRegex(m.ForwardProbeError, 'NOT_BSC'):
