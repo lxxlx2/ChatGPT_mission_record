@@ -333,5 +333,105 @@ class ForwardObservationTests(unittest.TestCase):
         self.assertNotIn('PIT_VERIFIED', json.dumps(result))
 
 
+
+class BoundedForwardObservationTests(unittest.TestCase):
+    """New finite-mode tests; old two-snapshot contract remains unchanged."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.dir = Path(self.tmp.name) / 'bounded'
+
+    def bounded(self, *, rpc=None, clock=None, budget=55, duration=36):
+        rpc = rpc or FakeRPC()
+        clock = clock or Clock()
+        return m.capture_bounded(
+            rpc, self.dir, duration_seconds=duration,
+            poll_seconds=12, rpc_budget=budget,
+            clock=clock.now, monotonic_ns=clock.monotonic, sleep=clock.sleep)
+
+    def test_real_new_pair_across_snapshots_and_original_raw(self):
+        result = self.bounded()
+        self.assertEqual(result['schema'], 'MONSTER_FORWARD_BSC_V2_MANUAL_BOUNDED_V1')
+        self.assertGreaterEqual(len(result['snapshots']), 2)
+        self.assertEqual(result['new_factory_pair_index_count'], 1)
+        self.assertEqual(len(result['new_pairs_read']), 1)
+        self.assertEqual(result['new_pairs_read'][0]['pool'], PAIR)
+        self.assertEqual(result['unread_new_pair_count'], 0)
+        self.assertFalse(result['p1_gate_passed'])
+        self.assertFalse(result['trading_authorized'])
+        self.assertIn(result['stop_reason'], ('DURATION_LIMIT', 'RPC_BUDGET_SAFETY_RESERVE'))
+        self.assertLessEqual(result['rpc_attempt_count'], 55)
+        self.assertEqual(json.loads((self.dir/'manifest.json').read_text()), result)
+        for row in result['rpc_requests']:
+            self.assertIn(row['method'], m.READ_METHODS)
+            original = (self.dir/row['raw_file']).read_bytes()
+            self.assertEqual(hashlib.sha256(original).hexdigest(), row['raw_sha256'])
+            self.assertEqual(len(original), row['raw_bytes'])
+            self.assertEqual(row['ordinal'], json.loads(original)['id'])
+        self.assertFalse((self.dir/'failure.json').exists())
+
+    def test_zero_delta_is_scoped_to_factory_only(self):
+        result = self.bounded(rpc=FakeRPC(before=500, after=500))
+        self.assertEqual(result['new_factory_pair_index_count'], 0)
+        self.assertEqual(result['new_pairs_read'], [])
+        self.assertEqual(result['unread_new_pair_count'], 0)
+        self.assertTrue(result['zero_delta_does_not_imply_whole_market_zero'])
+
+    def test_burst_keeps_all_missing_indices_as_explicit_denominator(self):
+        result = self.bounded(rpc=FakeRPC(before=500, after=510))
+        self.assertEqual(result['new_factory_pair_index_count'], 10)
+        self.assertEqual(len(result['new_pairs_read']), 3)
+        self.assertEqual(result['unread_new_pair_count'], 7)
+        self.assertEqual(result['factory_index_identity_coverage'], 'PARTIAL')
+        self.assertEqual(result['verified_intervals'][0]['unread_factory_indices'],
+                         [503, 504, 505, 506, 507, 508, 509])
+
+    def test_wrong_chain_writes_failure_without_manifest(self):
+        with self.assertRaisesRegex(m.ForwardProbeError, 'NOT_BSC'):
+            self.bounded(rpc=FakeRPC(chain=1))
+        self.assertFalse((self.dir/'manifest.json').exists())
+        reason = json.loads((self.dir/'failure.json').read_text())
+        self.assertIn('NOT_BSC', reason['reason'])
+
+    def test_long_gap_refused_instead_of_faking_contiguity(self):
+        with self.assertRaisesRegex(m.ForwardProbeError, 'ANCESTRY_EXCEEDS_BOUNDED_DEPTH'):
+            self.bounded(rpc=FakeRPC(second_height=135))
+        self.assertFalse((self.dir/'manifest.json').exists())
+        self.assertTrue((self.dir/'failure.json').exists())
+
+    def test_reorg_refused_instead_of_using_stale_counter(self):
+        with self.assertRaisesRegex(m.ForwardProbeError, 'FIRST_ANCHOR_CHANGED'):
+            self.bounded(rpc=FakeRPC(changed_hash=True))
+        self.assertFalse((self.dir/'manifest.json').exists())
+
+    def test_bad_parent_hash_fails_closed(self):
+        with self.assertRaisesRegex(m.ForwardProbeError, 'NONCONTIGUOUS_PARENT_HASH'):
+            self.bounded(rpc=FakeRPC(second_height=103, broken_parent_height=102))
+        self.assertFalse((self.dir/'manifest.json').exists())
+
+    def test_clock_jump_fails_closed(self):
+        with self.assertRaisesRegex(m.ForwardProbeError, 'LOCAL_CLOCK_MONOTONIC_DISAGREEMENT'):
+            self.bounded(clock=Clock(utc_jump_at=9, utc_jump_seconds=4))
+        self.assertFalse((self.dir/'manifest.json').exists())
+
+    def test_bounds_reject_unlimited_duration_and_request_budget(self):
+        for kw in ({'duration_seconds': 181, 'rpc_budget': 55},
+                   {'duration_seconds': 36, 'rpc_budget': 181},
+                   {'duration_seconds': 36, 'rpc_budget': 39},
+                   {'duration_seconds': 36, 'rpc_budget': 55, 'poll_seconds': 13}):
+            with self.subTest(kw=kw):
+                with self.assertRaisesRegex(m.ForwardProbeError, 'BOUNDED_CONTRACT_OUT_OF_RANGE'):
+                    m.capture_bounded(FakeRPC(), self.dir, **kw)
+        self.assertFalse(self.dir.exists())
+
+    def test_existing_output_never_overwritten(self):
+        result = self.bounded()
+        original = (self.dir/'manifest.json').read_bytes()
+        with self.assertRaisesRegex(m.ForwardProbeError, 'OUTPUT_DIRECTORY_MUST_NOT_EXIST'):
+            self.bounded()
+        self.assertEqual((self.dir/'manifest.json').read_bytes(), original)
+
+
 if __name__ == '__main__':
     unittest.main()
