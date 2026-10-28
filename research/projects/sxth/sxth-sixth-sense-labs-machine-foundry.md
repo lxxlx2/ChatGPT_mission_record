@@ -7,6 +7,40 @@ Action: `WATCH`, `NO_BUY_UNTIL_OFFICIAL_LAUNCH_AND_LIQUIDITY_VERIFIED`.
 Authority: `crypto-300-profit-mission/PROJECT_ANALYSIS_FRAMEWORK.md`, `PROJECT_ANALYSIS_EVIDENCE_WORKFLOW.md`, `token_trading_principles.md`.
 Trading/monitoring: `PRODUCTION_TRADING=NO_GO`; no capital committed or monitoring task created by this note.
 
+## 2026-10-29 critical onchain breakthrough: Machine-branded PlatformConfig created 18h44m BEFORE first mint
+
+**Directly verified** with user's read-only Alchemy Solana mainnet RPC, by *decoding actual original accounts*, not trusting either issuer announcement or token ticker. This supersedes all previous records saying no Machine.fun `PlatformConfig` candidate has been found. **No live monitor, cron, wallet trade, or auto order was authorized or created.**
+
+### Deterministic derivation from suspicious first-mint pool
+
+- Existing alleged launch tx `XSsPNb1TM8J7rEsWgr9ujus6TABVx45UhqaARaN454LWhr9qwM3aJg5qELDGzV9LNYimk1bShPpaeuKWLA2nmXE`, at **2026-10-28T13:18:19Z** (20:18:19 Bangkok), mint `sYUJLvHEVQofSBehcUQiYLZA967BLqX8CZbUdCWMACH` using WSOL quote.
+- Raydium official SDK `getPdaLaunchpadPoolId` uses seeds `[b"pool", mintA, mintB]` under program `LanMV9sAd7wArD4vJFi2qDdfnVhFxYSUg6eADduJ3uj`. The Solana PDA algorithm independently reproduced **`Ehb92xLBJVAshcbwfMVYgWnQ8oeKJeeqdPR4HNFn6d9J`** with bump 255; `getAccountInfo(base64)` returned owner = LaunchLab and 429-byte `PoolState`, current `status=2` (graduated). Decoding via SDK `src/raydium/launchpad/layout.ts`: `GlobalConfig=6s1xP3hpbAfFoNtUNF8mfHsjr2Bd97JxFJRWLbL6aHuX`, **`PlatformConfig=3hVbfgB77tL1qDKhtMQoe4Gv7qPN2dGmKpD2KxWP2sPb`**, `baseMint=sYUJ...`, `quoteMint=So11111111111111111111111111111111111111112`, `creator=7LJoZL5GHDmJoxczmM1P1hzrARCUWa7uyxVT5jBwsd9d`, total supply raw `1000000000000000` (1bn 6dec), curve total quote raw `60000000000` (60 SOL).
+- Direct RPC `getAccountInfo(base64)` for `3hVbfgB77tL1qDKhtMQoe4Gv7qPN2dGmKpD2KxWP2sPb` returns 944-byte legitimate LaunchLab-owned **PlatformConfig**. Exact byte decoded:
+  - `name=Machine.fun`
+  - `web=https://machine.fun/`
+  - `platformClaimFeeWallet=FmoGkvumFhRo8jiJfuV9VgVhDL5gNQrzS9YaecaaDUhn` (**also recipient in later MACHX program-close loader transaction**)
+  - `platformLockNftWallet=DX4gpRCZWK6Nt2zZEGwRG1FQDEUCXobSzc8hGmYLxoSH`
+  - `platformScale=1000000`, `creatorScale=0`, `burnScale=0` (100% platform LP share per config; **DO NOT call fully locked/burned until actual FeeKey NFT custody and graduation pool are verified**).
+  - `feeRate=10000` = 1%; `creatorFeeRate=1000` = 0.1%, denominator 1e6; `cpConfigId=627Jx6eN61TrdgMFSQt1QxvAmYWHXmzVA8M9FsKFtdkX`; `platformCpCreator=7LJoZL5GHDmJoxczmM1P1hzrARCUWa7uyxVT5jBwsd9d`; `restrictGlobalConfig=0`, `restrictCurveParam=0`; `curveRuleManager=11111111111111111111111111111111`. Branding is self-declared inside permissionless PlatformConfig, **not corporate proof by itself**.
+- **Independent platform-admin PDA derivation** using SDK seeds `[b"platform_config", platform_admin]`: `platform_admin=HSTR8asV66986Mso6DfkuEVA7pWjRPMHd5m1hKFM7XFF` yields **EXACT `3hVbfgB77tL1qDKhtMQoe4Gv7qPN2dGmKpD2KxWP2sPb`**, bump 246. This supplies precise platform admin identity in address space; no need to scan all Solana tokens.
+
+### Pre-mint platform-config creation proven (~18h44m advance)
+
+- `solana_getSignaturesForAddress(platformConfig, before=<mint-tx-signature>, limit=22)` returned **exactly one earlier signature**: `3icZstcFh86CCA2QebiAyJjtzJvwDtjXu2XpVYo8a7fq5KL6AdJNWLYrjKhxQATiYE67CCLGWWfuMgeuRLNThRJN`, successful at **2026-10-27T18:33:59Z / 2026-10-28 01:33:59 Asia/Bangkok**, slot **462173640**, **18h44m20s BEFORE** suspicious Mint `2026-10-28T13:18:19Z`. Under confirmed account history for this exact `PlatformConfig`, first encounter was this creation and next was the launch mint — not a post-launch attribution exercise. A timely historical listener could have detected readiness **before token CA**.
+- Direct `getTransaction(jsonParsed, maxSupportedTransactionVersion=1)` returned successful `Squads v4 VaultTransactionExecute`, with onchain Memo **`Machine.fun: create Raydium LaunchLab platform config`**, cross-program invoke to `MACHX97ggsHjPyrZErp5mGr7uq5jVmqgCnN7Hd2213g`:
+  1. `MACHX` `SetPaused` succeeds;
+  2. `MACHX` `CreatePlatformConfig` succeeds, with CPI to **Raydium LaunchLab `CreatePlatformConfig`** and 944-byte `3hVb...` account creation; platform admin address `HSTR8asV66986Mso6DfkuEVA7pWjRPMHd5m1hKFM7XFF`.
+  3. CPI to Raydium **`UpdatePlatformConfig`**, logs setting `PlatformCPCreator(7LJo...)`;
+  4. `MACHX` `SetPaused` succeeds, and the outer multisig execution returns success.
+- This provides a **strong direct identity/technical bridge** from the machine.fun-brand `PlatformConfig` through the custom `MACHX` wrapper and Squads control to original mint creator `7LJo...` and later program-close tx `4k7Hdv7diFSxAc9SUWT6NPnN2z5WCdLvirvBPLv66GFFrsf1H47vnL3Lcfub8JwsFh5bBwZKXsBriimBzJDzcLvL`. No reliance on project team's denial. Still **cannot establish human/private corporate legal ownership** solely from self-declared branding and memos. Strongly supports disputed token as an issuance under same Machine-branded launch infrastructure, NOT merely random Raydium token / unrelated vanity address.
+- **Config already existed before first suspicious mint:** the first evidence-rich PlatformConfig was set up ~19h prior. This opens a concrete prelaunch monitoring opportunity for future configurations / management operations, independent of finding token CA. **Do not guarantee every future launch uses this one config**: the admin may create a new config or program, and custom MACHX wrapper was later closed.
+- Alchemy `getProgramAccounts` broad scan returned 429 previously; direct seed-based `getAccountInfo` calls here SUCCEEDED, so broad scans were **not necessary**. Confirm the dedicated `PlatformConfig` exists and is parsable under 1-shot RPC.
+- **First Garage roster remains separately unverified:** Machine.fun Sept10 selected teams, Foundry form public without list. **New candidate primary source:** Sixth Sense Labs own LinkedIn post `https://www.linkedin.com/posts/sixth-sense-labs_machinefun-apply-now-to-the-foundry-activity-7508314310788444161-JITv` explicitly states "We are preparing to launch with Machine.Fun"; this validates the intended *venue from project statements*, not selection into first Garage, order, CA or token start. Candidate SXTH, NOT official confirmed first token.
+- **Practical stage-gated early detector** (research proposal only): `Squads VaultTransactionExecute` with `MACHX` `CreatePlatformConfig` and `Raydium CreatePlatformConfig` event on custom admin cluster; `PlatformConfig` `name/web` inspection + admin/feePDA graph for provenance; candidate project roster via public Foundry/partner direct cross-references; finalized `InitializeV2` matching **approved config** and first buy defense. **This same historical event was available 18h44m before mint.** No promise all new configs can be seen without program-level subscription, and no trading until actual first viable launch and sell quote evidence.
+- **Explicit decision:** `PLATFORM_CONFIG_3hVb..._CHAIN_CONFIRMED / CREATED_PRE_MINT_18H44M / MACHX_SQDS_RAYDIUM_CPI_DIRECT_BRIDGE / MACHX_BRANDED_PLATFORM_ISSUER_LIKELY_ASSOCIATED / COMPANY_PRIVATE_KEY_IDENTITY_UNVERIFIED / FIRST_GARAGE_LIST_UNPUBLISHED / SXTH_CANDIDATE_ONLY / NO_MONITOR_ENABLED`.
+
+---
+
 ## 2026-10-29 PRE-LAUNCH discovery correction: operational owner, curated Garage and advance triggers
 
 **USER GOAL IS BEFORE THE FIRST TOKEN, not finding a token after CA is public.** Earlier proposal to wait for a first successful release to extract PlatformConfig was inadequate for buying the first correct token in its earliest minutes. This supersedes that priority. No unauthorized cron, automation, code deployment, wallet action or trade.
