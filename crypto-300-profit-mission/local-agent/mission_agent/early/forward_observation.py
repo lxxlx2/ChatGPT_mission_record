@@ -495,6 +495,8 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
         if attempted >= rpc_budget:
             raise ForwardProbeError("BOUNDED_RPC_LIMIT")
         begin, m_begin = checkpoint()
+        if m_begin >= end_mono:
+            raise ForwardProbeError("BOUNDED_GLOBAL_DEADLINE_EXCEEDED")
         attempted += 1
         value, raw = rpc.request(method, params)
         recv, m_end = checkpoint()
@@ -536,6 +538,8 @@ def capture_bounded(rpc, out_dir, *, duration_seconds=MAX_BOUNDED_SECONDS,
             raise ForwardProbeError("BOUNDED_BATCH_TRANSPORT_REQUIRED")
         jobs = [("eth_getBlockByNumber", [hex(h), False]) for h in heights]
         begin, m_begin = checkpoint()
+        if m_begin >= end_mono:
+            raise ForwardProbeError("BOUNDED_GLOBAL_DEADLINE_EXCEEDED")
         # The total subrequest count, not the HTTP call count, owns the quota.
         attempted += len(jobs)
         values, raw = rpc.request_batch(jobs)

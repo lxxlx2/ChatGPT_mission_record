@@ -555,6 +555,43 @@ class BoundedForwardObservationTests(unittest.TestCase):
             self.bounded(rpc=MutatedRPC(second_height=103))
         self.assertFalse((self.dir/'manifest.json').exists())
 
+    def test_slow_second_head_cannot_start_more_rpc_after_global_deadline(self):
+        clk = Clock()
+        class SlowHeadRPC(FakeRPC):
+            def request(self, method, params):
+                value = super().request(method, params)
+                if method == 'eth_blockNumber' and self.head_reads == 2:
+                    clk.advance_ns += 20_000_000_000
+                return value
+        rpc = SlowHeadRPC()
+        with self.assertRaisesRegex(
+                m.ForwardProbeError, 'BOUNDED_GLOBAL_DEADLINE_EXCEEDED'):
+            self.bounded(rpc=rpc, clock=clk, duration=12)
+        self.assertEqual(sum(method == 'eth_blockNumber'
+                             for method, _ in rpc.calls), 2)
+        self.assertFalse(any(method == 'eth_getBlockByNumber' and
+                             params == [hex(rpc.second_height), False]
+                             for method, params in rpc.calls))
+        self.assertFalse((self.dir/'manifest.json').exists())
+        self.assertTrue((self.dir/'failure.json').exists())
+
+    def test_slow_batch_ancestry_cannot_initiate_post_deadline_anchor(self):
+        clk = Clock()
+        class SlowBatchRPC(FakeRPC):
+            def request_batch(self, jobs):
+                values, raw = super().request_batch(jobs)
+                clk.advance_ns += 20_000_000_000
+                return values, raw
+        rpc = SlowBatchRPC(second_height=103)
+        with self.assertRaisesRegex(
+                m.ForwardProbeError, 'BOUNDED_GLOBAL_DEADLINE_EXCEEDED'):
+            self.bounded(rpc=rpc, clock=clk, duration=12)
+        self.assertEqual(sum(
+            method == 'eth_getBlockByNumber' and params == [hex(103), False]
+            for method, params in rpc.calls), 2)
+        self.assertFalse((self.dir/'manifest.json').exists())
+        self.assertTrue((self.dir/'failure.json').exists())
+
     def test_legacy_twelve_second_poll_rejected_as_unsafe(self):
         rpc = FakeRPC()
         with self.assertRaisesRegex(m.ForwardProbeError,
