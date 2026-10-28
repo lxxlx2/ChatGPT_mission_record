@@ -198,14 +198,16 @@ class FiveMinuteSourceTests(unittest.TestCase):
         class Response:
             status=200
             chunked=False
-            length=44
+            length=40
             will_close=False
             closed=False
             def getheaders(self):
                 return [("Content-Type","application/json"),
-                        ("Content-Length","44")]
+                        ("Content-Length","40")]
             def read1(self,n):
                 time.sleep(0.003)
+                if self.closed:
+                    return b""
                 self.closed=True
                 return b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
             def isclosed(self):
@@ -278,17 +280,21 @@ class FiveMinuteSourceTests(unittest.TestCase):
             self.assertIn("global lock",result["timing_definition"]["pacing_wait"])
 
     def _run_wire(self, wire: bytes, *, timeout=1.0, latency=0,
-                  slow_headers=0):
+                  slow_headers=0, slow_body=0):
         class SlowRaw(io.RawIOBase):
             def __init__(self, payload):
                 self.buffer=io.BytesIO(payload)
+                self.body_at=payload.find(b"\\r\\n\\r\\n")+4
             def readable(self):
                 return True
             def readinto(self, b):
                 n=min(len(b),1)
+                index=self.buffer.tell()
                 data=self.buffer.read(n)
                 if data:
-                    time.sleep(slow_headers)
+                    delay=slow_headers if index<self.body_at else slow_body
+                    if delay:
+                        time.sleep(delay)
                 b[:len(data)]=data
                 return len(data)
 
@@ -296,7 +302,7 @@ class FiveMinuteSourceTests(unittest.TestCase):
             def __init__(self, content):
                 self.content=content
             def makefile(self,*args,**kwargs):
-                if slow_headers:
+                if slow_headers or slow_body:
                     return io.BufferedReader(SlowRaw(self.content),
                                              buffer_size=1)
                 return io.BytesIO(self.content)
@@ -378,6 +384,26 @@ class FiveMinuteSourceTests(unittest.TestCase):
         result=self._run_wire(wire,timeout=0.06,slow_headers=0.0015)
         self.assertEqual(result["state"],"REQUEST_DEADLINE_EXCEEDED")
         self.assertNotEqual(result["state"],"RAW")
+
+    def test_trickle_body_stream_deadline_preserves_partial_bytes(self):
+        valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
+        wire=(b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
+              +b"Content-Length: "+str(len(valid)).encode()
+              +b"\\r\\nConnection: close\\r\\n\\r\\n"+valid)
+        out=self._run_wire(wire,timeout=0.26,slow_body=0.02)
+        self.assertEqual(out["state"],"REQUEST_DEADLINE_EXCEEDED")
+        self.assertTrue(valid.startswith(out["raw"]))
+        self.assertLess(len(out["raw"]),len(valid))
+
+    def test_header_and_body_cumulative_request_deadline(self):
+        valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
+        wire=(b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
+              +b"Content-Length: "+str(len(valid)).encode()
+              +b"\\r\\nConnection: close\\r\\n\\r\\n"+valid)
+        out=self._run_wire(wire,timeout=0.22,
+                           slow_headers=0.0012,slow_body=0.01)
+        self.assertEqual(out["state"],"REQUEST_DEADLINE_EXCEEDED")
+        self.assertNotEqual(out["state"],"RAW")
 
     def test_slow_stream_elapsed_over_deadline_rejected_even_if_json_valid(self):
         valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
