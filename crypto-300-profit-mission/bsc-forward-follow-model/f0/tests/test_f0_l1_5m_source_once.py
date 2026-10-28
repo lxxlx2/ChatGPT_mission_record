@@ -166,6 +166,107 @@ class FiveMinuteSourceTests(unittest.TestCase):
             self.assertGreaterEqual(result["contiguous_rate_blocks_per_s"],0)
             self.assertGreater(len(result["head_samples"]),1)
 
+    def test_blocked_connect_returns_owner_thread_at_deadline_without_wait(self):
+        """A 3s native-style connect does NOT block coordinator for 3s."""
+        entered=threading.Event()
+        release=threading.Event()
+        called_post=[]
+        class BlockedConnect:
+            def __init__(self,*args,**kwargs):
+                self.sock=None
+            def connect(self):
+                entered.set()
+                release.wait(timeout=3.0)
+            def request(self,*args,**kwargs):
+                called_post.append(True)
+            def close(self):
+                pass
+
+        doc=permit()
+        doc.update(timeout_ms=500,duration_ms=1500,
+                   max_total_attempts=6,max_block_reads=2,
+                   max_head_polls=2)
+        sender=Sender(end_utc=now_utc()+timedelta(seconds=10),
+                      stop_mono=time.monotonic()+2,
+                      timeout_s=0.5,spacing_s=0.25,
+                      post_factory=BlockedConnect)
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp).resolve()
+            start=time.monotonic()
+            try:
+                with (patch("socket.getaddrinfo",
+                            side_effect=AssertionError("NO_DNS")) as dns,
+                      patch("socket.create_connection",
+                            side_effect=AssertionError("NO_TCP")) as tcp):
+                    result=run_probe(doc,set(),set(),root,sender=sender)
+                    dns.assert_not_called()
+                    tcp.assert_not_called()
+                elapsed=time.monotonic()-start
+                self.assertTrue(entered.is_set())
+                self.assertLess(elapsed,1.5)
+                self.assertEqual(result["attempts"],1)
+                self.assertEqual(result["failed"],1)
+                self.assertEqual(result["per_request_deadline_outcomes"],1)
+                self.assertEqual(result["unjoined_worker_count"],1)
+                self.assertEqual(result["post_started"],0)
+                self.assertEqual(result["stop"],
+                                 "SOURCE_REQUEST_DEADLINE_EXCEEDED")
+                self.assertIsNone(result["latest_source_head"])
+                self.assertEqual(called_post,[])
+                rows=[json.loads(line) for line in
+                      (root/"attempts.jsonl").read_text().splitlines()]
+                self.assertEqual(len(rows),2)
+                self.assertEqual(rows[0]["event"],"RESERVE_UNKNOWN")
+                self.assertEqual(rows[1]["event"],"SETTLE")
+                self.assertTrue(rows[1]["outcome_unknown"])
+                self.assertEqual(rows[1]["failure"],
+                                 "REQUEST_DEADLINE_EXCEEDED")
+                self.assertEqual(rows[1]["state"],"FAILED")
+                self.assertIsNone(rows[1]["raw_file"])
+            finally:
+                release.set()
+                time.sleep(0.03)
+            rows_after=[json.loads(line) for line in
+                        (root/"attempts.jsonl").read_text().splitlines()]
+            self.assertEqual(rows,rows_after)
+            self.assertEqual(called_post,[])
+
+    def test_late_finished_valid_json_cannot_be_accepted_at_coordination(self):
+        # Worker completes with valid JSON but AFTER the reservation
+        # deadline. It must be saved as FAILED, not accepted chain ID.
+        class LateSource:
+            def send(self,encoded):
+                req=json.loads(encoded)
+                time.sleep(0.07)
+                return {"state":"RAW","raw":valid_rpc(req),"status":200,
+                        "headers":{"Content-Type":"application/json"},
+                        "post_ns":time.monotonic_ns()-1_000_000,
+                        "end_ns":time.monotonic_ns()}
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td).resolve()
+            doc=permit()
+            doc["timeout_ms"]=20
+            cap=Capture(root,doc,sender=LateSource())
+            try:
+                with ThreadPoolExecutor(max_workers=1) as pool:
+                    cap.reserve(pool,"eth_chainId",[],"CHAIN")
+                    time.sleep(0.09)
+                    rows=cap.drain(timeout=0)
+                    self.assertEqual(len(rows),1)
+                    self.assertEqual(rows[0][3],"REQUEST_DEADLINE_EXCEEDED")
+                    self.assertIsNone(rows[0][2])
+                    cap.ingest(*rows[0],set(),set())
+                    self.assertEqual(cap.stop_reason,
+                                     "SOURCE_REQUEST_DEADLINE_EXCEEDED")
+            finally:
+                cap.finish()
+            settled=[json.loads(x) for x in
+                     (root/"attempts.jsonl").read_text().splitlines()][-1]
+            self.assertEqual(settled["state"],"FAILED")
+            self.assertTrue(settled["outcome_unknown"])
+            self.assertEqual(settled["failure"],"REQUEST_DEADLINE_EXCEEDED")
+            self.assertIsNotNone(settled["raw_file"])
+
     def test_orphan_parent_block_does_not_count_wallet_signed_transactions(self):
         cohort_raw=(ROOT/"F0_COHORT_PRESELECTION.json").read_bytes()
         watched,_=cohort_watchlist(load_frozen_cohort(cohort_raw))
