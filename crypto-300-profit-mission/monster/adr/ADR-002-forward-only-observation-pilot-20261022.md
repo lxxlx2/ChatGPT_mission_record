@@ -101,3 +101,17 @@ STATUS: PINNED_READ_PASS
 不削弱实际跨区块父哈希完整性条件的限量修复：`--manual-bounded` 默认间隔从12秒缩短为 **5秒**，24区块祖先最大深度、180总RPC/180秒最大目标观察时长、12个Pair身份与单段3个身份限制不变，显式拒绝传入12秒间隔。根据0.45秒估算5秒内约11块，但节点请求耗时及限流可能超24块，届时依然必须 fail closed。**重要：180次读取无法保证完整核验3分钟内约400个区块，必须允许在 `RPC_BUDGET_SAFETY_RESERVE` 触发时提前停止，并如实展示已验收区间、实际耗时与未覆盖尾段；不能宣传‘已经持续覆盖3分钟’，也不能借此放宽PIT。**
 
 新代码固定提交 `31f875e2b31c4f9e48002958e1020286266a1914`，专项测试数量增加为37，新增模拟0.45秒出块与拒绝旧12秒间隔。**截至本文撰写，新37项尚未有Mac真实运行PASS；不得启动新实测，也不得因GitHub其他Baseline CI PASS冒充这37项成功。** 该修复属于来源覆盖完整性的必要定向改动，待本地专项测试与必要独立审查，不新增workflow、调度或交易。
+
+## 2026-10-28 14:32 (Asia/Bangkok)：37/37 Mac 离线PASS，但真实有界源测试被跨块速度阻断
+
+**实测用户终端**：冻结提交 `8c8da2f2b5ad8e2eeb89ab7719ec76a4f68aecc0` 的 `test_monster_forward_observation.py` 37/37 PASS（`Ran 37 tests in 0.067s / OK`）；紧接着按其 `--manual-bounded` 在真实Mac前台采集返回 `ForwardProbeError: ANCESTRY_EXCEEDS_BOUNDED_DEPTH`。用户另传原始本地 ZIP：`monster-bsc-bounded-20261028T073230Z.zip`，大小 **122910字节**，SHA256 `692a5119a83f29b2370f6fe13ce410926e751e34a527dc379994724a723b4925`，包含29个原RPC JSON以及 `failure.json`，而非成功manifest。本人在本回合离线读取29/29原文件，逐个核对`raw_sha256`、`raw_bytes`、递增ID、响应体，**29/29均一致**；这证明用户文件内部一致，不是来源数字签名认证。按照早期原raw本地不进Git边界，此处仅登记原包SHA/范围，不上传含逐请求回执的ZIP。
+
+**可归因的失败路径**：实际固定块计数序列 `130241864:3575982`，`130241879:3575982`，`130241910:3575982`。第一段跨15块，原原始回执 `130241865..879` 父hash连接且前后头锚重查一致，但逐块核查耗费约6秒；其间BSC继续生产区块，第三次head比上一点跳增31块，超过 `MAX_BOUNDED_ANCESTOR_BLOCKS=24`，脚本在第29次RPC后 fail-closed，只输出 `failure.json`。**当前不能把前段局部成功包装为整轮 `PIT_VERIFIED`，真实新池身份/流动性/成交仍0**。文件内29次方法：1 `eth_chainId`、3 `eth_blockNumber`、3 `eth_call(allPairsLength)`、22 `eth_getBlockByNumber`，没有交易发送/签名。此问题不是简单将轮询从12秒调至5秒就能根治：串行多次约0.42秒HTTP耗时造成新块增长。
+
+**净新增信号只作后验范围统计**：此前2026-10-28约06:24UTC的单次V2 Factory计数3575553，与此次约07:32UTC的计数3575982相差 **429 Pair索引**。两次均为真实原响应但相隔约68分钟、没有连续块日志覆盖，不能称为当时已捕获429个token、429个可交易机会，不能声称任何profit信号。
+
+**根因优先下一个验证**：为保留完整ParentHash链与0美元来源，需先单次前台只读确认原BSC公共RPC是否接受小规模（例如2个显式高度）的`eth_getBlockByNumber` JSON-RPC batch。Geth官方 `https://geth.ethereum.org/docs/interacting-with-geth/rpc/batch` 描述batched请求能节约网络延时，但**不能据此认定此BSC公开端点已通过验收**。若实测支持，再在现有观察器/测试内做严格每子请求编号、响应条数、hash链、总方法调用次数与原raw SHA的限额实现；若不支持，接受严格连续观察在180请求内难覆盖3min的硬限制并停止此方案，不通过跳过父hash/加付费或抬请求额度掩盖PIT缺口。此轮未执行新批量网络测试。
+
+**操作侧独立错误**：先前给Mac打包命令用了 `status=$?`，而zsh的 `status` 为只读特殊参数，故另见 `zsh: read-only variable: status`；这与链上RPC失败没有因果关系，今后用 `capture_exit_code=$?`。保留失败ZIP、不重采伪造成成功。
+
+**不变门禁**：旧历史P0 `INSUFFICIENT_COVERAGE`，P1 `BLOCKED`，G6 `NO_GO`；新模式 `LIVE_BOUNDED_FAILURE_CONFIRMED / BATCH_PROVIDER_SUPPORT_UNVERIFIED`。不启动定时、付费、生产邮件/交易，不改Frank。
