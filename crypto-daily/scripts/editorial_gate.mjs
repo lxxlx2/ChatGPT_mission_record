@@ -66,6 +66,30 @@ export function validateEditorial(input, rules) {
     if(!ev.material_version||!ev.kind||!ev.source_url||!ev.published_at||!ev.actual_delta)fail('EVENT_PROVENANCE_MISSING',ev.event_key);
     if(!rules.routing.some(r=>r.kind===ev.kind))fail('UNKNOWN_EVENT_KIND',ev.event_key);
   }
+  // Exchange IPO watch is a watch hypothesis until an OFFICIAL issuer-named
+  // exchange product exists. Synthetic perps cannot become an IPO share offer.
+  const accessPolicy=rules.full_report.third_party_ipo_watch||{};
+  const accessHosts=accessPolicy.official_venue_hosts||{};
+  const accessStatuses=accessPolicy.eligible_offer_status||[];
+  const accessTypes=accessPolicy.eligible_product_types||[];
+  const includedEventKeys=new Set(declared.map(i=>i.event_key));
+  for(const ev of input.events||[]){
+    if(!includedEventKeys.has(ev.event_key)||ev.kind!=='VENUE_IPO_ACCESS')continue;
+    const proof=ev.venue_offer_proof||{};
+    const officialVenue=String(proof.venue||'');
+    const expectedHosts=accessHosts[officialVenue]||[];
+    let officialHost='';
+    try{officialHost=new URL(String(proof.official_offer_url||'')).hostname.toLowerCase()}catch{}
+    const hostCorrect=expectedHosts.some(d=>officialHost===d||officialHost.endsWith('.'+d));
+    const required=proof.issuer==='Anthropic' && hostCorrect
+      && accessStatuses.includes(proof.offer_status)
+      && accessTypes.includes(proof.product_type)
+      && proof.issuer_named_in_official_notice===true
+      && /^https:\/\//.test(String(proof.official_offer_url||''))
+      && String(proof.offer_published_at||'').length>=10
+      && ev.source_confirmed===true;
+    if(!required)fail('UNCONFIRMED_OR_SYNTHETIC_IPO_ACCESS',ev.event_key+'/'+officialVenue+'/'+String(proof.offer_status||'unknown'));
+  }
   const historical=new Set((input.previous_events||[]).map(e=>e.event_key+'::'+e.material_version));
   const counts=new Map(),highlights=[];
   for(const item of declared){
