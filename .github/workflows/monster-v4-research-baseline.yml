@@ -38,9 +38,13 @@ on:
       - 'crypto-300-profit-mission/local-agent/scripts/monster_stage5_integrity.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_stage5_integrity.py'
       - '.github/workflows/monster-v4-research-baseline.yml'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/early/forward_observation.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_forward_observation.py'
   pull_request:
     paths:
       - 'crypto-300-profit-mission/monster/**'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/early/forward_observation.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_forward_observation.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_neutral_control_replay.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_neutral_control_replay.py'
       - 'crypto-300-profit-mission/local-agent/config/monster_v4_research_candidate.json'
@@ -71,6 +75,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Test finite BSC V2 forward observer and RPC batch fail-closed
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          PYTHONPATH=. python -B -m py_compile mission_agent/early/forward_observation.py tests/test_monster_forward_observation.py
+          PYTHONPATH=. python -B -m unittest discover -v -s tests -p test_monster_forward_observation.py
       - name: Compile baseline script and tests
         run: python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_baseline_audit.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_baseline_audit.py
       - name: Reproduce evidence and independently check frozen config/validation
