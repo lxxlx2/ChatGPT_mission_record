@@ -459,9 +459,8 @@ class Capture:
                 # deadline. Record UNKNOWN, never incorporate the late RAW.
                 if (type(end_ns) is not int or
                         end_ns > deadline_ns):
-                    transport={"state":"REQUEST_DEADLINE_EXCEEDED",
-                               "raw":None, "post_ns":None,
-                               "end_ns":now_ns,
+                    transport={**transport,
+                               "state":"REQUEST_DEADLINE_EXCEEDED",
                                "late_result_discarded":True}
             elif abort:
                 future.cancel()
@@ -601,7 +600,8 @@ def run_probe(scope, watched, routers, root, *, sender=None, clock=now_utc,
         response_cap=scope["max_response_bytes"])
     probe=Capture(root,scope,sender=sender,mono=mono)
     try:
-        with ThreadPoolExecutor(max_workers=3,thread_name_prefix="f0-bsc-read") as pool:
+        pool=ThreadPoolExecutor(max_workers=3,thread_name_prefix="f0-bsc-read")
+        try:
             def single(method,params,kind,height=None):
                 probe.reserve(pool,method,params,kind,height)
                 while probe.pending and not probe.stop_reason:
@@ -641,12 +641,20 @@ def run_probe(scope, watched, routers, root, *, sender=None, clock=now_utc,
                     time.sleep(0.03)
                 if probe.total>=scope["max_total_attempts"]:
                     probe.stop_reason="GLOBAL_ATTEMPT_LIMIT"
-            # Worker results after hard stop may be late: bounded timeout is per
-            # worker and there is NO new submission after the deadline.
-            while probe.pending:
-                for data in probe.drain(timeout=0.1):
-                    probe.ingest(*data,watched,routers)
+            # Never wait indefinitely on native DNS/TCP/TLS. Completed
+            # outcomes are recorded if timely; the rest become explicit
+            # ABORTED_UNKNOWN_NO_RETRY and cannot be used for observations.
+            for data in probe.drain(timeout=0):
+                probe.ingest(*data,watched,routers)
+            for data in probe.drain(abort=True):
+                probe.ingest(*data,watched,routers)
             probe.stop_reason=probe.stop_reason or "FIVE_MINUTE_WINDOW_DONE"
+        finally:
+            # shutdown(wait=True) and a with-executor block BOTH join blocked
+            # native connections. This probe is single-use, fail-closed; the
+            # owner foreground CLI exits the OS process after fsync if any
+            # unjoined worker survives this non-blocking shutdown.
+            pool.shutdown(wait=False,cancel_futures=True)
     finally:
         probe.finish()
     elapsed=max(0.001,mono()-probe.started_mono)
@@ -675,6 +683,12 @@ def run_probe(scope, watched, routers, root, *, sender=None, clock=now_utc,
             "archived_raw_bytes":probe.raw_bytes,
             "post_started":probe.post_attempts,"blocks_requested":probe.blocks,
             "heads_requested":probe.heads,"failed":probe.errors,
+            "per_request_deadline_outcomes":probe.deadline_outcomes,
+            "aborted_unknown_outcomes":probe.aborted_unknown_outcomes,
+            "unjoined_worker_count":sum(
+                not f.done() for f in probe.unjoined_futures),
+            "native_dns_or_tls_uninterruptible":True,
+            "timeout_contract":"main_thread_settles_expired_futures_as_UNKNOWN_without_join; process_hard_stop_covers_native_dns",
             "last_contiguous_height":probe.last_contiguous,
             "latest_source_head":probe.latest_head,
             "source_backlog":None if probe.latest_head is None or
@@ -789,7 +803,14 @@ def main():
                       "source_backlog":result["source_backlog"],
                       "watch_signed_tx_candidates":
                       result["watch_signed_tx_candidates"],
-                      "summary":str(root/"summary.json")},sort_keys=True))
+                      "unjoined_worker_count":result["unjoined_worker_count"],
+                      "summary":str(root/"summary.json")},sort_keys=True),
+          flush=True)
+    if result["unjoined_worker_count"]:
+        # The journal and summary are already fsynced, and no timed-out
+        # worker response may be ingested. Exit the ENTIRE foreground process
+        # instead of silently waiting for Python's non-daemon pool at exit.
+        os._exit(93)
 
 
 if __name__=="__main__":
