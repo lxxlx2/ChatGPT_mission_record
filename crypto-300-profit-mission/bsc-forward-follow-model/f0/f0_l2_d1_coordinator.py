@@ -332,6 +332,10 @@ class GlobalStartGate:
                     if physical:
                         try:
                             source.check_at_actual_post()
+                            # The final monotonic permit/deadline check lives
+                            # UNDER the shared lock, after pacing and UTC.
+                            if physical_live and not _real_foreground_permit.valid():
+                                raise ValueError("F0_REAL_ONCE_FINAL_POST_EXPIRED")
                         except (ValueError, TypeError):
                             raise _FakeHTTPSStartDenied(
                                 "PRESTART_PHYSICAL_POST_UTC_DENIED")
