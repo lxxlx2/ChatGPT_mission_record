@@ -53,7 +53,7 @@ Ctrl-C 停止。首次连接之后以最新已存在签名作 checkpoint，不�
 
 1. 官方真实平台归属及新配置更替的独立核验。已知 PlatformConfig 存在链上，但仅凭自填 Machine.fun 名称并不足以完成企业归属证明。
 2. 用户单独授权的 Mac 上真实 WebSocket 长连接和断线重连验收，测量从上链到候选输出的真实延迟，记录资源/RPC 限流。
-3. macOS 通知到达验收；如要远程 Gmail 推送，必须另建独立、经授权且有实际 Sent 读回的送达路径。当前只支持 stdout 和可选 macOS 本地通知。
+3. 新增独立 Gmail 通道已经实现，但需要用户 Mac 端对真实 OAuth、Sent 读回和新发行事件执行验收；stdout、本地通知和合成测试都不能代替真实邮件送达证明。
 4. 独立固定 SHA 代码审查通过后，另行评估常驻运行；本 PR 保持 Draft，既不部署，也不交易，不接触 Frank。
 
 官方来源：
@@ -78,7 +78,7 @@ bash run_machine_fun.sh probe
 bash run_machine_fun.sh run --notify-local
 ~~~
 
-`check` 只读本地两个现有凭据并检查权限，不联网、不发邮件、不启用监听；`probe` 通过现有 RPC 实际执行一次 getHealth，并用现有 Gmail OAuth 刷新短期 token，核对 Google 账户身份与 Sent 读取权限，**不发邮件**；`run` 首先自动执行本模块全部 28 项离线/本机回环测试；任意失败则不启动真实监听和 Gmail 发送。测试成功后，`run` 在前台监听已知 Machine.fun PlatformConfig，对**新检测到的真实候选**发送 Gmail 通知，另可选本地桌面通知。首次启动只设置现有链上状态为 checkpoint，不会给历史代币补发邮件。终端保持运行才能持续监控，Ctrl-C 停止；无 LaunchAgent、cron、定时任务。
+`check` 只读本地两个现有凭据并检查权限，不联网、不发邮件、不启用监听；`probe` 通过现有 RPC 实际执行一次 getHealth，并用现有 Gmail OAuth 刷新短期 token，核对 Google 账户身份与 Sent 读取权限，**不发邮件**；`run` 首先自动执行本模块全部 28 项离线/本机回环测试；任意失败则不启动真实监听和 Gmail 发送。测试成功后，`run` 在前台监听已知 Machine.fun PlatformConfig，对**新检测到的真实候选**发送 Gmail 通知，另可选本地桌面通知。首次启动只设置现有链上状态为 checkpoint，不会给历史代币补发邮件。此命令是可选的手动前台方式；后续已提供独立 LaunchAgent 后台安装器，建议使用下面的后台方案。
 
 完整独立测试命令：
 
@@ -87,7 +87,7 @@ bash run_machine_fun.sh run --notify-local
 .venv/bin/python -m py_compile machine_launch_detector.py machine_launch_gmail.py machine_fun_runtime.py
 ~~~
 
-**重要门禁：** 新增 10 个 Gmail/配置测试已提交到 Git，但本次交付不把未在目标 Mac 实际运行的测试写成 PASS。完整 28 项测试、真实 Gmail OAuth `probe`、Solana WS 订阅确认、单独的真正链上新发行邮件 Sent readback，均需要 Mac 的执行回执。没有创建后台进程或不经授权的定时通知。
+**重要门禁：** 新增 10 个 Gmail/配置测试和 7 个 LaunchAgent 测试已提交，但仍需在目标 Mac 实际执行。手动 `run` 的原有 28 项门禁与后台安装器完整 35 项门禁不同；真实 Gmail OAuth `probe`、Solana WS 订阅确认及新发行邮件 Sent 回执均需要 Mac 执行证据。目前尚未创建任何后台进程。
 
 官方 API 来源：
 - https://www.alchemy.com/docs/reference/solana-subscription-api-endpoints
