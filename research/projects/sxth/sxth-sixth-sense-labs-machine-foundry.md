@@ -7,6 +7,26 @@ Action: `WATCH`, `NO_BUY_UNTIL_OFFICIAL_LAUNCH_AND_LIQUIDITY_VERIFIED`.
 Authority: `crypto-300-profit-mission/PROJECT_ANALYSIS_FRAMEWORK.md`, `PROJECT_ANALYSIS_EVIDENCE_WORKFLOW.md`, `token_trading_principles.md`.
 Trading/monitoring: `PRODUCTION_TRADING=NO_GO`; no capital committed or monitoring task created by this note.
 
+## 2026-10-28 17:32 Telegram General now visible: owner did not confirm today launch
+
+**Observation method**: User's recently reopened, authenticated Telegram Web `https://web.telegram.org/a/?utm_source=chatgpt.com#-1004432036138_1` read-only through connected Browser on Oct28 evening Bangkok. Unlike previous stale view, visible message region explicitly shows **Today** and Oct28 messages through approx **17:32**, followed by member-join events. This is not a full historical Telegram export. The previous "42 unread not inspected" limitation is now partially closed for the newly displayed slice.
+
+**Launch date attribution:**
+- At visible **16:37** member `O CA` asks Todd: `Wen launch todd`. The Owner does **not** answer with date/clock/CA in the currently rendered segment.
+- At visible **17:32** member `Froze Tong` asks `hi, token launch today right ?`; member `O CA` responds **`Yes`** at 17:32. This is **NON-OWNER MEMBER-ONLY assertion**, not canonical issuer/machine.fun launch confirmation. Do not promote it to confirmed Oct28 TGE or official permission to snipe. Original issuer Telegram Owner's prior Oct27 endorsement `Wednesday Launch` was only a nonbinding target day.
+- Machine.fun original X https://x.com/machinedotfun/status/2115110031754703022 (Oct27 15:55 UTC) remains a **platform** go-live within next 48h claim, literally through **Oct29 15:55 UTC / 22:55 Bangkok**. Its website https://machine.fun/ independently fetched Oct28 still shows `Phase 2: FIND THE NEXT UNITREE — LOADING…`. No platform first-listing roster or SXTH verified mint/curve initializer/timestamp located.
+- Project's Oct28 **02:28** Telegram pinned https://x.com/Sextus_Sensus/status/2115163645114040782 is `Sixth Sense Labs Is Growing!` and welcomes community members. This is **community growth marketing**, NOT token deployment or distribution details.
+
+**Separate possible future data-capture points and reward experiment**:
+- At visible **01:38–01:50**, Telegram Owner Todd says `Quality over quantity right now!`, `We won’t make it a requirement for the global airdrop just will yield less points`, then **`Again this is all speculation we still have to build out a proper plan and document it all down but we have a vision and would love to ship it!`**. This concerns a *potential* hardware/data-capture quality weighting and future global airdrop and has **not been committed as an SXTH eligibility, PP conversion, claim or vesting rule**. Do not conflate planned Lumina points with an existing spot-launch $SXTH allocation. No verified reward payout, fixed multiplier or requirement.
+- New social/group activity and several joins do not establish paid customers, launch or real trade volume. Do not treat the community member reply `Yes` as first-party proof.
+
+**Evidence decision**: `TG_NEW_TODAY_READ_TO_17_32 / OWNER_OCT28_TOKEN_LAUNCH_TIME_UNCONFIRMED / MEMBER_YES_ONLY / PLANNED_GLOBAL_AIRDROP_SPECULATION / MACHINE_WEBSITE_LOADING / SXTH_MINT_UNCONFIRMED / NO_TRADE`. Verify on the canonical issuer and machine.fun first-party pages and actual Raydium LaunchLab creation transaction before any market action.
+
+No account message, signature, transaction, monitoring or automation created.
+
+---
+
 ## 2026-10-28 evening cross-source recheck: Machine peaq CodecFlow X, website, and Telegram limits
 
 **Check time:** October 28 2026 around 19:20–20:00 Asia/Bangkok. Primary issuer X read through user-shared connected browser, official project sites via public web; user-authenticated Sixth Telegram General read-only; independent verbatim peaq representative interview of Oct13 as primary-speaker source. This update specifically answers cross-platform launch status and conflicts.
