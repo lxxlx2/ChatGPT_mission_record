@@ -120,7 +120,7 @@ export function validateEditorial(input, rules) {
   }
   // Distinct daily keys are NOT proof of distinct news. Only recurring market tape
   // may use a fresh time-window without a narrative state-change receipt.
-  const narrativeKinds=new Set(['MAJOR_SECURITY','MAJOR_POLICY','MAJOR_INFRASTRUCTURE','TGE_PUBLIC_SALE','EARLY_NFT_MEME','INSTITUTIONAL_FLOW','FUTURE_CATALYST']);
+  const narrativeKinds=new Set(['MAJOR_SECURITY','MAJOR_POLICY','MAJOR_INFRASTRUCTURE','TGE_PUBLIC_SALE','EARLY_NFT_MEME','INSTITUTIONAL_FLOW','FUTURE_CATALYST','VENUE_IPO_ACCESS']);
   const older=Array.isArray(input.previous_events)?input.previous_events:[];
   for(const ev of input.events||[]){
     if(!counts.has(ev.event_key)||!narrativeKinds.has(ev.kind))continue;
