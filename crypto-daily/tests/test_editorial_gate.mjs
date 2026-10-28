@@ -175,3 +175,35 @@ test('fresh distinct onchain txid may be new without repeating older transfer',(
  });
  assert.equal(r.passed,true);
 });
+
+test('IPO watch source receipt is mandatory even when no official offer exists',()=>{
+ const r=run(x=>{x.source_receipts=x.source_receipts.filter(q=>q.lane!=='third_party_ipo_access')});
+ assert.ok(r.errors.some(e=>e.startsWith('DISCOVERY_LANE_RECEIPT_MISSING:third_party_ipo_access')));
+});
+test('X source receipt is mandatory but an honest unavailable-source gap is permitted',()=>{
+ const a=run(x=>{x.source_receipts=x.source_receipts.filter(q=>q.lane!=='official_x')});
+ assert.ok(a.errors.some(e=>e.startsWith('DISCOVERY_LANE_RECEIPT_MISSING:official_x')));
+ const b=run(x=>{const q=x.source_receipts.find(q=>q.lane==='official_x');q.status='source_gap';q.error='Scheduled Browser tab not available; public original also inaccessible';q.result_urls=[]});
+ assert.equal(b.passed,true);
+});
+test('unconfirmed Anthropic IPO rumor or perpetual is NEVER a verified IPO allocation',()=>{
+ const r=run(x=>{
+  const e=x.events.find(e=>e.event_key==='balance-cca');e.kind='VENUE_IPO_ACCESS';
+  e.venue_offer_proof={issuer:'Anthropic',venue:'Kraken',official_offer_url:'https://www.kraken.com/derivatives',issuer_named_in_official_notice:false,offer_status:'RUMOR',product_type:'PRE_IPO_PERPETUAL',offer_published_at:'2026-10-28'};
+ });
+ assert.ok(r.errors.some(e=>e.startsWith('UNCONFIRMED_OR_SYNTHETIC_IPO_ACCESS')));
+});
+test('wrong venue source website is rejected for exchange IPO allocation',()=>{
+ const r=run(x=>{
+  const e=x.events.find(e=>e.event_key==='balance-cca');e.kind='VENUE_IPO_ACCESS';
+  e.venue_offer_proof={issuer:'Anthropic',venue:'Kraken',official_offer_url:'https://fake-kraken.example/ipo',issuer_named_in_official_notice:true,offer_status:'SUBSCRIPTION_OPEN',product_type:'IPO_ALLOCATION',offer_published_at:'2026-10-28'};
+ });
+ assert.ok(r.errors.some(e=>e.startsWith('UNCONFIRMED_OR_SYNTHETIC_IPO_ACCESS')));
+});
+test('hypothetical verified official issuer-named IPO access would be eligible',()=>{
+ const r=run(x=>{
+  const e=x.events.find(e=>e.event_key==='balance-cca');e.kind='VENUE_IPO_ACCESS';
+  e.venue_offer_proof={issuer:'Anthropic',venue:'Kraken',official_offer_url:'https://www.kraken.com/official-example',issuer_named_in_official_notice:true,offer_status:'INDICATION_OF_INTEREST_OPEN',product_type:'NONBINDING_INTEREST',offer_published_at:'2026-10-28'};
+ });
+ assert.equal(r.passed,true);
+});
