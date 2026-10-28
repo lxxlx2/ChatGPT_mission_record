@@ -1,3 +1,13 @@
+## 2026-10-28：ADR-006 下新公开来源只读核验（仅目录/官方限制，非链上原字节验收）
+
+依 [ADR-006](../../adr/ADR-006-early-sellable-multiples-primary-goal-and-research-stop-20261028.md) 不扩模型、Stage或workflow。本轮**新信息**是Pinax公开只读 BSC 日志 Parquet 分区索引：<https://data.pinax.network/buckets/bsc/logs/> 显示当前可见最早`2026-09-25`、最新2026-10、该首日14文件/104,646,292行/区块123849166–124041106；按其 <https://data.pinax.network/config/?bucket=bsc> 公开S3说明不需凭证。但**只有目录元数据被网页核对**，未下载原Parquet/RowGroup、未自行查2025-07-01分区是否存在、未验证连续2025 Factory/Swap样本或当时真实`available_at`。故仅标`PINAX_PUBLIC_POST_2026_SOURCE_CANDIDATE_NOT_HISTORIC_P0_PASS`，可作为另一个未来研究方向的来源候选，绝不能计本轮冻结2025 P0的24/30、18/30。
+
+Alchemy官方 <https://www.alchemy.com/docs/chains/bnb-smart-chain/bnb-smart-chain-api-endpoints/eth-get-logs> 确认BNB免费`eth_getLogs`每次**至多10块**且计60 CU，按旧AWS 2025-07-01 blocks Footer仅**声明**115,196行估算至少11,520次请求/日、约691,200 CU（若每行=独立块的假设成立，非真实完成覆盖/用量），**不证明**可在原≤30分钟/日处理吞吐下完成，也没有历史公众收包PIT证据。BNB官方 <https://docs.bnbchain.org/bnb-smart-chain/developers/json_rpc/json-rpc-endpoint/> 明确公开RPC禁`eth_getLogs`；Bitquery <https://bitquery.io/datastore/datasets/bsc> 原历史events/dex_trades完整集为付费交付，免费sample不等价连续母体。只读取已连接Alchemy应用目录（存在多个可选应用），**未选择任何App、未发起任何RPC/交易、未消耗已连接账户查询额度**。容器网络DNS失败，公开JSON列表/S3原始对象未做HTTP字节验收。
+
+**决策不变**：`PLAN_A_NO_COMPLETE_SOURCE_PROVEN / PLAN_B_NO_2025_COMPLETE_SOURCE_PROVEN / PLAN_C_$0_NOT_AUTHORIZED / HISTORIC_AVAILABLE_AT_UNKNOWN / P0_INSUFFICIENT_COVERAGE / P1_BLOCKED / G4_UNKNOWN / G6_NO_GO`，2026-11-02原期限不变。无新的P0覆盖通过声明，不因未来可用的新数据源改变旧样本或预算；不新建文件/脚本/CI/监控。
+
+---
+
 ## 2026-10-26：P0 30例历史归档可复算核验器落地，不升级来源证明或门禁
 
 **已提交并逐字核验**：`local-agent/mission_agent/early/p0_evidence_audit.py`，Git blob `0fb625bebcac75318fc3709650152b876ce601b7`，提交`6522e10ff59b18452d3df2566403620fb9dbd981`；原`mission_agent/cli.py`只加`early-p0-audit --input`的无副作用、优先返回入口，提交`8301d66f7f980df906ec1d196ac56eb5c19c4e4e`。测试源码`local-agent/tests/test_monster_p0_evidence_audit.py`，Git blob `c76ed9cdc62a379efdefac2653d6ec922fb5ab8c`，最终测试提交`d318459ca73f7cca14a7dac025670dbce18f7608`。本会话本地离线Python实际`14/14 PASS`，并且GitHub读回源码/测试Blob与执行版本SHA完全匹配；无远端CI或用户Mac执行，本机不曾获取用户的1.1MB原档案原字节，不能冒充实际Python全源归档回归PASS。
