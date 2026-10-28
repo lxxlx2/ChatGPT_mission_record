@@ -15,9 +15,9 @@ class RPCFailure(RuntimeError):
 
 class SolanaRPC:
     def __init__(self, request=urllib.request.urlopen, sleep=time.sleep,
-                 monotonic=time.monotonic, jitter=random.random, min_interval=.5):
+                 monotonic=time.monotonic, jitter=random.random, min_interval=.5, *, endpoint=RPC):
         self.request, self.sleep, self.monotonic, self.jitter = request,sleep,monotonic,jitter
-        self.last=None; self.calls=0; self.retries=0; self.rate_limits=0; self.min_interval=min_interval
+        self.endpoint=endpoint; self.last=None; self.calls=0; self.retries=0; self.rate_limits=0; self.min_interval=min_interval
     def call(self,method,params):
         if method not in ('getHealth','getSignaturesForAddress','getTransaction','getSlot','getBlockTime'):
             raise ValueError('READ_ONLY_METHOD_ALLOWLIST')
@@ -26,7 +26,7 @@ class SolanaRPC:
             if self.last is not None:self.sleep(max(0,self.min_interval-(self.monotonic()-self.last)))
             self.last=self.monotonic();self.calls+=1
             try:
-                req=urllib.request.Request(RPC,data=body,headers={'Content-Type':'application/json'})
+                req=urllib.request.Request(self.endpoint,data=body,headers={'Content-Type':'application/json'})
                 with self.request(req,timeout=20) as response:value=json.loads(response.read())
                 if value.get('error'):raise RPCFailure(value['error'].get('code','RPC_ERROR'))
                 if 'result' not in value:raise RPCFailure('INCOMPLETE_RPC_ENVELOPE')
