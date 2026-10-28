@@ -129,6 +129,8 @@ def assess_lags(entry_bars, exit_bars, entry_time, exit_time):
                 row["status"] = "MISSING_NONZERO_VOLUME_CANDLE"
             elif row["entry"]["price_known_no_earlier_than"] >= exit_time:
                 row["status"] = "ENTRY_CANDLE_KNOWN_AT_OR_AFTER_EXIT"
+            elif exit_px["price_known_no_earlier_than"] >= exit_time:
+                row["status"] = "EXIT_CANDLE_KNOWN_AFTER_EXIT"
             else:
                 ratio = exit_px["close_usd"] / row["entry"]["close_usd"]
                 if not math.isfinite(ratio) or ratio <= 0:
@@ -158,7 +160,8 @@ def run(*, execute=False, max_http=MAX_HTTP, out_dir=None):
         "cases": [],
         "raw_provider_responses": [],
         "notes": [
-            "Price is the next future-known one-minute CLOSE, not a fill at event time.",
+            "Existing future-known exit CLOSE is rejected if not known strictly before the exit anchor.",
+            "Price is a one-minute CLOSE proxy, not a fill at event time.",
             "First-page surviving pool selection is hindsight-biased.",
             "Minute pool volumes do not prove executable liquidity.",
             "Frank's original-lot exit timestamp is not a follower exit time.",
