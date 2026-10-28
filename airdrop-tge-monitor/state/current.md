@@ -1,15 +1,15 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-29 03:58:33 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-29 05:04:56 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-29 03:58:33 Asia/Bangkok (03:57:30 attempt; late same-hour invocation)
+- latest_actual_run: 2026-10-29 05:04:56 Asia/Bangkok (05:03:12 attempt)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-29/035833-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-29/035730-attempt.md
-- latest_scheduled_shard: 3
-- latest_executed_shard: 3
-- stale_shard_recovery: false; fair shard3 at 03%4, repeated same-hour after 030327; no extra shard
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-29/050456-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-29/050312-attempt.md
+- latest_scheduled_shard: 1
+- latest_executed_shard: 1
+- stale_shard_recovery: false; fair shard1 at 05%4, no override
 - latest_candidate_count: 6
 - latest_triggered_events: 0
 - latest_identity_failures: 0
@@ -19,20 +19,20 @@ Timezone: Asia/Bangkok
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_extra_USDC,Surf_PONS_raffle,StandX_DUSD_checker,Crusoe_private_SPV_rights,Republic_rTTOK_private_settlement
+- latest_source_gaps: Concrete_extra_USDC,Surf_PONS_raffle,StandX_DUSD_checker,ForecastFDN_current_issuer,Neutrl_private_redemption
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-10-28 20:05:36 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard1: 2026-10-29 01:59:27 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard1: 2026-10-29 05:04:56 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard2: 2026-10-28 22:02:21 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-10-29 03:58:33 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 035833-final.md commit b0ebb97b5645d2066fc9b11a2a654d89d60ed5f2
-- latest_terminal_readback: VERIFIED 035833-final.md blob 5599782ff530ceee58d0bed60727a2c919fb8cc4
-- latest_four_executed_shards: [1,1,3,3]
+- latest_primary_final_write: VERIFIED_DURABLE 050456-final.md commit 763f3fafab6d08dec299c9e3c1947d1c35052712
+- latest_terminal_readback: VERIFIED 050456-final.md blob c239aea7ea34b396e4b3f1ea9267f6d735466296
+- latest_four_executed_shards: [1,3,3,1]
 - last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (prior delivered 2026-10-28; no new email)
 - last_delivered_gmail_message_id: 1a1812a1f6802ecb
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-29 03:58:33 BKK PARTIAL shard3; 15 distinct registered identities attempted, five named rights/source gaps, zero new ACTION; Browser X unavailable, official fallback read; no Gmail/App; verified-complete unchanged. Same-hour shard3 repeat capped at two.
+- latest_terminal_sync: 2026-10-29 05:04:56 BKK PARTIAL shard1; 14 distinct registered identities attempted, five named source/rights gaps, zero new ACTION; Browser X unavailable, issuer fallback read; no Gmail/App; verified-complete unchanged.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
@@ -291,3 +291,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-29 01:05:48 BKK: existing HH:00 TGE monitor 010416-attempt.md and readback-verified 010548-final.md persisted; urgent5 + Surf/StandX + fair shard1 (14 distinct Registry identities), bounded Cambria Base RSGP/lifecycle. Five candidate families, zero new Tier A/B ACTION, five SOURCE_GAP (Concrete extra USDC, Surf PONS, StandX checker, ForecastFDN, Neutrl redemption rights). Browser list_tabs originating-context failure, public official fallback used; Gmail Sent prior Cambria 1a1812a1f6802ecb confirmed and suppressed, no new mapped Inbox rights, no Gmail/App. Shard1 meaningful attempt PARTIAL; last fully verified complete Oct10 unchanged. Last four executed [2,3,3,1]. No task/schedule/scope/recipient changes.
 
 - 2026-10-29 03:03:27 BKK: existing HH:00 TGE monitor attempt 030224-attempt.md and readback-verified 030327-final.md persisted; urgent5 + Surf/StandX + fair shard3 (15 distinct identities); six candidates, zero new Tier A/B ACTION, five source/rights gaps (Concrete extra USDC, Surf PONS, StandX original checker, Crusoe private SPV, Republic private rTTOK settlement). Cambria Base RSGP TGE unchanged and previously emailed 1a1812a1f6802ecb, exact Gmail Sent readback confirmed; no new mapped rights email. Browser originating X context unavailable, official fallback used; no Gmail/App. Shard3 meaningful attempt PARTIAL; last verified full completion Oct10 unchanged. Last four executed [3,1,1,3]; no scope/task/schedule/recipient change.
+
+- 2026-10-29 05:04:56 BKK: existing hourly monitor 050312-attempt.md and readback-verified 050456-final.md persisted; urgent5 + Surf/StandX + fair shard1 (14 distinct active Registry identities), bounded cross-shard Cambria RSGP/StandX beneficiary. Six candidate families, zero new Tier A/B ACTION, five SOURCE_GAP (Concrete extra USDC, Surf PONS raffle, StandX DUSD checker original, ForecastFDN current issuer, Neutrl redemption portal). Gmail Sent Cambria 1a1812a1f6802ecb readback confirmed and suppressed, mapped Inbox checked; no new Gmail/App. Browser originating X unavailable; issuer docs and official Telegram fallback used. Shard1 meaningful attempt PARTIAL; last fully verified complete Oct10 unchanged. Last four terminal-backed executed [1,3,3,1], no override. Existing task/schedule/scope/recipient unchanged.
