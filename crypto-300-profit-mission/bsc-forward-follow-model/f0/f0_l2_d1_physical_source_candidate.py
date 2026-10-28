@@ -25,10 +25,11 @@ _UNRELEASED_SOURCE_CODE_SEAL = object()
 class BoundedPhysicalReadOnlySource:
     """Exactly one fixed-host HTTP source; no URL, keys or transport callback."""
 
-    __slots__ = ("_start", "_end", "_last")
+    __slots__ = ("_start", "_end", "_last", "_runtime_permit", "_clock")
 
     def __init__(self, start_utc: str, end_utc: str, *,
-                 _unreleased_review_seal=None):
+                 _unreleased_review_seal=None, _runtime_permit=None,
+                 _clock=None):
         if (_unreleased_review_seal is not _UNRELEASED_SOURCE_CODE_SEAL
                 or type(start_utc) is not str
                 or type(end_utc) is not str):
@@ -40,10 +41,22 @@ class BoundedPhysicalReadOnlySource:
         self._start = start
         self._end = end
         self._last = None
+        self._runtime_permit = _runtime_permit
+        if _runtime_permit is not None:
+            from f0_l2_d1_physical_once import _LiveOnceChildPermit
+            if (type(_runtime_permit) is not _LiveOnceChildPermit
+                    or not _runtime_permit.valid()):
+                raise ValueError("F0_REAL_SOURCE_ONCE_CHILD_PERMIT_INVALID")
+        if _clock is not None and not callable(_clock):
+            raise ValueError("F0_REAL_SOURCE_UTC_CLOCK_INVALID")
+        self._clock = _clock or (lambda: datetime.now(timezone.utc))
 
     def check_at_actual_post(self):
         """UTC is checked AFTER TLS connect and shared start-gap wait."""
-        now = datetime.now(timezone.utc)
+        now = self._clock()
+        if type(now) is not datetime or now.tzinfo is None:
+            raise ValueError("F0_REAL_SOURCE_UTC_CLOCK_INVALID")
+        now = now.astimezone(timezone.utc)
         if self._last is not None and now < self._last:
             raise ValueError("F0_REAL_SOURCE_UTC_ROLLBACK")
         self._last = now
@@ -66,14 +79,20 @@ class BoundedPhysicalReadOnlySource:
                 or not callable(begin_at_real_post)):
             raise ValueError("F0_REAL_SOURCE_DURABLE_RID_REQUIRED")
         reservation_guard(request)
+        if self._runtime_permit is not None and not self._runtime_permit.valid():
+            raise ValueError("F0_REAL_SOURCE_ONCE_EXPIRED")
         denied = [None]
 
         def pre_connect(payload):
+            if self._runtime_permit is not None and not self._runtime_permit.valid():
+                raise ValueError("F0_REAL_SOURCE_ONCE_EXPIRED")
             if payload != request:
                 raise ValueError("F0_REAL_SOURCE_PRECONNECT_PAYLOAD_CHANGED")
             reservation_guard(payload)
 
         def final_post(payload):
+            if self._runtime_permit is not None and not self._runtime_permit.valid():
+                raise ValueError("F0_REAL_SOURCE_ONCE_EXPIRED")
             if payload != request:
                 raise ValueError("F0_REAL_SOURCE_PREPOST_PAYLOAD_CHANGED")
             try:
