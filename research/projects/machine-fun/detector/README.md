@@ -123,3 +123,27 @@ python3 machine_fun_service.py uninstall
 当前交付限于代码与测试，**尚未在用户 Mac 上实际执行安装或真实邮件送达验证**。它只覆盖已知平台配置 `3hVbfgB77tL1qDKhtMQoe4Gv7qPN2dGmKpD2KxWP2sPb`，不保证 Machine.fun 以后不会换配置；真实新币首先以 `CHAIN_PLATFORM_CANDIDATE_UNENDORSED` 发送，不冒充官方认证首发，不进行交易。
 
 背景依据：Apple LaunchAgents official documentation https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html 及 Alchemy streaming WS https://www.alchemy.com/docs/reference/solana-subscription-api-endpoints。
+
+
+## 2026-10-29 Mac 现场失败修复：FRANK_EXISTING_GMAIL_RECIPIENT_MISSING
+
+用户第一次执行 `install_machine_fun_background.sh` 终止于预检查：
+
+```text
+MACHINE_PREFLIGHT=FRANK_CONFIG_READ_ONLY
+MACHINE_START_BLOCKED: FRANK_EXISTING_GMAIL_RECIPIENT_MISSING
+```
+
+根因是本模块错误地把 Frank `gmail-existing-source.json` 的可选 `recipient` 字段当成了必填；**已有 OAuth 文件及 Alchemy 源可被找到，真正执行过的 only configuration check 未启动后台服务，也未发信**。
+
+现在 `gmail_from_existing()` 在 `recipient` 缺失/空字符串时返回 `None`，`check` 只打印 `MACHINE_GMAIL_RECIPIENT=OAUTH_PROFILE_TO_BE_VERIFIED`（不访问网络）；后续 `probe` 使用已有 OAuth 的 `users/me/profile` 接口验证真实 Google 邮箱及已有 Sent 读权限，并使用验证过的账户自己作为 From/To；不会把得到的地址写回 Frank。若旧配置显式存在邮箱，则必须与 profile 一致，否则阻断；非法值也阻断；缺少 OAuth send/readonly scopes 时不扩权、不尝试重新授权。回归新增 4 项 synthetic/mock 测试，累计 39 项代码测试待用户 Mac 执行。
+
+**用户已克隆分支，不重新 clone、不删除既有目录。** 更新命令：
+
+~~~sh
+cd "$HOME/Documents/ChatGPT/machine-fun-launch"
+git pull --ff-only
+bash research/projects/machine-fun/detector/install_machine_fun_background.sh
+~~~
+
+只要此前失败发生在 `check`，本模块 plist 尚未创建，更新后安装器可安全重试。其余检查可能发现独立新问题，不能在未运行前宣称真实端到端 Gmail/WS 验证成功。再次强调不修改 Frank 配置、Frank OAuth 文件、Frank LaunchAgent 或其数据库。
