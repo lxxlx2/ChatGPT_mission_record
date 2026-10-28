@@ -228,3 +228,23 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - event_archive: airdrop-tge-monitor/reports/events/2026/2026-10/2026-10-24/020558-cambria-duel-arena-blast-abstract-reclaim.md
 - stable_key_policy: suppress unchanged old-stake reclaim/login reminder; re-alert only for newly verified material deadline, route, eligibility or rights change.
 - prior_cambria_rsgp_opt_in: separate event, already delivered; no duplicate.
+
+## 2026-10-28 Cambria Base $RSGP TGE and My Cambria Journey — DELIVERED
+- event_key: cambria:rsgp-base-tge-and-journey:2026-10-29
+- project_id: cambria (EXISTING Shard 3; not a new Abstract/ABS watch entry)
+- distinct_from: cambria:rsgp_genesis_opt_in:2026-09-30 AND old Blast/Abstract Duel Arena escrow reclaim/login events
+- event_family: cambria:rsgp:base_tge_and_player_allocation_review
+- evidence_tier: A project original https://docs.cambria.gg/genesis/usdrsgp and https://lobby.cambria.gg/token/
+- expected_tge_utc: 2026-10-29T15:00:00Z
+- expected_tge_bangkok: 2026-10-29T22:00:00+07:00
+- launch_chain: Base
+- issuer_token_ca: 0x44B63aF715D5ef02CC3646a6CE96875e11d69E85
+- prior_user_participation: historical Cambria game, exact linked wallet and allocation UNVERIFIED
+- allocation_amount: UNVERIFIED
+- claim_open_transaction: UNVERIFIED
+- delivery_status: DELIVERED_EMAIL_CONFIRMED
+- gmail_message_id: 1a1812a1f6802ecb
+- canonical_event_archive: airdrop-tge-monitor/reports/events/2026/2026-10/2026-10-28/now-cambria-rsgp-base-tge.md
+- repeated_alert_policy: unchanged Oct29 date, Base chain and My Cambria Journey visibility are ALREADY NOTIFIED. A new email only for a freshly issuer-verified actual claim opening, changed deadline, actual wallet-specific rights, contract migration/change, material postponement or other urgent user action, with distinct version and Gmail Sent dedupe.
+- critical_negative_guard: user-suppressed independent Abstract/ABS token watch does not exclude Cambria-as-registered-project rights that were earned on Abstract but settle on Base.
+
