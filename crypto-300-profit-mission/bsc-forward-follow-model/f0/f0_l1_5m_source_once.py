@@ -201,6 +201,7 @@ class Capture:
         fsync_directory(root)
         self.total, self.blocks, self.heads = 0,0,0
         self.post_attempts, self.errors = 0,0
+        self.raw_bytes=0
         self.pending={}
         self.replies={}
         self.block_latency_ms=[]
@@ -255,6 +256,7 @@ class Capture:
             rawpath=None
             if type(raw) is bytes and len(raw)<=self.scope["max_response_bytes"]:
                 rawpath=_save_raw(self.rawdir,req["id"],raw)
+                self.raw_bytes+=len(raw)
             result=None
             failure=None
             cap=self.scope["max_response_bytes"]
@@ -319,19 +321,24 @@ class Capture:
                     self.last_hash=bhash
                     self.next_needed=height+1
                 else:
-                    self.replies[height]=(bhash,parent)
-                    self.watch_signed+=sum(c["group"]=="WATCHLIST"
-                                           for c in parsed["candidates"])
-                    self.router_candidates+=sum(c["group"]=="CONTROL_CANDIDATE"
-                                                for c in parsed["candidates"])
+                    watch_count=sum(c["group"]=="WATCHLIST"
+                                    for c in parsed["candidates"])
+                    control_count=sum(c["group"]=="CONTROL_CANDIDATE"
+                                      for c in parsed["candidates"])
+                    # Count ONLY parent-linked contiguous blocks; a syntactically
+                    # parsed but orphaned block has NO valid wallet denominator.
+                    self.replies[height]=(bhash,parent,watch_count,control_count)
                     post=transport.get("post_ns")
                     end=transport.get("end_ns")
                     if post is not None and end is not None:
                         self.block_latency_ms.append((end-post)/1e6)
                     while self.next_needed in self.replies:
-                        chash,cparent=self.replies.pop(self.next_needed)
+                        chash,cparent,watch_count,control_count=(
+                            self.replies.pop(self.next_needed))
                         require(cparent==self.last_hash,
                                 "BLOCK_PARENT_MISMATCH")
+                        self.watch_signed+=watch_count
+                        self.router_candidates+=control_count
                         self.last_hash=chash
                         self.last_contiguous=self.next_needed
                         self.next_needed+=1
@@ -419,6 +426,7 @@ def run_probe(scope, watched, routers, root, *, sender=None, clock=now_utc,
                    and samples[1]["backlog"] is not None else None)
     return {"schema":SCHEMA,"result":"UNVERIFIED_LIVE_SOURCE_FEASIBILITY",
             "stop":probe.stop_reason,"attempts":probe.total,
+            "archived_raw_bytes":probe.raw_bytes,
             "post_started":probe.post_attempts,"blocks_requested":probe.blocks,
             "heads_requested":probe.heads,"failed":probe.errors,
             "last_contiguous_height":probe.last_contiguous,
