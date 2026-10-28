@@ -13,10 +13,10 @@ P1：2026-10-28 20:47 → **2026-11-04 20:47 曼谷**（7 天），新 P1 研究
 预算到期：**强制 `INVEST_GO / INVEST_NO_GO`**，标注置信度及最大盲点；禁止以 `NEED_MORE_DATA` 或自动申请新预算收尾。阶段启动许可不等于合并/部署/交易许可。
 
 ## 本周唯一目标（1 行）
-**在 P1 截止前**按 [188 BUY/752 延迟证据矩阵](./FRANK_P1_HISTORICAL_FOLLOWABILITY_COVERAGE_20261028.md)交付有置信度的投入裁决；无新增执行报价则**候选到期结论 `INVEST_NO_GO`**，不得延期或申请自动续预算。
+**在 P1 截止前**按 [188 BUY/752 延迟证据矩阵](./FRANK_P1_HISTORICAL_FOLLOWABILITY_COVERAGE_20261028.md)交付有置信度的投入裁决；已进一步核查 22 ACC 中 1 例信号前有归档 SELL、10 MULT 晚于 ACC 中位 75 分 38 秒、5 个已核实 lot 的 4 个早于 24h 退出；**候选到期结论 `INVEST_NO_GO`**，不得延期或申请自动续预算。
 
 ## 正在进行（最多 3 项）
-- [A] P1 首轮离线证据核查已完成：[188 episode / 752 延迟证据格矩阵](./FRANK_P1_HISTORICAL_FOLLOWABILITY_COVERAGE_20261028.md)，可验证入/出报价 **0/752**；仍待 Claude/Codex 对本报告独立复核、阶段结束给 `INVEST_GO/NO_GO`。
+- [A] P1 历史跟随性核验：[188 episode / 752 延迟证据格矩阵](./FRANK_P1_HISTORICAL_FOLLOWABILITY_COVERAGE_20261028.md)已补 22 条 ACC 逐 episode 账本、信号前归档卖出和五个精选退出时差；可验证金额匹配入/出报价仍 **0/752**，等待新固定 SHA 的独立复核与阶段投入裁决。
 - [B→A] P0 打标清单：103 条 Open Frank 候选在 [P0 清单](../../docs/frank-operating-model/FRANK_P0_OPEN_PR_TRIAGE_20261028.md) 内做一次性分类；只冻结噪音，不关闭任何栈式依赖。
 - [A] G4 既有修复证据：[PR #239](https://github.com/lxxlx2/ChatGPT_mission_record/pull/239) 已获固定 SHA 研究审核，原预注册严格有效价格 0/30，另 15/30 事后敏感性不能算真实跟单利润。
 
