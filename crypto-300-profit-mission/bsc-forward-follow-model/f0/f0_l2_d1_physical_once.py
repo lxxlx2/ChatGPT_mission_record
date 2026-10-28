@@ -309,7 +309,7 @@ def main(argv):
         # after separate exact SHA/code/run review and fresh authorization.
         result = run_owner_approved_once(
             Path(argv[2]), argv[3], argv[4])
-    elif len(argv) == 10 and argv[1] == "--child":
+    elif len(argv) == 9 and argv[1] == "--child":
         root, evidence = Path(argv[2]), Path(argv[3])
         result = _child(root, evidence, bytes.fromhex(argv[4]),
                         argv[5], argv[6], int(argv[7]), float(argv[8]))
