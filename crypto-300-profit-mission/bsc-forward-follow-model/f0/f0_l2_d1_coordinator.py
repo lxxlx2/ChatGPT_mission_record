@@ -677,6 +677,12 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
                       "category":category, "height":height,
                       "state":state, "reason":reason,
                       "started":outcome.get("start") is not None}
+        if physical_live:
+            # REAL Python POST attempt boundary, NOT proven TCP byte send.
+            # The raw, owner-private journal permits offline latency audit.
+            settlement["post_attempt_monotonic"] = outcome.get("start")
+            settlement["response_worker_complete_monotonic"] = outcome.get(
+                "completed_at")
         try:
             log.settle(rid,settlement,raw)
         except (OSError,ValueError) as exc:
@@ -707,10 +713,13 @@ def _run_single_shared_coordinator(source, output_root, *, max_total=32,
             head_pending = False
             if next_height is None:
                 next_height = next_commit = head + 1
-            head_samples.append({"sampled_head":head,
-                                 "at_monotonic":head_completed,
-                                 "accepted_at_monotonic":time.monotonic(),
-                                 "clock_basis":"WORKER_RESPONSE_COMPLETED"})
+            sample = {"sampled_head":head,
+                      "at_monotonic":head_completed,
+                      "accepted_at_monotonic":time.monotonic(),
+                      "clock_basis":"WORKER_RESPONSE_COMPLETED"}
+            if physical_live:
+                sample["rpc_id"] = rid
+            head_samples.append(sample)
         elif category == "ANCHOR":
             # Successful RAW must already be fsynced via log.settle.
             # Same source only; not independent canonical/finality proof.
