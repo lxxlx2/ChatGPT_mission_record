@@ -2,6 +2,8 @@
 import json
 import io
 import http.client
+import threading
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 import socket
@@ -15,6 +17,7 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from f0_l1_5m_source_once import (
     SCHEMA, ENDPOINT, METHODS, MAX_BODY, validate_scope, run_probe, Sender, Capture,
+    _read_complete_http_body, _FramingFailure,
     now_utc, main)
 from f0_l1_window import load_frozen_cohort,cohort_watchlist
 from f0_l1_preflight import official_router_addresses
@@ -366,6 +369,7 @@ class FiveMinuteSourceTests(unittest.TestCase):
         trunc=self._run_wire(prefix+body)
         self.assertNotEqual(trunc["state"],"RAW")
         self.assertTrue(trunc["state"].startswith("HTTP_"))
+        self.assertEqual(trunc["raw"],valid)
 
     def test_stdlib_valid_content_length_success(self):
         valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
@@ -404,6 +408,62 @@ class FiveMinuteSourceTests(unittest.TestCase):
                            slow_headers=0.0012,slow_body=0.01)
         self.assertEqual(out["state"],"REQUEST_DEADLINE_EXCEEDED")
         self.assertNotEqual(out["state"],"RAW")
+
+    def test_bad_frame_cannot_become_successful_chain_head_in_capture(self):
+        valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
+        wire=(b"HTTP/1.1 200 OK\\r\\nContent-Type: application/json\\r\\n"
+              +b"Content-Length: "+str(len(valid)+100).encode()
+              +b"\\r\\nConnection: close\\r\\n\\r\\n"+valid)
+        # Actual standard-library HTTPResponse to Sender, then original
+        # durable Capture SETTLE and ingest: valid JSON is NOT sufficient.
+        outcome=self._run_wire(wire)
+        self.assertEqual(outcome["state"],"HTTP_TRUNCATED_CONTENT_LENGTH")
+        class FixedSender:
+            def send(self,encoded):
+                return outcome
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td).resolve()
+            cap=Capture(root,permit(),sender=FixedSender())
+            try:
+                with ThreadPoolExecutor(max_workers=1) as pool:
+                    cap.reserve(pool,"eth_chainId",[],"CHAIN")
+                    rows=cap.drain(timeout=1)
+                    self.assertEqual(len(rows),1)
+                    self.assertEqual(rows[0][3],"HTTP_TRUNCATED_CONTENT_LENGTH")
+                    cap.ingest(*rows[0],set(),set())
+                    self.assertEqual(cap.stop_reason,
+                                     "SOURCE_HTTP_TRUNCATED_CONTENT_LENGTH")
+                    self.assertEqual(cap.errors,1)
+            finally:
+                cap.finish()
+            rows=[json.loads(line) for line in
+                  (root/"attempts.jsonl").read_text().splitlines()]
+            self.assertEqual(rows[0]["event"],"RESERVE_UNKNOWN")
+            self.assertEqual(rows[1]["event"],"SETTLE")
+            self.assertEqual(rows[1]["state"],"FAILED")
+            self.assertEqual((root/"raw_responses"/rows[1]["raw_file"]).read_bytes(),
+                             valid)
+
+    def test_midstream_io_failure_keeps_earlier_bounded_bytes(self):
+        class BrokenRead:
+            chunked=False
+            length=6
+            will_close=True
+            def __init__(self):
+                self.calls=0
+            def read1(self,n):
+                self.calls+=1
+                if self.calls==1:
+                    return b'{"'
+                raise OSError("simulated interruption")
+            def isclosed(self):
+                return False
+        with self.assertRaises(_FramingFailure) as caught:
+            _read_complete_http_body(
+                BrokenRead(),[("Content-Length","6")],
+                100,time.monotonic()+5,threading.Event(),lambda:None)
+        self.assertEqual(caught.exception.code,"HTTP_STREAM_INTERRUPTED")
+        self.assertEqual(caught.exception.partial,b'{"')
 
     def test_slow_stream_elapsed_over_deadline_rejected_even_if_json_valid(self):
         valid=b'{"jsonrpc":"2.0","id":1,"result":"0x38"}'
