@@ -41,7 +41,8 @@
       "web_pki_tls",
       "web_runtime_rce",
       "macro",
-      "forward_catalysts"
+      "forward_catalysts",
+      "third_party_ipo_access"
     ],
     "allow_source_gap_with_reason": true,
     "empty_sections_must_document_research": true,
@@ -95,6 +96,46 @@
       ],
       "decision": "Sources must be dated, actually fetched and have checked_at or SOURCE_GAP; all verified high-impact candidates need event version and primary Section 9 and may qualify for independent Top5. A generic old wallet article never discharges these independent security lanes.",
       "disclosure_rules": "Do not overclaim exfiltration for each customer or assume the user runs any affected software. Do not automatically repeat PHP/eMudhra after prior day without material delta."
+    },
+    "third_party_ipo_watch": {
+      "watch_condition": "POTENTIAL_NOT_CONFIRMED",
+      "focus_issuer": [
+        "Anthropic"
+      ],
+      "reference_pattern": "previous SpaceX venue-mediated share allocation/tokenized share program, historical analogy only",
+      "venues": [
+        "Kraken",
+        "Binance",
+        "Bitget",
+        "Bybit",
+        "Gate",
+        "OKX"
+      ],
+      "sources": [
+        "exchange official English announcements",
+        "exchange official product pages",
+        "issuer SEC filing/IR",
+        "exchange official X posts when actually readable"
+      ],
+      "classify_products": [
+        "IPO primary allocation subscription",
+        "fully backed tokenized shares",
+        "synthetic/pre-IPO derivative/perpetual",
+        "nonbinding indication of interest",
+        "rumor only"
+      ],
+      "alert_policy": "Never announce availability without an independently checked official venue page specifying Anthropic and actual status. Genuine newly open application or impending verified deadline appears in existing Crypto daily §7 with official issuer/venue evidence and full terms; do not create another recurring task.",
+      "required_evidence": [
+        "official product URL",
+        "actual offer status",
+        "eligibility and jurisdictions",
+        "subscription start/end if available",
+        "subscription price and allocation details if available",
+        "whether shares are held/delivered or only derivative exposure",
+        "fees, lockup, refund and conversion if disclosed"
+      ],
+      "unknown_status": "UNCONFIRMED_MONITORING",
+      "dedupe_family": "ipoaccess:anthropic:<venue>:<instrument_kind>"
     }
   },
   "top_highlights": {
@@ -306,6 +347,20 @@
       "exclude": [
         "重复事件报道",
         "无需操作的旧空投"
+      ]
+    },
+    {
+      "kind": "VENUE_IPO_ACCESS",
+      "section": 7,
+      "title": "空投、积分、TGE、ICO/公售、解锁和实际可参与机会",
+      "examples": [
+        "Kraken/Bitget/Gate/Bybit/Binance/OKX new Anthropic or other issuer official third-party IPO allocation window",
+        "tokenized stock subscription by crypto venue"
+      ],
+      "exclude": [
+        "Kraken own IPO",
+        "ANTHROPIC perpetual futures ticker listing",
+        "unverified speculation that exchange must launch an offer"
       ]
     }
   ],
