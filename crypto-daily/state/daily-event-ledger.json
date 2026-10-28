@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-10-27",
-  "status": "OCT27_DELIVERED_AND_ARCHIVED_PARTIAL_SOURCE_GAPS",
-  "note": "2026-10-27 full 13-section 37-item text/plain Gmail Sent 1a17b2d317942c5a readback and exact canonical Git readback PASS, canonical blob 407a25cf17db3f476932759de598d60102b13a85, SHA-bound CI PASS manifest 48d7644dcb6b5cfb3cddb02eef0c24d465330561. Original social/TXID and some ETF issuer data remain SOURCE_GAP; no duplicate mail.",
+  "updated_at": "2026-10-28",
+  "status": "OCT28_DELIVERED_AND_ARCHIVED_PARTIAL_SOURCE_GAPS",
+  "note": "2026-10-28 official 13-section Gmail readback exact archived, 34 numbered items, 32 unique delivered events, source gaps tge/early_nft and original X/TXIDs/ETF issuer data. Gmail Sent 1a180500065679d2, canonical blob 5bc7be7c463f2d8b88917e974b31dc330e5d0f50.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -864,6 +864,326 @@
       "delivered_date": "2026-10-27",
       "gmail_message_id": "1a17b2d317942c5a",
       "source_url": "https://announcements.bybit.com/en/article/bybit-to-end-token-deposits-and-withdrawals-via-select-networks-nov-6-2026--art808530fb81de/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "keystone:webauth-device-attestation-key-compromise:2026-10-26",
+      "family_key": "keystone:webauth-device-attestation-key-compromise",
+      "material_version": "company-attributed-2026-10-26-webauth-key-18835-units-25964-records",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.cryptotimes.io/2026/10/26/keystone-reports-data-breach-affecting-25964-hardware-wallet-buyers/",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "security:udesk-malicious-customer-support-js:2026-10-27",
+      "family_key": "security:udesk-malicious-customer-support-js",
+      "material_version": "slowmist-original-sample-analysis-2026-10-27-v1",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://slowmist.medium.com/threat-intelligence-udesk-loads-malicious-js-to-steal-data-and-alter-transfer-addresses-157f331a5b8b",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "spot:BTC:2026-10-28T0124Z",
+      "family_key": "spot:BTC",
+      "material_version": "2026-10-28T01:24:28.996Z",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:ETH:2026-10-28T0124Z",
+      "family_key": "spot:ETH",
+      "material_version": "2026-10-28T01:24:29.014Z",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:SOL:2026-10-28T0124Z",
+      "family_key": "spot:SOL",
+      "material_version": "2026-10-28T01:24:24.786Z",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:BNB:2026-10-28T0124Z",
+      "family_key": "spot:BNB",
+      "material_version": "2026-10-28T01:24:26.027Z",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:HYPE:2026-10-28T0124Z",
+      "family_key": "spot:HYPE",
+      "material_version": "2026-10-28T01:24:28.727Z",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "deriv:BTC-ETH:oi-multipoint:2026-10-28",
+      "family_key": "deriv:BTC-ETH:oi-multipoint",
+      "material_version": "binance-futures-2026-10-28T0124Z-btc-eth-multipoint",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "deriv:SOL:oi-multipoint:2026-10-28",
+      "family_key": "deriv:SOL:oi-multipoint",
+      "material_version": "binance-futures-sol-2026-10-28T0124Z-multipoint",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://fapi.binance.com/fapi/v1/openInterest?symbol=SOLUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "binance:cross-margin-pair-forced-settlement:2026-10-30",
+      "family_key": "binance:cross-margin-pair-forced-settlement",
+      "material_version": "official-2026-10-27-cross-margin-auto-settle-2026-10-30T0600Z",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.binance.com/en/support/announcement/b4015154ce33445ebf7b98d1bc12c072",
+      "verification": "verified"
+    },
+    {
+      "event_key": "binance:isolated-margin-max-leverage-reduction:2026-11-10",
+      "family_key": "binance:isolated-margin-max-leverage-reduction:2026-11-10",
+      "material_version": "official-2026-10-27-23pairs-10x-to-5x",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.binance.com/en/support/announcement/98f858ce2402474a88369532d54494ef",
+      "verification": "verified"
+    },
+    {
+      "event_key": "bitget:usdc-avax-cchain-withdrawal-suspension:2026-10-28",
+      "family_key": "bitget:usdc-avax-cchain-withdrawal-suspension",
+      "material_version": "official-2026-10-28T0122UTC8-usdc-avax-pause",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.bitget.com/support/articles/12560603898976",
+      "verification": "verified"
+    },
+    {
+      "event_key": "bitget:haedal-bsc-withdrawal-suspension:2026-10-28",
+      "family_key": "bitget:haedal-bsc-withdrawal-suspension",
+      "material_version": "official-2026-10-28T0601UTC8-haedal-bsc-pause",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.bitget.com/support/articles/12560603899022",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "etf:crossasset:2026-10-26:completed",
+      "family_key": "etf:crossasset:2026-10-26:completed",
+      "material_version": "farside-2026-10-28-0827-completed-2026-10-26",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://farside.co.uk/btc/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "etf:crossasset:2026-10-27:partial",
+      "family_key": "etf:crossasset:2026-10-27:partial",
+      "material_version": "farside-2026-10-28-0827-2026-10-27-partial",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://farside.co.uk/eth/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "onchain:binance-btc-withdrawal:11330btc:2026-10-27",
+      "family_key": "onchain:binance-btc-withdrawal:11330btc",
+      "material_version": "onchainlens-attributed-11330btc-2026-10-27-v1-txid-gap",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://lookonchain.com/feeds/78911",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "onchain:ibit-coinbase-prime:1698btc:2026-10-27",
+      "family_key": "onchain:ibit-coinbase-prime:1698btc",
+      "material_version": "onchainlens-attributed-2026-10-27-1698btc",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://lookonchain.com/feeds/78916",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "onchain:hype-wintermute-whale:2026-10-28",
+      "family_key": "onchain:hype-wintermute-whale",
+      "material_version": "onchainlens-attributed-123055hype-2026-10-28-v1",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://lookonchain.com/feeds/78989",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "circle:aci-colombia-usdc-settlement-pilot:2026-10-27",
+      "family_key": "circle:aci-colombia-usdc-settlement-pilot",
+      "material_version": "issuer-joint-press-release-2026-10-27-colombia-breb",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.businesswire.com/news/home/20261027452148/en/ACI-Worldwide-and-Circle-Collaborate-to-Bring-USDC-Settlement-to-Existing-Payments-Infrastructure-in-Latin-America",
+      "verification": "verified"
+    },
+    {
+      "event_key": "cancore:canton-seed-funding:2026-10-28",
+      "family_key": "cancore:canton-seed-funding",
+      "material_version": "secondary-2026-10-28-cancore-7_2m-seed",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://lookonchain.com/feeds/78911",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "coindcx:deprecated-wallet-sweeper-loss:2026-10-25",
+      "family_key": "coindcx:deprecated-wallet-sweeper-loss",
+      "material_version": "issuer-2026-10-25-15_99m-usdt-sweeper-failure",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://coindcx.com/blog/coindcx-news/on-chain-wallet-activity-update-21-oct-2026",
+      "verification": "verified"
+    },
+    {
+      "event_key": "myriad:bnb-amm-settlement-privatekey-incident:2026-10-28",
+      "family_key": "myriad:bnb-amm-settlement-privatekey-incident",
+      "material_version": "myriad-attributed-2026-10-28-10markets-auto-refund",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://lookonchain.com/feeds/78989",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "ngrave:advanced-threat-warning:2026-10-28",
+      "family_key": "ngrave:advanced-threat-warning",
+      "material_version": "ngrave-attributed-2026-10-28-security-warning",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://lookonchain.com/feeds/78985",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "security:gamdom-whitearmor-ransomware-claim:2026-10-26",
+      "family_key": "security:gamdom-whitearmor-ransomware-claim",
+      "material_version": "whitearmor-allegation-2026-10-26-v1",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://crypto.news/whitearmor-demands-15m-in-bitcoin-from-crypto-casino-gamdom/",
+      "verification": "unverified"
+    },
+    {
+      "event_key": "connectwise:cloudbackup:2026-10-27-thirdparty-validation-delay",
+      "family_key": "connectwise:cloudbackup:2026-10-27-thirdparty-validation-delay",
+      "material_version": "connectwise-official-2026-10-27T1430Z-restoration-awaits-thirdparty-validation",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.connectwise.com/company/trust/advisories",
+      "verification": "verified"
+    },
+    {
+      "event_key": "macro:us-equity-close:2026-10-27",
+      "family_key": "macro:us-equity-close",
+      "material_version": "market-scale-us-close-2026-10-27-spx-nasdaq",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.marketscale.com/industries/business-services/stocks-rose-again-as-chips-rallied-and-oil-slid-under-100",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "macro:wti-oil-close:2026-10-27",
+      "family_key": "macro:wti-oil-close",
+      "material_version": "market-scale-wti-2026-10-27-99_90",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.marketscale.com/industries/business-services/stocks-rose-again-as-chips-rallied-and-oil-slid-under-100",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "binance:eth-network-wallet-maintenance:2026-10-28",
+      "family_key": "binance:eth-network-wallet-maintenance",
+      "material_version": "binance-official-2026-10-28T0555Z-eth-wallet-maintenance",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.binance.com/en/support/announcement/6d453d371099439a8d25ec1c1d28e5f4",
+      "verification": "verified"
+    },
+    {
+      "event_key": "binance:epic-quick-spot-delisting:2026-10-28",
+      "family_key": "binance:epic-quick-spot-delisting",
+      "material_version": "binance-official-2026-10-28T0300Z-epic-quick-spot-delisting",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/290a660c0b2e4e888c582cd29ecf9ecc",
+      "verification": "verified"
+    },
+    {
+      "event_key": "trend:hype:relative-strength-2026-10-28",
+      "family_key": "trend:hype:relative-strength-2026-10-28",
+      "material_version": "hype-two-session-2026-10-27-28-0824",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "action:2026-10-28:operational-transfer-preflight",
+      "family_key": "action:2026-10-28:operational-transfer-preflight",
+      "material_version": "action-conditional-exchange-preflight-2026-10-28",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.binance.com/en/support/announcement/6d453d371099439a8d25ec1c1d28e5f4",
+      "verification": "verified"
+    },
+    {
+      "event_key": "action:2026-10-28:market-evidence-risk",
+      "family_key": "action:2026-10-28:market-evidence-risk",
+      "material_version": "action-evidence-risk-2026-10-28",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://farside.co.uk/btc/",
       "verification": "verified"
     }
   ],
