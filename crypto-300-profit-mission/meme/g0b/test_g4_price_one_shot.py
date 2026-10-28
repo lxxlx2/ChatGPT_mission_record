@@ -40,7 +40,7 @@ class TestG4OneShot(unittest.TestCase):
         with self.assertRaises(ValueError):
             run(max_http=-1)
 
-    def test_exit_before_entry_is_excluded_not_profitable(self):
+    def test_entry_after_exit_excluded_and_exit_lookahead_rejected(self):
         entry_time, exit_time = 1000, 2400
         entry = [{"t": 1060, "c": 10.0, "v": 100.0},
                  {"t": 1300, "c": 12.0, "v": 100.0},
@@ -49,8 +49,29 @@ class TestG4OneShot(unittest.TestCase):
         out = assess_lags(entry, exit_, entry_time, exit_time)
         self.assertEqual(out["3600"]["status"], "ENTRY_AT_OR_AFTER_EXIT")
         self.assertIsNone(out["3600"]["gross_candle_close_proxy_pct"])
-        self.assertEqual(out["300"]["status"], "CANDLE_PROXY_ONLY_NOT_EXECUTABLE")
-        self.assertIsNotNone(out["300"]["gross_candle_close_proxy_pct"])
+        self.assertEqual(out["300"]["status"], "EXIT_CANDLE_KNOWN_AFTER_EXIT")
+        self.assertIsNone(out["300"]["gross_candle_close_proxy_pct"])
+        self.assertEqual(out["300"]["exit"]["price_known_no_earlier_than"], 2460)
+
+
+    def test_exit_candle_late_60_or_180_seconds_cannot_be_used(self):
+        entry = [{"t": 1050, "c": 10, "v": 100},
+                 {"t": 1200, "c": 10, "v": 100}]
+        for exit_start in (2400, 2520):
+            with self.subTest(exit_start=exit_start):
+                # Prior implementation returned +100% for the first case.
+                exiting = [{"t": exit_start, "c": 20, "v": 100}]
+                result = assess_lags(entry, exiting, 1000, 2400)
+                for lag in (30, 120):
+                    row = result[str(lag)]
+                    self.assertEqual(row["status"], "EXIT_CANDLE_KNOWN_AFTER_EXIT")
+                    self.assertIsNone(row["gross_candle_close_proxy_pct"])
+
+    def test_missing_exit_candle_stays_missing(self):
+        entry = [{"t": 1050, "c": 10, "v": 100}]
+        out = assess_lags(entry, [], 1000, 2400)
+        self.assertEqual(out["30"]["status"], "MISSING_NONZERO_VOLUME_CANDLE")
+        self.assertIsNone(out["30"]["gross_candle_close_proxy_pct"])
 
     def test_no_zero_volume_and_no_late_unbounded_candle(self):
         entry = [{"t": 1060, "c": 10, "v": 0},
