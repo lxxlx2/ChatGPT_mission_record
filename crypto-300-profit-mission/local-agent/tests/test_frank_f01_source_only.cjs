@@ -85,6 +85,21 @@ test('invalid or missing reason-count map must remain unknown rather than fabric
   }
 });
 
+test('a failed required refresh must invalidate the previously rendered F01 summary',()=>{
+  // Regression: refresh() catch previously updated only runtime, leaving the last
+  // successful "近期来源信号 N 条" text on screen as if still current.
+  const refreshStart = js.indexOf('async function refresh()');
+  const refreshEnd = js.indexOf('\nrefresh();', refreshStart);
+  assert.ok(refreshStart > 0 && refreshEnd > refreshStart, 'refresh() must exist');
+  const body = js.slice(refreshStart, refreshEnd);
+  const catchAt = body.indexOf('} catch (e) {');
+  assert.ok(catchAt > 0, 'refresh() must have a catch branch');
+  const catchBody = body.slice(catchAt);
+  assert.match(catchBody, /\$\('f01-source-status'\)\.textContent\s*=\s*'[^']*不可核实/,
+    'catch must replace the F01 source summary with a not-verifiable message');
+  assert.match(catchBody, /不展示可跟结论/,
+    'catch must keep the no-eligible-claim wording');
+});
 test('chain epoch parser handles numeric seconds and timezone-bearing timestamps only',()=>{
   assert.equal(context.epoch(now-1),now-1);
   assert.equal(context.epoch(String(now-1)),now-1);

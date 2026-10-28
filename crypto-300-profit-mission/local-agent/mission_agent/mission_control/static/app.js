@@ -1106,6 +1106,9 @@ async function refresh() {
   } catch (e) {
     $('runtime').className = 'runtime offline';
     $('runtime').innerHTML = `<strong>控制台读取失败</strong><span>${esc(e.message)}</span>`;
+    // Required feed failed: do not leave the last successful F01 summary on screen.
+    $('f01-source-status').textContent = 'F01 来源资格暂不可核实（本轮读取失败，旧结果已作废）；不展示可跟结论，完整历史候选保留。';
+    $('f01-timing-status').textContent = '本轮来源核验失败；不产生延迟观测样本。';
   }
 }
 
