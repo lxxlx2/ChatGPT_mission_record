@@ -38,7 +38,7 @@ class TestG4OneShot(unittest.TestCase):
             with self.assertRaises(ValueError):
                 run(max_http=wrong)
         with self.assertRaises(ValueError):
-            PublicGet(max_calls=MAX_HTTP+1) if False else run(max_http=MAX_HTTP+1)
+            run(max_http=-1)
 
     def test_exit_before_entry_is_excluded_not_profitable(self):
         entry_time, exit_time = 1000, 2400
