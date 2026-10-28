@@ -1,0 +1,9 @@
+{
+  "phase": "P0_KILL_TEST",
+  "max_new_workflows": 0,
+  "max_new_monster_md_per_week": 2,
+  "max_commits_per_week": 40,
+  "max_new_scripts_per_week": 3,
+  "phase_deadline_utc": "2026-11-11T00:00:00Z",
+  "paid_source_usd": 0
+}

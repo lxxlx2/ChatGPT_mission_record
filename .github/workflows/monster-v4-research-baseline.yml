@@ -3,43 +3,6 @@ on:
   push:
     branches:
       - research/monster-v4-local-discovery-20261010
-    paths:
-      - 'crypto-300-profit-mission/monster/**'
-      - 'crypto-300-profit-mission/local-agent/config/monster_v4_research_candidate.json'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_baseline_audit.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_baseline_audit.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_export_event_packet.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_export_event_packet.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_full_market_history_diagnostic.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_full_market_history_diagnostic.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_d2.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_d2_evidence.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_historical_price_probe.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_historical_replay.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_causal_feature_research.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_short_history_replay.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_neutral_control_replay.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_neutral_control_replay.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_short_history_replay.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_causal_feature_research.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_history_source_quality.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_history_source_quality.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_historical_replay.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_historical_price_probe.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_mac_service.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_mac_service.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_d2.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_shadow.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_opportunity_snapshot.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_opportunity_snapshot.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_economic_readiness.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_economic_readiness.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_stage5_integrity.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_stage5_integrity.py'
-      - '.github/workflows/monster-v4-research-baseline.yml'
-      - 'crypto-300-profit-mission/local-agent/mission_agent/early/forward_observation.py'
-      - 'crypto-300-profit-mission/local-agent/tests/test_monster_forward_observation.py'
   pull_request:
     paths:
       - 'crypto-300-profit-mission/monster/**'
@@ -65,6 +28,92 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  anti-drift-budget:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.ref == 'research/monster-v4-local-discovery-20261010'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check Monster anti-drift owner contract and weekly budgets
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import datetime as dt
+          import json
+          import pathlib
+          import re
+          import subprocess
+          import sys
+
+          def git(*args):
+              return subprocess.check_output(['git', *args], text=True).strip()
+
+          root = pathlib.Path('crypto-300-profit-mission/monster')
+          gov = root / 'governance'
+          contract = gov / 'MONSTER_ANTI_DRIFT_OPERATING_CONTRACT_20261028.md'
+          budget_path = gov / 'budget.json'
+          baseline = '8a993f7805c1acf96555b069fb7909876bd42bec'
+          expected = {str(contract): 'eb644b329e5a9e1ec11759095b6ac908dc092a3d', str(budget_path): 'e827bd01d25d30579dcfaee3b256924468ee6195'}
+          for path, sha in expected.items():
+              if git('hash-object', path) != sha:
+                  raise SystemExit('OWNER_FROZEN_CONTRACT_MODIFIED: ' + path)
+          if subprocess.run(['git', 'merge-base', '--is-ancestor', baseline, 'HEAD']).returncode:
+              raise SystemExit('ANCHOR_NOT_ANCESTOR: cannot trust budget counts')
+          budget = json.loads(budget_path.read_text())
+          limits = {
+              'commits': budget['max_commits_per_week'],
+              'new_monster_md': budget['max_new_monster_md_per_week'],
+              'new_scripts': budget['max_new_scripts_per_week'],
+              'new_workflows': budget['max_new_workflows'],
+          }
+          if budget['phase'] != 'P0_KILL_TEST' or budget['paid_source_usd'] != 0:
+              raise SystemExit('UNAUTHORIZED_PHASE_OR_SPEND')
+          if any(type(value) is not int or value < 0 for value in limits.values()):
+              raise SystemExit('INVALID_BUDGET_LIMITS')
+          commits = git('rev-list', '--first-parent', '--reverse', baseline + '..HEAD').splitlines()
+          weeks = {}
+          for sha in commits:
+              stamp = dt.datetime.fromisoformat(git('show','-s','--format=%cI',sha))
+              stamp = stamp.astimezone(dt.timezone.utc)
+              monday = (stamp - dt.timedelta(days=stamp.weekday())).date().isoformat()
+              c = weeks.setdefault(monday, dict.fromkeys(limits, 0))
+              c['commits'] += 1
+              added = git('diff-tree','--no-commit-id','--name-only','-r','--diff-filter=A',sha).splitlines()
+              for path in added:
+                  if path.startswith('.github/workflows/') and path.endswith(('.yml','.yaml')):
+                      c['new_workflows'] += 1
+                  if path.startswith('crypto-300-profit-mission/monster/') and path.endswith('.md'):
+                      c['new_monster_md'] += 1
+                  if path.endswith('.py') and (path.startswith('crypto-300-profit-mission/monster/')
+                        or path.startswith('crypto-300-profit-mission/local-agent/mission_agent/early/')
+                        or (path.startswith('crypto-300-profit-mission/local-agent/scripts/')
+                            and 'monster' in path.lower())):
+                      c['new_scripts'] += 1
+                  if re.search(r'monster.*stage[_-]?[0-9]+', path, re.IGNORECASE):
+                      raise SystemExit('NEW_MONSTER_STAGE_FILE_FORBIDDEN: ' + path)
+          for week, observed in sorted(weeks.items()):
+              for name, used in observed.items():
+                  if used > limits[name]:
+                      raise SystemExit(f'WEEKLY_BUDGET_EXCEEDED week={week} {name}={used}/{limits[name]}')
+              print('MONSTER_BUDGET_WEEK',week,json.dumps(observed,sort_keys=True))
+          this_week = (dt.datetime.now(dt.timezone.utc)
+                        - dt.timedelta(days=dt.datetime.now(dt.timezone.utc).weekday())).date().isoformat()
+          reports = sorted((gov / 'weekly').glob('*.md'))
+          for report in reports:
+              lines = report.read_text().splitlines()
+              if len(lines) > 60:
+                  raise SystemExit('WEEKLY_REPORT_OVER_60_LINES: ' + str(report))
+              if not any(line.startswith('## 本周唯一指标：N_VALID = ') for line in lines):
+                  raise SystemExit('WEEKLY_REPORT_NO_MEASURABLE_P0_N: '+str(report))
+          if dt.datetime.now(dt.timezone.utc) >= dt.datetime.fromisoformat(budget['phase_deadline_utc'].replace('Z','+00:00')):
+              raise SystemExit('P0_PHASE_DEADLINE_REACHED_OWNER_DECISION_REQUIRED')
+          print('ANTI_DRIFT_BUDGET_PASS',len(commits),'new commits',len(reports),'weekly reports')
+          PY
+
   historical-baseline:
     runs-on: ubuntu-latest
     timeout-minutes: 6
