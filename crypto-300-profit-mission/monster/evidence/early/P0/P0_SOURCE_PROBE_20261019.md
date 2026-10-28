@@ -1,3 +1,15 @@
+## 2026-10-28 BSC V2 单次前瞻 RPC 原始回执复核：完整但未新增池（独立于2025历史P0）
+
+**真正的新来源证据**：用户在 Mac 明确手动只读运行现有固定源码 `forward_observation.py`（`--manual-once --pause-ms 500`），提供原始归档ZIP；本会话逐一读取其中15份`rpc-NN.json`并复算**15/15原字节SHA256/字节长/请求序号全部一致**，解析链Id `0x38=56`。上传ZIP **49,012字节，SHA256 `639cd694386100202b5aff9b69d91d0c069b6b1790f7bc4cadf651dbfb0d0c11`**；manifest SHA256 `831b36431db1a2c054b48d951f680209f399304015c5607e7192902a213edcf6`。原始ZIP仅留用户Mac本地/本次会话上传，不上传Git（遵守早期链上raw来源保密和仓库归档合同）；本段只是可检查摘要。Mac原目录：`$HOME/Desktop/monster-bsc-forward-20261028T062434Z/`。原始数据是否能从别人环境独立重获与重放，取决于保留该ZIP及其SHA，Git本身不是完整raw数据归档。
+
+**真实两点观察**：BSC Mainnet PancakeSwap V2 Factory `0xca143ce32fe78f1f7019d7d551a6402fc5350c73`；块`130232809`（hash `0xd5a4871e0c901a5d8eb29c24c592d87d395bc4d75985de48de71528b8b3a52d5`）与块`130232814`（hash `0x89da60f1879498a65bddf991e1b5c7e651d5cb08ddc0c3dbe0d709c415e6f856`）的`eth_call allPairsLength()=3575553`两次一致；中间`130232810..813`四个实际响应存在且五条父哈希均连贯，同高度复查哈希不变。BSC区块链上时间`06:24:40..06:24:42Z`，Factory计数回复间真实单调间隔`2.210271375s`；采集全流程`06:24:34.241563Z..06:24:47.510818Z`，耗时`13.269133125s`，**不可把整个13.27s冒充连续双计数观察窗口**。15 RPC = `eth_chainId×1 + eth_blockNumber×2 + eth_getBlockByNumber×10 + eth_call×2`，未有`eth_sendRawTransaction`及任何真实订单。
+
+**准确定性**：`FORWARD_BSC_V2_TWO_PINNED_COUNTS_RAW_SHA_VERIFIED / 5_CONTIGUOUS_BLOCKS / DELTA_0_VALID_ZERO_OBSERVATION / SOURCE_SCOPE_SINGLE_PROVIDER_ONLY`。零差只代表这个Factory这段块高没有新增Pair，**不是**全部BSC/全部DEX/全天新币为零；本轮没有`allPairs(index)`新增身份、池储备、双向报价或可兑现收益。local接收时间只是用户本机上界，`LOCAL_SYSTEM_CLOCK_NOT_EXTERNALLY_ATTESTED`、`REORG_FINALITY_NOT_PROVEN`，不能记为独立公证`PIT_VERIFIED`。**2025-07-01历史P0仍`INSUFFICIENT_COVERAGE`，P1 `BLOCKED`、G4 `UNKNOWN`、G6 `NO_GO`。** 此事件建立了“可读、可核原字节的短窗前瞻来源”，没有完成“实测捕获一个可交易的新池”。
+
+**下一有效投资研究证据**：只需前瞻捕到至少一个真实新增Pair的同块Factory索引、pool/token0/token1及原收包时间，再在独立的有限只读门禁下核对双向可成交性、真实流动性与名义额。零增量时**不建议机械重复同一2.21s短窗以凑新池**；不得私自上定时器、增长采样调用预算或产生新的脚本/工作流。以上是一次限定只读捕获，不代表已授权新的持续收包。
+
+---
+
 ## 2026-10-28 07:50:41（Asia/Bangkok）：SQD 第二次 529，按预设停止门禁关闭本轮候选
 
 **证据类型：用户 Mac 前台 curl HTTP 原始响应头+JSON（USER_PASTED_TERMINAL_OUTPUT），非本会话直连重算。** 供应商响应 `date: Wed, 28 Oct 2026 00:50:41 GMT`，即曼谷 **2026-10-28 07:50:41**；`HTTP/2 529`、`HTTP_STATUS=529`、`retry-after: 10`、`x-sqd-data-source: network`、`x-request-id: 07b229a7cbf38dbc973947a507fa9bea`、`cf-ray: a515f2a08cc2f82a-BKK`；返回 `{"error":{"type":"rate_limit_error","code":"overloaded","message":"Service is overloaded, please try again later","request_id":"07b229a7cbf38dbc973947a507fa9bea"}}`。与第一次单区块返回529、`request_id=5ea90d441966433a03cec671f673a78a`一起，构成**两次同一固定查询均无事件行**的证据。`Retry-After: 10`仅是服务端建议的最低等待秒数，**不是保证成功，也不是用户再次重试的授权**。`x-sqd-data-source: network`仅按原文字段保存，不推导历史事件源可用或参数通过。
