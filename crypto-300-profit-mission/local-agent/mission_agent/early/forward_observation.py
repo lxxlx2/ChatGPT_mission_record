@@ -173,8 +173,7 @@ class ForwardRPC(JsonRPC):
                     "Content-Type": "application/json",
                     "User-Agent": "MonsterForwardReadonly/1"})
             with self.opener.open(req, timeout=REQUEST_TIMEOUT_SECONDS) as response:
-                if response.status != 200:
-                    raise ForwardProbeError("BATCH_HTTP_STATUS_NOT_200")
+                bad_status = response.status != 200
                 lengths = response.headers.get_all("Content-Length", [])
                 invalid_framing = (
                     len(lengths) > 1 or
@@ -182,6 +181,8 @@ class ForwardRPC(JsonRPC):
                     (lengths and int(lengths[0]) > MAX_RESPONSE_BYTES) or
                     (lengths and response.headers.get("Transfer-Encoding")))
                 raw = response.read(MAX_RESPONSE_BYTES + 1)
+                if bad_status:
+                    raise ForwardProbeError("BATCH_HTTP_STATUS_NOT_200")
                 if invalid_framing:
                     raise ForwardProbeError("BATCH_HTTP_FRAMING_INVALID")
                 if lengths and len(raw) != int(lengths[0]):

@@ -594,11 +594,12 @@ class BoundedForwardObservationTests(unittest.TestCase):
 
 
     def _run_rejected_http_batch(self, body, *, declared_length=None,
-                                 chunked=False, endpoint="https://bsc-dataseed.bnbchain.org"):
+                                 chunked=False, status=200,
+                                 endpoint="https://bsc-dataseed.bnbchain.org"):
         """Offline real ForwardRPC HTTP-validation through a fake opener."""
         class Response:
-            status = 200
             def __init__(self):
+                self.status = status
                 self.headers = Message()
                 if declared_length is not None:
                     self.headers['Content-Length'] = str(declared_length)
@@ -663,6 +664,15 @@ class BoundedForwardObservationTests(unittest.TestCase):
                                  len(raw) > m.MAX_RESPONSE_BYTES)
                 self.assertEqual(failure['rpc_attempt_count'],
                                  len(failure['completed_rpc_responses']) + 2)
+
+    def test_rejected_non_200_batch_status_keeps_body_evidence(self):
+        raw = b'{"error":"provider rejected the HTTP request"}'
+        _, failure = self._run_rejected_http_batch(raw, status=503)
+        self.assertEqual(failure['reason'], 'BATCH_HTTP_STATUS_NOT_200')
+        receipt = failure['rejected_response']
+        self.assertEqual(receipt['privacy'], 'PRIVATE_RAW_SAVED')
+        self.assertEqual((self.dir/receipt['raw_file']).read_bytes(), raw)
+        self.assertEqual(receipt['raw_sha256'], hashlib.sha256(raw).hexdigest())
 
     def test_rejected_batch_secret_echo_hash_only_without_raw(self):
         secret = 'SECRET_WITHHOLD_FORENSIC_TEST_123456'
