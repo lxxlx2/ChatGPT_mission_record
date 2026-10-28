@@ -132,8 +132,98 @@ def _save_raw(rawdir, rid, body):
     return dest.name
 
 
+class _FramingFailure(Exception):
+    """Only complete HTTP framing may become a validated RPC response."""
+
+    def __init__(self, code, partial=b""):
+        super().__init__(code)
+        self.code = code
+        self.partial = partial[:MAX_BODY]
+
+
+def _read_complete_http_body(response, headers, cap, deadline, timeout_event,
+                             set_remaining_timeout):
+    """Bounded read1 loop: enforce CL, chunk terminator, and total deadline.
+
+    http.client.HTTPResponse.read(cap+1) is NOT sufficient: it may return
+    short bytes for a declared Content-Length without raising IncompleteRead.
+    read1 permits a monotonic check between bounded underlying reads.
+    """
+    framing = {}
+    for key, value in headers:
+        k = key.lower().strip()
+        if k in ("content-length", "transfer-encoding",
+                 "content-type", "content-encoding"):
+            # Disallow duplicate security-relevant fields even if identical.
+            if k in framing:
+                raise _FramingFailure("HTTP_DUPLICATE_FRAMING_HEADER")
+            framing[k] = value.strip()
+    cl = framing.get("content-length")
+    te = framing.get("transfer-encoding")
+    if cl is not None and te is not None:
+        raise _FramingFailure("HTTP_CL_TE_CONFLICT")
+    if te is not None and te.lower() != "chunked":
+        raise _FramingFailure("HTTP_TRANSFER_ENCODING_UNSUPPORTED")
+    if te is not None and not response.chunked:
+        raise _FramingFailure("HTTP_CHUNK_FRAMING_INVALID")
+    if cl is not None:
+        if not cl.isascii() or not cl.isdecimal() or len(cl) > 12:
+            raise _FramingFailure("HTTP_CONTENT_LENGTH_INVALID")
+        expected = int(cl)
+        if expected > cap:
+            raise _FramingFailure("RAW_OVERSIZE")
+        if response.chunked:
+            raise _FramingFailure("HTTP_CL_TE_CONFLICT")
+        if response.length is not None and response.length != expected:
+            raise _FramingFailure("HTTP_CONTENT_LENGTH_PARSER_MISMATCH")
+    else:
+        expected = None
+        if te is None and not response.will_close:
+            raise _FramingFailure("HTTP_UNBOUNDED_FRAMING_REJECTED")
+    parts = []
+    count = 0
+    try:
+        while True:
+            if timeout_event.is_set() or time.monotonic() >= deadline:
+                raise _FramingFailure("REQUEST_DEADLINE_EXCEEDED",
+                                      b"".join(parts))
+            if expected is not None and count == expected:
+                if not response.isclosed():
+                    raise _FramingFailure("HTTP_CONTENT_LENGTH_NOT_CLOSED",
+                                          b"".join(parts))
+                return b"".join(parts)
+            remaining = cap + 1 - count
+            if remaining <= 0:
+                raise _FramingFailure("RAW_OVERSIZE", b"".join(parts))
+            if expected is not None:
+                remaining = min(remaining, expected-count)
+            set_remaining_timeout()
+            # read1 is deliberately used instead of read(amt): read(amt)
+            # can obscure premature EOF and may block across many chunks.
+            data = response.read1(min(8192, remaining))
+            if data:
+                parts.append(data)
+                count += len(data)
+            if timeout_event.is_set() or time.monotonic() >= deadline:
+                raise _FramingFailure("REQUEST_DEADLINE_EXCEEDED",
+                                      b"".join(parts))
+            if not data:
+                if expected is not None and count < expected:
+                    raise _FramingFailure("HTTP_TRUNCATED_CONTENT_LENGTH",
+                                          b"".join(parts))
+                if not response.isclosed():
+                    raise _FramingFailure("HTTP_MISSING_TERMINAL_EOF",
+                                          b"".join(parts))
+                return b"".join(parts)
+            if count > cap:
+                raise _FramingFailure("RAW_OVERSIZE", b"".join(parts)[:cap])
+    except http.client.IncompleteRead as exc:
+        raise _FramingFailure("HTTP_INCOMPLETE_CHUNKED_OR_FRAMING",
+                              (b"".join(parts) + exc.partial)[:cap]) from exc
+
+
 class Sender:
-    """Direct HTTPS, one TLS connection/request; global lock at ACTUAL HTTP POST."""
+    """One real TLS connection/request; hard per-attempt monotonic deadline."""
 
     def __init__(self, *, end_utc, stop_mono, timeout_s, spacing_s,
                  response_cap=MAX_BODY, post_factory=None):
@@ -142,70 +232,122 @@ class Sender:
         self.response_cap = response_cap
         self.lock = threading.Lock()
         self.last_start = None
-        # Test-only injected connection factory, NEVER supplied by real CLI.
+        # Test-only injected connection factory; real CLI never supplies it.
         self._test_connection_factory = post_factory
 
     def send(self, encoded):
         conn = None
+        live_socket = None
         started = None
         start_ns = time.monotonic_ns()
+        deadline = time.monotonic() + self.timeout_s
         tls_connect_ms = None
         pacing_wait_ms = None
-        full_attempt_ms = None
-        connected_ns = None
-        try:
-            ctor = self._test_connection_factory or http.client.HTTPSConnection
-            conn = ctor(HOST, port=443, timeout=self.timeout_s,
-                        context=ssl.create_default_context())
-            tls_start_ns = time.monotonic_ns()
-            conn.connect()
-            connected_ns = time.monotonic_ns()
-            # Strictly the conn.connect() call, excluding constructor/setup.
-            tls_connect_ms = round((connected_ns-tls_start_ns)/1e6,3)
-            with self.lock:
-                if self.last_start is not None:
-                    delay = self.spacing_s - (time.monotonic()-self.last_start)
-                    if delay > 0:
-                        time.sleep(delay)
-                if time.monotonic() >= self.stop_mono or now_utc() >= self.end_utc:
-                    return {"state":"PRE_POST_WINDOW_DENIED","raw":None,
-                            "post_ns":None,"end_ns":time.monotonic_ns()}
-                self.last_start = time.monotonic()
-                started = time.monotonic_ns()
-                # Includes acquiring the global POST lock and pacing sleep.
-                pacing_wait_ms = round((started-connected_ns)/1e6,3)
-                conn.request("POST", "/", body=encoded, headers={
-                    "Host":HOST, "Content-Type":"application/json",
-                    "Accept":"application/json", "Accept-Encoding":"identity",
-                    "Connection":"close"})
-            response = conn.getresponse()
-            headers = response.getheaders()
-            if len(headers) > 64 or sum(len(k)+len(v) for k,v in headers) > 32768:
-                return {"state":"HEADERS_OVERSIZE","raw":None,
-                        "post_ns":started,"end_ns":time.monotonic_ns()}
-            body = response.read(self.response_cap+1)
+        timeout_event = threading.Event()
+        completed_event = threading.Event()
+
+        def expire():
+            if completed_event.is_set():
+                return
+            timeout_event.set()
+            # Shutdown the socket captured before HTTPResponse takes
+            # ownership. Closing only conn.sock is insufficient because
+            # http.client may set conn.sock=None after getresponse().
+            sock = live_socket
+            if sock is not None:
+                try:
+                    sock.shutdown(socket.SHUT_RDWR)
+                except (OSError, AttributeError):
+                    pass
+                try:
+                    sock.close()
+                except OSError:
+                    pass
+
+        watcher = threading.Timer(self.timeout_s, expire)
+        watcher.daemon = True
+        watcher.start()
+
+        def check_deadline(partial=b""):
+            if timeout_event.is_set() or time.monotonic() >= deadline:
+                raise _FramingFailure("REQUEST_DEADLINE_EXCEEDED", partial)
+
+        def remaining_io_timeout():
+            check_deadline()
+            if live_socket is not None:
+                live_socket.settimeout(max(0.001, deadline-time.monotonic()))
+
+        def finish(state, raw=None, **extra):
             end_ns = time.monotonic_ns()
-            # One complete attempt: constructor + TLS + lock/pacing + HTTP
-            # POST-to-body-read; not only remote server processing time.
-            return {"state":"RAW", "status":response.status,
-                    "headers":dict(headers), "raw":body,
-                    "post_ns":started, "end_ns":end_ns,
-                    "tls_connect_ms":tls_connect_ms,
-                    "pacing_wait_ms":pacing_wait_ms,
-                    "post_to_response_ms":round((end_ns-started)/1e6,3),
-                    "full_attempt_ms":round((end_ns-start_ns)/1e6,3)}
-        except (OSError, TimeoutError, ValueError, ssl.SSLError) as exc:
-            end_ns = time.monotonic_ns()
-            return {"state":"NETWORK_OR_SOURCE_ERROR",
-                    "class":type(exc).__name__, "raw":None,
-                    "post_ns":started,"end_ns":end_ns,
+            return {"state":state, "raw":raw, "post_ns":started,
+                    "end_ns":end_ns,
                     "tls_connect_ms":tls_connect_ms,
                     "pacing_wait_ms":pacing_wait_ms,
                     "post_to_response_ms":(
                         round((end_ns-started)/1e6,3)
                         if started is not None else None),
-                    "full_attempt_ms":round((end_ns-start_ns)/1e6,3)}
+                    "full_attempt_ms":round((end_ns-start_ns)/1e6,3),
+                    **extra}
+        try:
+            ctor = self._test_connection_factory or http.client.HTTPSConnection
+            check_deadline()
+            conn = ctor(HOST, port=443,
+                        timeout=max(0.001, deadline-time.monotonic()),
+                        context=ssl.create_default_context())
+            tls_start_ns = time.monotonic_ns()
+            check_deadline()
+            conn.connect()
+            # A connected socket may be handed to the HTTPResponse object,
+            # so retain a reference for the independent deadline watchdog.
+            live_socket = getattr(conn, "sock", None)
+            check_deadline()
+            connected_ns = time.monotonic_ns()
+            tls_connect_ms = round((connected_ns-tls_start_ns)/1e6,3)
+            with self.lock:
+                if self.last_start is not None:
+                    delay = self.spacing_s-(time.monotonic()-self.last_start)
+                    if delay > 0:
+                        # A slow local scheduler is part of request deadline.
+                        time.sleep(min(delay, max(0,deadline-time.monotonic())))
+                check_deadline()
+                if time.monotonic() >= self.stop_mono or now_utc() >= self.end_utc:
+                    return finish("PRE_POST_WINDOW_DENIED")
+                remaining_io_timeout()
+                self.last_start = time.monotonic()
+                started = time.monotonic_ns()
+                pacing_wait_ms = round((started-connected_ns)/1e6,3)
+                conn.request("POST", "/", body=encoded, headers={
+                    "Host":HOST, "Content-Type":"application/json",
+                    "Accept":"application/json", "Accept-Encoding":"identity",
+                    "Connection":"close"})
+            check_deadline()
+            remaining_io_timeout()
+            response = conn.getresponse()
+            check_deadline()
+            headers = response.getheaders()
+            if len(headers) > 64 or sum(len(k)+len(v) for k,v in headers) > 32768:
+                raise _FramingFailure("HEADERS_OVERSIZE")
+            # Headers cannot be safely collapsed until duplicate framing is
+            # rejected. Incomplete framing NEVER returns state RAW.
+            body = _read_complete_http_body(
+                response, headers, self.response_cap, deadline,
+                timeout_event, remaining_io_timeout)
+            check_deadline(body)
+            return finish("RAW", raw=body, status=response.status,
+                          headers=dict(headers))
+        except _FramingFailure as exc:
+            return finish(exc.code, raw=exc.partial,
+                          framing_valid=False)
+        except (OSError, TimeoutError, ValueError, ssl.SSLError,
+                http.client.HTTPException) as exc:
+            if timeout_event.is_set() or time.monotonic() >= deadline:
+                return finish("REQUEST_DEADLINE_EXCEEDED",
+                              exception_type=type(exc).__name__)
+            return finish("NETWORK_OR_SOURCE_ERROR",
+                          exception_type=type(exc).__name__)
         finally:
+            completed_event.set()
+            watcher.cancel()
             if conn is not None:
                 conn.close()
 
