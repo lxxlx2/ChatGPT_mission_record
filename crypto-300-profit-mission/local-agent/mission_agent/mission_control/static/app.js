@@ -1058,7 +1058,9 @@ $('frank-activity-type').addEventListener('change',
   () => renderFrankActivity(frankActivitySnapshot));
 $('frank-activity-reload').addEventListener('click',refreshFrankActivity);
 
+let refreshGeneration = 0;
 async function refresh() {
+  const generation = ++refreshGeneration;
   try {
     const [runtime,control,candidates,trades,reviewActivity,decisions,coverage,watch,f01] = await Promise.all([
       get('/api/runtime'),
@@ -1071,6 +1073,7 @@ async function refresh() {
       get('/api/frank-observed-watchlist').catch(() => ({status:'SOURCE_UNAVAILABLE',rows:[],summary:{}})),
       get('/api/follow-opportunities').catch(() => null)
     ]);
+    if (generation !== refreshGeneration) return;
     const activeCandidates = candidates.filter(x => x.position_state !== 'CLOSED');
     const endedCandidates = candidates.filter(x => x.position_state === 'CLOSED');
     const view = verifiedF01SourceView(f01, candidates);
@@ -1105,6 +1108,7 @@ async function refresh() {
     }
     $('updated').textContent = `更新于 ${new Date().toLocaleTimeString('zh-CN')}`;
   } catch (e) {
+    if (generation !== refreshGeneration) return;
     $('runtime').className = 'runtime offline';
     $('runtime').innerHTML = `<strong>控制台读取失败</strong><span>${esc(e.message)}</span>`;
     invalidateF01OnFailure(e);

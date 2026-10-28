@@ -97,6 +97,7 @@ function loadPage({ getImpl, rendered }) {
     document: { getElementById: dom.getElementById.bind(dom) },
     $: (id) => dom.getElementById(id),
     Date, Number, Math, JSON, Array, Object, String, Promise, Set, Map, console,
+    refreshGeneration: 0,
     setTimeout, clearTimeout,
     // record calls to renderers unrelated to F01 so the test can prove they are not cleared
     __rendered: rendered,
@@ -243,3 +244,57 @@ test('no default amount, quote or executable claim is ever written by the failur
     'no default-amount or executable wording may be written');
 });
 
+
+function concurrentPage(getImpl) {
+  const rendered = [];
+  const { ctx, dom } = loadPage({ getImpl, rendered });
+  ctx.refreshGeneration = 0;
+  ctx.renderCandidates = (rows) => {
+    dom.nodes.candidates.innerHTML = rows.length ? '<article>近期来源信号（仅观察）</article>' : '';
+  };
+  const code = ['get','verifiedF01SourceView','f01EventEpoch','recordF01PageObservation',
+    'f01ExcludedReasonCount','invalidateF01OnFailure','refresh'].map(sliceFunction).join('\n');
+  vm.createContext(ctx);
+  vm.runInContext(code + '\nthis.__refresh = refresh;', ctx);
+  return { ctx, dom };
+}
+
+function delayedCandidates(failOld=false) {
+  let count = 0, release;
+  const ready = okGetImpl(null);
+  return {
+    getImpl: async (url) => {
+      if (url === '/api/candidates') {
+        const turn = ++count;
+        if (turn === 1) return new Promise(resolve => { release = () => resolve(failOld ? failJson(url,503) : okJson(CANDS)); });
+        if (!failOld && turn === 2) return failJson(url,503);
+      }
+      return ready(url);
+    },
+    release: () => release(),
+  };
+}
+
+test('same page: older success cannot resurrect recent signals after newer 503', async () => {
+  const net = delayedCandidates();
+  const { ctx, dom } = concurrentPage(net.getImpl);
+  const old = ctx.__refresh();
+  await ctx.__refresh();
+  assert.match(dom.nodes.candidates.innerHTML, /不得作为当前机会/);
+  net.release(); await old;
+  assert.match(dom.nodes.candidates.innerHTML, /不得作为当前机会/);
+  assert.doesNotMatch(dom.nodes['f01-source-status'].textContent, /近期来源信号 1 条/);
+  // A subsequent genuinely newer successful round may recover the page.
+  await ctx.__refresh();
+  assert.match(dom.nodes.candidates.innerHTML, /近期来源信号（仅观察）/);
+});
+
+test('same page: older 503 cannot invalidate newer successful signals', async () => {
+  const net = delayedCandidates(true);
+  const { ctx, dom } = concurrentPage(net.getImpl);
+  const old = ctx.__refresh();
+  await ctx.__refresh();
+  assert.match(dom.nodes.candidates.innerHTML, /近期来源信号（仅观察）/);
+  net.release(); await old;
+  assert.match(dom.nodes.candidates.innerHTML, /近期来源信号（仅观察）/);
+});

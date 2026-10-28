@@ -35,3 +35,111 @@ Status: CODE_ONLY. No authorization for production change, launchctl, runner/pli
 - Use delay ladder 30/120/300/900/3600s with executable entry/exit evidence, actual liquidity, price source coverage, fees, impact, failed routes, exit latency, outliers and sensitivity bounds. Historical Frank payment price and OHLCV are not assured executable follower quotes.
 - No lookahead, no post-hoc threshold selection, no unapproved amount defaults, no unsupported out-of-sample label, and no paper-PnL claim from unverified fill proxies.
 - New RPC/market-data collection, notification, longer monitoring or trading require separate consent and resource budget.
+
+## Final bounded live read-only trial proposal — separate authorization pending
+
+### Pinned identity and refresh ordering
+
+Preparation starts at PR232 `56d6d42b4b339dd99f8e1cc94d0ff680a37ae603`.
+Use the subsequent race-only fix's exact final GitHub HEAD and static hashes,
+recorded in its execution receipt. Old approval does not automatically cover new
+bytes. Each refresh generation owns its DOM and timing writes only while latest:
+old success after new 503 cannot resurrect signals, old 503 after new success
+cannot erase them. A later genuinely new success may recover. This does not
+make separate API reads an atomic database snapshot or cancel old HTTP requests;
+existing source identity/freshness checks remain mandatory.
+
+### Listener, control directory and fixed finish
+
+Proposed listener `127.0.0.1:18767`, never 8766/8765. After separate approval,
+check availability and STOP if occupied; do not kill another listener or silently
+change port. Use fresh 0700 private control/log/browser directories outside all
+production roots. Preserve exact source SHA and canonical paths locally only.
+
+One observation, at most 30 minutes. The separate owner authorization must name
+absolute end instant E in UTC and Bangkok. Start no earlier than E minus 30min,
+refuse start at/after E, never extend E automatically. A foreground supervisor
+owns/reaps the child process group, browser and listener using a monotonic
+deadline no later than E. Interrupt/failure stops only these owned children.
+No cron, launchd, recurring task or background monitor. An approval arriving too
+late requires a new window. This plan has not started a live observation.
+
+### Live input and DB/WAL/SHM boundaries
+
+Derive existing production/control roots from fresh authorized runtime evidence,
+not guessed paths. Use actual DashboardState GET functions and FrankReader with
+live ledger/health and existing control SQLite/health. The trial harness sets
+only control *read pointers* to existing inputs; construction and analysis scratch
+stay in the new private control directory. Do not instantiate MissionMemeService,
+ControlDB, Scanner, notifier, collector or worker. Do not copy/import D2 balances
+for F01. Missing unrelated panels remain unavailable without fabricated data.
+
+Source SQLite uses URI mode=ro, query_only=ON, existing busy timeout and bounded
+request/process deadlines. Never use immutable=1 on a changing WAL database,
+copy the main file alone, checkpoint, repair or create production sidecars.
+mode=ro/query_only only prevent SQL writes; they are not complete proof against
+SHM/read-mark/sidecar effects. Enforce macOS sandbox deny file-write* over the
+ENTIRE verified canonical production and original control roots, including
+forward.sqlite, WAL, SHM, health, policies, D2 and their parents. Only trial scratch
+is writable. Minimal environment contains no RPC/provider/mail secrets; deny
+outbound connections and permit the single loopback inbound listener. Verify
+actual path resolution and policy before any live read. If a legitimate read
+needs SHM initialization or the sandbox cannot enforce confinement, STOP; never
+relax it or change production permissions.
+
+Proof is OS denial, not unchanged mtime: the preparation's synthetic active-WAL
+fixture read a committed WAL row, rejected SQL insert, denied O_WRONLY on main
+DB/WAL/SHM, and denied new sidecar creation. Real roots/policy still need execution
+preflight. Existing V1/Loop are legitimate writers, so changing production file
+hashes/mtimes during observation are expected and cannot by themselves identify
+trial writes. Do not assert global production immutability while producers run.
+
+### GET-only port, CA explicitly disabled
+
+Stock Handler cannot be exposed unchanged because it has functioning POST routes.
+A trial-only wrapper delegates to real Handler.do_GET solely for exact reviewed
+paths/queries needed by this page: root/static, runtime, control-health,
+candidates, follow-opportunities, trades, coverage, decisions, review-activity,
+and bounded indexed activity/watchlist reads. Deny all cluster-* GETs, unknown
+paths and unreviewed query parameters. No CA job/status/report operation is in
+scope. Preserve exact local Host/same-origin checks, no CORS.
+
+Reject POST/PUT/PATCH/DELETE/CONNECT/TRACE/OPTIONS with 405 and connection close
+BEFORE body parsing, stock dispatch or any worker lookup. Browser blocking of
+non-GET/external requests is secondary defense; server rejection also protects
+against a direct client. CA controls are visibly unavailable in the trial.
+Synthetic Quick/Standard/Deep POST-shaped requests were independently tested
+against this wrapper pattern: 405 each, zero worker delegation; they were fixture
+requests, not real CA submissions. Full live allowlist wiring and outbound-denial
+profile must be verified in a bounded synthetic preflight before authorization
+is used; this document is not a completed production launcher.
+
+### What the page can prove
+
+Separate all locally indexed Frank BUY/ADD/REENTRY activity from F01's qualified
+subset: Frank identity, verified frozen source signal, OPEN model state, allowed
+pattern, newest BUY within 600s, LIVE runtime and matching cross-GET identities.
+The bounded D1 recent activity is not a full-chain BUY denominator. OPEN does not
+prove current wallet holdings. Nonqualified buys remain activity/history.
+Execution eligibility stays zero/empty; no default amount, quote or tradeability.
+
+Use actual page memory first-seen logic only for F01 identities first observed
+after page opening and whose event time is after opening. Record private salted
+event key, chain event time, first page time, window/age/remaining600s, errors,
+clock uncertainty and tab suspension. No raw addresses/signatures on GitHub.
+This is confirmation+indexing+polling+display delay, not measured ingest latency,
+notification SLA or fill speed. It does not sample every Frank BUY. Reload resets
+samples; never merge them as continuous. No new event is NOT_SCORABLE; a source
+older than600s stays historical. No window relaxation, ROI or win-rate claim.
+
+### End, cleanup and stop conditions
+
+Stop at E, on user interruption, identity/source drift, stale required feed,
+sandbox/read failure, forbidden request attempt or unsafe current-signal display.
+No automatic scan/restart/repair. Close/reap only owned listener/browser/children;
+verify trial port no longer listening and existing service identities/configs
+untouched. Do not use DB mtime as a no-write proof. Remove temporary profile and
+source-derived trial files, or retain private evidence0700/0600 under an explicit
+retention decision. Cleanup uncertainty is UNVERIFIED and blocks another run.
+Publish only source/policy hashes, counts, timing limits and errors. No deployment,
+merge, real RPC, new scanner, notification or trading authorization follows.
