@@ -871,6 +871,61 @@ class BoundedForwardObservationTests(unittest.TestCase):
         self.assertEqual(unverified['candidate_index_start'], 500)
         self.assertFalse((self.dir/'manifest.json').exists())
 
+    def test_user_reported_57_rpc_15_23_26_block_trace_replays_fail_closed(self):
+        # Structural replay of user's 2026-10-28 terminal observations.
+        # Header hashes here are synthetic: this is NOT original RPC/PIT proof.
+        observed_heads = (130253626, 130253641, 130253664, 130253690)
+        observed_counts = (3576364, 3576364, 3576364, 3576365)
+
+        class UserTraceShape(FakeRPC):
+            def __init__(self):
+                super().__init__(first_height=observed_heads[0],
+                                 second_height=observed_heads[1],
+                                 before=observed_counts[0],
+                                 after=observed_counts[1])
+
+            def request(self, method, params):
+                if method == 'eth_blockNumber':
+                    index = min(self.head_reads, len(observed_heads)-1)
+                    if index == 0:
+                        self.first_height = observed_heads[0]
+                    else:
+                        self.second_height = observed_heads[index]
+                if (method == 'eth_call' and
+                        params[0]['data'] == m.COUNT_SELECTOR):
+                    index = min(self.count_reads, len(observed_counts)-1)
+                    if index == 0:
+                        self.before = observed_counts[0]
+                    else:
+                        self.after = observed_counts[index]
+                return super().request(method, params)
+
+        with self.assertRaisesRegex(m.ForwardProbeError,
+                                    'ANCESTRY_EXCEEDS_BOUNDED_DEPTH'):
+            self.bounded(rpc=UserTraceShape(), budget=180, duration=180)
+        failure = json.loads((self.dir/'failure.json').read_text())
+        self.assertEqual(failure['rpc_attempt_count'], 57)
+        self.assertEqual(len(failure['completed_rpc_responses']), 57)
+        prefix = failure['completed_verified_prefix_intervals']
+        self.assertEqual([(p['from_block'], p['to_block'])
+                          for p in prefix],
+                         [(130253626, 130253641),
+                          (130253641, 130253664)])
+        self.assertEqual([p['factory_counter_delta'] for p in prefix], [0, 0])
+        candidate = failure['uncommitted_counter_interval']
+        self.assertEqual((candidate['from_block'], candidate['to_block']),
+                         (130253664, 130253690))
+        self.assertEqual(candidate['gap_blocks'], 26)
+        self.assertEqual(candidate['factory_counter_delta'], 1)
+        self.assertEqual((candidate['candidate_index_start'],
+                          candidate['candidate_index_end_exclusive']),
+                         (3576364, 3576365))
+        self.assertEqual(candidate['ancestry_and_pair_identity'], 'NOT_VERIFIED')
+        self.assertFalse((self.dir/'manifest.json').exists())
+        for row in failure['completed_rpc_responses']:
+            raw = (self.dir / row['raw_file']).read_bytes()
+            self.assertEqual(hashlib.sha256(raw).hexdigest(), row['raw_sha256'])
+
     def test_untrusted_counts_do_not_create_uncommitted_candidate(self):
         with self.assertRaisesRegex(m.ForwardProbeError,
                                     'FACTORY_COUNTER_DECREASED'):
