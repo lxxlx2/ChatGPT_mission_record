@@ -4,7 +4,7 @@
   "automation_id": "EXISTING_CRYPTO_DAILY_UNCHANGED",
   "prebuild_status": "PREBUILT_CORRECTED_MARKET_DATA_PENDING_CLOUD_QA_PARTIAL_SOURCE_GAPS",
   "ci_status": "CI_NOT_PROVEN",
-  "snapshot_at": "2026-10-29T01:29:13.862Z",
+  "snapshot_at": "2026-10-29T01:29:38.387Z",
   "rule_blob_sha": {
     "PIPELINE_CONTRACT.md": "0d94442ca1b920ad0b3e5ea9158d47a6b3dcbe25",
     "EDITORIAL_RULESET.json": "2ed51528d230508ae4e0015762b1d60c9d72e299",
@@ -463,9 +463,9 @@
       "status": "verified",
       "source_confirmed": true,
       "novelty_proof": {
-        "previous_material_version": "connectwise-2026-10-24T14Z-oct26-target",
+        "previous_material_version": "connectwise-official-2026-10-27T1430Z-restoration-awaits-thirdparty-validation",
         "changed_field": "phased_m365_restoration_status",
-        "old_value": "Oct26 target with validation pending",
+        "old_value": "Third-party validation pending; no phased restoration yet",
         "new_value": "Phased M365 restoration has begun",
         "evidence_url": "https://www.connectwise.com/company/trust/advisories",
         "evidence_published_at": "2026-10-28T16:00:00Z"
@@ -2048,7 +2048,7 @@
     },
     {
       "event_key": "connectwise:cloudbackup:2026-10-27-thirdparty-validation-delay",
-      "family_key": "connectwise:cloudbackup:2026-10-27-thirdparty-validation-delay",
+      "family_key": "oauth:connectwise:storm0940",
       "material_version": "connectwise-official-2026-10-27T1430Z-restoration-awaits-thirdparty-validation",
       "aliases": [],
       "delivered_date": "2026-10-28",
@@ -2189,5 +2189,6 @@
   "gmail_sent_prefix_count_at_prebuild": 0,
   "app_output": "NONE_EMAIL_ONLY",
   "no_new_tasks": true,
-  "market_snapshot_at": "2026-10-29T01:29:12.011Z"
+  "market_snapshot_at": "2026-10-29T01:29:12.011Z",
+  "previous_events_normalization_note": "The Oct28-delivered ConnectWise Oct27 event was historically written with date-specific family_key; normalized here to stable oauth:connectwise:storm0940 for deduping without modifying original ledger."
 }
