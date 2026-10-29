@@ -1,15 +1,15 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-29 15:04:36 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-29 15:59:47 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-29 15:04:36 Asia/Bangkok (15:03:26 attempt)
+- latest_actual_run: 2026-10-29 15:59:47 Asia/Bangkok (15:58:32 attempt, off-minute)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-29/150436-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-29/150326-attempt.md
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-29/155947-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-29/155832-attempt.md
 - latest_scheduled_shard: 3
 - latest_executed_shard: 3
-- stale_shard_recovery: false; fair default 15%4=3
+- stale_shard_recovery: false; fair default 15%4=3; second consecutive Shard3
 - latest_candidate_count: 6
 - latest_triggered_events: 0
 - latest_identity_failures: 0
@@ -24,15 +24,15 @@ Timezone: Asia/Bangkok
 - last_meaningful_attempt_at_shard0: 2026-10-29 08:58:32 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard1: 2026-10-29 13:02:02 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard2: 2026-10-29 14:02:04 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard3: 2026-10-29 15:04:36 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard3: 2026-10-29 15:59:47 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 150436-final.md commit 57d204de369c513bbc6a79a0ee458b945c0c4fab
-- latest_terminal_readback: VERIFIED 150436-final.md blob b2abadf7aa414d669f6db69ff084044eb75e4b77
-- latest_four_executed_shards: [3,1,2,3]
+- latest_primary_final_write: VERIFIED_DURABLE 155947-final.md commit b6c506efa7cf7dff81c022979130f0e8d9fce801
+- latest_terminal_readback: VERIFIED 155947-final.md blob e3011bdefd0aedfb41a191a69fa423a5c869efa6
+- latest_four_executed_shards: [1,2,3,3]
 - last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (prior delivered 2026-10-28; no new email)
 - last_delivered_gmail_message_id: 1a1812a1f6802ecb
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-29 15:04:36 BKK PARTIAL fair shard3; 15 distinct registered identities attempted, six source/rights gaps, zero new ACTION; Browser X unavailable, official fallback; no Gmail/App; verified-complete unchanged.
+- latest_terminal_sync: 2026-10-29 15:59:47 BKK PARTIAL fair shard3; 15 distinct registered identities attempted, six source/rights gaps, zero new ACTION; Browser X unavailable, official fallback; no Gmail/App; verified-complete unchanged.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
@@ -301,3 +301,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-29 09:58:33 BKK: actual off-minute existing monitor attempt 095730-attempt.md and readback-verified terminal 095833-final.md durable; urgent5 + dynamic Surf/StandX + fair shard1 (14 distinct Registry identities), bounded Cambria Base RSGP/StandX beneficiary and English lifecycle. Six candidate families, zero Tier A/B new ACTION, five source/rights gaps (Concrete extra USDC, Surf PONS raffle, StandX checker, ForecastFDN canonical, Neutrl live redemption portal/personal rights). Official Neutrl site linked official Telegram @NeutrlOfficial and X @Neutrl, exposing registry legacy @neutrl_labs discrepancy; issuer Sept18 redemption notice and expected Nov14 close are OLD, current portal inaccessible and personal entitlement unknown, no speculative email. Browser originating X context unavailable, issuer fallback read. Gmail Sent prior Cambria Base RSGP id 1a1812a1f6802ecb readback verified and suppressed; no mapped new TierB Inbox. No Gmail/App. Shard1 meaningful PARTIAL attempt advanced, last verified full completion Oct10 unchanged. Last four executed [2,3,0,1], no override. Task/schedule/scope/recipient unchanged.
 
 - 2026-10-29 10:58:53 BKK: existing TGE monitor 105801-attempt.md and readback-verified 105853-final.md persisted (commit d7df8622802e08548622a0fe584271237eab0684); urgent5 + Surf/StandX + fair shard2 (15 distinct Registry identities), bounded cross-shard Cambria Base RSGP and lifecycle. Six candidate families, zero new Tier A/mapped Tier B ACTION, five SOURCE_GAP (Concrete extra USDC, Surf PONS, StandX original DUSD checker, 01 private mapped rights, OhBabyGames issuer). Gmail Sent Cambria RSGP id 1a1812a1f6802ecb direct readback confirmed and suppressed; mapped Inbox search no new Tier B. Browser original X originating context unavailable; issuer docs/site/official Telegram fallback read. No Gmail/App. Shard2 meaningful attempt PARTIAL, last verified full completion 2026-10-10 07:52:16 unchanged. Last four [3,0,1,2], no override. Existing task/schedule/scope/recipient unchanged.
+
+- 2026-10-29 15:59:47 BKK: extra off-minute invocation existing task attempt `155832-attempt.md`, readback-verified final `155947-final.md` commit `b6c506efa7cf7dff81c022979130f0e8d9fce801`; urgent5 + Surf/StandX + exactly fair shard3, 15 distinct registered identities, bounded cross-shard Cambria RSGP/lifecycle. Six candidate families, zero new Tier A/B ACTION, six SOURCE_GAP (Concrete extra USDC, Surf PONS raffle, StandX original checker, Crusoe private SPV, Republic rTTOK private settlement, Cambria live wallet claim UI). Cambria Base TGE 22:00 BKK unchanged, already emailed `1a1812a1f6802ecb` and Gmail SENT readback reconfirmed. Mapped Inbox search no new TierB. Browser originating X unavailable; official docs/blog/sites fallback. No Gmail/App. Shard3 meaningful attempt PARTIAL; last verified complete Oct10 unchanged. Last four [1,2,3,3], no override. No task/schedule/scope/recipient changes.
