@@ -1,0 +1,2192 @@
+{
+  "report_date": "2026-10-29",
+  "timezone": "Asia/Bangkok",
+  "automation_id": "EXISTING_CRYPTO_DAILY_UNCHANGED",
+  "prebuild_status": "PREBUILT_PENDING_CLOUD_QA_PARTIAL_SOURCE_GAPS",
+  "ci_status": "CI_NOT_PROVEN",
+  "snapshot_at": "2026-10-29T01:28:45.591Z",
+  "rule_blob_sha": {
+    "PIPELINE_CONTRACT.md": "0d94442ca1b920ad0b3e5ea9158d47a6b3dcbe25",
+    "EDITORIAL_RULESET.json": "2ed51528d230508ae4e0015762b1d60c9d72e299",
+    "REPORT_SPEC.md": "809a5c1cbcd6503d42305c842f37826b74a4741f",
+    "REPORT_ACCEPTANCE.md": "d9952d82e3903d699d7db02632c1f26ebdd2c945",
+    "COLLECTOR_SPEC.md": "aa4f1473f3c767b2216f715cbba78231c4794c02",
+    "SECURITY_SOURCE_POLICY.md": "86b36f208220e90a52caa1cb8acaeec47add9628",
+    "DELIVERY_RUNBOOK.md": "181c0448dddd2586e6082faaa1f51f7556eaa795",
+    "state/daily-event-ledger.json": "909633572f3c4428dc41e9dc4423283186408117",
+    "X_FIRST_PARTY_SOURCE_POLICY.md": "20abfed8a287307bb2d6017b3b9e7ff509bbeebe",
+    "editorial_gate.mjs": "3d19a0fcb65534888111c9b00a5a07a85452f796"
+  },
+  "body": "Crypto Daily Brief｜2026-10-29\n时区：Asia/Bangkok；预构建报价约08:25。来源缺口：原始X/浏览器会话、CISA、部分ETF发行人及链上TXID；无法访问不等于没有事件。\n\n一、今日最重要的5件事\n（1）宏观政策：美联储10月28日以10比2维持3.75%至4.00%利率区间，两名委员主张加息25基点。跨股债汇及加密市场的重要正式政策变化，需结合今晚GDP/PCE核验后续影响。\n（2）AI基础设施安全：LiteLLM披露Enterprise代理未经认证文件外传漏洞（CVSS 10.0），可暴露主密钥和API凭据；已有修补版本，与旧的恶意PyPI/Docker事件不同。\n（3）云身份与备份安全：ConnectWise Cloud Backup于10月28日正式开始M365分阶段恢复，用户动作从等待验证变为重置密码、MFA和逐租户授权新应用，且须验证备份快照。\n\n二、BTC/ETH/SOL及主要资产\n（1）BTC/USDT：81322.41 USDT，Binance官方现货滚动24小时+0.531%；24小时高81823.00、低80397.14，本交易对成交额约1072.04百万USDT；采样约2026-10-29 08:25曼谷，非全市场加权价。\n（2）ETH/USDT：2362.73 USDT，Binance官方现货滚动24小时+0.529%；24小时高2391.55、低2323.20，本交易对成交额约422.89百万USDT；采样约2026-10-29 08:25曼谷，非全市场加权价。\n（3）SOL/USDT：102.48 USDT，Binance官方现货滚动24小时+1.145%；24小时高103.85、低100.46，本交易对成交额约191.08百万USDT；采样约2026-10-29 08:25曼谷，非全市场加权价。\n（4）BNB/USDT：754.28 USDT，Binance官方现货滚动24小时+0.722%；采样约2026-10-29 08:25曼谷，非全市场加权价。\n（5）HYPE/USDT：81.23 USDT，Binance官方现货滚动24小时-0.080%；采样约2026-10-29 08:25曼谷，非全市场加权价。\n\n三、二级市场剧烈波动与持续趋势\n（1）Binance USDⓈ-M合约采样：BTC标记价81280.1、资金费率+0.0100%、未平仓量95432.618 BTC；ETH标记价2361.9、资金费率+0.0100%、OI 2361124.553 ETH；SOL标记价102.44、资金费率+0.0100%、OI 9095012.34 SOL。费率为单结算周期，不能年化误读为确定收益；单次OI不足以判定新多空方向。\n（2）同一采样窗口BTC、ETH、SOL的24小时涨幅分别为0.531%、0.529%、1.145%，SOL相对更强；HYPE约-0.080%。这仅是短窗口相对强弱，缺乏多日成交量与链上资金共振，不能单独认定趋势突破。\n\n四、监管与政策\n（1）美联储10月28日14:00 EDT正式宣布以10比2投票维持联邦基金利率目标区间3.75%至4.00%；Lisa Cook和Beth Hammack主张加息25基点。声明称经济扩张强劲、通胀仍高。已确认决定，不能据此直接推定12月必加息。\n（2）Binance公告10月30日03:00 UTC（曼谷10:00）移除AAVE/BTC、ATOM/BTC、CAKE/BTC、DASH/BTC、ETC/BTC、ICP/BTC、PENDLE/BTC、RENDER/BTC、TAO/BTC、THETA/BTC、XAUT/BTC、XTZ/BTC共12个现货交易对，并终止相关现货交易机器人；公告明确不是下架这些代币，其他交易对可能继续可用。\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）10月27日美国现货BTC ETF合计净流入约1.760亿美元，IBIT 1.515亿美元、FBTC 2450万美元；10月28日行仍有IBIT缺报，当前1.3百万美元不能视为完整日净流量。\n（2）10月27日美国现货ETH ETF合计净流出约6020万美元；10月28日部分发行人尚未披露，表中暂列+2340万美元并非最终净流量。\n（3）10月27日美国现货SOL ETF合计净流出约1920万美元；10月28日目前显示净流出约570万美元，仍需注意数据后续修订。\n（4）Lookonchain相关报道将约6168 BTC转入三处Coinbase Prime标签地址归因于鲸鱼资金活动，但本轮未取得独立BTC交易哈希，地址标签及是否与另一笔438.37 BTC转账重叠均未解决；该信息仅为待核实资金动向，不代表实际卖出。\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n（1）Chainlink与S&P Global Ratings于10月28日联合宣布，已通过Chainlink DataLink/CRE把S&P的Vault Risk Assessment风险意见发布到链上，Base为首个支持网络。该评估是贷款金库减损风险意见，不是信用评级，也不评估收益率；这是基础设施接入，不能直接推定LINK代币收入或币价上涨。\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n（1）Binance公布PREDICT积分空投二选一：A立即领取应得代币的35%，永久放弃剩余65%；B质押满一年后领取100%，未提交表单默认B。若希望上线日领取A，须在10月29日09:00 UTC（曼谷16:00）前提交一次性不可修改表单；总截止11月26日09:00 UTC（曼谷16:00）。个人PP资格与数量须以官方账户实际显示为准。\n（2）Binance Wallet官方确认PREDICT Pre-TGE Prime Sale于10月29日08:00至10:00 UTC（曼谷15:00至17:00）进行，参与需符合Binance Alpha Points门槛，每个钱包最高认购6 BNB；认购后可领取BSC上的PREDICT Key，实际PREDICT在TGE时空投至Binance Alpha账户。官方活动规则入口已给出，但本轮未核实最低积分、定价、分配、退款和地域限制，切勿在缺少这些条款时预设获配或利润。\n\n八、Early / Meme / NFT / 新生态热点\n无高置信新增。\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n（1）LiteLLM 10月27日安全公告GHSA-w4c7-34wj-hqm8披露Enterprise许可证代理可遭未经认证的本地文件读取与向外发送，可能暴露LITELLM_MASTER_KEY和提供商API密钥；部分配置进一步允许高权限代码执行，CVSS 10.0。受影响分支分别已修补至1.103.10、1.104.8、1.105.6、1.106.5；无Enterprise许可证的开源部署不受该代码路径影响。与此前1.107.0恶意发行是独立事件，不能据此推定用户密钥已泄露。\n（2）ConnectWise官方10月28日16:00 UTC宣布Phased M365 restoration has begun（Microsoft 365 Cloud Backup分阶段恢复已经开始），由10月27日仍待第三方验证的状态进入新加固应用实际分阶段启用；合作伙伴须重置密码、启用MFA，并逐租户重新授权“ConnectWise Cloud Backup for M365”。重新授权本身不等于备份已成功，仍需检查新快照。仅对真实使用该服务的租户适用，不推定用户已受侵。\n\n十、全球局势与跨市场冲击\n（1）10月28日美股收盘道指约+0.19%、标普500约+0.28%、纳指约+0.27%（Reuters当日收盘报道）；这表明美联储维持利率后美股小幅上涨，不能仅凭单日股指涨幅推断加密市场会同步上涨。\n（2）Reuters 10月28日报道金价承压、油价因中东供应忧虑走高；能源推动的通胀风险与美联储偏紧措辞可能同时抬升风险资产贴现率，具体未来价格方向尚不能确认。\n\n十一、未来24至72小时催化\n（1）美国BEA日程显示10月29日08:30 EDT（曼谷19:30）同时公布第三季度GDP初值及9月个人收入与支出/PCE。公布前不要填入预期值为事实；应关注实际值、修订和美债收益率的同步反应。\n（2）Amazon投资者关系公告第三季度业绩电话会定于10月29日17:00 EDT（曼谷10月30日04:00）。需观察AWS收入、资本支出和AI投资披露；这是已确认财报日程，不能在公布前推断具体盈利数字。\n\n十二、持续趋势与跨市场机会观察清单\n（1）观察条件：10月28日BTC/ETH ETF部分发行人仍以“-”缺报；待IBIT、ETHA等缺失数据补齐后再计算完整单日净流入，并对照10月27日完成值。失效条件是所有基金均有真实报告或权威修订。\n（2）观察条件：若BTC/ETH/SOL价格同向上涨且未平仓量和现货成交量持续扩张，再评估杠杆驱动；若OI增加但价格下跌，则优先检查清算风险。当前只有一个时点，不将资金费率+0.01%误当必然回报。\n\n十三、今日行动与风险结论\n（1）如考虑PREDICT，先在Binance官方活动页面核对实际Alpha积分门槛、报价、退款、锁定与地区限制，再决定是否认购；35%即时领取选项会永久放弃65%，不可逆，且需本人确实持有PP积分。\n（2）只有在实际部署LiteLLM Enterprise代理时才按官方公告升级、隔离出站并评估API密钥轮换；只有使用ConnectWise Cloud Backup的租户才执行其新应用重新授权。任何已遭攻击或凭据已泄露的个人结论均无证据。\n（3）曼谷今晚19:30前避免把未公布的GDP/PCE数据当作已确认信息；高杠杆仓位需预先评估跳空、资金费率和流动性风险，后续用官方公布值与市场反应重新验证。\n",
+  "items": [
+    {
+      "section": 1,
+      "item_number": 1,
+      "event_key": "fed:fomc:2026-10-28:hold-375-400",
+      "role": "highlight",
+      "text": "宏观政策：美联储10月28日以10比2维持3.75%至4.00%利率区间，两名委员主张加息25基点。跨股债汇及加密市场的重要正式政策变化，需结合今晚GDP/PCE核验后续影响。"
+    },
+    {
+      "section": 1,
+      "item_number": 2,
+      "event_key": "security:litellm-enterprise-unauth-file-read:2026-10-27",
+      "role": "highlight",
+      "text": "AI基础设施安全：LiteLLM披露Enterprise代理未经认证文件外传漏洞（CVSS 10.0），可暴露主密钥和API凭据；已有修补版本，与旧的恶意PyPI/Docker事件不同。"
+    },
+    {
+      "section": 1,
+      "item_number": 3,
+      "event_key": "connectwise:cloudbackup:2026-10-28-phased-restoration",
+      "role": "highlight",
+      "text": "云身份与备份安全：ConnectWise Cloud Backup于10月28日正式开始M365分阶段恢复，用户动作从等待验证变为重置密码、MFA和逐租户授权新应用，且须验证备份快照。"
+    },
+    {
+      "section": 2,
+      "item_number": 1,
+      "event_key": "spot:BTC:2026-10-29T0125Z",
+      "role": "detail",
+      "text": "BTC/USDT：81322.41 USDT，Binance官方现货滚动24小时+0.531%；24小时高81823.00、低80397.14，本交易对成交额约1072.04百万USDT；采样约2026-10-29 08:25曼谷，非全市场加权价。"
+    },
+    {
+      "section": 2,
+      "item_number": 2,
+      "event_key": "spot:ETH:2026-10-29T0125Z",
+      "role": "detail",
+      "text": "ETH/USDT：2362.73 USDT，Binance官方现货滚动24小时+0.529%；24小时高2391.55、低2323.20，本交易对成交额约422.89百万USDT；采样约2026-10-29 08:25曼谷，非全市场加权价。"
+    },
+    {
+      "section": 2,
+      "item_number": 3,
+      "event_key": "spot:SOL:2026-10-29T0125Z",
+      "role": "detail",
+      "text": "SOL/USDT：102.48 USDT，Binance官方现货滚动24小时+1.145%；24小时高103.85、低100.46，本交易对成交额约191.08百万USDT；采样约2026-10-29 08:25曼谷，非全市场加权价。"
+    },
+    {
+      "section": 2,
+      "item_number": 4,
+      "event_key": "spot:BNB:2026-10-29T0125Z",
+      "role": "detail",
+      "text": "BNB/USDT：754.28 USDT，Binance官方现货滚动24小时+0.722%；采样约2026-10-29 08:25曼谷，非全市场加权价。"
+    },
+    {
+      "section": 2,
+      "item_number": 5,
+      "event_key": "spot:HYPE:2026-10-29T0125Z",
+      "role": "detail",
+      "text": "HYPE/USDT：81.23 USDT，Binance官方现货滚动24小时-0.080%；采样约2026-10-29 08:25曼谷，非全市场加权价。"
+    },
+    {
+      "section": 3,
+      "item_number": 1,
+      "event_key": "deriv:btc-eth-sol:2026-10-29T0125Z",
+      "role": "detail",
+      "text": "Binance USDⓈ-M合约采样：BTC标记价81280.1、资金费率+0.0100%、未平仓量95432.618 BTC；ETH标记价2361.9、资金费率+0.0100%、OI 2361124.553 ETH；SOL标记价102.44、资金费率+0.0100%、OI 9095012.34 SOL。费率为单结算周期，不能年化误读为确定收益；单次OI不足以判定新多空方向。"
+    },
+    {
+      "section": 3,
+      "item_number": 2,
+      "event_key": "trend:crossmarket:2026-10-29T0125Z",
+      "role": "detail",
+      "text": "同一采样窗口BTC、ETH、SOL的24小时涨幅分别为0.531%、0.529%、1.145%，SOL相对更强；HYPE约-0.080%。这仅是短窗口相对强弱，缺乏多日成交量与链上资金共振，不能单独认定趋势突破。"
+    },
+    {
+      "section": 4,
+      "item_number": 1,
+      "event_key": "fed:fomc:2026-10-28:hold-375-400",
+      "role": "detail",
+      "text": "美联储10月28日14:00 EDT正式宣布以10比2投票维持联邦基金利率目标区间3.75%至4.00%；Lisa Cook和Beth Hammack主张加息25基点。声明称经济扩张强劲、通胀仍高。已确认决定，不能据此直接推定12月必加息。"
+    },
+    {
+      "section": 4,
+      "item_number": 2,
+      "event_key": "binance:spot-pair-removal:2026-10-30",
+      "role": "detail",
+      "text": "Binance公告10月30日03:00 UTC（曼谷10:00）移除AAVE/BTC、ATOM/BTC、CAKE/BTC、DASH/BTC、ETC/BTC、ICP/BTC、PENDLE/BTC、RENDER/BTC、TAO/BTC、THETA/BTC、XAUT/BTC、XTZ/BTC共12个现货交易对，并终止相关现货交易机器人；公告明确不是下架这些代币，其他交易对可能继续可用。"
+    },
+    {
+      "section": 5,
+      "item_number": 1,
+      "event_key": "etf:btc:2026-10-27-final",
+      "role": "detail",
+      "text": "10月27日美国现货BTC ETF合计净流入约1.760亿美元，IBIT 1.515亿美元、FBTC 2450万美元；10月28日行仍有IBIT缺报，当前1.3百万美元不能视为完整日净流量。"
+    },
+    {
+      "section": 5,
+      "item_number": 2,
+      "event_key": "etf:eth:2026-10-27-final",
+      "role": "detail",
+      "text": "10月27日美国现货ETH ETF合计净流出约6020万美元；10月28日部分发行人尚未披露，表中暂列+2340万美元并非最终净流量。"
+    },
+    {
+      "section": 5,
+      "item_number": 3,
+      "event_key": "etf:sol:2026-10-27-final",
+      "role": "detail",
+      "text": "10月27日美国现货SOL ETF合计净流出约1920万美元；10月28日目前显示净流出约570万美元，仍需注意数据后续修订。"
+    },
+    {
+      "section": 5,
+      "item_number": 4,
+      "event_key": "onchain:coinbase-prime-6168btc:2026-10-28:unverified",
+      "role": "detail",
+      "text": "Lookonchain相关报道将约6168 BTC转入三处Coinbase Prime标签地址归因于鲸鱼资金活动，但本轮未取得独立BTC交易哈希，地址标签及是否与另一笔438.37 BTC转账重叠均未解决；该信息仅为待核实资金动向，不代表实际卖出。"
+    },
+    {
+      "section": 6,
+      "item_number": 1,
+      "event_key": "chainlink:sp-vra-onchain:2026-10-28",
+      "role": "detail",
+      "text": "Chainlink与S&P Global Ratings于10月28日联合宣布，已通过Chainlink DataLink/CRE把S&P的Vault Risk Assessment风险意见发布到链上，Base为首个支持网络。该评估是贷款金库减损风险意见，不是信用评级，也不评估收益率；这是基础设施接入，不能直接推定LINK代币收入或币价上涨。"
+    },
+    {
+      "section": 7,
+      "item_number": 1,
+      "event_key": "predict:pp:2026-10-28:claim-options",
+      "role": "detail",
+      "text": "Binance公布PREDICT积分空投二选一：A立即领取应得代币的35%，永久放弃剩余65%；B质押满一年后领取100%，未提交表单默认B。若希望上线日领取A，须在10月29日09:00 UTC（曼谷16:00）前提交一次性不可修改表单；总截止11月26日09:00 UTC（曼谷16:00）。个人PP资格与数量须以官方账户实际显示为准。"
+    },
+    {
+      "section": 7,
+      "item_number": 2,
+      "event_key": "predict:binancewallet:prime-sale:2026-10-29",
+      "role": "detail",
+      "text": "Binance Wallet官方确认PREDICT Pre-TGE Prime Sale于10月29日08:00至10:00 UTC（曼谷15:00至17:00）进行，参与需符合Binance Alpha Points门槛，每个钱包最高认购6 BNB；认购后可领取BSC上的PREDICT Key，实际PREDICT在TGE时空投至Binance Alpha账户。官方活动规则入口已给出，但本轮未核实最低积分、定价、分配、退款和地域限制，切勿在缺少这些条款时预设获配或利润。"
+    },
+    {
+      "section": 9,
+      "item_number": 1,
+      "event_key": "security:litellm-enterprise-unauth-file-read:2026-10-27",
+      "role": "detail",
+      "text": "LiteLLM 10月27日安全公告GHSA-w4c7-34wj-hqm8披露Enterprise许可证代理可遭未经认证的本地文件读取与向外发送，可能暴露LITELLM_MASTER_KEY和提供商API密钥；部分配置进一步允许高权限代码执行，CVSS 10.0。受影响分支分别已修补至1.103.10、1.104.8、1.105.6、1.106.5；无Enterprise许可证的开源部署不受该代码路径影响。与此前1.107.0恶意发行是独立事件，不能据此推定用户密钥已泄露。"
+    },
+    {
+      "section": 9,
+      "item_number": 2,
+      "event_key": "connectwise:cloudbackup:2026-10-28-phased-restoration",
+      "role": "detail",
+      "text": "ConnectWise官方10月28日16:00 UTC宣布Phased M365 restoration has begun（Microsoft 365 Cloud Backup分阶段恢复已经开始），由10月27日仍待第三方验证的状态进入新加固应用实际分阶段启用；合作伙伴须重置密码、启用MFA，并逐租户重新授权“ConnectWise Cloud Backup for M365”。重新授权本身不等于备份已成功，仍需检查新快照。仅对真实使用该服务的租户适用，不推定用户已受侵。"
+    },
+    {
+      "section": 10,
+      "item_number": 1,
+      "event_key": "macro:us-equities:2026-10-28-close",
+      "role": "detail",
+      "text": "10月28日美股收盘道指约+0.19%、标普500约+0.28%、纳指约+0.27%（Reuters当日收盘报道）；这表明美联储维持利率后美股小幅上涨，不能仅凭单日股指涨幅推断加密市场会同步上涨。"
+    },
+    {
+      "section": 10,
+      "item_number": 2,
+      "event_key": "macro:gold-oil:2026-10-28",
+      "role": "detail",
+      "text": "Reuters 10月28日报道金价承压、油价因中东供应忧虑走高；能源推动的通胀风险与美联储偏紧措辞可能同时抬升风险资产贴现率，具体未来价格方向尚不能确认。"
+    },
+    {
+      "section": 11,
+      "item_number": 1,
+      "event_key": "macro:bea:gdp-pce-release:2026-10-29",
+      "role": "detail",
+      "text": "美国BEA日程显示10月29日08:30 EDT（曼谷19:30）同时公布第三季度GDP初值及9月个人收入与支出/PCE。公布前不要填入预期值为事实；应关注实际值、修订和美债收益率的同步反应。"
+    },
+    {
+      "section": 11,
+      "item_number": 2,
+      "event_key": "amazon:q3-earnings:2026-10-29",
+      "role": "detail",
+      "text": "Amazon投资者关系公告第三季度业绩电话会定于10月29日17:00 EDT（曼谷10月30日04:00）。需观察AWS收入、资本支出和AI投资披露；这是已确认财报日程，不能在公布前推断具体盈利数字。"
+    },
+    {
+      "section": 12,
+      "item_number": 1,
+      "event_key": "watch:etf-completeness:2026-10-29",
+      "role": "detail",
+      "text": "观察条件：10月28日BTC/ETH ETF部分发行人仍以“-”缺报；待IBIT、ETHA等缺失数据补齐后再计算完整单日净流入，并对照10月27日完成值。失效条件是所有基金均有真实报告或权威修订。"
+    },
+    {
+      "section": 12,
+      "item_number": 2,
+      "event_key": "watch:deriv-confirmation:2026-10-29",
+      "role": "detail",
+      "text": "观察条件：若BTC/ETH/SOL价格同向上涨且未平仓量和现货成交量持续扩张，再评估杠杆驱动；若OI增加但价格下跌，则优先检查清算风险。当前只有一个时点，不将资金费率+0.01%误当必然回报。"
+    },
+    {
+      "section": 13,
+      "item_number": 1,
+      "event_key": "action:predict:2026-10-29",
+      "role": "detail",
+      "text": "如考虑PREDICT，先在Binance官方活动页面核对实际Alpha积分门槛、报价、退款、锁定与地区限制，再决定是否认购；35%即时领取选项会永久放弃65%，不可逆，且需本人确实持有PP积分。"
+    },
+    {
+      "section": 13,
+      "item_number": 2,
+      "event_key": "action:security:2026-10-29",
+      "role": "detail",
+      "text": "只有在实际部署LiteLLM Enterprise代理时才按官方公告升级、隔离出站并评估API密钥轮换；只有使用ConnectWise Cloud Backup的租户才执行其新应用重新授权。任何已遭攻击或凭据已泄露的个人结论均无证据。"
+    },
+    {
+      "section": 13,
+      "item_number": 3,
+      "event_key": "action:macro-risk:2026-10-29",
+      "role": "detail",
+      "text": "曼谷今晚19:30前避免把未公布的GDP/PCE数据当作已确认信息；高杠杆仓位需预先评估跳空、资金费率和流动性风险，后续用官方公布值与市场反应重新验证。"
+    }
+  ],
+  "events": [
+    {
+      "event_key": "spot:BTC:2026-10-29T0125Z",
+      "kind": "CORE_QUOTE",
+      "family_key": "spot:BTC:daily",
+      "material_version": "2026-10-29T01:25:31Z",
+      "published_at": "2026-10-29T01:25:31Z",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "actual_delta": "BTC/USDT：81322.41 USDT，Binance官方现货滚动24小时+0.531%；24小时高81823.00、低80397.14，本交易对成交额约1072.04百万USDT；采样约2026-10-29 08:25曼谷，非全市场加权价。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "spot:ETH:2026-10-29T0125Z",
+      "kind": "CORE_QUOTE",
+      "family_key": "spot:ETH:daily",
+      "material_version": "2026-10-29T01:25:31Z",
+      "published_at": "2026-10-29T01:25:31Z",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
+      "actual_delta": "ETH/USDT：2362.73 USDT，Binance官方现货滚动24小时+0.529%；24小时高2391.55、低2323.20，本交易对成交额约422.89百万USDT；采样约2026-10-29 08:25曼谷，非全市场加权价。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "spot:SOL:2026-10-29T0125Z",
+      "kind": "CORE_QUOTE",
+      "family_key": "spot:SOL:daily",
+      "material_version": "2026-10-29T01:25:31Z",
+      "published_at": "2026-10-29T01:25:31Z",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
+      "actual_delta": "SOL/USDT：102.48 USDT，Binance官方现货滚动24小时+1.145%；24小时高103.85、低100.46，本交易对成交额约191.08百万USDT；采样约2026-10-29 08:25曼谷，非全市场加权价。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "spot:BNB:2026-10-29T0125Z",
+      "kind": "CORE_QUOTE",
+      "family_key": "spot:BNB:daily",
+      "material_version": "2026-10-29T01:25:31Z",
+      "published_at": "2026-10-29T01:25:31Z",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT",
+      "actual_delta": "BNB/USDT：754.28 USDT，Binance官方现货滚动24小时+0.722%；采样约2026-10-29 08:25曼谷，非全市场加权价。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "spot:HYPE:2026-10-29T0125Z",
+      "kind": "CORE_QUOTE",
+      "family_key": "spot:HYPE:daily",
+      "material_version": "2026-10-29T01:25:31Z",
+      "published_at": "2026-10-29T01:25:31Z",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT",
+      "actual_delta": "HYPE/USDT：81.23 USDT，Binance官方现货滚动24小时-0.080%；采样约2026-10-29 08:25曼谷，非全市场加权价。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "deriv:btc-eth-sol:2026-10-29T0125Z",
+      "kind": "TREND_DERIVATIVES",
+      "family_key": "deriv:btc-eth-sol:daily",
+      "material_version": "binance-2026-10-29T0125Z",
+      "published_at": "2026-10-29T01:25:31Z",
+      "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+      "actual_delta": "Binance USDⓈ-M合约采样：BTC标记价81280.1、资金费率+0.0100%、未平仓量95432.618 BTC；ETH标记价2361.9、资金费率+0.0100%、OI 2361124.553 ETH；SOL标记价102.44、资金费率+0.0100%、OI 9095012.34 SOL。费率为单结算周期，不能年化误读为确定收益；单次OI不足以判定新多空方向。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "trend:crossmarket:2026-10-29T0125Z",
+      "kind": "TREND_DERIVATIVES",
+      "family_key": "trend:crossmarket:daily",
+      "material_version": "binance-2026-10-29T0125Z",
+      "published_at": "2026-10-29T01:25:31Z",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
+      "actual_delta": "同一采样窗口BTC、ETH、SOL的24小时涨幅分别为0.531%、0.529%、1.145%，SOL相对更强；HYPE约-0.080%。这仅是短窗口相对强弱，缺乏多日成交量与链上资金共振，不能单独认定趋势突破。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "fed:fomc:2026-10-28:hold-375-400",
+      "kind": "MAJOR_POLICY",
+      "family_key": "fed:fomc:rate-decision",
+      "material_version": "fed-official-2026-10-28-10-2-hold-3.75-4.00",
+      "published_at": "2026-10-28T18:00:00Z",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+      "actual_delta": "美联储10月28日14:00 EDT正式宣布以10比2投票维持联邦基金利率目标区间3.75%至4.00%；Lisa Cook和Beth Hammack主张加息25基点。声明称经济扩张强劲、通胀仍高。已确认决定，不能据此直接推定12月必加息。",
+      "impact": "MAJOR",
+      "status": "verified",
+      "source_confirmed": true,
+      "impact_breadth": "sector-wide",
+      "top5_basis": "原始公告揭示跨市场或跨行业的真实重大风险变化，影响机构投资、技术供应链或关键服务可用性，具有广泛的独立决策价值。",
+      "top5_evidence_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm"
+    },
+    {
+      "event_key": "binance:spot-pair-removal:2026-10-30",
+      "kind": "MAJOR_POLICY",
+      "family_key": "binance:spot-pair-removal:btc-pairs",
+      "material_version": "binance-official-2026-10-27T0830Z-oct30-12-btc-pairs",
+      "published_at": "2026-10-27T08:30:00Z",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/de45689cbd7b4e1fa87055cdf5a85997",
+      "actual_delta": "Binance公告10月30日03:00 UTC（曼谷10:00）移除AAVE/BTC、ATOM/BTC、CAKE/BTC、DASH/BTC、ETC/BTC、ICP/BTC、PENDLE/BTC、RENDER/BTC、TAO/BTC、THETA/BTC、XAUT/BTC、XTZ/BTC共12个现货交易对，并终止相关现货交易机器人；公告明确不是下架这些代币，其他交易对可能继续可用。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "etf:btc:2026-10-27-final",
+      "kind": "INSTITUTIONAL_FLOW",
+      "family_key": "etf:btc:daily",
+      "material_version": "farside-us-session-2026-10-27-final-176",
+      "published_at": "2026-10-28",
+      "source_url": "https://farside.co.uk/btc/",
+      "actual_delta": "10月27日美国现货BTC ETF合计净流入约1.760亿美元，IBIT 1.515亿美元、FBTC 2450万美元；10月28日行仍有IBIT缺报，当前1.3百万美元不能视为完整日净流量。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true,
+      "observation_type": "dated_fund_flow",
+      "observation_id": "btc-us-etf-session-2026-10-27",
+      "observation_date": "2026-10-27"
+    },
+    {
+      "event_key": "etf:eth:2026-10-27-final",
+      "kind": "INSTITUTIONAL_FLOW",
+      "family_key": "etf:eth:daily",
+      "material_version": "farside-us-session-2026-10-27-final--60.2",
+      "published_at": "2026-10-28",
+      "source_url": "https://farside.co.uk/eth/",
+      "actual_delta": "10月27日美国现货ETH ETF合计净流出约6020万美元；10月28日部分发行人尚未披露，表中暂列+2340万美元并非最终净流量。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true,
+      "observation_type": "dated_fund_flow",
+      "observation_id": "eth-us-etf-session-2026-10-27",
+      "observation_date": "2026-10-27"
+    },
+    {
+      "event_key": "etf:sol:2026-10-27-final",
+      "kind": "INSTITUTIONAL_FLOW",
+      "family_key": "etf:sol:daily",
+      "material_version": "farside-us-session-2026-10-27-final--19.2",
+      "published_at": "2026-10-28",
+      "source_url": "https://farside.co.uk/sol/",
+      "actual_delta": "10月27日美国现货SOL ETF合计净流出约1920万美元；10月28日目前显示净流出约570万美元，仍需注意数据后续修订。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true,
+      "observation_type": "dated_fund_flow",
+      "observation_id": "sol-us-etf-session-2026-10-27",
+      "observation_date": "2026-10-27"
+    },
+    {
+      "event_key": "onchain:coinbase-prime-6168btc:2026-10-28:unverified",
+      "kind": "INSTITUTIONAL_FLOW",
+      "family_key": "onchain:coinbase-prime-6168btc",
+      "material_version": "lookonchain-attributed-2026-10-28-6168btc",
+      "published_at": "2026-10-28",
+      "source_url": "https://www.lookonchain.com/token/bitcoin",
+      "actual_delta": "Lookonchain相关报道将约6168 BTC转入三处Coinbase Prime标签地址归因于鲸鱼资金活动，但本轮未取得独立BTC交易哈希，地址标签及是否与另一笔438.37 BTC转账重叠均未解决；该信息仅为待核实资金动向，不代表实际卖出。",
+      "impact": "NORMAL",
+      "status": "attributed",
+      "source_confirmed": false,
+      "priority": "NORMAL"
+    },
+    {
+      "event_key": "chainlink:sp-vra-onchain:2026-10-28",
+      "kind": "MAJOR_INFRASTRUCTURE",
+      "family_key": "chainlink:sp-vra-onchain",
+      "material_version": "joint-issuer-2026-10-28-vra-live-base",
+      "published_at": "2026-10-28",
+      "source_url": "https://www.prnewswire.com/news-releases/chainlink-expands-collaboration-with-sp-global-ratings-to-bring-vault-risk-assessments-onchain-302921507.html",
+      "actual_delta": "Chainlink与S&P Global Ratings于10月28日联合宣布，已通过Chainlink DataLink/CRE把S&P的Vault Risk Assessment风险意见发布到链上，Base为首个支持网络。该评估是贷款金库减损风险意见，不是信用评级，也不评估收益率；这是基础设施接入，不能直接推定LINK代币收入或币价上涨。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "predict:pp:2026-10-28:claim-options",
+      "kind": "TGE_PUBLIC_SALE",
+      "family_key": "predict:pp:claim-options",
+      "material_version": "binance-official-2026-10-28T1000Z-35pct-or-1yr",
+      "published_at": "2026-10-28T10:00:00Z",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/58d55610f5954d6c867bfa71658585dd",
+      "actual_delta": "Binance公布PREDICT积分空投二选一：A立即领取应得代币的35%，永久放弃剩余65%；B质押满一年后领取100%，未提交表单默认B。若希望上线日领取A，须在10月29日09:00 UTC（曼谷16:00）前提交一次性不可修改表单；总截止11月26日09:00 UTC（曼谷16:00）。个人PP资格与数量须以官方账户实际显示为准。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "predict:binancewallet:prime-sale:2026-10-29",
+      "kind": "TGE_PUBLIC_SALE",
+      "family_key": "predict:binancewallet:prime-sale",
+      "material_version": "binancewallet-official-2026-10-28-0800-1000utc-cap6bnb",
+      "published_at": "2026-10-28",
+      "source_url": "https://www.binance.com/en/square/post/382126588667402",
+      "actual_delta": "Binance Wallet官方确认PREDICT Pre-TGE Prime Sale于10月29日08:00至10:00 UTC（曼谷15:00至17:00）进行，参与需符合Binance Alpha Points门槛，每个钱包最高认购6 BNB；认购后可领取BSC上的PREDICT Key，实际PREDICT在TGE时空投至Binance Alpha账户。官方活动规则入口已给出，但本轮未核实最低积分、定价、分配、退款和地域限制，切勿在缺少这些条款时预设获配或利润。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "security:litellm-enterprise-unauth-file-read:2026-10-27",
+      "kind": "MAJOR_SECURITY",
+      "family_key": "ai:litellm:enterprise-unauth-file-read",
+      "material_version": "litellm-ghsa-w4c7-34wj-hqm8-2026-10-27",
+      "published_at": "2026-10-27",
+      "source_url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-w4c7-34wj-hqm8",
+      "actual_delta": "LiteLLM 10月27日安全公告GHSA-w4c7-34wj-hqm8披露Enterprise许可证代理可遭未经认证的本地文件读取与向外发送，可能暴露LITELLM_MASTER_KEY和提供商API密钥；部分配置进一步允许高权限代码执行，CVSS 10.0。受影响分支分别已修补至1.103.10、1.104.8、1.105.6、1.106.5；无Enterprise许可证的开源部署不受该代码路径影响。与此前1.107.0恶意发行是独立事件，不能据此推定用户密钥已泄露。",
+      "impact": "MAJOR",
+      "status": "verified",
+      "source_confirmed": true,
+      "impact_breadth": "sector-wide",
+      "top5_basis": "原始公告揭示跨市场或跨行业的真实重大风险变化，影响机构投资、技术供应链或关键服务可用性，具有广泛的独立决策价值。",
+      "top5_evidence_url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-w4c7-34wj-hqm8"
+    },
+    {
+      "event_key": "connectwise:cloudbackup:2026-10-28-phased-restoration",
+      "kind": "MAJOR_SECURITY",
+      "family_key": "oauth:connectwise:storm0940",
+      "material_version": "connectwise-official-2026-10-28T1600Z-phased-m365-restoration",
+      "published_at": "2026-10-28T16:00:00Z",
+      "source_url": "https://www.connectwise.com/company/trust/advisories",
+      "actual_delta": "ConnectWise官方10月28日16:00 UTC宣布Phased M365 restoration has begun（Microsoft 365 Cloud Backup分阶段恢复已经开始），由10月27日仍待第三方验证的状态进入新加固应用实际分阶段启用；合作伙伴须重置密码、启用MFA，并逐租户重新授权“ConnectWise Cloud Backup for M365”。重新授权本身不等于备份已成功，仍需检查新快照。仅对真实使用该服务的租户适用，不推定用户已受侵。",
+      "impact": "MAJOR",
+      "status": "verified",
+      "source_confirmed": true,
+      "novelty_proof": {
+        "previous_material_version": "connectwise-2026-10-24T14Z-oct26-target",
+        "changed_field": "phased_m365_restoration_status",
+        "old_value": "Oct26 target with validation pending",
+        "new_value": "Phased M365 restoration has begun",
+        "evidence_url": "https://www.connectwise.com/company/trust/advisories",
+        "evidence_published_at": "2026-10-28T16:00:00Z"
+      },
+      "impact_breadth": "sector-wide",
+      "top5_basis": "原始公告揭示跨市场或跨行业的真实重大风险变化，影响机构投资、技术供应链或关键服务可用性，具有广泛的独立决策价值。",
+      "top5_evidence_url": "https://www.connectwise.com/company/trust/advisories"
+    },
+    {
+      "event_key": "macro:us-equities:2026-10-28-close",
+      "kind": "MACRO_CROSS_MARKET",
+      "family_key": "macro:us-equity-close",
+      "material_version": "reuters-us-close-2026-10-28-dow019-sp028-nas027",
+      "published_at": "2026-10-28",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "actual_delta": "10月28日美股收盘道指约+0.19%、标普500约+0.28%、纳指约+0.27%（Reuters当日收盘报道）；这表明美联储维持利率后美股小幅上涨，不能仅凭单日股指涨幅推断加密市场会同步上涨。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "macro:gold-oil:2026-10-28",
+      "kind": "MACRO_CROSS_MARKET",
+      "family_key": "macro:gold-oil:daily",
+      "material_version": "reuters-2026-10-28-gold-down-oil-up",
+      "published_at": "2026-10-28",
+      "source_url": "https://www.reuters.com/business/gold-slips-oil-fuelled-inflation-fears-ahead-fed-meeting-2026-10-28/",
+      "actual_delta": "Reuters 10月28日报道金价承压、油价因中东供应忧虑走高；能源推动的通胀风险与美联储偏紧措辞可能同时抬升风险资产贴现率，具体未来价格方向尚不能确认。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "macro:bea:gdp-pce-release:2026-10-29",
+      "kind": "FUTURE_CATALYST",
+      "family_key": "macro:bea:gdp-pce-release",
+      "material_version": "bea-official-schedule-2026-10-29-0830ET",
+      "published_at": "2026-10-29",
+      "source_url": "https://www.bea.gov/news/schedule",
+      "actual_delta": "美国BEA日程显示10月29日08:30 EDT（曼谷19:30）同时公布第三季度GDP初值及9月个人收入与支出/PCE。公布前不要填入预期值为事实；应关注实际值、修订和美债收益率的同步反应。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "amazon:q3-earnings:2026-10-29",
+      "kind": "FUTURE_CATALYST",
+      "family_key": "amazon:q3-earnings-call",
+      "material_version": "amazon-ir-2026-10-29-1700ET",
+      "published_at": "2026-10-29",
+      "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-to-Webcast-Third-Quarter-2026-Financial-Results-Conference-Call/default.aspx",
+      "actual_delta": "Amazon投资者关系公告第三季度业绩电话会定于10月29日17:00 EDT（曼谷10月30日04:00）。需观察AWS收入、资本支出和AI投资披露；这是已确认财报日程，不能在公布前推断具体盈利数字。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "watch:etf-completeness:2026-10-29",
+      "kind": "PERSISTENT_WATCH",
+      "family_key": "watch:etf-completeness",
+      "material_version": "2026-10-29-btc-eth-issuer-pending",
+      "published_at": "2026-10-29",
+      "source_url": "https://farside.co.uk/btc/",
+      "actual_delta": "观察条件：10月28日BTC/ETH ETF部分发行人仍以“-”缺报；待IBIT、ETHA等缺失数据补齐后再计算完整单日净流入，并对照10月27日完成值。失效条件是所有基金均有真实报告或权威修订。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "watch:deriv-confirmation:2026-10-29",
+      "kind": "PERSISTENT_WATCH",
+      "family_key": "watch:deriv-confirmation",
+      "material_version": "2026-10-29-spot-vs-oi-confirmation",
+      "published_at": "2026-10-29",
+      "source_url": "https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT",
+      "actual_delta": "观察条件：若BTC/ETH/SOL价格同向上涨且未平仓量和现货成交量持续扩张，再评估杠杆驱动；若OI增加但价格下跌，则优先检查清算风险。当前只有一个时点，不将资金费率+0.01%误当必然回报。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "action:predict:2026-10-29",
+      "kind": "ACTION_CONCLUSION",
+      "family_key": "action:predict:eligibility",
+      "material_version": "2026-10-29-verify-before-subscribe",
+      "published_at": "2026-10-29",
+      "source_url": "https://www.binance.com/en/events/primesale-predictfun",
+      "actual_delta": "如考虑PREDICT，先在Binance官方活动页面核对实际Alpha积分门槛、报价、退款、锁定与地区限制，再决定是否认购；35%即时领取选项会永久放弃65%，不可逆，且需本人确实持有PP积分。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "action:security:2026-10-29",
+      "kind": "ACTION_CONCLUSION",
+      "family_key": "action:security:exposure-check",
+      "material_version": "2026-10-29-exposure-conditional",
+      "published_at": "2026-10-29",
+      "source_url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-w4c7-34wj-hqm8",
+      "actual_delta": "只有在实际部署LiteLLM Enterprise代理时才按官方公告升级、隔离出站并评估API密钥轮换；只有使用ConnectWise Cloud Backup的租户才执行其新应用重新授权。任何已遭攻击或凭据已泄露的个人结论均无证据。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    },
+    {
+      "event_key": "action:macro-risk:2026-10-29",
+      "kind": "ACTION_CONCLUSION",
+      "family_key": "action:macro-risk",
+      "material_version": "2026-10-29-bea-volatility-preflight",
+      "published_at": "2026-10-29",
+      "source_url": "https://www.bea.gov/news/schedule",
+      "actual_delta": "曼谷今晚19:30前避免把未公布的GDP/PCE数据当作已确认信息；高杠杆仓位需预先评估跳空、资金费率和流动性风险，后续用官方公布值与市场反应重新验证。",
+      "impact": "NORMAL",
+      "status": "verified",
+      "source_confirmed": true
+    }
+  ],
+  "source_receipts": [
+    {
+      "lane": "spot",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "status": "checked",
+      "result_urls": [
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT"
+      ],
+      "published_at": "2026-10-29T01:25:31Z"
+    },
+    {
+      "lane": "derivatives",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+      "status": "checked",
+      "result_urls": [
+        "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT"
+      ],
+      "published_at": "2026-10-29T01:25:31Z"
+    },
+    {
+      "lane": "capital_flows",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://farside.co.uk/btc/",
+      "status": "checked",
+      "result_urls": [
+        "https://farside.co.uk/btc/"
+      ],
+      "published_at": "2026-10-28"
+    },
+    {
+      "lane": "capital_flows",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://farside.co.uk/eth/",
+      "status": "checked",
+      "result_urls": [
+        "https://farside.co.uk/eth/"
+      ],
+      "published_at": "2026-10-28"
+    },
+    {
+      "lane": "capital_flows",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://farside.co.uk/sol/",
+      "status": "checked",
+      "result_urls": [
+        "https://farside.co.uk/sol/"
+      ],
+      "published_at": "2026-10-28"
+    },
+    {
+      "lane": "onchain",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.lookonchain.com/token/bitcoin",
+      "status": "checked",
+      "result_urls": [
+        "https://www.lookonchain.com/token/bitcoin"
+      ],
+      "published_at": "2026-10-29"
+    },
+    {
+      "lane": "onchain",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://info.arkm.com/research",
+      "status": "checked",
+      "result_urls": [
+        "https://info.arkm.com/research"
+      ],
+      "published_at": "2026-10-28"
+    },
+    {
+      "lane": "onchain",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.lookonchain.com/token/bitcoin",
+      "status": "source_gap",
+      "error": "Original BTC TXIDs not independently retrieved; attributed transfers not confirmed",
+      "published_at": null
+    },
+    {
+      "lane": "policy",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.binance.com/en/support/announcement/detail/de45689cbd7b4e1fa87055cdf5a85997",
+      "status": "checked",
+      "result_urls": [
+        "https://www.binance.com/en/support/announcement/detail/de45689cbd7b4e1fa87055cdf5a85997"
+      ],
+      "published_at": "2026-10-27T08:30:00Z"
+    },
+    {
+      "lane": "infrastructure",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.prnewswire.com/news-releases/chainlink-expands-collaboration-with-sp-global-ratings-to-bring-vault-risk-assessments-onchain-302921507.html",
+      "status": "checked",
+      "result_urls": [
+        "https://www.prnewswire.com/news-releases/chainlink-expands-collaboration-with-sp-global-ratings-to-bring-vault-risk-assessments-onchain-302921507.html"
+      ],
+      "published_at": "2026-10-28"
+    },
+    {
+      "lane": "tge",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.binance.com/en/support/announcement/detail/58d55610f5954d6c867bfa71658585dd",
+      "status": "checked",
+      "result_urls": [
+        "https://www.binance.com/en/support/announcement/detail/58d55610f5954d6c867bfa71658585dd"
+      ],
+      "published_at": "2026-10-28T10:00:00Z"
+    },
+    {
+      "lane": "tge",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.binance.com/en/square/post/382126588667402",
+      "status": "checked",
+      "result_urls": [
+        "https://www.binance.com/en/square/post/382126588667402"
+      ],
+      "published_at": "2026-10-28"
+    },
+    {
+      "lane": "tge",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.binance.com/en/events/primesale-predictfun",
+      "status": "source_gap",
+      "error": "Event portal direct fetch unavailable; pricing/eligibility/refund terms not independently verified",
+      "published_at": null
+    },
+    {
+      "lane": "early_nft",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://opensea.io/blog/announcements",
+      "status": "checked",
+      "result_urls": [
+        "https://opensea.io/blog/announcements"
+      ],
+      "published_at": "2026-10-20"
+    },
+    {
+      "lane": "early_nft",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.reddit.com/r/CryptoCurrency/new",
+      "status": "source_gap",
+      "error": "Reddit cached page stale; not a live NFT mint feed",
+      "published_at": null
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://securitylabs.datadoghq.com/",
+      "status": "checked",
+      "result_urls": [
+        "https://securitylabs.datadoghq.com/"
+      ],
+      "published_at": "2026-10-26"
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "status": "source_gap",
+      "error": "HTTP 403 direct CISA access",
+      "published_at": null
+    },
+    {
+      "lane": "backend_framework_auth",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://github.com/laravel/framework/security/advisories",
+      "status": "checked",
+      "result_urls": [
+        "https://github.com/laravel/framework/security/advisories"
+      ],
+      "published_at": "2026-10-21"
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.connectwise.com/company/trust/advisories",
+      "status": "checked",
+      "result_urls": [
+        "https://www.connectwise.com/company/trust/advisories"
+      ],
+      "published_at": "2026-10-28T16:00:00Z"
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://blog.railway.com/p/security-disclosure-wednesday-october-21st",
+      "status": "checked",
+      "result_urls": [
+        "https://blog.railway.com/p/security-disclosure-wednesday-october-21st"
+      ],
+      "published_at": "2026-10-21"
+    },
+    {
+      "lane": "ai_package_supply_chain",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-w4c7-34wj-hqm8",
+      "status": "checked",
+      "result_urls": [
+        "https://github.com/BerriAI/litellm/security/advisories/GHSA-w4c7-34wj-hqm8"
+      ],
+      "published_at": "2026-10-27"
+    },
+    {
+      "lane": "ai_package_supply_chain",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://pypi.org/project/litellm/",
+      "status": "checked",
+      "result_urls": [
+        "https://pypi.org/project/litellm/"
+      ],
+      "published_at": "2026-10-28"
+    },
+    {
+      "lane": "ai_package_supply_chain",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://docs.litellm.ai/blog",
+      "status": "checked",
+      "result_urls": [
+        "https://docs.litellm.ai/blog"
+      ],
+      "published_at": "2026-10-27"
+    },
+    {
+      "lane": "web_pki_tls",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/",
+      "status": "checked",
+      "result_urls": [
+        "https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/"
+      ],
+      "published_at": "2026-10-20"
+    },
+    {
+      "lane": "web_pki_tls",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.mozilla.org/en-US/security/advisories/",
+      "status": "checked",
+      "result_urls": [
+        "https://www.mozilla.org/en-US/security/advisories/"
+      ],
+      "published_at": "2026-10-27"
+    },
+    {
+      "lane": "web_runtime_rce",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://nodejs.org/en/blog/vulnerability",
+      "status": "checked",
+      "result_urls": [
+        "https://nodejs.org/en/blog/vulnerability"
+      ],
+      "published_at": "2026-10-21"
+    },
+    {
+      "lane": "web_runtime_rce",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.php.net/archive/2026.php",
+      "status": "checked",
+      "result_urls": [
+        "https://www.php.net/archive/2026.php"
+      ],
+      "published_at": "2026-10-26"
+    },
+    {
+      "lane": "macro",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+      "status": "checked",
+      "result_urls": [
+        "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm"
+      ],
+      "published_at": "2026-10-28T18:00:00Z"
+    },
+    {
+      "lane": "macro",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "status": "checked",
+      "result_urls": [
+        "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/"
+      ],
+      "published_at": "2026-10-28"
+    },
+    {
+      "lane": "forward_catalysts",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.bea.gov/news/schedule",
+      "status": "checked",
+      "result_urls": [
+        "https://www.bea.gov/news/schedule"
+      ],
+      "published_at": "2026-10-29"
+    },
+    {
+      "lane": "forward_catalysts",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-to-Webcast-Third-Quarter-2026-Financial-Results-Conference-Call/default.aspx",
+      "status": "checked",
+      "result_urls": [
+        "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-to-Webcast-Third-Quarter-2026-Financial-Results-Conference-Call/default.aspx"
+      ],
+      "published_at": "2026-10-29"
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm",
+      "status": "checked",
+      "result_urls": [
+        "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
+      ],
+      "published_at": "2026-10-26"
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "site:kraken.com OR site:binance.com OR site:bitget.com OR site:bybit.com OR site:gate.com OR site:okx.com Anthropic IPO equity allocation tokenized shares",
+      "status": "source_gap",
+      "error": "No official issuer-named exchange allocation offer found in bounded public searches; UNCONFIRMED_MONITORING",
+      "published_at": null
+    },
+    {
+      "lane": "official_x",
+      "checked_at": "2026-10-29T01:28:45.591Z",
+      "query_or_url": "site:x.com/BinanceWallet/status OR site:x.com/playcambria/status OR site:x.com/krakenfx/status 2026-10-29",
+      "status": "source_gap",
+      "error": "Browser.list_tabs returned originating browser context error; public X indexed search failed to retrieve verifiable original posts; official sites checked as fallback",
+      "published_at": null
+    }
+  ],
+  "market_core": [
+    {
+      "symbol": "BTC",
+      "price": 81322.41,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "observed_at": "2026-10-29T01:25:31Z"
+    },
+    {
+      "symbol": "ETH",
+      "price": 2362.73,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
+      "observed_at": "2026-10-29T01:25:31Z"
+    },
+    {
+      "symbol": "SOL",
+      "price": 102.48,
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
+      "observed_at": "2026-10-29T01:25:31Z"
+    }
+  ],
+  "empty_section_reasons": [
+    {
+      "section": 8,
+      "reason": "OpenSea官方NFT公告页、Art Blocks与英文社区/公开X原帖已作有界检查；最新可直接核实的艺术/NFT发行未出现新的可执行日期或可信合约，X原帖与实时mint覆盖仍存在缺口，不用旧艺术新闻凑条。",
+      "checked_lanes": [
+        "early_nft",
+        "official_x"
+      ]
+    }
+  ],
+  "previous_events": [
+    {
+      "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
+      "family_key": "qubic:weak_seed_wallet_drain",
+      "material_version": "incident_reported_2026-10-20_v1",
+      "aliases": [
+        "Qubic"
+      ],
+      "delivered_date": "2026-10-20"
+    },
+    {
+      "event_key": "cysic:bridge_mint_exploit:2026-10-17",
+      "family_key": "cysic:bridge_mint_exploit",
+      "material_version": "incident_reported_2026-10-20_v1",
+      "aliases": [
+        "Cysic"
+      ],
+      "delivered_date": "2026-10-20"
+    },
+    {
+      "event_key": "jpm:jpm-coin-ethereum-expansion:2026-10-19",
+      "family_key": "jpm:jpm-coin-ethereum-expansion",
+      "material_version": "issuer_launch_2026-10-19",
+      "aliases": [
+        "JPMD",
+        "JPM Coin"
+      ],
+      "delivered_date": "2026-10-20"
+    },
+    {
+      "event_key": "bitget:restricted-counterparty-htx:2026-10-16",
+      "family_key": "cex:htx-source-of-funds-restrictions",
+      "material_version": "bitget_delta_2026-10-16",
+      "aliases": [
+        "HTX",
+        "Huobi Global SA"
+      ],
+      "delivered_date": "2026-10-17"
+    },
+    {
+      "event_key": "cambria:blast-abstract-transition:2026-10-19",
+      "family_key": "cambria:blast-abstract-transition",
+      "material_version": "secondary_unverified_2026-10-17",
+      "aliases": [
+        "Cambria"
+      ],
+      "delivered_date": "2026-10-18",
+      "source_status": "SOURCE_GAP_NOT_USER_ACTION"
+    },
+    {
+      "event_key": "neosoul:dna-standx-beneficiary:2026-10-15",
+      "family_key": "neosoul:dna-standx-beneficiary",
+      "material_version": "secondary_unverified_2026-10-15",
+      "aliases": [
+        "NeoSoul"
+      ],
+      "delivered_date": "2026-10-17",
+      "source_status": "BENEFICIARY_NOT_FIRST_PARTY_VERIFIED"
+    },
+    {
+      "event_key": "btc:clifton-collins:2026-10-20:tranche-5",
+      "family_key": "btc:clifton-collins",
+      "material_version": "tx:eb0bde50049e924590a1812af2d2699c13d513415d3f03bbe3d10f316b3d6756",
+      "aliases": [
+        "Clifton Collins"
+      ],
+      "delivered_date": "2026-10-21",
+      "delivered_edition": "official_corrected",
+      "gmail_message_id": "1a15c6d25715d6ca",
+      "source_tier": "ARKHAM_PRIMARY_ANALYTICS",
+      "source_url": "https://info.arkm.com/research/clifton-collins-fifth-500-btc-40m-transfer-from-drug-dealers-lost-stack",
+      "unresolved": [
+        "ultimate_recipient_beneficial_owner",
+        "government_announcement_for_fifth",
+        "btc_spot_sale"
+      ]
+    },
+    {
+      "event_key": "php:php2shell:2026-10-21",
+      "family_key": "php:php2shell",
+      "material_version": "cve-2026-109618-109619:fix-2026-10-21",
+      "aliases": [
+        "PHP2Shell",
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "delivered_date": "2026-10-22",
+      "delivered_edition": "official_security_corrected",
+      "gmail_message_id": "1a16279bdb00ea34",
+      "source_url": "https://www.php.net/archive/2026.php",
+      "event_status": "PATCHED_UPGRADE_URGENT",
+      "new_user_action": "Upgrade affected PHP web-server deployment via official distributor packages; monitor for signs of prior compromise."
+    },
+    {
+      "event_key": "pki:emudhra:2026-10-20",
+      "family_key": "pki:emudhra",
+      "material_version": "8_intermediate_ca_keys_exposed:removal-2026-10-20",
+      "aliases": [
+        "eMudhra",
+        "emSign ECC Root CA"
+      ],
+      "delivered_date": "2026-10-22",
+      "delivered_edition": "official_security_corrected",
+      "gmail_message_id": "1a16279bdb00ea34",
+      "source_url": "https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/",
+      "event_status": "INTERMEDIATE_CERTS_BLOCKED_MAINSTREAM_BROWSERS_DOWNSTREAM_UPDATE_PENDING",
+      "new_user_action": "Keep browser OS and non-browser TLS trust stores updated; do not override invalid TLS certificate warnings."
+    },
+    {
+      "event_key": "security:litellm:2026-10-21:poisoned-1.107.0",
+      "family_key": "ai:litellm:release-poison",
+      "material_version": "obs-2026-10-23",
+      "primary_version": "official-malicious-release-1.107.0",
+      "aliases": [
+        "litellm"
+      ],
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4",
+      "delivered_edition": "official_backfill",
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+      "classification": "MAJOR_SECURITY",
+      "new_delta_required_for_repeat": true
+    },
+    {
+      "event_key": "security:railway:2026-10-21:env-secrets",
+      "family_key": "cloud:railway:secrets",
+      "material_version": "obs-2026-10-23",
+      "primary_version": "official-2026-10-21-disclosure",
+      "aliases": [
+        "railway"
+      ],
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4",
+      "delivered_edition": "official_backfill",
+      "source_url": "https://blog.railway.com/p/security-disclosure-wednesday-october-21st",
+      "classification": "MAJOR_SECURITY",
+      "new_delta_required_for_repeat": true
+    },
+    {
+      "event_key": "security:connectwise:2026-10-21:microsoft-art-ex",
+      "family_key": "oauth:connectwise:storm0940",
+      "material_version": "obs-2026-10-23",
+      "primary_version": "microsoft-threat-intel-2026-10-21",
+      "aliases": [
+        "connectwise"
+      ],
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4",
+      "delivered_edition": "official_backfill",
+      "source_url": "https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/",
+      "classification": "MAJOR_SECURITY",
+      "new_delta_required_for_repeat": true
+    },
+    {
+      "event_key": "security:node:2026-10-21:patch-train",
+      "family_key": "runtime:node:2026-10",
+      "material_version": "obs-2026-10-23",
+      "primary_version": "official-fixes-22.23.4-24.22.1-26.12.1",
+      "aliases": [
+        "node"
+      ],
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4",
+      "delivered_edition": "official_backfill",
+      "source_url": "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases",
+      "classification": "MAJOR_SECURITY",
+      "new_delta_required_for_repeat": true
+    },
+    {
+      "event_key": "security:laravel:2026-10-19:tokenguard",
+      "family_key": "framework:laravel:tokenguard",
+      "material_version": "obs-2026-10-23",
+      "primary_version": "patched-12.68.0-13.29.0",
+      "aliases": [
+        "laravel"
+      ],
+      "delivered_date": "2026-10-23",
+      "gmail_message_id": "1a1671914359ade4",
+      "delivered_edition": "official_backfill",
+      "source_url": "https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6",
+      "classification": "MAJOR_SECURITY",
+      "new_delta_required_for_repeat": true
+    },
+    {
+      "event_key": "litellm:root-cause:2026-10-23",
+      "family_key": "ai:litellm:release-poison",
+      "material_version": "official-2026-10-23-root-cause",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain",
+      "verification": "verified"
+    },
+    {
+      "event_key": "railway:preliminary-impact:2026-10-22",
+      "family_key": "cloud:railway:secrets",
+      "material_version": "official-2026-10-22-preliminary-1.85pct",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://blog.railway.com/p/preliminary-report-october-security-incident",
+      "verification": "verified"
+    },
+    {
+      "event_key": "emudhra:tls-exit:2026-10-22",
+      "family_key": "pki:emudhra",
+      "material_version": "official-2026-10-22-global-tls-exit",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://emudhra.com/en/press-release/emudhra-to-exit-global-ssl-tls-certificate-business",
+      "verification": "verified"
+    },
+    {
+      "event_key": "etf:btc:2026-10-22",
+      "family_key": "etf:btc:daily",
+      "material_version": "us-session-2026-10-22-final",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://farside.co.uk/btc/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "bitget:usdc-bsc-withdrawal-pause:2026-10-24",
+      "family_key": "bitget:usdc-bsc",
+      "material_version": "official-suspend-2026-10-24-0047-utc8",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://www.bitget.com/support/articles/12560603898707",
+      "verification": "verified"
+    },
+    {
+      "event_key": "php:session-upload:2026-10-23",
+      "family_key": "php:session-upload",
+      "material_version": "php-official-2026-10-23-cve-2026-115560",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://www.php.net/archive/2026.php",
+      "verification": "verified"
+    },
+    {
+      "event_key": "binance:alpha-removal:2026-10-23",
+      "family_key": "binance:alpha-removal",
+      "material_version": "alpha-removal-2026-10-23",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/ab3a0eac9e614819b7b6fa0c03504b1f",
+      "verification": "verified"
+    },
+    {
+      "event_key": "neosoul:dna:kraken-listing:2026-10-22",
+      "family_key": "neosoul:dna:kraken-listing",
+      "material_version": "kraken-official-post-2026-10-22",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://blog.kraken.com/product/asset-listings/dna-is-available-for-trading",
+      "verification": "verified"
+    },
+    {
+      "event_key": "policy:sec:fy2027-exam-priorities:2026-10-23",
+      "family_key": "policy:sec:exam-priorities",
+      "material_version": "sec-2026-109-fy2027-exam",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://www.sec.gov/newsroom/press-releases/2026-109-sec-announces-fiscal-year-2027-examination-priorities",
+      "verification": "verified"
+    },
+    {
+      "event_key": "tge:extended:xten:2026-10-23-announcement",
+      "family_key": "tge:extended:xten",
+      "material_version": "official-telegram-visible-2026-10-23-time-gap",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://t.me/s/extended_updates",
+      "verification": "unverified"
+    },
+    {
+      "event_key": "security:initia:2026-10-23:halt-reported",
+      "family_key": "security:initia:chain-halt",
+      "material_version": "secondary-halt-official-status-operational-source-gap",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://status.initia.xyz/",
+      "verification": "unverified"
+    },
+    {
+      "event_key": "security:connectwise:2026-10-23:recovery-update",
+      "family_key": "oauth:connectwise:storm0940",
+      "material_version": "connectwise-official-2026-10-23T1400Z-restoration-forecast",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://www.connectwise.com/company/trust/advisories",
+      "verification": "verified"
+    },
+    {
+      "event_key": "etf:eth:2026-10-22",
+      "family_key": "etf:eth",
+      "material_version": "us-session-2026-10-22-final",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://farside.co.uk/eth/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "etf:sol:2026-10-22",
+      "family_key": "etf:sol",
+      "material_version": "us-session-2026-10-22-final",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://farside.co.uk/sol/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "macro:us-close:2026-10-23",
+      "family_key": "macro:us-close",
+      "material_version": "us-session-2026-10-23",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://apnews.com/article/e07c72bc5cbe5dffe352ddf30054e35f",
+      "verification": "verified"
+    },
+    {
+      "event_key": "macro:brent-oil:2026-10-23",
+      "family_key": "macro:brent-oil",
+      "material_version": "brent-close-2026-10-23",
+      "delivered_date": "2026-10-24",
+      "source_url": "https://www.reuters.com/world/china/global-markets-global-markets-2026-10-23/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "x100:governance:2026-10-24",
+      "family_key": "security:x100:governance",
+      "material_version": "2026-10-24T14:49:33Z",
+      "aliases": [
+        "X100"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://x.com/blockaid_/status/2114006384735916278",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "keystone:shopify:2026-10-24",
+      "family_key": "security:keystone:customer-orders",
+      "material_version": "2026-10-24 (official post exact minute unavailable)",
+      "aliases": [
+        "Keystone"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://www.sotwe.com/KeystoneWallet",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "railway:revoked-replacement-keys:2026-10-24",
+      "family_key": "cloud:railway:secrets",
+      "material_version": "railway-status-2026-10-24T13:57Z",
+      "aliases": [
+        "Railway"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://status.railway.com/",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "connectwise:cloud-backup:2026-10-24",
+      "family_key": "oauth:connectwise:storm0940",
+      "material_version": "connectwise-2026-10-24T14Z-oct26-target",
+      "aliases": [
+        "ConnectWise 10月24日"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://www.connectwise.com/company/trust/advisories",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "hsbc:redcoin:payme:2026-10-23",
+      "family_key": "infra:hsbc:redcoin",
+      "material_version": "hsbc-official-launch-2026-10-23",
+      "aliases": [
+        "RedCoin"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://www.about.hsbc.com.hk/news-and-media/hsbc-redcoin-launches-today",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "zeabur:shutdown:2026-10-17",
+      "family_key": "cloud:zeabur:shutdown",
+      "material_version": "zeabur-official-2026-10-17-shutdown",
+      "aliases": [
+        "Zeabur停服"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://zeabur.com/blogs/zeabur-is-shutting-down",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "zeabur:cloud-secrets:2026-10-19",
+      "family_key": "cloud:zeabur:security",
+      "material_version": "zeabur-official-preliminary-2026-10-19",
+      "aliases": [
+        "Zeabur安全"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://dash-new.zeabur.com/blogs/october-2026-security-incident",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "circle:gateway:cirbtc-eurc:2026-10-23",
+      "family_key": "infra:circle:gateway",
+      "material_version": "circle-official-2026-10-23-cirbtc-eurc",
+      "aliases": [
+        "cirBTC"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://www.circle.com/blog/circle-gateway-now-supports-cirbtc-and-eurc",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "okxice:tokenized-stock-objections:2026-10-23",
+      "family_key": "rwa:okxice:issuer-objections",
+      "material_version": "reuters-2026-10-23-22-objections",
+      "aliases": [
+        "OKX与ICE"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://www.reuters.com/legal/government/wells-fargo-intuit-others-object-their-shares-being-tokenized-regulatory-2026-10-23/",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "bitget:usdc-bsc:resumed:2026-10-24",
+      "family_key": "bitget:usdc-bsc",
+      "material_version": "bitget-official-2026-10-24-0324",
+      "aliases": [
+        "Bitget"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://www.bitget.com/support/articles/12560603898714",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "arkham:drift:tornado:2026-10-22",
+      "family_key": "onchain:drift-exploiter-tornado",
+      "material_version": "arkham-2026-10-22-122.3m",
+      "aliases": [
+        "Drift"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://info.arkm.com/research/drift-protocol-hacker-moves-122-million-into-tornado-cash",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "lookonchain:eth-whale:2026-10-24",
+      "family_key": "onchain:eth-perp-whale",
+      "material_version": "lookonchain-93184-eth",
+      "aliases": [
+        "93,184 ETH"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://lookonchain.com/feeds/78511",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "electrum:4.8.3:security:2026-10-23",
+      "family_key": "security:electrum:release",
+      "material_version": "electrum-release-4.8.3",
+      "aliases": [
+        "Electrum"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://github.com/spesmilo/electrum/blob/master/RELEASE-NOTES",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "macro:iran-diplomatic-staffing:2026-10-24",
+      "family_key": "macro:iran-us-threats",
+      "material_version": "reuters-ap-oct24",
+      "aliases": [
+        "涉伊朗"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://www.reuters.com/world/middle-east/iran-has-ramped-up-efforts-target-us-personnel-intelligence-memo-warns-2026-10-24/",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "etf:BTC:2026-10-23-partial",
+      "family_key": "etf:btc:daily",
+      "material_version": "farside-2026-10-23-partial-HODL",
+      "aliases": [
+        "美国BTC现货ETF 10月23日"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://farside.co.uk/btc/",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "etf:ETH:2026-10-23-partial",
+      "family_key": "etf:eth",
+      "material_version": "farside-2026-10-23-partial-ETHV",
+      "aliases": [
+        "美国ETH现货ETF 10月23日"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://farside.co.uk/eth/",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "etf:SOL:2026-10-23-partial",
+      "family_key": "etf:sol",
+      "material_version": "farside-2026-10-23-partial-VSOL",
+      "aliases": [
+        "美国SOL现货ETF 10月23日"
+      ],
+      "delivered_date": "2026-10-25",
+      "gmail_message_id": "1a170e1f82549e41",
+      "source_url": "https://farside.co.uk/sol/",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "blast:ui-withdrawal-cutoff:2026-10-26",
+      "family_key": "blast:ui-withdrawal-cutoff",
+      "material_version": "2026-10-26-official-live-bridge-ui",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://blast.io/en/bridge",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "binance:predict-perp:2026-10-25",
+      "family_key": "binance:predict-perp:2026-10-25",
+      "material_version": "binance-predict-2026-10-25-0815UTC",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/5ef55cf8358e4a48b2512a156e89c8e5",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "onchain:wld-aave:2026-10-26",
+      "family_key": "onchain:wld-aave",
+      "material_version": "lookonchain-78592",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://lookonchain.com/feeds/78592",
+      "verification": "secondary_unverified"
+    },
+    {
+      "event_key": "onchain:hayes-usdc:2026-10-26",
+      "family_key": "onchain:hayes-usdc",
+      "material_version": "lookonchain-78582",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://lookonchain.com/feeds/78582",
+      "verification": "secondary_unverified"
+    },
+    {
+      "event_key": "ethereum:hoodi-postponed:2026-10-22",
+      "family_key": "ethereum:hoodi-postponed:2026-10-22",
+      "material_version": "ethereum-official-hoodi-delay-2026-10-22",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://blog.ethereum.org/en/2026/10/22/glamsterdam-hoodi-delay",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "hyperliquid:eqx-equities:2026-10-26",
+      "family_key": "hyperliquid:eqx-equities",
+      "material_version": "lookonchain-78573",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://lookonchain.com/feeds/78573",
+      "verification": "secondary_unverified"
+    },
+    {
+      "event_key": "standx:dusd-checker:2026-10-26",
+      "family_key": "standx:dusd-checker",
+      "material_version": "standx-2026-10-26-checker-secondary",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://lookonchain.com/feeds/78590",
+      "verification": "secondary_unverified"
+    },
+    {
+      "event_key": "ducat:redemption-shutdown:2026-10-26",
+      "family_key": "ducat:redemption-shutdown",
+      "material_version": "ducat-2026-10-26-shutdown-secondary",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://lookonchain.com/feeds/78601",
+      "verification": "secondary_unverified"
+    },
+    {
+      "event_key": "ethereum:acdt102:2026-10-26",
+      "family_key": "ethereum:acdt102",
+      "material_version": "ethereum-pm-2281-oct26",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://github.com/ethereum/pm/issues/2281",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "connectwise:update-due:2026-10-26",
+      "family_key": "connectwise:update-due",
+      "material_version": "connectwise-oct25-update-oct26-next",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://www.connectwise.com/company/trust/advisories",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "bnbchain:newl1-devnet-docs:2026-10-26",
+      "family_key": "bnbchain:newl1",
+      "material_version": "official-docs-checked-2026-10-26-devnet-no-public-endpoint",
+      "aliases": [],
+      "delivered_date": "2026-10-26",
+      "gmail_message_id": "1a176097e267ed98",
+      "source_url": "https://docs.bnbchain.org/newl1/",
+      "verification": "official_or_attributed"
+    },
+    {
+      "event_key": "binance:tradfi-perps:2026-10-26",
+      "family_key": "binance:tradfi-perps",
+      "material_version": "2026-10-26T06:15:00Z",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/02d204fc963f4f8687599fc22a13d538",
+      "verification": "verified"
+    },
+    {
+      "event_key": "php:windows-brotli-builds:2026-10-26",
+      "family_key": "php:windows-brotli-builds",
+      "material_version": "php-windows-brotli-2026-10-26-build-1",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.php.net/archive/2026.php",
+      "verification": "verified"
+    },
+    {
+      "event_key": "connectwise:cloudbackup:oct26-restoration-not-yet",
+      "family_key": "connectwise:cloudbackup:oct26-restoration-not-yet",
+      "material_version": "connectwise-2026-10-26-1400UTC-not-restored",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.connectwise.com/company/trust/advisories",
+      "verification": "verified"
+    },
+    {
+      "event_key": "foundation:passport:phishing-mail:2026-10-27",
+      "family_key": "foundation:passport:phishing-mail",
+      "material_version": "lookonchain-78780-foundation-23k",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://lookonchain.com/feeds/78780",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "etf:BTC:2026-10-26-incomplete",
+      "family_key": "etf:BTC",
+      "material_version": "farside-2026-10-27-0820-IBIT-BTCW-missing",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://farside.co.uk/btc/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "etf:ETH:2026-10-26-incomplete",
+      "family_key": "etf:ETH",
+      "material_version": "farside-2026-10-27-0820-ETHA-ETHB-missing",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://farside.co.uk/eth/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "etf:SOL:2026-10-26-incomplete",
+      "family_key": "etf:SOL",
+      "material_version": "farside-2026-10-27-0820-VSOL-missing",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://farside.co.uk/sol/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "strategy:btc-no-purchase:2026-10-19-25",
+      "family_key": "strategy:btc-no-purchase",
+      "material_version": "strategy-oct26-8k-no-btc-19-25",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://info.arkm.com/research/strategy-pauses-btc-purchase-bitmine-adds-10k-eth",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "bitmine:eth-add:2026-10-26",
+      "family_key": "bitmine:eth-add",
+      "material_version": "arkham-2026-10-26-bitmine-10452eth",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://info.arkm.com/research/strategy-pauses-btc-purchase-bitmine-adds-10k-eth",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "mara:btc-bitgo-transfer:2026-10-27",
+      "family_key": "mara:btc-bitgo-transfer",
+      "material_version": "lookonchain-78787-1000btc-bitgo",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://lookonchain.com/feeds/78787",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "osmosis:proposal1053:passed:2026-10-26",
+      "family_key": "osmosis:proposal1053:passed",
+      "material_version": "lookonchain-78781-proposal1053",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://lookonchain.com/feeds/78781",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "balancer:unclaimed:2026-10-27",
+      "family_key": "balancer:unclaimed",
+      "material_version": "lookonchain-78783-500k-unclaimed",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://lookonchain.com/feeds/78783",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "binance:axis-alpha-competition:2026-10-26",
+      "family_key": "binance:axis-alpha-competition",
+      "material_version": "2026-10-26T11:00:00Z",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/aeab048502ff4d3898bcd872fab0354f",
+      "verification": "verified"
+    },
+    {
+      "event_key": "macro:us-stocks:2026-10-26",
+      "family_key": "macro:us-stocks",
+      "material_version": "2026-10-26T21:00:00Z",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://apnews.com/article/693ac6c4e67da0332045e66804780be7",
+      "verification": "verified"
+    },
+    {
+      "event_key": "macro:anthropic-ipo:2026-10-26",
+      "family_key": "macro:anthropic-ipo",
+      "material_version": "SEC-S1-2026-10-26-ANT-no-offering-price",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.anthropic.com/news/s1-sec",
+      "verification": "verified"
+    },
+    {
+      "event_key": "fomc:oct27-28:calendar",
+      "family_key": "fomc:oct27-28:calendar",
+      "material_version": "fomc-2026-10-27-28-upcoming",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "verification": "verified"
+    },
+    {
+      "event_key": "strategy:shareholder-vote:2026-10-28",
+      "family_key": "strategy:shareholder-vote",
+      "material_version": "2026-10-26T17:45:00Z",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://info.arkm.com/research/strategy-pauses-btc-purchase-bitmine-adds-10k-eth",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "security:cloudflare:workers-ai-glm53-kv-cache-cross-tenant:2026-10-26",
+      "family_key": "security:cloudflare:workers-ai-glm53-kv-cache-cross-tenant",
+      "material_version": "official-disclosure-2026-10-26-155-responses",
+      "aliases": [
+        "GLM-5.3跨租户"
+      ],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://blog.cloudflare.com/kv-cache-exposure-remediation/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "security:bloomtrading:sol-wallet-drain:2026-10-26",
+      "family_key": "security:bloomtrading:sol-wallet-drain",
+      "material_version": "bitquery-2026-10-26-9408sol-48wallets-94sec",
+      "aliases": [
+        "BloomTrading Solana交易机器人重大钱包损失"
+      ],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.bitquery.io/investigations/bloom-trading-bot-hack",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "ritual:mainnet-coinbase-price-page:2026-10-27",
+      "family_key": "ritual:mainnet-coinbase-price-page",
+      "material_version": "coinbase-price-page-available-2026-10-27-0822",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.coinbase.com/price/ritual",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "onchain:hype:coinbase-deposit:2026-10-26:494310",
+      "family_key": "onchain:hype:coinbase-deposit",
+      "material_version": "lookonchain-feed-78602-three-attributed-wallets",
+      "aliases": [],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://lookonchain.com/feeds/78602",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "binance:brazil-local-products-effective:2026-10-27",
+      "family_key": "binance:brazil-local-products-effective",
+      "material_version": "official-2026-10-08-notice-effective-2026-10-27",
+      "aliases": [
+        "Binance巴西官方10月8日公告"
+      ],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://www.binance.com/pt-BR/support/faq/detail/d79576b30c8240118a043129e0c21398",
+      "verification": "verified_official_portuguese"
+    },
+    {
+      "event_key": "bybit:network-deposit-withdrawal-sunset:2026-11-06",
+      "family_key": "bybit:network-deposit-withdrawal-sunset",
+      "material_version": "bybit-official-2026-10-23-effective-2026-11-06",
+      "aliases": [
+        "Bybit官方10月23日公告"
+      ],
+      "delivered_date": "2026-10-27",
+      "gmail_message_id": "1a17b2d317942c5a",
+      "source_url": "https://announcements.bybit.com/en/article/bybit-to-end-token-deposits-and-withdrawals-via-select-networks-nov-6-2026--art808530fb81de/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "keystone:webauth-device-attestation-key-compromise:2026-10-26",
+      "family_key": "keystone:webauth-device-attestation-key-compromise",
+      "material_version": "company-attributed-2026-10-26-webauth-key-18835-units-25964-records",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.cryptotimes.io/2026/10/26/keystone-reports-data-breach-affecting-25964-hardware-wallet-buyers/",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "security:udesk-malicious-customer-support-js:2026-10-27",
+      "family_key": "security:udesk-malicious-customer-support-js",
+      "material_version": "slowmist-original-sample-analysis-2026-10-27-v1",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://slowmist.medium.com/threat-intelligence-udesk-loads-malicious-js-to-steal-data-and-alter-transfer-addresses-157f331a5b8b",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "spot:BTC:2026-10-28T0124Z",
+      "family_key": "spot:BTC",
+      "material_version": "2026-10-28T01:24:28.996Z",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:ETH:2026-10-28T0124Z",
+      "family_key": "spot:ETH",
+      "material_version": "2026-10-28T01:24:29.014Z",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:SOL:2026-10-28T0124Z",
+      "family_key": "spot:SOL",
+      "material_version": "2026-10-28T01:24:24.786Z",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:BNB:2026-10-28T0124Z",
+      "family_key": "spot:BNB",
+      "material_version": "2026-10-28T01:24:26.027Z",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:HYPE:2026-10-28T0124Z",
+      "family_key": "spot:HYPE",
+      "material_version": "2026-10-28T01:24:28.727Z",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "deriv:BTC-ETH:oi-multipoint:2026-10-28",
+      "family_key": "deriv:BTC-ETH:oi-multipoint",
+      "material_version": "binance-futures-2026-10-28T0124Z-btc-eth-multipoint",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "deriv:SOL:oi-multipoint:2026-10-28",
+      "family_key": "deriv:SOL:oi-multipoint",
+      "material_version": "binance-futures-sol-2026-10-28T0124Z-multipoint",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://fapi.binance.com/fapi/v1/openInterest?symbol=SOLUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "binance:cross-margin-pair-forced-settlement:2026-10-30",
+      "family_key": "binance:cross-margin-pair-forced-settlement",
+      "material_version": "official-2026-10-27-cross-margin-auto-settle-2026-10-30T0600Z",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.binance.com/en/support/announcement/b4015154ce33445ebf7b98d1bc12c072",
+      "verification": "verified"
+    },
+    {
+      "event_key": "binance:isolated-margin-max-leverage-reduction:2026-11-10",
+      "family_key": "binance:isolated-margin-max-leverage-reduction:2026-11-10",
+      "material_version": "official-2026-10-27-23pairs-10x-to-5x",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.binance.com/en/support/announcement/98f858ce2402474a88369532d54494ef",
+      "verification": "verified"
+    },
+    {
+      "event_key": "bitget:usdc-avax-cchain-withdrawal-suspension:2026-10-28",
+      "family_key": "bitget:usdc-avax-cchain-withdrawal-suspension",
+      "material_version": "official-2026-10-28T0122UTC8-usdc-avax-pause",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.bitget.com/support/articles/12560603898976",
+      "verification": "verified"
+    },
+    {
+      "event_key": "bitget:haedal-bsc-withdrawal-suspension:2026-10-28",
+      "family_key": "bitget:haedal-bsc-withdrawal-suspension",
+      "material_version": "official-2026-10-28T0601UTC8-haedal-bsc-pause",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.bitget.com/support/articles/12560603899022",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "etf:crossasset:2026-10-26:completed",
+      "family_key": "etf:crossasset:2026-10-26:completed",
+      "material_version": "farside-2026-10-28-0827-completed-2026-10-26",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://farside.co.uk/btc/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "etf:crossasset:2026-10-27:partial",
+      "family_key": "etf:crossasset:2026-10-27:partial",
+      "material_version": "farside-2026-10-28-0827-2026-10-27-partial",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://farside.co.uk/eth/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "onchain:binance-btc-withdrawal:11330btc:2026-10-27",
+      "family_key": "onchain:binance-btc-withdrawal:11330btc",
+      "material_version": "onchainlens-attributed-11330btc-2026-10-27-v1-txid-gap",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://lookonchain.com/feeds/78911",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "onchain:ibit-coinbase-prime:1698btc:2026-10-27",
+      "family_key": "onchain:ibit-coinbase-prime:1698btc",
+      "material_version": "onchainlens-attributed-2026-10-27-1698btc",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://lookonchain.com/feeds/78916",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "onchain:hype-wintermute-whale:2026-10-28",
+      "family_key": "onchain:hype-wintermute-whale",
+      "material_version": "onchainlens-attributed-123055hype-2026-10-28-v1",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://lookonchain.com/feeds/78989",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "circle:aci-colombia-usdc-settlement-pilot:2026-10-27",
+      "family_key": "circle:aci-colombia-usdc-settlement-pilot",
+      "material_version": "issuer-joint-press-release-2026-10-27-colombia-breb",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.businesswire.com/news/home/20261027452148/en/ACI-Worldwide-and-Circle-Collaborate-to-Bring-USDC-Settlement-to-Existing-Payments-Infrastructure-in-Latin-America",
+      "verification": "verified"
+    },
+    {
+      "event_key": "cancore:canton-seed-funding:2026-10-28",
+      "family_key": "cancore:canton-seed-funding",
+      "material_version": "secondary-2026-10-28-cancore-7_2m-seed",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://lookonchain.com/feeds/78911",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "coindcx:deprecated-wallet-sweeper-loss:2026-10-25",
+      "family_key": "coindcx:deprecated-wallet-sweeper-loss",
+      "material_version": "issuer-2026-10-25-15_99m-usdt-sweeper-failure",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://coindcx.com/blog/coindcx-news/on-chain-wallet-activity-update-21-oct-2026",
+      "verification": "verified"
+    },
+    {
+      "event_key": "myriad:bnb-amm-settlement-privatekey-incident:2026-10-28",
+      "family_key": "myriad:bnb-amm-settlement-privatekey-incident",
+      "material_version": "myriad-attributed-2026-10-28-10markets-auto-refund",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://lookonchain.com/feeds/78989",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "ngrave:advanced-threat-warning:2026-10-28",
+      "family_key": "ngrave:advanced-threat-warning",
+      "material_version": "ngrave-attributed-2026-10-28-security-warning",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://lookonchain.com/feeds/78985",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "security:gamdom-whitearmor-ransomware-claim:2026-10-26",
+      "family_key": "security:gamdom-whitearmor-ransomware-claim",
+      "material_version": "whitearmor-allegation-2026-10-26-v1",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://crypto.news/whitearmor-demands-15m-in-bitcoin-from-crypto-casino-gamdom/",
+      "verification": "unverified"
+    },
+    {
+      "event_key": "connectwise:cloudbackup:2026-10-27-thirdparty-validation-delay",
+      "family_key": "connectwise:cloudbackup:2026-10-27-thirdparty-validation-delay",
+      "material_version": "connectwise-official-2026-10-27T1430Z-restoration-awaits-thirdparty-validation",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.connectwise.com/company/trust/advisories",
+      "verification": "verified"
+    },
+    {
+      "event_key": "macro:us-equity-close:2026-10-27",
+      "family_key": "macro:us-equity-close",
+      "material_version": "market-scale-us-close-2026-10-27-spx-nasdaq",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.marketscale.com/industries/business-services/stocks-rose-again-as-chips-rallied-and-oil-slid-under-100",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "macro:wti-oil-close:2026-10-27",
+      "family_key": "macro:wti-oil-close",
+      "material_version": "market-scale-wti-2026-10-27-99_90",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.marketscale.com/industries/business-services/stocks-rose-again-as-chips-rallied-and-oil-slid-under-100",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "binance:eth-network-wallet-maintenance:2026-10-28",
+      "family_key": "binance:eth-network-wallet-maintenance",
+      "material_version": "binance-official-2026-10-28T0555Z-eth-wallet-maintenance",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.binance.com/en/support/announcement/6d453d371099439a8d25ec1c1d28e5f4",
+      "verification": "verified"
+    },
+    {
+      "event_key": "binance:epic-quick-spot-delisting:2026-10-28",
+      "family_key": "binance:epic-quick-spot-delisting",
+      "material_version": "binance-official-2026-10-28T0300Z-epic-quick-spot-delisting",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/290a660c0b2e4e888c582cd29ecf9ecc",
+      "verification": "verified"
+    },
+    {
+      "event_key": "trend:hype:relative-strength-2026-10-28",
+      "family_key": "trend:hype:relative-strength-2026-10-28",
+      "material_version": "hype-two-session-2026-10-27-28-0824",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "action:2026-10-28:operational-transfer-preflight",
+      "family_key": "action:2026-10-28:operational-transfer-preflight",
+      "material_version": "action-conditional-exchange-preflight-2026-10-28",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://www.binance.com/en/support/announcement/6d453d371099439a8d25ec1c1d28e5f4",
+      "verification": "verified"
+    },
+    {
+      "event_key": "action:2026-10-28:market-evidence-risk",
+      "family_key": "action:2026-10-28:market-evidence-risk",
+      "material_version": "action-evidence-risk-2026-10-28",
+      "aliases": [],
+      "delivered_date": "2026-10-28",
+      "gmail_message_id": "1a180500065679d2",
+      "source_url": "https://farside.co.uk/btc/",
+      "verification": "verified"
+    }
+  ],
+  "collector_history": [
+    "crypto-daily/research/2026-10-29/002345.md",
+    "crypto-daily/research/2026-10-29/032548.md",
+    "crypto-daily/research/2026-10-29/061857.md"
+  ],
+  "excluded_candidate_reasons": [
+    {
+      "family_key": "ai:litellm:release-poison",
+      "reason": "Previously delivered 1.107.0 malicious PyPI/Docker release; new enterprise file-read is distinct family."
+    },
+    {
+      "family_key": "pki:emudhra:2026-10-20",
+      "reason": "No verified new issuer state beyond prior report."
+    },
+    {
+      "family_key": "php:php2shell:2026-10-21",
+      "reason": "Previously delivered, no new official material state."
+    },
+    {
+      "family_key": "oauth:connectwise:storm0940",
+      "reason": "New phased restoration state included with explicit old-to-new proof, not a generic replay."
+    },
+    {
+      "family_key": "anthropic:issuer:sec-s1",
+      "reason": "Oct26 issuer S-1 already delivered, no new effective date/offer; no CEX Anthropic equity subscription confirmed."
+    },
+    {
+      "family_key": "cambria:rsgp:base-tge",
+      "reason": "Already user-notified Gmail 1a1812a1f6802ecb on Oct28, no new independently dated claim or CA change."
+    },
+    {
+      "family_key": "railway:env-secrets",
+      "reason": "No newly evidenced credential incident or action since prior report."
+    },
+    {
+      "family_key": "node:oct21-brotli",
+      "reason": "Oct21 patch already delivered; HKCERT exploitation claim cannot be independently corroborated via CISA 403."
+    },
+    {
+      "family_key": "onchain:coinbase-prime-6168btc",
+      "reason": "Included as explicitly unverified observation only, no sale inference."
+    }
+  ],
+  "source_gaps": [
+    "Browser session unavailable; original X posts unverified",
+    "CISA HTTP403",
+    "October 28 BTC/ETH ETF incomplete issuer cells",
+    "Raw Bitcoin transaction IDs not independently retrieved",
+    "PREDICT Prime Sale dynamic price/Alpha threshold/refund and jurisdiction rules inaccessible",
+    "NFT issuer X/real-time mint coverage partial",
+    "Direct Binance event portal access unavailable"
+  ],
+  "publisher_reverification": [
+    "Gmail Sent same-date prefix before any send",
+    "Re-read Git rules and blob SHAs before send",
+    "Verify 09:20 refreshed Binance market/ETF and deadline terms",
+    "Wait for matching push-only CI receipt and compare pending/rules/gate blob SHAs",
+    "Gmail sent readback before canonical archive; no duplicate on Git archive failure"
+  ],
+  "gmail_sent_prefix_count_at_prebuild": 0,
+  "app_output": "NONE_EMAIL_ONLY",
+  "no_new_tasks": true
+}
