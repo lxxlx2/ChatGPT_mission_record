@@ -210,10 +210,20 @@
         </form>
       </section>
 
+      <div class="cluster-recovery">
+        <button type="button" class="link-btn" id="cluster-read-cached">查看输入 CA 的历史报告</button>
+        <span>仅读取已有数据，不重新扫描；历史报告不代表当前链上状态。</span>
+      </div>
+      <div class="cluster-recovery">
+        <label for="cluster-reports">本浏览器最近已读报告</label>
+        <select id="cluster-reports" aria-label="选择原任务报告"><option value="">暂无已核对报告</option></select>
+        <button type="button" class="link-btn" id="cluster-read-report" disabled>读取选中报告</button>
+        <button type="button" class="link-btn" id="cluster-clear-reports">清除本机记录</button>
+        <span>最多保存 10 个报告入口；任务归属仍由服务核对，不代表覆盖完整。</span>
+      </div>
       <section id="cluster-status" class="cluster-status" hidden></section>
       <div id="cluster-recovery" class="cluster-recovery" hidden>
         <button type="button" class="link-btn" id="cluster-resume-get">继续读取原任务</button>
-        <button type="button" class="link-btn" id="cluster-read-cached">查看已有历史报告</button>
         <span>仅读取已有数据，不重新扫描</span>
       </div>
       <section id="cluster-preview" class="cluster-preview" hidden aria-live="polite"></section>

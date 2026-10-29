@@ -34,3 +34,23 @@ jobs:
       - name: Real frontend GET/report association and budget UI tests (offline)
         working-directory: crypto-300-profit-mission/local-agent
         run: node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_ca_report_render.mjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install isolated browser test dependency
+        run: |
+          npm install --prefix "$RUNNER_TEMP/frank-ca-browser" --no-audit --no-fund playwright@1.62.1
+          "$RUNNER_TEMP/frank-ca-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Real HTTP worker and browser flow with synthetic analysis only
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          export FRANK_PLAYWRIGHT_MODULE="$RUNNER_TEMP/frank-ca-browser/node_modules/playwright"
+          export FRANK_CHROME="$(node -e 'console.log(require(process.env.FRANK_PLAYWRIGHT_MODULE).chromium.executablePath())')"
+          export FRANK_BROWSER_EVIDENCE="$RUNNER_TEMP/frank-ca-browser-evidence"
+          node tests/test_frank_ca_browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: synthetic-ca-browser-evidence
+          path: ${{ runner.temp }}/frank-ca-browser-evidence
+          if-no-files-found: ignore

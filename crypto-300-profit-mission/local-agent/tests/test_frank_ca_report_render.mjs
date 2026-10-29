@@ -18,7 +18,7 @@ const fixture={
   transaction_errors:[],
 };
 
-function harness() {
+function harness(options = {}) {
   const elements=new Map();
   const classes={add(){},remove(){},toggle(){}};
   const element=(id)=>{
@@ -30,7 +30,8 @@ function harness() {
     });
     return elements.get(id);
   };
-  const store=new Map(),requests=[];
+  const store=options.store || new Map(),requests=[];
+  let responseFor=null;
   const context={
     document:{
       getElementById:element,querySelectorAll:()=>[],
@@ -39,10 +40,12 @@ function harness() {
     window:{location:{hash:'#cluster'},addEventListener(){}},
     history:{replaceState(){}},
     navigator:{clipboard:{writeText:async()=>{}}},
-    localStorage:{getItem:k=>store.get('local:'+k)||null,setItem:(k,v)=>store.set('local:'+k,v)},
+    localStorage:{getItem:k=>store.get('local:'+k)||null,setItem:(k,v)=>store.set('local:'+k,v),removeItem:k=>store.delete('local:'+k)},
     sessionStorage:{getItem:k=>store.get('session:'+k)||null,setItem:(k,v)=>store.set('session:'+k,v),removeItem:k=>store.delete('session:'+k)},
     fetch:async(url,options={})=>{
       requests.push({url,method:options.method||'GET'});
+      if (responseFor) return responseFor(url,options);
+      if (options.method==='POST') throw new TypeError('fixture submission failed');
       if(url==='/api/cluster-latest?mint='+encodeURIComponent(mint)+'&job_id='+jobId)
         return {ok:true,status:200,json:async()=>fixture};
       if(url==='/api/cluster-analysis?job_id='+jobId)
@@ -56,7 +59,7 @@ function harness() {
   };
   vm.createContext(context);
   vm.runInContext(source,context,{timeout:2500,filename:'app.js'});
-  return {context,element,requests,store};
+  return {context,element,requests,store,setResponse(fn){responseFor=fn;}};
 }
 
 test('full shipped app.js directly renders a verified-shape incomplete CA report',()=>{
@@ -85,4 +88,80 @@ test('full script DONE -> existing report GET -> pending cleared without phantom
   assert.equal(h.element('cluster-submit').disabled,false);
   assert.equal(h.element('cluster-recovery').hidden,true);
   assert.match(h.element('cluster-status').innerHTML,/无法独立证明与本次分析一一对应/);
+});
+
+const secondJob='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
+const historyKey='mission-meme-cluster-reports-v1';
+async function finish(h,id,name='REPORT') {
+  h.element('cluster-mint').value=mint;
+  h.setResponse(async url=>({ok:true,status:200,json:async()=>
+    url.startsWith('/api/cluster-analysis?') ? {job_id:id,mint,status:'DONE'} :
+      {...fixture,ca_job_id:id,market:{...fixture.market,name}}}));
+  h.context.__id=id;h.context.__mint=mint;
+  vm.runInContext('clusterSetJob(__id,__mint)',h.context);
+  await vm.runInContext('pollClusterJob(__id)',h.context);
+}
+
+test('history read is visible outside transient task recovery controls',()=>{
+  const html=readFileSync(new URL('../mission_agent/mission_control/static/index.html',import.meta.url),'utf8');
+  const recovery=html.match(/<div id="cluster-recovery"[\s\S]*?<\/div>/)[0];
+  assert.doesNotMatch(recovery,/id="cluster-read-cached"/);
+  assert.match(html,/id="cluster-reports"/);
+});
+
+test('completed A and B survive a new page; selecting A reads exact ID without POST',async()=>{
+  const h=harness();
+  await finish(h,jobId,'REPORT_A');await finish(h,secondJob,'REPORT_B');
+  const saved=JSON.parse(h.store.get('local:'+historyKey));
+  assert.equal(saved.length,2);assert.equal(saved[0].id,secondJob);
+  assert.equal(h.store.has('session:mission-meme-cluster-pending-v1'),false);
+  const restored=harness({store:h.store});
+  assert.match(restored.element('cluster-reports').innerHTML,new RegExp(jobId));
+  restored.element('cluster-reports').value=jobId;
+  restored.setResponse(async url=>({ok:true,status:200,json:async()=>
+    url.startsWith('/api/cluster-analysis?') ? {job_id:jobId,mint,status:'DONE'} :
+      {...fixture,ca_job_id:jobId,market:{...fixture.market,name:'REPORT_A'}}}));
+  await restored.element('cluster-read-report').listeners.get('click')();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.match(restored.element('cluster-summary').innerHTML,/REPORT_A/);
+  assert.ok(restored.requests.some(x=>x.url.includes('&job_id='+jobId)));
+  assert.equal(restored.requests.filter(x=>x.method==='POST').length,0);
+});
+
+test('invalid CA preserves pending identity and does not attempt submission',async()=>{
+  const h=harness();
+  h.context.__id=jobId;h.context.__mint=mint;
+  vm.runInContext('clusterSetJob(__id,__mint)',h.context);
+  h.element('cluster-mint').value='bad CA';h.element('cluster-preset').value='quick';
+  await h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
+  assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
+  assert.equal(JSON.parse(h.store.get('session:mission-meme-cluster-pending-v1')).id,jobId);
+  assert.match(h.element('cluster-status').innerHTML,/完整.*Solana CA/);
+});
+
+test('explicit historical lookup uses entered Mint and keeps the other pending task',async()=>{
+  const h=harness(), otherMint='33333333333333333333333333333333';
+  h.context.__id=jobId;h.context.__mint=mint;
+  vm.runInContext('clusterSetJob(__id,__mint)',h.context);
+  h.element('cluster-mint').value=otherMint;
+  h.setResponse(async url=>({ok:true,status:200,json:async()=>({...fixture,mint:otherMint})}));
+  await h.element('cluster-read-cached').listeners.get('click')();
+  assert.equal(h.requests.at(-1).url,'/api/cluster-latest?mint='+otherMint);
+  assert.equal(JSON.parse(h.store.get('session:mission-meme-cluster-pending-v1')).id,jobId);
+  assert.match(h.element('cluster-status').innerHTML,/覆盖仍不完整.*关联未经核实/);
+  h.setResponse(async url=>({ok:true,status:200,json:async()=>({job_id:jobId,mint,status:'RUNNING'})}));
+  h.element('cluster-resume-get').listeners.get('click')();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(h.element('cluster-mint').value,mint);
+});
+
+test('report shortcuts are bounded, validated and contain no report payload',async()=>{
+  const h=harness();
+  for(let i=1;i<=12;i++) await finish(h,i.toString(16).padStart(32,'0'));
+  const saved=JSON.parse(h.store.get('local:'+historyKey));
+  assert.equal(saved.length,10);
+  assert.deepEqual(Object.keys(saved[0]).sort(),['id','mint','observed_at']);
+  const bad=harness({store:new Map([['local:'+historyKey,JSON.stringify([{id:'<script>',mint,observed_at:1}])]])});
+  assert.equal(bad.element('cluster-read-report').disabled,true);
+  assert.doesNotMatch(bad.element('cluster-reports').innerHTML,/<script>/);
 });

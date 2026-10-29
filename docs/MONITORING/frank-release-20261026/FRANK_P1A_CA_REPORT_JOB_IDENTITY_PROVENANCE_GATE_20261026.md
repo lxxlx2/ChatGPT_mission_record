@@ -48,3 +48,18 @@
 - 新定向测试注入 by-job、latest、marker 原子写入失败及提交前异常，验证原失败任务无法按 ID 恢复 DONE；测试内容缺失、错误字段类型、错误 source、摘要不符和 marker 消失时安全拒绝。保留同 Mint A/B、GET only 与旧历史无 ID 兼容路径。
 
 **发布边界仍是 NO_GO。** 新 SHA 的 CI 与独立复审均需先通过。未授权 Mac 发布、launchctl 重启、真实 CA POST/RPC、当前钱包持仓读取、通知、邮件、合并和交易。原 C2A bootstrap 根因仍未解决。
+
+## 2026-10-29 用户流程收尾（同一 PR；非生产）
+
+用户已授权复用既有功能收尾，先完成 CA 使用链路；不恢复盈利研究，不新增发布框架。
+
+- 历史报告入口始终可见，明确按输入 CA 只发送 GET；与原待恢复任务分开。恢复原任务时恢复对应 CA 输入。
+- 浏览器最多保存 10 个已读且 job ID 匹配的报告入口（ID、Mint、报告时间，不保存报告正文）；同 CA 的 A/B 可分别选择，重新调用服务核对原任务，不能把本机记录当作 DONE 或完整性证明。可清除本机入口。更换浏览器/清除存储不会自动发现服务器所有旧报告，未实现跨设备历史目录。
+- 无效 CA/模式在请求前说明原因，不发送 POST，也不清空原 pending 任务。合法提交若没有可靠回执，仍保持未知且不自动重发。
+- 保留原 C1 预算、DONE marker、错误隔离及 GET 重试实现；不改生产服务、D2、冻结信号、通知或交易。
+
+定向测试：`node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_ca_report_render.mjs`。
+
+真实浏览器测试：安装已有 Playwright 的环境中设置 `FRANK_PLAYWRIGHT_MODULE` 和 `FRANK_CHROME`，运行 `node tests/test_frank_ca_browser.mjs`。Python fixture 使用真实 Handler、submit、worker、报告落盘与 GET；仅 analyzer/RPC 和非 CA 展示输入使用合成数据。随机 loopback 端口、独立临时 profile，退出清理。浏览器阻断非 fixture 请求；Python 审计钩子拒绝网络连接和子进程。Mac 实测另加 OS 外部出站禁网。测试 POST 仅在 fixture 内，不能称为真实 Quick/Standard/Deep 链上验收。
+
+本轮结果与固定提交、CI 链接写入 PR #220 / Issue #165 的执行回执。剩余实际交付门禁是新 SHA 独立复审、生产发布授权与经单独授权的有界真实 CA 查询；不以合成 PASS 关闭 Issue #165。
