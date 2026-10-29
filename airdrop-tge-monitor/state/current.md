@@ -1,38 +1,38 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-29 15:59:47 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-29 16:57:07 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-29 15:59:47 Asia/Bangkok (15:58:32 attempt, off-minute)
+- latest_actual_run: 2026-10-29 16:57:07 Asia/Bangkok (16:55:48 attempt, off-minute)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-29/155947-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-29/155832-attempt.md
-- latest_scheduled_shard: 3
-- latest_executed_shard: 3
-- stale_shard_recovery: false; fair default 15%4=3; second consecutive Shard3
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-29/165707-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-29/165548-attempt.md
+- latest_scheduled_shard: 0
+- latest_executed_shard: 0
+- stale_shard_recovery: false; fair default 16%4=0
 - latest_candidate_count: 6
 - latest_triggered_events: 0
 - latest_identity_failures: 0
 - latest_source_failures: 6
 - latest_notification_decision: SILENT_NO_ACTION_EMAIL_ONLY
-- latest_notification_status: NO_GMAIL_NO_APP; prior Cambria RSGP Gmail Sent 1a1812a1f6802ecb readback verified and deduped
+- latest_notification_status: NO_GMAIL_NO_APP; Cambria prior RSGP Gmail Sent 1a1812a1f6802ecb readback verified and deduped
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_extra_USDC,Surf_PONS_raffle,StandX_DUSD_checker,Crusoe_private_SPV,Republic_rTTOK_private_settlement,Cambria_live_wallet_claim_ui
+- latest_source_gaps: Concrete_extra_USDC,Surf_PONS,StandX_DUSD_checker,TurboFlow_issuer_restricted,Block_Stranding_current_issuer,Makina_Recovery_NFT
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
-- last_meaningful_attempt_at_shard0: 2026-10-29 08:58:32 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard0: 2026-10-29 16:57:07 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard1: 2026-10-29 13:02:02 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard2: 2026-10-29 14:02:04 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-10-29 15:59:47 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 155947-final.md commit b6c506efa7cf7dff81c022979130f0e8d9fce801
-- latest_terminal_readback: VERIFIED 155947-final.md blob e3011bdefd0aedfb41a191a69fa423a5c869efa6
-- latest_four_executed_shards: [1,2,3,3]
+- latest_primary_final_write: VERIFIED_DURABLE 165707-final.md commit 5c0546579ea13493adfc4358d9bed71f6e8119a8
+- latest_terminal_readback: VERIFIED 165707-final.md blob 6e3e9037b23370eedda9635e267af2d698ba2b29
+- latest_four_executed_shards: [2,3,3,0]
 - last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (prior delivered 2026-10-28; no new email)
 - last_delivered_gmail_message_id: 1a1812a1f6802ecb
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-29 15:59:47 BKK PARTIAL fair shard3; 15 distinct registered identities attempted, six source/rights gaps, zero new ACTION; Browser X unavailable, official fallback; no Gmail/App; verified-complete unchanged.
+- latest_terminal_sync: 2026-10-29 16:57:07 BKK PARTIAL fair shard0, 15 distinct registered identities attempted, six unresolved source/rights gaps, zero new ACTION; Browser X unavailable, official fallback; no Gmail/App; verified-complete unchanged.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
@@ -303,3 +303,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-29 10:58:53 BKK: existing TGE monitor 105801-attempt.md and readback-verified 105853-final.md persisted (commit d7df8622802e08548622a0fe584271237eab0684); urgent5 + Surf/StandX + fair shard2 (15 distinct Registry identities), bounded cross-shard Cambria Base RSGP and lifecycle. Six candidate families, zero new Tier A/mapped Tier B ACTION, five SOURCE_GAP (Concrete extra USDC, Surf PONS, StandX original DUSD checker, 01 private mapped rights, OhBabyGames issuer). Gmail Sent Cambria RSGP id 1a1812a1f6802ecb direct readback confirmed and suppressed; mapped Inbox search no new Tier B. Browser original X originating context unavailable; issuer docs/site/official Telegram fallback read. No Gmail/App. Shard2 meaningful attempt PARTIAL, last verified full completion 2026-10-10 07:52:16 unchanged. Last four [3,0,1,2], no override. Existing task/schedule/scope/recipient unchanged.
 
 - 2026-10-29 15:59:47 BKK: extra off-minute invocation existing task attempt `155832-attempt.md`, readback-verified final `155947-final.md` commit `b6c506efa7cf7dff81c022979130f0e8d9fce801`; urgent5 + Surf/StandX + exactly fair shard3, 15 distinct registered identities, bounded cross-shard Cambria RSGP/lifecycle. Six candidate families, zero new Tier A/B ACTION, six SOURCE_GAP (Concrete extra USDC, Surf PONS raffle, StandX original checker, Crusoe private SPV, Republic rTTOK private settlement, Cambria live wallet claim UI). Cambria Base TGE 22:00 BKK unchanged, already emailed `1a1812a1f6802ecb` and Gmail SENT readback reconfirmed. Mapped Inbox search no new TierB. Browser originating X unavailable; official docs/blog/sites fallback. No Gmail/App. Shard3 meaningful attempt PARTIAL; last verified complete Oct10 unchanged. Last four [1,2,3,3], no override. No task/schedule/scope/recipient changes.
+
+- 2026-10-29 16:57:07 BKK: actual off-minute existing task attempt 165548-attempt.md and readback-verified 165707-final.md (commit 5c0546579ea13493adfc4358d9bed71f6e8119a8) persisted. Urgent5 + Surf/StandX + fair Shard0 (15 distinct Registry identities), bounded Cambria Base and cross-shard lifecycle. Six candidate families, zero Tier A/mapped Tier B new ACTION, six source/rights gaps (Concrete extra USDC, Surf PONS, StandX original checker, TurboFlow issuer restricted, Block Stranding current issuer, Makina Recovery NFT). Browser original X originating-context failure; public official issuer/docs fallback. Gmail Sent Cambria RSGP 1a1812a1f6802ecb readback verified and suppressed; no new mapped Inbox rights, no Gmail/App. Shard0 last_meaningful_attempt_at advanced PARTIAL; last_verified_complete_at Oct10 unchanged. Last four terminal-backed [2,3,3,0], no override. Task ID/schedule/scope/recipient/other monitors unchanged.
