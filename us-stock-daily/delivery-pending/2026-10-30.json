@@ -1,0 +1,1746 @@
+{
+  "schema": "US_STOCK_NOVELTY_V1",
+  "report_date": "2026-10-30",
+  "timezone": "Asia/Bangkok",
+  "latest_completed_us_session": "2026-10-29",
+  "checked_at": "2026-10-30T05:35:23+07:00",
+  "body": "美股每日晨报｜2026-10-30\n时区：Asia/Bangkok。最近完整美国股票现货交易日：2026-10-29（美东周四）。截至曼谷10月30日清晨可验证信息；美国10月30日常规交易尚未开始。\n\n一、市场总览\n（1）美国10月29日周四现货收盘，AP统一口径：标普500跌23.59点（0.30%）至7,720.39；道指跌132.54点（0.25%）至52,342.56；纳指综合跌365.13点（1.37%）至26,184.72；罗素2000涨28.71点（1.02%）至2,859.22。三大指数下跌与小盘上涨同时发生，不能概括为全部美股同步下跌。\n（2）Reuters统计纽交所上涨/下跌家数比1.95:1，纳斯达克2,464家上涨、2,308家下跌；标普500创新高19只、新低6只，纳指新高88只、新低191只。美股交易所成交170.5亿股，接近过去20日170.9亿股均量。多数股票上涨与权重科技股拖累指数并存。\n（3）BEA于10月29日发布2026年第三季度GDP初值，实际GDP折年率增长3.4%，高于第二季度2.2%；加速主要来自投资与政府支出，消费仍增长，出口转弱。强增长是已公布事实，后续仍可能修订。\n（4）BEA公布9月PCE物价指数环比涨0.5%、同比涨3.6%；核心PCE环比涨0.3%、同比涨3.1%。9月个人收入环比增0.2%，名义消费支出增0.5%，实际消费增幅不足0.1%；通胀与实际消费的差异比单看名义消费更值得关注。\n（5）10月29日美债10年期收益率在避险买盘下回落至约4.94%（报道时点）；布伦特原油结算114.88美元/桶、跌0.38%，WTI结算102.00美元/桶、跌0.76%。美元指数12月期货盘中约101.8，属于合约时点报价，不能视为现货美元指数正式收盘。\n\n二、正常时段、盘后与异动原因\n（1）Alphabet在10月28日已发布第三季度业绩后，10月29日常规交易股价重挫12.6%。当日新增事实是正式交易时段完成的跌幅，反映市场对广告增长、AI支出及现金转换率的重新定价；不再把已发布财报写作待公布。\n（2）Eli Lilly公布Q3营收243.97亿美元、同比增长39%，非GAAP每股收益7.48美元；Mounjaro收入107.23亿美元、Zepbound 53.52亿美元。全年营收指引从850亿至870亿美元上调至910亿至920亿美元，股价上涨6.6%；但收购相关IPR&D费用令全年EPS指引调整为35至36美元。\n（3）Caterpillar第三季度利润超过分析师预期，但维持增长目标不变，10月29日股价下跌9.3%。这提示工业股对前瞻指引的敏感度高于当季单一利润超预期。\n（4）Ford第三季度收入超过市场预期，10月29日股价上涨12.4%；汽车制造商的单日反弹应与其盈利指引和现金流持续性一起评估。\n（5）Merck季度盈利超出预期，Keytruda与Gardasil销售提供支撑，股价上涨3.8%；大型制药与科技股出现独立的盈利催化。\n（6）软件股出现业绩后的集中抛售：Fortinet与ServiceNow均跌逾20%，反映企业软件定价对财报和增长指引的高敏感度；不能用半导体走势代表整个科技行业。\n（7）Amazon在10月29日美股收盘后公布Q3正式结果，Reuters记录盘后跌约6.5%；这是盘后反应，不能混入当日纳指现货跌幅。AWS、自由现金流及全年资本开支数据在专题部分集中分析。\n（8）Intel已于10月29日盘后公布Q3收入165亿美元、同比增长21%，非GAAP每股收益0.52美元，但第四季度收入展望150亿至160亿美元；股价盘后出现约20%的下跌反应。应以公司正式指引和后续常规交易确认走势。\n\n三、行业级异动与结构性主题\n（1）费城半导体指数10月29日下跌1.4%，终止此前连续四个交易日上涨；通信服务板块受Alphabet重挫拖累，说明AI产业链内部价格表现已经从存储、设备强势转向更严格的现金回报筛选。\n（2）10月29日医疗与工业板块内部明显分化：Lilly、Merck等制药企业受盈利支持，Caterpillar却因指引缺乏上修而下跌。行业标签不能替代各家公司实际利润、订单和前瞻披露。\n\n四、重大主题专题分析\n（1）Amazon Q3官方财报：营收2019亿美元、同比增12%，AWS收入460亿美元、同比增约39%，集团营业利润281亿美元，营业利润率13.9%创公司高位。AWS营业利润178亿美元、同比高于去年114亿美元；公司称云业务加速，仍须与真实现金创造同时评价。\n（2）Amazon过去12个月经营现金流1683亿美元、同比增29%，但自由现金流由上年同期正148亿美元转为负424亿美元；公司将变化主要归于AI相关固定资产净投入同比增加948亿美元，并维持2026年现金资本开支约2200亿美元预期。高营业利润与负自由现金流并存，投资回收期是关键。\n（3）Amazon给出2026年Q4收入指引2400亿至2470亿美元、营业利润285亿至335亿美元。结合10月29日GDP增长3.4%和9月核心PCE同比3.1%，云需求与名义经济韧性存在支撑，但高利率和资本开支使估值不能仅按AWS收入增速外推。\n\n五、AI、科技与一级市场\n（1）Walmart与仓储自动化公司Symbotic扩大既有合作，Walmart承诺未来数年约60亿美元，新增覆盖25个美国区域配送中心。该合同属于实际物流机器人部署计划，仍需关注Symbotic收入确认、安装成本和客户集中度。\n（2）DoorDash与Instacart已签署170亿美元收购协议，报价为每股65美元、至少75%以现金支付，预计2027年末至2028年上半年交割并待监管批准。相较10月26日仅处于谈判阶段，这是正式签约的新事实；反垄断审批和融资成本仍可能影响交易完成。\n\n六、机构资金与市场观点\n（1）Reuters援引LSEG：截至10月29日已有253家标普500成分公司披露Q3财报，其中81%超出分析师预期，分析师预计整体Q3利润同比增长31.0%。相较前一日样本200家、超预期比例84%，样本扩大后比例回落，不能把高超预期率等同机构资金净流入。\n\n七、政策、监管与全球局势\n（1）Reuters称美国与伊朗恢复接触的外交消息使10月29日原油结算下跌，但也门胡塞组织袭击声明和海湾航运威胁仍在；外交提议、武装组织声明和已确认的实际供给中断必须分别验证，不能把油价单日回落写成冲突解除。\n（2）DoorDash与Instacart合并仍需监管审查，Reuters报道FTC可能关注线上生鲜配送集中度、平台收费和消费者数据使用；这是潜在审查风险，尚未有最终批准或禁止决定。\n\n八、风险雷达\n（1）市场结构风险：10月29日纳指跌1.37%而罗素2000涨1.02%，纳指新低家数191仍多于新高88；若下一交易日小盘广度也转弱且半导体跌势扩大，需提高对风险从少数权重股扩散的警惕。\n（2）AI资金风险：Amazon过去12个月负424亿美元自由现金流与全年约2200亿美元现金资本开支预期提高了债券利差、再融资和投资回收期的观察优先级。若下一期AWS增长不能带动现金流改善，应下调对高杠杆AI算力链的估值容忍度。\n\n九、未来24至72小时事件日历\n（1）10月30日周五美东08:30（曼谷19:30）：美国劳工统计局按官方日历公布第三季度Employment Cost Index。重点观察工资成本增速与10月29日公布的核心PCE通胀是否形成同向压力，公布前不写预测为结果。\n（2）10月30日周五美东中部时间05:30（曼谷17:30）ExxonMobil官方计划公布Q3财报材料，08:30中部时间（曼谷20:30）召开业绩电话会议；核对上游实际产量、炼油利润、自由现金流和回购。\n（3）10月30日周五美股常规交易为10月最后一个交易日；Chevron计划盘前披露Q3业绩，重点关注油价高位对上游盈利与炼厂利润的不同影响。正式数据以公司发布为准。\n（4）11月1日周日美国大部分地区夏令时结束，NIST确认当地02:00拨回01:00。美国股市周末休市，随后常规交易对应曼谷开盘时间将从20:30改为21:30；跨时区观察财报与美股时段须更新时差。\n\n十、今日买入观察\n（1）AMZN：暂列观察等待。最新AWS同比增约39%、营业利润率13.9%支持业务增长，但过去12个月自由现金流负424亿美元、盘后股价跌约6.5%；优先等待10月30日常规交易确认估值与管理层资本开支回报路径。若后续AWS增速放缓且现金流缺口扩大，则降低买入优先级。\n（2）LLY：增长卫星研究，不追涨。Q3营收同比增39%且全年收入指引上调至910亿至920亿美元，股价当日已涨6.6%；但成交价格、研发收购费用及新药竞争仍是风险。若后续销量增长无法抵消实现价格下降或指引再度下修，则暂停加仓研究。\n\n十一、漏检复盘与监控修正\n（1）10月29日出现“权重指数下跌、交易所上涨家数占优、小盘指数上涨”的背离。若只看纳指跌幅会误判市场整体风险偏好；后续必须并列核对权重贡献、交易所广度、罗素2000及纳指新高新低。\n（2）10月29日Amazon和Intel业绩在美国现货收盘后披露。跨时区行情复盘需把当日现货收盘、盘后公司披露和次日常规交易反应分开，否则会把已披露结果错写为待公布，或把盘后跌幅算入现货指数。\n\n十二、结论\n（1）10月29日美股回撤主要集中于大型科技和企业软件，罗素2000及交易所广度并未同步转弱；最新GDP增长3.4%、核心PCE同比3.1%显示经济增长与通胀压力并存。风险判断优先看分化是否扩散，避免用纳指代替全部股票。\n（2）10月30日的行动顺序为先核对ECI与能源巨头财报，再观察Amazon/Intel盘后冲击在正式交易中是否兑现；买入观察维持条件触发，未出现新的现金流或估值验证前不追单日涨跌。\n\n英文及官方主要来源：\nAP 10/29 close: https://apnews.com/article/wall-street-stocks-dow-nasdaq-2c26b0b1bbc3bfab9f3f4b902172f458\nReuters 10/29 close and breadth: https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/\nBEA GDP Q3 advance: https://www.bea.gov/index.php/news/2026/gdp-advance-estimate-3rd-quarter-2026\nBEA September PCE: https://www.bea.gov/news/2026/personal-income-and-outlays-september-2026\nAmazon Q3 issuer IR: https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx\nEli Lilly Q3 issuer IR: https://investor.lilly.com/news-releases/news-release-details/lilly-reports-third-quarter-2026-financial-results-raises-full\nIntel Q3 issuer release: https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-third-quarter-2026-financial-results.html\nReuters oil settlement: https://www.reuters.com/business/energy/us-oil-prices-fall-investors-gauge-risks-mideast-supply-2026-10-29/\nReuters DoorDash/Instacart: https://www.reuters.com/legal/transactional/doordash-strikes-17-billion-deal-us-rival-instacart-bets-grocery-delivery-2026-10-29/\nReuters Walmart/Symbotic: https://www.reuters.com/technology/walmart-commits-6-billion-expand-symbotic-deal-2026-10-29/\nBLS 2026 calendar: https://www.bls.gov/schedule/2026/home.htm\nExxonMobil IR calendar: https://investor.exxonmobil.com/news-events/ir-calendar/detail/20261030-3q-2026-earnings-call\nNIST DST rules: https://www.nist.gov/pml/time-and-frequency-division/popular-links/daylight-saving-time-dst\nAnthropic SEC issuer filings: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/0001628280-26-067168-index.htm\nUSD futures quote: https://www.investing.com/currencies/us-dollar-index",
+  "items": [
+    {
+      "section": 1,
+      "item_number": 1,
+      "text": "美国10月29日周四现货收盘，AP统一口径：标普500跌23.59点（0.30%）至7,720.39；道指跌132.54点（0.25%）至52,342.56；纳指综合跌365.13点（1.37%）至26,184.72；罗素2000涨28.71点（1.02%）至2,859.22。三大指数下跌与小盘上涨同时发生，不能概括为全部美股同步下跌。",
+      "event_key": "stock_20261030_s1_i1"
+    },
+    {
+      "section": 1,
+      "item_number": 2,
+      "text": "Reuters统计纽交所上涨/下跌家数比1.95:1，纳斯达克2,464家上涨、2,308家下跌；标普500创新高19只、新低6只，纳指新高88只、新低191只。美股交易所成交170.5亿股，接近过去20日170.9亿股均量。多数股票上涨与权重科技股拖累指数并存。",
+      "event_key": "stock_20261030_s1_i2"
+    },
+    {
+      "section": 1,
+      "item_number": 3,
+      "text": "BEA于10月29日发布2026年第三季度GDP初值，实际GDP折年率增长3.4%，高于第二季度2.2%；加速主要来自投资与政府支出，消费仍增长，出口转弱。强增长是已公布事实，后续仍可能修订。",
+      "event_key": "stock_20261030_s1_i3"
+    },
+    {
+      "section": 1,
+      "item_number": 4,
+      "text": "BEA公布9月PCE物价指数环比涨0.5%、同比涨3.6%；核心PCE环比涨0.3%、同比涨3.1%。9月个人收入环比增0.2%，名义消费支出增0.5%，实际消费增幅不足0.1%；通胀与实际消费的差异比单看名义消费更值得关注。",
+      "event_key": "stock_20261030_s1_i4"
+    },
+    {
+      "section": 1,
+      "item_number": 5,
+      "text": "10月29日美债10年期收益率在避险买盘下回落至约4.94%（报道时点）；布伦特原油结算114.88美元/桶、跌0.38%，WTI结算102.00美元/桶、跌0.76%。美元指数12月期货盘中约101.8，属于合约时点报价，不能视为现货美元指数正式收盘。",
+      "event_key": "stock_20261030_s1_i5"
+    },
+    {
+      "section": 2,
+      "item_number": 1,
+      "text": "Alphabet在10月28日已发布第三季度业绩后，10月29日常规交易股价重挫12.6%。当日新增事实是正式交易时段完成的跌幅，反映市场对广告增长、AI支出及现金转换率的重新定价；不再把已发布财报写作待公布。",
+      "event_key": "stock_20261030_s2_i1"
+    },
+    {
+      "section": 2,
+      "item_number": 2,
+      "text": "Eli Lilly公布Q3营收243.97亿美元、同比增长39%，非GAAP每股收益7.48美元；Mounjaro收入107.23亿美元、Zepbound 53.52亿美元。全年营收指引从850亿至870亿美元上调至910亿至920亿美元，股价上涨6.6%；但收购相关IPR&D费用令全年EPS指引调整为35至36美元。",
+      "event_key": "stock_20261030_s2_i2"
+    },
+    {
+      "section": 2,
+      "item_number": 3,
+      "text": "Caterpillar第三季度利润超过分析师预期，但维持增长目标不变，10月29日股价下跌9.3%。这提示工业股对前瞻指引的敏感度高于当季单一利润超预期。",
+      "event_key": "stock_20261030_s2_i3"
+    },
+    {
+      "section": 2,
+      "item_number": 4,
+      "text": "Ford第三季度收入超过市场预期，10月29日股价上涨12.4%；汽车制造商的单日反弹应与其盈利指引和现金流持续性一起评估。",
+      "event_key": "stock_20261030_s2_i4"
+    },
+    {
+      "section": 2,
+      "item_number": 5,
+      "text": "Merck季度盈利超出预期，Keytruda与Gardasil销售提供支撑，股价上涨3.8%；大型制药与科技股出现独立的盈利催化。",
+      "event_key": "stock_20261030_s2_i5"
+    },
+    {
+      "section": 2,
+      "item_number": 6,
+      "text": "软件股出现业绩后的集中抛售：Fortinet与ServiceNow均跌逾20%，反映企业软件定价对财报和增长指引的高敏感度；不能用半导体走势代表整个科技行业。",
+      "event_key": "stock_20261030_s2_i6"
+    },
+    {
+      "section": 2,
+      "item_number": 7,
+      "text": "Amazon在10月29日美股收盘后公布Q3正式结果，Reuters记录盘后跌约6.5%；这是盘后反应，不能混入当日纳指现货跌幅。AWS、自由现金流及全年资本开支数据在专题部分集中分析。",
+      "event_key": "stock_20261030_s2_i7"
+    },
+    {
+      "section": 2,
+      "item_number": 8,
+      "text": "Intel已于10月29日盘后公布Q3收入165亿美元、同比增长21%，非GAAP每股收益0.52美元，但第四季度收入展望150亿至160亿美元；股价盘后出现约20%的下跌反应。应以公司正式指引和后续常规交易确认走势。",
+      "event_key": "stock_20261030_s2_i8"
+    },
+    {
+      "section": 3,
+      "item_number": 1,
+      "text": "费城半导体指数10月29日下跌1.4%，终止此前连续四个交易日上涨；通信服务板块受Alphabet重挫拖累，说明AI产业链内部价格表现已经从存储、设备强势转向更严格的现金回报筛选。",
+      "event_key": "stock_20261030_s3_i1"
+    },
+    {
+      "section": 3,
+      "item_number": 2,
+      "text": "10月29日医疗与工业板块内部明显分化：Lilly、Merck等制药企业受盈利支持，Caterpillar却因指引缺乏上修而下跌。行业标签不能替代各家公司实际利润、订单和前瞻披露。",
+      "event_key": "stock_20261030_s3_i2"
+    },
+    {
+      "section": 4,
+      "item_number": 1,
+      "text": "Amazon Q3官方财报：营收2019亿美元、同比增12%，AWS收入460亿美元、同比增约39%，集团营业利润281亿美元，营业利润率13.9%创公司高位。AWS营业利润178亿美元、同比高于去年114亿美元；公司称云业务加速，仍须与真实现金创造同时评价。",
+      "event_key": "stock_20261030_s4_i1"
+    },
+    {
+      "section": 4,
+      "item_number": 2,
+      "text": "Amazon过去12个月经营现金流1683亿美元、同比增29%，但自由现金流由上年同期正148亿美元转为负424亿美元；公司将变化主要归于AI相关固定资产净投入同比增加948亿美元，并维持2026年现金资本开支约2200亿美元预期。高营业利润与负自由现金流并存，投资回收期是关键。",
+      "event_key": "stock_20261030_s4_i2"
+    },
+    {
+      "section": 4,
+      "item_number": 3,
+      "text": "Amazon给出2026年Q4收入指引2400亿至2470亿美元、营业利润285亿至335亿美元。结合10月29日GDP增长3.4%和9月核心PCE同比3.1%，云需求与名义经济韧性存在支撑，但高利率和资本开支使估值不能仅按AWS收入增速外推。",
+      "event_key": "stock_20261030_s4_i3"
+    },
+    {
+      "section": 5,
+      "item_number": 1,
+      "text": "Walmart与仓储自动化公司Symbotic扩大既有合作，Walmart承诺未来数年约60亿美元，新增覆盖25个美国区域配送中心。该合同属于实际物流机器人部署计划，仍需关注Symbotic收入确认、安装成本和客户集中度。",
+      "event_key": "stock_20261030_s5_i1"
+    },
+    {
+      "section": 5,
+      "item_number": 2,
+      "text": "DoorDash与Instacart已签署170亿美元收购协议，报价为每股65美元、至少75%以现金支付，预计2027年末至2028年上半年交割并待监管批准。相较10月26日仅处于谈判阶段，这是正式签约的新事实；反垄断审批和融资成本仍可能影响交易完成。",
+      "event_key": "stock_20261030_s5_i2"
+    },
+    {
+      "section": 6,
+      "item_number": 1,
+      "text": "Reuters援引LSEG：截至10月29日已有253家标普500成分公司披露Q3财报，其中81%超出分析师预期，分析师预计整体Q3利润同比增长31.0%。相较前一日样本200家、超预期比例84%，样本扩大后比例回落，不能把高超预期率等同机构资金净流入。",
+      "event_key": "stock_20261030_s6_i1"
+    },
+    {
+      "section": 7,
+      "item_number": 1,
+      "text": "Reuters称美国与伊朗恢复接触的外交消息使10月29日原油结算下跌，但也门胡塞组织袭击声明和海湾航运威胁仍在；外交提议、武装组织声明和已确认的实际供给中断必须分别验证，不能把油价单日回落写成冲突解除。",
+      "event_key": "stock_20261030_s7_i1"
+    },
+    {
+      "section": 7,
+      "item_number": 2,
+      "text": "DoorDash与Instacart合并仍需监管审查，Reuters报道FTC可能关注线上生鲜配送集中度、平台收费和消费者数据使用；这是潜在审查风险，尚未有最终批准或禁止决定。",
+      "event_key": "stock_20261030_s7_i2"
+    },
+    {
+      "section": 8,
+      "item_number": 1,
+      "text": "市场结构风险：10月29日纳指跌1.37%而罗素2000涨1.02%，纳指新低家数191仍多于新高88；若下一交易日小盘广度也转弱且半导体跌势扩大，需提高对风险从少数权重股扩散的警惕。",
+      "event_key": "stock_20261030_s8_i1"
+    },
+    {
+      "section": 8,
+      "item_number": 2,
+      "text": "AI资金风险：Amazon过去12个月负424亿美元自由现金流与全年约2200亿美元现金资本开支预期提高了债券利差、再融资和投资回收期的观察优先级。若下一期AWS增长不能带动现金流改善，应下调对高杠杆AI算力链的估值容忍度。",
+      "event_key": "stock_20261030_s8_i2"
+    },
+    {
+      "section": 9,
+      "item_number": 1,
+      "text": "10月30日周五美东08:30（曼谷19:30）：美国劳工统计局按官方日历公布第三季度Employment Cost Index。重点观察工资成本增速与10月29日公布的核心PCE通胀是否形成同向压力，公布前不写预测为结果。",
+      "event_key": "stock_20261030_s9_i1"
+    },
+    {
+      "section": 9,
+      "item_number": 2,
+      "text": "10月30日周五美东中部时间05:30（曼谷17:30）ExxonMobil官方计划公布Q3财报材料，08:30中部时间（曼谷20:30）召开业绩电话会议；核对上游实际产量、炼油利润、自由现金流和回购。",
+      "event_key": "stock_20261030_s9_i2"
+    },
+    {
+      "section": 9,
+      "item_number": 3,
+      "text": "10月30日周五美股常规交易为10月最后一个交易日；Chevron计划盘前披露Q3业绩，重点关注油价高位对上游盈利与炼厂利润的不同影响。正式数据以公司发布为准。",
+      "event_key": "stock_20261030_s9_i3"
+    },
+    {
+      "section": 9,
+      "item_number": 4,
+      "text": "11月1日周日美国大部分地区夏令时结束，NIST确认当地02:00拨回01:00。美国股市周末休市，随后常规交易对应曼谷开盘时间将从20:30改为21:30；跨时区观察财报与美股时段须更新时差。",
+      "event_key": "stock_20261030_s9_i4"
+    },
+    {
+      "section": 10,
+      "item_number": 1,
+      "text": "AMZN：暂列观察等待。最新AWS同比增约39%、营业利润率13.9%支持业务增长，但过去12个月自由现金流负424亿美元、盘后股价跌约6.5%；优先等待10月30日常规交易确认估值与管理层资本开支回报路径。若后续AWS增速放缓且现金流缺口扩大，则降低买入优先级。",
+      "event_key": "stock_20261030_s10_i1"
+    },
+    {
+      "section": 10,
+      "item_number": 2,
+      "text": "LLY：增长卫星研究，不追涨。Q3营收同比增39%且全年收入指引上调至910亿至920亿美元，股价当日已涨6.6%；但成交价格、研发收购费用及新药竞争仍是风险。若后续销量增长无法抵消实现价格下降或指引再度下修，则暂停加仓研究。",
+      "event_key": "stock_20261030_s10_i2"
+    },
+    {
+      "section": 11,
+      "item_number": 1,
+      "text": "10月29日出现“权重指数下跌、交易所上涨家数占优、小盘指数上涨”的背离。若只看纳指跌幅会误判市场整体风险偏好；后续必须并列核对权重贡献、交易所广度、罗素2000及纳指新高新低。",
+      "event_key": "stock_20261030_s11_i1"
+    },
+    {
+      "section": 11,
+      "item_number": 2,
+      "text": "10月29日Amazon和Intel业绩在美国现货收盘后披露。跨时区行情复盘需把当日现货收盘、盘后公司披露和次日常规交易反应分开，否则会把已披露结果错写为待公布，或把盘后跌幅算入现货指数。",
+      "event_key": "stock_20261030_s11_i2"
+    },
+    {
+      "section": 12,
+      "item_number": 1,
+      "text": "10月29日美股回撤主要集中于大型科技和企业软件，罗素2000及交易所广度并未同步转弱；最新GDP增长3.4%、核心PCE同比3.1%显示经济增长与通胀压力并存。风险判断优先看分化是否扩散，避免用纳指代替全部股票。",
+      "event_key": "stock_20261030_s12_i1"
+    },
+    {
+      "section": 12,
+      "item_number": 2,
+      "text": "10月30日的行动顺序为先核对ECI与能源巨头财报，再观察Amazon/Intel盘后冲击在正式交易中是否兑现；买入观察维持条件触发，未出现新的现金流或估值验证前不追单日涨跌。",
+      "event_key": "stock_20261030_s12_i2"
+    }
+  ],
+  "events": [
+    {
+      "event_key": "stock_20261030_s1_i1",
+      "family_key": "us_cash_market_index_close",
+      "material_version": "2026-10-30:ROUTINE_MARKET:2026-10-29",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 1,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://apnews.com/article/wall-street-stocks-dow-nasdaq-2c26b0b1bbc3bfab9f3f4b902172f458",
+      "source": "AP",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-29"
+    },
+    {
+      "event_key": "stock_20261030_s1_i2",
+      "family_key": "us_cash_market_breadth",
+      "material_version": "2026-10-30:ROUTINE_MARKET:2026-10-29",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 1,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-29"
+    },
+    {
+      "event_key": "stock_20261030_s1_i3",
+      "family_key": "us_gdp_q3_2026_advance",
+      "material_version": "2026-10-30:MACRO_RELEASE:2026-10-29",
+      "kind": "MACRO_RELEASE",
+      "primary_section": 1,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.bea.gov/index.php/news/2026/gdp-advance-estimate-3rd-quarter-2026",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s1_i4",
+      "family_key": "us_pce_2026_09_release",
+      "material_version": "2026-10-30:MACRO_RELEASE:2026-10-29",
+      "kind": "MACRO_RELEASE",
+      "primary_section": 1,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.bea.gov/news/2026/personal-income-and-outlays-september-2026",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s1_i5",
+      "family_key": "us_cross_asset_quotes",
+      "material_version": "2026-10-30:ROUTINE_QUOTE:2026-10-29",
+      "kind": "ROUTINE_QUOTE",
+      "primary_section": 1,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/business/energy/us-oil-prices-fall-investors-gauge-risks-mideast-supply-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-29"
+    },
+    {
+      "event_key": "stock_20261030_s2_i1",
+      "family_key": "alphabet_2026q3_price_reaction",
+      "material_version": "2026-10-30:ROUTINE_QUOTE:2026-10-29",
+      "kind": "ROUTINE_QUOTE",
+      "primary_section": 2,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-29"
+    },
+    {
+      "event_key": "stock_20261030_s2_i2",
+      "family_key": "lilly_2026q3_results",
+      "material_version": "2026-10-30:EARNINGS:2026-10-29",
+      "kind": "EARNINGS",
+      "primary_section": 2,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://investor.lilly.com/news-releases/news-release-details/lilly-reports-third-quarter-2026-financial-results-raises-full",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s2_i3",
+      "family_key": "caterpillar_2026q3_reaction",
+      "material_version": "2026-10-30:EARNINGS:2026-10-29",
+      "kind": "EARNINGS",
+      "primary_section": 2,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s2_i4",
+      "family_key": "ford_2026q3_reaction",
+      "material_version": "2026-10-30:EARNINGS:2026-10-29",
+      "kind": "EARNINGS",
+      "primary_section": 2,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s2_i5",
+      "family_key": "merck_2026q3_reaction",
+      "material_version": "2026-10-30:EARNINGS:2026-10-29",
+      "kind": "EARNINGS",
+      "primary_section": 2,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s2_i6",
+      "family_key": "enterprise_software_2026_10_29_selloff",
+      "material_version": "2026-10-30:SECTOR_REACTION:2026-10-29",
+      "kind": "SECTOR_REACTION",
+      "primary_section": 2,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s2_i7",
+      "family_key": "amazon_2026q3_afterhours_reaction",
+      "material_version": "2026-10-30:ROUTINE_QUOTE:2026-10-29",
+      "kind": "ROUTINE_QUOTE",
+      "primary_section": 2,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-29"
+    },
+    {
+      "event_key": "stock_20261030_s2_i8",
+      "family_key": "intel_2026q3_results",
+      "material_version": "2026-10-30:EARNINGS:2026-10-29",
+      "kind": "EARNINGS",
+      "primary_section": 2,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-third-quarter-2026-financial-results.html",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s3_i1",
+      "family_key": "sox_sector_2026_10_29",
+      "material_version": "2026-10-30:ROUTINE_MARKET:2026-10-29",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 3,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-29"
+    },
+    {
+      "event_key": "stock_20261030_s3_i2",
+      "family_key": "sector_dispersion_2026_10_29",
+      "material_version": "2026-10-30:SECTOR_SYNTHESIS:2026-10-29",
+      "kind": "SECTOR_SYNTHESIS",
+      "primary_section": 3,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s4_i1",
+      "family_key": "amazon_2026q3_operating_result",
+      "material_version": "2026-10-30:EARNINGS:2026-10-29",
+      "kind": "EARNINGS",
+      "primary_section": 4,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s4_i2",
+      "family_key": "amazon_2026q3_cash_conversion",
+      "material_version": "2026-10-30:EARNINGS_CASH:2026-10-29",
+      "kind": "EARNINGS_CASH",
+      "primary_section": 4,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s4_i3",
+      "family_key": "amazon_2026q4_guidance_macro",
+      "material_version": "2026-10-30:EARNINGS_GUIDANCE:2026-10-29",
+      "kind": "EARNINGS_GUIDANCE",
+      "primary_section": 4,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s5_i1",
+      "family_key": "walmart_symbotic_2026_expansion",
+      "material_version": "2026-10-30:CONTRACT:2026-10-29",
+      "kind": "CONTRACT",
+      "primary_section": 5,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/technology/walmart-commits-6-billion-expand-symbotic-deal-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s5_i2",
+      "family_key": "doordash_instacart_2026",
+      "material_version": "2026-10-30:MATERIAL_DELTA:2026-10-29",
+      "kind": "MATERIAL_DELTA",
+      "primary_section": 5,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/legal/transactional/doordash-strikes-17-billion-deal-us-rival-instacart-bets-grocery-delivery-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "MATERIAL_DELTA",
+      "novelty_proof": {
+        "previous_material_version": "talks_2026-10-26",
+        "changed_field": "transaction_status",
+        "old_value": "advanced talks",
+        "new_value": "已签署170亿美元收购协议",
+        "evidence_url": "https://www.reuters.com/legal/transactional/doordash-strikes-17-billion-deal-us-rival-instacart-bets-grocery-delivery-2026-10-29/",
+        "evidence_published_at": "2026-10-29"
+      }
+    },
+    {
+      "event_key": "stock_20261030_s6_i1",
+      "family_key": "sp500_q3_earnings_season_sample",
+      "material_version": "2026-10-30:ROUTINE_MARKET:2026-10-29",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 6,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-29"
+    },
+    {
+      "event_key": "stock_20261030_s7_i1",
+      "family_key": "middle_east_energy_diplomacy_2026_10_29",
+      "material_version": "2026-10-30:GEOPOLITICAL_DELTA:2026-10-29",
+      "kind": "GEOPOLITICAL_DELTA",
+      "primary_section": 7,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/business/energy/us-oil-prices-fall-investors-gauge-risks-mideast-supply-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s7_i2",
+      "family_key": "doordash_instacart_regulatory_2026_10_29",
+      "material_version": "2026-10-30:REGULATORY_RISK:2026-10-29",
+      "kind": "REGULATORY_RISK",
+      "primary_section": 7,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/legal/litigation/doordashs-instacart-deal-may-draw-ftc-scrutiny-amid-cost-of-living-concerns-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s8_i1",
+      "family_key": "market_breadth_risk_checkpoint_2026_10_29",
+      "material_version": "2026-10-30:RISK_CHECKPOINT:2026-10-29",
+      "kind": "RISK_CHECKPOINT",
+      "primary_section": 8,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s8_i2",
+      "family_key": "amazon_cashflow_risk_checkpoint_2026_10_29",
+      "material_version": "2026-10-30:RISK_CHECKPOINT:2026-10-29",
+      "kind": "RISK_CHECKPOINT",
+      "primary_section": 8,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s9_i1",
+      "family_key": "calendar_eci_2026q3",
+      "material_version": "2026-10-30:CALENDAR:2026-10-01",
+      "kind": "CALENDAR",
+      "primary_section": 9,
+      "first_published_at": "2026-10-01",
+      "published_at": "2026-10-01",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.bls.gov/schedule/2026/home.htm",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW",
+      "calendar_date": "2026-10-30"
+    },
+    {
+      "event_key": "stock_20261030_s9_i2",
+      "family_key": "calendar_xom_q3_2026",
+      "material_version": "2026-10-30:CALENDAR:2026-10-16",
+      "kind": "CALENDAR",
+      "primary_section": 9,
+      "first_published_at": "2026-10-16",
+      "published_at": "2026-10-16",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://investor.exxonmobil.com/news-events/ir-calendar/detail/20261030-3q-2026-earnings-call",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW",
+      "calendar_date": "2026-10-30"
+    },
+    {
+      "event_key": "stock_20261030_s9_i3",
+      "family_key": "calendar_cvx_q3_2026",
+      "material_version": "2026-10-30:CALENDAR:2026-10-29",
+      "kind": "CALENDAR",
+      "primary_section": 9,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.marketbeat.com/earnings/reports/2026-10-30-chevron-co-stock/",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW",
+      "calendar_date": "2026-10-30"
+    },
+    {
+      "event_key": "stock_20261030_s9_i4",
+      "family_key": "calendar_dst_2026_11_01",
+      "material_version": "2026-10-30:CALENDAR:2026-02-09",
+      "kind": "CALENDAR",
+      "primary_section": 9,
+      "first_published_at": "2026-02-09",
+      "published_at": "2026-02-09",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.nist.gov/pml/time-and-frequency-division/popular-links/daylight-saving-time-dst",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW",
+      "calendar_date": "2026-11-01"
+    },
+    {
+      "event_key": "stock_20261030_s10_i1",
+      "family_key": "buywatch_amzn_2026_10_30",
+      "material_version": "2026-10-30:BUY_WATCH:2026-10-29",
+      "kind": "BUY_WATCH",
+      "primary_section": 10,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s10_i2",
+      "family_key": "buywatch_lly_2026_10_30",
+      "material_version": "2026-10-30:BUY_WATCH:2026-10-29",
+      "kind": "BUY_WATCH",
+      "primary_section": 10,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://investor.lilly.com/news-releases/news-release-details/lilly-reports-third-quarter-2026-financial-results-raises-full",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s11_i1",
+      "family_key": "blindspot_index_vs_breadth_2026_10_29",
+      "material_version": "2026-10-30:MODEL_BLINDSPOT:2026-10-29",
+      "kind": "MODEL_BLINDSPOT",
+      "primary_section": 11,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s11_i2",
+      "family_key": "blindspot_afterhours_release_2026_10_29",
+      "material_version": "2026-10-30:MODEL_BLINDSPOT:2026-10-29",
+      "kind": "MODEL_BLINDSPOT",
+      "primary_section": 11,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s12_i1",
+      "family_key": "decision_summary_2026_10_30",
+      "material_version": "2026-10-30:DAILY_SYNTHESIS:2026-10-29",
+      "kind": "DAILY_SYNTHESIS",
+      "primary_section": 12,
+      "first_published_at": "2026-10-29",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261030_s12_i2",
+      "family_key": "action_plan_2026_10_30",
+      "material_version": "2026-10-30:DAILY_ACTION:2026-10-30",
+      "kind": "DAILY_ACTION",
+      "primary_section": 12,
+      "first_published_at": "2026-10-30",
+      "published_at": "2026-10-30",
+      "observed_at": "2026-10-30T05:35:23+07:00",
+      "source_url": "https://www.bls.gov/schedule/2026/home.htm",
+      "source": "OFFICIAL_OR_MARKET",
+      "novelty_status": "NEW"
+    }
+  ],
+  "previous_events": [
+    {
+      "family_key": "us_cash_market_index_close",
+      "material_version": "2026-10-27:close",
+      "observation_date": "2026-10-27"
+    },
+    {
+      "family_key": "us_cash_market_breadth",
+      "material_version": "2026-10-27:breadth",
+      "observation_date": "2026-10-27"
+    },
+    {
+      "family_key": "us_cash_market_volume",
+      "material_version": "2026-10-27:volume",
+      "observation_date": "2026-10-27"
+    },
+    {
+      "family_key": "us_cross_asset_quotes",
+      "material_version": "2026-10-27:quote",
+      "observation_date": "2026-10-27"
+    },
+    {
+      "family_key": "msft_fy27_q1_earnings",
+      "material_version": "2026-10-27:scheduled"
+    },
+    {
+      "family_key": "alphabet_q3_2026_earnings",
+      "material_version": "2026-10-27:scheduled"
+    },
+    {
+      "family_key": "fomc_20261028_decision",
+      "material_version": "2026-10-27:pending"
+    },
+    {
+      "family_key": "brent_wti_quote",
+      "material_version": "2026-10-27:quote",
+      "observation_date": "2026-10-27"
+    },
+    {
+      "event_key": "stock_20261029_s1_i1",
+      "family_key": "us_cash_market_index_close",
+      "material_version": "2026-10-28:routine_market",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 1,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.ctinsider.com/business/article/how-major-us-stock-indexes-fared-wednesday-22499204.php",
+      "source": "AP",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s1_i2",
+      "family_key": "us_cash_market_breadth",
+      "material_version": "2026-10-28:routine_market",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 1,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s1_i3",
+      "family_key": "us_cash_market_volume",
+      "material_version": "2026-10-28:routine_market",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 1,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s1_i4",
+      "family_key": "us_cross_asset_quotes",
+      "material_version": "2026-10-28:routine_quote",
+      "kind": "ROUTINE_QUOTE",
+      "primary_section": 1,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/dollar-holds-gains-ahead-fed-policy-signal-rbnz-decision-2026-10-28/",
+      "source": "FX",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s2_i1",
+      "family_key": "vertiv_q3_2026_results",
+      "material_version": "2026-10-28:earnings_result",
+      "kind": "EARNINGS_RESULT",
+      "primary_section": 2,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.prnewswire.com/news-releases/vertiv-reports-strong-third-quarter-2026-with-net-sales-growth-of-61-organic-orders-growth-over-100-and-diluted-eps-growth-of-91-adjusted-diluted-eps-growth-of-78-raises-full-year-2026-guidance-across-all-key-metrics-302921936.html",
+      "source": "VRT",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s2_i2",
+      "family_key": "micron_skhynix_q3_2026_memory",
+      "material_version": "2026-10-28:earnings_reaction",
+      "kind": "EARNINGS_REACTION",
+      "primary_section": 2,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s2_i3",
+      "family_key": "boston_scientific_q3_2026_guidance",
+      "material_version": "2026-10-28:earnings_reaction",
+      "kind": "EARNINGS_REACTION",
+      "primary_section": 2,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s2_i4",
+      "family_key": "robinhood_q3_2026_profit",
+      "material_version": "2026-10-28:earnings_reaction",
+      "kind": "EARNINGS_REACTION",
+      "primary_section": 2,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s2_i5",
+      "family_key": "msft_googl_afterhours_20261028",
+      "material_version": "2026-10-28:routine_market",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 2,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s3_i1",
+      "family_key": "phlx_sox",
+      "material_version": "2026-10-28:routine_market",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 3,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s3_i2",
+      "family_key": "us_sector_divergence",
+      "material_version": "2026-10-28:routine_market",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 3,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s3_i3",
+      "family_key": "brent_wti_quote",
+      "material_version": "2026-10-28:routine_quote",
+      "kind": "ROUTINE_QUOTE",
+      "primary_section": 3,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/oil-prices-rise-after-attack-saudi-arabian-refinery-reignites-supply-concerns-2026-10-28/",
+      "source": "OIL",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s4_i1",
+      "family_key": "msft_fy27_q1_earnings",
+      "material_version": "2026-10-28:earnings_result",
+      "kind": "EARNINGS_RESULT",
+      "primary_section": 4,
+      "first_published_at": "2026-10-27",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.microsoft.com/en-us/investor/earnings/fy-2027-q1/press-release-webcast",
+      "source": "MSFT",
+      "novelty_status": "MATERIAL_DELTA",
+      "novelty_proof": {
+        "previous_material_version": "2026-10-27:scheduled",
+        "changed_field": "quarterly_earnings_released",
+        "old_value": "尚未公布财报",
+        "new_value": "营收923亿美元",
+        "evidence_url": "https://www.microsoft.com/en-us/investor/earnings/fy-2027-q1/press-release-webcast",
+        "evidence_published_at": "2026-10-28"
+      }
+    },
+    {
+      "event_key": "stock_20261029_s4_i2",
+      "family_key": "alphabet_q3_2026_earnings",
+      "material_version": "2026-10-28:earnings_result",
+      "kind": "EARNINGS_RESULT",
+      "primary_section": 4,
+      "first_published_at": "2026-10-27",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/alphabets-google-cloud-unit-beats-quarterly-revenue-estimates-steady-ai-demand-2026-10-28/",
+      "source": "GOOGL",
+      "novelty_status": "MATERIAL_DELTA",
+      "novelty_proof": {
+        "previous_material_version": "2026-10-27:scheduled",
+        "changed_field": "quarterly_earnings_released",
+        "old_value": "尚未公布财报",
+        "new_value": "自由现金流为负90.7亿美元",
+        "evidence_url": "https://www.reuters.com/business/alphabets-google-cloud-unit-beats-quarterly-revenue-estimates-steady-ai-demand-2026-10-28/",
+        "evidence_published_at": "2026-10-28"
+      }
+    },
+    {
+      "event_key": "stock_20261029_s4_i3",
+      "family_key": "hyperscaler_cashflow_spread_2026q3",
+      "material_version": "2026-10-28:thematic_synthesis",
+      "kind": "THEMATIC_SYNTHESIS",
+      "primary_section": 4,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/retail-consumer/microsoft-beats-quarterly-cloud-revenue-estimates-2026-10-28/",
+      "source": "MSFT_R",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s5_i1",
+      "family_key": "oracle_investor_day_20261028",
+      "material_version": "2026-10-28:official_guidance",
+      "kind": "OFFICIAL_GUIDANCE",
+      "primary_section": 5,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://investor.oracle.com/investor-news/news-details/2026/Oracle-Investor-Day-2026-Accelerating-Value-Creation/default.aspx",
+      "source": "ORCL",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s5_i2",
+      "family_key": "google_gemini4carbon_announcement",
+      "material_version": "2026-10-28:issuer_claim",
+      "kind": "ISSUER_CLAIM",
+      "primary_section": 5,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/alphabets-google-cloud-unit-beats-quarterly-revenue-estimates-steady-ai-demand-2026-10-28/",
+      "source": "GOOGL",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s6_i1",
+      "family_key": "sp500_q3_earnings_season",
+      "material_version": "2026-10-28:routine_quote",
+      "kind": "ROUTINE_QUOTE",
+      "primary_section": 6,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s6_i2",
+      "family_key": "fedwatch_dec2026_hike_odds",
+      "material_version": "2026-10-28:routine_quote",
+      "kind": "ROUTINE_QUOTE",
+      "primary_section": 6,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s6_i3",
+      "family_key": "msft_credit_quality_comparison_20261028",
+      "material_version": "2026-10-28:new_credit_signal",
+      "kind": "NEW_CREDIT_SIGNAL",
+      "primary_section": 6,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/retail-consumer/microsoft-beats-quarterly-cloud-revenue-estimates-2026-10-28/",
+      "source": "MSFT_R",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s7_i1",
+      "family_key": "fomc_20261028_decision",
+      "material_version": "2026-10-28:policy_decision",
+      "kind": "POLICY_DECISION",
+      "primary_section": 7,
+      "first_published_at": "2026-10-27",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+      "source": "FED",
+      "novelty_status": "MATERIAL_DELTA",
+      "novelty_proof": {
+        "previous_material_version": "2026-10-27:pending",
+        "changed_field": "policy_decision_released",
+        "old_value": "预期维持利率不变",
+        "new_value": "维持联邦基金目标区间3.75%至4.00%",
+        "evidence_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+        "evidence_published_at": "2026-10-28"
+      }
+    },
+    {
+      "event_key": "stock_20261029_s7_i2",
+      "family_key": "nvidia_huggingface_doj_inquiry_20261028",
+      "material_version": "2026-10-28:regulatory_report",
+      "kind": "REGULATORY_REPORT",
+      "primary_section": 7,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/us-doj-is-inquiring-about-nvidias-purchase-hugging-face-sources-say-2026-10-28/",
+      "source": "DOJ",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s7_i3",
+      "family_key": "saudi_refinery_attack_claim_20261028",
+      "material_version": "2026-10-28:geopolitical_claim",
+      "kind": "GEOPOLITICAL_CLAIM",
+      "primary_section": 7,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/oil-prices-rise-after-attack-saudi-arabian-refinery-reignites-supply-concerns-2026-10-28/",
+      "source": "OIL",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s8_i1",
+      "family_key": "alphabet_fcf_followthrough_risk_20261028",
+      "material_version": "2026-10-28:decision_risk",
+      "kind": "DECISION_RISK",
+      "primary_section": 8,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/alphabets-google-cloud-unit-beats-quarterly-revenue-estimates-steady-ai-demand-2026-10-28/",
+      "source": "GOOGL",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s8_i2",
+      "family_key": "msft_capex_delay_capacity_risk_20261028",
+      "material_version": "2026-10-28:decision_risk",
+      "kind": "DECISION_RISK",
+      "primary_section": 8,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/retail-consumer/microsoft-beats-quarterly-cloud-revenue-estimates-2026-10-28/",
+      "source": "MSFT_R",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s8_i3",
+      "family_key": "energy_inflation_next_data_risk_20261028",
+      "material_version": "2026-10-28:decision_risk",
+      "kind": "DECISION_RISK",
+      "primary_section": 8,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/oil-prices-rise-after-attack-saudi-arabian-refinery-reignites-supply-concerns-2026-10-28/",
+      "source": "OIL",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s8_i4",
+      "family_key": "breadth_vs_index_risk_20261028",
+      "material_version": "2026-10-28:routine_market",
+      "kind": "ROUTINE_MARKET",
+      "primary_section": 8,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "stock_20261029_s9_i1",
+      "family_key": "bea_20261029_gdp_pce",
+      "material_version": "2026-10-29:calendar",
+      "kind": "CALENDAR",
+      "primary_section": 9,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-29",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.bea.gov/news/schedule",
+      "source": "BEA",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "calendar_date": "2026-10-29",
+      "source_published_at_status": "NOT_VERIFIED",
+      "published_at_basis": "calendar_event_date"
+    },
+    {
+      "event_key": "stock_20261029_s9_i2",
+      "family_key": "lilly_q3_2026_release",
+      "material_version": "2026-10-29:calendar",
+      "kind": "CALENDAR",
+      "primary_section": 9,
+      "first_published_at": "2026-10-15",
+      "published_at": "2026-10-15",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://investor.lilly.com/news-releases/news-release-details/lilly-confirms-date-and-conference-call-third-quarter-2026",
+      "source": "LLY",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "calendar_date": "2026-10-29",
+      "source_published_at_status": "VERIFIED"
+    },
+    {
+      "event_key": "stock_20261029_s9_i3",
+      "family_key": "amazon_q3_2026_release",
+      "material_version": "2026-10-29:calendar",
+      "kind": "CALENDAR",
+      "primary_section": 9,
+      "first_published_at": "2026-10-15",
+      "published_at": "2026-10-15",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.businesswire.com/news/home/20261015676873/en/Amazon.com-to-Webcast-Third-Quarter-2026-Financial-Results-Conference-Call",
+      "source": "AMZN",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "calendar_date": "2026-10-29",
+      "source_published_at_status": "VERIFIED"
+    },
+    {
+      "event_key": "stock_20261029_s9_i4",
+      "family_key": "us_month_end_20261030",
+      "material_version": "2026-10-30:calendar",
+      "kind": "CALENDAR",
+      "primary_section": 9,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-30",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.federalreserve.gov/newsevents.htm",
+      "source": "FEDCAL",
+      "novelty_status": "ROUTINE_DATED_FACT",
+      "calendar_date": "2026-10-30",
+      "source_published_at_status": "NOT_VERIFIED",
+      "published_at_basis": "calendar_event_date"
+    },
+    {
+      "event_key": "stock_20261029_s10_i1",
+      "family_key": "msft_post_earnings_buywatch_20261029",
+      "material_version": "2026-10-28:buy_watch",
+      "kind": "BUY_WATCH",
+      "primary_section": 10,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.microsoft.com/en-us/investor/earnings/fy-2027-q1/press-release-webcast",
+      "source": "MSFT",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s10_i2",
+      "family_key": "vertiv_post_earnings_buywatch_20261029",
+      "material_version": "2026-10-28:buy_watch",
+      "kind": "BUY_WATCH",
+      "primary_section": 10,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.prnewswire.com/news-releases/vertiv-reports-strong-third-quarter-2026-with-net-sales-growth-of-61-organic-orders-growth-over-100-and-diluted-eps-growth-of-91-adjusted-diluted-eps-growth-of-78-raises-full-year-2026-guidance-across-all-key-metrics-302921936.html",
+      "source": "VRT",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s10_i3",
+      "family_key": "googl_post_earnings_buywatch_20261029",
+      "material_version": "2026-10-28:buy_watch",
+      "kind": "BUY_WATCH",
+      "primary_section": 10,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/business/alphabets-google-cloud-unit-beats-quarterly-revenue-estimates-steady-ai-demand-2026-10-28/",
+      "source": "GOOGL",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s10_i4",
+      "family_key": "orcl_fy29_fcf_buywatch_20261029",
+      "material_version": "2026-10-28:buy_watch",
+      "kind": "BUY_WATCH",
+      "primary_section": 10,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://investor.oracle.com/investor-news/news-details/2026/Oracle-Investor-Day-2026-Accelerating-Value-Creation/default.aspx",
+      "source": "ORCL",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s11_i1",
+      "family_key": "market_close_vs_afterhours_model_gap_20261028",
+      "material_version": "2026-10-28:market_blindspot",
+      "kind": "MARKET_BLINDSPOT",
+      "primary_section": 11,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s11_i2",
+      "family_key": "fed_intraday_curve_model_gap_20261028",
+      "material_version": "2026-10-28:market_blindspot",
+      "kind": "MARKET_BLINDSPOT",
+      "primary_section": 11,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.ctinsider.com/business/article/how-major-us-stock-indexes-fared-wednesday-22499204.php",
+      "source": "AP",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s12_i1",
+      "family_key": "stock_daily_20261029_regime_conclusion",
+      "material_version": "2026-10-28:daily_synthesis",
+      "kind": "DAILY_SYNTHESIS",
+      "primary_section": 12,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "source": "REUTERS",
+      "novelty_status": "NEW"
+    },
+    {
+      "event_key": "stock_20261029_s12_i2",
+      "family_key": "stock_daily_20261029_action_conclusion",
+      "material_version": "2026-10-28:daily_synthesis",
+      "kind": "DAILY_SYNTHESIS",
+      "primary_section": 12,
+      "first_published_at": "2026-10-28",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-10-29T05:42:04+07:00",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+      "source": "FED",
+      "novelty_status": "NEW"
+    },
+    {
+      "family_key": "doordash_instacart_2026",
+      "material_version": "talks_2026-10-26",
+      "observation_date": "2026-10-26",
+      "source_url": "https://www.reuters.com/business/doordash-talks-buy-instacart-roughly-17-billion-deal-source-says-2026-10-26/"
+    }
+  ],
+  "previous_days_checked": [
+    "2026-10-23",
+    "2026-10-24",
+    "2026-10-25",
+    "2026-10-26",
+    "2026-10-27",
+    "2026-10-28",
+    "2026-10-29"
+  ],
+  "previous_sent_ids": [
+    "1a1671833f467233",
+    "1a16b90883482131",
+    "1a17082e447b78ef",
+    "1a175a8875794e7e",
+    "1a17ace257d35937",
+    "1a17ff534fa52261",
+    "1a1851a8cef33909"
+  ],
+  "ipo_status_receipts": [
+    {
+      "issuer_name": "Anthropic, PBC",
+      "official_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/0001628280-26-067168-index.htm",
+      "stage": "PUBLIC_S1_NOT_EFFECTIVE",
+      "last_official_stage_changed_at": "2026-10-26",
+      "checked_at": "2026-10-30T05:35:23+07:00",
+      "new_delta_or_none": "NO_DELTA",
+      "confirmed_symbol": "UNVERIFIED",
+      "shares": "NOT_DETERMINED",
+      "price_range": "NOT_DETERMINED",
+      "exchange_mediated_equity_access": "NOT_CONFIRMED"
+    }
+  ],
+  "x_source_receipt": {
+    "checked_at": "2026-10-30T05:35:23+07:00",
+    "browser_session": "UNAVAILABLE",
+    "status": "SOURCE_GAP",
+    "error": "Browser list_tabs rejected: requires originating browser context; bounded public site:x.com issuer search did not yield a verifiable fresh original issuer post.",
+    "fallback_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/0001628280-26-067168-index.htm"
+  },
+  "novelty_evidence": {
+    "included": [
+      {
+        "event_key": "stock_20261030_s1_i1",
+        "family_key": "us_cash_market_index_close",
+        "material_version": "2026-10-30:ROUTINE_MARKET:2026-10-29",
+        "primary_section": 1,
+        "novelty_status": "ROUTINE_DATED_FACT",
+        "source_url": "https://apnews.com/article/wall-street-stocks-dow-nasdaq-2c26b0b1bbc3bfab9f3f4b902172f458",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s1_i2",
+        "family_key": "us_cash_market_breadth",
+        "material_version": "2026-10-30:ROUTINE_MARKET:2026-10-29",
+        "primary_section": 1,
+        "novelty_status": "ROUTINE_DATED_FACT",
+        "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s1_i3",
+        "family_key": "us_gdp_q3_2026_advance",
+        "material_version": "2026-10-30:MACRO_RELEASE:2026-10-29",
+        "primary_section": 1,
+        "novelty_status": "NEW",
+        "source_url": "https://www.bea.gov/index.php/news/2026/gdp-advance-estimate-3rd-quarter-2026",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s1_i4",
+        "family_key": "us_pce_2026_09_release",
+        "material_version": "2026-10-30:MACRO_RELEASE:2026-10-29",
+        "primary_section": 1,
+        "novelty_status": "NEW",
+        "source_url": "https://www.bea.gov/news/2026/personal-income-and-outlays-september-2026",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s1_i5",
+        "family_key": "us_cross_asset_quotes",
+        "material_version": "2026-10-30:ROUTINE_QUOTE:2026-10-29",
+        "primary_section": 1,
+        "novelty_status": "ROUTINE_DATED_FACT",
+        "source_url": "https://www.reuters.com/business/energy/us-oil-prices-fall-investors-gauge-risks-mideast-supply-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s2_i1",
+        "family_key": "alphabet_2026q3_price_reaction",
+        "material_version": "2026-10-30:ROUTINE_QUOTE:2026-10-29",
+        "primary_section": 2,
+        "novelty_status": "ROUTINE_DATED_FACT",
+        "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s2_i2",
+        "family_key": "lilly_2026q3_results",
+        "material_version": "2026-10-30:EARNINGS:2026-10-29",
+        "primary_section": 2,
+        "novelty_status": "NEW",
+        "source_url": "https://investor.lilly.com/news-releases/news-release-details/lilly-reports-third-quarter-2026-financial-results-raises-full",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s2_i3",
+        "family_key": "caterpillar_2026q3_reaction",
+        "material_version": "2026-10-30:EARNINGS:2026-10-29",
+        "primary_section": 2,
+        "novelty_status": "NEW",
+        "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s2_i4",
+        "family_key": "ford_2026q3_reaction",
+        "material_version": "2026-10-30:EARNINGS:2026-10-29",
+        "primary_section": 2,
+        "novelty_status": "NEW",
+        "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s2_i5",
+        "family_key": "merck_2026q3_reaction",
+        "material_version": "2026-10-30:EARNINGS:2026-10-29",
+        "primary_section": 2,
+        "novelty_status": "NEW",
+        "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s2_i6",
+        "family_key": "enterprise_software_2026_10_29_selloff",
+        "material_version": "2026-10-30:SECTOR_REACTION:2026-10-29",
+        "primary_section": 2,
+        "novelty_status": "NEW",
+        "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s2_i7",
+        "family_key": "amazon_2026q3_afterhours_reaction",
+        "material_version": "2026-10-30:ROUTINE_QUOTE:2026-10-29",
+        "primary_section": 2,
+        "novelty_status": "ROUTINE_DATED_FACT",
+        "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s2_i8",
+        "family_key": "intel_2026q3_results",
+        "material_version": "2026-10-30:EARNINGS:2026-10-29",
+        "primary_section": 2,
+        "novelty_status": "NEW",
+        "source_url": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-third-quarter-2026-financial-results.html",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s3_i1",
+        "family_key": "sox_sector_2026_10_29",
+        "material_version": "2026-10-30:ROUTINE_MARKET:2026-10-29",
+        "primary_section": 3,
+        "novelty_status": "ROUTINE_DATED_FACT",
+        "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s3_i2",
+        "family_key": "sector_dispersion_2026_10_29",
+        "material_version": "2026-10-30:SECTOR_SYNTHESIS:2026-10-29",
+        "primary_section": 3,
+        "novelty_status": "NEW",
+        "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s4_i1",
+        "family_key": "amazon_2026q3_operating_result",
+        "material_version": "2026-10-30:EARNINGS:2026-10-29",
+        "primary_section": 4,
+        "novelty_status": "NEW",
+        "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s4_i2",
+        "family_key": "amazon_2026q3_cash_conversion",
+        "material_version": "2026-10-30:EARNINGS_CASH:2026-10-29",
+        "primary_section": 4,
+        "novelty_status": "NEW",
+        "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s4_i3",
+        "family_key": "amazon_2026q4_guidance_macro",
+        "material_version": "2026-10-30:EARNINGS_GUIDANCE:2026-10-29",
+        "primary_section": 4,
+        "novelty_status": "NEW",
+        "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s5_i1",
+        "family_key": "walmart_symbotic_2026_expansion",
+        "material_version": "2026-10-30:CONTRACT:2026-10-29",
+        "primary_section": 5,
+        "novelty_status": "NEW",
+        "source_url": "https://www.reuters.com/technology/walmart-commits-6-billion-expand-symbotic-deal-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s5_i2",
+        "family_key": "doordash_instacart_2026",
+        "material_version": "2026-10-30:MATERIAL_DELTA:2026-10-29",
+        "primary_section": 5,
+        "novelty_status": "MATERIAL_DELTA",
+        "source_url": "https://www.reuters.com/legal/transactional/doordash-strikes-17-billion-deal-us-rival-instacart-bets-grocery-delivery-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": "transaction_status",
+        "prior_version": "talks_2026-10-26"
+      },
+      {
+        "event_key": "stock_20261030_s6_i1",
+        "family_key": "sp500_q3_earnings_season_sample",
+        "material_version": "2026-10-30:ROUTINE_MARKET:2026-10-29",
+        "primary_section": 6,
+        "novelty_status": "ROUTINE_DATED_FACT",
+        "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s7_i1",
+        "family_key": "middle_east_energy_diplomacy_2026_10_29",
+        "material_version": "2026-10-30:GEOPOLITICAL_DELTA:2026-10-29",
+        "primary_section": 7,
+        "novelty_status": "NEW",
+        "source_url": "https://www.reuters.com/business/energy/us-oil-prices-fall-investors-gauge-risks-mideast-supply-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s7_i2",
+        "family_key": "doordash_instacart_regulatory_2026_10_29",
+        "material_version": "2026-10-30:REGULATORY_RISK:2026-10-29",
+        "primary_section": 7,
+        "novelty_status": "NEW",
+        "source_url": "https://www.reuters.com/legal/litigation/doordashs-instacart-deal-may-draw-ftc-scrutiny-amid-cost-of-living-concerns-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s8_i1",
+        "family_key": "market_breadth_risk_checkpoint_2026_10_29",
+        "material_version": "2026-10-30:RISK_CHECKPOINT:2026-10-29",
+        "primary_section": 8,
+        "novelty_status": "NEW",
+        "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s8_i2",
+        "family_key": "amazon_cashflow_risk_checkpoint_2026_10_29",
+        "material_version": "2026-10-30:RISK_CHECKPOINT:2026-10-29",
+        "primary_section": 8,
+        "novelty_status": "NEW",
+        "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s9_i1",
+        "family_key": "calendar_eci_2026q3",
+        "material_version": "2026-10-30:CALENDAR:2026-10-01",
+        "primary_section": 9,
+        "novelty_status": "NEW",
+        "source_url": "https://www.bls.gov/schedule/2026/home.htm",
+        "published_at": "2026-10-01",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s9_i2",
+        "family_key": "calendar_xom_q3_2026",
+        "material_version": "2026-10-30:CALENDAR:2026-10-16",
+        "primary_section": 9,
+        "novelty_status": "NEW",
+        "source_url": "https://investor.exxonmobil.com/news-events/ir-calendar/detail/20261030-3q-2026-earnings-call",
+        "published_at": "2026-10-16",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s9_i3",
+        "family_key": "calendar_cvx_q3_2026",
+        "material_version": "2026-10-30:CALENDAR:2026-10-29",
+        "primary_section": 9,
+        "novelty_status": "NEW",
+        "source_url": "https://www.marketbeat.com/earnings/reports/2026-10-30-chevron-co-stock/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s9_i4",
+        "family_key": "calendar_dst_2026_11_01",
+        "material_version": "2026-10-30:CALENDAR:2026-02-09",
+        "primary_section": 9,
+        "novelty_status": "NEW",
+        "source_url": "https://www.nist.gov/pml/time-and-frequency-division/popular-links/daylight-saving-time-dst",
+        "published_at": "2026-02-09",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s10_i1",
+        "family_key": "buywatch_amzn_2026_10_30",
+        "material_version": "2026-10-30:BUY_WATCH:2026-10-29",
+        "primary_section": 10,
+        "novelty_status": "NEW",
+        "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s10_i2",
+        "family_key": "buywatch_lly_2026_10_30",
+        "material_version": "2026-10-30:BUY_WATCH:2026-10-29",
+        "primary_section": 10,
+        "novelty_status": "NEW",
+        "source_url": "https://investor.lilly.com/news-releases/news-release-details/lilly-reports-third-quarter-2026-financial-results-raises-full",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s11_i1",
+        "family_key": "blindspot_index_vs_breadth_2026_10_29",
+        "material_version": "2026-10-30:MODEL_BLINDSPOT:2026-10-29",
+        "primary_section": 11,
+        "novelty_status": "NEW",
+        "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s11_i2",
+        "family_key": "blindspot_afterhours_release_2026_10_29",
+        "material_version": "2026-10-30:MODEL_BLINDSPOT:2026-10-29",
+        "primary_section": 11,
+        "novelty_status": "NEW",
+        "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s12_i1",
+        "family_key": "decision_summary_2026_10_30",
+        "material_version": "2026-10-30:DAILY_SYNTHESIS:2026-10-29",
+        "primary_section": 12,
+        "novelty_status": "NEW",
+        "source_url": "https://www.reuters.com/business/nasdaq-futures-slide-mixed-big-tech-results-test-ai-trade-2026-10-29/",
+        "published_at": "2026-10-29",
+        "changed_field": null,
+        "prior_version": null
+      },
+      {
+        "event_key": "stock_20261030_s12_i2",
+        "family_key": "action_plan_2026_10_30",
+        "material_version": "2026-10-30:DAILY_ACTION:2026-10-30",
+        "primary_section": 12,
+        "novelty_status": "NEW",
+        "source_url": "https://www.bls.gov/schedule/2026/home.htm",
+        "published_at": "2026-10-30",
+        "changed_field": null,
+        "prior_version": null
+      }
+    ],
+    "excluded": [
+      {
+        "family_key": "meta_ai_spending_risk",
+        "reason": "prior seven-day narrative; no newly measured issuer delta"
+      },
+      {
+        "family_key": "cspx_qqqm_overlap",
+        "reason": "unchanged user portfolio thesis"
+      },
+      {
+        "family_key": "anthropic_ipo_stage",
+        "reason": "public S-1 filed 2026-10-26, no new verified amendment/price"
+      },
+      {
+        "family_key": "fomc_2026_10_28",
+        "reason": "policy already reported, no new decision"
+      }
+    ],
+    "source_gaps": [
+      "BROWSER_UNAVAILABLE",
+      "X_SOURCE_GAP",
+      "institutional fund net-flow data for 2026-10-29 not verified",
+      "Chevron issuer precise earnings release hour not independently confirmed"
+    ]
+  },
+  "qa_status": "PASS"
+}
