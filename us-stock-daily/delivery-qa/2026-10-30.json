@@ -1,0 +1,1 @@
+{"schema":"US_STOCK_NOVELTY_CI_V1","status":"NOVELTY_QA_PASS","report_date":"2026-10-30","manifest_blob_sha":"78d4a3c37668c1f885293580882e68c617956b28","gate_blob_sha":"dfcc4be0ddc7de54d4ef505160173ccf0cbdca90","limitation":"Does not verify external facts or Gmail delivery"}
