@@ -1,15 +1,15 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-29 22:05:13 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-29 23:02:21 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-29 22:05:13 Asia/Bangkok (22:03:59 attempt; off-minute)
+- latest_actual_run: 2026-10-29 23:02:21 Asia/Bangkok (23:00:45 attempt)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-29/220513-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-29/220359-attempt.md
-- latest_scheduled_shard: 2
-- latest_executed_shard: 2
-- stale_shard_recovery: false; fair hour 22%4=2; prior [2,2,0,1], now [2,0,1,2]
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-29/230221-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-29/230045-attempt.md
+- latest_scheduled_shard: 3
+- latest_executed_shard: 3
+- stale_shard_recovery: false; fair hour 23%4=3; last four terminal-backed [0,1,2,3]
 - latest_candidate_count: 6
 - latest_triggered_events: 0
 - latest_identity_failures: 0
@@ -19,20 +19,20 @@ Timezone: Asia/Bangkok
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_extra_USDC,Surf_PONS,StandX_DUSD_checker,01_Exchange_private_rights,OhBabyGames_issuer,Cambria_live_wallet_claim_UI
+- latest_source_gaps: Concrete_extra_USDC,Surf_PONS,StandX_DUSD_checker,Crusoe_private_SPV,Republic_rTTOK_private_settlement,Cambria_live_wallet_claim_UI
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-10-29 20:03:28 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard1: 2026-10-29 21:04:29 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard2: 2026-10-29 22:05:13 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard3: 2026-10-29 15:59:47 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard3: 2026-10-29 23:02:21 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 220513-final.md commit 883e7aeb4548a9165df705a1647fccd60697501e
-- latest_terminal_readback: VERIFIED 220513-final.md blob ef2aa6c36dba0a587c0c81027cd351e9704cb0b2
-- latest_four_executed_shards: [2,0,1,2]
+- latest_primary_final_write: VERIFIED_DURABLE 230221-final.md commit d8a96cc9a4255eefb4944b994266a1cd89b3c986
+- latest_terminal_readback: VERIFIED 230221-final.md blob 4f573a550b6e83c1b9347ef1c1987ed78b35d567
+- latest_four_executed_shards: [0,1,2,3]
 - last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (prior delivered 2026-10-28; no new email)
 - last_delivered_gmail_message_id: 1a1812a1f6802ecb
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-29 22:05:13 BKK PARTIAL fair shard2, 15 distinct registry identities attempted, six unresolved rights/source gaps, zero new ACTION; Browser X unavailable, official fallback; no Gmail/App; verified-complete unchanged.
+- latest_terminal_sync: 2026-10-29 23:02:21 BKK PARTIAL fair shard3, 15 distinct registry identities attempted, six unresolved rights/source gaps, zero new ACTION; Browser X unavailable, official fallback; no Gmail/App; verified-complete unchanged.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
@@ -313,3 +313,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-29 20:03:28 BKK: existing hourly TGE monitor attempt 200213-attempt.md and readback-verified 200328-final.md committed (27d141bdcde1212c15ab1c35902aa5554dab2777); urgent5 + Surf/StandX + fair shard0 (15 distinct Registry identities), bounded Cambria Base/lifecycle. Seven candidate/source-rights gaps, zero Tier A/B new ACTION. Browser original X originating context unavailable, official fallback. Gmail Sent prior Cambria RSGP id 1a1812a1f6802ecb direct readback verified; mapped Inbox no new Tier B. No Gmail/App. Shard0 meaningful PARTIAL attempt advanced; last verified full 2026-10-10 07:52:16 unchanged. Last four executed [0,2,2,0]. No task/schedule/scope/recipient change.
 
 - 2026-10-29 22:05:13 BKK: existing task 220359-attempt.md and readback-verified 220513-final.md committed 883e7aeb4548a9165df705a1647fccd60697501e; urgent5 + Surf/StandX + fair Shard2 (15 distinct Registry identities), bounded Cambria Base RSGP/lifecycle. Six candidate families, zero Tier A/B new ACTION, six source/rights gaps (Concrete extra USDC, Surf PONS, StandX DUSD checker original, 01 mapped private rights, OhBaby issuer, Cambria wallet claim). Browser X originating context unavailable, official fallback; Gmail Sent prior Cambria 1a1812a1f6802ecb found and deduped; no new mapped Inbox rights, no Gmail/App. Shard2 last_meaningful_attempt_at PARTIAL advanced; last verified complete Oct10 unchanged. Last four executed [2,0,1,2]. No task/schedule/scope/recipient change.
+
+- 2026-10-29 23:02:21 BKK: existing hourly TGE attempt 230045-attempt.md and readback-verified 230221-final.md committed d8a96cc9a4255eefb4944b994266a1cd89b3c986; urgent5 + Surf/StandX + fair shard3 (15 distinct Registry identities), bounded Cambria Base and lifecycle. Six old unresolved source/rights gaps, zero new Tier A/mapped Tier B ACTION, no Gmail/App. Browser originating context unavailable, official issuer fallback. Prior Cambria RSGP Gmail 1a1812a1f6802ecb Sent search-confirmed and suppressed; mapped Inbox no new rights. Shard3 meaningful PARTIAL attempt advanced, verified complete Oct10 unchanged. Last four [0,1,2,3]. Task/schedule/scope/recipient unchanged.
