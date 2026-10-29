@@ -1,38 +1,38 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-29 06:00:13 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-29 07:58:40 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-29 06:00:13 Asia/Bangkok (05:58:52 attempt, off-minute start)
+- latest_actual_run: 2026-10-29 07:58:40 Asia/Bangkok (07:58:05 attempt, off-minute)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-29/060013-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-29/055852-attempt.md
-- latest_scheduled_shard: 1
-- latest_executed_shard: 0
-- stale_shard_recovery: true; one-in-four fairness oldest last meaningful attempt shard0
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-29/075840-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-29/075805-attempt.md
+- latest_scheduled_shard: 3
+- latest_executed_shard: 3
+- stale_shard_recovery: false; fair default 07%4=3
 - latest_candidate_count: 6
 - latest_triggered_events: 0
 - latest_identity_failures: 0
-- latest_source_failures: 8
+- latest_source_failures: 5
 - latest_notification_decision: SILENT_NO_ACTION_EMAIL_ONLY
 - latest_notification_status: NO_GMAIL_NO_APP; prior Cambria RSGP Gmail Sent 1a1812a1f6802ecb deduped
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_extra_USDC,Surf_PONS_raffle,StandX_DUSD_checker,Block_Stranding,Makina_Recovery_NFT,Perena,TurboFlow,Rho
+- latest_source_gaps: Concrete_extra_USDC,Surf_PONS_raffle,StandX_DUSD_checker,Crusoe_private_SPV,Republic_rTTOK_private_settlement
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-10-29 06:00:13 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard1: 2026-10-29 05:04:56 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard2: 2026-10-28 22:02:21 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard3: 2026-10-29 03:58:33 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard2: 2026-10-29 06:57:32 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard3: 2026-10-29 07:58:40 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 060013-final.md commit 4b8064b881de2ae347742477128a0c7e45a2314a
-- latest_terminal_readback: VERIFIED 060013-final.md blob e5a714d6226c857285f4613aad08e969c31267b9
-- latest_four_executed_shards: [3,3,1,0]
+- latest_primary_final_write: VERIFIED_DURABLE 075840-final.md commit a233a1931067c46e156c588b9a58e3cf404c666a
+- latest_terminal_readback: VERIFIED 075840-final.md blob 31c1741e9d64b20658e7b0f35f01c28f7b50a466
+- latest_four_executed_shards: [1,0,2,3]
 - last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (prior delivered 2026-10-28; no new email)
 - last_delivered_gmail_message_id: 1a1812a1f6802ecb
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-29 06:00:13 BKK PARTIAL fairness shard0; 15 distinct registered identities attempted, eight named source/rights gaps, zero new ACTION; Browser X unavailable, issuer fallback read; no Gmail/App; verified-complete unchanged.
+- latest_terminal_sync: 2026-10-29 07:58:40 BKK PARTIAL fair shard3; 15 distinct registered identities attempted, five named source/rights gaps, zero new ACTION; Browser X unavailable, official fallback read; no Gmail/App; verified-complete unchanged.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
