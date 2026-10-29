@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-10-28",
-  "status": "OCT28_DELIVERED_AND_ARCHIVED_PARTIAL_SOURCE_GAPS",
-  "note": "2026-10-28 official 13-section Gmail readback exact archived, 34 numbered items, 32 unique delivered events, source gaps tge/early_nft and original X/TXIDs/ETF issuer data. Gmail Sent 1a180500065679d2, canonical blob 5bc7be7c463f2d8b88917e974b31dc330e5d0f50.",
+  "updated_at": "2026-10-29",
+  "status": "OCT29_DELIVERED_AND_ARCHIVED_PARTIAL_SOURCE_GAPS",
+  "note": "2026-10-29 formal Gmail Sent 1a185794e63c022c, exact canonical Git readback verified. Original source gaps remain; unchanged families suppressed.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -1184,6 +1184,276 @@
       "delivered_date": "2026-10-28",
       "gmail_message_id": "1a180500065679d2",
       "source_url": "https://farside.co.uk/btc/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:BTC:2026-10-29T0223Z",
+      "family_key": "spot:BTC:daily",
+      "material_version": "2026-10-29T02:24:04.006Z",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:ETH:2026-10-29T0223Z",
+      "family_key": "spot:ETH:daily",
+      "material_version": "2026-10-29T02:24:04.013Z",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:SOL:2026-10-29T0223Z",
+      "family_key": "spot:SOL:daily",
+      "material_version": "2026-10-29T02:24:03.770Z",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:BNB:2026-10-29T0223Z",
+      "family_key": "spot:BNB:daily",
+      "material_version": "2026-10-29T02:24:04.101Z",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:HYPE:2026-10-29T0223Z",
+      "family_key": "spot:HYPE:daily",
+      "material_version": "2026-10-29T02:24:04.738Z",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "deriv:btc-eth-sol:2026-10-29T0223Z",
+      "family_key": "deriv:btc-eth-sol:daily",
+      "material_version": "2026-10-29T02:24:06.001Z",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "trend:crossmarket:2026-10-29T0223Z",
+      "family_key": "trend:crossmarket:daily",
+      "material_version": "2026-10-29T02:24:04.006Z",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "fed:fomc:2026-10-28:hold-375-400",
+      "family_key": "fed:fomc:rate-decision",
+      "material_version": "fed-official-2026-10-28-10-2-hold-3.75-4.00",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+      "verification": "verified"
+    },
+    {
+      "event_key": "binance:spot-pair-removal:2026-10-30",
+      "family_key": "binance:spot-pair-removal:btc-pairs",
+      "material_version": "binance-official-2026-10-27T0830Z-oct30-12-btc-pairs",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/de45689cbd7b4e1fa87055cdf5a85997",
+      "verification": "verified"
+    },
+    {
+      "event_key": "etf:btc:2026-10-27-final",
+      "family_key": "etf:btc:daily",
+      "material_version": "farside-us-session-2026-10-27-final-176",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://farside.co.uk/btc/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "etf:eth:2026-10-27-final",
+      "family_key": "etf:eth:daily",
+      "material_version": "farside-us-session-2026-10-27-final--60.2",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://farside.co.uk/eth/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "etf:sol:2026-10-27-final",
+      "family_key": "etf:sol:daily",
+      "material_version": "farside-us-session-2026-10-27-final--19.2",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://farside.co.uk/sol/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "onchain:coinbase-prime-6168btc:2026-10-28:unverified",
+      "family_key": "onchain:coinbase-prime-6168btc",
+      "material_version": "lookonchain-attributed-2026-10-28-6168btc",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://www.lookonchain.com/token/bitcoin",
+      "verification": "attributed"
+    },
+    {
+      "event_key": "chainlink:sp-vra-onchain:2026-10-28",
+      "family_key": "chainlink:sp-vra-onchain",
+      "material_version": "joint-issuer-2026-10-28-vra-live-base",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://www.prnewswire.com/news-releases/chainlink-expands-collaboration-with-sp-global-ratings-to-bring-vault-risk-assessments-onchain-302921507.html",
+      "verification": "verified"
+    },
+    {
+      "event_key": "predict:pp:2026-10-28:claim-options",
+      "family_key": "predict:pp:claim-options",
+      "material_version": "binance-official-2026-10-28T1000Z-35pct-or-1yr",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/58d55610f5954d6c867bfa71658585dd",
+      "verification": "verified"
+    },
+    {
+      "event_key": "predict:binancewallet:prime-sale:2026-10-29",
+      "family_key": "predict:binancewallet:prime-sale",
+      "material_version": "binancewallet-official-2026-10-28-0800-1000utc-cap6bnb",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://www.binance.com/en/square/post/382126588667402",
+      "verification": "verified"
+    },
+    {
+      "event_key": "security:litellm-enterprise-unauth-file-read:2026-10-27",
+      "family_key": "ai:litellm:enterprise-unauth-file-read",
+      "material_version": "litellm-ghsa-w4c7-34wj-hqm8-2026-10-27",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-w4c7-34wj-hqm8",
+      "verification": "verified"
+    },
+    {
+      "event_key": "connectwise:cloudbackup:2026-10-28-phased-restoration",
+      "family_key": "oauth:connectwise:storm0940",
+      "material_version": "connectwise-official-2026-10-28T1600Z-phased-m365-restoration",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://www.connectwise.com/company/trust/advisories",
+      "verification": "verified"
+    },
+    {
+      "event_key": "macro:us-equities:2026-10-28-close",
+      "family_key": "macro:us-equity-close",
+      "material_version": "reuters-us-close-2026-10-28-dow019-sp028-nas027",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://www.reuters.com/world/asia-pacific/nasdaq-futures-rise-sk-hynix-boosts-chips-before-fed-decision-earnings-2026-10-28/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "macro:gold-oil:2026-10-28",
+      "family_key": "macro:gold-oil:daily",
+      "material_version": "reuters-2026-10-28-gold-down-oil-up",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://www.reuters.com/business/gold-slips-oil-fuelled-inflation-fears-ahead-fed-meeting-2026-10-28/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "macro:bea:gdp-pce-release:2026-10-29",
+      "family_key": "macro:bea:gdp-pce-release",
+      "material_version": "bea-official-schedule-2026-10-29-0830ET",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://www.bea.gov/news/schedule",
+      "verification": "verified"
+    },
+    {
+      "event_key": "amazon:q3-earnings:2026-10-29",
+      "family_key": "amazon:q3-earnings-call",
+      "material_version": "amazon-ir-2026-10-29-1700ET",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-to-Webcast-Third-Quarter-2026-Financial-Results-Conference-Call/default.aspx",
+      "verification": "verified"
+    },
+    {
+      "event_key": "watch:etf-completeness:2026-10-29",
+      "family_key": "watch:etf-completeness",
+      "material_version": "2026-10-29-btc-eth-issuer-pending",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://farside.co.uk/btc/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "watch:deriv-confirmation:2026-10-29",
+      "family_key": "watch:deriv-confirmation",
+      "material_version": "2026-10-29-spot-vs-oi-confirmation",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "action:predict:2026-10-29",
+      "family_key": "action:predict:eligibility",
+      "material_version": "2026-10-29-verify-before-subscribe",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://www.binance.com/en/events/primesale-predictfun",
+      "verification": "verified"
+    },
+    {
+      "event_key": "action:security:2026-10-29",
+      "family_key": "action:security:exposure-check",
+      "material_version": "2026-10-29-exposure-conditional",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-w4c7-34wj-hqm8",
+      "verification": "verified"
+    },
+    {
+      "event_key": "action:macro-risk:2026-10-29",
+      "family_key": "action:macro-risk",
+      "material_version": "2026-10-29-bea-volatility-preflight",
+      "aliases": [],
+      "delivered_date": "2026-10-29",
+      "gmail_message_id": "1a185794e63c022c",
+      "source_url": "https://www.bea.gov/news/schedule",
       "verification": "verified"
     }
   ],
