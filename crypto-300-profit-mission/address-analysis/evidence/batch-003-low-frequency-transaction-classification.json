@@ -1,0 +1,178 @@
+{
+  "schema": "mission-address-analysis-batch-003-bounded-transaction-classification-v1",
+  "date": "2026-10-18",
+  "research_only": true,
+  "source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "batch": 3,
+  "network_scope": [
+    "bnb-mainnet",
+    "eth-mainnet",
+    "base-mainnet"
+  ],
+  "method": "Alchemy read-only getAssetTransfers + eth_getTransactionByHash, selected receipts",
+  "cases": [
+    {
+      "row": 44,
+      "network": "bnb-mainnet",
+      "hash": "0x9fe8b9c857bf9e2c28f64c8a21b06eabdf9357977974984885cba4beeea02e6d",
+      "to": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "selector": "0xa9059cbb",
+      "status": "0x1",
+      "classification": "ERC20_DIRECT_TRANSFER",
+      "native_value_wei": "0",
+      "note": "WBNB token transfer seen; not classified as token buy/sell by this transaction alone"
+    },
+    {
+      "row": 44,
+      "network": "base-mainnet",
+      "hash": "0x558c3f56b43b1f057e2539bc898af9d3e21394a35b2fe6ce1af386fd70dcabb7",
+      "to": "0xbd5dcac4e124a6d61bf6c68e284846c8144d0af7",
+      "selector": "0x",
+      "native_value_hex": "0x23b695847421a",
+      "classification": "NATIVE_TRANSFER",
+      "note": "Direct value transfer, no contract calldata"
+    },
+    {
+      "row": 45,
+      "network": "base-mainnet",
+      "hash": "0x44965de6b382eeb673e9f3c42eb74b644d2f8cdb1c2dca223fd04e39a3309f6a",
+      "to": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+      "selector": "0xa9059cbb",
+      "status": "0x1",
+      "classification": "ERC20_DIRECT_TRANSFER",
+      "note": "Base USDC contract transfer; not proof of paid trade"
+    },
+    {
+      "row": 50,
+      "network": "eth-mainnet",
+      "hash": "0x92854f297b49b842329ccdf602845b21e8aaa99aba84607afcf6102340fd69d6",
+      "to": "0xd095e2eb05abcf63ebc42d58239dd6d810736e88",
+      "selector": "0x",
+      "native_value_hex": "0x2398a4ddf5c3a",
+      "classification": "NATIVE_TRANSFER",
+      "note": "Direct ETH transfer without calldata"
+    },
+    {
+      "row": 51,
+      "network": "eth-mainnet",
+      "hash": "0xea1f982f75fc2d794a08c94fade2a8b6ec8e9a600611e1916d872cb27b43d299",
+      "to": "0x2bb84fd8f7ed0ffae3da36ad60d4d7840bdeeada",
+      "selector": "0x",
+      "native_value_hex": "0x0",
+      "classification": "ZERO_VALUE_CALL",
+      "note": "A zero-value external call not proven to be a swap"
+    },
+    {
+      "row": 51,
+      "network": "base-mainnet",
+      "classification": "NINE_SIGNED_CALL_TYPES",
+      "signed_transaction_count": 9,
+      "transactions": [
+        {
+          "hash": "0x8cd1ee5004cfe6c9c209a76aeafb73cd7f4d063fcd51d74020824e2f7ff33930",
+          "to": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+          "selector": "0x095ea7b3",
+          "type": "APPROVAL"
+        },
+        {
+          "hash": "0x990907b41f68a0020ce7856c7ce01c0f748b7362a47f0d86e1c5e3796c1234dc",
+          "to": "0xa238dd80c259a72e81d7e4664a9801593f98d1c5",
+          "selector": "0x617ba037",
+          "type": "LENDING_POOL_SUPPLY_LIKE_CALL"
+        },
+        {
+          "hash": "0x40a1109620e98ec4759a77475677c954518d64bcc5eabf79250990746462afc4",
+          "to": "0xa238dd80c259a72e81d7e4664a9801593f98d1c5",
+          "selector": "0x69328dec",
+          "type": "LENDING_POOL_WITHDRAW_LIKE_CALL"
+        },
+        {
+          "hash": "0x11c16ad3f2658201a0c22f1089a4d962184fbccf32854577b37a773c41549b74",
+          "to": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+          "selector": "0x095ea7b3",
+          "type": "APPROVAL"
+        },
+        {
+          "hash": "0x1349703fe7b7e567167ca0c8e2cc928edb3d96cf3ed2b5a3eb5ddb79415e4e45",
+          "to": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+          "selector": "0x095ea7b3",
+          "type": "APPROVAL"
+        },
+        {
+          "hash": "0x6d7e6961fe2c35b4b5c71f7670f129818b3f857d9407df5abebee24f1e7b8200",
+          "to": "0xcaf22ce31298cf2bf1d152862f80216478ad7c67",
+          "selector": "0x3593564c",
+          "status": "0x1",
+          "type": "ROUTER_EXECUTION_UNDECODED"
+        },
+        {
+          "hash": "0xfc65c17fe24c8be983be4c751be29e54f1230b766cc098622816a838c6db35a0",
+          "to": "0x940181a94a35a4569e4529a3cdfb74e38fd98631",
+          "selector": "0x095ea7b3",
+          "type": "APPROVAL"
+        },
+        {
+          "hash": "0x8b2c57351f2a75d40737af1ad04422f3fb27732ea182c6cf5ca36213bc84d3e7",
+          "to": "0x940181a94a35a4569e4529a3cdfb74e38fd98631",
+          "selector": "0x095ea7b3",
+          "type": "APPROVAL"
+        },
+        {
+          "hash": "0xb1d7f2159836b623d55105c0307ccdf3f30487eed782c7acc10accffee5a1ae7",
+          "to": "0xcaf22ce31298cf2bf1d152862f80216478ad7c67",
+          "selector": "0x3593564c",
+          "status": "0x1",
+          "type": "ROUTER_EXECUTION_UNDECODED"
+        }
+      ],
+      "note": "Five ERC20 approvals; two lending-like calls; two successful execute() calls. The latter are NOT automatically profitable DEX swaps without receipt/token-flow and inventory reconciliation."
+    },
+    {
+      "row": 60,
+      "network": "bnb-mainnet",
+      "classification": "FOUR_MIXED_SIGNED_CALLS",
+      "transactions": [
+        {
+          "hash": "0x71e0b4b18d10de3a8bb5c10fd6fc9ef7d99f7ac4857fae9d7284eaaf7710e65b",
+          "selector": "0x5eddd157",
+          "type": "UNDECODED_CONTRACT_CALL"
+        },
+        {
+          "hash": "0x8c1b75fb7f48e52cef7809c14df1be308fafce1951e41bcdf032c556faa465f7",
+          "selector": "0x0c307f76",
+          "type": "UNDECODED_CONTRACT_CALL"
+        },
+        {
+          "hash": "0xa6d32b729000a48a7812ddde7974704b0cfa886149dc38a0d0287bb335987369",
+          "selector": "0x095ea7b3",
+          "type": "APPROVAL"
+        },
+        {
+          "hash": "0x66e9967a9cb8c74d13c1cdbfcbdd56b03854be807712378829f83cfb3a311c82",
+          "selector": "0x",
+          "type": "NATIVE_TRANSFER",
+          "native_value_hex": "0x4eec6629bdc66c"
+        }
+      ],
+      "note": "No fully decoded swap/cost basis"
+    },
+    {
+      "row": 60,
+      "network": "base-mainnet",
+      "hash": "0x3c8ee66e7dd0ce5d170ea11bc66676fd80b5eeb14fd19927f4036f408baffe6b",
+      "selector": "0x",
+      "type": "NATIVE_TRANSFER",
+      "native_value_hex": "0xf04ad37bc5b7"
+    }
+  ],
+  "conclusion": {
+    "confirmed_wallet_pnl": 0,
+    "confirmed_token_pnl": 0,
+    "notes": [
+      "This is transaction-method classification, not fully decoded swap PnL or proof of all wallet transfers",
+      "Calls to token contracts and native transfers cannot be treated as token trade activity by nonce counts",
+      "Two successful router execute calls remain DEFERRED_FOR_RECEIPT_TOKEN_CASHFLOW",
+      "Unverified counterpart identity, ERC20 scam-like token names and other EVM chains are not assumptions"
+    ]
+  }
+}

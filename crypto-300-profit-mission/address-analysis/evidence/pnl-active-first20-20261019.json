@@ -1,0 +1,347 @@
+{
+  "schema": "mission-address-analysis-pnl-active-first20-20261019-v1",
+  "source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "baseline_commit": "81d9ca1686a36e87cf07b03c5fc264621d761303",
+  "network_window": {
+    "bnb": [
+      "0x74cf256",
+      "0x7a4ca36"
+    ],
+    "ethereum": [
+      "0x18cb9c8",
+      "0x19001e3"
+    ],
+    "base": [
+      "0x310fd64",
+      "0x324c3e5"
+    ]
+  },
+  "source": "Authenticated read-only Alchemy getAssetTransfers, ethGetTransactionByHash, ethGetTransactionReceipt, ethCall(balanceOf), ethGetBalance. Compact result transcribed; complete provider frames not archived. Source is a single endpoint, not independent multi-provider attestation.",
+  "outbound_discovery": {
+    "active_candidate_queue_positions": "1..20",
+    "query_fromAddress_only": true,
+    "categories": [
+      "erc20",
+      "external"
+    ],
+    "order": "asc",
+    "maxCount": 5,
+    "checked_wallets": 20,
+    "first_pages_with_more": 14,
+    "first_page_rpc_failures": 0,
+    "rows": [
+      {
+        "queue_position": 1,
+        "source_row": 1,
+        "network": "bnb-mainnet",
+        "returned_count": 2,
+        "has_more": false,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 2,
+        "source_row": 2,
+        "network": "bnb-mainnet",
+        "returned_count": 5,
+        "has_more": true,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 3,
+        "source_row": 3,
+        "network": "bnb-mainnet",
+        "returned_count": 2,
+        "has_more": false,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 4,
+        "source_row": 4,
+        "network": "bnb-mainnet",
+        "returned_count": 5,
+        "has_more": true,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 5,
+        "source_row": 5,
+        "network": "eth-mainnet",
+        "returned_count": 5,
+        "has_more": true,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 6,
+        "source_row": 6,
+        "network": "bnb-mainnet",
+        "returned_count": 2,
+        "has_more": false,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 7,
+        "source_row": 7,
+        "network": "bnb-mainnet",
+        "returned_count": 1,
+        "has_more": false,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 8,
+        "source_row": 12,
+        "network": "eth-mainnet",
+        "returned_count": 5,
+        "has_more": true,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 9,
+        "source_row": 14,
+        "network": "bnb-mainnet",
+        "returned_count": 5,
+        "has_more": true,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 10,
+        "source_row": 15,
+        "network": "bnb-mainnet",
+        "returned_count": 5,
+        "has_more": false,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 11,
+        "source_row": 16,
+        "network": "bnb-mainnet",
+        "returned_count": 5,
+        "has_more": true,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 12,
+        "source_row": 17,
+        "network": "bnb-mainnet",
+        "returned_count": 5,
+        "has_more": true,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 13,
+        "source_row": 18,
+        "network": "bnb-mainnet",
+        "returned_count": 5,
+        "has_more": true,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 14,
+        "source_row": 19,
+        "network": "bnb-mainnet",
+        "returned_count": 5,
+        "has_more": true,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 15,
+        "source_row": 20,
+        "network": "bnb-mainnet",
+        "returned_count": 5,
+        "has_more": true,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 16,
+        "source_row": 21,
+        "network": "bnb-mainnet",
+        "returned_count": 5,
+        "has_more": true,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 17,
+        "source_row": 22,
+        "network": "bnb-mainnet",
+        "returned_count": 5,
+        "has_more": true,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 18,
+        "source_row": 23,
+        "network": "base-mainnet",
+        "returned_count": 5,
+        "has_more": true,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 19,
+        "source_row": 25,
+        "network": "bnb-mainnet",
+        "returned_count": 2,
+        "has_more": false,
+        "profit": "UNRESOLVED"
+      },
+      {
+        "queue_position": 20,
+        "source_row": 27,
+        "network": "bnb-mainnet",
+        "returned_count": 5,
+        "has_more": true,
+        "profit": "UNRESOLVED"
+      }
+    ],
+    "limitation": "One selected chain and first outbound page per wallet, not all trades or all EVM networks; pagination remains deferred."
+  },
+  "s3b_gpay_case_studies": [
+    {
+      "source_row": 1,
+      "wallet": "0x0006d09df7b0e8dce98463b95439475fcec29111",
+      "s3b": {
+        "ca": "0x7138b48df7d98d7e3cc221bfe7192d0a178182d8",
+        "all_observed_incoming_raw_hex": [
+          "0x22e8cb1b9f3d1e",
+          "0x40ecae5930b3e"
+        ],
+        "all_observed_incoming_hashes": [
+          "0xa6103c581dfad8a8d886aa6b6c1b8debbf870de9ef79397ba8a2d5d001e832ad",
+          "0x79073b5540efb294957faa76a320514c8eee7d716a63389f44aca651fed7356c"
+        ],
+        "scan_from_block": "0x0",
+        "scan_to_block": "0x7551d6b",
+        "inbound_pagination_exhausted": true,
+        "inbound_total_raw_integer": "10968272752232540",
+        "wallet_signed_out_tx": "0x15a68ba15a0681d2c860007a48e9faa8e44784bc1ec3160f091f4d9287cfc279",
+        "out_total_raw_integer": "10968272752232540",
+        "receipt_status": "0x1",
+        "after_sale_balanceOf_raw_integer": "0",
+        "native_block_balance_delta_wei": "10861267639963436",
+        "third_party_acquisition": true,
+        "acquisition_basis": "UNRESOLVED",
+        "realized_pnl": "UNRESOLVED"
+      },
+      "gpay": {
+        "ca": "0x7e28372e864e199f9004223b5bfde01e7d926666",
+        "wallet_signed_buy_tx": "0x4186bec30f6866e635d7a6db2334ec6ca3c75f81152e91f080963b5b1f5f06f1",
+        "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "receipt_status": "0x1",
+        "tx_value_wei": "45454545454545454",
+        "native_block_balance_delta_wei": "-45487550014545454",
+        "opening_balanceOf_at_block_0x766d8d8_raw_integer": "0",
+        "received_raw_integer": "395415905094515469594063",
+        "frozen_balanceOf_at_block_0x7a4ca36_raw_integer": "395415905094515469594063",
+        "no_outbound_erc20_logs_in_frozen_window": true,
+        "inventory": "OPEN_AT_FROZEN_END",
+        "realized_pnl": "UNRESOLVED",
+        "unrealized_pnl": "UNRESOLVED"
+      }
+    },
+    {
+      "source_row": 3,
+      "wallet": "0x45004af18692aac16840c807d8980ad215d58dad",
+      "s3b": {
+        "ca": "0x7138b48df7d98d7e3cc221bfe7192d0a178182d8",
+        "all_observed_incoming_raw_hex": [
+          "0x531e61e9dcbdba",
+          "0x4a6186136ee3e"
+        ],
+        "all_observed_incoming_hashes": [
+          "0xa6103c581dfad8a8d886aa6b6c1b8debbf870de9ef79397ba8a2d5d001e832ad",
+          "0xdb999db2c22f84661a9995030b161f04bdb8d4fecb2f43f029c3948ef4228d4c"
+        ],
+        "scan_from_block": "0x0",
+        "scan_to_block": "0x7551d6b",
+        "inbound_pagination_exhausted": true,
+        "inbound_total_raw_integer": "24704352498461688",
+        "wallet_signed_out_tx": "0xb3d6b94ff2ed68e39876b5459ba74f2b3a8710b2a4459aa870038a578a5ad4d6",
+        "out_total_raw_integer": "24704352498461688",
+        "receipt_status": "0x1",
+        "after_sale_balanceOf_raw_integer": "0",
+        "native_block_balance_delta_wei": "24517112812709955",
+        "third_party_acquisition": true,
+        "acquisition_basis": "UNRESOLVED",
+        "realized_pnl": "UNRESOLVED"
+      },
+      "gpay": {
+        "ca": "0x7e28372e864e199f9004223b5bfde01e7d926666",
+        "wallet_signed_buy_tx": "0x2c712968d0f747dee0d55d9fd0bc32ab06ec28456e683b67e9aff9eda6a333fd",
+        "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "receipt_status": "0x1",
+        "tx_value_wei": "45454545454545454",
+        "native_block_balance_delta_wei": "-45487545694545454",
+        "opening_balanceOf_at_block_0x766d8d8_raw_integer": "0",
+        "received_raw_integer": "384108329195523369915117",
+        "frozen_balanceOf_at_block_0x7a4ca36_raw_integer": "384108329195523369915117",
+        "no_outbound_erc20_logs_in_frozen_window": true,
+        "inventory": "OPEN_AT_FROZEN_END",
+        "realized_pnl": "UNRESOLVED",
+        "unrealized_pnl": "UNRESOLVED"
+      }
+    },
+    {
+      "source_row": 6,
+      "wallet": "0x000ae1e2ba3624208300605d7919d6c4803c6111",
+      "s3b": {
+        "ca": "0x7138b48df7d98d7e3cc221bfe7192d0a178182d8",
+        "all_observed_incoming_raw_hex": [
+          "0x12e76ce08fcbb8",
+          "0x4e6fe28710854b",
+          "0x45d867dc94b91"
+        ],
+        "all_observed_incoming_hashes": [
+          "0x58cfdfb9d58fd37169cfee917ac689e6768a4ba0ce654ccb8379cf00463ce0c4",
+          "0xa6103c581dfad8a8d886aa6b6c1b8debbf870de9ef79397ba8a2d5d001e832ad",
+          "0xdb999db2c22f84661a9995030b161f04bdb8d4fecb2f43f029c3948ef4228d4c"
+        ],
+        "scan_from_block": "0x0",
+        "scan_to_block": "0x7551d6b",
+        "inbound_pagination_exhausted": true,
+        "inbound_total_raw_integer": "28627803417713812",
+        "wallet_signed_out_tx": "0xe5890d6bf432835a779ca720f7c5bcebd243bf9a6bc2a34c18284ab8dd9941f4",
+        "out_total_raw_integer": "28627803417713812",
+        "receipt_status": "0x1",
+        "after_sale_balanceOf_raw_integer": "0",
+        "native_block_balance_delta_wei": "28415988571861260",
+        "third_party_acquisition": true,
+        "acquisition_basis": "UNRESOLVED",
+        "realized_pnl": "UNRESOLVED"
+      },
+      "gpay": {
+        "ca": "0x7e28372e864e199f9004223b5bfde01e7d926666",
+        "wallet_signed_buy_tx": "0xd537232647f300cc3e801cafdb3b0051190a973c77843c290d8b62b5c18495bd",
+        "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "receipt_status": "0x1",
+        "tx_value_wei": "45454545454545454",
+        "native_block_balance_delta_wei": "-45487553374545454",
+        "opening_balanceOf_at_block_0x766d8d8_raw_integer": "0",
+        "received_raw_integer": "399296240399503942091807",
+        "frozen_balanceOf_at_block_0x7a4ca36_raw_integer": "399296240399503942091807",
+        "no_outbound_erc20_logs_in_frozen_window": true,
+        "inventory": "OPEN_AT_FROZEN_END",
+        "realized_pnl": "UNRESOLVED",
+        "unrealized_pnl": "UNRESOLVED"
+      }
+    }
+  ],
+  "cross_wallet_relation": {
+    "source_row_27_out_tx": "0x0fc2bfb5378b009013d4e862cff27460df77ce10a6543087c35f1e5176f15afd",
+    "asset_ca": "0xf2db6decf8c7fed1173b3fba49bd014b7e5eca0a",
+    "observed_recipient_source_rows": [
+      22,
+      29
+    ],
+    "claim": "ERC20 shared transaction relation only; no common controller or economic outcome verified"
+  },
+  "whole_wallet_30d_completed": 0,
+  "whole_wallet_lifetime_completed": 0,
+  "new_verified_token_realized_profit": 0,
+  "new_verified_token_realized_loss": 0,
+  "limits": [
+    "Receipt content truncated at connector view for router swaps; status can be read, full transaction-level quote attribution cannot be independently established.",
+    "S3B transfer incoming from third party; not equivalent to zero cost.",
+    "The GPAY window end has no observed outbound ERC20 and balanceOf equals in-flow; this is an open position, not a realized PnL.",
+    "ERC20 symbol text may mimic BNB/ETH/USDC; treat exact contract address as identity.",
+    "14 first pages have more and remain unexamined; first page is not a complete token/trade portfolio."
+  ],
+  "state": "RESEARCH_ONLY / PR_DRAFT / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE / NO_AUTOMATION"
+}

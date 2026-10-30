@@ -1,0 +1,297 @@
+{
+  "schema": "mission-address-analysis-first-discovery-completed-pass-012-v1",
+  "research_date": "2026-10-19",
+  "repository": "lxxlx2/ChatGPT_mission_record",
+  "pr": 97,
+  "baseline_commit": "6f244d03b01523501c131c9cbc057d65fe830298",
+  "source_manifest_blob": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "activity_screened_total": 449,
+  "active_candidates_total": 237,
+  "active_candidates_one_chain_first_transfer_query_completed": 237,
+  "complete_wallet_30d_pnl_audited": 0,
+  "complete_wallet_lifetime_pnl_audited": 0,
+  "first_screened_signed_inactive_deferred": 212,
+  "query": {
+    "network": "bnb-mainnet",
+    "fromBlock": "0x74cf256",
+    "toBlock": "0x7a4ca36",
+    "fromAddress": "per-candidate",
+    "categories": [
+      "erc20",
+      "external"
+    ],
+    "order": "asc",
+    "maxCount": "0x5",
+    "note": "transfer event query misses some signed contract calls"
+  },
+  "final_queue_positions": [
+    221,
+    237
+  ],
+  "final_queue_first_pages": [
+    {
+      "queue_position": 221,
+      "source_row": 415,
+      "address": "0xeb89055e16ae1c1e42ad6770a7344ff5c7b4f31d",
+      "network": "bnb-mainnet",
+      "first_page_events": 5,
+      "has_more": true,
+      "first_tx_hash": "0x5e3b420ab5b32253d5304c95620ca646f33f61fe11bd1bf669854eaae3e3ade6",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 222,
+      "source_row": 417,
+      "address": "0x2ec31068d6451510841578981081124a0f75cc64",
+      "network": "bnb-mainnet",
+      "first_page_events": 5,
+      "has_more": true,
+      "first_tx_hash": "0x6fe6a497c1eb44cc3bc2963c17d5347ad0ead7418ab8ee592be9a09f659dcee6",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 223,
+      "source_row": 418,
+      "address": "0x8f6448ea8a6a0d223acf4f2746dab5d032c65b72",
+      "network": "bnb-mainnet",
+      "first_page_events": 1,
+      "has_more": false,
+      "first_tx_hash": "0xb783f91034196ca8ff60c84ab4a985a5f863024ab28cdf38e3ecbca72123a283",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 224,
+      "source_row": 419,
+      "address": "0x4df495b783a9e849eebbe431d881d43a26f0f686",
+      "network": "bnb-mainnet",
+      "first_page_events": 5,
+      "has_more": false,
+      "first_tx_hash": "0x18a8ceb33c303e6e540f1e9fad8ca78488153e93d0f42010a666622fee6fc2f1",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 225,
+      "source_row": 420,
+      "address": "0xbf004bff64725914ee36d03b87d6965b0ced4903",
+      "network": "bnb-mainnet",
+      "first_page_events": 5,
+      "has_more": true,
+      "first_tx_hash": "0x6db56a0ede421054bf145a0ddf162127f7913100b8cc83e70928badda7b039fd",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 226,
+      "source_row": 422,
+      "address": "0x0bdde6377f27ece8b772771bbfd9a7f5cf663a0f",
+      "network": "bnb-mainnet",
+      "first_page_events": 5,
+      "has_more": true,
+      "first_tx_hash": "0xe8ca7e0f9ec8f0c9b1dc826eeb59c762f9dc0fdc53100913bc5380ca5204b21f",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 227,
+      "source_row": 423,
+      "address": "0x9f12f27e9d64ed061fec82d61b46702189f529d4",
+      "network": "bnb-mainnet",
+      "first_page_events": 5,
+      "has_more": true,
+      "first_tx_hash": "0xdc5483923307ea47e8cc995e35e928d4adf07eefe25284646ebfe6d6a3910e80",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 228,
+      "source_row": 424,
+      "address": "0xa7d4ffc4eca3c71af150ce302560a9d04a1d2b9f",
+      "network": "bnb-mainnet",
+      "first_page_events": 5,
+      "has_more": true,
+      "first_tx_hash": "0xe89c9acddc8b5d142c01a54c503903d98887ee0fb9965666c81cc101b380da61",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 229,
+      "source_row": 425,
+      "address": "0xd948f17d2c2b0a97f7b434ecfeff116095ee0b89",
+      "network": "bnb-mainnet",
+      "first_page_events": 4,
+      "has_more": false,
+      "first_tx_hash": "0xd594c99baa9fdd7b819b656aadd401be7e17ecc9aa79f3a1f76ad9360c40d6ae",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 230,
+      "source_row": 426,
+      "address": "0xf165d95f8f5d1639994ab3c668ccb66cf65cda13",
+      "network": "bnb-mainnet",
+      "first_page_events": 5,
+      "has_more": true,
+      "first_tx_hash": "0xe3770e3a004bbafe4bdd5e0511cd5ac3f54441c76e94670b899e9aaeef26aee3",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 231,
+      "source_row": 429,
+      "address": "0xc51b0f84cd767e18ae1364a302d6ca56a5fe9672",
+      "network": "bnb-mainnet",
+      "first_page_events": 5,
+      "has_more": false,
+      "first_tx_hash": "0xcc2b9bb76a1509936cd40313b98257bf6c14622f9a962f1769cce778cacea463",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 232,
+      "source_row": 430,
+      "address": "0xa4de109e414acedf0a40c6937515740ef7761919",
+      "network": "bnb-mainnet",
+      "first_page_events": 5,
+      "has_more": true,
+      "first_tx_hash": "0x3d8956f4de60cd3b2949f8bcebeb9f9681dfcee60d8bdab554696ad252ce343c",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 233,
+      "source_row": 431,
+      "address": "0x7e8fb0392542812476d9f2d0d71c01d1fa0776c5",
+      "network": "bnb-mainnet",
+      "first_page_events": 5,
+      "has_more": true,
+      "first_tx_hash": "0x777a861e0d133637f8e8ee5e3ad733e17c07f2024d13374342ec22b2d84539b0",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 234,
+      "source_row": 432,
+      "address": "0x7325f5ba83cf8942b3941d874bf1aac13f0d5108",
+      "network": "bnb-mainnet",
+      "first_page_events": 5,
+      "has_more": true,
+      "first_tx_hash": "0xad956242d739c6d9b083fc52916a8b58ec9ef55195b10edf2461cfd94a4df9b5",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 235,
+      "source_row": 433,
+      "address": "0x6df7f71f8c9786dcbb127bb957e3ec9695d7a66e",
+      "network": "bnb-mainnet",
+      "first_page_events": 1,
+      "has_more": false,
+      "first_tx_hash": "0xdb2e87bc934736088343450044fcd10acb9cf623f978da6218cf68ec3212f291",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 236,
+      "source_row": 440,
+      "address": "0xda9f482ea717384af879597303e8b67968afcde2",
+      "network": "bnb-mainnet",
+      "first_page_events": 5,
+      "has_more": true,
+      "first_tx_hash": "0x1f34d1bc129c51e81745e576d92a1f8d1adaa4a9c6b2c1d79eaacfd71ea9c795",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "queue_position": 237,
+      "source_row": 444,
+      "address": "0xfa948f2513259f510e91772114339074a1b626fc",
+      "network": "bnb-mainnet",
+      "first_page_events": 5,
+      "has_more": true,
+      "first_tx_hash": "0x84fa87d19b7ea356b16b91360ec4f905b5cd7db4f507c2abf1a34b4b8305cd20",
+      "full_wallet_pnl": "UNRESOLVED"
+    }
+  ],
+  "final_group_pages_unresolved": 12,
+  "cumulative_queue_positions_with_more_pages": 171,
+  "case_429": {
+    "source_row": 429,
+    "address": "0xc51b0f84cd767e18ae1364a302d6ca56a5fe9672",
+    "token_symbol_untrusted": "UPTOBER",
+    "exact_token_ca": "0xd1d21633b34312a3f490ef2d111bfe0342b47777",
+    "decimals": 18,
+    "token_historical_in_events": 1,
+    "token_historical_out_events": 2,
+    "token_in_raw": "238138351436254473768300",
+    "token_out_raw_components": [
+      "2381383514362544737683",
+      "235756967921891929030617"
+    ],
+    "token_in_raw_equals_out_raw": true,
+    "exhausted_all_exact_ca_history_pages": true,
+    "buy": {
+      "signed_hash": "0xcc2b9bb76a1509936cd40313b98257bf6c14622f9a962f1769cce778cacea463",
+      "block": "0x77435d4",
+      "value_hex": "0x2314fe38801f0b",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "receipt_status": "0x1",
+      "token_balance_before_raw": "0",
+      "token_balance_after_raw": "238138351436254473768300",
+      "native_balance_before_wei": "125006911746000000",
+      "native_balance_after_wei": "115115794018957685",
+      "native_block_delta_wei": "-9891117727042315",
+      "wallet_signed_nonce_in_block": 1
+    },
+    "sell": {
+      "approval_tx": "0xdda97b9efbd7f4828e338dfce7e41e9d4ca0469ce66fd4e0ca4d6a314293013c",
+      "approval_selector": "0x095ea7b3",
+      "approval_receipt_status": "0x1",
+      "swap_tx": "0x8792d00580a2b57832df48984638df049e2818f757913d92423e432ed16c26fb",
+      "block": "0x7745165",
+      "swap_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "swap_selector": "0x4d819a2a",
+      "swap_receipt_status": "0x1",
+      "native_balance_before_wei": "115115794018957685",
+      "native_balance_after_wei": "124834827445104611",
+      "native_block_delta_wei": "9719033426146926",
+      "wallet_signed_nonce_in_block": 2,
+      "token_balance_after_raw": "0",
+      "token_balance_at_frozen_end_raw": "0"
+    },
+    "combined_execution_block_delta_wei": "-172084300895389",
+    "combined_execution_block_delta_BNB": "-0.000172084300895389",
+    "assessment": "NEGATIVE_PROVISIONAL_BLOCK_NATIVE_DELTA_CLOSED_TOKEN_ROUNDTRIP_NOT_VERIFIED_REALIZED_LOSS",
+    "same_contract_and_sell_block_as_source_213": {
+      "row": 213,
+      "hash": "0x0b67493537c37270d24034dd1fb775cb5e4908e6d1da73275233e196f7e1f69a",
+      "sell_block": "0x7745165",
+      "separate_signer_wallet": true,
+      "control_relationship": "UNVERIFIED"
+    },
+    "limits": [
+      "Coinciding sell block and CA is a real temporal trading relation, not proof wallets share an operator.",
+      "Buy and sell balance deltas are block-level not swap internal-native settlement trace.",
+      "Full-wallet period/lifetime PnL remains unavailable."
+    ]
+  },
+  "other_facts": [
+    {
+      "row": 417,
+      "token": "SOON",
+      "exact_ca": "0xb9e1fd5a02d3a33b25a14d661414e6ed6954a721",
+      "first_page_transfer_out_count": 5,
+      "more_pages": true,
+      "classification": "REPEATED_TOKEN_OUT_ONLY_NO_PNL_YET"
+    },
+    {
+      "row": 424,
+      "notes": "BNB Router calls and token transfers, pagination outstanding and incomplete token basis"
+    },
+    {
+      "row": 430,
+      "notes": "Burned MONKEY / other ERC20 to dead, not proof of realized sale"
+    },
+    {
+      "row": 444,
+      "notes": "Unicode-lookalike stablecoin alongside native and canonical DOGE, do not rely on symbol"
+    }
+  ],
+  "next_phase": "PRIORITIZE_CLOSED_TOKEN_CASES_FOR_TRANSACTION_RECEIPT_SETTLEMENT_PLUS_SELECTED_LOW_FREQUENCY_WALLET_30D_AND_LIFETIME_PROFIT",
+  "gates": [
+    "PR_DRAFT",
+    "NO_MERGE",
+    "NO_DEPLOY",
+    "NO_GMAIL",
+    "NO_TRADE",
+    "RESEARCH_ONLY"
+  ]
+}
