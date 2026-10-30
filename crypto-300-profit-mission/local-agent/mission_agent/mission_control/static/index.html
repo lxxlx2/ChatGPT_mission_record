@@ -24,11 +24,19 @@
     <div id="signals-view" class="view-pane active">
     <section class="panel priority-panel" id="follow-opportunities">
       <div class="panel-title">
-        <div><h2>当前跟单机会</h2><p>优先查看当前跟单判断；WAIT / NO_BUY 不是买入信号，历史买卖也不是实时跟单建议。</p></div>
+        <div><h2>Frank 近期来源信号（只读）</h2><p>仅展示近 10 分钟的本地已索引来源 BUY；不推断实时持仓或可执行价格。交易金额和买卖均由用户决定。</p></div>
         <span id="updated">未刷新</span>
       </div>
+      <p id="f01-source-status" class="frank-watch-footnote">F01 来源与执行资格尚未核实，不展示可跟结论。</p>
+      <p id="f01-timing-status" class="frank-watch-footnote">本页尚无新事件观测样本；真实索引延迟尚未测量。</p>
       <div id="candidates" class="candidate-list"></div>
     </section>
+    <details class="panel ended-panel" id="f01-history">
+      <summary><div><h2>历史和资格未核实候选 <span id="f01-history-count">0</span></h2>
+      <p>含过期信号、卖出、模型仓位未核实及当前无法确认的候选；不作为跟单建议。</p></div><span class="summary-hint">展开</span></summary>
+      <p id="f01-history-cache-note" class="frank-watch-footnote"></p>
+      <div id="f01-history-cards" class="candidate-list"></div>
+    </details>
     <section class="panel" id="frank-intelligence-panel">
       <div class="panel-title">
         <div>

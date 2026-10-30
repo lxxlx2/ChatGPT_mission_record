@@ -1,0 +1,40 @@
+name: Frank F01 amount-free source display only
+on:
+  push:
+    branches: [feature/frank-f01-source-only-20261028]
+  pull_request:
+    branches: [feature/frank-p1a-ca-job-report-identity-20261026]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  f01-source-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Python source-only contract and existing D1-D2 tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m unittest discover -s tests -p 'test_frank_f01_source_only.py' -v
+          python -B -m unittest discover -s tests -p 'test_frank_g2_d1_d2_dashboard.py' -v
+      - name: Node F01 UI identity and syntax
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          node --check mission_agent/mission_control/static/app.js
+          node --test tests/test_frank_f01_source_only.cjs
+          node --test tests/test_frank_f01_failure_state.cjs
+      - name: Full affected Dashboard, D1-D2 and wallet-watch regressions
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -B -m pytest -q -p no:cacheprovider \
+            tests/test_frank_f01_source_only.py \
+            tests/test_frank_g2_d1_d2_dashboard.py \
+            tests/test_frank_wallet_watchlist_v2.py \
+            tests/test_mission_control_dashboard.py

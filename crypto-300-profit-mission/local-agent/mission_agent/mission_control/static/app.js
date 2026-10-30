@@ -1,4 +1,7 @@
 const $ = (id) => document.getElementById(id);
+const f01PageOpenedAtEpoch = Date.now() / 1000;
+const f01FirstSeenKeys = new Set();
+const f01ObservedLagSeconds = [];
 
 const USDC_MINT = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
 const WSOL_MINT = 'So11111111111111111111111111111111111111112';
@@ -309,9 +312,9 @@ function renderRuntime(runtime, control) {
     </div>`;
 }
 
-function renderStats(candidates, runtime, coverage) {
+function renderStats(candidates, runtime, coverage, f01Verified) {
   const w = coverage?.windows?.['24h'] || {};
-  const action = candidates.filter(x => x.decision === 'BUY' || x.decision === 'SMALL_BUY').length;
+  const action = f01Verified ? 0 : '待核实';
   const items = [
     ['Frank状态', translated(runtimeLabel,runtime.status,'未知')],
     ['24h已索引签名', w.indexed_signatures ?? '—'],
@@ -591,38 +594,17 @@ function frankPriceText(x, m) {
 function renderCandidates(rows) {
   $('candidates').innerHTML = rows.map(x => {
     const m = x.metrics || {};
-    const q = x.decision_quote || {};
     const decision = x.decision || 'UNASSESSED';
     const reason = reasonFor(x);
-
-    const frankPriceRaw = m.frank_latest_buy_price_usdc ?? x.latest_buy_price_usdc;
-    const execRaw = m.execution_price_usdc ?? q.execution_price_usdc;
-    const impactRaw = m.price_impact_pct ?? q.price_impact_pct;
-
-    let deltaRaw = m.price_deviation_pct;
-    if (deltaRaw == null && frankPriceRaw != null && execRaw != null) {
-      const f = Number(frankPriceRaw);
-      const e = Number(execRaw);
-      if (Number.isFinite(f) && f > 0 && Number.isFinite(e)) {
-        deltaRaw = (e / f - 1) * 100;
-      }
-    }
-
-    const delta = deltaRaw != null ? `${n(deltaRaw,2)}%` : quoteUnavailableText(x,q);
-    const impact = impactRaw != null ? `${n(impactRaw,2)}%` : quoteUnavailableText(x,q);
     const frankPrice = frankPriceText(x,m);
-    const execPrice = execRaw != null ? `${money(execRaw,8)}` : quoteUnavailableText(x,q);
     const buys = x.buy_count ?? 0;
     const sells = x.sell_count ?? 0;
-    const followable = (decision === 'BUY' || decision === 'SMALL_BUY') && x.position_state === 'OPEN' && !['SELL','EXIT','SELL_POSITION_UNRESOLVED'].includes(x.latest_side);
-    const historyNote = followable
-      ? '模式来自已观察到的建仓序列；实际操作前仍需重新确认价格和 Frank 状态。'
-      : '模型模式与买入金额是历史记录；当前没有可执行的买入结论。';
+    const historyNote = '近期已索引来源 BUY，仅供观察。模型仓位尚未确认为当前链上余额；没有用户指定的交易金额，也没有验证可执行报价。';
 
     return `<article class="candidate-card decision-${esc(decision.toLowerCase().replaceAll('_','-'))}">
       <div class="candidate-head">
         <div class="candidate-title">
-          ${badge(decision)}
+          <span class="badge wait">近期来源信号（仅观察）</span>
           <strong>${esc(translated(patternLabel,x.pattern,'未形成模式'))}</strong>
           <span class="state-text">Frank模型仓位：${esc(translated(stateLabel,x.position_state,'未知'))}</span>
         </div>
@@ -632,7 +614,7 @@ function renderCandidates(rows) {
       ${tokenIdentity(x.mint)}
 
       <div class="decision-reason">
-        <span>当前跟单结论：“${esc(translated(decisionLabel,decision,decision))}”</span>
+        <span>历史模型判断：“${esc(translated(decisionLabel,decision,decision))}”；当前执行资格：未评估</span>
         <strong>${esc(reason)} ${esc(historyNote)}</strong>
       </div>
 
@@ -643,7 +625,94 @@ function renderCandidates(rows) {
         ${metric('Frank 参考买入价',frankPrice,'直接来自 Frank 最近买入事件；即使当前 Decision 因超时提前结束，也尽量展示。')}
       </div>
     </article>`;
-  }).join('') || '<div class="empty">当前没有需要跟踪的 Frank 候选</div>';
+  }).join('') || '<div class="empty">当前没有已核实的近期来源信号；历史候选仍可在下方查看。</div>';
+}
+
+function verifiedF01SourceView(doc, candidates, now=Date.now()/1000) {
+  if (!doc || doc.schema_version !== 2 || doc.status !== 'SOURCE_ONLY' ||
+      doc.scope !== 'FRANK_LOCAL_INDEX_SOURCE_ONLY_NO_EXECUTION_QUOTE' ||
+      !Number.isFinite(doc.as_of_epoch) || now < doc.as_of_epoch ||
+      now - doc.as_of_epoch >= 8 || !Array.isArray(doc.source_recent) ||
+      doc.source_recent_count !== doc.source_recent.length ||
+      !Array.isArray(doc.eligible) || doc.eligible.length !== 0 ||
+      doc.eligible_count !== 0 || !Array.isArray(candidates)) return null;
+  const key = row => JSON.stringify([row.person_id,row.mint,row.episode_id,
+    row.source_signal_id,row.latest_signature,row.latest_buy_at,row.latest_at,row.latest_side,
+    row.position_state,row.pattern,row.decision,row.candidate_source]);
+  const actual = new Map();
+  for (const row of candidates) {
+    if (!row || typeof row !== 'object') return null;
+    const k = key(row);
+    if (actual.has(k)) return null;
+    actual.set(k,row);
+  }
+  const selected = new Set();
+  for (const row of doc.source_recent) {
+    const k = key(row);
+    if (selected.has(k) || !actual.has(k) ||
+        row.f01_source_state !== 'RECENT_SOURCE_BUY_ONLY' ||
+        row.execution_eligibility !== 'NOT_ASSESSED_USER_AMOUNT_MISSING' ||
+        row.person_id !== 'frank' || !row.source_signal_id) return null;
+    selected.add(k);
+  }
+  return {recent:doc.source_recent, historical:candidates.filter(x=>!selected.has(key(x)))};
+}
+
+function f01EventEpoch(value) {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  if (typeof value !== 'string' || !value.trim()) return null;
+  if (/^\d+(?:\.\d+)?$/.test(value)) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : null;
+  }
+  if (!/^\d{4}-\d{2}-\d{2}T.*(?:Z|[+-]\d{2}:\d{2})$/.test(value)) return null;
+  const valueMs = Date.parse(value);
+  return Number.isFinite(valueMs) ? valueMs / 1000 : null;
+}
+
+function recordF01PageObservation(view, now=Date.now()/1000) {
+  if (!view || !Number.isFinite(now)) return null;
+  const rows = [...view.recent, ...view.historical];
+  for (const row of rows) {
+    if (!row || row.person_id !== 'frank' || !row.source_signal_id ||
+        row.candidate_source === 'MISSION_CONTROL_OVERLAY' ||
+        !['BUY','ADD','REENTRY'].includes(row.latest_side)) continue;
+    const eventAt = f01EventEpoch(row.latest_buy_at);
+    // Preexisting events cannot measure passive observation delay. Old open
+    // pages also cannot prove DB ingest time, only event-to-first-browser-view.
+    if (eventAt === null || eventAt < f01PageOpenedAtEpoch || eventAt > now) continue;
+    const key = JSON.stringify([row.person_id,row.mint,row.episode_id,
+      row.source_signal_id,row.latest_signature,row.latest_buy_at,row.latest_at]);
+    if (f01FirstSeenKeys.has(key)) continue;
+    f01FirstSeenKeys.add(key);
+    f01ObservedLagSeconds.push(now-eventAt);
+  }
+  const samples = f01ObservedLagSeconds;
+  if (!samples.length) return '本页尚无打开后发生的新 BUY 观察样本；索引延迟不可测。';
+  const maximum = Math.max(...samples);
+  const overdue = samples.filter(seconds => seconds > 600).length;
+  return `本页新 BUY 初见样本 ${samples.length} 条；事件到页面首次观察最长 ${maximum.toFixed(1)} 秒，${overdue} 条超过10分钟。该数值包含链上确认、索引、轮询和页面刷新，不能拆分为纯索引延迟，也不代表成交速度。`;
+}
+
+function f01ExcludedReasonCount(doc, reason) {
+  const counts = doc?.excluded_reason_counts;
+  if (!counts || typeof counts !== 'object' || Array.isArray(counts)) return '未知';
+  const value = counts[reason] ?? 0;
+  return Number.isSafeInteger(value) && value >= 0 ? value : '未知';
+}
+
+function renderF01History(rows) {
+  const box = $('f01-history-cards');
+  if (!box) return;
+  box.innerHTML = rows.map(x => `<div class="ended-row">
+    <div class="ended-main"><span class="badge no-buy">历史 / 资格未核实</span>
+      <strong>${esc(translated(patternLabel,x.pattern,'来源待核'))}</strong>
+      <span>最近动作：${esc(translated(sideLabel,x.latest_side,'未知'))} · ${esc(age(x.latest_at))}</span>
+    </div>
+    <div class="ended-ca"><code>${esc(x.mint || '未知')}</code>${copyButton(x.mint,'复制 CA')}</div>
+    <div class="ended-note">历史模型判断：${esc(translated(decisionLabel,x.decision,'未评估'))}；历史说明（不代表当前）：${esc(reasonFor(x))} 本行不可当作当前跟单资格。</div>
+  </div>`).join('') || '<div class="empty">本次没有历史候选；钱包活动账本仍独立可查。</div>';
+  $('f01-history-count').textContent = rows.length;
 }
 
 function withinHours(ts,hours) {
@@ -989,9 +1058,11 @@ $('frank-activity-type').addEventListener('change',
   () => renderFrankActivity(frankActivitySnapshot));
 $('frank-activity-reload').addEventListener('click',refreshFrankActivity);
 
+let refreshGeneration = 0;
 async function refresh() {
+  const generation = ++refreshGeneration;
   try {
-    const [runtime,control,candidates,trades,reviewActivity,decisions,coverage,watch] = await Promise.all([
+    const [runtime,control,candidates,trades,reviewActivity,decisions,coverage,watch,f01] = await Promise.all([
       get('/api/runtime'),
       get('/api/control-health'),
       get('/api/candidates'),
@@ -999,16 +1070,34 @@ async function refresh() {
       get('/api/review-activity'),
       get('/api/decisions').catch(() => null),
       get('/api/coverage'),
-      get('/api/frank-observed-watchlist').catch(() => ({status:'SOURCE_UNAVAILABLE',rows:[],summary:{}}))
+      get('/api/frank-observed-watchlist').catch(() => ({status:'SOURCE_UNAVAILABLE',rows:[],summary:{}})),
+      get('/api/follow-opportunities').catch(() => null)
     ]);
+    if (generation !== refreshGeneration) return;
     const activeCandidates = candidates.filter(x => x.position_state !== 'CLOSED');
     const endedCandidates = candidates.filter(x => x.position_state === 'CLOSED');
+    const view = verifiedF01SourceView(f01, candidates);
+    const recent = view?.recent || [];
+    const history = view?.historical || candidates;
+    const newestAge = Number(f01?.newest_indexed_buy_age_seconds);
+    const ageLabel = f01?.newest_indexed_buy_age_seconds != null &&
+      Number.isFinite(newestAge) ? `最近已索引 BUY 距链上事件 ${Math.round(newestAge)} 秒；`
+      : '最近已索引 BUY 的事件时间未知；';
+    const staleCount = f01ExcludedReasonCount(f01, 'SOURCE_BUY_STALE_OR_UNVERIFIED');
+    $('f01-source-status').textContent = view
+      ? `近期来源信号 ${recent.length} 条；过期或时间待核 ${staleCount} 条；${ageLabel}当前执行资格 0 条；来源窗口 10 分钟。`
+      : 'F01 来源资格暂不可核实或已过期；不展示可跟结论，完整历史候选保留。';
+    $('f01-timing-status').textContent = view
+      ? recordF01PageObservation(view)
+      : '当前来源核验失败；不产生延迟观测样本。本地首次入库时间尚无可靠数据。';
 
     renderRuntime(runtime,control);
-    renderStats(activeCandidates,runtime,coverage);
+    renderStats(activeCandidates,runtime,coverage,!!view);
     renderCoverage(coverage);
     renderFrankWatchlist(watch);
-    renderCandidates(activeCandidates);
+    renderCandidates(recent);
+    renderF01History(history);
+    { const note = $('f01-history-cache-note'); if (note) note.textContent = ''; }
     renderEnded(endedCandidates);
     renderTrades(trades);
     renderReviewActivity(reviewActivity);
@@ -1019,8 +1108,34 @@ async function refresh() {
     }
     $('updated').textContent = `更新于 ${new Date().toLocaleTimeString('zh-CN')}`;
   } catch (e) {
+    if (generation !== refreshGeneration) return;
     $('runtime').className = 'runtime offline';
     $('runtime').innerHTML = `<strong>控制台读取失败</strong><span>${esc(e.message)}</span>`;
+    invalidateF01OnFailure(e);
+  }
+}
+
+// A failed required F01 feed must not leave any last-good "current" F01 evidence
+// on screen. Only F01-owned surfaces are touched; D1, watchlist, trades, ledger
+// and decisions are rendered by their own functions and are left alone here.
+function invalidateF01OnFailure(e) {
+  const reason = esc(e?.message || 'UNKNOWN');
+  $('f01-source-status').textContent =
+    'F01 来源资格暂不可核实（本轮读取失败，旧结果已作废）；不展示可跟结论，完整历史候选保留。';
+  $('f01-timing-status').textContent = '本轮来源核验失败；不产生延迟观测样本。';
+  $('candidates').innerHTML =
+    `<div class="empty">近期来源信号已失效：本轮 F01 数据读取失败（${reason}），不得作为当前机会。</div>`;
+  const note = $('f01-history-cache-note');
+  if (note) note.textContent = '以下历史内容为上次成功读取的缓存，本轮未核实，不代表当前状态。';
+  const stats = $('stats');
+  if (stats) {
+    stats.querySelectorAll('.stat').forEach(node => {
+      const label = node.querySelector('span')?.textContent || '';
+      if (label === 'Frank状态' || label === '当前可跟候选') {
+        const value = node.querySelector('strong');
+        if (value) value.textContent = '待核实';
+      }
+    });
   }
 }
 
