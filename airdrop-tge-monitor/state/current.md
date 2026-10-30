@@ -1,38 +1,38 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-30 08:03:44 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-30 09:01:06 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-30 08:03:44 Asia/Bangkok (08:02:34 attempt)
+- latest_actual_run: 2026-10-30 09:01:06 Asia/Bangkok (09:00:27 attempt)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-30/080344-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-30/080234-attempt.md
-- latest_scheduled_shard: 0
-- latest_executed_shard: 0
-- stale_shard_recovery: false; fair hour 08%4=0; last four terminal-backed [1,2,3,0]
-- latest_candidate_count: 7
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-30/090106-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-30/090027-attempt.md
+- latest_scheduled_shard: 1
+- latest_executed_shard: 1
+- stale_shard_recovery: false; fair hour 09%4=1; last four terminal-backed [2,3,0,1]
+- latest_candidate_count: 6
 - latest_triggered_events: 0
-- latest_identity_failures: 0
-- latest_source_failures: 7
+- latest_identity_failures: 1
+- latest_source_failures: 6
 - latest_notification_decision: SILENT_NO_ACTION_EMAIL_ONLY
 - latest_notification_status: NO_GMAIL_NO_APP; prior Cambria RSGP 1a1812a1f6802ecb and NeoSoul StandX 1a168dd4a732eab4 suppressed
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_extra_USDC,Surf_PONS,StandX_DUSD_checker,Block_Stranding_original_issuer,Makina_recovery_NFT,Rho_issuer,Cambria_RSGP_wallet_claim_UI
+- latest_source_gaps: Concrete_extra_USDC,Surf_PONS,StandX_DUSD_checker,ForecastFDN_current_issuer,Neutrl_redemption_portal,Cambria_RSGP_wallet_claim_UI
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-10-30 08:03:44 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard1: 2026-10-30 05:05:24 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard1: 2026-10-30 09:01:06 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard2: 2026-10-30 06:05:58 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-10-30 07:04:04 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 080344-final.md commit 1dcfad4ce6c9717d0cf10fbb6c2ff68463329dc3
-- latest_terminal_readback: VERIFIED 080344-final.md
-- latest_four_executed_shards: [1,2,3,0]
+- latest_primary_final_write: VERIFIED_DURABLE 090106-final.md commit 7847d4ee2b50b5b3c25693553b3f184f5f3d5a32
+- latest_terminal_readback: VERIFIED 090106-final.md
+- latest_four_executed_shards: [2,3,0,1]
 - last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (prior delivered 2026-10-28; no new email)
 - last_delivered_gmail_message_id: 1a1812a1f6802ecb
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-30 08:03:44 BKK PARTIAL shard0, 15 distinct registered identities attempted, seven source/rights gaps, zero new Tier A/B ACTION; Browser original X unavailable, issuer fallback; mapped Gmail searched; no Gmail/App; verified-complete unchanged.
+- latest_terminal_sync: 2026-10-30 09:01:06 BKK PARTIAL shard1, 14 distinct registered identities attempted, six source/rights gaps, one Neutrl identity conflict, zero new Tier A/B ACTION; Browser original X unavailable, issuer fallback; Gmail mapped inbox/Sent searched; no Gmail/App; verified-complete unchanged.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
