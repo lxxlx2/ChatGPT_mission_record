@@ -22,28 +22,28 @@
       "section": 1,
       "item_number": 1,
       "event_key": "security:binance:potential-wallet-incident:2026-10-29",
-      "role": "detail",
+      "role": "highlight",
       "text": "Binance潜在安全事故：10月29日暂停多网络提现并暂停Alpha，Reuters引述官方称已核实冻结约25.4亿美元；失窃总额、原因未确认，用户资金安全仅为平台声明。"
     },
     {
       "section": 1,
       "item_number": 2,
       "event_key": "security:polymarket:thirdparty-incident:2026-10-29",
-      "role": "detail",
+      "role": "highlight",
       "text": "Polymarket第三方供应商遭入侵，10月29日18:05至19:05 UTC暂停相关交易后官方标记恢复，并承诺补偿受影响用户；金额仍待链上核实。"
     },
     {
       "section": 1,
       "item_number": 3,
       "event_key": "infra:ice-tradexyz:us-regulated-perps-agreement:2026-10-29",
-      "role": "detail",
+      "role": "highlight",
       "text": "ICE与Trade[XYZ]公布合作及战略投资，拟在美国建设使用Hyperliquid技术的合规永续市场，仍需监管许可，尚未正式运营。"
     },
     {
       "section": 1,
       "item_number": 4,
       "event_key": "policy:fca:htx-uk-high-court-undertakings:2026-10-29",
-      "role": "detail",
+      "role": "highlight",
       "text": "英国FCA 10月29日宣布取得法院承诺，HTX退出英国市场，新用户无法注册、现有英国用户无法入金；仅针对英国辖区。"
     },
     {
