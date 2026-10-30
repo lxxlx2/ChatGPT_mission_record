@@ -1,38 +1,38 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-30 13:03:50 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-30 15:00:30 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-30 13:03:50 Asia/Bangkok (13:02:14 attempt)
+- latest_actual_run: 2026-10-30 15:00:30 Asia/Bangkok (14:59:15 attempt; actual off-minute invocation)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-30/130350-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-30/130214-attempt.md
-- latest_scheduled_shard: 1
-- latest_executed_shard: 1
-- stale_shard_recovery: false; fair hour 13%4=1; prior four terminal-backed [1,1,3,0]
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-30/150030-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-30/145915-attempt.md
+- latest_scheduled_shard: 2
+- latest_executed_shard: 2
+- stale_shard_recovery: false; fair 14%4=2; prior terminal-backed [3,0,1,1]
 - latest_candidate_count: 6
 - latest_triggered_events: 0
-- latest_identity_failures: 1
+- latest_identity_failures: 0
 - latest_source_failures: 6
 - latest_notification_decision: SILENT_NO_ACTION_EMAIL_ONLY
-- latest_notification_status: NO_GMAIL_NO_APP; prior Cambria RSGP 1a1812a1f6802ecb and NeoSoul StandX 1a168dd4a732eab4 suppressed
+- latest_notification_status: NO_GMAIL_NO_APP; prior Cambria RSGP 1a1812a1f6802ecb suppressed
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_extra_USDC,Surf_PONS,StandX_DUSD_checker,ForecastFDN_original,Neutrl_redemption_portal,Cambria_RSGP_wallet_claim_UI
+- latest_source_gaps: Concrete_extra_USDC,Surf_PONS,StandX_DUSD_checker,01_Exchange_private_rights,OhBabyGames_issuer,Cambria_RSGP_wallet_claim_UI
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-10-30 12:01:09 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard1: 2026-10-30 13:03:50 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard2: 2026-10-30 06:05:58 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard1: 2026-10-30 13:59:29 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard2: 2026-10-30 15:00:30 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-10-30 11:05:37 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 130350-final.md commit ef5cd2dda9dc1773f15874d2f717b333d55b3eb6
-- latest_terminal_readback: VERIFIED 130350-final.md sha b8314acdde8d1e6846f7e45bf3f59bb3ad8b5cd5
-- latest_four_executed_shards: [1,3,0,1]
+- latest_primary_final_write: VERIFIED_DURABLE 150030-final.md commit db3d0e812a2b61b938e3efa116f6aadd6888c097
+- latest_terminal_readback: VERIFIED 150030-final.md sha 64427d823440206c4b19809029ddc775a062bb6a
+- latest_four_executed_shards: [0,1,1,2]
 - last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (prior delivered 2026-10-28; no new email)
 - last_delivered_gmail_message_id: 1a1812a1f6802ecb
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-30 13:03:50 BKK PARTIAL shard1, 14 distinct registered identities attempted, six source/rights gaps and one Neutrl legacy-handle conflict, zero new Tier A/B ACTION; Browser original X unavailable, issuer fallback; Gmail mapped inbox/Sent searched; no Gmail/App; verified-complete unchanged.
+- latest_terminal_sync: 2026-10-30 15:00:30 BKK PARTIAL shard2, urgent5 + Surf/StandX + one fair shard2 + bounded Cambria/lifecycle, six unresolved source/rights gaps, zero new Tier A/B ACTION, Browser original X unavailable, official fallback, Gmail Inbox/Sent checked, no Gmail/App.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
