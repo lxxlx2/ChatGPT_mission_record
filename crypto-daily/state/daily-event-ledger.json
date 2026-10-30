@@ -1,6 +1,6 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-10-29",
+  "updated_at": "2026-10-30",
   "status": "OCT29_DELIVERED_AND_ARCHIVED_PARTIAL_SOURCE_GAPS",
   "note": "2026-10-29 formal Gmail Sent 1a185794e63c022c, exact canonical Git readback verified. Original source gaps remain; unchanged families suppressed.",
   "previous_events": [
@@ -1454,6 +1454,268 @@
       "delivered_date": "2026-10-29",
       "gmail_message_id": "1a185794e63c022c",
       "source_url": "https://www.bea.gov/news/schedule",
+      "verification": "verified"
+    },
+    {
+      "event_key": "security:binance:potential-wallet-incident:2026-10-29",
+      "family_key": "security:binance:hotwallet-2026-10-29",
+      "material_version": "binance-reuters-2026-10-30-3bn-frozen-deposits-withdrawals-paused",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://www.reuters.com/legal/transactional/tether-circle-freeze-238-billion-after-binance-reports-security-incident-2026-10-29/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "security:polymarket:thirdparty-incident:2026-10-29",
+      "family_key": "security:polymarket:thirdparty-2026-10-29",
+      "material_version": "polymarket-status-2026-10-29T1905Z-resolved-reimburse",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://status.polymarket.com/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "infra:ice-tradexyz:us-regulated-perps-agreement:2026-10-29",
+      "family_key": "infra:ice-tradexyz-hyperliquid-us-perps",
+      "material_version": "ice-official-2026-10-29-definitive-agreement",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://ir.theice.com/press/news-details/2026/Intercontinental-Exchange-and-TradeXYZ-to-Bring-Hyperliquid-Based-Perpetual-Markets-Onshore/default.aspx",
+      "verification": "verified"
+    },
+    {
+      "event_key": "policy:fca:htx-uk-high-court-undertakings:2026-10-29",
+      "family_key": "policy:fca:htx-uk-exit",
+      "material_version": "fca-official-2026-10-29-high-court-undertakings",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://www.fca.org.uk/news/press-releases/fca-stops-htxs-crypto-promotions",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:BTC:2026-10-30T0220Z",
+      "family_key": "spot:BTC:daily",
+      "material_version": "2026-10-30T02:20:28.008Z",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:ETH:2026-10-30T0220Z",
+      "family_key": "spot:ETH:daily",
+      "material_version": "2026-10-30T02:20:28.012Z",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:SOL:2026-10-30T0220Z",
+      "family_key": "spot:SOL:daily",
+      "material_version": "2026-10-30T02:20:29.771Z",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:BNB:2026-10-30T0220Z",
+      "family_key": "spot:BNB:daily",
+      "material_version": "2026-10-30T02:20:30.102Z",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "spot:HYPE:2026-10-30T0220Z",
+      "family_key": "spot:HYPE:daily",
+      "material_version": "2026-10-30T02:20:29.709Z",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "deriv:btc-eth-sol:2026-10-30T0220Z",
+      "family_key": "deriv:btc-eth-sol:daily",
+      "material_version": "2026-10-30T02:20:28Z",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "trend:crossmarket:2026-10-30T0220Z",
+      "family_key": "trend:crossmarket:daily",
+      "material_version": "2026-10-30T02:20:28Z",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "etf:btc:2026-10-28-final",
+      "family_key": "etf:btc:daily",
+      "material_version": "farside-us-session-2026-10-28-+137.3",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://farside.co.uk/btc/",
+      "verification": "verified",
+      "observation_id": "FARSIDE-BTC-2026-10-28",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "etf:eth:2026-10-28-final",
+      "family_key": "etf:eth:daily",
+      "material_version": "farside-us-session-2026-10-28--21.4",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://farside.co.uk/eth/",
+      "verification": "verified",
+      "observation_id": "FARSIDE-ETH-2026-10-28",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "etf:sol:2026-10-28-final",
+      "family_key": "etf:sol:daily",
+      "material_version": "farside-us-session-2026-10-28--5.7",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://farside.co.uk/sol/",
+      "verification": "verified",
+      "observation_id": "FARSIDE-SOL-2026-10-28",
+      "observation_date": "2026-10-28"
+    },
+    {
+      "event_key": "tge:predict:binance-spot:2026-10-30",
+      "family_key": "predict:binance:spot-listing",
+      "material_version": "binance-official-2026-10-29-spot-2026-10-30T1000Z",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://www.binance.com/en-AE/support/announcement/detail/a259777ee4104befa3daba5c1eadc7b5",
+      "verification": "verified"
+    },
+    {
+      "event_key": "tge:binance-usd1-wlfi:2026-10-30",
+      "family_key": "binance:usd1:wlfi-reward-campaign-2026-10-30",
+      "material_version": "binance-official-2026-10-29-120mwlfi-2.5musd1-2026-10-30",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/59f28e09ce8e4f01804aac4699bedaff",
+      "verification": "verified"
+    },
+    {
+      "event_key": "security:electrum:rbf-malicious-server:2026-10-24",
+      "family_key": "security:electrum:release",
+      "material_version": "electrum-ghsa-2026-10-24-cve2026-117601-rbf-inwild",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://github.com/spesmilo/electrum/security/advisories/GHSA-6jp4-8v48-cc5v",
+      "verification": "verified",
+      "novelty_proof": {
+        "previous_material_version": "electrum-release-4.8.3",
+        "changed_field": "public exploit mechanics and affected user report",
+        "old_value": "4.8.3 security release; exploit specifics not independently verified",
+        "new_value": "恶意Electrum服务器RBF重定向攻击已报告在野利用，4.8.3修复",
+        "evidence_url": "https://github.com/spesmilo/electrum/security/advisories/GHSA-6jp4-8v48-cc5v",
+        "evidence_published_at": "2026-10-24"
+      }
+    },
+    {
+      "event_key": "macro:bea:gdp-q3-2026-advance",
+      "family_key": "macro:bea:q3-2026-gdp",
+      "material_version": "bea-official-2026-10-29-q3-3.4-vs-q2-2.2",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://www.bea.gov/data/gdp/gross-domestic-product",
+      "verification": "verified"
+    },
+    {
+      "event_key": "macro:bea:september-2026-pce",
+      "family_key": "macro:bea:sep-2026-pce",
+      "material_version": "bea-official-2026-10-29-sept-pce3.6-core3.1",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://www.bea.gov/news/2026/personal-income-and-outlays-september-2026",
+      "verification": "verified"
+    },
+    {
+      "event_key": "macro:amazon:q3-2026-actual-earnings",
+      "family_key": "amazon:q3-earnings-call",
+      "material_version": "amazon-ir-2026-10-29-q3-actual-aws45.984b-39.3pct",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+      "verification": "verified",
+      "novelty_proof": {
+        "previous_material_version": "amazon-ir-2026-10-29-1700ET",
+        "changed_field": "actual_Q3_AWS_revenue_and_growth",
+        "old_value": "仅公告2026-10-29 17:00 EDT财报电话会日程，未披露实际业绩",
+        "new_value": "AWS 459.84亿美元同比+39.3%",
+        "evidence_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+        "evidence_published_at": "2026-10-29"
+      }
+    },
+    {
+      "event_key": "watch:market:2026-10-30-risk-bands",
+      "family_key": "watch:market:risk-bands",
+      "material_version": "2026-10-30T02:20Z-btc76500-sol9234",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "watch:hype:2026-10-30-divergence",
+      "family_key": "watch:hype:divergence",
+      "material_version": "2026-10-30T02:20Z-hype90.39-up14.971",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT",
+      "verification": "verified"
+    },
+    {
+      "event_key": "action:cex-risk:2026-10-30",
+      "family_key": "action:cex-risk:daily",
+      "material_version": "2026-10-30-preflight-exchange-security",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://www.binance.com/en/support/announcement/",
+      "verification": "verified"
+    },
+    {
+      "event_key": "action:source-discipline:2026-10-30",
+      "family_key": "action:source-discipline:daily",
+      "material_version": "2026-10-30-partial-gap-ipo-no-offer",
+      "aliases": [],
+      "delivered_date": "2026-10-30",
+      "gmail_message_id": "1a18a9d5e767548d",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm",
       "verification": "verified"
     }
   ],
