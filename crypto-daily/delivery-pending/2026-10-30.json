@@ -490,7 +490,15 @@
       "actual_delta": "Amazon Q3 actual net sales 201.9b USD, AWS 45.984b +39.3% YoY, operating income 28.1b; prior report only scheduled 17:00 EDT earnings call",
       "status": "verified",
       "source_confirmed": true,
-      "impact": "MAJOR"
+      "impact": "MAJOR",
+      "novelty_proof": {
+        "previous_material_version": "amazon-ir-2026-10-29-1700ET",
+        "changed_field": "actual_Q3_AWS_revenue_and_growth",
+        "old_value": "仅公告2026-10-29 17:00 EDT财报电话会日程，未披露实际业绩",
+        "new_value": "AWS 459.84亿美元同比+39.3%",
+        "evidence_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+        "evidence_published_at": "2026-10-29"
+      }
     },
     {
       "event_key": "watch:market:2026-10-30-risk-bands",
