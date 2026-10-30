@@ -1,0 +1,58 @@
+{
+  "schema": "BSC_P4B_V2_FIRST10_ORIGINAL_POOL_SWAP_LOGS",
+  "part": 3,
+  "index_range": [
+    10,
+    14
+  ],
+  "precommit_git_blob_sha": "09e23ee13f2eaaa3fd0c72790b4072b970fec3c8",
+  "rows": [
+    {
+      "index": 10,
+      "token": "4",
+      "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "from_block": 63056879,
+      "to_block": 63056888,
+      "query_status": "FAILED_OR_TRUNCATED",
+      "details": "[\n  {\n    \"address\": \"0xf0a949d3d93b833c183a27ee067165b6f2c9625e\",\n    \"topics\": [\n      \"0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822\",\n      \"0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e\",\n      \"0x0000000000000000000000004535e74a33bb6b1897a21efd1d0c7f04fd6fbef5\"\n    ],\n    \"data\": \"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001bc16d674ec800000000000000000000000000000000000000000000"
+    },
+    {
+      "index": 11,
+      "token": "GIGGLE",
+      "pool": "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+      "from_block": 61963725,
+      "to_block": 61963734,
+      "query_status": "COMPLETE",
+      "event_count": 0,
+      "logs": []
+    },
+    {
+      "index": 12,
+      "token": "币安人生",
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "from_block": 63454407,
+      "to_block": 63454416,
+      "query_status": "FAILED_OR_TRUNCATED",
+      "details": "[\n  {\n    \"address\": \"0x66f289de31eef70d52186729d2637ac978cfc56b\",\n    \"topics\": [\n      \"0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822\",\n      \"0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e\",\n      \"0x000000000000000000000000ab01e0d2e1b06e21d519a50ce24ede2b55a24dac\"\n    ],\n    \"data\": \"0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006f05b59d3b200000000000000000000000000000000000000000000"
+    },
+    {
+      "index": 13,
+      "token": "我踏马来了",
+      "pool": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "from_block": 73658906,
+      "to_block": 73658915,
+      "query_status": "FAILED_OR_TRUNCATED",
+      "details": "[\n  {\n    \"address\": \"0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480\",\n    \"topics\": [\n      \"0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822\",\n      \"0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc\",\n      \"0x0000000000000000000000009f737956481178cc4e1dc3d913f582bcd5d0e7e3\"\n    ],\n    \"data\": \"0x00000000000000000000000000000000000000000000000000afdbfcdc61c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "index": 14,
+      "token": "龙虾",
+      "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "from_block": 83636128,
+      "to_block": 83636137,
+      "query_status": "FAILED_OR_TRUNCATED",
+      "details": "[\n  {\n    \"address\": \"0x22af7297243c4eef12e2d5a4f888b92e56bf127c\",\n    \"topics\": [\n      \"0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822\",\n      \"0x00000000000000000000000038fb583d3a797219651eb960fdbdeb31f8ec7a18\",\n      \"0x00000000000000000000000038fb583d3a797219651eb960fdbdeb31f8ec7a18\"\n    ],\n    \"data\": \"0x0000000000000000000000000000000000000000000000000000b5e620f4800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "production": "NO_GO"
+}

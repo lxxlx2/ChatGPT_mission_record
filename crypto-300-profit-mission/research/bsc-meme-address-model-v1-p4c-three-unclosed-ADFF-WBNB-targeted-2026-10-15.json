@@ -1,0 +1,52 @@
+{
+  "schema": "BSC_P4C_ADFF_WBNB_RECIPIENT_FIXED_BLOCK_EVENTS",
+  "precommit_filename": "bsc-meme-address-model-v1-p4c-three-unclosed-router-event-precommit-2026-10-15.json",
+  "rows": [
+    {
+      "b": 83656622,
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "status": "COMPLETE",
+      "logs": [],
+      "error": null
+    },
+    {
+      "b": 83656622,
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "status": "COMPLETE",
+      "logs": [],
+      "error": null
+    },
+    {
+      "b": 83656734,
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "status": "COMPLETE",
+      "logs": [],
+      "error": null
+    },
+    {
+      "b": 83656734,
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "status": "COMPLETE",
+      "logs": [
+        {
+          "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "topics": [
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x00000000000000000000000022af7297243c4eef12e2d5a4f888b92e56bf127c",
+            "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+          ],
+          "data": "0x00000000000000000000000000000000000000000000000002decf0365777d38",
+          "blockHash": "0xb6c63bfbfdf6d0105163ef2859f093b5729693431f92adab7c3b8e25973a6ad2",
+          "blockNumber": "0x4fc801e",
+          "blockTimestamp": "0x69a17f19",
+          "transactionHash": "0xcbd78ec6eed55dba0f9f90bdfa342c48644d3d626d975aa77e931ad0ffe69045",
+          "transactionIndex": "0x2",
+          "logIndex": "0x3",
+          "removed": false
+        }
+      ],
+      "error": null
+    }
+  ],
+  "production": "NO_GO"
+}

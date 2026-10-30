@@ -1,0 +1,26 @@
+{
+  "schema": "BSC_P4B_2026_DRAGON_D503_E11B_BLOCKSCOUT_PUBLIC_ACCESS_DENIED_RESULT_V1",
+  "date": "2026-10-18",
+  "source_scope": "bsc-meme-address-model-v1-p4b-dragon-five-actual-external-tx-independent-fee-precommit-2026-10-18.json",
+  "source_grade": "PROVIDER_ACCESS_DENIED_NOT_ONCHAIN_RECEIPT",
+  "attempts": [
+    {
+      "hash": "0xd099d33a83c217e47f21b618483ae48de6018fb7fd26d093924f2eb25d219118",
+      "provider": "Blockscout",
+      "method": "get_transaction_info",
+      "chain_id": "56",
+      "first_error": "session_id required",
+      "second_attempt_with_previously_issued_session_id": "session_id no longer permitted; tool explicitly requests Blockscout PRO API key",
+      "success": false
+    }
+  ],
+  "remaining_frozen_transactions_not_requested_due_to_provider_explicit_paid_key_gate": 4,
+  "gas_used": "UNRESOLVED",
+  "fee": "UNRESOLVED",
+  "token_transfers": "UNRESOLVED_VIA_THIS_PROVIDER",
+  "no_paid_upgrade": true,
+  "no_retry_after_explicit_key_denial": true,
+  "can_use_different_existing_free_provider_only_after_fresh_PRECOMMIT": true,
+  "limits": "Access-control failure cannot be interpreted as chain transaction failure, zero fees, or no liquidity.",
+  "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+}

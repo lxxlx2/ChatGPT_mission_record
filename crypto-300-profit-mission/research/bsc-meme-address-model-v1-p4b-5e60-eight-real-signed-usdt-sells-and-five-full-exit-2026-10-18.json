@@ -1,0 +1,278 @@
+{
+  "schema": "BSC_P4B_2026_5E60_ALL_EIGHT_REAL_SIGNED_DRAGON_SELLS_AND_USDT_RECEIPT_V1",
+  "date": "2026-10-18",
+  "precommit_path": "bsc-meme-address-model-v1-p4b-5e60-first-five-closed-inventory-eight-usdt-proceeds-precommit-2026-10-18.json",
+  "precommit_sha": "5410e8219be426037edf25376a3872b608c4b1ba",
+  "provider": "Alchemy existing free BNB mainnet",
+  "source_grade": "EIGHT_ORIGINAL_SIGNED_ROUTER_TX_FULL_TOOL_PARSED_AND_EIGHT_COMPLETE_ERC20_USDT_LOGS_NO_FULL_PROVIDER_WIRE_ARCHIVE",
+  "bounded_calls": {
+    "max": 13,
+    "actual": 13,
+    "retries": 0
+  },
+  "rows": [
+    {
+      "rank": 1,
+      "tx": "0x473a6f97e4580036e82142e56b1cd9d4b0fd026dd5363dcf33cf8271651777e4",
+      "block": 85961702,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "signed_router": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+      "signed_router_method": "swapExactTokensForTokensSupportingFeeOnTransferTokens",
+      "signed_router_selector": "0x5c11d795",
+      "signed_router_path": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "0x55d398326f99059ff775485246999027b3197955"
+      ],
+      "original_tx_fully_parseable": true,
+      "original_tx_legacy_type0": true,
+      "signed_gasPrice_wei": "500000000",
+      "actual_signed_Dragon_sold_raw": "115088555360000000000000",
+      "actual_USDT_received_raw": "2511292317080730962150",
+      "selected_full_USDT_Transfer": {
+        "transactionHash": "0x473a6f97e4580036e82142e56b1cd9d4b0fd026dd5363dcf33cf8271651777e4",
+        "blockNumber": "0x51fabe6",
+        "transactionIndex": "0x1",
+        "logIndex": "0x4",
+        "address": "0x55d398326f99059ff775485246999027b3197955",
+        "topic_from": "0x00000000000000000000000016b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+        "topic_to": "0x0000000000000000000000005e600e259e3cff0757e3736223685958665866c6",
+        "data": "0x000000000000000000000000000000000000000000000088232e90fcec9b88e6"
+      }
+    },
+    {
+      "rank": 2,
+      "tx": "0x9d52a9208bae6f42154b2f974745be5c43ad116ea801badba61fc9fd1ec8701f",
+      "block": 85961711,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "signed_router": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+      "signed_router_method": "swapExactTokensForTokensSupportingFeeOnTransferTokens",
+      "signed_router_selector": "0x5c11d795",
+      "signed_router_path": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "0x55d398326f99059ff775485246999027b3197955"
+      ],
+      "original_tx_fully_parseable": true,
+      "original_tx_legacy_type0": true,
+      "signed_gasPrice_wei": "500000000",
+      "actual_signed_Dragon_sold_raw": "26853996250000000000000",
+      "actual_USDT_received_raw": "585327128205946387713",
+      "selected_full_USDT_Transfer": {
+        "transactionHash": "0x9d52a9208bae6f42154b2f974745be5c43ad116ea801badba61fc9fd1ec8701f",
+        "blockNumber": "0x51fabef",
+        "transactionIndex": "0x5",
+        "logIndex": "0xe",
+        "address": "0x55d398326f99059ff775485246999027b3197955",
+        "topic_from": "0x00000000000000000000000016b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+        "topic_to": "0x0000000000000000000000005e600e259e3cff0757e3736223685958665866c6",
+        "data": "0x00000000000000000000000000000000000000000000001fbb0bb1e842f5fd01"
+      }
+    },
+    {
+      "rank": 3,
+      "tx": "0x67e653802aa2c2907313ecd7428ab93fe0ff92b36f75eb7600e676e278c50984",
+      "block": 85961724,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "signed_router": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+      "signed_router_method": "swapExactTokensForTokensSupportingFeeOnTransferTokens",
+      "signed_router_selector": "0x5c11d795",
+      "signed_router_path": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "0x55d398326f99059ff775485246999027b3197955"
+      ],
+      "original_tx_fully_parseable": true,
+      "original_tx_legacy_type0": true,
+      "signed_gasPrice_wei": "500000000",
+      "actual_signed_Dragon_sold_raw": "24168596630000000000000",
+      "actual_USDT_received_raw": "529979032978949999464",
+      "selected_full_USDT_Transfer": {
+        "transactionHash": "0x67e653802aa2c2907313ecd7428ab93fe0ff92b36f75eb7600e676e278c50984",
+        "blockNumber": "0x51fabfc",
+        "transactionIndex": "0x12",
+        "logIndex": "0x65",
+        "address": "0x55d398326f99059ff775485246999027b3197955",
+        "topic_from": "0x00000000000000000000000016b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+        "topic_to": "0x0000000000000000000000005e600e259e3cff0757e3736223685958665866c6",
+        "data": "0x00000000000000000000000000000000000000000000001cbaefc28b8b590b68"
+      }
+    },
+    {
+      "rank": 4,
+      "tx": "0xe62f8b2435117348bfb8f320f0533638cd97f21fcced5b15edbad154eb712ef6",
+      "block": 85961776,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "signed_router": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+      "signed_router_method": "swapExactTokensForTokensSupportingFeeOnTransferTokens",
+      "signed_router_selector": "0x5c11d795",
+      "signed_router_path": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "0x55d398326f99059ff775485246999027b3197955"
+      ],
+      "original_tx_fully_parseable": true,
+      "original_tx_legacy_type0": true,
+      "signed_gasPrice_wei": "500000000",
+      "actual_signed_Dragon_sold_raw": "108758684820000000000000",
+      "actual_USDT_received_raw": "2385297721548076113170",
+      "selected_full_USDT_Transfer": {
+        "transactionHash": "0xe62f8b2435117348bfb8f320f0533638cd97f21fcced5b15edbad154eb712ef6",
+        "blockNumber": "0x51fac30",
+        "transactionIndex": "0x3",
+        "logIndex": "0x35",
+        "address": "0x55d398326f99059ff775485246999027b3197955",
+        "topic_from": "0x00000000000000000000000016b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+        "topic_to": "0x0000000000000000000000005e600e259e3cff0757e3736223685958665866c6",
+        "data": "0x0000000000000000000000000000000000000000000000814ea7d7e625b25d12"
+      }
+    },
+    {
+      "rank": 5,
+      "tx": "0xbc1e4d56e0946bf63343e045dd2da459431219acbc80ba2cc0478d28901fd7f2",
+      "block": 85961787,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "signed_router": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+      "signed_router_method": "swapExactTokensForTokensSupportingFeeOnTransferTokens",
+      "signed_router_selector": "0x5c11d795",
+      "signed_router_path": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "0x55d398326f99059ff775485246999027b3197955"
+      ],
+      "original_tx_fully_parseable": true,
+      "original_tx_legacy_type0": true,
+      "signed_gasPrice_wei": "500000000",
+      "actual_signed_Dragon_sold_raw": "108758684810200760487354",
+      "actual_USDT_received_raw": "2387723926769129620988",
+      "selected_full_USDT_Transfer": {
+        "transactionHash": "0xbc1e4d56e0946bf63343e045dd2da459431219acbc80ba2cc0478d28901fd7f2",
+        "blockNumber": "0x51fac3b",
+        "transactionIndex": "0x3",
+        "logIndex": "0x5f",
+        "address": "0x55d398326f99059ff775485246999027b3197955",
+        "topic_from": "0x00000000000000000000000016b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+        "topic_to": "0x0000000000000000000000005e600e259e3cff0757e3736223685958665866c6",
+        "data": "0x000000000000000000000000000000000000000000000081705374b166ca05fc"
+      }
+    },
+    {
+      "rank": 6,
+      "tx": "0x9c71aaf82a867109076b58bea79ba8f52043f151484de6e0ac40361219750545",
+      "block": 85980702,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "signed_router": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+      "signed_router_method": "swapExactTokensForTokensSupportingFeeOnTransferTokens",
+      "signed_router_selector": "0x5c11d795",
+      "signed_router_path": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "0x55d398326f99059ff775485246999027b3197955"
+      ],
+      "original_tx_fully_parseable": true,
+      "original_tx_legacy_type0": true,
+      "signed_gasPrice_wei": "500000000",
+      "actual_signed_Dragon_sold_raw": "244762540070000000000000",
+      "actual_USDT_received_raw": "4064998831054595966191",
+      "selected_full_USDT_Transfer": {
+        "transactionHash": "0x9c71aaf82a867109076b58bea79ba8f52043f151484de6e0ac40361219750545",
+        "blockNumber": "0x51ff61e",
+        "transactionIndex": "0x1",
+        "logIndex": "0x4",
+        "address": "0x55d398326f99059ff775485246999027b3197955",
+        "topic_from": "0x00000000000000000000000016b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+        "topic_to": "0x0000000000000000000000005e600e259e3cff0757e3736223685958665866c6",
+        "data": "0x0000000000000000000000000000000000000000000000dc5d30f38eab5244ef"
+      }
+    },
+    {
+      "rank": 7,
+      "tx": "0x3fd9ef769f6c294fe2d0a4949c88e5c261935e769c5144470a4570df59b5591a",
+      "block": 85980740,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "signed_router": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+      "signed_router_method": "swapExactTokensForTokensSupportingFeeOnTransferTokens",
+      "signed_router_selector": "0x5c11d795",
+      "signed_router_path": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "0x55d398326f99059ff775485246999027b3197955"
+      ],
+      "original_tx_fully_parseable": true,
+      "original_tx_legacy_type0": true,
+      "signed_gasPrice_wei": "500000000",
+      "actual_signed_Dragon_sold_raw": "285556296750000000000000",
+      "actual_USDT_received_raw": "4749802259266624265186",
+      "selected_full_USDT_Transfer": {
+        "transactionHash": "0x3fd9ef769f6c294fe2d0a4949c88e5c261935e769c5144470a4570df59b5591a",
+        "blockNumber": "0x51ff644",
+        "transactionIndex": "0x85",
+        "logIndex": "0x1e3",
+        "address": "0x55d398326f99059ff775485246999027b3197955",
+        "topic_from": "0x00000000000000000000000016b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+        "topic_to": "0x0000000000000000000000005e600e259e3cff0757e3736223685958665866c6",
+        "data": "0x0000000000000000000000000000000000000000000001017cbf7545a6fb9be2"
+      }
+    },
+    {
+      "rank": 8,
+      "tx": "0xf6bba19e1dafc184f6887e672d0f3dbef662465c65ed929172ccf299193062a2",
+      "block": 85980748,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "signed_router": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+      "signed_router_method": "swapExactTokensForTokensSupportingFeeOnTransferTokens",
+      "signed_router_selector": "0x5c11d795",
+      "signed_router_path": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "0x55d398326f99059ff775485246999027b3197955"
+      ],
+      "original_tx_fully_parseable": true,
+      "original_tx_legacy_type0": true,
+      "signed_gasPrice_wei": "500000000",
+      "actual_signed_Dragon_sold_raw": "285556296752723286997184",
+      "actual_USDT_received_raw": "4725956365867561598425",
+      "selected_full_USDT_Transfer": {
+        "transactionHash": "0xf6bba19e1dafc184f6887e672d0f3dbef662465c65ed929172ccf299193062a2",
+        "blockNumber": "0x51ff64c",
+        "transactionIndex": "0x1",
+        "logIndex": "0x4",
+        "address": "0x55d398326f99059ff775485246999027b3197955",
+        "topic_from": "0x00000000000000000000000016b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+        "topic_to": "0x0000000000000000000000005e600e259e3cff0757e3736223685958665866c6",
+        "data": "0x00000000000000000000000000000000000000000000010031d1d3910c053dd9"
+      }
+    }
+  ],
+  "checkpoints": {
+    "before_first_sell_Dragon_raw": "383628517870200760487354",
+    "after_fifth_sell_Dragon_raw": "0",
+    "after_eighth_sell_Dragon_raw": "0",
+    "before_first_sell_USDT_raw": "9946711670407384671180",
+    "after_fifth_sell_USDT_raw": "18346331796990217754665"
+  },
+  "first_five": {
+    "Dragon_sold_raw": "383628517870200760487354",
+    "USDT_received_raw": "8399620126582833083485",
+    "wallet_USDT_actual_increase_raw": "8399620126582833083485",
+    "token_fully_exited": true
+  },
+  "second_three": {
+    "Dragon_sold_raw": "815875133572723286997184",
+    "USDT_received_raw": "13540757456188781829802",
+    "separate_later_round_cost_basis": "UNRESOLVED"
+  },
+  "limits": [
+    "These are actual signed and fully returned Router token sales with matching USDT transfer, not merely Pair events.",
+    "The 5 earliest sell token raws equal the preexisting 383628517870200760487354 raw balance, and independent post-fifth balanceOf is zero.",
+    "First-five USDT transfers exactly reconcile to actual wallet USDT balance increase, not yet net profit.",
+    "Wallet had 335173.813691889308361853 Dragon prior to 1000 USDT tranche; earliest cost basis unavailable, so do not attribute full 8399.62 USDT to 1000 USDT profit.",
+    "Eight SELL receipt actual gasUsed not yet checked, no production or P5 upgrade."
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}

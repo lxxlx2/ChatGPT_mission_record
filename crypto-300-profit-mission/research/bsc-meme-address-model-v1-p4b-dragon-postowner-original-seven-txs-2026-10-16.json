@@ -1,0 +1,262 @@
+{
+  "schema": "BSC_P4B_DRAGON_D503_TWO_REAL_BUY_APPROVE_SELL_AND_E11B_BUY_SOURCE_V1",
+  "captured_date": "2026-10-16",
+  "network": "bnb-mainnet",
+  "original_DDAC_source_block": 83635776,
+  "token_exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "manager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+  "sources": {
+    "transactions": "eth_getTransactionByHash read-only",
+    "receipts": "eth_getTransactionReceipt read-only, truncated source is marked and only visible event/status fields are extracted, not called complete",
+    "decoder": "TokenPurchase and TokenSale first 8 ABI non-indexed 32-byte words; Approval first word only"
+  },
+  "cases": [
+    {
+      "label": "D503_BUY_1",
+      "tx": "0xd099d33a83c217e47f21b618483ae48de6018fb7fd26d093924f2eb25d219118",
+      "kind": "purchase",
+      "block": 83636000,
+      "nonce": 1957,
+      "txIndex": 1,
+      "chainId": "0x38",
+      "from": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_value_wei": "190000000000000000",
+      "gas_price_wei": "3000000000",
+      "selector": "0x0b3f5cf9",
+      "approve_input": null,
+      "receipt": {
+        "status": "0x1",
+        "gas_used_wei_gas_units": null,
+        "effective_gas_price_wei": null,
+        "complete": false,
+        "response_char_length": 8098
+      },
+      "matched_original_event": {
+        "raw": "0x000000000000000000000000eccbb861c0dda7efd964010085488b69317e4444000000000000000000000000d503f69b37efbfe510e37f46a4ca34e0adb1a7aa00000000000000000000000000000000000000000000000000000008b7af5ddc0000000000000000000000000000000000000000000429ea6a539154e03722000000000000000000000000000000000000000000000000000295a621d02b562a00000000000000000000000000000000000000000000000000069dd24214e9d200000000000000000000000000000000000000000079342f38fa5c21e5c9d60000000000000000000000000000000000000000000000000084f1fce4282a41a4",
+        "word_count": 8,
+        "words": [
+          "1351864935114091558394821480401253997522607555652",
+          "1216103418861531887103291656838525849060211009450",
+          "37441461724",
+          "5033644503996605000000000",
+          "186237623762376234",
+          "1862376237623762",
+          "146526458333146127000000000",
+          "9579715939250356644"
+        ]
+      },
+      "original_event_topic": "0x7db52723a3b2cdd6164364b3b766e65e540d7be48ffa89582956d8eaebe62942"
+    },
+    {
+      "label": "D503_APPROVE_1",
+      "tx": "0x0b6a3d872ef79a5b6b6048151340e399935d3167bcc3fc2f2ca26ee3574a83b4",
+      "kind": "approve",
+      "block": 83636018,
+      "nonce": 1958,
+      "txIndex": 1,
+      "chainId": "0x38",
+      "from": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "to": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "tx_value_wei": "0",
+      "gas_price_wei": "2000000000",
+      "selector": "0x095ea7b3",
+      "approve_input": "0x095ea7b30000000000000000000000005c952063c7fc8610ffdb798152d69f0b9550762b0000000000000000000000000000000000000000000429ea6a539154e0372200",
+      "receipt": {
+        "status": "0x1",
+        "gas_used_wei_gas_units": "46327",
+        "effective_gas_price_wei": "2000000000",
+        "complete": true,
+        "response_char_length": 1810
+      },
+      "matched_original_event": {
+        "raw": "0x0000000000000000000000000000000000000000000429ea6a539154e0372200",
+        "word_count": 1,
+        "words": [
+          "5033644503996605000000000"
+        ]
+      },
+      "original_event_topic": "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925"
+    },
+    {
+      "label": "D503_SELL_1",
+      "tx": "0x854ce4c5edc725bf9d763c043e29e0d8ef8a9ab89a3c39bdf7fba31dda98416d",
+      "kind": "sale",
+      "block": 83636018,
+      "nonce": 1959,
+      "txIndex": 2,
+      "chainId": "0x38",
+      "from": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_value_wei": "0",
+      "gas_price_wei": "2000000000",
+      "selector": "0x0b3f5cf9",
+      "approve_input": null,
+      "receipt": {
+        "status": "0x1",
+        "gas_used_wei_gas_units": "211830",
+        "effective_gas_price_wei": "2000000000",
+        "complete": true,
+        "response_char_length": 7833
+      },
+      "matched_original_event": {
+        "raw": "0x000000000000000000000000eccbb861c0dda7efd964010085488b69317e4444000000000000000000000000d503f69b37efbfe510e37f46a4ca34e0adb1a7aa0000000000000000000000000000000000000000000000000000000a0c3a09270000000000000000000000000000000000000000000429ea6a539154e0372200000000000000000000000000000000000000000000000000030dc9ec14a15a1e0000000000000000000000000000000000000000000000000007d16114afb18a000000000000000000000000000000000000000000615ca4f77d96505b1f8a00000000000000000000000000000000000000000000000000950626db3d616798",
+        "word_count": 8,
+        "words": [
+          "1351864935114091558394821480401253997522607555652",
+          "1216103418861531887103291656838525849060211009450",
+          "43154802983",
+          "5033644503996605000000000",
+          "220053972606605854",
+          "2200539726066058",
+          "117703305318646497000000000",
+          "10738313084581013400"
+        ]
+      },
+      "original_event_topic": "0x0a5575b3648bae2210cee56bf33254cc1ddfbc7bf637c0af2ac18b14fb1bae19"
+    },
+    {
+      "label": "D503_BUY_2",
+      "tx": "0xbc1622bb9a1850b5966f7c056d0344e586c3ffcf7b882df84cb07673bd13bfb5",
+      "kind": "purchase",
+      "block": 83636084,
+      "nonce": 1960,
+      "txIndex": 55,
+      "chainId": "0x38",
+      "from": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_value_wei": "220000000000000000",
+      "gas_price_wei": "7000000000",
+      "selector": "0x0b3f5cf9",
+      "approve_input": null,
+      "receipt": {
+        "status": "0x1",
+        "gas_used_wei_gas_units": null,
+        "effective_gas_price_wei": null,
+        "complete": false,
+        "response_char_length": 8098
+      },
+      "matched_original_event": {
+        "raw": "0x000000000000000000000000eccbb861c0dda7efd964010085488b69317e4444000000000000000000000000d503f69b37efbfe510e37f46a4ca34e0adb1a7aa0000000000000000000000000000000000000000000000000000001042199cc300000000000000000000000000000000000000000002949334564ac44835640000000000000000000000000000000000000000000000000002fe1eade3907eaa0000000000000000000000000000000000000000000000000007a9444c8401440000000000000000000000000000000000000000001c12bce679141226d1fa00000000000000000000000000000000000000000000000000d4d66d39a7512de4",
+        "word_count": 8,
+        "words": [
+          "1351864935114091558394821480401253997522607555652",
+          "1216103418861531887103291656838525849060211009450",
+          "69828451523",
+          "3119477321356746000000000",
+          "215643564356435626",
+          "2156435643564356",
+          "33938410141114297000000000",
+          "15336565675444481508"
+        ]
+      },
+      "original_event_topic": "0x7db52723a3b2cdd6164364b3b766e65e540d7be48ffa89582956d8eaebe62942"
+    },
+    {
+      "label": "D503_APPROVE_2",
+      "tx": "0x8b7765c0f34c1f2cb7b41798ca5e5b50c772d2ad7eafd4bbbb1de1a66e33fae0",
+      "kind": "approve",
+      "block": 83636094,
+      "nonce": 1961,
+      "txIndex": 12,
+      "chainId": "0x38",
+      "from": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "to": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "tx_value_wei": "0",
+      "gas_price_wei": "2000000000",
+      "selector": "0x095ea7b3",
+      "approve_input": "0x095ea7b30000000000000000000000005c952063c7fc8610ffdb798152d69f0b9550762b00000000000000000000000000000000000000000002949334564ac448356400",
+      "receipt": {
+        "status": "0x1",
+        "gas_used_wei_gas_units": "46327",
+        "effective_gas_price_wei": "2000000000",
+        "complete": true,
+        "response_char_length": 1812
+      },
+      "matched_original_event": {
+        "raw": "0x00000000000000000000000000000000000000000002949334564ac448356400",
+        "word_count": 1,
+        "words": [
+          "3119477321356746000000000"
+        ]
+      },
+      "original_event_topic": "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925"
+    },
+    {
+      "label": "D503_SELL_2",
+      "tx": "0x25122e07f529fc935856f99cc948f442587ac09d1e339a859eb86537e93eca0a",
+      "kind": "sale",
+      "block": 83636094,
+      "nonce": 1962,
+      "txIndex": 13,
+      "chainId": "0x38",
+      "from": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_value_wei": "0",
+      "gas_price_wei": "2000000000",
+      "selector": "0x0b3f5cf9",
+      "approve_input": null,
+      "receipt": {
+        "status": "0x1",
+        "gas_used_wei_gas_units": "211830",
+        "effective_gas_price_wei": "2000000000",
+        "complete": true,
+        "response_char_length": 7841
+      },
+      "matched_original_event": {
+        "raw": "0x000000000000000000000000eccbb861c0dda7efd964010085488b69317e4444000000000000000000000000d503f69b37efbfe510e37f46a4ca34e0adb1a7aa000000000000000000000000000000000000000000000000000000138b63636000000000000000000000000000000000000000000002949334564ac44835640000000000000000000000000000000000000000000000000003acc1ab6cc959cb0000000000000000000000000000000000000000000000000009685631ba556000000000000000000000000000000000000000000005acea5294b32090e6c200000000000000000000000000000000000000000000000000f19b6bb45c7c9150",
+        "word_count": 8,
+        "words": [
+          "1351864935114091558394821480401253997522607555652",
+          "1216103418861531887103291656838525849060211009450",
+          "83942925152",
+          "3119477321356746000000000",
+          "264799420116720075",
+          "2647994201167200",
+          "6861198621817933000000000",
+          "17409627206920737104"
+        ]
+      },
+      "original_event_topic": "0x0a5575b3648bae2210cee56bf33254cc1ddfbc7bf637c0af2ac18b14fb1bae19"
+    },
+    {
+      "label": "E11B_BUY_1",
+      "tx": "0xc0262a91f9e2036a5700f88753aec82496104410b8d8a02610f33c8a2d5a6c7a",
+      "kind": "purchase",
+      "block": 83636000,
+      "nonce": 5908,
+      "txIndex": 67,
+      "chainId": "0x38",
+      "from": "0xe11b917d591db3bf40ecb5bf7ea4ea5af503460c",
+      "to": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+      "tx_value_wei": "12000000000000000",
+      "gas_price_wei": "57531543",
+      "selector": "0x810c705b",
+      "approve_input": null,
+      "receipt": {
+        "status": "0x1",
+        "gas_used_wei_gas_units": null,
+        "effective_gas_price_wei": null,
+        "complete": false,
+        "response_char_length": 8098
+      },
+      "matched_original_event": {
+        "raw": "0x000000000000000000000000eccbb861c0dda7efd964010085488b69317e4444000000000000000000000000e11b917d591db3bf40ecb5bf7ea4ea5af503460c00000000000000000000000000000000000000000000000000000007ed0c04d70000000000000000000000000000000000000000000049988a7c63a9bec7a6000000000000000000000000000000000000000000000000000029ffd927583f3b00000000000000000000000000000000000000000000000000006b84bb4600a10000000000000000000000000000000000000000008a28bf8bb8ef7cdd7c5a000000000000000000000000000000000000000000000000007aca23145a905723",
+        "word_count": 8,
+        "words": [
+          "1351864935114091558394821480401253997522607555652",
+          "1285137717490935704068096852251103835184804611596",
+          "34041758935",
+          "347546637309143000000000",
+          "11821782178217787",
+          "118217821782177",
+          "167024191162311977000000000",
+          "8847922988248487715"
+        ]
+      },
+      "original_event_topic": "0x7db52723a3b2cdd6164364b3b766e65e540d7be48ffa89582956d8eaebe62942"
+    }
+  ],
+  "scope_note": "Original D503 signed buys, ERC20 approvals, and signed sells in Four.meme curve; two original D503 buys, two original D503 sells, one control E11B buy. Same owner bought twice after DDAC but no proof of following DDAC signal; no 1/5/15m follower PnL.",
+  "production": "NO_GO"
+}

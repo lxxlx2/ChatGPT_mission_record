@@ -1,0 +1,190 @@
+{
+  "schema": "BSC_P4B_FROZEN19_FIRST_OBSERVABLE_V2_ROUTER_QUOTE_PRECOMMIT",
+  "network": "bnb-mainnet",
+  "router": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+  "router_method": "getAmountsOut(uint256,address[])",
+  "router_selector": "0xd06ca61f",
+  "pair_method": "getReserves()",
+  "pair_selector": "0x0902f1ac",
+  "quote_asset": "WBNB",
+  "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "fixed_input_WBNB_wei": "10000000000000000",
+  "stake_freeze_before_quote": true,
+  "source_19liquidity_git_blob_sha": "9fbc8bdaeb9df342a4d200fefb0ebd48b746b903",
+  "observer_state_policy": "historical block immediately AFTER first source-verified positive V2/WBNB reserves block; end-of-block; cannot infer an actual observer saw a tx nor could enter at this block",
+  "scope": "All 19 exact CA; read pair reserves and Router V2 mathematical buy quote at same historical block. Quote does not call token transfers or verify sellability; reverse buy-out quote later separately. Preserve failures/no reserves and negative cases.",
+  "rows": [
+    {
+      "index": 0,
+      "token": "TST",
+      "exact_CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "pool": "0xb36c81707e5ca2bd6f68cd6b71b3178d29c48a4b",
+      "first_positive_reserves_block": 46421401,
+      "read_block": 46421402,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 1,
+      "token": "CHEEMS",
+      "exact_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "pool": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+      "first_positive_reserves_block": 42638444,
+      "read_block": 42638445,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 2,
+      "token": "MUBARAK",
+      "exact_CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "pool": "0xb7c6f7db26cde42550e4017bb9855bbaaa20eb44",
+      "first_positive_reserves_block": 47442143,
+      "read_block": 47442144,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 3,
+      "token": "TUT",
+      "exact_CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "pool": "0xd7efdee04e508502bdc666f67f3d9b006c20318d",
+      "first_positive_reserves_block": 46521964,
+      "read_block": 46521965,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 4,
+      "token": "BROCCOLI714",
+      "exact_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "pool": "0x9eb0bc7a207f77811ee365729d00152622a745b7",
+      "first_positive_reserves_block": 46627714,
+      "read_block": 46627715,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 5,
+      "token": "BROCCOLIF3B",
+      "exact_CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "pool": "0xd32041a219835ed79c1ffd7f43df68d06b9b13d5",
+      "first_positive_reserves_block": 46628416,
+      "read_block": 46628417,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 6,
+      "token": "SIREN",
+      "exact_CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "pool": "0xa9b4493042830109b44e18ec3586ecd22bd032ed",
+      "first_positive_reserves_block": 46828822,
+      "read_block": 46828823,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 7,
+      "token": "BANANAS31",
+      "exact_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "pool": "0xe518025b12f424f825f3b53c8d4a747ccbfc6127",
+      "first_positive_reserves_block": 46871948,
+      "read_block": 46871949,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 8,
+      "token": "BOB",
+      "exact_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "pool": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "first_positive_reserves_block": 44007572,
+      "read_block": 44007573,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 9,
+      "token": "BULLA",
+      "exact_CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "pool": "0x3551191f78869c29388886330f31739a87866c38",
+      "first_positive_reserves_block": 50982326,
+      "read_block": 50982327,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 10,
+      "token": "4",
+      "exact_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "first_positive_reserves_block": 63056879,
+      "read_block": 63056880,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 11,
+      "token": "GIGGLE",
+      "exact_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "pool": "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+      "first_positive_reserves_block": 61963725,
+      "read_block": 61963726,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 12,
+      "token": "币安人生",
+      "exact_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "first_positive_reserves_block": 63454407,
+      "read_block": 63454408,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 13,
+      "token": "我踏马来了",
+      "exact_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "pool": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "first_positive_reserves_block": 73658906,
+      "read_block": 73658907,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 14,
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "first_positive_reserves_block": 83636128,
+      "read_block": 83636129,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 15,
+      "token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "pool": "0xbfc26980d8068ae744f5405d3abf6e7df02e11b3",
+      "first_positive_reserves_block": 116314917,
+      "read_block": 116314918,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 16,
+      "token": "MARSCOIN",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "pool": "0x9f286c9bd510150c62a08da72af797ac45311ae0",
+      "first_positive_reserves_block": 112668701,
+      "read_block": 112668702,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 17,
+      "token": "哈基米 / HAJIMI",
+      "exact_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "first_positive_reserves_block": 63838943,
+      "read_block": 63838944,
+      "stake_wei": "10000000000000000"
+    },
+    {
+      "index": 18,
+      "token": "BUBB",
+      "exact_CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "pool": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+      "first_positive_reserves_block": 47620838,
+      "read_block": 47620839,
+      "stake_wei": "10000000000000000"
+    }
+  ],
+  "production": "NO_GO"
+}

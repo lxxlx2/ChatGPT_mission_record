@@ -1,0 +1,266 @@
+{
+  "schema": "BSC_P4_COMPETING22_HISTORICAL_POOL_LIQUIDITY",
+  "part": 2,
+  "range": [
+    7,
+    12
+  ],
+  "source_precommit_sha": "2cc89a63db6d070ac3e5706e8d5bda198b8feee6",
+  "rows": [
+    {
+      "token": "BANANAS31",
+      "CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "at_block": 46871948,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "499166953299975284102053",
+            "sqrtPriceX96": "127159132404467188868873950"
+          },
+          "reads": [
+            {
+              "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x0000000000000000000000000000000000000000000069b3e50efe7653ea93a5",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000000692efe6155c12e5fc47edefffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0944000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000ce40ce40000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0xe736f1b0e809ff648e557dd3ea591580f416c2ed",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_NO_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "0",
+            "sqrtPriceX96": "128762441549353111859488310"
+          },
+          "reads": [
+            {
+              "pool": "0xe736f1b0e809ff648e557dd3ea591580f416c2ed",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0xe736f1b0e809ff648e557dd3ea591580f416c2ed",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x0000000000000000000000000000000000000000006a8281f17023032427e636fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0a3f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "11653349451995818247359",
+            "sqrtPriceX96": "3254202357545672765815586954"
+          },
+          "reads": [
+            {
+              "pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000000000277bab6007fa7c044bf",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000000a83d02749b559a3d8bf008affffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0695000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        }
+      ],
+      "rpc": "MULTICALL3_COMPLETE"
+    },
+    {
+      "token": "BOB",
+      "CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "at_block": 44007572,
+      "pools": [],
+      "rpc": "NOT_NEEDED"
+    },
+    {
+      "token": "BULLA",
+      "CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "at_block": 50982326,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "pool": "0x26b5508768c049d930f0b3c15337b74ed7d244a0",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_NO_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "0",
+            "sqrtPriceX96": "1384844822230552255363366739"
+          },
+          "reads": [
+            {
+              "pool": "0x26b5508768c049d930f0b3c15337b74ed7d244a0",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0x26b5508768c049d930f0b3c15337b74ed7d244a0",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000000479844c3daa87f1ddb13f53fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffec3d5000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "140815101878957563409",
+            "sqrtPriceX96": "1321121018644741022383475643"
+          },
+          "reads": [
+            {
+              "pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000000000007a233bd16a9b4de11",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000000444ce41ed3205e702f20bbbfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffec026000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "pool": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "25624020529964783978864",
+            "sqrtPriceX96": "186358473192804611824503605264"
+          },
+          "reads": [
+            {
+              "pool": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000000000056d14b83e1fab934970",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000025a281db2d6056816943dc81000000000000000000000000000000000000000000000000000000000000042d3000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        }
+      ],
+      "rpc": "MULTICALL3_COMPLETE"
+    },
+    {
+      "token": "4",
+      "CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "at_block": 63056879,
+      "pools": [],
+      "rpc": "NOT_NEEDED"
+    },
+    {
+      "token": "GIGGLE",
+      "CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "at_block": 61963725,
+      "pools": [],
+      "rpc": "NOT_NEEDED"
+    },
+    {
+      "token": "币安人生",
+      "CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "at_block": 63454407,
+      "pools": [],
+      "rpc": "NOT_NEEDED"
+    }
+  ],
+  "production": "NO_GO"
+}

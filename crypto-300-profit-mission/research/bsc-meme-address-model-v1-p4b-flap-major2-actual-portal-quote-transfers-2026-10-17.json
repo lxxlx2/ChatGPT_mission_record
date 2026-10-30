@@ -1,0 +1,81 @@
+{
+  "schema": "BSC_P4B_2026_FLAP_FIRST_ORIGINAL_SIGNED_BUY_INTERMEDIARY_PORTAL_QUOTE_TRANSFER_V1",
+  "captured_date_bangkok": "2026-10-17",
+  "precommits": {
+    "from_original_signer_ERC20_Transfer_oneblock_sha": "dcf3ec9a919e8fccfb77adb880ce59f5a94926ed",
+    "to_portal_ERC20_Transfer_oneblock_sha": "744146ac730c0f7f2b69539bb63045b5b85b0985"
+  },
+  "source_original_first_buys_git_blob": "d69f2ddfade437a1d8b0fc49585eb4ca0f9268e9",
+  "rpc_method": "eth_getLogs bnb-mainnet, ERC20 Transfer topic + original quote token exact address, one historical original signed buy block; first phase from=original EOA, second phase to=Flap Portal; no unbounded follow-up",
+  "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+  "portal": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+  "rows": [
+    {
+      "token": "牛来",
+      "token_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_ca": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "block": 115628774,
+      "signed_buy_original_tx": "0xcb89b7adafacdfb5f844102c4e27ed474abec8947c74476d461be70a9b0e8fa5",
+      "original_signed_eoa": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+      "source_Original_TokenBought_cost_raw": "205991990065603310",
+      "source_Original_TokenBought_fee_raw": "2059919900656033",
+      "from_signer_quote_ERC20_Transfer_filter_status": "COMPLETE_PARSED_JSON",
+      "from_signer_quote_ERC20_Transfer_count_in_N": 0,
+      "to_portal_quote_ERC20_Transfer_filter_status": "COMPLETE_PARSED_JSON",
+      "to_portal_oneblock_all_transfer_count": 1,
+      "to_portal_transfers": [
+        {
+          "tx": "0xcb89b7adafacdfb5f844102c4e27ed474abec8947c74476d461be70a9b0e8fa5",
+          "from": "0x9e698d361bb2375bd335dad156accbbad45bf364",
+          "to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "raw_value_hex": "0x00000000000000000000000000000000000000000000000002dbd49fa26fa2ee",
+          "logIndex": "0xfc"
+        }
+      ],
+      "matching_quote_from_intermediary_to_portal_raw": "205991990065603310",
+      "nonmatching_sameblock_count": 0
+    },
+    {
+      "token": "MARSCOIN",
+      "token_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_ca": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "block": 112441394,
+      "signed_buy_original_tx": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+      "original_signed_eoa": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+      "source_Original_TokenBought_cost_raw": "2674483304192706318",
+      "source_Original_TokenBought_fee_raw": "26744833041927063",
+      "from_signer_quote_ERC20_Transfer_filter_status": "COMPLETE_PARSED_JSON",
+      "from_signer_quote_ERC20_Transfer_count_in_N": 0,
+      "to_portal_quote_ERC20_Transfer_filter_status": "COMPLETE_PARSED_JSON",
+      "to_portal_oneblock_all_transfer_count": 2,
+      "to_portal_transfers": [
+        {
+          "tx": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+          "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "raw_value_hex": "0x000000000000000000000000000000000000000000000000251dac65281e870e",
+          "logIndex": "0x9c"
+        },
+        {
+          "tx": "0x85e6a71e9080edc28e0c39bf6a0115b88223223ca059c90505a4aa71c0d4045f",
+          "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "raw_value_hex": "0x0000000000000000000000000000000000000000000000002017deff170277cc",
+          "logIndex": "0xbf"
+        }
+      ],
+      "matching_quote_from_intermediary_to_portal_raw": "2674483304192706318",
+      "nonmatching_sameblock_count": 1
+    }
+  ],
+  "evidence_grade": "HISTORICAL_RPC_FILTERED_SELECTED_FIELDS_SUCCESS_NOT_FULL_VERBATIM_LOG_PERSISTED",
+  "confirmed": "One intermediary->Portal ERC20 configured quote transfer EXACT original signed transaction hash per selected market, matching original TokenBought.cost raw WEI/18-decimal units exactly. Full outer wallet quote funding, other tokens, protocol fee beneficiary, gas and same-state follower fill not verified.",
+  "not_confirmed": "Zero direct from-EOA quote token Transfer in that original block is only scoped absence of this exact quoteCA Transfer(from) in that block, not original purchase free of cost or proof of no other signed trade. Same-block unrelated MARS Portal transfer must not attach to selected original EOA.",
+  "gates": {
+    "original_EOA_complete_quote_funding": "UNRESOLVED",
+    "public_first_executable_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "production": "NO_GO",
+    "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "BSC_P4C_BSC_BLOCKSCOUT_FIVE_ORIGINAL_TX_ENRICHMENT_PRECOMMIT",
+  "upstream_owner_source_blob_sha": "1d6e22f6c60d241cde69fec93a5688750def9702",
+  "chain_id": "56",
+  "method": "get_transaction_info",
+  "targets": [
+    {
+      "token": "龙虾",
+      "tx": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+      "block": 83635800,
+      "owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "CA": "0xeccbb861c0dda7efd964010085488b69317e4444"
+    },
+    {
+      "token": "牛来",
+      "tx": "0xe336a788b4e7e69a6fab47f130c07c689ae01e8459cf8e3b4d4b4c201216221c",
+      "block": 115853752,
+      "owner": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+    },
+    {
+      "token": "牛来",
+      "tx": "0xebf0ec4f9dbc9a3f0d3a06d2297691c35928ae840157656d20553a0bf9962089",
+      "block": 115853755,
+      "owner": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+    },
+    {
+      "token": "MARSCOIN",
+      "tx": "0x2af9071f7b71de7d29f3bb7ed5559c1efdc47ee79917e20fa6a8c15f80206392",
+      "block": 112441403,
+      "owner": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+      "CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+    },
+    {
+      "token": "MARSCOIN",
+      "tx": "0x7374837ec5eea55bd4572683d7f3ec261b1d17c134cadaf4d362f295d7bdab49",
+      "block": 112441408,
+      "owner": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+      "CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+    }
+  ],
+  "scope": "Alternative public BNB explorer original transaction decoded input, native value, fee, token transfers and internal settlement when returned for same precommitted five original owner tx; treat missing internal events or malformed/unsupported fields UNKNOWN, not zero. Never add secondary transaction candidates; preserve source ref.",
+  "production": "NO_GO"
+}

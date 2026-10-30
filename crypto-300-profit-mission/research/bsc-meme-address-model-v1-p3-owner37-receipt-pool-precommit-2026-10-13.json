@@ -1,0 +1,593 @@
+{
+  "schema": "BSC_MEME_P3_FROZEN_37_OWNER_TX_RECEIPT_POOL_AUDIT_PRECOMMIT",
+  "status": "FROZEN_BEFORE_RECEIPT_OR_POOL_CLASSIFICATION",
+  "as_of": "2026-10-13T08:37:36Z",
+  "network": "bnb-mainnet",
+  "original_full_source_sha": "607d615fa8278f73be402ac11b971a8bddcb3f58",
+  "manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-original-tx-candidates-precommit-2026-10-13.json",
+      "git_blob_sha": "9364abfbeedb9201afa0036df849dc9c43101d4f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-original-signer-part1-2026-10-13.json",
+      "git_blob_sha": "2f952533161c2145f331da345e679fb206244732"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-original-signer-part2-2026-10-13.json",
+      "git_blob_sha": "cf3c4ae05d35a4a5b0cb32065ae81d0f83a46216"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-original-signer-part3-2026-10-13.json",
+      "git_blob_sha": "f7173f3906983d96eb29bcfac1c6d9d1a874e816"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-original-signer-part4-2026-10-13.json",
+      "git_blob_sha": "445d26b880b82531e9ad4ae9c2b5765c85099a4a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-original-signer-part5-2026-10-13.json",
+      "git_blob_sha": "4830fa1376db094c4c4fa1e7c56989d3ea4f79ca"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-original-signer-part6-2026-10-13.json",
+      "git_blob_sha": "35adca2d573f9abde5775c29b7803cfa0191885e"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-original-signer-part7-2026-10-13.json",
+      "git_blob_sha": "f60d249a1f54e9681a69d5dff93e200775062c79"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-original-signer-part8-2026-10-13.json",
+      "git_blob_sha": "610077af932b7d2242f6bc3dccbfccf39dd954e9"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-original-signer-part9-2026-10-13.json",
+      "git_blob_sha": "6702b1c212e35eca3bc05dbcc8d1486c79b8c5b4"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-original-signer-part10-2026-10-13.json",
+      "git_blob_sha": "0b02fda574e1a097d01fdc7e6ab83f4bf3085deb"
+    }
+  ],
+  "already_confirmed_swap_hash": "0xcfcc99e6a8d6900fa805cf5b8da72761e9d175455914772ebf394778d9d8aed4",
+  "selection": "Every verified original transaction signer matching original wallet in frozen 23 x 19 CA 30d transfer candidates, excluding already audited A83B TST true swap; include all positive and negative receipt outcomes; dedupe original tx by hash only where same wallet",
+  "summary": {
+    "wallet_tx_all": 38,
+    "wallet_tx_to_audit": 37,
+    "unique_hashes_to_audit": 37,
+    "wallets_in_receipt_batch": 8
+  },
+  "candidates": [
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "hash": "0x00d5eabcd78fa629f2f9036d74bfbac889cea475f8617111c32db45fae5413ed",
+      "block": 123355289,
+      "utc": null,
+      "router": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "selector": "0x84da2c7b",
+      "token_cas": [
+        "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+        "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+        "0xeccbb861c0dda7efd964010085488b69317e4444"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "hash": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+      "block": 123398349,
+      "utc": null,
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0x82ec31d69b3c289e541b50e30681fd1acad24444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "hash": "0xf9d57b0971395dc6f59a0317ba4bcbee3d4c0920e34474cf6f153300f76275d9",
+      "block": 126605440,
+      "utc": null,
+      "router": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "selector": "0x84da2c7b",
+      "token_cas": [
+        "0x20d6015660b3fe52e6690a889b5c51f69902ce0e"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xae1def223a10ca11bf4e13f716f475b99693047e4e541c465e9dde0a30b24189",
+      "block": 122582898,
+      "utc": null,
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xcab3ab44e62796268d5817e67b89823b0e14cd199b5b9100f4bfc38fe2689f7f",
+      "block": 122582910,
+      "utc": null,
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xafca658cebd8cb5a0e0afb73426451f8f3fc1fcd3796478dc6ac0269472353b8",
+      "block": 122987987,
+      "utc": null,
+      "router": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "selector": "0x84da2c7b",
+      "token_cas": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xe1520b559ea7186bc733c290ba34c64e9486d9a4daf2380a2240c1993af59b9a",
+      "block": 122987993,
+      "utc": null,
+      "router": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "selector": "0x84da2c7b",
+      "token_cas": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0x488a4bef32fca7a08c31cb8416ebe63f9375e46974c0978b0e308c4e75ed6874",
+      "block": 122987995,
+      "utc": null,
+      "router": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "selector": "0x84da2c7b",
+      "token_cas": [
+        "0x12b4356c65340fb02cdff01293f95febb1512f3b"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xc81eadbe91ba27a418a7e574e327d3cc4d47eea8ec13221a42b746795ca4bb72",
+      "block": 122988185,
+      "utc": null,
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0x4915f70f5a07dcc6cb6152f8a7390ffa90060a983c80c012b8254497bb165496",
+      "block": 122988406,
+      "utc": null,
+      "router": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "selector": "0x84da2c7b",
+      "token_cas": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0x118dd6d6d2c4766660342cf7e67518753928ea441943cedd8ff7a6f4f66a5756",
+      "block": 122995918,
+      "utc": "2026-09-20T13:18:20.000Z",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x8ecd40fddcdc93ee3c90328166f098ec412ad4d80f50c00ed98601b0e9bb4fa2",
+      "block": 122367977,
+      "utc": "2026-09-17T06:47:03.000Z",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0x0a43fc31a73013089df59194872ecae4cae14444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x158c28e5efafde2a93fa1549d328082b2357369f666fd4cbd48eec0e54ff222b",
+      "block": 122742452,
+      "utc": "2026-09-19T05:36:37.000Z",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x49748cf3ec185c54bc3b46dc4bb6c92e225d2bcbf0a1aadf1a49c0fb093f53ca",
+      "block": 123506149,
+      "utc": "2026-09-23T05:06:22.000Z",
+      "router": "0x5994814f2c4040b863a0125a45de152a8c2a4dec",
+      "selector": "0x0c307f76",
+      "token_cas": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x0245294448b6197e70660a0fdc5fb9186f8c5b98919567d22915c552dbca9be6",
+      "block": 126840114,
+      "utc": "2026-10-10T14:00:50.000Z",
+      "router": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "selector": "0x84da2c7b",
+      "token_cas": [
+        "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x8421eb9bd2bc261f6b7c2562668c3c7f2a5912894f91634d5bbc26e7effabeb8",
+      "block": 126840130,
+      "utc": "2026-10-10T14:00:58.000Z",
+      "router": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "selector": "0x84da2c7b",
+      "token_cas": [
+        "0x0a43fc31a73013089df59194872ecae4cae14444"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x41d1b44d7f17218ed671609bab4cbd6dbe9eb613ed79540ff9d0be0d905fd230",
+      "block": 126840137,
+      "utc": "2026-10-10T14:01:01.000Z",
+      "router": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "selector": "0x84da2c7b",
+      "token_cas": [
+        "0x20d6015660b3fe52e6690a889b5c51f69902ce0e"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "hash": "0x72cd4f7d896f045680cbbaf70eb2377e4f534d1939df05f68c26ed75535e12f1",
+      "block": 121966513,
+      "utc": "2026-09-15T04:34:39.000Z",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0x924fa68a0fc644485b8df8abfa0a41c2e7744444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x886381944f0c7171f808dda40930dea262236b9af08af6195b430352e54e57b4",
+      "block": 122185934,
+      "utc": "2026-09-16T08:00:55.000Z",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x38a46891ba00fa6ffeff72ed90f2ae3f291f4c36245d7aef416739ce73e45663",
+      "block": 122987878,
+      "utc": "2026-09-20T12:18:00.000Z",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x04cad9f0aae0cb0224e49b4b19434d2ff607edba5527d614571cc3eb4fb1b3ba",
+      "block": 123019626,
+      "utc": "2026-09-20T16:16:11.000Z",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x5c853608c3bc8793e3ea53e25289bc3fbeadc377a04e266d05c6cfdebef23849",
+      "block": 123682058,
+      "utc": "2026-09-24T03:06:15.000Z",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0x924fa68a0fc644485b8df8abfa0a41c2e7744444"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x1c69f5bcf9acfbb07340890713a290e280d8f3d8dfd0957aa86c3044b92d9fe6",
+      "block": 123682061,
+      "utc": "2026-09-24T03:06:17.000Z",
+      "router": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+      "selector": "0x8cb5772c",
+      "token_cas": [
+        "0x924fa68a0fc644485b8df8abfa0a41c2e7744444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xe276fb4ca7b1d0c8eed1eb7fed6f0ff44a8afd3cee5c4edb0eb0ed41926da503",
+      "block": 123685688,
+      "utc": null,
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0x924fa68a0fc644485b8df8abfa0a41c2e7744444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x0688c737243ad718ab3f9fae4ee4d1fbcf3208dd092fb5af3f7a66e47bc61929",
+      "block": 126467804,
+      "utc": "2026-10-08T15:27:14.000Z",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0x3d4f0513e8a29669b960f9dbca61861548a9a760"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xaa57afb7da6d5bb86ce2eacedec42abf6e99749972321d85adc0f352ef1c4065",
+      "block": 126467931,
+      "utc": "2026-10-08T15:28:11.000Z",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xd581b586b41038a4a0d3ea573a65a4a2c06b9b7674d7f5f84a5e768809209dab",
+      "block": 126468036,
+      "utc": "2026-10-08T15:28:58.000Z",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0x82ec31d69b3c289e541b50e30681fd1acad24444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xe651156fb79e04c22e6e3740e1930e657ba106c0134dd79fcc59563711de1db1",
+      "block": 126468121,
+      "utc": "2026-10-08T15:29:36.000Z",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x6875c13bfba6382f1078ea29d26a5e261ba662c52a00131583017f4b326ef7b6",
+      "block": 126468394,
+      "utc": null,
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x6cbb4a85cdbeaf6066f5e860a96ae4f85d90f8710723dbcedb94dfef7b6c7915",
+      "block": 126468527,
+      "utc": null,
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0x0a43fc31a73013089df59194872ecae4cae14444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+      "block": 121783426,
+      "utc": "2026-09-14T05:40:56.000Z",
+      "router": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "selector": "0x84da2c7b",
+      "token_cas": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+      "block": 121786352,
+      "utc": "2026-09-14T06:02:53.000Z",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0x6b411510ce6ddb3d38b124c232fd059c431f1623c2528113f84fdb58bfbc80ae",
+      "block": 121848139,
+      "utc": "2026-09-14T13:46:29.000Z",
+      "router": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "selector": "0x84da2c7b",
+      "token_cas": [
+        "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0x87176f7f43cd9b1e48832683a706238b1beecf072bb590709d85bd2988fa2514",
+      "block": 122015238,
+      "utc": null,
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0x6c7f28fe04982f805eca509287ce053260ed1133a89c7fe937608a7d4baed9f7",
+      "block": 122213277,
+      "utc": "2026-09-16T11:26:03.000Z",
+      "router": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "selector": "0x84da2c7b",
+      "token_cas": [
+        "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "hash": "0x46f4ebf92b95cd023d89a50ee20f0957eea2ec31e27fa53419dba7a3498fb17d",
+      "block": 126050422,
+      "utc": "2026-10-06T11:15:55.000Z",
+      "router": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "selector": "0x84da2c7b",
+      "token_cas": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "hash": "0xa9eabce653ba2cfd6ec10656da7da32a9d929f0d45d6cf040693e36c97f6bc47",
+      "block": 126050553,
+      "utc": "2026-10-06T11:16:54.000Z",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "token_cas": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "out"
+      ]
+    }
+  ],
+  "requirements": [
+    "Original transaction from == wallet and original block matches frozen transfer block",
+    "Receipt status 0x1 and full decoded receipt or separately scoped immutable event logs; record truncation/coverage",
+    "Swap proof: exact CA owner token leg plus venue pool quote token and authentic matching Swap event, or a well justified alternate venue",
+    "Differentiate approvals/transfers/liquidity operations from swaps; unknown is not inactive",
+    "No causal PnL, no follower alpha from origin-only evidence"
+  ],
+  "production": "NO_GO"
+}

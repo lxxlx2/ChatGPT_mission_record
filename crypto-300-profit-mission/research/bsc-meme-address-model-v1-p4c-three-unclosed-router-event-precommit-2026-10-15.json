@@ -1,0 +1,62 @@
+{
+  "schema": "BSC_P4C_THREE_UNCLOSED_ORIGINAL_TX_LOG_PROBE",
+  "original_batch_source_blob_sha": "85a39f4c5c9723e98180a1c018b9dd94588fe3b6",
+  "owner_source_part1_sha": "a038983867c6cfbad35c1fcd4b070992eba3fe8f",
+  "owner_source_part2_sha": "b1ceba18b696553ac902bbb25bbd68b7abe75187",
+  "network": "bnb-mainnet",
+  "production": "NO_GO",
+  "transfer_topic": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+  "WBNB": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "selected": [
+    {
+      "round": "ADFF_DRAGON_R4",
+      "CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "txs": [
+        [
+          "0xf295cea8ca007cf8bbf00889acf7be78d9d035300be51da67a194fe50c33a3e3",
+          83656622
+        ],
+        [
+          "0xcbd78ec6eed55dba0f9f90bdfa342c48644d3d626d975aa77e931ad0ffe69045",
+          83656734
+        ]
+      ]
+    },
+    {
+      "round": "2ADF_NIULAI_R3",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "txs": [
+        [
+          "0x5b9f98b8feff8b9589b9a229bd64485689d11f7aa08d7973d7553fd18ba35e1e",
+          116038180
+        ],
+        [
+          "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f",
+          116087810
+        ]
+      ]
+    },
+    {
+      "round": "A83B_NIULAI_R2",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "txs": [
+        [
+          "0x8a22a65a977409a7e82266d05ceaf1e98074d1f6b50e942486600dacdc672716",
+          116113193
+        ],
+        [
+          "0x3e8b50350c8d2cf87d9662434ad205d08a33595eaf253dac04996134a35e2971",
+          116113193
+        ],
+        [
+          "0xd0bc93c086a44affed01a7bfb25022cd51e18513401b15d2fbb3692ec1bde9a4",
+          116113197
+        ]
+      ]
+    }
+  ],
+  "read_method": "Exact one-block filtered ERC20 original token owner Transfer logs and WBNB Transfer logs, inspect exact signed tx hash, filter block other trades; do not treat absence of WBNB logs as an unexecuted exit, and do not upgrade native delta to PnL."
+}

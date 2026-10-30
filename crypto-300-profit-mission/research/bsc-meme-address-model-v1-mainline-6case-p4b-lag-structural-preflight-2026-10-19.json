@@ -1,0 +1,472 @@
+{
+  "schema": "BSC_V1_SIX_FROZEN_ROUNDS_P4B_P5_STRUCTURAL_LAG_PRECHECK_V1",
+  "timestamp_date": "2026-10-19",
+  "scope": "Read-only descriptive cross-wallet P4-B and bounded P5 time-order PRECHECK, NOT historical public-first-observed signal and NOT a backtest",
+  "source_base_file": "bsc-meme-address-model-v1-mainline-5wallet-4major-6case-source-gate-2026-10-19.json",
+  "source_base_git_blob": "995fbf9d43bef38649721db4c01705d2bbd36739",
+  "time_source": "20 Alchemy BNB Mainnet eth_getBlockByNumber scalar replies in current research session; tool returned truncated response bodies but header timestamp/hash were present; complete raw HTTP/provider signature not archived",
+  "block_hash_utc_anchors": [
+    {
+      "block": 83635776,
+      "unix": 1772182082,
+      "hash": "0x8a8a49ea72acc9adb8a60add4f07391a7b5be27b237603eb839f76ee8cd",
+      "utc": "2026-02-27T08:48:02.000Z"
+    },
+    {
+      "block": 83635800,
+      "unix": 1772182092,
+      "hash": "0x7a5660bc764aded11281414e0151f0dd8ab963845c15cd418af7a6b8022a9e28",
+      "utc": "2026-02-27T08:48:12.000Z"
+    },
+    {
+      "block": 83636128,
+      "unix": 1772182240,
+      "hash": "0xa1e6a5a34a8d344bc5000b7281f6951d4aa03f83cb2ec16547f7924a64c0af6c",
+      "utc": "2026-02-27T08:50:40.000Z"
+    },
+    {
+      "block": 83636129,
+      "unix": 1772182241,
+      "hash": "0xdf0a17eaf5d3f0dd994a4dc4e72f6ef723e815a65ab8344cf36fb44470eb9db3",
+      "utc": "2026-02-27T08:50:41.000Z"
+    },
+    {
+      "block": 85954137,
+      "unix": 1773225560,
+      "hash": "0x0389e923aac51d4c9991e5a0f25b0e4e8a16ff5457949d9a54b5372ffc7fe8dc",
+      "utc": "2026-03-11T10:39:20.000Z"
+    },
+    {
+      "block": 85957578,
+      "unix": 1773227110,
+      "hash": "0x5e9a72e31b12362db0b8a0954fe930e0db7a3e2dcdddb151ae9c4206b5887297",
+      "utc": "2026-03-11T11:05:10.000Z"
+    },
+    {
+      "block": 85959961,
+      "unix": 1773228183,
+      "hash": "0x235cdc98f73598ad2c8205a62eb6271c44529509da5685436e21cd129203efc6",
+      "utc": "2026-03-11T11:23:03.000Z"
+    },
+    {
+      "block": 85961371,
+      "unix": 1773228817,
+      "hash": "0x1160342d0a137d60499f0d437f97206dd7fda711d6a8b6d7593f0f348bc7f91a",
+      "utc": "2026-03-11T11:33:37.000Z"
+    },
+    {
+      "block": 74741352,
+      "unix": 1768058344,
+      "hash": "0x48a1c21ef6325a5c8d3bc9263eb16799d8d09993b94df891067964e1c12f2624",
+      "utc": "2026-01-10T15:19:04.000Z"
+    },
+    {
+      "block": 74741587,
+      "unix": 1768058520,
+      "hash": "0xb34312e9657a55c1a461450dfd515056bfe9d74ca918ef564d8a666e9e947c07",
+      "utc": "2026-01-10T15:22:00.000Z"
+    },
+    {
+      "block": 63838943,
+      "unix": 1759878542,
+      "hash": "0x7e9f129e04e2a56ed676de559017f59097bb78944dc605fc99d52f7e8f471745",
+      "utc": "2025-10-07T23:09:02.000Z"
+    },
+    {
+      "block": 63838944,
+      "unix": 1759878543,
+      "hash": "0x0398117c31d9650f0084293908ee30f44730f451325a592afea311fc75c40715",
+      "utc": "2025-10-07T23:09:03.000Z"
+    },
+    {
+      "block": 116113193,
+      "unix": 1786811642,
+      "hash": "0x8d9cd5de24dd63e7bcbe06c470d18db07831f6a737cf091d3bc2c00311b06f99",
+      "utc": "2026-08-15T16:34:02.000Z"
+    },
+    {
+      "block": 116113197,
+      "unix": 1786811643,
+      "hash": "0x66f0eb74a8b6ebe232f76f3f35cfa4693e1a153b270eed3ccc0a1d808aa76be9",
+      "utc": "2026-08-15T16:34:03.000Z"
+    },
+    {
+      "block": 115919205,
+      "unix": 1786724323,
+      "hash": "0x9893b0dc01afa1a28e3af67e536875d14d459a03791bd95db594075a0b0e75cf",
+      "utc": "2026-08-14T16:18:43.000Z"
+    },
+    {
+      "block": 116314918,
+      "unix": 1786902437,
+      "hash": "0x9648ee8b4ddd7f5c07753da99995d07a601f66433a89782291bf4a9791499d4a",
+      "utc": "2026-08-16T17:47:17.000Z"
+    },
+    {
+      "block": 112475764,
+      "unix": 1785174047,
+      "hash": "0x0dc7e6f391ef924b0010c10458044d788c8b37ac57a47fde3d625be4b7ac9f56",
+      "utc": "2026-07-27T17:40:47.000Z"
+    },
+    {
+      "block": 112476616,
+      "unix": 1785174431,
+      "hash": "0x003d185bb4dbdc3cb06c3d8efece120199ff3a338de331c2c18f12ad700d759a",
+      "utc": "2026-07-27T17:47:11.000Z"
+    },
+    {
+      "block": 112642885,
+      "unix": 1785249282,
+      "hash": "0x7cf0a26229f1ba063bbd12b8e8fdcd02f96e8b6d23307be52bf1e18da7f8866b",
+      "utc": "2026-07-28T14:34:42.000Z"
+    },
+    {
+      "block": 112668702,
+      "unix": 1785260901,
+      "hash": "0x0f8e90ffda59dcf13546080091d55b84fa3244e1ce40ac399c9871ce44cfd4dc",
+      "utc": "2026-07-28T17:48:21.000Z"
+    }
+  ],
+  "stats": {
+    "cases": 6,
+    "owner_exit_before_first_scoped_pool": 2,
+    "owner_exit_before_lag_60": 2,
+    "owner_exit_before_lag_300": 3,
+    "owner_exit_before_lag_900": 5,
+    "globally_qualified_public_U": 0,
+    "real_follower_P5_executions": 0
+  },
+  "cases": [
+    {
+      "case": "DDAC_DRAGON",
+      "original_wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "original_entry_block": 83635776,
+      "original_entry_utc": "2026-02-27T08:48:02.000Z",
+      "original_exit_block": 83635800,
+      "original_exit_utc": "2026-02-27T08:48:12.000Z",
+      "owner_round_elapsed_seconds": 10,
+      "first_scoped_dex_active_block": 83636128,
+      "first_scoped_dex_utc": "2026-02-27T08:50:40.000Z",
+      "first_scoped_dex_protocol": "V2",
+      "first_scoped_quote": "WBNB",
+      "first_scoped_venue_grade": "OWNER_EXIT_PRECEDES_FIRST_SCOPED_DEX_POOL_NOT_GLOBAL_U_REJECTION",
+      "first_scoped_dex_minus_owner_exit_seconds": 148,
+      "later_math_quote_block": 83636129,
+      "later_math_quote_utc": "2026-02-27T08:50:41.000Z",
+      "later_math_quote_market_comparison": "SAME_POOL_LATER_BLOCK_ONLY_NOT_EXECUTION",
+      "historical_block_timestamp_grade": "SCALAR_EXTRACTED_FROM_CONNECTED_ALCHEMY_BODY_TRUNCATED_TO_8098_CHARS_NOT_RAW_HTTP_ARCHIVED",
+      "post_entry_lag_structural_preflight_NOT_PUBLIC_SIGNAL": [
+        {
+          "lag_sec": 60,
+          "post_owner_entry_proxy_utc": "2026-02-27T08:49:02.000Z",
+          "owner_exit_already_mined_by_proxy": true,
+          "scoped_earliest_pool_active_by_proxy": false,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        },
+        {
+          "lag_sec": 300,
+          "post_owner_entry_proxy_utc": "2026-02-27T08:53:02.000Z",
+          "owner_exit_already_mined_by_proxy": true,
+          "scoped_earliest_pool_active_by_proxy": true,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        },
+        {
+          "lag_sec": 900,
+          "post_owner_entry_proxy_utc": "2026-02-27T09:03:02.000Z",
+          "owner_exit_already_mined_by_proxy": true,
+          "scoped_earliest_pool_active_by_proxy": true,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        }
+      ],
+      "global_first_executable_U": "UNRESOLVED_NOT_INFERRED_FROM_EARLIEST_SCOPED_POOL",
+      "market_venue_at_original_buy": "UNKNOWN_DO_NOT_ASSUME_SCOPE_FIRST_POOL",
+      "follower_net_pnl": "NOT_CALCULATED_NO_PUBLIC_FIRST_SEEN_AND_FULL_QUOTE_PATH"
+    },
+    {
+      "case": "239E_DRAGON_R1",
+      "original_wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "original_entry_block": 85954137,
+      "original_entry_utc": "2026-03-11T10:39:20.000Z",
+      "original_exit_block": 85957578,
+      "original_exit_utc": "2026-03-11T11:05:10.000Z",
+      "owner_round_elapsed_seconds": 1550,
+      "first_scoped_dex_active_block": 83636128,
+      "first_scoped_dex_utc": "2026-02-27T08:50:40.000Z",
+      "first_scoped_dex_protocol": "V2",
+      "first_scoped_quote": "WBNB",
+      "first_scoped_venue_grade": "SCOPED_DEX_EXISTS_BEFORE_OWNER_EXIT_NOT_PROOF_OF_EXECUTABLE_U",
+      "first_scoped_dex_minus_owner_exit_seconds": -1044870,
+      "later_math_quote_block": 83636129,
+      "later_math_quote_utc": "2026-02-27T08:50:41.000Z",
+      "later_math_quote_market_comparison": "SAME_POOL_LATER_BLOCK_ONLY_NOT_EXECUTION",
+      "historical_block_timestamp_grade": "SCALAR_EXTRACTED_FROM_CONNECTED_ALCHEMY_BODY_TRUNCATED_TO_8098_CHARS_NOT_RAW_HTTP_ARCHIVED",
+      "post_entry_lag_structural_preflight_NOT_PUBLIC_SIGNAL": [
+        {
+          "lag_sec": 60,
+          "post_owner_entry_proxy_utc": "2026-03-11T10:40:20.000Z",
+          "owner_exit_already_mined_by_proxy": false,
+          "scoped_earliest_pool_active_by_proxy": true,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        },
+        {
+          "lag_sec": 300,
+          "post_owner_entry_proxy_utc": "2026-03-11T10:44:20.000Z",
+          "owner_exit_already_mined_by_proxy": false,
+          "scoped_earliest_pool_active_by_proxy": true,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        },
+        {
+          "lag_sec": 900,
+          "post_owner_entry_proxy_utc": "2026-03-11T10:54:20.000Z",
+          "owner_exit_already_mined_by_proxy": false,
+          "scoped_earliest_pool_active_by_proxy": true,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        }
+      ],
+      "global_first_executable_U": "UNRESOLVED_NOT_INFERRED_FROM_EARLIEST_SCOPED_POOL",
+      "market_venue_at_original_buy": "UNKNOWN_DO_NOT_ASSUME_SCOPE_FIRST_POOL",
+      "follower_net_pnl": "NOT_CALCULATED_NO_PUBLIC_FIRST_SEEN_AND_FULL_QUOTE_PATH"
+    },
+    {
+      "case": "239E_DRAGON_R2",
+      "original_wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "original_entry_block": 85959961,
+      "original_entry_utc": "2026-03-11T11:23:03.000Z",
+      "original_exit_block": 85961371,
+      "original_exit_utc": "2026-03-11T11:33:37.000Z",
+      "owner_round_elapsed_seconds": 634,
+      "first_scoped_dex_active_block": 83636128,
+      "first_scoped_dex_utc": "2026-02-27T08:50:40.000Z",
+      "first_scoped_dex_protocol": "V2",
+      "first_scoped_quote": "WBNB",
+      "first_scoped_venue_grade": "SCOPED_DEX_EXISTS_BEFORE_OWNER_EXIT_NOT_PROOF_OF_EXECUTABLE_U",
+      "first_scoped_dex_minus_owner_exit_seconds": -1046577,
+      "later_math_quote_block": 83636129,
+      "later_math_quote_utc": "2026-02-27T08:50:41.000Z",
+      "later_math_quote_market_comparison": "SAME_POOL_LATER_BLOCK_ONLY_NOT_EXECUTION",
+      "historical_block_timestamp_grade": "SCALAR_EXTRACTED_FROM_CONNECTED_ALCHEMY_BODY_TRUNCATED_TO_8098_CHARS_NOT_RAW_HTTP_ARCHIVED",
+      "post_entry_lag_structural_preflight_NOT_PUBLIC_SIGNAL": [
+        {
+          "lag_sec": 60,
+          "post_owner_entry_proxy_utc": "2026-03-11T11:24:03.000Z",
+          "owner_exit_already_mined_by_proxy": false,
+          "scoped_earliest_pool_active_by_proxy": true,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        },
+        {
+          "lag_sec": 300,
+          "post_owner_entry_proxy_utc": "2026-03-11T11:28:03.000Z",
+          "owner_exit_already_mined_by_proxy": false,
+          "scoped_earliest_pool_active_by_proxy": true,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        },
+        {
+          "lag_sec": 900,
+          "post_owner_entry_proxy_utc": "2026-03-11T11:38:03.000Z",
+          "owner_exit_already_mined_by_proxy": true,
+          "scoped_earliest_pool_active_by_proxy": true,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        }
+      ],
+      "global_first_executable_U": "UNRESOLVED_NOT_INFERRED_FROM_EARLIEST_SCOPED_POOL",
+      "market_venue_at_original_buy": "UNKNOWN_DO_NOT_ASSUME_SCOPE_FIRST_POOL",
+      "follower_net_pnl": "NOT_CALCULATED_NO_PUBLIC_FIRST_SEEN_AND_FULL_QUOTE_PATH"
+    },
+    {
+      "case": "8E6B_HAJIMI",
+      "original_wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "哈基米 / HAJIMI",
+      "exact_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "original_entry_block": 74741352,
+      "original_entry_utc": "2026-01-10T15:19:04.000Z",
+      "original_exit_block": 74741587,
+      "original_exit_utc": "2026-01-10T15:22:00.000Z",
+      "owner_round_elapsed_seconds": 176,
+      "first_scoped_dex_active_block": 63838943,
+      "first_scoped_dex_utc": "2025-10-07T23:09:02.000Z",
+      "first_scoped_dex_protocol": "V2",
+      "first_scoped_quote": "WBNB",
+      "first_scoped_venue_grade": "SCOPED_DEX_EXISTS_BEFORE_OWNER_EXIT_NOT_PROOF_OF_EXECUTABLE_U",
+      "first_scoped_dex_minus_owner_exit_seconds": -8179978,
+      "later_math_quote_block": 63838944,
+      "later_math_quote_utc": "2025-10-07T23:09:03.000Z",
+      "later_math_quote_market_comparison": "SAME_POOL_LATER_BLOCK_ONLY_NOT_EXECUTION",
+      "historical_block_timestamp_grade": "SCALAR_EXTRACTED_FROM_CONNECTED_ALCHEMY_BODY_TRUNCATED_TO_8098_CHARS_NOT_RAW_HTTP_ARCHIVED",
+      "post_entry_lag_structural_preflight_NOT_PUBLIC_SIGNAL": [
+        {
+          "lag_sec": 60,
+          "post_owner_entry_proxy_utc": "2026-01-10T15:20:04.000Z",
+          "owner_exit_already_mined_by_proxy": false,
+          "scoped_earliest_pool_active_by_proxy": true,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        },
+        {
+          "lag_sec": 300,
+          "post_owner_entry_proxy_utc": "2026-01-10T15:24:04.000Z",
+          "owner_exit_already_mined_by_proxy": true,
+          "scoped_earliest_pool_active_by_proxy": true,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        },
+        {
+          "lag_sec": 900,
+          "post_owner_entry_proxy_utc": "2026-01-10T15:34:04.000Z",
+          "owner_exit_already_mined_by_proxy": true,
+          "scoped_earliest_pool_active_by_proxy": true,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        }
+      ],
+      "global_first_executable_U": "UNRESOLVED_NOT_INFERRED_FROM_EARLIEST_SCOPED_POOL",
+      "market_venue_at_original_buy": "UNKNOWN_DO_NOT_ASSUME_SCOPE_FIRST_POOL",
+      "follower_net_pnl": "NOT_CALCULATED_NO_PUBLIC_FIRST_SEEN_AND_FULL_QUOTE_PATH"
+    },
+    {
+      "case": "A83B_NIULAI",
+      "original_wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "original_entry_block": 116113193,
+      "original_entry_utc": "2026-08-15T16:34:02.000Z",
+      "original_exit_block": 116113197,
+      "original_exit_utc": "2026-08-15T16:34:03.000Z",
+      "owner_round_elapsed_seconds": 1,
+      "first_scoped_dex_active_block": 115919205,
+      "first_scoped_dex_utc": "2026-08-14T16:18:43.000Z",
+      "first_scoped_dex_protocol": "V3",
+      "first_scoped_quote": "USDT",
+      "first_scoped_venue_grade": "SCOPED_DEX_EXISTS_BEFORE_OWNER_EXIT_NOT_PROOF_OF_EXECUTABLE_U",
+      "first_scoped_dex_minus_owner_exit_seconds": -87320,
+      "later_math_quote_block": 116314918,
+      "later_math_quote_utc": "2026-08-16T17:47:17.000Z",
+      "later_math_quote_market_comparison": "DIFFERENT_POOL_OR_MARKET_NOT_COMPARABLE",
+      "historical_block_timestamp_grade": "SCALAR_EXTRACTED_FROM_CONNECTED_ALCHEMY_BODY_TRUNCATED_TO_8098_CHARS_NOT_RAW_HTTP_ARCHIVED",
+      "post_entry_lag_structural_preflight_NOT_PUBLIC_SIGNAL": [
+        {
+          "lag_sec": 60,
+          "post_owner_entry_proxy_utc": "2026-08-15T16:35:02.000Z",
+          "owner_exit_already_mined_by_proxy": true,
+          "scoped_earliest_pool_active_by_proxy": true,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        },
+        {
+          "lag_sec": 300,
+          "post_owner_entry_proxy_utc": "2026-08-15T16:39:02.000Z",
+          "owner_exit_already_mined_by_proxy": true,
+          "scoped_earliest_pool_active_by_proxy": true,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        },
+        {
+          "lag_sec": 900,
+          "post_owner_entry_proxy_utc": "2026-08-15T16:49:02.000Z",
+          "owner_exit_already_mined_by_proxy": true,
+          "scoped_earliest_pool_active_by_proxy": true,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        }
+      ],
+      "global_first_executable_U": "UNRESOLVED_NOT_INFERRED_FROM_EARLIEST_SCOPED_POOL",
+      "market_venue_at_original_buy": "UNKNOWN_DO_NOT_ASSUME_SCOPE_FIRST_POOL",
+      "follower_net_pnl": "NOT_CALCULATED_NO_PUBLIC_FIRST_SEEN_AND_FULL_QUOTE_PATH"
+    },
+    {
+      "case": "877AF_MARSCOIN",
+      "original_wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "original_entry_block": 112475764,
+      "original_entry_utc": "2026-07-27T17:40:47.000Z",
+      "original_exit_block": 112476616,
+      "original_exit_utc": "2026-07-27T17:47:11.000Z",
+      "owner_round_elapsed_seconds": 384,
+      "first_scoped_dex_active_block": 112642885,
+      "first_scoped_dex_utc": "2026-07-28T14:34:42.000Z",
+      "first_scoped_dex_protocol": "V3",
+      "first_scoped_quote": "USDT",
+      "first_scoped_venue_grade": "OWNER_EXIT_PRECEDES_FIRST_SCOPED_DEX_POOL_NOT_GLOBAL_U_REJECTION",
+      "first_scoped_dex_minus_owner_exit_seconds": 74851,
+      "later_math_quote_block": 112668702,
+      "later_math_quote_utc": "2026-07-28T17:48:21.000Z",
+      "later_math_quote_market_comparison": "DIFFERENT_POOL_OR_MARKET_NOT_COMPARABLE",
+      "historical_block_timestamp_grade": "SCALAR_EXTRACTED_FROM_CONNECTED_ALCHEMY_BODY_TRUNCATED_TO_8098_CHARS_NOT_RAW_HTTP_ARCHIVED",
+      "post_entry_lag_structural_preflight_NOT_PUBLIC_SIGNAL": [
+        {
+          "lag_sec": 60,
+          "post_owner_entry_proxy_utc": "2026-07-27T17:41:47.000Z",
+          "owner_exit_already_mined_by_proxy": false,
+          "scoped_earliest_pool_active_by_proxy": false,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        },
+        {
+          "lag_sec": 300,
+          "post_owner_entry_proxy_utc": "2026-07-27T17:45:47.000Z",
+          "owner_exit_already_mined_by_proxy": false,
+          "scoped_earliest_pool_active_by_proxy": false,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        },
+        {
+          "lag_sec": 900,
+          "post_owner_entry_proxy_utc": "2026-07-27T17:55:47.000Z",
+          "owner_exit_already_mined_by_proxy": true,
+          "scoped_earliest_pool_active_by_proxy": false,
+          "first_public_observer_receive_time": "UNRESOLVED",
+          "can_user_reproduce_actual_owner_roundtrip": "UNRESOLVED",
+          "executed_trade": false
+        }
+      ],
+      "global_first_executable_U": "UNRESOLVED_NOT_INFERRED_FROM_EARLIEST_SCOPED_POOL",
+      "market_venue_at_original_buy": "UNKNOWN_DO_NOT_ASSUME_SCOPE_FIRST_POOL",
+      "follower_net_pnl": "NOT_CALCULATED_NO_PUBLIC_FIRST_SEEN_AND_FULL_QUOTE_PATH"
+    }
+  ],
+  "limitations": [
+    "Block header timestamp is neither public pre-mine first seen time nor particular external feed's first receipt.",
+    "Owner buy block as proxy anchor is explicitly not a real trader's execution timestamp.",
+    "Global first tradable venue may precede the first scoped DEX pool; cannot reject global launchpad U from a later DEX listing.",
+    "Lag-only owner exit status is NOT enough to conclude positive/negative follower returns.",
+    "No endpoint HTTP signed proof retained for extracted header scalars; if a P4-B economic upgrade is requested, capture raw source before review."
+  ],
+  "gates": {
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "ACTUAL_REALIZED_NET_PNL": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}

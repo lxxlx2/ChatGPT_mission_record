@@ -1,0 +1,42 @@
+{
+  "schema": "BSC_P4B_FLAP_2026_MAJOR2_ACTUAL_FIRSTBUY_PLUS9_SELL_OBSERVATION_PRECOMMIT",
+  "scope": "FROZEN two 2026 Flap early purchases; next 10 inclusive blocks from first original observed buy. Portal TokenSold events within this scope; fixed post-buy block portal quoteExactInput(whole original purchased token amount, to true quote CA). Full filtered logs must be COMPLETE to assert none within window, not entire historical market; reverse quote never demonstrates successful external sale; no DDAC or wallet outside candidate promotion.",
+  "portal": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+  "sell_topic0": "0x03a4693e592f5e75dc7c136acb39b146d2b4966c0e509c34f362dee02b3b861a",
+  "quote_selector": "0xfc847c2b",
+  "sources": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-topic-raw-part1-2026-10-14.json",
+      "git_blob_sha": "b7bd1f907e94e2103b2c4e35c763ea18cf15b28e"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-topic-raw-part2-2026-10-14.json",
+      "git_blob_sha": "1cd57c862cc373183dcd1df05853863268ce4586"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-bidirectional-quotes-raw-2026-10-14.json",
+      "git_blob_sha": "43fe6d36fbeeda43e07a2b65874c4292e5d91606"
+    }
+  ],
+  "queries": [
+    {
+      "token": "牛来",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_CA": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "buy_block": 115628774,
+      "actual_bought_token_raw": "37956445907182539413593521",
+      "sell_window_start": 115628774,
+      "sell_window_end": 115628783
+    },
+    {
+      "token": "MARSCOIN",
+      "CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_CA": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "buy_block": 112441394,
+      "actual_bought_token_raw": "77163604478330373759393953",
+      "sell_window_start": 112441394,
+      "sell_window_end": 112441403
+    }
+  ],
+  "production": "NO_GO"
+}

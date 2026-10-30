@@ -1,0 +1,43 @@
+{
+  "schema": "BSC_P4B_2026_FLAP_ORIGINAL_BUYER_QUOTE_TRANSFER_FROM_SOURCE_PREFREEZE_V1",
+  "base": "dd3d529c99853b89f2be299235cdb499c2ad365f",
+  "dependent_two_sided_quote_freeze": "bsc-meme-address-model-v1-p4b-flap-major2-nplus1-roundtrip-math-precommit-2026-10-17.json",
+  "fixed_source": "bsc-meme-address-model-v1-p4b-flap-major2-original-buys-and-quotes-2026-10-14.json",
+  "fixed_source_blob": "d69f2ddfade437a1d8b0fc49585eb4ca0f9268e9",
+  "network": "bnb-mainnet",
+  "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+  "method": "historical eth_getLogs for ERC20 quoteCA, Transfer(from=original signed EOA), exactly original first signed buy block N; no broad range, max 2 bounded requests, no retries",
+  "cases": [
+    {
+      "token": "牛来",
+      "tokenCA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quoteCA": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "signer": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+      "original_signed_buy_tx": "0xcb89b7adafacdfb5f844102c4e27ed474abec8947c74476d461be70a9b0e8fa5",
+      "blockN": 115628774
+    },
+    {
+      "token": "MARSCOIN",
+      "tokenCA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quoteCA": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "signer": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+      "original_signed_buy_tx": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+      "blockN": 112441394
+    }
+  ],
+  "semantic_rules": [
+    "If match is a different tx in same block, do not assign it to owner first buy.",
+    "If zero logs found, it only means zero matching selected ERC20 sender/quoteCA/one-block events, not no economic spend or no trading.",
+    "If clipped JSON, set UNRESOLVED not zero.",
+    "Amounts quoteCA raw 18 decimals, not USD or BNB; actual cost attribution requires matching full signed tx and intermediary provenance."
+  ],
+  "max_calls": 2,
+  "no_retry": true,
+  "gates": {
+    "global_U": "UNRESOLVED",
+    "original_cost": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "production": "NO_GO",
+    "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  }
+}

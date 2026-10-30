@@ -1,0 +1,26 @@
+{
+  "schema": "BSC_P4C_ORIGINAL_TOKEN4_BOUNDARY_BLOCK_UTC_HEADER_READBACK",
+  "network": "bnb-mainnet",
+  "production": "NO_GO",
+  "scope": "Exactly the first original owner buy and final original sell of source-closed 8E6B token4 two-round cohort. ethGetBlockByNumber(false) response text is truncated at ~8KB but initial header timestamp/hash/number are readable; do not claim full block-body source.",
+  "rows": [
+    {
+      "block": 63056884,
+      "block_hex": "0x3c22bf4",
+      "block_hash": "0x00c1b9f14f2eeb41d88c610d25aefe7ecb19799d9990facab5aeb76fba874f66",
+      "timestamp_hex": "0x68dca94d",
+      "timestamp_unix": 1759291725,
+      "UTC": "2025-10-01T04:08:45.000Z",
+      "RPC_FULL_BLOCK_BODY": "TRUNCATED_TOOL_OUTPUT_HEADER_FIELDS_ONLY"
+    },
+    {
+      "block": 64458294,
+      "block_hex": "0x3d78e36",
+      "block_hash": "0x999358e08aa0ff44ab348233557473cd6878be025bc0a5dfad81c562e460f2a1",
+      "timestamp_hex": "0x68ecb4a1",
+      "timestamp_unix": 1760343201,
+      "UTC": "2025-10-13T08:13:21.000Z",
+      "RPC_FULL_BLOCK_BODY": "TRUNCATED_TOOL_OUTPUT_HEADER_FIELDS_ONLY"
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "schema": "BSC_P4_PRIORITY4_V2_FACTORY_CREATION_BOUNDARY_DIRECT_ONCHAIN",
+  "precommit_sha": "fdaf91ec445a7b94c24508335ce9a6f017326c73",
+  "source_binary_proof": "bsc-meme-address-model-v1-p4-priority4-firstpair-seven-stage-proof-2026-10-13.json",
+  "network": "bnb-mainnet",
+  "topic": "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+  "reads": [
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "creation_block": 83636128,
+      "pair_before": "0x0000000000000000000000000000000000000000",
+      "pair_at": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "pairCreated_event_count_in_block": 1,
+      "matched_pair_created": [
+        {
+          "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+          "block_hex": "0x4fc2fa0",
+          "hash": "0x843382ac52f04c8b0321fb366b3de2de0047e736d733bf405116bbd4823adad7",
+          "log_index": "0x68",
+          "topics": [
+            "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+            "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "0x000000000000000000000000eccbb861c0dda7efd964010085488b69317e4444"
+          ],
+          "data": "0x00000000000000000000000022af7297243c4eef12e2d5a4f888b92e56bf127c000000000000000000000000000000000000000000000000000000000024eb9e"
+        }
+      ],
+      "boundary_confirmed": true,
+      "full_logs_parse": true
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "币安人生",
+      "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "creation_block": 63454407,
+      "pair_before": "0x0000000000000000000000000000000000000000",
+      "pair_at": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "pairCreated_event_count_in_block": 1,
+      "matched_pair_created": [
+        {
+          "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+          "block_hex": "0x3c83cc7",
+          "hash": "0xa4ce8497bbae8c3d6739ea652ea7ae69caca230cefb56c56e344836aa65369f1",
+          "log_index": "0xa6",
+          "topics": [
+            "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+            "0x000000000000000000000000924fa68a0fc644485b8df8abfa0a41c2e7744444",
+            "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+          ],
+          "data": "0x00000000000000000000000066f289de31eef70d52186729d2637ac978cfc56b00000000000000000000000000000000000000000000000000000000001e6c3b"
+        }
+      ],
+      "boundary_confirmed": true,
+      "full_logs_parse": true
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "MARSCOIN",
+      "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "pool": "0x9f286c9bd510150c62a08da72af797ac45311ae0",
+      "creation_block": 112668701,
+      "pair_before": "0x0000000000000000000000000000000000000000",
+      "pair_at": "0x9f286c9bd510150c62a08da72af797ac45311ae0",
+      "pairCreated_event_count_in_block": 1,
+      "matched_pair_created": [
+        {
+          "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+          "block_hex": "0x6b7301d",
+          "hash": "0x17e2f283b285a3c9a3f4dc00e82fe9a0efea4080a5d6adc13f4f043ced53a214",
+          "log_index": "0x0",
+          "topics": [
+            "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+            "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "0x000000000000000000000000fe189e97832da1573e4e4ff034f4ffc3a15c7777"
+          ],
+          "data": "0x0000000000000000000000009f286c9bd510150c62a08da72af797ac45311ae000000000000000000000000000000000000000000000000000000000002870fd"
+        }
+      ],
+      "boundary_confirmed": true,
+      "full_logs_parse": true
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "pool": "0xbfc26980d8068ae744f5405d3abf6e7df02e11b3",
+      "creation_block": 116314917,
+      "pair_before": "0x0000000000000000000000000000000000000000",
+      "pair_at": "0xbfc26980d8068ae744f5405d3abf6e7df02e11b3",
+      "pairCreated_event_count_in_block": 1,
+      "matched_pair_created": [
+        {
+          "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+          "block_hex": "0x6eed325",
+          "hash": "0x01aa8554e5a6be546bd8341e95d4fb89c0e0b2965b6c6c572c6fd4ad8c2bd8d7",
+          "log_index": "0x71",
+          "topics": [
+            "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+            "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "0x000000000000000000000000beea1d618e533a387d941f58a7d4c9b7bd377777"
+          ],
+          "data": "0x000000000000000000000000bfc26980d8068ae744f5405d3abf6e7df02e11b3000000000000000000000000000000000000000000000000000000000028ed13"
+        }
+      ],
+      "boundary_confirmed": true,
+      "full_logs_parse": true
+    }
+  ],
+  "production": "NO_GO"
+}

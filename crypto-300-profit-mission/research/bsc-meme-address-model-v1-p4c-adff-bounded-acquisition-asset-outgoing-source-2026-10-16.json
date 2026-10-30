@@ -1,0 +1,128 @@
+{
+  "schema": "BSC_MEME_P4C_ADFF_BOUNDED_ORIGINAL_ACQUISITION_OUTGOING_PAYMENT_SEARCH_V1",
+  "collected_date": "2026-10-16",
+  "chain": "bnb-mainnet",
+  "base_independent_review_sha": "520eb0dd0851b1bb15728d4f57c50abc0917474c",
+  "previous_signed_two_tx_source_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-adff-dragon-original-two-owner-transfers-2026-10-16.json",
+  "previous_signed_two_tx_git_blob_sha": "b2a428b6c2f417abaef2c0f3b94bf4d16e9c91ab",
+  "original_owner": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+  "original_tx": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+  "original_block": 121783426,
+  "original_signed_tx_native_value_wei": "0",
+  "payment_event_query_scope": "Only one historical block and exact indexed owner FROM for standard ERC20 Transfer signature across all token contracts; Alchemy bnb-mainnet. Source partial owner IN scan was clipped and is not considered exhaustive.",
+  "source_queries": [
+    {
+      "method": "eth_getLogs",
+      "contract_filter": null,
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "topic1": "0x000000000000000000000000adffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "topic2": null,
+      "fromBlock": 121783426,
+      "toBlock": 121783426,
+      "raw_text": "[]",
+      "full_json_parseable": true,
+      "matching_ERC20_outgoing_transfer_log_count_in_entire_block": 0
+    },
+    {
+      "method": "eth_getLogs",
+      "contract_filter": "0x55d398326f99059ff775485246999027b3197955",
+      "asset": "USDT",
+      "direction": "owner_out",
+      "raw_text": "[]",
+      "full_json_parseable": true
+    },
+    {
+      "method": "eth_getLogs",
+      "contract_filter": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+      "asset": "USDC",
+      "direction": "owner_out",
+      "raw_text": "[]",
+      "full_json_parseable": true
+    },
+    {
+      "method": "eth_getLogs",
+      "contract_filter": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "asset": "BUSD",
+      "direction": "owner_out",
+      "raw_text": "[]",
+      "full_json_parseable": true
+    },
+    {
+      "method": "alchemy_getAssetTransfers",
+      "category": [
+        "erc20",
+        "external"
+      ],
+      "fromAddress": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "fromBlock": 121783426,
+      "toBlock": 121783426,
+      "raw_text": "{\"transfers\": []}",
+      "full_json_parseable": true
+    },
+    {
+      "method": "alchemy_getAssetTransfers",
+      "category": [
+        "erc20",
+        "external",
+        "internal"
+      ],
+      "fromAddress": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "fromBlock": 121783426,
+      "toBlock": 121783426,
+      "status": "RPC_ERROR_UNSUPPORTED_INTERNAL_CATEGORY_ON_BNB_MAINNET",
+      "raw_text": null
+    },
+    {
+      "method": "eth_getLogs",
+      "contract_filter": null,
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "topic1": "0x000000000000000000000000adffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "topic2": "0x000000000000000000000000eb91d9ed63a060077d51678248ae11dc784ab735",
+      "raw_text": "[]",
+      "full_json_parseable": true
+    },
+    {
+      "method": "eth_getLogs",
+      "contract_filter": null,
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "topic1": "0x000000000000000000000000adffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "topic2": "0x000000000000000000000000d3604620f75fefab226d0fa50a3894e1d1111137",
+      "raw_text": "[]",
+      "full_json_parseable": true
+    },
+    {
+      "method": "eth_getLogs",
+      "contract_filter": null,
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "topic1": "0x000000000000000000000000adffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "topic2": "0x000000000000000000000000359bf61ca77cbda27a5eb3a8b472f3c02bc2bc75",
+      "raw_text": "[]",
+      "full_json_parseable": true
+    }
+  ],
+  "read_scope_grade": "SAME_PROVIDER_INDEPENDENT_RPC_METHODS_NO_INDEXED_OWNER_OUT_STANDARD_ERC20_TRANSFER_IN_SELECTED_BLOCK; NOT FULL_ACCOUNTING",
+  "original_acquisition": "TWO_DRAGON_ERC20_OWNER_IN_EVENTS_ARRIVAL_CONFIRMED",
+  "original_owner_token_turnover": "TWO_IN_ONE_OUT_CLOSED_SOURCE_TRANSACTIONS",
+  "original_acquisition_payment_source": "UNRESOLVED_OTHER_ADDRESS_PREFUNDING_INTERNAL_ROUTING_NONSTANDARD_TOKEN_OR_EARLIER_BALANCE",
+  "original_owner_realized_pnl": "UNRESOLVED",
+  "valid_inferences": [
+    "standard indexed Transfer(owner,..) logs from that owner were absent across original buy block",
+    "original direct native tx.value was 0",
+    "source Dragon token arrivals were two outside addresses"
+  ],
+  "invalid_inferences": [
+    "owner paid zero economic cost",
+    "free airdrop proven",
+    "ADFF profitable repeated Meme buyer",
+    "any route is executable by external observer"
+  ],
+  "not_queried_or_not_supported": [
+    "internal asset transfer traces unsupported on BNB by this app",
+    "EIP-1155, NFT, nonstandard token transfer mechanisms, other accounts costs and prior funding",
+    "all block receipts and all internal router call paths",
+    "2ADF original middle withdrawal complete single-tx receipt remains 8098-character clipped"
+  ],
+  "P4_C": "PARTIAL",
+  "P5": "BLOCKED",
+  "PRODUCTION": "NO_GO"
+}

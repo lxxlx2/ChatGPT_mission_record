@@ -1,0 +1,27 @@
+{
+  "schema": "BSC_P4C_DRAGON_DDAC_BUY_EXIT_HISTORIC_NATIVE_BALANCE_AND_BLOCK_ISOLATION_PRECOMMIT",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-dragon-ddac-real-pre-dex-buy-2026-10-14.json",
+      "git_blob_sha": "f89362368ad47f1cde2d8475f9e7b8a688093f83"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-major3-selected-exits-sales-raw-2026-10-15.json",
+      "git_blob_sha": "ae92b1b05b5d188244f5ac37aa320504b3fb8f75"
+    }
+  ],
+  "network": "bnb-mainnet",
+  "scope": "Freeze known original DDAC Dragon buy and immediate full-token transfer-to-manager sale candidate. Query BNB native EOA historical balance in four exact states (buy_block-1,buy_block,sale_block-1,sale_block); original tx, external EOA tx count in each touched block with excludeZeroValue=false, and receipt header gasUsed/effectiveGasPrice when possible. Balance delta includes gas and unrelated txs; only infer original BNB receipt when exactly one sender tx in block and no other inbound native transfers and full gas cost verified. Otherwise actual PnL unknown.",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "buy_tx": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+  "buy_block": 83635776,
+  "sell_candidate_tx": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+  "sell_candidate_block": 83635800,
+  "blocks": [
+    83635775,
+    83635776,
+    83635799,
+    83635800
+  ],
+  "production": "NO_GO"
+}

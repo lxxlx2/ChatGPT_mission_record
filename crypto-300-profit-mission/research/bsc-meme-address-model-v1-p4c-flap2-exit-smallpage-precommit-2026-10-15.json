@@ -1,0 +1,52 @@
+{
+  "schema": "BSC_P4C_FLAP_MAJOR2_OWNER_EXIT_2PERPAGE_FALLBACK_PRECOMMIT",
+  "parent_raw_git_blob_sha": "30425f9ee554bdf8f883b1c85e01261f1cf438df",
+  "query": "Original 20/page asc/desc RPC JSON truncated at 8002 bytes for both Flap major owners; now freeze source-identical from signer/CA/from block, only maxCount 0x2 with asc and desc. Preserve pageKey and do not pretend first 2 cover entire history.",
+  "queries": [
+    {
+      "token": "牛来",
+      "order": "asc",
+      "original_criteria": {
+        "wallet": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+        "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+        "fromBlock": "0x6e45ae6",
+        "maxCount": "0x14"
+      },
+      "maxCount": "0x2"
+    },
+    {
+      "token": "牛来",
+      "order": "desc",
+      "original_criteria": {
+        "wallet": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+        "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+        "fromBlock": "0x6e45ae6",
+        "maxCount": "0x14"
+      },
+      "maxCount": "0x2"
+    },
+    {
+      "token": "MARSCOIN",
+      "order": "asc",
+      "original_criteria": {
+        "wallet": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+        "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "fromBlock": "0x6b3b832",
+        "maxCount": "0x14"
+      },
+      "maxCount": "0x2"
+    },
+    {
+      "token": "MARSCOIN",
+      "order": "desc",
+      "original_criteria": {
+        "wallet": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+        "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "fromBlock": "0x6b3b832",
+        "maxCount": "0x14"
+      },
+      "maxCount": "0x2"
+    }
+  ],
+  "production": "NO_GO"
+}

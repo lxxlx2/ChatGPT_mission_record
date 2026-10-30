@@ -1,0 +1,109 @@
+{
+  "schema": "BSC_P4B_FIRST_OBSERVED_SWAP_OWNER_RECEIPT_9_PRECOMMIT",
+  "origin_source_blob_sha": "646732ca70fa06dff798b30b2a91236135f4ecbb",
+  "network": "bnb-mainnet",
+  "query": "eth_getTransactionByHash and eth_getTransactionReceipt read only",
+  "selection_rule": "Exactly one earliest observed V2 Swap from each of 9 frozen 19-CA pools with a Swap in covered (10-block or 1-block) original window; not global earliest market buy and not trader profit; retain both negative and unknown",
+  "targets": [
+    {
+      "index": 2,
+      "token": "MUBARAK",
+      "CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "pool": "0xb7c6f7db26cde42550e4017bb9855bbaaa20eb44",
+      "first_observed_swap_block": 47442145,
+      "txhash": "0xfd4ff6e14292ab047c94ca09ce53dc865862e0934ef3e23c032480f3bdde0af0",
+      "first_event_log_index": 223,
+      "first_event_direction": "POOL_SWAP_SELL_TOKEN_WBNB_OUT",
+      "scope": "FULL_FIRST_TEN_BLOCKS"
+    },
+    {
+      "index": 3,
+      "token": "TUT",
+      "CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "pool": "0xd7efdee04e508502bdc666f67f3d9b006c20318d",
+      "first_observed_swap_block": 46521964,
+      "txhash": "0xcd52e9d31b7ef5f7a9afc5914810ca949f997c97c3a656b337da30acd8a9c391",
+      "first_event_log_index": 36,
+      "first_event_direction": "POOL_SWAP_SELL_TOKEN_WBNB_OUT",
+      "scope": "FULL_FIRST_TEN_BLOCKS"
+    },
+    {
+      "index": 7,
+      "token": "BANANAS31",
+      "CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "pool": "0xe518025b12f424f825f3b53c8d4a747ccbfc6127",
+      "first_observed_swap_block": 46871949,
+      "txhash": "0x23758071fc345e324263c01e14e9de0d4b21f75c4cdfd462d4c567106637f761",
+      "first_event_log_index": 3,
+      "first_event_direction": "POOL_SWAP_BUY_TOKEN_WBNB_IN",
+      "scope": "FULL_FIRST_TEN_BLOCKS"
+    },
+    {
+      "index": 8,
+      "token": "BOB",
+      "CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "pool": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "first_observed_swap_block": 44007572,
+      "txhash": "0x95eeb1162dfd14e037eb863a785251850041ee4a777fc664e3763993bf4d2f75",
+      "first_event_log_index": 55,
+      "first_event_direction": "POOL_SWAP_BUY_TOKEN_WBNB_IN",
+      "scope": "FULL_FIRST_TEN_BLOCKS"
+    },
+    {
+      "index": 9,
+      "token": "BULLA",
+      "CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "pool": "0x3551191f78869c29388886330f31739a87866c38",
+      "first_observed_swap_block": 50982327,
+      "txhash": "0xb1e139ccb3664f08297f5f0bd5c049d539378a46aee72ac079ed10e1df736806",
+      "first_event_log_index": 48,
+      "first_event_direction": "POOL_SWAP_SELL_TOKEN_WBNB_OUT",
+      "scope": "FULL_FIRST_TEN_BLOCKS"
+    },
+    {
+      "index": 10,
+      "token": "4",
+      "CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "first_observed_swap_block": 63056879,
+      "txhash": "0x7a7473b7171ee3ff7431a74e623bf130b4ec13c17a00553b5581c99ec1091e71",
+      "first_event_log_index": 104,
+      "first_event_direction": "POOL_SWAP_BUY_TOKEN_WBNB_IN",
+      "scope": "FIRST_BLOCK_ONLY_TEN_BLOCK_SOURCE_TRUNCATED"
+    },
+    {
+      "index": 12,
+      "token": "币安人生",
+      "CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "first_observed_swap_block": 63454407,
+      "txhash": "0x2af9884e236381a99afb95d34878c79cff686440f5df7bb8c78297790b73bda3",
+      "first_event_log_index": 180,
+      "first_event_direction": "POOL_SWAP_BUY_TOKEN_WBNB_IN",
+      "scope": "FIRST_BLOCK_ONLY_TEN_BLOCK_SOURCE_TRUNCATED"
+    },
+    {
+      "index": 15,
+      "token": "牛来",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "pool": "0xbfc26980d8068ae744f5405d3abf6e7df02e11b3",
+      "first_observed_swap_block": 116314923,
+      "txhash": "0xb5151c0a3963e1725d96081c99752c4cf384553aa45e25898dad995117049c95",
+      "first_event_log_index": 446,
+      "first_event_direction": "POOL_SWAP_BUY_TOKEN_WBNB_IN",
+      "scope": "FULL_FIRST_TEN_BLOCKS"
+    },
+    {
+      "index": 16,
+      "token": "MARSCOIN",
+      "CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "pool": "0x9f286c9bd510150c62a08da72af797ac45311ae0",
+      "first_observed_swap_block": 112668701,
+      "txhash": "0x511f04ae99dffd3aeecd4ef996229c16175ab73c389d8e68b1717876eed5fd13",
+      "first_event_log_index": 25,
+      "first_event_direction": "POOL_SWAP_SELL_TOKEN_WBNB_OUT",
+      "scope": "FULL_FIRST_TEN_BLOCKS"
+    }
+  ],
+  "production": "NO_GO"
+}

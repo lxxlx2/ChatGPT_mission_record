@@ -1,0 +1,21 @@
+{
+  "schema": "BSC_P4C_BNB_2026_MISSING_INTERNAL_TRACE_FALLBACK_PRECOMMIT",
+  "parent_receipt_raw_blob_sha": "7447a8600f4f43a022ce79cf8ded88e147d6b1b7",
+  "scope": "Original BNB mainnet Alchemy getAssetTransfers category=internal was rejected as unsupported. Freeze historical DDAC Dragon real signed first sale candidate and MARS first exit outflow transaction only to evaluate traceTransaction/debugTraceTransaction callTracer (if available), and category external DDAC in original sale block. No trace available means quote settlement UNKNOWN. Avoid simulating historically signed tx as a new transaction.",
+  "network": "bnb-mainnet",
+  "targets": [
+    {
+      "token": "龙虾",
+      "tx": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+      "block": 83635800,
+      "EOA": "0xddac928a240bdace3994c2cc0783d4e29a002127"
+    },
+    {
+      "token": "MARSCOIN",
+      "tx": "0x2af9071f7b71de7d29f3bb7ed5559c1efdc47ee79917e20fa6a8c15f80206392",
+      "block": 112441403,
+      "EOA": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea"
+    }
+  ],
+  "production": "NO_GO"
+}
