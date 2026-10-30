@@ -1,0 +1,510 @@
+{
+  "schema": "CRYPTO_DAILY_COLLECTOR_EVIDENCE_V1",
+  "run_date_bangkok": "2026-10-31",
+  "run_window": "00:20",
+  "actual_collection_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+  "mode": "HOURLY_COLLECTOR_EMAIL_ONLY",
+  "source_rule_blob_shas": {
+    "crypto-daily/PIPELINE_CONTRACT.md": "0d94442ca1b920ad0b3e5ea9158d47a6b3dcbe25",
+    "crypto-daily/EDITORIAL_RULESET.json": "2ed51528d230508ae4e0015762b1d60c9d72e299",
+    "crypto-daily/REPORT_SPEC.md": "809a5c1cbcd6503d42305c842f37826b74a4741f",
+    "crypto-daily/REPORT_ACCEPTANCE.md": "d9952d82e3903d699d7db02632c1f26ebdd2c945",
+    "crypto-daily/COLLECTOR_SPEC.md": "aa4f1473f3c767b2216f715cbba78231c4794c02",
+    "crypto-daily/SECURITY_SOURCE_POLICY.md": "86b36f208220e90a52caa1cb8acaeec47add9628",
+    "crypto-daily/DELIVERY_RUNBOOK.md": "181c0448dddd2586e6082faaa1f51f7556eaa795",
+    "crypto-daily/state/daily-event-ledger.json": "f28d7743215ea9f1447c6e85a4fe11154f420e94",
+    "docs/MONITORING/X_FIRST_PARTY_SOURCE_POLICY.md": "20abfed8a287307bb2d6017b3b9e7ff509bbeebe"
+  },
+  "previous_7_days_actual_sent_readback_and_git": [
+    {
+      "date": "2026-10-24",
+      "gmail_id": "1a16bba1e9212873",
+      "git_blob_sha": "85f11dd7076fcaf81ffea3e68948817f7ad00121",
+      "body_equality": "EMBEDDED_FULL_BODY_WITH_FRONTMATTER",
+      "sent": true,
+      "recipient": "lxx.run688@gmail.com"
+    },
+    {
+      "date": "2026-10-25",
+      "gmail_id": "1a170e1f82549e41",
+      "git_blob_sha": "fcb290616c0268b5323c9322923681b504523df7",
+      "body_equality": "EMBEDDED_FULL_BODY_WITH_FRONTMATTER",
+      "sent": true,
+      "recipient": "lxx.run688@gmail.com"
+    },
+    {
+      "date": "2026-10-26",
+      "gmail_id": "1a176097e267ed98",
+      "git_blob_sha": "da4ae0ef14aaf8111c14174ac827d3d5c9344091",
+      "body_equality": "EXACT",
+      "sent": true,
+      "recipient": "lxx.run688@gmail.com"
+    },
+    {
+      "date": "2026-10-27",
+      "gmail_id": "1a17b2d317942c5a",
+      "git_blob_sha": "407a25cf17db3f476932759de598d60102b13a85",
+      "body_equality": "EXACT",
+      "sent": true,
+      "recipient": "lxx.run688@gmail.com"
+    },
+    {
+      "date": "2026-10-28",
+      "gmail_id": "1a180500065679d2",
+      "git_blob_sha": "5bc7be7c463f2d8b88917e974b31dc330e5d0f50",
+      "body_equality": "EXACT",
+      "sent": true,
+      "recipient": "lxx.run688@gmail.com"
+    },
+    {
+      "date": "2026-10-29",
+      "gmail_id": "1a185794e63c022c",
+      "git_blob_sha": "89b93f0a7883b02c85824afb0b07547d51ae28c9",
+      "body_equality": "EXACT",
+      "sent": true,
+      "recipient": "lxx.run688@gmail.com"
+    },
+    {
+      "date": "2026-10-30",
+      "gmail_id": "1a18a9d5e767548d",
+      "git_blob_sha": "23d55aab5c7400a0fd9688d7bc90ab1023ce9710",
+      "body_equality": "EXACT",
+      "sent": true,
+      "recipient": "lxx.run688@gmail.com"
+    }
+  ],
+  "ledger_previous_events": 164,
+  "ledger_open_missed_candidates": 0,
+  "collector_deep_shard": {
+    "planned": 0,
+    "executed": 0,
+    "reason": "00h fallback because previous final artifacts did not explicitly mark successful shard IDs; NFT/ArtBlocks/Manifold checked; social original gap",
+    "last_two_complete_shards": "UNKNOWN",
+    "backlog_shards": [
+      1,
+      2
+    ],
+    "completion": "PARTIAL_SOCIAL"
+  },
+  "source_receipts": [
+    {
+      "lane": "spot",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-30T17:18:41Z",
+      "read_status": "CHECKED_BINANCE_CONNECTED_FREE_API",
+      "read_mode": "BINANCE_CONNECTOR_5_SINGLE_SYMBOLS",
+      "observation": "BTC 77339.50 (-4.559%, range 76500.11..81179.67); ETH 2246.11 (-4.412%, 2174.08..2354.06); SOL 95.11 (-6.425%, 92.34..101.81); BNB 702.49 (-6.083%); HYPE 91.64 (-3.456%). All single-pair 24h rolling; timestamp from Binance closeTime ~1793380721xxx"
+    },
+    {
+      "lane": "derivatives",
+      "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-30T17:18:36Z",
+      "read_status": "CHECKED_BINANCE_CONNECTED_FREE_API",
+      "read_mode": "BINANCE_CONNECTOR_MARK_PRICE_AND_OPEN_INTEREST",
+      "observation": "BTC mark 77283.70 funding 0.00010000 OI 95291.363 BTC; ETH mark 2243.97 funding -0.00010780 OI 2367673.021 ETH; SOL mark 95.02 funding 0.00005336 OI 8920617.10 SOL; snapshot only, no causal conclusion"
+    },
+    {
+      "lane": "capital_flows",
+      "source_url": "https://farside.co.uk/btc/",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "US trading session 2026-10-29",
+      "read_status": "CHECKED_FARSIDE_PARTIAL_ISSUER_PROOF",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Oct29 BTC ETF +17.2 USDm; Oct30 row all dashes/0.0 placeholder not real zero"
+    },
+    {
+      "lane": "capital_flows",
+      "source_url": "https://farside.co.uk/eth/",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "US trading session 2026-10-29",
+      "read_status": "CHECKED_FARSIDE_PARTIAL_ISSUER_PROOF",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Oct29 ETH ETF -105.5 USDm; Oct30 row blank"
+    },
+    {
+      "lane": "capital_flows",
+      "source_url": "https://farside.co.uk/sol/",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "US trading session 2026-10-29",
+      "read_status": "CHECKED_FARSIDE_PARTIAL_ISSUER_PROOF",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Oct29 SOL ETF -27.7 USDm; Oct30 row blank"
+    },
+    {
+      "lane": "onchain",
+      "source_url": "https://info.arkm.com/research/binance-hack-trace-largest-hack-ever-6-3b-on-chain",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-30 06:00 EST",
+      "read_status": "CHECKED_RESEARCH_ATTRIBUTED_TXID_GAP",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Arkham attributes 6.36bn USD transfers across ten chains and 2.7bn frozen; Binance says ~6.3bn impact/~3bn frozen; attribution and exact chain breakdown not independently verified by TXID"
+    },
+    {
+      "lane": "onchain",
+      "source_url": "https://www.lookonchain.com/feeds",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-30 feed updates, individual dates unverified",
+      "read_status": "CHECKED_FEED_TXID_GAP",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Feed has Binance and equity-market summaries; no independent new whale TXID extracted; not proof no whales"
+    },
+    {
+      "lane": "policy",
+      "source_url": "https://www.binance.com/en/support/announcement",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-30",
+      "read_status": "CHECKED_OFFICIAL",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "PREDICT spot trading delayed; Binance incident restrictions. Kraken Oct8 scheduled delisting older; no new named cross-venue rule confirmed"
+    },
+    {
+      "lane": "infrastructure",
+      "source_url": "https://www.circle.com/blog/",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "unknown current page",
+      "read_status": "SOURCE_GAP_FRESH_ISSUER_ITEM",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Bounded infrastructure/RWA search attempted; no fresh issuer-dated major event independently established"
+    },
+    {
+      "lane": "tge",
+      "source_url": "https://www.binance.com/en/square/post/382715428129327",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-30",
+      "read_status": "CHECKED_OFFICIAL_VERIFIED_BINANCE_ACCOUNT",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "PREDICT 10:00 UTC Oct30 spot listing POSTPONED until further notice, prior official start now invalid; no new time; Binance Wallet Alpha also delayed"
+    },
+    {
+      "lane": "early_nft",
+      "source_url": "https://www.artblocks.io/",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "undated dynamic listings",
+      "read_status": "CHECKED_PARTIAL_SOCIAL_TIMESTAMP_GAP",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Art Blocks correspondence by ixnayokay upcoming, Lagrange Bend live; no original post time/contract independently confirmed"
+    },
+    {
+      "lane": "early_nft",
+      "source_url": "https://manifold.xyz/",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "undated dynamic feed",
+      "read_status": "CHECKED_PARTIAL_RIGHTS_GAP",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Manifold trending and coming-soon drops checked; creator identity, contracts and issuer social timestamps not independently verified; no alert"
+    },
+    {
+      "lane": "security",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/c5a8729a97ac486d963784d96c5642d7",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-30 02:23, updated 11:36 page local timezone unspecified",
+      "read_status": "CHECKED_OFFICIAL_SEARCH_INDEX_AND_BINANCE_NEWS",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Issuer estimates ~$6.3bn affected, ~$3bn frozen, suspected DevOps laptop/service container, no evidence private keys leaked; user personal exposure unconfirmed"
+    },
+    {
+      "lane": "web_runtime_rce",
+      "source_url": "https://www.php.net/archive/2026.php",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-26 latest visible",
+      "read_status": "CHECKED_OFFICIAL_OLD_FAMILY_NO_NEW_VERSION",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Oct26 PHP Windows Brotli rebuild already delivered Oct27; no newer issuer notice in inspected archive"
+    },
+    {
+      "lane": "web_pki_tls",
+      "source_url": "https://blog.mozilla.org/security/",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-20 latest visible",
+      "read_status": "CHECKED_OFFICIAL_OLD_FAMILY_NO_NEW_VERSION",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Mozilla eMudhra advisory previously delivered; no fresh distinct CA trust event in inspected official index"
+    },
+    {
+      "lane": "ai_package_supply_chain",
+      "source_url": "https://docs.litellm.ai/blog",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-27 latest visible",
+      "read_status": "CHECKED_OFFICIAL_OLD_FAMILY_NO_NEW_VERSION",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "LiteLLM Oct27 private registry and Enterprise GHSA, Oct21 malicious PyPI/Docker 1.107.0 already reported; no new material malicious release identified"
+    },
+    {
+      "lane": "ai_package_supply_chain",
+      "source_url": "https://github.com/advisories/GHSA-92x9-889m-jgmw",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-22 advisory updated",
+      "read_status": "CHECKED_ADVISORY_OLD_FAMILY",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "PyPI malicious litellm 1.107.0 confirmed old, no new victim exposure proof"
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "source_url": "https://status.railway.com/",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-29 15:45 UTC latest visible",
+      "read_status": "CHECKED_OFFICIAL_OLD_STATUS",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Signups still paused, no reopening date; no new state"
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "source_url": "https://www.connectwise.com/company/trust/advisories",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-29 20:45 UTC",
+      "read_status": "CHECKED_OFFICIAL_MINOR_GUIDANCE",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "M365 phased restore ongoing; password reset error HTTP 500 retry/contact support guidance, low incremental importance, not fresh general attack"
+    },
+    {
+      "lane": "backend_framework_auth",
+      "source_url": "https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-19",
+      "read_status": "CHECKED_OFFICIAL_OLD_FAMILY",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "TokenGuard auth bypass patched versions already delivered; no new attack version"
+    },
+    {
+      "lane": "backend_framework_auth",
+      "source_url": "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-21",
+      "read_status": "CHECKED_OFFICIAL_OLD_FAMILY",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Node Brotli/TLS security release previously delivered; Oct28 ordinary LTS releases not automatically new critical vulnerability"
+    },
+    {
+      "lane": "macro",
+      "source_url": "https://www.reuters.com/legal/transactional/global-markets-global-markets-2026-10-30/",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-30",
+      "read_status": "CHECKED_RECENT_REUTERS",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "US equities sharp Oct30 decline tied to AI spending concerns, oil spike and bond rally; attribution analysis not proven singular cause"
+    },
+    {
+      "lane": "macro",
+      "source_url": "https://www.reuters.com/world/tanker-strait-hormuz-hit-by-limpet-mines-security-sources-say-2026-10-30/",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-30",
+      "read_status": "CHECKED_RECENT_REUTERS",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Limpet-mine attack on tanker in Hormuz, crew safe; responsibility unconfirmed; separate IRGC claim of three tankers not independently verified"
+    },
+    {
+      "lane": "forward_catalysts",
+      "source_url": "https://www.binance.com/en/square/post/382715428129327",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-10-30",
+      "read_status": "CHECKED_NO_CONFIRMED_NEW_DATE",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "PREDICT postponed indefinitely; Oct31 prior withdrawal date must not be presented as valid"
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "source_url": "https://www.gate.com/it/blog/anthropic-races-toward-the-largest-ipo-in-history-will-gate-direct-ipo-open-for-subscriptions",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "2026-09-23",
+      "read_status": "CHECKED_OLD_EXPLAINER_NO_OFFER",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Gate explicitly says Anthropic not included in Direct-to-IPO as of Sept23; fresh bounded official searches Kraken/Binance/Bitget/Bybit/Gate/OKX found no issuer-specific live subscription. Derivative listings do not qualify"
+    },
+    {
+      "lane": "official_x",
+      "source_url": "https://x.com/krakenfx",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "original post timestamps not retrievable",
+      "read_status": "BROWSER_SESSION_UNAVAILABLE_X_SOURCE_GAP",
+      "read_mode": "BROWSER_ATTEMPT_FAILED_AND_PUBLIC_X_SEARCH",
+      "observation": "Actual Browser.list_tabs failed: originating browser context required; public site:x.com/<verified-handle>/status searches for issuer/exchanges/Cambria/ArtBlocks/Lookonchain returned no readable new originals; used official issuer websites and SEC fallback"
+    },
+    {
+      "lane": "reddit",
+      "source_url": "https://www.reddit.com/r/CryptoCurrency/new/",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "page crawl ~3 weeks stale",
+      "read_status": "STALE_CRAWL_SOURCE_GAP",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Actual Reddit page read returned stale indexed content, not current Oct30 feed; no firsthand event promotion"
+    },
+    {
+      "lane": "security_cisa",
+      "source_url": "https://www.cisa.gov/news-events/alerts",
+      "checked_at_window_utc": "2026-10-30T17:18:00Z/2026-10-30T17:20:15Z",
+      "source_published_at": "unknown",
+      "read_status": "HTTP_403_SOURCE_GAP",
+      "read_mode": "WEB_DIRECT_OR_INDEXED_SEARCH",
+      "observation": "Direct CISA fetch returned HTTP 403; no claim of complete coverage"
+    }
+  ],
+  "source_receipts_count": 28,
+  "candidates": [
+    {
+      "event_key": "security:binance:reserve-6p34b-2026-10-30",
+      "family_key": "security:binance:hotwallet-2026-10-29",
+      "material_version": "binance-official-2026-10-30-6p34b-company-funds-5b-matching-tokens",
+      "source_published_at": "2026-10-30",
+      "source_url": "https://www.binance.com/en-IN/square/post/10-30-2026-binance-news-update-binance-reserves-6-34-billion-to-cover-security-incident-with-5-billion-already-held-in-the-affected-tokens-and-3-billion-frozen-382841282807553",
+      "primary_section": 9,
+      "materiality": "HIGH",
+      "status": "VERIFIED_ISSUER_CLAIM_RESERVE_NOT_INDEPENDENTLY_AUDITED",
+      "decision": "INCLUDE_NEXT_FORMAL_AFTER_FRESH_VERIFY_CONSOLIDATE_WITH_EXISTING_BINANCE_CANDIDATE",
+      "novelty_proof": {
+        "previous_material_version": "binance-official-2026-10-30-6.3b-estimated-impact-devops-laptop-deposits-unaffected",
+        "changed_field": "funds_set_aside_for_customer_restitution",
+        "old_value": "Issuer pledged SAFU/company funds; precise reserve amount not in Oct30 delivered Gmail or 20:20 candidate",
+        "new_value": "Issuer now claims >$6.34bn company funds reserved, ~$5bn in corresponding affected tokens, remaining acquired through market/OTC; ~$3bn frozen separate",
+        "evidence_url": "https://www.binance.com/en-IN/square/post/10-30-2026-binance-news-update-binance-reserves-6-34-billion-to-cover-security-incident-with-5-billion-already-held-in-the-affected-tokens-and-3-billion-frozen-382841282807553",
+        "evidence_published_at": "2026-10-30"
+      },
+      "constraints": "Do not infer user account impacted; do not conflate reserved funds with externally audited proof of reserves or actual compensation completed; original X not readable"
+    },
+    {
+      "event_key": "security:binance:official-rootcause-and-impact-2026-10-30",
+      "family_key": "security:binance:hotwallet-2026-10-29",
+      "material_version": "binance-official-2026-10-30-6.3b-estimated-impact-devops-laptop-deposits-unaffected",
+      "source_published_at": "2026-10-30",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/c5a8729a97ac486d963784d96c5642d7",
+      "primary_section": 9,
+      "materiality": "CRITICAL",
+      "status": "CARRIED_FROM_2026-10-30_20H",
+      "decision": "MERGE_WITH_LATEST_SAME_FAMILY_RESERVE_DELTA",
+      "constraints": "Original 30th morning email only stated ~$3bn frozen, no official total impact/cause"
+    },
+    {
+      "event_key": "security:aave:binance-hack-contagion-2026-10-30",
+      "family_key": "aave:binance-incident-market-freeze",
+      "material_version": "llamarisk-2026-10-30T0100Z-175v3-117v4-reserves-frozen",
+      "source_published_at": "2026-10-30T01:00:00Z",
+      "source_url": "https://governance.aave.com/t/binance-hot-wallet-exploit-aaves-response/25954",
+      "primary_section": 9,
+      "materiality": "HIGH",
+      "status": "CARRIED_ATTRIBUTED_ORIGINAL_INDEXED_FULL_PAGE_UNAVAILABLE",
+      "decision": "INCLUDE_NEXT_FORMAL_IF_STILL_FROZEN_AND_FRESH_VERIFY",
+      "constraints": "175 V3 +117 V4 reserves freeze blocks new supply/borrow; withdrawals/repayments continue; do not call Aave hacked"
+    },
+    {
+      "event_key": "cex:predict:binance-spot-postponed-2026-10-30",
+      "family_key": "predict:binance:spot-listing",
+      "material_version": "binance-official-2026-10-30-postponed-until-further-notice",
+      "source_published_at": "2026-10-30",
+      "source_url": "https://www.binance.com/en/square/post/382715428129327",
+      "primary_section": 7,
+      "materiality": "HIGH",
+      "status": "CARRIED_FROM_20H_OFFICIAL",
+      "decision": "INCLUDE_NEXT_FORMAL_IF_NO_NEW_DATE",
+      "novelty_proof": {
+        "previous_material_version": "binance-official-2026-10-29-spot-2026-10-30T1000Z",
+        "changed_field": "spot_trading_start",
+        "old_value": "2026-10-30T10:00:00Z",
+        "new_value": "POSTPONED_UNTIL_FURTHER_NOTICE",
+        "evidence_url": "https://www.binance.com/en/square/post/382715428129327",
+        "evidence_published_at": "2026-10-30"
+      }
+    },
+    {
+      "event_key": "macro:hormuz:2026-10-30-tanker-mine",
+      "family_key": "macro:hormuz:tanker-attacks",
+      "material_version": "reuters-2026-10-30-limpet-mine-tanker-crew-safe",
+      "source_published_at": "2026-10-30",
+      "source_url": "https://www.reuters.com/world/tanker-strait-hormuz-hit-by-limpet-mines-security-sources-say-2026-10-30/",
+      "primary_section": 10,
+      "materiality": "HIGH",
+      "status": "REUTERS_VERIFIED_REPORT_RESPONSIBILITY_UNCONFIRMED",
+      "decision": "INCLUDE_NEXT_FORMAL_AFTER_CHECK_7DAY_FAMILY_NOVELTY",
+      "constraints": "Reuters cites UKMTO and security sources, IRGC additional claims unverified"
+    },
+    {
+      "event_key": "etf:us:2026-10-29-flows",
+      "family_key": "etf:daily:2026-10-29",
+      "material_version": "farside-btc17.2-eth-105.5-sol-27.7m-2026-10-29",
+      "source_published_at": "2026-10-29 US trading session",
+      "source_url": "https://farside.co.uk/btc/",
+      "primary_section": 5,
+      "materiality": "ROUTINE",
+      "status": "FARSIDE_AGGREGATOR_ISSUER_GAP",
+      "decision": "ROUTINE_NEXT_FORMAL_IF_NO_NEWER_COMPLETE_DAY",
+      "constraints": "Oct30 empty row is not zero; independent issuer checks partial"
+    },
+    {
+      "event_key": "nft:artblocks:correspondence-upcoming",
+      "family_key": "nft:artblocks:correspondence",
+      "material_version": "dynamic-site-upcoming-undated-2026-10-30",
+      "source_published_at": null,
+      "source_url": "https://www.artblocks.io/",
+      "primary_section": 8,
+      "materiality": "LOW",
+      "status": "VERIFYING",
+      "decision": "EXCLUDE_UNTIL_CREATOR_TIME_CONTRACT_TERMS_VERIFIED"
+    },
+    {
+      "event_key": "ipoaccess:anthropic:venues:monitor-2026-10-31",
+      "family_key": "ipoaccess:anthropic:venues",
+      "material_version": "no-new-issuer-specific-offer-confirmed-2026-10-31-check",
+      "source_published_at": null,
+      "source_url": "https://www.gate.com/it/blog/anthropic-races-toward-the-largest-ipo-in-history-will-gate-direct-ipo-open-for-subscriptions",
+      "primary_section": 7,
+      "materiality": "WATCH",
+      "status": "UNCONFIRMED_MONITORING",
+      "decision": "EXCLUDE_NO_OFFICIAL_VENUE_ANthropic_APPLICATION",
+      "constraints": "Kraken/Binance/Bitget/Bybit/Gate/OKX bounded searches; Binance/Gate/Bitget perps are synthetic, not shares. No user-facing reminder."
+    }
+  ],
+  "candidate_count": 8,
+  "excluded_repeats": [
+    {
+      "family_key": "cloud:railway:secrets",
+      "reason": "Oct29 unchanged signups paused"
+    },
+    {
+      "family_key": "oauth:connectwise:storm0940",
+      "reason": "Oct29 HTTP500 password reset guidance minor, old M365 restoration remains; not high global novelty"
+    },
+    {
+      "family_key": "php:php2shell",
+      "reason": "Oct26 rebuild previously delivered"
+    },
+    {
+      "family_key": "pki:emudhra",
+      "reason": "Oct20 CA incident previously delivered"
+    },
+    {
+      "family_key": "ai:litellm:release-poison",
+      "reason": "Oct21/23 prior reports, no new package version"
+    },
+    {
+      "family_key": "runtime:node:2026-10",
+      "reason": "Oct21 vulnerabilities already delivered"
+    },
+    {
+      "family_key": "framework:laravel:tokenguard",
+      "reason": "Oct19 already delivered"
+    },
+    {
+      "family_key": "macro:ai-capex:2026-10",
+      "reason": "Old capital expenditure headlines not independently novel; Oct30 market close is separate dated market observation"
+    }
+  ],
+  "gaps": [
+    "BROWSER_SESSION_UNAVAILABLE: Browser.list_tabs requires originating browser context",
+    "X_SOURCE_GAP: original issuer posts unreadable, public indexed searches and official websites attempted",
+    "CISA_HTTP_403",
+    "Reddit current feed indexed stale ~3 weeks",
+    "NFT contract/social launch timestamps not verified",
+    "Binance official announcement direct web open unavailable; official Binance News and indexed announcement available",
+    "Arkham attributed transfer details not independently validated transaction-by-transaction",
+    "ETF 2026-10-30 row empty, issuer confirmation partial",
+    "No exact proof of Anthropic venue IPO allocation; UNCONFIRMED_MONITORING"
+  ],
+  "gmail_sent_2026_10_31_prefix_count": 0,
+  "gmail_attempted": false,
+  "app_message": false,
+  "new_tasks": false,
+  "github_cron": false,
+  "mac_process": false,
+  "paid_api": false,
+  "terminal_state": "PARTIAL_SOURCE_GAPS_CANDIDATES_PERSISTED_PENDING_NEXT_08H_PREBUILD"
+}
