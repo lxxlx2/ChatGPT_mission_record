@@ -85,6 +85,7 @@ const runtimeLabel = {
   DEGRADED:'异常降级',
   OFFLINE:'离线',
   STOPPED:'已停止',
+  STALE:'心跳过期',
   UNKNOWN:'未知',
 };
 

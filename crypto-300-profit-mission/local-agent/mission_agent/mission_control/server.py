@@ -13,6 +13,7 @@ import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -576,6 +577,23 @@ class DashboardState:
             return {"status": "UNKNOWN", "reason": "MISSION_CONTROL_HEARTBEAT_UNREADABLE"}
         if not isinstance(health, dict):
             return {"status": "UNKNOWN", "reason": "MISSION_CONTROL_HEARTBEAT_INVALID"}
+        # This is a display snapshot, not permission to resume the stopped loop.
+        # Keep the historical file and all delivery records untouched.
+        health["recorded_status"] = health.get("status", "UNKNOWN")
+        try:
+            updated = datetime.fromisoformat(health["updated_at"].replace("Z", "+00:00"))
+            if updated.tzinfo is None:
+                raise ValueError("TIMEZONE_REQUIRED")
+            age = time.time() - updated.timestamp()
+            if not math.isfinite(age) or age < 0:
+                raise ValueError("INVALID_HEARTBEAT_TIME")
+        except (KeyError, AttributeError, TypeError, ValueError, OverflowError, OSError):
+            health.update(status="UNKNOWN", heartbeat_age_seconds=None,
+                          heartbeat_reason="MISSION_CONTROL_HEARTBEAT_TIME_INVALID")
+        else:
+            health["heartbeat_age_seconds"] = round(age, 3)
+            if age > 120:
+                health.update(status="STALE", heartbeat_reason="MISSION_CONTROL_HEARTBEAT_STALE")
         if not self.control_db.is_file():
             health["manual_review_breakdown_available"] = False
             health["manual_review_breakdown_error"] = "CONTROL_DB_UNAVAILABLE"
