@@ -176,7 +176,9 @@
       "items": 27,
       "chars": 5203,
       "market_closed_weekend": true,
-      "semantic_review": "PASS_PREBUILD_RECHECK_REQUIRED"
+      "semantic_review": "PASS_PREBUILD_RECHECK_REQUIRED",
+      "repaired_at": "2026-11-01T06:40:00+07:00",
+      "repair_note": "06:40 semantic dedup: removed unchanged energy buy-watch, made cross-asset risk and section-11 blind spot distinct; 12 sections and 27 items preserved; delivery-slot recheck required."
     },
     "history_gmail_dates": [
       "2026-10-25",
