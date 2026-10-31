@@ -1,5 +1,5 @@
 # Frank STATUS（唯一当前决策状态入口）
-更新时间：2026-10-31 21:46 Asia/Bangkok
+更新时间：2026-10-31 21:50 Asia/Bangkok
 更新者：Codex（按本轮用户默认授权完成既有 Scanner 受控切换；独立审核按用户指示未执行；P0/P1 结项和实盘 NO_GO 保持）
 
 ## 北极星答案（1 行）
@@ -16,7 +16,7 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 **阶段管理已结束，保留 Frank 只读钱包观察工具的既有安全维护，不扩张研发或研究。** 新的跟单盈利研究必须经用户另行明确授权；P2/P3 未启动。
 
 ## 正在进行（最多 3 项）
-- 目前**无正在执行的 P0/P1 任务**。既有 Scanner RPC 维护 DONE：生产已加载固定源码 [`1f2c6afc28b9988eaacdc896562ff9a71b78f801`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/1f2c6afc28b9988eaacdc896562ff9a71b78f801)，原 PID 53946 → 新 PID 3402，RUNNING / 0 连续错误 / source_drift=false；短时前台检查新增 3 次成功轮询。
+- 目前**无正在执行的 P0/P1 任务**。既有 Scanner RPC 维护 DONE：生产已加载固定源码 [`1f2c6afc28b9988eaacdc896562ff9a71b78f801`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/1f2c6afc28b9988eaacdc896562ff9a71b78f801)，原 PID 53946 → 新 PID 3402，RUNNING / 0 连续错误 / source_drift=false；74.013 秒前台检查逐轮记录 3 次成功轮询（每次 poll_increment=1）。
 - 受控切换首轮 gap=0、游标未回退、raw_pending=model_unprocessed=0；历史 5881 签名 / 7 信号 / 9 outbox / 2 Gmail 回执逐行不变，无测试投递或历史补发。317 原非缓存文件仅 RPC/入口两个文件变更；466 文件备份及恢复哈希/旧版隔离预检 PASS。[脱敏证据](./evidence/frank-scanner-rpc-maintenance-20261031.json)。
 
 ## 等用户授权（最多 3 项）
