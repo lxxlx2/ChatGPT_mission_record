@@ -76,14 +76,50 @@ try {
  // Interrupt exactly the first report GET for the next real fixture submission.
  let failures=0;
  await page.route('**/api/cluster-latest?*',route=>{if(route.request().url().includes('job_id=')&&failures++===0)return route.abort('connectionreset');return route.fallback();});
- const c=await submit(null,'deep');
+ let releasePost,postArrived;
+ const postGate=new Promise(resolve=>{releasePost=resolve;});
+ const postSeen=new Promise(resolve=>{postArrived=resolve;});
+ const postPattern='**/api/cluster-analysis';
+ await page.route(postPattern,async route=>{postArrived();await postGate;return route.fallback();});
+ const submitting=submit(null,'deep','3'.repeat(32));
+ await postSeen;
+ try {
+   assert.equal(await page.locator('#cluster-read-cached').isDisabled(),true);
+   assert.equal(await page.locator('#cluster-read-report').isDisabled(),true);
+   const before=requests.length;
+   await page.evaluate(()=>{
+     for(const id of ['cluster-read-cached','cluster-read-report'])
+       document.getElementById(id).dispatchEvent(new MouseEvent('click'));
+   });
+   assert.equal(requests.length,before);
+ } finally { releasePost(); }
+ const c=await submitting;
+ await page.unroute(postPattern);
+ check('history controls during pending POST cannot discard the acknowledged job');
  await page.getByRole('button',{name:'重试读取报告',exact:true}).waitFor({state:'visible'});
  await page.waitForFunction(()=>document.getElementById('cluster-status').textContent.includes('报告读取中断'));
- assert.ok(await page.evaluate(()=>sessionStorage.getItem('mission-meme-cluster-pending-v1')));
+ const pending=await page.evaluate(()=>sessionStorage.getItem('mission-meme-cluster-pending-v1'));
+ assert.equal(JSON.parse(pending).id,c.job_id);
  const retryPosts=requests.filter(r=>r.method==='POST').length;
+ const savedPattern='**/api/cluster-latest?*job_id='+a.job_id;
+ await page.route(savedPattern,route=>route.abort('connectionreset'));
+ await page.locator('#cluster-reports').selectOption(a.job_id);
+ await page.locator('#cluster-read-report').click();
+ await page.waitForFunction(()=>document.getElementById('cluster-status').textContent.includes('选中报告读取或核对失败'));
+ assert.equal(await page.evaluate(()=>sessionStorage.getItem('mission-meme-cluster-pending-v1')),pending);
+ assert.equal(await page.locator('#cluster-result').isVisible(),false);
+ await page.unroute(savedPattern);
+ check('failed saved-report read preserves the other pending job');
+ await page.locator('#cluster-read-report').click();
+ await page.waitForFunction(()=>document.getElementById('cluster-result').hidden===false&&document.getElementById('cluster-status').textContent.includes('已读取该任务保存报告'));
+ assert.match(await page.locator('#cluster-summary').innerText(),/SYNTHETIC_REPORT_1/);
+ assert.equal(await page.evaluate(()=>sessionStorage.getItem('mission-meme-cluster-pending-v1')),pending);
+ assert.equal(await page.locator('#cluster-mint').inputValue(),mint);
+ check('view saved A while C awaits recovery without replacing C');
  await page.getByRole('button',{name:'重试读取报告',exact:true}).click();
  await page.waitForFunction(()=>document.getElementById('cluster-summary').textContent.includes('SYNTHETIC_REPORT_3')&&!document.getElementById('cluster-submit').disabled);
  assert.equal(await page.evaluate(()=>sessionStorage.getItem('mission-meme-cluster-pending-v1')),null);
+ assert.equal(await page.locator('#cluster-mint').inputValue(),'3'.repeat(32));
  assert.equal(requests.filter(r=>r.method==='POST').length,retryPosts);
  check('deep DONE/report disconnect -> manual GET recovery -> real rendering and pending cleanup');
  await page.unroute('**/api/cluster-latest?*');

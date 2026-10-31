@@ -165,3 +165,109 @@ test('report shortcuts are bounded, validated and contain no report payload',asy
   assert.equal(bad.element('cluster-read-report').disabled,true);
   assert.doesNotMatch(bad.element('cluster-reports').innerHTML,/<script>/);
 });
+
+const pendingKey='session:mission-meme-cluster-pending-v1';
+const pendingMint='33333333333333333333333333333333';
+function setPending(h) {
+  h.context.__id=secondJob;h.context.__mint=pendingMint;
+  vm.runInContext('clusterSetJob(__id,__mint)',h.context);
+  h.element('cluster-mint').value=pendingMint;
+}
+function deferred() {
+  let resolve;
+  const promise=new Promise(r=>{resolve=r;});
+  return {promise,resolve};
+}
+
+test('reading saved A preserves pending B and resume reads B with its own CA',async()=>{
+  const h=harness();await finish(h,jobId,'REPORT_A');setPending(h);
+  const pending=h.store.get(pendingKey);
+  h.element('cluster-reports').value=jobId;
+  h.setResponse(async url=>({ok:true,status:200,json:async()=>
+    url.startsWith('/api/cluster-analysis?') ? {job_id:jobId,mint,status:'DONE'} :
+      {...fixture,ca_job_id:jobId,market:{...fixture.market,name:'REPORT_A'}}}));
+  await h.element('cluster-read-report').listeners.get('click')();
+  assert.match(h.element('cluster-summary').innerHTML,/REPORT_A/);
+  assert.equal(h.store.get(pendingKey),pending);
+  assert.equal(h.element('cluster-recovery').hidden,false);
+  h.setResponse(async()=>({ok:true,status:200,json:async()=>({job_id:secondJob,mint:pendingMint,status:'RUNNING'})}));
+  h.element('cluster-resume-get').listeners.get('click')();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(h.element('cluster-mint').value,pendingMint);
+  assert.equal(h.requests.at(-1).url,'/api/cluster-analysis?job_id='+secondJob);
+  assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
+});
+
+test('failed saved A lookup leaves pending B recoverable',async()=>{
+  const h=harness();await finish(h,jobId);setPending(h);
+  const pending=h.store.get(pendingKey);
+  h.element('cluster-reports').value=jobId;
+  h.setResponse(async()=>({ok:false,status:404}));
+  await h.element('cluster-read-report').listeners.get('click')();
+  assert.equal(h.store.get(pendingKey),pending);
+  assert.equal(h.element('cluster-recovery').hidden,false);
+  assert.equal(h.element('cluster-result').hidden,true);
+});
+
+for (const control of ['cluster-read-cached','cluster-read-report']) {
+  test(control+' during POST cannot discard its eventual acknowledged job',async()=>{
+    const h=harness();await finish(h,jobId);
+    const ack=deferred();
+    h.setResponse(async(url,options)=>options.method==='POST' ? ack.promise :
+      {ok:true,status:200,json:async()=>url.startsWith('/api/cluster-analysis?') ?
+        {job_id:secondJob,mint:pendingMint,status:'RUNNING'} : {...fixture,ca_job_id:jobId}});
+    h.element('cluster-mint').value=pendingMint;h.element('cluster-preset').value='quick';
+    h.element('cluster-reports').value=jobId;
+    const submitting=h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
+    const requestCount=h.requests.length;
+    await h.element(control).listeners.get('click')();
+    assert.equal(h.requests.length,requestCount,'no history GET while POST receipt is pending');
+    ack.resolve({ok:true,status:202,json:async()=>({job_id:secondJob,mint:pendingMint})});
+    await submitting;await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(JSON.parse(h.store.get(pendingKey)).id,secondJob);
+    assert.equal(h.element('cluster-mint').value,pendingMint);
+    assert.equal(h.requests.filter(x=>x.method==='POST').length,1);
+  });
+}
+
+for (const wrong of [{ca_job_id:secondJob},{mint:pendingMint},{ca_job_id:undefined}]) {
+  test('saved report rejects unverified server identity '+JSON.stringify(wrong),async()=>{
+    const h=harness();await finish(h,jobId);setPending(h);
+    const pending=h.store.get(pendingKey);
+    h.element('cluster-reports').value=jobId;
+    h.setResponse(async()=>({ok:true,status:200,json:async()=>({...fixture,ca_job_id:jobId,...wrong})}));
+    await h.element('cluster-read-report').listeners.get('click')();
+    assert.equal(h.element('cluster-result').hidden,true);
+    assert.equal(h.store.get(pendingKey),pending);
+    assert.match(h.element('cluster-status').innerHTML,/核对失败/);
+  });
+}
+
+test('late saved report cannot overwrite the resumed pending task',async()=>{
+  const h=harness();await finish(h,jobId);setPending(h);
+  h.element('cluster-reports').value=jobId;
+  const report=deferred();
+  h.setResponse(async url=>url.startsWith('/api/cluster-latest?') ? report.promise :
+    {ok:true,status:200,json:async()=>({job_id:secondJob,mint:pendingMint,status:'RUNNING'})});
+  const loading=h.element('cluster-read-report').listeners.get('click')();
+  h.element('cluster-resume-get').listeners.get('click')();
+  await new Promise(resolve=>setImmediate(resolve));
+  const status=h.element('cluster-status').innerHTML;
+  report.resolve({ok:true,status:200,json:async()=>({...fixture,ca_job_id:jobId})});
+  await loading;
+  assert.equal(h.element('cluster-mint').value,pendingMint);
+  assert.equal(h.element('cluster-result').hidden,true);
+  assert.equal(h.element('cluster-status').innerHTML,status);
+  assert.equal(JSON.parse(h.store.get(pendingKey)).id,secondJob);
+});
+
+test('failed POST unlocks history controls without automatically resubmitting',async()=>{
+  const h=harness();await finish(h,jobId);
+  h.element('cluster-preset').value='quick';
+  h.setResponse(async()=>{throw new TypeError('lost POST response');});
+  await h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
+  assert.equal(h.element('cluster-read-cached').disabled,false);
+  assert.equal(h.element('cluster-read-report').disabled,false);
+  assert.equal(h.requests.filter(x=>x.method==='POST').length,1);
+  assert.match(h.element('cluster-status').innerHTML,/提交状态未核实/);
+});

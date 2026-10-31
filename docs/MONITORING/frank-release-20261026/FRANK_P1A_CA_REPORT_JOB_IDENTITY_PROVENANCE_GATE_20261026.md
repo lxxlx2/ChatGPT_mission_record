@@ -63,3 +63,13 @@
 真实浏览器测试：安装已有 Playwright 的环境中设置 `FRANK_PLAYWRIGHT_MODULE` 和 `FRANK_CHROME`，运行 `node tests/test_frank_ca_browser.mjs`。Python fixture 使用真实 Handler、submit、worker、报告落盘与 GET；仅 analyzer/RPC 和非 CA 展示输入使用合成数据。随机 loopback 端口、独立临时 profile，退出清理。浏览器阻断非 fixture 请求；Python 审计钩子拒绝网络连接和子进程。Mac 实测另加 OS 外部出站禁网。测试 POST 仅在 fixture 内，不能称为真实 Quick/Standard/Deep 链上验收。
 
 本轮结果与固定提交、CI 链接写入 PR #220 / Issue #165 的执行回执。剩余实际交付门禁是新 SHA 独立复审、生产发布授权与经单独授权的有界真实 CA 查询；不以合成 PASS 关闭 Issue #165。
+
+## 2026-10-31 增量复核与修复（同一 PR）
+
+对 `0e6f4d497be4e47480dcda929cc0b6b8a1145086` 的复核发现两个 P2：读取已读任务会覆盖或清除另一个待恢复任务；POST 回执尚未返回时点击历史入口会改变读取版本，丢弃随后到达的有效任务 ID。新增的 4 项真实完整 app.js 反例在原代码上均失败。
+
+- 已读报告现在直接通过已有的精确 ID 报告 GET 读取。后端仍验证 DONE marker、摘要、结构、ID 和 Mint；前端再次核对 ID/Mint。浏览历史只暂停轮询，不替换 sessionStorage 中的原任务；成功、404、身份不符和迟到响应均不能丢掉原任务。
+- POST 等待回执期间暂时禁用两个历史读取按钮，处理函数也拒绝此时切换；成功或失败后恢复入口，不自动重发 POST。
+- 本地完整 app.js/恢复/预算 UI 共 **33/33 PASS**，Python unittest **18/18 PASS**，语法及 diff 检查通过。当前环境没有 pytest 和 Chromium 可执行文件，本地未重跑 44 项 pytest 或浏览器验收；原 CI 继续执行完整 Python 和浏览器测试，新增 3 组浏览器场景（合计 10 组）。实际新 SHA/CI 结果以 PR 描述为准。
+
+此次复核对旧 SHA 给出需修复结论；随后由同一执行者修复，不能把测试通过记为新 SHA 的独立批准。保留 Draft 和 Issue #165 OPEN。没有改后端、RPC 预算、生产、D2、通知或交易，也不扩展发布框架。生产发布和真实 RPC 仍需单独授权。

@@ -1107,6 +1107,7 @@ let clusterActiveJob = null;
 let clusterPollVersion = 0;
 let clusterReportLoadError = 'GET';
 let clusterLastReportJobVerified = false;
+let clusterSubmitting = false;
 
 function clusterSavedReports() {
   try {
@@ -1131,7 +1132,13 @@ function clusterRenderSavedReports() {
     '<option value="'+esc(row.id)+'">'+esc(row.mint.slice(0,8)+'… · '+
       new Date(row.observed_at*1000).toLocaleString('zh-CN')+' · '+row.id.slice(0,8))+'</option>'
   ).join('') : '<option value="">暂无已核对报告</option>';
-  $('cluster-read-report').disabled=!rows.length;
+  $('cluster-read-report').disabled=clusterSubmitting || !rows.length;
+}
+
+function clusterSetSubmitting(submitting) {
+  clusterSubmitting=submitting;
+  $('cluster-read-cached').disabled=submitting;
+  clusterRenderSavedReports();
 }
 
 function clusterRememberReport(report) {
@@ -1849,6 +1856,7 @@ async function pollClusterJob(jobId, failures=0) {
 }
 
 async function clusterLoadHistoricalCache() {
+  if (clusterSubmitting) return;
   const mint=$('cluster-mint').value.trim() || clusterActiveJob?.mint;
   if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint || ''))
     return clusterStatus('error','请输入完整的 Solana CA');
@@ -1935,6 +1943,7 @@ function clusterRestorePending() {
 
 $('cluster-form').addEventListener('submit', async (event) => {
   event.preventDefault();
+  if (clusterSubmitting) return;
   const mint = $('cluster-mint').value.trim();
   const preset = $('cluster-preset').value;
   if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint)) {
@@ -1948,6 +1957,7 @@ $('cluster-form').addEventListener('submit', async (event) => {
   // Explicit submission retires the old task and the old pending session
   // before the network attempt. A rejected POST has UNKNOWN submission status.
   clusterFinishJob();
+  clusterSetSubmitting(true);
   const submitVersion=clusterPollVersion;
   $('cluster-submit').disabled = true;
   $('cluster-submit').textContent = '分析中…';
@@ -1975,20 +1985,46 @@ $('cluster-form').addEventListener('submit', async (event) => {
     $('cluster-submit').textContent = '开始新的分析';
     clusterStatus('error','提交状态未核实','请求未取得可核对的任务编号，请先核查已有任务或报告，不会自动重发');
     clusterShowRecovery(true);
+  } finally {
+    clusterSetSubmitting(false);
   }
 });
 
 // A browser reload may only resume GET for an already submitted job
 setTimeout(clusterRestorePending,0);
 
-$('cluster-read-report').addEventListener('click',()=>{
+$('cluster-read-report').addEventListener('click',async()=>{
+  if (clusterSubmitting) return;
   const row=clusterSavedReports().find(item=>item.id===$('cluster-reports').value);
   if (!row) return;
+  // Browsing a saved report pauses polling, but never replaces the pending job.
+  clearTimeout(clusterPollTimer);
+  const version=++clusterPollVersion;
   $('cluster-mint').value=row.mint;
   $('cluster-result').hidden=true;
-  clusterSetJob(row.id,row.mint);
+  $('cluster-preview').hidden=true;
+  $('cluster-submit').disabled=true;
+  clusterShowRecovery(false);
   clusterStatus('running','读取选中任务的报告','仅发送 GET，并重新核对任务编号与 CA；不会重新扫描');
-  return pollClusterJob(row.id,0);
+  const current=()=>clusterPollVersion===version && $('cluster-mint').value.trim()===row.mint;
+  try {
+    const report=await get('/api/cluster-latest?mint='+encodeURIComponent(row.mint)+'&job_id='+encodeURIComponent(row.id));
+    if (!current()) return;
+    if (report?.mint!==row.mint || report?.ca_job_id!==row.id) throw new Error('SAVED_REPORT_IDENTITY_MISMATCH');
+    renderClusterReport(report);
+    clusterRememberReport(report);
+    clusterStatus('running','已读取该任务保存报告','保存报告中的任务编号与 CA 已核对；覆盖与完整性仍须另行核实');
+  } catch (_) {
+    if (!current()) return;
+    $('cluster-result').hidden=true;
+    clusterStatus('error','选中报告读取或核对失败','可重试读取此报告；原待恢复任务已保留，不会重新扫描');
+  } finally {
+    if (clusterPollVersion===version) {
+      $('cluster-submit').disabled=false;
+      $('cluster-submit').textContent='开始新的分析';
+      clusterShowRecovery(!!clusterActiveJob);
+    }
+  }
 });
 $('cluster-clear-reports').addEventListener('click',()=>{
   try { localStorage.removeItem(CLUSTER_REPORTS_KEY); } catch (_) {}
