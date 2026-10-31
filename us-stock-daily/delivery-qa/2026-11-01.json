@@ -1,1 +1,1 @@
-{"schema":"US_STOCK_NOVELTY_CI_V1","status":"NOVELTY_QA_PASS","report_date":"2026-11-01","manifest_blob_sha":"2cac111cc579f29886fb87ceae0addd9eba6cee4","gate_blob_sha":"dfcc4be0ddc7de54d4ef505160173ccf0cbdca90","limitation":"Does not verify external facts or Gmail delivery"}
+{"schema":"US_STOCK_NOVELTY_CI_V1","status":"NOVELTY_QA_PASS","report_date":"2026-11-01","manifest_blob_sha":"429d4ffb7dab01dbd1637b9c301936f7bdc688eb","gate_blob_sha":"dfcc4be0ddc7de54d4ef505160173ccf0cbdca90","limitation":"Does not verify external facts or Gmail delivery"}
