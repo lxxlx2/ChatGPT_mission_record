@@ -1,6 +1,6 @@
 {
   "schema": "frank_scanner_rpc_maintenance_v1",
-  "updated_at": "2026-10-31T21:50:07.785342+07:00",
+  "updated_at": "2026-10-31T22:02:41.894055+07:00",
   "scope": "existing scanner maintenance only; no P1/P2/P3 research restart",
   "source_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
   "parent_sha": "858ef37bbabcfe2f2baeaaeeb95f3478e044defb",
@@ -234,5 +234,148 @@
     "maximum_seconds": 100,
     "extra_rpc_requests": 0,
     "new_background_monitor": false
+  },
+  "post_release_production_progress": {
+    "at": "2026-10-31T22:00:41.510353+07:00",
+    "health": {
+      "pid": 3402,
+      "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "status": "RUNNING",
+      "poll_count": 78669,
+      "consecutive_errors": 0,
+      "source_drift": false,
+      "raw_pending": 0,
+      "model_unprocessed": 0,
+      "last_successful_poll": "2026-10-31T15:00:39.183801+00:00",
+      "restart_count": 10,
+      "production_trading": "NO_GO"
+    },
+    "network_requests_by_audit": 0,
+    "production_sql_write": false,
+    "notifications_sent_by_audit": 0,
+    "successful_poll_age_seconds": 2.327,
+    "source_head": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "source_worktree_clean": true,
+    "signatures_before_release": 5881,
+    "signatures_now": 5883,
+    "signatures_added": 2,
+    "new_classification_counts": {
+      "PASSIVE_TRANSFER": 2
+    },
+    "new_trade_directions": {},
+    "historical_rows": {
+      "signatures": {
+        "before": 5881,
+        "now": 5883,
+        "all_original_rows_unchanged": true
+      },
+      "signals": {
+        "before": 7,
+        "now": 7,
+        "all_original_rows_unchanged": true
+      },
+      "outbox": {
+        "before": 9,
+        "now": 9,
+        "all_original_rows_unchanged": true
+      },
+      "gmail_delivery": {
+        "before": 2,
+        "now": 2,
+        "all_original_rows_unchanged": true
+      },
+      "email_content": {
+        "before": 2,
+        "now": 2,
+        "all_original_rows_unchanged": true
+      },
+      "v1_seen": {
+        "before": 5881,
+        "now": 5883,
+        "all_original_rows_unchanged": true
+      }
+    },
+    "outbox_counts": [
+      {
+        "channel": "gmail",
+        "status": "SENT_VERIFIED",
+        "count": 2
+      },
+      {
+        "channel": "local",
+        "status": "COMMAND_ACCEPTED",
+        "count": 6
+      },
+      {
+        "channel": "local",
+        "status": "DRY_RUN_AUDIT",
+        "count": 1
+      }
+    ],
+    "gmail_counts": [
+      {
+        "status": "SENT_VERIFIED",
+        "count": 2
+      }
+    ],
+    "unresolved_local": 0,
+    "gmail_inflight": 0,
+    "new_signal_count": 0,
+    "real_buy_acceptance": "NOT_COVERED",
+    "health_recheck_at": "2026-10-31T22:02:41.894055+07:00",
+    "health_recheck": {
+      "pid": 3402,
+      "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "status": "RUNNING",
+      "consecutive_errors": 0,
+      "source_drift": false,
+      "raw_pending": 0,
+      "model_unprocessed": 0,
+      "last_successful_poll": "2026-10-31T15:02:39.273401+00:00"
+    }
+  },
+  "post_release_raw_and_classification_verification": {
+    "at": "2026-10-31T22:02:16.821745+07:00",
+    "source_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "network_requests": 0,
+    "production_sql_write": false,
+    "notifications_sent": 0,
+    "comparison_contract": "classifier fields plus Ledger person_id, position_change and signal_ids; full stored passive record equality checked",
+    "new_rows_checked": 2,
+    "checks": [
+      {
+        "signature_sha256": "981d9052f1ad0deedc2bf47f622d57cd9c26c79806751f885f82532ba63ba41b",
+        "raw_file_sha256": "29b63a717b2fdda322d61cdc71f401b81ce85f88e473e10ad90f8e5c405d5899",
+        "raw_canonical_sha256": "619c174ebaaa894ae7ba5671a8d10b83129ff5fac5676d415123f21a59dd9892",
+        "stored_record_sha256": "793a633d8022602d49397ae19e8f9f39b9b2b38453c0d87b36bfe289a57b331a",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "2c9944403834dc6a1edd8f126b0113e0e0a51e890bd1eaac245a55c221917da1",
+        "raw_file_sha256": "97131aa6fef2044a02aca6e085d0742aa030b62eaa4a1cde4f935e936179d1ed",
+        "raw_canonical_sha256": "ce22a3f2356a209dc49ea109130749d86cf0a9d0cf395ce3c0c8a4d95ec5aacd",
+        "stored_record_sha256": "d7e0dd66a5a792db5f0e3e00e17e0a2c6e638443a1e9c082ef835288fa8db7b6",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      }
+    ],
+    "status": "PASS"
   }
 }
