@@ -28,8 +28,10 @@ def configured_scanner_rpc(path=None):
             raise ValueError("empty RPC config")
         endpoint = values[0]
         parsed = urlsplit(endpoint)
-        if (parsed.scheme != "https" or not parsed.hostname or parsed.username
-                or parsed.password or parsed.fragment or any(c.isspace() for c in endpoint)):
+        # Accessing port validates numeric syntax and range before any transport.
+        parsed.port
+        if (parsed.scheme != "https" or not parsed.hostname or parsed.username is not None
+                or parsed.password is not None or parsed.fragment or any(c.isspace() for c in endpoint)):
             raise ValueError("invalid RPC endpoint")
         return endpoint
     except (OSError, UnicodeError, ValueError):

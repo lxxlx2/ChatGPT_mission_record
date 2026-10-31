@@ -28,7 +28,10 @@ class SolanaRPC:
             try:
                 req=urllib.request.Request(self.endpoint,data=body,headers={'Content-Type':'application/json'})
                 with self.request(req,timeout=20) as response:value=json.loads(response.read())
-                if value.get('error'):raise RPCFailure(value['error'].get('code','RPC_ERROR'))
+                if value.get('error'):
+                    error=value['error'];code=error.get('code') if isinstance(error,dict) else None
+                    # Provider-controlled text may echo the private endpoint/token.
+                    raise RPCFailure(code if type(code) is int else 'RPC_ERROR')
                 if 'result' not in value:raise RPCFailure('INCOMPLETE_RPC_ENVELOPE')
                 return value['result']
             except urllib.error.HTTPError as exc:
