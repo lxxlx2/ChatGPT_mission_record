@@ -1,40 +1,40 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-11-01 03:02:45 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-11-01 03:57:56 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-11-01 03:02:45 Asia/Bangkok (attempt 03:01:20)
+- latest_actual_run: 2026-11-01 03:57:56 Asia/Bangkok (off-minute invocation; attempt 03:56:49)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-11-01/030245-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-11-01/030120-attempt.md
+- latest_run_path: airdrop-tge-monitor/runs/2026-11-01/035756-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-11-01/035649-attempt.md
 - latest_scheduled_shard: 3
-- latest_executed_shard: 3
-- stale_shard_recovery: false; default Shard3 03%4; no override
+- latest_executed_shard: 1
+- stale_shard_recovery: true; once-per-four oldest meaningful attempt override, no repeat starvation
 - latest_candidate_count: 7
 - latest_triggered_events: 0
 - latest_identity_failures: 0
-- latest_source_failures: 3
+- latest_source_failures: 4
 - latest_notification_decision: SILENT_NO_ACTION_EMAIL_ONLY
 - latest_notification_status: NO_GMAIL_NO_APP; no new Tier A/mapped Tier B rights ACTION
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_extra_USDC_current_entitlement,StandX_DUSD_live_checker,Cambria_RSGP_wallet_claim
-- latest_private_rights_unverified: Clay_Shares_wallet,Surf_PONS_and_SurfBoard_wallet,Crusoe_private_SPV,Republic_rTTOK_private_settlement
+- latest_source_gaps: Concrete_extra_USDC_current_right,StandX_DUSD_live_checker,ForecastFDN_current_issuer,Neutrl_special_redemption_current_right
+- latest_private_rights_unverified: Clay_Shares_wallet,Surf_PONS_and_SurfBoard_wallet,Cambria_RSGP_wallet_claim,Neutrl_NUSD_personal_holdings
 - latest_identity_gap: none; Space/Spacecoin, Theo/Autheo, Titan guards preserved
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
-- last_meaningful_attempt_at_shard0: 2026-11-01 01:00:26 Asia/Bangkok (PARTIAL; invocation started 00:58)
-- last_meaningful_attempt_at_shard1: 2026-10-31 21:04:23 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard0: 2026-11-01 01:00:26 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard1: 2026-11-01 03:57:56 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard2: 2026-11-01 02:01:31 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-11-01 03:02:45 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 030245-final.md commit 94bcca06c59e7c74260b3b64c4601d4c24a3bf2f
-- latest_terminal_readback: VERIFIED 030245-final.md (main blob SHA edcac8e8236d38d6b50317805fe0eb531e6f73c9)
-- latest_four_executed_shards: [0,0,2,3]
+- latest_primary_final_write: VERIFIED_DURABLE 035756-final.md commit 0fd27c0bbf123caad885b18efeacae27070b25db
+- latest_terminal_readback: VERIFIED 035756-final.md (main blob SHA 191f20f9d29726eda44cb4c2bcda5637c1ed0a68)
+- latest_four_executed_shards: [0,2,3,1]
 - last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (unchanged)
 - last_delivered_gmail_message_id: 1a1812a1f6802ecb
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-11-01 03:02:45 BKK PARTIAL Shard3; urgent5 + Surf/StandX + bounded Cambria/StandX/NeoSoul lifecycle; 7 known/candidate families, 3 public/claim source gaps and private-rights unknowns; no new Tier A/B ACTION, no Gmail/App. Browser X unavailable, issuer English fallback; prior Sent checked; last verified complete Oct10 unchanged.
+- latest_terminal_sync: 2026-11-01 03:57:56 BKK PARTIAL shard1 recovery; urgent5 + Surf/StandX + bounded Cambria/StandX/NeoSoul/Relay lifecycle; seven old candidate families, four unresolved source/right gaps and private-wallet unknowns; zero new Tier A/B ACTION, no Gmail/App. Browser original X unavailable, official English fallback; prior Gmail Sent checked. Last verified complete Oct10 unchanged.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
@@ -365,3 +365,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-11-01 02:01:31 BKK: existing HH:00 monitor 020034-attempt.md and readback-verified 020131-final.md commit ce95ae5213964fd8b4a6eddb3e1775c626342e2c; urgent5 + dynamic Surf/StandX + exactly one fair Shard2 (15 distinct registered identities), bounded Cambria/StandX/Relay lifecycle. Seven known/candidate families, zero new Tier A/mapped Tier B ACTION, three unresolved public issuer gaps and four private rights unknowns; Browser X originating-context unavailable, official English fallback. Gmail Sent prior Cambria/NeoSoul confirmed, mapped work Inbox no new rights. No Gmail/App. Shard2 meaningful PARTIAL attempt advanced; last verified complete Oct10 unchanged. Last four [2,0,0,2]; existing task/schedule/scope/recipient unchanged.
 
 - 2026-11-01 03:02:45 BKK: existing hourly monitor attempt 030120-attempt.md and readback-verified 030245-final.md committed 94bcca06c59e7c74260b3b64c4601d4c24a3bf2f; urgent5 + Surf/StandX + fair Shard3 (15 distinct Registry identities), bounded cross-shard Cambria/StandX/NeoSoul/Relay lifecycle. Seven existing candidate/right families, zero new Tier A/mapped Tier B ACTION, three unresolved source/claim gaps plus private wallet/SPV rights unknown. Browser original X originating context unavailable; official English fallback. Gmail Sent Cambria/NeoSoul delivered, mapped life/work Inbox no new rights. No Gmail/App. Shard3 meaningful PARTIAL attempt advanced; last verified complete Oct10 unchanged. Task/schedule/scope/recipient unchanged.
+
+- 2026-11-01 03:57:56 BKK: off-minute existing monitor 035649-attempt.md and readback-verified 035756-final.md committed 0fd27c0bbf123caad885b18efeacae27070b25db; urgent5 + Surf/StandX + exactly one oldest-attempt recovery shard1 (14 distinct registered identities) plus bounded Cambria/StandX/NeoSoul/Relay lifecycle. Seven existing candidate families, zero new Tier A/mapped Tier B ACTION, four unresolved public/private-rights source gaps. Browser original X unavailable due originating-context, issuer English fallback. Gmail Sent prior Cambria/NeoSoul verified, mapped Inbox no new rights. No Gmail/App. Shard1 meaningful PARTIAL attempt advanced; verified-complete remains Oct10. Last four [0,2,3,1]; no task/schedule/scope/recipient changes.
