@@ -1,0 +1,366 @@
+{
+  "schema": "CRYPTO_DAILY_BOUNDED_COLLECTOR_RESEARCH_V2",
+  "report_date": "2026-11-01",
+  "slot": "03:20 Asia/Bangkok",
+  "recorded_at": "2026-10-31T20:25:21.809Z",
+  "status": "PARTIAL_SOURCE_GAPS",
+  "email_only": true,
+  "app_silent": true,
+  "email_sent": false,
+  "original_task_unchanged": true,
+  "new_task_or_cron_or_local_process_or_paid_api": false,
+  "rules_blob_sha": {
+    "PIPELINE_CONTRACT.md": "0d94442ca1b920ad0b3e5ea9158d47a6b3dcbe25",
+    "EDITORIAL_RULESET.json": "2ed51528d230508ae4e0015762b1d60c9d72e299",
+    "REPORT_SPEC.md": "809a5c1cbcd6503d42305c842f37826b74a4741f",
+    "REPORT_ACCEPTANCE.md": "d9952d82e3903d699d7db02632c1f26ebdd2c945",
+    "COLLECTOR_SPEC.md": "aa4f1473f3c767b2216f715cbba78231c4794c02",
+    "SECURITY_SOURCE_POLICY.md": "86b36f208220e90a52caa1cb8acaeec47add9628",
+    "DELIVERY_RUNBOOK.md": "181c0448dddd2586e6082faaa1f51f7556eaa795",
+    "state/daily-event-ledger.json": "a320907b357bbdfa77459e50c5a5c98dde8f1ed6",
+    "docs/MONITORING/X_FIRST_PARTY_SOURCE_POLICY.md": "20abfed8a287307bb2d6017b3b9e7ff509bbeebe"
+  },
+  "shard": {
+    "fallback_slot": 1,
+    "planned_shard": 1,
+    "executed_shard": 1,
+    "complete": false,
+    "last_two_completed_shards": "UNVERIFIED_FROM_PERSISTED_FINALS",
+    "reason": "00:20 previous run partial; 20:20 last final did not expose reliable completed shard index; use 03 fallback and mark incomplete"
+  },
+  "gamil_sent_nov1_count": 0,
+  "seven_day_gmail_git_readback": [
+    {
+      "date": "2026-10-25",
+      "gmail_id": "1a170e1f82549e41",
+      "git_blob_sha": "fcb290616c0268b5323c9322923681b504523df7",
+      "body_match": "FRONTMATTER_STRIPPED_EQUAL"
+    },
+    {
+      "date": "2026-10-26",
+      "gmail_id": "1a176097e267ed98",
+      "git_blob_sha": "da4ae0ef14aaf8111c14174ac827d3d5c9344091",
+      "body_match": "EXACT"
+    },
+    {
+      "date": "2026-10-27",
+      "gmail_id": "1a17b2d317942c5a",
+      "git_blob_sha": "407a25cf17db3f476932759de598d60102b13a85",
+      "body_match": "EXACT"
+    },
+    {
+      "date": "2026-10-28",
+      "gmail_id": "1a180500065679d2",
+      "git_blob_sha": "5bc7be7c463f2d8b88917e974b31dc330e5d0f50",
+      "body_match": "EXACT"
+    },
+    {
+      "date": "2026-10-29",
+      "gmail_id": "1a185794e63c022c",
+      "git_blob_sha": "89b93f0a7883b02c85824afb0b07547d51ae28c9",
+      "body_match": "EXACT"
+    },
+    {
+      "date": "2026-10-30",
+      "gmail_id": "1a18a9d5e767548d",
+      "git_blob_sha": "23d55aab5c7400a0fd9688d7bc90ab1023ce9710",
+      "body_match": "EXACT"
+    },
+    {
+      "date": "2026-10-31",
+      "gmail_id": "1a18fc6328b668e2",
+      "git_blob_sha": "6727cca0190395f3ecc21024e7b19bbd4447d259",
+      "body_match": "EXACT"
+    }
+  ],
+  "source_receipts": [
+    {
+      "lane": "spot",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": null,
+      "status": "CHECKED_OFFICIAL_BINANCE_CONNECTOR",
+      "observation": "BTC 77600.00 +0.947%, ETH 2253.99 +0.668%, SOL 95.88 +1.043%, BNB 705.93 +0.899%, HYPE 88.13 -2.176%; 24h rolling, single-pair; per-symbol official connector; closeTime BTC 1793478215012"
+    },
+    {
+      "lane": "derivatives",
+      "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": null,
+      "status": "CHECKED_OFFICIAL_BINANCE_CONNECTOR",
+      "observation": "BTC mark 77555.00 funding 0.010000% OI 97539.575 BTC; ETH mark 2252.51 funding -0.011731% OI 2358779.372 ETH; SOL mark 95.7872449 funding 0.010000% OI 8768510.65 SOL; single-point"
+    },
+    {
+      "lane": "capital_flows",
+      "source_url": "https://farside.co.uk/btc/",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": "2026-10-30 US session",
+      "status": "CHECKED",
+      "observation": "Farside 30 Oct BTC ETF -643.2 USDm; ETH -155.7 USDm; SOL -10.8 USDm; BTC/ETH totals now fully populated in page table; issuer-level independent corroboration not done",
+      "also_checked": [
+        "https://farside.co.uk/eth/",
+        "https://farside.co.uk/sol/"
+      ]
+    },
+    {
+      "lane": "onchain",
+      "source_url": "https://info.arkm.com/research",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": "2026-10-30",
+      "status": "PARTIAL_SOURCE_GAP",
+      "observation": "Arkham primary index accessible; Oct30 Binance hack article available; Lookonchain /feeds/79763 original URL direct access failed; 7500 BTC SAFU TXID and wallet attribution not independently verified",
+      "failed_url": "https://lookonchain.com/feeds/79763"
+    },
+    {
+      "lane": "policy",
+      "source_url": "https://www.binance.com/en/support/announcement/list/000000000000000049",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": "2026-10-31",
+      "status": "CHECKED",
+      "observation": "Official exchange latest notice includes security recovery update, PREDICT postponement; no new separate venue restriction verified this pass; FCA prior HTX UK event already sent"
+    },
+    {
+      "lane": "infrastructure",
+      "source_url": "https://status.railway.com/",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": "2026-10-31 19:53 UTC",
+      "status": "CHECKED",
+      "observation": "Railway new cross-region elevated build failure partial outage; status explicitly says unrelated to Oct21 secrets security incident; operational availability candidate, not new breach"
+    },
+    {
+      "lane": "tge",
+      "source_url": "https://www.binance.com/en/support/announcement/list/000000000000000049",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": "2026-10-30",
+      "status": "PARTIAL_SOURCE_GAP",
+      "observation": "PREDICT official listing remains postponed; no new opening time on checked latest official notice. StandX Nov1 claim third-party calendar lacks original confirmation. Cambria RSGP Oct29 already alerted; no verified new claim action.",
+      "also_checked": [
+        "https://www.binance.com/en/support/announcement/detail/1fdf1f61559c401da0435895ffcccb62"
+      ],
+      "missing": [
+        "issuer primary StandX claim post",
+        "Cambria fresh issuer original post"
+      ]
+    },
+    {
+      "lane": "early_nft",
+      "source_url": "https://opensea.io/blog",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": "2026-10-30",
+      "status": "PARTIAL_SOURCE_GAP",
+      "observation": "Oct30 OpenSea Currents digest visible; no primary new specific high-materiality NFT project launch validated; social heat and official X posts unavailable"
+    },
+    {
+      "lane": "security",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/1fdf1f61559c401da0435895ffcccb62",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": "2026-10-31 14:24 (site timezone unspecified)",
+      "status": "CHECKED_PRIMARY_SEARCH_INDEX",
+      "observation": "Binance official Update #3 changes 80% to 90% replenished, ten major tokens claimed fully backed; Oct31 00:00 UTC PoR snapshot, ZK proof still pending, Nov1 withdrawal reopening forecast not confirmed. Direct article open failed, official support index and indexed full official announcement independently visible.",
+      "also_checked": [
+        "https://cursor.com/blog/claude-code-extension-security-notice",
+        "https://www.microsoft.com/en-us/security/blog/2026/10/30/inside-malicious-claude-code-branded-cursor-extension-persistent-ssh-backdoor/"
+      ]
+    },
+    {
+      "lane": "web_runtime_rce",
+      "source_url": "https://www.php.net/archive/2026.php",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": "2026-10-26",
+      "status": "CHECKED_OLD_NO_NOVELTY",
+      "observation": "PHP Windows Brotli 1.2.1 rebuild CVE-2026-111497 dated Oct26; no new vendor advisory after already delivered security stories; Node official Oct21 release reviewed",
+      "also_checked": [
+        "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases"
+      ]
+    },
+    {
+      "lane": "web_pki_tls",
+      "source_url": "https://blog.mozilla.org/security/",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": "2026-10-20",
+      "status": "CHECKED_OLD_NO_NOVELTY",
+      "observation": "Mozilla eMudhra compromised intermediate certificates Oct20; no new issuer change on current index; old family already delivered"
+    },
+    {
+      "lane": "ai_package_supply_chain",
+      "source_url": "https://github.com/BerriAI/litellm/security/advisories",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": "2026-10-27",
+      "status": "CHECKED",
+      "observation": "LiteLLM Enterprise unauthenticated file read GHSA-w4c7-34wj-hqm8 Oct27, no new post-Oct27 issuer revision established; Cursor malicious Claude Code extension Oct29 independently confirmed, not a LiteLLM release",
+      "also_checked": [
+        "https://cursor.com/blog/claude-code-extension-security-notice",
+        "https://www.microsoft.com/en-us/security/blog/2026/10/30/inside-malicious-claude-code-branded-cursor-extension-persistent-ssh-backdoor/"
+      ]
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "source_url": "https://status.railway.com/",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": "2026-10-31 19:53 UTC",
+      "status": "CHECKED",
+      "observation": "New Railway build failure explicitly separate from Oct21 secrets incident. Railway signups still paused in Oct29 status; ConnectWise Oct30 Phase1/2 done Phase3 ongoing Phase4 pending already reported; Microsoft Oct21 OAuth compromise previously reported",
+      "also_checked": [
+        "https://blog.railway.com/p/security-disclosure-wednesday-october-21st",
+        "https://www.connectwise.com/company/trust/advisories",
+        "https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/"
+      ]
+    },
+    {
+      "lane": "backend_framework_auth",
+      "source_url": "https://github.com/laravel/framework/security/advisories",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": "2026-10-19",
+      "status": "CHECKED_OLD_NO_NOVELTY",
+      "observation": "Laravel token guard auth bypass GHSA-f9x3-7vq9-cph6 already delivered; no new dated critical advisory visible"
+    },
+    {
+      "lane": "macro",
+      "source_url": "https://www.blackrock.com/us/individual/insights/blackrock-investment-institute/weekly-commentary",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": "2026-10-27",
+      "status": "CHECKED_PREVIOUS_NO_NEW",
+      "observation": "Official macro calendar and prior US Oct30 close checked; no new independently verified Nov1 macro release in bounded pass; Hormuz Oct30 previously delivered"
+    },
+    {
+      "lane": "forward_catalysts",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/1fdf1f61559c401da0435895ffcccb62",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": "2026-10-31 14:24 (site timezone unspecified)",
+      "status": "CHECKED",
+      "observation": "Binance targets withdrawal reopening Nov1 (not confirmed), PoR ZK proof Nov3; future targets only; previously announced VELODROME delist Nov2/3 remains future event"
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "source_url": "https://www.gate.com/announcements",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": null,
+      "status": "UNCONFIRMED_MONITORING",
+      "observation": "Official Kraken, Binance, Bitget, Bybit, Gate, OKX pages and bounded English issuer-specific searches checked. Gate generic Pre-IPOs product exists but no Anthropic-specific offer/application terms found. SEC EDGAR page accessible but dynamic issuer-specific filing not independently fetched. Derivatives and generic IPO products not equity allocation.",
+      "also_checked": [
+        "https://www.kraken.com/",
+        "https://www.binance.com/en/support/announcement/list/000000000000000049",
+        "https://www.bitget.com/support",
+        "https://www.bybit.com/en/help-center",
+        "https://www.okx.com/help",
+        "https://www.sec.gov/edgar/search/"
+      ],
+      "missing": "issuer-specific official Anthropic offer page / terms"
+    },
+    {
+      "lane": "official_x",
+      "source_url": "https://x.com/krakenfx",
+      "checked_at": "2026-10-31T20:25:21.809Z",
+      "source_published_at": null,
+      "status": "BROWSER_SESSION_UNAVAILABLE_X_SOURCE_GAP",
+      "observation": "Browser list_tabs failed: originating browser context required; bounded public site:x.com verified-handle searches yielded no readable fresh original permanent posts; official websites/SEC fallback used; no logged-in tab access claimed.",
+      "failed_method": "Browser.list_tabs",
+      "read_mode": "PUBLIC_SEARCH_AND_OFFICIAL_WEB_FALLBACK"
+    }
+  ],
+  "candidates": [
+    {
+      "event_key": "security:binance:replenishment-90pct-2026-10-31",
+      "family_key": "security:binance:hotwallet-2026-10-29",
+      "material_version": "binance-official-2026-10-31-1424-replenishment90pct-por-snapshot",
+      "primary_section": 9,
+      "materiality": "HIGH",
+      "status": "VERIFIED_OFFICIAL_ISSUER_CLAIM",
+      "decision": "INCLUDE_NEXT_FORMAL_DAILY_AFTER_PRESEND_REFRESH",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/1fdf1f61559c401da0435895ffcccb62",
+      "source_published_at": "2026-10-31 14:24 (site timezone unspecified)",
+      "novelty_proof": {
+        "previous_material_version": "binance-official-2026-10-30-1933-loss6p3-reserve6p34-withdrawal34h",
+        "changed_field": "affected_assets_replenishment_and_reserve_snapshot",
+        "old_value": "about 80% of impacted token assets covered; no updated 2026-10-31 PoR snapshot",
+        "new_value": "about 90% replenished; ten specified assets issuer-claimed 100% backed; 2026-10-31 00:00 UTC PoR snapshot published, ZK proof pending",
+        "evidence_url": "https://www.binance.com/en/support/announcement/detail/1fdf1f61559c401da0435895ffcccb62",
+        "evidence_published_at": "2026-10-31 14:24 (site timezone unspecified)"
+      },
+      "caveats": "Replenishment/PoR backing are Binance issuer claims, not independent proof; withdrawals not yet confirmed resumed."
+    },
+    {
+      "event_key": "security:cursor:claude-code-extension-malware-2026-10-29",
+      "family_key": "security:cursor:claude-code-extension-marketplace-2026-10-29",
+      "material_version": "cursor-2026-10-29-affected-versions-and-microsoft-2026-10-30-analysis",
+      "primary_section": 9,
+      "materiality": "HIGH",
+      "status": "VERIFIED_VENDOR_AND_MICROSOFT",
+      "decision": "CARRY_FOR_NEXT_FORMAL_DAILY_IF_NOT_ALREADY_DELIVERED",
+      "source_url": "https://cursor.com/blog/claude-code-extension-security-notice",
+      "source_published_at": "2026-10-29",
+      "second_source": "https://www.microsoft.com/en-us/security/blog/2026/10/30/inside-malicious-claude-code-branded-cursor-extension-persistent-ssh-backdoor/",
+      "delta": "Malicious Cursor marketplace Claude Code extension 2.1.312/2.1.313 could plant SSH key and persistence. Official Cursor max 5000 potentially affected. Microsoft Visual Studio Marketplace and npm not affected. User exposure unknown. Avoid declaring all installed extensions compromised."
+    },
+    {
+      "event_key": "infrastructure:railway:build-failures-2026-10-31",
+      "family_key": "infrastructure:railway:build-outage-2026-10-31",
+      "material_version": "railway-status-2026-10-31T19:53Z-investigating",
+      "primary_section": 6,
+      "materiality": "MEDIUM",
+      "status": "OFFICIAL_INCIDENT_INVESTIGATING",
+      "decision": "WATCH_FOLLOW_UP_NEW_OPERATIONAL_OUTAGE",
+      "source_url": "https://status.railway.com/",
+      "source_published_at": "2026-10-31T19:53:00Z",
+      "delta": "Cross-region elevated build failure rates; Railway explicitly distinguishes from resolved Oct21 security incident; no confirmed secrets compromise in this event."
+    },
+    {
+      "event_key": "market:etf:2026-10-30-flow-finalization",
+      "family_key": "market:etf:daily-2026-10-30",
+      "material_version": "farside-2026-10-31-btc-minus643p2-eth-minus155p7-sol-minus10p8",
+      "primary_section": 5,
+      "materiality": "ROUTINE",
+      "status": "VERIFIED_FARSIDE_DYNAMIC_SUMMARY",
+      "decision": "INCLUDE_NEXT_ROUTINE_ETF_UPDATE_NOT_TOP5_BY_DEFAULT",
+      "source_url": "https://farside.co.uk/btc/",
+      "source_published_at": "2026-10-30 US trading day",
+      "delta": "BTC -643.2 USDm vs previously reported provisional -409.5; ETH -155.7 vs provisional -59.6; SOL -10.8 unchanged. Not new security narrative."
+    },
+    {
+      "event_key": "onchain:binance-safu:7500btc-2026-10-31",
+      "family_key": "onchain:binance:safu-replenishment-transfers",
+      "material_version": "lookonchain-feed79763-7500btc-2026-10-31",
+      "primary_section": 5,
+      "materiality": "HIGH_REVIEW",
+      "status": "VERIFYING_TXID_SOURCE_GAP",
+      "decision": "EXCLUDE_UNTIL_TXID_AND_ADDRESS_VERIFIED",
+      "source_url": "https://lookonchain.com/feeds/79763",
+      "source_published_at": null,
+      "delta": "Lookonchain attributes 7500 BTC SAFU transfer; original page unavailable in current web session, TXID not retrieved. Do not claim sale or independently verified movement."
+    },
+    {
+      "event_key": "rights:standx:2026-11-01-calendar-claim",
+      "family_key": "rights:standx:claim",
+      "material_version": "thirdparty-calendar-unconfirmed-2026-11-01",
+      "primary_section": 7,
+      "materiality": "VERIFYING",
+      "status": "UNCONFIRMED",
+      "decision": "EXCLUDE_NO_OFFICIAL_CLAIM_PAGE",
+      "source_url": "https://airdrops.io/calendar/",
+      "source_published_at": null,
+      "delta": "Third-party calendar date only; no issuer source or wallet eligibility verified."
+    },
+    {
+      "event_key": "ipo:anthropic:third-party-venue-access",
+      "family_key": "ipo:anthropic:venue-access",
+      "material_version": "monitoring-2026-11-01-no-official-offer",
+      "primary_section": 7,
+      "materiality": "WATCH",
+      "status": "UNCONFIRMED_MONITORING",
+      "decision": "EXCLUDE_NO_OFFICIAL_ANTHROPIC_VENUE_SUBSCRIPTION",
+      "source_url": "https://www.gate.com/announcements",
+      "source_published_at": null,
+      "delta": "Generic Gate Pre-IPO product and Kraken xStocks do not establish Anthropic allocation; no official named offer/eligibility/window on six checked venues."
+    }
+  ],
+  "limitations": [
+    "Browser list_tabs failed due originating browser context; X_SOURCE_GAP",
+    "Lookonchain feed direct read failed; onchain BTC TXID not independently checked",
+    "StandX and Cambria original social issuer claim pages not accessible; no rights alert",
+    "SEC EDGAR dynamic Anthropic-specific result not independently inspected",
+    "No per-issuer independent ETF flow corroboration",
+    "CISA original current advisory not independently opened in this bounded pass",
+    "Attempt log was not written before discovery; status remains PARTIAL"
+  ],
+  "delivery_decision": "COLLECT_ONLY_NO_GMAIL_NO_APP_MESSAGE"
+}
