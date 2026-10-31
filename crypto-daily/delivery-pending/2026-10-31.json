@@ -886,7 +886,8 @@
       "status": "source_gap",
       "result_urls": [],
       "published_at": null,
-      "reason": "BROWSER_SESSION_UNAVAILABLE: originating browser context required"
+      "reason": "BROWSER_SESSION_UNAVAILABLE: originating browser context required",
+      "error": "BROWSER_SESSION_UNAVAILABLE: originating browser context required"
     }
   ],
   "market_core": [
