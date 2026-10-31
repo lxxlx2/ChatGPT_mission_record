@@ -2,9 +2,9 @@
   "report_date": "2026-10-31",
   "timezone": "Asia/Bangkok",
   "automation_id": "EXISTING_CRYPTO_DAILY_UNCHANGED",
-  "prebuild_status": "PREBUILD_PENDING_CLOUD_QA_PARTIAL_SOURCE_GAPS",
+  "prebuild_status": "PUBLISHER_REVERIFIED_PARTIAL_SOURCE_GAPS",
   "ci_status": "CI_NOT_PROVEN",
-  "snapshot_at": "2026-10-31T01:21:42.364Z",
+  "snapshot_at": "2026-10-31T02:23:00.342Z",
   "rule_blob_sha": {
     "PIPELINE_CONTRACT.md": "0d94442ca1b920ad0b3e5ea9158d47a6b3dcbe25",
     "EDITORIAL_RULESET.json": "2ed51528d230508ae4e0015762b1d60c9d72e299",
@@ -16,7 +16,7 @@
     "state/daily-event-ledger.json": "f28d7743215ea9f1447c6e85a4fe11154f420e94",
     "docs/MONITORING/X_FIRST_PARTY_SOURCE_POLICY.md": "20abfed8a287307bb2d6017b3b9e7ff509bbeebe"
   },
-  "body": "Crypto Daily Brief｜2026-10-31\n快照：Asia/Bangkok 2026-10-31 08:19:32预构建，币价和永续为Binance官方单交易对滚动窗口；美国ETF为对应交易日Farside动态汇总。来源未通及未核实项目保留SOURCE_GAP；08:20预构建尚未正式发送，09:20须刷新关键行情与新闻后再审核。\n\n一、今日最重要的5件事\n（1）Binance在10月30日正式披露热钱包遭未经授权提取，确认约63亿美元失窃，已准备超过63.4亿美元公司资金，其中约50亿美元为对应受影响币种；约30亿美元已冻结。提现仍暂停，赔付与安全承诺属于交易所声明，需后续储备证明和实际恢复核验。\n（2）Tether 10月30日发布Q3储备鉴证：截至9月30日超额储备约79.546亿美元，较Q2的41.095亿美元提高约38.45亿美元，Q3营业利润约15亿美元。属于发行方及其鉴证口径，须区分超额储备与即时可赎回现金。\n\n二、BTC/ETH/SOL及主要资产\n（1）BTC/USDT 77566.00 USDT，滚动24小时+0.674%，低76325.98、高78804.01，单交易对成交额约15.95亿USDT；Binance官方采样2026-10-31 08:19:32曼谷，非全球加权价。\n（2）ETH/USDT 2247.70 USDT，滚动24小时+1.557%，低2174.08、高2262.49，单交易对成交额约8.78亿USDT；Binance官方采样2026-10-31 08:19:32曼谷，非全球加权价。\n（3）SOL/USDT 96.83 USDT，滚动24小时+2.879%，低93.16、高98.59，单交易对成交额约2.38亿USDT；Binance官方采样2026-10-31 08:19:32曼谷，非全球加权价。\n（4）BNB/USDT 708.05 USDT，滚动24小时+1.095%，低692.01、高722.08，单交易对成交额约1.99亿USDT；Binance官方采样2026-10-31 08:19:32曼谷，非全球加权价。\n（5）HYPE/USDT 89.38 USDT，滚动24小时-0.379%，低88.83、高94.02，单交易对成交额约0.658亿USDT；Binance官方采样2026-10-31 08:19:32曼谷，非全球加权价。\n\n三、二级市场剧烈波动与持续趋势\n（1）Binance USDⓈ-M永续截面：BTC标记价77529.90、资金费率+0.010000%、OI 96699.006 BTC；ETH标记2246.17、费率-0.011479%、OI 2339451.544 ETH；SOL标记96.74、费率-0.006806%、OI 8829567.62 SOL。08:19:29曼谷采样，单点OI与资金费率不能证明持续增仓或清算规模。\n（2）BTC、ETH、SOL在昨日大跌后本次滚动24小时分别反弹0.674%、1.557%、2.879%，HYPE却为-0.379%；需结合前一日较大跌幅和持续OI判断，单窗口反弹尚不足以证明市场已修复。\n\n四、监管与政策\n无高置信新增。\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）Farside美国BTC现货ETF 10月29日全表净流+17.2百万美元；10月30日已披露列暂计-409.5百万美元，但部分发行人仍为“-”，暂计不可当完整最终净流，也不等于链上实际卖出。\n（2）Farside美国ETH现货ETF 10月29日全表净流-105.5百万美元；10月30日已披露列暂计-59.6百万美元，但部分发行人仍为“-”，暂计不可当完整最终净流，也不等于链上实际卖出。\n（3）Farside美国SOL现货ETF 10月29日全表净流-27.7百万美元；10月30日已披露列暂计-10.8百万美元，但部分发行人仍为“-”，暂计不可当完整最终净流，也不等于链上实际卖出。\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n（1）Tether 10月30日Q3鉴证报告显示9月30日总资产1914.51亿美元、负债1834.96亿美元，超额储备79.546亿美元；Q2超额储备41.095亿美元，Q3营业利润约15亿美元。美债直接及间接敞口约1324亿美元。官方报告和BDO鉴证提供季度资产负债证据，但不等同实时逐笔审计。来源：https://tether.io/news/tether-generates-1-5-billion-in-q3-net-operating-profit-as-reserve-buffer-doubles-to-almost-8-billion/\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n（1）重要更正：Binance官方10月30日公告，PREDICT原计划10月30日10:00 UTC（曼谷17:00）开盘，现已推迟至另行通知，尚无新的现货开盘时间。此前日报写出的原定时间不可继续视为实际上市，Alpha也另行延期；未取得新开盘时间、领取或退款变化。来源：https://www.binance.com/en/square/post/382715428129327\n\n八、Early / Meme / NFT / 新生态热点\n无高置信新增。\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n（1）Binance官方10月30日19:33公告：10月29日20:05 UTC左右热钱包被攻击，确认约63亿美元失窃，已准备超过63.4亿美元公司资金，其中约50亿美元为对应受影响币种，称约30亿美元链上冻结。此前失窃总额未确认的状态已变化。初查曾指向员工电脑，后又发现其他入侵点；暂未发现钱包私钥泄露证据，不能据此断言无其他漏洞。提现暂停、入金及其他未受影响服务维持运行，预计约34小时内分阶段恢复只是目标；计划11月2日出具PoR，均需实际核验。\n（2）ConnectWise于10月30日21:00 UTC更新：Phase 1备份恢复及Phase 2客户门户/监控均已完成，Phase 3报表/导出/计费仍在恢复，Phase 4通知功能待恢复。相较10月28日仅启动分阶段恢复已有具名功能状态变化。仅实际使用Cloud Backup的M365租户需重新授权并检查新快照成功；不能推定用户受侵。来源：https://www.connectwise.com/company/trust/advisories\n\n十、全球局势与跨市场冲击\n（1）美国10月30日收盘，标普500跌1.8%至7580.07，纳斯达克跌2.9%至25437，道指跌1.1%至51770.31。科技股及AI资本开支担忧拖累风险资产，但不能将加密市场单日波动全部归因于美股。来源：https://apnews.com/article/a01d3551e794fed1a0c317c20bc3f0a2\n（2）路透10月30日报道，霍尔木兹海峡一艘油轮遭附着式水雷袭击并一度失去动力，英国海事机构称船员安全、火已扑灭；责任方未确认。伊朗方面另称多艘油轮起火，但路透未独立核实且可能与已知事件重叠。海运保险及能源风险上升属分析判断，不能写成已确认供应中断。来源：https://www.reuters.com/world/tanker-strait-hormuz-hit-by-limpet-mines-security-sources-say-2026-10-30/\n\n十一、未来24至72小时催化\n（1）未来72小时内，Binance按10月16日正式公告安排于11月2日03:00 UTC（曼谷10:00）移除VELODROME现货跟单交易对，11月2日07:00 UTC（曼谷14:00）停止其活期理财支持；11月3日03:00 UTC再移除VELODROME/USDT现货。属于已预告的代币合并日程，不代表新的TGE或当前可申购机会。来源：https://www.binance.com/en/square/post/377826560934838\n\n十二、持续趋势与跨市场机会观察清单\n（1）后续复核BTC 76325.98至78804.01美元及SOL 93.16至98.59美元的当前24小时区间：跌破下沿且成交量和连续OI同步扩张，流动性风险假设增强；收复上沿且ETF缺列补齐、资金流改善则减弱。阈值为观察条件，非自动买卖信号。\n（2）10月30日BTC/ETH/SOL ETF目前已披露列分别约-409.5/-59.6/-10.8百万美元，发行人仍有缺列；下次检查缺列是否补齐以及前后交易日净流是否连续同向，避免用动态小计判断机构抛压。\n\n十三、今日行动与风险结论\n（1）涉及Binance资金调度时，先在官方账户界面核验实际提现网络和恢复批次，勿根据预计34小时自动假设已恢复；只使用官方域名，拒绝私信解冻、赔付或签名链接。平台承诺承担损失不能代替独立资产证明，未确认用户个人资金受影响。\n（2）当前不凭单点OI、暂计ETF流量或研究机构地址归因直接扩大杠杆；优先等待10月30日基金完整发行人数据、Binance实际恢复公告及链上原始TXID。Anthropic交易所第三方IPO配售仍为UNCONFIRMED_MONITORING，未发现具名可执行认购页，不发认购提醒。\n\n",
+  "body": "Crypto Daily Brief｜2026-10-31\n快照：Asia/Bangkok 31/10/2026, 09:22:58正式发布前复核；币价和永续为Binance官方单交易对滚动窗口；美国ETF为对应交易日Farside动态汇总。部分ETF发行人缺列，X浏览器会话不可用，安全和NFT原帖保留SOURCE_GAP；重大叙事已对照近7天已发Gmail及Git去重。\n\n一、今日最重要的5件事\n（1）Binance在10月30日正式披露热钱包遭未经授权提取，确认约63亿美元失窃，已准备超过63.4亿美元公司资金，其中约50亿美元为对应受影响币种；约30亿美元已冻结。提现仍暂停，赔付与安全承诺属于交易所声明，需后续储备证明和实际恢复核验。\n（2）Tether 10月30日发布Q3储备鉴证：截至9月30日超额储备约79.546亿美元，较Q2的41.095亿美元提高约38.45亿美元，Q3营业利润约15亿美元。属于发行方及其鉴证口径，须区分超额储备与即时可赎回现金。\n\n二、BTC/ETH/SOL及主要资产\n（1）BTC/USDT 77462.81 USDT，滚动24小时+0.410%，低76325.98、高78804.01，单交易对成交额约14.35亿USDT；Binance官方采样31/10/2026, 09:22:58曼谷，非全球加权价。\n（2）ETH/USDT 2247.06 USDT，滚动24小时+1.589%，低2208.08、高2262.49，单交易对成交额约7.76亿USDT；Binance官方采样31/10/2026, 09:22:58曼谷，非全球加权价。\n（3）SOL/USDT 96.84 USDT，滚动24小时+1.980%，低93.62、高98.59，单交易对成交额约2.23亿USDT；Binance官方采样31/10/2026, 09:22:58曼谷，非全球加权价。\n（4）BNB/USDT 704.83 USDT，滚动24小时-0.866%，低694.00、高722.08，单交易对成交额约1.81亿USDT；Binance官方采样31/10/2026, 09:22:58曼谷，非全球加权价。\n（5）HYPE/USDT 89.88 USDT，滚动24小时-0.784%，低88.95、高94.02，单交易对成交额约0.61亿USDT；Binance官方采样31/10/2026, 09:22:58曼谷，非全球加权价。\n\n三、二级市场剧烈波动与持续趋势\n（1）Binance USDⓈ-M永续截面：BTC标记77415.16、费率+0.010000%、OI 96577.575 BTC；ETH标记2245.17、费率-0.012149%、OI 2338318.882 ETH；SOL标记96.75、费率-0.006676%、OI 8764068.040 SOL。31/10/2026, 09:22:58曼谷采样，单点OI与资金费率不能证明持续增仓或清算规模。\n（2）BTC、ETH、SOL在前一日大跌后本次滚动24小时分别为+0.410%、+1.589%、+1.980%，HYPE为-0.784%；需结合前一日跌幅与连续OI判断，单窗口反弹尚不足以证明市场已修复。\n\n四、监管与政策\n无高置信新增。\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）Farside美国BTC现货ETF 10月29日全表净流+17.2百万美元；10月30日已披露列暂计-409.5百万美元，但部分发行人仍为“-”，暂计不可当完整最终净流，也不等于链上实际卖出。\n（2）Farside美国ETH现货ETF 10月29日全表净流-105.5百万美元；10月30日已披露列暂计-59.6百万美元，但部分发行人仍为“-”，暂计不可当完整最终净流，也不等于链上实际卖出。\n（3）Farside美国SOL现货ETF 10月29日全表净流-27.7百万美元；10月30日已披露列暂计-10.8百万美元，但部分发行人仍为“-”，暂计不可当完整最终净流，也不等于链上实际卖出。\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n（1）Tether 10月30日Q3鉴证报告显示9月30日总资产1914.51亿美元、负债1834.96亿美元，超额储备79.546亿美元；Q2超额储备41.095亿美元，Q3营业利润约15亿美元。美债直接及间接敞口约1324亿美元。官方报告和BDO鉴证提供季度资产负债证据，但不等同实时逐笔审计。来源：https://tether.io/news/tether-generates-1-5-billion-in-q3-net-operating-profit-as-reserve-buffer-doubles-to-almost-8-billion/\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n（1）重要更正：Binance官方10月30日公告，PREDICT原计划10月30日10:00 UTC（曼谷17:00）开盘，现已推迟至另行通知，尚无新的现货开盘时间。此前日报写出的原定时间不可继续视为实际上市，Alpha也另行延期；未取得新开盘时间、领取或退款变化。来源：https://www.binance.com/en/square/post/382715428129327\n\n八、Early / Meme / NFT / 新生态热点\n无高置信新增。\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n（1）Binance官方10月30日19:33公告：10月29日20:05 UTC左右热钱包被攻击，确认约63亿美元失窃，已准备超过63.4亿美元公司资金，其中约50亿美元为对应受影响币种，称约30亿美元链上冻结。此前失窃总额未确认的状态已变化。初查曾指向员工电脑，后又发现其他入侵点；暂未发现钱包私钥泄露证据，不能据此断言无其他漏洞。提现暂停、入金及其他未受影响服务维持运行，预计约34小时内分阶段恢复只是目标；计划11月2日出具PoR，均需实际核验。\n（2）ConnectWise于10月30日21:00 UTC更新：Phase 1备份恢复及Phase 2客户门户/监控均已完成，Phase 3报表/导出/计费仍在恢复，Phase 4通知功能待恢复。相较10月28日仅启动分阶段恢复已有具名功能状态变化。仅实际使用Cloud Backup的M365租户需重新授权并检查新快照成功；不能推定用户受侵。来源：https://www.connectwise.com/company/trust/advisories\n\n十、全球局势与跨市场冲击\n（1）美国10月30日收盘，标普500跌1.8%至7580.07，纳斯达克跌2.9%至25437，道指跌1.1%至51770.31。科技股及AI资本开支担忧拖累风险资产，但不能将加密市场单日波动全部归因于美股。来源：https://apnews.com/article/a01d3551e794fed1a0c317c20bc3f0a2\n（2）路透10月30日报道，霍尔木兹海峡一艘油轮遭附着式水雷袭击并一度失去动力，英国海事机构称船员安全、火已扑灭；责任方未确认。伊朗方面另称多艘油轮起火，但路透未独立核实且可能与已知事件重叠。海运保险及能源风险上升属分析判断，不能写成已确认供应中断。来源：https://www.reuters.com/world/tanker-strait-hormuz-hit-by-limpet-mines-security-sources-say-2026-10-30/\n\n十一、未来24至72小时催化\n（1）未来72小时内，Binance按10月16日正式公告安排于11月2日03:00 UTC（曼谷10:00）移除VELODROME现货跟单交易对，11月2日07:00 UTC（曼谷14:00）停止其活期理财支持；11月3日03:00 UTC再移除VELODROME/USDT现货。属于已预告的代币合并日程，不代表新的TGE或当前可申购机会。来源：https://www.binance.com/en/square/post/377826560934838\n\n十二、持续趋势与跨市场机会观察清单\n（1）后续复核BTC 76325.98至78804.01美元及SOL 93.62至98.59美元的当前24小时区间：跌破下沿且成交量和连续OI同步扩张，流动性风险假设增强；收复上沿且ETF缺列补齐、资金流改善则减弱。阈值为观察条件，非自动买卖信号。\n（2）10月30日BTC/ETH/SOL ETF目前已披露列分别约-409.5/-59.6/-10.8百万美元，发行人仍有缺列；下次检查缺列是否补齐以及前后交易日净流是否连续同向，避免用动态小计判断机构抛压。\n\n十三、今日行动与风险结论\n（1）涉及Binance资金调度时，先在官方账户界面核验实际提现网络和恢复批次，勿根据预计34小时自动假设已恢复；只使用官方域名，拒绝私信解冻、赔付或签名链接。平台承诺承担损失不能代替独立资产证明，未确认用户个人资金受影响。\n（2）当前不凭单点OI、暂计ETF流量或研究机构地址归因直接扩大杠杆；优先等待10月30日基金完整发行人数据、Binance实际恢复公告及链上原始TXID。Anthropic交易所第三方IPO配售仍为UNCONFIRMED_MONITORING，未发现具名可执行认购页，不发认购提醒。\n\n",
   "items": [
     {
       "section": 1,
@@ -35,51 +35,51 @@
     {
       "section": 2,
       "item_number": 1,
-      "event_key": "spot:BTC:2026-10-31T0119Z",
+      "event_key": "spot:BTC:2026-10-31T02:22Z",
       "role": "detail",
-      "text": "BTC/USDT 77566.00 USDT，滚动24小时+0.674%，低76325.98、高78804.01，单交易对成交额约15.95亿USDT；Binance官方采样2026-10-31 08:19:32曼谷，非全球加权价。"
+      "text": "BTC/USDT 77462.81 USDT，滚动24小时+0.410%，低76325.98、高78804.01，单交易对成交额约14.35亿USDT；Binance官方采样31/10/2026, 09:22:58曼谷，非全球加权价。"
     },
     {
       "section": 2,
       "item_number": 2,
-      "event_key": "spot:ETH:2026-10-31T0119Z",
+      "event_key": "spot:ETH:2026-10-31T02:22Z",
       "role": "detail",
-      "text": "ETH/USDT 2247.70 USDT，滚动24小时+1.557%，低2174.08、高2262.49，单交易对成交额约8.78亿USDT；Binance官方采样2026-10-31 08:19:32曼谷，非全球加权价。"
+      "text": "ETH/USDT 2247.06 USDT，滚动24小时+1.589%，低2208.08、高2262.49，单交易对成交额约7.76亿USDT；Binance官方采样31/10/2026, 09:22:58曼谷，非全球加权价。"
     },
     {
       "section": 2,
       "item_number": 3,
-      "event_key": "spot:SOL:2026-10-31T0119Z",
+      "event_key": "spot:SOL:2026-10-31T02:22Z",
       "role": "detail",
-      "text": "SOL/USDT 96.83 USDT，滚动24小时+2.879%，低93.16、高98.59，单交易对成交额约2.38亿USDT；Binance官方采样2026-10-31 08:19:32曼谷，非全球加权价。"
+      "text": "SOL/USDT 96.84 USDT，滚动24小时+1.980%，低93.62、高98.59，单交易对成交额约2.23亿USDT；Binance官方采样31/10/2026, 09:22:58曼谷，非全球加权价。"
     },
     {
       "section": 2,
       "item_number": 4,
-      "event_key": "spot:BNB:2026-10-31T0119Z",
+      "event_key": "spot:BNB:2026-10-31T02:22Z",
       "role": "detail",
-      "text": "BNB/USDT 708.05 USDT，滚动24小时+1.095%，低692.01、高722.08，单交易对成交额约1.99亿USDT；Binance官方采样2026-10-31 08:19:32曼谷，非全球加权价。"
+      "text": "BNB/USDT 704.83 USDT，滚动24小时-0.866%，低694.00、高722.08，单交易对成交额约1.81亿USDT；Binance官方采样31/10/2026, 09:22:58曼谷，非全球加权价。"
     },
     {
       "section": 2,
       "item_number": 5,
-      "event_key": "spot:HYPE:2026-10-31T0119Z",
+      "event_key": "spot:HYPE:2026-10-31T02:22Z",
       "role": "detail",
-      "text": "HYPE/USDT 89.38 USDT，滚动24小时-0.379%，低88.83、高94.02，单交易对成交额约0.658亿USDT；Binance官方采样2026-10-31 08:19:32曼谷，非全球加权价。"
+      "text": "HYPE/USDT 89.88 USDT，滚动24小时-0.784%，低88.95、高94.02，单交易对成交额约0.61亿USDT；Binance官方采样31/10/2026, 09:22:58曼谷，非全球加权价。"
     },
     {
       "section": 3,
       "item_number": 1,
-      "event_key": "derivatives:btc-eth-sol:2026-10-31T0119Z",
+      "event_key": "derivatives:btc-eth-sol:2026-10-31T02:22Z",
       "role": "detail",
-      "text": "Binance USDⓈ-M永续截面：BTC标记价77529.90、资金费率+0.010000%、OI 96699.006 BTC；ETH标记2246.17、费率-0.011479%、OI 2339451.544 ETH；SOL标记96.74、费率-0.006806%、OI 8829567.62 SOL。08:19:29曼谷采样，单点OI与资金费率不能证明持续增仓或清算规模。"
+      "text": "Binance USDⓈ-M永续截面：BTC标记77415.16、费率+0.010000%、OI 96577.575 BTC；ETH标记2245.17、费率-0.012149%、OI 2338318.882 ETH；SOL标记96.75、费率-0.006676%、OI 8764068.040 SOL。31/10/2026, 09:22:58曼谷采样，单点OI与资金费率不能证明持续增仓或清算规模。"
     },
     {
       "section": 3,
       "item_number": 2,
-      "event_key": "trend:core-rebound:2026-10-31T0119Z",
+      "event_key": "trend:core-rebound:2026-10-31T02:22Z",
       "role": "detail",
-      "text": "BTC、ETH、SOL在昨日大跌后本次滚动24小时分别反弹0.674%、1.557%、2.879%，HYPE却为-0.379%；需结合前一日较大跌幅和持续OI判断，单窗口反弹尚不足以证明市场已修复。"
+      "text": "BTC、ETH、SOL在前一日大跌后本次滚动24小时分别为+0.410%、+1.589%、+1.980%，HYPE为-0.784%；需结合前一日跌幅与连续OI判断，单窗口反弹尚不足以证明市场已修复。"
     },
     {
       "section": 5,
@@ -154,9 +154,9 @@
     {
       "section": 12,
       "item_number": 1,
-      "event_key": "watch:market-risk:2026-10-31T0119Z",
+      "event_key": "watch:market-risk:2026-10-31T02:22Z",
       "role": "detail",
-      "text": "后续复核BTC 76325.98至78804.01美元及SOL 93.16至98.59美元的当前24小时区间：跌破下沿且成交量和连续OI同步扩张，流动性风险假设增强；收复上沿且ETF缺列补齐、资金流改善则减弱。阈值为观察条件，非自动买卖信号。"
+      "text": "后续复核BTC 76325.98至78804.01美元及SOL 93.62至98.59美元的当前24小时区间：跌破下沿且成交量和连续OI同步扩张，流动性风险假设增强；收复上沿且ETF缺列补齐、资金流改善则减弱。阈值为观察条件，非自动买卖信号。"
     },
     {
       "section": 12,
@@ -222,79 +222,79 @@
       "top5_evidence_url": "https://tether.io/news/tether-generates-1-5-billion-in-q3-net-operating-profit-as-reserve-buffer-doubles-to-almost-8-billion/"
     },
     {
-      "event_key": "spot:BTC:2026-10-31T0119Z",
+      "event_key": "spot:BTC:2026-10-31T02:22Z",
       "kind": "CORE_QUOTE",
       "family_key": "spot:BTC:rolling24h",
-      "material_version": "binance-2026-10-31T0119Z",
+      "material_version": "binance-2026-10-31T02:22Z",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
-      "published_at": "2026-10-31T01:19:32Z",
-      "actual_delta": "Binance BTC/USDT rolling24h last 77566.00 +0.674% high 78804.01 low 76325.98",
+      "published_at": "2026-10-31T02:22:58.047Z",
+      "actual_delta": "Binance BTC/USDT rolling24h 77462.81000000 0.410% high 78804.01000000 low 76325.98000000",
       "status": "verified",
       "source_confirmed": true
     },
     {
-      "event_key": "spot:ETH:2026-10-31T0119Z",
+      "event_key": "spot:ETH:2026-10-31T02:22Z",
       "kind": "CORE_QUOTE",
       "family_key": "spot:ETH:rolling24h",
-      "material_version": "binance-2026-10-31T0119Z",
+      "material_version": "binance-2026-10-31T02:22Z",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
-      "published_at": "2026-10-31T01:19:32Z",
-      "actual_delta": "Binance ETH/USDT rolling24h last 2247.70 +1.557% high 2262.49 low 2174.08",
+      "published_at": "2026-10-31T02:22:58.047Z",
+      "actual_delta": "Binance ETH/USDT rolling24h 2247.06000000 1.589% high 2262.49000000 low 2208.08000000",
       "status": "verified",
       "source_confirmed": true
     },
     {
-      "event_key": "spot:SOL:2026-10-31T0119Z",
+      "event_key": "spot:SOL:2026-10-31T02:22Z",
       "kind": "CORE_QUOTE",
       "family_key": "spot:SOL:rolling24h",
-      "material_version": "binance-2026-10-31T0119Z",
+      "material_version": "binance-2026-10-31T02:22Z",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
-      "published_at": "2026-10-31T01:19:32Z",
-      "actual_delta": "Binance SOL/USDT rolling24h last 96.83 +2.879% high 98.59 low 93.16",
+      "published_at": "2026-10-31T02:22:58.047Z",
+      "actual_delta": "Binance SOL/USDT rolling24h 96.84000000 1.980% high 98.59000000 low 93.62000000",
       "status": "verified",
       "source_confirmed": true
     },
     {
-      "event_key": "spot:BNB:2026-10-31T0119Z",
+      "event_key": "spot:BNB:2026-10-31T02:22Z",
       "kind": "CORE_QUOTE",
       "family_key": "spot:BNB:rolling24h",
-      "material_version": "binance-2026-10-31T0119Z",
+      "material_version": "binance-2026-10-31T02:22Z",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT",
-      "published_at": "2026-10-31T01:19:32Z",
-      "actual_delta": "Binance BNB/USDT rolling24h last 708.05 +1.095% high 722.08 low 692.01",
+      "published_at": "2026-10-31T02:22:58.047Z",
+      "actual_delta": "Binance BNB/USDT rolling24h 704.83000000 -0.866% high 722.08000000 low 694.00000000",
       "status": "verified",
       "source_confirmed": true
     },
     {
-      "event_key": "spot:HYPE:2026-10-31T0119Z",
+      "event_key": "spot:HYPE:2026-10-31T02:22Z",
       "kind": "CORE_QUOTE",
       "family_key": "spot:HYPE:rolling24h",
-      "material_version": "binance-2026-10-31T0119Z",
+      "material_version": "binance-2026-10-31T02:22Z",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT",
-      "published_at": "2026-10-31T01:19:32Z",
-      "actual_delta": "Binance HYPE/USDT rolling24h last 89.38 -0.379% high 94.02 low 88.83",
+      "published_at": "2026-10-31T02:22:58.047Z",
+      "actual_delta": "Binance HYPE/USDT rolling24h 89.88000000 -0.784% high 94.02000000 low 88.95000000",
       "status": "verified",
       "source_confirmed": true
     },
     {
-      "event_key": "derivatives:btc-eth-sol:2026-10-31T0119Z",
+      "event_key": "derivatives:btc-eth-sol:2026-10-31T02:22Z",
       "kind": "TREND_DERIVATIVES",
       "family_key": "derivatives:binance:rolling",
-      "material_version": "binance-2026-10-31T0119Z",
+      "material_version": "binance-2026-10-31T02:22Z",
       "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
-      "published_at": "2026-10-31T01:19:29Z",
-      "actual_delta": "Binance perpetual mark BTC77529.90 ETH2246.17 SOL96.74, funding BTC+0.010000%, ETH-0.011479%, SOL-0.006806%, OI BTC96699.006 ETH2339451.544 SOL8829567.62",
+      "published_at": "2026-10-31T02:22:58.047Z",
+      "actual_delta": "BTC标记77415.16、费率+0.010000%、OI 96577.575 BTC；ETH标记2245.17、费率-0.012149%、OI 2338318.882 ETH；SOL标记96.75、费率-0.006676%、OI 8764068.040 SOL",
       "status": "verified",
       "source_confirmed": true
     },
     {
-      "event_key": "trend:core-rebound:2026-10-31T0119Z",
+      "event_key": "trend:core-rebound:2026-10-31T02:22Z",
       "kind": "TREND_DERIVATIVES",
       "family_key": "trend:core-spot-cross-section",
-      "material_version": "binance-2026-10-31T0119Z",
+      "material_version": "binance-2026-10-31T02:22Z",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
-      "published_at": "2026-10-31T01:19:32Z",
-      "actual_delta": "BTC +0.674%, ETH +1.557%, SOL +2.879% rolling24h after prior large decline; no single causal driver verified",
+      "published_at": "2026-10-31T02:22:58.047Z",
+      "actual_delta": "BTC、ETH、SOL在前一日大跌后本次滚动24小时分别为+0.410%、+1.589%、+1.980%，HYPE为-0.784%；需结合前一日跌幅与连续OI判断，单窗口反弹尚不足以证明市场已修复。",
       "status": "verified",
       "source_confirmed": true
     },
@@ -414,13 +414,13 @@
       "source_confirmed": true
     },
     {
-      "event_key": "watch:market-risk:2026-10-31T0119Z",
+      "event_key": "watch:market-risk:2026-10-31T02:22Z",
       "kind": "PERSISTENT_WATCH",
       "family_key": "watch:market:price-depth",
-      "material_version": "binance-2026-10-31T0119Z",
+      "material_version": "binance-2026-10-31T02:22Z",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
-      "published_at": "2026-10-31T01:19:32Z",
-      "actual_delta": "BTC low76325.98 high78804.01; SOL low93.16 high98.59; future confirmation needs volume and OI",
+      "published_at": "2026-10-31T02:22:58.047Z",
+      "actual_delta": "后续复核BTC 76325.98至78804.01美元及SOL 93.62至98.59美元的当前24小时区间：跌破下沿且成交量和连续OI同步扩张，流动性风险假设增强；收复上沿且ETF缺列补齐、资金流改善则减弱。阈值为观察条件，非自动买卖信号。",
       "status": "verified",
       "source_confirmed": true
     },
@@ -798,26 +798,115 @@
       "result_urls": [],
       "published_at": null,
       "error": "HTTP 403 Forbidden; vendor original advisories used as fallback"
+    },
+    {
+      "lane": "spot",
+      "checked_at": "2026-10-31T02:23:00.342Z",
+      "query_or_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "status": "checked",
+      "result_urls": [
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT"
+      ],
+      "published_at": "2026-10-31T02:22:58.013Z"
+    },
+    {
+      "lane": "spot",
+      "checked_at": "2026-10-31T02:23:00.342Z",
+      "query_or_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
+      "status": "checked",
+      "result_urls": [
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT"
+      ],
+      "published_at": "2026-10-31T02:22:57.987Z"
+    },
+    {
+      "lane": "spot",
+      "checked_at": "2026-10-31T02:23:00.342Z",
+      "query_or_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
+      "status": "checked",
+      "result_urls": [
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT"
+      ],
+      "published_at": "2026-10-31T02:22:57.655Z"
+    },
+    {
+      "lane": "spot",
+      "checked_at": "2026-10-31T02:23:00.342Z",
+      "query_or_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT",
+      "status": "checked",
+      "result_urls": [
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT"
+      ],
+      "published_at": "2026-10-31T02:22:58.047Z"
+    },
+    {
+      "lane": "spot",
+      "checked_at": "2026-10-31T02:23:00.342Z",
+      "query_or_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT",
+      "status": "checked",
+      "result_urls": [
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT"
+      ],
+      "published_at": "2026-10-31T02:22:57.686Z"
+    },
+    {
+      "lane": "derivatives",
+      "checked_at": "2026-10-31T02:23:00.342Z",
+      "query_or_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+      "status": "checked",
+      "result_urls": [
+        "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT"
+      ],
+      "published_at": "2026-10-31T02:22:58.000Z"
+    },
+    {
+      "lane": "derivatives",
+      "checked_at": "2026-10-31T02:23:00.342Z",
+      "query_or_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=ETHUSDT",
+      "status": "checked",
+      "result_urls": [
+        "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=ETHUSDT"
+      ],
+      "published_at": "2026-10-31T02:22:58.000Z"
+    },
+    {
+      "lane": "derivatives",
+      "checked_at": "2026-10-31T02:23:00.342Z",
+      "query_or_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=SOLUSDT",
+      "status": "checked",
+      "result_urls": [
+        "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=SOLUSDT"
+      ],
+      "published_at": "2026-10-31T02:22:59.000Z"
+    },
+    {
+      "lane": "official_x",
+      "checked_at": "2026-10-31T02:23:00.342Z",
+      "query_or_url": "Browser list_tabs",
+      "status": "source_gap",
+      "result_urls": [],
+      "published_at": null,
+      "reason": "BROWSER_SESSION_UNAVAILABLE: originating browser context required"
     }
   ],
   "market_core": [
     {
       "symbol": "BTC",
-      "price": 77566,
+      "price": 77462.81,
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
-      "observed_at": "2026-10-31T01:19:32Z"
+      "observed_at": "2026-10-31T02:22:58.013Z"
     },
     {
       "symbol": "ETH",
-      "price": 2247.7,
+      "price": 2247.06,
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
-      "observed_at": "2026-10-31T01:19:34Z"
+      "observed_at": "2026-10-31T02:22:57.987Z"
     },
     {
       "symbol": "SOL",
-      "price": 96.83,
+      "price": 96.84,
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
-      "observed_at": "2026-10-31T01:19:33Z"
+      "observed_at": "2026-10-31T02:22:57.655Z"
     }
   ],
   "empty_section_reasons": [
@@ -2603,11 +2692,23 @@
     "ETF_2026_10_30_ISSUER_MISSING",
     "AAVE_ONCHAIN_STATUS_UNVERIFIED"
   ],
-  "publisher_reverification": "09:20 must re-read Gmail Sent, rules and SHA-matched CI, refresh market and all material updates, verify novelty proof and exact body before one text/plain Gmail",
+  "publisher_reverification": {
+    "checked_at": "2026-10-31T02:23:00.342Z",
+    "sent_prefix_count": 0,
+    "market_snapshot": "2026-10-31T02:22:58.047Z",
+    "binance_official": "https://www.binance.com/en/support/announcement/detail/d3306d9dca5243548c813b605e1d1751",
+    "connectwise_official": "https://www.connectwise.com/company/trust/advisories",
+    "tether_official": "https://tether.io/news/tether-generates-1-5-billion-in-q3-net-operating-profit-as-reserve-buffer-doubles-to-almost-8-billion/",
+    "predict_official": "https://www.binance.com/en/square/post/382715428129327",
+    "etf_partial": true,
+    "browser": "BROWSER_SESSION_UNAVAILABLE",
+    "gmail_git_history": "Oct24-25 archive body mismatch, Oct26-30 exact match; all seven Sent originals checked",
+    "novelty": "Binance 10/30 issuer-confirmed loss distinct from 10/30 earlier preliminary status; ConnectWise Oct30 phases 1/2 complete distinct from Oct28 partial restoration; no later verified material update"
+  },
   "gmail_sent_prefix_count_at_prebuild": 0,
   "app_output": "EMPTY_EMAIL_ONLY",
   "no_new_tasks": true,
-  "market_snapshot_at": "2026-10-31T01:19:32Z",
+  "market_snapshot_at": "2026-10-31T02:22:58.047Z",
   "candidates": [
     {
       "event_key": "security:binance:official-6p3b-loss-reserve-2026-10-30",
