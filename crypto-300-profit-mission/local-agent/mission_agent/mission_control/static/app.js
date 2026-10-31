@@ -1109,6 +1109,11 @@ let clusterReportLoadError = 'GET';
 let clusterLastReportJobVerified = false;
 let clusterSubmitting = false;
 
+function clusterRememberMint(mint) {
+  // This convenience hint must never block acknowledgement or task recovery.
+  try { localStorage.setItem('mission-meme-last-cluster-ca',mint); } catch (_) {}
+}
+
 function clusterSavedReports() {
   try {
     const raw=localStorage.getItem(CLUSTER_REPORTS_KEY) || '[]';
@@ -1198,7 +1203,8 @@ function setView(name) {
   if (window.location.hash !== '#' + view) history.replaceState(null,'','#' + view);
   if (view==='cluster' && !clusterLastAutoLoaded) {
     clusterLastAutoLoaded=true;
-    const mint=localStorage.getItem('mission-meme-last-cluster-ca') || '';
+    let mint='';
+    try { mint=localStorage.getItem('mission-meme-last-cluster-ca') || ''; } catch (_) {}
     // Pending session restoration takes precedence over a different last-CA cache.
     let pending=null;
     try { pending=JSON.parse(sessionStorage.getItem(CLUSTER_PENDING_KEY)||'null'); } catch (_) {}
@@ -1811,7 +1817,7 @@ async function pollClusterJob(jobId, failures=0) {
         clusterFinishJob();
         $('cluster-submit').disabled=false;
         $('cluster-submit').textContent='重新查询';
-        localStorage.setItem('mission-meme-last-cluster-ca',mint);
+        clusterRememberMint(mint);
         // Completed-job report GET is scoped to its original job ID.
         clusterStatus('running','原分析任务已结束，已读取该任务报告',
           clusterLastReportJobVerified ? '保存报告中的任务编号与已结束任务一致；覆盖与完整性仍须另行核实' :
@@ -1890,9 +1896,12 @@ async function clusterLoadHistoricalCache() {
     } else {
       clusterStatus('error','历史缓存读取失败','没有可核对的同 CA 报告');
     }
-  }
-  if (clusterPollVersion===version && (clusterActiveJob?.id||null)===jobId) {
-    clusterShowRecovery(!!clusterActiveJob);
+  } finally {
+    // Editing the input invalidates this report, but the paused job must stay
+    // reachable even when the response is discarded above.
+    if (clusterPollVersion===version && (clusterActiveJob?.id||null)===jobId) {
+      clusterShowRecovery(!!clusterActiveJob);
+    }
   }
 }
 
@@ -1976,7 +1985,8 @@ $('cluster-form').addEventListener('submit', async (event) => {
     if (!r.ok) throw new Error(payload.error || ('HTTP ' + r.status));
     if (!/^[0-9a-f]{32}$/.test(String(payload.job_id||'')) ||
         (payload.mint!=null && payload.mint!==mint)) throw new Error('无有效任务编号或代币不符');
-    localStorage.setItem('mission-meme-last-cluster-ca',mint);
+    $('cluster-mint').value=mint;
+    clusterRememberMint(mint);
     clusterSetJob(payload.job_id,mint);
     pollClusterJob(payload.job_id,0);
   } catch (e) {

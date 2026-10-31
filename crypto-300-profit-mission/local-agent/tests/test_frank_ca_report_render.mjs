@@ -40,7 +40,11 @@ function harness(options = {}) {
     window:{location:{hash:'#cluster'},addEventListener(){}},
     history:{replaceState(){}},
     navigator:{clipboard:{writeText:async()=>{}}},
-    localStorage:{getItem:k=>store.get('local:'+k)||null,setItem:(k,v)=>store.set('local:'+k,v),removeItem:k=>store.delete('local:'+k)},
+    localStorage:{
+      getItem:k=>{if(options.storageReadError) throw new Error('SecurityError');return store.get('local:'+k)||null;},
+      setItem:(k,v)=>{if(options.storageWriteError) throw new Error('QuotaExceededError');store.set('local:'+k,v);},
+      removeItem:k=>store.delete('local:'+k),
+    },
     sessionStorage:{getItem:k=>store.get('session:'+k)||null,setItem:(k,v)=>store.set('session:'+k,v),removeItem:k=>store.delete('session:'+k)},
     fetch:async(url,options={})=>{
       requests.push({url,method:options.method||'GET'});
@@ -270,4 +274,62 @@ test('failed POST unlocks history controls without automatically resubmitting',a
   assert.equal(h.element('cluster-read-report').disabled,false);
   assert.equal(h.requests.filter(x=>x.method==='POST').length,1);
   assert.match(h.element('cluster-status').innerHTML,/提交状态未核实/);
+});
+
+test('blocked localStorage reads do not prevent CA controls from initializing',()=>{
+  const h=harness({storageReadError:true});
+  assert.equal(typeof h.element('cluster-form').listeners.get('submit'),'function');
+  assert.equal(typeof h.element('cluster-read-cached').listeners.get('click'),'function');
+  assert.equal(h.element('cluster-read-report').disabled,true);
+});
+
+test('a failed optional last-CA write cannot discard an acknowledged POST job',async()=>{
+  const h=harness({storageWriteError:true});
+  h.element('cluster-mint').value=mint;h.element('cluster-preset').value='quick';
+  h.setResponse(async(url,options)=>({ok:true,status:options.method==='POST'?202:200,json:async()=>
+    options.method==='POST'?{job_id:jobId,mint}:{job_id:jobId,mint,status:'RUNNING'}}));
+  await h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(JSON.parse(h.store.get(pendingKey)).id,jobId);
+  assert.equal(h.requests.filter(x=>x.method==='POST').length,1);
+  assert.equal(h.requests.at(-1).url,'/api/cluster-analysis?job_id='+jobId);
+  assert.doesNotMatch(h.element('cluster-status').innerHTML,/提交状态未核实/);
+});
+
+test('an optional storage write failure after DONE keeps the received report successful',async()=>{
+  const h=harness({storageWriteError:true});
+  await finish(h,jobId,'REPORT_WITHOUT_STORAGE');
+  assert.match(h.element('cluster-summary').innerHTML,/REPORT_WITHOUT_STORAGE/);
+  assert.equal(h.store.has(pendingKey),false);
+  assert.equal(h.element('cluster-submit').disabled,false);
+  assert.match(h.element('cluster-status').innerHTML,/已读取该任务报告/);
+  assert.doesNotMatch(h.element('cluster-status').innerHTML,/读取中断/);
+});
+
+test('editing CA while POST awaits receipt cannot mislabel its acknowledged job',async()=>{
+  const h=harness(),ack=deferred();
+  h.setResponse(async(url,options)=>options.method==='POST'?ack.promise:
+    {ok:true,status:200,json:async()=>({job_id:jobId,mint,status:'RUNNING'})});
+  h.element('cluster-mint').value=mint;h.element('cluster-preset').value='quick';
+  const submitting=h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
+  h.element('cluster-mint').value=pendingMint;
+  ack.resolve({ok:true,status:202,json:async()=>({job_id:jobId,mint})});
+  await submitting;await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(h.element('cluster-mint').value,mint);
+  assert.equal(JSON.parse(h.store.get(pendingKey)).mint,mint);
+});
+
+test('editing CA during historical GET still exposes the paused pending task',async()=>{
+  const h=harness(),report=deferred();
+  setPending(h);
+  h.element('cluster-submit').disabled=true;
+  h.setResponse(async()=>report.promise);
+  const loading=h.element('cluster-read-cached').listeners.get('click')();
+  h.element('cluster-mint').value=mint;
+  report.resolve({ok:true,status:200,json:async()=>({...fixture,mint:pendingMint})});
+  await loading;
+  assert.equal(h.element('cluster-recovery').hidden,false);
+  assert.equal(h.element('cluster-resume-get').hidden,false);
+  assert.equal(JSON.parse(h.store.get(pendingKey)).id,secondJob);
+  assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
 });

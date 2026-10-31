@@ -141,6 +141,67 @@ try {
  assert.equal(await page.locator('#cluster-read-report').isDisabled(),true);
  assert.equal(await page.evaluate(()=>localStorage.getItem('mission-meme-cluster-reports-v1')),null);
  check('local report shortcuts can be cleared without changing backend reports');
+ // Optional browser persistence may be blocked by privacy settings. Exercise
+ // the complete app boot, POST acknowledgement and DONE recovery in that case.
+ const regularPage=page;
+ page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
+ await page.addInitScript(()=>Object.defineProperty(window,'localStorage',{
+   get(){throw new DOMException('Fixture storage access denied','SecurityError');}
+ }));
+ await page.goto(origin+'/#cluster');
+ await page.locator('#cluster-read-cached').waitFor({state:'visible'});
+ let storageFailures=0;
+ await page.route('**/api/cluster-latest?*',route=>{
+   if(route.request().url().includes('job_id=')&&storageFailures++===0)return route.abort('connectionreset');
+   return route.fallback();
+ });
+ const noStorage=await submit(null);
+ await page.getByRole('button',{name:'重试读取报告',exact:true}).waitFor({state:'visible'});
+ await page.waitForFunction(()=>document.getElementById('cluster-status').textContent.includes('报告读取中断'));
+ assert.equal(JSON.parse(await page.evaluate(()=>sessionStorage.getItem('mission-meme-cluster-pending-v1'))).id,noStorage.job_id);
+ const noStoragePosts=requests.filter(r=>r.method==='POST').length;
+ await page.getByRole('button',{name:'重试读取报告',exact:true}).click();
+ await page.waitForFunction(()=>document.getElementById('cluster-summary').textContent.includes('SYNTHETIC_REPORT_5')&&!document.getElementById('cluster-submit').disabled);
+ assert.equal(await page.evaluate(()=>sessionStorage.getItem('mission-meme-cluster-pending-v1')),null);
+ assert.equal(requests.filter(r=>r.method==='POST').length,noStoragePosts);
+ check('blocked localStorage still permits app boot, acknowledged job and GET-only DONE recovery');
+ await page.close();page=regularPage;
+ // A user can edit the CA while the server's POST receipt is still in flight.
+ let releaseEditedPost,editedPostSeen;
+ const editedPostGate=new Promise(resolve=>{releaseEditedPost=resolve;});
+ const editedPostArrived=new Promise(resolve=>{editedPostSeen=resolve;});
+ await page.route(postPattern,async route=>{editedPostSeen();await editedPostGate;return route.fallback();});
+ const editedSubmit=submit(null);
+ await editedPostArrived;
+ try {await page.locator('#cluster-mint').fill('3'.repeat(32));}
+ finally {releaseEditedPost();}
+ await editedSubmit;
+ await page.unroute(postPattern);
+ assert.equal(await page.locator('#cluster-mint').inputValue(),mint);
+ await page.waitForFunction(()=>document.getElementById('cluster-summary').textContent.includes('SYNTHETIC_REPORT_6')&&!document.getElementById('cluster-submit').disabled);
+ check('edited input during POST is restored to the acknowledged job CA');
+ // Pause a RUNNING task with a slow historical GET, then edit the input.
+ // Discarding that stale response must still expose the paused original task.
+ const paused=await submit(null,'quick','3'.repeat(32));
+ await page.waitForFunction(()=>/等待开始分析|正在扫描链上数据/.test(document.getElementById('cluster-status').textContent));
+ let releaseHistory,historySeen;
+ const historyGate=new Promise(resolve=>{releaseHistory=resolve;});
+ const historyArrived=new Promise(resolve=>{historySeen=resolve;});
+ const historyPattern=origin+'/api/cluster-latest?mint='+'3'.repeat(32);
+ await page.route(historyPattern,async route=>{historySeen();await historyGate;return route.fallback();});
+ await page.locator('#cluster-read-cached').click();
+ await historyArrived;
+ try {await page.locator('#cluster-mint').fill(mint);}
+ finally {releaseHistory();}
+ await page.locator('#cluster-recovery').waitFor({state:'visible'});
+ await page.unroute(historyPattern);
+ assert.equal(JSON.parse(await page.evaluate(()=>sessionStorage.getItem('mission-meme-cluster-pending-v1'))).id,paused.job_id);
+ const pausedPosts=requests.filter(r=>r.method==='POST').length;
+ await page.getByRole('button',{name:'继续读取原任务',exact:true}).click();
+ await page.waitForFunction(()=>document.getElementById('cluster-summary').textContent.includes('SYNTHETIC_REPORT_7')&&!document.getElementById('cluster-submit').disabled);
+ assert.equal(await page.locator('#cluster-mint').inputValue(),'3'.repeat(32));
+ assert.equal(requests.filter(r=>r.method==='POST').length,pausedPosts);
+ check('edited input during historical GET leaves the paused task reachable and recoverable');
  assert.deepEqual(errors,[]);
  const result={port,checks,page_errors:errors,blocked,requests,fixture_posts:requests.filter(r=>r.method==='POST').length,real_rpc:0,production_requests:0,real_ca_posts:0,browser:context.browser()?.version()};
  if(output)writeFileSync(join(output,'result.json'),JSON.stringify(result,null,2));
