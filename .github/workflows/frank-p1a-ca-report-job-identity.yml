@@ -1,0 +1,56 @@
+name: Frank P1-A real CA report job correlation regression
+
+on:
+  push:
+    branches: [feature/frank-p1a-ca-job-report-identity-20261026]
+  pull_request:
+    branches: [feature/frank-p1a-c1-job-rpc-budget-20261025]
+
+permissions:
+  contents: read
+
+jobs:
+  ca-report-job-provenance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install existing Python test dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pip install -e '.[dev]'
+      - name: Compile production CA server and UI
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile mission_agent/mission_control/server.py tests/test_frank_ca_job_rpc_budget.py
+          node --check mission_agent/mission_control/static/app.js
+      - name: Actual worker persistence + approved C1 budget regressions (offline)
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -B -m pytest -q -p no:cacheprovider tests/test_frank_ca_job_rpc_budget.py tests/test_meme_wallet_cluster.py
+      - name: Real frontend GET/report association and budget UI tests (offline)
+        working-directory: crypto-300-profit-mission/local-agent
+        run: node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_ca_report_render.mjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install isolated browser test dependency
+        run: |
+          npm install --prefix "$RUNNER_TEMP/frank-ca-browser" --no-audit --no-fund playwright@1.62.1
+          "$RUNNER_TEMP/frank-ca-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Real HTTP worker and browser flow with synthetic analysis only
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          export FRANK_PLAYWRIGHT_MODULE="$RUNNER_TEMP/frank-ca-browser/node_modules/playwright"
+          export FRANK_CHROME="$(node -e 'console.log(require(process.env.FRANK_PLAYWRIGHT_MODULE).chromium.executablePath())')"
+          export FRANK_BROWSER_EVIDENCE="$RUNNER_TEMP/frank-ca-browser-evidence"
+          node tests/test_frank_ca_browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: synthetic-ca-browser-evidence
+          path: ${{ runner.temp }}/frank-ca-browser-evidence
+          if-no-files-found: ignore

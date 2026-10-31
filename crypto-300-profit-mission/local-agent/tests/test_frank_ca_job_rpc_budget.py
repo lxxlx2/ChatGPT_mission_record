@@ -375,3 +375,246 @@ class TestReviewP1Regressions(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestCompletedCAReportIdentity(unittest.TestCase):
+    """Actual worker persistence path in temp dir; no RPC or production writes."""
+
+    def test_successful_worker_saves_real_job_id_to_timestamp_and_latest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            worker = object.__new__(server.ClusterJobManager)
+            worker.lock = threading.Lock()
+            worker.jobs = {
+                "a" * 32: {
+                    "job_id": "a" * 32, "mint": "So11111111111111111111111111111111111111112",
+                    "preset": "quick", "status": "QUEUED",
+                    "created_at": 1, "started_at": None,
+                    "finished_at": None, "progress": {"stage": "QUEUED"},
+                    "error": None,
+                },
+            }
+            worker.max_retained_jobs = 64
+            worker.cache_path = root / "cache.sqlite"
+            worker.report_root = root / "reports"
+            worker.rpc_endpoint = "https://synthetic.example"
+            worker.rpc_endpoints = ["https://synthetic.example"]
+            worker.registry_path = root / "registry.json"
+            worker.market_client = None
+            worker.evidence_enabled = False
+
+            class StubRPC:
+                def __init__(self, *args, **kwargs):
+                    self.calls = 0
+
+                def assert_can_publish(self):
+                    return None
+
+            class StubAnalyzer:
+                def __init__(self, *args, **kwargs):
+                    pass
+
+                def analyze(self):
+                    return {"schema_version": 2, "source": "SOLANA_FINALIZED_JSON_RPC",
+                            "mint": "So11111111111111111111111111111111111111112",
+                            "coverage": {}, "observed_at": 100, "holders": [],
+                            "metrics": {}, "assessment": {}, "token_profile": {},
+                            "limitations": []}
+
+            with (
+                patch.object(server, "SolanaReadOnlyRPC", StubRPC),
+                patch.object(server, "WalletClusterAnalyzer", StubAnalyzer),
+                patch.object(server, "load_registry", return_value={}),
+                patch.object(server, "markdown", return_value="synthetic report\n"),
+                patch.object(worker, "_attach_assessment_history", return_value=None),
+            ):
+                worker._run("a" * 32)
+
+            self.assertEqual(worker.jobs["a" * 32]["status"], "DONE")
+            report_dir = root / "reports" / "So11111111111111111111111111111111111111112"
+            stored = json.loads((report_dir / "latest.json").read_text())
+            self.assertEqual(stored["ca_job_id"], "a" * 32)
+            self.assertEqual(stored["mint"], "So11111111111111111111111111111111111111112")
+            dated = list(report_dir.glob("20*.json"))
+            self.assertEqual(len(dated), 1)
+            self.assertEqual(json.loads(dated[0].read_text())["ca_job_id"], "a" * 32)
+            by_id = root / "reports" / "_jobs" / ("a" * 32 + ".json")
+            self.assertEqual(json.loads(by_id.read_text())["ca_job_id"], "a" * 32)
+            marker = json.loads((root / "reports" / "_jobs" / ("a" * 32 + ".done.json")).read_text())
+            self.assertEqual(marker["status"], "DONE")
+            self.assertEqual(marker["report_sha256"], server.hashlib.sha256(by_id.read_bytes()).hexdigest())
+            worker.jobs.clear()
+            recovered = worker.get("a" * 32)
+            self.assertEqual(recovered["status"], "DONE")
+            self.assertTrue(recovered["restored_from_saved_report"])
+            self.assertEqual(worker.latest(recovered["mint"], job_id="a" * 32)["ca_job_id"], "a" * 32)
+            self.assertIsNone(worker.get("b" * 32))
+            self.assertIsNone(worker.latest(recovered["mint"], job_id="b" * 32))
+            with self.assertRaises(ValueError):
+                worker.latest(recovered["mint"], job_id="../invalid")
+
+            # New B on the same mint overwrites latest while A stays by-ID.
+            worker.jobs["b" * 32] = {
+                "job_id": "b" * 32, "mint": recovered["mint"],
+                "preset": "quick", "status": "QUEUED", "created_at": 2,
+                "started_at": None, "finished_at": None,
+                "progress": {"stage": "QUEUED"}, "error": None,
+            }
+            with (
+                patch.object(server, "SolanaReadOnlyRPC", StubRPC),
+                patch.object(server, "WalletClusterAnalyzer", StubAnalyzer),
+                patch.object(server, "load_registry", return_value={}),
+                patch.object(server, "markdown", return_value="synthetic report\\n"),
+                patch.object(worker, "_attach_assessment_history", return_value=None),
+            ):
+                worker._run("b" * 32)
+            self.assertEqual(worker.jobs["b" * 32]["status"], "DONE")
+            self.assertEqual(worker.latest(recovered["mint"])["ca_job_id"], "b" * 32)
+            self.assertEqual(worker.latest(recovered["mint"], job_id="a" * 32)["ca_job_id"], "a" * 32)
+            self.assertEqual(worker.latest(recovered["mint"], job_id="b" * 32)["ca_job_id"], "b" * 32)
+            self.assertIsNone(worker.latest("11111111111111111111111111111111", job_id="a" * 32))
+            worker.jobs.clear()
+            self.assertEqual(worker.get("a" * 32)["status"], "DONE")
+            self.assertEqual(worker.get("b" * 32)["status"], "DONE")
+            by_id.write_text(json.dumps({"mint": recovered["mint"], "ca_job_id": "b" * 32}))
+            self.assertIsNone(worker.get("a" * 32))
+            self.assertIsNone(worker.latest(recovered["mint"], job_id="a" * 32))
+
+    @staticmethod
+    def _worker(root, job_id, mint):
+        worker = object.__new__(server.ClusterJobManager)
+        worker.lock = threading.Lock()
+        worker.jobs = {job_id: {
+            "job_id": job_id, "mint": mint, "preset": "quick",
+            "status": "QUEUED", "created_at": 1, "started_at": None,
+            "finished_at": None, "error": None, "progress": {"stage": "QUEUED"},
+        }}
+        worker.max_retained_jobs = 64
+        worker.cache_path = root / "cache.sqlite"
+        worker.report_root = root / "reports"
+        worker.rpc_endpoint = "https://synthetic.example"
+        worker.rpc_endpoints = [worker.rpc_endpoint]
+        worker.registry_path = root / "registry.json"
+        worker.market_client = None
+        worker.evidence_enabled = False
+        return worker
+
+    @staticmethod
+    def _run_fake(worker, job_id, injected=None):
+        mint = worker.jobs[job_id]["mint"]
+        class StubRPC:
+            def __init__(self, *args, **kwargs):
+                self.calls = 0
+            def assert_can_publish(self):
+                return None
+        class StubAnalyzer:
+            def __init__(self, *args, **kwargs):
+                pass
+            def analyze(self):
+                return {
+                    "schema_version": 2, "source": "SOLANA_FINALIZED_JSON_RPC",
+                    "mint": mint, "observed_at": 100.0, "coverage": {},
+                    "holders": [], "metrics": {}, "assessment": {},
+                    "token_profile": {}, "limitations": [],
+                }
+        original = server._atomic_write_text
+        def writer(path, payload):
+            if injected is not None:
+                injected(Path(path))
+            return original(path, payload)
+        with (
+            patch.object(server, "SolanaReadOnlyRPC", StubRPC),
+            patch.object(server, "WalletClusterAnalyzer", StubAnalyzer),
+            patch.object(server, "load_registry", return_value={}),
+            patch.object(server, "markdown", return_value="synthetic report\\n"),
+            patch.object(worker, "_attach_assessment_history", return_value=None),
+            patch.object(server, "_atomic_write_text", writer),
+        ):
+            worker._run(job_id)
+
+    def test_mandatory_stage_failures_do_not_publish_recoverable_done(self):
+        mint = "So11111111111111111111111111111111111111112"
+        job_id = "c" * 32
+        for failed in (job_id + ".json", "latest.json", job_id + ".done.json"):
+            with self.subTest(failed=failed), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                worker = self._worker(root, job_id, mint)
+                out = worker.report_root / mint
+                out.mkdir(parents=True)
+                old_latest = '{"mint":"OLD","status":"historical"}'
+                (out / "latest.json").write_text(old_latest)
+                def raise_at(path):
+                    if path.name == failed:
+                        raise OSError("SYNTHETIC_WRITE_FAILED")
+                self._run_fake(worker, job_id, injected=raise_at)
+                self.assertEqual(worker.get(job_id)["status"], "ERROR")
+                self.assertIsNone(worker._saved_job_report(job_id))
+                marker = worker.report_root / "_jobs" / (job_id + ".done.json")
+                self.assertFalse(marker.exists())
+                if failed in (job_id + ".json", "latest.json"):
+                    self.assertEqual((out / "latest.json").read_text(), old_latest)
+                worker.jobs.clear()
+                self.assertIsNone(worker.get(job_id))
+                old_fallback = worker.latest(mint, job_id=job_id)
+                self.assertTrue(old_fallback is None or old_fallback.get("ca_job_id") is None)
+
+    def test_precommit_pruning_failure_does_not_restore_done(self):
+        mint = "So11111111111111111111111111111111111111112"
+        job_id = "d" * 32
+        with tempfile.TemporaryDirectory() as directory:
+            worker = self._worker(Path(directory), job_id, mint)
+            with patch.object(worker, "_prune_jobs_locked", side_effect=[
+                OSError("SYNTHETIC_PRECOMMIT_FAILURE"), None,
+            ]):
+                self._run_fake(worker, job_id)
+            self.assertEqual(worker.get(job_id)["status"], "ERROR")
+            worker.jobs.clear()
+            self.assertIsNone(worker.get(job_id))
+            self.assertIsNone(worker.latest(mint, job_id=job_id))
+
+    def test_structural_damage_with_matching_digest_still_cannot_restore(self):
+        mint = "So11111111111111111111111111111111111111112"
+        job_id = "e" * 32
+        with tempfile.TemporaryDirectory() as directory:
+            worker = self._worker(Path(directory), job_id, mint)
+            self._run_fake(worker, job_id)
+            self.assertEqual(worker.get(job_id)["status"], "DONE")
+            report_path = worker.report_root / "_jobs" / (job_id + ".json")
+            marker_path = worker.report_root / "_jobs" / (job_id + ".done.json")
+            report = json.loads(report_path.read_text())
+            raw_report = report_path.read_bytes()
+            raw_marker = marker_path.read_bytes()
+            for broken in (
+                {"mint": mint, "ca_job_id": job_id},
+                {**report, "observed_at": "yesterday"},
+                {**report, "coverage": []},
+                {**report, "source": "UNSUPPORTED"},
+            ):
+                with self.subTest(removed_fields=list(set(report) - set(broken))):
+                    report_path.write_text(json.dumps(broken))
+                    marker = json.loads(raw_marker)
+                    marker["report_sha256"] = server.hashlib.sha256(report_path.read_bytes()).hexdigest()
+                    marker_path.write_text(json.dumps(marker))
+                    worker.jobs.clear()
+                    self.assertIsNone(worker.get(job_id))
+                    self.assertIsNone(worker.latest(mint, job_id=job_id))
+            report_path.write_bytes(raw_report)
+            marker_path.write_bytes(raw_marker)
+            self.assertEqual(worker.get(job_id)["status"], "DONE")
+            marker_path.unlink()
+            self.assertIsNone(worker.get(job_id))
+            self.assertIsNone(worker.latest(mint, job_id=job_id))
+
+    def test_report_digest_mismatch_does_not_restore(self):
+        mint = "So11111111111111111111111111111111111111112"
+        job_id = "f" * 32
+        with tempfile.TemporaryDirectory() as directory:
+            worker = self._worker(Path(directory), job_id, mint)
+            self._run_fake(worker, job_id)
+            worker.jobs.clear()
+            report_path = worker.report_root / "_jobs" / (job_id + ".json")
+            report = json.loads(report_path.read_text())
+            report["metrics"]["changed"] = 1
+            report_path.write_text(json.dumps(report))
+            self.assertIsNone(worker.get(job_id))
+            self.assertIsNone(worker.latest(mint, job_id=job_id))

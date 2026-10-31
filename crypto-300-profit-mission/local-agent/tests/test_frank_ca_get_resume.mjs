@@ -238,8 +238,8 @@ test('P2-2: DONE report GET fails and manual recovery retries only report GET',a
   h.listeners['cluster-resume-get']();
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal(h.calls.length,3);
-  assert.equal(h.calls[1],'/api/cluster-latest?mint='+mint);
-  assert.equal(h.calls[2],'/api/cluster-latest?mint='+mint);
+  assert.equal(h.calls[1],'/api/cluster-latest?mint='+mint+'&job_id='+id);
+  assert.equal(h.calls[2],'/api/cluster-latest?mint='+mint+'&job_id='+id);
   assert.equal(h.elements('cluster-submit').disabled,false);
   assert.equal(h.storage.has('mission-meme-cluster-pending-v1'),false);
   assert.equal(h.rendered.length,1);
@@ -260,4 +260,73 @@ test('P2-3: failed new POST B cannot resurrect previous pending job A after refr
   assert.equal(h.calls.length,1);
   assert.equal(h.calls[0],'POST:/api/cluster-analysis');
   assert.equal(h.rendered.length,0);
+});
+
+
+test('DONE job renders same-ID persisted report with verified identity, not blanket completeness',async()=>{
+  const h=makeHarness([
+    {job_id:id,mint,status:'DONE'},
+    {mint,ca_job_id:id,observed_at:1792708806,coverage:{special_normalization_complete:false}},
+  ],null,{realCache:true});
+  h.elements('cluster-mint').value=mint;
+  h.context.clusterSetJob(id,mint);
+  await h.context.pollClusterJob(id);
+  assert.equal(h.rendered.length,1);
+  assert.equal(h.rendered[0].ca_job_id,id);
+  assert.equal(h.calls[1],'/api/cluster-latest?mint='+mint+'&job_id='+id);
+  assert.equal(h.storage.has('mission-meme-cluster-pending-v1'),false);
+  assert.match(h.statuses.at(-1).join(' '),/任务编号与已结束任务一致/);
+  assert.match(h.statuses.at(-1).join(' '),/完整性仍须另行核实/);
+  assert.ok(h.calls.every(path=>!path.startsWith('POST:')));
+});
+
+test('DONE job MUST NOT display a newer different-job same-Mint latest report',async()=>{
+  const h=makeHarness([
+    {job_id:id,mint,status:'DONE'},
+    {mint,ca_job_id:idB,observed_at:1792708806,coverage:{}},
+  ],null,{realCache:true});
+  h.elements('cluster-mint').value=mint;
+  h.context.clusterSetJob(id,mint);
+  await h.context.pollClusterJob(id);
+  assert.equal(h.rendered.length,0);
+  assert.equal(h.elements('cluster-recovery').hidden,false);
+  assert.equal(h.elements('cluster-submit').disabled,true);
+  assert.ok(h.storage.get('mission-meme-cluster-pending-v1').includes(id));
+  assert.equal(vm.runInContext('clusterReportLoadError',h.context),'IDENTITY');
+  assert.match(h.statuses.at(-1).join(' '),/已有报告属于另一任务/);
+  assert.match(h.statuses.at(-1).join(' '),/不会重新扫描/);
+  assert.equal(h.calls.length,2);
+  assert.equal(h.calls.filter(p=>p.startsWith('POST:')).length,0);
+});
+
+test('legacy report without ca_job_id remains explicit unverified historical reading',async()=>{
+  const h=makeHarness([
+    {job_id:id,mint,status:'DONE'},
+    {mint,observed_at:1792708806,coverage:{special_normalization_complete:false}},
+  ],null,{realCache:true});
+  h.elements('cluster-mint').value=mint;
+  h.context.clusterSetJob(id,mint);
+  await h.context.pollClusterJob(id);
+  assert.equal(h.rendered.length,1);
+  assert.match(h.statuses.at(-1).join(' '),/缺少可核对的本次任务编号/);
+  assert.doesNotMatch(h.statuses.at(-1).join(' '),/任务编号与已结束任务一致/);
+});
+
+
+test('completed A recovers its durable report after same-Mint B became latest',async()=>{
+  const h=makeHarness([
+    {job_id:id,mint,status:'DONE',restored_from_saved_report:true},
+    {mint,ca_job_id:id,observed_at:1792708806,coverage:{}},
+  ],{id,mint},{realCache:true});
+  h.elements('cluster-mint').value=mint;
+  h.context.clusterRestorePending();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(h.rendered.length,1);
+  assert.equal(h.rendered[0].ca_job_id,id);
+  assert.deepEqual(h.calls,[
+    '/api/cluster-analysis?job_id='+id,
+    '/api/cluster-latest?mint='+mint+'&job_id='+id,
+  ]);
+  assert.equal(h.storage.has('mission-meme-cluster-pending-v1'),false);
+  assert.ok(h.calls.every(path=>!path.startsWith('POST:')));
 });
