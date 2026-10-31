@@ -1,0 +1,186 @@
+{
+  "schema": "frank_scanner_rpc_maintenance_v1",
+  "updated_at": "2026-10-31T21:46:56.761752+07:00",
+  "scope": "existing scanner maintenance only; no P1/P2/P3 research restart",
+  "source_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+  "parent_sha": "858ef37bbabcfe2f2baeaaeeb95f3478e044defb",
+  "original_pr": 244,
+  "original_pr_head": "438bbe20899108a858a513648ab8c8c05b11e05e",
+  "source_branch": "codex/frank-scanner-rpc-runtime-20261031",
+  "review": "independent review not performed at user request",
+  "ci": "not run for this maintenance commit",
+  "offline_tests": {
+    "targeted_and_service_entry": {
+      "passed": 174,
+      "command": "python -B -m pytest -q -p no:cacheprovider -p frank_offline_guard tests/test_frank_configured_rpc.py tests/test_frank_fm.py tests/test_frank_local_signals.py tests/test_frank_v1.py tests/test_frank_gmail_delivery.py tests/test_frank_gmail_health.py tests/test_frank_historical_delivery.py tests/test_frank_shadow_service.py test_service_entry_local.py"
+    },
+    "full": {
+      "passed": 693,
+      "skipped": 3,
+      "skip_reason": "unrelated Monster modules require numpy",
+      "command": "python -B -m pytest -q -p no:cacheprovider -p frank_offline_guard tests"
+    },
+    "supporting_files": {
+      "crypto-300-profit-mission/meme/evidence/frank-scanner-rpc-maintenance-20261031/frank_offline_guard.py": "cf091af513f58db0cc565d58c20a0127e97980c7947444f99fc6b447a9f73661",
+      "crypto-300-profit-mission/meme/evidence/frank-scanner-rpc-maintenance-20261031/test_service_entry_local.py": "0548f134b126f236dc25a5931f153f38cd2ac7b5dedf9282f3aac0eeb969f313"
+    }
+  },
+  "source_preservation": {
+    "original_noncache_files_checked": 317,
+    "original_cache_files_backed_up": 149,
+    "missing_count": 0,
+    "changed_paths": [
+      "mission_agent/frank/rpc.py",
+      "scripts/frank_local_signal_service.py"
+    ],
+    "only_two_expected_runtime_changes": true,
+    "no_original_noncached_files_missing": true
+  },
+  "backup": {
+    "running_directory_files": 466,
+    "restored_file_hashes_match": true,
+    "rollback_copy_preflight": "PREFLIGHT_PASS",
+    "candidate_preflight": "PREFLIGHT_PASS",
+    "sqlite_backup_integrity": "ok",
+    "sqlite_backup_fk_violations": 0,
+    "actual_production_rollback_exercised": false
+  },
+  "prior_isolated_live_catchup": {
+    "network_calls": 12,
+    "elapsed_seconds": 6.173,
+    "new_signatures": 9,
+    "lag_seconds": 0,
+    "raw_pending": 0,
+    "outbox_unchanged": true,
+    "source_cursor_unchanged": true
+  },
+  "captured_data_replay": {
+    "classification_counts": [
+      {
+        "classification": "ATA_CREATE",
+        "count": 6
+      },
+      {
+        "classification": "PASSIVE_TRANSFER",
+        "count": 3
+      }
+    ],
+    "unprocessed_before": 9,
+    "unprocessed_after": 0,
+    "reopen_replay_unchanged": {
+      "signatures": true,
+      "signals": true,
+      "outbox": true,
+      "seen": true
+    },
+    "historical_outbox_rows_unchanged": true
+  },
+  "production_cutover": {
+    "status": "PASS",
+    "candidate_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "old_pid": 53946,
+    "new_pid": 3402,
+    "new_pid_changed": true,
+    "loaded_source_sha256": "c7a453d5a579c9425dd964f1945b887b3d4ebe92d8159cd8db17a85471958085",
+    "source_drift": false,
+    "first_cycle_status": "PASS",
+    "first_cycle_catchup_signatures": 0,
+    "first_cycle_gap": 0,
+    "cursor_slots_before": [
+      463725011
+    ],
+    "cursor_slots_after": [
+      463725011
+    ],
+    "raw_pending": 0,
+    "model_unprocessed": 0,
+    "one_scanner": true,
+    "historical_rows": {
+      "signatures": {
+        "before_count": 5881,
+        "after_count": 5881,
+        "all_old_rows_unchanged": true
+      },
+      "signals": {
+        "before_count": 7,
+        "after_count": 7,
+        "all_old_rows_unchanged": true
+      },
+      "outbox": {
+        "before_count": 9,
+        "after_count": 9,
+        "all_old_rows_unchanged": true
+      },
+      "gmail_delivery": {
+        "before_count": 2,
+        "after_count": 2,
+        "all_old_rows_unchanged": true
+      },
+      "email_content": {
+        "before_count": 2,
+        "after_count": 2,
+        "all_old_rows_unchanged": true
+      },
+      "v1_seen": {
+        "before_count": 5881,
+        "after_count": 5881,
+        "all_old_rows_unchanged": true
+      }
+    },
+    "production_trading": "NO_GO",
+    "production_restored": true,
+    "test_notifications_sent": 0,
+    "database_restored_from_old_backup": false,
+    "old_source_directory_untouched": true,
+    "stopped_at": "2026-10-31T14:44:03.029838+00:00",
+    "verified_at": "2026-10-31T14:44:06.185832+00:00"
+  },
+  "limitations": [
+    "Short observation window only; no long-term reliability claim.",
+    "Captured nine transactions were ATA creation/passive transfer, not a positive real BUY notification acceptance.",
+    "Historical notification rows were preserved; no test notification or email was sent.",
+    "No merge or trading; INVEST_NO_GO and TRADE_NO_GO remain."
+  ],
+  "stability_observation": {
+    "pid": 3402,
+    "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "status": "RUNNING",
+    "poll_count": 78640,
+    "consecutive_errors": 0,
+    "last_successful_poll": "2026-10-31T14:46:05.785330+00:00",
+    "source_drift": false,
+    "raw_pending": 0,
+    "model_unprocessed": 0,
+    "restart_count": 10,
+    "production_trading": "NO_GO",
+    "at": "2026-10-31T21:46:19.596945+07:00",
+    "observed_poll_advance": 3,
+    "same_pid": true,
+    "successful_poll_age_seconds": 13.812,
+    "outbox_counts": [
+      {
+        "channel": "gmail",
+        "status": "SENT_VERIFIED",
+        "count": 2
+      },
+      {
+        "channel": "local",
+        "status": "COMMAND_ACCEPTED",
+        "count": 6
+      },
+      {
+        "channel": "local",
+        "status": "DRY_RUN_AUDIT",
+        "count": 1
+      }
+    ],
+    "gmail_counts": [
+      {
+        "status": "SENT_VERIFIED",
+        "count": 2
+      }
+    ],
+    "candidate_worktree_clean": true,
+    "status_check": "PASS"
+  }
+}
