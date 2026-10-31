@@ -1,39 +1,39 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-31 16:57:06 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-10-31 18:00:36 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-10-31 16:57:06 Asia/Bangkok (off-minute invocation, not HH:00 punctuality proof)
+- latest_actual_run: 2026-10-31 18:00:36 Asia/Bangkok (invoked off-minute 17:58:55, not punctuality proof)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-31/165706-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-31/165608-attempt.md
-- latest_scheduled_shard: 0
-- latest_executed_shard: 0
-- stale_shard_recovery: false; fair hour%4; next recorded run must rotate away from shard0 (two consecutive)
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-31/180036-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-31/175926-attempt.md
+- latest_scheduled_shard: 1
+- latest_executed_shard: 1
+- stale_shard_recovery: false; fair invocation hour%4; rotated away from two consecutive shard0 runs
 - latest_candidate_count: 7
 - latest_triggered_events: 0
-- latest_identity_failures: 0
-- latest_source_failures: 9
+- latest_identity_failures: 1
+- latest_source_failures: 8
 - latest_notification_decision: SILENT_NO_ACTION_EMAIL_ONLY
-- latest_notification_status: NO_GMAIL_NO_APP; prior Cambria RSGP 1a1812a1f6802ecb and StandX NeoSoul 1a168dd4a732eab4 suppressed
+- latest_notification_status: NO_GMAIL_NO_APP; prior Cambria RSGP 1a1812a1f6802ecb and NeoSoul StandX 1a168dd4a732eab4 suppressed
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_extra_USDC,Clay_Shares_private,Surf_PONS,StandX_DUSD_live_checker,Cambria_RSGP_wallet_claim,Makina_private_recovery,Block_Stranding,Rho,TurboFlow_restricted
-- latest_identity_gap: none new; Space/Spacecoin, Theo/Autheo and Titan collisions guarded
+- latest_source_gaps: Concrete_extra_USDC_private,Clay_Shares_private,Surf_PONS_private,StandX_DUSD_live_checker,Cambria_RSGP_wallet_claim,ForecastFDN_current,Theo_Network_current,Neutrl_private_redemption
+- latest_identity_gap: Theo/Autheo collision hard-failed; Neutrl legacy handle @neutrl_labs differs from issuer @Neutrl, official domain neutrl.finance; old neutrl.fi unsafe
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-10-31 16:57:06 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard1: 2026-10-31 13:03:42 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard1: 2026-10-31 18:00:36 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard2: 2026-10-31 13:58:29 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-10-31 15:03:42 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 165706-final.md commit 66d0fc4453bddf0f68f0748e85d935aa22885dfd
-- latest_terminal_readback: VERIFIED 165706-final.md (main branch blob SHA 34c4d660371689dc0744376e1ad407a0cf5fe5f9)
-- latest_four_executed_shards: [2,3,0,0]
-- last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (prior delivered 2026-10-28; no new email)
+- latest_primary_final_write: VERIFIED_DURABLE 180036-final.md commit c776c691cbb79f99104716fb117fbd8fa9af67bd
+- latest_terminal_readback: VERIFIED 180036-final.md (main blob SHA 60ff41fd4dc9f3a657a3ab5483b4b250f7598405)
+- latest_four_executed_shards: [3,0,0,1]
+- last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (unchanged)
 - last_delivered_gmail_message_id: 1a1812a1f6802ecb
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-10-31 16:57:06 BKK PARTIAL shard0; urgent5 + Surf/StandX + bounded lifecycle; 7 candidates, 9 source/private-rights gaps, zero new Tier A/B ACTION; Browser X unavailable, issuer English fallback; Gmail Sent and mapped Inbox checked; no Gmail/App. Attempt and final durable.
+- latest_terminal_sync: 2026-10-31 18:00:36 BKK PARTIAL shard1; urgent5 + Surf/StandX + bounded lifecycle; 7 old candidate families, 8 private/source gaps, 1 identity collision, zero new Tier A/B ACTION; Browser original X unavailable, official English fallback; Gmail Sent and mapped Inbox checked; no Gmail/App. Attempt and final durable.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
