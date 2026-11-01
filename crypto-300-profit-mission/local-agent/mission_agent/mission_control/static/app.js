@@ -903,6 +903,7 @@ const intelligencePriceLabel = {
 };
 
 let frankIntelligenceSnapshot = null;
+let frankIntelligenceRequest = 0;
 
 function frankIntelligenceTimestamp(ts) {
   const n = Number(ts);
@@ -974,12 +975,17 @@ function renderFrankIntelligence(snapshot) {
 }
 
 async function refreshFrankIntelligence() {
+  const request = ++frankIntelligenceRequest;
   try {
-    frankIntelligenceSnapshot = await get('/api/frank-intelligence');
+    const snapshot = await get('/api/frank-intelligence');
+    if (request !== frankIntelligenceRequest) return;
+    frankIntelligenceSnapshot = snapshot;
     renderFrankIntelligence(frankIntelligenceSnapshot);
     $('frank-intelligence-updated').textContent = '本地读取于 ' +
       new Date().toLocaleTimeString('zh-CN');
   } catch (e) {
+    if (request !== frankIntelligenceRequest) return;
+    frankIntelligenceSnapshot = null;
     renderFrankIntelligence(null);
     $('frank-intelligence-updated').textContent = '来源不可用';
   }
@@ -998,6 +1004,7 @@ const frankActivityLabels = {
   SELL_POSITION_UNRESOLVED: 'Frank 已卖出；剩余仓位无法确定'
 };
 let frankActivitySnapshot = null;
+let frankActivityRequest = 0;
 
 function renderFrankActivity(snapshot) {
   const summary = $('frank-activity-summary');
@@ -1056,12 +1063,16 @@ function renderFrankActivity(snapshot) {
 }
 
 async function refreshFrankActivity() {
+  const request = ++frankActivityRequest;
   try {
-    frankActivitySnapshot = await get('/api/frank-activity-watch');
+    const snapshot = await get('/api/frank-activity-watch');
+    if (request !== frankActivityRequest) return;
+    frankActivitySnapshot = snapshot;
     renderFrankActivity(frankActivitySnapshot);
     $('frank-activity-updated').textContent = '本地读取于 ' +
       new Date().toLocaleTimeString('zh-CN');
   } catch (e) {
+    if (request !== frankActivityRequest) return;
     frankActivitySnapshot = null;
     renderFrankActivity(null);
     $('frank-activity-updated').textContent = '来源不可用';

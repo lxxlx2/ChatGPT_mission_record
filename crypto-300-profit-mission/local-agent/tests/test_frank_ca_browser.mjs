@@ -264,6 +264,79 @@ try {
  }
  await page.getByRole('button',{name:'CA 链上查询',exact:true}).click();
  assert.match(await page.locator('#cluster-summary').innerText(),/SYNTHETIC_REPORT_7/);
+
+ // Overlapping observation refreshes must not replace a newer SELL with
+ // an older BUY, nor resurrect cached rows when the user filters after failure.
+ await page.getByRole('button',{name:'Frank 信号',exact:true}).click();
+ await page.locator('#frank-activity-type').selectOption({label:'全部买卖'});
+ const observationFeeds=[
+   {kind:'intelligence',endpoint:'/api/frank-intelligence',reload:'frank-intelligence-reload',
+    root:'frank-intelligence-cards',filter:'frank-intelligence-search',updated:'frank-intelligence-updated'},
+   {kind:'activity',endpoint:'/api/frank-activity-watch',reload:'frank-activity-reload',
+    root:'frank-activity-feed',filter:'frank-activity-search',updated:'frank-activity-updated'},
+ ];
+ function observationPayload(kind,target,side) {
+   return kind==='intelligence'
+     ? {status:'LOCAL_SOURCE_RESEARCH_ONLY',rows:[{mint:target,latest_side:side,
+         latest_action_at:1,source_signal_id:'FIXTURE_'+side,facts:[],missing:[],price:{}}]}
+     : {status:'LOCAL_SOURCE_ACTIVITY_RESEARCH_ONLY',source_rows_considered:1,counts:{},
+         rows:[{mint:target,source_side:side,signature:'5'.repeat(64),block_time:1}]};
+ }
+ for(const feed of observationFeeds) {
+   const beforePosts=requests.filter(r=>r.method==='POST').length;
+   const endpoint=origin+feed.endpoint,newerMint='3'.repeat(32);
+   let releaseOld,oldArrived,calls=0;
+   const oldGate=new Promise(resolve=>{releaseOld=resolve;});
+   const oldSeen=new Promise(resolve=>{oldArrived=resolve;});
+   await page.locator('#'+feed.filter).fill('');
+   await page.route(endpoint,async route=>{
+     if(++calls===1) {
+       oldArrived();await oldGate;
+       return route.fulfill({status:200,contentType:'application/json',
+         headers:{'X-Fixture-Response':'OLDER_BUY'},
+         body:JSON.stringify(observationPayload(feed.kind,mint,'BUY'))});
+     }
+     return route.fulfill({status:200,contentType:'application/json',
+       body:JSON.stringify(observationPayload(feed.kind,newerMint,'SELL'))});
+   });
+   await page.locator('#'+feed.reload).click();
+   await oldSeen;
+   await page.locator('#'+feed.reload).click();
+   await page.waitForFunction(({root,target})=>document.getElementById(root).innerHTML.includes(target),
+     {root:feed.root,target:newerMint});
+   const oldReply=page.waitForResponse(r=>r.url()===endpoint&&r.headers()['x-fixture-response']==='OLDER_BUY');
+   releaseOld();
+   await (await oldReply).finished();
+   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+   assert.equal(await page.locator('#'+feed.root+' [data-copy]').first().getAttribute('data-copy'),newerMint);
+   await page.locator('#'+feed.filter).fill(newerMint);
+   assert.equal(await page.locator('#'+feed.root+' [data-copy]').first().getAttribute('data-copy'),newerMint);
+   assert.equal(requests.filter(r=>r.method==='POST').length,beforePosts);
+   await snapshot(page,'observation-'+feed.kind+'-newer-sell-retained');
+   await page.unroute(endpoint);
+   check(feed.kind+' keeps newer SELL and filter snapshot after delayed older BUY');
+ }
+ const intelligence=observationFeeds[0],intelEndpoint=origin+intelligence.endpoint;
+ const filterFailurePosts=requests.filter(r=>r.method==='POST').length;
+ await page.locator('#'+intelligence.filter).fill('');
+ await page.route(intelEndpoint,route=>route.fulfill({status:200,contentType:'application/json',
+   body:JSON.stringify(observationPayload('intelligence',mint,'BUY'))}));
+ await page.locator('#'+intelligence.reload).click();
+ await page.waitForFunction(target=>document.getElementById('frank-intelligence-cards').innerHTML.includes(target),mint);
+ await page.unroute(intelEndpoint);
+ await page.route(intelEndpoint,route=>route.fulfill({status:503,contentType:'application/json',body:'{}'}));
+ await page.locator('#'+intelligence.reload).click();
+ await page.waitForFunction(()=>document.getElementById('frank-intelligence-updated').textContent==='来源不可用');
+ await page.locator('#'+intelligence.filter).fill(mint);
+ assert.equal(await page.locator('#frank-intelligence-cards article').count(),0);
+ assert.match(await page.locator('#frank-intelligence-summary').innerText(),/来源不可用/);
+ assert.match(await page.locator('#frank-d2-rows').innerText(),/12 枚/);
+ assert.equal(requests.filter(r=>r.method==='POST').length,filterFailurePosts);
+ await snapshot(page,'intelligence-failed-refresh-filter-remains-unavailable');
+ await page.unroute(intelEndpoint);
+ check('intelligence filter cannot resurrect cached BUY after failed refresh; D2 remains independent');
+ await page.getByRole('button',{name:'CA 链上查询',exact:true}).click();
+ assert.match(await page.locator('#cluster-summary').innerText(),/SYNTHETIC_REPORT_7/);
  assert.deepEqual(errors,[]);
  const result={port,checks,page_errors:errors,blocked,requests,fixture_posts:requests.filter(r=>r.method==='POST').length,real_rpc:0,production_requests:0,real_ca_posts:0,browser:context.browser()?.version()};
  if(output)writeFileSync(join(output,'result.json'),JSON.stringify(result,null,2));
