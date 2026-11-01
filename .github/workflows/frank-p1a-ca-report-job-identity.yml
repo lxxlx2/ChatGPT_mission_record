@@ -28,9 +28,9 @@ jobs:
         run: |
           python -B -m py_compile mission_agent/mission_control/server.py tests/test_frank_ca_job_rpc_budget.py
           node --check mission_agent/mission_control/static/app.js
-      - name: Actual worker persistence + approved C1 budget regressions (offline)
+      - name: Full integrated Dashboard and existing agent regressions (offline)
         working-directory: crypto-300-profit-mission/local-agent
-        run: python -B -m pytest -q -p no:cacheprovider tests/test_frank_ca_job_rpc_budget.py tests/test_meme_wallet_cluster.py tests/test_frank_f01_source_only.py tests/test_frank_d2_ingress.py tests/test_frank_d2_http_route.py tests/test_control_health_freshness.py tests/test_mission_control_dashboard.py tests/research/test_frank_dashboard_priority_layout.py
+        run: python -B -m pytest -q -p no:cacheprovider tests
       - name: Real frontend GET/report association and budget UI tests (offline)
         working-directory: crypto-300-profit-mission/local-agent
         run: node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_ca_report_render.mjs tests/test_frank_d2_ingress_ui.mjs tests/test_frank_f01_source_only.cjs tests/test_frank_f01_failure_state.cjs
