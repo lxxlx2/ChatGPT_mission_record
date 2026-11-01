@@ -254,10 +254,23 @@ document.addEventListener('click', (event) => {
   copyText(button.dataset.copy,button);
 });
 
+function getReadFailure(path, phase, status=null) {
+  // Only fixed local endpoint names are safe for the page. Never include
+  // query identifiers, response bodies or the browser's exception text.
+  const endpoint=String(path).split('?')[0];
+  const known=["/api/frank-signed-activity","/api/frank-intelligence","/api/frank-activity-watch","/api/runtime","/api/control-health","/api/candidates","/api/trades","/api/review-activity","/api/decisions","/api/coverage","/api/frank-observed-watchlist","/api/follow-opportunities","/api/cluster-latest","/api/cluster-analysis"];
+  const label=known.includes(endpoint) ? endpoint : '本地接口';
+  const http=Number.isInteger(status)&&status>=100&&status<=599 ? ' '+status : '';
+  return new Error('GET '+label+http+' ['+phase+']');
+}
+
 async function get(path) {
-  const r = await fetch(path,{cache:'no-store'});
-  if (!r.ok) throw new Error(`${path} ${r.status}`);
-  return r.json();
+  let r;
+  try { r=await fetch(path,{cache:'no-store'}); }
+  catch (_) { throw getReadFailure(path,'NETWORK'); }
+  if (!r.ok) throw getReadFailure(path,'HTTP',r.status);
+  try { return await r.json(); }
+  catch (_) { throw getReadFailure(path,'JSON',r.status); }
 }
 
 function renderRuntime(runtime, control) {

@@ -236,6 +236,34 @@ try {
  await page.getByRole('button',{name:'CA 链上查询',exact:true}).click();
  assert.match(await page.locator('#cluster-summary').innerText(),/SYNTHETIC_REPORT_7/);
  check('combined CA/F01/D2 preserves manual snapshot reads, local source age and CA report');
+
+ // Fault injection is confined to the CI fixture origin. Existing five-second
+ // refresh performs recovery; no new timer, retry loop or scan is introduced.
+ await page.getByRole('button',{name:'Frank 信号',exact:true}).click();
+ const candidatesPattern=origin+'/api/candidates';
+ for (const phase of ['NETWORK','JSON','HTTP']) {
+   const failurePosts=requests.filter(r=>r.method==='POST').length;
+   await page.route(candidatesPattern,route=>{
+     if(phase==='NETWORK')return route.abort('connectionreset');
+     return route.fulfill({status:phase==='HTTP'?503:200,
+       contentType:'application/json',body:'private-fixture-body-token=fixture-secret'});
+   });
+   await page.waitForFunction(expected=>document.getElementById('runtime').textContent.includes('['+expected+']'),phase,{timeout:10000});
+   const failedRuntime=await page.locator('#runtime').innerText();
+   assert.match(failedRuntime,/GET \/api\/candidates/);
+   assert.doesNotMatch(failedRuntime,/fixture-secret|private-fixture|Failed to fetch|SyntaxError/);
+   assert.match(await page.locator('#f01-source-status').innerText(),/不展示可跟结论/);
+   assert.equal(await page.locator('#candidates .candidate-card').count(),0);
+   assert.match(await page.locator('#frank-d2-rows').innerText(),/12 枚/);
+   assert.equal(requests.filter(r=>r.method==='POST').length,failurePosts);
+   await snapshot(page,'safe-get-'+phase.toLowerCase());
+   await page.unroute(candidatesPattern);
+   await page.waitForFunction(()=>!document.getElementById('runtime').textContent.includes('控制台读取失败')&&document.getElementById('f01-source-status').textContent.includes('近期'),null,{timeout:10000});
+   assert.equal(requests.filter(r=>r.method==='POST').length,failurePosts);
+   check('GET '+phase+' is safely attributed, closes old F01 cards and recovers without POST');
+ }
+ await page.getByRole('button',{name:'CA 链上查询',exact:true}).click();
+ assert.match(await page.locator('#cluster-summary').innerText(),/SYNTHETIC_REPORT_7/);
  assert.deepEqual(errors,[]);
  const result={port,checks,page_errors:errors,blocked,requests,fixture_posts:requests.filter(r=>r.method==='POST').length,real_rpc:0,production_requests:0,real_ca_posts:0,browser:context.browser()?.version()};
  if(output)writeFileSync(join(output,'result.json'),JSON.stringify(result,null,2));
