@@ -1,6 +1,6 @@
 # Frank STATUS（唯一当前决策状态入口）
-更新时间：2026-11-01 08:19 Asia/Bangkok
-更新者：Codex（按用户维护授权恢复既有 Scanner 与只读 Dashboard；独立审核未执行；P0/P1 结项及实盘 NO_GO 保持）
+更新时间：2026-11-01 08:29 Asia/Bangkok
+更新者：Codex（用户明确授权本地调试、环境调整与既有服务维护；独立review已豁免；INVEST_NO_GO / TRADE_NO_GO保持）
 
 ## 北极星答案（1 行）
 **P1 正式投入决定：`INVEST_NO_GO`**（2026-10-29 01:45 经用户批准提前结项；停止继续投入 Frank 跟单盈利研究，不自动进入 P2/P3）｜**实盘：`TRADE_NO_GO`**｜置信度：对「当前证据不足以支持追加资源/实盘」**高**；对「策略 edge 是否存在」**无法判断**。依据：[P1 188 episode / 752 理论延迟格证据](./FRANK_P1_HISTORICAL_FOLLOWABILITY_COVERAGE_20261028.md) **0 条已核验金额匹配双边报价**、[G4 PR #239](https://github.com/lxxlx2/ChatGPT_mission_record/pull/239) 严格有效 **0/30**。最大盲点：用户实际看到通知后的报价、交易规模、费用/滑点、成功退出率及独立样本。**NO_GO 不等于证明没有 edge。**
@@ -16,14 +16,14 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 **阶段管理已结束，保留 Frank 只读钱包观察工具的既有安全维护，不扩张研发或研究。** 新的跟单盈利研究必须经用户另行明确授权；P2/P3 未启动。
 
 ## 正在进行（最多 3 项）
-- **无正在执行的 P0/P1 盈利研究任务**。原 Scanner RPC 维护及 Dashboard 恢复已完成；当前 Scanner PID 3402、RUNNING / 0 连续错误 / source_drift=false；生产源码仍为 Scanner `1f2c6afc28b9988eaacdc896562ff9a71b78f801`、Dashboard `4de090643590226ba7ec78e9b6c815bb9d6c7259`。
-- 用户要求继续收尾旧计划：F01 已在当前 Dashboard 精确基线上完成源码整合和 Mac 隔离浏览器验收，固定 [`ffa96a78a9cae9902d6ba297d5d2135ecbce28cc`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/ffa96a78a9cae9902d6ba297d5d2135ecbce28cc)，1569 完整离线 / 70 提交后 / Node20 通过；历史模型与支付信息已补回，近期0、历史7、eligible0。**未安装新 F01**；用户豁免独立 review，不宣称独立 APPROVE。[计划核对](./FRANK_PLAN_RECONCILIATION_20261101.md)。
-- 最新只读复查签名5940，信号7/outbox9/Gmail2保持；先前37条逐笔核验不延伸到后来新增签名。D2既有4305 Mint、44页和跨页查询通过，但来源仍为10月25日旧快照，非当前余额。[本轮证据](./evidence/frank-f01-plan-reconciliation-20261101.json)。
+- **无正在执行的P0/P1盈利研究任务**。既有工具维护已推进：Dashboard F01安装固定 [`ffa96a78a9cae9902d6ba297d5d2135ecbce28cc`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/ffa96a78a9cae9902d6ba297d5d2135ecbce28cc)，实际PID40693、Mac页面PASS，近期0/历史7/eligible0；控制库、旧心跳和plist字节保留。首次维护脚本丢失执行权限导致启动失败，已修正为0700，先验证旧版本恢复，再切换成功；原始失败留证。
+- D2已完成**一次两请求**现有私有RPC采集，固定PR60 `e4529ba7069e5499d12323a7160ceac08c481fae`完整原始响应离线重放PASS后原子导入；2026-11-01 08:26:32 Asia/Bangkok，slots463906568/463906572，4898账户/Mint、4023非零；49页+跨页精确查询PASS。非原子快照，current_chain_balance_verified/USD/PnL均false，无自动刷新。[本轮实际验收证据](./evidence/frank-f01-d2-local-acceptance-20261101.json)。
+- Scanner PID3402保持LIVE，0连续错误、source_drift=false，固定 `1f2c6afc28b9988eaacdc896562ff9a71b78f801`；最终只读检查签名5941、seen5941，信号7/outbox9/Gmail2。未重启Scanner、未改变其冻结策略或补发通知。
 
 ## 剩余真实条件（最多 3 项）
-- **新来源与自然事件尚缺**：D2需要新的、限定范围的真实采集，当前仍保留NO_REAL_RPC；新BUY实际通知/真实首见延迟需要自然事件，历史Sent验证不代替新事件，不制造测试交易或通知。
-- **MC Loop签名工件仍缺**：保持未加载。用户的默认授权及免review不是由用户持钥生成的有效策略签名字节；不生成/读取用户私钥，不恢复旧决策写入或投递。
-- **大规划不自动重启**：P1已INVEST_NO_GO结项，P2/P3、多人物/PnL与更大CA/V3改造仍冻结。F01源码和隔离验收完成不等于生产安装、F2/F3组合验收或盈利证明。
+- **自然新BUY及真实延迟/通知样本仍缺**：当前无新增识别信号；历史Sent验证不代替新事件，不制造测试交易或虚构通知。本轮未发邮件/本地通知，未新增等待监控或自动任务。
+- **MC Loop的独立签名条件不具备**：root公钥锚点不存在，控制目录未发现批准/签名工件，Loop保持未加载。用户的维护授权与免review已经生效，但不能伪造用户持钥签名；不生成/读取用户私钥，不恢复旧默认金额决策或投递路径。
+- **大规划不自动重启**：P1已INVEST_NO_GO结项，P2/P3、多人物/PnL与更大CA/V3改造仍冻结。F01实际安装与D2快照通过不等于完整F2/F3/CA组合验收或盈利证明。
 
 ## 本周已关闭（最多 5 行）
 - **P1 历史回答于 2026-10-29 01:45 经用户批准提前结项：`INVEST_NO_GO`、`TRADE_NO_GO`**。[原始证据矩阵](./FRANK_P1_HISTORICAL_FOLLOWABILITY_COVERAGE_20261028.md)保留。
@@ -34,8 +34,8 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 
 ## 已知但故意不做（C 类清单）
 - P1 延迟报价研究、ACC/MULT 跟单盈利研究与 P2/P3 后续开发均已暂停；保留冻结源数据和审核记录，不误认为 edge 为负。
-- F01 生产安装及 F2/F3 新发布流程、无关 UI 打磨、pyc 考古和额外辅助门禁；真正 S 类生产/资金安全检查始终生效。
-- 不新增报价采集、定时任务、外部 RPC、Mac/8766 发布、钱包签名、交易或未经审核的 PR 清理。
+- F2/F3 新发布流程、无关UI打磨、pyc考古和额外辅助门禁；真正S类生产/资金安全检查始终生效。F01安装已按后续明确维护授权完成。
+- 不新增报价、数据源、定时任务、钱包签名、交易或PR清理。本轮仅复用既有RPC两次读取及既有8766 Dashboard源码切换，不授权周期采集或新研究预算。
 
 ## S 类（不可豁免）
-此前按维护授权完成 Scanner 与既有 Dashboard 恢复；本轮只做本地隔离源码/页面验收和实际状态只读复查，无生产生命周期调用、真实RPC/CA POST或通知发送，不启动 MC Loop、不回灌旧数据库、不改变模型/冻结策略。`TRADE_NO_GO / NO_CA_POST / NO_TRADES / NO_MERGE` 保持；V1 Gmail 仅做现有凭据刷新和历史 Sent 读取，发送调用为 0；没有新增监控、自动化或盈利研究。
+本轮按用户另行明确本地维护授权完成既有Dashboard的F01源码切换与一次D2双程序读取/离线重放/原子导入；不启动MC Loop、不回灌旧数据库、不改变模型或冻结策略。`TRADE_NO_GO / NO_CA_POST / NO_TRADES / NO_MERGE`保持；现有RPC只读调用2、重试0、邮件/通知发送0、Scanner重启0；未新增监控、自动化或盈利研究。原始余额/完整响应与含私有路径的维护日志仅在Git外私有目录保留，公开只提交脱敏回执与哈希。
