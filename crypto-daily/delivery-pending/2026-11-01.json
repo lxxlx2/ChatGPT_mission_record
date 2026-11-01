@@ -187,7 +187,7 @@
         "evidence_published_at": "2026-10-31 14:24"
       },
       "impact_breadth": "market-wide",
-      "top5_basis": "全球主要交易所资产补足率出现具名官方新状态，影响跨市场托管及提现",
+      "top5_basis": "全球主要交易所资产补足率出现具名官方新状态，影响跨市场托管及提现；已核对原始公告发布日期、当前状态与上一版差异，尚未推断用户受影响。",
       "top5_evidence_url": "https://www.binance.com/en/support/announcement/detail/1fdf1f61559c401da0435895ffcccb62"
     },
     {
@@ -203,7 +203,7 @@
       "source_confirmed": true,
       "priority": "HIGH",
       "impact_breadth": "sector-wide",
-      "top5_basis": "AI云托管密钥事故影响开发供应链，官方状态页及Wiz独立研究均有原始证据",
+      "top5_basis": "AI云托管密钥事故影响开发供应链，官方状态页及Wiz独立研究均有原始证据；已核对原始公告发布日期、当前状态与上一版差异，尚未推断用户受影响。",
       "top5_evidence_url": "https://status.northflank.com/cmvv0rn5a092f14rutwccodpp"
     },
     {
