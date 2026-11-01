@@ -1,5 +1,5 @@
 # Frank STATUS（唯一当前决策状态入口）
-更新时间：2026-11-01 19:20 Asia/Bangkok
+更新时间：2026-11-01 19:21 Asia/Bangkok
 更新者：Codex（用户明确授权本地调试、环境调整与既有服务维护；独立review已豁免；INVEST_NO_GO / TRADE_NO_GO保持）
 
 ## 北极星答案（1 行）
@@ -16,9 +16,9 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 **阶段管理已结束，保留 Frank 只读钱包观察工具的既有安全维护，不扩张研发或研究。** 新的跟单盈利研究必须经用户另行明确授权；P2/P3 未启动。
 
 ## 正在进行（最多 3 项）
-- **无正在执行的P0/P1盈利研究任务**。现有Dashboard已采用原PR220最新整合源码，并在Chrome复现/修复无效CA残留旧报告：固定 [`15aa995629c503fb9cc4278c18d7957672c05499`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/15aa995629c503fb9cc4278c18d7957672c05499)，Git父提交c18fa276，实际PID11137。完整离线1587通过/3无关numpy跳过、提交后前端81通过；3个反例由失败转绿。实际8766历史→无效→恢复PASS，页面保留；原任务身份不丢、不自动POST。[完整证据与命令](./evidence/frank-ca-local-acceptance-20261101.json)。[当前HEAD CI run35](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41305576201)已读回SUCCESS；CI与实际Mac证据分别记录。独立review按用户豁免，未声称独立APPROVE。
+- **无正在执行的P0/P1盈利研究任务**。现有Dashboard已采用原PR220最新整合源码，并在Chrome复现/修复无效CA残留旧报告：固定 [`15aa995629c503fb9cc4278c18d7957672c05499`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/15aa995629c503fb9cc4278c18d7957672c05499)，Git父提交c18fa276，实际PID11137。完整离线1587通过/3无关numpy跳过、提交后前端81通过；3个反例由失败转绿。实际8766历史→无效→恢复PASS，页面保留；原任务身份不丢、不自动POST。[完整证据与命令](./evidence/frank-ca-local-acceptance-20261101.json)。[当前HEAD CI run35](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41305576201)已读回SUCCESS；CI与实际Mac证据分别记录。Chrome后续捕获一次瞬时Failed to fetch，现有轮询自动恢复且F01旧机会闭锁；无同刻服务错误日志，具体失败请求/传输触发原因UNRESOLVED，未做猜测性补丁。独立review按用户豁免，未声称独立APPROVE。
 - D2来源仍为2026-11-01 08:26:32 Asia/Bangkok、slots463906568/463906572、4898账户/Mint、4023非零；未再次采集。F01近期0/历史7/eligible0、D1/D2可读，年龄计时修复保留。24份既有CA报告、控制库、D2来源、旧心跳和plist字节保持。c18父版Chrome隔离合成A/B/内存丢失/错误恢复通过，合成POST3、真实RPC/CA POST0；不冒充真实新扫描。
-- Scanner PID3402仍LIVE、0连续错误、source_drift=false，固定1f2c6afc28b9988eaacdc896562ff9a71b78f801；原PR244最新仍438bbe20899108a858a513648ab8c8c05b11e05e。19:19只读快照5979签名/seen，信号7/outbox9/Gmail2；逐笔原始核验仍只覆盖此前截至5959的78条，后来20条未在本阶段单独重放，不扩展旧结论。
+- Scanner PID3402仍LIVE、0连续错误、source_drift=false，固定1f2c6afc28b9988eaacdc896562ff9a71b78f801；原PR244最新仍438bbe20899108a858a513648ab8c8c05b11e05e。19:18:53一致只读快照5979签名/seen，信号7/outbox9/Gmail2；排除已核验78条，后来20条逐笔重放PASS（被动16/ATA4），发布后共98条原始哈希/签名slot/分类账本/durable/seen核验完成。队列RAW_PENDING/未处理均0，签名/信号/outbox事件渠道/Gmail信号重复组均0；不外推未来自然事件或长期可靠性。
 
 ## 剩余真实条件（最多 3 项）
 - **自然新BUY及真实延迟/通知样本仍缺**：当前无新增识别信号；历史Sent、买类候选年龄和交易列表BUY不是同一口径。不制造交易/通知，不新增等待监控或自动任务。

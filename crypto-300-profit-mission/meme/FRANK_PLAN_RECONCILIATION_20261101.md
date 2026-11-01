@@ -1,5 +1,7 @@
 # Frank 旧计划核对与只读维护收尾（2026-11-01）
 
+> **增量补完（2026-11-01 19:21 Asia/Bangkok）**：源码未变。补完上次留出的20条原始事件离线核验（16被动/4 ATA，0交易行），排除原78条，发布后累计98条；5979签名全部seen，RAW_PENDING/未处理0，四类重复组0。Chrome整合版本D2显示100行/49页、源年龄持续增长。另实际捕获一次F01/顶部Failed to fetch，原有轮询自动恢复且旧机会闭锁；失败请求/传输触发原因仍UNRESOLVED，后台没有同刻新错误日志，不推断RPC故障或做猜测性改码。证据已接到同一[验收回执](./evidence/frank-ca-local-acceptance-20261101.json)，真实RPC/CA POST、服务变更、通知均0。
+
 > **最新维护进展（2026-11-01 19:20 Asia/Bangkok，取代下方旧运行快照）**：重新核对main `f1f848d4e11f26239c0adadf07b1c20256d6e402`及原PR220最新c18fa276整合，根规则未变；采用现有完整功能栈，未重复推送旧试验集成。Chrome发现无效CA时仍残留上一报告，在原PR220两文件最小修复 `15aa995629c503fb9cc4278c18d7957672c05499`，3个反例先红后绿、完整离线1587通过/3跳过、提交后Node81通过。本地Dashboard已运行新SHA，真实Chrome历史→无效→恢复PASS；24份历史报告和控制库/D2/心跳/plist哈希不变，Scanner未重启。c18父版另外完成Chrome合成A/B和空内存恢复，合成POST3、真实RPC/CA POST0；临时服务/端口/标签已清理，实际8766页保留。详见[本轮证据](./evidence/frank-ca-local-acceptance-20261101.json)。旧任务缺身份关联、自然新BUY/通知样本、MC签名工件仍缺；维护PASS，旧规划整体PARTIAL，INVEST_NO_GO / TRADE_NO_GO保持。
 
 > **持续维护后续（2026-11-01 14:13 Asia/Bangkok）**：D2年龄冻结与F01 BUY口径过宽已修复，实际运行 `dd17c9dcc057c79f4984029fff188d88b9b9d45e`。Chrome旧版18秒年龄不变，新版约20秒20700→20718；复用现有5秒刷新、无新增来源GET/timer/RPC，错误/恢复仍PASS，页面保留。完整测试运行版1569、原PR178为1541、原PR232为1579通过，各3无关跳过；提交后前端36通过。原PR同步修复见[最新证据](./evidence/frank-source-age-ca-boundary-20261101.json)。截至14:13，另18条原始记录增量核验PASS，不重复先前60条，共78条。
