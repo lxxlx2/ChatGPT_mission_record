@@ -1,5 +1,9 @@
 # Frank 旧计划核对与只读维护收尾（2026-11-01）
 
+> **持续维护后续（2026-11-01 14:13 Asia/Bangkok）**：D2年龄冻结与F01 BUY口径过宽已修复，实际运行 `dd17c9dcc057c79f4984029fff188d88b9b9d45e`。Chrome旧版18秒年龄不变，新版约20秒20700→20718；复用现有5秒刷新、无新增来源GET/timer/RPC，错误/恢复仍PASS，页面保留。完整测试运行版1569、原PR178为1541、原PR232为1579通过，各3无关跳过；提交后前端36通过。原PR同步修复见[最新证据](./evidence/frank-source-age-ca-boundary-20261101.json)。截至14:13，另18条原始记录增量核验PASS，不重复先前60条，共78条。
+>
+> 既有CA历史报告现可GET200，但不带原job ID，无法证明是失败任务结果；旧原始连接触发因素仍未定。PR220最新18e065bd候选及C1依赖未在本轮合入，不用新扫描补造旧任务证据。旧计划整体仍PARTIAL，INVEST_NO_GO / TRADE_NO_GO保持；尚缺原CA任务关联、自然新BUY样本和用户独立签名工件。
+
 > **Chrome后续验收（2026-11-01 08:38 Asia/Bangkok）**：按用户指定在Google Chrome实际验收并保留标签页。发现D2成功查询后无效Mint仍残留旧余额；已在原PR178修复 `9a259359a3e9ede4540e90276f8fef71df0d0bae`，本机运行候选 `700373e59c17f35aa465664e6eff01057fcfa0c9`。4个反例转绿，运行基线1569/原PR基线1541完整离线通过，Chrome有效→无效→恢复、分页/跨页查询PASS。首轮bootstrap返回5后旧HTTP与源码恢复已核验，等待旧job/PID/listener退出后的再次切换PASS；具体launchd错误原因未获独立证明。既有D2来源与控制库字节未变、额外RPC/通知0。
 >
 > 补完Scanner发布后未核验的23条（被动6/ATA16/UNKNOWN1）；不重复先前37条，当前新增60条均完成完整原始与分类账本重放。UNKNOWN无Frank签名或authority，保留未识别，不制造新BUY。详见[Chrome验收、修复与增量证据](./evidence/frank-chrome-d2-query-recovery-20261101.json)。当前仍缺自然新BUY样本和用户独立签名工件，研究NO_GO不变。
