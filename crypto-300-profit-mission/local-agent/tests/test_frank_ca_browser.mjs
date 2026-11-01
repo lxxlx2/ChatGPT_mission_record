@@ -67,6 +67,12 @@ try {
  // A genuinely fresh page has no prior sessionStorage; recent completed report hints persist.
  await page.close();page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
  await page.goto(origin+'/#cluster');
+ await page.waitForFunction(()=>document.getElementById('cluster-status').textContent.includes('已读取已有历史报告')&&!document.getElementById('cluster-result').hidden);
+ assert.match(await page.locator('#cluster-status').innerText(),/与当前任务的关联未经核实/);
+ assert.match(await page.locator('#cluster-summary').innerText(),/SYNTHETIC_REPORT_2/);
+ assert.equal(await page.locator('#cluster-mint').inputValue(),mint);
+ assert.equal(requests.filter(r=>r.method==='POST').length,postsBefore);
+ check('fresh page automatic history read is explicitly unverified and GET only');
  await page.locator('#cluster-reports').selectOption(a.job_id);
  await page.locator('#cluster-read-report').click();
  await page.waitForFunction(()=>document.getElementById('cluster-summary').textContent.includes('SYNTHETIC_REPORT_1')&&!document.getElementById('cluster-submit').disabled);
@@ -129,10 +135,20 @@ try {
  assert.equal(requests.filter(r=>r.method==='POST').length,currentPosts);
  check('invalid input is explained without submitting a scan');
  await page.locator('#cluster-mint').fill(mint);await page.locator('#cluster-read-cached').click();
- await page.waitForFunction(()=>document.getElementById('cluster-status').textContent.includes('与当前任务的关联未经核实'));
+ await page.waitForFunction(()=>document.getElementById('cluster-status').textContent.includes('已读取已有历史报告')&&!document.getElementById('cluster-result').hidden);
+ assert.match(await page.locator('#cluster-status').innerText(),/与当前任务的关联未经核实/);
  assert.match(await page.locator('#cluster-status').innerText(),/覆盖仍不完整/);
  assert.equal(requests.filter(r=>r.method==='POST').length,currentPosts);
  check('visible existing-report entry reads partial historical cache without new POST');
+ const missingMint='5'.repeat(32);
+ await page.locator('#cluster-mint').fill(missingMint);
+ await page.locator('#cluster-read-cached').click();
+ await page.waitForFunction(()=>document.getElementById('cluster-status').textContent.includes('历史缓存读取失败'));
+ assert.equal(await page.locator('#cluster-result').isVisible(),false);
+ assert.equal(await page.locator('#cluster-preview').isVisible(),false);
+ assert.equal(await page.locator('#cluster-mint').inputValue(),missingMint);
+ assert.equal(requests.filter(r=>r.method==='POST').length,currentPosts);
+ check('missing history for another CA hides the old report without a new POST');
  await submit(null,'quick','4'.repeat(32));
  await page.waitForFunction(()=>document.getElementById('cluster-status').textContent.includes('分析任务失败'));
  assert.equal(await page.locator('#cluster-result').isVisible(),false);
@@ -215,3 +231,4 @@ try {
  if(port){const listening=await new Promise(resolve=>{const s=createConnection({host:'127.0.0.1',port});s.on('connect',()=>{s.destroy();resolve(true)});s.on('error',()=>resolve(false));});assert.equal(listening,false,'fixture port released');}
  console.log('CLEANUP: browser profile removed, fixture exited, port released');
 }
+
