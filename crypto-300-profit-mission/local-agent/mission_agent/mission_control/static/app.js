@@ -1746,6 +1746,9 @@ async function frankD2Read({mint=null, page=0}={}) {
   $('frank-d2-page-prev').disabled = true;
   $('frank-d2-page-next').disabled = true;
   $('frank-d2-summary').textContent = '正在读取已手动导入的本机 D2 时点证据…（没有 RPC）';
+  $('frank-d2-updated').textContent = '正在核验';
+  $('frank-d2-rows').innerHTML =
+    '<tr><td colspan="5">正在核验本次本机来源；尚无本次查询结果。</td></tr>';
   const path = '/api/frank-d2-at-slot' +
     (mint === null ? '?page=' + encodeURIComponent(String(page))
       : '?mint=' + encodeURIComponent(mint));
@@ -1774,6 +1777,7 @@ async function frankD2Read({mint=null, page=0}={}) {
     if (epoch !== frankD2Epoch) return;
     $('frank-d2-summary').textContent =
       '本地 D2 读取失败，余额保持未知；不会重试或发起链上采集';
+    $('frank-d2-updated').textContent = '未核实';
     $('frank-d2-rows').innerHTML =
       '<tr><td colspan="5">本次 GET 无法核验数据来源。</td></tr>';
     frankD2Page=0;frankD2TotalPages=0;
@@ -1794,7 +1798,16 @@ $('frank-d2-read').addEventListener('click', () => {
 $('frank-d2-find').addEventListener('click', () => {
   const mint = $('frank-d2-mint').value.trim();
   if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint)) {
+    ++frankD2Epoch;
+    frankD2Page=0; frankD2TotalPages=0;
     $('frank-d2-summary').textContent='请输入完整的 Solana Mint 地址';
+    $('frank-d2-updated').textContent='未核实';
+    $('frank-d2-rows').innerHTML=
+      '<tr><td colspan="5">地址无效，本次没有可展示的经核实余额。</td></tr>';
+    $('frank-d2-page-prev').disabled=true;
+    $('frank-d2-page-next').disabled=true;
+    $('frank-d2-read').disabled=false;
+    $('frank-d2-find').disabled=false;
     return;
   }
   void frankD2Read({mint});
