@@ -1194,7 +1194,7 @@ const clusterMetricLabel = {
   DEV_LINKED_CLUSTER_PCT:'Dev 关联集群',
   CLUSTER_ADJUSTED_TOP10_PCT:'集群调整后 Top10',
   UNRESOLVED_MATERIAL_HOLDER_PCT:'重大未确认持仓',
-  KNOWN_EX_LP_TOP10_PCT:'已识别池/Vault 排除后 Top10',
+  KNOWN_EX_LP_TOP10_PCT:'已解析样本排除池/Vault 后 Owner Top10',
   KNOWN_EX_SPECIAL_TOP10_PCT:'已知标签下排除特殊地址 Top10',
   KNOWN_CLUSTER_ADJUSTED_TOP10_PCT:'已知证据下集群调整 Top10',
 };
@@ -1579,7 +1579,8 @@ function renderClusterReport(report) {
   const coverage = report.coverage || {};
   const metrics = report.metrics || {};
   const mint = report.mint || '';
-  const strictComplete = coverage.special_normalization_complete === true;
+  const strictComplete = coverage.special_normalization_complete === true &&
+    coverage.eligible_owner_rank_complete === true && coverage.snapshot_consistent === true;
   const ctrl = report.probable_control_clusters || [];
   const exec = report.probable_execution_clusters || [];
   const rel = report.confirmed_relation_groups || [];
@@ -1706,7 +1707,7 @@ function renderClusterReport(report) {
   ];
   const renderConcentration = key =>
     '<div class="cluster-metric"><span>' + esc(clusterMetricLabel[key] || key) + '</span><strong>' +
-    clusterMetricValue(metrics[key]) + '</strong></div>';
+    clusterMetricValue(!strictComplete && ['EX_LP_TOP10_PCT','EX_SPECIAL_TOP10_PCT','DEV_LINKED_CLUSTER_PCT','CLUSTER_ADJUSTED_TOP10_PCT'].includes(key) ? 'UNRESOLVED' : metrics[key]) + '</strong></div>';
   $('cluster-metrics').innerHTML = primary.map(renderConcentration).join('') +
     '<details class="cluster-extra-metrics"><summary>查看其余集中度指标</summary><div class="cluster-metrics-extra">' +
     extra.map(renderConcentration).join('') + '</div></details>';
@@ -1719,7 +1720,19 @@ function renderClusterReport(report) {
 
   const rpcFailures=Object.values(coverage.rpc_endpoint_failures || {}).reduce((a,b)=>a+Number(b||0),0);
   const warnings = [];
-  if (!strictComplete) warnings.push('特殊地址身份归一化尚未完成，严格 EX_* / cluster-adjusted 指标会保持“未确认”；“已识别 LP 后 Top10”仍可作为部分事实查看。');
+  if (coverage.special_normalization_complete !== true) warnings.push('特殊地址身份归一化尚未完成。');
+  if (coverage.eligible_owner_rank_complete !== true) warnings.push('完整持有人排名尚未核实；已解析样本排除池/Vault 后 Owner Top10 仅代表样本，不能视为全局精确值。');
+  if (coverage.snapshot_consistent !== true) warnings.push('链上供给与账户余额尚未核对到同一 slot，严格集中度保持未确认。');
+  const gapLabels = {
+    NO_RESOLVED_HOLDERS:'没有已解析持有人', SUPPLY_UNAVAILABLE:'代币供给尚未核实',
+    TOP_ACCOUNT_RESOLUTION_GAPS:'部分 Top20 账户尚未解析',
+    OWNER_HISTORY_NOT_SCANNED:'部分钱包历史尚未扫描',
+    MULTIPLE_TOKEN_ACCOUNTS_PER_OWNER:'同一钱包存在多个代币账户，当前历史采样未覆盖全部账户',
+    TRANSACTION_READ_GAPS:'历史交易存在读取缺口',
+  };
+  const gaps = Array.isArray(coverage.gaps) ? coverage.gaps : [];
+  const gapMessages = Object.keys(gapLabels).filter(key => gaps.includes(key)).map(key => gapLabels[key]);
+  if (gapMessages.length) warnings.push('尚缺证据：' + gapMessages.join('；') + '。');
   if (unresolvedEdges.length) warnings.push('存在 ' + unresolvedEdges.length + ' 条未确认共同 funder/signer/归集关系，未升级为共同控制。');
   if (errors.length) warnings.push('有 ' + errors.length + ' 笔历史交易读取/解析失败，覆盖率不是 100%。');
   if (rpcFailures) warnings.push('免费 RPC 共出现 ' + rpcFailures + ' 次失败/限流，系统已尝试自动降速或切换备用节点。');

@@ -574,3 +574,34 @@ for (const config of observedPanelConfigs) {
     assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
   });
 }
+
+
+test('CA legacy normalization flag cannot expose exact metrics without ranks and slots',()=>{
+  const h=harness();
+  h.context.renderClusterReport({...fixture,market:{...fixture.market,status:'OK'},coverage:{special_normalization_complete:true},metrics:{EX_LP_TOP10_PCT:'98.7654',DEV_LINKED_CLUSTER_PCT:'87.6543',KNOWN_EX_LP_TOP10_PCT:'12.34'}});
+  const metrics=h.element('cluster-metrics').innerHTML;
+  assert.ok(!metrics.includes('98.7654'));
+  assert.ok(!metrics.includes('87.6543'));
+  assert.match(metrics,/已解析样本/);
+  assert.match(metrics,/12.34/);
+  assert.match(h.element('cluster-coverage').innerHTML,/完整持有人排名/);
+  assert.match(h.element('cluster-coverage').innerHTML,/同一 slot/);
+});
+
+test('CA exact concentration remains available with verified labels ranks and slots',()=>{
+  const h=harness();
+  h.context.renderClusterReport({...fixture,coverage:{special_normalization_complete:true,eligible_owner_rank_complete:true,snapshot_consistent:true},metrics:{EX_LP_TOP10_PCT:'42.1234',DEV_LINKED_CLUSTER_PCT:'12.1234'}});
+  assert.match(h.element('cluster-metrics').innerHTML,/42.1234/);
+  assert.match(h.element('cluster-metrics').innerHTML,/12.1234/);
+});
+
+test('CA coverage shows specific bounded gaps without echoing untrusted codes',()=>{
+  const h=harness();
+  h.context.renderClusterReport({...fixture,coverage:{...fixture.coverage,gaps:['OWNER_HISTORY_NOT_SCANNED','TOP_ACCOUNT_RESOLUTION_GAPS','MULTIPLE_TOKEN_ACCOUNTS_PER_OWNER','TRANSACTION_READ_GAPS','http://private.example/SECRET']}});
+  const coverage=h.element('cluster-coverage').innerHTML;
+  assert.match(coverage,/部分钱包历史尚未扫描/);
+  assert.match(coverage,/部分 Top20 账户尚未解析/);
+  assert.match(coverage,/同一钱包存在多个代币账户/);
+  assert.match(coverage,/历史交易存在读取缺口/);
+  assert.ok(!coverage.includes('SECRET'));
+});
