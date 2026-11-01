@@ -391,3 +391,23 @@ test('editing CA during historical GET still exposes the paused pending task',as
   assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
 });
 
+
+for(const action of ['history-invalid-ca','submit-invalid-ca','submit-invalid-mode']){
+  test(action+' hides prior report/preview without a request or losing pending identity',async()=>{
+    const h=harness();
+    setPending(h);
+    h.context.renderClusterReport({...fixture,ca_job_id:jobId});
+    h.element('cluster-preview').hidden=false;
+    assert.equal(h.element('cluster-result').hidden,false);
+    const pending=h.store.get(pendingKey),requests=h.requests.length;
+    h.element('cluster-mint').value=action==='submit-invalid-mode'?mint:'bad CA';
+    h.element('cluster-preset').value=action==='submit-invalid-mode'?'unsupported':'quick';
+    if(action==='history-invalid-ca')await h.element('cluster-read-cached').listeners.get('click')();
+    else await h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
+    assert.equal(h.element('cluster-result').hidden,true);
+    assert.equal(h.element('cluster-preview').hidden,true);
+    assert.equal(h.store.get(pendingKey),pending);
+    assert.equal(h.requests.length,requests);
+    assert.match(h.element('cluster-status').innerHTML,/请输入完整|请选择有效/);
+  });
+}

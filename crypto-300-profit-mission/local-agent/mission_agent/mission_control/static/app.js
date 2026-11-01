@@ -2023,8 +2023,11 @@ async function pollClusterJob(jobId, failures=0) {
 async function clusterLoadHistoricalCache() {
   if (clusterSubmitting) return;
   const mint=$('cluster-mint').value.trim() || clusterActiveJob?.mint;
-  if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint || ''))
+  if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint || '')) {
+    $('cluster-result').hidden=true;
+    $('cluster-preview').hidden=true;
     return clusterStatus('error','请输入完整的 Solana CA');
+  }
   clusterPollVersion += 1;
   clearTimeout(clusterPollTimer);
   const version=clusterPollVersion;
@@ -2118,10 +2121,14 @@ $('cluster-form').addEventListener('submit', async (event) => {
   const mint = $('cluster-mint').value.trim();
   const preset = $('cluster-preset').value;
   if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint)) {
+    $('cluster-result').hidden=true;
+    $('cluster-preview').hidden=true;
     clusterStatus('error','请输入完整的 Solana CA','输入无效，未提交查询；原任务仍可恢复');
     return;
   }
   if (!['quick','standard','deep'].includes(preset)) {
+    $('cluster-result').hidden=true;
+    $('cluster-preview').hidden=true;
     clusterStatus('error','请选择有效的查询模式','未提交查询');
     return;
   }
