@@ -73,7 +73,7 @@ def test_priority_panel_states_are_explanatory_not_executable():
     assert "function renderCandidates(rows)" in js
     assert "function renderTrades(rows)" in js
     assert "function renderFrankWatchlist(payload)" in js
-    assert "当前没有需要跟踪的 Frank 候选" in js
+    assert "当前没有已核实的近期来源信号" in js
 
 
 def test_ca_research_form_and_history_sections_not_removed():
@@ -85,11 +85,12 @@ def test_ca_research_form_and_history_sections_not_removed():
     assert "数据来源与覆盖范围" in markup
     assert "Frank 最近买卖" in markup
     assert "Frank 持续观察池" in markup
-    assert "当前跟单机会" in markup
+    assert "Frank 近期来源信号（只读）" in markup
+    assert "f01-history" in page.identifiers
     assert "cluster-form" in page.identifiers
 
 
-def test_nonactionable_sell_candidate_marks_model_and_historical_payment():
+def test_nonactionable_sell_moves_to_history_with_model_and_historical_payment():
     import subprocess
     js = (STATIC / "app.js").read_text(encoding="utf-8")
     assert "MULTIPLE:'多次强加仓（本轮历史模型记录）'" in js
@@ -102,7 +103,8 @@ const extract=(a,b)=> {
   assert(i>=0 && j>i,'source function missing');
   return js.slice(i,j);
 };
-const elements={candidates:{innerHTML:''}};
+const elements={candidates:{innerHTML:''},'f01-history-cards':{innerHTML:''},
+  'f01-history-count':{textContent:''}};
 const ctx={
   '$':id=>elements[id],
   esc:x=>String(x??''),
@@ -115,6 +117,7 @@ const ctx={
   age:()=> '5分钟前',
   reasonFor:()=> 'Frank 最新动作是卖出',
   tokenIdentity:()=> 'CA',
+  copyButton:()=> '',
   metric:(label,value)=>'<p>'+label+': '+value+'</p>',
   n:x=>String(x),
   money:x=>String(x),
@@ -125,21 +128,25 @@ const ctx={
 vm.createContext(ctx);
 vm.runInContext(extract('function frankQuote(x) {','function reasonFor(x) {'),ctx);
 vm.runInContext(extract('function renderCandidates(rows) {','function withinHours('),ctx);
-ctx.renderCandidates([{
+ctx.renderCandidates([]);
+ctx.renderF01History([{
   mint:'mint-test',pattern:'MULTIPLE',decision:'NO_BUY',
   position_state:'INVENTORY_UNDETERMINED',latest_side:'SELL',
   latest_at:1700000000, latest_buy_at:1699999000,
   latest_buy_original_quote_asset:'USDC',latest_buy_original_quote_quantity:'15000',
   buy_count:3,sell_count:1,metrics:{},decision_quote:{}
 }]);
-const html=elements.candidates.innerHTML;
-assert(html.includes('当前跟单结论：“不跟”'));
+const html=elements['f01-history-cards'].innerHTML;
+assert(!elements.candidates.innerHTML.includes('mint-test'));
+assert(elements.candidates.innerHTML.includes('当前没有已核实的近期来源信号'));
+assert(html.includes('历史模型判断：不跟'));
 assert(html.includes('Frank模型仓位：仓位不明'));
-assert(html.includes('模式与买入金额是历史记录'));
+assert(html.includes('历史记录，非当前链上余额'));
 assert(html.includes('Frank 最近一次买入支付（历史）'));
 assert(html.includes('15000 USDC'));
 assert(html.includes('最近动作：卖出'));
 assert(!html.includes('当前跟单结论：“可跟”'));
+assert(!html.includes('近期来源信号（仅观察）'));
 """
     subprocess.run(["node", "-e", script, str(STATIC / "app.js")],
                    check=True, capture_output=True, text=True, timeout=10)

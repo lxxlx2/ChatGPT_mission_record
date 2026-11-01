@@ -711,6 +711,7 @@ function renderF01History(rows) {
     </div>
     <div class="ended-ca"><code>${esc(x.mint || '未知')}</code>${copyButton(x.mint,'复制 CA')}</div>
     <div class="ended-note">历史模型判断：${esc(translated(decisionLabel,x.decision,'未评估'))}；历史说明（不代表当前）：${esc(reasonFor(x))} 本行不可当作当前跟单资格。</div>
+    <div class="ended-note">Frank模型仓位：${esc(translated(stateLabel,x.position_state,'未知'))}（历史记录，非当前链上余额） · Frank 最近一次买入支付（历史）：${frankQuote(x)}</div>
   </div>`).join('') || '<div class="empty">本次没有历史候选；钱包活动账本仍独立可查。</div>';
   $('f01-history-count').textContent = rows.length;
 }
