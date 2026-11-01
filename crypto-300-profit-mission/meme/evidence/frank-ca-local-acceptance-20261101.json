@@ -1,0 +1,213 @@
+{
+  "schema": 1,
+  "observed_at_utc": "2026-11-01T12:16:46.509557+00:00",
+  "verdict": {
+    "bounded_ca_maintenance": "PASS",
+    "whole_prior_plan": "PARTIAL",
+    "investment": "INVEST_NO_GO",
+    "trading": "TRADE_NO_GO"
+  },
+  "source": {
+    "repository": "lxxlx2/ChatGPT_mission_record",
+    "pr": 220,
+    "head": "15aa995629c503fb9cc4278c18d7957672c05499",
+    "git_parent": "c18fa276d630b2bf6386f5e742ba786decd7e8e0",
+    "parent_git_parent": "348e5e66789d8447480b5149f3b172b691ddaaba",
+    "pr_base": "4fdf2238a4db2347975689913e49142b760dc091",
+    "prior_runtime_before_parent": "dd17c9dcc057c79f4984029fff188d88b9b9d45e",
+    "latest_main_rules_checked": "f1f848d4e11f26239c0adadf07b1c20256d6e402",
+    "rules_delta_since_a651": "none",
+    "changed_files_from_parent": [
+      "mission_agent/mission_control/static/app.js",
+      "tests/test_frank_ca_report_render.mjs"
+    ],
+    "diff_insertions": 28,
+    "diff_deletions": 1,
+    "independent_review": "waived_by_user; not claimed"
+  },
+  "defect": {
+    "actual_chrome_parent": "valid historical report -> invalid CA -> read history showed input error with old report still visible",
+    "red": {
+      "passed": 25,
+      "failed": 3
+    },
+    "fix": "hide old result and preview for invalid history CA, submit CA and submit mode; preserve pending identity; zero added requests",
+    "green_render": {
+      "passed": 28,
+      "failed": 0
+    }
+  },
+  "tests": {
+    "environment": "macOS local Python 3.14.7 / pytest 8.3.5; external-network-denying frank_offline_guard",
+    "python_command": "PYTHONPATH=<private-offline-guard-dir>:. <isolated-venv>/bin/python -B -m pytest -q -p no:cacheprovider -p frank_offline_guard --basetemp=<unique-private-temp> tests",
+    "python_result": {
+      "passed": 1587,
+      "skipped": 3,
+      "warnings": 14,
+      "seconds": 93.74,
+      "skip_reason": "unrelated Monster tests require unavailable numpy"
+    },
+    "node_command": "node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_report_render.mjs tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_d2_ingress_ui.mjs tests/test_frank_f01_source_only.cjs tests/test_frank_f01_failure_state.cjs",
+    "node_postcommit": {
+      "passed": 81,
+      "failed": 0
+    },
+    "syntax_command": "node --check mission_agent/mission_control/static/app.js",
+    "syntax": "PASS",
+    "initial_test_invocation_correction": "Two guessed F01 .mjs filenames did not exist; reran exact tracked .cjs tests with all six groups, 81 PASS. This invocation error is not counted as product failure.",
+    "logs": {
+      "ca-invalid-view-red.txt": {
+        "sha256": "94f5151cdc09c99b3b95bd6d779ad5b25befd344c1ddfb055a5cf218c1172ceb"
+      },
+      "ca-invalid-view-green.txt": {
+        "sha256": "128e8a28497565e88742b768cc5c0cd0ad5360b783ecc414f1b3260903f536a8"
+      },
+      "ca-invalid-view-full.txt": {
+        "sha256": "ba49ae30d59dc0c95be8e4c772b1d9eed607fb1fb46ee848124363747651a0ea"
+      },
+      "ca-invalid-view-node-post.txt": {
+        "sha256": "1b68c3cff431c06080c197deae5f18e171bbd000d15519c5956419f15789e8c0"
+      }
+    }
+  },
+  "ci": {
+    "parent_head": "c18fa276d630b2bf6386f5e742ba786decd7e8e0",
+    "parent_run": 41296205375,
+    "parent_conclusion": "success",
+    "child_head": "15aa995629c503fb9cc4278c18d7957672c05499",
+    "child_run": 41305576201,
+    "child_status": "completed",
+    "ci_is_not_mac_acceptance": true,
+    "child_conclusion": "success",
+    "metadata_read_back": true,
+    "child_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41305576201"
+  },
+  "mac_chrome_synthetic_fixture": {
+    "source_sha": "c18fa276d630b2bf6386f5e742ba786decd7e8e0",
+    "browser": "Google Chrome via CUA",
+    "synthetic_analyzer": true,
+    "real_rpc": 0,
+    "production_requests": 0,
+    "real_ca_posts": 0,
+    "synthetic_fixture_posts": 3,
+    "checks": {
+      "quick_A_saved": true,
+      "standard_B_same_mint_saved": true,
+      "A_B_distinct_ids": true,
+      "empty_memory_exact_A_recovery": true,
+      "automatic_latest_cache_labelled_history_unverified": true,
+      "cross_ca_failed_get_hides_old_report": true,
+      "deep_synthetic_worker_error_no_phantom_done": true,
+      "completed_shortcuts_stay_two_after_error": true,
+      "invalid_ca_explained_before_submit": true
+    },
+    "at": "2026-11-01T12:07:01.984711+00:00",
+    "fixture_cleanup": {
+      "old_and_new_ports_released": {
+        "49184": true,
+        "60802": true
+      },
+      "fixture_process_exit_code": 0,
+      "temporary_fixture_tabs_closed": true,
+      "production_tab_kept_open": true
+    }
+  },
+  "mac_actual_dashboard": {
+    "status": "PASS",
+    "observed_at": "2026-11-01T12:15:26.292686+00:00",
+    "source_sha": "15aa995629c503fb9cc4278c18d7957672c05499",
+    "old_dashboard_pid": 5420,
+    "dashboard_pid": 11137,
+    "scanner_pid_unchanged": true,
+    "scanner_pid": 3402,
+    "scanner_code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "scanner_status": "LIVE",
+    "source_drift": false,
+    "control_health_status": "STALE",
+    "source_recent_count": 0,
+    "history_count": 7,
+    "eligible_count": 0,
+    "current_balance_verified": false,
+    "html_js_match_pinned_source": true,
+    "d1_http": 200,
+    "d2_http": 200,
+    "d2_source_observed_at": "2026-11-01T01:26:32.578080+00:00",
+    "preserved_byte_hashes": {
+      "control_db": true,
+      "control_health": true,
+      "d2_source": true,
+      "plist": true
+    },
+    "old_backup_source_files": 455,
+    "old_backup_import_preflight": "PASS",
+    "loop_remains_unloaded": true,
+    "rpc_or_ca_post_calls_by_release": 0,
+    "notification_send_calls": 0,
+    "rollback_exercised": false,
+    "prior_running_sha": "c18fa276d630b2bf6386f5e742ba786decd7e8e0",
+    "git_parent_sha": "c18fa276d630b2bf6386f5e742ba786decd7e8e0"
+  },
+  "mac_actual_chrome": {
+    "origin": "http://127.0.0.1:8766/#cluster",
+    "invalid_input_result_hidden": true,
+    "invalid_input_preview_hidden": true,
+    "recovered_valid_history_visible": true,
+    "history_label": "data time 2026-10-22; incomplete coverage; original-task association unverified",
+    "page_kept_open": true,
+    "real_ca_post": 0,
+    "screenshots_sha256": {
+      "frank-ca-invalid-fixed.jpg": "3244242930c8a8d947189743f3b789b1bea92449dd7d82a1496bd5516f975ebc",
+      "frank-ca-final-live.jpg": "909593ef643d70b4469ea6cd63e045781e55153d31749a67525b5feb18a5e679"
+    }
+  },
+  "preservation": {
+    "legacy_ca_report_files": 24,
+    "legacy_hashes_unchanged": true,
+    "legacy_jobs_index_still_absent": true,
+    "no_report_job_id_backfill": true,
+    "control_db_health_d2_plist_hashes_unchanged": true,
+    "old_backup_files": 455,
+    "old_backup_import_pass": true,
+    "rollback_needed": false
+  },
+  "scanner_readonly_snapshot": {
+    "at_approx_bkk": "2026-11-01 19:19",
+    "code_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "pr244_head": "438bbe20899108a858a513648ab8c8c05b11e05e",
+    "pid": 3402,
+    "status": "LIVE",
+    "consecutive_errors": 0,
+    "source_drift": false,
+    "signatures": 5979,
+    "seen": 5979,
+    "signals": 7,
+    "outbox": 9,
+    "gmail_delivery": 2,
+    "email_content": 2,
+    "raw_delta_verified_through_earlier_snapshot": 5959,
+    "later_20_rows_not_individually_replayed_this_phase": true
+  },
+  "remaining": [
+    "Original Issue165 failed-job identity and original connection trigger unresolved; same-Mint legacy report is not proof.",
+    "No real CA scan or real-chain budget/completeness acceptance in this phase.",
+    "No new natural recognized BUY or actual first-observation/new-notification sample.",
+    "Root public-key anchor and valid user-held-key signed policy artifacts unavailable; MC Loop remains unloaded.",
+    "P0/P1 already closed INVEST_NO_GO; P2/P3, multiple people and PnL expansion frozen."
+  ],
+  "scope": {
+    "real_rpc_this_ca_phase": 0,
+    "real_ca_posts": 0,
+    "synthetic_fixture_posts": 3,
+    "agent_notification_sends": 0,
+    "scanner_restarts": 0,
+    "new_services_or_timers_or_sources": 0,
+    "merges": 0,
+    "trades_or_signatures": 0,
+    "production_trading": "NO_GO"
+  },
+  "public_redaction_scan": {
+    "status": "PASS",
+    "secret_echoes": 0,
+    "private_path_echoes": false
+  }
+}
