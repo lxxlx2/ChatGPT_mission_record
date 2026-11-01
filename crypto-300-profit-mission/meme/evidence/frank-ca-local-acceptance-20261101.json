@@ -1146,5 +1146,84 @@
       "investment": "INVEST_NO_GO",
       "trading": "TRADE_NO_GO"
     }
+  },
+  "single_query_followup_20261102": {
+    "observed_at_utc": "2026-11-01T20:39:19.982Z",
+    "authority": "Same current user request to continue manual CA mainline, allowing local debugging/isolated testing and waiving independent review.",
+    "source": {
+      "baseline": "91db349f1764e22a3fd9de98ec4ab557741bbde9",
+      "head": "b3319bece6e327de2dbc3a9dfe4bafb779597680",
+      "reference_existing_pr": 46,
+      "reference_sha": "e2fdb48e1e7d98a3f39d3153997b3b76f4d413ae",
+      "reference_status": "Referenced existing single-entry design; did not merge the historical PR",
+      "all_eight_final_files_exact_readback": true
+    },
+    "behavior": "One visible CA input/query action; no quick/standard/deep selector or mode listener. Fixed existing standard progressive plan remains an internal detail. Existing job identity recovery remains compatible with previously saved modes. Two-column desktop form; mobile stack retained.",
+    "internal_plan": {
+      "preset": "standard",
+      "max_wire_attempts": 1200,
+      "max_elapsed_seconds": 1800,
+      "configured_per_preset_limits_changed": false,
+      "previous_UI_default": "quick",
+      "previous_UI_default_max_wire_attempts": 300,
+      "previous_UI_default_max_elapsed_seconds": 600,
+      "note": "UI default now uses existing standard instead of quick; this does change the potential per-click default ceiling. No real scan was executed in this phase.",
+      "real_plan_executions_this_phase": 0
+    },
+    "tests": {
+      "local_integrated_passed": 118,
+      "local_frontend_passed": 103,
+      "local_frontend_failed": 0,
+      "syntax": "PASS",
+      "single_entry_baseline_frontend_report_passed": 48,
+      "single_entry_baseline_frontend_report_failed": 2,
+      "ci": {
+        "head": "b3319bece6e327de2dbc3a9dfe4bafb779597680",
+        "merge_ref_sha_prefix": "a1f115679",
+        "run": 41347750403,
+        "job": 124971115986,
+        "status": "completed",
+        "conclusion": "success",
+        "metadata_and_log_readback": true,
+        "python_passed": 1603,
+        "python_skipped": 4,
+        "frontend_passed": 103,
+        "frontend_failed": 0,
+        "browser_checks": 23,
+        "page_errors": 0,
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "production_requests": 0,
+        "real_ca_posts": 0,
+        "cleanup_verified": true,
+        "scope": "CI Chromium + real HTTP Handler + synthetic analyzer; one-mode DOM absence and bounded internal standard submission checked, plus existing identity/recovery/failure/observation flows. Not actual Mac candidate acceptance.",
+        "skip_reasons": [
+          "3 unrelated Monster suites missing numpy",
+          "/tmp symlink case inapplicable on Linux"
+        ]
+      }
+    },
+    "evidence_hashes": {
+      "mainline-single-red.txt": "2741f4f98c868939cd5a1c288c48903780d7ccb95e79a1fade58c2c7134c20de",
+      "mainline-single-green.txt": "c560064d219d13e752a2d35ba62d3ff9d8628fe63eaa39e00c3797de937e3d18",
+      "mainline-single-integrated.txt": "8308fc10f9291550865449539fd84d252f5d8ae47807fc13cfbe02c808da5c58"
+    },
+    "limits": {
+      "coverage_governed_complete_analysis": "NOT_COMPLETED",
+      "formal_PARTIAL_INCOMPLETE_EVIDENCE_report_contract": "NOT_COMPLETED",
+      "complete_holder_ranks_and_history": "NOT_COMPLETED",
+      "external_narrative_and_independent_parity": "NOT_COMPLETED",
+      "mac_deployment": false,
+      "mac_candidate_acceptance": false,
+      "latest_prior_installation_receipt": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "new_real_rpc": 0,
+      "new_real_ca_posts": 0,
+      "notification_sends": 0,
+      "mc_loop_starts": 0,
+      "scanner_restarts": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "independent_review": "WAIVED_NOT_PERFORMED"
+    }
   }
 }

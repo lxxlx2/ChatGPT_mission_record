@@ -1,5 +1,5 @@
 # Frank STATUS（唯一当前决策状态入口）
-更新时间：2026-11-02 03:34 Asia/Bangkok
+更新时间：2026-11-02 03:39 Asia/Bangkok
 更新者：Codex（用户继续授权本地调试、隔离测试与既有Dashboard维护；独立review豁免；INVEST_NO_GO / TRADE_NO_GO保持）
 
 ## 北极星答案（1 行）
@@ -16,7 +16,7 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 **阶段管理已结束，保留 Frank 只读钱包观察工具的既有安全维护，不扩张研发或研究。** 新的跟单盈利研究必须经用户另行明确授权；P2/P3 未启动。
 
 ## 正在进行（最多 3 项）
-- **无正在执行的P0/P1盈利研究任务；手动CA主线按当前用户继续指令推进准确性修复**。原PR220最新候选[`91db349f1764e22a3fd9de98ec4ab557741bbde9`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/91db349f1764e22a3fd9de98ec4ab557741bbde9)已修复Owner聚合/样本排名、错误布尔归一化、原始Top10被解析缺失缩小、自适应扫描状态与slot/覆盖前提；页面显示具体缺口并拒绝旧报告的无依据严格指标。4文件增量，最终本地分析器43、CA/服务/页面联调118、前端102通过；[最终固定CI run51](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41347189821)实际1603 Python通过/4跳过、102前端及22隔离Chromium场景通过。最后已验收Mac源码仍为f690，本轮未部署新候选。完整分层回执见既有JSON的manual_ca_accuracy_followup_20261102字段。
+- **无正在执行的P0/P1盈利研究任务；手动CA主线按当前用户继续指令推进准确性修复**。原PR220最新候选[`b3319bece6e327de2dbc3a9dfe4bafb779597680`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/b3319bece6e327de2dbc3a9dfe4bafb779597680)已修复Owner聚合/样本排名、错误布尔归一化、原始Top10被解析缺失缩小、自适应扫描状态与slot/覆盖前提；页面显示具体缺口并拒绝旧报告的无依据严格指标。已进一步整合原PR46的单一查询入口，移除三档选择；内部仍为既有standard上限1200请求/1800秒，不代表完整尽调。共8文件（4运行/4原有测试），本地分析器43、CA/服务/页面联调118、前端103通过；[最终固定CI run55](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41347750403)实际1603 Python通过/4跳过、103前端及23隔离Chromium场景通过。最后已验收Mac源码仍为f690，本轮未部署新候选。完整分层回执见既有JSON的manual_ca_accuracy_followup_20261102及single_query_followup_20261102字段。
 - 既有真实CA job `2306599a664d4308ad9b0cf3706c07a3`（11月1日22:10报告，本轮未创建）经GET和磁盘确认报告/任务/marker/摘要一致；私有副本空内存恢复及4项损坏拒绝PASS。Dashboard源码切换后实际GET返回DONE/restored_from_saved_report=true，Chrome“读取选中报告”显示任务ID与CA已核对；无效CA清理与恢复PASS，标签保留。当前28份报告文件哈希保留；控制库、D2、旧心跳及plist不变。D2仍为11月1日08:26的4898账户/Mint快照，F01近期0/历史7/eligible0，不是实时余额或可执行资格。
 - Scanner固定1f2c6afc28b9988eaacdc896562ff9a71b78f801、PID3402保持LIVE/0连续错误/无漂移；00:07只读快照6006签名/seen、RAW_PENDING/未处理0，信号7/outbox9/Gmail2。逐笔重放结论仍只覆盖此前发布后98条（截至5979），后来27条未在本阶段单独重放，不扩展旧结论。
 
@@ -27,7 +27,7 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 | 原目标 | 本轮实际状态 |
 |---|---|
 | 账户与Owner、样本与全局Top10、快照slot | 部分实现：修复口径与错误完整性判断；未新增全量排名源或自动同slot重采 |
-| 单一查询及PARTIAL/INCOMPLETE_EVIDENCE结论 | 尚未完成，现有界面仍有快速/标准/深度 |
+| 单一查询及PARTIAL/INCOMPLETE_EVIDENCE结论 | 单一入口已在候选中实现并移除三档选择；正式完整性状态契约仍未完成，不能将任务DONE写为完整尽调 |
 | 完整历史/资金分页、外部叙事及多来源对照 | 尚未完成；不能由本轮归一化/恢复测试替代 |
 | 新候选实际Mac与代表CA验收 | 尚未执行，本轮Chrome仅GET读取既有2306599a任务并保留页面 |
 
@@ -56,4 +56,4 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 
 2026-11-02本机后续：上述f690最新源码已按用户再次明确的本地维护授权完成本机离线与Chrome验收和既有Dashboard切换，取代上方历史段落的“未运行本地调试或部署”状态；本轮真实RPC/CA POST0，既有真实job仅GET/读盘/私有副本验证，不能算本轮发起的新扫描。
 
-2026-11-02 03:34 手动CA后续：上述f690仍是最后已验收安装版，新候选91db349只在原PR220提交及隔离验证；本轮实际Chrome按原任务入口GET读取通过。自然新BUY与用户签名条件仍未具备，旧10月失败任务身份仍未证明，真实RPC/CA POST/通知/交易/部署/新增监控均0。此前历史段落中的本机安装计数与测试数不自动覆盖本轮候选。
+2026-11-02 03:39 手动CA后续：上述f690仍是最后已验收安装版，新候选b3319be只在原PR220提交及隔离验证；本轮实际Chrome按原任务入口GET读取通过。自然新BUY与用户签名条件仍未具备，旧10月失败任务身份仍未证明，真实RPC/CA POST/通知/交易/部署/新增监控均0。此前历史段落中的本机安装计数与测试数不自动覆盖本轮候选。
