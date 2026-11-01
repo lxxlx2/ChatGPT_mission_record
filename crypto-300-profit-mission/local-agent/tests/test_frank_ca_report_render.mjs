@@ -392,7 +392,7 @@ test('editing CA during historical GET still exposes the paused pending task',as
 });
 
 
-for(const action of ['history-invalid-ca','submit-invalid-ca','submit-invalid-mode']){
+for(const action of ['history-invalid-ca','submit-invalid-ca']){
   test(action+' hides prior report/preview without a request or losing pending identity',async()=>{
     const h=harness();
     setPending(h);
@@ -400,8 +400,7 @@ for(const action of ['history-invalid-ca','submit-invalid-ca','submit-invalid-mo
     h.element('cluster-preview').hidden=false;
     assert.equal(h.element('cluster-result').hidden,false);
     const pending=h.store.get(pendingKey),requests=h.requests.length;
-    h.element('cluster-mint').value=action==='submit-invalid-mode'?mint:'bad CA';
-    h.element('cluster-preset').value=action==='submit-invalid-mode'?'unsupported':'quick';
+    h.element('cluster-mint').value='bad CA';
     if(action==='history-invalid-ca')await h.element('cluster-read-cached').listeners.get('click')();
     else await h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
     assert.equal(h.element('cluster-result').hidden,true);
@@ -604,4 +603,28 @@ test('CA coverage shows specific bounded gaps without echoing untrusted codes',(
   assert.match(coverage,/同一钱包存在多个代币账户/);
   assert.match(coverage,/历史交易存在读取缺口/);
   assert.ok(!coverage.includes('SECRET'));
+});
+
+
+
+test('CA has one visible query entry and no accuracy preset selector',()=>{
+  const html=readFileSync(new URL('../mission_agent/mission_control/static/index.html',import.meta.url),'utf8');
+  assert.doesNotMatch(html,/id="cluster-preset"|title="扫描深度"/);
+  assert.match(html,/统一查询/);
+});
+
+test('CA submit uses fixed bounded standard without reading a mode control',async()=>{
+  let posted;
+  const h=harness({responseFor:async(url,options)=>{
+    if(options.method==='POST'){
+      posted=JSON.parse(options.body);
+      return {ok:false,status:400,json:async()=>({error:'FIXTURE_DENIED'})};
+    }
+    return new Promise(()=>{});
+  }});
+  h.element('cluster-mint').value=mint;
+  h.element('cluster-preset').value='unsupported-stale-dom';
+  await h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
+  assert.deepEqual(posted,{mint,preset:'standard'});
+  assert.equal(h.requests.filter(x=>x.method==='POST').length,1);
 });

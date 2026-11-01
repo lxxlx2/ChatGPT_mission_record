@@ -46,20 +46,23 @@ try {
  await page.locator('#cluster-read-cached').waitFor({state:'visible'});
  await page.waitForFunction(()=>document.getElementById('updated').textContent.includes('更新于'));
  const mint='2'.repeat(32);
- async function submit(name,preset='quick',target=mint){
+ async function submit(name,target=mint){
    await page.locator('#cluster-mint').fill(target);
-   await page.locator('#cluster-preset').selectOption(preset);
    const reply=page.waitForResponse(r=>r.request().method()==='POST'&&r.url()===origin+'/api/cluster-analysis');
    await page.locator('#cluster-submit').click();
    const response=await reply;assert.equal(response.status(),202);
    const job=await response.json();
+   assert.equal(job.preset,'standard');
    if(name) await page.waitForFunction(label=>document.getElementById('cluster-summary').textContent.includes(label)&&!document.getElementById('cluster-submit').disabled,name);
    return job;
  }
+ assert.equal(await page.locator('#cluster-preset').count(),0);
+ assert.match(await page.locator('#cluster-preset-help').innerText(),/统一查询/);
+ check('single query entry removes depth selector and explains bounded incomplete evidence');
  const a=await submit('SYNTHETIC_REPORT_1');
- const b=await submit('SYNTHETIC_REPORT_2','standard');
+ const b=await submit('SYNTHETIC_REPORT_2');
  assert.notEqual(a.job_id,b.job_id);
- check('quick/standard submit -> real worker persistence -> real report render');
+ check('single-mode submits -> distinct real worker persistence -> real report render');
  assert.equal(await page.locator('#cluster-reports option').count(),2);
  assert.match(await page.locator('#cluster-status').innerText(),/覆盖与完整性仍须另行核实/);
  await page.request.get(origin+'/__fixture/reset-memory');
@@ -87,7 +90,7 @@ try {
  const postSeen=new Promise(resolve=>{postArrived=resolve;});
  const postPattern='**/api/cluster-analysis';
  await page.route(postPattern,async route=>{postArrived();await postGate;return route.fallback();});
- const submitting=submit(null,'deep','3'.repeat(32));
+ const submitting=submit(null,'3'.repeat(32));
  await postSeen;
  try {
    assert.equal(await page.locator('#cluster-read-cached').isDisabled(),true);
@@ -127,7 +130,7 @@ try {
  assert.equal(await page.evaluate(()=>sessionStorage.getItem('mission-meme-cluster-pending-v1')),null);
  assert.equal(await page.locator('#cluster-mint').inputValue(),'3'.repeat(32));
  assert.equal(requests.filter(r=>r.method==='POST').length,retryPosts);
- check('deep DONE/report disconnect -> manual GET recovery -> real rendering and pending cleanup');
+ check('unified DONE/report disconnect -> manual GET recovery -> real rendering and pending cleanup');
  await page.unroute('**/api/cluster-latest?*');
  const currentPosts=requests.filter(r=>r.method==='POST').length;
  await page.locator('#cluster-mint').fill('bad CA');await page.locator('#cluster-submit').click();
@@ -149,7 +152,7 @@ try {
  assert.equal(await page.locator('#cluster-mint').inputValue(),missingMint);
  assert.equal(requests.filter(r=>r.method==='POST').length,currentPosts);
  check('missing history for another CA hides the old report without a new POST');
- await submit(null,'quick','4'.repeat(32));
+ await submit(null,'4'.repeat(32));
  await page.waitForFunction(()=>document.getElementById('cluster-status').textContent.includes('分析任务失败'));
  assert.equal(await page.locator('#cluster-result').isVisible(),false);
  check('worker error remains error, no phantom successful report');
@@ -198,7 +201,7 @@ try {
  check('edited input during POST is restored to the acknowledged job CA');
  // Pause a RUNNING task with a slow historical GET, then edit the input.
  // Discarding that stale response must still expose the paused original task.
- const paused=await submit(null,'quick','3'.repeat(32));
+ const paused=await submit(null,'3'.repeat(32));
  await page.waitForFunction(()=>/等待开始分析|正在扫描链上数据/.test(document.getElementById('cluster-status').textContent));
  let releaseHistory,historySeen;
  const historyGate=new Promise(resolve=>{releaseHistory=resolve;});

@@ -206,14 +206,9 @@
           <label for="cluster-mint">Solana CA</label>
           <div class="cluster-search-row">
             <input id="cluster-mint" name="mint" autocomplete="off" spellcheck="false" placeholder="粘贴 token CA" />
-            <select id="cluster-preset" name="preset" title="扫描深度">
-              <option value="quick" selected>快速</option>
-              <option value="standard">标准</option>
-              <option value="deep">深度</option>
-            </select>
             <button id="cluster-submit" class="primary-btn" type="submit">开始查询</button>
           </div>
-          <div class="cluster-preset-help" id="cluster-preset-help">快速模式：先查权限、主池与 Top20 地址；需要深度钱包归因时再切换模式。</div>
+          <div class="cluster-preset-help" id="cluster-preset-help">统一查询：先核对 CA、合约权限和市场，再逐步分析主要持有人及资金关系。查询受现有请求与耗时上限保护；缺失证据会明确列出，任务结束不代表完整尽调。</div>
 
         </form>
       </section>

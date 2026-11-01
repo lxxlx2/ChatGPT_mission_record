@@ -1178,12 +1178,6 @@ setInterval(refreshFrankIntelligence,60000);
 setInterval(refreshFrankActivity,60000);
 
 
-const clusterPresetHelp = {
-  quick:'快速：Top20 全部解析；浅扫前 6 个 owner，每个最多 8 笔目标币历史 + 4 笔 funding。用于快速排雷。',
-  standard:'标准：Top20 全部解析；先浅扫前 6 个 owner（12 + 8），只对出现关系证据、重大未确认角色或高风险标签的钱包自动加深到 30 + 12。',
-  deep:'深度：Top20 owner 全部深扫；每个最多 100 笔目标币历史 + 50 笔 funding。仅用于高价值项目或强烈怀疑分仓/集群时。',
-};
-
 const clusterMetricLabel = {
   RAW_TOP10_PCT:'原始 Top10',
   EX_LP_TOP10_PCT:'排除 LP 后 Top10',
@@ -1338,7 +1332,7 @@ async function loadLatestCluster(mint, silent=false, expectedVersion=clusterPoll
 function setView(name) {
   const view = name === 'cluster' ? 'cluster' : 'signals';
   const heading=$('product-title');
-  if (heading) heading.textContent=view==='cluster' ? 'CA 快速分析' : 'Frank 信号';
+  if (heading) heading.textContent=view==='cluster' ? 'CA 链上研究' : 'Frank 信号';
   document.querySelectorAll('.view-tab').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.view === view);
   });
@@ -1371,14 +1365,6 @@ document.querySelectorAll('.view-tab').forEach(btn => {
 
 window.addEventListener('hashchange', () => setView(window.location.hash.slice(1)));
 setView(window.location.hash.slice(1));
-
-$('cluster-preset').addEventListener('change', (e) => {
-  $('cluster-preset-help').textContent = clusterPresetHelp[e.target.value] || '';
-  const values=['quick','standard','deep'];
-  document.querySelectorAll('.preset-guide>div').forEach((node,index) => {
-    node.classList.toggle('active',values[index]===e.target.value);
-  });
-});
 
 function clusterStatus(kind, title, detail='') {
   const el = $('cluster-status');
@@ -2156,17 +2142,11 @@ $('cluster-form').addEventListener('submit', async (event) => {
   event.preventDefault();
   if (clusterSubmitting) return;
   const mint = $('cluster-mint').value.trim();
-  const preset = $('cluster-preset').value;
+  const preset = 'standard'; // Fixed internal bounded plan; no user accuracy/speed modes.
   if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint)) {
     $('cluster-result').hidden=true;
     $('cluster-preview').hidden=true;
     clusterStatus('error','请输入完整的 Solana CA','输入无效，未提交查询；原任务仍可恢复');
-    return;
-  }
-  if (!['quick','standard','deep'].includes(preset)) {
-    $('cluster-result').hidden=true;
-    $('cluster-preview').hidden=true;
-    clusterStatus('error','请选择有效的查询模式','未提交查询');
     return;
   }
   // Explicit submission retires the old task and the old pending session
