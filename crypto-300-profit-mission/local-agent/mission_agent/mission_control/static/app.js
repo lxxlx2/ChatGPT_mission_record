@@ -1083,8 +1083,8 @@ async function refresh() {
     const history = view?.historical || candidates;
     const newestAge = Number(f01?.newest_indexed_buy_age_seconds);
     const ageLabel = f01?.newest_indexed_buy_age_seconds != null &&
-      Number.isFinite(newestAge) ? `最近已索引 BUY 距链上事件 ${Math.round(newestAge)} 秒；`
-      : '最近已索引 BUY 的事件时间未知；';
+      Number.isFinite(newestAge) ? `买类候选记录的最近链上 BUY 距今 ${Math.round(newestAge)} 秒；`
+      : '买类候选记录的 BUY 事件时间未知；';
     const staleCount = f01ExcludedReasonCount(f01, 'SOURCE_BUY_STALE_OR_UNVERIFIED');
     $('f01-source-status').textContent = view
       ? `近期来源信号 ${recent.length} 条；过期或时间待核 ${staleCount} 条；${ageLabel}当前执行资格 0 条；来源窗口 10 分钟。`
@@ -1145,7 +1145,10 @@ refresh();
 refreshSignedActivity(true);
 refreshFrankIntelligence();
 refreshFrankActivity();
-setInterval(refresh,5000);
+setInterval(() => {
+  frankD2RefreshAge();
+  void refresh();
+},5000);
 setInterval(refreshSignedActivity,60000);
 setInterval(refreshFrankIntelligence,60000);
 setInterval(refreshFrankActivity,60000);
@@ -1681,6 +1684,16 @@ function renderClusterReport(report) {
 let frankD2Epoch = 0;
 let frankD2Page = 0;
 let frankD2TotalPages = 0;
+let frankD2AgeView = null;
+
+function frankD2RefreshAge() {
+  if (!frankD2AgeView) return;
+  const view = frankD2AgeView;
+  const elapsed = (Date.now() - view.observedAtMs) / 1000;
+  const age = Number.isFinite(elapsed) && elapsed >= 0
+    ? Math.floor(elapsed) + ' 秒' : '未知';
+  $('frank-d2-summary').textContent = view.prefix + age + view.suffix;
+}
 
 function frankD2Decimal(raw, decimals) {
   // Exact decimal arithmetic: never convert on-chain base units to JS Number.
@@ -1703,15 +1716,22 @@ function frankD2Paint(payload) {
   const description = payload.lookup_mint
     ? (' · 精确查询 ' + esc(payload.lookup_state || '未知'))
     : (' · 第 ' + (Number(payload.page) + 1) + '/' + payload.total_pages + ' 页');
-  $('frank-d2-summary').textContent = '来源采集时间 ' + observed +
-    ' · 数据年龄 ' + payload.age_seconds_at_response + ' 秒' +
-    ' · ' + (payload.account_count ?? '—') + ' Token 账户 / ' +
+  // Recompute age from the declared UTC capture time using the existing page
+  // refresh. No source reread or extra timer is added.
+  const timestamp = payload.observed_at_utc;
+  frankD2AgeView = {
+    observedAtMs: typeof timestamp === 'string' && /(?:Z|[+-]\d{2}:\d{2})$/.test(timestamp)
+      ? Date.parse(timestamp) : NaN,
+    prefix: '来源采集时间 ' + observed + ' · 数据年龄 ',
+    suffix: ' · ' + (payload.account_count ?? '—') + ' Token 账户 / ' +
     (payload.mint_count ?? '—') + ' Mint' +
     ' · 两个独立 finalized slot，非原子快照' +
     ' · 美元估值及盈亏均未核实' +
     ' · 当前余额不是自动持续核验' +
     (payload.lookup_mint ? ' · ' + (payload.lookup_state || 'UNKNOWN') :
-    ' · 第 ' + (Number(payload.page) + 1) + '/' + payload.total_pages + ' 页');
+    ' · 第 ' + (Number(payload.page) + 1) + '/' + payload.total_pages + ' 页'),
+  };
+  frankD2RefreshAge();
   $('frank-d2-updated').textContent = observed + ' · ' +
     (Array.isArray(payload.program_coverage)
      ? payload.program_coverage.map(p => String(p.slot)).join(' / ') : 'slot 未核实');
@@ -1741,6 +1761,7 @@ function frankD2Paint(payload) {
 
 async function frankD2Read({mint=null, page=0}={}) {
   const epoch = ++frankD2Epoch;
+  frankD2AgeView = null;
   $('frank-d2-read').disabled = true;
   $('frank-d2-find').disabled = true;
   $('frank-d2-page-prev').disabled = true;
@@ -1799,6 +1820,7 @@ $('frank-d2-find').addEventListener('click', () => {
   const mint = $('frank-d2-mint').value.trim();
   if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint)) {
     ++frankD2Epoch;
+    frankD2AgeView = null;
     frankD2Page=0; frankD2TotalPages=0;
     $('frank-d2-summary').textContent='请输入完整的 Solana Mint 地址';
     $('frank-d2-updated').textContent='未核实';

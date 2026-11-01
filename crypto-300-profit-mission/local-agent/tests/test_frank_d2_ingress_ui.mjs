@@ -23,6 +23,8 @@ const doc={status:'BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE',
   account_count:2,slot_min:460482174,slot_max:460482174}],result_count:1};
 function fixture(results=[]){
   const nodes=new Map(),calls=[];
+  let clockMs=Date.parse(doc.observed_at_utc)+3600*1000;
+  class ClockDate extends Date {static now(){return clockMs;}}
   const get=id=>{
     if(!nodes.has(id))nodes.set(id,{value:'',textContent:'',innerHTML:'',disabled:false,
       listeners:{},addEventListener(event,cb){this.listeners[event]=cb;}});
@@ -31,6 +33,7 @@ function fixture(results=[]){
   const ctx={ $:get, walletWatchData:{rows:[{mint,local_model_state:'CLOSED',last_event_side:'SELL'}]},
     esc:x=>String(x).replaceAll('<','&lt;'),short:x=>x.slice(0,8),
     copyButton:()=>'',encodeURIComponent,Number,String,
+    Date:ClockDate,
     fetch:async(path,opts)=>{
       calls.push({path,opts});
       if(opts.method!=='GET')throw Error('unexpected POST');
@@ -42,7 +45,7 @@ function fixture(results=[]){
     }};
   vm.createContext(ctx);
   vm.runInContext(realSource,ctx);
-  return {ctx,el:get,calls};
+  return {ctx,el:get,calls,advance:ms=>{clockMs+=ms;}};
 }
 const task=body=>Promise.resolve(body);
 function deferred(){let resolve;const promise=new Promise(r=>resolve=r);return {promise,resolve};}
@@ -145,4 +148,61 @@ test('invalid input invalidates any older pending result and a later valid read 
   assert.equal(h.el('frank-d2-find').disabled,false);
   await h.ctx.frankD2Read({page:0});
   assert.match(h.el('frank-d2-rows').innerHTML,/12 枚/);
+});
+
+test('D2 source age advances locally without another GET or replacing balance rows',async()=>{
+  const h=fixture([task(doc)]);
+  await h.ctx.frankD2Read({page:0});
+  const rows=h.el('frank-d2-rows').innerHTML;
+  h.advance(12345);
+  h.ctx.frankD2RefreshAge();
+  assert.match(h.el('frank-d2-summary').textContent,/数据年龄 3612 秒/);
+  assert.equal(h.calls.length,1);
+  assert.equal(h.el('frank-d2-rows').innerHTML,rows);
+  assert.match(h.el('frank-d2-updated').textContent,/460482174 \/ 460482176/);
+});
+test('age updates never overwrite an invalid, pending, rejected or failed query state',async()=>{
+  for(const outcome of ['invalid','pending','rejected','failed']){
+    const later=deferred(),h=fixture([task(doc),later.promise]);
+    await h.ctx.frankD2Read({page:0});
+    let pending;
+    if(outcome==='invalid'){
+      h.el('frank-d2-mint').value='invalid';
+      h.el('frank-d2-find').listeners.click();
+    }else{
+      pending=h.ctx.frankD2Read({page:1});
+      if(outcome==='rejected')later.resolve({status:'SOURCE_REJECTED',reason:'BAD_HASH'});
+      if(outcome==='failed')later.resolve(new Error('offline'));
+      if(outcome!=='pending')await pending;
+    }
+    const summary=h.el('frank-d2-summary').textContent;
+    h.advance(60000);h.ctx.frankD2RefreshAge();
+    assert.equal(h.el('frank-d2-summary').textContent,summary,outcome);
+    assert.doesNotMatch(h.el('frank-d2-rows').innerHTML,/12 枚/);
+    if(outcome==='pending'){later.resolve(doc);await pending;}
+  }
+});
+test('missing, naive, invalid or future source time remains unknown rather than becoming zero',async()=>{
+  for(const observed of [null,undefined,false,'garbage','2026-10-23T14:46:32','2099-10-23T14:46:32Z']){
+    const h=fixture([task({...doc,observed_at_utc:observed})]);
+    await h.ctx.frankD2Read({page:0});h.advance(10000);h.ctx.frankD2RefreshAge();
+    assert.match(h.el('frank-d2-summary').textContent,/数据年龄 未知/);
+    assert.equal(h.calls.length,1);
+  }
+});
+test('UTC source time, not an inconsistent cached age field, determines displayed age',async()=>{
+  const h=fixture([task({...doc,age_seconds_at_response:0})]);
+  await h.ctx.frankD2Read({page:0});h.advance(3600000);h.ctx.frankD2RefreshAge();
+  assert.match(h.el('frank-d2-summary').textContent,/数据年龄 7200 秒/);
+  assert.equal(h.calls.length,1);
+});
+test('new exact-Mint response uses its own source time and retains its lookup scope',async()=>{
+  const h=fixture([task(doc),task({...doc,age_seconds_at_response:3700,
+    observed_at_utc:new Date(Date.parse(doc.observed_at_utc)-10000).toISOString(),
+    lookup_mint:mint,lookup_state:'NONZERO_AT_SLOT'})]);
+  await h.ctx.frankD2Read({page:0});h.advance(90000);
+  await h.ctx.frankD2Read({mint});h.advance(5100);h.ctx.frankD2RefreshAge();
+  assert.match(h.el('frank-d2-summary').textContent,/数据年龄 3705 秒/);
+  assert.match(h.el('frank-d2-summary').textContent,/NONZERO_AT_SLOT/);
+  assert.equal(h.calls.length,2);
 });

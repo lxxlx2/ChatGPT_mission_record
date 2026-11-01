@@ -298,3 +298,11 @@ test('same page: older 503 cannot invalidate newer successful signals', async ()
   net.release(); await old;
   assert.match(dom.nodes.candidates.innerHTML, /近期来源信号（仅观察）/);
 });
+
+test('BUY age explicitly describes candidate rows when the trade list contains a newer BUY',async()=>{
+  const normal=okGetImpl(null);
+  const {dom}=await runRefresh(url=>url==='/api/trades'
+    ? okJson([{side:'BUY',block_time:Date.now()/1000-1}]) : normal(url));
+  assert.match(dom.nodes['f01-source-status'].textContent,/买类候选记录.*60 秒/);
+  assert.doesNotMatch(dom.nodes['f01-source-status'].textContent,/最近已索引 BUY/);
+});
