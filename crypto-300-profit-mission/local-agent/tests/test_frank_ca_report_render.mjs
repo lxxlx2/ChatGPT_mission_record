@@ -235,9 +235,9 @@ function setPending(h) {
   h.element('cluster-mint').value=pendingMint;
 }
 function deferred() {
-  let resolve;
-  const promise=new Promise(r=>{resolve=r;});
-  return {promise,resolve};
+  let resolve, reject;
+  const promise=new Promise((yes,no)=>{resolve=yes;reject=no;});
+  return {promise,resolve,reject};
 }
 
 test('reading saved A preserves pending B and resume reads B with its own CA',async()=>{
