@@ -539,6 +539,7 @@ class WalletClusterAnalyzer:
         self.progress_callback=progress_callback
         self.edges=[];self.trades=[];self.funding=[];self.consolidations=[];self.tx_errors=[]
         self.adaptive_deepened_owners=[]
+        self._snapshot_slots={}
 
     def _progress(self,stage,**details):
         if not self.progress_callback:return
@@ -682,15 +683,19 @@ class WalletClusterAnalyzer:
         except (ValueError,TypeError,InvalidOperation):return None
     def _supply(self):
         r=self.rpc.call("getTokenSupply",[self.mint,{"commitment":"finalized"}],ttl=30)
+        self._snapshot_slots["supply"]=(r or {}).get("context",{}).get("slot")
         v=(r or {}).get("value") or {}
         return int(v["amount"]),int(v["decimals"])
     def _top(self):
         r=self.rpc.call("getTokenLargestAccounts",[self.mint,{"commitment":"finalized"}],ttl=30)
+        self._snapshot_slots["largest_accounts"]=(r or {}).get("context",{}).get("slot")
         return (r or {}).get("value") or []
     def _accounts(self,addresses):
         r=self.rpc.call("getMultipleAccounts",[addresses,{"encoding":"jsonParsed","commitment":"finalized"}],ttl=60)
+        self._snapshot_slots.setdefault("account_batches",[]).append((r or {}).get("context",{}).get("slot"))
         return (r or {}).get("value") or []
     def holders(self):
+        self._snapshot_slots={}
         supply,decimals=self._supply();top=self._top()[:20];tas=[x["address"] for x in top]
         raw_top10=top[:10]
         self._raw_top10_snapshot_pct=(
@@ -698,6 +703,7 @@ class WalletClusterAnalyzer:
             if supply>0 and raw_top10 and all(str(x.get("amount","")).isdigit() for x in raw_top10)
             else None
         )
+        self._top_accounts_requested=len(tas)
         infos=self._accounts(tas)
         owners=[];temp=[]
         for row,info in zip(top,infos):
@@ -732,7 +738,9 @@ class WalletClusterAnalyzer:
             try:tx=self.rpc.call("getTransaction",[sig,{"commitment":"finalized","encoding":"jsonParsed","maxSupportedTransactionVersion":1}],ttl=3650*86400)
             except RPCJobBudgetExceeded:raise
             except Exception as exc:self.tx_errors.append({"signature":sig,"error":type(exc).__name__});continue
-            if not tx:continue
+            if not tx:
+                self.tx_errors.append({"signature":sig,"phase":"holder","error":"UNAVAILABLE_ON_PUBLIC_RPC"})
+                continue
             bt=tx.get("blockTime")
             for tr in _native_transfers(tx):
                 if tr["source"] in top_owners and tr["destination"] in top_owners:
@@ -941,6 +949,7 @@ class WalletClusterAnalyzer:
                 self._derive_pair_edges()
         self._progress("FINALIZING",deep_holders_scanned=len(deep),adaptive_deepened=len(self.adaptive_deepened_owners))
 
+        scanned_owners=deep_seen | set(self.adaptive_deepened_owners)
         owners=sorted({h.owner for h in holders});balances=defaultdict(int)
         for h in holders:balances[h.owner]+=h.raw
         relation=UnionFind(owners);control=UnionFind(owners);execution=UnionFind(owners)
@@ -962,7 +971,7 @@ class WalletClusterAnalyzer:
         def acquisition(owner):
             row=firsts.get(owner)
             if not row or not isinstance(row,dict):
-                return {"status":"UNRESOLVED","type":"UNRESOLVED"} if owner in deep_seen else {"status":"NOT_SCANNED","type":"NOT_SCANNED"}
+                return {"status":"UNRESOLVED","type":"UNRESOLVED"} if owner in scanned_owners else {"status":"NOT_SCANNED","type":"NOT_SCANNED"}
             token_qty=None
             if row.get("token_amount_raw") not in {None,""} and row.get("token_decimals") is not None:
                 try:token_qty=str(Decimal(str(row["token_amount_raw"]))/(Decimal(10)**int(row["token_decimals"])))
@@ -1012,8 +1021,12 @@ class WalletClusterAnalyzer:
         raw_top10=sum(h.raw for h in holders[:10])
         nonspecial=[h for h in holders if h.role not in SPECIAL_ROLES]
         ex_lp=[h for h in holders if h.role not in {"LP","AMM_POOL","PROTOCOL_VAULT"}]
-        ex_special_top10=sum(h.raw for h in nonspecial[:10])
-        ex_lp_top10=sum(h.raw for h in ex_lp[:10])
+        def known_owner_top10(rows):
+            amounts=defaultdict(int)
+            for h in rows:amounts[h.owner]+=h.raw
+            return sum(sorted(amounts.values(),reverse=True)[:10])
+        ex_special_top10=known_owner_top10(nonspecial)
+        ex_lp_top10=known_owner_top10(ex_lp)
         dev_owners={h.owner for h in holders if h.role in DEV_ROLES}
         dev_linked_owners=set(dev_owners)
         for group in control.groups():
@@ -1031,22 +1044,51 @@ class WalletClusterAnalyzer:
 
         unresolved_raw=0;classified=set()
         for g in control_groups+relation_groups:classified.update(g["wallets"])
+        unresolved_balances=defaultdict(int)
         for h in nonspecial:
-            pct=Decimal(h.raw)*100/Decimal(supply) if supply else Decimal(0)
-            if pct>=self.material_pct and h.owner not in classified and h.role in {"ORDINARY","UNRESOLVED","PROGRAM_OWNED_UNRESOLVED","TOKEN_ACCOUNT_OWNER_UNRESOLVED"}:
-                unresolved_raw+=h.raw
+            if h.owner not in classified and h.role in {"ORDINARY","UNRESOLVED","PROGRAM_OWNED_UNRESOLVED","TOKEN_ACCOUNT_OWNER_UNRESOLVED"}:
+                unresolved_balances[h.owner]+=h.raw
+        # Materiality belongs to an owner, not one of its token accounts.
+        for raw in unresolved_balances.values():
+            pct=Decimal(raw)*100/Decimal(supply) if supply else Decimal(0)
+            if pct>=self.material_pct:unresolved_raw+=raw
 
         token_cfg=(self.registry.get("tokens") or {}).get(self.mint) or {}
-        normalization_complete=bool(token_cfg.get("normalization_complete",self.registry.get("normalization_complete",False)))
+        normalization_complete=token_cfg.get("normalization_complete",self.registry.get("normalization_complete",False)) is True
+        # LargestAccounts is capped at 20 token accounts. Labels alone cannot
+        # prove the eligible-owner ranks after exclusions. Only a sample that
+        # accounts for the entire supply can close that gap in this collector.
+        holder_rank_complete=(supply>0 and sum(h.raw for h in holders)==supply
+                              and len({h.token_account for h in holders})==len(holders))
+        slots=[self._snapshot_slots.get("supply"),self._snapshot_slots.get("largest_accounts")]
+        slots+=self._snapshot_slots.get("account_batches",[])
+        snapshot_consistent=(len(slots)>=4 and all(type(slot) is int and slot>0 for slot in slots)
+                             and len(set(slots))==1)
+        strict_metrics_available=normalization_complete and holder_rank_complete and snapshot_consistent
+        owners_not_scanned=sorted(set(owners)-scanned_owners)
+        coverage_gaps=[]
+        if not holders:coverage_gaps.append("NO_RESOLVED_HOLDERS")
+        if supply<=0:coverage_gaps.append("SUPPLY_UNAVAILABLE")
+        if len(holders)<getattr(self,"_top_accounts_requested",len(holders)):
+            coverage_gaps.append("TOP_ACCOUNT_RESOLUTION_GAPS")
+        if not normalization_complete:coverage_gaps.append("SPECIAL_NORMALIZATION_UNVERIFIED")
+        if not holder_rank_complete:coverage_gaps.append("ELIGIBLE_OWNER_RANKS_INCOMPLETE")
+        if not snapshot_consistent:coverage_gaps.append("SNAPSHOT_SLOT_UNRECONCILED")
+        if owners_not_scanned:coverage_gaps.append("OWNER_HISTORY_NOT_SCANNED")
+        if len(holders)>len(owners):coverage_gaps.append("MULTIPLE_TOKEN_ACCOUNTS_PER_OWNER")
+        if self.tx_errors:coverage_gaps.append("TRANSACTION_READ_GAPS")
         metrics={
-            "RAW_TOP10_PCT":self._pct(raw_top10,supply),
-            "EX_LP_TOP10_PCT":self._pct(ex_lp_top10,supply) if normalization_complete else "UNRESOLVED",
-            "EX_SPECIAL_TOP10_PCT":self._pct(ex_special_top10,supply) if normalization_complete else "UNRESOLVED",
+            "RAW_TOP10_PCT":(
+                preview_top10_pct if preview_top10_pct is not None else
+                self._pct(raw_top10,supply) if holders and len(holders)==getattr(self,"_top_accounts_requested",len(holders)) else "UNRESOLVED"
+            ),
+            "EX_LP_TOP10_PCT":self._pct(ex_lp_top10,supply) if strict_metrics_available else "UNRESOLVED",
+            "EX_SPECIAL_TOP10_PCT":self._pct(ex_special_top10,supply) if strict_metrics_available else "UNRESOLVED",
             "LARGEST_CONFIRMED_RELATION_GROUP_PCT":relation_groups[0]["supply_pct"] if relation_groups else "0",
             "LARGEST_PROBABLE_CONTROL_CLUSTER_PCT":control_groups[0]["supply_pct"] if control_groups else "0",
             "LARGEST_PROBABLE_EXECUTION_CLUSTER_PCT":execution_groups[0]["supply_pct"] if execution_groups else "0",
-            "DEV_LINKED_CLUSTER_PCT":self._pct(dev_raw,supply) if normalization_complete else "UNRESOLVED",
-            "CLUSTER_ADJUSTED_TOP10_PCT":self._pct(sum(cluster_values[:10]),supply) if normalization_complete else "UNRESOLVED",
+            "DEV_LINKED_CLUSTER_PCT":self._pct(dev_raw,supply) if strict_metrics_available else "UNRESOLVED",
+            "CLUSTER_ADJUSTED_TOP10_PCT":self._pct(sum(cluster_values[:10]),supply) if strict_metrics_available else "UNRESOLVED",
             "UNRESOLVED_MATERIAL_HOLDER_PCT":self._pct(unresolved_raw,supply),
             "KNOWN_EX_LP_TOP10_PCT":self._pct(ex_lp_top10,supply),
             "KNOWN_EX_SPECIAL_TOP10_PCT":self._pct(ex_special_top10,supply),
@@ -1059,7 +1101,7 @@ class WalletClusterAnalyzer:
                 "rank":i+1,"token_account":h.token_account,"owner":h.owner,"raw":str(h.raw),
                 "quantity":str(h.quantity),"supply_pct":self._pct(h.raw,supply),"role":h.role,
                 "role_source":h.role_source,"account_program":h.account_program,
-                "deep_scanned":h.owner in deep_seen,
+                "deep_scanned":h.owner in scanned_owners,
                 "first_acquisition":acquisition(h.owner),
                 "funding":funding_record(h.owner),
             })
@@ -1081,7 +1123,7 @@ class WalletClusterAnalyzer:
         unresolved_pct=Decimal(str(metrics["UNRESOLVED_MATERIAL_HOLDER_PCT"] or "0"))
         if control_groups:
             cluster_status="PROBABLE_CONTROL_CLUSTER_PRESENT"
-        elif (not normalization_complete or unresolved_pct>0 or
+        elif (coverage_gaps or unresolved_pct>0 or
               any(edge.get("type") in {
                   "COMMON_FUNDER_UNRESOLVED","COMMON_SIGNER_UNRESOLVED",
                   "COMMON_CONSOLIDATION_UNRESOLVED"
@@ -1142,6 +1184,13 @@ class WalletClusterAnalyzer:
             "funding_evidence":self.funding,"consolidation_evidence":self.consolidations,
             "trade_evidence":self.trades,"transaction_errors":self.tx_errors,
             "coverage":{
+                "scope":"BOUNDED_TOP20_ACCOUNTS",
+                "eligible_owner_rank_complete":holder_rank_complete,
+                "snapshot_slots":self._snapshot_slots,"snapshot_consistent":snapshot_consistent,
+                "gaps":coverage_gaps,
+                "owners_resolved":len(owners),"owners_scanned":len(scanned_owners),
+                "owners_not_scanned":owners_not_scanned,
+                "top_accounts_requested":getattr(self,"_top_accounts_requested",len(holders)),
                 "top_accounts_resolved":len(holders),"deep_holders_scanned":len(deep),
                 "history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,
                 "adaptive_history_per_holder":self.adaptive_history_per_holder,
@@ -1157,6 +1206,8 @@ class WalletClusterAnalyzer:
                 "CEX/public-infrastructure identity is never guessed from funding alone.",
                 "Program-owned holder accounts remain unresolved unless explicitly labelled.",
                 "Bounded history can miss older funding, consolidation, and cross-token coordination.",
+                "Owner scan status means at least one sampled token account was queried; it does not prove all owner accounts or lifetime history were scanned.",
+                "Known exclusion Top10 values aggregate owners within resolved Top20 accounts only; they are not exact global eligible-owner Top10 without complete holder ranks.",
                 "PROBABLE_EXECUTION_CLUSTER never implies common beneficial ownership.",
                 "Narrative ownership, social endorsement and creator identity are not automatically inferred from token name or social links.",
             ],
