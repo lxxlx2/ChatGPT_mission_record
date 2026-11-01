@@ -1,15 +1,15 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-11-02 06:02:25 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-11-02 06:58:24 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-11-02 06:02:25 Asia/Bangkok (attempt 06:01:23)
+- latest_actual_run: 2026-11-02 06:58:24 Asia/Bangkok (attempt 06:56:50; off-minute invocation, not proof of HH:00 scheduler)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-11-02/060225-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-11-02/060123-attempt.md
+- latest_run_path: airdrop-tge-monitor/runs/2026-11-02/065824-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-11-02/065650-attempt.md
 - latest_scheduled_shard: 2
 - latest_executed_shard: 2
-- stale_shard_recovery: false; fair 06%4=2, one shard
+- stale_shard_recovery: false; actual 06%4=2, exactly one shard; second consecutive shard2, next rotate
 - latest_candidate_count: 7
 - latest_triggered_events: 0
 - latest_identity_failures: 0
@@ -25,16 +25,16 @@ Timezone: Asia/Bangkok
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-11-02 03:01:06 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard1: 2026-11-02 05:04:10 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard2: 2026-11-02 06:02:25 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard2: 2026-11-02 06:58:24 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-11-02 04:00:45 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 060225-final.md commit 9849fd70bebe0d343418548b8f8418cc399fa184
-- latest_terminal_readback: VERIFIED 060225-final.md (main blob SHA 386368d2d9fc64be9da4e6ea9ad48c55f965a447)
-- latest_four_executed_shards: [0,3,1,2]
+- latest_primary_final_write: VERIFIED_DURABLE 065824-final.md commit 284eaeac068a3b9749feebbb2562009608cef8cf
+- latest_terminal_readback: VERIFIED 065824-final.md (main blob SHA 5842789c176093466820c62996f63071fcd231ad)
+- latest_four_executed_shards: [3,1,2,2]
 - last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (unchanged)
 - last_delivered_gmail_message_id: 1a1812a1f6802ecb
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-11-02 06:02:25 BKK PARTIAL; urgent5 + Surf/StandX + fair shard2. Seven existing candidate families, zero new Tier A/mapped Tier B ACTION; three unresolved source/action gaps. Browser original X unavailable originating context; English issuer fallback. Life/work Inbox no new mapped rights. No Gmail/App. Verified-complete Oct10 unchanged.
+- latest_terminal_sync: 2026-11-02 06:58:24 BKK PARTIAL; urgent5 + Surf/StandX + fair shard2. Seven existing candidate families, zero new Tier A/mapped Tier B ACTION; three unresolved source/action gaps. Browser original X unavailable originating context; English issuer fallback. Life/work Inbox no new mapped rights. No Gmail/App. Verified-complete Oct10 unchanged.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
