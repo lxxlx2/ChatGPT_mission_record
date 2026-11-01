@@ -1194,7 +1194,7 @@ const clusterMetricLabel = {
   DEV_LINKED_CLUSTER_PCT:'Dev 关联集群',
   CLUSTER_ADJUSTED_TOP10_PCT:'集群调整后 Top10',
   UNRESOLVED_MATERIAL_HOLDER_PCT:'重大未确认持仓',
-  KNOWN_EX_LP_TOP10_PCT:'已解析样本排除池/Vault 后 Owner Top10',
+  KNOWN_EX_LP_TOP10_PCT:'已解析样本排除池/Vault 后 Top10',
   KNOWN_EX_SPECIAL_TOP10_PCT:'已知标签下排除特殊地址 Top10',
   KNOWN_CLUSTER_ADJUSTED_TOP10_PCT:'已知证据下集群调整 Top10',
 };
@@ -1721,7 +1721,7 @@ function renderClusterReport(report) {
   const rpcFailures=Object.values(coverage.rpc_endpoint_failures || {}).reduce((a,b)=>a+Number(b||0),0);
   const warnings = [];
   if (coverage.special_normalization_complete !== true) warnings.push('特殊地址身份归一化尚未完成。');
-  if (coverage.eligible_owner_rank_complete !== true) warnings.push('完整持有人排名尚未核实；已解析样本排除池/Vault 后 Owner Top10 仅代表样本，不能视为全局精确值。');
+  if (coverage.eligible_owner_rank_complete !== true) warnings.push('完整持有人排名尚未核实；已解析样本排除池/Vault 后 Top10 仅代表样本，不能视为全局精确值。');
   if (coverage.snapshot_consistent !== true) warnings.push('链上供给与账户余额尚未核对到同一 slot，严格集中度保持未确认。');
   const gapLabels = {
     NO_RESOLVED_HOLDERS:'没有已解析持有人', SUPPLY_UNAVAILABLE:'代币供给尚未核实',
