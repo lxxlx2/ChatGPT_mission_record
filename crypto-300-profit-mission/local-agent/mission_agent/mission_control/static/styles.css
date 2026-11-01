@@ -211,7 +211,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d7dce3}
 }
 .cluster-search{padding:16px}
 .cluster-search form>label{display:block;font-size:11px;color:#8d97a4;margin-bottom:8px;font-weight:650}
-.cluster-search-row{display:grid;grid-template-columns:minmax(0,1fr) 120px 120px;gap:8px}
+.cluster-search-row{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:8px}
 .cluster-search input,.cluster-search select{
   width:100%;border:1px solid #303741;background:#0b0e12;color:#e7ebef;border-radius:6px;
   padding:10px 11px;font:12px ui-monospace,SFMono-Regular,Menlo,monospace;outline:none
