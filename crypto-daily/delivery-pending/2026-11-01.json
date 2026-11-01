@@ -1,9 +1,9 @@
 {
   "report_date": "2026-11-01",
   "timezone": "Asia/Bangkok",
-  "prebuild_status": "PREBUILD_PARTIAL_SOURCE_GAPS",
+  "prebuild_status": "PRESEND_REFRESH_PARTIAL_SOURCE_GAPS",
   "ci_status": "CI_NOT_PROVEN",
-  "snapshot_at": "2026-11-01T01:24:36Z",
+  "snapshot_at": "2026-11-01T02:17:34.043Z",
   "rule_blob_sha": {
     "PIPELINE_CONTRACT.md": "0d94442ca1b920ad0b3e5ea9158d47a6b3dcbe25",
     "EDITORIAL_RULESET.json": "2ed51528d230508ae4e0015762b1d60c9d72e299",
@@ -15,7 +15,7 @@
     "state/daily-event-ledger.json": "a320907b357bbdfa77459e50c5a5c98dde8f1ed6",
     "docs/MONITORING/X_FIRST_PARTY_SOURCE_POLICY.md": "20abfed8a287307bb2d6017b3b9e7ff509bbeebe"
   },
-  "body": "Crypto Daily Brief｜2026-11-01\n采样：2026-11-01T01:24:36Z（曼谷08:24）；行情Binance滚动24小时，ETF Farside动态表；X及部分链上数据存在SOURCE_GAP，报告PARTIAL。\n\n一、今日最重要的5件事\n（1）Binance官方补足率从约80%提升至约90%，前十类资产宣布100%储备覆盖，提现实际恢复和完整储备证明仍待验证。\n（2）Northflank官方披露AI API密钥被滥用的客户报告并要求轮换，Wiz同期列出九家AI开发平台事故，不能推定同一攻击者。\n\n二、BTC/ETH/SOL及主要资产\n（1）BTC/USDT 77,732.76，24h +0.294%，区间77,114.01至77,796.01，成交额453,012,108.60 USDT。Binance官方单交易对滚动24小时，采样2026-11-01T01:24:36Z。\n（2）ETH/USDT 2,266.54，24h +0.897%，区间2,237.00至2,268.76，成交额127,364,888.57 USDT。Binance官方滚动24小时，采样2026-11-01T01:24:36Z。\n（3）SOL/USDT 95.87，24h -0.869%，区间95.23至97.09，成交额61,046,245.01 USDT。Binance官方滚动24小时，采样2026-11-01T01:24:36Z。\n（4）BNB/USDT 704.23（24h -0.466%），HYPE/USDT 88.40（24h -1.019%），均为Binance官方现货报价，非Hyperliquid链上持仓估值。\n\n三、二级市场剧烈波动与持续趋势\n（1）Binance USDⓈ-M永续：BTC标记77,688.02、资金费率0.01000%、OI 96,520.590 BTC；ETH标记2,266.21、资金费率0.000484%、OI 2,355,565.623 ETH；SOL标记95.7831、资金费率0.007512%、OI 8,847,196.26 SOL。OI为币数量，单点采样不足以判定多空趋势。\n\n四、监管与政策\n（1）补录此前未交付的监管里程碑：Ripple 10月26日称Ripple National Trust Bank获OCC最终许可，此前2025年12月仅有条件批准。获批业务含RLUSD储备管理及受托数字资产托管，RLUSD仍由Standard Custody & Trust发行；OCC个案批文未直接取得，保留发行方声明。来源：https://ripple.com/ripple-press/ripple-receives-final-occ-approval-to-establish-national-trust-bank/\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）Farside美国BTC现货ETF 10月30日全表更新净流出6.432亿美元，较10月31日已发缺列暂计4.095亿美元多流出2.337亿美元；IBIT -2.337亿、FBTC -2.010亿、ARKB -1.295亿。动态汇总可能修订，不等于链上实际出售。来源：https://farside.co.uk/btc/\n（2）Farside美国ETH现货ETF 10月30日全表更新净流出1.557亿美元，较昨日已发缺列暂计5960万美元多流出9610万美元；ETHA -7660万、ETHB -1950万、ETHE -2150万、ETH -3410万。基金净流不等于交易所现货卖单。来源：https://farside.co.uk/eth/\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n（1）补录Ripple与Robinhood 10月27日合作声明：RLUSD已在Robinhood Chain和Bitstamp by Robinhood使用，未来计划进入Robinhood App；Ripple Treasury、Prime和机构结算亦列入合作。区分已开放渠道与未来App产品，链上实际使用量未独立核验。来源：https://ripple.com/ripple-press/ripple-and-robinhood-partner-to-power-the-next-generation-of-finance/\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n无高置信新增。\n\n八、Early / Meme / NFT / 新生态热点\n（1）OpenSea 10月30日数字艺术简报称Rhizome 2026 Microgrants开放申请，11月20日截止，资助500至1500美元，含与Larva Labs合作方向。Rhizome原始页HTTP402，资格和申请表单未独立确认；这是艺术资助，非NFT免费铸造或TGE。来源：https://blog-v3.opensea.io/articles/opensea-digest-october-30-2026\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n（1）Binance官方10月31日更新：10月30日公告约80%已补足，现约90%已补足，前十类资产100%储备覆盖，余约10%低流动性资产仍在补购。10月31日00:00 UTC储备快照已公布，零知识证明预计11月3日完成；11月1日恢复提现仅为计划，尚未确认实际恢复。覆盖率属于交易所声明，等待独立验证。来源：https://www.binance.com/en/support/announcement/detail/1fdf1f61559c401da0435895ffcccb62\n（2）Northflank官方确认用户报告托管AI API密钥被未授权使用，要求所有客户假定环境变量可能暴露，撤销并更换凭据。10月31日新增MySQL、Redis、Minio、RabbitMQ轮换功能和免费用户审计日志；Wiz同期研究列出九家AI开发平台十月事故，但未证明共同攻击者。仅实际使用Northflank的部署需要对应处置。来源：https://status.northflank.com/cmvv0rn5a092f14rutwccodpp；https://www.wiz.io/blog/black-october-for-ai-developer-platforms\n（3）10月31日Flap、Kintsu网站被报道遭DNS劫持，Blockaid称另10个DeFi网站出现StepDrainer恶意签名前端。原始X帖HTTP403，未独立确认12站点的共同根因或总损失；只在对应风险时段连接并签名的用户应检查授权，不能推定所有用户受影响。来源原帖：https://x.com/blockaid_/status/2116368762488107157；英文复核：https://tsnmedia.org/flap-kintsu-dns-hijack/\n（4）b14g声明约9700万枚CORE从质押合约未经授权提出并已暂停相关合约，称约6800万枚仍在Core链、约900万枚由交易所冻结、BTC质押未受影响。此为CORE代币数量，非美元损失；X原帖HTTP403，Core交易浏览器文本为空，TXID仍待独立解析，原因和赔付未确认。原帖：https://x.com/b14g_network/status/2116570456245596580；TX：https://scan.coredao.org/tx/0xe1947f325e1f0bc22290ea97dc5b2ce44827fbb56e1cc40abaeda1d2ed04f62c\n\n十、全球局势与跨市场冲击\n（1）美联储11月日历列11月2日美东14:00发布高级贷款官调查SLOOS；11月1日周日没有新的美股现金市场收盘。该调查可能影响信贷与风险偏好，公布前不预测结果，也不把10月30日美股跌幅写成今日新闻。来源：https://www.federalreserve.gov/newsevents/2026-november.htm\n\n十一、未来24至72小时催化\n（1）ISM官方预告美国10月制造业PMI于11月2日10:00美东时间公布，曼谷11月2日22:00（美东冬令时）。关注新订单、价格与就业分项，尚未公布，不能提前填值。来源：https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/september/\n\n十二、持续趋势与跨市场机会观察清单\n（1）BTC若连续跌破本轮24小时低点77,114.01，且后续OI与成交同步放大、ETF连续净流出，风险情景增强；收复区间且资金流改善则减弱。此为观察条件，非自动交易。\n\n十三、今日行动与风险结论\n（1）不把交易所预计恢复提现当成真实可用；跨平台调拨前核实官方恢复公告、账户实际状态与完整储备证明，避免资金在暂停期间被锁。\n（2）仅在确实使用受影响云端或于恶意前端窗口签名时，才按对应官方指南撤销密钥、核对钱包授权及账单；不能推定个人钱包已受侵。无新官方Anthropic交易所股权申购入口或TGE/claim实质变化，不另发提醒。\n\n",
+  "body": "Crypto Daily Brief｜2026-11-01\n采样：2026-11-01T02:17:34.043Z（曼谷09:17）；行情Binance滚动24小时，ETF Farside动态表；X及部分链上数据存在SOURCE_GAP，报告PARTIAL。\n\n一、今日最重要的5件事\n（1）Binance官方补足率从约80%提升至约90%，前十类资产宣布100%储备覆盖，提现实际恢复和完整储备证明仍待验证。\n（2）Northflank官方披露AI API密钥被滥用的客户报告并要求轮换，Wiz同期列出九家AI开发平台事故，不能推定同一攻击者。\n\n二、BTC/ETH/SOL及主要资产\n（1）BTC/USDT 77,768.00，24h +0.402%，区间77,114.01至77,897.03，成交额459,766,270.98 USDT。Binance官方单交易对滚动24小时，采样2026-11-01T02:17:34.043Z。\n（2）ETH/USDT 2,268.60，24h +0.942%，区间2,237.00至2,276.31，成交额134,977,130.66 USDT。Binance官方滚动24小时，采样2026-11-01T02:17:34.043Z。\n（3）SOL/USDT 95.64，24h -1.219%，区间95.23至97.07，成交额55,967,940.91 USDT。Binance官方滚动24小时，采样2026-11-01T02:17:34.043Z。\n（4）BNB/USDT 703.48（24h -0.281%），HYPE/USDT 88.54（24h -1.458%），均为Binance官方现货报价，非Hyperliquid链上持仓估值。\n\n三、二级市场剧烈波动与持续趋势\n（1）Binance USDⓈ-M永续：BTC标记77,712.30、资金费率0.01000%、OI 96,733.540 BTC；ETH标记2,267.26、资金费率0.001695%、OI 2,366,244.174 ETH；SOL标记95.5535、资金费率0.007647%、OI 8,858,043.08 SOL。OI为币数量，单点采样不足以判定多空趋势。\n\n四、监管与政策\n（1）补录此前未交付的监管里程碑：Ripple 10月26日称Ripple National Trust Bank获OCC最终许可，此前2025年12月仅有条件批准。获批业务含RLUSD储备管理及受托数字资产托管，RLUSD仍由Standard Custody & Trust发行；OCC个案批文未直接取得，保留发行方声明。来源：https://ripple.com/ripple-press/ripple-receives-final-occ-approval-to-establish-national-trust-bank/\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）Farside美国BTC现货ETF 10月30日全表更新净流出6.432亿美元，较10月31日已发缺列暂计4.095亿美元多流出2.337亿美元；IBIT -2.337亿、FBTC -2.010亿、ARKB -1.295亿。动态汇总可能修订，不等于链上实际出售。来源：https://farside.co.uk/btc/\n（2）Farside美国ETH现货ETF 10月30日全表更新净流出1.557亿美元，较昨日已发缺列暂计5960万美元多流出9610万美元；ETHA -7660万、ETHB -1950万、ETHE -2150万、ETH -3410万。基金净流不等于交易所现货卖单。来源：https://farside.co.uk/eth/\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n（1）补录Ripple与Robinhood 10月27日合作声明：RLUSD已在Robinhood Chain和Bitstamp by Robinhood使用，未来计划进入Robinhood App；Ripple Treasury、Prime和机构结算亦列入合作。区分已开放渠道与未来App产品，链上实际使用量未独立核验。来源：https://ripple.com/ripple-press/ripple-and-robinhood-partner-to-power-the-next-generation-of-finance/\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n无高置信新增。\n\n八、Early / Meme / NFT / 新生态热点\n（1）OpenSea 10月30日数字艺术简报称Rhizome 2026 Microgrants开放申请，11月20日截止，资助500至1500美元，含与Larva Labs合作方向。Rhizome原始页HTTP402，资格和申请表单未独立确认；这是艺术资助，非NFT免费铸造或TGE。来源：https://blog-v3.opensea.io/articles/opensea-digest-october-30-2026\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n（1）Binance官方10月31日更新：10月30日公告约80%已补足，现约90%已补足，前十类资产100%储备覆盖，余约10%低流动性资产仍在补购。10月31日00:00 UTC储备快照已公布，零知识证明预计11月3日完成；11月1日恢复提现仅为计划，尚未确认实际恢复。覆盖率属于交易所声明，等待独立验证。来源：https://www.binance.com/en/support/announcement/detail/1fdf1f61559c401da0435895ffcccb62\n（2）Northflank官方确认用户报告托管AI API密钥被未授权使用，要求所有客户假定环境变量可能暴露，撤销并更换凭据。10月31日新增MySQL、Redis、Minio、RabbitMQ轮换功能和免费用户审计日志；Wiz同期研究列出九家AI开发平台十月事故，但未证明共同攻击者。仅实际使用Northflank的部署需要对应处置。来源：https://status.northflank.com/cmvv0rn5a092f14rutwccodpp；https://www.wiz.io/blog/black-october-for-ai-developer-platforms\n（3）10月31日Flap、Kintsu网站被报道遭DNS劫持，Blockaid称另10个DeFi网站出现StepDrainer恶意签名前端。原始X帖HTTP403，未独立确认12站点的共同根因或总损失；只在对应风险时段连接并签名的用户应检查授权，不能推定所有用户受影响。来源原帖：https://x.com/blockaid_/status/2116368762488107157；英文复核：https://tsnmedia.org/flap-kintsu-dns-hijack/\n（4）b14g声明约9700万枚CORE从质押合约未经授权提出并已暂停相关合约，称约6800万枚仍在Core链、约900万枚由交易所冻结、BTC质押未受影响。此为CORE代币数量，非美元损失；X原帖HTTP403，Core交易浏览器文本为空，TXID仍待独立解析，原因和赔付未确认。原帖：https://x.com/b14g_network/status/2116570456245596580；TX：https://scan.coredao.org/tx/0xe1947f325e1f0bc22290ea97dc5b2ce44827fbb56e1cc40abaeda1d2ed04f62c\n\n十、全球局势与跨市场冲击\n（1）美联储11月日历列11月2日美东14:00发布高级贷款官调查SLOOS；11月1日周日没有新的美股现金市场收盘。该调查可能影响信贷与风险偏好，公布前不预测结果，也不把10月30日美股跌幅写成今日新闻。来源：https://www.federalreserve.gov/newsevents/2026-november.htm\n\n十一、未来24至72小时催化\n（1）ISM官方预告美国10月制造业PMI于11月2日10:00美东时间公布，曼谷11月2日22:00（美东冬令时）。关注新订单、价格与就业分项，尚未公布，不能提前填值。来源：https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/september/\n\n十二、持续趋势与跨市场机会观察清单\n（1）BTC若连续跌破本轮24小时低点77,114.01，且后续OI与成交同步放大、ETF连续净流出，风险情景增强；收复区间且资金流改善则减弱。此为观察条件，非自动交易。\n\n十三、今日行动与风险结论\n（1）不把交易所预计恢复提现当成真实可用；跨平台调拨前核实官方恢复公告、账户实际状态与完整储备证明，避免资金在暂停期间被锁。\n（2）仅在确实使用受影响云端或于恶意前端窗口签名时，才按对应官方指南撤销密钥、核对钱包授权及账单；不能推定个人钱包已受侵。无新官方Anthropic交易所股权申购入口或TGE/claim实质变化，不另发提醒。\n\n",
   "items": [
     {
       "section": 1,
@@ -34,37 +34,37 @@
     {
       "section": 2,
       "item_number": 1,
-      "event_key": "quote:btc:daily:binance-spot-2026-11-01-0124-BTC",
+      "event_key": "quote:btc:daily:binance-spot-2026-11-01-0217-BTC",
       "role": "detail",
-      "text": "BTC/USDT 77,732.76，24h +0.294%，区间77,114.01至77,796.01，成交额453,012,108.60 USDT。Binance官方单交易对滚动24小时，采样2026-11-01T01:24:36Z。"
+      "text": "BTC/USDT 77,768.00，24h +0.402%，区间77,114.01至77,897.03，成交额459,766,270.98 USDT。Binance官方单交易对滚动24小时，采样2026-11-01T02:17:34.043Z。"
     },
     {
       "section": 2,
       "item_number": 2,
-      "event_key": "quote:eth:daily:binance-spot-2026-11-01-0124-ETH",
+      "event_key": "quote:eth:daily:binance-spot-2026-11-01-0217-ETH",
       "role": "detail",
-      "text": "ETH/USDT 2,266.54，24h +0.897%，区间2,237.00至2,268.76，成交额127,364,888.57 USDT。Binance官方滚动24小时，采样2026-11-01T01:24:36Z。"
+      "text": "ETH/USDT 2,268.60，24h +0.942%，区间2,237.00至2,276.31，成交额134,977,130.66 USDT。Binance官方滚动24小时，采样2026-11-01T02:17:34.043Z。"
     },
     {
       "section": 2,
       "item_number": 3,
-      "event_key": "quote:sol:daily:binance-spot-2026-11-01-0124-SOL",
+      "event_key": "quote:sol:daily:binance-spot-2026-11-01-0217-SOL",
       "role": "detail",
-      "text": "SOL/USDT 95.87，24h -0.869%，区间95.23至97.09，成交额61,046,245.01 USDT。Binance官方滚动24小时，采样2026-11-01T01:24:36Z。"
+      "text": "SOL/USDT 95.64，24h -1.219%，区间95.23至97.07，成交额55,967,940.91 USDT。Binance官方滚动24小时，采样2026-11-01T02:17:34.043Z。"
     },
     {
       "section": 2,
       "item_number": 4,
-      "event_key": "quote:bnb-hype:daily:binance-spot-2026-11-01-0124-BNB-HYPE",
+      "event_key": "quote:bnb-hype:daily:binance-spot-2026-11-01-0217-BNB-HYPE",
       "role": "detail",
-      "text": "BNB/USDT 704.23（24h -0.466%），HYPE/USDT 88.40（24h -1.019%），均为Binance官方现货报价，非Hyperliquid链上持仓估值。"
+      "text": "BNB/USDT 703.48（24h -0.281%），HYPE/USDT 88.54（24h -1.458%），均为Binance官方现货报价，非Hyperliquid链上持仓估值。"
     },
     {
       "section": 3,
       "item_number": 1,
-      "event_key": "derivatives:binance:daily:binance-futures-2026-11-01-0124",
+      "event_key": "derivatives:binance:daily:binance-futures-2026-11-01-0217",
       "role": "detail",
-      "text": "Binance USDⓈ-M永续：BTC标记77,688.02、资金费率0.01000%、OI 96,520.590 BTC；ETH标记2,266.21、资金费率0.000484%、OI 2,355,565.623 ETH；SOL标记95.7831、资金费率0.007512%、OI 8,847,196.26 SOL。OI为币数量，单点采样不足以判定多空趋势。"
+      "text": "Binance USDⓈ-M永续：BTC标记77,712.30、资金费率0.01000%、OI 96,733.540 BTC；ETH标记2,267.26、资金费率0.001695%、OI 2,366,244.174 ETH；SOL标记95.5535、资金费率0.007647%、OI 8,858,043.08 SOL。OI为币数量，单点采样不足以判定多空趋势。"
     },
     {
       "section": 4,
@@ -146,7 +146,7 @@
     {
       "section": 12,
       "item_number": 1,
-      "event_key": "watch:btc-oi-etf:watch-2026-11-01-0124",
+      "event_key": "watch:btc-oi-etf:watch-2026-11-01-0217",
       "role": "detail",
       "text": "BTC若连续跌破本轮24小时低点77,114.01，且后续OI与成交同步放大、ETF连续净流出，风险情景增强；收复区间且资金流改善则减弱。此为观察条件，非自动交易。"
     },
@@ -233,10 +233,10 @@
       "priority": "HIGH"
     },
     {
-      "event_key": "quote:btc:daily:binance-spot-2026-11-01-0124-BTC",
+      "event_key": "quote:btc:daily:binance-spot-2026-11-01-0217-BTC",
       "kind": "CORE_QUOTE",
       "family_key": "quote:btc:daily",
-      "material_version": "binance-spot-2026-11-01-0124-BTC",
+      "material_version": "binance-spot-2026-11-01-0217-BTC",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
       "published_at": "2026-11-01T01:24:36Z",
       "actual_delta": "BTC/USDT 77,732.76，24h +0.294%，区间77,114.01至77,796.01，成交额453,012,108.60 USDT。Binance官方单交易对滚动24小时，采样2026-11-01T01:24:36Z。",
@@ -245,10 +245,10 @@
       "source_confirmed": true
     },
     {
-      "event_key": "quote:eth:daily:binance-spot-2026-11-01-0124-ETH",
+      "event_key": "quote:eth:daily:binance-spot-2026-11-01-0217-ETH",
       "kind": "CORE_QUOTE",
       "family_key": "quote:eth:daily",
-      "material_version": "binance-spot-2026-11-01-0124-ETH",
+      "material_version": "binance-spot-2026-11-01-0217-ETH",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
       "published_at": "2026-11-01T01:24:36Z",
       "actual_delta": "ETH/USDT 2,266.54，24h +0.897%，区间2,237.00至2,268.76，成交额127,364,888.57 USDT。Binance官方滚动24小时，采样2026-11-01T01:24:36Z。",
@@ -257,10 +257,10 @@
       "source_confirmed": true
     },
     {
-      "event_key": "quote:sol:daily:binance-spot-2026-11-01-0124-SOL",
+      "event_key": "quote:sol:daily:binance-spot-2026-11-01-0217-SOL",
       "kind": "CORE_QUOTE",
       "family_key": "quote:sol:daily",
-      "material_version": "binance-spot-2026-11-01-0124-SOL",
+      "material_version": "binance-spot-2026-11-01-0217-SOL",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
       "published_at": "2026-11-01T01:24:36Z",
       "actual_delta": "SOL/USDT 95.87，24h -0.869%，区间95.23至97.09，成交额61,046,245.01 USDT。Binance官方滚动24小时，采样2026-11-01T01:24:36Z。",
@@ -269,10 +269,10 @@
       "source_confirmed": true
     },
     {
-      "event_key": "quote:bnb-hype:daily:binance-spot-2026-11-01-0124-BNB-HYPE",
+      "event_key": "quote:bnb-hype:daily:binance-spot-2026-11-01-0217-BNB-HYPE",
       "kind": "CORE_QUOTE",
       "family_key": "quote:bnb-hype:daily",
-      "material_version": "binance-spot-2026-11-01-0124-BNB-HYPE",
+      "material_version": "binance-spot-2026-11-01-0217-BNB-HYPE",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT",
       "published_at": "2026-11-01T01:24:36Z",
       "actual_delta": "BNB/USDT 704.23（24h -0.466%），HYPE/USDT 88.40（24h -1.019%），均为Binance官方现货报价，非Hyperliquid链上持仓估值。",
@@ -281,10 +281,10 @@
       "source_confirmed": true
     },
     {
-      "event_key": "derivatives:binance:daily:binance-futures-2026-11-01-0124",
+      "event_key": "derivatives:binance:daily:binance-futures-2026-11-01-0217",
       "kind": "TREND_DERIVATIVES",
       "family_key": "derivatives:binance:daily",
-      "material_version": "binance-futures-2026-11-01-0124",
+      "material_version": "binance-futures-2026-11-01-0217",
       "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
       "published_at": "2026-11-01T01:24:36Z",
       "actual_delta": "Binance USDⓈ-M永续：BTC标记77,688.02、资金费率0.01000%、OI 96,520.590 BTC；ETH标记2,266.21、资金费率0.000484%、OI 2,355,565.623 ETH；SOL标记95.7831、资金费率0.007512%、OI 8,847,196.26 SOL。OI为币数量，单点采样不足以判定多空趋势。",
@@ -383,10 +383,10 @@
       "source_confirmed": true
     },
     {
-      "event_key": "watch:btc-oi-etf:watch-2026-11-01-0124",
+      "event_key": "watch:btc-oi-etf:watch-2026-11-01-0217",
       "kind": "PERSISTENT_WATCH",
       "family_key": "watch:btc-oi-etf",
-      "material_version": "watch-2026-11-01-0124",
+      "material_version": "watch-2026-11-01-0217",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
       "published_at": "2026-11-01T01:24:36Z",
       "actual_delta": "BTC若连续跌破本轮24小时低点77,114.01，且后续OI与成交同步放大、ETF连续净流出，风险情景增强；收复区间且资金流改善则减弱。此为观察条件，非自动交易。",
@@ -422,11 +422,11 @@
   "source_receipts": [
     {
       "lane": "spot",
-      "checked_at": "2026-11-01T01:32:21.421Z",
+      "checked_at": "2026-11-01T02:17:34.043Z",
       "query_or_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
       "status": "checked",
-      "published_at": "2026-11-01T01:24:36Z",
-      "notes": "Binance connector actual BTC ETH SOL BNB HYPE tickers",
+      "published_at": "2026-11-01T02:17:34.043Z",
+      "notes": "Binance connector actual BTC ETH SOL BNB HYPE tickers; refreshed via official Binance connector before send",
       "result_urls": [
         "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
         "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
@@ -435,11 +435,11 @@
     },
     {
       "lane": "derivatives",
-      "checked_at": "2026-11-01T01:32:21.421Z",
+      "checked_at": "2026-11-01T02:17:34.043Z",
       "query_or_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
       "status": "checked",
-      "published_at": "2026-11-01T01:24:36Z",
-      "notes": "Binance connector actual mark funding OI for BTC ETH SOL",
+      "published_at": "2026-11-01T02:17:34.043Z",
+      "notes": "Binance connector actual mark funding OI for BTC ETH SOL; refreshed via official Binance connector before send",
       "result_urls": [
         "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
         "https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT"
@@ -648,21 +648,21 @@
   "market_core": [
     {
       "symbol": "BTC",
-      "price": 77732.76,
+      "price": 77768,
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
-      "observed_at": "2026-11-01T01:24:36Z"
+      "observed_at": "2026-11-01T02:17:34.043Z"
     },
     {
       "symbol": "ETH",
-      "price": 2266.54,
+      "price": 2268.6,
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
-      "observed_at": "2026-11-01T01:24:36Z"
+      "observed_at": "2026-11-01T02:17:34.043Z"
     },
     {
       "symbol": "SOL",
-      "price": 95.87,
+      "price": 95.64,
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
-      "observed_at": "2026-11-01T01:24:36Z"
+      "observed_at": "2026-11-01T02:17:34.043Z"
     }
   ],
   "empty_section_reasons": [
