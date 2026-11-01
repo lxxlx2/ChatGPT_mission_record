@@ -728,5 +728,77 @@
       "original_job_report_association": "UNPROVEN",
       "mac_installation": "NOT_PERFORMED_OR_VERIFIED_THIS_TURN"
     }
+  },
+  "observation_refresh_consistency_followup_20261101": {
+    "observed_at_bangkok": "2026-11-01 22:06",
+    "authority": "Continue existing Frank maintenance; isolation permitted, no local debugging, review waived.",
+    "source": {
+      "baseline": "35879a223a9f572dc77ab3d993c9c722aacf6cea",
+      "red_tests": "da2823ab65c0023a1016a13728a6293d38c449c0",
+      "final": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "pr": 220
+    },
+    "defects": [
+      "Intelligence refresh failure left the last-good snapshot in memory, so editing its search filter could render old cards again.",
+      "Both intelligence and activity accepted out-of-order success/failure completions, allowing an older BUY response to replace a newer SELL or an old error to clear newer data."
+    ],
+    "repair": "Per-panel request generation admits only the latest requested response or error. Latest intelligence failure clears its filter snapshot. No new requests, timer, retries, source, model, notification or execution semantics added.",
+    "tests": {
+      "red": {
+        "run": 41319153924,
+        "job": 124885466893,
+        "python_pass": 1586,
+        "python_skip": 4,
+        "node_total": 99,
+        "node_pass": 92,
+        "node_fail": 7
+      },
+      "green": {
+        "run": 41319318148,
+        "job": 124885961581,
+        "status": "completed",
+        "conclusion": "success",
+        "python_pass": 1586,
+        "python_skip": 4,
+        "node_pass": 99,
+        "node_fail": 0,
+        "chromium_checks": 22,
+        "page_errors": 0,
+        "fixture_posts": 7,
+        "real_ca_posts": 0,
+        "real_rpc": 0,
+        "production_requests": 0
+      },
+      "skips": [
+        "3 unrelated Monster numpy-dependent suites",
+        "1 macOS /tmp symlink-specific case on Linux"
+      ],
+      "new_tests": "10 full-app cases across both existing panels; older success/newer SELL, older success/newer failure, older error/newer success, failure followed by filtering, and normal recovery. Three Chromium cases add actual DOM/filter/race coverage."
+    },
+    "chrome_actual": {
+      "observed_runtime_failure": "控制台读取失败Failed to fetch",
+      "failure_timestamp_not_independently_captured": true,
+      "subsequent_observation_utc": "2026-11-01T15:03:47.620Z",
+      "subsequent_runtime_normal": true,
+      "subsequent_f01_source_recent": 0,
+      "matching_app_error_logs_in_last_30_entries": false,
+      "connection_cause": "UNRESOLVED",
+      "runtime_source_identity": "Not reverified; latest earlier Mac installation receipt remains 15aa9956. New candidate not installed or tested on Mac this turn.",
+      "tab_kept_open": true
+    },
+    "scope": {
+      "local_debug": false,
+      "mac_deploy": false,
+      "service_restart": false,
+      "new_monitor": false,
+      "new_rpc": false,
+      "new_ca_scan": false,
+      "notification_send": false,
+      "trades": false,
+      "merge": false,
+      "independent_review": "WAIVED_NOT_PERFORMED",
+      "original_failed_job_association": "UNPROVEN",
+      "profit_research": "INVEST_NO_GO_UNCHANGED"
+    }
   }
 }
