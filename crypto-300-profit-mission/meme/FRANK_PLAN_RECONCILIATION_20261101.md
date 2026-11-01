@@ -1,5 +1,7 @@
 # Frank 旧计划核对与只读维护收尾（2026-11-01）
 
+> **最新本机主线验收（2026-11-02 00:08 Asia/Bangkok，取代下方旧候选状态）**：采用Git最新f690fbf6c0beb582fdede50d7b46f126e9ca64ea，未重复推送本地旧试验修复。Mac完整离线1587/3跳过、Node99通过，隔离Chrome安全GET三阶段、双面板失败后筛选清理及恢复PASS；实际Dashboard已切换PID20153，Scanner原PID3402保持LIVE/0错误。当前28份报告、控制库/D2/心跳/plist哈希保留。既有11月1日22:10真实job 2306599a经私有副本损坏拒绝/恢复及实际跨进程GET恢复通过，Chrome选中原任务显示ID/CA核对；未新建真实扫描。该job不替代10月原故障身份，覆盖与原传输根因仍未闭合，整体PARTIAL/研究与实盘NO_GO。详情见同一[分层回执](./evidence/frank-ca-local-acceptance-20261101.json)的mac_latest_head_acceptance_20261102。
+
 > **增量补完（2026-11-01 19:21 Asia/Bangkok）**：源码未变。补完上次留出的20条原始事件离线核验（16被动/4 ATA，0交易行），排除原78条，发布后累计98条；5979签名全部seen，RAW_PENDING/未处理0，四类重复组0。Chrome整合版本D2显示100行/49页、源年龄持续增长。另实际捕获一次F01/顶部Failed to fetch，原有轮询自动恢复且旧机会闭锁；失败请求/传输触发原因仍UNRESOLVED，后台没有同刻新错误日志，不推断RPC故障或做猜测性改码。证据已接到同一[验收回执](./evidence/frank-ca-local-acceptance-20261101.json)，真实RPC/CA POST、服务变更、通知均0。
 
 > **最新维护进展（2026-11-01 19:20 Asia/Bangkok，取代下方旧运行快照）**：重新核对main `f1f848d4e11f26239c0adadf07b1c20256d6e402`及原PR220最新c18fa276整合，根规则未变；采用现有完整功能栈，未重复推送旧试验集成。Chrome发现无效CA时仍残留上一报告，在原PR220两文件最小修复 `15aa995629c503fb9cc4278c18d7957672c05499`，3个反例先红后绿、完整离线1587通过/3跳过、提交后Node81通过。本地Dashboard已运行新SHA，真实Chrome历史→无效→恢复PASS；24份历史报告和控制库/D2/心跳/plist哈希不变，Scanner未重启。c18父版另外完成Chrome合成A/B和空内存恢复，合成POST3、真实RPC/CA POST0；临时服务/端口/标签已清理，实际8766页保留。详见[本轮证据](./evidence/frank-ca-local-acceptance-20261101.json)。旧任务缺身份关联、自然新BUY/通知样本、MC签名工件仍缺；维护PASS，旧规划整体PARTIAL，INVEST_NO_GO / TRADE_NO_GO保持。

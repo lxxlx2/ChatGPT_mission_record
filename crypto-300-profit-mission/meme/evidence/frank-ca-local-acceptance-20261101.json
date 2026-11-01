@@ -800,5 +800,226 @@
       "original_failed_job_association": "UNPROVEN",
       "profit_research": "INVEST_NO_GO_UNCHANGED"
     }
+  },
+  "mac_latest_head_acceptance_20261102": {
+    "at_utc": "2026-11-01T17:08:11.973319+00:00",
+    "client_date_bangkok": "2026-11-02",
+    "source": {
+      "head": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "git_parent": "da2823ab65c0023a1016a13728a6293d38c449c0",
+      "prior_running_sha": "15aa995629c503fb9cc4278c18d7957672c05499",
+      "main_rules_checked": "b1a2dc4a0076bbf0f46d1c40674a433632688947",
+      "AGENTS_and_DEVELOPMENT_RULES_delta": "none",
+      "runtime_changed_files_from_prior": [
+        "mission_agent/mission_control/static/app.js"
+      ],
+      "backend_or_workflow_changes": false,
+      "local_experimental_get_patch": "preserved privately; superseded by existing remote commits, not pushed as duplicate"
+    },
+    "tests": {
+      "python_command": "PYTHONPATH=<private-offline-guard>:. <isolated-venv>/bin/python -B -m pytest -q -p no:cacheprovider -p frank_offline_guard --basetemp=<unique-private-temp>/pytest-f690-latest tests",
+      "python_passed": 1587,
+      "python_skipped": 3,
+      "python_warnings": 14,
+      "python_seconds": 94.31,
+      "skip_reason": "unrelated Monster modules require unavailable numpy",
+      "node_command": "node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_report_render.mjs tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_d2_ingress_ui.mjs tests/test_frank_f01_source_only.cjs tests/test_frank_f01_failure_state.cjs",
+      "node_passed": 99,
+      "node_failed": 0,
+      "syntax_command": "node --check mission_agent/mission_control/static/app.js",
+      "syntax": "PASS",
+      "actual_execution": "Mac local, no external network for regression"
+    },
+    "ci": {
+      "head": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "run_id": 41319318148,
+      "conclusion": "success",
+      "metadata_read_back": true,
+      "not_used_as_mac_evidence": true
+    },
+    "mac_chrome_synthetic": {
+      "source_sha": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "real_http_handler": true,
+      "synthetic_observation_data": true,
+      "network_denied": true,
+      "checks": {
+        "connection_disconnect_shows_safe_candidates_NETWORK": true,
+        "invalid_json_shows_safe_candidates_200_JSON": true,
+        "http_503_shows_safe_candidates_503_HTTP": true,
+        "raw_body_test_secret_not_echoed": true,
+        "F01_prior_opportunities_invalidated": true,
+        "intelligence_failure_then_filter_does_not_resurrect_snapshot": true,
+        "activity_failure_then_filter_does_not_resurrect_snapshot": true,
+        "both_panels_recover_on_healthy_read": true
+      },
+      "synthetic_POST": 0,
+      "real_rpc_or_ca_post": 0,
+      "fixture_process_exit_code": 0,
+      "fixture_port_closed": true,
+      "fixture_tab_closed": true,
+      "scope_limit": "Manual Chrome cases above only; CI 22 scenarios not borrowed as local count"
+    },
+    "release": {
+      "status": "PASS",
+      "observed_at": "2026-11-01T17:06:36.484040+00:00",
+      "source_sha": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "old_dashboard_pid": 11137,
+      "dashboard_pid": 20153,
+      "scanner_pid_unchanged": true,
+      "scanner_pid": 3402,
+      "scanner_code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "scanner_status": "LIVE",
+      "source_drift": false,
+      "control_health_status": "STALE",
+      "source_recent_count": 0,
+      "history_count": 7,
+      "eligible_count": 0,
+      "current_balance_verified": false,
+      "html_js_match_pinned_source": true,
+      "d1_http": 200,
+      "d2_http": 200,
+      "d2_source_observed_at": "2026-11-01T01:26:32.578080+00:00",
+      "preserved_byte_hashes": {
+        "control_db": true,
+        "control_health": true,
+        "d2_source": true,
+        "plist": true
+      },
+      "old_backup_source_files": 455,
+      "old_backup_import_preflight": "PASS",
+      "loop_remains_unloaded": true,
+      "rpc_or_ca_post_calls_by_release": 0,
+      "notification_send_calls": 0,
+      "rollback_exercised": false,
+      "prior_running_sha": "15aa995629c503fb9cc4278c18d7957672c05499",
+      "git_parent_sha": "da2823ab65c0023a1016a13728a6293d38c449c0"
+    },
+    "existing_completed_real_job": {
+      "job_id": "2306599a664d4308ad9b0cf3706c07a3",
+      "status": "DONE",
+      "persisted_job_id_report_marker_match": true,
+      "persisted_digest_match": true,
+      "persisted_report_sha256": "857afc374de8faf8990e4d7bcc9b05d4fe7416f9a3edfabf9d62309e083e8d53",
+      "persisted_marker_sha256": "08ffe46d36b3d18ff26881c99b42f67167cef8e2fb069fb87dda8969b5967251",
+      "live_get_report_job_id_matches": true,
+      "observed_at": 1793545833.653012,
+      "coverage_complete": false,
+      "live_get_job_keys": [
+        "job_id",
+        "mint",
+        "preset",
+        "status",
+        "created_at",
+        "started_at",
+        "finished_at",
+        "error",
+        "progress",
+        "preview"
+      ],
+      "no_real_post_or_rpc_by_this_probe": true,
+      "actual_dashboard_restart_get_recovery": {
+        "source_sha": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+        "status": "DONE",
+        "restored_from_saved_report": true,
+        "job_id": "2306599a664d4308ad9b0cf3706c07a3",
+        "current_report_files_preserved": 28
+      }
+    },
+    "private_copy_recovery": {
+      "source_sha": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "job_id": "2306599a664d4308ad9b0cf3706c07a3",
+      "checks": {
+        "valid_empty_memory": true,
+        "report_tamper": true,
+        "marker_wrong_job_id": true,
+        "marker_wrong_mint": true,
+        "missing_done_marker": true
+      },
+      "status": "PASS",
+      "external_network_requests": 0,
+      "production_writes": 0,
+      "private_source_copy_unchanged": true
+    },
+    "actual_chrome": {
+      "url": "http://127.0.0.1:8766/#cluster",
+      "exact_saved_job": "2306599a664d4308ad9b0cf3706c07a3",
+      "saved_job_selection_after_restart": "PASS: task ID and CA checked",
+      "invalid_CA_hides_old_report": true,
+      "read_selected_report_recovers_correct_CA_and_report": true,
+      "visible_status": "已读取该任务保存报告；保存报告中的任务编号与 CA 已核对；覆盖与完整性仍须另行核实",
+      "tab_kept_open": true,
+      "other_session_tabs_not_claimed_or_closed": true
+    },
+    "final_readonly_snapshot": {
+      "at": "2026-11-01T17:07:24.293198+00:00",
+      "counts": {
+        "signatures": 6006,
+        "v1_seen": 6006,
+        "signals": 7,
+        "outbox": 9,
+        "gmail_delivery": 2,
+        "email_content": 2
+      },
+      "runtime": {
+        "status": "LIVE",
+        "pid": 3402,
+        "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+        "consecutive_errors": 0,
+        "source_drift": false,
+        "raw_pending": 0,
+        "model_unprocessed": 0
+      },
+      "current_report_files_hash_preserved": 28,
+      "fixture_port_closed": true,
+      "no_new_scanner_raw_replay_claim": "98 previously verified rows only; later rows not individually replayed in this CA acceptance phase"
+    },
+    "preservation": {
+      "current_report_files": 28,
+      "current_report_hashes_unchanged": true,
+      "old_source_backup_files": 455,
+      "old_backup_and_candidate_import_preflight": "PASS",
+      "control_db_health_d2_plist_byte_hashes_unchanged": true
+    },
+    "evidence_hashes": {
+      "latest-f690-full.txt": "a3d0af0aedac3c21f388070c4f6f60fd2435d92ab0b70443ac7fb95b6068fa43",
+      "latest-f690-node.txt": "5110ed8643d6e4e48a513f4df045e71cc30bc214bec92af8c243e85586241cdc",
+      "manual_f690_browser_fixture.py": "f4b3f7de2c2fa29a8026adc7a3b302eba995c7abc8752f0179a867db3d2a579a",
+      "probe_existing_job_recovery_20261102.py": "3178504ea0568a11c6c96ae43edf5bea99d51418714d17a9c8bc60a8df0ee329",
+      "existing-job-proof-20261102.json": "899e887da8dd3141f6cd402fcf4a739974673d223c3aad4276d5f5b1fcc21551",
+      "existing-job-offline-recovery-result-20261102.json": "d4bee5ded24060428f3006d3b3c09b8738d4af2b0e36a00115f43dd0de9f3b6a",
+      "prepare_latest_f690_release.py": "90ca34f9c188cd6716f6efe8981c0d687ef0540ff95ffea9938ea10473a932e2",
+      "preflight_latest_f690_release.py": "21b5fc5ba8a8a5da10766e00f08616527bf4fdbde9a95adf4f4b07e62cbbb8b9",
+      "apply_latest_f690_release.py": "604e232a51e0fb0a426bcf86b8493ebda044e68fce8c8b9f3efe4b5688b85bc0",
+      "latest-f690-release-preflight.json": "f02dc409cf49e4b7331d7874b9979002c84fbb956489ae2cf3d577072e92920f",
+      "latest-f690-release-result.json": "64b0a54a18babf50e903a3eafefe1c3f545b124c18cbc0b5481a09e060272711",
+      "latest-f690-final-runtime.json": "66241a4005bf2fcf90931906bfc47659a2c7475aaf2e4f25bb88f027f526aae1"
+    },
+    "screenshot_hashes": {
+      "frank-f690-network-fixture.jpg": "e83d8916408c433882232d6e981873aa871a064b851e4a99fd12273d58914279",
+      "frank-f690-actual-job-restored-20261102.jpg": "9e249493b000783606b49f81067a156271125fbc0ac0b9ab7c2727c2f6b6844b"
+    },
+    "verdict": {
+      "latest_HEAD_offline_and_mac_acceptance": "PASS",
+      "existing_completed_real_job_cross_process_recovery": "PASS",
+      "real_chain_report_completeness": "NOT_PASSED",
+      "original_October_failed_job_provenance": "UNRESOLVED",
+      "transient_browser_transport_trigger": "UNRESOLVED",
+      "whole_prior_plan": "PARTIAL",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO"
+    },
+    "safety": {
+      "real_rpc_requests_by_this_phase": 0,
+      "real_ca_POST_by_this_phase": 0,
+      "notification_sends": 0,
+      "dashboard_source_switches": 1,
+      "scanner_restarts": 0,
+      "mc_loop_starts": 0,
+      "production_data_writes": 0,
+      "new_sources_timers_monitors_or_automation": 0,
+      "merges_signatures_or_trades": 0,
+      "independent_review": "waived by user; not claimed"
+    },
+    "scope_limit": "The real job existed before this phase. GET/disk verification and recovery do not authorize a new scan, prove complete chain coverage, recover the original October failed job, or determine the transport trigger."
   }
 }

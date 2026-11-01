@@ -1,6 +1,6 @@
 # Frank STATUS（唯一当前决策状态入口）
-更新时间：2026-11-01 22:06 Asia/Bangkok
-更新者：Codex（本轮仅GitHub/Chrome与既有CI，不做本地调试或部署；独立review按用户豁免；INVEST_NO_GO / TRADE_NO_GO保持）
+更新时间：2026-11-02 00:08 Asia/Bangkok
+更新者：Codex（用户继续授权本地调试、隔离测试与既有Dashboard维护；独立review豁免；INVEST_NO_GO / TRADE_NO_GO保持）
 
 ## 北极星答案（1 行）
 **P1 正式投入决定：`INVEST_NO_GO`**（2026-10-29 01:45 经用户批准提前结项；停止继续投入 Frank 跟单盈利研究，不自动进入 P2/P3）｜**实盘：`TRADE_NO_GO`**｜置信度：对「当前证据不足以支持追加资源/实盘」**高**；对「策略 edge 是否存在」**无法判断**。依据：[P1 188 episode / 752 理论延迟格证据](./FRANK_P1_HISTORICAL_FOLLOWABILITY_COVERAGE_20261028.md) **0 条已核验金额匹配双边报价**、[G4 PR #239](https://github.com/lxxlx2/ChatGPT_mission_record/pull/239) 严格有效 **0/30**。最大盲点：用户实际看到通知后的报价、交易规模、费用/滑点、成功退出率及独立样本。**NO_GO 不等于证明没有 edge。**
@@ -16,14 +16,14 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 **阶段管理已结束，保留 Frank 只读钱包观察工具的既有安全维护，不扩张研发或研究。** 新的跟单盈利研究必须经用户另行明确授权；P2/P3 未启动。
 
 ## 正在进行（最多 3 项）
-- **无正在执行的P0/P1盈利研究任务**。既有Mac Dashboard最近安装回执仍为`15aa995629c503fb9cc4278c18d7957672c05499`，原离线1587/3跳过、前端81及真实Chrome历史→无效→恢复证据保留，未在本轮重做或部署。**最新GitHub候选**为原PR220 [`f690fbf6c0beb582fdede50d7b46f126e9ca64ea`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/f690fbf6c0beb582fdede50d7b46f126e9ca64ea)：保留GET安全接口/阶段定位，并修复智能分析失败后筛选复活旧快照、智能分析/买卖观察旧响应覆盖新结果。7个反例实际由失败转绿；[CI run45](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41319318148)1586 Python通过/4跳过、99前端及22 Chromium场景通过。本轮仅GitHub/隔离CI/Chrome，无本地调试或Mac部署；review按用户豁免，不宣称独立APPROVE。Chrome又观察到一次瞬时Failed to fetch，后续读取已恢复，但失败接口/传输原因仍UNRESOLVED。[完整分层证据](./evidence/frank-ca-local-acceptance-20261101.json)。
-- D2来源仍为2026-11-01 08:26:32 Asia/Bangkok、slots463906568/463906572、4898账户/Mint、4023非零；未再次采集。F01近期0/历史7/eligible0、D1/D2可读，年龄计时修复保留。24份既有CA报告、控制库、D2来源、旧心跳和plist字节保持。c18父版Chrome隔离合成A/B/内存丢失/错误恢复通过，合成POST3、真实RPC/CA POST0；不冒充真实新扫描。
-- Scanner PID3402仍LIVE、0连续错误、source_drift=false，固定1f2c6afc28b9988eaacdc896562ff9a71b78f801；原PR244最新仍438bbe20899108a858a513648ab8c8c05b11e05e。19:18:53一致只读快照5979签名/seen，信号7/outbox9/Gmail2；排除已核验78条，后来20条逐笔重放PASS（被动16/ATA4），发布后共98条原始哈希/签名slot/分类账本/durable/seen核验完成。队列RAW_PENDING/未处理均0，签名/信号/outbox事件渠道/Gmail信号重复组均0；不外推未来自然事件或长期可靠性。
+- **无正在执行的P0/P1盈利研究任务**。原PR220最新固定 [`f690fbf6c0beb582fdede50d7b46f126e9ca64ea`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/f690fbf6c0beb582fdede50d7b46f126e9ca64ea) 已完成本机完整离线1587通过/3无关numpy跳过、Node99及语法检查通过，并切换到实际Dashboard PID20153。安全GET阶段定位、双面板旧响应/旧快照防护已在本机Chrome合成故障验收；不借CI场景数冒充Mac实测。Scanner未重启、MC Loop未启动，独立review按用户豁免。[本轮完整回执](./evidence/frank-ca-local-acceptance-20261101.json)见mac_latest_head_acceptance_20261102。
+- 既有真实CA job `2306599a664d4308ad9b0cf3706c07a3`（11月1日22:10报告，本轮未创建）经GET和磁盘确认报告/任务/marker/摘要一致；私有副本空内存恢复及4项损坏拒绝PASS。Dashboard源码切换后实际GET返回DONE/restored_from_saved_report=true，Chrome“读取选中报告”显示任务ID与CA已核对；无效CA清理与恢复PASS，标签保留。当前28份报告文件哈希保留；控制库、D2、旧心跳及plist不变。D2仍为11月1日08:26的4898账户/Mint快照，F01近期0/历史7/eligible0，不是实时余额或可执行资格。
+- Scanner固定1f2c6afc28b9988eaacdc896562ff9a71b78f801、PID3402保持LIVE/0连续错误/无漂移；00:07只读快照6006签名/seen、RAW_PENDING/未处理0，信号7/outbox9/Gmail2。逐笔重放结论仍只覆盖此前发布后98条（截至5979），后来27条未在本阶段单独重放，不扩展旧结论。
 
 ## 剩余真实条件（最多 3 项）
 - **自然新BUY及真实延迟/通知样本仍缺**：当前无新增识别信号；历史Sent、买类候选年龄和交易列表BUY不是同一口径。不制造交易/通知，不新增等待监控或自动任务。
 - **MC Loop独立签名条件不具备**：root公钥锚点与有效用户签名工件缺失，Loop保持未加载。维护授权与免review已生效，不能代替用户持钥签名；不生成/读取用户私钥、不恢复旧默认金额路径。
-- **CA旧任务关联与大规划仍未闭合**：原PR220未来任务job索引/GET恢复已在本机采用，旧报告仍无ca_job_id/_jobs，未证明属于原失败job，最初连接触发因素仍UNRESOLVED。本阶段不发真实CA POST，不用新扫描补造旧证据。P1已INVEST_NO_GO；P2/P3、多人物/PnL和更大V3冻结。
+- **CA旧任务关联与大规划仍未闭合**：原PR220已补上一个既有真实完成job的跨进程GET/Chrome恢复证据；但10月原故障报告缺可证明的原job关联，新11月job不能替代它。最初连接触发因素及瞬时传输原因仍UNRESOLVED，报告覆盖仍不完整。本阶段不发真实CA POST，不用新扫描补造旧证据。P1已INVEST_NO_GO；P2/P3、多人物/PnL和更大V3冻结。
 
 ## 本周已关闭（最多 5 行）
 - **P1 历史回答于 2026-10-29 01:45 经用户批准提前结项：`INVEST_NO_GO`、`TRADE_NO_GO`**。[原始证据矩阵](./FRANK_P1_HISTORICAL_FOLLOWABILITY_COVERAGE_20261028.md)保留。
@@ -41,3 +41,5 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 截至19:21的既有Mac维护记录按用户明确授权完成既有Dashboard安装/定点修复，以及一次D2双程序采集、离线重放和原子导入；不启动MC Loop、不回灌旧数据库、不改变模型或冻结策略。累计新增链上读取2；本轮CA整合、无效输入修复与Chrome验收真实RPC/CA POST为0。`TRADE_NO_GO / NO_CA_POST / NO_TRADES / NO_MERGE`保持；邮件/通知发送0、Scanner重启0、无新增timer/监控/自动化/数据源或盈利研究。原始余额、完整响应和含私有路径的日志保留在Git外；公开只写脱敏代码/回执与哈希。用户豁免独立review，不宣称独立APPROVE，也不把CI或合成证据当作真实链上验收。
 
 本轮GitHub/Chrome补充：GET安全定位和双面板刷新一致性的隔离故障注入均在CI合成服务完成，CI真实CA/RPC/生产请求均0。实际Chrome仅读取既有本地GET，观察到瞬时读取失败后恢复；未采集新来源，未写运行文件、发邮件/通知或交易。未运行本地调试或部署。分层回执见既有[验收证据](./evidence/frank-ca-local-acceptance-20261101.json)的github_chrome_get_error_followup_20261101及observation_refresh_consistency_followup_20261101字段。
+
+2026-11-02本机后续：上述f690最新源码已按用户再次明确的本地维护授权完成本机离线与Chrome验收和既有Dashboard切换，取代上方历史段落的“未运行本地调试或部署”状态；本轮真实RPC/CA POST0，既有真实job仅GET/读盘/私有副本验证，不能算本轮发起的新扫描。
