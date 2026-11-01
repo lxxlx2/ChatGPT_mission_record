@@ -1021,5 +1021,130 @@
       "independent_review": "waived by user; not claimed"
     },
     "scope_limit": "The real job existed before this phase. GET/disk verification and recovery do not authorize a new scan, prove complete chain coverage, recover the original October failed job, or determine the transport trigger."
+  },
+  "manual_ca_accuracy_followup_20261102": {
+    "observed_at_utc": "2026-11-01T20:33:56.738Z",
+    "authority": "Latest user explicitly requested continuing mainline, allowed local debugging and isolated testing, and waived independent review. This phase repairs existing manual CA evidence semantics only; profit research remains frozen.",
+    "source": {
+      "baseline": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "head": "91db349f1764e22a3fd9de98ec4ab557741bbde9",
+      "pr": 220,
+      "changed_files": [
+        "mission_agent/meme/cluster.py",
+        "mission_agent/mission_control/static/app.js",
+        "tests/test_meme_wallet_cluster.py",
+        "tests/test_frank_ca_report_render.mjs"
+      ],
+      "remote_four_file_exact_readback": true
+    },
+    "product_authority": "meme/ca-analysis-unified-accuracy-acceptance.md Gate A; overall Gate A remains PARTIAL",
+    "defects_and_repairs": [
+      "Materiality and known exclusion Top10 aggregate token accounts by Owner before ranking; a split 0.6% + 0.6% holding becomes 1.2%, rather than vanishing below the 1% owner threshold.",
+      "Raw account Top10 uses the LargestAccounts snapshot even when Owner resolution loses rows.",
+      "Only literal boolean true declares special normalization. Labels alone do not establish complete eligible Owner ranks.",
+      "Strict concentration requires verified labels, holder-rank sufficiency and same finalized slot across supply, largest accounts and both account batches. Existing responses supply these slots; no extra RPC.",
+      "Adaptive-only Owner scans now carry scanned status; a missing acquisition stays unresolved rather than not-scanned.",
+      "Null transaction reads and missing/unscanned/multiple-account evidence enter explicit coverage gaps and block an unsupported negative cluster conclusion.",
+      "UI retains partial sample figures with a generic sample label valid for legacy reports, masks unsupported strict legacy metrics and describes allowlisted gaps without echoing arbitrary payload codes."
+    ],
+    "tests": {
+      "local_environment": "Linux root container; external DNS/connect blocked by local pytest guard; not Mac acceptance",
+      "analyzer_final": {
+        "passed": 43,
+        "failed": 0
+      },
+      "integrated_CA_server_dashboard": {
+        "passed": 118,
+        "failed": 0
+      },
+      "frontend_final": {
+        "passed": 102,
+        "failed": 0
+      },
+      "javascript_syntax": "PASS",
+      "baseline_counterexamples": {
+        "source": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+        "python_passed": 25,
+        "python_failed": 18,
+        "frontend_report_passed": 47,
+        "frontend_report_failed": 2,
+        "frontend_added": 3
+      },
+      "root_full_suite_observation": {
+        "status": "FAIL_PRESERVED",
+        "failure": "test_public_key_must_be_provisioned_in_protected_external_location",
+        "reason": "Runner UID 0 makes the normally user-owned temporary key and parent root-owned. Existing test expects an unsafe user-owned trust anchor. Production verifier and its tests were not modified.",
+        "intermediate_run_passed": 1623,
+        "intermediate_run_failed": 1,
+        "intermediate_run_skipped": 4,
+        "final_HEAD_full_suite_claim": "Use the pinned final CI result; intermediate local totals are not final-HEAD full acceptance."
+      },
+      "ci": {
+        "head": "91db349f1764e22a3fd9de98ec4ab557741bbde9",
+        "merge_ref_sha_prefix": "100988e38",
+        "run": 41347189821,
+        "job": 124969433332,
+        "status": "completed",
+        "conclusion": "success",
+        "metadata_and_log_readback": true,
+        "python_passed": 1603,
+        "python_skipped": 4,
+        "frontend_passed": 102,
+        "frontend_failed": 0,
+        "browser_checks": 22,
+        "page_errors": 0,
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "production_requests": 0,
+        "real_ca_posts": 0,
+        "cleanup_verified": true,
+        "skip_reasons": [
+          "3 unrelated Monster suites: numpy unavailable",
+          "1 macOS /tmp-symlink-specific case on Linux"
+        ],
+        "scope": "CI Chromium + synthetic analyzer/real HTTP Handler; not Mac installation or real-chain completeness"
+      }
+    },
+    "chrome_actual": {
+      "action": "Opened existing Dashboard and clicked Read selected report once; did not submit analysis",
+      "saved_job_prefix": "2306599a",
+      "report_time_bangkok": "2026-11-01 22:10:33",
+      "verified_visible": "保存报告中的任务编号与 CA 已核对；覆盖与完整性仍须另行核实",
+      "report_still_incomplete": true,
+      "tab_kept_open": true,
+      "scope": "GET recovery of last installed service only; not new candidate UI/chain acceptance",
+      "current_serving_source_bytes_reverified": false
+    },
+    "evidence_hashes": {
+      "mainline-integrated-final.txt": "cfe2712617ce3705b7010c07f9cc6c6ba7931ed734c3dc24c80e935a3e47d935",
+      "mainline-targeted-final.txt": "eb322620609ebd56a0e4aef63c5ffabaaa339b1870527c801e4bf49d389c6fca",
+      "mainline-final-red.txt": "049b4405a03d7064ad32260c6ae93f1d2a9a1ca3760a105540e7adf1c6c8f153",
+      "mainline-ui-red.txt": "876387b3959b81d846f1347862b4a3717570e25f3126e758d37c78eba4b9cd26",
+      "mainline-ui-green.txt": "5edc7fb7352c4edab9f1f12d6128c102f337a645898c6a40c79ccd6b8e6ec1fa",
+      "mainline-final-full.txt": "8063292540f778ef5f2291f0cb2ebabfbebd9c0f5609d875c477b112b4c77a7d",
+      "frank-mainline-job-readback-20261102.jpg": "34136d31e2eccd7e7b0eb6a23aa24586403fe18dd38774cad945d002c37bb185"
+    },
+    "remaining_mainline": [
+      "Single user-facing query mode with truthfully governed PARTIAL/INCOMPLETE_EVIDENCE result status",
+      "Permitted holder-rank enumeration beyond raw Top20 and sufficiently paginated material history/funding",
+      "Exact-CA external narrative sources and independent market/holder reconciliation",
+      "Representative source-parity real cases and final candidate Mac acceptance"
+    ],
+    "limits": {
+      "original_October_failed_job_identity": "UNPROVEN",
+      "original_transport_trigger": "UNRESOLVED",
+      "new_real_rpc": 0,
+      "new_real_ca_posts": 0,
+      "mac_deployments": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "notification_sends": 0,
+      "new_monitors_or_automations": 0,
+      "trades": 0,
+      "merges": 0,
+      "independent_review": "WAIVED_NOT_PERFORMED",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO"
+    }
   }
 }
