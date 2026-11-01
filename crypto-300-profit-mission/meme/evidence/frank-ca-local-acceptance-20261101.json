@@ -660,5 +660,73 @@
     "real_rpc_or_ca_post": 0,
     "notification_sends": 0,
     "new_monitor_or_automation": false
+  },
+  "github_chrome_get_error_followup_20261101": {
+    "observed_at_bangkok": "2026-11-01 21:55",
+    "authority": "User requested GitHub and Chrome only, no local debugging, independent review waived.",
+    "source": {
+      "baseline_sha": "15aa995629c503fb9cc4278c18d7957672c05499",
+      "red_test_sha": "b06002185d5966ca5db245bf0307db12b9ccbc12",
+      "final_sha": "35879a223a9f572dc77ab3d993c9c722aacf6cea",
+      "pr": 220
+    },
+    "change": "Shared GET reports allowlisted local endpoint and NETWORK/HTTP/JSON phase; omits query identity, arbitrary URL, response content and raw exception text. HTTP 404 stop semantics and success payload preserved. No retry/timer change.",
+    "ci": {
+      "red": {
+        "run": 41318242473,
+        "job": 124882767037,
+        "python_pass": 1586,
+        "python_skip": 4,
+        "node_pass": 82,
+        "node_fail": 7,
+        "verdict": "EXPECTED_COUNTEREXAMPLES_CONFIRMED"
+      },
+      "green": {
+        "run": 41318378493,
+        "job": 124883176330,
+        "conclusion": "success",
+        "python_pass": 1586,
+        "python_skip": 4,
+        "node_pass": 89,
+        "node_fail": 0,
+        "browser_checks": 19,
+        "page_errors": 0,
+        "fixture_posts": 7,
+        "real_ca_posts": 0,
+        "real_rpc": 0,
+        "production_requests": 0
+      },
+      "skips": [
+        "3 unrelated Monster numpy-dependent suites",
+        "1 macOS /tmp-symlink-specific case on Linux"
+      ],
+      "browser_scope": "CI Chromium with real fixture HTTP Handler and synthetic analysis; NETWORK/JSON/HTTP fault injection, safe attribution, F01 closure, existing refresh recovery and no new POST."
+    },
+    "user_chrome": {
+      "dashboard_reachable": true,
+      "runtime_display": "Frank monitor normal; MC heartbeat stale",
+      "d2": {
+        "rows": 100,
+        "total_pages": 49,
+        "source_bangkok": "2026-11-01T08:26:32.578080+07:00",
+        "source_refreshed": false
+      },
+      "ca": "Existing 2026-10-22 report read; incomplete coverage and unverified task association remain explicit.",
+      "console": "Wallet-extension warnings/conflict observed; no causal attribution to the original GET failure.",
+      "current_served_js_identity": "NOT_VERIFIED: direct app.js navigation was blocked by the client; no bypass attempted.",
+      "tab_kept_open": true
+    },
+    "limits": {
+      "local_debug": false,
+      "mac_deploy": false,
+      "restarts": 0,
+      "new_monitor": false,
+      "notification_send": 0,
+      "trades": 0,
+      "independent_review": "WAIVED_NOT_PERFORMED",
+      "original_failed_fetch_cause": "UNRESOLVED",
+      "original_job_report_association": "UNPROVEN",
+      "mac_installation": "NOT_PERFORMED_OR_VERIFIED_THIS_TURN"
+    }
   }
 }
