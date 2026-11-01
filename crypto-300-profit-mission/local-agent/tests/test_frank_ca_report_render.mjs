@@ -31,7 +31,7 @@ function harness(options = {}) {
     return elements.get(id);
   };
   const store=options.store || new Map(),requests=[];
-  let responseFor=null;
+  let responseFor=options.responseFor || null;
   const context={
     document:{
       getElementById:element,querySelectorAll:()=>[],
@@ -62,9 +62,66 @@ function harness(options = {}) {
     Date,Math,Number,String,JSON,URL,URLSearchParams,Intl,
   };
   vm.createContext(context);
+  if (options.initialMint) element('cluster-mint').value=options.initialMint;
   vm.runInContext(source,context,{timeout:2500,filename:'app.js'});
   return {context,element,requests,store,setResponse(fn){responseFor=fn;}};
 }
+
+test('startup historical load labels the remembered CA as unverified and uses GET only',async()=>{
+  const store=new Map([['local:mission-meme-last-cluster-ca',mint]]);
+  const h=harness({store,responseFor:async url=>url.startsWith('/api/cluster-latest?')
+    ? {ok:true,status:200,json:async()=>fixture} : new Promise(()=>{})});
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(h.element('cluster-mint').value,mint);
+  assert.equal(h.element('cluster-result').hidden,false);
+  assert.match(h.element('cluster-status').innerHTML,/已有历史报告/);
+  assert.match(h.element('cluster-status').innerHTML,/与当前任务的关联未经核实/);
+  assert.deepEqual(h.requests.filter(x=>x.url.startsWith('/api/cluster-latest?')),
+    [{url:'/api/cluster-latest?mint='+mint,method:'GET'}]);
+  assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
+});
+
+test('startup prefilled CA takes precedence over the previous CA cache',async()=>{
+  const selected='33333333333333333333333333333333';
+  const store=new Map([['local:mission-meme-last-cluster-ca',mint]]);
+  const h=harness({store,initialMint:selected,responseFor:async url=>url.startsWith('/api/cluster-latest?')
+    ? {ok:true,status:200,json:async()=>({...fixture,mint:selected})} : new Promise(()=>{})});
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(h.element('cluster-mint').value,selected);
+  assert.deepEqual(h.requests.filter(x=>x.url.startsWith('/api/cluster-latest?')),
+    [{url:'/api/cluster-latest?mint='+selected,method:'GET'}]);
+  assert.match(h.element('cluster-status').innerHTML,/与当前任务的关联未经核实/);
+  assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
+});
+
+test('startup historical cache cannot preempt a pending task',async()=>{
+  const store=new Map([
+    ['local:mission-meme-last-cluster-ca',mint],
+    ['session:mission-meme-cluster-pending-v1',JSON.stringify({id:jobId,mint})],
+  ]);
+  const h=harness({store});
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(h.requests.filter(x=>x.url.startsWith('/api/cluster-latest?')).length,0);
+  assert.equal(JSON.parse(h.store.get('session:mission-meme-cluster-pending-v1')).id,jobId);
+});
+
+test('failed history lookup for another CA hides the previously rendered report',async()=>{
+  const h=harness();
+  await finish(h,jobId,'OLD_CA_REPORT');
+  assert.equal(h.element('cluster-result').hidden,false);
+  h.element('cluster-preview').hidden=false;
+  h.element('cluster-mint').value='33333333333333333333333333333333';
+  const response=deferred();
+  h.setResponse(async()=>response.promise);
+  const reading=h.element('cluster-read-cached').listeners.get('click')();
+  assert.equal(h.element('cluster-result').hidden,true);
+  assert.equal(h.element('cluster-preview').hidden,true);
+  response.resolve({ok:false,status:404,json:async()=>({})});
+  await reading;
+  assert.equal(h.element('cluster-result').hidden,true);
+  assert.match(h.element('cluster-status').innerHTML,/历史缓存读取失败/);
+  assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
+});
 
 test('full shipped app.js directly renders a verified-shape incomplete CA report',()=>{
   const h=harness();
@@ -333,3 +390,4 @@ test('editing CA during historical GET still exposes the paused pending task',as
   assert.equal(JSON.parse(h.store.get(pendingKey)).id,secondJob);
   assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
 });
+

@@ -180,13 +180,14 @@ test('P2-1: late historical cache A cannot change active B, report or status',as
   h.elements('cluster-mint').value=mint;
   h.context.clusterSetJob(id,mint);
   const loading=h.listeners['cluster-read-cached']();
+  const statusBeforeSwitch=h.statuses.slice();
   h.context.clusterSetJob(idB,mintB);
   h.elements('cluster-mint').value=mintB;
   a.resolve({mint,observed_at:1792708806,coverage:{special_normalization_complete:false}});
   await loading;
   assert.equal(h.rendered.length,0);
   assert.equal(h.elements('cluster-mint').value,mintB);
-  assert.equal(h.statuses.length,0);
+  assert.deepEqual(h.statuses,statusBeforeSwitch);
   assert.equal(h.elements('cluster-recovery').hidden,true);
 });
 
@@ -330,3 +331,4 @@ test('completed A recovers its durable report after same-Mint B became latest',a
   assert.equal(h.storage.has('mission-meme-cluster-pending-v1'),false);
   assert.ok(h.calls.every(path=>!path.startsWith('POST:')));
 });
+

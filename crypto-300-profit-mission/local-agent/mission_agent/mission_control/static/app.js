@@ -1210,7 +1210,14 @@ function setView(name) {
     try { pending=JSON.parse(sessionStorage.getItem(CLUSTER_PENDING_KEY)||'null'); } catch (_) {}
     const validPending=pending && /^[0-9a-f]{32}$/.test(pending.id) &&
       /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(pending.mint);
-    if (mint && !validPending) loadLatestCluster(mint,true);
+    if (!validPending) {
+      // An explicitly selected CA takes precedence over the convenience hint.
+      mint=$('cluster-mint').value.trim() || mint;
+      if (mint) {
+        $('cluster-mint').value=mint;
+        void clusterLoadHistoricalCache();
+      }
+    }
   }
 }
 
@@ -1871,6 +1878,9 @@ async function clusterLoadHistoricalCache() {
   const version=clusterPollVersion;
   const jobId=clusterActiveJob?.id || null;
   const input=$('cluster-mint').value.trim();
+  $('cluster-result').hidden=true;
+  $('cluster-preview').hidden=true;
+  clusterStatus('running','读取已有历史报告','仅发送 GET；与当前任务的关联未经核实');
   let phase='GET';
   try {
     const report=await get('/api/cluster-latest?mint='+encodeURIComponent(mint));
@@ -2041,3 +2051,4 @@ $('cluster-clear-reports').addEventListener('click',()=>{
   clusterRenderSavedReports();
 });
 clusterRenderSavedReports();
+
