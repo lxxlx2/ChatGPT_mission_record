@@ -1,5 +1,5 @@
 # Frank STATUS（唯一当前决策状态入口）
-更新时间：2026-11-01 03:21 Asia/Bangkok
+更新时间：2026-11-01 08:19 Asia/Bangkok
 更新者：Codex（按用户维护授权恢复既有 Scanner 与只读 Dashboard；独立审核未执行；P0/P1 结项及实盘 NO_GO 保持）
 
 ## 北极星答案（1 行）
@@ -16,12 +16,14 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 **阶段管理已结束，保留 Frank 只读钱包观察工具的既有安全维护，不扩张研发或研究。** 新的跟单盈利研究必须经用户另行明确授权；P2/P3 未启动。
 
 ## 正在进行（最多 3 项）
-- 目前**无正在执行的 P0/P1 任务**。既有 Scanner RPC 维护 DONE：生产已加载固定源码 [`1f2c6afc28b9988eaacdc896562ff9a71b78f801`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/1f2c6afc28b9988eaacdc896562ff9a71b78f801)，原 PID 53946 → 新 PID 3402，RUNNING / 0 连续错误 / source_drift=false；74.013 秒前台检查逐轮记录 3 次成功轮询（每次 poll_increment=1）。
-- Scanner 发布后本地新增并处理 37 签名（被动转账 20 / ATA 16 / 证据不足 UNKNOWN 1），原始哈希、签名/slot、完整分类账本重放均 PASS；未观察到已识别 BUY，无新信号/通知，历史记录保持。[Scanner 证据](./evidence/frank-scanner-rpc-maintenance-20261031.json)。
-- 既有 Dashboard 恢复 DONE：固定源码 [`4de090643590226ba7ec78e9b6c815bb9d6c7259`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/4de090643590226ba7ec78e9b6c815bb9d6c7259)，127.0.0.1:8766 / API 与实际页面可用；Scanner 显示正常、旧 Loop 显示心跳过期，控制库 13 表内容未变。[恢复证据](./evidence/frank-dashboard-readonly-recovery-20261101.json)。
+- **无正在执行的 P0/P1 盈利研究任务**。原 Scanner RPC 维护及 Dashboard 恢复已完成；当前 Scanner PID 3402、RUNNING / 0 连续错误 / source_drift=false；生产源码仍为 Scanner `1f2c6afc28b9988eaacdc896562ff9a71b78f801`、Dashboard `4de090643590226ba7ec78e9b6c815bb9d6c7259`。
+- 用户要求继续收尾旧计划：F01 已在当前 Dashboard 精确基线上完成源码整合和 Mac 隔离浏览器验收，固定 [`ffa96a78a9cae9902d6ba297d5d2135ecbce28cc`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/ffa96a78a9cae9902d6ba297d5d2135ecbce28cc)，1569 完整离线 / 70 提交后 / Node20 通过；历史模型与支付信息已补回，近期0、历史7、eligible0。**未安装新 F01**；用户豁免独立 review，不宣称独立 APPROVE。[计划核对](./FRANK_PLAN_RECONCILIATION_20261101.md)。
+- 最新只读复查签名5940，信号7/outbox9/Gmail2保持；先前37条逐笔核验不延伸到后来新增签名。D2既有4305 Mint、44页和跨页查询通过，但来源仍为10月25日旧快照，非当前余额。[本轮证据](./evidence/frank-f01-plan-reconciliation-20261101.json)。
 
-## 等用户授权（最多 3 项）
-- **P1 提前结项保持有效，P2/P3 未启动**。既有只读维护无待批项；MC Loop 按原签名策略门禁保持未加载，本轮未生成任何签名/批准记录，不恢复旧决策写入或投递。真实新 BUY 通知验收仍未覆盖，等待自然事件，不制造测试交易。
+## 剩余真实条件（最多 3 项）
+- **新来源与自然事件尚缺**：D2需要新的、限定范围的真实采集，当前仍保留NO_REAL_RPC；新BUY实际通知/真实首见延迟需要自然事件，历史Sent验证不代替新事件，不制造测试交易或通知。
+- **MC Loop签名工件仍缺**：保持未加载。用户的默认授权及免review不是由用户持钥生成的有效策略签名字节；不生成/读取用户私钥，不恢复旧决策写入或投递。
+- **大规划不自动重启**：P1已INVEST_NO_GO结项，P2/P3、多人物/PnL与更大CA/V3改造仍冻结。F01源码和隔离验收完成不等于生产安装、F2/F3组合验收或盈利证明。
 
 ## 本周已关闭（最多 5 行）
 - **P1 历史回答于 2026-10-29 01:45 经用户批准提前结项：`INVEST_NO_GO`、`TRADE_NO_GO`**。[原始证据矩阵](./FRANK_P1_HISTORICAL_FOLLOWABILITY_COVERAGE_20261028.md)保留。
@@ -32,8 +34,8 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 
 ## 已知但故意不做（C 类清单）
 - P1 延迟报价研究、ACC/MULT 跟单盈利研究与 P2/P3 后续开发均已暂停；保留冻结源数据和审核记录，不误认为 edge 为负。
-- F1–F3 新发布流程、无关 UI 打磨、pyc 考古和额外辅助门禁；真正 S 类生产/资金安全检查始终生效。
+- F01 生产安装及 F2/F3 新发布流程、无关 UI 打磨、pyc 考古和额外辅助门禁；真正 S 类生产/资金安全检查始终生效。
 - 不新增报价采集、定时任务、外部 RPC、Mac/8766 发布、钱包签名、交易或未经审核的 PR 清理。
 
 ## S 类（不可豁免）
-本轮按维护授权完成 Scanner 与既有 Dashboard 恢复，不启动 MC Loop、不回灌旧数据库、不改变模型/冻结策略。`TRADE_NO_GO / NO_CA_POST / NO_TRADES / NO_MERGE` 保持；V1 Gmail 仅做现有凭据刷新和历史 Sent 读取，发送调用为 0；没有新增监控、自动化或盈利研究。
+此前按维护授权完成 Scanner 与既有 Dashboard 恢复；本轮只做本地隔离源码/页面验收和实际状态只读复查，无生产生命周期调用、真实RPC/CA POST或通知发送，不启动 MC Loop、不回灌旧数据库、不改变模型/冻结策略。`TRADE_NO_GO / NO_CA_POST / NO_TRADES / NO_MERGE` 保持；V1 Gmail 仅做现有凭据刷新和历史 Sent 读取，发送调用为 0；没有新增监控、自动化或盈利研究。
