@@ -1,0 +1,429 @@
+{
+  "schema": "CRYPTO_DAILY_COLLECTOR_RESEARCH_V2",
+  "run_date_bkk": "2026-11-02",
+  "run_mode": "COLLECTOR_06_20",
+  "recorded_at_utc": "2026-11-01T23:19:31.383Z",
+  "source_check_window_bkk": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+  "planned_shard": 2,
+  "executed_shard": 2,
+  "last_two_complete_shards": [
+    0,
+    1
+  ],
+  "rule_blob_shas": {
+    "PIPELINE_CONTRACT.md": "0d94442ca1b920ad0b3e5ea9158d47a6b3dcbe25",
+    "EDITORIAL_RULESET.json": "2ed51528d230508ae4e0015762b1d60c9d72e299",
+    "REPORT_SPEC.md": "809a5c1cbcd6503d42305c842f37826b74a4741f",
+    "REPORT_ACCEPTANCE.md": "d9952d82e3903d699d7db02632c1f26ebdd2c945",
+    "COLLECTOR_SPEC.md": "aa4f1473f3c767b2216f715cbba78231c4794c02",
+    "SECURITY_SOURCE_POLICY.md": "86b36f208220e90a52caa1cb8acaeec47add9628",
+    "DELIVERY_RUNBOOK.md": "181c0448dddd2586e6082faaa1f51f7556eaa795",
+    "state/daily-event-ledger.json": "bc7801e5efc9d42dee5cfb3554347073cbda65ac",
+    "docs/MONITORING/X_FIRST_PARTY_SOURCE_POLICY.md": "20abfed8a287307bb2d6017b3b9e7ff509bbeebe"
+  },
+  "gmail_sent_prefix_today": [],
+  "gmail_sent_checked": true,
+  "seven_day_delivered_history": [
+    {
+      "date": "2026-10-26",
+      "gmail_id": "1a176097e267ed98",
+      "git_blob_sha": "da4ae0ef14aaf8111c14174ac827d3d5c9344091",
+      "chars": 4664,
+      "full_gmail_read": true,
+      "full_git_read": true,
+      "exact_body_equal": true
+    },
+    {
+      "date": "2026-10-27",
+      "gmail_id": "1a17b2d317942c5a",
+      "git_blob_sha": "407a25cf17db3f476932759de598d60102b13a85",
+      "chars": 5516,
+      "full_gmail_read": true,
+      "full_git_read": true,
+      "exact_body_equal": true
+    },
+    {
+      "date": "2026-10-28",
+      "gmail_id": "1a180500065679d2",
+      "git_blob_sha": "5bc7be7c463f2d8b88917e974b31dc330e5d0f50",
+      "chars": 4943,
+      "full_gmail_read": true,
+      "full_git_read": true,
+      "exact_body_equal": true
+    },
+    {
+      "date": "2026-10-29",
+      "gmail_id": "1a185794e63c022c",
+      "git_blob_sha": "89b93f0a7883b02c85824afb0b07547d51ae28c9",
+      "chars": 4307,
+      "full_gmail_read": true,
+      "full_git_read": true,
+      "exact_body_equal": true
+    },
+    {
+      "date": "2026-10-30",
+      "gmail_id": "1a18a9d5e767548d",
+      "git_blob_sha": "23d55aab5c7400a0fd9688d7bc90ab1023ce9710",
+      "chars": 3721,
+      "full_gmail_read": true,
+      "full_git_read": true,
+      "exact_body_equal": true
+    },
+    {
+      "date": "2026-10-31",
+      "gmail_id": "1a18fc6328b668e2",
+      "git_blob_sha": "6727cca0190395f3ecc21024e7b19bbd4447d259",
+      "chars": 4053,
+      "full_gmail_read": true,
+      "full_git_read": true,
+      "exact_body_equal": true
+    },
+    {
+      "date": "2026-11-01",
+      "gmail_id": "1a194e8623464edf",
+      "git_blob_sha": "9d1de6ff96fbe46f8b453f3cf4d1a7a22074881d",
+      "chars": 3957,
+      "full_gmail_read": true,
+      "full_git_read": true,
+      "exact_body_equal": true
+    }
+  ],
+  "event_ledger": {
+    "sha": "bc7801e5efc9d42dee5cfb3554347073cbda65ac",
+    "delivered_previous_events": 204,
+    "open_missed_candidates": 0
+  },
+  "market": {
+    "asof_utc": "2026-11-01T23:17:59Z",
+    "source": "Binance official read-only connector",
+    "spot": {
+      "BTCUSDT": {
+        "last": 78103.1,
+        "change24h_pct": 0.708,
+        "low24h": 77515.3,
+        "high24h": 78285,
+        "quote_volume_usdt": 496197053.275
+      },
+      "ETHUSDT": {
+        "last": 2269.27,
+        "change24h_pct": 0.62,
+        "low24h": 2247.84,
+        "high24h": 2278,
+        "quote_volume_usdt": 195131700.713
+      },
+      "SOLUSDT": {
+        "last": 94.26,
+        "change24h_pct": -1.381,
+        "low24h": 93.18,
+        "high24h": 96.04,
+        "quote_volume_usdt": 73974724.903
+      },
+      "BNBUSDT": {
+        "last": 708.93,
+        "change24h_pct": 0.835
+      },
+      "HYPEUSDT": {
+        "last": 87.64,
+        "change24h_pct": -0.08
+      }
+    },
+    "futures": {
+      "BTCUSDT": {
+        "mark": 78067.076,
+        "rate_fraction": 0.0001,
+        "open_interest_btc": 95636.134
+      },
+      "ETHUSDT": {
+        "mark": 2268.15,
+        "rate_fraction": 0.00001974,
+        "open_interest_eth": 2359941.905
+      },
+      "SOLUSDT": {
+        "mark": 94.19,
+        "rate_fraction": 0.0001,
+        "open_interest_sol": 9095083.17
+      }
+    },
+    "etf_last_session": {
+      "date": "2026-10-30",
+      "BTC_usdm": -643.2,
+      "ETH_usdm": -155.7,
+      "SOL_usdm": -10.8,
+      "already_delivered": "2026-11-01",
+      "new_session": false
+    }
+  },
+  "source_receipts": [
+    {
+      "lane": "spot",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-11-01T23:17:59Z",
+      "status": "VERIFIED",
+      "observation": "Binance official connector 5 individual ticker calls; multi-symbol call failed HTTP400 duplicate symbols, recovered individually."
+    },
+    {
+      "lane": "derivatives",
+      "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-11-01T23:17:51Z",
+      "status": "VERIFIED",
+      "observation": "Official Binance BTC/ETH/SOL mark, funding and open interest; single-point OI only."
+    },
+    {
+      "lane": "capital_flows",
+      "source_url": "https://farside.co.uk/btc/",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-10-30 US session",
+      "status": "CHECKED_NO_NEW_US_TRADING_DAY",
+      "observation": "BTC/ETH/SOL Farside tables checked; Oct30 BTC -643.2m USD, ETH -155.7m, SOL -10.8m from prior final; already delivered Nov1. US weekend; issuer-level reconciliation not repeated."
+    },
+    {
+      "lane": "onchain",
+      "source_url": "https://info.arkm.com/research",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-10-30 newest relevant featured hack article",
+      "status": "PARTIAL_TXID_GAP",
+      "observation": "Arkham first-party index read; Lookonchain Nov1 first-day Binance outflows $3.64bn attributed, no independent complete TXID or entity reconciliation."
+    },
+    {
+      "lane": "policy",
+      "source_url": "https://www.binance.com/en/support/announcement",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-11-01 04:08 (site)",
+      "status": "CHECKED",
+      "observation": "Binance official exchange access/withdrawal phase update; SEC issuer/EDGAR and six venue original support pages checked; no new verified separate regulatory notice."
+    },
+    {
+      "lane": "infrastructure",
+      "source_url": "https://info.arkm.com/research",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-10-30",
+      "status": "PARTIAL_NO_NEW_VERIFIED",
+      "observation": "Arkham current research and existing RWA/chain official search; no independently confirmed new protocol material version; Ripple/Robinhood Oct27 already delivered Nov1."
+    },
+    {
+      "lane": "tge",
+      "source_url": "https://www.binance.com/en/support/announcement",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-11-01 newest index",
+      "status": "PARTIAL_X_SOURCE_GAP",
+      "observation": "Official exchange announcements and Cambria indexed X query; no newly verified actionable claim, contract change or beneficiary right; Cambria Oct28 Gmail 1a1812a1f6802ecb already alerted."
+    },
+    {
+      "lane": "early_nft",
+      "source_url": "https://blog-v3.opensea.io/articles/opensea-digest-october-30-2026",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-10-30",
+      "status": "PARTIAL_NO_FRESH_PRIMARY_POST",
+      "observation": "OpenSea official art/NFT brief; Rhizome grants already delivered Nov1; direct creator X original and current mint contract not verified; Reddit /r/CryptoCurrency and /r/CryptoMarkets pages returned stale crawl."
+    },
+    {
+      "lane": "security",
+      "source_url": "https://www.fbi.gov/investigate/cyber/alerts/2026/north-korea-responsible-for-6-billion-binance-attack",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-10-31",
+      "status": "HIGH_CANDIDATE",
+      "observation": "FBI directly attributes Oct29 >$6bn Binance theft to DPRK TraderTraitor; lists suspect addresses, does not establish any individual user exposure. Binance issuer Nov1 95% replenishment / phase-one planned withdrawals is a distinct new state in same family."
+    },
+    {
+      "lane": "web_runtime_rce",
+      "source_url": "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-10-21",
+      "status": "CHECKED_OLD_DELIVERED",
+      "observation": "Node Brotli/TLS official fixed releases and PHP 2026 archive checked; CERT-EU 2026 advisories latest Oct22 GitLab RCE; no newly dated November original RCE found in bounded scan."
+    },
+    {
+      "lane": "web_pki_tls",
+      "source_url": "https://blog.cloudflare.com/emudhra-patching/",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-10-30",
+      "status": "NEW_MATERIAL_FOLLOWUP_CANDIDATE",
+      "observation": "Cloudflare original Oct30 observed ~22k weak-key handshakes, ~160 forged SAN mismatch cases; no evidence Cloudflare connections intercepted. 50m skewed probes show 30-40% Android WebView still accepting weak chain; original eMudhra compromise already delivered, new observed exposure version distinct."
+    },
+    {
+      "lane": "ai_package_supply_chain",
+      "source_url": "https://cursor.com/blog/claude-code-extension-security-notice",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-10-29 (updated to include 2.1.312)",
+      "status": "HIGH_CANDIDATE",
+      "observation": "Cursor original confirms malicious Anthropic.claude-code 2.1.312/2.1.313 in Cursor Marketplace on Oct29, Windows/macOS; Microsoft Oct30 confirms Microsoft Marketplace/npm unaffected. LiteLLM official blog and GitHub advisories separately checked; no new LiteLLM material delta."
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "source_url": "https://status.northflank.com/",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-10-31 23:31 UTC",
+      "status": "CHECKED_OLD_DELIVERED",
+      "observation": "Northflank secret rotation latest Oct31 already delivered Nov1; Railway Oct22 report/status and ConnectWise advisories checked; no new verified named restoration/credential state; Microsoft Cursor followup in AI supply-chain candidate."
+    },
+    {
+      "lane": "backend_framework_auth",
+      "source_url": "https://github.com/laravel/framework/security/advisories",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-10-19 latest critical TokenGuard",
+      "status": "CHECKED_OLD_DELIVERED",
+      "observation": "Laravel TokenGuard 9.2 Oct19 and Node official fixes reviewed; no new material version. LiteLLM enterprise file-read GHSA Oct27 already delivered Oct29."
+    },
+    {
+      "lane": "macro",
+      "source_url": "https://www.federalreserve.gov/newsevents/2026-november.htm",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "Nov2 scheduled, not yet released",
+      "status": "CHECKED_FUTURE",
+      "observation": "Fed SLOOS 2026-11-02 14:00 ET and ISM manufacturing PMI Nov2 10:00 ET not yet published at check; prior Nov1 report already announced schedule."
+    },
+    {
+      "lane": "forward_catalysts",
+      "source_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/october",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "November 2 scheduled, no confirmed release",
+      "status": "OLD_DELIVERED_SCHEDULE",
+      "observation": "Prior-day reported ISM and Fed scheduled publications; new actual figures not yet available. Binance VELODROME scheduled changes already delivered Oct31."
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "source_url": "https://www.okx.com/en-us/help/okx-to-list-pre-ipo-pre-market-perpetual-futures-for-spacex-usdt-openai-usdt-and-anthropic-usdt",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-05-07",
+      "status": "UNCONFIRMED_MONITORING",
+      "observation": "Checked Kraken, Binance, Bitget, Bybit, Gate, OKX official sites and indexed Anthropic queries; no issuer-named official executable share allocation or backed tokenized-equity offer. OKX May7 and Binance June2 ANTHROPICUSDT are derivatives, not equity. Gate Sep23 blog explicitly said no official Anthropic subscription plan."
+    },
+    {
+      "lane": "official_x",
+      "source_url": "https://x.com/binance/status/2116926305254133892",
+      "checked_at_window": "2026-11-02 06:17–06:19 Asia/Bangkok (bounded actual tool-call window; per-request seconds not exposed)",
+      "published_at": "2026-11-01 (index; exact post time unavailable)",
+      "status": "BROWSER_SESSION_UNAVAILABLE_X_SOURCE_GAP",
+      "observation": "Browser.list_tabs actual error: originating browser context required; bounded public site:x.com/binance/status and site:x.com/playcambria/status searches; cannot read authenticated original X or assert all network withdrawals actually resumed.",
+      "browser_session": "UNAVAILABLE",
+      "read_mode": "public indexed search and official-site fallback",
+      "read_status": "X_SOURCE_GAP"
+    }
+  ],
+  "candidates": [
+    {
+      "event_key": "security:binance:2026-11-01:recovery-phase1-95pct",
+      "family_key": "security:binance:hotwallet-2026-10-29",
+      "material_version": "binance-official-2026-11-01-phase1-95pct",
+      "source_url": "https://www.binance.com/en-GB/support/announcement/security-incident-recovery-update-4-withdrawals-resume-in-phases-2026-11-01-73911fb819b240f88b88256bdd318eda",
+      "source_published_at": "2026-11-01 04:08 site",
+      "severity": "HIGH",
+      "status": "VERIFIED_ISSUER_STATEMENT",
+      "section": 9,
+      "decision": "CARRY_TO_08_20_REVERIFY",
+      "novelty_proof": {
+        "previous_material_version": "binance-2026-10-31-replenished90",
+        "changed_field": "replenishment_and_withdrawal_plan",
+        "old_value": "90%; withdrawal service resumption only planned",
+        "new_value": "95%; phase-one Nov1 06:00–09:00 UTC announced for 15 networks; actual per-route completion unverified",
+        "evidence_url": "https://www.binance.com/en-GB/support/announcement/security-incident-recovery-update-4-withdrawals-resume-in-phases-2026-11-01-73911fb819b240f88b88256bdd318eda",
+        "evidence_published_at": "2026-11-01 04:08 site"
+      }
+    },
+    {
+      "event_key": "security:binance:2026-10-31:fbi-tradertraitor",
+      "family_key": "security:binance:hotwallet-2026-10-29",
+      "material_version": "fbi-2026-10-31-tradertraitor-attribution",
+      "source_url": "https://www.fbi.gov/investigate/cyber/alerts/2026/north-korea-responsible-for-6-billion-binance-attack",
+      "source_published_at": "2026-10-31",
+      "severity": "HIGH",
+      "status": "VERIFIED_OFFICIAL_ATTRIBUTION",
+      "section": 9,
+      "decision": "CARRY_TO_08_20_REVERIFY_CONSOLIDATE_WITH_BINANCE",
+      "novelty_proof": {
+        "previous_material_version": "binance-2026-10-31-replenished90",
+        "changed_field": "responsible_actor_official_attribution",
+        "old_value": "unknown actor",
+        "new_value": "FBI identifies DPRK TraderTraitor and publishes associated addresses",
+        "evidence_url": "https://www.fbi.gov/investigate/cyber/alerts/2026/north-korea-responsible-for-6-billion-binance-attack",
+        "evidence_published_at": "2026-10-31"
+      }
+    },
+    {
+      "event_key": "security:cursor:2026-10-29:claude-code-extension",
+      "family_key": "security:cursor-marketplace:anthropic-claude-code-extension-2026-10-29",
+      "material_version": "cursor-2026-10-29-affected-2.1.312-2.1.313-microsoft-2026-10-30",
+      "source_url": "https://cursor.com/blog/claude-code-extension-security-notice",
+      "source_published_at": "2026-10-29, Microsoft followup 2026-10-30",
+      "severity": "HIGH",
+      "status": "VERIFIED_VENDOR",
+      "section": 9,
+      "decision": "CARRY_TO_08_20_REVERIFY",
+      "notes": "Only Cursor marketplace Oct29 macOS/Windows; not all Claude Code or Microsoft VS Marketplace/npm; do not presume user installed."
+    },
+    {
+      "event_key": "pki:emudhra:2026-10-30:cloudflare-observed-trust",
+      "family_key": "pki:emudhra",
+      "material_version": "cloudflare-2026-10-30-22k-handshakes-50m-probes",
+      "source_url": "https://blog.cloudflare.com/emudhra-patching/",
+      "source_published_at": "2026-10-30",
+      "severity": "HIGH_REVIEW",
+      "status": "VERIFIED_RESEARCH_NOT_INTERCEPTION",
+      "section": 9,
+      "decision": "CARRY_FOR_08_20_NOVELTY_AND_MATERIALITY_QA",
+      "novelty_proof": {
+        "previous_material_version": "official-2026-10-22-global-tls-exit",
+        "changed_field": "observed_forged_certificates_and_residual_client_trust",
+        "old_value": "CA keys compromised, revocation/exit announced; no measured observed forged-certificate traffic",
+        "new_value": "Cloudflare saw ~22,000 weak-key handshakes, ~160 mismatched-SAN certificates, and 30–40% sampled Android WebView acceptance; no confirmed interception of Cloudflare connections",
+        "evidence_url": "https://blog.cloudflare.com/emudhra-patching/",
+        "evidence_published_at": "2026-10-30"
+      }
+    },
+    {
+      "event_key": "onchain:binance:2026-11-01:withdrawal-outflows",
+      "family_key": "onchain:binance:post-hack-withdrawal-flows",
+      "material_version": "lookonchain-2026-11-01-3p64bn-attributed",
+      "source_url": "https://www.lookonchain.com/feeds/79850",
+      "source_published_at": "2026-11-01",
+      "severity": "HIGH_REVIEW",
+      "status": "ATTRIBUTED_TXID_GAP",
+      "section": 5,
+      "decision": "WATCH_NO_PROVEN_ONCHAIN_TOTAL",
+      "notes": "Lookonchain net outflow estimate $3.64bn; not independently reconciled onchain and not proof of exchange sale."
+    },
+    {
+      "event_key": "ipoaccess:anthropic:venues:2026-11-02",
+      "family_key": "ipoaccess:anthropic:venue:unconfirmed",
+      "material_version": "unchanged-unconfirmed-monitoring",
+      "source_url": "https://www.okx.com/en-us/help/okx-to-list-pre-ipo-pre-market-perpetual-futures-for-spacex-usdt-openai-usdt-and-anthropic-usdt",
+      "source_published_at": "2026-05-07",
+      "status": "UNCONFIRMED_MONITORING",
+      "section": 7,
+      "decision": "EXCLUDE_NO_OFFICIAL_OFFER",
+      "notes": "No named equity application or backed tokenized-share terms; six official venues checked, no alert."
+    },
+    {
+      "event_key": "tge:cambria:rsgp:2026-10-29",
+      "family_key": "tge:cambria:base-rsgp",
+      "material_version": "unchanged-known-2026-10-28-mail",
+      "source_url": "https://x.com/playcambria",
+      "source_published_at": "2026-10-28 original prior Gmail",
+      "status": "ALREADY_ALERTED_X_GAP",
+      "section": 7,
+      "decision": "EXCLUDE_NO_NEW_CLAIM_CONTRACT_DELTA"
+    }
+  ],
+  "source_gaps": [
+    "Browser.list_tabs unavailable due to originating browser context",
+    "original X posts not readable / public index only",
+    "CISA KEV HTTP403",
+    "Arkham and Lookonchain transfer TXID attribution not independently reconciled",
+    "some NFT/TGE original social issuer pages unavailable",
+    "SEC dynamic issuer search not independently parsed",
+    "no current US ETF session over weekend"
+  ],
+  "delivery": {
+    "email_attempted": false,
+    "app_message": false,
+    "pending_manifest": false,
+    "reason": "collector-only; 08:20 full prebuild and 09:20 normal Gmail",
+    "task_changes": false,
+    "paid_api": false,
+    "local_mac_process": false,
+    "github_cron": false
+  },
+  "coverage_status": "PARTIAL_SOURCE_GAPS"
+}
