@@ -98,3 +98,51 @@ test('exact decimal formatting never uses JS floating point',()=>{
   assert.equal(h.ctx.frankD2Decimal('0',9),'0');
   assert.equal(h.ctx.frankD2Decimal('1000000000',9),'1');
 });
+
+test('invalid Mint after a successful read clears prior balances and source time without another GET',async()=>{
+  const h=fixture([task(doc)]);
+  await h.ctx.frankD2Read({page:1});
+  assert.match(h.el('frank-d2-rows').innerHTML,/12 枚/);
+  h.el('frank-d2-mint').value='invalid-mint';
+  h.el('frank-d2-find').listeners.click();
+  assert.equal(h.calls.length,1,'invalid local input must not issue a GET');
+  assert.match(h.el('frank-d2-summary').textContent,/请输入完整/);
+  assert.doesNotMatch(h.el('frank-d2-rows').innerHTML,/12 枚/);
+  assert.equal(h.el('frank-d2-updated').textContent,'未核实');
+  assert.equal(h.el('frank-d2-page-prev').disabled,true);
+  assert.equal(h.el('frank-d2-page-next').disabled,true);
+});
+test('a pending new query cannot display balances from the previous query',async()=>{
+  const pending=deferred(),h=fixture([task(doc),pending.promise]);
+  await h.ctx.frankD2Read({page:0});
+  const next=h.ctx.frankD2Read({mint});
+  assert.doesNotMatch(h.el('frank-d2-rows').innerHTML,/12 枚/);
+  assert.equal(h.el('frank-d2-updated').textContent,'正在核验');
+  pending.resolve({...doc,lookup_mint:mint,lookup_state:'NONZERO_AT_SLOT'});
+  await next;
+  assert.match(h.el('frank-d2-rows').innerHTML,/12 枚/);
+});
+test('failed GET clears the previously verified source time and allows local recovery',async()=>{
+  const h=fixture([task(doc),new Error('offline'),task(doc)]);
+  await h.ctx.frankD2Read({page:0});
+  await h.ctx.frankD2Read({mint});
+  assert.doesNotMatch(h.el('frank-d2-rows').innerHTML,/12 枚/);
+  assert.equal(h.el('frank-d2-updated').textContent,'未核实');
+  assert.equal(h.el('frank-d2-read').disabled,false);
+  await h.ctx.frankD2Read({page:0});
+  assert.match(h.el('frank-d2-rows').innerHTML,/12 枚/);
+});
+test('invalid input invalidates any older pending result and a later valid read recovers',async()=>{
+  const pending=deferred(),h=fixture([pending.promise,task(doc)]);
+  const older=h.ctx.frankD2Read({page:0});
+  h.el('frank-d2-mint').value='invalid-mint';
+  h.el('frank-d2-find').listeners.click();
+  pending.resolve(doc);
+  await older;
+  assert.match(h.el('frank-d2-summary').textContent,/请输入完整/);
+  assert.doesNotMatch(h.el('frank-d2-rows').innerHTML,/12 枚/);
+  assert.equal(h.el('frank-d2-read').disabled,false);
+  assert.equal(h.el('frank-d2-find').disabled,false);
+  await h.ctx.frankD2Read({page:0});
+  assert.match(h.el('frank-d2-rows').innerHTML,/12 枚/);
+});
