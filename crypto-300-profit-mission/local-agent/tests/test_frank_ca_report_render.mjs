@@ -479,3 +479,98 @@ test('GET success returns the unchanged payload with one fetch and one JSON read
   assert.equal(jsonReads,1);
   assert.equal(h.requests.length,before+1);
 });
+
+const observedPanelConfigs=[
+  {kind:'intelligence',refresh:'refreshFrankIntelligence',endpoint:'/api/frank-intelligence',
+   root:'frank-intelligence-cards',summary:'frank-intelligence-summary',updated:'frank-intelligence-updated',
+   filter:'frank-intelligence-search',status:'LOCAL_SOURCE_RESEARCH_ONLY'},
+  {kind:'activity',refresh:'refreshFrankActivity',endpoint:'/api/frank-activity-watch',
+   root:'frank-activity-feed',summary:'frank-activity-summary',updated:'frank-activity-updated',
+   filter:'frank-activity-search',status:'LOCAL_SOURCE_ACTIVITY_RESEARCH_ONLY'},
+];
+function observedPayload(config,target,side='SELL') {
+  const row=config.kind==='intelligence'
+    ? {mint:target,latest_side:side,latest_action_at:1,source_signal_id:'FIXTURE_'+side,
+       facts:side==='SELL'?['FRANK_SELL_OBSERVED_REVIEW_RISK']:[],missing:[],price:{}}
+    : {mint:target,source_side:side,signature:'5'.repeat(64),block_time:1};
+  return {status:config.status,rows:[row],source_rows_considered:1,counts:{}};
+}
+function invokeObserved(h,config) {
+  return vm.runInContext(config.refresh+'()',h.context,{timeout:2500});
+}
+function observedHarness(config) {
+  const h=harness();
+  h.element('frank-activity-type').value='ALL';
+  return h;
+}
+for (const config of observedPanelConfigs) {
+  const newerMint='3'.repeat(32);
+  test(config.kind+': delayed older BUY cannot overwrite the newer SELL response or filtering snapshot',async()=>{
+    const h=observedHarness(config),old=deferred();
+    let calls=0;
+    h.setResponse(async()=>++calls===1?old.promise:
+      {ok:true,status:200,json:async()=>observedPayload(config,newerMint)});
+    const pending=invokeObserved(h,config);
+    await invokeObserved(h,config);
+    assert.ok(h.element(config.root).innerHTML.includes(newerMint));
+    old.resolve({ok:true,status:200,json:async()=>observedPayload(config,mint,'BUY')});
+    await pending;
+    assert.ok(h.element(config.root).innerHTML.includes(newerMint));
+    assert.ok(!h.element(config.root).innerHTML.includes(mint));
+    h.element(config.filter).listeners.get('input')();
+    assert.ok(h.element(config.root).innerHTML.includes(newerMint));
+    assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
+  });
+  test(config.kind+': late old success cannot resurrect rows after the latest GET failure',async()=>{
+    const h=observedHarness(config),old=deferred();
+    let calls=0;
+    h.setResponse(async()=>{
+      if(++calls===1)return old.promise;
+      throw new TypeError('fixture connection failure');
+    });
+    const pending=invokeObserved(h,config);
+    await invokeObserved(h,config);
+    assert.equal(h.element(config.updated).textContent,'来源不可用');
+    old.resolve({ok:true,status:200,json:async()=>observedPayload(config,mint,'BUY')});
+    await pending;
+    assert.equal(h.element(config.updated).textContent,'来源不可用');
+    assert.ok(!h.element(config.root).innerHTML.includes(mint));
+  });
+  test(config.kind+': late old failure cannot clear a newer successful response',async()=>{
+    const h=observedHarness(config),old=deferred();
+    let calls=0;
+    h.setResponse(async()=>++calls===1?old.promise:
+      {ok:true,status:200,json:async()=>observedPayload(config,newerMint)});
+    const pending=invokeObserved(h,config);
+    await invokeObserved(h,config);
+    old.reject(new TypeError('old fixture failure'));
+    await pending;
+    assert.ok(h.element(config.root).innerHTML.includes(newerMint));
+    assert.notEqual(h.element(config.updated).textContent,'来源不可用');
+  });
+  test(config.kind+': filter after a failed refresh cannot restore a last-good snapshot',async()=>{
+    const h=observedHarness(config);
+    h.element('frank-d2-rows').innerHTML='KEEP_D2';
+    h.element('cluster-status').innerHTML='KEEP_CA';
+    h.setResponse(async()=>({ok:true,status:200,json:async()=>observedPayload(config,mint,'BUY')}));
+    await invokeObserved(h,config);
+    assert.ok(h.element(config.root).innerHTML.includes(mint));
+    h.setResponse(async()=>{throw new TypeError('fixture failure');});
+    await invokeObserved(h,config);
+    h.element(config.filter).listeners.get('input')();
+    assert.ok(!h.element(config.root).innerHTML.includes(mint));
+    assert.equal(h.element(config.updated).textContent,'来源不可用');
+    assert.equal(h.element('frank-d2-rows').innerHTML,'KEEP_D2');
+    assert.equal(h.element('cluster-status').innerHTML,'KEEP_CA');
+  });
+  test(config.kind+': a subsequent successful GET restores normal rendering after a failure',async()=>{
+    const h=observedHarness(config);
+    h.setResponse(async()=>{throw new TypeError('fixture failure');});
+    await invokeObserved(h,config);
+    h.setResponse(async()=>({ok:true,status:200,json:async()=>observedPayload(config,newerMint)}));
+    await invokeObserved(h,config);
+    assert.ok(h.element(config.root).innerHTML.includes(newerMint));
+    assert.notEqual(h.element(config.updated).textContent,'来源不可用');
+    assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
+  });
+}
