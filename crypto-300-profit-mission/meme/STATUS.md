@@ -1,5 +1,5 @@
 # Frank STATUS（唯一当前决策状态入口）
-更新时间：2026-11-01 08:29 Asia/Bangkok
+更新时间：2026-11-01 08:39 Asia/Bangkok
 更新者：Codex（用户明确授权本地调试、环境调整与既有服务维护；独立review已豁免；INVEST_NO_GO / TRADE_NO_GO保持）
 
 ## 北极星答案（1 行）
@@ -16,9 +16,9 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 **阶段管理已结束，保留 Frank 只读钱包观察工具的既有安全维护，不扩张研发或研究。** 新的跟单盈利研究必须经用户另行明确授权；P2/P3 未启动。
 
 ## 正在进行（最多 3 项）
-- **无正在执行的P0/P1盈利研究任务**。既有工具维护已推进：Dashboard F01安装固定 [`ffa96a78a9cae9902d6ba297d5d2135ecbce28cc`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/ffa96a78a9cae9902d6ba297d5d2135ecbce28cc)，实际PID40693、Mac页面PASS，近期0/历史7/eligible0；控制库、旧心跳和plist字节保留。首次维护脚本丢失执行权限导致启动失败，已修正为0700，先验证旧版本恢复，再切换成功；原始失败留证。
-- D2已完成**一次两请求**现有私有RPC采集，固定PR60 `e4529ba7069e5499d12323a7160ceac08c481fae`完整原始响应离线重放PASS后原子导入；2026-11-01 08:26:32 Asia/Bangkok，slots463906568/463906572，4898账户/Mint、4023非零；49页+跨页精确查询PASS。非原子快照，current_chain_balance_verified/USD/PnL均false，无自动刷新。[本轮实际验收证据](./evidence/frank-f01-d2-local-acceptance-20261101.json)。
-- Scanner PID3402保持LIVE，0连续错误、source_drift=false，固定 `1f2c6afc28b9988eaacdc896562ff9a71b78f801`；最终只读检查签名5941、seen5941，信号7/outbox9/Gmail2。未重启Scanner、未改变其冻结策略或补发通知。
+- **无正在执行的P0/P1盈利研究任务**。既有Dashboard最新源码 [`700373e59c17f35aa465664e6eff01057fcfa0c9`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/700373e59c17f35aa465664e6eff01057fcfa0c9)、PID52130；用户指定的**Google Chrome**实际验收PASS且页面按要求保持打开。修复D2无效Mint仍留旧余额、等待新GET仍显示旧行和失败保留旧核验时间；4项红反例转绿，原PR178同步最小修复 [`9a259359a3e9ede4540e90276f8fef71df0d0bae`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/9a259359a3e9ede4540e90276f8fef71df0d0bae)，无新PR。运行基线1569/原PR基线1541完整离线通过，各3无关跳过；提交后前端30项通过。首轮launchctl bootstrap返回5，旧服务HTTP/源码已验证回退；等待旧job/PID/端口退出后再次切换成功，具体launchd错误原因仍UNRESOLVED。
+- D2仍为已核验的**一次两请求**快照：2026-11-01 08:26:32 Asia/Bangkok、slots463906568/463906572、4898账户/Mint、4023非零、49页+跨页精确查询PASS。Chrome中无效查询撤下旧余额、重新读取和分页均PASS；本轮无额外RPC、无D2来源替换。非原子快照，current_chain_balance_verified/USD/PnL仍false，无自动刷新。[Chrome与修复证据](./evidence/frank-chrome-d2-query-recovery-20261101.json)。
+- Scanner PID3402保持LIVE、0连续错误、source_drift=false，固定 `1f2c6afc28b9988eaacdc896562ff9a71b78f801`。补完未核验的新增23条（被动6/ATA16/UNKNOWN1）完整原始哈希、签名slot、分类及账本重放、durable检测和seen检查PASS；排除先前37条，发布后当前新增60条均核验。UNKNOWN无Frank签名或authority，不推断买卖。当前5941签名/seen，信号7/outbox9/Gmail2，未重启Scanner或补发通知。
 
 ## 剩余真实条件（最多 3 项）
 - **自然新BUY及真实延迟/通知样本仍缺**：当前无新增识别信号；历史Sent验证不代替新事件，不制造测试交易或虚构通知。本轮未发邮件/本地通知，未新增等待监控或自动任务。

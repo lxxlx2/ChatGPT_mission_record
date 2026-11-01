@@ -1,5 +1,9 @@
 # Frank 旧计划核对与只读维护收尾（2026-11-01）
 
+> **Chrome后续验收（2026-11-01 08:38 Asia/Bangkok）**：按用户指定在Google Chrome实际验收并保留标签页。发现D2成功查询后无效Mint仍残留旧余额；已在原PR178修复 `9a259359a3e9ede4540e90276f8fef71df0d0bae`，本机运行候选 `700373e59c17f35aa465664e6eff01057fcfa0c9`。4个反例转绿，运行基线1569/原PR基线1541完整离线通过，Chrome有效→无效→恢复、分页/跨页查询PASS。首轮bootstrap返回5后旧HTTP与源码恢复已核验，等待旧job/PID/listener退出后的再次切换PASS；具体launchd错误原因未获独立证明。既有D2来源与控制库字节未变、额外RPC/通知0。
+>
+> 补完Scanner发布后未核验的23条（被动6/ATA16/UNKNOWN1）；不重复先前37条，当前新增60条均完成完整原始与分类账本重放。UNKNOWN无Frank签名或authority，保留未识别，不制造新BUY。详见[Chrome验收、修复与增量证据](./evidence/frank-chrome-d2-query-recovery-20261101.json)。当前仍缺自然新BUY样本和用户独立签名工件，研究NO_GO不变。
+
 > **后续实际进展（2026-11-01 08:27 Asia/Bangkok）**：用户另行明确授权本地环境与既有服务维护并豁免review后，F01已安装固定 `ffa96a78a9cae9902d6ba297d5d2135ecbce28cc`，实际Mac页面PASS；D2已复用现有私有RPC完成一次两请求采集、固定PR60离线完整重放及原子导入，4898 Mint、49页+精确查询PASS。原下表“F01未安装、D2仍10月25日旧源”是08:19快照，已被本段及[新验收证据](./evidence/frank-f01-d2-local-acceptance-20261101.json)取代；原证据保留。
 >
 > 本次有一次维护执行器权限错误：runner被复制为0600，候选未启动；恢复旧字节并改为0700后验证旧服务恢复，再次切换成功。控制库、Scanner和模型均未受改写。当前剩余：自然新BUY/真实通知与首见延迟样本、MC用户独立公钥/签名工件；盈利研究和更大产品规划仍冻结。**既有工具维护PASS；旧规划整体PARTIAL；INVEST_NO_GO / TRADE_NO_GO保持。**
