@@ -1,40 +1,40 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-11-02 01:04:47 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-11-02 02:06:40 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-11-02 01:04:47 Asia/Bangkok
+- latest_actual_run: 2026-11-02 02:06:40 Asia/Bangkok
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-11-02/010447-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-11-02/010335-attempt.md
-- latest_scheduled_shard: 1
-- latest_executed_shard: 1
-- stale_shard_recovery: false; fair 01%4=1; exactly one shard; no override
+- latest_run_path: airdrop-tge-monitor/runs/2026-11-02/020640-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-11-02/020526-attempt.md
+- latest_scheduled_shard: 2
+- latest_executed_shard: 2
+- stale_shard_recovery: false; fair 02%4=2; exactly one shard; no override
 - latest_candidate_count: 7
 - latest_triggered_events: 0
-- latest_identity_failures: 1
+- latest_identity_failures: 0
 - latest_source_failures: 3
 - latest_notification_decision: SILENT_NO_ACTION_EMAIL_ONLY
 - latest_notification_status: NO_GMAIL_NO_APP; zero new Tier A/mapped Tier B actionable entitlement
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_extra_USDC,StandX_DUSD_live_claim_or_postponement,ForecastFDN_current_issuer
-- latest_private_rights_unverified: Clay_Shares_wallet,Surf_SurfBoard_wallet,Cambria_RSGP_wallet_claim,StandX_DUSD_wallet,Crusoe_SPV_terms,rTTOK_wallet
-- latest_identity_gap: Neutrl legacy @neutrl_labs versus canonical site @Neutrl; no alert
+- latest_source_gaps: Concrete_extra_USDC,StandX_DUSD_live_claim_or_postponement,OhBabyGames_current_issuer
+- latest_private_rights_unverified: Clay_Shares_wallet,Surf_SurfBoard_wallet,Cambria_RSGP_wallet_claim,StandX_DUSD_wallet,01_Echo_private_allocation
+- latest_browser_session: UNAVAILABLE (originating browser context restriction); public X SOURCE_GAP
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-11-01 20:01:57 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard1: 2026-11-02 01:04:47 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard2: 2026-11-01 22:04:33 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard2: 2026-11-02 02:06:40 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-11-01 23:58:07 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 010447-final.md commit 331ed327b36e65f96ca82d0519f172145fef9430
-- latest_terminal_readback: VERIFIED 010447-final.md (main blob SHA d1da61ab9ee8d49f61de24dc0e53d9d7918e6e47)
-- latest_four_executed_shards: [2,3,3,1]
+- latest_primary_final_write: VERIFIED_DURABLE 020640-final.md commit d2a26d4c29b62fada2c1d3865d1f5196da14e48f
+- latest_terminal_readback: VERIFIED 020640-final.md (main blob SHA 8353fa19e50ee0be9fe44b55fa78408e1af332af)
+- latest_four_executed_shards: [3,3,1,2]
 - last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (unchanged)
 - last_delivered_gmail_message_id: 1a1812a1f6802ecb
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-11-02 01:04:47 BKK PARTIAL; urgent5 + Surf/StandX + fair Shard1. Seven existing candidate families, zero new Tier A/mapped Tier B ACTION; three unresolved source/action gaps (Concrete extra USDC, StandX DUSD live/postponement, ForecastFDN current issuer), Neutrl legacy-handle conflict. Browser original X unavailable originating context, English issuer fallback. Life/work Gmail Inbox no new mapped rights. No Gmail/App. Verified-complete Oct10 unchanged.
+- latest_terminal_sync: 2026-11-02 02:06:40 BKK PARTIAL; urgent5 + Surf/StandX + fair Shard2. Seven existing candidate families, zero new Tier A/mapped Tier B ACTION; three unresolved source/action gaps (Concrete extra USDC, StandX DUSD actual claim/postponement, OhBabyGames current issuer). Browser original X unavailable originating context, English issuer fallback. Life/work Gmail Inbox no new mapped rights. No Gmail/App. Verified-complete Oct10 unchanged.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
