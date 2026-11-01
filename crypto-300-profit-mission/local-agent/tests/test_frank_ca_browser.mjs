@@ -218,6 +218,24 @@ try {
  assert.equal(await page.locator('#cluster-mint').inputValue(),'3'.repeat(32));
  assert.equal(requests.filter(r=>r.method==='POST').length,pausedPosts);
  check('edited input during historical GET leaves the paused task reachable and recoverable');
+ // The integrated source must preserve D2 manual loading and its local age
+ // updates while the CA recovery code and source-only F01 refresh coexist.
+ const d2ReadsBefore=requests.filter(r=>r.path==='/api/frank-d2-at-slot').length;
+ assert.equal(d2ReadsBefore,0,'CA navigation must not auto-read D2');
+ const combinedPosts=requests.filter(r=>r.method==='POST').length;
+ await page.getByRole('button',{name:'Frank 信号',exact:true}).click();
+ await page.waitForFunction(()=>document.getElementById('f01-source-status').textContent.includes('近期'));
+ await page.locator('#frank-d2-read').click();
+ await page.waitForFunction(()=>document.getElementById('frank-d2-rows').textContent.includes('12 枚'));
+ assert.match(await page.locator('#frank-d2-summary').innerText(),/非原子快照/);
+ const ageBefore=await page.locator('#frank-d2-summary').innerText();
+ await page.waitForFunction(before=>document.getElementById('frank-d2-summary').textContent!==before,ageBefore,{timeout:10000});
+ assert.match(await page.locator('#frank-d2-rows').innerText(),/12 枚/);
+ assert.equal(requests.filter(r=>r.path==='/api/frank-d2-at-slot').length,d2ReadsBefore+1);
+ assert.equal(requests.filter(r=>r.method==='POST').length,combinedPosts);
+ await page.getByRole('button',{name:'CA 链上查询',exact:true}).click();
+ assert.match(await page.locator('#cluster-summary').innerText(),/SYNTHETIC_REPORT_7/);
+ check('combined CA/F01/D2 preserves manual snapshot reads, local source age and CA report');
  assert.deepEqual(errors,[]);
  const result={port,checks,page_errors:errors,blocked,requests,fixture_posts:requests.filter(r=>r.method==='POST').length,real_rpc:0,production_requests:0,real_ca_posts:0,browser:context.browser()?.version()};
  if(output)writeFileSync(join(output,'result.json'),JSON.stringify(result,null,2));

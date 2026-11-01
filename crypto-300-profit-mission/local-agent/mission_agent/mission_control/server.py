@@ -14,6 +14,7 @@ import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -25,6 +26,7 @@ from .delivery_review import summarize_manual_reviews
 from .frank import FrankReader
 from .intelligence_preview import analyze_rows
 from .frank_activity_watch import summarize_activity
+from .f01_source_view import partition_source_only
 from .payment_evidence import latest_buy_payment_evidence
 from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
@@ -715,6 +717,23 @@ class DashboardState:
             return {"status": "UNKNOWN", "reason": "MISSION_CONTROL_HEARTBEAT_UNREADABLE"}
         if not isinstance(health, dict):
             return {"status": "UNKNOWN", "reason": "MISSION_CONTROL_HEARTBEAT_INVALID"}
+        # This is a display snapshot, not permission to resume the stopped loop.
+        # Keep the historical file and all delivery records untouched.
+        health["recorded_status"] = health.get("status", "UNKNOWN")
+        try:
+            updated = datetime.fromisoformat(health["updated_at"].replace("Z", "+00:00"))
+            if updated.tzinfo is None:
+                raise ValueError("TIMEZONE_REQUIRED")
+            age = time.time() - updated.timestamp()
+            if not math.isfinite(age) or age < 0:
+                raise ValueError("INVALID_HEARTBEAT_TIME")
+        except (KeyError, AttributeError, TypeError, ValueError, OverflowError, OSError):
+            health.update(status="UNKNOWN", heartbeat_age_seconds=None,
+                          heartbeat_reason="MISSION_CONTROL_HEARTBEAT_TIME_INVALID")
+        else:
+            health["heartbeat_age_seconds"] = round(age, 3)
+            if age > 120:
+                health.update(status="STALE", heartbeat_reason="MISSION_CONTROL_HEARTBEAT_STALE")
         if not self.control_db.is_file():
             health["manual_review_breakdown_available"] = False
             health["manual_review_breakdown_error"] = "CONTROL_DB_UNAVAILABLE"
@@ -815,6 +834,29 @@ class DashboardState:
             candidates.append(item)
         candidates.sort(key=lambda x:int(x.get("latest_at") or 0),reverse=True)
         return candidates
+
+    def follow_opportunities(self):
+        """Source-only F01 facts; deliberately no quote, approval, or LIVE delivery."""
+        try:
+            now = time.time()
+            candidates = self.candidates()
+            runtime = self.frank.runtime()
+            if not isinstance(runtime, dict):
+                raise ValueError("F01_INVALID_RUNTIME")
+            return partition_source_only(
+                candidates, now=now, runtime_status=runtime.get("status"))
+        except (OSError, ValueError, TypeError, KeyError, sqlite3.DatabaseError):
+            return {
+                "schema_version": 2,
+                "scope": "FRANK_LOCAL_INDEX_SOURCE_ONLY_NO_EXECUTION_QUOTE",
+                "status": "SOURCE_UNAVAILABLE", "source_recent": None,
+                "source_recent_count": None, "not_followed": None,
+                "excluded_count": None, "eligible": [],
+                "eligible_count": 0, "full_chain_verified": False,
+                "current_balance_verified": False,
+                "execution_eligibility": "NOT_ASSESSED",
+                "live_notification_authorized": False,
+            }
 
     def frank_intelligence(self):
         """Source-only amount-free research observations. No price fetch/sender."""
@@ -1017,6 +1059,10 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.state.mission_control_health())
         if path == "/api/candidates":
             return self._json(self.state.candidates())
+        if path == "/api/follow-opportunities":
+            if urlparse(self.path).query:
+                return self._json({"error": "UNSUPPORTED_F01_QUERY"}, 400)
+            return self._json(self.state.follow_opportunities())
         if path == "/api/frank-intelligence":
             if urlparse(self.path).query:
                 return self._json({"error": "UNSUPPORTED_INTELLIGENCE_QUERY"}, 400)
@@ -1113,8 +1159,11 @@ class Handler(BaseHTTPRequestHandler):
             return self._json({"error":"INVALID_JSON_REQUEST"},400)
         try:
             job = self.state.cluster_jobs.submit(body.get("mint",""), body.get("preset","standard"))
-        except ValueError:
-            return self._json({"error":"INVALID_CLUSTER_REQUEST"},400)
+        except ValueError as exc:
+            # Preserve only the known public CA validation code; never reflect
+            # arbitrary exception text, RPC details or internal paths.
+            error = "INVALID_SOLANA_CA" if str(exc) == "INVALID_SOLANA_CA" else "INVALID_CLUSTER_REQUEST"
+            return self._json({"error":error},400)
         return self._json(job,202)
 
 

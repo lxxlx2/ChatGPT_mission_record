@@ -4,6 +4,7 @@ Invoked only by test_frank_ca_browser.mjs. No DashboardState/production root,
 provider clients, keys or production files. The fixture exits when stdin closes.
 """
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -81,8 +82,30 @@ with TemporaryDirectory(prefix='frank-ca-browser-') as scratch:
     manager.evidence_enabled = False
     manager.executor = ThreadPoolExecutor(max_workers=1)
 
+    # Explicit synthetic D2 data only, served through the product's real
+    # same-origin GET handler. No private source import or RPC is involved.
+    observed = datetime.fromtimestamp(time.time() - 3600, timezone.utc).isoformat()
+    d2_fixture = {
+        'status': 'BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE',
+        'observed_at_utc': observed, 'observed_at_bangkok': observed,
+        'age_seconds_at_response': 3600,
+        'account_count': 2, 'mint_count': 1,
+        'program_coverage': [
+            {'program_id': 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA', 'slot': 100},
+            {'program_id': 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb', 'slot': 101},
+        ],
+        'page': 0, 'total_pages': 1, 'result_count': 1,
+        'rows': [{'mint': '2' * 32, 'raw_amount': '12000000', 'decimals': 6,
+                  'account_count': 2, 'slot_min': 100, 'slot_max': 101}],
+    }
+
     class FixtureHandler(server.Handler):
-        state = SimpleNamespace(cluster_jobs=manager)
+        state = SimpleNamespace(
+            cluster_jobs=manager,
+            follow_opportunities=lambda: server.partition_source_only(
+                [], now=time.time(), runtime_status='LIVE'),
+            frank_d2_at_slot=lambda **_: d2_fixture,
+        )
         static_root = Path(server.__file__).parent / 'static'
 
         def log_message(self, *args):
@@ -95,7 +118,10 @@ with TemporaryDirectory(prefix='frank-ca-browser-') as scratch:
                 with manager.lock:
                     manager.jobs.clear()
                 return self._json({'cleared': True})
-            if path.startswith('/api/') and path not in {'/api/cluster-analysis', '/api/cluster-latest'}:
+            if path.startswith('/api/') and path not in {
+                '/api/cluster-analysis', '/api/cluster-latest',
+                '/api/follow-opportunities', '/api/frank-d2-at-slot',
+            }:
                 lists = {'/api/candidates', '/api/trades', '/api/decisions', '/api/review-activity'}
                 return self._json([] if path in lists else {'status': 'TEST_FIXTURE', 'rows': [], 'summary': {}})
             return super().do_GET()
