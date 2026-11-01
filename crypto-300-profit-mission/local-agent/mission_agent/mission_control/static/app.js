@@ -1082,8 +1082,8 @@ async function refresh() {
     const history = view?.historical || candidates;
     const newestAge = Number(f01?.newest_indexed_buy_age_seconds);
     const ageLabel = f01?.newest_indexed_buy_age_seconds != null &&
-      Number.isFinite(newestAge) ? `最近已索引 BUY 距链上事件 ${Math.round(newestAge)} 秒；`
-      : '最近已索引 BUY 的事件时间未知；';
+      Number.isFinite(newestAge) ? `买类候选记录的最近链上 BUY 距今 ${Math.round(newestAge)} 秒；`
+      : '买类候选记录的 BUY 事件时间未知；';
     const staleCount = f01ExcludedReasonCount(f01, 'SOURCE_BUY_STALE_OR_UNVERIFIED');
     $('f01-source-status').textContent = view
       ? `近期来源信号 ${recent.length} 条；过期或时间待核 ${staleCount} 条；${ageLabel}当前执行资格 0 条；来源窗口 10 分钟。`
