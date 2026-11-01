@@ -99,6 +99,29 @@
       </div>
       <p class="frank-watch-footnote">最多读取 5,000 条已索引签名，超过上限会报告不可用，绝不静默截断；为了页面性能，每次显示前 200 条筛选结果。全部数据均为本地历史证据，不是实时完整链史、当前持仓、收益或跟单指令。</p>
     </section>
+    <section class="panel" id="frank-d2-panel">
+      <div class="panel-title">
+        <div><h2>Frank 链上余额证据（D2，按采集时点）</h2>
+          <p>单独使用经离线核验并手动导入的全钱包双程序余额来源，不改变原有交易信号、观察池或通知。</p>
+        </div><span id="frank-d2-updated">未读取</span>
+      </div>
+      <div class="frank-watch-controls">
+        <button type="button" class="link-btn" id="frank-d2-read">读取已导入快照</button>
+        <label for="frank-d2-mint">按完整 Mint 精确查询（不限于首 100 行）</label>
+        <input type="search" id="frank-d2-mint" autocomplete="off" spellcheck="false" placeholder="输入完整 Solana Mint 地址">
+        <button type="button" class="link-btn" id="frank-d2-find">查询 Mint</button>
+        <button type="button" class="link-btn" id="frank-d2-page-prev" disabled>上一页</button>
+        <button type="button" class="link-btn" id="frank-d2-page-next" disabled>下一页</button>
+      </div>
+      <div class="frank-watch-summary" id="frank-d2-summary" role="status">尚未请求私有 D2 来源。只有显式点击才会读取本机已手动导入的数据，不触发 RPC。</div>
+      <div class="frank-watch-table-wrap">
+        <table class="frank-watch-table" id="frank-d2-table">
+          <thead><tr><th>Mint</th><th>指定 slot 的账户余额</th><th>账户数</th><th>来源 slot</th><th>本地历史模型／交易（独立信息）</th></tr></thead>
+          <tbody id="frank-d2-rows"><tr><td colspan="5">未读取</td></tr></tbody>
+        </table>
+      </div>
+      <p class="frank-watch-footnote">数据仅代表显示的 finalized slot 及采集时间；SPL Token 与 Token-2022 不属于同一原子快照。观察到零不代表卖出；未观察到活跃账户不等于从未持有。钱包当前余额、实时美元估值、成本与盈亏均未得到持续核实。每页最多 100 个 Mint，本页面不发起任何链上请求。</p>
+    </section>
     <section class="panel frank-watch-panel" id="frank-watch-panel">
       <div class="panel-title">
         <div>

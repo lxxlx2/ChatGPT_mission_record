@@ -143,12 +143,15 @@ def _reject_git_output(parent):
         raise ValueError("OUTPUT_GIT_BOUNDARY_CHECK_UNAVAILABLE")
 
 
-def _private_create(path, html):
+def _private_create(path, html, *, suffix=".html"):
+    # Private JSON exporter must obey the SAME already audited no-Git boundary.
+    if suffix not in (".html", ".json"):
+        raise ValueError("PRIVATE_OUTPUT_TYPE_INVALID")
     # abspath is a *lexical* normalized absolute path: '..' is eliminated
     # before all containment checks AND before the actual open. Avoid
     # Path.absolute(), which leaves '..' intact on several Python versions.
     path = Path(os.path.abspath(os.path.expanduser(os.fspath(path))))
-    if path.suffix.lower() != ".html":
+    if path.suffix.lower() != suffix:
         raise ValueError("PRIVATE_PREVIEW_PATH_INVALID")
     if path == REPO_ROOT or REPO_ROOT in path.parents:
         raise ValueError("PUBLIC_GIT_HTML_OUTPUT_FORBIDDEN")
