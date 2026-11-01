@@ -1,0 +1,353 @@
+{
+  "schema": "CRYPTO_DAILY_BOUNDED_COLLECTOR_RESEARCH_V2",
+  "report_date": "2026-11-01",
+  "slot": "12:20",
+  "recorded_at_utc": "2026-11-01T05:25:51.448Z",
+  "mode": "COLLECT_ONLY_NO_GMAIL_NO_APP",
+  "status": "PARTIAL_SOURCE_GAPS",
+  "rules_blob_sha": {
+    "crypto-daily/PIPELINE_CONTRACT.md": "0d94442ca1b920ad0b3e5ea9158d47a6b3dcbe25",
+    "crypto-daily/EDITORIAL_RULESET.json": "2ed51528d230508ae4e0015762b1d60c9d72e299",
+    "crypto-daily/REPORT_SPEC.md": "809a5c1cbcd6503d42305c842f37826b74a4741f",
+    "crypto-daily/REPORT_ACCEPTANCE.md": "d9952d82e3903d699d7db02632c1f26ebdd2c945",
+    "crypto-daily/COLLECTOR_SPEC.md": "aa4f1473f3c767b2216f715cbba78231c4794c02",
+    "crypto-daily/SECURITY_SOURCE_POLICY.md": "86b36f208220e90a52caa1cb8acaeec47add9628",
+    "crypto-daily/DELIVERY_RUNBOOK.md": "181c0448dddd2586e6082faaa1f51f7556eaa795",
+    "crypto-daily/state/daily-event-ledger.json": "bc7801e5efc9d42dee5cfb3554347073cbda65ac",
+    "docs/MONITORING/X_FIRST_PARTY_SOURCE_POLICY.md": "20abfed8a287307bb2d6017b3b9e7ff509bbeebe"
+  },
+  "prior_seven_day_delivered": [
+    {
+      "date": "2026-10-26",
+      "gmail_id": "1a176097e267ed98",
+      "git_blob_sha": "da4ae0ef14aaf8111c14174ac827d3d5c9344091",
+      "actual_gmail_and_git_body_readback_this_run": true,
+      "exact_equal": true
+    },
+    {
+      "date": "2026-10-27",
+      "gmail_id": "1a17b2d317942c5a",
+      "git_blob_sha": "407a25cf17db3f476932759de598d60102b13a85",
+      "actual_gmail_and_git_body_readback_this_run": true,
+      "exact_equal": true
+    },
+    {
+      "date": "2026-10-28",
+      "gmail_id": "1a180500065679d2",
+      "git_blob_sha": "5bc7be7c463f2d8b88917e974b31dc330e5d0f50",
+      "actual_gmail_and_git_body_readback_this_run": true,
+      "exact_equal": true
+    },
+    {
+      "date": "2026-10-29",
+      "gmail_id": "1a185794e63c022c",
+      "git_blob_sha": "89b93f0a7883b02c85824afb0b07547d51ae28c9",
+      "actual_gmail_and_git_body_readback_this_run": true,
+      "exact_equal": true
+    },
+    {
+      "date": "2026-10-30",
+      "gmail_id": "1a18a9d5e767548d",
+      "git_blob_sha": "23d55aab5c7400a0fd9688d7bc90ab1023ce9710",
+      "actual_gmail_and_git_body_readback_this_run": true,
+      "exact_equal": true
+    },
+    {
+      "date": "2026-10-31",
+      "gmail_id": "1a18fc6328b668e2",
+      "git_blob_sha": "6727cca0190395f3ecc21024e7b19bbd4447d259",
+      "actual_gmail_and_git_body_readback_this_run": true,
+      "exact_equal": true
+    },
+    {
+      "date": "2026-11-01",
+      "gmail_id": "1a194e8623464edf",
+      "git_blob_sha": "9d1de6ff96fbe46f8b453f3cf4d1a7a22074881d",
+      "actual_gmail_and_git_body_readback_this_run": true,
+      "exact_equal": true
+    }
+  ],
+  "today_sent_prefix": {
+    "subject_prefix": "Crypto Daily Brief｜2026-11-01",
+    "sent_ids": [
+      "1a194e8623464edf"
+    ],
+    "gmail_readback_chars": 3957,
+    "canonical_path": "crypto-daily/reports/daily/2026/2026-11/2026-11-01.md",
+    "canonical_sha": "9d1de6ff96fbe46f8b453f3cf4d1a7a22074881d",
+    "exact_equal": true
+  },
+  "source_receipts": [
+    {
+      "lane": "spot",
+      "url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-11-01T05:24:23Z",
+      "status": "checked",
+      "note": "Binance public read-only connector: BTC 77840.01 +0.748%, ETH 2267.46 +1.172%, SOL 95.64 -0.468%, BNB 705.34 +0.370%, HYPE 88.06 -0.621%. Rolling 24h, not a new daily email."
+    },
+    {
+      "lane": "derivatives",
+      "url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-11-01T05:24:22Z",
+      "status": "checked",
+      "note": "Binance public USD-M: BTC mark 77791.00, funding 0.0100%, OI 96907.920 BTC; ETH mark 2266.35, funding 0.003449%, OI 2376622.113 ETH; SOL mark 95.55, funding 0.008793%, OI 8858848.59 SOL."
+    },
+    {
+      "lane": "capital_flows",
+      "url": "https://farside.co.uk/btc/",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-30 US session",
+      "status": "checked",
+      "note": "BTC ETF 30 Oct total -643.2 US$m; no US trading on Sunday; same period already in today's formal report."
+    },
+    {
+      "lane": "capital_flows",
+      "url": "https://farside.co.uk/eth/",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-30 US session",
+      "status": "checked",
+      "note": "ETH ETF 30 Oct total -155.7 US$m; no new session."
+    },
+    {
+      "lane": "onchain",
+      "url": "https://info.arkm.com/research",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-30 06:00 (site time unspecified)",
+      "status": "source_gap",
+      "note": "Arkham featured Binance $6.3B hack research; bounded Lookonchain public X search yielded no independently verified new large TXID; not a comprehensive chain scan."
+    },
+    {
+      "lane": "policy",
+      "url": "https://www.bitget.com/support/articles/12560603899271",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-31 16:53 (site timezone unspecified)",
+      "status": "checked",
+      "note": "CORE Core DAO deposits and withdrawals suspended for wallet maintenance from 2026-11-01 00:53 UTC+8; restoration TBD. Cannot infer b14g incident causation."
+    },
+    {
+      "lane": "policy",
+      "url": "https://www.bitget.com/support/articles/12560603899272",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-11-01 00:31 (site timezone unspecified)",
+      "status": "checked",
+      "note": "SOON BSC deposits/withdrawals maintenance suspension; separate network restriction, not broad exchange failure."
+    },
+    {
+      "lane": "infrastructure",
+      "url": "https://blog-v3.opensea.io/articles/opensea-digest-october-30-2026",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-30",
+      "status": "checked",
+      "note": "OpenSea digest mentions ICE and TradeXYZ future CFTC-dependent venue; no new independent contract activation verified in this slot."
+    },
+    {
+      "lane": "tge",
+      "url": "https://www.binance.com/en/support/announcement/detail/a88495062d5947e895999cf73fa8bce1",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-16 updated 2026-10-20",
+      "status": "checked",
+      "note": "VELODROME/AERO Nov2/3 merger operations already delivered Oct31, no new official change; Cambria Oct29 Base RSGP previously emailed, no repeat."
+    },
+    {
+      "lane": "early_nft",
+      "url": "https://blog-v3.opensea.io/articles/opensea-digest-october-30-2026",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-30",
+      "status": "checked",
+      "note": "Rhizome Microgrants covered today; original Rhizome eligibility not independently available; no fresh verified NFT mint/claim."
+    },
+    {
+      "lane": "security",
+      "url": "https://www.binance.com/en/support/announcement/detail/73911fb819b240f88b88256bdd318eda",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-11-01 04:08 (Binance display, UTC assumed from release window)",
+      "status": "checked",
+      "note": "New official update #4: 90%->95% replenishment; phase-one withdrawal target 06:00-09:00 UTC, not verified resumed as of 05:25 UTC."
+    },
+    {
+      "lane": "web_runtime_rce",
+      "url": "https://www.php.net/archive/2026.php",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-26 latest Windows Brotli build notice",
+      "status": "checked",
+      "note": "PHP Oct26 Windows Brotli rebuild and Oct21 PHP RCE notices inspected; no newly published post-Nov1 delta."
+    },
+    {
+      "lane": "web_pki_tls",
+      "url": "https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-20",
+      "status": "checked",
+      "note": "Mozilla eMudhra CA incident already delivered; no new official changed trust state observed."
+    },
+    {
+      "lane": "ai_package_supply_chain",
+      "url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-21 updated 2026-10-23",
+      "status": "checked",
+      "note": "LiteLLM compromised 1.107.0 old reported family; no new package release delta."
+    },
+    {
+      "lane": "ai_package_supply_chain",
+      "url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-w4c7-34wj-hqm8",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-27",
+      "status": "checked",
+      "note": "Enterprise proxy unauthenticated file read patched in specified branches, distinct from compromised wheel, but prior delivered already; do not repeat without material change."
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "url": "https://status.northflank.com/cmvv0rn5a092f14rutwccodpp",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-31 23:31 UTC latest displayed",
+      "status": "checked",
+      "note": "Northflank secret rotation RabbitMQ update already covered in today's report."
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "url": "https://status.railway.com/",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-29 15:45 UTC latest visible recovery",
+      "status": "checked",
+      "note": "Railway signup paused; no novel official restoration change."
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "url": "https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-21",
+      "status": "checked",
+      "note": "Microsoft Storm-0940/ConnectWise prior delivered; not new."
+    },
+    {
+      "lane": "backend_framework_auth",
+      "url": "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-21",
+      "status": "checked",
+      "note": "Node Brotli/TLS security fixes prior delivered; no new notice in checked source."
+    },
+    {
+      "lane": "backend_framework_auth",
+      "url": "https://github.com/laravel/framework/security/advisories/GHSA-f9x3-7vq9-cph6",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-10-19",
+      "status": "checked",
+      "note": "Laravel TokenGuard CVSS9.2 prior delivered; no new patch delta."
+    },
+    {
+      "lane": "macro",
+      "url": "https://www.federalreserve.gov/newsevents/2026-november.htm",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-11 calendar (page date unspecified)",
+      "status": "checked",
+      "note": "Nov2 SLOOS scheduled; Sunday no US cash equity close."
+    },
+    {
+      "lane": "forward_catalysts",
+      "url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/september/",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-09 report; Nov2 release previously scheduled",
+      "status": "checked",
+      "note": "Upcoming ISM Oct manufacturing PMI Nov2, not yet published; use no invented PMI."
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "url": "https://www.gate.com/it/blog/anthropic-races-toward-the-largest-ipo-in-history-will-gate-direct-ipo-open-for-subscriptions",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-09-23",
+      "status": "checked",
+      "note": "Gate explicitly says no Anthropic direct IPO plan announced as of Sep23; searched current six venue official domains, no issuer-named live subscription page verified; UNCONFIRMED_MONITORING."
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "url": "https://www.okx.com/help/okx-to-list-pre-ipo-pre-market-perpetual-futures-for-spacex-usdt-openai-usdt-and-anthropic-usdt",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "2026-05-07",
+      "status": "checked",
+      "note": "OKX ANTHROPICUSDT is cash-settled premarket perpetual, NOT equity allocation; exclude."
+    },
+    {
+      "lane": "official_x",
+      "url": "https://x.com/binance/status",
+      "checked_at": "2026-11-01T05:25:51.448Z",
+      "published_at": "not obtainable",
+      "status": "source_gap",
+      "note": "Browser list_tabs actual error: originating browser context required. BROWSER_SESSION_UNAVAILABLE; direct x.com disabled; bounded public original-post search fallback inconclusive; do not claim logged-in X read."
+    }
+  ],
+  "candidates": [
+    {
+      "event_key": "security:binance:hotwallet-2026-10-29:binance-2026-11-01-0408-phase1-95pct",
+      "family_key": "security:binance:hotwallet-2026-10-29",
+      "material_version": "binance-official-2026-11-01T0408Z-phase1-target-95pct",
+      "kind": "MAJOR_SECURITY",
+      "primary_section": 9,
+      "decision": "INCLUDE_NEXT_FORMAL_IF_STILL_MATERIAL_AND_NOT_DELIVERED",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/73911fb819b240f88b88256bdd318eda",
+      "published_at": "2026-11-01 04:08 (official Binance displayed)",
+      "actual_delta": "Official new #4 raises replenishment from 90% to 95%, and sets first withdrawal phase target 2026-11-01 06:00-09:00 UTC for BTC, ETH, BSC, SOL and listed other networks. At 05:25 UTC this is only a scheduled future rollout; live availability NOT verified. Platform's solvency and safety statements are its own assertions.",
+      "novelty_proof": {
+        "previous_material_version": "binance-2026-10-31-replenished90",
+        "changed_field": "replenishment_coverage_and_withdrawal_phase_one_target",
+        "old_value": "90% replenished, withdrawal reopening only planned for Nov1 with no confirmed network-by-network window",
+        "new_value": "95% replenished, phase-one window announced 06:00-09:00 UTC Nov1 for 15 networks; actual availability not yet confirmed",
+        "evidence_url": "https://www.binance.com/en/support/announcement/detail/73911fb819b240f88b88256bdd318eda",
+        "evidence_published_at": "2026-11-01 04:08 (official display)"
+      },
+      "include_reason": "Fresh official named operational change after today's 09:20 formal email; do not resend same-day; verify live phase and any further update for next scheduled report."
+    },
+    {
+      "event_key": "cex:bitget:core-network-suspension:2026-10-31",
+      "family_key": "cex:bitget:core-network-access",
+      "material_version": "bitget-official-2026-10-31-1653-suspend",
+      "kind": "MAJOR_POLICY",
+      "primary_section": 4,
+      "decision": "WATCH_NEXT_REPORT",
+      "source_url": "https://www.bitget.com/support/articles/12560603899271",
+      "published_at": "2026-10-31 16:53 (site timezone unspecified)",
+      "actual_delta": "CORE Core DAO deposit and withdrawal service suspended from Nov1 00:53 UTC+8; resumption unknown. Official cites wallet maintenance, no causal attribution to b14g.",
+      "reason": "New operational restriction; limited network scope; need live recovery status and prior-day family comparison before inclusion."
+    },
+    {
+      "event_key": "cex:bitget:soon-bsc-maintenance:2026-11-01",
+      "family_key": "cex:bitget:soon-bsc-access",
+      "material_version": "bitget-official-2026-11-01-0031-suspend",
+      "kind": "MAJOR_POLICY",
+      "primary_section": 4,
+      "decision": "WATCH",
+      "source_url": "https://www.bitget.com/support/articles/12560603899272",
+      "published_at": "2026-11-01 00:31 (site timezone unspecified)",
+      "actual_delta": "SOON BSC deposits/withdrawals temporarily suspended for wallet maintenance; no restart time announced.",
+      "reason": "Narrow routine maintenance; no systemic impact or known user action."
+    },
+    {
+      "event_key": "ipoaccess:anthropic:allvenues:2026-11-01-check",
+      "family_key": "ipoaccess:anthropic:venue-discovery",
+      "material_version": "source-check-2026-11-01T0525Z",
+      "kind": "VENUE_IPO_ACCESS",
+      "primary_section": 7,
+      "decision": "EXCLUDE_UNCONFIRMED_MONITORING",
+      "source_url": "https://www.gate.com/it/blog/anthropic-races-toward-the-largest-ipo-in-history-will-gate-direct-ipo-open-for-subscriptions",
+      "published_at": "2026-09-23",
+      "actual_delta": "No current verified official venue-named Anthropic equity IPO application, backing terms or subscription window; OKX instrument is perpetual futures.",
+      "reason": "No qualifying new issuer-specific application; suppress repeat."
+    }
+  ],
+  "execution_limits": [
+    "Browser list_tabs failed originating browser context; public X original posts not independently read",
+    "Arkham/Lookonchain TXID search cannot prove comprehensive onchain coverage",
+    "No user portfolio or exchange-account status read; cannot claim withdrawals available for user's account",
+    "Some source published_at unknown; left explicit rather than invented",
+    "Sunday ETF last US session Oct30, no new session",
+    "No extra email or App output; new official Binance update remains internal candidate for next authorized formal delivery"
+  ],
+  "email_sent_this_run": false,
+  "app_output_intended": "EMPTY",
+  "automation_changed": false,
+  "new_scheduler": false,
+  "paid_api": false
+}
