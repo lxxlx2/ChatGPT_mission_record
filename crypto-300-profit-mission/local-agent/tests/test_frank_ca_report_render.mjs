@@ -411,3 +411,71 @@ for(const action of ['history-invalid-ca','submit-invalid-ca','submit-invalid-mo
     assert.match(h.element('cluster-status').innerHTML,/请输入完整|请选择有效/);
   });
 }
+
+async function readGetFixture(h,path) {
+  h.context.__getPath=path;
+  return await vm.runInContext('get(__getPath)',h.context,{timeout:2500});
+}
+
+for (const endpoint of ['/api/runtime','/api/control-health','/api/candidates','/api/follow-opportunities']) {
+  test('GET network failure identifies '+endpoint+' without leaking exception details or retrying',async()=>{
+    const h=harness(),before=h.requests.length;
+    h.setResponse(async()=>{throw new TypeError('private-fixture-origin?token=fixture-secret');});
+    await assert.rejects(()=>readGetFixture(h,endpoint+'?mint=fixture-mint&job_id=fixture-job'),error=>{
+      assert.match(error.message,/\[NETWORK\]/);
+      assert.ok(error.message.includes(endpoint));
+      assert.doesNotMatch(error.message,/private-fixture|fixture-secret|fixture-mint|fixture-job|token=|job_id=/);
+      return true;
+    });
+    assert.equal(h.requests.length,before+1);
+    assert.equal(h.requests.at(-1).method,'GET');
+  });
+}
+
+test('GET JSON failure identifies the decode stage without exposing response contents',async()=>{
+  const h=harness(),before=h.requests.length;
+  let jsonReads=0;
+  h.setResponse(async()=>({ok:true,status:200,json:async()=>{
+    jsonReads++;throw new SyntaxError('private JSON body with fixture-secret');
+  }}));
+  await assert.rejects(()=>readGetFixture(h,'/api/candidates?mint=fixture-mint'),error=>{
+    assert.match(error.message,/GET \/api\/candidates 200 \[JSON\]/);
+    assert.doesNotMatch(error.message,/private JSON|fixture-secret|fixture-mint|SyntaxError/);
+    return true;
+  });
+  assert.equal(jsonReads,1);
+  assert.equal(h.requests.length,before+1);
+});
+
+test('GET HTTP 404 retains the CA terminal-status contract and does not read error body',async()=>{
+  const h=harness(),before=h.requests.length;
+  let jsonReads=0;
+  h.setResponse(async()=>({ok:false,status:404,json:async()=>{jsonReads++;throw Error('private body');}}));
+  await assert.rejects(()=>readGetFixture(h,'/api/cluster-analysis?job_id='+jobId),error=>{
+    assert.match(error.message,/GET \/api\/cluster-analysis 404 \[HTTP\]/);
+    assert.ok(error.message.includes(' 404'));
+    assert.doesNotMatch(error.message,new RegExp(jobId));
+    return true;
+  });
+  assert.equal(jsonReads,0);
+  assert.equal(h.requests.length,before+1);
+});
+
+test('GET failure never echoes an unrecognized URL or its private query',async()=>{
+  const h=harness();
+  h.setResponse(async()=>{throw Error('fixture-secret');});
+  await assert.rejects(()=>readGetFixture(h,'https://private-fixture.invalid/path?token=fixture-secret'),error=>{
+    assert.match(error.message,/\[NETWORK\]/);
+    assert.doesNotMatch(error.message,/private-fixture|fixture-secret|https:|token=/);
+    return true;
+  });
+});
+
+test('GET success returns the unchanged payload with one fetch and one JSON read',async()=>{
+  const h=harness(),before=h.requests.length,payload={rows:[{value:'fixture'}]};
+  let jsonReads=0;
+  h.setResponse(async()=>({ok:true,status:200,json:async()=>{jsonReads++;return payload;}}));
+  assert.equal(await readGetFixture(h,'/api/candidates'),payload);
+  assert.equal(jsonReads,1);
+  assert.equal(h.requests.length,before+1);
+});
