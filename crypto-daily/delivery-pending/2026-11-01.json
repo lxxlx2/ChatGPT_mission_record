@@ -182,7 +182,7 @@
         "previous_material_version": "binance-official-2026-10-30-1933-loss6p3-reserve6p34-withdrawal34h",
         "changed_field": "replenishment_coverage",
         "old_value": "10月30日公告约80%已补足",
-        "new_value": "10月31日公告约90%已补足，前十类资产100%储备覆盖",
+        "new_value": "现约90%已补足，前十类资产100%储备覆盖",
         "evidence_url": "https://www.binance.com/en/support/announcement/detail/1fdf1f61559c401da0435895ffcccb62",
         "evidence_published_at": "2026-10-31 14:24"
       },
@@ -2702,14 +2702,14 @@
         "Binance"
       ],
       "decision": "include",
-      "material_delta": "10月31日公告约90%已补足，前十类资产100%储备覆盖",
+      "material_delta": "现约90%已补足，前十类资产100%储备覆盖",
       "source_url": "https://www.binance.com/en/support/announcement/detail/1fdf1f61559c401da0435895ffcccb62",
       "published_at": "2026-10-31 14:24",
       "novelty_proof": {
         "previous_material_version": "binance-official-2026-10-30-1933-loss6p3-reserve6p34-withdrawal34h",
         "changed_field": "replenishment_coverage",
         "old_value": "10月30日公告约80%已补足",
-        "new_value": "10月31日公告约90%已补足，前十类资产100%储备覆盖",
+        "new_value": "现约90%已补足，前十类资产100%储备覆盖",
         "evidence_url": "https://www.binance.com/en/support/announcement/detail/1fdf1f61559c401da0435895ffcccb62",
         "evidence_published_at": "2026-10-31 14:24"
       }
