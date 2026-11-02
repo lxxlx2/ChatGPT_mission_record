@@ -1571,6 +1571,7 @@ def report_completeness(report:dict)->dict:
     market=report.get("market") or {}
     raw_pool=report.get("pool_vaults") or {}
     raw_pool_read=raw_pool.get("status")=="VAULT_BALANCE_SNAPSHOT"
+    reserve_model_read=raw_pool_read and (raw_pool.get("effective_reserves") or {}).get("status") in {"DERIVED_PROTOCOL_RESERVES","ARITHMETIC_ONLY"}
     narrative=report.get("narrative") or {}
     narrative_read=bool(narrative.get("evidence"))
     narrative_attempted=any(row.get("requested") is True for row in narrative.get("attempts") or [])
@@ -1607,8 +1608,8 @@ def report_completeness(report:dict)->dict:
         "Resolve material unknown relationships using independent non-public evidence; keep inherent uncertainty explicit.",
         ["assessment.cluster_status","unresolved_relation_edges","probable_control_clusters"])
     row("market","PARTIAL" if market.get("status")=="OK" else "UNAVAILABLE",
-        "RAW_VAULT_BALANCES_WITHOUT_NET_RESERVE_OR_PRICE_RECONCILIATION" if raw_pool_read else "INDEXED_MARKETS_WITHOUT_RAW_POOL_RECONCILIATION" if compared else "SINGLE_MARKET_REFERENCE_WITHOUT_POOL_RECONCILIATION",
-        ["DexScreener market reference"]+(["GeckoTerminal exact-pool indexer"] if independent.get("attempted") is True else [])+(["Selected PumpSwap raw vault/Mint accounts in one finalized batch; not net reserves"] if raw_pool_read else []),
+        "DOCUMENTED_RESERVES_WITHOUT_USD_OR_SNAPSHOT_PARITY" if reserve_model_read else "RAW_VAULT_BALANCES_WITHOUT_NET_RESERVE_OR_PRICE_RECONCILIATION" if raw_pool_read else "INDEXED_MARKETS_WITHOUT_RAW_POOL_RECONCILIATION" if compared else "SINGLE_MARKET_REFERENCE_WITHOUT_POOL_RECONCILIATION",
+        ["DexScreener market reference"]+(["GeckoTerminal exact-pool indexer"] if independent.get("attempted") is True else [])+(["Selected PumpSwap raw vault/Mint accounts in one finalized batch; documented signed virtual reserve arithmetic" if reserve_model_read else "Selected PumpSwap raw vault/Mint accounts in one finalized batch; not net reserves"] if raw_pool_read else []),
         "Reconcile dated selected-pool reserves and market definitions with an independent permitted source.",
         ["market","pool_vaults"])
     row("independent_sources","PARTIAL" if compared else "UNAVAILABLE" if independent.get("attempted") is True else "NOT_COLLECTED",
@@ -1747,7 +1748,7 @@ def markdown(report:dict)->str:
                 + (" — evidence: "+", ".join(edge_types) if edge_types else "")
             )
     lines += ["", "## Raw selected-pool vault balance evidence (not price or executable quote)", "",
-              "Raw vault balances do not establish net reserves, USD valuation, tradability or indexer snapshot parity.",
+              "Raw vault balances alone do not establish net reserves. A separately recorded documented reserve model does not establish USD valuation, tradability, deployed-binary semantics or indexer snapshot parity.",
               "~~~json", json.dumps(report.get("pool_vaults") or {},ensure_ascii=False,indent=2), "~~~"]
     lines += ["", "## External narrative source claims (bounded; attribution unverified)", "", "~~~json",
               json.dumps(report.get("narrative") or {},ensure_ascii=False,indent=2), "~~~"]

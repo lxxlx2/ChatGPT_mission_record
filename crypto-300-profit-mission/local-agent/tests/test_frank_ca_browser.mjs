@@ -78,6 +78,14 @@ try {
  assert.match(await page.locator('.cluster-pool-vaults').innerText(),/0.000100/);
  assert.match(await page.locator('.cluster-pool-vaults').innerText(),/美元价格、美元流动性、可执行报价与索引同快照对齐均未核实/);
  check('raw vault snapshot survives job persistence with visible slot precision and no executable price claim');
+ assert.equal(saved.pool_vaults.effective_reserves.effective_quote_raw,'185');
+ assert.equal(saved.pool_vaults.effective_reserves.virtual_quote_raw,'-15');
+ assert.equal(await page.locator('.cluster-pool-reserves').isVisible(),true);
+ assert.match(await page.locator('.cluster-pool-reserves').innerText(),/0.000185/);
+ assert.match(await page.locator('.cluster-pool-reserves').innerText(),/1.85/);
+ assert.match(await page.locator('.cluster-pool-reserves').innerText(),/不再重复减去待提取费用/);
+ assert.match(await page.locator('.cluster-pool-reserves').innerText(),/已部署程序二进制/);
+ check('signed virtual reserves and waiting-fee separation persist without a double deduction or executable quote');
  assert.equal(saved.analysis_completeness.status,'INCOMPLETE_EVIDENCE');
  assert.ok(saved.analysis_completeness.missing_required.includes('narrative'));
  assert.ok(saved.analysis_completeness.missing_required.includes('wallet_history'));

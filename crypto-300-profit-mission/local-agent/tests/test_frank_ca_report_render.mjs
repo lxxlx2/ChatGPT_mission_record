@@ -814,3 +814,44 @@ test('unsupported raw pool never displays provider exception text or old balance
   h.context.renderClusterReport({...fixture,pool_vaults:{status:'INCOMPLETE_EVIDENCE',reason:'SECRET_RAW_ERROR'}});
   assert.doesNotMatch(h.element('cluster-market').innerHTML,/SECRET_RAW_ERROR/);
 });
+
+function reserveReportForUi() {
+  const pool='POOL',quote='QUOTE';
+  return {...fixture,market:{status:'OK',source:'DEXSCREENER_API',mint,main_pair:{pair_address:pool,base_address:mint,quote_address:quote}},pool_vaults:{status:'VAULT_BALANCE_SNAPSHOT',mint,pool_address:pool,snapshot_slot:101,discovery_slot:100,raw_vault_quote_per_target:'2',target:{mint,vault:'A',authority:pool,raw:'100',decimals:0,quantity:'100'},quote:{mint:quote,vault:'B',authority:pool,raw:'200',decimals:0,quantity:'200'},flags:[],effective_reserves:{version:1,status:'DERIVED_PROTOCOL_RESERVES',formula:'PUMPSWAP_SIGNED_VQR_V1',protocol_base_mint:mint,protocol_quote_mint:quote,target_mint:mint,quote_mint:quote,base_decimals:0,quote_decimals:0,base_raw:'100',base_quantity:'100',quote_vault_raw:'200',quote_vault_quantity:'200',waiting_fees_raw:'15',waiting_fees_quantity:'15',virtual_quote_raw:'-15',real_quote_raw:'185',real_quote_quantity:'185',effective_quote_raw:'185',effective_quote_quantity:'185',boost_component_raw:'0',boost_component_quantity:'0',effective_quote_per_target:'1.85',documented_zero_defaults:[],deployed_binary_semantics:'UNVERIFIED'}}};
+}
+
+test('signed protocol reserve model is separate from raw balance and excludes waiting fees once',()=>{
+  const h=harness(),report=reserveReportForUi();h.context.renderClusterReport(report);
+  const html=h.element('cluster-market').innerHTML;
+  assert.match(html,/cluster-pool-reserves/);assert.match(html,/有效储备 = 金库余额 \+ 有符号虚拟储备/);
+  assert.match(html,/-15/);assert.match(html,/185/);assert.match(html,/1.85/);
+  assert.match(html,/不再重复减去待提取费用/);assert.match(html,/美元价格、美元流动性、可执行报价与索引同快照对齐均未核实/);
+  assert.match(html,/已部署程序二进制/);
+});
+
+test('legacy reports and inconsistent or unsupported reserve models never inherit a computed ratio',()=>{
+  const h=harness(),report=reserveReportForUi();h.context.renderClusterReport(report);
+  report.pool_vaults.effective_reserves.status='INCOMPLETE_EVIDENCE';report.pool_vaults.effective_reserves.reason='SECRET';
+  h.context.renderClusterReport(report);assert.doesNotMatch(h.element('cluster-market').innerHTML,/1.85|SECRET/);
+  delete report.pool_vaults.effective_reserves;h.context.renderClusterReport(report);
+  assert.match(h.element('cluster-market').innerHTML,/此报告未计算协议储备/);assert.doesNotMatch(h.element('cluster-market').innerHTML,/1.85/);
+  report.pool_vaults.effective_reserves=reserveReportForUi().pool_vaults.effective_reserves;
+  report.pool_vaults.effective_reserves.protocol_quote_mint='WRONG';h.context.renderClusterReport(report);
+  assert.doesNotMatch(h.element('cluster-market').innerHTML,/1.85|185/);
+});
+
+test('documented default zeros are identified and Token-2022 arithmetic does not display a ratio',()=>{
+  const h=harness(),report=reserveReportForUi();report.pool_vaults.effective_reserves.documented_zero_defaults=['virtual_quote_reserves'];
+  report.pool_vaults.effective_reserves.status='ARITHMETIC_ONLY';report.pool_vaults.effective_reserves.ratio_reason='TOKEN_ECONOMICS_UNVERIFIED';
+  report.pool_vaults.effective_reserves.effective_quote_per_target='UNRESOLVED';h.context.renderClusterReport(report);
+  const html=h.element('cluster-market').innerHTML;
+  assert.match(html,/文档约定的零默认值/);assert.match(html,/Token-2022 或冻结状态/);assert.doesNotMatch(html,/1.85/);
+});
+
+test('reserve model rejects inconsistent arithmetic and preserves reversed protocol direction',()=>{
+  const h=harness(),report=reserveReportForUi(),m=report.pool_vaults.effective_reserves;
+  m.effective_quote_raw='170';h.context.renderClusterReport(report);assert.doesNotMatch(h.element('cluster-market').innerHTML,/1.85|185/);
+  m.effective_quote_raw='185';m.protocol_base_mint='QUOTE';m.protocol_quote_mint=mint;
+  m.base_raw='200';m.quote_vault_raw='100';m.waiting_fees_raw='10';m.virtual_quote_raw='-10';m.real_quote_raw='90';m.effective_quote_raw='90';m.boost_component_raw='0';m.effective_quote_per_target='2.2222222222';
+  h.context.renderClusterReport(report);assert.match(h.element('cluster-market').innerHTML,/2.2222222222/);
+});

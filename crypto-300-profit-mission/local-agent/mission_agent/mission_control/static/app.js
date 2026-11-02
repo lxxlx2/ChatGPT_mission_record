@@ -1585,6 +1585,46 @@ function renderNarrativeSources(report,links) {
     (attempts?'<details><summary>来源读取范围与缺口</summary><ul>'+attempts+'</ul></details>':'<p>本次未记录公开来源读取；保留资料链接。</p>')+'<div class="narrative-links">'+links+'</div>';
 }
 
+function renderPoolReserveModel(r) {
+  const m=r.effective_reserves,t=r.target || {},q=r.quote || {};
+  if (!m) return '<div class="cluster-pool-reserves"><p>此报告未计算协议储备；读取历史报告不会补算或重采。</p></div>';
+  const heading='<div class="cluster-pool-reserves"><strong>按协议文档推导的储备</strong>';
+  const integer=v=>typeof v==='string' && /^-?(0|[1-9][0-9]{0,38})$/.test(v);
+  const number=v=>typeof v==='string' && v.length<=400 && /^(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:E[+-]?[0-9]+)?$/i.test(v);
+  const identity=m.version===1 && m.formula==='PUMPSWAP_SIGNED_VQR_V1' && m.target_mint===t.mint && m.quote_mint===q.mint &&
+    m.protocol_base_mint!==m.protocol_quote_mint && [t.mint,q.mint].includes(m.protocol_base_mint) && [t.mint,q.mint].includes(m.protocol_quote_mint);
+  const base=m.protocol_base_mint===t.mint?t:q,quote=m.protocol_quote_mint===t.mint?t:q;
+  const fields=['base_raw','quote_vault_raw','virtual_quote_raw','waiting_fees_raw','real_quote_raw','effective_quote_raw','boost_component_raw'];
+  let arithmetic=false;
+  if (identity && fields.every(k=>integer(m[k]))) {
+    const n=k=>BigInt(m[k]),max=18446744073709551615n;
+    arithmetic=m.base_raw===base.raw && m.quote_vault_raw===quote.raw &&
+      m.base_decimals===base.decimals && m.quote_decimals===quote.decimals &&
+      Number.isInteger(base.decimals) && base.decimals>=0 && base.decimals<=255 && Number.isInteger(quote.decimals) && quote.decimals>=0 && quote.decimals<=255 &&
+      n('waiting_fees_raw')>=0n && n('real_quote_raw')>=0n && n('effective_quote_raw')>=0n && n('effective_quote_raw')<=max &&
+      n('boost_component_raw')>=0n && n('real_quote_raw')===n('quote_vault_raw')-n('waiting_fees_raw') &&
+      n('effective_quote_raw')===n('quote_vault_raw')+n('virtual_quote_raw') && n('boost_component_raw')===n('virtual_quote_raw')+n('waiting_fees_raw');
+  }
+  if (!identity || !arithmetic || !['DERIVED_PROTOCOL_RESERVES','ARITHMETIC_ONLY'].includes(m.status))
+    return heading+'<p>协议储备证据不完整或不一致，未输出推导值与比值；原始余额另列。</p></div>';
+  const scaled=raw=>{
+    const negative=raw.startsWith('-'),digits=(negative?raw.slice(1):raw).padStart(m.quote_decimals+1,'0');
+    return (negative?'-':'')+(m.quote_decimals?digits.slice(0,-m.quote_decimals)+'.'+digits.slice(-m.quote_decimals):digits);
+  };
+  const labels={quote_vault_raw:'计价币金库余额',waiting_fees_raw:'待提取协议及创建者费用',virtual_quote_raw:'有符号虚拟储备',real_quote_raw:'真实计价币储备',boost_component_raw:'boost 储备分量',effective_quote_raw:'有效计价币储备'};
+  const rows=Object.entries(labels).map(([key,label])=>'<tr><td>'+label+'</td><td>'+esc(m[key])+'</td><td>'+esc(scaled(m[key]))+'</td></tr>').join('');
+  const defaults=Array.isArray(m.documented_zero_defaults)?m.documented_zero_defaults.filter(k=>['virtual_quote_reserves','protocol_fees','creator_fees'].includes(k)):[];
+  const ratio=m.status==='DERIVED_PROTOCOL_RESERVES' && BigInt(m.base_raw)>0n && BigInt(m.effective_quote_raw)>0n && number(m.effective_quote_per_target) && Number.isFinite(Number(m.effective_quote_per_target)) && Number(m.effective_quote_per_target)>0?m.effective_quote_per_target:null;
+  const ratioText=m.status==='ARITHMETIC_ONLY'?'Token-2022 或冻结状态的经济影响未核实，只列算术，不展示储备比值':m.ratio_reason==='ZERO_POOL_SIDE'?'池子至少一侧为零，不展示储备比值':'储备比值未核实';
+  return heading+'<p>有效储备 = 金库余额 + 有符号虚拟储备；不再重复减去待提取费用。真实储备 = 金库余额 - 待提取费用；boost 分量 = 虚拟储备 + 待提取费用。</p>'+
+    '<p>协议基础币 '+esc(m.protocol_base_mint)+' / 协议计价币 '+esc(m.protocol_quote_mint)+'；计价币精度 '+esc(m.quote_decimals)+'。协议方向与报告目标币方向分别保留。</p>'+
+    '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>计价币口径</th><th>原始整数</th><th>数量</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+    (defaults.length?'<p>文档约定的零默认值：'+esc(defaults.join(' / '))+'；原始缺失字段仍保留为未知。</p>':'')+
+    (ratio?'<p>协议储备比值（报告计价币 / 目标币）：'+esc(ratio)+'；不含下单规模、费用或价格冲击。</p>':'<p>'+ratioText+'</p>')+
+    '<p>仅按固定协议文档推导，未独立验证已部署程序二进制、美元估值或索引同快照；本项不能作为可执行报价或流动性安全结论。</p>'+
+    '<a class="link-btn compact" href="https://github.com/pump-fun/pump-public-docs/blob/main/docs/VIRTUAL_QUOTE_RESERVES_FEE_ADJUSTMENT.md" target="_blank" rel="noreferrer">官方费用与虚拟储备文档</a></div>';
+}
+
 function renderPoolVaults(report) {
   const r=report.pool_vaults;
   if (!r || r.status==='NOT_REQUESTED') return '';
@@ -1595,8 +1635,8 @@ function renderPoolVaults(report) {
     t.authority===r.pool_address && q.authority===r.pool_address && Number.isSafeInteger(r.snapshot_slot) && r.snapshot_slot>0;
   const reasons={UNSUPPORTED_POOL_PROGRAM:'所选池程序尚未支持，未读取其他池子',RPC_UNAVAILABLE:'链上账户读取失败',RESPONSE_LIMIT:'响应超过本轮上限'};
   const rows=valid ? [t,q].map((v,i)=>'<tr><td>'+(i?'计价币':'目标币')+'</td><td>'+esc(v.mint)+'</td><td>'+esc(v.vault)+'</td><td>'+esc(v.raw)+'</td><td>'+esc(v.decimals)+'</td><td>'+esc(v.quantity)+'</td></tr>').join('') : '';
-  return '<div class="trust-box cluster-pool-vaults"><strong>PumpSwap 原始金库余额</strong><p>仅覆盖所选池。余额比值未扣累计费用、未纳入虚拟储备或 Token-2022 调整；美元价格、美元流动性、可执行报价与索引同快照对齐均未核实。</p>'+
-    (valid ? '<p>finalized slot '+esc(r.snapshot_slot)+'；发现池 slot '+esc(r.discovery_slot)+'。minContextSlot 只设下界，批次实际 slot 另行记录。</p><div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>方向</th><th>Mint</th><th>金库</th><th>原始整数余额</th><th>精度</th><th>数量</th></tr></thead><tbody>'+rows+'</tbody></table></div><p>计价币 / 目标币原始余额比值：'+esc(r.raw_vault_quote_per_target)+'；这项比值不作为市场价格。</p><p>状态限制：'+esc((r.flags || []).join(' / ') || '仍需独立储备模型核对')+'</p>' : '<p>'+esc(reasons[r.reason] || '池子或金库证据不完整，未输出余额比值')+'</p>')+'</div>';
+  return '<div class="trust-box cluster-pool-vaults"><strong>PumpSwap 原始金库余额</strong><p>仅覆盖所选池。原始余额比值未扣累计费用、未纳入虚拟储备或 Token-2022 调整；美元价格、美元流动性、可执行报价与索引同快照对齐均未核实。</p>'+
+    (valid ? '<p>finalized slot '+esc(r.snapshot_slot)+'；发现池 slot '+esc(r.discovery_slot)+'。minContextSlot 只设下界，批次实际 slot 另行记录。</p><div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>方向</th><th>Mint</th><th>金库</th><th>原始整数余额</th><th>精度</th><th>数量</th></tr></thead><tbody>'+rows+'</tbody></table></div><p>计价币 / 目标币原始余额比值：'+esc(r.raw_vault_quote_per_target)+'；这项比值不作为市场价格。</p><p>状态限制：'+esc((r.flags || []).join(' / ') || '无附加状态标记；仍需独立来源核对')+'</p>' + renderPoolReserveModel(r) : '<p>'+esc(reasons[r.reason] || '池子或金库证据不完整，未输出余额比值')+'</p>')+'</div>';
 }
 
 function renderMarketComparison(market,mint) {

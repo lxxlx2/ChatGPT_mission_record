@@ -1,4 +1,4 @@
-"""Bounded PumpSwap raw vault snapshot, never a pricing or reserve model.
+"""Bounded PumpSwap raw snapshot and documented reserve arithmetic, no quote.
 
 Layout: pump-fun/pump-public-docs idl/pump_amm.json blob
  d907b16a91f035aeb3c3182bfa0972a91bf23a86. SPL Token interface state.rs
@@ -8,7 +8,7 @@ Layout: pump-fun/pump-public-docs idl/pump_amm.json blob
 import base64
 import hashlib
 import json
-from decimal import Decimal, localcontext
+from decimal import Decimal, localcontext, ROUND_HALF_EVEN
 from .holder_ranks import ALPHABET, PROGRAMS, TOKEN_2022_PROGRAM, valid_pubkey
 
 PROGRAM='pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA'
@@ -83,6 +83,60 @@ def _token(account,mint_account,mint_id,pool_address,vault_address,flags):
     return {'mint':mint_id,'vault':vault_address,'authority':pool_address,'token_program':program,'raw':str(raw),'decimals':decimals,'quantity':quantity,'state':'frozen' if b[108]==2 else 'initialized','mint_supply_raw':str(int.from_bytes(m[36:44],'little'))}
 
 
+# Official protocol documentation is a model basis, not deployed-binary proof.
+RESERVE_REFERENCE_BLOBS={
+    'PUMP_SWAP_README.md':'c2837ee4dd0f8a4839ec41f920369c05d90ca0fc',
+    'NEGATIVE_VIRTUAL_QUOTE_RESERVES.md':'96fa56d171b92e750ad4f965ea71b7cc2fa4b01b',
+    'VIRTUAL_QUOTE_RESERVES_FEE_ADJUSTMENT.md':'14d7c316bad91feb976d06e3f88955ae637ea609',
+}
+
+
+def _derive_reserves(base,quote,params,target_mint,flags):
+    """Quote-side fees are ALREADY offset by signed virtual reserves.
+
+    Effective = quote vault + virtual. Real = quote vault - waiting fees.
+    Boost = virtual + waiting fees. Never subtract waiting fees twice.
+    Missing trailing fields use documented zero defaults only in this model;
+    observed pool_parameters retain None. No extra collection on report GET.
+    """
+    out={'version':1,'status':'INCOMPLETE_EVIDENCE','formula':'PUMPSWAP_SIGNED_VQR_V1',
+         'reference_blobs':dict(RESERVE_REFERENCE_BLOBS),'deployed_binary_semantics':'UNVERIFIED',
+         'effective_quote_per_target':'UNRESOLVED','ratio_precision_digits':80,'ratio_rounding':'ROUND_HALF_EVEN',
+         'scope':'DOCUMENTED_RESERVE_ARITHMETIC_NOT_USD_OR_EXECUTABLE_QUOTE',
+         'protocol_base_mint':base['mint'],'protocol_quote_mint':quote['mint'],
+         'target_mint':target_mint,'quote_mint':quote['mint'] if target_mint==base['mint'] else base['mint']}
+    fields=('virtual_quote_reserves','protocol_fees','creator_fees')
+    out['documented_zero_defaults']=[k for k in fields if params[k] is None]
+    virtual,protocol,creator=(int(params[k]) if params[k] is not None else 0 for k in fields)
+    base_raw=int(base['raw']);vault_raw=int(quote['raw']);fees=protocol+creator
+    effective=vault_raw+virtual;real=vault_raw-fees;boost=virtual+fees
+    if not 0<=effective<=2**64-1:return {**out,'reason':'EFFECTIVE_QUOTE_OUT_OF_RANGE'}
+    if real<0:return {**out,'reason':'WAITING_FEES_EXCEED_QUOTE_VAULT'}
+    # Documentation calls boost an additional reserve amount; negative boost
+    # has no verified model here. Keep raw facts, withhold model conclusions.
+    if boost<0:return {**out,'reason':'NEGATIVE_BOOST_COMPONENT_UNVERIFIED'}
+    with localcontext() as ctx:
+        ctx.prec=320
+        bq=Decimal(base_raw).scaleb(-base['decimals'])
+        eq=Decimal(effective).scaleb(-quote['decimals'])
+        out.update(base_quantity=str(bq),quote_vault_quantity=str(Decimal(vault_raw).scaleb(-quote['decimals'])),
+                   waiting_fees_quantity=str(Decimal(fees).scaleb(-quote['decimals'])),
+                   real_quote_quantity=str(Decimal(real).scaleb(-quote['decimals'])),
+                   effective_quote_quantity=str(eq),boost_component_quantity=str(Decimal(boost).scaleb(-quote['decimals'])))
+    out.update(status='DERIVED_PROTOCOL_RESERVES',base_raw=str(base_raw),quote_vault_raw=str(vault_raw),
+               virtual_quote_raw=str(virtual),protocol_fees_raw=str(protocol),creator_fees_raw=str(creator),
+               waiting_fees_raw=str(fees),real_quote_raw=str(real),effective_quote_raw=str(effective),
+               boost_component_raw=str(boost),boost_present=boost!=0,base_decimals=base['decimals'],quote_decimals=quote['decimals'])
+    if flags & {'TOKEN_2022_ADJUSTMENTS_UNVERIFIED','FROZEN_VAULT'}:
+        out.update(status='ARITHMETIC_ONLY',ratio_reason='TOKEN_ECONOMICS_UNVERIFIED')
+    elif not base_raw or not effective:out['ratio_reason']='ZERO_POOL_SIDE'
+    else:
+        with localcontext() as ctx:
+            ctx.prec=80;ctx.rounding=ROUND_HALF_EVEN
+            out['effective_quote_per_target']=str(eq/bq if target_mint==base['mint'] else bq/eq)
+    return out
+
+
 def _slot(result):
     ctx=result.get('context') if isinstance(result,dict) else None
     value=ctx.get('slot') if isinstance(ctx,dict) else None
@@ -121,8 +175,9 @@ def collect_pool_vault_snapshot(mint,market,rpc):
             ctx.prec=80
             ratio=str(Decimal(other['quantity'])/Decimal(target['quantity'])) if int(target['raw']) else 'UNRESOLVED'
         out.update(status='VAULT_BALANCE_SNAPSHOT',snapshot_slot=slot,commitment='finalized',pool_program=PROGRAM,target=target,quote=other,pool_parameters=params,flags=sorted(flags),raw_vault_quote_per_target=ratio,
+                   effective_reserves=_derive_reserves(base,quote,params,mint,flags),
                    response_sha256=hashlib.sha256(json.dumps(response,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
-                   scope='RAW_VAULT_BALANCES_ONLY_NOT_NET_RESERVES_OR_PRICE')
+                   scope='RAW_VAULT_BALANCES_AND_DOCUMENTED_RESERVE_MODEL_NOT_MARKET_PRICE')
     except (ValueError,TypeError,KeyError,OverflowError) as exc:
         out['reason']=str(exc) if isinstance(exc,PoolSourceError) else 'ACCOUNT_RESPONSE_INVALID'
         if out['reason']=='UNSUPPORTED_POOL_PROGRAM':out['status']='UNSUPPORTED'
