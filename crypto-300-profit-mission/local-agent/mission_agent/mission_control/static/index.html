@@ -245,8 +245,12 @@
           <div class="panel-title"><div><h2>筹码集中度</h2><p>优先看 Top10、开发者关联与未确认持仓。严格数据不足时不会显示安全结论。</p></div></div>
           <div id="cluster-metrics" class="cluster-metrics"></div>
         </section>
+        <section class="panel" id="cluster-rankings-panel" hidden>
+          <div class="panel-title"><div><h2>全量账户来源与 Owner 排名</h2><p>先合并同一 Owner 的账户余额，再计算排名；完整性与历史归因分开核实。</p></div></div>
+          <div id="cluster-rankings"></div>
+        </section>
         <section class="panel">
-          <div class="panel-title"><div><h2>前 20 大实际持有人</h2><p>账户已解析到 Owner；建仓记录来自有限历史采样，未扫描时明确标记。</p></div></div>
+          <div class="panel-title"><div><h2>原始 Top20 账户及 Owner</h2><p>账户已解析到 Owner；建仓记录来自有限历史采样，未扫描时明确标记。</p></div></div>
           <div class="holder-table-wrap">
             <table class="holder-table">
               <thead><tr><th>#</th><th>Owner</th><th>占比</th><th>角色</th><th>资金来源</th><th>首次买入记录</th></tr></thead>

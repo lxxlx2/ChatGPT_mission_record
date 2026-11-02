@@ -23,6 +23,7 @@ from ..frank.parser import DEX_PROGRAMS, INFRA_PROGRAMS
 from ..signals.classifier import classify
 from ..market.sol_usd import USDC, WSOL
 from .market import DexScreenerMarketClient
+from .holder_ranks import collect_mint_holder_ranks, valid_pubkey, valid_enumeration_query, HolderRankSourceError, MAX_RESPONSE_BYTES
 
 DEFAULT_RPC = "https://api.mainnet.solana.com"
 DEFAULT_RPC_FALLBACKS = (
@@ -254,7 +255,7 @@ class RpcCache:
 
 
 class SolanaReadOnlyRPC:
-    ALLOWED={"getTokenSupply","getTokenLargestAccounts","getMultipleAccounts","getAccountInfo","getSignaturesForAddress","getTransaction"}
+    ALLOWED={"getTokenSupply","getTokenLargestAccounts","getMultipleAccounts","getAccountInfo","getSignaturesForAddress","getTransaction","getProgramAccounts"}
     RETRYABLE_HTTP={403,429,500,502,503,504}
 
     def __init__(
@@ -371,6 +372,7 @@ class SolanaReadOnlyRPC:
 
     def call(self, method, params, *, ttl=0):
         if method not in self.ALLOWED:raise ValueError("READ_ONLY_METHOD_ALLOWLIST")
+        if method=="getProgramAccounts" and not valid_enumeration_query(params):raise ValueError("HOLDER_ENUMERATION_QUERY_INVALID")
         self._check_job_budget()
         now=time.time()
         if ttl and self.cache:
@@ -399,7 +401,12 @@ class SolanaReadOnlyRPC:
                 self._last_by_endpoint[endpoint]=self._monotonic()
                 self.calls+=1;self.endpoint_calls[endpoint]+=1
                 self._last_wire_succeeded=False
-                with self.open_url(req,timeout=timeout) as response:value=json.loads(response.read())
+                with self.open_url(req,timeout=timeout) as response:
+                    if method=="getProgramAccounts":
+                        payload=response.read(MAX_RESPONSE_BYTES+1)
+                        if len(payload)>MAX_RESPONSE_BYTES:raise RPCError("RPC_HOLDER_RANK_RESPONSE_LIMIT")
+                        value=json.loads(payload)
+                    else:value=json.loads(response.read())
                 self._check_job_deadline()
                 if value.get("error"):
                     error=value.get("error") or {}
@@ -531,6 +538,7 @@ class WalletClusterAnalyzer:
         material_pct=Decimal("1"),market_client:DexScreenerMarketClient|None=None,
         adaptive_history_per_holder=None,adaptive_funding_lookback=None,
         progress_callback=None,
+        enumerate_holder_ranks=False,
         history_max_pages=1,funding_max_pages=1,
         adaptive_history_max_pages=1,adaptive_funding_max_pages=1,
     ):
@@ -550,6 +558,7 @@ class WalletClusterAnalyzer:
         self._history_page_limit=history_max_pages;self._funding_page_limit=funding_max_pages
         self.history_coverage={}
         self.history_attempts=[]
+        self.enumerate_holder_ranks=enumerate_holder_ranks is True
 
     def _progress(self,stage,**details):
         if not self.progress_callback:return
@@ -720,6 +729,7 @@ class WalletClusterAnalyzer:
             else None
         )
         self._top_accounts_requested=len(tas)
+        self._largest_account_snapshot={x["address"]:int(x["amount"]) for x in top if isinstance(x.get("address"),str) and str(x.get("amount","")).isdigit()}
         infos=self._accounts(tas)
         owners=[];temp=[]
         for row,info in zip(top,infos):
@@ -742,6 +752,32 @@ class WalletClusterAnalyzer:
         x,y=sorted([a,b]);record={"a":x,"b":y,"type":kind,"signature":signature,**extra}
         key=_hash(record)
         if key not in {e["_key"] for e in self.edges}:self.edges.append({**record,"_key":key})
+    def _rank_owner_accounts(self,addresses,slot):
+        try:
+            return self.rpc.call("getMultipleAccounts",[addresses,{"encoding":"jsonParsed","commitment":"finalized","minContextSlot":slot}],ttl=60)
+        except RPCJobBudgetExceeded:raise
+        except Exception:return None
+
+    def _holder_ranks(self,profile,supply,decimals):
+        if not self.enumerate_holder_ranks:return {"requested":False,"status":"NOT_REQUESTED"}
+        base={"requested":True,"status":"UNAVAILABLE","owners":[],"metrics":{}}
+        if profile.get("program_id") not in TOKEN_PROGRAMS or profile.get("is_initialized") is not True or not valid_pubkey(self.mint):
+            return {**base,"reason":"MINT_IDENTITY_UNVERIFIED"}
+        cfg=(self.registry.get("tokens") or {}).get(self.mint) or {}
+        normalized=cfg.get("normalization_complete",self.registry.get("normalization_complete",False)) is True
+        try:
+            self._progress("HOLDER_ENUMERATION",scanned=0)
+            return collect_mint_holder_ranks(self.mint,profile["program_id"],supply,decimals,
+                self._snapshot_slots.get("supply"),self.rpc,self._role,
+                normalization_declared=normalized,special_roles=SPECIAL_ROLES,
+                expected_top_accounts=getattr(self,"_largest_account_snapshot",None),
+                largest_slot=self._snapshot_slots.get("largest_accounts"),owner_reader=self._rank_owner_accounts)
+        except RPCJobBudgetExceeded:raise
+        except HolderRankSourceError as exc:return {**base,"reason":str(exc)}
+        except Exception as exc:
+            reason="RESPONSE_LIMIT" if str(exc)=="RPC_HOLDER_RANK_RESPONSE_LIMIT" else "SOURCE_UNAVAILABLE"
+            return {**base,"reason":reason}
+
     def _signature_pages(self,holder,address,page_size,max_pages,phase,*,before=None):
         """Enumerate a bounded finalized source window; empty page is not full wallet history.
 
@@ -981,6 +1017,7 @@ class WalletClusterAnalyzer:
         self._progress("BASE_READY",token_profile=token_profile,market=market)
 
         supply,decimals,holders=self.holders()
+        holder_rankings=self._holder_ranks(token_profile,supply,decimals)
         preview_top10_pct=getattr(self,"_raw_top10_snapshot_pct",None)
         self._progress(
             "HOLDERS_READY",top_accounts_resolved=len(holders),
@@ -1164,6 +1201,10 @@ class WalletClusterAnalyzer:
         strict_metrics_available=normalization_complete and holder_rank_complete and snapshot_consistent
         owners_not_scanned=sorted(set(owners)-scanned_owners)
         coverage_gaps=[]
+        if holder_rankings.get("requested") and holder_rankings.get("status")!="COMPLETE_SNAPSHOT":coverage_gaps.append("HOLDER_ENUMERATION_INCOMPLETE")
+        for row in holder_rankings.get("owners") or []:row["history_scanned"]=row["owner"] in scanned_owners
+        if any(not row["history_scanned"] and Decimal(row["raw"])*100/Decimal(supply)>=self.material_pct for row in (holder_rankings.get("owners") or []) if supply>0):
+            coverage_gaps.append("GLOBAL_OWNER_HISTORY_NOT_SCANNED")
         if not holders:coverage_gaps.append("NO_RESOLVED_HOLDERS")
         if supply<=0:coverage_gaps.append("SUPPLY_UNAVAILABLE")
         if len(holders)<getattr(self,"_top_accounts_requested",len(holders)):
@@ -1194,6 +1235,7 @@ class WalletClusterAnalyzer:
             "KNOWN_CLUSTER_ADJUSTED_TOP10_PCT":self._pct(sum(cluster_values[:10]),supply),
         }
 
+        metrics.update(holder_rankings.get("metrics") or {})
         holder_rows=[]
         for i,h in enumerate(holders):
             holder_rows.append({
@@ -1274,7 +1316,7 @@ class WalletClusterAnalyzer:
             "schema_version":2,"mint":self.mint,"source":"SOLANA_FINALIZED_JSON_RPC",
             "rpc_endpoint":safe_rpc_label(getattr(self.rpc,"endpoint","UNKNOWN")),"rpc_endpoints":endpoints,
             "observed_at":time.time(),"supply_raw":str(supply),"decimals":decimals,
-            "token_profile":token_profile,"market":market,"assessment":assessment,"holders":holder_rows,
+            "token_profile":token_profile,"market":market,"assessment":assessment,"holders":holder_rows,"holder_rankings":holder_rankings,
             "metrics":metrics,"confirmed_relation_groups":relation_groups,"probable_control_clusters":control_groups,
             "probable_execution_clusters":execution_groups,
             "shared_infrastructure_exclusions":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_CEX","SHARED_INFRA"}],

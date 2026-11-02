@@ -60,6 +60,12 @@ try {
  assert.match(await page.locator('#cluster-preset-help').innerText(),/统一查询/);
  check('single query entry removes depth selector and explains bounded incomplete evidence');
  const a=await submit('SYNTHETIC_REPORT_1');
+ assert.equal(await page.locator('#cluster-rankings-panel').isVisible(),true);
+ assert.match(await page.locator('#cluster-rankings').innerText(),/全局 Owner Top10/);
+ assert.match(await page.locator('#cluster-rankings').innerText(),/98%/);
+ assert.match(await page.locator('#cluster-rankings').innerText(),/20%/);
+ assert.match(await page.locator('#cluster-rankings').innerText(),/本轮未覆盖历史/);
+ check('full mint Owner ranks are separate from raw Top20 history and preserve uncovered history');
  await page.locator('.cluster-detail-fold > summary').click();
  await page.locator('.cluster-history-windows summary').click();
  assert.match(await page.locator('#cluster-coverage').innerText(),/目标币账户历史/);

@@ -134,6 +134,7 @@ CLUSTER_PRESETS = {
         "deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8,
         "adaptive_history_per_holder": 30, "adaptive_funding_lookback": 12,
         "adaptive_history_max_pages": 4, "adaptive_funding_max_pages": 5,
+        "enumerate_holder_ranks": True,
     },
     "deep": {
         "deep_holders": 20, "history_per_holder": 100, "funding_lookback": 50,
@@ -516,6 +517,7 @@ class ClusterJobManager:
                 funding_lookback=opts["funding_lookback"],
                 adaptive_history_per_holder=opts.get("adaptive_history_per_holder"),
                 adaptive_funding_lookback=opts.get("adaptive_funding_lookback"),
+                enumerate_holder_ranks=opts.get("enumerate_holder_ranks",False),
                 adaptive_history_max_pages=opts.get("adaptive_history_max_pages",1),
                 adaptive_funding_max_pages=opts.get("adaptive_funding_max_pages",1),
                 market_client=self.market_client,

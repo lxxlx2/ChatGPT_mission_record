@@ -1475,6 +1475,7 @@ function clusterProgressDetail(job) {
       (p.liquidity_usd != null ? ' · LP ' + usd(p.liquidity_usd) : '') +
       ' · 正在解析 Top20 owner';
   }
+  if (stage==='HOLDER_ENUMERATION') return '正在按 Mint 读取账户来源并合并 Owner 余额；仍受原任务硬上限保护';
   if (stage==='HOLDERS_READY') return 'Top20 owner 已解析 ' + esc(p.top_accounts_resolved ?? 0) + ' 个，开始历史浅扫';
   if (stage==='OWNER_SCAN') return '历史浅扫 ' + esc(p.scanned ?? 0) + ' / ' + esc(p.target ?? '?') + ' 个 owner';
   if (stage==='FUNDING_SCAN') return '建仓前 funding 回看 ' + esc(p.scanned ?? 0) + ' / ' + esc(p.target ?? '?');
@@ -1582,9 +1583,31 @@ function renderClusterHistoryWindows(coverage) {
       : '<p>此报告未记录分页窗口，不能补造历史覆盖证据。</p>')+'</details>';
 }
 
+function renderHolderRankings(report) {
+  const r=report.holder_rankings;
+  const panel=$('cluster-rankings-panel');
+  if (!r || !r.requested) { panel.hidden=true; $('cluster-rankings').innerHTML=''; return; }
+  panel.hidden=false;
+  const complete=r.status==='COMPLETE_SNAPSHOT';
+  const reasons={SOURCE_UNAVAILABLE:'当前 RPC 来源未返回可核验的完整排名',RESPONSE_LIMIT:'来源响应超过本轮大小上限',
+    ACCOUNT_LIMIT:'来源账户数超过本轮上限',SUPPLY_SUM_MISMATCH:'来源余额总和与供给未对上',
+    SNAPSHOT_SLOT_UNRECONCILED:'账户与供给快照 slot 尚未对齐',TOP20_RECONCILIATION_MISMATCH:'同 slot 的全量来源与 Top20 账户数据不一致',
+    MINT_IDENTITY_UNVERIFIED:'Mint 或 Token Program 身份未核实',ACCOUNT_ROW_INVALID:'来源账户结构未通过核对',
+    ENVELOPE_INVALID:'来源快照上下文不完整',OWNER_METADATA_INVALID:'Owner 身份来源未通过核对',SUPPLY_INVALID:'供给格式未核实'};
+  const intro=complete ? '账户余额总和与同 slot 供给已核对；钱包归因与历史仍须分别核实' : (reasons[r.reason] || '完整排名来源尚未核实');
+  const labels={GLOBAL_OWNER_TOP10_PCT:'全局 Owner Top10',GLOBAL_EX_LP_OWNER_TOP10_PCT:'全局排除池/Vault 后 Owner Top10',GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT:'全局排除特殊地址后 Owner Top10'};
+  const cards=Object.keys(labels).map(key=>'<div class="cluster-metric"><span>'+labels[key]+'</span><strong>'+clusterMetricValue(complete && (key==='GLOBAL_OWNER_TOP10_PCT' || r.normalization_complete===true) ? (r.metrics || {})[key] : 'UNRESOLVED')+'</strong></div>').join('');
+  const owners=Array.isArray(r.owners) ? r.owners.filter(x=>x && typeof x==='object').slice(0,20) : [];
+  const rows=owners.map((row,i)=>'<tr><td>'+esc(i+1)+'</td><td>'+ownerCell(row.owner || '')+'</td><td>'+esc(frankD2Decimal(row.raw,r.decimals))+'</td><td>'+esc(row.account_count ?? '未记录')+'</td><td>'+clusterMetricValue(complete ? row.supply_pct : 'UNRESOLVED')+'</td><td>'+holderRole(row)+'</td><td>'+(row.history_scanned===true ? '已做有限历史采样' : '本轮未覆盖历史')+'</td></tr>').join('');
+  $('cluster-rankings').innerHTML='<p>'+esc(intro)+'</p><p>来源返回 '+esc(r.account_count ?? '未记录')+' 个账户 / '+esc(r.nonzero_owner_count ?? '未记录')+' 个非零 Owner；账户 slot '+esc(r.snapshot_slot ?? '未记录')+' / 供给 slot '+esc(r.supply_slot ?? '未记录')+'</p>'+
+    '<div class="cluster-metrics-extra">'+cards+'</div>'+ (r.normalization_complete===true ? '' : '<p>身份标签或其快照 slot 尚未全部核实，排除口径保持未确认。</p>')+'<p>页面最多展示前20个 Owner，完整来源排名保存在报告中。排除口径仍取决于已核实的身份标签。</p>'+
+    '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>#</th><th>Owner</th><th>代币数量</th><th>账户数</th><th>供给占比</th><th>身份</th><th>历史覆盖</th></tr></thead><tbody>'+(rows || '<tr><td colspan="7">完整排名未获得，原始Top20样本仍可查看</td></tr>')+'</tbody></table></div>';
+}
+
 function renderClusterReport(report) {
   $('cluster-result').hidden = false;
   $('cluster-preview').hidden = true;
+  renderHolderRankings(report);
   const coverage = report.coverage || {};
   const metrics = report.metrics || {};
   const mint = report.mint || '';
@@ -1738,6 +1761,8 @@ function renderClusterReport(report) {
     OWNER_HISTORY_NOT_SCANNED:'部分钱包历史尚未扫描',
     MULTIPLE_TOKEN_ACCOUNTS_PER_OWNER:'同一钱包存在多个代币账户，当前历史采样未覆盖全部账户',
     TRANSACTION_READ_GAPS:'历史交易存在读取缺口',
+    HOLDER_ENUMERATION_INCOMPLETE:'完整持有人来源仍未核实',
+    GLOBAL_OWNER_HISTORY_NOT_SCANNED:'完整来源中的部分重大 Owner 尚未覆盖历史',
     HISTORY_PAGINATION_INCOMPLETE:'部分历史窗口达到页数上限、来源失败或来源信息不足',
   };
   const gaps = Array.isArray(coverage.gaps) ? coverage.gaps : [];
