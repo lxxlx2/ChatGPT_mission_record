@@ -1563,6 +1563,28 @@ function renderClusterGroup(group, kind) {
   '</article>';
 }
 
+function renderMarketComparison(market,mint) {
+  const c=market.comparison;
+  if (!c || typeof c!=='object') return '';
+  const independent=market.independent_market || {},pair=market.main_pair || {};
+  const valid=['INDEXER_SNAPSHOTS_COMPARED','PARTIAL_INDEXER_SNAPSHOTS'].includes(c.status) && independent.status==='OK' &&
+    c.mint===mint && c.pool_address===pair.pair_address && c.quote_address===pair.quote_address &&
+    independent.mint===mint && independent.pool_address===c.pool_address && independent.quote_address===c.quote_address;
+  const labels={price_usd:'目标币 USD 价格',pool_liquidity_usd:'主池 USD 价值'};
+  const rows=valid ? Object.entries(labels).map(([id,label])=>{
+    const row=(c.metrics || {})[id] || {};
+    const difference=row.status==='COMPARED' ? row.difference : null;
+    const percent=row.status==='COMPARED' && row.difference_pct_of_primary!=='UNRESOLVED' ? row.difference_pct_of_primary : null;
+    return '<tr><td>'+label+'</td><td>'+esc(row.primary ?? '未提供')+'</td><td>'+esc(row.independent ?? '未提供')+'</td><td>'+esc(difference ?? '未核实')+'</td><td>'+esc(percent==null?'未核实':percent+'%')+'</td></tr>';
+  }).join('') : '';
+  const timeText=value=>{const n=Number(value);return Number.isFinite(n)&&n>0&&n<4102444800 ? new Date(n*1000).toLocaleString('zh-CN') : '未记录';};
+  const reasons={PRIMARY_POOL_IDENTITY_UNVERIFIED:'主来源池子身份未核实，未请求第二来源',POOL_IDENTITY_MISMATCH:'第二来源返回另一池子',TOKEN_MEMBERSHIP_MISMATCH:'第二来源交易对成员不一致',RESPONSE_LIMIT:'第二来源响应超过本轮上限',NETWORK_OR_RESPONSE_INVALID:'第二来源读取或响应异常',IDENTITY_INVALID:'池子或代币地址无效'};
+  const reason=reasons[independent.reason] || (/^HTTP_[0-9]{3}$/.test(independent.reason || '')?'第二来源返回 '+independent.reason:'独立来源身份未核实');
+  const gap=Number(c.retrieval_gap_seconds);
+  return '<div class="trust-box cluster-market-comparison"><strong>同池索引来源对照</strong><p>DexScreener / GeckoTerminal。读取时间不等于行情观测时间，尚未核对链上池子储备或独立持有人来源；差异不代表安全或可买。</p>'+
+    (valid ? '<p>同池 '+esc(c.pool_address)+'；DexScreener 读取 '+esc(timeText(market.observed_at))+' / GeckoTerminal 读取 '+esc(timeText(independent.observed_at))+'；读取间隔 '+esc(c.retrieval_gap_seconds!=null&&Number.isFinite(gap)?gap+' 秒':'未记录')+'。市值/FDV、主池价值和多池合计不混用。</p><div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>口径</th><th>DexScreener</th><th>GeckoTerminal</th><th>后者减前者</th><th>相对前者</th></tr></thead><tbody>'+rows+'</tbody></table></div>' : '<p>'+esc(reason)+'</p>')+'</div>';
+}
+
 function renderHistoricalAccountEvidence(report) {
   if (!Array.isArray(report.historical_account_evidence)) return '';
   const evidence=report.historical_account_evidence.filter(r=>r && typeof r==='object').slice(0,20);
@@ -1646,8 +1668,8 @@ const clusterRequiredEvidence = {
   holder_roles:['特殊地址身份','特殊地址身份尚未全部核实','Owner 元数据和身份登记','逐项核对池、Vault、CEX 及金库证据'],
   wallet_history:['完整历史与资金','有界采样未覆盖全部 Owner 账户及经济历史','逐 Owner/代币账户及资金历史窗口','枚举重大 Owner 全部账户并核对买入、卖出和资金流'],
   control_attribution:['控制关系归因','样本关系未形成完整受益控制归因','已覆盖的转账、资金、签名及归集证据','补独立非公共关系证据并保留归属不确定性'],
-  market:['市场与池子核对','单一市场参考尚未核对池子储备','市场参考读取路径','核对指定池子的链上储备与独立市场定义'],
-  independent_sources:['独立来源对照','独立池子及持有人对照尚未接入','未执行独立来源对照','比较同 CA、同时间窗口及同口径来源'],
+  market:['市场与池子核对','索引行情尚未核对链上池子储备','市场参考及按需同池索引读取路径','核对指定池子的链上储备与独立市场定义'],
+  independent_sources:['独立来源对照','仍缺原始池子及持有人独立核对','同池索引来源按需读取，实际尝试见对照明细','比较同 CA、同时间窗口及同口径来源'],
   narrative:['外部叙事','外部帖子采集尚未接入','仅市场附带官网及社交链接','读取可访问的项目、发射台及社区来源并核对 exact CA'],
 };
 function renderClusterCompleteness(report) {
@@ -1795,7 +1817,7 @@ function renderClusterReport(report) {
     fact('24h 买 / 卖','<span>' + esc((h24tx.buys ?? '—') + ' / ' + (h24tx.sells ?? '—')) + '</span>') +
     fact('1h 买 / 卖','<span>' + esc((h1tx.buys ?? '—') + ' / ' + (h1tx.sells ?? '—')) + '</span>') +
     fact('价格变化','<span>1h ' + esc(pctText((mainPair.price_change || {}).h1)) + ' · 24h ' + esc(pctText((mainPair.price_change || {}).h24)) + '</span>') +
-    fact('主池 / DEX','<span>' + esc((mainPair.dex_id || '未确认') + ' · ' + short(mainPair.pair_address || '',7,5)) + '</span>',pairLink + ' ' + marketUrl);
+    fact('主池 / DEX','<span>' + esc((mainPair.dex_id || '未确认') + ' · ' + short(mainPair.pair_address || '',7,5)) + '</span>',pairLink + ' ' + marketUrl) + renderMarketComparison(market,mint);
 
   const primary = [
     'RAW_TOP10_PCT','KNOWN_EX_LP_TOP10_PCT','DEV_LINKED_CLUSTER_PCT',

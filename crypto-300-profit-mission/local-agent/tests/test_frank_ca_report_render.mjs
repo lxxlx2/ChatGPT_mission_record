@@ -754,3 +754,24 @@ test('missing historical proof context never upgrades a close string to confirme
   assert.match(html,/关闭状态未证明/);
   assert.doesNotMatch(html,/<script>|该交易结束时关闭<\/td>/);
 });
+
+test('market comparison displays same-pool source values and differences without a parity PASS',()=>{
+  const h=harness();const report=structuredClone(fixture);const pool='11111111111111111111111111111112',quote='11111111111111111111111111111113';
+  report.market={status:'OK',mint,source:'DEXSCREENER_API',observed_at:100,price_usd:'2',main_pair:{pair_address:pool,base_address:mint,quote_address:quote,liquidity_usd:'1000'},independent_market:{status:'OK',source:'GECKOTERMINAL_PUBLIC_API',attempted:true,pool_address:pool,mint,quote_address:quote,observed_at:102},comparison:{status:'INDEXER_SNAPSHOTS_COMPARED',pool_address:pool,mint,quote_address:quote,retrieval_gap_seconds:2,same_chain_snapshot:false,provider_asof:'UNVERIFIED',metrics:{price_usd:{status:'COMPARED',primary:'2',independent:'2.5',difference:'0.5',difference_pct_of_primary:'25.0000'},pool_liquidity_usd:{status:'COMPARED',primary:'1000',independent:'900',difference:'-100',difference_pct_of_primary:'-10.0000'}}}};
+  vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
+  const html=h.element('cluster-market').innerHTML;
+  assert.match(html,/GeckoTerminal/);assert.match(html,/25.0000%/);assert.match(html,/-10.0000%/);
+  assert.match(html,/读取时间.*行情观测时间/);assert.match(html,/未核对链上池子储备/);
+  assert.doesNotMatch(html,/PARITY_PASS|交叉验证通过/);
+  report.market={status:'UNAVAILABLE',independent_market:{status:'UNAVAILABLE',attempted:true,reason:'SECRET_PROVIDER_TEXT'},comparison:{status:'INCOMPLETE_EVIDENCE',metrics:{}}};
+  vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
+  assert.doesNotMatch(h.element('cluster-market').innerHTML,/25.0000%|SECRET_PROVIDER_TEXT/);
+});
+
+test('mismatched comparison identity masks metrics even when its status claims compared',()=>{
+  const h=harness();const report=structuredClone(fixture);
+  report.market={status:'OK',main_pair:{pair_address:mint},independent_market:{status:'OK'},comparison:{status:'INDEXER_SNAPSHOTS_COMPARED',mint:'OTHER',pool_address:'OTHER',metrics:{price_usd:{status:'COMPARED',primary:'2',independent:'2.5',difference_pct_of_primary:'999.1234'}}}};
+  vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
+  assert.match(h.element('cluster-market').innerHTML,/独立来源身份未核实/);
+  assert.doesNotMatch(h.element('cluster-market').innerHTML,/999.1234/);
+});

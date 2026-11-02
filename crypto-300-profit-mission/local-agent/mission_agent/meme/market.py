@@ -66,6 +66,7 @@ class DexScreenerMarketClient:
         return {
             "status":"OK",
             "source":"DEXSCREENER_API",
+            "mint":mint,
             "observed_at":observed_at,
             "pair_count":len(pairs),
             "name":base.get("name"),
@@ -76,6 +77,7 @@ class DexScreenerMarketClient:
             "main_pair":{
                 "dex_id":main.get("dexId"),
                 "pair_address":main.get("pairAddress"),
+                "base_address":base.get("address"),
                 "url":main.get("url"),
                 "quote_address":quote.get("address"),
                 "quote_symbol":quote.get("symbol"),

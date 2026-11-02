@@ -77,7 +77,12 @@ class FixtureAnalyzer:
                 'balance_phase':'pre','raw':'10','decimals':0,
                 'closure_at_transaction_end':'CONFIRMED_CLOSED_AT_TRANSACTION_END','response_sha256':'a'*64}],
             'holders': [], 'metrics': {}, 'assessment': {}, 'token_profile': {},
-            'market': {'status': 'UNAVAILABLE', 'name': name, 'symbol': 'FIXTURE', 'main_pair': {}},
+            'market': {'status':'OK','source':'DEXSCREENER_API','name':name,'symbol':'FIXTURE','mint':self.mint,'observed_at':100,
+                'price_usd':'2','main_pair':{'pair_address':'1'*31+'5','base_address':self.mint,'quote_address':'1'*31+'6','liquidity_usd':'1000'},
+                'independent_market':{'status':'OK','source':'GECKOTERMINAL_PUBLIC_API','attempted':True,'mint':self.mint,'pool_address':'1'*31+'5','quote_address':'1'*31+'6','observed_at':102},
+                'comparison':{'status':'INDEXER_SNAPSHOTS_COMPARED','mint':self.mint,'pool_address':'1'*31+'5','quote_address':'1'*31+'6','same_chain_snapshot':False,'provider_asof':'UNVERIFIED','retrieval_gap_seconds':2,
+                    'metrics':{'price_usd':{'status':'COMPARED','primary':'2','independent':'2.5','difference':'0.5','difference_pct_of_primary':'25.0000'},
+                              'pool_liquidity_usd':{'status':'COMPARED','primary':'1000','independent':'900','difference':'-100','difference_pct_of_primary':'-10.0000'}}}},
             'limitations': ['SYNTHETIC_ONLY_NO_CHAIN_REQUEST'],
         }
 

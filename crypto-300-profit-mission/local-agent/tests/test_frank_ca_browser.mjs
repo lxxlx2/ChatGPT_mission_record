@@ -67,6 +67,10 @@ try {
  assert.match(await page.locator('#cluster-rankings').innerText(),/本轮未覆盖历史/);
  const saved=await (await page.request.get(origin+'/api/cluster-latest?mint='+mint+'&job_id='+a.job_id)).json();
  assert.equal(saved.ca_job_id,a.job_id);
+ assert.equal(saved.market.comparison.status,'INDEXER_SNAPSHOTS_COMPARED');
+ assert.match(await page.locator('.cluster-market-comparison').innerText(),/25.0000%/);
+ assert.match(await page.locator('.cluster-market-comparison').innerText(),/未核对链上池子储备/);
+ check('same-pool indexer differences persist with source times and no chain parity claim');
  assert.equal(saved.analysis_completeness.status,'INCOMPLETE_EVIDENCE');
  assert.ok(saved.analysis_completeness.missing_required.includes('narrative'));
  assert.ok(saved.analysis_completeness.missing_required.includes('wallet_history'));

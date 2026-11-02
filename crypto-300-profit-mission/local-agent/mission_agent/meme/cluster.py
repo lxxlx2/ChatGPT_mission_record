@@ -23,6 +23,7 @@ from ..frank.parser import DEX_PROGRAMS, INFRA_PROGRAMS
 from ..signals.classifier import classify
 from ..market.sol_usd import USDC, WSOL
 from .market import DexScreenerMarketClient
+from .market_parity import attach_market_comparison
 from .historical_accounts import observe_token_accounts, HistoricalAccountEvidenceError, MAX_OBSERVATIONS
 from .holder_ranks import collect_mint_holder_ranks, valid_pubkey, valid_enumeration_query, HolderRankSourceError, MAX_RESPONSE_BYTES
 
@@ -539,12 +540,13 @@ class WalletClusterAnalyzer:
         material_pct=Decimal("1"),market_client:DexScreenerMarketClient|None=None,
         adaptive_history_per_holder=None,adaptive_funding_lookback=None,
         progress_callback=None,
-        enumerate_holder_ranks=False,
+        enumerate_holder_ranks=False,independent_market_client=None,compare_market_sources=None,
         history_max_pages=1,funding_max_pages=1,
         adaptive_history_max_pages=1,adaptive_funding_max_pages=1,
     ):
         self.mint=mint;self.rpc=rpc;self.registry=special_registry or {};self.history_per_holder=int(history_per_holder);self.deep_holders=int(deep_holders);self.funding_lookback=int(funding_lookback);self.material_pct=Decimal(material_pct)
         self.market_client=market_client
+        self.independent_market_client=independent_market_client if compare_market_sources is not False else None
         self.adaptive_history_per_holder=int(adaptive_history_per_holder) if adaptive_history_per_holder else None
         self.adaptive_funding_lookback=int(adaptive_funding_lookback) if adaptive_funding_lookback else None
         self.progress_callback=progress_callback
@@ -824,7 +826,11 @@ class WalletClusterAnalyzer:
     def market_snapshot(self):
         if self.market_client is None:
             return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","reason":"MARKET_CLIENT_DISABLED"}
-        try:return self.market_client.token_snapshot(self.mint)
+        try:
+            primary=self.market_client.token_snapshot(self.mint)
+            if self.independent_market_client is not None:
+                return attach_market_comparison(self.mint,primary,self.independent_market_client)
+            return primary
         except Exception as exc:
             return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","reason":type(exc).__name__}
 
@@ -1532,6 +1538,8 @@ def report_completeness(report:dict)->dict:
     ranks=report.get("holder_rankings") or {}
     profile=report.get("token_profile") or {}
     market=report.get("market") or {}
+    independent=market.get("independent_market") or {}
+    compared=(market.get("comparison") or {}).get("status") in {"INDEXER_SNAPSHOTS_COMPARED","PARTIAL_INDEXER_SNAPSHOTS"}
     ranked=ranks.get("requested") is True and ranks.get("status")=="COMPLETE_SNAPSHOT"
     normalized=ranked and ranks.get("normalization_complete") is True
     requirements=[]
@@ -1563,14 +1571,15 @@ def report_completeness(report:dict)->dict:
         "Resolve material unknown relationships using independent non-public evidence; keep inherent uncertainty explicit.",
         ["assessment.cluster_status","unresolved_relation_edges","probable_control_clusters"])
     row("market","PARTIAL" if market.get("status")=="OK" else "UNAVAILABLE",
-        "SINGLE_MARKET_REFERENCE_WITHOUT_POOL_RECONCILIATION",
-        ["DexScreener market reference"],
+        "INDEXED_MARKETS_WITHOUT_RAW_POOL_RECONCILIATION" if compared else "SINGLE_MARKET_REFERENCE_WITHOUT_POOL_RECONCILIATION",
+        ["DexScreener market reference"]+(["GeckoTerminal exact-pool indexer"] if independent.get("attempted") is True else []),
         "Reconcile dated selected-pool reserves and market definitions with an independent permitted source.",
         ["market"])
-    row("independent_sources","NOT_COLLECTED","INDEPENDENT_SOURCE_COMPARISON_NOT_IMPLEMENTED",
-        ["No independent pool/holder comparison collector is connected"],
-        "Compare the same CA, observation window and definitions using independent pool/holder evidence.",
-        [])
+    row("independent_sources","PARTIAL" if compared else "UNAVAILABLE" if independent.get("attempted") is True else "NOT_COLLECTED",
+        "INDEXER_COMPARISON_NOT_RAW_POOL_OR_HOLDER_PARITY" if compared else "INDEPENDENT_INDEXER_UNAVAILABLE" if independent.get("attempted") is True else "INDEPENDENT_INDEXER_NOT_REQUESTED",
+        ["GeckoTerminal exact selected pool; retrieval timestamps are not provider as-of timestamps"] if independent.get("attempted") is True else ["No independent selected-pool response collected"],
+        "Reconcile actual DEX pool reserves and independent holder evidence at a controlled chain snapshot.",
+        ["market.independent_market","market.comparison"])
     row("narrative","NOT_COLLECTED","EXTERNAL_NARRATIVE_COLLECTION_NOT_IMPLEMENTED",
         ["Market profile website/social hints only; external posts not collected"],
         "Read accessible launchpad/project/X/community sources; record exact-CA mention and attribution separately.",
