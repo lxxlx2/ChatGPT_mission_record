@@ -15,3 +15,12 @@
 - Novelty family: security:binance:hotwallet-2026-10-29, previous material_version binance-2026-10-31-replenished90, new version binance-official-2026-11-01T1530Z-phase1-15networks-reopened-replenished95; issuer statement changed from planned withdrawal/90% replenishment to 15 networks actually resumed/95% replenished, original https://www.binance.com/en/square/post/383634490736604. Other material candidates: attributed Solana Mobile fake SKR Claim, THORChain ETH reorg and partial pause, 21,750 BTC transfer attribution, confirmed Binance $3.64bn net outflow, Reuters Hormuz oil risk.
 - Market source: Binance official public ticker/mark/OI, captured 2026-11-02T01:25:46.008Z UTC; Farside Oct 30 BTC -643.2m, ETH -155.7m, SOL -10.8m (already reported yesterday; not repeated as numbered news).
 - Follow-up gate at 09:20: Gmail Sent prefix recheck, rules/manifest/gate SHA match, source refresh and all CR acceptance checks. No App notification, no new task or timer, no paid API.
+
+## Subsequent cloud QA receipt readback
+
+- Checked: 2026-11-02T01:29:55.478Z UTC.
+- CI receipt: crypto-daily/delivery-qa/2026-11-02.json; blob SHA c951360f0d326763ffb4f795d2509deab5e17a4e.
+- CI status: EDITORIAL_QA_PASS; validated_at 2026-11-02T01:29:26.682Z.
+- Three-way SHA binding: MATCHED.
+- Manifest SHA 8bf73afc80470f2e227eadb2beaa6cd5d8f597a5; editorial rules SHA 2ed51528d230508ae4e0015762b1d60c9d72e299; editorial gate SHA 3d19a0fcb65534888111c9b00a5a07a85452f796.
+- Final prebuild state: PREBUILD_CI_PASS_PARTIAL_SOURCE_GAPS; still NOT_SENT, 09:20 must independently recheck Gmail Sent, sources, rules and current SHA before any authorized Gmail.
