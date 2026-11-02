@@ -1210,7 +1210,7 @@ class WalletClusterAnalyzer:
         if len(holders)<getattr(self,"_top_accounts_requested",len(holders)):
             coverage_gaps.append("TOP_ACCOUNT_RESOLUTION_GAPS")
         if not normalization_complete:coverage_gaps.append("SPECIAL_NORMALIZATION_UNVERIFIED")
-        if not holder_rank_complete:coverage_gaps.append("ELIGIBLE_OWNER_RANKS_INCOMPLETE")
+        if not holder_rank_complete and holder_rankings.get("status")!="COMPLETE_SNAPSHOT":coverage_gaps.append("ELIGIBLE_OWNER_RANKS_INCOMPLETE")
         if not snapshot_consistent:coverage_gaps.append("SNAPSHOT_SLOT_UNRECONCILED")
         if owners_not_scanned:coverage_gaps.append("OWNER_HISTORY_NOT_SCANNED")
         if len(holders)>len(owners):coverage_gaps.append("MULTIPLE_TOKEN_ACCOUNTS_PER_OWNER")
@@ -1329,7 +1329,8 @@ class WalletClusterAnalyzer:
                 "history_windows":list(self.history_attempts),
                 "holder_history_pages":sum(w["pages"] for w in self.history_attempts if w["phase"]=="holder"),
                 "funding_history_pages":sum(w["pages"] for w in self.history_attempts if w["phase"]=="funding"),
-                "eligible_owner_rank_complete":holder_rank_complete,
+                "eligible_owner_rank_complete":holder_rank_complete or holder_rankings.get("status")=="COMPLETE_SNAPSHOT",
+                "sample_owner_rank_complete":holder_rank_complete,
                 "snapshot_slots":self._snapshot_slots,"snapshot_consistent":snapshot_consistent,
                 "gaps":coverage_gaps,
                 "owners_resolved":len(owners),"owners_scanned":len(scanned_owners),

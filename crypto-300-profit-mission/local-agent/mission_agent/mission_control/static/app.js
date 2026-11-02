@@ -1612,7 +1612,7 @@ function renderClusterReport(report) {
   const metrics = report.metrics || {};
   const mint = report.mint || '';
   const strictComplete = coverage.special_normalization_complete === true &&
-    coverage.eligible_owner_rank_complete === true && coverage.snapshot_consistent === true;
+    (coverage.sample_owner_rank_complete ?? coverage.eligible_owner_rank_complete) === true && coverage.snapshot_consistent === true;
   const ctrl = report.probable_control_clusters || [];
   const exec = report.probable_execution_clusters || [];
   const rel = report.confirmed_relation_groups || [];
@@ -1754,7 +1754,7 @@ function renderClusterReport(report) {
   const warnings = [];
   if (coverage.special_normalization_complete !== true) warnings.push('特殊地址身份归一化尚未完成。');
   if (coverage.eligible_owner_rank_complete !== true) warnings.push('完整持有人排名尚未核实；已解析样本排除池/Vault 后 Top10 仅代表样本，不能视为全局精确值。');
-  if (coverage.snapshot_consistent !== true) warnings.push('链上供给与账户余额尚未核对到同一 slot，严格集中度保持未确认。');
+  if (coverage.snapshot_consistent !== true) warnings.push('原始 Top20 样本与供给尚未核对到同一 slot，该样本的严格集中度保持未确认。');
   const gapLabels = {
     NO_RESOLVED_HOLDERS:'没有已解析持有人', SUPPLY_UNAVAILABLE:'代币供给尚未核实',
     TOP_ACCOUNT_RESOLUTION_GAPS:'部分 Top20 账户尚未解析',

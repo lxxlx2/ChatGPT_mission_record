@@ -140,6 +140,9 @@ def test_actual_analyzer_adds_full_owner_rank_without_replacing_top20_history_sa
     out=a.analyze()
     assert len(out['holders'])==20
     assert out['holder_rankings']['account_count']==30
+    assert out['coverage']['eligible_owner_rank_complete'] is True
+    assert out['coverage']['sample_owner_rank_complete'] is False
+    assert 'ELIGIBLE_OWNER_RANKS_INCOMPLETE' not in out['coverage']['gaps']
     assert out['metrics']['GLOBAL_EX_LP_OWNER_TOP10_PCT']=='20.0000'
     assert out['metrics']['EX_LP_TOP10_PCT']=='UNRESOLVED'
     assert 'GLOBAL_OWNER_HISTORY_NOT_SCANNED' in out['coverage']['gaps']

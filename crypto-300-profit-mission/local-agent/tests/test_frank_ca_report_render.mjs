@@ -651,7 +651,7 @@ test('CA history progress and unknown stop reason never echo raw provider errors
 
 test('full mint Owner rank is separate from raw Top20 account history and unavailable legacy ranks hide',()=>{
   const h=harness();
-  h.context.renderClusterReport({...fixture,holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',snapshot_slot:100,supply_slot:100,account_count:30,nonzero_owner_count:11,normalization_complete:true,metrics:{GLOBAL_OWNER_TOP10_PCT:'98.0000',GLOBAL_EX_LP_OWNER_TOP10_PCT:'20.0000'},owners:[{owner:mint,raw:'800',account_count:20,role:'LP',supply_pct:'80.0000',history_scanned:false}],decimals:0}});
+  h.context.renderClusterReport({...fixture,coverage:{...fixture.coverage,special_normalization_complete:true,snapshot_consistent:true,eligible_owner_rank_complete:true,sample_owner_rank_complete:false},metrics:{EX_LP_TOP10_PCT:'99.8765'},holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',snapshot_slot:100,supply_slot:100,account_count:30,nonzero_owner_count:11,normalization_complete:true,metrics:{GLOBAL_OWNER_TOP10_PCT:'98.0000',GLOBAL_EX_LP_OWNER_TOP10_PCT:'20.0000'},owners:[{owner:mint,raw:'800',account_count:20,role:'LP',supply_pct:'80.0000',history_scanned:false}],decimals:0}});
   assert.equal(h.element('cluster-rankings-panel').hidden,false);
   const html=h.element('cluster-rankings').innerHTML;
   assert.match(html,/全局 Owner Top10/);
@@ -659,6 +659,7 @@ test('full mint Owner rank is separate from raw Top20 account history and unavai
   assert.match(html,/20%/);
   assert.match(html,/30/);
   assert.match(html,/本轮未覆盖历史/);
+  assert.ok(!h.element('cluster-metrics').innerHTML.includes('99.8765'));
   h.context.renderClusterReport(fixture);
   assert.equal(h.element('cluster-rankings-panel').hidden,true);
 });
