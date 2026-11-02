@@ -22,6 +22,7 @@ from urllib.parse import parse_qs, urlparse
 from ..meme.cluster import RpcCache, RPCJobBudgetExceeded, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown, report_completeness
 from ..meme.market import DexScreenerMarketClient
 from ..meme.market_parity import GeckoTerminalMarketClient
+from ..meme.narrative import PublicNarrativeClient
 from .db import open_control_ro
 from .delivery_review import summarize_manual_reviews
 from .frank import FrankReader
@@ -135,7 +136,7 @@ CLUSTER_PRESETS = {
         "deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8,
         "adaptive_history_per_holder": 30, "adaptive_funding_lookback": 12,
         "adaptive_history_max_pages": 4, "adaptive_funding_max_pages": 5,
-        "enumerate_holder_ranks": True, "compare_market_sources": True,
+        "enumerate_holder_ranks": True, "compare_market_sources": True, "collect_narrative": True,
     },
     "deep": {
         "deep_holders": 20, "history_per_holder": 100, "funding_lookback": 50,
@@ -166,6 +167,7 @@ class ClusterJobManager:
         self.rpc_endpoint=self.rpc_endpoints[0]
         self.market_client=DexScreenerMarketClient()
         self.independent_market_client=GeckoTerminalMarketClient()
+        self.narrative_client=PublicNarrativeClient()
         self.jupiter=JupiterQuoteClient(os.environ.get("JUPITER_API_KEY"))
         self.frank=FrankReader(production_root) if production_root is not None else None
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-cluster")
@@ -525,6 +527,8 @@ class ClusterJobManager:
                 market_client=self.market_client,
                 independent_market_client=getattr(self,"independent_market_client",None) if opts.get("compare_market_sources") else None,
                 compare_market_sources=opts.get("compare_market_sources",False),
+                narrative_client=getattr(self,"narrative_client",None) if opts.get("collect_narrative") else None,
+                collect_narrative=opts.get("collect_narrative",False),
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
             # Recompute for every newly produced report; legacy GETs remain unchanged.

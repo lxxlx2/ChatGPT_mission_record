@@ -1476,6 +1476,7 @@ function clusterProgressDetail(job) {
       (p.liquidity_usd != null ? ' · LP ' + usd(p.liquidity_usd) : '') +
       ' · 正在解析 Top20 owner';
   }
+  if (stage==='NARRATIVE_SOURCES') return '正在读取有限公开来源；页面陈述与精确 CA 归属分开核实';
   if (stage==='HISTORICAL_ACCOUNT_SCAN') return '正在读取交易余额中发现的历史账户；只补查一轮，仍受原任务硬上限保护';
   if (stage==='HOLDER_ENUMERATION') return '正在按 Mint 读取账户来源并合并 Owner 余额；仍受原任务硬上限保护';
   if (stage==='HOLDERS_READY') return 'Top20 owner 已解析 ' + esc(p.top_accounts_resolved ?? 0) + ' 个，开始历史浅扫';
@@ -1561,6 +1562,26 @@ function renderClusterGroup(group, kind) {
     '<div class="cluster-wallets">' + wallets + '</div>' +
     '<div class="cluster-evidence-tags">' + (edgeTypes.map(x => '<span>' + esc(x) + '</span>').join('') || '<span>无自动证据摘要</span>') + '</div>' +
   '</article>';
+}
+
+function renderNarrativeSources(report,links) {
+  const n=report.narrative;
+  if (!n || n.version!==1) return '<div class="narrative-state"><strong>此历史报告未记录外部来源读取</strong><p>仅保留市场附带的链接，未补造帖子、发布时间或官方认领。</p></div><div class="narrative-links">'+links+'</div>';
+  const evidence=Array.isArray(n.evidence) ? n.evidence.filter(r=>r && r.classification==='THIRD_PARTY_CLAIM' && typeof r.excerpt==='string' && /^[a-f0-9]{64}$/.test(r.response_sha256 || '')).slice(0,3) : [];
+  const dateText=value=>{const stamp=Number(value);return Number.isFinite(stamp)&&stamp>0&&stamp<4102444800 ? new Date(stamp*1000).toLocaleString('zh-CN') : '未记录';};
+  const cards=evidence.map(r=>{
+    const url=safeHttpUrl(r.source_url);
+    if (!url || !url.startsWith('https://')) return '';
+    return '<article class="cluster-card"><strong>来源页面陈述 · 官方归属未核实</strong><p>'+esc(r.title || r.publisher_host || '来源页面')+'</p><p>'+esc(r.excerpt)+'</p><p>'+esc(r.exact_ca_mentioned===true ? '静态文本或描述中提及精确 CA；仍未核实官方认领' : '精确 CA 未提及；保留页面叙事，归属仍未核实')+'</p><p>作者声明 '+esc(r.author_claim || '未记录')+'；发布时间声明 '+esc(r.published_at_claim || '未记录')+'；本报告首次读取 '+esc(dateText(r.first_seen_at))+'</p><a class="link-btn" href="'+esc(url)+'" target="_blank" rel="noreferrer">来源页面 ↗</a></article>';
+  }).join('');
+  const reasons={URL_NOT_ALLOWED:'URL 不符合本轮公开 HTTPS 读取范围',DNS_NOT_PUBLIC:'地址解析包含非公开目标，未连接',PUBLIC_IPV4_UNAVAILABLE:'没有可用的公开 IPv4',DNS_UNAVAILABLE:'地址解析失败',REDIRECT_NOT_FOLLOWED:'来源跳转未跟随',NOT_HTML:'来源未返回 HTML',COMPRESSED_BODY_NOT_SUPPORTED:'未读取压缩响应',RESPONSE_LIMIT:'响应超过本轮上限',SOURCE_UNAVAILABLE:'来源未能读取',FETCH_WORKER_FAILED:'来源读取未完成',FETCH_TIMEOUT:'来源读取超时',ACCESS_WALL_OR_SCRIPT_ONLY:'访问墙或脚本页面，未绕过',NO_EXTRACTABLE_CLAIM:'没有可提取的静态页面陈述',SOURCE_LANGUAGE_NOT_SELECTED:'该来源语言不在本轮选择范围',RESPONSE_TEXT_INVALID:'页面文本编码无法读取',SOURCE_LIMIT:'达到本轮来源上限',DUPLICATE_CONTENT:'与已读页面陈述重复，未当作独立佐证'};
+  const attempts=(Array.isArray(n.attempts)?n.attempts:[]).slice(0,7).map(a=>{
+    const source=safeHttpUrl(a.source_url);
+    const reason=a.status==='CLAIM_READ'?'已读取页面陈述':reasons[a.reason] || (/^HTTP_[0-9]{3}$/.test(a.reason || '')?'来源返回 '+a.reason:'未完成来源读取');
+    return '<li>'+esc(source || '来源提示')+'：'+esc(reason)+(a.requested===true?'':'（未请求）')+'</li>';
+  }).join('');
+  return '<div class="narrative-state"><strong>有界公开来源证据</strong><p>页面陈述属于第三方声明。未做全网检索、未证明最早起源或官方 CA 归属；脚本不执行，登录或访问墙不绕过。</p></div>'+ (cards || '<p>本轮没有可展示的外部页面陈述；未读取不等于叙事不存在。</p>')+
+    (attempts?'<details><summary>来源读取范围与缺口</summary><ul>'+attempts+'</ul></details>':'<p>本次未记录公开来源读取；保留资料链接。</p>')+'<div class="narrative-links">'+links+'</div>';
 }
 
 function renderMarketComparison(market,mint) {
@@ -1670,7 +1691,7 @@ const clusterRequiredEvidence = {
   control_attribution:['控制关系归因','样本关系未形成完整受益控制归因','已覆盖的转账、资金、签名及归集证据','补独立非公共关系证据并保留归属不确定性'],
   market:['市场与池子核对','索引行情尚未核对链上池子储备','市场参考及按需同池索引读取路径','核对指定池子的链上储备与独立市场定义'],
   independent_sources:['独立来源对照','仍缺原始池子及持有人独立核对','同池索引来源按需读取，实际尝试见对照明细','比较同 CA、同时间窗口及同口径来源'],
-  narrative:['外部叙事','外部帖子采集尚未接入','仅市场附带官网及社交链接','读取可访问的项目、发射台及社区来源并核对 exact CA'],
+  narrative:['外部叙事','公开页面陈述仍缺官方归属与传播起源核对','有界发射台及市场提示公开页面，实际尝试见叙事明细','读取可访问的项目、发射台及社区来源并核对 exact CA'],
 };
 function renderClusterCompleteness(report) {
   const node=$('cluster-completeness');
@@ -1910,10 +1931,8 @@ function renderClusterReport(report) {
   const socials=(market.socials || []).map(x =>
     '<span class="narrative-link">' + esc((x.platform || 'social') + ': ' + (x.handle || '')) + '</span>'
   ).join('');
-  $('cluster-narrative').innerHTML =
-    '<div class="narrative-state"><strong>未接入 X/FOMO 外部叙事检索</strong>' +
-    '<p>目前仅展示市场资料附带的链接；不抓取实时官方帖子，也不提供官方认领或叙事打分。</p></div>' +
-    '<div class="narrative-links">' + (websites || socials ? websites + socials : '<span class="muted">当前市场资料没有可展示的官网/社交链接</span>') + '</div>';
+  $('cluster-narrative').innerHTML = renderNarrativeSources(report,
+    websites || socials ? websites + socials : '<span class="muted">当前市场资料没有可展示的官网/社交链接</span>');
 
   clusterStatus('running','报告已读取，'+clusterCompletenessLabel+(coverage.special_normalization_complete===true?'':'；持有人归一化尚未完成'), '数据时间 ' + observedAge + (rpcFailures ? ' · 有部分链上请求失败，详情见证据' : ''));
 }

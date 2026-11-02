@@ -540,12 +540,13 @@ class WalletClusterAnalyzer:
         material_pct=Decimal("1"),market_client:DexScreenerMarketClient|None=None,
         adaptive_history_per_holder=None,adaptive_funding_lookback=None,
         progress_callback=None,
-        enumerate_holder_ranks=False,independent_market_client=None,compare_market_sources=None,
+        enumerate_holder_ranks=False,independent_market_client=None,compare_market_sources=None,narrative_client=None,collect_narrative=None,
         history_max_pages=1,funding_max_pages=1,
         adaptive_history_max_pages=1,adaptive_funding_max_pages=1,
     ):
         self.mint=mint;self.rpc=rpc;self.registry=special_registry or {};self.history_per_holder=int(history_per_holder);self.deep_holders=int(deep_holders);self.funding_lookback=int(funding_lookback);self.material_pct=Decimal(material_pct)
         self.market_client=market_client
+        self.narrative_client=narrative_client if collect_narrative is not False else None
         self.independent_market_client=independent_market_client if compare_market_sources is not False else None
         self.adaptive_history_per_holder=int(adaptive_history_per_holder) if adaptive_history_per_holder else None
         self.adaptive_funding_lookback=int(adaptive_funding_lookback) if adaptive_funding_lookback else None
@@ -833,6 +834,18 @@ class WalletClusterAnalyzer:
             return primary
         except Exception as exc:
             return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","reason":type(exc).__name__}
+
+    def narrative_snapshot(self,market):
+        empty={"version":1,"status":"NOT_REQUESTED","attempts":[],"evidence":[],
+               "official_recognition":"UNVERIFIED","earliest_origin":"UNVERIFIED",
+               "exhaustive":False,"search_coverage":"BOUNDED_HINTS_ONLY"}
+        if self.narrative_client is None:return empty
+        # Hints are read only after primary market identity is tied to this Mint.
+        # Failure to establish this prerequisite does not initiate a blind crawl.
+        if market.get("status")!="OK" or market.get("source")!="DEXSCREENER_API" or market.get("mint")!=self.mint:
+            return {**empty,"reason":"PRIMARY_MARKET_IDENTITY_UNVERIFIED"}
+        self._progress("NARRATIVE_SOURCES",scanned=0)
+        return self.narrative_client.collect(self.mint,market)
 
     @staticmethod
     def _quote_quantity(record):
@@ -1159,6 +1172,7 @@ class WalletClusterAnalyzer:
     def analyze(self):
         token_profile=self.token_profile()
         market=self.market_snapshot()
+        narrative=self.narrative_snapshot(market)
         self._progress("BASE_READY",token_profile=token_profile,market=market)
 
         supply,decimals,holders=self.holders()
@@ -1449,7 +1463,7 @@ class WalletClusterAnalyzer:
             "unresolved_extension_risks":unresolved_extension_risks,
             "cluster_status":cluster_status,
             "trading_status":trading_status,
-            "narrative_status":"NOT_AUTOMATICALLY_VERIFIED",
+            "narrative_status":"EXTERNAL_CLAIMS_PARTIAL" if narrative.get("evidence") else "SOURCE_ATTEMPTS_INCOMPLETE" if narrative.get("attempts") else "NOT_AUTOMATICALLY_VERIFIED",
             "next_checks":[
                 "Verify whether the project/narrative owner explicitly recognizes this exact CA.",
                 "Verify creator-fee claim, creator buy, lock or treasury relationship on-chain when relevant.",
@@ -1473,7 +1487,7 @@ class WalletClusterAnalyzer:
             "schema_version":2,"mint":self.mint,"source":"SOLANA_FINALIZED_JSON_RPC",
             "rpc_endpoint":safe_rpc_label(getattr(self.rpc,"endpoint","UNKNOWN")),"rpc_endpoints":endpoints,
             "observed_at":time.time(),"supply_raw":str(supply),"decimals":decimals,
-            "token_profile":token_profile,"market":market,"assessment":assessment,"holders":holder_rows,"holder_rankings":holder_rankings,
+            "token_profile":token_profile,"market":market,"narrative":narrative,"assessment":assessment,"holders":holder_rows,"holder_rankings":holder_rankings,
             "metrics":metrics,"confirmed_relation_groups":relation_groups,"probable_control_clusters":control_groups,
             "probable_execution_clusters":execution_groups,
             "shared_infrastructure_exclusions":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_CEX","SHARED_INFRA"}],
@@ -1538,6 +1552,9 @@ def report_completeness(report:dict)->dict:
     ranks=report.get("holder_rankings") or {}
     profile=report.get("token_profile") or {}
     market=report.get("market") or {}
+    narrative=report.get("narrative") or {}
+    narrative_read=bool(narrative.get("evidence"))
+    narrative_attempted=any(row.get("requested") is True for row in narrative.get("attempts") or [])
     independent=market.get("independent_market") or {}
     compared=(market.get("comparison") or {}).get("status") in {"INDEXER_SNAPSHOTS_COMPARED","PARTIAL_INDEXER_SNAPSHOTS"}
     ranked=ranks.get("requested") is True and ranks.get("status")=="COMPLETE_SNAPSHOT"
@@ -1580,10 +1597,11 @@ def report_completeness(report:dict)->dict:
         ["GeckoTerminal exact selected pool; retrieval timestamps are not provider as-of timestamps"] if independent.get("attempted") is True else ["No independent selected-pool response collected"],
         "Reconcile actual DEX pool reserves and independent holder evidence at a controlled chain snapshot.",
         ["market.independent_market","market.comparison"])
-    row("narrative","NOT_COLLECTED","EXTERNAL_NARRATIVE_COLLECTION_NOT_IMPLEMENTED",
-        ["Market profile website/social hints only; external posts not collected"],
-        "Read accessible launchpad/project/X/community sources; record exact-CA mention and attribution separately.",
-        ["market.websites","market.socials","assessment.narrative_status"])
+    row("narrative","PARTIAL" if narrative_read else "UNAVAILABLE" if narrative_attempted else "NOT_COLLECTED",
+        "BOUNDED_SOURCE_CLAIMS_NOT_OFFICIAL_RECOGNITION_OR_ORIGIN" if narrative_read else "EXTERNAL_SOURCE_ATTEMPTS_INCOMPLETE" if narrative_attempted else "EXTERNAL_SOURCES_NOT_REQUESTED",
+        ["Bounded public launchpad/market-hinted website/social HTML reads; no script/login bypass or exhaustive search"] if narrative_attempted else ["No external page read recorded"],
+        "Verify author/official exact-CA recognition and independently attributable public posts/origin; keep page claims separate.",
+        ["narrative","market.websites","market.socials","assessment.narrative_status"])
     return {"version":1,"status":"INCOMPLETE_EVIDENCE",
             "scope":"MANUAL_CA_DUE_DILIGENCE",
             "requirements":requirements,
@@ -1709,6 +1727,8 @@ def markdown(report:dict)->str:
                 + ", ".join(g.get("wallets") or [])
                 + (" — evidence: "+", ".join(edge_types) if edge_types else "")
             )
+    lines += ["", "## External narrative source claims (bounded; attribution unverified)", "", "~~~json",
+              json.dumps(report.get("narrative") or {},ensure_ascii=False,indent=2), "~~~"]
     lines += ["", "## Required evidence gaps", "", "~~~json",
               json.dumps([r for r in completeness["requirements"]
                           if r.get("status")!="VERIFIED_SNAPSHOT"],ensure_ascii=False,indent=2), "~~~"]

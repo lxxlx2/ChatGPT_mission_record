@@ -775,3 +775,24 @@ test('mismatched comparison identity masks metrics even when its status claims c
   assert.match(h.element('cluster-market').innerHTML,/独立来源身份未核实/);
   assert.doesNotMatch(h.element('cluster-market').innerHTML,/999.1234/);
 });
+
+test('external page claims remain readable without exact CA recognition and escape publisher markup',()=>{
+  const h=harness();const report=structuredClone(fixture);
+  report.narrative={version:1,status:'PARTIAL',official_recognition:'VERIFIED',exhaustive:false,search_coverage:'BOUNDED_HINTS_ONLY',evidence:[{classification:'THIRD_PARTY_CLAIM',source_url:'https://project.example.org/about',publisher_host:'project.example.org',title:'Fixture story',excerpt:'A cat explores distant planets <img onerror=bad>',exact_ca_mentioned:false,published_at_claim:null,first_seen_at:100,response_sha256:'a'.repeat(64)}],attempts:[{kind:'LAUNCHPAD_PAGE',source_url:'https://pump.fun/coin/'+mint,status:'UNAVAILABLE',reason:'HTTP_403',requested:true}]};
+  vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
+  const html=h.element('cluster-narrative').innerHTML;
+  assert.match(html,/A cat explores/);assert.match(html,/精确 CA 未提及/);
+  assert.match(html,/官方归属未核实/);assert.match(html,/本报告首次读取/);
+  assert.match(html,/403/);assert.match(html,/未做全网检索/);
+  assert.doesNotMatch(html,/<img|认领已核实/);
+});
+
+test('reading legacy report removes prior external claim and does not fabricate source attempts',()=>{
+  const h=harness();const report=structuredClone(fixture);
+  report.narrative={version:1,status:'PARTIAL',evidence:[{classification:'THIRD_PARTY_CLAIM',source_url:'https://project.example.org/',excerpt:'UNIQUE_OLD_NARRATIVE',response_sha256:'a'.repeat(64)}],attempts:[]};
+  vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
+  assert.match(h.element('cluster-narrative').innerHTML,/UNIQUE_OLD_NARRATIVE/);
+  vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:fixture}));
+  assert.doesNotMatch(h.element('cluster-narrative').innerHTML,/UNIQUE_OLD_NARRATIVE/);
+  assert.match(h.element('cluster-narrative').innerHTML,/历史报告.*未记录外部来源读取/);
+});

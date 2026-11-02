@@ -67,6 +67,11 @@ try {
  assert.match(await page.locator('#cluster-rankings').innerText(),/本轮未覆盖历史/);
  const saved=await (await page.request.get(origin+'/api/cluster-latest?mint='+mint+'&job_id='+a.job_id)).json();
  assert.equal(saved.ca_job_id,a.job_id);
+ assert.equal(saved.narrative.official_recognition,'UNVERIFIED');
+ assert.match(await page.locator('#cluster-narrative').innerText(),/A fictional cat/);
+ assert.match(await page.locator('#cluster-narrative').innerText(),/精确 CA 未提及/);
+ assert.match(await page.locator('#cluster-narrative').innerText(),/官方归属未核实/);
+ check('external narrative claim persists without exact-CA endorsement or invented publication time');
  assert.equal(saved.market.comparison.status,'INDEXER_SNAPSHOTS_COMPARED');
  assert.match(await page.locator('.cluster-market-comparison').innerText(),/25.0000%/);
  assert.match(await page.locator('.cluster-market-comparison').innerText(),/未核对链上池子储备/);

@@ -328,7 +328,8 @@ def test_cluster_dashboard_does_not_fabricate_narrative_conclusion():
     js=(Handler.static_root/"app.js").read_text()
     assert "链上 / 市场结构结论" in js
     assert "完整投资结论" not in js
-    assert "未接入 X/FOMO 外部叙事检索" in js
+    assert "官方归属未核实" in js
+    assert "未做全网检索" in js
 
 
 def test_standard_cluster_preset_is_adaptive_not_bruteforce():
@@ -679,8 +680,9 @@ def test_dashboard_prioritizes_trade_tape_and_states_scope():
     assert 'id="coverage"' in html
     assert '/api/coverage' in js and '/api/coverage' in server
     assert 'LOCAL_INDEX_ONLY' in (Handler.static_root.parent/"frank.py").read_text()
-    assert '不抓取实时官方帖子' in js
-    assert '未接入 X/FOMO 外部叙事检索' in js
+    assert '脚本不执行' in js
+    assert '登录或访问墙不绕过' in js
+    assert '官方归属未核实' in js
 
 def test_frank_wallet_live_rpc_audit_diff_reports_missing_signatures():
     import runpy

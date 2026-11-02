@@ -93,8 +93,8 @@ class DexScreenerMarketClient:
             "aggregate_liquidity_usd":str(total_liquidity),
             "websites":[x.get("url") for x in (info.get("websites") or []) if isinstance(x,dict) and x.get("url")],
             "socials":[
-                {"platform":x.get("platform"),"handle":x.get("handle")}
+                {"platform":x.get("platform") or x.get("type"),"handle":x.get("handle"),"url":x.get("url")}
                 for x in (info.get("socials") or [])
-                if isinstance(x,dict) and (x.get("platform") or x.get("handle"))
+                if isinstance(x,dict) and (x.get("platform") or x.get("type") or x.get("handle") or x.get("url"))
             ],
         }
