@@ -68,10 +68,6 @@ try {
  const saved=await (await page.request.get(origin+'/api/cluster-latest?mint='+mint+'&job_id='+a.job_id)).json();
  assert.equal(saved.ca_job_id,a.job_id);
  assert.equal(saved.narrative.official_recognition,'UNVERIFIED');
- assert.match(await page.locator('#cluster-narrative').innerText(),/A fictional cat/);
- assert.match(await page.locator('#cluster-narrative').innerText(),/精确 CA 未提及/);
- assert.match(await page.locator('#cluster-narrative').innerText(),/官方归属未核实/);
- check('external narrative claim persists without exact-CA endorsement or invented publication time');
  assert.equal(saved.market.comparison.status,'INDEXER_SNAPSHOTS_COMPARED');
  assert.match(await page.locator('.cluster-market-comparison').innerText(),/25.0000%/);
  assert.match(await page.locator('.cluster-market-comparison').innerText(),/未核对链上池子储备/);
@@ -89,6 +85,12 @@ try {
  check('worker DONE persists incomplete product outcome and browser shows required evidence gaps');
  check('full mint Owner ranks are separate from raw Top20 history and preserve uncovered history');
  await page.locator('.cluster-detail-fold > summary').click();
+ assert.equal(await page.locator('#cluster-narrative').isVisible(),true);
+ assert.match(await page.locator('#cluster-narrative').innerText(),/A fictional cat/);
+ assert.match(await page.locator('#cluster-narrative').innerText(),/精确 CA 未提及/);
+ assert.match(await page.locator('#cluster-narrative').innerText(),/官方归属未核实/);
+ check('external narrative claim persists without exact-CA endorsement or invented publication time');
+
  await page.locator('.cluster-historical-accounts summary').click();
  assert.match(await page.locator('.cluster-historical-accounts').innerText(),/该交易结束时关闭/);
  assert.match(await page.locator('.cluster-historical-accounts').innerText(),/不能证明当前仍关闭/);

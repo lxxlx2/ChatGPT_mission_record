@@ -1544,9 +1544,10 @@ class WalletClusterAnalyzer:
 def report_completeness(report:dict)->dict:
     """Versioned product outcome, independent of worker DONE and risk ratings.
 
-    This collector has no full economic-history, independent-market or narrative
-    acquisition path. No combination of snapshot flags can close those required
-    gaps. VERIFIED_SNAPSHOT is deliberately narrower than analysis completion.
+    Current paths collect bounded history, independent indexer comparisons and
+    public page claims. Full economic history, raw-chain parity and official
+    narrative attribution still have gaps. Snapshot flags cannot close them.
+    VERIFIED_SNAPSHOT is deliberately narrower than analysis completion.
     Only fixed capability descriptions are emitted, never provider error text.
     """
     ranks=report.get("holder_rankings") or {}
