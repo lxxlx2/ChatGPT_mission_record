@@ -1,5 +1,20 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-11-03 05:59:41 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+## Latest authoritative terminal cache sync — 2026-11-03 06:59:36 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-03/065936-final.md
+- actual_run: 2026-11-03 06:59:36 Asia/Bangkok (began 06:57:56; off-minute, no HH:00 trigger proof)
+- run_status: PARTIAL; source_failures: 4; identity_failures: 0
+- scheduled_shard: 2; executed_shard: 2; last_four_executed_shards: [3,1,1,2]
+- last_meaningful_attempt_at_shard2: 2026-11-03 06:59:36 Asia/Bangkok PARTIAL_ONLY
+- last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok UNCHANGED
+- urgent: Concrete, MetaMask, Claynosaurz, HEEBOO, Space; dynamic Surf, StandX; shard2 10 entries (15 distinct registered identities)
+- candidate_count: 7; action_gate_pass: 0; triggered_events: 0; Gmail_attempted: false; App_notification: false
+- SOURCE_GAP: Concrete_additional_USDC, StandX_DUSD_Nov2_claim_firstparty, 01_private_intermediary_rights, OhBabyGames_issuer
+- X_BROWSER: UNAVAILABLE originating browser context; original StandX X post HTTP403; English secondary cannot authorize ACTION
+- life/work Gmail rights search after Nov1: 5 unrelated/0, no new mapped rights ACTION
+- durable dedupe: NeoSoul StandX Nov3 22:59 BKK already emailed Oct23; SurfBoard Nov13 already emailed; Cambria RSGP Oct29 already emailed; no duplicate
+- task ID/name/HH:00 schedule/registry/recipient unchanged; no extra task/cron/daily email
+
+Updated: 2026-11-03 06:59:36 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
 - latest_actual_run: 2026-11-03 05:59:41 Asia/Bangkok (attempt 05:58:06; off-minute)
