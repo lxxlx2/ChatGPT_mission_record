@@ -1476,6 +1476,7 @@ function clusterProgressDetail(job) {
       (p.liquidity_usd != null ? ' · LP ' + usd(p.liquidity_usd) : '') +
       ' · 正在解析 Top20 owner';
   }
+  if (stage==='HISTORICAL_ACCOUNT_SCAN') return '正在读取交易余额中发现的历史账户；只补查一轮，仍受原任务硬上限保护';
   if (stage==='HOLDER_ENUMERATION') return '正在按 Mint 读取账户来源并合并 Owner 余额；仍受原任务硬上限保护';
   if (stage==='HOLDERS_READY') return 'Top20 owner 已解析 ' + esc(p.top_accounts_resolved ?? 0) + ' 个，开始历史浅扫';
   if (stage==='OWNER_SCAN') return '历史浅扫 ' + esc(p.scanned ?? 0) + ' / ' + esc(p.target ?? '?') + ' 个 owner';
@@ -1562,13 +1563,32 @@ function renderClusterGroup(group, kind) {
   '</article>';
 }
 
+function renderHistoricalAccountEvidence(report) {
+  if (!Array.isArray(report.historical_account_evidence)) return '';
+  const evidence=report.historical_account_evidence.filter(r=>r && typeof r==='object').slice(0,20);
+  const plans=Array.isArray(report.coverage?.historical_account_history) ? report.coverage.historical_account_history.filter(r=>r && typeof r==='object').slice(0,40) : [];
+  const reasons={CURRENT_ACCOUNT_ALREADY_SELECTED:'已在当前账户中选择',CURRENT_ACCOUNT_NOT_SELECTED:'当前账户尚未选择',OWNER_ACCOUNT_LIMIT:'达到单 Owner 账户上限',REPORT_EXTRA_ACCOUNT_LIMIT:'达到本轮额外账户上限',FRONTIER_LIMIT:'本轮只补查一轮',SELECTED_BOUNDED_HISTORY:'已选择有限历史补查'};
+  const rows=evidence.map(r=>{
+    const context=Number.isInteger(r.slot) && r.slot>0 && typeof r.response_sha256==='string' && /^[a-f0-9]{64}$/.test(r.response_sha256) && typeof r.signature==='string' && r.signature.length>0 && r.signature.length<=128;
+    const closed=context && r.balance_phase==='pre' && r.closure_at_transaction_end==='CONFIRMED_CLOSED_AT_TRANSACTION_END';
+    const stamp=Number(r.block_time);
+    const when=Number.isFinite(stamp) && stamp>0 && stamp<4102444800 ? new Date(stamp*1000).toLocaleString('zh-CN') : '时间未记录';
+    const signature=typeof r.signature==='string' ? '<a class="link-btn compact" href="https://solscan.io/tx/'+encodeURIComponent(r.signature)+'" target="_blank" rel="noreferrer">'+esc(short(r.signature,8,6))+'</a>' : '签名未记录';
+    return '<tr><td>'+ownerCell(r.owner || '')+'</td><td>'+ownerCell(r.account || '')+'</td><td>'+esc(r.balance_phase==='pre'?'交易前余额':r.balance_phase==='post'?'交易后余额':'余额阶段未记录')+' '+esc(frankD2Decimal(r.raw,r.decimals))+'</td><td>'+esc(when)+' / slot '+esc(r.slot ?? '未记录')+'</td><td>'+(closed?'该交易结束时关闭':'关闭状态未证明')+'</td><td>'+signature+'</td></tr>';
+  }).join('');
+  const coverage=plans.map(r=>'<li>'+ownerCell(r.owner || '')+' · '+ownerCell(r.account || '')+'：'+esc(reasons[r.stop_reason] || '未核实补查状态')+'</li>').join('');
+  return '<details class="cluster-historical-accounts"><summary>历史账户的交易证据与有限补查</summary><p>Owner 和余额只绑定所列交易的前后状态；该交易结束时关闭不能证明当前仍关闭，也不证明该 Owner 终生拥有此账户。新发现只补查一轮，账户限额与原任务硬上限共用。</p>'+
+    (rows?'<p>最多显示20条余额证据，完整记录与响应哈希保存在报告中。</p><div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>当时 Owner</th><th>账户</th><th>余额阶段</th><th>时间 / slot</th><th>关闭证据</th><th>交易</th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<p>本轮没有可核实的历史账户余额记录；元数据不足不等于从未持有。</p>')+
+    (coverage?'<ul>'+coverage+'</ul>':'')+'</details>';
+}
+
 function renderOwnerAccountHistory(coverage) {
   const rows=Array.isArray(coverage.owner_account_history) ? coverage.owner_account_history.filter(r=>r && typeof r==='object').slice(0,40) : [];
   if (!rows.length) return '';
   const sources={VERIFIED_CURRENT_MINT_ACCOUNTS:'本轮当前账户来源已核对',OBSERVED_TOP20_ACCOUNTS:'仅已解析 Top20 样本',SNAPSHOT_OWNER_CONFLICT:'账户快照 Owner 不一致'};
   const reasons={ALL_OBSERVED_SELECTED:'当前观察到的账户均已选择',OWNER_ACCOUNT_LIMIT:'达到单 Owner 账户上限',REPORT_EXTRA_ACCOUNT_LIMIT:'达到本轮额外账户上限'};
   return '<details class="cluster-owner-accounts"><summary>Owner 逐账户历史覆盖</summary>'+
-    '<p>包括所选当前零余额账户；已关闭账户和历史 Owner 变更未枚举。选择当前全部账户仍不证明完整经济历史，空页也不证明真实首买。</p>'+
+    '<p>包括所选当前零余额账户；已关闭账户的完整集合未枚举，历史 Owner 仅覆盖本轮发现证据。选择当前全部账户仍不证明完整经济历史，空页也不证明真实首买。</p>'+
     '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>Owner</th><th>账户来源</th><th>观察 / 已选择 / 已请求</th><th>所选账户</th><th>未选及停止原因</th></tr></thead><tbody>'+rows.map(r=>{
       const selected=Array.isArray(r.accounts_selected) ? r.accounts_selected.slice(0,4) : [];
       const queried=Array.isArray(r.accounts_with_windows) ? r.accounts_with_windows : [];
@@ -1810,6 +1830,9 @@ function renderClusterReport(report) {
     MULTIPLE_TOKEN_ACCOUNTS_PER_OWNER:'同一钱包存在多个代币账户，逐账户覆盖仍不证明全经济历史',
     OWNER_ACCOUNT_SELECTION_INCOMPLETE:'部分已发现账户因本轮账户上限未选择',
     OWNER_ACCOUNT_SNAPSHOT_CONFLICT:'Top20 与当前账户来源的 Owner 不一致，未合并为已核实账户集合',
+    HISTORICAL_ACCOUNT_CONTEXT_GAPS:'部分交易的历史账户上下文无法核实',
+    HISTORICAL_ACCOUNT_EVIDENCE_LIMIT:'历史账户余额记录达到本轮保存上限',
+    HISTORICAL_ACCOUNT_SCAN_INCOMPLETE:'部分历史发现账户未补查，原因见逐账户记录',
     TRANSACTION_READ_GAPS:'历史交易存在读取缺口',
     HOLDER_ENUMERATION_INCOMPLETE:'完整持有人来源仍未核实',
     GLOBAL_OWNER_HISTORY_NOT_SCANNED:'完整来源中的部分重大 Owner 尚未覆盖历史',
@@ -1832,6 +1855,7 @@ function renderClusterReport(report) {
       '<div><span>初查每页目标币历史数</span><strong>' + esc(coverage.history_per_holder ?? 0) + '</strong></div>' +
       '<div><span>初查每页资金历史数</span><strong>' + esc(coverage.funding_lookback ?? 0) + '</strong></div>' +
     '</div>' +
+    renderHistoricalAccountEvidence(report) +
     renderOwnerAccountHistory(coverage) +
     renderClusterHistoryWindows(coverage) +
     '<div class="trust-box">' + (warnings.map(x => '<p>⚠ ' + esc(x) + '</p>').join('') || '<p class="ok-text">当前自动分析未发现覆盖率警告。</p>') + '</div>';

@@ -730,3 +730,27 @@ test('verified current account selection and source empty pages do not turn hist
   vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
   assert.doesNotMatch(h.element('cluster-coverage').innerHTML,/当前来源账户均已选择/);
 });
+
+test('historical account proof keeps phase, close-at-transaction time and unscanned frontier visible',()=>{
+  const h=harness();const report=structuredClone(fixture);
+  report.historical_account_evidence=[{owner:mint,account:'11111111111111111111111111111112',signature:'PROOF_SIGNATURE',slot:100,block_time:1000,raw:'10',decimals:0,balance_phase:'pre',closure_at_transaction_end:'CONFIRMED_CLOSED_AT_TRANSACTION_END',response_sha256:'a'.repeat(64)}];
+  report.coverage.historical_account_history=[{owner:mint,account:'11111111111111111111111111111112',selected:false,stop_reason:'FRONTIER_LIMIT'}];
+  vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
+  const html=h.element('cluster-coverage').innerHTML;
+  assert.match(html,/交易前余额/);assert.match(html,/该交易结束时关闭/);
+  assert.match(html,/PROOF_SIGNATURE/);assert.match(html,/本轮只补查一轮/);
+  assert.match(html,/不能证明当前仍关闭/);
+  report.historical_account_evidence=[];report.coverage={};
+  vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
+  assert.doesNotMatch(h.element('cluster-coverage').innerHTML,/该交易结束时关闭<\/td>|PROOF_SIGNATURE/);
+  assert.match(h.element('cluster-coverage').innerHTML,/本轮没有可核实/);
+});
+
+test('missing historical proof context never upgrades a close string to confirmed current closure',()=>{
+  const h=harness();const report=structuredClone(fixture);
+  report.historical_account_evidence=[{owner:mint,account:mint,closure_at_transaction_end:'CONFIRMED_CLOSED_AT_TRANSACTION_END',balance_phase:'pre',signature:'<script>bad</script>'}];
+  vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
+  const html=h.element('cluster-coverage').innerHTML;
+  assert.match(html,/关闭状态未证明/);
+  assert.doesNotMatch(html,/<script>|该交易结束时关闭<\/td>/);
+});

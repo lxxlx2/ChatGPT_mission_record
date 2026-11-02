@@ -80,6 +80,13 @@ try {
  check('worker DONE persists incomplete product outcome and browser shows required evidence gaps');
  check('full mint Owner ranks are separate from raw Top20 history and preserve uncovered history');
  await page.locator('.cluster-detail-fold > summary').click();
+ await page.locator('.cluster-historical-accounts summary').click();
+ assert.match(await page.locator('.cluster-historical-accounts').innerText(),/该交易结束时关闭/);
+ assert.match(await page.locator('.cluster-historical-accounts').innerText(),/不能证明当前仍关闭/);
+ assert.match(await page.locator('.cluster-historical-accounts').innerText(),/本轮只补查一轮/);
+ assert.equal(saved.historical_account_evidence[0].signature,'FIXTURE_HISTORICAL_PROOF');
+ check('historical Owner, closure time and one-frontier gap persist without current ownership claims');
+ await page.locator('.cluster-historical-accounts summary').click();
  await page.locator('.cluster-owner-accounts summary').click();
  assert.match(await page.locator('.cluster-owner-accounts').innerText(),/本轮额外账户上限/);
  assert.match(await page.locator('.cluster-owner-accounts').innerText(),/已关闭账户.*未枚举/);
