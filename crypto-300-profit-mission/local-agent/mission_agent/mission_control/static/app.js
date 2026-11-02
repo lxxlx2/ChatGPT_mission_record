@@ -1562,6 +1562,21 @@ function renderClusterGroup(group, kind) {
   '</article>';
 }
 
+function renderOwnerAccountHistory(coverage) {
+  const rows=Array.isArray(coverage.owner_account_history) ? coverage.owner_account_history.filter(r=>r && typeof r==='object').slice(0,40) : [];
+  if (!rows.length) return '';
+  const sources={VERIFIED_CURRENT_MINT_ACCOUNTS:'本轮当前账户来源已核对',OBSERVED_TOP20_ACCOUNTS:'仅已解析 Top20 样本',SNAPSHOT_OWNER_CONFLICT:'账户快照 Owner 不一致'};
+  const reasons={ALL_OBSERVED_SELECTED:'当前观察到的账户均已选择',OWNER_ACCOUNT_LIMIT:'达到单 Owner 账户上限',REPORT_EXTRA_ACCOUNT_LIMIT:'达到本轮额外账户上限'};
+  return '<details class="cluster-owner-accounts"><summary>Owner 逐账户历史覆盖</summary>'+
+    '<p>包括所选当前零余额账户；已关闭账户和历史 Owner 变更未枚举。选择当前全部账户仍不证明完整经济历史，空页也不证明真实首买。</p>'+
+    '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>Owner</th><th>账户来源</th><th>观察 / 已选择 / 已请求</th><th>所选账户</th><th>未选及停止原因</th></tr></thead><tbody>'+rows.map(r=>{
+      const selected=Array.isArray(r.accounts_selected) ? r.accounts_selected.slice(0,4) : [];
+      const queried=Array.isArray(r.accounts_with_windows) ? r.accounts_with_windows : [];
+      const selection=r.account_selection_complete===true && r.account_source_status==='VERIFIED_CURRENT_MINT_ACCOUNTS' ? '当前来源账户均已选择' : '账户集合覆盖仍有缺口';
+      return '<tr><td>'+ownerCell(r.owner || '')+'</td><td>'+esc(sources[r.account_source_status] || '未核实来源')+'</td><td>'+esc(r.current_accounts_observed ?? '未记录')+' / '+esc(selected.length)+' / '+esc(queried.length)+'</td><td>'+selected.map(address=>ownerCell(address)).join('<br>')+'</td><td>'+esc(r.accounts_not_selected ?? '未记录')+' 个未选；'+esc(reasons[r.selection_stop_reason] || '未记录停止原因')+'；'+selection+'</td></tr>';
+    }).join('')+'</tbody></table></div></details>';
+}
+
 function renderClusterHistoryWindows(coverage) {
   const windows=Array.isArray(coverage.history_windows) ? coverage.history_windows.filter(w=>w && typeof w==='object').slice(0,80) : [];
   const reasons={PROVIDER_EMPTY_PAGE:'来源返回空页',PAGE_LIMIT:'达到本轮页数上限',
@@ -1574,13 +1589,13 @@ function renderClusterHistoryWindows(coverage) {
     const when=Number.isFinite(oldest) && oldest>0 ? new Date(oldest*1000).toLocaleString('zh-CN') : '未记录';
     const cursor=typeof w.next_before==='string' && w.next_before.length<=128
       ? '<code>'+esc(short(w.next_before,8,6))+'</code>'+copyButton(w.next_before,'复制游标') : '未记录';
-    return '<tr><td>'+ownerCell(w.owner || '')+'</td><td>'+phase+'</td><td>'+esc(w.pages ?? 0)+
+    return '<tr><td>'+ownerCell(w.owner || '')+'</td><td>'+ownerCell(w.address || '')+'</td><td>'+phase+'</td><td>'+esc(w.pages ?? 0)+
       ' 页 / '+esc(w.signature_count ?? 0)+' 条（每页上限 '+esc(w.page_size ?? '未记录')+'）</td><td>'+esc(when)+'</td><td>'+esc(reasons[w.stop_reason] || '未记录停止原因')+
       '</td><td>'+cursor+'</td></tr>';
   }).join('');
   return '<details class="cluster-history-windows"><summary>历史分页与覆盖窗口</summary>'+
     '<p>来源空页也不证明完整钱包历史；最早可见记录仍是当前地址窗口内的观察。分页游标供核对，不自动发起续采。</p>'+
-    (rows ? '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>钱包</th><th>采集范围</th><th>页数 / 签名数</th><th>最早可见时间</th><th>停止原因</th><th>分页游标</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
+    (rows ? '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>钱包</th><th>查询地址</th><th>采集范围</th><th>页数 / 签名数</th><th>最早可见时间</th><th>停止原因</th><th>分页游标</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
       : '<p>此报告未记录分页窗口，不能补造历史覆盖证据。</p>')+'</details>';
 }
 
@@ -1609,7 +1624,7 @@ const clusterRequiredEvidence = {
   contract:['合约控制与来源','Mint 解析未覆盖全部合约来源与控制','Mint 账户解析','核对元数据权限及适用程序控制证据'],
   holder_balances:['全局持有人余额排名','完整 Mint 账户来源或同 slot 供给尚未核实','供给、Top20 及按需全 Mint 枚举','取得完整账户来源并核对实际 slot 和总供给'],
   holder_roles:['特殊地址身份','特殊地址身份尚未全部核实','Owner 元数据和身份登记','逐项核对池、Vault、CEX 及金库证据'],
-  wallet_history:['完整历史与资金','有界采样未覆盖全部 Owner 账户及经济历史','已记录的目标币及资金历史窗口','枚举重大 Owner 全部账户并核对买入、卖出和资金流'],
+  wallet_history:['完整历史与资金','有界采样未覆盖全部 Owner 账户及经济历史','逐 Owner/代币账户及资金历史窗口','枚举重大 Owner 全部账户并核对买入、卖出和资金流'],
   control_attribution:['控制关系归因','样本关系未形成完整受益控制归因','已覆盖的转账、资金、签名及归集证据','补独立非公共关系证据并保留归属不确定性'],
   market:['市场与池子核对','单一市场参考尚未核对池子储备','市场参考读取路径','核对指定池子的链上储备与独立市场定义'],
   independent_sources:['独立来源对照','独立池子及持有人对照尚未接入','未执行独立来源对照','比较同 CA、同时间窗口及同口径来源'],
@@ -1792,7 +1807,9 @@ function renderClusterReport(report) {
     NO_RESOLVED_HOLDERS:'没有已解析持有人', SUPPLY_UNAVAILABLE:'代币供给尚未核实',
     TOP_ACCOUNT_RESOLUTION_GAPS:'部分 Top20 账户尚未解析',
     OWNER_HISTORY_NOT_SCANNED:'部分钱包历史尚未扫描',
-    MULTIPLE_TOKEN_ACCOUNTS_PER_OWNER:'同一钱包存在多个代币账户，当前历史采样未覆盖全部账户',
+    MULTIPLE_TOKEN_ACCOUNTS_PER_OWNER:'同一钱包存在多个代币账户，逐账户覆盖仍不证明全经济历史',
+    OWNER_ACCOUNT_SELECTION_INCOMPLETE:'部分已发现账户因本轮账户上限未选择',
+    OWNER_ACCOUNT_SNAPSHOT_CONFLICT:'Top20 与当前账户来源的 Owner 不一致，未合并为已核实账户集合',
     TRANSACTION_READ_GAPS:'历史交易存在读取缺口',
     HOLDER_ENUMERATION_INCOMPLETE:'完整持有人来源仍未核实',
     GLOBAL_OWNER_HISTORY_NOT_SCANNED:'完整来源中的部分重大 Owner 尚未覆盖历史',
@@ -1815,6 +1832,7 @@ function renderClusterReport(report) {
       '<div><span>初查每页目标币历史数</span><strong>' + esc(coverage.history_per_holder ?? 0) + '</strong></div>' +
       '<div><span>初查每页资金历史数</span><strong>' + esc(coverage.funding_lookback ?? 0) + '</strong></div>' +
     '</div>' +
+    renderOwnerAccountHistory(coverage) +
     renderClusterHistoryWindows(coverage) +
     '<div class="trust-box">' + (warnings.map(x => '<p>⚠ ' + esc(x) + '</p>').join('') || '<p class="ok-text">当前自动分析未发现覆盖率警告。</p>') + '</div>';
 

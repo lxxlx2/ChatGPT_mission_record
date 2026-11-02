@@ -80,6 +80,12 @@ try {
  check('worker DONE persists incomplete product outcome and browser shows required evidence gaps');
  check('full mint Owner ranks are separate from raw Top20 history and preserve uncovered history');
  await page.locator('.cluster-detail-fold > summary').click();
+ await page.locator('.cluster-owner-accounts summary').click();
+ assert.match(await page.locator('.cluster-owner-accounts').innerText(),/本轮额外账户上限/);
+ assert.match(await page.locator('.cluster-owner-accounts').innerText(),/已关闭账户.*未枚举/);
+ assert.ok(saved.coverage.owner_account_history[0].accounts_selected.length===2);
+ check('persisted Owner account selection, limits and missing closed history remain explicit');
+ await page.locator('.cluster-owner-accounts summary').click();
  await page.locator('.cluster-history-windows summary').click();
  assert.match(await page.locator('#cluster-coverage').innerText(),/目标币账户历史/);
  assert.match(await page.locator('#cluster-coverage').innerText(),/达到本轮页数上限/);

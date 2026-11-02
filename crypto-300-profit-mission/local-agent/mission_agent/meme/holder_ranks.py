@@ -60,7 +60,7 @@ def collect_mint_holder_ranks(mint,program,supply,decimals,supply_slot,rpc,role_
         raise HolderRankSourceError('ENVELOPE_INVALID')
     records=result['value'];snapshot_slot=result['context']['slot']
     if len(records)>max_accounts:raise HolderRankSourceError('ACCOUNT_LIMIT')
-    seen=set();balances={};counts={};nonzero=0;account_balances={}
+    seen=set();balances={};counts={};nonzero=0;account_balances={};accounts=[]
     for row in records:
         if not isinstance(row,dict) or not valid_pubkey(row.get('pubkey')) or row['pubkey'] in seen:raise HolderRankSourceError('ACCOUNT_ROW_INVALID')
         seen.add(row['pubkey']);account=row.get('account')
@@ -71,6 +71,7 @@ def collect_mint_holder_ranks(mint,program,supply,decimals,supply_slot,rpc,role_
         token=info.get('tokenAmount');amount=token.get('amount') if isinstance(token,dict) else None
         if not isinstance(amount,str) or not 1<=len(amount)<=20 or not amount.isascii() or not amount.isdigit() or int(amount)>2**64-1 or type(token.get('decimals')) is not int or token['decimals']!=decimals:raise HolderRankSourceError('ACCOUNT_ROW_INVALID')
         raw=int(amount);account_balances[row["pubkey"]]=raw
+        accounts.append({"token_account":row["pubkey"],"owner":info["owner"],"raw":str(raw),"decimals":decimals})
         if raw:
             nonzero+=1;owner=info['owner'];balances[owner]=balances.get(owner,0)+raw;counts[owner]=counts.get(owner,0)+1
     owner_ids=sorted(balances);roles={};role_slots=[];owner_role_slots={};role_reason=None
@@ -105,4 +106,5 @@ def collect_mint_holder_ranks(mint,program,supply,decimals,supply_slot,rpc,role_
             'response_sha256':hashlib.sha256(json.dumps(result,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
             'account_count':len(records),'nonzero_accounts':nonzero,'nonzero_owner_count':len(owners),
             'total_raw':str(total),'supply_raw':str(supply),'decimals':decimals,
-            'normalization_complete':role_complete,'owner_metadata_reason':role_reason,'metrics':metrics,'owners':owners}
+            'normalization_complete':role_complete,'owner_metadata_reason':role_reason,'metrics':metrics,'owners':owners,
+            'accounts':sorted(accounts,key=lambda r:r['token_account'])}

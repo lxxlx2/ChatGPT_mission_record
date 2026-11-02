@@ -706,3 +706,27 @@ test('unsupported complete claims and source text cannot turn completeness green
   assert.doesNotMatch(h.element('cluster-completeness').innerHTML,/<img|SECRET_PROVIDER_TEXT/);
   assert.doesNotMatch(h.element('cluster-status').className,/done/);
 });
+
+test('owner multi-account history shows each selected address and never claims lifetime completion',()=>{
+  const h=harness();const report=structuredClone(fixture);
+  report.coverage.owner_account_history=[{owner:mint,account_source_status:'VERIFIED_CURRENT_MINT_ACCOUNTS',current_accounts_observed:3,accounts_selected:['11111111111111111111111111111112','11111111111111111111111111111113'],accounts_with_windows:['11111111111111111111111111111112','11111111111111111111111111111113'],accounts_not_selected:1,account_selection_complete:false,selection_stop_reason:'REPORT_EXTRA_ACCOUNT_LIMIT',history_complete:false}];
+  report.coverage.history_windows=[{owner:mint,address:'11111111111111111111111111111113',phase:'holder',pages:1,signature_count:1,page_size:12,stop_reason:'PAGE_LIMIT'}];
+  vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
+  const html=h.element('cluster-coverage').innerHTML;
+  assert.match(html,/Owner 逐账户历史覆盖/);
+  assert.match(html,/11111111111111111111111111111113/);
+  assert.match(html,/本轮额外账户上限/);
+  assert.match(html,/已关闭账户.*未枚举/);
+  assert.match(html,/不证明完整经济历史/);
+});
+
+test('verified current account selection and source empty pages do not turn history complete',()=>{
+  const h=harness();const report=structuredClone(fixture);
+  report.coverage.owner_account_history=[{owner:mint,account_source_status:'VERIFIED_CURRENT_MINT_ACCOUNTS',current_accounts_observed:1,accounts_selected:[mint],accounts_with_windows:[mint],accounts_not_selected:0,account_selection_complete:true,selection_stop_reason:'ALL_OBSERVED_SELECTED',history_complete:false}];
+  vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
+  assert.match(h.element('cluster-coverage').innerHTML,/当前来源账户均已选择/);
+  assert.match(h.element('cluster-coverage').innerHTML,/不证明完整经济历史/);
+  report.coverage={};
+  vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
+  assert.doesNotMatch(h.element('cluster-coverage').innerHTML,/当前来源账户均已选择/);
+});
