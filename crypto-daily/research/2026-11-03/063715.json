@@ -1,0 +1,529 @@
+{
+  "schema": "crypto-daily-collector-research-v3",
+  "date_bkk": "2026-11-03",
+  "scheduled_window_bkk": "06:20",
+  "actual_checked_at_utc": "2026-11-02T23:37:15.155Z",
+  "actual_checked_at_bkk": "2026-11-03 06:37:15",
+  "execution": "bounded collector; not 08:20 prebuild or 09:20 Gmail",
+  "email_only": true,
+  "gmail_send_performed": false,
+  "app_notification_performed": false,
+  "original_automation_unchanged": true,
+  "last_two_completed_shards": [
+    2,
+    0
+  ],
+  "planned_shard": 1,
+  "executed_shard": 1,
+  "backlog_shards": [],
+  "rules_blob_sha": {
+    "crypto-daily/PIPELINE_CONTRACT.md": "0d94442ca1b920ad0b3e5ea9158d47a6b3dcbe25",
+    "crypto-daily/EDITORIAL_RULESET.json": "2ed51528d230508ae4e0015762b1d60c9d72e299",
+    "crypto-daily/REPORT_SPEC.md": "809a5c1cbcd6503d42305c842f37826b74a4741f",
+    "crypto-daily/REPORT_ACCEPTANCE.md": "d9952d82e3903d699d7db02632c1f26ebdd2c945",
+    "crypto-daily/COLLECTOR_SPEC.md": "aa4f1473f3c767b2216f715cbba78231c4794c02",
+    "crypto-daily/SECURITY_SOURCE_POLICY.md": "86b36f208220e90a52caa1cb8acaeec47add9628",
+    "crypto-daily/DELIVERY_RUNBOOK.md": "181c0448dddd2586e6082faaa1f51f7556eaa795",
+    "crypto-daily/state/daily-event-ledger.json": "17f115b7b8de491d68e9d8aa66fde6539cff870e",
+    "docs/MONITORING/X_FIRST_PARTY_SOURCE_POLICY.md": "20abfed8a287307bb2d6017b3b9e7ff509bbeebe"
+  },
+  "prior_7d_gmail_sent_and_git_readback": [
+    {
+      "date": "2026-10-27",
+      "gmail_sent_id": "1a17b2d317942c5a",
+      "git_canonical_path": "crypto-daily/reports/daily/2026/2026-10/2026-10-27.md",
+      "git_blob_sha": "407a25cf17db3f476932759de598d60102b13a85",
+      "gmail_real_body_readback_matches_git_exactly": true,
+      "actual_body_preserved_at_git_canonical": true
+    },
+    {
+      "date": "2026-10-28",
+      "gmail_sent_id": "1a180500065679d2",
+      "git_canonical_path": "crypto-daily/reports/daily/2026/2026-10/2026-10-28.md",
+      "git_blob_sha": "5bc7be7c463f2d8b88917e974b31dc330e5d0f50",
+      "gmail_real_body_readback_matches_git_exactly": true,
+      "actual_body_preserved_at_git_canonical": true
+    },
+    {
+      "date": "2026-10-29",
+      "gmail_sent_id": "1a185794e63c022c",
+      "git_canonical_path": "crypto-daily/reports/daily/2026/2026-10/2026-10-29.md",
+      "git_blob_sha": "89b93f0a7883b02c85824afb0b07547d51ae28c9",
+      "gmail_real_body_readback_matches_git_exactly": true,
+      "actual_body_preserved_at_git_canonical": true
+    },
+    {
+      "date": "2026-10-30",
+      "gmail_sent_id": "1a18a9d5e767548d",
+      "git_canonical_path": "crypto-daily/reports/daily/2026/2026-10/2026-10-30.md",
+      "git_blob_sha": "23d55aab5c7400a0fd9688d7bc90ab1023ce9710",
+      "gmail_real_body_readback_matches_git_exactly": true,
+      "actual_body_preserved_at_git_canonical": true
+    },
+    {
+      "date": "2026-10-31",
+      "gmail_sent_id": "1a18fc6328b668e2",
+      "git_canonical_path": "crypto-daily/reports/daily/2026/2026-10/2026-10-31.md",
+      "git_blob_sha": "6727cca0190395f3ecc21024e7b19bbd4447d259",
+      "gmail_real_body_readback_matches_git_exactly": true,
+      "actual_body_preserved_at_git_canonical": true
+    },
+    {
+      "date": "2026-11-01",
+      "gmail_sent_id": "1a194e8623464edf",
+      "git_canonical_path": "crypto-daily/reports/daily/2026/2026-11/2026-11-01.md",
+      "git_blob_sha": "9d1de6ff96fbe46f8b453f3cf4d1a7a22074881d",
+      "gmail_real_body_readback_matches_git_exactly": true,
+      "actual_body_preserved_at_git_canonical": true
+    },
+    {
+      "date": "2026-11-02",
+      "gmail_sent_id": "1a19a135a76e95b8",
+      "git_canonical_path": "crypto-daily/reports/daily/2026/2026-11/2026-11-02.md",
+      "git_blob_sha": "007575d076a3fd30c4fdf4eb8128b3beff95b9c8",
+      "gmail_real_body_readback_matches_git_exactly": true,
+      "actual_body_preserved_at_git_canonical": true
+    }
+  ],
+  "prior_7d_real_bodies_preserved_in_canonical_git": true,
+  "current_day_sent_prefix_matches": [],
+  "market_spot": [
+    {
+      "symbol": "BTCUSDT",
+      "lastPrice": "76841.14",
+      "priceChangePercent": "-1.766",
+      "lowPrice": "76705.00",
+      "highPrice": "78878.01",
+      "quoteVolume": "988544931.82",
+      "source": "Binance official spot 24hr API",
+      "sample_utc": "2026-11-02T23:36:46Z"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "lastPrice": "2253.61",
+      "priceChangePercent": "-0.768",
+      "lowPrice": "2237.38",
+      "highPrice": "2317.84",
+      "quoteVolume": "583606563.21",
+      "source": "Binance official spot 24hr API",
+      "sample_utc": "2026-11-02T23:36:46Z"
+    },
+    {
+      "symbol": "SOLUSDT",
+      "lastPrice": "91.96",
+      "priceChangePercent": "-2.388",
+      "lowPrice": "90.87",
+      "highPrice": "95.95",
+      "quoteVolume": "178550877.97",
+      "source": "Binance official spot 24hr API",
+      "sample_utc": "2026-11-02T23:36:46Z"
+    },
+    {
+      "symbol": "BNBUSDT",
+      "lastPrice": "698.71",
+      "priceChangePercent": "-1.756",
+      "lowPrice": "693.77",
+      "highPrice": "716.00",
+      "quoteVolume": "81425614.28",
+      "source": "Binance official spot 24hr API",
+      "sample_utc": "2026-11-02T23:36:46Z"
+    },
+    {
+      "symbol": "HYPEUSDT",
+      "lastPrice": "84.04",
+      "priceChangePercent": "-4.195",
+      "lowPrice": "82.86",
+      "highPrice": "89.08",
+      "quoteVolume": "43036299.06",
+      "source": "Binance official spot 24hr API",
+      "sample_utc": "2026-11-02T23:36:46Z"
+    }
+  ],
+  "market_derivatives": [
+    {
+      "symbol": "BTCUSDT",
+      "markPrice": "76824.00",
+      "lastFundingRate": "0.00010000",
+      "openInterest": "99027.510",
+      "sample_utc": "2026-11-02T23:36:46Z",
+      "source": "Binance USD-M official mark and OI"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "markPrice": "2252.87827027",
+      "lastFundingRate": "0.00010000",
+      "openInterest": "2333933.002",
+      "sample_utc": "2026-11-02T23:36:46Z",
+      "source": "Binance USD-M official mark and OI"
+    },
+    {
+      "symbol": "SOLUSDT",
+      "markPrice": "91.94000000",
+      "lastFundingRate": "0.00010000",
+      "openInterest": "9442063.83",
+      "sample_utc": "2026-11-02T23:36:46Z",
+      "source": "Binance USD-M official mark and OI"
+    }
+  ],
+  "source_receipts": [
+    {
+      "lane": "market_spot",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-11-02T23:37:15.155Z",
+      "observation": "Five official spot 24h tickers, raw numeric snapshot preserved",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "derivatives",
+      "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-11-02T23:37:15.155Z",
+      "observation": "BTC ETH SOL mark, funding, OI point-in-time; no continuous OI or liquidations",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "etf_btc",
+      "source_url": "https://farside.co.uk/btc/",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-11-02 US session",
+      "observation": "All Nov2 issuer cells '-' despite total 0.0 placeholder; NOT actual zero",
+      "status": "SOURCE_GAP"
+    },
+    {
+      "lane": "etf_eth",
+      "source_url": "https://farside.co.uk/eth/",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-11-02 US session",
+      "observation": "Nov2 issuer cells '-', NOT confirmed zero",
+      "status": "SOURCE_GAP"
+    },
+    {
+      "lane": "etf_sol",
+      "source_url": "https://farside.co.uk/sol/",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-11-02 US session",
+      "observation": "Nov2 issuer cells '-', NOT confirmed zero",
+      "status": "SOURCE_GAP"
+    },
+    {
+      "lane": "exchange_policy",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/185bd9a4717f44088b3be70287b8237f",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-11-02 12:45 site",
+      "observation": "New Binance PoR zero-knowledge proof generated for Oct31 snapshot; user-specific independent verification not done",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "security",
+      "source_url": "https://info.arkm.com/research/mercado-bitcoin-hack-trace-the-46m-stolen-on-chain",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-11-02 13:45 EST site",
+      "observation": "New Mercado Bitcoin incident; exchange admission attributed; Arkham >=46m estimate not official loss",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "onchain_arkham",
+      "source_url": "https://arkm.com/explorer/tx/ada3bb2304be5de8dd7e67bf9be8c765c5f020a34508bd248f345a1205c5fcf9",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-11-02",
+      "observation": "Arkham original BTC TX hash link; explorer Loading, cannot independently parse TX",
+      "status": "SOURCE_GAP"
+    },
+    {
+      "lane": "onchain_lookonchain",
+      "source_url": "https://lookonchain.com/feeds/80031",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-11-02 relative time",
+      "observation": "Onchain Lens 3680 ETH/106 BTC/$8m stablecoin attribution; not independently verified",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "web_runtime_rce",
+      "source_url": "https://www.php.net/archive/2026.php",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-10-26 latest",
+      "observation": "PHP Oct26 Brotli Windows rebuild already reported, no new listed bulletin",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "web_runtime_rce",
+      "source_url": "https://nodejs.org/en/blog/vulnerability",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-10-21 latest",
+      "observation": "Node.js Oct21 security bulletin already reported",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "web_pki_tls",
+      "source_url": "https://blog.mozilla.org/security/",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-10-20 latest",
+      "observation": "Mozilla eMudhra certificate compromise already reported, no newer original post",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "ai_package_supply_chain",
+      "source_url": "https://github.com/BerriAI/litellm/security/advisories",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-10-27 latest relevant",
+      "observation": "LiteLLM Enterprise Oct27 advisory already delivered Oct29, no new dated item",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "source_url": "https://blog.railway.com/",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-10-23 latest",
+      "observation": "Railway Oct21-23 cloud secrets follow-ups previously reported",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "source_url": "https://status.railway.com/",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": null,
+      "observation": "Operational dashboard does not prove secrets secure",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "source_url": "https://www.connectwise.com/company/trust/advisories",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-10-30 latest relevant",
+      "observation": "No proven post-Oct30 recovery state change",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "backend_framework_auth",
+      "source_url": "https://github.com/laravel/framework/security/advisories",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-10-19 latest",
+      "observation": "Laravel TokenGuard critical auth bypass already reported",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "official_x",
+      "source_url": "https://x.com/playcambria",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": null,
+      "observation": "Browser list_tabs tool returned error; direct X HTTP403; cannot access user session",
+      "status": "BROWSER_SESSION_UNAVAILABLE_SOURCE_GAP"
+    },
+    {
+      "lane": "official_x",
+      "source_url": "https://x.com/BtcpayServer/status/2117020340815819262",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": null,
+      "observation": "X HTTP403, no original post confirmation",
+      "status": "SOURCE_GAP"
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "source_url": "https://www.kraken.com/ipo",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": null,
+      "observation": "Kraken lists SpaceX/Bending Spoons/Jersey Mike's, no Anthropic offering; old ANTHROPIC perpetual is not equity",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "source_url": "https://www.binance.com/en/support/announcement/",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": null,
+      "observation": "No verified official Anthropic IPO access in bounded exchange search",
+      "status": "SOURCE_GAP"
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-11-02",
+      "observation": "Issuer S-1/A new, not a venue subscription",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "macro",
+      "source_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/october/",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-11-02",
+      "observation": "Oct PMI 55.5 vs Sep54.5, new orders55.5, prices75.2",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "macro_policy",
+      "source_url": "https://www.sec.gov/newsroom/press-releases",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-10-30 latest",
+      "observation": "No Nov2 crypto-specific SEC press release in index",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "tge_early",
+      "source_url": "https://www.binance.com/en/support/announcement/",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-11-02 latest",
+      "observation": "PREDICT delayed remains; no fresh confirmed eligible TGE/claim from bounded list",
+      "status": "PARTIAL"
+    },
+    {
+      "lane": "nft",
+      "source_url": "https://opensea.io/blog",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-10-30 latest",
+      "observation": "Latest NFT digest Oct30; no verified new mint; X access gap",
+      "status": "PARTIAL"
+    },
+    {
+      "lane": "rwa_stablecoin",
+      "source_url": "https://www.circle.com/pressroom",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": "2026-10-27 latest",
+      "observation": "No newer official Circle release",
+      "status": "CHECKED"
+    },
+    {
+      "lane": "prediction_market",
+      "source_url": "https://polymarket.com",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": null,
+      "observation": "No new original verified PM announcement in bounded search",
+      "status": "SOURCE_GAP"
+    },
+    {
+      "lane": "security_cisa",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "source_published_at": null,
+      "observation": "HTTP403, cannot conclude no new KEV",
+      "status": "SOURCE_GAP"
+    }
+  ],
+  "mandatory_security_lanes": [
+    "security",
+    "web_runtime_rce",
+    "web_pki_tls",
+    "ai_package_supply_chain",
+    "cloud_secrets_identity",
+    "backend_framework_auth"
+  ],
+  "candidates": [
+    {
+      "family_key": "security:mercado-bitcoin:2026-11-02",
+      "event_key": "security:mercado-bitcoin:incident:2026-11-02",
+      "material_version": "arkham-nov2-46m-v1",
+      "primary_section": 9,
+      "source_url": "https://info.arkm.com/research/mercado-bitcoin-hack-trace-the-46m-stolen-on-chain",
+      "source_published_at": "2026-11-02",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "claim": "Company admitted incident and paused deposits/withdrawals; Arkham attributed >=$46m across >=10 chains; company did not confirm loss; no personal exposure proven",
+      "novelty_proof": {
+        "previous_material_version": null,
+        "changed_field": "new distinct exchange incident",
+        "old_value": "no prior report",
+        "new_value": "official incident admission and Arkham traced outflows",
+        "evidence_url": "https://info.arkm.com/research/mercado-bitcoin-hack-trace-the-46m-stolen-on-chain",
+        "evidence_published_at": "2026-11-02"
+      },
+      "editorial_decision": "INCLUDE_CANDIDATE",
+      "reason": "HIGH, needs independent original X/chain followup",
+      "status": "VERIFYING"
+    },
+    {
+      "family_key": "security:binance:hotwallet-2026-10-29",
+      "event_key": "security:binance:por-zk-generated:2026-11-02",
+      "material_version": "binance-2026-11-02-zk-proof-ready",
+      "primary_section": 9,
+      "source_url": "https://www.binance.com/en/support/announcement/detail/185bd9a4717f44088b3be70287b8237f",
+      "source_published_at": "2026-11-02 12:45",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "claim": "Binance says Oct31 10-asset PoR ZK proof generated and verifier available; individual balance inclusion not independently verified",
+      "novelty_proof": {
+        "previous_material_version": "binance-official-2026-11-01T1530Z-phase1-15networks-reopened-replenished95",
+        "changed_field": "por_zk_proof_status",
+        "old_value": "Oct31 snapshot exists, proof pending",
+        "new_value": "Nov2 proof generated and verifier published",
+        "evidence_url": "https://www.binance.com/en/support/announcement/detail/185bd9a4717f44088b3be70287b8237f",
+        "evidence_published_at": "2026-11-02 12:45"
+      },
+      "editorial_decision": "INCLUDE_CANDIDATE",
+      "reason": "Official new milestone; 95% replenishment unchanged",
+      "status": "VERIFYING"
+    },
+    {
+      "family_key": "macro:anthropic-ipo",
+      "event_key": "macro:anthropic:sec-s1a:2026-11-02",
+      "material_version": "sec-s1a-nov2-q3-895p4b",
+      "primary_section": 10,
+      "source_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm",
+      "source_published_at": "2026-11-02",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "claim": "SEC S-1/A Amendment1 reveals $895.4b committed compute spend, $447.5b through 2030 and $69.8b next 12 months; no price/share count; no exchange IPO subscription",
+      "novelty_proof": {
+        "previous_material_version": "SEC-S1-2026-10-26-ANT-no-offering-price",
+        "changed_field": "filing_version_and_compute_commitments",
+        "old_value": "Oct26 S-1 dollar fields blank",
+        "new_value": "Nov2 S-1/A quantified $895.4b total, $447.5b through 2030",
+        "evidence_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm",
+        "evidence_published_at": "2026-11-02"
+      },
+      "editorial_decision": "INCLUDE_CANDIDATE",
+      "reason": "Issuer SEC novelty only, NOT Anthropic venue access",
+      "status": "VERIFYING"
+    },
+    {
+      "family_key": "macro:ism-manufacturing:2026-10",
+      "event_key": "macro:ism:oct2026-pmi-release",
+      "material_version": "ism-nov2-oct55p5",
+      "primary_section": 10,
+      "source_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/october/",
+      "source_published_at": "2026-11-02",
+      "checked_at_utc": "2026-11-02T23:37:15.155Z",
+      "claim": "ISM October manufacturing PMI 55.5 vs September 54.5, prices75.2 vs77.9",
+      "novelty_proof": {
+        "previous_material_version": "ism-calendar-nov2-1000ET",
+        "changed_field": "release_state_and_actual_PMI",
+        "old_value": "scheduled but unreleased",
+        "new_value": "released 55.5 vs prior54.5",
+        "evidence_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/october/",
+        "evidence_published_at": "2026-11-02"
+      },
+      "editorial_decision": "INCLUDE_CANDIDATE",
+      "reason": "New official scheduled macro release",
+      "status": "VERIFYING"
+    }
+  ],
+  "excluded": [
+    {
+      "family_key": "ipo:anthropic:third-party-access",
+      "decision": "UNCONFIRMED_MONITORING",
+      "reason": "No original Anthropic venue subscription; Kraken IPO page has other issuers only. Perpetual is not equity."
+    },
+    {
+      "family_key": "security:connectwise:storm0940",
+      "decision": "EXCLUDE_REPEAT",
+      "reason": "No new official changed status after Oct30"
+    },
+    {
+      "family_key": "security:litellm:enterprise-file-read",
+      "decision": "EXCLUDE_REPEAT",
+      "reason": "Oct27 disclosure delivered Oct29"
+    },
+    {
+      "family_key": "tge:cambria:rsgp",
+      "decision": "EXCLUDE_REPEAT",
+      "reason": "Already alerted Gmail 1a1812a1f6802ecb on Oct28; no new official claim/CA"
+    }
+  ],
+  "source_gaps": [
+    "Browser list_tabs failed; X HTTP403",
+    "CISA HTTP403",
+    "Mercado chain TXID dynamic explorer, not independently parsed",
+    "Nov2 ETF issuer rows blank",
+    "NFT/TGE original social posts inaccessible",
+    "No independent Kraken Anthropic IPO allocation",
+    "Derivatives OI point only"
+  ],
+  "terminal_status": "PARTIAL_SOURCE_GAPS",
+  "next_step": "08:20 full prebuild and 09:20 formal QA/Sent dedupe, no extra notification"
+}
