@@ -628,3 +628,22 @@ test('CA submit uses fixed bounded standard without reading a mode control',asyn
   assert.deepEqual(posted,{mint,preset:'standard'});
   assert.equal(h.requests.filter(x=>x.method==='POST').length,1);
 });
+
+
+test('CA report exposes per-address page window, bound and continuation without completeness claim',()=>{
+  const h=harness();
+  h.context.renderClusterReport({...fixture,coverage:{...fixture.coverage,holder_history_pages:4,funding_history_pages:5,gaps:['HISTORY_PAGINATION_INCOMPLETE'],history_windows:[{owner:mint,address:mint,phase:'holder',page_size:30,pages:4,signature_count:120,oldest_block_time:1792683606,next_before:'public-cursor',stop_reason:'PAGE_LIMIT',history_complete:false}]}});
+  const html=h.element('cluster-coverage').innerHTML;
+  assert.match(html,/目标币账户历史/);
+  assert.match(html,/120/);
+  assert.match(html,/达到本轮页数上限/);
+  assert.match(html,/分页游标/);
+  assert.match(html,/来源空页也不证明完整钱包历史/);
+});
+
+test('CA history progress and unknown stop reason never echo raw provider errors',()=>{
+  const h=harness();
+  assert.match(h.context.clusterProgressDetail({progress:{stage:'HISTORY_PAGE',phase:'holder',pages:2,signature_count:60}}),/历史分页/);
+  h.context.renderClusterReport({...fixture,coverage:{...fixture.coverage,history_windows:[{owner:mint,phase:'holder',pages:1,stop_reason:'https://private.invalid/SECRET'}]}});
+  assert.ok(!h.element('cluster-coverage').innerHTML.includes('SECRET'));
+});

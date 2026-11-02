@@ -531,6 +531,8 @@ class WalletClusterAnalyzer:
         material_pct=Decimal("1"),market_client:DexScreenerMarketClient|None=None,
         adaptive_history_per_holder=None,adaptive_funding_lookback=None,
         progress_callback=None,
+        history_max_pages=1,funding_max_pages=1,
+        adaptive_history_max_pages=1,adaptive_funding_max_pages=1,
     ):
         self.mint=mint;self.rpc=rpc;self.registry=special_registry or {};self.history_per_holder=int(history_per_holder);self.deep_holders=int(deep_holders);self.funding_lookback=int(funding_lookback);self.material_pct=Decimal(material_pct)
         self.market_client=market_client
@@ -540,6 +542,14 @@ class WalletClusterAnalyzer:
         self.edges=[];self.trades=[];self.funding=[];self.consolidations=[];self.tx_errors=[]
         self.adaptive_deepened_owners=[]
         self._snapshot_slots={}
+        for pages in (history_max_pages,funding_max_pages,adaptive_history_max_pages,adaptive_funding_max_pages):
+            if type(pages) is not int or not 1<=pages<=8:raise ValueError("HISTORY_PAGE_BOUND_INVALID")
+        self.history_max_pages=history_max_pages;self.funding_max_pages=funding_max_pages
+        self.adaptive_history_max_pages=adaptive_history_max_pages
+        self.adaptive_funding_max_pages=adaptive_funding_max_pages
+        self._history_page_limit=history_max_pages;self._funding_page_limit=funding_max_pages
+        self.history_coverage={}
+        self.history_attempts=[]
 
     def _progress(self,stage,**details):
         if not self.progress_callback:return
@@ -563,24 +573,30 @@ class WalletClusterAnalyzer:
         ]
         return len(positional)>positional_without_limit
 
-    def _scan_holder_bounded(self,holder,account_to_owner,top_owners,limit):
+    def _scan_holder_bounded(self,holder,account_to_owner,top_owners,limit,max_pages=None):
         method=self._scan_holder
-        if self._accepts_optional_limit(method,3):
-            return method(holder,account_to_owner,top_owners,limit)
-        # Legacy override path: preserve the old 3-argument call contract.
-        original=self.history_per_holder
-        self.history_per_holder=int(limit)
-        try:return method(holder,account_to_owner,top_owners)
-        finally:self.history_per_holder=original
+        original=self.history_per_holder;original_pages=self._history_page_limit
+        self._history_page_limit=self.history_max_pages if max_pages is None else max_pages
+        try:
+            if self._accepts_optional_limit(method,3):
+                return method(holder,account_to_owner,top_owners,limit)
+            self.history_per_holder=int(limit)
+            return method(holder,account_to_owner,top_owners)
+        finally:
+            self.history_per_holder=original;self._history_page_limit=original_pages
 
-    def _scan_funding_bounded(self,holder,first,top_owners,limit):
+    def _scan_funding_bounded(self,holder,first,top_owners,limit,max_pages=None):
         method=self._scan_funding
-        if self._accepts_optional_limit(method,3):
-            return method(holder,first,top_owners,limit)
-        original=self.funding_lookback
-        self.funding_lookback=int(limit)
-        try:return method(holder,first,top_owners)
-        finally:self.funding_lookback=original
+        original=self.funding_lookback;original_pages=self._funding_page_limit
+        self._funding_page_limit=self.funding_max_pages if max_pages is None else max_pages
+        try:
+            if self._accepts_optional_limit(method,3):
+                return method(holder,first,top_owners,limit)
+            self.funding_lookback=int(limit)
+            return method(holder,first,top_owners)
+        finally:
+            self.funding_lookback=original;self._funding_page_limit=original_pages
+
     def _entry(self,address):
         token_cfg=(self.registry.get("tokens") or {}).get(self.mint) or {}
         return (token_cfg.get("addresses") or {}).get(address) or (self.registry.get("addresses") or {}).get(address)
@@ -726,17 +742,95 @@ class WalletClusterAnalyzer:
         x,y=sorted([a,b]);record={"a":x,"b":y,"type":kind,"signature":signature,**extra}
         key=_hash(record)
         if key not in {e["_key"] for e in self.edges}:self.edges.append({**record,"_key":key})
+    def _signature_pages(self,holder,address,page_size,max_pages,phase,*,before=None):
+        """Enumerate a bounded finalized source window; empty page is not full wallet history.
+
+        Advance the public continuation cursor only after the caller consumed a
+        whole page. Successful RPC pages/transactions retain the existing cache;
+        this does not restart workers or authorize collection during GET recovery.
+        """
+        if type(page_size) is not int or not 1<=page_size<=1000:raise ValueError("HISTORY_PAGE_SIZE_INVALID")
+        if type(max_pages) is not int or not 1<=max_pages<=8:raise ValueError("HISTORY_PAGE_BOUND_INVALID")
+        state={"owner":holder.owner,"address":address,"phase":phase,
+               "initial_before":before,"next_before":before,"page_size":page_size,"page_limit":max_pages,
+               "pages":0,"page_requests":0,"signature_count":0,"duplicates_skipped":0,
+               "oldest_slot":None,"newest_slot":None,"oldest_block_time":None,"newest_block_time":None,
+               "signature_slots_complete":True,"provider_pagination_end_observed":False,
+               "history_complete":False,"stop_reason":"RUNNING"}
+        self.history_coverage[(phase,address,before)]=state
+        self.history_attempts.append(state)
+        cursor=before;seen={};cursors={before} if before else set()
+        def fail(reason):
+            state["stop_reason"]=reason
+            self.tx_errors.append({"address":address,"phase":phase+"_signatures","error":reason})
+        try:
+            for _ in range(max_pages):
+                opts={"commitment":"finalized","limit":page_size}
+                if cursor:opts["before"]=cursor
+                state["page_requests"]+=1
+                try:page=self.rpc.call("getSignaturesForAddress",[address,opts],ttl=300)
+                except RPCJobBudgetExceeded:
+                    state["stop_reason"]="JOB_BUDGET"
+                    raise
+                except Exception as exc:
+                    state["stop_reason"]="SOURCE_UNAVAILABLE"
+                    self.tx_errors.append({"address":address,"phase":phase+"_signatures","error":type(exc).__name__})
+                    return
+                state["pages"]+=1
+                if not isinstance(page,list) or len(page)>page_size or any(
+                    not isinstance(row,dict) or not isinstance(row.get("signature"),str)
+                    or not row["signature"] or len(row["signature"])>128 for row in page
+                ):
+                    fail("MALFORMED_SIGNATURE_PAGE");return
+                if not page:
+                    state["provider_pagination_end_observed"]=True
+                    state["stop_reason"]="PROVIDER_EMPTY_PAGE"
+                    self._progress("HISTORY_PAGE",**state)
+                    return
+                fresh=[]
+                for row in page:
+                    sig=row["signature"];identity=(row.get("slot"),row.get("blockTime"))
+                    if sig in seen:
+                        previous=seen[sig]
+                        if any(a is not None and b is not None and a!=b for a,b in zip(previous,identity)):
+                            fail("SOURCE_PAGE_CONFLICT");return
+                        state["duplicates_skipped"]+=1
+                    else:
+                        seen[sig]=identity;fresh.append(row)
+                tail=page[-1]["signature"]
+                if tail in cursors or not fresh:
+                    fail("CURSOR_STALLED");return
+                known_slots=[row["slot"] for row in fresh if type(row.get("slot")) is int and row["slot"]>0]
+                if known_slots!=sorted(known_slots,reverse=True) or (
+                    known_slots and state["oldest_slot"] is not None and known_slots[0]>state["oldest_slot"]
+                ):
+                    fail("SOURCE_PAGE_CONFLICT");return
+                yield from fresh
+                # All rows in this page have now been consumed. A failure while
+                # processing one transaction must not skip the rest on continuation.
+                state["signature_count"]+=len(fresh)
+                state["signature_slots_complete"] &= len(known_slots)==len(fresh)
+                for key,values in (("slot",known_slots),("block_time",[row["blockTime"] for row in fresh if type(row.get("blockTime")) is int])):
+                    if values:
+                        old=state["oldest_"+key];new=state["newest_"+key]
+                        state["oldest_"+key]=min(values+[old] if old is not None else values)
+                        state["newest_"+key]=max(values+[new] if new is not None else values)
+                cursor=tail;cursors.add(cursor);state["next_before"]=cursor
+                self._progress("HISTORY_PAGE",**state)
+            state["stop_reason"]="PAGE_LIMIT"
+        finally:
+            if state["stop_reason"]=="RUNNING":state["stop_reason"]="INTERRUPTED"
+
     def _scan_holder(self,holder:Holder,account_to_owner,top_owners,history_limit=None):
         limit=int(history_limit or self.history_per_holder)
-        try:rows=self.rpc.call("getSignaturesForAddress",[holder.token_account,{"commitment":"finalized","limit":limit}],ttl=300)
-        except RPCJobBudgetExceeded:raise
-        except Exception as exc:self.tx_errors.append({"address":holder.token_account,"error":type(exc).__name__});return None
         first=None
-        for meta in rows or []:
+        for meta in self._signature_pages(holder,holder.token_account,limit,self._history_page_limit,"holder"):
             sig=meta.get("signature")
             if not sig:continue
             try:tx=self.rpc.call("getTransaction",[sig,{"commitment":"finalized","encoding":"jsonParsed","maxSupportedTransactionVersion":1}],ttl=3650*86400)
-            except RPCJobBudgetExceeded:raise
+            except RPCJobBudgetExceeded:
+                self.history_coverage[("holder",holder.token_account,None)]["stop_reason"]="JOB_BUDGET"
+                raise
             except Exception as exc:self.tx_errors.append({"signature":sig,"error":type(exc).__name__});continue
             if not tx:
                 self.tx_errors.append({"signature":sig,"phase":"holder","error":"UNAVAILABLE_ON_PUBLIC_RPC"})
@@ -756,7 +850,9 @@ class WalletClusterAnalyzer:
                 elif mint in {USDC,WSOL} and src in top_owners and dst in top_owners:
                     self._edge(src,dst,"DIRECT_QUOTE_TRANSFER",sig,asset=mint,amount_raw=tr["amount_raw"],block_time=bt)
             try:c=classify(sig,tx,holder.owner)
-            except Exception:continue
+            except Exception as exc:
+                self.tx_errors.append({"signature":sig,"phase":"holder_classify","error":type(exc).__name__})
+                continue
             trade=c.get("trade") or {}
             if c.get("classification")=="ACTIVE_TRADE" and trade.get("mint")==self.mint:
                 record={"owner":holder.owner,"signature":sig,"block_time":bt,"direction":trade.get("direction"),"quote_asset":trade.get("quote_asset"),"quote_amount_raw":trade.get("quote_amount_raw"),"quote_decimals":trade.get("quote_decimals"),"token_amount_raw":trade.get("token_amount_raw"),"token_decimals":trade.get("token_decimals"),"program_ids":(c.get("evidence") or {}).get("program_ids") or [],"signers":_signers(tx)}
@@ -775,18 +871,14 @@ class WalletClusterAnalyzer:
     def _scan_funding(self,holder:Holder,first,top_owners,funding_limit=None):
         if not first:return
         limit=int(funding_limit or self.funding_lookback)
-        options={"commitment":"finalized","limit":limit,"before":first["signature"]}
-        try:rows=self.rpc.call("getSignaturesForAddress",[holder.owner,options],ttl=300)
-        except RPCJobBudgetExceeded:raise
-        except Exception as exc:
-            self.tx_errors.append({"address":holder.owner,"phase":"funding_signatures","error":type(exc).__name__})
-            return
         best=None
-        for meta in rows or []:
+        for meta in self._signature_pages(holder,holder.owner,limit,self._funding_page_limit,"funding",before=first["signature"]):
             sig=meta.get("signature")
             if not sig:continue
             try:tx=self.rpc.call("getTransaction",[sig,{"commitment":"finalized","encoding":"jsonParsed","maxSupportedTransactionVersion":1}],ttl=3650*86400)
-            except RPCJobBudgetExceeded:raise
+            except RPCJobBudgetExceeded:
+                self.history_coverage[("funding",holder.owner,first["signature"])]["stop_reason"]="JOB_BUDGET"
+                raise
             except Exception as exc:
                 self.tx_errors.append({"signature":sig,"phase":"funding","error":type(exc).__name__})
                 continue
@@ -796,7 +888,7 @@ class WalletClusterAnalyzer:
             bt=tx.get("blockTime")
             if bt is None or bt>first["block_time"]:continue
             for source,lamports in _native_funders(tx,holder.owner):
-                candidate={"owner":holder.owner,"source":source,"lamports":lamports,"signature":sig,"block_time":bt}
+                candidate={"owner":holder.owner,"source":source,"lamports":lamports,"signature":sig,"block_time":bt,"acquisition_signature":first["signature"],"acquisition_block_time":first["block_time"]}
                 if source in top_owners:self._edge(source,holder.owner,"DIRECT_QUOTE_TRANSFER",sig,asset="SOL",amount_raw=lamports,block_time=bt)
                 if best is None or bt>best["block_time"]:best=candidate
         if best and not any(x["owner"]==best["owner"] and x["signature"]==best["signature"] for x in self.funding):self.funding.append(best)
@@ -943,8 +1035,8 @@ class WalletClusterAnalyzer:
             if targets:
                 self._progress("ADAPTIVE_DEEPEN",scanned=0,target=len(targets),owners=self.adaptive_deepened_owners)
                 for idx,h in enumerate(targets,1):
-                    firsts[h.owner]=self._scan_holder_bounded(h,account_to_owner,top_owners,adaptive_history) or firsts.get(h.owner)
-                    self._scan_funding_bounded(h,firsts.get(h.owner),top_owners,adaptive_funding)
+                    firsts[h.owner]=self._scan_holder_bounded(h,account_to_owner,top_owners,adaptive_history,self.adaptive_history_max_pages) or firsts.get(h.owner)
+                    self._scan_funding_bounded(h,firsts.get(h.owner),top_owners,adaptive_funding,self.adaptive_funding_max_pages)
                     self._progress("ADAPTIVE_DEEPEN",scanned=idx,target=len(targets),owner=h.owner)
                 self._derive_pair_edges()
         self._progress("FINALIZING",deep_holders_scanned=len(deep),adaptive_deepened=len(self.adaptive_deepened_owners))
@@ -964,6 +1056,11 @@ class WalletClusterAnalyzer:
 
         funding_by_owner={}
         for row in self.funding:
+            anchor=firsts.get(row["owner"])
+            # A deeper window may discover an earlier acquisition. Preserve all
+            # funding evidence, but never show a later transfer as its prefunding.
+            if isinstance(anchor,dict) and row.get("block_time") is not None and anchor.get("block_time") is not None and row["block_time"]>anchor["block_time"]:
+                continue
             current=funding_by_owner.get(row["owner"])
             if current is None or (row.get("block_time") or 0)>(current.get("block_time") or 0):
                 funding_by_owner[row["owner"]]=row
@@ -1077,6 +1174,8 @@ class WalletClusterAnalyzer:
         if owners_not_scanned:coverage_gaps.append("OWNER_HISTORY_NOT_SCANNED")
         if len(holders)>len(owners):coverage_gaps.append("MULTIPLE_TOKEN_ACCOUNTS_PER_OWNER")
         if self.tx_errors:coverage_gaps.append("TRANSACTION_READ_GAPS")
+        if any(w["stop_reason"]!="PROVIDER_EMPTY_PAGE" or not w["signature_slots_complete"] for w in self.history_coverage.values()):
+            coverage_gaps.append("HISTORY_PAGINATION_INCOMPLETE")
         metrics={
             "RAW_TOP10_PCT":(
                 preview_top10_pct if preview_top10_pct is not None else
@@ -1185,6 +1284,9 @@ class WalletClusterAnalyzer:
             "trade_evidence":self.trades,"transaction_errors":self.tx_errors,
             "coverage":{
                 "scope":"BOUNDED_TOP20_ACCOUNTS",
+                "history_windows":list(self.history_attempts),
+                "holder_history_pages":sum(w["pages"] for w in self.history_attempts if w["phase"]=="holder"),
+                "funding_history_pages":sum(w["pages"] for w in self.history_attempts if w["phase"]=="funding"),
                 "eligible_owner_rank_complete":holder_rank_complete,
                 "snapshot_slots":self._snapshot_slots,"snapshot_consistent":snapshot_consistent,
                 "gaps":coverage_gaps,
@@ -1206,6 +1308,7 @@ class WalletClusterAnalyzer:
                 "CEX/public-infrastructure identity is never guessed from funding alone.",
                 "Program-owned holder accounts remain unresolved unless explicitly labelled.",
                 "Bounded history can miss older funding, consolidation, and cross-token coordination.",
+                "A provider empty page ends only that address/cursor window; it does not prove complete wallet history or the true first acquisition/funding.",
                 "Owner scan status means at least one sampled token account was queried; it does not prove all owner accounts or lifetime history were scanned.",
                 "Known exclusion Top10 values aggregate owners within resolved Top20 accounts only; they are not exact global eligible-owner Top10 without complete holder ranks.",
                 "PROBABLE_EXECUTION_CLUSTER never implies common beneficial ownership.",

@@ -133,6 +133,7 @@ CLUSTER_PRESETS = {
     "standard": {
         "deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8,
         "adaptive_history_per_holder": 30, "adaptive_funding_lookback": 12,
+        "adaptive_history_max_pages": 4, "adaptive_funding_max_pages": 5,
     },
     "deep": {
         "deep_holders": 20, "history_per_holder": 100, "funding_lookback": 50,
@@ -261,7 +262,7 @@ class ClusterJobManager:
                 "liquidity_usd":pair.get("liquidity_usd"),
             })
         else:
-            for key in ("top_accounts_resolved","scanned","target","owner","mode","deep_holders_scanned","adaptive_deepened"):
+            for key in ("top_accounts_resolved","scanned","target","owner","mode","deep_holders_scanned","adaptive_deepened","phase","pages","signature_count","stop_reason"):
                 if key in details:progress[key]=details.get(key)
             if details.get("owners"):progress["owners"]=list(details.get("owners") or [])[:10]
         with self.lock:
@@ -515,6 +516,8 @@ class ClusterJobManager:
                 funding_lookback=opts["funding_lookback"],
                 adaptive_history_per_holder=opts.get("adaptive_history_per_holder"),
                 adaptive_funding_lookback=opts.get("adaptive_funding_lookback"),
+                adaptive_history_max_pages=opts.get("adaptive_history_max_pages",1),
+                adaptive_funding_max_pages=opts.get("adaptive_funding_max_pages",1),
                 market_client=self.market_client,
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()

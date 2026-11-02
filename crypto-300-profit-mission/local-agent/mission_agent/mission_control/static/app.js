@@ -1479,6 +1479,7 @@ function clusterProgressDetail(job) {
   if (stage==='OWNER_SCAN') return '历史浅扫 ' + esc(p.scanned ?? 0) + ' / ' + esc(p.target ?? '?') + ' 个 owner';
   if (stage==='FUNDING_SCAN') return '建仓前 funding 回看 ' + esc(p.scanned ?? 0) + ' / ' + esc(p.target ?? '?');
   if (stage==='ADAPTIVE_DEEPEN') return '发现需要继续核实的钱包，正在自适应加深 ' + esc(p.scanned ?? 0) + ' / ' + esc(p.target ?? '?');
+  if (stage==='HISTORY_PAGE') return (p.phase==='funding' ? '建仓前资金历史分页 ' : '目标币账户历史分页 ') + esc(p.pages ?? 0) + ' 页，已读 ' + esc(p.signature_count ?? 0) + ' 条签名；仍需核实覆盖范围';
   if (stage==='FINALIZING') return '链上扫描完成，正在生成集群、风险和结论';
   if (stage==='REPORT_PERSISTING') return '正在保存完整报告和结论变化历史';
   return job.preset === 'deep'
@@ -1557,6 +1558,28 @@ function renderClusterGroup(group, kind) {
     '<div class="cluster-wallets">' + wallets + '</div>' +
     '<div class="cluster-evidence-tags">' + (edgeTypes.map(x => '<span>' + esc(x) + '</span>').join('') || '<span>无自动证据摘要</span>') + '</div>' +
   '</article>';
+}
+
+function renderClusterHistoryWindows(coverage) {
+  const windows=Array.isArray(coverage.history_windows) ? coverage.history_windows.filter(w=>w && typeof w==='object').slice(0,80) : [];
+  const reasons={PROVIDER_EMPTY_PAGE:'来源返回空页',PAGE_LIMIT:'达到本轮页数上限',
+    SOURCE_UNAVAILABLE:'来源读取失败',CURSOR_STALLED:'来源游标未推进',
+    SOURCE_PAGE_CONFLICT:'来源分页冲突',MALFORMED_SIGNATURE_PAGE:'来源页结构异常',
+    JOB_BUDGET:'触及任务硬上限',INTERRUPTED:'读取中断',RUNNING:'读取中'};
+  const rows=windows.map(w=>{
+    const phase=w.phase==='holder' ? '目标币账户历史' : w.phase==='funding' ? '建仓前资金历史' : '未记录范围';
+    const oldest=Number(w.oldest_block_time);
+    const when=Number.isFinite(oldest) && oldest>0 ? new Date(oldest*1000).toLocaleString('zh-CN') : '未记录';
+    const cursor=typeof w.next_before==='string' && w.next_before.length<=128
+      ? '<code>'+esc(short(w.next_before,8,6))+'</code>'+copyButton(w.next_before,'复制游标') : '未记录';
+    return '<tr><td>'+ownerCell(w.owner || '')+'</td><td>'+phase+'</td><td>'+esc(w.pages ?? 0)+
+      ' 页 / '+esc(w.signature_count ?? 0)+' 条（每页上限 '+esc(w.page_size ?? '未记录')+'）</td><td>'+esc(when)+'</td><td>'+esc(reasons[w.stop_reason] || '未记录停止原因')+
+      '</td><td>'+cursor+'</td></tr>';
+  }).join('');
+  return '<details class="cluster-history-windows"><summary>历史分页与覆盖窗口</summary>'+
+    '<p>来源空页也不证明完整钱包历史；最早可见记录仍是当前地址窗口内的观察。分页游标供核对，不自动发起续采。</p>'+
+    (rows ? '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>钱包</th><th>采集范围</th><th>页数 / 签名数</th><th>最早可见时间</th><th>停止原因</th><th>分页游标</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
+      : '<p>此报告未记录分页窗口，不能补造历史覆盖证据。</p>')+'</details>';
 }
 
 function renderClusterReport(report) {
@@ -1715,6 +1738,7 @@ function renderClusterReport(report) {
     OWNER_HISTORY_NOT_SCANNED:'部分钱包历史尚未扫描',
     MULTIPLE_TOKEN_ACCOUNTS_PER_OWNER:'同一钱包存在多个代币账户，当前历史采样未覆盖全部账户',
     TRANSACTION_READ_GAPS:'历史交易存在读取缺口',
+    HISTORY_PAGINATION_INCOMPLETE:'部分历史窗口达到页数上限、来源失败或来源信息不足',
   };
   const gaps = Array.isArray(coverage.gaps) ? coverage.gaps : [];
   const gapMessages = Object.keys(gapLabels).filter(key => gaps.includes(key)).map(key => gapLabels[key]);
@@ -1730,9 +1754,10 @@ function renderClusterReport(report) {
       '<div><span>本地缓存命中</span><strong>' + esc(coverage.rpc_cache_hits ?? 0) + '</strong></div>' +
       '<div><span>使用 RPC 节点</span><strong>' + esc(Object.keys(coverage.rpc_endpoint_calls || {}).length || 1) + '</strong></div>' +
       '<div><span>RPC 失败/限流</span><strong>' + esc(rpcFailures) + '</strong></div>' +
-      '<div><span>每 owner 历史上限</span><strong>' + esc(coverage.history_per_holder ?? 0) + '</strong></div>' +
-      '<div><span>Funding 回看</span><strong>' + esc(coverage.funding_lookback ?? 0) + '</strong></div>' +
+      '<div><span>初查每页目标币历史数</span><strong>' + esc(coverage.history_per_holder ?? 0) + '</strong></div>' +
+      '<div><span>初查每页资金历史数</span><strong>' + esc(coverage.funding_lookback ?? 0) + '</strong></div>' +
     '</div>' +
+    renderClusterHistoryWindows(coverage) +
     '<div class="trust-box">' + (warnings.map(x => '<p>⚠ ' + esc(x) + '</p>').join('') || '<p class="ok-text">当前自动分析未发现覆盖率警告。</p>') + '</div>';
 
   $('cluster-control').innerHTML =
