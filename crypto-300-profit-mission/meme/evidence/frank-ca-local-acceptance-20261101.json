@@ -2153,5 +2153,163 @@
       "Larger-Mint/provider limits",
       "Real representative CA/source failure and Mac UX acceptance"
     ]
+  },
+  "ca_pool_vault_snapshot_followup_20261103": {
+    "observed_at_utc": "2026-11-02T19:25:15.776Z",
+    "verdict": "PASS_BOUNDED_SELECTED_PUMPSWAP_RAW_VAULT_SNAPSHOT; NET_RESERVES_USD_EXECUTION_AND_WHOLE_CA_UNVERIFIED",
+    "source": {
+      "pr": 220,
+      "head": "da80dde885b5df6e8d04d3df150be7ccd96b0e42",
+      "tree": "bc3e103f3116e5f618adfe458b15666ea95ac517",
+      "baseline": "a670a4d30d386283f81737e36632022fa2677edf",
+      "baseline_tree": "0715b84ffbdcb0c26d5c9e792f34d401836122b8",
+      "files": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/pool_vaults.py",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_pool_vaults.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+        "crypto-300-profit-mission/local-agent/tests/fixtures/frank_ca_browser_server.py",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_browser.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_f01_failure_state.cjs"
+      ],
+      "runtime_files": 4,
+      "test_files": 5,
+      "new_files": 2,
+      "remote_file_readback": "9/9 exact content match"
+    },
+    "implementation": {
+      "scope": "Explicit standard job only. Primary DexScreener Mint/base/quote/selected-pool identities must match; GET recovery and default quick/deep/CLI do not start raw reads.",
+      "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+      "program_validation": "Verify account owner and Pool discriminator; unsupported selected pool returns UNSUPPORTED before vault reads, no alternate pool.",
+      "reads": "getAccountInfo discovers mint/vault addresses, then getMultipleAccounts re-reads selected pool + base/quote vault + base/quote Mint in one finalized bank context. Revalidate all discovered identities. minContextSlot is a lower bound, not a pinned historical slot.",
+      "account_validation": "Strict bounded base64 layouts, executable=false, Mint and vault program agreement, exact vault Mint and pool token authority, initialized/frozen states and COption tags. Token-2022 extension envelope validated; extension economic effects remain unverified. No amount <= Mint supply invariant, which would reject wrapped-native supply semantics.",
+      "raw_precision": "u64 amounts remain decimal strings; Mint decimals from the same batch. Exact scaled Decimal quantities; 80-significant-digit quote-per-target raw vault balance ratio including reversed target. Zero denominator UNRESOLVED. Ratio never labeled USD price, net/effective reserves or executable quote.",
+      "pool_parameters": "Record available signed virtual_quote_reserves, creator_fee_bps, protocol_fees, creator_fees and flags. Missing optional fields stay null. Frozen/delegate/close-authority/native/Token-2022 states remain visible limitations. No LP burn/lock inference.",
+      "transport": {
+        "max_rpc_body_bytes": 262144,
+        "max_decoded_account_bytes": 16384,
+        "oversize": "RPCError immediately, no size retry or cache insertion",
+        "existing_retry_policy": "Unchanged; logical reads may use existing bounded wire retries",
+        "max_wire_attempts": 1200,
+        "max_elapsed_seconds": 1800
+      },
+      "result": {
+        "status": "VAULT_BALANCE_SNAPSHOT",
+        "price_usd": "UNVERIFIED",
+        "liquidity_usd": "UNVERIFIED",
+        "executable_quote": "NOT_COMPUTED",
+        "indexer_snapshot_parity": "UNVERIFIED",
+        "overall": "INCOMPLETE_EVIDENCE"
+      },
+      "ui": "JSON, Markdown and browser show actual batch slot, raw amounts, decimals, scaled quantities and nonpricing scope. UI checks report/market/target/quote/pool identities before rendering rows; invalid or legacy response never inherits prior balances."
+    },
+    "validation": {
+      "new_python_tests_passed": 37,
+      "related_python_passed": 73,
+      "local_frontend_passed": 120,
+      "red": "Before implementation, missing pool_vaults module caused one collection ImportError; not 37 failed assertions.",
+      "initial_local_frontend": {
+        "passed": 115,
+        "failed": 5,
+        "cause": "Existing F01 source event built from separate Date.now calls could differ by 1 ms, breaking exact identity. Original failed log retained.",
+        "repeat_without_fix": {
+          "passed": 120,
+          "failed": 0
+        },
+        "fix": "Both F01 fixture views now reuse one event timestamp; all identity and BUY-age assertions retained. Production F01 logic unchanged."
+      },
+      "local_full": {
+        "passed": 1836,
+        "failed": 1,
+        "skipped": 4,
+        "scope": "Run started before final one added analyzer-persistence test; not the final fixed-head full count.",
+        "failure": "Existing protected external approval-key test assumes non-root temporary key ownership. This container runs root, so generated fixture is root-owned and correctly passes its production trust-anchor ownership check. No production code or assertion changed.",
+        "unprivileged_attempt": "Unable to set file owner (EINVAL) or drop uid/gid in container; copied temp environment removed. CI uses normal runner ownership; full step passed.",
+        "ci_result": "The unchanged protected-key test passed in the normal CI runner; final fixed-head CI total separately recorded above."
+      },
+      "syntax_and_diff_check": "PASS",
+      "ci": {
+        "run_id": 41509316656,
+        "job_id": 125496727013,
+        "head": "da80dde885b5df6e8d04d3df150be7ccd96b0e42",
+        "merge_ref": "206b8ff463d35f81d3494dec2afe276326ac8999",
+        "status": "completed",
+        "conclusion": "success",
+        "python_passed": 1814,
+        "python_skipped": 4,
+        "frontend_passed": 120,
+        "browser_checks": 31,
+        "page_errors": [],
+        "blocked_requests": [],
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "real_ca_posts": 0,
+        "production_requests": 0,
+        "browser": "151.0.7922.34",
+        "cleanup": "browser profile removed, fixture exited, port released",
+        "browser_scope": "Actual HTTP worker/persistence and GET recovery with synthetic analysis only; raw binary collector tests use injected RPC. No real representative CA/source acceptance.",
+        "artifact": {
+          "id": 13172667584,
+          "sha256": "8fda5d1abf6382f7bb7c1c19c675fdcca5c442ce745695443dd2bc132fff331e"
+        }
+      },
+      "cases": [
+        "Unsupported program/discriminator/pair/duplicate or changing vault identities",
+        "Actual batch slot may advance, never precede discovery slot",
+        "Missing account, authority/Mint/program mismatch, uninitialized state, invalid base64",
+        "Token-2022 type, Mint padding and multisig ambiguity, COption and pool bool validation",
+        "Native Mint zero supply preserved; tiny nonzero balance ratio not quantized to zero",
+        "Virtual reserves/fees/frozen vault/delegate flags never become price",
+        "Response-size cap, no cache or retry on oversize, budget exception terminal",
+        "Actual analyzer root report persistence and whole-product incomplete status",
+        "Browser raw rows require exact selected-pool identity; errors and markup escaped"
+      ]
+    },
+    "references": [
+      {
+        "url": "https://github.com/pump-fun/pump-public-docs/blob/main/idl/pump_amm.json",
+        "blob": "d907b16a91f035aeb3c3182bfa0972a91bf23a86"
+      },
+      {
+        "url": "https://github.com/pump-fun/pump-public-docs/blob/main/docs/PUMP_SWAP_README.md"
+      },
+      {
+        "url": "https://github.com/solana-program/token/blob/main/interface/src/state.rs",
+        "blob": "1bf00f7a1b28eb0b776d3bc90605c7e44bfdbcfd"
+      },
+      {
+        "url": "https://github.com/solana-program/token-2022/blob/main/interface/src/extension/mod.rs",
+        "blob": "12f066a14f0db3ee65543a48919a82a870db44a6"
+      }
+    ],
+    "boundaries": {
+      "installed_mac_last_receipt": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "candidate_deployed": false,
+      "real_source_acceptance": false,
+      "real_rpc": 0,
+      "real_ca_posts": 0,
+      "production_requests": 0,
+      "notifications": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "new_services": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "merged": false,
+      "independent_review": "waived by user; not claimed",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO",
+      "old_failed_job_identity": "UNPROVEN"
+    },
+    "remaining": [
+      "Raw vault balance to net/effective reserve model and independently dated USD/indexer reconciliation",
+      "Other selected DEX program layouts",
+      "Independent holder-source reconciliation at controlled snapshot",
+      "Full account epochs/history and material Owners outside selected sample",
+      "Official exact-CA attribution and independently verified origin/propagation",
+      "Real representative CA/source failure and Mac UX acceptance"
+    ]
   }
 }

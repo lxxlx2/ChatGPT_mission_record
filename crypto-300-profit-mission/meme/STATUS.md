@@ -1,5 +1,5 @@
 # Frank STATUS（唯一当前决策状态入口）
-更新时间：2026-11-02 22:29 Asia/Bangkok
+更新时间：2026-11-03 02:25 Asia/Bangkok
 更新者：Codex（用户继续授权本地调试、隔离测试与既有Dashboard维护；独立review豁免；INVEST_NO_GO / TRADE_NO_GO保持）
 
 ## 北极星答案（1 行）
@@ -16,20 +16,20 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 **阶段管理已结束；按当前用户继续主线指令推进手动CA查询能力，同时保留原只读钱包观察工具。** 跟单盈利研究不因此恢复；P2/P3 未启动。
 
 ## 正在进行（最多 3 项）
-- **手动CA主线：有界公开叙事来源已接入候选**。原PR220最新候选[`a670a4d30d386283f81737e36632022fa2677edf`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/a670a4d30d386283f81737e36632022fa2677edf)在standard显式查询且主市场Mint身份核对后，最多读取3个公开页面候选（固定发射台、市场网站/X等提示）；仅静态HTML/元描述，不执行脚本、登录或绕访问墙，不跟随跳转。HTTPS读取前检查全部DNS结果，阻止非公开地址，只连接已检IPv4且按原主机名验证TLS；每页256KiB、短任务子进程10秒timeout、最小环境，无常驻服务或新监控。页面陈述、精确CA文本提及、作者/发布时间声明、本报告首次读取与官方归属分别记录；URL含CA不算文本提及，未提及CA仍保留可读陈述，官方认领/起源始终未核实，同文不当独立佐证。兼容platform/handle及type/url社交提示，不声称已验证当前真实API载荷。13文件（7运行/6测试，新增3文件）远端逐字一致；351相关Python、118前端及定点75回归通过。[最终固定CI run75](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41471190994)实际1777 Python通过/4跳过、118前端、30隔离Chromium场景通过，page errors0；7次fixture POST均合成分析，真实RPC/CA POST/生产请求0，临时fixture/浏览器/端口已清理。首轮CI Python/前端通过，但浏览器因未展开叙事父级折叠而失败，已补真实点击/可见性检查，失败保留。整体仍INCOMPLETE_EVIDENCE，叙事最多PARTIAL，未做全网/帖子传播起源核验；Mac最后回执仍f690，本轮未对真实CA运行新采集器或部署。详见既有JSON的ca_public_narrative_sources_followup_20261102。
+- **手动CA主线：所选PumpSwap原始金库余额已接入候选**。原PR220固定候选[`da80dde885b5df6e8d04d3df150be7ccd96b0e42`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/da80dde885b5df6e8d04d3df150be7ccd96b0e42)仅在standard显式查询、主来源Mint/币对/池子身份核对后，读取一次池子定位Mint/金库，再将池子本体、两侧金库和两侧Mint在一个finalized批次重读。核对程序owner、discriminator、币对、金库authority/Token程序/初始化状态和批次slot；minContextSlot仅设下界，不假装钉住发现slot。不支持的池程序明确UNSUPPORTED，不另换池子；响应256KiB、单账户解码16KiB，沿用1200 wire attempt/1800秒硬上限，预算异常仍终止发布。原始整数、精度、数量与余额比值保存在JSON/Markdown/UI；虚拟储备、累计费用、冻结/委托和Token-2022限制分列，未输出净储备、美元价格/流动性或可执行报价，索引同快照对齐仍未核实。9文件（4运行/5测试，新增2文件）远端逐字一致；37新增Python、73相关及120前端通过。[最终固定CI run77](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41509316656)实际1814 Python通过/4跳过、120前端、31隔离Chromium场景通过，page errors0；7次fixture POST均为合成分析，真实RPC/CA POST/生产请求0，临时fixture/浏览器/端口已清理。保留本地root权限假设造成的1项既有签名测试失败与F01独立取时造成的5项偶发失败；F01测试改为共用事件时间，生产签名和F01逻辑未改。整体INCOMPLETE_EVIDENCE；前批公开叙事有界读取已验收，官方归属/起源仍未核实。Mac最后安装回执f690，本轮未做真实CA/RPC/生产请求或部署，原Chrome页未关闭。详见既有JSON的ca_pool_vault_snapshot_followup_20261103。
 - 前批已验收的既有真实CA job `2306599a664d4308ad9b0cf3706c07a3`（11月1日22:10报告，本轮未创建）经GET和磁盘确认报告/任务/marker/摘要一致；私有副本空内存恢复及4项损坏拒绝PASS。Dashboard源码切换后实际GET返回DONE/restored_from_saved_report=true，Chrome“读取选中报告”显示任务ID与CA已核对；无效CA清理与恢复PASS，标签保留。该次安装验收中28份报告文件哈希保留；控制库、D2、旧心跳及plist不变。最后D2来源回执为11月1日08:26的4898账户/Mint快照，F01近期0/历史7/eligible0，不是实时余额或可执行资格。
 - 最后已记录的Scanner只读快照为2026-11-02 00:07：源码1f2c6afc28b9988eaacdc896562ff9a71b78f801、PID3402，当时LIVE/0连续错误/无漂移；6006签名/seen、RAW_PENDING/未处理0、信号7/outbox9/Gmail2。此前98条逐笔重放（截至5979）不自动覆盖后来27条。本轮未查询生产DB或重新核验进程，不把旧快照冒充当前可用性。
 
 ## 手动 CA 主线尚未完成的功能
 
-本轮依2026-11-02当前用户明确的继续主线/本地调试/隔离测试授权修复既有手动CA工具，独立review已豁免；不重启被冻结的跟单盈利研究。原[统一准确性要求](./ca-analysis-unified-accuracy-acceptance.md)仍是产品目标，不能把三档有限扫描或本轮测试通过当作产品完成。
+本轮依当前用户明确的继续主线/本地调试/隔离测试授权修复既有手动CA工具，独立review已豁免；不重启被冻结的跟单盈利研究。原[统一准确性要求](./ca-analysis-unified-accuracy-acceptance.md)仍是产品目标，不能把三档有限扫描或本轮测试通过当作产品完成。
 
 | 原目标 | 本轮实际状态 |
 |---|---|
 | 账户与Owner、样本与全局Top10、快照slot | 候选已实现有界全Mint来源、Owner聚合与同slot/供给核对；Token-2022保留扩展账户。超5000账户/8MiB、来源不支持或slot不一致时保持未完成；未做真实来源/Mac验收或自动同slot重采。全局排名完成不提升旧样本指标或全历史状态 |
 | 单一查询及PARTIAL/INCOMPLETE_EVIDENCE结论 | 单一入口已实现；候选新增版本化必需证据状态、缺口原因/来源/下一来源，JSON/Markdown/UI一致。当前能力只能输出INCOMPLETE_EVIDENCE；不以DONE/排名完成/权限PASS代替完整尽调 |
 | 历史/资金分页及多账户 | 候选已接入当前多账户及交易绑定的历史账户发现/一轮补查，合并最早已发现BUY和资金锚点；共用4/Owner、12额外账户/报告与原任务硬上限。关闭与Owner只绑定各交易前后状态，当前是否再创建/转让、全部历史账户、Top20之外Owner全历史、真实首笔及跨重启续采仍未完成 |
-| 外部叙事及多来源对照 | 候选已有同池索引行情对照及最多3个公开页面的陈述/CA提及/时间声明/失败范围记录。未做全网检索、登录或脚本读取，未证明官方归属、最早起源或社区传播；原始链上池子/独立持有人核对与真实代表CA仍未完成 |
+| 所选池原始链上余额 | 候选支持PumpSwap池/两侧金库/Mint同批finalized读取与严格身份、精度核对。仅原始金库余额及其比值；净/有效储备模型、美元估值、可执行报价、其他DEX程序与真实来源验收仍缺，未据此宣布流动性安全或可买 |\n| 外部叙事及多来源对照 | 候选已有同池索引对照、有界公开页面陈述及所选PumpSwap原始金库读取。读取时间与行情as-of、原始余额与净储备分开；独立持有人/同快照索引核对仍缺。未证明官方归属、最早起源、社区传播或完整尽调 |
 | 新候选实际Mac与代表CA验收 | 尚未执行；前批Chrome仅GET读取既有2306599a，本轮只做隔离测试/CI，不借旧页面验收新候选 |
 
 
