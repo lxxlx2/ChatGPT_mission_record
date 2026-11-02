@@ -1,9 +1,9 @@
 {
   "schema": "CRYPTO_DAILY_PENDING_V1",
   "report_date": "2026-11-02",
-  "mode": "08:20_PREBUILD_NOT_SENT",
-  "generated_at": "2026-11-02T01:28:34.294Z",
-  "body": "Crypto Daily Brief｜2026-11-02\n预构建快照：Asia/Bangkok 2026-11-02 08:25至08:28；Binance官方单交易对现货与USDⓈ-M永续，ETF最近可核对交易日为美国10月30日。官方X会话不可用且原帖403，部分链上TXID及NFT/TGE存在SOURCE_GAP；本稿须在09:20前重检Sent、市场、最新规则及QA，未获发送授权。\n\n一、今日最重要的5件事\n（1）Binance官方11月1日新进度：首批15条网络提现实际恢复，补足率约95%；与昨日仅宣布计划、补足约90%不同。其余网络仍待恢复，账户实际可提币状态及PoR须逐项核验。\n\n二、BTC/ETH/SOL及主要资产\n（1）BTC/USDT 78613.38 USDT，滚动24小时 +1.139%，区间 77620.00 至 78617.18，该交易对成交额 548165939.64 USDT；Binance官方采样 2026-11-02T01:25:46.008Z，非全球加权价。\n（2）ETH/USDT 2296.43 USDT，滚动24小时 +1.330%，区间 2247.84 至 2297.82，该交易对成交额 248970575.87 USDT；Binance官方采样 2026-11-02T01:25:46.008Z，非全球加权价。\n（3）SOL/USDT 95.40 USDT，滚动24小时 -0.480%，区间 93.18 至 96.04，该交易对成交额 83323096.81 USDT；Binance官方采样 2026-11-02T01:25:45.761Z，非全球加权价。\n（4）BNB/USDT 714.96 USDT，滚动24小时 +1.545%，区间 702.28 至 717.75，该交易对成交额 70798038.57 USDT；Binance官方采样 2026-11-02T01:25:47.099Z，非全球加权价。\n（5）HYPE/USDT 88.26 USDT，滚动24小时 -0.124%，区间 86.67 至 88.78，该交易对成交额 17163704.04 USDT；Binance官方采样 2026-11-02T01:25:45.601Z，非全球加权价。\n\n三、二级市场剧烈波动与持续趋势\n（1）Binance USDⓈ-M永续采样 2026-11-02T01:25:29.000Z：BTC标记价78,576.50、最近资金费率+0.010000%、OI 95,070.008 BTC；ETH标记2,296.24、费率-0.001653%、OI 2,359,440.233 ETH；SOL标记95.37、费率+0.010000%、OI 9,098,964.06 SOL。OI为币数量，单点不能证明增仓或强平规模。\n（2）相较11月1日09:17已发快照BTC 77,768与SOL 95.64，本次BTC 78,613.38而SOL 95.40；两个不同时间点仅能说明截面分化，尚需同频连续OI、成交量和多日趋势才能确认持续性。\n\n四、监管与政策\n无高置信新增。\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）Binance官方11月1日06:00至15:30 UTC统计：提现46.49亿美元、入金10.10亿美元、净流出约36.4亿美元；平台称约占其10月28日1710亿美元资产管理规模的2.1%。这是平台汇总口径，未独立复算逐链净流，也不等于全部客户撤资。来源：https://www.binance.com/en/square/post/383634490736604\n（2）Lookonchain转述Onchain Lens称Binance关联地址将约21,750 BTC由冷钱包转往热钱包，按当时估值约16.9亿美元；原始TXID和地址归属本轮未独立核验，可能用于流动性调拨，不能据此认定出售或已补偿用户。来源：https://www.lookonchain.com/feeds/79867\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n无高置信新增。\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n无高置信新增。\n\n八、Early / Meme / NFT / 新生态热点\n无高置信新增。\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n（1）Binance经认证官方渠道11月1日宣布：首批15条网络提现实际恢复，补足率约95%，较10月31日约90%增加；其中BTC、ETH、SOL、BNB等首批网络已宣布重开。11月1日12:36 UTC为其所称首批全部恢复时点，其他资产网络继续测试，10月31日储备快照的新ZKP证明仍待发布。实际可用性以账户和网络状态为准，平台声明不能替代独立审计。来源：https://www.binance.com/en/square/post/383634490736604\n（2）Lookonchain 11月2日转述Solana Mobile：恶意第三方“SKR Claim”应用曾进入dApp Store推荐页并诱导用户输入助记词，约一小时后下架；团队称已修补发布关联缺陷并尝试从安装设备移除。原始官方X https://x.com/solanamobile/status/2116962140301266959 返回403，受害人数与资产损失未确认；仅安装或输入过助记词者需立即按官方渠道排查，不能推定普通SOL持有人受影响。来源：https://www.lookonchain.com/feeds/79870\n（3）Lookonchain 11月2日转述THORChain：10月31日ETH单区块重组引发10 ETH误支付，用户已主动返还、国库偿付能力恢复；部分链仍暂停签名/交换，AVAX、BASE、RUNE、XRPL被称可用。原始官方X https://x.com/THORChain/status/2117011632757092501 返回403，链上原始交易未核验，切勿把二手恢复口径当作全部跨链交易已开放。来源：https://www.lookonchain.com/feeds/79862\n\n十、全球局势与跨市场冲击\n（1）Reuters 11月1日报道伊朗革命卫队海军声称两艘油轮在霍尔木兹海峡触雷爆炸，属于伊方声明，独立损失及责任仍待核实；Reuters 11月2日00:11 UTC市场快讯称Brent约111.84美元/桶、WTI约102.56美元/桶，均跌约1.4%至1.5%，同时卡塔尔调停仍在进行。不能由单次报价推断冲突已结束。来源：https://www.reuters.com/world/middle-east/irans-irgc-navy-says-two-tankers-exploded-after-hitting-mines-hormuz-2026-11-01/；https://www.reuters.com/business/energy/oil-slips-more-than-1-talks-continue-ending-iran-war-2026-11-01/\n\n十一、未来24至72小时催化\n（1）美国联邦选举委员会确认11月3日为2026年联邦大选投票日，距离本轮不足48小时；结果可能改变财政与监管预期，但投票前不能将任何席位结果当成已定。来源：https://www.fec.gov/introduction-campaign-finance/election-results-and-voting-information/\n（2）Circle官方10月7日预告11月4日披露2026年第三季度业绩，08:00美东时间举行网络电话会；关注USDC流通与储备收益、跨境支付及Arc基础设施收入，结果尚未公布。来源：https://www.circle.com/pressroom/circle-to-announce-q3-2026-financial-results-on-november-4-2026\n\n十二、持续趋势与跨市场机会观察清单\n（1）BTC本轮24小时低点77,620与高点78,617.18形成短窗观察带；若跌破低点并伴随连续OI/成交量扩张，需重新评估流动性风险。SOL滚动24小时仍为-0.480%，若不能收复96.04上沿，暂不把BTC单币反弹外推至整个市场。ETF最新美国交易日仍是10月30日。\n\n十三、今日行动与风险结论\n（1）需要跨平台调拨时先核对实际币种/链的提现按钮、网络状态、额度、手续费和到账地址，小额测试后再操作；不要因为平台宣称首批恢复就默认所有网络可用。未获得新的完整PoR证明前，保留对储备承诺的独立验证要求。\n（2）若曾安装假“SKR Claim”或输入助记词，应从正规设备与官方渠道检查风险并迁移暴露钱包资产；没有相关行为不推定受影响。THORChain跨链交换先查当前官方链状态，不凭二手转述假设全部恢复。\n\nETF历史基准（非新增事件，不计入编号新闻）：Farside美国10月30日BTC/ETH/SOL现货ETF分别净流出643.2/155.7/10.8百万美元；11月2日曼谷早晨美国11月2日交易日尚未开盘，不能填入今日ETF资金流。来源：https://farside.co.uk/btc/、https://farside.co.uk/eth/、https://farside.co.uk/sol/",
+  "mode": "09:20_PUBLISH_READY_NOT_SENT",
+  "generated_at": "2026-11-02T02:24:38.006Z",
+  "body": "Crypto Daily Brief｜2026-11-02\n09:20正式发布前复核：Asia/Bangkok 2026-11-02 09:23；Binance官方单交易对现货与USDⓈ-M永续，ETF最近可核对交易日为美国10月30日。官方X会话不可用且原帖403，部分链上TXID及NFT/TGE存在SOURCE_GAP；已按本日最新Binance官方行情重新采样，保留SOURCE_GAP及独立事实核验边界。\n\n一、今日最重要的5件事\n（1）Binance官方11月1日新进度：首批15条网络提现实际恢复，补足率约95%；与昨日仅宣布计划、补足约90%不同。其余网络仍待恢复，账户实际可提币状态及PoR须逐项核验。\n\n二、BTC/ETH/SOL及主要资产\n（1）BTC/USDT 78494.02 USDT，滚动24小时 +0.988%，区间 77620.00 至 78631.00，该交易对成交额 545393743.24 USDT；Binance官方采样 2026-11-02T02:24:38.006Z，非全球加权价。\n（2）ETH/USDT 2294.45 USDT，滚动24小时 +1.230%，区间 2247.84 至 2298.76，该交易对成交额 269199092.98 USDT；Binance官方采样 2026-11-02T02:24:40.983Z，非全球加权价。\n（3）SOL/USDT 95.09 USDT，滚动24小时 -0.585%，区间 93.18 至 96.00，该交易对成交额 87490989.82 USDT；Binance官方采样 2026-11-02T02:24:40.635Z，非全球加权价。\n（4）BNB/USDT 713.68 USDT，滚动24小时 +1.526%，区间 702.28 至 717.75，该交易对成交额 70272924.52 USDT；Binance官方采样 2026-11-02T02:24:40.996Z，非全球加权价。\n（5）HYPE/USDT 87.74 USDT，滚动24小时 -0.589%，区间 86.67 至 88.46，该交易对成交额 17026697.95 USDT；Binance官方采样 2026-11-02T02:24:40.735Z，非全球加权价。\n\n三、二级市场剧烈波动与持续趋势\n（1）Binance USDⓈ-M永续采样 2026-11-02T02:24:42.001Z：BTC标记价78,459.06、最近资金费率+0.009593%、OI 95,202.437 BTC；ETH标记2,293.38、费率-0.003194%、OI 2,374,539.640 ETH；SOL标记95.07、费率+0.010000%、OI 9,080,281.56 SOL。OI为币数量，单点不能证明增仓或强平规模。\n（2）相较11月1日09:17已发快照BTC 77,768与SOL 95.64，本次BTC 78,494.02而SOL 95.09；两个不同时间点仅能说明截面分化，尚需同频连续OI、成交量和多日趋势才能确认持续性。\n\n四、监管与政策\n无高置信新增。\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）Binance官方11月1日06:00至15:30 UTC统计：提现46.49亿美元、入金10.10亿美元、净流出约36.4亿美元；平台称约占其10月28日1710亿美元资产管理规模的2.1%。这是平台汇总口径，未独立复算逐链净流，也不等于全部客户撤资。来源：https://www.binance.com/en/square/post/383634490736604\n（2）Lookonchain转述Onchain Lens称Binance关联地址将约21,750 BTC由冷钱包转往热钱包，按当时估值约16.9亿美元；原始TXID和地址归属本轮未独立核验，可能用于流动性调拨，不能据此认定出售或已补偿用户。来源：https://www.lookonchain.com/feeds/79867\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n无高置信新增。\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n无高置信新增。\n\n八、Early / Meme / NFT / 新生态热点\n无高置信新增。\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n（1）Binance经认证官方渠道11月1日宣布：首批15条网络提现实际恢复，补足率约95%，较10月31日约90%增加；其中BTC、ETH、SOL、BNB等首批网络已宣布重开。11月1日12:36 UTC为其所称首批全部恢复时点，其他资产网络继续测试，10月31日储备快照的新ZKP证明仍待发布。实际可用性以账户和网络状态为准，平台声明不能替代独立审计。来源：https://www.binance.com/en/square/post/383634490736604\n（2）Lookonchain 11月2日转述Solana Mobile：恶意第三方“SKR Claim”应用曾进入dApp Store推荐页并诱导用户输入助记词，约一小时后下架；团队称已修补发布关联缺陷并尝试从安装设备移除。原始官方X https://x.com/solanamobile/status/2116962140301266959 返回403，受害人数与资产损失未确认；仅安装或输入过助记词者需立即按官方渠道排查，不能推定普通SOL持有人受影响。来源：https://www.lookonchain.com/feeds/79870\n（3）Lookonchain 11月2日转述THORChain：10月31日ETH单区块重组引发10 ETH误支付，用户已主动返还、国库偿付能力恢复；部分链仍暂停签名/交换，AVAX、BASE、RUNE、XRPL被称可用。原始官方X https://x.com/THORChain/status/2117011632757092501 返回403，链上原始交易未核验，切勿把二手恢复口径当作全部跨链交易已开放。来源：https://www.lookonchain.com/feeds/79862\n\n十、全球局势与跨市场冲击\n（1）Reuters 11月1日报道伊朗革命卫队海军声称两艘油轮在霍尔木兹海峡触雷爆炸，属于伊方声明，独立损失及责任仍待核实；Reuters 11月2日00:11 UTC市场快讯称Brent约111.84美元/桶、WTI约102.56美元/桶，均跌约1.4%至1.5%，同时卡塔尔调停仍在进行。不能由单次报价推断冲突已结束。来源：https://www.reuters.com/world/middle-east/irans-irgc-navy-says-two-tankers-exploded-after-hitting-mines-hormuz-2026-11-01/；https://www.reuters.com/business/energy/oil-slips-more-than-1-talks-continue-ending-iran-war-2026-11-01/\n\n十一、未来24至72小时催化\n（1）美国联邦选举委员会确认11月3日为2026年联邦大选投票日，距离本轮不足48小时；结果可能改变财政与监管预期，但投票前不能将任何席位结果当成已定。来源：https://www.fec.gov/introduction-campaign-finance/election-results-and-voting-information/\n（2）Circle官方10月7日预告11月4日披露2026年第三季度业绩，08:00美东时间举行网络电话会；关注USDC流通与储备收益、跨境支付及Arc基础设施收入，结果尚未公布。来源：https://www.circle.com/pressroom/circle-to-announce-q3-2026-financial-results-on-november-4-2026\n\n十二、持续趋势与跨市场机会观察清单\n（1）BTC本轮24小时低点77,620与高点78,631形成短窗观察带；若跌破低点并伴随连续OI/成交量扩张，需重新评估流动性风险。SOL滚动24小时仍为-0.585%，若不能收复96.00上沿，暂不把BTC单币反弹外推至整个市场。ETF最新美国交易日仍是10月30日。\n\n十三、今日行动与风险结论\n（1）需要跨平台调拨时先核对实际币种/链的提现按钮、网络状态、额度、手续费和到账地址，小额测试后再操作；不要因为平台宣称首批恢复就默认所有网络可用。未获得新的完整PoR证明前，保留对储备承诺的独立验证要求。\n（2）若曾安装假“SKR Claim”或输入助记词，应从正规设备与官方渠道检查风险并迁移暴露钱包资产；没有相关行为不推定受影响。THORChain跨链交换先查当前官方链状态，不凭二手转述假设全部恢复。\n\nETF历史基准（非新增事件，不计入编号新闻）：Farside美国10月30日BTC/ETH/SOL现货ETF分别净流出643.2/155.7/10.8百万美元；11月2日曼谷早晨美国11月2日交易日尚未开盘，不能填入今日ETF资金流。来源：https://farside.co.uk/btc/、https://farside.co.uk/eth/、https://farside.co.uk/sol/",
   "items": [
     {
       "section": 1,
@@ -15,51 +15,51 @@
     {
       "section": 2,
       "item_number": 1,
-      "event_key": "quote:btc:2026-11-02-0125",
+      "event_key": "quote:btc:2026-11-02-0224",
       "role": "detail",
-      "text": "BTC/USDT 78613.38 USDT，滚动24小时 +1.139%，区间 77620.00 至 78617.18，该交易对成交额 548165939.64 USDT；Binance官方采样 2026-11-02T01:25:46.008Z，非全球加权价。"
+      "text": "BTC/USDT 78494.02 USDT，滚动24小时 +0.988%，区间 77620.00 至 78631.00，该交易对成交额 545393743.24 USDT；Binance官方采样 2026-11-02T02:24:38.006Z，非全球加权价。"
     },
     {
       "section": 2,
       "item_number": 2,
-      "event_key": "quote:eth:2026-11-02-0125",
+      "event_key": "quote:eth:2026-11-02-0224",
       "role": "detail",
-      "text": "ETH/USDT 2296.43 USDT，滚动24小时 +1.330%，区间 2247.84 至 2297.82，该交易对成交额 248970575.87 USDT；Binance官方采样 2026-11-02T01:25:46.008Z，非全球加权价。"
+      "text": "ETH/USDT 2294.45 USDT，滚动24小时 +1.230%，区间 2247.84 至 2298.76，该交易对成交额 269199092.98 USDT；Binance官方采样 2026-11-02T02:24:40.983Z，非全球加权价。"
     },
     {
       "section": 2,
       "item_number": 3,
-      "event_key": "quote:sol:2026-11-02-0125",
+      "event_key": "quote:sol:2026-11-02-0224",
       "role": "detail",
-      "text": "SOL/USDT 95.40 USDT，滚动24小时 -0.480%，区间 93.18 至 96.04，该交易对成交额 83323096.81 USDT；Binance官方采样 2026-11-02T01:25:45.761Z，非全球加权价。"
+      "text": "SOL/USDT 95.09 USDT，滚动24小时 -0.585%，区间 93.18 至 96.00，该交易对成交额 87490989.82 USDT；Binance官方采样 2026-11-02T02:24:40.635Z，非全球加权价。"
     },
     {
       "section": 2,
       "item_number": 4,
-      "event_key": "quote:bnb:2026-11-02-0125",
+      "event_key": "quote:bnb:2026-11-02-0224",
       "role": "detail",
-      "text": "BNB/USDT 714.96 USDT，滚动24小时 +1.545%，区间 702.28 至 717.75，该交易对成交额 70798038.57 USDT；Binance官方采样 2026-11-02T01:25:47.099Z，非全球加权价。"
+      "text": "BNB/USDT 713.68 USDT，滚动24小时 +1.526%，区间 702.28 至 717.75，该交易对成交额 70272924.52 USDT；Binance官方采样 2026-11-02T02:24:40.996Z，非全球加权价。"
     },
     {
       "section": 2,
       "item_number": 5,
-      "event_key": "quote:hype:2026-11-02-0125",
+      "event_key": "quote:hype:2026-11-02-0224",
       "role": "detail",
-      "text": "HYPE/USDT 88.26 USDT，滚动24小时 -0.124%，区间 86.67 至 88.78，该交易对成交额 17163704.04 USDT；Binance官方采样 2026-11-02T01:25:45.601Z，非全球加权价。"
+      "text": "HYPE/USDT 87.74 USDT，滚动24小时 -0.589%，区间 86.67 至 88.46，该交易对成交额 17026697.95 USDT；Binance官方采样 2026-11-02T02:24:40.735Z，非全球加权价。"
     },
     {
       "section": 3,
       "item_number": 1,
-      "event_key": "derivatives:binance:btc-eth-sol:2026-11-02-0125",
+      "event_key": "derivatives:binance:btc-eth-sol:2026-11-02-0224",
       "role": "detail",
-      "text": "Binance USDⓈ-M永续采样 2026-11-02T01:25:29.000Z：BTC标记价78,576.50、最近资金费率+0.010000%、OI 95,070.008 BTC；ETH标记2,296.24、费率-0.001653%、OI 2,359,440.233 ETH；SOL标记95.37、费率+0.010000%、OI 9,098,964.06 SOL。OI为币数量，单点不能证明增仓或强平规模。"
+      "text": "Binance USDⓈ-M永续采样 2026-11-02T02:24:42.001Z：BTC标记价78,459.06、最近资金费率+0.009593%、OI 95,202.437 BTC；ETH标记2,293.38、费率-0.003194%、OI 2,374,539.640 ETH；SOL标记95.07、费率+0.010000%、OI 9,080,281.56 SOL。OI为币数量，单点不能证明增仓或强平规模。"
     },
     {
       "section": 3,
       "item_number": 2,
-      "event_key": "trend:btc-sol-relative:2026-11-02-0125",
+      "event_key": "trend:btc-sol-relative:2026-11-02-0224",
       "role": "detail",
-      "text": "相较11月1日09:17已发快照BTC 77,768与SOL 95.64，本次BTC 78,613.38而SOL 95.40；两个不同时间点仅能说明截面分化，尚需同频连续OI、成交量和多日趋势才能确认持续性。"
+      "text": "相较11月1日09:17已发快照BTC 77,768与SOL 95.64，本次BTC 78,494.02而SOL 95.09；两个不同时间点仅能说明截面分化，尚需同频连续OI、成交量和多日趋势才能确认持续性。"
     },
     {
       "section": 5,
@@ -122,7 +122,7 @@
       "item_number": 1,
       "event_key": "watch:btc-sol-etf-risk:2026-11-02",
       "role": "detail",
-      "text": "BTC本轮24小时低点77,620与高点78,617.18形成短窗观察带；若跌破低点并伴随连续OI/成交量扩张，需重新评估流动性风险。SOL滚动24小时仍为-0.480%，若不能收复96.04上沿，暂不把BTC单币反弹外推至整个市场。ETF最新美国交易日仍是10月30日。"
+      "text": "BTC本轮24小时低点77,620与高点78,631形成短窗观察带；若跌破低点并伴随连续OI/成交量扩张，需重新评估流动性风险。SOL滚动24小时仍为-0.585%，若不能收复96.00上沿，暂不把BTC单币反弹外推至整个市场。ETF最新美国交易日仍是10月30日。"
     },
     {
       "section": 13,
@@ -165,91 +165,91 @@
       }
     },
     {
-      "event_key": "quote:btc:2026-11-02-0125",
-      "material_version": "binance-spot-2026-11-02T01:25:46.008Z-BTC",
+      "event_key": "quote:btc:2026-11-02-0224",
+      "material_version": "binance-spot-2026-11-02T02:24:38.006Z-BTC",
       "family_key": "quote:btc:daily",
       "kind": "CORE_QUOTE",
       "primary_section": 2,
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
-      "published_at": "2026-11-02T01:25:46.008Z",
+      "published_at": "2026-11-02T02:24:38.006Z",
       "actual_delta": "BTC Binance现货24h报价及成交额更新",
       "impact": "NORMAL",
       "status": "verified",
       "source_confirmed": true
     },
     {
-      "event_key": "quote:eth:2026-11-02-0125",
-      "material_version": "binance-spot-2026-11-02T01:25:46.008Z-ETH",
+      "event_key": "quote:eth:2026-11-02-0224",
+      "material_version": "binance-spot-2026-11-02T02:24:40.983Z-ETH",
       "family_key": "quote:eth:daily",
       "kind": "CORE_QUOTE",
       "primary_section": 2,
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
-      "published_at": "2026-11-02T01:25:46.008Z",
+      "published_at": "2026-11-02T02:24:40.983Z",
       "actual_delta": "ETH Binance现货24h报价及成交额更新",
       "impact": "NORMAL",
       "status": "verified",
       "source_confirmed": true
     },
     {
-      "event_key": "quote:sol:2026-11-02-0125",
-      "material_version": "binance-spot-2026-11-02T01:25:45.761Z-SOL",
+      "event_key": "quote:sol:2026-11-02-0224",
+      "material_version": "binance-spot-2026-11-02T02:24:40.635Z-SOL",
       "family_key": "quote:sol:daily",
       "kind": "CORE_QUOTE",
       "primary_section": 2,
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
-      "published_at": "2026-11-02T01:25:45.761Z",
+      "published_at": "2026-11-02T02:24:40.635Z",
       "actual_delta": "SOL Binance现货24h报价及成交额更新",
       "impact": "NORMAL",
       "status": "verified",
       "source_confirmed": true
     },
     {
-      "event_key": "quote:bnb:2026-11-02-0125",
-      "material_version": "binance-spot-2026-11-02T01:25:47.099Z-BNB",
+      "event_key": "quote:bnb:2026-11-02-0224",
+      "material_version": "binance-spot-2026-11-02T02:24:40.996Z-BNB",
       "family_key": "quote:bnb:daily",
       "kind": "CORE_QUOTE",
       "primary_section": 2,
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT",
-      "published_at": "2026-11-02T01:25:47.099Z",
+      "published_at": "2026-11-02T02:24:40.996Z",
       "actual_delta": "BNB Binance现货24h报价及成交额更新",
       "impact": "NORMAL",
       "status": "verified",
       "source_confirmed": true
     },
     {
-      "event_key": "quote:hype:2026-11-02-0125",
-      "material_version": "binance-spot-2026-11-02T01:25:45.601Z-HYPE",
+      "event_key": "quote:hype:2026-11-02-0224",
+      "material_version": "binance-spot-2026-11-02T02:24:40.735Z-HYPE",
       "family_key": "quote:hype:daily",
       "kind": "CORE_QUOTE",
       "primary_section": 2,
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT",
-      "published_at": "2026-11-02T01:25:45.601Z",
+      "published_at": "2026-11-02T02:24:40.735Z",
       "actual_delta": "HYPE Binance现货24h报价及成交额更新",
       "impact": "NORMAL",
       "status": "verified",
       "source_confirmed": true
     },
     {
-      "event_key": "derivatives:binance:btc-eth-sol:2026-11-02-0125",
-      "material_version": "derivatives:binance:btc-eth-sol:2026-11-02-0125:v1",
+      "event_key": "derivatives:binance:btc-eth-sol:2026-11-02-0224",
+      "material_version": "derivatives:binance:btc-eth-sol:2026-11-02-0224:v1",
       "family_key": "derivatives:binance:daily",
       "kind": "TREND_DERIVATIVES",
       "primary_section": 3,
       "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
-      "published_at": "2026-11-02T01:25:29.000Z",
+      "published_at": "2026-11-02T02:24:42.001Z",
       "actual_delta": "BTC/ETH/SOL永续标记价、最近资金费率及单点未平仓量",
       "impact": "NORMAL",
       "status": "verified",
       "source_confirmed": true
     },
     {
-      "event_key": "trend:btc-sol-relative:2026-11-02-0125",
-      "material_version": "trend:btc-sol-relative:2026-11-02-0125:v1",
+      "event_key": "trend:btc-sol-relative:2026-11-02-0224",
+      "material_version": "trend:btc-sol-relative:2026-11-02-0224:v1",
       "family_key": "trend:btc-sol:daily",
       "kind": "TREND_DERIVATIVES",
       "primary_section": 3,
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
-      "published_at": "2026-11-02T01:25:46.008Z",
+      "published_at": "2026-11-02T02:24:38.006Z",
       "actual_delta": "BTC与SOL滚动24小时方向分化，BTC较11月1日09:17快照回升，SOL偏弱",
       "impact": "NORMAL",
       "status": "verified",
@@ -350,12 +350,12 @@
     },
     {
       "event_key": "watch:btc-sol-etf-risk:2026-11-02",
-      "material_version": "watch:btc-sol-etf-risk:2026-11-02:v1",
+      "material_version": "watch:btc-sol-etf-risk:2026-11-02-0224:v1",
       "family_key": "watch:btc-sol-etf:daily",
       "kind": "PERSISTENT_WATCH",
       "primary_section": 12,
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
-      "published_at": "2026-11-02T01:25:46.008Z",
+      "published_at": "2026-11-02T02:24:38.006Z",
       "actual_delta": "本轮BTC高低区间与SOL相对弱势观察，ETF最近交易日未刷新",
       "impact": "NORMAL",
       "status": "verified",
@@ -734,25 +734,61 @@
       "venue": "OKX",
       "decision": "UNCONFIRMED_MONITORING",
       "discovery_decision": "UNCONFIRMED_MONITORING"
+    },
+    {
+      "lane": "spot",
+      "checked_at": "2026-11-02T02:24:38.006Z",
+      "query_or_url": "Binance connected official get_spot_24hr_ticker_price_change_statistics (BTC ETH SOL BNB HYPE)",
+      "status": "checked",
+      "result_urls": [
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT",
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT",
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT",
+        "https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT"
+      ],
+      "published_at": "2026-11-02T02:24:38.006Z",
+      "summary": "Five Binance official spot symbols refreshed for publication."
+    },
+    {
+      "lane": "derivatives",
+      "checked_at": "2026-11-02T02:24:42.001Z",
+      "query_or_url": "Binance connected official get_futures_usds_mark_price/get_futures_usds_open_interest",
+      "status": "checked",
+      "result_urls": [
+        "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+        "https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT"
+      ],
+      "published_at": "2026-11-02T02:24:42.001Z",
+      "summary": "BTC ETH SOL mark, funding and OI refreshed."
+    },
+    {
+      "lane": "official_x",
+      "checked_at": "2026-11-02T02:24:38.006Z",
+      "query_or_url": "Browser list_tabs({})",
+      "status": "source_gap",
+      "error": "RuntimeException: Browser access requires originating browser context; BROWSER_SESSION_UNAVAILABLE. Official issuer website and public original-post search fallback used.",
+      "browser_session": "UNAVAILABLE",
+      "read_mode": "BROWSER_SESSION_UNAVAILABLE"
     }
   ],
   "market_core": [
     {
       "symbol": "BTC",
-      "price": 78613.38,
-      "observed_at": "2026-11-02T01:25:46.008Z",
+      "price": 78494.02,
+      "observed_at": "2026-11-02T02:24:38.006Z",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT"
     },
     {
       "symbol": "ETH",
-      "price": 2296.43,
-      "observed_at": "2026-11-02T01:25:46.008Z",
+      "price": 2294.45,
+      "observed_at": "2026-11-02T02:24:40.983Z",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT"
     },
     {
       "symbol": "SOL",
-      "price": 95.4,
-      "observed_at": "2026-11-02T01:25:45.761Z",
+      "price": 95.09,
+      "observed_at": "2026-11-02T02:24:40.635Z",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT"
     }
   ],
