@@ -1469,5 +1469,127 @@
       "formal overall analysis completeness contract",
       "new candidate real Mac and representative CA acceptance"
     ]
+  },
+  "ca_completeness_contract_followup_20261102": {
+    "observed_at_utc": "2026-11-02T07:23:48.730Z",
+    "verdict": "IMPLEMENTED_BOUNDED_CONTRACT; WHOLE_CA_PRODUCT_INCOMPLETE",
+    "source": {
+      "pr": 220,
+      "head": "aeabe3a57f78b8a27b83cc8a16752ebe305a7f71",
+      "baseline": "d6c5bf6cc20e280327cc08d966a9b42db9c399dd",
+      "tree": "8f34ac63aec70787def286b592a81622fe002495",
+      "files": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/index.html",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_browser.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_holder_ranks.py",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_ca_completeness.py"
+      ],
+      "remote_file_readback": "8/8 exact content match",
+      "runtime_files": 4,
+      "test_files": 4,
+      "new_files": 1
+    },
+    "implementation": {
+      "contract": "analysis_completeness version 1, MANUAL_CA_DUE_DILIGENCE",
+      "overall": "INCOMPLETE_EVIDENCE",
+      "requirements": [
+        "contract",
+        "holder_balances",
+        "holder_roles",
+        "wallet_history",
+        "control_attribution",
+        "market",
+        "independent_sources",
+        "narrative"
+      ],
+      "fields": [
+        "status",
+        "cause",
+        "attempted_sources",
+        "next_source",
+        "evidence_paths"
+      ],
+      "snapshot_verified_only": [
+        "holder_balances",
+        "holder_roles"
+      ],
+      "rule": "Current collector lacks complete economic history, independent source comparison and external narrative acquisition. No rank/normalization/permission/empty-page flag combination proves overall completion.",
+      "new_reports": "Analyzer derives; worker recomputes before publish; report JSON/Markdown and identity-bound persisted artifact retain the contract.",
+      "old_reports": "GET does not rewrite or re-assess legacy reports; UI and Markdown show NOT_ASSESSED for missing or unsupported contract.",
+      "frontend": "Known required domains only, missing/duplicate/unknown rows cannot silently remove gaps; unsupported COMPLETE never turns green. All report-read routes retain the separate task-identity warning.",
+      "additional_external_requests": 0,
+      "job_max_wire_attempts": 1200,
+      "job_max_seconds": 1800
+    },
+    "validation": {
+      "baseline_python": "1 collection ImportError for absent report_completeness helper; not 10 baseline assertion failures",
+      "baseline_frontend": {
+        "total": 57,
+        "passed": 54,
+        "failed": 3
+      },
+      "intermediate_related_python_passed": 234,
+      "intermediate_frontend": {
+        "total": 110,
+        "passed": 108,
+        "failed": 2,
+        "cause": "Existing recovery-unit extraction omitted newly introduced state; moved the state declaration beside existing pending-job state. Full-app tests already passed; kept all assertions."
+      },
+      "final_local_related_python_passed": 236,
+      "final_local_frontend_passed": 110,
+      "syntax_and_diff_check": "PASS",
+      "ci": {
+        "run_id": 41405938251,
+        "job_id": 125147846004,
+        "status": "completed",
+        "conclusion": "success",
+        "merge_ref": "83960776e2ea6204eff8a8cb9d403b41f27de1ab",
+        "python_passed": 1668,
+        "python_skipped": 4,
+        "frontend_passed": 110,
+        "browser_checks": 26,
+        "page_errors": [],
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "real_ca_posts": 0,
+        "production_requests": 0,
+        "cleanup": "browser profile removed, fixture exited, port released",
+        "assertion": "Actual worker persisted new completeness contract; same-job report GET readback and page show required missing history/narrative evidence."
+      },
+      "log_sha256": {
+        "baseline_python": "7a35780829d79dd04b8d77986307f70a1af64b6af69092ee381bdad1c63aabca",
+        "baseline_frontend": "ed7f44ea4e639f160c99c53cd17d5252366b5a69bba672833e3909484d005600",
+        "intermediate_frontend": "9deea0eb20d6a263e0602954364560170b672c59fc50a8b51fa934ff605047b1",
+        "final_related_python": "946c78a78396f8b94420b51c74238996439a4c6be9bbc32b0fe6bc783c9db53b",
+        "final_frontend": "0fab525dd952fad1f2902e553fdaf8da81c2cf77640762fc1f8bfc4c2c0bfd91"
+      }
+    },
+    "boundaries": {
+      "installed_mac_head": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "candidate_deployed": false,
+      "real_source_acceptance": false,
+      "real_rpc": 0,
+      "real_ca_posts": 0,
+      "notifications": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "merged": false,
+      "independent_review": "waived by user; not claimed",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO",
+      "old_failed_job_identity": "UNPROVEN"
+    },
+    "remaining": [
+      "Complete all material Owner/ATA economic histories",
+      "External narrative acquisition and independent source reconciliation",
+      "Provider-capable larger-mint sources beyond enumeration bounds",
+      "Real Mac and representative CA acceptance"
+    ]
   }
 }
