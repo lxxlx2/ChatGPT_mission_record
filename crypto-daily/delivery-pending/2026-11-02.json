@@ -9,7 +9,7 @@
       "section": 1,
       "item_number": 1,
       "event_key": "security:binance:withdrawals-phase1-confirmed:2026-11-01",
-      "role": "detail",
+      "role": "highlight",
       "text": "Binance官方11月1日新进度：首批15条网络提现实际恢复，补足率约95%；与昨日仅宣布计划、补足约90%不同。其余网络仍待恢复，账户实际可提币状态及PoR须逐项核验。"
     },
     {
@@ -2553,5 +2553,6 @@
   },
   "browser_session": "BROWSER_SESSION_UNAVAILABLE",
   "delivery_status": "NOT_SENT_PREBUILD",
-  "code_execution": "CODE_NOT_EXECUTED"
+  "code_execution": "V8_IN_MEMORY_EDITORIAL_GATE_EXACT_VALIDATOR_FUNCTION;NODE_NOT_EXECUTED",
+  "quality_note": "V8 executed validateEditorial function extracted from Git blob 3d19a0fcb65534888111c9b00a5a07a85452f796; cloud CI still independently required"
 }
