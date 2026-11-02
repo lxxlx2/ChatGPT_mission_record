@@ -1715,5 +1715,137 @@
       "Larger Mint/provider source support beyond enumeration bounds",
       "Real Mac and representative CA acceptance"
     ]
+  },
+  "ca_historical_account_discovery_followup_20261102": {
+    "observed_at_utc": "2026-11-02T13:36:50.573Z",
+    "verdict": "PASS_BOUNDED_TRANSACTION_EVIDENCE_IMPLEMENTATION; WHOLE_ECONOMIC_HISTORY_INCOMPLETE",
+    "source": {
+      "pr": 220,
+      "head": "a295e9c189b9257b726d3062d28d7af71628c59b",
+      "baseline": "00558bd94a67292b73d2437956d7da63690fdb51",
+      "baseline_tree": "3c5c34f938b8fcf5b3b595f9e0a1cb75b2d6c5b7",
+      "isolated_baseline_tree_exact": true,
+      "tree": "8595837663c392ccf0af0f46566eb532f214a6e8",
+      "files": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/historical_accounts.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+        "crypto-300-profit-mission/local-agent/tests/fixtures/frank_ca_browser_server.py",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_browser.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_historical_accounts.py",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_historical_account_scan.py"
+      ],
+      "runtime_files": 3,
+      "test_files": 5,
+      "new_files": 3,
+      "remote_file_readback": "8/8 exact content match"
+    },
+    "implementation": {
+      "discovery": "Reuse already-read finalized holder/funding transactions, bound primary signature and slot, require successful meta, resolve jsonParsed account indices, validate Owner/Mint/program/raw amount/decimals per pre/post phase. No inferred lifetime Owner.",
+      "closure": "Confirmed only at the recorded transaction end: parsed matching Token Program CloseAccount, no post token balance row at that account index, and full-length native balance arrays showing positive pre-lamports and zero post-lamports. Missing post token row alone is NOT proof. Current closure/recreation is not queried or inferred.",
+      "historical_reads": "One fixed discovered-account frontier, one initial-size history page per selected historical account; current-account and historical selections share 4 accounts/Owner and 12 extra physical accounts/report. New discoveries during that pass or re-anchored funding are retained with FRONTIER_LIMIT, never recurse.",
+      "funding": "When the aggregate earliest observed BUY candidate changes the Owner anchor, repeat one bounded prefunding window; prior evidence remains and funding later than the chosen candidate is excluded. Same-timestamp candidate selection does not establish within-slot transaction order.",
+      "observation_limit": 200,
+      "parser_balance_rows_per_phase_limit": 512,
+      "additional_rpc_methods": 0,
+      "discovery_extra_requests": 0,
+      "job_max_wire_attempts": 1200,
+      "job_max_seconds": 1800,
+      "output_fields": [
+        "historical_account_evidence",
+        "coverage.historical_account_history",
+        "coverage.historical_account_evidence_errors",
+        "coverage.historical_account_observation_limit",
+        "coverage.historical_account_frontier_limit"
+      ],
+      "overall": "INCOMPLETE_EVIDENCE"
+    },
+    "validation": {
+      "new_python_tests": 31,
+      "baseline_parser": "1 collection ModuleNotFoundError before new parser exists; not 31 failed assertions.",
+      "baseline_integration": "5/5 business-path regressions fail against exact 00558bd tree with new pure parser staged only for test collection; baseline analyzer has no discovery/scan hooks.",
+      "baseline_frontend": {
+        "total": 61,
+        "passed": 59,
+        "failed": 2
+      },
+      "intermediate_frontend": {
+        "total": 114,
+        "passed": 113,
+        "failed": 1,
+        "cause": "Stale-row assertion also matched permanent closure disclaimer; narrowed to actual data cell and stale proof signature, retained explicit no-record assertion."
+      },
+      "final_local_related_python_passed": 277,
+      "final_local_frontend_passed": 114,
+      "syntax_and_diff_check": "PASS",
+      "ci": {
+        "run_id": 41454213859,
+        "job_id": 125306670178,
+        "status": "completed",
+        "conclusion": "success",
+        "merge_ref": "eb90c8d83e493d5356f81232aae2b31cdbc33833",
+        "python_passed": 1709,
+        "python_skipped": 4,
+        "frontend_passed": 114,
+        "browser_checks": 28,
+        "page_errors": [],
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "real_ca_posts": 0,
+        "production_requests": 0,
+        "cleanup": "browser profile removed, fixture exited, port released",
+        "browser_scope": "Actual HTTP worker/report persistence and same-job GET with synthetic analysis fixture; UI verifies historical Owner, closure at transaction end, no current-closure claim and one-frontier limit. Python tests exercise the actual observer and historical collector using injected RPC/classifier."
+      },
+      "cases": [
+        "Same-signature/slot successful transaction proof with missing time kept unknown",
+        "Absent post row, wrong Token program, missing/native nonzero end state do not confirm closure",
+        "Owner changes preserve pre/post associations separately",
+        "Malformed/duplicate/negative/bool/out-of-range indices and raw/lookup/decimals context rejected",
+        "Historical funding discovery finds earlier BUY and new funding anchor",
+        "Second frontier discovered but not followed",
+        "Historical reads share current Owner limits",
+        "Actual worker historical-account budget failure preserves old latest and no DONE",
+        "200 observations capped without claiming exhaustive discovery"
+      ],
+      "log_sha256": {
+        "parser_absent_red": "f2c4ce81aa5d2d43728951ec05bdbfd52ac769aa4443062b0e4b5d28bff41005",
+        "baseline_scan_red": "5dd65a84346b7e732d40650ef9531cf31b71804631638e5bd98707abc38f7b7e",
+        "baseline_frontend_red": "ba22e918a595c299393efaa982c2b51a4d01689d22552e77332b1cf1b940f77f",
+        "intermediate_frontend": "ee22c8cd25b5cf505db7cb331a9e3f0c57c3d4ad803586866b1a42a67fa24565",
+        "final_related_python": "aa8e63ff519faac69de191385f4a3f0ebb81ac06c3a0c3c17151a66c0e1afa3b",
+        "final_frontend": "17ca5d7893f378bd760339958cce303835fd4919f2238dc5d37129541195a133"
+      }
+    },
+    "official_sources": [
+      "https://solana.com/docs/rpc/http/gettransaction",
+      "https://solana.com/docs/rpc/json-structures",
+      "https://solana.com/docs/tokens/basics/close-account"
+    ],
+    "boundaries": {
+      "installed_mac_head": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "candidate_deployed": false,
+      "real_source_acceptance": false,
+      "real_rpc": 0,
+      "real_ca_posts": 0,
+      "notifications": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "merged": false,
+      "independent_review": "waived by user; not claimed",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO",
+      "old_failed_job_identity": "UNPROVEN"
+    },
+    "remaining": [
+      "All historical account epochs, later recreation/Owner changes and full economic history",
+      "Historical contexts omitted by provider metadata and bounded read windows",
+      "Material global Owners outside original Top20 history cohort",
+      "External narrative and independent source reconciliation",
+      "Larger Mint/provider support beyond enumeration bounds",
+      "Real Mac and representative CA acceptance"
+    ]
   }
 }
