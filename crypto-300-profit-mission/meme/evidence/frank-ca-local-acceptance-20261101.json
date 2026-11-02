@@ -1225,5 +1225,135 @@
       "new_monitors": 0,
       "independent_review": "WAIVED_NOT_PERFORMED"
     }
+  },
+  "ca_history_pagination_followup_20261102": {
+    "observed_at_utc": "2026-11-02T02:04:11.184Z",
+    "authority": "User continued the existing manual CA mainline with local debugging/isolated tests authorized and independent review waived. No real scan, production rollout or new monitor performed.",
+    "source": {
+      "baseline": "b3319bece6e327de2dbc3a9dfe4bafb779597680",
+      "head": "bc9f4d9a2814d8c27aea805ade209083eb4270c3",
+      "pr": 220,
+      "changed_files": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+        "crypto-300-profit-mission/local-agent/tests/fixtures/frank_ca_browser_server.py",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_browser.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_wallet_cluster_pagination.py"
+      ],
+      "seven_files_exact_remote_readback": true,
+      "reference": {
+        "pr": 48,
+        "head": "26c40912c146dca3e85eb15d69570999dcc7e24f",
+        "path": "mission_agent/mission_control/wallet_history_replay.py",
+        "use": "Source cursor/empty-page semantics inspected; independent Sidecar journal not merged or claimed as current CA recovery"
+      },
+      "implementation_commit": "b5ad9682c8ba7d0b8c159918ebffdadbe900698c"
+    },
+    "behavior": [
+      "Finalized exclusive-before pagination now feeds the actual holder and prefunding transaction loops.",
+      "Initial shallow/legacy plans keep one page; existing standard adaptive selection can read up to 4 pages of 30 target-account signatures and 5 pages of 12 prefunding signatures per selected owner.",
+      "Each attempted window records phase/address/anchor, page and signature counts, duplicate count, oldest/newest known slot/time, continuation cursor, explicit provider-empty observation and stop reason. Initial and adaptive windows both retained.",
+      "Overlap deduplicates transaction work; repeated cursors, source conflict/malformed page or source error stop safely. Only consuming a full page advances its continuation cursor.",
+      "RPC job budget exceptions propagate; a real RPC class max-wire test stops within a page without advancing its cursor or passing assert_can_publish.",
+      "A deeper earlier acquisition excludes later funding from the per-holder prefunding display; all original transfer evidence remains.",
+      "Classification exceptions are counted without echoing raw messages. UI shows localized page progress and per-window evidence with allowlisted stop reasons."
+    ],
+    "bounds": {
+      "page_size": "1..1000",
+      "page_count": "1..8",
+      "standard_adaptive_history_max_signatures": 120,
+      "standard_adaptive_funding_max_signatures": 60,
+      "job_max_wire_attempts": 1200,
+      "job_max_elapsed_seconds": 1800,
+      "job_limits_changed": false,
+      "owner_adaptive_selection_changed": false,
+      "new_retry_or_timer": false
+    },
+    "validation": {
+      "synthetic_old_buy": "Actual standard analyze() finds the synthetic s-110 BUY on page 4 and retains CONFIRMED_BOUNDED/PAGE_LIMIT.",
+      "synthetic_old_funding": "Prefunding loop finds synthetic s-55 beyond the old 50-signature boundary.",
+      "source_empty": "Explicit empty page observed; history_complete remains false.",
+      "cache": "Fresh analyzer and reopened existing RpcCache can reuse pages within existing TTL with 0 new wire calls; not durable worker restart/resume.",
+      "red": {
+        "baseline": "b3319bece6e327de2dbc3a9dfe4bafb779597680",
+        "new_python_failed": 26,
+        "report_frontend_passed": 50,
+        "report_frontend_failed": 2
+      },
+      "local": {
+        "environment": "Linux isolated workspace; external DNS/connect denied by pytest guard, no Mac source access",
+        "python_CA_integrated_passed": 144,
+        "frontend_passed": 105,
+        "frontend_failed": 0,
+        "javascript_syntax": "PASS",
+        "diff_check": "PASS"
+      },
+      "ci": {
+        "head": "bc9f4d9a2814d8c27aea805ade209083eb4270c3",
+        "run": 41375399468,
+        "job": 125054414017,
+        "merge_ref_sha_prefix": "2a810db72",
+        "status": "completed",
+        "conclusion": "success",
+        "metadata_and_logs_readback": true,
+        "python_passed": 1629,
+        "python_skipped": 4,
+        "frontend_passed": 105,
+        "frontend_failed": 0,
+        "browser_checks": 24,
+        "page_errors": 0,
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "production_requests": 0,
+        "real_ca_posts": 0,
+        "cleanup_verified": true,
+        "skip_reasons": [
+          "3 unrelated Monster suites missing numpy",
+          "/tmp symlink-specific macOS case inapplicable on Linux"
+        ],
+        "scope": "Real HTTP Handler and saved reports with synthetic analyzer. New browser scenario opens parent evidence fold and verifies bounded history windows; not real-chain or Mac acceptance."
+      },
+      "first_full_ci": {
+        "head": "b5ad9682c8ba7d0b8c159918ebffdadbe900698c",
+        "run": 41375140345,
+        "job": 125053626052,
+        "conclusion": "failure",
+        "python_passed": 1629,
+        "python_skipped": 4,
+        "frontend_passed": 105,
+        "browser_failure": "new nested history-window summary not visible because the browser test had not opened the parent evidence fold; fixture/browser/port cleanup confirmed",
+        "repair": "Open the existing outer evidence fold through its summary before the new child summary, then close it after the assertion; no production code changed by repair"
+      }
+    },
+    "evidence_hashes": {
+      "paging-final-red.txt": "f561ff8bbf6d3f13901e31ecfba9a2fcd03a0e7dcecb0f68f0d8db9ae1cd45e2",
+      "paging-final-ui-red.txt": "cbfc722829603086eaccf23e620408872d749d25147ccc0b91c4cbb3a9840656",
+      "paging-final-integrated.txt": "8b4fb2081531a02b904aa1f66f907c75e9c777d3042cb478dd5e61f6a9e7e842",
+      "paging-final-ui.txt": "a9c2932573e4dac3cc0c89bb997a629bc5db85cf710b55481becda9c4c8e0b70"
+    },
+    "limits": {
+      "history_complete": false,
+      "provider_end_is_not_wallet_birth_or_true_first_acquisition": true,
+      "collection_on_GET": false,
+      "durable_worker_restart_resumption": false,
+      "full_owner_multi_ATA_history": false,
+      "formal_analysis_complete_contract": "NOT_COMPLETED",
+      "external_narrative_and_independent_parity": "NOT_COMPLETED",
+      "current_candidate_Mac_acceptance": false,
+      "mac_deployments": 0,
+      "real_RPC": 0,
+      "real_CA_POST": 0,
+      "notification_sends": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "new_monitors_or_automations": 0,
+      "trades_or_merges": 0,
+      "original_failed_October_job_identity": "UNPROVEN",
+      "independent_review": "WAIVED_NOT_PERFORMED",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO"
+    }
   }
 }
