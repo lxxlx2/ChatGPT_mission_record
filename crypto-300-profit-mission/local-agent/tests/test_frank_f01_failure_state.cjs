@@ -145,18 +145,21 @@ async function runRefresh(getImpl) {
 function okJson(body) { return { ok: true, status: 200, json: async () => body }; }
 function failJson(path, status) { return { ok: false, status, json: async () => ({}) }; }
 
+// Both views describe the same source event, including its exact timestamp.
+// Sampling Date.now separately can differ by 1 ms and invalidate identity.
+const fixtureEpoch = Date.now()/1000;
 const LIVE_F01 = {
   schema_version: 2, status: 'SOURCE_ONLY', scope: 'FRANK_LOCAL_INDEX_SOURCE_ONLY_NO_EXECUTION_QUOTE',
-  as_of_epoch: Date.now()/1000 - 1, eligible: [], eligible_count: 0,
+  as_of_epoch: fixtureEpoch - 1, eligible: [], eligible_count: 0,
   source_recent_count: 1, source_recent: [{ person_id:'frank', mint:'MINT1', episode_id:'E1',
-    source_signal_id:'S1', latest_signature:'SIG', latest_buy_at: Date.now()/1000 - 60, latest_at: Date.now()/1000 - 60,
+    source_signal_id:'S1', latest_signature:'SIG', latest_buy_at: fixtureEpoch - 60, latest_at: fixtureEpoch - 60,
     latest_side:'BUY', position_state:'OPEN', pattern:'ACCUMULATION', decision:'NO_BUY',
     candidate_source:'FROZEN', f01_source_state:'RECENT_SOURCE_BUY_ONLY',
     execution_eligibility:'NOT_ASSESSED_USER_AMOUNT_MISSING' }],
   excluded_reason_counts: {}, newest_indexed_buy_age_seconds: 60,
 };
 const CANDS = [{ person_id:'frank', mint:'MINT1', episode_id:'E1', source_signal_id:'S1',
-  latest_signature:'SIG', latest_buy_at: Date.now()/1000 - 60, latest_at: Date.now()/1000 - 60,
+  latest_signature:'SIG', latest_buy_at: fixtureEpoch - 60, latest_at: fixtureEpoch - 60,
   latest_side:'BUY', position_state:'OPEN', pattern:'ACCUMULATION', decision:'NO_BUY',
   candidate_source:'FROZEN' }];
 

@@ -408,6 +408,11 @@ class SolanaReadOnlyRPC:
                         payload=response.read(MAX_RESPONSE_BYTES+1)
                         if len(payload)>MAX_RESPONSE_BYTES:raise RPCError("RPC_HOLDER_RANK_RESPONSE_LIMIT")
                         value=json.loads(payload)
+                    elif method in {"getAccountInfo","getMultipleAccounts"} and isinstance(params[-1],dict) and params[-1].get("encoding")=="base64":
+                        from .pool_vaults import MAX_RPC_BYTES
+                        payload=response.read(MAX_RPC_BYTES+1)
+                        if len(payload)>MAX_RPC_BYTES:raise RPCError("RPC_POOL_RESPONSE_LIMIT")
+                        value=json.loads(payload)
                     else:value=json.loads(response.read())
                 self._check_job_deadline()
                 if value.get("error"):
@@ -540,11 +545,12 @@ class WalletClusterAnalyzer:
         material_pct=Decimal("1"),market_client:DexScreenerMarketClient|None=None,
         adaptive_history_per_holder=None,adaptive_funding_lookback=None,
         progress_callback=None,
-        enumerate_holder_ranks=False,independent_market_client=None,compare_market_sources=None,narrative_client=None,collect_narrative=None,
+        enumerate_holder_ranks=False,independent_market_client=None,compare_market_sources=None,narrative_client=None,collect_narrative=None,read_pool_vaults=False,
         history_max_pages=1,funding_max_pages=1,
         adaptive_history_max_pages=1,adaptive_funding_max_pages=1,
     ):
         self.mint=mint;self.rpc=rpc;self.registry=special_registry or {};self.history_per_holder=int(history_per_holder);self.deep_holders=int(deep_holders);self.funding_lookback=int(funding_lookback);self.material_pct=Decimal(material_pct)
+        self.read_pool_vaults=read_pool_vaults is True
         self.market_client=market_client
         self.narrative_client=narrative_client if collect_narrative is not False else None
         self.independent_market_client=independent_market_client if compare_market_sources is not False else None
@@ -834,6 +840,15 @@ class WalletClusterAnalyzer:
             return primary
         except Exception as exc:
             return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","reason":type(exc).__name__}
+
+    def pool_vault_snapshot(self,market):
+        from .pool_vaults import collect_pool_vault_snapshot
+        if not self.read_pool_vaults:return {"version":1,"status":"NOT_REQUESTED","reason":"NOT_ENABLED"}
+        self._progress("POOL_VAULTS",scanned=0)
+        try:return collect_pool_vault_snapshot(self.mint,market,self.rpc)
+        except RPCJobBudgetExceeded:raise
+        except RPCError as exc:
+            return {"version":1,"status":"INCOMPLETE_EVIDENCE","reason":"RESPONSE_LIMIT" if str(exc)=="RPC_POOL_RESPONSE_LIMIT" else "RPC_UNAVAILABLE"}
 
     def narrative_snapshot(self,market):
         empty={"version":1,"status":"NOT_REQUESTED","attempts":[],"evidence":[],
@@ -1178,6 +1193,7 @@ class WalletClusterAnalyzer:
         supply,decimals,holders=self.holders()
         self._history_decimals=decimals
         holder_rankings=self._holder_ranks(token_profile,supply,decimals)
+        pool_vaults=self.pool_vault_snapshot(market)
         self._prepare_owner_account_history(holders,holder_rankings)
         preview_top10_pct=getattr(self,"_raw_top10_snapshot_pct",None)
         self._progress(
@@ -1487,7 +1503,7 @@ class WalletClusterAnalyzer:
             "schema_version":2,"mint":self.mint,"source":"SOLANA_FINALIZED_JSON_RPC",
             "rpc_endpoint":safe_rpc_label(getattr(self.rpc,"endpoint","UNKNOWN")),"rpc_endpoints":endpoints,
             "observed_at":time.time(),"supply_raw":str(supply),"decimals":decimals,
-            "token_profile":token_profile,"market":market,"narrative":narrative,"assessment":assessment,"holders":holder_rows,"holder_rankings":holder_rankings,
+            "token_profile":token_profile,"market":market,"pool_vaults":pool_vaults,"narrative":narrative,"assessment":assessment,"holders":holder_rows,"holder_rankings":holder_rankings,
             "metrics":metrics,"confirmed_relation_groups":relation_groups,"probable_control_clusters":control_groups,
             "probable_execution_clusters":execution_groups,
             "shared_infrastructure_exclusions":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_CEX","SHARED_INFRA"}],
@@ -1553,6 +1569,8 @@ def report_completeness(report:dict)->dict:
     ranks=report.get("holder_rankings") or {}
     profile=report.get("token_profile") or {}
     market=report.get("market") or {}
+    raw_pool=report.get("pool_vaults") or {}
+    raw_pool_read=raw_pool.get("status")=="VAULT_BALANCE_SNAPSHOT"
     narrative=report.get("narrative") or {}
     narrative_read=bool(narrative.get("evidence"))
     narrative_attempted=any(row.get("requested") is True for row in narrative.get("attempts") or [])
@@ -1589,10 +1607,10 @@ def report_completeness(report:dict)->dict:
         "Resolve material unknown relationships using independent non-public evidence; keep inherent uncertainty explicit.",
         ["assessment.cluster_status","unresolved_relation_edges","probable_control_clusters"])
     row("market","PARTIAL" if market.get("status")=="OK" else "UNAVAILABLE",
-        "INDEXED_MARKETS_WITHOUT_RAW_POOL_RECONCILIATION" if compared else "SINGLE_MARKET_REFERENCE_WITHOUT_POOL_RECONCILIATION",
-        ["DexScreener market reference"]+(["GeckoTerminal exact-pool indexer"] if independent.get("attempted") is True else []),
+        "RAW_VAULT_BALANCES_WITHOUT_NET_RESERVE_OR_PRICE_RECONCILIATION" if raw_pool_read else "INDEXED_MARKETS_WITHOUT_RAW_POOL_RECONCILIATION" if compared else "SINGLE_MARKET_REFERENCE_WITHOUT_POOL_RECONCILIATION",
+        ["DexScreener market reference"]+(["GeckoTerminal exact-pool indexer"] if independent.get("attempted") is True else [])+(["Selected PumpSwap raw vault/Mint accounts in one finalized batch; not net reserves"] if raw_pool_read else []),
         "Reconcile dated selected-pool reserves and market definitions with an independent permitted source.",
-        ["market"])
+        ["market","pool_vaults"])
     row("independent_sources","PARTIAL" if compared else "UNAVAILABLE" if independent.get("attempted") is True else "NOT_COLLECTED",
         "INDEXER_COMPARISON_NOT_RAW_POOL_OR_HOLDER_PARITY" if compared else "INDEPENDENT_INDEXER_UNAVAILABLE" if independent.get("attempted") is True else "INDEPENDENT_INDEXER_NOT_REQUESTED",
         ["GeckoTerminal exact selected pool; retrieval timestamps are not provider as-of timestamps"] if independent.get("attempted") is True else ["No independent selected-pool response collected"],
@@ -1728,6 +1746,9 @@ def markdown(report:dict)->str:
                 + ", ".join(g.get("wallets") or [])
                 + (" — evidence: "+", ".join(edge_types) if edge_types else "")
             )
+    lines += ["", "## Raw selected-pool vault balance evidence (not price or executable quote)", "",
+              "Raw vault balances do not establish net reserves, USD valuation, tradability or indexer snapshot parity.",
+              "~~~json", json.dumps(report.get("pool_vaults") or {},ensure_ascii=False,indent=2), "~~~"]
     lines += ["", "## External narrative source claims (bounded; attribution unverified)", "", "~~~json",
               json.dumps(report.get("narrative") or {},ensure_ascii=False,indent=2), "~~~"]
     lines += ["", "## Required evidence gaps", "", "~~~json",

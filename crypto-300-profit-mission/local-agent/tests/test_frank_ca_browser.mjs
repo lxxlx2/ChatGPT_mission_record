@@ -72,6 +72,12 @@ try {
  assert.match(await page.locator('.cluster-market-comparison').innerText(),/25.0000%/);
  assert.match(await page.locator('.cluster-market-comparison').innerText(),/未核对链上池子储备/);
  check('same-pool indexer differences persist with source times and no chain parity claim');
+ assert.equal(saved.pool_vaults.executable_quote,'NOT_COMPUTED');
+ assert.equal(await page.locator('.cluster-pool-vaults').isVisible(),true);
+ assert.match(await page.locator('.cluster-pool-vaults').innerText(),/finalized slot 101/);
+ assert.match(await page.locator('.cluster-pool-vaults').innerText(),/0.000100/);
+ assert.match(await page.locator('.cluster-pool-vaults').innerText(),/美元价格、美元流动性、可执行报价与索引同快照对齐均未核实/);
+ check('raw vault snapshot survives job persistence with visible slot precision and no executable price claim');
  assert.equal(saved.analysis_completeness.status,'INCOMPLETE_EVIDENCE');
  assert.ok(saved.analysis_completeness.missing_required.includes('narrative'));
  assert.ok(saved.analysis_completeness.missing_required.includes('wallet_history'));

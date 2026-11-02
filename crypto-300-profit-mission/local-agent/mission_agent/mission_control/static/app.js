@@ -1476,6 +1476,7 @@ function clusterProgressDetail(job) {
       (p.liquidity_usd != null ? ' · LP ' + usd(p.liquidity_usd) : '') +
       ' · 正在解析 Top20 owner';
   }
+  if (stage==='POOL_VAULTS') return '正在核对所选 PumpSwap 池与两侧金库；原始余额不作为价格';
   if (stage==='NARRATIVE_SOURCES') return '正在读取有限公开来源；页面陈述与精确 CA 归属分开核实';
   if (stage==='HISTORICAL_ACCOUNT_SCAN') return '正在读取交易余额中发现的历史账户；只补查一轮，仍受原任务硬上限保护';
   if (stage==='HOLDER_ENUMERATION') return '正在按 Mint 读取账户来源并合并 Owner 余额；仍受原任务硬上限保护';
@@ -1582,6 +1583,20 @@ function renderNarrativeSources(report,links) {
   }).join('');
   return '<div class="narrative-state"><strong>有界公开来源证据</strong><p>页面陈述属于第三方声明。未做全网检索、未证明最早起源或官方 CA 归属；脚本不执行，登录或访问墙不绕过。</p></div>'+ (cards || '<p>本轮没有可展示的外部页面陈述；未读取不等于叙事不存在。</p>')+
     (attempts?'<details><summary>来源读取范围与缺口</summary><ul>'+attempts+'</ul></details>':'<p>本次未记录公开来源读取；保留资料链接。</p>')+'<div class="narrative-links">'+links+'</div>';
+}
+
+function renderPoolVaults(report) {
+  const r=report.pool_vaults;
+  if (!r || r.status==='NOT_REQUESTED') return '';
+  const market=report.market || {},pair=market.main_pair || {},t=r.target || {},q=r.quote || {};
+  const valid=r.status==='VAULT_BALANCE_SNAPSHOT' && r.mint===report.mint && market.mint===report.mint &&
+    market.status==='OK' && market.source==='DEXSCREENER_API' && r.pool_address===pair.pair_address &&
+    t.mint===report.mint && t.mint===pair.base_address && q.mint===pair.quote_address && t.vault!==q.vault &&
+    t.authority===r.pool_address && q.authority===r.pool_address && Number.isSafeInteger(r.snapshot_slot) && r.snapshot_slot>0;
+  const reasons={UNSUPPORTED_POOL_PROGRAM:'所选池程序尚未支持，未读取其他池子',RPC_UNAVAILABLE:'链上账户读取失败',RESPONSE_LIMIT:'响应超过本轮上限'};
+  const rows=valid ? [t,q].map((v,i)=>'<tr><td>'+(i?'计价币':'目标币')+'</td><td>'+esc(v.mint)+'</td><td>'+esc(v.vault)+'</td><td>'+esc(v.raw)+'</td><td>'+esc(v.decimals)+'</td><td>'+esc(v.quantity)+'</td></tr>').join('') : '';
+  return '<div class="trust-box cluster-pool-vaults"><strong>PumpSwap 原始金库余额</strong><p>仅覆盖所选池。余额比值未扣累计费用、未纳入虚拟储备或 Token-2022 调整；美元价格、美元流动性、可执行报价与索引同快照对齐均未核实。</p>'+
+    (valid ? '<p>finalized slot '+esc(r.snapshot_slot)+'；发现池 slot '+esc(r.discovery_slot)+'。minContextSlot 只设下界，批次实际 slot 另行记录。</p><div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>方向</th><th>Mint</th><th>金库</th><th>原始整数余额</th><th>精度</th><th>数量</th></tr></thead><tbody>'+rows+'</tbody></table></div><p>计价币 / 目标币原始余额比值：'+esc(r.raw_vault_quote_per_target)+'；这项比值不作为市场价格。</p><p>状态限制：'+esc((r.flags || []).join(' / ') || '仍需独立储备模型核对')+'</p>' : '<p>'+esc(reasons[r.reason] || '池子或金库证据不完整，未输出余额比值')+'</p>')+'</div>';
 }
 
 function renderMarketComparison(market,mint) {
@@ -1838,7 +1853,7 @@ function renderClusterReport(report) {
     fact('24h 买 / 卖','<span>' + esc((h24tx.buys ?? '—') + ' / ' + (h24tx.sells ?? '—')) + '</span>') +
     fact('1h 买 / 卖','<span>' + esc((h1tx.buys ?? '—') + ' / ' + (h1tx.sells ?? '—')) + '</span>') +
     fact('价格变化','<span>1h ' + esc(pctText((mainPair.price_change || {}).h1)) + ' · 24h ' + esc(pctText((mainPair.price_change || {}).h24)) + '</span>') +
-    fact('主池 / DEX','<span>' + esc((mainPair.dex_id || '未确认') + ' · ' + short(mainPair.pair_address || '',7,5)) + '</span>',pairLink + ' ' + marketUrl) + renderMarketComparison(market,mint);
+    fact('主池 / DEX','<span>' + esc((mainPair.dex_id || '未确认') + ' · ' + short(mainPair.pair_address || '',7,5)) + '</span>',pairLink + ' ' + marketUrl) + renderMarketComparison(market,mint) + renderPoolVaults(report);
 
   const primary = [
     'RAW_TOP10_PCT','KNOWN_EX_LP_TOP10_PCT','DEV_LINKED_CLUSTER_PCT',

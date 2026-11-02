@@ -796,3 +796,21 @@ test('reading legacy report removes prior external claim and does not fabricate 
   assert.doesNotMatch(h.element('cluster-narrative').innerHTML,/UNIQUE_OLD_NARRATIVE/);
   assert.match(h.element('cluster-narrative').innerHTML,/历史报告.*未记录外部来源读取/);
 });
+
+test('raw vault balances show actual batch slot and precision while prices remain unverified',()=>{
+  const h=harness(),pool='POOL',quote='QUOTE';
+  const r={...fixture,market:{status:'OK',source:'DEXSCREENER_API',mint,main_pair:{pair_address:pool,base_address:mint,quote_address:quote}},pool_vaults:{status:'VAULT_BALANCE_SNAPSHOT',mint,pool_address:pool,snapshot_slot:101,discovery_slot:100,raw_vault_quote_per_target:'2',target:{mint,vault:'A',authority:pool,raw:'100',decimals:6,quantity:'0.000100'},quote:{mint:quote,vault:'B',authority:pool,raw:'200',decimals:6,quantity:'0.000200'},flags:['<unsafe>']}};
+  h.context.renderClusterReport(r);
+  let html=h.element('cluster-market').innerHTML;
+  assert.match(html,/finalized slot 101/);assert.match(html,/0.000100/);assert.match(html,/不作为市场价格/);
+  assert.match(html,/美元价格、美元流动性、可执行报价与索引同快照对齐均未核实/);assert.doesNotMatch(html,/<unsafe>/);
+  r.pool_vaults.pool_address='WRONG';h.context.renderClusterReport(r);html=h.element('cluster-market').innerHTML;
+  assert.doesNotMatch(html,/0.000100|finalized slot 101/);assert.match(html,/证据不完整/);
+});
+
+test('unsupported raw pool never displays provider exception text or old balance rows',()=>{
+  const h=harness();h.context.renderClusterReport({...fixture,pool_vaults:{status:'UNSUPPORTED',reason:'UNSUPPORTED_POOL_PROGRAM'}});
+  assert.match(h.element('cluster-market').innerHTML,/未读取其他池子/);
+  h.context.renderClusterReport({...fixture,pool_vaults:{status:'INCOMPLETE_EVIDENCE',reason:'SECRET_RAW_ERROR'}});
+  assert.doesNotMatch(h.element('cluster-market').innerHTML,/SECRET_RAW_ERROR/);
+});
