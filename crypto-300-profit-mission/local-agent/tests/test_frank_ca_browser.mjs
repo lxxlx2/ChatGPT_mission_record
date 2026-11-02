@@ -60,11 +60,13 @@ try {
  assert.match(await page.locator('#cluster-preset-help').innerText(),/统一查询/);
  check('single query entry removes depth selector and explains bounded incomplete evidence');
  const a=await submit('SYNTHETIC_REPORT_1');
+ await page.locator('.cluster-detail-fold > summary').click();
  await page.locator('.cluster-history-windows summary').click();
  assert.match(await page.locator('#cluster-coverage').innerText(),/目标币账户历史/);
  assert.match(await page.locator('#cluster-coverage').innerText(),/达到本轮页数上限/);
  assert.match(await page.locator('#cluster-coverage').innerText(),/来源空页也不证明完整钱包历史/);
  check('bounded history pages and cursor are visible without claiming full wallet history');
+ await page.locator('.cluster-detail-fold > summary').click();
  const b=await submit('SYNTHETIC_REPORT_2');
  assert.notEqual(a.job_id,b.job_id);
  check('single-mode submits -> distinct real worker persistence -> real report render');
