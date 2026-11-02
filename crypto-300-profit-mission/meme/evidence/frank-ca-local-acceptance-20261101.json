@@ -2311,5 +2311,156 @@
       "Official exact-CA attribution and independently verified origin/propagation",
       "Real representative CA/source failure and Mac UX acceptance"
     ]
+  },
+  "ca_effective_pool_reserves_followup_20261103": {
+    "observed_at_utc": "2026-11-02T19:38:59.405Z",
+    "verdict": "PASS_DOCUMENTED_PUMPSWAP_RESERVE_MODEL; DEPLOYED_SEMANTICS_USD_PARITY_AND_WHOLE_CA_UNVERIFIED",
+    "source": {
+      "pr": 220,
+      "head": "dadeab57eb0a4e21749d29261c6ec5e676e4b9d6",
+      "tree": "76234b8bb2cc28e092b020370e8aa95a54564d57",
+      "baseline": "da80dde885b5df6e8d04d3df150be7ccd96b0e42",
+      "baseline_tree": "bc3e103f3116e5f618adfe458b15666ea95ac517",
+      "isolated_baseline_tree_exact": true,
+      "files": [
+        "crypto-300-profit-mission/local-agent/tests/test_meme_effective_reserves.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/pool_vaults.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+        "crypto-300-profit-mission/local-agent/tests/fixtures/frank_ca_browser_server.py",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_browser.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs"
+      ],
+      "runtime_files": 3,
+      "test_files": 4,
+      "new_files": 1,
+      "remote_readback": "7/7 exact"
+    },
+    "implementation": {
+      "scope": "Derive during existing standard explicit collector from its already-validated single finalized batch. Zero additional RPC/HTTP/provider calls, no new client/service/workflow. GET/legacy reports never backfilled or recollected.",
+      "formula_version": "PUMPSWAP_SIGNED_VQR_V1",
+      "equations": {
+        "waiting_fees_raw": "protocol_fees + creator_fees",
+        "real_quote_raw": "quote_vault_raw - waiting_fees_raw",
+        "boost_component_raw": "signed virtual_quote_reserves + waiting_fees_raw",
+        "effective_quote_raw": "quote_vault_raw + signed virtual_quote_reserves"
+      },
+      "fee_semantics": "Waiting protocol/creator fees are already offset in signed virtual_quote_reserves. Do not subtract fees again from effective reserves. Raw-vault ratio, real quote liquidity and effective pricing reserves are separate.",
+      "missing_fields": "Raw observed pool_parameters still retain null. Only the separately labeled model applies pinned official documented zero defaults for absent trailing virtual/protocol/creator fields and lists each default used. No claim that all currently deployed pools have virtual_quote_reserves=0.",
+      "consistency": "Reject effective quote outside u64, waiting fees exceeding quote vault, and negative boost component not supported by the model evidence. Keep verified raw snapshot; child model INCOMPLETE_EVIDENCE with no derived ratio. This is not a declaration that the pool is invalid.",
+      "precision": "Exact integer arithmetic and Decimal scaling; ratio 80 significant digits, explicit ROUND_HALF_EVEN. Direction maps protocol base/quote to requested target/quote, handles signed VQR and different Mint decimals. Either reserve side zero => ratio UNRESOLVED.",
+      "economic_limits": "Token-2022 and frozen vaults keep ARITHMETIC_ONLY quantities but withhold reserve ratio. Protocol-model result does not establish transfer behavior, executable size/fee/slippage, USD prices/TVL, deploy-binary semantics, or provider snapshot parity.",
+      "reporting": "Separate effective_reserves child in JSON/Markdown. UI rechecks report/pool/Mint identity, raw model ledger, actual raw balances and decimals before showing model rows. UI scales raw integers exactly for quantities, escapes values and clears model rows on legacy/malformed/inconsistent reports. Fixed official fee explanation link included.",
+      "whole_product": "INCOMPLETE_EVIDENCE; market PARTIAL with documented-reserve cause, independent source and all other required gaps retained.",
+      "budget": {
+        "max_wire_attempts": 1200,
+        "max_elapsed_seconds": 1800,
+        "additional_source_calls": 0
+      }
+    },
+    "validation": {
+      "baseline_python": {
+        "tests": 24,
+        "passed": 0,
+        "failed": 24,
+        "cause": "Previously published da80dde lacks effective_reserves; real KeyError assertions, not collection-only failure."
+      },
+      "baseline_frontend": {
+        "tests": 70,
+        "passed": 67,
+        "failed": 3,
+        "cause": "Existing app has no protocol reserve rendering. Fourth new UI invariant/reverse-direction case added afterward."
+      },
+      "final_local_new_python_passed": 24,
+      "final_local_pool_python_passed": 61,
+      "final_local_related_python_passed": 301,
+      "final_local_frontend_passed": 124,
+      "syntax_and_diff": "PASS",
+      "cases": [
+        "Negative signed VQR removes waiting fees exactly once in both requested directions",
+        "Sweep reduces raw quote and waiting fees, increases VQR, preserving effective/real reserves",
+        "Boost recognized by VQR plus waiting fees; negative VQR alone not evidence of boost",
+        "Negative/overflow effective sums, fee deficits and unsupported negative boost withhold model, keep raw balances",
+        "Nine historical field-aligned layouts use individually documented zero defaults without rewriting observed missing fields",
+        "Zero-side pool and Token-2022/frozen economic uncertainty withhold ratio",
+        "Different Mint decimals and tiny nonzero reserve ratios retain precision",
+        "JSON/Markdown/completeness remain incomplete; UI stale identity and inconsistent ledger rejected",
+        "Actual browser worker persistence must retain negative VQR, effective quantity and non-executable scope"
+      ],
+      "ci": {
+        "run_id": 41511498627,
+        "job_id": 125504174383,
+        "head": "dadeab57eb0a4e21749d29261c6ec5e676e4b9d6",
+        "merge_ref": "96acc65a1e9fe89cf3ce298840a141b14696e7e3",
+        "status": "completed",
+        "conclusion": "success",
+        "python_passed": 1838,
+        "python_skipped": 4,
+        "frontend_passed": 124,
+        "browser_checks": 32,
+        "page_errors": [],
+        "blocked_requests": [],
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "real_ca_posts": 0,
+        "production_requests": 0,
+        "browser": "151.0.7922.34",
+        "cleanup": "browser profile removed, fixture exited, port released",
+        "browser_scope": "Actual HTTP worker/persistence and GET recovery with synthetic analysis only. Reserve binary/arithmetic tests use injected RPC; no real representative CA/source acceptance.",
+        "artifact": {
+          "id": 13174215065,
+          "sha256": "c1489415f7a7f35cf59ece3bb0f386e2879c6dd13b7f9cb475a0ebf25081b64a"
+        }
+      },
+      "log_sha256": {
+        "python_red": "c7f6d3e76d591b5f43bf85f4472a72a0c272216ab66585e469a12ce7e90ca4f5",
+        "python_pool_green": "2aee7dbf2b5d469cae7d239e0fc89dd58bfd69b4400a2b65868c1652d5f48465",
+        "ui_red": "57e36e2918b17b76794d6d90f8e934b7d563a3eabc7451e71cee68a7916fbd53",
+        "ui_panel_final": "c3b1ae0d6898d2a32ebb80be50887a935b334848e3253733f55fab19cefc4b18",
+        "related": "44b014b537ea50401d38a4e3173557ee8187ff519ded9564832954452c503e1b",
+        "frontend_final": "94e2c712c3b6ca14062a34ffa7baf4eff524f49db4530e794a02c32f29bd1052"
+      }
+    },
+    "references": [
+      {
+        "url": "https://github.com/pump-fun/pump-public-docs/blob/main/docs/PUMP_SWAP_README.md",
+        "blob": "c2837ee4dd0f8a4839ec41f920369c05d90ca0fc"
+      },
+      {
+        "url": "https://github.com/pump-fun/pump-public-docs/blob/main/docs/NEGATIVE_VIRTUAL_QUOTE_RESERVES.md",
+        "blob": "96fa56d171b92e750ad4f965ea71b7cc2fa4b01b"
+      },
+      {
+        "url": "https://github.com/pump-fun/pump-public-docs/blob/main/docs/VIRTUAL_QUOTE_RESERVES_FEE_ADJUSTMENT.md",
+        "blob": "14d7c316bad91feb976d06e3f88955ae637ea609"
+      }
+    ],
+    "reference_precedence": "General README contains a dated zero-VQR statement. Dedicated signed-VQR and waiting-fee documents supply current arithmetic; do not treat the README statement as live on-chain evidence. Official documentation is protocol-side semantics, not independently verified deployed binary.",
+    "boundaries": {
+      "installed_mac_last_receipt": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "candidate_deployed": false,
+      "real_source_acceptance": false,
+      "real_rpc": 0,
+      "real_ca_posts": 0,
+      "production_requests": 0,
+      "notifications": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "new_services": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "merged": false,
+      "independent_review": "waived by user; not claimed",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO",
+      "old_failed_job_identity": "UNPROVEN"
+    },
+    "remaining": [
+      "Independently verify deployed semantics and dated USD/indexer reconciliation; do not treat virtual/boost reserves as withdrawable dollar liquidity",
+      "Other selected DEX programs and Token-2022 economic/transfer adjustments",
+      "Independent holder source at controlled snapshot",
+      "Full material Owner account epochs/history and official exact-CA attribution/origin",
+      "Real representative source failure, CA product and Mac UX acceptance"
+    ]
   }
 }
