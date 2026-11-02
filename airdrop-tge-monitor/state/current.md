@@ -1,15 +1,15 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-11-03 01:03:11 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-11-03 01:56:59 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-11-03 01:03:11 Asia/Bangkok (attempt 01:01:52)
+- latest_actual_run: 2026-11-03 01:56:59 Asia/Bangkok (attempt 01:56:23; off-minute)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-11-03/010311-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-11-03/010152-attempt.md
+- latest_run_path: airdrop-tge-monitor/runs/2026-11-03/015659-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-11-03/015623-attempt.md
 - latest_scheduled_shard: 1
 - latest_executed_shard: 1
-- stale_shard_recovery: false; fair 01%4=1; last four [2,3,0,1]
+- stale_shard_recovery: false; fair 01%4=1; last four [3,0,1,1], two consecutive shard1 attempts at most
 - latest_candidate_count: 9
 - latest_triggered_events: 0
 - latest_identity_failures: 0
@@ -24,17 +24,17 @@ Timezone: Asia/Bangkok
 - latest_browser_session: UNAVAILABLE (originating browser context restriction); original X_SOURCE_GAP
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
 - last_meaningful_attempt_at_shard0: 2026-11-03 00:03:11 Asia/Bangkok (PARTIAL)
-- last_meaningful_attempt_at_shard1: 2026-11-03 01:03:11 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard1: 2026-11-03 01:56:59 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard2: 2026-11-02 22:03:59 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-11-02 23:00:49 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 010311-final.md commit bd324cb1000ff27ee678ed6d1818878143e6b776
-- latest_terminal_readback: VERIFIED 010311-final.md (main blob SHA 7d580db5659217e60e31a45e653ee501def913a3)
-- latest_four_executed_shards: [2,3,0,1]
+- latest_primary_final_write: VERIFIED_DURABLE 015659-final.md commit f6a8ba8eb0e6a10bdfb045925e8c511e7b24a9d2
+- latest_terminal_readback: VERIFIED 015659-final.md (main blob SHA c0ed3fc4cf8b2025a771989e2a84ae856ca61a76)
+- latest_four_executed_shards: [3,0,1,1]
 - last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (unchanged)
 - last_delivered_gmail_message_id: 1a1812a1f6802ecb
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-11-03 01:03:11 BKK PARTIAL; urgent5 + Surf/StandX + fair shard1, 9 candidate families, 0 new ACTION, 4 source gaps. StandX Nov2 DUSD claim-live still secondary-only; no Gmail/App.
+- latest_terminal_sync: 2026-11-03 01:56:59 BKK PARTIAL off-minute; urgent5 + Surf/StandX + fair shard1, 9 candidate families, 0 new ACTION, 4 source gaps. No Gmail/App.
 - latest_gmail_life_search: after Nov1 rights terms 3 unrelated/self-sent, no new mapped rights
 - latest_gmail_work_search: after Nov1 mapped rights 0
 
@@ -415,3 +415,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-11-02 22:03:59 BKK: existing monitor 220243-attempt.md and readback-verified terminal 220359-final.md committed 1bb685c08fdaa4d79e53dc3b5e5af92e11e56317; urgent5 + Surf/StandX + fair Shard2 (15 distinct Registry projects), bounded Cambria/NeoSoul/StandX lifecycle. Nine existing candidate/right families, zero new Tier A/mapped Tier B ACTION; four source/rights gaps Concrete extra USDC, StandX DUSD Nov2 live first-party, OhBabyGames issuer, 01 private mapped rights. Browser X originating context unavailable; canonical English fallback. Life/work Gmail Inbox and prior Sent checked, unchanged Cambria/NeoSoul keys suppressed; no Gmail/App. Shard2 meaningful PARTIAL attempt advanced; last verified complete Oct10 unchanged. Task/schedule/scope/recipient unchanged.
 
 - 2026-11-03 00:03:11 BKK: existing hourly monitor 000211-attempt.md and readback-verified 000311-final.md committed c164b698d03182d70cd864d42864f75bc861994f; urgent5 + Surf/StandX + fair Shard0 (15 distinct active registered identities), bounded Cambria/NeoSoul/StandX lifecycle. Nine existing candidate/right families, zero fresh Tier A/mapped Tier B ACTION; five source gaps Concrete extra USDC, StandX DUSD Nov2 live claim, Block Stranding Season2, TurboFlow issuer, Makina Recovery Notes. Browser X originating context unavailable; official English fallback. Life Gmail rights search FORBIDDEN, work Inbox 0, no eligible ACTION and no Sent/send. No Gmail/App. Shard0 meaningful PARTIAL attempt advanced, last verified complete Oct10 unchanged. Last four [1,2,3,0]. Task/schedule/scope/recipient unchanged.
+
+- 2026-11-03 01:56:59 BKK: existing monitor off-minute invocation, 015623-attempt.md and readback-verified 015659-final.md committed f6a8ba8eb0e6a10bdfb045925e8c511e7b24a9d2; urgent5 + Surf/StandX + one fair Shard1 (14 unique active Registry identities), bounded Cambria/NeoSoul/StandX lifecycle. Nine known candidate/right families, zero new Tier A/mapped Tier B ACTION, four unresolved source/action gaps Concrete extra USDC, StandX DUSD Nov2 claim, ForecastFDN issuer, Neutrl special redemption. Browser originating X unavailable, canonical English official fallback. Life/work Gmail Inbox searched, no new mapped rights. No Gmail/App. Shard1 meaningful PARTIAL attempt advanced, verified-complete Oct10 unchanged. Last four [3,0,1,1], two consecutive Shard1 attempts; next run should fairly rotate. Existing task/schedule/scope/recipient unchanged; this invocation does not prove HH:00 trigger.
