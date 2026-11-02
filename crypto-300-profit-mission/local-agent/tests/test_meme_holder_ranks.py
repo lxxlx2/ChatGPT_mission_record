@@ -138,6 +138,8 @@ def test_actual_analyzer_adds_full_owner_rank_without_replacing_top20_history_sa
     a.holders=sample;a.token_profile=profile;a.market_snapshot=lambda:{'status':'UNAVAILABLE'}
     a._scan_holder=lambda *args:None;a._scan_funding=lambda *args:None
     out=a.analyze()
+    assert out['analysis_completeness']['status']=='INCOMPLETE_EVIDENCE'
+    assert 'wallet_history' in out['analysis_completeness']['missing_required']
     assert len(out['holders'])==20
     assert out['holder_rankings']['account_count']==30
     assert out['coverage']['eligible_owner_rank_complete'] is True

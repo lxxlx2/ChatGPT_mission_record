@@ -19,7 +19,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from ..meme.cluster import RpcCache, RPCJobBudgetExceeded, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
+from ..meme.cluster import RpcCache, RPCJobBudgetExceeded, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown, report_completeness
 from ..meme.market import DexScreenerMarketClient
 from .db import open_control_ro
 from .delivery_review import summarize_manual_reviews
@@ -523,6 +523,8 @@ class ClusterJobManager:
                 market_client=self.market_client,
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
+            # Recompute for every newly produced report; legacy GETs remain unchanged.
+            report["analysis_completeness"] = report_completeness(report)
             # Do not persist/publish a successful job after an exhausted RPC deadline
             # or a terminal failed attempt, even if a future analyzer catches an error.
             rpc.assert_can_publish()

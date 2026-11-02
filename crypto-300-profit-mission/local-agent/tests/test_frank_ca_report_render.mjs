@@ -672,3 +672,37 @@ test('incomplete global snapshot masks exact metrics and maps safe source reason
   h.context.renderClusterReport({...fixture,holder_rankings:{requested:true,status:'UNAVAILABLE',reason:'https://private.invalid/SECRET',owners:[]}});
   assert.ok(!h.element('cluster-rankings').innerHTML.includes('SECRET'));
 });
+
+test('complete holder flags and PASS permissions never imply complete analysis',()=>{
+  const h=harness();
+  const report=structuredClone(fixture);
+  Object.assign(report.coverage,{special_normalization_complete:true,eligible_owner_rank_complete:true,sample_owner_rank_complete:true,snapshot_consistent:true,gaps:[]});
+  report.assessment.chain_permission_status='PASS';
+  vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
+  assert.match(h.element('cluster-completeness').innerHTML,/完整性尚未评估/);
+  assert.doesNotMatch(h.element('cluster-status').className,/done/);
+});
+
+test('explicit incomplete contract displays mandatory gaps despite complete rank snapshot',()=>{
+  const h=harness();const report=structuredClone(fixture);
+  report.analysis_completeness={version:1,status:'INCOMPLETE_EVIDENCE',requirements:[
+    {id:'holder_balances',status:'VERIFIED_SNAPSHOT'},
+    {id:'wallet_history',status:'PARTIAL'},
+    {id:'narrative',status:'NOT_COLLECTED'},
+    {id:'independent_sources',status:'NOT_COLLECTED'},
+  ]};
+  vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
+  const html=h.element('cluster-completeness').innerHTML;
+  assert.match(html,/证据不完整/);assert.match(html,/完整历史/);assert.match(html,/外部叙事/);
+  assert.match(html,/独立来源/);assert.match(html,/下一来源/);
+  assert.match(h.element('cluster-status').innerHTML,/证据不完整/);
+});
+
+test('unsupported complete claims and source text cannot turn completeness green or inject markup',()=>{
+  const h=harness();const report=structuredClone(fixture);
+  report.analysis_completeness={version:1,status:'ANALYSIS_COMPLETE',requirements:[{id:'<img src=x onerror=alert(1)>',status:'VERIFIED_SNAPSHOT',cause:'SECRET_PROVIDER_TEXT'}]};
+  vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
+  assert.match(h.element('cluster-completeness').innerHTML,/完整性状态无法核实/);
+  assert.doesNotMatch(h.element('cluster-completeness').innerHTML,/<img|SECRET_PROVIDER_TEXT/);
+  assert.doesNotMatch(h.element('cluster-status').className,/done/);
+});

@@ -1238,6 +1238,7 @@ const clusterEdgeLabel = {
 
 let clusterLastAutoLoaded=false;
 const CLUSTER_PENDING_KEY = 'mission-meme-cluster-pending-v1';
+let clusterCompletenessLabel = '完整性尚未评估';
 const CLUSTER_GET_MAX_RETRIES = 3;
 const CLUSTER_REPORTS_KEY = 'mission-meme-cluster-reports-v1';
 let clusterPollTimer = null;
@@ -1604,10 +1605,42 @@ function renderHolderRankings(report) {
     '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>#</th><th>Owner</th><th>代币数量</th><th>账户数</th><th>供给占比</th><th>身份</th><th>历史覆盖</th></tr></thead><tbody>'+(rows || '<tr><td colspan="7">完整排名未获得，原始Top20样本仍可查看</td></tr>')+'</tbody></table></div>';
 }
 
+const clusterRequiredEvidence = {
+  contract:['合约控制与来源','Mint 解析未覆盖全部合约来源与控制','Mint 账户解析','核对元数据权限及适用程序控制证据'],
+  holder_balances:['全局持有人余额排名','完整 Mint 账户来源或同 slot 供给尚未核实','供给、Top20 及按需全 Mint 枚举','取得完整账户来源并核对实际 slot 和总供给'],
+  holder_roles:['特殊地址身份','特殊地址身份尚未全部核实','Owner 元数据和身份登记','逐项核对池、Vault、CEX 及金库证据'],
+  wallet_history:['完整历史与资金','有界采样未覆盖全部 Owner 账户及经济历史','已记录的目标币及资金历史窗口','枚举重大 Owner 全部账户并核对买入、卖出和资金流'],
+  control_attribution:['控制关系归因','样本关系未形成完整受益控制归因','已覆盖的转账、资金、签名及归集证据','补独立非公共关系证据并保留归属不确定性'],
+  market:['市场与池子核对','单一市场参考尚未核对池子储备','市场参考读取路径','核对指定池子的链上储备与独立市场定义'],
+  independent_sources:['独立来源对照','独立池子及持有人对照尚未接入','未执行独立来源对照','比较同 CA、同时间窗口及同口径来源'],
+  narrative:['外部叙事','外部帖子采集尚未接入','仅市场附带官网及社交链接','读取可访问的项目、发射台及社区来源并核对 exact CA'],
+};
+function renderClusterCompleteness(report) {
+  const node=$('cluster-completeness');
+  const contract=report.analysis_completeness;
+  const valid=contract?.version===1 && contract.status==='INCOMPLETE_EVIDENCE' && Array.isArray(contract.requirements);
+  clusterCompletenessLabel=valid ? '证据不完整' : contract ? '完整性状态无法核实' : '完整性尚未评估';
+  const states={PARTIAL:'部分覆盖',UNAVAILABLE:'来源不可用',NOT_COLLECTED:'尚未采集'};
+  const requirements=valid ? contract.requirements : [];
+  // Fixed domain labels only. Unknown, duplicated or missing rows cannot hide a
+  // mandatory gap, and unsupported COMPLETE claims never produce a green state.
+  const gaps=Object.entries(clusterRequiredEvidence).flatMap(([id,labels])=>{
+    const rows=requirements.filter(r=>r && r.id===id);
+    if (valid && rows.length===1 && rows[0].status==='VERIFIED_SNAPSHOT' && ['holder_balances','holder_roles'].includes(id)) return [];
+    const state=rows.length===1 ? states[rows[0].status] : null;
+    return ['<li><strong>'+esc(labels[0])+'</strong>：'+esc(state || '尚未评估')+'。'+esc(labels[1])+
+      '。已用来源：'+esc(valid ? labels[2] : '未记录，旧报告未做本轮来源复核')+'；下一来源：'+esc(labels[3])+'。</li>'];
+  });
+  node.innerHTML='<h2>'+esc(clusterCompletenessLabel)+'</h2><p>任务执行结束与尽调完整性分别核实；余额排名已核实也不能证明完整历史或可买。</p>'+
+    (!valid ? '<p>此报告没有受支持的完整性记录，保留原始证据，不补造已验收结论。</p>' : '')+
+    '<details><summary>尚缺哪些必需证据</summary><ul>'+gaps.join('')+'</ul></details>';
+}
+
 function renderClusterReport(report) {
   $('cluster-result').hidden = false;
   $('cluster-preview').hidden = true;
   renderHolderRankings(report);
+  renderClusterCompleteness(report);
   const coverage = report.coverage || {};
   const metrics = report.metrics || {};
   const mint = report.mint || '';
@@ -1818,7 +1851,7 @@ function renderClusterReport(report) {
     '<p>目前仅展示市场资料附带的链接；不抓取实时官方帖子，也不提供官方认领或叙事打分。</p></div>' +
     '<div class="narrative-links">' + (websites || socials ? websites + socials : '<span class="muted">当前市场资料没有可展示的官网/社交链接</span>') + '</div>';
 
-  clusterStatus(strictComplete ? 'done' : 'running',strictComplete ? '报告已读取' : '报告已读取，持有人归一化尚未完成', '数据时间 ' + observedAge + (rpcFailures ? ' · 有部分链上请求失败，详情见证据' : ''));
+  clusterStatus('running','报告已读取，'+clusterCompletenessLabel+(coverage.special_normalization_complete===true?'':'；持有人归一化尚未完成'), '数据时间 ' + observedAge + (rpcFailures ? ' · 有部分链上请求失败，详情见证据' : ''));
 }
 
 
@@ -2052,7 +2085,7 @@ async function pollClusterJob(jobId, failures=0) {
         clusterRememberMint(mint);
         // Completed-job report GET is scoped to its original job ID.
         clusterStatus('running','原分析任务已结束，已读取该任务报告',
-          clusterLastReportJobVerified ? '保存报告中的任务编号与已结束任务一致；覆盖与完整性仍须另行核实' :
+          clusterLastReportJobVerified ? '保存报告中的任务编号与已结束任务一致；覆盖与完整性仍须另行核实 · '+clusterCompletenessLabel :
             '该报告缺少可核对的本次任务编号，无法独立证明与本次分析一一对应');
       }
       return;
@@ -2121,9 +2154,9 @@ async function clusterLoadHistoricalCache() {
     renderClusterReport(report);
     const observed=Number(report.observed_at);
     const when=Number.isFinite(observed)&&observed>0 ? new Date(observed*1000).toLocaleString('zh-CN') : '时间未知';
-    const complete=report.coverage?.special_normalization_complete===true;
+    const completeness=clusterCompletenessLabel;
     clusterStatus('running','已读取已有历史报告',
-      '数据时间 '+when+' · '+(complete?'部分覆盖标记已完成':'覆盖仍不完整')+' · 与当前任务的关联未经核实');
+      '数据时间 '+when+' · '+'覆盖仍不完整 · '+completeness+' · 与当前任务的关联未经核实');
   } catch (_) {
     if (clusterPollVersion!==version ||
         (clusterActiveJob?.id||null)!==jobId ||
@@ -2166,7 +2199,7 @@ $('cluster-resume-get').addEventListener('click',()=>{
         $('cluster-submit').disabled=false;
         $('cluster-submit').textContent='重新查询';
         clusterStatus('running','已读取该任务保存报告',
-          clusterLastReportJobVerified ? '保存报告中的任务编号已与本次任务核对；覆盖与完整性仍未证明' :
+          clusterLastReportJobVerified ? '保存报告中的任务编号已与本次任务核对；覆盖与完整性仍未证明 · '+clusterCompletenessLabel :
             '报告与本次任务的身份关联仍未独立核实');
       }
     });
@@ -2259,7 +2292,7 @@ $('cluster-read-report').addEventListener('click',async()=>{
     if (report?.mint!==row.mint || report?.ca_job_id!==row.id) throw new Error('SAVED_REPORT_IDENTITY_MISMATCH');
     renderClusterReport(report);
     clusterRememberReport(report);
-    clusterStatus('running','已读取该任务保存报告','保存报告中的任务编号与 CA 已核对；覆盖与完整性仍须另行核实');
+    clusterStatus('running','已读取该任务保存报告','保存报告中的任务编号与 CA 已核对；覆盖与完整性仍须另行核实 · '+clusterCompletenessLabel);
   } catch (_) {
     if (!current()) return;
     $('cluster-result').hidden=true;

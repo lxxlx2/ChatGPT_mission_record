@@ -1312,7 +1312,7 @@ class WalletClusterAnalyzer:
                         (getattr(self.rpc,"endpoint_calls",{}) or {}).items()}
         endpoint_failures={safe_rpc_label(k):v for k,v in
                            (getattr(self.rpc,"endpoint_failures",{}) or {}).items()}
-        return {
+        report = {
             "schema_version":2,"mint":self.mint,"source":"SOLANA_FINALIZED_JSON_RPC",
             "rpc_endpoint":safe_rpc_label(getattr(self.rpc,"endpoint","UNKNOWN")),"rpc_endpoints":endpoints,
             "observed_at":time.time(),"supply_raw":str(supply),"decimals":decimals,
@@ -1358,6 +1358,68 @@ class WalletClusterAnalyzer:
                 "Narrative ownership, social endorsement and creator identity are not automatically inferred from token name or social links.",
             ],
         }
+        report["analysis_completeness"]=report_completeness(report)
+        return report
+
+
+def report_completeness(report:dict)->dict:
+    """Versioned product outcome, independent of worker DONE and risk ratings.
+
+    This collector has no full economic-history, independent-market or narrative
+    acquisition path. No combination of snapshot flags can close those required
+    gaps. VERIFIED_SNAPSHOT is deliberately narrower than analysis completion.
+    Only fixed capability descriptions are emitted, never provider error text.
+    """
+    ranks=report.get("holder_rankings") or {}
+    profile=report.get("token_profile") or {}
+    market=report.get("market") or {}
+    ranked=ranks.get("requested") is True and ranks.get("status")=="COMPLETE_SNAPSHOT"
+    normalized=ranked and ranks.get("normalization_complete") is True
+    requirements=[]
+    def row(key,status,cause,attempted,next_source,paths):
+        requirements.append({"id":key,"status":status,"cause":cause,
+                             "attempted_sources":attempted,"next_source":next_source,
+                             "evidence_paths":paths})
+    row("contract","PARTIAL" if profile.get("status")=="OK" else "UNAVAILABLE",
+        "PARSED_MINT_IS_NOT_FULL_CONTRACT_PROVENANCE",
+        ["Finalized getAccountInfo mint parsing"],
+        "Verify metadata/update authority and applicable program controls with account/transaction evidence.",
+        ["token_profile","assessment.chain_permission_status"])
+    row("holder_balances","VERIFIED_SNAPSHOT" if ranked else "PARTIAL",
+        "SAME_SLOT_SUPPLY_RECONCILED" if ranked else "FULL_MINT_RANK_SOURCE_NOT_VERIFIED",
+        ["Finalized supply and Top20 account reads", "Mint-filtered getProgramAccounts" if ranks.get("requested") is True else "Full enumeration not requested"],
+        "Use a permitted complete mint-account source within bounds and reconcile actual slots and supply.",
+        ["holder_rankings","coverage.snapshot_slots"])
+    row("holder_roles","VERIFIED_SNAPSHOT" if normalized else "PARTIAL",
+        "SNAPSHOT_ROLES_NORMALIZED" if normalized else "SPECIAL_ADDRESS_IDENTITIES_NOT_FULLY_VERIFIED",
+        ["Owner account metadata and configured special-address registry"],
+        "Verify pool/vault/CEX/treasury roles with dated program/account/transaction evidence.",
+        ["holder_rankings.normalization_complete","holders"])
+    row("wallet_history","PARTIAL","BOUNDED_HISTORY_NOT_ALL_OWNER_ACCOUNTS",
+        ["Sampled token-account history and owner prefunding signature windows"],
+        "Enumerate all material Owner token accounts and reconcile complete acquisition/sale/funding movements.",
+        ["coverage.history_windows","coverage.owners_not_scanned","trade_evidence","funding_evidence"])
+    row("control_attribution","PARTIAL","BOUNDED_RELATIONS_NOT_COMPLETE_BENEFICIAL_CONTROL",
+        ["Sampled transfers/funders/signers/consolidations with public-infrastructure exclusions"],
+        "Resolve material unknown relationships using independent non-public evidence; keep inherent uncertainty explicit.",
+        ["assessment.cluster_status","unresolved_relation_edges","probable_control_clusters"])
+    row("market","PARTIAL" if market.get("status")=="OK" else "UNAVAILABLE",
+        "SINGLE_MARKET_REFERENCE_WITHOUT_POOL_RECONCILIATION",
+        ["DexScreener market reference"],
+        "Reconcile dated selected-pool reserves and market definitions with an independent permitted source.",
+        ["market"])
+    row("independent_sources","NOT_COLLECTED","INDEPENDENT_SOURCE_COMPARISON_NOT_IMPLEMENTED",
+        ["No independent pool/holder comparison collector is connected"],
+        "Compare the same CA, observation window and definitions using independent pool/holder evidence.",
+        [])
+    row("narrative","NOT_COLLECTED","EXTERNAL_NARRATIVE_COLLECTION_NOT_IMPLEMENTED",
+        ["Market profile website/social hints only; external posts not collected"],
+        "Read accessible launchpad/project/X/community sources; record exact-CA mention and attribution separately.",
+        ["market.websites","market.socials","assessment.narrative_status"])
+    return {"version":1,"status":"INCOMPLETE_EVIDENCE",
+            "scope":"MANUAL_CA_DUE_DILIGENCE",
+            "requirements":requirements,
+            "missing_required":[r["id"] for r in requirements if r["status"]!="VERIFIED_SNAPSHOT"]}
 
 
 def load_registry(path:Path|None):
@@ -1382,6 +1444,11 @@ def markdown(report:dict)->str:
     market=report.get("market") or {}
     assessment=report.get("assessment") or {}
     pair=market.get("main_pair") or {}
+    completeness=report.get("analysis_completeness")
+    if not (isinstance(completeness,dict) and completeness.get("version")==1
+            and completeness.get("status")=="INCOMPLETE_EVIDENCE"
+            and isinstance(completeness.get("requirements"),list)):
+        completeness={"status":"NOT_ASSESSED","requirements":[]}
     lines=[
         f"# Meme CA Research — {report.get('mint')}",
         "",
@@ -1390,6 +1457,7 @@ def markdown(report:dict)->str:
         "",
         "## Conclusion",
         "",
+        f"- Analysis completeness: {completeness['status']}",
         f"- Trading status: {assessment.get('trading_status','UNRESOLVED')}",
         f"- Chain permission: {assessment.get('chain_permission_status','UNRESOLVED')}",
         f"- Wallet cluster: {assessment.get('cluster_status','UNRESOLVED')}",
@@ -1473,6 +1541,9 @@ def markdown(report:dict)->str:
                 + ", ".join(g.get("wallets") or [])
                 + (" — evidence: "+", ".join(edge_types) if edge_types else "")
             )
+    lines += ["", "## Required evidence gaps", "", "~~~json",
+              json.dumps([r for r in completeness["requirements"]
+                          if r.get("status")!="VERIFIED_SNAPSHOT"],ensure_ascii=False,indent=2), "~~~"]
     lines += [
         "",
         "## Coverage",
