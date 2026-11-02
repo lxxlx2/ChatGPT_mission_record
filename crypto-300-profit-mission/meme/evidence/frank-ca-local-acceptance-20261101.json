@@ -1986,5 +1986,172 @@
       "Larger Mint/provider source support beyond bounds",
       "Real Mac and representative CA source/UX acceptance"
     ]
+  },
+  "ca_public_narrative_sources_followup_20261102": {
+    "observed_at_utc": "2026-11-02T15:29:01.985Z",
+    "verdict": "PASS_BOUNDED_PUBLIC_SOURCE_CLAIMS; OFFICIAL_ATTRIBUTION_ORIGIN_AND_WHOLE_CA_UNVERIFIED",
+    "source": {
+      "pr": 220,
+      "head": "a670a4d30d386283f81737e36632022fa2677edf",
+      "first_implementation": "1853772c2c7182afe8ccc80aab321c3b6941d2cd",
+      "baseline": "eca0b3704b21ca36761fceb679ddf41acd06df89",
+      "baseline_tree": "5db10ca69b92d2964f5acf81ad8631f16a372754",
+      "isolated_baseline_tree_exact": true,
+      "tree": "0715b84ffbdcb0c26d5c9e792f34d401836122b8",
+      "files": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/market.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/narrative.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/public_html.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+        "crypto-300-profit-mission/local-agent/tests/fixtures/frank_ca_browser_server.py",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_browser.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_market_and_rpc.py",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_narrative.py",
+        "crypto-300-profit-mission/local-agent/tests/test_mission_control_dashboard.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/index.html"
+      ],
+      "runtime_files": 7,
+      "test_files": 6,
+      "new_files": 3,
+      "remote_file_readback": "13/13 exact content match"
+    },
+    "implementation": {
+      "scope": "Explicit standard job only, after primary market source/Mint identity matches request. Legacy quick/deep, CLI without client, GET/report history recovery do not start reads.",
+      "candidates": "Fixed pump.fun coin page plus bounded market website/social hints. Up to four website/two social hints examined, duplicate URLs deduplicated; at most three reader invocations, no recursive crawl.",
+      "social_compatibility": "Official reference exposes platform/handle. Preserve those fields and additionally accept type/url shape; derive X profile URL only from constrained handle as an unverified hint. No claim a real provider response was broken.",
+      "transport": "Public HTTPS port443 only, no credentials/query/private/local/selected-region URLs. Check all returned addresses are public, require a public IPv4, pin checked IP to TCP while TLS verifies original host, reject redirects and compressed/non-HTML bodies.",
+      "max_html_bytes": 262144,
+      "fetch_worker_timeout_seconds": 10,
+      "timeout_note": "Short-lived -I -S Python worker includes DNS/connect/response/body within subprocess timeout; process creation overhead is not claimed to have an exact bound. Worker ends on completion/timeout, not a new service or scheduler.",
+      "worker_environment": {
+        "LANG": "C"
+      },
+      "per_operation_socket_timeout_seconds": 5,
+      "inherit_credentials_proxy_cookies": false,
+      "execute_scripts": false,
+      "follow_links": false,
+      "source_coverage": "BOUNDED_HINTS_ONLY; exhaustive=false",
+      "claims": "THIRD_PARTY_CLAIM only; author and timezone-aware publisher date remain publisher claims. Missing/naive dates remain null. First-seen timestamp is THIS_REPORT_ONLY, not earliest publication or system-global first-seen.",
+      "ca_binding": "Exact case-sensitive Base58-boundary match in parsed static text/title/description; URL match alone is separate and never official recognition. No rendered visibility check. Scripts/styles/templates/noscript are excluded.",
+      "excerpt_limits": "At most 16 words/200 chars excerpt, 6-word title/80 chars, 2-word author/60 chars. Identical normalized claim fingerprints are retained once and duplicate attempts marked.",
+      "official_recognition": "UNVERIFIED",
+      "earliest_origin": "UNVERIFIED",
+      "completeness": "Narrative PARTIAL when source claims collected, UNAVAILABLE when attempted but no claim, otherwise NOT_COLLECTED; whole analysis INCOMPLETE_EVIDENCE.",
+      "rpc_budget_unchanged": {
+        "max_wire_attempts": 1200,
+        "max_elapsed_seconds": 1800
+      }
+    },
+    "validation": {
+      "new_python_tests": 42,
+      "baseline_modules_absent": "1 collection ImportError for missing public_html module, not 42 failed assertions.",
+      "baseline_with_pure_readers_staged": {
+        "tests": 42,
+        "passed": 38,
+        "failed": 4,
+        "note": "New standalone/pure modules staged only for collection; old analyzer/worker lacks wiring and old market adapter lacks alternate social shape."
+      },
+      "baseline_frontend": {
+        "tests": 65,
+        "passed": 63,
+        "failed": 2
+      },
+      "intermediate_related_python": {
+        "passed": 345,
+        "failed": 2,
+        "cause": "Old static tests asserted unavailable-feature text. Updated to actual bounded-source/unverified attribution/script-access limits; kept original no-full-investment-claim and dashboard-order protections."
+      },
+      "final_local_related_python_passed": 351,
+      "final_local_frontend_passed": 118,
+      "post_fold_fix_targeted_python_passed": 75,
+      "standalone_worker_check": "Actual python -I -S public_html.py --fetch http://localhost/ rejects URL before DNS; no package imports/network.",
+      "syntax_and_diff_check": "PASS",
+      "first_ci": {
+        "run_id": 41470425236,
+        "job_id": 125362225639,
+        "head": "1853772c2c7182afe8ccc80aab321c3b6941d2cd",
+        "conclusion": "failure",
+        "python_passed": 1777,
+        "python_skipped": 4,
+        "frontend_passed": 118,
+        "browser": "Failed before reading visible narrative text: parent details closed, actual innerText empty.",
+        "cleanup": "browser profile removed, fixture exited, port released",
+        "fix": "Open actual parent details, assert panel visible, keep all text/attribution assertions. Update old panel heading and completeness docstring; no removal of checks or hidden-text substitution."
+      },
+      "ci": {
+        "run_id": 41471190994,
+        "job_id": 125364887649,
+        "head": "a670a4d30d386283f81737e36632022fa2677edf",
+        "merge_ref": "510446bc5e84cb10b8164c54bd3ba69642985268",
+        "status": "completed",
+        "conclusion": "success",
+        "python_passed": 1777,
+        "python_skipped": 4,
+        "frontend_passed": 118,
+        "browser_checks": 30,
+        "page_errors": [],
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "real_ca_posts": 0,
+        "production_requests": 0,
+        "cleanup": "browser profile removed, fixture exited, port released",
+        "browser_scope": "Actual HTTP worker/persistence/identity-bound GET and expanded narrative UI with synthetic claims. Python new source tests use injected DNS/TLS/HTTP/process data; no real CA source acceptance."
+      },
+      "cases": [
+        "Narrative retained without exact CA mention; official attribution never upgraded",
+        "CA in URL/script or larger identifier not promoted to content match",
+        "Publisher timezone-aware date separated from report-read time; missing date not invented",
+        "Access walls and script-only or generic platform pages produce missing evidence",
+        "Bad URL, userinfo/query, local/metadata/private/multicast/mixed DNS never connect",
+        "Single checked DNS answer pinned to TCP, original hostname and certificate requirement retained",
+        "Redirect denied, credential-free worker timeout, isolated script operation",
+        "Bounded alternative source attempts, no link recursion, duplicate claims not independent corroboration",
+        "Legacy report clears prior external claim and keeps unverified hints"
+      ],
+      "log_sha256": {
+        "modules_absent_red": "381d39e7d1de7dc6f097f4ea9c8704b8ac32e019c2c206f2355799a8d5d9340f",
+        "baseline_red": "beb4eccab884feafe4da780585802576df88001916fdfaa2eee128dce96b18ae",
+        "baseline_frontend": "2fe330788565051f3cd58bf27822ae96fddea75e307d9acd3105a2e3f8387e75",
+        "intermediate_related": "6c212a3eb2e810281aad4a6863c04d5ce90bf156107f890d65a4d49a2ef86c0f",
+        "final_related": "bfcd96c015ca98ae4d48248bd3133a986b575120fbf09a0a697ece701a365c05",
+        "final_frontend": "0630321f6294e312e0b7edadf098f5b8aec025d0fb7e6d7059f4ea2a1f0fc661",
+        "fold_fix_targeted": "b160574243614861d5982cab2d8efacf076bae4e8a166767238d33dbfe46f6e5"
+      }
+    },
+    "references": [
+      "https://docs.python.org/3/library/html.parser.html",
+      "https://docs.python.org/3/library/http.client.html",
+      "https://docs.python.org/3/library/subprocess.html",
+      "https://docs.dexscreener.com/api/reference"
+    ],
+    "boundaries": {
+      "installed_mac_head": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "candidate_deployed": false,
+      "real_source_acceptance": false,
+      "real_ca_source_collection_run": false,
+      "real_rpc": 0,
+      "real_ca_posts": 0,
+      "notifications": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "new_services": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "merged": false,
+      "independent_review": "waived by user; not claimed",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO",
+      "old_failed_job_identity": "UNPROVEN"
+    },
+    "remaining": [
+      "Independently attributed official exact-CA recognition, actual public posts and propagation/origin beyond bounded hints",
+      "Raw DEX pool and independent holder reconciliation",
+      "Full history/account epochs and material Owners outside sample",
+      "Larger-Mint/provider limits",
+      "Real representative CA/source failure and Mac UX acceptance"
+    ]
   }
 }
