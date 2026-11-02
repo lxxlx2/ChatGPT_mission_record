@@ -152,7 +152,7 @@
       "impact": "SYSTEMIC",
       "status": "verified",
       "source_confirmed": true,
-      "impact_breadth": "multi-venue",
+      "impact_breadth": "market-wide",
       "top5_basis": "重大交易所遭遇约63亿美元热钱包事故后，首批15条链提现实际恢复直接改变全球用户资金可转移性；剩余网络与储备证明仍待核实。",
       "top5_evidence_url": "https://www.binance.com/en/square/post/383634490736604",
       "novelty_proof": {
@@ -493,7 +493,8 @@
         "https://www.binance.com/en/square/post/383634490736604"
       ],
       "published_at": "2026-11-01",
-      "summary": "Binance first-phase withdrawal actual reopening; Solana Mobile/THORChain separately attributed"
+      "summary": "Binance first-phase withdrawal actual reopening; Solana Mobile/THORChain separately attributed",
+      "discovery_decision": "INCLUDE_NEW_BINANCE_STATE_OR_SOURCE_GAP"
     },
     {
       "lane": "backend_framework_auth",
@@ -610,7 +611,8 @@
       "checked_at": "2026-11-02T01:28:34.294Z",
       "query_or_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
       "status": "source_gap",
-      "error": "HTTP 403 Forbidden; fallback vendor original advisories actually checked"
+      "error": "HTTP 403 Forbidden; fallback vendor original advisories actually checked",
+      "discovery_decision": "INCLUDE_NEW_BINANCE_STATE_OR_SOURCE_GAP"
     },
     {
       "lane": "macro",
@@ -643,7 +645,8 @@
         "https://www.kraken.com/ipo"
       ],
       "published_at": null,
-      "summary": "Kraken official IPO access general page; NO Anthropic-specific offer found"
+      "summary": "Kraken official IPO access general page; NO Anthropic-specific offer found",
+      "discovery_decision": "UNCONFIRMED_MONITORING"
     },
     {
       "lane": "third_party_ipo_access",
@@ -654,7 +657,8 @@
         "https://www.anthropic.com/news/s1-sec"
       ],
       "published_at": "2026-10-26",
-      "summary": "Anthropic issuer S-1 announcement does not authorize any crypto exchange allocation"
+      "summary": "Anthropic issuer S-1 announcement does not authorize any crypto exchange allocation",
+      "discovery_decision": "UNCONFIRMED_MONITORING"
     },
     {
       "lane": "official_x",
@@ -666,7 +670,8 @@
       "read_mode": "BROWSER_SESSION_UNAVAILABLE",
       "issuer": "Solana Mobile",
       "verified_account": "@solanamobile",
-      "post_url": "https://x.com/solanamobile/status/2116962140301266959"
+      "post_url": "https://x.com/solanamobile/status/2116962140301266959",
+      "read_status": "HTTP_403"
     },
     {
       "lane": "official_x",
@@ -677,7 +682,8 @@
       "browser_session": "UNAVAILABLE",
       "issuer": "THORChain",
       "verified_account": "@THORChain",
-      "post_url": "https://x.com/THORChain/status/2117011632757092501"
+      "post_url": "https://x.com/THORChain/status/2117011632757092501",
+      "read_status": "HTTP_403"
     },
     {
       "lane": "third_party_ipo_access",
@@ -686,7 +692,8 @@
       "status": "source_gap",
       "error": "Bounded English official-site search for Anthropic IPO subscription/allocation returned no issuer-named offer; venue=Binance; do not infer exhaustive site clearance",
       "venue": "Binance",
-      "decision": "UNCONFIRMED_MONITORING"
+      "decision": "UNCONFIRMED_MONITORING",
+      "discovery_decision": "UNCONFIRMED_MONITORING"
     },
     {
       "lane": "third_party_ipo_access",
@@ -695,7 +702,8 @@
       "status": "source_gap",
       "error": "Bounded English official-site search for Anthropic IPO subscription/allocation returned no issuer-named offer; venue=Bitget; do not infer exhaustive site clearance",
       "venue": "Bitget",
-      "decision": "UNCONFIRMED_MONITORING"
+      "decision": "UNCONFIRMED_MONITORING",
+      "discovery_decision": "UNCONFIRMED_MONITORING"
     },
     {
       "lane": "third_party_ipo_access",
@@ -704,7 +712,8 @@
       "status": "source_gap",
       "error": "Bounded English official-site search for Anthropic IPO subscription/allocation returned no issuer-named offer; venue=Bybit; do not infer exhaustive site clearance",
       "venue": "Bybit",
-      "decision": "UNCONFIRMED_MONITORING"
+      "decision": "UNCONFIRMED_MONITORING",
+      "discovery_decision": "UNCONFIRMED_MONITORING"
     },
     {
       "lane": "third_party_ipo_access",
@@ -713,7 +722,8 @@
       "status": "source_gap",
       "error": "Bounded English official-site search for Anthropic IPO subscription/allocation returned no issuer-named offer; venue=Gate; do not infer exhaustive site clearance",
       "venue": "Gate",
-      "decision": "UNCONFIRMED_MONITORING"
+      "decision": "UNCONFIRMED_MONITORING",
+      "discovery_decision": "UNCONFIRMED_MONITORING"
     },
     {
       "lane": "third_party_ipo_access",
@@ -722,7 +732,8 @@
       "status": "source_gap",
       "error": "Bounded English official-site search for Anthropic IPO subscription/allocation returned no issuer-named offer; venue=OKX; do not infer exhaustive site clearance",
       "venue": "OKX",
-      "decision": "UNCONFIRMED_MONITORING"
+      "decision": "UNCONFIRMED_MONITORING",
+      "discovery_decision": "UNCONFIRMED_MONITORING"
     }
   ],
   "market_core": [
@@ -741,7 +752,7 @@
     {
       "symbol": "SOL",
       "price": 95.4,
-      "observed_at": "2026-11-02T01:25:46.008Z",
+      "observed_at": "2026-11-02T01:25:45.761Z",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT"
     }
   ],
@@ -2471,43 +2482,50 @@
       "date": "2026-10-26",
       "gmail_id": "1a176097e267ed98",
       "git_blob_sha": "da4ae0ef14aaf8111c14174ac827d3d5c9344091",
-      "body_equal": true
+      "body_equal": true,
+      "canonical_path": "crypto-daily/reports/daily/2026/2026-10/2026-10-26.md"
     },
     {
       "date": "2026-10-27",
       "gmail_id": "1a17b2d317942c5a",
       "git_blob_sha": "407a25cf17db3f476932759de598d60102b13a85",
-      "body_equal": true
+      "body_equal": true,
+      "canonical_path": "crypto-daily/reports/daily/2026/2026-10/2026-10-27.md"
     },
     {
       "date": "2026-10-28",
       "gmail_id": "1a180500065679d2",
       "git_blob_sha": "5bc7be7c463f2d8b88917e974b31dc330e5d0f50",
-      "body_equal": true
+      "body_equal": true,
+      "canonical_path": "crypto-daily/reports/daily/2026/2026-10/2026-10-28.md"
     },
     {
       "date": "2026-10-29",
       "gmail_id": "1a185794e63c022c",
-      "git_blob_sha": "23d55aab5c7400a0fd9688d7bc90ab1023ce9710",
-      "body_equal": true
+      "git_blob_sha": "89b93f0a7883b02c85824afb0b07547d51ae28c9",
+      "body_equal": true,
+      "canonical_path": "crypto-daily/reports/daily/2026/2026-10/2026-10-29.md"
     },
     {
       "date": "2026-10-30",
       "gmail_id": "1a18a9d5e767548d",
       "git_blob_sha": "23d55aab5c7400a0fd9688d7bc90ab1023ce9710",
-      "body_equal": true
+      "body_equal": true,
+      "canonical_path": "crypto-daily/reports/daily/2026/2026-10/2026-10-30.md"
     },
     {
       "date": "2026-10-31",
       "gmail_id": "1a18fc6328b668e2",
       "git_blob_sha": "6727cca0190395f3ecc21024e7b19bbd4447d259",
-      "body_equal": true
+      "body_equal": true,
+      "canonical_path": "crypto-daily/reports/daily/2026/2026-10/2026-10-31.md"
     },
     {
       "date": "2026-11-01",
       "gmail_id": "1a194e8623464edf",
       "git_blob_sha": "9d1de6ff96fbe46f8b453f3cf4d1a7a22074881d",
-      "body_equal": true
+      "body_equal": true,
+      "canonical_path": "crypto-daily/reports/daily/2026/2026-11/2026-11-01.md"
     }
   ],
   "rule_shas": {
