@@ -1,16 +1,16 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-11-02 08:05:04 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
+Updated: 2026-11-02 08:58:40 Asia/Bangkok — readback-verified PARTIAL final, NO_NEW_ACTION
 Timezone: Asia/Bangkok
 - expected_schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- latest_actual_run: 2026-11-02 08:05:04 Asia/Bangkok (attempt 08:03:17)
+- latest_actual_run: 2026-11-02 08:58:40 Asia/Bangkok (off-minute invocation, attempt 08:57:07)
 - latest_actual_run_status: PARTIAL
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_run_path: airdrop-tge-monitor/runs/2026-11-02/080504-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-11-02/080317-attempt.md
+- latest_run_path: airdrop-tge-monitor/runs/2026-11-02/085840-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-11-02/085707-attempt.md
 - latest_scheduled_shard: 0
 - latest_executed_shard: 0
-- stale_shard_recovery: false; fair 08%4=0, exactly one shard, prior [3,1,2,2]
-- latest_candidate_count: 9
+- stale_shard_recovery: false; fair 08%4=0, exactly one shard, prior [1,2,2,0]
+- latest_candidate_count: 6
 - latest_triggered_events: 0
 - latest_identity_failures: 0
 - latest_source_failures: 4
@@ -19,22 +19,22 @@ Timezone: Asia/Bangkok
 - latest_gmail_attempted: false
 - latest_gmail_message_id: null (NO_ACTION)
 - latest_event_archive: none (NO_ACTION)
-- latest_source_gaps: Concrete_extra_USDC,StandX_DUSD_new_claim_or_postponement,Block_Straining_current_issuer,Makina_Recovery_Notes_current_rights
+- latest_source_gaps: Concrete_extra_USDC,StandX_DUSD_new_claim_stage,Block_Straining_current_issuer,Makina_Recovery_Notes_current_rights
 - latest_private_rights_unverified: Clay_Shares_wallet,Surf_SurfBoard_wallet,Cambria_RSGP_wallet,StandX_DUSD_wallet,01_Echo_private_allocation,Polymarket_Oct29_personal_impact
 - latest_browser_session: UNAVAILABLE (originating browser context restriction); public X SOURCE_GAP
 - latest_verified_coverage: PARTIAL_NOT_AUTHORITATIVE_COMPLETE
-- last_meaningful_attempt_at_shard0: 2026-11-02 08:05:04 Asia/Bangkok (PARTIAL)
+- last_meaningful_attempt_at_shard0: 2026-11-02 08:58:40 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard1: 2026-11-02 05:04:10 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard2: 2026-11-02 06:58:24 Asia/Bangkok (PARTIAL)
 - last_meaningful_attempt_at_shard3: 2026-11-02 04:00:45 Asia/Bangkok (PARTIAL)
 - last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok (unchanged)
-- latest_primary_final_write: VERIFIED_DURABLE 080504-final.md commit 950d66f420ba79ec4092bebeacc523c8ffb15138
-- latest_terminal_readback: VERIFIED 080504-final.md (main blob SHA ab0fad9191bcceae7083b1e110f28ed7bfbb3745)
-- latest_four_executed_shards: [1,2,2,0]
+- latest_primary_final_write: VERIFIED_DURABLE 085840-final.md commit bd8ccb16f99c859874cf536a0dbfac015c12d98a
+- latest_terminal_readback: VERIFIED 085840-final.md (main blob SHA 7903c416aabad13073ff1c6aa85b3f1e680fd0c6)
+- latest_four_executed_shards: [2,2,0,0]
 - last_delivered_event_key: cambria:rsgp-base-tge-and-journey:2026-10-29 (unchanged)
 - last_delivered_gmail_message_id: 1a1812a1f6802ecb
 - user_alert: email only on fresh ACTION, App silent
-- latest_terminal_sync: 2026-11-02 08:05:04 BKK PARTIAL; urgent5 + Surf/StandX + fair shard0. Nine assessed candidate families, zero new Tier A/mapped Tier B ACTION; four unresolved public source/action gaps. Browser X unavailable originating context; English issuer fallback. Gmail life/work rights Inbox checked, work Echo SPC claim processed/completed, no new mapped rights. No Gmail/App. Verified-complete Oct10 unchanged.
+- latest_terminal_sync: 2026-11-02 08:58:40 BKK PARTIAL; urgent5 + Surf/StandX + fair shard0. Six candidate families, zero new Tier A/mapped Tier B ACTION; four unresolved first-party/action gaps. Browser X unavailable; English issuer fallback. Life/work Gmail inbox and Sent deduped, no new mapped rights. No Gmail/App. Verified-complete Oct10 unchanged.
 
 ## Durable known-events
 Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO claim, Surf referral rewards, Reflect recovery, MetaMask Sweepstakes and Cambria opt-in are suppressed unless new Tier A/B material delta is confirmed. UNICRED #230 completed. humans& fully refunded and CLOSED; Abstract user-suppressed; Grass and Backpack excluded. Independent Loopscale TGE scope removed.
