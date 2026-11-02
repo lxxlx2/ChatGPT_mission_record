@@ -1591,5 +1591,129 @@
       "Provider-capable larger-mint sources beyond enumeration bounds",
       "Real Mac and representative CA acceptance"
     ]
+  },
+  "ca_owner_account_history_followup_20261102": {
+    "observed_at_utc": "2026-11-02T07:41:40.790Z",
+    "verdict": "PASS_BOUNDED_CURRENT_ACCOUNT_IMPLEMENTATION; FULL_ECONOMIC_HISTORY_INCOMPLETE",
+    "source": {
+      "pr": 220,
+      "head": "00558bd94a67292b73d2437956d7da63690fdb51",
+      "baseline": "aeabe3a57f78b8a27b83cc8a16752ebe305a7f71",
+      "baseline_tree": "8f34ac63aec70787def286b592a81622fe002495",
+      "isolated_baseline_tree_exact": true,
+      "tree": "3c5c34f938b8fcf5b3b595f9e0a1cb75b2d6c5b7",
+      "files": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/holder_ranks.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+        "crypto-300-profit-mission/local-agent/tests/fixtures/frank_ca_browser_server.py",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_browser.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_owner_account_history.py"
+      ],
+      "runtime_files": 3,
+      "test_files": 4,
+      "new_files": 1,
+      "remote_file_readback": "7/7 exact content match"
+    },
+    "implementation": {
+      "discovery": "Reuse validated same-run current Mint account enumeration, including zero balances; no added RPC method or discovery request.",
+      "history_owner_scope": "Owners already selected from original Top20 sample; other global-ranking Owners remain explicitly uncovered.",
+      "source_fallback": "Observed resolved Top20 accounts only if complete Mint source unavailable; conflicting current-vs-sample Owner assignment never promotes a verified account set.",
+      "owner_account_limit": 4,
+      "report_extra_account_limit": 12,
+      "limits_apply": "Unique selected extra accounts shared across shallow/adaptive reads, not reset by deepening.",
+      "aggregation": "Earliest observed market BUY across selected accounts; funding anchored after aggregate earliest choice; adaptive read cannot replace an earlier observed BUY with a later one.",
+      "deduplication": "Successful holder transaction classification cached per (Owner, signature); different Owners classify separately. Failed transactions remain retryable; per-account signature/page windows retained.",
+      "coverage_fields": [
+        "owner_account_history",
+        "account_source_status",
+        "current_accounts_observed",
+        "accounts_selected",
+        "accounts_with_windows",
+        "accounts_not_selected",
+        "account_selection_complete",
+        "selection_stop_reason",
+        "closed_account_history",
+        "history_complete"
+      ],
+      "closed_account_history": "NOT_ENUMERATED",
+      "history_complete": false,
+      "overall": "INCOMPLETE_EVIDENCE",
+      "job_max_wire_attempts": 1200,
+      "job_max_seconds": 1800
+    },
+    "validation": {
+      "baseline_python": {
+        "total": 10,
+        "failed": 9,
+        "passed": 1
+      },
+      "baseline_frontend": {
+        "total": 59,
+        "failed": 2,
+        "passed": 57
+      },
+      "final_local_related_python_passed": 246,
+      "final_local_frontend_passed": 112,
+      "syntax_and_diff_check": "PASS",
+      "ci": {
+        "run_id": 41407794025,
+        "job_id": 125153677365,
+        "status": "completed",
+        "conclusion": "success",
+        "merge_ref": "bc58903a6c073b321cc0546e81c1217dd0ac1944",
+        "python_passed": 1678,
+        "python_skipped": 4,
+        "frontend_passed": 112,
+        "browser_checks": 27,
+        "page_errors": [],
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "real_ca_posts": 0,
+        "production_requests": 0,
+        "cleanup": "browser profile removed, fixture exited, port released",
+        "browser_scope": "Actual HTTP worker/persistence/report GET/render with synthetic analysis fixture; UI selected-account/limit/closed-history check is synthetic. Python tests exercise actual Mint account collector and Owner scans using injected RPC."
+      },
+      "cases": [
+        "Second and current-zero-balance account earlier BUY updates funding anchor",
+        "Cross-account shared signatures counted/classified once per Owner",
+        "Distinct Owners still classified separately",
+        "Per-Owner and shared report extra-account caps remain explicit and survive adaptive rereads",
+        "Current-source Owner conflict refuses account-set verification",
+        "Fallback Top20 account groups do not imply complete account discovery",
+        "Actual worker secondary-account budget error preserves old latest and creates no report/DONE marker"
+      ],
+      "log_sha256": {
+        "baseline_python": "83e17391e52720cb9308fabc60a465883fe20747735d347b0f62bff51472434e",
+        "baseline_frontend": "43b5d89c096c4588736a4a75628bd6967a3217a8c03a2adb989291cb373ad494",
+        "final_related_python": "00a514eb849b0022d4cdfeb3a8c52cbc11012f25037d321401b0c8deb0347110",
+        "final_frontend": "833177d66f54c47e4a01f5a089f5914ded06e87839cbab113961a987630a41a8"
+      }
+    },
+    "boundaries": {
+      "installed_mac_head": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "candidate_deployed": false,
+      "real_source_acceptance": false,
+      "real_rpc": 0,
+      "real_ca_posts": 0,
+      "notifications": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "merged": false,
+      "independent_review": "waived by user; not claimed",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO",
+      "old_failed_job_identity": "UNPROVEN"
+    },
+    "remaining": [
+      "Closed/formerly owned token accounts and lifetime economic history",
+      "Material global Owners outside original Top20 history cohort",
+      "External narrative and independent source reconciliation",
+      "Larger Mint/provider source support beyond enumeration bounds",
+      "Real Mac and representative CA acceptance"
+    ]
   }
 }
