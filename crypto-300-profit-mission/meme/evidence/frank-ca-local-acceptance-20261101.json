@@ -1355,5 +1355,119 @@
       "investment": "INVEST_NO_GO",
       "trading": "TRADE_NO_GO"
     }
+  },
+  "full_mint_owner_ranking_followup_20261102": {
+    "observed_at_utc": "2026-11-02T07:11:06.662Z",
+    "verdict": "PASS_BOUNDED_IMPLEMENTATION_AND_ISOLATED_TESTS; LIVE_SOURCE_AND_MAC_UNVERIFIED",
+    "source": {
+      "pr": 220,
+      "head": "d6c5bf6cc20e280327cc08d966a9b42db9c399dd",
+      "baseline": "bc9f4d9a2814d8c27aea805ade209083eb4270c3",
+      "tree": "2bb071e220a4201cd01e69bedab0d40e9baae059",
+      "files": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/holder_ranks.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/index.html",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_holder_ranks.py",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_browser.mjs",
+        "crypto-300-profit-mission/local-agent/tests/fixtures/frank_ca_browser_server.py"
+      ],
+      "remote_file_readback": "9/9 exact content match",
+      "runtime_files": 5,
+      "test_files": 4,
+      "new_files": 2
+    },
+    "implementation": {
+      "method": "getProgramAccounts",
+      "commitment": "finalized",
+      "scope": "explicit standard CA query only; no GET collection",
+      "mint_filter_offset": 0,
+      "legacy_token_data_size": 165,
+      "token_2022_data_size_filter": null,
+      "max_response_bytes": 8388608,
+      "max_accounts": 5000,
+      "identity_batch_max": 100,
+      "job_max_wire_attempts": 1200,
+      "job_max_seconds": 1800,
+      "aggregation": "sum all returned token accounts by Owner before sorting",
+      "verification": "actual snapshot slots and supply sum must agree; same-slot raw Top20 must agree when available; minContextSlot is only a lower bound",
+      "identity_failure": "retain verified raw balance ranks; exclusions unverified; budget exception propagates",
+      "completeness": "COMPLETE_SNAPSHOT applies only to balance/ranking snapshot; sample rank completeness and global rank completeness remain separate",
+      "history": "existing bounded Top20 history sample retained; missing global-owner history explicitly marked; no multi-ATA full-history claim"
+    },
+    "validation": {
+      "baseline_python": "one collection ImportError because new module absent; not 29 baseline failures",
+      "baseline_frontend": {
+        "tests": 54,
+        "passed": 52,
+        "failed": 2
+      },
+      "local_related_python_passed": 173,
+      "local_frontend_passed": 107,
+      "syntax_and_diff_check": "PASS",
+      "ci": {
+        "run_id": 41404181999,
+        "job_id": 125142371359,
+        "status": "completed",
+        "conclusion": "success",
+        "merge_ref": "07274b2a12fbf61c0dee6588041fcfcfadde3dfa",
+        "python_passed": 1658,
+        "python_skipped": 4,
+        "frontend_passed": 107,
+        "browser_checks": 25,
+        "page_errors": [],
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "real_ca_posts": 0,
+        "production_requests": 0,
+        "cleanup": "browser profile removed, fixture exited, port released"
+      },
+      "cases": [
+        "LP-heavy raw Top20 still finds eligible Owners outside sample",
+        "small accounts aggregate before ranking",
+        "malformed/mismatched/duplicate/truncated/oversize source rejects precision",
+        "slot drift preserves raw balances and masks unsupported precise exclusions",
+        "identity timeout retains verified raw ranks",
+        "global rank complete does not promote incomplete sample metrics",
+        "wire budget exception propagates and prevents DONE publication"
+      ],
+      "log_sha256": {
+        "baseline_python": "2f2d329da8270756587c62d46e21da1d62214106a9fcc49ef40b494dc7c84e1f",
+        "baseline_frontend": "5022f5e8f5b9175cde3107f23129e4d80999860c8ad7f9e8a33ad0fca09242a8",
+        "related_python": "8e490f8e9ff55cb678520a5742cdf166429b4264d6d5f4ffd3af3cb2cc54e2e0",
+        "frontend": "314c2d7533f55c91ad8c64cce2a4dd92f9d7ab5c5eaf7c3d3a507bb92fdf6504"
+      }
+    },
+    "official_sources": [
+      "https://solana.com/docs/rpc/http/getprogramaccounts",
+      "https://www.solana-program.com/docs/token"
+    ],
+    "boundaries": {
+      "installed_mac_head": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "candidate_deployed": false,
+      "real_source_acceptance": false,
+      "independent_review": "waived by user; not claimed",
+      "real_rpc": 0,
+      "real_ca_posts": 0,
+      "notifications": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "merged": false,
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO",
+      "old_failed_job_identity": "UNPROVEN; no new scan substituted"
+    },
+    "remaining": [
+      "provider-capable or larger-mint enumeration beyond implementation bounds",
+      "full wallet/multi-ATA economic history",
+      "external narrative and independent source comparison",
+      "formal overall analysis completeness contract",
+      "new candidate real Mac and representative CA acceptance"
+    ]
   }
 }

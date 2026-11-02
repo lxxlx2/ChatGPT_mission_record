@@ -1,5 +1,5 @@
 # Frank STATUS（唯一当前决策状态入口）
-更新时间：2026-11-02 09:04 Asia/Bangkok
+更新时间：2026-11-02 14:11 Asia/Bangkok
 更新者：Codex（用户继续授权本地调试、隔离测试与既有Dashboard维护；独立review豁免；INVEST_NO_GO / TRADE_NO_GO保持）
 
 ## 北极星答案（1 行）
@@ -16,7 +16,7 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 **阶段管理已结束；按当前用户继续主线指令推进手动CA查询能力，同时保留原只读钱包观察工具。** 跟单盈利研究不因此恢复；P2/P3 未启动。
 
 ## 正在进行（最多 3 项）
-- **P0/P1盈利研究仍关闭；手动CA主线继续推进实际历史采集**。原PR220最新候选[`bc9f4d9a2814d8c27aea805ade209083eb4270c3`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/bc9f4d9a2814d8c27aea805ade209083eb4270c3)保留单一查询与前批准确性修复，新增finalized before分页。既有standard自适应选择中的钱包可读4×30条目标币历史、5×12条建仓前资金历史；原任务1200次wire attempt/1800秒上限不变。逐窗口保留页数/签名/时间/游标/停止原因，空页不等于全链历史完整；更早买入找到后不再把其后的资金转入显示为建仓前资金。7文件增量（3运行/4测试），144项相关回归和105前端通过；[最终固定CI run59](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41375399468)实际1629 Python通过/4跳过、105前端及24隔离Chromium场景通过。首轮CI1629 Python/4跳过、105前端通过，浏览器因测试未展开父级证据折叠而失败，已补齐真实点击步骤，失败记录保留。候选未部署、未发真实RPC/CA POST。详见既有JSON的ca_history_pagination_followup_20261102。
+- **手动CA主线：完整Mint账户来源与Owner排名已完成候选实现及隔离验收**。原PR220最新候选[`d6c5bf6cc20e280327cc08d966a9b42db9c399dd`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/d6c5bf6cc20e280327cc08d966a9b42db9c399dd)在bc9有界历史分页基础上新增按Mint过滤的finalized getProgramAccounts，完整返回账户先按Owner合并再排名；实现上限8MiB/5000账户、身份读取每批≤100。原任务1200次wire attempt/1800秒不变。供给总和、实际slot或同slot Top20不一致时保留INCOMPLETE_EVIDENCE；身份读取失败保留已核实原始排名，排除口径仍未知。完整排名与Top20历史样本完整性分开，排名不代表历史/归因完整。9文件增量（5运行/4测试，新增2文件）远端逐字读回一致；173项相关回归及107前端通过。[最终固定CI run63](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41404181999)实际1658 Python通过/4跳过、107前端及25隔离Chromium场景通过，page errors0；7次fixture POST均为合成分析，真实RPC/CA POST/生产请求0，清理完成。最后Mac安装回执仍f690，新候选未部署。前批分页及失败记录保留于既有JSON；本轮见full_mint_owner_ranking_followup_20261102。
 - 前批已验收的既有真实CA job `2306599a664d4308ad9b0cf3706c07a3`（11月1日22:10报告，本轮未创建）经GET和磁盘确认报告/任务/marker/摘要一致；私有副本空内存恢复及4项损坏拒绝PASS。Dashboard源码切换后实际GET返回DONE/restored_from_saved_report=true，Chrome“读取选中报告”显示任务ID与CA已核对；无效CA清理与恢复PASS，标签保留。该次安装验收中28份报告文件哈希保留；控制库、D2、旧心跳及plist不变。最后D2来源回执为11月1日08:26的4898账户/Mint快照，F01近期0/历史7/eligible0，不是实时余额或可执行资格。
 - 最后已记录的Scanner只读快照为2026-11-02 00:07：源码1f2c6afc28b9988eaacdc896562ff9a71b78f801、PID3402，当时LIVE/0连续错误/无漂移；6006签名/seen、RAW_PENDING/未处理0、信号7/outbox9/Gmail2。此前98条逐笔重放（截至5979）不自动覆盖后来27条。本轮未查询生产DB或重新核验进程，不把旧快照冒充当前可用性。
 
@@ -26,7 +26,7 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 
 | 原目标 | 本轮实际状态 |
 |---|---|
-| 账户与Owner、样本与全局Top10、快照slot | 部分实现：修复口径与错误完整性判断；未新增全量排名源或自动同slot重采 |
+| 账户与Owner、样本与全局Top10、快照slot | 候选已实现有界全Mint来源、Owner聚合与同slot/供给核对；Token-2022保留扩展账户。超5000账户/8MiB、来源不支持或slot不一致时保持未完成；未做真实来源/Mac验收或自动同slot重采。全局排名完成不提升旧样本指标或全历史状态 |
 | 单一查询及PARTIAL/INCOMPLETE_EVIDENCE结论 | 单一入口已在候选中实现并移除三档选择；正式完整性状态契约仍未完成，不能将任务DONE写为完整尽调 |
 | 历史/资金分页 | 已接入当前CA采集器的有界分页，合成反例覆盖第110条买入和第55条资金；全钱包/多ATA/真实首笔及跨重启采集续跑仍未完成 |
 | 外部叙事及多来源对照 | 尚未完成；不借分页或旧Sidecar的真实来源证据替代 |
