@@ -1847,5 +1847,144 @@
       "Larger Mint/provider support beyond enumeration bounds",
       "Real Mac and representative CA acceptance"
     ]
+  },
+  "ca_market_indexer_comparison_followup_20261102": {
+    "observed_at_utc": "2026-11-02T14:23:17.358Z",
+    "verdict": "PASS_BOUNDED_SAME_POOL_INDEXER_IMPLEMENTATION; RAW_CHAIN_PARITY_UNVERIFIED",
+    "source": {
+      "pr": 220,
+      "head": "eca0b3704b21ca36761fceb679ddf41acd06df89",
+      "baseline": "a295e9c189b9257b726d3062d28d7af71628c59b",
+      "baseline_tree": "8595837663c392ccf0af0f46566eb532f214a6e8",
+      "isolated_baseline_tree_exact": true,
+      "tree": "5db10ca69b92d2964f5acf81ad8631f16a372754",
+      "files": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/market.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/market_parity.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+        "crypto-300-profit-mission/local-agent/tests/fixtures/frank_ca_browser_server.py",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_browser.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_market_parity.py"
+      ],
+      "runtime_files": 5,
+      "test_files": 4,
+      "new_files": 2,
+      "remote_file_readback": "9/9 exact content match"
+    },
+    "implementation": {
+      "scope": "Explicit standard manual CA job only. Legacy quick/deep, CLI without injected client, GET/history recovery do not add comparison requests.",
+      "provider": "GeckoTerminal public keyless fixed host; never paid CoinGecko Pro host, user API keys or GMGN.",
+      "provider_documentation": "Official support describes free beta public API; actual live pool availability was not queried or verified in this phase.",
+      "requests": "At most one independent GET after primary Mint/base/quote/pool identity checks; no retry, pool substitution or paid fallback.",
+      "identity": "Require exact solana pool id/type/address and exact two-token membership. If target Mint is quote in second source, use quote-token USD price.",
+      "metrics": [
+        "Target Mint USD price",
+        "Selected-pool provider-reported USD value, not aggregate across pools"
+      ],
+      "precision": "Finite nonnegative bounded Decimal values; raw source values retained; zero primary denominator leaves relative difference unresolved. No arbitrary PASS/mismatch threshold.",
+      "timestamps": "Separate retrieval times and gap; provider as-of unverified, same_chain_snapshot=false. Equal values do not establish same-slot, raw reserve, holder, lock or tradeability parity.",
+      "max_response_bytes": 1048576,
+      "http_socket_timeout_seconds": 8,
+      "stream_read_deadline_seconds": 8,
+      "deadline_note": "Deadline checked between read1 operations; socket timeout also bounds an in-flight operation. Not claimed as exact 8-second total wall duration.",
+      "redirects": "Rejected by actual urllib redirect-handler chain; provider errors never echo URL/error bodies.",
+      "task_max_rpc_wire_attempts": 1200,
+      "task_max_seconds": 1800,
+      "completeness": "Successful/partial indexer comparison marks independent_sources PARTIAL; attempted unavailable source UNAVAILABLE; no attempt NOT_COLLECTED. Overall INCOMPLETE_EVIDENCE remains."
+    },
+    "validation": {
+      "new_python_tests": 26,
+      "baseline_module_absent": "1 collection ModuleNotFoundError, not 26 failed assertions.",
+      "baseline_with_new_pure_client_staged": {
+        "tests": 26,
+        "passed": 22,
+        "failed": 4,
+        "note": "New pure client staged solely for collection; old analyzer/worker and completeness contract have no comparison wiring."
+      },
+      "baseline_frontend": {
+        "tests": 63,
+        "passed": 61,
+        "failed": 2
+      },
+      "intermediate_python": {
+        "passed": 306,
+        "failed": 1,
+        "cause": "Existing direct standard-preset analyzer construction required accepting the new internal compare flag; corrected constructor/worker compatibility without dropping test."
+      },
+      "final_local_related_python_passed": 309,
+      "final_local_frontend_passed": 116,
+      "syntax_and_diff_check": "PASS",
+      "ci": {
+        "run_id": 41461066790,
+        "job_id": 125329919465,
+        "status": "completed",
+        "conclusion": "success",
+        "merge_ref": "9331afcc5491da3c20f947501c9a914d5ebe345c",
+        "python_passed": 1735,
+        "python_skipped": 4,
+        "frontend_passed": 116,
+        "browser_checks": 29,
+        "page_errors": [],
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "real_ca_posts": 0,
+        "production_requests": 0,
+        "cleanup": "browser profile removed, fixture exited, port released",
+        "browser_scope": "Actual HTTP worker/report persistence and same-job GET with synthetic analysis; same-pool indexer differences/time/disclaimer UI verified. Python new source calls use injected HTTP; real provider/pool availability not accepted."
+      },
+      "cases": [
+        "Exact pool/token membership and reversed base/quote selection",
+        "Same-pool price and liquidity deltas remain distinct from market cap/FDV/multiple-pool totals",
+        "NaN/infinity/negative/bool/extreme exponent/missing values never become zero",
+        "Zero denominator preserves unresolved percentage",
+        "HTTP302/404/429 one attempt, original source retained, private error body not leaked",
+        "Actual urllib handler rejects redirect to another host",
+        "Response-size cap and streaming read deadline",
+        "Standard-only opt-in, explicit disable and unchanged RPC budgets",
+        "Successful indexer comparison still leaves raw pool/holder parity incomplete"
+      ],
+      "log_sha256": {
+        "module_absent_red": "f86fccd5a0ae4676a6f0bcb05bdb45e2dcd32a612d7c6b6d110564d116abea60",
+        "baseline_red": "0336e7488f84e47edc2ae5ddbcd821d839c035e1f7bfbb65bb87856371fde721",
+        "baseline_frontend": "9c048b03e0c0cb31101ea2b8a22bfbe67cebdd328f9bb476f8a555606c48f753",
+        "intermediate_python": "553f773debea9361b41fccb3530260bd596a0499b0cc76ddb235c01395959787",
+        "final_related_python": "808d6f9aedac94f9e59524053f10e975042adef99c49f8660e7673b8e275818c",
+        "final_frontend": "b2b0e1d5515f387971b782ef81576f46b6353f3611a9dedc8d2a3461e8d676fd"
+      }
+    },
+    "official_sources": [
+      "https://support.coingecko.com/articles/6867086195-does-geckoterminal-have-an-api",
+      "https://www.geckoterminal.com/terms-conditions",
+      "https://www.coingecko.com/learn/dex-data-api",
+      "https://docs.coingecko.com/reference/pool-address"
+    ],
+    "boundaries": {
+      "installed_mac_head": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "candidate_deployed": false,
+      "real_source_acceptance": false,
+      "real_market_ca_queries": 0,
+      "real_rpc": 0,
+      "real_ca_posts": 0,
+      "notifications": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "merged": false,
+      "independent_review": "waived by user; not claimed",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO",
+      "old_failed_job_identity": "UNPROVEN"
+    },
+    "remaining": [
+      "Raw DEX pool reserves and independent holder reconciliation at controlled chain snapshots",
+      "External narrative acquisition",
+      "All historical account epochs/full economic history and other material Owners",
+      "Larger Mint/provider source support beyond bounds",
+      "Real Mac and representative CA source/UX acceptance"
+    ]
   }
 }
