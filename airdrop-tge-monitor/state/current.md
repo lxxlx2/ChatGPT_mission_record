@@ -1,3 +1,21 @@
+## Latest authoritative terminal cache sync — 2026-11-04 00:57:27 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-04/005727-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-04/005625-attempt.md
+- run_started: 2026-11-04T00:56:25+07:00 (off-minute; HH:00 schedule unchanged)
+- run_time: 2026-11-04T00:57:27+07:00
+- schedule: existing hourly HH:00 Asia/Bangkok UNCHANGED
+- run_status: PARTIAL; verified_complete: false; last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- scheduled_shard: 0; executed_shard: 0; override_reason: fair_default; last_four_executed_shards: [2,3,1,0]; consecutive_same_shard: 1
+- last_meaningful_attempt_at_shard0: 2026-11-04T00:57:27+07:00 PARTIAL_ONLY
+- urgent5 + Surf/StandX + exactly one Shard0; 15 distinct active registered identities attempted; bounded Cambria/NeoSoul/StandX lifecycle
+- candidate_count: 5; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 6
+- SOURCE_GAP: StandX Nov2 DUSD original/claim, Concrete extra USDC, Clay Shares private, Block Stranding current issuer, TurboFlow restricted, Makina private Recovery NFT rights
+- browser_session: UNAVAILABLE (originating browser context); public English first-party fallback; no authenticated X read
+- Gmail life/work rights searches: 0/0 after Nov2; gmail_attempted: false; gmail_sent_readback: NOT_APPLICABLE_NO_ACTION; app_notification: false
+- dedupe: NeoSoul StandX Nov3 registration expired/already mailed, SurfBoard Nov13 already mailed, Cambria Base RSGP Oct29 already mailed; no repeat
+- final_readback: VERIFIED main blob b79011b59480d838c3d3243b9ab52aa4b2048e72; commit 8002e490163abfc524c35dcd7c54a0674bdb110a
+- task ID/name/schedule/registry/recipient unchanged; no new task, Mac, cron or daily TGE email
+
 ## Latest authoritative terminal cache sync — 2026-11-03 23:57:10 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-03/235710-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-03/2356:-attempt.md (actual nonstandard basename retained)
