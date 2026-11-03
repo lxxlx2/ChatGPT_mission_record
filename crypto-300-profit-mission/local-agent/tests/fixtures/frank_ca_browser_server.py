@@ -172,6 +172,8 @@ class FixtureAnalyzer:
         from mission_agent.meme.pool_holder_roles import attach_pool_holder_roles
         report['pool_holder_roles']=attach_pool_holder_roles(self.mint,report['holder_rankings'],report['pool_vaults'])
         report['special_address_roles']=fixture_special_roles(self.mint,report['holder_rankings'],report['market'])
+        from mission_agent.meme.special_roles import withhold_legacy_normalization
+        withhold_legacy_normalization(report['holder_rankings'],report['special_address_roles'])
         return report
 
 

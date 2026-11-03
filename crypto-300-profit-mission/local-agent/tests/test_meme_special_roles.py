@@ -235,3 +235,14 @@ def test_expired_registry_is_not_renewed_by_reading_a_saved_report():
     prior=copy.deepcopy(r)
     derive_special_ranks(target,c,p,{'role_evidence':[r]})
     assert r==prior
+
+
+def test_new_audit_withdraws_legacy_blanket_normalization_and_filtered_ranks():
+    from mission_agent.meme.special_roles import withhold_legacy_normalization
+    ranks={'normalization_complete':True,'metrics':{'GLOBAL_OWNER_TOP10_PCT':'98.0000','GLOBAL_EX_LP_OWNER_TOP10_PCT':'20.0000','GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT':'10.0000'}}
+    audit={'status':'INCOMPLETE_EVIDENCE'}
+    withhold_legacy_normalization(ranks,audit)
+    assert ranks['normalization_complete'] is False
+    assert ranks['metrics']['GLOBAL_OWNER_TOP10_PCT']=='98.0000'
+    assert ranks['metrics']['GLOBAL_EX_LP_OWNER_TOP10_PCT']=='UNRESOLVED'
+    assert audit['legacy_normalization_before_audit']['metrics']['GLOBAL_EX_LP_OWNER_TOP10_PCT']=='20.0000'

@@ -63,7 +63,7 @@ try {
  assert.equal(await page.locator('#cluster-rankings-panel').isVisible(),true);
  assert.match(await page.locator('#cluster-rankings').innerText(),/全局 Owner Top10/);
  assert.match(await page.locator('#cluster-rankings').innerText(),/98%/);
- assert.match(await page.locator('#cluster-rankings').innerText(),/20%/);
+ assert.doesNotMatch(await page.locator('#cluster-rankings').innerText(),/20%/);
  assert.match(await page.locator('#cluster-rankings').innerText(),/本轮未覆盖历史/);
  const saved=await (await page.request.get(origin+'/api/cluster-latest?mint='+mint+'&job_id='+a.job_id)).json();
  assert.equal(saved.ca_job_id,a.job_id);
@@ -82,6 +82,8 @@ try {
  assert.match(await page.locator('.cluster-pool-holder-roles').innerText(),/同一 Owner 的其他余额仍保留/);
  assert.match(await page.locator('.cluster-pool-holder-roles').innerText(),/97.7778%/);
  check('verified single target-vault deduction preserves auxiliary balance and both denominators without all-LP claim');
+ assert.equal(saved.holder_rankings.normalization_complete,false);
+ assert.equal(saved.holder_rankings.metrics.GLOBAL_EX_LP_OWNER_TOP10_PCT,'UNRESOLVED');
  assert.equal(saved.special_address_roles.pools.filter(p=>p.status==='POOL_IDENTITY_BOUND').length,2);
  assert.equal(saved.special_address_roles.rankings.metrics.known_ex_lp.deducted_raw,'120');
  assert.equal(saved.special_address_roles.rankings.metrics.known_ex_lp.top10_pct_of_remaining,'100.0000');

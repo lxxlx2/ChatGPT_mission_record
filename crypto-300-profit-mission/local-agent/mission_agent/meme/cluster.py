@@ -1229,6 +1229,8 @@ class WalletClusterAnalyzer:
         from .pool_holder_roles import attach_pool_holder_roles
         pool_holder_roles=attach_pool_holder_roles(self.mint,holder_rankings,pool_vaults)
         special_address_roles=self.special_role_snapshot(holder_rankings,market)
+        from .special_roles import withhold_legacy_normalization
+        withhold_legacy_normalization(holder_rankings,special_address_roles)
         self._prepare_owner_account_history(holders,holder_rankings)
         preview_top10_pct=getattr(self,"_raw_top10_snapshot_pct",None)
         self._progress(
@@ -1404,7 +1406,8 @@ class WalletClusterAnalyzer:
             if pct>=self.material_pct:unresolved_raw+=raw
 
         token_cfg=(self.registry.get("tokens") or {}).get(self.mint) or {}
-        normalization_complete=token_cfg.get("normalization_complete",self.registry.get("normalization_complete",False)) is True
+        normalization_complete=(token_cfg.get("normalization_complete",self.registry.get("normalization_complete",False)) is True
+                                and special_address_roles.get("status")=="NOT_REQUESTED")
         # LargestAccounts is capped at 20 token accounts. Labels alone cannot
         # prove the eligible-owner ranks after exclusions. Only a sample that
         # accounts for the entire supply can close that gap in this collector.

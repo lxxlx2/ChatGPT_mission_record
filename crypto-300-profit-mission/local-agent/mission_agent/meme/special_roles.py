@@ -164,3 +164,14 @@ def collect_special_roles(mint,source,market,rpc,registry=None):
     out.update(snapshot_slot=captured['slot'],cohort_response_sha256=captured['hash'],
                rankings=derive_special_ranks(mint,check,out['pools'],registry))
     return out
+
+
+def withhold_legacy_normalization(ranks,audit):
+    """A blanket flag cannot certify the new exhaustive identity contract."""
+    if audit.get('status')=='NOT_REQUESTED':return
+    audit['legacy_normalization_before_audit']={
+        'normalization_complete':ranks.get('normalization_complete'),
+        'metrics':dict(ranks.get('metrics') or {})}
+    ranks['normalization_complete']=False
+    for name in ('GLOBAL_EX_LP_OWNER_TOP10_PCT','GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT'):
+        if name in (ranks.get('metrics') or {}):ranks['metrics'][name]='UNRESOLVED'
