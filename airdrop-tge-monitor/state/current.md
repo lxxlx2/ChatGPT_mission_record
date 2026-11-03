@@ -1,3 +1,20 @@
+## Latest authoritative terminal cache sync — 2026-11-03 13:00:58 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-03/130058-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-03/125945-attempt.md
+- run_time: 2026-11-03T13:00:58+07:00 (attempt began 12:59:45 BKK, not proof of a 13:00 scheduled trigger)
+- schedule: existing hourly HH:00 Asia/Bangkok UNCHANGED
+- run_status: PARTIAL; verified_complete: false; last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- scheduled_shard: 0; executed_shard: 0; override_reason: fair default from actual 12:59 attempt; last_four_executed_shards: [1,3,3,0]; consecutive_same_shard: 1
+- last_meaningful_attempt_at_shard0: 2026-11-03T13:00:58+07:00 PARTIAL_ONLY
+- urgent5 + Surf/StandX + one Shard0; 15 distinct registered identities attempted; bounded cross-shard existing-project leads
+- candidate_count: 8; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 7
+- SOURCE_GAP: StandX DUSD Nov2 original claim, Concrete additional USDC, Clay Shares private rights, Block Stranding, Perena, TurboFlow, Makina current canonical issuer action
+- browser_session: UNAVAILABLE originating browser context; no authenticated X read; English first-party fallback and honest gaps
+- Gmail life/work rights search: 1 unrelated newsletter/0 mapped Tier B; gmail_attempted: false; gmail_sent_readback: NOT_APPLICABLE_NO_ACTION; App: false
+- dedupe: NeoSoul StandX Nov3 already mailed Oct23, SurfBoard Nov13 already mailed, Cambria RSGP Oct29 already mailed. MetaMask public Perps competition has no verified user-specific existing entitlement; no action email.
+- final_readback: VERIFIED main blob 2478b193776134d3128ecaf255989d447149ee16, commit 68410731b230971271b87266b0bae086ed6229de
+- task ID/name/schedule/registry/recipient unchanged; no new task, cron, daily TGE email
+
 ## Latest authoritative terminal cache sync — 2026-11-03 11:57:32 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-03/115732-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-03/115633-attempt.md
