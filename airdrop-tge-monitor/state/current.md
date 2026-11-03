@@ -1,3 +1,21 @@
+## Latest authoritative terminal cache sync — 2026-11-03 22:01:16 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-03/220116-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-03/220033-attempt.md
+- run_started: 2026-11-03T22:00:33+07:00
+- run_time: 2026-11-03T22:01:16+07:00
+- schedule: existing hourly HH:00 Asia/Bangkok UNCHANGED
+- run_status: PARTIAL; verified_complete: false; last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- scheduled_shard: 2; executed_shard: 2; override_reason: fair_default; last_four_executed_shards: [2,3,0,2]; consecutive_same_shard: 1
+- last_meaningful_attempt_at_shard2: 2026-11-03T22:01:16+07:00 PARTIAL_ONLY
+- urgent5 + Surf/StandX + one Shard2; 15 distinct active registered identities attempted, bounded existing Cambria/NeoSoul/StandX lifecycle
+- candidate_count: 7; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 7
+- SOURCE_GAP: StandX Nov2 DUSD original/live claim, Concrete additional USDC, Clay Shares private allocation, Reya current issuer, 01 private mapped rights, OhBabyGames issuer, Cambria wallet-specific RSGP claim
+- browser_session: UNAVAILABLE (originating browser context); no authenticated X original read; English official fallback
+- Gmail life/work read-only rights search: 0 new mapped Tier B; gmail_attempted: false; gmail_sent_readback: NOT_APPLICABLE_NO_ACTION; app_notification: false
+- dedupe: NeoSoul StandX Nov3 22:59 BKK already mailed Oct23, SurfBoard Nov13 already mailed, Cambria Base RSGP Oct29 already mailed; no duplicate
+- final_readback: VERIFIED main blob 47d5c8b5261cb1dd673cb242042a4d9678926c36; commit 8733ca28b715c5ebe720e9b396783caadee51f22
+- task ID/name/schedule/registry/recipient unchanged; no new task, Mac, cron or daily TGE email
+
 ## Latest authoritative terminal cache sync — 2026-11-03 21:01:21 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-03/210121-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-03/205944-attempt.md
