@@ -1,3 +1,11 @@
+## Latest terminal cache sync — 2026-11-04 02:58:10 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-04/025810-final.md
+- final_readback: VERIFIED blob 10db8fc8d71b49a69ae5b848ada92cf40f82eaf1; commit de6053ddd2880bb60f383b3a72bc05235b8093f7
+- run_status: PARTIAL; scheduled_shard: 2; executed_shard: 2; last_meaningful_attempt_at_shard2: 2026-11-04T02:58:10+07:00 PARTIAL_ONLY
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 unchanged
+- candidate_count: 3; triggered_events: 0; identity_failures: 0; source_failures: 6; gmail_attempted: false; app_notification: false
+- schedule HH:00 Asia/Bangkok unchanged; this off-minute invocation does not prove scheduler trigger. No new tasks, sources not fully accessible.
+
 ## Latest authoritative terminal cache sync — 2026-11-04 02:00:36 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-04/020036-final.md
 - run_status: PARTIAL; verified_complete: false; last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
