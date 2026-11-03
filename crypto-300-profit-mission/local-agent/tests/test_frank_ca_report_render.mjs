@@ -887,3 +887,32 @@ test('missing pair-denominated field never turns USD or native currency into a p
   h.context.renderClusterReport(r);const html=h.element('cluster-market').innerHTML;
   assert.match(html,/直接币对报价字段缺失或无效/);assert.doesNotMatch(html,/2.7027%/);
 });
+
+function binaryHolderReportForUi() {
+  const owner='11111111111111111111111111111112',account='11111111111111111111111111111113';
+  return {...fixture,holder_rankings:{requested:true,status:'INCOMPLETE_EVIDENCE',snapshot_slot:100,response_sha256:'a'.repeat(64),owners:[],metrics:{},raw_balance_check:{version:1,status:'RECONCILED_NONZERO_BALANCE_MASS',mint,program_id:'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',full_positive_mass_reconciled:true,all_selected_accounts_decoded:true,independent_provider:false,roles_verified:false,enumeration_membership_independently_verified:false,enumeration_slot:100,snapshot_slot:101,enumeration_relation:'DIFFERENT_FINALIZED_SLOTS',enumeration_response_sha256:'a'.repeat(64),response_sha256:'b'.repeat(64),mint_supply_raw:'100',selected_total_raw:'100',decimals:0,selected_account_count:1,selected_accounts:[account],enumeration_account_count:1,accounts_not_selected:0,owner_top10_pct:'100.0000',records:[{token_account:account,mint,owner,raw:'100',status:'MATCH'}],owners:[{owner,raw:'100',observed_account_count:1,supply_pct:'100.0000'}]}}};
+}
+
+test('binary holder proof shows actual bank and unfiltered mass without independent-provider or role claim',()=>{
+  const h=harness();h.context.renderClusterReport(binaryHolderReportForUi());const html=h.element('cluster-rankings').innerHTML;
+  assert.match(html,/cluster-holder-binary/);assert.match(html,/同批非零余额已覆盖/);assert.match(html,/原始 Owner Top10/);
+  assert.match(html,/100%/);assert.match(html,/100.*101/);assert.match(html,/同一 RPC/);assert.match(html,/独立提供方/);
+});
+
+test('partial, malformed and legacy binary proofs cannot retain a precise mass percentage',()=>{
+  const h=harness(),r=binaryHolderReportForUi();h.context.renderClusterReport(r);
+  r.holder_rankings.raw_balance_check.selected_total_raw='99';h.context.renderClusterReport(r);
+  assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/同批非零余额已覆盖|100%/);
+  r.holder_rankings.raw_balance_check.status='OBSERVED_SAMPLE_ONLY';r.holder_rankings.raw_balance_check.reason='TOKEN_2022_MASS_SEMANTICS_UNVERIFIED';h.context.renderClusterReport(r);
+  assert.match(h.element('cluster-rankings').innerHTML,/Token-2022/);assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/100%/);
+  delete r.holder_rankings.raw_balance_check;h.context.renderClusterReport(r);
+  assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/cluster-holder-binary|100%/);
+});
+
+test('equal binary balances use ASCII address order consistently with the backend',()=>{
+  const h=harness(),r=binaryHolderReportForUi(),c=r.holder_rankings.raw_balance_check;
+  const addresses=['11111111111111111111111111111113','11111111111111111111111111111114'],owners=['1111111111111111111111111111111Z','1111111111111111111111111111111a'];
+  c.selected_accounts=addresses;c.selected_account_count=2;c.records=addresses.map((token_account,i)=>({token_account,mint,owner:owners[i],raw:'50',status:'MATCH'}));
+  c.owners=owners.map(owner=>({owner,raw:'50',observed_account_count:1,supply_pct:'50.0000'}));
+  h.context.renderClusterReport(r);assert.match(h.element('cluster-rankings').innerHTML,/同批非零余额已覆盖/);
+});

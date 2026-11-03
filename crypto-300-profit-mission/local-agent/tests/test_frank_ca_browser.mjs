@@ -45,7 +45,7 @@ try {
  await page.goto(origin+'/#cluster');
  await page.locator('#cluster-read-cached').waitFor({state:'visible'});
  await page.waitForFunction(()=>document.getElementById('updated').textContent.includes('更新于'));
- const mint='2'.repeat(32);
+ const mint='111111111111111111111111111111JF';
  async function submit(name,target=mint){
    await page.locator('#cluster-mint').fill(target);
    const reply=page.waitForResponse(r=>r.request().method()==='POST'&&r.url()===origin+'/api/cluster-analysis');
@@ -67,6 +67,13 @@ try {
  assert.match(await page.locator('#cluster-rankings').innerText(),/本轮未覆盖历史/);
  const saved=await (await page.request.get(origin+'/api/cluster-latest?mint='+mint+'&job_id='+a.job_id)).json();
  assert.equal(saved.ca_job_id,a.job_id);
+ assert.equal(saved.holder_rankings.raw_balance_check.status,'RECONCILED_NONZERO_BALANCE_MASS');
+ assert.equal(saved.holder_rankings.raw_balance_check.independent_provider,false);
+ assert.equal(await page.locator('.cluster-holder-binary').isVisible(),true);
+ assert.match(await page.locator('.cluster-holder-binary').innerText(),/同批非零余额已覆盖/);
+ assert.match(await page.locator('.cluster-holder-binary').innerText(),/100%/);
+ assert.match(await page.locator('.cluster-holder-binary').innerText(),/独立提供方/);
+ check('same-bank binary holder mass and raw Owner ranks persist without provider role or history parity claims');
  assert.equal(saved.narrative.official_recognition,'UNVERIFIED');
  assert.equal(saved.market.comparison.status,'INDEXER_SNAPSHOTS_COMPARED');
  assert.match(await page.locator('.cluster-market-comparison').innerText(),/25.0000%/);

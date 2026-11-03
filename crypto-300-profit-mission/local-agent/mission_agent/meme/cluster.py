@@ -545,11 +545,12 @@ class WalletClusterAnalyzer:
         material_pct=Decimal("1"),market_client:DexScreenerMarketClient|None=None,
         adaptive_history_per_holder=None,adaptive_funding_lookback=None,
         progress_callback=None,
-        enumerate_holder_ranks=False,independent_market_client=None,compare_market_sources=None,narrative_client=None,collect_narrative=None,read_pool_vaults=False,
+        enumerate_holder_ranks=False,independent_market_client=None,compare_market_sources=None,narrative_client=None,collect_narrative=None,read_pool_vaults=False,audit_holder_binary=False,
         history_max_pages=1,funding_max_pages=1,
         adaptive_history_max_pages=1,adaptive_funding_max_pages=1,
     ):
         self.mint=mint;self.rpc=rpc;self.registry=special_registry or {};self.history_per_holder=int(history_per_holder);self.deep_holders=int(deep_holders);self.funding_lookback=int(funding_lookback);self.material_pct=Decimal(material_pct)
+        self.audit_holder_binary=audit_holder_binary is True
         self.read_pool_vaults=read_pool_vaults is True
         self.market_client=market_client
         self.narrative_client=narrative_client if collect_narrative is not False else None
@@ -934,11 +935,25 @@ class WalletClusterAnalyzer:
         normalized=cfg.get("normalization_complete",self.registry.get("normalization_complete",False)) is True
         try:
             self._progress("HOLDER_ENUMERATION",scanned=0)
-            return collect_mint_holder_ranks(self.mint,profile["program_id"],supply,decimals,
+            result=collect_mint_holder_ranks(self.mint,profile["program_id"],supply,decimals,
                 self._snapshot_slots.get("supply"),self.rpc,self._role,
                 normalization_declared=normalized,special_roles=SPECIAL_ROLES,
                 expected_top_accounts=getattr(self,"_largest_account_snapshot",None),
                 largest_slot=self._snapshot_slots.get("largest_accounts"),owner_reader=self._rank_owner_accounts)
+            if self.audit_holder_binary:
+                self._progress("HOLDER_BINARY",scanned=0)
+                try:
+                    from .holder_binary import collect_holder_binary_check
+                    check=collect_holder_binary_check(self.mint,result,self.rpc)
+                except RPCJobBudgetExceeded:raise
+                except RPCError as exc:
+                    check={"version":1,"status":"UNAVAILABLE","reason":"RESPONSE_LIMIT" if str(exc)=="RPC_POOL_RESPONSE_LIMIT" else "RPC_UNAVAILABLE"}
+                result["raw_balance_check"]=check
+                if check.get("enumeration_relation")=="SAME_SLOT_CONTRADICTION":
+                    result.update(status="INCOMPLETE_EVIDENCE",reason="RAW_BINARY_REPRESENTATION_CONTRADICTION")
+                    result["metrics"]={key:"UNRESOLVED" for key in result.get("metrics") or {}}
+                    for row in result.get("owners") or []:row["supply_pct"]="UNRESOLVED"
+            return result
         except RPCJobBudgetExceeded:raise
         except HolderRankSourceError as exc:return {**base,"reason":str(exc)}
         except Exception as exc:
@@ -1583,7 +1598,10 @@ def report_completeness(report:dict)->dict:
     independent=market.get("independent_market") or {}
     compared=(market.get("comparison") or {}).get("status") in {"INDEXER_SNAPSHOTS_COMPARED","PARTIAL_INDEXER_SNAPSHOTS"}
     ranked=ranks.get("requested") is True and ranks.get("status")=="COMPLETE_SNAPSHOT"
-    normalized=ranked and ranks.get("normalization_complete") is True
+    from .holder_binary import verified_holder_mass
+    binary_check=ranks.get("raw_balance_check") or {}
+    binary_mass=verified_holder_mass(binary_check,report.get("mint")) and binary_check.get("enumeration_response_sha256")==ranks.get("response_sha256")
+    normalized=ranked and ranks.get("normalization_complete") is True and (not binary_mass or binary_check.get("snapshot_slot")==ranks.get("snapshot_slot"))
     requirements=[]
     def row(key,status,cause,attempted,next_source,paths):
         requirements.append({"id":key,"status":status,"cause":cause,
@@ -1594,11 +1612,11 @@ def report_completeness(report:dict)->dict:
         ["Finalized getAccountInfo mint parsing"],
         "Verify metadata/update authority and applicable program controls with account/transaction evidence.",
         ["token_profile","assessment.chain_permission_status"])
-    row("holder_balances","VERIFIED_SNAPSHOT" if ranked else "PARTIAL",
-        "SAME_SLOT_SUPPLY_RECONCILED" if ranked else "FULL_MINT_RANK_SOURCE_NOT_VERIFIED",
+    row("holder_balances","VERIFIED_SNAPSHOT" if ranked or binary_mass else "PARTIAL",
+        "RAW_BINARY_NONZERO_BALANCE_MASS_RECONCILED_SAME_PROVIDER" if binary_mass else "SAME_SLOT_SUPPLY_RECONCILED" if ranked else "FULL_MINT_RANK_SOURCE_NOT_VERIFIED",
         ["Finalized supply and Top20 account reads", "Mint-filtered getProgramAccounts" if ranks.get("requested") is True else "Full enumeration not requested"],
         "Use a permitted complete mint-account source within bounds and reconcile actual slots and supply.",
-        ["holder_rankings","coverage.snapshot_slots"])
+        ["holder_rankings","holder_rankings.raw_balance_check","coverage.snapshot_slots"])
     row("holder_roles","VERIFIED_SNAPSHOT" if normalized else "PARTIAL",
         "SNAPSHOT_ROLES_NORMALIZED" if normalized else "SPECIAL_ADDRESS_IDENTITIES_NOT_FULLY_VERIFIED",
         ["Owner account metadata and configured special-address registry"],
@@ -1752,6 +1770,9 @@ def markdown(report:dict)->str:
                 + ", ".join(g.get("wallets") or [])
                 + (" — evidence: "+", ".join(edge_types) if edge_types else "")
             )
+    lines += ["", "## Same-provider binary holder balance check", "",
+              "One actual finalized batch can reconcile nonzero legacy SPL balance mass; provider, role, account-enumeration and history independence remain unverified.",
+              "~~~json", json.dumps({"raw_balance_check":(report.get("holder_rankings") or {}).get("raw_balance_check")},ensure_ascii=False,indent=2), "~~~"]
     lines += ["", "## Raw selected-pool vault balance evidence (not price or executable quote)", "",
               "Raw vault balances alone do not establish net reserves. A separately recorded documented reserve model does not establish USD valuation, tradability, deployed-binary semantics or indexer snapshot parity.",
               "~~~json", json.dumps(report.get("pool_vaults") or {},ensure_ascii=False,indent=2), "~~~"]

@@ -1476,6 +1476,7 @@ function clusterProgressDetail(job) {
       (p.liquidity_usd != null ? ' · LP ' + usd(p.liquidity_usd) : '') +
       ' · 正在解析 Top20 owner';
   }
+  if (stage==='HOLDER_BINARY') return '正在同批读取 Mint 与有界账户的二进制余额；独立提供方仍未核实';
   if (stage==='POOL_VAULTS') return '正在核对所选 PumpSwap 池与两侧金库；原始余额不作为价格';
   if (stage==='NARRATIVE_SOURCES') return '正在读取有限公开来源；页面陈述与精确 CA 归属分开核实';
   if (stage==='HISTORICAL_ACCOUNT_SCAN') return '正在读取交易余额中发现的历史账户；只补查一轮，仍受原任务硬上限保护';
@@ -1748,6 +1749,41 @@ function renderClusterHistoryWindows(coverage) {
       : '<p>此报告未记录分页窗口，不能补造历史覆盖证据。</p>')+'</details>';
 }
 
+function renderHolderBinary(report,ranks) {
+  const c=ranks.raw_balance_check;
+  if (!c || c.status==='NOT_REQUESTED') return '';
+  const uint=v=>typeof v==='string' && /^[0-9]{1,20}$/.test(v) && BigInt(v)<=18446744073709551615n;
+  const hash=v=>typeof v==='string' && /^[0-9a-f]{64}$/.test(v);
+  const owners=Array.isArray(c.owners)?c.owners:[],records=Array.isArray(c.records)?c.records:[],selected=Array.isArray(c.selected_accounts)?c.selected_accounts:[];
+  let verified=c.version===1 && c.status==='RECONCILED_NONZERO_BALANCE_MASS' && c.full_positive_mass_reconciled===true && c.all_selected_accounts_decoded===true &&
+    c.program_id==='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA' && c.mint===report.mint && c.independent_provider===false &&
+    hash(c.enumeration_response_sha256) && c.enumeration_response_sha256===ranks.response_sha256 && hash(c.response_sha256) &&
+    Number.isSafeInteger(c.snapshot_slot) && c.snapshot_slot>0 && uint(c.mint_supply_raw) && BigInt(c.mint_supply_raw)>0n && c.selected_total_raw===c.mint_supply_raw &&
+    (c.flags===undefined || Array.isArray(c.flags)) && records.length>0 && records.length<=99 && records.length===c.selected_account_count && selected.length===records.length && !(c.flags || []).includes('WRAPPED_NATIVE_ACCOUNT');
+  const amounts=new Map(),seen=new Set();
+  if (verified) for (const row of records) {
+    if (!row || !['MATCH','DIFFERS'].includes(row.status) || row.mint!==report.mint || typeof row.owner!=='string' || typeof row.token_account!=='string' || seen.has(row.token_account) || !selected.includes(row.token_account) || !uint(row.raw)) { verified=false;break; }
+    seen.add(row.token_account);const raw=BigInt(row.raw);
+    if (raw>0n) amounts.set(row.owner,(amounts.get(row.owner)||0n)+raw);
+  }
+  const ranked=[...amounts].sort((a,b)=>a[1]===b[1]?(a[0]<b[0]?-1:a[0]>b[0]?1:0):a[1]>b[1]?-1:1);
+  if (verified) verified=ranked.reduce((sum,row)=>sum+row[1],0n)===BigInt(c.mint_supply_raw) && owners.length===ranked.length && owners.every((row,i)=>row.owner===ranked[i][0] && row.raw===String(ranked[i][1]));
+  const percent=raw=>{
+    const supply=BigInt(c.mint_supply_raw),numerator=raw*1000000n;let n=numerator/supply;const remainder=numerator%supply;
+    if (remainder*2n>supply || (remainder*2n===supply && n%2n)) n+=1n;
+    const digits=String(n).padStart(5,'0');return digits.slice(0,-4)+'.'+digits.slice(-4);
+  };
+  if (verified) verified=percent(ranked.slice(0,10).reduce((sum,row)=>sum+row[1],0n))===c.owner_top10_pct;
+  const reasons={TOKEN_2022_MASS_SEMANTICS_UNVERIFIED:'Token-2022 扩展的余额计量尚未核实',SUPPLY_MASS_NOT_RECONCILED:'已读余额尚未覆盖同期供给',ZERO_SUPPLY:'供给为零，未计算百分比',NATIVE_BALANCE_MASS_UNVERIFIED:'原生包装币计量尚未核实',RESPONSE_LIMIT:'二进制响应超过本轮大小上限',RPC_UNAVAILABLE:'二进制账户读取不可用'};
+  const rows=owners.filter(row=>row&&typeof row==='object').slice(0,10).map(row=>'<tr><td>'+ownerCell(row.owner || '')+'</td><td>'+esc(row.raw ?? '未核实')+'</td><td>'+esc(row.observed_account_count ?? '未记录')+'</td><td>'+clusterMetricValue(verified?percent(BigInt(row.raw)):'UNRESOLVED')+'</td></tr>').join('');
+  return '<div class="trust-box cluster-holder-binary"><strong>同批二进制余额核验</strong><p>枚举 slot '+esc(c.enumeration_slot ?? '未记录')+' / 二进制批次实际 slot '+esc(c.snapshot_slot ?? '未记录')+'。minContextSlot 只设下界，读取结果可能来自缓存。</p>'+
+    '<p>枚举地址 '+esc(c.enumeration_account_count ?? '未记录')+'，本批读取 '+esc(c.selected_account_count ?? '未记录')+'，未选 '+esc(c.accounts_not_selected ?? '未记录')+'；Mint 精度 '+esc(c.decimals ?? '未核实')+'。</p>'+
+    (verified?'<p>同批非零余额已覆盖：已读原始整数之和 '+esc(c.selected_total_raw)+' = 同批 Mint 供给 '+esc(c.mint_supply_raw)+'；原始 Owner Top10 '+clusterMetricValue(c.owner_top10_pct)+'。</p>':'<p>'+esc(reasons[c.reason] || '二进制余额证明尚未完成或不一致，未展示精确 Owner 比例')+'</p>')+
+    (c.enumeration_relation==='SAME_SLOT_CONTRADICTION'?'<p>同 slot 的两种表示存在矛盾，原枚举精确比例已撤下，原始来源记录保留。</p>':'')+
+    '<p>复用同一 RPC 的二进制解码；独立提供方、完整账户枚举、地址角色、实际控制归属与全历史仍未核实。本项原始 Owner 包含池、Vault 等特殊地址，未做排除口径。</p>'+
+    (rows?'<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>原始 Owner</th><th>已读整数余额</th><th>已读账户数</th><th>同批供给占比</th></tr></thead><tbody>'+rows+'</tbody></table></div>':'')+'</div>';
+}
+
 function renderHolderRankings(report) {
   const r=report.holder_rankings;
   const panel=$('cluster-rankings-panel');
@@ -1758,7 +1794,7 @@ function renderHolderRankings(report) {
     ACCOUNT_LIMIT:'来源账户数超过本轮上限',SUPPLY_SUM_MISMATCH:'来源余额总和与供给未对上',
     SNAPSHOT_SLOT_UNRECONCILED:'账户与供给快照 slot 尚未对齐',TOP20_RECONCILIATION_MISMATCH:'同 slot 的全量来源与 Top20 账户数据不一致',
     MINT_IDENTITY_UNVERIFIED:'Mint 或 Token Program 身份未核实',ACCOUNT_ROW_INVALID:'来源账户结构未通过核对',
-    ENVELOPE_INVALID:'来源快照上下文不完整',OWNER_METADATA_INVALID:'Owner 身份来源未通过核对',SUPPLY_INVALID:'供给格式未核实'};
+    ENVELOPE_INVALID:'来源快照上下文不完整',OWNER_METADATA_INVALID:'Owner 身份来源未通过核对',SUPPLY_INVALID:'供给格式未核实',RAW_BINARY_REPRESENTATION_CONTRADICTION:'同 slot 二进制与解析表示存在矛盾，原枚举精确比例已撤下'};
   const intro=complete ? '账户余额总和与同 slot 供给已核对；钱包归因与历史仍须分别核实' : (reasons[r.reason] || '完整排名来源尚未核实');
   const labels={GLOBAL_OWNER_TOP10_PCT:'全局 Owner Top10',GLOBAL_EX_LP_OWNER_TOP10_PCT:'全局排除池/Vault 后 Owner Top10',GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT:'全局排除特殊地址后 Owner Top10'};
   const cards=Object.keys(labels).map(key=>'<div class="cluster-metric"><span>'+labels[key]+'</span><strong>'+clusterMetricValue(complete && (key==='GLOBAL_OWNER_TOP10_PCT' || r.normalization_complete===true) ? (r.metrics || {})[key] : 'UNRESOLVED')+'</strong></div>').join('');
@@ -1766,7 +1802,7 @@ function renderHolderRankings(report) {
   const rows=owners.map((row,i)=>'<tr><td>'+esc(i+1)+'</td><td>'+ownerCell(row.owner || '')+'</td><td>'+esc(frankD2Decimal(row.raw,r.decimals))+'</td><td>'+esc(row.account_count ?? '未记录')+'</td><td>'+clusterMetricValue(complete ? row.supply_pct : 'UNRESOLVED')+'</td><td>'+holderRole(row)+'</td><td>'+(row.history_scanned===true ? '已做有限历史采样' : '本轮未覆盖历史')+'</td></tr>').join('');
   $('cluster-rankings').innerHTML='<p>'+esc(intro)+'</p><p>来源返回 '+esc(r.account_count ?? '未记录')+' 个账户 / '+esc(r.nonzero_owner_count ?? '未记录')+' 个非零 Owner；账户 slot '+esc(r.snapshot_slot ?? '未记录')+' / 供给 slot '+esc(r.supply_slot ?? '未记录')+'</p>'+
     '<div class="cluster-metrics-extra">'+cards+'</div>'+ (r.normalization_complete===true ? '' : '<p>身份标签或其快照 slot 尚未全部核实，排除口径保持未确认。</p>')+'<p>页面最多展示前20个 Owner，完整来源排名保存在报告中。排除口径仍取决于已核实的身份标签。</p>'+
-    '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>#</th><th>Owner</th><th>代币数量</th><th>账户数</th><th>供给占比</th><th>身份</th><th>历史覆盖</th></tr></thead><tbody>'+(rows || '<tr><td colspan="7">完整排名未获得，原始Top20样本仍可查看</td></tr>')+'</tbody></table></div>';
+    '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>#</th><th>Owner</th><th>代币数量</th><th>账户数</th><th>供给占比</th><th>身份</th><th>历史覆盖</th></tr></thead><tbody>'+(rows || '<tr><td colspan="7">完整排名未获得，原始Top20样本仍可查看</td></tr>')+'</tbody></table></div>'+renderHolderBinary(report,r);
 }
 
 const clusterRequiredEvidence = {

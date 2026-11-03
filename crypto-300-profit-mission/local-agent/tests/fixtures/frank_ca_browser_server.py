@@ -11,6 +11,7 @@ from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 from urllib.parse import urlparse
 import json
+import base64
 import sys
 import threading
 import time
@@ -35,6 +36,39 @@ class FixtureRPC:
 
     def assert_can_publish(self):
         pass
+
+
+def fixture_holder_binary(mint):
+    from mission_agent.meme.pool_vaults import _key
+    from mission_agent.meme.holder_binary import collect_holder_binary_check
+    program='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+    owner=lambda i:_key((6000+i).to_bytes(32,'big'))
+    addresses=[_key((5000+i).to_bytes(32,'big')) for i in range(30)]
+    amounts=[800]+[20]*10+[0]*19
+    accounts=[{'token_account':a,'owner':owner(i),'raw':str(amounts[i]),'decimals':0} for i,a in enumerate(addresses)]
+    source={'requested':True,'status':'COMPLETE_SNAPSHOT','mint':mint,'program_id':program,'snapshot_slot':100,'supply_slot':100,
+        'response_sha256':'a'*64,'account_count':30,'nonzero_owner_count':11,'normalization_complete':True,'decimals':0,'supply_raw':'1000','total_raw':'1000',
+        'metrics':{'GLOBAL_OWNER_TOP10_PCT':'98.0000','GLOBAL_EX_LP_OWNER_TOP10_PCT':'20.0000'},'accounts':accounts,
+        'owners':[{'owner':owner(i),'raw':str(amounts[i]),'account_count':1,'role':'LP' if i==0 else 'ORDINARY','supply_pct':'80.0000' if i==0 else '2.0000','history_scanned':False} for i in range(11)]}
+    def encoded(data):return {'owner':program,'executable':False,'data':[base64.b64encode(data).decode(),'base64']}
+    m=bytearray(82);m[36:44]=(1000).to_bytes(8,'little');m[45]=1
+    # Decode the syntactically supplied Mint for actual binary fixture fields.
+    from mission_agent.meme.holder_ranks import ALPHABET
+    value=0
+    for c in mint:value=value*58+ALPHABET.index(c)
+    if value.bit_length()>256:return source
+    mint_key=value.to_bytes(32,'big')
+    values={}
+    for i,a in enumerate(addresses):
+        b=bytearray(165);b[:32]=mint_key;b[32:64]=(6000+(0 if i==0 else 1)).to_bytes(32,'big')
+        b[64:72]=(800 if i==0 else 200 if i==1 else 0).to_bytes(8,'little');b[108]=1
+        values[a]=encoded(b)
+    class BinaryRPC:
+        def call(self,method,params,ttl=0):
+            assert method=='getMultipleAccounts' and params[0][0]==mint
+            return {'context':{'slot':101},'value':[encoded(m)]+[values[a] for a in params[0][1:]]}
+    source['raw_balance_check']=collect_holder_binary_check(mint,source,BinaryRPC())
+    return source
 
 
 class FixtureAnalyzer:
@@ -66,12 +100,7 @@ class FixtureAnalyzer:
                              'signature_count': 120, 'page_size': 30, 'stop_reason': 'PAGE_LIMIT',
                              'next_before': 'FIXTURE_PUBLIC_CURSOR', 'history_complete': False}],
                          'gaps': ['HISTORY_PAGINATION_INCOMPLETE']},
-            'holder_rankings': {'requested': True, 'status': 'COMPLETE_SNAPSHOT',
-                'snapshot_slot': 100, 'supply_slot': 100, 'account_count': 30,
-                'nonzero_owner_count': 11, 'normalization_complete': True, 'decimals': 0,
-                'metrics': {'GLOBAL_OWNER_TOP10_PCT': '98.0000', 'GLOBAL_EX_LP_OWNER_TOP10_PCT': '20.0000'},
-                'owners': [{'owner': self.mint, 'raw': '800', 'account_count': 20,
-                    'role': 'LP', 'supply_pct': '80.0000', 'history_scanned': False}]},
+            'holder_rankings':fixture_holder_binary(self.mint),
             'historical_account_evidence':[{'owner':self.mint,'account':'1'*31+'4',
                 'signature':'FIXTURE_HISTORICAL_PROOF','slot':90,'block_time':90,
                 'balance_phase':'pre','raw':'10','decimals':0,

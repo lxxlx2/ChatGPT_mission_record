@@ -58,17 +58,26 @@ def _option(b,offset):
     return value
 
 
+def _layout(raw,base,type_id,program,flags):
+    if program==TOKEN_2022_PROGRAM:
+        if len(raw)==base:return
+        if len(raw)<=165 or len(raw)==355 or raw[165]!=type_id or (base==82 and any(raw[82:165])):raise PoolSourceError('TOKEN_2022_LAYOUT_INVALID')
+        flags.add('TOKEN_2022_ADJUSTMENTS_UNVERIFIED')
+    elif len(raw)!=base:raise PoolSourceError('TOKEN_LAYOUT_INVALID')
+
+
+def _mint(account,program,flags):
+    m=_data(account,program);_layout(m,82,1,program,flags)
+    if len(m)<82 or m[45]!=1:raise PoolSourceError('TOKEN_STATE_INVALID')
+    for offset in (0,46):_option(m,offset)
+    return {'raw':str(int.from_bytes(m[36:44],'little')),'decimals':m[44]}
+
+
 def _token(account,mint_account,mint_id,pool_address,vault_address,flags):
     program=account.get('owner') if isinstance(account,dict) else None
     if program not in PROGRAMS:raise PoolSourceError('TOKEN_PROGRAM_INVALID')
     b=_data(account,program);m=_data(mint_account,program)
-    def layout(raw,base,type_id):
-        if program==TOKEN_2022_PROGRAM:
-            if len(raw)==base:return
-            if len(raw)<=165 or len(raw)==355 or raw[165]!=type_id or (base==82 and any(raw[82:165])):raise PoolSourceError('TOKEN_2022_LAYOUT_INVALID')
-            flags.add('TOKEN_2022_ADJUSTMENTS_UNVERIFIED')
-        elif len(raw)!=base:raise PoolSourceError('TOKEN_LAYOUT_INVALID')
-    layout(b,165,2);layout(m,82,1)
+    _layout(b,165,2,program,flags);_layout(m,82,1,program,flags)
     if len(b)<165 or len(m)<82 or m[45]!=1 or b[108] not in (1,2):raise PoolSourceError('TOKEN_STATE_INVALID')
     if _key(b[:32])!=mint_id or _key(b[32:64])!=pool_address:raise PoolSourceError('VAULT_MEMBERSHIP_INVALID')
     for offset in (0,46):_option(m,offset)

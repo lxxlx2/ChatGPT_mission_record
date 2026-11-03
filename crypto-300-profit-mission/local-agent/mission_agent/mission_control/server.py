@@ -136,7 +136,7 @@ CLUSTER_PRESETS = {
         "deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8,
         "adaptive_history_per_holder": 30, "adaptive_funding_lookback": 12,
         "adaptive_history_max_pages": 4, "adaptive_funding_max_pages": 5,
-        "enumerate_holder_ranks": True, "compare_market_sources": True, "collect_narrative": True, "read_pool_vaults": True,
+        "enumerate_holder_ranks": True, "compare_market_sources": True, "collect_narrative": True, "read_pool_vaults": True, "audit_holder_binary": True,
     },
     "deep": {
         "deep_holders": 20, "history_per_holder": 100, "funding_lookback": 50,
@@ -530,6 +530,7 @@ class ClusterJobManager:
                 narrative_client=getattr(self,"narrative_client",None) if opts.get("collect_narrative") else None,
                 collect_narrative=opts.get("collect_narrative",False),
                 read_pool_vaults=opts.get("read_pool_vaults",False),
+                audit_holder_binary=opts.get("audit_holder_binary",False),
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
             # Recompute for every newly produced report; legacy GETs remain unchanged.
