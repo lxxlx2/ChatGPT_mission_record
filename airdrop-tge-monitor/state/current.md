@@ -1,3 +1,20 @@
+## Latest authoritative terminal cache sync — 2026-11-03 16:02:44 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-03/160244-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-03/160141-attempt.md
+- run_time: 2026-11-03T16:02:44+07:00 (attempt 16:01:41; HH:00 schedule unchanged, exact scheduler trigger instant unverified)
+- schedule: existing hourly HH:00 Asia/Bangkok UNCHANGED
+- run_status: PARTIAL; verified_complete: false; last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- scheduled_shard: 0; executed_shard: 0; override_reason: fair_default; last_four_executed_shards: [0,2,3,0]; consecutive_same_shard: 1
+- last_meaningful_attempt_at_shard0: 2026-11-03T16:02:44+07:00 PARTIAL_ONLY
+- urgent5 + Surf/StandX + one Shard0; 15 distinct registered identities attempted; bounded Cambria/NeoSoul/Polymarket existing-registry lifecycle check
+- candidate_count: 10; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 6
+- SOURCE_GAP: StandX Nov2 DUSD original claim, Concrete additional USDC, Clay Shares private rights, Block Stranding issuer original, TurboFlow region restriction, Makina Recovery NFT private rights
+- browser_session: UNAVAILABLE (originating browser context); no authenticated X original read; official English fallback and honest X gaps
+- Gmail life/work mapped-rights search: 0 relevant; gmail_attempted: false; gmail_sent_readback: NOT_APPLICABLE_NO_ACTION; app_notification: false
+- dedupe: NeoSoul StandX Nov3 registration already mailed Oct23, SurfBoard Nov13 already mailed, Cambria Base RSGP Oct29 already mailed; no duplicate
+- final_readback: VERIFIED main blob 5ad7ab6f515c4ba8bf7173a26ab49f52bed516b5; commit 793266e4160530ef58a63273b2bcb201f49adaeb
+- task ID/name/schedule/registry/recipient unchanged; no new task, cron, daily TGE email
+
 ## Latest authoritative terminal cache sync — 2026-11-03 15:04:18 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-03/150418-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-03/150320-attempt.md
