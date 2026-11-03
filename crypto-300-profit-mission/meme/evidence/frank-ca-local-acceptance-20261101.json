@@ -2462,5 +2462,146 @@
       "Full material Owner account epochs/history and official exact-CA attribution/origin",
       "Real representative source failure, CA product and Mac UX acceptance"
     ]
+  },
+  "ca_pool_quote_units_comparison_followup_20261103": {
+    "observed_at_utc": "2026-11-03T03:39:30.631Z",
+    "verdict": "PASS_BOUNDED_SAME_POOL_QUOTE_UNIT_REFERENCE_COMPARISON; SAME_SNAPSHOT_USD_EXECUTION_AND_WHOLE_CA_UNVERIFIED",
+    "source": {
+      "pr": 220,
+      "head": "896f47c5b219f3eceae1d550605a08de9a3b00bd",
+      "tree": "8c9d1cbadb8b58582b916daa945acf2119c433e8",
+      "baseline": "dadeab57eb0a4e21749d29261c6ec5e676e4b9d6",
+      "baseline_tree": "76234b8bb2cc28e092b020370e8aa95a54564d57",
+      "isolated_baseline_tree_exact": true,
+      "files": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/pool_market.py",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_pool_market_ratio.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/market_parity.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/pool_vaults.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+        "crypto-300-profit-mission/local-agent/tests/fixtures/frank_ca_browser_server.py",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_browser.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs"
+      ],
+      "runtime_files": 5,
+      "test_files": 4,
+      "new_files": 2,
+      "remote_file_readback": "9/9 exact"
+    },
+    "implementation": {
+      "scope": "Only newly collected standard explicit reports, reusing the existing bounded finalized pool batch and one existing GeckoTerminal response. No extra RPC/HTTP/data client or endpoint; GET/history does not collect or backfill.",
+      "provider_fields": "Optional base_token_price_quote_token when requested target is GT base, quote_token_price_base_token when requested target is GT quote. Exact pool and target/quote relationship required. Retain selected source-field name and its value. Missing optional public data stays missing; no reciprocal, native-currency, USD-ratio, peg, symbol or alternate-pool fallback.",
+      "public_schema_limit": "Official CoinGecko pool-address schema and GeckoTerminal documentation describe these explicit pair-unit fields/onchain data. No assumption that every keyless public response supplies the fields, and no actual public CA payload acceptance this round. Pro endpoint not called.",
+      "precision": "GT JSON fractional numbers parsed with Decimal, preserving numeric literal digits and existing raw-body SHA256. Unit price must be positive, finite, ASCII, <=400 characters and |decimal adjusted exponent|<=300. Native price strings remain exact. Difference uses Decimal precision700/ROUND_HALF_EVEN; percentage relative to protocol model rounded to four decimals. No float reserve arithmetic.",
+      "identity": "Primary requested Mint/base/quote/pool, GT source/attempt status/Mint/quote/pool/orientation/field and response hash, raw pool program/Mint/quote/pool/slot/hash, protocol model direction/raw amounts/decimals must agree. Token-2022 ARITHMETIC_ONLY or incomplete/zero model cannot produce a comparison.",
+      "result": "UNALIGNED_RATIO_COMPARISON means numerical references in explicit quote-token units only. Retain model, indexer, indexer-minus-model difference and percent; equal values never become a parity PASS. same_chain_snapshot=false, provider_asof/price_basis_alignment/deployed_binary_semantics=UNVERIFIED.",
+      "time": "Raw batch records time this job receives result, including possible RPC cache. GT existing result-received time retained. Both times and absolute gap shown, missing/invalid stays null. Neither is a chain block timestamp or provider as-of; no invented freshness/pass threshold.",
+      "ui": "Dedicated same-pool pair-unit comparison. Match current report/pool/model/GT identities, source field, hashes, slot, result times and gap before rendering; escape numbers/errors and clear old comparison for mismatched, malformed, falsely aligned or legacy report. Missing field explains no USD/native substitution.",
+      "whole_product": "INCOMPLETE_EVIDENCE; independent_sources PARTIAL with non-synchronous-reference cause. No USD valuation, quote-size execution, liquidity safety or independent holder parity result.",
+      "unchanged_budgets": {
+        "max_wire_attempts": 1200,
+        "max_elapsed_seconds": 1800
+      }
+    },
+    "validation": {
+      "baseline_new_python": {
+        "tests": 30,
+        "passed": 0,
+        "failed": 30,
+        "cause": "Missing new pool_market module, optional native field extraction and analyzer wiring. Per-test failures, not one collection error.",
+        "fixture_correction": "Initial adapter fixture accidentally used the raw-pool fixture Mint with the separate GT fixture. Corrected to GT fixture's own identities before implementation; corrected baseline still30 failures. Both logs retained."
+      },
+      "baseline_frontend": {
+        "tests": 74,
+        "passed": 72,
+        "failed": 2,
+        "note": "Three new cases; legacy/mismatch absence check passed baseline, positive rendering and missing-field explanation failed."
+      },
+      "final_local_new_python_passed": 33,
+      "final_local_pool_related_python_passed": 120,
+      "final_local_related_python_passed": 334,
+      "final_local_frontend_passed": 127,
+      "syntax_and_diff": "PASS",
+      "cases": [
+        "Both requested target directions and independent GT orientation/source-field identity",
+        "Wrong Mint/quote/pool/source/hash/native-currency field/orientation/model/slot cannot emit differences",
+        "None/NaN/Infinity/negative/zero/huge-exponent/bool do not become a quote or fallback",
+        "Equal values still unaligned; missing times stay null",
+        "Optional public field absent preserves primary provider response with one injected GET",
+        "Wire JSON fractional literal beyond float precision retained exactly",
+        "Actual tiny Mint ratio and reference difference remain nonzero",
+        "Actual analyzer wires comparison and retains unchanged injected RPC count",
+        "Completeness/Markdown preserve numerical reference plus incomplete outcome",
+        "UI rejects mismatched and forged-aligned reports; exact units, provenance and missing-field text visible"
+      ],
+      "ci": {
+        "run_id": 41573211096,
+        "job_id": 125710674263,
+        "head": "896f47c5b219f3eceae1d550605a08de9a3b00bd",
+        "merge_ref": "21e98e13e6e63450211eb2dfdf34a286e8585e20",
+        "status": "completed",
+        "conclusion": "success",
+        "python_passed": 1871,
+        "python_skipped": 4,
+        "frontend_passed": 127,
+        "browser_checks": 33,
+        "page_errors": [],
+        "blocked_requests": [],
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "real_ca_posts": 0,
+        "production_requests": 0,
+        "browser": "151.0.7922.34",
+        "cleanup": "browser profile removed, fixture exited, port released",
+        "browser_scope": "Actual HTTP worker, persistence, report rendering and identity-bound GET recovery with synthetic analysis only. Optional GT field extraction and raw-pool comparison use injected HTTP/RPC. No representative real CA acceptance.",
+        "artifact": {
+          "id": 13202188286,
+          "sha256": "efcb873aa533babbed1fa089e7100387521690ac65bc17991798336f11661d57"
+        }
+      },
+      "log_sha256": {
+        "initial_red": "fb66e70dae5bc913ce66426c5ebaa0651ec2e22b780a8a433f25f86b4af10e65",
+        "corrected_red": "dff22c87d4484a1b33f49aaaf685a2777f448eb9a58f295440a63a256dd7faa6",
+        "pool_related_green": "1b4bdb70596ae735341931c574fa2fce5cc73eb849342abb6e7ae957a72d1da0",
+        "ui_red": "e01bade2b17bc8606c33d9eb7b51c8bb538a2a99a71864162c3ccd8e25170566",
+        "ui_green": "641db90661fbe37b9ffaffa612d25ca5cfbf36d43e29c7aebf3dbdae42e2144b",
+        "related_final": "d504c4ad952e800a0405f2683320023110df47ac4b4b6f585ae8937e1a48e479",
+        "frontend_final": "14432df7f1e93e406a1ec2194dd5314101638e9100fb0f4fe90703b5564c0d80"
+      }
+    },
+    "references": [
+      "https://docs.coingecko.com/reference/pool-address",
+      "https://www.geckoterminal.com/dex-api",
+      "https://docs.dexscreener.com/api/reference"
+    ],
+    "boundaries": {
+      "installed_mac_last_receipt": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "candidate_deployed": false,
+      "real_source_acceptance": false,
+      "additional_collector_rpc": 0,
+      "additional_collector_http": 0,
+      "real_rpc": 0,
+      "real_ca_posts": 0,
+      "production_requests": 0,
+      "notifications": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "new_services": 0,
+      "new_workflows": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "merged": false,
+      "independent_review": "waived by user; not claimed",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO",
+      "old_failed_job_identity": "UNPROVEN"
+    },
+    "remaining": [
+      "Controlled chain/indexer observation window and independently verified price basis/deployed semantics",
+      "Independent USD/liquidity valuation and holder source; no USDC peg or native-currency assumption",
+      "Other DEX programs, Token-2022 economics and full material Owner history/account epochs",
+      "Official exact-CA attribution/origin and real representative CA/source/Mac acceptance"
+    ]
   }
 }

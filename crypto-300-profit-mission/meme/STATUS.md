@@ -1,5 +1,5 @@
 # Frank STATUS（唯一当前决策状态入口）
-更新时间：2026-11-03 02:38 Asia/Bangkok
+更新时间：2026-11-03 10:39 Asia/Bangkok
 更新者：Codex（用户继续授权本地调试、隔离测试与既有Dashboard维护；独立review豁免；INVEST_NO_GO / TRADE_NO_GO保持）
 
 ## 北极星答案（1 行）
@@ -16,7 +16,7 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 **阶段管理已结束；按当前用户继续主线指令推进手动CA查询能力，同时保留原只读钱包观察工具。** 跟单盈利研究不因此恢复；P2/P3 未启动。
 
 ## 正在进行（最多 3 项）
-- **手动CA主线：PumpSwap有符号虚拟储备及待提费用模型已接入候选**。原PR220最新候选[`dadeab57eb0a4e21749d29261c6ec5e676e4b9d6`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/dadeab57eb0a4e21749d29261c6ec5e676e4b9d6)复用前批已核对的同批池/金库/Mint数据，不增加RPC读取。按固定官方专项文档分别推导真实计价币储备（金库减待提费用）、boost分量（虚拟储备加待提费用）与有效储备（金库加有符号虚拟储备），不把费用重复扣除；负虚拟值本身不代表boost。原始缺失字段仍为null，模型单列文档零默认值；不将README旧的全部为零说明当作当前链上事实。精确整数、Mint精度及80有效位比值保留，反向目标币正确映射；越界/费用缺口/尚无证据支持的负boost保留原始余额并拒绝模型结论。Token-2022/冻结状态仅列算术，零储备不输出比值。JSON/Markdown/UI分列原始余额和协议模型，UI核对身份及原始整数守恒，旧GET不补算。7文件（3运行/4测试，新增1测试文件）远端逐字一致；新增24Python、301相关及124前端通过，基线24项Python/3项前端失败已保留。[最终固定CI run79](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41511498627)实际1838 Python通过/4跳过、124前端、32隔离Chromium场景通过，page errors0；7次fixture POST均合成分析，真实RPC/CA POST/生产请求0，临时fixture/浏览器/端口已清理。整体INCOMPLETE_EVIDENCE；模型不等于已部署二进制、美元估值、可执行报价或独立同快照对齐。Mac最后安装回执f690，本轮真实CA/RPC/生产请求和部署0。详见既有JSON的ca_effective_pool_reserves_followup_20261103。
+- **手动CA主线：所选池协议储备与独立币对报价的数值对照已接入候选**。原PR220最新候选[`896f47c5b219f3eceae1d550605a08de9a3b00bd`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/896f47c5b219f3eceae1d550605a08de9a3b00bd)复用原有GeckoTerminal响应中的可选直接币对字段，按目标币在返回币对的方向选择计价单位；先核对池子/Mint/quote/方向/源字段、原始池/模型身份、两侧响应哈希与实际slot，再计算索引减协议及相对差异。字段缺失保留缺口，不用USD比值、native currency、固定汇率、符号或另一池子替代。GT数值JSON按Decimal解析，保留原始响应哈希和超过float精度的数字；原始账户结果读取时间、索引结果读取时间与间隔另列，可能来自缓存，均不证明区块时间/provider as-of。成功仅为UNALIGNED_RATIO_COMPARISON，数值相同也不提升为同快照或价格口径PASS；Token-2022/冻结/零储备等未核实模型不对照。新标准报告保存JSON/Markdown/UI，GET不补算或重采；新增RPC/HTTP/工作流0，1200 wire attempt/1800秒不变。9文件（5运行/4测试，新增2文件）远端逐字一致；新增33Python、334相关及127前端通过，基线30Python/2前端失败保留。[最终固定CI run81](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41573211096)实际1871 Python通过/4跳过、127前端、33隔离Chromium场景通过，page errors0；7次fixture POST均合成分析，真实RPC/CA POST/生产请求0，临时fixture/浏览器/端口已清理。整体INCOMPLETE_EVIDENCE，独立来源最多PARTIAL，美元估值、可执行报价、受控同快照/独立持有人及真实CA验收仍缺。Mac最后回执f690，本轮真实CA/RPC/生产请求及部署0。详见既有JSON的ca_pool_quote_units_comparison_followup_20261103。
 - 前批已验收的既有真实CA job `2306599a664d4308ad9b0cf3706c07a3`（11月1日22:10报告，本轮未创建）经GET和磁盘确认报告/任务/marker/摘要一致；私有副本空内存恢复及4项损坏拒绝PASS。Dashboard源码切换后实际GET返回DONE/restored_from_saved_report=true，Chrome“读取选中报告”显示任务ID与CA已核对；无效CA清理与恢复PASS，标签保留。该次安装验收中28份报告文件哈希保留；控制库、D2、旧心跳及plist不变。最后D2来源回执为11月1日08:26的4898账户/Mint快照，F01近期0/历史7/eligible0，不是实时余额或可执行资格。
 - 最后已记录的Scanner只读快照为2026-11-02 00:07：源码1f2c6afc28b9988eaacdc896562ff9a71b78f801、PID3402，当时LIVE/0连续错误/无漂移；6006签名/seen、RAW_PENDING/未处理0、信号7/outbox9/Gmail2。此前98条逐笔重放（截至5979）不自动覆盖后来27条。本轮未查询生产DB或重新核验进程，不把旧快照冒充当前可用性。
 
@@ -30,7 +30,7 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 | 单一查询及PARTIAL/INCOMPLETE_EVIDENCE结论 | 单一入口已实现；候选新增版本化必需证据状态、缺口原因/来源/下一来源，JSON/Markdown/UI一致。当前能力只能输出INCOMPLETE_EVIDENCE；不以DONE/排名完成/权限PASS代替完整尽调 |
 | 历史/资金分页及多账户 | 候选已接入当前多账户及交易绑定的历史账户发现/一轮补查，合并最早已发现BUY和资金锚点；共用4/Owner、12额外账户/报告与原任务硬上限。关闭与Owner只绑定各交易前后状态，当前是否再创建/转让、全部历史账户、Top20之外Owner全历史、真实首笔及跨重启续采仍未完成 |
 | 所选池余额及协议储备模型 | 候选支持PumpSwap池/两侧金库/Mint同批finalized读取，按固定文档推导真实/有效储备和boost分量，防止待提费用重复扣除。Token-2022/冻结状态只列算术；已部署二进制语义、美元估值/流动性、可执行报价、其他DEX程序及真实来源验收仍缺，未据此宣布安全或可买 |
-| 外部叙事及多来源对照 | 候选已有同池索引对照、有界公开页面陈述及所选PumpSwap原始金库读取。读取时间与行情as-of、原始余额与净储备分开；独立持有人/同快照索引核对仍缺。未证明官方归属、最早起源、社区传播或完整尽调 |
+| 外部叙事及多来源对照 | 候选已有同池索引USD参考、原始金库/协议模型与可选GT直接币对报价的数值差异，以及有界公开页面陈述。源单位/方向/哈希核对后才展示差异；读取时间不等于行情as-of。缺字段不猜单位或换池，数值相同不宣布同快照。受控快照/独立持有人、官方归属/起源与真实来源验收仍缺 |
 | 新候选实际Mac与代表CA验收 | 尚未执行；前批Chrome仅GET读取既有2306599a，本轮只做隔离测试/CI，不借旧页面验收新候选 |
 
 
