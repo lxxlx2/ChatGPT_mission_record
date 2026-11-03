@@ -1,3 +1,21 @@
+## Latest authoritative terminal cache sync — 2026-11-03 16:58:01 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-03/165801-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-03/165627-attempt.md
+- run_time: 2026-11-03T16:58:01+07:00 (off-minute invocation; existing HH:00 schedule unchanged, exact scheduler trigger not claimed)
+- schedule: existing hourly HH:00 Asia/Bangkok UNCHANGED
+- run_status: PARTIAL; verified_complete: false; last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- scheduled_shard: 0; executed_shard: 1; override_reason: one permitted oldest-meaningful-attempt fairness recovery; last_four_executed_shards: [2,3,0,1]; consecutive_same_shard: 1
+- last_meaningful_attempt_at_shard1: 2026-11-03T16:58:01+07:00 PARTIAL_ONLY
+- urgent5 + Surf/StandX + one Shard1; 15 distinct registered identities attempted; bounded Cambria/NeoSoul/StandX lifecycle
+- candidate_count: 9; action_gate_pass: 0; triggered_events: 0; identity_failures: 1 (Theo/Autheo rejected); source_failures: 6
+- SOURCE_GAP: StandX DUSD Nov2 first-party original/claim, Concrete extra USDC, Clay Shares private, Neutrl portal and wallet-specific redemption, ForecastFDN original issuer, Theo Network current canonical
+- Neutrl issuer Telegram confirms Sep17 early redemption with expected Nov14 close, but original portal inaccessible and user holdings unknown; historical/current candidate fails new wallet-specific ACTION gate, no email
+- browser_session: UNAVAILABLE (actual originating-browser-context error), no authenticated original X read; English first-party fallback
+- Gmail life/work mapped-rights search: 0 relevant; gmail_attempted: false; gmail_sent_readback: NOT_APPLICABLE_NO_ACTION; app_notification: false
+- dedupe: SurfBoard Nov13, NeoSoul StandX Nov3 22:59 BKK, Cambria Base RSGP Oct29, StandX winddown and all other previously mailed stable keys unchanged
+- final_readback: VERIFIED main blob ac27b95a897e35e2ef49c825cd6559ecafb8f048; commit ae2ff36de071ae309983a1d57e3ecd5f1f9b663a
+- task ID/name/schedule/registry/recipient unchanged; no new task, cron, daily TGE email
+
 ## Latest authoritative terminal cache sync — 2026-11-03 16:02:44 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-03/160244-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-03/160141-attempt.md
