@@ -2603,5 +2603,163 @@
       "Other DEX programs, Token-2022 economics and full material Owner history/account epochs",
       "Official exact-CA attribution/origin and real representative CA/source/Mac acceptance"
     ]
+  },
+  "ca_holder_binary_balance_mass_followup_20261103": {
+    "observed_at_utc": "2026-11-03T09:03:15.258Z",
+    "verdict": "PASS_BOUNDED_SAME_BANK_LEGACY_NONZERO_BALANCE_MASS; INDEPENDENT_PROVIDER_ROLES_HISTORY_AND_WHOLE_CA_UNVERIFIED",
+    "source": {
+      "pr": 220,
+      "head": "4695027ac59cf419ded3bd98f03baa4495343c49",
+      "tree": "7d6465ada60d3a5b14842ed0e69be9eb18e1e653",
+      "baseline": "896f47c5b219f3eceae1d550605a08de9a3b00bd",
+      "baseline_tree": "8c9d1cbadb8b58582b916daa945acf2119c433e8",
+      "isolated_baseline_tree_exact": true,
+      "files": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/holder_binary.py",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_holder_binary.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/pool_vaults.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+        "crypto-300-profit-mission/local-agent/tests/fixtures/frank_ca_browser_server.py",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_browser.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs"
+      ],
+      "runtime_files": 5,
+      "test_files": 4,
+      "new_files": 2,
+      "remote_file_readback": "9/9 exact"
+    },
+    "implementation": {
+      "scope": "Standard explicit jobs opt in via audit_holder_binary. Quick/deep and default CLI disabled. One extra logical getMultipleAccounts call only after validated bounded enumeration; existing wire retries/job budget apply. GET/recovery/history never collects or backfills.",
+      "request": "Mint first, then <=99 token accounts in one finalized response. If enumeration <=99, select all; otherwise <=10 deterministic accounts: largest account per highest observed-balance Owner then fill remaining slots by balance/address. Validate all enumeration identities/unique addresses/decimals/u64 amounts before requesting. Existing256KiB raw RPC response and16KiB decoded-account caps retained.",
+      "snapshot": "minContextSlot is only enumeration lower bound; actual returned context may advance and is separately recorded. Mint supply/decimals and selected token Mint/authority/raw amount/state/COption tags come from that single actual bank. Job-received time may include cache, not block time.",
+      "decode": "Shared strict base64/layout/COption primitives with existing pool reader; comparison is against RPC jsonParsed enumeration, not a second data provider. Legacy Token length82/165; Token-2022 base/extension envelope accepted but economic mass not certified.",
+      "mass_proof": "Only for legacy SPL, initialized valid Mint, all selected accounts decoded with correct Mint/program, positive u64 supply, no native wrapper flag, and exact sum of selected nonnegative u64 amounts == same-bank Mint supply. Under normal legacy SPL supply invariant, no positive target balance remains outside the selected set. This covers nonzero balance mass, not all zero accounts/membership enumeration, roles, history or beneficial control.",
+      "mass_result": "RECONCILED_NONZERO_BALANCE_MASS aggregates current raw token authorities into Owner balances and raw unfiltered Owner Top10, exact Decimal percentages four places. A bounded subset can cover all positive mass if remaining accounts hold zero; do not claim their membership/zero addresses were independently enumerated.",
+      "partial_result": "OBSERVED_SAMPLE_ONLY retains valid observed amounts/owners but never outputs exact full Owner percentages for gaps, invalid/missing accounts, zero supply, Token-2022 semantics or native-wrapper exceptions. Unknown/missing data never becomes zero. Large Mint coverage remains bounded.",
+      "contradictions": "Different actual finalized slots remain DIFFERENT_FINALIZED_SLOTS, allowing legitimate amount/authority changes. Definite same-slot amount/identity/absence/decimals or same-slot prior-supply disagreement becomes SAME_SLOT_CONTRADICTION. Prior parsed-ranking status/metrics retained in child proof; parsed root status INCOMPLETE_EVIDENCE, exact metrics and owner percentages withdrawn. New validated binary mass remains a separately dated source, not silent repair of original source/history.",
+      "reporting": "Stored nested holder_rankings.raw_balance_check, JSON/Markdown/UI. Stored proof validator checks current schema, legacy program/Mint, bounded unique records, selected set, amount sum, owner aggregation/order and Top10 arithmetic. Completeness can verify narrow binary nonzero mass snapshot; independent source never promoted, roles at a different slot remain PARTIAL.",
+      "ui": "Dedicated raw Owner card shows enum vs binary actual slot, selected/unselected bounds, integer amounts/decimals and unfiltered Top10 only after client-side mass/owner/percentage checks. Owner tie order ASCII consistent with Python, not locale. Unknown/malformed/partial/legacy proofs clear earlier exact binary percentages. Explicit same-RPC, no independent-provider/role/full-history claims.",
+      "unchanged_budgets": {
+        "max_wire_attempts": 1200,
+        "max_elapsed_seconds": 1800
+      },
+      "max_new_logical_rpc_calls": 1,
+      "max_total_pubkeys_per_batch": 100
+    },
+    "validation": {
+      "baseline_new_python": {
+        "tests": 24,
+        "passed": 0,
+        "failed": 24,
+        "cause": "Per-test failures for absent holder_binary module and standard flag/analyzer wiring; not24 independent on-chain source failures."
+      },
+      "intermediate_markdown": {
+        "passed": 40,
+        "failed": 1,
+        "cause": "New proof not yet serialized in Markdown. Added explicit binary-check section, retained assertion."
+      },
+      "baseline_frontend": {
+        "tests": 76,
+        "passed": 74,
+        "failed": 2
+      },
+      "intermediate_owner_tie": {
+        "tests": 77,
+        "passed": 76,
+        "failed": 1,
+        "cause": "JS localeCompare ordered equal-balance Base58 address ties differently from Python ASCII sort, rejecting a valid proof. Replaced with explicit codepoint order and kept the failing case."
+      },
+      "final_new_python_passed": 31,
+      "final_local_related_python_passed": 394,
+      "final_local_frontend_passed": 130,
+      "syntax_and_diff": "PASS",
+      "cases": [
+        "99 accounts + Mint fits one100-key request;100/150-account enumeration selects bounded10 deterministically",
+        "Advancing actual bank accepted, never pretend minContextSlot pins history; older context rejected",
+        "Raw multi-account balances aggregate by current authority Owner",
+        "Positive mass equals same-bank supply; subset covers positive mass while90 zero-address membership unverified",
+        "Supply gaps/zero, malformed account/Mint, uninitialized state, COption/encoding/program/mint identity failures never get full percentages",
+        "Same-slot contradiction versus later-state change; original exact ranking withdrawn",
+        "Token-2022 and native semantics not certified; frozen/delegate/close-authority flags don't prove control or exclusions",
+        "Budget exception terminal; standard-only flag and actual analyzer wiring",
+        "Proof corruption/unsupported schema/provider/Mint/owners/percent fails validation",
+        "Markdown/completeness preserve new proof and overall incomplete status",
+        "Browser main fixture uses a valid synthetic32-byte Mint; actual binary decoder with injected local RPC generates its balance proof"
+      ],
+      "ci": {
+        "run_id": 41607099227,
+        "job_id": 125819541174,
+        "head": "4695027ac59cf419ded3bd98f03baa4495343c49",
+        "merge_ref": "a6fe1fc08a3574072c88ad6a1067a6e2fe6de483",
+        "status": "completed",
+        "conclusion": "success",
+        "python_passed": 1902,
+        "python_skipped": 4,
+        "frontend_passed": 130,
+        "browser_checks": 34,
+        "page_errors": [],
+        "blocked_requests": [],
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "real_ca_posts": 0,
+        "production_requests": 0,
+        "browser": "151.0.7922.34",
+        "cleanup": "browser profile removed, fixture exited, port released",
+        "browser_scope": "Actual HTTP worker, report persistence/rendering and GET recovery; synthetic analyzer invokes actual holder_binary decoder using local injected RPC response. Valid synthetic32-byte Mint and advancing slot; no real representative CA/source acceptance.",
+        "artifact": {
+          "id": 13217606675,
+          "sha256": "925dd4d07b21f9fa303d02960944df2b9520961938cb651c185198f98cf23570"
+        }
+      },
+      "log_sha256": {
+        "red": "6dd5e845e8a0c7ba67acd76d768ece216ba6bfcdf3cb627ee0e365d25a0fbfb4",
+        "pool_green": "4eb6fd1e2a22347b208875a8d2d863e4d9e3096dd19edd90de5c306266c991ce",
+        "markdown_red": "38ca576b8668d2dd05d17b1a59d398bbfb7d91f91e10a8fb2a893e7747d1a57a",
+        "ui_red": "e7aaa6d5a95e850e8fb2ccc3b8f31f272d7043f068c37a7ac03afbdee5e4edea",
+        "tie_red": "7c8664d0b10f6269e194450395b82e20b64abfd5e504a795d24e5fa70d0f79aa",
+        "ui_final": "ae28ab36b11904ca332aff424475248c40569b07e71d59bc7444c29eca964a19",
+        "related_final": "9262bb0de7ceefd264fb4e1ad529f203dc03a6443a16e4e134613c3063001e55",
+        "frontend_final": "8286cf310694450f79a9930507e84470467024d3fdc1bebbf7ed723054b402dd"
+      },
+      "extra_fixed_code_check": "99 synthetic equal-balance Owners in one batch: raw Owner Top10 exactly10.1010%; fixed code untouched. No network."
+    },
+    "references": [
+      {
+        "url": "https://solana.com/docs/rpc/http/getmultipleaccounts"
+      },
+      {
+        "url": "https://github.com/solana-program/token/blob/main/interface/src/state.rs",
+        "blob": "1bf00f7a1b28eb0b776d3bc90605c7e44bfdbcfd"
+      }
+    ],
+    "boundaries": {
+      "installed_mac_last_receipt": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "candidate_deployed": false,
+      "real_source_acceptance": false,
+      "real_rpc": 0,
+      "real_ca_posts": 0,
+      "production_requests": 0,
+      "notifications": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "new_services": 0,
+      "new_workflows": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "merged": false,
+      "independent_review": "waived by user; not claimed",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO",
+      "old_failed_job_identity": "UNPROVEN"
+    },
+    "remaining": [
+      "Separate permitted holder provider/decoder source with controlled provenance and independent same-snapshot parity",
+      "Large Mint positive balances beyond one bounded batch; Token-2022 economic/withheld/confidential semantics and filtered role ranks",
+      "All zero/closed/recreated account epochs, material Owner history and beneficial-control attribution",
+      "USD/liquidity/date/price-basis validation and official exact-CA narrative origin",
+      "Real representative CA/source failure and Mac UX acceptance"
+    ]
   }
 }

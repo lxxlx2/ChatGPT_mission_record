@@ -1,5 +1,5 @@
 # Frank STATUS（唯一当前决策状态入口）
-更新时间：2026-11-03 10:39 Asia/Bangkok
+更新时间：2026-11-03 16:03 Asia/Bangkok
 更新者：Codex（用户继续授权本地调试、隔离测试与既有Dashboard维护；独立review豁免；INVEST_NO_GO / TRADE_NO_GO保持）
 
 ## 北极星答案（1 行）
@@ -16,7 +16,7 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 **阶段管理已结束；按当前用户继续主线指令推进手动CA查询能力，同时保留原只读钱包观察工具。** 跟单盈利研究不因此恢复；P2/P3 未启动。
 
 ## 正在进行（最多 3 项）
-- **手动CA主线：所选池协议储备与独立币对报价的数值对照已接入候选**。原PR220最新候选[`896f47c5b219f3eceae1d550605a08de9a3b00bd`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/896f47c5b219f3eceae1d550605a08de9a3b00bd)复用原有GeckoTerminal响应中的可选直接币对字段，按目标币在返回币对的方向选择计价单位；先核对池子/Mint/quote/方向/源字段、原始池/模型身份、两侧响应哈希与实际slot，再计算索引减协议及相对差异。字段缺失保留缺口，不用USD比值、native currency、固定汇率、符号或另一池子替代。GT数值JSON按Decimal解析，保留原始响应哈希和超过float精度的数字；原始账户结果读取时间、索引结果读取时间与间隔另列，可能来自缓存，均不证明区块时间/provider as-of。成功仅为UNALIGNED_RATIO_COMPARISON，数值相同也不提升为同快照或价格口径PASS；Token-2022/冻结/零储备等未核实模型不对照。新标准报告保存JSON/Markdown/UI，GET不补算或重采；新增RPC/HTTP/工作流0，1200 wire attempt/1800秒不变。9文件（5运行/4测试，新增2文件）远端逐字一致；新增33Python、334相关及127前端通过，基线30Python/2前端失败保留。[最终固定CI run81](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41573211096)实际1871 Python通过/4跳过、127前端、33隔离Chromium场景通过，page errors0；7次fixture POST均合成分析，真实RPC/CA POST/生产请求0，临时fixture/浏览器/端口已清理。整体INCOMPLETE_EVIDENCE，独立来源最多PARTIAL，美元估值、可执行报价、受控同快照/独立持有人及真实CA验收仍缺。Mac最后回执f690，本轮真实CA/RPC/生产请求及部署0。详见既有JSON的ca_pool_quote_units_comparison_followup_20261103。
+- **手动CA主线：同批二进制余额与非零余额覆盖核验已接入候选**。原PR220最新候选[`4695027ac59cf419ded3bd98f03baa4495343c49`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/4695027ac59cf419ded3bd98f03baa4495343c49)在standard可信枚举后最多增加1个逻辑RPC读取，Mint加最多99个账户同批finalized；枚举超过99时仅确定性选择最多10个Owner代表账户，保留未选数量，复用原RPC预算/有限重试。minContextSlot只设下界，记录实际批次slot与原枚举slot；较晚快照的余额/authority变化不当作旧数据错误。同slot确实矛盾时撤下原枚举精确比例并保留来源。仅普通SPL、有效初始化/布局、全部选中账户解码正确、无原生包装计量例外，且所选非负余额之和严格等于同批正Mint供给时，才单列RECONCILED_NONZERO_BALANCE_MASS及原始Owner聚合/Top10；这可覆盖全部非零余额，仍不证明所有零账户枚举、特殊角色、控制归属或全历史。Token-2022、缺额、零供给和缺失/无效账户仅保留样本，不补零或伪造全局比例。JSON/Markdown/UI分列证明与旧来源，精确整数及比例校验，GET不补算/重采，独立提供方仍未核实。9文件（5运行/4测试，新增2文件）远端逐字一致；新增31Python、394相关和130前端通过，24项初始失败、Markdown缺口及地址并列排序反例保留。[最终固定CI run83](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41607099227)实际1902 Python通过/4跳过、130前端、34隔离Chromium场景通过，page errors0；浏览器采用有效合成Mint并调用实际二进制解码/供给核验，7次fixture POST均合成分析，真实RPC/CA POST/生产请求0，临时fixture/浏览器/端口已清理。整体INCOMPLETE_EVIDENCE，受控非零余额快照仅在覆盖条件成立时核实；大型Mint、独立提供方、同快照价格/美元估值、全历史及真实CA/Mac验收仍缺。Mac最后回执f690，本轮真实CA/RPC/生产请求及部署0。详见既有JSON的ca_holder_binary_balance_mass_followup_20261103。
 - 前批已验收的既有真实CA job `2306599a664d4308ad9b0cf3706c07a3`（11月1日22:10报告，本轮未创建）经GET和磁盘确认报告/任务/marker/摘要一致；私有副本空内存恢复及4项损坏拒绝PASS。Dashboard源码切换后实际GET返回DONE/restored_from_saved_report=true，Chrome“读取选中报告”显示任务ID与CA已核对；无效CA清理与恢复PASS，标签保留。该次安装验收中28份报告文件哈希保留；控制库、D2、旧心跳及plist不变。最后D2来源回执为11月1日08:26的4898账户/Mint快照，F01近期0/历史7/eligible0，不是实时余额或可执行资格。
 - 最后已记录的Scanner只读快照为2026-11-02 00:07：源码1f2c6afc28b9988eaacdc896562ff9a71b78f801、PID3402，当时LIVE/0连续错误/无漂移；6006签名/seen、RAW_PENDING/未处理0、信号7/outbox9/Gmail2。此前98条逐笔重放（截至5979）不自动覆盖后来27条。本轮未查询生产DB或重新核验进程，不把旧快照冒充当前可用性。
 
@@ -26,7 +26,7 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 
 | 原目标 | 本轮实际状态 |
 |---|---|
-| 账户与Owner、样本与全局Top10、快照slot | 候选已实现有界全Mint来源、Owner聚合与同slot/供给核对；Token-2022保留扩展账户。超5000账户/8MiB、来源不支持或slot不一致时保持未完成；未做真实来源/Mac验收或自动同slot重采。全局排名完成不提升旧样本指标或全历史状态 |
+| 账户与Owner、样本与全局Top10、快照slot | 候选已有有界全Mint来源/Owner排名，并新增同一批次的原始Mint/账户解码。普通SPL所选非负余额之和等于同批正供给时可核对全部非零Owner余额及原始Top10；原枚举与实际批次slot分别保留，同slot矛盾撤下旧比例。>99枚举仅采最多10账户，缺额、Token-2022/原生包装计量、角色排除、独立提供方和真实来源仍可能未完成；不提升全部账户枚举/历史或控制归属 |
 | 单一查询及PARTIAL/INCOMPLETE_EVIDENCE结论 | 单一入口已实现；候选新增版本化必需证据状态、缺口原因/来源/下一来源，JSON/Markdown/UI一致。当前能力只能输出INCOMPLETE_EVIDENCE；不以DONE/排名完成/权限PASS代替完整尽调 |
 | 历史/资金分页及多账户 | 候选已接入当前多账户及交易绑定的历史账户发现/一轮补查，合并最早已发现BUY和资金锚点；共用4/Owner、12额外账户/报告与原任务硬上限。关闭与Owner只绑定各交易前后状态，当前是否再创建/转让、全部历史账户、Top20之外Owner全历史、真实首笔及跨重启续采仍未完成 |
 | 所选池余额及协议储备模型 | 候选支持PumpSwap池/两侧金库/Mint同批finalized读取，按固定文档推导真实/有效储备和boost分量，防止待提费用重复扣除。Token-2022/冻结状态只列算术；已部署二进制语义、美元估值/流动性、可执行报价、其他DEX程序及真实来源验收仍缺，未据此宣布安全或可买 |
