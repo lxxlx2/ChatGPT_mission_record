@@ -916,3 +916,40 @@ test('equal binary balances use ASCII address order consistently with the backen
   c.owners=owners.map(owner=>({owner,raw:'50',observed_account_count:1,supply_pct:'50.0000'}));
   h.context.renderClusterReport(r);assert.match(h.element('cluster-rankings').innerHTML,/同批非零余额已覆盖/);
 });
+
+function selectedVaultReportForUi() {
+  const r=binaryHolderReportForUi(),h=r.holder_rankings.raw_balance_check;
+  const authority=h.owners[0].owner,vault=h.records[0].token_account;
+  h.records[0].raw='60';h.records.push({token_account:'11111111111111111111111111111114',mint,owner:authority,raw:'40',status:'MATCH'});
+  h.selected_accounts.push(h.records[1].token_account);h.selected_account_count=2;
+  h.owners[0].observed_account_count=2;
+  r.pool_vaults={status:'VAULT_BALANCE_SNAPSHOT',source:'SOLANA_FINALIZED_RAW_ACCOUNTS',pool_program:'pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA',mint,pool_address:authority,snapshot_slot:101,response_sha256:'c'.repeat(64),target:{mint,vault,authority,raw:'60',decimals:0,token_program:'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',mint_supply_raw:'100'}};
+  r.pool_holder_roles={version:1,pool_program:'pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA',status:'SELECTED_VAULT_BOUND',metric_status:'SINGLE_VAULT_DEDUCTION_ONLY',mint,pool_address:authority,vault_address:vault,authority,
+    pool_slot:101,holder_slot:101,pool_response_sha256:'c'.repeat(64),holder_response_sha256:'b'.repeat(64),vault_raw:'60',mint_supply_raw:'100',remaining_raw:'40',pool_owner_raw_before:'100',pool_owner_raw_after:'40',top10_raw_after:'40',top10_pct_of_mint_supply:'40.0000',top10_pct_of_remaining:'100.0000',owners_after:[{owner:authority,raw:'40'}],independent_provider:false,all_special_roles_normalized:false};
+  return r;
+}
+
+test('selected target-vault deduction keeps auxiliary balances and labels both denominators',()=>{
+  const h=harness();h.context.renderClusterReport(selectedVaultReportForUi());const html=h.element('cluster-rankings').innerHTML;
+  assert.match(html,/cluster-pool-holder-roles/);assert.match(html,/仅扣所选池目标币金库/);
+  assert.match(html,/占全部 Mint 供给/);assert.match(html,/占扣除后剩余余额/);assert.match(html,/40%/);assert.match(html,/100%/);
+  assert.match(html,/同一 Owner 的其他余额仍保留/);assert.match(html,/全部 LP/);
+});
+
+test('different slot and malformed role proofs cannot retain deduction percentages',()=>{
+  const h=harness(),r=selectedVaultReportForUi();h.context.renderClusterReport(r);
+  r.pool_holder_roles.holder_slot=102;h.context.renderClusterReport(r);
+  assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/占全部 Mint 供给/);
+  r.pool_holder_roles.status='OBSERVED_AT_DIFFERENT_SLOTS';h.context.renderClusterReport(r);
+  assert.match(h.element('cluster-rankings').innerHTML,/slot 尚未对齐/);
+  delete r.pool_holder_roles;h.context.renderClusterReport(r);
+  assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/cluster-pool-holder-roles/);
+});
+
+test('known selected-vault identity stays visible when whole-holder mass is incomplete',()=>{
+  const h=harness(),r=selectedVaultReportForUi();r.holder_rankings.raw_balance_check.status='OBSERVED_SAMPLE_ONLY';
+  r.holder_rankings.raw_balance_check.full_positive_mass_reconciled=false;r.pool_holder_roles.metric_status='UNRESOLVED';
+  h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
+  assert.match(html,/所选池目标币金库身份已核对/);assert.match(html,/未计算扣除比例/);
+  assert.doesNotMatch(html,/占全部 Mint 供给/);
+});

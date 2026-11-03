@@ -44,14 +44,14 @@ def fixture_holder_binary(mint):
     program='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
     owner=lambda i:_key((6000+i).to_bytes(32,'big'))
     addresses=[_key((5000+i).to_bytes(32,'big')) for i in range(30)]
-    amounts=[800]+[20]*10+[0]*19
-    accounts=[{'token_account':a,'owner':owner(i),'raw':str(amounts[i]),'decimals':0} for i,a in enumerate(addresses)]
+    amounts=[100,700]+[20]*10+[0]*18
+    accounts=[{'token_account':a,'owner':owner(0 if i<2 else i-1),'raw':str(amounts[i]),'decimals':6} for i,a in enumerate(addresses)]
     source={'requested':True,'status':'COMPLETE_SNAPSHOT','mint':mint,'program_id':program,'snapshot_slot':100,'supply_slot':100,
-        'response_sha256':'a'*64,'account_count':30,'nonzero_owner_count':11,'normalization_complete':True,'decimals':0,'supply_raw':'1000','total_raw':'1000',
+        'response_sha256':'a'*64,'account_count':30,'nonzero_owner_count':11,'normalization_complete':True,'decimals':6,'supply_raw':'1000','total_raw':'1000',
         'metrics':{'GLOBAL_OWNER_TOP10_PCT':'98.0000','GLOBAL_EX_LP_OWNER_TOP10_PCT':'20.0000'},'accounts':accounts,
-        'owners':[{'owner':owner(i),'raw':str(amounts[i]),'account_count':1,'role':'LP' if i==0 else 'ORDINARY','supply_pct':'80.0000' if i==0 else '2.0000','history_scanned':False} for i in range(11)]}
+        'owners':[{'owner':owner(i),'raw':'800' if i==0 else '20','account_count':2 if i==0 else 1,'role':'LP' if i==0 else 'ORDINARY','supply_pct':'80.0000' if i==0 else '2.0000','history_scanned':False} for i in range(11)]}
     def encoded(data):return {'owner':program,'executable':False,'data':[base64.b64encode(data).decode(),'base64']}
-    m=bytearray(82);m[36:44]=(1000).to_bytes(8,'little');m[45]=1
+    m=bytearray(82);m[36:44]=(1000).to_bytes(8,'little');m[44]=6;m[45]=1
     # Decode the syntactically supplied Mint for actual binary fixture fields.
     from mission_agent.meme.holder_ranks import ALPHABET
     value=0
@@ -60,8 +60,8 @@ def fixture_holder_binary(mint):
     mint_key=value.to_bytes(32,'big')
     values={}
     for i,a in enumerate(addresses):
-        b=bytearray(165);b[:32]=mint_key;b[32:64]=(6000+(0 if i==0 else 1)).to_bytes(32,'big')
-        b[64:72]=(800 if i==0 else 200 if i==1 else 0).to_bytes(8,'little');b[108]=1
+        b=bytearray(165);b[:32]=mint_key;b[32:64]=(6000+(0 if i<2 else i-1)).to_bytes(32,'big')
+        b[64:72]=amounts[i].to_bytes(8,'little');b[108]=1
         values[a]=encoded(b)
     class BinaryRPC:
         def call(self,method,params,ttl=0):
@@ -85,7 +85,9 @@ class FixtureAnalyzer:
         time.sleep(0.15)
         if self.mint == '4' * 32:
             raise ValueError('FIXTURE_ANALYZER_ERROR')
-        return {
+        from mission_agent.meme.pool_vaults import _key
+        pool_addr=_key((6000).to_bytes(32,'big'));pool_vault=_key((5000).to_bytes(32,'big'))
+        report={
             'schema_version': 2, 'source': 'SOLANA_FINALIZED_JSON_RPC',
             'mint': self.mint, 'observed_at': time.time(),
             'coverage': {'special_normalization_complete': False,
@@ -105,12 +107,12 @@ class FixtureAnalyzer:
                 'signature':'FIXTURE_HISTORICAL_PROOF','slot':90,'block_time':90,
                 'balance_phase':'pre','raw':'10','decimals':0,
                 'closure_at_transaction_end':'CONFIRMED_CLOSED_AT_TRANSACTION_END','response_sha256':'a'*64}],
-            'pool_vaults':{'version':1,'status':'VAULT_BALANCE_SNAPSHOT','mint':self.mint,'pool_address':'1'*31+'5',
+            'pool_vaults':{'version':1,'source':'SOLANA_FINALIZED_RAW_ACCOUNTS','pool_program':'pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA','status':'VAULT_BALANCE_SNAPSHOT','mint':self.mint,'pool_address':pool_addr,
                 'discovery_slot':100,'snapshot_slot':101,'observed_at':103,'response_sha256':'a'*64,'raw_vault_quote_per_target':'2','price_usd':'UNVERIFIED',
                 'liquidity_usd':'UNVERIFIED','executable_quote':'NOT_COMPUTED','flags':['VIRTUAL_QUOTE_RESERVES_PRESENT'],
-                'target':{'mint':self.mint,'vault':'1'*31+'7','authority':'1'*31+'5','raw':'100','decimals':6,'quantity':'0.000100'},
-                'quote':{'mint':'1'*31+'6','vault':'1'*31+'8','authority':'1'*31+'5','raw':'200','decimals':6,'quantity':'0.000200'},
-                'market_comparison':{'version':1,'status':'UNALIGNED_RATIO_COMPARISON','mint':self.mint,'quote_address':'1'*31+'6','pool_address':'1'*31+'5',
+                'target':{'mint':self.mint,'vault':pool_vault,'authority':pool_addr,'raw':'100','decimals':6,'quantity':'0.000100','token_program':'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA','mint_supply_raw':'1000'},
+                'quote':{'mint':'1'*31+'6','vault':'1'*31+'8','authority':pool_addr,'raw':'200','decimals':6,'quantity':'0.000200'},
+                'market_comparison':{'version':1,'status':'UNALIGNED_RATIO_COMPARISON','mint':self.mint,'quote_address':'1'*31+'6','pool_address':pool_addr,
                     'model_quote_per_target':'1.85','indexer_quote_per_target':'1.9','indexer_field':'base_token_price_quote_token',
                     'snapshot_slot':101,'same_chain_snapshot':False,'provider_asof':'UNVERIFIED','price_basis_alignment':'UNVERIFIED',
                     'chain_response_sha256':'a'*64,'indexer_response_sha256':'b'*64,
@@ -130,13 +132,16 @@ class FixtureAnalyzer:
                 'attempts':[{'kind':'LAUNCHPAD_PAGE','status':'UNAVAILABLE','reason':'HTTP_403','requested':True}]},
             'holders': [], 'metrics': {}, 'assessment': {}, 'token_profile': {},
             'market': {'status':'OK','source':'DEXSCREENER_API','name':name,'symbol':'FIXTURE','mint':self.mint,'observed_at':100,
-                'price_usd':'2','main_pair':{'pair_address':'1'*31+'5','base_address':self.mint,'quote_address':'1'*31+'6','liquidity_usd':'1000'},
-                'independent_market':{'status':'OK','source':'GECKOTERMINAL_PUBLIC_API','attempted':True,'mint':self.mint,'pool_address':'1'*31+'5','quote_address':'1'*31+'6','observed_at':102,'target_orientation':'BASE','price_quote_units':'1.9','price_quote_units_field':'base_token_price_quote_token','response_sha256':'b'*64},
-                'comparison':{'status':'INDEXER_SNAPSHOTS_COMPARED','mint':self.mint,'pool_address':'1'*31+'5','quote_address':'1'*31+'6','same_chain_snapshot':False,'provider_asof':'UNVERIFIED','retrieval_gap_seconds':2,
+                'price_usd':'2','main_pair':{'pair_address':pool_addr,'base_address':self.mint,'quote_address':'1'*31+'6','liquidity_usd':'1000'},
+                'independent_market':{'status':'OK','source':'GECKOTERMINAL_PUBLIC_API','attempted':True,'mint':self.mint,'pool_address':pool_addr,'quote_address':'1'*31+'6','observed_at':102,'target_orientation':'BASE','price_quote_units':'1.9','price_quote_units_field':'base_token_price_quote_token','response_sha256':'b'*64},
+                'comparison':{'status':'INDEXER_SNAPSHOTS_COMPARED','mint':self.mint,'pool_address':pool_addr,'quote_address':'1'*31+'6','same_chain_snapshot':False,'provider_asof':'UNVERIFIED','retrieval_gap_seconds':2,
                     'metrics':{'price_usd':{'status':'COMPARED','primary':'2','independent':'2.5','difference':'0.5','difference_pct_of_primary':'25.0000'},
                               'pool_liquidity_usd':{'status':'COMPARED','primary':'1000','independent':'900','difference':'-100','difference_pct_of_primary':'-10.0000'}}}},
             'limitations': ['SYNTHETIC_ONLY_NO_CHAIN_REQUEST'],
         }
+        from mission_agent.meme.pool_holder_roles import attach_pool_holder_roles
+        report['pool_holder_roles']=attach_pool_holder_roles(self.mint,report['holder_rankings'],report['pool_vaults'])
+        return report
 
 
 server.SolanaReadOnlyRPC = FixtureRPC

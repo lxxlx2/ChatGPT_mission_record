@@ -1213,6 +1213,8 @@ class WalletClusterAnalyzer:
         self._history_decimals=decimals
         holder_rankings=self._holder_ranks(token_profile,supply,decimals)
         pool_vaults=self.pool_vault_snapshot(market)
+        from .pool_holder_roles import attach_pool_holder_roles
+        pool_holder_roles=attach_pool_holder_roles(self.mint,holder_rankings,pool_vaults)
         self._prepare_owner_account_history(holders,holder_rankings)
         preview_top10_pct=getattr(self,"_raw_top10_snapshot_pct",None)
         self._progress(
@@ -1398,10 +1400,14 @@ class WalletClusterAnalyzer:
         slots+=self._snapshot_slots.get("account_batches",[])
         snapshot_consistent=(len(slots)>=4 and all(type(slot) is int and slot>0 for slot in slots)
                              and len(set(slots))==1)
+        if pool_holder_roles.get("status")=="SAME_SLOT_CONTRADICTION":snapshot_consistent=False
         strict_metrics_available=normalization_complete and holder_rank_complete and snapshot_consistent
         owners_not_scanned=sorted(set(owners)-scanned_owners)
         owner_account_history=self._owner_account_history_coverage()
         coverage_gaps=[]
+        if pool_holder_roles.get("status")=="SAME_SLOT_CONTRADICTION":
+            snapshot_consistent=False
+            coverage_gaps.append("POOL_HOLDER_SAME_SLOT_CONTRADICTION")
         if self._historical_errors:coverage_gaps.append("HISTORICAL_ACCOUNT_CONTEXT_GAPS")
         if self._historical_evidence_limited:coverage_gaps.append("HISTORICAL_ACCOUNT_EVIDENCE_LIMIT")
         if any(not r["selected"] and r["stop_reason"]!="CURRENT_ACCOUNT_ALREADY_SELECTED" for r in self.historical_account_scans):coverage_gaps.append("HISTORICAL_ACCOUNT_SCAN_INCOMPLETE")
@@ -1446,7 +1452,7 @@ class WalletClusterAnalyzer:
         for i,h in enumerate(holders):
             holder_rows.append({
                 "rank":i+1,"token_account":h.token_account,"owner":h.owner,"raw":str(h.raw),
-                "quantity":str(h.quantity),"supply_pct":self._pct(h.raw,supply),"role":h.role,
+                "quantity":str(h.quantity),"supply_pct":self._pct(h.raw,supply) if pool_holder_roles.get("status")!="SAME_SLOT_CONTRADICTION" else "UNRESOLVED","role":h.role,
                 "role_source":h.role_source,"account_program":h.account_program,
                 "deep_scanned":h.owner in scanned_owners,
                 "first_acquisition":acquisition(h.owner),
@@ -1518,11 +1524,16 @@ class WalletClusterAnalyzer:
                         (getattr(self.rpc,"endpoint_calls",{}) or {}).items()}
         endpoint_failures={safe_rpc_label(k):v for k,v in
                            (getattr(self.rpc,"endpoint_failures",{}) or {}).items()}
+        if pool_holder_roles.get("status")=="SAME_SLOT_CONTRADICTION":
+            pool_holder_roles.setdefault("withdrawn_metrics",{})["analysis_metrics_before_withdrawal"]=dict(metrics)
+            for key in metrics:
+                if key.endswith("_PCT"):metrics[key]="UNRESOLVED"
+            for group in relation_groups+control_groups+execution_groups:group["supply_pct"]="UNRESOLVED"
         report = {
             "schema_version":2,"mint":self.mint,"source":"SOLANA_FINALIZED_JSON_RPC",
             "rpc_endpoint":safe_rpc_label(getattr(self.rpc,"endpoint","UNKNOWN")),"rpc_endpoints":endpoints,
             "observed_at":time.time(),"supply_raw":str(supply),"decimals":decimals,
-            "token_profile":token_profile,"market":market,"pool_vaults":pool_vaults,"narrative":narrative,"assessment":assessment,"holders":holder_rows,"holder_rankings":holder_rankings,
+            "token_profile":token_profile,"market":market,"pool_vaults":pool_vaults,"pool_holder_roles":pool_holder_roles,"narrative":narrative,"assessment":assessment,"holders":holder_rows,"holder_rankings":holder_rankings,
             "metrics":metrics,"confirmed_relation_groups":relation_groups,"probable_control_clusters":control_groups,
             "probable_execution_clusters":execution_groups,
             "shared_infrastructure_exclusions":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_CEX","SHARED_INFRA"}],
@@ -1597,11 +1608,13 @@ def report_completeness(report:dict)->dict:
     narrative_attempted=any(row.get("requested") is True for row in narrative.get("attempts") or [])
     independent=market.get("independent_market") or {}
     compared=(market.get("comparison") or {}).get("status") in {"INDEXER_SNAPSHOTS_COMPARED","PARTIAL_INDEXER_SNAPSHOTS"}
+    role_evidence=report.get("pool_holder_roles") or {}
+    pool_holder_conflict=role_evidence.get("status")=="SAME_SLOT_CONTRADICTION"
     ranked=ranks.get("requested") is True and ranks.get("status")=="COMPLETE_SNAPSHOT"
     from .holder_binary import verified_holder_mass
     binary_check=ranks.get("raw_balance_check") or {}
     binary_mass=verified_holder_mass(binary_check,report.get("mint")) and binary_check.get("enumeration_response_sha256")==ranks.get("response_sha256")
-    normalized=ranked and ranks.get("normalization_complete") is True and (not binary_mass or binary_check.get("snapshot_slot")==ranks.get("snapshot_slot"))
+    normalized=not pool_holder_conflict and ranked and ranks.get("normalization_complete") is True and (not binary_mass or binary_check.get("snapshot_slot")==ranks.get("snapshot_slot"))
     requirements=[]
     def row(key,status,cause,attempted,next_source,paths):
         requirements.append({"id":key,"status":status,"cause":cause,
@@ -1612,8 +1625,8 @@ def report_completeness(report:dict)->dict:
         ["Finalized getAccountInfo mint parsing"],
         "Verify metadata/update authority and applicable program controls with account/transaction evidence.",
         ["token_profile","assessment.chain_permission_status"])
-    row("holder_balances","VERIFIED_SNAPSHOT" if ranked or binary_mass else "PARTIAL",
-        "RAW_BINARY_NONZERO_BALANCE_MASS_RECONCILED_SAME_PROVIDER" if binary_mass else "SAME_SLOT_SUPPLY_RECONCILED" if ranked else "FULL_MINT_RANK_SOURCE_NOT_VERIFIED",
+    row("holder_balances","VERIFIED_SNAPSHOT" if (ranked or binary_mass) and not pool_holder_conflict else "PARTIAL",
+        "POOL_HOLDER_SAME_SLOT_CONTRADICTION" if pool_holder_conflict else "RAW_BINARY_NONZERO_BALANCE_MASS_RECONCILED_SAME_PROVIDER" if binary_mass else "SAME_SLOT_SUPPLY_RECONCILED" if ranked else "FULL_MINT_RANK_SOURCE_NOT_VERIFIED",
         ["Finalized supply and Top20 account reads", "Mint-filtered getProgramAccounts" if ranks.get("requested") is True else "Full enumeration not requested"],
         "Use a permitted complete mint-account source within bounds and reconcile actual slots and supply.",
         ["holder_rankings","holder_rankings.raw_balance_check","coverage.snapshot_slots"])
@@ -1621,7 +1634,7 @@ def report_completeness(report:dict)->dict:
         "SNAPSHOT_ROLES_NORMALIZED" if normalized else "SPECIAL_ADDRESS_IDENTITIES_NOT_FULLY_VERIFIED",
         ["Owner account metadata and configured special-address registry"],
         "Verify pool/vault/CEX/treasury roles with dated program/account/transaction evidence.",
-        ["holder_rankings.normalization_complete","holders"])
+        ["holder_rankings.normalization_complete","holders","pool_holder_roles"])
     row("wallet_history","PARTIAL","BOUNDED_HISTORY_NOT_ALL_OWNER_ACCOUNTS",
         ["Selected observed token-account history and owner prefunding signature windows; per-account coverage in coverage.owner_account_history"],
         "Enumerate all material Owner token accounts and reconcile complete acquisition/sale/funding movements.",
@@ -1631,10 +1644,10 @@ def report_completeness(report:dict)->dict:
         "Resolve material unknown relationships using independent non-public evidence; keep inherent uncertainty explicit.",
         ["assessment.cluster_status","unresolved_relation_edges","probable_control_clusters"])
     row("market","PARTIAL" if market.get("status")=="OK" else "UNAVAILABLE",
-        "DOCUMENTED_RESERVES_WITHOUT_USD_OR_SNAPSHOT_PARITY" if reserve_model_read else "RAW_VAULT_BALANCES_WITHOUT_NET_RESERVE_OR_PRICE_RECONCILIATION" if raw_pool_read else "INDEXED_MARKETS_WITHOUT_RAW_POOL_RECONCILIATION" if compared else "SINGLE_MARKET_REFERENCE_WITHOUT_POOL_RECONCILIATION",
+        "POOL_HOLDER_SAME_SLOT_CONTRADICTION" if pool_holder_conflict else "DOCUMENTED_RESERVES_WITHOUT_USD_OR_SNAPSHOT_PARITY" if reserve_model_read else "RAW_VAULT_BALANCES_WITHOUT_NET_RESERVE_OR_PRICE_RECONCILIATION" if raw_pool_read else "INDEXED_MARKETS_WITHOUT_RAW_POOL_RECONCILIATION" if compared else "SINGLE_MARKET_REFERENCE_WITHOUT_POOL_RECONCILIATION",
         ["DexScreener market reference"]+(["GeckoTerminal exact-pool indexer"] if independent.get("attempted") is True else [])+(["Selected PumpSwap raw vault/Mint accounts in one finalized batch; documented signed virtual reserve arithmetic" if reserve_model_read else "Selected PumpSwap raw vault/Mint accounts in one finalized batch; not net reserves"] if raw_pool_read else []),
         "Reconcile dated selected-pool reserves and market definitions with an independent permitted source.",
-        ["market","pool_vaults"])
+        ["market","pool_vaults","pool_holder_roles"])
     row("independent_sources","PARTIAL" if compared or unit_compared else "UNAVAILABLE" if independent.get("attempted") is True else "NOT_COLLECTED",
         "NON_SYNCHRONOUS_POOL_RATIO_REFERENCES_NOT_FULL_PARITY" if unit_compared else "INDEXER_COMPARISON_NOT_RAW_POOL_OR_HOLDER_PARITY" if compared else "INDEPENDENT_INDEXER_UNAVAILABLE" if independent.get("attempted") is True else "INDEPENDENT_INDEXER_NOT_REQUESTED",
         ["GeckoTerminal exact selected pool; retrieval timestamps are not provider as-of timestamps"] if independent.get("attempted") is True else ["No independent selected-pool response collected"],
@@ -1770,6 +1783,8 @@ def markdown(report:dict)->str:
                 + ", ".join(g.get("wallets") or [])
                 + (" — evidence: "+", ".join(edge_types) if edge_types else "")
             )
+    lines += ["", "## Selected pool/holder role evidence (not all LP exclusions)", "", "~~~json",
+              json.dumps({"pool_holder_roles":report.get("pool_holder_roles")},ensure_ascii=False,indent=2), "~~~"]
     lines += ["", "## Same-provider binary holder balance check", "",
               "One actual finalized batch can reconcile nonzero legacy SPL balance mass; provider, role, account-enumeration and history independence remain unverified.",
               "~~~json", json.dumps({"raw_balance_check":(report.get("holder_rankings") or {}).get("raw_balance_check")},ensure_ascii=False,indent=2), "~~~"]

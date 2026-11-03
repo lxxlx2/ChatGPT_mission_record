@@ -71,9 +71,17 @@ try {
  assert.equal(saved.holder_rankings.raw_balance_check.independent_provider,false);
  assert.equal(await page.locator('.cluster-holder-binary').isVisible(),true);
  assert.match(await page.locator('.cluster-holder-binary').innerText(),/同批非零余额已覆盖/);
- assert.match(await page.locator('.cluster-holder-binary').innerText(),/100%/);
+ assert.match(await page.locator('.cluster-holder-binary').innerText(),/98%/);
  assert.match(await page.locator('.cluster-holder-binary').innerText(),/独立提供方/);
  check('same-bank binary holder mass and raw Owner ranks persist without provider role or history parity claims');
+ assert.equal(saved.pool_holder_roles.status,'SELECTED_VAULT_BOUND');
+ assert.equal(saved.pool_holder_roles.pool_owner_raw_after,'700');
+ assert.equal(saved.pool_holder_roles.top10_pct_of_mint_supply,'88.0000');
+ assert.equal(saved.pool_holder_roles.top10_pct_of_remaining,'97.7778');
+ assert.equal(await page.locator('.cluster-pool-holder-roles').isVisible(),true);
+ assert.match(await page.locator('.cluster-pool-holder-roles').innerText(),/同一 Owner 的其他余额仍保留/);
+ assert.match(await page.locator('.cluster-pool-holder-roles').innerText(),/97.7778%/);
+ check('verified single target-vault deduction preserves auxiliary balance and both denominators without all-LP claim');
  assert.equal(saved.narrative.official_recognition,'UNVERIFIED');
  assert.equal(saved.market.comparison.status,'INDEXER_SNAPSHOTS_COMPARED');
  assert.match(await page.locator('.cluster-market-comparison').innerText(),/25.0000%/);
