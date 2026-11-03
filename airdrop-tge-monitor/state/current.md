@@ -1,4 +1,21 @@
 # Airdrop / TGE Monitor State
+## Latest authoritative terminal cache sync — 2026-11-03 11:03:16 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-03/110316-final.md
+- final_readback: VERIFIED blob b3d0f835249aaa7230bdae59632b29c1a5fe8594; commit eb5e3a80fd7990156bc63d5b49a3c01a0518028d
+- actual_run: 2026-11-03 11:03:16 Asia/Bangkok (started 11:02:26, off-minute; HH:00 trigger precision not asserted)
+- schedule: existing hourly HH:00 Asia/Bangkok unchanged
+- run_status: PARTIAL; verified_complete: false; source_failures: 5; identity_failures: 0
+- scheduled_shard: 3; executed_shard: 3; last_four_executed_shards: [0,1,1,3]; consecutive_same_shard: 1
+- last_meaningful_attempt_at_shard3: 2026-11-03 11:03:16 Asia/Bangkok PARTIAL_ONLY
+- last_verified_complete_at: 2026-10-10 07:52:16 Asia/Bangkok UNCHANGED
+- urgent: Concrete, MetaMask, Claynosaurz, HEEBOO, Space; dynamic Surf, StandX; one Shard3 attempted (15 distinct registered identities total)
+- candidate_count: 8; action_gate_pass: 0; triggered_events: 0; gmail_attempted: false; app_notification: false
+- SOURCE_GAP: StandX DUSD Nov2 original/claim, Concrete additional USDC, Crusoe private SPV, Thalassa current issuer rights, Republic rTTOK private allocation
+- Browser X originating context unavailable; public English issuer fallback, no authenticated original X read
+- Gmail life/work rights search after Nov1: 4 unrelated / 0 mapped; no qualifying new action, no Sent/send
+- durable dedupe: NeoSoul StandX Nov3 22:59 BKK already mailed Oct23; SurfBoard Nov13 already mailed; Cambria RSGP Oct29 already mailed; no repeat
+- task ID/name/schedule/registry/recipient unchanged; NO_ACTION_EMAIL_ONLY
+
 ## Latest authoritative terminal cache sync — 2026-11-03 10:00:39 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-03/100039-final.md
 - actual_run: 2026-11-03 10:00:39 Asia/Bangkok (began 09:59:28, off-minute; no HH:00 scheduler trigger proof)
