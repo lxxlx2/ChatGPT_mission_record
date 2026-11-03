@@ -1,3 +1,19 @@
+## Latest authoritative terminal cache sync — 2026-11-03 19:59:06 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-03/195906-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-03/195728-attempt.md
+- run_time: 2026-11-03T19:59:06+07:00 (actual off-minute invocation; HH:00 schedule unchanged)
+- schedule: existing hourly HH:00 Asia/Bangkok UNCHANGED
+- run_status: PARTIAL; verified_complete: false; last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- scheduled_shard: 3; executed_shard: 3; override_reason: fair_default; last_four_executed_shards: [1,1,2,3]; consecutive_same_shard: 1
+- last_meaningful_attempt_at_shard3: 2026-11-03T19:59:06+07:00 PARTIAL_ONLY
+- urgent5 + Surf/StandX + exactly one Shard3, 15 distinct active Registry identities attempted; bounded Cambria/NeoSoul/StandX lifecycle
+- candidate_count: 9; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 6
+- SOURCE_GAP: StandX Nov2 DUSD original/live claim, Concrete extra USDC, Clay Shares private, Cambria RSGP wallet claim, Crusoe SPV, Republic rTTOK private rights
+- browser_session: UNAVAILABLE (actual originating browser context error); original StandX X HTTP403, English issuer fallback; no authenticated X read
+- Gmail life/work mapped-rights search: zero new Tier B rights; life Sent Cambria RSGP and NeoSoul StandX already delivered; no Gmail/App
+- final_readback: VERIFIED main blob bcbbb09e9ca04db14b691a192175eff756cfdac5; commit 9bf9edd001a9a2c598149783affd1d3a7be0f18e
+- task ID/name/schedule/registry/recipient unchanged; no new automation, Mac process, cron or daily TGE email
+
 ## Latest authoritative terminal cache sync — 2026-11-03 18:58:13 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-03/185813-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-03/185641-attempt.md
