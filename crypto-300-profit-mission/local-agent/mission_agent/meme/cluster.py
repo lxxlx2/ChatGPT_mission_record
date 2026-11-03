@@ -845,7 +845,11 @@ class WalletClusterAnalyzer:
         from .pool_vaults import collect_pool_vault_snapshot
         if not self.read_pool_vaults:return {"version":1,"status":"NOT_REQUESTED","reason":"NOT_ENABLED"}
         self._progress("POOL_VAULTS",scanned=0)
-        try:return collect_pool_vault_snapshot(self.mint,market,self.rpc)
+        try:
+            result=collect_pool_vault_snapshot(self.mint,market,self.rpc)
+            from .pool_market import compare_pool_quote_ratio
+            result["market_comparison"]=compare_pool_quote_ratio(self.mint,market,result)
+            return result
         except RPCJobBudgetExceeded:raise
         except RPCError as exc:
             return {"version":1,"status":"INCOMPLETE_EVIDENCE","reason":"RESPONSE_LIMIT" if str(exc)=="RPC_POOL_RESPONSE_LIMIT" else "RPC_UNAVAILABLE"}
@@ -1571,6 +1575,7 @@ def report_completeness(report:dict)->dict:
     market=report.get("market") or {}
     raw_pool=report.get("pool_vaults") or {}
     raw_pool_read=raw_pool.get("status")=="VAULT_BALANCE_SNAPSHOT"
+    unit_compared=raw_pool_read and (raw_pool.get("market_comparison") or {}).get("status")=="UNALIGNED_RATIO_COMPARISON"
     reserve_model_read=raw_pool_read and (raw_pool.get("effective_reserves") or {}).get("status") in {"DERIVED_PROTOCOL_RESERVES","ARITHMETIC_ONLY"}
     narrative=report.get("narrative") or {}
     narrative_read=bool(narrative.get("evidence"))
@@ -1612,11 +1617,11 @@ def report_completeness(report:dict)->dict:
         ["DexScreener market reference"]+(["GeckoTerminal exact-pool indexer"] if independent.get("attempted") is True else [])+(["Selected PumpSwap raw vault/Mint accounts in one finalized batch; documented signed virtual reserve arithmetic" if reserve_model_read else "Selected PumpSwap raw vault/Mint accounts in one finalized batch; not net reserves"] if raw_pool_read else []),
         "Reconcile dated selected-pool reserves and market definitions with an independent permitted source.",
         ["market","pool_vaults"])
-    row("independent_sources","PARTIAL" if compared else "UNAVAILABLE" if independent.get("attempted") is True else "NOT_COLLECTED",
-        "INDEXER_COMPARISON_NOT_RAW_POOL_OR_HOLDER_PARITY" if compared else "INDEPENDENT_INDEXER_UNAVAILABLE" if independent.get("attempted") is True else "INDEPENDENT_INDEXER_NOT_REQUESTED",
+    row("independent_sources","PARTIAL" if compared or unit_compared else "UNAVAILABLE" if independent.get("attempted") is True else "NOT_COLLECTED",
+        "NON_SYNCHRONOUS_POOL_RATIO_REFERENCES_NOT_FULL_PARITY" if unit_compared else "INDEXER_COMPARISON_NOT_RAW_POOL_OR_HOLDER_PARITY" if compared else "INDEPENDENT_INDEXER_UNAVAILABLE" if independent.get("attempted") is True else "INDEPENDENT_INDEXER_NOT_REQUESTED",
         ["GeckoTerminal exact selected pool; retrieval timestamps are not provider as-of timestamps"] if independent.get("attempted") is True else ["No independent selected-pool response collected"],
         "Reconcile actual DEX pool reserves and independent holder evidence at a controlled chain snapshot.",
-        ["market.independent_market","market.comparison"])
+        ["market.independent_market","market.comparison","pool_vaults.market_comparison"])
     row("narrative","PARTIAL" if narrative_read else "UNAVAILABLE" if narrative_attempted else "NOT_COLLECTED",
         "BOUNDED_SOURCE_CLAIMS_NOT_OFFICIAL_RECOGNITION_OR_ORIGIN" if narrative_read else "EXTERNAL_SOURCE_ATTEMPTS_INCOMPLETE" if narrative_attempted else "EXTERNAL_SOURCES_NOT_REQUESTED",
         ["Bounded public launchpad/market-hinted website/social HTML reads; no script/login bypass or exhaustive search"] if narrative_attempted else ["No external page read recorded"],

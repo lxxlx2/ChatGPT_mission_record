@@ -60,7 +60,7 @@ class GeckoTerminalMarketClient:
             if not isinstance(raw,bytes):return {**out,'reason':'NETWORK_OR_RESPONSE_INVALID'}
             out['observed_at']=self.clock()
             if len(raw)>MAX_RESPONSE_BYTES:return {**out,'reason':'RESPONSE_LIMIT'}
-            payload=json.loads(raw)
+            payload=json.loads(raw,parse_float=Decimal)
         except urllib.error.HTTPError as exc:return {**out,'reason':'HTTP_'+str(exc.code)}
         except (urllib.error.URLError,OSError,TimeoutError,ValueError,TypeError,RecursionError):return {**out,'reason':'NETWORK_OR_RESPONSE_INVALID'}
         data=payload.get('data') if isinstance(payload,dict) else None
@@ -73,10 +73,11 @@ class GeckoTerminalMarketClient:
             relation=relations.get(side);token=relation.get('data') if isinstance(relation,dict) else None
             if not isinstance(token,dict) or token.get('type')!='token':return {**out,'reason':'TOKEN_MEMBERSHIP_MISMATCH'}
             tokens.append(token.get('id'))
-        if tokens==['solana_'+mint,'solana_'+quote]:price='base_token_price_usd';orientation='BASE'
-        elif tokens==['solana_'+quote,'solana_'+mint]:price='quote_token_price_usd';orientation='QUOTE'
+        if tokens==['solana_'+mint,'solana_'+quote]:price='base_token_price_usd';orientation='BASE';unit_field='base_token_price_quote_token'
+        elif tokens==['solana_'+quote,'solana_'+mint]:price='quote_token_price_usd';orientation='QUOTE';unit_field='quote_token_price_base_token'
         else:return {**out,'reason':'TOKEN_MEMBERSHIP_MISMATCH'}
-        return {**out,'status':'OK','pool_address':pool,'mint':mint,'quote_address':quote,
+        from .pool_market import quote_number
+        return {**out,'status':'OK','price_quote_units':quote_number(attrs.get(unit_field)),'price_quote_units_field':unit_field,'pool_address':pool,'mint':mint,'quote_address':quote,
                 'target_orientation':orientation,'price_usd':number(attrs.get(price)),
                 'pool_liquidity_usd':number(attrs.get('reserve_in_usd')),
                 'response_sha256':hashlib.sha256(raw).hexdigest(),

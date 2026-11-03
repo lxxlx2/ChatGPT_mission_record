@@ -8,6 +8,7 @@ Layout: pump-fun/pump-public-docs idl/pump_amm.json blob
 import base64
 import hashlib
 import json
+import time
 from decimal import Decimal, localcontext, ROUND_HALF_EVEN
 from .holder_ranks import ALPHABET, PROGRAMS, TOKEN_2022_PROGRAM, valid_pubkey
 
@@ -158,6 +159,7 @@ def collect_pool_vault_snapshot(mint,market,rpc):
         addresses=[pool_address,ids['base_vault'],ids['quote_vault'],ids['base_mint'],ids['quote_mint']]
         if len(set(addresses))!=5:raise PoolSourceError('POOL_ADDRESSES_INVALID')
         response=rpc.call('getMultipleAccounts',[addresses,{'encoding':'base64','commitment':'finalized','minContextSlot':discovery_slot}],ttl=30)
+        received_at=time.time()
         slot=_slot(response)
         if slot<discovery_slot:raise PoolSourceError('SNAPSHOT_BEFORE_DISCOVERY')
         values=response.get('value')
@@ -174,7 +176,7 @@ def collect_pool_vault_snapshot(mint,market,rpc):
         with localcontext() as ctx:
             ctx.prec=80
             ratio=str(Decimal(other['quantity'])/Decimal(target['quantity'])) if int(target['raw']) else 'UNRESOLVED'
-        out.update(status='VAULT_BALANCE_SNAPSHOT',snapshot_slot=slot,commitment='finalized',pool_program=PROGRAM,target=target,quote=other,pool_parameters=params,flags=sorted(flags),raw_vault_quote_per_target=ratio,
+        out.update(status='VAULT_BALANCE_SNAPSHOT',observed_at=received_at,snapshot_slot=slot,commitment='finalized',pool_program=PROGRAM,target=target,quote=other,pool_parameters=params,flags=sorted(flags),raw_vault_quote_per_target=ratio,
                    effective_reserves=_derive_reserves(base,quote,params,mint,flags),
                    response_sha256=hashlib.sha256(json.dumps(response,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
                    scope='RAW_VAULT_BALANCES_AND_DOCUMENTED_RESERVE_MODEL_NOT_MARKET_PRICE')

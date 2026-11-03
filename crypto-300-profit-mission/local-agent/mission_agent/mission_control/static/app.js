@@ -1625,6 +1625,37 @@ function renderPoolReserveModel(r) {
     '<a class="link-btn compact" href="https://github.com/pump-fun/pump-public-docs/blob/main/docs/VIRTUAL_QUOTE_RESERVES_FEE_ADJUSTMENT.md" target="_blank" rel="noreferrer">官方费用与虚拟储备文档</a></div>';
 }
 
+function renderPoolQuoteComparison(r,market) {
+  const c=r.market_comparison;
+  if (!c) return '';
+  const m=r.effective_reserves || {},i=market.independent_market || {},pair=market.main_pair || {};
+  const heading='<div class="cluster-pool-ratio-comparison"><strong>同池币对报价参考对照</strong>';
+  const fields={BASE:'base_token_price_quote_token',QUOTE:'quote_token_price_base_token'};
+  const hash=v=>typeof v==='string' && /^[0-9a-f]{64}$/.test(v);
+  const received=v=>typeof v==='number' && Number.isFinite(v) && v>0?v:null;
+  const numeric=v=>typeof v==='string' && v.length<=800 && /^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:E[+-]?[0-9]+)?$/i.test(v);
+  const valid=c.version===1 && c.status==='UNALIGNED_RATIO_COMPARISON' && c.mint===r.mint && c.pool_address===r.pool_address &&
+    c.quote_address===r.quote.mint && c.pool_address===pair.pair_address && c.quote_address===pair.quote_address &&
+    c.same_chain_snapshot===false && c.provider_asof==='UNVERIFIED' && c.price_basis_alignment==='UNVERIFIED' &&
+    m.status==='DERIVED_PROTOCOL_RESERVES' && m.formula==='PUMPSWAP_SIGNED_VQR_V1' && m.target_mint===r.mint && m.quote_mint===r.quote.mint && c.model_quote_per_target===m.effective_quote_per_target &&
+    i.status==='OK' && i.attempted===true && i.source==='GECKOTERMINAL_PUBLIC_API' && i.mint===r.mint && i.quote_address===r.quote.mint && i.pool_address===r.pool_address &&
+    typeof c.indexer_field==='string' && ['base_token_price_quote_token','quote_token_price_base_token'].includes(c.indexer_field) && c.indexer_field===fields[i.target_orientation] && c.indexer_field===i.price_quote_units_field && c.indexer_quote_per_target===i.price_quote_units &&
+    c.chain_result_received_at===received(r.observed_at) && c.indexer_result_received_at===received(i.observed_at) &&
+    c.retrieval_gap_seconds===(received(r.observed_at)!==null && received(i.observed_at)!==null?Math.abs(r.observed_at-i.observed_at):null) &&
+    c.snapshot_slot===r.snapshot_slot && hash(c.chain_response_sha256) && c.chain_response_sha256===r.response_sha256 &&
+    hash(c.indexer_response_sha256) && c.indexer_response_sha256===i.response_sha256 &&
+    [c.model_quote_per_target,c.indexer_quote_per_target,c.difference_indexer_minus_model,c.difference_pct_of_model].every(numeric);
+  if (!valid) {
+    const reasons={DIRECT_QUOTE_RATIO_UNAVAILABLE:'直接币对报价字段缺失或无效；未改用 USD 或 native currency 推算',MODEL_RATIO_UNVERIFIED:'协议储备比值尚未核实，未对照报价',INDEXER_UNIT_UNVERIFIED:'独立来源币对报价单位未核实'};
+    return heading+'<p>'+esc(reasons[c.reason] || '池子、币对、来源或模型证据不完整，未展示差异')+'</p></div>';
+  }
+  const when=v=>typeof v==='number' && Number.isFinite(v) && v>0 ? new Date(v*1000).toLocaleString('zh-CN') : '未记录';
+  return heading+'<p>单位 '+esc(c.quote_address)+' / '+esc(c.mint)+'；同一池子 '+esc(c.pool_address)+'。</p>'+
+    '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>协议储备比值</th><th>GeckoTerminal 直接币对报价</th><th>索引减协议</th><th>相对协议差异</th></tr></thead><tbody><tr><td>'+esc(c.model_quote_per_target)+'</td><td>'+esc(c.indexer_quote_per_target)+'</td><td>'+esc(c.difference_indexer_minus_model)+'</td><td>'+esc(c.difference_pct_of_model)+'%</td></tr></tbody></table></div>'+
+    '<p>链上账户结果 slot '+esc(c.snapshot_slot)+'；结果读取 '+esc(when(c.chain_result_received_at))+' / 索引结果读取 '+esc(when(c.indexer_result_received_at))+'；读取间隔 '+esc(typeof c.retrieval_gap_seconds==='number' && Number.isFinite(c.retrieval_gap_seconds)?c.retrieval_gap_seconds+' 秒':'未记录')+'。</p>'+
+    '<p>读取结果可能来自缓存；区块时间、provider as-of 与价格计算口径未核实。相同数值也不能证明同一行情快照，差异不能直接判定来源错误。美元估值和可执行报价未核实。</p></div>';
+}
+
 function renderPoolVaults(report) {
   const r=report.pool_vaults;
   if (!r || r.status==='NOT_REQUESTED') return '';
@@ -1636,7 +1667,7 @@ function renderPoolVaults(report) {
   const reasons={UNSUPPORTED_POOL_PROGRAM:'所选池程序尚未支持，未读取其他池子',RPC_UNAVAILABLE:'链上账户读取失败',RESPONSE_LIMIT:'响应超过本轮上限'};
   const rows=valid ? [t,q].map((v,i)=>'<tr><td>'+(i?'计价币':'目标币')+'</td><td>'+esc(v.mint)+'</td><td>'+esc(v.vault)+'</td><td>'+esc(v.raw)+'</td><td>'+esc(v.decimals)+'</td><td>'+esc(v.quantity)+'</td></tr>').join('') : '';
   return '<div class="trust-box cluster-pool-vaults"><strong>PumpSwap 原始金库余额</strong><p>仅覆盖所选池。原始余额比值未扣累计费用、未纳入虚拟储备或 Token-2022 调整；美元价格、美元流动性、可执行报价与索引同快照对齐均未核实。</p>'+
-    (valid ? '<p>finalized slot '+esc(r.snapshot_slot)+'；发现池 slot '+esc(r.discovery_slot)+'。minContextSlot 只设下界，批次实际 slot 另行记录。</p><div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>方向</th><th>Mint</th><th>金库</th><th>原始整数余额</th><th>精度</th><th>数量</th></tr></thead><tbody>'+rows+'</tbody></table></div><p>计价币 / 目标币原始余额比值：'+esc(r.raw_vault_quote_per_target)+'；这项比值不作为市场价格。</p><p>状态限制：'+esc((r.flags || []).join(' / ') || '无附加状态标记；仍需独立来源核对')+'</p>' + renderPoolReserveModel(r) : '<p>'+esc(reasons[r.reason] || '池子或金库证据不完整，未输出余额比值')+'</p>')+'</div>';
+    (valid ? '<p>finalized slot '+esc(r.snapshot_slot)+'；发现池 slot '+esc(r.discovery_slot)+'。minContextSlot 只设下界，批次实际 slot 另行记录。</p><div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>方向</th><th>Mint</th><th>金库</th><th>原始整数余额</th><th>精度</th><th>数量</th></tr></thead><tbody>'+rows+'</tbody></table></div><p>计价币 / 目标币原始余额比值：'+esc(r.raw_vault_quote_per_target)+'；这项比值不作为市场价格。</p><p>状态限制：'+esc((r.flags || []).join(' / ') || '无附加状态标记；仍需独立来源核对')+'</p>' + renderPoolReserveModel(r) + renderPoolQuoteComparison(r,market) : '<p>'+esc(reasons[r.reason] || '池子或金库证据不完整，未输出余额比值')+'</p>')+'</div>';
 }
 
 function renderMarketComparison(market,mint) {

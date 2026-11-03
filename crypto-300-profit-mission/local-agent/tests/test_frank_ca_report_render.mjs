@@ -855,3 +855,35 @@ test('reserve model rejects inconsistent arithmetic and preserves reversed proto
   m.base_raw='200';m.quote_vault_raw='100';m.waiting_fees_raw='10';m.virtual_quote_raw='-10';m.real_quote_raw='90';m.effective_quote_raw='90';m.boost_component_raw='0';m.effective_quote_per_target='2.2222222222';
   h.context.renderClusterReport(report);assert.match(h.element('cluster-market').innerHTML,/2.2222222222/);
 });
+
+function unitRatioReportForUi() {
+  const r=reserveReportForUi(),pool=r.pool_vaults,m=r.pool_vaults.effective_reserves;
+  pool.response_sha256='a'.repeat(64);pool.observed_at=103;
+  r.market.independent_market={status:'OK',attempted:true,observed_at:101,source:'GECKOTERMINAL_PUBLIC_API',mint,quote_address:'QUOTE',pool_address:'POOL',target_orientation:'BASE',price_quote_units:'1.9',price_quote_units_field:'base_token_price_quote_token',response_sha256:'b'.repeat(64)};
+  pool.market_comparison={version:1,status:'UNALIGNED_RATIO_COMPARISON',mint,quote_address:'QUOTE',pool_address:'POOL',model_quote_per_target:m.effective_quote_per_target,indexer_quote_per_target:'1.9',indexer_field:'base_token_price_quote_token',snapshot_slot:101,same_chain_snapshot:false,provider_asof:'UNVERIFIED',price_basis_alignment:'UNVERIFIED',chain_response_sha256:'a'.repeat(64),indexer_response_sha256:'b'.repeat(64),chain_result_received_at:103,indexer_result_received_at:101,retrieval_gap_seconds:2,difference_indexer_minus_model:'0.05',difference_pct_of_model:'2.7027'};
+  return r;
+}
+
+test('pool and indexer ratio comparison preserves explicit units and unaligned timing',()=>{
+  const h=harness();h.context.renderClusterReport(unitRatioReportForUi());const html=h.element('cluster-market').innerHTML;
+  assert.match(html,/cluster-pool-ratio-comparison/);assert.match(html,/1.9/);assert.match(html,/0.05/);assert.match(html,/2.7027%/);
+  assert.match(html,/QUOTE \/ 222222/);assert.match(html,/相同数值也不能证明同一行情快照/);
+  assert.match(html,/读取结果可能来自缓存/);assert.match(html,/美元估值和可执行报价未核实/);
+});
+
+test('ratio comparison clears mismatched identities, forged alignment and legacy report values',()=>{
+  const h=harness(),r=unitRatioReportForUi();h.context.renderClusterReport(r);
+  r.pool_vaults.market_comparison.pool_address='WRONG';h.context.renderClusterReport(r);
+  assert.doesNotMatch(h.element('cluster-market').innerHTML,/2.7027%/);
+  r.pool_vaults.market_comparison=unitRatioReportForUi().pool_vaults.market_comparison;
+  r.pool_vaults.market_comparison.same_chain_snapshot=true;h.context.renderClusterReport(r);
+  assert.doesNotMatch(h.element('cluster-market').innerHTML,/2.7027%/);
+  delete r.pool_vaults.market_comparison;h.context.renderClusterReport(r);
+  assert.doesNotMatch(h.element('cluster-market').innerHTML,/cluster-pool-ratio-comparison|2.7027%/);
+});
+
+test('missing pair-denominated field never turns USD or native currency into a pool ratio',()=>{
+  const h=harness(),r=unitRatioReportForUi();r.pool_vaults.market_comparison={status:'UNAVAILABLE',reason:'DIRECT_QUOTE_RATIO_UNAVAILABLE'};
+  h.context.renderClusterReport(r);const html=h.element('cluster-market').innerHTML;
+  assert.match(html,/直接币对报价字段缺失或无效/);assert.doesNotMatch(html,/2.7027%/);
+});

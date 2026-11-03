@@ -86,6 +86,13 @@ try {
  assert.match(await page.locator('.cluster-pool-reserves').innerText(),/不再重复减去待提取费用/);
  assert.match(await page.locator('.cluster-pool-reserves').innerText(),/已部署程序二进制/);
  check('signed virtual reserves and waiting-fee separation persist without a double deduction or executable quote');
+ assert.equal(saved.pool_vaults.market_comparison.same_chain_snapshot,false);
+ assert.equal(saved.pool_vaults.market_comparison.indexer_quote_per_target,'1.9');
+ assert.equal(await page.locator('.cluster-pool-ratio-comparison').isVisible(),true);
+ assert.match(await page.locator('.cluster-pool-ratio-comparison').innerText(),/2.7027%/);
+ assert.match(await page.locator('.cluster-pool-ratio-comparison').innerText(),/相同数值也不能证明同一行情快照/);
+ assert.match(await page.locator('.cluster-pool-ratio-comparison').innerText(),/美元估值和可执行报价未核实/);
+ check('same-pool explicit quote-unit difference persists with unaligned time and no parity verdict');
  assert.equal(saved.analysis_completeness.status,'INCOMPLETE_EVIDENCE');
  assert.ok(saved.analysis_completeness.missing_required.includes('narrative'));
  assert.ok(saved.analysis_completeness.missing_required.includes('wallet_history'));
