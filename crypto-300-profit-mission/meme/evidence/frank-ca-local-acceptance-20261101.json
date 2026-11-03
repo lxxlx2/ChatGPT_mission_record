@@ -3262,5 +3262,195 @@
       "Large Mint/Token-2022 economics and independent provider, full historical epochs and real representative CA source acceptance remain incomplete.",
       "Frank production Mac installation not performed."
     ]
+  },
+  "ca_owner_pool_discovery_followup_20261104": {
+    "observed_at_utc": "2026-11-03T19:16:39.582Z",
+    "verdict": "PASS_BOUNDED_OWNER_DERIVED_OFF_INDEX_POOL_DISCOVERY; EXHAUSTIVE_POOL_AND_SPECIAL_IDENTITIES_UNVERIFIED",
+    "source": {
+      "pr": 220,
+      "head": "a6908bdcb94a15ec06ae314b179a7c785345afec",
+      "tree": "ed8b145bff6afa6cf4c4933076c71fe6904c43c3",
+      "baseline": "cd353c15628c491c116dd5a53434bcacbd160512",
+      "baseline_tree": "d235b7589beabe7d49e106d230d0eb5b5d482d41",
+      "files": [
+        "crypto-300-profit-mission/local-agent/tests/test_meme_owner_pool_discovery.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/holder_ranks.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/special_roles.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+        "crypto-300-profit-mission/local-agent/tests/fixtures/frank_ca_browser_server.py",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_browser.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs"
+      ],
+      "runtime_files": 3,
+      "test_files": 4,
+      "new_files": 1,
+      "remote_file_readback": "7/7 exact"
+    },
+    "implementation": {
+      "discovery": "Reuse already returned finalized Owner account metadata from existing holder enumeration batches; decode only pinned known pool layouts, require pool authority equals this Owner, exact target Mint and stored target vault present under same enumerated Owner. No extra Owner metadata request, no registry name/DEX ownership heuristic. This discovers self-authority pool states, not a reverse index behind Raydium shared global authorities.",
+      "provenance": "Hint stores enum/metadata actual slots, enum hash/Owner batch hash, pool program/layout reference, target vault and exact normalized target/quote. Hint is STRUCTURAL_POOL_HINT_NOT_ROLE_PROOF. Older/unparsed/malformed/missing/nonmatching data produce no hint. Retain at most8 by descending observed Owner balance and ASCII address tie-break; omitted count remains explicit.",
+      "collection": "Role collector accepts validated Owner hints even when market unavailable. Main index pair first, then alternate Owner and remaining index hints. Deduplicate pool address, retain both source labels, reject disagreeing quote hints, report skipped/rejected counts. Combined discovery cap stays8; raw discovery minContextSlot lower-bounds selected Owner observations; actual slot checked, changed vault/authority rejected.",
+      "cohort": "Existing raw discovery then Mint/token/pool same-bank cohort preserved, max100 keys; no third role-audit logical call, no new retry or provider. An eligible Owner-only path can now make the existing <=2 role-audit calls when the market path previously returned early. Shared1200 wire attempts/1800sec and raw response/decode caps unchanged. GET does not discover or collect.",
+      "ranking": "Only re-read supported pool identity plus same-bank token authority/Mint/balance participates in existing per-account deduction; duplicate source hints never double deduct, auxiliary Owner balance preserved. Unknown identities and all-special normalization remain unresolved.",
+      "reporting": "JSON/Markdown preserve hint source, hashes/slots and bounded discovery coverage. UI distinguishes index versus already-read Owner account, shows valid/rejected counts and shared-authority limitation; unknown source values map to safe label, not arbitrary provider text."
+    },
+    "validation": {
+      "baseline_new_python": {
+        "passed": 0,
+        "failed": 12,
+        "cause": "Current baseline omitted Owner pool hints and refused role discovery without a market source."
+      },
+      "new_python_passed": 25,
+      "local_related_python_passed": 513,
+      "local_frontend_passed": 138,
+      "syntax_diff": "PASS",
+      "log_sha256": {
+        "owner-pool-discovery-related.txt": "9fec5eafc0b10395be62c08e6cbdd64bccb0ddb517b4dd267eebdf150116493a",
+        "owner-pool-discovery-ui1.txt": "c88c777fe17989158d4e28483d6589c068149fbe2ef15d27fd5d12664120a5f1",
+        "owner-pool-discovery-red.txt": "312e39565c0f3012c4de64812928951b708187d882c049067710a373d8b2c70f",
+        "owner-pool-discovery-green.txt": "19e44ee784d81a5ffcb15db7ca0513d44b42eebc4c817d8f964b5e97f5e77be9",
+        "owner-pool-discovery-related-final.txt": "32d25a867cb9074e6e6fe5ad111e5fa96ecc422ff09db9e1ec8443907a88ee7e",
+        "owner-pool-discovery-green2.txt": "9e995db20084b04135e0eda3390577b09ca64065a9bba986c054d5e6bdcf4ddf",
+        "owner-pool-discovery-node.txt": "e3df81a5ad97adb0d5a08fdfcde6d67a806d850743bc9f850081cc1c8c08c5de"
+      },
+      "cases": [
+        "Reuse enumeration Owner reads without extra calls; wrong Mint/vault/layout or older metadata ignored",
+        "PumpSwap plus Orca/CLMM/DLMM forward/reverse structural hints; no global-authority reverse lookup claim",
+        "Top8 Owner hints by balance, dropped count; index list cannot starve every Owner hint",
+        "Market unavailable still audits Owner-only pool, keeps auxiliary balance; malformed stored hash/identity/slot hint causes no reads",
+        "Duplicate index/Owner hint merges origins and deducts once; quote disagreement/changed pool/older discovery rejects",
+        "Actual browser fixture Orca removed from index hints, discovered with actual Owner-layout extractor and re-read with holder cohort"
+      ],
+      "ci": {
+        "run_id": 41700842593,
+        "run_number": 91,
+        "job_id": 126143389700,
+        "head": "a6908bdcb94a15ec06ae314b179a7c785345afec",
+        "merge_ref": "209ecb906506eb949692867035eeb2400e16f080",
+        "status": "completed",
+        "conclusion": "success",
+        "python_passed": 2021,
+        "python_skipped": 4,
+        "frontend_passed": 138,
+        "browser_checks": 37,
+        "checks": [
+          "single query entry removes depth selector and explains bounded incomplete evidence",
+          "same-bank binary holder mass and raw Owner ranks persist without provider role or history parity claims",
+          "verified single target-vault deduction preserves auxiliary balance and both denominators without all-LP claim",
+          "two actual decoded pool identities and same-bank holder ledger persist known-only exclusion ranks with auxiliary balances",
+          "off-index Orca pool is discovered from decoded Owner account hint and re-read with holder cohort before exclusion",
+          "same-pool indexer differences persist with source times and no chain parity claim",
+          "raw vault snapshot survives job persistence with visible slot precision and no executable price claim",
+          "signed virtual reserves and waiting-fee separation persist without a double deduction or executable quote",
+          "same-pool explicit quote-unit difference persists with unaligned time and no parity verdict",
+          "worker DONE persists incomplete product outcome and browser shows required evidence gaps",
+          "full mint Owner ranks are separate from raw Top20 history and preserve uncovered history",
+          "external narrative claim persists without exact-CA endorsement or invented publication time",
+          "historical Owner, closure time and one-frontier gap persist without current ownership claims",
+          "persisted Owner account selection, limits and missing closed history remain explicit",
+          "bounded history pages and cursor are visible without claiming full wallet history",
+          "single-mode submits -> distinct real worker persistence -> real report render",
+          "fresh page automatic history read is explicitly unverified and GET only",
+          "new page + empty backend memory -> select original A instead of latest B, GET only",
+          "history controls during pending POST cannot discard the acknowledged job",
+          "failed saved-report read preserves the other pending job",
+          "view saved A while C awaits recovery without replacing C",
+          "unified DONE/report disconnect -> manual GET recovery -> real rendering and pending cleanup",
+          "invalid input is explained without submitting a scan",
+          "visible existing-report entry reads partial historical cache without new POST",
+          "missing history for another CA hides the old report without a new POST",
+          "worker error remains error, no phantom successful report",
+          "local report shortcuts can be cleared without changing backend reports",
+          "blocked localStorage still permits app boot, acknowledged job and GET-only DONE recovery",
+          "edited input during POST is restored to the acknowledged job CA",
+          "edited input during historical GET leaves the paused task reachable and recoverable",
+          "combined CA/F01/D2 preserves manual snapshot reads, local source age and CA report",
+          "GET NETWORK is safely attributed, closes old F01 cards and recovers without POST",
+          "GET JSON is safely attributed, closes old F01 cards and recovers without POST",
+          "GET HTTP is safely attributed, closes old F01 cards and recovers without POST",
+          "intelligence keeps newer SELL and filter snapshot after delayed older BUY",
+          "activity keeps newer SELL and filter snapshot after delayed older BUY",
+          "intelligence filter cannot resurrect cached BUY after failed refresh; D2 remains independent"
+        ],
+        "page_errors": [],
+        "blocked_requests": [],
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "real_ca_posts": 0,
+        "production_requests": 0,
+        "browser": "151.0.7922.34",
+        "cleanup": "browser profile removed, fixture exited, port released",
+        "artifact": {
+          "id": 13263925307,
+          "sha256": "c1064e2fe31f91968b514512aee055fd86ea96f0f7d795b7a85d813670ffc4ed"
+        }
+      },
+      "user_chrome": {
+        "family": "Google Chrome user-connected extension",
+        "status": "PASS_BOUNDED_SYNTHETIC_UI",
+        "qa_url": "https://frank-role-isolated-qa-20261103.sappypanel.chatgpt.site",
+        "qa_source_commit": "88be50cb231ca64b38a66589e9b21d97306ab0fe",
+        "site_project_id": "appgprj_6ae9f8b543c481918dfb014559946d0a",
+        "site_version_id": "appgprj_6ae9f8b543c481918dfb014559946d0a~appgver_9003fd947ee481918e53890a65061d04",
+        "site_deployment_id": "appgdep_6aea322e84a881919a7830b0375c343a",
+        "site_deployment_status": "succeeded",
+        "app_js_sha256": "05e126b0a8dd745d75f153a9dda2fcf684d871d8d691359b47a4d22528eabfe3",
+        "app_js_matches_candidate": true,
+        "checks": {
+          "normal": {
+            "ownerHint1": true,
+            "orcaOwnerSource": true,
+            "exact": true,
+            "auxiliary700": true,
+            "unknown880": true,
+            "globalAuthorityGap": true
+          },
+          "partial": {
+            "withheld": true,
+            "exact": false
+          },
+          "corrupt": {
+            "withheld": true,
+            "exact": false
+          },
+          "legacy": {
+            "specialPanels": 0,
+            "singlePoolPanels": 0
+          },
+          "restored": {
+            "mode": " 当前：normal",
+            "exact": true
+          }
+        },
+        "site_origin_console_errors": [],
+        "screenshot_sha256": "f216107a2b5288e73272e8b9dbd453e0fae10b59bd2e3902718009cd230d0d9b",
+        "page_left_open": true,
+        "scope": "Same shipped app.js + actual extractor/collector injected synthetic inputs. No real representative CA/source or production backend acceptance."
+      }
+    },
+    "boundaries": {
+      "real_rpc": 0,
+      "real_ca_posts": 0,
+      "frank_production_deployed": false,
+      "real_source_acceptance": false,
+      "existing_private_qa_site_updated": true,
+      "new_sites": 0,
+      "notifications": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "new_workflows": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "merged": false,
+      "independent_review": "waived by user; not claimed",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO",
+      "old_failed_job_identity": "UNPROVEN"
+    },
+    "remaining": [
+      "Shared global authorities do not reveal every pool; unknown protocols/index omissions and offchain CEX/MM identities not exhaustive",
+      "Large Mint/Token-2022 economic mass and independent holder source",
+      "Full historical account epochs/official attribution/USD/executable prices/real representative CA source and final Mac acceptance"
+    ]
   }
 }
