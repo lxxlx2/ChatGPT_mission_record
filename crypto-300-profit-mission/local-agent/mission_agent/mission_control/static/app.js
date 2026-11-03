@@ -1477,7 +1477,8 @@ function clusterProgressDetail(job) {
       ' · 正在解析 Top20 owner';
   }
   if (stage==='HOLDER_BINARY') return '正在同批读取 Mint 与有界账户的二进制余额；独立提供方仍未核实';
-  if (stage==='POOL_VAULTS') return '正在核对所选 PumpSwap 池与两侧金库；原始余额不作为价格';
+  if (stage==='SPECIAL_ROLES') return '正在同批核对多池金库与持有人账户角色';
+  if (stage==='POOL_VAULTS') return '正在核对所选池程序与两侧金库；原始余额不作为价格';
   if (stage==='NARRATIVE_SOURCES') return '正在读取有限公开来源；页面陈述与精确 CA 归属分开核实';
   if (stage==='HISTORICAL_ACCOUNT_SCAN') return '正在读取交易余额中发现的历史账户；只补查一轮，仍受原任务硬上限保护';
   if (stage==='HOLDER_ENUMERATION') return '正在按 Mint 读取账户来源并合并 Owner 余额；仍受原任务硬上限保护';
@@ -1664,10 +1665,10 @@ function renderPoolVaults(report) {
   const valid=r.status==='VAULT_BALANCE_SNAPSHOT' && r.mint===report.mint && market.mint===report.mint &&
     market.status==='OK' && market.source==='DEXSCREENER_API' && r.pool_address===pair.pair_address &&
     t.mint===report.mint && t.mint===pair.base_address && q.mint===pair.quote_address && t.vault!==q.vault &&
-    t.authority===r.pool_address && q.authority===r.pool_address && Number.isSafeInteger(r.snapshot_slot) && r.snapshot_slot>0;
+    t.authority===(r.vault_authority || r.pool_address) && q.authority===(r.vault_authority || r.pool_address) && Number.isSafeInteger(r.snapshot_slot) && r.snapshot_slot>0;
   const reasons={UNSUPPORTED_POOL_PROGRAM:'所选池程序尚未支持，未读取其他池子',RPC_UNAVAILABLE:'链上账户读取失败',RESPONSE_LIMIT:'响应超过本轮上限'};
   const rows=valid ? [t,q].map((v,i)=>'<tr><td>'+(i?'计价币':'目标币')+'</td><td>'+esc(v.mint)+'</td><td>'+esc(v.vault)+'</td><td>'+esc(v.raw)+'</td><td>'+esc(v.decimals)+'</td><td>'+esc(v.quantity)+'</td></tr>').join('') : '';
-  return '<div class="trust-box cluster-pool-vaults"><strong>PumpSwap 原始金库余额</strong><p>仅覆盖所选池。原始余额比值未扣累计费用、未纳入虚拟储备或 Token-2022 调整；美元价格、美元流动性、可执行报价与索引同快照对齐均未核实。</p>'+
+  return '<div class="trust-box cluster-pool-vaults"><strong>池子原始金库余额</strong><p>仅覆盖所选池。原始余额比值未扣累计费用、未纳入虚拟储备或 Token-2022 调整；美元价格、美元流动性、可执行报价与索引同快照对齐均未核实。</p>'+
     (valid ? '<p>finalized slot '+esc(r.snapshot_slot)+'；发现池 slot '+esc(r.discovery_slot)+'。minContextSlot 只设下界，批次实际 slot 另行记录。</p><div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>方向</th><th>Mint</th><th>金库</th><th>原始整数余额</th><th>精度</th><th>数量</th></tr></thead><tbody>'+rows+'</tbody></table></div><p>计价币 / 目标币原始余额比值：'+esc(r.raw_vault_quote_per_target)+'；这项比值不作为市场价格。</p><p>状态限制：'+esc((r.flags || []).join(' / ') || '无附加状态标记；仍需独立来源核对')+'</p>' + renderPoolReserveModel(r) + renderPoolQuoteComparison(r,market) : '<p>'+esc(reasons[r.reason] || '池子或金库证据不完整，未输出余额比值')+'</p>')+'</div>';
 }
 
@@ -1799,7 +1800,7 @@ function renderPoolHolderRoles(report,ranks) {
   const heading='<div class="trust-box cluster-pool-holder-roles"><strong>所选池目标币金库角色核对</strong>';
   const uint=v=>typeof v==='string' && /^[0-9]{1,20}$/.test(v) && BigInt(v)<=18446744073709551615n;
   const identity=c.version===1 && c.status==='SELECTED_VAULT_BOUND' &&
-    c.mint===report.mint && c.mint===p.mint && p.status==='VAULT_BALANCE_SNAPSHOT' && p.source==='SOLANA_FINALIZED_RAW_ACCOUNTS' && p.pool_program==='pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA' && c.pool_program===p.pool_program && c.pool_address===p.pool_address && c.vault_address===t.vault && c.authority===c.pool_address && t.authority===c.authority &&
+    c.mint===report.mint && c.mint===p.mint && p.status==='VAULT_BALANCE_SNAPSHOT' && p.source==='SOLANA_FINALIZED_RAW_ACCOUNTS' && ['pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA','CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C','675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8','CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK','whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc','LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo'].includes(p.pool_program) && c.pool_program===p.pool_program && c.pool_address===p.pool_address && c.vault_address===t.vault && c.authority===(p.vault_authority || c.pool_address) && t.authority===c.authority &&
     c.pool_slot===c.holder_slot && c.pool_slot===p.snapshot_slot && c.holder_slot===h.snapshot_slot &&
     c.pool_response_sha256===p.response_sha256 && c.holder_response_sha256===h.response_sha256 &&
     c.vault_raw===t.raw && t.token_program===h.program_id && t.decimals===h.decimals && h.mint_supply_raw===t.mint_supply_raw &&
@@ -1832,6 +1833,56 @@ function renderPoolHolderRoles(report,ranks) {
     '<p>这项证据只覆盖所选池的一个目标币金库，不能代表已排除全部 LP、其他池、CEX、锁仓或所有特殊地址；独立提供方与归属仍未核实。</p></div>';
 }
 
+function renderSpecialAddressRoles(report,ranks) {
+  const audit=report.special_address_roles;
+  if (!audit || audit.status==='NOT_REQUESTED') return '';
+  const r=audit.rankings || {},c=audit.balance_check || {},pools=Array.isArray(audit.pools)?audit.pools:[];
+  const title='<div class="trust-box cluster-special-roles"><strong>多池与特殊地址排除核对</strong>';
+  const footer='<p>只排除有记录的账户，按账户扣除后重新聚合 Owner；同 Owner 的其他余额保留。CEX、做市商、锁仓、桥等身份可能无法从链上结构辨认，未标注地址保持未知。已知排除后的精确算术不能代表全部特殊地址已识别。</p>';
+  const mass=holderBinaryMassView(c,report.mint,ranks.response_sha256).verified;
+  const uint=v=>typeof v==='string' && /^[0-9]{1,20}$/.test(v) && BigInt(v)<=18446744073709551615n;
+  const specials=new Set(['LP','AMM_POOL','PROTOCOL_VAULT','ESCROW','VESTING','LOCK','BURN','CEX','BRIDGE','ROUTER','PUBLIC_INFRA','PUBLIC_PROGRAM','MARKET_MAKER']);
+  const lp=new Set(['LP','AMM_POOL','PROTOCOL_VAULT']);
+  let valid=mass && audit.version===1 && audit.mint===report.mint && r.mint===report.mint &&
+    r.version===1 && r.holder_snapshot_slot===c.snapshot_slot && audit.snapshot_slot===c.snapshot_slot &&
+    r.holder_response_sha256===c.response_sha256 && r.all_special_roles_normalized===false &&
+    audit.all_special_roles_normalized===false && r.independent_provider===false &&
+    Array.isArray(r.conflicts) && r.conflicts.length===0 && Array.isArray(r.records) && r.records.length===c.records.length;
+  const original=new Map((c.records || []).map(row=>[row.token_account,row])),seen=new Set();
+  const rows=Array.isArray(r.records)?r.records:[];
+  if (valid) for (const row of rows) {
+    const raw=original.get(row.token_account);
+    if (!raw || seen.has(row.token_account) || row.owner!==raw.owner || row.raw!==raw.raw || !uint(row.raw)) {valid=false;break;}
+    seen.add(row.token_account);
+    if (row.role==='UNKNOWN') continue;
+    if (row.classification==='CHAIN_ACCOUNT_ROLE' && row.role==='PROTOCOL_VAULT') {
+      const bound=pools.filter(p=>p && p.status==='POOL_IDENTITY_BOUND' && p.snapshot_slot===c.snapshot_slot && p.decoded &&
+        p.decoded.authority===row.owner && ((p.decoded.base_mint===report.mint && p.decoded.base_vault===row.token_account) || (p.decoded.quote_mint===report.mint && p.decoded.quote_vault===row.token_account)));
+      if (!bound.length || !Array.isArray(row.pools) || !row.pools.every(a=>bound.some(p=>p.pool_address===a))) {valid=false;break;}
+    } else if (row.classification==='ATTRIBUTION_CLAIM' && row.basis==='DATED_REGISTRY_ATTRIBUTION') {
+      if (!['TOKEN_ACCOUNT','OWNER'].includes(row.scope) || !Number.isSafeInteger(row.valid_from_slot) || !Number.isSafeInteger(row.valid_until_slot) || !(row.valid_from_slot<=c.snapshot_slot && c.snapshot_slot<=row.valid_until_slot) || !row.label_version || !/^https:\/\//.test(row.evidence_url || '') || !/^[0-9a-f]{64}$/.test(row.evidence_sha256 || '')) {valid=false;break;}
+    } else {valid=false;break;}
+  }
+  const rendered=[],rankTables=[];
+  if (valid) for (const [key,excluded,label] of [['known_ex_lp',lp,'扣除已核对 LP 金库'],['known_ex_special',specials,'扣除已记录特殊账户']]) {
+    const metric=(r.metrics || {})[key] || {},amounts=new Map();let deducted=0n,unknown=0n,claimed=0n;
+    for (const row of rows) {
+      const n=BigInt(row.raw);if(row.role==='UNKNOWN')unknown+=n;if(row.classification==='ATTRIBUTION_CLAIM')claimed+=n;
+      if(excluded.has(row.role))deducted+=n;else amounts.set(row.owner,(amounts.get(row.owner)||0n)+n);
+    }
+    const owners=[...amounts].filter(x=>x[1]>0n).sort((a,b)=>a[1]===b[1]?(a[0]<b[0]?-1:a[0]>b[0]?1:0):a[1]>b[1]?-1:1),top=owners.slice(0,10).reduce((s,x)=>s+x[1],0n),supply=BigInt(c.mint_supply_raw),remaining=supply-deducted;
+    if (remaining<0n || metric.status!=='EXACT_KNOWN_EXCLUSION_ARITHMETIC' || metric.deducted_raw!==String(deducted) || metric.remaining_raw!==String(remaining) || metric.top10_raw!==String(top) || metric.unknown_role_raw!==String(unknown) || metric.registry_attributed_raw!==String(claimed) || metric.top10_pct_of_mint_supply!==clusterExactPercent(top,supply) || metric.top10_pct_of_remaining!==clusterExactPercent(top,remaining) || metric.global_exhaustive_top10!=='UNRESOLVED' || !Array.isArray(metric.owners) || metric.owners.length!==owners.length || !metric.owners.every((o,i)=>o.owner===owners[i][0] && o.raw===String(owners[i][1]))) {valid=false;break;}
+    rankTables.push('<h4>'+label+'的已知排除后 Top10 Owner</h4><table class="holder-table"><thead><tr><th>排名</th><th>Owner</th><th>保留整数余额</th></tr></thead><tbody>'+owners.slice(0,10).map((row,i)=>'<tr><td>'+(i+1)+'</td><td>'+ownerCell(row[0])+'</td><td>'+esc(String(row[1]))+'</td></tr>').join('')+'</tbody></table>');
+    rendered.push('<tr><td>'+label+'</td><td>'+esc(metric.deducted_raw)+'</td><td>'+clusterMetricValue(metric.top10_pct_of_mint_supply)+'</td><td>'+clusterMetricValue(metric.top10_pct_of_remaining)+'</td><td>'+esc(metric.unknown_role_raw)+'</td><td>'+esc(metric.registry_attributed_raw)+'</td></tr>');
+  }
+  const attempts=pools.map(p=>'<li>'+ownerCell(p.pool_address)+'：'+esc((p.decoded || {}).protocol || p.status)+'；'+esc(p.reason || p.status)+'</li>').join('');
+  const facts=rows.filter(row=>row.role!=='UNKNOWN').slice(0,100).map(row=>'<tr><td>'+ownerCell(row.token_account)+'</td><td>'+esc(row.role)+'</td><td>'+esc(row.raw)+'</td><td>'+esc(row.classification==='CHAIN_ACCOUNT_ROLE'?'同批链上角色':'带日期的归属声明')+'</td><td>'+esc(row.evidence_url || (row.pools || []).join(', '))+'</td></tr>').join('');
+  return title+'<p>实际批次 slot '+esc(audit.snapshot_slot || '未获得')+'；最多8个索引池线索，未穷尽全部池。未选线索 '+esc(audit.not_selected_pool_hints || 0)+'。</p>'+
+    (valid?'<p>已知排除口径已复算；未知角色仍保留在余额中。以下两列分别使用原 Mint 供给和扣除后剩余余额作分母。</p><table class="holder-table"><thead><tr><th>口径</th><th>扣除整数余额</th><th>Top10 / 原供给</th><th>Top10 / 剩余余额</th><th>未知角色余额</th><th>归属声明余额</th></tr></thead><tbody>'+rendered.join('')+'</tbody></table>'+rankTables.join(''):'<p>角色、余额或派生指标未通过完整核对，未展示精确排除后比例。</p>')+
+    (facts?'<table class="holder-table"><thead><tr><th>账户</th><th>角色</th><th>原始余额</th><th>证据等级</th><th>依据</th></tr></thead><tbody>'+facts+'</tbody></table>':'')+
+    (attempts?'<ul>'+attempts+'</ul>':'')+footer+'</div>';
+}
+
 function renderHolderRankings(report) {
   const r=report.holder_rankings;
   const panel=$('cluster-rankings-panel');
@@ -1850,7 +1901,7 @@ function renderHolderRankings(report) {
   const rows=owners.map((row,i)=>'<tr><td>'+esc(i+1)+'</td><td>'+ownerCell(row.owner || '')+'</td><td>'+esc(frankD2Decimal(row.raw,r.decimals))+'</td><td>'+esc(row.account_count ?? '未记录')+'</td><td>'+clusterMetricValue(complete ? row.supply_pct : 'UNRESOLVED')+'</td><td>'+holderRole(row)+'</td><td>'+(row.history_scanned===true ? '已做有限历史采样' : '本轮未覆盖历史')+'</td></tr>').join('');
   $('cluster-rankings').innerHTML='<p>'+esc(intro)+'</p><p>来源返回 '+esc(r.account_count ?? '未记录')+' 个账户 / '+esc(r.nonzero_owner_count ?? '未记录')+' 个非零 Owner；账户 slot '+esc(r.snapshot_slot ?? '未记录')+' / 供给 slot '+esc(r.supply_slot ?? '未记录')+'</p>'+
     '<div class="cluster-metrics-extra">'+cards+'</div>'+ (r.normalization_complete===true ? '' : '<p>身份标签或其快照 slot 尚未全部核实，排除口径保持未确认。</p>')+'<p>页面最多展示前20个 Owner，完整来源排名保存在报告中。排除口径仍取决于已核实的身份标签。</p>'+
-    '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>#</th><th>Owner</th><th>代币数量</th><th>账户数</th><th>供给占比</th><th>身份</th><th>历史覆盖</th></tr></thead><tbody>'+(rows || '<tr><td colspan="7">完整排名未获得，原始Top20样本仍可查看</td></tr>')+'</tbody></table></div>'+renderHolderBinary(report,r)+renderPoolHolderRoles(report,r);
+    '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>#</th><th>Owner</th><th>代币数量</th><th>账户数</th><th>供给占比</th><th>身份</th><th>历史覆盖</th></tr></thead><tbody>'+(rows || '<tr><td colspan="7">完整排名未获得，原始Top20样本仍可查看</td></tr>')+'</tbody></table></div>'+renderHolderBinary(report,r)+renderPoolHolderRoles(report,r)+renderSpecialAddressRoles(report,r);
 }
 
 const clusterRequiredEvidence = {

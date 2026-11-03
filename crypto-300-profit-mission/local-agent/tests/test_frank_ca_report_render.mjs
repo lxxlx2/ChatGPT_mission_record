@@ -953,3 +953,34 @@ test('known selected-vault identity stays visible when whole-holder mass is inco
   assert.match(html,/所选池目标币金库身份已核对/);assert.match(html,/未计算扣除比例/);
   assert.doesNotMatch(html,/占全部 Mint 供给/);
 });
+
+function specialRoleReportForUi() {
+  const r=selectedVaultReportForUi(),c=r.holder_rankings.raw_balance_check,p=r.pool_vaults;
+  const records=c.records.map((row,i)=>({token_account:row.token_account,owner:row.owner,raw:row.raw,role:i?'UNKNOWN':'PROTOCOL_VAULT',classification:i?'UNVERIFIED':'CHAIN_ACCOUNT_ROLE',pools:i?[]:[p.pool_address]}));
+  const metric={status:'EXACT_KNOWN_EXCLUSION_ARITHMETIC',deducted_raw:'60',remaining_raw:'40',top10_raw:'40',unknown_role_raw:'40',registry_attributed_raw:'0',top10_pct_of_mint_supply:'40.0000',top10_pct_of_remaining:'100.0000',global_exhaustive_top10:'UNRESOLVED',owners:[{owner:c.owners[0].owner,raw:'40'}]};
+  r.special_address_roles={version:1,mint,snapshot_slot:101,all_special_roles_normalized:false,pools:[{pool_address:p.pool_address,status:'POOL_IDENTITY_BOUND',snapshot_slot:101,decoded:{protocol:'PUMPSWAP',authority:p.pool_address,base_mint:mint,base_vault:p.target.vault}}],balance_check:c,rankings:{version:1,mint,holder_snapshot_slot:101,holder_response_sha256:c.response_sha256,all_special_roles_normalized:false,independent_provider:false,conflicts:[],records,metrics:{known_ex_lp:structuredClone(metric),known_ex_special:structuredClone(metric)}}};return r;
+}
+
+test('multi-pool known-exclusion arithmetic retains unknown balance and both denominators',()=>{
+  const h=harness(),r=specialRoleReportForUi();h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
+  assert.match(html,/cluster-special-roles/);assert.match(html,/已知排除口径已复算/);assert.match(html,/未知角色余额/);assert.match(html,/40%/);assert.match(html,/未穷尽全部池/);
+});
+
+test('multi-pool forged mass, deduction, slot or exhaustive flag cannot retain exact filtered ranks',()=>{
+  for(const bad of ['mass','metric','slot','exhaustive','duplicate','authority']) {
+    const h=harness(),r=specialRoleReportForUi(),a=r.special_address_roles;
+    if(bad==='mass')a.balance_check.selected_total_raw='99';
+    if(bad==='metric')a.rankings.metrics.known_ex_special.deducted_raw='61';
+    if(bad==='slot')a.pools[0].snapshot_slot=102;
+    if(bad==='exhaustive')a.rankings.all_special_roles_normalized=true;
+    if(bad==='duplicate')a.rankings.records[1]=a.rankings.records[0];
+    if(bad==='authority')a.pools[0].decoded.authority='bad';
+    h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
+    assert.doesNotMatch(html,/已知排除口径已复算/);assert.match(html,/未展示精确排除后比例/);
+  }
+});
+
+test('loading legacy report clears the multi-pool evidence panel',()=>{
+  const h=harness();h.context.renderClusterReport(specialRoleReportForUi());
+  h.context.renderClusterReport(fixture);assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/cluster-special-roles/);
+});

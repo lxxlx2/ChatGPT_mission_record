@@ -9,6 +9,7 @@ import re
 from .holder_ranks import valid_pubkey,PROGRAMS
 from .holder_binary import _uint,verified_holder_mass
 from .pool_vaults import PROGRAM
+from .pool_programs import SUPPORTED_PROGRAMS
 
 
 def _hash(v):return isinstance(v,str) and re.fullmatch('[0-9a-f]{64}',v) is not None
@@ -23,12 +24,12 @@ def build_pool_holder_roles(mint,ranks,pool):
          'conflicts':[]}
     if not isinstance(pool,dict) or pool.get('status')=='NOT_REQUESTED':return {**out,'status':'NOT_REQUESTED','reason':'POOL_NOT_COLLECTED'}
     t=pool.get('target');q=pool.get('quote');pool_slot=pool.get('snapshot_slot')
-    if not isinstance(t,dict) or not isinstance(q,dict) or pool.get('status')!='VAULT_BALANCE_SNAPSHOT' or pool.get('source')!='SOLANA_FINALIZED_RAW_ACCOUNTS' or pool.get('pool_program')!=PROGRAM or pool.get('mint')!=mint or t.get('mint')!=mint or t.get('authority')!=pool.get('pool_address') or not all(valid_pubkey(v) for v in (mint,pool.get('pool_address'),t.get('vault'),q.get('mint'))) or mint==q.get('mint') or not isinstance(t.get('token_program'),str) or t.get('token_program') not in PROGRAMS or _uint(t.get('raw')) is None or _uint(t.get('mint_supply_raw')) is None or type(t.get('decimals')) is not int or not 0<=t['decimals']<=255 or type(pool_slot) is not int or pool_slot<=0 or not _hash(pool.get('response_sha256')):
+    if not isinstance(t,dict) or not isinstance(q,dict) or pool.get('status')!='VAULT_BALANCE_SNAPSHOT' or pool.get('source')!='SOLANA_FINALIZED_RAW_ACCOUNTS' or pool.get('pool_program') not in SUPPORTED_PROGRAMS or pool.get('mint')!=mint or t.get('mint')!=mint or t.get('authority')!=pool.get('vault_authority',pool.get('pool_address')) or not all(valid_pubkey(v) for v in (mint,pool.get('pool_address'),t.get('vault'),q.get('mint'))) or mint==q.get('mint') or not isinstance(t.get('token_program'),str) or t.get('token_program') not in PROGRAMS or _uint(t.get('raw')) is None or _uint(t.get('mint_supply_raw')) is None or type(t.get('decimals')) is not int or not 0<=t['decimals']<=255 or type(pool_slot) is not int or pool_slot<=0 or not _hash(pool.get('response_sha256')):
         return {**out,'reason':'POOL_IDENTITY_UNVERIFIED'}
     out.update(mint=mint,pool_address=pool['pool_address'],vault_address=t['vault'],authority=t['authority'],
                pool_slot=pool_slot,pool_response_sha256=pool['response_sha256'],vault_raw=t['raw'],
-               pool_program=PROGRAM,role='SELECTED_POOL_TARGET_TOKEN_VAULT',role_basis='PROGRAM_DISCRIMINATOR_STORED_VAULT_AND_TOKEN_AUTHORITY',
-               reference_blob='d907b16a91f035aeb3c3182bfa0972a91bf23a86')
+               pool_program=pool['pool_program'],role='SELECTED_POOL_TARGET_TOKEN_VAULT',role_basis='PROGRAM_DISCRIMINATOR_STORED_VAULT_AND_TOKEN_AUTHORITY',
+               reference_blob=pool.get('layout_reference_blob','d907b16a91f035aeb3c3182bfa0972a91bf23a86'))
     c=ranks.get('raw_balance_check') if isinstance(ranks,dict) else None
     if not isinstance(c,dict) or c.get('status') not in {'RECONCILED_NONZERO_BALANCE_MASS','OBSERVED_SAMPLE_ONLY'} or c.get('mint')!=mint or not isinstance(c.get('program_id'),str) or c.get('program_id') not in PROGRAMS or not _hash(c.get('response_sha256')) or not _hash(c.get('enumeration_response_sha256')) or c['enumeration_response_sha256']!=ranks.get('response_sha256') or c.get('enumeration_slot')!=ranks.get('snapshot_slot') or type(c.get('snapshot_slot')) is not int or c['snapshot_slot']<=0 or _uint(c.get('mint_supply_raw')) is None or type(c.get('decimals')) is not int or not isinstance(c.get('records'),list) or len(c['records'])>99:
         return {**out,'reason':'HOLDER_BINARY_PROVENANCE_UNVERIFIED'}
@@ -45,7 +46,7 @@ def build_pool_holder_roles(mint,ranks,pool):
         if record.get('status')=='MISSING':conflicts.append('VAULT_ABSENT_AT_HOLDER_BANK')
         elif isinstance(record.get('status'),str) and record.get('status') in {'MATCH','DIFFERS'} and _uint(record.get('raw')) is not None and valid_pubkey(record.get('mint')) and valid_pubkey(record.get('owner')):
             if record.get('mint')!=mint:conflicts.append('VAULT_MINT_DIFFERS')
-            if record.get('owner')!=pool['pool_address']:conflicts.append('VAULT_AUTHORITY_DIFFERS')
+            if record.get('owner')!=t['authority']:conflicts.append('VAULT_AUTHORITY_DIFFERS')
             if int(record['raw'])!=int(t['raw']):conflicts.append('VAULT_AMOUNT_DIFFERS')
             bound=not conflicts
     mass=verified_holder_mass(c,mint)
@@ -59,9 +60,9 @@ def build_pool_holder_roles(mint,ranks,pool):
     out['status']='SELECTED_VAULT_BOUND'
     if not mass:return {**out,'reason':'HOLDER_MASS_NOT_VERIFIED'}
     supply=int(c['mint_supply_raw']);vault=int(t['raw']);balances={r['owner']:int(r['raw']) for r in c['owners']}
-    before=balances.get(pool['pool_address'],0)
+    before=balances.get(t['authority'],0)
     if before<vault or supply<vault:return {**out,'status':'SAME_SLOT_CONTRADICTION','reason':'POOL_HOLDER_SAME_SLOT_CONTRADICTION','conflicts':['VAULT_EXCEEDS_RECONCILED_OWNER_BALANCE']}
-    after=before-vault;balances[pool['pool_address']]=after
+    after=before-vault;balances[t['authority']]=after
     owners=sorted(((o,v) for o,v in balances.items() if v),key=lambda x:(-x[1],x[0]));remaining=supply-vault;top=sum(v for _,v in owners[:10])
     def pct(raw,denominator):
         if not denominator:return 'UNRESOLVED'

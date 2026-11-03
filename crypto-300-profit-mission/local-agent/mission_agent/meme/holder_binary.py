@@ -22,8 +22,8 @@ def _uint(v):
     n=int(v);return n if n<=2**64-1 else None
 
 
-def _selected(rows):
-    if len(rows)<=MAX_FULL_ACCOUNTS:return sorted(rows,key=lambda r:r['token_account']),'ALL_ENUMERATED_ONE_BATCH'
+def _selected(rows,max_full_accounts=MAX_FULL_ACCOUNTS):
+    if len(rows)<=max_full_accounts:return sorted(rows,key=lambda r:r['token_account']),'ALL_ENUMERATED_ONE_BATCH'
     groups={}
     for row in rows:groups.setdefault(row['owner'],[]).append(row)
     owners=sorted(groups,key=lambda o:(-sum(int(r['raw']) for r in groups[o]),o))
@@ -35,7 +35,7 @@ def _selected(rows):
     return sorted(chosen,key=lambda r:r['token_account']),'BOUNDED_OWNER_SAMPLE'
 
 
-def collect_holder_binary_check(mint,source,rpc):
+def collect_holder_binary_check(mint,source,rpc,*,max_full_accounts=MAX_FULL_ACCOUNTS):
     out={'version':1,'status':'UNAVAILABLE','owner_top10_pct':'UNRESOLVED','owners':[],'records':[],
          'independent_provider':False,'roles_verified':False,'enumeration_membership_independently_verified':False,
          'full_positive_mass_reconciled':False,'enumeration_relation':'UNVERIFIED',
@@ -50,7 +50,8 @@ def collect_holder_binary_check(mint,source,rpc):
         if not isinstance(row,dict) or not valid_pubkey(row.get('token_account')) or row['token_account']==mint or row['token_account'] in seen or not valid_pubkey(row.get('owner')) or _uint(row.get('raw')) is None or type(row.get('decimals')) is not int or row['decimals']!=d:
             return {**out,'reason':'ENUMERATION_UNVERIFIED'}
         seen.add(row['token_account'])
-    chosen,selection=_selected(rows);addresses=[mint]+[r['token_account'] for r in chosen]
+    if type(max_full_accounts) is not int or not 10<=max_full_accounts<=99:return {**out,'reason':'BATCH_CAP_INVALID'}
+    chosen,selection=_selected(rows,max_full_accounts);addresses=[mint]+[r['token_account'] for r in chosen]
     out.update(mint=mint,program_id=program,enumeration_slot=slot,enumeration_response_sha256=source['response_sha256'],
                enumeration_account_count=len(rows),selected_accounts=addresses[1:],selected_account_count=len(chosen),
                accounts_not_selected=len(rows)-len(chosen),selection=selection,

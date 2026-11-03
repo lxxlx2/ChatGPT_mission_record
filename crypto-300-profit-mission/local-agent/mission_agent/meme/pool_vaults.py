@@ -163,7 +163,9 @@ def collect_pool_vault_snapshot(mint,market,rpc):
     try:
         first=rpc.call('getAccountInfo',[pool_address,{'encoding':'base64','commitment':'finalized'}],ttl=30)
         discovery_slot=_slot(first);out['discovery_slot']=discovery_slot
-        ids,_=_pool(first.get('value'))
+        from .pool_programs import decode_pool
+        discovery=decode_pool(first.get('value'),pool_address)
+        ids={k:discovery[k] for k in ('base_mint','quote_mint','base_vault','quote_vault')}
         if {ids['base_mint'],ids['quote_mint']}!={mint,pair['quote_address']}:raise PoolSourceError('POOL_PAIR_MISMATCH')
         addresses=[pool_address,ids['base_vault'],ids['quote_vault'],ids['base_mint'],ids['quote_mint']]
         if len(set(addresses))!=5:raise PoolSourceError('POOL_ADDRESSES_INVALID')
@@ -173,20 +175,23 @@ def collect_pool_vault_snapshot(mint,market,rpc):
         if slot<discovery_slot:raise PoolSourceError('SNAPSHOT_BEFORE_DISCOVERY')
         values=response.get('value')
         if not isinstance(values,list) or len(values)!=5:raise PoolSourceError('BATCH_INCOMPLETE')
-        batch_ids,params=_pool(values[0])
-        if batch_ids!=ids:raise PoolSourceError('POOL_CHANGED_SINCE_DISCOVERY')
+        decoded=decode_pool(values[0],pool_address)
+        batch_ids={k:decoded[k] for k in ids};params=decoded['parameters']
+        if batch_ids!=ids or any(decoded[k]!=discovery[k] for k in ('authority','program','protocol')):raise PoolSourceError('POOL_CHANGED_SINCE_DISCOVERY')
         flags=set()
-        base=_token(values[1],values[3],ids['base_mint'],pool_address,ids['base_vault'],flags)
-        quote=_token(values[2],values[4],ids['quote_mint'],pool_address,ids['quote_vault'],flags)
+        base=_token(values[1],values[3],ids['base_mint'],decoded['authority'],ids['base_vault'],flags)
+        quote=_token(values[2],values[4],ids['quote_mint'],decoded['authority'],ids['quote_vault'],flags)
+        if decoded.get('token_programs') is not None and decoded['token_programs']!=[base['token_program'],quote['token_program']]:raise PoolSourceError('POOL_TOKEN_PROGRAM_MISMATCH')
+        if decoded.get('mint_decimals') is not None and decoded['mint_decimals']!=[base['decimals'],quote['decimals']]:raise PoolSourceError('POOL_MINT_DECIMALS_MISMATCH')
         target,other=(base,quote) if base['mint']==mint else (quote,base)
         if any(v is None for v in params.values()):flags.add('POOL_OPTIONAL_FIELDS_UNAVAILABLE')
-        if params['virtual_quote_reserves'] not in (None,'0'):flags.add('VIRTUAL_QUOTE_RESERVES_PRESENT')
-        if any(params[k] not in (None,'0') for k in ('protocol_fees','creator_fees')):flags.add('ACCUMULATED_FEES_PRESENT')
+        if params.get('virtual_quote_reserves') not in (None,'0'):flags.add('VIRTUAL_QUOTE_RESERVES_PRESENT')
+        if any(params.get(k) not in (None,'0') for k in ('protocol_fees','creator_fees')):flags.add('ACCUMULATED_FEES_PRESENT')
         with localcontext() as ctx:
             ctx.prec=80
             ratio=str(Decimal(other['quantity'])/Decimal(target['quantity'])) if int(target['raw']) else 'UNRESOLVED'
-        out.update(status='VAULT_BALANCE_SNAPSHOT',observed_at=received_at,snapshot_slot=slot,commitment='finalized',pool_program=PROGRAM,target=target,quote=other,pool_parameters=params,flags=sorted(flags),raw_vault_quote_per_target=ratio,
-                   effective_reserves=_derive_reserves(base,quote,params,mint,flags),
+        out.update(status='VAULT_BALANCE_SNAPSHOT',observed_at=received_at,snapshot_slot=slot,commitment='finalized',pool_program=decoded['program'],protocol=decoded['protocol'],vault_authority=decoded['authority'],layout_reference_blob=decoded['reference_blob'],target=target,quote=other,pool_parameters=params,flags=sorted(flags),raw_vault_quote_per_target=ratio,
+                   effective_reserves=_derive_reserves(base,quote,params,mint,flags) if decoded['program']==PROGRAM else {'version':1,'status':'NOT_COMPUTED','reason':'PROTOCOL_RESERVE_MODEL_NOT_IMPLEMENTED','effective_quote_per_target':'UNRESOLVED'},
                    response_sha256=hashlib.sha256(json.dumps(response,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
                    scope='RAW_VAULT_BALANCES_AND_DOCUMENTED_RESERVE_MODEL_NOT_MARKET_PRICE')
     except (ValueError,TypeError,KeyError,OverflowError) as exc:

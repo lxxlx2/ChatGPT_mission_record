@@ -69,6 +69,8 @@ class DexScreenerMarketClient:
             "mint":mint,
             "observed_at":observed_at,
             "pair_count":len(pairs),
+            "pool_candidates":[{"pair_address":x.get("pairAddress"),"base_address":(x.get("baseToken") or {}).get("address"),"quote_address":(x.get("quoteToken") or {}).get("address")} for x in pairs[:8]],
+            "pool_candidates_not_selected":max(0,len(pairs)-8),
             "name":base.get("name"),
             "symbol":base.get("symbol"),
             "price_usd":_num(main.get("priceUsd")),

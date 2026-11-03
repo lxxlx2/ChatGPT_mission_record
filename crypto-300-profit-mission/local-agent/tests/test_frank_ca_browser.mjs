@@ -82,6 +82,15 @@ try {
  assert.match(await page.locator('.cluster-pool-holder-roles').innerText(),/同一 Owner 的其他余额仍保留/);
  assert.match(await page.locator('.cluster-pool-holder-roles').innerText(),/97.7778%/);
  check('verified single target-vault deduction preserves auxiliary balance and both denominators without all-LP claim');
+ assert.equal(saved.special_address_roles.pools.filter(p=>p.status==='POOL_IDENTITY_BOUND').length,2);
+ assert.equal(saved.special_address_roles.rankings.metrics.known_ex_lp.deducted_raw,'120');
+ assert.equal(saved.special_address_roles.rankings.metrics.known_ex_lp.top10_pct_of_remaining,'100.0000');
+ assert.equal(saved.special_address_roles.rankings.metrics.known_ex_lp.unknown_role_raw,'880');
+ assert.match(await page.locator('.cluster-special-roles').innerText(),/已知排除口径已复算/);
+ assert.match(await page.locator('.cluster-special-roles').innerText(),/ORCA_WHIRLPOOL/);
+ assert.match(await page.locator('.cluster-special-roles').innerText(),/未知角色/);
+ check('two actual decoded pool identities and same-bank holder ledger persist known-only exclusion ranks with auxiliary balances');
+
  assert.equal(saved.narrative.official_recognition,'UNVERIFIED');
  assert.equal(saved.market.comparison.status,'INDEXER_SNAPSHOTS_COMPARED');
  assert.match(await page.locator('.cluster-market-comparison').innerText(),/25.0000%/);

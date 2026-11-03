@@ -71,6 +71,36 @@ def fixture_holder_binary(mint):
     return source
 
 
+def fixture_special_roles(mint,source,market):
+    from mission_agent.meme.pool_vaults import _key,PROGRAM,POOL_DISCRIMINATOR
+    from mission_agent.meme.pool_programs import pubkey_bytes,WHIRLPOOL
+    from mission_agent.meme.special_roles import collect_special_roles
+    from mission_agent.meme.holder_ranks import valid_pubkey
+    if not valid_pubkey(mint):return {"status":"NOT_REQUESTED"}
+    pool1=_key((6000).to_bytes(32,'big'));pool2=_key((6001).to_bytes(32,'big'))
+    quote=_key((5).to_bytes(32,'big'));vquote=_key((7).to_bytes(32,'big'))
+    def enc(owner,b):return {'owner':owner,'executable':False,'data':[base64.b64encode(b).decode(),'base64']}
+    b=bytearray(287);b[:8]=POOL_DISCRIMINATOR
+    for offset,value in [(43,mint),(75,quote),(139,_key((5000).to_bytes(32,'big'))),(171,vquote)]:b[offset:offset+32]=pubkey_bytes(value)
+    pump=enc(PROGRAM,b)
+    import hashlib
+    b=bytearray(653);b[:8]=hashlib.sha256(b'account:Whirlpool').digest()[:8]
+    for offset,value in [(101,mint),(181,quote),(133,_key((5002).to_bytes(32,'big'))),(213,vquote)]:b[offset:offset+32]=pubkey_bytes(value)
+    orca=enc(WHIRLPOOL,b)
+    program='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+    m=bytearray(82);m[36:44]=(1000).to_bytes(8,'little');m[44]=6;m[45]=1
+    values={mint:enc(program,m),pool1:pump,pool2:orca}
+    for row in source['accounts']:
+        b=bytearray(165);b[:32]=pubkey_bytes(mint);b[32:64]=pubkey_bytes(row['owner']);b[64:72]=int(row['raw']).to_bytes(8,'little');b[108]=1
+        values[row['token_account']]=enc(program,b)
+    class RPC:
+        def call(self,method,params,ttl=0):
+            assert method=='getMultipleAccounts' and len(params[0])<=100
+            return {'context':{'slot':101},'value':[values[a] for a in params[0]]}
+    hints={**market,'pool_candidates':[{'pair_address':pool2,'base_address':mint,'quote_address':quote}]}
+    return collect_special_roles(mint,source,hints,RPC())
+
+
 class FixtureAnalyzer:
     count = 0
 
@@ -141,6 +171,7 @@ class FixtureAnalyzer:
         }
         from mission_agent.meme.pool_holder_roles import attach_pool_holder_roles
         report['pool_holder_roles']=attach_pool_holder_roles(self.mint,report['holder_rankings'],report['pool_vaults'])
+        report['special_address_roles']=fixture_special_roles(self.mint,report['holder_rankings'],report['market'])
         return report
 
 

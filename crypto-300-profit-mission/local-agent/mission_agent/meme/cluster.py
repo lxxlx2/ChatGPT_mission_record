@@ -757,7 +757,7 @@ class WalletClusterAnalyzer:
         program=value.get("owner")
         if value.get("executable"):return "PUBLIC_PROGRAM","RPC_EXECUTABLE_ACCOUNT"
         if program==SYSTEM_PROGRAM:return "ORDINARY","RPC_SYSTEM_OWNED"
-        if program in DEX_PROGRAMS:return "PROTOCOL_VAULT","RPC_RECOGNIZED_DEX_PROGRAM:"+str(program)
+        if program in DEX_PROGRAMS:return "PROGRAM_OWNED_UNRESOLVED","RPC_DEX_PROGRAM_OWNER_NOT_VAULT_PROOF:"+str(program)
         if program in TOKEN_PROGRAMS:return "TOKEN_ACCOUNT_OWNER_UNRESOLVED","RPC_TOKEN_PROGRAM_OWNED"
         return "PROGRAM_OWNED_UNRESOLVED","RPC_PROGRAM_OWNER:"+str(program)
 
@@ -854,6 +854,19 @@ class WalletClusterAnalyzer:
         except RPCJobBudgetExceeded:raise
         except RPCError as exc:
             return {"version":1,"status":"INCOMPLETE_EVIDENCE","reason":"RESPONSE_LIMIT" if str(exc)=="RPC_POOL_RESPONSE_LIMIT" else "RPC_UNAVAILABLE"}
+
+    def special_role_snapshot(self,ranks,market):
+        if not (self.read_pool_vaults and self.audit_holder_binary):
+            return {"version":1,"status":"NOT_REQUESTED","reason":"NOT_ENABLED"}
+        self._progress("SPECIAL_ROLES",scanned=0)
+        try:
+            from .special_roles import collect_special_roles
+            return collect_special_roles(self.mint,ranks,market,self.rpc,self.registry)
+        except RPCJobBudgetExceeded:raise
+        except RPCError as exc:
+            return {"version":1,"status":"INCOMPLETE_EVIDENCE","reason":"RESPONSE_LIMIT" if str(exc)=="RPC_POOL_RESPONSE_LIMIT" else "RPC_UNAVAILABLE"}
+        except (ValueError,TypeError,KeyError,OverflowError):
+            return {"version":1,"status":"INCOMPLETE_EVIDENCE","reason":"ROLE_SOURCE_INVALID"}
 
     def narrative_snapshot(self,market):
         empty={"version":1,"status":"NOT_REQUESTED","attempts":[],"evidence":[],
@@ -1215,6 +1228,7 @@ class WalletClusterAnalyzer:
         pool_vaults=self.pool_vault_snapshot(market)
         from .pool_holder_roles import attach_pool_holder_roles
         pool_holder_roles=attach_pool_holder_roles(self.mint,holder_rankings,pool_vaults)
+        special_address_roles=self.special_role_snapshot(holder_rankings,market)
         self._prepare_owner_account_history(holders,holder_rankings)
         preview_top10_pct=getattr(self,"_raw_top10_snapshot_pct",None)
         self._progress(
@@ -1533,7 +1547,7 @@ class WalletClusterAnalyzer:
             "schema_version":2,"mint":self.mint,"source":"SOLANA_FINALIZED_JSON_RPC",
             "rpc_endpoint":safe_rpc_label(getattr(self.rpc,"endpoint","UNKNOWN")),"rpc_endpoints":endpoints,
             "observed_at":time.time(),"supply_raw":str(supply),"decimals":decimals,
-            "token_profile":token_profile,"market":market,"pool_vaults":pool_vaults,"pool_holder_roles":pool_holder_roles,"narrative":narrative,"assessment":assessment,"holders":holder_rows,"holder_rankings":holder_rankings,
+            "token_profile":token_profile,"market":market,"pool_vaults":pool_vaults,"pool_holder_roles":pool_holder_roles,"special_address_roles":special_address_roles,"narrative":narrative,"assessment":assessment,"holders":holder_rows,"holder_rankings":holder_rankings,
             "metrics":metrics,"confirmed_relation_groups":relation_groups,"probable_control_clusters":control_groups,
             "probable_execution_clusters":execution_groups,
             "shared_infrastructure_exclusions":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_CEX","SHARED_INFRA"}],
@@ -1614,7 +1628,8 @@ def report_completeness(report:dict)->dict:
     from .holder_binary import verified_holder_mass
     binary_check=ranks.get("raw_balance_check") or {}
     binary_mass=verified_holder_mass(binary_check,report.get("mint")) and binary_check.get("enumeration_response_sha256")==ranks.get("response_sha256")
-    normalized=not pool_holder_conflict and ranked and ranks.get("normalization_complete") is True and (not binary_mass or binary_check.get("snapshot_slot")==ranks.get("snapshot_slot"))
+    special_audit=report.get("special_address_roles") or {}
+    normalized=special_audit.get("status") in (None,"NOT_REQUESTED") and not pool_holder_conflict and ranked and ranks.get("normalization_complete") is True and (not binary_mass or binary_check.get("snapshot_slot")==ranks.get("snapshot_slot"))
     requirements=[]
     def row(key,status,cause,attempted,next_source,paths):
         requirements.append({"id":key,"status":status,"cause":cause,
@@ -1632,9 +1647,9 @@ def report_completeness(report:dict)->dict:
         ["holder_rankings","holder_rankings.raw_balance_check","coverage.snapshot_slots"])
     row("holder_roles","VERIFIED_SNAPSHOT" if normalized else "PARTIAL",
         "SNAPSHOT_ROLES_NORMALIZED" if normalized else "SPECIAL_ADDRESS_IDENTITIES_NOT_FULLY_VERIFIED",
-        ["Owner account metadata and configured special-address registry"],
+        ["Owner account metadata, dated role evidence registry and bounded multi-program pool identities"],
         "Verify pool/vault/CEX/treasury roles with dated program/account/transaction evidence.",
-        ["holder_rankings.normalization_complete","holders","pool_holder_roles"])
+        ["holder_rankings.normalization_complete","holders","pool_holder_roles","special_address_roles"])
     row("wallet_history","PARTIAL","BOUNDED_HISTORY_NOT_ALL_OWNER_ACCOUNTS",
         ["Selected observed token-account history and owner prefunding signature windows; per-account coverage in coverage.owner_account_history"],
         "Enumerate all material Owner token accounts and reconcile complete acquisition/sale/funding movements.",
@@ -1784,7 +1799,7 @@ def markdown(report:dict)->str:
                 + (" — evidence: "+", ".join(edge_types) if edge_types else "")
             )
     lines += ["", "## Selected pool/holder role evidence (not all LP exclusions)", "", "~~~json",
-              json.dumps({"pool_holder_roles":report.get("pool_holder_roles")},ensure_ascii=False,indent=2), "~~~"]
+              json.dumps({"pool_holder_roles":report.get("pool_holder_roles"),"special_address_roles":report.get("special_address_roles")},ensure_ascii=False,indent=2), "~~~"]
     lines += ["", "## Same-provider binary holder balance check", "",
               "One actual finalized batch can reconcile nonzero legacy SPL balance mass; provider, role, account-enumeration and history independence remain unverified.",
               "~~~json", json.dumps({"raw_balance_check":(report.get("holder_rankings") or {}).get("raw_balance_check")},ensure_ascii=False,indent=2), "~~~"]
