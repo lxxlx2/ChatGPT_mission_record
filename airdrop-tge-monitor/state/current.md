@@ -1,3 +1,20 @@
+## Latest authoritative terminal cache sync — 2026-11-03 17:58:21 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-03/175821-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-03/175720-attempt.md
+- run_time: 2026-11-03T17:58:21.676+07:00 (off-minute invocation; existing HH:00 schedule unchanged)
+- schedule: existing hourly HH:00 Asia/Bangkok UNCHANGED
+- run_status: PARTIAL; verified_complete: false; last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- scheduled_shard: 1; executed_shard: 1; override_reason: fair_default; last_four_executed_shards: [3,0,1,1]; consecutive_same_shard: 2
+- last_meaningful_attempt_at_shard1: 2026-11-03T17:58:21.676+07:00 PARTIAL_ONLY
+- urgent5 + Surf/StandX + exactly one Shard1; 15 distinct registered identities attempted; bounded Cambria/NeoSoul/StandX lifecycle
+- candidate_count: 8; action_gate_pass: 0; triggered_events: 0; identity_failures: 1 (Theo/Autheo rejected); source_failures: 6
+- SOURCE_GAP: StandX Nov2 DUSD original/live claim, Concrete extra USDC, Clay Shares private, ForecastFDN original, Theo Network canonical, Neutrl redemption portal/wallet
+- browser_session: UNAVAILABLE (actual originating-browser-context error); English issuer fallback, no authenticated X read
+- Gmail life/work mapped-rights search: 0 relevant; gmail_attempted: false; gmail_sent_readback: NOT_APPLICABLE_NO_ACTION; app_notification: false
+- dedupe: SurfBoard Nov13, NeoSoul StandX Nov3 22:59 BKK, Cambria Base RSGP Oct29, StandX winddown and other prior delivered stable keys unchanged
+- final_readback: VERIFIED main blob 89a7f20e3fb4d05d1f099d21a667aefbf046554b; commit 85eabdd1514e8664c49da7e43f47d1d729cc466e
+- task ID/name/schedule/registry/recipient unchanged; no new task, cron or daily TGE email
+
 ## Latest authoritative terminal cache sync — 2026-11-03 16:58:01 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-03/165801-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-03/165627-attempt.md
