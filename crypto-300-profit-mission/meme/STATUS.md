@@ -1,5 +1,5 @@
 # Frank STATUS（唯一当前决策状态入口）
-更新时间：2026-11-03 21:00 Asia/Bangkok
+更新时间：2026-11-03 22:18 Asia/Bangkok
 更新者：Codex（用户继续授权本地调试、隔离测试与既有Dashboard维护；独立review豁免；INVEST_NO_GO / TRADE_NO_GO保持）
 
 ## 北极星答案（1 行）
@@ -16,7 +16,7 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 **阶段管理已结束；按当前用户继续主线指令推进手动CA查询能力，同时保留原只读钱包观察工具。** 跟单盈利研究不因此恢复；P2/P3 未启动。
 
 ## 正在进行（最多 3 项）
-- **手动CA主线：所选金库角色与同slot持有人扣除已接入候选**。原PR220最新候选[`11541239e1a4e5bf648058787e1a83ce2fb9747a`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/11541239e1a4e5bf648058787e1a83ce2fb9747a)复用既有池/金库/Mint和持有人二进制结果，不新增RPC/HTTP。核验PumpSwap程序/discriminator/所存金库/token authority与同一实际finalized slot的精确账户/Mint/金额；只扣所选目标币金库原始余额，保留同Owner辅助余额，分列Top10占原Mint供给和扣除后剩余余额。完整非零余额不足时仅显示已核对身份；不同slot不计算扣除比例。已知同slot矛盾保留来源/撤下前指标，并撤下受影响的持有人比例、池子原始/模型比值及索引差异。未宣称全部LP/特殊地址已排除。7文件（3运行/4测试，新增2文件）远端逐字一致；新增24Python、418相关Python和133前端通过，初始20项失败、部分身份显示及提前撤下指标导致计算异常的反例保留。[固定CI run85](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41649048315)实际1926 Python通过/4跳过、133前端、35隔离Chromium场景通过，page errors0。合成浏览器调用实际二进制解码/角色绑定器并验证保存/显示/GET恢复；7次fixture POST均合成分析，真实RPC/CA POST/生产请求0，临时fixture/profile/端口清理确认。原1200 wire attempts/1800秒预算与旧恢复行为保留。整体INCOMPLETE_EVIDENCE；其他池/全部特殊角色、独立提供方、大型Mint、Token-2022计量、全历史和真实CA/Mac验收仍缺。Mac最后回执f690，本轮部署/通知/交易0。详见既有JSON新增ca_selected_pool_holder_role_followup_20261103，前批原始Owner非零余额证明及全部历史记录保留。
+- **手动CA主线：多程序池与逐账户排除排名已接入候选，用户Chrome功能验收待登录授权**。原PR220候选[`cd353c15628c491c116dd5a53434bcacbd160512`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/cd353c15628c491c116dd5a53434bcacbd160512)新增Raydium CPMM/AMM v4/CLMM、Orca Whirlpool、Meteora DLMM，连同既有PumpSwap共6类程序固定布局。最多8个已有索引池线索，经1个发现批次和1个池/Mint/有界token账户共用finalized批次核验（最多100键），逐token账户扣除再聚合Owner，保留同Owner辅助余额；分列已知LP/已记录特殊账户Top10、原供给/剩余余额分母、未知角色余额。DEX程序owner不直接成为金库；归属标签需精确Mint/范围/日期slot/版本/HTTPS依据哈希，声明与链上结构分列。新路径撤下旧总归类开关支持的精确过滤比例并保留原值；不宣称全部池/CEX/特殊身份已穷尽。12文件（8运行/4测试、新增3）逐字读回一致；70新增Python、488相关Python和136前端通过，旧开关反例69通过/1失败后修复保留。[固定CI run89](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41661951573)实际1996 Python通过/4跳过、136前端、36隔离Chromium场景通过，page errors0；7次fixture POST均合成分析，真实RPC/CA POST/生产请求0，fixture/profile/端口清理确认。用户Google Chrome已确认连接并打开[仅本人可见HTTPS合成验收页](https://frank-role-isolated-qa-20261103.sappypanel.chatgpt.site)，auth.openai.com登录访问被自动审批拒绝；功能验收仍未完成，页面保留，不能用CI Chromium替代。私有测试页已发布，Frank生产Dashboard未部署，旧安装回执仍f690。原1200 wire attempts/1800秒预算不变，最多新增2逻辑RPC，GET不采集；整体INCOMPLETE_EVIDENCE。详见既有JSON新增ca_multi_program_special_roles_followup_20261103，前批证据全部保留。
 - 前批已验收的既有真实CA job `2306599a664d4308ad9b0cf3706c07a3`（11月1日22:10报告，本轮未创建）经GET和磁盘确认报告/任务/marker/摘要一致；私有副本空内存恢复及4项损坏拒绝PASS。Dashboard源码切换后实际GET返回DONE/restored_from_saved_report=true，Chrome“读取选中报告”显示任务ID与CA已核对；无效CA清理与恢复PASS，标签保留。该次安装验收中28份报告文件哈希保留；控制库、D2、旧心跳及plist不变。最后D2来源回执为11月1日08:26的4898账户/Mint快照，F01近期0/历史7/eligible0，不是实时余额或可执行资格。
 - 最后已记录的Scanner只读快照为2026-11-02 00:07：源码1f2c6afc28b9988eaacdc896562ff9a71b78f801、PID3402，当时LIVE/0连续错误/无漂移；6006签名/seen、RAW_PENDING/未处理0、信号7/outbox9/Gmail2。此前98条逐笔重放（截至5979）不自动覆盖后来27条。本轮未查询生产DB或重新核验进程，不把旧快照冒充当前可用性。
 
@@ -26,12 +26,12 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 
 | 原目标 | 本轮实际状态 |
 |---|---|
-| 账户与Owner、样本与全局Top10、快照slot | 候选复用既有二进制非零余额证明，并新增所选PumpSwap目标币金库与持有人同实际finalized slot核对。只扣该金库原始余额，保留同Owner辅助余额，分别列占原Mint供给/扣除后余额的Top10；不同slot/不完整余额不算精确扣除比例。已知同slot矛盾撤下受影响比例与池子派生比值，原始来源保留。仍未完成全部LP/特殊角色、独立提供方、大型Mint、Token-2022计量、全历史或真实来源验收 |
+| 账户与Owner、样本与全局Top10、快照slot | 候选已支持PumpSwap、Raydium CPMM/AMM v4/CLMM、Orca Whirlpool、Meteora DLMM的固定布局/金库authority核验；最多8个已有索引池线索，池/Mint/所选持有人同批finalized核对，再按token账户扣除、聚合Owner并列两种分母的已知排除后Top10。未知角色余额保留并量化，带日期/版本/来源的CEX等归属声明与链上角色分开；旧总归类开关不再为本路径背书。仍不宣称所有池/全部特殊身份已穷尽；独立来源、大型Mint、Token-2022与真实来源尚缺 |
 | 单一查询及PARTIAL/INCOMPLETE_EVIDENCE结论 | 单一入口已实现；候选新增版本化必需证据状态、缺口原因/来源/下一来源，JSON/Markdown/UI一致。当前能力只能输出INCOMPLETE_EVIDENCE；不以DONE/排名完成/权限PASS代替完整尽调 |
 | 历史/资金分页及多账户 | 候选已接入当前多账户及交易绑定的历史账户发现/一轮补查，合并最早已发现BUY和资金锚点；共用4/Owner、12额外账户/报告与原任务硬上限。关闭与Owner只绑定各交易前后状态，当前是否再创建/转让、全部历史账户、Top20之外Owner全历史、真实首笔及跨重启续采仍未完成 |
-| 所选池余额及协议储备模型 | 候选支持PumpSwap池/两侧金库/Mint同批finalized读取，按固定文档推导真实/有效储备和boost分量，防止待提费用重复扣除。Token-2022/冻结状态只列算术；已部署二进制语义、美元估值/流动性、可执行报价、其他DEX程序及真实来源验收仍缺，未据此宣布安全或可买 |
+| 所选池余额及协议储备模型 | 候选支持上述6类主网程序的池/两侧金库/Mint同批原始余额和authority核验；PumpSwap原有文档储备模型保留，新增5类程序不套用其模型、不输出可执行或美元报价。未知程序/布局明确失败；已部署语义、其他池、美元估值及真实来源验收仍缺 |
 | 外部叙事及多来源对照 | 候选已有同池索引USD参考、原始金库/协议模型与可选GT直接币对报价的数值差异，以及有界公开页面陈述。源单位/方向/哈希核对后才展示差异；读取时间不等于行情as-of。缺字段不猜单位或换池，数值相同不宣布同快照。受控快照/独立持有人、官方归属/起源与真实来源验收仍缺 |
-| 新候选实际Mac与代表CA验收 | 尚未执行；前批Chrome仅GET读取既有2306599a，本轮只做隔离测试/CI，不借旧页面验收新候选 |
+| 新候选实际Mac与代表CA验收 | Frank生产Mac未安装本候选；用户Google Chrome已打开私有合成验收页，登录auth.openai.com被自动审批拒绝，页面保留、功能验收待完成。CI Chromium36场景单列，不能替代用户Chrome或真实CA验收 |
 
 
 ## 剩余真实条件（最多 3 项）
