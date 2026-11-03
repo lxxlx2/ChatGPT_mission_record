@@ -2761,5 +2761,182 @@
       "USD/liquidity/date/price-basis validation and official exact-CA narrative origin",
       "Real representative CA/source failure and Mac UX acceptance"
     ]
+  },
+  "ca_selected_pool_holder_role_followup_20261103": {
+    "observed_at_utc": "2026-11-03T13:58:05.645Z",
+    "verdict": "PASS_BOUNDED_SELECTED_VAULT_ROLE; ALL_SPECIAL_ROLES_AND_WHOLE_CA_UNVERIFIED",
+    "source": {
+      "pr": 220,
+      "head": "11541239e1a4e5bf648058787e1a83ce2fb9747a",
+      "tree": "6c5cc277ae149170eadffb6bcc515e35e47d1881",
+      "baseline": "4695027ac59cf419ded3bd98f03baa4495343c49",
+      "baseline_tree": "7d6465ada60d3a5b14842ed0e69be9eb18e1e653",
+      "files": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/pool_holder_roles.py",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_pool_holder_roles.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+        "crypto-300-profit-mission/local-agent/tests/fixtures/frank_ca_browser_server.py",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_browser.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs"
+      ],
+      "runtime_files": 3,
+      "test_files": 4,
+      "new_files": 2,
+      "remote_file_readback": "7/7 exact"
+    },
+    "implementation": {
+      "scope": "Only selected PumpSwap target vault: program/discriminator/stored vault/token authority plus same actual finalized holder bank. No DEX-name heuristic or registry change. Uses prior raw snapshot and holder binary results, no I/O or automatic alignment retry.",
+      "slot": "Different actual slots -> OBSERVED_AT_DIFFERENT_SLOTS, no role-filtered percentages. minContextSlot does not pin a bank.",
+      "deduction": "Deduct only selected target vault raw amount, including held fees. Never deduct effective/virtual reserves or entire Owner. Keep other balances under that Owner. Separate Top10 percentage of original MintSupply from percentage of remaining supply.",
+      "conditions": "Exact vault account/Mint/authority/raw amount binding can be known while full mass is incomplete; withhold percentages. Full raw legacy mass proof required for deduction metrics. Omitted zero vault can be accepted only with verified positive mass. Zero remainder withholds percentage of remainder.",
+      "contradictions": "Definite same-slot Mint supply/decimals/program or vault identity/amount/absence disagreement withdraws binary mass, pool ratios, market derived difference and report derived percentages; coverage inconsistent. Raw facts/hashes/previous metrics retained. Prior parsed ranking withdrawn only if its slot equals contradictory bank.",
+      "reporting": "JSON/Markdown/UI expose selected vault identity, raw deduction, both denominators and preserved auxiliary Owner balance. UI recomputes mass, owner aggregation and deductions. Partial identity remains visible without exact percentages. All special-role normalization remains false; independent_provider=false.",
+      "additional_rpc_calls": 0,
+      "additional_http_calls": 0,
+      "unchanged_wire_budget": 1200,
+      "unchanged_seconds": 1800,
+      "reference_idl_blob": "d907b16a91f035aeb3c3182bfa0972a91bf23a86"
+    },
+    "validation": {
+      "baseline_new_python": {
+        "tests": 20,
+        "passed": 0,
+        "failed": 20,
+        "cause": "Absent role module/analyzer wiring on fixed baseline"
+      },
+      "baseline_frontend": {
+        "tests": 79,
+        "passed": 77,
+        "failed": 2
+      },
+      "intermediate_partial_identity_ui": {
+        "tests": 80,
+        "passed": 79,
+        "failed": 1,
+        "cause": "Known vault identity withheld together with unverified global percentages. Kept identity fact, percentages still unavailable."
+      },
+      "intermediate_integration": {
+        "passed": 417,
+        "failed": 1,
+        "cause": "Withdrawing percentage strings before internal assessment caused Decimal InvalidOperation. Moved global percentage withdrawal to report serialization after assessment; preserved original metrics and assertion."
+      },
+      "final_new_python_passed": 24,
+      "final_local_related_python_passed": 418,
+      "final_local_frontend_passed": 133,
+      "syntax_and_diff": "PASS",
+      "fixture_correction": "Aligned previously synthetic pool/holder identities and amounts. Actual decoder + role binder: vault100 + same Owner auxiliary700, other Owners200, supply1000. Raw Owner Top10 98%; after deduct only100, Top10 88% of supply and97.7778% of remaining900. This corrects fixture coherence, no real chain observation.",
+      "cases": [
+        "Forward/reverse target vault;600 vault+200 auxiliary same Owner: after deduct600 Top10 38% original supply,95% remaining400",
+        "Different slots never compute filtered rank; malformed/provenance/program/authority failures unresolved",
+        "Same-bank Mint/vault amount/authority/mint/absence conflicts withdraw both balance and pool derived metrics",
+        "Zero vault missing only accepted after mass proof; zero remaining no denominator",
+        "Known role with partial holder mass displays identity only",
+        "Actual analyzer coverage/completeness/Markdown and original GET/persistence browser flow"
+      ],
+      "log_sha256": {
+        "pool-holder-roles-ui-red.txt": "11a9c75a86b0e8bc1643972afa3117fd3e81d40e6ad43c27ec2ca793ff5bb0ef",
+        "pool-holder-roles-node-final.txt": "6584c09b65f242abbf686a5fb1e3aa63a679fbdb73ffe1c8358fff3f74f5ab5b",
+        "pool-holder-roles-green2.txt": "7d1250e9b91ccd28082a794d132ba821d05e8ab9dd11ff7e48740df00db00f7d",
+        "pool-holder-roles-green.txt": "e9718ffe7c41d4259851d1ffeaeb883d49e0dfc939118f195bea60d44b774ef7",
+        "pool-holder-roles-red.txt": "4fdb84c48e627675027362997770c7d994acec344646ac568ae278f58109bc26",
+        "pool-holder-roles-ui-final2.txt": "5e439443f875e892110c2a20a9e3ff694a65518951f5842e135db7512179da3f",
+        "pool-holder-roles-ui-final.txt": "6c1646593ae87dc5e96b4e3a413c2868a7dbbee3ca2199666242a8b0bc8168af",
+        "pool-holder-roles-ui-green.txt": "1ff360022e93563e0a217bf996972326d78cfaf9b4f3e09afd4c609006b02823",
+        "pool-holder-roles-node.txt": "cc95697af85ec51476293d0754204a401b99753e337364d49be92ed73e943263",
+        "pool-holder-roles-related.txt": "8f59b5b584052ad6fad80f6c1488220ef7f9692f58fa6b544487284632827945",
+        "pool-holder-roles-related-final.txt": "a9e3c3460f1cfbcc0f5ae84b6893c26ce0ad5bd21fe05c6c46fd105ff14928e9"
+      },
+      "ci": {
+        "run_id": 41649048315,
+        "run_number": 85,
+        "job_id": 125962030108,
+        "head": "11541239e1a4e5bf648058787e1a83ce2fb9747a",
+        "merge_ref": "e0d8ac977863dab5c6b2e52bdc846e7c7cd73112",
+        "status": "completed",
+        "conclusion": "success",
+        "python_passed": 1926,
+        "python_skipped": 4,
+        "frontend_passed": 133,
+        "browser_checks": 35,
+        "checks": [
+          "single query entry removes depth selector and explains bounded incomplete evidence",
+          "same-bank binary holder mass and raw Owner ranks persist without provider role or history parity claims",
+          "verified single target-vault deduction preserves auxiliary balance and both denominators without all-LP claim",
+          "same-pool indexer differences persist with source times and no chain parity claim",
+          "raw vault snapshot survives job persistence with visible slot precision and no executable price claim",
+          "signed virtual reserves and waiting-fee separation persist without a double deduction or executable quote",
+          "same-pool explicit quote-unit difference persists with unaligned time and no parity verdict",
+          "worker DONE persists incomplete product outcome and browser shows required evidence gaps",
+          "full mint Owner ranks are separate from raw Top20 history and preserve uncovered history",
+          "external narrative claim persists without exact-CA endorsement or invented publication time",
+          "historical Owner, closure time and one-frontier gap persist without current ownership claims",
+          "persisted Owner account selection, limits and missing closed history remain explicit",
+          "bounded history pages and cursor are visible without claiming full wallet history",
+          "single-mode submits -> distinct real worker persistence -> real report render",
+          "fresh page automatic history read is explicitly unverified and GET only",
+          "new page + empty backend memory -> select original A instead of latest B, GET only",
+          "history controls during pending POST cannot discard the acknowledged job",
+          "failed saved-report read preserves the other pending job",
+          "view saved A while C awaits recovery without replacing C",
+          "unified DONE/report disconnect -> manual GET recovery -> real rendering and pending cleanup",
+          "invalid input is explained without submitting a scan",
+          "visible existing-report entry reads partial historical cache without new POST",
+          "missing history for another CA hides the old report without a new POST",
+          "worker error remains error, no phantom successful report",
+          "local report shortcuts can be cleared without changing backend reports",
+          "blocked localStorage still permits app boot, acknowledged job and GET-only DONE recovery",
+          "edited input during POST is restored to the acknowledged job CA",
+          "edited input during historical GET leaves the paused task reachable and recoverable",
+          "combined CA/F01/D2 preserves manual snapshot reads, local source age and CA report",
+          "GET NETWORK is safely attributed, closes old F01 cards and recovers without POST",
+          "GET JSON is safely attributed, closes old F01 cards and recovers without POST",
+          "GET HTTP is safely attributed, closes old F01 cards and recovers without POST",
+          "intelligence keeps newer SELL and filter snapshot after delayed older BUY",
+          "activity keeps newer SELL and filter snapshot after delayed older BUY",
+          "intelligence filter cannot resurrect cached BUY after failed refresh; D2 remains independent"
+        ],
+        "page_errors": [],
+        "blocked_requests": [],
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "real_ca_posts": 0,
+        "production_requests": 0,
+        "browser": "151.0.7922.34",
+        "cleanup": "browser profile removed, fixture exited, port released",
+        "artifact": {
+          "id": 13236901713,
+          "sha256": "108869944b1ee1b67042c4dd70112023c5f1e9f65435c78a73110eeeb9d00ece"
+        },
+        "browser_scope": "Synthetic Analyzer calls actual binary decoder and role binder with injected local RPC. Real HTTP worker/report persistence/UI/GET recovery, not real representative source acceptance."
+      }
+    },
+    "boundaries": {
+      "installed_mac_last_receipt": "f690fbf6c0beb582fdede50d7b46f126e9ca64ea",
+      "candidate_deployed": false,
+      "real_source_acceptance": false,
+      "real_rpc": 0,
+      "real_ca_posts": 0,
+      "production_requests": 0,
+      "notifications": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "new_services": 0,
+      "new_workflows": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "merged": false,
+      "independent_review": "waived by user; not claimed",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO",
+      "old_failed_job_identity": "UNPROVEN"
+    },
+    "remaining": [
+      "All other pools and special roles, beneficial ownership/control",
+      "Independent holder provider and controlled same-snapshot source comparison",
+      "Large Mint beyond bounded batch and Token-2022 economic semantics",
+      "Full historical account epochs, official attribution/origin, USD/executable price validation",
+      "Real representative CA/source and Mac acceptance"
+    ]
   }
 }
