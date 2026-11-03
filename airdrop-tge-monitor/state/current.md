@@ -1,3 +1,20 @@
+## Latest authoritative terminal cache sync — 2026-11-03 15:04:18 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-03/150418-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-03/150320-attempt.md
+- run_time: 2026-11-03T15:04:18+07:00 (actual attempt 15:03:20, HH:00 schedule unchanged; exact trigger minute unverified)
+- schedule: existing hourly HH:00 Asia/Bangkok UNCHANGED
+- run_status: PARTIAL; verified_complete: false; last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- scheduled_shard: 3; executed_shard: 3; override_reason: fair_default; last_four_executed_shards: [3,0,2,3]; consecutive_same_shard: 1
+- last_meaningful_attempt_at_shard3: 2026-11-03T15:04:18+07:00 PARTIAL_ONLY
+- urgent5 + Surf/StandX + one Shard3; 15 distinct registered identities attempted; bounded Cambria and other existing-registry lifecycle check
+- candidate_count: 9; action_gate_pass: 0; triggered_events: 0; identity_failures: 1; source_failures: 7
+- SOURCE_GAP: StandX DUSD Nov2 primary claim, Concrete additional USDC, Clay Shares private allocation, Cambria personal/new RSGP claim, Crusoe private SPV, Thalassa Robotics issuer, Republic rTTOK private distribution
+- browser_session: UNAVAILABLE (originating browser context error); no authenticated X read; English first-party fallback with honest X gaps
+- Gmail life/work mapped-rights search: 0 relevant; gmail_attempted: false; gmail_sent_readback: NOT_APPLICABLE_NO_ACTION; app_notification: false
+- dedupe: NeoSoul StandX Nov3 registration already mailed Oct23, SurfBoard Nov13 already mailed, Cambria RSGP Oct29 already mailed; no duplicate
+- final_readback: VERIFIED main blob 3966401ba48a8b0ea24aa00c9cbb02ece88ceb07; commit 783cd39e5fcf097d2be78addc2f6760e70839fca
+- task ID/name/schedule/registry/recipient unchanged; no new task, cron, daily TGE email
+
 ## Latest authoritative terminal cache sync — 2026-11-03 14:02:42 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-03/140242-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-03/140113-attempt.md
