@@ -1,3 +1,21 @@
+## Latest authoritative terminal cache sync — 2026-11-03 21:01:21 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-03/210121-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-03/205944-attempt.md
+- run_started: 2026-11-03T20:59:44+07:00 (off-minute invocation; schedule HH:00 unchanged)
+- run_time: 2026-11-03T21:01:21+07:00
+- schedule: existing hourly HH:00 Asia/Bangkok UNCHANGED
+- run_status: PARTIAL; verified_complete: false; last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- scheduled_shard: 0; executed_shard: 0; override_reason: fair_default based on start hour20%4; last_four_executed_shards: [1,2,3,0]; consecutive_same_shard: 1
+- last_meaningful_attempt_at_shard0: 2026-11-03T21:01:21+07:00 PARTIAL_ONLY
+- urgent5 + Surf/StandX + exactly one Shard0 (10 registered entries; 15 distinct identities including dynamic), bounded Cambria/NeoSoul/StandX lifecycle
+- candidate_count: 7; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 7
+- SOURCE_GAP: StandX Nov2 DUSD issuer original/claim, Concrete extra USDC, Clay Shares private, Block Stranding current issuer, TurboFlow current issuer, Makina recovery, HEEBOO current issuer
+- browser_session: UNAVAILABLE (originating browser context); original StandX X HTTP403; official docs and independent English discovery fallback. Secondary Nov2 DUSD claim lead is NOT Tier A/B ACTION.
+- Gmail life/work read-only rights search: zero new Tier B rights; no Gmail Sent/send and no App output.
+- dedupe: SurfBoard Nov13, NeoSoul StandX Nov3 22:59, Cambria Base RSGP Oct29, StandX Oct15 winddown unchanged; no material first-party delta.
+- final_readback: VERIFIED main blob 01843224a985fd38cbac1ef50322cd2518319c06; commit 0d62adff24a5382d5f58445971612f92c1973e6a
+- task ID/name/schedule/registry/recipient unchanged; no new task, Mac, cron or daily TGE email
+
 ## Latest authoritative terminal cache sync — 2026-11-03 19:59:06 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-03/195906-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-03/195728-attempt.md
