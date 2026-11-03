@@ -3170,5 +3170,97 @@
       "Large-Mint nonzero balances beyond bounded cohort; Token-2022 economic mass",
       "Independent provider/same-snapshot reconciliation, full history and real source acceptance"
     ]
+  },
+  "ca_user_chrome_special_roles_followup_20261104": {
+    "observed_at_utc": "2026-11-03T19:04:54.838Z",
+    "verdict": "PASS_USER_CONNECTED_GOOGLE_CHROME_FOUR_STATE_SYNTHETIC_UI; REAL_CA_SOURCE_ACCEPTANCE_UNVERIFIED",
+    "source": {
+      "code_pr": 220,
+      "code_head": "cd353c15628c491c116dd5a53434bcacbd160512",
+      "runtime_changed": false,
+      "app_js_sha256": "b0a0a9a3849fa71e87ef866da147cbccb3e713e63a691d73cb292f23be8b4329",
+      "qa_app_js_matches_candidate": true,
+      "qa_site_project_id": "appgprj_6ae9f8b543c481918dfb014559946d0a",
+      "qa_site_source_commit": "601153335f302a04b975138b6f0cf405e5c90a39",
+      "qa_site_version_id": "appgprj_6ae9f8b543c481918dfb014559946d0a~appgver_21242fe38e608191aace5f20d95c79ff",
+      "qa_site_deployment_id": "appgdep_6aea2fb149188191b3a362145cd977d6",
+      "qa_site_deployment_status": "succeeded",
+      "qa_url": "https://frank-role-isolated-qa-20261103.sappypanel.chatgpt.site",
+      "audience": "owner-only custom access; one user, zero editors and zero external visitors"
+    },
+    "browser": {
+      "family": "Chrome",
+      "surface": "user-connected extension browser, not CI Chromium",
+      "login": "On this continuation, direct navigation reached actual QA UI. No authentication action or auth-domain retry was performed.",
+      "observations": {
+        "normal": {
+          "mode": " 当前：normal",
+          "exact": true,
+          "auxiliary700": true,
+          "runtimeError": false
+        },
+        "partial": {
+          "mode": " 当前：partial",
+          "withheld": true,
+          "exact": false
+        },
+        "corrupt": {
+          "mode": " 当前：corrupt",
+          "withheld": true,
+          "exact": false
+        },
+        "legacy": {
+          "mode": " 当前：legacy",
+          "specialPanels": 0,
+          "singlePoolPanels": 0
+        },
+        "restored": {
+          "mode": " 当前：normal",
+          "exact": true
+        }
+      },
+      "normal_values": {
+        "pump_vault_raw": "100",
+        "orca_vault_raw": "20",
+        "deducted_raw": "120",
+        "pool_owner_auxiliary_retained_raw": "700",
+        "unknown_role_raw": "880",
+        "top10_pct_of_original_supply": "88%",
+        "top10_pct_of_remaining": "100%"
+      },
+      "completeness": "Visible evidence-incomplete state rendered from actual report_completeness builder; overall never complete",
+      "site_origin_console_errors": [],
+      "extension_observation": "Separate wallet-extension scripts emitted their own injection/listener messages. They were not candidate app.js errors and no wallet interaction was performed.",
+      "screenshot_sha256": "057ec3368cdf0b8691571cad83246e31aea5ba20c6bce3c7683c3dc85f1e810a",
+      "page_left_open": true,
+      "final_state": "normal known-exclusion ranking visible"
+    },
+    "qa_fixture_repair": {
+      "before": "Actual Chrome page header showed candidates.filter is not a function because static QA fetch mock returned an object for array API contracts. Standalone report also omitted analysis_completeness.",
+      "after": "Only private QA harness changed: candidates/trades/decisions/review endpoints now return arrays; other mocks preserve rows/summary shape; actual report_completeness attached to fixture. Same exact shipped app.js retained. Reloaded Chrome: no runtime failure text, completeness shows evidence incomplete.",
+      "scope": "No production source or fixture worker regression files changed this continuation. Prior defect and source commit b42c0994 preserved by Site history and prior Git entry."
+    },
+    "boundaries": {
+      "real_ca_scan_started": false,
+      "real_rpc_started": false,
+      "frank_production_deployed": false,
+      "real_source_acceptance": false,
+      "backend_http_job_acceptance": "Prior fixed CI run89 only; this static private Chrome page does not exercise real backend job persistence.",
+      "notifications": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "new_workflows": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "merged": false,
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO",
+      "old_failed_job_identity": "UNPROVEN"
+    },
+    "remaining": [
+      "Other unknown pool programs and exhaustive offchain CEX/MM/special identities are not proven; unknown-role balances remain explicit.",
+      "Large Mint/Token-2022 economics and independent provider, full historical epochs and real representative CA source acceptance remain incomplete.",
+      "Frank production Mac installation not performed."
+    ]
   }
 }
