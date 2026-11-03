@@ -1,0 +1,87 @@
+{
+  "report_date": "2026-11-04",
+  "status": "DRAFT_UNVERIFIED",
+  "qa_status": "QA_PENDING",
+  "novelty_ci_status": "CI_NOT_PROVEN",
+  "browser_session": "BROWSER_UNAVAILABLE",
+  "x_source_gap": true,
+  "source_gap": [
+    "sector detail",
+    "full per-item original IR checks"
+  ],
+  "previous_sent_window": "2026-10-28..2026-11-03",
+  "events": [
+    {
+      "family_key": "us_equity_close",
+      "material_version": "2026-11-03_close",
+      "primary_section": "一",
+      "source": "https://apnews.com/article/95ac47c160dba546cbbdf72c10010e2c",
+      "published_at": "2026-11-03",
+      "novelty_proof": "ROUTINE_DATED_FACT",
+      "observed_at": "2026-11-04T05:35:36+07:00"
+    },
+    {
+      "family_key": "us_market_breadth",
+      "material_version": "2026-11-03_six_sectors_down",
+      "primary_section": "一",
+      "source": "https://www.reuters.com/business/retail-consumer/us-stock-futures-mixed-apple-slides-midterms-loom-2026-11-03/",
+      "published_at": "2026-11-03",
+      "novelty_proof": "MATERIAL_DELTA",
+      "observed_at": "2026-11-04T05:35:36+07:00"
+    },
+    {
+      "family_key": "apple_margin_market_reaction",
+      "material_version": "2026-11-03_regular_close",
+      "primary_section": "二",
+      "source": "https://www.reuters.com/business/retail-consumer/us-stock-futures-mixed-apple-slides-midterms-loom-2026-11-03/",
+      "published_at": "2026-11-03",
+      "novelty_proof": "MATERIAL_DELTA",
+      "observed_at": "2026-11-04T05:35:36+07:00"
+    },
+    {
+      "family_key": "ai_chip_rebound",
+      "material_version": "2026-11-03_regular_close",
+      "primary_section": "二",
+      "source": "https://www.reuters.com/business/retail-consumer/us-stock-futures-mixed-apple-slides-midterms-loom-2026-11-03/",
+      "published_at": "2026-11-03",
+      "novelty_proof": "MATERIAL_DELTA",
+      "observed_at": "2026-11-04T05:35:36+07:00"
+    },
+    {
+      "family_key": "oil_benchmark",
+      "material_version": "2026-11-03_settlement",
+      "primary_section": "三",
+      "source": "https://www.reuters.com/markets/commodities/oil-rises-after-report-us-strike-irans-qeshm-island-2026-11-03/",
+      "published_at": "2026-11-03",
+      "novelty_proof": "ROUTINE_DATED_FACT",
+      "observed_at": "2026-11-04T05:35:36+07:00"
+    },
+    {
+      "family_key": "anthropic_ipo",
+      "material_version": "2026-11-02_s1a_unchanged",
+      "primary_section": "五",
+      "source": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm",
+      "published_at": "2026-11-02",
+      "novelty_proof": "WATCH_ONLY",
+      "observed_at": "2026-11-04T05:35:36+07:00"
+    },
+    {
+      "family_key": "us_midterm_election",
+      "material_version": "2026-11-03_vote",
+      "primary_section": "七",
+      "source": "https://www.reuters.com/world/china/global-markets-wrapup-1-2026-11-03/",
+      "published_at": "2026-11-03",
+      "novelty_proof": "NEW",
+      "observed_at": "2026-11-04T05:35:36+07:00"
+    },
+    {
+      "family_key": "us_employment_release",
+      "material_version": "2026-11-06_schedule",
+      "primary_section": "九",
+      "source": "https://www.bls.gov/schedule/2026/11_sched_list.htm",
+      "published_at": "2026-11-06",
+      "novelty_proof": "ROUTINE_DATED_FACT",
+      "observed_at": "2026-11-04T05:35:36+07:00"
+    }
+  ]
+}
