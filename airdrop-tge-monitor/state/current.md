@@ -1,3 +1,20 @@
+## Latest authoritative terminal cache sync — 2026-11-03 11:57:32 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-03/115732-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-03/115633-attempt.md
+- run_time: 2026-11-03T11:57:32+07:00 (off-minute invocation, not proof of HH:00 scheduler trigger)
+- schedule: existing hourly HH:00 Asia/Bangkok UNCHANGED
+- run_status: PARTIAL; verified_complete: false; last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- scheduled_shard: 3; executed_shard: 3; override_reason: fair default; last_four_executed_shards: [1,1,3,3]; consecutive_same_shard: 2
+- last_meaningful_attempt_at_shard3: 2026-11-03T11:57:32+07:00 PARTIAL_ONLY
+- urgent5 + Surf/StandX + exactly one Shard3; 15 distinct registered identities; bounded existing-project lifecycle leads
+- candidate_count: 9; action_gate_pass: 0; triggered_events: 0; identity_failures: 1 (Thalassa Holdings collision rejected); source_failures: 5
+- SOURCE_GAP: StandX DUSD Nov2 issuer original/claim portal, Concrete additional USDC, Crusoe mapped private SPV, Thalassa Robotics current canonical issuer, Republic rTTOK private rights
+- browser_session: UNAVAILABLE originating browser context; no authenticated X post read; official English fallback and honest source gaps
+- Gmail life/work rights search: no new mapped Tier B; gmail_attempted: false; gmail_sent_readback: NOT_APPLICABLE_NO_ACTION; App: false
+- dedupe: NeoSoul StandX Nov3 22:59 Bangkok already mailed Oct23, SurfBoard Nov13 already mailed, Cambria RSGP Oct29 already mailed; no duplicate
+- final_readback: VERIFIED main blob 71c289b94dde54d227a7ca937309e4a44ff3f34a, commit 80c965192031b0fda70e2fcd9ec006be71400b96
+- task ID/name/schedule/registry/recipient unchanged; no new task, cron, daily TGE email
+
 # Airdrop / TGE Monitor State
 ## Latest authoritative terminal cache sync — 2026-11-03 11:03:16 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-03/110316-final.md
