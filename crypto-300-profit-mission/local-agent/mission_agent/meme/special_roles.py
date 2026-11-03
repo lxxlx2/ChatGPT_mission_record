@@ -114,28 +114,77 @@ def derive_special_ranks(mint,check,pools,registry=None):
 def collect_special_roles(mint,source,market,rpc,registry=None):
     out={'version':1,'status':'INCOMPLETE_EVIDENCE','mint':mint,'pools':[],
          'all_special_roles_normalized':False,'independent_provider':False,'max_pools':MAX_POOLS,
-         'discovery_scope':'BOUNDED_INDEXER_HINTS_NOT_ALL_POOLS'}
+         'discovery_scope':'BOUNDED_INDEXER_AND_HOLDER_OWNER_HINTS_NOT_ALL_POOLS',
+         'owner_hint_scope':'SELF_AUTHORITY_POOL_OWNERS_NOT_GLOBAL_AUTHORITY_REVERSE_LOOKUP',
+         'rejected_owner_pool_hints':0}
     if not isinstance(source,dict) or source.get('requested') is not True:return {**out,'status':'NOT_REQUESTED','reason':'NO_ENUMERATION'}
-    if not isinstance(market,dict) or market.get('status')!='OK' or market.get('source')!='DEXSCREENER_API' or market.get('mint')!=mint:return {**out,'reason':'POOL_DISCOVERY_SOURCE_UNVERIFIED'}
-    hints=[market.get('main_pair')]+(market.get('pool_candidates') or [])
-    candidates=[];seen=set()
-    for hint in hints:
+    good_market=isinstance(market,dict) and market.get('status')=='OK' and market.get('source')=='DEXSCREENER_API' and market.get('mint')==mint
+    out['indexer_discovery_status']='AVAILABLE' if good_market else 'UNAVAILABLE'
+    index_hints=([market.get('main_pair')]+(market.get('pool_candidates') if isinstance(market.get('pool_candidates'),list) else [])) if good_market else []
+    indices=[]
+    for hint in index_hints[:65]:
         if not isinstance(hint,dict) or hint.get('base_address')!=mint:continue
         a=hint.get('pair_address');q=hint.get('quote_address')
-        if not all(valid_pubkey(k) for k in (a,q)) or a in seen or len({mint,a,q})!=3:continue
-        candidates.append((a,q));seen.add(a)
-    out['candidate_count']=len(candidates);out['not_selected_pool_hints']=max(0,len(candidates)-MAX_POOLS)+max(0,market.get('pool_candidates_not_selected',0))
-    candidates=candidates[:MAX_POOLS]
+        if not all(valid_pubkey(k) for k in (a,q,mint)) or len({mint,a,q})!=3:continue
+        indices.append({'pool_address':a,'quote_mint':q,'candidate_sources':['DEXSCREENER_API'],'owner_hints':[]})
+    owner_hints=source.get('owner_pool_hints');owner_hints=owner_hints if isinstance(owner_hints,list) else []
+    accounts=source.get('accounts') if isinstance(source.get('accounts'),list) else []
+    accounts_by_address={r['token_account']:r for r in accounts if isinstance(r,dict) and valid_pubkey(r.get('token_account'))}
+    slot=source.get('snapshot_slot');sha=source.get('response_sha256');owners=[]
+    def hash_ok(v):return isinstance(v,str) and len(v)==64 and all(c in '0123456789abcdef' for c in v)
+    for h in owner_hints[:8]:
+        good=isinstance(h,dict) and source.get('mint')==mint and type(slot) is int and slot>0 and hash_ok(sha)
+        if good:
+            a=h.get('pair_address');q=h.get('quote_address');v=h.get('target_vault');ref=accounts_by_address.get(v) if isinstance(v,str) else None
+            good=(h.get('source')=='SOLANA_FINALIZED_OWNER_ACCOUNT_LAYOUT' and h.get('hint_status')=='STRUCTURAL_POOL_HINT_NOT_ROLE_PROOF'
+                and h.get('base_address')==mint and h.get('authority')==a and all(valid_pubkey(k) for k in (a,q,v)) and len({mint,a,q,v})==4
+                and type(h.get('enumeration_slot')) is int and h['enumeration_slot']==slot and h.get('enumeration_response_sha256')==sha
+                and type(h.get('owner_metadata_slot')) is int and h['owner_metadata_slot']>=slot and hash_ok(h.get('owner_metadata_response_sha256'))
+                and ref is not None and ref.get('owner')==a)
+        if not good:out['rejected_owner_pool_hints']+=1;continue
+        owners.append({'pool_address':a,'quote_mint':q,'candidate_sources':['HOLDER_OWNER_ACCOUNT'],'owner_hints':[h]})
+    out['owner_pool_hints_available']=len(owners)
+    # Keep the main pair first, then alternate owner and remaining index hints.
+    # A long index list cannot starve every owner-derived candidate.
+    ordered=indices[:1]
+    for i in range(max(len(owners),len(indices[1:]))):
+        if i<len(owners):ordered.append(owners[i])
+        if i<len(indices[1:]):ordered.append(indices[i+1])
+    merged={}
+    for hint in ordered:
+        a=hint['pool_address']
+        if a not in merged:merged[a]=hint.copy();merged[a]['candidate_sources']=list(hint['candidate_sources']);merged[a]['owner_hints']=list(hint['owner_hints'])
+        else:
+            row=merged[a]
+            if row['quote_mint']!=hint['quote_mint']:row['hint_quote_conflict']=True
+            row['candidate_sources']=sorted(set(row['candidate_sources']+hint['candidate_sources']))
+            row['owner_hints']+=hint['owner_hints']
+    all_candidates=list(merged.values());out['candidate_count']=len(all_candidates)
+    index_skipped=market.get('pool_candidates_not_selected',0) if good_market else 0
+    index_skipped=index_skipped if type(index_skipped) is int and index_skipped>=0 else 0
+    owner_summary=source.get('owner_pool_discovery') or {};owner_skipped=owner_summary.get('hints_not_selected',0) if isinstance(owner_summary,dict) else 0
+    owner_skipped=owner_skipped if type(owner_skipped) is int and owner_skipped>=0 else 0
+    out['not_selected_pool_hints']=max(0,len(all_candidates)-MAX_POOLS)+index_skipped+owner_skipped+max(0,len(owner_hints)-8)+max(0,len(index_hints)-65)
+    candidates=all_candidates[:MAX_POOLS]
     if not candidates:return {**out,'reason':'NO_VALID_POOL_HINTS'}
-    response=rpc.call('getMultipleAccounts',[[a for a,_ in candidates],{'encoding':'base64','commitment':'finalized'}],ttl=30)
+    discovery_cfg={'encoding':'base64','commitment':'finalized'}
+    owner_slots=[h['owner_metadata_slot'] for p in candidates for h in p['owner_hints']]
+    if owner_slots:discovery_cfg['minContextSlot']=max(owner_slots)
+    response=rpc.call('getMultipleAccounts',[[p['pool_address'] for p in candidates],discovery_cfg],ttl=30)
     discovery_slot=_slot(response);values=response.get('value')
     if not isinstance(values,list) or len(values)!=len(candidates):return {**out,'reason':'DISCOVERY_RESPONSE_INVALID'}
     out['discovery_slot']=discovery_slot;out['discovery_response_sha256']=digest(response)
     accepted=[]
-    for (address,quote),account in zip(candidates,values):
-        row={'pool_address':address,'quote_mint':quote,'status':'UNVERIFIED'}
+    for candidate,account in zip(candidates,values):
+        address=candidate['pool_address'];quote=candidate['quote_mint']
+        row={**candidate,'status':'UNVERIFIED'}
         try:
+            if row.get('hint_quote_conflict'):raise PoolSourceError('POOL_HINT_QUOTE_CONFLICT')
             d=decode_pool(account,address)
+            for h in row['owner_hints']:
+                target_vault=d['base_vault'] if d['base_mint']==mint else d['quote_vault'] if d['quote_mint']==mint else None
+                if d['authority']!=h['authority'] or target_vault!=h['target_vault']:raise PoolSourceError('OWNER_HINT_POOL_CHANGED')
+                if discovery_slot<h['owner_metadata_slot']:raise PoolSourceError('DISCOVERY_BEFORE_OWNER_HINT')
             if {d['base_mint'],d['quote_mint']}!={mint,quote}:raise PoolSourceError('POOL_PAIR_MISMATCH')
             row.update(status='DISCOVERED',decoded=d);accepted.append(row)
         except (ValueError,TypeError,KeyError) as exc:row['reason']=str(exc) if isinstance(exc,PoolSourceError) else 'POOL_RESPONSE_INVALID'

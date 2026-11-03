@@ -984,3 +984,18 @@ test('loading legacy report clears the multi-pool evidence panel',()=>{
   const h=harness();h.context.renderClusterReport(specialRoleReportForUi());
   h.context.renderClusterReport(fixture);assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/cluster-special-roles/);
 });
+
+
+test('Owner-derived pool discovery is visible without implying a complete reverse index',()=>{
+  const h=harness(),r=specialRoleReportForUi(),a=r.special_address_roles;
+  a.owner_pool_hints_available=1;a.rejected_owner_pool_hints=2;a.pools[0].candidate_sources=['HOLDER_OWNER_ACCOUNT'];
+  h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
+  assert.match(html,/已读 Owner 账户/);assert.match(html,/有效 Owner 池线索 1/);assert.match(html,/拒绝的 Owner 线索 2/);
+  assert.match(html,/共享全局 authority/);assert.match(html,/已知排除口径已复算/);
+});
+
+test('unknown pool candidate source never echoes arbitrary provider text',()=>{
+  const h=harness(),r=specialRoleReportForUi();r.special_address_roles.pools[0].candidate_sources=['https://private.invalid/SECRET'];
+  h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
+  assert.match(html,/未核实来源/);assert.doesNotMatch(html,/private.invalid|SECRET/);
+});

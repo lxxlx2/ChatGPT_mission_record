@@ -97,8 +97,14 @@ def fixture_special_roles(mint,source,market):
         def call(self,method,params,ttl=0):
             assert method=='getMultipleAccounts' and len(params[0])<=100
             return {'context':{'slot':101},'value':[values[a] for a in params[0]]}
-    hints={**market,'pool_candidates':[{'pair_address':pool2,'base_address':mint,'quote_address':quote}]}
-    return collect_special_roles(mint,source,hints,RPC())
+    from mission_agent.meme.holder_ranks import discover_owner_pool_hint
+    from mission_agent.meme.special_roles import digest
+    owner_response={'context':{'slot':101},'value':[orca]}
+    hint=discover_owner_pool_hint(mint,pool2,orca,101,source['snapshot_slot'],source['response_sha256'],digest(owner_response),{r['token_account']:r['owner'] for r in source['accounts']})
+    assert hint is not None
+    source['owner_pool_hints']=[hint]
+    source['owner_pool_discovery']={'hints_not_selected':0,'additional_rpc_calls':0}
+    return collect_special_roles(mint,source,market,RPC())
 
 
 class FixtureAnalyzer:
