@@ -248,3 +248,13 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - repeated_alert_policy: unchanged Oct29 date, Base chain and My Cambria Journey visibility are ALREADY NOTIFIED. A new email only for a freshly issuer-verified actual claim opening, changed deadline, actual wallet-specific rights, contract migration/change, material postponement or other urgent user action, with distinct version and Gmail Sent dedupe.
 - critical_negative_guard: user-suppressed independent Abstract/ABS token watch does not exclude Cambria-as-registered-project rights that were earned on Abstract but settle on Base.
 
+## 2026-11-04 candidate — StandX $DUSD claim-window transition, original-post readback unresolved
+- source_project: StandX (existing urgent Registry member, not new)
+- event_family_key: `standx:dusd_claim_window_open:2026-11` (distinct from `standx:winddown_dusd_airdrop:2026-10-15` and distinct from NeoSoul's StandX community rights)
+- historic_issuer_announcement: Oct15 original projected Nov1 claim start; Oct31 public-account report postponed because Binance withdrawals were closed.
+- public_account_post_candidate: `https://x.com/StandX_Official/status/2117039675559026937` dated Nov1 2026 23:42 UTC, quoted by two independent X post mirrors `https://teapaw.org/StandX_Official/status/2117039675559026937` and `https://twiscan.com/en/x/StandX_Official/2117039675559026937`.
+- mirror_text_claim: claim opens 2026-11-02 00:00 UTC, closes 2026-12-31 08:00 UTC, issuer-listed entry `https://standx.com/airdrop`. This is THIRD_PARTY_COPIED_ACCOUNT_TEXT, not directly readable original, as X direct returned HTTP403 and issuer's JS claim application was not readable on 2026-11-04 in this check.
+- prior_sent_dedupe: Gmail search from Oct15 through Nov4 yielded Oct15 winddown alert ID `1a13e6930e07d0ae` and Oct23 NeoSoul alert ID `1a168dd4a732eab4` but NO separately sent DUSD Nov2 claim-open notice; old winddown notice DOES NOT suppress this material status transition once authoritative proof is obtained.
+- user_claimable_allocation: UNVERIFIED; user-facing online claim interaction: UNVERIFIED; source tier for ACTION: `PENDING_DIRECT_FIRST_PARTY_OR_MAPPED_B`.
+- action_status: `HIGH_PRIORITY_FIRST_PARTY_CLAIM_WINDOW_VERIFY`, `NO_GMAIL_YET`. Next existing urgent slot should read the original named account or canonical issuer endpoint and status, validate exact claim period and new user action, apply ACTION_GATE (including no duplicates), then send exactly one authorized Gmail with source and eligibility caveat iff proof passes; otherwise record source gap and remain silent.
+- no extra task, no local cron, no assumption that current interactive X Home tab can be navigated by unattended schedule.
