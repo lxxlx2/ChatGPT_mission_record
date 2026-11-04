@@ -1184,7 +1184,12 @@ class Handler(BaseHTTPRequestHandler):
         return self._json(job,202)
 
 
-class IPv6ThreadingHTTPServer(ThreadingHTTPServer):
+class DashboardHTTPServer(ThreadingHTTPServer):
+    # Concurrent panel reads can overflow the stdlib's five pending accepts.
+    request_queue_size = 64
+
+
+class IPv6ThreadingHTTPServer(DashboardHTTPServer):
     address_family = socket.AF_INET6
 
 
@@ -1192,5 +1197,5 @@ def serve(production_root: Path, control_root: Path, host: str = "127.0.0.1", po
     if host not in {"127.0.0.1", "localhost", "::1"} or not _host_is_loopback(host, port):
         raise ValueError("MISSION_CONTROL_LOCALHOST_ONLY")
     Handler.state = DashboardState(production_root, control_root)
-    server_cls = IPv6ThreadingHTTPServer if ":" in host else ThreadingHTTPServer
+    server_cls = IPv6ThreadingHTTPServer if ":" in host else DashboardHTTPServer
     server_cls((host, port), Handler).serve_forever()
