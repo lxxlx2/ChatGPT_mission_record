@@ -1,26 +1,30 @@
 # Frank 原问题统一验收（2026-11-04）
 
-固定产品源码：`5f86548ccfb51144280ec16ff0431aaac966b323`；本轮起点：`33f2df95e9759adac0128ed39c56ecfbf1a4925d`。当前状态见 [STATUS](./STATUS.md)，机器证据见 [回执](./evidence/frank-mainline-acceptance-20261104.json)。
+固定产品源码：`e069a925b71985c35b75cc8fd01eb75a9c97dd87`；本轮父提交：`5f86548ccfb51144280ec16ff0431aaac966b323`。前轮33f2→5f86548原始验收保留于历史回执；本轮增量见[失败交易修复证据](./evidence/frank-failed-tx-replay-20261104.json)。当前状态见 [STATUS](./STATUS.md)，机器证据见 [回执](./evidence/frank-mainline-acceptance-20261104.json)。
 
 结论：**修复与本机交付 PASS；真实来源验收及原始完整诉求 PARTIAL；INVEST_NO_GO / TRADE_NO_GO。** 不以CI、合成结果或任务结束代替全量尽调。独立review按用户豁免；本轮没有额外功能扩展、付费采购、交易或新监控。
 
 | 原问题 / 交付项 | 实际验收 | 结论 |
 |---|---|---|
 | Scanner复用已有私有RPC、恢复/去重维护 | 原固定1f2c6af仍运行；本轮实时快照LIVE/0错误/无漂移/无积压；未执行Scanner重启 | 原维护已完成；自然新BUY/长期行为仍不外推 |
-| 最新CA候选留在Git，实际Mac仍旧版 | 最终完整SHA已安装，PID83492，服务HTML/JS与固定源码匹配；旧源码和28份报告备份/哈希核验 | PASS |
+| 最新CA候选留在Git，实际Mac仍旧版 | 最终完整SHA已安装，PID96221，服务HTML/JS与固定源码匹配；旧源码和28份报告备份/哈希核验 | PASS |
 | 单一查询、移除通用CA默认金额 | 实际Chrome无深度选择器、无默认$30；研究结束与完整性分开 | PASS |
-| 失败残留旧结果、任务恢复、数据乱序 | 本机实际旧job GET恢复，无效CA后隐藏、再读取恢复；前端151回归 | PASS，对原10月故障归因仍UNRESOLVED |
+| 失败残留旧结果、任务恢复、数据乱序 | 本机实际旧job GET恢复，无效CA后隐藏、再读取恢复；前端153回归 | PASS，对原10月故障归因仍UNRESOLVED |
 | 未采集来源却写作已尝试 | 真实只读RPC案例复现MARKET_CLIENT_DISABLED；JSON/Markdown/UI均改为未采集，反例先红后绿 | PASS |
 | 本机并发GET瞬时连接复位 | 实际serve路径并发24旧版64/100、新版100/100；监听待接入队列5→64；独立对照有同类机制 | PASS，仅修该已复现机制，不宣称原Chrome事件唯一根因 |
+| 失败交易被计入正数归集 | 同批572请求严格离线重放，115→108，移除7条全为失败交易；资金/交易/图边/历史窗口不变 | PASS，新真实请求0 |
+| 0%误读为不存在共同控制 | 实际Chrome与Markdown改为已覆盖样本未建立证据；明确不排除隐蔽控制，未知与正值不改 | PASS |
 | 持有人/Owner/去池排名与特殊身份真实准确 | 真实一次请求完成；全Mint枚举6次HTTP429，未得到全量源，不能升级完整排名/身份结论 | PARTIAL / SOURCE_UNAVAILABLE |
 | 完整首买/资金、独立市场与叙事 | 17个历史窗口仍有13个PAGE_LIMIT；市场/独立/叙事按批准范围未采集，不伪造已用来源 | PARTIAL / NOT_COLLECTED |
 | 当前钱包真实持仓 | 既有D2 4898账户/Mint、100行/49页可读，来源仍11月1日；本轮CA验收不替代全钱包采集 | PARTIAL，非持续当前余额 |
 | MC/盈利研究/新通知延迟 | 用户签名工件及自然新BUY样本仍缺；P0/P1已结项、不续预算 | NO_GO保持 |
 
-本机最终HEAD：2077 Python通过、3无关numpy跳过、14 warnings（85.83秒）；151前端通过。CI [run103](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41808345542)原日志读回2076 Python/4跳过、151前端、41隔离Chromium，真实RPC/生产请求0。平台skip差异不混算。
+本机最终HEAD：2089 Python通过、3无关numpy跳过、14 warnings（102.75秒）；153前端通过。CI [run105](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41853676484)原日志读回2088 Python/4跳过、153前端、41隔离Chromium，真实RPC/生产请求0。平台skip差异不混算。
 
 用户明确批准的一次真实来源验收：仅既有CA/既有私有RPC，硬上限1200 wire/1800秒。实际**572 wire、15缓存命中、340.818秒**，其中566份原始JSON响应及572份请求哈希核对通过，6次GPA为HTTP429。原始采集执行于33f2，最终源码仅用同批已捕获数据重新派生正确来源状态，无第二次真实查询，未用预算不结转。
 
 本次真实报告的合约/余额/角色/历史/控制归因均为部分覆盖，市场/独立来源/叙事未采集；最终`INCOMPLETE_EVIDENCE`。来源时间为2026-11-04 16:17:33 Asia/Bangkok，不代表后来时点仍当前。原始图谱/响应/日志在Git外私有保存，公开只保留摘要、哈希与限额。
 
 免费来源数据阻断已证实：在不替换来源、不增加查询预算的当前一次范围内，无法补出缺失全量Mint结果及全部身份。没有以买服务、换供应商、延长TTL或重复扫描绕过。此处不能关作“全部原问题已解决”。
+
+本轮在固定e069a925提交后再次执行真实捕获数据的完整离线重放，572/572请求字节按原顺序匹配，566响应哈希通过，15次原TTL算法缓存命中。成功状态必须由meta.err显式为null证明；失败/缺失/null metadata不产生转账经济证据，游标继续推进。仅consolidation_evidence一个报告根字段改变；新报告SHA256 `494b480cef5d31f158eff11be40d2e2b8a4e6e22c0de380db13105c1cd2086f4`。历史虚拟时钟不代表新鲜度或真实延迟测试，生产旧报告未被改写。
