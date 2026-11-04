@@ -1,3 +1,12 @@
+## Latest terminal cache sync — 2026-11-05 00:56:12 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-05/005612-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-05/005612-attempt.md
+- final_readback: VERIFIED blob bbf3478aef09b5efc28cb95bee3b04af16297c8e; commit 1bc3deb5b0c65b35ee2952fd8cde23daabd8fa83
+- run_status: PARTIAL; scheduled_shard: 0; executed_shard: 0; last_meaningful_attempt_at_shard0: 2026-11-05T00:56:12+07:00 PARTIAL_ONLY
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 7; gmail_attempted: false; app_notification: false
+- StandX DUSD claim original and live eligibility SOURCE_GAP; SurfBoard Nov13 already delivered; no new ACTION.
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+
 ## Latest terminal cache sync — 2026-11-04 23:03:07 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-04/230307-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-04/230307-attempt.md
