@@ -1,3 +1,11 @@
+## Latest terminal cache sync — 2026-11-04 09:00:08 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-04/090008-final.md
+- final_readback: VERIFIED blob 7208bb6bd02288c2d114092d8e54c9c1973de1c1; commit 82a43826f3d57076a2b2e7fc2b53c5d4e09eeea2
+- run_status: PARTIAL; scheduled_shard: 0; executed_shard: 0; last_meaningful_attempt_at_shard0: 2026-11-04T09:00:08+07:00 PARTIAL_ONLY
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 unchanged
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 6; gmail_attempted: false; app_notification: false
+- browser_session: UNAVAILABLE_NOT_INVOKED; partial English public official fallback; no authenticated X read. Existing task unchanged.
+
 ## Latest terminal cache sync — 2026-11-04 05:59:04 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-04/055904-final.md
 - final_readback: VERIFIED blob 8d48cfbbe8e5ea522ea792a6b6b7f15f33cca1e8; commit 958ed9215258e99d80d6c54f681bd2334c53bab8
