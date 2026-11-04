@@ -1957,8 +1957,10 @@ function renderClusterCompleteness(report) {
     const rows=requirements.filter(r=>r && r.id===id);
     if (valid && rows.length===1 && rows[0].status==='VERIFIED_SNAPSHOT' && ['holder_balances','holder_roles'].includes(id)) return [];
     const state=rows.length===1 ? states[rows[0].status] : null;
+    const sourceLabel=valid && rows.length===1 && rows[0].status==='NOT_COLLECTED'
+      ? '无（尚未采集）' : valid ? labels[2] : '未记录，旧报告未做本轮来源复核';
     return ['<li><strong>'+esc(labels[0])+'</strong>：'+esc(state || '尚未评估')+'。'+esc(labels[1])+
-      '。已用来源：'+esc(valid ? labels[2] : '未记录，旧报告未做本轮来源复核')+'；下一来源：'+esc(labels[3])+'。</li>'];
+      '。已用来源：'+esc(sourceLabel)+'；下一来源：'+esc(labels[3])+'。</li>'];
   });
   node.innerHTML='<h2>'+esc(clusterCompletenessLabel)+'</h2><p>任务执行结束与尽调完整性分别核实；余额排名已核实也不能证明完整历史或可买。</p>'+
     (!valid ? '<p>此报告没有受支持的完整性记录，保留原始证据，不补造已验收结论。</p>' : '')+

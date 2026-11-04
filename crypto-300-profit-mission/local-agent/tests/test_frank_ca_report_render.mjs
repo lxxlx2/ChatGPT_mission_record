@@ -1077,3 +1077,14 @@ test('source account and legacy identity labels remain unverified outside the ac
   assert.match(h.context.holderRole({role:'UNRECOGNIZED_PRIVATE_VALUE'}),/身份未核实/);
   assert.doesNotMatch(h.context.holderRole({role:'UNRECOGNIZED_PRIVATE_VALUE'}),/UNRECOGNIZED_PRIVATE_VALUE/);
 });
+
+test('uncollected completeness domains never label capability paths as used sources',()=>{
+  const h=harness();
+  h.context.renderClusterReport({...fixture,analysis_completeness:{version:1,
+    status:'INCOMPLETE_EVIDENCE',requirements:['market','independent_sources','narrative']
+      .map(id=>({id,status:'NOT_COLLECTED'}))}});
+  const html=h.element('cluster-completeness').innerHTML;
+  assert.equal((html.match(/已用来源：无（尚未采集）/g)||[]).length,3);
+  assert.doesNotMatch(html,/已用来源：市场参考|已用来源：同池索引来源|已用来源：有界发射台/);
+  assert.match(html,/全局持有人余额排名/,'unrecorded required domains stay visible');
+});
