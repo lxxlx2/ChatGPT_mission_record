@@ -1,5 +1,5 @@
 # Frank STATUS（唯一当前决策状态入口）
-更新时间：2026-11-04 07:35 Asia/Bangkok
+更新时间：2026-11-04 07:48 Asia/Bangkok
 更新者：Codex（用户继续授权本地调试、隔离测试与既有Dashboard维护；独立review豁免；INVEST_NO_GO / TRADE_NO_GO保持）
 
 ## 北极星答案（1 行）
@@ -16,7 +16,7 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 **阶段管理已结束；按当前用户继续主线指令推进手动CA查询能力，同时保留原只读钱包观察工具。** 跟单盈利研究不因此恢复；P2/P3 未启动。
 
 ## 正在进行（最多 3 项）
-- **手动CA主线：共享authority的有界Mint池发现已通过CI与用户Chrome**。原PR220候选[`23be73fc7472e0e024f8b8eca8b64f5a14f9520e`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/23be73fc7472e0e024f8b8eca8b64f5a14f9520e)在已核验Mint枚举出现已知Raydium CPMM/v4共享authority时，按两侧Mint/固定布局进行最多4次过滤GPA；seed+bump匹配只触发查询，不作为身份或排除证明。每响应128账户/256KiB硬上限，超限或错误整体标为来源缺口；实际slot/hash/过滤条件/收到结果时间与遗漏数保留。候选与索引、Owner线索去重并公平合并，总池8；仍须原始发现及Mint/token/池同批<=100key重读成功才逐账户扣除。同Owner辅助余额保留，未知角色不排除。新增最多4逻辑GPA加原2次核验，角色发现最多6逻辑调用，共享1200 wire attempts/1800秒不变；预算耗尽仍终止失败，GET不采集。9文件（4运行/5测试、新增2）远端逐字一致；28新增Python、541相关Python、140前端通过。[固定CI run93](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41747055366)实际2049 Python通过/4跳过、140前端、38 Chromium场景通过，page errors0；7次fixture POST全合成，真实RPC/CA POST/生产请求0。用户Google Chrome实测三来源PumpSwap/Orca/CPMM，CPMM两侧查询，扣140/保留860/辅助700/两分母86%与100%；缺余额或损坏指标撤下精确比例，旧报告清除新面板、恢复正常，本站origin控制台无错误，截图留存。[私有合成验收页](https://frank-role-isolated-qa-20261103.sappypanel.chatgpt.site)保留。仅更新既有测试页，生产Mac未部署，最后安装回执f690；真实CA来源未验收，全部池/特殊身份、独立来源、大型Mint/Token-2022/全历史仍未闭合，整体INCOMPLETE_EVIDENCE。详见既有JSON新增ca_shared_authority_pool_discovery_followup_20261104，旧Owner阶段证据及原NO_GO保留。
+- **手动CA主线：无已核实池时的特殊身份核对已补齐，并经CI/用户Chrome验收**。原PR220候选[`3c5f936976747fdb04dc829ff56749ed9eee0c9d`](https://github.com/lxxlx2/ChatGPT_mission_record/commit/3c5f936976747fdb04dc829ff56749ed9eee0c9d)保留索引/Owner/共享authority Mint过滤三路径，修复无有效池线索、池全部不受支持、发现响应数量异常时提前退出的问题。此时仍读取同批Mint/token余额，单独按实际slot核对已有带日期/精确Mint/明确账户或Owner范围/版本/HTTPS来源/hash的归属声明；不将声明升级为链上身份。不支持/冲突池保留拒绝理由，未知地址不排除，同Owner辅助账户余额保留。LP扣除0只表示没有已核对金库，不能证明没有池。新路径最多1次<=100key持仓批次，与已有发现合计最多2次二进制读取；加共享authority最多4次过滤GPA的角色总上限仍为6逻辑调用，1200 wire attempts/1800秒不变，预算异常终止。8文件（2运行/6测试、新增1）远端逐字一致；14新反例在旧基线全失败后转绿，622相关Python/144前端通过。[固定CI run95](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/41749019702)实际2063 Python通过/4跳过、144前端、39隔离Chromium场景通过，page errors0，8次fixture POST全合成，真实RPC/CA POST/生产请求0，profile/fixture/端口清理确认。用户Google Chrome实测无池声明扣100/未知900/辅助700保留、两分母88%与97.7778%；范围/有效slot/版本可见，过期声明/缺余额/损坏指标撤下比例，旧报告清面板并恢复正常，本站origin控制台无错误，截图与[既有私有合成验收页](https://frank-role-isolated-qa-20261103.sappypanel.chatgpt.site)保留。模拟LOCK不证明真实锁仓，真实CA来源未验收。生产Mac未部署，旧回执f690；全部特殊身份、其他池、独立来源、大型Mint/Token-2022/全历史仍未闭合，整体INCOMPLETE_EVIDENCE。详见既有JSON新增ca_no_pool_special_roles_followup_20261104，前阶段全部证据/NO_GO保留。
 - 前批已验收的既有真实CA job `2306599a664d4308ad9b0cf3706c07a3`（11月1日22:10报告，本轮未创建）经GET和磁盘确认报告/任务/marker/摘要一致；私有副本空内存恢复及4项损坏拒绝PASS。Dashboard源码切换后实际GET返回DONE/restored_from_saved_report=true，Chrome“读取选中报告”显示任务ID与CA已核对；无效CA清理与恢复PASS，标签保留。该次安装验收中28份报告文件哈希保留；控制库、D2、旧心跳及plist不变。最后D2来源回执为11月1日08:26的4898账户/Mint快照，F01近期0/历史7/eligible0，不是实时余额或可执行资格。
 - 最后已记录的Scanner只读快照为2026-11-02 00:07：源码1f2c6afc28b9988eaacdc896562ff9a71b78f801、PID3402，当时LIVE/0连续错误/无漂移；6006签名/seen、RAW_PENDING/未处理0、信号7/outbox9/Gmail2。此前98条逐笔重放（截至5979）不自动覆盖后来27条。本轮未查询生产DB或重新核验进程，不把旧快照冒充当前可用性。
 
@@ -26,12 +26,12 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 
 | 原目标 | 本轮实际状态 |
 |---|---|
-| 账户与Owner、样本与全局Top10、快照slot | 候选已有6类固定池布局/同批核验及逐账户扣除；Owner索引外池发现之外，新增已观察CPMM/v4共享authority触发两侧Mint受限查询。三来源去重/合并池最多8，再重读后排除；未知余额保留。全部协议/特殊身份、独立来源、大型Mint/Token-2022/全历史仍未完成，不声称穷尽 |
+| 账户与Owner、样本与全局Top10、快照slot | 已有6类池布局/同批核验，索引/Owner/共享authority Mint查询三来源；新增无有效池时仍独立核对同批余额与带日期的已有身份声明。逐账户扣除再聚合Owner，辅助/未知余额保留；LP扣除0不代表无池。全部协议/特殊身份、独立来源、大型Mint/Token-2022/全历史仍未完成 |
 | 单一查询及PARTIAL/INCOMPLETE_EVIDENCE结论 | 单一入口已实现；候选新增版本化必需证据状态、缺口原因/来源/下一来源，JSON/Markdown/UI一致。当前能力只能输出INCOMPLETE_EVIDENCE；不以DONE/排名完成/权限PASS代替完整尽调 |
 | 历史/资金分页及多账户 | 候选已接入当前多账户及交易绑定的历史账户发现/一轮补查，合并最早已发现BUY和资金锚点；共用4/Owner、12额外账户/报告与原任务硬上限。关闭与Owner只绑定各交易前后状态，当前是否再创建/转让、全部历史账户、Top20之外Owner全历史、真实首笔及跨重启续采仍未完成 |
 | 所选池余额及协议储备模型 | 候选支持上述6类主网程序的池/两侧金库/Mint同批原始余额和authority核验；PumpSwap原有文档储备模型保留，新增5类程序不套用其模型、不输出可执行或美元报价。未知程序/布局明确失败；已部署语义、其他池、美元估值及真实来源验收仍缺 |
 | 外部叙事及多来源对照 | 候选已有同池索引USD参考、原始金库/协议模型与可选GT直接币对报价的数值差异，以及有界公开页面陈述。源单位/方向/哈希核对后才展示差异；读取时间不等于行情as-of。缺字段不猜单位或换池，数值相同不宣布同快照。受控快照/独立持有人、官方归属/起源与真实来源验收仍缺 |
-| 新候选实际Mac与代表CA验收 | 用户Google Chrome已验证索引PumpSwap、Owner发现Orca、Mint查询CPMM三来源及正常/缺余额/损坏/旧报告/恢复；本站origin控制台无错误，页面保留，实际候选app.js与测试页一致。真实CA/RPC来源和生产Mac安装未执行；CI后端HTTP合成流程分别记录 |
+| 新候选实际Mac与代表CA验收 | 当前用户Google Chrome已验证无池身份声明、有效slot/范围/版本、缺余额/损坏/过期/旧报告/恢复；前阶段三种池来源验收保留在JSON。本站origin控制台无错误，页面保留。真实CA/RPC来源和生产Mac安装未执行；CI HTTP合成流程分别记录 |
 
 
 ## 剩余真实条件（最多 3 项）
@@ -68,3 +68,6 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 
 
 2026-11-04 共享authority池发现补充：本轮新增最多4次严格Mint过滤GPA与原2次角色核验共同计入原任务1200 wire attempts/1800秒硬预算，不能沿用上一Owner阶段“最多2次”描述本阶段总量。seed+bump哈希仅为发现触发条件，返回池必须通过原始布局及同批Mint/token/authority/余额重读。超限结果拒绝并保留缺口；仍不证明全部池或全部特殊身份。上一阶段未实现共享authority查询的描述为当时历史状态。详见ca_shared_authority_pool_discovery_followup_20261104。
+
+
+2026-11-04 无池身份核对补充：无有效/支持池不再阻断已有身份声明的持仓审计。新增1次持仓批次替代原跳过的同批核验；未增加角色路径既有最多6逻辑调用的总上限，但无池路径相对旧版会增加至多1次余额读取。所有读取受同一任务硬预算约束，GET仍不采集。模拟LOCK仅测试声明范围/时间与扣除算术，不能当作真实锁仓识别结果。详见ca_no_pool_special_roles_followup_20261104。
