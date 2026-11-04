@@ -878,3 +878,12 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - gmail_attempted: false; app_notification: false; browser_session: UNAVAILABLE_NOT_INVOKED
 - StandX DUSD claim first-party open remains SOURCE_GAP; MetaMask Perps contest issuer verified but user-rights ACTION_GATE FAIL; no qualified ACTION
 - final_readback: VERIFIED blob dda7d1197cfe85660d61aa091f278edfdee156a9
+
+## Terminal sync 2026-11-04 21:01:52 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-04/210152-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-04/210152-attempt.md
+- run_status: PARTIAL; scheduled_shard: 1; executed_shard: 1; last_meaningful_attempt_at_shard1: 2026-11-04T21:01:52+07:00 PARTIAL_ONLY
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- candidate_count: 3; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 6; gmail_attempted: false; app_notification: false
+- StandX Nov2 DUSD original X 403 and claim app inaccessible; SOURCE_GAP; Surf Nov13 already delivered. Browser originating context unavailable. No task/schedule/recipient/scope change.
+- final_readback: VERIFIED blob 8cae363332ba5678877018229459e4f732f23d2c; commit f85cc434f995c4e2b79c7e1c15625518028832f1
