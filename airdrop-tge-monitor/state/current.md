@@ -932,3 +932,12 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - StandX DUSD claim original and personal live eligibility SOURCE_GAP; Surf Nov13 already delivered; no new ACTION.
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
 - final_readback: VERIFIED main blob c5952a9a2837842391278223eb8344dc5097edd0; commit 3516f7a23df2f6e77abdc8ecba2a90d799ba8e21
+
+
+## Terminal cache sync — 2026-11-05 02:55:55 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-05/025555-final.md
+- run_status: PARTIAL; scheduled_shard: 2; executed_shard: 2; last_meaningful_attempt_at_shard2: 2026-11-05T02:55:55+07:00 PARTIAL_ONLY
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 1; gmail_attempted: false; app_notification: false
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- StandX original claim and user eligibility SOURCE_GAP; no new first-party ACTION. MetaMask official new contest discovery insufficient for user-specific entitlement. Cambria and Surf existing notices suppressed.
+- final_readback: VERIFIED blob a6abf26a116dfcf9f6524cd9d2769ffd10e321e8; commit f8111009d0b07e4ca7c492d34015d31301574fe1
