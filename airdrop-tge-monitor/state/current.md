@@ -785,3 +785,13 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-11-04 07:01:03 BKK: existing hourly TGE attempt 070103-attempt.md and readback-verified terminal 070103-final.md commit 965a52821df70cfa3da65b30e388dabd10fe6e12; urgent5 + Surf/StandX + fair Shard3, bounded Cambria/StandX lifecycle; 3 preexisting candidates, 0 new Tier A/mapped Tier B ACTION, 5 source/private-rights gaps. Browser original X unavailable, issuer English fallback. Gmail search yielded no verified new rights, one read FORBIDDEN; no Gmail/App. Shard3 meaningful PARTIAL attempt advanced; verified-complete Oct10 unchanged. Task/schedule/scope/recipient unchanged.
 
 - 2026-11-04 08:01:50 BKK: attempt 080150-attempt.md and terminal 080150-final.md, partial urgent5+Surf/StandX+fair Shard0, two candidates (StandX prior winddown, MetaMask perps competition user-specific eligibility unknown), zero ACTION, no Gmail/App. Official English fallback; X original unavailable; source gaps preserved. Shard0 meaningful PARTIAL attempt advanced, verified-complete Oct10 unchanged. Terminal commit fd265cc1ca606502b041f6a8819ccec484eca645. Task unchanged.
+
+## Latest terminal sync — 2026-11-04 10:01:58 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-04/100158-final.md
+- run_time: 2026-11-04T10:01:58+07:00
+- schedule: hourly HH:00 Asia/Bangkok UNCHANGED
+- run_status: PARTIAL; verified_complete: false; last_verified_complete_at UNCHANGED
+- scheduled_shard: 2; executed_shard: 2; last_meaningful_attempt_at_shard2: 2026-11-04T10:01:58+07:00 PARTIAL_ONLY
+- candidate_count: 1; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 12
+- Gmail attempted: false; app_notification: false; browser_session: UNAVAILABLE originating context
+- final_readback: VERIFIED blob 586cf264c8b8581145bb97071d6cd88502ab5d51; no changes to task/recipient/schedule/scope
