@@ -922,3 +922,13 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - StandX DUSD original issuer/claim SOURCE_GAP; Surf Nov13 previously delivered; no new ACTION.
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
 - final_readback: VERIFIED blob 60d63d9dfc21fed1c9414cee1cadde7af6a48bb1; commit b143375442fbd4ef3061d5ffffb8e5e00f332e04
+
+## Terminal cache sync — 2026-11-05 01:55:34 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-05/015534-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-05/015534-attempt.md
+- run_status: PARTIAL; schedule HH:00 unchanged; actual off-minute invocation
+- scheduled_shard: 1; executed_shard: 1; last_meaningful_attempt_at_shard1: 2026-11-05T01:55:34+07:00 PARTIAL_ONLY
+- candidate_count: 1; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 6; gmail_attempted: false; app_notification: false
+- StandX DUSD claim original and personal live eligibility SOURCE_GAP; Surf Nov13 already delivered; no new ACTION.
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- final_readback: VERIFIED main blob c5952a9a2837842391278223eb8344dc5097edd0; commit 3516f7a23df2f6e77abdc8ecba2a90d799ba8e21
