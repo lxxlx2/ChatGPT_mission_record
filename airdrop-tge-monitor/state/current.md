@@ -1,3 +1,11 @@
+## Latest terminal cache sync — 2026-11-04 16:00:37 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-04/160037-final.md
+- run_status: PARTIAL; scheduled_shard: 0; executed_shard: 0; last_meaningful_attempt_at_shard0: 2026-11-04T16:00:37+07:00 PARTIAL_ONLY
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 6; gmail_attempted: false; app_notification: false
+- StandX Nov2 DUSD issuer original and personal claim SOURCE_GAP; SurfBoard Nov13 already delivered; no new ACTION.
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- final_readback: VERIFIED blob 75b5a10d2bf19cfce4c68c62700a3f7d4621c31d; commit 928528c90cdcada59f266d9c0d3edcf442b87d96
+
 ## Latest terminal cache sync — 2026-11-04 14:01:08 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-04/140108-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-04/140108-attempt.md
