@@ -1622,6 +1622,7 @@ def report_completeness(report:dict)->dict:
     ranks=report.get("holder_rankings") or {}
     profile=report.get("token_profile") or {}
     market=report.get("market") or {}
+    market_requested=market.get("reason")!="MARKET_CLIENT_DISABLED"
     raw_pool=report.get("pool_vaults") or {}
     raw_pool_read=raw_pool.get("status")=="VAULT_BALANCE_SNAPSHOT"
     unit_compared=raw_pool_read and (raw_pool.get("market_comparison") or {}).get("status")=="UNALIGNED_RATIO_COMPARISON"
@@ -1667,9 +1668,9 @@ def report_completeness(report:dict)->dict:
         ["Sampled transfers/funders/signers/consolidations with public-infrastructure exclusions"],
         "Resolve material unknown relationships using independent non-public evidence; keep inherent uncertainty explicit.",
         ["assessment.cluster_status","unresolved_relation_edges","probable_control_clusters"])
-    row("market","PARTIAL" if market.get("status")=="OK" else "UNAVAILABLE",
-        "POOL_HOLDER_SAME_SLOT_CONTRADICTION" if pool_holder_conflict else "DOCUMENTED_RESERVES_WITHOUT_USD_OR_SNAPSHOT_PARITY" if reserve_model_read else "RAW_VAULT_BALANCES_WITHOUT_NET_RESERVE_OR_PRICE_RECONCILIATION" if raw_pool_read else "INDEXED_MARKETS_WITHOUT_RAW_POOL_RECONCILIATION" if compared else "SINGLE_MARKET_REFERENCE_WITHOUT_POOL_RECONCILIATION",
-        ["DexScreener market reference"]+(["GeckoTerminal exact-pool indexer"] if independent.get("attempted") is True else [])+(["Selected PumpSwap raw vault/Mint accounts in one finalized batch; documented signed virtual reserve arithmetic" if reserve_model_read else "Selected PumpSwap raw vault/Mint accounts in one finalized batch; not net reserves"] if raw_pool_read else []),
+    row("market","NOT_COLLECTED" if not market_requested else "PARTIAL" if market.get("status")=="OK" else "UNAVAILABLE",
+        "MARKET_SOURCE_NOT_REQUESTED" if not market_requested else "POOL_HOLDER_SAME_SLOT_CONTRADICTION" if pool_holder_conflict else "DOCUMENTED_RESERVES_WITHOUT_USD_OR_SNAPSHOT_PARITY" if reserve_model_read else "RAW_VAULT_BALANCES_WITHOUT_NET_RESERVE_OR_PRICE_RECONCILIATION" if raw_pool_read else "INDEXED_MARKETS_WITHOUT_RAW_POOL_RECONCILIATION" if compared else "SINGLE_MARKET_REFERENCE_WITHOUT_POOL_RECONCILIATION",
+        (["DexScreener market reference"] if market_requested else ["No market reference requested"])+(["GeckoTerminal exact-pool indexer"] if independent.get("attempted") is True else [])+(["Selected PumpSwap raw vault/Mint accounts in one finalized batch; documented signed virtual reserve arithmetic" if reserve_model_read else "Selected PumpSwap raw vault/Mint accounts in one finalized batch; not net reserves"] if raw_pool_read else []),
         "Reconcile dated selected-pool reserves and market definitions with an independent permitted source.",
         ["market","pool_vaults","pool_holder_roles"])
     row("independent_sources","PARTIAL" if compared or unit_compared else "UNAVAILABLE" if independent.get("attempted") is True else "NOT_COLLECTED",

@@ -79,3 +79,27 @@ def test_markdown_legacy_report_never_invents_new_acceptance():
 def test_markdown_does_not_endorse_unsupported_completion_claims(contract):
     report=snapshot();report['analysis_completeness']=contract
     assert 'Analysis completeness: NOT_ASSESSED' in markdown(report)
+
+
+def test_disabled_market_client_is_not_claimed_as_an_attempted_source():
+    report=snapshot()
+    report['market']={'status':'UNAVAILABLE','source':'DEXSCREENER_API',
+                      'reason':'MARKET_CLIENT_DISABLED'}
+    original=report['market'].copy()
+    rows={row['id']:row for row in report_completeness(report)['requirements']}
+    assert rows['market']['status']=='NOT_COLLECTED'
+    assert rows['market']['cause']=='MARKET_SOURCE_NOT_REQUESTED'
+    assert rows['market']['attempted_sources']==['No market reference requested']
+    assert report['market']==original
+    report['analysis_completeness']=report_completeness(report)
+    assert 'No market reference requested' in markdown(report)
+
+
+def test_attempted_unavailable_market_still_records_the_source_attempt():
+    report=snapshot()
+    report['market']={'status':'UNAVAILABLE','source':'DEXSCREENER_API',
+                      'reason':'PRIVATE_PROVIDER_ERROR'}
+    rows={row['id']:row for row in report_completeness(report)['requirements']}
+    assert rows['market']['status']=='UNAVAILABLE'
+    assert 'DexScreener market reference' in rows['market']['attempted_sources']
+    assert 'PRIVATE_PROVIDER_ERROR' not in str(rows['market'])
