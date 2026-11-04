@@ -101,6 +101,15 @@ try {
  assert.match(await page.locator('.cluster-special-roles').innerText(),/本轮 2 个过滤查询/);
  assert.match(await page.locator('.cluster-special-roles').innerText(),/Mint 过滤程序查询/);
  check('shared authority triggers two bounded CPMM Mint-side queries and third pool is re-read before account deduction');
+ assert.equal(saved.special_address_roles.rankings.role_coverage.chain_role_raw,'140');
+ assert.equal(saved.special_address_roles.rankings.role_coverage.unknown_role_raw,'860');
+ assert.equal(saved.special_address_roles.rankings.role_coverage.owners[0].unknown_role_raw,'700');
+ assert.equal(saved.special_address_roles.rankings.role_coverage.owners[0].mixed_evidence,true);
+ assert.match(await page.locator('.cluster-role-coverage').innerText(),/未知余额占 Mint 供给 86%/);
+ assert.match(await page.locator('.cluster-role-coverage').innerText(),/混合证据，只按账户归类/);
+ assert.doesNotMatch(await page.locator('#cluster-rankings').innerText(),/普通地址/);
+ check('same-bank role coverage partitions chain and unknown balances and never labels auxiliary balance as whole Owner pool');
+
 
  assert.equal(saved.narrative.official_recognition,'UNVERIFIED');
  assert.equal(saved.market.comparison.status,'INDEXER_SNAPSHOTS_COMPARED');
@@ -460,6 +469,13 @@ try {
  assert.equal(noPoolSaved.analysis_completeness.status,'INCOMPLETE_EVIDENCE');
  await snapshot(page,'no-bound-pool-dated-account-claim');
  check('no pool hints still persist holder-only same-bank audit and scoped dated attribution without LP or exhaustive identity claim');
+ assert.equal(noPoolSaved.special_address_roles.rankings.role_coverage.chain_role_raw,'0');
+ assert.equal(noPoolSaved.special_address_roles.rankings.role_coverage.attribution_claim_raw,'100');
+ assert.equal(noPoolSaved.special_address_roles.rankings.role_coverage.unknown_role_raw,'900');
+ assert.match(await page.locator('.cluster-role-coverage').innerText(),/未知余额占 Mint 供给 90%/);
+ assert.match(await page.locator('.cluster-role-coverage').innerText(),/11 个正余额账户 \/ 11 个 Owner/);
+ check('holder-only coverage preserves dated attribution separately from chain role and ranks remaining unknown Owner balances');
+
  assert.deepEqual(errors,[]);
  const result={port,checks,page_errors:errors,blocked,requests,fixture_posts:requests.filter(r=>r.method==='POST').length,real_rpc:0,production_requests:0,real_ca_posts:0,browser:context.browser()?.version()};
  if(output)writeFileSync(join(output,'result.json'),JSON.stringify(result,null,2));

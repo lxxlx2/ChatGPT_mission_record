@@ -1539,9 +1539,9 @@ function clusterErrorMessage(error) {
 }
 
 function holderRole(h) {
-  const label = clusterRoleLabel[h.role] || h.role || '未确认';
-  const unresolved = String(h.role || '').includes('UNRESOLVED');
-  return '<span class="role-pill ' + (unresolved ? 'unresolved-role' : '') + '">' + esc(label) + '</span>';
+  const role=typeof h.role==='string'?h.role:'';
+  const label=role==='ORDINARY' || role==='EOA'?'账户结构标签，归属未核实':clusterRoleLabel[role]?'来源标签：'+clusterRoleLabel[role]+'（身份待核对）':'身份未核实';
+  return '<span class="role-pill unresolved-role">'+esc(label)+'</span>';
 }
 
 function ownerCell(owner) {
@@ -1833,6 +1833,30 @@ function renderPoolHolderRoles(report,ranks) {
     '<p>这项证据只覆盖所选池的一个目标币金库，不能代表已排除全部 LP、其他池、CEX、锁仓或所有特殊地址；独立提供方与归属仍未核实。</p></div>';
 }
 
+function renderRoleCoverage(audit,rows,valid) {
+  const coverage=(audit.rankings || {}).role_coverage;
+  if (!coverage) return '';
+  const withheld='<div class="cluster-role-coverage"><strong>身份覆盖分解</strong><p>覆盖分解未通过同批余额核对，不展示精确覆盖比例或待核查排名。</p></div>';
+  if (!valid || coverage.version!==1 || coverage.status!=='EXACT_OBSERVED_ROLE_PARTITION' || coverage.scope!=='PER_TOKEN_ACCOUNT_EVIDENCE_NOT_WHOLE_OWNER_IDENTITY' || coverage.holder_snapshot_slot!==audit.snapshot_slot || coverage.holder_response_sha256!==audit.balance_check.response_sha256 || coverage.all_special_roles_normalized!==false) return withheld;
+  const keys=['chain_role_raw','attribution_claim_raw','unknown_role_raw'],groups=new Map(),totals=[0n,0n,0n];let unknownAccounts=0;
+  for (const row of rows) {
+    const n=BigInt(row.raw),index=row.classification==='CHAIN_ACCOUNT_ROLE'?0:row.classification==='ATTRIBUTION_CLAIM'?1:2;
+    if (!groups.has(row.owner))groups.set(row.owner,{owner:row.owner,raw:0n,account_count:0,parts:[0n,0n,0n],chain_roles:new Set(),claimed_roles:new Set()});
+    const g=groups.get(row.owner);g.raw+=n;g.account_count++;g.parts[index]+=n;totals[index]+=n;
+    if(n>0n && index===2)unknownAccounts++;
+    if(n>0n && index!==2)g[index===0?'chain_roles':'claimed_roles'].add(row.role);
+  }
+  const owners=[...groups.values()].filter(g=>g.raw>0n).sort((a,b)=>a.raw===b.raw?(a.owner<b.owner?-1:a.owner>b.owner?1:0):a.raw>b.raw?-1:1);
+  const supply=BigInt(audit.balance_check.mint_supply_raw),unknownOwners=owners.filter(o=>o.parts[2]>0n);
+  if (coverage.observed_account_count!==rows.length || coverage.observed_raw!==String(totals.reduce((a,b)=>a+b,0n)) || keys.some((k,i)=>coverage[k]!==String(totals[i])) || coverage.unknown_positive_account_count!==unknownAccounts || coverage.unknown_nonzero_owner_count!==unknownOwners.length || coverage.unknown_pct_of_mint_supply!==clusterExactPercent(totals[2],supply) || !Array.isArray(coverage.owners) || coverage.owners.length!==owners.length) return withheld;
+  for (let i=0;i<owners.length;i++) {
+    const g=owners[i],stored=coverage.owners[i];
+    if (!stored || stored.owner!==g.owner || stored.raw!==String(g.raw) || stored.account_count!==g.account_count || keys.some((k,j)=>stored[k]!==String(g.parts[j])) || stored.mixed_evidence!==(g.parts.filter(n=>n>0n).length>1) || !['chain_roles','claimed_roles'].every(k=>Array.isArray(stored[k]) && JSON.stringify(stored[k])===JSON.stringify([...g[k]].sort()))) return withheld;
+  }
+  const pending=unknownOwners.sort((a,b)=>a.parts[2]===b.parts[2]?(a.owner<b.owner?-1:a.owner>b.owner?1:0):a.parts[2]>b.parts[2]?-1:1).slice(0,20);
+  return '<div class="cluster-role-coverage"><strong>身份覆盖分解</strong><p>实际 slot '+esc(audit.snapshot_slot)+'；仅按本批 token 账户证据分解，不推断整个 Owner 的身份或实际控制人。未知余额占 Mint 供给 '+clusterMetricValue(coverage.unknown_pct_of_mint_supply)+'；'+esc(unknownAccounts)+' 个正余额账户 / '+esc(unknownOwners.length)+' 个 Owner 仍有未知余额。</p><table class="holder-table"><thead><tr><th>证据类别</th><th>原始整数余额</th></tr></thead><tbody><tr><td>同批链上角色账户</td><td>'+esc(String(totals[0]))+'</td></tr><tr><td>带来源的归属声明账户</td><td>'+esc(String(totals[1]))+'</td></tr><tr><td>身份仍未知的账户</td><td>'+esc(String(totals[2]))+'</td></tr></tbody></table><h4>待核查 Owner（按未知余额排序，最多20个）</h4><table class="holder-table"><thead><tr><th>Owner</th><th>已核实角色余额</th><th>归属声明余额</th><th>未知余额</th><th>证据范围</th></tr></thead><tbody>'+pending.map(g=>'<tr><td>'+ownerCell(g.owner)+'</td>'+g.parts.map(n=>'<td>'+esc(String(n))+'</td>').join('')+'<td>'+(g.parts.filter(n=>n>0n).length>1?'混合证据，只按账户归类':'未知身份，待核查')+'</td></tr>').join('')+'</tbody></table><p>分解算术精确不代表所有池、CEX、做市、锁仓等身份已识别；未核实账户不能标为普通用户。</p></div>';
+}
+
 function renderSpecialAddressRoles(report,ranks) {
   const audit=report.special_address_roles;
   if (!audit || audit.status==='NOT_REQUESTED') return '';
@@ -1886,7 +1910,7 @@ function renderSpecialAddressRoles(report,ranks) {
   return title+'<p>实际批次 slot '+esc(audit.snapshot_slot || '未获得')+'；最多8个合并池线索，来自索引、已读 Owner 账户和 Mint 过滤程序查询，未穷尽全部池。未选线索 '+esc(audit.not_selected_pool_hints || 0)+'。</p><p>有效 Owner 池线索 '+esc(audit.owner_pool_hints_available || 0)+'；拒绝的 Owner 线索 '+esc(audit.rejected_owner_pool_hints || 0)+'。Owner 路径只覆盖以池自身作为 authority 的账户结构，共享全局 authority 可触发有界程序查询，但其他池仍可能缺失。</p>'+
     holderOnly+(valid?'<p>已知排除口径已复算；未知角色仍保留在余额中。以下两列分别使用原 Mint 供给和扣除后剩余余额作分母。</p><table class="holder-table"><thead><tr><th>口径</th><th>扣除整数余额</th><th>Top10 / 原供给</th><th>Top10 / 剩余余额</th><th>未知角色余额</th><th>归属声明余额</th></tr></thead><tbody>'+rendered.join('')+'</tbody></table>'+rankTables.join(''):'<p>角色、余额或派生指标未通过完整核对，未展示精确排除后比例。</p>')+
     (facts?'<table class="holder-table"><thead><tr><th>账户</th><th>角色</th><th>原始余额</th><th>证据等级</th><th>依据</th></tr></thead><tbody>'+facts+'</tbody></table>':'')+
-    (attempts?'<ul>'+attempts+'</ul>':'')+programInfo+footer+'</div>';
+    (attempts?'<ul>'+attempts+'</ul>':'')+programInfo+renderRoleCoverage(audit,rows,valid)+footer+'</div>';
 }
 
 function renderHolderRankings(report) {

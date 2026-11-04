@@ -1039,3 +1039,41 @@ for(const bad of ['expired','tampered_mass','tampered_metric']) test('holder-onl
   h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
   assert.match(html,/未展示精确排除后比例/);assert.doesNotMatch(html,/已知排除口径已复算/);
 });
+
+function attachCoverageForUi(report) {
+  const a=report.special_address_roles,c=a.balance_check;
+  a.rankings.role_coverage={version:1,status:'EXACT_OBSERVED_ROLE_PARTITION',scope:'PER_TOKEN_ACCOUNT_EVIDENCE_NOT_WHOLE_OWNER_IDENTITY',holder_snapshot_slot:c.snapshot_slot,holder_response_sha256:c.response_sha256,all_special_roles_normalized:false,observed_account_count:2,observed_raw:'100',chain_role_raw:'60',attribution_claim_raw:'0',unknown_role_raw:'40',unknown_positive_account_count:1,unknown_nonzero_owner_count:1,unknown_pct_of_mint_supply:'40.0000',owners:[{owner:c.owners[0].owner,raw:'100',account_count:2,chain_role_raw:'60',attribution_claim_raw:'0',unknown_role_raw:'40',chain_roles:['PROTOCOL_VAULT'],claimed_roles:[],mixed_evidence:true}]};
+  return report;
+}
+
+test('coverage exposes same Owner mixed balances and unknown priority without whole Owner identity',()=>{
+  const h=harness(),r=attachCoverageForUi(specialRoleReportForUi());h.context.renderClusterReport(r);
+  const html=h.element('cluster-rankings').innerHTML;
+  assert.match(html,/身份覆盖分解/);assert.match(html,/未知余额占 Mint 供给 40%/);
+  assert.match(html,/1 个正余额账户 \/ 1 个 Owner/);assert.match(html,/混合证据，只按账户归类/);
+  assert.match(html,/待核查 Owner/);assert.match(html,/未核实账户不能标为普通用户/);
+});
+
+for(const bad of ['amount','owner','scope']) test('tampered role coverage '+bad+' withholds only unsupported coverage claim',()=>{
+  const h=harness(),r=attachCoverageForUi(specialRoleReportForUi()),c=r.special_address_roles.rankings.role_coverage;
+  if(bad==='amount')c.unknown_role_raw='39';
+  if(bad==='owner')c.owners[0].unknown_role_raw='39';
+  if(bad==='scope')c.scope='ALL_OWNER_IDENTITIES_VERIFIED';
+  h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
+  assert.match(html,/覆盖分解未通过同批余额核对/);assert.doesNotMatch(html,/未知余额占 Mint 供给/);
+  assert.match(html,/已知排除口径已复算/);
+});
+
+test('legacy report without coverage cannot invent an unknown count or coverage fraction',()=>{
+  const h=harness();h.context.renderClusterReport(specialRoleReportForUi());
+  assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/cluster-role-coverage|未知余额占 Mint 供给/);
+});
+
+test('source account and legacy identity labels remain unverified outside the account audit',()=>{
+  const h=harness();
+  assert.match(h.context.holderRole({role:'ORDINARY'}),/账户结构标签，归属未核实/);
+  assert.doesNotMatch(h.context.holderRole({role:'ORDINARY'}),/普通地址/);
+  assert.match(h.context.holderRole({role:'LP'}),/来源标签：LP（身份待核对）/);
+  assert.match(h.context.holderRole({role:'UNRECOGNIZED_PRIVATE_VALUE'}),/身份未核实/);
+  assert.doesNotMatch(h.context.holderRole({role:'UNRECOGNIZED_PRIVATE_VALUE'}),/UNRECOGNIZED_PRIVATE_VALUE/);
+});

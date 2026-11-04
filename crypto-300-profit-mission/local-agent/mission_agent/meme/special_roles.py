@@ -50,6 +50,33 @@ def registry_role(mint,account,owner,slot,registry):
             'valid_from_slot':r['valid_from_slot'],'valid_until_slot':r['valid_until_slot'],'scope':r['scope']}
 
 
+def role_coverage(records,check,exact):
+    """Partition observed account balances; a pool role never labels an Owner."""
+    groups={};totals={'chain_role_raw':0,'attribution_claim_raw':0,'unknown_role_raw':0};unknown_accounts=0
+    for row in records:
+        raw=int(row['raw']);owner=row['owner']
+        group=groups.setdefault(owner,{'owner':owner,'raw':0,'account_count':0,
+            'chain_role_raw':0,'attribution_claim_raw':0,'unknown_role_raw':0,'chain_roles':set(),'claimed_roles':set()})
+        category='chain_role_raw' if row['classification']=='CHAIN_ACCOUNT_ROLE' else 'attribution_claim_raw' if row['classification']=='ATTRIBUTION_CLAIM' else 'unknown_role_raw'
+        group['raw']+=raw;group['account_count']+=1;group[category]+=raw;totals[category]+=raw
+        if raw and category=='unknown_role_raw':unknown_accounts+=1
+        if raw and category!='unknown_role_raw':group['chain_roles' if category=='chain_role_raw' else 'claimed_roles'].add(row['role'])
+    owners=[]
+    for group in sorted(groups.values(),key=lambda g:(-g['raw'],g['owner'])):
+        if not group['raw']:continue
+        owners.append({**group,**{k:str(group[k]) for k in ('raw',*totals)},
+            'chain_roles':sorted(group['chain_roles']),'claimed_roles':sorted(group['claimed_roles']),
+            'mixed_evidence':sum(group[k]>0 for k in totals)>1})
+    return {'version':1,'status':'EXACT_OBSERVED_ROLE_PARTITION' if exact else 'OBSERVED_ROLE_PARTITION_ONLY',
+        'scope':'PER_TOKEN_ACCOUNT_EVIDENCE_NOT_WHOLE_OWNER_IDENTITY',
+        'holder_snapshot_slot':check.get('snapshot_slot'),'holder_response_sha256':check.get('response_sha256'),
+        'observed_account_count':len(records),'observed_raw':str(sum(totals.values())),
+        **{k:str(v) for k,v in totals.items()},'unknown_positive_account_count':unknown_accounts,
+        'unknown_nonzero_owner_count':sum(int(o['unknown_role_raw'])>0 for o in owners),
+        'unknown_pct_of_mint_supply':percent(totals['unknown_role_raw'],int(check['mint_supply_raw'])) if exact else 'UNRESOLVED',
+        'all_special_roles_normalized':False,'owners':owners}
+
+
 def derive_special_ranks(mint,check,pools,registry=None):
     out={'version':1,'mint':mint,'status':'INCOMPLETE_EVIDENCE','all_special_roles_normalized':False,
          'independent_provider':False,'records':[],'metrics':{},'conflicts':[],
@@ -84,6 +111,7 @@ def derive_special_ranks(mint,check,pools,registry=None):
                 row['registry_conflict']=label;out['conflicts'].append({'token_account':r['token_account'],'reason':'REGISTRY_CONFLICTS_WITH_CHAIN_ROLE'})
             elif row['role']=='UNKNOWN':row.update(label)
         out['records'].append(row)
+    out['role_coverage']=role_coverage(out['records'],check,mass and not out['conflicts'])
     # Exact known-exclusion ranks aggregate AFTER per-token-account subtraction.
     # Keep unknown balances and label their unresolved semantics explicitly.
     supply=int(check.get('mint_supply_raw','0')) if mass else 0
