@@ -54,6 +54,23 @@ export function validateEditorial(input, rules) {
       }else if(!receipt.result_urls?.length)fail('CHECKED_WITHOUT_SOURCE_RESULT',lane);
     }
   }
+  // Disclose source discovery completeness independently from schema/editorial PASS.
+  // A checked lane is only the manifest's own claim; it does not prove recall.
+  const missingVerifiedLanes=lanes.filter(lane=>!receipts.some(r=>
+    r.lane===lane&&r.status==='checked'&&Array.isArray(r.result_urls)&&r.result_urls.length>0));
+  const blankDiscoverySections=[];
+  if(missingVerifiedLanes.includes('early_nft')&&!parsed.some(x=>x.section===8))blankDiscoverySections.push('8:early_nft');
+  if(missingVerifiedLanes.includes('tge')&&!parsed.some(x=>x.section===7))blankDiscoverySections.push('7:tge');
+  if(missingVerifiedLanes.includes('security')&&!parsed.some(x=>x.section===9))blankDiscoverySections.push('9:security');
+  details.discovery_completeness=missingVerifiedLanes.length?'PARTIAL':'DECLARED_CHECKED_NOT_EXTERNALLY_PROVEN';
+  details.unverified_lanes=missingVerifiedLanes;
+  details.blank_sections_with_discovery_gaps=blankDiscoverySections;
+  details.checked_lane_count=lanes.length-missingVerifiedLanes.length;
+  details.required_lane_count=lanes.length;
+  if(missingVerifiedLanes.length)warnings.push('DISCOVERY_COVERAGE_PARTIAL:'+missingVerifiedLanes.join(','));
+  if(blankDiscoverySections.length)warnings.push('BLANK_SECTION_SOURCE_GAP:'+blankDiscoverySections.join(','));
+  // Keep separate delivery viability: a source lane failure must not block an
+  // otherwise independently source-backed full daily Gmail and its recovery.
   const markets=Array.isArray(input.market_core)?input.market_core:[];
   for(const symbol of rules.full_report.market_core_must_have){
     const matches=markets.filter(x=>x.symbol===symbol && Number.isFinite(Number(x.price))&&Number(x.price)>0&&x.observed_at&&x.source_url);
