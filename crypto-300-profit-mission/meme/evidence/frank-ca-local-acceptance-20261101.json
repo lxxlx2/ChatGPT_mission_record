@@ -3452,5 +3452,187 @@
       "Large Mint/Token-2022 economic mass and independent holder source",
       "Full historical account epochs/official attribution/USD/executable prices/real representative CA source and final Mac acceptance"
     ]
+  },
+  "ca_shared_authority_pool_discovery_followup_20261104": {
+    "observed_at_utc": "2026-11-04T00:35:40.688Z",
+    "verdict": "PASS_BOUNDED_SHARED_AUTHORITY_MINT_POOL_DISCOVERY; EXHAUSTIVE_ROLES_UNVERIFIED",
+    "source": {
+      "pr": 220,
+      "head": "23be73fc7472e0e024f8b8eca8b64f5a14f9520e",
+      "tree": "72a57068995a96ad279a3e26632ab1880e910f40",
+      "baseline": "a6908bdcb94a15ec06ae314b179a7c785345afec",
+      "files": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/pool_discovery.py",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_global_pool_discovery.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/special_roles.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+        "crypto-300-profit-mission/local-agent/tests/fixtures/frank_ca_browser_server.py",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_browser.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_owner_pool_discovery.py"
+      ],
+      "runtime_files": 4,
+      "test_files": 5,
+      "new_files": 2,
+      "remote_file_readback": "9/9 exact"
+    },
+    "implementation": {
+      "trigger": "Validated positive Mint enumeration accounts with observed pinned Raydium CPMM/v4 seed+bump hash match trigger queries only. No match means0 program queries. Hash match is not canonical PDA/control/exclusion proof.",
+      "queries": "Explicit standard audit only. At most2 pinned programs x2 Mint sides=4 logical getProgramAccounts queries, exact fixed dataSize/CPMM discriminator/Mint memcmp/finalized/withContext/minContextSlot. Relaxed or mistyped queries rejected pre-wire. Per response128rows/256KiB hard cap; malformed/overlimit response wholly rejected, never truncated into completeness. Holder enumeration retains existing8MiB cap.",
+      "provenance": "Record exact filters/offsets/actual slots/hashes/result-received times, which may be cached and are not block time. Decode pinned pool layout, require target vault present in enumeration with matching authority. Retain max8 hints sorted by target-vault balance/address and omitted count.",
+      "audit": "Merge index/Owner/program origins by pool address, main index first then fair round-robin; combined8 pools, existing raw discovery plus same-bank Mint/token/pool <=100-key reread required, slot lower bound and authority/vault consistency checked. At most4 new GPA plus2 existing role logical calls=6, shared1200wire attempts/1800sec and existing retries. Optional errors retain safe source gaps; RPCJobBudgetExceeded propagates terminal.",
+      "ranking": "Same-bank verified accounts deducted once before Owner reaggregation, auxiliary/unknown balances retained. Structural hints or seed matches alone cannot exclude. all_special_roles_normalized=false. JSON/Markdown/UI preserve provenance/limitations; UI adds source and query diagnostics. GET/quick/deep/defaultCLI do not collect."
+    },
+    "validation": {
+      "new_python_passed": 28,
+      "local_related_python_passed": 541,
+      "local_frontend_passed": 140,
+      "syntax_diff": "PASS",
+      "log_sha256": {
+        "global-pool-related.txt": "6535443ec5b2f901245fefdb129c61cb01b80078ae3bcabab4a8bebb757424dc",
+        "global-pool-node.txt": "8982787ad7f3e1c7ee45f895857371d55248d09bf8bab1aaf1b1a75f339ebacd",
+        "global-pool-green.txt": "26db9f8e5a8802b72ba712af680468f813c020c99b0978e8f0a80f06da1b0e9f"
+      },
+      "cases": [
+        "CPMM/v4 both Mint sides",
+        "No observed trigger no reads",
+        "11 malformed/relaxed query shapes rejected pre-wire",
+        "Hard wire cap, malformed/over128 rows/missing vault rejected",
+        "Budget terminal vs safe optional errors",
+        "Both authorities at most4 queries",
+        "Duplicate source hint deducted once"
+      ],
+      "ci": {
+        "run_id": 41747055366,
+        "run_number": 93,
+        "job_id": 126302603386,
+        "head": "23be73fc7472e0e024f8b8eca8b64f5a14f9520e",
+        "merge_ref_prefix": "410bfea49",
+        "status": "completed",
+        "conclusion": "success",
+        "python_passed": 2049,
+        "python_skipped": 4,
+        "frontend_passed": 140,
+        "browser_checks": 38,
+        "checks": [
+          "single query entry removes depth selector and explains bounded incomplete evidence",
+          "same-bank binary holder mass and raw Owner ranks persist without provider role or history parity claims",
+          "verified single target-vault deduction preserves auxiliary balance and both denominators without all-LP claim",
+          "two actual decoded pool identities and same-bank holder ledger persist known-only exclusion ranks with auxiliary balances",
+          "off-index Orca pool is discovered from decoded Owner account hint and re-read with holder cohort before exclusion",
+          "shared authority triggers two bounded CPMM Mint-side queries and third pool is re-read before account deduction",
+          "same-pool indexer differences persist with source times and no chain parity claim",
+          "raw vault snapshot survives job persistence with visible slot precision and no executable price claim",
+          "signed virtual reserves and waiting-fee separation persist without a double deduction or executable quote",
+          "same-pool explicit quote-unit difference persists with unaligned time and no parity verdict",
+          "worker DONE persists incomplete product outcome and browser shows required evidence gaps",
+          "full mint Owner ranks are separate from raw Top20 history and preserve uncovered history",
+          "external narrative claim persists without exact-CA endorsement or invented publication time",
+          "historical Owner, closure time and one-frontier gap persist without current ownership claims",
+          "persisted Owner account selection, limits and missing closed history remain explicit",
+          "bounded history pages and cursor are visible without claiming full wallet history",
+          "single-mode submits -> distinct real worker persistence -> real report render",
+          "fresh page automatic history read is explicitly unverified and GET only",
+          "new page + empty backend memory -> select original A instead of latest B, GET only",
+          "history controls during pending POST cannot discard the acknowledged job",
+          "failed saved-report read preserves the other pending job",
+          "view saved A while C awaits recovery without replacing C",
+          "unified DONE/report disconnect -> manual GET recovery -> real rendering and pending cleanup",
+          "invalid input is explained without submitting a scan",
+          "visible existing-report entry reads partial historical cache without new POST",
+          "missing history for another CA hides the old report without a new POST",
+          "worker error remains error, no phantom successful report",
+          "local report shortcuts can be cleared without changing backend reports",
+          "blocked localStorage still permits app boot, acknowledged job and GET-only DONE recovery",
+          "edited input during POST is restored to the acknowledged job CA",
+          "edited input during historical GET leaves the paused task reachable and recoverable",
+          "combined CA/F01/D2 preserves manual snapshot reads, local source age and CA report",
+          "GET NETWORK is safely attributed, closes old F01 cards and recovers without POST",
+          "GET JSON is safely attributed, closes old F01 cards and recovers without POST",
+          "GET HTTP is safely attributed, closes old F01 cards and recovers without POST",
+          "intelligence keeps newer SELL and filter snapshot after delayed older BUY",
+          "activity keeps newer SELL and filter snapshot after delayed older BUY",
+          "intelligence filter cannot resurrect cached BUY after failed refresh; D2 remains independent"
+        ],
+        "page_errors": [],
+        "blocked_requests": [],
+        "fixture_posts": 7,
+        "real_rpc": 0,
+        "real_ca_posts": 0,
+        "production_requests": 0,
+        "browser": "151.0.7922.34",
+        "cleanup": "browser profile removed, fixture exited, port released",
+        "artifact": {
+          "id": 13284023202,
+          "sha256": "9c8465d774471e3895ff3349e4c5c71cf1c30530654b76df4dd6c3e8c8c129a2"
+        }
+      },
+      "user_chrome": {
+        "family": "Google Chrome user-connected extension",
+        "status": "PASS_BOUNDED_SYNTHETIC_UI",
+        "qa_url": "https://frank-role-isolated-qa-20261103.sappypanel.chatgpt.site",
+        "qa_source_commit": "e23e6559fbce6e8ad41a755c341d8c2a5af83e92",
+        "site_project_id": "appgprj_6ae9f8b543c481918dfb014559946d0a",
+        "site_version_id": "appgprj_6ae9f8b543c481918dfb014559946d0a~appgver_e07e93ea8df48191941101aa412af439",
+        "site_deployment_id": "appgdep_6aea7d0dd38c8191968fd20e970d9a99",
+        "site_deployment_status": "succeeded",
+        "app_js_sha256": "022db75f1b6632c450658bd9ae9fa28a6f957c5e5932f3e3c4f7e34d80891dda",
+        "app_js_matches_candidate": true,
+        "checks": {
+          "normal": {
+            "threeSources": true,
+            "programQueries2": true,
+            "deduct140": true,
+            "auxiliary700": true,
+            "incomplete": true
+          },
+          "partial": {
+            "withheld": true,
+            "exact": false
+          },
+          "corrupt": {
+            "withheld": true,
+            "exact": false
+          },
+          "legacy": {
+            "specialPanels": 0,
+            "singlePoolPanels": 0
+          },
+          "restored": {
+            "mode": " 当前：normal",
+            "exact": true
+          }
+        },
+        "site_origin_console_errors": [],
+        "screenshot_sha256": "d500a57765f8783412018421ca6f71f293c3331398a01341a00835d975a86a19",
+        "page_left_open": true,
+        "scope": "Actual shipped app.js renders extractor/collector synthetic report. CI backend HTTP tests separate. No representative real CA/source or production backend acceptance."
+      }
+    },
+    "boundaries": {
+      "real_rpc": 0,
+      "real_ca_posts": 0,
+      "frank_production_deployed": false,
+      "real_source_acceptance": false,
+      "existing_private_qa_site_updated": true,
+      "new_sites": 0,
+      "notifications": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "new_workflows": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "merged": false,
+      "independent_review": "waived by user; not claimed",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO",
+      "old_failed_job_identity": "UNPROVEN"
+    },
+    "remaining": [
+      "Only observed known shared authorities and supported fixed layouts, not all protocols/pools/special identities",
+      "Independent holder source, large Mint/Token-2022 economic mass",
+      "Full historical epochs/true first BUY, executable/USD valuation, representative real CA/source and finalMac acceptance"
+    ]
   }
 }
