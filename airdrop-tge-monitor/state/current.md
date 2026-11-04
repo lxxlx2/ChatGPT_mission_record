@@ -1,3 +1,12 @@
+## Latest terminal cache sync — 2026-11-04 14:01:08 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-04/140108-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-04/140108-attempt.md
+- run_status: PARTIAL; scheduled_shard: 2; executed_shard: 2; last_meaningful_attempt_at_shard2: 2026-11-04T14:01:08+07:00 PARTIAL_ONLY
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 6; gmail_attempted: false; app_notification: false
+- StandX DUSD Nov2 issuer original HTTP403 and claim app unreadable; SOURCE_GAP; no duplicate. Cambria RSGP claim unknown.
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- final_readback: VERIFIED blob f005d618ea861760738e9228ed3380dc8bfe93a0; commit 9dc44eed8e20c0f15a01e0a18ed9804a587a4cea
+
 ## Latest terminal cache sync — 2026-11-04 13:00:00 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-04/130000-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-04/130000-attempt.md
