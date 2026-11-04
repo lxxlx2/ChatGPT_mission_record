@@ -207,3 +207,19 @@ test('hypothetical verified official issuer-named IPO access would be eligible',
  });
  assert.equal(r.passed,true);
 });
+
+
+test('a missing original Early/NFT source must not masquerade as fully checked discovery',()=>{
+ const r=run(x=>{const q=x.source_receipts.find(t=>t.lane==='early_nft');q.status='source_gap';q.error='scheduled X unavailable / issuer original HTTP 403';q.result_urls=[];});
+ assert.equal(r.passed,true);
+ assert.equal(r.metrics.discovery_completeness,'PARTIAL');
+ assert.ok(r.metrics.unverified_lanes.includes('early_nft'));
+ assert.ok(r.metrics.blank_sections_with_discovery_gaps.includes('8:early_nft'));
+ assert.ok(r.warnings.some(t=>t.startsWith('DISCOVERY_COVERAGE_PARTIAL')));
+ assert.ok(r.warnings.some(t=>t.startsWith('BLANK_SECTION_SOURCE_GAP')));
+});
+test('missing TGE proof plus a blank section is explicitly partial without suppressing daily delivery',()=>{
+ const r=run(x=>{const q=x.source_receipts.find(t=>t.lane==='tge');q.status='source_gap';q.error='Tier A original source could not be read';q.result_urls=[];x.items=x.items.filter(t=>t.section!==7);});
+ assert.equal(r.metrics.discovery_completeness,'PARTIAL');
+ assert.ok(r.metrics.blank_sections_with_discovery_gaps.includes('7:tge'));
+});
