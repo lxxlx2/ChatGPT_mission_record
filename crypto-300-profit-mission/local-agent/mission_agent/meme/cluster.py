@@ -462,10 +462,14 @@ class SolanaReadOnlyRPC:
 
 
 def _instructions(tx):
-    if not tx:return []
+    if not isinstance(tx,dict):return []
+    meta=tx.get("meta")
+    # Parsed instructions remain present after a transaction rolls back. They
+    # prove transfers only when RPC metadata explicitly confirms success.
+    if not isinstance(meta,dict) or "err" not in meta or meta["err"] is not None:return []
     msg=tx.get("transaction",{}).get("message",{})
     out=list(msg.get("instructions") or [])
-    for group in tx.get("meta",{}).get("innerInstructions") or []:out.extend(group.get("instructions") or [])
+    for group in meta.get("innerInstructions") or []:out.extend(group.get("instructions") or [])
     return out
 
 
@@ -503,8 +507,10 @@ def _token_account_meta(tx):
 
 
 def _owner_token_transfers(tx):
+    instructions=_instructions(tx)
+    if not instructions:return []
     meta=_token_account_meta(tx);rows=[]
-    for ix in _instructions(tx):
+    for ix in instructions:
         p=ix.get("parsed")
         if not isinstance(p,dict) or p.get("type") not in {"transfer","transferChecked"}:continue
         info=p.get("info") or {};src=info.get("source");dst=info.get("destination")
@@ -1773,6 +1779,13 @@ def markdown(report:dict)->str:
         "",
     ]
     for k,v in m.items():
+        if _decimal_value(v)==0:
+            if k=="LARGEST_PROBABLE_CONTROL_CLUSTER_PCT":
+                lines.append(f"- {k}: No common-control evidence established in the covered sample; hidden control is not ruled out.")
+                continue
+            if k=="LARGEST_PROBABLE_EXECUTION_CLUSTER_PCT":
+                lines.append(f"- {k}: No common-execution evidence established in the covered sample.")
+                continue
         suffix="%" if v not in {"UNRESOLVED","UNAVAILABLE",None} else ""
         lines.append(f"- {k}: {v}{suffix}")
     lines += [

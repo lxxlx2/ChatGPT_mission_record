@@ -594,6 +594,33 @@ test('CA exact concentration remains available with verified labels ranks and sl
   assert.match(h.element('cluster-metrics').innerHTML,/12.1234/);
 });
 
+test('CA zero probable groups describe bounded evidence instead of absence of hidden control',()=>{
+  const h=harness();
+  for (const zero of [0,'0','0.0000']) {
+    h.context.renderClusterReport({...fixture,metrics:{
+      LARGEST_PROBABLE_CONTROL_CLUSTER_PCT:zero,
+      LARGEST_PROBABLE_EXECUTION_CLUSTER_PCT:zero,
+    }});
+    const html=h.element('cluster-metrics').innerHTML;
+    assert.match(html,/已覆盖样本中未建立共同控制证据/);
+    assert.match(html,/不代表不存在隐蔽控制/);
+    assert.match(html,/已覆盖样本中未建立共同执行证据/);
+    assert.doesNotMatch(html,/<strong>0%<\/strong>/);
+  }
+});
+
+test('CA unknown probable control stays unknown and positive estimates retain their percentage',()=>{
+  const h=harness();
+  for (const value of [null,undefined,'UNRESOLVED']) {
+    h.context.renderClusterReport({...fixture,metrics:{LARGEST_PROBABLE_CONTROL_CLUSTER_PCT:value}});
+    const html=h.element('cluster-metrics').innerHTML;
+    assert.match(html,/最大 probable 控制集群<\/span><strong><span class="unresolved">未确认/);
+    assert.doesNotMatch(html,/已覆盖样本中未建立共同控制证据/);
+  }
+  h.context.renderClusterReport({...fixture,metrics:{LARGEST_PROBABLE_CONTROL_CLUSTER_PCT:'12.3456'}});
+  assert.match(h.element('cluster-metrics').innerHTML,/12.3456%/);
+});
+
 test('CA coverage shows specific bounded gaps without echoing untrusted codes',()=>{
   const h=harness();
   h.context.renderClusterReport({...fixture,coverage:{...fixture.coverage,gaps:['OWNER_HISTORY_NOT_SCANNED','TOP_ACCOUNT_RESOLUTION_GAPS','MULTIPLE_TOKEN_ACCOUNTS_PER_OWNER','TRANSACTION_READ_GAPS','http://private.example/SECRET']}});

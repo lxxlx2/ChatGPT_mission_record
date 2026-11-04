@@ -2101,9 +2101,16 @@ function renderClusterReport(report) {
     'EX_LP_TOP10_PCT','EX_SPECIAL_TOP10_PCT','LARGEST_CONFIRMED_RELATION_GROUP_PCT',
     'LARGEST_PROBABLE_EXECUTION_CLUSTER_PCT','CLUSTER_ADJUSTED_TOP10_PCT'
   ];
-  const renderConcentration = key =>
-    '<div class="cluster-metric"><span>' + esc(clusterMetricLabel[key] || key) + '</span><strong>' +
-    clusterMetricValue(!strictComplete && ['EX_LP_TOP10_PCT','EX_SPECIAL_TOP10_PCT','DEV_LINKED_CLUSTER_PCT','CLUSTER_ADJUSTED_TOP10_PCT'].includes(key) ? 'UNRESOLVED' : metrics[key]) + '</strong></div>';
+  const renderConcentration = key => {
+    const value = !strictComplete && ['EX_LP_TOP10_PCT','EX_SPECIAL_TOP10_PCT','DEV_LINKED_CLUSTER_PCT','CLUSTER_ADJUSTED_TOP10_PCT'].includes(key) ? 'UNRESOLVED' : metrics[key];
+    let display = clusterMetricValue(value);
+    // A zero is an empty result within covered evidence, not proof of absence.
+    if ((typeof value === 'number' || (typeof value === 'string' && value.trim() !== '')) && Number(value) === 0) {
+      if (key === 'LARGEST_PROBABLE_CONTROL_CLUSTER_PCT') display = '已覆盖样本中未建立共同控制证据（不代表不存在隐蔽控制）';
+      if (key === 'LARGEST_PROBABLE_EXECUTION_CLUSTER_PCT') display = '已覆盖样本中未建立共同执行证据';
+    }
+    return '<div class="cluster-metric"><span>' + esc(clusterMetricLabel[key] || key) + '</span><strong>' + display + '</strong></div>';
+  };
   $('cluster-metrics').innerHTML = primary.map(renderConcentration).join('') +
     '<details class="cluster-extra-metrics"><summary>查看其余集中度指标</summary><div class="cluster-metrics-extra">' +
     extra.map(renderConcentration).join('') + '</div></details>';

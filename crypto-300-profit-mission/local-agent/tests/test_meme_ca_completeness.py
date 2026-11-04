@@ -103,3 +103,26 @@ def test_attempted_unavailable_market_still_records_the_source_attempt():
     assert rows['market']['status']=='UNAVAILABLE'
     assert 'DexScreener market reference' in rows['market']['attempted_sources']
     assert 'PRIVATE_PROVIDER_ERROR' not in str(rows['market'])
+
+
+@pytest.mark.parametrize('zero',[0,'0','0.0000'])
+def test_markdown_zero_probable_groups_describe_bounded_evidence(zero):
+    report=snapshot()
+    report['metrics']={
+        'LARGEST_PROBABLE_CONTROL_CLUSTER_PCT':zero,
+        'LARGEST_PROBABLE_EXECUTION_CLUSTER_PCT':zero,
+    }
+    output=markdown(report)
+    assert 'No common-control evidence established in the covered sample; hidden control is not ruled out.' in output
+    assert 'No common-execution evidence established in the covered sample.' in output
+    assert f'LARGEST_PROBABLE_CONTROL_CLUSTER_PCT: {zero}%' not in output
+    assert report['metrics']['LARGEST_PROBABLE_CONTROL_CLUSTER_PCT']==zero
+
+
+@pytest.mark.parametrize('value',[None,'UNRESOLVED','12.3456'])
+def test_markdown_unknown_or_positive_probable_metric_keeps_its_value(value):
+    report=snapshot()
+    report['metrics']={'LARGEST_PROBABLE_CONTROL_CLUSTER_PCT':value}
+    output=markdown(report)
+    assert 'No common-control evidence established' not in output
+    assert f'LARGEST_PROBABLE_CONTROL_CLUSTER_PCT: {value}' in output
