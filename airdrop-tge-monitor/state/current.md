@@ -887,3 +887,12 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - candidate_count: 3; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 6; gmail_attempted: false; app_notification: false
 - StandX Nov2 DUSD original X 403 and claim app inaccessible; SOURCE_GAP; Surf Nov13 already delivered. Browser originating context unavailable. No task/schedule/recipient/scope change.
 - final_readback: VERIFIED blob 8cae363332ba5678877018229459e4f732f23d2c; commit f85cc434f995c4e2b79c7e1c15625518028832f1
+
+## Latest terminal cache sync — 2026-11-04 22:03:40 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-04/220340-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-04/220340-attempt.md
+- run_status: PARTIAL; scheduled_shard: 2; executed_shard: 2; last_meaningful_attempt_at_shard2: 2026-11-04T22:03:40+07:00 PARTIAL_ONLY
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 4; gmail_attempted: false; app_notification: false
+- StandX DUSD Nov2 original X HTTP403 and claim JS inaccessible; Cambria wallet claim unverified; no new ACTION.
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- final_readback: VERIFIED blob 66524b61be07b09008cd25af954f964e8b9afb77; commit b3d2ab175ef6655900af85a405c7c62016bfac97
