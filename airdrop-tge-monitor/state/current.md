@@ -859,3 +859,13 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - candidate_count: 1; action_gate_pass: 0; triggered_events: 0; gmail_attempted: false; app_notification: false
 - StandX DUSD issuer original/claim remains VERIFYING SOURCE_GAP; Surf Nov13 already notified; no fresh Tier A/B action.
 - final_readback: VERIFIED blob 3da45c63430d0adb412e56769a78f74753a7aab9
+
+## Terminal sync 2026-11-04 18:58:49 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-04/185849-final.md
+- run_status: PARTIAL; verified_complete: false; last_verified_complete_at: UNCHANGED
+- schedule: existing hourly HH:00 Asia/Bangkok unchanged; off-minute actual invocation
+- scheduled_shard: 2; executed_shard: 2; last_meaningful_attempt_at_shard2: 2026-11-04T18:58:49+07:00 PARTIAL_ONLY
+- candidate_count: 2; triggered_events: 0; identity_failures: 0; source_failures: 8
+- gmail_attempted: false; app_notification: false; browser_session: UNAVAILABLE_NOT_INVOKED
+- StandX DUSD claim first-party open remains SOURCE_GAP; MetaMask Perps contest issuer verified but user-rights ACTION_GATE FAIL; no qualified ACTION
+- final_readback: VERIFIED blob dda7d1197cfe85660d61aa091f278edfdee156a9
