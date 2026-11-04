@@ -1,3 +1,12 @@
+## Latest terminal cache sync — 2026-11-05 06:56:38 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-05/065638-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-05/065638-attempt.md
+- final_readback: VERIFIED blob 83acf973c6cd7f907caa414ec5942a0b1af213cf; commit d949600d2ea22f36a9adb7ed1f6c33fcb02e26ae
+- run_status: PARTIAL; scheduled_shard: 2; executed_shard: 2; last_meaningful_attempt_at_shard2: 2026-11-05T06:56:38+07:00 PARTIAL_ONLY
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 6; gmail_attempted: false; app_notification: false
+- StandX Nov2 original/live claim SOURCE_GAP; SurfBoard Nov13 already delivered; generic MetaMask contest no proven personal right. Existing task unchanged.
+
 ## Latest terminal cache sync — 2026-11-05 04:55:45 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-05/045545-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-05/045545-attempt.md
