@@ -1,3 +1,12 @@
+## Latest terminal cache sync — 2026-11-04 20:03:23 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-04/200323-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-04/200323-attempt.md
+- final_readback: VERIFIED blob a153f849978d834aa2c1f7789c65e35d212bcff1; commit 8b785782fe17e0ece31be1e04116fd2963ae59cd
+- run_status: PARTIAL; scheduled_shard: 0; executed_shard: 0; last_meaningful_attempt_at_shard0: 2026-11-04T20:03:23+07:00 PARTIAL_ONLY
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 8; gmail_attempted: false; app_notification: false
+- StandX Nov2 DUSD original X 403 and claim page unavailable, no Tier A/B actionable proof. Surf Nov13 already delivered; Cambria Oct29 already delivered.
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+
 ## Latest terminal cache sync — 2026-11-04 16:57:25 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-04/165725-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-04/165725-attempt.md
