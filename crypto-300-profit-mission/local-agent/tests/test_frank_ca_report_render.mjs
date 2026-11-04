@@ -999,3 +999,16 @@ test('unknown pool candidate source never echoes arbitrary provider text',()=>{
   h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
   assert.match(html,/未核实来源/);assert.doesNotMatch(html,/private.invalid|SECRET/);
 });
+
+test('shared authority filtered program discovery shows bounded query coverage and safe source label',()=>{
+  const h=harness(),r=specialRoleReportForUi(),a=r.special_address_roles;
+  a.pools[0].candidate_sources=['MINT_FILTERED_PROGRAM_QUERY'];
+  a.program_pool_discovery={version:1,logical_queries:2,attempts:[{program:'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C',mint_side:'BASE',status:'OBSERVED_QUERY_RESULT',matching_rows:2,eligible_rows:1,snapshot_slot:101},{program:'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C',mint_side:'QUOTE',status:'UNAVAILABLE',reason:'https://private.invalid/SECRET'}]};
+  h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
+  assert.match(html,/Mint 过滤程序查询/);assert.match(html,/本轮 2 个过滤查询/);assert.match(html,/最多4个/);assert.match(html,/128账户/);assert.match(html,/来源仍有缺口/);assert.doesNotMatch(html,/private.invalid|SECRET/);
+});
+
+test('legacy role report does not invent a program-query count',()=>{
+  const h=harness();h.context.renderClusterReport(specialRoleReportForUi());
+  assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/本轮 0 个过滤查询/);
+});

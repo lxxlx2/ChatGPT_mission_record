@@ -42,7 +42,9 @@ def fixture_holder_binary(mint):
     from mission_agent.meme.pool_vaults import _key
     from mission_agent.meme.holder_binary import collect_holder_binary_check
     program='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
-    owner=lambda i:_key((6000+i).to_bytes(32,'big'))
+    from mission_agent.meme.pool_programs import CPMM,stored_bump_authority,pubkey_bytes
+    shared_authority=stored_bump_authority(CPMM,b'vault_and_lp_mint_auth_seed',253)
+    owner=lambda i:shared_authority if i==2 else _key((6000+i).to_bytes(32,'big'))
     addresses=[_key((5000+i).to_bytes(32,'big')) for i in range(30)]
     amounts=[100,700]+[20]*10+[0]*18
     accounts=[{'token_account':a,'owner':owner(0 if i<2 else i-1),'raw':str(amounts[i]),'decimals':6} for i,a in enumerate(addresses)]
@@ -60,7 +62,7 @@ def fixture_holder_binary(mint):
     mint_key=value.to_bytes(32,'big')
     values={}
     for i,a in enumerate(addresses):
-        b=bytearray(165);b[:32]=mint_key;b[32:64]=(6000+(0 if i<2 else i-1)).to_bytes(32,'big')
+        b=bytearray(165);b[:32]=mint_key;b[32:64]=pubkey_bytes(owner(0 if i<2 else i-1))
         b[64:72]=amounts[i].to_bytes(8,'little');b[108]=1
         values[a]=encoded(b)
     class BinaryRPC:
@@ -73,7 +75,7 @@ def fixture_holder_binary(mint):
 
 def fixture_special_roles(mint,source,market):
     from mission_agent.meme.pool_vaults import _key,PROGRAM,POOL_DISCRIMINATOR
-    from mission_agent.meme.pool_programs import pubkey_bytes,WHIRLPOOL
+    from mission_agent.meme.pool_programs import pubkey_bytes,WHIRLPOOL,CPMM,stored_bump_authority
     from mission_agent.meme.special_roles import collect_special_roles
     from mission_agent.meme.holder_ranks import valid_pubkey
     if not valid_pubkey(mint):return {"status":"NOT_REQUESTED"}
@@ -87,14 +89,23 @@ def fixture_special_roles(mint,source,market):
     b=bytearray(653);b[:8]=hashlib.sha256(b'account:Whirlpool').digest()[:8]
     for offset,value in [(101,mint),(181,quote),(133,_key((5002).to_bytes(32,'big'))),(213,vquote)]:b[offset:offset+32]=pubkey_bytes(value)
     orca=enc(WHIRLPOOL,b)
+    pool3=_key((7000).to_bytes(32,'big'))
+    b=bytearray(637);b[:8]=hashlib.sha256(b'account:PoolState').digest()[:8];b[328]=253;b[331]=6;b[332]=6
+    for offset,value in [(168,mint),(200,quote),(72,_key((5003).to_bytes(32,'big'))),(104,_key((8800).to_bytes(32,'big'))),(232,'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'),(264,'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')]:b[offset:offset+32]=pubkey_bytes(value)
+    cpmm=enc(CPMM,b)
     program='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
     m=bytearray(82);m[36:44]=(1000).to_bytes(8,'little');m[44]=6;m[45]=1
-    values={mint:enc(program,m),pool1:pump,pool2:orca}
+    values={mint:enc(program,m),pool1:pump,pool2:orca,pool3:cpmm}
     for row in source['accounts']:
         b=bytearray(165);b[:32]=pubkey_bytes(mint);b[32:64]=pubkey_bytes(row['owner']);b[64:72]=int(row['raw']).to_bytes(8,'little');b[108]=1
         values[row['token_account']]=enc(program,b)
     class RPC:
         def call(self,method,params,ttl=0):
+            if method=='getProgramAccounts':
+                from mission_agent.meme.pool_discovery import valid_pool_discovery_query
+                assert valid_pool_discovery_query(params) and params[0]==CPMM
+                offset=params[1]['filters'][-1]['memcmp']['offset']
+                return {'context':{'slot':101},'value':[{'pubkey':pool3,'account':cpmm}] if offset==168 else []}
             assert method=='getMultipleAccounts' and len(params[0])<=100
             return {'context':{'slot':101},'value':[values[a] for a in params[0]]}
     from mission_agent.meme.holder_ranks import discover_owner_pool_hint

@@ -84,18 +84,23 @@ try {
  check('verified single target-vault deduction preserves auxiliary balance and both denominators without all-LP claim');
  assert.equal(saved.holder_rankings.normalization_complete,false);
  assert.equal(saved.holder_rankings.metrics.GLOBAL_EX_LP_OWNER_TOP10_PCT,'UNRESOLVED');
- assert.equal(saved.special_address_roles.pools.filter(p=>p.status==='POOL_IDENTITY_BOUND').length,2);
+ assert.equal(saved.special_address_roles.pools.filter(p=>p.status==='POOL_IDENTITY_BOUND').length,3);
  assert.equal(saved.special_address_roles.pools.find(p=>p.decoded?.protocol==='ORCA_WHIRLPOOL').candidate_sources[0],'HOLDER_OWNER_ACCOUNT');
  assert.equal(saved.special_address_roles.owner_pool_hints_available,1);
- assert.equal(saved.special_address_roles.rankings.metrics.known_ex_lp.deducted_raw,'120');
+ assert.equal(saved.special_address_roles.rankings.metrics.known_ex_lp.deducted_raw,'140');
  assert.equal(saved.special_address_roles.rankings.metrics.known_ex_lp.top10_pct_of_remaining,'100.0000');
- assert.equal(saved.special_address_roles.rankings.metrics.known_ex_lp.unknown_role_raw,'880');
+ assert.equal(saved.special_address_roles.rankings.metrics.known_ex_lp.unknown_role_raw,'860');
  assert.match(await page.locator('.cluster-special-roles').innerText(),/已知排除口径已复算/);
  assert.match(await page.locator('.cluster-special-roles').innerText(),/ORCA_WHIRLPOOL/);
  assert.match(await page.locator('.cluster-special-roles').innerText(),/未知角色/);
  check('two actual decoded pool identities and same-bank holder ledger persist known-only exclusion ranks with auxiliary balances');
  assert.match(await page.locator('.cluster-special-roles').innerText(),/已读 Owner 账户/);
  check('off-index Orca pool is discovered from decoded Owner account hint and re-read with holder cohort before exclusion');
+ assert.equal(saved.special_address_roles.program_pool_discovery.logical_queries,2);
+ assert.equal(saved.special_address_roles.pools.find(p=>p.decoded?.protocol==='RAYDIUM_CPMM').candidate_sources[0],'MINT_FILTERED_PROGRAM_QUERY');
+ assert.match(await page.locator('.cluster-special-roles').innerText(),/本轮 2 个过滤查询/);
+ assert.match(await page.locator('.cluster-special-roles').innerText(),/Mint 过滤程序查询/);
+ check('shared authority triggers two bounded CPMM Mint-side queries and third pool is re-read before account deduction');
 
  assert.equal(saved.narrative.official_recognition,'UNVERIFIED');
  assert.equal(saved.market.comparison.status,'INDEXER_SNAPSHOTS_COMPARED');

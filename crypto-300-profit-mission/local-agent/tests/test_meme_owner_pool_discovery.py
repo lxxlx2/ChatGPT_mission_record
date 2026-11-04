@@ -73,7 +73,7 @@ def test_pool_discovered_from_holder_owner_is_audited_when_market_is_unavailable
     assert out['rankings']['metrics']['known_ex_lp']['owners']==[{'owner':POOL,'raw':'400'}]
     assert out['rankings']['metrics']['known_ex_lp']['top10_pct_of_mint_supply']=='40.0000'
     assert out['rankings']['metrics']['known_ex_lp']['top10_pct_of_remaining']=='100.0000'
-    assert out['discovery_scope']=='BOUNDED_INDEXER_AND_HOLDER_OWNER_HINTS_NOT_ALL_POOLS'
+    assert out['discovery_scope']=='BOUNDED_INDEXER_OWNER_AND_PROGRAM_HINTS_NOT_ALL_POOLS'
     assert rpc.calls[0][1][1]['minContextSlot']==101
 
 @pytest.mark.parametrize('bad',['hash','mint','owner','vault','slot'])

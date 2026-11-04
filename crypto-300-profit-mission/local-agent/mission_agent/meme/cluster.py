@@ -374,7 +374,11 @@ class SolanaReadOnlyRPC:
 
     def call(self, method, params, *, ttl=0):
         if method not in self.ALLOWED:raise ValueError("READ_ONLY_METHOD_ALLOWLIST")
-        if method=="getProgramAccounts" and not valid_enumeration_query(params):raise ValueError("HOLDER_ENUMERATION_QUERY_INVALID")
+        pool_discovery_query=False
+        if method=="getProgramAccounts":
+            from .pool_discovery import valid_pool_discovery_query
+            pool_discovery_query=valid_pool_discovery_query(params)
+            if not pool_discovery_query and not valid_enumeration_query(params):raise ValueError("HOLDER_ENUMERATION_QUERY_INVALID")
         self._check_job_budget()
         now=time.time()
         if ttl and self.cache:
@@ -405,8 +409,10 @@ class SolanaReadOnlyRPC:
                 self._last_wire_succeeded=False
                 with self.open_url(req,timeout=timeout) as response:
                     if method=="getProgramAccounts":
-                        payload=response.read(MAX_RESPONSE_BYTES+1)
-                        if len(payload)>MAX_RESPONSE_BYTES:raise RPCError("RPC_HOLDER_RANK_RESPONSE_LIMIT")
+                        from .pool_vaults import MAX_RPC_BYTES
+                        limit=MAX_RPC_BYTES if pool_discovery_query else MAX_RESPONSE_BYTES
+                        payload=response.read(limit+1)
+                        if len(payload)>limit:raise RPCError("RPC_POOL_RESPONSE_LIMIT" if pool_discovery_query else "RPC_HOLDER_RANK_RESPONSE_LIMIT")
                         value=json.loads(payload)
                     elif method in {"getAccountInfo","getMultipleAccounts"} and isinstance(params[-1],dict) and params[-1].get("encoding")=="base64":
                         from .pool_vaults import MAX_RPC_BYTES
