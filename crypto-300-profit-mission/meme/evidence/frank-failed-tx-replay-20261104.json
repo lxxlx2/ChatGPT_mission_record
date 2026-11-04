@@ -235,5 +235,229 @@
     "model_unprocessed": 0,
     "production_trading": "NO_GO",
     "at_utc": "2026-11-04T15:09:09.958112+00:00"
+  },
+  "remaining_state_before_followup_as_of_utc": "2026-11-04T15:08:37.661672+00:00",
+  "remaining_work_followup_20261105": {
+    "at_utc": "2026-11-04T22:21:26.629668+00:00",
+    "current_product_sha": "e069a925b71985c35b75cc8fd01eb75a9c97dd87",
+    "product_code_changed": false,
+    "latest_main_checked": "39f63da066573afab0b68b258b2686ba3b2eecd9",
+    "main_delta_since_prior_check_affects_Frank_or_rules": false,
+    "bounded_existing_capture_check": {
+      "counts": {
+        "blocked_network_attempts": 0,
+        "captured_transactions_loaded": 521,
+        "confirmed_bounded_firsts_checked": 3,
+        "existing_success_unverified_diagnostics": 25,
+        "funding_records_checked": 4,
+        "historical_observations_checked": 200,
+        "history_complete_true": 0,
+        "history_page_limit": 13,
+        "history_provider_empty_page": 4,
+        "history_windows_checked": 17,
+        "mismatches": 0,
+        "source_modules_hash_verified": 2,
+        "trade_records_checked": 192
+      },
+      "mismatch_counts": {},
+      "report_sha256": "494b480cef5d31f158eff11be40d2e2b8a4e6e22c0de380db13105c1cd2086f4",
+      "status": "PASS_BOUNDED_OFFLINE"
+    },
+    "existing_local_source_read": {
+      "observed_at_utc": "2026-11-04T22:16:14.399836+00:00",
+      "source_sha": "e069a925b71985c35b75cc8fd01eb75a9c97dd87",
+      "since_previous_acceptance_utc": "2026-11-04T15:09:09.958112+00:00",
+      "runtime": {
+        "status": "LIVE",
+        "pid": 81945,
+        "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+        "loaded_source_sha256": "c7a453d5a579c9425dd964f1945b887b3d4ebe92d8159cd8db17a85471958085",
+        "source_drift": false,
+        "consecutive_errors": 0,
+        "raw_pending": 0,
+        "model_unprocessed": 0,
+        "last_successful_poll": "2026-11-04T22:15:56.706761+00:00",
+        "production_trading": "NO_GO"
+      },
+      "D1_last_day": {
+        "indexed_signatures": 123,
+        "trade_legs": 3,
+        "categories": {
+          "ACTIVE_TRADE": 3,
+          "ATA_CREATE": 44,
+          "FAILED_TX": 8,
+          "PASSIVE_TRANSFER": 67,
+          "UNKNOWN_NEEDS_REVIEW": 1
+        },
+        "flags": {
+          "MATCHED_OR_NOT_APPLICABLE": 122,
+          "UNRESOLVED": 1
+        }
+      },
+      "since_previous_acceptance": {
+        "indexed_signatures": 50,
+        "classes": {
+          "PASSIVE_TRANSFER": 24,
+          "ACTIVE_TRADE": 3,
+          "FAILED_TX": 8,
+          "ATA_CREATE": 15
+        },
+        "trade_sides": {
+          "ADD": 1,
+          "BUY": 1,
+          "SELL_POSITION_UNRESOLVED": 1
+        },
+        "time_basis": "chain block_time after the prior receipt, not count of rows inserted after that time"
+      },
+      "F01": {
+        "status": "SOURCE_ONLY",
+        "source_recent_count": 0,
+        "history_candidates": 7,
+        "eligible_count": 0,
+        "candidates_with_buy_after_previous_acceptance": 0
+      },
+      "scope": "GET existing local indexes; no real RPC, CA POST, notification or service operation"
+    },
+    "natural_buy_acceptance": {
+      "status": "PASS_NATURAL_BUY_RECOGNITION_AND_NONQUALIFYING_SUPPRESSION",
+      "scanner_source_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "policy_sha256": "83ebab1fbb8ec7e03950626137c5597a38b81b8a4085d9150610018cc78cedab",
+      "source_modules_sha256": {
+        "mission_agent/signals/classifier.py": "fff748524be509d7058544180af217e763f1d381b34486989aa182d0980ba509",
+        "mission_agent/signals/engine.py": "59fe1941a76c3334668d49d533d3379c27aa6b83f45cb15b7e98113eae82eba9",
+        "mission_agent/signals/evaluator.py": "e645f8a21f7835bbf65ceac3bcf261c568ac456f1044641038a5326a390529cd"
+      },
+      "events": [
+        {
+          "side": "BUY",
+          "chain_block_time_utc": "2026-11-04T21:44:32+00:00",
+          "quote_asset": "USDC",
+          "quote_quantity": "10000.0",
+          "block_to_first_detection_seconds": 18.020773,
+          "block_to_ledger_insert_seconds": 18.213978,
+          "recorded_model_result": {
+            "buy_count": 1,
+            "buy_span_seconds": 0,
+            "inventory_scope": "OBSERVED_ACTIVE_SEQUENCE",
+            "kind": "ACTIVE_TRADE",
+            "known_episode_usdc": "10000",
+            "known_rolling_usdc": "10000",
+            "lifetime_position": "LIFETIME_POSITION_UNKNOWN",
+            "predicates": {
+              "accumulation_amount": "FAIL",
+              "accumulation_buy_count": "FAIL",
+              "cumulative_amount": "PASS",
+              "distribution": "PASS",
+              "freshness": "PASS",
+              "hft": "PASS",
+              "inventory": "PASS",
+              "persistence": "FAIL",
+              "prior_accumulation": "FAIL",
+              "t0": "FAIL"
+            },
+            "sequence": "CURRENT_ACCUMULATION_SEQUENCE_KNOWN",
+            "signal_ids": [],
+            "stages": [],
+            "usd_estimate": "unavailable"
+          },
+          "raw_compressed_sha256": "469ec945873d789c19111f5bb47faa3045e99736a14e447d69f2b383a6d3b4e6",
+          "raw_transaction_sha256": "a51bdb5941278bcdb3d845eed5df89f4ac4420bc5ba7ea1297ce4c8a6e3ce17d"
+        },
+        {
+          "side": "ADD",
+          "chain_block_time_utc": "2026-11-04T21:44:38+00:00",
+          "quote_asset": "USDC",
+          "quote_quantity": "10000.0",
+          "block_to_first_detection_seconds": 12.019486,
+          "block_to_ledger_insert_seconds": 16.971236,
+          "recorded_model_result": {
+            "buy_count": 2,
+            "buy_span_seconds": 6,
+            "inventory_scope": "OBSERVED_ACTIVE_SEQUENCE",
+            "kind": "ACTIVE_TRADE",
+            "known_episode_usdc": "20000",
+            "known_rolling_usdc": "20000",
+            "lifetime_position": "LIFETIME_POSITION_UNKNOWN",
+            "predicates": {
+              "accumulation_amount": "FAIL",
+              "accumulation_buy_count": "PASS",
+              "cumulative_amount": "PASS",
+              "distribution": "PASS",
+              "freshness": "PASS",
+              "hft": "PASS",
+              "inventory": "PASS",
+              "persistence": "FAIL",
+              "prior_accumulation": "FAIL",
+              "t0": "PASS"
+            },
+            "sequence": "CURRENT_ACCUMULATION_SEQUENCE_KNOWN",
+            "signal_ids": [],
+            "stages": [],
+            "usd_estimate": "unavailable"
+          },
+          "raw_compressed_sha256": "6d2a73bc5871fd68ec68aecc5ce9b3569fc56e3a33c20c3ec02505a0434b214d",
+          "raw_transaction_sha256": "a8025416c347aecdb88d9caebf17ae5e4de4eb32e0c5cf2754c02d65f52346d7"
+        }
+      ],
+      "raw_success_hash_and_reclassification_verified": 2,
+      "live_source_dedup_rows_once": 2,
+      "private_engine_replay_matches_stored_results": true,
+      "duplicate_private_replay_counts_unchanged": true,
+      "private_replay_counts": {
+        "signatures": 2,
+        "trades": 2,
+        "v1_seen": 2,
+        "v1_evaluations": 2,
+        "signals": 0,
+        "outbox": 0,
+        "email_content": 0
+      },
+      "model_nonqualification_reason": "Two 10000 USDC buys total20000 below frozen25000 accumulation threshold;6-second span also fails persistence. No signal or notification expected.",
+      "latency_scope": "Block timestamp to existing signature detection/durable ledger insert only; not RPC wire completion, notification delivery or user visibility.",
+      "actual_network_attempts": 0,
+      "production_writes": 0,
+      "sender_calls": 0,
+      "notification_delivery_latency": "NOT_OBSERVED_NO_QUALIFYING_SIGNAL",
+      "not_proof_of_current_balances_or_full_history": true
+    },
+    "actual_Chrome": {
+      "page": "http://127.0.0.1:8766/#signals",
+      "D1_filter": "ACTIVE_TRADE",
+      "indexed_signatures_displayed": 123,
+      "matched_active_rows": 3,
+      "BUY_local_time": "2026-11-05 04:44:32 Asia/Bangkok",
+      "ADD_local_time": "2026-11-05 04:44:38 Asia/Bangkok",
+      "page_kept_open": true,
+      "new_scan_submit_actions": 0
+    },
+    "no_repeat_of_closed_full_CI_or_installation": true,
+    "new_real_RPC_or_CA_POST": 0,
+    "service_lifecycle_operations": 0,
+    "notification_or_mail_send_calls": 0,
+    "paid_cost": 0,
+    "research_or_capture_budget_renewal": false,
+    "decision": "PARTIAL / SOURCE_BLOCKED; bounded offline checks and natural nonqualifying BUY path PASS; no new source-backed code defect",
+    "remaining_current": [
+      "Full Mint/rank/role source unavailable after the prior six HTTP429 responses; original one-shot capture allowance consumed, not renewed.",
+      "13 of17 history windows PAGE_LIMIT; no source evidence for full history/true first buy.",
+      "Independent market/holder parity and narrative were not collected; no extra source authorized or used.",
+      "D2 remains Nov1 historical snapshot, not current whole-wallet balances.",
+      "Qualifying ACCUMULATION/MULTIPLE natural signal and actual notification latency remain unobserved. Two natural BUY/ADD records are verified but total20000 USDC does not satisfy frozen25000 threshold.",
+      "Original October failed-job identity/unique trigger unresolved; MC root key anchor and user-held-key signed artifact absent; research and trading remain NO_GO."
+    ],
+    "hashes": {
+      "bounded_check_script": "180000c730d318499f0776b799b9273d13aef9657248009655ffdd3335910aa3",
+      "bounded_check_receipt": "93edfbcae70db8d5d9036f6c415770967ee7c7a3dc4564020d24db020adff62d",
+      "natural_buy_private_script": "f38c72e2d02cf8faf50340812548057a7f71204c02981c63f4ea452b95a07750",
+      "natural_buy_private_receipt": "8f16addc19bff7dac8efa47ab759a89f2c5242a3360548a0d34deb080059f695",
+      "local_source_summary": "4553c5373fb0917c11d58351c09176e7b8d51903ce9e015779c5f263c701f79a",
+      "actual_Chrome_screenshot": "5ee725ed6b1653869ef24d925ca6aa448ec456e7f7baffd3836087049f7251f4"
+    },
+    "remaining_gates_readonly": {
+      "MC_loop_unloaded": true,
+      "D2_same_bytes_as_previous_acceptance": true,
+      "D2_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+      "D2_observed_at_utc": "2026-11-01T01:26:32.578080+00:00"
+    }
   }
 }
