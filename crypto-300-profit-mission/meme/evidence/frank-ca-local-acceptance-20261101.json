@@ -3820,5 +3820,199 @@
       "Independent holder source, large Mint/Token-2022 economic mass, full histories and true first BUY",
       "Real representative CA/source and final productionMac acceptance, executable/USD valuation"
     ]
+  },
+  "ca_role_coverage_followup_20261104": {
+    "observed_at_utc": "2026-11-04T01:06:05.064Z",
+    "verdict": "PASS_ACCOUNT_ROLE_COVERAGE_AND_UNKNOWN_OWNER_PRIORITY; EXHAUSTIVE_IDENTITIES_UNVERIFIED",
+    "source": {
+      "pr": 220,
+      "head": "33f2df95e9759adac0128ed39c56ecfbf1a4925d",
+      "tree": "af5f00d9d2e30951b946efdad01ffb8b7a22570c",
+      "baseline": "3c5f936976747fdb04dc829ff56749ed9eee0c9d",
+      "files": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/special_roles.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_browser.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs",
+        "crypto-300-profit-mission/local-agent/tests/test_meme_role_coverage.py"
+      ],
+      "runtime_files": 2,
+      "test_files": 3,
+      "new_files": 1,
+      "remote_readback": "5/5 exact"
+    },
+    "implementation": {
+      "partition": "From the existing same-bank role ledger, partition raw account balances into CHAIN_ACCOUNT_ROLE, ATTRIBUTION_CLAIM and unresolved evidence. Persist actual slot/hash, observed count/raw, each category total, unknown positive account/Owner counts, and per-Owner amounts/roles/account counts/mixed evidence. Sum after per-account classification; pool vault evidence never labels all balances under the same Owner. Deterministic descending total/raw and ASCII address order.",
+      "percentage": "Only verified holder mass and no role conflicts allow EXACT_OBSERVED_ROLE_PARTITION and unknown_pct_of_mint_supply. Otherwise retain OBSERVED_ROLE_PARTITION_ONLY, with denominator percentage UNRESOLVED. all_special_roles_normalized remains false even if observed unknown balance is zero.",
+      "ui": "Recompute partition from already validated same-bank account role records before endorsing stored summary/owners. Reject tampered slot/hash/scope/count/amount/roles/mixed flags; withhold coverage and priority list without discarding separately valid exclusion arithmetic. Show unknown Owner balances sorted by unknown amount, max20; display chain/claim/unknown parts separately and mixed-evidence warning. Old reports without coverage do not invent zero counts. Legacy raw Owner/sample labels marked source/pending verification; ORDINARY/EOA labels show account structure with unverified attribution, not ordinary user.",
+      "storage": "Additive role_coverage object under special_address_roles.rankings survives existing JSON/Markdown persistence and GET readback; no reclassification of legacy raw source fields.",
+      "requests": "Zero additional RPC/method/provider/retry/collection/workflow. Uses existing role ledger only, keeps prior role-query caps and shared1200wire attempts/1800sec budget, GET never collects."
+    },
+    "validation": {
+      "baseline_new_python_failed": 10,
+      "new_python_passed": 10,
+      "local_meme_python_passed": 632,
+      "local_frontend_passed": 150,
+      "syntax_and_diff": "PASS",
+      "log_sha256": {
+        "role-coverage-red.txt": "998ff68c603d1eb23823aa54e687f6cf390f838a6b30c3e56e4e35021b97aade",
+        "role-coverage-green.txt": "e8b981c8b9010bb633ad4e4d591190d80aad92cbe20d00915232255ce3e7fd94",
+        "role-coverage-python.txt": "8ae8a545a74cfdaf7881f4783470a30f6fc59a8506b221e3ed1849fd236c3425",
+        "role-coverage-node.txt": "89eef4751f6a5e7a9b5750a3fac78784b85a90cc2c1bea57e7958689406c50ec"
+      },
+      "ci": {
+        "run_id": 41751104132,
+        "run_number": 97,
+        "job_id": 126316103893,
+        "head": "33f2df95e9759adac0128ed39c56ecfbf1a4925d",
+        "merge_ref_prefix": "f54592ae0",
+        "status": "completed",
+        "conclusion": "success",
+        "python_passed": 2073,
+        "python_skipped": 4,
+        "frontend_passed": 150,
+        "browser_checks": 41,
+        "checks": [
+          "single query entry removes depth selector and explains bounded incomplete evidence",
+          "same-bank binary holder mass and raw Owner ranks persist without provider role or history parity claims",
+          "verified single target-vault deduction preserves auxiliary balance and both denominators without all-LP claim",
+          "two actual decoded pool identities and same-bank holder ledger persist known-only exclusion ranks with auxiliary balances",
+          "off-index Orca pool is discovered from decoded Owner account hint and re-read with holder cohort before exclusion",
+          "shared authority triggers two bounded CPMM Mint-side queries and third pool is re-read before account deduction",
+          "same-bank role coverage partitions chain and unknown balances and never labels auxiliary balance as whole Owner pool",
+          "same-pool indexer differences persist with source times and no chain parity claim",
+          "raw vault snapshot survives job persistence with visible slot precision and no executable price claim",
+          "signed virtual reserves and waiting-fee separation persist without a double deduction or executable quote",
+          "same-pool explicit quote-unit difference persists with unaligned time and no parity verdict",
+          "worker DONE persists incomplete product outcome and browser shows required evidence gaps",
+          "full mint Owner ranks are separate from raw Top20 history and preserve uncovered history",
+          "external narrative claim persists without exact-CA endorsement or invented publication time",
+          "historical Owner, closure time and one-frontier gap persist without current ownership claims",
+          "persisted Owner account selection, limits and missing closed history remain explicit",
+          "bounded history pages and cursor are visible without claiming full wallet history",
+          "single-mode submits -> distinct real worker persistence -> real report render",
+          "fresh page automatic history read is explicitly unverified and GET only",
+          "new page + empty backend memory -> select original A instead of latest B, GET only",
+          "history controls during pending POST cannot discard the acknowledged job",
+          "failed saved-report read preserves the other pending job",
+          "view saved A while C awaits recovery without replacing C",
+          "unified DONE/report disconnect -> manual GET recovery -> real rendering and pending cleanup",
+          "invalid input is explained without submitting a scan",
+          "visible existing-report entry reads partial historical cache without new POST",
+          "missing history for another CA hides the old report without a new POST",
+          "worker error remains error, no phantom successful report",
+          "local report shortcuts can be cleared without changing backend reports",
+          "blocked localStorage still permits app boot, acknowledged job and GET-only DONE recovery",
+          "edited input during POST is restored to the acknowledged job CA",
+          "edited input during historical GET leaves the paused task reachable and recoverable",
+          "combined CA/F01/D2 preserves manual snapshot reads, local source age and CA report",
+          "GET NETWORK is safely attributed, closes old F01 cards and recovers without POST",
+          "GET JSON is safely attributed, closes old F01 cards and recovers without POST",
+          "GET HTTP is safely attributed, closes old F01 cards and recovers without POST",
+          "intelligence keeps newer SELL and filter snapshot after delayed older BUY",
+          "activity keeps newer SELL and filter snapshot after delayed older BUY",
+          "intelligence filter cannot resurrect cached BUY after failed refresh; D2 remains independent",
+          "no pool hints still persist holder-only same-bank audit and scoped dated attribution without LP or exhaustive identity claim",
+          "holder-only coverage preserves dated attribution separately from chain role and ranks remaining unknown Owner balances"
+        ],
+        "page_errors": [],
+        "blocked_requests": [],
+        "fixture_posts": 8,
+        "real_rpc": 0,
+        "real_ca_posts": 0,
+        "production_requests": 0,
+        "browser": "151.0.7922.34",
+        "cleanup": "browser profile removed, fixture exited, port released",
+        "artifact": {
+          "id": 13286130846,
+          "sha256": "3d884d71a8d8eecdb00b893495280fc70a6e542dda72ad8a52aa264193fcd3ac"
+        }
+      },
+      "user_chrome": {
+        "family": "Google Chrome user-connected extension",
+        "verdict": "PASS_SYNTHETIC_ACCOUNT_ROLE_COVERAGE_UI",
+        "qa_url": "https://frank-role-isolated-qa-20261103.sappypanel.chatgpt.site",
+        "qa_source_commit": "0739bd3d5f4e7cd11d94c2c8a205d918557ef6de",
+        "site_project_id": "appgprj_6ae9f8b543c481918dfb014559946d0a",
+        "site_version_id": "appgprj_6ae9f8b543c481918dfb014559946d0a~appgver_81edb8f3329481919e82d752a553040b",
+        "site_deployment_id": "appgdep_6aea845a77008191b5a50cbc4c42cabe",
+        "site_deployment_status": "succeeded",
+        "app_js_sha256": "cfabf35dda3a0a76a2a09549fdb50408062fdc9bdcad35dc650a4c6bf4a27864",
+        "app_js_matches_candidate": true,
+        "checks": {
+          "holderOnly": {
+            "unknown90": true,
+            "claim100": true,
+            "unknown900": true,
+            "owner700": true,
+            "unknownOwners11": true
+          },
+          "pools": {
+            "unknown86": true,
+            "chain140": true,
+            "unknown860": true,
+            "ownerMixed": true,
+            "noOrdinary": true,
+            "legacyLabelUnverified": true
+          },
+          "tamperedCoverage": {
+            "withheld": true,
+            "noExactCoverage": true,
+            "existingArithmeticKept": true
+          },
+          "partial": {
+            "arithmeticWithheld": true,
+            "coverageWithheld": true,
+            "noExactCoverage": true
+          },
+          "corrupt": {
+            "arithmeticWithheld": true,
+            "coverageWithheld": true,
+            "noExactCoverage": true
+          },
+          "expired": {
+            "arithmeticWithheld": true,
+            "coverageWithheld": true,
+            "noExactCoverage": true
+          },
+          "legacy": {
+            "coveragePanels": 0,
+            "specialPanels": 0
+          },
+          "restored": {
+            "mode": " 当前：pools",
+            "exact": true
+          }
+        },
+        "site_origin_console_errors": [],
+        "screenshot_sha256": "8427876c6922fe12ff6c297a36fed72bc66b7465d52c9e659d87c7a2ba9aa993",
+        "page_left_open": true,
+        "scope": "Actual candidate app.js renders real collector-generated synthetic reports; no representative real CA/source or production backend acceptance. Synthetic attribution is not real lock/CEX proof."
+      }
+    },
+    "boundaries": {
+      "real_rpc": 0,
+      "real_ca_posts": 0,
+      "frank_production_deployed": false,
+      "real_source_acceptance": false,
+      "new_sites": 0,
+      "existing_private_qa_site_updated": true,
+      "notifications": 0,
+      "trades": 0,
+      "new_monitors": 0,
+      "new_workflows": 0,
+      "scanner_restarts": 0,
+      "mc_starts": 0,
+      "merged": false,
+      "independent_review": "waived by user; not claimed",
+      "investment": "INVEST_NO_GO",
+      "trading": "TRADE_NO_GO",
+      "old_failed_job_identity": "UNPROVEN"
+    },
+    "remaining": [
+      "Coverage quantifies unknown balance, it does not identify unknown protocols/CEX/MM/lock/bridge or certify all pool discovery",
+      "Independent holder source, large Mint/Token-2022 economic mass, full historical epochs/true first BUY",
+      "Representative real CA/source, official attribution, executable/USD valuation and final productionMac acceptance"
+    ]
   }
 }
