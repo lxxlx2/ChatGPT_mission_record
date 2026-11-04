@@ -174,15 +174,31 @@ def collect_special_roles(mint,source,market,rpc,registry=None):
     owner_skipped=owner_skipped if type(owner_skipped) is int and owner_skipped>=0 else 0
     out['not_selected_pool_hints']=max(0,len(all_candidates)-MAX_POOLS)+index_skipped+owner_skipped+max(0,len(owner_hints)-8)+max(0,len(index_hints)-65)+program_discovery.get('hints_not_selected',0)
     candidates=all_candidates[:MAX_POOLS]
-    if not candidates:return {**out,'reason':'NO_VALID_POOL_HINTS'}
+    def holder_only(reason):
+        # Pool discovery is optional role evidence, not a prerequisite for
+        # dated account attribution. Never treat a missing pool as ordinary.
+        lower=max(slot if type(slot) is int and slot>0 else 0,out.get('discovery_slot',0))
+        class HolderRPC:
+            def call(self,method,params,ttl=0):
+                addresses,cfg=params;cfg={**cfg,'minContextSlot':max(cfg.get('minContextSlot',0),lower)}
+                result=rpc.call(method,[addresses,cfg],ttl=ttl)
+                return result
+        check=collect_holder_binary_check(mint,source,HolderRPC())
+        if type(check.get('snapshot_slot')) is int and check['snapshot_slot']<lower:
+            check.update(status='UNAVAILABLE',reason='HOLDER_CONTEXT_BEFORE_DISCOVERY',full_positive_mass_reconciled=False)
+        out.update(audit_path='HOLDER_ONLY_NO_BOUND_POOL',pool_discovery_reason=reason,balance_check=check,
+                   snapshot_slot=check.get('snapshot_slot'),cohort_response_sha256=check.get('response_sha256'),
+                   rankings=derive_special_ranks(mint,check,[],registry))
+        return out
+    if not candidates:return holder_only('NO_VALID_POOL_HINTS')
     discovery_cfg={'encoding':'base64','commitment':'finalized'}
     owner_slots=[h['owner_metadata_slot'] for p in candidates for h in p['owner_hints']]
     owner_slots+=[h['program_snapshot_slot'] for p in candidates for h in p['program_hints']]
     if owner_slots:discovery_cfg['minContextSlot']=max(owner_slots)
     response=rpc.call('getMultipleAccounts',[[p['pool_address'] for p in candidates],discovery_cfg],ttl=30)
     discovery_slot=_slot(response);values=response.get('value')
-    if not isinstance(values,list) or len(values)!=len(candidates):return {**out,'reason':'DISCOVERY_RESPONSE_INVALID'}
     out['discovery_slot']=discovery_slot;out['discovery_response_sha256']=digest(response)
+    if not isinstance(values,list) or len(values)!=len(candidates):return holder_only('DISCOVERY_RESPONSE_INVALID')
     accepted=[]
     for candidate,account in zip(candidates,values):
         address=candidate['pool_address'];quote=candidate['quote_mint']
@@ -202,7 +218,7 @@ def collect_special_roles(mint,source,market,rpc,registry=None):
             row.update(status='DISCOVERED',decoded=d);accepted.append(row)
         except (ValueError,TypeError,KeyError) as exc:row['reason']=str(exc) if isinstance(exc,PoolSourceError) else 'POOL_RESPONSE_INVALID'
         out['pools'].append(row)
-    if not accepted:return {**out,'reason':'NO_SUPPORTED_POOL_IDENTITIES'}
+    if not accepted:return holder_only('NO_SUPPORTED_POOL_IDENTITIES')
     extra=[p['pool_address'] for p in accepted];captured={}
     class CohortRPC:
         def call(self,method,params,ttl=0):
@@ -223,7 +239,7 @@ def collect_special_roles(mint,source,market,rpc,registry=None):
             if any(d[k]!=p['decoded'][k] for k in ('base_mint','quote_mint','base_vault','quote_vault','authority','program')):raise PoolSourceError('POOL_CHANGED_SINCE_DISCOVERY')
             p.update(status='POOL_IDENTITY_BOUND',decoded=d,snapshot_slot=captured['slot'])
         except (ValueError,TypeError,KeyError) as exc:p.update(status='UNVERIFIED',reason=str(exc) if isinstance(exc,PoolSourceError) else 'POOL_RESPONSE_INVALID')
-    out.update(snapshot_slot=captured['slot'],cohort_response_sha256=captured['hash'],
+    out.update(audit_path='POOL_AND_HOLDER_COHORT',snapshot_slot=captured['slot'],cohort_response_sha256=captured['hash'],
                rankings=derive_special_ranks(mint,check,out['pools'],registry))
     return out
 

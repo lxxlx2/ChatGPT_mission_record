@@ -1012,3 +1012,30 @@ test('legacy role report does not invent a program-query count',()=>{
   const h=harness();h.context.renderClusterReport(specialRoleReportForUi());
   assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/本轮 0 个过滤查询/);
 });
+
+function holderOnlyReportForUi() {
+  const r=specialRoleReportForUi(),a=r.special_address_roles,c=a.balance_check;
+  delete r.pool_vaults;delete r.pool_holder_roles;
+  a.audit_path='HOLDER_ONLY_NO_BOUND_POOL';a.pools=[];
+  const row=a.rankings.records[0];Object.assign(row,{role:'LOCK',classification:'ATTRIBUTION_CLAIM',basis:'DATED_REGISTRY_ATTRIBUTION',scope:'TOKEN_ACCOUNT',valid_from_slot:100,valid_until_slot:102,label_version:'QA1',evidence_url:'https://synthetic.example/lock',evidence_sha256:'a'.repeat(64)});delete row.pools;
+  a.rankings.metrics.known_ex_special.registry_attributed_raw='60';
+  a.rankings.metrics.known_ex_lp={...a.rankings.metrics.known_ex_lp,deducted_raw:'0',remaining_raw:'100',top10_raw:'100',top10_pct_of_mint_supply:'100.0000',top10_pct_of_remaining:'100.0000',registry_attributed_raw:'60',owners:[{owner:c.owners[0].owner,raw:'100'}]};
+  return r;
+}
+
+test('holder-only report separates zero known LP from scoped attribution and auxiliary balance',()=>{
+  const h=harness(),r=holderOnlyReportForUi();h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
+  assert.match(html,/本轮未核实池身份/);assert.match(html,/不能证明没有池/);
+  assert.match(html,/已知排除口径已复算/);assert.match(html,/带日期的归属声明/);
+  assert.match(html,/仅此 token 账户/);assert.match(html,/slot 100 至 102/);assert.match(html,/版本 QA1/);
+  assert.match(html,/40%/);assert.doesNotMatch(html,/同批链上角色/);
+});
+
+for(const bad of ['expired','tampered_mass','tampered_metric']) test('holder-only '+bad+' withholds exact exclusion arithmetic',()=>{
+  const h=harness(),r=holderOnlyReportForUi(),a=r.special_address_roles;
+  if(bad==='expired')a.rankings.records[0].valid_until_slot=100;
+  if(bad==='tampered_mass')a.balance_check.full_positive_mass_reconciled=false;
+  if(bad==='tampered_metric')a.rankings.metrics.known_ex_special.deducted_raw='59';
+  h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
+  assert.match(html,/未展示精确排除后比例/);assert.doesNotMatch(html,/已知排除口径已复算/);
+});

@@ -73,7 +73,7 @@ def fixture_holder_binary(mint):
     return source
 
 
-def fixture_special_roles(mint,source,market):
+def fixture_special_roles(mint,source,market,holder_only=False):
     from mission_agent.meme.pool_vaults import _key,PROGRAM,POOL_DISCRIMINATOR
     from mission_agent.meme.pool_programs import pubkey_bytes,WHIRLPOOL,CPMM,stored_bump_authority
     from mission_agent.meme.special_roles import collect_special_roles
@@ -105,7 +105,7 @@ def fixture_special_roles(mint,source,market):
                 from mission_agent.meme.pool_discovery import valid_pool_discovery_query
                 assert valid_pool_discovery_query(params) and params[0]==CPMM
                 offset=params[1]['filters'][-1]['memcmp']['offset']
-                return {'context':{'slot':101},'value':[{'pubkey':pool3,'account':cpmm}] if offset==168 else []}
+                return {'context':{'slot':101},'value':[{'pubkey':pool3,'account':cpmm}] if offset==168 and not holder_only else []}
             assert method=='getMultipleAccounts' and len(params[0])<=100
             return {'context':{'slot':101},'value':[values[a] for a in params[0]]}
     from mission_agent.meme.holder_ranks import discover_owner_pool_hint
@@ -113,9 +113,12 @@ def fixture_special_roles(mint,source,market):
     owner_response={'context':{'slot':101},'value':[orca]}
     hint=discover_owner_pool_hint(mint,pool2,orca,101,source['snapshot_slot'],source['response_sha256'],digest(owner_response),{r['token_account']:r['owner'] for r in source['accounts']})
     assert hint is not None
-    source['owner_pool_hints']=[hint]
+    source['owner_pool_hints']=[] if holder_only else [hint]
     source['owner_pool_discovery']={'hints_not_selected':0,'additional_rpc_calls':0}
-    return collect_special_roles(mint,source,market,RPC())
+    registry={'role_evidence':[{'mint':mint,'address':_key((5000).to_bytes(32,'big')),'role':'LOCK','scope':'TOKEN_ACCOUNT',
+        'valid_from_slot':100,'valid_until_slot':102,'evidence_url':'https://synthetic.example/lock-claim',
+        'evidence_sha256':'b'*64,'label_version':'SYNTHETIC_1','classification':'VERIFIED_ATTRIBUTION'}]} if holder_only else None
+    return collect_special_roles(mint,source,{} if holder_only else market,RPC(),registry)
 
 
 class FixtureAnalyzer:
@@ -188,7 +191,11 @@ class FixtureAnalyzer:
         }
         from mission_agent.meme.pool_holder_roles import attach_pool_holder_roles
         report['pool_holder_roles']=attach_pool_holder_roles(self.mint,report['holder_rankings'],report['pool_vaults'])
-        report['special_address_roles']=fixture_special_roles(self.mint,report['holder_rankings'],report['market'])
+        report['special_address_roles']=fixture_special_roles(self.mint,report['holder_rankings'],report['market'],holder_only=self.mint==_key((1001).to_bytes(32,'big')))
+        if self.mint==_key((1001).to_bytes(32,'big')):
+            report['pool_vaults']={'status':'NOT_REQUESTED'}
+            report['pool_holder_roles']={'status':'NOT_REQUESTED'}
+            report['market']={'status':'UNAVAILABLE','mint':self.mint,'name':name,'symbol':'FIXTURE'}
         from mission_agent.meme.special_roles import withhold_legacy_normalization
         withhold_legacy_normalization(report['holder_rankings'],report['special_address_roles'])
         return report

@@ -174,7 +174,9 @@ def test_discovery_is_capped_and_unsupported_pool_reasons_are_retained():
         def call(self,method,params,ttl=0):
             seen.append(params);return {'context':{'slot':100},'value':[account(P,b'bad') for _ in params[0]]}
     out=collect_special_roles(target,source,{**market(),'pool_candidates':hints},Unsupported())
-    assert len(seen)==1 and len(seen[0][0])==8 and out['not_selected_pool_hints']==4
+    assert len(seen)==2 and len(seen[0][0])==8 and out['not_selected_pool_hints']==4
+    assert seen[1][0][0]==target and len(seen[1][0])<=100
+    assert out['rankings']['metrics']['known_ex_special']['status']=='UNRESOLVED'
     assert len(out['pools'])==8 and all(p['reason']=='UNSUPPORTED_POOL_PROGRAM' for p in out['pools'])
 
 

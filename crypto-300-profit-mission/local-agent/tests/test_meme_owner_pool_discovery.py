@@ -86,7 +86,9 @@ def test_malformed_stored_owner_hint_is_not_used_for_discovery(bad):
     elif bad=='vault':h['target_vault']=key(999)
     else:h['owner_metadata_slot']=99
     rpc=cohort_rpc(s,metadata);out=collect_special_roles(MINT,s,{'status':'UNAVAILABLE'},rpc)
-    assert not rpc.calls and out['reason']=='NO_VALID_POOL_HINTS'
+    assert len(rpc.calls)==1 and rpc.calls[0][1][0][0]==MINT and POOL not in rpc.calls[0][1][0]
+    assert out['pool_discovery_reason']=='NO_VALID_POOL_HINTS'
+    assert out['rankings']['metrics']['known_ex_lp']['deducted_raw']=='0'
     assert out['rejected_owner_pool_hints']==1
 
 
@@ -145,7 +147,8 @@ def test_changed_discovered_pool_cannot_reuse_a_prior_owner_vault_hint():
     change_data(changed,lambda b:b.__setitem__(slice(139,171),k(9999)))
     out=collect_special_roles(MINT,s,{'status':'UNAVAILABLE'},cohort_rpc(s,changed))
     assert out['pools'][0]['reason']=='OWNER_HINT_POOL_CHANGED'
-    assert 'rankings' not in out
+    assert out['audit_path']=='HOLDER_ONLY_NO_BOUND_POOL'
+    assert out['rankings']['metrics']['known_ex_lp']['deducted_raw']=='0'
 
 
 def test_malformed_owner_account_program_or_unparsed_layout_never_crashes_extraction():
@@ -173,8 +176,9 @@ def test_discovery_response_before_owner_metadata_is_not_accepted_as_current_poo
     from mission_agent.meme.special_roles import collect_special_roles
     s,_,metadata=source_with_owner_pool();rpc=cohort_rpc(s,metadata,actual=100)
     out=collect_special_roles(MINT,s,{'status':'UNAVAILABLE'},rpc)
-    assert len(rpc.calls)==1 and out['pools'][0]['reason']=='DISCOVERY_BEFORE_OWNER_HINT'
-    assert 'rankings' not in out
+    assert len(rpc.calls)==2 and out['pools'][0]['reason']=='DISCOVERY_BEFORE_OWNER_HINT'
+    assert out['audit_path']=='HOLDER_ONLY_NO_BOUND_POOL'
+    assert out['rankings']['metrics']['known_ex_lp']['deducted_raw']=='0'
 
 
 def test_disagreeing_quote_hints_do_not_silently_select_a_preferred_source():
@@ -182,4 +186,5 @@ def test_disagreeing_quote_hints_do_not_silently_select_a_preferred_source():
     from test_meme_pool_vaults import market
     s,_,metadata=source_with_owner_pool();m=market();m['main_pair']['quote_address']=key(8888)
     out=collect_special_roles(MINT,s,m,cohort_rpc(s,metadata))
-    assert out['pools'][0]['reason']=='POOL_HINT_QUOTE_CONFLICT' and 'rankings' not in out
+    assert out['pools'][0]['reason']=='POOL_HINT_QUOTE_CONFLICT'
+    assert out['rankings']['metrics']['known_ex_lp']['deducted_raw']=='0'
