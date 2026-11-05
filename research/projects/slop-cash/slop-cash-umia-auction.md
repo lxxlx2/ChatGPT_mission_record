@@ -2,9 +2,28 @@
 
 Updated: 2026-11-05 Asia/Bangkok (fresh official SLOP mint and funded auction contract; conditional early-bid economics; older 2026-10-27 research retained)
 Scope: ICO / pre-launch token auction / Robinhood Chain
-State: `USER_INTENDS_TO_PARTICIPATE / CURRENT_$300_USDG_EARLY_BID_PLAN / NO_FUNDS_COMMITTED`
+State: `USER_INTENDS_TO_PARTICIPATE / CURRENT_$300_USDG_PUBLIC_ONLY_PLAN / NO_FUNDS_COMMITTED`
 Decision classification: `WATCH` (not SETUP or ACTIVE).
 Execution: `NO_GO`; the user has expressed interest only, with no authorization for funding, wallet signature, live trading, scheduling or monitoring.
+
+## 2026-11-05 LATEST USER DECISION: $300 PUBLIC-ONLY, NO EARLY WHITELIST BID
+
+**As-of:** 2026-11-05 ~22:15 Asia/Bangkok, original SLOP CCA has yet to open. The user **explicitly canceled intended early-whitelist participation** after a rule change and specified **public auction only, maximum 300 USDG**. This supersedes the prior $300 early-bid allocation recorded below (which remains visible only as historical context). The user did not give a link or describe the specific rule change; do not invent its substance. **NO BID / NO SIGN / NO MONITOR / NO AUTOMATION**, WATCH, trading NO_GO.
+
+### Verified current status
+- Official SLOP page https://app.umia.finance/p/slop-cash/auction still displayed `Upcoming`, default order type `Market`, `Verification` widget, connected `0x3Df4...Ea7C`, 389.42 USDG available, 0 committed. Connected Alchemy direct Robinhood network latest observed head `106836020`, below immutable `startBlock 106868933` and public issuance `108530471`, CCA clearing price `$0.008889`, `currencyRaised()=0`, hook `zkGlobalBidTotal()=0`, current hook cap `$0.0219610588`, wallet `389.420578 USDG`. Zero prelaunch commitments do not establish public demand.
+- Latest original Umia FAQ https://x.com/umia_finance/status/2118352696742695355 states public open approximately **Nov 7 16:15 UTC = Nov 7 23:15 Bangkok**, while contract enforces **block 108530471**. Anyone can publicly bid in principle, without a per-wallet max, but currently deployed hook **requires a per-bid amount-bound server permit** on steps 1/2/3. Failure to obtain signed permit or too-late inclusion can prevent execution.
+- https://umia.finance/blog/understanding-your-bid: amount + maxPrice limit; price monotone; budget spread over remaining emission steps; arriving later reduces exposure to earlier low clearing prices. A max bid cannot be at or below current clearing; final cost can be below max. Public cap eligibility is not a guaranteed fill.
+
+### New conditional decision proposal, superseding earlier two early-white-list bids
+- **Primary public-only scenario:** one `$300 USDG` **Limit** at SLOP CCA price **tick 28**, `$0.0146407058823528/SLOP` (~**$1.46407M FDV**), only if first public onchain clearing is **comfortably below cap** and app confirms onchain max bid before signing. One order reduces per-bid signed permit and execution friction relative to two public bids; does **not** promise 100% fill, and budget may be partially refunded.
+- **Opening observation/action thresholds** are subjective, not contractual or statistical probabilities: if live clearing **< $0.011**, prefer full $300 one-limit bid; if **$0.011 to $0.01255**, same bid remains considered but demand/price momentum needs quick review; if **$0.01255 to <$0.01464**, reduce intent to $100 or skip due to poorer prospective risk/reward; if **>= $0.01464**, skip, DO NOT switch to Market or raise cap to maximum permitted price. User's prior risk boundary remains $1.5M FDV.
+- At maximum limit, $300 fully spent implies at least `300/0.014640705882 = 20,490.81 SLOP`; at hypothetical exit FDV $1M/$2M/$3M/$5M, mark ~$204.91/$409.82/$614.72/$1,024.54; P&L ~$-95.09/+109.82/+314.72/+724.54, excluding slippage, gas, fees, liquidity depth and unlock/claim execution. Actual CCA price path could improve average tokens-per-dollar or leave USDG unspent. The user can personally sign only after checking the exact tick grid and details.
+- **Do not chase to $0.021961** to force budget into tokens; public stage may become congested/closed if clearing reaches max. Requested $300 is a maximum budget, not a guarantee every dollar will be spent.
+- No independent fully reproducible evidence of the unspecified user-mentioned "rule change" was established. This update does **not** claim to have investigated that missing text. Confirm final auction terms and onchain hook state at the actual public entry window, and show only the current option.
+- Earlier early bid strategies and $1,000 scenarios below remain **historical/superseded**, not executable current-user intent.
+
+---
 
 ## 2026-11-05 revised intended early-bid exposure: $300 USDG, tick-aligned $200 + $100 limit plan
 
