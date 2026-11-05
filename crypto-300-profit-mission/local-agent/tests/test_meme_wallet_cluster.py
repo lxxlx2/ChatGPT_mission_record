@@ -1,4 +1,5 @@
 from decimal import Decimal
+import pytest
 
 from mission_agent.frank.parser import DEX_PROGRAMS
 from mission_agent.meme.cluster import Holder, RpcCache, WalletClusterAnalyzer
@@ -347,6 +348,7 @@ def test_token2022_sensitive_but_unresolved_config_is_not_upgraded_to_active_ris
 
 def test_adaptive_scan_deepens_suspicious_counterpart_beyond_initial_prefix():
     a=analyzer()
+    a.material_pct=Decimal("20")
     a.deep_holders=2
     a.history_per_holder=12
     a.funding_lookback=8
@@ -399,6 +401,33 @@ def test_adaptive_scan_deepens_material_unresolved_owner_outside_initial_prefix(
     assert ("G",12) not in calls
     assert ("G",30) in calls
     assert "G" in out["coverage"]["adaptive_deepened_owners"]
+
+
+@pytest.mark.parametrize("amounts,role,supply,selected", [
+    ([100], "ORDINARY", 10000, True),
+    ([99], "ORDINARY", 10000, False),
+    ([60, 40], "ORDINARY", 10000, True),
+    ([1000], "LP", 10000, False),
+    ([1000], "CEX", 10000, False),
+    ([100], "ORDINARY", 0, False),
+])
+def test_material_ordinary_owner_history_uses_owner_balance_not_risk_label(amounts,role,supply,selected):
+    a=analyzer();a.deep_holders=1
+    a.history_per_holder=12;a.adaptive_history_per_holder=30
+    rows=[Holder("prefix","PREFIX",200,0,"ORDINARY","fixture")]
+    rows += [Holder("target-"+str(i),"TARGET",raw,0,role,"fixture") for i,raw in enumerate(amounts)]
+    a.holders=lambda:(supply,0,rows)
+    calls=[]
+    a._scan_holder=lambda h,m,t,history_limit=None:calls.append((h.owner,history_limit))
+    out=a.analyze()
+    assert (("TARGET",30) in calls) is selected
+    assert ("TARGET" in out["coverage"]["adaptive_deepened_owners"]) is selected
+    target=next(h for h in out["holders"] if h["owner"]=="TARGET")
+    assert target["deep_scanned"] is selected
+    assert target["role"]==role
+    assert target["first_acquisition"]["status"]==("UNRESOLVED" if selected else "NOT_SCANNED")
+    assert out["edges"]==[] and out["probable_control_clusters"]==[]
+    assert out["analysis_completeness"]["status"]=="INCOMPLETE_EVIDENCE"
 
 
 
@@ -536,7 +565,7 @@ def test_adaptive_only_owner_has_scanned_status_even_without_acquisition():
     ])
     a._scan_holder=lambda *args,**kwargs:None
     out=a.analyze()
-    assert out["coverage"]["adaptive_deepened_owners"]==["B"]
+    assert out["coverage"]["adaptive_deepened_owners"]==["A","B"]
     assert out["holders"][1]["deep_scanned"] is True
     assert out["holders"][1]["first_acquisition"]["status"]=="UNRESOLVED"
     assert out["coverage"]["owners_scanned"]==2

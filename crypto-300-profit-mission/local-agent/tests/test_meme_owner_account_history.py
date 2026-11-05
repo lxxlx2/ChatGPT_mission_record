@@ -118,6 +118,15 @@ def test_budget_failure_in_secondary_account_propagates(monkeypatch):
     assert any(w['stop_reason']=='JOB_BUDGET' for w in a.history_attempts)
 
 
+def test_material_ordinary_owner_outside_prefix_still_propagates_budget_stop(monkeypatch):
+    a,rpc=analyzer(monkeypatch,adaptive_history_per_holder=30)
+    a._scan_funding=lambda *args:None
+    rpc.fail_address=TB
+    with pytest.raises(RPCJobBudgetExceeded):a.analyze()
+    assert any(address==TB for address,_ in rpc.history)
+    assert any(w['stop_reason']=='JOB_BUDGET' for w in a.history_attempts)
+
+
 def test_duplicate_signature_is_still_classified_separately_for_different_owners(monkeypatch):
     a,rpc=analyzer(monkeypatch);a.deep_holders=2
     rpc.windows[TB]=['shared'];classified=[]
@@ -136,7 +145,7 @@ def test_adaptive_scan_keeps_earlier_buy_from_another_account(monkeypatch):
     base=a.holders
     def sample():
         supply,decimals,rows=base();rows[0].role='UNRESOLVED';return supply,decimals,rows
-    a.holders=sample;anchors=[];a._scan_funding=lambda h,first,*args:anchors.append(first['signature'])
+    a.holders=sample;anchors=[];a._scan_funding=lambda h,first,*args:anchors.append(first['signature']) if first else None
     out=a.analyze()
     assert out['holders'][0]['first_acquisition']['signature']=='oldest'
     assert anchors==['oldest','oldest']

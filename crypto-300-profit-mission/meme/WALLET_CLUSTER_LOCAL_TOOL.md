@@ -83,7 +83,7 @@ From `crypto-300-profit-mission/local-agent`:
 Default CLI scan remains explicitly bounded by CLI flags. The Dashboard standard preset is now adaptive:
 - resolve Top20 token-account owners first;
 - shallow-scan the first 6 unique owners with up to 12 target-token signatures and 8 funding signatures;
-- only wallets with relation evidence, material unresolved roles, or verified dev/creator/treasury roles are automatically deepened;
+- wallets with relation evidence, or material ordinary/unresolved/dev/creator/treasury roles, are automatically deepened. Materiality aggregates the observed token-account balances by Owner; an ordinary system-owned account is not evidence of complete acquisition/funding history or safety. This selection does not create a risk/control label;
 - adaptive deepening expands those wallets to up to 30 target-token signatures and 12 funding signatures;
 - historical transactions remain locally cached.
 
@@ -177,7 +177,7 @@ From any current Frank candidate, `链上查询` carries that CA directly into t
 The research view supports three bounded presets. All three resolve Top20 token accounts to actual owners. The difference is how many owners receive historical deep scan and how far that scan goes:
 
 - `快速`: resolve Top20, then shallow-scan the first 6 unique owners with up to 8 target-token signatures plus 4 funding signatures. Use for first-pass screening.
-- `标准`: resolve Top20, shallow-scan the first 6 owners with 12 + 8, then automatically deepen only suspicious/material unresolved wallets to 30 + 12. This is the default formal analysis.
+- `标准`: resolve Top20, shallow-scan the first 6 owners with 12 + 8, then automatically deepen related or material ordinary/unresolved/dev wallets to 30 + 12. This is the default formal analysis. The whole-job request/time ceiling still applies and may stop collection; eligibility is not proof of complete history.
 - `深度`: deep-scan all Top20 unique owners with up to 100 target-token signatures plus 50 funding signatures. Use only for important projects or strong wallet-splitting suspicion; it puts the most pressure on free RPC.
 
 Queries are asynchronous so a long public-RPC scan does not block Frank signal rendering. Only one cluster job runs at a time to avoid turning the free Solana RPC into an uncontrolled fan-out.

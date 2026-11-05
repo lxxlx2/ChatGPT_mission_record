@@ -1280,13 +1280,14 @@ class WalletClusterAnalyzer:
         adaptive_history=self.adaptive_history_per_holder or self.history_per_holder
         adaptive_funding=self.adaptive_funding_lookback or self.funding_lookback
         if adaptive_history>self.history_per_holder or adaptive_funding>self.funding_lookback:
-            suspicious=set()
+            history_targets=set()
             for edge in self.edges:
                 if edge.get("type") not in {"SHARED_INFRA","COMMON_FUNDER_CEX"}:
-                    suspicious.update(x for x in (edge.get("a"),edge.get("b")) if x)
+                    history_targets.update(x for x in (edge.get("a"),edge.get("b")) if x)
             # Static role/materiality is known for all resolved Top20 holders, not
-            # only the shallow-scan prefix. A material DEV/unresolved owner outside
-            # the first six must still be eligible for targeted deepening.
+            # only the shallow-scan prefix. ORDINARY identifies an account's
+            # program, not its acquisition/funding history or a safe controller.
+            # Material ordinary owners need the same bounded history eligibility.
             owner_holder={}
             owner_balance=defaultdict(int)
             owner_roles=defaultdict(set)
@@ -1294,15 +1295,15 @@ class WalletClusterAnalyzer:
                 owner_holder.setdefault(h.owner,h)
                 owner_balance[h.owner]+=h.raw
                 owner_roles[h.owner].add(h.role)
-            risky_roles=DEV_ROLES | {"UNRESOLVED","PROGRAM_OWNED_UNRESOLVED","TOKEN_ACCOUNT_OWNER_UNRESOLVED"}
+            history_roles=DEV_ROLES | {"ORDINARY","UNRESOLVED","PROGRAM_OWNED_UNRESOLVED","TOKEN_ACCOUNT_OWNER_UNRESOLVED"}
             for owner,raw in owner_balance.items():
                 pct=Decimal(raw)*100/Decimal(supply) if supply else Decimal(0)
-                if pct>=self.material_pct and owner_roles[owner] & risky_roles:
-                    suspicious.add(owner)
+                if pct>=self.material_pct and owner_roles[owner] & history_roles:
+                    history_targets.add(owner)
             # A relationship discovered from a shallow-scanned owner may point to
             # rank 7-20. Deepen that known Top20 counterpart too rather than
             # silently restricting adaptive work to the first-six prefix.
-            targets=[owner_holder[owner] for owner in owner_holder if owner in suspicious]
+            targets=[owner_holder[owner] for owner in owner_holder if owner in history_targets]
             self.adaptive_deepened_owners=[h.owner for h in targets]
             if targets:
                 self._progress("ADAPTIVE_DEEPEN",scanned=0,target=len(targets),owners=self.adaptive_deepened_owners)
