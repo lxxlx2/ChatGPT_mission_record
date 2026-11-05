@@ -1,0 +1,65 @@
+{
+  "schema": "BSC_MEME_P4C_23x19_FROZEN_COHORT_ECONOMIC_PROOF_CENSUS_SCOPE_V1",
+  "date": "2026-10-17",
+  "source_approved_exact_sha": "b2fb255dd486a2bd6502e21dbd14eaa6ef557c2e",
+  "baseline_sources": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-baseline-2026-10-13.json",
+      "blob": "e3c8815630878dddc03b7a6e11b8f0d2d89cbf6a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json",
+      "blob": "2a19dbd88c2971efff60a15894d952d0d05e64d9"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE23_8E6B_REPEAT_WINNER_HAJIMI_LOBSTER_IFML_CROSS_MAJOR_ROUNDS_2026-10-13.json",
+      "blob": "6227e69fabd6c0d991add0d7ff5c6e406babd40b"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-adff-bounded-acquisition-asset-outgoing-source-2026-10-16.json",
+      "blob": "b921270650e00b4de190b1c396a0bbc78c89150e"
+    }
+  ],
+  "frozen_denominator": {
+    "wallets": 23,
+    "exact_CA": 19,
+    "cells": 437,
+    "transfer_present": 148,
+    "transfer_absent": 289
+  },
+  "historical_curated_episodes": 50,
+  "historical_curated_wallets": 7,
+  "wallets_without_curated_signed_rounds": "UNRESOLVED_NOT_IN_ECONOMIC_SELECTED_EPISODE_DATA",
+  "expected_grades": {
+    "SIGNED_NATIVE_BLOCK_SCOPE": 44,
+    "SETTLED_NATIVE_DIRECT_WBNB_GAS": 4,
+    "MIXED_BNB_USDT_SPOT_REFERENCE": 2
+  },
+  "selected_2026_8e6b_cross_major_positive_proofs": [
+    {
+      "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "stage23_round": 1
+    },
+    {
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "stage23_round": 2
+    }
+  ],
+  "adff_business_status": "SOURCE_AMBIGUOUS_NOT_CONFIRMED_BUY_OR_FREE_AIRDROP",
+  "selection_and_bias": "No wallet or episode was selected after this scope. All 23 original P1 wallets and 19 CAs are retained. The historical 50 P2 episodes and two Stage23 proofs are previously selected and fully outcome exposed. This is a descriptive census, NOT unbiased market performance, not external alpha ranking and not untouched holdout.",
+  "hard_contracts": [
+    "All 23 wallets kept including no curated episode, no missing=loss/win/inactive.",
+    "All 437 canonical wallet-exactCA cells retained, no audit of the full 437 is inferred from 50 episodes.",
+    "Separate native-scope positive/negative, WBNB-Gas partial settlement and two mixed quote marks. Do not derive win rates, full-wallet PnL or normalized returns.",
+    "2026 positive closed major CA requirement uses original 8E6B stage23 exact CA+round original dated proof; not P2 priority flag.",
+    "ADFF cost ambiguous and 2ADF middle-exit WBNB response clipped remain unknown, not free profit or zero exit.",
+    "Research-next-evidence priority may be reported in text, not calculated wallet profitable ranking.",
+    "All first public opportunity U and P5 1/5/15min followable return remain blocked."
+  ],
+  "requested_output": "Compact deterministic 23-wallet economically-graded evidence ledger, exact 19 CA cells each, 7 with selected P2 episodes and 16 marked unknown, 2026 two-major positive partial WBNB/Gas witness only for 8E6B, and explicit P4C/P4B/P5 non-release labels.",
+  "production": "NO_GO",
+  "NO_MERGE": true,
+  "NO_DEPLOY": true,
+  "NO_GMAIL": true,
+  "NO_TRADE": true
+}

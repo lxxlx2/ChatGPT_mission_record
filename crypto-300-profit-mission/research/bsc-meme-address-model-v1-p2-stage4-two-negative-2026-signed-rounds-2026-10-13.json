@@ -1,0 +1,211 @@
+{
+  "schema": "BSC_MEME_ADDRESS_MODEL_V1_P2_STAGE4_PRESELECTED_TWO_NATIVE_NEGATIVE_ROUNDS_V1",
+  "date": "2026-10-13",
+  "production": "NO_GO",
+  "selection_was_frozen_before_RPC": true,
+  "selection_git_sha": "c4477d02dac3de5fda2435c8a1ba226313a3c52c",
+  "precommit_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-precommitted-2026-10-13.json",
+  "rounds": [
+    {
+      "scope": "A83B_NIULAI",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "inventory_zero_round_index": 2,
+      "first_block": 116113193,
+      "last_block": 116113197,
+      "first_utc": "2026-08-15T16:34:02Z",
+      "last_utc": "2026-08-15T16:34:03Z",
+      "raw_transfer_logs": 4,
+      "unique_EOA_signed_transactions": 3,
+      "unique_native_account_blocks": 2,
+      "original_transaction_value_inputs_wei": "2800000000000000000",
+      "original_transactions": [
+        {
+          "hash": "0x8a22a65a977409a7e82266d05ceaf1e98074d1f6b50e942486600dacdc672716",
+          "block": 116113193,
+          "from_signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "EOA_self_signed": true,
+          "original_receipt_status": "0x1",
+          "full_receipt_body_parsed": false,
+          "original_tx_msg_value_wei": "1400000000000000000",
+          "original_input_selector": "0x4d819a2a"
+        },
+        {
+          "hash": "0x3e8b50350c8d2cf87d9662434ad205d08a33595eaf253dac04996134a35e2971",
+          "block": 116113193,
+          "from_signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "EOA_self_signed": true,
+          "original_receipt_status": "0x1",
+          "full_receipt_body_parsed": false,
+          "original_tx_msg_value_wei": "1400000000000000000",
+          "original_input_selector": "0x4d819a2a"
+        },
+        {
+          "hash": "0xd0bc93c086a44affed01a7bfb25022cd51e18513401b15d2fbb3692ec1bde9a4",
+          "block": 116113197,
+          "from_signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "EOA_self_signed": true,
+          "original_receipt_status": "0x1",
+          "full_receipt_body_parsed": false,
+          "original_tx_msg_value_wei": "0",
+          "original_input_selector": "0x4d819a2a"
+        }
+      ],
+      "unique_block_native_account_scopes": [
+        {
+          "block": 116113193,
+          "header_utc": "2026-08-15T16:34:02Z",
+          "historical_native_N_minus_1_to_N_wei": "-2896673890000000000",
+          "number_of_selected_owner_txs_in_block": 2
+        },
+        {
+          "block": 116113197,
+          "header_utc": "2026-08-15T16:34:03Z",
+          "historical_native_N_minus_1_to_N_wei": "2683074933187334961",
+          "number_of_selected_owner_txs_in_block": 1
+        }
+      ],
+      "source_provenance": {
+        "selection_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-precommitted-2026-10-13.json",
+        "selection_sha": "c4477d02dac3de5fda2435c8a1ba226313a3c52c",
+        "sources": [
+          {
+            "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_INBOUND_CURSOR_A_2026-10-12.json",
+            "git_blob_sha": "9c4d37ea37e4d9d06acfe756a4ab684d0605d8d3"
+          },
+          {
+            "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_OUTBOUND_CURSOR_A_2026-10-12.json",
+            "git_blob_sha": "e3153d031ecf2a6f23a35a2789c6a068b75c48eb"
+          },
+          {
+            "path": "crypto-300-profit-mission/research/BSC_MEME_877AF_MARS_FULL_ERC20_RECONCILED_CENSUS_2026-10-12.json",
+            "git_blob_sha": "8ccb13babfefb726a3a6a44ea5b766ce3628dd28"
+          }
+        ]
+      },
+      "native_wallet_block_scope_wei": "-213598956812665039",
+      "signed_success_all": true,
+      "economic_sign": "NEGATIVE_NATIVE_SCOPE",
+      "causal_internal_trace": "UNVERIFIED",
+      "receipt_gas_all_transactions": "UNRESOLVED_TRUNCATED_RECEIPTS",
+      "audit": "N-1/N wallet native BNB difference is per UNIQUE block, not per transaction. Multiple selected EOA tx in same block must never duplicate native balance delta.",
+      "fully_exhaustive_CA_PnL": false
+    },
+    {
+      "scope": "877AF_MARSCOIN",
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "inventory_zero_round_index": 4,
+      "first_block": 112475764,
+      "last_block": 112476616,
+      "first_utc": "2026-07-27T17:40:47Z",
+      "last_utc": "2026-07-27T17:47:11Z",
+      "raw_transfer_logs": 4,
+      "unique_EOA_signed_transactions": 3,
+      "unique_native_account_blocks": 3,
+      "original_transaction_value_inputs_wei": "850000000000000000",
+      "original_transactions": [
+        {
+          "hash": "0xc507befb9df698fa0dd2958c0e22bb3714820727b3b1d8440029fb18a5f12390",
+          "block": 112475764,
+          "from_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "EOA_self_signed": true,
+          "original_receipt_status": "0x1",
+          "full_receipt_body_parsed": false,
+          "original_tx_msg_value_wei": "300000000000000000",
+          "original_input_selector": "0x4d819a2a"
+        },
+        {
+          "hash": "0x80843ba0eab39a0ce99466f29573b46df0014bc6b13da24be1081a3b8f986b7e",
+          "block": 112475805,
+          "from_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "EOA_self_signed": true,
+          "original_receipt_status": "0x1",
+          "full_receipt_body_parsed": false,
+          "original_tx_msg_value_wei": "550000000000000000",
+          "original_input_selector": "0x4d819a2a"
+        },
+        {
+          "hash": "0xf27b20dbffca66c49260635bece999b3324887e9cabc67c38c6810ab2871d3d7",
+          "block": 112476616,
+          "from_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "EOA_self_signed": true,
+          "original_receipt_status": "0x1",
+          "full_receipt_body_parsed": false,
+          "original_tx_msg_value_wei": "0",
+          "original_input_selector": "0x4d819a2a"
+        }
+      ],
+      "unique_block_native_account_scopes": [
+        {
+          "block": 112475764,
+          "header_utc": "2026-07-27T17:40:47Z",
+          "historical_native_N_minus_1_to_N_wei": "-300217740600000000",
+          "number_of_selected_owner_txs_in_block": 1
+        },
+        {
+          "block": 112475805,
+          "header_utc": "2026-07-27T17:41:06Z",
+          "historical_native_N_minus_1_to_N_wei": "-550236062640000000",
+          "number_of_selected_owner_txs_in_block": 1
+        },
+        {
+          "block": 112476616,
+          "header_utc": "2026-07-27T17:47:11Z",
+          "historical_native_N_minus_1_to_N_wei": "824389139458098308",
+          "number_of_selected_owner_txs_in_block": 1
+        }
+      ],
+      "source_provenance": {
+        "selection_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-precommitted-2026-10-13.json",
+        "selection_sha": "c4477d02dac3de5fda2435c8a1ba226313a3c52c",
+        "sources": [
+          {
+            "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_INBOUND_CURSOR_A_2026-10-12.json",
+            "git_blob_sha": "9c4d37ea37e4d9d06acfe756a4ab684d0605d8d3"
+          },
+          {
+            "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_OUTBOUND_CURSOR_A_2026-10-12.json",
+            "git_blob_sha": "e3153d031ecf2a6f23a35a2789c6a068b75c48eb"
+          },
+          {
+            "path": "crypto-300-profit-mission/research/BSC_MEME_877AF_MARS_FULL_ERC20_RECONCILED_CENSUS_2026-10-12.json",
+            "git_blob_sha": "8ccb13babfefb726a3a6a44ea5b766ce3628dd28"
+          }
+        ]
+      },
+      "native_wallet_block_scope_wei": "-26064663781901692",
+      "signed_success_all": true,
+      "economic_sign": "NEGATIVE_NATIVE_SCOPE",
+      "causal_internal_trace": "UNVERIFIED",
+      "receipt_gas_all_transactions": "UNRESOLVED_TRUNCATED_RECEIPTS",
+      "audit": "N-1/N wallet native BNB difference is per UNIQUE block, not per transaction. Multiple selected EOA tx in same block must never duplicate native balance delta.",
+      "fully_exhaustive_CA_PnL": false
+    }
+  ],
+  "summary": {
+    "selected_wallets": 2,
+    "selected_token_CAs": 2,
+    "original_owner_successful_txs": 6,
+    "unique_native_account_blocks": 5,
+    "source_raw_inventory_rounds_in_pairs": 33,
+    "selected_real_raw_zero_inventory_signed_rounds": 2,
+    "negative_native_scope_rounds": 2,
+    "positive_native_scope_rounds": 0,
+    "all_receipt_bodies_truncated": 6,
+    "A83B_same_block_2_owner_buy_txs": true,
+    "hidden_profits_in_untested_rounds": "UNRESOLVED",
+    "CA_overall_PnL": "UNRESOLVED",
+    "historical_sample_proves_followable_alpha": false
+  },
+  "limits": [
+    "A83B two 1.4 BNB msg.value buy transactions occur at identical block 116113193. Observed wallet N-1/N delta -2.89667389 BNB is counted exactly ONCE.",
+    "All 6 original receipts returned success header but their full body was truncated; gas/internal routes cannot be independently proven from this tool response.",
+    "Wallet native block changes are real; internal unrelated same-block transfers are not exhaustively excluded.",
+    "877AF has other 20 original MARSCOIN raw-closed cycles and a residual token balance; this R4 is not entire wallet/CA profit.",
+    "A83B has 11 other Niulai raw closed cycles unverified; R2 negative cannot imply total token PnL.",
+    "No external AI review, follower simulation or trading deployment."
+  ]
+}

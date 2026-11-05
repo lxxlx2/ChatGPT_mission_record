@@ -1,0 +1,108 @@
+{
+  "schema": "BSC_P4C_DRAGON_DDAC_HISTORIC_NATIVE_WALLET_FOUR_BLOCK_READBACK",
+  "source_precommit_blob_sha": "dad9221f0316b590ebe6d86686e2225811572ddd",
+  "balances": [
+    {
+      "block": 83635775,
+      "status": "COMPLETE",
+      "balance_wei": "17806507402194926070",
+      "raw": "0xf71d6c23ae3139f6"
+    },
+    {
+      "block": 83635776,
+      "status": "COMPLETE",
+      "balance_wei": "16997499825194926074",
+      "raw": "0xebe34008ce81fffa"
+    },
+    {
+      "block": 83635799,
+      "status": "COMPLETE",
+      "balance_wei": "16997499825194926074",
+      "raw": "0xebe34008ce81fffa"
+    },
+    {
+      "block": 83635800,
+      "status": "COMPLETE",
+      "balance_wei": "17714337786680311798",
+      "raw": "0xf5d5f85cc65bfff6"
+    }
+  ],
+  "owner_external_source_activity": [
+    {
+      "block": 83635776,
+      "status": "COMPLETE_PAGE",
+      "transfers": [
+        {
+          "blockNum": "0x4fc2e40",
+          "uniqueId": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12:external",
+          "hash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "value": 0.8,
+          "erc721TokenId": null,
+          "erc1155Metadata": null,
+          "tokenId": null,
+          "asset": "BNB",
+          "category": "external",
+          "rawContract": {
+            "value": "0xb1a2bc2ec500000",
+            "address": null,
+            "decimal": "0x12"
+          },
+          "metadata": null
+        }
+      ],
+      "pageKey": null,
+      "error": null
+    },
+    {
+      "block": 83635800,
+      "status": "COMPLETE_PAGE",
+      "transfers": [
+        {
+          "blockNum": "0x4fc2e58",
+          "uniqueId": "0x1ccf2e1cc370cf7890a7829d5fdd0a16f9bc5f2344c64415578e3f46c8a177be:external",
+          "hash": "0x1ccf2e1cc370cf7890a7829d5fdd0a16f9bc5f2344c64415578e3f46c8a177be",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "value": 0,
+          "erc721TokenId": null,
+          "erc1155Metadata": null,
+          "tokenId": null,
+          "asset": "BNB",
+          "category": "external",
+          "rawContract": {
+            "value": "0x0",
+            "address": null,
+            "decimal": "0x12"
+          },
+          "metadata": null
+        },
+        {
+          "blockNum": "0x4fc2e58",
+          "uniqueId": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219:external",
+          "hash": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "value": 0,
+          "erc721TokenId": null,
+          "erc1155Metadata": null,
+          "tokenId": null,
+          "asset": "BNB",
+          "category": "external",
+          "rawContract": {
+            "value": "0x0",
+            "address": null,
+            "decimal": "0x12"
+          },
+          "metadata": null
+        }
+      ],
+      "pageKey": null,
+      "error": null
+    }
+  ],
+  "buy_block_native_delta_wei": "-809007576999999996",
+  "sell_block_native_delta_wei": "716837961485385724",
+  "production": "NO_GO"
+}

@@ -1,0 +1,64 @@
+{
+  "schema": "BSC_P4B_DRAGON_POST_OWNER_ACTUAL_SIGNED_ROUNDTRIP_PRECOMMIT_V1",
+  "created_date": "2026-10-16",
+  "source_revision": "7c7c17d001114cbebd4afe6f056143955a73b025",
+  "research_intent": "Determine whether two selected signed purchases of exact Dragon token made 100.8s after DDAC's owner entry have source-confirmed signed sells within remaining Four.meme V2 pre-migration window, without cherry-picking later profitable wallets; preserve all selected negatives.",
+  "chain": "bnb-mainnet",
+  "token_exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "manager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+  "owner": {
+    "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+    "buy_hash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+    "block": 83635776
+  },
+  "actual_buy_candidates_frozen_before_new_exit_RPC": [
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "original_purchase_tx": "0xd099d33a83c217e47f21b618483ae48de6018fb7fd26d093924f2eb25d219118",
+      "buy_block": 83636000
+    },
+    {
+      "wallet": "0xe11b917d591db3bf40ecb5bf7ea4ea5af503460c",
+      "original_purchase_tx": "0xc0262a91f9e2036a5700f88753aec82496104410b8d8a02610f33c8a2d5a6c7a",
+      "buy_block": 83636000
+    }
+  ],
+  "frozen_sale_only_negative_controls": [
+    {
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "sell_tx": "0x21870257be05a174adfbebf956553dd460c28ed94185b8b5a12b1d17744a0ef5",
+      "frozen23_member": true
+    },
+    {
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "sell_tx": "0x6e53994782172907d3442e751d1755415a90156a0833dd584a3a00dfeea793cd",
+      "frozen23_member": true
+    },
+    {
+      "wallet": "0xbb99a969db5df28f032e2023058ce64c14a46a9b",
+      "sell_tx": "0x656ed12c323353c91955f0902cfb249f561bd16afff12144826b95a634499998",
+      "frozen23_member": false
+    }
+  ],
+  "pre_migration_sell_scan": {
+    "from_block": 83636001,
+    "to_block": 83636127,
+    "only_target_CA_Transfer_from_frozen_buyer_to_tokenManager2": true,
+    "logs_chunk_max_block_count": 10,
+    "exhaustive_chunks_expected": 13,
+    "after_migration_excluded": true
+  },
+  "proof_gates": {
+    "buy": "Matching original TokenPurchase + Transfer and signed tx.from + receipt success required",
+    "exit": "Matching original TokenSale from the SAME buyer + exact ERC20 amount transfer to manager + signed transaction success and receipt required",
+    "economic_cashflow": "Gas/native BNB + actual token and BNB/ERC20 pay-ins/out, taxes, router and untracked internal flows must close before profit",
+    "signal_visibility": "Observable first owner public post-buy update and latencies 1/5/15min remain UNRESOLVED",
+    "statistic": "Only original two frozen purchases eligible, no sample substitution after results, two blocked/no-exit observations retained",
+    "overall": "NO_GO / NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE"
+  },
+  "sources": [
+    "bsc-meme-address-model-v1-p4b-lonxia-independent-review-errata-2026-10-16.json",
+    "bsc-meme-address-model-v1-p4b-lonxia-3-real-market-sells-2026-10-16.json"
+  ],
+  "note": "This is *post-owner* signed buy evidence, not proof a buyer observed DDAC or copied him; full availability of public executable U not shown. 2026-02-27 source sample exposed, not untouched P5."
+}

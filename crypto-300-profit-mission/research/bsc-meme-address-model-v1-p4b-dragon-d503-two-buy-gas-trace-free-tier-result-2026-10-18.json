@@ -1,0 +1,76 @@
+{
+  "schema": "BSC_P4B_2026_DRAGON_D503_TWO_HISTORIC_ACTUAL_BUYS_LIMITED_GAS_TRACE_PROVIDER_RESULT_V1",
+  "freeze_git_blob": "d09f5502e449d768182a5e3d9710c2c9561c6509",
+  "provider": "Alchemy bnb-mainnet previously selected free/read-only app",
+  "capture_grade": "TOOL_SUMMARIZED_PROVIDER_CLIPPED_RECEIPTS_AND_EXPLICIT_FREE_TIER_REJECTION_NOT_COMPLETE_RAW",
+  "date": "2026-10-18",
+  "actual_calls": 4,
+  "exhaustive_precommitted_probes": true,
+  "results": [
+    {
+      "label": "D503_BUY_1",
+      "tx": "0xd099d33a83c217e47f21b618483ae48de6018fb7fd26d093924f2eb25d219118",
+      "ethGetTransactionReceipt": {
+        "rpc_text_chars": 8098,
+        "complete_parseable_JSON": false,
+        "visible_status": "0x1",
+        "visible_cumulativeGasUsed": "0x4fa3f",
+        "visible_transaction_specific_gasUsed": "UNRESOLVED",
+        "visible_effectiveGasPrice": "UNRESOLVED",
+        "raw_response_saved_fully": false,
+        "reason": "TOOL_TRUNCATION_NOT_VALID_JSON"
+      },
+      "debugTraceTransaction": {
+        "tracer": "callTracer",
+        "timeout": "10s",
+        "status": "UNAVAILABLE_FREE_TIER",
+        "provider_error_exact": "RPC error (-32600): debug_traceTransaction is not available on the Free tier - upgrade to Pay As You Go, or Enterprise for access.",
+        "call_trace": "UNKNOWN"
+      }
+    },
+    {
+      "label": "D503_BUY_2",
+      "tx": "0xbc1622bb9a1850b5966f7c056d0344e586c3ffcf7b882df84cb07673bd13bfb5",
+      "ethGetTransactionReceipt": {
+        "rpc_text_chars": 8098,
+        "complete_parseable_JSON": false,
+        "visible_status": "0x1",
+        "visible_cumulativeGasUsed": "0x1ac4653",
+        "visible_transaction_specific_gasUsed": "UNRESOLVED",
+        "visible_effectiveGasPrice": "UNRESOLVED",
+        "raw_response_saved_fully": false,
+        "reason": "TOOL_TRUNCATION_NOT_VALID_JSON"
+      },
+      "debugTraceTransaction": {
+        "tracer": "callTracer",
+        "timeout": "10s",
+        "status": "UNAVAILABLE_FREE_TIER",
+        "provider_error_exact": "RPC error (-32600): debug_traceTransaction is not available on the Free tier - upgrade to Pay As You Go, or Enterprise for access.",
+        "call_trace": "UNKNOWN"
+      }
+    }
+  ],
+  "known_sourced_signed_set": {
+    "original_DDAC_block": 83635776,
+    "original_DDAC_buy_hash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+    "actual_D503_buy_and_sell_signed_rounds": 2,
+    "original_e11b_buy_no_curve_exit_in_frozen_13_full_chunks": 1
+  },
+  "limited_conclusions": [
+    "Existing signed D503 buy/approve/sell events prove selected post-owner Dragon venue trading, not causal copy trading or earliest public U.",
+    "cumulativeGasUsed is total gas used by preceding transactions within a block up to this tx; it is NOT this transaction's gasUsed.",
+    "Do not reverse engineer truncated per-tx receipt gasUsed or claimed complete native PnL from small residual EOA block balance movements (4/18 wei offset).",
+    "Failed debug_traceTransaction is an explicit free-tier provider restriction, NOT a reverted/failed chain transaction or proof of no internal flows.",
+    "Do not substitute paid Alchemy or GMGN; 1/5/15m causal follower ROI UNRESOLVED; preserve independent exit-unknown E11B."
+  ],
+  "gates": {
+    "actual_original_complete_buy_gas_receipts": "UNRESOLVED",
+    "verified_direct_public_follower_signal": "UNRESOLVED",
+    "stateful_hypothetical_follower_buy_sell": "UNRESOLVED",
+    "follower_net_return_1_5_15_min": "UNRESOLVED",
+    "P4_B": "PARTIAL",
+    "P5": "BLOCKED",
+    "production": "NO_GO",
+    "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  }
+}

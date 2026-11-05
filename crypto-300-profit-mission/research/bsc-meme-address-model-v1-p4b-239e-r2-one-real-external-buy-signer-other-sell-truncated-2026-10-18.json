@@ -1,0 +1,56 @@
+{
+  "schema": "BSC_P4B_2026_239E_R2_NEXT_BLOCK_TWO_SWAP_TX_SIGNER_READBACK_V1",
+  "date": "2026-10-18",
+  "precommit": "bsc-meme-address-model-v1-p4b-239e-r2-next-block-two-swap-signed-lookup-precommit-2026-10-18.json",
+  "calls": 2,
+  "provider": "Alchemy BNB free",
+  "method": "eth_getTransactionByHash",
+  "first_buy": {
+    "hash": "0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47",
+    "tool_return_full_JSON_parseable": true,
+    "tool_response_chars": 1265,
+    "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+    "to": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+    "value": "0x0",
+    "gasLimit": "0x7a120",
+    "gasPrice": "0x1dcd6500",
+    "blockNumber": "0x51fa51a",
+    "blockTimestamp": "0x69b15097",
+    "transactionIndex": "0x2",
+    "blockHash": "0xeb04fb609e3c356d0348c1e5c1f9d445d87943f234ccda7ab2dd95f7734da114",
+    "type": "0x0",
+    "nonce": "0x2a98",
+    "chainId": "0x38",
+    "input_selector": "0x38ed1739",
+    "corresponding_Swap_direction": "WBNB_IN_DRAGON_OUT",
+    "Swap_WBNB_in_wei": "1562236003910333182",
+    "Swap_Dragon_out_raw": "48454704178311452125501"
+  },
+  "first_sell": {
+    "hash": "0x57feec5cf7819b9a6261de69b05e5587bfc7df173a92f1478529d6533d7d20a0",
+    "tool_return_full_JSON_parseable": false,
+    "tool_response_chars": 8098,
+    "visible_tx_type": "0x4",
+    "visible_to": "0x9999b0cdd35d7f3b281ba02efc0d228486940515",
+    "signed_original_sender": "UNRESOLVED_NOT_ALLOWED_TO_USE_PARTIAL_AUTH_LIST",
+    "corresponding_full_Pair_Swap_logs_count": 3,
+    "corresponding_event_direction": "DRAGON_IN_WBNB_OUT"
+  },
+  "source_grade": "ORIGINAL_ONE_SIGNED_BUY_TX_FULL_TOOL_JSON_PLUS_ONE_SELL_TX_8098CHAR_PREFIX_ONLY_NOT_PROVIDER_WIRE",
+  "original_239E_was_owner_previously_signed_in_block": 85959961,
+  "actual_buy_block": 85959962,
+  "public_signal_observer_delivery_timestamp": "UNRESOLVED",
+  "another_trader_origin_same_person_as_239E": false,
+  "prove_external_causal_copy": false,
+  "unverified_buyer_true_recipient_token_balance": "NEXT_STAGE",
+  "constraints": [
+    "Pool Swap transfer amount may differ from buyer net token balance due to tax, transfers, multi-hop",
+    "Pair sender/to indexed event addresses not substitute signed tx sender",
+    "Same consensus timestamp on original buy and later block does not prove what was seen first by public observer"
+  ],
+  "status": {
+    "P4_B": "PARTIAL",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}

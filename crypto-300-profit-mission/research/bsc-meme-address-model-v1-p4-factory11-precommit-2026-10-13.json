@@ -1,0 +1,89 @@
+{
+  "schema": "BSC_MEME_P4_FROZEN_POOL_FACTORY_ORIGIN_PROBE",
+  "production": "NO_GO",
+  "source": {
+    "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-pool11-historical-precommit-2026-10-13.json",
+    "git_blob_sha": "e252399af01896a2bfcb05e3a2be73b53c8a8d43"
+  },
+  "purpose": "Determine contract factory() identity for all 11 already observed pools at earliest known confirmed owner Swap, as a venue-origin clue for P4 U; no assertion that this is first tradable pool or token launch.",
+  "network": "bnb-mainnet",
+  "method": {
+    "eth_call_selector_factory": "0xc45a0155",
+    "block_qualifier": "pool.earliest_block",
+    "all_pools_included": true
+  },
+  "pool_queries": [
+    {
+      "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "block": 121786352,
+      "target_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "swap_event_topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
+    },
+    {
+      "pool": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "block": 122015238,
+      "target_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "swap_event_topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
+    },
+    {
+      "pool": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+      "block": 122185934,
+      "target_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "swap_event_topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
+    },
+    {
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "block": 121966513,
+      "target_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "swap_event_topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
+    },
+    {
+      "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+      "block": 126467804,
+      "target_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "swap_event_topic0": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83"
+    },
+    {
+      "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "block": 122582898,
+      "target_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "swap_event_topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
+    },
+    {
+      "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+      "block": 126468121,
+      "target_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "swap_event_topic0": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83"
+    },
+    {
+      "pool": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+      "block": 126468394,
+      "target_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "swap_event_topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
+    },
+    {
+      "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "block": 123398349,
+      "target_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "swap_event_topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
+    },
+    {
+      "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+      "block": 122742452,
+      "target_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "swap_event_topic0": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83"
+    },
+    {
+      "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "block": 122367977,
+      "target_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "swap_event_topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
+    }
+  ],
+  "guardrails": [
+    "factory identity alone does not prove market launch",
+    "No snapshot profitability or missed opportunity from historical pool observation",
+    "Do not infer control or token legitimacy from common factory"
+  ],
+  "status": "FROZEN_BEFORE_CALL"
+}

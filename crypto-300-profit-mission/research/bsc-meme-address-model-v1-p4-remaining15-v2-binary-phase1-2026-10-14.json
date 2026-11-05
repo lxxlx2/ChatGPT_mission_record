@@ -1,0 +1,555 @@
+{
+  "schema": "BSC_P4_REMAINING15_MULTICALL_V2_BINARY_PHASE",
+  "phase": 1,
+  "rounds": 4,
+  "from_precommit_sha": "3f9d1f7561fbdbfa5e8f2cd74a8d79790d3767ab",
+  "start_bounds": [
+    {
+      "lo": 0,
+      "hi": 127372023
+    },
+    {
+      "lo": 0,
+      "hi": 127372023
+    },
+    {
+      "lo": 0,
+      "hi": 127372023
+    },
+    {
+      "lo": 0,
+      "hi": 127372023
+    },
+    {
+      "lo": 0,
+      "hi": 127372023
+    },
+    {
+      "lo": 0,
+      "hi": 127372023
+    },
+    {
+      "lo": 0,
+      "hi": 127372023
+    },
+    {
+      "lo": 0,
+      "hi": 127372023
+    },
+    {
+      "lo": 0,
+      "hi": 127372023
+    },
+    {
+      "lo": 0,
+      "hi": 127372023
+    },
+    {
+      "lo": 0,
+      "hi": 127372023
+    },
+    {
+      "lo": 0,
+      "hi": 127372023
+    },
+    {
+      "lo": 0,
+      "hi": 127372023
+    },
+    {
+      "lo": 0,
+      "hi": 127372023
+    },
+    {
+      "lo": 0,
+      "hi": 127372023
+    }
+  ],
+  "end_bounds": [
+    {
+      "lo": 39803756,
+      "hi": 47764508
+    },
+    {
+      "lo": 39803756,
+      "hi": 47764508
+    },
+    {
+      "lo": 39803756,
+      "hi": 47764508
+    },
+    {
+      "lo": 39803756,
+      "hi": 47764508
+    },
+    {
+      "lo": 39803756,
+      "hi": 47764508
+    },
+    {
+      "lo": 39803756,
+      "hi": 47764508
+    },
+    {
+      "lo": 39803756,
+      "hi": 47764508
+    },
+    {
+      "lo": 39803756,
+      "hi": 47764508
+    },
+    {
+      "lo": 39803756,
+      "hi": 47764508
+    },
+    {
+      "lo": 47764508,
+      "hi": 55725259
+    },
+    {
+      "lo": 55725259,
+      "hi": 63686011
+    },
+    {
+      "lo": 55725259,
+      "hi": 63686011
+    },
+    {
+      "lo": 71646762,
+      "hi": 79607514
+    },
+    {
+      "lo": 63686011,
+      "hi": 71646762
+    },
+    {
+      "lo": 39803756,
+      "hi": 47764508
+    }
+  ],
+  "probe_count": 60,
+  "rpc_batches": 8,
+  "probes": [
+    {
+      "round": 1,
+      "index": 0,
+      "block": 63686011,
+      "pool": "0xb36c81707e5ca2bd6f68cd6b71b3178d29c48a4b",
+      "exists": true
+    },
+    {
+      "round": 1,
+      "index": 1,
+      "block": 63686011,
+      "pool": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+      "exists": true
+    },
+    {
+      "round": 1,
+      "index": 2,
+      "block": 63686011,
+      "pool": "0xb7c6f7db26cde42550e4017bb9855bbaaa20eb44",
+      "exists": true
+    },
+    {
+      "round": 1,
+      "index": 3,
+      "block": 63686011,
+      "pool": "0xd7efdee04e508502bdc666f67f3d9b006c20318d",
+      "exists": true
+    },
+    {
+      "round": 1,
+      "index": 4,
+      "block": 63686011,
+      "pool": "0x9eb0bc7a207f77811ee365729d00152622a745b7",
+      "exists": true
+    },
+    {
+      "round": 1,
+      "index": 5,
+      "block": 63686011,
+      "pool": "0xd32041a219835ed79c1ffd7f43df68d06b9b13d5",
+      "exists": true
+    },
+    {
+      "round": 1,
+      "index": 6,
+      "block": 63686011,
+      "pool": "0xa9b4493042830109b44e18ec3586ecd22bd032ed",
+      "exists": true
+    },
+    {
+      "round": 1,
+      "index": 7,
+      "block": 63686011,
+      "pool": "0xe518025b12f424f825f3b53c8d4a747ccbfc6127",
+      "exists": true
+    },
+    {
+      "round": 1,
+      "index": 8,
+      "block": 63686011,
+      "pool": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "exists": true
+    },
+    {
+      "round": 1,
+      "index": 9,
+      "block": 63686011,
+      "pool": "0x3551191f78869c29388886330f31739a87866c38",
+      "exists": true
+    },
+    {
+      "round": 1,
+      "index": 10,
+      "block": 63686011,
+      "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "exists": true
+    },
+    {
+      "round": 1,
+      "index": 11,
+      "block": 63686011,
+      "pool": "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+      "exists": true
+    },
+    {
+      "round": 1,
+      "index": 12,
+      "block": 63686011,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 1,
+      "index": 13,
+      "block": 63686011,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 1,
+      "index": 14,
+      "block": 63686011,
+      "pool": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+      "exists": true
+    },
+    {
+      "round": 2,
+      "index": 0,
+      "block": 31843005,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 2,
+      "index": 1,
+      "block": 31843005,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 2,
+      "index": 2,
+      "block": 31843005,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 2,
+      "index": 3,
+      "block": 31843005,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 2,
+      "index": 4,
+      "block": 31843005,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 2,
+      "index": 5,
+      "block": 31843005,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 2,
+      "index": 6,
+      "block": 31843005,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 2,
+      "index": 7,
+      "block": 31843005,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 2,
+      "index": 8,
+      "block": 31843005,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 2,
+      "index": 9,
+      "block": 31843005,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 2,
+      "index": 10,
+      "block": 31843005,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 2,
+      "index": 11,
+      "block": 31843005,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 2,
+      "index": 14,
+      "block": 31843005,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 2,
+      "index": 12,
+      "block": 95529017,
+      "pool": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "exists": true
+    },
+    {
+      "round": 2,
+      "index": 13,
+      "block": 95529017,
+      "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "exists": true
+    },
+    {
+      "round": 3,
+      "index": 0,
+      "block": 47764508,
+      "pool": "0xb36c81707e5ca2bd6f68cd6b71b3178d29c48a4b",
+      "exists": true
+    },
+    {
+      "round": 3,
+      "index": 1,
+      "block": 47764508,
+      "pool": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+      "exists": true
+    },
+    {
+      "round": 3,
+      "index": 2,
+      "block": 47764508,
+      "pool": "0xb7c6f7db26cde42550e4017bb9855bbaaa20eb44",
+      "exists": true
+    },
+    {
+      "round": 3,
+      "index": 3,
+      "block": 47764508,
+      "pool": "0xd7efdee04e508502bdc666f67f3d9b006c20318d",
+      "exists": true
+    },
+    {
+      "round": 3,
+      "index": 4,
+      "block": 47764508,
+      "pool": "0x9eb0bc7a207f77811ee365729d00152622a745b7",
+      "exists": true
+    },
+    {
+      "round": 3,
+      "index": 5,
+      "block": 47764508,
+      "pool": "0xd32041a219835ed79c1ffd7f43df68d06b9b13d5",
+      "exists": true
+    },
+    {
+      "round": 3,
+      "index": 6,
+      "block": 47764508,
+      "pool": "0xa9b4493042830109b44e18ec3586ecd22bd032ed",
+      "exists": true
+    },
+    {
+      "round": 3,
+      "index": 7,
+      "block": 47764508,
+      "pool": "0xe518025b12f424f825f3b53c8d4a747ccbfc6127",
+      "exists": true
+    },
+    {
+      "round": 3,
+      "index": 8,
+      "block": 47764508,
+      "pool": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "exists": true
+    },
+    {
+      "round": 3,
+      "index": 9,
+      "block": 47764508,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 3,
+      "index": 10,
+      "block": 47764508,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 3,
+      "index": 11,
+      "block": 47764508,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 3,
+      "index": 14,
+      "block": 47764508,
+      "pool": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+      "exists": true
+    },
+    {
+      "round": 3,
+      "index": 12,
+      "block": 79607514,
+      "pool": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "exists": true
+    },
+    {
+      "round": 3,
+      "index": 13,
+      "block": 79607514,
+      "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "exists": true
+    },
+    {
+      "round": 4,
+      "index": 0,
+      "block": 39803756,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 4,
+      "index": 1,
+      "block": 39803756,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 4,
+      "index": 2,
+      "block": 39803756,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 4,
+      "index": 3,
+      "block": 39803756,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 4,
+      "index": 4,
+      "block": 39803756,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 4,
+      "index": 5,
+      "block": 39803756,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 4,
+      "index": 6,
+      "block": 39803756,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 4,
+      "index": 7,
+      "block": 39803756,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 4,
+      "index": 8,
+      "block": 39803756,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 4,
+      "index": 14,
+      "block": 39803756,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 4,
+      "index": 9,
+      "block": 55725259,
+      "pool": "0x3551191f78869c29388886330f31739a87866c38",
+      "exists": true
+    },
+    {
+      "round": 4,
+      "index": 10,
+      "block": 55725259,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 4,
+      "index": 11,
+      "block": 55725259,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 4,
+      "index": 12,
+      "block": 71646762,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 4,
+      "index": 13,
+      "block": 71646762,
+      "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "exists": true
+    }
+  ],
+  "production": "NO_GO"
+}

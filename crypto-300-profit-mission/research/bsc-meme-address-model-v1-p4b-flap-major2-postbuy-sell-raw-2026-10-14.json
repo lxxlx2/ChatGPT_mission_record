@@ -1,0 +1,39 @@
+{
+  "schema": "BSC_P4B_FLAP_2026_MAJOR2_POSTBUY_10BLOCK_SELL_EVENT_RAW",
+  "source_precommit_blob_sha": "ac39d5944e458b2cf6056f876340dfe9bff9b1ef",
+  "rows": [
+    {
+      "token": "牛来",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_CA": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "buy_block": 115628774,
+      "actual_bought_token_raw": "37956445907182539413593521",
+      "sell_window_start": 115628774,
+      "sell_window_end": 115628783,
+      "sell_logs_full_window_status": "COMPLETE",
+      "raw_sell_topic_logs_total": 1,
+      "exact_CA_sell_events": [],
+      "nonmatching_topic_events_count": 1,
+      "sell_topic_error": null,
+      "postbuy_quoteread_raw": "0x00000000000000000000000000000000000000000000000002bed99e3a6a99ec",
+      "postbuy_quote_status": "COMPLETE_QUOTE_ONLY"
+    },
+    {
+      "token": "MARSCOIN",
+      "CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_CA": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "buy_block": 112441394,
+      "actual_bought_token_raw": "77163604478330373759393953",
+      "sell_window_start": 112441394,
+      "sell_window_end": 112441403,
+      "sell_logs_full_window_status": "UNRESOLVED",
+      "raw_sell_topic_logs_total": null,
+      "exact_CA_sell_events": [],
+      "nonmatching_topic_events_count": null,
+      "sell_topic_error": "TRUNCATED_OR_NON_JSON",
+      "postbuy_quoteread_raw": "0x000000000000000000000000000000000000000000000000264ae9de48a1a2db",
+      "postbuy_quote_status": "COMPLETE_QUOTE_ONLY"
+    }
+  ],
+  "production": "NO_GO"
+}

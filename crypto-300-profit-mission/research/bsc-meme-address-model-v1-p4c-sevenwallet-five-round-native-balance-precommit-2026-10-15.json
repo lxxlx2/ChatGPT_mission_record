@@ -1,0 +1,120 @@
+{
+  "schema": "BSC_P4C_SEVEN_RECENT_5ROUND_UNIQUE_WALLET_BLOCK_BALANCE_SNAPSHOT_PRECOMMIT",
+  "source_cohort_sha": "85a39f4c5c9723e98180a1c018b9dd94588fe3b6",
+  "scope": "All unique owner-wallet x source-selected tx blocks of 5 positive and negative 2026 original rounds: historical eth_getBalance(N-1) and (N) exactly once per wallet/block. Does not prove full quote asset market PnL or lack of other tx in block. Preserve real unsigned discrepancies.",
+  "network": "bnb-mainnet",
+  "queries": [
+    {
+      "round": "8E6B_HAJIMI_R1",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "哈基米 / HAJIMI",
+      "block": 74741352,
+      "block_prev": 74741351,
+      "source_txs": [
+        "0x379a9f56fa6b47182c30a5854240aeb08a599b61d530ea969a446adfbfa09231"
+      ]
+    },
+    {
+      "round": "8E6B_HAJIMI_R1",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "哈基米 / HAJIMI",
+      "block": 74741573,
+      "block_prev": 74741572,
+      "source_txs": [
+        "0x7e6c7bfecd6815c38ad53af6d15faef516f6aec40ca5d5ee7ca2200053357efe"
+      ]
+    },
+    {
+      "round": "8E6B_HAJIMI_R1",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "哈基米 / HAJIMI",
+      "block": 74741587,
+      "block_prev": 74741586,
+      "source_txs": [
+        "0x3055cbb9f252a4b20a8cb2a127011fea8fc3c4ccaa24464a7f4bd75881d0e95e"
+      ]
+    },
+    {
+      "round": "8E6B_DRAGON_R2",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "龙虾",
+      "block": 93584281,
+      "block_prev": 93584280,
+      "source_txs": [
+        "0xe96df53014497d00b74d6a08fb903661b35a4ceea42851bcb31de80fca223f34"
+      ]
+    },
+    {
+      "round": "8E6B_DRAGON_R2",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "龙虾",
+      "block": 94208823,
+      "block_prev": 94208822,
+      "source_txs": [
+        "0xd3b7eafb4d5193be7f7ff9dd62b968a65fae16b37c430726e13207ed51c71530"
+      ]
+    },
+    {
+      "round": "ADFF_DRAGON_R4",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "block": 83656622,
+      "block_prev": 83656621,
+      "source_txs": [
+        "0xf295cea8ca007cf8bbf00889acf7be78d9d035300be51da67a194fe50c33a3e3"
+      ]
+    },
+    {
+      "round": "ADFF_DRAGON_R4",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "block": 83656734,
+      "block_prev": 83656733,
+      "source_txs": [
+        "0xcbd78ec6eed55dba0f9f90bdfa342c48644d3d626d975aa77e931ad0ffe69045"
+      ]
+    },
+    {
+      "round": "2ADF_NIULAI_R3",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "block": 116038180,
+      "block_prev": 116038179,
+      "source_txs": [
+        "0x5b9f98b8feff8b9589b9a229bd64485689d11f7aa08d7973d7553fd18ba35e1e"
+      ]
+    },
+    {
+      "round": "2ADF_NIULAI_R3",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "block": 116087810,
+      "block_prev": 116087809,
+      "source_txs": [
+        "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f"
+      ]
+    },
+    {
+      "round": "A83B_NIULAI_R2",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "block": 116113193,
+      "block_prev": 116113192,
+      "source_txs": [
+        "0x8a22a65a977409a7e82266d05ceaf1e98074d1f6b50e942486600dacdc672716",
+        "0x3e8b50350c8d2cf87d9662434ad205d08a33595eaf253dac04996134a35e2971"
+      ]
+    },
+    {
+      "round": "A83B_NIULAI_R2",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "block": 116113197,
+      "block_prev": 116113196,
+      "source_txs": [
+        "0xd0bc93c086a44affed01a7bfb25022cd51e18513401b15d2fbb3692ec1bde9a4"
+      ]
+    }
+  ],
+  "production": "NO_GO"
+}

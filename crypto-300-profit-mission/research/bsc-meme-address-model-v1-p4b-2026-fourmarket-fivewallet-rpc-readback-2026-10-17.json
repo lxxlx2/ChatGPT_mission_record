@@ -1,0 +1,98 @@
+{
+  "schema": "BSC_P4B_2026_FOUR_MARKET_FIVE_WALLET_ALCHEMY_HISTORIC_READBACK_V1",
+  "precommit_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-2026-fourmarket-fivewallet-precommit-2026-10-17.json",
+  "precommit_sha": "b717dc49343d8050978305defe8061c05ee6fa54",
+  "provider": "Alchemy BNB Mainnet read-only app (key not stored)",
+  "actual_reads": "5 wallets times 2 historical native block balances (one reused captured DDAC N+1), 3 quote ERC20 balanceOf, three MARSCOIN Flap TokenSold one-block reads. No transactions sent, no mutable state, no all-23 bankroll sweep.",
+  "balance_cases": [
+    {
+      "label": "DDAC",
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "龙虾",
+      "N": 83635776,
+      "amount_at_N_hex": "0xebe34008ce81fffa",
+      "amount_at_Nplus1_hex": "0xebe34008ce81fffa"
+    },
+    {
+      "label": "239E",
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "N": 83635776,
+      "amount_at_N_hex": "0x4ed9bc58dfea8e1",
+      "amount_at_Nplus1_hex": "0x4ed9bc58dfea8e1"
+    },
+    {
+      "label": "2ADF",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "N": 115628774,
+      "amount_at_N_hex": "0x116dac63f91cd850",
+      "amount_at_Nplus1_hex": "0x116dac63f91cd850",
+      "quote_ca": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "quote_balance_Nplus1_raw_hex": "0x4349643fba9fe5"
+    },
+    {
+      "label": "A83B",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "N": 115628774,
+      "amount_at_N_hex": "0x48d35980ff13d1988",
+      "amount_at_Nplus1_hex": "0x48d35980ff13d1988",
+      "quote_ca": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "quote_balance_Nplus1_raw_hex": "0x13a24d3b4fabb05"
+    },
+    {
+      "label": "877AF",
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "N": 112441394,
+      "amount_at_N_hex": "0xefe620f2fc1bc042",
+      "amount_at_Nplus1_hex": "0xefe620f2fc1bc042",
+      "quote_ca": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "quote_balance_Nplus1_raw_hex": "0x379e8e70661a12"
+    }
+  ],
+  "marscoin_sell_checks": [
+    {
+      "block": 112441395,
+      "response_status": "COMPLETE_JSON",
+      "topic": "TokenSold",
+      "total_events": 8,
+      "exact_CA_events": 0,
+      "non_target_txhashes": [
+        "0x6d0c47d1a3526e8268a4ec6ddf1c6ec23710df6140b9184fe96fa5361c09c89c",
+        "0x7f7ec0a7892914cb05bfc374029b76b474f332ae6bafe615c3c64129237b406c",
+        "0xe7cf090c7f19e10ef506c8683951262bccfcb190e56dd2d061ccc339b711ea67",
+        "0xd3bb15809d3883fbfbfcbfe13bcfbb0391f434782a25aeced7125303e50ac0e8",
+        "0xb9a8784c33e9fcdaaf24c5ae90ee29d1325c7156018e4fff63b209c1e64f1067",
+        "0x73800af0583d73e55976629796dfecdba737abb83c0d9587a9c8e3a65f2b0035",
+        "0x91c4865526c5698030836b0786282722b7db06f8c57d2a3896682fcee18b4058",
+        "0x443fc8fd4de583f94132bb3b48918d8e790f2a8226598ddc826aa257"
+      ],
+      "raw_response_archived_in_git": false
+    },
+    {
+      "block": 112441396,
+      "response_status": "TRUNCATED_NON_JSON_8098_CHARS",
+      "exact_CA_events": null,
+      "raw_response_archived_in_git": false
+    },
+    {
+      "block": 112441397,
+      "response_status": "TRUNCATED_NON_JSON_8098_CHARS",
+      "exact_CA_events": null,
+      "raw_response_archived_in_git": false
+    }
+  ],
+  "source_scope_limits": [
+    "For three ERC20 quote balanceOf results token decimals 18 previously recorded in source, but token current metadata symbols Q3B/S5B not historical brand/market denomination confirmation.",
+    "N and N+1 balances are end-of-block states; no provider network-public receipt propagation timestamp or intra-block executable price; cannot classify actual missed opportunity.",
+    "Complete 395 filtered logs exclude target CA only in that one block, and results are summarized from tool response, not byte-pinned full raw logs. 396/397 and wider 10-block window UNKNOWN.",
+    "No direct contemporaneous Flap market sell, original owner-wide cashflow, exact eligible capital at public U, or follower ROI verified."
+  ],
+  "gates": {
+    "PUBLIC_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}

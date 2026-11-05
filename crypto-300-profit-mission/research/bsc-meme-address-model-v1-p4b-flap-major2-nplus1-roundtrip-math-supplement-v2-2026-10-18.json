@@ -1,0 +1,144 @@
+{
+  "schema": "BSC_P4B_FLAP_2026_TWO_SIDED_QUOTE_NPLUS1_BLOCK_END_SUPPLEMENT_V2",
+  "source_precommit_blob_sha": "57408d1a792235ce43eebcb10d7096c97e9b3aea",
+  "source_reviewed_code_baseline": "dd3d529c99853b89f2be299235cdb499c2ad365f",
+  "network": "bnb-mainnet",
+  "source": "Original Alchemy V1 source readback byte-pinned separately; post-hoc reconstruction of both N+1 end-block request dictionaries, no provider transport capture and no eth_sendTransaction",
+  "method": "quoteExactInput fixed frozen 0.01 authentic source quote token; inverse of quoted output at SAME end-of-N+1 unmodified chain state, not a sequential filled buy/sell",
+  "read_count": 4,
+  "complete_results": 4,
+  "rows": [
+    {
+      "token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_CA": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "block": 115628775,
+      "original_witness_block_N": 115628774,
+      "caller": "NO_FROM_SET_VIEW",
+      "source_contract": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+      "math_function": "quoteExactInput((address tokenIn,address tokenOut,uint256 amountIn))",
+      "buy": {
+        "input_quote_raw": "10000000000000000",
+        "rpc_calldata": "0xfc847c2b000000000000000000000000205812cdbed920aff76c6580abd681a46d11efc7000000000000000000000000beea1d618e533a387d941f58a7d4c9b7bd377777000000000000000000000000000000000000000000000000002386f26fc10000",
+        "raw_return": "0x00000000000000000000000000000000000000000001781450a0468c222d9fbf",
+        "decoded_token_raw": "1775984542161547782102975",
+        "rpc_status": "COMPLETE_32BYTE_VIEW_ONLY",
+        "request": {
+          "network": "bnb-mainnet",
+          "method": "eth_call",
+          "to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "data": "0xfc847c2b000000000000000000000000205812cdbed920aff76c6580abd681a46d11efc7000000000000000000000000beea1d618e533a387d941f58a7d4c9b7bd377777000000000000000000000000000000000000000000000000002386f26fc10000",
+          "blockTag": "0x6e45ae7",
+          "from": null,
+          "value": null
+        },
+        "request_grade": "SCRIPT_RECONSTRUCTED_NOT_PROVIDER_CAPTURED"
+      },
+      "reverse": {
+        "input_token_raw": "1775984542161547782102975",
+        "rpc_calldata": "0xfc847c2b000000000000000000000000beea1d618e533a387d941f58a7d4c9b7bd377777000000000000000000000000205812cdbed920aff76c6580abd681a46d11efc700000000000000000000000000000000000000000001781450a0468c222d9fbf",
+        "raw_return": "0x000000000000000000000000000000000000000000000000002201cf6d16fd66",
+        "decoded_quote_raw": "9572139608243558",
+        "rpc_status": "COMPLETE_32BYTE_VIEW_ONLY",
+        "request": {
+          "network": "bnb-mainnet",
+          "method": "eth_call",
+          "to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "data": "0xfc847c2b000000000000000000000000beea1d618e533a387d941f58a7d4c9b7bd377777000000000000000000000000205812cdbed920aff76c6580abd681a46d11efc700000000000000000000000000000000000000000001781450a0468c222d9fbf",
+          "blockTag": "0x6e45ae7",
+          "from": null,
+          "value": null
+        },
+        "request_grade": "SCRIPT_RECONSTRUCTED_NOT_PROVIDER_CAPTURED"
+      },
+      "static_two_read_difference_quote_raw": "427860391756442",
+      "static_two_read_loss_bps_times_1e4": "4278603",
+      "signed_actual_buy": false,
+      "signed_actual_sell": false,
+      "hypothetical_purchase_did_change_chain_state": false,
+      "assumed_sufficient_real_spendable_quote": false,
+      "gas_tax_slippage_historical_settlement": "UNRESOLVED",
+      "public_observer_latency": "UNRESOLVED",
+      "qualified_public_market_U": "UNRESOLVED",
+      "Nplus1_block_end_lookahead_caveat": "End-of-N+1 includes all intra-block transactions occurring after any earlier third-party receipt of N; NOT an executable intra-block observer state or a price at first post-N transaction."
+    },
+    {
+      "token": "MARSCOIN",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_CA": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "block": 112441395,
+      "original_witness_block_N": 112441394,
+      "caller": "NO_FROM_SET_VIEW",
+      "source_contract": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+      "math_function": "quoteExactInput((address tokenIn,address tokenOut,uint256 amountIn))",
+      "buy": {
+        "input_quote_raw": "10000000000000000",
+        "rpc_calldata": "0xfc847c2b000000000000000000000000be9d156892e55e7154bcd3cb0fea677f9d3103e1000000000000000000000000fe189e97832da1573e4e4ff034f4ffc3a15c7777000000000000000000000000000000000000000000000000002386f26fc10000",
+        "raw_return": "0x00000000000000000000000000000000000000000000328c0259fcf6ac33d3df",
+        "decoded_token_raw": "238701037758398982247391",
+        "rpc_status": "COMPLETE_32BYTE_VIEW_ONLY",
+        "request": {
+          "network": "bnb-mainnet",
+          "method": "eth_call",
+          "to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "data": "0xfc847c2b000000000000000000000000be9d156892e55e7154bcd3cb0fea677f9d3103e1000000000000000000000000fe189e97832da1573e4e4ff034f4ffc3a15c7777000000000000000000000000000000000000000000000000002386f26fc10000",
+          "blockTag": "0x6b3b833",
+          "from": null,
+          "value": null
+        },
+        "request_grade": "SCRIPT_RECONSTRUCTED_NOT_PROVIDER_CAPTURED"
+      },
+      "reverse": {
+        "input_token_raw": "238701037758398982247391",
+        "rpc_calldata": "0xfc847c2b000000000000000000000000fe189e97832da1573e4e4ff034f4ffc3a15c7777000000000000000000000000be9d156892e55e7154bcd3cb0fea677f9d3103e100000000000000000000000000000000000000000000328c0259fcf6ac33d3df",
+        "raw_return": "0x0000000000000000000000000000000000000000000000000020b9c8d77f6f6d",
+        "decoded_quote_raw": "9211471514791789",
+        "rpc_status": "COMPLETE_32BYTE_VIEW_ONLY",
+        "request": {
+          "network": "bnb-mainnet",
+          "method": "eth_call",
+          "to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "data": "0xfc847c2b000000000000000000000000fe189e97832da1573e4e4ff034f4ffc3a15c7777000000000000000000000000be9d156892e55e7154bcd3cb0fea677f9d3103e100000000000000000000000000000000000000000000328c0259fcf6ac33d3df",
+          "blockTag": "0x6b3b833",
+          "from": null,
+          "value": null
+        },
+        "request_grade": "SCRIPT_RECONSTRUCTED_NOT_PROVIDER_CAPTURED"
+      },
+      "static_two_read_difference_quote_raw": "788528485208211",
+      "static_two_read_loss_bps_times_1e4": "7885284",
+      "signed_actual_buy": false,
+      "signed_actual_sell": false,
+      "hypothetical_purchase_did_change_chain_state": false,
+      "assumed_sufficient_real_spendable_quote": false,
+      "gas_tax_slippage_historical_settlement": "UNRESOLVED",
+      "public_observer_latency": "UNRESOLVED",
+      "qualified_public_market_U": "UNRESOLVED",
+      "Nplus1_block_end_lookahead_caveat": "End-of-N+1 includes all intra-block transactions occurring after any earlier third-party receipt of N; NOT an executable intra-block observer state or a price at first post-N transaction."
+    }
+  ],
+  "limits": [
+    "Each return is 32-byte isolated mathematical quote; no wallet transfer/approval/settlement or actual buy->sell state transition.",
+    "Same-state inverse price includes contract view math only. Effective transfer taxes, fees, slippage, gas, price impact and quote-to-BNB/USD conversion UNVERIFIED.",
+    "N+1 block-end is not a third party network delivered observability measurement or hypothetical transaction exact intra-block state.",
+    "Research selection exposed and not untouched 2026 holdout. No trade signal or actual follower profit.",
+    "Historical eth_call with N+1 block tag resolves post-all-transactions block-end state, so using this point for a follower immediately after N could include look-ahead to later N+1 transactions."
+  ],
+  "gates": {
+    "global_public_executable_U": "UNRESOLVED",
+    "actual_persisted_buy_and_sell": "UNRESOLVED",
+    "capital_at_public_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "restrictions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  },
+  "actual_provider_raw_transcript_archived": false,
+  "source_v1": {
+    "path": "bsc-meme-address-model-v1-p4b-flap-major2-nplus1-roundtrip-math-readback-2026-10-17.json",
+    "git_blob_sha": "b7c618582b969c61772deb8a07dbd0e706a187e4",
+    "source_role": "IMMUTABLE_ORIGINAL_RPC_READBACK_SELECTED_FIELDS"
+  },
+  "supplement_provenance": "POST_HOC_AUDIT_ENRICHMENT_NOT_NEW_RPC_QUERY",
+  "supplement_confirms_provider_request_capture": false,
+  "request_evidence_grade": "SCRIPT_RECONSTRUCTED_NOT_PROVIDER_CAPTURED"
+}

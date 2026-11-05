@@ -1,0 +1,151 @@
+{
+  "schema": "BSC_P4B_19CA_FIRST_ERC20_TRANSFERS_UNTIL_EARLIEST_SCOPED_DEX_PRECOMMIT",
+  "network": "bnb-mainnet",
+  "method": "alchemy_getAssetTransfers",
+  "category": [
+    "erc20"
+  ],
+  "order": "asc",
+  "excludeZeroValue": false,
+  "maxCount_hex": "0xa",
+  "from_block_hex": "0x0",
+  "contract_CA_filter_exact": true,
+  "scope": "All 19 major exact CAs: fixed first 10 asset transfer records from genesis through earliest source-proven active PancakeSwap pool block inclusive. Transfers are not proof of trade. Exact first page is initial index sample, not exhaustive buys/sells. Any unavailable provider call remains unknown.",
+  "source_crossvenue_git_blob_sha": "49377dad6324a1089ca1233a7db6327443d0e4e6",
+  "rows": [
+    {
+      "index": 0,
+      "token": "TST",
+      "exact_CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "earliest_scoped_active_block": 46411402,
+      "to_block_hex": "0x2c42e8a"
+    },
+    {
+      "index": 1,
+      "token": "CHEEMS",
+      "exact_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "earliest_scoped_active_block": 42638390,
+      "to_block_hex": "0x28a9c36"
+    },
+    {
+      "index": 2,
+      "token": "MUBARAK",
+      "exact_CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "earliest_scoped_active_block": 47425645,
+      "to_block_hex": "0x2d3a86d"
+    },
+    {
+      "index": 3,
+      "token": "TUT",
+      "exact_CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "earliest_scoped_active_block": 46484226,
+      "to_block_hex": "0x2c54b02"
+    },
+    {
+      "index": 4,
+      "token": "BROCCOLI714",
+      "exact_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "earliest_scoped_active_block": 46627251,
+      "to_block_hex": "0x2c779b3"
+    },
+    {
+      "index": 5,
+      "token": "BROCCOLIF3B",
+      "exact_CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "earliest_scoped_active_block": 46627261,
+      "to_block_hex": "0x2c779bd"
+    },
+    {
+      "index": 6,
+      "token": "SIREN",
+      "exact_CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "earliest_scoped_active_block": 46488279,
+      "to_block_hex": "0x2c55ad7"
+    },
+    {
+      "index": 7,
+      "token": "BANANAS31",
+      "exact_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "earliest_scoped_active_block": 44113219,
+      "to_block_hex": "0x2a11d43"
+    },
+    {
+      "index": 8,
+      "token": "BOB",
+      "exact_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "earliest_scoped_active_block": 44007572,
+      "to_block_hex": "0x29f8094"
+    },
+    {
+      "index": 9,
+      "token": "BULLA",
+      "exact_CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "earliest_scoped_active_block": 50972313,
+      "to_block_hex": "0x309c699"
+    },
+    {
+      "index": 10,
+      "token": "4",
+      "exact_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "earliest_scoped_active_block": 63056879,
+      "to_block_hex": "0x3c22bef"
+    },
+    {
+      "index": 11,
+      "token": "GIGGLE",
+      "exact_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "earliest_scoped_active_block": 61963725,
+      "to_block_hex": "0x3b17dcd"
+    },
+    {
+      "index": 12,
+      "token": "币安人生",
+      "exact_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "earliest_scoped_active_block": 63454407,
+      "to_block_hex": "0x3c83cc7"
+    },
+    {
+      "index": 13,
+      "token": "我踏马来了",
+      "exact_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "earliest_scoped_active_block": 73658906,
+      "to_block_hex": "0x463f21a"
+    },
+    {
+      "index": 14,
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "earliest_scoped_active_block": 83636128,
+      "to_block_hex": "0x4fc2fa0"
+    },
+    {
+      "index": 15,
+      "token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "earliest_scoped_active_block": 115919205,
+      "to_block_hex": "0x6e8c965"
+    },
+    {
+      "index": 16,
+      "token": "MARSCOIN",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "earliest_scoped_active_block": 112642885,
+      "to_block_hex": "0x6b6cb45"
+    },
+    {
+      "index": 17,
+      "token": "哈基米 / HAJIMI",
+      "exact_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "earliest_scoped_active_block": 63838943,
+      "to_block_hex": "0x3ce1adf"
+    },
+    {
+      "index": 18,
+      "token": "BUBB",
+      "exact_CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "earliest_scoped_active_block": 47612405,
+      "to_block_hex": "0x2d681f5"
+    }
+  ],
+  "production": "NO_GO"
+}

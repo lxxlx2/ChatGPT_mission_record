@@ -1,0 +1,34 @@
+{
+  "schema": "BSC_P4C_DRAGON_DDAC_NATIVE_BALANCE_WINDOW_SIGNED_TX_RECEIPT_HEADER_PRECOMMIT",
+  "source_balance_blob_sha": "938823f19b83aa1584c611047ac70dec28bdba88",
+  "network": "bnb-mainnet",
+  "signed_tx_selection": [
+    {
+      "block": 83635776,
+      "txhash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+      "EOA": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_value": 0.8
+    },
+    {
+      "block": 83635800,
+      "txhash": "0x1ccf2e1cc370cf7890a7829d5fdd0a16f9bc5f2344c64415578e3f46c8a177be",
+      "EOA": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "to": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "original_value": 0
+    },
+    {
+      "block": 83635800,
+      "txhash": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+      "EOA": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_value": 0
+    }
+  ],
+  "chain_queries": [
+    "eth_getTransactionByHash",
+    "eth_getTransactionReceipt"
+  ],
+  "other_validation": "Same block owner native INBOUND external category only at purchase and first sale block; not supported BSC internal, no claims internal zero. Retain receipt header fields even if full payload JSON truncates, but never claim full receipt status.",
+  "production": "NO_GO"
+}

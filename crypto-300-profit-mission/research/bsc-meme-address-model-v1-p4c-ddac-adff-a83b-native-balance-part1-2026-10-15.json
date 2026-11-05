@@ -1,0 +1,93 @@
+{
+  "schema": "BSC_P4C_THREE_EOA_ORIGINAL_NATIVE_BLOCK_READBACK",
+  "part": 1,
+  "query_manifest_sha": "bd03697b39f1acdecab4cfd35635ffcd9951cc2a",
+  "rows": [
+    {
+      "p2": 3,
+      "owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "我踏马来了",
+      "tx": "0xb19db9769e263071ebaa9a90d452aaac86cbc5ee5dcceae954996a334e1b8246",
+      "block": 74460512,
+      "before_block": 74460511,
+      "before": {
+        "status": "COMPLETE",
+        "wei": "11551771897905074173"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "wei": "11051596510905074173"
+      },
+      "delta_wei": "-500175387000000000"
+    },
+    {
+      "p2": 3,
+      "owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "我踏马来了",
+      "tx": "0xaf25e6a23743c25bae818e760f16919fc7d1617451a34470e1f93fe7999a762e",
+      "block": 74468389,
+      "before_block": 74468388,
+      "before": {
+        "status": "COMPLETE",
+        "wei": "9887266031759841233"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "wei": "10417545935912797839"
+      },
+      "delta_wei": "530279904152956606"
+    },
+    {
+      "p2": 4,
+      "owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "我踏马来了",
+      "tx": "0x0788b4e8ba13e70c101a0b793445dbf39451d9d0173f0c767161f3b12a94cb0a",
+      "block": 74473636,
+      "before_block": 74473635,
+      "before": {
+        "status": "COMPLETE",
+        "wei": "10384511150110072997"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "wei": "9384430391199365350"
+      },
+      "delta_wei": "-1000080758910707647"
+    },
+    {
+      "p2": 4,
+      "owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "我踏马来了",
+      "tx": "0x6dcec649a72a9aaafcdde3b47172d0a7961ec9e68c5784bd553163db0d2912ad",
+      "block": 74473637,
+      "before_block": 74473636,
+      "before": {
+        "status": "COMPLETE",
+        "wei": "9384430391199365350"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "wei": "8384358006771675603"
+      },
+      "delta_wei": "-1000072384427689747"
+    },
+    {
+      "p2": 4,
+      "owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "我踏马来了",
+      "tx": "0xd3e43e528a6e60c93e379b2d0f4820be8bc0b1feca73773eb5857cd7af93e19e",
+      "block": 74473641,
+      "before_block": 74473640,
+      "before": {
+        "status": "COMPLETE",
+        "wei": "8384358006771675603"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "wei": "9938186563207818195"
+      },
+      "delta_wei": "1553828556436142592"
+    }
+  ],
+  "production": "NO_GO"
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "BSC_P4C_DDAC_WINDOW_ALL_ORIGINAL_SIGNATURES_RECEIPT_HEADERS_AND_EXTERNAL_INBOUND",
+  "precommit_blob_sha": "d48ca2d7d744c8838d7c13765ebc440b9c392126",
+  "rows": [
+    {
+      "source": {
+        "block": 83635776,
+        "txhash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+        "EOA": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "original_value": 0.8
+      },
+      "transaction_verified": true,
+      "tx_from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_value_wei": "800000000000000000",
+      "tx_nonce": "14104",
+      "tx_input_selector": "0x0b3f5cf9",
+      "receipt_full_json_complete": false,
+      "receipt_hash_header": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+      "receipt_gasUsed_header": null,
+      "receipt_effectiveGasPrice_header": null,
+      "receipt_status_if_available": "0x1",
+      "receipt_block_header": "0x4fc2e40",
+      "receipt_error": "RAW_TRUNCATED_OR_INVALID_8098_CHARS"
+    },
+    {
+      "source": {
+        "block": 83635800,
+        "txhash": "0x1ccf2e1cc370cf7890a7829d5fdd0a16f9bc5f2344c64415578e3f46c8a177be",
+        "EOA": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+        "to": "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "original_value": 0
+      },
+      "transaction_verified": true,
+      "tx_from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "tx_to": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "tx_value_wei": "0",
+      "tx_nonce": "14105",
+      "tx_input_selector": "0x095ea7b3",
+      "receipt_full_json_complete": true,
+      "receipt_hash_header": "0x1ccf2e1cc370cf7890a7829d5fdd0a16f9bc5f2344c64415578e3f46c8a177be",
+      "receipt_gasUsed_header": "0xb4f7",
+      "receipt_effectiveGasPrice_header": "0x7270e00",
+      "receipt_status_if_available": "0x1",
+      "receipt_block_header": "0x4fc2e58",
+      "receipt_error": null
+    },
+    {
+      "source": {
+        "block": 83635800,
+        "txhash": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+        "EOA": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "original_value": 0
+      },
+      "transaction_verified": true,
+      "tx_from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_value_wei": "0",
+      "tx_nonce": "14106",
+      "tx_input_selector": "0x0b3f5cf9",
+      "receipt_full_json_complete": true,
+      "receipt_hash_header": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+      "receipt_gasUsed_header": "0x33b76",
+      "receipt_effectiveGasPrice_header": "0x7270e00",
+      "receipt_status_if_available": "0x1",
+      "receipt_block_header": "0x4fc2e58",
+      "receipt_error": null
+    }
+  ],
+  "external_inbound": [
+    {
+      "block": 83635776,
+      "status": "COMPLETE_PAGE",
+      "transfers": [],
+      "pageKey": null
+    },
+    {
+      "block": 83635800,
+      "status": "COMPLETE_PAGE",
+      "transfers": [],
+      "pageKey": null
+    }
+  ],
+  "production": "NO_GO"
+}

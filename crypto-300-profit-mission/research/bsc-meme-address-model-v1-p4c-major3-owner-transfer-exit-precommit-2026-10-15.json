@@ -1,0 +1,83 @@
+{
+  "schema": "BSC_P4C_2026_MAJOR3_ORIGINAL_EARLY_BUY_OWNER_EXIT_TRANSFER_COHORT_V1",
+  "production": "NO_GO",
+  "network": "bnb-mainnet",
+  "frozen_at": "2026-10-15 Asia/Bangkok",
+  "scope": "Three precommitted actual early original signed purchase witnesses, 1 from original 23, 2 outside. Search only ERC20 token transfers FROM exact original signed EOA, contract exact CA, from buy block inclusive to latest; initial first 20 and last 20 by block for each, do not claim exhaustiveness if pageKey. No owner PnL, sale, execution or missed opportunity inferred from transfers. Next inspect distinct signed transaction hashes and venue event settle on fixed unique candidate transactions.",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-dragon-ddac-real-pre-dex-buy-2026-10-14.json",
+      "git_blob_sha": "f89362368ad47f1cde2d8475f9e7b8a688093f83"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-original-buys-and-quotes-2026-10-14.json",
+      "git_blob_sha": "d69f2ddfade437a1d8b0fc49585eb4ca0f9268e9"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-19ca-unified-early-market-buy-evidence-2026-10-14.json",
+      "git_blob_sha": "c42ad01e896f30262f89f7852f927fc84fb3ea18"
+    }
+  ],
+  "queries": [
+    {
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "buy_tx": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+      "buy_block": 83635776,
+      "original_token_received_raw": "99069253510299993000000000",
+      "entry_quote_CA": "BNB_NATIVE",
+      "original_candidate_wallet": true,
+      "from_block_hex": "0x4fc2e40",
+      "to_block": "latest",
+      "categories": [
+        "erc20"
+      ],
+      "max_count": "0x14",
+      "orders": [
+        "asc",
+        "desc"
+      ]
+    },
+    {
+      "token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "wallet": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+      "buy_tx": "0xcb89b7adafacdfb5f844102c4e27ed474abec8947c74476d461be70a9b0e8fa5",
+      "buy_block": 115628774,
+      "original_token_received_raw": "37956445907182539413593521",
+      "entry_quote_CA": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "original_candidate_wallet": false,
+      "from_block_hex": "0x6e45ae6",
+      "to_block": "latest",
+      "categories": [
+        "erc20"
+      ],
+      "max_count": "0x14",
+      "orders": [
+        "asc",
+        "desc"
+      ]
+    },
+    {
+      "token": "MARSCOIN",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "wallet": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+      "buy_tx": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+      "buy_block": 112441394,
+      "original_token_received_raw": "77163604478330373759393953",
+      "entry_quote_CA": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "original_candidate_wallet": false,
+      "from_block_hex": "0x6b3b832",
+      "to_block": "latest",
+      "categories": [
+        "erc20"
+      ],
+      "max_count": "0x14",
+      "orders": [
+        "asc",
+        "desc"
+      ]
+    }
+  ]
+}

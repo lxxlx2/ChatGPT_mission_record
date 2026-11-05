@@ -1,0 +1,24 @@
+{
+  "schema": "BSC_P4B_2026_DRAGON_FOURMEME_MANAGER_CREATION_PURCHASE_EVENT_PRECOMMIT",
+  "network": "bnb-mainnet",
+  "manager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+  "token_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "source_selected_transactions_blob_sha": "57a13cfddd239d5c1705cfa31fb3182cac07c2aa",
+  "source_ABI_ref": "https://github.com/four-meme-community/fourmeme-docs/blob/5f7f589b042e4e3b41c2c214d0fe3a81b36725a9/abi/TokenManager2.lite.json",
+  "events": [
+    {
+      "kind": "TokenCreate",
+      "topic0": "0x396d5e902b675b032348d3d2e9517ee8f0c4a926603fbc075d3d282ff00cad20",
+      "block": 83635770,
+      "txhash": "0x822621d8b11dc2d0e36ffaf8219a6c79564ad707d885e450ac73e80554c7b616"
+    },
+    {
+      "kind": "TokenPurchase",
+      "topic0": "0x7db52723a3b2cdd6164364b3b766e65e540d7be48ffa89582956d8eaebe62942",
+      "block": 83635776,
+      "txhash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12"
+    }
+  ],
+  "negative_scope": "Manager event token fields are NOT indexed; one block can return other CAs. Require exact tx hash and decoded token CA. No actual historical out-of-order trader visibility or sellability.",
+  "production": "NO_GO"
+}

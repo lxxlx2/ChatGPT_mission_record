@@ -1,0 +1,87 @@
+{
+  "schema": "BSC_P4B_2026_239E_TWO_OPPOSITE_REAL_ROUNDS_V2_FIXED_PATH_SPOT_EXIT_QUOTE_PREFREEZE_V1",
+  "timestamp_bangkok": "2026-10-18",
+  "baseline_pr_head": "ccc490e548b2a3e58e2c34e2ae166bf2a01d53c9",
+  "scope": "Two existing signer-owned 239E Dragon R1 negative and R2 positive closed native profit cases, one fixed Pancake V2 pool and Router, no new wallets / tokens / venue choices after responses. NOT first U and NOT 1/5/15min fills.",
+  "source_pins": {
+    "original_two_native_rounds": {
+      "path": "bsc-meme-address-model-v1-p4c-239e-dragon-two-owner-native-settlements-2026-10-15.json",
+      "git_blob": "46e90123b98d5324e05388b17b8a3bbb77cb5361"
+    },
+    "original_19_Pancake_V2_math": {
+      "path": "bsc-meme-address-model-v1-p4b-19ca-v2-001wbnb-router-math-quotes-2026-10-14.json",
+      "git_blob": "1f44ed58bab1dec1b4ccdc4cc449dde90d6131e7"
+    },
+    "original_19_V2_router_freeze": {
+      "path": "bsc-meme-address-model-v1-p4b-19ca-v2-router-quote-precommit-2026-10-14.json",
+      "git_blob": "b1e39dbd718cd18acad29b5a3c0275eeca852f06"
+    },
+    "historic_balance_readback_13": {
+      "path": "bsc-meme-address-model-v1-p4b-2026-thirteen-historic-erc20-owner-balances-actual-readback-2026-10-18.json",
+      "git_blob": "7e930c57fb5ba3a3dfd795575c059ade9f8a387d"
+    }
+  },
+  "network": "bnb-mainnet",
+  "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+  "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "quote_CA_WBNB": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+  "router": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+  "router_selector": "0xd06ca61f",
+  "pool_reserves_selector": "0x0902f1ac",
+  "fixed_hypothetical_gross_WBNB_amount_in_wei": "10000000000000000",
+  "fee_formula_bps": "9975/10000",
+  "scope_grade": "SELECTED_ALREADY_EXPOSED_POSITIVE_AND_NEGATIVE_OWNER_ROUNDS_COMPARISON_NOT_CLEAN_HOLDOUT",
+  "rounds": [
+    {
+      "case": "239E_R1_OWNER_REAL_NATIVE_LOSS",
+      "owner_buy_block": 85954137,
+      "quote_buy_read_block": 85954138,
+      "owner_actual_sell_block": 85957578,
+      "quote_sell_read_block": 85957577,
+      "owner_real_native_net_wei": "-15332805033002259",
+      "owner_real_buy_signed_hash": "0x43a76faa30a37a7028cb82f75a6bc3340bd6ef6e50230126d4d40f2700606a81",
+      "owner_real_sell_signed_hash": "0x3e64fc9233617942d8c23edccd55c2273da16e8d32543178d1f9e9795544ba93"
+    },
+    {
+      "case": "239E_R2_OWNER_REAL_NATIVE_PROFIT",
+      "owner_buy_block": 85959961,
+      "quote_buy_read_block": 85959962,
+      "owner_actual_sell_block": 85961371,
+      "quote_sell_read_block": 85961370,
+      "owner_real_native_net_wei": "22647938898252522",
+      "owner_real_buy_signed_hash": "0x7aa4b9daf5bdcafbd6453dbb5d86957d8ce1336c897c8b308570be54ce7d9e6c",
+      "owner_real_sell_signed_hash": "0x5f7d389c874b47509989190287fdd57cf6d4a2a5f252110d1cdd71783faa6bf1"
+    }
+  ],
+  "pre_declared_RPC_query_schedule": [
+    "1) two exact eth_call getReserves at original buyer's block+1 (N+1) for each case (2 calls total)",
+    "2) two exact eth_call router.getAmountsOut(0.01 WBNB, [WBNB,Dragon]) at same N+1 block (2 calls)",
+    "3) two exact eth_call getReserves at original signed seller's previous end-block S-1 (2 calls)",
+    "4) two exact eth_call router.getAmountsOut(frozen buy quote out amount, [Dragon,WBNB]) at S-1 state (2 calls; sell amount derived only from frozen prior buy quote for same case, no variant search)"
+  ],
+  "max_calls": 8,
+  "zero_retries": true,
+  "method": "eth_call",
+  "from": null,
+  "value": null,
+  "market_selection_policy": "NO_POST_RESULT_RESELECTION",
+  "expected_missing_reverts": "REVERT_OR_NO_RESERVES_KEEP_UNRESOLVED_NOT_REPLACE",
+  "financial_model_limitations": [
+    "Buy quote is end-of-block N+1, not actual first public observer state or state after a new hypothetical purchase",
+    "Sell quote is at historical S-1 state unaffected by our hypothetical prior buy; two independent stateless reads cannot simulate real counterfactual pool reserves",
+    "Router quote does not exercise token transfer, tax/reflection, allowance, permission, maxWallet/maxTx, liquidity share or real EOA gas",
+    "Actual owner net from different amount and potentially route is neither predicted nor replicated by fixed 0.01 WBNB readbacks",
+    "S-1 is NOT 1/5/15 minutes after N+1; no resolved provider timestamp/duration from this precommit",
+    "Slippage and full trade fee unknown, do not publish estimated winrate nor net trade returns"
+  ],
+  "gates": {
+    "source_status": "P4B_PARTIAL",
+    "public_executable_U": "UNRESOLVED",
+    "quote_both_directions_only": "MATH_NOT_STATEFUL_EXECUTION",
+    "historical_fixed_delay_1_5_15min_follower_returns": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "production": "NO_GO",
+    "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  }
+}
