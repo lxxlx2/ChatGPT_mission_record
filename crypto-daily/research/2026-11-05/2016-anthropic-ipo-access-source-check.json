@@ -1,0 +1,66 @@
+{
+  "run_at": "2026-11-05T20:16:38+07:00",
+  "status": "PARTIAL_SOURCE_GAPS",
+  "slot": "bounded collector, no mail",
+  "rules_sha": {
+    "PIPELINE_CONTRACT.md": "29ffbc1d32ca87a744d2990e8d55639ebb84a6f9",
+    "EDITORIAL_RULESET.json": "2ed51528d230508ae4e0015762b1d60c9d72e299",
+    "docs/MONITORING/X_FIRST_PARTY_SOURCE_POLICY.md": "20abfed8a287307bb2d6017b3b9e7ff509bbeebe"
+  },
+  "browser_session": "BROWSER_SESSION_UNAVAILABLE",
+  "browser_error": "Browser access requires originating browser context",
+  "candidate": {
+    "family_key": "venue:bitget:anthropic-ipo-prime-rant",
+    "event_key": "venue:bitget:anthropic-ipo-prime-rant:2026-11-05-vip-open",
+    "material_version": "bitget-official-vip-open-2026-11-05-1600-utc8",
+    "source_url": "https://www.bitget.com/asia/campaigns/anthropic-ipo",
+    "support_url": "https://www.bitget.com/academy/what-is-anthropic-ipo-on-bitget-rant-benefits-fees-how-to-participate-2026-guide",
+    "source_published_at": "2026-11-03 (academy); campaign published_at not verified",
+    "checked_at": "2026-11-05T20:16:38+07:00",
+    "classification": "OFFICIAL_VENUE_TOKENIZED_ECONOMIC_EXPOSURE_NOT_ISSUER_ENDORSED",
+    "primary_section": 7,
+    "decision": "INCLUDE_CANDIDATE_NEXT_AUTHORIZED_DAILY_WINDOW; NO_EXTRA_EMAIL_AT_20_SLOT",
+    "facts": [
+      "Bitget official campaign says not issued/offered/managed or endorsed by Anthropic",
+      "VIP round Nov 5 16:00 UTC+8 to Nov 9 16:00 UTC+8; VIP1-VIP7, $100 to $3m, 12% fee on allocation",
+      "Public round Nov 10 16:00 UTC+8, $100-$25k, 5% fee",
+      "USDT or USDGO; rANT tokenized economic exposure, no automatic shareholder voting rights",
+      "Unallocated commitments unfrozen per Bitget terms; actual custody and issuer IPO not independently established"
+    ],
+    "limitations": [
+      "No independent verification of Anthropic SEC filing or final IPO date",
+      "Actual account eligibility and subscription transaction not tested",
+      "Other venue status not exhaustively verified",
+      "No November 5 Crypto Daily Sent found in current bounded Gmail query; no off-schedule recovery attempted"
+    ]
+  },
+  "source_receipts": [
+    {
+      "lane": "third_party_ipo_access",
+      "url": "https://www.bitget.com/asia/campaigns/anthropic-ipo",
+      "status": "OFFICIAL_PAGE_READ"
+    },
+    {
+      "lane": "official_x",
+      "status": "SOURCE_GAP",
+      "reason": "Browser session unavailable; no verified original X post read"
+    },
+    {
+      "lane": "web_runtime_rce",
+      "url": "https://www.php.net/archive/2026.php",
+      "status": "OLD_EVENT_NO_NOVELTY"
+    },
+    {
+      "lane": "backend_framework_auth",
+      "url": "https://github.com/advisories/GHSA-5wcm-3v2w-8362",
+      "status": "OLD_EVENT_CHECKED"
+    },
+    {
+      "lane": "early_nft",
+      "url": "https://opensea.io/blog/articles/opensea-adds-support-for-solana-nfts",
+      "status": "OLD_EVENT_ONLY"
+    }
+  ],
+  "other_lanes": "SOURCE_GAP_INCOMPLETE_BOUNDED_DISCOVERY; no claim of full sweep",
+  "gmail_check": "No Nov5 daily matching Sent in bounded query; October monthly already sent ID 1a1a496a0bdc257d; no mail sent this slot"
+}
