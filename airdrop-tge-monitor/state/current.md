@@ -978,3 +978,12 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - StandX DUSD Nov2 issuer original and claim wallet eligibility SOURCE_GAP; Surf Nov13 already delivered; Cambria Base Oct29 already delivered. No new ACTION.
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
 - final_readback: VERIFIED main blob 60990cdb9f8b0f7c1f35972053d411110115ce49
+
+## Latest terminal cache sync — 2026-11-05 08:04:43 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-05/080443-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-05/080443-attempt.md
+- run_status: PARTIAL; schedule HH:00 Asia/Bangkok unchanged; scheduled_shard: 0; executed_shard: 0; last_meaningful_attempt_at_shard0: 2026-11-05T08:04:43+07:00 PARTIAL_ONLY
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 8; gmail_attempted: false; app_notification: false
+- StandX Nov2 DUSD claim issuer original and personal eligibility SOURCE_GAP; Surf Nov13 already delivered; Cambria Oct29 already delivered; no duplicate.
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- final_readback: VERIFIED blob 1145da499bcc65eb68835ae47ce50ef9bde1cfa6; commit b08c77b3226856833ebeab10d0ae44b4a906d464
