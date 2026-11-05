@@ -1056,3 +1056,13 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
 - candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 7; gmail_attempted: false; app_notification: false
 - StandX Nov2 DUSD first-party original/live eligibility SOURCE_GAP; Surf Nov13 already mailed; Cambria Oct29 already mailed. Browser originating context unavailable. No task/schedule/recipient/scope change.
+
+## Latest terminal cache sync — 2026-11-05 17:02:38 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-05/170238-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-05/170238-attempt.md
+- final_readback: VERIFIED blob 8e1534f46e9e789c4a649e3696e697c386b3d132; commit a52368b778a57aa2e90ae73714e55a54e4044689
+- run_status: PARTIAL; scheduled_shard: 1; executed_shard: 1; last_meaningful_attempt_at_shard1: 2026-11-05T17:02:38+07:00 PARTIAL_ONLY
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 7; gmail_attempted: false; app_notification: false
+- StandX DUSD original/live claim SOURCE_GAP; SurfBoard Nov13 already delivered; no new Tier A/B ACTION.
+- existing task/schedule/registry unchanged.
