@@ -2,9 +2,30 @@
 
 Updated: 2026-11-05 Asia/Bangkok (fresh official SLOP mint and funded auction contract; conditional early-bid economics; older 2026-10-27 research retained)
 Scope: ICO / pre-launch token auction / Robinhood Chain
-State: `USER_INTENDS_TO_PARTICIPATE / WAIT_FOR_FINAL_AUCTION_TERMS / NO_FUNDS_COMMITTED`
+State: `USER_INTENDS_TO_PARTICIPATE / CURRENT_$300_USDG_EARLY_BID_PLAN / NO_FUNDS_COMMITTED`
 Decision classification: `WATCH` (not SETUP or ACTIVE).
 Execution: `NO_GO`; the user has expressed interest only, with no authorization for funding, wallet signature, live trading, scheduling or monitoring.
+
+## 2026-11-05 revised intended early-bid exposure: $300 USDG, tick-aligned $200 + $100 limit plan
+
+**Latest user's explicit allocation intent supersedes the earlier uncommitted $1,000 plan:** user plans **$300 USDG total** for the SLOP whitelist prebid; **no actual bid, approval/signature or transfer authorized by this research request**. Risk objective prioritizes low realized cost while retaining exposure to higher-price emissions; preserve prior **max FDV $1.5M**. Historical $1,000 scenario and source research are retained below only as past assumptions, not current capital allocation.
+
+### Direct current account/auction verification
+
+- Direct connected first-party browser tab https://app.umia.finance/p/slop-cash/auction showed wallet `0x3Df4...Ea7C`, **389.420578 USDG** available, `Market` currently selected, `Verification / Lock in your allocation` (no validated whitelist completion verified), `Upcoming` and price floor **$0.008889**. One source message listed the countdown `1h 26m` but browser snapshots may lag; rely on immutable block.
+- On 2026-11-05 late evening Bangkok time direct Alchemy read-only Robinhood Chain returned head **106819891**, `CCA.currencyRaised()=0`, `Hook.zkGlobalBidTotal()=0`, `CCA.clearingPrice()=$0.008888999999999902`, `zkGlobalMaxBidAmount=$200000`. This is before `startBlock=106868933`, so zero prebid is not independent hype evidence. User has sufficient USDG already for current $300 intention; separate native chain ETH gas needs reconfirmation.
+- 2026-11-05 official FAQ https://x.com/umia_finance/status/2118352696742695355 says early opening approximately **16:15 UTC / 23:15 Bangkok**; actual first accepted bid determined by block 106868933. No tokens released before public step1 `108530471`.
+
+### Conditional plan for manual user action once verified
+
+- Route: Prefer **verified GitHub/community** if it succeeds; dashboard says `Verification` and current onchain hook step0 verified-wallet limit **$3,000**, enough for $300. A user's unverified 50-star eligibility must not be asserted. Do not confuse with $250 base Umia Pass quota; choosing first route determines this sale's lane.
+- First order **$200 USDG, Limit tick24**, onchain max **$0.0125491764705881/SLOP**, implicit **$1,254,917.647 FDV**. Second order **$100 USDG, Limit tick28**, max **$0.0146407058823528/SLOP**, implicit **$1,464,070.588 FDV**.
+- Both limits sit at actual tick boundaries computed from live CCA `floorPrice()/tickSpacing()`. **Do not enter approximate rounded literal `$0.01255` or `$0.01464` blindly**: some UIs round upward; use exact tick selections, or FDV value mapping and inspect final transaction confirmation and allowed max before signing. UI currently exposes only `Market` and `Order type` toggle in the read-only DOM; no post-toggle exact labels observed. We cannot claim a successful click or verified details of an unobserved Limit form.
+- Submit as **two independent orders only if front-end allows multiple early bids for the same wallet and proof lane**; contract hook permits repeated verified bids while enforcing cumulative `stepMaxBidAmount`. Two tx + possible approvals, check actual order IDs; do not assume both succeeded on first confirmation.
+- If the interface prohibits multiple orders or price ticks are not displayed accurately, **safer one-order fallback** for a user prioritizing participation over higher low-cost segment: **$300 Limit tick28 max $0.0146407058823528** (max FDV $1.464M). This is an analytical alternative, not a trade instruction already executed; if the UI cannot guarantee an actual final cap ≤$1.5M, do not submit a Market order as a substitute.
+- At both limits completely spent at respective highest allowed prices, token allocation **~15,937.30 + 6,830.27 = 22,767.57 SLOP**, cost **$300**, worst-price average **$0.01317664**. At post-TGE price $0.01/$0.02/$0.03/$0.05, **hypothetical mark** ~$227.68/$455.35/$683.03/$1,138.38, corresponding P&L **-$72.32/+$155.35/+$383.03/+$838.38** before slippage/gas/fees. **No probability or executable sell quote implied; could fill only partially or zero.**
+- If both orders clear at earlier lower clearing prices, more tokens per spent USDG may be acquired, or some USDG returned. Early zero issuance, valid-server-permit public, $200K zk pathway and cap-hit no-new-bid all remain binding.
+- Verify actual official Robinhood 4663 network, canonical SLOP/CCA/USDG addresses, **verified-access proof**, current `maxBidPrice`, current `zkGlobalMaxBidAmount-zkGlobalBidTotal`, actual USDG and native gas; `Limit` is mandatory to enforce plan, NOT website default `Market`. Check each transaction receipt, BidSubmitted/bid id, budget, encoded max Price, and snapshot demand. No code or wallet changes performed.
 
 ## 2026-11-05 Umia first-party SLOP auction FAQ and user-supplied Grok X demand reconnaissance
 
