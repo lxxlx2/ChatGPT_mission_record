@@ -20,6 +20,8 @@ Current mapped material:
 - FLOP Close Call competition: active operational rules remain in Mission; long-form activity analysis should use a project directory here.
 
 - GANG / The Syndicate public beta, Backable deal and token fundamentals: `research/projects/the-syndicate-gang/the-syndicate-gang-fundamentals.md` (user's 500 USDC already in `crypto-300-profit-mission/positions/gang.md`).
+- 1609SAT / MetaDAO Apps Program（AI SAT 备考产品、公售 5%/$50K、87.1% 团队绩效包、$1M FDV、2026-11-06 02:00 曼谷开放）：`research/projects/1609sat/1609sat-metadao-apps-ico-due-diligence.md`（研究 WATCH，尚未申购；Mint/锁仓实例/流动性未核验）。
+
 - Slop Cash / Umia SLOP auction and planned user participation: `research/projects/slop-cash/slop-cash-umia-auction.md` (no funds committed; terms/eligibility TBA).
 - Sixth Sense Labs / SXTH user-intended participation, machine.fun Foundry verification: `research/projects/sxth/sxth-sixth-sense-labs-machine-foundry.md` (project identified, token mint/launch unconfirmed; no funds committed).
 
