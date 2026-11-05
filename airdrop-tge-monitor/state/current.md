@@ -1,3 +1,13 @@
+## Latest terminal cache sync — 2026-11-05 19:01:33 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-05/190133-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-05/190133-attempt.md
+- final_readback: VERIFIED blob 3898fe59a65a82ae5c7bd0eafb307ccfbe062112; commit 3ad12d102363dc0397dce0a86d0fba393acc6dc1
+- run_status: PARTIAL; scheduled_shard: 3; executed_shard: 3; last_meaningful_attempt_at_shard3: 2026-11-05T19:01:33+07:00 PARTIAL_ONLY
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 6; gmail_attempted: false; app_notification: false
+- StandX DUSD original/claim SOURCE_GAP; Fortytwo promo-code issuer page undated and personal eligibility unknown; Surf Nov13 already delivered. No new ACTION.
+- existing task ID/name/schedule/recipient/scope unchanged.
+
 
 ## Latest terminal cache sync — 2026-11-05 16:02:45 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-05/160213-final.md
