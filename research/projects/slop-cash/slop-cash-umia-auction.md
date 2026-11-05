@@ -6,6 +6,46 @@ State: `USER_INTENDS_TO_PARTICIPATE / WAIT_FOR_FINAL_AUCTION_TERMS / NO_FUNDS_CO
 Decision classification: `WATCH` (not SETUP or ACTIVE).
 Execution: `NO_GO`; the user has expressed interest only, with no authorization for funding, wallet signature, live trading, scheduling or monitoring.
 
+## 2026-11-05 historical comparables and full-fill versus cost tradeoff
+
+**Scope:** user asks to review Umia's previous $UMIA auction and Slop Cash CTO Shaw Walters' prior ai16z/ELIZAOS token, estimate SLOP post-TGE FDV, and decide early-whitelist limit bids. **Research only; no committed bid; no change to previously approved $1.5m FDV risk boundary.** Historical comparisons are not calibrated outcome probabilities.
+
+### Independent historical sample 1: Umia's own UMIA
+
+- First-party https://app.umia.finance/p/umia/auction and https://umia.finance/blog/umia-auction-recap: Aug26 to Sep02 2026 auction, 17.3M UMIA sale, final cap/clearing price $0.36 on 50M total supply = **$18M FDV**, ~$6.112M raised, **751 bid IDs** on first-party auction page (not verified distinct persons). Umia's official recap says available allocation *was fully committed* in roughly seven minutes during the open phase; this is **not** proof all sale tokens physically settled in those seven minutes. All bidders bought through CCA at per-block clearing, not necessarily $0.36 weighted average.
+- Older archived Base CCA first-party/offchain/reproducible evidence in this same research document: $6,112,005.046962 actually raised / 17,299,999.308 UMIA clearing = aggregate historical **$0.3532951** per token. Example early bid #0 had effective $0.3496557992 per UMIA and selected late bids approached $0.36. These are sampled bid costs and do not establish the complete distribution.
+- Actual historical direct Base v4 sparse spot samples in Oct27 section: official pool initialized at $0.36 at Sep02 ~12:10 UTC; observed ~$0.7262 at 12:15 and ~$0.7883 at 13:00. These are discrete state observations, **not executable highs** or guaranteed realizable profits.
+- Current Nov05 CoinMarketCap English https://coinmarketcap.com/currencies/umia/ reports approximately **$0.759** (about +111% vs $0.36 final sale), reported **Oct29 ATH $0.956**, i.e. theoretical **$47.8M FDV / 2.66x** versus $18M auction. DefiLlama reports a somewhat lower $0.92 ATH due to methodology/venue; treat peak band $0.92–$0.956 as third-party, not exact chain-verified global tick. The old October 8 ATH $0.9044 in the prior research is an *older historical snapshot* superseded for date-based peak.
+- UMIA had about **$6.1m auction funding**, 20% proceeds to LP plus $120k/mo operating allowance, materially deeper capitalization than SLOP's **$400k to $988,245 accepted auction** and $35k/mo draw. **Copying UMIA 2.66x into SLOP yields ~$5.84M FDV when entered at SLOP max auction FDV $2.1961m, but is a mechanical counterfactual, NOT a forecast.**
+
+### Independent historical sample 2: Shaw Walters' previous ai16z/ELIZAOS token
+
+- Slop Cash first-party https://app.umia.finance/p/slop-cash/auction identifies CTO **Shaw Walters** as developer of elizaOS and previously of ai16z ecosystem, cofounder Drew Pierson CEO; business and IP are distinct.
+- Independent dated reporting Aug05 2026: https://www.theblock.co/news/defi/2026-08-05-eliza-labs-native-token-dead-410774 ; https://www.coindesk.com/markets/2026/08/05/ai-agent-token-once-worth-usd2-4-billion-ends-with-founder-calling-it-dead . Walters explicitly declared the successor ELIZAOS **token dead**, foundation winding down and no further buyback/supply support after lawsuit settlement; the open-source AI agent software was to continue. This is not a court finding that he defrauded anyone; allegations of lawsuit remain allegations.
+- Historical AI16Z original token reached about **$2.4b–$2.5b peak capitalization in Jan 2025**; 2026 successor ELIZAOS was reported at approximately **$2.3m market cap** around Aug05 shutdown. Old AI16Z and post-migration ELIZAOS have DIFFERENT token supply/denomination and cannot be used for a simplistic price-percent return calculation. Multiple current trackers around Nov05 still show successor market cap low single-digit millions, but data sources differ.
+- **Investment implication:** demonstrated capacity for retail speculative hype and major **long-term token-holder loss / governance and reputational risk**. Neither the multi-billion ai16z peak nor historical UMIA success is a transferable SLOP valuation anchor. This must be disclosed in any participation decision.
+
+### SLOP price scenarios, without invented odds
+
+- Known original first-party fundamentals Nov05: 100M total, 45M sale, $0.008889 floor (FDV $0.8889m), $0.021961 bid ceiling (FDV $2.1961m), 9M SLOP treasury-owned LP backed by 20% actual auction receipts (~$80k–$197.649k USDG if auction succeeds at the min or fills all 45M at hard ceiling). Full auction 45% of supply liquid at TGE plus 2% contributor allocation; 9% LP token float is **pool inventory, not discretionary investor sell-side**. Pre-revenue issuer and $SLOP does not provide a mandatory dividend/buyback or per-transaction use requirement.
+- **Subjective stress bands, NOT probability forecast or live prices:** bearish secondary $0.5m–$1m FDV (price $0.005–0.01), middling $1m–$2m ($0.01–0.02), strong trading $2m–$3m ($0.02–0.03), speculative $3m–$5m ($0.03–0.05), exceptional $5m–$10m ($0.05–0.10) contingent on meaningful additional buy-side demand. Core trading stress comparator **$2m–$3m**, rather than a claim of most-likely FDV.
+- At max-price **$0.021961**, if $1,000 fully fills at that worst price: **45,535.2671 SLOP**; exit mark at $0.01 = $455.35 (-54.5%), $0.02 = $910.71 (-8.9%), $0.03 = $1,366.06 (+36.6%), $0.05 = $2,276.76 (+127.7%). Requires actual liquidity/claim; excludes gas/slippage/fees. At actual avg $0.012, fully spent $1,000 obtains 83,333 tokens and would mark $2,500 (+150%) at $0.03.
+- **Crucial CCA correction:** `max_price` is a ceiling, **NOT** automatic purchase cost. Official https://umia.finance/blog/understanding-your-bid explicitly says early bids get spread over remaining emissions and each block executes at actual clearing <= max; if demand arrives late, early bidders benefit; if early demand already saturates each block, high limit may fill near the max and offer **NO early discount**. Slop-specific **no emission Nov6–Nov8**, so early eligibility is early order placement only; all emission Nov8–Nov11. If at cap, same-price bid allocation is **pro rata** and full $1,000 can never be guaranteed. Full-fill certainty and best ROI simultaneously **cannot be guaranteed** at any limit.
+- Priority A **maximise acceptance** (new unapproved conditional scenario): place **$1,000 `Limit` max $0.021961** at first eligible opening; admits worst-case $2.1961M entry and does not guarantee full fill if total demand > supply or window cap hit. **This violates the prior $1.5M FDV participation ceiling and requires an explicit change decision rather than silently becoming the recommended setting.**
+- Priority B **risk-adjusted ROI / existing recorded plan**: two early `Limit` budgets **$700 capped $0.013 + $300 capped $0.015**, *provided Ui and hook permit 2 bid IDs*; $1k fully filled at maxima buys at least **73,846 SLOP**, worst weighted average ~$0.0135417; if competitors rapidly force clearing >$0.015 before first emission, fills may be **zero**, not a broken promise. No need to ask user to repeat budget; $1000 remains intended max, not already funded.
+- No liquid SLOP market yet and no verified SLOP-specific PM contracts; do not fabricate FDV probabilities, sale quotes, first-hour achievable sell prices or demand volume from comments about everyone maxing.
+- Required pre-sign: verify early extension claim status, onchain CCA parameters, `Limit` versus UI default Market, recorded maxPriceQ96/FDV, verified Robinhood USDG and native gas, available contribution headroom under global $200k early cap, actual successful order receipt, claim state. User wallet only held **389.420578 USDG** as of earlier Nov05 direct chain read, not the intended $1,000.
+
+### Evidence categorization
+
+1. **DIRECT_CHAIN** Nov05 prior section proves SLOP supply, auction inventory, USDG/gas balance before launch.
+2. **FIRST_PARTY** Umia auction docs and Slop project page prove bid mechanics, immutable limits, team identity, price ceiling, LP allocation. They are launchpad/issuer statements for future business outcomes.
+3. **ARCHIVED_CHAIN** pre-existing original UMIA sample calculations are supplied above with source pointers, cannot certify future SLOP fill.
+4. **THIRD_PARTY** CoinMarketCap/DefiLlama ATH, CoinDesk/TheBlock documented founder token shut-down.
+5. **ANALYSIS** FDV ranges, payoff math and conditional bidding alternatives are uncalibrated scenarios only; no trade, no whitelist verification, no protocol action.
+
+---
+
 ## 2026-11-05 PRE-AUCTION update: verified live $SLOP mint, funded CCA and conditional early-bid discipline
 
 **As-of:** 2026-11-05 approximately 20:15 Asia/Bangkok, before opening. **State: WATCH / eligible early bidder hypothetical / no bid authorized / no funds committed**. This subsection supersedes the 2026-10-27 `SLOP_CA_UNCONFIRMED` historical status, but does not rewrite that historical audit.
