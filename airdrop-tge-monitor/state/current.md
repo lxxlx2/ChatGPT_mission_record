@@ -1165,3 +1165,10 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
 - candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 8
 - gmail_attempted: false; app_notification: false; StandX DUSD original/live claim remains SOURCE_GAP, Surf Nov13 already delivered. Existing task unchanged. Actual off-minute invocation, no HH:00 scheduler proof.
+
+## Terminal sync 2026-11-06 06:58:03 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-06/065803-final.md
+- run_status: PARTIAL; scheduled_shard: 2; executed_shard: 2; last_meaningful_attempt_at_shard2: 2026-11-06T06:58:03+07:00 PARTIAL_ONLY
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 7; gmail_attempted: false; app_notification: false
+- final_readback: VERIFIED blob 8c5f7b9f603863ba05ef79b8a863a82272ee6f31; commit e62ac04e50a8e7fb50a317ac16a0dadba966eb33
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED; StandX Nov2 DUSD issuer original/claim remains SOURCE_GAP; Surf Nov13 already delivered. Schedule and task unchanged.
