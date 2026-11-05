@@ -1,0 +1,79 @@
+{
+  "run_at": "2026-11-06T00:17:17+07:00",
+  "kind": "bounded_collector",
+  "status": "DISCOVERY_PARTIAL",
+  "email_only": true,
+  "gmail_sent_review": "2026-10-29 through 2026-11-05 Sent summary checked; Nov5 ID 1a1ac87a1624ca68; Oct monthly ID 1a1a496a0bdc257d",
+  "source_receipts": [
+    {
+      "lane": "official_x",
+      "status": "BROWSER_SESSION_UNAVAILABLE",
+      "observation": "Browser list_tabs failed: requires originating browser context",
+      "url": "https://x.com",
+      "checked_at": "2026-11-06T00:17:17+07:00",
+      "published_at": null
+    },
+    {
+      "lane": "backend_framework_auth",
+      "status": "CHECKED",
+      "observation": "Laravel official advisories: Nov 4 low-severity task output injection; Oct19 critical TokenGuard previously known; no verified novel high incident",
+      "url": "https://github.com/laravel/framework/security/advisories",
+      "checked_at": "2026-11-06T00:17:17+07:00",
+      "published_at": null
+    },
+    {
+      "lane": "web_runtime_rce",
+      "status": "CHECKED",
+      "observation": "Node official Nov3 announced Nov11 security release; forward dated catalyst, not an already released fix",
+      "url": "https://nodejs.org/en/blog/vulnerability/november-2026-security-releases",
+      "checked_at": "2026-11-06T00:17:17+07:00",
+      "published_at": null
+    },
+    {
+      "lane": "ai_package_supply_chain",
+      "status": "PARTIAL",
+      "observation": "GitHub advisory search returned historical LiteLLM issues, no independently verified fresh malicious package",
+      "url": "https://github.com/advisories",
+      "checked_at": "2026-11-06T00:17:17+07:00",
+      "published_at": null
+    },
+    {
+      "lane": "early_nft",
+      "status": "PARTIAL",
+      "observation": "OpenSea blog result Aug31, stale; no proof of no new events",
+      "url": "https://opensea.io/blog/articles/opensea-adds-support-for-solana-nfts",
+      "checked_at": "2026-11-06T00:17:17+07:00",
+      "published_at": null
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "status": "SOURCE_GAP",
+      "observation": "No official Anthropic venue allocation found in bounded Kraken query; other venues not exhaustively checked; UNCONFIRMED_MONITORING",
+      "url": "https://www.kraken.com",
+      "checked_at": "2026-11-06T00:17:17+07:00",
+      "published_at": null
+    },
+    {
+      "lane": "security",
+      "status": "CHECKED_SECONDARY",
+      "observation": "Reuters Nov5 reports banking regulators asked banks about Binance hack; secondary attributed sources, do not infer bank compromise; requires prior ledger comparison",
+      "url": "https://www.reuters.com/legal/government/binance-hack-prompted-us-regulators-check-bank-systems-sources-say-2026-11-05/",
+      "checked_at": "2026-11-06T00:17:17+07:00",
+      "published_at": null
+    }
+  ],
+  "unverified_lanes": [
+    "spot",
+    "derivatives",
+    "capital_flows",
+    "onchain",
+    "policy",
+    "infrastructure",
+    "tge",
+    "web_pki_tls",
+    "cloud_secrets_identity",
+    "macro",
+    "forward_catalysts"
+  ],
+  "note": "Partial bounded check only; no assertion of complete source coverage or event novelty. No email in collection slot. No new automation."
+}
