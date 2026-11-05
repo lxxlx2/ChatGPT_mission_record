@@ -101,6 +101,22 @@ with TemporaryDirectory(prefix='frank-ca-checkpoint-browser-') as scratch:
         state = SimpleNamespace(cluster_jobs=manager)
         static_root = Path(server.__file__).parent/'static'
         def log_message(self, *args): pass
+        def _file(self, path):
+            if path.name != 'index.html':return super()._file(path)
+            # Only this isolated fixture seeds the browser's prior acknowledged
+            # identity. Product reload/recovery code itself stays unmodified.
+            pending = json.dumps({'id': job['job_id'], 'mint': MINT})
+            setup = ('<script>if(!sessionStorage.getItem("checkpoint-fixture-initialized")){'
+                'sessionStorage.setItem("checkpoint-fixture-initialized","1");'
+                'sessionStorage.setItem("mission-meme-cluster-pending-v1",'
+                + json.dumps(pending) + ');}</script>')
+            banner = '<p style="padding:8px;background:#fff4d6;color:#331f00">SYNTHETIC 隔离恢复验收：预置已中断任务；非真实 CA 来源，生产未修改。</p>'
+            payload = path.read_text().replace('<body>', '<body>'+setup+banner).encode()
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.send_header('Content-Length', str(len(payload)))
+            self.send_header('Cache-Control', 'no-store')
+            self.end_headers(); self.wfile.write(payload)
         def do_GET(self):
             path = urlparse(self.path).path
             if path == '/__fixture/stats':
