@@ -1,10 +1,53 @@
 # Slop Cash / SLOP — Umia auction participation research
 
-Updated: 2026-10-27 Asia/Bangkok (official Nov5/7/10 UTC dates corrected, precise early eligibility publication rule, freshly checked USDG balance, token vesting contradiction)
+Updated: 2026-11-05 Asia/Bangkok (fresh official SLOP mint and funded auction contract; conditional early-bid economics; older 2026-10-27 research retained)
 Scope: ICO / pre-launch token auction / Robinhood Chain
 State: `USER_INTENDS_TO_PARTICIPATE / WAIT_FOR_FINAL_AUCTION_TERMS / NO_FUNDS_COMMITTED`
 Decision classification: `WATCH` (not SETUP or ACTIVE).
 Execution: `NO_GO`; the user has expressed interest only, with no authorization for funding, wallet signature, live trading, scheduling or monitoring.
+
+## 2026-11-05 PRE-AUCTION update: verified live $SLOP mint, funded CCA and conditional early-bid discipline
+
+**As-of:** 2026-11-05 approximately 20:15 Asia/Bangkok, before opening. **State: WATCH / eligible early bidder hypothetical / no bid authorized / no funds committed**. This subsection supersedes the 2026-10-27 `SLOP_CA_UNCONFIRMED` historical status, but does not rewrite that historical audit.
+
+### Original first-party current launch parameters
+
+- Connected user's already-open first-party page, https://app.umia.finance/p/slop-cash/auction, now displays canonical Robinhood Chain (chain ID 4663) **$SLOP mint `0xfeb4e36fa4a2a494ff25ae4a63491e4c584a67ae`**, **CCA `0x901f26b42c61af93f548efa0fdf8df4d342b124c`**, **USDG `0x5fc5360d0400a0fd4f2af552add042d716f1d168`**.
+- CCA start Nov 6 00:00 Bangkok (Nov5 17:00 UTC); public Nov 8 00:00; close Nov11 00:00 (UTC 17:00 Nov10). **No tokens emit in first 2 gated days; early bids start filling only when public-round supply starts to emit.** There is no automatic cheap early presale fill. All bids cannot be canceled mid-auction; unused budget refunded at close.
+- Current official floor **$0.008889**, hard max **$0.021961**, corresponding $888,900 to $2,196,100 FDV given 100M supply. Auction **45M SLOP**; minimum raise **$400,000**, hard maximum theoretical accepted proceeds if all 45M priced at $0.021961 **$988,245**. Gross committed (possibly millions) is NOT the same as actually accepted/cleared funds or all holders' average cost.
+- Early contributor/zkTLS route: **$200,000 window-wide budget cap; $5,000 max per eligible wallet**. Independent ecosystem fund quota described as around $200,000. Separate UMIA Pass rules for prior holder wallet. A user possessing qualifying GitHub repo/eligibility has not yet been verified here and this report makes **no verified whitelist pass claim**.
+- The button currently displays order type `Market` on page. **Budget must be coupled with intentional explicit `Limit` max price / max FDV if available, and signed transaction checked before submission; never submit default market/high cap by accident**.
+- Token schedule from on-page: 45M auction fully liquid, 9M LP treasury-owned, 2M contributors unlock, 8M treasury locked, 14M ecosystem locked, 10M 12-month-cliff team time-vested, 10M price TWAP performance, 2M Umia. Thus nominal initial **56% circulation** includes **9M locked-in LP holdings**, not 56M independent sell-side wallet float. LP stablecoin = **20% actual auction proceeds**, range $80K at min $400K raised up to theoretical $197,649 at max $988,245 raised; exact v4 executable depth, LP range and slippage **NOT VERIFIED**.
+- Company claims current operating budget approximately **$35K/month**, product **pre-revenue**, on-chain contributor payouts are outgoing program costs, **not company revenue**. Product users do not need SLOP to interact; token grants protocol treasury/governance power, no verified dividends, buyback or enforced profit sharing. One factor reducing speculative 5x/10x confidence.
+
+### Direct chain read-only evidence, RPC via connected Alchemy
+
+Network `robinhood-mainnet`, no signatures/sends, as of Nov5:
+- SLOP `name()`: `Slop Cash`; `symbol()`: `SLOP`; `decimals()`: 18; `totalSupply()`: **100,000,000.000000000000000000 SLOP**. Official page matches this contract address. Mint creation & admin rights still require separate audited inspection.
+- `balanceOf(auction)`: **45,000,000.699999900000000000 SLOP** at the canonical sale contract, **enough for announced 45M auction supply**, with ~0.7 excess unexplained and immaterial here. Contract `totalSupply()` read returned **45M sale allocation**. No inference of user allocation or auction already succeeded.
+- `USDG.balanceOf(auction)` = **0** before launch. First-party page total committed = $0. No evidence of an active bidder fill yet.
+- User canonical EVM `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`: **389.420578 USDG** and **0.002152148618870669 native ETH** at this instant (real chain reads, not account net worth). User's planned $1,000 budget cannot currently be entirely placed from this wallet without additional funds; no transfer authorized.
+- These chain calls prove contract existence, token supply, inventory and current escrow balance, **not** a tested quote/CCA auction fill, actual live launch completion, top holders, security audit or Claim.
+
+### Early-white-list **hypothetical** investment strategy under frozen $1,000 user budget
+
+Use $1,000 only as a **max commitment** contingent on user actually acquiring whitelist and funding the wallet; this is a recommendation, no trading authorization. Preserve the already documented user price ceiling of **$1.5M FDV**, rather than increasing it after hearing others may max the auction.
+
+- Preferred **two max-price limit bids at first eligible start**, only if confirmed onchain launch and the UI supports multiple bids: **$700 USDG capped at $0.013 per SLOP ($1.3M FDV)**; **$300 USDG capped at $0.015 ($1.5M FDV)**. Verify USDG chain, seller/CCA/hook address, max-price encoded before signing. NO default market order.
+- If all two portions **fully fill at their respective maximum allowed price**, acquired at least $700/0.013 + $300/0.015 = **73,846.153846 SLOP**, aggregate worst-price average approximately **$0.01354167**; because CCA fills different blocks at *at-or-below* each limit, actual accepted tokens could be **more** for same deployed $1,000, or accepted USDG could be **less**, even **zero**, if competition pushes price beyond limits before any emission fills.
+- This portfolio's fully filled upper-price-mark sensitivities (fee/slippage excluded): at FDV $0.5M (price $0.005), approx $369 and loss $631; at FDV $1M (price $0.01), ~$738, loss ~$262; FDV $2M (price $0.02), ~$1,477, profit ~$477; FDV $3M (price $0.03), ~$2,215, profit ~$1,215; FDV $5M (price $0.05), ~$3,692, profit ~$2,692. **Scenarios not probabilities or executable sell quotes.**
+- An unconditional **$1,000 max at hard ceiling $0.021961** would buy only **45,535 SLOP** if fully spent at that price, requiring FDV >$2.196M to break even. At $3M post-launch FDV, paper profit only **~$366**; at $1M FDV paper loss **~$545**. Such a cap makes the auction increasingly an unprofitable chase relative to cash-real business; no credible ROI advantage from merely being whitelisted when no supply releases in early 2 days.
+- In a **pure same-max-price same-time proportional thought experiment** (NOT actual CCA fill simulation), with max accepted theoretical proceeds $988,245, gross commitments $2M/$5M/$10M leave a $1,000 bid ~$494/$198/$99 accepted, rest refunded. Actual fills depend on bucket timing, previous price, same-block pro-rata, allowable caps and varying limit prices. Do **not** present these theoretical fills as forecast.
+- The issuer's max price is a protocol ceiling, not any evidence of post-listing fair value. If the market bid demand reprices the auction above the user's $0.015 cap, accept **zero allocation** rather than raise the limit without fresh independently verified economics.
+- The previous 2026-10-27 public-round $700/$300 split and $1.5M FDV ceiling are **preserved**. Early-access improvements relate to order acceptance timeline, not a higher acceptable valuation.
+
+### PM status and evidence limits
+
+- Actual Nov5 web query included exact `Slop Cash`/`SLOP` project identity with venue-targeted Polymarket, Kalshi, Limitless, Predict.fun and relevant MetaDAO decision-market checks; **未检索到可验证的项目专属 PM 市场**. No liquidity, probabilities or FDV strike thresholds are available to cite. Ignore token ticker collisions.
+- No live bid, no wallet signature, no swap, no approval, no notifications/automation, no production change. Project `WATCH` remains in effect. $SLOP's underlying product metrics, PM absence, actual initial DEX price and order execution outcomes remain unresolved.
+- Evidence: https://app.umia.finance/p/slop-cash/auction ; https://umia.finance/docs/tailored-auctions ; https://umia.finance/blog/understanding-your-bid ; https://app.umia.finance/p/slop-cash ; read-only Alchemy Robinhood mainnet on canonical token/auction/USDG.
+
+---
 
 ## 2026-10-27 direct Base RPC historical UMIA auction fills and spot-pool backtest + SLOP CA check
 
