@@ -283,5 +283,6 @@
     "captured-job-resume-final/comparison.json": "a9427d6ea0c82c89374dfdc4073901eeaf0cc2bd165f5a14c9c4222776ab66d5",
     "chrome-acceptance-final.json": "f15b3cf5b1de8a9436df9f9be2f61a0901f3c314527bf3d18a7f374a482992ea",
     "qa-cleanup-final.json": "3379bce75aa042d6ec43a3b87123a24d04e1339eb22655aa160260d9ef187f23"
-  }
+  },
+  "current_status_superseded_by": "frank-ca-material-owner-history-20261106.json"
 }
