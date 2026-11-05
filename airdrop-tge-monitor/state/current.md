@@ -1,3 +1,11 @@
+## Latest terminal cache sync — 2026-11-05 20:59:11 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-05/205911-final.md
+- final_readback: VERIFIED blob 973917cdca711426dfedaf77441f6e07b6dce987; commit a03bee5228db811c297c8a5a18e2ffb3693b0d6d
+- run_status: PARTIAL; scheduled_shard: 0; executed_shard: 0; last_meaningful_attempt_at_shard0: 2026-11-05T20:59:11+07:00 PARTIAL_ONLY
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 6; gmail_attempted: false; app_notification: false
+- StandX DUSD issuer original X HTTP403 and airdrop app inaccessible; no verified claim-open; Surf Nov13 previously mailed. Existing task unchanged.
+
 ## Latest terminal cache sync — 2026-11-05 19:01:33 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-05/190133-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-05/190133-attempt.md
