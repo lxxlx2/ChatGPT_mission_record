@@ -21,6 +21,12 @@ from .cluster import RPCError, RPCJobBudgetExceeded
 
 MAX_BYTES = 128 * 1024 * 1024
 MAX_ENTRIES = 10000
+NONRECOVERABLE = {
+    'CA_CHECKPOINT_READ_SEQUENCE_CHANGED', 'CA_CHECKPOINT_READ_CHAIN_INVALID',
+    'CA_CHECKPOINT_READ_INVALID', 'CA_CHECKPOINT_REPLAY_INCOMPLETE',
+    'CA_CHECKPOINT_PAYLOAD_INVALID', 'CA_CHECKPOINT_SIZE_LIMIT',
+    'CA_CHECKPOINT_ERROR_TYPE_UNSUPPORTED',
+}
 
 
 class CheckpointError(RPCJobBudgetExceeded):
@@ -166,6 +172,8 @@ class JobCheckpoint:
             raise CheckpointError('CA_CHECKPOINT_TIME_BUDGET_EXHAUSTED')
         if self.fault:
             raise CheckpointError(self.fault)
+        if self.meta.get('blocked_reason'):
+            raise CheckpointError(self.meta['blocked_reason'])
         return now
 
     def begin(self, binding, budget=None):
@@ -282,13 +290,16 @@ class JobCheckpoint:
 
     def finish(self, status):
         with self.db:
+            if status == 'ERROR' and self.fault in NONRECOVERABLE:
+                self.meta['blocked_reason'] = self.fault
             self.meta.update(status=status, last_saved_at=max(self.clock(), self.meta['last_saved_at']))
             self._save_meta()
 
     def assert_can_publish(self):
         self._check_time()
         if self.index != len(self.entries):
-            raise CheckpointError('CA_CHECKPOINT_REPLAY_INCOMPLETE')
+            self.fault = 'CA_CHECKPOINT_REPLAY_INCOMPLETE'
+            raise CheckpointError(self.fault)
 
     def public_job(self):
         available = self.meta['status'] != 'DONE' and self.meta['wire_used'] < self.meta['wire_limit']

@@ -397,3 +397,21 @@ def test_new_acknowledged_job_with_missing_checkpoint_never_falls_back_to_a_fres
     assert manager.get(submitted['job_id'])['status'] == 'ERROR'
     assert not (manager.report_root/'_jobs'/(submitted['job_id']+'.done.json')).exists()
     manager.executor.shutdown()
+
+
+@pytest.mark.parametrize('stop', ['changed_sequence', 'unconsumed_prefix'])
+def test_sequence_integrity_stop_remains_unavailable_after_another_restart(tmp_path, stop):
+    create_checkpoint(tmp_path)
+    first = JobCheckpoint(tmp_path, JOB); first.begin('fixture-binding')
+    first.invoke('fixture', 'read', ['original'], {}, lambda: 'saved')
+    first.close()
+    second = JobCheckpoint(tmp_path, JOB); second.begin('fixture-binding')
+    with pytest.raises(CheckpointError):
+        if stop == 'changed_sequence':
+            second.invoke('fixture', 'read', ['changed'], {}, lambda: pytest.fail('NO_SOURCE_READ'))
+        else:
+            second.assert_can_publish()
+    second.finish('ERROR'); second.close()
+    third = JobCheckpoint(tmp_path, JOB, readonly=True)
+    assert third.public_job()['resume_available'] is False
+    third.close()
