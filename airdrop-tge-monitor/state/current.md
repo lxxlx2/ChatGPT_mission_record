@@ -1,3 +1,11 @@
+## Latest terminal cache sync — 2026-11-05 23:00:50 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-05/230050-final.md
+- final_readback: VERIFIED blob 6de2e2cf087d44dc247d3209750386613e5050b4; commit 4f286152282eb1897e810d63454b7df905d0397e
+- run_status: PARTIAL; scheduled_shard: 3; executed_shard: 3; last_meaningful_attempt_at_shard3: 2026-11-05T23:00:50+07:00 PARTIAL_ONLY
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 7; gmail_attempted: false; app_notification: false
+- StandX original X / live DUSD claim SOURCE_GAP; Surf Nov13 previously mailed; no qualifying new ACTION. Existing task unchanged.
+
 ## Latest terminal cache sync — 2026-11-05 20:59:11 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-05/205911-final.md
 - final_readback: VERIFIED blob 973917cdca711426dfedaf77441f6e07b6dce987; commit a03bee5228db811c297c8a5a18e2ffb3693b0d6d
