@@ -1,5 +1,34 @@
 # Slop Cash / SLOP — Umia auction participation research
 
+
+## 2026-11-06 early commitment threshold vs sellout
+
+**Question:** Can early-stage bids exceed the displayed 200K limit, meet the 400K minimum, or deny a $300 public-only limit bid at ~$1.464M FDV?
+
+**Observed UI read:** 2026-11-05 latest logged browser context displayed *total committed* 208,817 USDG (52.2% of 400K minimum; earlier screenshot 206,817), *total raised so far* 0, clearing display $0.00889, current stage Early Bidding. Direct Alchemy Robinhood Chain read at block **106898408** confirmed `currencyRaised()=0`, `isGraduated()=false`, and validation hook `zkGlobalBidTotal()=39378057648` (39,378.057648 USDG); public release begins at block **108530471**. These figures are a snapshot, not a live orderbook forecast.
+
+**Auction-specific static math, 45M SLOP:**
+
+| Indicative price per token | Static 45M token gross sale amount |
+| --- | ---: |
+| floor 0.008889 | 400,005 USDG |
+| 0.010000 | 450,000 USDG |
+| tick24 0.012549176470588 | 564,712.94 USDG |
+| tick28 0.014640705882353 | 658,831.76 USDG |
+| 0.017000 | 765,000 USDG |
+| maximum hook cap 0.021961058823529 | 988,247.65 USDG |
+
+These are **unit price times auctioned token count**, not a mechanical committed-bid sellout threshold or sale forecast. The 400K graduation threshold, 45M total sale amount, and ~2.196M max token FDV are different concepts. A given *aggregate* commitment cannot prove how much supply will fill: per-bid maximum prices, residual emission schedule and entry time matter. Source: [Uniswap CCA docs](https://developers.uniswap.org/docs/liquidity/liquidity-launchpad/concepts/cca) and [technical documentation](https://github.com/Uniswap/continuous-clearing-auction/blob/main/docs/TechnicalDocumentation.md).
+
+**Early-bid crowd-out risk:** Step 0 emits **zero tokens** until block 108530471. Nevertheless early *committed* budget is pre-positioned in the active book and will compete for every future issuance block. Thus early bidders cannot literally buy the 45M before the public issuance begins, yet sufficient price-aggressive early demand might drive the clearing price above our **tick28 $0.01464070588** before a public order can enter; then a new order at or below current clearing is invalid. If the price is already at the max permitted bid tick, the late public bidder may not be able to place any conforming bid. This is a **risk scenario**, not currently observed.
+
+**The alleged 200K global early cap is NOT a universal committed-USDG cap:** Direct hook `zkGlobalBidTotal` reflects the zk credential path, which excludes successful server-permit bids according to [official UmiaValidationHook docs](https://github.com/umiafinance/protocol/blob/4b76b7b13399e440b318d9c479d7fc720b846d7b/docs/contracts/UmiaValidationHook.md). Earlier direct `zkGlobalMaxBidAmount` was 200K USDG, but the UI itself already exceeded 200K in total commitments; server permits are not constrained by this **same zk accumulator**. Cannot infer aggregate total early-stage budget ceiling or buyers' price ticks from page headline alone.
+
+**Decision:** Maintain PUBLIC_ONLY, 300 USDG max, single limit tick28, NO_GO until the user authorizes an actual bid. At public start recheck (1) actual chain block and clearing price, (2) price-tick demand curve and total *valid* active amount at/above tick28, (3) verification permit availability, (4) contract bid price gate, (5) actual wallet approvals, and (6) likely execution slippage/fills. If current onchain clearing >= tick28 price, **do not raise user's ceiling or switch to market**. No bid, transaction, monitoring, email, or automation performed.
+
+---
+
+
 Updated: 2026-11-05 Asia/Bangkok (fresh official SLOP mint and funded auction contract; conditional early-bid economics; older 2026-10-27 research retained)
 Scope: ICO / pre-launch token auction / Robinhood Chain
 State: `USER_INTENDS_TO_PARTICIPATE / CURRENT_$300_USDG_PUBLIC_ONLY_PLAN / NO_FUNDS_COMMITTED`
