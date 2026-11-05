@@ -101,6 +101,36 @@ export function validateReport(input) {
   };
 }
 
+
+/**
+ * Pure recovery decision for the existing Crypto Daily publisher and its
+ * already-authorized 10:20 / 11:20 recovery windows. It never sends or writes.
+ * An absent pending draft must trigger source-backed reconstruction, not a
+ * terminal "no pending, no send" state.
+ */
+export function decideDailyRecovery({
+  gmailSentVerified = false,
+  gitCanonicalVerified = false,
+  pendingBodyExists = false,
+  pendingQaPassed = false,
+  fullSourceReviewPassed = false,
+  sevenDayDedupePassed = false
+} = {}) {
+  if (gmailSentVerified) {
+    return gitCanonicalVerified
+      ? { action: 'ALREADY_DELIVERED', needsEmail: false, requiresQa: false }
+      : { action: 'ARCHIVE_GMAIL_READBACK_ONLY', needsEmail: false, requiresQa: false };
+  }
+  const ready = pendingBodyExists && pendingQaPassed && fullSourceReviewPassed && sevenDayDedupePassed;
+  if (ready) return { action: 'SEND_FULL_REPORT_AFTER_FINAL_SENT_CHECK', needsEmail: true, requiresQa: false };
+  return {
+    action: pendingBodyExists ? 'REBUILD_OR_VALIDATE_COMPLETE_REPORT' : 'REBUILD_COMPLETE_REPORT_FROM_24H_RESEARCH',
+    needsEmail: true,
+    requiresQa: true,
+    notes: 'Aggregate research and final audits, recheck current primary sources and previous seven delivered days, build all 13 headings; do not send unverified body or stop solely for missing pending/CI.'
+  };
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   if (process.argv.length !== 3) {
     process.stderr.write('Usage: node crypto-daily/scripts/daily_event_gate.mjs manifest.json\n');
