@@ -6,6 +6,79 @@ State: `USER_INTENDS_TO_PARTICIPATE / WAIT_FOR_FINAL_AUCTION_TERMS / NO_FUNDS_CO
 Decision classification: `WATCH` (not SETUP or ACTIVE).
 Execution: `NO_GO`; the user has expressed interest only, with no authorization for funding, wallet signature, live trading, scheduling or monitoring.
 
+## 2026-11-05 SLOP CCA actual immutable steps, hook public-permit gate, bid tick grid and game-theory audit
+
+**Scope:** User requests strict rules-first, contract-second confirmation whether early/public phases must elapse; investigate omitted bidding games. Read-only direct RPC on Robinhood Chain `chainId=4663` before the first prebid block. This is a documentary update only: `WATCH / NO_TRADE / NO_AUTOMATION`. Prior price scenarios remain historical hypotheses; this section supersedes technically invalid off-grid price suggestions without changing the user's **$1.5M FDV risk ceiling**.
+
+### A. Contract identities and directly read immutable time/issuance schedule
+
+- Official first-party https://app.umia.finance/p/slop-cash/auction canonical CCA `0x901f26b42c61af93f548efa0fdf8df4d342b124c`; token `0xfeb4e36fa4a2a494ff25ae4a63491e4c584a67ae`; USDG `0x5fc5360d0400a0fd4f2af552add042d716f1d168`.
+- Direct CCA `startBlock()=106868933`; `endBlock()=111022780`; `claimBlock()=111023357`; `pointer()=0x30ed6cbbf5e67e2dd5cc481898242ab6378238a6`; `validationHook()=0xb8c877cf6ce506dbc3098cd086e3d4898659bd2d`.
+- Direct `eth_getCode(pointer)` returns SSTORE2 bytecode `0x000000000000195a620000040000173d8400000300000eca100f42400000000001`. After removing the leading 0x00 STOP byte, 8-byte `(uint24 mps,uint40 blockDelta)` steps decode to:
+  1. `0 mps/block × 1,661,538 blocks`, `[106868933, 108530471)`, early stage **ZERO issuance**.
+  2. `4 mps/block × 1,523,076 blocks`, `[108530471, 110053547)`, **6,092,304/10,000,000 issuance fraction = 60.92304% of auction**, ~27.415M SLOP.
+  3. `3 mps/block × 969,232 blocks`, `[110053547, 111022779)`, **2,907,696/10,000,000 = 29.07696%**, ~13.085M SLOP.
+  4. `1,000,000 mps/block × 1 block`, `[111022779, 111022780)`, **10% = 4,500,000 SLOP**.
+  - The source `StepStorage` verifies `sum(mps × blockDelta)=10,000,000` and `endBlock` matches sum of lengths; the reconstructed values reconcile to a complete 45M auction sale schedule.
+- Direct before-open `currencyRaised()=0`, `totalCleared()=0`, `isGraduated()=false`, latest observed chain head about block `106808150`. These are observed-before-open facts, not future predictions.
+- According to **actual** Uniswap CCA core `submitBid` rejects only when current block >= END_BLOCK and `sweepCurrency` only after END_BLOCK. CCA `lbpInitializationParams` requires final end-block checkpoint AND graduation. A $400k minimum being reached or bid cap reached does **not** automatically shorten the time interval or permit earlier normal settlement.
+- However the right to add NEW bids can vanish BEFORE end: source `_submitBid` rejects when auction has sold out, or when proposed maxPrice is **<= actual current clearing price**. If clearing price reaches hook's maximum permitted price, no new compliant bids can submit while that cap holds. Existing previously submitted bids remain active across future steps.
+- Normal early bid cannot be canceled/edited. Uniswap's `exitPartiallyFilledBid` can return unspent funds early **only after the auction is graduated** and the given bid's outbid/partially filled checkpoint proof is accepted; it is not an anytime cancel function. Otherwise settlement/refund occurs after end.
+- Time is determined by **block boundary**; published Bangkok clock times remain estimates/communication guidance, whereas each CCA transaction is enforced by block position.
+
+### B. DIRECT_CHAIN hook config, public permit dependence, admin mutability
+
+The deployed CCA points to `0xb8c877cf6ce506dbc3098cd086e3d4898659bd2d`, and hook `cca()` points back to the same CCA.
+
+Observed live calls (all read only):
+- `zkGlobalMaxBidAmount()=200,000,000,000` USDG 6-decimal atoms = **$200,000**; `zkGlobalBidTotal()=0` (prelaunch).
+- `stepMaxBidAmount(0)=3,000,000,000` atoms = **$3,000** per verified wallet in initial step; steps 1/2/3 configured `stepMaxBidAmount=0` (no zk step cap), but **public steps use per-bid signed permits and are not identical to zk bid admission**. Page's generic $5,000 narrative is not authoritative for currently enforced zk cap.
+- `maxBidPrice()=1,739,934,337,455,888` in Q96 units = **$0.0219610588235** SLOP/USDG with 18/6 decimals. `owner()=0x81a1566dddf4ce0705ae6d09571561e3f3825fde`, queried bytecode = `0x`, i.e. **EOA admin** onchain. Actual beneficial controller beyond that EOA is unknown.
+- Step 0: `isStepEnabled=true`, `isStepPermitEnabled=true`, `verifiesEveryBid=false`, **5 allowed zk provider hashes**. An eligible wallet may establish registration subject to hook verification; `maxBidPrice` still applies.
+- Steps 1/2/3: `isStepEnabled=true`, `isStepPermitEnabled=true`, `verifiesEveryBid=true`, **0 allowed zk provider hashes**. In currently deployed configuration, **ALL publicly admitted bids require an amount-bound valid EIP-712 SERVER PERMIT for that specific step and each bid**. Public qualification may be open via the app's signing service, but sending a direct no-permit CCA bid will revert with `ServerPermitRequired`. This is a real availability/central-permit execution dependency, not proven unfair discrimination or a KYC claim.
+- `authorizesWithoutCredential(step,user)` returned false for user canonical `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c` for all four steps at this snapshot. This proves no empty-hook-data admission for this wallet; it does not prove the account cannot be verified or receive an app permit.
+- Hook owner-only **mutable** admin functions in official source `UmiaValidationHook.sol`: `setMaxBidPrice`, `setZkGlobalMaxBidAmount`, `setStepMaxBidAmount`, `enableStep/disableStep`, `setStepProviders`, `enableStepPermit/disableStepPermit`, `setSigner`; published max $0.021961/zk $200k/step $3000 should be **rechecked just before any sign**. CCA issuance mps and end block remain immutable core constructor parameters.
+- `zkGlobalBidTotal` increments for zk verification/registration path, **not for server-permit bids**, per `_validatePermit` return before `_accrueZkBid`. Thus "zk early $200k full" does not establish full $200k fund allowlist or prevent server-permit bids; count separate access types accurately.
+
+Source: https://github.com/umiafinance/protocol/blob/4b76b7b13399e440b318d9c479d7fc720b846d7b/src/periphery/UmiaValidationHook.sol and https://github.com/umiafinance/protocol/blob/4b76b7b13399e440b318d9c479d7fc720b846d7b/docs/contracts/UmiaValidationHook.md. Uniswap core: https://github.com/Uniswap/continuous-clearing-auction/blob/main/src/ContinuousClearingAuction.sol ; state: https://github.com/Uniswap/continuous-clearing-auction/blob/main/src/StepStorage.sol .
+
+### C. Actual accepted max-bid price grid (corrects prior proposed price literals)
+
+Direct CCA `floorPrice()=704,259,136,589,288` Q96; `tickSpacing()=41,427,008,034,664` Q96. USDG 6 decimals, SLOP 18 decimals. Converts to:
+- floor `17 ticks = $0.00888899999999990` per token;
+- **single price tick $0.00052288235294117**, which corresponds to ~$52,288.2353 FDV per step at 100M tokens;
+- hard current hook max **42 ticks = $0.02196105882352917**.
+- **Allowed below prior $0.013 max:** tick 24 at **$0.01254917647 (~$1,254,918 FDV)**; the next tick 25 is **$0.01307205882**, EXCEEDS $0.013.
+- **Allowed below prior $0.015 max:** tick 28 at **$0.01464070588 (~$1,464,071 FDV)**; next tick 29 **$0.01516358824**, EXCEEDS $0.015.
+- The prior $700 @ exactly `$0.013` + $300 @ exactly `$0.015` were **not tick-aligned**. Any exact EVM bid with those Q96 prices fails `TickPriceNotAtBoundary`; a frontend could convert/round, which must be independently inspected before signature. Strictly keep original dollar caps by selecting lower valid ticks **$700 at tick24** and **$300 at tick28**, if the GUI accepts two entries. This is a **technical consistency correction** not fresh permission to trade or an expansion of risk limits.
+- At least one tick ABOVE existing clearing price is required for a new bid; a limit equal to floor when current clearing is floor fails `BidMustBeAboveClearingPrice`.
+
+### D. Newly identified economic and operational game points
+
+1. **Early time inside a zero-issuance step:** placing on Nov6 first block versus Nov7 near the end (both before first public issuance) does **not** buy earlier low-price tokens because `step0 mps=0`. With identical budget/max price, both present for the full release schedule if both were accepted before public issuance. Racing the first day primarily protects **scarce early zk $200k admission capacity**, verification reliability and avoiding later increased clearing price/permit hurdles, NOT a locked cheaper token price.
+2. **CAP full vs actual fills:** $200k is a cap on qualifying zk commitments, not a distinct $200k public funding tranche or guaranteed 9M token reserve. Entire CCA issuance schedule contains **zero tokens sold in initial zk step**. The issuer's "9M for community early" is marketing allocation framing, not an onchain fixed-price 9M pool evidenced by these CCA steps. No direct token-specific reserve identified.
+3. **Public permits:** the purported open round has a permissionless *audience* but a permissioned onchain execution path that needs individual valid signed permits. Server API outage, permit rejection/expiry and signing delay are separate risks from gas/chain congestion. Prior zk registration does not bypass verifyEveryBid in later permit-only stages.
+4. **Sustained offer vs effective bid:** setting maximum allowed price makes the order eligible to compete for later emissions if price rises, but does not guarantee full fill or same-block priority; zero-emission early precommits cannot be canceled, and all price constraints may be updated by the EOA hook owner.
+5. **If price reaches current hook max, NO compliant new bid** can be placed under the CCA's strict `maxPrice > clearingPrice` condition (as long as hook cap is unchanged). This can happen before `endBlock`. Yet the auction itself still reaches the final block and previous bids can continue being allocated.
+6. **Last bucket 10%:** **4.5M SLOP at single block** forms an unusually large final auction settlement quantum. Final price is used in LP initialization, and does not assure genuine liquidity at that mark; if late bidders cannot submit due to cap, prior bids compete for the bucket. Need independent real swap quote after LP deployment for ROI.
+7. **Threshold nuance:** `minRaise=$400k` refers to actual cleared currency `currencyRaised()`, NOT `Total committed` or unexecuted budgets. A gross-committed UI number over $400k is not proof of graduation; `isGraduated` and final checkpoint matter.
+8. **Split bids:** multiple eligible bids under one wallet do not evade `stepMaxBidAmount` because it accrues per wallet and step. Different limit ticks create a planned effective-price ladder, but one cannot simply assume two orders guarantee more accepted quantity.
+9. **Ticket feasibility:** live earlier connected canonical wallet had about **389.420578 USDG** and **0.002152 ETH**; prior $1,000 plan remains *intent only*, not funded. No wallet transactions authorized.
+10. **Operational risk:** `setMaxBidPrice`, server permit policy, proof providers, caps and signer are upgradeable by live hook admin, unlike core immutable issuance schedule. A pre-start read is a dated snapshot, not an assurance of future consistency.
+
+### Decision impact
+
+- Stage dates/bounds **are immutable in the sampled onchain CCA**; `startBlock=106868933` / public release `108530471` / `endBlock=111022780` / `claimBlock=111023357`.
+- Early-qualification work has positive **option value** when low cost, because $200k zk cap could be exhausted. It does not grant guaranteed cheaper token price, nor does waiting to submit during early 0-mps stage necessarily lower token fill.
+- Public-phase "same result as early" is a conditional outcome **only if signed permit is obtained and transaction accepted before first issuance, and same valid maximum price/budget and demand schedule**. Public permit signature/latency can erase the parity.
+- Preserve **WATCH** and **NO_GO**. Original price ceilings should be corrected to actual below-cap valid tick levels if a later user-authorized bid is contemplated. No change to production monitoring, Gmail, automation, other Mission modules, or order placement.
+
+### Verification and limitations
+
+Direct `eth_call`: 11 CCA getters, 15+ Umia hook getters; `eth_getCode` SSTORE2 schedule pointer and owner account; GitHub fixed official Umia source `4b76b7b13399e440b318d9c479d7fc720b846d7b` and Uniswap CCA files. **Did not independently reproduce a build-bytecode match of deployed hook/core to GitHub source**, so runtime states plus published source are distinct proof levels. No true live bid yet; no direct auction receipt at this snapshot; no empirical probability of sell-side depth. No functional browser click / onchain writable method invoked.
+
+---
+
 ## 2026-11-05 historical comparables and full-fill versus cost tradeoff
 
 **Scope:** user asks to review Umia's previous $UMIA auction and Slop Cash CTO Shaw Walters' prior ai16z/ELIZAOS token, estimate SLOP post-TGE FDV, and decide early-whitelist limit bids. **Research only; no committed bid; no change to previously approved $1.5m FDV risk boundary.** Historical comparisons are not calibrated outcome probabilities.
