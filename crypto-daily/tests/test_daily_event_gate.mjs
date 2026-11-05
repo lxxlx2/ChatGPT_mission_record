@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { validateReport } from '../scripts/daily_event_gate.mjs';
+import { validateReport, decideDailyRecovery } from '../scripts/daily_event_gate.mjs';
 
 const headings = [
   '一、今日最重要的5件事', '二、BTC/ETH/SOL及主要资产', '三、二级市场剧烈波动与持续趋势',
@@ -55,4 +55,28 @@ test('per-section numbering must restart at 1', () => {
 test('full 13-section report can have just 13 material items instead of filler', () => {
   const m=manifest();m.body=m.body.replace(/^（2）[^\n]*$/gm,'');
   const r=validateReport(m);assert.equal(r.passed,true);assert.equal(r.metrics.numbered_items,13);
+});
+
+test('recovery reconstructs full 13-chapter draft when 08:20 pending is missing', () => {
+  const v=decideDailyRecovery({gmailSentVerified:false,pendingBodyExists:false});
+  assert.equal(v.action,'REBUILD_COMPLETE_REPORT_FROM_24H_RESEARCH');
+  assert.equal(v.requiresQa,true);
+});
+test('an unverified pending body cannot be sent as a shortcut', () => {
+  const v=decideDailyRecovery({pendingBodyExists:true,pendingQaPassed:false});
+  assert.equal(v.action,'REBUILD_OR_VALIDATE_COMPLETE_REPORT');
+  assert.equal(v.requiresQa,true);
+});
+test('a fully verified pending body can be sent only after a final Sent check', () => {
+  const v=decideDailyRecovery({pendingBodyExists:true,pendingQaPassed:true,fullSourceReviewPassed:true,sevenDayDedupePassed:true});
+  assert.equal(v.action,'SEND_FULL_REPORT_AFTER_FINAL_SENT_CHECK');
+});
+test('Gmail Sent readback is authoritative even if Git archive is missing', () => {
+  const v=decideDailyRecovery({gmailSentVerified:true,gitCanonicalVerified:false});
+  assert.equal(v.action,'ARCHIVE_GMAIL_READBACK_ONLY');
+  assert.equal(v.needsEmail,false);
+});
+test('once delivered and archived, no further email is due', () => {
+  const v=decideDailyRecovery({gmailSentVerified:true,gitCanonicalVerified:true});
+  assert.equal(v.action,'ALREADY_DELIVERED');
 });
