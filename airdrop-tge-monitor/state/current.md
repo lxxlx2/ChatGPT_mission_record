@@ -1008,3 +1008,13 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - StandX Nov2 DUSD claim issuer original and personal eligibility SOURCE_GAP; Surf Nov13 already delivered; Cambria Oct29 already delivered; no duplicate.
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
 - final_readback: VERIFIED blob 1145da499bcc65eb68835ae47ce50ef9bde1cfa6; commit b08c77b3226856833ebeab10d0ae44b4a906d464
+
+## Latest terminal cache sync — 2026-11-05 10:57:21 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-05/105721-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-05/105707-attempt.md
+- final_readback: VERIFIED blob 0445d44ec0178fd9aca795ab47b71375e22743a1; commit 71bc7839c529035d87c8a2868c4ae5c5dd579bd7
+- run_status: PARTIAL; scheduled_shard: 2; executed_shard: 2; last_meaningful_attempt_at_shard2: 2026-11-05T10:57:21+07:00 PARTIAL_ONLY
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 9; gmail_attempted: false; app_notification: false
+- StandX DUSD original and personal claim SOURCE_GAP; SurfBoard Nov13 already mailed; Cambria RSGP unchanged; no eligible new ACTION.
+- schedule HH:00 unchanged; actual invocation 10:56; no new tasks or Mac processes.
