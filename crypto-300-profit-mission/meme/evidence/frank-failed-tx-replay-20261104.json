@@ -460,5 +460,232 @@
       "D2_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
       "D2_observed_at_utc": "2026-11-01T01:26:32.578080+00:00"
     }
-  }
+  },
+  "free_rpc_diagnostic_20261105": {
+    "at_utc": "2026-11-05T04:20:31.977607+00:00",
+    "authorization": {
+      "user_text": "额度无上限，免费即可，不需要review",
+      "free_existing_source_budget_unlimited": true,
+      "independent_review_waived": true,
+      "prior_once_only_limit_no_longer_blocks_new_free_reads": true,
+      "profit_research_budget_reopened": false,
+      "new_provider_or_index_source_authorized": false,
+      "paid_upgrade_authorized": false
+    },
+    "product_sha": "e069a925b71985c35b75cc8fd01eb75a9c97dd87",
+    "product_code_changed": false,
+    "main_checked": "480cc654018ef4548d372cf7bdd30cb978600a51",
+    "Frank_or_rules_main_delta": false,
+    "new_rpc_diagnostic": {
+      "at_utc": "2026-11-05T04:19:20.835648+00:00",
+      "authorization": "Unlimited free existing-source read budget; no review required",
+      "source_sha": "e069a925b71985c35b75cc8fd01eb75a9c97dd87",
+      "actual_wire_attempts": 6,
+      "entries": [
+        {
+          "label": "original_gpa",
+          "method": "getProgramAccounts",
+          "attempt_marker_time_utc": "2026-11-05T04:05:46.762775+00:00",
+          "request_sha256": "2470e7730c7d785e7d165655576aa95d55079c0b0f2c72deac9dfc7da3ecd211",
+          "http_status": 429,
+          "wire_attempts": 1,
+          "body_complete": true,
+          "body_bytes": 247,
+          "body_sha256": "58146bd5f9e6e0af858d3829c18c378b76a25b15ac1112b0e7d1847c2db511ee",
+          "retry_after": null,
+          "request_elapsed_seconds": 0.142258,
+          "parent_elapsed_seconds": 0.243849,
+          "private_script_sha256": "becd4f38cd2c5907fd2c94ee855df9158e2618138adf67ce46043605f940119e"
+        },
+        {
+          "label": "idle_gpa",
+          "method": "getProgramAccounts",
+          "attempt_marker_time_utc": "2026-11-05T04:09:11.602546+00:00",
+          "request_sha256": "2470e7730c7d785e7d165655576aa95d55079c0b0f2c72deac9dfc7da3ecd211",
+          "http_status": 429,
+          "wire_attempts": 1,
+          "body_complete": true,
+          "body_bytes": 247,
+          "body_sha256": "58146bd5f9e6e0af858d3829c18c378b76a25b15ac1112b0e7d1847c2db511ee",
+          "retry_after": null,
+          "request_elapsed_seconds": 0.122203,
+          "parent_elapsed_seconds": 0.182905,
+          "private_script_sha256": "8862ddb776fd0ec99c842e0de1fc84e3743daed8ded0aac3dd0d3a32a9c6046e"
+        },
+        {
+          "label": "keys_only_gpa",
+          "method": "getProgramAccounts",
+          "attempt_marker_time_utc": "2026-11-05T04:09:40.987918+00:00",
+          "request_sha256": "b7553bcb5f9e741764b0f355205b5ec7d3cfd6471652ce778f58d2ba4ab6a2be",
+          "http_status": 429,
+          "wire_attempts": 1,
+          "body_complete": true,
+          "body_bytes": 247,
+          "body_sha256": "58146bd5f9e6e0af858d3829c18c378b76a25b15ac1112b0e7d1847c2db511ee",
+          "retry_after": null,
+          "request_elapsed_seconds": 0.124573,
+          "parent_elapsed_seconds": 0.236892,
+          "private_script_sha256": "bb8f1e8c952e608e6c6254ce038428679474f3c2015fc02d5f6ec5a3966a0d99"
+        },
+        {
+          "label": "light_control",
+          "method": "getTokenSupply",
+          "attempt_marker_time_utc": "2026-11-05T04:12:21.647160+00:00",
+          "request_sha256": "9b3b482a4ac893a22bf92accd7e34bc84f664f940589c53c604215a8abc9d21a",
+          "http_status": 200,
+          "wire_attempts": 1,
+          "body_complete": true,
+          "body_bytes": 200,
+          "body_sha256": "07fab8f8c444d57e38c01e326d99b739c5e3521a41b37d803e703e5272247b0a",
+          "retry_after": null,
+          "request_elapsed_seconds": 0.129154,
+          "parent_elapsed_seconds": 0.186763,
+          "private_script_sha256": "fd31177a1a730b42742d9bd9ed94c6de3b51ca4e24649f726a0fd5c54b847f70"
+        },
+        {
+          "label": "gpa_v2_one_row",
+          "method": "getProgramAccountsV2",
+          "attempt_marker_time_utc": "2026-11-05T04:14:21.319622+00:00",
+          "request_sha256": "1643621bc7bd69afcba1c67df53e250d576fcd06e7315895737d09643b77c630",
+          "http_status": 400,
+          "wire_attempts": 1,
+          "body_complete": true,
+          "body_bytes": 169,
+          "body_sha256": "82504cf970a020046315150bfaecf3cfb326051a3de2f8e4557f451292cd32c9",
+          "retry_after": null,
+          "request_elapsed_seconds": 0.120979,
+          "parent_elapsed_seconds": 0.186024,
+          "private_script_sha256": "c3c0b903d8775390481d09ef8f58273905a45c2ef9a13fc5d73398aa482b6c57"
+        },
+        {
+          "label": "legacy_program_negative_control",
+          "method": "getProgramAccounts",
+          "attempt_marker_time_utc": "2026-11-05T04:18:31.810368+00:00",
+          "request_sha256": "a59c84dfde0bf1e79270338b5190c01fc751da8a971d948337f73acb360596b3",
+          "http_status": 429,
+          "wire_attempts": 1,
+          "body_complete": true,
+          "body_bytes": 247,
+          "body_sha256": "58146bd5f9e6e0af858d3829c18c378b76a25b15ac1112b0e7d1847c2db511ee",
+          "retry_after": null,
+          "request_elapsed_seconds": 0.122314,
+          "parent_elapsed_seconds": 0.182522,
+          "private_script_sha256": "6fab49d3958fbe98b93b179c2b7d60137123a1d0fd483184948452664ce90d95"
+        }
+      ],
+      "production_writes": 0,
+      "notifications_signing_or_trades": 0
+    },
+    "facts": [
+      {
+        "method": "getProgramAccounts",
+        "attempts": 4,
+        "variants": [
+          "original byte-identical request",
+          "same request after205seconds without another diagnostic RPC",
+          "same Mint/program/filter,base64 and zero-byte dataSlice",
+          "same Mint on legacy token program as a negative capability control, not holder evidence"
+        ],
+        "response_class": "PROVIDER_REPORTED_COMPUTE_UNITS_PER_SECOND_CAPACITY_EXCEEDED",
+        "error_code": 429,
+        "Retry_After_present": false,
+        "same_complete_body_sha256": "58146bd5f9e6e0af858d3829c18c378b76a25b15ac1112b0e7d1847c2db511ee",
+        "does_not_prove_paid_only_or_permanent_unavailability": true
+      },
+      {
+        "method": "getTokenSupply",
+        "attempts": 1,
+        "http_status": 200,
+        "conclusion": "Existing endpoint can answer a light standard RPC; whole endpoint failure is not established.",
+        "full_holder_or_fresh_complete_report_proven": false
+      },
+      {
+        "method": "getProgramAccountsV2",
+        "attempts": 1,
+        "limit": 1,
+        "encoding": "base64",
+        "dataSlice_length": 0,
+        "http_status": 400,
+        "rpc_error_code": -32600,
+        "response_class": "PROVIDER_EXPLICITLY_REJECTS_V2_ON_FREE_TIER_REQUIRES_PAID_PLAN",
+        "paid_path_stopped": true,
+        "body_sha256": "82504cf970a020046315150bfaecf3cfb326051a3de2f8e4557f451292cd32c9"
+      }
+    ],
+    "old_capture_limitations": {
+      "six_original_429_bodies_and_retry_after_not_preserved": true,
+      "old_provider_specific_root_cause": "UNRESOLVED",
+      "current_error_not_retroactively_assigned_to_old_attempts": true
+    },
+    "existing_scanner_endpoint_resolution_check": {
+      "source_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "entry": "scripts.frank_local_signal_service",
+      "config_source_kind": "SAME_EXISTING_FRANKMEME_RPC_FILE",
+      "configured_provider_count": 1,
+      "actual_resolution_functions_equal": true,
+      "endpoint_fingerprints_equal": true,
+      "adapter_endpoint_equals_config": true,
+      "env_override": false,
+      "cli_endpoint_override": false,
+      "fallback": false,
+      "offline_resolution_probe_wire_calls": 0,
+      "loaded_source_fingerprint_matches_disk": true,
+      "historical_endpoint_fingerprint_not_captured": true
+    },
+    "official_reference_interpretation": {
+      "throughput_scope": "Account shared,10-second rolling token bucket; published free example300CU/s. Actual account/app limits not inspected.",
+      "GPA_published_CU": 20,
+      "GPA_V2_published_CU": 20,
+      "published_CU_does_not_override_live_account_rejection": true,
+      "dataSlice_reduces_response_bytes_not_documented_to_reduce_CU": true,
+      "URLs": [
+        "https://www.alchemy.com/docs/reference/throughput",
+        "https://www.alchemy.com/docs/reference/compute-unit-costs",
+        "https://www.alchemy.com/docs/chains/solana/solana-api-endpoints/get-program-accounts-v-2"
+      ]
+    },
+    "actual_Chrome_provider_console": {
+      "page": "https://dashboard.alchemy.com/",
+      "result": "EXISTING_ACCOUNT_LOGIN_REQUIRED",
+      "account_authenticated": false,
+      "signup_or_login_submission_by_agent": false,
+      "terms_accepted_by_agent": false,
+      "paid_plan_or_new_key_created": false,
+      "login_tab_kept_for_user_handoff": true
+    },
+    "new_provider_or_DAS_source_used": 0,
+    "production_data_writes": 0,
+    "service_lifecycle_operations": 0,
+    "notifications_or_emails_sent": 0,
+    "wallet_signing_or_trade": 0,
+    "purchases_or_upgrades": 0,
+    "new_monitor_or_automation": 0,
+    "full_real_CA_scan_started": 0,
+    "verdict": "PARTIAL / SOURCE_BLOCKED_NEEDS_PROVIDER_ACCOUNT_ACCESS; budget and review are no longer blockers",
+    "next_action": "User logs into existing RPC-owner Alchemy account in the open Chrome tab; then inspect actual throughput configuration and request logs read-only. No paid upgrade or new key.",
+    "hashes": {
+      "original_probe_script": "becd4f38cd2c5907fd2c94ee855df9158e2618138adf67ce46043605f940119e",
+      "diagnostic_summary": "0d8db65169bac75fd25fdcd929575e41a784e402d00e28d5e28be3c028f681d5",
+      "login_screenshot": "1f71c898dbaaddd7da342c9a7ac53674f608df0c33a06118ca8990dd805afb71"
+    },
+    "runtime_after": {
+      "at_utc": "2026-11-05T04:21:45.990097+00:00",
+      "status": "LIVE",
+      "pid": 81945,
+      "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "loaded_source_sha256": "c7a453d5a579c9425dd964f1945b887b3d4ebe92d8159cd8db17a85471958085",
+      "source_drift": false,
+      "consecutive_errors": 0,
+      "raw_pending": 0,
+      "model_unprocessed": 0,
+      "production_trading": "NO_GO"
+    },
+    "initial_probe_offline_selftest": {
+      "passed": 8,
+      "real_wire_attempts": 0,
+      "credentials_read": 0,
+      "receipt_sha256": "b8f77d2f337f19e0688e4af086e859f3ef5a2c94bf87b7f89ea848ab1016dc18"
+    }
+  },
+  "current_followup_field": "free_rpc_diagnostic_20261105"
 }
