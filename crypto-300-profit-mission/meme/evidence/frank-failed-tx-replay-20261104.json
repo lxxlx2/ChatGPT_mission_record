@@ -1258,5 +1258,7 @@
       "git_diff_check": "PASS",
       "public_secret_private_path_and_new_signature_scan": "PASS"
     }
-  }
+  },
+  "current_status_superseded_by": "frank-ca-restart-resume-20261105.json",
+  "retained_scope": "Historical e069 installed repair and prior provider/history checks; latest candidate and current state are in STATUS and the new restart-resume receipt."
 }
