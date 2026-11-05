@@ -1,5 +1,31 @@
 # 1609SAT / MetaDAO Apps Program：SAT 备考产品、公售估值、早期流通与退出风险调查
 
+
+## 2026-11-05 direct SAT Solana account and funding audit
+
+**Observed:** Solana slot 465768722 at 2026-11-05 16:13:33 UTC / 23:13:33 Bangkok; read-only Alchemy Solana mainnet; no wallet signatures, trades or automation. This section supersedes the earlier identity and contract-address unknowns, but preserves the earlier historical research.
+
+**Onchain identity and transaction:**
+
+- Official MetaDAO v0.7 Launchpad program: moontUzsdepotRGe5xsfip7vLPTJnVuafqdUWexVnPM. Direct decoded Anchor Launch account: [B9QX36vNtxsSr3o1A2wNpihUC2bELehqP7hvYUsDcuRT](https://solscan.io/account/B9QX36vNtxsSr3o1A2wNpihUC2bELehqP7hvYUsDcuRT), account discriminator 903333a3ce55d526, 785 bytes, owner matches program. Successful InitializeLaunch transaction on 2026-11-04 18:56:58 UTC: [2wB8pyVHwxTNvRsmCkwmRRG4DsMJSjmgWt5K7QKFw24ZdaGti3nJYbGrRiJWd6NVSKEGKEtvVRszQqrvvGbGAupz](https://solscan.io/tx/2wB8pyVHwxTNvRsmCkwmRRG4DsMJSjmgWt5K7QKFw24ZdaGti3nJYbGrRiJWd6NVSKEGKEtvVRszQqrvvGbGAupz).
+- SAT Mint: [BSwp4GjLnejXKqvmjueJmPXC7UZhNoF6RuMQJRpSmeta](https://solscan.io/token/BSwp4GjLnejXKqvmjueJmPXC7UZhNoF6RuMQJRpSmeta). Direct Solana Metaplex Metadata account 2SJ32k2vxBGhKfzRnDVenxCLadySwA15g2S7VsUUKbWZ decodes name SAT and symbol SAT; URI: https://tokens.metadao.fi/token-metadata/841/6bf836d53427b5f379c3c5cb9e72ec313c7e974cee9a20642b7514da2d660c27.json .
+- Launch config directly decoded against official [v0.7 Launch Rust struct](https://github.com/metaDAOproject/programs/blob/develop/programs/v07_launchpad/src/state/launch.rs): minimum_raise_amount=100000000000 raw USDC (100,000 USDC), monthly_spending_limit_amount=16000000000 (16,000 USDC), additional_tokens_amount=87100000000000 raw SAT (87,100,000 SAT), performance_package_token_amount=1000000 raw SAT (1 SAT), seconds_for_launch=345600 (4 days). These exact values plus SAT metadata establish a **strong, project-specific 1609SAT attribution**, but the production page-to-Mint identity binding has not been extracted from JavaScript/network or directly published, so label issuer-linked identity **HIGH_CONFIDENCE_INFERRED** rather than separately issuer-attested.
+
+**Funds and timing:**
+
+- Dedicated canonical USDC quote escrow: [3HixScNNPUDXU4XLf1QqYkFQCqcUimoW1Bck95fw1AZh](https://solscan.io/account/3HixScNNPUDXU4XLf1QqYkFQCqcUimoW1Bck95fw1AZh), quote mint EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v. Direct getTokenAccountBalance and getAccountInfo at slot 465768722: **0 USDC**. getSignaturesForAddress(escrow) returned only the Nov4 initialization transaction, no later successful transfer. Direct Launch total_committed_amount=0 and total_approved_amount=0.
+- The public website displays MetaDAO Pre-Committed 50K, a **platform pledge**; **NOT verified as 50,000 USDC in this Launch escrow**. No assumption that the funds are absent from separate MetaDAO treasury accounts or that the promised transfer will fail.
+- Direct Launch state=Initialized (0), unix_timestamp_started=None, unix_timestamp_closed=None, launch duration 4 days. Its actual start and close timestamp are **UNCONFIRMED**; only *if* the advertised Nov5 19:00 UTC / Nov6 02:00 Bangkok opening executes on time is the implied end Nov9 19:00 UTC / Nov10 02:00 Bangkok. Official [StartLaunch source](https://github.com/metaDAOproject/programs/blob/develop/programs/v07_launchpad/src/instructions/start_launch.rs) sets the true start timestamp only on successful execution.
+- Direct getTokenSupply at slot 465768719 gives **100,000,001 SAT**, six decimals. All 100,000,001 SAT were in dedicated token vault [DKKygjCaqWRTzjaGHtydA4haF3JJUqFn7eHhwK8Wbh2q](https://solscan.io/account/DKKygjCaqWRTzjaGHtydA4haF3JJUqFn7eHhwK8Wbh2q) at slot 465768722. The 1 SAT amount beyond issuer nominal 100M corresponds to the Launch performance allocation of 1 SAT. Do not invent how or whether it will be burned.
+- The 87.1M additional-token recipient UkkkU6yNnLYeSfPW46L6Y1JC5bu6o6wx7M45Yr4iWmS currently has zero account data and a System Program owner; its pubkey is off curve, suggesting a PDA, but **the specific downstream enforcing program and advertised 90-day price unlock plus 25K/month team sell cap remain UNVERIFIED**. Generic [v0.7 additional allocation handler](https://github.com/metaDAOproject/programs/blob/develop/programs/v07_launchpad/src/instructions/claim_additional_token_allocation.rs) allows release to the configured recipient after LaunchState Complete; cannot infer the recipient's future unrestricted custody from this fact alone.
+- Excluded superficially nearby program launches FINAL (4WSZkN6p4wfqGqQSwTnvpCTnjNMdazDebYQJu14nmeta, 50K minimum) and SENDR (AuYQ5Y2zmFppLUhWT1i2AQPdswChgQ9vuMu9Ts61meta, 250K minimum) after direct Metaplex verification. v0.6 and v0.8 Launchpad program latest observed transactions were from July 2026, while v0.7 was active during Nov4/5.
+- Generic filtered getProgramAccounts calls failed with **RPC 429 compute-per-second limit**. Individual getAccountInfo, getTokenAccountBalance, getTokenSupply, getSignaturesForAddress and reconstructed source parsing succeeded. Browser exposed authenticated DOM but this chat's Browser read tool did **not** expose full production JavaScript bundle/network request capture. Do not claim full frontend reverse engineering or exhaustive enumeration.
+
+**Decision:** WATCH / NO_GO. Hard chain evidence upgrades token deployment and named Launch identity, not actual raise readiness, verified MetaDAO cash deposit, investor fill, performance vesting execution, or realized ROI. No monitor, mail, wallet signing, bid, or task created.
+
+---
+
+
 - 更新：2026-11-05，Asia/Bangkok；研究时点约 11:11–12:00。
 - 阶段：**PRE-SALE / RESEARCH ONLY / NO FUNDS COMMITTED**。
 - 项目分类：Solana MetaDAO Apps Program，消费级 AI 教育产品与 $SAT 新币公售。
