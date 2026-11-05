@@ -2,6 +2,44 @@
 
 Status: local read-only research utility.
 
+## Dashboard unfinished-job recovery
+
+New Dashboard CA jobs persist a private checkpoint before the POST acknowledges
+the job ID. A service process that loses its in-memory task can read that exact
+unfinished job back as `PAUSED`. Reload, status GET and report GET never start
+collection. The separate **继续未完成的查询** action explicitly POSTs the existing
+`resume_job_id` and exact Mint; it does not allocate a new task or background loop.
+
+Recovery replays the saved logical source reads locally to rebuild analyzer
+state, then reads only the missing suffix. This reconstructs partial-page
+classification and cursor state without double-counting economic evidence. An
+unrecorded response may have to be read again; each wire attempt is reserved in
+SQLite before transport, so a crash can conservatively overcount an uncertain
+attempt but cannot reset the original per-job wire limit or deadline. Known
+provider cooldowns and pacing are retained. Double-clicks reuse the same task;
+an exclusive process lease prevents two workers collecting one checkpoint.
+
+This journal is separate from `RpcCache`: replay does not extend or rewrite its
+TTL. Resumed output is an observation of the original historical source epoch,
+with a separate completion time and explicit UI/Markdown notice; it does not
+refresh current balances or market prices. `collection_checkpoint` records the
+resume/replay and reserved-attempt scope. Empty source pages remain bounded
+address-window evidence, never wallet birth or global history completeness.
+
+Source files, registry, preset/budget and existing provider configuration are
+bound to the checkpoint. Changed configuration, broken identity/hash chain,
+unsafe paths, exhausted budget or incompatible code fail closed. New jobs whose
+checkpoint is missing cannot silently run as a fresh scan. Legacy tasks retain
+their existing one-process behavior; old unjournaled unfinished jobs cannot be
+retroactively recovered. Completed reports still require the existing exact-ID
+report hash and separate DONE marker; recovery never substitutes another job.
+
+Checkpoint files stay in the local private `_checkpoints` directory (0700/0600),
+with a 128 MiB logical payload ceiling per job. They are local integrity checks,
+not a signed independent trust root. No checkpoint/raw source file is exposed by
+the HTTP API or exported to a public repository. This feature adds no provider,
+daemon, scheduler, notification, wallet action, paid service or production grant.
+
 Goal: turn the mandatory wallet-cluster specification into a repeatable local command without paid data providers.
 
 ## Data sources

@@ -272,6 +272,8 @@ class SolanaReadOnlyRPC:
         max_wire_attempts:int|None=None,
         max_elapsed_seconds:float|None=None,
         monotonic=time.monotonic,
+        before_wire=None,
+        transport_updated=None,
     ):
         endpoints=[endpoint]
         endpoints.extend(DEFAULT_RPC_FALLBACKS if fallback_endpoints is None else fallback_endpoints)
@@ -292,6 +294,8 @@ class SolanaReadOnlyRPC:
         self.sleep=sleep
         self.min_interval=float(min_interval)
         self.cache=cache
+        self.before_wire=before_wire
+        self.transport_updated=transport_updated
         self.cache_hits=0
         self.calls=0
         if max_wire_attempts is not None and (type(max_wire_attempts) is not int or max_wire_attempts <= 0):
@@ -310,6 +314,7 @@ class SolanaReadOnlyRPC:
         self._cooldown_until=defaultdict(float)
 
     def _next_endpoint(self):
+        if self.transport_updated is not None:self.transport_updated()
         now=self._monotonic()
         primary=self.endpoints[0]
         # Keep the official/configured primary as the normal source. Only move to
@@ -403,6 +408,9 @@ class SolanaReadOnlyRPC:
                 "Content-Type":"application/json",
                 "User-Agent":"mission-meme-cluster/2",
             })
+            # Persist a job reservation before transport, outside retry catches.
+            # A local checkpoint failure must never start an uncounted request.
+            if self.before_wire is not None:self.before_wire(endpoint)
             try:
                 self._last_by_endpoint[endpoint]=self._monotonic()
                 self.calls+=1;self.endpoint_calls[endpoint]+=1
@@ -851,6 +859,7 @@ class WalletClusterAnalyzer:
             if self.independent_market_client is not None:
                 return attach_market_comparison(self.mint,primary,self.independent_market_client)
             return primary
+        except RPCJobBudgetExceeded:raise
         except Exception as exc:
             return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","reason":type(exc).__name__}
 
@@ -1726,6 +1735,8 @@ def markdown(report:dict)->str:
         f"# Meme CA Research — {report.get('mint')}",
         "",
         f"Observed at: {report.get('observed_at')}",
+        *( ["Collection resumed from the original job's historical source epoch; completion does not refresh balances or market data."]
+           if (report.get("collection_checkpoint") or {}).get("mode")=="RESUMED_HISTORICAL_JOB" else [] ),
         f"Schema: {report.get('schema_version')}",
         "",
         "## Conclusion",

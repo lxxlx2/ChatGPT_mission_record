@@ -67,6 +67,83 @@ function harness(options = {}) {
   return {context,element,requests,store,setResponse(fn){responseFor=fn;}};
 }
 
+test('unfinished persisted job restore uses GET and offers a separate source continuation',async()=>{
+  const h=harness({store:new Map([['session:mission-meme-cluster-pending-v1',JSON.stringify({id:jobId,mint})]]),
+    responseFor:async url=>url.startsWith('/api/cluster-analysis?')
+      ? {ok:true,json:async()=>({job_id:jobId,mint,status:'PAUSED',resume_available:true})} : new Promise(()=>{})});
+  h.context.clusterRestorePending();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(h.element('cluster-continuation').hidden,false);
+  assert.match(h.element('cluster-status').innerHTML,/原查询尚未完成/);
+  assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
+  assert.ok(h.store.has('session:mission-meme-cluster-pending-v1'));
+});
+
+test('source continuation POST is explicit same-job and double-click guarded',async()=>{
+  let posts=0,reads=0,release;
+  const h=harness({responseFor:async(url,options)=>{
+    if(options.method==='POST') {
+      posts++;
+      assert.deepEqual(JSON.parse(options.body),{mint,resume_job_id:jobId});
+      await new Promise(resolve=>{release=resolve;});
+      return {ok:true,json:async()=>({job_id:jobId,mint,status:'QUEUED'})};
+    }
+    if(url.startsWith('/api/cluster-analysis?')) return {ok:true,json:async()=>({job_id:jobId,mint,
+      status:++reads===1?'PAUSED':'RUNNING',resume_available:true})};
+    return new Promise(()=>{});
+  }});
+  h.context.clusterSetJob(jobId,mint);
+  await h.context.pollClusterJob(jobId);
+  const first=h.element('cluster-resume-scan').listeners.get('click')();
+  await h.element('cluster-resume-scan').listeners.get('click')();
+  assert.equal(posts,1);
+  release(); await first;
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(h.element('cluster-continuation').hidden,true);
+  assert.equal(JSON.parse(h.store.get('session:mission-meme-cluster-pending-v1')).id,jobId);
+});
+
+test('failed continuation POST retains the same pending job and never retries automatically',async()=>{
+  const h=harness({responseFor:async(url,options)=>{
+    if(options.method==='POST') throw new TypeError('Failed to fetch');
+    if(url.startsWith('/api/cluster-analysis?')) return {ok:true,json:async()=>({job_id:jobId,mint,status:'PAUSED',resume_available:true})};
+    return new Promise(()=>{});
+  }});
+  h.context.clusterSetJob(jobId,mint); await h.context.pollClusterJob(jobId);
+  await h.element('cluster-resume-scan').listeners.get('click')();
+  assert.equal(h.requests.filter(x=>x.method==='POST').length,1);
+  assert.equal(JSON.parse(h.store.get('session:mission-meme-cluster-pending-v1')).id,jobId);
+  assert.match(h.element('cluster-status').innerHTML,/不会自动重发/);
+});
+
+test('expired or incompatible checkpoint cannot initiate source continuation',async()=>{
+  const h=harness({responseFor:async url=>url.startsWith('/api/cluster-analysis?')
+    ? {ok:true,json:async()=>({job_id:jobId,mint,status:'PAUSED',resume_available:false})} : new Promise(()=>{})});
+  h.context.clusterSetJob(jobId,mint); await h.context.pollClusterJob(jobId);
+  assert.equal(h.element('cluster-continuation').hidden,true);
+  await h.element('cluster-resume-scan').listeners.get('click')();
+  assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
+});
+
+test('a continuation acknowledgment for another job cannot replace the pending identity',async()=>{
+  const h=harness({responseFor:async(url,options)=>{
+    if(options.method==='POST') return {ok:true,json:async()=>({job_id:'b'.repeat(32),mint,status:'QUEUED'})};
+    if(url.startsWith('/api/cluster-analysis?')) return {ok:true,json:async()=>({job_id:jobId,mint,status:'PAUSED',resume_available:true})};
+    return new Promise(()=>{});
+  }});
+  h.context.clusterSetJob(jobId,mint); await h.context.pollClusterJob(jobId);
+  await h.element('cluster-resume-scan').listeners.get('click')();
+  assert.equal(JSON.parse(h.store.get('session:mission-meme-cluster-pending-v1')).id,jobId);
+  assert.equal(h.requests.filter(x=>x.url.includes('b'.repeat(32))).length,0);
+});
+
+test('resumed report visibly retains its historical source epoch',()=>{
+  const h=harness();
+  h.context.renderClusterReport({...fixture,collection_checkpoint:{mode:'RESUMED_HISTORICAL_JOB'}});
+  assert.match(h.element('cluster-completeness').innerHTML,/保留原始来源时间/);
+  assert.match(h.element('cluster-completeness').innerHTML,/不代表余额或行情已更新到当前/);
+});
+
 test('startup historical load labels the remembered CA as unverified and uses GET only',async()=>{
   const store=new Map([['local:mission-meme-last-cluster-ca',mint]]);
   const h=harness({store,responseFor:async url=>url.startsWith('/api/cluster-latest?')

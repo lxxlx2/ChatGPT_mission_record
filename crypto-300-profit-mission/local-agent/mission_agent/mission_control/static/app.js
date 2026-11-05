@@ -1963,6 +1963,7 @@ function renderClusterCompleteness(report) {
       '。已用来源：'+esc(sourceLabel)+'；下一来源：'+esc(labels[3])+'。</li>'];
   });
   node.innerHTML='<h2>'+esc(clusterCompletenessLabel)+'</h2><p>任务执行结束与尽调完整性分别核实；余额排名已核实也不能证明完整历史或可买。</p>'+
+    (report.collection_checkpoint?.mode==='RESUMED_HISTORICAL_JOB' ? '<p>此报告从原任务继续完成，保留原始来源时间；任务完成时间不代表余额或行情已更新到当前。</p>' : '')+
     (!valid ? '<p>此报告没有受支持的完整性记录，保留原始证据，不补造已验收结论。</p>' : '')+
     '<details><summary>尚缺哪些必需证据</summary><ul>'+gaps.join('')+'</ul></details>';
 }
@@ -2376,6 +2377,7 @@ function clusterSetJob(jobId,mint) {
   clearTimeout(clusterPollTimer);
   clusterPollVersion += 1;
   clusterActiveJob = {id:jobId,mint};
+  $('cluster-continuation').hidden=true;
   try { sessionStorage.setItem(CLUSTER_PENDING_KEY,JSON.stringify(clusterActiveJob)); } catch (_) {}
   clusterShowRecovery(false);
 }
@@ -2384,6 +2386,7 @@ function clusterFinishJob() {
   clearTimeout(clusterPollTimer);
   clusterPollVersion += 1;
   clusterActiveJob = null;
+  $('cluster-continuation').hidden=true;
   try { sessionStorage.removeItem(CLUSTER_PENDING_KEY); } catch (_) {}
   clusterShowRecovery(false);
 }
@@ -2405,6 +2408,21 @@ async function pollClusterJob(jobId, failures=0) {
     if (clusterPollVersion!==version) return;
     if (job.job_id!==jobId || job.mint!==clusterActiveJob.mint) {
       throw new Error('CLUSTER_JOB_IDENTITY_MISMATCH');
+    }
+    if (job.status==='PAUSED' || (job.status==='ERROR' && job.resume_available===true)) {
+      clusterActiveJob.status='PAUSED';
+      clusterActiveJob.resumeAvailable=job.resume_available===true;
+      $('cluster-continuation').hidden=!clusterActiveJob.resumeAvailable;
+      $('cluster-resume-scan').disabled=false;
+      $('cluster-submit').disabled=false;
+      $('cluster-submit').textContent='开始新的分析';
+      clusterShowRecovery(true);
+      $('cluster-resume-get').textContent='重新读取任务状态';
+      renderClusterPreview(job);
+      clusterStatus('error',clusterActiveJob.resumeAvailable?'原查询尚未完成，可手动继续':'原查询暂不能继续',
+        clusterActiveJob.resumeAvailable?'刷新与读取不会继续采集；点击“继续未完成的查询”才会发起只读查询，原任务额度不重置':
+          '原任务的预算或恢复条件已不满足；可以保留历史数据并开始新的查询');
+      return;
     }
     if (job.status==='DONE') {
       // Retain the exact identity until a matching report GET succeeds.
@@ -2614,6 +2632,37 @@ $('cluster-form').addEventListener('submit', async (event) => {
 
 // A browser reload may only resume GET for an already submitted job
 setTimeout(clusterRestorePending,0);
+
+// Source collection is a separate explicit action, never a GET retry/reload.
+$('cluster-resume-scan').addEventListener('click',async()=>{
+  if (clusterSubmitting || clusterActiveJob?.status!=='PAUSED' || !clusterActiveJob.resumeAvailable) return;
+  const {id,mint}=clusterActiveJob;
+  const version=clusterPollVersion;
+  clusterSetSubmitting(true);
+  $('cluster-resume-scan').disabled=true;
+  $('cluster-submit').disabled=true;
+  clusterStatus('running','正在继续原查询','沿用原任务编号、剩余额度和已保存来源时间');
+  try {
+    const response=await fetch('/api/cluster-analysis',{
+      method:'POST',cache:'no-store',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({mint,resume_job_id:id}),
+    });
+    const job=await response.json();
+    if (clusterPollVersion!==version || clusterActiveJob?.id!==id) return;
+    if (!response.ok) throw new Error('CA_RESUME_REJECTED');
+    if (job.job_id!==id || job.mint!==mint) throw new Error('CLUSTER_JOB_IDENTITY_MISMATCH');
+    clusterSetJob(id,mint);
+    pollClusterJob(id,0);
+  } catch (_) {
+    if (clusterPollVersion!==version || clusterActiveJob?.id!==id) return;
+    clusterStatus('error','未能确认原查询已继续','任务已保留，请重新读取状态；不会自动重发采集请求');
+    clusterShowRecovery(true);
+    $('cluster-submit').disabled=false;
+  } finally {
+    clusterSetSubmitting(false);
+    $('cluster-resume-scan').disabled=false;
+  }
+});
 
 $('cluster-read-report').addEventListener('click',async()=>{
   if (clusterSubmitting) return;

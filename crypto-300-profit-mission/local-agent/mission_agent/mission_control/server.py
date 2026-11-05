@@ -20,6 +20,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from ..meme.cluster import RpcCache, RPCJobBudgetExceeded, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown, report_completeness
+from ..meme.job_checkpoint import JobCheckpoint, CheckpointRPC, CheckpointClient, CheckpointError, canonical, digest, source_fingerprint
 from ..meme.market import DexScreenerMarketClient
 from ..meme.market_parity import GeckoTerminalMarketClient
 from ..meme.narrative import PublicNarrativeClient
@@ -151,6 +152,7 @@ class ClusterJobManager:
         self.report_root = self.control_root / "cluster-reports"
         self.report_root.mkdir(parents=True, exist_ok=True)
         self.cache_path = self.control_root / "wallet-cluster-rpc-cache.sqlite"
+        self.checkpoint_root = self.report_root / "_checkpoints"
         self.registry_path = Path(__file__).resolve().parents[2] / "config" / "meme_special_addresses.json"
         configured=os.environ.get("SOLANA_RPC_URLS")
         if configured:
@@ -211,6 +213,55 @@ class ClusterJobManager:
             if job_id not in keep and job_id not in active:
                 self.jobs.pop(job_id,None)
 
+    def _checkpoint_binding(self, preset):
+        def client_kind(value):
+            return None if value is None else type(value).__module__ + "." + type(value).__qualname__
+        return digest(canonical({
+            "source": source_fingerprint(), "preset": preset, "options": CLUSTER_PRESETS[preset],
+            "budget": CLUSTER_RPC_JOB_BUDGETS[preset],
+            "registry": hashlib.sha256(self.registry_path.read_bytes()).hexdigest(),
+            "endpoints": hashlib.sha256(canonical(self.rpc_endpoints).encode()).hexdigest(),
+            "clients": [client_kind(getattr(self, name, None)) for name in
+                        ("market_client", "independent_market_client", "narrative_client")],
+        }))
+
+    def _paused_job(self, job_id):
+        if not self._valid_job_id(job_id) or not getattr(self, "checkpoint_root", None):
+            return None
+        checkpoint = None
+        try:
+            checkpoint = JobCheckpoint(self.checkpoint_root, job_id, readonly=True)
+            self.validate_mint(checkpoint.meta["mint"])
+            preset = checkpoint.meta["preset"]
+            if preset not in CLUSTER_PRESETS:return None
+            public = checkpoint.public_job()
+            try: checkpoint.check_binding(self._checkpoint_binding(preset), CLUSTER_RPC_JOB_BUDGETS[preset])
+            except CheckpointError as exc:
+                public.update(resume_available=False, resume_unavailable_reason=str(exc))
+            return public
+        except (OSError, ValueError, KeyError, TypeError, sqlite3.Error, CheckpointError):
+            return None
+        finally:
+            if checkpoint is not None:checkpoint.close()
+
+    def resume(self, job_id, mint):
+        mint = self.validate_mint(mint)
+        if not self._valid_job_id(job_id):raise ValueError("INVALID_CA_JOB_ID")
+        with self.lock:
+            current = self.jobs.get(job_id)
+            if current and current["mint"] == mint and current["status"] in {"QUEUED", "RUNNING"}:
+                return self._public_job(current)
+            if self._saved_job_report(job_id) is not None:
+                raise ValueError("CA_JOB_ALREADY_DONE")
+            paused = self._paused_job(job_id)
+            if paused is None or paused["mint"] != mint or not paused["resume_available"]:
+                raise ValueError("CA_JOB_NOT_RESUMABLE")
+            job = {**paused, "status": "QUEUED", "resume_available": False,
+                   "progress": {"stage": "QUEUED", "updated_at": time.time()}}
+            self.jobs[job_id] = job
+            job["future"] = self.executor.submit(self._run, job_id)
+            return self._public_job(job)
+
     def submit(self, mint: str, preset: str = "standard") -> dict:
         mint = self.validate_mint(mint)
         if preset not in CLUSTER_PRESETS:
@@ -232,6 +283,11 @@ class ClusterJobManager:
                 "error": None,
                 "progress": {"stage":"QUEUED","updated_at":time.time()},
             }
+            # Persist before acknowledging the POST or queuing any source work.
+            if getattr(self, "checkpoint_root", None):
+                job["checkpoint_version"] = 1
+                JobCheckpoint.create(self.checkpoint_root, job, self._checkpoint_binding(preset),
+                                     CLUSTER_RPC_JOB_BUDGETS[preset])
             self.jobs[job_id] = job
             job["future"] = self.executor.submit(self._run, job_id)
             return self._public_job(job)
@@ -498,19 +554,30 @@ class ClusterJobManager:
         with self.lock:
             job = self.jobs[job_id]
             job["status"] = "RUNNING"
-            job["started_at"] = time.time()
+            job["started_at"] = job.get("started_at") or time.time()
             mint = job["mint"]
             preset = job["preset"]
+            checkpoint_enabled = job.get("checkpoint_version") == 1
         cache = RpcCache(self.cache_path)
+        checkpoint = None
         try:
             opts = CLUSTER_PRESETS[preset]
             wire_budget = CLUSTER_RPC_JOB_BUDGETS[preset]
+            active_budget = wire_budget
+            if checkpoint_enabled:
+                checkpoint = JobCheckpoint(self.checkpoint_root, job_id)
+                checkpoint.begin(self._checkpoint_binding(preset), wire_budget)
+                active_budget = checkpoint.transport_budget()
             rpc = SolanaReadOnlyRPC(
                 self.rpc_endpoint,
                 fallback_endpoints=self.rpc_endpoints[1:],
                 cache=cache,
-                **wire_budget,
+                **active_budget,
             )
+            if checkpoint is not None:rpc = CheckpointRPC(checkpoint, rpc)
+            def source_client(name, enabled=True):
+                client = getattr(self, name, None) if enabled else None
+                return CheckpointClient(checkpoint, client, name) if checkpoint is not None and client is not None else client
             registry = load_registry(self.registry_path)
             report = WalletClusterAnalyzer(
                 mint,
@@ -524,15 +591,23 @@ class ClusterJobManager:
                 enumerate_holder_ranks=opts.get("enumerate_holder_ranks",False),
                 adaptive_history_max_pages=opts.get("adaptive_history_max_pages",1),
                 adaptive_funding_max_pages=opts.get("adaptive_funding_max_pages",1),
-                market_client=self.market_client,
-                independent_market_client=getattr(self,"independent_market_client",None) if opts.get("compare_market_sources") else None,
+                market_client=source_client("market_client"),
+                independent_market_client=source_client("independent_market_client", opts.get("compare_market_sources")),
                 compare_market_sources=opts.get("compare_market_sources",False),
-                narrative_client=getattr(self,"narrative_client",None) if opts.get("collect_narrative") else None,
+                narrative_client=source_client("narrative_client", opts.get("collect_narrative")),
                 collect_narrative=opts.get("collect_narrative",False),
                 read_pool_vaults=opts.get("read_pool_vaults",False),
                 audit_holder_binary=opts.get("audit_holder_binary",False),
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
+            if checkpoint is not None:
+                checkpoint.check_binding(self._checkpoint_binding(preset), wire_budget)
+                checkpoint.assert_can_publish()
+                report["collection_checkpoint"] = checkpoint.provenance()
+                report.setdefault("coverage", {})["rpc_call_count_scope"] = "JOB_RESERVED_ATTEMPTS_INCLUDING_UNCERTAIN_CRASH_OUTCOMES"
+                if checkpoint.meta["resume_count"]:
+                    report["completed_at"] = time.time()
+                    report["observed_at"] = checkpoint.meta["started_at"]
             # Recompute for every newly produced report; legacy GETs remain unchanged.
             report["analysis_completeness"] = report_completeness(report)
             # Do not persist/publish a successful job after an exhausted RPC deadline
@@ -566,6 +641,7 @@ class ClusterJobManager:
             }
             _atomic_write_text(by_job / f"{job_id}.done.json",
                                json.dumps(marker, sort_keys=True))
+            if checkpoint is not None:checkpoint.finish("DONE")
             # Marker is the irreversible success boundary. No later failure
             # may turn a committed result into a persisted ERROR.
             with self.lock:
@@ -580,6 +656,19 @@ class ClusterJobManager:
                 except Exception:
                     # This optional export cannot revoke the DONE commit.
                     pass
+        except CheckpointError as exc:
+            if self._saved_job_report(job_id) is not None:
+                with self.lock:
+                    job = self.jobs[job_id]
+                    job.update(status="DONE", error=None, finished_at=time.time())
+                    job["progress"] = {"stage": "DONE", "updated_at": job["finished_at"]}
+                return
+            with self.lock:
+                job = self.jobs[job_id]
+                job.update(status="ERROR", finished_at=time.time(),
+                           error={"type": "CA_CHECKPOINT_UNAVAILABLE", "reason": str(exc),
+                                  "message": "CLUSTER_ANALYSIS_CHECKPOINT_UNAVAILABLE"})
+                job["progress"] = {"stage": "ERROR", "updated_at": job["finished_at"]}
         except RPCJobBudgetExceeded as exc:
             if self._saved_job_report(job_id) is not None:
                 with self.lock:
@@ -630,7 +719,17 @@ class ClusterJobManager:
                 job["progress"] = {"stage":"ERROR","updated_at":job["finished_at"]}
                 self._prune_jobs_locked()
         finally:
-            cache.close()
+            try:cache.close()
+            finally:
+                if checkpoint is not None:
+                    try:
+                        if checkpoint.lock_fd is not None and self.jobs[job_id]["status"] != "DONE":
+                            checkpoint.finish("ERROR")
+                    finally:checkpoint.close()
+            if self.jobs[job_id]["status"] == "ERROR":
+                paused = self._paused_job(job_id)
+                with self.lock:
+                    self.jobs[job_id]["resume_available"] = bool(paused and paused["resume_available"])
 
     @staticmethod
     def _valid_job_id(job_id: str) -> bool:
@@ -663,14 +762,16 @@ class ClusterJobManager:
             return None
 
     def get(self, job_id: str) -> dict | None:
+        error_job = None
         with self.lock:
             job = self.jobs.get(job_id)
             if job is not None:
-                return self._public_job(job)
+                if job.get("status") != "ERROR":return self._public_job(job)
+                error_job = self._public_job(job)
         # Only a previously completed, durable exact-ID report can restore DONE.
         report = self._saved_job_report(job_id)
         if report is None:
-            return None
+            return error_job if error_job is not None else self._paused_job(job_id)
         return {
             "job_id": job_id, "mint": report["mint"], "status": "DONE",
             "created_at": None, "started_at": None, "finished_at": None,
@@ -1175,7 +1276,10 @@ class Handler(BaseHTTPRequestHandler):
         except ValueError:
             return self._json({"error":"INVALID_JSON_REQUEST"},400)
         try:
-            job = self.state.cluster_jobs.submit(body.get("mint",""), body.get("preset","standard"))
+            if "resume_job_id" in body:
+                job = self.state.cluster_jobs.resume(body["resume_job_id"], body.get("mint", ""))
+            else:
+                job = self.state.cluster_jobs.submit(body.get("mint",""), body.get("preset","standard"))
         except ValueError as exc:
             # Preserve only the known public CA validation code; never reflect
             # arbitrary exception text, RPC details or internal paths.
