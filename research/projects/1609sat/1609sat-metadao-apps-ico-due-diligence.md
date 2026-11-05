@@ -1,5 +1,24 @@
 # 1609SAT / MetaDAO Apps Program：SAT 备考产品、公售估值、早期流通与退出风险调查
 
+## 2026-11-05 Apps Program investment model and economic checks
+
+**Evidence class**: MetaDAO official documentation and live issuer page are PLATFORM/ISSUER CLAIMS unless separately validated. The Ecosystem Fund governance vote is independently visible as a passed MetaDAO decision, but fund transfers and the particular 1609SAT investment are **NOT** independently proven settled.
+
+- MetaDAO official Apps Program entry: https://metadao.com/apps . It says the platform commits first, the app raises publicly, and founders earn compensation against performance milestones. This is a platform operating model, not a guarantee of returns for any given new token.
+- MetaDAO decision `METADAO-042` (passed): https://metadao.fi/decisions/metadao-042 . The motion authorizes donating the former Ownership Capital escrow to a MetaDAO LLC Ecosystem Fund. It quotes a historic escrow balance of **1,908,771.32 USDC** and proposed individual investments of **$50K-$150K** in **$50K-$300K** early-stage raises, prioritizing consumer apps. The decision's passed status is verifiable; actual fund movement to a new Ecosystem Fund multisig and the **1609SAT-specific $50K transfer** have not been separately verified. The directly inspected SAT escrow at slot 465768722 remains **0 USDC**.
+- The 1609SAT issuer on https://metadao.com/companies/1609sat reports **400+ paying users**, **$5,000 monthly revenue**, **$3,500 monthly profit**, and **15,000 users**, all issuer-stated. Annualized $5,000 MRR gives **$60,000 annual revenue run rate**, and the **$1M token FDV** is **16.7x issuer-reported annualized revenue**. This P/S-style number is a narrative sensitivity only: tokenholders' value capture from company profit is **not established**, and revenue, profit, retention and CAC are not audited.
+- The $100,000 target less **20% reserved for initial USDC pool capital** implies about **$80,000 of launch-raise treasury USDC** if fully raised and those generic mechanics apply. At the onchain **16,000 USDC/month** spending limit, this funds **5 months of allowed spending without other income or spending changes**. This is a scenario, not observed escrow funding or a measured cash burn.
+- The issuer's nominal **87.1% team additional allocation** is a large long-term concentration, yet the issuer claims 90-day price average milestones (2x, 4x, 8x, 16x, 32x) and a **$25K/30-day team sale cap during the first 18 months**. Current direct Launch `additional_tokens_amount=87.1M SAT`; the designated additional recipient has not been independently bound to the specific downstream restrictions. Do not assume 87.1M tokens are initially tradable, and do not assume contract enforcement until verified.
+- At the intended $100K gross raise, the generic rule dedicating 20% USDC to LP is about **$20K on the USDC side**, versus a public sale allocation of **5M SAT**. This implies potentially high early exit slippage and uncertain realizable ROI even if quoted FDV rises. LP existence and depth remain to be checked after launch.
+- Generic official docs https://metadao.com/docs/sale and https://metadao.com/docs/whats-new describe a 4-day funding accumulator, early fill boost, Ownership Score and reserved Aligned Parties. Public commitments may be partially accepted and refunded; a $300 commitment is **not** equivalent to $300 confirmed allocation. This is independent from the unrelated SLOP auction's 300 USDG budget.
+- Token economic framing: MetaDAO describes an 'ownership coin' through control of treasury and key IP (https://metadao.com/docs/ownership-coins), but platform Terms (https://metadao.com/terms) do not promise ordinary equity or contractual profit distribution. Do not convert issuer revenue multiples mechanically into token intrinsic value, dividends or a guaranteed claim.
+- External user signal is limited and mixed: a few small Reddit SAT prep discussions include both supportive comments about past-paper question banks and skepticism about paying for AI-assisted practice. These are unverified anecdotes, not validated subscriber churn or company financials.
+
+**Decision gate**: Platform architecture worth tracking; 1609SAT remains `WATCH / NO_GO` for position sizing until (i) the SAT `StartLaunch` succeeds and quote escrow or funding record is reconciled against the stated $50K, (ii) actual public accepted subscriptions, (iii) project-specific performance package recipient/program and lock enforcement, and (iv) real post-close LP exit quotes and revenue evidence are checked. No change to user budget, alerts, execution or trading.
+
+---
+
+
 
 ## 2026-11-05 direct SAT Solana account and funding audit
 
