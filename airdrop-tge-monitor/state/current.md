@@ -1,3 +1,13 @@
+
+## Latest terminal cache sync — 2026-11-05 11:58:21 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-05/115821-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-05/115821-attempt.md
+- final_readback: VERIFIED blob 82c4542efd9fc2ad490c4cf640cc4c139f371780; commit 463aaf07ba763fa2a3893b4f5120d61c7fcf2ff1
+- run_status: PARTIAL; scheduled_shard: 3; executed_shard: 3; last_meaningful_attempt_at_shard3: 2026-11-05T11:58:21+07:00 PARTIAL_ONLY
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 8; gmail_attempted: false; app_notification: false
+- StandX DUSD original/claim wallet rights SOURCE_GAP; Surf Nov13 and Cambria Base Oct29 previously delivered. No qualifying new ACTION. Schedule HH:00 unchanged; actual invocation off-minute.
+
 ## Latest terminal cache sync — 2026-11-05 10:03:36 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-05/100336-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-05/100336-attempt.md
