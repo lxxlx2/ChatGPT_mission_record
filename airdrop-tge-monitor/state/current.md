@@ -1,4 +1,14 @@
 
+## Latest terminal cache sync — 2026-11-05 16:02:45 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-05/160213-final.md
+- attempt_path: airdrop-tge-monitor/runs/2026-11-05/160213-attempt.md
+- final_readback: VERIFIED blob cc3baf570bf9b2e91155fb264913bd368d5fcd3c; commit 3ec4b3b9e3539b92ea11e6ada235070c9e1638bf
+- run_status: PARTIAL; scheduled_shard: 0; executed_shard: 0; last_meaningful_attempt_at_shard0: 2026-11-05T16:02:45+07:00 PARTIAL_ONLY
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 5; gmail_attempted: false; app_notification: false
+- StandX DUSD original X 403 and JS claim inaccessible, SOURCE_GAP; Surf Nov13 already delivered; no new ACTION. Browser requires originating context. Existing task unchanged.
+
+
 ## Latest terminal cache sync — 2026-11-05 12:57:22 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-05/125722-final.md
 - attempt_path: airdrop-tge-monitor/runs/2026-11-05/125722-attempt.md
