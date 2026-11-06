@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import inspect
 import json
+import re
 import math
 import sqlite3
 import time
@@ -592,6 +593,7 @@ class WalletClusterAnalyzer:
         self.enumerate_holder_ranks=enumerate_holder_ranks is True
         self._owner_history_candidates={};self._owner_history_selection={}
         self._extra_history_accounts=set();self._classified_holder_transactions={}
+        self._classified_holder_contexts={}
         self._owner_account_source="OBSERVED_TOP20_ACCOUNTS"
         self.historical_accounts=[];self.historical_account_scans=[]
         self._historical_context_seen=set();self._historical_evidence_keys=set()
@@ -680,6 +682,28 @@ class WalletClusterAnalyzer:
         for account in self._owner_history_selection[owner]["holders"]:
             first=self._earlier_buy(first,self._scan_holder_bounded(account,mapping,owners,limit,max_pages))
         return first
+
+    def _reject_conflicting_transaction_context(self,tx,signature,expected_slot,phase):
+        # Historical-account discovery must not be the only consumer protected
+        # from a contradictory response. Reject explicit slot/signature conflicts
+        # before transfers, classification or prefunding can use this payload.
+        # Legacy inputs without these fields remain unverified by the existing
+        # discovery checks; absence alone is not promoted to a verified context.
+        reason=None
+        if isinstance(tx,dict):
+            if "slot" in tx:
+                if type(tx["slot"]) is not int or tx["slot"]<=0:
+                    reason="TRANSACTION_CONTEXT_UNAVAILABLE"
+                elif expected_slot is not None and (type(expected_slot) is not int or expected_slot!=tx["slot"]):
+                    reason="TRANSACTION_SLOT_CONFLICT"
+            transaction=tx.get("transaction")
+            if reason is None and isinstance(transaction,dict) and "signatures" in transaction:
+                signatures=transaction["signatures"]
+                if not isinstance(signatures,list) or not signatures or signatures[0]!=signature:
+                    reason="TRANSACTION_IDENTITY_MISMATCH"
+        if reason:
+            self.tx_errors.append({"signature":signature,"phase":phase+"_context","error":reason})
+        return reason is not None
 
     def _observe_historical_accounts(self,tx,signature,owner,expected_slot=None):
         if not self.enumerate_holder_ranks or (owner,signature) in self._historical_context_seen:return
@@ -1082,6 +1106,7 @@ class WalletClusterAnalyzer:
             if not sig:continue
             cache_key=(holder.owner,sig)
             if cache_key in self._classified_holder_transactions:
+                if self._reject_conflicting_transaction_context(self._classified_holder_contexts[cache_key],sig,meta.get("slot"),"holder"):continue
                 first=self._earlier_buy(first,self._classified_holder_transactions[cache_key])
                 continue
             try:tx=self.rpc.call("getTransaction",[sig,{"commitment":"finalized","encoding":"jsonParsed","maxSupportedTransactionVersion":1}],ttl=3650*86400)
@@ -1093,6 +1118,7 @@ class WalletClusterAnalyzer:
                 self.tx_errors.append({"signature":sig,"phase":"holder","error":"UNAVAILABLE_ON_PUBLIC_RPC"})
                 continue
             self._observe_historical_accounts(tx,sig,holder.owner,meta.get("slot"))
+            if self._reject_conflicting_transaction_context(tx,sig,meta.get("slot"),"holder"):continue
             bt=tx.get("blockTime")
             for tr in _native_transfers(tx):
                 if tr["source"] in top_owners and tr["destination"] in top_owners:
@@ -1128,6 +1154,11 @@ class WalletClusterAnalyzer:
                     }
                     first=self._earlier_buy(first,found)
             self._classified_holder_transactions[cache_key]=found
+            context={"slot":tx["slot"]} if "slot" in tx else {}
+            transaction=tx.get("transaction")
+            if isinstance(transaction,dict) and isinstance(transaction.get("signatures"),list) and transaction["signatures"]:
+                context["transaction"]={"signatures":[transaction["signatures"][0]]}
+            self._classified_holder_contexts[cache_key]=context
         return first
     def _scan_funding(self,holder:Holder,first,top_owners,funding_limit=None):
         if not first:return
@@ -1147,6 +1178,7 @@ class WalletClusterAnalyzer:
                 self.tx_errors.append({"signature":sig,"phase":"funding","error":"UNAVAILABLE_ON_PUBLIC_RPC"})
                 continue
             self._observe_historical_accounts(tx,sig,holder.owner,meta.get("slot"))
+            if self._reject_conflicting_transaction_context(tx,sig,meta.get("slot"),"funding"):continue
             bt=tx.get("blockTime")
             if bt is None or bt>first["block_time"]:continue
             for source,lamports in _native_funders(tx,holder.owner):
@@ -1841,6 +1873,16 @@ def markdown(report:dict)->str:
     lines += ["", "## Raw selected-pool vault balance evidence (not price or executable quote)", "",
               "Raw vault balances alone do not establish net reserves. A separately recorded documented reserve model does not establish USD valuation, tradability, deployed-binary semantics or indexer snapshot parity.",
               "~~~json", json.dumps(report.get("pool_vaults") or {},ensure_ascii=False,indent=2), "~~~"]
+    narrative=report.get("narrative") or {}
+    summary=narrative.get("story_summary") or {}
+    if summary.get("version")==1:
+        def source_text(value):return re.sub(r'([\\`*_{}\[\]<>])',r'\\\1',' '.join(str(value or '').split()))
+        lines += ["", "## Narrative content (source-attributed)", "",
+                  "- Topics mentioned by read sources: "+source_text(' / '.join(summary.get("themes") or [])),
+                  "- Interaction evidence: unverified. A name or an unread post link does not prove interaction.",
+                  "- Exact-CA official recognition: unverified; source content is retained independently."]
+        for claim in (narrative.get("evidence") or [])[:3]:
+            lines.append("- Source statement: "+source_text(claim.get("excerpt"))+" | "+source_text(claim.get("source_url")))
     lines += ["", "## External narrative source claims (bounded; attribution unverified)", "", "~~~json",
               json.dumps(report.get("narrative") or {},ensure_ascii=False,indent=2), "~~~"]
     lines += ["", "## Required evidence gaps", "", "~~~json",

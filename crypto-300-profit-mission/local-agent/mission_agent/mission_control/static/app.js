@@ -1572,10 +1572,23 @@ function renderNarrativeSources(report,links) {
   if (!n || n.version!==1) return '<div class="narrative-state"><strong>此历史报告未记录外部来源读取</strong><p>仅保留市场附带的链接，未补造帖子、发布时间或官方认领。</p></div><div class="narrative-links">'+links+'</div>';
   const evidence=Array.isArray(n.evidence) ? n.evidence.filter(r=>r && r.classification==='THIRD_PARTY_CLAIM' && typeof r.excerpt==='string' && /^[a-f0-9]{64}$/.test(r.response_sha256 || '')).slice(0,3) : [];
   const dateText=value=>{const stamp=Number(value);return Number.isFinite(stamp)&&stamp>0&&stamp<4102444800 ? new Date(stamp*1000).toLocaleString('zh-CN') : '未记录';};
+  const themeLabels=new Set(['AI／模型训练','爬虫／智能体','动物／社区模因','游戏／虚拟世界','文化／艺术','人物／事件关联说法']);
+  const actorLabels={ELON_MUSK:'Elon Musk',DONALD_TRUMP:'Donald Trump',VITALIK_BUTERIN:'Vitalik Buterin'};
+  const validStory=r=>r.story && r.story.version===1 && r.story.interaction_status==='UNVERIFIED' && /^[a-f0-9]{64}$/.test(r.content_sha256 || '') ? r.story : null;
+  const themes=[...new Set(evidence.flatMap(r=>{const s=validStory(r);return s && Array.isArray(s.themes) ? s.themes.filter(x=>themeLabels.has(x)) : [];}))];
+  const postUrl=value=>{
+    const url=safeHttpUrl(value);
+    if (!url) return '';
+    try {const u=new URL(url);return u.protocol==='https:' && !u.username && !u.password && !u.search && !u.hash && ['x.com','www.x.com','twitter.com','www.twitter.com'].includes(u.hostname) && /^\/[A-Za-z0-9_]{1,30}\/status\/[0-9]+\/?$/.test(u.pathname) ? url : '';} catch {return '';}
+  };
   const cards=evidence.map(r=>{
     const url=safeHttpUrl(r.source_url);
     if (!url || !url.startsWith('https://')) return '';
-    return '<article class="cluster-card"><strong>来源页面陈述 · 官方归属未核实</strong><p>'+esc(r.title || r.publisher_host || '来源页面')+'</p><p>'+esc(r.excerpt)+'</p><p>'+esc(r.exact_ca_mentioned===true ? '静态文本或描述中提及精确 CA；仍未核实官方认领' : '精确 CA 未提及；保留页面叙事，归属仍未核实')+'</p><p>作者声明 '+esc(r.author_claim || '未记录')+'；发布时间声明 '+esc(r.published_at_claim || '未记录')+'；本报告首次读取 '+esc(dateText(r.first_seen_at))+'</p><a class="link-btn" href="'+esc(url)+'" target="_blank" rel="noreferrer">来源页面 ↗</a></article>';
+    const story=validStory(r),actors=story && Array.isArray(story.actors_mentioned) ? story.actors_mentioned.filter(x=>Object.hasOwn(actorLabels,x)).map(x=>actorLabels[x]) : [];
+    const posts=story && Array.isArray(story.post_links) ? [...new Set(story.post_links.map(postUrl).filter(Boolean))].slice(0,4) : [];
+    const kind={MARKET_WEBSITE_HINT:'项目资料链接中的陈述',MARKET_SOCIAL_HINT:'社交页面中的陈述',LAUNCHPAD_PAGE:'发射台页面中的陈述'}[r.source_kind] || '来源页面陈述';
+    const relations=story ? '<p>人物／事件：'+esc(actors.length ? '已读文本提及 '+actors.join('、')+'；是否实际互动尚未核实' : '已读文本未提取到可识别人物；具体内容见来源摘录')+'</p><p>证据强度：已读取页面陈述；未独立核实原始互动。'+(posts.length ? '保留原帖链接线索，链接目标未读取。' : '本页未提取到可核对的原帖链接。')+'</p>'+posts.map(p=>'<a class="link-btn" href="'+esc(p)+'" target="_blank" rel="noreferrer">原帖链接线索（未核实） ↗</a>').join('') : '<p>此历史报告未记录主题或人物互动分析；保留原来源陈述。</p>';
+    return '<article class="cluster-card"><strong>'+esc(kind)+' · 官方归属未核实</strong><p>'+esc(r.title || r.publisher_host || '来源页面')+'</p><p>'+esc(r.excerpt)+'</p>'+relations+'<p>CA 认领：尚未核实。'+esc(r.exact_ca_mentioned===true ? '静态文本或描述中提及精确 CA；仍未核实官方认领' : '精确 CA 未提及；保留页面叙事，归属仍未核实')+'</p><p>作者声明 '+esc(r.author_claim || '未记录')+'；发布时间声明 '+esc(r.published_at_claim || '未记录')+'；本报告首次读取 '+esc(dateText(r.first_seen_at))+'</p><a class="link-btn" href="'+esc(url)+'" target="_blank" rel="noreferrer">来源页面 ↗</a></article>';
   }).join('');
   const reasons={URL_NOT_ALLOWED:'URL 不符合本轮公开 HTTPS 读取范围',DNS_NOT_PUBLIC:'地址解析包含非公开目标，未连接',PUBLIC_IPV4_UNAVAILABLE:'没有可用的公开 IPv4',DNS_UNAVAILABLE:'地址解析失败',REDIRECT_NOT_FOLLOWED:'来源跳转未跟随',NOT_HTML:'来源未返回 HTML',COMPRESSED_BODY_NOT_SUPPORTED:'未读取压缩响应',RESPONSE_LIMIT:'响应超过本轮上限',SOURCE_UNAVAILABLE:'来源未能读取',FETCH_WORKER_FAILED:'来源读取未完成',FETCH_TIMEOUT:'来源读取超时',ACCESS_WALL_OR_SCRIPT_ONLY:'访问墙或脚本页面，未绕过',NO_EXTRACTABLE_CLAIM:'没有可提取的静态页面陈述',SOURCE_LANGUAGE_NOT_SELECTED:'该来源语言不在本轮选择范围',RESPONSE_TEXT_INVALID:'页面文本编码无法读取',SOURCE_LIMIT:'达到本轮来源上限',DUPLICATE_CONTENT:'与已读页面陈述重复，未当作独立佐证'};
   const attempts=(Array.isArray(n.attempts)?n.attempts:[]).slice(0,7).map(a=>{
@@ -1583,7 +1596,8 @@ function renderNarrativeSources(report,links) {
     const reason=a.status==='CLAIM_READ'?'已读取页面陈述':reasons[a.reason] || (/^HTTP_[0-9]{3}$/.test(a.reason || '')?'来源返回 '+a.reason:'未完成来源读取');
     return '<li>'+esc(source || '来源提示')+'：'+esc(reason)+(a.requested===true?'':'（未请求）')+'</li>';
   }).join('');
-  return '<div class="narrative-state"><strong>有界公开来源证据</strong><p>页面陈述属于第三方声明。未做全网检索、未证明最早起源或官方 CA 归属；脚本不执行，登录或访问墙不绕过。</p></div>'+ (cards || '<p>本轮没有可展示的外部页面陈述；未读取不等于叙事不存在。</p>')+
+  return '<div class="narrative-state"><strong>叙事讲什么</strong><p>'+esc(themes.length ? '已读来源提及主题：'+themes.join('、')+'。具体内容和出处见下方。' : evidence.length ? '保留以下已读来源内容；本报告未提供可核对的主题摘要。' : '本轮尚未读到可展示的叙事内容。')+'</p><p>叙事内容与 CA 认领分别核对；人物被提及或出现原帖链接，不代表已发生互动或认领该币。</p></div>'+ (cards || '<p>本轮没有可展示的外部页面陈述；未读取不等于叙事不存在。</p>')+
+    '<details><summary>有界公开来源证据与完整性</summary><p>页面陈述属于第三方声明。未做全网检索、未证明最早起源或官方 CA 归属；脚本不执行，登录或访问墙不绕过。</p></details>'+
     (attempts?'<details><summary>来源读取范围与缺口</summary><ul>'+attempts+'</ul></details>':'<p>本次未记录公开来源读取；保留资料链接。</p>')+'<div class="narrative-links">'+links+'</div>';
 }
 

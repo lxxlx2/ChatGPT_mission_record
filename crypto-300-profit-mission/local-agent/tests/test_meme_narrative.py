@@ -172,6 +172,9 @@ def test_actual_analyzer_uses_public_claims_without_upgrading_official_ca_or_com
     assert next(row for row in report['analysis_completeness']['requirements'] if row['id']=='narrative')['status']=='PARTIAL'
     assert report['analysis_completeness']['status']=='INCOMPLETE_EVIDENCE'
     assert 'External narrative source claims' in markdown(report)
+    assert 'Narrative content (source-attributed)' in markdown(report)
+    assert 'Exact-CA official recognition: unverified' in markdown(report)
+    assert report['narrative']['evidence'][0]['excerpt'] in markdown(report)
 
 
 def test_unverified_primary_identity_does_not_start_public_fetch():

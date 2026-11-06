@@ -1192,3 +1192,55 @@ test('uncollected completeness domains never label capability paths as used sour
   assert.doesNotMatch(html,/已用来源：市场参考|已用来源：同池索引来源|已用来源：有界发射台/);
   assert.match(html,/全局持有人余额排名/,'unrecorded required domains stay visible');
 });
+
+function storyReport() {
+  const report=structuredClone(fixture);
+  report.narrative={version:1,status:'PARTIAL',official_recognition:'UNVERIFIED',attempts:[],evidence:[{
+    classification:'THIRD_PARTY_CLAIM',source_url:'https://project.example.org/',source_kind:'MARKET_WEBSITE_HINT',
+    title:'A crawler model',excerpt:'A crawler trains an AI model.',exact_ca_mentioned:false,
+    response_sha256:'a'.repeat(64),content_sha256:'b'.repeat(64),
+    story:{version:1,themes:['AI／模型训练','爬虫／智能体'],actors_mentioned:['ELON_MUSK'],
+      interaction_status:'UNVERIFIED',post_links:['https://x.com/elonmusk/status/1234567890123456789']},
+  }]};
+  return report;
+}
+
+test('source narrative explains content and keeps actor interaction separate from CA recognition',()=>{
+  const h=harness();h.context.renderClusterReport(storyReport());
+  const html=h.element('cluster-narrative').innerHTML;
+  assert.match(html,/叙事讲什么/);assert.match(html,/AI／模型训练/);
+  assert.match(html,/A crawler trains an AI model\./);
+  assert.match(html,/Elon Musk.*是否实际互动尚未核实/);
+  assert.match(html,/CA 认领：尚未核实/);assert.match(html,/精确 CA 未提及/);
+  assert.match(html,/原帖链接线索（未核实）/);
+  assert.doesNotMatch(html,/已核实互动|已获得背书|推荐买入/);
+});
+
+for (const change of ['forged_verification','broken_content_hash','forged_theme_and_actor']) test('narrative refuses unsupported story fields '+change,()=>{
+  const report=storyReport(),row=report.narrative.evidence[0];
+  if(change==='forged_verification') row.story.interaction_status='VERIFIED_ELON_ENDORSEMENT';
+  if(change==='broken_content_hash') row.content_sha256='bad';
+  if(change==='forged_theme_and_actor') {row.story.themes=['<img src=x onerror=bad()>'];row.story.actors_mentioned=['<script>bad</script>'];}
+  report.narrative.story_summary={version:1,status:'VERIFIED',themes:['FORGED_SUMMARY'],official_recognition:'VERIFIED'};
+  const h=harness();h.context.renderClusterReport(report);const html=h.element('cluster-narrative').innerHTML;
+  assert.match(html,/A crawler trains an AI model/);assert.match(html,/CA 认领：尚未核实/);
+  assert.doesNotMatch(html,/VERIFIED_ELON_ENDORSEMENT|FORGED_SUMMARY|<img|<script>/);
+});
+
+test('narrative post hints reject unsafe targets and do not trigger reads',()=>{
+  const report=storyReport(),row=report.narrative.evidence[0];
+  row.story.post_links=['javascript:bad()','https://127.0.0.1/elonmusk/status/123',
+    'https://x.com.attacker.example/elonmusk/status/123','https://u:SECRET@x.com/elonmusk/status/123',
+    'https://x.com/elonmusk/status/123?key=SECRET','https://x.com/elonmusk/status/123'];
+  const h=harness();h.context.renderClusterReport(report);const html=h.element('cluster-narrative').innerHTML;
+  assert.doesNotMatch(html,/SECRET|attacker|127\.0\.0\.1|javascript:/);
+  assert.match(html,/href="https:\/\/x\.com\/elonmusk\/status\/123"/);
+  assert.equal(h.requests.filter(x=>x.url.startsWith('https://')).length,0);
+});
+
+test('legacy narrative is preserved without inventing story or actor verification',()=>{
+  const report=storyReport();delete report.narrative.evidence[0].story;delete report.narrative.evidence[0].content_sha256;
+  const h=harness();h.context.renderClusterReport(report);const html=h.element('cluster-narrative').innerHTML;
+  assert.match(html,/A crawler trains an AI model/);assert.match(html,/历史报告未记录主题或人物互动分析/);
+  assert.doesNotMatch(html,/已读来源提及主题：|已读文本提及 Elon Musk/);
+});
