@@ -1,18 +1,18 @@
 # Airdrop / TGE Monitor State (bounded materialized cache)
-Last synchronized: 2026-11-06 18:04:09 Asia/Bangkok
+Last synchronized: 2026-11-06 19:01:26 Asia/Bangkok
 Status: PARTIAL, verified_complete=false. This file is a compact convenience index, never completion evidence. Original append-only attempt/final records and state/known-events.md are authoritative. Last fully verified complete sweep remains **2026-10-10T07:52:16+07:00**; partial run must never advance it.
 
 ## Latest terminal
-- authoritative_final: `airdrop-tge-monitor/runs/2026-11-06/180409-final.md`
-- final_blob_sha: `1bade609b79f6b43b9a6b11f936a435262c60bb4`
+- authoritative_final: `airdrop-tge-monitor/runs/2026-11-06/190126-final.md`
+- final_blob_sha: `pending-readback`
 - run_status: PARTIAL
-- candidate_count: 1
+- candidate_count: 2
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
-- scheduled_shard: 2
-- executed_shard: 2
+- scheduled_shard: 3
+- executed_shard: 3
 - original_x_context: UNAVAILABLE
 - completeness: Unverified original StandX DUSD issuer claim and user eligibility; other bounded-shard first-party source gaps remain
 
@@ -20,7 +20,7 @@ Status: PARTIAL, verified_complete=false. This file is a compact convenience ind
 - shard0: 2026-11-06 16:04:42 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/160442-final.md`; PARTIAL_ONLY
 - shard1: 2026-11-06 13:59:54 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/135954-final.md`; PARTIAL_ONLY
 - shard2: 2026-11-06 18:04:09 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/180409-final.md`; PARTIAL_ONLY
-- shard3: 2026-11-06 15:00:36 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/150036-final.md`; PARTIAL_ONLY
+- shard3: 2026-11-06 19:01:26 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/190126-final.md`; PARTIAL_ONLY
 
 ## Open urgent and eligibility state
 - Always-hourly urgent5: Concrete, MetaMask, Claynosaurz, HEEBOO, Space @intodotspace. Dynamic Surf and StandX; full scope and four-shard groups remain defined by `REGISTRY.md`.
