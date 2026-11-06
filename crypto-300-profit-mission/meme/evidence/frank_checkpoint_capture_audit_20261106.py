@@ -29,6 +29,7 @@ def main():
     parser.add_argument('--agent', type=Path, required=True)
     parser.add_argument('--capture', type=Path, required=True)
     parser.add_argument('--expected-agent-sha', default='e977cc09023bdfcc9ce80660aedf2d58d2febc5f')
+    parser.add_argument('--output', type=Path)
     args = parser.parse_args()
     source_sha = subprocess.check_output(['git', '-C', str(args.agent), 'rev-parse', 'HEAD'], text=True).strip()
     assert source_sha == args.expected_agent_sha and len(source_sha)==40, 'SOURCE_SHA_CHANGED'
@@ -189,7 +190,7 @@ def main():
         'network_attempts_blocked': counts['network_attempts_blocked'],
         'live_resume_count': meta['resume_count'],
     }
-    (args.capture / 'offline-audit.json').write_text(json.dumps(result, indent=2) + '\n')
+    (args.output or args.capture / 'offline-audit.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(result, indent=2))
 
 

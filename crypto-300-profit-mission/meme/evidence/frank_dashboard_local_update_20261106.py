@@ -1,4 +1,4 @@
-"""Fixed 3a96 -> 1f0e Dashboard-only final narrative layout maintenance.
+"""Fixed 1f0e -> fd5d Dashboard-only narrative card layout maintenance.
 
 Default is preflight only. --apply-authorized-dashboard-only reloads the existing
 Dashboard LaunchAgent, preserving Scanner/Loop/data. A private prepared plan,
@@ -21,8 +21,8 @@ import time
 import urllib.parse
 import urllib.request
 
-OLD='3a96bc776cbd115596df53c77d1767cb7fe466d2'
-NEW='1f0e475c5027ed11e7b9532a699e073fe5036459'
+OLD='1f0e475c5027ed11e7b9532a699e073fe5036459'
+NEW='fd5dddd5f664703b612f7736f5483bb355f971c1'
 LABEL='com.jerson.frank-meme.dashboard'
 LOOP='com.jerson.frank-meme.loop'
 AUTH='USER_20261106_REQUIRES_ACTUAL_LOCAL_FEATURES_LATEST_DASHBOARD_ONLY'
