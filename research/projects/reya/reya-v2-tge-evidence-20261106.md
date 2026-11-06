@@ -1,5 +1,21 @@
 # Reya ($REYA): v2 progress, declining legacy business, TGE readiness and prediction-market evidence
 
+## 2026-11-06 user-confirmed full $5K Reya allocation and CoinList legacy wallet migration
+
+**Latest user correction and status priority:** User explicitly confirms **all $5,000 submitted in the Reya CoinList sale were allocated**. Update position to `USER_CONFIRMED_FULL_5000_USD_FILLED / PENDING_REYA_DISTRIBUTION / NO_TGE_OR_CLAIM_CONFIRMED`. Original Gmail receipt independently confirms **$5,000 commitment** on Nov25 2025; allocation was communicated in a Dec5 email but the email body itself gives no numbers. Therefore **full fill is USER_CONFIRMED (stronger than inference, not a direct account/API readback)**. User has **no Reya points**, only this paid purchase. Expected nominal quantity at $0.01875 = **266,666.6667 REYA** and 50% first-release on eventual TGE, still **theoretical until account or original issuer ledger is read**. Do not say actual account allocation was independently retrieved or wallet tokens are already delivered.
+
+**Authenticated browser inspection** [CoinList Reya sale page](https://coinlist.co/reya) as of Nov6 shows profile logged in and the section `Your orders — Your orders in this sale will appear here` **empty**, despite user-confirmed 2025 allocation. An empty frontend panel is **not evidence of a refunded or cancelled Reya order**. Old system has been migrated. Official [CoinList FAQ](https://coinlist.co/faq) states:
+- CoinList migrated from custodial to non-custodial wallets, so new `Wallet Total` only shows supported self-custody tokens; older historical balances and legacy holdings are at [Legacy Wallet](https://coinlist.co/wallet/legacy).
+- Official FAQ under `What happens to my pending token unlocks and distributions?`: users **still own unvested, undelivered entitlements** from earlier CoinList purchases; CoinList plans token-specific distribution methods and will contact users as distributions occur. **Issuer/platform promise**, not verified project-specific Reya escrow or binding refund guarantee.
+- Old domain `old.coinlist.co` publicly redirects to new homepage; unauthenticated public fetch of Legacy Wallet failed. In this Chat-mode browser access only the user-opened Reya page was readable; **Legacy Wallet was not open yet** and no account data from that page was obtained.
+- New wallet's current list of supported assets does **not include REYA** in the FAQ; unlisted future token distributions need not show as current wallet assets. Do not ask the user to migrate funds or export a private key to "recover" unissued REYA.
+- Need separately obtain user-specific authenticated legacy order/ledger readback, purchase-date Reya Token Purchase Agreement and written refund/issuer-non-delivery clause if TGE is permanently cancelled. The platform's promise to distribute tokens **is not** protection against project insolvency or a right to refund successful allocations. No cancellation, bankruptcy, token delivery, repayment, or official claim time verified.
+
+**No funds moved, new monitor, user support request, email or automation created.**
+
+---
+
+
 ## 2026-11-06 CoinList purchase at risk and failure/refund terms
 
 **User scope correction:** The user holds a **CoinList token-sale subscription only**, **no Reya points or airdrop allocation claimed**. Prior answers must **not** recommend keeping Season 1 points, or attribute Season 2 economics to this user's actual cost basis. The relevant exposure is a 2025 CoinList purchase, and the key question is principal recovery if the issuer fails before TGE.
