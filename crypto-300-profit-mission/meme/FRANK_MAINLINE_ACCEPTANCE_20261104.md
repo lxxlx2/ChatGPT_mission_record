@@ -1,8 +1,8 @@
 # Frank 原问题统一验收（2026-11-04）
 
-固定已安装产品源码：`e069a925b71985c35b75cc8fd01eb75a9c97dd87`；本轮父提交：`5f86548ccfb51144280ec16ff0431aaac966b323`。前轮33f2→5f86548原始验收保留于历史回执；本轮增量见[失败交易修复证据](./evidence/frank-failed-tx-replay-20261104.json)。当前状态见 [STATUS](./STATUS.md)，机器证据见 [回执](./evidence/frank-mainline-acceptance-20261104.json)。
+当前已安装产品源码：`e977cc09023bdfcc9ce80660aedf2d58d2febc5f`；产品父提交：`b0dc014d4512a28257017e16fc22725d9625c757`；本次安装基线：`e069a925b71985c35b75cc8fd01eb75a9c97dd87`。当前状态见 [STATUS](./STATUS.md)，当前机器证据见[本机更新回执](./evidence/frank-dashboard-local-update-20261106.json)。下文保留Nov4起各阶段的固定SHA记录，不把旧版本或旧数据改写为当前。
 
-结论：**修复与本机交付 PASS；真实来源验收及原始完整诉求 PARTIAL；INVEST_NO_GO / TRADE_NO_GO。** 不以CI、合成结果或任务结束代替全量尽调。独立review按用户豁免；此行描述e069已安装修复记录，新增恢复候选见下方增量。本轮无付费采购、交易或新监控。
+结论：**当前软件安装与本机交付 PASS；真实来源验收及原始完整诉求 PARTIAL；INVEST_NO_GO / TRADE_NO_GO。** 不以CI、合成结果或任务结束代替全量尽调。独立review按用户豁免。本次仅Dashboard更新，无付费采购、交易或新监控；历史阶段状态以下方日期为准。
 
 2026-11-05重启恢复增量：原PR220候选`b0dc014d4512a28257017e16fc22725d9625c757`（本轮实现基线`e069a925b71985c35b75cc8fd01eb75a9c97dd87`）已完成同源码/配置与原预算内的手动恢复：新任务先持久化再回应POST，GET不采集，明确继续操作才恢复原ID；完整性失败状态也持久停止。21项检查点/2137完整本机Python/159前端、真实捕获数据跨进程离线重放、实际用户Chrome合成界面和最新CI分别留证。候选未安装，下面e069本机交付记录保持原时间/源码身份。历史数据不改称当前，全量CA仍PARTIAL。详见[新回执](./evidence/frank-ca-restart-resume-20261105.json)。
 
@@ -10,7 +10,9 @@
 
 2026-11-06本机最新功能更新：按用户本轮明确指令，正式本地Dashboard已从e069切换到PR220最新`e977cc09023bdfcc9ce80660aedf2d58d2febc5f`，新PID58030。前文“候选未安装”为上轮历史状态。固定执行器先提交至`aec4e5cbbb71a0c74be08077f61d5a2602ab7c62`并读回，再仅重载既有Dashboard；Scanner/MC Loop未重启。487旧文件/28报告/一致SQLite备份校验及旧新隔离HTTP通过；安装目录81项回归、实际正式Chrome刷新/信号/旧报告GET、安装目录合成跨重启恢复与原ID重读通过。控制数据/报告/批准策略等哈希未变；旧报告和D2保留原时间，本轮真实RPC/CA POST0。Scanner两份维护文件已与PR244最新438bbe20 blob核对一致。软件与本机更新PASS，完整真实CA仍PARTIAL、交易NO_GO。详见[本轮更新回执](./evidence/frank-dashboard-local-update-20261106.json)。
 
-| 原问题 / 交付项 | 实际验收 | 结论 |
+下表保留2026-11-04 e069阶段的验收记录（包括当时PID96221）；当前安装版本与PID58030以上方Nov6更新及当前回执为准。前轮33f2→5f86548原始验收及[e069失败交易修复](./evidence/frank-failed-tx-replay-20261104.json)保持原SHA身份。
+
+| 原问题 / 交付项 | 当时实际验收 | 当时结论 |
 |---|---|---|
 | Scanner复用已有私有RPC、恢复/去重维护 | 原固定1f2c6af仍运行；本轮实时快照LIVE/0错误/无漂移/无积压；未执行Scanner重启 | 自然BUY/ADD识别及不达门槛抑制已补验；达标通知/长期行为不外推 |
 | 最新CA候选留在Git，实际Mac仍旧版 | 最终完整SHA已安装，PID96221，服务HTML/JS与固定源码匹配；旧源码和28份报告备份/哈希核验 | PASS |
