@@ -1,5 +1,21 @@
 # Reya ($REYA): v2 progress, declining legacy business, TGE readiness and prediction-market evidence
 
+## 2026-11-06 authenticated Legacy Wallet check and historic external-wallet distribution rule
+
+**Actual connected logged-in browser inspection (read-only, 2026-11-06):**
+- `https://coinlist.co/wallet/legacy`: **"Legacy CoinList Balances" / "No custodied balances found" / "You do not have any balances in your legacy CoinList wallet."** UI exposes **"Request tax documents"** and **"Request transaction reports"** controls; no historical Reya record or contract shown.
+- `https://coinlist.co/wallet`: **"Your orders: No orders yet"** and **"Invested with an external wallet? Connect it to view your orders."** A newly shown embedded Ethereum address `0x40aA…89ac` and Solana address `HZeidi…fGdJ` are **new UI wallets only** and **must not be assumed to equal the historic Reya allocation receiving wallet**. Do not attach them to historic Reya sale without primary confirmation.
+- `https://coinlist.co/reya`: user authenticated, **"Sale Ended"**, `Your orders` empty. **These are interface presentation gaps, not evidence of issuer cancellation, payment reversal, missing beneficial entitlement, or security breach.**
+- **Critical project-specific rule**: CoinList archived [Reya historical sale FAQ](https://tr.coinlist.co/help/what-is-reya?locale=tr) says **users MUST link an external wallet during purchase**, and **token distributions go to that wallet regardless of which wallet supplied funding**. The page also states 50% unlock at TGE + remaining 50% linear six months. Therefore the historic intended distribution address may be different from both newly created CoinList addresses. Linking a new external wallet now must **not** be assumed to override or restore original delivery settings.
+- [CoinList 2026 migration FAQ](https://coinlist.co/faq) assures still-undistributed/locked user token entitlements will be supported through token-specific distribution later. This is a **platform statement**, not a guarantee of issuer financial solvency, TGE timing, direct refund, or an audited allocation ledger.
+
+**Result:** `CONFIRMED_USER_PURCHASE_5000 / EMPTY_NEW_UI / NO_LEGACY_CUSTODIAL_BALANCE / HISTORICAL_EXTERNAL_RECEIVER_ADDRESS_UNRESOLVED / ISSUER_TERMINATION_REFUND_UNRESOLVED`. Correct earlier mistaken association with Reya Season 1/2 point-farming: user **never participated in Reya points farming**, only the paid CoinList sale. Do not revive airdrop-participant status.
+
+**Next (only if user elects)**: use platform `Request transaction reports` control and inspect resulting historical sales ledger; if unhelpful contact CoinList support for 2025 Reya order ID, $5000 allocated cost, token entitlement count, original external wallet address, historic purchase TPA and legally relevant issuer cancellation/non-delivery/refund process. **Do not activate the report request, connect a wallet, export keys, transfer funds, or send support email without explicit user authorization.**
+
+---
+
+
 ## 2026-11-06 user-confirmed full $5K Reya allocation and CoinList legacy wallet migration
 
 **Latest user correction and status priority:** User explicitly confirms **all $5,000 submitted in the Reya CoinList sale were allocated**. Update position to `USER_CONFIRMED_FULL_5000_USD_FILLED / PENDING_REYA_DISTRIBUTION / NO_TGE_OR_CLAIM_CONFIRMED`. Original Gmail receipt independently confirms **$5,000 commitment** on Nov25 2025; allocation was communicated in a Dec5 email but the email body itself gives no numbers. Therefore **full fill is USER_CONFIRMED (stronger than inference, not a direct account/API readback)**. User has **no Reya points**, only this paid purchase. Expected nominal quantity at $0.01875 = **266,666.6667 REYA** and 50% first-release on eventual TGE, still **theoretical until account or original issuer ledger is read**. Do not say actual account allocation was independently retrieved or wallet tokens are already delivered.
