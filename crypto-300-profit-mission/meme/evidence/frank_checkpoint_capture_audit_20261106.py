@@ -28,9 +28,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--agent', type=Path, required=True)
     parser.add_argument('--capture', type=Path, required=True)
+    parser.add_argument('--expected-agent-sha', default='e977cc09023bdfcc9ce80660aedf2d58d2febc5f')
     args = parser.parse_args()
     source_sha = subprocess.check_output(['git', '-C', str(args.agent), 'rev-parse', 'HEAD'], text=True).strip()
-    assert source_sha == 'e977cc09023bdfcc9ce80660aedf2d58d2febc5f', 'SOURCE_SHA_CHANGED'
+    assert source_sha == args.expected_agent_sha and len(source_sha)==40, 'SOURCE_SHA_CHANGED'
     assert not subprocess.check_output(['git', '-C', str(args.agent), 'status', '--porcelain', '--', 'mission_agent', 'config'], text=True)
     sys.path.insert(0, str(args.agent.resolve()))
     from mission_agent.meme import cluster

@@ -1,8 +1,9 @@
-"""Fixed e069 -> e977 Dashboard-only maintenance for the Nov6 user request.
+"""Fixed e977 -> 3a96 Dashboard-only maintenance for the Nov6 continuation.
 
 Default is preflight only. --apply-authorized-dashboard-only reloads the existing
 Dashboard LaunchAgent, preserving Scanner/Loop/data. A private prepared plan,
-verified backups and isolated old/new HTTP preflight are mandatory. No source
+verified backups and old/new in-process Handler preflight are mandatory. No
+temporary listener is opened. No source
 fetch, CA POST, RPC, notification, database restore or trading operation.
 """
 import argparse
@@ -20,8 +21,8 @@ import time
 import urllib.parse
 import urllib.request
 
-OLD='e069a925b71985c35b75cc8fd01eb75a9c97dd87'
-NEW='e977cc09023bdfcc9ce80660aedf2d58d2febc5f'
+OLD='e977cc09023bdfcc9ce80660aedf2d58d2febc5f'
+NEW='3a96bc776cbd115596df53c77d1767cb7fe466d2'
 LABEL='com.jerson.frank-meme.dashboard'
 LOOP='com.jerson.frank-meme.loop'
 AUTH='USER_20261106_REQUIRES_ACTUAL_LOCAL_FEATURES_LATEST_DASHBOARD_ONLY'
@@ -109,7 +110,8 @@ def main():
                'no_open_ca_worker_cache_twice':True,'scanner_unchanged':True,'loop_unloaded':True,'real_rpc_or_ca_post':0}
     write(backup/'switch-preflight.json',preflight)
     if not args.apply_authorized_dashboard_only:print(json.dumps(preflight));return
-    smoke=json.loads((backup/'isolated-http-preflight.json').read_text())
+    smoke=json.loads((backup/'in-process-handler-preflight.json').read_text())
+    assert smoke['mode']=='IN_PROCESS_HANDLER_NO_LISTENER'
     assert smoke['status']=='PASS' and smoke['old_backup']['status']=='PASS' and smoke['candidate']['status']=='PASS'
     lock=(backup/'switch.lock').open('w');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
     events=[];unloaded=False;changed=False
