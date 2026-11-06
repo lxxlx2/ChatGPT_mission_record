@@ -1,0 +1,288 @@
+{
+  "schema_version": 1,
+  "at_utc": "2026-11-05T15:36:21.911955+00:00",
+  "scope": "Existing manual CA unfinished-job restart recovery, isolated validation only",
+  "source_head": "b0dc014d4512a28257017e16fc22725d9625c757",
+  "source_parent": "38a954723b4770545836919387def8154c5f4795",
+  "implementation_base": "e069a925b71985c35b75cc8fd01eb75a9c97dd87",
+  "initial_implementation_commit": "b9b2eb6bc359e5b48062d7a5961aa5b44dc9d6be",
+  "latest_main_checked": "b24debd87e1eb9aaf4f93a9531207f5981a37305",
+  "main_delta_affects_Frank_or_rules": false,
+  "AGENTS_blob": "6a1217d85e217754dea557bcd4e23982efaf3949",
+  "DEVELOPMENT_RULES_blob": "5e8f89418bf206ee77dec9a803b808262d62a72a",
+  "authorization": {
+    "local_debugging_and_isolated_tests": true,
+    "free_existing_source_read_budget_unlimited": true,
+    "independent_review_waived": true,
+    "independent_APPROVE_claimed": false,
+    "production_or_trade_permission_inferred_from_tests": false
+  },
+  "changes": {
+    "files": [
+      "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+      "crypto-300-profit-mission/local-agent/mission_agent/meme/job_checkpoint.py",
+      "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py",
+      "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+      "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/index.html",
+      "crypto-300-profit-mission/local-agent/tests/fixtures/frank_ca_checkpoint_browser_server.py",
+      "crypto-300-profit-mission/local-agent/tests/test_ca_job_checkpoint.py",
+      "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs",
+      "crypto-300-profit-mission/meme/WALLET_CLUSTER_LOCAL_TOOL.md"
+    ],
+    "file_sha256": {
+      "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py": "dff3231507102613aefd49a3386732f490561aca02e892c4f7c46f5aecebea1e",
+      "crypto-300-profit-mission/local-agent/mission_agent/meme/job_checkpoint.py": "df2642c78c74b98ddd1f5a9acbd5ca64a95bde54415bbb79ed95f3cbd7255ff7",
+      "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py": "f4e289a8967bc261bb8793dc7cd428ff9592e3a50e3ce934ff785677bb6ff937",
+      "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js": "7992f521124dad329cd8d181b1b41efab9d81ab5884351ab5ab6cedda86ebf4f",
+      "crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/index.html": "d3cbc6de2ee337a49c924c8da6ef3b766384bf034def39265ba33066e8d3dc1d",
+      "crypto-300-profit-mission/local-agent/tests/fixtures/frank_ca_checkpoint_browser_server.py": "08303983e92f093c429a18b13addb89b6ba4c3f93032ec15587efbaa43370c7d",
+      "crypto-300-profit-mission/local-agent/tests/test_ca_job_checkpoint.py": "3a5dc64e0e7324dc9d29e88e43c730dc5d359c50135a8870f2438bcf42c29af1",
+      "crypto-300-profit-mission/local-agent/tests/test_frank_ca_report_render.mjs": "3ee86b4cfe052ea780bad747272ac05cbaeddb35309eaaf02d57c88d93ff1af5",
+      "crypto-300-profit-mission/meme/WALLET_CLUSTER_LOCAL_TOOL.md": "49b982c7a38f7df303cc886e909ae9c619c1eba98c9f327b774eae42c7f4e6fa"
+    },
+    "acknowledged_job_persisted_before_POST_reply": true,
+    "GET_never_starts_or_resumes_collection": true,
+    "resume_requires_explicit_same_ID_same_Mint_POST": true,
+    "immutable_logical_read_prefix_rebuilds_analyzer": true,
+    "per_wire_reservation_before_transport": true,
+    "original_global_wire_and_deadline_not_reset": true,
+    "known_provider_cooldown_and_pacing_retained": true,
+    "unknown_crash_attempt_can_be_overcounted_not_underbudgeted": true,
+    "separate_process_lease": true,
+    "same_job_double_click_deduplication": true,
+    "registry_code_provider_and_plan_binding": true,
+    "RPC_cache_TTL_not_extended": true,
+    "historical_source_epoch_label_in_JSON_Markdown_UI": true,
+    "integrity_faults_and_unconsumed_prefix_stay_nonresumable_after_restart": true,
+    "legacy_jobs_without_checkpoints_not_retroactively_recovered": true,
+    "new_missing_checkpoint_never_falls_back_to_fresh_scan": true,
+    "no_new_provider_daemon_scheduler_or_notification_path": true
+  },
+  "counterexamples_and_fixes": [
+    {
+      "baseline": "e069a925b71985c35b75cc8fd01eb75a9c97dd87",
+      "observed": "Acknowledged unfinished job becomes None after a new manager instance",
+      "red": "1 failed",
+      "green": "Persistent PAUSED job; reads do not queue source work"
+    },
+    {
+      "candidate": "38a954723b4770545836919387def8154c5f4795",
+      "observed": "Read-sequence integrity stop incorrectly becomes resumable after another restart",
+      "red": "1 failed,19 deselected",
+      "green": "Nonrecoverable stop persists in private metadata"
+    },
+    {
+      "observed": "Unconsumed replay-prefix stop also lost its nonrecoverable status",
+      "red": "1 failed,20 deselected",
+      "green": "Publication check records the same durable integrity stop"
+    }
+  ],
+  "local_Mac_tests": {
+    "environment": {
+      "python": "3.14.7",
+      "pytest": "8.3.5",
+      "numpy": "2.5.3",
+      "preexisting_review_venv": true,
+      "packages_installed_this_followup": 0
+    },
+    "final_full": {
+      "passed": 2137,
+      "skipped": 0,
+      "warnings": 14,
+      "seconds": 86.36,
+      "command": "PYTHONPATH=<fixed_offline_guard>:. python -B -m pytest -q -p no:cacheprovider -p frank_offline_guard --basetemp=<unique_private_temp> tests"
+    },
+    "checkpoint_targeted": {
+      "passed": 21,
+      "command": "python -B -m pytest -q -p no:cacheprovider tests/test_ca_job_checkpoint.py"
+    },
+    "frontend": {
+      "passed": 159,
+      "command": "node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_ca_report_render.mjs tests/test_frank_d2_ingress_ui.mjs tests/test_frank_f01_source_only.cjs tests/test_frank_f01_failure_state.cjs"
+    },
+    "guard_source_commit": "6ebd37fba354666c48d6bb7aac9c939b2db180e5",
+    "guard_repo_path": "crypto-300-profit-mission/meme/evidence/frank-scanner-rpc-maintenance-20261031/frank_offline_guard.py",
+    "syntax_and_diff_check": "PASS",
+    "first_integrated_run_retained": {
+      "failed": 3,
+      "passed": 2131,
+      "reason": "Legacy direct worker fixtures bypassed new submit/checkpoint creation. Explicit checkpoint_version preserves legacy execution; new missing checkpoints still stop."
+    },
+    "earlier_closed_2089_suite_not_reused_as_this_result": true
+  },
+  "offline_original_real_capture": {
+    "status": "PASS_REAL_CAPTURE_PROCESS_RESTART_REPLAY",
+    "original_unique_request_bytes_verified": 572,
+    "original_success_response_hashes_verified": 566,
+    "crash_exit_code": 73,
+    "crash_reserved_attempt": 150,
+    "original_wire_attempts": 572,
+    "checkpoint_reserved_attempts": 573,
+    "uncertain_attempts_conservatively_retained": 1,
+    "locally_replayed_logical_reads": 144,
+    "ordinary_cache_hits": 15,
+    "new_network_calls": 0,
+    "blocked_network_attempts": 0,
+    "report_semantic_roots_identical": true,
+    "only_changed_roots": [
+      "coverage"
+    ],
+    "only_changed_coverage_fields": [
+      "rpc_calls",
+      "rpc_endpoint_calls"
+    ],
+    "global_history_complete": false,
+    "original_report_unchanged": true,
+    "historical_clock_not_fresh_source_or_latency": true,
+    "job_checkpoint_module_sha256": "df2642c78c74b98ddd1f5a9acbd5ca64a95bde54415bbb79ed95f3cbd7255ff7",
+    "report_sha256": "b4d899c155d0b03fc57844921a79c3de347480166dfc9f9727a8bfd86337e7e5"
+  },
+  "actual_user_Chrome": {
+    "source_head": "b0dc014d4512a28257017e16fc22725d9625c757",
+    "browser": "USER_GOOGLE_CHROME",
+    "fixture": "frank_ca_checkpoint_browser_server.py",
+    "scope": "Actual UI and HTTP manager/checkpoint, synthetic transport and prior browser identity only",
+    "fixture_initial_manager_memory_cleared": true,
+    "real_process_exit_proof_is_separate_offline_test": true,
+    "reload_and_status_GET_add_no_collection": true,
+    "before_and_after_GET": {
+      "synthetic_wire": 1,
+      "source_POSTs": 0
+    },
+    "one_manual_POST_same_job_then_DONE": true,
+    "after_manual_POST_and_DONE_reload": {
+      "synthetic_wire": 2,
+      "source_POSTs": 1
+    },
+    "saved_exact_job_and_Mint_visibly_verified": true,
+    "historical_source_notice_visible": true,
+    "observed_console_errors": 1,
+    "observed_console_errors_are_existing_extension_injection_only": true,
+    "wallet_extension_error_not_hidden_or_claimed_as_zero": true,
+    "wallet_connection_or_signature": 0,
+    "synthetic_CA_POST": 1,
+    "real_RPC": 0,
+    "real_CA_POST": 0,
+    "production_writes": 0,
+    "tab_left_open": true,
+    "temporary_foreground_fixture_exited": true,
+    "screenshots_sha256": {
+      "frank-ca-checkpoint-final-paused-20261105.png": "c46658c215a8ce2dab1f749ea4a77d3402380fd949aab520dbdff594151ebd71",
+      "frank-ca-checkpoint-final-verified-20261105.png": "dcc2600dc99befbd05219d0ed7b84c8a0445bd08b55a714cd4965c98865d0688"
+    }
+  },
+  "GitHub_CI": {
+    "head_sha": "b0dc014d4512a28257017e16fc22725d9625c757",
+    "run_id": 42055482256,
+    "run_number": 111,
+    "job_id": 127342604632,
+    "compiled_merge_sha": "59abb4f268149ae0af6a291f523ad04b2fbc5c2d",
+    "conclusion": "success",
+    "raw_logs_read_back": true,
+    "python_passed": 2109,
+    "python_skipped": 4,
+    "python_seconds": 55.2,
+    "skip_reasons_not_listed_by_q_mode": true,
+    "frontend_passed": 159,
+    "browser_checks": 41,
+    "page_errors": [],
+    "blocked_external_requests": [],
+    "synthetic_fixture_POSTs": 8,
+    "real_RPC": 0,
+    "real_CA_POST": 0,
+    "production_requests": 0,
+    "browser_version": "151.0.7922.34",
+    "CI_not_used_as_actual_Mac_Chrome_evidence": true,
+    "browser_checks_scope": "Existing synthetic CA regression flow; new checkpoint UI independently exercised in actual user Chrome."
+  },
+  "latest_existing_source_probe": {
+    "body_bytes": 247,
+    "body_complete": true,
+    "body_limit_bytes": 65536,
+    "body_sha256": "58146bd5f9e6e0af858d3829c18c378b76a25b15ac1112b0e7d1847c2db511ee",
+    "content_type": "application/json",
+    "elapsed_seconds": 0.118631,
+    "full_holder_parity_verified": false,
+    "full_rank_completeness": "NOT_ASSESSED",
+    "historical_endpoint_identity_verified": false,
+    "http_status": 429,
+    "notifications_or_trades": 0,
+    "production_writes": 0,
+    "provider_scope": "EXISTING_CONFIGURED_PROVIDER_INDEX_0",
+    "request_sha256": "2470e7730c7d785e7d165655576aa95d55079c0b0f2c72deac9dfc7da3ecd211",
+    "retry_after": null,
+    "status": "HTTP_ERROR_CAPTURED",
+    "wire_attempts": 1,
+    "result_file_written_at_utc": "2026-11-05T15:12:16.717250+00:00",
+    "parent": {
+      "elapsed_seconds": 0.240641,
+      "max_elapsed_seconds": 60,
+      "max_wire_attempts": 1,
+      "status": "WORKER_EXITED",
+      "worker_returncode": 0
+    },
+    "full_scan_started": false
+  },
+  "source_probe_interpretation": "New independent one-call standard GPA diagnostic still429. It is not feature live-source acceptance or a full CA scan; old six missing error bodies remain unresolved.",
+  "this_followup_actual_real_RPC_attempts": 1,
+  "this_followup_real_CA_POST": 0,
+  "free_authorization_phase_actual_attempts_after_probe": 443,
+  "free_phase_breakdown": {
+    "diagnostic": 8,
+    "prior_history_followup": 435
+  },
+  "original_572_attempt_run_remains_separate_historical_source_run": true,
+  "runtime": {
+    "new_candidate_installed": false,
+    "prior_Dashboard_release_not_switched": true,
+    "prior_installed_Dashboard_source": "e069a925b71985c35b75cc8fd01eb75a9c97dd87",
+    "scanner_health_read_only_after": {
+      "status": "RUNNING",
+      "last_poll_at": "2026-11-05T15:36:03.036660+00:00",
+      "pid": 81945,
+      "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "source_drift": false,
+      "consecutive_errors": 0,
+      "raw_pending": 0,
+      "model_unprocessed": 0,
+      "production_trading": "NO_GO"
+    },
+    "production_service_lifecycle_operations": 0,
+    "production_data_writes": 0
+  },
+  "other_effects": {
+    "new_PR": 0,
+    "new_provider_or_DAS": 0,
+    "new_monitor_or_automation": 0,
+    "paid_purchase_or_upgrade": 0,
+    "email_or_notification_send": 0,
+    "wallet_signing_or_trade": 0,
+    "merge": 0
+  },
+  "remaining": [
+    "Free existing-provider standard GPA429; provider underlying policy unresolved; no full Mint rank closure.",
+    "All current/closed accounts, material Owners beyond Top20, true first acquisition/funding, full identity/beneficial control and remaining protocol/Token2022 cases still incomplete.",
+    "Cross-source market/narrative parity not collected in this source scope; D2 remains Nov1.",
+    "Qualifying notification latency, MC root anchor/user signature and October original failure-job/trigger evidence remain missing.",
+    "Same-code/config recovery only within original task limits; old uncheckpointed jobs, code migration and expired-budget continuation unsupported."
+  ],
+  "verdict": {
+    "restart_resume_code_and_isolated_validation": "PASS",
+    "actual_feature_live_source_acceptance": "NOT_RUN",
+    "whole_CA_requirements": "PARTIAL",
+    "production": "NO_GO",
+    "investment": "INVEST_NO_GO",
+    "trading": "TRADE_NO_GO"
+  },
+  "private_evidence_hashes": {
+    "final-gate-full.txt": "281c64dc82ef652d49f95ba884c25fe9f969ec3a32de41fc694bbdac2b61c2fc",
+    "final-gate-targeted.txt": "060c9db815e0251b2ba27804e52633748ea9936da8b86bf7de739141f4cecfb5",
+    "frontend.txt": "54f8e94060fd6b636d9f5890055d4db15ca043a21f6e9711b5b69df5ee720a7e",
+    "persistent-integrity-red.txt": "b41020b419170058d775a7b7c0631f02c56e224839a433b3947d7e44644f5271",
+    "unconsumed-integrity-red.txt": "7165ad77b0bb38eeac412adc889665b75d4b9a08a706af7d1cf64904330ead72",
+    "captured-job-resume-final/comparison.json": "a9427d6ea0c82c89374dfdc4073901eeaf0cc2bd165f5a14c9c4222776ab66d5",
+    "chrome-acceptance-final.json": "f15b3cf5b1de8a9436df9f9be2f61a0901f3c314527bf3d18a7f374a482992ea",
+    "qa-cleanup-final.json": "3379bce75aa042d6ec43a3b87123a24d04e1339eb22655aa160260d9ef187f23"
+  },
+  "current_status_superseded_by": "frank-ca-material-owner-history-20261106.json"
+}

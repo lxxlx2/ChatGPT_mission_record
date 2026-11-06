@@ -1,0 +1,599 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-11-01T07:15:32.516780+00:00",
+  "verdict": "PASS",
+  "verdict_scope": "Existing read-only Dashboard source-age and candidate BUY scope repair, actual Chrome acceptance, incremental offline Scanner verification",
+  "overall_old_plan": "PARTIAL",
+  "rules_main_sha": "8b6cebb9a325aeafc833068e3c2ec8be5f13193a",
+  "rules_delta": "AGENTS.md / docs/DEVELOPMENT_RULES.md unchanged from previous verified main",
+  "source": {
+    "runtime_sha": "dd17c9dcc057c79f4984029fff188d88b9b9d45e",
+    "runtime_parent": "700373e59c17f35aa465664e6eff01057fcfa0c9",
+    "original_pr178_sha": "39a500fa0b6c96353f7016f43981f8cf04fee530",
+    "original_pr178_parent": "9a259359a3e9ede4540e90276f8fef71df0d0bae",
+    "original_pr232_sha": "db62f3e2c8c9cab7621e4b3ee263f7ac4e51941c",
+    "original_pr232_parent": "7812df52526d12ef205e471b9de2a9556269feef"
+  },
+  "scanner_pr244_head": "438bbe20899108a858a513648ab8c8c05b11e05e",
+  "defects": [
+    {
+      "trigger": "Leave an already-read D2 snapshot open across existing refresh cycles",
+      "before": {
+        "before": 20207,
+        "after": 20207,
+        "elapsed_seconds": 18.137,
+        "observed_at": "2026-11-01T07:03:21.051Z",
+        "frozen_despite_existing_refresh": true
+      },
+      "repair": "Compute displayed age from declared observed_at_utc using Date.now on the existing five-second refresh callback. No extra interval or source request. Missing, naive, invalid and future times remain unknown. Clear age rendering state on new or invalid queries so an old age cannot overwrite loading/error states."
+    },
+    {
+      "trigger": "Compare F01 latest BUY age with the existing recent trade list",
+      "before": {
+        "at": "2026-11-01T07:03:33.730568+00:00",
+        "runtime": {
+          "pid": 3402,
+          "status": "LIVE",
+          "consecutive_errors": 0,
+          "source_drift": false,
+          "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+          "last_successful_poll": "2026-11-01T07:03:22.467997+00:00"
+        },
+        "f01": {
+          "as_of_epoch": 1793516613.7346618,
+          "newest_indexed_buy_age_seconds": 975695.7346618176,
+          "source_recent_count": 0,
+          "eligible_count": 0
+        },
+        "candidate_latest_buy_epoch": 1792540918.0,
+        "trade_rows": 100,
+        "buy_rows": 21,
+        "latest_trade_buy_epoch": 1793379764,
+        "candidate_and_trade_buy_denominators_differ": true
+      },
+      "repair": "Label the existing metric as BUY-side candidate-record age. No eligibility, threshold, classifier, trade or API-denominator change. Candidate-age epoch and latest indexed-trade BUY epoch legitimately differ; the original all-indexed-BUY label was too broad."
+    }
+  ],
+  "tests": {
+    "full_command": "PYTHONPATH=/private/tmp/frank-pr244-evidence-20261031:. /private/tmp/frank-pr244-venv-20261031/bin/python -B -m pytest -q -p no:cacheprovider -p frank_offline_guard tests",
+    "full_results": {
+      "source-age-runtime-full-final.txt": {
+        "summary": "1569 passed, 3 skipped, 14 warnings in 85.27s (0:01:25)",
+        "post_suite_cleanup_warning_count": 169
+      },
+      "source-age-pr178-full-final.txt": {
+        "summary": "1541 passed, 3 skipped, 14 warnings in 84.92s (0:01:24)",
+        "post_suite_cleanup_warning_count": 41
+      },
+      "buy-scope-pr232-full.txt": {
+        "summary": "1579 passed, 3 skipped, 14 warnings in 86.83s (0:01:26)",
+        "post_suite_cleanup_warning_count": 0
+      }
+    },
+    "full_exit_codes": {
+      "runtime": 0,
+      "pr178": 0,
+      "pr232": 0
+    },
+    "warnings": "Each suite has 14 existing fork warnings and 3 unrelated missing-numpy skips. Runtime/PR178 also emitted 169/41 post-suite pytest rm_rf directory-not-empty cleanup warnings; tests and process exit codes remained passing. Raw output retained; no cross-worktree cleanup attempted.",
+    "red_counterexamples": {
+      "D2": "10 passed / 4 failed on prior implementation",
+      "F01": "10 passed / 1 failed on prior implementation"
+    },
+    "final_node_commands": [
+      "node tests/test_frank_d2_ingress_ui.mjs",
+      "node tests/test_frank_f01_source_only.cjs",
+      "node tests/test_frank_f01_failure_state.cjs",
+      "node --check mission_agent/mission_control/static/app.js"
+    ],
+    "post_commit_node_results": {
+      "D2": 15,
+      "F01_source": 10,
+      "F01_failure_and_scope": 11,
+      "total": 36,
+      "failures": 0,
+      "syntax": "exit0"
+    },
+    "source_age_counterexamples": [
+      "advances elapsed age without another GET or balance rerender",
+      "timer cannot overwrite invalid/pending/rejected/failed query state",
+      "missing/naive/invalid/future UTC timestamps remain unknown",
+      "declared source UTC overrides inconsistent cached response age",
+      "new lookup retains exact-Mint scope and uses its own source timestamp"
+    ],
+    "pr178_ci": {
+      "run_id": 41283725957,
+      "conclusion": "success"
+    },
+    "pr232_ci": {
+      "run_id": 41283560231,
+      "conclusion": "success"
+    },
+    "independent_review": "Waived by user; not performed; no independent APPROVE",
+    "ci_is_not_mac_acceptance": true
+  },
+  "chrome": {
+    "browser": "Google Chrome",
+    "before": 20700,
+    "after": 20718,
+    "elapsed_seconds": 20.022,
+    "observed_at": "2026-11-01T07:11:33.713Z",
+    "rows_unchanged": 100,
+    "f01_scope_label_correct": true,
+    "invalid_query_state_preserved_after_next_tick": true,
+    "reread_recovery": "PASS",
+    "tab_kept_open": true
+  },
+  "browser_interval_count": {
+    "before": 4,
+    "after": 4,
+    "new_intervals": 0
+  },
+  "deployment": {
+    "status": "PASS",
+    "observed_at": "2026-11-01T07:11:13.133204+00:00",
+    "source_sha": "dd17c9dcc057c79f4984029fff188d88b9b9d45e",
+    "parent_sha": "700373e59c17f35aa465664e6eff01057fcfa0c9",
+    "old_dashboard_pid": 52130,
+    "dashboard_pid": 84500,
+    "scanner_pid_unchanged": true,
+    "scanner_pid": 3402,
+    "scanner_code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "scanner_status": "LIVE",
+    "source_drift": false,
+    "control_health_status": "STALE",
+    "source_recent_count": 0,
+    "history_count": 7,
+    "eligible_count": 0,
+    "current_balance_verified": false,
+    "html_js_match_pinned_source": true,
+    "d1_http": 200,
+    "d2_http": 200,
+    "d2_source_observed_at": "2026-11-01T01:26:32.578080+00:00",
+    "preserved_byte_hashes": {
+      "control_db": true,
+      "control_health": true,
+      "d2_source": true,
+      "plist": true
+    },
+    "old_backup_source_files": 451,
+    "old_backup_import_preflight": "PASS",
+    "loop_remains_unloaded": true,
+    "rpc_or_ca_post_calls_by_release": 0,
+    "notification_send_calls": 0,
+    "rollback_exercised": false
+  },
+  "preflight": {
+    "old_backup": {
+      "import": "PASS",
+      "candidates": 7,
+      "control_health": "STALE"
+    },
+    "new": {
+      "import": "PASS",
+      "candidates": 7,
+      "control_health": "STALE",
+      "f01_status": "SOURCE_ONLY",
+      "history_count": 7,
+      "recent_count": 0,
+      "eligible_count": 0
+    }
+  },
+  "final_runtime": {
+    "at": "2026-11-01T07:12:50.836025+00:00",
+    "dashboard_sha": "dd17c9dcc057c79f4984029fff188d88b9b9d45e",
+    "dashboard_pid": 84500,
+    "dashboard_source_clean": true,
+    "scanner": {
+      "pid": 3402,
+      "status": "LIVE",
+      "consecutive_errors": 0,
+      "source_drift": false,
+      "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "last_successful_poll": "2026-11-01T07:12:25.367193+00:00"
+    },
+    "counts": {
+      "signatures": 5959,
+      "v1_seen": 5959,
+      "signals": 7,
+      "outbox": 9,
+      "gmail_delivery": 2,
+      "email_content": 2
+    },
+    "loop_unloaded": true
+  },
+  "incremental_scanner_audit": {
+    "at": "2026-11-01T14:13:01.824053+07:00",
+    "source_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "network_requests": 0,
+    "production_sql_write": false,
+    "notifications_sent": 0,
+    "comparison_contract": "classifier fields plus Ledger person_id, position_change and signal_ids; full stored passive record equality checked",
+    "already_verified_rows_excluded": 60,
+    "new_rows_checked": 18,
+    "checks": [
+      {
+        "signature_sha256": "6faebad4cf40d18fbc19a0bcc47187742f748984cd122b871417ca43f1dc3c27",
+        "raw_file_sha256": "0a71fccd91765fc10ea607d56508182f8fa646a475b710b2bd65a336a8e14441",
+        "raw_canonical_sha256": "5ca1221f87c5eebd6289d6f09d75c0762cac8ed020f89ac7737db3abf85b60b4",
+        "stored_record_sha256": "51fc8e4b954a2c2db18d24ecfd2df4b0bc02cdc02f970ae959562f4d294b4b3f",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "b9125225d02ff9d213752a687c870633a623eab8c843c7fdc220f9d0a3dcd558",
+        "raw_file_sha256": "fff6d8b5980c1bb54ac65a6f3594724b00334b4a127d0030d0409bcdb0a5f153",
+        "raw_canonical_sha256": "cad4791393e3ab9a6b35664618a7f9c97e7f76d1340ddd755085b76b66d61d41",
+        "stored_record_sha256": "bce1481e4f284741482d9ceb36e53a1195e7b2d8d903130f4bc52be7e0536b1d",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "2c51e6259a4c651c2c199b4712e3ced40f5b184fb1e1e6288fb23ccf7a502738",
+        "raw_file_sha256": "ec1f2d930339971c5f88f668ef58c229fe33ba2a891669836d77d46e4c3e8372",
+        "raw_canonical_sha256": "8eeb4f79ba4df31d0f1134f7e5f63bcd7cba37b7107685a99703790e70d9779f",
+        "stored_record_sha256": "0af67c75f82725713a75869b2a3c158b20eb4c272ffca80f7ed1dd29dd66be7c",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "f46c5b0d7cb4d6adfdbabd6deeb8685482c42363a73728ff66181c63466a0587",
+        "raw_file_sha256": "55854944d78a487a85b4d0885a79ac813333888f8c967c4cc98ec871dcbd1af1",
+        "raw_canonical_sha256": "aa81947e143a39875b4fdde264bcb3261cbf8ee6d6a482a1f6f88bef7cc6c166",
+        "stored_record_sha256": "6ba3250d36c199fedfcfc2d57cbb17c730a55aa92341344ecf098729c59f7e4b",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "f3272f5749b148f7dba7dc79aaa474e6383c5fb3dbdf28f277e95e1d3411f7a8",
+        "raw_file_sha256": "6724c8ebb4840be5e4da3be0bd038fd59e2112578e48ba9e53eebeb3288aa33a",
+        "raw_canonical_sha256": "4abcbefa3ef2b486d01d352a0396d021293c0e173fe7f2844b500b92e87eea67",
+        "stored_record_sha256": "2b0fb9e4fa5fb5f3a7350295411b674fdb8c7dc7163c0df280b0c3c4f9224a45",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "5cd29e1734c9e8c851c379d236cfd26b82782b87c0c6f6018d9e99d7feb290ed",
+        "raw_file_sha256": "2c735e0b7277df6048fc14bc9efed4f42d126e86bb860b97e4290b7e8bdcecb4",
+        "raw_canonical_sha256": "b487ced36511f869a2110f3be4d8f083164495cc39c6730d9ac3e5c56b2da901",
+        "stored_record_sha256": "e293a7fc832265859991be1125d7ed43ef0db5c3ad06ca40d4fcc319ca20e41d",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "988f3fd52336004fb8d84257bdbd5bb49711ab6bf5ee0d4e36a7b5036d9133e5",
+        "raw_file_sha256": "097cee0763eb849f25a55185d2dd7977cfb7332ff896438e38f16a3957f15d7f",
+        "raw_canonical_sha256": "03b3a10c24694e43092ff8143f589337fd370746ee943461bf38b9cf77479617",
+        "stored_record_sha256": "c741b5d3f1e20a0d4851acb3b844ebff2c8fb0287f3e09e75aa6216e91d6af43",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "6b771d04570794a82434988e3c8af99cf9d434be9f93df1c00ac8723642ff5bc",
+        "raw_file_sha256": "fd723a32fcf3eeef6192518635456cb095c3d24b226f6854ecc27d9ed64d3edf",
+        "raw_canonical_sha256": "f7e3c056c9cba25f14fa7e0f0aedf4620df5ef3425323ee1546025fd4e0e975c",
+        "stored_record_sha256": "5fd12d2cecf52affc23de16e96ebfc857e728021949e3f8dd76ea36a51e316c8",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "8d3bd7e28c740f584d12bc186b12bd53f4f1714e74e1bf6bfd88e9f875938615",
+        "raw_file_sha256": "2c2c9938983aad9cc948b840ca3356a5846caf7fb1cf1544c141a4ab702721d1",
+        "raw_canonical_sha256": "269a3bb9ce37e8aa1efbdbd58d020e3140e0cfae68962fd6b8054cffca5ad8e8",
+        "stored_record_sha256": "0e9451cd8084c16b2598c149a7f64934e6ecf5c8f42afd0d5e97bc23fa32bab7",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "c2591f7b167fee6f76e6b34f3cf0b1e020673adcfca0404d8a0cdd65ea4e6414",
+        "raw_file_sha256": "90274ea4f35fb3ec770ce663e07aba8f8ab6b2f7fae39b33cc67a51493c22a7c",
+        "raw_canonical_sha256": "547478abfdda1230543f1eeb5cab1589420240342506433b110541816c76c8b3",
+        "stored_record_sha256": "30ed682e65da196df9e79c7dbb9a4eaceda1c428285a5ce0c710f26c8fe2e2cf",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "ec582a76e249c2a4910f6f12662e9be3918d7180d09ba788f4ed3c0920d2d734",
+        "raw_file_sha256": "583899d94882fc76e73cdf3b8f054671883e97f5e51c4c434a6c45c4a21d65b3",
+        "raw_canonical_sha256": "0bf6848c7140411e96fd2b383557281ffac1cb3d7b8e804c0ba083698d6f001e",
+        "stored_record_sha256": "de24fa75417604499c70c4db26809a84447442660ea0d49cf10da8d63d2cd266",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "6e6d1227697bdbabbbbfd7e8b2b89736aa08a505fcdf448f955af2f71e64acb9",
+        "raw_file_sha256": "5fad1e7a9e7f81731086484413254b38ecfe6292cb50d5988b7fc9f2ab242448",
+        "raw_canonical_sha256": "f744957496fcbe5a5d04ef3f0dfe5c2bf29ed377dbf6af8673fbf13df963a1f8",
+        "stored_record_sha256": "45ef0e24433171bde986010c6df1b0f2d9c08c550c9b5ca24a8dc235349d473a",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "93a5955508c245b084dcaaefcc66b914e86e0bba2e91680726e40bcdd225cbf8",
+        "raw_file_sha256": "02dda069bff12901f02314ab18f0ec2b51708eb44a26868dabc205b33ea4ebee",
+        "raw_canonical_sha256": "a0cc5dd8b3e7c8bea582f978fdd55e0f9d3aebbc461a7c64b4d9cf6839677660",
+        "stored_record_sha256": "d054266cc36aa2e0dacb12e44b75fdacfa1ea0fb501f7b99a5706f9689c9db70",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "54fbdfe1c84730b1ff1faac5a4fc6643b2edac50a65d52e18754ebd6fe3b5a7e",
+        "raw_file_sha256": "c61398616621c5cbbe19643790658626e6ed6757b24f804785a505b33641d5e4",
+        "raw_canonical_sha256": "3f16d85a28bf819660000b7460650b43b7be6cf4624398ac1003bd638de5b9ff",
+        "stored_record_sha256": "67ed46b58af5c5c13dc4155561c41e45157e775291661df7527d9628021d4e76",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "0e1490bacd0213506ff008a1f86e4102220c4eb108d639be0f968b6916769f7f",
+        "raw_file_sha256": "12fc4fecddd61085d7a55aad11d8ef9ff6f5c003443396b75904d11a1266ffec",
+        "raw_canonical_sha256": "8fd6fb347eb987977262a4ce4d31f39813f2e01273c6637cdc1bf5d57adece47",
+        "stored_record_sha256": "b5769c1664294d28300f8fe75dd01d7873014a18e0c427a5481baa2fba503a20",
+        "classification": "UNKNOWN_NEEDS_REVIEW",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "1fcd9186509a7bbad990ee400e1b1c2c4821a60af36e995cc62f6267d93be170",
+        "raw_file_sha256": "92b5fca1c1ec5331771ba3abc99207d1ae9b46bb5841482df815692d23782e86",
+        "raw_canonical_sha256": "e9d046afbf78a8284ee182dc78b8cacbf1a2490fb50d89bedc73d69b74e1132c",
+        "stored_record_sha256": "d6d35317170733679aa34aaa17d60642e860a9ba56c6dfeb45952b3100d6a94f",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "9c57bb4db94e97cf916f442098b9af1e0c161c4b36e47987546a95cddbcf898e",
+        "raw_file_sha256": "9c64fa6998208c5000e095d75a7fa7de1419f7267c94a04c165001b4983bc314",
+        "raw_canonical_sha256": "267ea774e27c96c3c7127ac54c6662c16099f8dfd06d65a0168e6a78d69e35ab",
+        "stored_record_sha256": "9b2047bbd0231199c15d65ea4cbfa4f4d1ad1451e0573bb69244604dc1300268",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "4490d0e9ee9cf1b6f1ed8d0a213b859d51a95532f65b239e91ddcf2354a62173",
+        "raw_file_sha256": "7a04dfe1073d1d70ebf67a13654763e27bb81ff2af44b859d3b66266a5c3ce6a",
+        "raw_canonical_sha256": "386ee23db068cf9aa2cad86c4a47b15ecdebaaa531ca9edb153cc5b4e83c81ce",
+        "stored_record_sha256": "0cfde97b5810253bf92373f912403bcc7a89129a9654695278a34a1ba40d6a80",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      }
+    ],
+    "status": "PASS",
+    "classification_counts": {
+      "PASSIVE_TRANSFER": 12,
+      "ATA_CREATE": 5,
+      "UNKNOWN_NEEDS_REVIEW": 1
+    },
+    "total_verified_post_release_rows_at_this_cutoff": 78
+  },
+  "incremental_unknown_review": [
+    {
+      "signature_sha256": "0e1490bacd0213506ff008a1f86e4102220c4eb108d639be0f968b6916769f7f",
+      "wallet_signed": false,
+      "classifier_wallet_signer": false,
+      "classifier_wallet_authority": false,
+      "classification_reason": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+      "trade_present": false,
+      "classification": "UNKNOWN_NEEDS_REVIEW",
+      "no_buy_or_sell_inferred": true
+    }
+  ],
+  "ca_readonly_boundary": {
+    "at": "2026-11-01T07:07:09.443274+00:00",
+    "status": "PARTIAL",
+    "current_dashboard_sha": "700373e59c17f35aa465664e6eff01057fcfa0c9",
+    "legacy_report_get_http": 200,
+    "mint_sha256": "9e040ad5ed06c367f64ffd601d7ec91194ad4dbfddfbb704e54d8bddadccc103",
+    "report_schema": 2,
+    "report_source": "SOLANA_FINALIZED_JSON_RPC",
+    "report_observed_at": 1792683606.060419,
+    "report_ca_job_id_present": false,
+    "legacy_file_sha256": "e7666c2509ca61d88529217fe0543c3169d4b4cce4bd7e1b22186a55a076b824",
+    "legacy_file_unchanged": true,
+    "durable_by_job_index_exists": false,
+    "original_failed_job_identity": "UNRESOLVED_FROM_CURRENT_AVAILABLE_STATE",
+    "original_failed_job_report_association": "NOT_PROVEN",
+    "original_failed_fetch_root_cause": "UNRESOLVED: current successful legacy GET does not identify the original browser/HTTP/job/worker/RPC failure",
+    "latest_pr220_head": "18e065bd43dadb66f81070e35c31fec631d25082",
+    "candidate_delta_from_installed_common_base": "4 runtime files plus existing tests; includes C1 RPC budget dependency; not installed or merged in this iteration",
+    "real_ca_post_calls": 0,
+    "external_rpc_requests": 0,
+    "production_write": false
+  },
+  "ca_issue_original_evidence": "https://github.com/lxxlx2/ChatGPT_mission_record/issues/165#issuecomment-6347259929",
+  "remaining": [
+    "Original CA failed job identity and exact connection trigger remain unproven; existing ID-less historical report is not certified as that job result. Latest PR220 candidate18e065bd43dadb66f81070e35c31fec631d25082 not installed in this iteration.",
+    "No natural newly recognized BUY notification/event-to-first-observation sample. Historical Sent and candidate timing do not replace it.",
+    "MC Loop still lacks independent trusted public key and valid user-held-key signature artifact; remains unloaded. No fabricated approval.",
+    "INVEST_NO_GO / TRADE_NO_GO maintained; no P2/P3 or larger CA/multi-person/PnL expansion."
+  ],
+  "safety": {
+    "new_rpc_requests": 0,
+    "real_ca_post_calls": 0,
+    "notification_send_calls": 0,
+    "scanner_restarts": 0,
+    "mc_loop_starts": 0,
+    "new_monitor_or_automation": false,
+    "wallet_sign_or_trade": false,
+    "merge": false,
+    "d2_private_source_unchanged": true,
+    "control_db_bytes_unchanged": true,
+    "chrome_tab_left_open": true
+  },
+  "private_evidence_sha256": {
+    "source-age-node-red.txt": "ce6c77ff596be1f389274ede05a06aa34b148a69460734bf2d66ed9543e3809b",
+    "buy-scope-node-red.txt": "e88288009807c18131481722f7afb9e8c91c0f98f3a018b5cbf3b454ee73d0da",
+    "source-age-node-green-final.txt": "abb3afd9d18be00c0d9f612cd16f9e0b1e02e69106ed6f2d1fba8e7dad2adfa9",
+    "buy-scope-node-green.txt": "f654803a8a724377ec854bdfd0ff41541bb895b5821f5dac0840a91c7e63c900",
+    "source-age-runtime-full-final.txt": "793d7f42b10a665e6daec7c22391420b5b28869f85e901e1e95fc6fe9bf3d482",
+    "source-age-pr178-full-final.txt": "2601f727aa0892c5146ebdf59f39227127c38dbce509ac4f0e2c57ff68659750",
+    "buy-scope-pr232-full.txt": "1b230210f8bb3fae74893787baec1ce33ef27b0b79cc4dc1260a6b59eeacfeee",
+    "source-age-runtime-postcommit-d2.txt": "19aa367aecd27b8b88ec46ca603014428f7d9b1c34bd571304dbdf25c62833ed",
+    "source-age-runtime-postcommit-f01.txt": "355989c82c325c80b824034196302961bd4094daf50f9bd9bf30b2ae712910a9",
+    "source-age-runtime-postcommit-failure.txt": "1ad191df2ea734a0078a4726203a4686e6a1c03f09fd3db67a3457f33b05a901",
+    "source-age-pr178-postcommit.txt": "7d3a18179d587aecf405d92a3b1ec93a88d9661b1df0ce026f473929e9761620",
+    "buy-scope-pr232-postcommit.txt": "23ee0a533e3781a9086174093776ffe70df160b4c5ea8550fe9e51df84d9b353",
+    "prepare_source_age_release.py": "6f6df8a311408919659470e98d529e7e09402381c1c0dde65274ece3fde8ec45",
+    "preflight_source_age_release.py": "2b910d7f4124a262f730b740445fceca75abb59c55c92cfeb9652f90a5749e30",
+    "apply_source_age_release.py": "82e29b98d260bac5d1a34355090683ae1f8a91c9fff8399697178a3174029609",
+    "source-age-release-result.json": "3fcad54e9bc0f3decfb60c99c65ee2e2dd758ef41b5ce4f040762dccfc4c6ac7",
+    "source-age-browser-before.json": "5618ae2ed5d19b54f08462946754a703c2c7d0f12a75d85599bda2336185ca57",
+    "source-age-browser-after.json": "7368120fe790cfe90884bc85564e8ae58de103cfc8c006c2c98b7c4beeede991",
+    "source-age-final-runtime.json": "43eccabbb9641be1e23347e1a7d14e1e0380f915325e0e79a3bde05a67b10fae",
+    "verify_postrelease_incremental_source_age.py": "ec70aa6e26d8e057781dbad3e7c8d31ddacc938309ff4236dcdd414bd157b4e4",
+    "post-release-incremental-source-age-20261101.json": "006ff317f5e99a8a448108424f560c00cb2325051a99db42f625c18d12e4700b",
+    "ca-existing-report-readonly-20261101.json": "62aaf7cba27b02d7b240a35d7309d1c0c235796170919e00211a662c14683044"
+  },
+  "private_screenshot_sha256": {
+    "frank-chrome-live-source-age.jpg": "1f4996e89e39e791c5c81b03ee8c6ccf4fe03eaed71a551d627b12397619b675",
+    "frank-chrome-source-age-recovered.jpg": "03f784bad42e093cacef676f9403f5c87046c50c1dbee739f2bec55c9e0e922f"
+  },
+  "public_sensitive_echo_check": {
+    "status": "PASS",
+    "private_rpc_or_oauth_echoes": 0,
+    "private_absolute_user_paths": 0
+  }
+}

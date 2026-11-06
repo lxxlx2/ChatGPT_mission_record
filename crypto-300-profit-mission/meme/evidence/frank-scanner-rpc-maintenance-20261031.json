@@ -1,0 +1,1065 @@
+{
+  "schema": "frank_scanner_rpc_maintenance_v1",
+  "updated_at": "2026-11-01T03:21:56.245589+07:00",
+  "scope": "existing scanner maintenance only; no P1/P2/P3 research restart",
+  "source_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+  "parent_sha": "858ef37bbabcfe2f2baeaaeeb95f3478e044defb",
+  "original_pr": 244,
+  "original_pr_head": "438bbe20899108a858a513648ab8c8c05b11e05e",
+  "source_branch": "codex/frank-scanner-rpc-runtime-20261031",
+  "review": "independent review not performed at user request",
+  "ci": "not run for this maintenance commit",
+  "offline_tests": {
+    "targeted_and_service_entry": {
+      "passed": 174,
+      "command": "python -B -m pytest -q -p no:cacheprovider -p frank_offline_guard tests/test_frank_configured_rpc.py tests/test_frank_fm.py tests/test_frank_local_signals.py tests/test_frank_v1.py tests/test_frank_gmail_delivery.py tests/test_frank_gmail_health.py tests/test_frank_historical_delivery.py tests/test_frank_shadow_service.py test_service_entry_local.py"
+    },
+    "full": {
+      "passed": 693,
+      "skipped": 3,
+      "skip_reason": "unrelated Monster modules require numpy",
+      "command": "python -B -m pytest -q -p no:cacheprovider -p frank_offline_guard tests"
+    },
+    "supporting_files": {
+      "crypto-300-profit-mission/meme/evidence/frank-scanner-rpc-maintenance-20261031/frank_offline_guard.py": "cf091af513f58db0cc565d58c20a0127e97980c7947444f99fc6b447a9f73661",
+      "crypto-300-profit-mission/meme/evidence/frank-scanner-rpc-maintenance-20261031/test_service_entry_local.py": "0548f134b126f236dc25a5931f153f38cd2ac7b5dedf9282f3aac0eeb969f313"
+    }
+  },
+  "source_preservation": {
+    "original_noncache_files_checked": 317,
+    "original_cache_files_backed_up": 149,
+    "missing_count": 0,
+    "changed_paths": [
+      "mission_agent/frank/rpc.py",
+      "scripts/frank_local_signal_service.py"
+    ],
+    "only_two_expected_runtime_changes": true,
+    "no_original_noncached_files_missing": true
+  },
+  "backup": {
+    "running_directory_files": 466,
+    "restored_file_hashes_match": true,
+    "rollback_copy_preflight": "PREFLIGHT_PASS",
+    "candidate_preflight": "PREFLIGHT_PASS",
+    "sqlite_backup_integrity": "ok",
+    "sqlite_backup_fk_violations": 0,
+    "actual_production_rollback_exercised": false
+  },
+  "prior_isolated_live_catchup": {
+    "network_calls": 12,
+    "elapsed_seconds": 6.173,
+    "new_signatures": 9,
+    "lag_seconds": 0,
+    "raw_pending": 0,
+    "outbox_unchanged": true,
+    "source_cursor_unchanged": true
+  },
+  "captured_data_replay": {
+    "classification_counts": [
+      {
+        "classification": "ATA_CREATE",
+        "count": 6
+      },
+      {
+        "classification": "PASSIVE_TRANSFER",
+        "count": 3
+      }
+    ],
+    "unprocessed_before": 9,
+    "unprocessed_after": 0,
+    "reopen_replay_unchanged": {
+      "signatures": true,
+      "signals": true,
+      "outbox": true,
+      "seen": true
+    },
+    "historical_outbox_rows_unchanged": true
+  },
+  "production_cutover": {
+    "status": "PASS",
+    "candidate_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "old_pid": 53946,
+    "new_pid": 3402,
+    "new_pid_changed": true,
+    "loaded_source_sha256": "c7a453d5a579c9425dd964f1945b887b3d4ebe92d8159cd8db17a85471958085",
+    "source_drift": false,
+    "first_cycle_status": "PASS",
+    "first_cycle_catchup_signatures": 0,
+    "first_cycle_gap": 0,
+    "cursor_slots_before": [
+      463725011
+    ],
+    "cursor_slots_after": [
+      463725011
+    ],
+    "raw_pending": 0,
+    "model_unprocessed": 0,
+    "one_scanner": true,
+    "historical_rows": {
+      "signatures": {
+        "before_count": 5881,
+        "after_count": 5881,
+        "all_old_rows_unchanged": true
+      },
+      "signals": {
+        "before_count": 7,
+        "after_count": 7,
+        "all_old_rows_unchanged": true
+      },
+      "outbox": {
+        "before_count": 9,
+        "after_count": 9,
+        "all_old_rows_unchanged": true
+      },
+      "gmail_delivery": {
+        "before_count": 2,
+        "after_count": 2,
+        "all_old_rows_unchanged": true
+      },
+      "email_content": {
+        "before_count": 2,
+        "after_count": 2,
+        "all_old_rows_unchanged": true
+      },
+      "v1_seen": {
+        "before_count": 5881,
+        "after_count": 5881,
+        "all_old_rows_unchanged": true
+      }
+    },
+    "production_trading": "NO_GO",
+    "production_restored": true,
+    "test_notifications_sent": 0,
+    "database_restored_from_old_backup": false,
+    "old_source_directory_untouched": true,
+    "stopped_at": "2026-10-31T14:44:03.029838+00:00",
+    "verified_at": "2026-10-31T14:44:06.185832+00:00"
+  },
+  "limitations": [
+    "Short observation window only; no long-term reliability claim.",
+    "Captured nine transactions were ATA creation/passive transfer, not a positive real BUY notification acceptance.",
+    "Historical notification rows were preserved; no test notification or email was sent.",
+    "No merge or trading; INVEST_NO_GO and TRADE_NO_GO remain."
+  ],
+  "stability_observation": {
+    "pid": 3402,
+    "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "status": "RUNNING",
+    "poll_count": 78640,
+    "consecutive_errors": 0,
+    "last_successful_poll": "2026-10-31T14:46:05.785330+00:00",
+    "source_drift": false,
+    "raw_pending": 0,
+    "model_unprocessed": 0,
+    "restart_count": 10,
+    "production_trading": "NO_GO",
+    "at": "2026-10-31T21:46:19.596945+07:00",
+    "observed_poll_advance": 3,
+    "same_pid": true,
+    "successful_poll_age_seconds": 13.812,
+    "outbox_counts": [
+      {
+        "channel": "gmail",
+        "status": "SENT_VERIFIED",
+        "count": 2
+      },
+      {
+        "channel": "local",
+        "status": "COMMAND_ACCEPTED",
+        "count": 6
+      },
+      {
+        "channel": "local",
+        "status": "DRY_RUN_AUDIT",
+        "count": 1
+      }
+    ],
+    "gmail_counts": [
+      {
+        "status": "SENT_VERIFIED",
+        "count": 2
+      }
+    ],
+    "candidate_worktree_clean": true,
+    "status_check": "PASS",
+    "scope": "endpoint snapshots; individual completed poll proof is recorded separately"
+  },
+  "three_individually_observed_polls": {
+    "status": "PASS",
+    "source_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "initial_poll_count": 78644,
+    "individually_observed_completed_polls": 3,
+    "samples": [
+      {
+        "pid": 3402,
+        "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+        "poll_count": 78645,
+        "status": "RUNNING",
+        "consecutive_errors": 0,
+        "last_successful_poll": "2026-10-31T14:48:36.528917+00:00",
+        "raw_pending": 0,
+        "model_unprocessed": 0,
+        "source_drift": false,
+        "poll_increment": 1,
+        "observed_at": "2026-10-31T21:48:36.813404+07:00"
+      },
+      {
+        "pid": 3402,
+        "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+        "poll_count": 78646,
+        "status": "RUNNING",
+        "consecutive_errors": 0,
+        "last_successful_poll": "2026-10-31T14:49:06.792552+00:00",
+        "raw_pending": 0,
+        "model_unprocessed": 0,
+        "source_drift": false,
+        "poll_increment": 1,
+        "observed_at": "2026-10-31T21:49:07.231705+07:00"
+      },
+      {
+        "pid": 3402,
+        "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+        "poll_count": 78647,
+        "status": "RUNNING",
+        "consecutive_errors": 0,
+        "last_successful_poll": "2026-10-31T14:49:36.759594+00:00",
+        "raw_pending": 0,
+        "model_unprocessed": 0,
+        "source_drift": false,
+        "poll_increment": 1,
+        "observed_at": "2026-10-31T21:49:37.119935+07:00"
+      }
+    ],
+    "observation_seconds": 74.013,
+    "maximum_seconds": 100,
+    "extra_rpc_requests": 0,
+    "new_background_monitor": false
+  },
+  "post_release_production_progress": {
+    "at": "2026-10-31T22:00:41.510353+07:00",
+    "health": {
+      "pid": 3402,
+      "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "status": "RUNNING",
+      "poll_count": 78669,
+      "consecutive_errors": 0,
+      "source_drift": false,
+      "raw_pending": 0,
+      "model_unprocessed": 0,
+      "last_successful_poll": "2026-10-31T15:00:39.183801+00:00",
+      "restart_count": 10,
+      "production_trading": "NO_GO"
+    },
+    "network_requests_by_audit": 0,
+    "production_sql_write": false,
+    "notifications_sent_by_audit": 0,
+    "successful_poll_age_seconds": 2.327,
+    "source_head": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "source_worktree_clean": true,
+    "signatures_before_release": 5881,
+    "signatures_now": 5883,
+    "signatures_added": 2,
+    "new_classification_counts": {
+      "PASSIVE_TRANSFER": 2
+    },
+    "new_trade_directions": {},
+    "historical_rows": {
+      "signatures": {
+        "before": 5881,
+        "now": 5883,
+        "all_original_rows_unchanged": true
+      },
+      "signals": {
+        "before": 7,
+        "now": 7,
+        "all_original_rows_unchanged": true
+      },
+      "outbox": {
+        "before": 9,
+        "now": 9,
+        "all_original_rows_unchanged": true
+      },
+      "gmail_delivery": {
+        "before": 2,
+        "now": 2,
+        "all_original_rows_unchanged": true
+      },
+      "email_content": {
+        "before": 2,
+        "now": 2,
+        "all_original_rows_unchanged": true
+      },
+      "v1_seen": {
+        "before": 5881,
+        "now": 5883,
+        "all_original_rows_unchanged": true
+      }
+    },
+    "outbox_counts": [
+      {
+        "channel": "gmail",
+        "status": "SENT_VERIFIED",
+        "count": 2
+      },
+      {
+        "channel": "local",
+        "status": "COMMAND_ACCEPTED",
+        "count": 6
+      },
+      {
+        "channel": "local",
+        "status": "DRY_RUN_AUDIT",
+        "count": 1
+      }
+    ],
+    "gmail_counts": [
+      {
+        "status": "SENT_VERIFIED",
+        "count": 2
+      }
+    ],
+    "unresolved_local": 0,
+    "gmail_inflight": 0,
+    "new_signal_count": 0,
+    "real_buy_acceptance": "NOT_COVERED",
+    "health_recheck_at": "2026-10-31T22:02:41.894055+07:00",
+    "health_recheck": {
+      "pid": 3402,
+      "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "status": "RUNNING",
+      "consecutive_errors": 0,
+      "source_drift": false,
+      "raw_pending": 0,
+      "model_unprocessed": 0,
+      "last_successful_poll": "2026-10-31T15:02:39.273401+00:00"
+    }
+  },
+  "post_release_raw_and_classification_verification": {
+    "at": "2026-10-31T22:02:16.821745+07:00",
+    "source_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "network_requests": 0,
+    "production_sql_write": false,
+    "notifications_sent": 0,
+    "comparison_contract": "classifier fields plus Ledger person_id, position_change and signal_ids; full stored passive record equality checked",
+    "new_rows_checked": 2,
+    "checks": [
+      {
+        "signature_sha256": "981d9052f1ad0deedc2bf47f622d57cd9c26c79806751f885f82532ba63ba41b",
+        "raw_file_sha256": "29b63a717b2fdda322d61cdc71f401b81ce85f88e473e10ad90f8e5c405d5899",
+        "raw_canonical_sha256": "619c174ebaaa894ae7ba5671a8d10b83129ff5fac5676d415123f21a59dd9892",
+        "stored_record_sha256": "793a633d8022602d49397ae19e8f9f39b9b2b38453c0d87b36bfe289a57b331a",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "2c9944403834dc6a1edd8f126b0113e0e0a51e890bd1eaac245a55c221917da1",
+        "raw_file_sha256": "97131aa6fef2044a02aca6e085d0742aa030b62eaa4a1cde4f935e936179d1ed",
+        "raw_canonical_sha256": "ce22a3f2356a209dc49ea109130749d86cf0a9d0cf395ce3c0c8a4d95ec5aacd",
+        "stored_record_sha256": "d7e0dd66a5a792db5f0e3e00e17e0a2c6e638443a1e9c082ef835288fa8db7b6",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      }
+    ],
+    "status": "PASS"
+  },
+  "post_release_progress_20261101": {
+    "observed_at": "2026-11-01T03:16:07.140514+07:00",
+    "source_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "post_release_added_signatures": 37,
+    "classifications": {
+      "PASSIVE_TRANSFER": 20,
+      "ATA_CREATE": 16,
+      "UNKNOWN_NEEDS_REVIEW": 1
+    },
+    "trade_directions": {},
+    "historical_rows": {
+      "signatures": {
+        "before": 5881,
+        "now": 5918,
+        "original_rows_unchanged": true
+      },
+      "signals": {
+        "before": 7,
+        "now": 7,
+        "original_rows_unchanged": true
+      },
+      "outbox": {
+        "before": 9,
+        "now": 9,
+        "original_rows_unchanged": true
+      },
+      "gmail_delivery": {
+        "before": 2,
+        "now": 2,
+        "original_rows_unchanged": true
+      },
+      "email_content": {
+        "before": 2,
+        "now": 2,
+        "original_rows_unchanged": true
+      },
+      "v1_seen": {
+        "before": 5881,
+        "now": 5918,
+        "original_rows_unchanged": true
+      }
+    },
+    "outbox_counts": [
+      {
+        "channel": "gmail",
+        "status": "SENT_VERIFIED",
+        "count": 2
+      },
+      {
+        "channel": "local",
+        "status": "COMMAND_ACCEPTED",
+        "count": 6
+      },
+      {
+        "channel": "local",
+        "status": "DRY_RUN_AUDIT",
+        "count": 1
+      }
+    ],
+    "gmail_counts": [
+      {
+        "status": "SENT_VERIFIED",
+        "count": 2
+      }
+    ],
+    "external_rpc_requests": 0,
+    "production_sql_write": false,
+    "new_signal_count": 0,
+    "real_buy_notification_acceptance": "NOT_COVERED",
+    "unknown_classification_review": [
+      {
+        "reason": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "wallet_is_signer": false,
+        "wallet_is_authority": false,
+        "mechanical_classification": "UNKNOWN",
+        "trade_is_none": true,
+        "alert_state": "NO"
+      }
+    ]
+  },
+  "post_release_raw_verification_20261101": {
+    "at": "2026-11-01T03:16:59.607163+07:00",
+    "source_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "network_requests": 0,
+    "production_sql_write": false,
+    "notifications_sent": 0,
+    "comparison_contract": "classifier fields plus Ledger person_id, position_change and signal_ids; full stored passive record equality checked",
+    "new_rows_checked": 37,
+    "checks": [
+      {
+        "signature_sha256": "981d9052f1ad0deedc2bf47f622d57cd9c26c79806751f885f82532ba63ba41b",
+        "raw_file_sha256": "29b63a717b2fdda322d61cdc71f401b81ce85f88e473e10ad90f8e5c405d5899",
+        "raw_canonical_sha256": "619c174ebaaa894ae7ba5671a8d10b83129ff5fac5676d415123f21a59dd9892",
+        "stored_record_sha256": "793a633d8022602d49397ae19e8f9f39b9b2b38453c0d87b36bfe289a57b331a",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "2c9944403834dc6a1edd8f126b0113e0e0a51e890bd1eaac245a55c221917da1",
+        "raw_file_sha256": "97131aa6fef2044a02aca6e085d0742aa030b62eaa4a1cde4f935e936179d1ed",
+        "raw_canonical_sha256": "ce22a3f2356a209dc49ea109130749d86cf0a9d0cf395ce3c0c8a4d95ec5aacd",
+        "stored_record_sha256": "d7e0dd66a5a792db5f0e3e00e17e0a2c6e638443a1e9c082ef835288fa8db7b6",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "15ad6b5d82bb5d176c8289f225847ecfc3bbe258479e17ff149aed1b20c6e655",
+        "raw_file_sha256": "d9db66f10cfbd86ab2519d303172bb3916abb3ad302a54b84ddf85efd0bc7e68",
+        "raw_canonical_sha256": "0949816796f0ab95aa09755195750516927283e7a4892c2681e651ea42d012b0",
+        "stored_record_sha256": "d8261b7415343044051d30216e04aa4a87be76a3dace6e22a63c4947198dc9d9",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "f993e4919726e8b28bf606385a84996f1b2d49a922317ef545028bec769bf160",
+        "raw_file_sha256": "60194009dd8c3d997e8fe779c7a36ca968cfc31db0cdb0f9a85642f135b85db7",
+        "raw_canonical_sha256": "09333543197aaea285e29ebed5e16bffd62dc7b355c5cd233379f16176a9bd55",
+        "stored_record_sha256": "d4fa473b14656146c9c46aa83cfe8ab4eb0f02463c296a4b2c5ca522c2280d8b",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "6e0023e3678d4a126714723dea236ae4c5f06e69c5c9302b95ea9a6287d6743f",
+        "raw_file_sha256": "ef9de374a16a810c5d21e4503e7ce5799cb8f1b935e8c756ee85d25eba410554",
+        "raw_canonical_sha256": "f26c20774908b6be9cf5f6b6ee933105cdaeee7029f8aaa34018100cf1bdf7db",
+        "stored_record_sha256": "3d6c34918642abf1b45623f50622c5d05b09100184acad7408e40ba5d59f9e0e",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "dccca50953d63d647a99342a9b88f340d72284c186da9a99c7b23d5ad06d07fd",
+        "raw_file_sha256": "90a9c1d433d2b992e80009412ba527f87b6a0822d0d0b1e92d46f0758573cd14",
+        "raw_canonical_sha256": "d33168f123f860e2c9712aa9494a046a8843a44d7cbb70916152cecf6c0f1531",
+        "stored_record_sha256": "0e8456853c074b490b916042046c48518ff62b2600c03fb658ec53043367fcb4",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "32a202cf80c3833632ba3a503f7661f3ae75cfc67d1adba545d87705620559a6",
+        "raw_file_sha256": "6a30b12843e5fbef30224ac60a6e2e939d3fc6ee30c003ad74744e84b0690a7d",
+        "raw_canonical_sha256": "7dcb706f3152b19db10516734fb05ec1fcac78bb1509caa64a0a785f63af5ed9",
+        "stored_record_sha256": "859a1ea0fa7bf4d8fd300e8e98f06e74759927d18692c112560a684aac2147c2",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "d26dc2b0132bb4c7d1a908d9be6a1b989a17411262e822fdd01270e0258dd459",
+        "raw_file_sha256": "7cb3c9e73705a326c71a3833a1e76caa24ba30d2004a7b23e243cbb99fa5e4a0",
+        "raw_canonical_sha256": "17111a83be9de3ec8a3f69468fc14c293a4caf726aa9045b871c89e177a93cda",
+        "stored_record_sha256": "c146237f813866f7f6d013f3e4b6eec9faf8f03e4694c453f9fb993aa927f63d",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "7b6a6d480faf643d0c26b138a4b97786e564527423a70a8c78e200b1503d80ae",
+        "raw_file_sha256": "1f83a6fdb23df8e23dc008ad7f8cbb517e8093158b01090f20ace80da2a9c697",
+        "raw_canonical_sha256": "8c89f23cdb15ef19c4b47a108d255cab606965b1ff6f4cb9cf2df0f299c08799",
+        "stored_record_sha256": "1b14ded8d0ce59b469781e3e300868842c9971d69d8d4c8694ec2c0a3c745d23",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "44063802d41846aea4dcdaaa3932a67765f82683c5b5e487f1c7554784416171",
+        "raw_file_sha256": "747b254bc8161ec439536be4c195c082e3596b9126c8d2c5ee6453a21fe6f730",
+        "raw_canonical_sha256": "ad5eb560b9f45487668728bd9f081af087879b325097a89f0602824af188c019",
+        "stored_record_sha256": "fb97069b193af45455c05bb3d141ad2ef1384b16c677fca110736d7c5656b61b",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "4896cd1c6b57aefc44a1bf55ae8d089cf28dac89c5a266c7e84371851aa322fc",
+        "raw_file_sha256": "948258cb5108a7e2be33543bf37c424d43d62dc75f66952f5c938e28e1e35a43",
+        "raw_canonical_sha256": "701c18042d567664afacd071b3e58e9b606027767807ab017decb9a40e5f8eaf",
+        "stored_record_sha256": "e6d54ef2424a2e33a4f8473e8957638fe463fae9c873a6098f6917a689fa885b",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "1d3c76aa2093ed1df86628f45dae486abbffc16205fb71905573bf1004fb4718",
+        "raw_file_sha256": "46f5bda3a0be7e5ddf189eb1d7ab6262645892ebd78d687b96690d80bc1f8aa6",
+        "raw_canonical_sha256": "2ea705f79da0a12e1ce566833c0a0b5c21886287d039ce134c16fe0fd8bb0af0",
+        "stored_record_sha256": "03795681ab0452f20c03ccf59bf86dc0d5cf266379773e63c065b3695b0c6770",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "4de0a9749d8f409347e3f9f9e4766d4f4c121f10d38219ef3d588ee0f5eaa3cb",
+        "raw_file_sha256": "44e2a98f33ca36cf667f5cc72ed18cfe2a9b8fe2a5fb398eb6585b78f93a9fee",
+        "raw_canonical_sha256": "2617b260d456a71e585d7809592f8e813beb150d497a34014207509eff551f85",
+        "stored_record_sha256": "3e3c27b90812050b3157f7411de9fcfada6247d4a452ddfa232649bac79037ba",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "085ad2a5a7fb15752bed98b738f12f28c99be2d2a3fc0cdd7e74873194ba0825",
+        "raw_file_sha256": "d5efb6992630fd0dd9d8d7016fc3c14287cbd85dde33022ad5411114b2e46035",
+        "raw_canonical_sha256": "35b1bea927ed31cb1eccf39bac398c89d65ca46bcc78a54891d4a1f238457354",
+        "stored_record_sha256": "1e657f380b500ea67f05167eecc92dbc72505c6cd3672a291a2efa8642dbf410",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "aa65e685536043ca1d300dc32c8ae5b40ea74c6cc4cc6b11d33f73816e3aeb71",
+        "raw_file_sha256": "a6cb1d9a68082436671525a4aa58a417eab5b8951aa1ee72741ac71441b2b94c",
+        "raw_canonical_sha256": "d79ddf3ea07472a7aeb5f6fd2bdcfa109a05254ea7cd953e2a3cfe83c8c3e27a",
+        "stored_record_sha256": "8b203c3ee7215f507762a0e58f363eb2bf7785a5f4e47ed9a86f4d855a4fd3e7",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "6d8ff440eff56214bb451c1e659bea840546c4e051c03ba5f287fd5ea29ee199",
+        "raw_file_sha256": "d4b105d1c86a54495f3347606a3b8e32b06625aa963c70b9424cbf29e00045df",
+        "raw_canonical_sha256": "06248179c1bdd67a1b6e77c233eeb0ca38abdb3b5e360cc5eeae2c534fbf1851",
+        "stored_record_sha256": "a1e5bb9624f509fd74d6c56f22b56a54ffc6d641564ac1cb69a4aba0cd92c5a7",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "2a738096ed4360ea310431f0524ed0abbecf3ddec5e48768e72d3cb44d43afac",
+        "raw_file_sha256": "3cbc1ce2ebf8705ece693edd01758a861d38d7ce80da9a9bb847e4e4c604eb2e",
+        "raw_canonical_sha256": "819d59ad48f8e7566a778f47edafdc28c82b2dc78312d262eecd2f8f6c9e1917",
+        "stored_record_sha256": "020142c16b0cb95e2f69d286af71381865abc104a622d04ea0b36b7bcb460d5c",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "8b1c1893177650d4cd3c9117fb321df3ee35994ef4808ec9f65681de8005ea64",
+        "raw_file_sha256": "52142f93d11c0e219af8e1d960b4380d6112ee44379fb1bc28f5227f3f9d512c",
+        "raw_canonical_sha256": "db9f949abe56b267536bfbb1885495f40db495fefb82ffe6038953afed6972f2",
+        "stored_record_sha256": "4f2ac48f942c5ef665d00c88b4ac9e5f96f558ff8e1ee55a030e777d09bba5d8",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "364bd2e2d3599fe0a48c968888d706dd7fd083a84d4a5d1af5336bd0573fd467",
+        "raw_file_sha256": "8bffa68edc527281e37ab43b5bf746ffc467c51dc2f02fa2851b6a9dd507d304",
+        "raw_canonical_sha256": "73aa393754ed4ccf8a696b6a3d216d2c2edf336f17fb95082a6b7ded5e0fbf7d",
+        "stored_record_sha256": "3a4a8228fe5ab3cc62b46bd24de0734a84921f5ead30dfea32cfdf3f1f46aad0",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "b250c0acf228fcf27d93e5da3835dcee29aa99a1ae3b106394f0b1db39cb87bf",
+        "raw_file_sha256": "02bcab74e1fbb8a296c4e1a653148bd9b2f7489df5f2fde6846eb183c298a298",
+        "raw_canonical_sha256": "2bb47c6e21ec3cf41dbd5b0b90c9cb6ba1a85469c470a8b9ca9928493ac9d077",
+        "stored_record_sha256": "25fd7c1c7d34546c48f8792cac752799faa0543f670ab76e9ccb26b7641edf19",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "73d68952cd8b6b227deb2223ec7fa460c2b371d7f0954ce4596b42399cb84512",
+        "raw_file_sha256": "c5af1f3cb7a9e5c187110e6c82db7a6ebbf3945179fb7e59b49357beae5610dc",
+        "raw_canonical_sha256": "84519a13096eea895b516dcc1a42b1d5ba9bcad57fc9ddf45d2bdb0c0866d673",
+        "stored_record_sha256": "c10e489d3086132a689e48d0b8f535d4091987264b9066cbb39ba9be6762af6f",
+        "classification": "UNKNOWN_NEEDS_REVIEW",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "e8bcf82a0679f1553a8c3d689094dc891d107e63846b133f74c7b7afcdf4b8c2",
+        "raw_file_sha256": "711a77edc003b13b8c2bfa5811b953be1b251aee8769a97bc35913db758af1d5",
+        "raw_canonical_sha256": "dc4edee5035a12b543442211236e3dcbfce5c5f6667db44c00cf3205333f8d73",
+        "stored_record_sha256": "d510beed1930218a135ad1ccce7401c76b9ddd27834b20906c635aee1053d534",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "73efbd0e5e21ba5260fc66da2465194e16557a05c8f04b1b599df93f65dbbd56",
+        "raw_file_sha256": "00446c42a82b346455dec43103f93a34d75f4cb5c328a796b932993a07de24fc",
+        "raw_canonical_sha256": "95f59811f91e8e8dbd2915e78fd3943cc51103eea052e0a1a5c815a2f416b4ab",
+        "stored_record_sha256": "fb70b671387dc4339b376dbacc3e8dca92a8acaf16ead4803f60928cc7734f45",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "d527068ce0c27e94c594e5057374da9e52b93f56ce0093344821c576dc2b8d08",
+        "raw_file_sha256": "443cb0e2a8209cbb903a7a7f043555764ce393a1ab09f59e520474e806130634",
+        "raw_canonical_sha256": "d89379a55117d230d4f3ddc6b7712bfe428dcfc5543a32d8703d19d7068bb752",
+        "stored_record_sha256": "aa0912154b8bade6f65f2a008a1de10c9feed8756ed52c2d0506ca6f683f19b8",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "20b0102d98cd1e797e7b6416247af5e1e019208e221d9bb470ad61a63ec97055",
+        "raw_file_sha256": "0a1b67ee1b6fce1d07e39075ab8a5236f173c06648b7b6d6ea56e8a36dea94c8",
+        "raw_canonical_sha256": "730494a411072bae7631af57258e4844c9c1b7bcbe7bc574eb53313ded8c8a52",
+        "stored_record_sha256": "479cc6924b9708e1befead04981781f6a5d0a052d8d842e25fdfedc93bf567c1",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "0105b3d96b159469461b08d0940afcf845588a78bf37146844e80d429afc7ca9",
+        "raw_file_sha256": "cf67cc65d65ba07e50614af26531cd304503b5c14d8f0563cc17a7fb9ef31498",
+        "raw_canonical_sha256": "0a60269b75960622752b7921ab9c33280a720180f4216603fb40ab5aad7c0b27",
+        "stored_record_sha256": "5ed2e7e593f23c8c7ddc436a14900ea365c5d5db6dd0768885f42d810a984ca6",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "2069c84406551c6353d0f12ac292716d633dda2c5f95c6442a4ef7709280fd0b",
+        "raw_file_sha256": "f49e1dca336a6a9f9cb42a38b0776d9fb1ea42b9fab9ec8aade5e5ece91dfb71",
+        "raw_canonical_sha256": "771a388c5851cac11d5cee2fb1726dcfc9394c2144b758ad051891b67835d06a",
+        "stored_record_sha256": "a1a695564716c85c512a0e670620579387b1c98494992fc4bec366c3d6807bad",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "db892727796c643437339e7226cebf1b342e33033ed04b831a980527739a85d0",
+        "raw_file_sha256": "a56b3ba144fc8639859686adf6c638d0db141f05f7cfa143f61f23aa3a024674",
+        "raw_canonical_sha256": "e16fa22cc2a3409a7c8afb54ab94319210de2a324dbdf1ef484c0b9c56fd9676",
+        "stored_record_sha256": "b46096b597e1535ef749b67bc4a377ced916fef99fa48559161511cbe521d4a8",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "49099327a242f0cef7a4484b22014ea6038f1b35c3b82f3174cb313fcc082a54",
+        "raw_file_sha256": "7c1906e372cca4eed36c5ab28eda53560f9e59b9463730af93ff20bd635365b8",
+        "raw_canonical_sha256": "b32513dfc355f72629cf1c5d6770f58c2f0314208a1786de1791808798e17cdd",
+        "stored_record_sha256": "104f626b551958d9a43b6141c9fb7eb7f35a0bba7e33834affd8725aacfa438c",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "a0cc920c609a442aa3539000274f9c5f5879f93870a76ee5a670bd7c74ea51be",
+        "raw_file_sha256": "c910765aebd1e0f6bae6eaacdf25f15d162239e09c1d0fec492a55487e620c20",
+        "raw_canonical_sha256": "6bf64e25bfe159810a80d70aab9ae03158cdd726d44438d87cc1864f0af10171",
+        "stored_record_sha256": "2cd34d4809b73a110eb98d0a374f0b457852e2e1f5a6d9469ca6c4f785d519c3",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "5e573c11ffa5b7beda8ad2a366b17ab5e34f6798d01c7dd961abb583f62a1198",
+        "raw_file_sha256": "57c01172ea42e37a66f5c030318f10ba9deebf239aa4a30ef98d90512e62e5e2",
+        "raw_canonical_sha256": "22d012c5ac5fab7cd40d78dc35f63b2357f03f8183bc7fffe7a920e80beb6d72",
+        "stored_record_sha256": "88f8954ca594de90802212fb937696b31b7f5e34790cf0cee4a407a90f47a989",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "74bc306c9dfe1bdb0669c00490cc264be89711fa42f30f1aecbd497fdf4614f9",
+        "raw_file_sha256": "01411d59186b42bbc05a5a5110bee14945c458199187392511d6189b137b2260",
+        "raw_canonical_sha256": "aedfff136581aae91e8d03f4f61681c8631ebbb66603fabf9551b4ec94bded23",
+        "stored_record_sha256": "a7e97ceeccca3323829b46bfb2c27bc3a2687190a9ece45d89b7cc3522069289",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "cba5ec0e21e10c6e79e83f84bd2a235761c5d8e02ff0a5124e1afb1c07c98970",
+        "raw_file_sha256": "cd50a360664d577eaa217b0c061ebbc0f4e03b8d284c2b9cc7ac72d90878284a",
+        "raw_canonical_sha256": "1672b8105e3d9fa678b74a3297416dcd0317f90e53cac8d15c5ab20fd52cb509",
+        "stored_record_sha256": "f82e7991c1c648cf24840968fcf9ed7bc03eda41ac28065005250b30c9d82bcf",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "84feee5f4915072d342608be9b42aa495226d5f670e52012b77547004038194f",
+        "raw_file_sha256": "d3dbfa630438a33a87d2b3d2d1306400946932dd0d44ba153b9f8055b2c7871d",
+        "raw_canonical_sha256": "259eb9f46537a57a8cfbe3182f63ecda845282da589adb0b0d420ffab211916f",
+        "stored_record_sha256": "d475d436b2464f51ff58cdc704b3ebd95ca6c3ef7636e533cf61dd18809c0d2d",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "4bde36d45ac7529150ff3ebf7d12aad0f3f8d45cd7a2c5d4b0d7ed00bde47f03",
+        "raw_file_sha256": "32b2da5706c3bd3f48bb3e0ef13949a9756c9c129c8dbd975879b480e6744bc0",
+        "raw_canonical_sha256": "ad990a2d9af9de6985127d9a946e841ab64ed705506585fe90eb1b7674644a49",
+        "stored_record_sha256": "0a535301fd94140e8fbc2970ccec8af0f9ae10565db638c37516b7d3d3a2798e",
+        "classification": "ATA_CREATE",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "66946f7fd7404f7b7bc4daa8e43d880b07a7217b2cb849e54a9909e3c09ae81a",
+        "raw_file_sha256": "5f5480317a252a53d3959cdfabef8211c9b49794f1f51dcf6b24efd11d690961",
+        "raw_canonical_sha256": "9e8475656fcf1943aee2486ec61632ff1e29d6254c9f24613ec683e1fabe98b9",
+        "stored_record_sha256": "d60074c7e709701bc35714aa921f13e68cc5a2e559b0bac05e15cd8603c5f720",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      },
+      {
+        "signature_sha256": "a236216880cf1f5a2385e66a21a98e24031a12d6907cdcb9165a219f7e76cf9a",
+        "raw_file_sha256": "0a7dd0c47ef37490d518a7dbf647f5ae37b1ff15b567cbd986de0c8599c3b8ee",
+        "raw_canonical_sha256": "b12ab932f183bd62d3a4bed212976af3e49844719d5f887c4f090b87647c07da",
+        "stored_record_sha256": "3465d58ccfe8ca234d81fb82a521b3ddd83294d5b5796fcb550b3ddd4a9416fd",
+        "classification": "PASSIVE_TRANSFER",
+        "raw_hash_matches": true,
+        "raw_slot_matches": true,
+        "raw_signature_bound": true,
+        "classification_replay_matches": true,
+        "ledger_enrichment_matches": true,
+        "durable_detection": true,
+        "model_seen": true,
+        "trade_rows": 0,
+        "passive_has_no_trade": true
+      }
+    ],
+    "status": "PASS"
+  }
+}
