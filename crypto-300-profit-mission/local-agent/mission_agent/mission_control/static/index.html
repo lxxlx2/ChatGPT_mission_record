@@ -5,12 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Meme 研究控制台</title>
   <link rel="stylesheet" href="/static/styles.css">
+  <link rel="stylesheet" href="/static/frank-design-preview.css">
 </head>
-<body>
+<body class="frank-studio">
   <header class="topbar">
-    <div>
-      <div class="eyebrow">$300 → $3000 MISSION · MEME</div>
-      <h1 id="product-title">Frank 信号</h1>
+    <div class="brand-lockup">
+      <div class="brand-mark" aria-hidden="true">F</div>
+      <div>
+        <div class="eyebrow">Solana · 钱包行为证据工作台</div>
+        <h1 id="product-title">Frank 信号</h1>
+        <p class="subtitle">先看当前判断，再核对交易和链上来源。</p>
+      </div>
     </div>
     <div class="runtime" id="runtime">正在读取 Frank 状态…</div>
   </header>
@@ -20,6 +25,7 @@
       <button class="view-tab active" type="button" data-view="signals">Frank 信号</button>
       <button class="view-tab" type="button" data-view="cluster">CA 链上查询</button>
     </nav>
+    <div class="scope-note" role="note">本页面不会执行交易。信号结论、历史索引与链上时点快照应分别核对；CA 查询仅在明确点击后发起。</div>
 
     <div id="signals-view" class="view-pane active">
     <section class="panel priority-panel" id="follow-opportunities">

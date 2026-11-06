@@ -1,0 +1,479 @@
+/*
+ * Frank signal desk / visual experiment
+ * Built against product source 0e6f4d497be4e47480dcda929cc0b6b8a1145086.
+ * Presentation only. Do not infer data provenance or executable trade eligibility.
+ * Source of design direction: anthropics/skills frontend-design.
+ */
+body.frank-studio {
+  --bg:#0b1820;
+  --panel:#10212a;
+  --panel2:#152b35;
+  --line:#29414b;
+  --muted:#a5b7bf;
+  --soft:#d5e2e5;
+  --green:#8bd8ac;
+  --yellow:#f1c57c;
+  --red:#fa9c91;
+  --blue:#89cbeb;
+  --frank-accent:#65cdd1;
+  --frank-surface:#132731;
+  --frank-ink:#eef5f5;
+  --frank-quiet:#93aeb9;
+  color:var(--frank-ink);
+  background:var(--bg);
+  font-family:"Avenir Next","SF Pro Text","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  font-size:14px;
+  -webkit-font-smoothing:antialiased;
+}
+body.frank-studio ::selection {background:#2f6b73;color:#fff}
+body.frank-studio .topbar {
+  position:relative;
+  top:auto;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:26px;
+  padding:22px clamp(18px,3.3vw,54px) 21px;
+  background:#10222a;
+  border-bottom:1px solid #34505a;
+  backdrop-filter:none;
+}
+body.frank-studio .brand-lockup{display:flex;align-items:center;gap:17px;min-width:0}
+body.frank-studio .brand-mark{
+  flex:0 0 52px;
+  width:52px;
+  height:52px;
+  display:grid;
+  place-items:center;
+  border:1px solid #65cdd1;
+  border-radius:3px 14px 3px 14px;
+  color:#94e5e3;
+  font-family:"DIN Alternate","Arial Narrow",sans-serif;
+  font-size:31px;
+  font-weight:700;
+  line-height:1;
+  background:repeating-linear-gradient(0deg,transparent 0 8px,rgba(101,205,209,.08) 8px 9px),#102f38;
+}
+body.frank-studio .eyebrow{
+  color:#92b4bd;
+  letter-spacing:.03em;
+  font-size:11px;
+  font-weight:600;
+}
+body.frank-studio .topbar h1{
+  margin:4px 0 0;
+  color:#f4f8f7;
+  font-size:clamp(24px,2.45vw,33px);
+  font-weight:650;
+  letter-spacing:-.045em;
+  line-height:1.18;
+}
+body.frank-studio .subtitle{
+  margin:7px 0 0;
+  color:#adbec5;
+  line-height:1.5;
+  font-size:12px;
+}
+body.frank-studio .runtime{
+  max-width:55%;
+  align-items:flex-end;
+  padding-left:23px;
+  border-left:1px solid #36505b;
+  color:#b8c9ce;
+  font-size:12px;
+  line-height:1.55;
+}
+body.frank-studio .runtime-main{gap:9px}
+body.frank-studio .runtime.live,
+body.frank-studio .runtime.running,
+body.frank-studio .runtime.ok{color:var(--green)}
+body.frank-studio .runtime.degraded{color:var(--yellow)}
+body.frank-studio .runtime.offline,
+body.frank-studio .runtime.stopped{color:var(--red)}
+body.frank-studio .tech-details{font-size:11px;color:#a4b9c1}
+body.frank-studio .tech-details summary{color:#b4c9d1}
+body.frank-studio main{
+  max-width:1740px;
+  padding:24px clamp(18px,3.3vw,54px) 64px;
+}
+body.frank-studio .view-tabs{
+  display:flex;
+  width:100%;
+  gap:0;
+  margin:0 0 18px;
+  padding:0;
+  border:0;
+  border-bottom:1px solid #34505b;
+  background:transparent;
+  border-radius:0;
+}
+body.frank-studio .view-tab{
+  position:relative;
+  min-height:49px;
+  padding:11px 22px 14px;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:#b2c5ca;
+  font-size:13px;
+  font-weight:580;
+  letter-spacing:0;
+}
+body.frank-studio .view-tab:hover{background:#142b34;color:#edf6f7}
+body.frank-studio .view-tab.active{
+  color:#9be7e9;
+  background:transparent;
+  box-shadow:none;
+}
+body.frank-studio .view-tab.active::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:-1px;height:3px;
+  background:var(--frank-accent);
+}
+body.frank-studio .scope-note{
+  display:flex;
+  gap:11px;
+  align-items:flex-start;
+  padding:10px 0 17px;
+  color:#aabfc6;
+  line-height:1.5;
+  font-size:12px;
+}
+body.frank-studio .scope-note::before{
+  content:"";
+  flex:0 0 7px;
+  width:7px;height:7px;
+  margin-top:5px;
+  border-radius:50%;
+  background:#e2af68;
+  box-shadow:0 0 0 3px #3c342a;
+}
+body.frank-studio .panel{
+  border:1px solid var(--line);
+  border-radius:5px;
+  background:var(--panel);
+  box-shadow:none;
+  margin-bottom:16px;
+}
+body.frank-studio .panel-title{
+  gap:14px;
+  padding:18px 20px 16px;
+  border-bottom:1px solid var(--line);
+}
+body.frank-studio .panel-title h2{
+  margin:0;
+  color:#eaf2f3;
+  font-size:17px;
+  line-height:1.4;
+  font-weight:630;
+  letter-spacing:-.015em;
+}
+body.frank-studio .panel-title p{
+  max-width:88ch;
+  margin:6px 0 0;
+  color:#acbfc6;
+  font-size:12px;
+  line-height:1.65;
+}
+body.frank-studio .panel-title>span{
+  font-size:11px;
+  color:#a9bec6;
+}
+body.frank-studio .priority-panel{
+  position:relative;
+  border-color:#4d7980;
+  background:#10252e;
+  overflow:hidden;
+}
+body.frank-studio .priority-panel::before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;width:4px;
+  background:linear-gradient(#68d0d1 0 43%,#eab66d 43% 68%,#456975 68%);
+}
+body.frank-studio .priority-panel>.panel-title{
+  padding:23px 24px 20px 26px;
+  background:#18343d;
+  border-bottom-color:#42616b;
+}
+body.frank-studio .priority-panel>.panel-title h2{
+  font-size:clamp(23px,2.2vw,30px);
+  font-weight:660;
+  letter-spacing:-.04em;
+  color:#f4f8f7;
+}
+body.frank-studio .priority-panel>.panel-title p{
+  font-size:12px;
+  color:#bbd1d6;
+  max-width:82ch;
+}
+body.frank-studio .priority-panel>.panel-title>span{
+  align-self:flex-start;
+  font-variant-numeric:tabular-nums;
+  color:#b7cdd2;
+}
+body.frank-studio .candidate-list{padding:14px 18px 18px;gap:12px}
+body.frank-studio .candidate-card{
+  border-color:#37535d;
+  border-radius:4px;
+  padding:16px 17px;
+  background:#112831;
+  box-shadow:none;
+}
+body.frank-studio .candidate-card.decision-buy{border-left:4px solid #83d7ac}
+body.frank-studio .candidate-card.decision-small-buy{border-left:4px solid #c0d999}
+body.frank-studio .candidate-card.decision-wait{border-left:4px solid #eab66d}
+body.frank-studio .candidate-card.decision-no-buy{border-left:4px solid #ed958a}
+body.frank-studio .candidate-title>strong{font-size:16px;color:#f0f5f5}
+body.frank-studio .candidate-head{margin-bottom:13px}
+body.frank-studio .state-text,
+body.frank-studio .candidate-time{color:#b2c6cd;font-size:12px}
+body.frank-studio .ca-row{
+  padding:10px 12px;
+  gap:9px;
+  background:#0b1c24;
+  border-color:#36505b;
+  border-radius:3px;
+}
+body.frank-studio .ca-label{font-size:11px;color:#b8cbd0}
+body.frank-studio .ca-full{font-size:12px;color:#dfebed}
+body.frank-studio .decision-reason{
+  background:#162c35;
+  border-left-color:#71b9bd;
+  padding:11px 14px;
+  margin-top:12px;
+  border-radius:0 3px 3px 0;
+}
+body.frank-studio .decision-reason span{color:#adbfca}
+body.frank-studio .decision-reason strong{color:#e4eef0;font-size:12px;line-height:1.65}
+body.frank-studio .metrics-grid{gap:0;border:1px solid #344f59;border-radius:4px;overflow:hidden}
+body.frank-studio .metric{
+  border:0;
+  border-right:1px solid #344f59;
+  border-bottom:1px solid #344f59;
+  background:#122731;
+  padding:13px 12px;
+  border-radius:0;
+}
+body.frank-studio .metric span{color:#afc0c9;font-size:11px;margin-bottom:7px}
+body.frank-studio .metric strong{color:#f0f5f6;font-size:14px;font-variant-numeric:tabular-nums}
+body.frank-studio .subvalue{color:#a7bec6;font-size:11px;line-height:1.4}
+body.frank-studio .stats{
+  gap:0;
+  margin:20px 0;
+  overflow:hidden;
+  border:1px solid #36515c;
+  border-radius:5px;
+  background:#142a34;
+}
+body.frank-studio .stat{
+  min-height:92px;
+  padding:17px 18px;
+  border:0;
+  border-right:1px solid #36515c;
+  border-radius:0;
+  background:transparent;
+}
+body.frank-studio .stat:last-child{border-right:0}
+body.frank-studio .stat span{font-size:12px;letter-spacing:0;color:#b7cad0}
+body.frank-studio .stat strong{
+  font-size:25px;
+  letter-spacing:-.035em;
+  color:#ecf6f5;
+  font-variant-numeric:tabular-nums;
+}
+body.frank-studio .badge{
+  font-family:inherit;
+  padding:4px 9px;
+  border-radius:3px;
+  letter-spacing:0;
+  font-size:11px;
+  font-weight:630;
+}
+body.frank-studio .badge.buy,
+body.frank-studio .badge.add,
+body.frank-studio .badge.reentry,
+body.frank-studio .badge.live,
+body.frank-studio .badge.running,
+body.frank-studio .badge.ok{color:#a9f1c2;border-color:#438462;background:#1c4738}
+body.frank-studio .badge.wait{color:#f3d28e;border-color:#876b3a;background:#4d3924}
+body.frank-studio .badge.no-buy,
+body.frank-studio .badge.offline,
+body.frank-studio .badge.stopped,
+body.frank-studio .badge.sell,
+body.frank-studio .badge.exit,
+body.frank-studio .badge.sell-position-unresolved{color:#ffb7ac;border-color:#94584f;background:#4d2b2c}
+body.frank-studio .badge.multiple{color:#bbdfff;border-color:#4b7599;background:#1e3b53}
+body.frank-studio .badge.accumulation{color:#d9c6ff;border-color:#75639b;background:#332c51}
+body.frank-studio .feed{max-height:620px}
+body.frank-studio .feed-row{
+  border-bottom:1px solid #2b424b;
+  padding:13px 18px;
+  font-size:12px;
+  line-height:1.6;
+}
+body.frank-studio .feed-row time{color:#bbcad1}
+body.frank-studio .feed-row small{color:#b3c4ca}
+body.frank-studio .hash-row{color:#a3bac3}
+body.frank-studio .muted,
+body.frank-studio .empty{color:#abbdc5}
+body.frank-studio .empty{
+  text-align:left;
+  padding:25px 22px;
+  line-height:1.65;
+}
+body.frank-studio .frank-watch-controls{
+  gap:12px;
+  padding:14px 19px;
+  border-top:0;
+}
+body.frank-studio .frank-watch-controls label{font-size:12px;color:#bdcbd2}
+body.frank-studio .frank-watch-controls select,
+body.frank-studio .frank-watch-controls input,
+body.frank-studio .cluster-search input,
+body.frank-studio .cluster-search select{
+  min-height:41px;
+  border-color:#4b626e;
+  color:#eff5f7;
+  border-radius:4px;
+  background:#0e2028;
+  padding:9px 12px;
+  font:inherit;
+  font-size:13px;
+}
+body.frank-studio input::placeholder{color:#8fa8b2;opacity:1}
+body.frank-studio .copy-btn,
+body.frank-studio .link-btn{
+  padding:7px 11px;
+  min-height:33px;
+  border-color:#45606b;
+  border-radius:4px;
+  color:#c9e5e7;
+  background:#16313c;
+  font-size:11px;
+  font-weight:600;
+  text-decoration:none;
+}
+body.frank-studio .copy-btn:hover,
+body.frank-studio .link-btn:hover{
+  border-color:#7fd1d3;
+  background:#20414b;
+  color:#fff;
+}
+body.frank-studio .primary-btn{
+  min-height:41px;
+  padding:10px 18px;
+  border:1px solid #8cdddf;
+  border-radius:4px;
+  background:#74d2d4;
+  color:#0c242b;
+  font-size:13px;
+  font-weight:700;
+}
+body.frank-studio .primary-btn:hover{background:#a0e7e5;color:#082028}
+body.frank-studio button:disabled{opacity:.55;cursor:not-allowed}
+body.frank-studio .frank-watch-summary{padding:12px 19px;color:#d0e0e4}
+body.frank-studio .frank-watch-footnote{padding:12px 19px 16px;color:#afc0ca;font-size:11px;line-height:1.65}
+body.frank-studio .frank-watch-table,
+body.frank-studio .holder-table{font-size:12px;line-height:1.55}
+body.frank-studio .frank-watch-table th,
+body.frank-studio .holder-table th{
+  background:#1b343f;
+  color:#d0e0e6;
+  font-size:11px;
+  font-weight:700;
+}
+body.frank-studio .frank-watch-table th,
+body.frank-studio .frank-watch-table td,
+body.frank-studio .holder-table th,
+body.frank-studio .holder-table td{padding:13px 14px;border-color:#2d4650}
+body.frank-studio .frank-watch-table tr:hover td{background:#1d3944}
+body.frank-studio .frank-watch-table a{color:#91dce6}
+body.frank-studio .frank-watch-table code{font-size:12px}
+body.frank-studio .cluster-search{padding:22px}
+body.frank-studio .cluster-search-row{gap:10px}
+body.frank-studio .cluster-preset-help{color:#aec0c8;font-size:12px;line-height:1.55}
+body.frank-studio .cluster-status{font-size:12px}
+body.frank-studio .cluster-status span{color:#bad0d8}
+body.frank-studio .cluster-recovery{
+  padding:13px 16px;
+  border-color:#365662;
+  background:#122934;
+  border-radius:4px;
+  gap:10px;
+}
+body.frank-studio .cluster-recovery span{color:#abc4cc;font-size:12px;line-height:1.5}
+body.frank-studio .cluster-summary-card,
+body.frank-studio .cluster-metric,
+body.frank-studio .fact-card,
+body.frank-studio .cluster-card,
+body.frank-studio .conclusion-grid>div,
+body.frank-studio .coverage-grid>div{
+  border-color:#38535f;
+  background:#132a34;
+  border-radius:4px;
+}
+body.frank-studio .cluster-summary-card{padding:14px}
+body.frank-studio .cluster-summary-card span,
+body.frank-studio .cluster-metric span,
+body.frank-studio .fact-card>span,
+body.frank-studio .coverage-grid span{color:#b4c8cf;font-size:11px}
+body.frank-studio .cluster-summary-card strong,
+body.frank-studio .cluster-metric strong,
+body.frank-studio .fact-card strong{color:#e8f2f5}
+body.frank-studio .cluster-preview{border-color:#477481;background:#142d37}
+body.frank-studio .cluster-preview-head span,
+body.frank-studio .cluster-preview>p{color:#b8cbd2}
+body.frank-studio .cluster-detail-fold>summary,
+body.frank-studio .ended-panel>summary,
+body.frank-studio #coverage-details>summary{color:#c4dce0;font-size:12px}
+body.frank-studio a{color:#91dce6}
+body.frank-studio code{color:#d7e8ef}
+body.frank-studio :is(button,input,select,a,summary):focus-visible{
+  outline:2px solid #93e5e6;
+  outline-offset:3px;
+}
+body.frank-studio .toast{background:#d5f3ef;color:#102832}
+@media (max-width:1120px){
+  body.frank-studio .topbar{align-items:flex-start}
+  body.frank-studio .stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+  body.frank-studio .stat:nth-child(3){border-right:0}
+  body.frank-studio .stat:nth-child(-n+3){border-bottom:1px solid #36515c}
+}
+@media (max-width:760px){
+  body.frank-studio .topbar{flex-direction:column;padding:18px}
+  body.frank-studio .runtime{max-width:100%;width:100%;border:0;border-top:1px solid #36505b;padding:12px 0 0;align-items:flex-start}
+  body.frank-studio .runtime-main{justify-content:flex-start}
+  body.frank-studio .brand-mark{width:44px;height:44px;flex-basis:44px;font-size:26px}
+  body.frank-studio main{padding:14px 13px 40px}
+  body.frank-studio .view-tabs{margin-bottom:13px}
+  body.frank-studio .view-tab{flex:1;padding:10px 9px;font-size:12px}
+  body.frank-studio .panel-title{flex-direction:column;align-items:flex-start;padding:15px}
+  body.frank-studio .panel-title>span{white-space:normal}
+  body.frank-studio .priority-panel>.panel-title{padding:19px}
+  body.frank-studio .candidate-list{padding:10px}
+  body.frank-studio .candidate-card{padding:13px}
+  body.frank-studio .metrics-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.frank-studio .frank-watch-controls input{min-width:100%}
+  body.frank-studio .cluster-search{padding:15px}
+  body.frank-studio .cluster-search-row{grid-template-columns:1fr}
+  body.frank-studio .feed-row{grid-template-columns:1fr}
+  body.frank-studio .feed-row time{grid-column:1;text-align:left}
+}
+@media (max-width:480px){
+  body.frank-studio .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.frank-studio .stat{border-right:1px solid #36515c;border-bottom:1px solid #36515c}
+  body.frank-studio .stat:nth-child(2n){border-right:0}
+  body.frank-studio .stat:last-child{border-bottom:0}
+  body.frank-studio .ca-row{grid-template-columns:minmax(0,1fr) auto}
+  body.frank-studio .ca-label{display:none}
+  body.frank-studio .ca-row .link-btn{grid-column:1/-1;justify-self:start}
+  body.frank-studio .metrics-grid{grid-template-columns:1fr}
+  body.frank-studio .cluster-summary{grid-template-columns:1fr}
+  body.frank-studio .cluster-summary-card:first-child{grid-column:auto}
+}
+@media (prefers-reduced-motion:reduce){
+  body.frank-studio .toast{transition:none}
+}
