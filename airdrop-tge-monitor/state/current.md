@@ -1,12 +1,12 @@
 # Airdrop / TGE Monitor State (bounded materialized cache)
-Last synchronized: 2026-11-06 21:00:32 Asia/Bangkok
+Last synchronized: 2026-11-06 21:58:34 Asia/Bangkok
 Status: PARTIAL, verified_complete=false. This file is a compact convenience index, never completion evidence. Original append-only attempt/final records and state/known-events.md are authoritative. Last fully verified complete sweep remains **2026-10-10T07:52:16+07:00**; partial run must never advance it.
 
 ## Latest terminal
-- authoritative_final: `airdrop-tge-monitor/runs/2026-11-06/210032-final.md`
+- authoritative_final: `airdrop-tge-monitor/runs/2026-11-06/215834-final.md`
 - final_blob_sha: `pending-readback`
 - run_status: PARTIAL
-- candidate_count: 2
+- candidate_count: 3
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
@@ -18,7 +18,7 @@ Status: PARTIAL, verified_complete=false. This file is a compact convenience ind
 
 ## Last meaningful per-shard attempts (PARTIAL_ONLY, not full coverage)
 - shard0: 2026-11-06 20:00:21 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/200021-final.md`; PARTIAL_ONLY
-- shard1: 2026-11-06 21:00:32 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/210032-final.md`; PARTIAL_ONLY
+- shard1: 2026-11-06 21:58:34 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/210032-final.md`; PARTIAL_ONLY
 - shard2: 2026-11-06 18:04:09 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/180409-final.md`; PARTIAL_ONLY
 - shard3: 2026-11-06 19:01:26 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/190126-final.md`; PARTIAL_ONLY
 
