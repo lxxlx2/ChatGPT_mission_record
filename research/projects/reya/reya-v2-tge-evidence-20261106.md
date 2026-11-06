@@ -1,5 +1,25 @@
 # Reya ($REYA): v2 progress, declining legacy business, TGE readiness and prediction-market evidence
 
+## 2026-11-06 CoinList purchase at risk and failure/refund terms
+
+**User scope correction:** The user holds a **CoinList token-sale subscription only**, **no Reya points or airdrop allocation claimed**. Prior answers must **not** recommend keeping Season 1 points, or attribute Season 2 economics to this user's actual cost basis. The relevant exposure is a 2025 CoinList purchase, and the key question is principal recovery if the issuer fails before TGE.
+
+**Direct user-specific Gmail receipt evidence, read-only, no credentials/PII stored here:**
+- **2025-11-25 17:24 UTC**, official CoinList receipt email subject `You've committed 5,000.00 USD to the Reya` confirms **$5,000 USD subscription commitment**, **not necessarily final accepted allocation**. Email states if not selected the purchase will be refunded within **48h** after sale close (marketing receipt wording; website FAQ now says **5 business days** for unsuccessful allocations). Do not apply either rule to **successful paid allocations**.
+- **2025-12-05 22:43 UTC**, official CoinList email subject `The results for Reya are in` points to account status but **does not disclose actual confirmed filled USD or token amount**. A full search of connected life/work mail for Reya did not yield a detailed final fill or authenticated 2025 issuer Token Purchase Agreement. Thus **EXPOSURE_AMT_ACCEPTED = UNVERIFIED**, `REFUNDED_UNUSED_AMT = UNVERIFIED`. Do **not** represent $5,000 as already irreversibly invested, as a current marked REYA holding, or as realized loss. If all $5,000 were filled at $0.01875, tokens would be **266,666.6667 REYA** and 50% initially unlocked at eventual TGE; math is a **conditional scenario** only.
+
+**Issuer/platform official publicly verifiable terms:**
+- [CoinList Reya sale deal page](https://coinlist.co/reya): initial purchase Nov25–Dec2 2025; sale $0.01875, 50% TGE unlocked, remaining 50% linear six months; TGE/listing **to be announced**. Its explicit refunds apply to **no allocation / unused subscription funds**; **NO public unconditional issuer-failure refund or long-TGE-delay redemption clause located**.
+- [CoinList current terms](https://coinlist.co/terms) acknowledge issuer insolvency, fraud, non-performance, illiquidity and total loss and separate platform services from third-party sale contracts. The current posted terms may **differ from the version accepted by user in Nov2025**; cannot conclude contractual rights conclusively without the exact historic **Reya Token Purchase Agreement / Offering Terms**. CoinList is not a proven principal guarantor of successful allocations.
+- Distinct outcomes: delay = continuing lock, no confirmed automatic refund; issuer voluntarily cancels and refunds = contingent on confirmed decision and funds; permanent failure/insolvency = real risk of loss of full accepted amount and possible uncertain claim if original agreement provides remedy; unaffiliated/unaccepted subscriptions = specific refund terms above. No evidence as of Nov6 of actual formal project cancellation, official insolvency, confirmed refund event, or successful token delivery.
+
+**Practical next evidence:** User should read authenticated CoinList Reya `Order / Allocation / Transaction details` to establish **actual allocated USD, pending claimable REYA and any already returned unused funds**, then recover **the purchase-date Token Purchase Agreement** and obtain written confirmation from CoinList and issuer addressing complete failure / deadline / refund/recourse. **Do not send support request or initiate account operation without user's explicit direction.**
+
+**Status:** `USER_COINLIST_SUBMITTED_5000_CONFIRMED_BY_ORIGINAL_EMAIL / FINAL_ALLOCATION_UNCONFIRMED / REFUND_POLICY_SUCCESSFUL_ALLOCATIONS_NOT_PROVEN / 2026_TGE_ODDS_LOW / NO_LOSS_REALIZED_PROVEN / RESEARCH_ONLY`.
+
+---
+
+
 **Evidence date:** 2026-11-06 (Asia/Bangkok). Research-only snapshot; no new TGE, claim, market listing, trade, notification or monitoring authorization.
 
 ## Executive finding
