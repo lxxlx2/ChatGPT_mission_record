@@ -1,18 +1,18 @@
 # Airdrop / TGE Monitor State (bounded materialized cache)
-Last synchronized: 2026-11-07 02:56:47 Asia/Bangkok
+Last synchronized: 2026-11-07 03:58:09 Asia/Bangkok
 Status: PARTIAL, verified_complete=false. This file is a compact convenience index, never completion evidence. Original append-only attempt/final records and state/known-events.md are authoritative. Last fully verified complete sweep remains **2026-10-10T07:52:16+07:00**; partial run must never advance it.
 
 ## Latest terminal
-- authoritative_final: `airdrop-tge-monitor/runs/2026-11-07/025647-final.md`
-- final_commit_sha: `38932a3ac9a2f72894e45023171c841035977313`
+- authoritative_final: `airdrop-tge-monitor/runs/2026-11-07/035809-final.md`
+- final_commit_sha: `8b530dd84e1297e09ce1494e9b5b739c1264de68`
 - run_status: PARTIAL
 - candidate_count: 1
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
-- scheduled_shard: 2
-- executed_shard: 2
+- scheduled_shard: 3
+- executed_shard: 3
 - original_x_context: UNAVAILABLE
 - completeness: Unverified original StandX DUSD issuer claim and user eligibility; other bounded-shard first-party source gaps remain
 
@@ -20,7 +20,7 @@ Status: PARTIAL, verified_complete=false. This file is a compact convenience ind
 - shard0: 2026-11-06 20:00:21 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/200021-final.md`; PARTIAL_ONLY
 - shard1: 2026-11-07 01:59:54 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-07/015954-final.md`; PARTIAL_ONLY
 - shard2: 2026-11-07 02:56:47 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-07/025647-final.md`; PARTIAL_ONLY
-- shard3: 2026-11-06 23:58:06 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/235806-final.md`; PARTIAL_ONLY
+- shard3: 2026-11-07 03:58:09 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-07/035809-final.md`; PARTIAL_ONLY
 
 ## Open urgent and eligibility state
 - Always-hourly urgent5: Concrete, MetaMask, Claynosaurz, HEEBOO, Space @intodotspace. Dynamic Surf and StandX; full scope and four-shard groups remain defined by `REGISTRY.md`.
