@@ -1,6 +1,6 @@
 # Frank 原问题统一验收（2026-11-04）
 
-当前已安装产品源码：`e977cc09023bdfcc9ce80660aedf2d58d2febc5f`；产品父提交：`b0dc014d4512a28257017e16fc22725d9625c757`；本次安装基线：`e069a925b71985c35b75cc8fd01eb75a9c97dd87`。当前状态见 [STATUS](./STATUS.md)，当前机器证据见[本机更新回执](./evidence/frank-dashboard-local-update-20261106.json)。下文保留Nov4起各阶段的固定SHA记录，不把旧版本或旧数据改写为当前。
+当前已安装产品源码：`e977cc09023bdfcc9ce80660aedf2d58d2febc5f`；产品父提交：`b0dc014d4512a28257017e16fc22725d9625c757`；本次安装基线：`e069a925b71985c35b75cc8fd01eb75a9c97dd87`。当前状态见 [STATUS](./STATUS.md)，当前来源证据见[正式本机真实查询回执](./evidence/frank-ca-live-installed-20261106.json)，安装身份仍见[本机更新回执](./evidence/frank-dashboard-local-update-20261106.json)。下文保留Nov4起各阶段的固定SHA记录，不把旧版本或旧数据改写为当前。
 
 结论：**当前软件安装与本机交付 PASS；真实来源验收及原始完整诉求 PARTIAL；INVEST_NO_GO / TRADE_NO_GO。** 不以CI、合成结果或任务结束代替全量尽调。独立review按用户豁免。本次仅Dashboard更新，无付费采购、交易或新监控；历史阶段状态以下方日期为准。
 
@@ -9,6 +9,10 @@
 2026-11-06重要Owner增量：原PR220最新`e977cc09023bdfcc9ce80660aedf2d58d2febc5f`（parent`b0dc014d4512a28257017e16fc22725d9625c757`）修复普通Owner因角色门槛漏掉渐进历史检查。旧快照3个未深查Owner合计3.3159%，新7例先红后绿；60相关/2144完整本机Python、159前端及CI113（2116/4skip、159、41合成浏览器）通过。真实同CA/既有RPC的Top20专项286次、179缓存、132.798秒后getSignaturesForAddress 429首错停止，与提供方控制台请求/响应逐字段一致。当前第7/9名普通Owner虽已选入却尚未读到历史，不能宣布补齐。两次硬禁网重放286请求/响应及失败交易抑制/去重通过，没有成功报告。实际Chrome本轮只看静态来源证据及提供方日志，不冒充新产品/全量来源验收。候选未安装；全量CA仍PARTIAL、生产NO_GO。详见[新回执](./evidence/frank-ca-material-owner-history-20261106.json)；前述Nov5恢复与e069安装保留历史SHA身份。
 
 2026-11-06本机最新功能更新：按用户本轮明确指令，正式本地Dashboard已从e069切换到PR220最新`e977cc09023bdfcc9ce80660aedf2d58d2febc5f`，新PID58030。前文“候选未安装”为上轮历史状态。固定执行器先提交至`aec4e5cbbb71a0c74be08077f61d5a2602ab7c62`并读回，再仅重载既有Dashboard；Scanner/MC Loop未重启。487旧文件/28报告/一致SQLite备份校验及旧新隔离HTTP通过；安装目录81项回归、实际正式Chrome刷新/信号/旧报告GET、安装目录合成跨重启恢复与原ID重读通过。控制数据/报告/批准策略等哈希未变；旧报告和D2保留原时间，本轮真实RPC/CA POST0。Scanner两份维护文件已与PR244最新438bbe20 blob核对一致。软件与本机更新PASS，完整真实CA仍PARTIAL、交易NO_GO。详见[本轮更新回执](./evidence/frank-dashboard-local-update-20261106.json)。
+
+2026-11-06正式8766真实查询补验：产品HEAD仍e977，最新main dd252196d73cf2d4940f834601b596afee6916e3无Frank/规则新差异。按用户当前继续、免费、直接Chrome指令，仅对同一既有CA从正式UI发起1次新分析，654 RPC wire/243缓存/454.497秒完成，原任务上限不变。886逻辑读取保存，报告/DONE marker/磁盘/精确job GET一致，报告SHA256 `62b2b8f7ac9a7f6e323ba831889e601615930b2917674110349cdb7d85ac084d`。当前第7/9/10/11名重大普通Owner已深扫，补闭旧版漏选的本轮真实验收；既有市场/独立同池索引OK，叙事2条有限陈述。GPA在6次wire尝试后以HTTP429结束，全Mint排名未得；27历史窗口16 PAGE_LIMIT/11空页且全部非完整钱包历史，所有8类必需证据仍PARTIAL。市场价格差0.1071%、池USD值差0.0616%，但来源as-of及同链快照未核实，不作为parity或可交易证明。
+
+同批保存检查点两次硬禁网逐序回放各886条，业务报告一致；冻结两个原本机收取时间字段，不改来源/TTL，不作为新鲜度或真实恢复证明。784唯一交易中26失败交易未入经济证据，125交易/8资金/122归集/157边/200历史观察逐条成功状态及去重核验，27游标可复核。26原有固定报告与控制/策略/D2等字节未变，latest/history和新报告/检查点/缓存为查询预期写入。正式Chrome原ID重读通过并保留；无新监听端口、重启、通知或交易。免费阶段累计1383，原一次572及离线0分列。此段取代前轮“新选Owner未读”“独立/叙事本轮未采集”“本轮真实CA POST0”的当前状态；历史段落保留原身份。**本机软件与有界执行PASS，完整原诉求PARTIAL / INCOMPLETE_EVIDENCE，INVEST_NO_GO / TRADE_NO_GO。** 详见[正式真实查询回执](./evidence/frank-ca-live-installed-20261106.json)及[可复核运行脚本](./evidence/frank_checkpoint_capture_audit_20261106.py)。
 
 下表保留2026-11-04 e069阶段的验收记录（包括当时PID96221）；当前安装版本与PID58030以上方Nov6更新及当前回执为准。前轮33f2→5f86548原始验收及[e069失败交易修复](./evidence/frank-failed-tx-replay-20261104.json)保持原SHA身份。
 
