@@ -1,18 +1,18 @@
 # Airdrop / TGE Monitor State (bounded materialized cache)
-Last synchronized: 2026-11-06 10:55:18 Asia/Bangkok
+Last synchronized: 2026-11-06 11:02:58 Asia/Bangkok
 Status: PARTIAL, verified_complete=false. This file is a compact convenience index, never completion evidence. Original append-only attempt/final records and state/known-events.md are authoritative. Last fully verified complete sweep remains **2026-10-10T07:52:16+07:00**; partial run must never advance it.
 
 ## Latest terminal
-- authoritative_final: `airdrop-tge-monitor/runs/2026-11-06/105518-final.md`
-- final_blob_sha: `9b094f19a4a1014aea587bb16acebc285d8b6850`
+- authoritative_final: `airdrop-tge-monitor/runs/2026-11-06/110258-final.md`
+- final_blob_sha: `038f24b9c24cd00024972ed0cb8a08849724b893`
 - run_status: PARTIAL
 - candidate_count: 2
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
-- scheduled_shard: 2
-- executed_shard: 2
+- scheduled_shard: 3
+- executed_shard: 3
 - original_x_context: UNAVAILABLE
 - completeness: Unverified original StandX DUSD issuer claim and user eligibility; other bounded-shard first-party source gaps remain
 
@@ -20,7 +20,7 @@ Status: PARTIAL, verified_complete=false. This file is a compact convenience ind
 - shard0: 2026-11-06 08:57:47 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/085747-final.md`; PARTIAL_ONLY
 - shard1: 2026-11-06 01:58:42 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/015842-final.md`; PARTIAL_ONLY
 - shard2: 2026-11-06 10:55:18 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/105518-final.md`; PARTIAL_ONLY
-- shard3: 2026-11-06 03:58:00 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/035800-final.md`; PARTIAL_ONLY
+- shard3: 2026-11-06 11:02:58 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-06/110258-final.md`; PARTIAL_ONLY
 
 ## Open urgent and eligibility state
 - Always-hourly urgent5: Concrete, MetaMask, Claynosaurz, HEEBOO, Space @intodotspace. Dynamic Surf and StandX; full scope and four-shard groups remain defined by `REGISTRY.md`.
