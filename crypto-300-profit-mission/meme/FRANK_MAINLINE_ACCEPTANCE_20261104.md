@@ -8,6 +8,8 @@
 
 2026-11-06重要Owner增量：原PR220最新`e977cc09023bdfcc9ce80660aedf2d58d2febc5f`（parent`b0dc014d4512a28257017e16fc22725d9625c757`）修复普通Owner因角色门槛漏掉渐进历史检查。旧快照3个未深查Owner合计3.3159%，新7例先红后绿；60相关/2144完整本机Python、159前端及CI113（2116/4skip、159、41合成浏览器）通过。真实同CA/既有RPC的Top20专项286次、179缓存、132.798秒后getSignaturesForAddress 429首错停止，与提供方控制台请求/响应逐字段一致。当前第7/9名普通Owner虽已选入却尚未读到历史，不能宣布补齐。两次硬禁网重放286请求/响应及失败交易抑制/去重通过，没有成功报告。实际Chrome本轮只看静态来源证据及提供方日志，不冒充新产品/全量来源验收。候选未安装；全量CA仍PARTIAL、生产NO_GO。详见[新回执](./evidence/frank-ca-material-owner-history-20261106.json)；前述Nov5恢复与e069安装保留历史SHA身份。
 
+2026-11-06本机最新功能更新：按用户本轮明确指令，正式本地Dashboard已从e069切换到PR220最新`e977cc09023bdfcc9ce80660aedf2d58d2febc5f`，新PID58030。前文“候选未安装”为上轮历史状态。固定执行器先提交至`aec4e5cbbb71a0c74be08077f61d5a2602ab7c62`并读回，再仅重载既有Dashboard；Scanner/MC Loop未重启。487旧文件/28报告/一致SQLite备份校验及旧新隔离HTTP通过；安装目录81项回归、实际正式Chrome刷新/信号/旧报告GET、安装目录合成跨重启恢复与原ID重读通过。控制数据/报告/批准策略等哈希未变；旧报告和D2保留原时间，本轮真实RPC/CA POST0。Scanner两份维护文件已与PR244最新438bbe20 blob核对一致。软件与本机更新PASS，完整真实CA仍PARTIAL、交易NO_GO。详见[本轮更新回执](./evidence/frank-dashboard-local-update-20261106.json)。
+
 | 原问题 / 交付项 | 实际验收 | 结论 |
 |---|---|---|
 | Scanner复用已有私有RPC、恢复/去重维护 | 原固定1f2c6af仍运行；本轮实时快照LIVE/0错误/无漂移/无积压；未执行Scanner重启 | 自然BUY/ADD识别及不达门槛抑制已补验；达标通知/长期行为不外推 |

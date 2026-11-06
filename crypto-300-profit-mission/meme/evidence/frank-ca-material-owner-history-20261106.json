@@ -545,5 +545,6 @@
     "frank_ca_material_history_probe.py": "87ae8dc4e9256c5b4563527928cbf9ae6b08347274a8e906801a8d2f1202bd0f",
     "frank_ca_material_history_replay.py": "a721591330a996f0b0712c7660ba237cc8036e4073fae74dbe0dd01da5675ac9",
     "frank_ca_material_history_audit.py": "5692e21a2eba9b30a8b3c00d3d799a4947a708b1a2398bed5f37cd1731657e94"
-  }
+  },
+  "current_status_superseded_by": "frank-dashboard-local-update-20261106.json"
 }
