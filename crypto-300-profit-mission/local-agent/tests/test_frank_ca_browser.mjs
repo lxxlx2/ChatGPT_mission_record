@@ -149,6 +149,9 @@ try {
  await page.locator('#cluster-completeness summary').click();
  check('worker DONE persists incomplete product outcome and browser shows required evidence gaps');
  check('full mint Owner ranks are separate from raw Top20 history and preserve uncovered history');
+ assert.equal(await page.locator('#cluster-narrative').isVisible(),true);
+ assert.equal(await page.locator('.cluster-detail-fold').getAttribute('open'),null);
+ check('narrative content is visible in the primary result while technical evidence stays folded');
  await page.locator('.cluster-detail-fold > summary').click();
  assert.equal(await page.locator('#cluster-narrative').isVisible(),true);
  assert.match(await page.locator('#cluster-narrative').innerText(),/A fictional cat/);
