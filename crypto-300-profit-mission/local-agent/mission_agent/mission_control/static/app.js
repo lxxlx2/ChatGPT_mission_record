@@ -1579,7 +1579,7 @@ function renderNarrativeSources(report,links) {
   const postUrl=value=>{
     const url=safeHttpUrl(value);
     if (!url) return '';
-    try {const u=new URL(url);return u.protocol==='https:' && !u.username && !u.password && !u.search && !u.hash && ['x.com','www.x.com','twitter.com','www.twitter.com'].includes(u.hostname) && /^\/[A-Za-z0-9_]{1,30}\/status\/[0-9]+\/?$/.test(u.pathname) ? url : '';} catch {return '';}
+    try {const u=new URL(url);return u.protocol==='https:' && !u.port && !u.username && !u.password && !u.search && !u.hash && ['x.com','www.x.com','twitter.com','www.twitter.com'].includes(u.hostname) && /^\/[A-Za-z0-9_]{1,30}\/status\/[0-9]+\/?$/.test(u.pathname) ? url : '';} catch {return '';}
   };
   const cards=evidence.map(r=>{
     const url=safeHttpUrl(r.source_url);

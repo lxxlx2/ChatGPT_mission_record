@@ -1229,11 +1229,11 @@ for (const change of ['forged_verification','broken_content_hash','forged_theme_
 
 test('narrative post hints reject unsafe targets and do not trigger reads',()=>{
   const report=storyReport(),row=report.narrative.evidence[0];
-  row.story.post_links=['javascript:bad()','https://127.0.0.1/elonmusk/status/123',
+  row.story.post_links=['javascript:bad()','https://127.0.0.1/elonmusk/status/123','https://x.com:8443/elonmusk/status/123',
     'https://x.com.attacker.example/elonmusk/status/123','https://u:SECRET@x.com/elonmusk/status/123',
     'https://x.com/elonmusk/status/123?key=SECRET','https://x.com/elonmusk/status/123'];
   const h=harness();h.context.renderClusterReport(report);const html=h.element('cluster-narrative').innerHTML;
-  assert.doesNotMatch(html,/SECRET|attacker|127\.0\.0\.1|javascript:/);
+  assert.doesNotMatch(html,/SECRET|attacker|127\.0\.0\.1|javascript:|8443/);
   assert.match(html,/href="https:\/\/x\.com\/elonmusk\/status\/123"/);
   assert.equal(h.requests.filter(x=>x.url.startsWith('https://')).length,0);
 });
