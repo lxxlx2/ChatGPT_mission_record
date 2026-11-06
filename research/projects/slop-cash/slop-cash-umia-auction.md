@@ -1,6 +1,45 @@
 # Slop Cash / SLOP — Umia auction participation research
 
 
+## 2026-11-06 SLOP public ICO vs secondary-market decision update
+
+**As of 2026-11-06 ~10:20 Asia/Bangkok.** Research only; NO_GO for trading. User still intends at most **300 USDG**, **PUBLIC_ONLY**, never raises the already recorded hard ceiling **tick28 $0.014640705882 / $1.464M FDV** without an independent new user decision. This section is an updated **decision recommendation** to prefer waiting for post-TGE onchain price/exit-liquidity validation rather than chasing the public sale.
+
+### Current actual evidence (not a forward forecast)
+
+- Authenticated official Umia page `https://app.umia.finance/p/slop-cash/auction` displayed **434,486 USDG total bid commitments, 173 bids, ~2,511 per bid**, **$0.00966** indicative clearing price (**~$965.5K FDV**), 45M auction tokens, $400K minimum and $0.02196 maximum token bid price. **0 already cleared** in early phase.
+- Top displayed bids: **43,958; 15,000; 15,000; 15,000; 11,000 USDG**; first five sum **99,958 = ~23.0%** of aggregate. Bids != unique bidders and their max-price distribution was **not** independently decoded. Total commitments alone cannot imply a tick28 clear, guarantee sellout or predict a TGE listing price.
+- Direct Alchemy Robinhood Chain query near head block **107266142**: CCA `0x901f26b42c61af93f548efa0fdf8df4d342b124c` `currencyRaised()=0`, `isGraduated()=false`; Umia hook `0xb8c877cf6ce506dbc3098cd086e3d4898659bd2d` zk-only committed counter **125,592.096084 USDG**, not total auction commitments because other valid server-permit paths exist. CCA public release remains tied to onchain `startBlock=108530471`; do not replace actual block with an unverified scheduled clock time.
+- Official Slop profile snapshot on Nov6 shows approx **4.5K X followers** and early-bid announcements with view counts ranging from a few thousand to ~14K; social impressions **do not prove** conversion to unique buyers or post-TGE liquidity. Sources: https://www.sotwe.com/SlopCash , https://x.com/SlopCash . Team claims **11K+ scored merged PRs since July**; operator's https://record.slop.cash/ reports an October29 compiled prior 35-day sample of **6,150 PRs + 1,697 accepted reviews, 152 contributors, 6 repositories**, and **6,004.98 USDC** from 72 finalized *August* contributor payouts. The figures have different windows and definitions; the payments count is operator-indexed, not independently reproduced with RPC here.
+
+### Crucial primary issuer operating filing published 2026-11-05
+
+[Blockworks Slop Cash B1 v1.4 token transparency filing](https://blockworks.com/token-transparency/filing/slop-cash), **ISSUER-REPORTED**, says:
+
+- **Pre-revenue**, no project-funded vault active / no protocol fee revenue as of filing. Published fees: **2%** from approved contributor payouts, **2%** on unused withdrawn vault funds, and **25%** of private security awards. Historic pilot payouts to contributors are distinct from protocol fee revenue.
+- **$35,000/month capped treasury operations draw**, supporting both founders and operating expenses. Of gross auction proceeds **20% is intended for initial treasury-owned LP USDC**, leaving 80% for other treasury uses. At $400K gross, $320K/35K ~= **9.14 months at full monthly cap**; $658.8K gross implies ~$527K/35K ~= **15.06 months**. These are *maximum-draw runway illustrations*, not observed monthly burn. To gross $35K/month entirely from the **2%** contributor fee, absent any other fee channel, would require **$1.75M of monthly fee-bearing approved contributor awards**; this is a mechanical scenario, not currently achieved business volume.
+- The native application and contributor payouts are funded in stablecoins and do **not require holding SLOP**; $SLOP provides governance only. Filing disclaims dividends, profit shares, buybacks, rewards/staking or fee-routing to tokenholders. Therefore high PR counts are evidence of product activity, not a mechanical source of SLOP buying demand.
+- **56% nominal supply liquid at TGE**: **45M auction**, **9M protocol LP pool**, **2M unlocked contributor allocation**; note that LP-held inventory is not equivalent to all 56M being held by sellers. Of 45M auction, issuer states **9M zkTLS access** and **6.75M whitelisted-funds access** within auction allocation, with no hidden price discount; these are **access tranches**, not verified filled quantities.
+- Token supply: direct Robinhood `totalSupply()` read **100M SLOP**, `decimals()=18`, token owner `0x96028de971a9d37404f5030f6284b40640e2d1a2`. Official [Umia VentureToken.sol](https://github.com/umiafinance/protocol/blob/main/src/tokens/VentureToken.sol) has **onlyOwner mint/burn/pause**. The filing states new mint/burn requires a successful governance decision market. Thus 100M is **present supply and no scheduled inflation**, not independently proven an irreversible immutable max supply against future governance; execution control requires further chain verification. This nuance should supersede any older unqualified "hard-capped supply forever" assertions.
+- **Funding concentration:** first five early bid display positions ~23% of public aggregate, fairly small number of early bids (173), no realized price discovery for all 45M until public issuance, and market-side future token buyer depth **unknown**.
+
+### Historical actual-mechanism comparisons, not SLOP forecasts
+
+1. **Umia UMIA auction**, official https://umia.finance/tge: cleared **$0.36/UMIA** and sold 17.3M, Aug26–Sep2 2026. CoinMarketCap historical page https://coinmarketcap.com/currencies/umia/ reported **all-time high $0.956 on Oct29, 2026** (~**2.66x** auction clearing); this was ~57 days *after* TGE, not a verified opening-minute return. Distinct platform/governance capitalization and liquidity; not valid to assume SLOP reproduces this.
+2. **Jack Butcher BALANCE Uniswap CCA**, official https://jack.art/credits/whitepaper: final close **0.000227 ETH/BALANCE** on Oct21, 2026 (268,750 units = 0.5% supply). Oct21 ETHUSD daily close **$2,470.77** from https://finance.yahoo.com/quote/ETH-USD/history/ implies approximate close-day translated auction price **~$0.56086**. OpenSea https://opensea.io/token/ethereum/0x3620540c994433d7b4a628c46d2ed5f92572ea07 reports **Oct21 ATH $0.1767** whereas Dexonomics https://dexonomics.io/eth/balance/0xd262227cd6ad883b3d85c5138f017f90aaac0ff3ce69136c36a7280dbd009a03 shows **Oct21 daily high $0.3509**. **These vendor high estimates conflict substantially** and should be used only as evidence that observed indexed secondary prices can fall below the CCA close, NOT a single proven onchain global ATH, universal bidder cost basis or realized P/L. BALANCE 0.5% auction float contrasts sharply with SLOP 45% auction; do not fit an empirical return distribution from these two samples.
+
+### Forward decision gate (policy, not a backtested model)
+
+- **Default WAIT / NO ICO bid at the current demand trajectory**, do not FOMO. If the Nov7 public-opening validated clearing is still below **tick24 $0.01254917647** (FDV about **$1.255M**), demand distribution does not imply imminent outbidding, and front-end signed permit works, an **optional small exploratory limit of up to 100–150 USDG** is a *judgment-based risk limit*, not an inferred probability of profit. The remaining overall $300 budget stays unspent for post-launch. The prior tick28 $1.464M remains an absolute maximum, **not a target execution price**. At >=tick24, prefer skipping ICO; >=tick28, DEFINITELY SKIP; no Market order and no raising cap.
+- **Post-TGE Nov10/11 only after actual pool exists:** verify true final CCA bid cost/claim, Uniswap v4 pool price and effective executable buy/sell quotes for intended size, LP stablecoin reserves, swaps and sell pressure from early bidders/contributors. No purchase in first minutes solely to catch a presumed pump. If available quotes place **actual FDV at or below 1.0M–1.25M, selling is demonstrably possible and the LP is usable**, consider a small staged spot entry **$50–100 first**, total max $300 without a new user budget decision. These FDV levels are user-risk heuristics derived from prior cap/floor, not validated “fair value”. If market opens >$1.464M FDV, default skip.
+- Stop/exit: avoid averaging down without fresh evidence, do not assume advertised 20% LP capital has migrated until check onchain, distinguish liquidity depth from total LP TVL, check price impact for a sell of the actual size. Favor no position if evidence insufficient.
+
+**Source caveats**: Independent direct contract balances and page commitments proven; pre-revenue and fee policies are issuer filing, not an audited financial statement. Post-listing prices, future bid limit distribution and launch volatility are **UNVERIFIED**; scenario thresholds are **ANALYSIS**, not observed market data. No new trade, email, scheduled monitor, wallet action or production change.
+
+---
+
+
+
 ## 2026-11-06 early commitment threshold vs sellout
 
 **Question:** Can early-stage bids exceed the displayed 200K limit, meet the 400K minimum, or deny a $300 public-only limit bid at ~$1.464M FDV?
