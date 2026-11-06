@@ -1,5 +1,19 @@
 # 1609SAT / MetaDAO Apps Program：SAT 备考产品、公售估值、早期流通与退出风险调查
 
+## 2026-11-06 user additional SAT contribution verified at 10:26 Bangkok
+
+**Evidence class: DIRECT SOLANA MAINNET RPC, successful transaction / per-user FundingRecord.** This section **supersedes the previous $300-only position snapshot** elsewhere in this historical research. User explicitly reported adding funds, and requested read-only on-chain confirmation; no user-requested additional action beyond research record update.
+
+- User-specific [successful second Fund transaction](https://solscan.io/tx/5hSMbGTKmRMtskd8RTg3RBFHBWsiFDzvSjjg8Pv2WLPUYnTpR4riuX1Vt3XEZszhMEuoDCyhZxCv7kJwzxfZg5Qk) at **slot 465957443**, **2026-11-06 03:26:44 UTC / 10:26:44 Bangkok**: `meta.err=null`; nested SPL Token transfer **318,190,000 raw USDC units = 318.19 USDC**, signed by user wallet `BP7h…4dSp`, from USDC token account `AaHmxVnUryLCrSr32zxrDGzfafXTvuHATURZbBy6XQ6A` into SAT canonical USDC escrow `3HixScNNPUDXU4XLf1QqYkFQCqcUimoW1Bck95fw1AZh`; instruction `Fund` succeeded.
+- Previously established first successful Fund transaction [ajQNxZ...](https://solscan.io/tx/ajQNxZKFbMQoxp5axvKJ9tFpsFWyaLLoZyhAf2KKXPqM3hroGc4WNSPVoknG8HPEyyKJK5TXTZggD2ViGbzi4KG) at slot 465815490, 2026-11-06 02:00:28 Bangkok, **300 USDC**.
+- The exact user FundingRecord `45jwzpest3hPhhDXoS6WqxJ2t3Z2kLDZUrQxMXQ84FNg` was independently read and decoded at **slot 465962174**: `committed_amount=618190000` raw (**618.19 USDC total**), `approved_amount=0` (**not yet settled**), `is_tokens_claimed=false`, `is_usdc_refunded=false`; transaction history for this PDA has precisely **two successful Fund signatures** listed above. This record is direct evidence of *escrowed subscription rights*, **not** 618.19 SAT cash investment cost, actual SAT token allocation, spendable wallet USDC, or final realized P&L.
+- New spending since previous historical snapshot: **318.19 USDC**. Economic status `COMMITTED_618_19_USDC / ALLOCATION_PENDING / REFUND_PENDING / NO_SAT_CLAIMED / NO_ADDITIONAL_TRADE_EXECUTED_BY_CHATGPT`. Continue to distinguish nominal commitments from eventual actual accepted amount and refundable remainder; founder/program approvals and final per-SAT price remain unknown.
+
+**No monitoring, alert, new automation, email, additional contribution, wallet action or production changes** performed in this audit.
+
+---
+
+
 ## 2026-11-06 SAT live raise and user $300 direct funding proof
 
 **As-of:** 2026-11-05 19:03 UTC / 2026-11-06 02:03 Asia/Bangkok, live read-only Solana mainnet RPC. The observed funds and orderbook are snapshots during an actively changing raise, not final allocations or token price forecasts.
