@@ -1,0 +1,242 @@
+{
+  "report_date": "2026-11-07",
+  "status": "QA_PENDING",
+  "body": "美股每日晨报｜2026-11-07\n时区：Asia/Bangkok。最近完整美国现货交易日：2026-11-06（美东周五）。周末无新美国股票现货收盘。\n\n一、市场总览\n（1）2026-11-06美股收盘出现分化：道指51,285.73，跌0.46%；标普500为7,376.86，涨0.31%；纳斯达克综合24,579.42，涨1.09%；罗素2000为2,754.11，涨0.89%。11月5日四指数普跌，周五仅部分修复，不能写成所有美股同步反弹。来源：https://apnews.com/article/806f71d95105bc7efbc760b194dd8cad\n（2）AP周度统计：纳指跌3.4%，标普跌2.7%，罗素跌2.1%，道指跌0.9%。周五上涨不能抹去一周回撤；纳指仍较近期高点回撤逾10%。来源：https://apnews.com/article/806f71d95105bc7efbc760b194dd8cad\n（3）11月6日公布的美国10月非农新增16.5万人，失业率降至4.1%；美元指数在Reuters报道时点涨约0.77%至102.26。就业强于预期抬高12月加息定价。来源：https://www.reuters.com/world/asia-pacific/dollar-holds-yen-gains-equity-rout-saps-risk-appetite-ahead-payrolls-2026-11-06/\n\n二、正常时段、盘后与异动原因\n（1）半导体指数周五反弹约4.2%，AMD涨约11%，Nvidia涨约2.8%；这属于前一交易日暴跌后的价格变化，AMD 11月3日公布的财报已经发布，不再作为待发布事件。来源：https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/\n（2）Airbnb在提高营收增长预期后上涨约12%；Atlassian下跌约16%，体现软件和互联网公司在同一交易日的业绩与增长预期分化。来源：https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/\n（3）DraftKings下调2026年展望后股价跌逾21%；Axon业绩未达预期并下调指引后跌逾18%。两者均属于已公布结果驱动的定价，不能写成尚未发布财报。来源：https://www.barrons.com/articles/stock-movers-ddbd1841\n\n三、行业级异动与结构性主题\n（1）周五芯片链显著反弹而道指仍下跌0.46%，说明大盘内部继续分化。费城半导体指数涨约4.2%，但一周科技板块和纳指仍承受明显跌幅；具体11行业涨跌家数本轮无法可靠核验。来源：https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/\n（2）Cloudflare、IonQ、JFrog等公司在公布财报或指引后出现显著上涨，其中JFrog约涨35%、IonQ超过23%；其价格弹性与传统蓝筹不同，需分别核对收入质量、现金流和估值。来源：https://www.barrons.com/articles/stock-movers-ddbd1841\n\n四、重大主题专题分析\n（1）周五市场的核心矛盾是就业强劲与科技估值修复同时出现。10月非农16.5万人及失业率4.1%支持经济需求，但也使市场把12月美联储加息概率重新定价至约78%。芯片反弹并不意味着贴现率或AI建设审批风险已经消失。来源：https://www.reuters.com/business/view-strong-october-jobs-report-sends-yields-higher-2026-11-06/\n（2）在现金流判断上，应将已有云收入与拟建数据中心的未来收入分开；对高负债扩张公司，检查融资成本、项目获批与实际客户合同。周五芯片股反弹、Atlassian及Axon下跌提供了盈利兑现差异的当日新证据，尚不能推断AI信用利差已收窄。\n\n五、AI、科技与一级市场\n（1）AI链当日新增可验证变化主要来自半导体股价修复及部分软件企业最新财报表现。Lam Research宣布250亿美元股票回购及季度股息，属于可进一步核验公司公告的资本回报信息；发行人IR/SEC原件仍需在正式发送前复核。来源：https://www.barrons.com/articles/stock-movers-ddbd1841\n（2）IPO / Pre-IPO / 新股机会：本轮没有核验到可宣布Anthropic发行人新公开S-1、正式定价或交易所真实股票配售开放的原始文件；不得把第三方合约或传闻写成IPO认购资格。\n\n六、机构资金与市场观点\n（1）Reuters记录部分策略师把11月5日科技抛售视为潜在买点，但这是市场观点；11月6日半导体反弹约4.2%是可验证价格事实，不能据此声称机构已发生特定金额净流入。来源：https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/\n（2）本轮未获得可审计的11月6日全市场机构净申赎及AI信用利差同口径报价，不以成交量或指数涨幅代替资金流和信用价差。\n\n七、政策、监管与全球局势\n（1）11月6日非农强劲后，市场预期美联储12月加息概率接近80%，属于利率期货市场定价，非FOMC已决议。下一步以官方通胀发布和联储声明为准。来源：https://www.reuters.com/world/asia-pacific/dollar-holds-yen-gains-equity-rout-saps-risk-appetite-ahead-payrolls-2026-11-06/\n（2）美国中期选举后市场关注数据中心审批和AI监管可能收紧，仍须区分地方投票、政治预期与已生效的具体法令。能源运输风险则通过油价和通胀预期影响长端利率。来源：https://www.reuters.com/business/energy/global-markets-global-markets-2026-11-05/\n\n八、风险雷达\n（1）周五纳指上涨1.09%，但全周仍跌3.4%且较高点回撤逾10%。若下周半导体反弹未扩散至市场广度、软件和信用市场，技术性修复可能不稳。来源：https://apnews.com/article/806f71d95105bc7efbc760b194dd8cad\n（2）就业强劲带动美元上涨及加息预期提高，若11月10日CPI再超预期，高估值成长股面临折现率二次冲击；若通胀低于预期，也需看盈利和信用条件能否配合。来源：https://www.bls.gov/schedule/2026/11_sched_list.htm\n\n九、未来24至72小时事件日历\n（1）11月7日、8日美国股票现货周末休市；下一常规交易日为11月9日周一。开盘关注芯片反弹延续性、10年期美债和美元方向，不能把周末报价误当作现货收盘。交易日历：https://www.nyse.com/markets/hours-calendars\n（2）11月10日周二美东08:30（曼谷20:30）BLS计划公布10月CPI及实际收入数据。该事件在当前72小时窗口边界附近，是下周利率和科技估值的重要正式核验点。来源：https://www.bls.gov/schedule/2026/11_sched_list.htm\n\n十、今日买入观察\n（1）AMD：仅研究观察，不把单日约11%反弹直接视为追买信号。触发条件是后续订单与数据中心毛利兑现、行业广度持续改善；失效条件是信用成本再升或新增指引低于市场预期。来源：https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/\n\n十一、漏检复盘与监控修正\n（1）本交易日最值得加入模型的对照是就业意外走强与科技板块同步反弹。若只用单日纳指上涨推断风险消失，会遗漏美元、加息概率和周度跌幅；下周同时核对利率、信用及板块广度。\n\n十二、结论\n（1）11月6日科技及小盘反弹、道指仍跌，且周度四指数全线收低。11月10日CPI前保持对AI高杠杆扩张公司的现金流和估值纪律，优先核对实际财报、债务成本和官方政策变化。",
+  "events": [
+    {
+      "family_key": "us.close.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "一、市场总览",
+      "source": "https://apnews.com/article/806f71d95105bc7efbc760b194dd8cad",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "us.week.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "一、市场总览",
+      "source": "https://apnews.com/article/806f71d95105bc7efbc760b194dd8cad",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "us.jobs.202610",
+      "material_version": "2026-11-06",
+      "primary_section": "一、市场总览",
+      "source": "https://www.reuters.com/world/asia-pacific/dollar-holds-yen-gains-equity-rout-saps-risk-appetite-ahead-payrolls-2026-11-06/",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "semis.rebound.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "二、正常时段、盘后与异动原因",
+      "source": "https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "airbnb.atlassian.earnings.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "二、正常时段、盘后与异动原因",
+      "source": "https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "draftkings.axon.guidance.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "二、正常时段、盘后与异动原因",
+      "source": "https://www.barrons.com/articles/stock-movers-ddbd1841",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "sector.divergence.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "三、行业级异动与结构性主题",
+      "source": "https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "software.earnings.winners.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "三、行业级异动与结构性主题",
+      "source": "https://www.barrons.com/articles/stock-movers-ddbd1841",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "jobs.rates.ai.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "四、重大主题专题分析",
+      "source": "https://www.reuters.com/business/view-strong-october-jobs-report-sends-yields-higher-2026-11-06/",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "ai.cashflow.divergence.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "四、重大主题专题分析",
+      "source": null,
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "lam.capitalreturn.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "五、AI、科技与一级市场",
+      "source": "https://www.barrons.com/articles/stock-movers-ddbd1841",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "ipo.anthropic.status.20261107",
+      "material_version": "2026-11-06",
+      "primary_section": "五、AI、科技与一级市场",
+      "source": null,
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "WATCH_ONLY",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "institutional.view.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "六、机构资金与市场观点",
+      "source": "https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "flows.gap.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "六、机构资金与市场观点",
+      "source": null,
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "WATCH_ONLY",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "fed.pricing.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "七、政策、监管与全球局势",
+      "source": "https://www.reuters.com/world/asia-pacific/dollar-holds-yen-gains-equity-rout-saps-risk-appetite-ahead-payrolls-2026-11-06/",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "policy.ai.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "七、政策、监管与全球局势",
+      "source": "https://www.reuters.com/business/energy/global-markets-global-markets-2026-11-05/",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "risk.nasdaq.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "八、风险雷达",
+      "source": "https://apnews.com/article/806f71d95105bc7efbc760b194dd8cad",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "risk.cpi.20261110",
+      "material_version": "2026-11-06",
+      "primary_section": "八、风险雷达",
+      "source": "https://www.bls.gov/schedule/2026/11_sched_list.htm",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "calendar.nyse.20261109",
+      "material_version": "2026-11-06",
+      "primary_section": "九、未来24至72小时事件日历",
+      "source": "https://www.nyse.com/markets/hours-calendars",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "calendar.cpi.20261110",
+      "material_version": "2026-11-06",
+      "primary_section": "九、未来24至72小时事件日历",
+      "source": "https://www.bls.gov/schedule/2026/11_sched_list.htm",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "watch.amd.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "十、今日买入观察",
+      "source": "https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/",
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "model.jobs.tech.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "十一、漏检复盘与监控修正",
+      "source": null,
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    },
+    {
+      "family_key": "conclusion.20261106",
+      "material_version": "2026-11-06",
+      "primary_section": "十二、结论",
+      "source": null,
+      "first_published_at": "2026-11-06",
+      "observed_at": "2026-11-07T05:44:52+07:00",
+      "status": "NEW",
+      "novelty_proof": "Prior seven Sent reports through 2026-11-06 checked; current November 6 closing/earnings/jobs or newly dated next-week checkpoint."
+    }
+  ],
+  "novelty_evidence": {
+    "previous_sent_days": 7,
+    "source_gap": "Git canonical equality not fully verified; Browser X unavailable in scheduled context",
+    "ci_status": "CI_NOT_PROVEN"
+  }
+}
