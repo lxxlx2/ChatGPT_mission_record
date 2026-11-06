@@ -471,5 +471,7 @@
     "INVEST": "NO_GO",
     "TRADE": "NO_GO",
     "next_action": "Stop source retries on this unchanged blocker; retain exact evidence. No new source, paid upgrade, monitor or profitability phase automatically follows."
-  }
+  },
+  "later_narrative_context_acceptance_receipt": "frank-ca-narrative-context-20261107.json",
+  "historical_identity_note": "This receipt retains its original source/time/counters. Current product and new capture belong to the later narrative/context receipt."
 }

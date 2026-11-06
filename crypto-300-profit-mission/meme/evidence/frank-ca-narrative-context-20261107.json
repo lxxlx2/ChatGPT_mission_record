@@ -1,0 +1,718 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-06T21:46:57.117838+00:00",
+  "client_timezone": "Asia/Bangkok",
+  "client_date": "2026-11-07",
+  "verdict": "PASS_NARRATIVE_AND_CONTEXT_FIX_AND_LOCAL_UI / PARTIAL_COMPLETE_CA",
+  "source": {
+    "repository": "lxxlx2/ChatGPT_mission_record",
+    "product_pr": 220,
+    "final_installed_sha": "fd5dddd5f664703b612f7736f5483bb355f971c1",
+    "final_parent": "1f0e475c5027ed11e7b9532a699e073fe5036459",
+    "implementation_baseline": "e977cc09023bdfcc9ce80660aedf2d58d2febc5f",
+    "pr_base": "4fdf2238a4db2347975689913e49142b760dc091",
+    "live_query_source_sha": "1f0e475c5027ed11e7b9532a699e073fe5036459",
+    "final_vs_live_source_changes": [
+      "mission_control/static/styles.css"
+    ],
+    "unchanged_other_runtime_files": 147,
+    "backend_JS_HTML_bytes_identical": true,
+    "main_checked": "b9e6ebc12e7f9b75e7dae0e219c52805776968b4",
+    "main_check_scope": "No Frank or rule changes relative to dd252196; only unrelated airdrop/crypto-daily updates",
+    "AGENTS_blob": "6a1217d85e217754dea557bcd4e23982efaf3949",
+    "DEVELOPMENT_RULES_blob": "5e8f89418bf206ee77dec9a803b808262d62a72a",
+    "scanner_pr_head_unchanged": "438bbe20899108a858a513648ab8c8c05b11e05e"
+  },
+  "user_clarification": "Explain credible source-attributed narrative, content and event evidence separately from exact-CA recognition; lack of recognition must not erase readable narrative. A name or an unread original-post link is not verified interaction or endorsement.",
+  "implemented": [
+    "Prefer a concrete source sentence over generic metadata; choose a complete short sentence when available; explicitly mark truncated excerpts; keep title6/author2/excerpt16 word bounds",
+    "Full normalized content, claimed author/date and post links enter semantic content hash; different statements sharing a display prefix no longer collapse; true mirrors still deduplicate",
+    "Read-source topic and unambiguous person/handle mentions remain source claims; post link hints are validated, not followed; interaction and CA recognition remain separate UNVERIFIED fields",
+    "Narrative content appears in primary result outside technical fold; equal source cards and full-width readable summary; legacy reports retain original content and do not invent new source analysis",
+    "Reject explicitly conflicting/malformed provided transaction slot or primary signature before holder/funding economic side effects; check classified-cache reuse against later account context, preserving original good evidence and consumed cursor",
+    "Missing legacy context remains unverified; this patch is not a claim of universal strict context completeness or true first buy"
+  ],
+  "counterexamples": {
+    "narrative_baseline_story_suite": {
+      "failed": 19,
+      "passed_controls": 2,
+      "seconds": 0.09,
+      "scope": "Includes concrete lost body event, half-sentence and false dedup defects plus new schema requirements"
+    },
+    "transaction_context_baseline": {
+      "failed_negatives": 4,
+      "passed_controls": 8,
+      "seconds": 0.06
+    },
+    "cross_account_cache_baseline": {
+      "failed": 1,
+      "passed_control": 1,
+      "seconds": 0.05
+    },
+    "actual_prior_capture_corrupted_by_these_context_cases": false,
+    "actual_prior_capture_primary_signature_and_slot_mismatches": 0
+  },
+  "validation": {
+    "installed_backend_targeted_python": {
+      "source_sha": "1f0e475c5027ed11e7b9532a699e073fe5036459",
+      "same_backend_bytes_at_final_sha": true,
+      "passed": 276,
+      "failed": 0,
+      "seconds": 0.8,
+      "log_sha256": "40b9fc266ca24ce5330d50538c32b97ce0034e34a35497f14cf0686d2f72b80e",
+      "command": "<EXISTING_PYTHON> -B -m pytest -q -p no:cacheprovider tests/test_meme_narrative.py tests/test_meme_narrative_story.py tests/test_meme_failed_transfer_evidence.py tests/test_meme_wallet_cluster.py tests/test_meme_wallet_cluster_pagination.py tests/test_meme_owner_account_history.py tests/test_meme_historical_account_scan.py tests/test_meme_historical_accounts.py tests/test_ca_job_checkpoint.py tests/test_meme_ca_completeness.py tests/test_mission_control_dashboard.py"
+    },
+    "local_frontend": {
+      "passed": 165,
+      "same_JS_bytes_at_final_sha": true,
+      "log_sha256": "f66612d8f7558da6872bf7cf60ce3ecf4a1c32084d1cfa6bbfcef24d9b64ff23",
+      "command": "node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_ca_report_render.mjs tests/test_frank_d2_ingress_ui.mjs tests/test_frank_f01_source_only.cjs tests/test_frank_f01_failure_state.cjs"
+    },
+    "final_CI": {
+      "run": 42298469842,
+      "run_number": 121,
+      "job": 128169755771,
+      "source_head": "fd5dddd5f664703b612f7736f5483bb355f971c1",
+      "status": "completed",
+      "conclusion": "success",
+      "Python_passed": 2155,
+      "Python_skipped": 4,
+      "Python_seconds": 53.55,
+      "Node_passed": 165,
+      "synthetic_browser_cases": 42,
+      "browser_page_errors": 0,
+      "browser_blocked_requests": 0,
+      "proves_Mac_or_real_RPC": false
+    },
+    "full_new_Mac_suite_rerun": false,
+    "full_Mac_note": "Targeted installed tests and actual Chrome run separately from full CI; no temporary local HTTP test listener opened"
+  },
+  "live_query": {
+    "status": "DONE",
+    "source_sha": "1f0e475c5027ed11e7b9532a699e073fe5036459",
+    "same_existing_CA": true,
+    "actual_Chrome_CA_POSTs": 1,
+    "preset": "standard",
+    "budget": {
+      "max_wire_attempts": 1200,
+      "max_elapsed_seconds": 1800
+    },
+    "started_at_utc": "2026-11-06T21:29:48.365113+00:00",
+    "finished_at_utc": "2026-11-06T21:35:15.939345+00:00",
+    "started_at_Asia_Bangkok": "2026-11-07T04:29:48.365113+07:00",
+    "finished_at_Asia_Bangkok": "2026-11-07T04:35:15.939345+07:00",
+    "elapsed_seconds": 327.57423186302185,
+    "rpc_reserved_wire_attempts": 378,
+    "rpc_cache_hits": 455,
+    "rpc_endpoint_failures": 39,
+    "rpc_logical_reads": 795,
+    "all_logical_reads": 798,
+    "caught_logical_errors": [
+      {
+        "operation": "getProgramAccounts",
+        "type": "RPCError",
+        "code": "HTTP_429"
+      }
+    ],
+    "GPA_terminal_read_attempts": 6,
+    "GPA_attempt_basis": "One endpoint, fixed max_attempts=6 before terminal retryable HTTP429; individual attempt bodies not captured",
+    "other_endpoint_failures_recovered": 33,
+    "other_failure_types": "NOT_INDIVIDUALLY_CAPTURED",
+    "non_RPC_client_logical_reads": 3,
+    "non_RPC_HTTP_wire_count": "NOT_SEPARATELY_CAPTURED",
+    "report_sha256": "1eac77caa84e5dc4d5c39cfb6a547a97358ffd437e10447a172dc42ef2498f51",
+    "checkpoint_sqlite_sha256": "2741549be58804b013c88a17e1b75205bb5bd136af7e389e212e4e6b7b47ae99",
+    "DONE_marker_report_disk_exact_GET_equal": true,
+    "live_resume_count": 0,
+    "mode": "ORIGINAL_JOB; not a live crash/resume test",
+    "raw_CA_wallet_graph_responses_paths": "PRIVATE_OUTSIDE_GIT"
+  },
+  "narrative_source_result": {
+    "status": "PARTIAL",
+    "summary": {
+      "evidence_scope": "READ_SOURCE_CONTENT; NO_INDEPENDENT_EVENT_OR_AUTHOR_VERIFICATION",
+      "interaction_status": "UNVERIFIED",
+      "official_recognition": "UNVERIFIED",
+      "sources_read": 2,
+      "status": "SOURCE_CLAIMS",
+      "themes": [
+        "AI／模型训练",
+        "爬虫／智能体"
+      ],
+      "version": 1
+    },
+    "claims_retained": 2,
+    "all_claims_unverified_official_recognition": true,
+    "claims_with_exact_CA_in_text": 1,
+    "full_short_sentences_visible_in_actual_UI": true,
+    "request_limit": 3,
+    "recursive_crawl": false,
+    "new_source_URLs": 0,
+    "additional_prior_foreground_same_URL_public_GETs": 3,
+    "additional_prior_foreground_RPC": 0,
+    "does_not_prove_primary_interaction_or_origin": true
+  },
+  "coverage": {
+    "owners_scanned": 9,
+    "top_account_rows": 20,
+    "history_windows": 25,
+    "PAGE_LIMIT": 16,
+    "PROVIDER_EMPTY_PAGE": 9,
+    "all_windows_still_incomplete": true,
+    "analysis_completeness": "INCOMPLETE_EVIDENCE",
+    "required_domain_statuses": {
+      "contract": "PARTIAL",
+      "holder_balances": "PARTIAL",
+      "holder_roles": "PARTIAL",
+      "wallet_history": "PARTIAL",
+      "control_attribution": "PARTIAL",
+      "market": "PARTIAL",
+      "independent_sources": "PARTIAL",
+      "narrative": "PARTIAL"
+    },
+    "gaps": [
+      "HISTORICAL_ACCOUNT_CONTEXT_GAPS",
+      "HISTORICAL_ACCOUNT_EVIDENCE_LIMIT",
+      "HOLDER_ENUMERATION_INCOMPLETE",
+      "SPECIAL_NORMALIZATION_UNVERIFIED",
+      "ELIGIBLE_OWNER_RANKS_INCOMPLETE",
+      "SNAPSHOT_SLOT_UNRECONCILED",
+      "OWNER_HISTORY_NOT_SCANNED",
+      "HISTORY_PAGINATION_INCOMPLETE"
+    ]
+  },
+  "new_capture_offline_audit": {
+    "verdict": "PASS_OFFLINE_CAPTURE_AUDIT",
+    "source_sha": "1f0e475c5027ed11e7b9532a699e073fe5036459",
+    "scope": "Historical logical-response replay; not fresh wire capture or live crash/resume",
+    "report_sha256": "1eac77caa84e5dc4d5c39cfb6a547a97358ffd437e10447a172dc42ef2498f51",
+    "checkpoint_chain_head": "066afaa66a3898305ab24fc5fbbc43bb26baffe714fd80db51fb69009d9809b0",
+    "replay_count": 2,
+    "logical_reads_each": 798,
+    "report_business_equal_each": true,
+    "business_report_sha256_each": [
+      "f109c814a3dc46c9b1bc5fc80d5dd778b629fcc9bb14cf6fd6623548aa0d10a5",
+      "f109c814a3dc46c9b1bc5fc80d5dd778b629fcc9bb14cf6fd6623548aa0d10a5"
+    ],
+    "excluded_worker_augmentation_root_keys": [
+      "ca_job_id",
+      "assessment_history",
+      "assessment_history_context",
+      "collection_checkpoint"
+    ],
+    "excluded_worker_augmentation_coverage_keys": [
+      "rpc_call_count_scope"
+    ],
+    "locally_derived_timestamps_frozen": [
+      "observed_at",
+      "pool_vaults.observed_at"
+    ],
+    "clock_frozen_to_original_report": true,
+    "cache_ttls_modified": false,
+    "unique_captured_transactions": 695,
+    "captured_failed_transactions": 42,
+    "captured_null_transactions": 0,
+    "counts": {
+      "trade_evidence_checked": 169,
+      "trade_evidence_exact_duplicates": 0,
+      "funding_evidence_checked": 7,
+      "funding_evidence_exact_duplicates": 0,
+      "consolidation_evidence_checked": 130,
+      "consolidation_evidence_exact_duplicates": 0,
+      "edges_checked": 154,
+      "edges_exact_duplicates": 0,
+      "historical_account_evidence_checked": 200,
+      "historical_account_evidence_exact_duplicates": 0,
+      "history_windows_with_preserved_cursor": 25
+    },
+    "new_wire_attempts": 0,
+    "network_attempts_blocked": 0,
+    "live_resume_count": 0
+  },
+  "independent_capture_integrity_audit": {
+    "status": "PASS_INDEPENDENT_READ_ONLY_CAPTURE_AUDIT",
+    "source_sha": "1f0e475c5027ed11e7b9532a699e073fe5036459",
+    "report_sha256": "1eac77caa84e5dc4d5c39cfb6a547a97358ffd437e10447a172dc42ef2498f51",
+    "logical_reads": 798,
+    "metadata_and_read_chain_integrity": "PASS",
+    "source_errors_records_integrity_checked": 1,
+    "checkpoint_chain_head": "066afaa66a3898305ab24fc5fbbc43bb26baffe714fd80db51fb69009d9809b0",
+    "source_fingerprint": "5503ad81e2c5365a94dc314d886a2d22e0f46e24e9794f4beee1441b2e371b94",
+    "current_source_registry_options_budget_existing_endpoint_client_binding_matches": true,
+    "current_runtime_manifest_matches_prepared_fixed_release": true,
+    "counts": {
+      "unique_transactions": 695,
+      "transaction_logical_reads": 722,
+      "failed_transactions": 42,
+      "differing_payloads_for_same_requested_transaction": 0,
+      "requested_primary_signature_mismatches": 0,
+      "missing_or_invalid_transaction_slots": 0,
+      "cross_page_signature_slot_conflicts": 0,
+      "signature_page_rows_checked": 785,
+      "missing_or_invalid_signature_page_slots": 0,
+      "page_to_response_slot_pairs_checked": 785,
+      "page_to_response_slot_mismatches": 0,
+      "page_to_response_blocktime_mismatches": 0,
+      "new_guard_rejections_on_actual_capture": 0,
+      "same_owner_signature_repeated_holder_observations": 63,
+      "same_owner_signature_cross_account_keys": 0,
+      "cross_account_cache_slot_conflicts": 0,
+      "historical_response_hash_mismatches": 0,
+      "historical_response_slot_mismatches": 0,
+      "historical_exact_mint_mismatches": 0,
+      "bounded_first_buy_references_checked": 7,
+      "bounded_first_buy_failed_or_missing_references": 0,
+      "checkpoint_report_provenance_mismatches": 0
+    },
+    "economic_references": {
+      "trade_evidence": {
+        "rows": 169,
+        "exact_duplicates": 0,
+        "transaction_references_checked": 169,
+        "failed_transaction_references": 0,
+        "unknown_transaction_references": 0
+      },
+      "funding_evidence": {
+        "rows": 7,
+        "exact_duplicates": 0,
+        "transaction_references_checked": 14,
+        "failed_transaction_references": 0,
+        "unknown_transaction_references": 0
+      },
+      "consolidation_evidence": {
+        "rows": 130,
+        "exact_duplicates": 0,
+        "transaction_references_checked": 130,
+        "failed_transaction_references": 0,
+        "unknown_transaction_references": 0
+      },
+      "edges": {
+        "rows": 154,
+        "exact_duplicates": 0,
+        "transaction_references_checked": 150,
+        "failed_transaction_references": 0,
+        "unknown_transaction_references": 0
+      },
+      "historical_account_evidence": {
+        "rows": 200,
+        "exact_duplicates": 0,
+        "transaction_references_checked": 200,
+        "failed_transaction_references": 0,
+        "unknown_transaction_references": 0
+      }
+    },
+    "synthetic_multi_transaction_edges_not_treated_as_raw_signatures": {
+      "edges:SHARED_INFRA": 3,
+      "edges:COMMON_SIGNER_UNRESOLVED": 1
+    },
+    "reported_historical_errors": {
+      "TRANSACTION_SUCCESS_UNVERIFIED": 42
+    },
+    "actual_report_context_errors": 0,
+    "socket_operations": 0,
+    "new_network_requests": 0,
+    "production_writes": 0,
+    "limits": [
+      "This audits captured responses and does not refresh source state.",
+      "All raw requested primary signatures and signature-page slots match in this sample; real contradictory responses were not observed.",
+      "If cross-account repeat count is zero, the real sample does not exercise the cache bypass regression; offline negative tests remain the fix evidence.",
+      "Four MULTI_TX edges are synthetic combinations of already admitted evidence, not individual raw transaction identity claims.",
+      "Does not resolve full mint enumeration or whole-wallet history coverage."
+    ]
+  },
+  "previous_capture_replay_on_new_backend": {
+    "source_sha": "1f0e475c5027ed11e7b9532a699e073fe5036459",
+    "logical_reads_each": 886,
+    "replays": 2,
+    "business_report_equal": true,
+    "new_wire_attempts": 0
+  },
+  "offline_command": "<EXISTING_PYTHON> -I -B <DOCS_WORKTREE>/crypto-300-profit-mission/meme/evidence/frank_checkpoint_capture_audit_20261106.py --agent <FIXED_1F0E_BACKEND_AGENT> --capture <PRIVATE_NEW_CAPTURE> --expected-agent-sha 1f0e475c5027ed11e7b9532a699e073fe5036459 --output <PRIVATE_AUDIT_JSON>",
+  "free_existing_GPA_variant_probe": {
+    "status": "CAPTURED_ONE_ATTEMPT",
+    "existing_endpoint_only": true,
+    "attempts": 1,
+    "retries": 0,
+    "new_providers_keys_or_paid_features": 0,
+    "method": "getProgramAccounts",
+    "parameter_changes_from_failed_same_CA_query": {
+      "encoding": "base64",
+      "dataSlice": {
+        "offset": 0,
+        "length": 0
+      },
+      "order": "desc"
+    },
+    "strict_mint_filter_and_finalized_context_preserved": true,
+    "documentation": "https://www.alchemy.com/docs/solana/accounts-db-infra",
+    "HTTP_status": 429,
+    "elapsed_seconds": 0.15401162498164922,
+    "transport_exception_type": null,
+    "response_bytes_saved": 247,
+    "response_complete": true,
+    "request_sha256": "db283bec57ffb9fb8f0b19ac0682935e36b30c260689f327a0c5a826e3455370",
+    "response_sha256": "58146bd5f9e6e0af858d3829c18c378b76a25b15ac1112b0e7d1847c2db511ee",
+    "Retry-After": null,
+    "RPC_error_code": 429,
+    "result_field_names": [],
+    "account_rows": null,
+    "page_key_present": false,
+    "no_cursor_followed": true,
+    "full_mint_coverage_proven": false,
+    "production_reports_changed": false
+  },
+  "installation": {
+    "actual_Dashboard_only_reloads": 3,
+    "PID_chain": [
+      58030,
+      69255,
+      72989,
+      73728
+    ],
+    "old_sources_backed_up_file_counts": [
+      490,
+      491,
+      491
+    ],
+    "reports_backed_up_file_counts": [
+      34,
+      34,
+      40
+    ],
+    "SQLite_consistent_backup_integrity_and_FK": "PASS_EACH",
+    "fixed_execution_events": [
+      {
+        "dashboard_pid": 69255,
+        "saved_exact_jobs_read": 2,
+        "scanner_status": "LIVE",
+        "scanner_pid_unchanged": true,
+        "source_drift": false,
+        "html_js_match_fixed_source": true,
+        "source_recent_count": 0,
+        "history_count": 7,
+        "eligible_count": 0,
+        "d1_http": 200,
+        "d2_http": 200,
+        "d2_source_observed_at": "2026-11-01T01:26:32.578080+00:00",
+        "status": "PASS",
+        "source_sha": "3a96bc776cbd115596df53c77d1767cb7fe466d2",
+        "previous_installed_sha": "e977cc09023bdfcc9ce80660aedf2d58d2febc5f",
+        "executor_sha256": "58bbbdf3f9b443e5b3fc9fb14e9fb737757e8f0e1116cf14e9e9eaf4c8c77a11",
+        "preserved_report_files": 34,
+        "protected_file_hashes_unchanged": true,
+        "loop_remains_unloaded": true,
+        "real_rpc_or_ca_post": 0,
+        "notification_or_trade": 0,
+        "dashboard_launchagent_only_reloaded": true,
+        "rollback_exercised": false
+      },
+      {
+        "dashboard_pid": 72989,
+        "saved_exact_jobs_read": 2,
+        "scanner_status": "LIVE",
+        "scanner_pid_unchanged": true,
+        "source_drift": false,
+        "html_js_match_fixed_source": true,
+        "source_recent_count": 0,
+        "history_count": 7,
+        "eligible_count": 0,
+        "d1_http": 200,
+        "d2_http": 200,
+        "d2_source_observed_at": "2026-11-01T01:26:32.578080+00:00",
+        "status": "PASS",
+        "source_sha": "1f0e475c5027ed11e7b9532a699e073fe5036459",
+        "previous_installed_sha": "3a96bc776cbd115596df53c77d1767cb7fe466d2",
+        "executor_sha256": "891ca508967f3a0d0ae034324eefc3e41f1ed98f96af58d787ba91d037be5157",
+        "preserved_report_files": 34,
+        "protected_file_hashes_unchanged": true,
+        "loop_remains_unloaded": true,
+        "real_rpc_or_ca_post": 0,
+        "notification_or_trade": 0,
+        "dashboard_launchagent_only_reloaded": true,
+        "rollback_exercised": false
+      },
+      {
+        "dashboard_pid": 73728,
+        "saved_exact_jobs_read": 3,
+        "scanner_status": "LIVE",
+        "scanner_pid_unchanged": true,
+        "source_drift": false,
+        "html_js_match_fixed_source": true,
+        "source_recent_count": 0,
+        "history_count": 7,
+        "eligible_count": 0,
+        "d1_http": 200,
+        "d2_http": 200,
+        "d2_source_observed_at": "2026-11-01T01:26:32.578080+00:00",
+        "status": "PASS",
+        "source_sha": "fd5dddd5f664703b612f7736f5483bb355f971c1",
+        "previous_installed_sha": "1f0e475c5027ed11e7b9532a699e073fe5036459",
+        "executor_sha256": "07a2486692213f761dec3a22eb760f0df5a10ead1b46367287ca87b35faf699e",
+        "preserved_report_files": 40,
+        "protected_file_hashes_unchanged": true,
+        "loop_remains_unloaded": true,
+        "real_rpc_or_ca_post": 0,
+        "notification_or_trade": 0,
+        "dashboard_launchagent_only_reloaded": true,
+        "rollback_exercised": false
+      }
+    ],
+    "all_preflights": [
+      {
+        "status": "PASS",
+        "mode": "IN_PROCESS_HANDLER_NO_LISTENER",
+        "old_backup": {
+          "status": "PASS",
+          "mode": "IN_PROCESS_HANDLER_NO_LISTENER",
+          "actual_Handler_GET": true,
+          "actual_response_serialization": true,
+          "html_js_match": true,
+          "exact_saved_jobs_read": 2,
+          "runtime_status": "LIVE",
+          "scanner_pid": 81945,
+          "source_recent_count": 0,
+          "history_count": 7,
+          "eligible_count": 0,
+          "D1_status": "INDEXED_LOCAL_ONLY",
+          "D2_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+          "external_network_attempts": 0,
+          "socket_operations": 0,
+          "listeners_started": 0,
+          "POSTs": 0,
+          "clean_exit": true
+        },
+        "candidate": {
+          "status": "PASS",
+          "mode": "IN_PROCESS_HANDLER_NO_LISTENER",
+          "actual_Handler_GET": true,
+          "actual_response_serialization": true,
+          "html_js_match": true,
+          "exact_saved_jobs_read": 2,
+          "runtime_status": "LIVE",
+          "scanner_pid": 81945,
+          "source_recent_count": 0,
+          "history_count": 7,
+          "eligible_count": 0,
+          "D1_status": "INDEXED_LOCAL_ONLY",
+          "D2_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+          "external_network_attempts": 0,
+          "socket_operations": 0,
+          "listeners_started": 0,
+          "POSTs": 0,
+          "clean_exit": true
+        },
+        "actual_HTTP_listener_started": false,
+        "actual_network_HTTP_server_test": false,
+        "preflight_script_sha256": "d53b0750a2cabb2840666b1ecf64e538d549ba0f90f6edd71923c06434ec6411"
+      },
+      {
+        "status": "PASS",
+        "mode": "IN_PROCESS_HANDLER_NO_LISTENER",
+        "old_backup": {
+          "status": "PASS",
+          "mode": "IN_PROCESS_HANDLER_NO_LISTENER",
+          "actual_Handler_GET": true,
+          "actual_response_serialization": true,
+          "html_js_match": true,
+          "exact_saved_jobs_read": 2,
+          "runtime_status": "LIVE",
+          "scanner_pid": 81945,
+          "source_recent_count": 0,
+          "history_count": 7,
+          "eligible_count": 0,
+          "D1_status": "INDEXED_LOCAL_ONLY",
+          "D2_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+          "external_network_attempts": 0,
+          "socket_operations": 0,
+          "listeners_started": 0,
+          "POSTs": 0,
+          "clean_exit": true
+        },
+        "candidate": {
+          "status": "PASS",
+          "mode": "IN_PROCESS_HANDLER_NO_LISTENER",
+          "actual_Handler_GET": true,
+          "actual_response_serialization": true,
+          "html_js_match": true,
+          "exact_saved_jobs_read": 2,
+          "runtime_status": "LIVE",
+          "scanner_pid": 81945,
+          "source_recent_count": 0,
+          "history_count": 7,
+          "eligible_count": 0,
+          "D1_status": "INDEXED_LOCAL_ONLY",
+          "D2_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+          "external_network_attempts": 0,
+          "socket_operations": 0,
+          "listeners_started": 0,
+          "POSTs": 0,
+          "clean_exit": true
+        },
+        "actual_HTTP_listener_started": false,
+        "actual_network_HTTP_server_test": false,
+        "preflight_script_sha256": "d53b0750a2cabb2840666b1ecf64e538d549ba0f90f6edd71923c06434ec6411"
+      },
+      {
+        "status": "PASS",
+        "mode": "IN_PROCESS_HANDLER_NO_LISTENER",
+        "old_backup": {
+          "status": "PASS",
+          "mode": "IN_PROCESS_HANDLER_NO_LISTENER",
+          "actual_Handler_GET": true,
+          "actual_response_serialization": true,
+          "html_js_match": true,
+          "css_match": true,
+          "css_assets_checked": 1,
+          "exact_saved_jobs_read": 3,
+          "runtime_status": "LIVE",
+          "scanner_pid": 81945,
+          "source_recent_count": 0,
+          "history_count": 7,
+          "eligible_count": 0,
+          "D1_status": "INDEXED_LOCAL_ONLY",
+          "D2_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+          "external_network_attempts": 0,
+          "socket_operations": 0,
+          "listeners_started": 0,
+          "POSTs": 0,
+          "clean_exit": true
+        },
+        "candidate": {
+          "status": "PASS",
+          "mode": "IN_PROCESS_HANDLER_NO_LISTENER",
+          "actual_Handler_GET": true,
+          "actual_response_serialization": true,
+          "html_js_match": true,
+          "css_match": true,
+          "css_assets_checked": 1,
+          "exact_saved_jobs_read": 3,
+          "runtime_status": "LIVE",
+          "scanner_pid": 81945,
+          "source_recent_count": 0,
+          "history_count": 7,
+          "eligible_count": 0,
+          "D1_status": "INDEXED_LOCAL_ONLY",
+          "D2_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+          "external_network_attempts": 0,
+          "socket_operations": 0,
+          "listeners_started": 0,
+          "POSTs": 0,
+          "clean_exit": true
+        },
+        "actual_HTTP_listener_started": false,
+        "actual_network_HTTP_server_test": false,
+        "preflight_script_sha256": "33def0b85b055cfa14ee9287d969f1c29522a6f1fcec392fe97cf7225098ac1c"
+      }
+    ],
+    "preflight_mode": "IN_PROCESS_HANDLER_NO_LISTENER",
+    "actual_temporary_HTTP_servers_started": 0,
+    "actual_rollback_exercised": false,
+    "old_releases_and_backups_retained": true,
+    "published_first_executor_commit": "3da0edaf8bd54327da9b0f3b28dff46112a415b0",
+    "published_second_executor_commit": "ca8eabd6c1004dc0075a684690f2d99d76d6213e",
+    "published_final_executor_commit": "128f0cbd73098b39f28a0753fb2e20ca140c19d7",
+    "final_executor_sha256": "07a2486692213f761dec3a22eb760f0df5a10ead1b46367287ca87b35faf699e",
+    "no_listener_preflight_helper_sha256": "33def0b85b055cfa14ee9287d969f1c29522a6f1fcec392fe97cf7225098ac1c"
+  },
+  "actual_Chrome": {
+    "url": "http://127.0.0.1:8766/?acceptance=fd5dddd5#cluster",
+    "latest_source_report_read": true,
+    "saved_report_exact_job_identity_message": true,
+    "refresh_then_exact_job_reread": true,
+    "narrative_visible_outside_technical_fold": true,
+    "topic_and_source_content_visible_without_recognition": true,
+    "final_summary_full_width_equal_source_cards_visually_verified": true,
+    "existing_page_reloaded_with_query_to_force_full_document_navigation": true,
+    "screenshot_sha256": "d8099d36501e342ac86e8bd78e443e93d346c561b9ce69e2f88118a2fb37790a",
+    "screenshot_location": "PRIVATE_LOCAL_VISUALIZATION_ARTIFACT; not committed",
+    "left_open": true,
+    "file_preview_attempt": {
+      "status": "BLOCKED_NOT_USED",
+      "reason": "Browser URL policy allows http/https only; file protocol rejected",
+      "stopped_and_removed": true,
+      "workarounds": 0
+    }
+  },
+  "production_effect": {
+    "new_query_expected_writes": [
+      "new dated JSON/Markdown report",
+      "new exact-job report and DONE marker",
+      "new private checkpoint",
+      "existing RPC cache/latest.json/assessment-history.json"
+    ],
+    "prequery_report_files": 34,
+    "prior_immutable_files_unchanged": 32,
+    "expected_changed_prior_files": [
+      "latest.json",
+      "assessment-history.json"
+    ],
+    "new_query_files": 6,
+    "current_report_files": 40,
+    "final_CSS_rollout_preserved_all_current_40_files": true,
+    "protected_hashes_unchanged": {
+      "control_db": true,
+      "control_health": true,
+      "d2": true,
+      "plist": true,
+      "rpc_config": true,
+      "follow_policy_v1.approved.json": true,
+      "approved_policy_sha256": true
+    },
+    "final_runtime_manifest_files": 148,
+    "final_runtime_manifest_matches": true,
+    "dashboard_PID": 73728,
+    "scanner_PID": 81945,
+    "scanner_source_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "scanner_source_drift": false,
+    "scanner_errors": 0,
+    "scanner_pending": {
+      "raw_pending": 0,
+      "model_unprocessed": 0,
+      "gmail_pending": 0,
+      "local_pending": 0
+    },
+    "scanner_lifecycle_operations": 0,
+    "MC_Loop_unloaded": true,
+    "email_notification_sends_initiated": 0,
+    "wallet_signatures_or_trades": 0,
+    "merges": 0,
+    "new_monitors_automations_providers_keys": 0,
+    "paid_upgrades_or_purchases": 0,
+    "existing_private_endpoint_found_in_report": false
+  },
+  "ports": {
+    "Frank_dashboard": 8766,
+    "temporary_Frank_listeners": 0,
+    "existing_unrelated_left_untouched": [
+      8765,
+      48721
+    ],
+    "system_ports_not_modified": true
+  },
+  "request_accounting": {
+    "prior_free_phase_RPC": 1383,
+    "this_query_RPC": 378,
+    "single_existing_GPA_probe_RPC": 1,
+    "free_phase_RPC_total": 1762,
+    "original_prior_one_shot_RPC_separate": 572,
+    "offline_replays_new_RPC": 0,
+    "additional_same_URL_public_GETs_separate": 3,
+    "future_source_retries_started": false
+  },
+  "remaining_blockers": [
+    "Complete mint enumeration remains unavailable on the existing source, including one documented order/dataSlice variant; provider-specific rule unresolved",
+    "16 of25 history windows hit page limit; closed/current accounts and true first buy/funding remain incomplete",
+    "Special roles/control attribution, controlled-snapshot independent holders/pool reconciliation, primary narrative interaction/recognition/origin and other representative protocols/Token-2022/large mints still incomplete",
+    "Original October failed task identity/trigger still lacks original artifacts; new job cannot replace it",
+    "D2 remains historical; no refresh this iteration",
+    "Qualified notification latency and independent user key/signature artifact remain absent; Loop stays unloaded"
+  ],
+  "decision": {
+    "narrative_and_context_fix": "PASS",
+    "local_current_feature_delivery": "PASS",
+    "complete_original_CA_requirements": "PARTIAL / INCOMPLETE_EVIDENCE",
+    "INVEST": "NO_GO",
+    "TRADE": "NO_GO",
+    "next_action": "Stop repeated same-source enumeration retries; retain exact evidence and the usable existing page. No new provider, paid capability, monitor or research phase automatically follows."
+  }
+}

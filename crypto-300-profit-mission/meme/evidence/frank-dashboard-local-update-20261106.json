@@ -244,5 +244,7 @@
     "independent_review": "USER_WAIVED_NO_INDEPENDENT_APPROVE"
   },
   "later_source_acceptance_receipt": "frank-ca-live-installed-20261106.json",
-  "scope_note": "This installation receipt remains valid for its timestamp; later real CA POST/RPC and intended report/cache/checkpoint/history writes are recorded separately."
+  "scope_note": "This installation receipt remains valid for its timestamp; later real CA POST/RPC and intended report/cache/checkpoint/history writes are recorded separately.",
+  "later_narrative_context_acceptance_receipt": "frank-ca-narrative-context-20261107.json",
+  "historical_identity_note": "This receipt retains its original source/time/counters. Current product and new capture belong to the later narrative/context receipt."
 }
