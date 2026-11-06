@@ -1,3 +1,11 @@
+## Latest terminal cache sync — 2026-11-06 10:55:18 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-06/105518-final.md
+- final_readback: VERIFIED blob 9b094f19a4a1014aea587bb16acebc285d8b6850; commit ded3a92f0e424a9d90247b45e2fe597c69641fb7
+- run_status: PARTIAL; verified_complete: false; scheduled_shard: 2; executed_shard: 2; last_meaningful_attempt_at_shard2: 2026-11-06T10:55:18+07:00 PARTIAL_ONLY
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 UNCHANGED
+- candidate_count: 2; action_gate_pass: 0; triggered_events: 0; identity_failures: 0; source_failures: 1; gmail_attempted: false; app_notification: false
+- StandX DUSD original/live claim SOURCE_GAP; Surf Nov13 and Cambria Oct29 previously delivered. Existing task unchanged.
+
 ## Latest terminal cache sync — 2026-11-06 08:57:47 Asia/Bangkok
 - run_path: airdrop-tge-monitor/runs/2026-11-06/085747-final.md
 - final_readback: VERIFIED blob 4a6403ec1da1d0eaed9c9f23db8066af7aafc4e9; commit 66ae36ac3feae23ffb0dc4b34bda4a163beaa6d5
