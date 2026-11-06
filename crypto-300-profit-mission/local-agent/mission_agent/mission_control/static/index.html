@@ -24,11 +24,19 @@
     <div id="signals-view" class="view-pane active">
     <section class="panel priority-panel" id="follow-opportunities">
       <div class="panel-title">
-        <div><h2>当前跟单机会</h2><p>优先查看当前跟单判断；WAIT / NO_BUY 不是买入信号，历史买卖也不是实时跟单建议。</p></div>
+        <div><h2>Frank 近期来源信号（只读）</h2><p>仅展示近 10 分钟的本地已索引来源 BUY；不推断实时持仓或可执行价格。交易金额和买卖均由用户决定。</p></div>
         <span id="updated">未刷新</span>
       </div>
+      <p id="f01-source-status" class="frank-watch-footnote">F01 来源与执行资格尚未核实，不展示可跟结论。</p>
+      <p id="f01-timing-status" class="frank-watch-footnote">本页尚无新事件观测样本；真实索引延迟尚未测量。</p>
       <div id="candidates" class="candidate-list"></div>
     </section>
+    <details class="panel ended-panel" id="f01-history">
+      <summary><div><h2>历史和资格未核实候选 <span id="f01-history-count">0</span></h2>
+      <p>WAIT / NO_BUY 不是买入信号；含过期信号、卖出、模型仓位未核实及当前无法确认的候选，不作为跟单建议。</p></div><span class="summary-hint">展开</span></summary>
+      <p id="f01-history-cache-note" class="frank-watch-footnote"></p>
+      <div id="f01-history-cards" class="candidate-list"></div>
+    </details>
     <section class="panel" id="frank-intelligence-panel">
       <div class="panel-title">
         <div>
@@ -198,31 +206,45 @@
           <label for="cluster-mint">Solana CA</label>
           <div class="cluster-search-row">
             <input id="cluster-mint" name="mint" autocomplete="off" spellcheck="false" placeholder="粘贴 token CA" />
-            <select id="cluster-preset" name="preset" title="扫描深度">
-              <option value="quick" selected>快速</option>
-              <option value="standard">标准</option>
-              <option value="deep">深度</option>
-            </select>
             <button id="cluster-submit" class="primary-btn" type="submit">开始查询</button>
           </div>
-          <div class="cluster-preset-help" id="cluster-preset-help">快速模式：先查权限、主池与 Top20 地址；需要深度钱包归因时再切换模式。</div>
+          <div class="cluster-preset-help" id="cluster-preset-help">统一查询：先核对 CA、合约权限和市场，再逐步分析主要持有人及资金关系。查询受现有请求与耗时上限保护；缺失证据会明确列出，任务结束不代表完整尽调。</div>
 
         </form>
       </section>
 
+      <div class="cluster-recovery">
+        <button type="button" class="link-btn" id="cluster-read-cached">查看输入 CA 的历史报告</button>
+        <span>仅读取已有数据，不重新扫描；历史报告不代表当前链上状态。</span>
+      </div>
+      <div class="cluster-recovery">
+        <label for="cluster-reports">本浏览器最近已读报告</label>
+        <select id="cluster-reports" aria-label="选择原任务报告"><option value="">暂无已核对报告</option></select>
+        <button type="button" class="link-btn" id="cluster-read-report" disabled>读取选中报告</button>
+        <button type="button" class="link-btn" id="cluster-clear-reports">清除本机记录</button>
+        <span>最多保存 10 个报告入口；任务归属仍由服务核对，不代表覆盖完整。</span>
+      </div>
       <section id="cluster-status" class="cluster-status" hidden></section>
       <div id="cluster-recovery" class="cluster-recovery" hidden>
         <button type="button" class="link-btn" id="cluster-resume-get">继续读取原任务</button>
-        <button type="button" class="link-btn" id="cluster-read-cached">查看已有历史报告</button>
         <span>仅读取已有数据，不重新扫描</span>
+      </div>
+      <div id="cluster-continuation" class="cluster-recovery" hidden>
+        <button type="button" class="link-btn" id="cluster-resume-scan">继续未完成的查询</button>
+        <span>手动继续链上只读查询，沿用原任务剩余额度和来源时间。</span>
       </div>
       <section id="cluster-preview" class="cluster-preview" hidden aria-live="polite"></section>
 
       <section id="cluster-result" class="cluster-result" hidden>
+        <section class="panel" aria-label="分析证据完整性"><div id="cluster-completeness"></div></section>
         <div class="cluster-summary" id="cluster-summary"></div>
         <section class="panel conclusion-panel">
           <div class="panel-title"><div><h2>快速判断</h2><p>合约风险、筹码集中与市场可交易性。未确认的数据保持未确认。</p></div></div>
           <div id="cluster-conclusion" class="cluster-conclusion"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-title"><div><h2>叙事与事件</h2><p>先看项目讲什么、人物与事件有哪些来源证据；CA 认领单独核对。</p></div></div>
+          <div id="cluster-narrative" class="cluster-narrative"></div>
         </section>
         <section class="panel">
           <div class="panel-title"><div><h2>行情与交易条件</h2><p>市场参考行情与 Jupiter 可执行报价分开显示，点击 CA 可跳转交易。</p></div></div>
@@ -232,8 +254,12 @@
           <div class="panel-title"><div><h2>筹码集中度</h2><p>优先看 Top10、开发者关联与未确认持仓。严格数据不足时不会显示安全结论。</p></div></div>
           <div id="cluster-metrics" class="cluster-metrics"></div>
         </section>
+        <section class="panel" id="cluster-rankings-panel" hidden>
+          <div class="panel-title"><div><h2>全量账户来源与 Owner 排名</h2><p>先合并同一 Owner 的账户余额，再计算排名；完整性与历史归因分开核实。</p></div></div>
+          <div id="cluster-rankings"></div>
+        </section>
         <section class="panel">
-          <div class="panel-title"><div><h2>前 20 大实际持有人</h2><p>账户已解析到 Owner；建仓记录来自有限历史采样，未扫描时明确标记。</p></div></div>
+          <div class="panel-title"><div><h2>原始 Top20 账户及 Owner</h2><p>账户已解析到 Owner；建仓记录来自有限历史采样，未扫描时明确标记。</p></div></div>
           <div class="holder-table-wrap">
             <table class="holder-table">
               <thead><tr><th>#</th><th>Owner</th><th>占比</th><th>角色</th><th>资金来源</th><th>首次买入记录</th></tr></thead>
@@ -265,10 +291,6 @@
             <section class="panel">
               <div class="panel-title"><div><h2>原始证据摘要</h2><p>可复核共同资金源、直接转账和同步交易。</p></div></div>
               <div id="cluster-evidence" class="cluster-evidence"></div>
-            </section>
-            <section class="panel">
-              <div class="panel-title"><div><h2>项目链接</h2><p>未接入实时 X / FOMO 叙事检索，不作背书。</p></div></div>
-              <div id="cluster-narrative" class="cluster-narrative"></div>
             </section>
           </div>
         </details>

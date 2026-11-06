@@ -66,8 +66,11 @@ class DexScreenerMarketClient:
         return {
             "status":"OK",
             "source":"DEXSCREENER_API",
+            "mint":mint,
             "observed_at":observed_at,
             "pair_count":len(pairs),
+            "pool_candidates":[{"pair_address":x.get("pairAddress"),"base_address":(x.get("baseToken") or {}).get("address"),"quote_address":(x.get("quoteToken") or {}).get("address")} for x in pairs[:8]],
+            "pool_candidates_not_selected":max(0,len(pairs)-8),
             "name":base.get("name"),
             "symbol":base.get("symbol"),
             "price_usd":_num(main.get("priceUsd")),
@@ -76,6 +79,7 @@ class DexScreenerMarketClient:
             "main_pair":{
                 "dex_id":main.get("dexId"),
                 "pair_address":main.get("pairAddress"),
+                "base_address":base.get("address"),
                 "url":main.get("url"),
                 "quote_address":quote.get("address"),
                 "quote_symbol":quote.get("symbol"),
@@ -91,8 +95,8 @@ class DexScreenerMarketClient:
             "aggregate_liquidity_usd":str(total_liquidity),
             "websites":[x.get("url") for x in (info.get("websites") or []) if isinstance(x,dict) and x.get("url")],
             "socials":[
-                {"platform":x.get("platform"),"handle":x.get("handle")}
+                {"platform":x.get("platform") or x.get("type"),"handle":x.get("handle"),"url":x.get("url")}
                 for x in (info.get("socials") or [])
-                if isinstance(x,dict) and (x.get("platform") or x.get("handle"))
+                if isinstance(x,dict) and (x.get("platform") or x.get("type") or x.get("handle") or x.get("url"))
             ],
         }

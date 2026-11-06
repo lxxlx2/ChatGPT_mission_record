@@ -50,6 +50,8 @@ The headline must answer, with evidence:
 
 User-facing cards should show useful results, not nine repetitive `未确认` badges. One compact `尚缺哪些证据` section lists missing data with blocker and attempted sources, while uncertainty intrinsic to ownership remains honestly explicit.
 
+2026-11-06 user clarification: explain what the narrative is about and why its evidence deserves attention even when exact-CA recognition is unverified. Keep source-attributed content, concrete event/person claims and their links visible; report CA recognition separately. A verified original interaction, a project's unverified claim, and name borrowing have different evidential value. Mentioning Musk or linking to an unread post never proves interaction, endorsement, CA adoption or investment merit. When no readable evidence is available, state that collection gap rather than inventing a story. Preserve original source times for historical reports.
+
 ## 4. Data acquisition and computation plan
 
 1. **Canonical snapshot + source provenance**: timestamp + slot/block identity for on-chain balances/supply/owners, timestamp and provider for markets, report run ID, exact CA; non-synchronous reads need captured slot divergence/staleness and reconciliation. Use decimal raw units and avoid floating point rounding in holder percentages.

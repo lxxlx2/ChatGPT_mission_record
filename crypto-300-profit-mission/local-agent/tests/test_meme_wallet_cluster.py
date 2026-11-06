@@ -1,4 +1,5 @@
 from decimal import Decimal
+import pytest
 
 from mission_agent.frank.parser import DEX_PROGRAMS
 from mission_agent.meme.cluster import Holder, RpcCache, WalletClusterAnalyzer
@@ -66,8 +67,10 @@ def test_special_lp_is_excluded_but_raw_top10_keeps_it():
     a=analyzer();a.registry={"normalization_complete":True,"addresses":{}};a._scan_holder=lambda *args:100
     out=a.analyze()
     assert out["metrics"]["RAW_TOP10_PCT"]=="53.0000"
-    assert out["metrics"]["EX_LP_TOP10_PCT"]=="43.0000"
-    assert out["metrics"]["EX_SPECIAL_TOP10_PCT"]=="43.0000"
+    assert out["metrics"]["EX_LP_TOP10_PCT"]=="UNRESOLVED"
+    assert out["metrics"]["EX_SPECIAL_TOP10_PCT"]=="UNRESOLVED"
+    assert out["metrics"]["KNOWN_EX_LP_TOP10_PCT"]=="43.0000"
+    assert out["metrics"]["KNOWN_EX_SPECIAL_TOP10_PCT"]=="43.0000"
 
 
 def test_execution_cluster_does_not_become_control_without_strong_evidence():
@@ -169,7 +172,8 @@ def test_dev_linked_cluster_includes_probable_control_wallets():
     a._scan_holder=scan
     out=a.analyze()
     assert set(out["probable_control_clusters"][0]["wallets"])=={"A","B"}
-    assert out["metrics"]["DEV_LINKED_CLUSTER_PCT"]=="35.0000"
+    assert out["metrics"]["DEV_LINKED_CLUSTER_PCT"]=="UNRESOLVED"
+    assert out["probable_control_clusters"][0]["supply_pct"]=="35.0000"
 
 
 def test_full_report_exposes_bounded_holder_acquisition_and_conservative_conclusion():
@@ -344,6 +348,7 @@ def test_token2022_sensitive_but_unresolved_config_is_not_upgraded_to_active_ris
 
 def test_adaptive_scan_deepens_suspicious_counterpart_beyond_initial_prefix():
     a=analyzer()
+    a.material_pct=Decimal("20")
     a.deep_holders=2
     a.history_per_holder=12
     a.funding_lookback=8
@@ -396,6 +401,33 @@ def test_adaptive_scan_deepens_material_unresolved_owner_outside_initial_prefix(
     assert ("G",12) not in calls
     assert ("G",30) in calls
     assert "G" in out["coverage"]["adaptive_deepened_owners"]
+
+
+@pytest.mark.parametrize("amounts,role,supply,selected", [
+    ([100], "ORDINARY", 10000, True),
+    ([99], "ORDINARY", 10000, False),
+    ([60, 40], "ORDINARY", 10000, True),
+    ([1000], "LP", 10000, False),
+    ([1000], "CEX", 10000, False),
+    ([100], "ORDINARY", 0, False),
+])
+def test_material_ordinary_owner_history_uses_owner_balance_not_risk_label(amounts,role,supply,selected):
+    a=analyzer();a.deep_holders=1
+    a.history_per_holder=12;a.adaptive_history_per_holder=30
+    rows=[Holder("prefix","PREFIX",200,0,"ORDINARY","fixture")]
+    rows += [Holder("target-"+str(i),"TARGET",raw,0,role,"fixture") for i,raw in enumerate(amounts)]
+    a.holders=lambda:(supply,0,rows)
+    calls=[]
+    a._scan_holder=lambda h,m,t,history_limit=None:calls.append((h.owner,history_limit))
+    out=a.analyze()
+    assert (("TARGET",30) in calls) is selected
+    assert ("TARGET" in out["coverage"]["adaptive_deepened_owners"]) is selected
+    target=next(h for h in out["holders"] if h["owner"]=="TARGET")
+    assert target["deep_scanned"] is selected
+    assert target["role"]==role
+    assert target["first_acquisition"]["status"]==("UNRESOLVED" if selected else "NOT_SCANNED")
+    assert out["edges"]==[] and out["probable_control_clusters"]==[]
+    assert out["analysis_completeness"]["status"]=="INCOMPLETE_EVIDENCE"
 
 
 
@@ -506,3 +538,236 @@ def test_authenticated_rpc_endpoint_validator_excludes_unsafe_urls():
         with pytest.raises(ValueError,match="RPC_ENDPOINT_INVALID") as exc:
             SolanaReadOnlyRPC(url,fallback_endpoints=[])
         assert "SECRET123" not in str(exc.value)
+
+
+def test_material_holder_threshold_aggregates_accounts_by_owner():
+    a=analyzer()
+    a.registry={"normalization_complete":True,"addresses":{}}
+    a.holders=lambda:(1000,0,[
+        Holder("ta1","A",6,0,"ORDINARY","test"),
+        Holder("ta2","A",6,0,"ORDINARY","test"),
+        Holder("ta3","B",5,0,"ORDINARY","test"),
+    ])
+    a._scan_holder=lambda *args:None
+    out=a.analyze()
+    assert out["metrics"]["UNRESOLVED_MATERIAL_HOLDER_PCT"]=="1.2000"
+    assert out["assessment"]["cluster_status"]=="WALLET_CLUSTER_UNRESOLVED"
+
+
+def test_adaptive_only_owner_has_scanned_status_even_without_acquisition():
+    a=analyzer()
+    a.deep_holders=1
+    a.history_per_holder=12
+    a.adaptive_history_per_holder=30
+    a.holders=lambda:(1000,0,[
+        Holder("ta1","A",200,0,"ORDINARY","test"),
+        Holder("ta2","B",150,0,"UNRESOLVED","test"),
+    ])
+    a._scan_holder=lambda *args,**kwargs:None
+    out=a.analyze()
+    assert out["coverage"]["adaptive_deepened_owners"]==["A","B"]
+    assert out["holders"][1]["deep_scanned"] is True
+    assert out["holders"][1]["first_acquisition"]["status"]=="UNRESOLVED"
+    assert out["coverage"]["owners_scanned"]==2
+
+
+def test_adaptive_only_owner_is_marked_scanned_when_acquisition_found():
+    a=analyzer()
+    a.deep_holders=1
+    a.history_per_holder=12
+    a.adaptive_history_per_holder=30
+    a.holders=lambda:(1000,0,[
+        Holder("ta1","A",200,0,"ORDINARY","test"),
+        Holder("ta2","B",150,0,"UNRESOLVED","test"),
+    ])
+    a._scan_holder=lambda *args,**kwargs:{"block_time":100,"signature":"buy"}
+    out=a.analyze()
+    assert out["holders"][1]["deep_scanned"] is True
+    assert out["holders"][1]["first_acquisition"]["status"]=="CONFIRMED_BOUNDED"
+
+
+def test_non_boolean_normalization_does_not_publish_strict_metrics():
+    for value in ("false","true",1,[True],{"verified":True}):
+        a=analyzer()
+        a.registry={"normalization_complete":value,"addresses":{}}
+        a._scan_holder=lambda *args:None
+        out=a.analyze()
+        assert out["coverage"]["special_normalization_complete"] is False, value
+        assert out["metrics"]["EX_SPECIAL_TOP10_PCT"]=="UNRESOLVED", value
+
+
+def test_token_normalization_false_overrides_global_true():
+    a=analyzer()
+    a.registry={"normalization_complete":True,"tokens":{"Mint":{"normalization_complete":False}},"addresses":{}}
+    a._scan_holder=lambda *args:None
+    out=a.analyze()
+    assert out["coverage"]["special_normalization_complete"] is False
+
+
+def test_transaction_gap_prevents_clean_cluster_assessment():
+    a=analyzer()
+    a.registry={"normalization_complete":True,"addresses":{}}
+    a.holders=lambda:(1000,0,[Holder("ta","A",5,0,"ORDINARY","test")])
+    def scan(*args):
+        a.tx_errors.append({"signature":"missing","error":"UNAVAILABLE_ON_PUBLIC_RPC"})
+    a._scan_holder=scan
+    out=a.analyze()
+    assert out["assessment"]["cluster_status"]=="WALLET_CLUSTER_UNRESOLVED"
+    assert "TRANSACTION_READ_GAPS" in out["coverage"]["gaps"]
+
+
+def test_bounded_report_exposes_unscanned_owner_and_multi_account_scope():
+    a=analyzer()
+    a.deep_holders=1
+    a.holders=lambda:(1000,0,[
+        Holder("ta1","A",200,0,"ORDINARY","test"),
+        Holder("ta2","A",100,0,"ORDINARY","test"),
+        Holder("ta3","B",50,0,"ORDINARY","test"),
+    ])
+    a._scan_holder=lambda *args:None
+    out=a.analyze()
+    assert out["coverage"]["owners_resolved"]==2
+    assert out["coverage"]["owners_scanned"]==1
+    assert out["coverage"]["owners_not_scanned"]==["B"]
+    assert "OWNER_HISTORY_NOT_SCANNED" in out["coverage"]["gaps"]
+    assert "MULTIPLE_TOKEN_ACCOUNTS_PER_OWNER" in out["coverage"]["gaps"]
+    assert out["coverage"]["scope"]=="BOUNDED_TOP20_ACCOUNTS"
+
+
+def test_empty_holder_snapshot_cannot_claim_no_material_cluster():
+    a=analyzer()
+    a.registry={"normalization_complete":True,"addresses":{}}
+    a.holders=lambda:(1000,0,[])
+    out=a.analyze()
+    assert out["assessment"]["cluster_status"]=="WALLET_CLUSTER_UNRESOLVED"
+    assert "NO_RESOLVED_HOLDERS" in out["coverage"]["gaps"]
+
+
+def test_low_materiality_sample_does_not_close_missing_holder_ranks():
+    a=analyzer()
+    a.registry={"normalization_complete":True,"addresses":{}}
+    a.holders=lambda:(1000,0,[Holder("ta","A",5,0,"ORDINARY","test")])
+    a._scan_holder=lambda *args:None
+    out=a.analyze()
+    assert out["assessment"]["cluster_status"]=="WALLET_CLUSTER_UNRESOLVED"
+    assert "ELIGIBLE_OWNER_RANKS_INCOMPLETE" in out["coverage"]["gaps"]
+
+
+def test_null_holder_transaction_is_a_visible_read_gap():
+    class NullTxRPC:
+        endpoint="test";calls=0;cache_hits=0
+        def call(self,method,params,ttl=0):
+            if method=="getSignaturesForAddress":return [{"signature":"missing"}]
+            if method=="getTransaction":return None
+            raise AssertionError(method)
+    a=WalletClusterAnalyzer("Mint",rpc=NullTxRPC())
+    assert a._scan_holder(Holder("ta","A",5,0,"ORDINARY","test"),{"ta":"A"},{"A"}) is None
+    assert a.tx_errors==[{"signature":"missing","phase":"holder","error":"UNAVAILABLE_ON_PUBLIC_RPC"}]
+
+
+def test_partial_top_account_resolution_prevents_clean_assessment():
+    a=analyzer()
+    a.registry={"normalization_complete":True,"addresses":{}}
+    a.holders=lambda:(1000,0,[Holder("ta","A",5,0,"ORDINARY","test")])
+    a._top_accounts_requested=2
+    a._scan_holder=lambda *args:None
+    out=a.analyze()
+    assert "TOP_ACCOUNT_RESOLUTION_GAPS" in out["coverage"]["gaps"]
+    assert out["assessment"]["cluster_status"]=="WALLET_CLUSTER_UNRESOLVED"
+
+
+def test_known_exclusion_top10_aggregates_owner_before_ranking():
+    a=analyzer()
+    # A's two accounts occupy two raw ranks; owner K must still enter owner Top10.
+    rows=[Holder("ta-a1","A",60,0,"ORDINARY","test"),Holder("ta-a2","A",60,0,"ORDINARY","test")]
+    rows += [Holder("ta-"+str(i),"owner-"+str(i),50-i,0,"ORDINARY","test") for i in range(10)]
+    a.holders=lambda:(10000,0,rows)
+    a._scan_holder=lambda *args:None
+    out=a.analyze()
+    expected=120+sum(50-i for i in range(9))
+    assert out["metrics"]["KNOWN_EX_LP_TOP10_PCT"]==f"{expected / 100:.4f}"
+    assert out["metrics"]["KNOWN_EX_SPECIAL_TOP10_PCT"]==f"{expected / 100:.4f}"
+
+
+def test_complete_supply_and_labels_still_require_snapshot_provenance():
+    a=analyzer()
+    a.registry={"normalization_complete":True,"addresses":{}}
+    a.holders=lambda:(1000,0,[Holder("ta-pool","POOL",500,0,"LP","test"),Holder("ta-a","A",500,0,"ORDINARY","test")])
+    a._scan_holder=lambda *args:None
+    out=a.analyze()
+    assert out["coverage"]["eligible_owner_rank_complete"] is True
+    assert out["metrics"]["EX_SPECIAL_TOP10_PCT"]=="UNRESOLVED"
+    assert "SNAPSHOT_SLOT_UNRECONCILED" in out["coverage"]["gaps"]
+    assert out["metrics"]["EX_LP_TOP10_PCT"]=="UNRESOLVED"
+
+
+def test_labels_alone_cannot_prove_post_exclusion_holder_ranks():
+    a=analyzer()
+    a.registry={"normalization_complete":True,"addresses":{}}
+    a._scan_holder=lambda *args:None
+    out=a.analyze()
+    assert out["coverage"]["special_normalization_complete"] is True
+    assert out["coverage"]["eligible_owner_rank_complete"] is False
+    for name in ("EX_LP_TOP10_PCT","EX_SPECIAL_TOP10_PCT","DEV_LINKED_CLUSTER_PCT","CLUSTER_ADJUSTED_TOP10_PCT"):
+        assert out["metrics"][name]=="UNRESOLVED"
+    assert "ELIGIBLE_OWNER_RANKS_INCOMPLETE" in out["coverage"]["gaps"]
+
+
+def snapshot_analyzer(largest_slot=100,account_slot=100):
+    class SnapshotRPC(DummyRPC):
+        def __init__(self):self.methods=[]
+        def call(self,method,params,ttl=0):
+            self.methods.append(method)
+            slot=100
+            if method=="getTokenSupply":value={"amount":"1000","decimals":0}
+            elif method=="getTokenLargestAccounts":
+                slot=largest_slot
+                value=[{"address":"ta-pool","amount":"500"},{"address":"ta-a","amount":"500"}]
+            elif method=="getMultipleAccounts":
+                slot=account_slot
+                if params[0]==["ta-pool","ta-a"]:
+                    value=[{"data":{"parsed":{"info":{"owner":owner,"tokenAmount":{"amount":"500"}}}}} for owner in ("POOL","A")]
+                else:value=[{"owner":"11111111111111111111111111111111"} for _ in params[0]]
+            else:raise AssertionError(method)
+            return {"context":{"slot":slot},"value":value}
+    a=analyzer()
+    a.rpc=SnapshotRPC()
+    a.holders=WalletClusterAnalyzer.holders.__get__(a)
+    a.registry={"normalization_complete":True,"addresses":{"POOL":{"role":"LP","source":"fixture"}}}
+    a._scan_holder=lambda *args:None
+    return a
+
+
+def test_same_slot_full_supply_closes_exact_exclusion_metric_preconditions():
+    a=snapshot_analyzer()
+    out=a.analyze()
+    assert out["coverage"]["snapshot_slots"]=={"supply":100,"largest_accounts":100,"account_batches":[100,100]}
+    assert out["coverage"]["snapshot_consistent"] is True
+    assert out["coverage"]["eligible_owner_rank_complete"] is True
+    assert out["metrics"]["EX_SPECIAL_TOP10_PCT"]=="50.0000"
+    assert a.rpc.methods==["getTokenSupply","getTokenLargestAccounts","getMultipleAccounts","getMultipleAccounts"]
+
+
+def test_different_finalized_slots_keep_strict_metrics_unresolved():
+    for largest,accounts in ((101,100),(100,102),(None,100),(True,100)):
+        out=snapshot_analyzer(largest,accounts).analyze()
+        assert out["coverage"]["snapshot_consistent"] is False
+        assert out["metrics"]["EX_LP_TOP10_PCT"]=="UNRESOLVED"
+        assert "SNAPSHOT_SLOT_UNRECONCILED" in out["coverage"]["gaps"]
+
+
+
+def test_missing_owner_resolution_does_not_shrink_raw_account_top10():
+    a=snapshot_analyzer()
+    original=a.rpc.call
+    def call(method,params,ttl=0):
+        result=original(method,params,ttl)
+        if method=="getMultipleAccounts" and params[0]==["ta-pool","ta-a"]:
+            result["value"][0]=None
+        return result
+    a.rpc.call=call
+    out=a.analyze()
+    assert out["coverage"]["top_accounts_resolved"]==1
+    assert out["metrics"]["RAW_TOP10_PCT"]=="100.00"
+    assert "TOP_ACCOUNT_RESOLUTION_GAPS" in out["coverage"]["gaps"]
+    assert out["metrics"]["EX_LP_TOP10_PCT"]=="UNRESOLVED"
