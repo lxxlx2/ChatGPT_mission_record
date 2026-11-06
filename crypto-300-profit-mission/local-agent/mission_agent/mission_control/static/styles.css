@@ -378,12 +378,13 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d7dce3}
 .holder-evidence small{font-size:9px;color:#66717d}
 .holder-evidence .link-btn{display:inline-block;margin-left:4px}
 
-.cluster-narrative{padding:12px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.5fr);gap:10px}
+.cluster-narrative{padding:12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:start}
+.cluster-narrative>.narrative-state,.cluster-narrative>.narrative-links,.cluster-narrative>details{grid-column:1/-1}
 .narrative-state{
   padding:10px;border:1px solid #4a4329;background:#17150e;border-radius:6px
 }
-.narrative-state strong{font-size:11px;color:#dfca71}
-.narrative-state p{margin:5px 0 0;font-size:10px;color:#9a906a;line-height:1.55}
+.narrative-state strong{font-size:13px;color:#dfca71}
+.narrative-state p{margin:5px 0 0;font-size:13px;color:#bcb38f;line-height:1.55}
 .narrative-links{display:flex;align-content:flex-start;align-items:flex-start;gap:6px;flex-wrap:wrap;padding:4px}
 .narrative-link{
   display:inline-block;padding:4px 7px;border:1px solid #303944;background:#10151b;
