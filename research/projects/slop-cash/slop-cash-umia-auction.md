@@ -1,5 +1,17 @@
 # Slop Cash / SLOP — Umia auction participation research
 
+## 2026-11-06 USER OVERRIDE: skip SLOP public ICO, evaluate only post-listing spot
+
+**Latest explicit decision (supersedes ALL prior public-only conditional bid proposals):** `ICO_PUBLIC_SKIP_USER_CONFIRMED / ZERO_PUBLIC_BID_INTENT / SPOT_ONLY_IF_POST_TGE_PRICE_LIQUIDITY_JUSTIFY / NO_TRADE`.
+
+- **No SLOP ICO/CCA bidding in the public phase**, including no $100/$150 exploratory limit, no $300 tick28 limit, no early bid, no Market fallback, no permit request or token approval for the auction. Do not present the older $300 USDG/tick28 scenario as still authorized/current. Those figures remain in historical sections **for audit context only**.
+- User wishes to **look at actual open-market/TGE trading later** and **buy only if price and conditions are attractive, otherwise abstain**. This expresses a conditional research/decision goal, **not** authorization to execute a spot trade or assume the old $300 ICO budget automatically applies to secondary-market purchases; spot amount and final execution require explicit user direction.
+- For any future *user-initiated* spot analysis, read current **actual Uniswap v4/Robinhood Chain pool deployment, token mint and supply, tradable float, executable sell and buy quotes, USDC/ETH reserves, effective sell price impact, holder flows, CCA final clearing/bid basis, claim state and observable volume**. Distinguish live onchain values from webpage indications; never assume a pool, FDV, performance or price exists before verified. A pump, weak depth, high FDV or missing executable quotes can justify **SKIP**; declining price alone is insufficient evidence of value.
+- Existing historical $1.464M tick28 cap was for **ICO price discipline**; current spot thresholds are **not automatically executable orders**. Research, wallet and production monitoring/trading remain `NO_GO`, unless the user separately authorizes an operation. Do **not** create monitors, alerts, fallback automations or emails.
+
+---
+
+
 
 ## 2026-11-06 SLOP public ICO vs secondary-market decision update
 
