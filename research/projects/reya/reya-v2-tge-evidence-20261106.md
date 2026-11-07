@@ -1,0 +1,90 @@
+# Reya ($REYA): v2 progress, declining legacy business, TGE readiness and prediction-market evidence
+
+## 2026-11-06 authenticated Legacy Wallet check and historic external-wallet distribution rule
+
+**Actual connected logged-in browser inspection (read-only, 2026-11-06):**
+- `https://coinlist.co/wallet/legacy`: **"Legacy CoinList Balances" / "No custodied balances found" / "You do not have any balances in your legacy CoinList wallet."** UI exposes **"Request tax documents"** and **"Request transaction reports"** controls; no historical Reya record or contract shown.
+- `https://coinlist.co/wallet`: **"Your orders: No orders yet"** and **"Invested with an external wallet? Connect it to view your orders."** A newly shown embedded Ethereum address `0x40aA…89ac` and Solana address `HZeidi…fGdJ` are **new UI wallets only** and **must not be assumed to equal the historic Reya allocation receiving wallet**. Do not attach them to historic Reya sale without primary confirmation.
+- `https://coinlist.co/reya`: user authenticated, **"Sale Ended"**, `Your orders` empty. **These are interface presentation gaps, not evidence of issuer cancellation, payment reversal, missing beneficial entitlement, or security breach.**
+- **Critical project-specific rule**: CoinList archived [Reya historical sale FAQ](https://tr.coinlist.co/help/what-is-reya?locale=tr) says **users MUST link an external wallet during purchase**, and **token distributions go to that wallet regardless of which wallet supplied funding**. The page also states 50% unlock at TGE + remaining 50% linear six months. Therefore the historic intended distribution address may be different from both newly created CoinList addresses. Linking a new external wallet now must **not** be assumed to override or restore original delivery settings.
+- [CoinList 2026 migration FAQ](https://coinlist.co/faq) assures still-undistributed/locked user token entitlements will be supported through token-specific distribution later. This is a **platform statement**, not a guarantee of issuer financial solvency, TGE timing, direct refund, or an audited allocation ledger.
+
+**Result:** `CONFIRMED_USER_PURCHASE_5000 / EMPTY_NEW_UI / NO_LEGACY_CUSTODIAL_BALANCE / HISTORICAL_EXTERNAL_RECEIVER_ADDRESS_UNRESOLVED / ISSUER_TERMINATION_REFUND_UNRESOLVED`. Correct earlier mistaken association with Reya Season 1/2 point-farming: user **never participated in Reya points farming**, only the paid CoinList sale. Do not revive airdrop-participant status.
+
+**Next (only if user elects)**: use platform `Request transaction reports` control and inspect resulting historical sales ledger; if unhelpful contact CoinList support for 2025 Reya order ID, $5000 allocated cost, token entitlement count, original external wallet address, historic purchase TPA and legally relevant issuer cancellation/non-delivery/refund process. **Do not activate the report request, connect a wallet, export keys, transfer funds, or send support email without explicit user authorization.**
+
+---
+
+
+## 2026-11-06 user-confirmed full $5K Reya allocation and CoinList legacy wallet migration
+
+**Latest user correction and status priority:** User explicitly confirms **all $5,000 submitted in the Reya CoinList sale were allocated**. Update position to `USER_CONFIRMED_FULL_5000_USD_FILLED / PENDING_REYA_DISTRIBUTION / NO_TGE_OR_CLAIM_CONFIRMED`. Original Gmail receipt independently confirms **$5,000 commitment** on Nov25 2025; allocation was communicated in a Dec5 email but the email body itself gives no numbers. Therefore **full fill is USER_CONFIRMED (stronger than inference, not a direct account/API readback)**. User has **no Reya points**, only this paid purchase. Expected nominal quantity at $0.01875 = **266,666.6667 REYA** and 50% first-release on eventual TGE, still **theoretical until account or original issuer ledger is read**. Do not say actual account allocation was independently retrieved or wallet tokens are already delivered.
+
+**Authenticated browser inspection** [CoinList Reya sale page](https://coinlist.co/reya) as of Nov6 shows profile logged in and the section `Your orders — Your orders in this sale will appear here` **empty**, despite user-confirmed 2025 allocation. An empty frontend panel is **not evidence of a refunded or cancelled Reya order**. Old system has been migrated. Official [CoinList FAQ](https://coinlist.co/faq) states:
+- CoinList migrated from custodial to non-custodial wallets, so new `Wallet Total` only shows supported self-custody tokens; older historical balances and legacy holdings are at [Legacy Wallet](https://coinlist.co/wallet/legacy).
+- Official FAQ under `What happens to my pending token unlocks and distributions?`: users **still own unvested, undelivered entitlements** from earlier CoinList purchases; CoinList plans token-specific distribution methods and will contact users as distributions occur. **Issuer/platform promise**, not verified project-specific Reya escrow or binding refund guarantee.
+- Old domain `old.coinlist.co` publicly redirects to new homepage; unauthenticated public fetch of Legacy Wallet failed. In this Chat-mode browser access only the user-opened Reya page was readable; **Legacy Wallet was not open yet** and no account data from that page was obtained.
+- New wallet's current list of supported assets does **not include REYA** in the FAQ; unlisted future token distributions need not show as current wallet assets. Do not ask the user to migrate funds or export a private key to "recover" unissued REYA.
+- Need separately obtain user-specific authenticated legacy order/ledger readback, purchase-date Reya Token Purchase Agreement and written refund/issuer-non-delivery clause if TGE is permanently cancelled. The platform's promise to distribute tokens **is not** protection against project insolvency or a right to refund successful allocations. No cancellation, bankruptcy, token delivery, repayment, or official claim time verified.
+
+**No funds moved, new monitor, user support request, email or automation created.**
+
+---
+
+
+## 2026-11-06 CoinList purchase at risk and failure/refund terms
+
+**User scope correction:** The user holds a **CoinList token-sale subscription only**, **no Reya points or airdrop allocation claimed**. Prior answers must **not** recommend keeping Season 1 points, or attribute Season 2 economics to this user's actual cost basis. The relevant exposure is a 2025 CoinList purchase, and the key question is principal recovery if the issuer fails before TGE.
+
+**Direct user-specific Gmail receipt evidence, read-only, no credentials/PII stored here:**
+- **2025-11-25 17:24 UTC**, official CoinList receipt email subject `You've committed 5,000.00 USD to the Reya` confirms **$5,000 USD subscription commitment**, **not necessarily final accepted allocation**. Email states if not selected the purchase will be refunded within **48h** after sale close (marketing receipt wording; website FAQ now says **5 business days** for unsuccessful allocations). Do not apply either rule to **successful paid allocations**.
+- **2025-12-05 22:43 UTC**, official CoinList email subject `The results for Reya are in` points to account status but **does not disclose actual confirmed filled USD or token amount**. A full search of connected life/work mail for Reya did not yield a detailed final fill or authenticated 2025 issuer Token Purchase Agreement. Thus **EXPOSURE_AMT_ACCEPTED = UNVERIFIED**, `REFUNDED_UNUSED_AMT = UNVERIFIED`. Do **not** represent $5,000 as already irreversibly invested, as a current marked REYA holding, or as realized loss. If all $5,000 were filled at $0.01875, tokens would be **266,666.6667 REYA** and 50% initially unlocked at eventual TGE; math is a **conditional scenario** only.
+
+**Issuer/platform official publicly verifiable terms:**
+- [CoinList Reya sale deal page](https://coinlist.co/reya): initial purchase Nov25–Dec2 2025; sale $0.01875, 50% TGE unlocked, remaining 50% linear six months; TGE/listing **to be announced**. Its explicit refunds apply to **no allocation / unused subscription funds**; **NO public unconditional issuer-failure refund or long-TGE-delay redemption clause located**.
+- [CoinList current terms](https://coinlist.co/terms) acknowledge issuer insolvency, fraud, non-performance, illiquidity and total loss and separate platform services from third-party sale contracts. The current posted terms may **differ from the version accepted by user in Nov2025**; cannot conclude contractual rights conclusively without the exact historic **Reya Token Purchase Agreement / Offering Terms**. CoinList is not a proven principal guarantor of successful allocations.
+- Distinct outcomes: delay = continuing lock, no confirmed automatic refund; issuer voluntarily cancels and refunds = contingent on confirmed decision and funds; permanent failure/insolvency = real risk of loss of full accepted amount and possible uncertain claim if original agreement provides remedy; unaffiliated/unaccepted subscriptions = specific refund terms above. No evidence as of Nov6 of actual formal project cancellation, official insolvency, confirmed refund event, or successful token delivery.
+
+**Practical next evidence:** User should read authenticated CoinList Reya `Order / Allocation / Transaction details` to establish **actual allocated USD, pending claimable REYA and any already returned unused funds**, then recover **the purchase-date Token Purchase Agreement** and obtain written confirmation from CoinList and issuer addressing complete failure / deadline / refund/recourse. **Do not send support request or initiate account operation without user's explicit direction.**
+
+**Status:** `USER_COINLIST_SUBMITTED_5000_CONFIRMED_BY_ORIGINAL_EMAIL / FINAL_ALLOCATION_UNCONFIRMED / REFUND_POLICY_SUCCESSFUL_ALLOCATIONS_NOT_PROVEN / 2026_TGE_ODDS_LOW / NO_LOSS_REALIZED_PROVEN / RESEARCH_ONLY`.
+
+---
+
+
+**Evidence date:** 2026-11-06 (Asia/Bangkok). Research-only snapshot; no new TGE, claim, market listing, trade, notification or monitoring authorization.
+
+## Executive finding
+
+**TGE by end-2026: LOW CONFIDENCE**, distinct from **v2 product development: ACTIVE**. Markets indicate a substantial risk of missing 2026, and earlier token milestones remain unconfirmed as public trading, but the new orderbook runs and the official API continues receiving meaningful commits. Legacy/combined historical TVL and protocol revenue have materially declined and should not be mistaken for current v2-only economics. No official fixed token listing, claim time, or allocation date independently verified.
+
+## Prediction markets: exact subject and dated snapshots
+
+- [Polymarket: Will Reya launch a token by ___?](https://polymarket.com/event/will-reya-launch-a-token-by), outcome `December 31, 2026`: **~12.5% YES on 2026-11-04 21:00 UTC** according to [PredictPedia snapshot](https://predictpedia.com/events/KqI3fe/will-reya-launch-a-token-by-___). Polymarket's public indexed page crawled the following week vicinity reports **~13% YES** and **$118,792 all-outcome volume**, with around **$16,954** in the 2026 outcome. Market URL and dated odds are reproducible; **not** an exchange or official launch guarantee. A separately retrieved older Polymarket index from ~three weeks before Nov6 showed **36% for 2026**, though the precise historical capture time isn't available, so treat the decline's exact point size as indicative, not an audited time-series tick. Other older snapshots differ; do not silently mix differently timestamped 2027 prices.
+- 2027 cumulative outcome **85.5% on Nov4** per PredictPedia; other indexed Polymarket snapshots differ (e.g., 70%). Neither figure establishes a particular 2027 TGE date. These are different markets with different cutoff dates and spreads.
+- [Polymarket: REYA FDV above ___ one day after launch](https://polymarket.com/event/reya-fdv-above-one-day-after-launch) requires token to **launch by 2026-12-31** or all FDV strike YES legs resolve NO. Thus prices such as **~14.5% YES for FDV >$10M on Nov4** embed both TGE deadline and valuation; **not** direct consensus that unconditional FDV is under $10M. Primary rules and [dated independent quote](https://polymarkettrader.com/odds/reya-fdv-above-one-day-after-launch/).
+- Mandatory scan of public search results for Reya-specific TGE markets on Kalshi, Limitless, Predict.fun and Opinion did **not** return a verifiable directly matching live market. Search coverage only; not proof none exists. No PM positions opened.
+
+## Product engineering: positive DIRECT PUBLIC GIT evidence, claims distinguished
+
+- Reya [official X](https://x.com/reya_xyz) announced Reya **v2 private beta live 2026-09-28**, replacing v1 AMM with an orderbook, progressively admitting traders and market makers. v2 rollout is not public TGE.
+- CEO [Simon Jones](https://x.com/0xSimonJones) on **Sep22** publicly acknowledged that the project had taken too long in 2026, citing inadequate prior engineering capacity; announced reorganized team and head of engineering; an **ISSUER SELF-REPORT**, not independent failure attribution. Oct23 CEO claimed **26 markets, ~10 institutions live/onboarding, $100M notional traded on a high day**; metrics not independently recomputed.
+- Latest product news: v2 **Wave 5** user admission **2026-11-03**, **Golden Tickets** launched Nov4, v2 agentic trading announcement [Nov3 blog](https://blog.reya.network/super-intelligence-meets-trading/) (issuer statement), and official Nov5 maintenance scheduled AWS migration. Maintenance announcement is **not** evidence of permanent downtime.
+- **Public GitHub independently verified:** [Reya-Labs/reya-api-specs](https://github.com/Reya-Labs/reya-api-specs/commits/main) commits **2026-11-03** [wallet fills / pre-settlement](https://github.com/Reya-Labs/reya-api-specs/commit/b9623aaca7e2130906fab4f429863de1fd4c9d79), **2026-11-04** [fee tiers and lookback windows](https://github.com/Reya-Labs/reya-api-specs/commit/19e4f660f6a953e078827af1ab0c2a3cdc9183b3), **2026-11-06** [PARTIAL_FILL cancel reason](https://github.com/Reya-Labs/reya-api-specs/commit/3f0fc9b9df8f328d2e4bad7f3ee5413a10bd96f8). These prove live published API development, **not** token readiness or execution of all backend features. [reya-python-sdk](https://github.com/Reya-Labs/reya-python-sdk/commits/main) latest observed push Oct23 included strategy examples.
+- The above open-source repositories are APIs/examples, **not full v2 core matching engine source**. A comprehensive onchain deployment or backend-runtime audit has not been done.
+
+## Operational market metrics (provider metrics; metadata, timing and conflict)
+
+- [DefiLlama Reya combined](https://defillama.com/protocol/reya) TVL **$29.66M at Dec31 2025**, **$13.39M at Nov5 2026**, **~54.9% down**. The dip encompasses the v1 retirement/v2 migration.
+- Same provider's *monthly* protocol revenue **$52,835 (Oct 2025)** versus **$4,624 (Oct 2026)**, **~91.25% down**. Fee revenue series **$482,546 (Oct 2025)** versus **$26,252 (Oct 2026)**, **~94.56% down**. Higher recent past fee month Nov2025 $767,613; current business measurement is depressed. These are provider-attributed protocol categories rather than audited company-wide earnings.
+- [DefiLlama exchange Reya](https://defillama.com/exchange/reya) Nov4 snapshot **$5.18M daily perp volume**, **~$2.07M OI**, **34 listed markets** (data provider). **Critical conflict:** [DefiLlama combined protocol](https://defillama.com/protocol/reya) reports **$0 30d perp volume** at Nov5, so do not assert platform has zero trading activity or simply stitch old v1 vs v2 volumes. Need check revamped exchange data coverage/source adapter before treating volume series as uniform.
+- A source discrepancy in network TVL exists: `Reya Perps` chain TVL ~$9.91M versus `Reya combined` TVL ~$13.39M. Different scope and bridge aggregation; **use like-for-like series**.
+
+## Token economics and commercialization / missing TGE gates
+
+- [Official Reya token design, dated Mar20 2026](https://blog.reya.network/reya-design-distribution-and-differentiation/): issuer stated 8B fixed supply; community 45%; network token staking/slashing, protocol-fee-funded buyback proposal; said `$REYA, sREYA and LayerZero deployment complete` and MM agreements signed, while **live testing, CEX/DEX final listing confirmations, and Checker Portal** remained **in progress**. This issuer assertion can coexist with **no official publicly tradable $REYA yet**; don't claim token never deployed on any chain without a direct account search.
+- [CoinList official 2025-11-25 to 2025-12-02 token sale](https://coinlist.co/reya): **$0.01875 per token**, **160M tokens (2% of 8B)**, **$150M sale FDV**, **50% unlock at eventual TGE**, other 50% linear over six months. Sale ended and listing status still `To be announced` at latest inspected page. Already completed sale is **not evidence that current TGE or claim is live**.
+- Official launch date and onchain externally transferable token, whitelist/checker, named CEX go-live and concrete claim start **UNVERIFIED** as of this research. TGE calendar precise date = **unknown**, forecast 2027 should NOT be recorded as issuer-confirmed schedule.
+
+**Decision:** classify `ACTIVE_V2_PRODUCT / INCOMPLETE_TOKEN_LAUNCH_EVIDENCE / 2026_TGE_ODDS_LOW / HISTORICAL_REVENUE_DOWN / WATCH / NO_GO`. For any next Reya look-up prioritize (1) official TGE+CEX+checker new links, (2) independently verifiable permissionless REYA transferability/deployment bridge, (3) actual v2 revenue and trade data normalized for migrations, and (4) latest PM quotes with time stamps, order depth and resolution conditions. No new recurring monitor, mail or fallback automation.
+
