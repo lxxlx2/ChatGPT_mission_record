@@ -258,3 +258,24 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - user_claimable_allocation: UNVERIFIED; user-facing online claim interaction: UNVERIFIED; source tier for ACTION: `PENDING_DIRECT_FIRST_PARTY_OR_MAPPED_B`.
 - action_status: `HIGH_PRIORITY_FIRST_PARTY_CLAIM_WINDOW_VERIFY`, `NO_GMAIL_YET`. Next existing urgent slot should read the original named account or canonical issuer endpoint and status, validate exact claim period and new user action, apply ACTION_GATE (including no duplicates), then send exactly one authorized Gmail with source and eligibility caveat iff proof passes; otherwise record source gap and remain silent.
 - no extra task, no local cron, no assumption that current interactive X Home tab can be navigated by unattended schedule.
+
+## 2026-11-08 historical reconciliation: revoked Space claim and duplicate HEEBOO timing
+### Space / Spacecoin misattribution, original Sep14 alert (RETRACTED)
+- false_alert_gmail_id: 1a09cc0fb4edb6f0
+- correction_gmail_id: 1a0e149f1f9d03be (Gmail Sent, 2026-09-27)
+- false_event_key: space:misattributed_spacecoin_final_claim:2026-09-14
+- status: RETRACTED_DO_NOT_USE_AS_FACT_OR_ACTION
+- canonical_archive: airdrop-tge-monitor/reports/events/2026/2026-09/2026-09-14/045127-space-final-claim-deadline.md (status: retracted, corrected mail recorded)
+- original_claim_deadline_2026-09-14_09:00_bkk: FALSE_FOR_MONITORED_SPACE
+- original_claim_link_chain: CROSS_PROJECT_EVIDENCE_CONFLATION
+- scope: Space @intodotspace remains separate from Spacecoin @spacecoin and later independently verified SPC public-sale claim dApp sunset Oct15. The Oct15 reminder is a separate valid event family and has Gmail id 1a129b8b2ddd1607; neither historical date may replace the other.
+- operational_rule: excluded from actionable opportunity/expiry metrics, 7-day novelty baselines, future private user TGE reminder and monthly rights summaries, except as incident/QA warning. Do not resend Sep14 error or Sep27 already-sent correction.
+
+### HEEBOO Metaplex Aug24 explicit 9am ET notice: redundant emails
+- family: heeboo:metaplex:tomorrow_9am_et:2026-08-24
+- near_duplicate_sends: 1a03567f802748e5 and 1a0356976e78a590
+- evidence: both Gmail Sent texts cite same exact Metaplex "Tomorrow. 9am ET. $HEEBOO." news, same Bangkok Aug25 20:00 and same unconfirmed stage. The later email adds explanation but no independent new event version or changed user action.
+- classification: HISTORICAL_DUPLICATE_CONTENT_QUALITY_EXCEPTION
+- separate_fact_families: earlier Aug24 tokenomics/allocation announcement 1a034f0f1a9a3f8a; launch pool mechanics/preflight 1a0344cdbb8d9b89, may overlap in timing but are distinct stage details, do not automatically label them identical.
+- no_new_email: historical reminder already expired; no fresh actionable state. Future email gate must include event family and material version comparison before any new dispatch, never allow repetition solely because another official account repeats a schedule.
+- past_sent_bodies: immutable Gmail evidence; don't delete/alter old messages or pretend duplicates were never sent.
