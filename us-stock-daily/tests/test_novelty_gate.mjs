@@ -66,3 +66,11 @@ test('verified new IPO stage must appear in existing IPO section',()=>{
  const v=make();v.events[4].kind='IPO_ISSUER_STAGE';
  assert.ok(validateStockNovelty(v).errors.some(e=>e.startsWith('IPO_STAGE_NOT_IN_IPO_SECTION')));
 });
+
+test('empty sections are rejected even with twelve correct headings',()=>{
+ const v=make();
+ v.body=v.body.replace('五、AI、科技与一级市场\\n（1）有日期和真实源的新事实-5','五、AI、科技与一级市场\\n无高置信新增。');
+ const r=validateStockNovelty(v);
+ assert.equal(r.passed,false);
+ assert.ok(r.errors.some(e=>e.startsWith('EMPTY_STOCK_SECTION:5')));
+});
