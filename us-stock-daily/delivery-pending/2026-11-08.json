@@ -1,0 +1,202 @@
+{
+  "report_date": "2026-11-08",
+  "stage": "0540_PREBUILD",
+  "qa_status": "QA_PENDING",
+  "ci_status": "CI_NOT_PROVEN",
+  "market_session": "2026-11-06",
+  "history": "Seven authoritative Sent bodies inspected, including corrected Nov 2; full seven Git canonical comparison incomplete",
+  "official_x": "BROWSER_UNAVAILABLE; X_SOURCE_GAP; SEC/IR fallback",
+  "ipo": "Anthropic SEC S-1/A 2026-11-02; pricing and actual share access unverified",
+  "items": [
+    {
+      "family_key": "us_market_2026_11_06_1_1",
+      "material_version": "2026-11-06_session",
+      "primary_section": 1,
+      "source": "https://apnews.com/article/806f71d95105bc7efbc760b194dd8cad",
+      "published_at": "2026-11-06",
+      "novelty_proof": "Dated market fact or forward decision checkpoint",
+      "status": "ROUTINE_DATED_FACT"
+    },
+    {
+      "family_key": "us_market_2026_11_06_1_2",
+      "material_version": "2026-11-06_session",
+      "primary_section": 1,
+      "source": "https://www.reuters.com/world/asia-pacific/dollar-holds-yen-gains-equity-rout-saps-risk-appetite-ahead-payrolls-2026-11-06/",
+      "published_at": "2026-11-06",
+      "novelty_proof": "Dated market fact or forward decision checkpoint",
+      "status": "ROUTINE_DATED_FACT"
+    },
+    {
+      "family_key": "us_market_2026_11_06_2_1",
+      "material_version": "2026-11-06_session",
+      "primary_section": 2,
+      "source": "https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/",
+      "published_at": "2026-11-06",
+      "novelty_proof": "Dated market fact or forward decision checkpoint",
+      "status": "ROUTINE_DATED_FACT"
+    },
+    {
+      "family_key": "berkshire_q3_2026_2_2",
+      "material_version": "2026-11-07_official_q3",
+      "primary_section": 2,
+      "source": "https://www.berkshirehathaway.com/news/nov0726.pdf",
+      "published_at": "2026-11-07",
+      "novelty_proof": "Issuer weekend release after previous daily Sent",
+      "status": "NEW"
+    },
+    {
+      "family_key": "us_market_2026_11_06_3_1",
+      "material_version": "2026-11-06_session",
+      "primary_section": 3,
+      "source": "https://www.reuters.com/business/sp-500-futures-steady-after-midterm-rally-nasdaq-lags-chip-weakness-2026-11-05/",
+      "published_at": "2026-11-06",
+      "novelty_proof": "Dated market fact or forward decision checkpoint",
+      "status": "ROUTINE_DATED_FACT"
+    },
+    {
+      "family_key": "berkshire_q3_2026_3_2",
+      "material_version": "2026-11-07_official_q3",
+      "primary_section": 3,
+      "source": "https://www.berkshirehathaway.com/news/nov0726.pdf",
+      "published_at": "2026-11-07",
+      "novelty_proof": "Issuer weekend release after previous daily Sent",
+      "status": "NEW"
+    },
+    {
+      "family_key": "berkshire_q3_2026_4_1",
+      "material_version": "2026-11-07_official_q3",
+      "primary_section": 4,
+      "source": "https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/",
+      "published_at": "2026-11-07",
+      "novelty_proof": "Issuer weekend release after previous daily Sent",
+      "status": "NEW"
+    },
+    {
+      "family_key": "us_market_2026_11_06_5_1",
+      "material_version": "2026-11-06_session",
+      "primary_section": 5,
+      "source": "https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/",
+      "published_at": "2026-11-06",
+      "novelty_proof": "Dated market fact or forward decision checkpoint",
+      "status": "ROUTINE_DATED_FACT"
+    },
+    {
+      "family_key": "us_market_2026_11_06_5_2",
+      "material_version": "2026-11-06_session",
+      "primary_section": 5,
+      "source": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676-index.htm",
+      "published_at": "2026-11-06",
+      "novelty_proof": "Dated market fact or forward decision checkpoint",
+      "status": "ROUTINE_DATED_FACT"
+    },
+    {
+      "family_key": "berkshire_q3_2026_6_1",
+      "material_version": "2026-11-07_official_q3",
+      "primary_section": 6,
+      "source": "https://www.berkshirehathaway.com/news/nov0726.pdf",
+      "published_at": "2026-11-07",
+      "novelty_proof": "Issuer weekend release after previous daily Sent",
+      "status": "NEW"
+    },
+    {
+      "family_key": "cpi_oct_2026_7",
+      "material_version": "2026-11-06_session",
+      "primary_section": 7,
+      "source": "https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/",
+      "published_at": "2026-11-06",
+      "novelty_proof": "Dated market fact or forward decision checkpoint",
+      "status": "ROUTINE_DATED_FACT"
+    },
+    {
+      "family_key": "us_market_2026_11_06_7_2",
+      "material_version": "2026-11-06_session",
+      "primary_section": 7,
+      "source": "https://www.reuters.com/business/sp-500-futures-steady-after-midterm-rally-nasdaq-lags-chip-weakness-2026-11-05/",
+      "published_at": "2026-11-06",
+      "novelty_proof": "Dated market fact or forward decision checkpoint",
+      "status": "ROUTINE_DATED_FACT"
+    },
+    {
+      "family_key": "us_market_2026_11_06_8_1",
+      "material_version": "2026-11-06_session",
+      "primary_section": 8,
+      "source": "https://apnews.com/article/806f71d95105bc7efbc760b194dd8cad",
+      "published_at": "2026-11-06",
+      "novelty_proof": "Dated market fact or forward decision checkpoint",
+      "status": "ROUTINE_DATED_FACT"
+    },
+    {
+      "family_key": "berkshire_q3_2026_8_2",
+      "material_version": "2026-11-07_official_q3",
+      "primary_section": 8,
+      "source": "https://www.berkshirehathaway.com/news/nov0726.pdf",
+      "published_at": "2026-11-07",
+      "novelty_proof": "Issuer weekend release after previous daily Sent",
+      "status": "NEW"
+    },
+    {
+      "family_key": "berkshire_q3_2026_9_1",
+      "material_version": "2026-11-07_official_q3",
+      "primary_section": 9,
+      "source": "https://www.nyse.com/markets/hours-calendars",
+      "published_at": "2026-11-07",
+      "novelty_proof": "Issuer weekend release after previous daily Sent",
+      "status": "NEW"
+    },
+    {
+      "family_key": "cpi_oct_2026_9",
+      "material_version": "2026-11-06_session",
+      "primary_section": 9,
+      "source": "https://www.bls.gov/schedule/2026/",
+      "published_at": "2026-11-06",
+      "novelty_proof": "Dated market fact or forward decision checkpoint",
+      "status": "ROUTINE_DATED_FACT"
+    },
+    {
+      "family_key": "berkshire_q3_2026_10_1",
+      "material_version": "2026-11-07_official_q3",
+      "primary_section": 10,
+      "source": "https://www.berkshirehathaway.com/news/nov0726.pdf",
+      "published_at": "2026-11-07",
+      "novelty_proof": "Issuer weekend release after previous daily Sent",
+      "status": "NEW"
+    },
+    {
+      "family_key": "us_market_2026_11_06_10_2",
+      "material_version": "2026-11-06_session",
+      "primary_section": 10,
+      "source": "https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/",
+      "published_at": "2026-11-06",
+      "novelty_proof": "Dated market fact or forward decision checkpoint",
+      "status": "ROUTINE_DATED_FACT"
+    },
+    {
+      "family_key": "us_market_2026_11_06_11_1",
+      "material_version": "2026-11-06_session",
+      "primary_section": 11,
+      "source": "https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/",
+      "published_at": "2026-11-06",
+      "novelty_proof": "Dated market fact or forward decision checkpoint",
+      "status": "ROUTINE_DATED_FACT"
+    },
+    {
+      "family_key": "berkshire_q3_2026_11_2",
+      "material_version": "2026-11-07_official_q3",
+      "primary_section": 11,
+      "source": "https://www.berkshirehathaway.com/news/nov0726.pdf",
+      "published_at": "2026-11-07",
+      "novelty_proof": "Issuer weekend release after previous daily Sent",
+      "status": "NEW"
+    },
+    {
+      "family_key": "berkshire_q3_2026_12_1",
+      "material_version": "2026-11-07_official_q3",
+      "primary_section": 12,
+      "source": "https://www.berkshirehathaway.com/news/nov0726.pdf",
+      "published_at": "2026-11-07",
+      "novelty_proof": "Issuer weekend release after previous daily Sent",
+      "status": "NEW"
+    }
+  ],
+  "body": "美股每日晨报｜2026-11-08\n时区：Asia/Bangkok；最近完整美股现货交易日为2026-11-06（周五）。周末无新现货收盘。\n\n一、市场总览\n（1）11月6日道指51,285.73（-0.46%）、标普500 7,376.86（+0.31%）、纳斯达克24,579.42（+1.09%）、罗素2000 2,754.11（+0.89%）。全周纳指跌3.4%、标普跌2.7%、道指跌0.9%、罗素跌2.1%。周五局部修复未抹平周跌幅。来源：https://apnews.com/article/806f71d95105bc7efbc760b194dd8cad\n（2）11月6日美国10月非农增加16.5万人，失业率4.1%；Reuters记录美元指数约102.26。债息、油价最新同步精确数值待核验。来源：https://www.reuters.com/world/asia-pacific/dollar-holds-yen-gains-equity-rout-saps-risk-appetite-ahead-payrolls-2026-11-06/\n\n二、正常时段、盘后与异动原因\n（1）周五费城半导体指数涨约4.2%，AMD涨约11%、Nvidia涨约2.8%，道指仍跌；AMD于11月3日公布的财报不能继续列为待发布。来源：https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/\n（2）11月7日Berkshire Hathaway公布三季度经营利润127.05亿美元（去年134.85亿美元），净利润221.12亿美元（去年307.96亿美元）。周一才有公布后首个美股常规交易日，不能虚构周末股价反应。来源：https://www.berkshirehathaway.com/news/nov0726.pdf\n\n三、行业级异动与结构性主题\n（1）周五芯片涨幅与道指下跌形成行业分化，周四标普11行业全部下跌的旧事实不能当成周五行业广度。来源：https://www.reuters.com/business/sp-500-futures-steady-after-midterm-rally-nasdaq-lags-chip-weakness-2026-11-05/\n（2）Berkshire三季度保险承保经营利润13.52亿美元（去年23.69亿美元），BNSF铁路17.29亿美元（去年14.49亿美元），能源16.12亿美元（去年14.89亿美元）。非科技行业利润同样显著分化。来源：https://www.berkshirehathaway.com/news/nov0726.pdf\n\n四、重大主题专题分析\n（1）11月6日半导体反弹与11月7日Berkshire业绩给出两类盈利可见度：AI链需要继续验证未来建设支出的现金回报，铁路和能源已经公布经营利润增长；若下周芯片反弹不能扩散至广度与信用市场，技术性反弹未必可持续。来源：https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/ ；https://www.berkshirehathaway.com/news/nov0726.pdf\n\n五、AI、科技与一级市场\n（1）11月6日AI硬件链价格反弹是新交易日事实，不能推断AI项目自由现金流或债券信用利差已同步改善。来源：https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/\n（2）IPO / Pre-IPO / 新股机会：Anthropic SEC文件可核验到11月2日S-1/A，未核实更新的最终定价、配售股数或第三方真实股权认购资格；相关衍生品不能等同于IPO股份。来源：https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676-index.htm\n\n六、机构资金与市场观点\n（1）Berkshire披露三季度回购约96亿美元，这是可量化的单一公司资本配置，不能等同于全市场机构资金净流入。其经营利润同比下降约6%，回购加速与盈利放缓需要一起评估。来源：https://www.berkshirehathaway.com/news/nov0726.pdf\n\n七、政策、监管与全球局势\n（1）周五就业数据后，Reuters记录12月加息市场概率约78%，属于当时交易定价，非已作出的FOMC决议。11月10日官方CPI将检验这一预期。来源：https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/ ；https://www.bls.gov/schedule/2026/\n（2）选举后关于数据中心审批的政治担忧需要区分政策预期与已经生效的正式限制，投资判断仍需追踪具体法规文件。来源：https://www.reuters.com/business/sp-500-futures-steady-after-midterm-rally-nasdaq-lags-chip-weakness-2026-11-05/\n\n八、风险雷达\n（1）纳指周五上涨1.09%但全周仍跌3.4%，若下周市场广度和软件股未跟上芯片反弹，仍有二次回撤风险。来源：https://apnews.com/article/806f71d95105bc7efbc760b194dd8cad\n（2）Berkshire保险承保利润由23.69亿美元降至13.52亿美元，需检查赔付、定价与承保周期变化。来源：https://www.berkshirehathaway.com/news/nov0726.pdf\n\n九、未来24至72小时事件日历\n（1）11月8日周日美国现货休市；11月9日周一恢复交易，观察BRK.B财报后的首次市场定价与科技股广度。来源：https://www.nyse.com/markets/hours-calendars\n（2）11月10日周二美东08:30、曼谷20:30，BLS计划公布10月CPI及Real Earnings，发布前不得写成实际结果。来源：https://www.bls.gov/schedule/2026/\n\n十、今日买入观察\n（1）BRK.B仅列研究观察：11月7日新增回购96亿美元与铁路、能源经营利润增长是why-now；保险承保利润下降是风险，周一股价及估值未经核验前不提供买点。来源：https://www.berkshirehathaway.com/news/nov0726.pdf\n（2）AMD仅观察，不追逐周五约11%反弹。后续检验债息、芯片行业广度和已公布指引的兑现；若利率继续上升且相对强度消失则失效。来源：https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/\n\n十一、漏检复盘与监控修正\n（1）具体模型盲点是将周五半导体反弹当作全市场风险解除；需同时看道指下跌、纳指全周回撤、利率及市场广度。来源：https://www.reuters.com/business/nasdaq-futures-rise-after-steep-ai-selloff-chip-stocks-stabilize-2026-11-06/\n（2）11月7日Berkshire周末正式业绩是周五收盘新闻源无法覆盖的新增公司披露，周一须核对首次真实价格反应。来源：https://www.berkshirehathaway.com/news/nov0726.pdf\n\n十二、结论\n（1）11月8日无新美股现货收盘，市场仍处11月6日局部反弹与全周下跌并存状态；周末新增重要事实是Berkshire三季度经营利润、业务分化及回购。下一个官方风险节点是11月10日CPI。来源：https://www.berkshirehathaway.com/news/nov0726.pdf ；https://www.bls.gov/schedule/2026/"
+}
