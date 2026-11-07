@@ -1,5 +1,22 @@
 # 1609SAT / MetaDAO Apps Program：SAT 备考产品、公售估值、早期流通与退出风险调查
 
+## 2026-11-08: user contribution increased to 729.12 USDC, onchain confirmation
+
+**As of direct Solana finalized RPC slot 466608403 for FundingRecord / slot 466608881 for Launch; 2026-11-08 ~01:09 Bangkok. This section supersedes the historical 646.68 USDC contribution snapshot.**
+
+- Canonical project Launch: `B9QX36vNtxsSr3o1A2wNpihUC2bELehqP7hvYUsDcuRT`, owner MetaDAO v0.7 `moontUzsdepotRGe5xsfip7vLPTJnVuafqdUWexVnPM`; schema independently checked against official pinned `v07_launchpad/src/state/launch.rs`.
+- User FundingRecord (previously verified PDA) `45jwzpest3hPhhDXoS6WqxJ2t3Z2kLDZUrQxMXQ84FNg`, exact 115-byte record decoded with official `funding_record.rs` layout. Funder matches known `BP7h…4dSp` wallet; launch field matches SAT launch.
+- **Committed = 729,120,000 raw USDC = 729.12 USDC**; **approved = 0** (presettlement); `is_tokens_claimed=false`, `is_usdc_refunded=false`. Four finalized FundingRecord signatures returned, `err=null`: 300, 318.19, 28.49, and newly **82.44 USDC**.
+- [Fourth successful Fund transaction](https://solscan.io/tx/4m1uvrtg7BeL9ALLNZ8KLMZ9rB92X7XwUtyUs2W7WuF7E6isTsxNxRScceMxSNT9zg918cNHAADwUkzR7ZP9XJtg), slot **466607166**, block time **2026-11-07 18:07:15 UTC / 2026-11-08 01:07:15 Bangkok**; MetaDAO `moont...` Fund instruction has the same instruction discriminator as earlier first Fund. Transaction successfully moved **82.44 USDC** from the user's USDC token account to SAT quote escrow, independently verified by pre/post SPL balances; fee 12,114 lamports.
+- SAT Launch `state=Live`, `total_committed_amount=6,887,910.921404 USDC`, `total_approved_amount=0`, `unix_timestamp_closed=None`. Canonical escrow `3HixScNNPUDXU4XLf1QqYkFQCqcUimoW1Bck95fw1AZh` token balance **6,887,910.921404 USDC** at slot 466608402, equal to Launch committed amount at the sampled slots. Minimal target **100,000 USDC**; founder discretionary accepted amount remains unknown, so gross commitments **must not** be labeled as net raised/accepted capital.
+- The nominal 100K raise has gross committed ~**68.88×** target, with public 50K nominal allocation subject to rules. User committed percentage of gross pool ~**0.01059%**; capital share alone does **not** determine allocation. MetaDAO time accumulator, early-fill boost, Ownership Score, potential aligned-party preferences and discretionary approval matter.
+- The public MetaDAO browser showed **Ownership Score 1,102.936** and rank **#26,524**. This is site UI context, **not** a verified SAT subscription rank and **not** a chain-verified allocation multiplier.
+- Scheduled launch duration (4 days from actual `unix_timestamp_started=1793905201`): contribution window nominally ends **2026-11-10 02:00:01 Bangkok**, absent a valid extension/early close; this is **not** Claim time.
+- **Position state: COMMITTED_729_12_USDC_VERIFIED / LAUNCH_LIVE / ALLOCATION_NOT_APPROVED / NO_SAT_CLAIMED / NO_REFUND / NO_CHATGPT_EXECUTION.** No signing, USDC funding, redemption, monitoring, automation or production alert change performed by this update.
+
+---
+
+
 ## 2026-11-06 user additional SAT contribution verified at 10:26 Bangkok
 
 **Evidence class: DIRECT SOLANA MAINNET RPC, successful transaction / per-user FundingRecord.** This section **supersedes the previous $300-only position snapshot** elsewhere in this historical research. User explicitly reported adding funds, and requested read-only on-chain confirmation; no user-requested additional action beyond research record update.
