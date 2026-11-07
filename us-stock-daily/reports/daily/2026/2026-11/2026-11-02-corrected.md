@@ -1,4 +1,9 @@
 ---
+archival_role: AUDIT_COPY_NONCANONICAL
+authoritative_report_path: us-stock-daily/reports/daily/2026/2026-11/2026-11-02.md
+exclude_from_daily_manifest: true
+exclude_from_monthly_calendar_day_count: true
+exclude_from_dedupe_as_distinct_day: true
 report_type: daily
 report_date: 2026-11-02
 revision: 2026-11-08
