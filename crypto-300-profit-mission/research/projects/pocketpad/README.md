@@ -116,3 +116,23 @@ The Privy embedded wallet may not expose window.ethereum. The helper will refuse
 | Current user mint receipt | NOT VERIFIED |
 
 No credentials, session identifiers, wallet secret material or personal account details should be committed into this public repository.
+
+## 2026-11-08 00:30 Bangkok, live auth error evidence
+
+The user's Chrome Network tab showed:
+- `GET api.pocketpad.io/mint/pocket/state`: HTTP 200.
+- `GET api.pocketpad.io/mint/pocket/eligibility`: HTTP 200. This alone does not confirm user eligibility.
+- `GET api.pocketpad.io/me`: HTTP 401.
+- `GET api.pocketpad.io/mint/pocket/allowance`: HTTP 401.
+
+Account UI still appeared logged in. Exact backend root cause remains UNRESOLVED. In particular, authorization missing, expired, wrong audience, or mismatched account are hypotheses, not confirmations.
+
+**Chrome-only procedure**: Open the *already logged-in* pocketpad.io DevTools Sources > Snippets. Paste `auth_401_diagnostic.js`, run it, then in Console run `await PocketAuth401.recheck()`. It clicks the official "Check access again" button **once**, records only redacted route, HTTP code, elapsed time, Authorization header **presence/absence** (not value), and credentials mode. For delayed calls, run `PocketAuth401.report()`. To uninstall hooks, run `PocketAuth401.restore()`.
+
+If 401 requests lack authorization, confirm whether the site uses cookies or an unsupported session mechanism. If Authorization is present and HTTP 401 persists, it was rejected by the API; inspect the normal Privy-to-backend session flow. Do not invent bearer tokens or bypass the issuer signature gate.
+
+Never publish credentials, cookies, identity hashes, signed vouchers, email, session values, or private keys. Because the issuer acknowledged historical Privy-wallet remapping, do not clear site storage or logout until the exact funded embedded-wallet address is verified.
+
+Last checked chain: 2026-11-08 00:30:12 Bangkok, block 108580701, mintPhase=1, totalMinted=503, allowlistMinted=301, reserveMinted=100, paused=false. Snapshot is not an availability claim.
+
+State: targeted diagnostic saved to Git, JS syntax validated; not yet run in the user's browser; no valid user voucher or live mint transaction confirmed.
