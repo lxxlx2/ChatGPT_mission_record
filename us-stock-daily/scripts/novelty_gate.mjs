@@ -24,6 +24,12 @@ export function validateStockNovelty(input){
   if(found){num++;if(Number(found[1])!==num)fail('NUMBERING',section+'/'+found[1]);parsed.push({section,item_number:num,text:found[2]});}
  }
  if(headings.length!==12||headings.some((h,i)=>h!==HEADINGS[i]))fail('WRONG_12_HEADINGS',headings.length);
+ // Every preserved heading needs actual numbered substance. The old validation
+ // accepted 12 headings with 6 empty sections (2026-11-02 production regression).
+ for(let i=1;i<=HEADINGS.length;i++){
+  if(!parsed.some(entry=>entry.section===i))fail('EMPTY_STOCK_SECTION',i+':'+HEADINGS[i-1]);
+ }
+
  const items=Array.isArray(input.items)?input.items:[];
  if(items.length!==parsed.length)fail('BODY_ITEMS_MISMATCH',items.length+'/'+parsed.length);
  const byKey=new Map();
