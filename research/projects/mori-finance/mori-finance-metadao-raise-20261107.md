@@ -1,0 +1,55 @@
+# Mori Finance / MetaDAO curated raise — evidence-first ICO diligence (2026-11-07)
+
+**Status:** `WATCH / RESEARCH_INCOMPLETE / NO_GO`. **No user allocation or trade authorized.** This is a single-project research record. Verified against Mission `PROJECT_ANALYSIS_FRAMEWORK.md`, `PROJECT_ANALYSIS_EVIDENCE_WORKFLOW.md`, `token_trading_principles.md`, and `MISSION_SPEC.md`. Independent operating metrics, mint address and launch config unresolved.
+
+## Identity and official sources
+- Canonical project: **Mori Finance**, Solana covered calls, official website https://mori.finance/ ; docs https://morifinance.gitbook.io/docs ; official X **@morifinance_**, *not* the unrelated 2023 Ethereum Mori Protocol at @Mori_Finance.
+- MetaDAO's official upcoming curated raise: https://metadao.com/companies/mori-finance ; MetaDAO @MetaDAOProject announcement dated 2026-11-07. **Opens 2026-11-09 19:00 UTC = 2026-11-10 02:00 Asia/Bangkok (Nov 9 11am PST)**. Official page says **$250,000 raise goal** and **$MORI**, but as of this research **does not publish verified total supply, explicit token price, final accepted cap, investor/insider allocation, vesting or canonical mint address**. Opening is scheduled, not an already executed onchain deposit. Sale close/time and initial listing date are UNVERIFIED.
+- Explicitly do not confuse with https://mori-finance.gitbook.io/mori-finance/mori-protocol , an unrelated 2023 Ethereum stable-asset project and old MORI ERC20. Same ticker cannot justify a canonical CA assertion.
+
+## Product, stage and custody
+- Working **public-facing options UI** https://mori.finance/calls/ and how-it-works https://mori.finance/how-it-works show SOL, cbBTC, PENGU, JitoSOL covered calls, selected strike/expiry and premium quotes. Does not alone prove settled executions.
+- Mori issuer says October 2026 **$1.7 million option *notional volume***, PENGU options, Solana USDC payouts, and that trades route through **Mori's own OTC account** to **a single institutional market maker reportedly backed by Kraken**. These are **issuer/MetaDAO pitch claims, not independently reconstructed trades, paid users, counterparty identity or collected fees**. Kraken or market maker acknowledgement not independently found. Do NOT upgrade to verified partnership.
+- **Important architecture**: despite "DeFi" positioning, current frontend is backed by **Mori-controlled custody and CeFi/OTC execution**; project itself acknowledges custody/counterparty and single-MM concentration risk. Previous GitBook alpha docs describe an institutional custodian and later planned smart contract migration. Production backend, custodian controls, solvency, withdrawals and audit not independently verified. Current `Level 1` UI confirmed; claimed production `Level 3-4` pending primary execution proof; independently verified paying users/revenue insufficient for confirmed Level 4/5.
+- Core public GitHub identity not established: searched GitHub by exact project, `mori.finance`, `Morifinance`, Pavan Katepalli, options and Solana; no project-attributable open source program repo proven. Unrelated name-only `mori-finance/Mori-Finance-` is a generic Python financial analytics MVP and should **not** be attributed to this project.
+- **Chain**: no canonical custody/settlement wallets, options contracts or $MORI mint publicly established by this check. Therefore no program/bytecode/signer/settlement/funder audit, and **no verified 1.7M notional**, TVL, holders, LP, claim readiness. Do not invent addresses or assume the old Ethereum MORI token is connected.
+
+## Team, funding, historical record
+- Founder named by MetaDAO: **Pavan Katepalli**; personal https://pavan.vc/about/ independently acknowledges founding Mori in 2026, former Trilogy senior executive and Yomi CEO.
+- **Trilogy Education was truly acquired** by 2U in May 2019; SEC/2U 8-K and announcements: https://www.sec.gov/Archives/edgar/data/1459417/000110465919031103/a19-10494_1ex99d1.htm and https://www.sec.gov/Archives/edgar/data/1459417/000110465919020236/a19-7982_18k.htm ; transaction announced as $750M cash and stock. This verifies corporate sale, NOT that Pavan individually realized $750M, founded Trilogy or owned a particular fraction. His exact job title CTO/CLO remains a **personal/team statement pending independent employee record**.
+- Pavan led **Yomi Games**, which issued 2022 primary funding press release announcing **$2M seed round** and investor names Hypersphere Ventures, Infinity Ventures Crypto, Sfermion, Cultur3 Capital, Maveron, Momentum 6, Taureon. Source: https://www.prnewswire.com/news-releases/yomi-games-raises-2m-to-build-out-casual-play-and-earn-ecosystem-301526937.html . This is **Yomi financing, not Mori financing**. Historical product success/users claimed by issuer, independently confirmed retention/revenue unavailable.
+- Mori's own venture financing/valuation and any strategic investors remain UNVERIFIED beyond the upcoming MetaDAO $250k intended raise. The team GitBook also refers to co-founder Jason; current MetaDAO team panel lists only Pavan, so Jason's present role and identity require checking.
+
+## Real financials and simple economic sensitivity
+- Mori issuer claims **12% of gross option premiums** as its platform fee. Monthly notional **$1.7m** does NOT equal premium paid or revenue collected.
+- **Explicit assumptions, never observed income:** 1% option premium-to-notional x 12% fee gives **$2,040/month**, $24,480/year; 3% yields **$6,120/month**, $73,440/year; 5% yields **$10,200/month**, $122,400/year. Assumes 100% fee applicability, no rebate, stable monthly volume for 12 months. Actual strike/term mix, transaction quality, referral shares, gross/net fee revenue, user counts, operating costs and runway NOT VERIFIED.
+- Issuer target to win $10m–$20m/month notional from market maker and project its $2.8m/year fee income from Rysk-scale volume is **forecast**, not realized P&L. OTC counterparty concentration affects attainable spread, capacity and take rate.
+
+## This sale, implied price and exit liquidity
+- **Confirmed from MetaDAO Mori page:** upcoming *curated* raise for $250k, November 9 19UTC start, symbol $MORI; currently no confirmed specific total supply, token mint, total accepted money, sale end, private cost basis, performance package config, extra premine, exchange/LP.
+- **MetaDAO generic documents, NOT Mori-specific confirmed terms:** https://metadao.com/docs/create ; https://metadao.com/docs/sale ; https://metadao.com/docs/whats-new ; describe **10,000,000 sale participant tokens + 2,900,000 liquidity tokens**, 20% accepted proceeds typically assigned to LP, optional up-to-12.9M founder performance package, time-weighted commitment/fill boost/Ownership Score, aligned-party reserved allocations and USDC refund for unused commitments. Do not automatically apply to Mori until its live deployment is onchain checked.
+- **Conditional illustration only:** if Mori accepts exactly $250,000 in standard 10M participant issuance, **sale price = $0.025**; under such case 20% LP quote is **$50k** before any actual slippage or liquidity accounting. If a fully diluted 25.8M tokens existed, sale-price FDV **$645k**; if total supply differs, FDV changes linearly. **Neither supply nor price is verified Mori fact.** Even at low hypothetical FDV, $50k LP quote versus $250k sale token notional could limit realizable exit and price. No verified mint => no verified initial circulating MC, LP depth or actual quote.
+- Relative ICO exit scenarios with hypothetical $0.025 sale price: $0.0125 (−50%), $0.020 (−20%), $0.025 (0%), $0.05 (+100%), $0.10 (+300%) before fees, slippage and unlock. Multipliers are illustrative, not forecasts or asserted tradeable prices.
+- As-of review **no independently confirmed finalized claim, token CA, CEX listing, TGE, DEX pool, initial listing date or LP liquidity**.
+
+## Mandatory project-specific PM and social scan — 2026-11-07 Asia/Bangkok
+- Indexed venue/domain searches checked exact `Mori Finance`, `MORI MetaDAO`, `morifinance_` with **Polymarket, Kalshi, Limitless, Predict.fun** and MetaDAO company-specific decision pages. **未检索到可验证的项目专属 PM 市场**. Same-name `Mori` Peru election markets and 2023 Mori Protocol excluded. No numerical probability inferred. Venue-native complete unindexed coverage is not established.
+- MetaDAO initial announcement has several thousand views/limited initial interactions, but these are platform distribution signals, not independent organic investor inflows. Real distinct participants, grassroots technical reviews and non-incentivized market depth unverified.
+- No prior comparable ICO results used to set valuation, as per Mission project-specific preference.
+
+## Risks and verification requirements
+1. **Production custody model**: authority, segregation, proof of reserves, withdrawal and MM counterparty concentration unknown, plus no published audit matched to live backend.
+2. **1.7m notional cannot be independently reproduced**, cannot infer recurring users, revenue or margin; buy-side options retail/treasury demand unverified.
+3. **Mori total supply/private cost and future sell pressure not announced**; MetaDAO generic package is not immutable project config. No verified L2/chain contract addresses and attribution.
+4. **Token exit liquidity**: accepted 250k is maximum *illustration*, and small early quote liquidity relative to public unlocked inventory may make headline multiples unrealizable.
+5. **Historical team exit caveat**: 2019 2U acquired Trilogy, but amount is company valuation, not founder personal profit. Yomi seed amount applies only to Yomi.
+6. **Identity collision**: unrelated Ethereum 2023 MORI must not be treated as official CA.
+7. **PM**: no verified project-specific market found; no odds.
+
+## Final assessment and state
+- **Current project state `WATCH`**, not `SETUP`: potential attractive real-team + options distribution thesis, business data still issuer reported and sale economics/runtime unavailable.
+- Before upgrade to `SETUP`: independently reconstruct real notional and USDC premium payout with canonical sender/receiver transactions and issuer reconciliations; verify custodian/OTC counterparty and recorded net fees, list live deploy and confirmed token mint + total supply/performance package/accepted $/public float/LP creation and slippage; recheck PM/source and real demand near opening; then compute sale-price-to-executable-TGE ROI in downside/base/strong cases.
+- No sale participation planned, no wallets signed, no automated monitor, no position changes. `PRODUCTION_TRADING = NO_GO`.
+
+## Source integrity
+Official MetaDAO https://metadao.com/companies/mori-finance ; official platform sale mechanics https://metadao.com/docs/sale and https://metadao.com/docs/create ; Mori website https://mori.finance/ , product docs https://morifinance.gitbook.io/docs ; SEC and Yomi release above. This report intentionally leaves exact unknowns unknown. Research as-of 2026-11-07, not a live automated tracker.
