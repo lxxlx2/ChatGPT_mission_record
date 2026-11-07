@@ -136,3 +136,15 @@ Never publish credentials, cookies, identity hashes, signed vouchers, email, ses
 Last checked chain: 2026-11-08 00:30:12 Bangkok, block 108580701, mintPhase=1, totalMinted=503, allowlistMinted=301, reserveMinted=100, paused=false. Snapshot is not an availability claim.
 
 State: targeted diagnostic saved to Git, JS syntax validated; not yet run in the user's browser; no valid user voucher or live mint transaction confirmed.
+
+## Chrome CSP correction (observed from user's DevTools)
+
+A Chrome Console attempt to load `https://raw.githubusercontent.com/...` using `fetch()` was BLOCKED by Pocket Pad's Content Security Policy (`connect-src` does not include raw.githubusercontent.com). The resulting `Failed to fetch` is a **CSP enforcement error**, not evidence that the Git content was deleted or the script syntax failed.
+
+Therefore DO NOT recommend `fetch(raw.githubusercontent.com).then(...new Function...)` from the already open Pocket page. Use DevTools Sources > Snippets to paste source copied separately from the trusted GitHub file, or paste a self-contained diagnostic into the existing Console. Loading it with a Terminal clipboard step is optional and unnecessary if DevTools is already open.
+
+**Screenshot-proven API facts:** `GET /me` HTTP 401, `GET /mint/pocket/eligibility` HTTP 401, `GET /mint/pocket/allowance` HTTP 401. Earlier /state and /eligibility had sometimes returned HTTP 200, showing the situation is time-varying. UI logged-in indicator does not establish accepted API auth. Do not call this a confirmed missing Authorization header, expired Privy token or server bug until request metadata supports it.
+
+The targeted `auth_401_diagnostic.js` remains available as plain source, to run by manually pasting into DevTools Sources > Snippets. It only records redacted metadata and triggers the site's normal access-check once. It does not fix the upstream HTTP 401, and cannot forge a voucher or bypass server-side authorization.
+
+State: CSP error independently visible in screenshot; auth root cause unresolved; no Chrome script execution verified after CSP; no transaction sent.
