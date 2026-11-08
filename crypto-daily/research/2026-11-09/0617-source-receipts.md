@@ -1,0 +1,19 @@
+# 2026-11-09 06:17 Asia/Bangkok bounded source receipt
+
+Status: PARTIAL_SOURCE_GAPS; collector-only; NO_GMAIL_SEND. No prebuild/QA claimed.
+
+Git main rule blob SHA: PIPELINE_CONTRACT 29ffbc1d32ca87a744d2990e8d55639ebb84a6f9; REPORT_SPEC 2e70414c8fdb8d23a292cc3bf7797425a403e179. Other required rule files were fetched this run; their SHA must be rechecked in the 08:20 prebuild. Seven-day Gmail Sent subject/ID search returned 2026-11-07 daily 1a1b71334aeb0615, 2026-11-06 1a1aefe6426bda13, 2026-11-05 1a1ac87a1624ca68, 2026-11-04 1a1a4869ded9decd, monthly October 1a1a496a0bdc257d. 2026-11-08 and 2026-11-09 Sent not observed in this search; NOT proof of missing mail until full prefix and timezone search. Body readback NOT done; cross-day dedupe incomplete.
+
+All checked_at: 2026-11-09 approximately 06:17-06:20 Asia/Bangkok; search index publication dates must not be confused with actual check time.
+
+- regulation: https://www.fincen.gov/news/press-releases official index latest listed Nov 06 2026 MEXC order and Travel Rule proposal withdrawal; known historical; EXCLUDE until new material version. https://www.fincen.gov/news similarly lists Nov 06. OFAC/Treasury direct latest not verified: SOURCE_GAP.
+- exchange: https://www.binance.com/en/support/announcement/ official list latest Nov 09 promotion and Nov 06 recovery update #9. Candidate recovery update requires comparison to prior delivered material_version; WATCH, not automatically new. Other CEX original bulletins SOURCE_GAP.
+- macro: Reuters https://www.reuters.com/business/cryptocurrencies-slide-two-month-lows-after-us-midterms-2026-11-08/ dated Nov 08 reports BTC low $73,708 and ETH $2,223; SECONDARY report, not current quote. Candidate family macro:post-midterms-crypto-selloff, material_version reuters-2026-11-08-two-month-low, WATCH until checked against delivered reports and primary market. Reuters https://www.reuters.com/business/take-five/global-markets-themes-graphic-2026-11-06/ dated Nov 06 upcoming CPI/PPI; WATCH as previously discussed macro possible.
+- security: https://www.cisa.gov/known-exploited-vulnerabilities-catalog HTTP403 SOURCE_GAP. https://github.com/BerriAI/litellm/security/advisories accessible, latest displayed Oct 27 critical, old EXCLUDE. https://github.com/laravel/framework/security/advisories accessible, latest Nov 04 low, old WATCH. https://nodejs.org/en/blog/vulnerability accessible, Nov 03 advisory about planned Nov 11 patch, WATCH if upcoming date material. https://www.microsoft.com/en-us/security/blog/ accessible, Nov 06 ARTEX financial-sector report candidate WATCH, separate source verification needed. https://www.railway.com/blog unavailable SOURCE_GAP. Web runtime RCE, PKI/TLS, package supply chain, cloud identity, backend auth each require separate original-source expansion; do not claim full six-family coverage.
+- onchain: https://lookonchain.com returned 502 SOURCE_GAP. https://arkm.com landing page accessible but no authenticated original TXID or attributed transfer verified; SOURCE_GAP.
+- ETF: attempted https://farside.co.uk/btc/sol and /btc/eth invalid/unavailable; ETF issuer rows and correct https://farside.co.uk/btc/ , /eth/ , /sol/ require new checks; SOURCE_GAP.
+- official_x: no Browser session queried in this runtime; BROWSER_SESSION_UNAVAILABLE; X original posts not claimed verified.
+- TGE/Early/NFT/Anthropic venue access: not sufficiently checked; SOURCE_GAP, no claim of no news, no subscription alert.
+- market: Binance official spot/futures BTC/ETH/SOL/BNB/HYPE live API sampling not completed in this pass; SOURCE_GAP; Reuters historical prices not substituted.
+
+No 13-section draft or QA pass produced. Next scheduled 08:20 must prioritize full draft and actual source coverage; do not treat this research artifact as successful prebuild. No task or schedule changes, no App/Gmail operational notification.
