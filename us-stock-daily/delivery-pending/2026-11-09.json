@@ -1,0 +1,74 @@
+{
+  "report_date": "2026-11-09",
+  "state": "DRAFT_UNVERIFIED",
+  "ci_status": "CI_NOT_PROVEN",
+  "manifest_sha": null,
+  "gate_sha": null,
+  "history_window": "2026-11-02..2026-11-08",
+  "history_gmail_ids": [
+    "1a1b715f3180aa78",
+    "1a19edfdbba08f91",
+    "1a1a481104e18df5",
+    "1a1a92afc6993aad",
+    "1a1ae8358797055c",
+    "1a1b3aa651e8aa0f",
+    "1a1b8cd9862e8393"
+  ],
+  "source_gaps": [
+    "BROWSER_UNAVAILABLE",
+    "X_SOURCE_GAP",
+    "FULL_GMAIL_BODY_EQUALITY_NOT_RECHECKED",
+    "CI_NOT_PROVEN"
+  ],
+  "novelty_evidence": [
+    {
+      "family_key": "2026-11-06-index-close",
+      "material_version": "2026-11-06-close",
+      "primary_section": "一",
+      "source": "AP",
+      "published_at": "2026-11-06",
+      "status": "ROUTINE_DATED_FACT"
+    },
+    {
+      "family_key": "oil-physical-balance-2026",
+      "material_version": "2026-11-06-reuters-supply-surplus",
+      "primary_section": "四",
+      "source": "Reuters",
+      "published_at": "2026-11-06",
+      "status": "NEW"
+    },
+    {
+      "family_key": "anthropic-onepwr-generator-supply",
+      "material_version": "2026-11-08-ft-via-reuters-unverified",
+      "primary_section": "五",
+      "source": "Reuters relaying FT",
+      "published_at": "2026-11-08",
+      "status": "NEW_UNCONFIRMED"
+    },
+    {
+      "family_key": "us-october-cpi-release",
+      "material_version": "2026-11-10-scheduled",
+      "primary_section": "九",
+      "source": "BLS",
+      "published_at": "2026-11-10",
+      "status": "ROUTINE_DATED_FACT"
+    },
+    {
+      "family_key": "berkshire-q3-2026",
+      "material_version": "2026-11-07-ir-repeated-context",
+      "primary_section": "二",
+      "source": "Berkshire IR",
+      "published_at": "2026-11-07",
+      "status": "WATCH_ONLY"
+    },
+    {
+      "family_key": "us-october-payrolls-2026",
+      "material_version": "2026-11-06-bls-repeated-context",
+      "primary_section": "七",
+      "source": "BLS",
+      "published_at": "2026-11-06",
+      "status": "WATCH_ONLY"
+    }
+  ],
+  "note": "Draft prebuild only; no Gmail attempted. Later repair must verify SEC/IR, exact latest source status, CI receipt or independent QA, and Gmail dedupe."
+}
