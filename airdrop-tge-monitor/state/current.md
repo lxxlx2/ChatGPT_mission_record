@@ -1,24 +1,24 @@
 # Airdrop / TGE Monitor State (bounded materialized cache)
-Last synchronized: 2026-11-08 08:01 Asia/Bangkok
+Last synchronized: 2026-11-08 09:00 Asia/Bangkok
 Status: PARTIAL, verified_complete=false. Cache only; final and known-events authoritative. Last fully verified complete sweep 2026-10-10T07:52:16+07:00.
 
 ## Latest terminal
-- authoritative_final: `airdrop-tge-monitor/runs/2026-11-08/080156-final.md`
-- final_commit_sha: `d8cdd5cc63b5795deedb2a1524eb766268cccb1c`
+- authoritative_final: `airdrop-tge-monitor/runs/2026-11-08/090032-final.md`
+- final_commit_sha: `0076181d51410e2cc449429f0a014d754b97b625`
 - run_status: PARTIAL
 - candidate_count: 2
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
-- scheduled_shard: 0
-- executed_shard: 0
+- scheduled_shard: 1
+- executed_shard: 1
 - original_x_context: UNAVAILABLE
 - completeness: StandX DUSD issuer original post and wallet eligibility SOURCE_GAP; no full verified coverage.
 
 ## Last meaningful per-shard attempts (PARTIAL_ONLY)
 - shard0: 2026-11-08 08:01:56 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-08/080156-final.md`; PARTIAL_ONLY
-- shard1: 2026-11-08 05:00:44 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-08/050044-final.md`; PARTIAL_ONLY
+- shard1: 2026-11-08 09:00:32 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-08/090032-final.md`; PARTIAL_ONLY
 - shard2: 2026-11-08 06:01:24 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-08/060124-final.md`; PARTIAL_ONLY
 - shard3: 2026-11-08 07:00:06 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-08/070006-final.md`; PARTIAL_ONLY
 
