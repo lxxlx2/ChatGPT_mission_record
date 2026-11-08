@@ -1,12 +1,12 @@
 # Airdrop / TGE Monitor State (bounded materialized cache)
-Last synchronized: 2026-11-08 13:02 Asia/Bangkok
+Last synchronized: 2026-11-08 13:55 Asia/Bangkok
 Status: PARTIAL, verified_complete=false. Cache only; final and known-events authoritative. Last fully verified complete sweep 2026-10-10T07:52:16+07:00.
 
 ## Latest terminal
-- authoritative_final: `airdrop-tge-monitor/runs/2026-11-08/130247-final.md`
-- final_commit_sha: `26dc70dbc8a3563db3ea67df766271cb1bf6587b`
+- authoritative_final: `airdrop-tge-monitor/runs/2026-11-08/135530-final.md`
+- final_commit_sha: `7822b8f2f8d69c8fd2e4d0756b4766501e171db5`
 - run_status: PARTIAL
-- candidate_count: 1
+- candidate_count: 2
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
