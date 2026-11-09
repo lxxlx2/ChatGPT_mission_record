@@ -596,7 +596,9 @@ class WalletClusterAnalyzer:
         self._classified_holder_contexts={}
         self._owner_account_source="OBSERVED_TOP20_ACCOUNTS"
         self.historical_accounts=[];self.historical_account_scans=[]
-        self._historical_context_seen=set();self._historical_evidence_keys=set()
+        self._historical_context_seen=set();self._historical_retention_index={}
+        self._historical_valid_observations=0;self._historical_compacted_observations=0
+        self._historical_limit_rejected_observations=0
         self._historical_errors=defaultdict(int);self._historical_evidence_limited=False
         self._historical_scan_active=False;self._history_decimals=0
 
@@ -712,12 +714,36 @@ class WalletClusterAnalyzer:
         except HistoricalAccountEvidenceError as exc:
             self._historical_errors[str(exc)]+=1
             return
+        self._historical_valid_observations+=len(rows)
         for row in rows:
-            identity=(owner,row["account"],signature,row["balance_phase"])
-            if identity in self._historical_evidence_keys:continue
+            # Discovery needs distinct transaction-bound account proofs, not
+            # hundreds of snapshots of an already represented current account.
+            # Keep the oldest slot, retaining the first observed proof on equal
+            # slots; this does not establish transaction order within a slot.
+            # An independently confirmed closure and a different historical
+            # owner must never be overwritten by an earlier nonclosure proof.
+            identity=(owner,row["account"],row["balance_phase"],row["closure_at_transaction_end"])
+            index=self._historical_retention_index.get(identity)
+            if index is not None:
+                self._historical_compacted_observations+=1
+                if row["slot"]<self.historical_accounts[index]["slot"]:
+                    self.historical_accounts[index]=row
+                continue
             if len(self.historical_accounts)>=MAX_OBSERVATIONS:
-                self._historical_evidence_limited=True;break
-            self._historical_evidence_keys.add(identity);self.historical_accounts.append(row)
+                self._historical_evidence_limited=True
+                self._historical_limit_rejected_observations+=1
+                continue
+            self._historical_retention_index[identity]=len(self.historical_accounts)
+            self.historical_accounts.append(row)
+
+    def _historical_retention_coverage(self):
+        return {"version":1,"mode":"OLDEST_VALID_PER_OWNER_ACCOUNT_PHASE_CLOSURE_STATUS",
+                "raw_valid_observations":self._historical_valid_observations,
+                "retained_observations":len(self.historical_accounts),
+                "compacted_observations":self._historical_compacted_observations,
+                "limit_rejected_observations":self._historical_limit_rejected_observations,
+                "represented_owner_accounts":len({(r["owner"],r["account"]) for r in self.historical_accounts}),
+                "max_observations":MAX_OBSERVATIONS,"complete_history":False}
 
     def _historical_frontier(self):
         grouped={}
@@ -1481,6 +1507,7 @@ class WalletClusterAnalyzer:
             coverage_gaps.append("POOL_HOLDER_SAME_SLOT_CONTRADICTION")
         if self._historical_errors:coverage_gaps.append("HISTORICAL_ACCOUNT_CONTEXT_GAPS")
         if self._historical_evidence_limited:coverage_gaps.append("HISTORICAL_ACCOUNT_EVIDENCE_LIMIT")
+        if self._historical_compacted_observations:coverage_gaps.append("HISTORICAL_ACCOUNT_EVIDENCE_COMPACTED")
         if any(not r["selected"] and r["stop_reason"]!="CURRENT_ACCOUNT_ALREADY_SELECTED" for r in self.historical_account_scans):coverage_gaps.append("HISTORICAL_ACCOUNT_SCAN_INCOMPLETE")
         if self._owner_account_source=="SNAPSHOT_OWNER_CONFLICT":coverage_gaps.append("OWNER_ACCOUNT_SNAPSHOT_CONFLICT")
         if any(row["accounts_not_selected"] for row in owner_account_history):coverage_gaps.append("OWNER_ACCOUNT_SELECTION_INCOMPLETE")
@@ -1619,6 +1646,7 @@ class WalletClusterAnalyzer:
                 "owner_account_history":owner_account_history,
                 "historical_account_history":self.historical_account_scans,
                 "historical_account_evidence_errors":dict(self._historical_errors),
+                "historical_account_retention":self._historical_retention_coverage(),
                 "historical_account_observation_limit":MAX_OBSERVATIONS,
                 "historical_account_frontier_limit":1,
                 "owner_history_account_limit":4,"report_extra_history_account_limit":12,

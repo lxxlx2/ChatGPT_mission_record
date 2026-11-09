@@ -1710,7 +1710,20 @@ function renderMarketComparison(market,mint) {
 
 function renderHistoricalAccountEvidence(report) {
   if (!Array.isArray(report.historical_account_evidence)) return '';
-  const evidence=report.historical_account_evidence.filter(r=>r && typeof r==='object').slice(0,20);
+  const allEvidence=report.historical_account_evidence.filter(r=>r && typeof r==='object');
+  const evidence=allEvidence.slice(0,20);
+  const retention=report.coverage?.historical_account_retention;
+  const countKeys=['raw_valid_observations','retained_observations','compacted_observations','limit_rejected_observations','represented_owner_accounts'];
+  const validRetention=retention && retention.version===1 && retention.mode==='OLDEST_VALID_PER_OWNER_ACCOUNT_PHASE_CLOSURE_STATUS' && retention.complete_history===false && retention.max_observations===200 &&
+    countKeys.every(k=>Number.isSafeInteger(retention[k]) && retention[k]>=0) &&
+    retention.raw_valid_observations===retention.retained_observations+retention.compacted_observations+retention.limit_rejected_observations &&
+    retention.retained_observations<=200 && retention.retained_observations===allEvidence.length && allEvidence.length===report.historical_account_evidence.length &&
+    (retention.limit_rejected_observations===0 || retention.retained_observations===200) &&
+    allEvidence.every(r=>typeof r.owner==='string' && typeof r.account==='string' && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(r.owner) && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(r.account) && r.mint===report.mint && Number.isSafeInteger(r.slot) && r.slot>0 && /^[a-f0-9]{64}$/.test(r.response_sha256 || '') && typeof r.signature==='string' && r.signature.length>0 && r.signature.length<=128 && ['pre','post'].includes(r.balance_phase) && ['NOT_PROVEN','CONFIRMED_CLOSED_AT_TRANSACTION_END'].includes(r.closure_at_transaction_end)) &&
+    retention.represented_owner_accounts===new Set(allEvidence.map(r=>r.owner+'|'+r.account)).size &&
+    new Set(allEvidence.map(r=>[r.owner,r.account,r.balance_phase,r.closure_at_transaction_end].join('|'))).size===allEvidence.length;
+  const retentionText=validRetention ? '<p>有效来源观察 '+retention.raw_valid_observations+' 条，保留 '+retention.retained_observations+' 条代表证据，覆盖 '+retention.represented_owner_accounts+' 个 Owner／账户身份；同类账户状态观察压缩 '+retention.compacted_observations+' 条，容量拒绝 '+retention.limit_rejected_observations+' 条，上限 200 条。较早绑定与关闭证明分别保留；代表样本不等于完整账户历史或真实首买。</p>' :
+    retention ? '<p>历史证据保留摘要未通过核对，以下按原记录显示；历史完整性仍未核实。</p>' : '<p>此历史报告未记录代表证据保留策略，按原记录显示；不能补造压缩或覆盖统计。</p>';
   const plans=Array.isArray(report.coverage?.historical_account_history) ? report.coverage.historical_account_history.filter(r=>r && typeof r==='object').slice(0,40) : [];
   const reasons={CURRENT_ACCOUNT_ALREADY_SELECTED:'已在当前账户中选择',CURRENT_ACCOUNT_NOT_SELECTED:'当前账户尚未选择',OWNER_ACCOUNT_LIMIT:'达到单 Owner 账户上限',REPORT_EXTRA_ACCOUNT_LIMIT:'达到本轮额外账户上限',FRONTIER_LIMIT:'本轮只补查一轮',SELECTED_BOUNDED_HISTORY:'已选择有限历史补查'};
   const rows=evidence.map(r=>{
@@ -1722,7 +1735,7 @@ function renderHistoricalAccountEvidence(report) {
     return '<tr><td>'+ownerCell(r.owner || '')+'</td><td>'+ownerCell(r.account || '')+'</td><td>'+esc(r.balance_phase==='pre'?'交易前余额':r.balance_phase==='post'?'交易后余额':'余额阶段未记录')+' '+esc(frankD2Decimal(r.raw,r.decimals))+'</td><td>'+esc(when)+' / slot '+esc(r.slot ?? '未记录')+'</td><td>'+(closed?'该交易结束时关闭':'关闭状态未证明')+'</td><td>'+signature+'</td></tr>';
   }).join('');
   const coverage=plans.map(r=>'<li>'+ownerCell(r.owner || '')+' · '+ownerCell(r.account || '')+'：'+esc(reasons[r.stop_reason] || '未核实补查状态')+'</li>').join('');
-  return '<details class="cluster-historical-accounts"><summary>历史账户的交易证据与有限补查</summary><p>Owner 和余额只绑定所列交易的前后状态；该交易结束时关闭不能证明当前仍关闭，也不证明该 Owner 终生拥有此账户。新发现只补查一轮，账户限额与原任务硬上限共用。</p>'+
+  return '<details class="cluster-historical-accounts"><summary>历史账户的交易证据与有限补查</summary><p>Owner 和余额只绑定所列交易的前后状态；该交易结束时关闭不能证明当前仍关闭，也不证明该 Owner 终生拥有此账户。新发现只补查一轮，账户限额与原任务硬上限共用。</p>'+retentionText+
     (rows?'<p>最多显示20条余额证据，完整记录与响应哈希保存在报告中。</p><div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>当时 Owner</th><th>账户</th><th>余额阶段</th><th>时间 / slot</th><th>关闭证据</th><th>交易</th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<p>本轮没有可核实的历史账户余额记录；元数据不足不等于从未持有。</p>')+
     (coverage?'<ul>'+coverage+'</ul>':'')+'</details>';
 }

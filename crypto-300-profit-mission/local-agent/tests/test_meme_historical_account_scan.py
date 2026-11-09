@@ -95,7 +95,14 @@ def test_observation_limit_never_silently_implies_exhaustive_discovery(monkeypat
     a,_=historical_analyzer(monkeypatch)
     for n in range(MAX_OBSERVATIONS+1):
         value=tx(post=False,close=True);sig=f'proof-{n}';value['transaction']['signatures']=[sig]
+        # The hard cap applies to distinct retained proof groups. Repeated
+        # snapshots of one account are compacted rather than using the quota.
+        address=key(2000+n)
+        value['transaction']['message']['accountKeys'][1]['pubkey']=address
+        value['transaction']['message']['instructions'][0]['parsed']['info']['account']=address
         a._observe_historical_accounts(value,sig,A,100)
     assert len(a.historical_accounts)==MAX_OBSERVATIONS
     assert a._historical_evidence_limited is True
     assert all(len(r['response_sha256'])==64 for r in a.historical_accounts)
+    assert a._historical_retention_coverage()['limit_rejected_observations']==1
+    assert a._historical_retention_coverage()['complete_history'] is False

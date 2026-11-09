@@ -1244,3 +1244,37 @@ test('legacy narrative is preserved without inventing story or actor verificatio
   assert.match(html,/A crawler trains an AI model/);assert.match(html,/历史报告未记录主题或人物互动分析/);
   assert.doesNotMatch(html,/已读来源提及主题：|已读文本提及 Elon Musk/);
 });
+
+function retainedHistoryReport() {
+  const report=structuredClone(fixture);
+  report.historical_account_evidence=[{owner:mint,account:mint,mint,slot:100,signature:'proof',response_sha256:'a'.repeat(64),
+    balance_phase:'pre',raw:'1',decimals:0,closure_at_transaction_end:'CONFIRMED_CLOSED_AT_TRANSACTION_END'}];
+  report.coverage={...report.coverage,historical_account_retention:{version:1,mode:'OLDEST_VALID_PER_OWNER_ACCOUNT_PHASE_CLOSURE_STATUS',raw_valid_observations:5,retained_observations:1,compacted_observations:4,limit_rejected_observations:0,represented_owner_accounts:1,max_observations:200,complete_history:false}};
+  return report;
+}
+
+test('historical representative coverage explains compression without implying full history or current closure',()=>{
+  const h=harness();h.context.renderClusterReport(retainedHistoryReport());const html=h.element('cluster-coverage').innerHTML;
+  assert.match(html,/有效来源观察 5 条，保留 1 条代表证据，覆盖 1 个 Owner／账户身份/);
+  assert.match(html,/压缩 4 条/);assert.match(html,/不等于完整账户历史或真实首买/);
+  assert.match(html,/该交易结束时关闭/);assert.match(html,/不能证明当前仍关闭/);
+});
+
+for(const change of ['sum','complete','cap','count','hash','mint','duplicate_group']) test('invalid historical retention metadata is not presented as verified coverage '+change,()=>{
+  const report=retainedHistoryReport(),c=report.coverage.historical_account_retention;
+  if(change==='sum') c.raw_valid_observations=99;
+  if(change==='complete') c.complete_history=true;
+  if(change==='cap') c.max_observations=201;
+  if(change==='count') c.represented_owner_accounts=2;
+  if(change==='hash') report.historical_account_evidence[0].response_sha256='bad';
+  if(change==='mint') report.historical_account_evidence[0].mint='wrong';
+  if(change==='duplicate_group') {report.historical_account_evidence.push({...report.historical_account_evidence[0],signature:'other'});c.retained_observations=2;c.compacted_observations=3;}
+  const h=harness();h.context.renderClusterReport(report);const html=h.element('cluster-coverage').innerHTML;
+  assert.match(html,/历史证据保留摘要未通过核对/);assert.doesNotMatch(html,/有效来源观察 5 条/);
+});
+
+test('legacy history does not acquire fabricated retention counts',()=>{
+  const report=retainedHistoryReport();delete report.coverage.historical_account_retention;
+  const h=harness();h.context.renderClusterReport(report);const html=h.element('cluster-coverage').innerHTML;
+  assert.match(html,/此历史报告未记录代表证据保留策略/);assert.doesNotMatch(html,/有效来源观察 5 条/);
+});
