@@ -1,10 +1,10 @@
 # Airdrop / TGE Monitor State (bounded materialized cache)
-Last synchronized: 2026-11-09 07:01:41 Asia/Bangkok
+Last synchronized: 2026-11-09 07:57:37 Asia/Bangkok
 Status: PARTIAL, verified_complete=false. Cache only; final and known-events authoritative. Last fully verified complete sweep 2026-10-10T07:52:16+07:00.
 
 ## Latest terminal
-- authoritative_final: `airdrop-tge-monitor/runs/2026-11-09/070141-final.md`
-- final_commit_sha: `c5c51d4d747c7728cf6f1493fee07036c1086bfe`
+- authoritative_final: `airdrop-tge-monitor/runs/2026-11-09/075737-final.md`
+- final_commit_sha: `6e8666cb0955d9292b9d950e90d1f05a4e54c3d4`
 - run_status: PARTIAL
 - candidate_count: 1
 - action_gate_pass: 0
@@ -20,7 +20,7 @@ Status: PARTIAL, verified_complete=false. Cache only; final and known-events aut
 - shard0: 2026-11-08 16:55:57 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-08/165557-final.md`; PARTIAL_ONLY
 - shard1: 2026-11-09 05:56:49 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-09/055649-final.md`; PARTIAL_ONLY
 - shard2: 2026-11-09 02:01:56 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-09/020156-final.md`; PARTIAL_ONLY
-- shard3: 2026-11-09 07:01:41 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-09/070141-final.md`; PARTIAL_ONLY
+- shard3: 2026-11-09 07:57:37 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-09/075737-final.md`; PARTIAL_ONLY
 
 ## Open urgent and eligibility state
 - Always-hourly urgent5: Concrete, MetaMask, Claynosaurz, HEEBOO, Space @intodotspace; dynamic Surf and StandX.
