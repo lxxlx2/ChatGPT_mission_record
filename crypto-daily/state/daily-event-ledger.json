@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-11-03T02:27:10Z",
+  "updated_at": "2026-11-09T07:38:00Z",
   "status": "ACTIVE",
-  "note": "Updated after Nov 2 Gmail Sent readback 1a19a135a76e95b8, canonical exact match.",
+  "note": "Nov9 repair: dedupe ledger reconciled to actually verified Sent/readback through Nov9; individual primary material versions appended only, historic 232 events preserved. No claim exhaustive security source recall or CI.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -2540,6 +2540,141 @@
       "source_published_at": "2026-11-02",
       "verification": "verified",
       "delivered_text": "有Binance资产时可通过官方PoR页面独立核对10月31日快照，另逐币逐链确认实际提现可用性；任何独立验证失败都需记录证据，不以平台“95%”宣传替代真实可提状态。IPO方面等待交易所具名Anthropic正式申购页、资格、价格与退款条款，永续合约不等于股权。行情波动阶段避免用缺列ETF小计或无TXID鲸鱼消息直接加杠杆。"
+    },
+    {
+      "event_key": "sec:mercado-bitcoin:2026-11-02",
+      "family_key": "sec:mercado-bitcoin",
+      "material_version": "chainalysis-original-2026-11-02-v1",
+      "delivered_date": "2026-11-04",
+      "gmail_message_id": "1a1a4869ded9decd",
+      "source_url": "https://www.chainalysis.com/blog/chainalysis-response-mercado-bitcoin/",
+      "classification": "SECURITY_RETROSPECTIVE"
+    },
+    {
+      "event_key": "sec:btcpay:2026-11-02",
+      "family_key": "sec:btcpay-server-wallet-drain",
+      "material_version": "btcpay-official-2.4.1-earlier-2026-11-02",
+      "delivered_date": "2026-11-04",
+      "gmail_message_id": "1a1a4869ded9decd",
+      "source_url": "https://blog.btcpayserver.org/btcpay-server-security-incident-2-4-1-and-earlier/",
+      "classification": "SECURITY_RETROSPECTIVE"
+    },
+    {
+      "event_key": "sec:signalplus:2026-11-05",
+      "family_key": "sec:signalplus-api-key-revocations",
+      "material_version": "binance-deribit-revoked-2026-11-05",
+      "delivered_date": "2026-11-05",
+      "gmail_message_id": "1a1ac87a1624ca68",
+      "source_url": "https://www.reuters.com/technology/binance-removes-all-signalplus-api-keys-after-security-issue-2026-11-05/",
+      "classification": "THIRD_PARTY_TRADING_API"
+    },
+    {
+      "event_key": "sec:metamask:2026-11-05",
+      "family_key": "sec:metamask-staking-validator-reward-address",
+      "material_version": "all-affected-validators-exited-2026-11-05",
+      "delivered_date": "2026-11-06",
+      "gmail_message_id": "1a1aefe6426bda13",
+      "source_url": "https://metamask.com/news/user-update",
+      "classification": "WALLET_STAKING"
+    },
+    {
+      "event_key": "cex:binance:recovery-9:2026-11-06",
+      "family_key": "cex:binance-withdrawals-recovery",
+      "material_version": "recovery-update-9-2026-11-06",
+      "delivered_date": "2026-11-06",
+      "gmail_message_id": "1a1aefe6426bda13",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/a2dd10b860a14c35a856fe9d66d6032c",
+      "classification": "CEX_WITHDRAWAL"
+    },
+    {
+      "event_key": "reg:mexc:2026-11-06",
+      "family_key": "reg:fincen-mexc-9714",
+      "material_version": "fincen-order-issued-2026-11-06-federal-register-date-pending",
+      "delivered_date": "2026-11-07",
+      "gmail_message_id": "1a1b71334aeb0615",
+      "source_url": "https://www.fincen.gov/news/news-releases/operation-economic-outcast-severs-mexc-globals-access-us-financial-system",
+      "classification": "MAJOR_REGULATION"
+    },
+    {
+      "event_key": "reg:travel-rule-withdrawn:2026-11-06",
+      "family_key": "reg:fincen-travel-rule-proposal",
+      "material_version": "proposed-amendment-withdrawn-2026-11-06",
+      "delivered_date": "2026-11-07",
+      "gmail_message_id": "1a1b71334aeb0615",
+      "source_url": "https://www.fincen.gov/news/news-releases/fincen-announces-withdrawal-proposed-rule-related-recordkeeping-and-travel-rule",
+      "classification": "MAJOR_REGULATION"
+    },
+    {
+      "event_key": "cex:gopax:2026-11-06",
+      "family_key": "cex:gopax-crypto-transfer-trade-halt",
+      "material_version": "halt-due-threat-2026-11-06-no-proven-hack",
+      "delivered_date": "2026-11-07",
+      "gmail_message_id": "1a1b71334aeb0615",
+      "source_url": "https://en.yna.co.kr/view/AEN20261106011751320",
+      "classification": "CEX_SECURITY_OPERATIONS"
+    },
+    {
+      "event_key": "cex:binance:cfo:2026-11-07",
+      "family_key": "cex:binance-cfo",
+      "material_version": "kaiser-ng-to-justin-yek-2026-11-07",
+      "delivered_date": "2026-11-08",
+      "gmail_message_id": "1a1bf42ad0c5d3c8",
+      "source_url": "https://www.reuters.com/business/finance/binance-cfo-kaiser-ng-steps-down-justin-yek-named-new-finance-chief-2026-11-07/",
+      "classification": "EXCHANGE_GOVERNANCE"
+    },
+    {
+      "event_key": "fintech:nu-mercadopago:2026-11-06",
+      "family_key": "fintech:nu-mercadopago-external-provider-crypto-transfers",
+      "material_version": "external-provider-disruption-2026-11-06",
+      "delivered_date": "2026-11-08",
+      "gmail_message_id": "1a1bf42ad0c5d3c8",
+      "source_url": "https://www.reuters.com/world/americas/nubank-halts-crypto-withdrawals-deposits-after-external-provider-disruption-2026-11-06/",
+      "classification": "CRYPTO_TRANSFER_AVAILABILITY"
+    },
+    {
+      "event_key": "macro:riyadh-aramco:2026-11-08",
+      "family_key": "macro:riyadh-aramco-office-houthi",
+      "material_version": "debris-limited-damage-2026-11-08",
+      "delivered_date": "2026-11-08",
+      "gmail_message_id": "1a1bf42ad0c5d3c8",
+      "source_url": "https://www.reuters.com/world/middle-east/saudi-arabia-says-danger-passed-riyadh-after-alert-day-after-houthi-attack-2026-11-09/",
+      "classification": "GLOBAL_ENERGY_SECURITY"
+    },
+    {
+      "event_key": "macro:riyadh-aramco:2026-11-09",
+      "family_key": "macro:riyadh-aramco-office-houthi",
+      "material_version": "new-civil-defense-alert-all-clear-2026-11-09",
+      "delivered_date": "2026-11-09",
+      "gmail_message_id": "1a1bf46e14b36b3e",
+      "source_url": "https://www.reuters.com/world/middle-east/saudi-arabia-says-danger-passed-riyadh-after-alert-day-after-houthi-attack-2026-11-09/",
+      "classification": "GLOBAL_ENERGY_SECURITY"
+    },
+    {
+      "event_key": "macro:crypto-lows:2026-11-09",
+      "family_key": "macro:crypto-nov-2026-risk-off",
+      "material_version": "reuters-late-nov08-btc-73708-eth-2223-2026-11-09",
+      "delivered_date": "2026-11-09",
+      "gmail_message_id": "1a1bf46e14b36b3e",
+      "source_url": "https://www.reuters.com/business/cryptocurrencies-slide-two-month-lows-after-us-midterms-2026-11-08/",
+      "classification": "MACRO_VOLATILITY"
+    },
+    {
+      "event_key": "macro:asia-tech-rebound:2026-11-09",
+      "family_key": "macro:asian-technology-equities",
+      "material_version": "ap-asia-equities-2026-11-09",
+      "delivered_date": "2026-11-09",
+      "gmail_message_id": "1a1bf46e14b36b3e",
+      "source_url": "https://apnews.com/article/d938f8e6ff42b3706e1d36e6245ec56b",
+      "classification": "CROSS_MARKET"
+    },
+    {
+      "event_key": "market:binance:2026-11-09-1438",
+      "family_key": "market:binance-spot-snapshot",
+      "material_version": "spot-live-2026-11-09T0738Z",
+      "delivered_date": "2026-11-09",
+      "gmail_message_id": "1a1bf46e14b36b3e",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "classification": "DAILY_MARKET_SNAPSHOT"
     }
   ],
   "open_missed_candidates": []
