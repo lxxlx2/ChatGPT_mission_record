@@ -1,5 +1,20 @@
 # 1609SAT / MetaDAO Apps Program：SAT 备考产品、公售估值、早期流通与退出风险调查
 
+## 2026-11-10 SAT raise CLOSED; personal allocation and refund still PENDING
+
+**Evidence: direct Solana finalized RPC, refreshed at block slot 467428292 (2026-11-09 19:04:38 UTC / Nov 10 02:04:38 Bangkok).** This supersedes historical *Live* raise status, but NOT the confirmed 729.12 USDC commitment.
+
+- SAT launch PDA `B9QX36vNtxsSr3o1A2wNpihUC2bELehqP7hvYUsDcuRT`: v0.7 `LaunchState=Closed` (enum 2), `unix_timestamp_closed=1794250842` = **2026-11-09 19:00:42 UTC / Nov 10 02:00:42 Bangkok**, `total_committed_amount=7,911,340.211404 USDC`, `total_approved_amount=0`, not yet `Complete`, closed USDC escrow also sampled at exactly 7,911,340.211404 USDC.
+- User FundingRecord `45jwzpest3hPhhDXoS6WqxJ2t3Z2kLDZUrQxMXQ84FNg`: `committed_amount=729.12 USDC`, **`approved_amount=0` PENDING APPROVAL**, `is_tokens_claimed=false`, `is_usdc_refunded=false`. A zero approved amount during `Closed` must NOT be labeled a final zero allocation.
+- The MetaDAO issuer UI, independently read from the connected user's page, says **"Raise closed · Settling allocations"** and **"Claims and refunds open here when that’s done"**, shows 227 participating backers and $100K nominal objective. This is website status consistent with chain, not a chain-confirmed allocation.
+- Core actual v0.7 source checked at commit `e2ba4e9be712248ae4874f3b0621eaac69376c98`: `set_funding_record_approval.rs` only allows the launch authority to approve users while Closed and before `closed+2 days` (2026-11-12 **02:00:42 Bangkok**), while `complete_launch.rs` permits completion by launch authority within those 48 hours after approved total meets minimum; `claim.rs` requires `LaunchState::Complete`, and `refund.rs` requires `Complete` (refund of committed minus approved) or `Refunding` (full refund). **48 hours is an approval authority window, NOT a mandatory wait or guaranteed claim-open timestamp.**
+- Claim formula exactly: `user_SAT = user_approved_USDC * 10M SAT / total_approved_USDC`; refund if Complete: `729.12 - user_approved_USDC`. Final user approved amount, claim availability, public price at execution, final FDV and TGE execution remain UNCONFIRMED.
+- Screenshot of issuer X announcement claims token goes live at 2026-11-09 11:30 AM US Pacific Standard Time = **Nov 10 02:30 Bangkok**, **PROJECT ANNOUNCEMENT ONLY**, not verified as a successful onchain launch or token-claim time. Chain currently Closed.
+- Position state: `COMMITTED_729_12_VERIFIED / LAUNCH_CLOSED / APPROVAL_PENDING / CLAIM_NOT_OPEN / REFUND_NOT_OPEN`. No wallet signing, USDC deposit, claim, refund, trade, alert, or new automation executed.
+
+---
+
+
 ## 2026-11-08: user contribution increased to 729.12 USDC, onchain confirmation
 
 **As of direct Solana finalized RPC slot 466608403 for FundingRecord / slot 466608881 for Launch; 2026-11-08 ~01:09 Bangkok. This section supersedes the historical 646.68 USDC contribution snapshot.**
