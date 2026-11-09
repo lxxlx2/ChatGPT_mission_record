@@ -1,5 +1,28 @@
 # 1609SAT / MetaDAO Apps Program：SAT 备考产品、公售估值、早期流通与退出风险调查
 
+## 2026-11-10 ~02:27 Bangkok: last-three-ICO onchain comparison and pre-claim gate
+
+Source: Solana finalized state of three MetaDAO v0.7 Launch PDAs, derived with official `seeds=[b"launch", base_mint]` in `initialize_launch.rs`, program `moontUzsdepotRGe5xsfip7vLPTJnVuafqdUWexVnPM`.
+
+| ICO | Launch PDA | Closed UTC | Complete UTC | Completion delay |
+| --- | --- | --- | --- | --- |
+| CARS (Rip Cars) | `8uMemVUT1ToSuda2jBVhcaPmJWq5C3bKe7DhrM5wkqZP` | 2026-07-25 17:00:01 | 2026-07-25 18:00:01 | 3600 s |
+| CRED (Credible Finance) | `6GAk85NBtButdHm7ASZ6fykGsc6bB7dUUVky5QFZgm5h` | 2026-07-17 17:00:03 | 2026-07-17 18:59:59 | 7196 s |
+| LASO (Laso Finance) | `3UU7HP5NwWTznkZ5CqNBpSnKu7Jyzt1YqB2RpreDjWcp` | 2026-07-04 17:00:24 | 2026-07-04 19:07:08 | 7604 s |
+
+These are onchain `unix_timestamp_closed` and `unix_timestamp_completed`, NOT first claim timestamps. These are the prior three completed ICOs shown near SAT in the official companies list; Mori is more recent but not completed.
+
+CARS actual successful [batch Refund](https://solscan.io/tx/kjepdwY3ieE7CRk83wSo4wxpfebTNELYhDfHieZVycEQw3Uaxn5BV7PpdgJJkpD2rBYCHtuHorBrhy2epsPu2NX) at **2026-07-25 18:00:35 UTC**, **34 seconds after Complete**, showed multiple `Refund` instructions in one successful transaction. Nearby `Claim` attempts failed error 6017 `TokensAlreadyClaimed`; repeated `Refund` attempts failed 6018 `MoneyAlreadyRefunded`; codes verified in official v0.7 `error.rs`. The initiator's identity and whether any automation performed this are NOT determined. Early successful CRED/LASO claim hashes and exact first-claim times remain unverified.
+
+Official v0.7 `claim.rs` permits `Claim` only at `Complete`; `refund.rs` permits `Refund` only at `Complete` or `Refunding`. Both transfer to FundingRecord's original funder token account, and do not require that funder to be a signer, so third-party batch triggers are possible. Neither can bypass state requirements.
+
+Fresh SAT read at slot 467434494 at **2026-11-09 19:26:53 UTC**: `state=Closed`, `global_approved=100000 USDC`; user's PDA at slot 467434496: `committed=729.12 USDC`, `approved=6.07733 USDC`, `tokens_claimed=false`, `usdc_refunded=false`. If approved amounts remain unchanged upon Complete, user receives **607.733 SAT** and **723.04267 USDC** refund on successful respective instructions.
+
+No wallet signing, claim/refund transaction, transfer, automation, or monitoring task executed.
+
+---
+
+
 ## 2026-11-10 ~02:10 Bangkok: per-user allocation approval written; CompleteLaunch gates claims and refunds together
 
 **Direct evidence, Solana finalized at slot 467429631 (Launch), 467429629 (FundingRecord). This supersedes earlier approved_amount=0 snapshots. Allocation remains revisable until launch Complete.**
