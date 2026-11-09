@@ -1,24 +1,24 @@
 # Airdrop / TGE Monitor State (bounded materialized cache)
-Last synchronized: 2026-11-09 16:31:28 Asia/Bangkok
+Last synchronized: 2026-11-09 17:03:07 Asia/Bangkok
 Status: PARTIAL, verified_complete=false. Cache only; final and known-events authoritative. Last fully verified complete sweep 2026-10-10T07:52:16+07:00.
 
 ## Latest terminal
-- authoritative_final: `airdrop-tge-monitor/runs/2026-11-09/163128-final.md`
-- final_commit_sha: `e6f4986b5e82fd8c03f7597a236fdb171b69c063`
+- authoritative_final: `airdrop-tge-monitor/runs/2026-11-09/170307-final.md`
+- final_commit_sha: `734a58541d0ef2ae78aed516b6cd89b61560e991`
 - run_status: PARTIAL
 - candidate_count: 1
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
-- scheduled_shard: 0
-- executed_shard: 0
+- scheduled_shard: 1
+- executed_shard: 1
 - original_x_context: UNAVAILABLE
-- completeness: StandX original X/airdrop wallet eligibility SOURCE_GAP; shard3 bounded discovery PARTIAL_ONLY.
+- completeness: StandX original X/airdrop wallet eligibility SOURCE_GAP; shard1 bounded discovery PARTIAL_ONLY.
 
 ## Last meaningful per-shard attempts (PARTIAL_ONLY)
 - shard0: 2026-11-09 16:31:28 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-09/163128-final.md`; PARTIAL_ONLY
-- shard1: 2026-11-09 13:03:20 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-09/130320-final.md`; PARTIAL_ONLY
+- shard1: 2026-11-09 17:03:07 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-09/170307-final.md`; PARTIAL_ONLY
 - shard2: 2026-11-09 14:02:02 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-09/140202-final.md`; PARTIAL_ONLY
 - shard3: 2026-11-09 15:07:10 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-09/150710-final.md`; PARTIAL_ONLY
 
