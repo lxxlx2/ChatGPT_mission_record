@@ -1,5 +1,17 @@
 # Mori Finance / MetaDAO curated raise — evidence-first ICO diligence (2026-11-07)
 
+## 2026-11-10 participation update: 700 USDC committed on connected MetaDAO UI
+
+**Evidence class: user-provided MetaDAO screenshot plus direct read of the user's connected MetaDAO browser tab; NOT independently verified via Solana RPC in this update.**
+
+- The issuer's official page `https://metadao.fi/companies/mori-finance` displayed **"Committed $700 on Mori Finance"**, payment wallet **`BP7h…4dSp`** and **`Confirmed`**. This supersedes the 2026-11-07 research-era *planning assumption* of `0 USDC` / no user position. The user's actual participation is a **700 USDC gross commitment** according to the connected interface, not a final approved allocation or token distribution.
+- The same screenshot displayed **$1,780,155 gross commitments** against a **$250,000 minimum objective** and the fundraiser still open. The subsequently inspected live connected browser page showed around **$1.9M** cumulative commitments and **75 wallets** at that separate observation. These are MetaDAO UI snapshots, not a verified accepted amount or Solana Escrow readback, and therefore must not be counted as the project's final raised capital.
+- Issuer page still names the project risks: **Mori controls custody**, executes via a **single current institutional options market maker**; October **$1.7M notional** is issuer reported, still not independently proven revenue, active users, final real executions or profitability.
+- **State: USER_COMMITMENT_700_USDC_UI_CONFIRMED / FUNDRAISE_OPEN / FINAL_APPROVAL_UNKNOWN / MORI_CLAIM_UNKNOWN / MAIN_RESEARCH_WATCH**. Do not infer an investment authorization to increase this position, and do not extrapolate a final token allocation from oversubscribed commitments. No signed transactions, wallet operations, recurring monitoring or automations were executed by this research update.
+
+---
+
+
 **Status:** `WATCH / RESEARCH_INCOMPLETE / NO_GO`. **No user allocation or trade authorized.** This is a single-project research record. Verified against Mission `PROJECT_ANALYSIS_FRAMEWORK.md`, `PROJECT_ANALYSIS_EVIDENCE_WORKFLOW.md`, `token_trading_principles.md`, and `MISSION_SPEC.md`. Independent operating metrics, mint address and launch config unresolved.
 
 ## Identity and official sources
