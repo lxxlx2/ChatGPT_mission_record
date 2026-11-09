@@ -1,5 +1,19 @@
 # 1609SAT / MetaDAO Apps Program：SAT 备考产品、公售估值、早期流通与退出风险调查
 
+## 2026-11-10 ~02:10 Bangkok: per-user allocation approval written; CompleteLaunch gates claims and refunds together
+
+**Direct evidence, Solana finalized at slot 467429631 (Launch), 467429629 (FundingRecord). This supersedes earlier approved_amount=0 snapshots. Allocation remains revisable until launch Complete.**
+
+- User FundingRecord `45jwzpest3hPhhDXoS6WqxJ2t3Z2kLDZUrQxMXQ84FNg`: **committed 729.12 USDC, approved 6.077330 USDC**, `is_tokens_claimed=false`, `is_usdc_refunded=false`. A new successful `SetFundingRecordApproval`-linked signature at [5gb27th5...](https://solscan.io/tx/5gb27th5y1aizk29LVA1hViDWZYbrnehzCfmuxREfjG6ndhBxYonk9RBUqwUoa3BgFkUZNBrnkB6nGhtFvZ5K4wL) occurred at **2026-11-09 19:07:28 UTC / Nov 10 02:07:28 Bangkok**. The signature appeared in direct `getSignaturesForAddress` for this funding PDA, with `err=null`; raw PDA read provides the approved amount.
+- SAT Launch PDA `B9QX36vNtxsSr3o1A2wNpihUC2bELehqP7hvYUsDcuRT`: `state=Closed`, `total_approved_amount=100000.000000 USDC`, `unix_timestamp_completed=None`. The official v0.7 `Claim` and `Refund` programs reject `Closed`.
+- **Conditional allocation if these numbers remain unchanged at completion:** `6.07733 / 100000 * 10,000,000 = 607.733 SAT`; refundable `729.12 - 6.07733 = 723.04267 USDC`. These are **chain-calculated conditional entitlements**, not yet transferred tokens/USDC.
+- **Critical coupling verified from official fixed source** `programs/v07_launchpad/src/instructions/complete_launch.rs`: `CompleteLaunch` initializes DAO and AMM/Meteora liquidity, moves funds, and sets `LaunchState::Complete` **within the same successful transaction**. Then `claim.rs` (requires Complete) and `refund.rs` (permits Complete, and also Refunding for full refund) both become callable. The issuer's scheduled token trading launch and claim/refund are therefore ordinarily **the same readiness milestone**, though separate wallet calls and website UI availability can lag. The exact announced Nov 10 **02:30 Bangkok** time is a planned event, not a blockchain-enforced timestamp: if `CompleteLaunch` is delayed, none of the three states is guaranteed at 02:30.
+- This corrects the preceding over-cautious statement that listed token market opening, SAT claim, and surplus-USDC refund as possibly requiring separate launch-stage delays. They are unlocked by the *same* successful Complete transition.
+- **No wallet signing, claiming, USDC refund, extra contribution, automation or alert creation** performed.
+
+---
+
+
 ## 2026-11-10 SAT raise CLOSED; personal allocation and refund still PENDING
 
 **Evidence: direct Solana finalized RPC, refreshed at block slot 467428292 (2026-11-09 19:04:38 UTC / Nov 10 02:04:38 Bangkok).** This supersedes historical *Live* raise status, but NOT the confirmed 729.12 USDC commitment.
