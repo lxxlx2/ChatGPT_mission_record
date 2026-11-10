@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "recorded_at_utc": "2026-11-10T06:28:28.061820+00:00",
+  "recorded_at_utc": "2026-11-10T06:33:24.109456+00:00",
   "client_timezone": "Asia/Bangkok",
   "client_date": "2026-11-10",
   "verdict": {
@@ -24,7 +24,8 @@
     "AGENTS_blob": "6a1217d85e217754dea557bcd4e23982efaf3949",
     "DEVELOPMENT_RULES_blob": "5e8f89418bf206ee77dec9a803b808262d62a72a",
     "PR244_head": "438bbe20899108a858a513648ab8c8c05b11e05e",
-    "PRs_remain_Draft_Open_unmerged": true
+    "PRs_remain_Draft_Open_unmerged": true,
+    "one_attempt_probe_commit": "87a0fdcc3947abc778c6d1a4a652de7ab6ea50da"
   },
   "counterexamples": {
     "backend_baseline": "fd5dddd5f664703b612f7736f5483bb355f971c1",
@@ -326,12 +327,14 @@
     "new_CA_POST": 0
   },
   "request_accounting": {
-    "new_manual_RPC_wire": 0,
+    "new_manual_RPC_wire": 1,
     "new_CA_POST": 0,
     "new_external_narrative_GET": 0,
-    "free_phase_cumulative_manual_RPC_unchanged": 1762,
     "original_once_only_572_separate": true,
-    "existing_Scanner_background_activity_not_counted_as_manual_test_requests": true
+    "existing_Scanner_background_activity_not_counted_as_manual_test_requests": true,
+    "retention_fix_and_install_stage_RPC_wire": 0,
+    "one_followup_GPA_probe_RPC_wire": 1,
+    "free_phase_cumulative_manual_RPC": 1763
   },
   "production_effect": {
     "Dashboard_existing_8766_only_started_from_unloaded_state": true,
@@ -348,8 +351,8 @@
   "remaining_blockers": [
     {
       "item": "Full Mint enumeration and strict full owner/exclusion rankings",
-      "state": "UNRESOLVED_CURRENT_SOURCE; last observed unavailable on 2026-11-07",
-      "evidence": "Last same-source standard GPA after6 attempts429; one documented order/base64/emptySlice variant also429, full247-byte response captured; not re-probed this iteration"
+      "state": "SOURCE_BLOCKED_CURRENTLY_OBSERVED_2026-11-10",
+      "evidence": "One existing-endpoint original-parameter GPA attempt: HTTP429/RPC429; complete247-byte response hash matches Nov7; provider reports CU/s capacity, exact account/method rule remains unresolved; no retry or alternate source"
     },
     {
       "item": "Full economic history, all former/closed accounts and true first purchase",
@@ -369,5 +372,46 @@
       "state": "NOT_SATISFIED; no new collection, signature or notification manufactured"
     }
   ],
-  "decision": "Continue manual CA maintenance only when concrete evidence can change an unresolved answer; do not replace missing source data by more simulation or resume P2/P3/profit research."
+  "decision": "Bounded code fix and existing Dashboard acceptance PASS. Source followup stopped on first observed429. Full CA PARTIAL / INCOMPLETE_EVIDENCE; keep INVEST_NO_GO / TRADE_NO_GO. Resume evidence completion only when existing source can supply missing results or required original artifacts become available.",
+  "current_existing_GPA_probe": {
+    "mode": "EXECUTED_AUTHORIZED_ONCE",
+    "request_sha256": "1b7820f0491b3208aaafca74d283a36a936a0abb0ca6fa33de2b1cb911bb6d78",
+    "attempts": 1,
+    "retries": 0,
+    "redirects_followed": 0,
+    "first_existing_configured_endpoint_only": true,
+    "original_request_parameters_unchanged": true,
+    "response_limit_bytes": 8388608,
+    "timeout_seconds": 20,
+    "new_CA_POST": 0,
+    "recorded_at_utc": "2026-11-10T06:32:39.663565+00:00",
+    "HTTP_status": 429,
+    "elapsed_seconds": 0.11656637499982025,
+    "transport_error_type": null,
+    "response_bytes": 247,
+    "response_complete": true,
+    "response_sha256": "58146bd5f9e6e0af858d3829c18c378b76a25b15ac1112b0e7d1847c2db511ee",
+    "RPC_error_code": 429,
+    "Retry_After_present": false,
+    "result_present": false,
+    "full_mint_coverage_proven": false,
+    "production_reports_changed": false,
+    "executor_commit": "87a0fdcc3947abc778c6d1a4a652de7ab6ea50da",
+    "executor_published_and_read_back_before_execution": true,
+    "executor_sha256": "6d6c605451d4e19476b9ef2088e450fc421611f7d44c689924e3af5b395c5785",
+    "provider_error_class": "COMPUTE_UNITS_PER_SECOND_CAPACITY",
+    "exact_account_or_method_quota_rule": "UNRESOLVED",
+    "raw_error_body_kept_private": true,
+    "command": "<dedicated-review-venv-python> -I -B meme/evidence/frank_existing_gpa_single_attempt_20261110.py --agent <fixed-7aaf-agent> --capture <frozen-private-capture> --rpc-config <existing-Dashboard-private-RPC-config> --output <new-private-directory> --execute-authorized-once",
+    "offline_fake_transport_check": {
+      "fixture_only": true,
+      "one_transport_call": true,
+      "full_HTTP_error_body_saved": true,
+      "network_attempts": 0,
+      "listeners": 0,
+      "actual_RPC": 0
+    },
+    "stopped_after_first_source_failure": true,
+    "source_availability_verdict": "SOURCE_BLOCKED_FOR_THIS_EXISTING_GPA_REQUEST"
+  }
 }
