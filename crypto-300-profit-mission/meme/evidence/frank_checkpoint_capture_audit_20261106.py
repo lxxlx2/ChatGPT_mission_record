@@ -24,8 +24,8 @@ from unittest.mock import patch
 sys.dont_write_bytecode = True
 
 
-def check_retention_change(actual, expected, raw_rows, canonical):
-    """Check a representative-only derivation against original source records."""
+def check_retention_coverage(actual, raw_rows):
+    """Reconstruct representatives and counts from admitted original source rows."""
     def group(row):
         return tuple(row[k] for k in ('owner','account','balance_phase','closure_at_transaction_end'))
     representatives={};rejected=0
@@ -46,6 +46,15 @@ def check_retention_change(actual, expected, raw_rows, canonical):
               'limit_rejected_observations':rejected,'represented_owner_accounts':len(pairs),
               'max_observations':200,'complete_history':False}
     assert actual['coverage']['historical_account_retention']==metadata
+    return metadata
+
+
+def check_retention_change(actual, expected, raw_rows, canonical):
+    """Check a representative-only derivation against original source records."""
+    metadata=check_retention_coverage(actual,raw_rows)
+    retained=actual['historical_account_evidence']
+    pairs={(r['owner'],r['account']) for r in retained}
+    rejected=metadata['limit_rejected_observations']
     old_pairs={(r['owner'],r['account']) for r in expected['historical_account_evidence']}
     def frontier(rows):
         out={}
@@ -145,6 +154,7 @@ def main():
     digests = []
     entries = None
     retention_result=None
+    retention_coverage=None
     collect_pool = pool_vaults.collect_pool_vault_snapshot
     original_observer=cluster.observe_token_accounts
     def historical_pool_clock(*values, **kwargs):
@@ -179,6 +189,8 @@ def main():
                         **CLUSTER_PRESETS[meta['preset']], **clients)
                     actual = analyzer.analyze()
                 rpc.assert_can_publish()
+                if 'historical_account_retention' in actual['coverage']:
+                    retention_coverage=check_retention_coverage(actual,raw_rows)
                 if args.retention_change_only:
                     retention_result=check_retention_change(actual,expected,raw_rows,canonical)
                 else:
@@ -259,6 +271,8 @@ def main():
         'report_business_equal_each': not args.retention_change_only,
         'report_retention_only_change_verified_each': bool(args.retention_change_only),
         'retention_change': retention_result,
+        'retention_coverage_verified_each': retention_coverage is not None,
+        'retention_coverage': retention_coverage,
         'derived_report_json_sha256': hashlib.sha256(args.derived_report.read_bytes()).hexdigest() if args.derived_report else None,
         'business_report_sha256_each': digests,
         'excluded_worker_augmentation_root_keys': augmentation,
