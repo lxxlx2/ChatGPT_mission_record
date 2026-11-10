@@ -1,5 +1,31 @@
 # Slop Cash / SLOP — Umia auction participation research
 
+## 2026-11-11 SLOP auction final settlement and observed early secondary-market break below clearing price
+
+**Source: direct Robinhood Chain 4663 Alchemy RPC on the official user-specified SLOP ERC20, CCA and exact Uniswap v4 pool, sampled 2026-11-10 18:14:19 UTC / Nov 11 01:14:19 Bangkok. All quantities below are verified onchain, not website proxy prices.**
+
+- **USER POSITION:** The user specifically confirms **NO SLOP ICO participation**. Preserve `ICO_PUBLIC_SKIP_USER_CONFIRMED / NO_FUNDS_COMMITTED / NO_SLOP_HOLDING_INFERRED`. This is retrospective research, not authorization to buy spot. Do not revive an earlier $300 ICO budget.
+- SLOP ERC20: `0xfeb4e36fa4a2a494ff25ae4a63491e4c584a67ae`, name `Slop Cash`, symbol `SLOP`, 18 decimals, total supply **100,000,000**. USDG Robinhood `0x5fc5360d0400a0fd4f2af552add042d716f1d168`, 6 decimals.
+- SLOP Tailored CCA `0x901f26b42c61af93f548efa0fdf8df4d342b124c`: `isGraduated()=true`, `remainingSupply()=0`, `totalCleared()=45,000,000.6999999 SLOP`, `currencyRaised()=988,020.566123 USDG`, `endBlock()=111022780`, `claimBlock()=111023357` (already passed at observation), final `clearingPrice() = 1,739,934,337,455,888 Q96` = **$0.02196105882352917 USDG/SLOP**. This exactly matches observed cap in the hook. The oversubscription/bid amount is not 988k accepted spend; `currencyRaised` here is onchain accepted proceeds.
+- Exact **Uniswap v4** spot pool ID **`0x18f3778f93a34c08d41a03e6b3a466a37ec0fd1b019e43f622927ba0c339838b`**, `PoolManager=0x8366a39cc670b4001a1121b8f6a443a643e40951`, `StateView=0xf3334192d15450cdd385c8b70e03f9a6bd9e673b`, currencies `currency0=USDG`, `currency1=SLOP`, fee **10,000 pips = 1%**, tickSpacing 60, hook from Initialize event. Exact Initialize event in [bootstrap transaction](https://robinhoodchain.blockscout.com/tx/0x25e64d72e0cb87bf260fc49fcf71e750ba6795b179e0cea605e3f7e6f36b0173), block `0x69e1320`, timestamp **2026-11-10 16:31:38 UTC / 23:31:38 Bangkok**. Bootstrap transaction also contains two pool Swap events; **post-transaction pool spot** was $0.0281491682, **+28.18%** vs auction clearing. The raw Initialize sqrtPrice alone is a transient pre-liquidity value and MUST NOT be advertised as an executable opening trade.
+- Authentic live trading verified using [SLOP sell transaction](https://robinhoodchain.blockscout.com/tx/0xbafbab33ccaf1e05f1f6c20b8fde14f1bb19f9ff7e94f9a572dbf4721d802378), block 0x69efba9: Uniswap v4 `Swap` log topic1 exactly equals this pool ID, and ERC20 Transfer sends SLOP to PoolManager. Event includes `sqrtPriceX96` and 1% fee; computed spot $0.0202747663 for that trade's block, ~7.68% below clearing. Other trades from this same token into PoolManager, plus USDG into PoolManager, independently confirm real secondary trading.
+- Latest pool marginal spot at Ethereum archive read `getSlot0(poolId)` / Robinhood finalized-like latest head `0x69efeb7`, timestamp **2026-11-10 18:14:19 UTC / Nov 11 01:14:19 Bangkok**: `sqrtPriceX96=551568762873912001536380001307262884`, computed **$0.020632879512802106 USDG/SLOP**, **-6.0479% relative to final auction clearing** and **-26.7016% vs the post-bootstrap spot snapshot**. Current spot implied 100M-supply FDV about $2,063,288. These are **marginal pool quotes**, not guaranteed size-executable selling proceeds; deduct 1% pool fee, price impact, router fee if any and gas.
+- Historical archive snapshots, NOT full min/max or tick-by-tick:
+  - 2026-11-10 16:31:38 UTC (pool bootstrap block, post-tx): **$0.02814917** (+28.18% vs clearing)
+  - 16:37:40: $0.02299521 (+4.71%)
+  - 16:51:27: $0.02477044 (+12.79%)
+  - 17:05:17: $0.02190843 (**-0.24%**; first observed below clearing; actual crossover sometime earlier within sampled interval, exact timestamp UNKNOWN)
+  - 17:19:08: $0.02203353 (+0.33%)
+  - 17:33:03: $0.02202467 (+0.29%)
+  - 17:46:55: $0.02145977 (-2.28%)
+  - 18:00:53: $0.02085361 (-5.04%)
+  - 18:07:53: $0.02023680 (-7.85%)
+  - 18:14:19: $0.02063288 (-6.05%).
+- Conclusion: **confirmed BELOW_AUCTION_CLEARING at latest sample**, despite a brief post-bootstrap premium. No exact historical ATH/ATL is claimed because sampling is sparse; do not conflate `PoolManager`'s aggregate balances with this one pool's reserves. This is a project status and methodology update, no user trade or monitoring event.
+
+---
+
+
 ## 2026-11-07 CCA oversubscription, Nitro L2 checkpointing and LIVE price-cap control
 
 **2026-11-07 ~04:14 Bangkok: audit of REAL SLOP/Umia auction behavior, not a price forecast. Supersedes prior unqualified statements that the cap and all launch parameters are immutable.**
