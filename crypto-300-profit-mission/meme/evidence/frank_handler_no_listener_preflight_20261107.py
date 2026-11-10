@@ -97,7 +97,7 @@ try:
     print(json.dumps({'status': 'PASS', 'mode': 'IN_PROCESS_HANDLER_NO_LISTENER',
                       'actual_Handler_GET': True, 'actual_response_serialization': True,
                       'html_js_match': True, 'css_match': True, 'css_assets_checked': len(css_files), 'exact_saved_jobs_read': saved,
-                      'runtime_status': runtime['status'], 'scanner_pid': runtime['pid'],
+                      'runtime_status': runtime['status'], 'scanner_pid': runtime['pid'], 'scanner_code_commit': runtime['code_commit'],
                       'source_recent_count': f['source_recent_count'], 'history_count': len(f['not_followed']),
                       'eligible_count': 0, 'D1_status': d1['status'], 'D2_status': d2['status'],
                       'external_network_attempts': network_attempts, 'socket_operations': socket_operations,
