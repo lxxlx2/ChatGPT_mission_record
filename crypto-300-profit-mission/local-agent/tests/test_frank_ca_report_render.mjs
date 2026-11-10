@@ -1260,8 +1260,9 @@ test('historical representative coverage explains compression without implying f
   assert.match(html,/该交易结束时关闭/);assert.match(html,/不能证明当前仍关闭/);
 });
 
-for(const change of ['sum','complete','cap','count','hash','mint','duplicate_group']) test('invalid historical retention metadata is not presented as verified coverage '+change,()=>{
+for(const change of ['sum','complete','cap','count','hash','mint','duplicate_group','post_closed','negative_raw','uint64_overflow','unicode_raw','fractional_decimals','excess_decimals','report_decimals']) test('invalid historical retention metadata is not presented as verified coverage '+change,()=>{
   const report=retainedHistoryReport(),c=report.coverage.historical_account_retention;
+  const row=report.historical_account_evidence[0];
   if(change==='sum') c.raw_valid_observations=99;
   if(change==='complete') c.complete_history=true;
   if(change==='cap') c.max_observations=201;
@@ -1269,8 +1270,25 @@ for(const change of ['sum','complete','cap','count','hash','mint','duplicate_gro
   if(change==='hash') report.historical_account_evidence[0].response_sha256='bad';
   if(change==='mint') report.historical_account_evidence[0].mint='wrong';
   if(change==='duplicate_group') {report.historical_account_evidence.push({...report.historical_account_evidence[0],signature:'other'});c.retained_observations=2;c.compacted_observations=3;}
+  if(change==='post_closed') row.balance_phase='post';
+  if(change==='negative_raw') row.raw='-1';
+  if(change==='uint64_overflow') row.raw='18446744073709551616';
+  if(change==='unicode_raw') row.raw='１';
+  if(change==='fractional_decimals') row.decimals=0.5;
+  if(change==='excess_decimals') row.decimals=999;
+  if(change==='report_decimals') report.decimals=6;
   const h=harness();h.context.renderClusterReport(report);const html=h.element('cluster-coverage').innerHTML;
   assert.match(html,/历史证据保留摘要未通过核对/);assert.doesNotMatch(html,/有效来源观察 5 条/);
+  if(change==='post_closed') assert.doesNotMatch(html,/<td>该交易结束时关闭<\/td>/);
+});
+
+test('historical retention accepts backend-valid uint64 boundaries and leading zeroes',()=>{
+  for(const raw of ['0','0001','18446744073709551615']) {
+    const report=retainedHistoryReport();report.decimals=255;
+    Object.assign(report.historical_account_evidence[0],{raw,decimals:255});
+    const h=harness();h.context.renderClusterReport(report);
+    assert.match(h.element('cluster-coverage').innerHTML,/有效来源观察 5 条/);
+  }
 });
 
 test('legacy history does not acquire fabricated retention counts',()=>{

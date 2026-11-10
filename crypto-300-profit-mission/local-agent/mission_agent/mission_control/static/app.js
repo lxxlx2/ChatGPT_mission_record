@@ -1714,12 +1714,15 @@ function renderHistoricalAccountEvidence(report) {
   const evidence=allEvidence.slice(0,20);
   const retention=report.coverage?.historical_account_retention;
   const countKeys=['raw_valid_observations','retained_observations','compacted_observations','limit_rejected_observations','represented_owner_accounts'];
+  const validBalance=r=>typeof r.raw==='string' && /^[0-9]{1,20}$/.test(r.raw) && BigInt(r.raw)<=18446744073709551615n && Number.isInteger(r.decimals) && r.decimals>=0 && r.decimals<=255 &&
+    (report.decimals==null || (Number.isInteger(report.decimals) && r.decimals===report.decimals)) &&
+    (r.closure_at_transaction_end!=='CONFIRMED_CLOSED_AT_TRANSACTION_END' || r.balance_phase==='pre');
   const validRetention=retention && retention.version===1 && retention.mode==='OLDEST_VALID_PER_OWNER_ACCOUNT_PHASE_CLOSURE_STATUS' && retention.complete_history===false && retention.max_observations===200 &&
     countKeys.every(k=>Number.isSafeInteger(retention[k]) && retention[k]>=0) &&
     retention.raw_valid_observations===retention.retained_observations+retention.compacted_observations+retention.limit_rejected_observations &&
     retention.retained_observations<=200 && retention.retained_observations===allEvidence.length && allEvidence.length===report.historical_account_evidence.length &&
     (retention.limit_rejected_observations===0 || retention.retained_observations===200) &&
-    allEvidence.every(r=>typeof r.owner==='string' && typeof r.account==='string' && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(r.owner) && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(r.account) && r.mint===report.mint && Number.isSafeInteger(r.slot) && r.slot>0 && /^[a-f0-9]{64}$/.test(r.response_sha256 || '') && typeof r.signature==='string' && r.signature.length>0 && r.signature.length<=128 && ['pre','post'].includes(r.balance_phase) && ['NOT_PROVEN','CONFIRMED_CLOSED_AT_TRANSACTION_END'].includes(r.closure_at_transaction_end)) &&
+    allEvidence.every(r=>typeof r.owner==='string' && typeof r.account==='string' && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(r.owner) && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(r.account) && r.mint===report.mint && Number.isSafeInteger(r.slot) && r.slot>0 && /^[a-f0-9]{64}$/.test(r.response_sha256 || '') && typeof r.signature==='string' && r.signature.length>0 && r.signature.length<=128 && ['pre','post'].includes(r.balance_phase) && ['NOT_PROVEN','CONFIRMED_CLOSED_AT_TRANSACTION_END'].includes(r.closure_at_transaction_end) && validBalance(r)) &&
     retention.represented_owner_accounts===new Set(allEvidence.map(r=>r.owner+'|'+r.account)).size &&
     new Set(allEvidence.map(r=>[r.owner,r.account,r.balance_phase,r.closure_at_transaction_end].join('|'))).size===allEvidence.length;
   const retentionText=validRetention ? '<p>有效来源观察 '+retention.raw_valid_observations+' 条，保留 '+retention.retained_observations+' 条代表证据，覆盖 '+retention.represented_owner_accounts+' 个 Owner／账户身份；同类账户状态观察压缩 '+retention.compacted_observations+' 条，容量拒绝 '+retention.limit_rejected_observations+' 条，上限 200 条。较早绑定与关闭证明分别保留；代表样本不等于完整账户历史或真实首买。</p>' :
