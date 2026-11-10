@@ -1,0 +1,438 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-10T11:51:38.881349+00:00",
+  "client_timezone": "Asia/Bangkok",
+  "client_date": "2026-11-10",
+  "scope_update": {
+    "old_incident_attribution": "REMOVED_FROM_CURRENT_TASK_BY_EXPLICIT_USER_INSTRUCTION",
+    "historical_evidence_not_rewritten_as_resolved": true,
+    "authorized_work": "Existing free manual CA mainline, direct local Chrome validation, local latest installation, no independent review",
+    "existing_boundaries_preserved": [
+      "no merge",
+      "no new provider/key/paid service",
+      "no notification/email",
+      "no wallet signature/trade",
+      "MC Loop remains unloaded",
+      "no new port numbers",
+      "no monitor/automation",
+      "no P2/P3 or profit research"
+    ]
+  },
+  "verdict": {
+    "fixed_source_and_local_latest": "PASS",
+    "fresh_real_existing_CA_bounded_run": "PASS_EXECUTION",
+    "representative_retention_in_real_report_and_Chrome": "PASS",
+    "captured_report_source_replay": "PASS",
+    "full_Mint_source": "SOURCE_BLOCKED_HTTP429",
+    "full_original_CA_requirements": "PARTIAL_INCOMPLETE_EVIDENCE",
+    "INVEST": "INVEST_NO_GO",
+    "TRADE": "TRADE_NO_GO"
+  },
+  "source": {
+    "PR": 220,
+    "head": "7aaf96a1524a9c6ae26749dae80a945097ac111e",
+    "parent": "2c512081708f78291021b5635a30480c5004b827",
+    "implementation_baseline": "fd5dddd5f664703b612f7736f5483bb355f971c1",
+    "PR_base": "4fdf2238a4db2347975689913e49142b760dc091",
+    "prior_receipt_commit": "30c6306b0cc120366c491d62f3dd17fce235c25f",
+    "audit_verifier_commit": "e0da6ddf4d7f4b57bfbe0570d504b93a8600fbbb",
+    "audit_verifier_sha256": "0f0d9bfc499ed2e88c60ca79c31eb6494ccb6cb71592ab4c4ab8a850bd0a16e4",
+    "latest_main_checked": "ea8a0839babc61af7b65bf711619e9a9057f0ed1",
+    "AGENTS_and_DEVELOPMENT_RULES_read_at_this_main": true,
+    "Frank_or_rules_delta_since_f178545": "NONE",
+    "product_runtime_code_changed_this_iteration": false
+  },
+  "live_job": {
+    "status": "DONE",
+    "captured_at_utc": "2026-11-10T11:44:21.489599+00:00",
+    "source_sha": "7aaf96a1524a9c6ae26749dae80a945097ac111e",
+    "report_sha256": "b2e699887dc1ad8ce60d16430cbc61672393a4ca9bb1be2e8557fee29d2118b1",
+    "marker_sha256": "8dbb644dc66b93ebbce5258f1bc32ceca16e3644a772a106439894b0c0dd45ef",
+    "checkpoint_chain_head": "5e373cc7b01511d1d3fa0f3d0ed615bc646c62c4f4e029d2d50911cf3abae9b7",
+    "wire": 417,
+    "cache_hits": 595,
+    "logical_entries": 978,
+    "elapsed_seconds": 430.7252399921417,
+    "limits": {
+      "wire": 1200,
+      "seconds": 1800
+    },
+    "resume_count": 0,
+    "retention": {
+      "compacted_observations": 732,
+      "complete_history": false,
+      "limit_rejected_observations": 0,
+      "max_observations": 200,
+      "mode": "OLDEST_VALID_PER_OWNER_ACCOUNT_PHASE_CLOSURE_STATUS",
+      "raw_valid_observations": 752,
+      "represented_owner_accounts": 11,
+      "retained_observations": 20,
+      "version": 1
+    },
+    "holders_scanned": 11,
+    "economic_counts": {
+      "trade_evidence": 209,
+      "funding_evidence": 8,
+      "consolidation_evidence": 126,
+      "edges": 207,
+      "historical_account_evidence": 20
+    },
+    "completeness": "INCOMPLETE_EVIDENCE",
+    "required_states": {
+      "PARTIAL": 8
+    },
+    "windows": {
+      "all": 28,
+      "all_stops": {
+        "PAGE_LIMIT": 17,
+        "PROVIDER_EMPTY_PAGE": 11
+      },
+      "active": 20,
+      "active_stops": {
+        "PAGE_LIMIT": 9,
+        "PROVIDER_EMPTY_PAGE": 11
+      },
+      "superseded": 8
+    },
+    "protected_files_unchanged": 12,
+    "old_report_files": 40,
+    "old_dynamic_files_expected_changed": 2,
+    "old_fixed_report_files_unchanged": 38,
+    "new_files": 6,
+    "after_report_files": 46,
+    "API_report_equals_disk": true,
+    "SQLite_backup_integrity_FK": "PASS",
+    "profile_fields": [
+      "active_extension_risks",
+      "decimals",
+      "extensions",
+      "freeze_authority",
+      "inactive_sensitive_extensions",
+      "is_initialized",
+      "metadata_update_authority",
+      "metadata_update_authority_status",
+      "mint_authority",
+      "program_id",
+      "risk_flags",
+      "sensitive_extension_details",
+      "sensitive_extensions",
+      "source",
+      "status",
+      "supply_raw",
+      "token_program",
+      "unresolved_sensitive_extensions"
+    ],
+    "market_status": "OK",
+    "narrative_claim_count": 1,
+    "logical_channels": {
+      "rpc": 975,
+      "market_client": 1,
+      "independent_market_client": 1,
+      "narrative_client": 1
+    },
+    "logical_RPC_method_outcomes": {
+      "getAccountInfo:OK": 2,
+      "getTokenSupply:OK": 1,
+      "getTokenLargestAccounts:OK": 1,
+      "getMultipleAccounts:OK": 4,
+      "getProgramAccounts:ERROR": 1,
+      "getSignaturesForAddress:OK": 78,
+      "getTransaction:OK": 888
+    },
+    "new_CA_POST": 1,
+    "new_manual_RPC_wire": 417,
+    "same_existing_CA_and_configured_private_endpoint": true,
+    "not_a_resume_of_old_DONE_or_expired_job": true,
+    "no_source_or_TTL_change": true,
+    "source_snapshot_is_not_atomically_all_at_report_completion": true,
+    "endpoint_failures_total": 38,
+    "terminal_logical_RPC_errors": 1,
+    "other_wire_failures_recovered": 32,
+    "all_recovered_error_bodies_captured": false,
+    "retained_confirmed_closed_rows": 0,
+    "new_noncurrent_account_frontier_selected": 0,
+    "narrative_URL_attempts": 3,
+    "narrative_claims_read": 1,
+    "independent_same_pool_index_status": "OK",
+    "not_controlled_snapshot_holder_pool_parity": true
+  },
+  "offline_capture_audit": {
+    "verdict": "PASS_OFFLINE_CAPTURE_AUDIT",
+    "source_sha": "7aaf96a1524a9c6ae26749dae80a945097ac111e",
+    "scope": "Historical logical-response replay; not fresh wire capture or live crash/resume",
+    "report_sha256": "b2e699887dc1ad8ce60d16430cbc61672393a4ca9bb1be2e8557fee29d2118b1",
+    "checkpoint_chain_head": "5e373cc7b01511d1d3fa0f3d0ed615bc646c62c4f4e029d2d50911cf3abae9b7",
+    "replay_count": 2,
+    "logical_reads_each": 978,
+    "report_business_equal_each": true,
+    "report_retention_only_change_verified_each": false,
+    "retention_change": null,
+    "retention_coverage_verified_each": true,
+    "retention_coverage": {
+      "version": 1,
+      "mode": "OLDEST_VALID_PER_OWNER_ACCOUNT_PHASE_CLOSURE_STATUS",
+      "raw_valid_observations": 752,
+      "retained_observations": 20,
+      "compacted_observations": 732,
+      "limit_rejected_observations": 0,
+      "represented_owner_accounts": 11,
+      "max_observations": 200,
+      "complete_history": false
+    },
+    "derived_report_json_sha256": null,
+    "business_report_sha256_each": [
+      "e9ae58c700803abdd5cee6f2fcb10c6363fbbac3b487bc0e7be5d6fe8f07f588",
+      "e9ae58c700803abdd5cee6f2fcb10c6363fbbac3b487bc0e7be5d6fe8f07f588"
+    ],
+    "excluded_worker_augmentation_root_keys": [
+      "ca_job_id",
+      "assessment_history",
+      "assessment_history_context",
+      "collection_checkpoint"
+    ],
+    "excluded_worker_augmentation_coverage_keys": [
+      "rpc_call_count_scope"
+    ],
+    "locally_derived_timestamps_frozen": [
+      "observed_at",
+      "pool_vaults.observed_at"
+    ],
+    "clock_frozen_to_original_report": true,
+    "cache_ttls_modified": false,
+    "unique_captured_transactions": 867,
+    "captured_failed_transactions": 42,
+    "captured_null_transactions": 0,
+    "counts": {
+      "trade_evidence_checked": 209,
+      "trade_evidence_exact_duplicates": 0,
+      "funding_evidence_checked": 8,
+      "funding_evidence_exact_duplicates": 0,
+      "consolidation_evidence_checked": 126,
+      "consolidation_evidence_exact_duplicates": 0,
+      "edges_checked": 207,
+      "edges_exact_duplicates": 0,
+      "historical_account_evidence_checked": 20,
+      "historical_account_evidence_exact_duplicates": 0,
+      "history_windows_with_preserved_cursor": 28
+    },
+    "new_wire_attempts": 0,
+    "network_attempts_blocked": 0,
+    "live_resume_count": 0
+  },
+  "verifier_backward_compatibility": {
+    "capture": "Nov7 saved798 logical reads, same report hash",
+    "two_replays_passed": true,
+    "business_hashes_unchanged": true,
+    "new_wire": 0
+  },
+  "existing_CI_and_Mac_tests": {
+    "layer": "Mac isolated offline; no local fixture HTTP servers",
+    "python_version": "3.14.7",
+    "node_version": "v24.18.0",
+    "cwd": "crypto-300-profit-mission/local-agent",
+    "python_command": "<dedicated-review-venv-python> -B -m pytest -q -p no:cacheprovider tests/test_meme_historical_retention.py tests/test_meme_narrative.py tests/test_meme_narrative_story.py tests/test_meme_failed_transfer_evidence.py tests/test_meme_wallet_cluster.py tests/test_meme_wallet_cluster_pagination.py tests/test_meme_owner_account_history.py tests/test_meme_historical_account_scan.py tests/test_meme_historical_accounts.py tests/test_ca_job_checkpoint.py tests/test_meme_ca_completeness.py tests/test_mission_control_dashboard.py",
+    "python_result": {
+      "passed": 288,
+      "seconds": 0.82
+    },
+    "node_command": "node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_ca_report_render.mjs tests/test_frank_d2_ingress_ui.mjs tests/test_frank_f01_source_only.cjs tests/test_frank_f01_failure_state.cjs",
+    "node_result": {
+      "passed": 182,
+      "failed": 0
+    },
+    "node_check": "node --check mission_agent/mission_control/static/app.js PASS",
+    "git_diff_check": "PASS",
+    "CI": {
+      "run": 42767896275,
+      "job": 129668602971,
+      "run_number": 125,
+      "url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/42767896275",
+      "conclusion": "success",
+      "python_passed": 2167,
+      "python_skipped": 4,
+      "python_seconds": 48.31,
+      "node_passed": 182,
+      "synthetic_browser_checks": 42,
+      "page_errors": 0,
+      "blocked_requests": 0,
+      "real_rpc": 0,
+      "production_requests": 0,
+      "not_Mac_or_live_source_evidence": true
+    }
+  },
+  "actual_Chrome": {
+    "url": "http://127.0.0.1:8766/?acceptance=7aaf-live#cluster",
+    "real_UI_started_the_job": true,
+    "DONE_report_exact_job_and_CA_confirmed": "PASS",
+    "reload_restore": "PASS",
+    "selected_original_job_read": "PASS",
+    "retention_text": "752 valid observations /20 representatives /11 owner-account identities /732 compacted /0 capacity-rejected /cap200 /complete_history=false",
+    "retention_summary_guard_passed": true,
+    "page_left_open": true,
+    "screenshot_kept_private": true,
+    "screenshot_sha256": "a7c39fb8d8fe4679fdc6e478b78fa08b99b15bd3a3608ca7e7d511db89c052ef",
+    "browser_fixture_or_synthetic_report_used": false
+  },
+  "provider_console_read_only": {
+    "existing_logged_in_account": true,
+    "captured_at_utc": "2026-11-10T11:38:14.703571+00:00",
+    "monthly_CU_used_approx": "2.3M",
+    "monthly_limit": "30M",
+    "monthly_remaining_approx": "27.7M",
+    "displayed_throughput_limit_CU_per_second": 300,
+    "displayed_last7day_peak_CU_per_second": 91.3,
+    "displayed_24hour_Max_throughput": 27,
+    "custom_throughput_overrides_displayed": "NONE",
+    "metrics_are_aggregated_not_a_complete_per_second_failure_window": true,
+    "do_not_prove_exact_method_or_route_quota": true,
+    "logs_request_response_correlation": {
+      "provider_console_request_matches_job_journal": true,
+      "matching_entries": 1,
+      "provider_response_semantically_matches_prior_raw_body": true,
+      "method": "getProgramAccounts",
+      "rpc_error_code": 429,
+      "provider_method_quota_unresolved": true
+    },
+    "console_request_json_sha256": "96c043c95f93cd1d04afbcbf5d34bc3a7982b359dd7219584ba802d01e0c6771",
+    "console_response_json_sha256": "04f225d22fbb3f308a277fd397474b6979f928d4ee9201ceea17c161ef21ea02",
+    "standard_GPA_documented_CU": 20,
+    "official_method_documentation": "https://www.alchemy.com/docs/chains/solana/solana-api-endpoints/get-program-accounts",
+    "official_account_10_second_shared_throughput_documentation": "https://www.alchemy.com/docs/reference/throughput",
+    "conclusion": "Monthly exhaustion not shown; public20CU does not explain this account's persistent original-GPA429. Exact actual method/route rule remains unresolved. No new limiter, key, plan or source was introduced.",
+    "raw_console_documents_kept_private": true,
+    "messages_to_provider_sent": 0
+  },
+  "manual_narrative_browser_supplement": {
+    "source_url": "https://x.com/matthewabides/status/2106506213458341960",
+    "observed_account_handle": "@matthewabides",
+    "visible_post_text_sha256": "14571772de84ff6f6ea48276bf5e30e448de0abb28a240967e03465138d759eb",
+    "times": [
+      {
+        "datetime": "2026-10-01T16:44:07.000Z",
+        "text": "Oct 1"
+      },
+      {
+        "datetime": "2026-10-03T22:06:32.000Z",
+        "href": "/matthewabides/status/2106506213458341960",
+        "text": "5:06 AM · Oct 4, 2026"
+      }
+    ],
+    "exact_CA_found": false,
+    "Musk_interaction_established": false,
+    "earliest_origin_established": false,
+    "account_badge_not_independent_identity_verification": true,
+    "raw_text_kept_private": true,
+    "no_saved_report_mutation": true,
+    "scope": "One post URL already cited by this CA report; no new CA/provider, no recursive link following",
+    "source_class": "DIRECTLY_OBSERVED_PUBLIC_POST_CONTAINING_ACCOUNT_SELF_CLAIMS",
+    "specific_content_paraphrase": "该账号称让爬虫读取加密网页，以采集语料训练LLM，爬虫可实时观看，训练后开放模型权重。帖子内还引用了较早的爬虫演示。",
+    "model_training_or_open_weights_independently_verified": false,
+    "CA_official_recognition": "UNVERIFIED",
+    "badge_only_observed_not_identity_proof": true,
+    "Musk_interaction": "NOT_ESTABLISHED_BY_THIS_READ",
+    "earlier_quoted_demo_datetime_UTC": "2026-10-01T16:44:07.000Z",
+    "quoted_demo_is_not_proof_of_first_origin": true,
+    "browser_page_visits": 1,
+    "browser_HTTP_request_count": "NOT_CAPTURED; not equated to one wire request",
+    "new_RPC": 0,
+    "saved_CA_report_immutable": true,
+    "not_in_original_job_checkpoint_or_offline_replay": true,
+    "not_automatically_ingested_into_product_report": true
+  },
+  "runtime_after_validation": {
+    "recorded_at_utc": "2026-11-10T11:50:32.321623+00:00",
+    "installed_source_sha": "7aaf96a1524a9c6ae26749dae80a945097ac111e",
+    "served_JS_matches": true,
+    "Scanner": {
+      "pid": 2268,
+      "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "status": "LIVE",
+      "source_drift": false,
+      "consecutive_errors": 0
+    },
+    "MC_Loop_unloaded": true,
+    "protected_files_unchanged": 12,
+    "active_capped_phases": {
+      "holder": 1,
+      "funding": 8
+    },
+    "narrative_browser_source": {
+      "source_url": "https://x.com/matthewabides/status/2106506213458341960",
+      "observed_account_handle": "@matthewabides",
+      "visible_post_text_sha256": "14571772de84ff6f6ea48276bf5e30e448de0abb28a240967e03465138d759eb",
+      "times": [
+        {
+          "datetime": "2026-10-01T16:44:07.000Z",
+          "text": "Oct 1"
+        },
+        {
+          "datetime": "2026-10-03T22:06:32.000Z",
+          "href": "/matthewabides/status/2106506213458341960",
+          "text": "5:06 AM · Oct 4, 2026"
+        }
+      ],
+      "exact_CA_found": false,
+      "Musk_interaction_established": false,
+      "earliest_origin_established": false,
+      "account_badge_not_independent_identity_verification": true,
+      "raw_text_kept_private": true,
+      "no_saved_report_mutation": true
+    },
+    "report_source_program": "SPL Token-2022",
+    "live_job_source_reads_complete": true,
+    "new_fixed_report_is_not_the_Nov7_capture": true
+  },
+  "local_installation": {
+    "installed_product_sha": "7aaf96a1524a9c6ae26749dae80a945097ac111e",
+    "already_current_and_kept_running": true,
+    "new_Dashboard_reload_or_bootstrap_this_iteration": 0,
+    "existing_port": 8766,
+    "Scanner_lifecycle_operations": 0,
+    "MC_Loop_loaded": false,
+    "prior_verified_installation_receipt": "frank-ca-history-retention-20261110.json"
+  },
+  "request_accounting": {
+    "new_CA_POST": 1,
+    "new_manual_RPC_wire": 417,
+    "free_phase_before": 1763,
+    "free_phase_after": 2180,
+    "original_once_only_572_separate": true,
+    "offline_replays_RPC": 0,
+    "browser_original_post_is_separate_from_job_narrative_URL_budget": true,
+    "no_extra_standalone_GPA_probe_this_iteration": true,
+    "background_Scanner_requests_not_counted_as_manual_test": true
+  },
+  "remaining_CA_blockers": [
+    {
+      "item": "Full Mint enumeration/global owner and exclusion rankings",
+      "state": "SOURCE_BLOCKED",
+      "reason": "Same existing GPA request returns429; exact method/route quota unknown despite public20CU and account aggregate capacity readings"
+    },
+    {
+      "item": "Complete economic history/all former accounts/true first purchase",
+      "state": "PARTIAL",
+      "current_active_frontiers": 20,
+      "capped": 9,
+      "empty_page": 11,
+      "capped_phases": {
+        "holder": 1,
+        "funding": 8
+      },
+      "empty_page_not_wallet_birth": true
+    },
+    {
+      "item": "All special identities and independent controlled-snapshot holder/pool parity",
+      "state": "PARTIAL"
+    },
+    {
+      "item": "Official exact-CA affiliation, actual prominent-actor interaction and exhaustive earliest origin",
+      "state": "UNVERIFIED; concrete narrative content retained and original post manually read"
+    },
+    {
+      "item": "Other protocol/large-Mint/extension-risk representative coverage",
+      "state": "PARTIAL; this existing real CA is SPL Token-2022, not universal extension-risk coverage"
+    }
+  ],
+  "stop_condition": "Fresh bounded real acceptance is complete. No further source expansion or repeat scan in this iteration. No new validated runtime defect was found in the inspected paths; remaining full-coverage requirements depend on currently missing source evidence, not review approval.",
+  "offline_command": "<dedicated-review-venv-python> -I -B crypto-300-profit-mission/meme/evidence/frank_checkpoint_capture_audit_20261106.py --agent <fixed-7aaf-agent> --capture <private-current-capture> --expected-agent-sha 7aaf96a1524a9c6ae26749dae80a945097ac111e --output <private-audit-output>"
+}
