@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-11-09T07:38:00Z",
+  "updated_at": "2026-11-10T11:22:42Z",
   "status": "ACTIVE",
-  "note": "Nov9 repair: dedupe ledger reconciled to actually verified Sent/readback through Nov9; individual primary material versions appended only, historic 232 events preserved. No claim exhaustive security source recall or CI.",
+  "note": "Nov10 manual 13-chapter recovery verified Gmail Sent+Inbox ID 1a1c5322efda837e, canonical exact body; appended source-backed material families only. Source discovery remains PARTIAL; unattended delivery remains unproven. Preserved prior entries.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -2673,6 +2673,69 @@
       "material_version": "spot-live-2026-11-09T0738Z",
       "delivered_date": "2026-11-09",
       "gmail_message_id": "1a1bf46e14b36b3e",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "classification": "DAILY_MARKET_SNAPSHOT"
+    },
+    {
+      "event_key": "sec:ethersphere:bee-js-swarm:2026-11-09",
+      "family_key": "security:ethersphere-beejs-swarm-supply-chain",
+      "material_version": "ghsa-hh7j-5m3j-23pf-2026-11-09-replacement-0563",
+      "delivered_date": "2026-11-10",
+      "gmail_message_id": "1a1c5322efda837e",
+      "source_url": "https://github.com/advisories/GHSA-hh7j-5m3j-23pf",
+      "classification": "MAJOR_SECURITY"
+    },
+    {
+      "event_key": "finance:pnc:coinbase-usdc:2026-11-09",
+      "family_key": "finance:pnc-coinbase-usdc-receipt-pilot",
+      "material_version": "coinbase-pnc-limited-pilot-2026-11-09",
+      "delivered_date": "2026-11-10",
+      "gmail_message_id": "1a1c5322efda837e",
+      "source_url": "https://www.reuters.com/legal/transactional/pnc-offer-stablecoin-payments-clients-coinbase-partnership-2026-11-09/",
+      "classification": "STABLECOIN_INFRASTRUCTURE"
+    },
+    {
+      "event_key": "etf:btc:2026-11-09",
+      "family_key": "etf:bitcoin-us-spot-flow",
+      "material_version": "farside-2026-11-09-total-minus-201m",
+      "delivered_date": "2026-11-10",
+      "gmail_message_id": "1a1c5322efda837e",
+      "source_url": "https://farside.co.uk/btc/",
+      "classification": "ETF_INSTITUTIONAL_FLOW"
+    },
+    {
+      "event_key": "etf:eth:2026-11-09",
+      "family_key": "etf:ethereum-us-spot-flow",
+      "material_version": "farside-2026-11-09-total-minus-184.6m",
+      "delivered_date": "2026-11-10",
+      "gmail_message_id": "1a1c5322efda837e",
+      "source_url": "https://farside.co.uk/eth/",
+      "classification": "ETF_INSTITUTIONAL_FLOW"
+    },
+    {
+      "event_key": "reg:fincen:scamcenters:2026-11-09",
+      "family_key": "reg:fincen-scam-centers-exchange",
+      "material_version": "readout-public-2026-11-09-no-new-rule",
+      "delivered_date": "2026-11-10",
+      "gmail_message_id": "1a1c5322efda837e",
+      "source_url": "https://www.fincen.gov/news/news-releases/readout-fincen-hosts-exchange-event-combat-overseas-scam-centers",
+      "classification": "REGULATORY_COOPERATION"
+    },
+    {
+      "event_key": "macro:oil:2026-11-10",
+      "family_key": "macro:oil-middle-east-risk-repricing",
+      "material_version": "reuters-nov10-0930gmt-brent-90.18",
+      "delivered_date": "2026-11-10",
+      "gmail_message_id": "1a1c5322efda837e",
+      "source_url": "https://www.reuters.com/business/energy/oil-falls-trump-downplays-prospect-escalation-with-iran-2026-11-10/",
+      "classification": "CROSS_MARKET"
+    },
+    {
+      "event_key": "market:binance:2026-11-10-1816",
+      "family_key": "market:binance-spot-snapshot",
+      "material_version": "spot-live-2026-11-10T1116Z",
+      "delivered_date": "2026-11-10",
+      "gmail_message_id": "1a1c5322efda837e",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
       "classification": "DAILY_MARKET_SNAPSHOT"
     }
