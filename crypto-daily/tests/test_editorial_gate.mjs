@@ -35,6 +35,27 @@ function complete(x){
  return x;
 }
 function run(mutator=()=>{}){const x=base();mutator(x);complete(x);return validateEditorial(x,rules)}
+test('Nov11 SurfBoard old deadline cannot fill section seven as numbered news',()=>{
+  const r=run(x=>{
+    x.events.push(mkEvent('surf-old-status','TGE_PUBLIC_SALE','PERSONAL',{source_confirmed:false,status:'unverified',actual_delta:'No new issuer action or entitlement change'}));
+    x.items.push({section:7,event_key:'surf-old-status',role:'detail',text:'SurfBoard此前已发送11月13日领取截止提醒，旧窗口没有新增，故不再重复提醒。'});
+  });
+  assert.ok(r.errors.some(e=>e.startsWith('RIGHTS_STATUS_REPLAY_WITHOUT_NEW_ACTION')));
+});
+test('Nov11 StandX VERIFYING and unverified claim mirror cannot be numbered news',()=>{
+  const r=run(x=>{
+    x.events.push(mkEvent('standx-watch','TGE_PUBLIC_SALE','PERSONAL',{source_confirmed:false,status:'unverified',actual_delta:'Mirror shows old date; original issuer and personal rights not confirmed'}));
+    x.items.push({section:11,event_key:'standx-watch',role:'detail',text:'StandX DUSD仍未核实官方原帖与个人资格，处于VERIFYING和SOURCE_GAP。'});
+  });
+  assert.ok(r.errors.some(e=>e.startsWith('RIGHTS_STATUS_REPLAY_WITHOUT_NEW_ACTION')));
+});
+test('a fresh independently verified issuer claim is eligible for section seven',()=>{
+  const r=run(x=>{
+    x.events.push(mkEvent('fresh-claim','TGE_PUBLIC_SALE','PERSONAL',{source_confirmed:true,status:'verified',new_action_verified:true,issuer_action_source_url:'https://issuer.example/claim',actual_delta:'New issuer claim portal opened after prior verification; the claim period changed'}));
+    x.items.push({section:7,event_key:'fresh-claim',role:'detail',text:'StandX发布经发行方原始页面确认的新领取窗口，个人资格仍未完全核实，先进入官方入口核对。'});
+  });
+  assert.equal(r.errors.some(e=>e.startsWith('RIGHTS_STATUS_REPLAY_WITHOUT_NEW_ACTION')),false);
+});
 test('13 headings and sourced concise full structure pass without padding',()=>assert.equal(run().passed,true));
 test('balance bid cannot become a Top5 global item',()=>assert.ok(run(x=>{x.items[0].event_key='balance-cca'}).errors.some(e=>e.startsWith('TOP5_NOT_ELIGIBLE'))));
 test('balance must be in TGE/public sale section 7, not fund-flows 5',()=>assert.ok(run(x=>{x.items.find(t=>t.event_key==='balance-cca').section=5}).errors.some(e=>e.startsWith('WRONG_PRIMARY_SECTION'))));
