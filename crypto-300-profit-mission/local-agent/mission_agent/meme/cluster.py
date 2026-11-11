@@ -1052,6 +1052,13 @@ class WalletClusterAnalyzer:
         except RPCJobBudgetExceeded:raise
         except Exception:return None
 
+    def _supply_recheck(self):
+        try:value=self.rpc.call("getTokenSupply",[self.mint,{"commitment":"finalized"}])
+        except RPCJobBudgetExceeded:raise
+        except Exception:return None
+        try:return int(value["value"]["amount"]),value["context"]["slot"]
+        except (KeyError,TypeError,ValueError):return None
+
     def _holder_ranks(self,profile,supply,decimals):
         if not self.enumerate_holder_ranks:return {"requested":False,"status":"NOT_REQUESTED"}
         base={"requested":True,"status":"UNAVAILABLE","owners":[],"metrics":{}}
@@ -1065,7 +1072,8 @@ class WalletClusterAnalyzer:
                 self._snapshot_slots.get("supply"),self.rpc,self._role,
                 normalization_declared=normalized,special_roles=SPECIAL_ROLES,
                 expected_top_accounts=getattr(self,"_largest_account_snapshot",None),
-                largest_slot=self._snapshot_slots.get("largest_accounts"),owner_reader=self._rank_owner_accounts)
+                largest_slot=self._snapshot_slots.get("largest_accounts"),owner_reader=self._rank_owner_accounts,
+                supply_recheck=self._supply_recheck,supply_fixed_above=profile.get("mint_authority") is None)
             if self.audit_holder_binary:
                 self._progress("HOLDER_BINARY",scanned=0)
                 try:

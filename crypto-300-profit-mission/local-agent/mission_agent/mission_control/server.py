@@ -157,6 +157,11 @@ class ClusterJobManager:
         configured=os.environ.get("SOLANA_RPC_URLS")
         if configured:
             self.rpc_endpoints=[x.strip() for x in configured.split(",") if x.strip()]
+            # Keyed providers may throttle heavy GPA by compute units/s (HTTP 429).
+            # Keep the configured provider primary; the official public mainnet
+            # endpoint is used only while the primary is in an error cooldown.
+            if os.environ.get("SOLANA_RPC_PUBLIC_FALLBACK","1")!="0":
+                self.rpc_endpoints.append("https://api.mainnet-beta.solana.com")
         else:
             primary=os.environ.get("SOLANA_RPC_URL","https://api.mainnet.solana.com")
             self.rpc_endpoints=[
