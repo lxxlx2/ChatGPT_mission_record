@@ -32,6 +32,17 @@ export function validateTgeAction(input={}) {
     fail('PROJECT_SCOPE_OR_IDENTITY_UNVERIFIED');
   const receipts=(input.source_receipts||[]).filter(x=>x.project_id===c.project_id);
   if(!receipts.some(firstPartyReceipt))fail('FIRST_PARTY_RIGHTS_RECEIPT_MISSING');
+  // The original page must establish THIS exact entitlement event. A generic
+  // first-party home page or a previous issuer notice for another claim cannot
+  // validate a newer action from a mirror or an unrelated stage.
+  const eventBoundReceipt=r=>firstPartyReceipt(r)
+    && r.event_key===c.event_key
+    && r.family_key===c.family_key
+    && r.material_version===c.material_version
+    && r.source_url===c.source_url
+    && (!iso(c.checked_at)||Date.parse(r.checked_at)<=Date.parse(c.checked_at))
+    && (!iso(c.source_published_at)||Date.parse(r.source_published_at)===Date.parse(c.source_published_at));
+  if(!receipts.some(eventBoundReceipt))fail('ISSUER_RECEIPT_NOT_BOUND_TO_CANDIDATE_VERSION');
   if(!['A','B'].includes(c.evidence_tier)||!url(c.source_url)||
      c.issuer_original_read!==true)fail('DISCOVERY_ONLY_NOT_ACTION');
   if(!iso(c.source_published_at)||!iso(c.checked_at))
