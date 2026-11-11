@@ -73,7 +73,7 @@ test('previous seven days must be the real consecutive prior dates, not arbitrar
 });
 test('an actionless previously notified claim or source gap is not a stock market item',()=>{
  const v=make();v.items[6].text='SurfBoard此前已提醒11月13日截止，无高置信新增，仅SOURCE_GAP状态';
- v.body=headings.map((h,i)=>h+'\\n（1）'+v.items[i].text).join('\\n\\n');
+ v.body=headings.map((h,i)=>h+'\n（1）'+v.items[i].text).join('\n\n');
  assert.ok(validateStockNovelty(v).errors.some(e=>e.startsWith('NO_VALUE_OLD_NEWS_IN_NUMBERED_ITEM')));
 });
 test('a calendar previously delivered under same family version cannot recur as new item',()=>{
