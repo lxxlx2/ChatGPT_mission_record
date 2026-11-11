@@ -1742,5 +1742,12 @@
       "Chevron issuer precise earnings release hour not independently confirmed"
     ]
   },
-  "qa_status": "PASS"
+  "qa_status": "SUPERSEDED_DELIVERED_DO_NOT_SEND",
+  "pre_supersession_qa_status": "PASS",
+  "pre_supersession_status": null,
+  "status": "AUDIT_DRAFT_NONCANONICAL",
+  "archival_role": "AUDIT_DRAFT_NONCANONICAL",
+  "superseded_by_gmail_message_id": "1a18a3fe75bd8916",
+  "canonical_path": "us-stock-daily/reports/daily/2026/2026-10/2026-10-30.md",
+  "note": "This was a historical pre-send draft. Exact canonical Gmail Sent and Git body were independently verified. Never send or use this pending file as the active daily."
 }
