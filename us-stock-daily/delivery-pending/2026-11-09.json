@@ -70,5 +70,12 @@
       "status": "WATCH_ONLY"
     }
   ],
-  "note": "Draft prebuild only; no Gmail attempted. Later repair must verify SEC/IR, exact latest source status, CI receipt or independent QA, and Gmail dedupe."
+  "note": "This was a historical pre-send draft. Exact canonical Gmail Sent and Git body were independently verified. Never send or use this pending file as the active daily.",
+  "pre_supersession_qa_status": null,
+  "pre_supersession_status": null,
+  "qa_status": "SUPERSEDED_DELIVERED_DO_NOT_SEND",
+  "status": "AUDIT_DRAFT_NONCANONICAL",
+  "archival_role": "AUDIT_DRAFT_NONCANONICAL",
+  "superseded_by_gmail_message_id": "1a1bdc41942c2bd6",
+  "canonical_path": "us-stock-daily/reports/daily/2026/2026-11/2026-11-09.md"
 }
