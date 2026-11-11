@@ -1,4 +1,4 @@
-"""Fixed 7aaf -> candidate Dashboard-only narrative and holder validation update.
+"""Fixed 0b966ab4 -> d4387882 Dashboard-only confirmed review fixes.
 
 Default is preflight only. --apply-authorized-dashboard-only reloads the existing
 Dashboard LaunchAgent, preserving Scanner/Loop/data. A private prepared plan,
@@ -7,7 +7,6 @@ temporary listener is opened. No source
 fetch, CA POST, RPC, notification, database restore or trading operation.
 """
 import argparse
-from contextlib import ExitStack
 from datetime import datetime,timezone
 import fcntl
 import hashlib
@@ -22,11 +21,11 @@ import time
 import urllib.parse
 import urllib.request
 
-OLD='7aaf96a1524a9c6ae26749dae80a945097ac111e'
-NEW='0b966ab459b775bc58c77427c1dbcb491f2d9bf8'
+OLD='0b966ab459b775bc58c77427c1dbcb491f2d9bf8'
+NEW='d43878828c86eacee5be9df8a17d16fc63a74bb6'
 LABEL='com.jerson.frank-meme.dashboard'
 LOOP='com.jerson.frank-meme.loop'
-AUTH='USER_20261111_CONTINUE_LOCAL_DASHBOARD_WITHOUT_REVIEW'
+AUTH='USER_20261111_APPLY_CONFIRMED_REVIEW_FIXES_DASHBOARD_ONLY'
 os.umask(0o077)
 
 
@@ -48,10 +47,10 @@ def main():
     assert p['label']==LABEL and p['port']==8766 and p['old_backup_verified']
     side=p['narrative_note'];staged=Path(side['staged']);note_target=Path(side['target'])
     staged_bytes=staged.read_bytes();record=json.loads(staged_bytes)
-    assert hashlib.sha256(staged_bytes).hexdigest()==side['sha256'] and not side['existed_before']
+    assert hashlib.sha256(staged_bytes).hexdigest()==side['sha256'] and side['existed_before'] is True
     assert re.fullmatch(r'[0-9a-f]{32}',record['job_id'])
     assert note_target==Path(p['control'])/'cluster-source-notes'/record['job_id']/'narrative.json'
-    assert not note_target.exists() and not note_target.is_symlink()
+    assert note_target.is_file() and not note_target.is_symlink() and sha(note_target)==side['sha256']
     assert record['report_sha256']==sha(Path(p['control'])/'cluster-reports/_jobs'/(record['job_id']+'.json'))
     target='gui/'+str(os.getuid())+'/'+LABEL
     loop='gui/'+str(os.getuid())+'/'+LOOP
@@ -151,10 +150,10 @@ def main():
     smoke=json.loads((backup/'in-process-handler-preflight.json').read_text())
     assert smoke['mode']=='IN_PROCESS_HANDLER_NO_LISTENER'
     assert smoke['status']=='PASS' and smoke['old_backup']['status']=='PASS' and smoke['candidate']['status']=='PASS'
-    assert smoke['old_backup']['report_bound_browser_notes_read']==0
+    assert smoke['old_backup']['report_bound_browser_notes_read']==1
     assert smoke['candidate']['report_bound_browser_notes_read']==1
     lock=(backup/'switch.lock').open('w');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-    events=[];unloaded=False;changed=False;note_created=False
+    events=[];unloaded=False;changed=False
     def note(stage):
         events.append({'stage':stage,'at':datetime.now(timezone.utc).isoformat()});write(backup/'switch-journal.json',events)
     def command(args,name):
@@ -164,39 +163,6 @@ def main():
         fd=os.open(temp,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,p['runner_mode_before'])
         with os.fdopen(fd,'wb') as f:f.write(data);f.flush();os.fsync(f.fileno())
         os.chmod(temp,p['runner_mode_before']);os.replace(temp,runner)
-    def note_directory(create=False):
-        stack=ExitStack()
-        try:
-            fd=os.open(control,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW)
-            stack.callback(os.close,fd)
-            for part in ('cluster-source-notes',record['job_id']):
-                if create:
-                    try:os.mkdir(part,0o700,dir_fd=fd)
-                    except FileExistsError:pass
-                fd=os.open(part,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW,dir_fd=fd)
-                stack.callback(os.close,fd)
-            return stack,fd
-        except BaseException:
-            stack.close();raise
-    def install_note():
-        nonlocal note_created
-        stack,folder=note_directory(True)
-        with stack:
-            temporary='.narrative-nov11-candidate.tmp'
-            fd=os.open(temporary,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600,dir_fd=folder)
-            try:
-                with os.fdopen(fd,'wb') as f:f.write(staged_bytes);f.flush();os.fsync(f.fileno())
-                # link refuses an existing final path; no old note is overwritten.
-                os.link(temporary,'narrative.json',src_dir_fd=folder,dst_dir_fd=folder,follow_symlinks=False)
-                note_created=True
-            finally:os.unlink(temporary,dir_fd=folder)
-        assert sha(note_target)==side['sha256']
-    def remove_own_note():
-        if not note_created:return
-        stack,folder=note_directory()
-        with stack:
-            assert sha(note_target)==side['sha256']
-            os.unlink('narrative.json',dir_fd=folder)
     try:
         note('READY_VERIFIED_BACKUP_AND_EXPLICIT_DASHBOARD_UPDATE_AUTHORIZATION')
         if p['old_dashboard_loaded']:
@@ -213,7 +179,7 @@ def main():
             if absent and not alive and not listening:break
             if time.monotonic()>deadline:raise RuntimeError('OLD_DASHBOARD_TEARDOWN_INCOMPLETE')
             time.sleep(.1)
-        install_note();note('REPORT_BOUND_NARRATIVE_NOTE_INSTALLED')
+        assert sha(note_target)==side['sha256'];note('EXISTING_REPORT_BOUND_NARRATIVE_NOTE_PRESERVED')
         install((backup/'runner-candidate.sh').read_bytes());changed=True;note('RUNNER_SWITCHED')
         assert command(['launchctl','bootstrap','gui/'+str(os.getuid()),p['plist']],'dashboard-bootstrap').returncode==0
         note('NEW_DASHBOARD_BOOTSTRAPPED')
@@ -225,7 +191,7 @@ def main():
                 time.sleep(.3)
         result.update(status='PASS',source_sha=NEW,previous_installed_sha=OLD,executor_sha256=sha(__file__),
                       preserved_report_files=len(p['reports']),narrative_note_sha256=side['sha256'],
-                      narrative_note_bound_to_original_report=True,protected_file_hashes_unchanged=True,
+                      narrative_note_bound_to_original_report=True,narrative_note_unchanged=True,protected_file_hashes_unchanged=True,
                       loop_remains_unloaded=True,real_rpc_or_ca_post=0,notification_or_trade=0,
                       dashboard_launchagent_only_reloaded=p['old_dashboard_loaded'],dashboard_launchagent_only_started=not p['old_dashboard_loaded'],rollback_exercised=False)
         note('VERIFIED');write(backup/'switch-result.json',result);print(json.dumps(result))
@@ -240,7 +206,6 @@ def main():
                 if absent and not listening:break
                 if time.monotonic()>deadline:raise RuntimeError('ROLLBACK_TEARDOWN_BLOCKED') from error
                 time.sleep(.1)
-            remove_own_note()
             if changed:install((backup/'runner-before.sh').read_bytes())
             restored=command(['launchctl','bootstrap','gui/'+str(os.getuid()),p['plist']],'rollback-old-bootstrap')
             note('ROLLBACK_BOOTSTRAP_'+str(restored.returncode))
