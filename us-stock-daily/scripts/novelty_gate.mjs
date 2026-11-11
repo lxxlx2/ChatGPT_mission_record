@@ -91,6 +91,13 @@ export function validateStockNovelty(input){
  }
  for(const ev of input.events||[]){
   if(!count.has(ev.event_key))continue;
+  if(ev.kind===legitCalendar){
+   const d=String(ev.calendar_date||'').slice(0,10);
+   const from=Date.parse(reportDate+'T00:00:00Z'),to=Date.parse(d+'T00:00:00Z');
+   const days=(to-from)/86400000;
+   if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(d)||!Number.isInteger(days)||days<0||days>3)
+     fail('CALENDAR_NO_CURRENT_72H_ACTION',ev.event_key+'/'+d);
+  }
   const prev=history.filter(x=>x.family_key===ev.family_key);
   if(!prev.length)continue;
   if(routine.has(ev.kind)){
