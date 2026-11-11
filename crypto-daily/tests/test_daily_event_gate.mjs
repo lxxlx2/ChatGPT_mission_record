@@ -30,6 +30,16 @@ test('same event cannot repeat on following day without new material delta', () 
   const m=manifest();m.previous_events=[prior,{...fresh}];
   assert.ok(validateReport(m).errors.some(e=>e.startsWith('REPEATED_WITHOUT_DELTA')));
 });
+test('SurfBoard reminder from a prior delivered email is rejected in the numbered report',()=>{
+  const m=manifest();
+  m.body=m.body.replace('当日核实的行业行情和实际变化。','SurfBoard此前已提醒11月13日领取截止，属于旧窗口，没有新的权益变化。');
+  assert.ok(validateReport(m).errors.includes('RIGHTS_NO_DELTA_STATUS_IN_NUMBERED_REPORT'));
+});
+test('StandX public mirror and unresolved allocation watch are rejected',()=>{
+  const m=manifest();
+  m.body=m.body.replace('当日核实的行业行情和实际变化。','StandX公开镜像声称已有领取日期，但个人资格仍未核实，保留VERIFYING。');
+  assert.ok(validateReport(m).errors.includes('RIGHTS_NO_DELTA_STATUS_IN_NUMBERED_REPORT'));
+});
 test('old Qubic/Cysic/JPMD item without new delta is blocked', () => {
   const m=manifest();m.previous_events=[prior,{event_key:'qubic:wallet:2026-10-18',family_key:'qubic:wallet',material_version:'v1',aliases:['Qubic']}];
   m.body=body('Clifton Collins第5次500 BTC新转账，旧Qubic事件仍未改变。');
