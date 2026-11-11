@@ -5,7 +5,7 @@ const headings=['一、市场总览','二、正常时段、盘后与异动原因
 function make(){
  const items=headings.map((_,i)=>({section:i+1,item_number:1,event_key:'news-'+(i+1),text:'有日期和真实源的新事实-'+(i+1)}));
  const events=items.map(t=>({event_key:t.event_key,family_key:'stable-family-'+t.event_key,material_version:'original-2026-10-28',primary_section:t.section,kind:t.section===1?'ROUTINE_MARKET':t.section===9?'CALENDAR':'NEW_MATERIAL',observation_date:'2026-10-27',calendar_date:'2026-10-29',source_url:'https://example.org/issuer',published_at:'2026-10-28T01:20:00Z'}));
- return {report_date:'2026-10-28',body:headings.map((h,i)=>h+'\n（1）'+items[i].text).join('\n\n'),items,events,previous_events:[],previous_days_checked:['2026-10-21','2026-10-22','2026-10-23','2026-10-24','2026-10-25','2026-10-26','2026-10-27'],ipo_status_receipts:[{issuer_name:'Anthropic',official_url:'https://www.sec.gov/edgar/browse/',checked_at:'2026-10-28T02:00:00Z',stage:'PUBLIC_S1',new_delta_or_none:'NO_DELTA'}],x_source_receipt:{checked_at:'2026-10-28T02:00:00Z',browser_session:'UNAVAILABLE',status:'PUBLIC_ORIGINAL_LOOKUP',fallback_url:'https://x.com/AnthropicAI'}};
+ return {report_date:'2026-10-28',body:headings.map((h,i)=>h+'\n（1）'+items[i].text).join('\n\n'),items,events,previous_events:[],previous_days_checked:['2026-10-21','2026-10-22','2026-10-23','2026-10-24','2026-10-25','2026-10-26','2026-10-27'],previous_day_receipts:['2026-10-21','2026-10-22','2026-10-23','2026-10-24','2026-10-25','2026-10-26','2026-10-27'].map((date,i)=>({date,source:'GMAIL_SENT',gmail_message_id:'1a1234567890'+String(i),sent_readback:true,full_body_reviewed:true})),ipo_status_receipts:[{issuer_name:'Anthropic',official_url:'https://www.sec.gov/edgar/browse/',checked_at:'2026-10-28T02:00:00Z',stage:'PUBLIC_S1',new_delta_or_none:'NO_DELTA'}],x_source_receipt:{checked_at:'2026-10-28T02:00:00Z',browser_session:'UNAVAILABLE',status:'PUBLIC_ORIGINAL_LOOKUP',fallback_url:'https://x.com/AnthropicAI'}};
 }
 test('complete 12-section new-date facts pass',()=>assert.equal(validateStockNovelty(make()).passed,true));
 test('same family new date key cannot repeat identical issuer version',()=>{
@@ -104,4 +104,22 @@ test('empty sections are rejected even with twelve correct headings',()=>{
  const r=validateStockNovelty(v);
  assert.equal(r.passed,false);
  assert.ok(r.errors.some(e=>e.startsWith('EMPTY_STOCK_SECTION:5')));
+});
+
+test('seven arbitrary dates without actual body readback evidence do not pass',()=>{
+ const v=make();delete v.previous_day_receipts;
+ assert.ok(validateStockNovelty(v).errors.some(e=>e.startsWith('SEVEN_DAY_BODY_READBACK_RECEIPTS_MISSING')));
+});
+test('historical Git file path alone is not a complete body readback',()=>{
+ const v=make();
+ v.previous_day_receipts[0]={date:'2026-10-21',source:'GIT_CANONICAL',git_blob_sha:'0'.repeat(40),canonical_readback:false,full_body_reviewed:true};
+ assert.ok(validateStockNovelty(v).errors.some(e=>e.startsWith('PRIOR_REPORT_RECEIPT_UNVERIFIED')));
+});
+test('missing full body comparison despite Gmail Sent ID is not semantic dedupe',()=>{
+ const v=make();v.previous_day_receipts[0].full_body_reviewed=false;
+ assert.ok(validateStockNovelty(v).errors.some(e=>e.startsWith('PRIOR_REPORT_RECEIPT_UNVERIFIED')));
+});
+test('seven genuine unique Gmail report Sent and body receipts pass provenance gate',()=>{
+ const v=make();
+ assert.equal(validateStockNovelty(v).errors.some(e=>e.startsWith('SEVEN_DAY_BODY_READBACK_RECEIPTS_MISSING')||e.startsWith('PRIOR_REPORT_RECEIPT_UNVERIFIED')),false);
 });
