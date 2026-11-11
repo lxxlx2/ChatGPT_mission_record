@@ -6,6 +6,8 @@ on:
       - 'crypto-daily/delivery-pending/*.json'
       - 'crypto-daily/EDITORIAL_RULESET.json'
       - 'crypto-daily/scripts/editorial_gate.mjs'
+      - 'crypto-daily/scripts/daily_event_gate.mjs'
+      - 'crypto-daily/tests/test_daily_event_gate.mjs'
       - 'crypto-daily/scripts/ci_editorial_receipt.mjs'
       - 'crypto-daily/tests/test_editorial_gate.mjs'
       - '.github/workflows/crypto-daily-editorial-qa.yml'
