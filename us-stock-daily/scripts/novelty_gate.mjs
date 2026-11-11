@@ -24,10 +24,17 @@ export function validateStockNovelty(input){
   if(found){num++;if(Number(found[1])!==num)fail('NUMBERING',section+'/'+found[1]);parsed.push({section,item_number:num,text:found[2]});}
  }
  if(headings.length!==12||headings.some((h,i)=>h!==HEADINGS[i]))fail('WRONG_12_HEADINGS',headings.length);
- // Every preserved heading needs actual numbered substance. The old validation
- // accepted 12 headings with 6 empty sections (2026-11-02 production regression).
+ // Do not force stale news merely to fill 12 headings. Empty is allowed ONLY
+ // with an unnumbered neutral line and actual dated issuer/source receipts.
  for(let i=1;i<=HEADINGS.length;i++){
-  if(!parsed.some(entry=>entry.section===i))fail('EMPTY_STOCK_SECTION',i+':'+HEADINGS[i-1]);
+  if(parsed.some(entry=>entry.section===i))continue;
+  const neutral=report.includes(HEADINGS[i-1]+'\\n无高置信新增。');
+  const reason=(input.empty_section_reasons||[]).find(x=>x.section===i);
+  const all=(input.section_source_receipts||[]).filter(x=>x.section===i);
+  const checked=all.some(x=>x.status==='checked'&&/^https:\\/\\//.test(x.source_url||'')
+      && x.source_original_read===true && Number.isFinite(Date.parse(x.checked_at||'')));
+  if(!(neutral&&String(reason?.reason||'').length>=25&&checked))
+    fail('EMPTY_STOCK_SECTION',i+':'+HEADINGS[i-1]+'/missing_current_source_receipt');
  }
 
  const items=Array.isArray(input.items)?input.items:[];
