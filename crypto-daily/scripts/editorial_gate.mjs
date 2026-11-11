@@ -35,6 +35,28 @@ export function validateEditorial(input, rules) {
     const x=parsed[i],d=declared[i];
     if(!d||d.section!==x.section||d.item_number!==x.item_number||d.text!==x.text)fail('ITEM_MANIFEST_BODY_MISMATCH',i);
   }
+  // 2026-11-11 regression: an old TGE deadline, a previously delivered alert or
+  // an unverified watch/source gap is INTERNAL state, not a numbered daily item.
+  // The manifest must independently establish a new issuer-confirmed action if
+  // it wants to promote an otherwise unresolved rights watch into the report.
+  const rightsName = /\\b(?:SurfBoard|Surf|StandX|Cambria)\\b/i;
+  const replayOnly = /(?:此前已|历史(?:提醒|通知|窗口)|旧(?:提醒|通知|窗口|事件)|已(?:经)?(?:发送|提醒|通知)|同一(?:领取)?窗口|不(?:再)?重复(?:提醒|通知|发)|无(?:实质|明确|高置信)?新增|仍(?:未|在|待|处于)|尚未(?:取得|核实|验证|确认)|无法(?:读取|核实|确认|验证)|SOURCE_GAP|VERIFYING|原帖(?:无法|未能)|个人(?:资格|额度|权益)(?:尚未|仍未|未知|未获))/i;
+  for(let i=0;i<parsed.length;i++){
+    const row=parsed[i];
+    if(!rightsName.test(row.text)||!replayOnly.test(row.text))continue;
+    const decl=declared[i];
+    const ev=(input.events||[]).find(e=>e.event_key===decl?.event_key);
+    const verifiedNewAction=ev?.kind==='TGE_PUBLIC_SALE'
+      && ev?.source_confirmed===true && ev?.no_material_delta!==true
+      && ev?.status==='verified' && ev?.new_action_verified===true
+      && /^https:\\/\\//.test(ev?.issuer_action_source_url||'')
+      && String(ev?.actual_delta||'').length>=25;
+    // Even a valid issuer action does not justify a second non-news item about
+    // a previously emailed deadline or the prior alert's unchanged status.
+    const explicitOld=/此前已|历史(?:提醒|通知)|旧(?:提醒|通知)|已(?:经)?(?:发送|提醒|通知)|同一(?:领取)?窗口|不(?:再)?重复(?:提醒|通知|发)/.test(row.text);
+    if(explicitOld||!verifiedNewAction)fail('RIGHTS_STATUS_REPLAY_WITHOUT_NEW_ACTION',row.section+'/'+row.item_number+':'+(decl?.event_key||'unmanifested'));
+  }
+
   const lanes=rules.full_report.minimum_domain_receipts;
   const receipts=Array.isArray(input.source_receipts)?input.source_receipts:[];
   for(const lane of lanes){
