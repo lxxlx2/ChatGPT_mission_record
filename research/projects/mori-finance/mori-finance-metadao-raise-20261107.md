@@ -1,5 +1,37 @@
 # Mori Finance / MetaDAO curated raise — evidence-first ICO diligence (2026-11-07)
 
+## 2026-11-11 ~17:35 Bangkok: confirmed Mori v0.7 live launch account, exact close, canonical base mint and user funding
+
+**Source classification: direct finalized Solana RPC and MetaDAO user-authenticated official webpage**. Research-only update; this supersedes 2026-11-07 "MORI mint/address unverified" and "sale end unverified" statements. No trade, wallet signature, claim, alert or monitoring created.
+
+### Timestamp, chain contract and escrow (direct RPC)
+
+- **MetaDAO launch program**: `moontUzsdepotRGe5xsfip7vLPTJnVuafqdUWexVnPM`. Mori Launch PDA: **`BFVqq3Br9frUabrdgczu4obJ2TGNzKnys42j2pwrmXGZ`**, deterministically derived with official v0.7 `seeds=[b"launch", base_mint]`; derivation method independently reproduced and checked against previously known SAT Launch PDA. Base mint embedded in Mori program state is **`MoR1whCWjcLiUqAan4GHLRcn8wK4Jktk2DyDryNmeta`**; exact mint also appears in Mori's MetaDAO fundraiser reporting ([MCG Signal primary founder interview](https://mcgsignal.com/feed/mcg-2026-11-09/MoR1whCWjcLiUqAan4GHLRcn8wK4Jktk2DyDryNmeta)).
+- `state=Live`, `unix_timestamp_started=1794250810` (**2026-11-09 19:00:10 UTC / Nov 10 02:00:10 Bangkok**), `seconds_for_launch=345600` (**96 hours**), hence **hard coded scheduled close 1794596410 = Nov 13 19:00:10 UTC / Nov 14 02:00:10 Bangkok**. Actual `unix_timestamp_closed=null` until `CloseLaunch` is successfully executed, which may occur after the deadline; do not confuse scheduled end with confirmed closure. Official MetaDAO announced "4 days", independently corroborating the scheduled window.
+- Snapshot around **Solana slot 468091790** (blockTime **1794393307 / Nov 11 ~17:35 Bangkok**): `minimum_raise_amount=250000 USDC`, `total_committed_amount=6708975.960956 USDC`, `total_approved_amount=0 USDC`, `dao=None`, `dao_vault=None`, `unix_timestamp_completed=None`, `seq_num=249`. State remains Live, no ICO settlement/TGE.
+- Mori quote USDC vault `9uaoJiwyJszXnP8iguE4XH4btcbz4F1BXeN4thAbhK2t`: independent token-account balance `6,708,975.960956 USDC` at slot 468091936. Quote mint is canonical Solana USDC `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`.
+- Mori base MORI vault `9ymW4Ya54jAhoRbRxW7HEUuUPanYvVfg3JcjCEPcN3JH`: independent token-account balance `25,800,000 MORI` at slot 468091938. Base mint SPL Token program `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`, decimals 6, supply **25,800,000** at slot 468091247, mintAuthority `9hop857r4fh8ipL1dpUQxCXLe1aewmSqBhPwCzomP5eU` (matches Launch signer PDA), **freezeAuthority=None**. Current mint authority has not been disabled; no claim of immutable supply. Live total-supply 25.8M does **not** establish currently unlocked/tradable circulating supply, because 25.8M reside in Launch vault.
+- `performance_package_token_amount=12,900,000` raw token units as a future allocation/contract config, `months_until_insiders_can_unlock=18`, `is_performance_package_initialized=false`, `additional_tokens_amount=0`, `has_bid_wall=false`. Performance-based release requires its separate conditions. MetaDAO own page lists 90-day average hurdle, lower bound 630 days etc. These are issuer terms before final launch, not a present team balance unlocked.
+
+### User record (direct Solana RPC)
+
+- FundingRecord PDA using official `seeds=[b"funding_record",launch,funder]`: **`3z651WDFfQb7AzzYizSa8CdCaurP8TSHHTXugUhkWdki`**, funder `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`, launch matches Mori PDA. `committed_amount = 700 USDC` onchain (stronger than previous UI-only evidence), `approved_amount=0` (Live stage default, **not** final zero allocation), `is_tokens_claimed=false`, `is_usdc_refunded=false`. Funding account was read at slot 468091787.
+- Oversubscription on observed gross commitments = approx 26.836× minimum goal; final allocation could differ materially due to aligned allocations, ownership weighting, authority approvals, possible additional commitments, late exclusions etc. Do **not** invent accepted percentage or MORI token count from gross deposits.
+- **Claim/TGE**: Not open at this observation. Official v0.7 `claim.rs` requires `LaunchState::Complete`, `refund.rs` requires `Complete` or `Refunding`. Scheduled fundraise close at Nov 14 02:00:10 Bangkok is not a confirmed spot-trading/claim time. Check `CloseLaunch`, approval and `CompleteLaunch` after that. Mint existing and all escrowed is normal.
+- Verified official account on https://metadao.fi/companies/mori-finance , which shows user's 700 USDC commitment and funding call-to-action still open, $250k sale goal and intended $0.025 price / $645k FDV at goal. No user funding/trading action attempted in this check.
+
+### Direct explorer links
+
+- [MORI official launch PDA](https://solscan.io/account/BFVqq3Br9frUabrdgczu4obJ2TGNzKnys42j2pwrmXGZ)
+- [MORI base mint](https://solscan.io/token/MoR1whCWjcLiUqAan4GHLRcn8wK4Jktk2DyDryNmeta)
+- [MORI token vault](https://solscan.io/account/9ymW4Ya54jAhoRbRxW7HEUuUPanYvVfg3JcjCEPcN3JH)
+- [MORI USDC escrow](https://solscan.io/account/9uaoJiwyJszXnP8iguE4XH4btcbz4F1BXeN4thAbhK2t)
+- [User funding record](https://solscan.io/account/3z651WDFfQb7AzzYizSa8CdCaurP8TSHHTXugUhkWdki)
+- [Official v0.7 Fund instruction and seeds](https://github.com/metaDAOproject/programs/blob/e2ba4e9be712248ae4874f3b0621eaac69376c98/programs/v07_launchpad/src/instructions/fund.rs)
+
+---
+
+
 ## 2026-11-10 participation update: 700 USDC committed on connected MetaDAO UI
 
 **Evidence class: user-provided MetaDAO screenshot plus direct read of the user's connected MetaDAO browser tab; NOT independently verified via Solana RPC in this update.**
