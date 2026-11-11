@@ -1,5 +1,38 @@
 # Forks.wiki / FORK 预 TGE、可领取性、链与安全尽调（2026-11-10）
 
+
+## 2026-11-11 deeper chain forensic: #308 claim rank, exact collector provenance, fee history, unrelated token mints
+
+**Independent evidence:** Alchemy Solana finalized RPC; publicly versioned \`forkwiki/fork\` GitHub; user's authenticated claim page and official X. Research only, no wallet transactions or automation.
+
+### Link between claim collection wallet and public treasury, confirmed
+
+1. The collection wallet's **first-ever signature** [Tme3YTx...](https://solscan.io/tx/Tme3YTx2RASmWD18VfAxTTD77T4kqx18u7DV3ucFH8fPLBnSSn6ferf2DqqNbUhkJQPSM5Dv2GZ35w8KArh92hq), slot \`467805824\`, **2026-11-10 17:32:56 UTC / Nov 11 00:32:56 Bangkok** was signed by public config treasury \`61468ik7HhYNg8ixQYeF9caMNVm57PqTy3tyQ28F6Y5e\` and **sent exactly 0.15 SOL to \`Da71cES3NeUMLpW3MuNGkCVTht3jceik1RtNLrbqC6jV\`**. Receiver balance prior = 0, after = 0.15 SOL. This is a direct, strong operational link previously missed.
+2. Only **86 seconds later**, [tx 3mrTo8...](https://solscan.io/tx/3mrTo8Tg51J5HgsWmJb8hPjLmyMjLCJ8r6h1UK3zmY5HNnE2jUe5LSGk91z9UJ4YRMzbuTHcVmVtwUY1ympmph5E) at 2026-11-10 17:34:22 UTC **has this collection wallet as transaction signer** and calls pump.fun \`UpdateFeeSharesV2\`, \`DistributeCreatorFeesV2\`; involved Mint \`HTaBmiNnLkMZEcgmpAFU76LG3akLKPSfJxfXu3pffork\` with onchain Token-2022 metadata \`doge / DOGEP\`. This wallet participates in real pump.fun development/fee collection operations, **not** merely an unknown third-party payment wallet.
+3. Solana account data: collector \`owner=11111111111111111111111111111111\` / \`executable=false\` / \`space=0\`, verified on-curve and independently observed signing. **Not a deployed custom program or claim escrow**. Fee collector recorded ~**9.768090614 SOL** at finalized slot \`468163312\`; this is a mixed operational wallet balance including creator-fee distributions and user claim payments, **not proof of an airdrop reserve, a tally of paid fees, or 308 claim users**.
+
+### Queue #308 versus actual payments
+
+- User exact fee tx: [21HaGm...](https://solscan.io/tx/21HaGmHa9suUiXpfee4TYUQ1Bn8yA4MjUoAYDMwNLc3vZp97W9DqL68WJzBKPhuq3SsjgDHkofG2RmM5n5KNFUux), 2026-11-11 14:23:48 UTC. 0.002 SOL transferred to collection wallet; 0.000011 SOL separate chain fee; no token approval, custom token/claim program or claim-state receipt in transaction. User's queue \`#308\` and 12,600 FORK are only website-server fields.
+- I paginated **all 145 receiving-wallet signatures before the user's transaction back to the first transaction**: **only 7** prior signatures had the exact memo \`forks.wiki $FORK claim fee\`; the other 138 involved mostly pump.fun trade/fee activities, including \`SweepCreatorFee\` and \`DistributeCreatorFees\`. Hence **#308 cannot be proven as payment sequence number for this address and memo**; it may instead be a backend reservation queue, different payment route, or other design. The data do NOT establish the rank is fabricated, nor provide an external way to audit it.
+- Six of those seven prior fee-memo payments were \`0.002 SOL\`; an older [payment dZqU...](https://solscan.io/tx/dZqUAPss9F4TgXhpMpmnt6FuTUFtBacN97TtxNPZ2DVKd9jzeTwBNCz3zy3pzFPEndujvBDgKHo765oHqTxJu74) from 2026-11-11 12:37:47 UTC with the **same exact memo** transferred **0.02 SOL**, 10× the user amount. Pricing policy, test transaction vs separate tier are **UNCONFIRMED**; do not infer a particular explanation. Additional 155 same-memo receiving-wallet signatures were observed from 2026-11-11 14:30:52 through 14:52:34 UTC in a 180-signature sample, proving continued fee receipts, not successful token payouts.
+- Onchain receipt does not store a 308 index, distribution commitment, frozen Merkle root, 12,600-token claim entitlement or payout enforceability. Website still reported \`0 of 0 wallets sent\`. The current /claim queue/fee backend and fee address **do not appear in the public GitHub main** (last known SHA \`f807abf...\`, Nov 6); no live production backend or JavaScript/network-source audit was possible in read-only Browser. This is a material verification gap.
+
+### Exclude other pump.fun mints from official FORK
+
+- Direct Token-2022 mint reads, metadata extracted from raw account bytes:
+  - \`DSjhrziLzcFcVQZnK8fXxkMbYYo4KN51MT5Aqvy7fork\`: metadata symbol \`HIGHIQP\`, not \`FORK\`.
+  - \`BPHH5U39dbgts1fbCvLjEvSJ8tfeq3nihK8hrHWifork\`: metadata \`MEOW CAT / MEOWP\`.
+  - \`HTaBmiNnLkMZEcgmpAFU76LG3akLKPSfJxfXu3pffork\`: metadata \`doge / DOGEP\`.
+  - \`3UuwDcYf3Q5SjNoxhUrXAR24PTH8A1KpG5ywxaCm3crH\` held by public treasury: metadata \`dogecoin / DOGECOINP\`.
+- **None of these checked mints is official $FORK.** A \`fork\` vanity suffix is not a canonical issuer Mint. Public \`src/config.js\` \`token.ca:''\`; issuer X bio says \`CA: not live yet\`; issuer announced approx TGE 2026-11-12 01:20 Bangkok, **schedule not onchain execution**. No independently verified official mint, FORK token custody, distributor, ERC/SPL entitlement, or user payout transfer at this observation.
+
+### Updated assessment
+
+Fee wallet attribution upgraded from \`UNKNOWN_UNLINKED\` to **\`TREASURY_FUNDED_ACTIVE_PUMP_SIGNER\`**. This reduces concern that the receiver is completely unrelated to the official platform. It **does not** establish rank #308, code security of production distribution, token launch completion or future credit to user. User's one-time signing transaction has no dangerous ongoing approvals, but token delivery is still dependent on operator's later decisions. **No additional fees, no paid meme launch solely to unlock remaining 12,600, no trading of imitations until canonical Mint and actual transfers are verified.**
+
+---
+
 ## 2026-11-11 ~21:24–21:30 Bangkok: wallet claim-fee safety verification, OFFCHAIN_QUEUE_ONLY, no official FORK mint
 
 **Current evidence priority:** direct Alchemy Solana finalized RPC > authenticated forks.wiki live /claim and first-party @wikifork X post > old public fork GitHub source. No token sale, token claim, wallet signing, monitoring, notification or automation performed by this investigation.
@@ -14,8 +47,8 @@
 - Successfully finalized user fee transaction [Solscan](https://solscan.io/tx/21HaGmHa9suUiXpfee4TYUQ1Bn8yA4MjUoAYDMwNLc3vZp97W9DqL68WJzBKPhuq3SsjgDHkofG2RmM5n5KNFUux), slot **468155590**, timestamp **2026-11-11 14:23:48 UTC / 21:23:48 Bangkok**, `meta.err=null`.
 - Parsed instructions: ComputeBudget x2, **SystemProgram.transfer** `2,000,000 lamports = 0.002 SOL` from user wallet `BP7h…4dSp` to **`Da71cES3NeUMLpW3MuNGkCVTht3jceik1RtNLrbqC6jV`**, and Memo `forks.wiki $FORK claim fee`. Network transaction fee `11,000 lamports=0.000011 SOL`. Exact native wallet prebalance 55,849,243 -> postbalance 53,838,243 lamports, net decrease **0.002011 SOL**. No inner instructions, SPL token program invocation, approve, delegate, setAuthority, native program invoke to an untrusted dApp. **NARROW wallet-signature finding: no ongoing/token-spending approval granted by this transaction; no guarantee other site interactions are safe.**
 - Verified independent OTHER wallet payment [example](https://solscan.io/tx/3TjUrJLbDRcJ6cRCBrCmSubD1EfRozTXo1HX6fTBTpQRRtHANrLX1dPZn2G5Dera9zRUC2Bf4QpnsFkuGtsNHMr) transfers **another 0.002 SOL with same memo to same recipient**. The recipient is a **System Program owned basic account** (not a Solana smart contract / escrow). Its observed balance at slot 468156442 was **9.381677141 SOL**, which does **not** mean SOL is reserved for air drops or that all money came from claim fees.
-- **MATERIAL INTEGRITY MISMATCH**: fee receiving address `Da71cES3NeUMLpW3MuNGkCVTht3jceik1RtNLrbqC6jV` is **different** from publicly versioned `forkwiki/fork` `src/config.js` claimed `launch.treasury: '61468ik7HhYNg8ixQYeF9caMNVm57PqTy3tyQ28F6Y5e'`. Whether both are controlled by the same team is UNKNOWN. The current website Claim-specific paid fee code/receipt server is **absent from the Nov 6 source**; this audit could not verify deployment-to-source parity or recipient ownership. Treat claim charges as an **unsecured payment to an unverified payee**, not a contractual deposit or onchain claimable entitlement. Avoid accusing of confirmed theft without evidence.
-- Risk assessment: **wallet-transaction authorization LOW for this exact signed transfer**, **project counterparty/distribution risk HIGH/UNVERIFIED**, **site source-code/treasury integrity significant WARNING**; no official/chain backed redemption proven.
+- **CORRECTED RECIPIENT IDENTITY**: the claim wallet `Da71cES3NeUMLpW3MuNGkCVTht3jceik1RtNLrbqC6jV` differs from the public GitHub launch.treasury `61468ik7HhYNg8ixQYeF9caMNVm57PqTy3tyQ28F6Y5e`, **but direct onchain funding and pump.fun signing now STRONGLY VERIFY their operational association**: treasury funded 0.15 SOL to fee wallet, which immediately signed pump.fun fee sharing. Human ownership is still unverified. The website Claim-specific backend remains absent from public Nov 6 code; no contract-escrowed FORK entitlement exists in the inspected user transaction. See newer forensic section above.
+- Risk assessment: **wallet-transaction authorization LOW for this exact signed transfer**, **project distribution/issuer counterparty risk HIGH/UNVERIFIED**, **production claim and queue implementation NOT AUDITED**. Fee receiver is strongly chain-linked to public treasury, while delivery remains unsecured and official FORK Mint unverified.
 - User recommendation: **DO NOT pay another fee, do not launch a coin or buy a homonymous FORK to unlock the remaining 12,600**, until issuer links the exact mint and a traceable payout batch from identified operator wallet. Confirm claimed queue 308 only in site ledger; actual payout requires real SPL token `Transfer` from attributable distributor to recipient mint-associated wallet. A "Paid"/"Claimed" badge is not delivery.
 
 ### Evidence/source links
