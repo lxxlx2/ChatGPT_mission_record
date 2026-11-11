@@ -1642,7 +1642,7 @@ async function loadClusterNarrativeSupplement(report) {
     typeof record.summary==='string' && record.summary.trim().length>0 && [...record.summary].length<=800 &&
     !/[\p{Cc}\p{Cf}\p{Cs}]/u.test(record.summary) &&
     published!==null && captured!==null && published<=captured && captured<=Date.now()+60000 &&
-    typeof report.observed_at==='number' && Number.isFinite(report.observed_at) && report.observed_at>0 && captured/1000>=report.observed_at;
+    typeof report.observed_at==='number' && Number.isFinite(report.observed_at) && report.observed_at>0;
   if (!valid) return withheld();
   const when=value=>new Date(value).toLocaleString('zh-CN');
   node.innerHTML='<strong>浏览器核对补证 · 账号自述</strong><p>'+esc(record.summary)+'</p>'+

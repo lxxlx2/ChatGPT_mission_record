@@ -1350,7 +1350,7 @@ for(const action of ['latest','history','selected']) test('browser narrative sup
   assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
 });
 
-for(const change of ['job','mint','source','hash','source_hash','author','verified','extra_verified','future','before_report','invalid_date','control','format','newline','surrogate','oversize']) test('browser narrative supplement rejects unbound or unverified data '+change,async()=>{
+for(const change of ['job','mint','source','hash','source_hash','author','verified','extra_verified','future','published_after_capture','invalid_date','control','format','newline','surrogate','oversize']) test('browser narrative supplement rejects unbound or unverified data '+change,async()=>{
   const report=supplementReport(),record=supplementRecord(report,'SHOULD_NOT_BE_DISPLAYED');
   if(change==='job') record.job_id='b'.repeat(32);
   if(change==='mint') record.mint='33333333333333333333333333333333';
@@ -1361,7 +1361,7 @@ for(const change of ['job','mint','source','hash','source_hash','author','verifi
   if(change==='verified') record.official_recognition='VERIFIED';
   if(change==='extra_verified') record.interaction_verified=true;
   if(change==='future') record.captured_at_utc=new Date(Date.now()+120000).toISOString();
-  if(change==='before_report') record.captured_at_utc=new Date((report.observed_at-1)*1000).toISOString();
+  if(change==='published_after_capture') record.published_at_utc=new Date(Date.parse(record.captured_at_utc)+1000).toISOString();
   if(change==='invalid_date') record.published_at_utc='2026-02-30T00:00:00Z';
   if(change==='control') record.summary+='\u0000';
   if(change==='format') record.summary+='\u202e';
@@ -1485,4 +1485,17 @@ test('Top20 context conflict visibly withholds a trusted ratio',()=>{
   report.coverage.snapshot_consistent=false;
   h.context.renderClusterReport(report);
   assert.match(h.element('cluster-coverage').innerHTML,/Top20 账户身份、精度或同 slot 金额未通过核对；相关精确比例已撤下/);
+});
+
+
+for(const secondsBeforeReport of [1,300,86400]) test('browser narrative retains a true read '+secondsBeforeReport+' seconds before the report',async()=>{
+  const report=supplementReport(),record=supplementRecord(report,'READ_BEFORE_CHAIN_REPORT');
+  record.captured_at_utc=new Date((report.observed_at-secondsBeforeReport)*1000).toISOString();
+  record.published_at_utc=new Date(Date.parse(record.captured_at_utc)-60000).toISOString();
+  const original=JSON.stringify(record),h=await supplementHarness(record,'latest',report);
+  const html=h.element('cluster-narrative-supplement').innerHTML;
+  assert.match(html,/READ_BEFORE_CHAIN_REPORT/);
+  assert.ok(html.includes(new Date(record.captured_at_utc).toLocaleString('zh-CN')));
+  assert.equal(JSON.stringify(record),original);
+  assert.match(html,/CA 官方归属、人物互动和最早起源仍未核实/);
 });

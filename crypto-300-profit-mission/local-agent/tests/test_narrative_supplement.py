@@ -129,7 +129,7 @@ def test_missing_note_is_unrecorded_without_creating_directories(saved):
     ('published_at_utc', '2026-10-03T22:06:32+01:00'),
     ('published_at_utc', '2026-10-03T22:06:32-00:00'),
     ('published_at_utc', utc(NOW + 100)),
-    ('captured_at_utc', utc(NOW + 61)), ('captured_at_utc', utc(NOW - 61)),
+    ('captured_at_utc', utc(NOW + 61)), ('captured_at_utc', utc(NOW - 1001)),
 ])
 def test_invalid_record_withholds_claim_instead_of_echoing_data(saved, field, value):
     record = dict(saved.record)
@@ -260,3 +260,17 @@ def test_actual_get_handler_performs_no_collection_db_access_or_file_writes(save
     assert request(saved)[0] == 200
     after = {str(p.relative_to(saved.control)): p.read_bytes() for p in saved.control.rglob('*') if p.is_file()}
     assert before == after
+
+
+@pytest.mark.parametrize('seconds_before_report', [1, 300, 86400])
+def test_true_browser_read_before_report_remains_bound_and_preserves_time(saved, seconds_before_report):
+    captured = saved.report['observed_at'] - seconds_before_report
+    record = dict(saved.record, published_at_utc=utc(captured - 60), captured_at_utc=utc(captured))
+    write_note(saved, record)
+    before = (saved.folder / (JOB + '.json')).read_bytes()
+    status, result = request(saved)
+    assert status == 200 and result['status'] == 'BROWSER_OBSERVED_ACCOUNT_CLAIM'
+    assert result['captured_at_utc'] == record['captured_at_utc']
+    assert result['report_sha256'] == saved.digest
+    assert result['official_recognition'] == result['interaction_status'] == result['earliest_origin'] == 'UNVERIFIED'
+    assert (saved.folder / (JOB + '.json')).read_bytes() == before

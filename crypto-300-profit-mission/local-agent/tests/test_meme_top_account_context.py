@@ -125,3 +125,22 @@ def test_nested_rankings_withdraw_only_the_conflicting_bank(rank_slot):
         assert nested['status'] == 'COMPLETE_SNAPSHOT'
         assert nested['metrics']['GLOBAL_OWNER_TOP10_PCT'] == '100.0000'
         assert nested['raw_balance_check']['full_positive_mass_reconciled'] is True
+
+
+@pytest.mark.parametrize('stage', ['token', 'owner'])
+@pytest.mark.parametrize('payload', [None, {'unexpected': 'shape'}, 'invalid', []])
+def test_unavailable_batch_has_one_original_shape_reason(stage, payload):
+    a = analyzer();call = a.rpc.call
+    target = ACCOUNT if stage == 'token' else OWNER
+    def unavailable(method, params, ttl=0):
+        if method == 'getMultipleAccounts' and params[0] == [target]:
+            return {'context': {'slot': 100}, 'value': payload}
+        return call(method, params, ttl)
+    a.rpc.call = unavailable
+    report = a.analyze()
+    prefix = 'TOKEN_ACCOUNT' if stage == 'token' else 'OWNER_METADATA'
+    suffix = 'LENGTH_INVALID' if isinstance(payload, list) else 'INVALID'
+    assert report['coverage']['top_account_context_errors'] == [
+        {'reason': prefix + '_BATCH_' + suffix, 'snapshot_slot': 100}]
+    assert report['coverage']['snapshot_consistent'] is False
+    assert all(value == 'UNRESOLVED' for key, value in report['metrics'].items() if key.endswith('_PCT'))

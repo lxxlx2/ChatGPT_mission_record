@@ -96,11 +96,12 @@ def _validate(record, report, report_sha256, now):
     allowed = {row.get('source_url') for row in rows if isinstance(row, dict) and isinstance(row.get('source_url'), str)} if isinstance(rows, list) else set()
     if url not in allowed:
         raise ValueError('NOTE_SOURCE_NOT_IN_REPORT')
+    # A real browser read may precede or follow the chain report. Exact report
+    # hash/source binding is independent of publication -> capture chronology.
     published = _utc_timestamp(record['published_at_utc'])
     captured = _utc_timestamp(record['captured_at_utc'])
-    observed = report['observed_at']
     if (isinstance(now, bool) or not isinstance(now, (int, float)) or not math.isfinite(now)
-            or not published <= captured <= now + 60 or captured < observed):
+            or not published <= captured <= now + 60):
         raise ValueError('NOTE_TIME_ORDER_INVALID')
 
 

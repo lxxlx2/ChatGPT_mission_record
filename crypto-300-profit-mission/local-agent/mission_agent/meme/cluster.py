@@ -972,7 +972,8 @@ class WalletClusterAnalyzer:
     def _accounts(self,addresses):
         r=self.rpc.call("getMultipleAccounts",[addresses,{"encoding":"jsonParsed","commitment":"finalized"}],ttl=60)
         self._snapshot_slots.setdefault("account_batches",[]).append((r or {}).get("context",{}).get("slot"))
-        return (r or {}).get("value") or []
+        # Preserve an unavailable/non-list value for the caller's shape audit.
+        return (r or {}).get("value")
     def holders(self):
         self._snapshot_slots={}
         self._top_account_context_errors=[]
@@ -1009,7 +1010,7 @@ class WalletClusterAnalyzer:
                    and type(largest_slot) is int and largest_slot==account_slot)
         if not isinstance(infos,list):
             reject(None,"TOKEN_ACCOUNT_BATCH_INVALID",account_slot);infos=[]
-        if len(infos)!=len(tas):reject(None,"TOKEN_ACCOUNT_BATCH_LENGTH_INVALID",account_slot)
+        elif len(infos)!=len(tas):reject(None,"TOKEN_ACCOUNT_BATCH_LENGTH_INVALID",account_slot)
         owners=[];temp=[]
         for row,info in zip(top,infos):
             if info is None:continue
@@ -1032,7 +1033,7 @@ class WalletClusterAnalyzer:
         owner_infos=self._accounts(unique_owners) if owners else []
         if not isinstance(owner_infos,list):
             reject(None,"OWNER_METADATA_BATCH_INVALID",self._snapshot_slots["account_batches"][-1]);owner_infos=[]
-        if len(owner_infos)!=len(unique_owners):reject(None,"OWNER_METADATA_BATCH_LENGTH_INVALID",self._snapshot_slots["account_batches"][-1])
+        elif len(owner_infos)!=len(unique_owners):reject(None,"OWNER_METADATA_BATCH_LENGTH_INVALID",self._snapshot_slots["account_batches"][-1])
         owner_map={o:i for o,i in zip(unique_owners,owner_infos)}
         result=[]
         for row,owner,raw in temp:
