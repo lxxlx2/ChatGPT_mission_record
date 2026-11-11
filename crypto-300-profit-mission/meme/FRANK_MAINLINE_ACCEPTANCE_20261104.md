@@ -1,5 +1,18 @@
 # Frank 原问题统一验收（2026-11-04）
 
+## 最新维护验收：2026-11-11
+
+本节及[固定SHA机器回执](./evidence/frank-narrative-top20-local-20261111.json)为当前状态；下方历史执行记录保留当时身份。PR220当前并已安装产品`0b966ab459b775bc58c77427c1dbcb491f2d9bf8`，parent`7aaf96a1524a9c6ae26749dae80a945097ac111e`，base`4fdf2238a4db2347975689913e49142b760dc091`。本轮仅既有Dashboard原8766更新和私有叙事补证安装，Scanner未重启、Loop未加载，真实RPC/CA POST0。
+
+修复一个已复现的来源后备缺陷：旧版接受错误Mint、同slot Largest100/parsed900并标一致快照，输出互相矛盾的10%/90%比例。父版同18项用例15失败/3通过，新版18项通过；错误账户、精度、程序、状态及同slot矛盾拒绝，相关比例撤下，同slot嵌套排名降级，异slot余额观察保持有限样本。未增加逻辑RPC或wire预算。
+
+原帖浏览补证已在正式Chrome显示完整LLM/网页爬虫叙事、作者、帖子时间及Nov10实际浏览时间，账号计划与实证结果区分；精确DONE任务/原报告hash/原引用URL绑定。官方认领、人物实际互动和最早起源仍UNVERIFIED，原始报告和旧报告不补造。Chrome原IDGET、刷新、视图往返和旧报告无空卡/无借用通过，页面留开并存截图。
+
+本机固定HEAD374 Python/217 Node通过；Nov10真实捕获2次各978读取严格业务报告等值，752观察保留20/压缩732/11身份核对不变。Push CI [42946511699](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/42946511699)和PR CI [42946518503](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/42946518503)均2253 Python/4skip、217 Node、42合成浏览器检查成功；PR生成测试合并SHA`502a37d01df7d6bdd013ec7f52e847d88b7ce7be`，不是执行了Git合并。CI不是Mac或新来源验收。
+
+固定已发布执行器`c84181775c1893d0ac4f43a8062854609b704d2a`在492旧源码文件、46报告、3 SQLite一致备份/完整性/FK、13保护哈希与旧新实际Handler无监听预检后，仅重载Dashboard。切换后再次核对46报告和13保护哈希不变、四个原任务/F01/D1/D2通过，Scanner仍LIVE/无漂移/0错误。回滚未实操。本轮代码/离线/本地Chrome为PASS，完整CA原需求仍PARTIAL，GPA429、完整历史/特殊身份/独立受控快照/代表样本仍受真实证据阻断；原10月归因按用户取消。INVEST_NO_GO / TRADE_NO_GO保持。
+
+
 当前已安装产品源码：`7aaf96a1524a9c6ae26749dae80a945097ac111e`；父提交`2c512081708f78291021b5635a30480c5004b827`；保留策略实现基线`fd5dddd5f664703b612f7736f5483bb355f971c1`。当前状态见[STATUS](./STATUS.md)，最新证据见[Nov10新版真实验收回执](./evidence/frank-ca-live-retention-20261110.json)。产品源码与部署版本本轮未变；已从正式Chrome补齐新鲜真实任务/新保留统计验收，下方旧SHA/数据保留原阶段身份。
 
 当前范围：2026-11-10用户已取消原10月故障归因；该项从当前剩余任务和完成条件移除。以下历史段落保留其当时状态，不构成本轮阻断。
