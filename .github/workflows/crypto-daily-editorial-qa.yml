@@ -8,6 +8,8 @@ on:
       - 'crypto-daily/scripts/editorial_gate.mjs'
       - 'crypto-daily/scripts/daily_event_gate.mjs'
       - 'crypto-daily/tests/test_daily_event_gate.mjs'
+      - 'airdrop-tge-monitor/scripts/action_gate.mjs'
+      - 'airdrop-tge-monitor/tests/test_action_gate.mjs'
       - 'crypto-daily/scripts/ci_editorial_receipt.mjs'
       - 'crypto-daily/tests/test_editorial_gate.mjs'
       - '.github/workflows/crypto-daily-editorial-qa.yml'
@@ -35,7 +37,7 @@ jobs:
           node-version: '22'
       - name: Offline program regressions
         run: |
-          node --test crypto-daily/tests/test_editorial_gate.mjs crypto-daily/tests/test_daily_event_gate.mjs crypto-daily/tests/test_arkham_primary_discovery.mjs
+          node --test crypto-daily/tests/test_editorial_gate.mjs crypto-daily/tests/test_daily_event_gate.mjs crypto-daily/tests/test_arkham_primary_discovery.mjs airdrop-tge-monitor/tests/test_action_gate.mjs
       - name: Evaluate changed daily manifests against checked-in rules
         env:
           PUSH_BEFORE: ${{ github.event.before }}
