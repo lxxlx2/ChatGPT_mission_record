@@ -55,6 +55,25 @@ export function validateStockNovelty(input){
       (xr.status==='PUBLIC_ORIGINAL_LOOKUP'&&!/^https:\/\//.test(xr.fallback_url||''))||
       (xr.status==='SOURCE_GAP'&&!xr.error))
    fail('X_SOURCE_PROVENANCE_MISSING','scheduled_runtime_source_receipt');
+ // Strict source dedupe precondition. A mere arbitrary length of 7 strings is
+ // insufficient; every prior calendar day must be represented uniquely and
+ // must precede this report date. Gmail Sent, or verified Git canonical when
+ // Gmail is temporarily unavailable, supplies the actual body reviewed.
+ const reportDate=String(input.report_date||'');
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(reportDate))fail('INVALID_REPORT_DATE',reportDate||'missing');
+ const checkedDays=Array.isArray(input.previous_days_checked)?input.previous_days_checked:[];
+ const distinct=new Set(checkedDays);
+ const expectedDays=[];
+ if(/^\d{4}-\d{2}-\d{2}$/.test(reportDate)){
+  const pivot=Date.parse(reportDate+'T00:00:00Z');
+  if(Number.isFinite(pivot))for(let n=7;n>=1;n--)expectedDays.push(new Date(pivot-n*86400000).toISOString().slice(0,10));
+ }
+ if(checkedDays.length!==7||distinct.size!==7||expectedDays.some(d=>!distinct.has(d)))
+  fail('PREVIOUS_SEVEN_SENT_DAYS_NOT_PROVEN','requires_actual_7_consecutive_prior_day_Gmail_Sent_or_verified_Git_canonicals');
+ const noValueOld=/(?:此前已(?:提醒|发送|通知)|历史(?:提醒|已发|窗口)|同一(?:旧|领取)窗口|不再重复(?:提醒|发送)|没有(?:新|实质)变化|无(?:实质|高置信)新增|只是(?:旧|已有)消息|仍在(?:监控|等待核实)|SOURCE_GAP|QA_FAIL|Gmail Sent|Git(?:Hub)?(?:归档|回读|提交)|自动化(?:故障|恢复|执行)|运行(?:日志|状态|失败)|补发(?:记录|流程))/i;
+ for(const row of parsed){
+  if(noValueOld.test(row.text))fail('NO_VALUE_OLD_NEWS_IN_NUMBERED_ITEM',row.section+'/'+row.item_number);
+ }
  const count=new Map(),history=Array.isArray(input.previous_events)?input.previous_events:[];
  for(let i=0;i<parsed.length;i++){
   const item=items[i],line=parsed[i];
@@ -80,8 +99,25 @@ export function validateStockNovelty(input){
    continue;
   }
   if(ev.kind===legitCalendar){
-   const upcoming=/^\d{4}-\d{2}-\d{2}/.test(ev.calendar_date||'');
-   if(!upcoming||count.get(ev.event_key)!==1)fail('CALENDAR_NO_VERIFIED_DATE',ev.event_key);
+   const date=String(ev.calendar_date||'').slice(0,10);
+   const dated=/^\d{4}-\d{2}-\d{2}$/.test(date);
+   const daysAhead=dated&&/^\d{4}-\d{2}-\d{2}$/.test(reportDate)
+     ? Math.round((Date.parse(date+'T00:00:00Z')-Date.parse(reportDate+'T00:00:00Z'))/86400000)
+     : Number.NaN;
+   if(!dated||!Number.isFinite(daysAhead)||daysAhead<0||daysAhead>3||count.get(ev.event_key)!==1)
+     fail('CALENDAR_NO_CURRENT_72H_ACTION',ev.event_key+'/'+date);
+   if(prev.some(x=>x.material_version===ev.material_version))
+     fail('CALENDAR_REPEATED_WITHOUT_NEW_VERSION',ev.family_key);
+   else if(prev.length){
+     const proof=ev.novelty_proof;
+     const valid=proof&&prev.some(x=>x.material_version===proof.previous_material_version)
+       && String(proof.changed_field||'').length>=4
+       && String(proof.old_value||'')!==String(proof.new_value||'')
+       && /^https:\/\//.test(proof.evidence_url||'')
+       && String(proof.evidence_published_at||'').length>=10
+       && items.some(x=>x.event_key===ev.event_key&&x.text.includes(String(proof.new_value||'')));
+     if(!valid)fail('CALENDAR_REPLAY_WITHOUT_ACTION_DELTA',ev.family_key);
+   }
    continue;
   }
   if(prev.some(x=>x.material_version===ev.material_version)){fail('REPEATED_FAMILY_VERSION',ev.family_key);continue;}
@@ -96,8 +132,6 @@ export function validateStockNovelty(input){
     && items.some(x=>x.event_key===ev.event_key&&String(x.text||'').toLowerCase().includes(String(proof.new_value).trim().toLowerCase()));
   if(!valid)fail('NO_NEW_FACT_FOR_OLD_STORY',ev.family_key);
  }
- if(!Array.isArray(input.previous_days_checked)||input.previous_days_checked.length<7)
-   warnings.push('PREVIOUS_SEVEN_SENT_DAYS_NOT_PROVEN');
  return {passed:errors.length===0,errors,warnings,
   metrics:{sections:headings.length,numbered_items:parsed.length,event_families:byKey.size,prior_observations:history.length}};
 }
