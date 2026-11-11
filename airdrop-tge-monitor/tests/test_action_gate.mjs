@@ -10,7 +10,7 @@ const base=()=>{
   checked_at:'2026-10-28T12:00:00Z',event_effective_at:'2026-10-29T15:00:00Z',
   issuer_tge_time_verified:true,new_action_verified:true,user_rights_relevance:true,
   user_eligibility:'UNKNOWN'};
- const receipt={project_id:'cambria',status:'checked',evidence_tier:'A',
+ const receipt={project_id:'cambria',event_key:c.event_key,family_key:c.family_key,material_version:c.material_version,status:'checked',evidence_tier:'A',
   original_read:true,issuer_identity_verified:true,source_url:c.source_url,
   checked_at:c.checked_at,source_published_at:c.source_published_at,
   actual_status_text:'The original issuer establishes a current actionable TGE milestone and token distribution time.'};
@@ -28,7 +28,7 @@ test('SurfBoard original claim old already-delivered stable family is silent',()
  c.event_type='CLAIM';c.stage='CLAIM_ACTION';c.source_url='https://asksurf.ai/blog/en/surfboard-nft-launch';
  c.checked_at='2026-11-11T12:00:00Z';c.deadline_at='2026-11-13T23:59:00Z';
  c.official_claim_portal_verified=true;c.action_currently_open=true;
- x.source_receipts[0]={...x.source_receipts[0],project_id:'surf',source_url:c.source_url,checked_at:c.checked_at};
+ x.source_receipts[0]={...x.source_receipts[0],project_id:'surf',event_key:c.event_key,family_key:c.family_key,material_version:c.material_version,source_url:c.source_url,checked_at:c.checked_at};
  x.delivered_events=[{family_key:c.family_key,material_version:c.material_version,delivered:true,gmail_id:'1a13e676f3e4e04d'}];
  assert.ok(validateTgeAction(x).errors.includes('ALREADY_DELIVERED_SAME_VERSION'));
 });
@@ -36,7 +36,7 @@ test('StandX DUSD claim mirrored-only statement stays internal unverified',()=>{
  const x=base(),c=x.candidate;c.project_id='standx';c.event_key='standx:dusd_claim_window_open:2026-11';
  c.family_key='standx:dusd_claim_window_open';c.evidence_tier='D';
  c.issuer_original_read=false;c.source_url='https://thirdparty.example/standx-mirror';
- x.source_receipts=[{...x.source_receipts[0],project_id:'standx',source_url:c.source_url,
+ x.source_receipts=[{...x.source_receipts[0],project_id:'standx',event_key:c.event_key,family_key:c.family_key,material_version:c.material_version,source_url:c.source_url,
   evidence_tier:'D',original_read:false,actual_status_text:'Mirror asserts a claim; original issuer post inaccessible'}];
  assert.equal(validateTgeAction(x).eligible,false);
  assert.ok(validateTgeAction(x).errors.includes('DISCOVERY_ONLY_NOT_ACTION'));
@@ -76,4 +76,25 @@ test('batch search and unread original cannot claim source covered',()=>{
 });
 test('real original issuer receipt with date and readable status is checked',()=>{
  assert.equal(classifySourceReceipt(base().source_receipts[0]),'CHECKED_ORIGINAL');
+});
+
+test('old issuer source cannot validate a different new claim event',()=>{
+ const x=base();x.candidate.event_key='cambria:rsgp-new-claim:2026-11-11';
+ x.candidate.family_key='cambria:rsgp-new-claim';
+ x.candidate.material_version='new-claim-2026-11-11';
+ x.candidate.event_type='CLAIM';x.candidate.stage='CLAIM_ACTION';
+ x.candidate.official_claim_portal_verified=true;x.candidate.action_currently_open=true;
+ const r=validateTgeAction(x);
+ assert.equal(r.eligible,false);
+ assert.ok(r.errors.includes('ISSUER_RECEIPT_NOT_BOUND_TO_CANDIDATE_VERSION'));
+});
+test('first-party homepage for same project cannot replace event-specific original',()=>{
+ const x=base();
+ x.source_receipts[0].source_url='https://cambria.gg/';
+ const r=validateTgeAction(x);
+ assert.ok(r.errors.includes('ISSUER_RECEIPT_NOT_BOUND_TO_CANDIDATE_VERSION'));
+});
+test('same exact rights event with official source remains eligible',()=>{
+ const x=base(),r=validateTgeAction(x);
+ assert.equal(r.eligible,true,JSON.stringify(r.errors));
 });
