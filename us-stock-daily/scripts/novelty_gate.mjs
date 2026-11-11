@@ -77,6 +77,29 @@ export function validateStockNovelty(input){
  }
  if(checkedDays.length!==7||distinct.size!==7||expectedDays.some(d=>!distinct.has(d)))
   fail('PREVIOUS_SEVEN_SENT_DAYS_NOT_PROVEN','requires_actual_7_consecutive_prior_day_Gmail_Sent_or_verified_Git_canonicals');
+ // A list of seven dates is a claim, not evidence that those full prior
+ // reports were actually reviewed. Each day needs an independently traceable
+ // Gmail Sent message or the unique canonical Git body readback.
+ const readbacks=Array.isArray(input.previous_day_receipts)?input.previous_day_receipts:[];
+ const byDay=new Map();
+ for(const receipt of readbacks){
+   if(!receipt||!/^\\d{4}-\\d{2}-\\d{2}$/.test(String(receipt.date||'')))continue;
+   if(byDay.has(receipt.date))fail('DUPLICATED_PRIOR_REPORT_RECEIPT',receipt.date);
+   byDay.set(receipt.date,receipt);
+ }
+ if(readbacks.length!==7||expectedDays.some(d=>!byDay.has(d)))
+   fail('SEVEN_DAY_BODY_READBACK_RECEIPTS_MISSING','requires_7_real_prior_edition_evidence');
+ for(const day of expectedDays){
+   const r=byDay.get(day);
+   if(!r)continue;
+   const validSource=r.source==='GMAIL_SENT' || r.source==='GIT_CANONICAL';
+   const validIdentifier=r.source==='GMAIL_SENT'
+      ? /^[0-9a-f]{10,}$/i.test(String(r.gmail_message_id||'')) && r.sent_readback===true
+      : /^[0-9a-f]{40}$/i.test(String(r.git_blob_sha||'')) && r.canonical_readback===true;
+   if(!validSource||!validIdentifier||r.full_body_reviewed!==true)
+     fail('PRIOR_REPORT_RECEIPT_UNVERIFIED',day);
+ }
+
  const noValueOld=/(?:此前已(?:提醒|发送|通知)|历史(?:提醒|已发|窗口)|同一(?:旧|领取)窗口|不再重复(?:提醒|发送)|没有(?:新|实质)变化|无(?:实质|高置信)新增|只是(?:旧|已有)消息|仍在(?:监控|等待核实)|SOURCE_GAP|QA_FAIL|Gmail Sent|Git(?:Hub)?(?:归档|回读|提交)|自动化(?:故障|恢复|执行)|运行(?:日志|状态|失败)|补发(?:记录|流程))/i;
  for(const row of parsed){
   if(noValueOld.test(row.text))fail('NO_VALUE_OLD_NEWS_IN_NUMBERED_ITEM',row.section+'/'+row.item_number);
