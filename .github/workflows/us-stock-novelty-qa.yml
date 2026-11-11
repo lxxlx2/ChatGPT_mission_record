@@ -30,6 +30,11 @@ jobs:
           mkdir -p us-stock-daily/delivery-qa
           for f in $(git diff --name-only HEAD^ HEAD -- 'us-stock-daily/delivery-pending/*.json'); do
             if [[ -f "$f" ]]; then
+              draft_status=$(node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));process.stdout.write(String(x.qa_status||x.status||""))' "$f")
+              if [[ "$draft_status" == "SUPERSEDED_DELIVERED_DO_NOT_SEND" ]]; then
+                echo "Superseded historical draft, audit-only; skip editorial QA and never resend: $f"
+                continue
+              fi
               node us-stock-daily/scripts/novelty_gate.mjs "$f"
               day=$(basename "$f" .json)
               manifest_sha=$(git hash-object "$f")
