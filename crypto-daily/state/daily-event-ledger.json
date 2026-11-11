@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-11-10T11:22:42Z",
+  "updated_at": "2026-11-11T11:49:51Z",
   "status": "ACTIVE",
-  "note": "Nov10 manual 13-chapter recovery verified Gmail Sent+Inbox ID 1a1c5322efda837e, canonical exact body; appended source-backed material families only. Source discovery remains PARTIAL; unattended delivery remains unproven. Preserved prior entries.",
+  "note": "Nov11 manual full report SENT/INBOX Gmail 1a1ca7164f5e6e0b; report canonical exact. Historical Binance Nov10 counterparty restriction reported late. Origin X/TGE personal rights and several independent source lanes still PARTIAL. No unattended delivery success claim. Historic entries preserved.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -2738,6 +2738,69 @@
       "gmail_message_id": "1a1c5322efda837e",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
       "classification": "DAILY_MARKET_SNAPSHOT"
+    },
+    {
+      "event_key": "reg:binance:mexc-transfer-restriction:2026-11-10",
+      "family_key": "reg:binance-mexc-counterparty-restrictions",
+      "material_version": "binance-2026-11-10-reject-outgoing-review-incoming",
+      "delivered_date": "2026-11-11",
+      "gmail_message_id": "1a1ca7164f5e6e0b",
+      "source_url": "https://www.binance.com/en-AE/support/announcement/detail/9ef6e347da924cdc90f53577ab483b1f",
+      "classification": "CEX_TRANSFER_RESTRICTION"
+    },
+    {
+      "event_key": "macro:us-cpi:2026-10-released-2026-11-10",
+      "family_key": "macro:us-cpi-releases",
+      "material_version": "bls-oct2026-0p4-core0p3-released-nov10",
+      "delivered_date": "2026-11-11",
+      "gmail_message_id": "1a1ca7164f5e6e0b",
+      "source_url": "https://www.bls.gov/news.release/archives/cpi_11102026.htm",
+      "classification": "MACRO_CPI"
+    },
+    {
+      "event_key": "ipo:anthropic:sec-s1a2:2026-11-10",
+      "family_key": "ipo:anthropic-equity",
+      "material_version": "sec-000162828026072484-825m-70to78",
+      "delivered_date": "2026-11-11",
+      "gmail_message_id": "1a1ca7164f5e6e0b",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026072484/0001628280-26-072484-index.htm",
+      "classification": "IPO_S1A_FILED"
+    },
+    {
+      "event_key": "etf:btc:2026-11-10",
+      "family_key": "etf:bitcoin-us-spot-flow",
+      "material_version": "farside-2026-11-10-minus95m",
+      "delivered_date": "2026-11-11",
+      "gmail_message_id": "1a1ca7164f5e6e0b",
+      "source_url": "https://farside.co.uk/btc/",
+      "classification": "ETF_INSTITUTIONAL_FLOW"
+    },
+    {
+      "event_key": "etf:eth:2026-11-10",
+      "family_key": "etf:ethereum-us-spot-flow",
+      "material_version": "farside-2026-11-10-minus1p3m",
+      "delivered_date": "2026-11-11",
+      "gmail_message_id": "1a1ca7164f5e6e0b",
+      "source_url": "https://farside.co.uk/eth/",
+      "classification": "ETF_INSTITUTIONAL_FLOW"
+    },
+    {
+      "event_key": "market:binance:2026-11-11-1845",
+      "family_key": "market:binance-spot-snapshot",
+      "material_version": "spot-live-2026-11-11T1145Z-ZECminus13p523",
+      "delivered_date": "2026-11-11",
+      "gmail_message_id": "1a1ca7164f5e6e0b",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ZECUSDT",
+      "classification": "DAILY_MARKET_SNAPSHOT"
+    },
+    {
+      "event_key": "tech:tsmc:ai-investments:2026-11-10",
+      "family_key": "tech:tsmc-anthropic-openai-investment",
+      "material_version": "board-approval-up-to-500m-each-2026-11-10",
+      "delivered_date": "2026-11-11",
+      "gmail_message_id": "1a1ca7164f5e6e0b",
+      "source_url": "https://www.reuters.com/world/china/tsmc-invest-up-1-billion-anthropic-openai-2026-11-10/",
+      "classification": "TECH_STRATEGIC_ALLOCATION"
     }
   ],
   "open_missed_candidates": []
