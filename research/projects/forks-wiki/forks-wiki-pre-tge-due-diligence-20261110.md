@@ -1,6 +1,6 @@
 # Forks.wiki / FORK 预 TGE、可领取性、链与安全尽调（2026-11-10）
 
-## 2026-11-11 ~21:24–21:30 Bangkok: wallet claim-fee safety verification, OFFCHAIN_QUEUE_ONLY, no official MORI/FORK mint
+## 2026-11-11 ~21:24–21:30 Bangkok: wallet claim-fee safety verification, OFFCHAIN_QUEUE_ONLY, no official FORK mint
 
 **Current evidence priority:** direct Alchemy Solana finalized RPC > authenticated forks.wiki live /claim and first-party @wikifork X post > old public fork GitHub source. No token sale, token claim, wallet signing, monitoring, notification or automation performed by this investigation.
 
