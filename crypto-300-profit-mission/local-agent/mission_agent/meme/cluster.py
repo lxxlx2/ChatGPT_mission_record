@@ -825,7 +825,13 @@ class WalletClusterAnalyzer:
         explicit=self._entry(address)
         if explicit:return explicit.get("role","UNRESOLVED"),explicit.get("source","LOCAL_REGISTRY")
         value=(account_info or {}).get("value") if isinstance(account_info,dict) else None
-        if not value:return "UNRESOLVED","ACCOUNT_INFO_UNAVAILABLE"
+        if not value:
+            if isinstance(account_info,dict) and "value" in account_info and account_info["value"] is None:
+                from .holder_ranks import on_ed25519_curve
+                curve=on_ed25519_curve(address)
+                if curve is True:return "ORDINARY","RPC_NO_ACCOUNT_ON_CURVE_KEYPAIR"
+                if curve is False:return "UNRESOLVED","RPC_NO_ACCOUNT_OFF_CURVE_PDA"
+            return "UNRESOLVED","ACCOUNT_INFO_UNAVAILABLE"
         program=value.get("owner")
         if value.get("executable"):return "PUBLIC_PROGRAM","RPC_EXECUTABLE_ACCOUNT"
         if program==SYSTEM_PROGRAM:return "ORDINARY","RPC_SYSTEM_OWNED"

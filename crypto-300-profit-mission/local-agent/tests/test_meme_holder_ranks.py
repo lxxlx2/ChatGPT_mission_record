@@ -290,3 +290,32 @@ def test_supply_bracket_upgrades_only_with_fixed_supply_and_equal_later_reading(
                dict(supply_fixed_above=True,supply_recheck=lambda:(1000,99)),dict(supply_fixed_above=True,supply_recheck=lambda:1/0)]:
         out=ranks.collect_mint_holder_ranks(MINT,P22,1000,0,90,RPC(rows,slot=100),lambda *a:('ORDINARY','fixture'),**kw)
         assert out['status']=='INCOMPLETE_EVIDENCE' and out['reason']=='SNAPSHOT_SLOT_UNRECONCILED'
+
+
+def test_curve_check_separates_keypairs_from_pdas():
+    assert ranks.on_ed25519_curve('6hSjCsmRARbo6nszzGUN8L8j86JWprnqQXKSBfQeNDc4') is True
+    assert ranks.on_ed25519_curve('2B8tftZ5ww8TREMr3pgkgERLNjJyJxEAPWMENViGMsL4') is False
+    assert ranks.on_ed25519_curve('FcFu24r8M8TuTAhEjBSJsqhrPxeumUsKg7ZGzXAi4h9M') is False
+    assert ranks.on_ed25519_curve('not-a-key') is None
+
+
+def test_missing_owner_account_is_ordinary_only_when_on_curve():
+    from mission_agent.meme.cluster import WalletClusterAnalyzer
+    a=WalletClusterAnalyzer(MINT,rpc=RPC([]))
+    assert a._role('6hSjCsmRARbo6nszzGUN8L8j86JWprnqQXKSBfQeNDc4',{'value':None})==('ORDINARY','RPC_NO_ACCOUNT_ON_CURVE_KEYPAIR')
+    assert a._role('2B8tftZ5ww8TREMr3pgkgERLNjJyJxEAPWMENViGMsL4',{'value':None})==('UNRESOLVED','RPC_NO_ACCOUNT_OFF_CURVE_PDA')
+    assert a._role('6hSjCsmRARbo6nszzGUN8L8j86JWprnqQXKSBfQeNDc4',None)==('UNRESOLVED','ACCOUNT_INFO_UNAVAILABLE')
+
+
+def test_verified_pool_exclusion_uses_only_bound_self_authority_pools(monkeypatch):
+    monkeypatch.setattr(ranks,'discover_owner_pool_hint',lambda mint,owner,*a:{'authority':owner,'pair_address':owner,'target_vault':'v'} if owner==key(200) else None)
+    records=[account(1,200,500),account(2,301,300),account(3,302,200)]
+    out,_=run(records)
+    assert out['verified_pool_authorities']==[key(200)]
+    assert out['metrics']['GLOBAL_OWNER_TOP10_PCT']=='100.0000'
+    assert out['metrics']['GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT']=='50.0000'
+
+
+def test_no_bound_pool_keeps_verified_pool_metric_unresolved():
+    out,_=run([account(1,301,1000)])
+    assert out['metrics']['GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT']=='UNRESOLVED'

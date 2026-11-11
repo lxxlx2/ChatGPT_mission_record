@@ -79,6 +79,21 @@ def _binary_row(account,mint,program):
     return int.from_bytes(b[64:72],'little'),_b58(b[32:64])
 
 
+_P=2**255-19;_D=(-121665*pow(121666,_P-2,_P))%_P
+
+
+def on_ed25519_curve(address):
+    """True for a normal keypair address, False for an off-curve PDA."""
+    if not valid_pubkey(address):return None
+    n=0
+    for ch in address:n=n*58+ALPHABET.index(ch)
+    raw=n.to_bytes(32,'big');y=int.from_bytes(raw,'little')&((1<<255)-1)
+    if y>=_P:return False
+    u=(y*y-1)%_P;v=(_D*y*y+1)%_P
+    x2=u*pow(v,_P-2,_P)%_P
+    return x2==0 or pow(x2,(_P-1)//2,_P)==1
+
+
 def _slot(value):return type(value) is int and value>0
 
 
@@ -144,6 +159,7 @@ def collect_mint_holder_ranks(mint,program,supply,decimals,supply_slot,rpc,role_
             hint=discover_owner_pool_hint(mint,owner,account,response['context']['slot'],snapshot_slot,enumeration_hash,metadata_hash,account_owners)
             if hint:pool_hints.append(hint)
     pool_hints.sort(key=lambda h:(-balances[h['authority']],h['pair_address']))
+    pool_hints_all=list(pool_hints)
     pool_hints_not_selected=max(0,len(pool_hints)-MAX_OWNER_POOL_HINTS)
     pool_hints=pool_hints[:MAX_OWNER_POOL_HINTS]
     total=sum(balances.values())
@@ -164,15 +180,23 @@ def collect_mint_holder_ranks(mint,program,supply,decimals,supply_slot,rpc,role_
     def pct(raw):return str((Decimal(raw)*100/Decimal(supply)).quantize(Decimal('0.0001'))) if complete else 'UNRESOLVED'
     owners=[{'owner':owner,'raw':str(raw),'account_count':counts[owner],'role':roles[owner][0],
              'role_source':roles[owner][1],'role_slot':owner_role_slots[owner],'supply_pct':pct(raw)} for owner,raw in sorted(balances.items(),key=lambda x:(-x[1],x[0]))]
+    # Pool authorities proven from the same enumeration: the authority's stored
+    # vault is in this snapshot and owned by it. Pool vault pointers are fixed at
+    # pool creation, so a later metadata slot does not change this binding.
+    all_pool_authorities={h['authority'] for h in pool_hints_all}
+    def top10_ex_owners(excluded):
+        rest=[int(r['raw']) for r in owners if r['owner'] not in excluded][:10]
+        return sum(rest)
     def top10(excluded):return sum(int(r['raw']) for r in [r for r in owners if r['role'] not in excluded][:10])
     metrics={'GLOBAL_OWNER_TOP10_PCT':pct(top10(set())),
              'GLOBAL_EX_LP_OWNER_TOP10_PCT':pct(top10({'LP','AMM_POOL','PROTOCOL_VAULT'})) if role_complete else 'UNRESOLVED',
-             'GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT':pct(top10(special_roles)) if role_complete else 'UNRESOLVED'}
+             'GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT':pct(top10(special_roles)) if role_complete else 'UNRESOLVED',
+             'GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT':pct(top10_ex_owners(all_pool_authorities)) if all_pool_authorities else 'UNRESOLVED'}
     return {'requested':True,'status':'COMPLETE_SNAPSHOT' if complete else 'INCOMPLETE_EVIDENCE','reason':reason,
             'source':'SOLANA_FINALIZED_GET_PROGRAM_ACCOUNTS','mint':mint,'program_id':program,
             'snapshot_slot':snapshot_slot,'supply_slot':supply_slot,'supply_bracket':supply_bracket,'encoding':cfg['encoding'],'largest_slot':largest_slot,'top20_reconciled':top_reconciled,'owner_metadata_slots':role_slots,
             'response_sha256':enumeration_hash,
-            'owner_pool_hints':pool_hints,'owner_pool_discovery':{'scope':'SELF_AUTHORITY_POOL_OWNERS_NOT_GLOBAL_AUTHORITY_REVERSE_LOOKUP',
+            'owner_pool_hints':pool_hints,'verified_pool_authorities':sorted(all_pool_authorities),'verified_pool_exclusion_scope':'SELF_AUTHORITY_POOLS_BOUND_IN_THIS_ENUMERATION_OTHER_POOLS_CEX_LOCKS_STAY_INCLUDED','owner_pool_discovery':{'scope':'SELF_AUTHORITY_POOL_OWNERS_NOT_GLOBAL_AUTHORITY_REVERSE_LOOKUP',
                 'retained_hints':len(pool_hints),'hints_not_selected':pool_hints_not_selected,'max_hints':MAX_OWNER_POOL_HINTS,'additional_rpc_calls':0},
             'account_count':len(records),'nonzero_accounts':nonzero,'nonzero_owner_count':len(owners),
             'total_raw':str(total),'supply_raw':str(supply),'decimals':decimals,
