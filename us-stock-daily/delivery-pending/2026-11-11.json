@@ -1,7 +1,7 @@
 {
   "report_date": "2026-11-11",
   "timezone": "Asia/Bangkok",
-  "qa_status": "QA_PENDING",
+  "qa_status": "SUPERSEDED_DELIVERED_DO_NOT_SEND",
   "ci_status": "CI_NOT_PROVEN",
   "last_completed_us_session": "2026-11-10",
   "browser_session": "UNAVAILABLE",
@@ -247,5 +247,9 @@
       "novelty_proof": "2026-11-10 new official release, new market session, or dated decision checkpoint; compare 2026-11-04..10 canonical reports",
       "text": "Anthropic新增S-1/A定价区间是一级市场实质增量；其最终价格、SEC生效及普通投资者分配渠道仍需后续官方证据。"
     }
-  ]
+  ],
+  "archival_role": "AUDIT_DRAFT_NONCANONICAL",
+  "superseded_by_gmail_message_id": "1a1c80f425564b17",
+  "canonical_path": "us-stock-daily/reports/daily/2026/2026-11/2026-11-11.md",
+  "delivery_state": "SENT_CANONICAL_ARCHIVED_READBACK"
 }
