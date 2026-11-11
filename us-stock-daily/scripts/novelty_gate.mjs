@@ -83,7 +83,7 @@ export function validateStockNovelty(input){
  const readbacks=Array.isArray(input.previous_day_receipts)?input.previous_day_receipts:[];
  const byDay=new Map();
  for(const receipt of readbacks){
-   if(!receipt||!/^\\d{4}-\\d{2}-\\d{2}$/.test(String(receipt.date||'')))continue;
+   if(!receipt||!/^\d{4}-\d{2}-\d{2}$/.test(String(receipt.date||'')))continue;
    if(byDay.has(receipt.date))fail('DUPLICATED_PRIOR_REPORT_RECEIPT',receipt.date);
    byDay.set(receipt.date,receipt);
  }
