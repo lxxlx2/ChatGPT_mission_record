@@ -99,3 +99,21 @@ Examined Git `airdrop-tge-monitor/runs/YYYY-MM-DD/` for each audit date and last
 - `TGE_FULL_FOUR_SHARD_FIRST_PARTY`: **NOT_PROVEN**. Exact StandX entitlement remains unverified, no TGE email to send without action gate.
 - `HISTORICAL_EARLY_NFT_SOURCE_RECALL`: **OPEN**; report formatting and mail equality cannot certify exhaustive source discovery.
 - Future valid correction mail must be driven by independently confirmed missing material event or factual error, not number of notifications. No repeat unchanged Sent full editions.
+
+
+## 2026-11-11 supplemental full 28-date Gmail/Git identity proof and Nov10 correction
+audit_at: 2026-11-11 19:01+ Asia/Bangkok
+scope: 2026-10-29..2026-11-11, 14 full calendar dates
+proven_by: direct connected Gmail message readback, Git canonical file fetch with actual body equality
+
+### Full delivery/integrity readback
+- Re-fetched ALL 14/14 US stock formal `us-stock-daily/reports/daily/YYYY/YYYY-MM/YYYY-MM-DD.md` canonical bodies and corresponding exact Gmail Sent ID/body in two batches. **14/14 Gmail=SENT, 14/14 canonical body bytes exact, 14/14 heading count=12.** Real substantive exceptions Nov01 §10 and Nov03 §11 remained; a valid archive cannot establish original source discovery.
+- Re-fetched ALL 14/14 Crypto canonical bodies and corresponding latest Gmail Sent body, including Nov10 corrected and Nov11 backfill. **14/14 Gmail=SENT, 14/14 canonical body bytes exact, 14/14 heading count=13.** Original Oct29-Nov04 §8 emptiness confirmed **6/7** (Nov01 §7 empty instead), not 7/7. All older messages preserved as immutable historical artifacts.
+- This confirms `GMAIL_SENT_READBACK` and `GIT_ARCHIVE_EQUAL` for these 28 latest official daily versions only; it does NOT imply unattended on-time execution, source discovery completeness, or all article claims independently correct.
+
+### Material Nov10 report correction
+- On 2026-11-11 19:01 ICT sent a **single full 13-section Nov10 corrected replacement**, superseding original manual message `1a1c5322efda837e`. Corrected subject `Crypto Daily Brief｜2026-11-10｜完整更正版补发（补入币安MEXC转账限制）`; real Gmail ID `1a1ca7b9a202b667`, read back SENT+INBOX, recipient `lxx.run688@gmail.com`, 6,925 UTF-8 characters, 13 headings, 41 sequential numbered items. Fixed material omission: Binance's Nov10 official new counterparty restrictions to MEXC associated entities, not conflated with FinCEN's already-reported Nov06 order. Source `https://www.binance.com/en-AE/support/announcement/detail/9ef6e347da924cdc90f53577ab483b1f`. Market and ETF snapshot dates explicitly left Nov10 and US Nov09 respectively, not refreshed with future values.
+- Git canonical `crypto-daily/reports/daily/2026/2026-11/2026-11-10.md` replaced via optimistic blob SHA to EXACT corrected Gmail actual readback, with metadata `status: DELIVERED_FULL_CORRECTION` and `supersedes_gmail_message_id: "1a1c5322efda837e"`. Actual Git commit `52024555de105c3589e42184c902bd0dbbcce946`, successful independent Git refetch and body equality. Original version remains in Git prior commit and original Gmail remains in Sent for audit; no duplicate same corrected message.
+- The Nov11 full manual recovery already included the newly discovered Nov10 Binance restriction and is also Sent+Git exact, so do not send a separate third alert for unchanged same restriction.
+- Crypto daily event ledger 261 entries as of Nov11 reflects Binance restriction family delivered in Nov11 report; no duplicate family inserted solely because Nov10 corrected edition also carried it.
+- On-schedule automatic delivery STILL NOT PROVEN after changed original prompts. This audit is not a CI_PASS assertion. TGE X/eligibility first-party verification STILL PARTIAL. No user-actionable StandX claim email was sent on unconfirmed mirror evidence.
