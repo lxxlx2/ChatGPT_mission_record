@@ -1382,6 +1382,8 @@ class WalletClusterAnalyzer:
         special_address_roles=self.special_role_snapshot(holder_rankings,market)
         from .special_roles import withhold_legacy_normalization
         withhold_legacy_normalization(holder_rankings,special_address_roles)
+        from .special_roles import apply_sufficient_top10
+        apply_sufficient_top10(holder_rankings)
         self._prepare_owner_account_history(holders,holder_rankings)
         preview_top10_pct=getattr(self,"_raw_top10_snapshot_pct",None)
         self._progress(
