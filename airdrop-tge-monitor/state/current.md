@@ -1,35 +1,34 @@
-# Airdrop / TGE Monitor State (bounded materialized cache)
-Last synchronized: 2026-11-11 20:58:54 Asia/Bangkok
-Status: PARTIAL, verified_complete=false. Cache only; final and known-events authoritative. Last fully verified complete sweep 2026-10-10T07:52:16+07:00.
+# Airdrop / TGE Monitor State (bounded cache)
+Last synchronized: 2026-11-11 21:55:34 Asia/Bangkok
+Status: PARTIAL, verified_complete=false. Final and known-events authoritative. Last fully verified complete sweep 2026-10-10T07:52:16+07:00.
 
 ## Latest terminal
-- authoritative_final: `airdrop-tge-monitor/runs/2026-11-11/205854-final.md`
-- final_commit_sha: `2f6a9456dadf4c1634ecb4d8738a1966e489010e`
+- authoritative_final: `airdrop-tge-monitor/runs/2026-11-11/215534-final.md`
+- final_commit_sha: `3f18dfe06c37b5e43f64b29a1c040399f586f4b5`
 - run_status: PARTIAL
 - candidate_count: 1
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
-- scheduled_shard: 0
-- executed_shard: 0
+- scheduled_shard: 1
+- executed_shard: 1
 - stale_shard_recovery: false
 - original_x_context: UNAVAILABLE
-- completeness: StandX event-specific issuer receipt SOURCE_GAP; other urgent/shard0 PARTIAL_ONLY; Surf old deadline confirmed unchanged.
+- completeness: StandX DUSD original source SOURCE_GAP; Surf and Reflect original issuer pages read; remainder PARTIAL_ONLY.
 
 ## Last meaningful per-shard attempts (PARTIAL_ONLY)
-- shard0: 2026-11-11 20:58:54 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-11/205854-final.md`; PARTIAL_ONLY
-- shard1: 2026-11-11 17:04:06 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-11/170406-final.md`; PARTIAL_ONLY
-- shard2: 2026-11-11 18:58:44 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-11/185844-final.md`; PARTIAL_ONLY
-- shard3: 2026-11-11 11:56:56 Asia/Bangkok; `airdrop-tge-monitor/runs/2026-11-11/115656-final.md`; PARTIAL_ONLY
+- shard0: 2026-11-11 20:58:54 Asia/Bangkok; `runs/2026-11-11/205854-final.md`
+- shard1: 2026-11-11 21:55:34 Asia/Bangkok; `runs/2026-11-11/215534-final.md`
+- shard2: 2026-11-11 18:58:44 Asia/Bangkok; `runs/2026-11-11/185844-final.md`
+- shard3: 2026-11-11 11:56:56 Asia/Bangkok; `runs/2026-11-11/115656-final.md`
 
-## Open urgent and eligibility state
+## Open urgent and eligibility
 - Always-hourly urgent5: Concrete, MetaMask, Claynosaurz, HEEBOO, Space @intodotspace; dynamic Surf and StandX.
-- `standx:dusd_claim_window_open:2026-11`: VERIFYING; issuer original inaccessible; wallet entitlement unknown; NO_ACTION.
-- Concrete extra USDC/private claim VERIFYING; NO_ACTION.
-- SurfBoard Nov13 claim already emailed; suppress unchanged. Cambria Base RSGP Oct29 TGE already emailed; suppress unchanged.
-- Historical exclusions: Abstract, Grass, Backpack, Loopscale; fully refunded humans&. Space/Spacecoin and Theo/Autheo separated.
+- standx:dusd_claim_window_open:2026-11 VERIFYING, no event-bound issuer original, entitlement UNKNOWN, NO_ACTION.
+- Concrete extra USDC/private claim VERIFYING.
+- SurfBoard Nov13 window previously emailed; suppress unchanged. Cambria RSGP Oct29 previously emailed; suppress unchanged.
+- Excluded: Abstract, Grass, Backpack, Loopscale; fully refunded humans&.
+- Space/Spacecoin and Theo/Autheo strictly separate.
 
-## Historical integrity
-- Original large cache blob `be7fec5d2c130faeee0dca2b457c8d991bfefe24` preserved in Git history. Never append old hourly finals to this cache.
-- PARTIAL never advances verified-complete timestamps. EMAIL-ONLY; original task ID/schedule/recipient unchanged.
+PARTIAL does not advance verified-complete timestamps. EMAIL-ONLY. Task identity/schedule/recipient unchanged.
