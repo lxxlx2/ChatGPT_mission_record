@@ -84,6 +84,20 @@ test('a dated calendar event beyond next 72 hours cannot be numbered as near-ter
  const v=make();v.events[8].calendar_date='2026-11-13';v.previous_events=[{family_key:'stable-family-news-9',material_version:'different-earlier'}];
  assert.ok(validateStockNovelty(v).errors.some(e=>e.startsWith('CALENDAR_NO_CURRENT_72H_ACTION')));
 });
+test('an evidence-backed true no-news section may stay unnumbered without old event padding',()=>{
+ const v=make();v.items=v.items.filter(x=>x.section!==11);
+ v.body=headings.map((h,i)=>i===10?h+'\n无高置信新增。':h+'\n（1）'+v.items.find(x=>x.section===i+1).text).join('\n\n');
+ v.empty_section_reasons=[{section:11,reason:'Checked latest official issuer and market source material and found no new user-facing correction.'}];
+ v.section_source_receipts=[{section:11,status:'checked',source_url:'https://www.sec.gov/edgar/search/',
+   checked_at:'2026-10-28T02:00:00Z',source_original_read:true}];
+ assert.equal(validateStockNovelty(v).passed,true,JSON.stringify(validateStockNovelty(v).errors));
+});
+test('an empty stock section without independent receipt is still a hard QA failure',()=>{
+ const v=make();v.items=v.items.filter(x=>x.section!==11);
+ v.body=headings.map((h,i)=>i===10?h+'\n无高置信新增。':h+'\n（1）'+v.items.find(x=>x.section===i+1).text).join('\n\n');
+ v.empty_section_reasons=[{section:11,reason:'No new issuer action; the checked original source remains unchanged this trading session.'}];
+ assert.ok(validateStockNovelty(v).errors.some(e=>e.startsWith('EMPTY_STOCK_SECTION:11')));
+});
 test('empty sections are rejected even with twelve correct headings',()=>{
  const v=make();
  v.body=v.body.split('\n').filter(line=>!line.includes(v.items[4].text)).join('\n');
