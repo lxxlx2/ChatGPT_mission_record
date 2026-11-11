@@ -1,0 +1,11 @@
+# 2026-11-11 10:20 Asia/Bangkok recovery execution evidence
+
+Status: QA_FAIL_DELIVERY_PENDING. NO EMAIL SENT IN THIS RUN.
+
+Gmail Sent checked at approximately 2026-11-11 10:23 BKK, query `in:sent after:2026/11/10 before:2026/11/13` on life account. No 2026-11-11 Crypto Daily Brief found. Latest matching Crypto Sent: 2026-11-10 corrected/backfill ID 1a1c5322efda837e. This search was broad, not a substitute for seven-day body readback.
+
+Git main rules fetched: PIPELINE_CONTRACT 29ffbc1d32ca87a744d2990e8d55639ebb84a6f9; EDITORIAL_RULESET 2ed51528d230508ae4e0015762b1d60c9d72e299; REPORT_SPEC, REPORT_ACCEPTANCE, COLLECTOR_SPEC, SECURITY_SOURCE_POLICY, DELIVERY_RUNBOOK, ledger also fetched. Current-date pending JSON and canonical daily both returned Git 404. No approved complete prebuild available from these paths. No CI receipt validated. No complete independent 13-chapter report, source receipt matrix, seven-day Gmail full-body dedupe or QA could be established in this run; therefore sending would violate acceptance rules.
+
+Fresh primary/English spot checks: FinCEN press releases https://www.fincen.gov/news/press-releases (11/09 exchange-event readout; 11/06 MEXC order and Travel Rule proposal withdrawal already historical, not novel); Binance official announcements https://www.binance.com/en/support/announcement/ (11/10 BULLAUSDT futures last-price protection ending, 11/13 collateral ratio change, notice on transactions with certain crypto platforms; individual notice text not independently opened); Reuters 2026-11-11 dollar/Fed macro https://www.reuters.com/world/asia-pacific/dollar-gains-traction-fed-speakers-warn-risks-inflation-2026-11-11/ (new candidate, needs full primary data crosscheck). No official Binance timed spot/perp prices, Farside per-issuer flows, full six security families, Arkham/Lookonchain original TXIDs, TGE/Early/NFT official claims or issuer IPO evidence were completed. These are SOURCE_GAP, not 'no news'. X browser original session unavailable/unverified. Do not reuse older narrative as novelty.
+
+Disposition: QA_FAIL_DELIVERY_PENDING / PREBUILD_MISSING_RECONSTRUCT_NOW. The full-report QA and safe send were not achieved; 11:20 existing recovery must attempt substantive reconstruction, check Sent first, and never duplicate any existing mail. No new scheduler, notification, paid API or local process.
