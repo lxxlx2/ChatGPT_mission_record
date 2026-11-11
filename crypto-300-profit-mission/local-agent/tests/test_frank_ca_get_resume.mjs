@@ -50,6 +50,8 @@ function makeHarness(results = [], saved = null, opts = {}) {
     clusterStatus:(...args)=>statuses.push(args),
     renderClusterPreview() {},
     renderClusterReport:(row)=>rendered.push(row),
+    // Optional sidecar rendering is exercised by the complete-app render suite.
+    loadClusterNarrativeSupplement:async()=>{},
     clusterProgressDetail:()=> '已查询信息',
     clusterErrorMessage:x=>String(x),
     loadLatestCluster:async()=>true,

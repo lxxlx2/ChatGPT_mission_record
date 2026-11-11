@@ -1296,3 +1296,193 @@ test('legacy history does not acquire fabricated retention counts',()=>{
   const h=harness();h.context.renderClusterReport(report);const html=h.element('cluster-coverage').innerHTML;
   assert.match(html,/此历史报告未记录代表证据保留策略/);assert.doesNotMatch(html,/有效来源观察 5 条/);
 });
+
+const supplementPost='https://x.com/source_reader/status/12345';
+function supplementReport(id=jobId,ca=mint) {
+  return {...structuredClone(fixture),ca_job_id:id,mint:ca,narrative:{version:1,evidence:[{
+    classification:'THIRD_PARTY_CLAIM',source_url:supplementPost,response_sha256:'a'.repeat(64),
+    title:'ORIGINAL_SOURCE_TITLE',excerpt:'ORIGINAL_SHORT_CLAIM',
+  }]}};
+}
+function supplementRecord(report=supplementReport(),summary='账号称爬虫读取加密网页并用语料训练模型，训练后开放权重。') {
+  return {version:1,status:'BROWSER_OBSERVED_ACCOUNT_CLAIM',job_id:report.ca_job_id,mint:report.mint,
+    report_sha256:'b'.repeat(64),source_url:supplementPost,author_handle:'@source_reader',
+    published_at_utc:new Date((report.observed_at-86400)*1000).toISOString(),
+    captured_at_utc:new Date((report.observed_at+60)*1000).toISOString(),summary,
+    source_text_sha256:'c'.repeat(64),capture_method:'MANUAL_BROWSER_READ',
+    official_recognition:'UNVERIFIED',interaction_status:'UNVERIFIED',earliest_origin:'UNVERIFIED'};
+}
+const tick=()=>new Promise(resolve=>setImmediate(resolve));
+async function supplementHarness(record,action='latest',report=supplementReport()) {
+  const h=harness({responseFor:async url=>{
+    if(url.startsWith('/api/cluster-narrative-supplement?')) {
+      if(typeof record==='function') return record(url);
+      return {ok:true,json:async()=>record};
+    }
+    if(url.startsWith('/api/cluster-latest?')) return {ok:true,json:async()=>report};
+    return new Promise(()=>{});
+  }});
+  h.element('cluster-mint').value=report.mint;
+  if(action==='latest') {
+    h.context.clusterSetJob(report.ca_job_id,report.mint);
+    assert.equal(await h.context.loadLatestCluster(report.mint,true),true);
+  } else if(action==='history') await h.context.clusterLoadHistoricalCache();
+  else {
+    h.store.set('local:'+ 'mission-meme-cluster-reports-v1',JSON.stringify([{id:report.ca_job_id,mint:report.mint,observed_at:report.observed_at}]));
+    h.element('cluster-reports').value=report.ca_job_id;
+    await h.element('cluster-read-report').listeners.get('click')();
+  }
+  await tick();
+  return h;
+}
+
+for(const action of ['latest','history','selected']) test('browser narrative supplement follows successful '+action+' report GET without modifying its source',async()=>{
+  const report=supplementReport(),before=JSON.stringify(report),record=supplementRecord(report);
+  const h=await supplementHarness(record,action,report);
+  assert.equal(JSON.stringify(report),before);
+  assert.match(h.element('cluster-narrative').innerHTML,/ORIGINAL_SHORT_CLAIM/);
+  const html=h.element('cluster-narrative-supplement').innerHTML;
+  assert.equal(h.element('cluster-narrative-supplement').hidden,false);
+  assert.match(html,/浏览器核对补证 · 账号自述/);assert.match(html,/账号称爬虫读取加密网页/);
+  assert.match(html,/@source_reader/);assert.match(html,/CA 官方归属、人物互动和最早起源仍未核实/);
+  assert.match(html,/不代表来源或链上数据已更新到当前/);
+  assert.equal(h.requests.filter(x=>x.url.startsWith('/api/cluster-narrative-supplement?')).length,1);
+  assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
+});
+
+for(const change of ['job','mint','source','hash','source_hash','author','verified','extra_verified','future','before_report','invalid_date','control','format','newline','surrogate','oversize']) test('browser narrative supplement rejects unbound or unverified data '+change,async()=>{
+  const report=supplementReport(),record=supplementRecord(report,'SHOULD_NOT_BE_DISPLAYED');
+  if(change==='job') record.job_id='b'.repeat(32);
+  if(change==='mint') record.mint='33333333333333333333333333333333';
+  if(change==='source') record.source_url='https://x.com/source_reader/status/67890';
+  if(change==='hash') record.report_sha256='bad';
+  if(change==='source_hash') record.source_text_sha256='bad';
+  if(change==='author') record.author_handle='@ElonMusk';
+  if(change==='verified') record.official_recognition='VERIFIED';
+  if(change==='extra_verified') record.interaction_verified=true;
+  if(change==='future') record.captured_at_utc=new Date(Date.now()+120000).toISOString();
+  if(change==='before_report') record.captured_at_utc=new Date((report.observed_at-1)*1000).toISOString();
+  if(change==='invalid_date') record.published_at_utc='2026-02-30T00:00:00Z';
+  if(change==='control') record.summary+='\u0000';
+  if(change==='format') record.summary+='\u202e';
+  if(change==='newline') record.summary+='\n';
+  if(change==='surrogate') record.summary+='\ud800';
+  if(change==='oversize') record.summary='x'.repeat(801);
+  const h=await supplementHarness(record,'latest',report),node=h.element('cluster-narrative-supplement');
+  assert.match(node.innerHTML,/浏览器补证未通过核对/);
+  assert.doesNotMatch(node.innerHTML,/SHOULD_NOT_BE_DISPLAYED|ElonMusk/);
+  assert.match(h.element('cluster-narrative').innerHTML,/ORIGINAL_SHORT_CLAIM/);
+  assert.equal(h.element('cluster-result').hidden,false);
+});
+
+test('missing browser supplement leaves no empty card and does not fabricate source details',async()=>{
+  const report=supplementReport(),record={version:1,status:'NOT_RECORDED',job_id:report.ca_job_id,mint:report.mint,report_sha256:'b'.repeat(64)};
+  const h=await supplementHarness(record,'latest',report);
+  assert.equal(h.element('cluster-narrative-supplement').hidden,true);
+  assert.equal(h.element('cluster-narrative-supplement').innerHTML,'');
+  assert.match(h.element('cluster-narrative').innerHTML,/ORIGINAL_SHORT_CLAIM/);
+});
+
+test('unverified browser supplement uses only a fixed message',async()=>{
+  const report=supplementReport(),record={version:1,status:'UNVERIFIED',job_id:report.ca_job_id,mint:report.mint,report_sha256:'b'.repeat(64),reason:'SUPPLEMENT_NOT_VERIFIED'};
+  const h=await supplementHarness(record,'latest',report);
+  assert.match(h.element('cluster-narrative-supplement').innerHTML,/浏览器补证未通过核对/);
+  assert.match(h.element('cluster-narrative').innerHTML,/ORIGINAL_SHORT_CLAIM/);
+});
+
+for(const failure of ['HTTP403','transport']) test('optional browser supplement '+failure+' cannot fail or erase the report',async()=>{
+  const response=async()=>{
+    if(failure==='transport') throw new TypeError('PRIVATE_RAW_ERROR');
+    return {ok:false,status:403,json:async()=>({error:'PRIVATE_RAW_ERROR'})};
+  };
+  const h=await supplementHarness(response);
+  assert.equal(h.element('cluster-narrative-supplement').hidden,true);
+  assert.match(h.element('cluster-narrative').innerHTML,/ORIGINAL_SHORT_CLAIM/);
+  assert.equal(h.element('cluster-result').hidden,false);
+  assert.equal(h.requests.filter(x=>x.url.startsWith('/api/cluster-narrative-supplement?')).length,1);
+  assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
+});
+
+test('browser supplement escapes source text and keeps its exact allowed post link',async()=>{
+  const h=await supplementHarness(supplementRecord(undefined,'<img src=x onerror="attack()"> & <script>bad</script>'));
+  const html=h.element('cluster-narrative-supplement').innerHTML;
+  assert.match(html,/&lt;img src=x onerror=&quot;attack\(\)&quot;&gt;/);
+  assert.doesNotMatch(html,/<img|<script/);
+  assert.match(html,/href="https:\/\/x.com\/source_reader\/status\/12345"/);
+});
+
+for(const change of ['no_job','no_evidence','not_post','wrong_host']) test('browser supplement skips ineligible historical report '+change,async()=>{
+  const report=supplementReport();
+  if(change==='no_job') delete report.ca_job_id;
+  if(change==='no_evidence') report.narrative.evidence=[];
+  if(change==='not_post') report.narrative.evidence[0].source_url='https://x.com/source_reader';
+  if(change==='wrong_host') report.narrative.evidence[0].source_url='https://x.com.evil.invalid/source_reader/status/12345';
+  const h=harness();h.element('cluster-mint').value=report.mint;h.context.renderClusterReport(report);
+  const before=h.requests.length;await h.context.loadClusterNarrativeSupplement(report);
+  assert.equal(h.requests.length,before);
+  assert.equal(h.element('cluster-narrative-supplement').hidden,true);
+});
+
+test('late A browser supplement cannot attach to report B',async()=>{
+  const a=supplementReport(),b=supplementReport('b'.repeat(32),'33333333333333333333333333333333');
+  let resolveA;
+  const h=await supplementHarness(()=>new Promise(resolve=>{resolveA=resolve;}),'latest',a);
+  h.setResponse(async url=>url.startsWith('/api/cluster-narrative-supplement?')
+    ? {ok:true,json:async()=>supplementRecord(b,'CURRENT_B_NOTE')}
+    : url.startsWith('/api/cluster-latest?') ? {ok:true,json:async()=>b} : new Promise(()=>{}));
+  h.element('cluster-mint').value=b.mint;await h.context.clusterLoadHistoricalCache();await tick();
+  resolveA({ok:true,json:async()=>supplementRecord(a,'STALE_A_NOTE')});await tick();
+  assert.match(h.element('cluster-narrative-supplement').innerHTML,/CURRENT_B_NOTE/);
+  assert.doesNotMatch(h.element('cluster-narrative-supplement').innerHTML,/STALE_A_NOTE/);
+});
+
+for(const hide of ['invalid_input','input_roundtrip','new_job']) test('pending browser supplement is cleared after '+hide,async()=>{
+  const report=supplementReport();let resolveNote;
+  const h=await supplementHarness(()=>new Promise(resolve=>{resolveNote=resolve;}),'latest',report);
+  if(hide==='invalid_input') {h.element('cluster-mint').value='bad CA';await h.context.clusterLoadHistoricalCache();}
+  if(hide==='input_roundtrip') {
+    h.element('cluster-mint').value='33333333333333333333333333333333';h.element('cluster-mint').listeners.get('input')();
+    h.element('cluster-mint').value=mint;h.element('cluster-mint').listeners.get('input')();
+  }
+  if(hide==='new_job') h.context.clusterSetJob('b'.repeat(32),mint);
+  resolveNote({ok:true,json:async()=>supplementRecord(report,'STALE_HIDDEN_NOTE')});await tick();
+  assert.equal(h.element('cluster-narrative-supplement').hidden,true);
+  assert.doesNotMatch(h.element('cluster-narrative-supplement').innerHTML,/STALE_HIDDEN_NOTE/);
+});
+
+test('view roundtrip reloads the same displayed report supplement and discards a hidden-view response',async()=>{
+  const report=supplementReport();let releaseFirst,reads=0;
+  const h=await supplementHarness(async()=>{
+    if(++reads===1) return new Promise(resolve=>{releaseFirst=resolve;});
+    return {ok:true,json:async()=>supplementRecord(report,'CURRENT_RETURN_NOTE')};
+  },'latest',report);
+  h.context.setView('signals');h.context.setView('cluster');await tick();
+  releaseFirst({ok:true,json:async()=>supplementRecord(report,'STALE_HIDDEN_NOTE')});await tick();
+  assert.equal(reads,2);assert.equal(h.element('cluster-narrative-supplement').hidden,false);
+  assert.match(h.element('cluster-narrative-supplement').innerHTML,/CURRENT_RETURN_NOTE/);
+  assert.doesNotMatch(h.element('cluster-narrative-supplement').innerHTML,/STALE_HIDDEN_NOTE/);
+});
+
+test('DONE task cleanup does not discard its separately loaded browser supplement',async()=>{
+  const report=supplementReport();let release;
+  const h=harness({responseFor:async url=>{
+    if(url.startsWith('/api/cluster-analysis?')) return {ok:true,json:async()=>({job_id:jobId,mint,status:'DONE'})};
+    if(url.startsWith('/api/cluster-latest?')) return {ok:true,json:async()=>report};
+    if(url.startsWith('/api/cluster-narrative-supplement?')) return new Promise(resolve=>{release=resolve;});
+    return new Promise(()=>{});
+  }});
+  h.element('cluster-mint').value=mint;h.context.clusterSetJob(jobId,mint);await h.context.pollClusterJob(jobId);
+  assert.equal(h.store.has('session:mission-meme-cluster-pending-v1'),false);
+  release({ok:true,json:async()=>supplementRecord(report,'DONE_TASK_NOTE')});await tick();
+  assert.match(h.element('cluster-narrative-supplement').innerHTML,/DONE_TASK_NOTE/);
+  assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
+});
+
+
+test('Top20 context conflict visibly withholds a trusted ratio',()=>{
+  const h=harness(),report=structuredClone(fixture);
+  report.coverage.gaps=['TOP_ACCOUNT_CONTEXT_CONFLICT'];
+  report.coverage.snapshot_consistent=false;
+  h.context.renderClusterReport(report);
+  assert.match(h.element('cluster-coverage').innerHTML,/Top20 账户身份、精度或同 slot 金额未通过核对；相关精确比例已撤下/);
+});

@@ -735,7 +735,7 @@ class ClusterJobManager:
     def _valid_job_id(job_id: str) -> bool:
         return isinstance(job_id, str) and re.fullmatch(r"[0-9a-f]{32}", job_id) is not None
 
-    def _saved_job_report(self, job_id: str) -> dict | None:
+    def _saved_job_report_with_digest(self, job_id: str) -> tuple[dict, str] | None:
         if not self._valid_job_id(job_id):
             return None
         try:
@@ -757,9 +757,23 @@ class ClusterJobManager:
             if not self._valid_completed_report(report, job_id, mint):
                 return None
             report.pop("execution_quote_30_usdc", None)
-            return report
+            return report, digest
         except (OSError, ValueError, UnicodeDecodeError):
             return None
+
+    def _saved_job_report(self, job_id: str) -> dict | None:
+        saved = self._saved_job_report_with_digest(job_id)
+        return saved[0] if saved is not None else None
+
+    def narrative_supplement(self, mint: str, job_id: str) -> dict | None:
+        mint = self.validate_mint(mint)
+        if not self._valid_job_id(job_id):
+            raise ValueError('INVALID_CA_JOB_ID')
+        saved = self._saved_job_report_with_digest(job_id)
+        if saved is None or saved[0]['mint'] != mint:
+            return None
+        from .narrative_supplement import read_narrative_supplement
+        return read_narrative_supplement(self.control_root, saved[0], saved[1])
 
     def get(self, job_id: str) -> dict | None:
         error_job = None
@@ -1234,6 +1248,15 @@ class Handler(BaseHTTPRequestHandler):
             job_id = (query.get("job_id") or [""])[0]
             job = self.state.cluster_jobs.get(job_id)
             return self._json(job if job is not None else {"error":"CLUSTER_JOB_NOT_FOUND"}, 200 if job is not None else 404)
+        if path == "/api/cluster-narrative-supplement":
+            try:
+                query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=2)
+                if set(query) != {"mint", "job_id"} or any(len(value) != 1 for value in query.values()):
+                    raise ValueError('INVALID_SUPPLEMENT_QUERY')
+                result = self.state.cluster_jobs.narrative_supplement(query['mint'][0], query['job_id'][0])
+            except ValueError:
+                return self._json({"error": "INVALID_NARRATIVE_SUPPLEMENT_QUERY"}, 400)
+            return self._json(result if result is not None else {"error": "CA_REPORT_NOT_FOUND"}, 200 if result is not None else 404)
         if path == "/api/cluster-latest":
             try:
                 query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=2)

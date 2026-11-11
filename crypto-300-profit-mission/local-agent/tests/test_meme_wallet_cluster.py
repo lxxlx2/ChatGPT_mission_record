@@ -714,6 +714,8 @@ def test_labels_alone_cannot_prove_post_exclusion_holder_ranks():
 
 
 def snapshot_analyzer(largest_slot=100,account_slot=100):
+    from test_meme_holder_ranks import key, MINT
+    pool_account,user_account,pool_owner,user_owner=map(key,(700,701,702,703))
     class SnapshotRPC(DummyRPC):
         def __init__(self):self.methods=[]
         def call(self,method,params,ttl=0):
@@ -722,18 +724,22 @@ def snapshot_analyzer(largest_slot=100,account_slot=100):
             if method=="getTokenSupply":value={"amount":"1000","decimals":0}
             elif method=="getTokenLargestAccounts":
                 slot=largest_slot
-                value=[{"address":"ta-pool","amount":"500"},{"address":"ta-a","amount":"500"}]
+                value=[{"address":address,"amount":"500","decimals":0} for address in (pool_account,user_account)]
             elif method=="getMultipleAccounts":
                 slot=account_slot
-                if params[0]==["ta-pool","ta-a"]:
-                    value=[{"data":{"parsed":{"info":{"owner":owner,"tokenAmount":{"amount":"500"}}}}} for owner in ("POOL","A")]
+                if params[0]==[pool_account,user_account]:
+                    value=[{"owner":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","executable":False,"data":{"parsed":{"type":"account","info":{"mint":MINT,"owner":owner,"state":"initialized","tokenAmount":{"amount":"500","decimals":0}}}}} for owner in (pool_owner,user_owner)]
                 else:value=[{"owner":"11111111111111111111111111111111"} for _ in params[0]]
             else:raise AssertionError(method)
             return {"context":{"slot":slot},"value":value}
     a=analyzer()
+    a.mint=MINT
+    a._fixture_token_accounts=[pool_account,user_account]
+    a.token_profile=lambda:{"status":"OK","program_id":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","is_initialized":True,
+        "mint_authority":None,"freeze_authority":None}
     a.rpc=SnapshotRPC()
     a.holders=WalletClusterAnalyzer.holders.__get__(a)
-    a.registry={"normalization_complete":True,"addresses":{"POOL":{"role":"LP","source":"fixture"}}}
+    a.registry={"normalization_complete":True,"addresses":{pool_owner:{"role":"LP","source":"fixture"}}}
     a._scan_holder=lambda *args:None
     return a
 
@@ -762,7 +768,7 @@ def test_missing_owner_resolution_does_not_shrink_raw_account_top10():
     original=a.rpc.call
     def call(method,params,ttl=0):
         result=original(method,params,ttl)
-        if method=="getMultipleAccounts" and params[0]==["ta-pool","ta-a"]:
+        if method=="getMultipleAccounts" and params[0]==a._fixture_token_accounts:
             result["value"][0]=None
         return result
     a.rpc.call=call

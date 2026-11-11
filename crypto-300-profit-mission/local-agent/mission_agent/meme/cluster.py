@@ -582,6 +582,8 @@ class WalletClusterAnalyzer:
         self.edges=[];self.trades=[];self.funding=[];self.consolidations=[];self.tx_errors=[]
         self.adaptive_deepened_owners=[]
         self._snapshot_slots={}
+        self._top_account_context_errors=[]
+        self._expected_mint_program=None
         for pages in (history_max_pages,funding_max_pages,adaptive_history_max_pages,adaptive_funding_max_pages):
             if type(pages) is not int or not 1<=pages<=8:raise ValueError("HISTORY_PAGE_BOUND_INVALID")
         self.history_max_pages=history_max_pages;self.funding_max_pages=funding_max_pages
@@ -973,25 +975,64 @@ class WalletClusterAnalyzer:
         return (r or {}).get("value") or []
     def holders(self):
         self._snapshot_slots={}
-        supply,decimals=self._supply();top=self._top()[:20];tas=[x["address"] for x in top]
+        self._top_account_context_errors=[]
+        supply,decimals=self._supply();top=self._top()[:20]
+        self._top_accounts_requested=len(top)
+        def uint(value):
+            return (isinstance(value,str) and 1<=len(value)<=20 and value.isascii()
+                    and value.isdigit() and int(value)<=2**64-1)
+        def reject(address,reason,slot=None):
+            row={"reason":reason}
+            if valid_pubkey(address):row["token_account"]=address
+            if type(slot) is int and slot>0:row["snapshot_slot"]=slot
+            self._top_account_context_errors.append(row)
+        if self._expected_mint_program is None:reject(None,"MINT_PROGRAM_CONTEXT_UNAVAILABLE")
+        valid=[];seen=set()
+        for row in top:
+            address=row.get("address") if isinstance(row,dict) else None
+            if (not valid_pubkey(address) or address in seen or not uint(row.get("amount"))
+                    or type(row.get("decimals")) is not int or row["decimals"]!=decimals):
+                reject(address,"LARGEST_ACCOUNT_CONTEXT_INVALID",self._snapshot_slots.get("largest_accounts"));continue
+            seen.add(address);valid.append(row)
+        top=valid;tas=[x["address"] for x in top]
         raw_top10=top[:10]
         self._raw_top10_snapshot_pct=(
             str((Decimal(sum(int(x["amount"]) for x in raw_top10))*100/Decimal(supply)).quantize(Decimal("0.01")))
             if supply>0 and raw_top10 and all(str(x.get("amount","")).isdigit() for x in raw_top10)
             else None
         )
-        self._top_accounts_requested=len(tas)
         self._largest_account_snapshot={x["address"]:int(x["amount"]) for x in top if isinstance(x.get("address"),str) and str(x.get("amount","")).isdigit()}
-        infos=self._accounts(tas)
+        infos=self._accounts(tas) if tas else []
+        account_slot=(self._snapshot_slots.get("account_batches") or [None])[-1]
+        largest_slot=self._snapshot_slots.get("largest_accounts")
+        same_bank=(type(account_slot) is int and account_slot>0
+                   and type(largest_slot) is int and largest_slot==account_slot)
+        if not isinstance(infos,list):
+            reject(None,"TOKEN_ACCOUNT_BATCH_INVALID",account_slot);infos=[]
+        if len(infos)!=len(tas):reject(None,"TOKEN_ACCOUNT_BATCH_LENGTH_INVALID",account_slot)
         owners=[];temp=[]
         for row,info in zip(top,infos):
-            parsed=(((info or {}).get("data") or {}).get("parsed") or {}).get("info") or {}
-            owner=parsed.get("owner")
-            amount=((parsed.get("tokenAmount") or {}).get("amount")) or row.get("amount")
-            if not owner or amount is None:continue
+            if info is None:continue
+            data=info.get("data") if isinstance(info,dict) else None
+            parsed=data.get("parsed") if isinstance(data,dict) else None
+            value=parsed.get("info") if isinstance(parsed,dict) else None
+            token=value.get("tokenAmount") if isinstance(value,dict) else None
+            if (not isinstance(info,dict) or not isinstance(info.get("owner"),str) or info["owner"] not in TOKEN_PROGRAMS or info.get("executable") is not False
+                    or (self._expected_mint_program is not None and info.get("owner")!=self._expected_mint_program)
+                    or not isinstance(parsed,dict) or parsed.get("type")!="account" or not isinstance(value,dict)
+                    or value.get("mint")!=self.mint or not valid_pubkey(value.get("owner"))
+                    or not isinstance(value.get("state"),str) or value["state"] not in {"initialized","frozen"} or not isinstance(token,dict)
+                    or not uint(token.get("amount")) or type(token.get("decimals")) is not int or token["decimals"]!=decimals):
+                reject(row["address"],"TOKEN_ACCOUNT_CONTEXT_INVALID",account_slot);continue
+            owner=value["owner"];amount=token["amount"]
+            if same_bank and int(amount)!=int(row["amount"]):
+                reject(row["address"],"TOKEN_ACCOUNT_SAME_SLOT_AMOUNT_CONFLICT",account_slot);continue
             owners.append(owner);temp.append((row,owner,int(amount)))
         unique_owners=list(dict.fromkeys(owners))
         owner_infos=self._accounts(unique_owners) if owners else []
+        if not isinstance(owner_infos,list):
+            reject(None,"OWNER_METADATA_BATCH_INVALID",self._snapshot_slots["account_batches"][-1]);owner_infos=[]
+        if len(owner_infos)!=len(unique_owners):reject(None,"OWNER_METADATA_BATCH_LENGTH_INVALID",self._snapshot_slots["account_batches"][-1])
         owner_map={o:i for o,i in zip(unique_owners,owner_infos)}
         result=[]
         for row,owner,raw in temp:
@@ -1297,6 +1338,10 @@ class WalletClusterAnalyzer:
         return None if supply<=0 else str((Decimal(raw)*Decimal(100)/Decimal(supply)).quantize(Decimal("0.0001")))
     def analyze(self):
         token_profile=self.token_profile()
+        self._expected_mint_program=(token_profile.get("program_id")
+            if token_profile.get("status")=="OK" and token_profile.get("is_initialized") is True
+            and isinstance(token_profile.get("program_id"),str)
+            and token_profile.get("program_id") in TOKEN_PROGRAMS else None)
         market=self.market_snapshot()
         narrative=self.narrative_snapshot(market)
         self._progress("BASE_READY",token_profile=token_profile,market=market)
@@ -1304,6 +1349,18 @@ class WalletClusterAnalyzer:
         supply,decimals,holders=self.holders()
         self._history_decimals=decimals
         holder_rankings=self._holder_ranks(token_profile,supply,decimals)
+        conflict_slots={row.get("snapshot_slot") for row in self._top_account_context_errors
+                        if type(row.get("snapshot_slot")) is int}
+        if holder_rankings.get("snapshot_slot") in conflict_slots:
+            if holder_rankings.get("status")=="COMPLETE_SNAPSHOT":
+                holder_rankings.update(status="INCOMPLETE_EVIDENCE",reason="TOP_ACCOUNT_CONTEXT_CONFLICT")
+            holder_rankings["metrics"]={key:"UNRESOLVED" for key in holder_rankings.get("metrics") or {}}
+            for row in holder_rankings.get("owners") or []:row["supply_pct"]="UNRESOLVED"
+        binary=holder_rankings.get("raw_balance_check")
+        if isinstance(binary,dict) and binary.get("snapshot_slot") in conflict_slots:
+            binary.update(status="INCOMPLETE_EVIDENCE",reason="TOP_ACCOUNT_CONTEXT_CONFLICT",
+                          full_positive_mass_reconciled=False,owner_top10_pct="UNRESOLVED")
+            for row in binary.get("owners") or []:row["supply_pct"]="UNRESOLVED"
         pool_vaults=self.pool_vault_snapshot(market)
         from .pool_holder_roles import attach_pool_holder_roles
         pool_holder_roles=attach_pool_holder_roles(self.mint,holder_rankings,pool_vaults)
@@ -1496,12 +1553,14 @@ class WalletClusterAnalyzer:
         slots=[self._snapshot_slots.get("supply"),self._snapshot_slots.get("largest_accounts")]
         slots+=self._snapshot_slots.get("account_batches",[])
         snapshot_consistent=(len(slots)>=4 and all(type(slot) is int and slot>0 for slot in slots)
-                             and len(set(slots))==1)
+                             and len(set(slots))==1 and not self._top_account_context_errors
+                             and len(holders)==getattr(self,"_top_accounts_requested",len(holders)))
         if pool_holder_roles.get("status")=="SAME_SLOT_CONTRADICTION":snapshot_consistent=False
         strict_metrics_available=normalization_complete and holder_rank_complete and snapshot_consistent
         owners_not_scanned=sorted(set(owners)-scanned_owners)
         owner_account_history=self._owner_account_history_coverage()
         coverage_gaps=[]
+        if self._top_account_context_errors:coverage_gaps.append("TOP_ACCOUNT_CONTEXT_CONFLICT")
         if pool_holder_roles.get("status")=="SAME_SLOT_CONTRADICTION":
             snapshot_consistent=False
             coverage_gaps.append("POOL_HOLDER_SAME_SLOT_CONTRADICTION")
@@ -1550,7 +1609,7 @@ class WalletClusterAnalyzer:
         for i,h in enumerate(holders):
             holder_rows.append({
                 "rank":i+1,"token_account":h.token_account,"owner":h.owner,"raw":str(h.raw),
-                "quantity":str(h.quantity),"supply_pct":self._pct(h.raw,supply) if pool_holder_roles.get("status")!="SAME_SLOT_CONTRADICTION" else "UNRESOLVED","role":h.role,
+                "quantity":str(h.quantity),"supply_pct":self._pct(h.raw,supply) if pool_holder_roles.get("status")!="SAME_SLOT_CONTRADICTION" and not self._top_account_context_errors else "UNRESOLVED","role":h.role,
                 "role_source":h.role_source,"account_program":h.account_program,
                 "deep_scanned":h.owner in scanned_owners,
                 "first_acquisition":acquisition(h.owner),
@@ -1624,6 +1683,7 @@ class WalletClusterAnalyzer:
                            (getattr(self.rpc,"endpoint_failures",{}) or {}).items()}
         if pool_holder_roles.get("status")=="SAME_SLOT_CONTRADICTION":
             pool_holder_roles.setdefault("withdrawn_metrics",{})["analysis_metrics_before_withdrawal"]=dict(metrics)
+        if pool_holder_roles.get("status")=="SAME_SLOT_CONTRADICTION" or self._top_account_context_errors:
             for key in metrics:
                 if key.endswith("_PCT"):metrics[key]="UNRESOLVED"
             for group in relation_groups+control_groups+execution_groups:group["supply_pct"]="UNRESOLVED"
@@ -1682,6 +1742,8 @@ class WalletClusterAnalyzer:
                 "Narrative ownership, social endorsement and creator identity are not automatically inferred from token name or social links.",
             ],
         }
+        if self._top_account_context_errors:
+            report["coverage"]["top_account_context_errors"]=self._top_account_context_errors
         report["analysis_completeness"]=report_completeness(report)
         return report
 
