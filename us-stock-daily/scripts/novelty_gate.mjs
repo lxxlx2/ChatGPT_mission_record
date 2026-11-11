@@ -28,10 +28,10 @@ export function validateStockNovelty(input){
  // with an unnumbered neutral line and actual dated issuer/source receipts.
  for(let i=1;i<=HEADINGS.length;i++){
   if(parsed.some(entry=>entry.section===i))continue;
-  const neutral=report.includes(HEADINGS[i-1]+'\\n无高置信新增。');
+  const neutral=report.includes(HEADINGS[i-1]+'\n无高置信新增。');
   const reason=(input.empty_section_reasons||[]).find(x=>x.section===i);
   const all=(input.section_source_receipts||[]).filter(x=>x.section===i);
-  const checked=all.some(x=>x.status==='checked'&&/^https:\\/\\//.test(x.source_url||'')
+  const checked=all.some(x=>x.status==='checked'&&/^https:\/\//.test(x.source_url||'')
       && x.source_original_read===true && Number.isFinite(Date.parse(x.checked_at||'')));
   if(!(neutral&&String(reason?.reason||'').length>=25&&checked))
     fail('EMPTY_STOCK_SECTION',i+':'+HEADINGS[i-1]+'/missing_current_source_receipt');
