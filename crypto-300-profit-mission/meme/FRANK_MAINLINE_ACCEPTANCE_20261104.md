@@ -1,8 +1,17 @@
 # Frank 原问题统一验收（2026-11-04）
 
-## 最新维护验收：2026-11-11
+## 最新用户评审修复验收：2026-11-11
 
-本节及[固定SHA机器回执](./evidence/frank-narrative-top20-local-20261111.json)为当前状态；下方历史执行记录保留当时身份。PR220当前并已安装产品`0b966ab459b775bc58c77427c1dbcb491f2d9bf8`，parent`7aaf96a1524a9c6ae26749dae80a945097ac111e`，base`4fdf2238a4db2347975689913e49142b760dc091`。本轮仅既有Dashboard原8766更新和私有叙事补证安装，Scanner未重启、Loop未加载，真实RPC/CA POST0。
+当前并已安装产品`d43878828c86eacee5be9df8a17d16fc63a74bb6`，parent`0b966ab459b775bc58c77427c1dbcb491f2d9bf8`。用户评审的5项具体意见中2项确认并最小修复、3项守门穿透未复现且保留现有有限样本/独立证据语义；详见[逐项结论](./FRANK_REVIEW_CLAIMS_RESOLUTION_20261111.md)与[固定机器回执及全部命令](./evidence/frank-review-claims-resolution-20261111.json)。叙事阅读允许真实发生在报告前后，发布时间≤读取时间≤now+60及任务/原报告/原引用绑定保持；异常批次shape与length原因互斥。没有按未证实意见撤回已核验独立GPA bank或删除有范围说明的原始/样本比例。
+
+固定新HEAD本机385 Python/220 Node通过，父版固定新11例9失败/2通过。既有真实捕获2x978严格业务等值回放/0网络；双CI各2264 Python/4skip、220 Node、42合成浏览器检查通过，不能当作Mac或新真实源。495旧源码、46报告、3 SQLite一致备份/integrity/FK、14保护哈希与旧新实际Handler无监听预检通过后，仅重载Dashboard原8766；Chrome既有补证/原时间、原任务GET、刷新及样本/不完整提示通过并留页。提前阅读新场景仅在单元/API和DOM/VM验证，未采集真实前置阅读新任务样本。46报告、现有补证和14保护哈希不变；Scanner身份/代码不变且LIVE/无漂移/0错误，Loop未加载，回滚未实操。
+
+本轮真实RPC/CA POST/通知/签名/交易0，免费阶段2180不变，原一次572单列。代码/评审意见闭合/离线/本地Chrome PASS，完整CA目标仍PARTIAL，GPA429/完整历史/特殊身份/受控独立核对/代表样本等来源阻断保持。原10月归因按用户取消，INVEST_NO_GO / TRADE_NO_GO不变。
+
+
+## 历史维护验收：2026-11-11（0b966ab4）
+
+本节及[固定SHA机器回执](./evidence/frank-narrative-top20-local-20261111.json)保留0b966ab4当时状态，不覆盖上方当前d4387882验收。PR220当前并已安装产品`0b966ab459b775bc58c77427c1dbcb491f2d9bf8`，parent`7aaf96a1524a9c6ae26749dae80a945097ac111e`，base`4fdf2238a4db2347975689913e49142b760dc091`。本轮仅既有Dashboard原8766更新和私有叙事补证安装，Scanner未重启、Loop未加载，真实RPC/CA POST0。
 
 修复一个已复现的来源后备缺陷：旧版接受错误Mint、同slot Largest100/parsed900并标一致快照，输出互相矛盾的10%/90%比例。父版同18项用例15失败/3通过，新版18项通过；错误账户、精度、程序、状态及同slot矛盾拒绝，相关比例撤下，同slot嵌套排名降级，异slot余额观察保持有限样本。未增加逻辑RPC或wire预算。
 
