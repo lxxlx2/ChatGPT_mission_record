@@ -46,6 +46,23 @@ export function validateReport(input) {
   }
   if (headings.length !== HEADINGS.length || headings.some((h, i) => h !== HEADINGS[i])) errors.push('CANONICAL_13_HEADINGS_MISMATCH');
   if (items.length === 0) errors.push('REPORT_HAS_NO_SUBSTANTIVE_ITEMS');
+  // A stable monitoring status is not a new daily story. This defense also
+  // runs when the richer editorial manifest is unavailable.
+  const rightsName = /\b(?:SurfBoard|Surf|StandX|Cambria)\b/i;
+  const noDeltaStatus = /(?:此前已|历史(?:提醒|通知|窗口)|旧(?:提醒|通知|窗口|事件)|已(?:经)?(?:提醒|通知|发送)|同一(?:领取)?窗口|不(?:再)?重复(?:提醒|通知|发)|仍(?:未|在|待|处于)|尚未(?:核实|确认|取得|验证)|无法(?:读取|直读|核实|确认|验证)|尚不能确认|未核实|未确认|不能证明|公开镜像|SOURCE_GAP|VERIFYING)/i;
+  const rightsActionVerified = row => (input.candidates||[]).some(candidate =>
+    candidate.decision==='include' && candidate.new_action_verified===true
+    && candidate.source_tier==='issuer-original'
+    && /^https:\/\//.test(candidate.source_url||'')
+    && String(candidate.material_delta||'').length>=25
+    && Array.isArray(candidate.aliases)
+    && candidate.aliases.some(alias => normalized(row).includes(normalized(alias))));
+  for(const row of items){
+    if(!rightsName.test(row)||!noDeltaStatus.test(row))continue;
+    const explicitOld=/(?:此前已|历史(?:提醒|通知)|旧(?:提醒|通知)|已(?:经)?(?:提醒|通知|发送)|同一(?:领取)?窗口|不(?:再)?重复(?:提醒|通知|发))/.test(row);
+    if(explicitOld||!rightsActionVerified(row))errors.push('RIGHTS_NO_DELTA_STATUS_IN_NUMBERED_REPORT');
+  }
+
   if (!/^\d{4}-\d{2}-\d{2}$/.test(String(input.report_date ?? ''))) errors.push('INVALID_REPORT_DATE');
 
   const coverage = Array.isArray(input.coverage) ? input.coverage : [];
