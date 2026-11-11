@@ -162,3 +162,12 @@ def test_token_2022_sensitive_extension_without_state_stays_unresolved():
     assert out["active_extension_risks"]==[]
     assert out["unresolved_sensitive_extensions"][0]["name"]=="transferFeeConfig"
     assert out["unresolved_sensitive_extensions"][0]["status"]=="UNRESOLVED"
+
+
+def test_dexscreener_alternative_social_type_url_fields_are_preserved_as_unverified_hints():
+    payload=[{'chainId':'solana','baseToken':{'address':'Mint'},'quoteToken':{'address':'Quote'},
+              'pairAddress':'Pool','liquidity':{'usd':1},
+              'info':{'socials':[{'type':'twitter','url':'https://x.com/fixture'}]}}]
+    out=DexScreenerMarketClient(open_url=lambda *a,**k:Response(payload)).token_snapshot('Mint')
+    assert out['socials'][0]['platform']=='twitter'
+    assert out['socials'][0]['url']=='https://x.com/fixture'

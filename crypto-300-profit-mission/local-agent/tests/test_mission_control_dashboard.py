@@ -220,7 +220,7 @@ def test_dashboard_static_contains_signal_and_cluster_tabs():
     assert 'id="cluster-narrative"' in html
     assert 'id="review-activity-panel"' in html
     assert 'id="review-activity"' in html
-    assert '<option value="quick" selected>' in html
+    assert 'id="cluster-preset"' not in html
 
 
 class NoRunExecutor:
@@ -298,14 +298,14 @@ def test_atomic_cluster_report_write_replaces_complete_file(tmp_path):
     assert list(tmp_path.glob("latest.json.tmp-*"))==[]
 
 
-def test_cluster_dashboard_explains_presets_and_localizes_rate_limit():
+def test_cluster_dashboard_explains_single_query_bounds_and_localizes_rate_limit():
     from mission_agent.mission_control.server import Handler
     html=(Handler.static_root/"index.html").read_text()
     js=(Handler.static_root/"app.js").read_text()
-    assert "快速" in html and "标准" in html and "深度" in html
-    assert "快速模式：" in html
-    assert "自动加深到 30 + 12" in js
-    assert "Top20 owner 全部深扫" in js
+    assert "统一查询" in html
+    assert "请求与耗时上限" in html
+    assert "任务结束不代表完整尽调" in html
+    assert "clusterPresetHelp" not in js
     assert "免费 Solana RPC 触发限流（HTTP 429）" in js
     assert "execution_quote_30_usdc" not in js
     assert "token_profile" in js
@@ -328,7 +328,8 @@ def test_cluster_dashboard_does_not_fabricate_narrative_conclusion():
     js=(Handler.static_root/"app.js").read_text()
     assert "链上 / 市场结构结论" in js
     assert "完整投资结论" not in js
-    assert "未接入 X/FOMO 外部叙事检索" in js
+    assert "官方归属未核实" in js
+    assert "未做全网检索" in js
 
 
 def test_standard_cluster_preset_is_adaptive_not_bruteforce():
@@ -679,8 +680,9 @@ def test_dashboard_prioritizes_trade_tape_and_states_scope():
     assert 'id="coverage"' in html
     assert '/api/coverage' in js and '/api/coverage' in server
     assert 'LOCAL_INDEX_ONLY' in (Handler.static_root.parent/"frank.py").read_text()
-    assert '不抓取实时官方帖子' in js
-    assert '未接入 X/FOMO 外部叙事检索' in js
+    assert '脚本不执行' in js
+    assert '登录或访问墙不绕过' in js
+    assert '官方归属未核实' in js
 
 def test_frank_wallet_live_rpc_audit_diff_reports_missing_signatures():
     import runpy

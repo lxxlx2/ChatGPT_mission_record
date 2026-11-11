@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import ipaddress
+import hashlib
 import json
 import mimetypes
 import math
@@ -13,17 +14,22 @@ import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from ..meme.cluster import RpcCache, RPCJobBudgetExceeded, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
+from ..meme.cluster import RpcCache, RPCJobBudgetExceeded, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown, report_completeness
+from ..meme.job_checkpoint import JobCheckpoint, CheckpointRPC, CheckpointClient, CheckpointError, canonical, digest, source_fingerprint
 from ..meme.market import DexScreenerMarketClient
+from ..meme.market_parity import GeckoTerminalMarketClient
+from ..meme.narrative import PublicNarrativeClient
 from .db import open_control_ro
 from .delivery_review import summarize_manual_reviews
 from .frank import FrankReader
 from .intelligence_preview import analyze_rows
 from .frank_activity_watch import summarize_activity
+from .f01_source_view import partition_source_only
 from .payment_evidence import latest_buy_payment_evidence
 from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
@@ -130,6 +136,8 @@ CLUSTER_PRESETS = {
     "standard": {
         "deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8,
         "adaptive_history_per_holder": 30, "adaptive_funding_lookback": 12,
+        "adaptive_history_max_pages": 4, "adaptive_funding_max_pages": 5,
+        "enumerate_holder_ranks": True, "compare_market_sources": True, "collect_narrative": True, "read_pool_vaults": True, "audit_holder_binary": True,
     },
     "deep": {
         "deep_holders": 20, "history_per_holder": 100, "funding_lookback": 50,
@@ -144,6 +152,7 @@ class ClusterJobManager:
         self.report_root = self.control_root / "cluster-reports"
         self.report_root.mkdir(parents=True, exist_ok=True)
         self.cache_path = self.control_root / "wallet-cluster-rpc-cache.sqlite"
+        self.checkpoint_root = self.report_root / "_checkpoints"
         self.registry_path = Path(__file__).resolve().parents[2] / "config" / "meme_special_addresses.json"
         configured=os.environ.get("SOLANA_RPC_URLS")
         if configured:
@@ -159,6 +168,8 @@ class ClusterJobManager:
         self.rpc_endpoints=list(dict.fromkeys(self.rpc_endpoints))
         self.rpc_endpoint=self.rpc_endpoints[0]
         self.market_client=DexScreenerMarketClient()
+        self.independent_market_client=GeckoTerminalMarketClient()
+        self.narrative_client=PublicNarrativeClient()
         self.jupiter=JupiterQuoteClient(os.environ.get("JUPITER_API_KEY"))
         self.frank=FrankReader(production_root) if production_root is not None else None
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-cluster")
@@ -202,6 +213,55 @@ class ClusterJobManager:
             if job_id not in keep and job_id not in active:
                 self.jobs.pop(job_id,None)
 
+    def _checkpoint_binding(self, preset):
+        def client_kind(value):
+            return None if value is None else type(value).__module__ + "." + type(value).__qualname__
+        return digest(canonical({
+            "source": source_fingerprint(), "preset": preset, "options": CLUSTER_PRESETS[preset],
+            "budget": CLUSTER_RPC_JOB_BUDGETS[preset],
+            "registry": hashlib.sha256(self.registry_path.read_bytes()).hexdigest(),
+            "endpoints": hashlib.sha256(canonical(self.rpc_endpoints).encode()).hexdigest(),
+            "clients": [client_kind(getattr(self, name, None)) for name in
+                        ("market_client", "independent_market_client", "narrative_client")],
+        }))
+
+    def _paused_job(self, job_id):
+        if not self._valid_job_id(job_id) or not getattr(self, "checkpoint_root", None):
+            return None
+        checkpoint = None
+        try:
+            checkpoint = JobCheckpoint(self.checkpoint_root, job_id, readonly=True)
+            self.validate_mint(checkpoint.meta["mint"])
+            preset = checkpoint.meta["preset"]
+            if preset not in CLUSTER_PRESETS:return None
+            public = checkpoint.public_job()
+            try: checkpoint.check_binding(self._checkpoint_binding(preset), CLUSTER_RPC_JOB_BUDGETS[preset])
+            except CheckpointError as exc:
+                public.update(resume_available=False, resume_unavailable_reason=str(exc))
+            return public
+        except (OSError, ValueError, KeyError, TypeError, sqlite3.Error, CheckpointError):
+            return None
+        finally:
+            if checkpoint is not None:checkpoint.close()
+
+    def resume(self, job_id, mint):
+        mint = self.validate_mint(mint)
+        if not self._valid_job_id(job_id):raise ValueError("INVALID_CA_JOB_ID")
+        with self.lock:
+            current = self.jobs.get(job_id)
+            if current and current["mint"] == mint and current["status"] in {"QUEUED", "RUNNING"}:
+                return self._public_job(current)
+            if self._saved_job_report(job_id) is not None:
+                raise ValueError("CA_JOB_ALREADY_DONE")
+            paused = self._paused_job(job_id)
+            if paused is None or paused["mint"] != mint or not paused["resume_available"]:
+                raise ValueError("CA_JOB_NOT_RESUMABLE")
+            job = {**paused, "status": "QUEUED", "resume_available": False,
+                   "progress": {"stage": "QUEUED", "updated_at": time.time()}}
+            self.jobs[job_id] = job
+            job["future"] = self.executor.submit(self._run, job_id)
+            return self._public_job(job)
+
     def submit(self, mint: str, preset: str = "standard") -> dict:
         mint = self.validate_mint(mint)
         if preset not in CLUSTER_PRESETS:
@@ -223,6 +283,11 @@ class ClusterJobManager:
                 "error": None,
                 "progress": {"stage":"QUEUED","updated_at":time.time()},
             }
+            # Persist before acknowledging the POST or queuing any source work.
+            if getattr(self, "checkpoint_root", None):
+                job["checkpoint_version"] = 1
+                JobCheckpoint.create(self.checkpoint_root, job, self._checkpoint_binding(preset),
+                                     CLUSTER_RPC_JOB_BUDGETS[preset])
             self.jobs[job_id] = job
             job["future"] = self.executor.submit(self._run, job_id)
             return self._public_job(job)
@@ -258,7 +323,7 @@ class ClusterJobManager:
                 "liquidity_usd":pair.get("liquidity_usd"),
             })
         else:
-            for key in ("top_accounts_resolved","scanned","target","owner","mode","deep_holders_scanned","adaptive_deepened"):
+            for key in ("top_accounts_resolved","scanned","target","owner","mode","deep_holders_scanned","adaptive_deepened","phase","pages","signature_count","stop_reason"):
                 if key in details:progress[key]=details.get(key)
             if details.get("owners"):progress["owners"]=list(details.get("owners") or [])[:10]
         with self.lock:
@@ -466,23 +531,53 @@ class ClusterJobManager:
             "current_extension_audit_details":extension_audit_snapshot,
         }
 
+    @classmethod
+    def _valid_completed_report(cls, report: dict, job_id: str, mint: str) -> bool:
+        # Required structure of an analyzer report, not a completeness verdict.
+        if not isinstance(report, dict) or not cls._valid_job_id(job_id):
+            return False
+        if report.get("ca_job_id") != job_id or report.get("mint") != mint:
+            return False
+        if report.get("schema_version") != 2 or report.get("source") != "SOLANA_FINALIZED_JSON_RPC":
+            return False
+        observed = report.get("observed_at")
+        if isinstance(observed, bool) or not isinstance(observed, (int, float)) or not math.isfinite(observed) or observed <= 0:
+            return False
+        return (isinstance(report.get("coverage"), dict)
+                and isinstance(report.get("holders"), list)
+                and isinstance(report.get("metrics"), dict)
+                and isinstance(report.get("assessment"), dict)
+                and isinstance(report.get("token_profile"), dict)
+                and isinstance(report.get("limitations"), list))
+
     def _run(self, job_id: str):
         with self.lock:
             job = self.jobs[job_id]
             job["status"] = "RUNNING"
-            job["started_at"] = time.time()
+            job["started_at"] = job.get("started_at") or time.time()
             mint = job["mint"]
             preset = job["preset"]
+            checkpoint_enabled = job.get("checkpoint_version") == 1
         cache = RpcCache(self.cache_path)
+        checkpoint = None
         try:
             opts = CLUSTER_PRESETS[preset]
             wire_budget = CLUSTER_RPC_JOB_BUDGETS[preset]
+            active_budget = wire_budget
+            if checkpoint_enabled:
+                checkpoint = JobCheckpoint(self.checkpoint_root, job_id)
+                checkpoint.begin(self._checkpoint_binding(preset), wire_budget)
+                active_budget = checkpoint.transport_budget()
             rpc = SolanaReadOnlyRPC(
                 self.rpc_endpoint,
                 fallback_endpoints=self.rpc_endpoints[1:],
                 cache=cache,
-                **wire_budget,
+                **active_budget,
             )
+            if checkpoint is not None:rpc = CheckpointRPC(checkpoint, rpc)
+            def source_client(name, enabled=True):
+                client = getattr(self, name, None) if enabled else None
+                return CheckpointClient(checkpoint, client, name) if checkpoint is not None and client is not None else client
             registry = load_registry(self.registry_path)
             report = WalletClusterAnalyzer(
                 mint,
@@ -493,12 +588,36 @@ class ClusterJobManager:
                 funding_lookback=opts["funding_lookback"],
                 adaptive_history_per_holder=opts.get("adaptive_history_per_holder"),
                 adaptive_funding_lookback=opts.get("adaptive_funding_lookback"),
-                market_client=self.market_client,
+                enumerate_holder_ranks=opts.get("enumerate_holder_ranks",False),
+                adaptive_history_max_pages=opts.get("adaptive_history_max_pages",1),
+                adaptive_funding_max_pages=opts.get("adaptive_funding_max_pages",1),
+                market_client=source_client("market_client"),
+                independent_market_client=source_client("independent_market_client", opts.get("compare_market_sources")),
+                compare_market_sources=opts.get("compare_market_sources",False),
+                narrative_client=source_client("narrative_client", opts.get("collect_narrative")),
+                collect_narrative=opts.get("collect_narrative",False),
+                read_pool_vaults=opts.get("read_pool_vaults",False),
+                audit_holder_binary=opts.get("audit_holder_binary",False),
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
+            if checkpoint is not None:
+                checkpoint.check_binding(self._checkpoint_binding(preset), wire_budget)
+                checkpoint.assert_can_publish()
+                report["collection_checkpoint"] = checkpoint.provenance()
+                report.setdefault("coverage", {})["rpc_call_count_scope"] = "JOB_RESERVED_ATTEMPTS_INCLUDING_UNCERTAIN_CRASH_OUTCOMES"
+                if checkpoint.meta["resume_count"]:
+                    report["completed_at"] = time.time()
+                    report["observed_at"] = checkpoint.meta["started_at"]
+            # Recompute for every newly produced report; legacy GETs remain unchanged.
+            report["analysis_completeness"] = report_completeness(report)
             # Do not persist/publish a successful job after an exhausted RPC deadline
             # or a terminal failed attempt, even if a future analyzer catches an error.
             rpc.assert_can_publish()
+            # Bind a successful saved CA report to the actual submitted job.
+            # Historical reports without this field remain unverified by job ID.
+            report["ca_job_id"] = job_id
+            if not self._valid_completed_report(report, job_id, mint):
+                raise ValueError("CA_COMPLETED_REPORT_SCHEMA_INVALID")
             self._set_progress(job_id,"REPORT_PERSISTING",{"deep_holders_scanned":(report.get("coverage") or {}).get("deep_holders_scanned"),"adaptive_deepened":len((report.get("coverage") or {}).get("adaptive_deepened_owners") or [])})
             stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
             out = self.report_root / mint
@@ -507,23 +626,58 @@ class ClusterJobManager:
             payload = json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True)
             _atomic_write_text(out / f"{stamp}.json", payload)
             _atomic_write_text(out / f"{stamp}.md", markdown(report))
+            by_job = self.report_root / "_jobs"
+            by_job.mkdir(parents=True, exist_ok=True)
+            _atomic_write_text(by_job / f"{job_id}.json", payload)
             _atomic_write_text(out / "latest.json", payload)
-            if self.evidence_enabled:
-                try:
-                    self.evidence_spool.ca_done(mint=mint, job_id=job_id, report=report)
-                    self.evidence_executor.submit(
-                        GitEvidencePublisher(self.evidence_spool).sync
-                    )
-                except (OSError, ValueError, RuntimeError):
-                    # Finished CA report remains valid even if export fails.
-                    pass
+            # Only a separately committed terminal marker authorizes later
+            # recovery. Orphan reports from failed writes are never DONE.
+            with self.lock:
+                self._prune_jobs_locked()
+            marker = {
+                "version": 1, "status": "DONE", "ca_job_id": job_id,
+                "mint": mint,
+                "report_sha256": hashlib.sha256(payload.encode("utf-8")).hexdigest(),
+            }
+            _atomic_write_text(by_job / f"{job_id}.done.json",
+                               json.dumps(marker, sort_keys=True))
+            if checkpoint is not None:checkpoint.finish("DONE")
+            # Marker is the irreversible success boundary. No later failure
+            # may turn a committed result into a persisted ERROR.
             with self.lock:
                 job = self.jobs[job_id]
                 job["status"] = "DONE"
                 job["finished_at"] = time.time()
                 job["progress"] = {"stage":"DONE","updated_at":job["finished_at"]}
-                self._prune_jobs_locked()
+            if self.evidence_enabled:
+                try:
+                    self.evidence_spool.ca_done(mint=mint, job_id=job_id, report=report)
+                    self.evidence_executor.submit(GitEvidencePublisher(self.evidence_spool).sync)
+                except Exception:
+                    # This optional export cannot revoke the DONE commit.
+                    pass
+        except CheckpointError as exc:
+            if self._saved_job_report(job_id) is not None:
+                with self.lock:
+                    job = self.jobs[job_id]
+                    job.update(status="DONE", error=None, finished_at=time.time())
+                    job["progress"] = {"stage": "DONE", "updated_at": job["finished_at"]}
+                return
+            with self.lock:
+                job = self.jobs[job_id]
+                job.update(status="ERROR", finished_at=time.time(),
+                           error={"type": "CA_CHECKPOINT_UNAVAILABLE", "reason": str(exc),
+                                  "message": "CLUSTER_ANALYSIS_CHECKPOINT_UNAVAILABLE"})
+                job["progress"] = {"stage": "ERROR", "updated_at": job["finished_at"]}
         except RPCJobBudgetExceeded as exc:
+            if self._saved_job_report(job_id) is not None:
+                with self.lock:
+                    job = self.jobs[job_id]
+                    job["status"] = "DONE"
+                    job["error"] = None
+                    job["finished_at"] = job.get("finished_at") or time.time()
+                    job["progress"] = {"stage": "DONE", "updated_at": job["finished_at"]}
+                return
             # A budget stop is not a successful report. Preserve existing latest.json;
             # neither persist a partial report nor publish a DONE notification.
             with self.lock:
@@ -544,6 +698,14 @@ class ClusterJobManager:
                 }
                 self._prune_jobs_locked()
         except Exception as exc:
+            if self._saved_job_report(job_id) is not None:
+                with self.lock:
+                    job = self.jobs[job_id]
+                    job["status"] = "DONE"
+                    job["error"] = None
+                    job["finished_at"] = job.get("finished_at") or time.time()
+                    job["progress"] = {"stage": "DONE", "updated_at": job["finished_at"]}
+                return
             with self.lock:
                 job = self.jobs[job_id]
                 job["status"] = "ERROR"
@@ -557,27 +719,104 @@ class ClusterJobManager:
                 job["progress"] = {"stage":"ERROR","updated_at":job["finished_at"]}
                 self._prune_jobs_locked()
         finally:
-            cache.close()
+            try:cache.close()
+            finally:
+                if checkpoint is not None:
+                    try:
+                        if checkpoint.lock_fd is not None and self.jobs[job_id]["status"] != "DONE":
+                            checkpoint.finish("ERROR")
+                    finally:checkpoint.close()
+            if self.jobs[job_id]["status"] == "ERROR":
+                paused = self._paused_job(job_id)
+                with self.lock:
+                    self.jobs[job_id]["resume_available"] = bool(paused and paused["resume_available"])
+
+    @staticmethod
+    def _valid_job_id(job_id: str) -> bool:
+        return isinstance(job_id, str) and re.fullmatch(r"[0-9a-f]{32}", job_id) is not None
+
+    def _saved_job_report_with_digest(self, job_id: str) -> tuple[dict, str] | None:
+        if not self._valid_job_id(job_id):
+            return None
+        try:
+            folder = self.report_root / "_jobs"
+            marker = json.loads((folder / f"{job_id}.done.json").read_text())
+            if not isinstance(marker, dict) or marker.get("version") != 1 or marker.get("status") != "DONE" or marker.get("ca_job_id") != job_id:
+                return None
+            mint = marker.get("mint")
+            if not isinstance(mint, str):
+                return None
+            self.validate_mint(mint)
+            digest = marker.get("report_sha256")
+            if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+                return None
+            raw = (folder / f"{job_id}.json").read_bytes()
+            if hashlib.sha256(raw).hexdigest() != digest:
+                return None
+            report = json.loads(raw)
+            if not self._valid_completed_report(report, job_id, mint):
+                return None
+            report.pop("execution_quote_30_usdc", None)
+            return report, digest
+        except (OSError, ValueError, UnicodeDecodeError):
+            return None
+
+    def _saved_job_report(self, job_id: str) -> dict | None:
+        saved = self._saved_job_report_with_digest(job_id)
+        return saved[0] if saved is not None else None
+
+    def narrative_supplement(self, mint: str, job_id: str) -> dict | None:
+        mint = self.validate_mint(mint)
+        if not self._valid_job_id(job_id):
+            raise ValueError('INVALID_CA_JOB_ID')
+        saved = self._saved_job_report_with_digest(job_id)
+        if saved is None or saved[0]['mint'] != mint:
+            return None
+        from .narrative_supplement import read_narrative_supplement
+        return read_narrative_supplement(self.control_root, saved[0], saved[1])
 
     def get(self, job_id: str) -> dict | None:
+        error_job = None
         with self.lock:
             job = self.jobs.get(job_id)
-            return None if job is None else self._public_job(job)
+            if job is not None:
+                if job.get("status") != "ERROR":return self._public_job(job)
+                error_job = self._public_job(job)
+        # Only a previously completed, durable exact-ID report can restore DONE.
+        report = self._saved_job_report(job_id)
+        if report is None:
+            return error_job if error_job is not None else self._paused_job(job_id)
+        return {
+            "job_id": job_id, "mint": report["mint"], "status": "DONE",
+            "created_at": None, "started_at": None, "finished_at": None,
+            "error": None,
+            "progress": {"stage": "DONE", "source": "SAVED_CA_REPORT"},
+            "restored_from_saved_report": True,
+        }
 
-    def latest(self, mint: str) -> dict | None:
+    def latest(self, mint: str, job_id: str | None = None) -> dict | None:
         mint = self.validate_mint(mint)
+        if job_id is not None:
+            if not self._valid_job_id(job_id):
+                raise ValueError("INVALID_CA_JOB_ID")
+            saved = self._saved_job_report(job_id)
+            if saved is not None:
+                return saved if saved["mint"] == mint else None
         path = self.report_root / mint / "latest.json"
         if not path.is_file():
             return None
         try:
             report = json.loads(path.read_text())
-            # Previously saved fixed-notional quotes are stale historical
-            # research and must not appear in fresh CA analysis.
+            if not isinstance(report, dict) or report.get("mint") != mint:
+                return None
+            # A by-ID lookup must not silently substitute a newer job.
+            # Old ID-less cache stays readable with unverified identity.
+            if job_id is not None and report.get("ca_job_id") is not None:
+                return None
             report.pop("execution_quote_30_usdc", None)
             return report
         except (OSError, ValueError):
             return None
-
 
 class DashboardState:
     def __init__(self, production_root: Path, control_root: Path):
@@ -610,6 +849,23 @@ class DashboardState:
             return {"status": "UNKNOWN", "reason": "MISSION_CONTROL_HEARTBEAT_UNREADABLE"}
         if not isinstance(health, dict):
             return {"status": "UNKNOWN", "reason": "MISSION_CONTROL_HEARTBEAT_INVALID"}
+        # This is a display snapshot, not permission to resume the stopped loop.
+        # Keep the historical file and all delivery records untouched.
+        health["recorded_status"] = health.get("status", "UNKNOWN")
+        try:
+            updated = datetime.fromisoformat(health["updated_at"].replace("Z", "+00:00"))
+            if updated.tzinfo is None:
+                raise ValueError("TIMEZONE_REQUIRED")
+            age = time.time() - updated.timestamp()
+            if not math.isfinite(age) or age < 0:
+                raise ValueError("INVALID_HEARTBEAT_TIME")
+        except (KeyError, AttributeError, TypeError, ValueError, OverflowError, OSError):
+            health.update(status="UNKNOWN", heartbeat_age_seconds=None,
+                          heartbeat_reason="MISSION_CONTROL_HEARTBEAT_TIME_INVALID")
+        else:
+            health["heartbeat_age_seconds"] = round(age, 3)
+            if age > 120:
+                health.update(status="STALE", heartbeat_reason="MISSION_CONTROL_HEARTBEAT_STALE")
         if not self.control_db.is_file():
             health["manual_review_breakdown_available"] = False
             health["manual_review_breakdown_error"] = "CONTROL_DB_UNAVAILABLE"
@@ -710,6 +966,29 @@ class DashboardState:
             candidates.append(item)
         candidates.sort(key=lambda x:int(x.get("latest_at") or 0),reverse=True)
         return candidates
+
+    def follow_opportunities(self):
+        """Source-only F01 facts; deliberately no quote, approval, or LIVE delivery."""
+        try:
+            now = time.time()
+            candidates = self.candidates()
+            runtime = self.frank.runtime()
+            if not isinstance(runtime, dict):
+                raise ValueError("F01_INVALID_RUNTIME")
+            return partition_source_only(
+                candidates, now=now, runtime_status=runtime.get("status"))
+        except (OSError, ValueError, TypeError, KeyError, sqlite3.DatabaseError):
+            return {
+                "schema_version": 2,
+                "scope": "FRANK_LOCAL_INDEX_SOURCE_ONLY_NO_EXECUTION_QUOTE",
+                "status": "SOURCE_UNAVAILABLE", "source_recent": None,
+                "source_recent_count": None, "not_followed": None,
+                "excluded_count": None, "eligible": [],
+                "eligible_count": 0, "full_chain_verified": False,
+                "current_balance_verified": False,
+                "execution_eligibility": "NOT_ASSESSED",
+                "live_notification_authorized": False,
+            }
 
     def frank_intelligence(self):
         """Source-only amount-free research observations. No price fetch/sender."""
@@ -912,6 +1191,10 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.state.mission_control_health())
         if path == "/api/candidates":
             return self._json(self.state.candidates())
+        if path == "/api/follow-opportunities":
+            if urlparse(self.path).query:
+                return self._json({"error": "UNSUPPORTED_F01_QUERY"}, 400)
+            return self._json(self.state.follow_opportunities())
         if path == "/api/frank-intelligence":
             if urlparse(self.path).query:
                 return self._json({"error": "UNSUPPORTED_INTELLIGENCE_QUERY"}, 400)
@@ -965,13 +1248,25 @@ class Handler(BaseHTTPRequestHandler):
             job_id = (query.get("job_id") or [""])[0]
             job = self.state.cluster_jobs.get(job_id)
             return self._json(job if job is not None else {"error":"CLUSTER_JOB_NOT_FOUND"}, 200 if job is not None else 404)
-        if path == "/api/cluster-latest":
-            query = parse_qs(urlparse(self.path).query)
-            mint = (query.get("mint") or [""])[0]
+        if path == "/api/cluster-narrative-supplement":
             try:
-                report = self.state.cluster_jobs.latest(mint)
+                query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=2)
+                if set(query) != {"mint", "job_id"} or any(len(value) != 1 for value in query.values()):
+                    raise ValueError('INVALID_SUPPLEMENT_QUERY')
+                result = self.state.cluster_jobs.narrative_supplement(query['mint'][0], query['job_id'][0])
             except ValueError:
-                return self._json({"error":"INVALID_SOLANA_CA"},400)
+                return self._json({"error": "INVALID_NARRATIVE_SUPPLEMENT_QUERY"}, 400)
+            return self._json(result if result is not None else {"error": "CA_REPORT_NOT_FOUND"}, 200 if result is not None else 404)
+        if path == "/api/cluster-latest":
+            try:
+                query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=2)
+                if set(query) - {"mint", "job_id"} or any(len(v) != 1 for v in query.values()):
+                    raise ValueError("INVALID_REPORT_QUERY")
+                mint = (query.get("mint") or [""])[0]
+                job_id = (query.get("job_id") or [None])[0]
+                report = self.state.cluster_jobs.latest(mint, job_id=job_id)
+            except ValueError:
+                return self._json({"error":"INVALID_CLUSTER_REPORT_QUERY"},400)
             return self._json(report if report is not None else {"error":"CLUSTER_REPORT_NOT_FOUND"}, 200 if report is not None else 404)
         if path in {"/", "/index.html"}:
             return self._file(self.static_root / "index.html")
@@ -1004,13 +1299,24 @@ class Handler(BaseHTTPRequestHandler):
         except ValueError:
             return self._json({"error":"INVALID_JSON_REQUEST"},400)
         try:
-            job = self.state.cluster_jobs.submit(body.get("mint",""), body.get("preset","standard"))
-        except ValueError:
-            return self._json({"error":"INVALID_CLUSTER_REQUEST"},400)
+            if "resume_job_id" in body:
+                job = self.state.cluster_jobs.resume(body["resume_job_id"], body.get("mint", ""))
+            else:
+                job = self.state.cluster_jobs.submit(body.get("mint",""), body.get("preset","standard"))
+        except ValueError as exc:
+            # Preserve only the known public CA validation code; never reflect
+            # arbitrary exception text, RPC details or internal paths.
+            error = "INVALID_SOLANA_CA" if str(exc) == "INVALID_SOLANA_CA" else "INVALID_CLUSTER_REQUEST"
+            return self._json({"error":error},400)
         return self._json(job,202)
 
 
-class IPv6ThreadingHTTPServer(ThreadingHTTPServer):
+class DashboardHTTPServer(ThreadingHTTPServer):
+    # Concurrent panel reads can overflow the stdlib's five pending accepts.
+    request_queue_size = 64
+
+
+class IPv6ThreadingHTTPServer(DashboardHTTPServer):
     address_family = socket.AF_INET6
 
 
@@ -1018,5 +1324,5 @@ def serve(production_root: Path, control_root: Path, host: str = "127.0.0.1", po
     if host not in {"127.0.0.1", "localhost", "::1"} or not _host_is_loopback(host, port):
         raise ValueError("MISSION_CONTROL_LOCALHOST_ONLY")
     Handler.state = DashboardState(production_root, control_root)
-    server_cls = IPv6ThreadingHTTPServer if ":" in host else ThreadingHTTPServer
+    server_cls = IPv6ThreadingHTTPServer if ":" in host else DashboardHTTPServer
     server_cls((host, port), Handler).serve_forever()

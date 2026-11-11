@@ -2,6 +2,44 @@
 
 Status: local read-only research utility.
 
+## Dashboard unfinished-job recovery
+
+New Dashboard CA jobs persist a private checkpoint before the POST acknowledges
+the job ID. A service process that loses its in-memory task can read that exact
+unfinished job back as `PAUSED`. Reload, status GET and report GET never start
+collection. The separate **继续未完成的查询** action explicitly POSTs the existing
+`resume_job_id` and exact Mint; it does not allocate a new task or background loop.
+
+Recovery replays the saved logical source reads locally to rebuild analyzer
+state, then reads only the missing suffix. This reconstructs partial-page
+classification and cursor state without double-counting economic evidence. An
+unrecorded response may have to be read again; each wire attempt is reserved in
+SQLite before transport, so a crash can conservatively overcount an uncertain
+attempt but cannot reset the original per-job wire limit or deadline. Known
+provider cooldowns and pacing are retained. Double-clicks reuse the same task;
+an exclusive process lease prevents two workers collecting one checkpoint.
+
+This journal is separate from `RpcCache`: replay does not extend or rewrite its
+TTL. Resumed output is an observation of the original historical source epoch,
+with a separate completion time and explicit UI/Markdown notice; it does not
+refresh current balances or market prices. `collection_checkpoint` records the
+resume/replay and reserved-attempt scope. Empty source pages remain bounded
+address-window evidence, never wallet birth or global history completeness.
+
+Source files, registry, preset/budget and existing provider configuration are
+bound to the checkpoint. Changed configuration, broken identity/hash chain,
+unsafe paths, exhausted budget or incompatible code fail closed. New jobs whose
+checkpoint is missing cannot silently run as a fresh scan. Legacy tasks retain
+their existing one-process behavior; old unjournaled unfinished jobs cannot be
+retroactively recovered. Completed reports still require the existing exact-ID
+report hash and separate DONE marker; recovery never substitutes another job.
+
+Checkpoint files stay in the local private `_checkpoints` directory (0700/0600),
+with a 128 MiB logical payload ceiling per job. They are local integrity checks,
+not a signed independent trust root. No checkpoint/raw source file is exposed by
+the HTTP API or exported to a public repository. This feature adds no provider,
+daemon, scheduler, notification, wallet action, paid service or production grant.
+
 Goal: turn the mandatory wallet-cluster specification into a repeatable local command without paid data providers.
 
 ## Data sources
@@ -45,7 +83,7 @@ From `crypto-300-profit-mission/local-agent`:
 Default CLI scan remains explicitly bounded by CLI flags. The Dashboard standard preset is now adaptive:
 - resolve Top20 token-account owners first;
 - shallow-scan the first 6 unique owners with up to 12 target-token signatures and 8 funding signatures;
-- only wallets with relation evidence, material unresolved roles, or verified dev/creator/treasury roles are automatically deepened;
+- wallets with relation evidence, or material ordinary/unresolved/dev/creator/treasury roles, are automatically deepened. Materiality aggregates the observed token-account balances by Owner; an ordinary system-owned account is not evidence of complete acquisition/funding history or safety. This selection does not create a risk/control label;
 - adaptive deepening expands those wallets to up to 30 target-token signatures and 12 funding signatures;
 - historical transactions remain locally cached.
 
@@ -139,7 +177,7 @@ From any current Frank candidate, `链上查询` carries that CA directly into t
 The research view supports three bounded presets. All three resolve Top20 token accounts to actual owners. The difference is how many owners receive historical deep scan and how far that scan goes:
 
 - `快速`: resolve Top20, then shallow-scan the first 6 unique owners with up to 8 target-token signatures plus 4 funding signatures. Use for first-pass screening.
-- `标准`: resolve Top20, shallow-scan the first 6 owners with 12 + 8, then automatically deepen only suspicious/material unresolved wallets to 30 + 12. This is the default formal analysis.
+- `标准`: resolve Top20, shallow-scan the first 6 owners with 12 + 8, then automatically deepen related or material ordinary/unresolved/dev wallets to 30 + 12. This is the default formal analysis. The whole-job request/time ceiling still applies and may stop collection; eligibility is not proof of complete history.
 - `深度`: deep-scan all Top20 unique owners with up to 100 target-token signatures plus 50 funding signatures. Use only for important projects or strong wallet-splitting suspicion; it puts the most pressure on free RPC.
 
 Queries are asynchronous so a long public-RPC scan does not block Frank signal rendering. Only one cluster job runs at a time to avoid turning the free Solana RPC into an uncontrolled fan-out.
