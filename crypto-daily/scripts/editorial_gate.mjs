@@ -40,7 +40,7 @@ export function validateEditorial(input, rules) {
   // The manifest must independently establish a new issuer-confirmed action if
   // it wants to promote an otherwise unresolved rights watch into the report.
   const rightsName = /\b(?:SurfBoard|Surf|StandX|Cambria)\b/i;
-  const replayOnly = /(?:此前已|历史(?:提醒|通知|窗口)|旧(?:提醒|通知|窗口|事件)|已(?:经)?(?:发送|提醒|通知)|同一(?:领取)?窗口|不(?:再)?重复(?:提醒|通知|发)|无(?:实质|明确|高置信)?新增|仍(?:未|在|待|处于)|尚未(?:取得|核实|验证|确认)|无法(?:读取|核实|确认|验证)|SOURCE_GAP|VERIFYING|原帖(?:无法|未能)|个人(?:资格|额度|权益)(?:尚未|仍未|未知|未获))/i;
+  const replayOnly = /(?:此前已|历史(?:提醒|通知|窗口)|旧(?:提醒|通知|窗口|事件)|已(?:经)?(?:发送|提醒|通知)|同一(?:领取)?窗口|不(?:再)?重复(?:提醒|通知|发)|无(?:实质|明确|高置信)?新增|仍(?:未|在|待|处于)|尚未(?:取得|核实|验证|确认)|无法(?:读取|直读|核实|确认|验证)|不能证明|尚不能确认|未核实|未确认|公开镜像|SOURCE_GAP|VERIFYING|原帖(?:无法|未能)|个人(?:资格|额度|权益)(?:尚未|仍未|未知|未获))/i;
   for(let i=0;i<parsed.length;i++){
     const row=parsed[i];
     if(!rightsName.test(row.text)||!replayOnly.test(row.text))continue;
