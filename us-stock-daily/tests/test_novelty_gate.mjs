@@ -5,7 +5,7 @@ const headings=['一、市场总览','二、正常时段、盘后与异动原因
 function make(){
  const items=headings.map((_,i)=>({section:i+1,item_number:1,event_key:'news-'+(i+1),text:'有日期和真实源的新事实-'+(i+1)}));
  const events=items.map(t=>({event_key:t.event_key,family_key:'stable-family-'+t.event_key,material_version:'original-2026-10-28',primary_section:t.section,kind:t.section===1?'ROUTINE_MARKET':t.section===9?'CALENDAR':'NEW_MATERIAL',observation_date:'2026-10-27',calendar_date:'2026-10-29',source_url:'https://example.org/issuer',published_at:'2026-10-28T01:20:00Z'}));
- return {body:headings.map((h,i)=>h+'\n（1）'+items[i].text).join('\n\n'),items,events,previous_events:[],previous_days_checked:['2026-10-21','2026-10-22','2026-10-23','2026-10-24','2026-10-25','2026-10-26','2026-10-27'],ipo_status_receipts:[{issuer_name:'Anthropic',official_url:'https://www.sec.gov/edgar/browse/',checked_at:'2026-10-28T02:00:00Z',stage:'PUBLIC_S1',new_delta_or_none:'NO_DELTA'}],x_source_receipt:{checked_at:'2026-10-28T02:00:00Z',browser_session:'UNAVAILABLE',status:'PUBLIC_ORIGINAL_LOOKUP',fallback_url:'https://x.com/AnthropicAI'}};
+ return {report_date:'2026-10-28',body:headings.map((h,i)=>h+'\n（1）'+items[i].text).join('\n\n'),items,events,previous_events:[],previous_days_checked:['2026-10-21','2026-10-22','2026-10-23','2026-10-24','2026-10-25','2026-10-26','2026-10-27'],ipo_status_receipts:[{issuer_name:'Anthropic',official_url:'https://www.sec.gov/edgar/browse/',checked_at:'2026-10-28T02:00:00Z',stage:'PUBLIC_S1',new_delta_or_none:'NO_DELTA'}],x_source_receipt:{checked_at:'2026-10-28T02:00:00Z',browser_session:'UNAVAILABLE',status:'PUBLIC_ORIGINAL_LOOKUP',fallback_url:'https://x.com/AnthropicAI'}};
 }
 test('complete 12-section new-date facts pass',()=>assert.equal(validateStockNovelty(make()).passed,true));
 test('same family new date key cannot repeat identical issuer version',()=>{
@@ -42,9 +42,9 @@ test('local numbering must reset and be complete',()=>{
  const v=make();v.body=v.body.replace('二、正常时段、盘后与异动原因\n（1）','二、正常时段、盘后与异动原因\n（2）');
  assert.ok(validateStockNovelty(v).errors.some(e=>e.startsWith('NUMBERING')));
 });
-test('no seven-day Gmail review must be disclosed',()=>{
+test('no seven-day Gmail or canonical readback is a hard semantic QA failure',()=>{
  const v=make();v.previous_days_checked=[];
- assert.ok(validateStockNovelty(v).warnings.includes('PREVIOUS_SEVEN_SENT_DAYS_NOT_PROVEN'));
+ assert.ok(validateStockNovelty(v).errors.some(e=>e.startsWith('PREVIOUS_SEVEN_SENT_DAYS_NOT_PROVEN')));
 });
 
 test('IPO issuer pipeline receipt missing is a hard failure',()=>{
@@ -67,6 +67,23 @@ test('verified new IPO stage must appear in existing IPO section',()=>{
  assert.ok(validateStockNovelty(v).errors.some(e=>e.startsWith('IPO_STAGE_NOT_IN_IPO_SECTION')));
 });
 
+test('previous seven days must be the real consecutive prior dates, not arbitrary seven strings',()=>{
+ const v=make();v.previous_days_checked=['2026-10-10','2026-10-11','2026-10-12','2026-10-13','2026-10-14','2026-10-15','2026-10-16'];
+ assert.ok(validateStockNovelty(v).errors.some(e=>e.startsWith('PREVIOUS_SEVEN_SENT_DAYS_NOT_PROVEN')));
+});
+test('an actionless previously notified claim or source gap is not a stock market item',()=>{
+ const v=make();v.items[6].text='SurfBoard此前已提醒11月13日截止，无高置信新增，仅SOURCE_GAP状态';
+ v.body=headings.map((h,i)=>h+'\\n（1）'+v.items[i].text).join('\\n\\n');
+ assert.ok(validateStockNovelty(v).errors.some(e=>e.startsWith('NO_VALUE_OLD_NEWS_IN_NUMBERED_ITEM')));
+});
+test('a calendar previously delivered under same family version cannot recur as new item',()=>{
+ const v=make();v.previous_events=[{family_key:'stable-family-news-9',material_version:'original-2026-10-28'}];
+ assert.ok(validateStockNovelty(v).errors.some(e=>e.startsWith('CALENDAR_REPEATED_WITHOUT_NEW_VERSION')));
+});
+test('a dated calendar event beyond next 72 hours cannot be numbered as near-term',()=>{
+ const v=make();v.events[8].calendar_date='2026-11-13';v.previous_events=[{family_key:'stable-family-news-9',material_version:'different-earlier'}];
+ assert.ok(validateStockNovelty(v).errors.some(e=>e.startsWith('CALENDAR_NO_CURRENT_72H_ACTION')));
+});
 test('empty sections are rejected even with twelve correct headings',()=>{
  const v=make();
  v.body=v.body.split('\n').filter(line=>!line.includes(v.items[4].text)).join('\n');
