@@ -49,6 +49,14 @@ test('Nov11 StandX VERIFYING and unverified claim mirror cannot be numbered news
   });
   assert.ok(r.errors.some(e=>e.startsWith('RIGHTS_STATUS_REPLAY_WITHOUT_NEW_ACTION')));
 });
+test('cross-chapter mirror and safety-advice reuse from Nov11 cannot fill action/catalyst sections',()=>{
+  const r=run(x=>{
+    x.events.push(mkEvent('standx-unverified-20261111','TGE_PUBLIC_SALE','PERSONAL',{source_confirmed:false,status:'unverified',actual_delta:'Only social mirrors and unverified individual eligibility are known'}));
+    x.items.push({section:11,event_key:'standx-unverified-20261111',role:'detail',text:'StandX DUSD公开镜像声称年底领取截止，尚不能确认用户个人资格。'});
+    x.items.push({section:13,event_key:'standx-unverified-20261111',role:'detail',text:'此前StandX提醒过但本报告不能证明本人有额度，切勿盲签。'});
+  });
+  assert.ok(r.errors.some(e=>e.startsWith('RIGHTS_STATUS_REPLAY_WITHOUT_NEW_ACTION')));
+});
 test('a fresh independently verified issuer claim is eligible for section seven',()=>{
   const r=run(x=>{
     x.events.push(mkEvent('fresh-claim','TGE_PUBLIC_SALE','PERSONAL',{source_confirmed:true,status:'verified',new_action_verified:true,issuer_action_source_url:'https://issuer.example/claim',actual_delta:'New issuer claim portal opened after prior verification; the claim period changed'}));
