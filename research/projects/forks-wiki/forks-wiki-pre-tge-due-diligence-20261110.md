@@ -1,5 +1,34 @@
 # Forks.wiki / FORK 预 TGE、可领取性、链与安全尽调（2026-11-10）
 
+## 2026-11-11 ~21:24–21:30 Bangkok: wallet claim-fee safety verification, OFFCHAIN_QUEUE_ONLY, no official MORI/FORK mint
+
+**Current evidence priority:** direct Alchemy Solana finalized RPC > authenticated forks.wiki live /claim and first-party @wikifork X post > old public fork GitHub source. No token sale, token claim, wallet signing, monitoring, notification or automation performed by this investigation.
+
+### User participation and promised delivery
+- Connected official `https://forks.wiki/claim?auth=ok` shows X account `@lxx794`, wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`, **25,200 FORK pending** (prior 20,700 pending outdated); **12,600 "Available to claim"**, **12,600 "Unlock to claim"** only after launching a coin on forks. Three social tasks on new claim flow counted +250 each. The "Claimed" label belongs to queue **#308**, indicating paid spot in distributor queue, **NOT an actual token transfer**. Sending panel explicitly stated **0 of 0 wallets sent**, 0%; project states it will transfer FORK to wallet at launch, at its discretion. Exact final entitlement and redeemable amount are not onchain binding.
+- Source X: https://x.com/wikifork/status/2120522026117181787 ("launch $fork in 4 hours; claim is live"; first 500 launched coins +5,000 FORK project claim). Tweet Snowflake creation time **2026-11-11 14:20:23 UTC / 21:20:23 Bangkok**. Announced **approximate scheduled launch 2026-11-12 01:20 Bangkok**, not a confirmed TGE; do not convert announcement into actual launch or give exact-second launch assurance.
+- Official site's /market latest indexed content says `$FORK not launched yet`; public GitHub `forkwiki/fork` main head `f807abf1248ceadf47542cf7e223b223819e84f0` from Nov 6 still hardcodes `token.ca:''`; treasury wallet's latest signatures checked have **no verified official FORK create** at evidence time. Search results contain numerous same-name "FORK"/"Forkwiki" meme mints: **not canonical without first-party project mint corroboration**. Official CA, liquid market, contract-enforced claim, batch distribution remain **UNCONFIRMED**.
+- At the ~21:29 Bangkok Solana finalized RPC context, user Tokenkeg and Token-2022 token account listing found **no confirmed FORK issuance into that wallet**. This does not establish what might happen later.
+
+### Actual signed transaction, programs and cost
+- Successfully finalized user fee transaction [Solscan](https://solscan.io/tx/21HaGmHa9suUiXpfee4TYUQ1Bn8yA4MjUoAYDMwNLc3vZp97W9DqL68WJzBKPhuq3SsjgDHkofG2RmM5n5KNFUux), slot **468155590**, timestamp **2026-11-11 14:23:48 UTC / 21:23:48 Bangkok**, `meta.err=null`.
+- Parsed instructions: ComputeBudget x2, **SystemProgram.transfer** `2,000,000 lamports = 0.002 SOL` from user wallet `BP7h…4dSp` to **`Da71cES3NeUMLpW3MuNGkCVTht3jceik1RtNLrbqC6jV`**, and Memo `forks.wiki $FORK claim fee`. Network transaction fee `11,000 lamports=0.000011 SOL`. Exact native wallet prebalance 55,849,243 -> postbalance 53,838,243 lamports, net decrease **0.002011 SOL**. No inner instructions, SPL token program invocation, approve, delegate, setAuthority, native program invoke to an untrusted dApp. **NARROW wallet-signature finding: no ongoing/token-spending approval granted by this transaction; no guarantee other site interactions are safe.**
+- Verified independent OTHER wallet payment [example](https://solscan.io/tx/3TjUrJLbDRcJ6cRCBrCmSubD1EfRozTXo1HX6fTBTpQRRtHANrLX1dPZn2G5Dera9zRUC2Bf4QpnsFkuGtsNHMr) transfers **another 0.002 SOL with same memo to same recipient**. The recipient is a **System Program owned basic account** (not a Solana smart contract / escrow). Its observed balance at slot 468156442 was **9.381677141 SOL**, which does **not** mean SOL is reserved for air drops or that all money came from claim fees.
+- **MATERIAL INTEGRITY MISMATCH**: fee receiving address `Da71cES3NeUMLpW3MuNGkCVTht3jceik1RtNLrbqC6jV` is **different** from publicly versioned `forkwiki/fork` `src/config.js` claimed `launch.treasury: '61468ik7HhYNg8ixQYeF9caMNVm57PqTy3tyQ28F6Y5e'`. Whether both are controlled by the same team is UNKNOWN. The current website Claim-specific paid fee code/receipt server is **absent from the Nov 6 source**; this audit could not verify deployment-to-source parity or recipient ownership. Treat claim charges as an **unsecured payment to an unverified payee**, not a contractual deposit or onchain claimable entitlement. Avoid accusing of confirmed theft without evidence.
+- Risk assessment: **wallet-transaction authorization LOW for this exact signed transfer**, **project counterparty/distribution risk HIGH/UNVERIFIED**, **site source-code/treasury integrity significant WARNING**; no official/chain backed redemption proven.
+- User recommendation: **DO NOT pay another fee, do not launch a coin or buy a homonymous FORK to unlock the remaining 12,600**, until issuer links the exact mint and a traceable payout batch from identified operator wallet. Confirm claimed queue 308 only in site ledger; actual payout requires real SPL token `Transfer` from attributable distributor to recipient mint-associated wallet. A "Paid"/"Claimed" badge is not delivery.
+
+### Evidence/source links
+- https://forks.wiki/claim
+- https://forks.wiki/market
+- https://x.com/wikifork/status/2120522026117181787
+- https://github.com/forkwiki/fork/blob/f807abf1248ceadf47542cf7e223b223819e84f0/src/config.js
+- https://solscan.io/tx/21HaGmHa9suUiXpfee4TYUQ1Bn8yA4MjUoAYDMwNLc3vZp97W9DqL68WJzBKPhuq3SsjgDHkofG2RmM5n5KNFUux
+- https://solscan.io/account/Da71cES3NeUMLpW3MuNGkCVTht3jceik1RtNLrbqC6jV
+
+---
+
+
 Status: WATCH / PRE_TGE / NO_GO_FOR_FUNDED_TRADING。  
 证据时点：2026-11-10 18:33 起，曼谷时间。仅执行公开数据读取、GitHub 检查、只读链上 RPC 和用户已登录网页读取。未进行钱包签名、交易、自动化或监控。
 本报告遵守 Mission 项目分析框架、Evidence Workflow、token_trading_principles、MISSION_SPEC。
