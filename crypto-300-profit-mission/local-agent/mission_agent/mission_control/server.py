@@ -136,8 +136,8 @@ CLUSTER_PRESETS = {
     "standard": {
         "deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8,
         "adaptive_history_per_holder": 30, "adaptive_funding_lookback": 12,
-        "adaptive_history_max_pages": 4, "adaptive_funding_max_pages": 5,
-        "enumerate_holder_ranks": True, "compare_market_sources": True, "collect_narrative": True, "read_pool_vaults": True, "audit_holder_binary": True,
+        "adaptive_history_max_pages": 8, "adaptive_funding_max_pages": 8,
+        "enumerate_holder_ranks": True, "compare_market_sources": True, "collect_narrative": True, "read_pool_vaults": True, "audit_holder_binary": True, "read_launch_identity": True,
     },
     "deep": {
         "deep_holders": 20, "history_per_holder": 100, "funding_lookback": 50,
@@ -266,6 +266,13 @@ class ClusterJobManager:
             self.jobs[job_id] = job
             job["future"] = self.executor.submit(self._run, job_id)
             return self._public_job(job)
+
+    def _independent_rpc(self):
+        # Second free provider for balance parity only (getMultipleAccounts).
+        url=os.environ.get("SOLANA_RPC_SECONDARY","https://solana-rpc.publicnode.com")
+        if not url or url=="0" or url in self.rpc_endpoints[:1]:return None
+        try:return SolanaReadOnlyRPC(url,fallback_endpoints=[],max_wire_attempts=4,max_elapsed_seconds=60)
+        except ValueError:return None
 
     def submit(self, mint: str, preset: str = "standard") -> dict:
         mint = self.validate_mint(mint)
@@ -603,6 +610,8 @@ class ClusterJobManager:
                 collect_narrative=opts.get("collect_narrative",False),
                 read_pool_vaults=opts.get("read_pool_vaults",False),
                 audit_holder_binary=opts.get("audit_holder_binary",False),
+                read_launch_identity=opts.get("read_launch_identity",False),
+                independent_rpc=self._independent_rpc() if opts.get("audit_holder_binary") else None,
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
             if checkpoint is not None:

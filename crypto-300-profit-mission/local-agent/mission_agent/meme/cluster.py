@@ -567,11 +567,13 @@ class WalletClusterAnalyzer:
         adaptive_history_per_holder=None,adaptive_funding_lookback=None,
         progress_callback=None,
         enumerate_holder_ranks=False,independent_market_client=None,compare_market_sources=None,narrative_client=None,collect_narrative=None,read_pool_vaults=False,audit_holder_binary=False,
-        history_max_pages=1,funding_max_pages=1,
+        history_max_pages=1,funding_max_pages=1,independent_rpc=None,read_launch_identity=False,
         adaptive_history_max_pages=1,adaptive_funding_max_pages=1,
     ):
         self.mint=mint;self.rpc=rpc;self.registry=special_registry or {};self.history_per_holder=int(history_per_holder);self.deep_holders=int(deep_holders);self.funding_lookback=int(funding_lookback);self.material_pct=Decimal(material_pct)
         self.audit_holder_binary=audit_holder_binary is True
+        self.independent_rpc=independent_rpc
+        self.read_launch_identity=read_launch_identity is True
         self.read_pool_vaults=read_pool_vaults is True
         self.market_client=market_client
         self.narrative_client=narrative_client if collect_narrative is not False else None
@@ -824,6 +826,8 @@ class WalletClusterAnalyzer:
     def _role(self,address,account_info):
         explicit=self._entry(address)
         if explicit:return explicit.get("role","UNRESOLVED"),explicit.get("source","LOCAL_REGISTRY")
+        launch=getattr(self,"_launch_roles",{}).get(address)
+        if launch:return launch
         value=(account_info or {}).get("value") if isinstance(account_info,dict) else None
         if not value:
             if isinstance(account_info,dict) and "value" in account_info and account_info["value"] is None:
@@ -867,8 +871,13 @@ class WalletClusterAnalyzer:
         elif program=="TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA":token_program="SPL Token"
         else:token_program=program or "UNRESOLVED"
         found_update,update_authority=self._find_key(parsed,"updateAuthority")
-        extension_names=[];extension_details=[]
+        extension_names=[];extension_details=[];token_metadata=None
         for extension in info.get("extensions") or []:
+            if isinstance(extension,dict) and extension.get("extension")=="tokenMetadata" and isinstance(extension.get("state"),dict):
+                st=extension["state"]
+                if st.get("mint")==self.mint and isinstance(st.get("uri"),str) and len(st["uri"])<=512:
+                    token_metadata={"name":str(st.get("name") or "")[:64],"symbol":str(st.get("symbol") or "")[:32],
+                                    "uri":st["uri"].strip(),"update_authority":st.get("updateAuthority"),"mint":self.mint}
             if isinstance(extension,dict):
                 name=extension.get("extension") or extension.get("type")
                 if name:extension_names.append(str(name))
@@ -907,7 +916,24 @@ class WalletClusterAnalyzer:
             "inactive_sensitive_extensions":inactive_sensitive_extensions,
             "unresolved_sensitive_extensions":unresolved_sensitive_extensions,
             "risk_flags":risk_flags,
+            "token_metadata":token_metadata,
         }
+
+    def launch_snapshot(self,token_profile):
+        """Pump.fun bonding curve/creator and on-chain metadata URI (3 reads max)."""
+        from .launch_identity import collect_pump_launch,collect_token_metadata
+        self._launch_roles={}
+        out={"version":1}
+        if not self.read_launch_identity:return {**out,"status":"NOT_REQUESTED"}
+        for name,fn in (("pump",lambda:collect_pump_launch(self.mint,self.rpc)),("metadata",lambda:collect_token_metadata(self.mint,token_profile,self.rpc))):
+            try:out[name]=fn()
+            except RPCJobBudgetExceeded:raise
+            except Exception as exc:out[name]={"version":1,"status":"UNAVAILABLE","reason":type(exc).__name__}
+        pump=out.get("pump") or {}
+        if pump.get("status")=="VERIFIED_CHAIN_STATE":
+            self._launch_roles[pump["bonding_curve"]]=("PROTOCOL_VAULT","PUMP_BONDING_CURVE_PDA_VERIFIED")
+            if valid_pubkey(pump.get("creator")):self._launch_roles[pump["creator"]]=("CREATOR","PUMP_BONDING_CURVE_CREATOR_FIELD")
+        return out
 
     def market_snapshot(self):
         if self.market_client is None:
@@ -957,7 +983,11 @@ class WalletClusterAnalyzer:
         if market.get("status")!="OK" or market.get("source")!="DEXSCREENER_API" or market.get("mint")!=self.mint:
             return {**empty,"reason":"PRIMARY_MARKET_IDENTITY_UNVERIFIED"}
         self._progress("NARRATIVE_SOURCES",scanned=0)
-        return self.narrative_client.collect(self.mint,market)
+        result=self.narrative_client.collect(self.mint,market)
+        if hasattr(self.narrative_client,"collect_origin") and isinstance(result,dict):
+            try:result["origin"]=self.narrative_client.collect_origin(self.mint,getattr(self,"_launch_metadata",None),market)
+            except Exception as exc:result["origin"]={"version":1,"status":"UNAVAILABLE","reason":type(exc).__name__}
+        return result
 
     @staticmethod
     def _quote_quantity(record):
@@ -1357,7 +1387,9 @@ class WalletClusterAnalyzer:
             if token_profile.get("status")=="OK" and token_profile.get("is_initialized") is True
             and isinstance(token_profile.get("program_id"),str)
             and token_profile.get("program_id") in TOKEN_PROGRAMS else None)
+        launch=self.launch_snapshot(token_profile)
         market=self.market_snapshot()
+        self._launch_metadata=launch.get("metadata")
         narrative=self.narrative_snapshot(market)
         self._progress("BASE_READY",token_profile=token_profile,market=market)
 
@@ -1384,6 +1416,13 @@ class WalletClusterAnalyzer:
         withhold_legacy_normalization(holder_rankings,special_address_roles)
         from .special_roles import apply_sufficient_top10
         apply_sufficient_top10(holder_rankings)
+        independent_balance_check={"version":1,"status":"NOT_REQUESTED"}
+        if self.independent_rpc is not None:
+            from .independent_check import collect_independent_balance_check
+            ranked=[r["token_account"] for r in sorted(holder_rankings.get("accounts") or [],key=lambda r:-int(r.get("raw") or 0))] if isinstance(holder_rankings.get("accounts"),list) else []
+            try:independent_balance_check=collect_independent_balance_check(self.mint,ranked or [h.token_account for h in holders],self.rpc,self.independent_rpc)
+            except RPCJobBudgetExceeded:raise
+            except Exception as exc:independent_balance_check={"version":1,"status":"UNAVAILABLE","reason":type(exc).__name__}
         self._prepare_owner_account_history(holders,holder_rankings)
         preview_top10_pct=getattr(self,"_raw_top10_snapshot_pct",None)
         self._progress(
@@ -1474,16 +1513,34 @@ class WalletClusterAnalyzer:
             if current is None or (row.get("block_time") or 0)>(current.get("block_time") or 0):
                 funding_by_owner[row["owner"]]=row
 
+        holder_tx_errors=any(str(e.get("phase","")).startswith("holder") for e in self.tx_errors if isinstance(e,dict))
+        def account_history_complete(owner):
+            plan=self._owner_history_selection.get(owner)
+            if plan:
+                accounts=[h.token_account for h in plan["holders"]]
+                if self._owner_account_source!="VERIFIED_CURRENT_MINT_ACCOUNTS" or len(accounts)!=plan["observed"]:return False
+            else:
+                accounts=[h.token_account for h in holders if h.owner==owner]
+            if not accounts or holder_tx_errors:return False
+            for address in accounts:
+                if not any(w["phase"]=="holder" and w["address"]==address and w["initial_before"] is None
+                           and w["stop_reason"]=="PROVIDER_EMPTY_PAGE" and w["signature_slots_complete"]
+                           for w in self.history_attempts):return False
+            return True
         def acquisition(owner):
             row=firsts.get(owner)
+            complete=owner in scanned_owners and account_history_complete(owner)
             if not row or not isinstance(row,dict):
+                if complete:return {"status":"NO_MARKET_BUY_IN_COMPLETE_ACCOUNT_HISTORY","type":"NON_MARKET_ACQUISITION",
+                                    "history_scope":"ALL_SIGNATURES_OF_CURRENT_TOKEN_ACCOUNTS; CLOSED_ACCOUNTS_NOT_ENUMERATED"}
                 return {"status":"UNRESOLVED","type":"UNRESOLVED"} if owner in scanned_owners else {"status":"NOT_SCANNED","type":"NOT_SCANNED"}
             token_qty=None
             if row.get("token_amount_raw") not in {None,""} and row.get("token_decimals") is not None:
                 try:token_qty=str(Decimal(str(row["token_amount_raw"]))/(Decimal(10)**int(row["token_decimals"])))
                 except (ValueError,TypeError,InvalidOperation):token_qty=None
             return {
-                "status":"CONFIRMED_BOUNDED",
+                "status":"CONFIRMED_ACCOUNT_COMPLETE" if complete else "CONFIRMED_BOUNDED",
+                "history_scope":"ALL_SIGNATURES_OF_CURRENT_TOKEN_ACCOUNTS; CLOSED_ACCOUNTS_NOT_ENUMERATED" if complete else "BOUNDED_WINDOW",
                 "type":row.get("type") or "MARKET_BUY",
                 "block_time":row.get("block_time"),
                 "signature":row.get("signature"),
@@ -1708,7 +1765,7 @@ class WalletClusterAnalyzer:
             "schema_version":2,"mint":self.mint,"source":"SOLANA_FINALIZED_JSON_RPC",
             "rpc_endpoint":safe_rpc_label(getattr(self.rpc,"endpoint","UNKNOWN")),"rpc_endpoints":endpoints,
             "observed_at":time.time(),"supply_raw":str(supply),"decimals":decimals,
-            "token_profile":token_profile,"market":market,"pool_vaults":pool_vaults,"pool_holder_roles":pool_holder_roles,"special_address_roles":special_address_roles,"narrative":narrative,"assessment":assessment,"holders":holder_rows,"holder_rankings":holder_rankings,
+            "token_profile":token_profile,"launch_identity":launch,"independent_balance_check":independent_balance_check,"market":market,"pool_vaults":pool_vaults,"pool_holder_roles":pool_holder_roles,"special_address_roles":special_address_roles,"narrative":narrative,"assessment":assessment,"holders":holder_rows,"holder_rankings":holder_rankings,
             "metrics":metrics,"confirmed_relation_groups":relation_groups,"probable_control_clusters":control_groups,
             "probable_execution_clusters":execution_groups,
             "shared_infrastructure_exclusions":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_CEX","SHARED_INFRA"}],
@@ -1951,7 +2008,7 @@ def markdown(report:dict)->str:
         first=(
             f"{a.get('type')} {a.get('quote_quantity') or ''} {a.get('quote_asset') or ''} "
             f"@ {a.get('block_time') or ''}"
-        ).strip() if a.get("status")=="CONFIRMED_BOUNDED" else a.get("status","UNRESOLVED")
+        ).strip() if a.get("status") in {"CONFIRMED_BOUNDED","CONFIRMED_ACCOUNT_COMPLETE"} else a.get("status","UNRESOLVED")
         funding=h.get("funding") or {}
         funder=f"{funding.get('source') or 'UNRESOLVED'} {funding.get('sol') or ''} SOL".strip()
         lines.append(

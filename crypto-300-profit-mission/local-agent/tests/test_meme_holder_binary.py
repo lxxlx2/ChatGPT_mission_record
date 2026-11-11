@@ -132,10 +132,25 @@ def test_context_older_than_enumeration_is_not_accepted():
     assert out['status']=='UNAVAILABLE' and out['reason']=='CONTEXT_BEFORE_ENUMERATION'
 
 
-def test_token2022_base_amounts_do_not_prove_extension_economic_mass():
+def test_token2022_without_mass_extensions_reconciles_and_verifies():
+    from mission_agent.meme.holder_binary import verified_holder_mass
     r=source();r['program_id']=P22;rpc=RPC(r);out=run(r,rpc)
+    assert out['status']=='RECONCILED_NONZERO_BALANCE_MASS' and out['token_2022_extension_types']==[]
+    assert out['token_2022_mass_semantics']=='NO_WITHHELD_FEE_OR_CONFIDENTIAL_EXTENSION'
+    assert verified_holder_mass(out,MINT)
+
+
+def test_token2022_transfer_fee_extension_does_not_prove_economic_mass():
+    from mission_agent.meme.holder_binary import token2022_extension_types
+    r=source();r['program_id']=P22;rpc=RPC(r)
+    # Extended mint: AccountType=1 at 165, then TLV TransferFeeConfig(type 1, len 108).
+    def fee(b):
+        b[165]=1;b[166:170]=(1).to_bytes(2,'little')+(108).to_bytes(2,'little');b.extend(bytes(108))
+    change_data(rpc.mint,fee)
+    out=run(r,rpc)
     assert out['status']=='OBSERVED_SAMPLE_ONLY' and out['reason']=='TOKEN_2022_MASS_SEMANTICS_UNVERIFIED'
-    assert out['owner_top10_pct']=='UNRESOLVED'
+    assert out['owner_top10_pct']=='UNRESOLVED' and 1 in out['token_2022_extension_types']
+    assert token2022_extension_types(bytes(166)+(18).to_bytes(2,'little')+(0).to_bytes(2,'little'))==[18]
 
 
 def test_job_budget_exception_is_terminal():

@@ -94,6 +94,24 @@ def on_ed25519_curve(address):
     return x2==0 or pow(x2,(_P-1)//2,_P)==1
 
 
+def b58decode32(address):
+    if not valid_pubkey(address):raise ValueError('PUBKEY_INVALID')
+    n=0
+    for ch in address:n=n*58+ALPHABET.index(ch)
+    return n.to_bytes(32,'big')
+
+
+def find_program_address(seeds,program):
+    """Solana PDA derivation (sha256(seeds|bump|program|marker)); first off-curve bump."""
+    import hashlib
+    prog=b58decode32(program)
+    for bump in range(255,-1,-1):
+        h=hashlib.sha256(b''.join(seeds)+bytes([bump])+prog+b'ProgramDerivedAddress').digest()
+        addr=_b58(h)
+        if on_ed25519_curve(addr) is False:return addr,bump
+    raise ValueError('PDA_NOT_FOUND')
+
+
 def _slot(value):return type(value) is int and value>0
 
 
