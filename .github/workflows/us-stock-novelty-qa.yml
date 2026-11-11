@@ -5,6 +5,8 @@ on:
     paths:
       - 'us-stock-daily/scripts/novelty_gate.mjs'
       - 'us-stock-daily/tests/test_novelty_gate.mjs'
+      - 'airdrop-tge-monitor/scripts/action_gate.mjs'
+      - 'airdrop-tge-monitor/tests/test_action_gate.mjs'
       - 'us-stock-daily/delivery-pending/*.json'
       - '.github/workflows/us-stock-novelty-qa.yml'
 permissions:
@@ -23,6 +25,8 @@ jobs:
           node-version: '22'
       - name: Check regression tests
         run: node --test us-stock-daily/tests/test_novelty_gate.mjs
+      - name: Check existing TGE action gate regressions
+        run: node --test airdrop-tge-monitor/tests/test_action_gate.mjs
       - name: Check changed report manifests
         shell: bash
         run: |
