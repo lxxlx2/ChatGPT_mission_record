@@ -1,5 +1,7 @@
 # Airdrop / TGE Monitor Spec
 
+Latest delivery authority (2026-11-11): **EMAIL-ONLY** new verified ACTION notifications via the one existing authorized Gmail recipient; never ChatGPT/App status or routine emails. Any historical "Gmail + ChatGPT" language below is superseded. A passed Gate 0–6 action should be sent after real Gmail Sent-prefix dedupe and independent source QA even if optional Git staging is unavailable; then archive exact Sent body or mark SENT_ARCHIVE_PENDING, never silently suppress actionable alerts due solely to Git write failure. A bulk discovery batch or JS-only account shell is PARTIAL_ONLY, never checked_no_update. See ACTION_GATE.md final 2026-11-11 override. No new schedule, monitor or backup.
+
 Active schedule authority: existing task runs HOURLY at minute 00 Asia/Bangkok, starting 2026-10-10 00-minute cadence (future invocations). Older :14/:50 history is not active. Existing urgent+one-shard, ACTION_GATE, scope and alert dedupe unchanged.
 
 Updated: 2026-09-26 15:10 Asia/Bangkok
