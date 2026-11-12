@@ -30,5 +30,5 @@ Updated: 2026-11-12 17:04:19 Asia/Bangkok
 - Excluded: Abstract, Grass, Backpack, Loopscale, fully refunded humans&.
 - Space/Spacecoin and Theo/Autheo separate.
 - next scheduled shard: 2.
-- last_verified_complete_at: UNKNOWN; partial attempts never advance complete coverage.
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 (historical latest fully verified sweep recorded in AUTOMATION_RUNTIME.md; no later complete proof in current final cache; PARTIAL_ONLY attempts never advance it).
 - code_execution: CODE_NOT_EXECUTED / MANUAL_EQUIVALENT_ONLY.
