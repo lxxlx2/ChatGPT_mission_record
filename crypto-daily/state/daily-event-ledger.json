@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-11-12T10:15:00Z",
+  "updated_at": "2026-11-12T10:45:00Z",
   "status": "ACTIVE",
-  "note": "2026-11-12 user-requested manual recovery Crypto Gmail Sent ID 1a1cf2db24305968, complete Git canonical readback equal. Authoritative prior Nov10 corrected 1a1ca7b9a202b667, Nov11 1a1ca7164f5e6e0b; no Surf/StandX actionless alerts. All source availability partial; scheduled unattended still failed 09/10/11:20. Historical event records retained.",
+  "note": "Real Nov12 updates: Nov10 full dedup correction Sent 1a1cf318651e3490, Nov11 full dedup correction Sent 1a1cf32b2d2da5b6, Nov12 full recovered Sent 1a1cf2db24305968; all canonical report bodies exact Gmail readback. Earlier original ids remain historical delivery evidence. TGE Surf/StandX unverified/old no-value statuses suppressed. Unattended delivery still unproven.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -2746,7 +2746,11 @@
       "delivered_date": "2026-11-11",
       "gmail_message_id": "1a1ca7164f5e6e0b",
       "source_url": "https://www.binance.com/en-AE/support/announcement/detail/9ef6e347da924cdc90f53577ab483b1f",
-      "classification": "CEX_TRANSFER_RESTRICTION"
+      "classification": "CEX_TRANSFER_RESTRICTION",
+      "canonical_gmail_message_id": "1a1cf318651e3490",
+      "canonical_report_date": "2026-11-10",
+      "original_sent_id_retained": true,
+      "previous_recovery_sent_id": "1a1ca7164f5e6e0b"
     },
     {
       "event_key": "macro:us-cpi:2026-10-released-2026-11-10",
@@ -2755,7 +2759,10 @@
       "delivered_date": "2026-11-11",
       "gmail_message_id": "1a1ca7164f5e6e0b",
       "source_url": "https://www.bls.gov/news.release/archives/cpi_11102026.htm",
-      "classification": "MACRO_CPI"
+      "classification": "MACRO_CPI",
+      "canonical_gmail_message_id": "1a1cf32b2d2da5b6",
+      "canonical_report_date": "2026-11-11",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "ipo:anthropic:sec-s1a2:2026-11-10",
@@ -2764,7 +2771,10 @@
       "delivered_date": "2026-11-11",
       "gmail_message_id": "1a1ca7164f5e6e0b",
       "source_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026072484/0001628280-26-072484-index.htm",
-      "classification": "IPO_S1A_FILED"
+      "classification": "IPO_S1A_FILED",
+      "canonical_gmail_message_id": "1a1cf32b2d2da5b6",
+      "canonical_report_date": "2026-11-11",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "etf:btc:2026-11-10",
@@ -2773,7 +2783,10 @@
       "delivered_date": "2026-11-11",
       "gmail_message_id": "1a1ca7164f5e6e0b",
       "source_url": "https://farside.co.uk/btc/",
-      "classification": "ETF_INSTITUTIONAL_FLOW"
+      "classification": "ETF_INSTITUTIONAL_FLOW",
+      "canonical_gmail_message_id": "1a1cf32b2d2da5b6",
+      "canonical_report_date": "2026-11-11",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "etf:eth:2026-11-10",
@@ -2782,7 +2795,10 @@
       "delivered_date": "2026-11-11",
       "gmail_message_id": "1a1ca7164f5e6e0b",
       "source_url": "https://farside.co.uk/eth/",
-      "classification": "ETF_INSTITUTIONAL_FLOW"
+      "classification": "ETF_INSTITUTIONAL_FLOW",
+      "canonical_gmail_message_id": "1a1cf32b2d2da5b6",
+      "canonical_report_date": "2026-11-11",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "market:binance:2026-11-11-1845",
@@ -2791,7 +2807,10 @@
       "delivered_date": "2026-11-11",
       "gmail_message_id": "1a1ca7164f5e6e0b",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=ZECUSDT",
-      "classification": "DAILY_MARKET_SNAPSHOT"
+      "classification": "DAILY_MARKET_SNAPSHOT",
+      "canonical_gmail_message_id": "1a1cf32b2d2da5b6",
+      "canonical_report_date": "2026-11-11",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "tech:tsmc:ai-investments:2026-11-10",
@@ -2800,7 +2819,10 @@
       "delivered_date": "2026-11-11",
       "gmail_message_id": "1a1ca7164f5e6e0b",
       "source_url": "https://www.reuters.com/world/china/tsmc-invest-up-1-billion-anthropic-openai-2026-11-10/",
-      "classification": "TECH_STRATEGIC_ALLOCATION"
+      "classification": "TECH_STRATEGIC_ALLOCATION",
+      "canonical_gmail_message_id": "1a1cf32b2d2da5b6",
+      "canonical_report_date": "2026-11-11",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "etf:btc:2026-11-11",
