@@ -7,6 +7,7 @@ from html.parser import HTMLParser
 import re
 import time
 from urllib.parse import urlsplit
+from .cluster import RPCJobBudgetExceeded
 from .holder_ranks import valid_pubkey
 from .public_html import canonical_url,read_public_html,MAX_HTML_BYTES
 
@@ -258,6 +259,7 @@ def collect_origin(mint,metadata,market,*,fetch_json=read_public_json,clock=time
     def read(kind,url):
         row={'kind':kind,'url':url}
         try:result=fetch_json(url)
+        except RPCJobBudgetExceeded:raise
         except Exception as exc:result={'status':'UNAVAILABLE','reason':type(exc).__name__}
         row.update(status=result.get('status'),reason=result.get('reason'),response_sha256=result.get('response_sha256'))
         out['reads'].append(row)

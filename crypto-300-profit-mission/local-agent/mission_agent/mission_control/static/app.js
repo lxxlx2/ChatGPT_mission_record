@@ -1662,7 +1662,7 @@ function renderLaunchIdentity(report) {
   const p=l.pump||{},m=l.metadata||{};
   const acct=a=>a?'<code>'+esc(short(a,6,5))+'</code> <a class="link-btn compact" href="https://solscan.io/account/'+encodeURIComponent(a)+'" target="_blank" rel="noreferrer">↗</a>':'未记录';
   const pump=p.status==='VERIFIED_CHAIN_STATE'
-    ? '<p>Pump.fun 发射：bonding curve '+acct(p.bonding_curve)+'（由 Mint 推导的 PDA，链上状态已核对）；'+(p.complete?'曲线已完成并迁移':'仍在曲线阶段')+'。</p><p>链上创建者字段：'+acct(p.creator)+'（创建者手续费接收地址，不等于实际控制人）。</p>'
+    ? '<p>Pump.fun 发射：bonding curve '+acct(p.bonding_curve)+'（由 Mint 推导的 PDA，链上状态已核对）；'+(p.complete?'曲线完成标记为真，迁移状态尚未核实':'仍在曲线阶段')+'。</p><p>链上创建者字段：'+acct(p.creator)+'（创建者手续费接收地址，不等于实际控制人）。</p>'
     : p.status==='NOT_PUMP_LAUNCH' ? '<p>未找到该 Mint 的 Pump.fun bonding curve 账户，非 Pump.fun 发射或已关闭。</p>' : '<p>发射台身份读取未完成。</p>';
   const meta=m.status==='VERIFIED_CHAIN_STATE'
     ? '<p>链上元数据：'+esc((m.name||'')+' / '+(m.symbol||''))+'；元数据'+(m.is_mutable===false?'不可修改':m.is_mutable===true?'仍可被更新权限修改':'可变性未知')+'；来源 '+esc(m.source==='TOKEN_2022_TOKEN_METADATA_EXTENSION'?'Token-2022 元数据扩展':'Metaplex 元数据账户')+'。</p>'
@@ -2084,19 +2084,27 @@ function renderHolderRankings(report) {
     TOP_ACCOUNT_CONTEXT_CONFLICT:'Top20 与同 slot 账户表示存在冲突，精确排名已撤下',
     MINT_IDENTITY_UNVERIFIED:'Mint 或 Token Program 身份未核实',ACCOUNT_ROW_INVALID:'来源账户结构未通过核对',
     ENVELOPE_INVALID:'来源快照上下文不完整',OWNER_METADATA_INVALID:'Owner 身份来源未通过核对',SUPPLY_INVALID:'供给格式未核实',RAW_BINARY_REPRESENTATION_CONTRADICTION:'同 slot 二进制与解析表示存在矛盾，原枚举精确比例已撤下'};
-  const intro=complete ? '账户余额总和与同 slot 供给已核对；钱包归因与历史仍须分别核实' : (reasons[r.reason] || '完整排名来源尚未核实');
+  const slot=n=>Number.isSafeInteger(n) && n>0;
+  const b=r.supply_bracket;
+  const bracketed=b && b.method==='NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET' &&
+    slot(r.snapshot_slot) && slot(r.supply_slot) && b.before_slot===r.supply_slot &&
+    slot(b.after_slot) && b.before_slot<r.snapshot_slot && r.snapshot_slot<=b.after_slot;
+  const supplyBasis=bracketed ? '账户余额总和与跨 slot 供给夹逼已核对（无增发权限，前后供给相等）；非同 slot 原子快照' :
+    slot(r.snapshot_slot) && r.snapshot_slot===r.supply_slot ? '账户余额总和与同 slot 供给已核对' : '报告记录余额总和与供给相等，供给与账户的 slot 关系未记录或未核实';
+  const intro=complete ? supplyBasis+'；钱包归因与历史仍须分别核实' : (reasons[r.reason] || '完整排名来源尚未核实');
   const labels={GLOBAL_OWNER_TOP10_PCT:'全局 Owner Top10',GLOBAL_EX_LP_OWNER_TOP10_PCT:'全局排除池/Vault 后 Owner Top10',GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT:'全局排除特殊地址后 Owner Top10',GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT:'排除已核实池后 Owner Top10（其他池/CEX/锁仓仍计入）'};
   const cards=Object.keys(labels).map(key=>'<div class="cluster-metric"><span>'+labels[key]+'</span><strong>'+clusterMetricValue(complete && (key==='GLOBAL_OWNER_TOP10_PCT' || key==='GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT' || r.normalization_complete===true || ((r.role_sufficient_top10||{}).metrics||{})[key]===(r.metrics||{})[key]) ? (r.metrics || {})[key] : 'UNRESOLVED')+'</strong></div>').join('');
   const owners=Array.isArray(r.owners) ? r.owners.filter(x=>x && typeof x==='object').slice(0,20) : [];
   const rows=owners.map((row,i)=>'<tr><td>'+esc(i+1)+'</td><td>'+ownerCell(row.owner || '')+'</td><td>'+esc(frankD2Decimal(row.raw,r.decimals))+'</td><td>'+esc(row.account_count ?? '未记录')+'</td><td>'+clusterMetricValue(complete ? row.supply_pct : 'UNRESOLVED')+'</td><td>'+holderRole(row)+'</td><td>'+(row.history_scanned===true ? '已做有限历史采样' : '本轮未覆盖历史')+'</td></tr>').join('');
   $('cluster-rankings').innerHTML='<p>'+esc(intro)+'</p><p>来源返回 '+esc(r.account_count ?? '未记录')+' 个账户 / '+esc(r.nonzero_owner_count ?? '未记录')+' 个非零 Owner；账户 slot '+esc(r.snapshot_slot ?? '未记录')+' / 供给 slot '+esc(r.supply_slot ?? '未记录')+'</p>'+
+    (complete && bracketed ? '<p>供给夹逼 slot：前 '+esc(b.before_slot)+' / 账户 '+esc(r.snapshot_slot)+' / 后 '+esc(b.after_slot)+'。</p>' : '')+
     '<div class="cluster-metrics-extra">'+cards+'</div>'+ (r.normalization_complete===true ? '' : (r.role_sufficient_top10 ? '<p>排除口径按“前 10 名范围内身份已全部判定”计算：同次枚举核实的池与已登记特殊地址被排除；前缀中出现未判定程序地址时该项保持未确认。完整全表身份登记仍未完成。</p>' : '<p>身份标签或其快照 slot 尚未全部核实，排除口径保持未确认。</p>'))+'<p>页面最多展示前20个 Owner，完整来源排名保存在报告中。排除口径仍取决于已核实的身份标签。</p>'+
     '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>#</th><th>Owner</th><th>代币数量</th><th>账户数</th><th>供给占比</th><th>身份</th><th>历史覆盖</th></tr></thead><tbody>'+(rows || '<tr><td colspan="7">完整排名未获得，原始Top20样本仍可查看</td></tr>')+'</tbody></table></div>'+renderIndependentCheck(report)+renderHolderBinary(report,r)+renderPoolHolderRoles(report,r)+renderSpecialAddressRoles(report,r);
 }
 
 const clusterRequiredEvidence = {
   contract:['合约控制与来源','Mint 解析未覆盖全部合约来源与控制','Mint 账户解析','核对元数据权限及适用程序控制证据'],
-  holder_balances:['全局持有人余额排名','完整 Mint 账户来源或同 slot 供给尚未核实','供给、Top20 及按需全 Mint 枚举','取得完整账户来源并核对实际 slot 和总供给'],
+  holder_balances:['全局持有人余额排名','完整 Mint 账户来源或供给核对条件尚未核实','供给、Top20 及按需全 Mint 枚举','取得完整账户来源并核对实际 slot、总供给及适用的供给夹逼条件'],
   holder_roles:['特殊地址身份','特殊地址身份尚未全部核实','Owner 元数据和身份登记','逐项核对池、Vault、CEX 及金库证据'],
   wallet_history:['完整历史与资金','有界采样未覆盖全部 Owner 账户及经济历史','逐 Owner/代币账户及资金历史窗口','枚举重大 Owner 全部账户并核对买入、卖出和资金流'],
   control_attribution:['控制关系归因','样本关系未形成完整受益控制归因','已覆盖的转账、资金、签名及归集证据','补独立非公共关系证据并保留归属不确定性'],

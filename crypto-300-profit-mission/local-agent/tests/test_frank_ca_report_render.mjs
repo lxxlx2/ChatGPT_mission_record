@@ -1499,3 +1499,35 @@ for(const secondsBeforeReport of [1,300,86400]) test('browser narrative retains 
   assert.equal(JSON.stringify(record),original);
   assert.match(html,/CA 官方归属、人物互动和最早起源仍未核实/);
 });
+
+test('holder rankings describe a supply bracket without claiming a same-slot snapshot',()=>{
+  const h=harness();
+  h.context.renderHolderRankings({holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',
+    snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:30,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'},
+    metrics:{GLOBAL_OWNER_TOP10_PCT:'58.9540'},owners:[]}});
+  const html=h.element('cluster-rankings').innerHTML;
+  assert.match(html,/跨 slot 供给夹逼/);
+  assert.match(html,/前 10.*账户 20.*后 30/);
+  assert.doesNotMatch(html,/账户余额总和与同 slot 供给已核对/);
+  assert.match(html,/58.954%/);
+});
+
+test('holder rankings only use same-slot wording for recorded equal slots',()=>{
+  const h=harness();
+  for(const slots of [{snapshot_slot:20,supply_slot:10},{snapshot_slot:null,supply_slot:null},
+    {snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:15,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'}}]) {
+    h.context.renderHolderRankings({holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',...slots,metrics:{},owners:[]}});
+    assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/账户余额总和与同 slot 供给已核对/);
+    assert.match(h.element('cluster-rankings').innerHTML,/slot 关系未记录或未核实/);
+  }
+  h.context.renderHolderRankings({holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',snapshot_slot:20,supply_slot:20,metrics:{},owners:[]}});
+  assert.match(h.element('cluster-rankings').innerHTML,/账户余额总和与同 slot 供给已核对/);
+});
+
+test('Pump complete flag does not claim a verified migration',()=>{
+  const h=harness();
+  const html=h.context.renderLaunchIdentity({launch_identity:{version:1,pump:{status:'VERIFIED_CHAIN_STATE',complete:true}}});
+  assert.match(html,/曲线完成标记为真/);
+  assert.match(html,/迁移状态尚未核实/);
+  assert.doesNotMatch(html,/已完成并迁移/);
+});

@@ -986,6 +986,7 @@ class WalletClusterAnalyzer:
         result=self.narrative_client.collect(self.mint,market)
         if hasattr(self.narrative_client,"collect_origin") and isinstance(result,dict):
             try:result["origin"]=self.narrative_client.collect_origin(self.mint,getattr(self,"_launch_metadata",None),market)
+            except RPCJobBudgetExceeded:raise
             except Exception as exc:result["origin"]={"version":1,"status":"UNAVAILABLE","reason":type(exc).__name__}
         return result
 
@@ -1225,7 +1226,7 @@ class WalletClusterAnalyzer:
             except RPCJobBudgetExceeded:
                 self.history_coverage[("holder",holder.token_account,None)]["stop_reason"]="JOB_BUDGET"
                 raise
-            except Exception as exc:self.tx_errors.append({"signature":sig,"error":type(exc).__name__});continue
+            except Exception as exc:self.tx_errors.append({"signature":sig,"phase":"holder","error":type(exc).__name__});continue
             if not tx:
                 self.tx_errors.append({"signature":sig,"phase":"holder","error":"UNAVAILABLE_ON_PUBLIC_RPC"})
                 continue
@@ -1248,6 +1249,12 @@ class WalletClusterAnalyzer:
             try:c=classify(sig,tx,holder.owner)
             except Exception as exc:
                 self.tx_errors.append({"signature":sig,"phase":"holder_classify","error":type(exc).__name__})
+                continue
+            if c.get("classification")=="UNKNOWN_NEEDS_REVIEW":
+                # Reading a signature is not the same as explaining its economic
+                # effect. An incomplete/ambiguous classification cannot prove
+                # that this account has no earlier market acquisition.
+                self.tx_errors.append({"signature":sig,"phase":"holder_classify","error":"CLASSIFICATION_UNRESOLVED"})
                 continue
             trade=c.get("trade") or {}
             found=None
@@ -1847,6 +1854,10 @@ def report_completeness(report:dict)->dict:
     role_evidence=report.get("pool_holder_roles") or {}
     pool_holder_conflict=role_evidence.get("status")=="SAME_SLOT_CONTRADICTION"
     ranked=ranks.get("requested") is True and ranks.get("status")=="COMPLETE_SNAPSHOT"
+    bracket=ranks.get("supply_bracket")
+    supply_reconciliation=("NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET"
+        if isinstance(bracket,dict) and bracket.get("method")=="NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET"
+        else "SAME_SLOT_SUPPLY_RECONCILED")
     from .holder_binary import verified_holder_mass
     binary_check=ranks.get("raw_balance_check") or {}
     binary_mass=verified_holder_mass(binary_check,report.get("mint")) and binary_check.get("enumeration_response_sha256")==ranks.get("response_sha256")
@@ -1863,7 +1874,7 @@ def report_completeness(report:dict)->dict:
         "Verify metadata/update authority and applicable program controls with account/transaction evidence.",
         ["token_profile","assessment.chain_permission_status"])
     row("holder_balances","VERIFIED_SNAPSHOT" if (ranked or binary_mass) and not pool_holder_conflict else "PARTIAL",
-        "POOL_HOLDER_SAME_SLOT_CONTRADICTION" if pool_holder_conflict else "RAW_BINARY_NONZERO_BALANCE_MASS_RECONCILED_SAME_PROVIDER" if binary_mass else "SAME_SLOT_SUPPLY_RECONCILED" if ranked else "FULL_MINT_RANK_SOURCE_NOT_VERIFIED",
+        "POOL_HOLDER_SAME_SLOT_CONTRADICTION" if pool_holder_conflict else "RAW_BINARY_NONZERO_BALANCE_MASS_RECONCILED_SAME_PROVIDER" if binary_mass else supply_reconciliation if ranked else "FULL_MINT_RANK_SOURCE_NOT_VERIFIED",
         ["Finalized supply and Top20 account reads", "Mint-filtered getProgramAccounts" if ranks.get("requested") is True else "Full enumeration not requested"],
         "Use a permitted complete mint-account source within bounds and reconcile actual slots and supply.",
         ["holder_rankings","holder_rankings.raw_balance_check","coverage.snapshot_slots"])

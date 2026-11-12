@@ -249,6 +249,7 @@ class JobCheckpoint:
         self.index += 1
 
     def invoke(self, channel, operation, args, kwargs, function):
+        source_error = None
         try:
             self._check_time()
             request = json.loads(canonical({'channel': channel, 'operation': operation, 'args': args, 'kwargs': kwargs}))
@@ -263,7 +264,8 @@ class JobCheckpoint:
                     kind = classes.get(entry['response']['type'])
                     if kind is None:
                         raise CheckpointError('CA_CHECKPOINT_ERROR_TYPE_UNSUPPORTED')
-                    raise kind(entry['response']['code'])
+                    source_error = kind(entry['response']['code'])
+                    raise source_error
                 if entry['outcome'] != 'OK':
                     raise CheckpointError('CA_CHECKPOINT_READ_INVALID')
                 return json.loads(canonical(entry['response']))
@@ -278,6 +280,7 @@ class JobCheckpoint:
                 reason = str(exc)
                 safe = reason if re.fullmatch(r'(?:HTTP_[0-9]{3}|RPC_-?[0-9]+|RPC_RATE_LIMITED|RPC_ENVELOPE_INVALID|RPC_POOL_RESPONSE_LIMIT|RPC_HOLDER_RANK_RESPONSE_LIMIT)', reason) else 'RECORDED_SOURCE_ERROR'
                 self._append(request, 'ERROR', {'type': type(exc).__name__, 'code': safe}, started)
+                source_error = exc
                 raise
             self._append(request, 'OK', result, started)
             return json.loads(canonical(result))
@@ -285,6 +288,10 @@ class JobCheckpoint:
             self.fault = str(exc)
             raise
         except (sqlite3.Error, OSError) as exc:
+            # TimeoutError/OSError from a recorded source read is not evidence
+            # of failed checkpoint storage. Append/replay I/O still fails closed.
+            if exc is source_error:
+                raise
             self.fault = 'CA_CHECKPOINT_STORAGE_UNAVAILABLE'
             raise CheckpointError(self.fault) from exc
 
@@ -402,3 +409,10 @@ class CheckpointClient:
     def token_snapshot(self, mint): return self._call('token_snapshot', mint)
     def pool_snapshot(self, mint, pool, quote): return self._call('pool_snapshot', mint, pool, quote)
     def collect(self, mint, market): return self._call('collect', mint, market)
+
+    @property
+    def collect_origin(self):
+        # Keep optional capability checks valid for older narrative clients.
+        if not callable(getattr(self.client, 'collect_origin', None)):
+            raise AttributeError('collect_origin')
+        return lambda mint, metadata, market: self._call('collect_origin', mint, metadata, market)
