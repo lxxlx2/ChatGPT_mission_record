@@ -1,9 +1,9 @@
 # TGE Monitor Current State
 
-Updated: 2026-11-13 06:04:36 Asia/Bangkok
+Updated: 2026-11-13 06:55:07 Asia/Bangkok
 
-- authoritative_final: airdrop-tge-monitor/runs/2026-11-13/060436-final.md
-- final_commit_sha: 6fddb4de90738e0150c0cf1471c79c825454a49f
+- authoritative_final: airdrop-tge-monitor/runs/2026-11-13/065507-final.md
+- final_commit_sha: cf6add205c205c00d70c31e141c6d3b75e91ceff
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 2
 - executed_shard: 2
@@ -18,7 +18,7 @@ Updated: 2026-11-13 06:04:36 Asia/Bangkok
 ## Last meaningful attempts
 - shard0: 2026-11-13 04:57:55 Asia/Bangkok; runs/2026-11-13/045755-final.md (PARTIAL_ONLY)
 - shard1: 2026-11-13 01:00:27 Asia/Bangkok; runs/2026-11-13/010027-final.md (PARTIAL_ONLY)
-- shard2: 2026-11-13 06:04:36 Asia/Bangkok; runs/2026-11-13/060436-final.md (PARTIAL_ONLY)
+- shard2: 2026-11-13 06:55:07 Asia/Bangkok; runs/2026-11-13/065507-final.md (PARTIAL_ONLY)
 - shard3: 2026-11-13 03:02:59 Asia/Bangkok; runs/2026-11-13/030259-final.md (PARTIAL_ONLY)
 
 ## Open urgent
