@@ -1,34 +1,34 @@
 # TGE Monitor Current State
 
-Updated: 2026-11-12 15:08:48 Asia/Bangkok
+Updated: 2026-11-12 16:01:58 Asia/Bangkok
 
-- authoritative_final: airdrop-tge-monitor/runs/2026-11-12/150848-final.md
-- final_commit_sha: 6ce6eb5b8b5dea19967f883b5241afb330fc3fed
+- authoritative_final: airdrop-tge-monitor/runs/2026-11-12/160158-final.md
+- final_commit_sha: 36303ce4abcc0b591b4b0a8f0025656424f69414
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 3
-- executed_shard: 3
-- candidate_count: 2
+- scheduled_shard: 0
+- executed_shard: 0
+- candidate_count: 1
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
-- source_failures: 2 (StandX DUSD event-specific and Concrete additional USDC original)
+- source_failures: 1 (StandX November DUSD claim original)
 - identity_failures: 0
 
 ## Last meaningful attempts
-- shard0: 2026-11-12 08:03:22 Asia/Bangkok; runs/2026-11-12/080322-final.md (PARTIAL_ONLY)
+- shard0: 2026-11-12 16:01:58 Asia/Bangkok; runs/2026-11-12/160158-final.md (PARTIAL_ONLY)
 - shard1: 2026-11-12 13:56:53 Asia/Bangkok; runs/2026-11-12/135653-final.md (PARTIAL_ONLY)
 - shard2: 2026-11-12 10:00:36 Asia/Bangkok; runs/2026-11-12/100036-final.md (PARTIAL_ONLY)
 - shard3: 2026-11-12 15:08:48 Asia/Bangkok; runs/2026-11-12/150848-final.md (PARTIAL_ONLY)
 
 ## Open urgent
 - urgent5: Concrete, MetaMask, Claynosaurz, HEEBOO, Space @intodotspace; plus Surf and StandX.
-- StandX DUSD November claim: VERIFYING, SOURCE_GAP, personal eligibility UNKNOWN; issuer event-specific receipt missing, no mail.
-- Fortytwo original promo code page: readable but publication/novelty and personal eligibility UNKNOWN; no mail.
+- StandX DUSD November claim: VERIFYING/SOURCE_GAP; event-specific original not read; personal eligibility UNKNOWN; no mail.
+- Concrete additional USDC: original issuer rights receipt SOURCE_GAP.
 - SurfBoard November 13: prior mailed same material version, suppress unchanged.
 - Cambria Base RSGP October 29: prior mailed, suppress unchanged.
 - Excluded: Abstract, Grass, Backpack, Loopscale, fully refunded humans&.
 - Space/Spacecoin and Theo/Autheo separate.
-- next scheduled shard: 0.
+- next scheduled shard: 1.
 - last_verified_complete_at: UNKNOWN; partial attempts never advance complete coverage.
 - code_execution: CODE_NOT_EXECUTED / MANUAL_EQUIVALENT_ONLY.
