@@ -1,23 +1,23 @@
 # TGE Monitor Current State
 
-Updated: 2026-11-12 11:58:39 Asia/Bangkok
+Updated: 2026-11-12 13:56:53 Asia/Bangkok
 
-- authoritative_final: airdrop-tge-monitor/runs/2026-11-12/115839-final.md
-- final_commit_sha: d3134a6fc57c3c8e8f0fef8bfe02347397a18b07
+- authoritative_final: airdrop-tge-monitor/runs/2026-11-12/135653-final.md
+- final_commit_sha: 0e3a9d061385ec9f52c5cf0e7bac850ca1aa4267
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 3
-- executed_shard: 3
-- candidate_count: 2
+- scheduled_shard: 1
+- executed_shard: 1
+- candidate_count: 1
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
-- source_failures: 2 (StandX DUSD, Space fresh issuer source; other project-specific rights coverage PARTIAL_ONLY)
+- source_failures: 1 (StandX DUSD event-specific source; other sources PARTIAL_ONLY)
 - identity_failures: 0
 
 ## Last meaningful attempts
 - shard0: 2026-11-12 08:03:22 Asia/Bangkok; runs/2026-11-12/080322-final.md (PARTIAL_ONLY)
-- shard1: 2026-11-12 09:02:23 Asia/Bangkok; runs/2026-11-12/090223-final.md (PARTIAL_ONLY)
+- shard1: 2026-11-12 13:56:53 Asia/Bangkok; runs/2026-11-12/135653-final.md (PARTIAL_ONLY)
 - shard2: 2026-11-12 10:00:36 Asia/Bangkok; runs/2026-11-12/100036-final.md (PARTIAL_ONLY)
 - shard3: 2026-11-12 11:58:39 Asia/Bangkok; runs/2026-11-12/115839-final.md (PARTIAL_ONLY)
 
@@ -29,6 +29,6 @@ Updated: 2026-11-12 11:58:39 Asia/Bangkok
 - Cambria Base RSGP October 29: prior mailed, suppress unchanged.
 - Excluded: Abstract, Grass, Backpack, Loopscale, fully refunded humans&.
 - Space/Spacecoin and Theo/Autheo separate.
-- next scheduled shard: 0.
+- next scheduled shard: 2.
 - last_verified_complete_at: UNKNOWN; partial attempts never advance complete coverage.
 - code_execution: CODE_NOT_EXECUTED / MANUAL_EQUIVALENT_ONLY.
