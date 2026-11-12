@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-11-12T10:50:00Z",
+  "updated_at": "2026-11-12T11:20:00Z",
   "status": "ACTIVE",
-  "note": "Nov12 canonical reconciliation verified: Nov10 canonical Gmail 1a1cf318651e3490 (full dedup correction), Nov11 canonical Gmail 1a1cf32b2d2da5b6 (full dedup correction), Nov12 Gmail 1a1cf2db24305968. Historical Gmail ids and delivered_date preserved. Ledger is event historical evidence, canonical_* fields are active source authority. No new TGE action qualified. Autonomous morning delivery still not proven.",
+  "note": "Nov12 user-requested comprehensive re-issuance: Nov5..Nov11 7 full de-duplicated Crypto canonical Gmail (each user-sent verified, matching Git exact); Nov12 delivered full manual recovery. Original Gmail message IDs preserved in event ledger; canonical_gmail_message_id latest actual active edition. Old unverified Surf/StandX rights and repeated MEXC/Node were not materially new. TGE issuer-original coverage still PARTIAL; unattended morning send not verified.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -2566,7 +2566,10 @@
       "delivered_date": "2026-11-05",
       "gmail_message_id": "1a1ac87a1624ca68",
       "source_url": "https://www.reuters.com/technology/binance-removes-all-signalplus-api-keys-after-security-issue-2026-11-05/",
-      "classification": "THIRD_PARTY_TRADING_API"
+      "classification": "THIRD_PARTY_TRADING_API",
+      "canonical_gmail_message_id": "1a1cf3f0a0e069a0",
+      "canonical_report_date": "2026-11-05",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "sec:metamask:2026-11-05",
@@ -2575,7 +2578,10 @@
       "delivered_date": "2026-11-06",
       "gmail_message_id": "1a1aefe6426bda13",
       "source_url": "https://metamask.com/news/user-update",
-      "classification": "WALLET_STAKING"
+      "classification": "WALLET_STAKING",
+      "canonical_gmail_message_id": "1a1cf3f1e878f86a",
+      "canonical_report_date": "2026-11-06",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "cex:binance:recovery-9:2026-11-06",
@@ -2584,7 +2590,10 @@
       "delivered_date": "2026-11-06",
       "gmail_message_id": "1a1aefe6426bda13",
       "source_url": "https://www.binance.com/en/support/announcement/detail/a2dd10b860a14c35a856fe9d66d6032c",
-      "classification": "CEX_WITHDRAWAL"
+      "classification": "CEX_WITHDRAWAL",
+      "canonical_gmail_message_id": "1a1cf3f1e878f86a",
+      "canonical_report_date": "2026-11-06",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "reg:mexc:2026-11-06",
@@ -2593,7 +2602,10 @@
       "delivered_date": "2026-11-07",
       "gmail_message_id": "1a1b71334aeb0615",
       "source_url": "https://www.fincen.gov/news/news-releases/operation-economic-outcast-severs-mexc-globals-access-us-financial-system",
-      "classification": "MAJOR_REGULATION"
+      "classification": "MAJOR_REGULATION",
+      "canonical_gmail_message_id": "1a1cf4070be3780c",
+      "canonical_report_date": "2026-11-07",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "reg:travel-rule-withdrawn:2026-11-06",
@@ -2602,7 +2614,10 @@
       "delivered_date": "2026-11-07",
       "gmail_message_id": "1a1b71334aeb0615",
       "source_url": "https://www.fincen.gov/news/news-releases/fincen-announces-withdrawal-proposed-rule-related-recordkeeping-and-travel-rule",
-      "classification": "MAJOR_REGULATION"
+      "classification": "MAJOR_REGULATION",
+      "canonical_gmail_message_id": "1a1cf4070be3780c",
+      "canonical_report_date": "2026-11-07",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "cex:gopax:2026-11-06",
@@ -2611,7 +2626,10 @@
       "delivered_date": "2026-11-07",
       "gmail_message_id": "1a1b71334aeb0615",
       "source_url": "https://en.yna.co.kr/view/AEN20261106011751320",
-      "classification": "CEX_SECURITY_OPERATIONS"
+      "classification": "CEX_SECURITY_OPERATIONS",
+      "canonical_gmail_message_id": "1a1cf4070be3780c",
+      "canonical_report_date": "2026-11-07",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "cex:binance:cfo:2026-11-07",
@@ -2620,7 +2638,10 @@
       "delivered_date": "2026-11-08",
       "gmail_message_id": "1a1bf42ad0c5d3c8",
       "source_url": "https://www.reuters.com/business/finance/binance-cfo-kaiser-ng-steps-down-justin-yek-named-new-finance-chief-2026-11-07/",
-      "classification": "EXCHANGE_GOVERNANCE"
+      "classification": "EXCHANGE_GOVERNANCE",
+      "canonical_gmail_message_id": "1a1cf4085ae1d00f",
+      "canonical_report_date": "2026-11-08",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "fintech:nu-mercadopago:2026-11-06",
@@ -2629,7 +2650,10 @@
       "delivered_date": "2026-11-08",
       "gmail_message_id": "1a1bf42ad0c5d3c8",
       "source_url": "https://www.reuters.com/world/americas/nubank-halts-crypto-withdrawals-deposits-after-external-provider-disruption-2026-11-06/",
-      "classification": "CRYPTO_TRANSFER_AVAILABILITY"
+      "classification": "CRYPTO_TRANSFER_AVAILABILITY",
+      "canonical_gmail_message_id": "1a1cf4085ae1d00f",
+      "canonical_report_date": "2026-11-08",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "macro:riyadh-aramco:2026-11-08",
@@ -2638,7 +2662,10 @@
       "delivered_date": "2026-11-08",
       "gmail_message_id": "1a1bf42ad0c5d3c8",
       "source_url": "https://www.reuters.com/world/middle-east/saudi-arabia-says-danger-passed-riyadh-after-alert-day-after-houthi-attack-2026-11-09/",
-      "classification": "GLOBAL_ENERGY_SECURITY"
+      "classification": "GLOBAL_ENERGY_SECURITY",
+      "canonical_gmail_message_id": "1a1cf4085ae1d00f",
+      "canonical_report_date": "2026-11-08",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "macro:riyadh-aramco:2026-11-09",
@@ -2647,7 +2674,10 @@
       "delivered_date": "2026-11-09",
       "gmail_message_id": "1a1bf46e14b36b3e",
       "source_url": "https://www.reuters.com/world/middle-east/saudi-arabia-says-danger-passed-riyadh-after-alert-day-after-houthi-attack-2026-11-09/",
-      "classification": "GLOBAL_ENERGY_SECURITY"
+      "classification": "GLOBAL_ENERGY_SECURITY",
+      "canonical_gmail_message_id": "1a1cf409748802b7",
+      "canonical_report_date": "2026-11-09",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "macro:crypto-lows:2026-11-09",
@@ -2656,7 +2686,10 @@
       "delivered_date": "2026-11-09",
       "gmail_message_id": "1a1bf46e14b36b3e",
       "source_url": "https://www.reuters.com/business/cryptocurrencies-slide-two-month-lows-after-us-midterms-2026-11-08/",
-      "classification": "MACRO_VOLATILITY"
+      "classification": "MACRO_VOLATILITY",
+      "canonical_gmail_message_id": "1a1cf409748802b7",
+      "canonical_report_date": "2026-11-09",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "macro:asia-tech-rebound:2026-11-09",
@@ -2665,7 +2698,10 @@
       "delivered_date": "2026-11-09",
       "gmail_message_id": "1a1bf46e14b36b3e",
       "source_url": "https://apnews.com/article/d938f8e6ff42b3706e1d36e6245ec56b",
-      "classification": "CROSS_MARKET"
+      "classification": "CROSS_MARKET",
+      "canonical_gmail_message_id": "1a1cf409748802b7",
+      "canonical_report_date": "2026-11-09",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "market:binance:2026-11-09-1438",
@@ -2674,7 +2710,10 @@
       "delivered_date": "2026-11-09",
       "gmail_message_id": "1a1bf46e14b36b3e",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
-      "classification": "DAILY_MARKET_SNAPSHOT"
+      "classification": "DAILY_MARKET_SNAPSHOT",
+      "canonical_gmail_message_id": "1a1cf409748802b7",
+      "canonical_report_date": "2026-11-09",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "sec:ethersphere:bee-js-swarm:2026-11-09",
@@ -2768,8 +2807,8 @@
       "gmail_message_id": "1a1ca7164f5e6e0b",
       "source_url": "https://www.binance.com/en-AE/support/announcement/detail/9ef6e347da924cdc90f53577ab483b1f",
       "classification": "CEX_TRANSFER_RESTRICTION",
-      "canonical_gmail_message_id": "1a1cf318651e3490",
-      "canonical_report_date": "2026-11-10",
+      "canonical_gmail_message_id": "1a1cf32b2d2da5b6",
+      "canonical_report_date": "2026-11-11",
       "original_sent_id_retained": true,
       "previous_recovery_sent_id": "1a1ca7164f5e6e0b"
     },
@@ -2852,7 +2891,10 @@
       "source_url": "https://farside.co.uk/btc/",
       "classification": "ETF_FLOW",
       "delivered_date": "2026-11-12",
-      "gmail_message_id": "1a1cf2db24305968"
+      "gmail_message_id": "1a1cf2db24305968",
+      "canonical_gmail_message_id": "1a1cf2db24305968",
+      "canonical_report_date": "2026-11-12",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "etf:eth:2026-11-11",
@@ -2861,7 +2903,10 @@
       "source_url": "https://farside.co.uk/eth/",
       "classification": "ETF_FLOW",
       "delivered_date": "2026-11-12",
-      "gmail_message_id": "1a1cf2db24305968"
+      "gmail_message_id": "1a1cf2db24305968",
+      "canonical_gmail_message_id": "1a1cf2db24305968",
+      "canonical_report_date": "2026-11-12",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "etf:sol:2026-11-11",
@@ -2870,7 +2915,10 @@
       "source_url": "https://farside.co.uk/sol/",
       "classification": "ETF_FLOW",
       "delivered_date": "2026-11-12",
-      "gmail_message_id": "1a1cf2db24305968"
+      "gmail_message_id": "1a1cf2db24305968",
+      "canonical_gmail_message_id": "1a1cf2db24305968",
+      "canonical_report_date": "2026-11-12",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "etf:zec:2026-11-11",
@@ -2879,7 +2927,10 @@
       "source_url": "https://farside.co.uk/zec/",
       "classification": "ETF_FLOW",
       "delivered_date": "2026-11-12",
-      "gmail_message_id": "1a1cf2db24305968"
+      "gmail_message_id": "1a1cf2db24305968",
+      "canonical_gmail_message_id": "1a1cf2db24305968",
+      "canonical_report_date": "2026-11-12",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "sec:nodejs:2026-11-11-patched",
@@ -2888,7 +2939,10 @@
       "source_url": "https://nodejs.org/en/blog/vulnerability/november-2026-security-releases",
       "classification": "SECURITY_PATCH_RELEASE",
       "delivered_date": "2026-11-12",
-      "gmail_message_id": "1a1cf2db24305968"
+      "gmail_message_id": "1a1cf2db24305968",
+      "canonical_gmail_message_id": "1a1cf2db24305968",
+      "canonical_report_date": "2026-11-12",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "sec:laravel:signed-url:2026-11-11",
@@ -2897,7 +2951,10 @@
       "source_url": "https://github.com/laravel/framework/security/advisories/GHSA-v5ch-g375-82r6",
       "classification": "SECURITY_ADVISORY",
       "delivered_date": "2026-11-12",
-      "gmail_message_id": "1a1cf2db24305968"
+      "gmail_message_id": "1a1cf2db24305968",
+      "canonical_gmail_message_id": "1a1cf2db24305968",
+      "canonical_report_date": "2026-11-12",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "market:binance:2026-11-12-1648",
@@ -2906,7 +2963,10 @@
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
       "classification": "DAILY_MARKET_SNAPSHOT",
       "delivered_date": "2026-11-12",
-      "gmail_message_id": "1a1cf2db24305968"
+      "gmail_message_id": "1a1cf2db24305968",
+      "canonical_gmail_message_id": "1a1cf2db24305968",
+      "canonical_report_date": "2026-11-12",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "macro:nvidia-governance-market:2026-11-12",
@@ -2915,7 +2975,10 @@
       "source_url": "https://www.reuters.com/world/china/global-markets-wrapup-1-2026-11-12/",
       "classification": "MARKET_RISK_NEW_REPORT",
       "delivered_date": "2026-11-12",
-      "gmail_message_id": "1a1cf2db24305968"
+      "gmail_message_id": "1a1cf2db24305968",
+      "canonical_gmail_message_id": "1a1cf2db24305968",
+      "canonical_report_date": "2026-11-12",
+      "original_sent_id_retained": true
     }
   ],
   "open_missed_candidates": []
