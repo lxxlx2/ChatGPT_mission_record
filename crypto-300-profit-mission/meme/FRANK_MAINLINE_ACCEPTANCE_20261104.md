@@ -1,8 +1,19 @@
 # Frank 原问题统一验收（2026-11-04）
 
-## 最新用户评审修复验收：2026-11-11
+## 最新Claude交接核对：2026-11-12
 
-当前并已安装产品`d43878828c86eacee5be9df8a17d16fc63a74bb6`，parent`0b966ab459b775bc58c77427c1dbcb491f2d9bf8`。用户评审的5项具体意见中2项确认并最小修复、3项守门穿透未复现且保留现有有限样本/独立证据语义；详见[逐项结论](./FRANK_REVIEW_CLAIMS_RESOLUTION_20261111.md)与[固定机器回执及全部命令](./evidence/frank-review-claims-resolution-20261111.json)。叙事阅读允许真实发生在报告前后，发布时间≤读取时间≤now+60及任务/原报告/原引用绑定保持；异常批次shape与length原因互斥。没有按未证实意见撤回已核验独立GPA bank或删除有范围说明的原始/样本比例。
+当前开发为PR252 `aad880991565d148aa6cc2f74fa0de1f5e6c27c7`，base PR220 `d43878828c86eacee5be9df8a17d16fc63a74bb6`，四提交已推送且源树clean；本地原8766的171运行源码/配置字节匹配AAD，但复制.git仍报d438、测试拷贝不完整，因此安装身份PARTIAL。详见[交接结论](./FRANK_CLAUDE_HANDOFF_20261112.md)与[回执](./evidence/frank-claude-handoff-20261112.json)。
+
+Nov11已有四个新真实任务及完整原件，逐份DONE/raw、CP metadata/reads哈希链、timestamped原件与精确GET均核对通过。最新18:05:50报告33872账户/7978非零Owner，58.9540%全局Top10、14.2998%已核验池/前缀策略指标；这是无Mint authority+前后相同供给夹逼的不同slot数据，不是same-slot原子快照。normalization_complete仍false，独立PublicNode实际UNAVAILABLE/子预算超时，完整CA仍INCOMPLETE_EVIDENCE。
+
+新launch/metadata已有真实链状态；当前账户首买标签已输出但关闭账户未枚举，并有读取失败后错误升级的已复现缺陷；origin未通过CheckpointClient触发；同slot标签和安装Git身份均需收尾。本轮新Chrome已显示两个新卡片并原IDGET/刷新通过；未确认旧tab缓存根因。AAD仅本轮106项离线、Node语法与局部反例核对，未发现该HEAD CI，不转移旧版本全量/回放PASS。
+
+本轮仅同步/只读核对，新增RPC/CA POST/来源/通知/签名交易/重启/部署/端口0。Claude期间新增来源和预算已单列：主1200/1800不含独立checker的4wire，不能伪称资源边界完全未变。四任务主wire1113，加此前2180得可确认下界3293，额外诊断和独立尝试未完全计、原572单列。INVEST_NO_GO / TRADE_NO_GO保持，原10月归因取消不重开。
+
+
+## 历史用户评审修复验收：2026-11-11（d4387882）
+
+本节保留当时已安装产品`d43878828c86eacee5be9df8a17d16fc63a74bb6`，不覆盖上方AAD交接状态，parent`0b966ab459b775bc58c77427c1dbcb491f2d9bf8`。用户评审的5项具体意见中2项确认并最小修复、3项守门穿透未复现且保留现有有限样本/独立证据语义；详见[逐项结论](./FRANK_REVIEW_CLAIMS_RESOLUTION_20261111.md)与[固定机器回执及全部命令](./evidence/frank-review-claims-resolution-20261111.json)。叙事阅读允许真实发生在报告前后，发布时间≤读取时间≤now+60及任务/原报告/原引用绑定保持；异常批次shape与length原因互斥。没有按未证实意见撤回已核验独立GPA bank或删除有范围说明的原始/样本比例。
 
 固定新HEAD本机385 Python/220 Node通过，父版固定新11例9失败/2通过。既有真实捕获2x978严格业务等值回放/0网络；双CI各2264 Python/4skip、220 Node、42合成浏览器检查通过，不能当作Mac或新真实源。495旧源码、46报告、3 SQLite一致备份/integrity/FK、14保护哈希与旧新实际Handler无监听预检通过后，仅重载Dashboard原8766；Chrome既有补证/原时间、原任务GET、刷新及样本/不完整提示通过并留页。提前阅读新场景仅在单元/API和DOM/VM验证，未采集真实前置阅读新任务样本。46报告、现有补证和14保护哈希不变；Scanner身份/代码不变且LIVE/无漂移/0错误，Loop未加载，回滚未实操。
 
