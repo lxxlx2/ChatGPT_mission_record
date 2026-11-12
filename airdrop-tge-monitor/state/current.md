@@ -1,9 +1,9 @@
 # TGE Monitor Current State
 
-Updated: 2026-11-12 21:03:15 Asia/Bangkok
+Updated: 2026-11-12 21:58:42 Asia/Bangkok
 
-- authoritative_final: airdrop-tge-monitor/runs/2026-11-12/210315-final.md
-- final_commit_sha: 02f703e8cd6462be83971a3674f8563e2b5027b6
+- authoritative_final: airdrop-tge-monitor/runs/2026-11-12/215842-final.md
+- final_commit_sha: 32183a57e7e4a2a1c05aeba2633f86bada947f84
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 1
 - executed_shard: 1
@@ -17,18 +17,18 @@ Updated: 2026-11-12 21:03:15 Asia/Bangkok
 
 ## Last meaningful attempts
 - shard0: 2026-11-12 16:01:58 Asia/Bangkok; runs/2026-11-12/160158-final.md (PARTIAL_ONLY)
-- shard1: 2026-11-12 21:03:15 Asia/Bangkok; runs/2026-11-12/210315-final.md (PARTIAL_ONLY)
+- shard1: 2026-11-12 21:58:42 Asia/Bangkok; runs/2026-11-12/215842-final.md (PARTIAL_ONLY)
 - shard2: 2026-11-12 10:00:36 Asia/Bangkok; runs/2026-11-12/100036-final.md (PARTIAL_ONLY)
 - shard3: 2026-11-12 19:56:00 Asia/Bangkok; runs/2026-11-12/195600-final.md (PARTIAL_ONLY)
 
 ## Open urgent
 - urgent5: Concrete, MetaMask, Claynosaurz, HEEBOO, Space @intodotspace; plus Surf and StandX.
-- StandX DUSD November claim: VERIFYING/SOURCE_GAP; event-specific issuer original not read, personal eligibility UNKNOWN, no mail.
-- Concrete additional USDC: original issuer rights receipt SOURCE_GAP.
-- SurfBoard November 13: prior mailed same material version, suppress unchanged.
-- Cambria Base RSGP October 29: prior mailed, suppress unchanged.
+- StandX DUSD November claim: VERIFYING/SOURCE_GAP; issuer original not read; personal eligibility UNKNOWN; no mail.
+- Concrete additional USDC: SOURCE_GAP; no candidate-version-bound issuer rights receipt.
+- SurfBoard November 13: already delivered same material version; suppress unchanged.
+- Cambria Base RSGP October 29: already delivered; suppress unchanged.
 - Excluded: Abstract, Grass, Backpack, Loopscale, fully refunded humans&.
 - Space/Spacecoin and Theo/Autheo separate.
 - next scheduled shard: 2
-- last_verified_complete_at: 2026-10-10T07:52:16+07:00 (historical latest fully verified sweep recorded in AUTOMATION_RUNTIME.md; no later complete proof in current final cache; PARTIAL_ONLY attempts never advance it).
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 (historical full proof from AUTOMATION_RUNTIME.md; later PARTIAL_ONLY never advances it).
 - code_execution: CODE_NOT_EXECUTED / MANUAL_EQUIVALENT_ONLY.
