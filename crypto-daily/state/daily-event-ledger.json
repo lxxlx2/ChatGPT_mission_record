@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-11-11T11:49:51Z",
+  "updated_at": "2026-11-12T10:15:00Z",
   "status": "ACTIVE",
-  "note": "Nov11 manual full report SENT/INBOX Gmail 1a1ca7164f5e6e0b; report canonical exact. Historical Binance Nov10 counterparty restriction reported late. Origin X/TGE personal rights and several independent source lanes still PARTIAL. No unattended delivery success claim. Historic entries preserved.",
+  "note": "2026-11-12 user-requested manual recovery Crypto Gmail Sent ID 1a1cf2db24305968, complete Git canonical readback equal. Authoritative prior Nov10 corrected 1a1ca7b9a202b667, Nov11 1a1ca7164f5e6e0b; no Surf/StandX actionless alerts. All source availability partial; scheduled unattended still failed 09/10/11:20. Historical event records retained.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -2801,6 +2801,78 @@
       "gmail_message_id": "1a1ca7164f5e6e0b",
       "source_url": "https://www.reuters.com/world/china/tsmc-invest-up-1-billion-anthropic-openai-2026-11-10/",
       "classification": "TECH_STRATEGIC_ALLOCATION"
+    },
+    {
+      "event_key": "etf:btc:2026-11-11",
+      "family_key": "etf:bitcoin-us-spot-flow",
+      "material_version": "farside-2026-11-11-minus299p8m",
+      "source_url": "https://farside.co.uk/btc/",
+      "classification": "ETF_FLOW",
+      "delivered_date": "2026-11-12",
+      "gmail_message_id": "1a1cf2db24305968"
+    },
+    {
+      "event_key": "etf:eth:2026-11-11",
+      "family_key": "etf:ethereum-us-spot-flow",
+      "material_version": "farside-2026-11-11-minus144p8m",
+      "source_url": "https://farside.co.uk/eth/",
+      "classification": "ETF_FLOW",
+      "delivered_date": "2026-11-12",
+      "gmail_message_id": "1a1cf2db24305968"
+    },
+    {
+      "event_key": "etf:sol:2026-11-11",
+      "family_key": "etf:solana-us-spot-flow",
+      "material_version": "farside-2026-11-11-minus5p9m",
+      "source_url": "https://farside.co.uk/sol/",
+      "classification": "ETF_FLOW",
+      "delivered_date": "2026-11-12",
+      "gmail_message_id": "1a1cf2db24305968"
+    },
+    {
+      "event_key": "etf:zec:2026-11-11",
+      "family_key": "etf:zcash-us-spot-flow",
+      "material_version": "farside-2026-11-11-minus14p6m",
+      "source_url": "https://farside.co.uk/zec/",
+      "classification": "ETF_FLOW",
+      "delivered_date": "2026-11-12",
+      "gmail_message_id": "1a1cf2db24305968"
+    },
+    {
+      "event_key": "sec:nodejs:2026-11-11-patched",
+      "family_key": "security:nodejs-nov2026-patch",
+      "material_version": "official-patched-v22.23.5-v24.22.3-v26.13.1",
+      "source_url": "https://nodejs.org/en/blog/vulnerability/november-2026-security-releases",
+      "classification": "SECURITY_PATCH_RELEASE",
+      "delivered_date": "2026-11-12",
+      "gmail_message_id": "1a1cf2db24305968"
+    },
+    {
+      "event_key": "sec:laravel:signed-url:2026-11-11",
+      "family_key": "security:laravel-signed-url-expiration",
+      "material_version": "ghsa-v5ch-g375-82r6-and-ghsa-6rv8-qj5v-p8ch-patch12.72.0-13.41.0",
+      "source_url": "https://github.com/laravel/framework/security/advisories/GHSA-v5ch-g375-82r6",
+      "classification": "SECURITY_ADVISORY",
+      "delivered_date": "2026-11-12",
+      "gmail_message_id": "1a1cf2db24305968"
+    },
+    {
+      "event_key": "market:binance:2026-11-12-1648",
+      "family_key": "market:binance-spot-snapshot",
+      "material_version": "binance-spot-2026-11-12T0948Z-btc73434-eth2045",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "classification": "DAILY_MARKET_SNAPSHOT",
+      "delivered_date": "2026-11-12",
+      "gmail_message_id": "1a1cf2db24305968"
+    },
+    {
+      "event_key": "macro:nvidia-governance-market:2026-11-12",
+      "family_key": "macro:nvidia-governance-global-risk",
+      "material_version": "reuters-2026-11-12-nvda-afterhours-8p8",
+      "source_url": "https://www.reuters.com/world/china/global-markets-wrapup-1-2026-11-12/",
+      "classification": "MARKET_RISK_NEW_REPORT",
+      "delivered_date": "2026-11-12",
+      "gmail_message_id": "1a1cf2db24305968"
     }
   ],
   "open_missed_candidates": []
