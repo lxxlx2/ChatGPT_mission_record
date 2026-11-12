@@ -1,13 +1,13 @@
 # TGE Monitor Current State
 
-Updated: 2026-11-12 23:02:07 Asia/Bangkok
+Updated: 2026-11-13 00:04:19 Asia/Bangkok
 
-- authoritative_final: airdrop-tge-monitor/runs/2026-11-12/230207-final.md
-- final_commit_sha: 41cdc38d96dda012eac19e80246ba1784301bd5e
+- authoritative_final: airdrop-tge-monitor/runs/2026-11-13/000419-final.md
+- final_commit_sha: 875221e909a95421e5892009ed942b8eccd38a8c
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 3
-- executed_shard: 3
-- candidate_count: 2
+- scheduled_shard: 0
+- executed_shard: 0
+- candidate_count: 1
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
@@ -16,7 +16,7 @@ Updated: 2026-11-12 23:02:07 Asia/Bangkok
 - identity_failures: 0
 
 ## Last meaningful attempts
-- shard0: 2026-11-12 16:01:58 Asia/Bangkok; runs/2026-11-12/160158-final.md (PARTIAL_ONLY)
+- shard0: 2026-11-13 00:04:19 Asia/Bangkok; runs/2026-11-13/000419-final.md (PARTIAL_ONLY)
 - shard1: 2026-11-12 21:58:42 Asia/Bangkok; runs/2026-11-12/215842-final.md (PARTIAL_ONLY)
 - shard2: 2026-11-12 10:00:36 Asia/Bangkok; runs/2026-11-12/100036-final.md (PARTIAL_ONLY)
 - shard3: 2026-11-12 23:02:07 Asia/Bangkok; runs/2026-11-12/230207-final.md (PARTIAL_ONLY)
@@ -30,6 +30,6 @@ Updated: 2026-11-12 23:02:07 Asia/Bangkok
 - Fortytwo promo-code page: indexed issuer page; new material right/publication date UNKNOWN; PARTIAL_ONLY.
 - Excluded: Abstract, Grass, Backpack, Loopscale, fully refunded humans&.
 - Space/Spacecoin and Theo/Autheo separate.
-- next scheduled shard: 0
+- next scheduled shard: 1
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (historical full proof from AUTOMATION_RUNTIME.md; later PARTIAL_ONLY never advances it).
 - code_execution: CODE_NOT_EXECUTED / MANUAL_EQUIVALENT_ONLY.
