@@ -2,7 +2,7 @@
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
   "updated_at": "2026-11-12T11:20:00Z",
   "status": "ACTIVE",
-  "note": "Nov12 user-requested comprehensive re-issuance: Nov5..Nov11 7 full de-duplicated Crypto canonical Gmail (each user-sent verified, matching Git exact); Nov12 delivered full manual recovery. Original Gmail message IDs preserved in event ledger; canonical_gmail_message_id latest actual active edition. Old unverified Surf/StandX rights and repeated MEXC/Node were not materially new. TGE issuer-original coverage still PARTIAL; unattended morning send not verified.",
+  "note": "Nov12 user-requested comprehensive re-issuance: Nov5..Nov11 7 full de-duplicated Crypto canonical Gmail (each user-sent verified, matching Git exact); Nov12 delivered full manual recovery. Original Gmail message IDs preserved in event ledger; canonical_gmail_message_id latest actual active edition. Old unverified Surf/StandX rights and repeated MEXC/Node were not materially new. TGE issuer-original coverage still PARTIAL; unattended morning send not verified. Special: Binance Nov10 new policy first Sent Nov11 then assigned to Nov10 corrected full canonical, original Nov11 delivery remains historically recorded.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -2807,10 +2807,11 @@
       "gmail_message_id": "1a1ca7164f5e6e0b",
       "source_url": "https://www.binance.com/en-AE/support/announcement/detail/9ef6e347da924cdc90f53577ab483b1f",
       "classification": "CEX_TRANSFER_RESTRICTION",
-      "canonical_gmail_message_id": "1a1cf32b2d2da5b6",
-      "canonical_report_date": "2026-11-11",
+      "canonical_gmail_message_id": "1a1cf318651e3490",
+      "canonical_report_date": "2026-11-10",
       "original_sent_id_retained": true,
-      "previous_recovery_sent_id": "1a1ca7164f5e6e0b"
+      "previous_recovery_sent_id": "1a1ca7164f5e6e0b",
+      "canonical_mapping_note": "First sent in Nov11 manual recovery, subsequently included in fully corrected Nov10 event-date canonical; Nov11 de-duplicated reissue excludes this old item."
     },
     {
       "event_key": "macro:us-cpi:2026-10-released-2026-11-10",
