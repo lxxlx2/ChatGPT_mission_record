@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-11-12T10:45:00Z",
+  "updated_at": "2026-11-12T10:50:00Z",
   "status": "ACTIVE",
-  "note": "Real Nov12 updates: Nov10 full dedup correction Sent 1a1cf318651e3490, Nov11 full dedup correction Sent 1a1cf32b2d2da5b6, Nov12 full recovered Sent 1a1cf2db24305968; all canonical report bodies exact Gmail readback. Earlier original ids remain historical delivery evidence. TGE Surf/StandX unverified/old no-value statuses suppressed. Unattended delivery still unproven.",
+  "note": "Nov12 canonical reconciliation verified: Nov10 canonical Gmail 1a1cf318651e3490 (full dedup correction), Nov11 canonical Gmail 1a1cf32b2d2da5b6 (full dedup correction), Nov12 Gmail 1a1cf2db24305968. Historical Gmail ids and delivered_date preserved. Ledger is event historical evidence, canonical_* fields are active source authority. No new TGE action qualified. Autonomous morning delivery still not proven.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -2683,7 +2683,10 @@
       "delivered_date": "2026-11-10",
       "gmail_message_id": "1a1c5322efda837e",
       "source_url": "https://github.com/advisories/GHSA-hh7j-5m3j-23pf",
-      "classification": "MAJOR_SECURITY"
+      "classification": "MAJOR_SECURITY",
+      "canonical_gmail_message_id": "1a1cf318651e3490",
+      "canonical_report_date": "2026-11-10",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "finance:pnc:coinbase-usdc:2026-11-09",
@@ -2692,7 +2695,10 @@
       "delivered_date": "2026-11-10",
       "gmail_message_id": "1a1c5322efda837e",
       "source_url": "https://www.reuters.com/legal/transactional/pnc-offer-stablecoin-payments-clients-coinbase-partnership-2026-11-09/",
-      "classification": "STABLECOIN_INFRASTRUCTURE"
+      "classification": "STABLECOIN_INFRASTRUCTURE",
+      "canonical_gmail_message_id": "1a1cf318651e3490",
+      "canonical_report_date": "2026-11-10",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "etf:btc:2026-11-09",
@@ -2701,7 +2707,10 @@
       "delivered_date": "2026-11-10",
       "gmail_message_id": "1a1c5322efda837e",
       "source_url": "https://farside.co.uk/btc/",
-      "classification": "ETF_INSTITUTIONAL_FLOW"
+      "classification": "ETF_INSTITUTIONAL_FLOW",
+      "canonical_gmail_message_id": "1a1cf318651e3490",
+      "canonical_report_date": "2026-11-10",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "etf:eth:2026-11-09",
@@ -2710,7 +2719,10 @@
       "delivered_date": "2026-11-10",
       "gmail_message_id": "1a1c5322efda837e",
       "source_url": "https://farside.co.uk/eth/",
-      "classification": "ETF_INSTITUTIONAL_FLOW"
+      "classification": "ETF_INSTITUTIONAL_FLOW",
+      "canonical_gmail_message_id": "1a1cf318651e3490",
+      "canonical_report_date": "2026-11-10",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "reg:fincen:scamcenters:2026-11-09",
@@ -2719,7 +2731,10 @@
       "delivered_date": "2026-11-10",
       "gmail_message_id": "1a1c5322efda837e",
       "source_url": "https://www.fincen.gov/news/news-releases/readout-fincen-hosts-exchange-event-combat-overseas-scam-centers",
-      "classification": "REGULATORY_COOPERATION"
+      "classification": "REGULATORY_COOPERATION",
+      "canonical_gmail_message_id": "1a1cf318651e3490",
+      "canonical_report_date": "2026-11-10",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "macro:oil:2026-11-10",
@@ -2728,7 +2743,10 @@
       "delivered_date": "2026-11-10",
       "gmail_message_id": "1a1c5322efda837e",
       "source_url": "https://www.reuters.com/business/energy/oil-falls-trump-downplays-prospect-escalation-with-iran-2026-11-10/",
-      "classification": "CROSS_MARKET"
+      "classification": "CROSS_MARKET",
+      "canonical_gmail_message_id": "1a1cf318651e3490",
+      "canonical_report_date": "2026-11-10",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "market:binance:2026-11-10-1816",
@@ -2737,7 +2755,10 @@
       "delivered_date": "2026-11-10",
       "gmail_message_id": "1a1c5322efda837e",
       "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
-      "classification": "DAILY_MARKET_SNAPSHOT"
+      "classification": "DAILY_MARKET_SNAPSHOT",
+      "canonical_gmail_message_id": "1a1cf318651e3490",
+      "canonical_report_date": "2026-11-10",
+      "original_sent_id_retained": true
     },
     {
       "event_key": "reg:binance:mexc-transfer-restriction:2026-11-10",
