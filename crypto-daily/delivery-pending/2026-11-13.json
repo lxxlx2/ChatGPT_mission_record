@@ -1,7 +1,7 @@
 {
   "date": "2026-11-13",
-  "phase": "08:20_PREBUILD",
-  "qa_status": "QA_FAIL_PENDING_MARKET_AND_DISCOVERY",
+  "phase": "09:20_RECONSTRUCTION_ATTEMPT",
+  "qa_status": "QA_FAIL_INCOMPLETE_13_SECTION_EVIDENCE",
   "delivery_status": "NOT_SENT",
   "rules_sha": {
     "PIPELINE_CONTRACT.md": "29ffbc1d32ca87a744d2990e8d55639ebb84a6f9",
@@ -187,5 +187,32 @@
     "Complete security six-lane and early/NFT issuer checks",
     "Run editorial and daily-event gates or equivalent; do not claim CI pass",
     "Only send full 13 chapters after QA pass, read back Sent and archive exact text"
-  ]
+  ],
+  "recovery_required": [
+    "Obtain verified current BTC ETH SOL BNB HYPE official price and derivatives",
+    "Complete six security family original source checks",
+    "Verify all thirteen chapters with meaningful actual source receipts and last seven days Sent novelty",
+    "Perform manual equivalent gate or actual executable gate before Gmail"
+  ],
+  "additional_verified_sources": [
+    {
+      "lane": "spot",
+      "url": "https://www.binance.com/en/square/post/11-13-2026-bitcoin-btc-drops-below-71-000-usdt-with-a-4-27-decrease-in-24-hours-387641457719860",
+      "published_at": "2026-11-13T00:37:00Z",
+      "finding": "Binance verified news BTC 70890.898438 USDT at 00:37 UTC, -4.27% 24h, snapshot only; insufficient other assets"
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "url": "https://www.bitget.org/asia/blog/articles/bitget-ipo-prime-anthropic-listing",
+      "published_at": "2026-11-03",
+      "finding": "Official Bitget public round starts Nov10 08:00 UTC and ends day before IPO 08:00 UTC; backed tokenized exposure, not ordinary Anthropic shares"
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "url": "https://www.bitget.fit/support/articles/12560603900044",
+      "published_at": "2026-11-09",
+      "finding": "VIP extended until Nov11 08:00 UTC, public unchanged; must dedupe"
+    }
+  ],
+  "audit_note": "Existing 08:20 body contains explicit placeholder prices and unverified Bitget novelty. No fully validated 13-chapter report available. Sending would violate quality gate. 10:20/11:20 recovery must reconstruct, not merely check pending."
 }
