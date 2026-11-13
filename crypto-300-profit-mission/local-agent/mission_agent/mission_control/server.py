@@ -15,7 +15,6 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from decimal import Decimal
 from urllib.parse import parse_qs, urlparse
 
 from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
@@ -27,7 +26,6 @@ from .payment_evidence import latest_buy_payment_evidence
 from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
-from .jupiter import JupiterQuoteClient
 
 
 def _host_is_loopback(host: str, port: int) -> bool:
@@ -183,7 +181,6 @@ class ClusterJobManager:
         self.rpc_endpoints=list(dict.fromkeys(self.rpc_endpoints))
         self.rpc_endpoint=self.rpc_endpoints[0]
         self.market_client=DexScreenerMarketClient()
-        self.jupiter=JupiterQuoteClient(os.environ.get("JUPITER_API_KEY"))
         self.frank=FrankReader(production_root) if production_root is not None else None
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-cluster")
         self.lock = threading.Lock()
@@ -211,7 +208,7 @@ class ClusterJobManager:
             public["preview"] = dict(preview)
             quote = preview.get("execution_quote_30_usdc")
             if isinstance(quote, dict):
-                public["preview"]["execution_quote_30_usdc"] = _annotate_ca_quote(quote)
+                public["preview"]["execution_quote_30_usdc"] = _annotate_ca_quote(quote, archived=True)
         return public
 
     def _prune_jobs_locked(self):
@@ -312,40 +309,6 @@ class ClusterJobManager:
                 elif stage=="HOLDERS_READY" and isinstance(job.get("preview"),dict):
                     job["preview"]["raw_top10_resolved_pct"]=details.get("raw_top10_resolved_pct")
                     job["preview"]["top_accounts_resolved"]=details.get("top_accounts_resolved")
-        # BASE_READY is emitted before slow Top20/funding history. Fetch a
-        # read-only, time-stamped execution quote now so the trader sees it
-        # while history scans. The final report still refreshes the quote
-        # after history completes; an early quote must not be reused as fresh.
-        if stage=="BASE_READY":
-            profile=details.get("token_profile") or {}
-            decimals=profile.get("decimals")
-            if profile.get("status")!="OK" or type(decimals) is not int or not 0 <= decimals <= 18:
-                early_quote={
-                    "status":"UNAVAILABLE","reason":"TOKEN_DECIMALS_UNKNOWN",
-                    "source":"JUPITER_OFFICIAL","observed_at":time.time(),
-                }
-            else:
-                try:
-                    response=self.jupiter.quote_usdc_to_token(
-                        self.jobs[job_id]["mint"],decimals,
-                        usdc_amount=Decimal("30"),slippage_bps=100,
-                    )
-                    early_quote={
-                        key:response.get(key) for key in (
-                            "status","reason","source","observed_at","route_exists",
-                            "execution_price_usdc","price_impact_pct",
-                        )
-                    }
-                except Exception as exc:
-                    early_quote={
-                        "status":"UNAVAILABLE","reason":type(exc).__name__,
-                        "source":"JUPITER_OFFICIAL","observed_at":time.time(),
-                    }
-            with self.lock:
-                job=self.jobs.get(job_id)
-                if job is not None and job.get("status")=="RUNNING" and isinstance(job.get("preview"),dict):
-                    job["preview"]["execution_quote_30_usdc"]=early_quote
-
     @staticmethod
     def _extension_semantic_config(value):
         accounting_only={"withheldamount"}
@@ -552,23 +515,7 @@ class ClusterJobManager:
                 market_client=self.market_client,
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
-            try:
-                report["execution_quote_30_usdc"]=self.jupiter.quote_usdc_to_token(
-                    mint,
-                    int(report["decimals"]),
-                    usdc_amount=Decimal("30"),
-                    slippage_bps=100,
-                )
-            except Exception as exc:
-                report["execution_quote_30_usdc"]={
-                    "status":"UNAVAILABLE",
-                    "source":"JUPITER_OFFICIAL",
-                    "reason":type(exc).__name__,
-                }
             self._set_progress(job_id,"REPORT_PERSISTING",{"deep_holders_scanned":(report.get("coverage") or {}).get("deep_holders_scanned"),"adaptive_deepened":len((report.get("coverage") or {}).get("adaptive_deepened_owners") or [])})
-            report["execution_quote_30_usdc"] = _annotate_ca_quote(
-                report.get("execution_quote_30_usdc") or {}, archived=True,
-            )
             stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
             out = self.report_root / mint
             out.mkdir(parents=True, exist_ok=True)
@@ -622,7 +569,7 @@ class ClusterJobManager:
             report = json.loads(path.read_text())
             quote = report.get("execution_quote_30_usdc")
             if isinstance(quote, dict):
-                report["execution_quote_30_usdc"] = _annotate_ca_quote(quote)
+                report["execution_quote_30_usdc"] = _annotate_ca_quote(quote, archived=True)
             return report
         except (OSError, ValueError):
             return None

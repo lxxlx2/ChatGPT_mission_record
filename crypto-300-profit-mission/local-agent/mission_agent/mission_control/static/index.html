@@ -111,14 +111,9 @@
           <label for="cluster-mint">Solana CA</label>
           <div class="cluster-search-row">
             <input id="cluster-mint" name="mint" autocomplete="off" spellcheck="false" placeholder="粘贴 token CA" />
-            <select id="cluster-preset" name="preset" title="扫描深度">
-              <option value="quick" selected>快速</option>
-              <option value="standard">标准</option>
-              <option value="deep">深度</option>
-            </select>
             <button id="cluster-submit" class="primary-btn" type="submit">开始查询</button>
           </div>
-          <div class="cluster-preset-help" id="cluster-preset-help">快速模式：先查权限、主池与 Top20 地址；需要深度钱包归因时再切换模式。</div>
+          <div class="cluster-preset-help" id="cluster-preset-help">统一研究入口：先核对 CA、合约权限和市场，再分析主要持有人及资金关系。未覆盖的历史、LP 与交易数据会明确标为未确认，不将当前查询上限写作全量。</div>
 
         </form>
       </section>
@@ -129,11 +124,11 @@
       <section id="cluster-result" class="cluster-result" hidden>
         <div class="cluster-summary" id="cluster-summary"></div>
         <section class="panel conclusion-panel">
-          <div class="panel-title"><div><h2>快速判断</h2><p>合约风险、筹码集中与市场可交易性。未确认的数据保持未确认。</p></div></div>
+          <div class="panel-title"><div><h2>链上研究结论</h2><p>合约风险、筹码集中与市场结构。未完成的链上证据保持未确认。</p></div></div>
           <div id="cluster-conclusion" class="cluster-conclusion"></div>
         </section>
         <section class="panel">
-          <div class="panel-title"><div><h2>行情与交易条件</h2><p>市场参考行情与 Jupiter 可执行报价分开显示，点击 CA 可跳转交易。</p></div></div>
+          <div class="panel-title"><div><h2>行情与交易条件</h2><p>这里只展示有时效标记的市场参考行情；不会默认请求 $30 的 Jupiter 成交报价。</p></div></div>
           <div id="cluster-market" class="fact-grid"></div>
         </section>
         <section class="panel">
