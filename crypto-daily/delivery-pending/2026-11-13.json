@@ -1,0 +1,191 @@
+{
+  "date": "2026-11-13",
+  "phase": "08:20_PREBUILD",
+  "qa_status": "QA_FAIL_PENDING_MARKET_AND_DISCOVERY",
+  "delivery_status": "NOT_SENT",
+  "rules_sha": {
+    "PIPELINE_CONTRACT.md": "29ffbc1d32ca87a744d2990e8d55639ebb84a6f9",
+    "EDITORIAL_RULESET.json": "2ed51528d230508ae4e0015762b1d60c9d72e299",
+    "REPORT_ACCEPTANCE.md": "3f725c9d28584026b16432fc2f3af68854db6f1b",
+    "COLLECTOR_SPEC.md": "76e50b322ca551baff0922ca4e4fc721ad422184",
+    "DELIVERY_RUNBOOK.md": "e4d01309bcf0df9c1ca00b6777d5af5141ee20c3"
+  },
+  "code_status": "CODE_NOT_EXECUTED",
+  "ci_status": "CI_NOT_PROVEN",
+  "source_coverage": "PARTIAL",
+  "receipts": [
+    {
+      "lane": "capital_flows",
+      "status": "PARTIAL",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://farside.co.uk/btc/",
+      "published_at": "2026-11-12",
+      "note": "Nov12 incomplete, Nov11 complete BTC -299.8m USD"
+    },
+    {
+      "lane": "capital_flows_eth",
+      "status": "PARTIAL",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://farside.co.uk/eth/",
+      "published_at": "2026-11-12",
+      "note": "Nov12 incomplete, Nov11 complete ETH -144.8m USD"
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "status": "checked",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://www.bitget.com/support/articles/12560603899381",
+      "published_at": "2026-11-03 10:00",
+      "note": "Bitget rANT terms official; current campaign status and 7d novelty still require verification"
+    },
+    {
+      "lane": "spot",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "published_at": null,
+      "reason": "HTTP 451; ETH/SOL fetch unavailable"
+    },
+    {
+      "lane": "derivatives",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://fapi.binance.com/fapi/v1/premiumIndex",
+      "published_at": null,
+      "reason": "Not fetched in this prebuild"
+    },
+    {
+      "lane": "onchain",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://platform.arkm.com/",
+      "published_at": null,
+      "reason": "No original TXID checked"
+    },
+    {
+      "lane": "policy",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://www.sec.gov/newsroom",
+      "published_at": null,
+      "reason": "No fresh first-party policy checked"
+    },
+    {
+      "lane": "infrastructure",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://www.circle.com/blog",
+      "published_at": null,
+      "reason": "No fresh first-party release checked"
+    },
+    {
+      "lane": "tge",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://www.binance.com/en/support/announcement",
+      "published_at": null,
+      "reason": "No first-party new TGE claim verified"
+    },
+    {
+      "lane": "early_nft",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://opensea.io/",
+      "published_at": null,
+      "reason": "No issuer/mint original checked"
+    },
+    {
+      "lane": "security",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "published_at": null,
+      "reason": "Not checked"
+    },
+    {
+      "lane": "web_runtime_rce",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://nodejs.org/en/blog/vulnerability/",
+      "published_at": null,
+      "reason": "Not checked"
+    },
+    {
+      "lane": "web_pki_tls",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://www.mozilla.org/en-US/security/advisories/",
+      "published_at": null,
+      "reason": "Not checked"
+    },
+    {
+      "lane": "ai_package_supply_chain",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://github.com/advisories",
+      "published_at": null,
+      "reason": "Not checked"
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://www.connectwise.com/company/trust/advisories",
+      "published_at": null,
+      "reason": "Not checked"
+    },
+    {
+      "lane": "backend_framework_auth",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://github.com/laravel/framework/security/advisories",
+      "published_at": null,
+      "reason": "Not checked"
+    },
+    {
+      "lane": "macro",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://www.bls.gov/",
+      "published_at": null,
+      "reason": "No new original macro release checked"
+    },
+    {
+      "lane": "forward_catalysts",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://www.sec.gov/edgar/search/",
+      "published_at": null,
+      "reason": "No distinct new deadline checked"
+    },
+    {
+      "lane": "official_x",
+      "status": "SOURCE_GAP",
+      "checked_at": "2026-11-13T08:21:17+07:00",
+      "source_url": "https://x.com/",
+      "published_at": null,
+      "reason": "BROWSER_SESSION_UNAVAILABLE; no authenticated X checked"
+    }
+  ],
+  "events": [
+    {
+      "family_key": "ipoaccess:anthropic:bitget:BACKED_TOKENIZED_EQUITY",
+      "material_version": "bitget-ipo-prime-public-round-open-2026-11-10T16:00+08",
+      "source_url": "https://www.bitget.com/support/articles/12560603899381",
+      "source_published_at": "2026-11-03 10:00",
+      "decision": "INCLUDE_PENDING_NOVELTY_AND_STATUS_CHECK",
+      "primary_section": 7
+    }
+  ],
+  "body": "Crypto Daily Brief｜2026-11-13｜08:20预构建草稿（未发送，待09:20刷新与QA）\n时区：Asia/Bangkok。预构建约08:21后。美国ETF 11月12日数据尚未完整公布，最后完整已读日为11月11日。币安实时API本轮返回451/访问失败，禁止将历史行情冒充今晨价格。本稿属于待发全文，非已审核可发版。\n\n一、今日最重要的5件事\n无高置信新增。\n\n二、BTC/ETH/SOL及主要资产\nBTC、ETH、SOL、BNB、HYPE：本轮Binance现货原始API读取失败，实时价格/涨跌幅/成交量均待09:20从官方渠道补齐；不可引用11月12日历史报价充当11月13日08:20。原始请求：https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT 及ETHUSDT、SOLUSDT。此节目前未达到发布门槛。\n\n三、二级市场剧烈波动与持续趋势\n无高置信新增。\n\n四、监管与政策\n无高置信新增。\n\n五、机构、基金、鲸鱼真实资金动作\n（1）Farside 11月11日最后完整可核实的美国现货BTC ETF合计净流出2.998亿美元，ETH ETF合计净流出1.448亿美元。11月12日两张表仍有大量发行人“-”未填，BTC临时合计+330万美元、ETH临时合计-670万美元均不可视为最终净额。数据动态更新，09:20须重新核查。来源：https://farside.co.uk/btc/ 和 https://farside.co.uk/eth/ 。事件类型：例行交易日流量，不晋级全球Top5。\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场及公链生态\n无高置信新增。\n\n七、空投、TGE、ICO、公售、解锁和实际可参与机会\n（1）【Bitget发行方声明，非Anthropic直接股权】Bitget官方11月3日公告Anthropic关联IPO Prime产品rANT，公告规定公开轮11月10日16:00 UTC+8起，最低100美元、个人最高25,000美元、池上限2亿美元、实际获配金额服务费5%、以USDT或USDGO投入；截止为IPO前一日16:00 UTC+8。rANT不是Anthropic普通股，不自动附带投票权，平台明确Anthropic未授权或背书。资金提交后不可自行撤销，最终股权支持/赎回机制以产品协议为准；发行价与最终获配未知。原始公告：https://www.bitget.com/support/articles/12560603899381 。本条早于今日被11月12日Git研究发现，09:20必须检查近7天实际Sent是否已有相同版本、核对实时申购页面和资格，若已发或页面状态改变，删除或更新后才可发送。family_key=ipoaccess:anthropic:bitget:BACKED_TOKENIZED_EQUITY；material_version=bitget-ipo-prime-public-round-open-2026-11-10T16:00+08；09:20暂列INCLUDE_PENDING_NOVELTY_AND_STATUS_CHECK。\n\n八、Early / Meme / NFT / 新生态热点\n无高置信新增。\n\n九、安全、黑客、漏洞、恶意App及重大风险\n无高置信新增。\n\n十、全球局势与跨市场\n无高置信新增。\n\n十一、未来24至72小时催化\n无高置信新增。\n\n十二、持续趋势与机会观察\n无高置信新增。\n\n十三、今日行动与风险结论\n（1）在没有实时Binance官方报价和完整11月12日ETF发行人数据前，不把ETF暂时合计当成机构资金转向，也不依据未核实链上转账做买卖决策。涉及Bitget rANT必须先核对实际申购页面、所在地区资格和产品权利文件，不能当作直接持有Anthropic股票。\n",
+  "required_0920": [
+    "Check today Sent prefix before any send",
+    "Get official current BTC ETH SOL BNB HYPE quote and derivatives",
+    "Recheck Nov12 ETF after all issuer values populate",
+    "Read full seven-day Sent and compare family_key",
+    "Verify Bitget actual campaign status, user jurisdiction and rANT product terms",
+    "Complete security six-lane and early/NFT issuer checks",
+    "Run editorial and daily-event gates or equivalent; do not claim CI pass",
+    "Only send full 13 chapters after QA pass, read back Sent and archive exact text"
+  ]
+}
