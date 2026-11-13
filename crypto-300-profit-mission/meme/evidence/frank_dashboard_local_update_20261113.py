@@ -21,10 +21,10 @@ import time
 import urllib.parse
 import urllib.request
 
-OLD='e38d18421b46888a7cf36b4d004f08bc99d4f926'  # First corrected local installation; preserve its byte manifest.
+OLD='9677da7d0b429a4a69fd270cd0097231e4713507'  # First corrected local installation; preserve its byte manifest.
 LABEL='com.jerson.frank-meme.dashboard'
 LOOP='com.jerson.frank-meme.loop'
-AUTH='USER_20261113_LOCAL_DASHBOARD_FIXES_AND_CLEAN_INSTALL'
+AUTH='USER_20261113_CLASSIFICATION_FIXES_LOCAL_DASHBOARD'
 os.umask(0o077)
 
 

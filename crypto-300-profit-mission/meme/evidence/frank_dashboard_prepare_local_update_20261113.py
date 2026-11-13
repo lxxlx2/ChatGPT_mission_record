@@ -156,12 +156,12 @@ def main():
     side['staged'] = str(staged)
     # The no-listener helper will verify the fresh old backup and candidate;
     # the executor refuses apply before the combined PASS receipt exists.
-    plan = {**prior, 'version': 2, 'old_sha': 'e38d18421b46888a7cf36b4d004f08bc99d4f926',
-            'candidate_sha': candidate_sha, 'authorization': 'USER_20261113_LOCAL_DASHBOARD_FIXES_AND_CLEAN_INSTALL',
+    plan = {**prior, 'version': 2, 'old_sha': '9677da7d0b429a4a69fd270cd0097231e4713507',
+            'candidate_sha': candidate_sha, 'authorization': 'USER_20261113_CLASSIFICATION_FIXES_LOCAL_DASHBOARD',
             'backup': str(backup), 'old_agent': str(old_agent), 'candidate_agent': str(candidate),
             'candidate_repository': str(candidate_repo), 'candidate_tracked_agent_manifest': tracked,
             'old_agent_manifest': old_files, 'reports': reports,
-            'old_git_identity_trusted': git(old_agent,'rev-parse','HEAD')=='e38d18421b46888a7cf36b4d004f08bc99d4f926' and not git(old_agent,'status','--porcelain','--untracked-files=all'),
+            'old_git_identity_trusted': git(old_agent,'rev-parse','HEAD')=='9677da7d0b429a4a69fd270cd0097231e4713507' and not git(old_agent,'status','--porcelain','--untracked-files=all'),
             'candidate_runtime_manifest': manifest(candidate / 'mission_agent'),
             'runner_sha_before': sha(runner), 'runner_mode_before': runner.stat().st_mode & 0o777,
             'protected_files': protected, 'protected_hashes': hashes,
