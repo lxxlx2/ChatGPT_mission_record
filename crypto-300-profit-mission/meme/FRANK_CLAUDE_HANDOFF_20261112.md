@@ -1,5 +1,7 @@
 # Frank Claude 交接核对与进度同步（2026-11-12）
 
+后续：本记录为Nov12交接时点；Nov13已修的软件项、本地干净安装与新真实查询见[后续收尾](./FRANK_CA_FINISH_20261113.md)。下文保留当时未修复状态，不覆盖后续结论。
+
 结论：Claude 的四个新提交已在远端，源码工作树干净，未发现这些源码丢失。当前开发候选为`aad880991565d148aa6cc2f74fa0de1f5e6c27c7`（parent`d81f7fcbfb2f782f8528cb267e222950d24dfae7`），[PR252](https://github.com/lxxlx2/ChatGPT_mission_record/pull/252) Draft/Open，stack在[PR220](https://github.com/lxxlx2/ChatGPT_mission_record/pull/220)的`d43878828c86eacee5be9df8a17d16fc63a74bb6`上。PR220仍是基础版本，不能把它的HEAD说成当前安装源码。本轮只核对/同步，没有新RPC、CA POST、来源采集、重启、部署、交易或新PR。
 
 [机器回执](./evidence/frank-claude-handoff-20261112.json)保留固定SHA、任务原件指纹、测试命令、边界和未完成项；原始报告、完整任务标识、SQLite及私人路径仅保留Git外。最新核对main为`5507e58e650f25e074f45bf9b426c1220a1e4f4f`，相对之前规则和Frank相关路径无增量。

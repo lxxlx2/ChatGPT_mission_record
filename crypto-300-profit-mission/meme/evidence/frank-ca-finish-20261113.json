@@ -1,0 +1,334 @@
+{
+  "version": 1,
+  "date": "2026-11-13",
+  "source_sha": "9677da7d0b429a4a69fd270cd0097231e4713507",
+  "source_parent_sha": "e38d18421b46888a7cf36b4d004f08bc99d4f926",
+  "baseline_sha": "aad880991565d148aa6cc2f74fa0de1f5e6c27c7",
+  "source_pr": 252,
+  "source_pr_base_sha": "d43878828c86eacee5be9df8a17d16fc63a74bb6",
+  "source_branch": "codex/frank-gpa-binary-full-mint",
+  "latest_main_read_sha": "85fc12b14d65d75d5b2354d4e1bbd42974b1439f",
+  "rules_and_Franks_paths_delta_since_prior_main": "EMPTY",
+  "review_waived_by_user": true,
+  "verdicts": {
+    "confirmed_software_gaps": "PASS_FIXED",
+    "clean_local_install": "PASS",
+    "actual_Chrome_new_run_and_refresh": "PASS",
+    "independent_provider_parity": "UNAVAILABLE",
+    "complete_CA_acceptance": "PARTIAL",
+    "invest": "INVEST_NO_GO",
+    "trade": "TRADE_NO_GO"
+  },
+  "fixes": [
+    "FIRST_BUY_UNREAD_AND_UNCLASSIFIED_GAP_PRESERVED",
+    "ORIGIN_CHECKPOINT_ADAPTER_CONNECTED",
+    "ORIGIN_BUDGET_AND_CHECKPOINT_ERRORS_PROPAGATE",
+    "SOURCE_TIMEOUT_NOT_MISLABELED_AS_STORAGE_FAILURE",
+    "INDEPENDENT_RPC_TIMER_STARTS_AT_FIRST_USE",
+    "INDEPENDENT_ERROR_REASON_SANITIZED",
+    "CROSS_SLOT_SUPPLY_BRACKET_LABELS",
+    "PUMP_COMPLETE_NOT_MIGRATION_PROOF",
+    "CLEAN_FIXED_SHA_INSTALL_501_TRACKED_AGENT_FILES"
+  ],
+  "before_after_regressions": {
+    "first_buy_initial": {
+      "failed": 5,
+      "passed": 7
+    },
+    "origin_initial_before_two_storage_controls": {
+      "failed": 7,
+      "passed": 2
+    },
+    "independent_initial_before_two_budget_controls": {
+      "failed": 10,
+      "passed": 4
+    },
+    "new_browser_wording_initial": {
+      "failed": 3,
+      "passed": 0
+    }
+  },
+  "offline_tests": {
+    "python": {
+      "source_sha": "9677da7d0b429a4a69fd270cd0097231e4713507",
+      "args": [
+        "-ra",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_meme_first_buy_completeness.py",
+        "tests/test_ca_origin_checkpoint.py",
+        "tests/test_ca_job_checkpoint.py",
+        "tests/test_meme_independent_check_lifecycle.py",
+        "tests/test_frank_ca_job_rpc_budget.py",
+        "tests/test_meme_market_and_rpc.py",
+        "tests/test_meme_wallet_cluster.py",
+        "tests/test_meme_wallet_cluster_pagination.py",
+        "tests/test_meme_holder_ranks.py",
+        "tests/test_meme_holder_binary.py",
+        "tests/test_meme_ca_completeness.py",
+        "tests/test_meme_launch_origin.py",
+        "tests/test_meme_narrative.py",
+        "tests/test_meme_narrative_story.py",
+        "tests/test_meme_pool_holder_roles.py",
+        "tests/test_meme_top_account_context.py",
+        "tests/test_narrative_supplement.py"
+      ],
+      "exit_code": 0,
+      "socket_events": {},
+      "passed": 446,
+      "seconds": 1.07,
+      "command": "<review-python> -B; sys.addaudithook rejects all socket.*; pytest.main(args below)",
+      "listeners": 0,
+      "source_requests": 0
+    },
+    "node": {
+      "command": "node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_report_render.mjs tests/test_frank_d2_ingress_ui.mjs tests/test_frank_ca_rpc_budget_ui.mjs",
+      "executed_source_sha": "e38d18421b46888a7cf36b4d004f08bc99d4f926",
+      "passed": 202,
+      "failed": 0,
+      "final_HEAD_app_js_and_test_blobs_unchanged": true,
+      "syntax_command": "node --check mission_agent/mission_control/static/app.js",
+      "syntax_exit_code": 0
+    },
+    "playwright_browser_script": {
+      "status": "NOT_RUN",
+      "reason": "MODULE_NOT_FOUND_playwright",
+      "actual_Chrome_separately_executed": true
+    },
+    "ci": {
+      "source_sha": "9677da7d0b429a4a69fd270cd0097231e4713507",
+      "check_runs": 0,
+      "workflow_runs": []
+    }
+  },
+  "local_installs": [
+    {
+      "source_sha": "e38d18421b46888a7cf36b4d004f08bc99d4f926",
+      "executor_commit": "912d59e3cc54ef40c3b6916e9ac12139c72b7fd8",
+      "executor_sha256": "789a57d43dcaf81fee0633f7f40a324b29298e5311566cd0038768df1bbcae66",
+      "old_source_backup_files": 497,
+      "candidate_tracked_agent_files": 500,
+      "old_report_files_preserved_on_switch": 70,
+      "sqlite_consistent_backups": 3,
+      "sqlite_integrity_and_foreign_keys_passed": true,
+      "protected_hashes_preserved_on_switch": 14,
+      "exact_saved_jobs_read": 8,
+      "old_and_new_Handler_no_listener": "PASS",
+      "old_and_new_Handler_socket_operations": 0,
+      "old_and_new_Handler_POSTs": 0,
+      "dashboard_only_reloaded": true,
+      "new_ports": 0,
+      "scanner_unchanged_live": true,
+      "loop_unloaded": true,
+      "rollback_exercised": false
+    },
+    {
+      "source_sha": "9677da7d0b429a4a69fd270cd0097231e4713507",
+      "executor_commit": "1813a96678b57744cb68b24cb6ef0c408c72427d",
+      "executor_sha256": "09ec34fba524e6bb41518759e968f42fecfaa24112e800d5b878fe0aed4ca66b",
+      "old_source_backup_files": 500,
+      "candidate_tracked_agent_files": 501,
+      "old_report_files_preserved_on_switch": 70,
+      "sqlite_consistent_backups": 3,
+      "sqlite_integrity_and_foreign_keys_passed": true,
+      "protected_hashes_preserved_on_switch": 14,
+      "exact_saved_jobs_read": 8,
+      "old_and_new_Handler_no_listener": "PASS",
+      "old_and_new_Handler_socket_operations": 0,
+      "old_and_new_Handler_POSTs": 0,
+      "dashboard_only_reloaded": true,
+      "new_ports": 0,
+      "scanner_unchanged_live": true,
+      "loop_unloaded": true,
+      "rollback_exercised": false
+    }
+  ],
+  "live_run": {
+    "source_sha": "9677da7d0b429a4a69fd270cd0097231e4713507",
+    "status": "DONE",
+    "report_sha256": "2f1e663f8a47079609ffa1ad61c9dbe2359667aa48ead0706932390b4d8d4825",
+    "checkpoint_file_sha256": "a7f12f2840e20a7a150e1fea9675dc9078e168ad8f849736f8ad52d976de6ae3",
+    "checkpoint_entries": 1529,
+    "checkpoint_chain_head": "b6545cba2f4186f4b040d0d09807dde17f9d83824e06eab4057e22468b9424cf",
+    "checkpoint_readonly_hash_unchanged": true,
+    "done_marker_matches": true,
+    "exact_job_get_equals_raw": true,
+    "methods": {
+      "rpc:getAccountInfo": 3,
+      "market_client:token_snapshot": 1,
+      "independent_market_client:pool_snapshot": 1,
+      "narrative_client:collect": 1,
+      "narrative_client:collect_origin": 1,
+      "rpc:getTokenSupply": 2,
+      "rpc:getTokenLargestAccounts": 1,
+      "rpc:getMultipleAccounts": 87,
+      "rpc:getProgramAccounts": 1,
+      "rpc:getSignaturesForAddress": 108,
+      "rpc:getTransaction": 1323
+    },
+    "primary_wire": 558,
+    "cache_hits": 990,
+    "elapsed_seconds": 357.387,
+    "observed_at": 1794543874.2441669,
+    "origin": {
+      "status": "PARTIAL",
+      "posts": 2,
+      "read_count": 3,
+      "ca_link_status": "CREATOR_METADATA_LINKS_POST",
+      "creator_metadata_present": true,
+      "reads": [
+        {
+          "kind": "CREATOR_METADATA_JSON",
+          "status": "OK",
+          "reason": null
+        },
+        {
+          "kind": "X_POST_API",
+          "status": "OK",
+          "reason": null
+        },
+        {
+          "kind": "X_POST_API",
+          "status": "OK",
+          "reason": null
+        }
+      ]
+    },
+    "ranking": {
+      "status": "COMPLETE_SNAPSHOT",
+      "account_count": 33633,
+      "nonzero_accounts": 7960,
+      "nonzero_owner_count": 7951,
+      "snapshot_slot": 468789966,
+      "supply_slot": 468789955,
+      "supply_bracket": {
+        "after_slot": 468790192,
+        "before_slot": 468789955,
+        "method": "NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET"
+      },
+      "normalization_complete": false,
+      "metrics": {
+        "GLOBAL_EX_LP_OWNER_TOP10_PCT": "16.8260",
+        "GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT": "16.8260",
+        "GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT": "16.8260",
+        "GLOBAL_OWNER_TOP10_PCT": "55.6025"
+      }
+    },
+    "first_acquisition_statuses": {
+      "UNRESOLVED": 3,
+      "CONFIRMED_BOUNDED": 9,
+      "NOT_SCANNED": 8
+    },
+    "transaction_errors": 298,
+    "transaction_error_kinds": {
+      "CLASSIFICATION_UNRESOLVED": 298
+    },
+    "trade_evidence": 208,
+    "trade_duplicate_keys": 0,
+    "trade_all_successful_raw_transactions": true,
+    "history_windows": 29,
+    "history_stop_reasons": {
+      "PAGE_LIMIT": 16,
+      "PROVIDER_EMPTY_PAGE": 13
+    },
+    "analysis_status": "INCOMPLETE_EVIDENCE",
+    "narrative_recognition": {
+      "official_recognition": "UNVERIFIED",
+      "earliest_origin": "UNVERIFIED"
+    },
+    "old_report_files": 70,
+    "new_report_files": 76,
+    "protected_changed": [
+      "control_wallet-cluster-rpc-cache.sqlite"
+    ],
+    "all_noncache_protected_unchanged": true,
+    "trade_classifier_matches": 208,
+    "origin_equals_checkpoint": true,
+    "checkpoint_outcomes": {
+      "OK": 1529
+    },
+    "source_errors": 0,
+    "endpoint_failure_attempts": 23,
+    "narrative_html_requested": 3,
+    "funding_evidence_raw_matches": 10,
+    "consolidation_evidence_raw_matches": 175,
+    "funding_duplicate_keys": 0,
+    "consolidation_duplicate_keys": 0,
+    "independent": {
+      "status": "UNAVAILABLE",
+      "reason": "RPC_JOB_WIRE_BUDGET_EXHAUSTED",
+      "secondary_provider": "PUBLICNODE",
+      "secondary_wire_attempts": 4,
+      "accounts_compared": null,
+      "matches": null,
+      "differences": null,
+      "missing": null,
+      "primary_slot": null,
+      "secondary_slot": null,
+      "slot_gap": null,
+      "read_gap_seconds": null,
+      "scope": "LARGEST_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_FULL_ENUMERATION"
+    },
+    "job_alias": "NOV13_SINGLE_EXISTING_CA_RUN",
+    "observed_at_bangkok": "2026-11-13T11:24:34.244167+07:00",
+    "old_immutable_report_files_unchanged": 68,
+    "expected_latest_and_history_files_changed": 2,
+    "expected_new_capture_files": 6,
+    "timestamped_json_matches_raw": true,
+    "done_marker_identity_matches": true,
+    "raw_source_authentication_not_independently_attested": true,
+    "full_business_checkpoint_replay_executed": false
+  },
+  "browser": {
+    "actual_local_Chrome": true,
+    "url": "http://127.0.0.1:8766/#cluster",
+    "new_run_done_visible": true,
+    "origin_two_posts_visible": true,
+    "same_slot_claim_replaced_by_bracket": true,
+    "independent_failure_visible": true,
+    "first_buy_full_account_labels_not_shown_on_new_report": true,
+    "exact_new_job_refresh_restored": true,
+    "page_left_open": true,
+    "screenshot_sha256": "46b40e1b01f8e06740c386d70148b46fe0f143714ba82f2cbad08a01526996b8"
+  },
+  "side_effects": {
+    "manual_CA_POSTs": 1,
+    "primary_RPC_wire_attempts": 558,
+    "independent_RPC_wire_attempts": 4,
+    "RPC_wire_attempts_this_run_total": 562,
+    "primary_cache_hits": 990,
+    "narrative_HTML_reads_requested": 3,
+    "origin_JSON_reads": 3,
+    "new_configured_provider_CA_key_paid_or_automation": 0,
+    "new_listener_ports": 0,
+    "dashboard_only_reloads": 2,
+    "scanner_restarts": 0,
+    "loop_starts": 0,
+    "notifications_signatures_trades_merges": 0,
+    "expected_report_checkpoint_cache_writes": true
+  },
+  "cumulative_accounting": {
+    "prior_primary_confirmed_lower_bound": 3293,
+    "current_primary_wire": 558,
+    "new_primary_confirmed_lower_bound": 3851,
+    "current_secondary_wire_counted_separately": 4,
+    "historical_ad_hoc_or_secondary_attempts_not_complete": true,
+    "old_one_shot_572_separate": true
+  },
+  "remaining": [
+    "PUBLICNODE_NO_USABLE_PARITY_AFTER_4_WIRE_ATTEMPTS; PER_ATTEMPT_ERROR_BODIES_NOT_CAPTURED",
+    "CLOSED_ACCOUNTS_AND_FULL_OWNER_HISTORY_NOT_ENUMERATED",
+    "16_HISTORY_WINDOWS_AT_PAGE_LIMIT",
+    "ALL_SPECIAL_IDENTITIES_AND_CONTROLLED_INDEPENDENT_SNAPSHOT_NOT_PROVEN",
+    "EXHAUSTIVE_GLOBAL_ORIGIN_AND_OFFICIAL_CA_RECOGNITION_UNVERIFIED",
+    "OTHER_PROTOCOLS_AND_ADDITIONAL_REPRESENTATIVE_RISK_SAMPLES_NOT_ACCEPTED"
+  ],
+  "decision": "STOP_ADDITIONAL_SOURCE_REQUESTS_AFTER_THIS_ONE_RUN; NO_FURTHER_POSTS_OR_SOURCE_REPLACEMENT",
+  "sensitive_data_scan": {
+    "private_RPC_URL_or_key_in_report_status_checkpoint": false,
+    "artifacts_checked": 3,
+    "public_files_omit_private_CA_job_paths": true
+  },
+  "final_installed_head_clean": true
+}

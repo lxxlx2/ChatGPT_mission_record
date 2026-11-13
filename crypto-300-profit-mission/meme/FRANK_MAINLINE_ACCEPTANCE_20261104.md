@@ -1,6 +1,14 @@
 # Frank 原问题统一验收（2026-11-04）
 
-## 最新Claude交接核对：2026-11-12
+## 最新软件收尾与本地真实验收：2026-11-13
+
+当前原PR252固定源码并已安装`9677da7d0b429a4a69fd270cd0097231e4713507`，本轮基线AAD；已关闭首买失败后错误升级、origin checkpoint缺接线、跨slot/迁移措辞和安装身份四项，并修复独立计时提前耗尽及错误泄漏/存储误判。完整501文件干净detached checkout、446禁网Python/202同前端Node、旧新真实Handler无监听、原8766部署及Chrome新报告/刷新恢复通过。最终HEAD无CI，Playwright缺依赖未启动；旧CI不迁移。
+
+Nov13曼谷11:24:34既有CA单次真实DONE：主558wire/990缓存/357.387秒，独立另4wire；33633账户/7951 Owner，55.6025%全局、16.8260%已核验池/前缀口径，normalization_complete=false、跨slot供给夹逼。origin实际metadata+2帖3读OK；独立PublicNode仍到4wire上限不可用。9有界首买/3未知/8未扫，298分类缺口记录不再升级完整；16历史窗口封顶/关闭账户等仍缺。1529条检查点哈希链、DONE/原档/精确GET、208交易分类/10资金/175归集原交易与重复键核对通过，不冒充全业务回放。软件/安装/实际Chrome PASS，完整CA PARTIAL / INCOMPLETE_EVIDENCE，INVEST_NO_GO / TRADE_NO_GO保持。
+
+详见[本轮验收结论](./FRANK_CA_FINISH_20261113.md)和[机器回执](./evidence/frank-ca-finish-20261113.json)。原Scanner2268未动、Loop未加载、无新端口/来源/付费/通知/签名/交易/合并。以下Nov12及更早段落均保留当时身份，不覆盖本轮当前结论。
+
+## 历史Claude交接核对：2026-11-12
 
 当前开发为PR252 `aad880991565d148aa6cc2f74fa0de1f5e6c27c7`，base PR220 `d43878828c86eacee5be9df8a17d16fc63a74bb6`，四提交已推送且源树clean；本地原8766的171运行源码/配置字节匹配AAD，但复制.git仍报d438、测试拷贝不完整，因此安装身份PARTIAL。详见[交接结论](./FRANK_CLAUDE_HANDOFF_20261112.md)与[回执](./evidence/frank-claude-handoff-20261112.json)。
 

@@ -1,5 +1,5 @@
 # Frank STATUS（唯一当前决策状态入口）
-更新时间：2026-11-12 Asia/Bangkok
+更新时间：2026-11-13 Asia/Bangkok
 更新者：Codex（用户继续授权本地调试、隔离测试与既有Dashboard维护；独立review豁免；INVEST_NO_GO / TRADE_NO_GO保持）
 
 ## 北极星答案（1 行）
@@ -16,9 +16,9 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 **阶段管理已结束；按当前用户继续主线指令推进手动CA查询能力，同时保留原只读钱包观察工具。** 跟单盈利研究不因此恢复；P2/P3 未启动。
 
 ## 正在进行（最多 3 项）
-- **Claude交接已核对，源码已推送**：当前开发HEAD`aad880991565d148aa6cc2f74fa0de1f5e6c27c7`，PR252 Draft/Open，stack在PR220的`d43878828c86eacee5be9df8a17d16fc63a74bb6`上；四提交/15文件均已推送且工作树clean。当前8766服务171个运行源码/配置文件匹配AAD，Scanner2268固定1f2c6af LIVE/无漂移/0错误、Loop未加载。但安装.git仍报旧d438、1测试缺失2测试不同，安装身份仅PARTIAL，不按目录名伪称干净AAD checkout。详见[交接核对](./FRANK_CLAUDE_HANDOFF_20261112.md)和[机器回执](./evidence/frank-claude-handoff-20261112.json)。
-- **既有CA全Mint来源已有突破，完整尽调未完成**：Nov11四个真实DONE报告/marker、CP哈希链及精确GET均通过核对；最新18:05:50有33872账户/7978非零Owner，全局Top10 58.9540%、排已核验池/前缀策略14.2998%。这是无Mint authority+前后供给相等的跨slot夹逼，不是同slot原子快照；normalization_complete仍false，独立PublicNode实际超时。当前真实Chrome新卡片/原任务GET/刷新可用，不认定旧tab缓存根因已证实。数据仍为Nov11时点，本轮新RPC/CA POST0。
-- **已明确的软件和来源剩余项**：首买完整性在较早交易读取失败时错误升级已离线复现；origin方法未穿过CheckpointClient，最新报告无源头链；供给夹逼仍错误标same-slot；安装Git身份需规范。当前AAD仅重跑106项针对性离线测试和Node语法，未发现该HEAD CI；不迁移旧版本全量PASS。四新任务主wire1113，阶段可确认下界3293（额外诊断/独立checker未完整计，原572单列）。INVEST_NO_GO / TRADE_NO_GO保持。
+- **软件收尾已修复并安装**：原PR252最新`9677da7d0b429a4a69fd270cd0097231e4713507`，本轮基线AAD；首买交易/分类缺口不再错误升级、origin已接checkpoint且硬错误传播、来源超时不误判存储、独立RPC按实际使用启动计时、供给夹逼/迁移措辞正确。原8766最终PID16018，完整干净detached checkout/501 tracked agent文件校验通过；Scanner2268/1f2c6af仍LIVE/无漂移/0错误、Loop未加载。详见[本轮结论](./FRANK_CA_FINISH_20261113.md)和[机器回执](./evidence/frank-ca-finish-20261113.json)。
+- **Nov13单次真实查询DONE，叙事源头接线真实生效**：曼谷11:24:34，357.387秒；主558wire/990缓存，独立另4wire；1529 checkpoint读取及DONE/原档/精确GET一致。33633账户/7951非零Owner，Top10 55.6025%、已核验池/前缀16.8260%，仍为跨slot供给夹逼、normalization_complete=false。metadata+2帖已读取，官方认领/全网最早源头仍未核实。实际Chrome新报告/刷新恢复通过并留页。
+- **到限后的真实缺口保持**：PublicNode独立4尝试仍UNAVAILABLE，未继续或换源；29历史窗口16封顶/13空页，9有界首买/3未知/8未扫，298分类缺口记录不再升级完整首买；关闭账户、全部身份/受控独立快照及其他代表样本未齐。最终446禁网Python通过/0socket，202 Node同前端blob通过；Playwright缺依赖未启动、最终SHA无CI，不挪用旧全量PASS。INVEST_NO_GO / TRADE_NO_GO保持。
 
 ## 手动 CA 主线尚未完成的功能
 
@@ -28,17 +28,17 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 
 | 原目标 | 当前实际状态 |
 |---|---|
-| 全Mint余额/Owner排名 | 既有CA四次完整枚举已观察，最新33872账户/7978 Owner；官方公共fallback+base64 166-byte slice是来源突破。供给夹逼跨slot、不是原子same-slot；尚未证明所有Mint/扩展场景和独立来源 |
-| 单一查询及完整性 | 当前运行源码匹配PR252 AAD，新真实报告整体仍INCOMPLETE_EVIDENCE；任务结束不等于完整尽调，PR220是基础候选而非最新运行实现 |
-| 历史/资金分页与首买 | 最新报告输出8账户完整首买/1未见市场买入/1未知/10未扫，关闭账户未枚举，15窗口仍封顶；另有交易读取失败后错误升级的已证实缺陷，不能以标签验收全Owner历史 |
-| 排LP/特殊地址及池 | 同次枚举池排除和Top10前缀策略有14.2998%结果；前缀普通地址规则不能证明非CEX/MM/托管，normalization_complete=false。CEX实际新增12地址，非96；全身份/受控独立池快照仍缺 |
-| 叙事与发射身份 | Pump曲线/creator字段和Token-2022 metadata已出现在最新真实报告，非迁移/控制人/官方背书证明。metadata/post JSON函数已写，但origin checkpoint适配未接，最新earliest_origin/official仍UNVERIFIED；旧手工补证仍绑定旧任务，不擅自挪用 |
-| 本地/CI与代表样本 | Nov12Chrome新页面两新卡片、原ID/刷新可用；106离线及Node语法PASS。AAD未发现CI/完整回放，不沿用旧385/220/双CI。安装Git元数据不匹配，其他协议/大型Mint/扩展风险样本未补齐 |
+| 全Mint余额/Owner排名 | Nov13既有CA33633账户/7951 Owner，全局Top10 55.6025%；跨slot供给夹逼不是原子same-slot，独立全枚举/所有Mint场景未证明 |
+| 单一查询及完整性 | 原8766已安装PR252固定9677干净checkout，单次新真实DONE/精确GET/刷新可用；总体仍INCOMPLETE_EVIDENCE |
+| 历史/资金分页与首买 | 首买错误升级已修；新报告9有界/3未知/8未扫，298分类缺口记录不升级完整，16窗口封顶，关闭账户与全Owner历史未枚举 |
+| 排LP/特殊地址及池 | Nov13已核验池/前缀策略16.8260%；normalization_complete=false，普通地址结构不证明非CEX/MM/托管；全身份/受控独立池快照仍缺 |
+| 叙事与发射身份 | origin已接checkpoint，真实metadata+2帖3读均OK且页面可见；引用链不是全网起源/作者认领，official仍UNVERIFIED；Pump complete不再宣称迁移已验证 |
+| 本地/CI与代表样本 | 完整501文件固定9677安装与真实Chrome PASS；446禁网Python/202同前端Node通过；无最新CI，Playwright未启动；其他协议/扩展风险代表样本未补齐 |
 
 ## 剩余真实条件（最多 3 项）
 - **自然BUY识别已有历史补样本，达标信号及通知到达延迟仍缺**：此前只读既有索引和原始响应，已验证BUY/ADD各10000 USDC及不达25000门槛的正确抑制。链上时间至首次检测约18.021/12.019秒、至账本写入18.214/16.971秒，仅是这两笔样本；不等于通知时延或长期SLA。当时F01近期0/历史7/执行资格0，不能据此否认上述真实买入，也不代表本轮当前统计。不制造交易/通知，不新增等待监控或自动任务。
 - **MC Loop独立签名条件不具备**：root公钥锚点与有效用户签名工件缺失，Loop保持未加载。维护授权与免review已生效，不能代替用户持钥签名；不生成/读取用户私钥、不恢复旧默认金额路径。
-- **CA已从全量不可用推进到既有样本有结果，但仍有具体软件缺陷及真实源缺口**：先修首买失败覆盖、origin checkpoint接线、跨slot措辞和安装身份；独立PublicNode仍UNAVAILABLE，关闭账户/全部特殊身份/独立受控快照/代表样本未补齐。官方公共fallback的本次成功不能称Alchemy429已修好或来源永久可用。
+- **CA软件收尾已修，剩余为真实数据/覆盖缺口**：Nov13 origin与全Mint来源已有真实结果，PublicNode独立4尝试仍不可用；关闭账户/完整历史、全部身份/受控快照与其他代表样本仍未齐。单次查询已结束，到限不追加请求；不把来源缺失写成完整尽调。
 
 ## 本周已关闭（最多 5 行）
 - **P1 历史回答于 2026-10-29 01:45 经用户批准提前结项：`INVEST_NO_GO`、`TRADE_NO_GO`**。[原始证据矩阵](./FRANK_P1_HISTORICAL_FOLLOWABILITY_COVERAGE_20261028.md)保留。
@@ -50,13 +50,13 @@ P0 固定原快照：199 个 Open PR，Frank 103（继续 10 / 冻结 85 / 待�
 ## 已知但故意不做（C 类清单）
 - P1 延迟报价研究、ACC/MULT 跟单盈利研究与 P2/P3 后续开发均已暂停；保留冻结源数据和审核记录，不误认为 edge 为负。
 - F2/F3 新发布流程、无关UI打磨、pyc考古和额外辅助门禁；真正S类生产/资金安全检查始终生效。F01安装已按后续明确维护授权完成。
-- 本轮交接不新增报价、数据源、定时任务、钱包签名、交易或PR清理；已有免费来源变更见S类边界。免费阶段此前记录2180，Claude四次持久化主任务新增1113，可确认下界3293；额外诊断/独立checker未全计，原一次572单列。本轮交接审计新增RPC0，不授权周期采集或恢复盈利研究。
+- 本轮交接不新增报价、数据源、定时任务、钱包签名、交易或PR清理；已有免费来源变更见S类边界。此前主RPC可确认下界3293，本轮主558后为3851；本轮独立4单列，历史诊断/独立checker未全计，原一次572单列。不授权周期采集或恢复盈利研究。
 
 ## S 类当前边界
 
-本轮按用户“优先同步Claude进度”执行，只读现有源码/控制原档/CP/localhost GET和Chrome，不发新RPC/CA POST，不重启或部署、发通知、签名交易，不新增端口/PR/自动任务。原10月故障归因不重开。当前运行源码/配置字节匹配AAD，但安装.git指旧d438，身份风险如实记录，不能reset/clean运行树。
+用户明确授权本轮修复、本地Chrome调试、完成后直接本地部署、免独立review；本轮按此仅更新原Dashboard8766两次，不动Scanner/Loop、不加端口、监控、自动任务、CA、key、provider或付费。原10月故障归因不重开。干净固定9677 checkout替代旧拷贝.git安装，旧目录/备份不reset/clean。
 
-Claude原会话用户已明确允许免费替代方案和本地部署；实际代码新增官方public fallback、独立PublicNode、metadata/IPFS/fxtwitter路径。主1200wire/1800秒仍在，独立checker另有4wire/60秒（不计主wire），HTTP最多3+3+4；GPA上限200000/64MiB、历史/funding8/8页。它们是边界变更，不宣称延续原私有RPC-only/全部provider严格1200的旧描述，也不将本轮同步解释为新的采集授权。INVEST_NO_GO / TRADE_NO_GO保持，Scanner未重启/无漂移0错误，Loop未加载。
+最后仅对既有CA/既有免费来源从Chrome发起1次有界查询：主558wire/1200、357.387秒/1800，独立另4wire/60秒到限停；HTML3+origin3实际读取，来源名单/每任务上限不扩大。新报告/检查点/cache及latest/history为预期写入，旧固定原件及13非缓存保护文件不变。主RPC累计可确认下界3851，当前独立4另列、历史额外诊断不全计、原572单列。INVEST_NO_GO / TRADE_NO_GO保持，无通知、签名、交易、合并，不恢复盈利研究。
 
 ## 历史执行回执（以下为当时状态，不覆盖本轮统一验收）
 截至19:21的既有Mac维护记录按用户明确授权完成既有Dashboard安装/定点修复，以及一次D2双程序采集、离线重放和原子导入；不启动MC Loop、不回灌旧数据库、不改变模型或冻结策略。累计新增链上读取2；本轮CA整合、无效输入修复与Chrome验收真实RPC/CA POST为0。`TRADE_NO_GO / NO_CA_POST / NO_TRADES / NO_MERGE`保持；邮件/通知发送0、Scanner重启0、无新增timer/监控/自动化/数据源或盈利研究。原始余额、完整响应和含私有路径的日志保留在Git外；公开只写脱敏代码/回执与哈希。用户豁免独立review，不宣称独立APPROVE，也不把CI或合成证据当作真实链上验收。
