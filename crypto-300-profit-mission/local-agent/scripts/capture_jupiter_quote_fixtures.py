@@ -26,7 +26,7 @@ def default_interval_seconds(api_key)->float:
     return 1.05 if api_key else 2.5
 
 
-def capture(name,mint,decimals,api_key=None,amount_usdc='30',slippage_bps=100):
+def capture(name,mint,decimals,api_key=None,amount_usdc=None,slippage_bps=100):
     params={
         'inputMint':USDC,
         'outputMint':mint,
@@ -61,7 +61,7 @@ def capture(name,mint,decimals,api_key=None,amount_usdc='30',slippage_bps=100):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--case',action='append',required=True,help='NAME:MINT:DECIMALS');p.add_argument('--out',type=Path,required=True);p.add_argument('--amount-usdc',default='30');p.add_argument('--slippage-bps',type=int,default=100);p.add_argument('--minimum-interval-seconds',type=float);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--case',action='append',required=True,help='NAME:MINT:DECIMALS');p.add_argument('--out',type=Path,required=True);p.add_argument('--amount-usdc',required=True,help='Explicit user-selected research notional; no default');p.add_argument('--slippage-bps',type=int,default=100);p.add_argument('--minimum-interval-seconds',type=float);a=p.parse_args()
     key=os.environ.get('JUPITER_API_KEY') or None
     interval=default_interval_seconds(key) if a.minimum_interval_seconds is None else float(a.minimum_interval_seconds)
     if interval<0:raise SystemExit('INVALID_MINIMUM_INTERVAL')
