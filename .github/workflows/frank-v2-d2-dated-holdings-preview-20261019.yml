@@ -1,0 +1,42 @@
+name: Frank V2 D2 dated inventory preview
+on:
+  push:
+    branches:
+      - research/frank-v2-d2-dated-holdings-preview-20261019
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pinned-dated-watchlist:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Pinned QA source without product changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "FRANK_D2_SOURCE_SHA=$GITHUB_SHA"
+          git diff --quiet ee4baaf5ffd9719094c91d3cd96eaf54bf22cb4a HEAD -- crypto-300-profit-mission/local-agent/mission_agent/ || (echo "PRODUCTION_CODE_CHANGED"; exit 1)
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Real archived 32 and native localhost 926 preview
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m unittest discover -s tests -p 'test_frank_d2_dated_holdings_preview.py' -v
+          python -B -m py_compile scripts/frank_d2_dated_holdings_preview.py
+      - name: Full existing regression dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3
+      - name: Local agent full historical replay
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests
