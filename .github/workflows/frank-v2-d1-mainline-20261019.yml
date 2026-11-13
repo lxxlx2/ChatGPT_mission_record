@@ -1,0 +1,42 @@
+name: Frank V2 D1 mainline evidence regression
+on:
+  push:
+    branches:
+      - research/frank-v2-d1-mainline-20261019
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-and-causal-join:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Verify immutable audit candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "FRANK_V2_D1_SHA=$GITHUB_SHA"
+          git diff --quiet b8330e55078e4e0a9243c31d3fa8346598a1628b HEAD -- crypto-300-profit-mission/local-agent/mission_agent/ || (echo "PRODUCTION_FRANK_CODE_CHANGED"; exit 1)
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Actual SQLite mode-ro causal join and private ZIP contract
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m unittest discover -s tests -p 'test_frank_d1_buy_signal_trace.py' -v
+          python -B -m py_compile scripts/frank_d1_buy_signal_trace.py
+      - name: Install existing regression dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3
+      - name: Full local-agent offline replay
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests
