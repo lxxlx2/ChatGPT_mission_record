@@ -1,5 +1,14 @@
 # Mori Finance / MetaDAO curated raise — evidence-first ICO diligence (2026-11-07)
 
+## 2026-11-14 ~02:09 Bangkok: issuer publishes exact scheduled MORI open, still Closed at RPC
+
+- **First-party announcement supplied from verified @MetaDAOProject X post**: fundraiser closed with about $7.7m commitments; $250,000 capped acceptance; announced launch **Nov 13, 2026 11:20am Pacific Standard Time (PST, UTC-8)**, i.e. **Nov 14, 2026 at 02:20 Bangkok (UTC+7)**. This is a **scheduled issuer launch time**, not proof trading/claim has opened; it supersedes any speculative "1–2 hour" expectation for Mori specifically.
+- **Direct Solana finalized RPC at snapshot slot 469038154**: Mori Launch PDA `BFVqq3Br9frUabrdgczu4obJ2TGNzKnys42j2pwrmXGZ` still `state=Closed`, `approved_total=250,000 USDC`, `completed=None`, `dao=None`. User record `3z651WDFfQb7AzzYizSa8CdCaurP8TSHHTXugUhkWdki`: 700 committed, **17.650113 USDC approved**, `is_tokens_claimed=false`, `is_usdc_refunded=false`. MORI token ATA `3EytgJ37GRWLV3VwbjtHBnGdGro4HBTRZqijyVj7T7LE` has **0 MORI** at slot 469038155.
+- The onchain formula implies **706.00452 MORI eligible**, **682.349887 USDC unused refundable** when `CompleteLaunch` has actually succeeded, and subsequent Claim/Refund transactions must be executed. No claim by user or automatic payout yet verified. No new monitoring or wallet action.
+
+---
+
+
 ## 2026-11-14 ~02:05 Bangkok: Mori Closed, finalized onchain allocation for user's 700 USDC commitment
 
 **Direct finalized Solana RPC**, MetaDAO v0.7 launch program `moontUzsdepotRGe5xsfip7vLPTJnVuafqdUWexVnPM`. This section supersedes older `Live` / `approved_amount=0` snapshots. No wallet action, claim, transfer, automation or monitoring performed.
