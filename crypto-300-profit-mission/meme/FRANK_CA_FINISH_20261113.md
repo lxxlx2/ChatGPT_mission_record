@@ -1,5 +1,7 @@
 # Frank CA 软件收尾与本地验收（2026-11-13）
 
+后续：本记录保留11:24阶段；原298分类归因、Owner隔离及17:39新验收见[后续结论](./FRANK_CLASSIFICATION_GAPS_20261113.md)。下文不覆盖后续当前状态。
+
 当前源码并已安装 `9677da7d0b429a4a69fd270cd0097231e4713507`，parent `e38d18421b46888a7cf36b4d004f08bc99d4f926`；本轮基线 `aad880991565d148aa6cc2f74fa0de1f5e6c27c7`，源码仍在原PR252，stack在PR220固定 `d43878828c86eacee5be9df8a17d16fc63a74bb6` 上。最新读取main `85fc12b14d65d75d5b2354d4e1bbd42974b1439f`，AGENTS/开发规则与相关Frank门禁无增量。用户明确授权本地调试、直接部署、免独立review；不宣称独立APPROVE，不合并，不恢复MC Loop/盈利研究/通知或交易。
 
 ## 已修复的实际缺陷
