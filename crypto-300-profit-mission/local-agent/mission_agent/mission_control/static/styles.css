@@ -467,6 +467,15 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d7dce3}
 
 /* Read-only Frank observed tokens. Independent from follow signal eligibility. */
 .frank-watch-panel{margin:12px 0}
+.frank-watch-panel>summary{border-bottom:0}
+.frank-watch-panel[open]>summary{border-bottom:1px solid var(--line)}
+.watch-header-meta{display:flex;align-items:center;gap:12px;justify-content:flex-end;flex-wrap:wrap}
+.watch-header-meta #watch-scope{font-size:11px;color:#8c98a7}
+.frank-watch-panel>summary .summary-hint{color:#b8c8dd;font-weight:600}
+@media(max-width:620px){
+  .watch-header-meta{justify-content:flex-start}
+  .frank-watch-panel>summary{align-items:flex-start;flex-wrap:wrap}
+}
 .frank-watch-controls{display:flex;gap:9px;align-items:center;flex-wrap:wrap;padding:11px 14px;border-top:1px solid var(--line)}
 .frank-watch-controls label{font-size:11px;color:var(--muted,#96a3af)}
 .frank-watch-controls select,.frank-watch-controls input{min-height:32px;background:var(--panel,#10151b);color:inherit;border:1px solid var(--line);border-radius:7px;padding:6px 9px}
