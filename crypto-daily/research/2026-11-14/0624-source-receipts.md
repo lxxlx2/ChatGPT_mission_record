@@ -1,0 +1,18 @@
+# 2026-11-14 06:24 Asia/Bangkok bounded source receipts
+
+Status: PARTIAL_SOURCE_GAPS; research only; NO_GMAIL_SEND; CODE_NOT_EXECUTED. This is not a completed 13-section prebuild or delivery.
+
+## Primary and discovery checks
+- Binance official newsroom https://www.binance.com/en/press checked 2026-11-14 06:24 BKK: lists 2026-11-13 "Notice on Share Count Basis of USDⓈ-Margined ANTHROPICUSDT Pre-IPO Perp" and 2026-11-13 "Binance Completes Coverage of Assets Impacted in Security Incident; New Proof of Reserves Published". Official linked full articles not independently opened. Candidate family_key binance-2026-security-coverage-por; material_version official-newsroom-2026-11-13; WATCH/VERIFY issuer full text and 7-day novelty before any inclusion. Candidate family_key binance-anthropic-preipo-perp; material_version newsroom-2026-11-13; EXCLUDE from §7 IPO subscription: explicitly a PERPETUAL, not IPO equity allocation. Venue IPO access remains UNCONFIRMED_MONITORING. Do not conflate with issuer SEC filing.
+- Farside ETH ETF https://farside.co.uk/eth/ checked 2026-11-14 06:24 BKK: 2026-11-12 completed displayed total -70.5 USDm, 2026-11-13 row all dashes/0.0 aggregate, NOT final verified flow. Candidate routine dated ETF data only, no high-impact news until confirmed. BTC ETF source unavailable in this bounded attempt, SOURCE_GAP.
+- Laravel vendor https://github.com/laravel/framework/security/advisories checked 2026-11-14 06:24 BKK: GHSA-6rv8-qj5v-p8ch and GHSA-v5ch-g375-82r6 published 2026-11-11 (moderate temporary signed URL expiry bypass variants). family_key laravel-signed-url-expiry-2026-11; material_version 2026-11-11-two-advisories; WATCH pending last-seven-day comparison and affected-version details; do not present as critical auth bypass.
+- LiteLLM official GitHub advisories via https://github.com/advisories/GHSA-3cv6-jpf6-8222 and https://github.com/advisories/GHSA-r75f-5x8p-qvmc checked 2026-11-14 06:24 BKK; original publication 2026-08-26 and 2026-04-20, respectively; EXCLUDE stale, no new material version verified. AI package supply chain lane PARTIAL: no fresh PyPI/Docker verification.
+- Binance announcements https://www.binance.com/en-IN/support/announcement checked 2026-11-14 06:24 BKK, generic regional listing only, no specific verified new policy.
+- Onchain Arkham/Lookonchain original TXID: SOURCE_GAP; no verified new whale transfer. TGE/Early/NFT original issuer/X: SOURCE_GAP; no inferred absence. SEC, macro, BTC spot ETF, actual Binance spot/perp BTC/ETH/SOL/BNB/HYPE quotes: SOURCE_GAP; no invented prices.
+- web_runtime_rce, web_pki_tls, cloud_secrets_identity, security general independent vendor checks: SOURCE_GAP. backend_framework_auth Laravel checked above. official_x Browser authenticated session: BROWSER_SESSION_UNAVAILABLE, no claim of scanning user's signed-in X.
+
+## Historical Sent idempotency
+Gmail Sent search for Crypto Daily Brief after 2026-11-07 before 2026-11-15 checked during this run. No 2026-11-13 or 2026-11-14 formal daily in returned 14 messages (max 30), historical corrections through Nov12 present. No outgoing email in this research-only slot. Historical 7-day FULL bodies not retrieved this slot; semantic novelty gate NOT PROVEN. Current Git 2026-11-13 canonical fetch returned 404; this does not prove absence of an email outside search scope.
+
+## Handoff
+08:20 must build full 13-section body using fresh official Binance spot/perp and Farside BTC/ETH and 7-day actual Sent readbacks; verify Nov13 issuer incident and Laravel novelty; no QA_PASS or send claim here. 06:24 source receipt alone is insufficient for prebuild or delivery.
