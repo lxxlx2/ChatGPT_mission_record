@@ -132,7 +132,6 @@ for name,mint,expected_program in cases:
     print("\n=====",name,"=====")
     started=time.monotonic()
     preview_seconds=None
-    quote_preview_seconds=None
     job=post_json("/api/cluster-analysis",{"mint":mint,"preset":"quick" if name=="RACE_TOKEN2022" else "standard"})
     job_id=job["job_id"];deadline=time.time()+300;last=None
     while True:
@@ -141,8 +140,6 @@ for name,mint,expected_program in cases:
         preview=state.get("preview") or {}
         if preview and preview_seconds is None:
             preview_seconds=round(time.monotonic()-started,3)
-        if preview.get("execution_quote_30_usdc") is not None and quote_preview_seconds is None:
-            quote_preview_seconds=round(time.monotonic()-started,3)
         if stage!=last:
             print("progress:",stage,json.dumps(state.get("progress") or {},ensure_ascii=False,sort_keys=True))
             last=stage
@@ -156,7 +153,6 @@ for name,mint,expected_program in cases:
     profile=report.get("token_profile") or {}
     assessment=report.get("assessment") or {}
     coverage=report.get("coverage") or {}
-    execution=report.get("execution_quote_30_usdc") or {}
 
     assert report.get("schema_version")==2
     assert report.get("mint")==mint
@@ -171,25 +167,13 @@ for name,mint,expected_program in cases:
         assert detail.get("status") in {"ACTIVE_RISK","INACTIVE","UNRESOLVED"},detail
 
     assert preview_seconds is not None,(name,"BASE_PREVIEW_MISSING")
-    assert quote_preview_seconds is not None,(name,"EARLY_JUPITER_QUOTE_PREVIEW_MISSING")
-    assert execution.get("quote_record_type")=="HISTORICAL_SNAPSHOT",execution
-    assert execution.get("freshness_status") in {"CURRENT_AT_RESPONSE","EXPIRED","UNAVAILABLE"},execution
-    assert isinstance(execution.get("is_current_at_response"),bool),execution
-    if execution.get("is_current_at_response"):
-        assert execution.get("freshness_status")=="CURRENT_AT_RESPONSE"
-        assert execution.get("valid_until") is not None
 
     history=report.get("assessment_history")
     assert isinstance(history,list) and history
     report_dir=CONTROL/"cluster-reports"/mint
     assert (report_dir/"latest.json").is_file()
     archived=json.loads((report_dir/"latest.json").read_text())
-    archived_quote=archived.get("execution_quote_30_usdc") or {}
-    assert archived_quote.get("quote_record_type")=="HISTORICAL_SNAPSHOT",archived_quote
-    assert archived_quote.get("freshness_status")=="ARCHIVED_NOT_LIVE",archived_quote
-    assert archived_quote.get("is_current_at_response") is False,archived_quote
     assert list(report_dir.glob("*.md"))
-    assert execution.get("status") in {"OK","UNAVAILABLE"},execution
 
     summaries.append({
         "case":name,"mint":mint,"token_program":profile.get("token_program"),
@@ -199,9 +183,7 @@ for name,mint,expected_program in cases:
         "scan_mode":coverage.get("scan_mode"),
         "deep_holders_scanned":coverage.get("deep_holders_scanned"),
         "adaptive_deepened_count":len(coverage.get("adaptive_deepened_owners") or []),
-        "execution_quote_status":execution.get("status"),
         "first_preview_seconds":preview_seconds,
-        "first_quote_preview_seconds":quote_preview_seconds,
         "full_report_seconds":round(time.monotonic()-started,3),
         "assessment_history_count":len(history),
     })

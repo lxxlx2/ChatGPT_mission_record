@@ -14,7 +14,7 @@ A. **Wallet fact ledger**: all address-touching finalized signatures and decoded
 
 B. **Wallet position and observation portfolio**: every relevant mint seen in A (including still-held and exited history) has an inventory ledger, acquisition/disposal facts, duration, watch reason, current market snapshot, optional PnL if cost is reconstructible, review status, last activity and persistence. This layer answers **what tokens must we still look at**.
 
-C. **Frozen follow-signal engine**: consumes only its existing independently confirmed active-swap facts and frozen ACCUMULATION/MULTIPLE/reentry/WAIT/NO_BUY gates, maintains existing $30 sizing *only in this separate strategy*, live notification, outcome and dedupe. This layer answers **would a bounded Frank-follow policy trigger**. **No code or threshold change to C without separately approved review.**
+C. **Frozen follow-signal engine**: consumes only its existing independently confirmed active-swap facts and frozen ACCUMULATION/MULTIPLE/reentry/WAIT/NO_BUY gates, maintains independently sourced wallet-signal observations, live notification, outcome and dedupe; **does not define, suggest or assume any user order amount or execution method**. This layer answers **would a bounded Frank-follow policy trigger**. **No code or threshold change to C without separately approved review.**
 
 A zero in C is not a zero in A or B. Runtime health for the writer/outbox is not data-completeness health. No candidate due to a strategy veto must never delete the observed wallet position from B.
 
@@ -69,7 +69,7 @@ The current `FrankReader` production `forward.sqlite` remains **read-only** to t
 - Token authority and mint state via finalized RPC; compare with available public explorer/indexer outputs, exact mint and slot where possible.
 - GMGN public wallet/token pages, official GMGN documentation, FOMO and OKX Wallet publicly displayed views for **manual independent parity** where accessible. Never equate names alone, or silently assume profit formula/window equality.
 - External narrative research belongs to comprehensive single-mode CA detail; Watch list shows the latest sourced summary and a link, never an invented official call.
-- Quotes for an exact trade amount must be user-requested separately; the generic CA page has no forced $30 quote. Existing frozen follow engine's $30 Jupiter hypothetical executable quote is a **separate, unchanged system**.
+- Quotes for a specific trade amount must be explicitly requested by the user. Neither the generic CA page nor the Frank follow engine may choose a default order amount, generate a preset execution quote, or decide trade sizing. If no user-defined amount exists, executable entry price, size-dependent impact and hypothetical PnL remain **NOT_ASSESSED**; pattern/source monitoring remains independent.
 
 ## 4. Exact normalized data contracts
 
@@ -135,7 +135,7 @@ Persistent table, sortable by newest **real material Frank action**, with one ro
 ### C. 「CA 链上查询」 (existing manual CA feature)
 
 - Follow separate canonical one-mode, accurate evidence requirements `ca-analysis-unified-accuracy-acceptance.md`. Cross-navigation from every observed mint.
-- Preserve narrative and holder-role evidence; do not inject the follow policy's fixed Jupiter $30 quote.
+- Preserve narrative and holder-role evidence. Never inject a default fixed-notional Jupiter quote or transform market data into a user order recommendation.
 
 ### Empty/error states
 

@@ -6,7 +6,7 @@ def candidate(**overrides):
     base={"runtime_status":"LIVE","position_state":"OPEN","current_raw":"100","pattern":"MULTIPLE","latest_side":"BUY","latest_buy_at":995,"latest_buy_price_usdc":"1","latest_buy_price_status":"USDC_DIRECT"};base.update(overrides);return base
 
 def quote(**overrides):
-    base={"status":"OK","observed_at":1000,"route_exists":True,"execution_price_usdc":"1.05","price_impact_pct":"0.8","input_usdc":"30"};base.update(overrides);return base
+    base={"status":"OK","observed_at":1000,"route_exists":True,"execution_price_usdc":"1.05","price_impact_pct":"0.8","input_usdc":"27.25"};base.update(overrides);return base
 
 def test_multiple_close_to_frank_is_buy(): assert evaluate(candidate(),quote(),POLICY,now=1005)["decision"]=="BUY"
 def test_accumulation_is_small_buy_not_full_buy(): assert evaluate(candidate(pattern="ACCUMULATION"),quote(),POLICY,now=1005)["decision"]=="SMALL_BUY"

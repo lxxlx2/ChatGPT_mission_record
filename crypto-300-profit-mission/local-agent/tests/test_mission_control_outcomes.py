@@ -115,3 +115,31 @@ def test_even_sample_median_uses_statistical_midpoint():
     row=data["summary"]["horizons"]["300"]
     assert row["median_return_pct"]=="-20.0"
     assert row["mean_return_pct"]=="-20.0"
+
+
+
+def test_exit_quote_budget_counts_failed_provider_attempts():
+    """The cap constrains attempted network calls, not only saved samples."""
+    x=db();j=Jup();t=OutcomeTracker(x,j)
+    for i in range(5):
+        c=candidate();c["mint"]=f"FailMint{i}";c["episode_id"]=f"E{i}";c["source_signal_id"]=f"S{i}"
+        assert t.register(candidate=c,result=result(),quote=entry_quote(),now=100)
+    def always_fail(mint,raw,decimals,slippage_bps=100):
+        j.calls.append((mint,raw,decimals,slippage_bps))
+        raise TimeoutError("FAKE_PROVIDER_UNAVAILABLE")
+    j.quote_token_to_usdc=always_fail
+    out=t.sample_due(now=400,max_quotes=2)
+    assert len(j.calls)==2
+    assert out["sampled"]==0
+    assert len(out["errors"])==2
+    assert out["active"]==5
+    assert x.execute("SELECT COUNT(*) FROM outcome_samples").fetchone()[0]==0
+
+
+def test_zero_exit_quote_budget_prohibits_all_provider_calls():
+    x=db();j=Jup();t=OutcomeTracker(x,j)
+    assert t.register(candidate=candidate(),result=result(),quote=entry_quote(),now=100)
+    out=t.sample_due(now=400,max_quotes=0)
+    assert out["sampled"]==0
+    assert out["active"]==1
+    assert j.calls==[]

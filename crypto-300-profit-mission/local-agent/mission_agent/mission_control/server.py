@@ -15,7 +15,6 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from decimal import Decimal
 from urllib.parse import parse_qs, urlparse
 
 from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
@@ -26,6 +25,7 @@ from .frank import FrankReader
 from .payment_evidence import latest_buy_payment_evidence
 from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
+from .wallet_activity import activity as read_signed_activity
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .jupiter import JupiterQuoteClient
 
@@ -109,42 +109,6 @@ def _atomic_write_text(path: Path, text_value: str):
             pass
 
 
-CA_QUOTE_TTL_SECONDS = 30
-
-
-def _annotate_ca_quote(quote: dict, *, now: float | None = None, archived: bool = False) -> dict:
-    """An archived quote is never certified current; HTTP consumers get a live expiry check."""
-    result = dict(quote)
-    try:
-        observed = float(result.get("observed_at"))
-        if not math.isfinite(observed) or observed <= 0:
-            observed = None
-    except (TypeError, ValueError):
-        observed = None
-    valid_until = observed + CA_QUOTE_TTL_SECONDS if observed is not None else None
-    result["valid_until"] = valid_until
-    result["quote_record_type"] = "HISTORICAL_SNAPSHOT"
-    result["freshness_ttl_seconds"] = CA_QUOTE_TTL_SECONDS
-    if archived:
-        result["freshness_status"] = "ARCHIVED_NOT_LIVE"
-        result["is_current_at_response"] = False
-    else:
-        checked_at = time.time() if now is None else float(now)
-        fresh = (
-            result.get("status") == "OK" and result.get("route_exists") is True
-            and result.get("execution_price_usdc") is not None
-            and result.get("price_impact_pct") is not None
-            and valid_until is not None
-            and observed <= checked_at <= valid_until
-        )
-        result["freshness_checked_at"] = checked_at
-        result["freshness_status"] = ("CURRENT_AT_RESPONSE" if fresh else
-                                       "EXPIRED" if valid_until is not None and checked_at > valid_until else
-                                       "UNAVAILABLE")
-        result["is_current_at_response"] = bool(fresh)
-    return result
-
-
 SOLANA_PUBKEY_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
 CLUSTER_PRESETS = {
     "quick": {
@@ -208,10 +172,10 @@ class ClusterJobManager:
         public = {k: v for k, v in job.items() if k not in {"future"}}
         preview = job.get("preview")
         if isinstance(preview, dict):
-            public["preview"] = dict(preview)
-            quote = preview.get("execution_quote_30_usdc")
-            if isinstance(quote, dict):
-                public["preview"]["execution_quote_30_usdc"] = _annotate_ca_quote(quote)
+            # Old quote snapshots were made for a non-user-authorized preset.
+            # Do not resurface them as current executable prices.
+            public["preview"] = {k: v for k, v in preview.items()
+                                 if k != "execution_quote_30_usdc"}
         return public
 
     def _prune_jobs_locked(self):
@@ -312,40 +276,6 @@ class ClusterJobManager:
                 elif stage=="HOLDERS_READY" and isinstance(job.get("preview"),dict):
                     job["preview"]["raw_top10_resolved_pct"]=details.get("raw_top10_resolved_pct")
                     job["preview"]["top_accounts_resolved"]=details.get("top_accounts_resolved")
-        # BASE_READY is emitted before slow Top20/funding history. Fetch a
-        # read-only, time-stamped execution quote now so the trader sees it
-        # while history scans. The final report still refreshes the quote
-        # after history completes; an early quote must not be reused as fresh.
-        if stage=="BASE_READY":
-            profile=details.get("token_profile") or {}
-            decimals=profile.get("decimals")
-            if profile.get("status")!="OK" or type(decimals) is not int or not 0 <= decimals <= 18:
-                early_quote={
-                    "status":"UNAVAILABLE","reason":"TOKEN_DECIMALS_UNKNOWN",
-                    "source":"JUPITER_OFFICIAL","observed_at":time.time(),
-                }
-            else:
-                try:
-                    response=self.jupiter.quote_usdc_to_token(
-                        self.jobs[job_id]["mint"],decimals,
-                        usdc_amount=Decimal("30"),slippage_bps=100,
-                    )
-                    early_quote={
-                        key:response.get(key) for key in (
-                            "status","reason","source","observed_at","route_exists",
-                            "execution_price_usdc","price_impact_pct",
-                        )
-                    }
-                except Exception as exc:
-                    early_quote={
-                        "status":"UNAVAILABLE","reason":type(exc).__name__,
-                        "source":"JUPITER_OFFICIAL","observed_at":time.time(),
-                    }
-            with self.lock:
-                job=self.jobs.get(job_id)
-                if job is not None and job.get("status")=="RUNNING" and isinstance(job.get("preview"),dict):
-                    job["preview"]["execution_quote_30_usdc"]=early_quote
-
     @staticmethod
     def _extension_semantic_config(value):
         accounting_only={"withheldamount"}
@@ -552,23 +482,7 @@ class ClusterJobManager:
                 market_client=self.market_client,
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
-            try:
-                report["execution_quote_30_usdc"]=self.jupiter.quote_usdc_to_token(
-                    mint,
-                    int(report["decimals"]),
-                    usdc_amount=Decimal("30"),
-                    slippage_bps=100,
-                )
-            except Exception as exc:
-                report["execution_quote_30_usdc"]={
-                    "status":"UNAVAILABLE",
-                    "source":"JUPITER_OFFICIAL",
-                    "reason":type(exc).__name__,
-                }
             self._set_progress(job_id,"REPORT_PERSISTING",{"deep_holders_scanned":(report.get("coverage") or {}).get("deep_holders_scanned"),"adaptive_deepened":len((report.get("coverage") or {}).get("adaptive_deepened_owners") or [])})
-            report["execution_quote_30_usdc"] = _annotate_ca_quote(
-                report.get("execution_quote_30_usdc") or {}, archived=True,
-            )
             stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
             out = self.report_root / mint
             out.mkdir(parents=True, exist_ok=True)
@@ -620,9 +534,9 @@ class ClusterJobManager:
             return None
         try:
             report = json.loads(path.read_text())
-            quote = report.get("execution_quote_30_usdc")
-            if isinstance(quote, dict):
-                report["execution_quote_30_usdc"] = _annotate_ca_quote(quote)
+            # Previously saved fixed-notional quotes are stale historical
+            # research and must not appear in fresh CA analysis.
+            report.pop("execution_quote_30_usdc", None)
             return report
         except (OSError, ValueError):
             return None
@@ -760,6 +674,23 @@ class DashboardState:
         candidates.sort(key=lambda x:int(x.get("latest_at") or 0),reverse=True)
         return candidates
 
+    def frank_signed_activity(self, days: int = 1):
+        """Bounded D1 indexed source facts; never an actionable signal or balance."""
+        try:
+            result = read_signed_activity(self.frank.database, int(time.time()), days=days)
+            return {"status": "INDEXED_LOCAL_ONLY", **result}
+        except (ValueError, OSError, sqlite3.DatabaseError) as exc:
+            reason = ("INDEX_WINDOW_TOO_LARGE_NOT_TRUNCATED"
+                      if isinstance(exc, ValueError)
+                      and str(exc) == "INDEX_WINDOW_TOO_LARGE_NOT_TRUNCATED"
+                      else "LOCAL_ACTIVITY_SOURCE_UNAVAILABLE")
+            return {
+                "status": "UNAVAILABLE", "reason": reason,
+                "scope": "LOCAL_INDEX_ONLY_NOT_COMPLETE_CHAIN",
+                "full_chain_verified": False, "current_balance_verified": False,
+                "rows": [], "signatures": None,
+            }
+
     def frank_observed_watchlist(self):
         try:
             observed = read_frank_watchlist(
@@ -792,14 +723,33 @@ class DashboardState:
         # Optional dated, manually imported read-only provenance. No network
         # call, balance scan, writer intervention, or automatic deployment.
         snapshot = self.control_root / "frank-inventory-snapshot.json"
-        if not snapshot.is_file():
-            observed["snapshot_status"] = "SNAPSHOT_NOT_PRESENT"
+        snapshot_origin = "CONTROL_ROOT_EXPLICIT_IMPORT"
+        # lstat distinguishes truly absent input from a broken symlink or
+        # directory. An invalid explicit source must never select another one.
+        try:
+            snapshot.lstat()
+        except FileNotFoundError:
+            # Reuse PR #110's dated evidence already checked into this repo.
+            # This is a historic point-in-time sample, never current inventory.
+            snapshot = (Path(__file__).resolve().parents[3] / "meme" / "evidence" /
+                        "frank-v2-thirty-two-mint-finalized-2026-10-11.json")
+            snapshot_origin = "REPO_DATED_2026_10_11_NOT_LIVE"
+            if not snapshot.is_file() or snapshot.is_symlink():
+                observed["snapshot_status"] = "SNAPSHOT_NOT_PRESENT"
+                return observed
+        except OSError:
+            observed["snapshot_status"] = "SNAPSHOT_INVALID_READ_ONLY_IGNORED"
+            return observed
+        if not snapshot.is_file() or snapshot.is_symlink():
+            observed["snapshot_status"] = "SNAPSHOT_INVALID_READ_ONLY_IGNORED"
             return observed
         try:
             if snapshot.stat().st_size > 500_000:
                 raise InventoryEvidenceError("OVERSIZED_SNAPSHOT")
             source = json.loads(snapshot.read_text(encoding="utf-8"))
-            return reconcile_watchlist(observed, source)
+            reconciled = reconcile_watchlist(observed, source)
+            reconciled["snapshot_origin"] = snapshot_origin
+            return reconciled
         except (OSError, ValueError, InventoryEvidenceError, TypeError):
             observed["snapshot_status"] = "SNAPSHOT_INVALID_READ_ONLY_IGNORED"
             return observed
@@ -863,6 +813,14 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.state.candidates())
         if path == "/api/frank-observed-watchlist":
             return self._json(self.state.frank_observed_watchlist())
+        if path == "/api/frank-signed-activity":
+            values = parse_qs(urlparse(self.path).query)
+            if set(values) - {"days"} or len(values.get("days", ["1"])) != 1:
+                return self._json({"error": "INVALID_ACTIVITY_RANGE"}, 400)
+            days = values.get("days", ["1"])[0]
+            if days not in ("1", "7"):
+                return self._json({"error": "INVALID_ACTIVITY_RANGE"}, 400)
+            return self._json(self.state.frank_signed_activity(int(days)))
         if path == "/api/trades":
             return self._json(self.state.recent_trades())
         if path == "/api/coverage":

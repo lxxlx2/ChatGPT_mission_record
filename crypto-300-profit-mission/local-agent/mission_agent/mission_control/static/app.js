@@ -101,7 +101,8 @@ const reasonText = {
   QUOTE_METRICS_INVALID:'Jupiter 报价缺少有效成交价或价格冲击数据。',
   NO_EXECUTABLE_JUPITER_ROUTE:'Jupiter 当前没有可执行的跟单路径，不跟。',
   PRICE_TOO_FAR_FROM_FRANK:'当前价格已经离 Frank 买入价太远，暂时不追。',
-  EXECUTION_IMPACT_TOO_HIGH:'当前 $30 跟单的预计价格冲击太高，暂时不追。',
+  EXECUTION_IMPACT_TOO_HIGH:'指定交易金额下预计价格冲击超过阈值，不应视为可执行建议。',
+  EXECUTION_NOT_ASSESSED_USER_AMOUNT_MISSING:'Frank 的链上行为已单独记录；没有用户指定的金额，未评估执行价格和冲击。',
   FRANK_MULTIPLE_ACTIVE:'Frank 已观察到多次强加仓模型事件；是否可以跟随以本次结论为准。',
   PRICE_STILL_CLOSE_TO_FRANK:'当前成交价仍接近 Frank 的参考买入价。',
   EXECUTION_IMPACT_ACCEPTABLE:'当前预计价格冲击在可接受范围。',
@@ -121,6 +122,7 @@ const missingText = {
   EXECUTION_PRICE_OR_IMPACT:'缺少当前成交价或价格冲击。',
   TOKEN_DECIMALS_UNKNOWN:'Token decimals 未确认。',
   JUPITER_QUOTE_UNAVAILABLE:'Jupiter 当前报价不可用。',
+  USER_ORDER_AMOUNT_NOT_SPECIFIED:'未指定用户交易金额，因此没有请求执行报价。',
 };
 
 function translated(map, raw, fallback='未知') {
@@ -459,6 +461,89 @@ function renderFrankWatchlist(payload) {
   }).join('') || '<tr><td colspan="6">当前筛选没有记录。尝试选择「全部观察」。</td></tr>';
 }
 
+// D1: source-indexed signed wallet facts from PR #111. Independent of decision refresh.
+let signedActivity = {status:'LOADING', rows:[]};
+let signedActivityLastFetch = 0;
+let signedActivityRequest = 0;
+
+function renderSignedActivity() {
+  const payload = signedActivity;
+  const rows = Array.isArray(payload.rows) ? payload.rows : [];
+  const sourceOK = payload.status === 'INDEXED_LOCAL_ONLY';
+  if (!sourceOK) {
+    $('signed-activity-summary').textContent =
+      '签名索引不可读取：' + String(payload.reason || 'SOURCE_UNAVAILABLE') +
+      '。这不是“没有交易”，也不影响现有信号。';
+    $('signed-activity-rows').innerHTML =
+      '<tr><td colspan="5">暂无可验证的本地签名数据，不能按零交易处理。</td></tr>';
+    return;
+  }
+  const query = ($('signed-activity-search').value || '').trim().toLowerCase();
+  const matched = rows.filter(x => {
+    const legs = Array.isArray(x.trades) ? x.trades : [];
+    return !query || [x.sig, x.class, x.status,
+      ...legs.flatMap(t => [t.mint, t.side])].join(' ').toLowerCase().includes(query);
+  });
+  const display = matched.slice(0,200);
+  const categories = payload.categories || {};
+  $('signed-activity-summary').textContent =
+    '已索引 ' + String(payload.signatures) + ' 条签名 / ' +
+    String(payload.trade_legs ?? '未知') + ' 个交易记录 · 主动类 ' +
+    String(categories.ACTIVE_TRADE || 0) + ' · 被动 ' +
+    String(categories.PASSIVE_TRANSFER || 0) + ' · 未知 ' +
+    String(categories.UNKNOWN_NEEDS_REVIEW || 0) + ' · 筛选匹配 ' +
+    String(matched.length) +
+    (matched.length > display.length ? '（仅显示前 ' + String(display.length) + ' 条）' : '') +
+    ' · 非完整链史';
+  $('signed-activity-rows').innerHTML = display.map(x => {
+    const sig = typeof x.sig === 'string' ? x.sig : '';
+    const at = Number(x.at);
+    const when = Number.isFinite(at) && at > 0
+      ? new Date(at * 1000).toLocaleString('zh-CN')
+      : '时间未核实';
+    const signature = sig
+      ? '<a href="https://solscan.io/tx/' + encodeURIComponent(sig) +
+        '" target="_blank" rel="noopener noreferrer"><code>' + esc(short(sig,10,7)) + '</code> ↗</a>'
+      : '签名未核实';
+    const legs = Array.isArray(x.trades) ? x.trades : [];
+    const tradeText = legs.length ? legs.map(t => {
+      const mint = typeof t.mint === 'string' ? t.mint : '';
+      const txLink = mint
+        ? '<a href="https://solscan.io/token/' + encodeURIComponent(mint) +
+          '" target="_blank" rel="noopener noreferrer">' + esc(short(mint,8,6)) + ' ↗</a>'
+        : 'Mint 未核实';
+      return '<div>' + esc(t.side || 'UNKNOWN') + ' · ' + txLink + '</div>';
+    }).join('') : '没有已识别主动经济腿';
+    const state = String(x.status || 'UNRESOLVED');
+    return '<tr><td>' + esc(when) + '</td><td>' + signature +
+      '</td><td>' + esc(x.class || 'OTHER_OR_UNKNOWN') + '</td><td>' +
+      tradeText + '</td><td>' + esc(state) + '</td></tr>';
+  }).join('') || '<tr><td colspan="5">当前筛选没有本地签名记录；不代表链上无交易。</td></tr>';
+}
+
+async function refreshSignedActivity(force=false) {
+  const now = Date.now();
+  if (!force && now-signedActivityLastFetch < 55000) return;
+  signedActivityLastFetch = now;
+  const request = ++signedActivityRequest;
+  const days = $('signed-activity-days').value;
+  try {
+    const response = await get('/api/frank-signed-activity?days=' + encodeURIComponent(days));
+    if (request !== signedActivityRequest || days !== $('signed-activity-days').value) return;
+    signedActivity = response;
+    $('signed-activity-updated').textContent = '读取于 ' + new Date().toLocaleTimeString('zh-CN');
+  } catch (e) {
+    if (request !== signedActivityRequest) return;
+    signedActivity = {status:'UNAVAILABLE',reason:'ACTIVITY_GET_FAILED',rows:[]};
+    $('signed-activity-updated').textContent = '来源不可用';
+  }
+  renderSignedActivity();
+}
+
+$('signed-activity-days').addEventListener('change', () => refreshSignedActivity(true));
+$('signed-activity-search').addEventListener('input', renderSignedActivity);
+$('signed-activity-reload').addEventListener('click', () => refreshSignedActivity(true));
+
 function renderCoverage(coverage) {
   const node = $('coverage');
   if (!node) return;
@@ -556,9 +641,6 @@ function renderCandidates(rows) {
         ${metric('Frank 最近动作',`${esc(translated(sideLabel,x.latest_side,'未知'))} · ${esc(age(x.latest_at))}`)}
         ${metric('Frank 最近一次买入支付（历史）',frankQuote(x),'仅对应本轮最近一笔已识别买入事件；金额是否为完整支付由原始资金腿证据决定。不代表 Frank 当前持仓、当前市值、全部建仓成本或净投入。')}
         ${metric('Frank 参考买入价',frankPrice,'直接来自 Frank 最近买入事件；即使当前 Decision 因超时提前结束，也尽量展示。')}
-        ${metric('当前 $30 成交价',execPrice,'Jupiter 已经请求过就展示真实报价；只有明确跳过/失败才显示原因。')}
-        ${metric('相对 Frank 偏离',esc(delta),'如果决策提前返回但 Frank 参考价和 Jupiter 报价都存在，Dashboard 会独立计算偏离供研究。')}
-        ${metric('预计价格冲击',esc(impact),'用 $30 USDC 下单时 Jupiter 估算的价格冲击；已退出仓位不会浪费请求。')}
       </div>
     </article>`;
   }).join('') || '<div class="empty">当前没有需要跟踪的 Frank 候选</div>';
@@ -706,7 +788,7 @@ async function refresh() {
       get('/api/candidates'),
       get('/api/trades'),
       get('/api/review-activity'),
-      get('/api/decisions'),
+      get('/api/decisions').catch(() => null),
       get('/api/coverage'),
       get('/api/frank-observed-watchlist').catch(() => ({status:'SOURCE_UNAVAILABLE',rows:[],summary:{}}))
     ]);
@@ -721,7 +803,11 @@ async function refresh() {
     renderEnded(endedCandidates);
     renderTrades(trades);
     renderReviewActivity(reviewActivity);
-    renderDecisions(decisions);
+    if (decisions !== null) {
+      renderDecisions(decisions);
+    } else {
+      $('decisions').innerHTML = '<div class="empty">历史判断记录暂时不可用，不影响钱包活动及观察池。</div>';
+    }
     $('updated').textContent = `更新于 ${new Date().toLocaleTimeString('zh-CN')}`;
   } catch (e) {
     $('runtime').className = 'runtime offline';
@@ -730,7 +816,9 @@ async function refresh() {
 }
 
 refresh();
+refreshSignedActivity(true);
 setInterval(refresh,5000);
+setInterval(refreshSignedActivity,60000);
 
 
 const clusterPresetHelp = {
@@ -965,40 +1053,6 @@ function clusterProgressDetail(job) {
 }
 
 
-let caQuoteExpiryTimer = null;
-
-function caQuoteCurrent(q, nowSeconds=Date.now()/1000) {
-  if (q?.is_current_at_response !== true || q?.freshness_status !== 'CURRENT_AT_RESPONSE') return false;
-  const validUntil = q?.valid_until == null ? NaN : Number(q.valid_until);
-  return Number.isFinite(validUntil) && validUntil > 0 && nowSeconds <= validUntil;
-}
-
-function caQuoteUnavailableLabel(q, waiting='正在请求 Jupiter 报价') {
-  if (!q) return waiting;
-  if (q.freshness_status === 'EXPIRED' ||
-      (q.is_current_at_response === true && q.valid_until != null &&
-       Date.now()/1000 > Number(q.valid_until))) return '报价已过期，请重新查询';
-  if (q.freshness_status === 'ARCHIVED_NOT_LIVE') return '仅存档报价，请重新查询';
-  if (q.status === 'OK' && q.route_exists === false) return '暂无可成交路线';
-  if (q.status === 'OK') return '报价未通过服务端时效核验';
-  return q.reason ? '报价不可用：' + String(q.reason) : '暂不可成交 / 报价不可用';
-}
-
-function caScheduleQuoteExpiry(q, elementId) {
-  clearTimeout(caQuoteExpiryTimer);
-  caQuoteExpiryTimer = null;
-  if (!caQuoteCurrent(q)) return;
-  const remainingMs = Math.max(0, Number(q.valid_until)*1000-Date.now());
-  caQuoteExpiryTimer = setTimeout(() => {
-    const node=$(elementId);
-    if (node) {
-      node.textContent='报价已过期，请重新查询';
-      node.classList.add('unresolved');
-    }
-    caQuoteExpiryTimer = null;
-  }, Math.ceil(remainingMs)+15);
-}
-
 function renderClusterPreview(job) {
   const node=$('cluster-preview');
   const p=job?.preview;
@@ -1012,10 +1066,6 @@ function renderClusterPreview(job) {
     : extUnknown ? '部分扩展风险待核实'
     : '已解析权限未发现活动风险';
   const ready=p.market_status==='OK';
-  const q=p.execution_quote_30_usdc;
-  const quoteText=caQuoteCurrent(q)
-    ? '$'+smallPrice(q.execution_price_usdc)+' · 冲击 '+pctText(q.price_impact_pct)
-    : caQuoteUnavailableLabel(q);
   node.hidden=false;
   const incomplete=job.status==='ERROR';
   node.innerHTML=
@@ -1025,14 +1075,11 @@ function renderClusterPreview(job) {
     fact('参考价',ready ? esc(usd(p.price_usd,8)) : '暂不可用') +
     fact('市值',ready ? esc(usd(p.market_cap_usd)) : '暂不可用') +
     fact('主池流动性',ready ? esc(usd(p.liquidity_usd)) : '暂不可用') +
-    fact('$30 可成交报价','<span id="cluster-preview-quote">'+esc(quoteText)+'</span>',
-      'Jupiter 服务端校验时效的只读报价，不构成下单建议') +
     fact('权限',esc(authority)) +
     fact('原始 Top10 持币占比', p.raw_top10_resolved_pct != null
       ? esc(pctText(p.raw_top10_resolved_pct)) : '待解析', '含池子，未做 LP 排除或钱包关联归因') +
     '</div><p>已解析 Owner：' + esc(p.top_accounts_resolved ?? '待查询') +
     '。原始 Top10 可能含 LP 或交易所；钱包聚类仍在独立核对，不能据此认定筹码安全或可跟单。</p>';
-  caScheduleQuoteExpiry(q, 'cluster-preview-quote');
 }
 
 function clusterErrorMessage(error) {
@@ -1090,7 +1137,6 @@ function renderClusterReport(report) {
   const profile = report.token_profile || {};
   const market = report.market || {};
   const mainPair = market.main_pair || {};
-  const quote = report.execution_quote_30_usdc || {};
   const assessment = report.assessment || {};
 
   const observedAt = report.observed_at == null ? NaN : Number(report.observed_at);
@@ -1188,14 +1234,9 @@ function renderClusterReport(report) {
   const pairLink=mainPair.pair_address
     ? '<a class="link-btn compact" href="https://solscan.io/account/' + encodeURIComponent(mainPair.pair_address) + '" target="_blank" rel="noreferrer">Pool ↗</a>'
     : '';
-  const quoteText = caQuoteCurrent(quote)
-    ? '$'+smallPrice(quote.execution_price_usdc) + '<span class="subvalue">冲击 ' + pctText(quote.price_impact_pct) + '</span>'
-    : '<span class="unresolved">' + esc(caQuoteUnavailableLabel(quote,'报价不可用')) + '</span>';
 
   $('cluster-market').innerHTML =
     fact('查询时参考价','<span>' + (market.status==='OK' && market.price_usd != null ? '$'+smallPrice(market.price_usd) : '<span class="unresolved">不可用</span>') + '</span>','DexScreener 参考价') +
-    fact('$30 实际可成交价','<span id="cluster-final-quote">' + quoteText + '</span>',
-      'Jupiter read-only quote; server-validated at response time') +
     fact('Market Cap','<span>' + (market.status==='OK' ? usd(market.market_cap_usd) : '暂无') + '</span>') +
     fact('主池流动性','<span>' + (market.status==='OK' ? usd(mainPair.liquidity_usd) : '暂无') + '</span>') +
     fact('24h 成交额','<span>' + (market.status==='OK' ? usd((mainPair.volume || {}).h24) : '暂无') + '</span>') +
@@ -1329,8 +1370,6 @@ $('cluster-form').addEventListener('submit', async (event) => {
   $('cluster-submit').textContent = '分析中…';
   $('cluster-result').hidden = true;
   $('cluster-preview').hidden = true;
-  clearTimeout(caQuoteExpiryTimer);
-  caQuoteExpiryTimer=null;
   clusterStatus('running','准备链上分析','只读查询，不连接钱包，不发交易。');
   try {
     const r = await fetch('/api/cluster-analysis',{

@@ -20,7 +20,7 @@ from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .transfer_archive import publish_evidence_batch
 from .jupiter import JupiterQuoteClient
 from .observations import ObservationStore
-from .outcomes import OutcomeTracker
+from .outcomes import OutcomeTracker, MAX_QUOTES_PER_CYCLE
 from .sol_mirror import SolNormalizedMirror
 from .policy import evaluate, load_policy, should_notify, live_delivery_policy_authorized
 
@@ -30,6 +30,7 @@ _TRANSIENT_WAIT_REASONS = {
     "FRANK_RUNTIME_NOT_LIVE",
     "FRANK_BUY_SIGNAL_STALE_OR_UNKNOWN",
     "QUOTE_METRICS_INVALID",
+    "EXECUTION_NOT_ASSESSED_USER_AMOUNT_MISSING",
 }
 _ACTIONABLE = {"BUY", "SMALL_BUY"}
 
@@ -121,7 +122,20 @@ class MissionMemeService:
             return {"status":"SKIPPED","reason":"POSITION_NOT_FOLLOWABLE","source":"JUPITER_OFFICIAL","observed_at":time.time()}
         if candidate.get("latest_side") == "SELL":
             return {"status":"SKIPPED","reason":"LATEST_ACTION_SELL","source":"JUPITER_OFFICIAL","observed_at":time.time()}
-        amount = Decimal(str(self.policy["decision"]["quote_usdc_amount"]))
+        # No fixed order size is authorized. A quote is optional and only
+        # allowed for an amount explicitly supplied in the active policy.
+        # The checked-in approved policy intentionally defines no such amount.
+        raw_amount = self.policy["decision"].get("quote_usdc_amount")
+        if raw_amount is None:
+            return {"status": "SKIPPED", "reason": "USER_ORDER_AMOUNT_NOT_SPECIFIED",
+                    "source": "NONE", "observed_at": None}
+        try:
+            amount = Decimal(str(raw_amount))
+            if not amount.is_finite() or amount <= 0:
+                raise ValueError("INVALID_OPTIONAL_USER_AMOUNT")
+        except (ValueError, ArithmeticError):
+            return {"status": "SKIPPED", "reason": "INVALID_USER_ORDER_AMOUNT",
+                    "source": "NONE", "observed_at": time.time()}
         key = f"jupiter:{candidate['mint']}:{candidate.get('token_decimals')}:{amount}"
         cached = self.control.cache_get(key, time.time())
         if cached is not None:
@@ -297,9 +311,13 @@ class MissionMemeService:
                                "message": "CANDIDATE_EVALUATION_FAILED"})
                 continue
 
+        # Historical outcome tracks can predate the removal of the rejected
+        # default order amount. They must not silently trigger more Jupiter
+        # exit-size quotes while there is no user-specified research notional.
         outcome_tracking = self.outcomes.sample_due(
             now=time.time(),
             slippage_bps=int(rules["slippage_bps"]),
+            max_quotes=MAX_QUOTES_PER_CYCLE if rules.get("quote_usdc_amount") is not None else 0,
         )
         outcome_tracking["registered"] = outcome_registered
         pruned = self.observations.prune(time.time(), retention_seconds)
