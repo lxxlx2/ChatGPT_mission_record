@@ -271,8 +271,12 @@ class ClusterJobManager:
         # Second free provider for balance parity only (getMultipleAccounts).
         url=os.environ.get("SOLANA_RPC_SECONDARY","https://solana-rpc.publicnode.com")
         if not url or url=="0" or url in self.rpc_endpoints[:1]:return None
-        try:return SolanaReadOnlyRPC(url,fallback_endpoints=[],max_wire_attempts=4,max_elapsed_seconds=60)
-        except ValueError:return None
+        # Its separate deadline starts immediately before its first read, not
+        # while the main job is still collecting launch/holder evidence.
+        def create():
+            try:return SolanaReadOnlyRPC(url,fallback_endpoints=[],max_wire_attempts=4,max_elapsed_seconds=60)
+            except ValueError:return None
+        return create
 
     def submit(self, mint: str, preset: str = "standard") -> dict:
         mint = self.validate_mint(mint)

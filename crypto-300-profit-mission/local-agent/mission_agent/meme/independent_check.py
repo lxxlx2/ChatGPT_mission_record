@@ -4,10 +4,25 @@ Both providers are read back-to-back with jsonParsed getMultipleAccounts
 (mint + up to 30 accounts). Same context slot => exact parity claim; different
 slots => near-time comparison only. This never re-enumerates all holders.
 """
+import re
 import time
+from .cluster import RPCJobBudgetExceeded
 from .holder_ranks import valid_pubkey
+from .job_checkpoint import CheckpointError
 
 MAX_ACCOUNTS=30
+
+
+def _safe_reason(error):
+    code=str(error)
+    if re.fullmatch(r'(?:RPC_JOB_(?:TIME|WIRE)_BUDGET_EXHAUSTED|RESPONSE_INVALID|HTTP_[0-9]{3}|RPC_-?[0-9]+|RPC_RATE_LIMITED)',code):return code
+    name=type(error).__name__
+    return name if name in {'RPCError','TimeoutError','ValueError','TypeError','OSError','KeyError','AttributeError'} else 'SOURCE_UNAVAILABLE'
+
+
+def _wire_attempts(rpc):
+    count=getattr(rpc,'calls',None)
+    return count if type(count) is int and count>=0 else None
 
 
 def _read(rpc,addresses):
@@ -25,13 +40,21 @@ def _read(rpc,addresses):
 
 
 def collect_independent_balance_check(mint,accounts,primary,secondary,*,label='PUBLICNODE',clock=time.time):
-    base={'version':1,'status':'UNAVAILABLE','secondary_provider':label,'scope':'LARGEST_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_FULL_ENUMERATION'}
+    base={'version':1,'status':'UNAVAILABLE','secondary_provider':label,'scope':'LARGEST_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_FULL_ENUMERATION','secondary_wire_attempts':0}
     if secondary is None:return {**base,'status':'NOT_REQUESTED','reason':'NO_SECONDARY_PROVIDER'}
     addresses=[mint]+[a for a in dict.fromkeys(accounts) if valid_pubkey(a) and a!=mint][:MAX_ACCOUNTS]
     try:
         p_slot,p=_read(primary,addresses);p_at=clock()
-        s_slot,s=_read(secondary,addresses);s_at=clock()
-    except Exception as exc:return {**base,'reason':str(exc)[:60] or type(exc).__name__}
+    except RPCJobBudgetExceeded:raise
+    except Exception as exc:return {**base,'reason':_safe_reason(exc)}
+    rpc=secondary
+    try:
+        if not callable(getattr(rpc,'call',None)):rpc=secondary()
+        if rpc is None:return {**base,'reason':'SECONDARY_PROVIDER_UNAVAILABLE'}
+        s_slot,s=_read(rpc,addresses);s_at=clock()
+    except CheckpointError:raise
+    except Exception as exc:return {**base,'reason':_safe_reason(exc),'secondary_wire_attempts':_wire_attempts(rpc)}
+    base['secondary_wire_attempts']=_wire_attempts(rpc)
     rows=[];matches=0;differs=0;missing=0
     for a in addresses:
         x=p.get(a);y=s.get(a)
