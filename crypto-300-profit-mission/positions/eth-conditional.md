@@ -1,4 +1,7 @@
-# ETH Conditional Perpetual Plan
+# ETH / 历史条件永续交易方案与失效边界
+
+> **Historical stored plan, not current permission:** this dated September 2026 setup is preserved as historical research. Any statement below about an "hourly Mission monitor", live price/entry or automatic monitoring is **superseded** by `../MISSION_SPEC.md` and `../state/latest.md` (CORE PRICE paused; PRODUCTION_TRADING=NO_GO). Do not execute or re-enable tasks based on this file.
+
 
 Updated: 2026-09-26 07:52 Asia/Bangkok
 

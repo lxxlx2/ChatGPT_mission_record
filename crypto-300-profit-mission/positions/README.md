@@ -1,6 +1,6 @@
 # Mission Position Registry / Current and Historical Operational Holdings
 
-Updated: 2026-10-10 Asia/Bangkok
+Updated: 2026-10-18 Asia/Bangkok (correct 2026-10-12 GANG close classification; unchanged accounting authority)
 
 This is the **operational** `positions/` directory, not the location for full project research. Keep a file when it preserves a user-specific position, original capital provenance, existing execution rule, or compatibility reference. An exited historical file can remain without implying an open position.
 
@@ -8,10 +8,11 @@ Canonical current wallet balances and the **individual >= $1 USD display policy*
 
 ## Current exposure or unresolved operational item
 
-- `gang.md`: 500 USDC The Syndicate / GANG Backable Solana funding record; escrow committed, allocation/refund/claim pending, user follow-up only.
+- No open position is independently established by this historical registry alone. For fresh holdings and marked NAV refer only to `../portfolio/current.md` and `../state/latest.md`. A stored plan/older pending status must not be treated as current exposure.
 
 ## Closed or historical provenance (not open holdings)
 
+- `gang.md`: **CLOSED** on 2026-10-12; user sold all 8,008.208 GANG, current GANG token balance 0, net realized **−96.210562 USDC before SOL gas**. The original 500 USDC commitment/refund is historical provenance, **no outstanding escrow or pending allocation**. This is GANG-specific PnL, not Mission total PnL.
 - `credits.md`: original six Credits NFTs **all exited**, current ownership 0; Mission starting-asset accounting remains unresolved.
 - `unicred.md`: UNICRED #230 not owned, current contract ownership 0.
 - `jump.md`: JUMP application rejected, **1,000 USDC refunded, 0 allocation**.

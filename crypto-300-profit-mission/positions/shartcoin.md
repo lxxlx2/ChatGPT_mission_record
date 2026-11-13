@@ -1,4 +1,4 @@
-# SHARTCOIN Position
+# SHARTCOIN / Solana Meme 历史交易与退出记录
 
 > Monitoring status: **RETIRED** as of 2026-09-27. Direct wallet balance is zero. Historical content below is retained for audit/provenance only. No routine position-specific price/liquidity/holder/creator/pool monitoring unless a fresh non-zero balance or explicit user instruction reactivates it.
 

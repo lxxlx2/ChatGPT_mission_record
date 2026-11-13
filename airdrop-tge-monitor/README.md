@@ -2,6 +2,8 @@
 
 监控空投、TGE、Claim、KYC、allocation、investor distribution、Clay Shares 等需要用户动作的权益事件。
 
+**现行执行时点说明（以 [AUTOMATION_RUNTIME.md](AUTOMATION_RUNTIME.md) 为准）：** 2026-10-10 已授权的覆盖规则为每小时 **HH:00**，时区 `Asia/Bangkok`；旧 HH:50/HH:14 是历史时点。这里仅同步文档，不创建/修改自动化。配置时点不能替代实际 `HHMMSS-final.md` 与送达回读验证。
+
 ## 当前执行模式
 
 为保证运行成功率，采用：
