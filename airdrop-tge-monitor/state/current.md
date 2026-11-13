@@ -1,9 +1,9 @@
 # TGE Monitor Current State
 
-Updated: 2026-11-13 19:04:25 Asia/Bangkok
+Updated: 2026-11-13 19:59:23 Asia/Bangkok
 
-- authoritative_final: airdrop-tge-monitor/runs/2026-11-13/190425-final.md
-- final_commit_sha: bd1d4ac5376a587687c751426a928732fe8404e4
+- authoritative_final: airdrop-tge-monitor/runs/2026-11-13/195923-final.md
+- final_commit_sha: 1ebab56bbd89c720551528f1bd3b870a0a9510a1
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 3
 - executed_shard: 3
@@ -13,14 +13,14 @@ Updated: 2026-11-13 19:04:25 Asia/Bangkok
 - gmail_sent: false
 - app_notification: false
 - identity_failures: 0
-- source_failures: 1
+- source_failures: 3
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (historical source AUTOMATION_RUNTIME.md; PARTIAL_ONLY does not advance)
 
 ## Last meaningful attempts
 - shard0: 2026-11-13 16:02:04 Asia/Bangkok; runs/2026-11-13/160204-final.md (PARTIAL_ONLY)
 - shard1: 2026-11-13 17:03:59 Asia/Bangkok; runs/2026-11-13/170359-final.md (PARTIAL_ONLY)
 - shard2: 2026-11-13 18:01:52 Asia/Bangkok; runs/2026-11-13/180152-final.md (PARTIAL_ONLY)
-- shard3: 2026-11-13 19:04:25 Asia/Bangkok; runs/2026-11-13/190425-final.md (PARTIAL_ONLY)
+- shard3: 2026-11-13 19:59:23 Asia/Bangkok; runs/2026-11-13/195923-final.md (PARTIAL_ONLY)
 
 ## Open urgent and next checks
 - urgent5: Concrete, MetaMask, Claynosaurz, HEEBOO, Space @intodotspace; plus Surf and StandX.
