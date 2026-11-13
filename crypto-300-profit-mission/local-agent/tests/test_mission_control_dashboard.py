@@ -303,7 +303,9 @@ def test_cluster_dashboard_explains_single_query_bounds_and_localizes_rate_limit
     html=(Handler.static_root/"index.html").read_text()
     js=(Handler.static_root/"app.js").read_text()
     assert "统一查询" in html
-    assert "请求与耗时上限" in html
+    assert "历史按来源结束推进" in html
+    assert "逐请求设有超时和错误恢复" in html
+    assert "请求与耗时上限" not in html
     assert "任务结束不代表完整尽调" in html
     assert "clusterPresetHelp" not in js
     assert "免费 Solana RPC 触发限流（HTTP 429）" in js

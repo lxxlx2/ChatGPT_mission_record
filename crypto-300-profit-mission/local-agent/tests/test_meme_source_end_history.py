@@ -141,9 +141,9 @@ def test_newly_discovered_historical_accounts_are_drained_to_multiple_frontiers(
 def test_only_verified_protocol_account_is_skipped_unknown_program_owner_is_scanned(monkeypatch):
     a,rpc=analyzer(monkeypatch,exhaust_history=True)
     a._scan_funding=lambda *args:None
-    a.special_role_snapshot=lambda *args:{'records':[
+    a.special_role_snapshot=lambda *args:{'rankings':{'records':[
         {'owner':A,'token_account':T1,'role':'PROTOCOL_VAULT','classification':'CHAIN_ACCOUNT_ROLE'},
-        {'owner':B,'token_account':TB,'role':'AMM_POOL','classification':'UNVERIFIED'}]}
+        {'owner':B,'token_account':TB,'role':'AMM_POOL','classification':'UNVERIFIED'}]}}
     out=a.analyze()
     assert T1 not in {address for address,_ in rpc.history}
     assert T2 in {address for address,_ in rpc.history} and TB in {address for address,_ in rpc.history}
@@ -158,7 +158,7 @@ def test_owner_whose_every_verified_current_account_is_protocol_has_explicit_not
     records=[account(1,301,100),account(4,302,900)]
     a,rpc=analyzer(monkeypatch,records=records,exhaust_history=True)
     a._scan_funding=lambda *args:None
-    a.special_role_snapshot=lambda *args:{'records':[{'owner':A,'token_account':T1,'role':'PROTOCOL_VAULT','classification':'CHAIN_ACCOUNT_ROLE'}]}
+    a.special_role_snapshot=lambda *args:{'rankings':{'records':[{'owner':A,'token_account':T1,'role':'PROTOCOL_VAULT','classification':'CHAIN_ACCOUNT_ROLE'}]}}
     out=a.analyze()
     assert out['holders'][0]['first_acquisition']['status']=='NOT_APPLICABLE_PROTOCOL_POOL'
     assert T1 not in {address for address,_ in rpc.history}

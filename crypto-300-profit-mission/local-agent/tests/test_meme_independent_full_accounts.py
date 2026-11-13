@@ -60,10 +60,10 @@ def test_all_supplied_addresses_are_paired_in_protocol_sized_batches():
     assert result['provided_account_set_compared'] is True
     assert result['requested_addresses'] == result['accounts_compared'] == 206
     assert result['not_compared'] == 0 and result['matches'] == 206
-    assert result['batches_completed'] == 3 and result['secondary_wire_attempts'] == 3
-    assert [len(r) for r in primary.requests] == [100, 100, 6]
+    assert result['batches_completed'] == 21 and result['secondary_wire_attempts'] == 21
+    assert [len(r) for r in primary.requests] == [10]*20+[6]
     assert primary.requests == secondary.requests
-    assert [name for name, _ in order] == ['primary', 'secondary'] * 3
+    assert [name for name, _ in order] == ['primary', 'secondary'] * 21
     assert [r['address'] for r in result['rows']] == [MINT] + ACCOUNTS
     assert result['scope'].endswith('NOT_INDEPENDENT_ENUMERATION')
 
@@ -73,7 +73,7 @@ def test_matching_per_batch_slots_do_not_claim_one_global_snapshot():
     assert result['status'] == 'NEAR_TIME_ALL_MATCH'
     assert result['single_common_slot'] is False
     assert result['primary_slot_range'] == result['secondary_slot_range'] == [7, 9]
-    assert [b['slot_gap'] for b in result['batches']] == [0, 0, 0]
+    assert [b['slot_gap'] for b in result['batches']] == [0]*21
 
 
 def test_cross_provider_slot_difference_never_claims_same_snapshot():
@@ -87,9 +87,9 @@ def test_later_secondary_failure_preserves_completed_rows_and_exact_remainder():
     result, primary, secondary, _ = run(fail=(2, RPCError(secret)))
     assert result['status'] == 'PARTIAL' and result['reason'] == 'RPCError'
     assert result['failure_phase'] == 'SECONDARY' and result['failed_batch'] == 1
-    assert result['batches_completed'] == 1 and result['accounts_compared'] == 100
-    assert result['matches'] == 100 and result['not_compared'] == 106
-    assert len(result['rows']) == 100 and len(result['batches']) == 1
+    assert result['batches_completed'] == 1 and result['accounts_compared'] == 10
+    assert result['matches'] == 10 and result['not_compared'] == 196
+    assert len(result['rows']) == 10 and len(result['batches']) == 1
     assert result['provided_account_set_compared'] is False
     assert result['secondary_wire_attempts'] == 2 and result['last_source_error'] == 'HTTP_403'
     assert primary.calls == secondary.calls == 2
@@ -104,7 +104,7 @@ def test_primary_failure_on_later_batch_keeps_existing_secondary_evidence():
     assert result['status'] == 'PARTIAL' and result['reason'] == 'TimeoutError'
     assert result['failure_phase'] == 'PRIMARY' and result['batches_completed'] == 1
     assert result['secondary_wire_attempts'] == secondary.calls == 1
-    assert result['accounts_compared'] == 100 and result['not_compared'] == 106
+    assert result['accounts_compared'] == 10 and result['not_compared'] == 196
     assert 'PRIVATE' not in json.dumps(result)
 
 
@@ -172,6 +172,5 @@ def test_secondary_factory_starts_once_after_first_primary_batch():
         order.append(('factory', []))
         return secondary
     result = collect_independent_balance_check(MINT, ACCOUNTS, primary, factory, full_accounts=True)
-    assert result['batches_completed'] == 3
-    assert [name for name, _ in order] == ['primary', 'factory', 'secondary',
-        'primary', 'secondary', 'primary', 'secondary']
+    assert result['batches_completed'] == 21
+    assert [name for name, _ in order] == ['primary', 'factory', 'secondary'] + ['primary','secondary']*20

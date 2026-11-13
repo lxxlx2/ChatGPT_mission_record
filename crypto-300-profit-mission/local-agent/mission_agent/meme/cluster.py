@@ -1540,7 +1540,7 @@ class WalletClusterAnalyzer:
             # Only a verified per-account protocol role can make personal
             # acquisition history inapplicable. A program-owned/unknown address
             # or a legacy registry name is never enough to skip its history.
-            self._protocol_history_exclusions=[r for r in special_address_roles.get('records',[])
+            self._protocol_history_exclusions=[r for r in special_address_roles.get('rankings',{}).get('records',[])
                 if r.get('classification')=='CHAIN_ACCOUNT_ROLE'
                 and r.get('role') in {'LP','AMM_POOL','PROTOCOL_VAULT'}]
             self._protocol_pool_accounts={(r.get('owner'),r.get('token_account')) for r in self._protocol_history_exclusions}

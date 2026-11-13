@@ -2,7 +2,7 @@
 
 Both providers are read back-to-back with jsonParsed getMultipleAccounts
 (mint + up to 30 accounts by default). Full-set mode batches every supplied
-address at the RPC's 100-address request maximum. Only a single common slot
+address at this free provider's 10-address request maximum. Only a single common slot
 across every batch permits a same-slot claim. This does not independently
 enumerate holders or prove that the supplied address set is exhaustive.
 """
@@ -13,7 +13,9 @@ from .holder_ranks import valid_pubkey
 from .job_checkpoint import CheckpointError
 
 MAX_ACCOUNTS=30
-RPC_BATCH_SIZE=100
+# PublicNode's free endpoint returns HTTP403 / JSON-RPC -32602 above ten
+# addresses. This is a per-request service constraint, not a report quota.
+RPC_BATCH_SIZE=10
 
 
 def _safe_reason(error):
