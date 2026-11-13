@@ -169,7 +169,7 @@ def test_new_enumeration_is_opted_in_only_by_standard_worker_plan():
     assert a._holder_ranks(profile(),1000,0)['status']=='NOT_REQUESTED'
     assert a.rpc.requests==[]
     assert CLUSTER_PRESETS['standard']['enumerate_holder_ranks'] is True
-    assert CLUSTER_RPC_JOB_BUDGETS['standard']=={'max_wire_attempts':1200,'max_elapsed_seconds':1800}
+    assert CLUSTER_RPC_JOB_BUDGETS['standard']=={'max_wire_attempts':None,'max_elapsed_seconds':None}
 
 
 @pytest.mark.parametrize('cfg',[{}, {'encoding':'jsonParsed','commitment':'finalized','withContext':True,'filters':[]}])

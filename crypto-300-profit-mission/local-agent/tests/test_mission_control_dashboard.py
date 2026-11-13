@@ -332,9 +332,10 @@ def test_cluster_dashboard_does_not_fabricate_narrative_conclusion():
     assert "未做全网检索" in js
 
 
-def test_standard_cluster_preset_is_adaptive_not_bruteforce():
+def test_standard_cluster_preset_covers_top20_owners_with_source_driven_history():
     standard=CLUSTER_PRESETS["standard"]
-    assert standard["deep_holders"]==6
+    assert standard["deep_holders"]==20
+    assert standard["exhaust_history"] is True
     assert standard["history_per_holder"]==12
     assert standard["funding_lookback"]==8
     assert standard["adaptive_history_per_holder"]==30

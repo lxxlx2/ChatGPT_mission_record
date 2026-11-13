@@ -586,7 +586,7 @@ class WalletClusterAnalyzer:
         progress_callback=None,
         enumerate_holder_ranks=False,independent_market_client=None,compare_market_sources=None,narrative_client=None,collect_narrative=None,read_pool_vaults=False,audit_holder_binary=False,
         history_max_pages=1,funding_max_pages=1,independent_rpc=None,read_launch_identity=False,
-        adaptive_history_max_pages=1,adaptive_funding_max_pages=1,
+        adaptive_history_max_pages=1,adaptive_funding_max_pages=1,exhaust_history=False,
     ):
         self.mint=mint;self.rpc=rpc;self.registry=special_registry or {};self.history_per_holder=int(history_per_holder);self.deep_holders=int(deep_holders);self.funding_lookback=int(funding_lookback);self.material_pct=Decimal(material_pct)
         self.audit_holder_binary=audit_holder_binary is True
@@ -601,6 +601,9 @@ class WalletClusterAnalyzer:
         self.progress_callback=progress_callback
         self.edges=[];self.trades=[];self.funding=[];self.consolidations=[];self.tx_errors=[]
         self.adaptive_deepened_owners=[]
+        self.exhaust_history=exhaust_history is True
+        self._history_streams={};self._holder_firsts={}
+        self._protocol_pool_accounts=set();self._protocol_history_owners=set()
         self._snapshot_slots={}
         self._top_account_context_errors=[]
         self._expected_mint_program=None
@@ -723,14 +726,18 @@ class WalletClusterAnalyzer:
             selected=[holder];reason="ALL_OBSERVED_SELECTED"
             for candidate in sorted(candidates.values(),key=lambda h:(-h.raw,h.token_account)):
                 if candidate.token_account==holder.token_account:continue
-                if len(selected)>=4:
+                if not self.exhaust_history and len(selected)>=4:
                     reason="OWNER_ACCOUNT_LIMIT";break
-                if len(self._extra_history_accounts)>=12:
+                if not self.exhaust_history and len(self._extra_history_accounts)>=12:
                     reason="REPORT_EXTRA_ACCOUNT_LIMIT";break
                 selected.append(candidate);self._extra_history_accounts.add(candidate.token_account)
             self._owner_history_selection[owner]={"holders":selected,"reason":reason,"observed":len(candidates)}
         first=None
-        for account in self._owner_history_selection[owner]["holders"]:
+        plan=self._owner_history_selection[owner]
+        applicable=[h for h in plan['holders'] if not self.exhaust_history or (owner,h.token_account) not in self._protocol_pool_accounts]
+        plan['protocol_accounts_not_applicable']=[h.token_account for h in plan['holders'] if h not in applicable]
+        if plan['holders'] and not applicable:self._protocol_history_owners.add(owner)
+        for account in applicable:
             first=self._earlier_buy(first,self._scan_holder_bounded(account,mapping,owners,limit,max_pages))
         return first
 
@@ -778,7 +785,7 @@ class WalletClusterAnalyzer:
                 if row["slot"]<self.historical_accounts[index]["slot"]:
                     self.historical_accounts[index]=row
                 continue
-            if len(self.historical_accounts)>=MAX_OBSERVATIONS:
+            if not self.exhaust_history and len(self.historical_accounts)>=MAX_OBSERVATIONS:
                 self._historical_evidence_limited=True
                 self._historical_limit_rejected_observations+=1
                 continue
@@ -792,7 +799,7 @@ class WalletClusterAnalyzer:
                 "compacted_observations":self._historical_compacted_observations,
                 "limit_rejected_observations":self._historical_limit_rejected_observations,
                 "represented_owner_accounts":len({(r["owner"],r["account"]) for r in self.historical_accounts}),
-                "max_observations":MAX_OBSERVATIONS,"complete_history":False}
+                "max_observations":None if self.exhaust_history else MAX_OBSERVATIONS,"complete_history":False}
 
     def _historical_frontier(self):
         grouped={}
@@ -802,6 +809,8 @@ class WalletClusterAnalyzer:
         return sorted(grouped.values(),key=lambda row:(row["owner"],row["slot"],row["account"]))
 
     def _scan_historical_account_frontier(self,firsts,mapping,owners,representatives):
+        if self.exhaust_history:
+            return self._scan_discovered_account_histories(firsts,mapping,owners,representatives)
         # One fixed discovery frontier per report. Accounts found during this
         # pass or its new funding reads are recorded but never recurse.
         selected=defaultdict(list);handled=set();changed=set()
@@ -838,6 +847,48 @@ class WalletClusterAnalyzer:
                     "discovery_signature":row["signature"],"discovery_slot":row["slot"],
                     "selected":False,"stop_reason":"CURRENT_ACCOUNT_ALREADY_SELECTED" if any(h.token_account==row["account"] for h in (self._owner_history_selection.get(row["owner"]) or {}).get("holders",[])) else "FRONTIER_LIMIT","history_complete":False})
 
+    def _scan_discovered_account_histories(self,firsts,mapping,owners,representatives):
+        """Drain transaction-proven accounts to the provider's end, once per Owner.
+
+        Newly observed accounts form the next frontier. A closed account or a
+        different historical owner is still only a transaction-bound association;
+        no current-owner or lifetime first-buy claim follows from discovery.
+        """
+        handled=set();funded=set()
+        while True:
+            pending=[r for r in self._historical_frontier() if (r['owner'],r['account']) not in handled]
+            for row in pending:
+                owner,address=row['owner'],row['account'];handled.add((owner,address))
+                plan=self._owner_history_selection.get(owner)
+                if plan is None:continue
+                current={h.token_account for h in plan['holders']}
+                selected=address not in current
+                record={'owner':owner,'account':address,'discovery_signature':row['signature'],
+                        'discovery_slot':row['slot'],'selected':selected,
+                        'stop_reason':'SELECTED_SOURCE_DRIVEN_HISTORY' if selected else 'CURRENT_ACCOUNT_ALREADY_SELECTED',
+                        'history_complete':False}
+                self.historical_account_scans.append(record)
+                if not selected:continue
+                self._extra_history_accounts.add(address)
+                self._progress('HISTORICAL_ACCOUNT_SCAN',owner=owner,address=address)
+                self._historical_scan_active=True
+                holder=Holder(address,owner,0,self._history_decimals,'UNRESOLVED','TRANSACTION_BOUND_HISTORICAL_OWNER')
+                try:first=self._scan_holder_bounded(holder,mapping,owners,self.history_per_holder)
+                finally:self._historical_scan_active=False
+                state=self.history_coverage.get(self._history_window_key(holder,address,None,'holder'),{})
+                record['window_stop_reason']=state.get('stop_reason','NOT_RECORDED')
+                firsts[owner]=self._earlier_buy(firsts.get(owner),first)
+            # Funding history can reveal further target-token accounts too. Each
+            # distinct earliest-buy anchor is consumed once; repeated frontiers
+            # cannot restart a successfully exhausted funding window.
+            anchors=[(owner,first) for owner,first in firsts.items()
+                     if isinstance(first,dict) and owner in representatives
+                     and (owner,first.get('signature')) not in funded]
+            for owner,first in anchors:
+                funded.add((owner,first.get('signature')))
+                self._scan_funding_bounded(representatives[owner],first,owners,self.funding_lookback)
+            if not any((r['owner'],r['account']) not in handled for r in self._historical_frontier()):break
+
     def _owner_account_history_coverage(self):
         rows=[]
         for owner,plan in self._owner_history_selection.items():
@@ -846,6 +897,7 @@ class WalletClusterAnalyzer:
             rows.append({"owner":owner,"account_source_status":self._owner_account_source,
                          "current_accounts_observed":plan["observed"],"accounts_selected":selected,
                          "accounts_with_windows":[address for address in selected if address in queried],
+                         "protocol_accounts_not_applicable":plan.get('protocol_accounts_not_applicable',[]),
                          "accounts_not_selected":plan["observed"]-len(selected),
                          "account_selection_complete":self._owner_account_source=="VERIFIED_CURRENT_MINT_ACCOUNTS" and len(selected)==plan["observed"],
                          "selection_stop_reason":plan["reason"],
@@ -1176,33 +1228,49 @@ class WalletClusterAnalyzer:
             reason="RESPONSE_LIMIT" if str(exc)=="RPC_HOLDER_RANK_RESPONSE_LIMIT" else "SOURCE_UNAVAILABLE"
             return {**base,"reason":reason}
 
-    def _signature_pages(self,holder,address,page_size,max_pages,phase,*,before=None):
-        """Enumerate a bounded finalized source window; empty page is not full wallet history.
+    def _history_window_key(self,holder,address,before,phase):
+        # A reused historical account may have belonged to multiple Owners.
+        # Each transaction-bound ownership context needs its own continuation.
+        return (phase,holder.owner,address,before) if self.exhaust_history else (phase,address,before)
 
-        Advance the public continuation cursor only after the caller consumed a
-        whole page. Successful RPC pages/transactions retain the existing cache;
-        this does not restart workers or authorize collection during GET recovery.
+    def _signature_pages(self,holder,address,page_size,max_pages,phase,*,before=None):
+        """Read an address window, committing the cursor only after a whole page.
+
+        Source-driven mode has no local page count stop. Per-request transport
+        timeouts, source failures/conflicts and explicit job cancellation remain
+        terminal; an empty page is only the end of this provider address window.
         """
         if type(page_size) is not int or not 1<=page_size<=1000:raise ValueError("HISTORY_PAGE_SIZE_INVALID")
         if type(max_pages) is not int or not 1<=max_pages<=8:raise ValueError("HISTORY_PAGE_BOUND_INVALID")
-        state={"owner":holder.owner,"address":address,"phase":phase,
-               "initial_before":before,"next_before":before,"page_size":page_size,"page_limit":max_pages,
-               "pages":0,"page_requests":0,"signature_count":0,"duplicates_skipped":0,
-               "oldest_slot":None,"newest_slot":None,"oldest_block_time":None,"newest_block_time":None,
-               "signature_slots_complete":True,"provider_pagination_end_observed":False,
-               "history_complete":False,"stop_reason":"RUNNING",
-               "account_origin":"OWNER_FUNDING_WINDOW" if phase=="funding" else "HISTORICAL_OBSERVED_OWNER" if self._historical_scan_active else "CURRENT_SELECTED_ACCOUNT"}
-        self.history_coverage[(phase,address,before)]=state
-        self.history_attempts.append(state)
-        cursor=before;seen={};cursors={before} if before else set()
+        key=self._history_window_key(holder,address,before,phase)
+        previous=self._history_streams.get(key) if self.exhaust_history else None
+        if previous is not None:
+            state,seen,cursors=previous
+            # Never automatically retry a failed source or restart an exhausted
+            # address from newest. A partial consumer can replay its pending page.
+            if state['stop_reason'] not in {'INTERRUPTED','PAGE_LIMIT'}:return
+            cursor=state['next_before'];state['stop_reason']='RUNNING'
+        else:
+            state={"owner":holder.owner,"address":address,"phase":phase,
+                   "initial_before":before,"next_before":before,"page_size":page_size,
+                   "page_limit":None if self.exhaust_history else max_pages,
+                   "pages":0,"page_requests":0,"signature_count":0,"duplicates_skipped":0,
+                   "oldest_slot":None,"newest_slot":None,"oldest_block_time":None,"newest_block_time":None,
+                   "signature_slots_complete":True,"provider_pagination_end_observed":False,
+                   "history_complete":False,"stop_reason":"RUNNING",
+                   "account_origin":"OWNER_FUNDING_WINDOW" if phase=="funding" else "HISTORICAL_OBSERVED_OWNER" if self._historical_scan_active else "CURRENT_SELECTED_ACCOUNT"}
+            self.history_coverage[key]=state;self.history_attempts.append(state)
+            cursor=before;seen={};cursors={before} if before else set()
+            if self.exhaust_history:self._history_streams[key]=(state,seen,cursors)
         def fail(reason):
             state["stop_reason"]=reason
             self.tx_errors.append({"address":address,"phase":phase+"_signatures","error":reason})
+        requested=0
         try:
-            for _ in range(max_pages):
+            while self.exhaust_history or requested<max_pages:
                 opts={"commitment":"finalized","limit":page_size}
                 if cursor:opts["before"]=cursor
-                state["page_requests"]+=1
+                requested+=1;state["page_requests"]+=1
                 try:page=self.rpc.call("getSignaturesForAddress",[address,opts],ttl=300)
                 except RPCJobBudgetExceeded:
                     state["stop_reason"]="JOB_BUDGET"
@@ -1222,16 +1290,16 @@ class WalletClusterAnalyzer:
                     state["stop_reason"]="PROVIDER_EMPTY_PAGE"
                     self._progress("HISTORY_PAGE",**state)
                     return
-                fresh=[]
+                fresh=[];pending={};duplicates=0
                 for row in page:
                     sig=row["signature"];identity=(row.get("slot"),row.get("blockTime"))
-                    if sig in seen:
-                        previous=seen[sig]
-                        if any(a is not None and b is not None and a!=b for a,b in zip(previous,identity)):
+                    previous_identity=pending.get(sig,seen.get(sig))
+                    if previous_identity is not None:
+                        if any(a is not None and b is not None and a!=b for a,b in zip(previous_identity,identity)):
                             fail("SOURCE_PAGE_CONFLICT");return
-                        state["duplicates_skipped"]+=1
+                        duplicates+=1
                     else:
-                        seen[sig]=identity;fresh.append(row)
+                        pending[sig]=identity;fresh.append(row)
                 tail=page[-1]["signature"]
                 if tail in cursors or not fresh:
                     fail("CURSOR_STALLED");return
@@ -1241,15 +1309,17 @@ class WalletClusterAnalyzer:
                 ):
                     fail("SOURCE_PAGE_CONFLICT");return
                 yield from fresh
-                # All rows in this page have now been consumed. A failure while
-                # processing one transaction must not skip the rest on continuation.
+                # Seen identities and the continuation are a single page commit.
+                # An interrupted page is replayed, while transaction evidence is
+                # separately deduplicated per Owner/signature by its consumer.
+                seen.update(pending);state["duplicates_skipped"]+=duplicates
                 state["signature_count"]+=len(fresh)
                 state["signature_slots_complete"] &= len(known_slots)==len(fresh)
-                for key,values in (("slot",known_slots),("block_time",[row["blockTime"] for row in fresh if type(row.get("blockTime")) is int])):
+                for field,values in (("slot",known_slots),("block_time",[row["blockTime"] for row in fresh if type(row.get("blockTime")) is int])):
                     if values:
-                        old=state["oldest_"+key];new=state["newest_"+key]
-                        state["oldest_"+key]=min(values+[old] if old is not None else values)
-                        state["newest_"+key]=max(values+[new] if new is not None else values)
+                        old=state["oldest_"+field];new=state["newest_"+field]
+                        state["oldest_"+field]=min(values+[old] if old is not None else values)
+                        state["newest_"+field]=max(values+[new] if new is not None else values)
                 cursor=tail;cursors.add(cursor);state["next_before"]=cursor
                 self._progress("HISTORY_PAGE",**state)
             state["stop_reason"]="PAGE_LIMIT"
@@ -1258,7 +1328,8 @@ class WalletClusterAnalyzer:
 
     def _scan_holder(self,holder:Holder,account_to_owner,top_owners,history_limit=None):
         limit=int(history_limit or self.history_per_holder)
-        first=None
+        identity=(holder.owner,holder.token_account)
+        first=self._holder_firsts.get(identity) if self.exhaust_history else None
         for meta in self._signature_pages(holder,holder.token_account,limit,self._history_page_limit,"holder"):
             sig=meta.get("signature")
             if not sig:continue
@@ -1269,7 +1340,7 @@ class WalletClusterAnalyzer:
                 continue
             try:tx=self.rpc.call("getTransaction",[sig,{"commitment":"finalized","encoding":"jsonParsed","maxSupportedTransactionVersion":1}],ttl=3650*86400)
             except RPCJobBudgetExceeded:
-                self.history_coverage[("holder",holder.token_account,None)]["stop_reason"]="JOB_BUDGET"
+                self.history_coverage[self._history_window_key(holder,holder.token_account,None,'holder')]["stop_reason"]="JOB_BUDGET"
                 raise
             except Exception as exc:self.tx_errors.append({"signature":sig,"phase":"holder","error":type(exc).__name__});continue
             if not tx:
@@ -1317,6 +1388,7 @@ class WalletClusterAnalyzer:
                         "program_ids":(c.get("evidence") or {}).get("program_ids") or [],
                     }
                     first=self._earlier_buy(first,found)
+                    if self.exhaust_history:self._holder_firsts[identity]=first
             self._classified_holder_transactions[cache_key]=found
             context={"slot":tx["slot"]} if "slot" in tx else {}
             transaction=tx.get("transaction")
@@ -1333,7 +1405,7 @@ class WalletClusterAnalyzer:
             if not sig:continue
             try:tx=self.rpc.call("getTransaction",[sig,{"commitment":"finalized","encoding":"jsonParsed","maxSupportedTransactionVersion":1}],ttl=3650*86400)
             except RPCJobBudgetExceeded:
-                self.history_coverage[("funding",holder.owner,first["signature"])]["stop_reason"]="JOB_BUDGET"
+                self.history_coverage[self._history_window_key(holder,holder.owner,first['signature'],'funding')]["stop_reason"]="JOB_BUDGET"
                 raise
             except Exception as exc:
                 self.tx_errors.append({"signature":sig,"phase":"funding","error":type(exc).__name__})
@@ -1464,6 +1536,14 @@ class WalletClusterAnalyzer:
         from .pool_holder_roles import attach_pool_holder_roles
         pool_holder_roles=attach_pool_holder_roles(self.mint,holder_rankings,pool_vaults)
         special_address_roles=self.special_role_snapshot(holder_rankings,market)
+        if self.exhaust_history:
+            # Only a verified per-account protocol role can make personal
+            # acquisition history inapplicable. A program-owned/unknown address
+            # or a legacy registry name is never enough to skip its history.
+            self._protocol_history_exclusions=[r for r in special_address_roles.get('records',[])
+                if r.get('classification')=='CHAIN_ACCOUNT_ROLE'
+                and r.get('role') in {'LP','AMM_POOL','PROTOCOL_VAULT'}]
+            self._protocol_pool_accounts={(r.get('owner'),r.get('token_account')) for r in self._protocol_history_exclusions}
         from .special_roles import withhold_legacy_normalization
         withhold_legacy_normalization(holder_rankings,special_address_roles)
         from .special_roles import apply_sufficient_top10
@@ -1472,7 +1552,8 @@ class WalletClusterAnalyzer:
         if self.independent_rpc is not None:
             from .independent_check import collect_independent_balance_check
             ranked=[r["token_account"] for r in sorted(holder_rankings.get("accounts") or [],key=lambda r:-int(r.get("raw") or 0))] if isinstance(holder_rankings.get("accounts"),list) else []
-            try:independent_balance_check=collect_independent_balance_check(self.mint,ranked or [h.token_account for h in holders],self.rpc,self.independent_rpc)
+            try:independent_balance_check=collect_independent_balance_check(self.mint,ranked or [h.token_account for h in holders],self.rpc,self.independent_rpc,full_accounts=self.exhaust_history,
+                progress=lambda completed,total:self._progress('INDEPENDENT_BALANCE_BATCH',completed=completed,total=total))
             except RPCJobBudgetExceeded:raise
             except Exception as exc:independent_balance_check={"version":1,"status":"UNAVAILABLE","reason":type(exc).__name__}
         self._prepare_owner_account_history(holders,holder_rankings)
@@ -1488,7 +1569,7 @@ class WalletClusterAnalyzer:
         for h in holders:
             if h.owner in deep_seen:continue
             deep_seen.add(h.owner);deep.append(h)
-            if len(deep)>=self.deep_holders:break
+            if not self.exhaust_history and len(deep)>=self.deep_holders:break
         top_owners=set(account_to_owner.values())
 
         for idx,h in enumerate(deep,1):
@@ -1541,7 +1622,7 @@ class WalletClusterAnalyzer:
             self._derive_pair_edges()
         self._progress("FINALIZING",deep_holders_scanned=len(deep),adaptive_deepened=len(self.adaptive_deepened_owners))
 
-        scanned_owners=deep_seen | set(self.adaptive_deepened_owners)
+        scanned_owners=(deep_seen | set(self.adaptive_deepened_owners))-self._protocol_history_owners
         owners=sorted({h.owner for h in holders});balances=defaultdict(int)
         for h in holders:balances[h.owner]+=h.raw
         relation=UnionFind(owners);control=UnionFind(owners);execution=UnionFind(owners)
@@ -1582,6 +1663,9 @@ class WalletClusterAnalyzer:
                            for w in self.history_attempts):return False
             return True
         def acquisition(owner):
+            if owner in self._protocol_history_owners:
+                return {'status':'NOT_APPLICABLE_PROTOCOL_POOL','type':'PROTOCOL_POOL',
+                        'history_scope':'VERIFIED_PROTOCOL_VAULTS_NOT_PERSONAL_ACQUISITION'}
             row=firsts.get(owner)
             complete=owner in scanned_owners and account_history_complete(owner)
             if not row or not isinstance(row,dict):
@@ -1685,7 +1769,7 @@ class WalletClusterAnalyzer:
                              and len(holders)==getattr(self,"_top_accounts_requested",len(holders)))
         if pool_holder_roles.get("status")=="SAME_SLOT_CONTRADICTION":snapshot_consistent=False
         strict_metrics_available=normalization_complete and holder_rank_complete and snapshot_consistent
-        owners_not_scanned=sorted(set(owners)-scanned_owners)
+        owners_not_scanned=sorted(set(owners)-scanned_owners-self._protocol_history_owners)
         owner_account_history=self._owner_account_history_coverage()
         coverage_gaps=[]
         if self._top_account_context_errors:coverage_gaps.append("TOP_ACCOUNT_CONTEXT_CONFLICT")
@@ -1829,16 +1913,18 @@ class WalletClusterAnalyzer:
             "trade_evidence":self.trades,"transaction_errors":self.tx_errors,
             "historical_account_evidence":self.historical_accounts,
             "coverage":{
-                "scope":"BOUNDED_TOP20_OWNERS_CURRENT_ACCOUNTS" if self.enumerate_holder_ranks else "BOUNDED_TOP20_ACCOUNTS",
+                "scope":"SOURCE_END_TOP20_OWNERS_OBSERVED_ACCOUNTS" if self.exhaust_history else "BOUNDED_TOP20_OWNERS_CURRENT_ACCOUNTS" if self.enumerate_holder_ranks else "BOUNDED_TOP20_ACCOUNTS",
                 "history_windows":list(self.history_attempts),
+                "history_scan_mode":"SOURCE_END" if self.exhaust_history else "BOUNDED",
+                "protocol_history_exclusions":getattr(self,'_protocol_history_exclusions',[]),
                 "owner_account_history":owner_account_history,
                 "historical_account_history":self.historical_account_scans,
                 "historical_account_evidence_errors":dict(self._historical_errors),
                 "historical_account_retention":self._historical_retention_coverage(),
                 "holder_classification_gaps":self._classification_gap_coverage(),
-                "historical_account_observation_limit":MAX_OBSERVATIONS,
-                "historical_account_frontier_limit":1,
-                "owner_history_account_limit":4,"report_extra_history_account_limit":12,
+                "historical_account_observation_limit":None if self.exhaust_history else MAX_OBSERVATIONS,
+                "historical_account_frontier_limit":None if self.exhaust_history else 1,
+                "owner_history_account_limit":None if self.exhaust_history else 4,"report_extra_history_account_limit":None if self.exhaust_history else 12,
                 "additional_history_accounts_selected":len(self._extra_history_accounts),
                 "holder_history_pages":sum(w["pages"] for w in self.history_attempts if w["phase"]=="holder"),
                 "funding_history_pages":sum(w["pages"] for w in self.history_attempts if w["phase"]=="funding"),
@@ -1854,7 +1940,7 @@ class WalletClusterAnalyzer:
                 "adaptive_history_per_holder":self.adaptive_history_per_holder,
                 "adaptive_funding_lookback":self.adaptive_funding_lookback,
                 "adaptive_deepened_owners":list(self.adaptive_deepened_owners),
-                "scan_mode":"ADAPTIVE" if self.adaptive_history_per_holder or self.adaptive_funding_lookback else "FIXED",
+                "scan_mode":"SOURCE_END" if self.exhaust_history else "ADAPTIVE" if self.adaptive_history_per_holder or self.adaptive_funding_lookback else "FIXED",
                 "material_pct":str(self.material_pct),"special_normalization_complete":normalization_complete,
                 "rpc_calls":getattr(self.rpc,"calls",0),"rpc_cache_hits":getattr(self.rpc,"cache_hits",0),
                 "rpc_endpoint_calls":endpoint_calls,"rpc_endpoint_failures":endpoint_failures,
@@ -1865,7 +1951,7 @@ class WalletClusterAnalyzer:
                 "Program-owned holder accounts remain unresolved unless explicitly labelled.",
                 "Bounded history can miss older funding, consolidation, and cross-token coordination.",
                 "A provider empty page ends only that address/cursor window; it does not prove complete wallet history or the true first acquisition/funding.",
-                "Owner scan status means at least one sampled token account was queried; selected current accounts are individually recorded, with at most four per Owner and twelve additional accounts per report. Historical account association is transaction-bound; closure requires a successful Token Program close plus zero end lamports. Historical reads share account limits and use one fixed frontier. Lifetime and later account reuse remain unverified.",
+                ("Selected current accounts and recursively discovered transaction-proven historical accounts are read until the provider window ends or a source failure occurs, without a fixed page/account quota. Verified protocol vaults are separately marked inapplicable to personal acquisition. Historical association remains transaction-bound; lifetime ownership and later account reuse remain unverified." if self.exhaust_history else "Owner scan status means at least one sampled token account was queried; selected current accounts are individually recorded, with at most four per Owner and twelve additional accounts per report. Historical account association is transaction-bound; closure requires a successful Token Program close plus zero end lamports. Historical reads share account limits and use one fixed frontier. Lifetime and later account reuse remain unverified."),
                 "Known exclusion Top10 values aggregate owners within resolved Top20 accounts only; they are not exact global eligible-owner Top10 without complete holder ranks.",
                 "PROBABLE_EXECUTION_CLUSTER never implies common beneficial ownership.",
                 "Narrative ownership, social endorsement and creator identity are not automatically inferred from token name or social links.",

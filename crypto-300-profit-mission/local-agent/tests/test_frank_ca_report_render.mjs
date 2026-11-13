@@ -67,6 +67,40 @@ function harness(options = {}) {
   return {context,element,requests,store,setResponse(fn){responseFor=fn;}};
 }
 
+test('all-account second-provider batches keep source-universe and time limits explicit',()=>{
+  const h=harness();
+  const output=h.context.renderIndependentCheck({independent_balance_check:{
+    version:1,status:'NEAR_TIME_ALL_MATCH',secondary_provider:'PUBLICNODE',
+    scope:'ALL_PROVIDED_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_INDEPENDENT_ENUMERATION',
+    accounts_compared:301,matches:301,differences:0,missing:0,rows:[],
+  }});
+  assert.match(output,/主来源枚举的全部账户/);
+  assert.match(output,/逐批实际 slot/);
+  assert.match(output,/未独立发现其他账户/);
+  assert.match(output,/不能证明原子同快照一致/);
+  assert.doesNotMatch(output,/最大代币账户/);
+});
+
+test('partial second-provider result preserves completed work without endorsing unread accounts',()=>{
+  const h=harness();
+  const output=h.context.renderIndependentCheck({independent_balance_check:{
+    version:1,status:'PARTIAL',accounts_compared:100,
+    reason:'https://private.invalid/SECRET',last_source_error:'HTTP_403',
+  }});
+  assert.match(output,/已完成 100 项/);
+  assert.match(output,/未核对账户不视为一致/);
+  assert.match(output,/HTTP_403/);
+  assert.doesNotMatch(output,/SECRET|private.invalid/);
+});
+
+test('source-end history report does not promote collection to full wallet certainty',()=>{
+  const h=harness();
+  h.context.renderClusterCompleteness({...fixture,coverage:{history_scan_mode:'SOURCE_END'}});
+  assert.match(h.element('cluster-completeness').innerHTML,/不设固定分页数或账户数配额/);
+  assert.match(h.element('cluster-completeness').innerHTML,/无法发现的历史账户/);
+  assert.doesNotMatch(h.element('cluster-completeness').innerHTML,/分析完整|尽调通过/);
+});
+
 test('unfinished persisted job restore uses GET and offers a separate source continuation',async()=>{
   const h=harness({store:new Map([['session:mission-meme-cluster-pending-v1',JSON.stringify({id:jobId,mint})]]),
     responseFor:async url=>url.startsWith('/api/cluster-analysis?')

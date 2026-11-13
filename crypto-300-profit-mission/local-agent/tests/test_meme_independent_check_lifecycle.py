@@ -88,7 +88,7 @@ def test_slow_primary_work_does_not_preexpire_secondary_first_wire(monkeypatch):
     assert result['secondary_wire_attempts'] == 1
     assert reads == ['primary', 'secondary']
     assert len(created) == 1 and created[0]._budget_started_at == 125
-    assert created[0].max_wire_attempts == 4 and created[0].max_elapsed_seconds == 60
+    assert created[0].max_wire_attempts is None and created[0].max_elapsed_seconds is None
     assert created[0].calls == 1 and primary.calls == 1
     assert primary._budget_started_at == primary_started
 

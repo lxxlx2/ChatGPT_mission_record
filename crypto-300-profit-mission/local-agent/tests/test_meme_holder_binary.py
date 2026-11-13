@@ -163,7 +163,7 @@ def test_standard_flag_and_actual_analyzer_attach_check_and_downgrade_same_slot_
     from mission_agent.mission_control.server import CLUSTER_PRESETS,CLUSTER_RPC_JOB_BUDGETS
     assert CLUSTER_PRESETS['standard']['audit_holder_binary'] is True
     assert not CLUSTER_PRESETS['quick'].get('audit_holder_binary')
-    assert CLUSTER_RPC_JOB_BUDGETS['standard']['max_wire_attempts']==1200
+    assert CLUSTER_RPC_JOB_BUDGETS['standard']['max_wire_attempts'] is None
     r=source();r['status']='COMPLETE_SNAPSHOT';r['supply_slot']=100
     rpc=RPC(r);rpc.slot=100;change_data(rpc.records[r['accounts'][0]['token_account']],lambda b:b.__setitem__(slice(64,72),(39).to_bytes(8,'little')))
     monkeypatch.setattr('mission_agent.meme.cluster.collect_mint_holder_ranks',lambda *a,**kw:copy.deepcopy(r))
