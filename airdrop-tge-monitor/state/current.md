@@ -1,12 +1,12 @@
 # TGE Monitor Current State
 
-Updated: 2026-11-13 23:00:00 Asia/Bangkok
+Updated: 2026-11-14 00:01:48 Asia/Bangkok
 
-- authoritative_final: airdrop-tge-monitor/runs/2026-11-13/230000-final.md
-- final_commit_sha: e1e915a6398ecbae956e595ab6f3a17fa0b2d27a
+- authoritative_final: airdrop-tge-monitor/runs/2026-11-14/000148-final.md
+- final_commit_sha: be6f9131d4e39678509575d85a81b862bb12b56d
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 3
-- executed_shard: 3
+- scheduled_shard: 0
+- executed_shard: 0
 - candidate_count: 1
 - action_gate_pass: 0
 - triggered_events: 0
@@ -17,7 +17,7 @@ Updated: 2026-11-13 23:00:00 Asia/Bangkok
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (historical source AUTOMATION_RUNTIME.md; PARTIAL_ONLY does not advance)
 
 ## Last meaningful attempts
-- shard0: 2026-11-13 16:02:04 Asia/Bangkok; runs/2026-11-13/160204-final.md (PARTIAL_ONLY)
+- shard0: 2026-11-14 00:01:48 Asia/Bangkok; runs/2026-11-14/000148-final.md (PARTIAL_ONLY)
 - shard1: 2026-11-13 21:04:19 Asia/Bangkok; runs/2026-11-13/210419-final.md (PARTIAL_ONLY)
 - shard2: 2026-11-13 22:00:59 Asia/Bangkok; runs/2026-11-13/220059-final.md (PARTIAL_ONLY)
 - shard3: 2026-11-13 23:00:00 Asia/Bangkok; runs/2026-11-13/230000-final.md (PARTIAL_ONLY)
@@ -32,5 +32,5 @@ Updated: 2026-11-13 23:00:00 Asia/Bangkok
 - Shard3 Cambria token docs and Crusoe issuer newsroom directly readable Nov13; account rights and other shard3 issuers PARTIAL_ONLY.
 - Excluded: Abstract, Grass, Backpack, Loopscale, fully refunded humans&.
 - Space/Spacecoin and Theo/Autheo remain distinct.
-- next scheduled shard: 0
+- next scheduled shard: 1
 - code_execution: CODE_NOT_EXECUTED / MANUAL_EQUIVALENT_ONLY.
