@@ -21,7 +21,7 @@ import time
 import urllib.parse
 import urllib.request
 
-OLD='aad880991565d148aa6cc2f74fa0de1f5e6c27c7'  # Runtime-byte reference; legacy .git is not trusted.
+OLD='e38d18421b46888a7cf36b4d004f08bc99d4f926'  # First corrected local installation; preserve its byte manifest.
 LABEL='com.jerson.frank-meme.dashboard'
 LOOP='com.jerson.frank-meme.loop'
 AUTH='USER_20261113_LOCAL_DASHBOARD_FIXES_AND_CLEAN_INSTALL'
@@ -165,7 +165,7 @@ def main():
         if p['old_dashboard_loaded']:no_ca_worker(p['old_dashboard_pid'])
         else:verify_absent()
         time.sleep(.3)
-    preflight={'status':'PASS','previous_runtime_reference_sha':OLD,'previous_git_identity_trusted':False,'new_sha':NEW,'reports_preserved':len(p['reports']),
+    preflight={'status':'PASS','previous_runtime_reference_sha':OLD,'previous_git_identity_trusted':p.get('old_git_identity_trusted',False),'new_sha':NEW,'reports_preserved':len(p['reports']),
                'no_open_ca_worker_cache_twice':True,'dashboard_initially_loaded':p['old_dashboard_loaded'],'scanner_unchanged':True,'loop_unloaded':True,'real_rpc_or_ca_post':0}
     write(backup/'switch-preflight.json',preflight)
     if not args.apply_authorized_dashboard_only:print(json.dumps(preflight));return
@@ -215,7 +215,7 @@ def main():
             except (AssertionError,OSError,ValueError):
                 if time.monotonic()>deadline:raise RuntimeError('NEW_DASHBOARD_VERIFY_FAILED')
                 time.sleep(.3)
-        result.update(status='PASS',source_sha=NEW,previous_runtime_reference_sha=OLD,previous_git_identity_trusted=False,executor_sha256=sha(__file__),
+        result.update(status='PASS',source_sha=NEW,previous_runtime_reference_sha=OLD,previous_git_identity_trusted=p.get('old_git_identity_trusted',False),executor_sha256=sha(__file__),
                       preserved_report_files=len(p['reports']),narrative_note_sha256=side['sha256'],
                       narrative_note_bound_to_original_report=True,narrative_note_unchanged=True,protected_file_hashes_unchanged=True,
                       loop_remains_unloaded=True,real_rpc_or_ca_post=0,notification_or_trade=0,
