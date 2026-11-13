@@ -21,7 +21,7 @@ import time
 import urllib.parse
 import urllib.request
 
-OLD='81bb338d967d09a9598894cb47976f4f1f994296'  # First corrected local installation; preserve its byte manifest.
+OLD='c90faab17eba1a82074c2579d6bf20e92bdd61f3'  # First corrected local installation; preserve its byte manifest.
 LABEL='com.jerson.frank-meme.dashboard'
 LOOP='com.jerson.frank-meme.loop'
 AUTH='USER_20261113_FREE_MAINLINE_LOCAL_DASHBOARD'

@@ -82,15 +82,21 @@ def main():
     assert Path(prior['protected_files']['rpc_configuration']).stat().st_size > 0
     label = 'gui/' + str(os.getuid()) + '/com.jerson.frank-meme.dashboard'
     loaded = run(['launchctl', 'print', label])
-    assert loaded.returncode == 0
-    pid_match = re.search(r'\bpid = (\d+)', loaded.stdout)
-    assert pid_match
-    old_pid = int(pid_match.group(1))
+    dashboard_loaded = loaded.returncode == 0
+    pid_match = re.search(r'\bpid = (\d+)', loaded.stdout) if dashboard_loaded else None
+    assert not dashboard_loaded or pid_match
+    old_pid = int(pid_match.group(1)) if pid_match else None
     assert run(['launchctl', 'print', 'gui/' + str(os.getuid()) + '/com.jerson.frank-meme.loop']).returncode != 0
-    cwd = run(['/usr/sbin/lsof', '-a', '-p', str(old_pid), '-d', 'cwd', '-Fn'])
-    assert cwd.returncode == 0 and any(line == 'n' + str(old_agent) for line in cwd.stdout.splitlines())
-    opened = run(['/usr/sbin/lsof', '-a', '-p', str(old_pid), '-Fn'])
-    assert opened.returncode == 0 and 'wallet-cluster-rpc-cache.sqlite' not in opened.stdout
+    if dashboard_loaded:
+        cwd = run(['/usr/sbin/lsof', '-a', '-p', str(old_pid), '-d', 'cwd', '-Fn'])
+        assert cwd.returncode == 0 and any(line == 'n' + str(old_agent) for line in cwd.stdout.splitlines())
+        opened = run(['/usr/sbin/lsof', '-a', '-p', str(old_pid), '-Fn'])
+        assert opened.returncode == 0 and 'wallet-cluster-rpc-cache.sqlite' not in opened.stdout
+    else:
+        listening = run(['/usr/sbin/lsof','-nP','-iTCP:8766','-sTCP:LISTEN'])
+        assert listening.returncode == 1 and not listening.stdout.strip()
+        opened = run(['/usr/sbin/lsof','-t','--',str(control/'wallet-cluster-rpc-cache.sqlite')])
+        assert opened.returncode == 1 and not opened.stdout.strip()
     old_files = manifest(old_agent)
     reports = manifest(control / 'cluster-reports')
     protected = {name: str(Path(path)) for name, path in prior['protected_files'].items()}
@@ -156,16 +162,16 @@ def main():
     side['staged'] = str(staged)
     # The no-listener helper will verify the fresh old backup and candidate;
     # the executor refuses apply before the combined PASS receipt exists.
-    plan = {**prior, 'version': 2, 'old_sha': '81bb338d967d09a9598894cb47976f4f1f994296',
+    plan = {**prior, 'version': 2, 'old_sha': 'c90faab17eba1a82074c2579d6bf20e92bdd61f3',
             'candidate_sha': candidate_sha, 'authorization': 'USER_20261113_FREE_MAINLINE_LOCAL_DASHBOARD',
             'backup': str(backup), 'old_agent': str(old_agent), 'candidate_agent': str(candidate),
             'candidate_repository': str(candidate_repo), 'candidate_tracked_agent_manifest': tracked,
             'old_agent_manifest': old_files, 'reports': reports,
-            'old_git_identity_trusted': git(old_agent,'rev-parse','HEAD')=='81bb338d967d09a9598894cb47976f4f1f994296' and not git(old_agent,'status','--porcelain','--untracked-files=all'),
+            'old_git_identity_trusted': git(old_agent,'rev-parse','HEAD')=='c90faab17eba1a82074c2579d6bf20e92bdd61f3' and not git(old_agent,'status','--porcelain','--untracked-files=all'),
             'candidate_runtime_manifest': manifest(candidate / 'mission_agent'),
             'runner_sha_before': sha(runner), 'runner_mode_before': runner.stat().st_mode & 0o777,
             'protected_files': protected, 'protected_hashes': hashes,
-            'old_dashboard_pid': old_pid, 'old_dashboard_loaded': True,
+            'old_dashboard_pid': old_pid, 'old_dashboard_loaded': dashboard_loaded,
             'control_copy_old': str(backup / 'control-copy'),
             'control_copy_candidate': str(backup / 'control-copy-candidate'), 'narrative_note': side,
             'preflight_helper_sha256': sha(prior['preflight_helper']), 'old_backup_verified': True}
