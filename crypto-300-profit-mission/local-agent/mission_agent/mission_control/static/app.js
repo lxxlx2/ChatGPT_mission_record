@@ -1673,7 +1673,11 @@ function renderLaunchIdentity(report) {
 function renderIndependentCheck(report) {
   const c=report.independent_balance_check;
   if (!c || c.version!==1 || c.status==='NOT_REQUESTED') return '';
-  if (c.status==='UNAVAILABLE') return '<div class="trust-box"><strong>第二提供方余额复核</strong><p>本轮未完成（'+esc(c.reason||'来源不可用')+'）。</p></div>';
+  if (c.status==='UNAVAILABLE') {
+    const safeCode=v=>typeof v==='string' && /^(?:HTTP_[0-9]{3}|RPC_-?[0-9]+|RPC_JOB_(?:TIME|WIRE)_BUDGET_EXHAUSTED|RPC_RATE_LIMITED|RPC_ENVELOPE_INVALID|RPC_POOL_RESPONSE_LIMIT|RPC_HOLDER_RANK_RESPONSE_LIMIT|RPC_ERROR|TimeoutError|URLError|OSError|ValueError|JSONDecodeError|RPCError)$/.test(v);
+    const last=safeCode(c.last_source_error)?'最后来源错误：'+c.last_source_error+'。':'';
+    return '<div class="trust-box"><strong>第二提供方余额复核</strong><p>本轮未完成（'+esc(safeCode(c.reason)?c.reason:'来源不可用')+'）。'+esc(last)+'</p></div>';
+  }
   const label={SAME_SLOT_ALL_MATCH:'同一 slot 全部一致',NEAR_TIME_ALL_MATCH:'相邻时间读取全部一致',SAME_SLOT_MISMATCH:'同一 slot 出现不一致',NEAR_TIME_DIFFERENCES:'相邻时间读取存在差异（可能是期间成交）'}[c.status]||c.status;
   const diffs=(c.rows||[]).filter(r=>r.status!=='MATCH').slice(0,8).map(r=>'<li><code>'+esc(short(r.address,6,5))+'</code> 主 '+esc(r.primary_raw??'缺')+' / 第二 '+esc(r.secondary_raw??'缺')+'</li>').join('');
   return '<div class="trust-box"><strong>第二提供方余额复核（'+esc(c.secondary_provider)+'）</strong><p>'+esc(label)+'：比对 '+esc(c.accounts_compared)+' 项（Mint 供给 + 最大代币账户），一致 '+esc(c.matches)+'，差异 '+esc(c.differences)+'，缺失 '+esc(c.missing)+'；slot '+esc(c.primary_slot)+' / '+esc(c.secondary_slot)+'。</p><p>只复核余额数值，不是独立的全量持有人枚举。</p>'+(diffs?'<ul>'+diffs+'</ul>':'')+'</div>';
@@ -1835,6 +1839,25 @@ function renderMarketComparison(market,mint) {
   const gap=Number(c.retrieval_gap_seconds);
   return '<div class="trust-box cluster-market-comparison"><strong>同池索引来源对照</strong><p>DexScreener / GeckoTerminal。读取时间不等于行情观测时间，尚未核对链上池子储备或独立持有人来源；差异不代表安全或可买。</p>'+
     (valid ? '<p>同池 '+esc(c.pool_address)+'；DexScreener 读取 '+esc(timeText(market.observed_at))+' / GeckoTerminal 读取 '+esc(timeText(independent.observed_at))+'；读取间隔 '+esc(c.retrieval_gap_seconds!=null&&Number.isFinite(gap)?gap+' 秒':'未记录')+'。市值/FDV、主池价值和多池合计不混用。</p><div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>口径</th><th>DexScreener</th><th>GeckoTerminal</th><th>后者减前者</th><th>相对前者</th></tr></thead><tbody>'+rows+'</tbody></table></div>' : '<p>'+esc(reason)+'</p>')+'</div>';
+}
+
+function renderHolderClassificationGaps(report) {
+  const c=report.coverage?.holder_classification_gaps;
+  if (!c || c.version!==1) return '';
+  const keys=['observation_records','unique_owner_signatures','unique_signatures','affected_owners','unscoped_records'];
+  const reasons=c.reason_counts;
+  const valid=keys.every(k=>Number.isSafeInteger(c[k]) && c[k]>=0) && c.observation_records>=c.unique_owner_signatures &&
+    c.unique_owner_signatures>=c.unique_signatures && c.unique_owner_signatures>=c.affected_owners && c.unscoped_records===0 &&
+    reasons && typeof reasons==='object' && !Array.isArray(reasons) &&
+    Object.values(reasons).every(n=>Number.isSafeInteger(n) && n>=0) &&
+    Object.values(reasons).reduce((a,b)=>a+b,0)===c.unique_owner_signatures;
+  const title='<div class="trust-box"><strong>已读交易分类缺口</strong>';
+  if (!valid) return title+'<p>分类缺口统计尚未核实，保留各账户的未知状态。</p></div>';
+  if (!c.observation_records) return '';
+  const labels={WALLET_NOT_SIGNER_AUTHORITY_UNPROVEN:'签名授权尚未证明',AMBIGUOUS_USER_EXCHANGE_ASSETS:'多资产交换含义未明确',
+    WALLET_NOT_REFERENCED:'Owner 未出现在消息键中',INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE:'市场交换证据不足'};
+  const rows=Object.entries(reasons).map(([reason,n])=>'<li>'+esc(labels[reason] || '其他未分类原因')+'：'+esc(n)+'</li>').join('');
+  return title+'<p>'+esc(c.observation_records)+' 条观察记录，去重为 '+esc(c.unique_owner_signatures)+' 个 Owner／签名组合、'+esc(c.unique_signatures)+' 个不同签名，涉及 '+esc(c.affected_owners)+' 个 Owner。</p><ul>'+rows+'</ul><p>分类不明不等于 RPC 失败；每个 Owner 独立保留缺口，未升级为完整首买。</p></div>';
 }
 
 function renderHistoricalAccountEvidence(report) {
@@ -2316,7 +2339,7 @@ function renderClusterReport(report) {
   const gapMessages = Object.keys(gapLabels).filter(key => gaps.includes(key)).map(key => gapLabels[key]);
   if (gapMessages.length) warnings.push('尚缺证据：' + gapMessages.join('；') + '。');
   if (unresolvedEdges.length) warnings.push('存在 ' + unresolvedEdges.length + ' 条未确认共同 funder/signer/归集关系，未升级为共同控制。');
-  if (errors.length) warnings.push('有 ' + errors.length + ' 笔历史交易读取/解析失败，覆盖率不是 100%。');
+  if (errors.length) warnings.push('历史读取／分类缺口共 ' + errors.length + ' 条观察记录，可能含重复；分类不明不等于 RPC 失败，覆盖率不是 100%。');
   if (rpcFailures) warnings.push('免费 RPC 共出现 ' + rpcFailures + ' 次失败/限流，系统已尝试自动降速或切换备用节点。');
   if (market.status!=='OK') warnings.push('市场参考数据不可用：' + (market.reason || 'UNKNOWN') + '。链上 holder 结果仍可独立成立。');
 
@@ -2329,6 +2352,7 @@ function renderClusterReport(report) {
       '<div><span>初查每页目标币历史数</span><strong>' + esc(coverage.history_per_holder ?? 0) + '</strong></div>' +
       '<div><span>初查每页资金历史数</span><strong>' + esc(coverage.funding_lookback ?? 0) + '</strong></div>' +
     '</div>' +
+    renderHolderClassificationGaps(report) +
     renderHistoricalAccountEvidence(report) +
     renderOwnerAccountHistory(coverage) +
     renderClusterHistoryWindows(coverage) +

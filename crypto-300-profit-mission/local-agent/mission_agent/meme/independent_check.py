@@ -25,6 +25,15 @@ def _wire_attempts(rpc):
     return count if type(count) is int and count>=0 else None
 
 
+def _last_source_error(rpc):
+    # Optional transport evidence: the budget stop remains the report reason.
+    # Validate again because injected/legacy clients need not share our setter.
+    code=getattr(rpc,'last_wire_error_code',None)
+    if not isinstance(code,str) or len(code)>64:return None
+    if re.fullmatch(r'(?:HTTP_[0-9]{3}|RPC_-?[0-9]+|RPC_RATE_LIMITED|RPC_ENVELOPE_INVALID|RPC_POOL_RESPONSE_LIMIT|RPC_HOLDER_RANK_RESPONSE_LIMIT|RPC_ERROR)',code):return code
+    return code if code in {'TimeoutError','URLError','OSError','ValueError','JSONDecodeError'} else None
+
+
 def _read(rpc,addresses):
     r=rpc.call('getMultipleAccounts',[addresses,{'encoding':'jsonParsed','commitment':'finalized'}])
     slot=((r or {}).get('context') or {}).get('slot') if isinstance(r,dict) else None
@@ -40,7 +49,7 @@ def _read(rpc,addresses):
 
 
 def collect_independent_balance_check(mint,accounts,primary,secondary,*,label='PUBLICNODE',clock=time.time):
-    base={'version':1,'status':'UNAVAILABLE','secondary_provider':label,'scope':'LARGEST_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_FULL_ENUMERATION','secondary_wire_attempts':0}
+    base={'version':1,'status':'UNAVAILABLE','secondary_provider':label,'scope':'LARGEST_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_FULL_ENUMERATION','secondary_wire_attempts':0,'last_source_error':None}
     if secondary is None:return {**base,'status':'NOT_REQUESTED','reason':'NO_SECONDARY_PROVIDER'}
     addresses=[mint]+[a for a in dict.fromkeys(accounts) if valid_pubkey(a) and a!=mint][:MAX_ACCOUNTS]
     try:
@@ -53,7 +62,7 @@ def collect_independent_balance_check(mint,accounts,primary,secondary,*,label='P
         if rpc is None:return {**base,'reason':'SECONDARY_PROVIDER_UNAVAILABLE'}
         s_slot,s=_read(rpc,addresses);s_at=clock()
     except CheckpointError:raise
-    except Exception as exc:return {**base,'reason':_safe_reason(exc),'secondary_wire_attempts':_wire_attempts(rpc)}
+    except Exception as exc:return {**base,'reason':_safe_reason(exc),'secondary_wire_attempts':_wire_attempts(rpc),'last_source_error':_last_source_error(rpc)}
     base['secondary_wire_attempts']=_wire_attempts(rpc)
     rows=[];matches=0;differs=0;missing=0
     for a in addresses:

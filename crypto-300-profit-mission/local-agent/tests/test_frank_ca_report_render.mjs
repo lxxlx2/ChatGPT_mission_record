@@ -1531,3 +1531,34 @@ test('Pump complete flag does not claim a verified migration',()=>{
   assert.match(html,/迁移状态尚未核实/);
   assert.doesNotMatch(html,/已完成并迁移/);
 });
+
+test('classification gaps show deduplicated contexts without calling observations RPC failures',()=>{
+  const h=harness(),r=structuredClone(fixture);
+  r.transaction_errors=[{error:'CLASSIFICATION_UNRESOLVED'}];
+  r.coverage.holder_classification_gaps={version:1,observation_records:298,unique_owner_signatures:271,
+    unique_signatures:265,affected_owners:5,unscoped_records:0,reason_counts:{WALLET_NOT_SIGNER_AUTHORITY_UNPROVEN:223,AMBIGUOUS_USER_EXCHANGE_ASSETS:29,WALLET_NOT_REFERENCED:15,INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE:4}};
+  h.context.renderClusterReport(r);
+  const html=h.element('cluster-coverage').innerHTML;
+  assert.match(html,/298 条观察记录/);assert.match(html,/271 个 Owner／签名组合/);assert.match(html,/265 个不同签名/);
+  assert.match(html,/5 个 Owner/);assert.match(html,/Owner 未出现在消息键中/);
+  assert.doesNotMatch(html,/笔历史交易读取\/解析失败/);
+});
+
+test('invalid classification coverage cannot fabricate complete or zero-gap counts',()=>{
+  const h=harness();
+  const html=h.context.renderHolderClassificationGaps({coverage:{holder_classification_gaps:{version:1,
+    observation_records:2,unique_owner_signatures:3,unique_signatures:1,affected_owners:1,unscoped_records:0,
+    reason_counts:{'https://private.invalid/SECRET':3}}}});
+  assert.match(html,/统计尚未核实/);assert.doesNotMatch(html,/SECRET|3 个/);
+  assert.equal(h.context.renderHolderClassificationGaps(fixture),'');
+});
+
+test('independent failure separates the stopping budget from a safe last source code',()=>{
+  const h=harness();
+  let html=h.context.renderIndependentCheck({independent_balance_check:{version:1,status:'UNAVAILABLE',
+    reason:'RPC_JOB_WIRE_BUDGET_EXHAUSTED',last_source_error:'HTTP_403'}});
+  assert.match(html,/RPC_JOB_WIRE_BUDGET_EXHAUSTED/);assert.match(html,/最后来源错误：HTTP_403/);
+  html=h.context.renderIndependentCheck({independent_balance_check:{version:1,status:'UNAVAILABLE',
+    reason:'RPC_JOB_WIRE_BUDGET_EXHAUSTED',last_source_error:'https://private.invalid/SECRET'}});
+  assert.doesNotMatch(html,/SECRET/);
+});

@@ -15,13 +15,13 @@ import sqlite3
 import time
 import urllib.error
 import urllib.request
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 from ..frank.parser import DEX_PROGRAMS, INFRA_PROGRAMS
-from ..signals.classifier import classify
+from ..signals.classifier import classify, CHAIN_METADATA_REASONS
 from ..market.sol_usd import USDC, WSOL
 from .market import DexScreenerMarketClient
 from .market_parity import attach_market_comparison
@@ -309,6 +309,7 @@ class SolanaReadOnlyRPC:
         self._budget_started_at=self._monotonic()
         self._budget_terminal_reason=None
         self._last_wire_succeeded=None
+        self.last_wire_error_code=None
         self.endpoint_calls=defaultdict(int)
         self.endpoint_failures=defaultdict(int)
         self._last_by_endpoint=defaultdict(float)
@@ -352,6 +353,15 @@ class SolanaReadOnlyRPC:
         code=error.get("code")
         message=str(error.get("message") or "").lower()
         return code in {-32005,-32429,429} or "rate limit" in message or "too many request" in message
+
+    @staticmethod
+    def _safe_wire_error_code(error):
+        # Keep only fixed transport categories, never response text or URLs.
+        code=str(error)
+        if re.fullmatch(r'(?:HTTP_[0-9]{3}|RPC_-?[0-9]+|RPC_RATE_LIMITED|RPC_ENVELOPE_INVALID|RPC_POOL_RESPONSE_LIMIT|RPC_HOLDER_RANK_RESPONSE_LIMIT)',code):return code
+        name=type(error).__name__
+        if name=='RPCError':return 'RPC_ERROR'
+        return name if name in {'URLError','TimeoutError','OSError','ValueError','JSONDecodeError'} else 'SOURCE_UNAVAILABLE'
 
     def _stop_job_budget(self, reason):
         self._budget_terminal_reason=reason
@@ -416,6 +426,7 @@ class SolanaReadOnlyRPC:
                 self._last_by_endpoint[endpoint]=self._monotonic()
                 self.calls+=1;self.endpoint_calls[endpoint]+=1
                 self._last_wire_succeeded=False
+                self.last_wire_error_code=None
                 with self.open_url(req,timeout=timeout) as response:
                     if method=="getProgramAccounts":
                         from .pool_vaults import MAX_RPC_BYTES
@@ -439,10 +450,15 @@ class SolanaReadOnlyRPC:
                             self._monotonic()+min(30.0,1.5*(2**min(attempt,4))),
                         )
                         last_error=RPCError("RPC_RATE_LIMITED")
+                        self.last_wire_error_code="RPC_RATE_LIMITED"
                         self._check_job_budget()
                         continue
-                    raise RPCError("RPC_"+str(error.get("code","ERROR")))
-                if "result" not in value:raise RPCError("RPC_ENVELOPE_INVALID")
+                    failure=RPCError("RPC_"+str(error.get("code","ERROR")))
+                    self.last_wire_error_code=self._safe_wire_error_code(failure)
+                    raise failure
+                if "result" not in value:
+                    self.last_wire_error_code="RPC_ENVELOPE_INVALID"
+                    raise RPCError("RPC_ENVELOPE_INVALID")
                 result=value["result"]
                 if method=="getTransaction" and result is None and len(self.endpoints)>1 and null_seen<1:
                     null_seen+=1
@@ -454,12 +470,14 @@ class SolanaReadOnlyRPC:
                 return result
             except urllib.error.HTTPError as exc:
                 last_error=RPCError("HTTP_"+str(exc.code));self.endpoint_failures[endpoint]+=1
+                self.last_wire_error_code=self._safe_wire_error_code(last_error)
                 self._check_job_budget()
                 if exc.code not in self.RETRYABLE_HTTP:raise last_error
                 retry=max(self._retry_after(exc),min(30.0,1.5*(2**min(attempt,4))))
                 self._cooldown_until[endpoint]=max(self._cooldown_until[endpoint],self._monotonic()+retry)
             except (urllib.error.URLError,TimeoutError,OSError,ValueError) as exc:
                 last_error=RPCError(type(exc).__name__);self.endpoint_failures[endpoint]+=1
+                self.last_wire_error_code=self._safe_wire_error_code(exc)
                 self._check_job_budget()
                 self._cooldown_until[endpoint]=max(
                     self._cooldown_until[endpoint],
@@ -631,6 +649,7 @@ class WalletClusterAnalyzer:
     def _scan_holder_bounded(self,holder,account_to_owner,top_owners,limit,max_pages=None):
         method=self._scan_holder
         original=self.history_per_holder;original_pages=self._history_page_limit
+        error_start=len(self.tx_errors)
         self._history_page_limit=self.history_max_pages if max_pages is None else max_pages
         try:
             if self._accepts_optional_limit(method,3):
@@ -638,7 +657,33 @@ class WalletClusterAnalyzer:
             self.history_per_holder=int(limit)
             return method(holder,account_to_owner,top_owners)
         finally:
+            for error in self.tx_errors[error_start:]:
+                if isinstance(error,dict) and str(error.get('phase','')).startswith('holder'):
+                    error['owner']=holder.owner
+                    error['token_account']=holder.token_account
             self.history_per_holder=original;self._history_page_limit=original_pages
+
+    @staticmethod
+    def _classification_gap_reason(result):
+        reason=result.get('classification_reason')
+        allowed={'INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE','WALLET_MINT_DECIMALS_CONFLICT',
+                 'AMBIGUOUS_USER_EXCHANGE_ASSETS','WALLET_NOT_SIGNER_AUTHORITY_UNPROVEN'}
+        allowed.update('INCOMPLETE_CHAIN_METADATA:'+name for name in ('IncompleteTransaction','KeyError','TypeError','ValueError','IndexError'))
+        details=result.get('classification_details')
+        chain=details.get('chain_metadata_reason') if isinstance(details,dict) else None
+        return {'classification_reason':reason if isinstance(reason,str) and reason in allowed else 'UNCLASSIFIED',
+                **({'chain_metadata_reason':chain} if isinstance(chain,str) and chain in CHAIN_METADATA_REASONS else {})}
+
+    def _classification_gap_coverage(self):
+        rows=[e for e in self.tx_errors if e.get('error')=='CLASSIFICATION_UNRESOLVED'
+              and str(e.get('phase','')).startswith('holder')]
+        unique={}
+        for e in rows:unique.setdefault((e.get('owner'),e.get('signature')),e)
+        return {'version':1,'observation_records':len(rows),'unique_owner_signatures':len(unique),
+                'unique_signatures':len({e.get('signature') for e in rows}),
+                'affected_owners':len({e['owner'] for e in rows if e.get('owner')}),
+                'unscoped_records':sum(not e.get('owner') for e in rows),
+                'reason_counts':dict(Counter(e.get('chain_metadata_reason') or e.get('classification_reason','UNCLASSIFIED') for e in unique.values()))}
 
     def _prepare_owner_account_history(self,holders,rankings):
         # Reuse the validated current-mint enumeration, including zero balances.
@@ -1254,7 +1299,7 @@ class WalletClusterAnalyzer:
                 # Reading a signature is not the same as explaining its economic
                 # effect. An incomplete/ambiguous classification cannot prove
                 # that this account has no earlier market acquisition.
-                self.tx_errors.append({"signature":sig,"phase":"holder_classify","error":"CLASSIFICATION_UNRESOLVED"})
+                self.tx_errors.append({"signature":sig,"phase":"holder_classify","error":"CLASSIFICATION_UNRESOLVED",**self._classification_gap_reason(c)})
                 continue
             trade=c.get("trade") or {}
             found=None
@@ -1520,7 +1565,7 @@ class WalletClusterAnalyzer:
             if current is None or (row.get("block_time") or 0)>(current.get("block_time") or 0):
                 funding_by_owner[row["owner"]]=row
 
-        holder_tx_errors=any(str(e.get("phase","")).startswith("holder") for e in self.tx_errors if isinstance(e,dict))
+        holder_tx_errors=[e for e in self.tx_errors if isinstance(e,dict) and str(e.get("phase","")).startswith("holder")]
         def account_history_complete(owner):
             plan=self._owner_history_selection.get(owner)
             if plan:
@@ -1528,7 +1573,9 @@ class WalletClusterAnalyzer:
                 if self._owner_account_source!="VERIFIED_CURRENT_MINT_ACCOUNTS" or len(accounts)!=plan["observed"]:return False
             else:
                 accounts=[h.token_account for h in holders if h.owner==owner]
-            if not accounts or holder_tx_errors:return False
+            # Unscoped legacy errors stay conservative. A known different
+            # Owner's missing transaction cannot invalidate this account set.
+            if not accounts or any(not e.get('owner') or e['owner']==owner for e in holder_tx_errors):return False
             for address in accounts:
                 if not any(w["phase"]=="holder" and w["address"]==address and w["initial_before"] is None
                            and w["stop_reason"]=="PROVIDER_EMPTY_PAGE" and w["signature_slots_complete"]
@@ -1788,6 +1835,7 @@ class WalletClusterAnalyzer:
                 "historical_account_history":self.historical_account_scans,
                 "historical_account_evidence_errors":dict(self._historical_errors),
                 "historical_account_retention":self._historical_retention_coverage(),
+                "holder_classification_gaps":self._classification_gap_coverage(),
                 "historical_account_observation_limit":MAX_OBSERVATIONS,
                 "historical_account_frontier_limit":1,
                 "owner_history_account_limit":4,"report_extra_history_account_limit":12,
