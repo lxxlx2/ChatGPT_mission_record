@@ -1,5 +1,24 @@
 # Mori Finance / MetaDAO curated raise — evidence-first ICO diligence (2026-11-07)
 
+## 2026-11-14 ~02:05 Bangkok: Mori Closed, finalized onchain allocation for user's 700 USDC commitment
+
+**Direct finalized Solana RPC**, MetaDAO v0.7 launch program `moontUzsdepotRGe5xsfip7vLPTJnVuafqdUWexVnPM`. This section supersedes older `Live` / `approved_amount=0` snapshots. No wallet action, claim, transfer, automation or monitoring performed.
+
+- Launch PDA `BFVqq3Br9frUabrdgczu4obJ2TGNzKnys42j2pwrmXGZ` actual **`Closed`**, `unix_timestamp_closed=1794596431` = **2026-11-13 19:00:31 UTC / Nov 14 02:00:31 Bangkok**, **21 seconds after the hard-coded funding cutoff**. Successful closing [tx](https://solscan.io/tx/R2aG3LPTRNhNdbuw5h8mH2pcfVygFkFBjPjGQ1qfpk1kkekK8LwuHeCTsPutHMTSy7ejWgAtFHib5Zs3dxcm78k), slot **469035644**.
+- **Final global gross commitments `7,700,010.170956 USDC`**, backed by `Launch.total_committed_amount` and exactly matching USDC escrow vault `9uaoJiwyJszXnP8iguE4XH4btcbz4F1BXeN4thAbhK2t`. Base vault `9ymW4Ya54jAhoRbRxW7HEUuUPanYvVfg3JcjCEPcN3JH` still held **25,800,000 MORI** in the closed snapshot.
+- Final approval global `Launch.total_approved_amount=250,000 USDC` (observed at finalized slot **469036560**, while `state=Closed`, `unix_timestamp_completed=None`, `dao=None`). This is global accepted funding, not evidence of TGE completion or payout.
+- User `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`, FundingRecord PDA `3z651WDFfQb7AzzYizSa8CdCaurP8TSHHTXugUhkWdki`: `committed_amount=700.000000 USDC`, **`approved_amount=17.650113 USDC`**, `is_tokens_claimed=false`, `is_usdc_refunded=false` at finalized slot **469036561**.
+- Onchain approval successful [tx](https://solscan.io/tx/5MbHJQS7mPDbW8wZBipsRYWmCHAoJ1tsjoK47ZnGE2BHxqmNoVrm2YhTDCGRADyvQzx9Fu6zKVc4qtD4XXD9L8ev), **2026-11-13 19:03:08 UTC = Nov 14 02:03:08 Bangkok**, slot **469036369**, `meta.err=null`. Other approval txs appeared rapidly around 19:03 UTC. Approval is real, not a provisional allocation estimate.
+- Under official v0.7 Claim formula **`approved_amount * 10,000,000 MORI / total_approved_amount`**, the user has **706.00452 MORI** redeemable after successful `CompleteLaunch`, and unused USDC **700 − 17.650113 = 682.349887 USDC** refundable after Complete. Integer micro-unit arithmetic yields exact 706.00452 MORI at 6 decimals. This beats previous simple-pro-rata baseline ~659 MORI; earlier 600–1300 scenario assumptions are no longer needed.
+- User's MORI ATA `3EytgJ37GRWLV3VwbjtHBnGdGro4HBTRZqijyVj7T7LE` **exists but still has 0 MORI** at finalized slot **469036884**. User payout/USDC refund is **NOT DONE** as of this check. Do not confuse ATA creation with asset transfer.
+- Official authenticated webpage `https://metadao.fi/companies/mori-finance` reported `Raise closed · Settling allocations`, **248 backers**, user #176, and `Claims and refunds open here when that’s done`. Public UI may lag onchain approval; funds are not claimable while Launch state remains `Closed`.
+- **Timing:** do not invent a token trading/claim timestamp. `Claim` requires `LaunchState::Complete`, `Refund` requires `Complete` or `Refunding`. In previous completed MetaDAO v0.7 raises, closing-to-`Complete` varied ~1–2h, but this is historical, not a binding schedule. The 48-hour permissionless fallback after close is a separate condition and does not impose a mandatory wait for launch authority. In any case, the actual unlock is successful `CompleteLaunch` and subsequent token/refund transfers. The user does not need to send any new USDC or authorize an unknown claim site.
+
+Links: [Mori Launch](https://solscan.io/account/BFVqq3Br9frUabrdgczu4obJ2TGNzKnys42j2pwrmXGZ) · [FundingRecord](https://solscan.io/account/3z651WDFfQb7AzzYizSa8CdCaurP8TSHHTXugUhkWdki) · [MORI mint](https://solscan.io/token/MoR1whCWjcLiUqAan4GHLRcn8wK4Jktk2DyDryNmeta) · [Official fundraiser](https://metadao.fi/companies/mori-finance) · [ICO rules](https://metadao.fi/docs/sale).
+
+---
+
+
 ## 2026-11-11 ~17:35 Bangkok: confirmed Mori v0.7 live launch account, exact close, canonical base mint and user funding
 
 **Source classification: direct finalized Solana RPC and MetaDAO user-authenticated official webpage**. Research-only update; this supersedes 2026-11-07 "MORI mint/address unverified" and "sale end unverified" statements. No trade, wallet signature, claim, alert or monitoring created.
