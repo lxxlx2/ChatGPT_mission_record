@@ -1,12 +1,12 @@
 # TGE Monitor Current State
-Updated: 2026-11-14 23:02 Asia/Bangkok
+Updated: 2026-11-15 00:03 Asia/Bangkok
 
-- authoritative_final: airdrop-tge-monitor/runs/2026-11-14/230224-final.md
-- final_commit_sha: 8397ab2822c043488789622373c6bbed7d6f753c
+- authoritative_final: airdrop-tge-monitor/runs/2026-11-15/000321-final.md
+- final_commit_sha: c95859d9b539eb6faef1ac6f0604759fcc64fe40
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 3
-- executed_shard: 3
-- candidate_count: 1 (StandX DUSD existing VERIFYING)
+- scheduled_shard: 0
+- executed_shard: 0
+- candidate_count: 1 (existing StandX DUSD VERIFYING, no new event)
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
@@ -16,7 +16,7 @@ Updated: 2026-11-14 23:02 Asia/Bangkok
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (historical AUTOMATION_RUNTIME.md; no new fully verified coverage)
 
 ## Last meaningful attempts
-- shard0: 2026-11-14 16:56:01 Asia/Bangkok; runs/2026-11-14/165601-final.md (PARTIAL_ONLY)
+- shard0: 2026-11-15 00:03:21 Asia/Bangkok; runs/2026-11-15/000321-final.md (PARTIAL_ONLY)
 - shard1: 2026-11-14 21:03:27 Asia/Bangkok; runs/2026-11-14/210327-final.md (PARTIAL_ONLY)
 - shard2: 2026-11-14 22:01:36 Asia/Bangkok; runs/2026-11-14/220136-final.md (PARTIAL_ONLY)
 - shard3: 2026-11-14 23:02:24 Asia/Bangkok; runs/2026-11-14/230224-final.md (PARTIAL_ONLY)
@@ -31,5 +31,5 @@ Updated: 2026-11-14 23:02 Asia/Bangkok
 - Shard3 incomplete: Apptronik, Thalassa, Fortytwo, Republic/rTTOK require direct original rights checks next rotation; Crusoe/Aalo deal account checks still needed.
 - Excluded Abstract, Grass, Backpack, Loopscale, humans& fully refunded.
 - Space/Spacecoin and Theo/Autheo remain separate.
-- next scheduled shard: 0
+- next scheduled shard: 1
 - code_execution: CODE_NOT_EXECUTED / MANUAL_EQUIVALENT_ONLY.
