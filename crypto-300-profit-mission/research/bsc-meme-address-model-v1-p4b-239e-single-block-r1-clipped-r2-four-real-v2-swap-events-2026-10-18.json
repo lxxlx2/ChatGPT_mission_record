@@ -1,0 +1,126 @@
+{
+  "schema": "BSC_P4B_2026_239E_FROZEN_R1_R2_NEXT_BLOCK_SWAP_LOG_COMPLETENESS_DIAGNOSTIC_V1",
+  "source_prefreeze": "bsc-meme-address-model-v1-p4b-239e-two-single-block-pair-swap-completeness-precommit-2026-10-18.json",
+  "network": "bnb-mainnet",
+  "provider": "Alchemy existing free read-only",
+  "method": "eth_getLogs",
+  "total_calls": 2,
+  "retries": 0,
+  "source_grade": "R2_SINGLE_BLOCK_FULL_JSON_ARRAY_FROM_TOOL_WITHOUT_FULL_PROVIDER_NETWORK_CAPTURE",
+  "results": [
+    {
+      "case": "R1",
+      "block": 85954138,
+      "response_chars": 8098,
+      "complete_json": false,
+      "event_count": "UNRESOLVED",
+      "status": "TOOL_RESULT_TRUNCATED_NO_COMPLETE_ARRAY",
+      "precluded_causal_owner_attribution": true
+    },
+    {
+      "case": "R2",
+      "block": 85959962,
+      "response_chars": 3673,
+      "complete_json": true,
+      "swap_event_count": 4,
+      "distinct_transaction_hashes": 2,
+      "status": "FOUR_COMPLETE_PAIR_SWAP_EVENT_OBJECTS",
+      "all_log_objects": [
+        {
+          "address": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "blockNumber": "0x51fa51a",
+          "transactionHash": "0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47",
+          "transactionIndex": "0x2",
+          "logIndex": "0xf",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e",
+            "0x0000000000000000000000005e600e259e3cff0757e3736223685958665866c6"
+          ],
+          "data": "0x00000000000000000000000000000000000000000000000015ae2d5e5466b2fe00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a42bc1a562619fb693d",
+          "decoded_v2_swap_4_uint256": {
+            "amount0In": "1562236003910333182",
+            "amount1In": "0",
+            "amount0Out": "0",
+            "amount1Out": "48454704178311452125501"
+          },
+          "direction": "WBNB_IN_DRAGON_OUT"
+        },
+        {
+          "address": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "blockNumber": "0x51fa51a",
+          "transactionHash": "0x57feec5cf7819b9a6261de69b05e5587bfc7df173a92f1478529d6533d7d20a0",
+          "transactionIndex": "0x3",
+          "logIndex": "0x14",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x0000000000000000000000009999b0cdd35d7f3b281ba02efc0d228486940515",
+            "0x0000000000000000000000009999b0cdd35d7f3b281ba02efc0d228486940515"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000028cf2af7cb244d41808000000000000000000000000000000000000000000000000055f93c738f4b9910000000000000000000000000000000000000000000000000000000000000000",
+          "decoded_v2_swap_4_uint256": {
+            "amount0In": "0",
+            "amount1In": "12044764469041831352328",
+            "amount0Out": "387190576840489361",
+            "amount1Out": "0"
+          },
+          "direction": "DRAGON_IN_WBNB_OUT"
+        },
+        {
+          "address": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "blockNumber": "0x51fa51a",
+          "transactionHash": "0x57feec5cf7819b9a6261de69b05e5587bfc7df173a92f1478529d6533d7d20a0",
+          "transactionIndex": "0x3",
+          "logIndex": "0x20",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x0000000000000000000000009999b0cdd35d7f3b281ba02efc0d228486940515",
+            "0x0000000000000000000000009999b0cdd35d7f3b281ba02efc0d228486940515"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011868b6081e0a2a975e000000000000000000000000000000000000000000000000024e2c3451e4cf960000000000000000000000000000000000000000000000000000000000000000",
+          "decoded_v2_swap_4_uint256": {
+            "amount0In": "0",
+            "amount1In": "5172633567789492901726",
+            "amount0Out": "166118839483158422",
+            "amount1Out": "0"
+          },
+          "direction": "DRAGON_IN_WBNB_OUT"
+        },
+        {
+          "address": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "blockNumber": "0x51fa51a",
+          "transactionHash": "0x57feec5cf7819b9a6261de69b05e5587bfc7df173a92f1478529d6533d7d20a0",
+          "transactionIndex": "0x3",
+          "logIndex": "0x2d",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x0000000000000000000000009999b0cdd35d7f3b281ba02efc0d228486940515",
+            "0x0000000000000000000000009999b0cdd35d7f3b281ba02efc0d228486940515"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009c594a9a12a65818680000000000000000000000000000000000000000000000000148ea9a2a41043f0000000000000000000000000000000000000000000000000000000000000000",
+          "decoded_v2_swap_4_uint256": {
+            "amount0In": "0",
+            "amount1In": "2884126199921233107048",
+            "amount0Out": "92581740215862335",
+            "amount1Out": "0"
+          },
+          "direction": "DRAGON_IN_WBNB_OUT"
+        }
+      ]
+    }
+  ],
+  "wallet_position_source": "bsc-meme-address-model-v1-p4b-239e-owner-4-historical-balances-v2-12block-swap-denied-2026-10-18.json",
+  "original_owner_next_checkpoint_nonzero": true,
+  "possible_real_buyer_in_one_valid_swap": true,
+  "external_signer_identity": "UNRESOLVED_FROM_PAIR_LOGS_NEEDS_SIGNED_TRANSACTION",
+  "exit_for_same_external_signer": "UNRESOLVED",
+  "causal_observer_timestamp": "UNRESOLVED",
+  "fixed_delay_realized_return": "UNRESOLVED",
+  "hard_stop_on_more_same_window_slicing": true,
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}

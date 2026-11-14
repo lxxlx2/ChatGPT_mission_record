@@ -1,0 +1,148 @@
+{
+  "schema": "BSC_P4C_FIVE_OWNER_FOUR_CA_14_SIGNED_ORIGINAL_TX_SOURCE_FREEZE_V1",
+  "created_bangkok_date": "2026-10-16",
+  "parent_frozen_cohort_blob_sha": "93ccf47b87661fd734613d5b6c45aa2ddca26cd6",
+  "source_originals": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE17_8E6B_IFML_SIX_OWNER_RECEIPTS_TWO_CLOSED_EPISODES_2026-10-13.json",
+      "blob_sha": "949ff00fff47d9839d18da93fb5c0ae5ce5fa1aa"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json",
+      "blob_sha": "af69e24108b64d9ba70511d128a42d9e559f623c"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json",
+      "blob_sha": "51a41aebe7931c242910470a6907e4c93d217568"
+    }
+  ],
+  "exact_signer_tx_count": 14,
+  "cases": [
+    {
+      "p2_index": 15,
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "我踏马来了",
+      "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "source_native_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "native_scope": "NEGATIVE_NATIVE_SCOPE",
+      "original_transactions": [
+        {
+          "hash": "0x63fac2b371a445d96fc58348c8fee7ddb8f3c753041f863b9de122f25381c1d7",
+          "block": 76554500,
+          "source_dir": "in",
+          "source_receipt_parseable": true
+        },
+        {
+          "hash": "0xa89856fd61e59b8c34c425ca7f36100f5ed2ddf9b300ff02b3bd93618b7a4fb7",
+          "block": 76579819,
+          "source_dir": "in",
+          "source_receipt_parseable": true
+        },
+        {
+          "hash": "0x14cf70e39f00d8ed6da835d9cc9c71f901b2ff2948216e5adf74c8423c3fd467",
+          "block": 76580056,
+          "source_dir": "out",
+          "source_receipt_parseable": true
+        },
+        {
+          "hash": "0x863688f507d05b6fbd24f21036c90b80675c9a4702c971a7e5efd1f23412fd5f",
+          "block": 76582674,
+          "source_dir": "out",
+          "source_receipt_parseable": true
+        }
+      ]
+    },
+    {
+      "p2_index": 31,
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "source_native_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "native_scope": "NEGATIVE_NATIVE_SCOPE",
+      "original_transactions": [
+        {
+          "hash": "0xaa53775bf91228b31fa427a3e050bc7bd89a87900df86ff6ff64899d2cba6b13",
+          "block": 86649314
+        },
+        {
+          "hash": "0xd0e5beb5510f3d21c3a318529f80be4f2d507511b484c2fe3f3412dff6b4144b",
+          "block": 87876365
+        }
+      ]
+    },
+    {
+      "p2_index": 38,
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "source_native_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "native_scope": "NEGATIVE_NATIVE_SCOPE",
+      "original_transactions": [
+        {
+          "hash": "0xb3215e0bf0884fa79f7c061f94730e72ed822b4c32df5879d9e218a33c6b05a9",
+          "block": 112634149,
+          "source_receipt_full": false
+        },
+        {
+          "hash": "0xcfdf1cce9e7d4b17fb86e31cd4eeb93ec54a00ca7e6e6908fc0db0f42fed4f89",
+          "block": 112634161,
+          "source_receipt_full": false
+        },
+        {
+          "hash": "0xeb77015b8189b7dde56ed6cd98d313c5a8e17cf13b254fb9378abe5e9e091d31",
+          "block": 112634184,
+          "source_receipt_full": false
+        }
+      ]
+    },
+    {
+      "p2_index": 46,
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "source_native_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "native_scope": "POSITIVE_NATIVE_SCOPE",
+      "original_transactions": [
+        {
+          "hash": "0xf83f69d2d411b237bc10c7be7f16bfc57ae0567bdd00bf245e576688be3b4549",
+          "block": 116099537,
+          "source_receipt_full": false
+        },
+        {
+          "hash": "0xff6b642aa397450042ddbbb3010cd622dbb617b0479f5a2769aa93a8c1b03dc4",
+          "block": 116109420,
+          "source_receipt_full": false
+        },
+        {
+          "hash": "0x1e5aea53c25c41c0a9c84472f89774d0c93ff19be721ae8333fb0aafd264e366",
+          "block": 116211969,
+          "source_receipt_full": false
+        }
+      ]
+    },
+    {
+      "p2_index": 44,
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "source_native_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "native_scope": "POSITIVE_NATIVE_SCOPE",
+      "original_transactions": [
+        {
+          "hash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+          "block": 121783426,
+          "source_receipt_full": false
+        },
+        {
+          "hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+          "block": 121786352,
+          "source_receipt_full": false
+        }
+      ]
+    }
+  ],
+  "scope": "Original P2 source hashes fixed before this batch new chain RPC; signer/receipt still require re-query. No attempt at U/follower return, original source sign merely source-tier.",
+  "P4_C": "PARTIAL",
+  "P5": "BLOCKED",
+  "PRODUCTION": "NO_GO"
+}

@@ -1,0 +1,148 @@
+{
+  "schema": "BSC_P4C_8E6B_ORIGINAL_OWNER_EXTERNAL_EXCLUSIVITY",
+  "part": 2,
+  "precommit_sha": "d93d67e5e5c3af951eea9eafbdb56a714291faea",
+  "rows": [
+    {
+      "hash": "0x9a5e7e333092f94c7c78656f221c7b08c319727e8693084bf1e117e3c229723b",
+      "block": 63059782,
+      "p2_index": 17,
+      "dir": "out",
+      "directions": [
+        {
+          "direction": "OUT",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": [
+            {
+              "hash": "0x9a5e7e333092f94c7c78656f221c7b08c319727e8693084bf1e117e3c229723b",
+              "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+              "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+              "value": 0,
+              "asset": "BNB"
+            }
+          ]
+        },
+        {
+          "direction": "IN",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": []
+        }
+      ]
+    },
+    {
+      "hash": "0x0e89ad3e6f44b8a7de464b10862c61c9ec7060846539fab6ae0df24927e5af7b",
+      "block": 63069490,
+      "p2_index": 17,
+      "dir": "out",
+      "directions": [
+        {
+          "direction": "OUT",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": [
+            {
+              "hash": "0x0e89ad3e6f44b8a7de464b10862c61c9ec7060846539fab6ae0df24927e5af7b",
+              "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+              "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+              "value": 0,
+              "asset": "BNB"
+            }
+          ]
+        },
+        {
+          "direction": "IN",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": []
+        }
+      ]
+    },
+    {
+      "hash": "0x69616d58ef513786ce7536d573027a0bb83f3dc5908d10b0d13a9a6d02070219",
+      "block": 63073432,
+      "p2_index": 17,
+      "dir": "out",
+      "directions": [
+        {
+          "direction": "OUT",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": [
+            {
+              "hash": "0x69616d58ef513786ce7536d573027a0bb83f3dc5908d10b0d13a9a6d02070219",
+              "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+              "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+              "value": 0,
+              "asset": "BNB"
+            }
+          ]
+        },
+        {
+          "direction": "IN",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": []
+        }
+      ]
+    },
+    {
+      "hash": "0xc3d6fd52ea632d2c48a7cd79db4eb16ae5deaf3de930c56ba861ec2d4af8d59d",
+      "block": 63082567,
+      "p2_index": 17,
+      "dir": "out",
+      "directions": [
+        {
+          "direction": "OUT",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": [
+            {
+              "hash": "0xc3d6fd52ea632d2c48a7cd79db4eb16ae5deaf3de930c56ba861ec2d4af8d59d",
+              "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+              "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+              "value": 0,
+              "asset": "BNB"
+            }
+          ]
+        },
+        {
+          "direction": "IN",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": []
+        }
+      ]
+    },
+    {
+      "hash": "0x206bb565b2114fc58381a7f0d493f0c9454ea254f671ffadfd08c866dbf0c064",
+      "block": 63082969,
+      "p2_index": 17,
+      "dir": "out",
+      "directions": [
+        {
+          "direction": "OUT",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": [
+            {
+              "hash": "0x206bb565b2114fc58381a7f0d493f0c9454ea254f671ffadfd08c866dbf0c064",
+              "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+              "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+              "value": 0,
+              "asset": "BNB"
+            }
+          ]
+        },
+        {
+          "direction": "IN",
+          "status": "COMPLETE",
+          "page_key_present": false,
+          "transfers": []
+        }
+      ]
+    }
+  ],
+  "production": "NO_GO"
+}

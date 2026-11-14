@@ -1,0 +1,48 @@
+{
+  "schema": "BSC_P4B_DRAGON_POST_OWNER_ORIGINAL_FOUR_TRADING_BLOCK_HEADERS_V1",
+  "captured": "2026-10-16",
+  "provider": "Alchemy bnb-mainnet eth_getBlockByNumber, fixed block numbers",
+  "rows": [
+    {
+      "block": 83636000,
+      "number_hex": "0x4fc2f20",
+      "block_hash": "0x850767f9ab17846f94abca74a821b2fecf232581deb5a88305f0e60fce1e7bb6",
+      "timestamp_hex": "0x69a15aa6",
+      "milliTimestamp_hex": "0x19c9e4a1c26",
+      "utc": "2026-02-27T08:49:42.950Z",
+      "response_is_truncated": true
+    },
+    {
+      "block": 83636018,
+      "number_hex": "0x4fc2f32",
+      "block_hash": "0x411938c189ad4b1667e369cdc2cb1f4037b3f59cd73f03aa47631312508a0e17",
+      "timestamp_hex": "0x69a15aaf",
+      "milliTimestamp_hex": "0x19c9e4a3bca",
+      "utc": "2026-02-27T08:49:51.050Z",
+      "response_is_truncated": true
+    },
+    {
+      "block": 83636084,
+      "number_hex": "0x4fc2f74",
+      "block_hash": "0x65daeb0004d7510f70adbae493df2352504d1fbd223c966a761510c01b5ddcae",
+      "timestamp_hex": "0x69a15acc",
+      "milliTimestamp_hex": "0x19c9e4aafce",
+      "utc": "2026-02-27T08:50:20.750Z",
+      "response_is_truncated": false
+    },
+    {
+      "block": 83636094,
+      "number_hex": "0x4fc2f7e",
+      "block_hash": "0x00deb0a4c1643e3b3dcac30ff7809c6df43f1f9cd6c0e9cef7bd10a56c9bd8b2",
+      "timestamp_hex": "0x69a15ad1",
+      "milliTimestamp_hex": "0x19c9e4ac162",
+      "utc": "2026-02-27T08:50:25.250Z",
+      "response_is_truncated": true
+    }
+  ],
+  "original_owner_block": 83635776,
+  "owner_original_milliTimestamp_hex": "0x19c9e489266",
+  "unconfirmed_first_public_visibility": "UNRESOLVED",
+  "note": "Block header timestamps are not when the signed tx first became available to a public observer. Full block bodies were truncated.",
+  "production": "NO_GO"
+}

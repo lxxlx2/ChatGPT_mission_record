@@ -1,0 +1,56 @@
+{
+  "schema": "BSC_P4B_2026_R2_REAL_5E60_PANCAKE_V2_SIGNED_BUY_WBNB_DIRECT_FUNDING_PRECOMMIT_V1",
+  "date": "2026-10-18",
+  "purpose": "Tie actual original signed external buy Router to true WBNB sent from external signer by ERC20 Transfer(from=wallet) plus historical balanceOf across source buy block; do not equate Pair input with wallet cost until observed.",
+  "real_external_buy_source": "bsc-meme-address-model-v1-p4b-239e-r2-external-wallet-real-incremental-buy-erc20-transfer-readback-2026-10-18.json",
+  "wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+  "WBNB": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "Pair": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+  "exact_token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "signed_hash": "0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47",
+  "block": 85959962,
+  "orig_owner_239e_buy_block": 85959961,
+  "existing_5e60_balance_before_buy_erc20_token_raw": "335173813691889308361853",
+  "pair_observed_WBNB_input_wei": "1562236003910333182",
+  "queries": [
+    {
+      "kind": "ERC20_BALANCEOF_WBNB_BEFORE",
+      "method": "eth_call",
+      "to": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "data_selector": "0x70a08231",
+      "wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "block": 85959961
+    },
+    {
+      "kind": "ERC20_BALANCEOF_WBNB_AFTER",
+      "method": "eth_call",
+      "to": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "data_selector": "0x70a08231",
+      "wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "block": 85959962
+    },
+    {
+      "kind": "ERC20_TRANSFER_FROM_5E60_IN_EXACT_BLOCK",
+      "method": "eth_getLogs",
+      "token": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "indexed_sender": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "block": 85959962
+    }
+  ],
+  "max_calls": 3,
+  "retries": 0,
+  "no_reselect": true,
+  "qualifications": [
+    "Only count WBNB Transfer logs matching exact signed hash; additional unrelated transfers by same wallet in same block must not be attributed to that buy.",
+    "WBNB balance delta whole block is not necessarily isolated to one swap if other wallet activity.",
+    "Even true wallet spent WBNB and got token does not establish causal first-public U, after-tax profit or successful later sell.",
+    "No paid API, no live operation."
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}

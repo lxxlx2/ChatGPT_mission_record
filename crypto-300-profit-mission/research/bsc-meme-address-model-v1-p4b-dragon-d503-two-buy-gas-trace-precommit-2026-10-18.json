@@ -1,0 +1,58 @@
+{
+  "schema": "BSC_P4B_2026_DRAGON_D503_SIGNED_TWO_BUYS_NATIVE_COST_TRACE_PREFREEZE_V1",
+  "date": "2026-10-18",
+  "parent_sha": "69ffadbdda8f3fe67a9398067dc71110e31bd784",
+  "scope": "Dragon exact CA only, frozen D503 TWO observed actual signed buys and complete corresponding two signed approval+sale original source; no candidate selection after returns",
+  "market": "龙虾",
+  "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "owner_original_early_signal": {
+    "EOA": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+    "block": 83635776,
+    "tx": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+    "visibility": "NO_INDEPENDENT_OBSERVER_RECEIVE_TIMESTAMP"
+  },
+  "candidate_D503": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+  "old_source": {
+    "original_signed_seven": "bsc-meme-address-model-v1-p4b-dragon-postowner-original-seven-txs-2026-10-16.json",
+    "original_signed_seven_blob": "b06b2ef565ebd74bc7f83ad4a2ea731eeb5cb2b9",
+    "historical_4headers": "bsc-meme-address-model-v1-p4b-dragon-postowner-four-execution-block-headers-2026-10-16.json",
+    "historical_4headers_blob": "e1f03de64a7716625ad5968df8fd389b48e8b261",
+    "precommitted_original_research": "bsc-meme-address-model-v1-p4b-dragon-postowner-signed-roundtrip-precommit-2026-10-16.json",
+    "precommitted_original_research_blob": "a0937b2aca1c83cd99bf7e0678538a6067cc2d3f"
+  },
+  "probe_set": [
+    {
+      "label": "D503_BUY_1",
+      "tx": "0xd099d33a83c217e47f21b618483ae48de6018fb7fd26d093924f2eb25d219118",
+      "block": 83636000,
+      "tx_value_wei": "190000000000000000",
+      "preexisting_receipt_status": "SUCCESS_ONLY_TRUNCATED",
+      "preexisting_gasUsed": "UNRESOLVED"
+    },
+    {
+      "label": "D503_BUY_2",
+      "tx": "0xbc1622bb9a1850b5966f7c056d0344e586c3ffcf7b882df84cb07673bd13bfb5",
+      "block": 83636084,
+      "tx_value_wei": "220000000000000000",
+      "preexisting_receipt_status": "SUCCESS_ONLY_TRUNCATED",
+      "preexisting_gasUsed": "UNRESOLVED"
+    }
+  ],
+  "probe_plan": [
+    "First 2 exact eth_getTransactionReceipt original buy hashes ONLY; provider parseable gasUsed and effectiveGasPrice if present; truncated 8098 bytes -> UNRESOLVED.",
+    "Then max 2 debug_traceTransaction callTracer for SAME exact hashes ONLY to constrain transaction-level native BNB flows and internal refunds; unsupported/clipped -> UNKNOWN not zero or closed.",
+    "No other wallet / tx after responses, no rescanning, no BNB writes, zero retries; use old selected sale and approval evidence, compare 4 historic EOA balance-change blocks before asserting any native delta."
+  ],
+  "max_live_readonly_calls": 4,
+  "zero_retry": true,
+  "provider": "Alchemy BNB mainnet existing read-only app",
+  "research_scope_grade": "EXPOSED_POST_SIGNAL_REAL_HISTORIC_BUYER_NOT_RANDOM_HOLDOUT",
+  "gates": {
+    "owner_full_attributable_realized_PnL": "UNRESOLVED",
+    "public_observer_1_5_15_delay_execution": "UNRESOLVED",
+    "public_executable_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "production": "NO_GO",
+    "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  }
+}

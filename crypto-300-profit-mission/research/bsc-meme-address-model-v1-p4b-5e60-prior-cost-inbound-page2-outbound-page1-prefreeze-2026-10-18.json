@@ -1,0 +1,60 @@
+{
+  "schema": "BSC_P4B_5E60_2026_PREEXISTING_DRAGON_BOTH_FLOW_BOUNDED_PAGINATION_PRECOMMIT_V1",
+  "date": "2026-10-18",
+  "old_PR_head": "a7a145b867d35c317f02cfd3be131cb877c982b5",
+  "objective": "Recover historical Dragon token inflow AND outflow for same fixed external buyer before known signed 1000 USDT add. Do not cherry-pick profitable wallet or treat token inflow as money-cost basis. Track incomplete pagination explicitly.",
+  "evidence_blobs": {
+    "earlier_ten_inbound": "cee0c1be380f9509d5c30b73cc64d1350ad66c87",
+    "earlier_inbound_prefreeze": "b0d28b1afd6402bd4a6be5d69e9b7a6643c9e8ef",
+    "actual_1000USDT_buy": "4288f9819f2815cb4d899c93116b23e19e6fe0ba",
+    "first_liquidation": "902871db18ac42d98647ce43d61438e8e32b7947"
+  },
+  "network": "bnb-mainnet",
+  "provider": "Alchemy existing free",
+  "method": "getAssetTransfers",
+  "filters": {
+    "wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+    "token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+    "fromBlock": "0x51ebae0",
+    "toBlock": "0x51fa519",
+    "category": [
+      "erc20"
+    ],
+    "order": "asc",
+    "maxCount": "0xa",
+    "excludeZeroValue": true
+  },
+  "frozen_inbound_page_2_cursor": "a93be65e-cfe0-4ec1-ab42-8dc1739fef16",
+  "frozen_operations": [
+    {
+      "id": "INBOUND_PAGE2",
+      "direction": "toAddress",
+      "pageKey": "a93be65e-cfe0-4ec1-ab42-8dc1739fef16"
+    },
+    {
+      "id": "OUTBOUND_PAGE1",
+      "direction": "fromAddress",
+      "pageKey": null
+    }
+  ],
+  "max_calls": 2,
+  "no_retries": true,
+  "no_follow_more_pages_unless_new_precommit": true,
+  "must_archive_all_first_page_events": true,
+  "caveats": [
+    "Returned transfer-to-wallet token receipts do NOT independently establish original EOA signer, USDT amountIn, Gas, or historical profit.",
+    "Need outbound side to reconcile previous holding changes; every nonempty pageKey leaves cost basis censored.",
+    "Do not call 8399.620126 USDT historical cash proceeds profits until earlier buys/sells and costs close.",
+    "No P5 upgrade, no public causal follow or actual notification time."
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "NO_MERGE": true,
+    "NO_DEPLOY": true,
+    "NO_GMAIL": true,
+    "NO_TRADE": true
+  }
+}

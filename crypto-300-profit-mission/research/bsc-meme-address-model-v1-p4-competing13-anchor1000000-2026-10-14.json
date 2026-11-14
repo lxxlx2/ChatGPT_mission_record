@@ -1,0 +1,31 @@
+{
+  "schema": "BSC_P4_COMPETING13_GEOMETRIC_ANCHOR_READS",
+  "anchor_offset": 1000000,
+  "source_schedule_sha": "706820838fdee682f8a19ae9c100214cc2b889f3",
+  "source_precommit_sha": "b62ce08245322c9bfdc6b6ad0c6898ee9a5795b1",
+  "previous_anchor_sha": "f77bd824988936b60f9395802e04263d2757048a",
+  "reads": [
+    {
+      "index": 7,
+      "block": 45828822,
+      "pool": "0x0000000000000000000000000000000000000000",
+      "raw": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "index": 8,
+      "block": 45871948,
+      "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+      "raw": "0x0000000000000000000000007f51bbf34156ba802deb0e38b7671dc4fa32041d",
+      "exists": true
+    },
+    {
+      "index": 9,
+      "block": 45871948,
+      "pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+      "raw": "0x000000000000000000000000f65d3c3f99e431da5dbae7948c0dd1905c268121",
+      "exists": true
+    }
+  ],
+  "production": "NO_GO"
+}

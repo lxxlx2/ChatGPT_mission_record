@@ -1,0 +1,83 @@
+{
+  "schema": "BSC_P4_COMPETING4_CREATION_BLOCK_SWAP_WITNESSES",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-competing4-creation-evidence-part1-2026-10-14.json",
+      "blob_sha": "5bc9aa443e345694d6cb067c82d173ce8351ab50"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-competing4-creation-evidence-part2-2026-10-14.json",
+      "blob_sha": "5f80f2341c351925a2f450fdcd4ab238284bdf5d"
+    }
+  ],
+  "read_scope": "exact creation block of 4 immutable priority competitor pools, protocol-specific Swap topic, event count can be zero and is NOT an executable follower quote",
+  "records": [
+    {
+      "pool": "0x57143fffeba8aecfe31d18bcbdc9ed590990dc1a",
+      "protocol": "V2",
+      "token": "牛来",
+      "block": 116207845,
+      "status": "COMPLETE_BOUND_ONE_BLOCK",
+      "events": [
+        {
+          "address": "0x57143fffeba8aecfe31d18bcbdc9ed590990dc1a",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x00000000000000000000000000f67f6fff4cd3c0e1a60f881a574df15c73f2e1",
+            "0x00000000000000000000000000f67f6fff4cd3c0e1a60f881a574df15c73f2e1"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000872d0fce13bbea3ea0000000000000000000000000000000000000000000000002eba07087e29760f0000000000000000000000000000000000000000000000000000000000000000",
+          "blockHash": "0x32114a4b856ddb479d648ba617c0e709cb61a51adde18b7860e84b45e38adce3",
+          "blockNumber": "0x6ed30e5",
+          "blockTimestamp": "0x6a813b63",
+          "transactionHash": "0xcf035f3fc0ba26ec07e87a212ebf42b472f628c3fddb76305fe92084f962aa95",
+          "transactionIndex": "0x2",
+          "logIndex": "0x16",
+          "removed": false
+        }
+      ]
+    },
+    {
+      "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+      "protocol": "V3",
+      "token": "牛来",
+      "block": 116156658,
+      "status": "COMPLETE_BOUND_ONE_BLOCK",
+      "events": []
+    },
+    {
+      "pool": "0xab058332a7279f1e64162be08f59ac0cd9601759",
+      "protocol": "V3",
+      "token": "牛来",
+      "block": 115919188,
+      "status": "COMPLETE_BOUND_ONE_BLOCK",
+      "events": []
+    },
+    {
+      "pool": "0x4a4bea953813c118c260be9a26b2321e57aa62e5",
+      "protocol": "V3",
+      "token": "MARSCOIN",
+      "block": 112642885,
+      "status": "COMPLETE_BOUND_ONE_BLOCK",
+      "events": [
+        {
+          "address": "0x4a4bea953813c118c260be9a26b2321e57aa62e5",
+          "topics": [
+            "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+            "0x000000000000000000000000c5610d040644b0d92b911fd382e2531938193c32",
+            "0x00000000000000000000000094f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+          ],
+          "data": "0x0000000000000000000000000000000000000000000000005d63f57d7ab43000ffffffffffffffffffffffffffffffffffffffffffffffb3d925829f0d55c5e7000000000000000000000000000000000000000e491c8c2cc6c952dc93dec3b90000000000000000000000000000000000000000000000a08beb89e0ba19859c000000000000000000000000000000000000000000000000000000000000cfc3000000000000000000000000000000000000000000000000004c81666455c5fd0000000000000000000000000000000000000000000000000000000000000000",
+          "blockHash": "0x7cf0a26229f1ba063bbd12b8e8fdcd02f96e8b6d23307be52bf1e18da7f8866b",
+          "blockNumber": "0x6b6cb45",
+          "blockTimestamp": "0x6a68be02",
+          "transactionHash": "0x739cd82ebba3001b8f3b27b71743eefd31cb2393ff9b69b2073c76505c63063a",
+          "transactionIndex": "0x8",
+          "logIndex": "0x9f",
+          "removed": false
+        }
+      ]
+    }
+  ],
+  "production": "NO_GO"
+}

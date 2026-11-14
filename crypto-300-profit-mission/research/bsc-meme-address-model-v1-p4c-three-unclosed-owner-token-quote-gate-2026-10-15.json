@@ -1,0 +1,230 @@
+{
+  "schema": "BSC_P4C_THREE_FROZEN_ROUNDS_OWNER_TOKEN_INVENTORY_CLOSED_QUOTE_CAUSAL_ROUTE_OPEN",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-three-unclosed-router-event-precommit-2026-10-15.json",
+      "git_blob_sha": "9816653aae69785222ec75eb85c0abb19e1dd555"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-three-unclosed-ADFF-transfer-probe-2026-10-15.json",
+      "git_blob_sha": "ec26c14395b770ca036f6ee765603edd273717bc"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-three-unclosed-ADFF-WBNB-targeted-2026-10-15.json",
+      "git_blob_sha": "46034ffaec8ee79eed07de879c862f02f401d517"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-three-unclosed-2ADF-token-events-2026-10-15.json",
+      "git_blob_sha": "937e1710dcebb1a4aca34e9c88654f3e4bbac59a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-three-unclosed-A83B-token-events-2026-10-15.json",
+      "git_blob_sha": "df135ffb256daa98ebe14586e5b8e562d8486c90"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-three-unclosed-NIULAI-WBNB-pool-2026-10-15.json",
+      "git_blob_sha": "52642057666f7f02de56439887b9ead0522ba47c"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-three-unclosed-NIULAI-Q3B-outflow-2026-10-15.json",
+      "git_blob_sha": "49fd8b4ed14e2fb3cde5931e5ef22e10ea830fb9"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-sevenwallet-balanced-signers-native-outcome-2026-10-15.json",
+      "git_blob_sha": "3c4f07ebee061e16bebad3f0a307227b4b958823"
+    }
+  ],
+  "summary": {
+    "fixed_rounds": 3,
+    "fixed_original_owner_signed_txs": 7,
+    "source_canonical_token_inventory_closed": 3,
+    "native_window_positive_observed": 2,
+    "native_window_negative_observed": 1,
+    "new_settled_native_profitable_rounds": 0,
+    "new_settled_native_unprofitable_rounds": 0,
+    "unrelated_same_block_Q3B_outflows_excluded": 1,
+    "positive_profit_rank_approved": false,
+    "production": "NO_GO"
+  },
+  "rounds": [
+    {
+      "round_key": "ADFF_DRAGON_R4",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "source_signed_tx_count": 2,
+      "original_token_in_raw": "116550039851143133337499",
+      "original_token_out_raw": "116550039851143133337499",
+      "original_token_residual_raw": "0",
+      "original_onchain_buy_events": [
+        {
+          "block": 83656622,
+          "tx": "0xf295cea8ca007cf8bbf00889acf7be78d9d035300be51da67a194fe50c33a3e3",
+          "direction": "IN",
+          "raw": "116550039851143133337499",
+          "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d"
+        }
+      ],
+      "original_onchain_sell_events": [
+        {
+          "block": 83656734,
+          "tx": "0xcbd78ec6eed55dba0f9f90bdfa342c48644d3d626d975aa77e931ad0ffe69045",
+          "direction": "OUT",
+          "raw": "116550039851143133337499",
+          "from": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c"
+        }
+      ],
+      "returned_to_token_contract_fee_raw": "0",
+      "returned_to_pool_raw": "116550039851143133337499",
+      "quote_asset_source": "WBNB",
+      "quote_asset_contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "source_quote_to_router_transfers": [
+        {
+          "original_signed_tx": "0xcbd78ec6eed55dba0f9f90bdfa342c48644d3d626d975aa77e931ad0ffe69045",
+          "block": 83656734,
+          "raw": "206830246399802680",
+          "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "to": "0x1de460f363af910f51726def188f9004276bf4bc"
+        }
+      ],
+      "native_owner_block_net_wei": "4522437855804654",
+      "native_owner_block_sign": "POSITIVE_NATIVE_BLOCK_SCOPE",
+      "evidence": "OWNER_TOKEN_QUANTITY_CLOSED_QUOTE_ROUTER_ECONOMICS_UNRESOLVED",
+      "strict_native_settled_profit_qualification": false,
+      "first_observer_executable_U": "UNRESOLVED",
+      "follower_1_5_15min": "UNRESOLVED"
+    },
+    {
+      "round_key": "2ADF_NIULAI_R3",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "source_signed_tx_count": 2,
+      "original_token_in_raw": "13211550674646819143983",
+      "original_token_out_raw": "13211550674646819143983",
+      "original_token_residual_raw": "0",
+      "original_onchain_buy_events": [
+        {
+          "block": 116038180,
+          "tx": "0x5b9f98b8feff8b9589b9a229bd64485689d11f7aa08d7973d7553fd18ba35e1e",
+          "direction": "IN",
+          "raw": "13211550674646819143983",
+          "from": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba"
+        }
+      ],
+      "original_onchain_sell_events": [
+        {
+          "block": 116087810,
+          "tx": "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f",
+          "direction": "OUT",
+          "raw": "132115506746468191439",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+        },
+        {
+          "block": 116087810,
+          "tx": "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f",
+          "direction": "OUT",
+          "raw": "13079435167900350952544",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0x595d70977dff3c841df0bc0138ce89f80c7c9423"
+        }
+      ],
+      "returned_to_token_contract_fee_raw": "132115506746468191439",
+      "returned_to_pool_raw": "13079435167900350952544",
+      "quote_asset_source": "Q3B",
+      "quote_asset_contract": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "source_quote_to_router_transfers": [
+        {
+          "original_signed_tx": "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f",
+          "block": 116087810,
+          "raw": "111554339344126621",
+          "from": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+          "to": "0x1de460f363af910f51726def188f9004276bf4bc"
+        }
+      ],
+      "native_owner_block_net_wei": "31837686901930499",
+      "native_owner_block_sign": "POSITIVE_NATIVE_BLOCK_SCOPE",
+      "evidence": "OWNER_TOKEN_QUANTITY_CLOSED_QUOTE_ROUTER_ECONOMICS_UNRESOLVED",
+      "strict_native_settled_profit_qualification": false,
+      "first_observer_executable_U": "UNRESOLVED",
+      "follower_1_5_15min": "UNRESOLVED"
+    },
+    {
+      "round_key": "A83B_NIULAI_R2",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "source_signed_tx_count": 3,
+      "original_token_in_raw": "94673211735825585728593",
+      "original_token_out_raw": "94673211735825585728593",
+      "original_token_residual_raw": "0",
+      "original_onchain_buy_events": [
+        {
+          "block": 116113193,
+          "tx": "0x8a22a65a977409a7e82266d05ceaf1e98074d1f6b50e942486600dacdc672716",
+          "direction": "IN",
+          "raw": "47452007972568693771390",
+          "from": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+          "to": "0xa83b73f5644cde337b61da79589f10ea15548811"
+        },
+        {
+          "block": 116113193,
+          "tx": "0x3e8b50350c8d2cf87d9662434ad205d08a33595eaf253dac04996134a35e2971",
+          "direction": "IN",
+          "raw": "47221203763256891957203",
+          "from": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+          "to": "0xa83b73f5644cde337b61da79589f10ea15548811"
+        }
+      ],
+      "original_onchain_sell_events": [
+        {
+          "block": 116113197,
+          "tx": "0xd0bc93c086a44affed01a7bfb25022cd51e18513401b15d2fbb3692ec1bde9a4",
+          "direction": "OUT",
+          "raw": "946732117358255857285",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+        },
+        {
+          "block": 116113197,
+          "tx": "0xd0bc93c086a44affed01a7bfb25022cd51e18513401b15d2fbb3692ec1bde9a4",
+          "direction": "OUT",
+          "raw": "93726479618467329871308",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0x595d70977dff3c841df0bc0138ce89f80c7c9423"
+        }
+      ],
+      "returned_to_token_contract_fee_raw": "946732117358255857285",
+      "returned_to_pool_raw": "93726479618467329871308",
+      "quote_asset_source": "Q3B",
+      "quote_asset_contract": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "source_quote_to_router_transfers": [
+        {
+          "original_signed_tx": "0xd0bc93c086a44affed01a7bfb25022cd51e18513401b15d2fbb3692ec1bde9a4",
+          "block": 116113197,
+          "raw": "2264079415872901600",
+          "from": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+          "to": "0x1de460f363af910f51726def188f9004276bf4bc"
+        }
+      ],
+      "native_owner_block_net_wei": "-213598956812665039",
+      "native_owner_block_sign": "NEGATIVE_NATIVE_BLOCK_SCOPE",
+      "evidence": "OWNER_TOKEN_QUANTITY_CLOSED_QUOTE_ROUTER_ECONOMICS_UNRESOLVED",
+      "strict_native_settled_profit_qualification": false,
+      "first_observer_executable_U": "UNRESOLVED",
+      "follower_1_5_15min": "UNRESOLVED"
+    }
+  ],
+  "excluded_unrelated_quote_events": [
+    {
+      "block": 116113193,
+      "tx": "0x79df9ac69ddd2a54d0a6dd5c8d2b07319bd2f45d41c1e4d1a1f2fd95485bfa19",
+      "quote_raw": "346692204981807503",
+      "reason": "NOT_PRESELECTED_OWNER_SIGNED_TX_EXCLUDE"
+    }
+  ]
+}

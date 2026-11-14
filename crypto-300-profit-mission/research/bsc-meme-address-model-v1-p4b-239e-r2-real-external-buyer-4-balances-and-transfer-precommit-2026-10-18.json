@@ -1,0 +1,78 @@
+{
+  "schema": "BSC_P4B_2026_239E_DRAGON_R2_OUTSIDE_SIGNED_BUYER_TRUE_ERC20_INVENTORY_PRECOMMIT_V1",
+  "date": "2026-10-18",
+  "original_23_wallet_cohort_unchanged": true,
+  "token_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "original_signal_wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+  "external_real_SIGNED_buyer": "0x5e600e259e3cff0757e3736223685958665866c6",
+  "original_239e_buy_block": 85959961,
+  "external_signed_buy_block": 85959962,
+  "external_signed_tx": "0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47",
+  "pair_swap_matched_exact_block_amount": "48454704178311452125501",
+  "paid_on_pair_gross_WBNB_wei": "1562236003910333182",
+  "source_actual_external_signed_tx": "bsc-meme-address-model-v1-p4b-239e-r2-one-real-external-buy-signer-other-sell-truncated-2026-10-18.json",
+  "source_complete_pair_swap_logs": "bsc-meme-address-model-v1-p4b-239e-single-block-r1-clipped-r2-four-real-v2-swap-events-2026-10-18.json",
+  "provider": "Alchemy BNB existing free",
+  "historical_owner_native_source": "bsc-meme-address-model-v1-p4b-239e-owner-4-historical-balances-v2-12block-swap-denied-2026-10-18.json",
+  "calls": [
+    {
+      "method": "eth_call",
+      "to": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "selector": "0x70a08231",
+      "wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "block": 85959961,
+      "reason": "EXTERNAL_BUYER_BEFORE_SIGNED_SWAP_BLOCK_END"
+    },
+    {
+      "method": "eth_call",
+      "to": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "selector": "0x70a08231",
+      "wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "block": 85959962,
+      "reason": "EXTERNAL_BUYER_SAME_SWAP_BLOCK_END"
+    },
+    {
+      "method": "eth_call",
+      "to": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "selector": "0x70a08231",
+      "wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "block": 85960573,
+      "reason": "EXTERNAL_BUYER_LATER_WHILE_239E_SELECTED_HOLDING"
+    },
+    {
+      "method": "eth_call",
+      "to": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "selector": "0x70a08231",
+      "wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "block": 85961371,
+      "reason": "EXTERNAL_BUYER_BALANCE_WHEN_239E_SOURCE_SOLD"
+    },
+    {
+      "method": "eth_getLogs",
+      "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "indexed_to_wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "fromBlock": 85959962,
+      "toBlock": 85959962,
+      "reason": "EXTERNAL_BUYER_ERC20_TRANSFER_IN_THIS_FIXED_BLOCK"
+    }
+  ],
+  "max_calls": 5,
+  "no_retries": true,
+  "no_reselect": true,
+  "selector": "0x70a08231",
+  "standards": [
+    "Query from/before at historical block-end, not intra-block before original buyer's tx index",
+    "If token buyer balances already positive before, only infer delta not independent first buy ever",
+    "If later balance zero cannot assert realized profitable SELL without original independent signed receipts/native wallet balance evidence",
+    "If Transfer event absent or truncated, independent full buyer signed swap and balance changes can still demonstrate a real buy, but grade evidence accordingly",
+    "Do not infer public causal copy because original 239E buy and new buyer first Swap blocks share same chain timestamp seconds"
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  }
+}

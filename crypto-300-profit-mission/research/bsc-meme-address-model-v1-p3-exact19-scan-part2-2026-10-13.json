@@ -1,0 +1,248 @@
+{
+  "schema": "BSC_MEME_ADDRESS_MODEL_V1_P3_ERC20_ROSTER_SCAN_BATCH",
+  "part": 2,
+  "precommit_sha": "18cc2246135b381044403e09dc73eb1c0d436597",
+  "range": [
+    3,
+    6
+  ],
+  "rows": [
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "direction": "in",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 6979,
+      "pageKey": null,
+      "events": [
+        {
+          "block": "0x7549e42",
+          "hash": "0x31d00d5cd9f1f65f38b2f44529dc39bc94c2271464fc381febb8ae3f45889ac8",
+          "id": "0x31d00d5cd9f1f65f38b2f44529dc39bc94c2271464fc381febb8ae3f45889ac8:log:1107",
+          "from": "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw_value": "0x7e67ddff97900950",
+          "asset": "MarsCoin"
+        },
+        {
+          "block": "0x754a3e1",
+          "hash": "0xed280439fe38101ab1065564f1245fc689de6ea50276e42f0871cb55d6cf4414",
+          "id": "0xed280439fe38101ab1065564f1245fc689de6ea50276e42f0871cb55d6cf4414:log:2494",
+          "from": "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw_value": "0x32db03d5e9bf22ab1",
+          "asset": "MarsCoin"
+        },
+        {
+          "block": "0x754a5d3",
+          "hash": "0xafca658cebd8cb5a0e0afb73426451f8f3fc1fcd3796478dc6ac0269472353b8",
+          "id": "0xafca658cebd8cb5a0e0afb73426451f8f3fc1fcd3796478dc6ac0269472353b8:log:168",
+          "from": "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw_value": "0x3362068884a617c9",
+          "asset": "MarsCoin"
+        },
+        {
+          "block": "0x754a5d9",
+          "hash": "0xe1520b559ea7186bc733c290ba34c64e9486d9a4daf2380a2240c1993af59b9a",
+          "id": "0xe1520b559ea7186bc733c290ba34c64e9486d9a4daf2380a2240c1993af59b9a:log:450",
+          "from": "0x1ff5f3d06fd05ab7a436de510c9e470c1961d16b",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "raw_value": "0xdb7149f8a80b162e",
+          "asset": "牛来"
+        },
+        {
+          "block": "0x754a5d9",
+          "hash": "0xe1520b559ea7186bc733c290ba34c64e9486d9a4daf2380a2240c1993af59b9a",
+          "id": "0xe1520b559ea7186bc733c290ba34c64e9486d9a4daf2380a2240c1993af59b9a:log:455",
+          "from": "0x11a9144e881ac2af84b6d7609ef29e57b3f386aa",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "raw_value": "0xb7cc09067ccc863f",
+          "asset": "牛来"
+        },
+        {
+          "block": "0x754a5db",
+          "hash": "0x488a4bef32fca7a08c31cb8416ebe63f9375e46974c0978b0e308c4e75ed6874",
+          "id": "0x488a4bef32fca7a08c31cb8416ebe63f9375e46974c0978b0e308c4e75ed6874:log:360",
+          "from": "0xff497ca7118bd4b09435168372d188dc2d670f9d",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+          "raw_value": "0x33662faed156019db",
+          "asset": "Broccoli"
+        },
+        {
+          "block": "0x754a776",
+          "hash": "0x4915f70f5a07dcc6cb6152f8a7390ffa90060a983c80c012b8254497bb165496",
+          "id": "0x4915f70f5a07dcc6cb6152f8a7390ffa90060a983c80c012b8254497bb165496:log:459",
+          "from": "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw_value": "0x2578927d14a05acc",
+          "asset": "MarsCoin"
+        },
+        {
+          "block": "0x754aced",
+          "hash": "0x4c65e9d3f64fdf5ef8d7365f218d0a921029c5c8fbf0f779180e8fca763e22fa",
+          "id": "0x4c65e9d3f64fdf5ef8d7365f218d0a921029c5c8fbf0f779180e8fca763e22fa:log:1032",
+          "from": "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw_value": "0x7cee3bbf1e93e135",
+          "asset": "MarsCoin"
+        },
+        {
+          "block": "0x754b5dc",
+          "hash": "0xbcedfed2ae16de72f7b45a265a720b9edf2cc2d22a16c29aa9e9d4b09fe10776",
+          "id": "0xbcedfed2ae16de72f7b45a265a720b9edf2cc2d22a16c29aa9e9d4b09fe10776:log:852",
+          "from": "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw_value": "0x273bd0c4bbab4e88",
+          "asset": "MarsCoin"
+        },
+        {
+          "block": "0x754bb61",
+          "hash": "0xcaf9e13e30e2ee90106f3f4ad15bd7652e664f432f4e37c2d58645f3c491317d",
+          "id": "0xcaf9e13e30e2ee90106f3f4ad15bd7652e664f432f4e37c2d58645f3c491317d:log:874",
+          "from": "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw_value": "0x14924ade09f15759",
+          "asset": "MarsCoin"
+        }
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "direction": "out",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 4881,
+      "pageKey": null,
+      "events": [
+        {
+          "block": "0x74e7772",
+          "hash": "0xae1def223a10ca11bf4e13f716f475b99693047e4e541c465e9dde0a30b24189",
+          "id": "0xae1def223a10ca11bf4e13f716f475b99693047e4e541c465e9dde0a30b24189:log:437",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw_value": "0x9618a1e114b5bda",
+          "asset": "MarsCoin"
+        },
+        {
+          "block": "0x74e7772",
+          "hash": "0xae1def223a10ca11bf4e13f716f475b99693047e4e541c465e9dde0a30b24189",
+          "id": "0xae1def223a10ca11bf4e13f716f475b99693047e4e541c465e9dde0a30b24189:log:439",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw_value": "0x12f51c721848499ed",
+          "asset": "MarsCoin"
+        },
+        {
+          "block": "0x74e777e",
+          "hash": "0xcab3ab44e62796268d5817e67b89823b0e14cd199b5b9100f4bfc38fe2689f7f",
+          "id": "0xcab3ab44e62796268d5817e67b89823b0e14cd199b5b9100f4bfc38fe2689f7f:log:62",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "raw_value": "0x71edf95b86f4eaa6",
+          "asset": "龙虾"
+        },
+        {
+          "block": "0x754a699",
+          "hash": "0xc81eadbe91ba27a418a7e574e327d3cc4d47eea8ec13221a42b746795ca4bb72",
+          "id": "0xc81eadbe91ba27a418a7e574e327d3cc4d47eea8ec13221a42b746795ca4bb72:log:1339",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "raw_value": "0xa50706e3ff885e3",
+          "asset": "牛来"
+        },
+        {
+          "block": "0x754a699",
+          "hash": "0xc81eadbe91ba27a418a7e574e327d3cc4d47eea8ec13221a42b746795ca4bb72",
+          "id": "0xc81eadbe91ba27a418a7e574e327d3cc4d47eea8ec13221a42b746795ca4bb72:log:1341",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "raw_value": "0x3fd1b7aa2bd1bc714",
+          "asset": "牛来"
+        },
+        {
+          "block": "0x754c4ce",
+          "hash": "0x118dd6d6d2c4766660342cf7e67518753928ea441943cedd8ff7a6f4f66a5756",
+          "id": "0x118dd6d6d2c4766660342cf7e67518753928ea441943cedd8ff7a6f4f66a5756:log:647",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw_value": "0x24691764a696d5d9",
+          "asset": "MarsCoin"
+        },
+        {
+          "block": "0x754c4ce",
+          "hash": "0x118dd6d6d2c4766660342cf7e67518753928ea441943cedd8ff7a6f4f66a5756",
+          "id": "0x118dd6d6d2c4766660342cf7e67518753928ea441943cedd8ff7a6f4f66a5756:log:649",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw_value": "0x49945f4610a6257d3",
+          "asset": "MarsCoin"
+        }
+      ]
+    },
+    {
+      "wallet": "0x2b40f892a5b8aefdf9868317330ca0f956f70d2b",
+      "direction": "in",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0x2b40f892a5b8aefdf9868317330ca0f956f70d2b",
+      "direction": "out",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
+      "direction": "in",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
+      "direction": "out",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0x4789f192df5deb559af2bd9185781fda995856d5",
+      "direction": "in",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0x4789f192df5deb559af2bd9185781fda995856d5",
+      "direction": "out",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    }
+  ],
+  "production": "NO_GO"
+}

@@ -1,0 +1,154 @@
+{
+  "schema": "BSC_P4B_2026_5E60_FIVE_EXACT_FIRST_ROUND_LIQUIDATION_AND_ALL_EIGHT_USDT_RECEIPTS_PRECOMMIT_V1",
+  "origin_fixed_transfer_precommit_SHA": "7bbd14b61b0c28c86886ccb4738854bd6ac8e5e9",
+  "source_eight_original_signed_tx_lookup_precommit_sha": "965ae4f3e68922f697713ef7934722f7eec5e108",
+  "provider": "Alchemy existing free bnb-mainnet",
+  "exact_wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+  "Dragon": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "USDT": "0x55d398326f99059ff775485246999027b3197955",
+  "eight_frozen_original_signed_sell_hashes": [
+    "0x473a6f97e4580036e82142e56b1cd9d4b0fd026dd5363dcf33cf8271651777e4",
+    "0x9d52a9208bae6f42154b2f974745be5c43ad116ea801badba61fc9fd1ec8701f",
+    "0x67e653802aa2c2907313ecd7428ab93fe0ff92b36f75eb7600e676e278c50984",
+    "0xe62f8b2435117348bfb8f320f0533638cd97f21fcced5b15edbad154eb712ef6",
+    "0xbc1e4d56e0946bf63343e045dd2da459431219acbc80ba2cc0478d28901fd7f2",
+    "0x9c71aaf82a867109076b58bea79ba8f52043f151484de6e0ac40361219750545",
+    "0x3fd9ef769f6c294fe2d0a4949c88e5c261935e769c5144470a4570df59b5591a",
+    "0xf6bba19e1dafc184f6887e672d0f3dbef662465c65ed929172ccf299193062a2"
+  ],
+  "eight_original_signed_sell_blocks": [
+    85961702,
+    85961711,
+    85961724,
+    85961776,
+    85961787,
+    85980702,
+    85980740,
+    85980748
+  ],
+  "source_inventory_at_owner_239e_exit_raw": "383628517870200760487354",
+  "five_original_actual_signed_sell_amounts_raw": [
+    "115088555360000000000000",
+    "26853996250000000000000",
+    "24168596630000000000000",
+    "108758684820000000000000",
+    "108758684810200760487354"
+  ],
+  "pre_stated_first_five_sum_raw": "383628517870200760487354",
+  "first_phase_assessment": "FIVE_TRANSACTIONS_IN_FIRST_CONTIGUOUS_OUTBOUND_CLUSTER_AFTER_SOURCE_WALLET_EXIT_WITH_SUM_EXACT_PREVIOUS_BALANCE_NOT_POST_HOC_WINNER_PICK",
+  "max_calls": 13,
+  "queries": [
+    {
+      "kind": "DRAGON_HISTORIC_BALANCE_BEFORE_FIRST_SELL",
+      "block": 85961701,
+      "method": "eth_call",
+      "data_selector": "0x70a08231"
+    },
+    {
+      "kind": "DRAGON_HISTORIC_BALANCE_AFTER_FIFTH_SELL",
+      "block": 85961787,
+      "method": "eth_call",
+      "data_selector": "0x70a08231"
+    },
+    {
+      "kind": "USDT_HISTORIC_BALANCE_BEFORE_FIRST_SELL",
+      "block": 85961701,
+      "method": "eth_call",
+      "data_selector": "0x70a08231"
+    },
+    {
+      "kind": "USDT_HISTORIC_BALANCE_AFTER_FIFTH_SELL",
+      "block": 85961787,
+      "method": "eth_call",
+      "data_selector": "0x70a08231"
+    },
+    {
+      "kind": "USDT_TRANSFER_TO_SIGNED_WALLET_IN_EXACT_SELL_BLOCK",
+      "block": 85961702,
+      "hash": "0x473a6f97e4580036e82142e56b1cd9d4b0fd026dd5363dcf33cf8271651777e4",
+      "method": "eth_getLogs",
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "indexed_to": "0x5e600e259e3cff0757e3736223685958665866c6"
+    },
+    {
+      "kind": "USDT_TRANSFER_TO_SIGNED_WALLET_IN_EXACT_SELL_BLOCK",
+      "block": 85961711,
+      "hash": "0x9d52a9208bae6f42154b2f974745be5c43ad116ea801badba61fc9fd1ec8701f",
+      "method": "eth_getLogs",
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "indexed_to": "0x5e600e259e3cff0757e3736223685958665866c6"
+    },
+    {
+      "kind": "USDT_TRANSFER_TO_SIGNED_WALLET_IN_EXACT_SELL_BLOCK",
+      "block": 85961724,
+      "hash": "0x67e653802aa2c2907313ecd7428ab93fe0ff92b36f75eb7600e676e278c50984",
+      "method": "eth_getLogs",
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "indexed_to": "0x5e600e259e3cff0757e3736223685958665866c6"
+    },
+    {
+      "kind": "USDT_TRANSFER_TO_SIGNED_WALLET_IN_EXACT_SELL_BLOCK",
+      "block": 85961776,
+      "hash": "0xe62f8b2435117348bfb8f320f0533638cd97f21fcced5b15edbad154eb712ef6",
+      "method": "eth_getLogs",
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "indexed_to": "0x5e600e259e3cff0757e3736223685958665866c6"
+    },
+    {
+      "kind": "USDT_TRANSFER_TO_SIGNED_WALLET_IN_EXACT_SELL_BLOCK",
+      "block": 85961787,
+      "hash": "0xbc1e4d56e0946bf63343e045dd2da459431219acbc80ba2cc0478d28901fd7f2",
+      "method": "eth_getLogs",
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "indexed_to": "0x5e600e259e3cff0757e3736223685958665866c6"
+    },
+    {
+      "kind": "USDT_TRANSFER_TO_SIGNED_WALLET_IN_EXACT_SELL_BLOCK",
+      "block": 85980702,
+      "hash": "0x9c71aaf82a867109076b58bea79ba8f52043f151484de6e0ac40361219750545",
+      "method": "eth_getLogs",
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "indexed_to": "0x5e600e259e3cff0757e3736223685958665866c6"
+    },
+    {
+      "kind": "USDT_TRANSFER_TO_SIGNED_WALLET_IN_EXACT_SELL_BLOCK",
+      "block": 85980740,
+      "hash": "0x3fd9ef769f6c294fe2d0a4949c88e5c261935e769c5144470a4570df59b5591a",
+      "method": "eth_getLogs",
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "indexed_to": "0x5e600e259e3cff0757e3736223685958665866c6"
+    },
+    {
+      "kind": "USDT_TRANSFER_TO_SIGNED_WALLET_IN_EXACT_SELL_BLOCK",
+      "block": 85980748,
+      "hash": "0xf6bba19e1dafc184f6887e672d0f3dbef662465c65ed929172ccf299193062a2",
+      "method": "eth_getLogs",
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "indexed_to": "0x5e600e259e3cff0757e3736223685958665866c6"
+    },
+    {
+      "kind": "DRAGON_HISTORIC_BALANCE_AFTER_EIGHTH_SELL",
+      "block": 85980748,
+      "method": "eth_call",
+      "data_selector": "0x70a08231"
+    }
+  ],
+  "zero_retries": true,
+  "no_reselect": true,
+  "pnl_guardrails": [
+    "Only USDT Transfers with hash matching one of eight frozen REAL signed seller tx count as sale proceeds in that listed tx.",
+    "If a sale is token tax or transfer fee, do not assume Router min output equals full realized amount; use exact ERC20 actual transfer to wallet.",
+    "USDT balance delta first-round is wallet entire window and may include unrelated deposits/withdrawals; if equals sum of transfer receipts then independent corroboration.",
+    "Even if first five token outflows == previous balance, one must read historical balance after fifth to independently confirm true zero, and verify no other first-window Dragon inflows.",
+    "EXISTING_335K_DRAGON_COST_BASIS_UNRESOLVED, so do not call 5E60 wallet-wide combined USDT sell proceeds profit for 1k tranche.",
+    "Later 3 token sales are separate later round, preserve all eight and do not mix with first five.",
+    "No external observer causal signal or public executable 1/5/15-minute ROI proof."
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  }
+}

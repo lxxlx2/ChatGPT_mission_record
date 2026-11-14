@@ -1,0 +1,35 @@
+{
+  "schema": "BSC_P4C_BNB_MAJOR2_HISTORICAL_EXIT_TRACE_CAPABILITY_PROBE",
+  "precommit_blob_sha": "5df1602a71ecc036c4c867aa668e1053fb1d4ee7",
+  "outputs": [
+    {
+      "token": "龙虾",
+      "transaction": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+      "method": "trace",
+      "status": "RPC_ERROR",
+      "error": "INVALID_ARGUMENT: Error code: INVALID_ARGUMENT; Error: RuntimeException: Error calling MCP tool: [TextContent(type='text', text='RPC error (-32600): trace_transaction is not available on the Free tier - upgrade to Pay As You Go, or Enterprise for access.', annotations=None, meta=None)]"
+    },
+    {
+      "token": "龙虾",
+      "transaction": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+      "method": "debug",
+      "status": "RPC_ERROR",
+      "error": "INVALID_ARGUMENT: Error code: INVALID_ARGUMENT; Error: RuntimeException: Error calling MCP tool: [TextContent(type='text', text='RPC error (-32600): debug_traceTransaction is not available on the Free tier - upgrade to Pay As You Go, or Enterprise for access.', annotations=None, meta=None)]"
+    },
+    {
+      "token": "MARSCOIN",
+      "transaction": "0x2af9071f7b71de7d29f3bb7ed5559c1efdc47ee79917e20fa6a8c15f80206392",
+      "method": "trace",
+      "status": "RPC_ERROR",
+      "error": "INVALID_ARGUMENT: Error code: INVALID_ARGUMENT; Error: RuntimeException: Error calling MCP tool: [TextContent(type='text', text='RPC error (-32600): trace_transaction is not available on the Free tier - upgrade to Pay As You Go, or Enterprise for access.', annotations=None, meta=None)]"
+    },
+    {
+      "token": "MARSCOIN",
+      "transaction": "0x2af9071f7b71de7d29f3bb7ed5559c1efdc47ee79917e20fa6a8c15f80206392",
+      "method": "debug",
+      "status": "RPC_ERROR",
+      "error": "INVALID_ARGUMENT: Error code: INVALID_ARGUMENT; Error: RuntimeException: Error calling MCP tool: [TextContent(type='text', text='RPC error (-32600): debug_traceTransaction is not available on the Free tier - upgrade to Pay As You Go, or Enterprise for access.', annotations=None, meta=None)]"
+    }
+  ],
+  "production": "NO_GO"
+}

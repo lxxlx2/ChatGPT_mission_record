@@ -1,0 +1,66 @@
+{
+  "schema": "BSC_P4_FROZEN_POOL_FACTORY11_READ_RESULT",
+  "part": 1,
+  "range": [
+    0,
+    5
+  ],
+  "source_precommit_sha": "039e19fe13f98fcdbde6abc0d004599de4f4df07",
+  "records": [
+    {
+      "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "block": 121786352,
+      "target_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "method": "factory()",
+      "status": "DIRECT_HISTORICAL_CALL",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "raw": "0x000000000000000000000000ca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "pool": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "block": 122015238,
+      "target_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "method": "factory()",
+      "status": "DIRECT_HISTORICAL_CALL",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "raw": "0x000000000000000000000000ca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "pool": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+      "block": 122185934,
+      "target_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "method": "factory()",
+      "status": "DIRECT_HISTORICAL_CALL",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "raw": "0x000000000000000000000000ca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "block": 121966513,
+      "target_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "method": "factory()",
+      "status": "DIRECT_HISTORICAL_CALL",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "raw": "0x000000000000000000000000ca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+      "block": 126467804,
+      "target_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "method": "factory()",
+      "status": "DIRECT_HISTORICAL_CALL",
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+      "raw": "0x0000000000000000000000000bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "block": 122582898,
+      "target_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "method": "factory()",
+      "status": "DIRECT_HISTORICAL_CALL",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "raw": "0x000000000000000000000000ca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    }
+  ],
+  "production": "NO_GO"
+}

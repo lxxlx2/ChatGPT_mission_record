@@ -1,0 +1,83 @@
+{
+  "schema": "BSC_P4C_NEXT_FOUR_BALANCED_OWNER_NATIVE_BALANCE_SNAPSHOT",
+  "part": 1,
+  "source_precommit_sha": "2575b2d34d9e7b4607a37096558b577df8058df5",
+  "rows": [
+    {
+      "round": 29,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "block": 85954137,
+      "prior": 85954136,
+      "pre": {
+        "status": "COMPLETE",
+        "wei": "641794926358900557"
+      },
+      "post": {
+        "status": "COMPLETE",
+        "wei": "540751164358900557"
+      },
+      "delta_wei": "-101043762000000000"
+    },
+    {
+      "round": 29,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "block": 85954824,
+      "prior": 85954823,
+      "pre": {
+        "status": "COMPLETE",
+        "wei": "540751164358900557"
+      },
+      "post": {
+        "status": "COMPLETE",
+        "wei": "439724502358900557"
+      },
+      "delta_wei": "-101026662000000000"
+    },
+    {
+      "round": 29,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "block": 85957578,
+      "prior": 85957577,
+      "pre": {
+        "status": "COMPLETE",
+        "wei": "442302513031189861"
+      },
+      "post": {
+        "status": "COMPLETE",
+        "wei": "629040131998187602"
+      },
+      "delta_wei": "186737618966997741"
+    },
+    {
+      "round": 30,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "block": 85959961,
+      "prior": 85959960,
+      "pre": {
+        "status": "COMPLETE",
+        "wei": "715538712376171304"
+      },
+      "post": {
+        "status": "COMPLETE",
+        "wei": "412724454376171304"
+      },
+      "delta_wei": "-302814258000000000"
+    },
+    {
+      "round": 30,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "block": 85961371,
+      "prior": 85961370,
+      "pre": {
+        "status": "COMPLETE",
+        "wei": "406982992384181306"
+      },
+      "post": {
+        "status": "COMPLETE",
+        "wei": "732445189282433828"
+      },
+      "delta_wei": "325462196898252522"
+    }
+  ],
+  "production": "NO_GO"
+}

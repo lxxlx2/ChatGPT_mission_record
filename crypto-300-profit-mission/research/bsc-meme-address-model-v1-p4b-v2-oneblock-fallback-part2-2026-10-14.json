@@ -1,0 +1,66 @@
+{
+  "schema": "BSC_P4B_V2_FIRST_BLOCK_FALLBACK_POOL_SWAP_LOGS",
+  "precommit_git_blob_sha": "a9a9ac94e367c02161f9843f8ff429ac841b41f6",
+  "part": 2,
+  "scope": "ONLY EXACT FIRST POSITIVE POOL BLOCK, no whole ten-block coverage",
+  "rows": [
+    {
+      "index": 12,
+      "token": "币安人生",
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "block": 63454407,
+      "scope": "ONE_BLOCK_ONLY",
+      "query_status": "COMPLETE",
+      "event_count": 1,
+      "logs": [
+        {
+          "address": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e",
+            "0x000000000000000000000000ab01e0d2e1b06e21d519a50ce24ede2b55a24dac"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006f05b59d3b20000000000000000000000000000000000000000000000048c845f22d80cb747482c0000000000000000000000000000000000000000000000000000000000000000",
+          "blockHash": "0x0fc32408322d854267081eb177a2e9a9c9429ee35ddf19e3c652a4d2384ad08e",
+          "blockNumber": "0x3c83cc7",
+          "blockTimestamp": "0x68e136cc",
+          "transactionHash": "0x2af9884e236381a99afb95d34878c79cff686440f5df7bb8c78297790b73bda3",
+          "transactionIndex": "0x2d",
+          "logIndex": "0xb4",
+          "removed": false
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "token": "我踏马来了",
+      "pool": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "block": 73658906,
+      "scope": "ONE_BLOCK_ONLY",
+      "query_status": "COMPLETE",
+      "event_count": 0,
+      "logs": []
+    },
+    {
+      "index": 14,
+      "token": "龙虾",
+      "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "block": 83636128,
+      "scope": "ONE_BLOCK_ONLY",
+      "query_status": "COMPLETE",
+      "event_count": 0,
+      "logs": []
+    },
+    {
+      "index": 17,
+      "token": "哈基米 / HAJIMI",
+      "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "block": 63838943,
+      "scope": "ONE_BLOCK_ONLY",
+      "query_status": "COMPLETE",
+      "event_count": 0,
+      "logs": []
+    }
+  ],
+  "production": "NO_GO"
+}

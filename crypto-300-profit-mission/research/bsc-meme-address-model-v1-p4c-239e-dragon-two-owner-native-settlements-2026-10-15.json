@@ -1,0 +1,157 @@
+{
+  "schema": "BSC_P4C_239E_DRAGON_TWO_REAL_OWNER_WBNB_NATIVE_ROUNDS",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-next239e877af-economic-original-probe-precommit-2026-10-15.json",
+      "git_blob_sha": "5c9608d13e92f4e36a9fa0950fb065abb9869a0b"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-next239e877af-original-ca-events-part1-2026-10-15.json",
+      "git_blob_sha": "61681197d617a40b13042058bd7bb6d9850e3057"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-next239e877af-receipts-part1-2026-10-15.json",
+      "git_blob_sha": "c39006096b7edf879bb4deffde7d0e5fa3592cae"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-next239e877af-native-block-part1-2026-10-15.json",
+      "git_blob_sha": "603e58adc19a240583c91d66ab8e70286edc36d5"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-next239e877af-239e-owner-external-exclusivity-2026-10-15.json",
+      "git_blob_sha": "135d5a8addb4f5578b472f52dd4900eb733226a2"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-next239e877af-239e-owner-inbound-external-2026-10-15.json",
+      "git_blob_sha": "e606fd130c9632abd7aa8a1f72b03e3f3225ef44"
+    }
+  ],
+  "scope": "Original fixed P2 #29 and #30 239E Dragon, 5 original complete success receipts, original exact CA token round trips, actual WBNB deposit and withdrawal events, unique EOA external activity, no external inflow, historical owner native balances, gas, directly observed residual intermediary costs. Residual fee attribution not proven; global market U and follower delayed P5 unknown. Applies only selected owner events, not lifetime PnL or all trades.",
+  "summary": {
+    "owner_wallets": 1,
+    "major_CA": 1,
+    "original_closed_owner_rounds": 2,
+    "source_signed_original_transactions": 5,
+    "complete_success_receipts": 5,
+    "owner_native_original_profit_rounds": 1,
+    "owner_native_original_loss_rounds": 1,
+    "unattributed_router_cost_labels": "UNRESOLVED",
+    "profitable_wallet_rank_ready": false,
+    "followable_signals": 0,
+    "production": "NO_GO"
+  },
+  "rounds": [
+    {
+      "p2_ledger_index": 29,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "original_tx_count": 3,
+      "token_received_raw": "5733541559033810010318",
+      "token_sold_raw": "5733541559033810010318",
+      "token_inventory_residual_raw": "0",
+      "original_native_wallet_net_wei": "-15332805033002259",
+      "original_input_wbnb_pool_raw": "200000000000000000",
+      "original_output_wbnb_pool_raw": "188548785277439206",
+      "original_network_gas_wei": "462361000000000",
+      "actual_extra_route_delta_wei": "3419229310441465",
+      "source_status": "OWNER_NATIVE_BNB_CLOSED_WITH_UNNAMED_ROUTE_COST",
+      "not_claimed": "PROTOCOL_FEE_SEMANTICS_UNKNOWN_AND_FOLLOWER_UNTESTED",
+      "txs": [
+        {
+          "hash": "0x43a76faa30a37a7028cb82f75a6bc3340bd6ef6e50230126d4d40f2700606a81",
+          "block": 85954137,
+          "action": "BUY",
+          "token_raw": "2756988984252717159259",
+          "wallet_signed_token_delta_raw": "2756988984252717159259",
+          "original_wbnb_transfer_wei": "100000000000000000",
+          "gas_wei": "163762000000000",
+          "original_owner_native_block_delta_wei": "-101043762000000000",
+          "observed_router_cost_residual_wei": "880000000000000",
+          "complete_receipt": true,
+          "original_owner_single_external_tx_in_block": true,
+          "other_external_native_deposit_absent": true
+        },
+        {
+          "hash": "0xc85767729665b41c7c3c18f1140328c788893606ca624d36165f9eb0ba64f86f",
+          "block": 85954824,
+          "action": "BUY",
+          "token_raw": "2976552574781092851059",
+          "wallet_signed_token_delta_raw": "2976552574781092851059",
+          "original_wbnb_transfer_wei": "100000000000000000",
+          "gas_wei": "146662000000000",
+          "original_owner_native_block_delta_wei": "-101026662000000000",
+          "observed_router_cost_residual_wei": "880000000000000",
+          "complete_receipt": true,
+          "original_owner_single_external_tx_in_block": true,
+          "other_external_native_deposit_absent": true
+        },
+        {
+          "hash": "0x3e64fc9233617942d8c23edccd55c2273da16e8d32543178d1f9e9795544ba93",
+          "block": 85957578,
+          "action": "SELL",
+          "token_raw": "5733541559033810010318",
+          "wallet_signed_token_delta_raw": "-5733541559033810010318",
+          "original_wbnb_transfer_wei": "188548785277439206",
+          "gas_wei": "151937000000000",
+          "original_owner_native_block_delta_wei": "186737618966997741",
+          "observed_router_cost_residual_wei": "1659229310441465",
+          "complete_receipt": true,
+          "original_owner_single_external_tx_in_block": true,
+          "other_external_native_deposit_absent": true
+        }
+      ],
+      "native_original_EOA_profit_sign": "NEGATIVE",
+      "native_signed_debit_wei": "202070424000000000"
+    },
+    {
+      "p2_ledger_index": 30,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "original_tx_count": 2,
+      "token_received_raw": "9324059273385582494656",
+      "token_sold_raw": "9324059273385582494656",
+      "token_inventory_residual_raw": "0",
+      "original_native_wallet_net_wei": "22647938898252522",
+      "original_input_wbnb_pool_raw": "300000000000000000",
+      "original_output_wbnb_pool_raw": "328515554780319332",
+      "original_network_gas_wei": "336679000000000",
+      "actual_extra_route_delta_wei": "5530936882066810",
+      "source_status": "OWNER_NATIVE_BNB_CLOSED_WITH_UNNAMED_ROUTE_COST",
+      "not_claimed": "PROTOCOL_FEE_SEMANTICS_UNKNOWN_AND_FOLLOWER_UNTESTED",
+      "txs": [
+        {
+          "hash": "0x7aa4b9daf5bdcafbd6453dbb5d86957d8ce1336c897c8b308570be54ce7d9e6c",
+          "block": 85959961,
+          "action": "BUY",
+          "token_raw": "9324059273385582494656",
+          "wallet_signed_token_delta_raw": "9324059273385582494656",
+          "original_wbnb_transfer_wei": "300000000000000000",
+          "gas_wei": "174258000000000",
+          "original_owner_native_block_delta_wei": "-302814258000000000",
+          "observed_router_cost_residual_wei": "2640000000000000",
+          "complete_receipt": true,
+          "original_owner_single_external_tx_in_block": true,
+          "other_external_native_deposit_absent": true
+        },
+        {
+          "hash": "0x5f7d389c874b47509989190287fdd57cf6d4a2a5f252110d1cdd71783faa6bf1",
+          "block": 85961371,
+          "action": "SELL",
+          "token_raw": "9324059273385582494656",
+          "wallet_signed_token_delta_raw": "-9324059273385582494656",
+          "original_wbnb_transfer_wei": "328515554780319332",
+          "gas_wei": "162421000000000",
+          "original_owner_native_block_delta_wei": "325462196898252522",
+          "observed_router_cost_residual_wei": "2890936882066810",
+          "complete_receipt": true,
+          "original_owner_single_external_tx_in_block": true,
+          "other_external_native_deposit_absent": true
+        }
+      ],
+      "native_original_EOA_profit_sign": "POSITIVE",
+      "native_signed_debit_wei": "302814258000000000"
+    }
+  ]
+}

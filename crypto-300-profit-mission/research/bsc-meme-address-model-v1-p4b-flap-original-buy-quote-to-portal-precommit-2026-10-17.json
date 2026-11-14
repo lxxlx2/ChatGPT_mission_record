@@ -1,0 +1,36 @@
+{
+  "schema": "BSC_P4B_2026_FLAP_FIRST_BUY_QUOTE_TO_PORTAL_PREFREEZE_V1",
+  "predecessor_precommit": "bsc-meme-address-model-v1-p4b-flap-original-buyer-quote-outflow-precommit-2026-10-17.json",
+  "known_evidence": "Two original signed EOA quote token Transfer(from=signer) one-block queries returned [] before this frozen second leg",
+  "network": "bnb-mainnet",
+  "portal": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+  "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+  "method": "eth_getLogs filter address=original quote ERC20, topics[0]=ERC20 Transfer, topics[1]=null, topics[2]=pad(Portal), block=N only, read only no retry",
+  "cases": [
+    {
+      "token": "牛来",
+      "quote": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "block": 115628774,
+      "original_tx": "0xcb89b7adafacdfb5f844102c4e27ed474abec8947c74476d461be70a9b0e8fa5"
+    },
+    {
+      "token": "MARSCOIN",
+      "quote": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "block": 112441394,
+      "original_tx": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028"
+    }
+  ],
+  "max_calls": 2,
+  "zero_retry": true,
+  "semantics": [
+    "Compare actual returned quote token Transfer txn hash with source original signed tx; unrelated same-block events cannot be counted as original buyer proceeds.",
+    "A zero to-Portal log does not imply zero original cost; proxy may pay other intermediate or other function.",
+    "Full raw if small must be recorded; if truncated status UNKNOWN.",
+    "Even matched settlement event does not alone close outer signer funding/gas/net realized PnL."
+  ],
+  "gates": {
+    "PUBLIC_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}

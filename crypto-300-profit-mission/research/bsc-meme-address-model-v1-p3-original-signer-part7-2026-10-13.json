@@ -1,0 +1,138 @@
+{
+  "schema": "BSC_MEME_P3_ORIGINAL_TRANSACTION_SIGNER_SOURCE",
+  "part": 7,
+  "range": [
+    44,
+    50
+  ],
+  "precommit_sha": "9364abfbeedb9201afa0036df849dc9c43101d4f",
+  "records": [
+    {
+      "hash": "0xdcf3df398e17587a96b5d2e43a247eee1f3d4f76dea1a4eadb67c260430e7e62",
+      "wallets": [
+        "0xa83b73f5644cde337b61da79589f10ea15548811"
+      ],
+      "transfer_blocks": [
+        122987344
+      ],
+      "original_tx_read_state": "ORIGINAL_TX_PARSED",
+      "full_response": true,
+      "from": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+      "block": 122987344,
+      "to": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "value_wei": "0",
+      "input_selector": "0x84da2c7b",
+      "block_UTC": "2026-09-20T12:13:59.000Z",
+      "read_error": null
+    },
+    {
+      "hash": "0x331f498eeeccd7016706ba6a07af3441a54d3359d535c36638d911715a0c584b",
+      "wallets": [
+        "0xa83b73f5644cde337b61da79589f10ea15548811"
+      ],
+      "transfer_blocks": [
+        122987650
+      ],
+      "original_tx_read_state": "ORIGINAL_TX_PARSED",
+      "full_response": true,
+      "from": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+      "block": 122987650,
+      "to": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "value_wei": "0",
+      "input_selector": "0x84da2c7b",
+      "block_UTC": "2026-09-20T12:16:17.000Z",
+      "read_error": null
+    },
+    {
+      "hash": "0x38a46891ba00fa6ffeff72ed90f2ae3f291f4c36245d7aef416739ce73e45663",
+      "wallets": [
+        "0xa83b73f5644cde337b61da79589f10ea15548811"
+      ],
+      "transfer_blocks": [
+        122987878
+      ],
+      "original_tx_read_state": "ORIGINAL_TX_PARSED",
+      "full_response": true,
+      "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 122987878,
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "input_selector": "0x4d819a2a",
+      "block_UTC": "2026-09-20T12:18:00.000Z",
+      "read_error": null
+    },
+    {
+      "hash": "0xbe5f3f98ab9c7c7e9c3f7c197c0d3bee653ab4953a8f2420e1c26b8f8fec5cac",
+      "wallets": [
+        "0xa83b73f5644cde337b61da79589f10ea15548811"
+      ],
+      "transfer_blocks": [
+        122988777
+      ],
+      "original_tx_read_state": "ORIGINAL_TX_PARSED",
+      "full_response": true,
+      "from": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+      "block": 122988777,
+      "to": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "value_wei": "0",
+      "input_selector": "0x84da2c7b",
+      "block_UTC": "2026-09-20T12:24:45.000Z",
+      "read_error": null
+    },
+    {
+      "hash": "0x429260276a594e13c325d4ede69acdd2506845fb68e2e4b74166ae44eb95d327",
+      "wallets": [
+        "0xa83b73f5644cde337b61da79589f10ea15548811"
+      ],
+      "transfer_blocks": [
+        122988962
+      ],
+      "original_tx_read_state": "ORIGINAL_TX_PARSED",
+      "full_response": true,
+      "from": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+      "block": 122988962,
+      "to": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "value_wei": "0",
+      "input_selector": "0x84da2c7b",
+      "block_UTC": "2026-09-20T12:26:08.000Z",
+      "read_error": null
+    },
+    {
+      "hash": "0x04cad9f0aae0cb0224e49b4b19434d2ff607edba5527d614571cc3eb4fb1b3ba",
+      "wallets": [
+        "0xa83b73f5644cde337b61da79589f10ea15548811"
+      ],
+      "transfer_blocks": [
+        123019626
+      ],
+      "original_tx_read_state": "ORIGINAL_TX_PARSED",
+      "full_response": true,
+      "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 123019626,
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "input_selector": "0x4d819a2a",
+      "block_UTC": "2026-09-20T16:16:11.000Z",
+      "read_error": null
+    },
+    {
+      "hash": "0x411a0d6ba1b211133e2a549b71bfdc286dd115d34cc146c6d9c5adcf4de2bf94",
+      "wallets": [
+        "0xa83b73f5644cde337b61da79589f10ea15548811"
+      ],
+      "transfer_blocks": [
+        123644309
+      ],
+      "original_tx_read_state": "ORIGINAL_TX_PARSED",
+      "full_response": true,
+      "from": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+      "block": 123644309,
+      "to": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "value_wei": "0",
+      "input_selector": "0x84da2c7b",
+      "block_UTC": "2026-09-23T22:22:56.000Z",
+      "read_error": null
+    }
+  ],
+  "production": "NO_GO"
+}
