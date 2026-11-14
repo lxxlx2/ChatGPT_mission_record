@@ -136,11 +136,12 @@ def test_funding_older_than_50_signatures_is_found_on_second_page(monkeypatch):
     assert window(a)['phase']=='funding'
 
 
-def test_standard_worker_enables_bounded_adaptive_pages_without_changing_job_budgets():
+def test_standard_worker_enables_source_end_history_without_aggregate_quotas():
     from mission_agent.mission_control.server import CLUSTER_PRESETS,CLUSTER_RPC_JOB_BUDGETS
-    assert CLUSTER_PRESETS['standard']['adaptive_history_max_pages']==4
-    assert CLUSTER_PRESETS['standard']['adaptive_funding_max_pages']==5
-    assert CLUSTER_RPC_JOB_BUDGETS['standard']=={'max_wire_attempts':1200,'max_elapsed_seconds':1800}
+    assert CLUSTER_PRESETS['standard']['adaptive_history_max_pages']==8
+    assert CLUSTER_PRESETS['standard']['adaptive_funding_max_pages']==8
+    assert CLUSTER_PRESETS['standard']['exhaust_history'] is True
+    assert CLUSTER_RPC_JOB_BUDGETS['standard']=={'max_wire_attempts':None,'max_elapsed_seconds':None}
 
 
 def test_page_cache_can_be_reused_in_a_fresh_analyzer_without_wire_reads(tmp_path):
@@ -198,8 +199,9 @@ def test_classification_failure_remains_visible_and_does_not_leak_exception(monk
 
 def test_actual_standard_analyze_reaches_fourth_history_page_and_keeps_bounded_status(monkeypatch):
     from mission_agent.mission_control.server import CLUSTER_PRESETS
-    rpc=PageRPC([rows(0,12),rows(0,30),rows(30,30),rows(60,30),rows(90,30)])
-    a=WalletClusterAnalyzer('Mint',rpc=rpc,**CLUSTER_PRESETS['standard'])
+    rpc=PageRPC([rows(0,12),rows(0,30),rows(30,30),rows(60,30),rows(90,30),rows(120,30),rows(150,30),rows(180,30),rows(210,30)])
+    a=WalletClusterAnalyzer('Mint',rpc=rpc,**{**CLUSTER_PRESETS['standard'],'exhaust_history':False})
+    a.launch_snapshot=lambda profile:{'version':1,'status':'NOT_REQUESTED'}
     a.holders=lambda:(1000,0,[Holder('ta','A',100,0,'UNRESOLVED','fixture')])
     a.token_profile=lambda:{'status':'OK','mint_authority':None,'freeze_authority':None}
     a.market_snapshot=lambda:{'status':'UNAVAILABLE'}
@@ -210,12 +212,12 @@ def test_actual_standard_analyze_reaches_fourth_history_page_and_keeps_bounded_s
     assert report['holders'][0]['first_acquisition']['signature']=='s-110'
     assert report['holders'][0]['first_acquisition']['status']=='CONFIRMED_BOUNDED'
     history=report['coverage']['history_windows'][-1]
-    assert report['coverage']['holder_history_pages']==5
-    assert history['pages']==4 and history['signature_count']==120
+    assert report['coverage']['holder_history_pages']==9
+    assert history['pages']==8 and history['signature_count']==240
     assert history['stop_reason']=='PAGE_LIMIT' and history['history_complete'] is False
     assert 'HISTORY_PAGINATION_INCOMPLETE' in report['coverage']['gaps']
     assert funding_plans[-1][0]['signature']=='s-110'
-    assert funding_plans[-1][1]==5
+    assert funding_plans[-1][1]==8
 
 
 

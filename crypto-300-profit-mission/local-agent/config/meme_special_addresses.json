@@ -5,6 +5,102 @@
       "role": "PUBLIC_INFRA",
       "label": "FOMO execution / fee-payer infrastructure",
       "source": "repo:WALLET_CLUSTER_ANALYSIS_SPEC.md#GOMO-regression-example"
+    },
+    "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9": {
+      "role": "CEX",
+      "label": "Binance 2",
+      "source": "https://solscan.io/account/5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "source_kind": "SOLSCAN_PUBLIC_LABEL",
+      "checked_at": "2026-11-11",
+      "account_owner_program": "11111111111111111111111111111111"
+    },
+    "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM": {
+      "role": "CEX",
+      "label": "Binance 3",
+      "source": "https://solscan.io/account/9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+      "source_kind": "SOLSCAN_PUBLIC_LABEL",
+      "checked_at": "2026-11-11",
+      "account_owner_program": "11111111111111111111111111111111"
+    },
+    "H8sMJSCQxfKiFTCfDR3DUMLPwcRbM61LGFJ8N4dK3WjS": {
+      "role": "CEX",
+      "label": "Coinbase 1",
+      "source": "https://solscan.io/account/H8sMJSCQxfKiFTCfDR3DUMLPwcRbM61LGFJ8N4dK3WjS",
+      "source_kind": "SOLSCAN_PUBLIC_LABEL",
+      "checked_at": "2026-11-11",
+      "account_owner_program": "11111111111111111111111111111111"
+    },
+    "2AQdpHJ2JpcEgPiATUXjQxA8QmafFegfQwSLWSprPicm": {
+      "role": "CEX",
+      "label": "Coinbase 2",
+      "source": "https://solscan.io/account/2AQdpHJ2JpcEgPiATUXjQxA8QmafFegfQwSLWSprPicm",
+      "source_kind": "SOLSCAN_PUBLIC_LABEL",
+      "checked_at": "2026-11-11",
+      "account_owner_program": "11111111111111111111111111111111"
+    },
+    "GJRs4FwHtemZ5ZE9x3FNvJ8TMwitKTh21yxdRPqn7npE": {
+      "role": "CEX",
+      "label": "Coinbase Hot Wallet 2",
+      "source": "https://solscan.io/account/GJRs4FwHtemZ5ZE9x3FNvJ8TMwitKTh21yxdRPqn7npE",
+      "source_kind": "SOLSCAN_PUBLIC_LABEL",
+      "checked_at": "2026-11-11",
+      "account_owner_program": "11111111111111111111111111111111"
+    },
+    "FWznbcNXWQuHTawe9RxvQ2LdCENssh12dsznf4RiouN5": {
+      "role": "CEX",
+      "label": "Kraken Hot Wallet",
+      "source": "https://solscan.io/account/FWznbcNXWQuHTawe9RxvQ2LdCENssh12dsznf4RiouN5",
+      "source_kind": "SOLSCAN_PUBLIC_LABEL",
+      "checked_at": "2026-11-11",
+      "account_owner_program": "11111111111111111111111111111111"
+    },
+    "AC5RDfQFmDS1deWZos921JfqscXdByf8BKHs5ACWjtW2": {
+      "role": "CEX",
+      "label": "Bybit Hot Wallet",
+      "source": "https://solscan.io/account/AC5RDfQFmDS1deWZos921JfqscXdByf8BKHs5ACWjtW2",
+      "source_kind": "SOLSCAN_PUBLIC_LABEL",
+      "checked_at": "2026-11-11",
+      "account_owner_program": "11111111111111111111111111111111"
+    },
+    "5VCwKtCXgCJ6kit5FybXjvriW3xELsFDhYrPSqtJNmcD": {
+      "role": "CEX",
+      "label": "OKX Hot Wallet",
+      "source": "https://solscan.io/account/5VCwKtCXgCJ6kit5FybXjvriW3xELsFDhYrPSqtJNmcD",
+      "source_kind": "SOLSCAN_PUBLIC_LABEL",
+      "checked_at": "2026-11-11",
+      "account_owner_program": "11111111111111111111111111111111"
+    },
+    "u6PJ8DtQuPFnfmwHbGFULQ4u4EgjDiyYKjVEsynXq2w": {
+      "role": "CEX",
+      "label": "Gate.io Hot Wallet",
+      "source": "https://solscan.io/account/u6PJ8DtQuPFnfmwHbGFULQ4u4EgjDiyYKjVEsynXq2w",
+      "source_kind": "SOLSCAN_PUBLIC_LABEL",
+      "checked_at": "2026-11-11",
+      "account_owner_program": "11111111111111111111111111111111"
+    },
+    "A77HErqtfN1hLLpvZ9pCtu66FEtM8BveoaKbbMoZ4RiR": {
+      "role": "CEX",
+      "label": "Bitget Exchange",
+      "source": "https://solscan.io/account/A77HErqtfN1hLLpvZ9pCtu66FEtM8BveoaKbbMoZ4RiR",
+      "source_kind": "SOLSCAN_PUBLIC_LABEL",
+      "checked_at": "2026-11-11",
+      "account_owner_program": "11111111111111111111111111111111"
+    },
+    "BmFdpraQhkiDQE6SnfG5omcA1VwzqfXrwtNYBwWTymy6": {
+      "role": "CEX",
+      "label": "KuCoin Hot Wallet",
+      "source": "https://solscan.io/account/BmFdpraQhkiDQE6SnfG5omcA1VwzqfXrwtNYBwWTymy6",
+      "source_kind": "SOLSCAN_PUBLIC_LABEL",
+      "checked_at": "2026-11-11",
+      "account_owner_program": "11111111111111111111111111111111"
+    },
+    "ASTyfSima4LLAdDgoFGkgqoKowG1LZFDr9fAQrg7iaJZ": {
+      "role": "CEX",
+      "label": "MEXC",
+      "source": "https://solscan.io/account/ASTyfSima4LLAdDgoFGkgqoKowG1LZFDr9fAQrg7iaJZ",
+      "source_kind": "SOLSCAN_PUBLIC_LABEL",
+      "checked_at": "2026-11-11",
+      "account_owner_program": "11111111111111111111111111111111"
     }
   },
   "normalization_complete": false,

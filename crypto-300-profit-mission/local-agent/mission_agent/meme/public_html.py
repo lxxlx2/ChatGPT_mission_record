@@ -53,7 +53,7 @@ class PinnedHTTPSConnection(http.client.HTTPSConnection):
         except Exception:raw.close();raise
 
 
-def fetch_public_html(url,*,resolver=socket.getaddrinfo,connection_factory=PinnedHTTPSConnection):
+def fetch_public_html(url,*,resolver=socket.getaddrinfo,connection_factory=PinnedHTTPSConnection,want_json=False):
     try:url=canonical_url(url)
     except ValueError:return {'status':'UNAVAILABLE','reason':'URL_NOT_ALLOWED'}
     parsed=urlsplit(url);host=parsed.hostname
@@ -66,13 +66,16 @@ def fetch_public_html(url,*,resolver=socket.getaddrinfo,connection_factory=Pinne
     except (OSError,ValueError,TypeError,IndexError):return {'status':'UNAVAILABLE','reason':'DNS_UNAVAILABLE'}
     connection=None
     try:
-        connection=connection_factory(host,ipv4[0],timeout=5)
-        connection.request('GET',parsed.path or '/',headers={'Accept':'text/html, application/xhtml+xml','User-Agent':'mission-meme-research/4','Connection':'close'})
+        connection=connection_factory(host,ipv4[0],timeout=12 if want_json else 5)
+        connection.request('GET',parsed.path or '/',headers={'Accept':'application/json' if want_json else 'text/html, application/xhtml+xml','User-Agent':'mission-meme-research/4','Connection':'close'})
         response=connection.getresponse()
         if 300<=response.status<400:return {'status':'UNAVAILABLE','reason':'REDIRECT_NOT_FOLLOWED'}
         if response.status!=200:return {'status':'UNAVAILABLE','reason':'HTTP_'+str(response.status)}
         content_type=(response.getheader('Content-Type') or '').lower()
-        if content_type.split(';')[0].strip() not in {'text/html','application/xhtml+xml'}:return {'status':'UNAVAILABLE','reason':'NOT_HTML'}
+        kind=content_type.split(';')[0].strip()
+        if want_json:
+            if kind not in {'application/json','text/plain','application/octet-stream'}:return {'status':'UNAVAILABLE','reason':'NOT_JSON'}
+        elif kind not in {'text/html','application/xhtml+xml'}:return {'status':'UNAVAILABLE','reason':'NOT_HTML'}
         encoding=(response.getheader('Content-Encoding') or 'identity').lower()
         if encoding!='identity':return {'status':'UNAVAILABLE','reason':'COMPRESSED_BODY_NOT_SUPPORTED'}
         raw=response.read(MAX_HTML_BYTES+1)
@@ -83,12 +86,12 @@ def fetch_public_html(url,*,resolver=socket.getaddrinfo,connection_factory=Pinne
         if connection is not None:connection.close()
 
 
-def read_public_html(url):
+def read_public_html(url,*,_mode='--fetch'):
     try:url=canonical_url(url)
     except ValueError:return {'status':'UNAVAILABLE','reason':'URL_NOT_ALLOWED'}
     try:
-        result=subprocess.run([sys.executable,'-I','-S',str(Path(__file__).resolve()),'--fetch',url],
-            stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=10,check=False,env={'LANG':'C'})
+        result=subprocess.run([sys.executable,'-I','-S',str(Path(__file__).resolve()),_mode,url],
+            stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=15 if _mode=='--fetch-json' else 10,check=False,env={'LANG':'C'})
         if result.returncode!=0 or len(result.stdout)>2*MAX_HTML_BYTES:return {'status':'UNAVAILABLE','reason':'FETCH_WORKER_FAILED'}
         value=json.loads(result.stdout)
         if not isinstance(value,dict) or value.get('status') not in {'OK','UNAVAILABLE'}:raise ValueError()
@@ -97,5 +100,16 @@ def read_public_html(url):
     except (OSError,ValueError,TypeError):return {'status':'UNAVAILABLE','reason':'FETCH_WORKER_FAILED'}
 
 
+def read_public_json(url):
+    """Same isolated worker; JSON body returned as parsed value (no script, no redirect)."""
+    result=read_public_html(url,_mode='--fetch-json')
+    if result.get('status')!='OK':return result
+    try:
+        value=json.loads(base64.b64decode(result['body_b64'],validate=True).decode('utf-8'))
+    except (ValueError,TypeError,KeyError,UnicodeDecodeError):return {'status':'UNAVAILABLE','reason':'NOT_JSON'}
+    return {'status':'OK','json':value,'response_sha256':__import__('hashlib').sha256(base64.b64decode(result['body_b64'])).hexdigest()}
+
+
 if __name__=='__main__':
     if len(sys.argv)==3 and sys.argv[1]=='--fetch':print(json.dumps(fetch_public_html(sys.argv[2])))
+    elif len(sys.argv)==3 and sys.argv[1]=='--fetch-json':print(json.dumps(fetch_public_html(sys.argv[2],want_json=True)))

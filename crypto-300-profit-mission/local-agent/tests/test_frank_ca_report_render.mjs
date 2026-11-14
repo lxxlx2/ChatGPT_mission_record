@@ -67,6 +67,40 @@ function harness(options = {}) {
   return {context,element,requests,store,setResponse(fn){responseFor=fn;}};
 }
 
+test('all-account second-provider batches keep source-universe and time limits explicit',()=>{
+  const h=harness();
+  const output=h.context.renderIndependentCheck({independent_balance_check:{
+    version:1,status:'NEAR_TIME_ALL_MATCH',secondary_provider:'PUBLICNODE',
+    scope:'ALL_PROVIDED_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_INDEPENDENT_ENUMERATION',
+    accounts_compared:301,matches:301,differences:0,missing:0,rows:[],
+  }});
+  assert.match(output,/主来源枚举的全部账户/);
+  assert.match(output,/逐批实际 slot/);
+  assert.match(output,/未独立发现其他账户/);
+  assert.match(output,/不能证明原子同快照一致/);
+  assert.doesNotMatch(output,/最大代币账户/);
+});
+
+test('partial second-provider result preserves completed work without endorsing unread accounts',()=>{
+  const h=harness();
+  const output=h.context.renderIndependentCheck({independent_balance_check:{
+    version:1,status:'PARTIAL',accounts_compared:100,
+    reason:'https://private.invalid/SECRET',last_source_error:'HTTP_403',
+  }});
+  assert.match(output,/已完成 100 项/);
+  assert.match(output,/未核对账户不视为一致/);
+  assert.match(output,/HTTP_403/);
+  assert.doesNotMatch(output,/SECRET|private.invalid/);
+});
+
+test('source-end history report does not promote collection to full wallet certainty',()=>{
+  const h=harness();
+  h.context.renderClusterCompleteness({...fixture,coverage:{history_scan_mode:'SOURCE_END'}});
+  assert.match(h.element('cluster-completeness').innerHTML,/不设固定分页数或账户数配额/);
+  assert.match(h.element('cluster-completeness').innerHTML,/无法发现的历史账户/);
+  assert.doesNotMatch(h.element('cluster-completeness').innerHTML,/分析完整|尽调通过/);
+});
+
 test('unfinished persisted job restore uses GET and offers a separate source continuation',async()=>{
   const h=harness({store:new Map([['session:mission-meme-cluster-pending-v1',JSON.stringify({id:jobId,mint})]]),
     responseFor:async url=>url.startsWith('/api/cluster-analysis?')
@@ -1498,4 +1532,88 @@ for(const secondsBeforeReport of [1,300,86400]) test('browser narrative retains 
   assert.ok(html.includes(new Date(record.captured_at_utc).toLocaleString('zh-CN')));
   assert.equal(JSON.stringify(record),original);
   assert.match(html,/CA 官方归属、人物互动和最早起源仍未核实/);
+});
+
+test('holder rankings describe a supply bracket without claiming a same-slot snapshot',()=>{
+  const h=harness();
+  h.context.renderHolderRankings({holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',
+    snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:30,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'},
+    metrics:{GLOBAL_OWNER_TOP10_PCT:'58.9540'},owners:[]}});
+  const html=h.element('cluster-rankings').innerHTML;
+  assert.match(html,/跨 slot 供给夹逼/);
+  assert.match(html,/前 10.*账户 20.*后 30/);
+  assert.doesNotMatch(html,/账户余额总和与同 slot 供给已核对/);
+  assert.match(html,/58.954%/);
+});
+
+test('holder rankings only use same-slot wording for recorded equal slots',()=>{
+  const h=harness();
+  for(const slots of [{snapshot_slot:20,supply_slot:10},{snapshot_slot:null,supply_slot:null},
+    {snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:15,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'}}]) {
+    h.context.renderHolderRankings({holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',...slots,metrics:{},owners:[]}});
+    assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/账户余额总和与同 slot 供给已核对/);
+    assert.match(h.element('cluster-rankings').innerHTML,/slot 关系未记录或未核实/);
+  }
+  h.context.renderHolderRankings({holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',snapshot_slot:20,supply_slot:20,metrics:{},owners:[]}});
+  assert.match(h.element('cluster-rankings').innerHTML,/账户余额总和与同 slot 供给已核对/);
+});
+
+test('Pump complete flag does not claim a verified migration',()=>{
+  const h=harness();
+  const html=h.context.renderLaunchIdentity({launch_identity:{version:1,pump:{status:'VERIFIED_CHAIN_STATE',complete:true}}});
+  assert.match(html,/曲线完成标记为真/);
+  assert.match(html,/迁移状态尚未核实/);
+  assert.doesNotMatch(html,/已完成并迁移/);
+});
+
+test('classification gaps show deduplicated contexts without calling observations RPC failures',()=>{
+  const h=harness(),r=structuredClone(fixture);
+  r.transaction_errors=[{error:'CLASSIFICATION_UNRESOLVED'}];
+  r.coverage.holder_classification_gaps={version:1,observation_records:298,unique_owner_signatures:271,
+    unique_signatures:265,affected_owners:5,unscoped_records:0,reason_counts:{WALLET_NOT_SIGNER_AUTHORITY_UNPROVEN:223,AMBIGUOUS_USER_EXCHANGE_ASSETS:29,WALLET_NOT_REFERENCED:15,INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE:4}};
+  h.context.renderClusterReport(r);
+  const html=h.element('cluster-coverage').innerHTML;
+  assert.match(html,/298 条观察记录/);assert.match(html,/271 个 Owner／签名组合/);assert.match(html,/265 个不同签名/);
+  assert.match(html,/5 个 Owner/);assert.match(html,/Owner 未出现在消息键中/);
+  assert.doesNotMatch(html,/笔历史交易读取\/解析失败/);
+});
+
+test('invalid classification coverage cannot fabricate complete or zero-gap counts',()=>{
+  const h=harness();
+  const html=h.context.renderHolderClassificationGaps({coverage:{holder_classification_gaps:{version:1,
+    observation_records:2,unique_owner_signatures:3,unique_signatures:1,affected_owners:1,unscoped_records:0,
+    reason_counts:{'https://private.invalid/SECRET':3}}}});
+  assert.match(html,/统计尚未核实/);assert.doesNotMatch(html,/SECRET|3 个/);
+  assert.equal(h.context.renderHolderClassificationGaps(fixture),'');
+});
+
+test('independent failure separates the stopping budget from a safe last source code',()=>{
+  const h=harness();
+  let html=h.context.renderIndependentCheck({independent_balance_check:{version:1,status:'UNAVAILABLE',
+    reason:'RPC_JOB_WIRE_BUDGET_EXHAUSTED',last_source_error:'HTTP_403'}});
+  assert.match(html,/RPC_JOB_WIRE_BUDGET_EXHAUSTED/);assert.match(html,/最后来源错误：HTTP_403/);
+  html=h.context.renderIndependentCheck({independent_balance_check:{version:1,status:'UNAVAILABLE',
+    reason:'RPC_JOB_WIRE_BUDGET_EXHAUSTED',last_source_error:'https://private.invalid/SECRET'}});
+  assert.doesNotMatch(html,/SECRET/);
+});
+
+test('owner coverage renders every selected current account and its actual count',()=>{
+  const h=harness();
+  const accounts=Array.from({length:7},(_,i)=>String(i+1)+mint);
+  const html=h.context.renderOwnerAccountHistory({owner_account_history:[{
+    owner:mint,current_accounts_observed:7,accounts_selected:accounts,accounts_with_windows:accounts,
+    accounts_not_selected:0,account_selection_complete:true,account_source_status:'VERIFIED_CURRENT_MINT_ACCOUNTS',
+    selection_stop_reason:'ALL_OBSERVED_SELECTED',
+  }]});
+  assert.match(html,/7 \/ 7 \/ 7/);
+  assert.ok(html.includes(encodeURIComponent(accounts[6])));
+});
+
+test('a long source-end query exposes its read interval without claiming all data fresh at completion',()=>{
+  const h=harness();
+  h.context.renderClusterCompleteness({...fixture,collection_checkpoint:{version:1,source_epoch_started_at:1700000000,last_source_read_at:1700003600}});
+  assert.match(h.element('cluster-completeness').innerHTML,/本轮读取区间/);
+  assert.match(h.element('cluster-completeness').innerHTML,/任务结束不代表全部数据已刷新到结束时点/);
+  h.context.renderClusterCompleteness({...fixture,collection_checkpoint:{version:1,source_epoch_started_at:1700003600,last_source_read_at:1700000000}});
+  assert.doesNotMatch(h.element('cluster-completeness').innerHTML,/本轮读取区间/);
 });

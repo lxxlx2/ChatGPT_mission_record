@@ -169,7 +169,7 @@ def test_actual_analyzer_standard_opt_in_and_overall_incomplete(monkeypatch):
     from mission_agent.meme.cluster import report_completeness
     assert CLUSTER_PRESETS['standard']['read_pool_vaults'] is True
     assert not CLUSTER_PRESETS['quick'].get('read_pool_vaults')
-    assert CLUSTER_RPC_JOB_BUDGETS['standard']['max_wire_attempts']==1200
+    assert CLUSTER_RPC_JOB_BUDGETS['standard']['max_wire_attempts'] is None
     a=WalletClusterAnalyzer(MINT,rpc=RPC(),read_pool_vaults=True)
     out=a.pool_vault_snapshot(market())
     assert out['status']=='VAULT_BALANCE_SNAPSHOT'

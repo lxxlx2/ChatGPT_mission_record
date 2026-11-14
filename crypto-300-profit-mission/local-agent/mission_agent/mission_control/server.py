@@ -20,7 +20,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from ..meme.cluster import RpcCache, RPCJobBudgetExceeded, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown, report_completeness
-from ..meme.job_checkpoint import JobCheckpoint, CheckpointRPC, CheckpointClient, CheckpointError, canonical, digest, source_fingerprint
+from ..meme.job_checkpoint import JobCheckpoint, CheckpointRPC, CheckpointSecondaryRPC, CheckpointClient, CheckpointError, canonical, digest, source_fingerprint
 from ..meme.market import DexScreenerMarketClient
 from ..meme.market_parity import GeckoTerminalMarketClient
 from ..meme.narrative import PublicNarrativeClient
@@ -119,12 +119,13 @@ def _atomic_write_text(path: Path, text_value: str):
 
 
 SOLANA_PUBKEY_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
-# C1 code-only proposal. These are hard on-wire attempt ceilings, including fallback
-# and retries (not logical requests); deployment and real CA POST are NOT authorized.
-# Historical Deep report used 1,733 RPC attempts; budgets require independent review.
+# The manual standard query has no aggregate request/time quota, per the user's
+# explicit free-source authorization. Transport timeouts, cooldowns, durable
+# accounting and source-failure handling still apply. Finite legacy presets stay
+# available for callers that explicitly select them.
 CLUSTER_RPC_JOB_BUDGETS = {
     "quick": {"max_wire_attempts": 300, "max_elapsed_seconds": 600},
-    "standard": {"max_wire_attempts": 1200, "max_elapsed_seconds": 1800},
+    "standard": {"max_wire_attempts": None, "max_elapsed_seconds": None},
     "deep": {"max_wire_attempts": 2500, "max_elapsed_seconds": 3600},
 }
 
@@ -134,10 +135,11 @@ CLUSTER_PRESETS = {
         "adaptive_history_per_holder": None, "adaptive_funding_lookback": None,
     },
     "standard": {
-        "deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8,
+        "deep_holders": 20, "history_per_holder": 12, "funding_lookback": 8,
         "adaptive_history_per_holder": 30, "adaptive_funding_lookback": 12,
-        "adaptive_history_max_pages": 4, "adaptive_funding_max_pages": 5,
-        "enumerate_holder_ranks": True, "compare_market_sources": True, "collect_narrative": True, "read_pool_vaults": True, "audit_holder_binary": True,
+        "adaptive_history_max_pages": 8, "adaptive_funding_max_pages": 8,
+        "exhaust_history": True,
+        "enumerate_holder_ranks": True, "compare_market_sources": True, "collect_narrative": True, "read_pool_vaults": True, "audit_holder_binary": True, "read_launch_identity": True,
     },
     "deep": {
         "deep_holders": 20, "history_per_holder": 100, "funding_lookback": 50,
@@ -157,6 +159,11 @@ class ClusterJobManager:
         configured=os.environ.get("SOLANA_RPC_URLS")
         if configured:
             self.rpc_endpoints=[x.strip() for x in configured.split(",") if x.strip()]
+            # Keyed providers may throttle heavy GPA by compute units/s (HTTP 429).
+            # Keep the configured provider primary; the official public mainnet
+            # endpoint is used only while the primary is in an error cooldown.
+            if os.environ.get("SOLANA_RPC_PUBLIC_FALLBACK","1")!="0":
+                self.rpc_endpoints.append("https://api.mainnet-beta.solana.com")
         else:
             primary=os.environ.get("SOLANA_RPC_URL","https://api.mainnet.solana.com")
             self.rpc_endpoints=[
@@ -221,6 +228,7 @@ class ClusterJobManager:
             "budget": CLUSTER_RPC_JOB_BUDGETS[preset],
             "registry": hashlib.sha256(self.registry_path.read_bytes()).hexdigest(),
             "endpoints": hashlib.sha256(canonical(self.rpc_endpoints).encode()).hexdigest(),
+            "secondary_endpoint": hashlib.sha256(os.environ.get("SOLANA_RPC_SECONDARY","https://solana-rpc.publicnode.com").encode()).hexdigest(),
             "clients": [client_kind(getattr(self, name, None)) for name in
                         ("market_client", "independent_market_client", "narrative_client")],
         }))
@@ -261,6 +269,17 @@ class ClusterJobManager:
             self.jobs[job_id] = job
             job["future"] = self.executor.submit(self._run, job_id)
             return self._public_job(job)
+
+    def _independent_rpc(self):
+        # Second free provider for balance parity only (getMultipleAccounts).
+        url=os.environ.get("SOLANA_RPC_SECONDARY","https://solana-rpc.publicnode.com")
+        if not url or url=="0" or url in self.rpc_endpoints[:1]:return None
+        # No separate aggregate quota: each logical transport read still has
+        # finite retries and timeouts, so access failures terminate normally.
+        def create():
+            try:return SolanaReadOnlyRPC(url,fallback_endpoints=[])
+            except ValueError:return None
+        return create
 
     def submit(self, mint: str, preset: str = "standard") -> dict:
         mint = self.validate_mint(mint)
@@ -323,7 +342,7 @@ class ClusterJobManager:
                 "liquidity_usd":pair.get("liquidity_usd"),
             })
         else:
-            for key in ("top_accounts_resolved","scanned","target","owner","mode","deep_holders_scanned","adaptive_deepened","phase","pages","signature_count","stop_reason"):
+            for key in ("top_accounts_resolved","scanned","target","completed","total","owner","mode","deep_holders_scanned","adaptive_deepened","phase","pages","signature_count","stop_reason"):
                 if key in details:progress[key]=details.get(key)
             if details.get("owners"):progress["owners"]=list(details.get("owners") or [])[:10]
         with self.lock:
@@ -578,6 +597,11 @@ class ClusterJobManager:
             def source_client(name, enabled=True):
                 client = getattr(self, name, None) if enabled else None
                 return CheckpointClient(checkpoint, client, name) if checkpoint is not None and client is not None else client
+            secondary_factory=self._independent_rpc() if opts.get("audit_holder_binary") else None
+            def secondary_rpc():
+                if secondary_factory is None:return None
+                client=secondary_factory() if callable(secondary_factory) else secondary_factory
+                return CheckpointSecondaryRPC(checkpoint,client) if checkpoint is not None and client is not None else client
             registry = load_registry(self.registry_path)
             report = WalletClusterAnalyzer(
                 mint,
@@ -591,6 +615,7 @@ class ClusterJobManager:
                 enumerate_holder_ranks=opts.get("enumerate_holder_ranks",False),
                 adaptive_history_max_pages=opts.get("adaptive_history_max_pages",1),
                 adaptive_funding_max_pages=opts.get("adaptive_funding_max_pages",1),
+                exhaust_history=opts.get("exhaust_history",False),
                 market_client=source_client("market_client"),
                 independent_market_client=source_client("independent_market_client", opts.get("compare_market_sources")),
                 compare_market_sources=opts.get("compare_market_sources",False),
@@ -598,6 +623,8 @@ class ClusterJobManager:
                 collect_narrative=opts.get("collect_narrative",False),
                 read_pool_vaults=opts.get("read_pool_vaults",False),
                 audit_holder_binary=opts.get("audit_holder_binary",False),
+                read_launch_identity=opts.get("read_launch_identity",False),
+                independent_rpc=secondary_rpc if secondary_factory is not None else None,
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
             if checkpoint is not None:

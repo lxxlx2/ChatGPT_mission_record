@@ -281,3 +281,47 @@ def withhold_legacy_normalization(ranks,audit):
     ranks['normalization_complete']=False
     for name in ('GLOBAL_EX_LP_OWNER_TOP10_PCT','GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT'):
         if name in (ranks.get('metrics') or {}):ranks['metrics'][name]='UNRESOLVED'
+
+
+ORDINARY_ROLES={'ORDINARY','EOA','DEV','CREATOR','TREASURY'}
+LP_ROLES={'LP','AMM_POOL','PROTOCOL_VAULT'}
+
+
+def sufficient_top10_exclusions(ranks,special_roles=None):
+    """Exact ex-LP/ex-special Top10 without a global registry.
+
+    Walk owners by balance. Excluded: pool authorities bound in this same
+    enumeration plus explicit LP/special roles. The metric is exact iff every
+    owner reached before the 10th counted owner has a resolved role; an
+    unresolved owner in that prefix could change membership, so it stays
+    UNRESOLVED. Unresolved owners after the prefix cannot enter the Top10.
+    """
+    from .holder_ranks import DEFAULT_SPECIAL
+    special=set(special_roles or DEFAULT_SPECIAL)
+    if not isinstance(ranks,dict) or ranks.get('status')!='COMPLETE_SNAPSHOT':return None
+    owners=ranks.get('owners') or [];pools=set(ranks.get('verified_pool_authorities') or [])
+    supply=int(ranks.get('supply_raw') or 0)
+    if supply<=0:return None
+    from decimal import Decimal
+    out={'method':'TOP10_PREFIX_ROLE_SUFFICIENT_SAME_ENUMERATION','metrics':{},'prefix':{}}
+    for name,excl in (('GLOBAL_EX_LP_OWNER_TOP10_PCT',LP_ROLES),('GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT',special)):
+        total=0;counted=0;scanned=0;blocker=None;excluded=[]
+        for row in owners:
+            if counted>=10:break
+            scanned+=1;role=row.get('role')
+            if row.get('owner') in pools or role in excl:excluded.append(row.get('owner'));continue
+            if role in ORDINARY_ROLES or (role in special and role not in excl):
+                total+=int(row['raw']);counted+=1;continue
+            blocker={'owner':row.get('owner'),'role':role};break
+        ok=blocker is None and (counted==10 or scanned==len(owners))
+        out['metrics'][name]=str((Decimal(total)*100/Decimal(supply)).quantize(Decimal('0.0001'))) if ok else 'UNRESOLVED'
+        out['prefix'][name]={'owners_scanned':scanned,'excluded_owners':excluded,'blocker':blocker}
+    return out
+
+
+def apply_sufficient_top10(ranks):
+    res=sufficient_top10_exclusions(ranks)
+    if not res:return
+    ranks['role_sufficient_top10']=res
+    for name,value in res['metrics'].items():
+        if value!='UNRESOLVED':ranks.setdefault('metrics',{})[name]=value
