@@ -1,8 +1,8 @@
 # TGE Monitor Current State
-Updated: 2026-11-15 01:03 Asia/Bangkok
+Updated: 2026-11-15 01:59:58 Asia/Bangkok
 
-- authoritative_final: airdrop-tge-monitor/runs/2026-11-15/010325-final.md
-- final_commit_sha: d85d5e2ca1f559a28213ca27b3d366c5e777650b
+- authoritative_final: airdrop-tge-monitor/runs/2026-11-15/015958-final.md
+- final_commit_sha: 3bf409cfbe3896427d61f6a3502c643323e1ded5
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 1
 - executed_shard: 1
@@ -12,12 +12,12 @@ Updated: 2026-11-15 01:03 Asia/Bangkok
 - gmail_sent: false
 - app_notification: false
 - identity_failures: 0 observed, incomplete coverage
-- source_failures: StandX original X and claim portal; Concrete additional USDC; HEEBOO JS shell; Apptronik news; Cambria personal token page
+- source_failures: StandX original X403 and claim portal; Concrete official foundation inaccessible; HEEBOO claim JS shell; remaining shard1 incomplete
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (historical AUTOMATION_RUNTIME.md; no new fully verified coverage)
 
 ## Last meaningful attempts
 - shard0: 2026-11-15 00:03:21 Asia/Bangkok; runs/2026-11-15/000321-final.md (PARTIAL_ONLY)
-- shard1: 2026-11-15 01:03:25 Asia/Bangkok; runs/2026-11-15/010325-final.md (PARTIAL_ONLY)
+- shard1: 2026-11-15 01:59:58 Asia/Bangkok; runs/2026-11-15/015958-final.md (PARTIAL_ONLY)
 - shard2: 2026-11-14 22:01:36 Asia/Bangkok; runs/2026-11-14/220136-final.md (PARTIAL_ONLY)
 - shard3: 2026-11-14 23:02:24 Asia/Bangkok; runs/2026-11-14/230224-final.md (PARTIAL_ONLY)
 
