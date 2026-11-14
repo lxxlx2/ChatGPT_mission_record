@@ -1,0 +1,7 @@
+# 2026-11-14 recovery attempt (Asia/Bangkok 11:16)
+
+Status: QA_FAIL_NO_SEND. Gmail Sent prefix search `Crypto Daily Brief｜2026-11-14` returned zero messages (life account). Git `delivery-pending/2026-11-14.json` and canonical `reports/daily/2026/2026-11/2026-11-14.md` both returned 404. No full 13-section current-day draft verified; no Gmail send attempted. This is not delivery success. Node editorial gate not executed. No new task or scheduler created.
+
+Git rules fetched from main: PIPELINE_CONTRACT.md blob 29ffbc1d32ca87a744d2990e8d55639ebb84a6f9; EDITORIAL_RULESET.json blob 2ed51528d230508ae4e0015762b1d60c9d72e299. Other specifications fetched during run. 2026-11-13 canonical exists blob e4d15e019a3b124a263d6af8f4a565b1a5c5dad9, explicitly manually recovered, including Telegram Widget/QuickJS research; do not repeat that family without new material evidence.
+
+Actual bounded source check in this attempt: https://github.com/davtur19/tg-widget-rce/blob/master/docs/PAYLOAD_CHAIN.md (research evidence, previous family already reported); https://nodejs.org/en/blog (Nov 11 security patch publication, family novelty against previous seven days not fully reconciled); https://www.bls.gov/news.release/archives/ppi_11132026.htm (Nov 13 08:30 ET PPI, already reported in 11/13 corrected email). No complete fresh official market, ETF, onchain, TGE, venue IPO, six security family and full seven-day Sent content receipts assembled; mark SOURCE_GAP, not zero news. Missing inputs prevent honest CR-37/CR-38 full QA. Do not send truncated report or claim recovery.
