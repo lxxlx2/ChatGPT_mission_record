@@ -1,11 +1,11 @@
 # TGE Monitor Current State
-Updated: 2026-11-14 19:56:24 Asia/Bangkok
+Updated: 2026-11-14 21:03:27 Asia/Bangkok
 
-- authoritative_final: airdrop-tge-monitor/runs/2026-11-14/195624-final.md
-- final_commit_sha: 808028fe939d51bd76fecb311813728baf788207
+- authoritative_final: airdrop-tge-monitor/runs/2026-11-14/210327-final.md
+- final_commit_sha: 70248cf7d8a13899195c48a64047ef81f48a0783
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 3
-- executed_shard: 3
+- scheduled_shard: 1
+- executed_shard: 1
 - candidate_count: 1 StandX DUSD VERIFYING (existing unresolved)
 - action_gate_pass: 0
 - triggered_events: 0
@@ -17,7 +17,7 @@ Updated: 2026-11-14 19:56:24 Asia/Bangkok
 
 ## Last meaningful attempts
 - shard0: 2026-11-14 16:56:01 Asia/Bangkok; runs/2026-11-14/165601-final.md (PARTIAL_ONLY)
-- shard1: 2026-11-14 13:00:40 Asia/Bangkok; runs/2026-11-14/130040-final.md (PARTIAL_ONLY)
+- shard1: 2026-11-14 21:03:27 Asia/Bangkok; runs/2026-11-14/210327-final.md (PARTIAL_ONLY)
 - shard2: 2026-11-14 18:55:31 Asia/Bangkok; runs/2026-11-14/185531-final.md (PARTIAL_ONLY)
 - shard3: 2026-11-14 19:56:24 Asia/Bangkok; runs/2026-11-14/195624-final.md (PARTIAL_ONLY)
 
@@ -31,5 +31,5 @@ Updated: 2026-11-14 19:56:24 Asia/Bangkok
 - Shard2 issuer rights originals incomplete; prioritize Reya/01/N1/Figure/OhBabyGames on next shard2.
 - Excluded Abstract, Grass, Backpack, Loopscale, humans& fully refunded.
 - Space/Spacecoin and Theo/Autheo distinct.
-- next scheduled shard: 0
+- next scheduled shard: 2
 - code_execution: CODE_NOT_EXECUTED / MANUAL_EQUIVALENT_ONLY.
