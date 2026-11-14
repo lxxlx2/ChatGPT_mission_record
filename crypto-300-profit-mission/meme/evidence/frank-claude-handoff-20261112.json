@@ -1,0 +1,568 @@
+{
+  "version": 1,
+  "date": "2026-11-12 Asia/Bangkok",
+  "scope": "Reconstruct Claude handoff and synchronize actual progress; no new source run or production modification",
+  "verdict": "PASS_HANDOFF_RECONSTRUCTION_AND_SYNC__PARTIAL_PRODUCT_ACCEPTANCE",
+  "source_sha": "aad880991565d148aa6cc2f74fa0de1f5e6c27c7",
+  "baseline_sha": "d43878828c86eacee5be9df8a17d16fc63a74bb6",
+  "source_parent_sha": "d81f7fcbfb2f782f8528cb267e222950d24dfae7",
+  "source_pr": 252,
+  "source_pr_base": 220,
+  "source_branch": "codex/frank-gpa-binary-full-mint",
+  "source_worktree_clean": true,
+  "remote_head_matches": true,
+  "latest_main_read_sha": "5507e58e650f25e074f45bf9b426c1220a1e4f4f",
+  "relevant_rules_and_frank_delta_since_prior_main": "none",
+  "commits": [
+    "47d431c0cd5d37b6c3daf8f5e0f896a82ed12f71",
+    "c19dfd72632b851f167b7705ba1581f65f750e89",
+    "d81f7fcbfb2f782f8528cb267e222950d24dfae7",
+    "aad880991565d148aa6cc2f74fa0de1f5e6c27c7"
+  ],
+  "changed_files_count": 15,
+  "delta_insertions": 892,
+  "delta_deletions": 56,
+  "gemini_text_sha256": "d054a073444ca26cffe159d384c53242bc5fbd4198a7e932f13c6d5c14a941ab",
+  "confirmed_source_progress": [
+    "Fixed 166-byte base64 dataSlice GPA, not binary search; official public fallback can supply the existing CA enumeration",
+    "Supply monotonic bracket permits unequal slots under no mint authority/equal endpoint supplies; not atomic same-slot observation",
+    "Same-enumeration pool exclusion plus Top10 prefix role policy produces 14.2998 in the archived example; whole registry normalization remains false",
+    "Pump bonding curve/creator field and Token-2022 metadata available in latest real report; creator is not beneficial control proof",
+    "Current selected token-account history labels and independent-provider checker implemented, with incomplete or defective acceptance below"
+  ],
+  "durable_runs": [
+    {
+      "alias": "NOV11_RUN_1",
+      "observed_at_bangkok": "2026-11-11T16:02:53.851630+07:00",
+      "observed_at_utc": "2026-11-11T09:02:53.851630+00:00",
+      "report_sha256": "d6cebfc3a18f65b5c57226b9088e58867c30be181881d716f1fb98ca1f676570",
+      "report_bytes": 10020634,
+      "done_sha256": "8b996c3cd94d7393e640b34a219ddb1d3553bc5051a1192e12826970237af578",
+      "done_raw_digest_match": true,
+      "done_identity_match": true,
+      "primary_wire_attempts": 281,
+      "rpc_cache_hits": 725,
+      "observed_elapsed_seconds": 193.47437620162964,
+      "checkpoint_entries": 991,
+      "checkpoint_head": "12fdfa32959bb732bb6eaeafddb91e802f576e14591c05e6aaf20dc636c8ec93",
+      "checkpoint_file_sha256": "f3323b2b9f00bbf9f5f97f0bbe49ef58a9e8a01c2dde52de5c11ae7416ae7287",
+      "checkpoint_metadata_and_chain_verified": true,
+      "checkpoint_unchanged_during_read": true,
+      "logical_error_entries": [],
+      "source_errors": 0,
+      "endpoint_failures_by_index": {
+        "0": 17,
+        "1": 1
+      },
+      "loopback_exact_job_json_equal": {
+        "matches_durable_report": true,
+        "response_sha256_canonical": "68d0d4af9dbda14f2dddd744e0b8ee8a01215859085a68dcb1281383787dbe7d",
+        "status": 200
+      },
+      "rankings": {
+        "status": "COMPLETE_SNAPSHOT",
+        "account_count": 33876,
+        "nonzero_accounts": 7988,
+        "nonzero_owner_count": 7979,
+        "metrics": {
+          "GLOBAL_EX_LP_OWNER_TOP10_PCT": "UNRESOLVED",
+          "GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT": "UNRESOLVED",
+          "GLOBAL_OWNER_TOP10_PCT": "58.9106"
+        },
+        "normalization_complete": false,
+        "snapshot_slot": 468065104,
+        "supply_slot": 468065094,
+        "largest_slot": 468065098,
+        "snapshot_consistent": false,
+        "verified_pool_exclusion_scope": null
+      },
+      "first_acquisition_status_counts": {
+        "CONFIRMED_BOUNDED": 8,
+        "NOT_SCANNED": 10,
+        "UNRESOLVED": 2
+      },
+      "history_closed_account_scope": {
+        "NOT_ENUMERATED": 10
+      },
+      "independent_balance_check": {},
+      "overall": {
+        "missing_required": [
+          "contract",
+          "holder_roles",
+          "wallet_history",
+          "control_attribution",
+          "market",
+          "independent_sources",
+          "narrative"
+        ],
+        "status": "INCOMPLETE_EVIDENCE"
+      },
+      "narrative": {
+        "earliest_origin": "UNVERIFIED",
+        "exhaustive": false,
+        "official_recognition": "UNVERIFIED",
+        "search_coverage": "BOUNDED_HINTS_ONLY",
+        "status": "PARTIAL"
+      }
+    },
+    {
+      "alias": "NOV11_RUN_2",
+      "observed_at_bangkok": "2026-11-11T16:30:29.702499+07:00",
+      "observed_at_utc": "2026-11-11T09:30:29.702499+00:00",
+      "report_sha256": "db8a94c3400961eb68c9fac2a4329c532229754e4d2100eff8c8fe082d03b298",
+      "report_bytes": 10037702,
+      "done_sha256": "a1cfdd297514ebf3c8d5150e01cbdbd54fc3dab14174febf21a89f50e8d5ac45",
+      "done_raw_digest_match": true,
+      "done_identity_match": true,
+      "primary_wire_attempts": 183,
+      "rpc_cache_hits": 825,
+      "observed_elapsed_seconds": 141.88054823875427,
+      "checkpoint_entries": 991,
+      "checkpoint_head": "8c9c81993076f4bf0676f9e259fb10802eefd0f9e2d51da14d28073725416b50",
+      "checkpoint_file_sha256": "4cb5bbc67e6b993cfb4c84c0e8a640eae6bdc694a9d05223a261c213fbd07e45",
+      "checkpoint_metadata_and_chain_verified": true,
+      "checkpoint_unchanged_during_read": true,
+      "logical_error_entries": [],
+      "source_errors": 0,
+      "endpoint_failures_by_index": {
+        "0": 20
+      },
+      "loopback_exact_job_json_equal": {
+        "matches_durable_report": true,
+        "response_sha256_canonical": "808accff0a77839b0460f0681658b8930a27d90fc8ff947a4e65617e16274a01",
+        "status": 200
+      },
+      "rankings": {
+        "status": "COMPLETE_SNAPSHOT",
+        "account_count": 33875,
+        "nonzero_accounts": 7988,
+        "nonzero_owner_count": 7979,
+        "metrics": {
+          "GLOBAL_EX_LP_OWNER_TOP10_PCT": "UNRESOLVED",
+          "GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT": "UNRESOLVED",
+          "GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT": "14.2998",
+          "GLOBAL_OWNER_TOP10_PCT": "58.9106"
+        },
+        "normalization_complete": false,
+        "snapshot_slot": 468073167,
+        "supply_slot": 468073058,
+        "largest_slot": 468073159,
+        "snapshot_consistent": false,
+        "verified_pool_exclusion_scope": "SELF_AUTHORITY_POOLS_BOUND_IN_THIS_ENUMERATION_OTHER_POOLS_CEX_LOCKS_STAY_INCLUDED"
+      },
+      "first_acquisition_status_counts": {
+        "CONFIRMED_BOUNDED": 8,
+        "NOT_SCANNED": 10,
+        "UNRESOLVED": 2
+      },
+      "history_closed_account_scope": {
+        "NOT_ENUMERATED": 10
+      },
+      "independent_balance_check": {},
+      "overall": {
+        "missing_required": [
+          "contract",
+          "holder_roles",
+          "wallet_history",
+          "control_attribution",
+          "market",
+          "independent_sources",
+          "narrative"
+        ],
+        "status": "INCOMPLETE_EVIDENCE"
+      },
+      "narrative": {
+        "earliest_origin": "UNVERIFIED",
+        "exhaustive": false,
+        "official_recognition": "UNVERIFIED",
+        "search_coverage": "BOUNDED_HINTS_ONLY",
+        "status": "PARTIAL"
+      }
+    },
+    {
+      "alias": "NOV11_RUN_3",
+      "observed_at_bangkok": "2026-11-11T16:50:02.834290+07:00",
+      "observed_at_utc": "2026-11-11T09:50:02.834290+00:00",
+      "report_sha256": "a295c2b87f949f31fa9247c31d9ad3ba6782e17755742ca8781021bb3c25b412",
+      "report_bytes": 10038360,
+      "done_sha256": "87a6f9a81ac2f9c0d405e5bd5ff24e655207558987881a80ae9a54526eab76d5",
+      "done_raw_digest_match": true,
+      "done_identity_match": true,
+      "primary_wire_attempts": 186,
+      "rpc_cache_hits": 825,
+      "observed_elapsed_seconds": 120.8416998386383,
+      "checkpoint_entries": 991,
+      "checkpoint_head": "a74a9799e42254dff643ea82d3524ca0caf520765d7b8b9785cbf40d0ce0f725",
+      "checkpoint_file_sha256": "ed6383f392a45522af0a343396e0a765fa8548ff451ab3c6ed945877dddc42a7",
+      "checkpoint_metadata_and_chain_verified": true,
+      "checkpoint_unchanged_during_read": true,
+      "logical_error_entries": [],
+      "source_errors": 0,
+      "endpoint_failures_by_index": {
+        "0": 23
+      },
+      "loopback_exact_job_json_equal": {
+        "matches_durable_report": true,
+        "response_sha256_canonical": "54c7c65e2a747f6dbd199721cd1e8db7ca5be1c807e215d4d99f32e191d42164",
+        "status": 200
+      },
+      "rankings": {
+        "status": "COMPLETE_SNAPSHOT",
+        "account_count": 33875,
+        "nonzero_accounts": 7988,
+        "nonzero_owner_count": 7979,
+        "metrics": {
+          "GLOBAL_EX_LP_OWNER_TOP10_PCT": "14.2998",
+          "GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT": "14.2998",
+          "GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT": "14.2998",
+          "GLOBAL_OWNER_TOP10_PCT": "58.9106"
+        },
+        "normalization_complete": false,
+        "snapshot_slot": 468078641,
+        "supply_slot": 468078632,
+        "largest_slot": 468078636,
+        "snapshot_consistent": false,
+        "verified_pool_exclusion_scope": "SELF_AUTHORITY_POOLS_BOUND_IN_THIS_ENUMERATION_OTHER_POOLS_CEX_LOCKS_STAY_INCLUDED"
+      },
+      "first_acquisition_status_counts": {
+        "CONFIRMED_BOUNDED": 8,
+        "NOT_SCANNED": 10,
+        "UNRESOLVED": 2
+      },
+      "history_closed_account_scope": {
+        "NOT_ENUMERATED": 10
+      },
+      "independent_balance_check": {},
+      "overall": {
+        "missing_required": [
+          "contract",
+          "holder_roles",
+          "wallet_history",
+          "control_attribution",
+          "market",
+          "independent_sources",
+          "narrative"
+        ],
+        "status": "INCOMPLETE_EVIDENCE"
+      },
+      "narrative": {
+        "earliest_origin": "UNVERIFIED",
+        "exhaustive": false,
+        "official_recognition": "UNVERIFIED",
+        "search_coverage": "BOUNDED_HINTS_ONLY",
+        "status": "PARTIAL"
+      }
+    },
+    {
+      "alias": "NOV11_RUN_4",
+      "observed_at_bangkok": "2026-11-11T18:05:50.499643+07:00",
+      "observed_at_utc": "2026-11-11T11:05:50.499643+00:00",
+      "report_sha256": "468b8c78e140b5e28827034c2360ffa83f0c882803353f9ac05d436255b44bec",
+      "report_bytes": 10066931,
+      "done_sha256": "7f533168defe19ccefcb58e9cb14ab1af0c39331739a50fdada50a4d6b3f1cab",
+      "done_raw_digest_match": true,
+      "done_identity_match": true,
+      "primary_wire_attempts": 463,
+      "rpc_cache_hits": 926,
+      "observed_elapsed_seconds": 275.4109787940979,
+      "checkpoint_entries": 1378,
+      "checkpoint_head": "accc2eb1de05785441a6da2fa930264bcac0ca9a29cd22272d9af80a54886bef",
+      "checkpoint_file_sha256": "e5a70d7b9955ddb2451c19000a97b9868cf8d4c718f7e4e87643464475b7fd31",
+      "checkpoint_metadata_and_chain_verified": true,
+      "checkpoint_unchanged_during_read": true,
+      "logical_error_entries": [],
+      "source_errors": 0,
+      "endpoint_failures_by_index": {
+        "0": 14
+      },
+      "loopback_exact_job_json_equal": {
+        "matches_durable_report": true,
+        "response_sha256_canonical": "4fed8b3175288d6b8397ca96488b318b6eb4f86451d7cd301445600b298a4fa0",
+        "status": 200
+      },
+      "rankings": {
+        "status": "COMPLETE_SNAPSHOT",
+        "account_count": 33872,
+        "nonzero_accounts": 7987,
+        "nonzero_owner_count": 7978,
+        "metrics": {
+          "GLOBAL_EX_LP_OWNER_TOP10_PCT": "14.2998",
+          "GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT": "14.2998",
+          "GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT": "14.2998",
+          "GLOBAL_OWNER_TOP10_PCT": "58.9540"
+        },
+        "normalization_complete": false,
+        "snapshot_slot": 468099092,
+        "supply_slot": 468099081,
+        "largest_slot": 468099085,
+        "snapshot_consistent": false,
+        "verified_pool_exclusion_scope": "SELF_AUTHORITY_POOLS_BOUND_IN_THIS_ENUMERATION_OTHER_POOLS_CEX_LOCKS_STAY_INCLUDED"
+      },
+      "first_acquisition_status_counts": {
+        "CONFIRMED_ACCOUNT_COMPLETE": 8,
+        "NOT_SCANNED": 10,
+        "NO_MARKET_BUY_IN_COMPLETE_ACCOUNT_HISTORY": 1,
+        "UNRESOLVED": 1
+      },
+      "history_closed_account_scope": {
+        "NOT_ENUMERATED": 10
+      },
+      "independent_balance_check": {
+        "reason": "RPC_JOB_TIME_BUDGET_EXHAUSTED",
+        "scope": "LARGEST_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_FULL_ENUMERATION",
+        "secondary_provider": "PUBLICNODE",
+        "status": "UNAVAILABLE",
+        "version": 1
+      },
+      "overall": {
+        "missing_required": [
+          "contract",
+          "holder_roles",
+          "wallet_history",
+          "control_attribution",
+          "market",
+          "independent_sources",
+          "narrative"
+        ],
+        "status": "INCOMPLETE_EVIDENCE"
+      },
+      "narrative": {
+        "earliest_origin": "UNVERIFIED",
+        "exhaustive": false,
+        "official_recognition": "UNVERIFIED",
+        "search_coverage": "BOUNDED_HINTS_ONLY",
+        "status": "PARTIAL"
+      }
+    }
+  ],
+  "durable_audit": {
+    "jobs_verified": 4,
+    "done_digest_matches": 4,
+    "checkpoint_metadata_and_full_read_hash_chain_verified": 4,
+    "unchanged_checkpoint_files": 4,
+    "same_bytes_timestamped_archives": 4,
+    "loopback_exact_job_json_matches": 4,
+    "scope": "Observed local archive consistency, not provider authentication, full business replay or source-SHA attestation for every historical run",
+    "historical_job_source_sha_not_cryptographically_pinned": true
+  },
+  "latest_remaining_history": {
+    "historical_frontier_count": 10,
+    "historical_frontier_selected_count": 0,
+    "historical_frontier_stop_reasons": {
+      "CURRENT_ACCOUNT_ALREADY_SELECTED": 10
+    },
+    "additional_history_accounts_selected": 0,
+    "historical_observations": 18,
+    "historical_retention": {
+      "compacted_observations": 943,
+      "complete_history": false,
+      "limit_rejected_observations": 0,
+      "max_observations": 200,
+      "mode": "OLDEST_VALID_PER_OWNER_ACCOUNT_PHASE_CLOSURE_STATUS",
+      "raw_valid_observations": 961,
+      "represented_owner_accounts": 10,
+      "retained_observations": 18,
+      "version": 1
+    },
+    "trade_evidence_count": 206,
+    "trade_direction_counts": {
+      "BUY": 162,
+      "SELL": 44
+    },
+    "transaction_errors_count": 0,
+    "windows": {
+      "account_origin": {
+        "CURRENT_SELECTED_ACCOUNT": 16,
+        "OWNER_FUNDING_WINDOW": 10
+      },
+      "count": 26,
+      "duplicates_skipped": 0,
+      "history_complete": {
+        "False": 26
+      },
+      "oldest_block_time_min": 1744087710,
+      "page_limit": {
+        "1": 8,
+        "8": 18
+      },
+      "page_requests": 96,
+      "phase": {
+        "funding": 10,
+        "holder": 16
+      },
+      "signature_count": 1246,
+      "stop_reason": {
+        "PAGE_LIMIT": 15,
+        "PROVIDER_EMPTY_PAGE": 11
+      }
+    }
+  },
+  "source_code_registry": {
+    "base_address_count": 1,
+    "head_address_count": 13,
+    "added_cex_addresses": 12,
+    "added_lines": 96,
+    "normalization_complete": false,
+    "source": "git diff --numstat and JSON key-set comparison"
+  },
+  "budgets_and_sources": {
+    "main_rpc_wire_limit": 1200,
+    "main_rpc_seconds_limit": 1800,
+    "main_wallclock_still_checked_before_publish": true,
+    "secondary_independent_wire_limit": 4,
+    "secondary_independent_seconds_limit": 60,
+    "secondary_attempts_not_in_main_wire_counter": true,
+    "do_not_claim_all_provider_strict_total_1200_or_global_1860_seconds": true,
+    "GPA_account_limit_before": 5000,
+    "GPA_account_limit_after": 200000,
+    "GPA_response_limit_MiB_before": 8,
+    "GPA_response_limit_MiB_after": 64,
+    "standard_adaptive_history_pages_before": 4,
+    "standard_adaptive_history_pages_after": 8,
+    "standard_adaptive_funding_pages_before": 5,
+    "standard_adaptive_funding_pages_after": 8,
+    "narrative_old_HTML_max": 3,
+    "new_metadata_max": 3,
+    "new_post_chain_max": 4,
+    "narrative_all_HTTP_max": 10,
+    "narrative_HTTP_body_max_KiB": 256,
+    "official_public_mainnet_fallback_default_enabled": true,
+    "additional_publicnode_checker_default_enabled": true,
+    "metadata_IPFS_fxtwitter_paths_added": true,
+    "prior_Claude_user_request_explicitly_allowed_free_solutions_and_local_deployment": true
+  },
+  "runtime_install_identity": {
+    "tracked_agent_files": 498,
+    "runtime_config_files_equal": 171,
+    "runtime_config_all_match": true,
+    "release_missing_files": [
+      "tests/test_meme_launch_origin.py"
+    ],
+    "release_differing_files": [
+      "tests/test_meme_holder_binary.py",
+      "tests/test_meme_wallet_cluster_pagination.py"
+    ],
+    "release_git_reported_head": "d43878828c86eacee5be9df8a17d16fc63a74bb6",
+    "served_app_js_sha256": "a17f736926ce9dff9bf9bb222c00e9dbf79437f694a35cc64898b8b6e26f62a1",
+    "served_app_js_matches_source": true,
+    "http_cache_control": "no-store",
+    "port": 8766
+  },
+  "installation_verdict": "RUNTIME_BYTES_MATCH_AAD__GIT_RELEASE_IDENTITY_PARTIAL: copied gitdir still reports d438; do not reset installed tree",
+  "browser": {
+    "fresh_chrome_new_launch_panel_visible": true,
+    "fresh_chrome_second_provider_panel_visible": true,
+    "latest_exact_saved_job_read": true,
+    "refresh": true,
+    "global_owner_top10_display": "58.954%",
+    "ex_verified_pool_top10_display": "14.2998%",
+    "same_slot_label_contradicts_report_slots": true,
+    "old_tab_cache_root_cause_not_proven": true,
+    "screenshot_sha256": "36c7d75c04a87995fc52b1e64a173e9e5063c6bef78d3271f7774c3c0013fb65"
+  },
+  "current_audit_tests": {
+    "source_sha": "aad880991565d148aa6cc2f74fa0de1f5e6c27c7",
+    "python_command": "<review-venv-python> -B (pytest.main with socket audit denying all socket.*): -q -p no:cacheprovider tests/test_meme_holder_binary.py tests/test_meme_launch_origin.py tests/test_meme_holder_ranks.py tests/test_meme_wallet_cluster_pagination.py",
+    "python_passed": 106,
+    "seconds": 0.23,
+    "pytest_exit_code": 0,
+    "socket_audit_events": {},
+    "node_command": "node --check mission_agent/mission_control/static/app.js",
+    "node_exit_code": 0,
+    "latest_head_GitHub_workflow_runs_found": 0,
+    "latest_head_check_runs_found": 0,
+    "Claude_2300_full_suite_claim_not_reexecuted_or_transferred_to_latest_head": true
+  },
+  "confirmed_unfinished_software_items": [
+    {
+      "id": "FIRST_BUY_FALSE_COMPLETENESS",
+      "status": "REPRODUCED_OFFLINE_NOT_FIXED_IN_THIS_HANDOFF",
+      "source_lines": [
+        "cluster.py:1228",
+        "cluster.py:1516",
+        "cluster.py:1527"
+      ],
+      "cases": [
+        {
+          "older_tx_read": "TimeoutError",
+          "later_buy": false,
+          "incorrect_status": "NO_MARKET_BUY_IN_COMPLETE_ACCOUNT_HISTORY"
+        },
+        {
+          "older_tx_read": "TimeoutError",
+          "later_buy": true,
+          "incorrect_status": "CONFIRMED_ACCOUNT_COMPLETE"
+        }
+      ],
+      "reproducer": "frank-first-buy-completeness-probe-20261112.py",
+      "reproducer_source_sha": "aad880991565d148aa6cc2f74fa0de1f5e6c27c7",
+      "network": 0
+    },
+    {
+      "id": "ORIGIN_CHECKPOINT_ADAPTER_MISSING",
+      "status": "CONFIRMED_SOURCE_PATH_NOT_FIXED",
+      "direct_PublicNarrativeClient_has_collect_origin": true,
+      "CheckpointClient_has_collect_origin": false,
+      "production_checkpoint_job_skips_hasattr_guarded_origin_call": true,
+      "latest_report_has_origin_chain": false
+    },
+    {
+      "id": "SUPPLY_BRACKET_LABELED_SAME_SLOT",
+      "status": "CONFIRMED_REPORT_AND_CHROME",
+      "actual_GPA_slot": 468099092,
+      "before_supply_slot": 468099081,
+      "after_supply_slot": 468099321,
+      "UI_says_same_slot": true
+    },
+    {
+      "id": "INSTALL_GITDIR_POINTS_TO_OLD_WORKTREE",
+      "status": "CONFIRMED_BYTES_MATCH_BUT_GIT_IDENTITY_MISMATCH",
+      "reported_git_head": "d43878828c86eacee5be9df8a17d16fc63a74bb6",
+      "matching_runtime_config_head": "aad880991565d148aa6cc2f74fa0de1f5e6c27c7"
+    }
+  ],
+  "Gemini_corrections": [
+    "Not binary search: fixed 166-byte dataSlice",
+    "12 CEX addresses added, 96 JSON lines; not 96 addresses",
+    "Official GPA fallback observed for one existing CA does not mean Alchemy429 resolved or all source gaps closed",
+    "PublicNode latest UNAVAILABLE/RPC_JOB_TIME_BUDGET_EXHAUSTED, no successful independent parity claim",
+    "Pump complete flag is not by itself a migration/control/official-recognition proof",
+    "Fresh Chrome renders launch and independent panels; old-tab cache root cause remains unproven; served static Cache-Control is no-store",
+    "No full latest-head CI or full business replay proof acquired",
+    "Do not transfer account-complete labels to whole Owner or closed-account history"
+  ],
+  "primary_wire_accounting": {
+    "prior_recorded_free_phase": 2180,
+    "four_archived_runs_added": 1113,
+    "confirmed_lower_bound_excluding_original572": 3293,
+    "unarchived_probes_and_secondary_wire_not_fully_counted": true,
+    "original_one_shot572_separate": true
+  },
+  "current_audit_effects": {
+    "new_real_RPC": 0,
+    "new_CA_POST": 0,
+    "source_collection": 0,
+    "notifications_sign_or_trade": 0,
+    "service_restart": 0,
+    "new_listening_ports": 0,
+    "production_file_edits": 0,
+    "merge": 0,
+    "new_PR": 0
+  },
+  "decisions": {
+    "INVEST": "NO_GO",
+    "TRADE": "NO_GO",
+    "original_October_incident_cancelled": true
+  },
+  "private_audit_sha256": {
+    "capture": "856aec62a7ffd8b9d1d410a0c0ef5e8d79b46ae8d95b0b0c42dc6f65ef613b9e",
+    "code_scope": "9da6acb98839d77fa21b35fcd6d07e0bc8c2b26a0f29fb35edb7d19530e31eae"
+  },
+  "next_smallest_actions": [
+    "Fix holder transaction-read failure coverage before accepting account-first-buy complete labels",
+    "Expose collect_origin through checkpoint adapter with a versioned/source-bound path",
+    "Correct bracket vs same-slot labels and completeness reason",
+    "Prepare a clean exact-SHA release identity, retaining current runtime until controlled maintenance is ready",
+    "Then obtain actual independent parity and representative data; do not infer them from implementation alone"
+  ]
+}

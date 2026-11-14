@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "source_sha": "e7df038fa2bcc1a49add0019fb9a35718beed3a0",
+  "parent_sha": "c90faab17eba1a82074c2579d6bf20e92bdd61f3",
+  "iteration_baseline": "81bb338d967d09a9598894cb47976f4f1f994296",
+  "executor_sha": "2fa597cb1248b3cc6c347ebb59125a4660acf405",
+  "phase": "LIVE_CA_QUERY_RUNNING; INDEPENDENT_STAGE_COMPLETE",
+  "independent_stage": {
+    "status": "NEAR_TIME_DIFFERENCES",
+    "scope": "ALL_PROVIDED_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_INDEPENDENT_ENUMERATION",
+    "accounts_compared": 33615,
+    "requested_addresses": 33615,
+    "not_compared": 0,
+    "matches": 33613,
+    "differences": 0,
+    "missing": 2,
+    "batches_completed": 3362,
+    "secondary_wire_attempts": 3362,
+    "provided_account_set_compared": true,
+    "primary_slot_range": [
+      469085430,
+      469095763
+    ],
+    "secondary_slot_range": [
+      469085431,
+      469095765
+    ],
+    "single_common_slot": false,
+    "source_sha": "e7df038fa2bcc1a49add0019fb9a35718beed3a0",
+    "first_sequence": 97,
+    "read_count": 6724,
+    "previous_anchor_sha256": "6308c887b2cd04a03ece9b53b3aa577f53f785831373263a2748cc4feac2f271",
+    "last_read_sha256": "ed3cfe97868e75dcf720b2be69c56e9d1673f196b03a7fad29e0b96a0e6ebbf4",
+    "raw_capture_sha256": "4aa8e2fe4a11d8571a04443fc7425843e9ecaf46242a80f491fb7f22914642ed",
+    "socket_events": {},
+    "whole_job_status_at_snapshot": "RUNNING",
+    "whole_job_complete": false,
+    "secondary_verdict_frozen": false,
+    "read_started_at": 1794607164.087359,
+    "read_finished_at": 1794609387.6768131,
+    "read_interval_seconds": 2223.589,
+    "token_accounts_requested": 33614,
+    "mint_items_requested": 1,
+    "both_absent_accounts": 2
+  },
+  "missing_account_evidence": [
+    {
+      "address_sha256": "2dab0501e2a6bf9c25e8330f65df3a48a618a86e0f1bc7fbc6e150889df98fea",
+      "channel": "rpc",
+      "slot": 469088603,
+      "account_absent": true,
+      "data_kind": "NoneType",
+      "parsed_info_present": false
+    },
+    {
+      "address_sha256": "2dab0501e2a6bf9c25e8330f65df3a48a618a86e0f1bc7fbc6e150889df98fea",
+      "channel": "secondary_rpc",
+      "slot": 469088606,
+      "account_absent": true,
+      "data_kind": "NoneType",
+      "parsed_info_present": false
+    },
+    {
+      "address_sha256": "cba7bd85dfd23d4c887279f435fdcf85e425b60e9d4be60a2fa9c27476d4d29a",
+      "channel": "rpc",
+      "slot": 469091611,
+      "account_absent": true,
+      "data_kind": "NoneType",
+      "parsed_info_present": false
+    },
+    {
+      "address_sha256": "cba7bd85dfd23d4c887279f435fdcf85e425b60e9d4be60a2fa9c27476d4d29a",
+      "channel": "secondary_rpc",
+      "slot": 469091613,
+      "account_absent": true,
+      "data_kind": "NoneType",
+      "parsed_info_present": false
+    }
+  ],
+  "tests": {
+    "python_passed": 1035,
+    "python_seconds": 6.62,
+    "socket_events": {},
+    "node_passed": 208,
+    "node_syntax": "PASS",
+    "ci_workflow_runs": []
+  },
+  "installation": {
+    "dashboard_pid": 35864,
+    "port": 8766,
+    "tracked_agent_files": 507,
+    "source_clean": true,
+    "saved_done_jobs": 10,
+    "old_and_new_handler_no_listener": "PASS",
+    "loop_unloaded": true,
+    "rollback_exercised": false
+  },
+  "scanner": {
+    "pid": 2268,
+    "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "status": "LIVE",
+    "source_drift": false,
+    "consecutive_errors": 0
+  },
+  "provider_constraint": {
+    "http_status": 403,
+    "rpc_error_code": -32602,
+    "max_addresses_per_free_request": 10,
+    "above_limit_response_sha256": "4a415486afd1b9c752f9aad108905ce24ec906291b655c0424d2e249765ac13c",
+    "ten_addresses_http_status": 200,
+    "aggregate_request_quota": null,
+    "aggregate_seconds_quota": null,
+    "production_user_agent_changed": false
+  },
+  "interrupted_c90": {
+    "source_sha": "c90faab17eba1a82074c2579d6bf20e92bdd61f3",
+    "checkpoint_sha256": "eb3cc1b1cc78168dbff22111367ae10cdd23335c9cc0e849826e94a811df67d2",
+    "primary_reserved_wire": 421,
+    "secondary_reserved_wire": 6,
+    "captured_reads": 923,
+    "original_metadata_status": "RUNNING",
+    "outcome": "INTERRUPTED_FOR_CONFIRMED_ENGINEERING_FIX; NO_DONE_REPORT",
+    "source_file_hash_unchanged": true
+  },
+  "ad_hoc_source_diagnostic_wire_attempts": 18,
+  "whole_ca_report_finished": false,
+  "invest": "NO_GO",
+  "trade": "NO_GO",
+  "independent_compared_fields": [
+    "kind",
+    "raw_balance_or_supply",
+    "token_owner",
+    "token_mint"
+  ],
+  "next_candidate": {
+    "source_sha": "2471467e53cb772202abcc7415b17c1f33defd59",
+    "parent_sha": "e7df038fa2bcc1a49add0019fb9a35718beed3a0",
+    "python_passed": 1044,
+    "node_passed": 210,
+    "python_socket_events": {},
+    "installed": false,
+    "reason": "WAIT_CURRENT_SOURCE_COLLECTION_END; NO_EXTRA_APPROVAL_REQUIRED"
+  }
+}
