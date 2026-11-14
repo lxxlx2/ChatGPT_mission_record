@@ -1,25 +1,25 @@
 # TGE Monitor Current State
 
-Updated: 2026-11-14 13:00:40 Asia/Bangkok
+Updated: 2026-11-14 14:02:32 Asia/Bangkok
 
-- authoritative_final: airdrop-tge-monitor/runs/2026-11-14/130040-final.md
-- final_commit_sha: cb587cea2134fa98dc6d1f504358b71fe5cdc5f4
+- authoritative_final: airdrop-tge-monitor/runs/2026-11-14/140232-final.md
+- final_commit_sha: 067f701d848a99bab76a41303fee96f9a8869a13
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 1
-- executed_shard: 1
+- scheduled_shard: 2
+- executed_shard: 2
 - candidate_count: 1
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
 - identity_failures: 0
-- source_failures: 3 confirmed urgent source gaps; other projects PARTIAL_ONLY
+- source_failures: 2 confirmed source gaps (HEEBOO claim JS shell, StandX airdrop); remaining PARTIAL_ONLY
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (historical AUTOMATION_RUNTIME.md; partial cannot advance)
 
 ## Last meaningful attempts
 - shard0: 2026-11-14 08:55:51 Asia/Bangkok; runs/2026-11-14/085551-final.md (PARTIAL_ONLY)
 - shard1: 2026-11-14 13:00:40 Asia/Bangkok; runs/2026-11-14/130040-final.md (PARTIAL_ONLY)
-- shard2: 2026-11-14 10:04:46 Asia/Bangkok; runs/2026-11-14/100446-final.md (PARTIAL_ONLY)
+- shard2: 2026-11-14 14:02:32 Asia/Bangkok; runs/2026-11-14/140232-final.md (PARTIAL_ONLY)
 - shard3: 2026-11-14 11:00:49 Asia/Bangkok; runs/2026-11-14/110049-final.md (PARTIAL_ONLY)
 
 ## Unresolved and next
@@ -32,5 +32,5 @@ Updated: 2026-11-14 13:00:40 Asia/Bangkok
 - Shard2 Relay and Pond issuer pages readable, unrelated to new token rights; Titan app shell, N1 docs, Reya CoinList personal rights, 01 Echo channel and other project originals PARTIAL_ONLY/SOURCE_GAP.
 - Excluded: Abstract, Grass, Backpack, Loopscale, humans& fully refunded.
 - Space/Spacecoin and Theo/Autheo distinct.
-- next scheduled shard: 2
+- next scheduled shard: 3
 - code_execution: CODE_NOT_EXECUTED / MANUAL_EQUIVALENT_ONLY.
