@@ -1,9 +1,9 @@
 # TGE Monitor Current State
 
-Updated: 2026-11-14 07:03:19 Asia/Bangkok
+Updated: 2026-11-14 07:57:03 Asia/Bangkok
 
-- authoritative_final: airdrop-tge-monitor/runs/2026-11-14/070319-final.md
-- final_commit_sha: 7cb23c53292cd06bbdfb146a6f22ab89a1596ab1
+- authoritative_final: airdrop-tge-monitor/runs/2026-11-14/075703-final.md
+- final_commit_sha: f5185001d64ad9f22c1ad9802167315af3c433ed
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 3
 - executed_shard: 3
@@ -20,7 +20,7 @@ Updated: 2026-11-14 07:03:19 Asia/Bangkok
 - shard0: 2026-11-14 04:58:01 Asia/Bangkok; runs/2026-11-14/045801-final.md (PARTIAL_ONLY)
 - shard1: 2026-11-14 05:58:58 Asia/Bangkok; runs/2026-11-14/055858-final.md (PARTIAL_ONLY)
 - shard2: 2026-11-13 22:00:59 Asia/Bangkok; runs/2026-11-13/220059-final.md (PARTIAL_ONLY)
-- shard3: 2026-11-14 07:03:19 Asia/Bangkok; runs/2026-11-14/070319-final.md (PARTIAL_ONLY)
+- shard3: 2026-11-14 07:57:03 Asia/Bangkok; runs/2026-11-14/075703-final.md (PARTIAL_ONLY)
 
 ## Unresolved and next
 - urgent5: Concrete, MetaMask, Claynosaurz, HEEBOO, Space @intodotspace; plus Surf and StandX.
