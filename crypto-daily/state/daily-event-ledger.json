@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-11-12T11:20:00Z",
+  "updated_at": "2026-11-14T00:50:00Z",
   "status": "ACTIVE",
-  "note": "Nov12 user-requested comprehensive re-issuance: Nov5..Nov11 7 full de-duplicated Crypto canonical Gmail (each user-sent verified, matching Git exact); Nov12 delivered full manual recovery. Original Gmail message IDs preserved in event ledger; canonical_gmail_message_id latest actual active edition. Old unverified Surf/StandX rights and repeated MEXC/Node were not materially new. TGE issuer-original coverage still PARTIAL; unattended morning send not verified. Special: Binance Nov10 new policy first Sent Nov11 then assigned to Nov10 corrected full canonical, original Nov11 delivery remains historically recorded.",
+  "note": "Nov13 missing Crypto daily actually Sent through manual full 13-section recovery Gmail 1a1d785982ccbed1; canonical Git exact readback. Telegram QuickJS HTML Widget research omitted by 26 Nov11-14 collectors, caught manually Nov14 and now sent as one major-security event family. Original 09/10/11:20 runs were QA_FAIL_NO_SEND, not autonomous success. Nov14 report must dedupe this same version. PPI late-Nov13 post-09:20 event explicitly identified as late in corrected report. Prior event history retained.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -2980,6 +2980,81 @@
       "canonical_gmail_message_id": "1a1cf2db24305968",
       "canonical_report_date": "2026-11-12",
       "original_sent_id_retained": true
+    },
+    {
+      "event_key": "security:telegram:widget-quickjs-native-rce:2026-11-11",
+      "family_key": "security:telegram-client-html-widget-rce",
+      "material_version": "research-telejam-tgwidget-2026-11-11-to-13-windows7.4.2-multi-platform-older-builds",
+      "source_url": "https://github.com/bikini/telejam",
+      "source_tier": "PRIMARY_SECURITY_RESEARCH",
+      "classification": "MAJOR_SECURITY",
+      "source_status": "DEMONSTRATED_ON_OLD_BUILDS_CURRENT_INDIVIDUAL_PATCH_STATUS_NOT_FULLY_CONFIRMED",
+      "delivered_date": "2026-11-13",
+      "gmail_message_id": "1a1d785982ccbed1",
+      "canonical_gmail_message_id": "1a1d785982ccbed1",
+      "canonical_report_date": "2026-11-13"
+    },
+    {
+      "event_key": "cex:binance:security-compensation-complete:2026-11-12",
+      "family_key": "cex:binance-2026-10-29-incident-compensation",
+      "material_version": "official-2026-11-12-6p34b-assets-covered-198token-snapshot",
+      "source_url": "https://www.binance.com/en/support/announcement/detail/0729ad59cde74700b4eaa96c33441e71",
+      "source_tier": "EXCHANGE_SELF_REPORT",
+      "classification": "MAJOR_SECURITY",
+      "source_status": "OFFICIAL_CLAIM_NOT_INDEPENDENT_RESERVE_ATTESTATION",
+      "delivered_date": "2026-11-13",
+      "gmail_message_id": "1a1d785982ccbed1",
+      "canonical_gmail_message_id": "1a1d785982ccbed1",
+      "canonical_report_date": "2026-11-13"
+    },
+    {
+      "event_key": "etf:btc:2026-11-12",
+      "family_key": "etf:bitcoin-us-spot-flow",
+      "material_version": "farside-2026-11-12-minus284p1m",
+      "source_url": "https://farside.co.uk/btc/",
+      "source_tier": "PRIMARY_ETF_AGGREGATOR",
+      "classification": "ETF_FLOW",
+      "delivered_date": "2026-11-13",
+      "gmail_message_id": "1a1d785982ccbed1",
+      "canonical_gmail_message_id": "1a1d785982ccbed1",
+      "canonical_report_date": "2026-11-13"
+    },
+    {
+      "event_key": "etf:eth:2026-11-12",
+      "family_key": "etf:ethereum-us-spot-flow",
+      "material_version": "farside-2026-11-12-minus70p5m",
+      "source_url": "https://farside.co.uk/eth/",
+      "source_tier": "PRIMARY_ETF_AGGREGATOR",
+      "classification": "ETF_FLOW",
+      "delivered_date": "2026-11-13",
+      "gmail_message_id": "1a1d785982ccbed1",
+      "canonical_gmail_message_id": "1a1d785982ccbed1",
+      "canonical_report_date": "2026-11-13"
+    },
+    {
+      "event_key": "market:binance:2026-11-13-0900-1000bkk",
+      "family_key": "market:binance-spot-snapshot",
+      "material_version": "official-1h-kline-2026-11-13T02Z-BTC70252p9-low69900",
+      "source_url": "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&startTime=1794535200000&endTime=1794538799999",
+      "source_tier": "OFFICIAL_EXCHANGE_HISTORICAL_KLINE",
+      "classification": "DAILY_MARKET_SNAPSHOT",
+      "delivered_date": "2026-11-13",
+      "gmail_message_id": "1a1d785982ccbed1",
+      "canonical_gmail_message_id": "1a1d785982ccbed1",
+      "canonical_report_date": "2026-11-13"
+    },
+    {
+      "event_key": "macro:us-ppi:2026-10-released-2026-11-13",
+      "family_key": "macro:us-ppi-releases",
+      "material_version": "BLS-2026-11-13-0p3-mom-6p5-yoy",
+      "source_url": "https://www.bls.gov/news.release/ppi.htm",
+      "source_tier": "OFFICIAL_GOVERNMENT",
+      "classification": "MACRO_LATE_EVENT",
+      "source_status": "RELEASED_AFTER_2026-11-13_09H20_BKK",
+      "delivered_date": "2026-11-13",
+      "gmail_message_id": "1a1d785982ccbed1",
+      "canonical_gmail_message_id": "1a1d785982ccbed1",
+      "canonical_report_date": "2026-11-13"
     }
   ],
   "open_missed_candidates": []
