@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-11-14T00:50:00Z",
+  "updated_at": "2026-11-14T06:05:00Z",
   "status": "ACTIVE",
-  "note": "Nov13 missing Crypto daily actually Sent through manual full 13-section recovery Gmail 1a1d785982ccbed1; canonical Git exact readback. Telegram QuickJS HTML Widget research omitted by 26 Nov11-14 collectors, caught manually Nov14 and now sent as one major-security event family. Original 09/10/11:20 runs were QA_FAIL_NO_SEND, not autonomous success. Nov14 report must dedupe this same version. PPI late-Nov13 post-09:20 event explicitly identified as late in corrected report. Prior event history retained.",
+  "note": "Nov14 Crypto 09:20,10:20,11:20 actually QA_FAIL_NO_SEND due missing prebuild and Binance URL HTTP451. User-requested manual full 13-section recovery now verified Gmail Sent 1a1d8a65a1935ab7 to lxx.run688@gmail.com; canonical Git exact body SHA 56dddbe53c6073e2e761a7f697c27d2757f7d9cb. This is not autonomous scheduled repair. Nov13 1a1d785982ccbed1 Sent and archived; Nov14 must not be resent. Added first-party Thai SEC draft, Nov13 completed ETFs, late-discovered Bitcoin Core advisories, OKXICE proposed launch, official market snapshot. Source gaps and code gate not executed.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -3055,6 +3055,102 @@
       "gmail_message_id": "1a1d785982ccbed1",
       "canonical_gmail_message_id": "1a1d785982ccbed1",
       "canonical_report_date": "2026-11-13"
+    },
+    {
+      "event_key": "policy:thai-sec:stablecoin-draft-2026-11-12",
+      "family_key": "policy:thai-sec:stablecoin",
+      "material_version": "nov12-2026-draft-5mTHB-in-out-per-customer-operator",
+      "source_url": "https://www.sec.or.th/EN/Pages/News_Detail.aspx?Lang=EN&NewsNo=253&NewsYear=2026&SECID=13562",
+      "source_status": "OFFICIAL_DRAFT_NOT_ENACTED",
+      "delivered_date": "2026-11-14",
+      "gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_report_date": "2026-11-14",
+      "verified_sent_exact_git": true
+    },
+    {
+      "event_key": "etf:btc:2026-11-13",
+      "family_key": "etf:bitcoin-us-spot-flow",
+      "material_version": "farside-2026-11-13-minus185p4m",
+      "source_url": "https://farside.co.uk/btc/",
+      "source_status": "DATED_FUND_FLOW",
+      "delivered_date": "2026-11-14",
+      "gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_report_date": "2026-11-14",
+      "verified_sent_exact_git": true
+    },
+    {
+      "event_key": "etf:eth:2026-11-13",
+      "family_key": "etf:ethereum-us-spot-flow",
+      "material_version": "farside-2026-11-13-plus2p3m",
+      "source_url": "https://farside.co.uk/eth/",
+      "source_status": "DATED_FUND_FLOW",
+      "delivered_date": "2026-11-14",
+      "gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_report_date": "2026-11-14",
+      "verified_sent_exact_git": true
+    },
+    {
+      "event_key": "etf:sol:2026-11-13",
+      "family_key": "etf:solana-us-spot-flow",
+      "material_version": "farside-2026-11-13-minus3p1m",
+      "source_url": "https://farside.co.uk/sol/",
+      "source_status": "DATED_FUND_FLOW",
+      "delivered_date": "2026-11-14",
+      "gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_report_date": "2026-11-14",
+      "verified_sent_exact_git": true
+    },
+    {
+      "event_key": "security:bitcoin-core:2026-11-10-cve2025-62861",
+      "family_key": "security:bitcoin-core:62861-template-halt",
+      "material_version": "public-2026-11-10-high-patched-prior",
+      "source_url": "https://bitcoincore.org/en/2026/11/10/disclose-cve-2025-62861/",
+      "source_status": "OFFICIAL_LATE_DISCOVERY_PREVIOUSLY_PATCHED",
+      "delivered_date": "2026-11-14",
+      "gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_report_date": "2026-11-14",
+      "verified_sent_exact_git": true
+    },
+    {
+      "event_key": "security:bitcoin-core:2026-11-10-other",
+      "family_key": "security:bitcoin-core:62859-62860",
+      "material_version": "public-2026-11-10-medium-patched-prior",
+      "source_url": "https://bitcoincore.org/en/security-advisories/",
+      "source_status": "OFFICIAL_LATE_DISCOVERY_PREVIOUSLY_PATCHED",
+      "delivered_date": "2026-11-14",
+      "gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_report_date": "2026-11-14",
+      "verified_sent_exact_git": true
+    },
+    {
+      "event_key": "rwa:okxice:us-tokenized-securities-launch-announced-2026-11-11",
+      "family_key": "rwa:okxice:planned-trading-venue-launch",
+      "material_version": "official-2026-11-11-us-eligible-2026-11-23",
+      "source_url": "https://www.okx.com/en-us/learn/okxice-tsv-launch",
+      "source_status": "ISSUER_PLAN_NOT_LIVE",
+      "delivered_date": "2026-11-14",
+      "gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_report_date": "2026-11-14",
+      "verified_sent_exact_git": true
+    },
+    {
+      "event_key": "market:binance-spot:2026-11-14-1258ICT",
+      "family_key": "market:binance-official-24hr-snapshot",
+      "material_version": "2026-11-14T12:58:52+07:00-btc67200",
+      "source_url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "source_status": "PRIMARY_EXCHANGE_CONNECTED_TOOL",
+      "delivered_date": "2026-11-14",
+      "gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_gmail_message_id": "1a1d8a65a1935ab7",
+      "canonical_report_date": "2026-11-14",
+      "verified_sent_exact_git": true
     }
   ],
   "open_missed_candidates": []
