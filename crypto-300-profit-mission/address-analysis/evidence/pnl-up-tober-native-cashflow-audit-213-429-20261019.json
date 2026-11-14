@@ -1,0 +1,242 @@
+{
+  "schema": "mission-address-analysis-two-wallet-native-window-reconciliation-v1",
+  "date": "2026-10-19",
+  "pr": 97,
+  "baseline_commit": "0a23a93f1efdbd10f34de94cda20a5cf84f7a195",
+  "original_source_blob": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "provider": "Alchemy BNB mainnet + Ethereum + Base read-only RPC, historic eth_getBalance/nonce/transaction/receipts/erc20 balanceOf and transfers; free trace unavailable; Blockscout connected indexer chain_id 56 unsupported",
+  "audit_scope": "two original-source low-frequency wallet native BNB movements in frozen 30d window and complete originating signed activity on BNB/Ethereum/Base; NOT entire-wallet economic USD or lifetime PnL",
+  "token_ca": "0xd1d21633b34312a3f490ef2d111bfe0342b47777",
+  "same_funding_block": "0x77431c3",
+  "same_funding_value_wei": "125000000000000000",
+  "same_sale_block": "0x7745165",
+  "same_sweep_block": "0x7745218",
+  "same_sweep_recipient": "0xc415f5c509dece39b1ab27ba5697053a5ffaae3a",
+  "sweep_recipient_code_at_block": "0x",
+  "same_end_native_reserve_wei": "197480000000000",
+  "wallets": [
+    {
+      "source_row": 213,
+      "address": "0xba7b828b536973dc9913810a8a4dd36844444444",
+      "three_chain_noncedeltas": {
+        "bnb": 4,
+        "ethereum": 0,
+        "base": 0
+      },
+      "frozen_utc_window": [
+        "2026-09-17T21:12:12Z",
+        "2026-10-17T21:12:13Z"
+      ],
+      "bnb_balance_start_wei": "91101494334232",
+      "bnb_balance_end_wei": "197480000000000",
+      "native_external_incoming_events": 0,
+      "erc20_passive_incoming_exist": true,
+      "originating_signed_transactions": [
+        {
+          "nonce": 14353,
+          "role": "BUY_ROUTER",
+          "hash": "0x7c8e4b135ae5f10678083086b10ce7a191420251a09bd5daaeecb91d9b00e67b",
+          "tx_native_value_wei": "19550539946142948",
+          "block": "0x77435d8",
+          "receipt_success": true
+        },
+        {
+          "nonce": 14354,
+          "role": "APPROVE_TOKEN",
+          "hash": "0x205c03783c43a9d336ca66572aa30ca9a5e350b5f420bb988381fe57b3a11925",
+          "tx_native_value_wei": "0",
+          "block": "0x7745165",
+          "receipt_success": true
+        },
+        {
+          "nonce": 14355,
+          "role": "SELL_ROUTER",
+          "hash": "0x0b67493537c37270d24034dd1fb775cb5e4908e6d1da73275233e196f7e1f69a",
+          "tx_native_value_wei": "0",
+          "block": "0x7745165",
+          "receipt_success": true
+        },
+        {
+          "nonce": 14356,
+          "role": "EOA_NATIVE_SWEEP",
+          "hash": "0xd4d2904376c198c78ae8a7aa283da25f99e6a3d21568bf371ac497fc936b158b",
+          "recipient": "0xc415f5c509dece39b1ab27ba5697053a5ffaae3a",
+          "tx_native_value_wei": "124340737124639661",
+          "block": "0x7745218",
+          "receipt_success": true
+        }
+      ],
+      "funding": {
+        "funding_block": "0x77431c3",
+        "prev_block": "0x77431c2",
+        "nonce_change": 0,
+        "native_balance_before_wei": "91101494334232",
+        "native_balance_after_wei": "125091101494334232",
+        "native_delta_wei": "125000000000000000",
+        "external_native_incoming_event_found": false,
+        "source": "UNATTRIBUTED_NON_EXTERNAL_NATIVE_CREDIT_CANNOT_CONFIRM_INTERNAL_TX_SOURCE"
+      },
+      "token_swap": {
+        "ca": "0xd1d21633b34312a3f490ef2d111bfe0342b47777",
+        "symbol": "UPTOBER",
+        "decimals": 18,
+        "in_raw": "468769738605691040113959",
+        "out_raws": [
+          "4687697386056910401139",
+          "464082041219634129712820"
+        ],
+        "balance_before_buy_raw": "0",
+        "balance_after_sell_raw": "0",
+        "balance_frozen_end_raw": "0",
+        "in_out_history_exhausted": true,
+        "buy_block_native_balance_delta_wei": "-19566322346142948",
+        "sell_block_native_balance_delta_wei": "19015957976448377",
+        "combined_two_execution_blocks_delta_wei": "-550364369694571",
+        "combined_BNB": "-0.000550364369694571",
+        "economic_status": "RECONCILED_NATIVE_CASH_DELTA_WITHOUT_INTERNAL_SWAP_TRACE_NOT_APPROVED_REALIZED_TRADE_PNL"
+      },
+      "sweep": {
+        "block": "0x7745218",
+        "hash": "0xd4d2904376c198c78ae8a7aa283da25f99e6a3d21568bf371ac497fc936b158b",
+        "recipient": "0xc415f5c509dece39b1ab27ba5697053a5ffaae3a",
+        "recipient_is_contract_at_sweep": false,
+        "value_wei": "124340737124639661",
+        "gas_used": "21000",
+        "gas_price_wei": "120000000",
+        "fee_wei": "2520000000000",
+        "native_after_wei": "197480000000000",
+        "same_residual_BNB": "0.000197480000000000",
+        "exact_balance_reconciliation": true
+      },
+      "full_30d_native_balance_identity": "starting_native + funding + buy_sell_block_delta - sweep_value - sweep_gas_fee = ending_native",
+      "overall_pnl_status": "BNB_30D_SIGNED_ACTIONS_ENUMERATED_AND_NATIVE_CASHFLOW_RECONCILED_BUT_WALLET_VALUE_PNL_UNRESOLVED"
+    },
+    {
+      "source_row": 429,
+      "address": "0xc51b0f84cd767e18ae1364a302d6ca56a5fe9672",
+      "three_chain_noncedeltas": {
+        "bnb": 4,
+        "ethereum": 0,
+        "base": 0
+      },
+      "frozen_utc_window": [
+        "2026-09-17T21:12:12Z",
+        "2026-10-17T21:12:13Z"
+      ],
+      "bnb_balance_start_wei": "6911746000000",
+      "bnb_balance_end_wei": "197480000000000",
+      "native_external_incoming_events": 0,
+      "erc20_passive_incoming_exist": true,
+      "originating_signed_transactions": [
+        {
+          "nonce": 6913,
+          "role": "BUY_ROUTER",
+          "hash": "0xcc2b9bb76a1509936cd40313b98257bf6c14622f9a962f1769cce778cacea463",
+          "tx_native_value_wei": "9874706287042315",
+          "block": "0x77435d4",
+          "receipt_success": true
+        },
+        {
+          "nonce": 6914,
+          "role": "APPROVE_TOKEN",
+          "hash": "0xdda97b9efbd7f4828e338dfce7e41e9d4ca0469ce66fd4e0ca4d6a314293013c",
+          "tx_native_value_wei": "0",
+          "block": "0x7745165",
+          "receipt_success": true
+        },
+        {
+          "nonce": 6915,
+          "role": "SELL_ROUTER",
+          "hash": "0x8792d00580a2b57832df48984638df049e2818f757913d92423e432ed16c26fb",
+          "tx_native_value_wei": "0",
+          "block": "0x7745165",
+          "receipt_success": true
+        },
+        {
+          "nonce": 6916,
+          "role": "EOA_NATIVE_SWEEP",
+          "hash": "0xb53e65a74c032f3bdc79a1d7544eff4974b906cb3a37eb0b6bc051649fae6dbf",
+          "recipient": "0xc415f5c509dece39b1ab27ba5697053a5ffaae3a",
+          "tx_native_value_wei": "124634827445104611",
+          "block": "0x7745218",
+          "receipt_success": true
+        }
+      ],
+      "funding": {
+        "funding_block": "0x77431c3",
+        "prev_block": "0x77431c2",
+        "nonce_change": 0,
+        "native_balance_before_wei": "6911746000000",
+        "native_balance_after_wei": "125006911746000000",
+        "native_delta_wei": "125000000000000000",
+        "external_native_incoming_event_found": false,
+        "source": "UNATTRIBUTED_NON_EXTERNAL_NATIVE_CREDIT_CANNOT_CONFIRM_INTERNAL_TX_SOURCE"
+      },
+      "token_swap": {
+        "ca": "0xd1d21633b34312a3f490ef2d111bfe0342b47777",
+        "symbol": "UPTOBER",
+        "decimals": 18,
+        "in_raw": "238138351436254473768300",
+        "out_raws": [
+          "2381383514362544737683",
+          "235756967921891929030617"
+        ],
+        "balance_before_buy_raw": "0",
+        "balance_after_sell_raw": "0",
+        "balance_frozen_end_raw": "0",
+        "in_out_history_exhausted": true,
+        "buy_block_native_balance_delta_wei": "-9891117727042315",
+        "sell_block_native_balance_delta_wei": "9719033426146926",
+        "combined_two_execution_blocks_delta_wei": "-172084300895389",
+        "combined_BNB": "-0.000172084300895389",
+        "economic_status": "RECONCILED_NATIVE_CASH_DELTA_WITHOUT_INTERNAL_SWAP_TRACE_NOT_APPROVED_REALIZED_TRADE_PNL"
+      },
+      "sweep": {
+        "block": "0x7745218",
+        "hash": "0xb53e65a74c032f3bdc79a1d7544eff4974b906cb3a37eb0b6bc051649fae6dbf",
+        "recipient": "0xc415f5c509dece39b1ab27ba5697053a5ffaae3a",
+        "recipient_is_contract_at_sweep": false,
+        "value_wei": "124634827445104611",
+        "gas_used": "21000",
+        "gas_price_wei": "120000000",
+        "fee_wei": "2520000000000",
+        "native_after_wei": "197480000000000",
+        "same_residual_BNB": "0.000197480000000000",
+        "exact_balance_reconciliation": true
+      },
+      "full_30d_native_balance_identity": "starting_native + funding + buy_sell_block_delta - sweep_value - sweep_gas_fee = ending_native",
+      "overall_pnl_status": "BNB_30D_SIGNED_ACTIONS_ENUMERATED_AND_NATIVE_CASHFLOW_RECONCILED_BUT_WALLET_VALUE_PNL_UNRESOLVED"
+    }
+  ],
+  "combined_native_trade_execution_block_delta_wei": "-722448670589960",
+  "same_unrelated_forged_symbol_erc20_outgoing_tx": "0x7426ff990e98d6bf401ce7aadf398b4cbbe37aee91f835e16ab93833283e54b5",
+  "forged_token_ca": "0x0a6e8afa561d58b7f75f5db6bf9772fa448cd914",
+  "forged_erc20_reminder": "ERC20 Transfer.from is NOT evidence of transaction signer; one third party tx emitted Transfer logs attributed to both wallet addresses",
+  "sufficient_for": "HIGH_PRIORITY_COMMON_FUNDING_AND_COLLECTION_PATTERN_CANDIDATE",
+  "insufficient_for": [
+    "Same controller identity",
+    "The actual internal 0.125 BNB source contract or triggering transaction",
+    "Transaction-specific Router BNB payout trace",
+    "Native or USD wallet realized total across all passive holdings, all EVM networks and lifetime",
+    "Approved profitable-wallet ranking"
+  ],
+  "validation": {
+    "each_wallet_native_conservation": true,
+    "token_inventory_conservation": true,
+    "exactly_4_signed_nonce_increments_each": true,
+    "zero_signed_ethereum_base": true,
+    "zero_native_external_incoming_each": true,
+    "sweeps_21000_gas_exact": true,
+    "provider_debug_trace_transaction": "Free tier unavailable",
+    "provider_internal_asset_transfers": "BNB Chain category unsupported",
+    "third_party_chain_56_blockscout": "Not supported"
+  },
+  "gates": [
+    "PR_OPEN_DRAFT",
+    "NO_MERGE",
+    "NO_DEPLOY",
+    "NO_TRADE",
+    "NO_GMAIL",
+    "RESEARCH_ONLY"
+  ]
+}

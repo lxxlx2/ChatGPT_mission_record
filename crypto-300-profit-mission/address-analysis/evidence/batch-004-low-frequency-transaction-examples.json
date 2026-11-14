@@ -1,0 +1,56 @@
+{
+  "schema": "mission-address-analysis-batch-004-sampled-transactions-v1",
+  "research_only": true,
+  "source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "sample_size": 5,
+  "classification_method": "eth_getTransactionByHash call data, no inferred decoded swaps",
+  "transactions": [
+    {
+      "row": 72,
+      "chain": "bnb-mainnet",
+      "hash": "0x6aa88d62bb291fc06129e9b21fd2e55df9e5525ccef46035e4a9e5cf0e427b7a",
+      "selector": "0x4d819a2a",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "250000000000000000",
+      "classification": "PAID_CONTRACT_CALL_UNRESOLVED",
+      "note": "Router-like contract call with BNB value. No verified executed token output, holding basis, or exit."
+    },
+    {
+      "row": 77,
+      "chain": "bnb-mainnet",
+      "hash": "0xe71fb2dcc02afc5b41de3f582926a6f36caac2d2745166447462c591b18e33e8",
+      "selector": "0x095ea7b3",
+      "to": "0x5e904368dd716db2e14fe351d26565ad90c47777",
+      "value_wei": "0",
+      "classification": "ERC20_APPROVAL_NOT_SWAP"
+    },
+    {
+      "row": 78,
+      "chain": "bnb-mainnet",
+      "hash": "0xfb28df94e22d4e843ce6163f5a10607b4db1866b9e8477736400147060d63171",
+      "selector": "0x095ea7b3",
+      "to": "0x7138b48df7d98d7e3cc221bfe7192d0a178182d8",
+      "value_wei": "0",
+      "classification": "ERC20_APPROVAL_NOT_SWAP"
+    },
+    {
+      "row": 66,
+      "chain": "bnb-mainnet",
+      "hash": "0x97d316206ca969ba8af16a219f87f9bd99ef3985ee404bb16ccd7cd59700f318",
+      "selector": "0x",
+      "to": "0xc025474a03ef3967ba0a16c8635f71cf2a82c4fe",
+      "classification": "NATIVE_BNB_TRANSFER_NOT_SWAP"
+    },
+    {
+      "row": 78,
+      "chain": "bnb-mainnet",
+      "hash": "0xcfd7ccda4bc14fb9d1b2e6f0068b5a257eaf6cc3650c3f4b4aa335b6dcd7c53a",
+      "selector": "0x39ecce49",
+      "to": "0x0da2f0f00fb1915a4bb05bb8fa665cb683b1a8fe",
+      "classification": "CONTRACT_CALL_UNDECODED",
+      "note": "Nonzero BNB value alone does not establish an executed or profitable buy"
+    }
+  ],
+  "verified_profit_or_loss_roundtrips": 0,
+  "scope": "only selected signed calls, other transactions and fee/basis unresolved"
+}

@@ -1,0 +1,516 @@
+{
+  "schema": "mission-address-analysis-active-237-low-frequency-triage-v1",
+  "date": "2026-10-19",
+  "repository": "lxxlx2/ChatGPT_mission_record",
+  "pull_request": 97,
+  "base_head": "0a23a93f1efdbd10f34de94cda20a5cf84f7a195",
+  "source_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "input_original_wallets": 449,
+  "input_active_wallets": 237,
+  "nonce_evidence_batches_read": 23,
+  "first_120_all_three_chains_checked_active": 74,
+  "later_329_first_hit_early_exit_active": 163,
+  "three_chain_low_frequency_checked_11": [
+    {
+      "source_row": 45,
+      "bsc": 0,
+      "ethereum": 0,
+      "base": 1,
+      "all_three_chain_signed": 1,
+      "scope": "BNB_ETH_BASE_ALL_CHECKED"
+    },
+    {
+      "source_row": 50,
+      "bsc": 0,
+      "ethereum": 1,
+      "base": 0,
+      "all_three_chain_signed": 1,
+      "scope": "BNB_ETH_BASE_ALL_CHECKED"
+    },
+    {
+      "source_row": 72,
+      "bsc": 1,
+      "ethereum": 0,
+      "base": 0,
+      "all_three_chain_signed": 1,
+      "scope": "BNB_ETH_BASE_ALL_CHECKED"
+    },
+    {
+      "source_row": 106,
+      "bsc": 1,
+      "ethereum": 0,
+      "base": 0,
+      "all_three_chain_signed": 1,
+      "scope": "BNB_ETH_BASE_ALL_CHECKED"
+    },
+    {
+      "source_row": 44,
+      "bsc": 1,
+      "ethereum": 0,
+      "base": 1,
+      "all_three_chain_signed": 2,
+      "scope": "BNB_ETH_BASE_ALL_CHECKED"
+    },
+    {
+      "source_row": 103,
+      "bsc": 2,
+      "ethereum": 0,
+      "base": 0,
+      "all_three_chain_signed": 2,
+      "scope": "BNB_ETH_BASE_ALL_CHECKED"
+    },
+    {
+      "source_row": 7,
+      "bsc": 3,
+      "ethereum": 0,
+      "base": 0,
+      "all_three_chain_signed": 3,
+      "scope": "BNB_ETH_BASE_ALL_CHECKED"
+    },
+    {
+      "source_row": 12,
+      "bsc": 0,
+      "ethereum": 3,
+      "base": 0,
+      "all_three_chain_signed": 3,
+      "scope": "BNB_ETH_BASE_ALL_CHECKED"
+    },
+    {
+      "source_row": 60,
+      "bsc": 4,
+      "ethereum": 0,
+      "base": 1,
+      "all_three_chain_signed": 5,
+      "scope": "BNB_ETH_BASE_ALL_CHECKED"
+    },
+    {
+      "source_row": 83,
+      "bsc": 0,
+      "ethereum": 5,
+      "base": 0,
+      "all_three_chain_signed": 5,
+      "scope": "BNB_ETH_BASE_ALL_CHECKED"
+    },
+    {
+      "source_row": 112,
+      "bsc": 1,
+      "ethereum": 5,
+      "base": 0,
+      "all_three_chain_signed": 6,
+      "scope": "BNB_ETH_BASE_ALL_CHECKED"
+    }
+  ],
+  "only_first_positive_chain_low_frequency_56": [
+    {
+      "source_row": 149,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 177,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 181,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 193,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 223,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 224,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 241,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 248,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 311,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 348,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 367,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 368,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 369,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 374,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 385,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 395,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 396,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 418,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 433,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 1,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 153,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 2,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 166,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 2,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 178,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 2,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 205,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 2,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 208,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 2,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 237,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 2,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 240,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 2,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 376,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 2,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 127,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 3,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 211,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 3,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 275,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 3,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 280,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 3,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 293,
+      "first_positive_chain": "base",
+      "known_chain_nonce_delta": 3,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 308,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 3,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 413,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 3,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 125,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 4,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 130,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 4,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 213,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 4,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 226,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 4,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 279,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 4,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 312,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 4,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 365,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 4,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 392,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 4,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 425,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 4,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 429,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 4,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 142,
+      "first_positive_chain": "ethereum",
+      "known_chain_nonce_delta": 5,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 168,
+      "first_positive_chain": "ethereum",
+      "known_chain_nonce_delta": 5,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 186,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 5,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 274,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 5,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 345,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 5,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 380,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 5,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 414,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 5,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 430,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 5,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 196,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 6,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 323,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 6,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 419,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 6,
+      "other_chain_signed_status": "NOT_CHECKED"
+    },
+    {
+      "source_row": 426,
+      "first_positive_chain": "bsc",
+      "known_chain_nonce_delta": 6,
+      "other_chain_signed_status": "NOT_CHECKED"
+    }
+  ],
+  "low_candidates_total": 67,
+  "known_trade_quality_examples": {
+    "row45": "Base 1 signed but outgoing token Transfer.from logs include authentic USDC and fake symbols",
+    "row50": "Only one ETH direct send, no verified trade",
+    "row72": "0.25 BNB Router buy ABTC still open",
+    "row106": "BNB 1 signed but many passive fake/burn ERC20 Transfer.from logs",
+    "row44": "real WBNB and imitation WBNB separate CAs",
+    "row103": "BSC token send without verified cost",
+    "row7": "BNB-Peg ETH transfer only",
+    "row12": "Ethereum ETH-lookalike ERC20 symbols",
+    "row60": "short token transfer and native send",
+    "row83": "Ethereum USDC transfer + native ETH send",
+    "row112": "canonical USDC plus fake similar ERC20 assets"
+  },
+  "closed_token_cashflow_candidates_NOT_AUDITED_PNL": [
+    {
+      "row": 148,
+      "token": "MEMEBANK",
+      "bnb_delta_wei": "1529109813584584832",
+      "bnb_signed_count": 280,
+      "status": "PARTIAL_POSITIVE_TOKEN_CYCLE_NOT_WALLET_PNL",
+      "issue": "5th sell block has 4 own signed transactions and other native flows untraced"
+    },
+    {
+      "row": 121,
+      "token": "TILCAYO",
+      "bnb_delta_wei": "21068641700292979",
+      "bnb_signed_count": 3936,
+      "status": "PARTIAL_POSITIVE_TOKEN_CYCLE_NOT_WALLET_PNL"
+    },
+    {
+      "row": 227,
+      "token": "BOARDSEAT+BTCLIFE",
+      "bnb_delta_wei": "-50186759399041556",
+      "bnb_signed_count": 574,
+      "status": "MIXED_TWO_TOKENS_NOT_WALLET_PNL"
+    },
+    {
+      "row": 363,
+      "token": "BS",
+      "bnb_delta_wei": "217132915606493102",
+      "bnb_signed_count": 387,
+      "status": "MIXED_TWO_CYCLES_NOT_WALLET_PNL"
+    },
+    {
+      "row": 400,
+      "token": "BOARDSEAT",
+      "bnb_delta_wei": "-337858120186780058",
+      "bnb_signed_count": 1391,
+      "status": "PARTIAL_NEGATIVE_TOKEN_CYCLE_NOT_WALLET_PNL"
+    },
+    {
+      "row": 213,
+      "token": "UPTOBER",
+      "bnb_delta_wei": "-550364369694571",
+      "bnb_signed_count": 4,
+      "status": "CLUSTER_LINKED_TO_429_AND_7_EXTERNAL_WALLETS"
+    },
+    {
+      "row": 429,
+      "token": "UPTOBER",
+      "bnb_delta_wei": "-172084300895389",
+      "bnb_signed_count": 4,
+      "status": "CLUSTER_LINKED_TO_213_AND_7_EXTERNAL_WALLETS"
+    }
+  ],
+  "full_wallet_30day_pnl_approved": 0,
+  "full_wallet_lifetime_pnl_approved": 0,
+  "important_limitations": [
+    "Nonce delta is not token PnL",
+    "After batch 007 first positive chain checked only; other chain nonce missing",
+    "Token Transfer.from is not necessarily wallet-signed",
+    "Execution-block native deltas not independently traced as swap payouts",
+    "UPTOBER rows 213/429 are correlated wallet-strategy observations, not independent strategy samples"
+  ]
+}

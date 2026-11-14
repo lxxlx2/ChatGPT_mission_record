@@ -1,0 +1,61 @@
+{
+  "schema": "mission-address-analysis-receipt-facts-real-evidence-v1",
+  "as_of": "2026-10-18",
+  "source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "source": "Live authenticated Alchemy reads of FOUR complete historical receipt+transaction pairs; deterministic cross-check of chainId, source row, tx hash, block, status, ERC20 Transfer topics and gas",
+  "fixture_blob_sha": "a5c075dd9c77214f3823af564e88f09336742702",
+  "checks": [
+    {
+      "row": 2,
+      "network": "bnb-mainnet",
+      "transaction_hash": "0x56d745f5ac3d7458b107be7e3d3be2b7ca8c3e24f143a389222521d7e9b2f70f",
+      "classification": "APPROVAL_NOT_TRADE",
+      "gas_cost_native_wei": "5878080000000",
+      "net_erc20_raw": {},
+      "approval_logs": 1,
+      "signed_sender_matched": true
+    },
+    {
+      "row": 44,
+      "network": "bnb-mainnet",
+      "transaction_hash": "0x9fe8b9c857bf9e2c28f64c8a21b06eabdf9357977974984885cba4beeea02e6d",
+      "classification": "ERC20_TRANSFER_NOT_TRADE_PROVEN",
+      "gas_cost_native_wei": "4680600000000",
+      "net_erc20_raw": {
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c": "-12684915159767001"
+      },
+      "approval_logs": 0,
+      "signed_sender_matched": true
+    },
+    {
+      "row": 45,
+      "network": "base-mainnet",
+      "transaction_hash": "0x44965de6b382eeb673e9f3c42eb74b644d2f8cdb1c2dca223fd04e39a3309f6a",
+      "classification": "ERC20_TRANSFER_NOT_TRADE_PROVEN",
+      "gas_cost_native_wei": "382277850000",
+      "net_erc20_raw": {
+        "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": "-500000000"
+      },
+      "approval_logs": 0,
+      "signed_sender_matched": true
+    },
+    {
+      "row": 50,
+      "network": "eth-mainnet",
+      "transaction_hash": "0x92854f297b49b842329ccdf602845b21e8aaa99aba84607afcf6102340fd69d6",
+      "classification": "NATIVE_TRANSFER_NOT_TRADE_PROVEN",
+      "gas_cost_native_wei": "1972263426000",
+      "net_erc20_raw": {},
+      "approval_logs": 0,
+      "signed_sender_matched": true
+    }
+  ],
+  "run_status": "FOUR_REAL_RECEIPTS_READ_AND_MATCHED",
+  "pnl_status": "UNRESOLVED",
+  "limitation": [
+    "Read receipt facts ONLY, not an EVM swap PnL or ERC20 cost basis",
+    "Connected Alchemy tool truncated sauce BUY/SELL receipts (8098 chars plus truncation marker); those trade receipts could not be independently verified in this run",
+    "No native-value internal transfer trace, wallet full token history, or price conversion provided",
+    "Python V1 local offline 17-unit-test pass is independent of this connector-based JavaScript cross-check; the RPC-driven Python CLI not tested on Mac or provider URL"
+  ]
+}
