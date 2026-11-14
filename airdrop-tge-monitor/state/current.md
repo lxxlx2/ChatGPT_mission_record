@@ -1,12 +1,12 @@
 # TGE Monitor Current State
-Updated: 2026-11-14 15:04:50 Asia/Bangkok
+Updated: 2026-11-14 15:59:11 Asia/Bangkok
 
-- authoritative_final: airdrop-tge-monitor/runs/2026-11-14/150450-final.md
-- final_commit_sha: 28dfd9ddce7a689883858f0196ebaf997dff5a16
+- authoritative_final: airdrop-tge-monitor/runs/2026-11-14/155911-final.md
+- final_commit_sha: f5c24dca4706bef0e62e28fe65df446fef7e2d5c
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 3
 - executed_shard: 3
-- candidate_count: 0 qualified new ACTION; unresolved existing StandX DUSD VERIFYING
+- candidate_count: 0 qualified new ACTION; existing StandX DUSD VERIFYING
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
@@ -19,7 +19,7 @@ Updated: 2026-11-14 15:04:50 Asia/Bangkok
 - shard0: 2026-11-14 08:55:51 Asia/Bangkok; runs/2026-11-14/085551-final.md (PARTIAL_ONLY)
 - shard1: 2026-11-14 13:00:40 Asia/Bangkok; runs/2026-11-14/130040-final.md (PARTIAL_ONLY)
 - shard2: 2026-11-14 14:02:32 Asia/Bangkok; runs/2026-11-14/140232-final.md (PARTIAL_ONLY)
-- shard3: 2026-11-14 15:04:50 Asia/Bangkok; runs/2026-11-14/150450-final.md (PARTIAL_ONLY)
+- shard3: 2026-11-14 15:59:11 Asia/Bangkok; runs/2026-11-14/155911-final.md (PARTIAL_ONLY)
 
 ## Unresolved and next
 - urgent5: Concrete, MetaMask, Claynosaurz, HEEBOO, Space @intodotspace; dynamic Surf and StandX.
