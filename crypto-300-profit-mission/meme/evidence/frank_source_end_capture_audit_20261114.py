@@ -81,7 +81,10 @@ try:
         elif old!=new:differences.append(path)
     compare({k:report[k] for k in derived},derived)
     def allowed(path):
-        return (path in {'coverage.rpc_call_count_scope','rpc_endpoint','pool_vaults.market_comparison.result_received_at','pool_vaults.market_comparison.source_result_received_at','independent_balance_check.read_gap_seconds'}
+        # holder_binary labels these two local time.time() fields explicitly as
+        # JOB_RECEIVED_RESULT_MAY_BE_CACHED_NOT_BLOCK_TIME. They are not slots,
+        # source as-of timestamps, response values or evidence identities.
+        return (path in {'coverage.rpc_call_count_scope','rpc_endpoint','pool_vaults.market_comparison.result_received_at','pool_vaults.market_comparison.source_result_received_at','independent_balance_check.read_gap_seconds','special_address_roles.balance_check.result_received_at','holder_rankings.raw_balance_check.result_received_at'}
                 or (path.startswith('independent_balance_check.batches[') and path.endswith('].read_gap_seconds')))
     forbidden=[s for s in differences if not allowed(s)]
     assert not forbidden,forbidden[:25]
