@@ -136,12 +136,12 @@ def test_successful_indexer_comparison_still_requires_raw_pool_and_holder_reconc
     assert 'independent_sources' in result['missing_required']
 
 
-def test_standard_only_worker_opt_in_keeps_rpc_budgets():
+def test_standard_only_worker_opt_in_uses_authorized_free_quota():
     from mission_agent.mission_control.server import CLUSTER_PRESETS,CLUSTER_RPC_JOB_BUDGETS
     assert CLUSTER_PRESETS['standard']['compare_market_sources'] is True
     assert not CLUSTER_PRESETS['quick'].get('compare_market_sources')
     assert not CLUSTER_PRESETS['deep'].get('compare_market_sources')
-    assert CLUSTER_RPC_JOB_BUDGETS['standard']=={'max_wire_attempts':1200,'max_elapsed_seconds':1800}
+    assert CLUSTER_RPC_JOB_BUDGETS['standard']=={'max_wire_attempts':None,'max_elapsed_seconds':None}
 
 
 def test_actual_analyzer_market_path_invokes_injected_second_source_once():

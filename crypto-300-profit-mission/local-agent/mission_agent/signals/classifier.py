@@ -5,6 +5,12 @@ from .policy import USDC
 
 USDT='Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'
 QUOTE_MINTS = frozenset({WSOL, USDC, USDT})
+CHAIN_METADATA_REASONS = frozenset({
+    'UNAVAILABLE_ON_PUBLIC_RPC','UNSUPPORTED_VERSION','MISSING_META_MESSAGE','JSON_PARSED_KEYS_REQUIRED',
+    'WALLET_NOT_REFERENCED','BALANCE_VECTOR_INCOMPLETE','TOKEN_BALANCE_METADATA_MISSING',
+    'INSTRUCTION_METADATA_MISSING','TOKEN_IDENTITY_CHANGED','TOKEN_OWNER_CHANGED','TOKEN_OWNER_MISSING',
+    'FEE_MISSING','PROGRAM_INDEX_INVALID',
+})
 
 def classify(signature, tx, wallet):
     base = {'signature': signature, 'wallet': wallet, 'slot': tx.get('slot'),
@@ -15,6 +21,8 @@ def classify(signature, tx, wallet):
         e = normalize(signature, tx, wallet)
     except (IncompleteTransaction, KeyError, TypeError, ValueError, IndexError) as exc:
         base['classification_reason'] = 'INCOMPLETE_CHAIN_METADATA:' + type(exc).__name__
+        reason=str(exc) if isinstance(exc,IncompleteTransaction) and str(exc) in CHAIN_METADATA_REASONS else 'MALFORMED_CHAIN_METADATA'
+        base['classification_details']={'chain_metadata_reason':reason}
         return base
     base.update(frank_is_signer=e['wallet_is_signer'],
                 frank_is_authority=e['classification_evidence']['wallet_authority'], evidence=e)

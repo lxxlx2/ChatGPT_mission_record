@@ -184,12 +184,12 @@ def test_unverified_primary_identity_does_not_start_public_fetch():
     assert a.narrative_snapshot({'status':'UNAVAILABLE'})['status']=='NOT_REQUESTED' and calls==[]
 
 
-def test_standard_only_narrative_flag_keeps_legacy_paths_and_budgets():
+def test_standard_only_narrative_flag_keeps_legacy_paths_and_uses_authorized_free_quota():
     from mission_agent.mission_control.server import CLUSTER_PRESETS,CLUSTER_RPC_JOB_BUDGETS
     assert CLUSTER_PRESETS['standard']['collect_narrative'] is True
     assert not CLUSTER_PRESETS['quick'].get('collect_narrative')
     assert not CLUSTER_PRESETS['deep'].get('collect_narrative')
-    assert CLUSTER_RPC_JOB_BUDGETS['standard']=={'max_wire_attempts':1200,'max_elapsed_seconds':1800}
+    assert CLUSTER_RPC_JOB_BUDGETS['standard']=={'max_wire_attempts':None,'max_elapsed_seconds':None}
 
 
 def test_documented_platform_handle_maps_to_public_hint_not_verified_account():

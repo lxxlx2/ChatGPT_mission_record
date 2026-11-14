@@ -303,7 +303,9 @@ def test_cluster_dashboard_explains_single_query_bounds_and_localizes_rate_limit
     html=(Handler.static_root/"index.html").read_text()
     js=(Handler.static_root/"app.js").read_text()
     assert "统一查询" in html
-    assert "请求与耗时上限" in html
+    assert "历史按来源结束推进" in html
+    assert "逐请求设有超时和错误恢复" in html
+    assert "请求与耗时上限" not in html
     assert "任务结束不代表完整尽调" in html
     assert "clusterPresetHelp" not in js
     assert "免费 Solana RPC 触发限流（HTTP 429）" in js
@@ -332,9 +334,10 @@ def test_cluster_dashboard_does_not_fabricate_narrative_conclusion():
     assert "未做全网检索" in js
 
 
-def test_standard_cluster_preset_is_adaptive_not_bruteforce():
+def test_standard_cluster_preset_covers_top20_owners_with_source_driven_history():
     standard=CLUSTER_PRESETS["standard"]
-    assert standard["deep_holders"]==6
+    assert standard["deep_holders"]==20
+    assert standard["exhaust_history"] is True
     assert standard["history_per_holder"]==12
     assert standard["funding_lookback"]==8
     assert standard["adaptive_history_per_holder"]==30
@@ -697,3 +700,15 @@ def test_frank_wallet_live_rpc_audit_diff_reports_missing_signatures():
     assert result["missing_signatures_first_10"]==["sig-b"]
     assert result["local_not_in_rpc_page"]==1
     assert result["local_not_in_rpc_first_10"]==["local-only"]
+
+
+def test_independent_batch_progress_keeps_actual_completed_and_total_counts():
+    import threading
+    manager=ClusterJobManager.__new__(ClusterJobManager)
+    manager.lock=threading.Lock()
+    manager.jobs={'f'*32:{'status':'RUNNING'}}
+    manager._set_progress('f'*32,'INDEPENDENT_BALANCE_BATCH',{'completed':120,'total':33613,'private_url':'SECRET'})
+    progress=manager._public_job(manager.jobs['f'*32])['progress']
+    assert progress['completed']==120 and progress['total']==33613
+    assert progress['stage']=='INDEPENDENT_BALANCE_BATCH'
+    assert 'SECRET' not in str(progress)

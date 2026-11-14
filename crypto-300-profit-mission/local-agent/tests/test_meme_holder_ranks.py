@@ -42,7 +42,7 @@ def test_lp_heavy_ranks_beyond_raw_twenty_find_the_actual_eligible_owner_top10()
     assert len(out['owners'])==11
     assert out['owners'][0]['raw']=='800' and out['owners'][0]['account_count']==20
     opts=rpc.requests[0][1][1]
-    assert opts['withContext'] is True and opts['encoding']=='jsonParsed'
+    assert opts['withContext'] is True and opts['encoding']=='base64' and opts['dataSlice']=={'offset':0,'length':166}
     assert opts['filters']==[{'dataSize':165},{'memcmp':{'offset':0,'bytes':MINT}}]
     assert opts['minContextSlot']==100
 
@@ -169,7 +169,7 @@ def test_new_enumeration_is_opted_in_only_by_standard_worker_plan():
     assert a._holder_ranks(profile(),1000,0)['status']=='NOT_REQUESTED'
     assert a.rpc.requests==[]
     assert CLUSTER_PRESETS['standard']['enumerate_holder_ranks'] is True
-    assert CLUSTER_RPC_JOB_BUDGETS['standard']=={'max_wire_attempts':1200,'max_elapsed_seconds':1800}
+    assert CLUSTER_RPC_JOB_BUDGETS['standard']=={'max_wire_attempts':None,'max_elapsed_seconds':None}
 
 
 @pytest.mark.parametrize('cfg',[{}, {'encoding':'jsonParsed','commitment':'finalized','withContext':True,'filters':[]}])
@@ -240,3 +240,82 @@ def test_owner_identity_failure_preserves_verified_raw_ranks_and_stops_metadata_
     assert out['metrics']['GLOBAL_EX_LP_OWNER_TOP10_PCT']=='UNRESOLVED'
     assert out['owner_metadata_reason']=='OWNER_METADATA_UNAVAILABLE'
     assert 'PRIVATE_PROVIDER' not in str(out)
+
+
+def _raw(n):
+    import base64
+    return n.to_bytes(32,'big')
+
+def binary_account(n,owner,amount,program=P22,space=170,state=1,account_type=2,mint=None):
+    import base64
+    from mission_agent.meme.holder_ranks import _b58
+    mint_bytes=_raw(1000)
+    b=bytearray(166 if space>165 else 165)
+    b[0:32]=mint_bytes if mint is None else mint;b[32:64]=_raw(owner);b[64:72]=amount.to_bytes(8,'little');b[108]=state
+    if space>165:b[165]=account_type
+    return {'pubkey':key(n),'account':{'owner':program,'executable':False,'space':space,'data':[base64.b64encode(bytes(b)).decode(),'base64']}}
+
+
+def test_binary_slice_rows_decode_owner_and_amount_for_token2022_extensions():
+    rpc=RPC([binary_account(1,301,600),binary_account(2,302,400,space=165)])
+    out=ranks.collect_mint_holder_ranks(MINT,P22,1000,0,100,rpc,lambda *a:('ORDINARY','fixture'))
+    assert out['status']=='COMPLETE_SNAPSHOT' and out['encoding']=='base64'
+    assert [(r['owner'],r['raw']) for r in out['owners']]==[(key(301),'600'),(key(302),'400')]
+
+
+@pytest.mark.parametrize('kw',[{'mint':_raw(999)},{'state':0},{'account_type':1},{'space':166+0,'account_type':3}])
+def test_binary_rows_with_wrong_mint_state_or_account_type_are_rejected(kw):
+    with pytest.raises(ranks.HolderRankSourceError,match='ACCOUNT_ROW_INVALID'):
+        ranks.collect_mint_holder_ranks(MINT,P22,1000,0,100,RPC([binary_account(1,301,1000,**kw)]),lambda *a:('ORDINARY','fixture'))
+
+
+def test_legacy_program_rejects_extended_binary_rows():
+    with pytest.raises(ranks.HolderRankSourceError):
+        ranks.collect_mint_holder_ranks(MINT,P,1000,0,100,RPC([binary_account(1,301,1000,program=P)]),lambda *a:('ORDINARY','fixture'))
+
+
+def test_unsliced_or_wrong_slice_binary_query_rejected_before_wire():
+    base={'encoding':'base64','commitment':'finalized','withContext':True,'filters':[{'memcmp':{'offset':0,'bytes':MINT}}]}
+    assert not ranks.valid_enumeration_query([P22,base])
+    assert not ranks.valid_enumeration_query([P22,{**base,'dataSlice':{'offset':0,'length':72}}])
+    assert ranks.valid_enumeration_query([P22,{**base,'dataSlice':{'offset':0,'length':166}}])
+    assert not ranks.valid_enumeration_query([P22,{**base,'encoding':'jsonParsed','dataSlice':{'offset':0,'length':166}}])
+
+
+def test_supply_bracket_upgrades_only_with_fixed_supply_and_equal_later_reading():
+    rows=[binary_account(1,301,1000)]
+    ok=ranks.collect_mint_holder_ranks(MINT,P22,1000,0,90,RPC(rows,slot=100),lambda *a:('ORDINARY','fixture'),supply_fixed_above=True,supply_recheck=lambda:(1000,105))
+    assert ok['status']=='COMPLETE_SNAPSHOT' and ok['supply_bracket']['after_slot']==105
+    for kw in [dict(supply_fixed_above=False,supply_recheck=lambda:(1000,105)),dict(supply_fixed_above=True,supply_recheck=lambda:(999,105)),
+               dict(supply_fixed_above=True,supply_recheck=lambda:(1000,99)),dict(supply_fixed_above=True,supply_recheck=lambda:1/0)]:
+        out=ranks.collect_mint_holder_ranks(MINT,P22,1000,0,90,RPC(rows,slot=100),lambda *a:('ORDINARY','fixture'),**kw)
+        assert out['status']=='INCOMPLETE_EVIDENCE' and out['reason']=='SNAPSHOT_SLOT_UNRECONCILED'
+
+
+def test_curve_check_separates_keypairs_from_pdas():
+    assert ranks.on_ed25519_curve('6hSjCsmRARbo6nszzGUN8L8j86JWprnqQXKSBfQeNDc4') is True
+    assert ranks.on_ed25519_curve('2B8tftZ5ww8TREMr3pgkgERLNjJyJxEAPWMENViGMsL4') is False
+    assert ranks.on_ed25519_curve('FcFu24r8M8TuTAhEjBSJsqhrPxeumUsKg7ZGzXAi4h9M') is False
+    assert ranks.on_ed25519_curve('not-a-key') is None
+
+
+def test_missing_owner_account_is_ordinary_only_when_on_curve():
+    from mission_agent.meme.cluster import WalletClusterAnalyzer
+    a=WalletClusterAnalyzer(MINT,rpc=RPC([]))
+    assert a._role('6hSjCsmRARbo6nszzGUN8L8j86JWprnqQXKSBfQeNDc4',{'value':None})==('ORDINARY','RPC_NO_ACCOUNT_ON_CURVE_KEYPAIR')
+    assert a._role('2B8tftZ5ww8TREMr3pgkgERLNjJyJxEAPWMENViGMsL4',{'value':None})==('UNRESOLVED','RPC_NO_ACCOUNT_OFF_CURVE_PDA')
+    assert a._role('6hSjCsmRARbo6nszzGUN8L8j86JWprnqQXKSBfQeNDc4',None)==('UNRESOLVED','ACCOUNT_INFO_UNAVAILABLE')
+
+
+def test_verified_pool_exclusion_uses_only_bound_self_authority_pools(monkeypatch):
+    monkeypatch.setattr(ranks,'discover_owner_pool_hint',lambda mint,owner,*a:{'authority':owner,'pair_address':owner,'target_vault':'v'} if owner==key(200) else None)
+    records=[account(1,200,500),account(2,301,300),account(3,302,200)]
+    out,_=run(records)
+    assert out['verified_pool_authorities']==[key(200)]
+    assert out['metrics']['GLOBAL_OWNER_TOP10_PCT']=='100.0000'
+    assert out['metrics']['GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT']=='50.0000'
+
+
+def test_no_bound_pool_keeps_verified_pool_metric_unresolved():
+    out,_=run([account(1,301,1000)])
+    assert out['metrics']['GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT']=='UNRESOLVED'
