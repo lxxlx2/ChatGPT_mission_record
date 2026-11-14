@@ -1910,7 +1910,7 @@ function renderOwnerAccountHistory(coverage) {
   return '<details class="cluster-owner-accounts"><summary>Owner 逐账户历史覆盖</summary>'+
     '<p>包括所选当前零余额账户；已关闭账户的完整集合未枚举，历史 Owner 仅覆盖本轮发现证据。选择当前全部账户仍不证明完整经济历史，空页也不证明真实首买。</p>'+
     '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>Owner</th><th>账户来源</th><th>观察 / 已选择 / 已请求</th><th>所选账户</th><th>未选及停止原因</th></tr></thead><tbody>'+rows.map(r=>{
-      const selected=Array.isArray(r.accounts_selected) ? r.accounts_selected.slice(0,4) : [];
+      const selected=Array.isArray(r.accounts_selected) ? r.accounts_selected : [];
       const queried=Array.isArray(r.accounts_with_windows) ? r.accounts_with_windows : [];
       const selection=r.account_selection_complete===true && r.account_source_status==='VERIFIED_CURRENT_MINT_ACCOUNTS' ? '当前来源账户均已选择' : '账户集合覆盖仍有缺口';
       return '<tr><td>'+ownerCell(r.owner || '')+'</td><td>'+esc(sources[r.account_source_status] || '未核实来源')+'</td><td>'+esc(r.current_accounts_observed ?? '未记录')+' / '+esc(selected.length)+' / '+esc(queried.length)+'</td><td>'+selected.map(address=>ownerCell(address)).join('<br>')+'</td><td>'+esc(r.accounts_not_selected ?? '未记录')+' 个未选；'+esc(reasons[r.selection_stop_reason] || '未记录停止原因')+'；'+selection+'</td></tr>';
@@ -2149,6 +2149,11 @@ function renderClusterCompleteness(report) {
   clusterCompletenessLabel=valid ? '证据不完整' : contract ? '完整性状态无法核实' : '完整性尚未评估';
   const states={PARTIAL:'部分覆盖',UNAVAILABLE:'来源不可用',NOT_COLLECTED:'尚未采集'};
   const requirements=valid ? contract.requirements : [];
+  const reads=report.collection_checkpoint;
+  const readInterval=reads?.version===1 && Number.isFinite(reads.source_epoch_started_at) && reads.source_epoch_started_at>0 &&
+    Number.isFinite(reads.last_source_read_at) && reads.last_source_read_at>=reads.source_epoch_started_at
+    ? '<p>本轮读取区间：'+esc(new Date(reads.source_epoch_started_at*1000).toLocaleString('zh-CN'))+' 至 '+
+      esc(new Date(reads.last_source_read_at*1000).toLocaleString('zh-CN'))+'。各来源与缓存保留各自观测时点，任务结束不代表全部数据已刷新到结束时点。</p>' : '';
   // Fixed domain labels only. Unknown, duplicated or missing rows cannot hide a
   // mandatory gap, and unsupported COMPLETE claims never produce a green state.
   const gaps=Object.entries(clusterRequiredEvidence).flatMap(([id,labels])=>{
@@ -2161,6 +2166,7 @@ function renderClusterCompleteness(report) {
       '。已用来源：'+esc(sourceLabel)+'；下一来源：'+esc(labels[3])+'。</li>'];
   });
   node.innerHTML='<h2>'+esc(clusterCompletenessLabel)+'</h2><p>任务执行结束与尽调完整性分别核实；余额排名已核实也不能证明完整历史或可买。</p>'+
+    readInterval+
     (report.coverage?.history_scan_mode==='SOURCE_END' ? '<p>历史按来源分页结束采集，不设固定分页数或账户数配额；来源失败、交易分类歧义和无法发现的历史账户仍分别保留缺口。</p>' : '')+
     (report.collection_checkpoint?.mode==='RESUMED_HISTORICAL_JOB' ? '<p>此报告从原任务继续完成，保留原始来源时间；任务完成时间不代表余额或行情已更新到当前。</p>' : '')+
     (!valid ? '<p>此报告没有受支持的完整性记录，保留原始证据，不补造已验收结论。</p>' : '')+

@@ -174,3 +174,28 @@ def test_secondary_factory_starts_once_after_first_primary_batch():
     result = collect_independent_balance_check(MINT, ACCOUNTS, primary, factory, full_accounts=True)
     assert result['batches_completed'] == 21
     assert [name for name, _ in order] == ['primary', 'factory', 'secondary'] + ['primary','secondary']*20
+
+
+@pytest.mark.parametrize('bad',['NaN','-1',str(2**64),None,True])
+def test_equal_malformed_supply_from_two_sources_never_becomes_verified_match(bad):
+    class Malformed(Provider):
+        def call(self,method,params):
+            result=super().call(method,params)
+            result['value'][0]['data']['parsed']['info']['supply']=bad
+            return result
+    p,s=Malformed('primary',[]),Malformed('secondary',[])
+    result=collect_independent_balance_check(MINT,[],p,s,full_accounts=True)
+    assert result['status']=='UNAVAILABLE' and result['reason']=='RESPONSE_INVALID'
+    assert result['provided_account_set_compared'] is False and result['accounts_compared']==0
+
+
+@pytest.mark.parametrize('field,value',[('owner',None),('owner','INVALID'),('mint',OWNER)])
+def test_unverified_or_wrong_target_identity_cannot_pass_by_matching_other_provider(field,value):
+    class Malformed(Provider):
+        def call(self,method,params):
+            result=super().call(method,params)
+            result['value'][1]['data']['parsed']['info'][field]=value
+            return result
+    result=collect_independent_balance_check(MINT,[ACCOUNTS[0]],Malformed('primary',[]),Malformed('secondary',[]),full_accounts=True)
+    assert result['status']=='UNAVAILABLE' and result['reason']=='RESPONSE_INVALID'
+    assert result['accounts_compared']==0

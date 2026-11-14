@@ -700,3 +700,15 @@ def test_frank_wallet_live_rpc_audit_diff_reports_missing_signatures():
     assert result["missing_signatures_first_10"]==["sig-b"]
     assert result["local_not_in_rpc_page"]==1
     assert result["local_not_in_rpc_first_10"]==["local-only"]
+
+
+def test_independent_batch_progress_keeps_actual_completed_and_total_counts():
+    import threading
+    manager=ClusterJobManager.__new__(ClusterJobManager)
+    manager.lock=threading.Lock()
+    manager.jobs={'f'*32:{'status':'RUNNING'}}
+    manager._set_progress('f'*32,'INDEPENDENT_BALANCE_BATCH',{'completed':120,'total':33613,'private_url':'SECRET'})
+    progress=manager._public_job(manager.jobs['f'*32])['progress']
+    assert progress['completed']==120 and progress['total']==33613
+    assert progress['stage']=='INDEPENDENT_BALANCE_BATCH'
+    assert 'SECRET' not in str(progress)

@@ -342,7 +342,7 @@ class ClusterJobManager:
                 "liquidity_usd":pair.get("liquidity_usd"),
             })
         else:
-            for key in ("top_accounts_resolved","scanned","target","owner","mode","deep_holders_scanned","adaptive_deepened","phase","pages","signature_count","stop_reason"):
+            for key in ("top_accounts_resolved","scanned","target","completed","total","owner","mode","deep_holders_scanned","adaptive_deepened","phase","pages","signature_count","stop_reason"):
                 if key in details:progress[key]=details.get(key)
             if details.get("owners"):progress["owners"]=list(details.get("owners") or [])[:10]
         with self.lock:

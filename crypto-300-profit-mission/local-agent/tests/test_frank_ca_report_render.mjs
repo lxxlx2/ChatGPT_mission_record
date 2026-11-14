@@ -1596,3 +1596,24 @@ test('independent failure separates the stopping budget from a safe last source 
     reason:'RPC_JOB_WIRE_BUDGET_EXHAUSTED',last_source_error:'https://private.invalid/SECRET'}});
   assert.doesNotMatch(html,/SECRET/);
 });
+
+test('owner coverage renders every selected current account and its actual count',()=>{
+  const h=harness();
+  const accounts=Array.from({length:7},(_,i)=>String(i+1)+mint);
+  const html=h.context.renderOwnerAccountHistory({owner_account_history:[{
+    owner:mint,current_accounts_observed:7,accounts_selected:accounts,accounts_with_windows:accounts,
+    accounts_not_selected:0,account_selection_complete:true,account_source_status:'VERIFIED_CURRENT_MINT_ACCOUNTS',
+    selection_stop_reason:'ALL_OBSERVED_SELECTED',
+  }]});
+  assert.match(html,/7 \/ 7 \/ 7/);
+  assert.ok(html.includes(encodeURIComponent(accounts[6])));
+});
+
+test('a long source-end query exposes its read interval without claiming all data fresh at completion',()=>{
+  const h=harness();
+  h.context.renderClusterCompleteness({...fixture,collection_checkpoint:{version:1,source_epoch_started_at:1700000000,last_source_read_at:1700003600}});
+  assert.match(h.element('cluster-completeness').innerHTML,/本轮读取区间/);
+  assert.match(h.element('cluster-completeness').innerHTML,/任务结束不代表全部数据已刷新到结束时点/);
+  h.context.renderClusterCompleteness({...fixture,collection_checkpoint:{version:1,source_epoch_started_at:1700003600,last_source_read_at:1700000000}});
+  assert.doesNotMatch(h.element('cluster-completeness').innerHTML,/本轮读取区间/);
+});

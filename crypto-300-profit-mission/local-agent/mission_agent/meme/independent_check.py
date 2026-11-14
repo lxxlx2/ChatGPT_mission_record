@@ -39,7 +39,7 @@ def _last_source_error(rpc):
     return code if code in {'TimeoutError','URLError','OSError','ValueError','JSONDecodeError'} else None
 
 
-def _read(rpc,addresses):
+def _read(rpc,addresses,*,strict_mint=None):
     r=rpc.call('getMultipleAccounts',[addresses,{'encoding':'jsonParsed','commitment':'finalized'}])
     slot=((r or {}).get('context') or {}).get('slot') if isinstance(r,dict) else None
     values=(r or {}).get('value') if isinstance(r,dict) else None
@@ -47,7 +47,16 @@ def _read(rpc,addresses):
     out={}
     for address,v in zip(addresses,values):
         info=(((v or {}).get('data') or {}).get('parsed') or {}).get('info') if isinstance(v,dict) and isinstance(v.get('data'),dict) else None
-        if not isinstance(info,dict):out[address]=None;continue
+        if not isinstance(info,dict):
+            if strict_mint is not None and v is not None:raise ValueError('RESPONSE_INVALID')
+            out[address]=None;continue
+        if strict_mint is not None:
+            is_mint=address==strict_mint
+            raw=info.get('supply') if is_mint else (info.get('tokenAmount') or {}).get('amount')
+            if (not re.fullmatch(r'[0-9]{1,20}',str(raw)) or int(str(raw))>2**64-1
+                or (is_mint and 'supply' not in info)
+                or (not is_mint and (not valid_pubkey(info.get('owner')) or info.get('mint')!=strict_mint))):
+                raise ValueError('RESPONSE_INVALID')
         if 'supply' in info:out[address]={'kind':'mint','raw':str(info.get('supply'))}
         else:out[address]={'kind':'account','raw':str((info.get('tokenAmount') or {}).get('amount')),'owner':info.get('owner'),'mint':info.get('mint')}
     return slot,out
@@ -84,7 +93,7 @@ def _collect_full_set(mint,accounts,primary,secondary,label,clock,progress):
         batch=addresses[offset:offset+RPC_BATCH_SIZE]
         # A primary budget/checkpoint error must still terminate the whole job.
         try:
-            p_slot,p=_read(primary,batch);p_at=clock()
+            p_slot,p=_read(primary,batch,strict_mint=mint);p_at=clock()
         except (RPCJobBudgetExceeded,CheckpointError):raise
         except Exception as exc:
             return {**base,'status':'PARTIAL' if base['batches_completed'] else 'UNAVAILABLE',
@@ -97,7 +106,7 @@ def _collect_full_set(mint,accounts,primary,secondary,label,clock,progress):
                 return {**base,'status':'PARTIAL' if base['batches_completed'] else 'UNAVAILABLE',
                         'reason':'SECONDARY_PROVIDER_UNAVAILABLE','failed_batch':len(base['batches']),
                         'failure_phase':'SECONDARY'}
-            s_slot,s=_read(rpc,batch);s_at=clock()
+            s_slot,s=_read(rpc,batch,strict_mint=mint);s_at=clock()
         except CheckpointError:raise
         except Exception as exc:
             return {**base,'status':'PARTIAL' if base['batches_completed'] else 'UNAVAILABLE',
