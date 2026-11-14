@@ -22,6 +22,7 @@ from pathlib import Path
 
 from ..frank.parser import DEX_PROGRAMS, INFRA_PROGRAMS
 from ..signals.classifier import classify, CHAIN_METADATA_REASONS
+from .history_classification import resolve_history_classification, resolution_record
 from ..market.sol_usd import USDC, WSOL
 from .market import DexScreenerMarketClient
 from .market_parity import attach_market_comparison
@@ -275,6 +276,7 @@ class SolanaReadOnlyRPC:
         monotonic=time.monotonic,
         before_wire=None,
         transport_updated=None,
+        transaction_batches=True,
     ):
         endpoints=[endpoint]
         endpoints.extend(DEFAULT_RPC_FALLBACKS if fallback_endpoints is None else fallback_endpoints)
@@ -314,6 +316,21 @@ class SolanaReadOnlyRPC:
         self.endpoint_failures=defaultdict(int)
         self._last_by_endpoint=defaultdict(float)
         self._cooldown_until=defaultdict(float)
+        self.transaction_batches=transaction_batches is True
+        self._transaction_batches_disabled=False;self._transaction_plan=[];self._transaction_prefetched={}
+        self._transaction_plan_ttl=None
+        self._transaction_batch_stats={'http_batch_attempts':0,'transaction_subrequests':0,'fallbacks':0}
+
+    @property
+    def supports_transaction_batches(self):
+        return self.transaction_batches and not self._transaction_batches_disabled and self.max_wire_attempts is None and self.max_elapsed_seconds is None
+
+    @property
+    def transaction_batch_stats(self):return dict(self._transaction_batch_stats)
+
+    def prefetch_transactions(self,signatures,*,ttl):
+        from .transaction_batch import prepare
+        prepare(self,signatures,ttl)
 
     def _next_endpoint(self):
         if self.transport_updated is not None:self.transport_updated()
@@ -400,6 +417,10 @@ class SolanaReadOnlyRPC:
         if ttl and self.cache:
             hit=self.cache.get(method,params,now)
             if hit is not None:self.cache_hits+=1;return hit
+
+        from .transaction_batch import consume
+        prefetched,result=consume(self,method,params,ttl)
+        if prefetched:return result
 
         body=json.dumps({"jsonrpc":"2.0","id":1,"method":method,"params":params}).encode()
         last_error=None
@@ -618,7 +639,7 @@ class WalletClusterAnalyzer:
         self.enumerate_holder_ranks=enumerate_holder_ranks is True
         self._owner_history_candidates={};self._owner_history_selection={}
         self._extra_history_accounts=set();self._classified_holder_transactions={}
-        self._classified_holder_contexts={}
+        self._classified_holder_contexts={};self._history_classification_resolutions={}
         self._owner_account_source="OBSERVED_TOP20_ACCOUNTS"
         self.historical_accounts=[];self.historical_account_scans=[]
         self._historical_context_seen=set();self._historical_retention_index={}
@@ -1241,6 +1262,7 @@ class WalletClusterAnalyzer:
         terminal; an empty page is only the end of this provider address window.
         """
         if type(page_size) is not int or not 1<=page_size<=1000:raise ValueError("HISTORY_PAGE_SIZE_INVALID")
+        if self.exhaust_history and phase=='funding' and getattr(self.rpc,'supports_transaction_batches',False):page_size=1000
         if type(max_pages) is not int or not 1<=max_pages<=8:raise ValueError("HISTORY_PAGE_BOUND_INVALID")
         key=self._history_window_key(holder,address,before,phase)
         previous=self._history_streams.get(key) if self.exhaust_history else None
@@ -1308,6 +1330,8 @@ class WalletClusterAnalyzer:
                     known_slots and state["oldest_slot"] is not None and known_slots[0]>state["oldest_slot"]
                 ):
                     fail("SOURCE_PAGE_CONFLICT");return
+                if self.exhaust_history and phase=='funding' and getattr(self.rpc,'supports_transaction_batches',False):
+                    self.rpc.prefetch_transactions([row['signature'] for row in fresh],ttl=3650*86400)
                 yield from fresh
                 # Seen identities and the continuation are a single page commit.
                 # An interrupted page is replayed, while transaction evidence is
@@ -1362,7 +1386,12 @@ class WalletClusterAnalyzer:
                         if not any(x["source_owner"]==src and x["destination_owner"]==dst and x["signature"]==sig for x in self.consolidations):self.consolidations.append(record)
                 elif mint in {USDC,WSOL} and src in top_owners and dst in top_owners:
                     self._edge(src,dst,"DIRECT_QUOTE_TRANSFER",sig,asset=mint,amount_raw=tr["amount_raw"],block_time=bt)
-            try:c=classify(sig,tx,holder.owner)
+            try:
+                c=classify(sig,tx,holder.owner)
+                if self.exhaust_history:
+                    c=resolve_history_classification(c,sig,tx,holder.owner,self.mint)
+                    if c.get('history_resolution'):
+                        self._history_classification_resolutions[(holder.owner,sig)]=resolution_record(c,sig,tx,holder.owner,self.mint)
             except Exception as exc:
                 self.tx_errors.append({"signature":sig,"phase":"holder_classify","error":type(exc).__name__})
                 continue
@@ -1376,6 +1405,8 @@ class WalletClusterAnalyzer:
             found=None
             if c.get("classification")=="ACTIVE_TRADE" and trade.get("mint")==self.mint:
                 record={"owner":holder.owner,"signature":sig,"block_time":bt,"direction":trade.get("direction"),"quote_asset":trade.get("quote_asset"),"quote_amount_raw":trade.get("quote_amount_raw"),"quote_decimals":trade.get("quote_decimals"),"token_amount_raw":trade.get("token_amount_raw"),"token_decimals":trade.get("token_decimals"),"program_ids":(c.get("evidence") or {}).get("program_ids") or [],"signers":_signers(tx)}
+                if c.get('history_resolution')=='TARGET_MINT_TWO_TOKEN_EXCHANGE':
+                    record['quote_amount_semantics']=trade['route_amount_semantics']
                 if not any(x["owner"]==holder.owner and x["signature"]==sig for x in self.trades):self.trades.append(record)
                 if trade.get("direction")=="BUY" and bt is not None:
                     found={
@@ -1387,6 +1418,8 @@ class WalletClusterAnalyzer:
                         "token_decimals":trade.get("token_decimals"),
                         "program_ids":(c.get("evidence") or {}).get("program_ids") or [],
                     }
+                    if c.get('history_resolution')=='TARGET_MINT_TWO_TOKEN_EXCHANGE':
+                        found['quote_amount_semantics']=trade['route_amount_semantics']
                     first=self._earlier_buy(first,found)
                     if self.exhaust_history:self._holder_firsts[identity]=first
             self._classified_holder_transactions[cache_key]=found
@@ -1400,7 +1433,9 @@ class WalletClusterAnalyzer:
         if not first:return
         limit=int(funding_limit or self.funding_lookback)
         best=None
-        for meta in self._signature_pages(holder,holder.owner,limit,self._funding_page_limit,"funding",before=first["signature"]):
+        for processed,meta in enumerate(self._signature_pages(holder,holder.owner,limit,self._funding_page_limit,"funding",before=first["signature"]),1):
+            if processed>1 and (processed-1)%4==0:
+                self._progress('HISTORY_TRANSACTIONS',owner=holder.owner,phase='funding',completed=processed-1)
             sig=meta.get("signature")
             if not sig:continue
             try:tx=self.rpc.call("getTransaction",[sig,{"commitment":"finalized","encoding":"jsonParsed","maxSupportedTransactionVersion":1}],ttl=3650*86400)
@@ -1686,6 +1721,7 @@ class WalletClusterAnalyzer:
                 "quote_quantity":self._quote_quantity(row),
                 "token_quantity":token_qty,
                 "program_ids":row.get("program_ids") or [],
+                **({'quote_amount_semantics':row['quote_amount_semantics']} if row.get('quote_amount_semantics') else {}),
             }
 
         def funding_record(owner):
@@ -1959,6 +1995,11 @@ class WalletClusterAnalyzer:
         }
         if self._top_account_context_errors:
             report["coverage"]["top_account_context_errors"]=self._top_account_context_errors
+        if self._history_classification_resolutions:
+            report["coverage"]["holder_classification_resolutions"]=list(self._history_classification_resolutions.values())
+        batch_stats=getattr(self.rpc,'transaction_batch_stats',None)
+        if isinstance(batch_stats,dict) and batch_stats.get('http_batch_attempts'):
+            report['coverage']['transaction_batch_transport']=batch_stats
         report["analysis_completeness"]=report_completeness(report)
         return report
 

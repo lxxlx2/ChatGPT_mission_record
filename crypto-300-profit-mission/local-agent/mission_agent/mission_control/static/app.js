@@ -1455,7 +1455,9 @@ function acquisitionCell(h) {
     : '支付额未解析';
   const when=a.block_time ? new Date(Number(a.block_time)*1000).toLocaleString('zh-CN') : '时间未知';
   const tx=a.signature ? '<a class="link-btn compact" href="https://solscan.io/tx/' + encodeURIComponent(a.signature) + '" target="_blank" rel="noreferrer">Tx ↗</a>' : '';
-  return '<div class="holder-evidence">' + scope + '<span>' + esc(pay) + '</span><small>' + esc(when) + ' ' + tx + '</small></div>';
+  const semantics=a.quote_amount_semantics==='NET_WALLET_PAIR_NOT_EXACT_FINAL_TARGET_COST'
+    ? '<small>非标准币对的账户净交换量；未折算美元，不等于精确买入成本。</small>' : '';
+  return '<div class="holder-evidence">' + scope + '<span>' + esc(pay) + '</span>'+semantics+'<small>' + esc(when) + ' ' + tx + '</small></div>';
 }
 
 function fundingCell(h) {
@@ -1506,7 +1508,8 @@ function clusterProgressDetail(job) {
   if (stage==='NARRATIVE_SOURCES') return '正在读取有限公开来源；页面陈述与精确 CA 归属分开核实';
   if (stage==='HISTORICAL_ACCOUNT_SCAN') return '正在读取交易证据中发现的历史账户；覆盖范围和来源停止原因分别保留';
   if (stage==='INDEPENDENT_BALANCE_BATCH') return '第二来源余额核对 '+esc(p.completed ?? 0)+' / '+esc(p.total ?? '?')+' 项；分批读取时间分别记录';
-  if (stage==='HOLDER_ENUMERATION') return '正在按 Mint 读取账户来源并合并 Owner 余额；仍受原任务硬上限保护';
+  if (stage==='HOLDER_ENUMERATION') return '正在按 Mint 读取账户来源并合并 Owner 余额；完成范围与来源停止原因分别记录';
+  if (stage==='HISTORY_TRANSACTIONS') return '本 Owner 资金历史已处理 '+esc(p.completed ?? 0)+' 笔；完整分页继续，未截断较早数据';
   if (stage==='HOLDERS_READY') return 'Top20 owner 已解析 ' + esc(p.top_accounts_resolved ?? 0) + ' 个，开始历史浅扫';
   if (stage==='OWNER_SCAN') return '逐 Owner 历史读取 ' + esc(p.scanned ?? 0) + ' / ' + esc(p.target ?? '?');
   if (stage==='FUNDING_SCAN') return '建仓前 funding 回看 ' + esc(p.scanned ?? 0) + ' / ' + esc(p.target ?? '?');
@@ -1865,6 +1868,29 @@ function renderHolderClassificationGaps(report) {
     WALLET_NOT_REFERENCED:'Owner 未出现在消息键中',INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE:'市场交换证据不足'};
   const rows=Object.entries(reasons).map(([reason,n])=>'<li>'+esc(labels[reason] || '其他未分类原因')+'：'+esc(n)+'</li>').join('');
   return title+'<p>'+esc(c.observation_records)+' 条观察记录，去重为 '+esc(c.unique_owner_signatures)+' 个 Owner／签名组合、'+esc(c.unique_signatures)+' 个不同签名，涉及 '+esc(c.affected_owners)+' 个 Owner。</p><ul>'+rows+'</ul><p>分类不明不等于 RPC 失败；每个 Owner 独立保留缺口，未升级为完整首买。</p></div>';
+}
+
+function renderHistoryResolutions(report) {
+  const rows=report.coverage?.holder_classification_resolutions;
+  if (!Array.isArray(rows) || !rows.length) return '';
+  const labels={PASSIVE_TOKEN_OWNER_RECEIPT:'代币 Owner 的被动转入',TARGET_MINT_TWO_TOKEN_EXCHANGE:'目标币与另一代币的交换'};
+  const valid=rows.every(r=>r && Object.hasOwn(labels,r.reason) && r.mint===report.mint &&
+    typeof r.owner==='string' && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(r.owner) &&
+    typeof r.signature==='string' && r.signature.length>0 && r.signature.length<=128 &&
+    /^[a-f0-9]{64}$/.test(r.raw_transaction_sha256 || '')) &&
+    new Set(rows.map(r=>r.owner+'|'+r.signature)).size===rows.length;
+  if (!valid) return '<div class="trust-box"><p>补充分类记录尚未核实，保留原分类缺口。</p></div>';
+  return '<div class="trust-box"><strong>已补充的账户历史分类</strong><p>'+Object.entries(labels).map(([reason,label])=>
+    esc(label)+' '+rows.filter(r=>r.reason===reason).length+' 条').join('；')+
+    '。被动转入不作为买入或授权；非标准币对不折算美元，也不作为精确买入成本。其余分类缺口继续单独列明。</p></div>';
+}
+
+function renderTransactionBatchEvidence(report) {
+  const stats=report.coverage?.transaction_batch_transport;
+  if (!stats || !['http_batch_attempts','transaction_subrequests','fallbacks'].every(k=>Number.isSafeInteger(stats[k]) && stats[k]>=0)) return '';
+  return '<div class="trust-box"><strong>完整交易批量读取</strong><p>HTTP 批次 '+esc(stats.http_batch_attempts)+
+    ' 次，交易子请求 '+esc(stats.transaction_subrequests)+' 项，回退 '+esc(stats.fallbacks)+
+    ' 次。减少网络往返，不减少历史范围；每笔原始结果仍分别记录，失败项按原读取路径恢复。</p></div>';
 }
 
 function renderHistoricalAccountEvidence(report) {
@@ -2367,6 +2393,8 @@ function renderClusterReport(report) {
       '<div><span>初查每页资金历史数</span><strong>' + esc(coverage.funding_lookback ?? 0) + '</strong></div>' +
     '</div>' +
     renderHolderClassificationGaps(report) +
+    renderHistoryResolutions(report) +
+    renderTransactionBatchEvidence(report) +
     renderHistoricalAccountEvidence(report) +
     renderOwnerAccountHistory(coverage) +
     renderClusterHistoryWindows(coverage) +

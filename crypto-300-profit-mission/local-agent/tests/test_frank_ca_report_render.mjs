@@ -1617,3 +1617,29 @@ test('a long source-end query exposes its read interval without claiming all dat
   h.context.renderClusterCompleteness({...fixture,collection_checkpoint:{version:1,source_epoch_started_at:1700003600,last_source_read_at:1700000000}});
   assert.doesNotMatch(h.element('cluster-completeness').innerHTML,/本轮读取区间/);
 });
+
+
+test('CA history refinements and batching are explained without quote valuation or full-history claims',()=>{
+  const h=harness();
+  const report=structuredClone(fixture);
+  report.coverage.holder_classification_resolutions=[{owner:mint,mint,signature:'s1',reason:'PASSIVE_TOKEN_OWNER_RECEIPT',raw_transaction_sha256:'a'.repeat(64)},
+    {owner:mint,mint,signature:'s2',reason:'TARGET_MINT_TWO_TOKEN_EXCHANGE',raw_transaction_sha256:'b'.repeat(64)}];
+  report.coverage.transaction_batch_transport={http_batch_attempts:2,transaction_subrequests:8,fallbacks:0};
+  h.context.renderClusterReport(report);
+  const html=h.element('cluster-coverage').innerHTML;
+  assert.match(html,/代币 Owner 的被动转入 1 条/);
+  assert.match(html,/目标币与另一代币的交换 1 条/);
+  assert.match(html,/减少网络往返，不减少历史范围/);
+  assert.match(html,/不作为精确买入成本/);
+  report.coverage.holder_classification_resolutions[0].reason='<img src=x onerror=alert(1)>';
+  h.context.renderClusterReport(report);
+  assert.match(h.element('cluster-coverage').innerHTML,/补充分类记录尚未核实/);
+  assert.doesNotMatch(h.element('cluster-coverage').innerHTML,/<img/);
+});
+
+test('nonstandard token exchange first-buy amount is explicitly a net boundary observation',()=>{
+  const h=harness();
+  const html=h.context.acquisitionCell({first_acquisition:{status:'CONFIRMED_ACCOUNT_COMPLETE',quote_quantity:'12',quote_asset:mint,
+    quote_amount_semantics:'NET_WALLET_PAIR_NOT_EXACT_FINAL_TARGET_COST'}});
+  assert.match(html,/账户净交换量/);assert.match(html,/不等于精确买入成本/);
+});

@@ -400,6 +400,7 @@ class CheckpointRPC:
         self.checkpoint, self.rpc = checkpoint, rpc
         self.base_cache_hits = checkpoint.meta['cache_hits']
         self.base_failures = dict(checkpoint.meta['endpoint_failures'])
+        self.base_batch_stats = dict(checkpoint.meta.get('transaction_batch_transport',{}))
         now, monotonic = checkpoint.clock(), rpc._monotonic()
         for key, value in checkpoint.meta['endpoint_last_at'].items():
             rpc._last_by_endpoint[rpc.endpoints[int(key)]] = monotonic - max(0, now-value)
@@ -420,6 +421,9 @@ class CheckpointRPC:
             for endpoint, value in self.rpc._cooldown_until.items():
                 self.checkpoint.meta['endpoint_cooldown_until'][str(self.rpc.endpoints.index(endpoint))] = now+max(0, value-monotonic)
             self.checkpoint.meta['last_saved_at'] = now
+            stats=getattr(self.rpc,'transaction_batch_stats',{})
+            if any(stats.values()) or self.base_batch_stats:
+                self.checkpoint.meta['transaction_batch_transport']={k:self.base_batch_stats.get(k,0)+v for k,v in stats.items()}
             self.checkpoint._save_meta()
 
     def __getattr__(self, name):
@@ -446,6 +450,25 @@ class CheckpointRPC:
             finally:
                 self._store_transport()
         return self.checkpoint.invoke('rpc', method, [params], {'ttl': ttl}, read)
+
+    @property
+    def transaction_batch_stats(self):
+        return dict(self.checkpoint.meta.get('transaction_batch_transport',{}))
+
+    def prefetch_transactions(self,signatures,*,ttl):
+        from .transaction_batch import OPTIONS
+        remaining=[]
+        for offset,signature in enumerate(signatures):
+            index=self.checkpoint.index+offset
+            if index<len(self.checkpoint.entries):
+                expected={'channel':'rpc','operation':'getTransaction','args':[[signature,OPTIONS]],'kwargs':{'ttl':ttl}}
+                if self.checkpoint.entries[index]['request']!=expected:
+                    self.checkpoint.fault='CA_CHECKPOINT_READ_SEQUENCE_CHANGED'
+                    raise CheckpointError(self.checkpoint.fault)
+            else:remaining.append(signature)
+        # Scheduling sends no wire. Each uncaptured read invokes transport from
+        # inside the ordinary checkpoint invocation/reservation/error boundary.
+        if remaining:self.rpc.prefetch_transactions(remaining,ttl=ttl)
 
     def assert_can_publish(self):
         self.rpc.assert_can_publish()
