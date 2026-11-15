@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "as_of_date_bangkok": "2026-10-13",
+  "baseline_main_sha": "17a71c863b44c67f7a1a47639fd482958e56ee4b",
+  "evidence_type": "USER_SCREENSHOTS_AND_VERIFIED_SOURCE_CODE_ANCHORS",
+  "not_chain_truth": true,
+  "actual_mac_refreshed_by_this_task": false,
+  "original_requirement": "12 user-identified display and attribution defects plus research-only multi-person wallet interface; preserve frozen Frank notifications",
+  "sample_tokens": [
+    {
+      "role": "CA query",
+      "display_name": "Agency",
+      "mint_from_screenshot_visual_transcription": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXPpump",
+      "mint_exact_verification": "PENDING_CHAIN_AND_ORIGINAL_INPUT_READBACK",
+      "screenshot_statements": [
+        "market cap ~$1.54M as displayed, not freshly independently verified",
+        "the prior screenshot showed narrative/source missing",
+        "Top20 contains public/unknown wallet roles; not proof of ultimate controllers",
+        "$30 historical quote may expire"
+      ],
+      "chain_balance_verified": false
+    },
+    {
+      "role": "Frank priority card",
+      "screenshot_state": "NO_BUY with latest SELL roughly 19 hours earlier",
+      "screenshot_old_historical_quote": "15,000 USDC previously displayed",
+      "chain_inventory_verified": false
+    }
+  ],
+  "bugs": [
+    {
+      "id": 1,
+      "task": "F01",
+      "old_code": "static/app.js non-CLOSED current candidates, not current actionable decision filter",
+      "expected": "NO_BUY and historical exited not in current opportunities; still in history",
+      "old_fail_replayed": false
+    },
+    {
+      "id": 2,
+      "task": "A04/A05/F02",
+      "old_code": "frank model state not reconciled to all owned ATA and exact slot",
+      "expected": "verified chain balance and account coverage or explicit unresolved reason; not invent zero",
+      "old_fail_replayed": false
+    },
+    {
+      "id": 3,
+      "task": "F01/F02",
+      "old_code": "no executable BUY still rendered as priority",
+      "expected": "priority displays only valid BUY/SMALL_BUY with live gates",
+      "old_fail_replayed": false
+    },
+    {
+      "id": 4,
+      "task": "A05/C05/C09",
+      "old_code": "many unresolved holder/owner facts on overview",
+      "expected": "fetch material available source evidence; incomplete named blockers in one panel",
+      "old_fail_replayed": false
+    },
+    {
+      "id": 5,
+      "task": "C02",
+      "old_code": "app.js renders market.name plus symbol even when equal",
+      "expected": "mint + metadata + pair identity cross-check; no duplicate Agency Agency",
+      "old_fail_replayed": false
+    },
+    {
+      "id": 6,
+      "task": "C01/C05/C06",
+      "old_code": "CLUSTER_PRESETS deep bound <=20 owners, 100 token history, 50 funding history",
+      "expected": "single completeness-governed query and important holder first event/funder evidence",
+      "old_fail_replayed": false
+    },
+    {
+      "id": 7,
+      "task": "C05/C06",
+      "screenshot_indicators": {
+        "largest_direct_relation_group_pct": "32.93",
+        "material_unattributed_pct": "13.6204"
+      },
+      "old_code": "links not proof same controller; unresolved attribution",
+      "expected": "verify onchain relation vs control, exclude public infra and explicitly evidence any residual",
+      "old_fail_replayed": false
+    },
+    {
+      "id": 8,
+      "task": "C08",
+      "old_code": "general CA implicit $30 quote from follow policy",
+      "expected": "no CA quote unless user gives amount; frozen Frank quote remains untouched",
+      "old_fail_replayed": false
+    },
+    {
+      "id": 9,
+      "task": "C08/C10",
+      "old_code": "CA_QUOTE_TTL_SECONDS=30 quote can become stale by completion",
+      "expected": "on-demand fresh quote with TTL at rendering, never stale executable price",
+      "old_fail_replayed": false
+    },
+    {
+      "id": 10,
+      "task": "C04/C06",
+      "old_code": "Top20 token accounts insufficient after pool/vault exclusion",
+      "expected": "sufficient owner enumeration, correct denominator and source-verified top10 metrics",
+      "old_fail_replayed": false
+    },
+    {
+      "id": 11,
+      "task": "C05",
+      "old_code": "holder initial funding/trade histories bounded",
+      "expected": "source-replayable active buy vs transfer and funding provenance for material owners",
+      "old_fail_replayed": false
+    },
+    {
+      "id": 12,
+      "task": "C07/C09",
+      "old_code": "static/app.js labels X/FOMO narrative not connected near bottom",
+      "expected": "project narrative and exact-mint attributed sources at top",
+      "old_fail_replayed": false
+    }
+  ],
+  "evidence_rules": [
+    "This JSON freezes inputs and expectations; it does not claim tests or live chain proof for F/C features.",
+    "No paid GMGN API, no unauthorized browser scraping or Gmail send.",
+    "Unknown fact does not become zero or confirmed by omission.",
+    "A01 red baseline scenarios must be executed against actual code in F and C implementation PRs before marking resolved."
+  ],
+  "risk_classification": "P0_DATA_TRUTH_AND_DECISION_UI",
+  "privacy": "Only screenshot-quoted token identifiers/status; no private keys, user e-mail, wallet seed or production database"
+}
