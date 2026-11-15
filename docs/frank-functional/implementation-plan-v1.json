@@ -1,0 +1,2250 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-15",
+  "state": "READY_FOR_IMPLEMENTATION",
+  "branch": "codex/frank-functional-completion-20261115",
+  "pr": 253,
+  "planning_input_sha": "f174b7f4ac0bfbf8304e7a60ca42869f5ed4b56c",
+  "product_baseline_sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+  "scanner_baseline_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+  "definition": "usable Frank wallet observation + evidence-based CA due diligence, free local delivery; not profit proof",
+  "authorization": {
+    "routine_development_and_local_acceptance": "AUTHORIZED_NO_REVIEW_REQUIRED",
+    "final_dashboard_local_deployment": "AUTHORIZED_AFTER_UNIFIED_TEST",
+    "payment": "FORBIDDEN",
+    "notifications_signing_trading_loop_merge": "NOT_EXECUTED_IN_THIS_SCOPE",
+    "port": 8766
+  },
+  "sources": {
+    "G1": {
+      "sha": "3072ebda80c98c1912447a704b3c29f227c3dd96",
+      "path": "docs/FRANK_V2_G1_ARCHITECTURE_CONTRACT_20261019.md"
+    },
+    "V3": {
+      "sha": "dd58cac9efba465bd173e19b206a7b11b6a1b25f",
+      "path": "crypto-300-profit-mission/meme/frank-wallet-monitor-dashboard-v2-design-2026-10-11.md"
+    },
+    "OPTION3": {
+      "sha": "72cf75c61fdb220a01b98df0abe81ebc5d248fd4",
+      "path": "docs/MONITORING/frank-release-20261020/FRANK_AMOUNT_INDEPENDENT_INTELLIGENCE_PLAN.md"
+    },
+    "TODO": {
+      "sha": "c8e9da00d5f111c7e79727f4cc8543a88bebced2",
+      "path": "crypto-300-profit-mission/meme/FRANK_CA_MULTI_PERSON_IMPLEMENTATION_TODO_20261013.md"
+    },
+    "CA": {
+      "sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+      "path": "crypto-300-profit-mission/meme/ca-analysis-unified-accuracy-acceptance.md"
+    },
+    "STATUS": {
+      "sha": "15a782d841d2cf4d88cb27fa95654bdaefe2e4b9",
+      "path": "crypto-300-profit-mission/meme/STATUS.md"
+    }
+  },
+  "status_source": "crypto-300-profit-mission/meme/STATUS.md",
+  "design": "TECHNICAL_PLAN_20261115.md",
+  "interface_contracts": "interface-contracts-v1.json",
+  "work_packages": [
+    {
+      "id": "W00",
+      "title": "整体产品/技术方案与完整追踪",
+      "depends_on": [],
+      "acceptance_scenarios": [
+        "E01",
+        "E15"
+      ],
+      "state": "PLAN_READY",
+      "interfaces": [],
+      "functions": [],
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+    },
+    {
+      "id": "W01",
+      "title": "完整索引流水、分页、筛选和原件字段",
+      "depends_on": [
+        "W00"
+      ],
+      "acceptance_scenarios": [
+        "E01"
+      ],
+      "state": "IMPLEMENTED_OFFLINE_VERIFIED_NOT_DEPLOYED",
+      "interfaces": [
+        "API01",
+        "API28"
+      ],
+      "functions": [
+        "FN01"
+      ],
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+    },
+    {
+      "id": "W02",
+      "title": "来源、时间、覆盖、精度、接口保护共同合同",
+      "depends_on": [
+        "W00"
+      ],
+      "acceptance_scenarios": [
+        "E01",
+        "E03",
+        "E12",
+        "E13"
+      ],
+      "state": "TODO",
+      "interfaces": [
+        "API02",
+        "API30",
+        "API31"
+      ],
+      "functions": [
+        "FN03",
+        "FN14"
+      ],
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+    },
+    {
+      "id": "W03",
+      "title": "全Owner双程序余额刷新与核对",
+      "depends_on": [
+        "W02"
+      ],
+      "acceptance_scenarios": [
+        "E02",
+        "E13"
+      ],
+      "state": "TODO",
+      "interfaces": [
+        "API03",
+        "API04",
+        "API05",
+        "API06",
+        "API26",
+        "API27"
+      ],
+      "functions": [
+        "FN04",
+        "FN05",
+        "FN06"
+      ],
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+    },
+    {
+      "id": "W04",
+      "title": "免费行情、同币种参考和估值覆盖",
+      "depends_on": [
+        "W02",
+        "W03"
+      ],
+      "acceptance_scenarios": [
+        "E03"
+      ],
+      "state": "TODO",
+      "interfaces": [
+        "API07",
+        "API08",
+        "API09",
+        "API15"
+      ],
+      "functions": [
+        "FN07",
+        "FN10"
+      ],
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+    },
+    {
+      "id": "W05",
+      "title": "持久观察收藏备注与变更审计",
+      "depends_on": [
+        "W02"
+      ],
+      "acceptance_scenarios": [
+        "E04"
+      ],
+      "state": "TODO",
+      "interfaces": [
+        "API10",
+        "API11",
+        "API27"
+      ],
+      "functions": [
+        "FN08"
+      ],
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+    },
+    {
+      "id": "W06",
+      "title": "多腿/费用/租金/事实纠错与历史覆盖",
+      "depends_on": [
+        "W01",
+        "W02"
+      ],
+      "acceptance_scenarios": [
+        "E01",
+        "E05"
+      ],
+      "state": "TODO",
+      "interfaces": [
+        "API01",
+        "API02",
+        "API28",
+        "API30",
+        "API31",
+        "API32"
+      ],
+      "functions": [
+        "FN01",
+        "FN02",
+        "FN03",
+        "FN14"
+      ],
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+    },
+    {
+      "id": "W07",
+      "title": "原币FIFO成本与部分PnL",
+      "depends_on": [
+        "W03",
+        "W04",
+        "W06"
+      ],
+      "acceptance_scenarios": [
+        "E06"
+      ],
+      "state": "TODO",
+      "interfaces": [
+        "API06",
+        "API12",
+        "API13",
+        "API14",
+        "API31"
+      ],
+      "functions": [
+        "FN09"
+      ],
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+    },
+    {
+      "id": "W08",
+      "title": "持久金额无关分析与显式即时报价",
+      "depends_on": [
+        "W04",
+        "W05",
+        "W06"
+      ],
+      "acceptance_scenarios": [
+        "E07"
+      ],
+      "state": "TODO",
+      "interfaces": [
+        "API15",
+        "API16",
+        "API17",
+        "API18",
+        "API19",
+        "API29"
+      ],
+      "functions": [
+        "FN10",
+        "FN11"
+      ],
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+    },
+    {
+      "id": "W09",
+      "title": "CA身份/扩展/全量持有/角色/池",
+      "depends_on": [
+        "W02"
+      ],
+      "acceptance_scenarios": [
+        "E08",
+        "E09",
+        "E10"
+      ],
+      "state": "TODO",
+      "interfaces": [
+        "API22",
+        "API24"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+    },
+    {
+      "id": "W10",
+      "title": "CA历史、资金和关系证据",
+      "depends_on": [
+        "W06",
+        "W09"
+      ],
+      "acceptance_scenarios": [
+        "E05",
+        "E08"
+      ],
+      "state": "TODO",
+      "interfaces": [
+        "API22",
+        "API24"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+    },
+    {
+      "id": "W11",
+      "title": "可信叙事、官方认领和可追溯起源",
+      "depends_on": [
+        "W02",
+        "W09"
+      ],
+      "acceptance_scenarios": [
+        "E11"
+      ],
+      "state": "TODO",
+      "interfaces": [
+        "API22",
+        "API24",
+        "API25"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+    },
+    {
+      "id": "W12",
+      "title": "免费二源能力、完整核对和冷暖性能",
+      "depends_on": [
+        "W09",
+        "W10",
+        "W11"
+      ],
+      "acceptance_scenarios": [
+        "E10",
+        "E12",
+        "E13"
+      ],
+      "state": "TODO",
+      "interfaces": [
+        "API22",
+        "API23",
+        "API24"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+    },
+    {
+      "id": "W13",
+      "title": "通知审计归档、延迟与隔离可靠性",
+      "depends_on": [
+        "W02",
+        "W08"
+      ],
+      "acceptance_scenarios": [
+        "E14"
+      ],
+      "state": "TODO",
+      "interfaces": [
+        "API20",
+        "API21"
+      ],
+      "functions": [
+        "FN13"
+      ],
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+    },
+    {
+      "id": "W14",
+      "title": "统一多场景集成、Mac Chrome、本地发布回退",
+      "depends_on": [
+        "W01",
+        "W03",
+        "W04",
+        "W05",
+        "W06",
+        "W07",
+        "W08",
+        "W09",
+        "W10",
+        "W11",
+        "W12",
+        "W13"
+      ],
+      "acceptance_scenarios": [
+        "E01",
+        "E02",
+        "E03",
+        "E04",
+        "E05",
+        "E06",
+        "E07",
+        "E08",
+        "E09",
+        "E10",
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+        "E15"
+      ],
+      "state": "TODO",
+      "interfaces": [],
+      "functions": [],
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "SRC01",
+      "requirement": "已有RPC复用、超时及限流恢复",
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "baseline_state": "IMPLEMENTED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/frank/rpc.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W02",
+      "acceptance_scenarios": [
+        "E12"
+      ],
+      "acceptance": "在既有RPC适配器注入超时/429/403；重试和错误码可回放，认证URL不出现在响应，未知不当零",
+      "interfaces": [
+        "API02",
+        "API30",
+        "API31"
+      ],
+      "functions": [
+        "FN03",
+        "FN14"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "SRC02",
+      "requirement": "游标保留、追赶和重复签名幂等",
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/scanner.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/frank/collector.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W06",
+      "acceptance_scenarios": [
+        "E01"
+      ],
+      "acceptance": "重复签名/页、回填、响应后中断及重启后集合与独立输入一致；未提交原件不前移cursor",
+      "interfaces": [
+        "API01",
+        "API02",
+        "API28",
+        "API30",
+        "API31",
+        "API32"
+      ],
+      "functions": [
+        "FN01",
+        "FN02",
+        "FN03",
+        "FN14"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "SRC03",
+      "requirement": "原始响应/hash/slot/finality/索引时间",
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "baseline_state": "IMPLEMENTED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/store.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/frank/archive.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W02",
+      "acceptance_scenarios": [
+        "E01"
+      ],
+      "acceptance": "每条事实可定位私有原始字节与hash/request/provider/slot/commitment/索引时间；篡改原件拒绝",
+      "interfaces": [
+        "API02",
+        "API30",
+        "API31"
+      ],
+      "functions": [
+        "FN03",
+        "FN14"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "SRC04",
+      "requirement": "主动买卖、被动收付、失败、ATA及未知分型",
+      "requirements_sources": [
+        "G1",
+        "V3",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/classifier.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/frank/parser.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W06",
+      "acceptance_scenarios": [
+        "E05"
+      ],
+      "acceptance": "真实不同协议和复杂路由的主动/被动/失败/ATA/未知逐项核对；余额净差不单独构成买卖证明",
+      "interfaces": [
+        "API01",
+        "API02",
+        "API28",
+        "API30",
+        "API31",
+        "API32"
+      ],
+      "functions": [
+        "FN01",
+        "FN02",
+        "FN03",
+        "FN14"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "SRC05",
+      "requirement": "多腿事实与版本化纠错/supersedes",
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/classifier.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_history.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W06",
+      "acceptance_scenarios": [
+        "E05"
+      ],
+      "acceptance": "同签名多Mint多腿不互相覆盖；同输入幂等，重解析追加supersedes并保持旧事实可追溯",
+      "interfaces": [
+        "API01",
+        "API02",
+        "API28",
+        "API30",
+        "API31",
+        "API32"
+      ],
+      "functions": [
+        "FN01",
+        "FN02",
+        "FN03",
+        "FN14"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "SRC06",
+      "requirement": "SOL/WSOL/USDC原币、费用与租金分离",
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/frank/parser.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/frank.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W06",
+      "acceptance_scenarios": [
+        "E05"
+      ],
+      "acceptance": "SOL/WSOL/USDC原币、fee/rent独立且整数可重算；未知费用分配不补零或猜测换汇",
+      "interfaces": [
+        "API01",
+        "API02",
+        "API28",
+        "API30",
+        "API31",
+        "API32"
+      ],
+      "functions": [
+        "FN01",
+        "FN02",
+        "FN03",
+        "FN14"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "ACT01",
+      "requirement": "流水独立于信号/决策，历史买卖持续存在",
+      "requirements_sources": [
+        "G1",
+        "V3",
+        "OPTION3"
+      ],
+      "baseline_state": "IMPLEMENTED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_activity.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/frank_activity_watch.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W01",
+      "acceptance_scenarios": [
+        "E01"
+      ],
+      "acceptance": "无候选/无近期信号时历史流水仍全量可查；同签名全部交易腿返回",
+      "interfaces": [
+        "API01",
+        "API28"
+      ],
+      "functions": [
+        "FN01"
+      ],
+      "evidence_state": "W01_EVIDENCE_ONLY"
+    },
+    {
+      "id": "ACT02",
+      "requirement": "24h/7d/30d/全部可用范围",
+      "requirements_sources": [
+        "V3",
+        "TODO"
+      ],
+      "baseline_state": "MISSING",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_activity.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W01",
+      "acceptance_scenarios": [
+        "E01"
+      ],
+      "acceptance": "1/7/30/all各范围返回独立SQL精确集合；all中无block_time记录单列而非静默丢失",
+      "interfaces": [
+        "API01",
+        "API28"
+      ],
+      "functions": [
+        "FN01"
+      ],
+      "evidence_state": "W01_EVIDENCE_ONLY"
+    },
+    {
+      "id": "ACT03",
+      "requirement": "完整可继续分页，避免5000整窗失败及100封顶",
+      "requirements_sources": [
+        "V3",
+        "TODO"
+      ],
+      "baseline_state": "MISSING",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_activity.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/frank_activity_watch.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W01",
+      "acceptance_scenarios": [
+        "E01"
+      ],
+      "acceptance": "超过5000签名可取完；137/页8697行无重复/缺行；100条摘要明确不等于全集",
+      "interfaces": [
+        "API01",
+        "API28"
+      ],
+      "functions": [
+        "FN01"
+      ],
+      "evidence_state": "W01_EVIDENCE_ONLY"
+    },
+    {
+      "id": "ACT04",
+      "requirement": "按类型/Mint筛选、全匹配计数、稳定游标",
+      "requirements_sources": [
+        "V3",
+        "TODO"
+      ],
+      "baseline_state": "MISSING",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_activity.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W01",
+      "acceptance_scenarios": [
+        "E01"
+      ],
+      "acceptance": "类型和76交易Mint逐个筛选含全匹配计数；钱包owned过滤排除同交易对手方；查询变更游标拒绝",
+      "interfaces": [
+        "API01",
+        "API28"
+      ],
+      "functions": [
+        "FN01"
+      ],
+      "evidence_state": "W01_EVIDENCE_ONLY"
+    },
+    {
+      "id": "ACT05",
+      "requirement": "首次索引/raw hash/slot/解析来源字段",
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/store.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_activity.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W02",
+      "acceptance_scenarios": [
+        "E01"
+      ],
+      "acceptance": "输出raw hash/slot/first_indexed/parser版本/解析证据；源不含字段时明确null和缺项",
+      "interfaces": [
+        "API02",
+        "API30",
+        "API31"
+      ],
+      "functions": [
+        "FN03",
+        "FN14"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "ACT06",
+      "requirement": "所选时间窗完整性、回填和停止原因",
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/frank.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_watch.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W06",
+      "acceptance_scenarios": [
+        "E01"
+      ],
+      "acceptance": "每时间窗展示LOCAL_INDEX_ONLY和回填/已知缺页/来源停止原因；取完页不标全链",
+      "interfaces": [
+        "API01",
+        "API02",
+        "API28",
+        "API30",
+        "API31",
+        "API32"
+      ],
+      "functions": [
+        "FN01",
+        "FN02",
+        "FN03",
+        "FN14"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "POS01",
+      "requirement": "钱包双Token Program全部账户的时效合格余额",
+      "requirements_sources": [
+        "G1",
+        "V3",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_owner_at_slot.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_inventory.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W03",
+      "acceptance_scenarios": [
+        "E02"
+      ],
+      "acceptance": "全Owner两个Token Program真实捕获及全部开放账户可达，超过旧32Mint，时效和两个slot真实",
+      "interfaces": [
+        "API03",
+        "API04",
+        "API05",
+        "API06",
+        "API26",
+        "API27"
+      ],
+      "functions": [
+        "FN04",
+        "FN05",
+        "FN06"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "POS02",
+      "requirement": "用户可用的手动刷新和来源失败恢复",
+      "requirements_sources": [
+        "G1",
+        "V3",
+        "TODO"
+      ],
+      "baseline_state": "MISSING",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_d2_ingress.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W03",
+      "acceptance_scenarios": [
+        "E13"
+      ],
+      "acceptance": "手动POST真正触发来源；GET无RPC；单程序失败不刷新完整latest，续跑能恢复且旧快照不冒充新鲜",
+      "interfaces": [
+        "API03",
+        "API04",
+        "API05",
+        "API06",
+        "API26",
+        "API27"
+      ],
+      "functions": [
+        "FN04",
+        "FN05",
+        "FN06"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "POS03",
+      "requirement": "同Owner多账户整数合计及各程序slot/覆盖",
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "baseline_state": "IMPLEMENTED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_owner_at_slot.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_reconciliation.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W03",
+      "acceptance_scenarios": [
+        "E02"
+      ],
+      "acceptance": "多ATA按Owner/Mint精确整数聚合、重复账户拒绝、program覆盖和slot可查",
+      "interfaces": [
+        "API03",
+        "API04",
+        "API05",
+        "API06",
+        "API26",
+        "API27"
+      ],
+      "functions": [
+        "FN04",
+        "FN05",
+        "FN06"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "POS04",
+      "requirement": "模型状态与链余额分离/差异核对",
+      "requirements_sources": [
+        "G1",
+        "V3",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_reconciliation.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_watch.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W03",
+      "acceptance_scenarios": [
+        "E02"
+      ],
+      "acceptance": "模型状态和实时余额并列，差异有独立字段；不能从差异推断卖出/盗币或覆盖原信号",
+      "interfaces": [
+        "API03",
+        "API04",
+        "API05",
+        "API06",
+        "API26",
+        "API27"
+      ],
+      "functions": [
+        "FN04",
+        "FN05",
+        "FN06"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "POS05",
+      "requirement": "观察对象独立提醒阈值，退出/再入保留",
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "baseline_state": "IMPLEMENTED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_watch.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/engine.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W05",
+      "acceptance_scenarios": [
+        "E04"
+      ],
+      "acceptance": "退出/再入/被动账户活动保留且无提醒阈值过滤；数据与用户观察选择相互独立",
+      "interfaces": [
+        "API10",
+        "API11",
+        "API27"
+      ],
+      "functions": [
+        "FN08"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "POS06",
+      "requirement": "收藏/备注/观察变更的持久化与审计",
+      "requirements_sources": [
+        "V3",
+        "TODO"
+      ],
+      "baseline_state": "MISSING",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_watch.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W05",
+      "acceptance_scenarios": [
+        "E04"
+      ],
+      "acceptance": "pin/note/watch_override重启保留；同键幂等、revision冲突409、变更审计可查且不写Frank源库",
+      "interfaces": [
+        "API10",
+        "API11",
+        "API27"
+      ],
+      "functions": [
+        "FN08"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "POS07",
+      "requirement": "lot成本、内部划转、费用、已实现/未实现PnL",
+      "requirements_sources": [
+        "V3",
+        "TODO"
+      ],
+      "baseline_state": "MISSING",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_history.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W07",
+      "acceptance_scenarios": [
+        "E06"
+      ],
+      "acceptance": "FIFO多次买卖/内部迁移/未知转入/租金费用可独立重算；covered PnL与整仓未知分开，不填零成本",
+      "interfaces": [
+        "API06",
+        "API12",
+        "API13",
+        "API14",
+        "API31"
+      ],
+      "functions": [
+        "FN09"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "POS08",
+      "requirement": "当前估值、原币/USD转换和不可估值资产",
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_inventory.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/frank.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W04",
+      "acceptance_scenarios": [
+        "E03"
+      ],
+      "acceptance": "估值包含所有持仓Mint覆盖清单；有价/无价/过期和USD/USDC分开，未估值资产不计零",
+      "interfaces": [
+        "API07",
+        "API08",
+        "API09",
+        "API15"
+      ],
+      "functions": [
+        "FN07",
+        "FN10"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "INT01",
+      "requirement": "原ACC/MULT/HFT/再入源规则和身份保持",
+      "requirements_sources": [
+        "G1",
+        "OPTION3"
+      ],
+      "baseline_state": "IMPLEMENTED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/engine.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/policy.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W08",
+      "acceptance_scenarios": [
+        "E07"
+      ],
+      "acceptance": "冻结原规则/阈值和源信号ID逐字节或语义基准不变；SELL和再入真实事实保留",
+      "interfaces": [
+        "API15",
+        "API16",
+        "API17",
+        "API18",
+        "API19",
+        "API29"
+      ],
+      "functions": [
+        "FN10",
+        "FN11"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "INT02",
+      "requirement": "金额无关行为分析，无默认订单或询价",
+      "requirements_sources": [
+        "G1",
+        "OPTION3"
+      ],
+      "baseline_state": "IMPLEMENTED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/intelligence.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/service.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W08",
+      "acceptance_scenarios": [
+        "E07"
+      ],
+      "acceptance": "未给金额仍有行为/风险信息；无默认金额、隐式Jupiter、订单或sender调用",
+      "interfaces": [
+        "API15",
+        "API16",
+        "API17",
+        "API18",
+        "API19",
+        "API29"
+      ],
+      "functions": [
+        "FN10",
+        "FN11"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "INT03",
+      "requirement": "当前源信号/历史决定/执行资格分离",
+      "requirements_sources": [
+        "G1",
+        "OPTION3"
+      ],
+      "baseline_state": "IMPLEMENTED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/f01_source_view.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W08",
+      "acceptance_scenarios": [
+        "E07"
+      ],
+      "acceptance": "源近期/历史/执行资格分栏；WAIT或金额缺失不消灭源BUY，近期0不抹除历史",
+      "interfaces": [
+        "API15",
+        "API16",
+        "API17",
+        "API18",
+        "API19",
+        "API29"
+      ],
+      "functions": [
+        "FN10",
+        "FN11"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "INT04",
+      "requirement": "新鲜市场价及相对已核实买入价变化",
+      "requirements_sources": [
+        "OPTION3",
+        "V3"
+      ],
+      "baseline_state": "MISSING",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/intelligence.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W04",
+      "acceptance_scenarios": [
+        "E03"
+      ],
+      "acceptance": "接入真实多Mint市场而非None；exact CA/币对/币种/时间通过才计算已核实买价相对变化",
+      "interfaces": [
+        "API07",
+        "API08",
+        "API09",
+        "API15"
+      ],
+      "functions": [
+        "FN07",
+        "FN10"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "INT05",
+      "requirement": "减仓卖出/过期/追高/信息不足风险解释",
+      "requirements_sources": [
+        "OPTION3"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/intelligence.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/intelligence_preview.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W08",
+      "acceptance_scenarios": [
+        "E07"
+      ],
+      "acceptance": "减仓/SELL/过期/追高/资料不足各有可追溯依据与缺项，未来数据不参与判断",
+      "interfaces": [
+        "API15",
+        "API16",
+        "API17",
+        "API18",
+        "API19",
+        "API29"
+      ],
+      "functions": [
+        "FN10",
+        "FN11"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "INT06",
+      "requirement": "分析风险更新的持久身份/去重/重启恢复",
+      "requirements_sources": [
+        "OPTION3"
+      ],
+      "baseline_state": "MISSING",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/intelligence_preview.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W08",
+      "acceptance_scenarios": [
+        "E07"
+      ],
+      "acceptance": "同semantic hash不重复，状态变化产生新稳定update_id；重启/重复POST/GET不复活旧更新",
+      "interfaces": [
+        "API15",
+        "API16",
+        "API17",
+        "API18",
+        "API19",
+        "API29"
+      ],
+      "functions": [
+        "FN10",
+        "FN11"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "INT07",
+      "requirement": "用户主动提供金额时独立即时报价与TTL",
+      "requirements_sources": [
+        "G1",
+        "OPTION3"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/jupiter.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/policy.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W08",
+      "acceptance_scenarios": [
+        "E07"
+      ],
+      "acceptance": "只有显式原币金额POST生成quote；输入币种/金额/route/TTL绑定，默认与GET不询价，不签名",
+      "interfaces": [
+        "API15",
+        "API16",
+        "API17",
+        "API18",
+        "API19",
+        "API29"
+      ],
+      "functions": [
+        "FN10",
+        "FN11"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "CA01",
+      "requirement": "exact CA/链/metadata/名称/币对身份",
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "baseline_state": "IMPLEMENTED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/launch_identity.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/market.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W09",
+      "acceptance_scenarios": [
+        "E08"
+      ],
+      "acceptance": "不同真实CA与同名异币/错误链反例：公钥、program、metadata/创建来源精确绑定",
+      "interfaces": [
+        "API22",
+        "API24"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "CA02",
+      "requirement": "Mint/freeze/update及Token-2022敏感扩展",
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W09",
+      "acceptance_scenarios": [
+        "E08"
+      ],
+      "acceptance": "真实Token-2022风险与权限撤销样本；已支持扩展按布局验证，未知扩展NOT_SUPPORTED",
+      "interfaces": [
+        "API22",
+        "API24"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "CA03",
+      "requirement": "全Mint枚举/Owner聚合/供给/有效Top10",
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/holder_ranks.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W09",
+      "acceptance_scenarios": [
+        "E10"
+      ],
+      "acceptance": "不同规模全账户/Owner整数聚合及supply/Top10公式与独立原件对账，全集不抽样替代",
+      "interfaces": [
+        "API22",
+        "API24"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "CA04",
+      "requirement": "池/Vault/CEX/锁仓等特殊地址排除及分母",
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/special_roles.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/pool_discovery.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W09",
+      "acceptance_scenarios": [
+        "E10"
+      ],
+      "acceptance": "池/vault/CEX/lock角色有来源，排除明细和分母可复算；全池不以8个封顶，未知角色不冒充完整归一",
+      "interfaces": [
+        "API22",
+        "API24"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "CA05",
+      "requirement": "原始储备/费用/虚拟储备/LP锁定和协议布局",
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/pool_vaults.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/pool_programs.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W09",
+      "acceptance_scenarios": [
+        "E09"
+      ],
+      "acceptance": "6类协议真实布局/版本/vault/fee/虚拟储备对照；集中流动性不套恒定乘积LP锁仓公式",
+      "interfaces": [
+        "API22",
+        "API24"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "CA06",
+      "requirement": "价格/MC/FDV/流动性/成交和第二市场对照",
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/market.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/market_parity.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/pool_market.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W12",
+      "acceptance_scenarios": [
+        "E12"
+      ],
+      "acceptance": "价格/MC/FDV/流动性/volume注明来源和分母；同池二市场对照与跨slot变化分开，不称成交报价",
+      "interfaces": [
+        "API22",
+        "API23",
+        "API24"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "CA07",
+      "requirement": "取得与市场首买分离/重要Owner历史来源结束",
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/historical_accounts.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W10",
+      "acceptance_scenarios": [
+        "E08"
+      ],
+      "acceptance": "取得/转入/首个已见买入/来源结束分别呈现；全部目标继续可达；关闭账户未知不称终身首买",
+      "interfaces": [
+        "API22",
+        "API24"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "CA08",
+      "requirement": "SOL/USDC/WSOL资金源与复杂路由对价",
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/history_classification.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W10",
+      "acceptance_scenarios": [
+        "E05"
+      ],
+      "acceptance": "SOL/WSOL/USDC真实资金原币与复杂路线对价逐签名可重算；未决有准确原因，不靠重复扫一CA消零",
+      "interfaces": [
+        "API22",
+        "API24"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "CA09",
+      "requirement": "关系/共同funder/归集/控制/执行及公共设施分离",
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W10",
+      "acceptance_scenarios": [
+        "E08"
+      ],
+      "acceptance": "真实关联与无关公共设施对照；每边签名/时间/类型可核查，共funder不自动当同一控制/执行人",
+      "interfaces": [
+        "API22",
+        "API24"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "CA10",
+      "requirement": "可信叙事/人物事件及原帖网站出处",
+      "requirements_sources": [
+        "CA",
+        "OPTION3"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/narrative.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/public_html.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W11",
+      "acceptance_scenarios": [
+        "E11"
+      ],
+      "acceptance": "有出处的主题/人物/事件/互动类型/摘要；无官方认领也保留叙事；遍历已链接来源去重不任意3/6封顶",
+      "interfaces": [
+        "API22",
+        "API24",
+        "API25"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "CA11",
+      "requirement": "官方exact CA认领与可追溯起源分开",
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/narrative.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/launch_identity.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W11",
+      "acceptance_scenarios": [
+        "E11"
+      ],
+      "acceptance": "exact CA官方原帖/仅链接/未验证/来源失败分开；时间最早证据不宣称全网起源",
+      "interfaces": [
+        "API22",
+        "API24",
+        "API25"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "CA12",
+      "requirement": "第二提供方余额核对/独立枚举/快照口径",
+      "requirements_sources": [
+        "CA"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/independent_check.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W12",
+      "acceptance_scenarios": [
+        "E12"
+      ],
+      "acceptance": "独立枚举集合、主源地址二读数值、跨slot比较分列；403/429原错误安全留证，不用抽样冒充全量",
+      "interfaces": [
+        "API22",
+        "API23",
+        "API24"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "CA13",
+      "requirement": "持久job/部分进度/DONE完整性分离/GET恢复",
+      "requirements_sources": [
+        "CA",
+        "V3"
+      ],
+      "baseline_state": "IMPLEMENTED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/job_checkpoint.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W12",
+      "acceptance_scenarios": [
+        "E13"
+      ],
+      "acceptance": "202前持久job；终止后GET可读/POST恢复；DONE与各阶段coverage独立，绑定改变拒绝续跑",
+      "interfaces": [
+        "API22",
+        "API23",
+        "API24"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "CA14",
+      "requirement": "缓存时效/首次复查性能/完整性保持",
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/transaction_batch.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/state.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W12",
+      "acceptance_scenarios": [
+        "E13"
+      ],
+      "acceptance": "不同规模CA冷/暖各测；改前后完整集合/缺项对账；实际batch/rate凭据、阶段耗时可复算，不截断",
+      "interfaces": [
+        "API22",
+        "API23",
+        "API24"
+      ],
+      "functions": [
+        "FN12"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "CA15",
+      "requirement": "多CA生命周期/协议/规模/风险代表场景实测",
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "baseline_state": "MISSING",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W14",
+      "acceptance_scenarios": [
+        "E08"
+      ],
+      "acceptance": "不同真实CA覆盖毕业/成熟/LP-heavy/Token-2022/关联与无关，跨6协议/规模；重复CRAWL不替代",
+      "interfaces": [],
+      "functions": [],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "NT01",
+      "requirement": "原V1源身份/策略hash/去重/过期不复活",
+      "requirements_sources": [
+        "G1",
+        "OPTION3",
+        "TODO"
+      ],
+      "baseline_state": "IMPLEMENTED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/delivery.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/delivery.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W13",
+      "acceptance_scenarios": [
+        "E14"
+      ],
+      "acceptance": "V1 source/policy/dedup身份不变；过期/重启/归档不重新发送或enqueue",
+      "interfaces": [
+        "API20",
+        "API21"
+      ],
+      "functions": [
+        "FN13"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "NT02",
+      "requirement": "Gmail Sent回读/尝试和未知结果/通道分离",
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/gmail_api.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/delivery.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W13",
+      "acceptance_scenarios": [
+        "E14"
+      ],
+      "acceptance": "隔离fake与旧真实回执分层；attempt/通道/Sent verified/unknown明确；模糊结果不盲重发",
+      "interfaces": [
+        "API20",
+        "API21"
+      ],
+      "functions": [
+        "FN13"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "NT03",
+      "requirement": "Option3独立风险消息策略与可靠持久队列",
+      "requirements_sources": [
+        "OPTION3"
+      ],
+      "baseline_state": "MISSING",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/intelligence_preview.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W13",
+      "acceptance_scenarios": [
+        "E14"
+      ],
+      "acceptance": "Option3风险更新独立持久身份/策略/队列；不借V1签名授权，fake具备幂等崩溃恢复，真sender0",
+      "interfaces": [
+        "API20",
+        "API21"
+      ],
+      "functions": [
+        "FN13"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "NT04",
+      "requirement": "历史通知审计归档/身份可查/不重发",
+      "requirements_sources": [
+        "V3",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W13",
+      "acceptance_scenarios": [
+        "E14"
+      ],
+      "acceptance": "归档写注解/审计，原delivery/receipt不变；源事件到旧通知可查且不重发",
+      "interfaces": [
+        "API20",
+        "API21"
+      ],
+      "functions": [
+        "FN13"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "NT05",
+      "requirement": "事件到检测/信号/实际送达分段延迟",
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/store.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/observations.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W13",
+      "acceptance_scenarios": [
+        "E14"
+      ],
+      "acceptance": "event/index/detect/signal/enqueue/attempt/verified_delivery分段；缺真实时点不估算或承诺延迟",
+      "interfaces": [
+        "API20",
+        "API21"
+      ],
+      "functions": [
+        "FN13"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "NT06",
+      "requirement": "用户签名策略/安全启停与无默认金额",
+      "requirements_sources": [
+        "G1",
+        "OPTION3",
+        "STATUS"
+      ],
+      "baseline_state": "DEFERRED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/release_approval.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/policy.py"
+      ],
+      "disposition": "DEFERRED_LIVE_ACTIVATION",
+      "work_package": null,
+      "acceptance_scenarios": [],
+      "acceptance": "边界可追溯且不被整体PASS掩盖",
+      "reason": "本轮不代签或启动Loop；有效用户策略和真发送不由免review或fake结果制造。持久合同/隔离可靠性由NT01–05实现",
+      "interfaces": [],
+      "functions": [],
+      "evidence_state": "NOT_ACTIVATED"
+    },
+    {
+      "id": "RL01",
+      "requirement": "输入/Host/Origin/只读/查询错误合同",
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "baseline_state": "IMPLEMENTED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/db.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W02",
+      "acceptance_scenarios": [
+        "E13"
+      ],
+      "acceptance": "新写接口精确同源/Host/JSON保护，未知重复字段及错CA拒绝，GET无副作用；旧响应兼容",
+      "interfaces": [
+        "API02",
+        "API30",
+        "API31"
+      ],
+      "functions": [
+        "FN03",
+        "FN14"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "RL02",
+      "requirement": "超时/429/403恢复，来源失败不当零",
+      "requirements_sources": [
+        "G1",
+        "CA",
+        "TODO"
+      ],
+      "baseline_state": "IMPLEMENTED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/job_checkpoint.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W02",
+      "acceptance_scenarios": [
+        "E12"
+      ],
+      "acceptance": "来源超时/429/403/坏响应可恢复且不返回0事实；错误仅脱敏白名单，不反射私密URL",
+      "interfaces": [
+        "API02",
+        "API30",
+        "API31"
+      ],
+      "functions": [
+        "FN03",
+        "FN14"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "RL03",
+      "requirement": "磁盘失败/检查点/终止恢复/游标完整性",
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/job_checkpoint.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/transaction_batch.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W14",
+      "acceptance_scenarios": [
+        "E13"
+      ],
+      "acceptance": "磁盘满/SQLite锁/终止点/源替换/重复页全路径保留最后一致状态，恢复无漏无重复",
+      "interfaces": [],
+      "functions": [],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "RL04",
+      "requirement": "固定版本/运行身份/保护库与可运行回退",
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/release_approval.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W14",
+      "acceptance_scenarios": [
+        "E15"
+      ],
+      "acceptance": "候选与运行Dashboard/Scanner双SHA分列，源库只读；隔离实际回退和8766本地安装可运行",
+      "interfaces": [],
+      "functions": [],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "RL05",
+      "requirement": "敏感RPC URL/key/私有raw数据脱敏",
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "baseline_state": "IMPLEMENTED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/transport.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W02",
+      "acceptance_scenarios": [
+        "E13"
+      ],
+      "acceptance": "公共响应/日志/报告/提交扫描认证URL/key/私钥/raw私有路径；错误注入不泄漏",
+      "interfaces": [
+        "API02",
+        "API30",
+        "API31"
+      ],
+      "functions": [
+        "FN03",
+        "FN14"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "RL06",
+      "requirement": "来源/缓存/报告/决定时点及TTL一致",
+      "requirements_sources": [
+        "G1",
+        "V3",
+        "CA"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/job_checkpoint.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/intelligence.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_d2_ingress.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W02",
+      "acceptance_scenarios": [
+        "E03"
+      ],
+      "acceptance": "事件/捕获/缓存/解析/报告/服务时间与TTL分离；GET和旧工件导入不刷新源年龄",
+      "interfaces": [
+        "API02",
+        "API30",
+        "API31"
+      ],
+      "functions": [
+        "FN03",
+        "FN14"
+      ],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "RL07",
+      "requirement": "main/其他分支/安装功能的选择性集成",
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "baseline_state": "PARTIAL",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+      ],
+      "disposition": "IN_SCOPE",
+      "work_package": "W14",
+      "acceptance_scenarios": [
+        "E15"
+      ],
+      "acceptance": "按模块选择性集成，旧缺模块映射当前需求；不批量合并，运行清单明确实际功能版本",
+      "interfaces": [],
+      "functions": [],
+      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+    },
+    {
+      "id": "DF01",
+      "requirement": "多人物多钱包研究API/组合聚合",
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "baseline_state": "DEFERRED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/registry.py"
+      ],
+      "disposition": "DEFERRED",
+      "work_package": null,
+      "acceptance_scenarios": [],
+      "acceptance": "边界可追溯且不被整体PASS掩盖",
+      "reason": "后续G1仅启用Frank；多人物/多钱包API历史能力保留定位，不在本轮启用新钱包",
+      "interfaces": [],
+      "functions": [],
+      "evidence_state": "NOT_ACTIVATED"
+    },
+    {
+      "id": "DF02",
+      "requirement": "多链/Robinhood跨链订单完整归因",
+      "requirements_sources": [
+        "G1"
+      ],
+      "baseline_state": "DEFERRED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/fomo_crosschain.py"
+      ],
+      "disposition": "DEFERRED",
+      "work_package": null,
+      "acceptance_scenarios": [],
+      "acceptance": "边界可追溯且不被整体PASS掩盖",
+      "reason": "Solana first；多链/Robinhood产品单独延期，已有解码器不等于运行支持",
+      "interfaces": [],
+      "functions": [],
+      "evidence_state": "NOT_ACTIVATED"
+    },
+    {
+      "id": "DF03",
+      "requirement": "跟单净收益/OOS/前向影子研究",
+      "requirements_sources": [
+        "G1",
+        "STATUS"
+      ],
+      "baseline_state": "DEFERRED",
+      "existing_code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/followability.py"
+      ],
+      "disposition": "DEFERRED",
+      "work_package": null,
+      "acceptance_scenarios": [],
+      "acceptance": "边界可追溯且不被整体PASS掩盖",
+      "reason": "已停止净收益/OOS/前向跟单研究维持INVEST_NO_GO；不作为本轮产品开发前置",
+      "interfaces": [],
+      "functions": [],
+      "evidence_state": "NOT_ACTIVATED"
+    },
+    {
+      "id": "DF04",
+      "requirement": "自动交易/钱包签名/预设金额/新增监控",
+      "requirements_sources": [
+        "G1",
+        "STATUS"
+      ],
+      "baseline_state": "OUT_OF_SCOPE",
+      "existing_code_paths": [],
+      "disposition": "OUT_OF_SCOPE",
+      "work_package": null,
+      "acceptance_scenarios": [],
+      "acceptance": "边界可追溯且不被整体PASS掩盖",
+      "reason": "自动交易/签名/默认金额/新监控不实施；TRADE_NO_GO",
+      "interfaces": [],
+      "functions": [],
+      "evidence_state": "NOT_ACTIVATED"
+    }
+  ],
+  "acceptance_scenarios": [
+    {
+      "id": "E01",
+      "spec": "TECHNICAL_PLAN_20261115.md#10-统一验收设计",
+      "state": "NOT_RUN_UNIFIED",
+      "execution_layers": [
+        "synthetic_fault_injection",
+        "private_actual_capture_offline",
+        "free_live_readonly",
+        "mac_http_chrome",
+        "local_install_effect"
+      ]
+    },
+    {
+      "id": "E02",
+      "spec": "TECHNICAL_PLAN_20261115.md#10-统一验收设计",
+      "state": "NOT_RUN_UNIFIED",
+      "execution_layers": [
+        "synthetic_fault_injection",
+        "private_actual_capture_offline",
+        "free_live_readonly",
+        "mac_http_chrome",
+        "local_install_effect"
+      ]
+    },
+    {
+      "id": "E03",
+      "spec": "TECHNICAL_PLAN_20261115.md#10-统一验收设计",
+      "state": "NOT_RUN_UNIFIED",
+      "execution_layers": [
+        "synthetic_fault_injection",
+        "private_actual_capture_offline",
+        "free_live_readonly",
+        "mac_http_chrome",
+        "local_install_effect"
+      ]
+    },
+    {
+      "id": "E04",
+      "spec": "TECHNICAL_PLAN_20261115.md#10-统一验收设计",
+      "state": "NOT_RUN_UNIFIED",
+      "execution_layers": [
+        "synthetic_fault_injection",
+        "private_actual_capture_offline",
+        "free_live_readonly",
+        "mac_http_chrome",
+        "local_install_effect"
+      ]
+    },
+    {
+      "id": "E05",
+      "spec": "TECHNICAL_PLAN_20261115.md#10-统一验收设计",
+      "state": "NOT_RUN_UNIFIED",
+      "execution_layers": [
+        "synthetic_fault_injection",
+        "private_actual_capture_offline",
+        "free_live_readonly",
+        "mac_http_chrome",
+        "local_install_effect"
+      ]
+    },
+    {
+      "id": "E06",
+      "spec": "TECHNICAL_PLAN_20261115.md#10-统一验收设计",
+      "state": "NOT_RUN_UNIFIED",
+      "execution_layers": [
+        "synthetic_fault_injection",
+        "private_actual_capture_offline",
+        "free_live_readonly",
+        "mac_http_chrome",
+        "local_install_effect"
+      ]
+    },
+    {
+      "id": "E07",
+      "spec": "TECHNICAL_PLAN_20261115.md#10-统一验收设计",
+      "state": "NOT_RUN_UNIFIED",
+      "execution_layers": [
+        "synthetic_fault_injection",
+        "private_actual_capture_offline",
+        "free_live_readonly",
+        "mac_http_chrome",
+        "local_install_effect"
+      ]
+    },
+    {
+      "id": "E08",
+      "spec": "TECHNICAL_PLAN_20261115.md#10-统一验收设计",
+      "state": "NOT_RUN_UNIFIED",
+      "execution_layers": [
+        "synthetic_fault_injection",
+        "private_actual_capture_offline",
+        "free_live_readonly",
+        "mac_http_chrome",
+        "local_install_effect"
+      ]
+    },
+    {
+      "id": "E09",
+      "spec": "TECHNICAL_PLAN_20261115.md#10-统一验收设计",
+      "state": "NOT_RUN_UNIFIED",
+      "execution_layers": [
+        "synthetic_fault_injection",
+        "private_actual_capture_offline",
+        "free_live_readonly",
+        "mac_http_chrome",
+        "local_install_effect"
+      ]
+    },
+    {
+      "id": "E10",
+      "spec": "TECHNICAL_PLAN_20261115.md#10-统一验收设计",
+      "state": "NOT_RUN_UNIFIED",
+      "execution_layers": [
+        "synthetic_fault_injection",
+        "private_actual_capture_offline",
+        "free_live_readonly",
+        "mac_http_chrome",
+        "local_install_effect"
+      ]
+    },
+    {
+      "id": "E11",
+      "spec": "TECHNICAL_PLAN_20261115.md#10-统一验收设计",
+      "state": "NOT_RUN_UNIFIED",
+      "execution_layers": [
+        "synthetic_fault_injection",
+        "private_actual_capture_offline",
+        "free_live_readonly",
+        "mac_http_chrome",
+        "local_install_effect"
+      ]
+    },
+    {
+      "id": "E12",
+      "spec": "TECHNICAL_PLAN_20261115.md#10-统一验收设计",
+      "state": "NOT_RUN_UNIFIED",
+      "execution_layers": [
+        "synthetic_fault_injection",
+        "private_actual_capture_offline",
+        "free_live_readonly",
+        "mac_http_chrome",
+        "local_install_effect"
+      ]
+    },
+    {
+      "id": "E13",
+      "spec": "TECHNICAL_PLAN_20261115.md#10-统一验收设计",
+      "state": "NOT_RUN_UNIFIED",
+      "execution_layers": [
+        "synthetic_fault_injection",
+        "private_actual_capture_offline",
+        "free_live_readonly",
+        "mac_http_chrome",
+        "local_install_effect"
+      ]
+    },
+    {
+      "id": "E14",
+      "spec": "TECHNICAL_PLAN_20261115.md#10-统一验收设计",
+      "state": "NOT_RUN_UNIFIED",
+      "execution_layers": [
+        "synthetic_fault_injection",
+        "private_actual_capture_offline",
+        "free_live_readonly",
+        "mac_http_chrome",
+        "local_install_effect"
+      ]
+    },
+    {
+      "id": "E15",
+      "spec": "TECHNICAL_PLAN_20261115.md#10-统一验收设计",
+      "state": "NOT_RUN_UNIFIED",
+      "execution_layers": [
+        "synthetic_fault_injection",
+        "private_actual_capture_offline",
+        "free_live_readonly",
+        "mac_http_chrome",
+        "local_install_effect"
+      ]
+    }
+  ],
+  "existing_evidence": {
+    "source_sha": "7bc564b074aa1fe87d809883d0d1364194a92562",
+    "latest_docs_only_sha": "f174b7f4ac0bfbf8304e7a60ca42869f5ed4b56c",
+    "python_passed": 161,
+    "node_passed": 212,
+    "actual_index_replay": {
+      "signatures": 8697,
+      "trades": 197,
+      "trade_mints": 76,
+      "full_chain_verified": false,
+      "ca_end_to_end": "NOT_RUN"
+    },
+    "reference": "INDEXED_ACTIVITY_ACCEPTANCE_20261115.md"
+  },
+  "current_next": "W02 minimum source/time/coverage contract and read/write boundaries, then W03 actual full-owner refresh; no single-CA repeat loop"
+}
