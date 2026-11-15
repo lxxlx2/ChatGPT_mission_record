@@ -1225,7 +1225,6 @@
   ],
   "pr_count": 244,
   "related_named_pr_count": 173,
-  "backend_tree_sets": 83,
   "missing_legacy_paths": {
     "crypto-300-profit-mission/local-agent/mission_agent/meme/identity.py": [
       {
@@ -2096,5 +2095,7 @@
       }
     ]
   },
-  "warning": "Missing old file does not imply active gap; G1 defers wholesale Sidecar/multi-person. No branch merged."
+  "warning": "Missing old file does not imply active gap; G1 defers wholesale Sidecar/multi-person. No branch merged.",
+  "module_directory_tree_sets_including_static": 83,
+  "non_frontend_source_config_fingerprints": 71
 }

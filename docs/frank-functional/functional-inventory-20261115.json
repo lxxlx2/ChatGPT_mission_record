@@ -851,7 +851,7 @@
         "G1",
         "TODO"
       ],
-      "gap": "305 heads/244 PR/83后端tree组合；14旧缺模块多为延期，不能批量合并"
+      "gap": "305 heads/244 PR/83目录树/71非前端源码配置组合；14旧缺模块多为延期，不能批量合并"
     },
     {
       "id": "DF01",
@@ -913,5 +913,17 @@
     "MISSING": "Required active capability absent from current product",
     "DEFERRED": "Historical requested capability explicitly deferred by later authority",
     "OUT_OF_SCOPE": "Explicit exclusion; not an active missing feature"
+  },
+  "implementation_increment": {
+    "source_sha": "7bc564b074aa1fe87d809883d0d1364194a92562",
+    "completed_backend_scope": [
+      "ACT02",
+      "ACT03",
+      "ACT04"
+    ],
+    "partially_completed": [
+      "ACT05"
+    ],
+    "note": "Baseline rows above remain the installed ee81 audit. New indexed-activity code has offline multi-mint acceptance and is not yet the installed runtime. No claim of whole product or CA acceptance."
   }
 }
