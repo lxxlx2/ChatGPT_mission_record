@@ -1,8 +1,8 @@
 # TGE Monitor Current State
-Updated: 2026-11-15 07:01:13 Asia/Bangkok
+Updated: 2026-11-15 07:58:43 Asia/Bangkok
 
-- authoritative_final: airdrop-tge-monitor/runs/2026-11-15/070113-final.md
-- final_commit_sha: a3a592bdca7c14b21c48c84e39f7f88c2c61344c
+- authoritative_final: airdrop-tge-monitor/runs/2026-11-15/075843-final.md
+- final_commit_sha: 2a7d72c717c7c7284609915974266626acf8f909
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 3
 - executed_shard: 3
@@ -12,14 +12,14 @@ Updated: 2026-11-15 07:01:13 Asia/Bangkok
 - gmail_sent: false
 - app_notification: false
 - identity_failures: 0 observed; incomplete coverage
-- source_failures: StandX X403/claim inaccessible, Concrete Foundation inaccessible, Clay Shares and mapped issuer rights incomplete
+- source_failures: StandX claim inaccessible; Concrete Foundation inaccessible; other sources PARTIAL_ONLY
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (historical AUTOMATION_RUNTIME.md; no new fully verified coverage)
 
 ## Last meaningful attempts
 - shard0: 2026-11-15 04:02:13 Asia/Bangkok; runs/2026-11-15/040213-final.md (PARTIAL_ONLY)
 - shard1: 2026-11-15 05:00:14 Asia/Bangkok; runs/2026-11-15/050014-final.md (PARTIAL_ONLY)
 - shard2: 2026-11-15 06:05:03 Asia/Bangkok; runs/2026-11-15/060503-final.md (PARTIAL_ONLY)
-- shard3: 2026-11-15 07:01:13 Asia/Bangkok; runs/2026-11-15/070113-final.md (PARTIAL_ONLY)
+- shard3: 2026-11-15 07:58:43 Asia/Bangkok; runs/2026-11-15/075843-final.md (PARTIAL_ONLY)
 
 ## Unresolved and next
 - urgent5: Concrete, MetaMask, Claynosaurz, HEEBOO, Space @intodotspace; dynamic Surf and StandX.
