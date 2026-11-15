@@ -733,12 +733,6 @@ refresh();
 setInterval(refresh,5000);
 
 
-const clusterPresetHelp = {
-  quick:'快速：Top20 全部解析；浅扫前 6 个 owner，每个最多 8 笔目标币历史 + 4 笔 funding。用于快速排雷。',
-  standard:'标准：Top20 全部解析；先浅扫前 6 个 owner（12 + 8），只对出现关系证据、重大未确认角色或高风险标签的钱包自动加深到 30 + 12。',
-  deep:'深度：Top20 owner 全部深扫；每个最多 100 笔目标币历史 + 50 笔 funding。仅用于高价值项目或强烈怀疑分仓/集群时。',
-};
-
 const clusterMetricLabel = {
   RAW_TOP10_PCT:'原始 Top10',
   EX_LP_TOP10_PCT:'排除 LP 后 Top10',
@@ -815,7 +809,7 @@ async function loadLatestCluster(mint, silent=false) {
 function setView(name) {
   const view = name === 'cluster' ? 'cluster' : 'signals';
   const heading=$('product-title');
-  if (heading) heading.textContent=view==='cluster' ? 'CA 快速分析' : 'Frank 信号';
+  if (heading) heading.textContent=view==='cluster' ? 'CA 链上研究' : 'Frank 信号';
   document.querySelectorAll('.view-tab').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.view === view);
   });
@@ -835,14 +829,6 @@ document.querySelectorAll('.view-tab').forEach(btn => {
 
 window.addEventListener('hashchange', () => setView(window.location.hash.slice(1)));
 setView(window.location.hash.slice(1));
-
-$('cluster-preset').addEventListener('change', (e) => {
-  $('cluster-preset-help').textContent = clusterPresetHelp[e.target.value] || '';
-  const values=['quick','standard','deep'];
-  document.querySelectorAll('.preset-guide>div').forEach((node,index) => {
-    node.classList.toggle('active',values[index]===e.target.value);
-  });
-});
 
 function clusterStatus(kind, title, detail='') {
   const el = $('cluster-status');
@@ -959,45 +945,9 @@ function clusterProgressDetail(job) {
   if (stage==='ADAPTIVE_DEEPEN') return '发现需要继续核实的钱包，正在自适应加深 ' + esc(p.scanned ?? 0) + ' / ' + esc(p.target ?? '?');
   if (stage==='FINALIZING') return '链上扫描完成，正在生成集群、风险和结论';
   if (stage==='REPORT_PERSISTING') return '正在保存完整报告和结论变化历史';
-  return job.preset === 'deep'
-    ? '深度扫描会读取更多历史交易，免费 RPC 下需要更长时间。'
-    : '正在执行只读链上分析…';
+  return '正在执行只读链上研究；历史与资金归因若未完成会明确标注缺口。';
 }
 
-
-let caQuoteExpiryTimer = null;
-
-function caQuoteCurrent(q, nowSeconds=Date.now()/1000) {
-  if (q?.is_current_at_response !== true || q?.freshness_status !== 'CURRENT_AT_RESPONSE') return false;
-  const validUntil = q?.valid_until == null ? NaN : Number(q.valid_until);
-  return Number.isFinite(validUntil) && validUntil > 0 && nowSeconds <= validUntil;
-}
-
-function caQuoteUnavailableLabel(q, waiting='正在请求 Jupiter 报价') {
-  if (!q) return waiting;
-  if (q.freshness_status === 'EXPIRED' ||
-      (q.is_current_at_response === true && q.valid_until != null &&
-       Date.now()/1000 > Number(q.valid_until))) return '报价已过期，请重新查询';
-  if (q.freshness_status === 'ARCHIVED_NOT_LIVE') return '仅存档报价，请重新查询';
-  if (q.status === 'OK' && q.route_exists === false) return '暂无可成交路线';
-  if (q.status === 'OK') return '报价未通过服务端时效核验';
-  return q.reason ? '报价不可用：' + String(q.reason) : '暂不可成交 / 报价不可用';
-}
-
-function caScheduleQuoteExpiry(q, elementId) {
-  clearTimeout(caQuoteExpiryTimer);
-  caQuoteExpiryTimer = null;
-  if (!caQuoteCurrent(q)) return;
-  const remainingMs = Math.max(0, Number(q.valid_until)*1000-Date.now());
-  caQuoteExpiryTimer = setTimeout(() => {
-    const node=$(elementId);
-    if (node) {
-      node.textContent='报价已过期，请重新查询';
-      node.classList.add('unresolved');
-    }
-    caQuoteExpiryTimer = null;
-  }, Math.ceil(remainingMs)+15);
-}
 
 function renderClusterPreview(job) {
   const node=$('cluster-preview');
@@ -1012,10 +962,6 @@ function renderClusterPreview(job) {
     : extUnknown ? '部分扩展风险待核实'
     : '已解析权限未发现活动风险';
   const ready=p.market_status==='OK';
-  const q=p.execution_quote_30_usdc;
-  const quoteText=caQuoteCurrent(q)
-    ? '$'+smallPrice(q.execution_price_usdc)+' · 冲击 '+pctText(q.price_impact_pct)
-    : caQuoteUnavailableLabel(q);
   node.hidden=false;
   const incomplete=job.status==='ERROR';
   node.innerHTML=
@@ -1025,20 +971,17 @@ function renderClusterPreview(job) {
     fact('参考价',ready ? esc(usd(p.price_usd,8)) : '暂不可用') +
     fact('市值',ready ? esc(usd(p.market_cap_usd)) : '暂不可用') +
     fact('主池流动性',ready ? esc(usd(p.liquidity_usd)) : '暂不可用') +
-    fact('$30 可成交报价','<span id="cluster-preview-quote">'+esc(quoteText)+'</span>',
-      'Jupiter 服务端校验时效的只读报价，不构成下单建议') +
     fact('权限',esc(authority)) +
     fact('原始 Top10 持币占比', p.raw_top10_resolved_pct != null
       ? esc(pctText(p.raw_top10_resolved_pct)) : '待解析', '含池子，未做 LP 排除或钱包关联归因') +
     '</div><p>已解析 Owner：' + esc(p.top_accounts_resolved ?? '待查询') +
     '。原始 Top10 可能含 LP 或交易所；钱包聚类仍在独立核对，不能据此认定筹码安全或可跟单。</p>';
-  caScheduleQuoteExpiry(q, 'cluster-preview-quote');
 }
 
 function clusterErrorMessage(error) {
   const raw=((error?.type || '') + ' ' + (error?.message || '')).toUpperCase();
   if (raw.includes('429') || raw.includes('RATE_LIMIT')) {
-    return '免费 Solana RPC 触发限流（HTTP 429）。系统已经自动降速并切换备用免费节点；如果仍失败，稍后重试，或先用“快速”档。';
+    return '免费 Solana RPC 触发限流（HTTP 429）。系统已经自动降速并切换备用免费节点；如果仍失败，稍后重试，稍后重试。';
   }
   if (raw.includes('403')) {
     return '当前免费 RPC 拒绝了请求（HTTP 403）。系统会尝试备用节点；持续出现时可在本机配置其他免费 RPC。';
@@ -1090,7 +1033,6 @@ function renderClusterReport(report) {
   const profile = report.token_profile || {};
   const market = report.market || {};
   const mainPair = market.main_pair || {};
-  const quote = report.execution_quote_30_usdc || {};
   const assessment = report.assessment || {};
 
   const observedAt = report.observed_at == null ? NaN : Number(report.observed_at);
@@ -1188,14 +1130,8 @@ function renderClusterReport(report) {
   const pairLink=mainPair.pair_address
     ? '<a class="link-btn compact" href="https://solscan.io/account/' + encodeURIComponent(mainPair.pair_address) + '" target="_blank" rel="noreferrer">Pool ↗</a>'
     : '';
-  const quoteText = caQuoteCurrent(quote)
-    ? '$'+smallPrice(quote.execution_price_usdc) + '<span class="subvalue">冲击 ' + pctText(quote.price_impact_pct) + '</span>'
-    : '<span class="unresolved">' + esc(caQuoteUnavailableLabel(quote,'报价不可用')) + '</span>';
-
   $('cluster-market').innerHTML =
     fact('查询时参考价','<span>' + (market.status==='OK' && market.price_usd != null ? '$'+smallPrice(market.price_usd) : '<span class="unresolved">不可用</span>') + '</span>','DexScreener 参考价') +
-    fact('$30 实际可成交价','<span id="cluster-final-quote">' + quoteText + '</span>',
-      'Jupiter read-only quote; server-validated at response time') +
     fact('Market Cap','<span>' + (market.status==='OK' ? usd(market.market_cap_usd) : '暂无') + '</span>') +
     fact('主池流动性','<span>' + (market.status==='OK' ? usd(mainPair.liquidity_usd) : '暂无') + '</span>') +
     fact('24h 成交额','<span>' + (market.status==='OK' ? usd((mainPair.volume || {}).h24) : '暂无') + '</span>') +
@@ -1215,7 +1151,6 @@ function renderClusterReport(report) {
   const renderConcentration = key =>
     '<div class="cluster-metric"><span>' + esc(clusterMetricLabel[key] || key) + '</span><strong>' +
     clusterMetricValue(metrics[key]) + '</strong></div>';
-  caScheduleQuoteExpiry(quote, 'cluster-final-quote');
   $('cluster-metrics').innerHTML = primary.map(renderConcentration).join('') +
     '<details class="cluster-extra-metrics"><summary>查看其余集中度指标</summary><div class="cluster-metrics-extra">' +
     extra.map(renderConcentration).join('') + '</div></details>';
@@ -1320,7 +1255,7 @@ async function pollClusterJob(jobId) {
 $('cluster-form').addEventListener('submit', async (event) => {
   event.preventDefault();
   const mint = $('cluster-mint').value.trim();
-  const preset = $('cluster-preset').value;
+  const preset = 'standard';
   if (!mint) {
     clusterStatus('error','请输入 Solana CA');
     return;
@@ -1329,8 +1264,6 @@ $('cluster-form').addEventListener('submit', async (event) => {
   $('cluster-submit').textContent = '分析中…';
   $('cluster-result').hidden = true;
   $('cluster-preview').hidden = true;
-  clearTimeout(caQuoteExpiryTimer);
-  caQuoteExpiryTimer=null;
   clusterStatus('running','准备链上分析','只读查询，不连接钱包，不发交易。');
   try {
     const r = await fetch('/api/cluster-analysis',{
