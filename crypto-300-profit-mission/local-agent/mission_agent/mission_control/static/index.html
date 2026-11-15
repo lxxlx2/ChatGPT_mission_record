@@ -108,6 +108,27 @@
       <p class="frank-watch-footnote">最多读取 5,000 条已索引签名，超过上限会报告不可用，绝不静默截断；为了页面性能，每次显示前 200 条筛选结果。全部数据均为本地历史证据，不是实时完整链史、当前持仓、收益或跟单指令。</p>
     </section>
     <section class="panel" id="frank-d2-panel">
+      <details id="frank-source-panel" open>
+        <summary>全钱包余额刷新与市场参考</summary>
+        <p>手动刷新读取已有来源；重新读取和翻页仅使用本机已捕获数据。两个 Token Program 的 finalized slot 分别保留。</p>
+        <div class="frank-watch-controls">
+          <button type="button" class="link-btn" id="frank-source-balance">刷新全钱包余额</button>
+          <button type="button" class="link-btn" id="frank-source-market">刷新非零持仓行情</button>
+          <button type="button" class="link-btn" id="frank-source-signals">刷新信号行情</button>
+          <button type="button" class="link-btn" id="frank-source-read">重新读取本机结果</button>
+          <button type="button" class="link-btn" id="frank-source-resume" disabled>恢复余额任务</button>
+          <input type="search" id="frank-source-mint" placeholder="完整 Mint，留空读取全部" aria-label="全钱包结果Mint筛选">
+          <button type="button" class="link-btn" id="frank-source-find">筛选</button>
+          <button type="button" class="link-btn" id="frank-source-next" disabled>下一页</button>
+        </div>
+        <div id="frank-source-status" role="status">尚未读取；不会自动发起来源请求。</div>
+        <div id="frank-source-summary"></div>
+        <div class="frank-watch-table-wrap"><table class="frank-watch-table">
+          <thead><tr><th>Mint</th><th>捕获余额</th><th>账户数</th><th>市场参考（USD）</th><th>模型／链状态</th></tr></thead>
+          <tbody id="frank-source-rows"><tr><td colspan="5">尚未读取</td></tr></tbody>
+        </table></div>
+        <p>余额有效期300秒、市场参考60秒，来源时间保留；USD与USDC不默认等价。成本与盈亏不由市场参考价推算。下方D2保留历史导入证据。</p>
+      </details>
       <div class="panel-title">
         <div><h2>Frank 链上余额证据（D2，按采集时点）</h2>
           <p>单独使用经离线核验并手动导入的全钱包双程序余额来源，不改变原有交易信号、观察池或通知。</p>
@@ -300,5 +321,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="/static/app.js"></script>
+  <script src="/static/frank_research.js?v=source-contract-v1"></script>
 </body>
 </html>

@@ -38,6 +38,9 @@ from .wallet_activity import activity as read_signed_activity
 from .wallet_activity_paging import activity_page, KINDS as ACTIVITY_KINDS, CURSOR_ERRORS
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .jupiter import JupiterQuoteClient
+from .research_data import ResearchData, digest as research_digest
+from .wallet_refresh import OwnerRPC
+from .wallet_owner_at_slot import FRANK_WALLET
 
 
 def _host_is_loopback(host: str, port: int) -> bool:
@@ -853,6 +856,24 @@ class DashboardState:
         self.control_db = self.control_root / "mission-control.sqlite"
         self.control_health = self.control_root / "mission-control-health.json"
         self.cluster_jobs = ClusterJobManager(self.control_root, production_root)
+        code_sha = os.environ.get("FRANK_DASHBOARD_SOURCE_SHA", "UNPINNED")
+        if not re.fullmatch(r"[a-f0-9]{40}", code_sha):
+            code_sha = "UNPINNED"
+        # Reuse the already configured source; do not create a new provider/key.
+        endpoints = self.cluster_jobs.rpc_endpoints
+        self.research = ResearchData(
+            self.control_root, wallet=FRANK_WALLET,
+            rpc_factory=lambda: OwnerRPC(endpoints), market_client=self.cluster_jobs.market_client,
+            observed_mints=lambda: [r["mint"] for r in read_frank_watchlist(
+                self.frank.database, person_id=self.frank.person_id)["rows"]],
+            model_positions=lambda: {r["mint"]:r.get("position_state","UNKNOWN") for r in self.frank.candidates()},
+            signal_mints=lambda: [r["mint"] for r in self.frank.candidates()],
+            binding=research_digest({"wallet":FRANK_WALLET, "endpoints":endpoints,
+                "versions":{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
+                    for name in ("wallet_refresh.py","source_evidence.py","market_observations.py","research_data.py")},
+                "market_adapter":hashlib.sha256(Path(__file__).resolve().parents[1].joinpath("meme/market.py").read_bytes()).hexdigest()}),
+            code_sha=code_sha,
+        )
 
     def _control_query(self, sql: str, params=()):
         if not self.control_db.is_file():
@@ -1025,10 +1046,30 @@ class DashboardState:
             # Reuse existing read-only Frank candidate facts, never the MC
             # execution overlay, Jupiter or the provider-backed CA job.
             candidates = self.frank.candidates()
+            research = getattr(self, "research", None)
+            markets = research.market_rows() if research is not None else {}
             rows = analyze_rows(
                 candidates, as_of=observed_at,
-                max_market_age_seconds=1, market_observations=None,
+                max_market_age_seconds=60, market_observations=None,
             )
+            for row in rows:
+                reference = markets.get(row["mint"])
+                if reference is not None:
+                    row["market_reference"] = reference
+                    # The free market client supplies USD, not USDC. Preserve a
+                    # useful reference without inventing a comparable conversion.
+                    row["price"]["reference_currency"] = reference.get("currency")
+                    row["price"]["market_price_usd"] = reference.get("price_usd")
+                    row["price"]["comparison_status"] = "USD_USDC_CONVERSION_NOT_VERIFIED"
+                    row["price"]["reference_observed_at"] = reference.get("observed_at")
+                    row["price"]["reference_source"] = reference.get("source")
+                    try:
+                        age=observed_at-float(reference["observed_at"])
+                        row["price"]["reference_status"] = "FRESH_CAPTURE" if 0<=age<=60 and reference.get("status")=="OK" else "STALE_OR_UNAVAILABLE"
+                    except (KeyError,TypeError,ValueError):
+                        row["price"]["reference_status"] = "UNAVAILABLE"
+                    row["missing"] = [x for x in row["missing"] if x != "MARKET_REFERENCE_MISSING"]
+                    row["missing"].append("COMPARABLE_CURRENCY_CONVERSION_UNAVAILABLE")
         except (OSError, ValueError, TypeError, sqlite3.DatabaseError):
             return {
                 "status": "SOURCE_UNAVAILABLE", "rows": [],
@@ -1042,7 +1083,7 @@ class DashboardState:
             "as_of": observed_at,
             "scope": "FRANK_INDEX_ONLY_NOT_COMPLETE_CHAIN_OR_CURRENT_BALANCE",
             "source": "EXISTING_FRANK_READONLY_CANDIDATES",
-            "market_reference": "NOT_REQUESTED",
+            "market_reference": "CAPTURED_LOCAL_REFERENCES" if markets else "NOT_REQUESTED",
             "live_notification_authorized": False,
             "rows": rows,
         }
@@ -1180,6 +1221,85 @@ class Handler(BaseHTTPRequestHandler):
     def _allowed_host(self):
         return _host_header_is_loopback(self.headers.get("Host"))
 
+    def _research_origin(self, *, write=False):
+        host = self.headers.get("Host", "")
+        origin = self.headers.get("Origin")
+        if origin is not None and origin != "http://" + host:
+            return False
+        if write:
+            return origin == "http://" + host
+        return self.headers.get("X-Frank-Research-Read") == "1"
+
+    def _research_get(self, path):
+        if not self._research_origin():
+            return self._json({"error":"SAME_ORIGIN_READ_REQUIRED"},403)
+        try:
+            params = parse_qs(urlparse(self.path).query,keep_blank_values=True,max_num_fields=5)
+            if any(len(v)!=1 for v in params.values()):
+                raise ValueError("INVALID_QUERY")
+            params = {k:v[0] for k,v in params.items()}
+            research = self.state.research
+            if path in {"/api/frank-balance-refresh", "/api/frank-market-refresh"}:
+                if set(params)!={"refresh_id"}:raise ValueError("INVALID_QUERY")
+                job=research.job(params["refresh_id"],"balance" if "balance" in path else "market")
+                return self._json(job or {"error":"JOB_NOT_FOUND"},200 if job else 404)
+            if set(params)-{"snapshot_id","mint","limit","cursor"}:raise ValueError("INVALID_QUERY")
+            if "mint" in params and not SOLANA_PUBKEY_RE.fullmatch(params["mint"]):raise ValueError("INVALID_MINT")
+            raw_limit=params.pop("limit","100")
+            if not re.fullmatch(r"[0-9]{1,4}",raw_limit) or not 1<=int(raw_limit)<=1000:raise ValueError("INVALID_PAGE_SIZE")
+            limit=int(raw_limit)
+            if path=="/api/frank-positions":
+                return self._json(research.positions(**params,limit=limit))
+            if "snapshot_id" in params:raise ValueError("INVALID_QUERY")
+            observations=research.market_rows()
+            mint=params.get("mint")
+            rows=[r for m,r in sorted(observations.items()) if mint is None or mint==m]
+            page=research.page(rows,"market",research_digest(rows),mint,limit,params.get("cursor"))
+            return self._json({"status":"OK" if observations else "UNAVAILABLE",**page,"as_of":time.time(),"max_age_seconds":60})
+        except ValueError as exc:
+            reason=str(exc)
+            code=409 if reason in {"CURSOR_QUERY_CHANGED","SOURCE_BINDING_CHANGED"} else 400
+            return self._json({"error":reason if reason in {"INVALID_QUERY","INVALID_MINT","INVALID_PAGE_SIZE","INVALID_CURSOR","INVALID_JOB_ID","CURSOR_QUERY_CHANGED","SOURCE_BINDING_CHANGED"} else "INVALID_QUERY"},code)
+        except (OSError,sqlite3.Error):
+            return self._json({"error":"LOCAL_RESEARCH_UNAVAILABLE"},503)
+
+    def _research_post(self, path):
+        if not self._research_origin(write=True):
+            return self._json({"error":"EXACT_SAME_ORIGIN_REQUIRED"},403)
+        try:
+            length=int(self.headers.get("Content-Length","0"))
+            if not 0<length<=32768:raise ValueError("INVALID_REQUEST_SIZE")
+            def pairs(items):
+                obj={}
+                for k,v in items:
+                    if k in obj:raise ValueError("DUPLICATE_JSON_FIELD")
+                    obj[k]=v
+                return obj
+            body=json.loads(self.rfile.read(length),object_pairs_hook=pairs,
+                            parse_constant=lambda _: (_ for _ in ()).throw(ValueError("NONFINITE_JSON")))
+            if not isinstance(body,dict):raise ValueError("INVALID_JSON_OBJECT")
+            if path=="/api/frank-balance-refresh/resume":
+                if set(body)!={"refresh_id","idempotency_key"}:raise ValueError("INVALID_FIELDS")
+                if not isinstance(body["idempotency_key"],str) or not 1<=len(body["idempotency_key"])<=256 or any(ord(c)<32 for c in body["idempotency_key"]):raise ValueError("INVALID_IDEMPOTENCY_KEY")
+                job=self.state.research.resume(body["refresh_id"],idempotency_key=body["idempotency_key"])
+            else:
+                kind="balance" if path=="/api/frank-balance-refresh" else "market"
+                allowed={"idempotency_key"} if kind=="balance" else {"idempotency_key","scope","mint"}
+                if set(body)-allowed or "idempotency_key" not in body:raise ValueError("INVALID_FIELDS")
+                if kind=="market":
+                    if body.get("scope") not in {"observed","positions","signals","mint"}:raise ValueError("INVALID_SCOPE")
+                    if body["scope"]=="mint":
+                        if not isinstance(body.get("mint"),str) or not SOLANA_PUBKEY_RE.fullmatch(body["mint"]):raise ValueError("INVALID_MINT")
+                    elif "mint" in body:raise ValueError("INVALID_FIELDS")
+                job=self.state.research.submit(kind,body)
+            return self._json(job,202)
+        except (ValueError,TypeError,UnicodeError) as exc:
+            reason=str(exc)
+            safe={"INVALID_REQUEST_SIZE","DUPLICATE_JSON_FIELD","NONFINITE_JSON","INVALID_JSON_OBJECT","INVALID_FIELDS","INVALID_SCOPE","INVALID_MINT","INVALID_IDEMPOTENCY_KEY","INVALID_JOB_ID","JOB_NOT_FOUND","IDEMPOTENCY_CONFLICT","SOURCE_BINDING_CHANGED"}
+            return self._json({"error":reason if reason in safe else "INVALID_RESEARCH_REQUEST"},409 if reason in {"IDEMPOTENCY_CONFLICT","SOURCE_BINDING_CHANGED"} else 404 if reason=="JOB_NOT_FOUND" else 400)
+        except (OSError,sqlite3.Error):
+            return self._json({"error":"LOCAL_RESEARCH_UNAVAILABLE"},503)
+
     def _d2_same_origin_read(self):
         # Browser same-origin fetch uses a custom header. A cross-origin page
         # cannot set it without a preflight, which this server never enables.
@@ -1226,6 +1346,8 @@ class Handler(BaseHTTPRequestHandler):
             if urlparse(self.path).query:
                 return self._json({"error": "UNSUPPORTED_F01_QUERY"}, 400)
             return self._json(self.state.follow_opportunities())
+        if path in {"/api/frank-balance-refresh","/api/frank-market-refresh","/api/frank-positions","/api/frank-market-observations"}:
+            return self._research_get(path)
         if path == "/api/frank-intelligence":
             if urlparse(self.path).query:
                 return self._json({"error": "UNSUPPORTED_INTELLIGENCE_QUERY"}, 400)
@@ -1335,6 +1457,10 @@ class Handler(BaseHTTPRequestHandler):
         if not _content_type_is_json(self.headers.get("Content-Type")):
             return self._json({"error":"APPLICATION_JSON_REQUIRED"},415)
         path = urlparse(self.path).path
+        if path in {"/api/frank-balance-refresh","/api/frank-balance-refresh/resume","/api/frank-market-refresh"}:
+            if urlparse(self.path).query:
+                return self._json({"error":"INVALID_QUERY"},400)
+            return self._research_post(path)
         if path != "/api/cluster-analysis":
             return self.send_error(404)
         try:

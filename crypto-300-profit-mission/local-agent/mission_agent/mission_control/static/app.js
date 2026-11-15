@@ -966,8 +966,11 @@ function renderFrankIntelligence(snapshot) {
         ${metric('与 Frank 已核实买价相比', delta,
           '只有同币种、同计价单位和有效时点的行情才比较；不代表实际可执行收益或用户盈亏。')}
         ${metric('参考行情来源与时间',
-          esc(price.market_source || '未采集') + ' · ' +
-          esc(frankIntelligenceTimestamp(price.market_observed_at)))}
+          esc(price.reference_source || price.market_source || '未采集') + ' · ' +
+          esc(frankIntelligenceTimestamp(price.reference_observed_at || price.market_observed_at)))}
+        ${price.market_price_usd != null ? metric('独立 USD 参考价',
+          esc(price.market_price_usd) + ' USD/token · ' + esc(price.reference_status),
+          '美元参考不等同USDC，不转换成已证实买价变化或收益。') : ''}
       </div>
       <p class="frank-watch-footnote">不自动交易；未提供用户交易金额，因此未做路由、滑点或可执行评估。</p>
     </article>`;
