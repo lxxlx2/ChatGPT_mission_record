@@ -1,0 +1,241 @@
+{
+  "version": 1,
+  "date": "2026-11-11 Asia/Bangkok",
+  "source_sha": "0b966ab459b775bc58c77427c1dbcb491f2d9bf8",
+  "parent_sha": "7aaf96a1524a9c6ae26749dae80a945097ac111e",
+  "pr220_base_sha": "4fdf2238a4db2347975689913e49142b760dc091",
+  "scope": [
+    "report_bound_manual_browser_narrative_supplement",
+    "strict_fallback_top20_context_validation"
+  ],
+  "local_python": {
+    "passed": 374,
+    "failed": 0,
+    "seconds": 0.96
+  },
+  "local_node": {
+    "passed": 217,
+    "failed": 0
+  },
+  "parent_counterexample": {
+    "source_sha": "7aaf96a1524a9c6ae26749dae80a945097ac111e",
+    "failed": 15,
+    "passed": 3,
+    "configuration": "PYTHONPATH pinned parent runtime, -c /dev/null from evidence directory",
+    "log_sha256": "60f720c64fc392fd50aa84e9095ba2a8de7de88aa4899948b9164d38e8433429"
+  },
+  "offline_captured_replay": {
+    "verdict": "PASS_OFFLINE_CAPTURE_AUDIT",
+    "source_sha": "0b966ab459b775bc58c77427c1dbcb491f2d9bf8",
+    "scope": "Historical logical-response replay; not fresh wire capture or live crash/resume",
+    "report_sha256": "b2e699887dc1ad8ce60d16430cbc61672393a4ca9bb1be2e8557fee29d2118b1",
+    "checkpoint_chain_head": "5e373cc7b01511d1d3fa0f3d0ed615bc646c62c4f4e029d2d50911cf3abae9b7",
+    "replay_count": 2,
+    "logical_reads_each": 978,
+    "report_business_equal_each": true,
+    "report_retention_only_change_verified_each": false,
+    "retention_change": null,
+    "retention_coverage_verified_each": true,
+    "retention_coverage": {
+      "version": 1,
+      "mode": "OLDEST_VALID_PER_OWNER_ACCOUNT_PHASE_CLOSURE_STATUS",
+      "raw_valid_observations": 752,
+      "retained_observations": 20,
+      "compacted_observations": 732,
+      "limit_rejected_observations": 0,
+      "represented_owner_accounts": 11,
+      "max_observations": 200,
+      "complete_history": false
+    },
+    "derived_report_json_sha256": null,
+    "business_report_sha256_each": [
+      "e9ae58c700803abdd5cee6f2fcb10c6363fbbac3b487bc0e7be5d6fe8f07f588",
+      "e9ae58c700803abdd5cee6f2fcb10c6363fbbac3b487bc0e7be5d6fe8f07f588"
+    ],
+    "excluded_worker_augmentation_root_keys": [
+      "ca_job_id",
+      "assessment_history",
+      "assessment_history_context",
+      "collection_checkpoint"
+    ],
+    "excluded_worker_augmentation_coverage_keys": [
+      "rpc_call_count_scope"
+    ],
+    "locally_derived_timestamps_frozen": [
+      "observed_at",
+      "pool_vaults.observed_at"
+    ],
+    "clock_frozen_to_original_report": true,
+    "cache_ttls_modified": false,
+    "unique_captured_transactions": 867,
+    "captured_failed_transactions": 42,
+    "captured_null_transactions": 0,
+    "counts": {
+      "trade_evidence_checked": 209,
+      "trade_evidence_exact_duplicates": 0,
+      "funding_evidence_checked": 8,
+      "funding_evidence_exact_duplicates": 0,
+      "consolidation_evidence_checked": 126,
+      "consolidation_evidence_exact_duplicates": 0,
+      "edges_checked": 207,
+      "edges_exact_duplicates": 0,
+      "historical_account_evidence_checked": 20,
+      "historical_account_evidence_exact_duplicates": 0,
+      "history_windows_with_preserved_cursor": 28
+    },
+    "new_wire_attempts": 0,
+    "network_attempts_blocked": 0,
+    "live_resume_count": 0
+  },
+  "source_layer": "Captured Nov10 input under Nov11 candidate; not a fresh RPC run",
+  "new_real_rpc_calls": 0,
+  "new_ca_posts": 0,
+  "notification_or_trade": 0,
+  "review_waived_by_user": true,
+  "invest_decision": "INVEST_NO_GO",
+  "trade_decision": "TRADE_NO_GO",
+  "verdict": "PASS_CODE_OFFLINE_LOCAL_CHROME__PARTIAL_COMPLETE_CA_REQUIREMENTS",
+  "latest_main_read_sha": "0e36a2cd7c5becb425e06cb5ea4250f5aa7dc010",
+  "rules_changed_since_prior_main": false,
+  "changed_files": [
+    "local-agent/mission_agent/meme/cluster.py",
+    "local-agent/mission_agent/mission_control/server.py",
+    "local-agent/mission_agent/mission_control/narrative_supplement.py",
+    "local-agent/mission_agent/mission_control/static/app.js",
+    "local-agent/tests/test_frank_ca_get_resume.mjs",
+    "local-agent/tests/test_frank_ca_report_render.mjs",
+    "local-agent/tests/test_meme_wallet_cluster.py",
+    "local-agent/tests/test_meme_top_account_context.py",
+    "local-agent/tests/test_narrative_supplement.py"
+  ],
+  "top20_counterexample": {
+    "old_same_slot_largest_raw": "100",
+    "old_same_slot_parsed_raw": "900",
+    "old_raw_top10_pct": "10.00",
+    "old_known_ex_lp_top10_pct": "90.0000",
+    "old_snapshot_consistent": true,
+    "wrong_mint_also_accepted": true,
+    "new_invalid_context_rejected": true,
+    "new_test_cases": 18,
+    "same_slot_nested_rankings_withheld": true,
+    "other_slot_observation_remains_partial": true,
+    "additional_rpc_calls": 0
+  },
+  "narrative_supplement": {
+    "status": "BROWSER_OBSERVED_ACCOUNT_CLAIM",
+    "source_url": "https://x.com/matthewabides/status/2106506213458341960",
+    "published_at_utc": "2026-10-03T22:06:32.000Z",
+    "browser_captured_at_utc": "2026-11-10T11:49:25.486350+00:00",
+    "summary_chars": 139,
+    "source_text_sha256": "14571772de84ff6f6ea48276bf5e30e448de0abb28a240967e03465138d759eb",
+    "private_note_sha256": "6434329e7be79eaf7412a92972d64060589b04bf7a212eb8225aa9bce5b13174",
+    "binding": [
+      "exact_DONE_job",
+      "Mint",
+      "raw_report_sha256",
+      "exact_existing_report_source_URL",
+      "author_handle",
+      "publication_capture_report_time_order"
+    ],
+    "source_report_preserved": true,
+    "official_recognition": "UNVERIFIED",
+    "interaction_status": "UNVERIFIED",
+    "earliest_origin": "UNVERIFIED",
+    "no_new_external_fetch": true,
+    "legacy_reports_not_backfilled": true
+  },
+  "test_commands": {
+    "python": "<dedicated-review-venv-python> -B -m pytest -q -p no:cacheprovider tests/test_meme_historical_retention.py tests/test_meme_narrative.py tests/test_meme_narrative_story.py tests/test_meme_failed_transfer_evidence.py tests/test_meme_wallet_cluster.py tests/test_meme_wallet_cluster_pagination.py tests/test_meme_owner_account_history.py tests/test_meme_historical_account_scan.py tests/test_meme_historical_accounts.py tests/test_ca_job_checkpoint.py tests/test_meme_ca_completeness.py tests/test_mission_control_dashboard.py tests/test_narrative_supplement.py tests/test_meme_top_account_context.py",
+    "node": "node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_ca_report_render.mjs tests/test_frank_d2_ingress_ui.mjs tests/test_frank_f01_source_only.cjs tests/test_frank_f01_failure_state.cjs",
+    "replay": "<dedicated-review-venv-python> -I -B crypto-300-profit-mission/meme/evidence/frank_checkpoint_capture_audit_20261106.py --agent <fixed-0b966ab4-agent> --capture <private-Nov10-capture> --expected-agent-sha 0b966ab459b775bc58c77427c1dbcb491f2d9bf8 --output <private-candidate-audit.json>",
+    "parent_counterexample": "PYTHONPATH=<fixed-parent-7aaf-agent>:<candidate-tests> <dedicated-review-venv-python> -B -m pytest -c /dev/null -q -p no:cacheprovider <candidate-tests>/test_meme_top_account_context.py (run from evidence directory)",
+    "syntax": "node --check mission_agent/mission_control/static/app.js (from local-agent); Python AST parse without bytecode; git diff HEAD^ HEAD --check"
+  },
+  "ci": [
+    {
+      "id": 42946511699,
+      "event": "push",
+      "head_sha": "0b966ab459b775bc58c77427c1dbcb491f2d9bf8",
+      "status": "success",
+      "url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/42946511699",
+      "python_passed": 2253,
+      "python_skipped": 4,
+      "node_passed": 217,
+      "synthetic_browser_checks": 42,
+      "fixture_posts": 8,
+      "real_rpc": 0,
+      "production_requests": 0,
+      "real_ca_posts": 0
+    },
+    {
+      "id": 42946518503,
+      "event": "pull_request",
+      "head_sha": "0b966ab459b775bc58c77427c1dbcb491f2d9bf8",
+      "status": "success",
+      "url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/42946518503",
+      "python_passed": 2253,
+      "python_skipped": 4,
+      "node_passed": 217,
+      "synthetic_browser_checks": 42,
+      "fixture_posts": 8,
+      "real_rpc": 0,
+      "production_requests": 0,
+      "real_ca_posts": 0
+    }
+  ],
+  "ci_pull_request_merge_sha": "502a37d01df7d6bdd013ec7f52e847d88b7ce7be",
+  "local_install": {
+    "status": "PASS",
+    "source_sha": "0b966ab459b775bc58c77427c1dbcb491f2d9bf8",
+    "previous_source_sha": "7aaf96a1524a9c6ae26749dae80a945097ac111e",
+    "ops_executor_commit": "c84181775c1893d0ac4f43a8062854609b704d2a",
+    "executor_sha256": "187ec3dd501781f0be03f14d39586adefdc8f7e7f4f37c8701a516540995de5e",
+    "old_source_backup_files": 492,
+    "report_files_preserved": 46,
+    "sqlite_consistent_backups_integrity_and_fk_passed": 3,
+    "protected_file_hashes_unchanged": 13,
+    "old_and_candidate_actual_Handler_no_listener": "PASS",
+    "saved_exact_jobs_checked_each": 4,
+    "candidate_bound_browser_notes_checked": 1,
+    "port": 8766,
+    "new_listening_ports": 0,
+    "dashboard_only_reloaded": true,
+    "scanner_unchanged_live_no_drift_zero_errors": true,
+    "loop_unloaded": true,
+    "rollback_exercised": false
+  },
+  "chrome": {
+    "original_8766": true,
+    "complete_summary_visible": true,
+    "exact_job_GET": true,
+    "source_link_exact": true,
+    "view_roundtrip": true,
+    "refresh": true,
+    "older_and_legacy_reports_no_fabricated_note": true,
+    "left_open": true,
+    "screenshot_sha256": "761b24310b6688148a0d730d5e2d397f98b2c276a73ca7cb41a07bb8c7ccbcde"
+  },
+  "remaining_blockers": [
+    "Latest Nov10 authorized real acceptance still has GPA 429; exact free method or route restriction unresolved",
+    "Complete economic history and first acquisition, all special identities and controlled independent holder/pool snapshot remain unverified",
+    "Other protocol, large-Mint and Token-2022 extension-risk representative acceptance samples remain missing",
+    "Official CA recognition, significant-person interaction and earliest origin are unverified, with useful account narrative retained"
+  ],
+  "cancelled_by_user": [
+    "Original October incident attribution; historical evidence unchanged, no claim of root-cause resolution"
+  ],
+  "prior_live_source_receipt": "frank-ca-live-retention-20261110.json",
+  "free_phase_wire_attempts_cumulative_unchanged": 2180,
+  "original_one_shot_572_separate": true,
+  "scope_effects": {
+    "real_rpc_or_ca_post": 0,
+    "notification_send": 0,
+    "wallet_sign_or_trade": 0,
+    "scanner_restart": 0,
+    "loop_load": 0,
+    "merge": 0,
+    "paid_service": 0,
+    "new_provider_key_DAS": 0,
+    "new_automation_or_monitor": 0
+  }
+}

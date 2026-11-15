@@ -1,0 +1,283 @@
+{
+  "version": 1,
+  "date": "2026-11-11 Asia/Bangkok",
+  "scope": "Resolve user-pasted five concrete review claims without expanding manual-CA sources or research",
+  "verdict": "PASS_REVIEW_CLAIM_RESOLUTION_CODE_OFFLINE_LOCAL_CHROME__PARTIAL_COMPLETE_CA_REQUIREMENTS",
+  "source_sha": "d43878828c86eacee5be9df8a17d16fc63a74bb6",
+  "parent_sha": "0b966ab459b775bc58c77427c1dbcb491f2d9bf8",
+  "pr220_base_sha": "4fdf2238a4db2347975689913e49142b760dc091",
+  "latest_main_read_sha": "6fd199100eae23647fb13b91c214be827da72619",
+  "rules_and_frank_delta_since_previous_main": "none",
+  "input_text_sha256": [
+    "4c204ff43c022807fbc69b95fcdfdb0a642c014a42309aaebcd868501a205403",
+    "2d7b1ecc19892594f446c031dc68a793903fa1e8dac53080b3b87c6e713f5f52"
+  ],
+  "claims": [
+    {
+      "id": "LOGIC_1_BATCH_REASONS",
+      "verdict": "CONFIRMED_FIXED",
+      "scope": "Diagnostic precision; no proof of financial state corruption",
+      "evidence": "Unavailable/non-list token or owner batch was coerced or caused INVALID plus a synthetic LENGTH_INVALID",
+      "change": "Preserve missing/non-list value and use mutually exclusive shape/length branches; valid [] still records length mismatch",
+      "new_cases": 8
+    },
+    {
+      "id": "LOGIC_2_RAW_TOP10_PREVIEW",
+      "verdict": "INTENDED_NOT_REPRODUCED_AS_BUG",
+      "evidence": "Raw token-account Top10 does not depend on owner resolution. Explicit token/context contradictions still withhold final *_PCT",
+      "code_at_parent": [
+        "cluster.py:998",
+        "cluster.py:1590",
+        "cluster.py:1686",
+        "tests/test_meme_wallet_cluster.py:766"
+      ],
+      "offline_probes": {
+        "top20_raws": "200,190,...,10",
+        "supply": "2500",
+        "missing_two_owners": {
+          "resolved": 18,
+          "raw_top10_pct": "62.00",
+          "overall": "INCOMPLETE_EVIDENCE"
+        },
+        "missing_all_owners": {
+          "resolved": 0,
+          "raw_top10_pct": "62.00",
+          "overall": "INCOMPLETE_EVIDENCE"
+        },
+        "wrong_mint_or_same_bank_amount_conflict": "all *_PCT UNRESOLVED"
+      }
+    },
+    {
+      "id": "LOGIC_3_UNKNOWN_SLOT_PROPAGATION",
+      "verdict": "OBSERVATION_CONFIRMED_GUARD_BYPASS_NOT_REPRODUCED",
+      "evidence": "Real unavailable/missing-program/uninitialized profiles stop before GPA; an independently reconciled GPA bank can remain complete while Top20 and overall report remain incomplete",
+      "real_path_probes": [
+        "profile RPC timeout -> MINT_IDENTITY_UNVERIFIED; GPA not called; eligible false",
+        "missing Mint program -> MINT_IDENTITY_UNVERIFIED; GPA not called; eligible false",
+        "uninitialized Mint -> MINT_IDENTITY_UNVERIFIED; GPA not called; eligible false",
+        "Top20 missing slot+wrong Mint, valid independently reconciled GPA slot100 -> nested COMPLETE, overall INCOMPLETE_EVIDENCE, Top20 gaps and final ratios withheld"
+      ],
+      "code_at_parent": [
+        "cluster.py:1057",
+        "holder_ranks.py:121",
+        "cluster.py:1352",
+        "cluster.py:1563",
+        "cluster.py:1686"
+      ]
+    },
+    {
+      "id": "DESIGN_1_CAPTURE_TIME",
+      "verdict": "CONFIRMED_FIXED",
+      "evidence": "A true browser read 1/300/86400 seconds before the report was rejected",
+      "change": "Require publication <= capture <= now+60; preserve exact job/Mint/raw-report/source/author/hash bindings and original capture timestamp",
+      "unit_api_cases": 3,
+      "frontend_vm_cases": 3
+    },
+    {
+      "id": "DESIGN_2_KNOWN_SAMPLE",
+      "verdict": "INTENDED_NOT_REPRODUCED_AS_GLOBAL_PRECISION_BUG",
+      "evidence": "KNOWN value is labeled an observed Top20 Owner sample, with strict EX_LP/GLOBAL gating and an explicit not-global warning",
+      "offline_probe": {
+        "top12_special_accounts": 12,
+        "remaining_sample_eligible_owners": 8,
+        "sample_pct": "14.4000",
+        "constructed_true_global_pct": "15.2000",
+        "strict_ex_lp": "UNRESOLVED",
+        "eligible_owner_rank_complete": false,
+        "overall": "INCOMPLETE_EVIDENCE"
+      },
+      "code_at_parent": [
+        "ca-analysis-unified-accuracy-acceptance.md:58",
+        "cluster.py:1513",
+        "cluster.py:1551",
+        "cluster.py:1740",
+        "app.js:1191",
+        "app.js:2246"
+      ]
+    }
+  ],
+  "overview_corrections": [
+    "Zero verified amount-matched two-sided quotes is not proof that 752 cells are infeasible",
+    "Latest GPA429 observed; exact provider method/route restriction remains unknown",
+    "Narrative note binds report and source; hashes are not official recognition or an authenticity proof",
+    "Actual cluster.py is in mission_agent/meme; existing bounded RPC retry and cooldown already exist; no new node rotation added",
+    "Code review and existing tests do not establish comprehensive real-source coverage or current runtime without live verification"
+  ],
+  "local_python": {
+    "passed": 385,
+    "failed": 0,
+    "seconds": 0.97
+  },
+  "local_node": {
+    "passed": 220,
+    "failed": 0
+  },
+  "parent_reproduction_with_fixed_new_tests": {
+    "failed": 9,
+    "passed": 2,
+    "selected_cases": 11,
+    "log_sha256": "4b6b2bda4db1e7f8708f4c51e9db6e39a4d4e27a2a7f4357b155084acde60c14"
+  },
+  "test_commands": {
+    "python": "<dedicated-review-venv-python> -B -m pytest -q -p no:cacheprovider tests/test_meme_historical_retention.py tests/test_meme_narrative.py tests/test_meme_narrative_story.py tests/test_meme_failed_transfer_evidence.py tests/test_meme_wallet_cluster.py tests/test_meme_wallet_cluster_pagination.py tests/test_meme_owner_account_history.py tests/test_meme_historical_account_scan.py tests/test_meme_historical_accounts.py tests/test_ca_job_checkpoint.py tests/test_meme_ca_completeness.py tests/test_mission_control_dashboard.py tests/test_narrative_supplement.py tests/test_meme_top_account_context.py",
+    "node": "node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_ca_report_render.mjs tests/test_frank_d2_ingress_ui.mjs tests/test_frank_f01_source_only.cjs tests/test_frank_f01_failure_state.cjs",
+    "replay": "<dedicated-review-venv-python> -I -B crypto-300-profit-mission/meme/evidence/frank_checkpoint_capture_audit_20261106.py --agent <fixed-d4387882-agent> --capture <private-Nov10-capture> --expected-agent-sha d43878828c86eacee5be9df8a17d16fc63a74bb6 --output <private-candidate-audit.json>",
+    "parent_counterexample": "PYTHONPATH=<fixed-parent-0b966ab4-agent>:<candidate-tests> <dedicated-review-venv-python> -B -m pytest -c /dev/null -q -p no:cacheprovider <candidate-tests>/test_narrative_supplement.py::test_true_browser_read_before_report_remains_bound_and_preserves_time <candidate-tests>/test_meme_top_account_context.py::test_unavailable_batch_has_one_original_shape_reason (run from evidence directory)",
+    "syntax": "node --check mission_agent/mission_control/static/app.js (from local-agent); git diff HEAD^ HEAD --check"
+  },
+  "offline_captured_replay": {
+    "verdict": "PASS_OFFLINE_CAPTURE_AUDIT",
+    "source_sha": "d43878828c86eacee5be9df8a17d16fc63a74bb6",
+    "scope": "Historical logical-response replay; not fresh wire capture or live crash/resume",
+    "report_sha256": "b2e699887dc1ad8ce60d16430cbc61672393a4ca9bb1be2e8557fee29d2118b1",
+    "checkpoint_chain_head": "5e373cc7b01511d1d3fa0f3d0ed615bc646c62c4f4e029d2d50911cf3abae9b7",
+    "replay_count": 2,
+    "logical_reads_each": 978,
+    "report_business_equal_each": true,
+    "report_retention_only_change_verified_each": false,
+    "retention_change": null,
+    "retention_coverage_verified_each": true,
+    "retention_coverage": {
+      "version": 1,
+      "mode": "OLDEST_VALID_PER_OWNER_ACCOUNT_PHASE_CLOSURE_STATUS",
+      "raw_valid_observations": 752,
+      "retained_observations": 20,
+      "compacted_observations": 732,
+      "limit_rejected_observations": 0,
+      "represented_owner_accounts": 11,
+      "max_observations": 200,
+      "complete_history": false
+    },
+    "derived_report_json_sha256": null,
+    "business_report_sha256_each": [
+      "e9ae58c700803abdd5cee6f2fcb10c6363fbbac3b487bc0e7be5d6fe8f07f588",
+      "e9ae58c700803abdd5cee6f2fcb10c6363fbbac3b487bc0e7be5d6fe8f07f588"
+    ],
+    "excluded_worker_augmentation_root_keys": [
+      "ca_job_id",
+      "assessment_history",
+      "assessment_history_context",
+      "collection_checkpoint"
+    ],
+    "excluded_worker_augmentation_coverage_keys": [
+      "rpc_call_count_scope"
+    ],
+    "locally_derived_timestamps_frozen": [
+      "observed_at",
+      "pool_vaults.observed_at"
+    ],
+    "clock_frozen_to_original_report": true,
+    "cache_ttls_modified": false,
+    "unique_captured_transactions": 867,
+    "captured_failed_transactions": 42,
+    "captured_null_transactions": 0,
+    "counts": {
+      "trade_evidence_checked": 209,
+      "trade_evidence_exact_duplicates": 0,
+      "funding_evidence_checked": 8,
+      "funding_evidence_exact_duplicates": 0,
+      "consolidation_evidence_checked": 126,
+      "consolidation_evidence_exact_duplicates": 0,
+      "edges_checked": 207,
+      "edges_exact_duplicates": 0,
+      "historical_account_evidence_checked": 20,
+      "historical_account_evidence_exact_duplicates": 0,
+      "history_windows_with_preserved_cursor": 28
+    },
+    "new_wire_attempts": 0,
+    "network_attempts_blocked": 0,
+    "live_resume_count": 0
+  },
+  "additional_parent_semantic_validation": {
+    "fixed_parent_sha": "0b966ab459b775bc58c77427c1dbcb491f2d9bf8",
+    "rank_existing_tests_passed": 67,
+    "rank_adversarial_probes_passed": 5,
+    "frontend_semantic_cases_passed": 5,
+    "slot_existing_tests_passed": 47,
+    "real_profile_holders_GPA_path_probes_passed": 4,
+    "network_and_listeners": 0
+  },
+  "ci": [
+    {
+      "id": 42986392137,
+      "event": "push",
+      "head_sha": "d43878828c86eacee5be9df8a17d16fc63a74bb6",
+      "status": "success",
+      "url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/42986392137",
+      "python_passed": 2264,
+      "python_skipped": 4,
+      "node_passed": 220,
+      "synthetic_browser_checks": 42,
+      "fixture_posts": 8,
+      "real_rpc": 0,
+      "production_requests": 0,
+      "real_ca_posts": 0,
+      "generated_merge_sha": null
+    },
+    {
+      "id": 42986401895,
+      "event": "pull_request",
+      "head_sha": "d43878828c86eacee5be9df8a17d16fc63a74bb6",
+      "status": "success",
+      "url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/42986401895",
+      "python_passed": 2264,
+      "python_skipped": 4,
+      "node_passed": 220,
+      "synthetic_browser_checks": 42,
+      "fixture_posts": 8,
+      "real_rpc": 0,
+      "production_requests": 0,
+      "real_ca_posts": 0,
+      "generated_merge_sha": "7bd3bb675b9d46604976b2101335b5771d7f234e"
+    }
+  ],
+  "local_install": {
+    "status": "PASS",
+    "source_sha": "d43878828c86eacee5be9df8a17d16fc63a74bb6",
+    "previous_source_sha": "0b966ab459b775bc58c77427c1dbcb491f2d9bf8",
+    "executor_commit": "9ae971f0252afe232c4df1a0d5c9e8d182066ae8",
+    "executor_sha256": "fb8089a284e4a44bc5d6e193f3a5f12be312e9a6415d6c2cc3585c1027632877",
+    "old_source_backup_files": 495,
+    "report_files_unchanged": 46,
+    "sqlite_consistent_backups_integrity_fk_passed": 3,
+    "protected_hashes_unchanged": 14,
+    "previous_13_protected_files_plus_existing_note": true,
+    "existing_note_sha256": "6434329e7be79eaf7412a92972d64060589b04bf7a212eb8225aa9bce5b13174",
+    "existing_note_unchanged": true,
+    "old_and_new_no_listener_Handler": "PASS",
+    "exact_saved_jobs_checked_each": 4,
+    "bound_browser_notes_checked_each": 1,
+    "port": 8766,
+    "new_listeners": 0,
+    "dashboard_only_reloaded": true,
+    "scanner_unchanged_live_no_drift_zero_errors": true,
+    "loop_unloaded": true,
+    "rollback_exercised": false
+  },
+  "chrome": {
+    "existing_note_and_actual_original_time_visible": true,
+    "exact_job_GET": true,
+    "refresh": true,
+    "sample_label_and_incomplete_evidence_visible": true,
+    "pre_report_timestamp_cases_exercised_in_unit_and_VM_only": true,
+    "real_pre_report_timestamp_source_case_not_available": true,
+    "page_left_open": true,
+    "screenshot_sha256": "6863ec1bd4954e1fcbdc488e882175dc37f20bfb149a5b95883dee109d85cade"
+  },
+  "new_real_rpc": 0,
+  "new_ca_posts": 0,
+  "notification_sign_or_trade": 0,
+  "new_provider_key_paid_or_automation": 0,
+  "free_phase_wire_attempts_cumulative_unchanged": 2180,
+  "original_one_shot_572_separate": true,
+  "review_waived_by_user": true,
+  "invest_decision": "INVEST_NO_GO",
+  "trade_decision": "TRADE_NO_GO",
+  "remaining_blockers": [
+    "Latest Nov10 authorized real acceptance still has GPA 429; exact free method or route restriction unresolved",
+    "Complete economic history and first acquisition, all special identities and controlled independent holder/pool snapshot remain unverified",
+    "Other protocol, large-Mint and Token-2022 extension-risk representative acceptance samples remain missing",
+    "Official CA recognition, significant-person interaction and earliest origin are unverified, with useful account narrative retained"
+  ],
+  "old_incident_cancelled_by_user": true
+}

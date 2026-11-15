@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-06T10:39:28.116746+07:00",
+  "scope": "USER_REQUESTED_EXISTING_LOCAL_DASHBOARD_FEATURE_UPDATE",
+  "authorization": {
+    "user_request": "目前本地实际运行的项目是最新进度吗？不是的话保证功能是最新的",
+    "followup_after_dashboard_launchagent_scope_explained": "继续",
+    "scope": "Only existing Dashboard source switch and necessary Dashboard LaunchAgent reload; independent review waived; Scanner/MC Loop/trading permissions unchanged."
+  },
+  "source": {
+    "product_pr": 220,
+    "product_sha": "e977cc09023bdfcc9ce80660aedf2d58d2febc5f",
+    "previous_installed_sha": "e069a925b71985c35b75cc8fd01eb75a9c97dd87",
+    "product_parent": "b0dc014d4512a28257017e16fc22725d9625c757",
+    "runtime_changed_files": [
+      "mission_agent/meme/cluster.py",
+      "mission_agent/meme/job_checkpoint.py",
+      "mission_agent/mission_control/server.py",
+      "mission_agent/mission_control/static/app.js",
+      "mission_agent/mission_control/static/index.html"
+    ],
+    "complete_detached_release": true,
+    "executor_commit": "aec4e5cbbb71a0c74be08077f61d5a2602ab7c62",
+    "executor_sha256": "8898e5667ba7c8a87f11ec0a828d01abdc731d80d8c37e2b033c5f7ee4e4d864",
+    "executor_github_blob": "2bf846332c411c1380f2a2a336827bb1d282a807",
+    "executor_published_and_read_back_before_apply": true,
+    "latest_main_rules_checked": "d72dc12b51da9828470abece1fd5a22b08b2c56e",
+    "AGENTS_blob": "6a1217d85e217754dea557bcd4e23982efaf3949",
+    "DEVELOPMENT_RULES_blob": "5e8f89418bf206ee77dec9a803b808262d62a72a",
+    "source_fingerprint": "260c615d8f60192e476fc9f310d09c8b755345bf9d047ff63a0ffc292ee90c2f",
+    "runtime_manifest_files": 148,
+    "runtime_manifest_sha256": "e65e7921bf45494c037cd2ee343259b17768306a66354a05350436583fb70c56"
+  },
+  "backup": {
+    "old_source_files": 487,
+    "all_file_hashes_verified": true,
+    "report_files": 28,
+    "all_report_hashes_verified": true,
+    "consistent_SQLite_backup_integrity": "PASS",
+    "foreign_key_check": "PASS",
+    "old_backup_http_started": true,
+    "old_backup_exact_job_read": 1,
+    "old_backup_external_network": 0,
+    "runner_executable_mode_preserved": "0700",
+    "rollback_exercised": false,
+    "no_database_restore": true,
+    "location": "PRIVATE_EXISTING_MAINTENANCE_DIRECTORY_OUTSIDE_GIT"
+  },
+  "pre_switch": {
+    "no_open_worker_cache_observed_twice": true,
+    "cache_connection_covers_e069_analyzer_lifetime": true,
+    "no_checkpoint_jobs_existed": true,
+    "old_uncheckpointed_incomplete_jobs_cannot_migrate": true,
+    "control_SQLite_integrity": "ok",
+    "live_mail_in_flight": 0,
+    "local_unresolved": 0
+  },
+  "installed_layout_tests": {
+    "passed": 81,
+    "failed": 0,
+    "seconds": 0.51,
+    "log_sha256": "6d9714c30ae17275a4b20181e0837989f3808b64ff1687030f770a3f5f509ac5",
+    "command": "<EXISTING_PYTHON> -B -m pytest -q -p no:cacheprovider tests/test_ca_job_checkpoint.py tests/test_meme_wallet_cluster.py tests/test_meme_owner_account_history.py",
+    "cwd": "<INSTALLED_FIXED_RELEASE>/crypto-300-profit-mission/local-agent",
+    "external_RPC": 0
+  },
+  "isolated_old_and_new_http": {
+    "status": "PASS",
+    "old_backup": {
+      "status": "PASS",
+      "html_js_match": true,
+      "exact_saved_jobs_read": 1,
+      "external_network_attempts": 0,
+      "POSTs": 0,
+      "clean_exit": true,
+      "source_recent_count": 0,
+      "history_count": 7
+    },
+    "candidate": {
+      "status": "PASS",
+      "html_js_match": true,
+      "exact_saved_jobs_read": 1,
+      "external_network_attempts": 0,
+      "POSTs": 0,
+      "clean_exit": true,
+      "source_recent_count": 0,
+      "history_count": 7
+    }
+  },
+  "switch": {
+    "dashboard_pid": 58030,
+    "saved_exact_jobs_read": 1,
+    "scanner_status": "LIVE",
+    "scanner_pid_unchanged": true,
+    "source_drift": false,
+    "html_js_match_fixed_source": true,
+    "source_recent_count": 0,
+    "history_count": 7,
+    "eligible_count": 0,
+    "d1_http": 200,
+    "d2_http": 200,
+    "d2_source_observed_at": "2026-11-01T01:26:32.578080+00:00",
+    "status": "PASS",
+    "source_sha": "e977cc09023bdfcc9ce80660aedf2d58d2febc5f",
+    "previous_installed_sha": "e069a925b71985c35b75cc8fd01eb75a9c97dd87",
+    "executor_sha256": "8898e5667ba7c8a87f11ec0a828d01abdc731d80d8c37e2b033c5f7ee4e4d864",
+    "preserved_report_files": 28,
+    "protected_file_hashes_unchanged": true,
+    "loop_remains_unloaded": true,
+    "real_rpc_or_ca_post": 0,
+    "notification_or_trade": 0,
+    "dashboard_launchagent_only_reloaded": true,
+    "rollback_exercised": false
+  },
+  "after_actual_browser": {
+    "protected_file_hashes_unchanged_after_browser": true,
+    "all_28_report_hashes_unchanged": true,
+    "installed_runtime_manifest_unchanged": true,
+    "scanner_identity_unchanged": true,
+    "scanner_status": "RUNNING",
+    "scanner_pid": 81945,
+    "scanner_code": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "scanner_last_poll": "2026-11-06T03:34:51.301172+00:00",
+    "scanner_errors": 0,
+    "scanner_raw_pending": 0,
+    "scanner_model_unprocessed": 0,
+    "production_trading": "NO_GO",
+    "dashboard_pid": 58030
+  },
+  "scanner_latest_maintenance": {
+    "runtime_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "latest_PR244_head": "438bbe20899108a858a513648ab8c8c05b11e05e",
+    "two_PR244_changed_runtime_files_match_actual_disk": {
+      "mission_agent/frank/rpc.py": {
+        "matches_latest_PR244_blob": true,
+        "git_blob": "9bee67695b9619784655ecdfaf4acb8dce8b6215"
+      },
+      "scripts/frank_local_signal_service.py": {
+        "matches_latest_PR244_blob": true,
+        "git_blob": "26f940013d7229788a9b31d76890723cd11e9920"
+      }
+    },
+    "runtime_fingerprint_matches_health": true,
+    "PID_and_start_and_restart_counter_unchanged": true,
+    "note": "PR244 maintenance blobs are identical to the isolated deployed baseline integration. No wholesale branch replacement or Scanner restart."
+  },
+  "actual_Chrome": {
+    "source_sha": "e977cc09023bdfcc9ce80660aedf2d58d2febc5f",
+    "tab": "1243264220",
+    "url": "http://127.0.0.1:8766/#cluster",
+    "actual_dashboard_reloaded": true,
+    "signals_page_verified": true,
+    "old_exact_report_before_after_reload": true,
+    "screenshot": "frank-local-e977-running-20261106.png",
+    "screenshot_sha256": "fbf134685f1c4b0f8e2e6914d330da36a684d521215dcf715c5197e4f5fe2fc3",
+    "page_kept_open": true,
+    "real_CA_POST": 0,
+    "real_RPC": 0,
+    "wallet_actions": 0,
+    "observed_console_errors": 1,
+    "console_error_class": "EXISTING_WALLET_EXTENSION_ETHEREUM_REDEFINITION_NOT_PRODUCT_ERROR",
+    "full_CA_acceptance": false,
+    "old_report_kept_original_date_and_unknown_completeness": true
+  },
+  "installed_recovery_Chrome_synthetic": {
+    "code_source": "ACTUAL_INSTALLED_E977_RELEASE",
+    "real_Handler_manager_checkpoint": true,
+    "source_transport": "SYNTHETIC_ONLY",
+    "source_before": 1,
+    "POST_before_after_refresh": 0,
+    "source_after": 2,
+    "POST_after_manual_continue": 1,
+    "same_job_identity": true,
+    "same_mint": true,
+    "DONE_and_exact_saved_report_verified_after_reload": true,
+    "historical_epoch_notice_visible": true,
+    "real_RPC": 0,
+    "real_CA_POST": 0,
+    "production_writes": 0,
+    "QA_process_exit": 0,
+    "QA_port_released": true,
+    "screenshot": "frank-installed-e977-recovery-20261106.png",
+    "screenshot_sha256": "7ae9fc99b09b54c1687844a5639107fe5b9a549b7c327210b98b930233bb3b71",
+    "observed_console_errors": 1,
+    "console_error_class": "EXISTING_WALLET_EXTENSION_ETHEREUM_REDEFINITION_NOT_PRODUCT_ERROR"
+  },
+  "previous_fixed_product_tests": {
+    "receipt": "frank-ca-material-owner-history-20261106.json",
+    "exact_same_product_sha": true,
+    "full_mac_python": 2144,
+    "full_mac_skipped": 0,
+    "frontend": 159,
+    "CI_run": 42105441705,
+    "CI_python": 2116,
+    "CI_skip": 4,
+    "CI_synthetic_browser_cases": 41,
+    "full_suite_not_repeated_this_install": true,
+    "CI_is_not_Mac": true
+  },
+  "preservation": {
+    "control_DB_health_D2_plist_RPC_config_approved_policy_and_pin_hashes": true,
+    "old_28_report_bytes": true,
+    "scanner_PID_start_code_fingerprint_restart_counter": true,
+    "MC_Loop_stays_unloaded": true,
+    "no_analysis_or_delivery_data_changed": true,
+    "per_job_1200_wire_1800_seconds_limits": true,
+    "immutable_runtime_manifest_after_verification": true,
+    "verification_created_bytecode_cleanup": {
+      "generated_bytecode_files_cleaned": 17,
+      "only_new_pyc_files_removed": true,
+      "fixed_runtime_manifest_matches": true
+    }
+  },
+  "effects": {
+    "existing_Dashboard_LaunchAgent_bootout": 1,
+    "existing_Dashboard_LaunchAgent_bootstrap": 1,
+    "existing_runner_pointer_changed": true,
+    "dashboard_PID_runtime_files_logs_changed_as_expected": true,
+    "scanner_or_loop_lifecycle_commands": 0,
+    "real_RPC": 0,
+    "real_CA_POST": 0,
+    "new_provider_or_key_or_DAS": 0,
+    "paid_actions": 0,
+    "new_monitors_or_automations": 0,
+    "mail_or_notifications": 0,
+    "wallet_signatures_or_trades": 0,
+    "merges": 0
+  },
+  "remaining_limits": [
+    "Previously captured getSignaturesForAddress 429 remains unresolved; not re-probed this update.",
+    "Full Mint/complete history and independent source/representative CA acceptance remain PARTIAL.",
+    "Historical report data and Nov1 D2 were preserved, not refreshed.",
+    "Old pre-checkpoint unfinished jobs cannot be retroactively recovered.",
+    "MC root anchor/user signed artifact and natural threshold notification latency still missing.",
+    "October original failure job/root cause remains unresolved."
+  ],
+  "verdict": {
+    "latest_local_mainline_software": "PASS",
+    "Dashboard_install_and_actual_Mac_Chrome": "PASS",
+    "Scanner_current_maintenance_blobs": "PASS",
+    "source_complete_CA": "PARTIAL",
+    "investment": "INVEST_NO_GO",
+    "production_trading": "NO_GO",
+    "independent_review": "USER_WAIVED_NO_INDEPENDENT_APPROVE"
+  },
+  "later_source_acceptance_receipt": "frank-ca-live-installed-20261106.json",
+  "scope_note": "This installation receipt remains valid for its timestamp; later real CA POST/RPC and intended report/cache/checkpoint/history writes are recorded separately.",
+  "later_narrative_context_acceptance_receipt": "frank-ca-narrative-context-20261107.json",
+  "historical_identity_note": "This receipt retains its original source/time/counters. Current product and new capture belong to the later narrative/context receipt."
+}

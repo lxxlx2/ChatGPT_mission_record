@@ -1,0 +1,386 @@
+{
+  "at_utc": "2026-11-04T14:43:52.232782+00:00",
+  "source_sha": "5f86548ccfb51144280ec16ff0431aaac966b323",
+  "base_before_this_phase": "33f2df95e9759adac0128ed39c56ecfbf1a4925d",
+  "scope": "Consolidated mainline acceptance, bounded real private-RPC source run, truthful source reporting and local HTTP connection robustness",
+  "user_authorization": {
+    "existing_local_maintenance_and_review_waiver": true,
+    "one_real_existing_CA_run_explicitly_approved": true,
+    "wire_ceiling": 1200,
+    "seconds_ceiling": 1800,
+    "free_existing_private_RPC_only": true,
+    "no_new_source_or_notification_or_trade": true
+  },
+  "repairs": [
+    {
+      "sha": "9214290c1c5e676649a717720250f1ee0204233c",
+      "defect": "MARKET_CLIENT_DISABLED incorrectly appeared as an attempted DexScreener source",
+      "red": "1 failed / 11 passed",
+      "green": "12 passed",
+      "new_source_requests": 0
+    },
+    {
+      "sha": "232cb5d5855c4268bfc2990c8c9857d0a037adcb",
+      "defect": "NOT_COLLECTED domains displayed capability paths under used sources in UI",
+      "red": "1 failed / 97 passed",
+      "green_all_frontend": "151 passed",
+      "new_source_requests": 0
+    },
+    {
+      "sha": "5f86548ccfb51144280ec16ff0431aaac966b323",
+      "defect": "default pending-connection queue loses localhost GET bursts",
+      "actual_serve_path_red": "64/100 succeeded at concurrency24",
+      "green_related": "47 passed including actual serve-path burst",
+      "fixed_queue": 64,
+      "historical_Chrome_root_cause": "UNRESOLVED; local burst mechanism is proven, original event causality is not"
+    }
+  ],
+  "tests": {
+    "local_python_command": "PYTHONPATH=<private-offline-guard>:. <test-python> -B -m pytest -q -p no:cacheprovider -p frank_offline_guard --basetemp=<unique-private-temp> tests",
+    "local_python_passed": 2077,
+    "local_python_skipped": 3,
+    "local_python_warnings": 14,
+    "local_python_seconds": 85.83,
+    "skip_reason": "unrelated Monster modules require unavailable numpy",
+    "frontend_command": "node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_ca_report_render.mjs tests/test_frank_d2_ingress_ui.mjs tests/test_frank_f01_source_only.cjs tests/test_frank_f01_failure_state.cjs",
+    "frontend_passed": 151,
+    "syntax": "PASS",
+    "CI": {
+      "run_id": 41808345542,
+      "job_id": 126500924314,
+      "head": "5f86548ccfb51144280ec16ff0431aaac966b323",
+      "merge_ref": "a3bc43f69",
+      "conclusion": "success",
+      "raw_logs_read_back": true,
+      "python_passed": 2076,
+      "python_skipped": 4,
+      "frontend_passed": 151,
+      "Chromium_cases": 41,
+      "page_errors": 0,
+      "synthetic_POST": 8,
+      "real_RPC_or_CA_POST": 0,
+      "production_requests": 0,
+      "not_used_as_Mac_evidence": true
+    }
+  },
+  "real_source_once": {
+    "status": "COMPLETED_INCOMPLETE_EVIDENCE",
+    "source_sha": "33f2df95e9759adac0128ed39c56ecfbf1a4925d",
+    "started_at_utc": "2026-11-04T09:11:52.694272+00:00",
+    "finished_at_utc": "2026-11-04T09:17:33.512626+00:00",
+    "elapsed_seconds": 340.818,
+    "wire_attempts": 572,
+    "captured_wire_attempts": 572,
+    "cache_hits": 15,
+    "max_wire_attempts": 1200,
+    "max_elapsed_seconds": 1800,
+    "provider_count": 1,
+    "provider_scope": "EXISTING_PRIVATE_RPC_ONLY",
+    "market_narrative_other_sources_requested": 0,
+    "production_data_writes": 0,
+    "notifications_or_trades": 0,
+    "product_outcome": "INCOMPLETE_EVIDENCE",
+    "raw_manifest_sha256": "46970ff8ee00b45d053d34775b39fa36c2ede92aa9ea2c2c638352d0dcd00e39",
+    "report_sha256": "c0e92578dcfd8730d6541be27c7683be7cfe739b88ed3eda8b7674ba074a6ed1"
+  },
+  "real_capture_validation": {
+    "status": "PASS",
+    "wire_attempts": 572,
+    "request_hashes_verified": 572,
+    "response_hashes_and_envelopes_verified": 566,
+    "http_429_attempts": 6,
+    "snapshot_context_slots_observed": [
+      465246987,
+      465246989,
+      465246992,
+      465246993,
+      465246996
+    ],
+    "original_capture_report_sha256": "c0e92578dcfd8730d6541be27c7683be7cfe739b88ed3eda8b7674ba074a6ed1",
+    "derived_report_sha256": "a697ee372715188488aaa3d7a1cc717309fe4356dc6cf55dff7f40ef7a82fc28",
+    "derivation_changes_only_analysis_completeness": true,
+    "new_rpc_for_derivation": 0,
+    "holder_rankings_status": "UNAVAILABLE",
+    "special_role_status": "INCOMPLETE_EVIDENCE",
+    "all_special_normalization_complete": false,
+    "holder_rows": 20,
+    "history_window_count": 17,
+    "history_stop_reasons": {
+      "PAGE_LIMIT": 13,
+      "PROVIDER_EMPTY_PAGE": 4
+    },
+    "required_evidence_states": {
+      "contract": "PARTIAL",
+      "holder_balances": "PARTIAL",
+      "holder_roles": "PARTIAL",
+      "wallet_history": "PARTIAL",
+      "control_attribution": "PARTIAL",
+      "market": "NOT_COLLECTED",
+      "independent_sources": "NOT_COLLECTED",
+      "narrative": "NOT_COLLECTED"
+    }
+  },
+  "real_source_derivation": {
+    "collector_executed_at_sha": "33f2df95e9759adac0128ed39c56ecfbf1a4925d",
+    "final_report_contract_derived_at_sha": "5f86548ccfb51144280ec16ff0431aaac966b323",
+    "changes_only_analysis_completeness": true,
+    "requeries_after_once": 0,
+    "unused_budget_not_rolled_over": true
+  },
+  "legacy_cache_replay": {
+    "source_sha": "33f2df95e9759adac0128ed39c56ecfbf1a4925d",
+    "scope": "HISTORICAL_EXPIRED_CACHE_COMPATIBILITY_NOT_REAL_SOURCE_ACCEPTANCE",
+    "status": "PASS",
+    "elapsed_seconds": 0.013423042022623122,
+    "source_report_observed_at": 1793545833.653012,
+    "generated_at_is_not_new_source_observation": true,
+    "network_wire_requests": 0,
+    "cache_ttl_changed": false,
+    "cache_miss_fallback_to_network": false,
+    "logical_call_limit": 100,
+    "logical_calls": 17,
+    "cache_hits": 5,
+    "cache_misses": 12,
+    "miss_methods": {
+      "getProgramAccounts": 1,
+      "getSignaturesForAddress": 11
+    },
+    "expired_hits": 5,
+    "product_outcome": "INCOMPLETE_EVIDENCE",
+    "report_sha256": "cc9910d645cb5e5bcc9eaa9559d565f8bf28a1337b9edf3f077e27c0f1418389"
+  },
+  "local_connection_probe": [
+    {
+      "queue": 5,
+      "port_released": true,
+      "thread_stopped": true,
+      "server_errors": 0,
+      "phases": [
+        {
+          "concurrency": 6,
+          "attempted": 100,
+          "passed": 100,
+          "failed": 0,
+          "elapsed_seconds": 0.113822,
+          "latency_seconds": {
+            "p50": 0.00579,
+            "p95": 0.012959,
+            "max": 0.018507
+          }
+        },
+        {
+          "concurrency": 24,
+          "attempted": 100,
+          "passed": 49,
+          "failed": 51,
+          "elapsed_seconds": 0.174257,
+          "latency_seconds": {
+            "p50": 0.034807,
+            "p95": 0.068877,
+            "max": 0.06986
+          }
+        }
+      ]
+    },
+    {
+      "queue": 64,
+      "port_released": true,
+      "thread_stopped": true,
+      "server_errors": 0,
+      "phases": [
+        {
+          "concurrency": 6,
+          "attempted": 100,
+          "passed": 100,
+          "failed": 0,
+          "elapsed_seconds": 0.127662,
+          "latency_seconds": {
+            "p50": 0.005873,
+            "p95": 0.019589,
+            "max": 0.024609
+          }
+        },
+        {
+          "concurrency": 24,
+          "attempted": 100,
+          "passed": 100,
+          "failed": 0,
+          "elapsed_seconds": 0.150512,
+          "latency_seconds": {
+            "p50": 0.031068,
+            "p95": 0.056116,
+            "max": 0.058465
+          }
+        }
+      ]
+    }
+  ],
+  "release": {
+    "status": "PASS",
+    "observed_at": "2026-11-04T14:39:46.826331+00:00",
+    "source_sha": "5f86548ccfb51144280ec16ff0431aaac966b323",
+    "old_dashboard_pid": 70005,
+    "dashboard_pid": 83492,
+    "scanner_pid_unchanged": true,
+    "scanner_pid": 81945,
+    "scanner_code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "scanner_status": "LIVE",
+    "source_drift": false,
+    "control_health_status": "STALE",
+    "source_recent_count": 0,
+    "history_count": 7,
+    "eligible_count": 0,
+    "current_balance_verified": false,
+    "html_js_match_pinned_source": true,
+    "d1_http": 200,
+    "d2_http": 200,
+    "d2_source_observed_at": "2026-11-01T01:26:32.578080+00:00",
+    "preserved_byte_hashes": {
+      "control_db": true,
+      "control_health": true,
+      "d2_source": true,
+      "plist": true
+    },
+    "old_backup_source_files": 485,
+    "old_backup_import_preflight": "PASS",
+    "loop_remains_unloaded": true,
+    "rpc_or_ca_post_calls_by_release": 0,
+    "notification_send_calls": 0,
+    "rollback_exercised": false,
+    "prior_running_sha": "232cb5d5855c4268bfc2990c8c9857d0a037adcb",
+    "git_parent_sha": "232cb5d5855c4268bfc2990c8c9857d0a037adcb"
+  },
+  "successful_dashboard_source_switches_this_phase": 4,
+  "scanner_lifecycle_commands_by_this_phase": 0,
+  "scanner_baseline_changes": [
+    {
+      "old_recorded_pid": 3402,
+      "observed_pid": 62110,
+      "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "loaded_source_sha256": "c7a453d5a579c9425dd964f1945b887b3d4ebe92d8159cd8db17a85471958085",
+      "cwd_matches_existing_release": true,
+      "source_drift": false,
+      "status": "LIVE",
+      "consecutive_errors": 0,
+      "scanner_restart_by_this_agent": false,
+      "restart_cause": "UNRESOLVED_NOT_ATTRIBUTED",
+      "precondition_failure_unloaded": false,
+      "precondition_failure_changed_runner": false
+    },
+    {
+      "old_recorded_pid": 62110,
+      "current_pid": 81945,
+      "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "loaded_source_sha256": "c7a453d5a579c9425dd964f1945b887b3d4ebe92d8159cd8db17a85471958085",
+      "cwd_matches": true,
+      "status": "LIVE",
+      "consecutive_errors": 0,
+      "restart_by_this_agent": false,
+      "cause": "UNRESOLVED_NOT_ATTRIBUTED",
+      "failed_precondition_did_not_unload_or_change_runner": true
+    }
+  ],
+  "final_runtime": {
+    "at_utc": "2026-11-04T14:41:26.363644+00:00",
+    "scanner": {
+      "pid": 81945,
+      "status": "LIVE",
+      "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "consecutive_errors": 0,
+      "source_drift": false,
+      "raw_pending": 0,
+      "model_unprocessed": 0
+    },
+    "readonly_counts": {
+      "signatures": 6392,
+      "v1_seen": 6392,
+      "signals": 7,
+      "outbox": 9,
+      "gmail_delivery": 2,
+      "email_content": 2
+    },
+    "source_sha": "5f86548ccfb51144280ec16ff0431aaac966b323",
+    "dashboard_pid": 83492,
+    "report_files_preserved": 28,
+    "no_extended_scanner_raw_replay_claim": true
+  },
+  "actual_Chrome": {
+    "production_page": "http://127.0.0.1:8766/#cluster",
+    "latest_source_installed": true,
+    "single_query_no_depth_selector": true,
+    "generic_fixed_30_quote_absent": true,
+    "existing_job_GET_restore": true,
+    "invalid_CA_hides_old_report": true,
+    "selected_report_recovers": true,
+    "legacy_completeness_not_fabricated": true,
+    "legacy_owner_labels_unverified": true,
+    "F01_recent": 0,
+    "F01_history": 7,
+    "eligible": 0,
+    "D2_rows": 100,
+    "D2_pages": 49,
+    "D2_source_not_refreshed": true,
+    "local_synthetic_POST": 2,
+    "synthetic_multi_pool": {
+      "chain_raw": 140,
+      "attribution_raw": 0,
+      "unknown_raw": 860,
+      "unknown_percent": 86,
+      "same_owner_vault_and_auxiliary_separate": true
+    },
+    "synthetic_no_pool": {
+      "chain_raw": 0,
+      "attribution_raw": 100,
+      "unknown_raw": 900,
+      "unknown_percent": 90,
+      "unknown_owners": 11
+    },
+    "synthetic_is_not_real_identity_proof": true,
+    "real_report_read_only_viewer": {
+      "GET": 353,
+      "POST": 0,
+      "market_independent_narrative_visible_as_no_source_collected": true,
+      "no_fake_job_ID": true,
+      "closed_after_acceptance": true
+    },
+    "final_page_kept_open": true
+  },
+  "remaining": [
+    "Complete Mint ranks unavailable: six getProgramAccounts wire attempts all HTTP429. No paid source or replacement provider used.",
+    "All special identities/beneficial control, independent source parity and full economic history remain incomplete.",
+    "Current wallet D2 source remains dated Nov1; no new whole-wallet collection was included in the approved CA run.",
+    "Original October failed-job identity and original transient Chrome transport trigger remain unproven.",
+    "Natural new recognized BUY latency/new notification sample and MC user-held-key signature artifact remain missing; research and trading NO_GO."
+  ],
+  "verdict": {
+    "source_repairs_and_regression": "PASS",
+    "local_Mac_installation_and_UI": "PASS",
+    "bounded_actual_RPC_capture": "COMPLETED_WITH_GAPS",
+    "complete_real_source_product_acceptance": "PARTIAL",
+    "whole_original_requirements": "PARTIAL",
+    "investment": "INVEST_NO_GO",
+    "trading": "TRADE_NO_GO"
+  },
+  "evidence_hashes": {
+    "accepted-final-full.txt": "b80cb3ceecfd1fd27f3c601e66b5ebcfacdfc552b8a33b97470d8581ca12a707",
+    "accepted-final-node.txt": "b794f8e29b3e2ec3fea0ea5245239064f1b7e47f408571026b3db22b4ade8fb6",
+    "market-source-red.txt": "53e515e573261a43b53c095f153694a3e166ee3c1722c97e2ac6996c70a8c4a7",
+    "market-source-green.txt": "ebf302f1eb8a6cd74d7a77fe3ffd8012b525db1cd45cc9d82b753dc770614df0",
+    "source-ui-red.txt": "4780cfd1f1135220e2e6c376ea70c7b689098a302637e738429960f3c7f96e68",
+    "backlog-red.txt": "c7bc2e83d83d3a30af41b134cd916256cb0cbb3b1ad275e89b4d3c8a250aaa4b",
+    "backlog-green.txt": "8b76e984684eff9c7c12a9a2836746812fbe1b4592272f489137f4cfbe06d71f",
+    "real_source_once.py": "3c7ed90ab09fa606bc3b639c6f7afe6574a9aa2d5f80907bae4f6cb95683ecb2",
+    "run_real_once_bounded.py": "e4ff91ca2dcb34c3251f9b5c66464b72cd71a0db54d66e33a3db532c1a8c9b67",
+    "real-source-once/wire-manifest.json": "46970ff8ee00b45d053d34775b39fa36c2ede92aa9ea2c2c638352d0dcd00e39",
+    "real-source-once/report.json": "c0e92578dcfd8730d6541be27c7683be7cfe739b88ed3eda8b7674ba074a6ed1",
+    "real-source-once/report-source-corrected.json": "a697ee372715188488aaa3d7a1cc717309fe4356dc6cf55dff7f40ef7a82fc28",
+    "real-capture-validation.json": "84762e9ce5749c7aeab4e9a62ac1c20f26eedf1f54ac2d33bf678712d8f8c32f",
+    "backlog-release-result.json": "0435bbb5b6638ac469bceb65a0f3ed5ded4e32734c78b004605eb478ae22da70",
+    "accepted-runtime-final.json": "e2342acb79aa6b317efe05bc84a79b38e95ec17315cfdeff439528ff13a4c24b"
+  },
+  "screenshot_sha256": {
+    "frank-real-source-before-ui-fix-20261104.jpg": "1a605ea7bab5f22e4e255671dc1a79ea3a8c8d0fa70f86a309c6934471e4a84b",
+    "frank-real-source-acceptance-20261104.jpg": "ab9390724465eef92696964bd746a3d4d404a8b8a6b394e6a7747205767a00e1",
+    "frank-final-installed-20261104.jpg": "8afcb6559df1fbdd0ae378a86dbc8438856e98853571b8f2fd4c0e0a81556561"
+  }
+}

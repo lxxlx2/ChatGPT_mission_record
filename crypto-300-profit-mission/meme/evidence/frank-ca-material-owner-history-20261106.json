@@ -1,0 +1,550 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-06T03:52:24.242721+07:00",
+  "scope": "EXISTING_MANUAL_CA_MAINTENANCE_NOT_PROFIT_RESEARCH",
+  "source": {
+    "pr": 220,
+    "head": "e977cc09023bdfcc9ce80660aedf2d58d2febc5f",
+    "parent": "b0dc014d4512a28257017e16fc22725d9625c757",
+    "implementation_files": [
+      "local-agent/mission_agent/meme/cluster.py",
+      "local-agent/tests/test_meme_wallet_cluster.py",
+      "local-agent/tests/test_meme_owner_account_history.py",
+      "meme/WALLET_CLUSTER_LOCAL_TOOL.md"
+    ],
+    "delta_files": 4,
+    "insertions": 51,
+    "deletions": 12,
+    "installed_dashboard_sha": "e069a925b71985c35b75cc8fd01eb75a9c97dd87",
+    "pr244_head": "438bbe20899108a858a513648ab8c8c05b11e05e",
+    "pr244_changed_this_iteration": false,
+    "main_rules_ref": "85604fdf40a2c07682a999918c657b2d73202b08",
+    "AGENTS_blob": "6a1217d85e217754dea557bcd4e23982efaf3949",
+    "DEVELOPMENT_RULES_blob": "5e8f89418bf206ee77dec9a803b808262d62a72a"
+  },
+  "defect": {
+    "status": "REPRODUCED_AND_FIXED",
+    "kind": "MATERIAL_ORDINARY_OWNER_HISTORY_COVERAGE_GAP",
+    "prior_report_sha256": "494b480cef5d31f158eff11be40d2e2b8a4e6e22c0de380db13105c1cd2086f4",
+    "prior_snapshot_unscanned_material_ordinary": [
+      {
+        "rank": 8,
+        "supply_pct": "1.2443"
+      },
+      {
+        "rank": 9,
+        "supply_pct": "1.0701"
+      },
+      {
+        "rank": 11,
+        "supply_pct": "1.0015"
+      }
+    ],
+    "prior_snapshot_combined_supply_pct": "3.3159",
+    "prior_report_honestly_marked_NOT_SCANNED": true,
+    "minimal_fix": "Add ORDINARY to material Owner history eligibility; preserve Owner aggregation, related targets, role labels and whole-job limits.",
+    "new_risk_or_control_label": false,
+    "materiality_threshold_changed": false,
+    "fixed_budget": {
+      "max_wire_attempts": 1200,
+      "max_elapsed_seconds": 1800
+    },
+    "red_test": {
+      "failed": 3,
+      "passed_controls": 4,
+      "deselected": 53,
+      "log_sha256": "4f8a44ee3e05461ace57fecaf5a3beff2bc196fce76d53afa333c7b98de0727f"
+    },
+    "new_test_cases": 7,
+    "negative_controls": [
+      "BELOW_MATERIALITY",
+      "SPLIT_BALANCE_OWNER_AGGREGATION",
+      "EXACT_THRESHOLD",
+      "LP",
+      "CEX",
+      "SUPPLY_UNAVAILABLE",
+      "RPC_BUDGET_PROPAGATION"
+    ]
+  },
+  "mac_isolated_offline": {
+    "code_sha": "e977cc09023bdfcc9ce80660aedf2d58d2febc5f",
+    "environment": {
+      "python": "3.14.7",
+      "pytest": "8.3.5",
+      "numpy": "2.5.3",
+      "new_dependencies_installed": 0
+    },
+    "full": {
+      "passed": 2144,
+      "skipped": 0,
+      "warnings": 14,
+      "seconds": 86.6,
+      "log_sha256": "cad7bbc4c1f2201784bc49531da8b6eadf7791a04ef5d467786454a8d5354042",
+      "command": "PYTHONPATH=<DOCS_CHECKOUT>/crypto-300-profit-mission/meme/evidence/frank-scanner-rpc-maintenance-20261031:. <EXISTING_PYTHON> -B -m pytest -q -p no:cacheprovider -p frank_offline_guard --basetemp=<ISOLATED_TEMP>/pytest-final-full tests"
+    },
+    "targeted": {
+      "passed": 60,
+      "seconds": 0.16,
+      "log_sha256": "0f3abf87862ef23c15a27a12d235752b1deed665556c47771801a7583723db22",
+      "command": "<EXISTING_PYTHON> -B -m pytest -q -p no:cacheprovider tests/test_meme_wallet_cluster.py tests/test_meme_owner_account_history.py"
+    },
+    "frontend": {
+      "passed": 159,
+      "failed": 0,
+      "log_sha256": "8d6617fae059d5ff8bd6b5902f59952e11a948aa9d28ae739aba99a31c1fbeea",
+      "command": "node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_ca_report_render.mjs tests/test_frank_d2_ingress_ui.mjs tests/test_frank_f01_source_only.cjs tests/test_frank_f01_failure_state.cjs"
+    },
+    "path_placeholders_only_for_public_privacy": true,
+    "full_test_cwd": "<PRODUCT_CHECKOUT>/crypto-300-profit-mission/local-agent",
+    "prior_intermediate_full_run": "INTERRUPTED_AFTER_FINAL_VARIABLE_RENAME_NOT_COUNTED_AS_PASS",
+    "prior_targeted_fixture_expectation": "1 FAIL / 59 PASS before updating intended ordinary eligibility and no-acquisition funding stub; final60 all pass",
+    "syntax_and_diff_check": "PASS",
+    "network_guard_docs_ref": "f90d740b355d0b9b5b0754b087df2b10d7491508"
+  },
+  "github_ci": {
+    "run_number": 113,
+    "run_id": 42105441705,
+    "job_id": 127518914030,
+    "conclusion": "success",
+    "url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/42105441705",
+    "tested_merge_sha": "7758a2be1cd3123a682ca81b0df53e57f57ba5ab",
+    "feature_parent": "e977cc09023bdfcc9ce80660aedf2d58d2febc5f",
+    "python_passed": 2116,
+    "python_skipped": 4,
+    "python_seconds": 62.84,
+    "skip_reasons": "NOT_PRINTED_BY_Q_DO_NOT_INFER",
+    "frontend_passed": 159,
+    "synthetic_chromium_checks": 41,
+    "page_errors": [],
+    "blocked_requests": [],
+    "synthetic_posts": 8,
+    "real_rpc": 0,
+    "real_ca_posts": 0,
+    "production_requests": 0,
+    "browser": "151.0.7922.34",
+    "raw_logs_read_back": true,
+    "not_mac_evidence": true
+  },
+  "live_read_only": {
+    "status": "STOPPED",
+    "stop_type": "SourceStop",
+    "source_sha": "e977cc09023bdfcc9ce80660aedf2d58d2febc5f",
+    "scope": "CURRENT_TOP20_HISTORY_ONLY_NOT_FULL_CA_ACCEPTANCE",
+    "started_at_utc": "2026-11-05T20:40:48.694256+00:00",
+    "finished_at_utc": "2026-11-05T20:43:01.492767+00:00",
+    "wire_attempts": 286,
+    "adapter_wire_attempts": 286,
+    "cache_hits": 179,
+    "methods": {
+      "getAccountInfo": 1,
+      "getTokenSupply": 1,
+      "getTokenLargestAccounts": 1,
+      "getMultipleAccounts": 2,
+      "getSignaturesForAddress": 34,
+      "getTransaction": 247
+    },
+    "elapsed_seconds": 132.798,
+    "max_wire_attempts": 1200,
+    "max_elapsed_seconds": 1800,
+    "prior_report_sha256": "494b480cef5d31f158eff11be40d2e2b8a4e6e22c0de380db13105c1cd2086f4",
+    "seed_cache_sha256": "44a82ce58fc0dea4b0b6d671ca02da7de43a915b5a3f732ea9ccd81f35adaee3",
+    "original_seed_unchanged": true,
+    "script_sha256": "87ae8dc4e9256c5b4563527928cbf9ae6b08347274a8e906801a8d2f1202bd0f",
+    "manifest_sha256": "3c5b0c7e9c3e5ca8ef36de5bf9a9a3d4869f8daa9f200d79db1750d3e2c63b21",
+    "report_sha256": null,
+    "retry_or_fallback": 0,
+    "product_ca_posts": 0,
+    "production_writes": 0,
+    "notifications_or_trades": 0,
+    "gpa_market_pool_narrative_reads": 0,
+    "new_sources": 0
+  },
+  "offline_prefix_replay": {
+    "status": "PASS_STOPPED_PREFIX_REPLAY",
+    "mode": "STRICT_REQUEST_SEQUENCE",
+    "actual_network_attempts": 0,
+    "validated_capture_entries": 286,
+    "replayed_wire_requests": 286,
+    "cache_hits": 179,
+    "capture_manifest_sha256": "3c5b0c7e9c3e5ca8ef36de5bf9a9a3d4869f8daa9f200d79db1750d3e2c63b21",
+    "live_report_sha256": null,
+    "replay_report_sha256": null,
+    "partial_evidence_sha256": "4b12004e3c5e510452145c2e6f04a6fb5e3cef9d3f37b89d9838fe6a255fd167",
+    "source_stop_reproduced": true,
+    "success_report_written": false,
+    "excluded_volatile_fields": [],
+    "history_complete": false,
+    "real_rpc": 0
+  },
+  "prefix_audit": {
+    "status": "PASS_PREFIX_AUDIT_NOT_FULL_ANALYSIS",
+    "prior_report_sha256": "494b480cef5d31f158eff11be40d2e2b8a4e6e22c0de380db13105c1cd2086f4",
+    "prior_unscanned_material_ordinary": [
+      {
+        "rank": 8,
+        "supply_pct": "1.2443"
+      },
+      {
+        "rank": 9,
+        "supply_pct": "1.0701"
+      },
+      {
+        "rank": 11,
+        "supply_pct": "1.0015"
+      }
+    ],
+    "snapshot_slots": {
+      "supply": 465843609,
+      "largest_accounts": 465843614,
+      "account_batches": [
+        465843614,
+        465843616
+      ]
+    },
+    "snapshot_atomic": false,
+    "current_top20": [
+      {
+        "rank": 1,
+        "supply_pct": "29.4954",
+        "role": "PROGRAM_OWNED_UNRESOLVED",
+        "old_token_account_rank": 1,
+        "planned_adaptive": true,
+        "actual_history_attempts": 2,
+        "history_stop_reasons": [
+          "PAGE_LIMIT",
+          "PAGE_LIMIT"
+        ]
+      },
+      {
+        "rank": 2,
+        "supply_pct": "2.4466",
+        "role": "ORDINARY",
+        "old_token_account_rank": 12,
+        "planned_adaptive": true,
+        "actual_history_attempts": 3,
+        "history_stop_reasons": [
+          "PAGE_LIMIT",
+          "PROVIDER_EMPTY_PAGE",
+          "PROVIDER_EMPTY_PAGE"
+        ]
+      },
+      {
+        "rank": 3,
+        "supply_pct": "2.2381",
+        "role": "ORDINARY",
+        "old_token_account_rank": 2,
+        "planned_adaptive": true,
+        "actual_history_attempts": 2,
+        "history_stop_reasons": [
+          "PAGE_LIMIT",
+          "PROVIDER_EMPTY_PAGE"
+        ]
+      },
+      {
+        "rank": 4,
+        "supply_pct": "2.1153",
+        "role": "UNRESOLVED",
+        "old_token_account_rank": null,
+        "planned_adaptive": true,
+        "actual_history_attempts": 4,
+        "history_stop_reasons": [
+          "PAGE_LIMIT",
+          "PAGE_LIMIT",
+          "PROVIDER_EMPTY_PAGE",
+          "PAGE_LIMIT"
+        ]
+      },
+      {
+        "rank": 5,
+        "supply_pct": "2.0228",
+        "role": "ORDINARY",
+        "old_token_account_rank": 4,
+        "planned_adaptive": true,
+        "actual_history_attempts": 4,
+        "history_stop_reasons": [
+          "PAGE_LIMIT",
+          "PAGE_LIMIT",
+          "PAGE_LIMIT",
+          "INTERRUPTED"
+        ]
+      },
+      {
+        "rank": 6,
+        "supply_pct": "1.7229",
+        "role": "UNRESOLVED",
+        "old_token_account_rank": 5,
+        "planned_adaptive": true,
+        "actual_history_attempts": 2,
+        "history_stop_reasons": [
+          "PAGE_LIMIT",
+          "PAGE_LIMIT"
+        ]
+      },
+      {
+        "rank": 7,
+        "supply_pct": "1.5260",
+        "role": "ORDINARY",
+        "old_token_account_rank": 6,
+        "planned_adaptive": true,
+        "actual_history_attempts": 0,
+        "history_stop_reasons": []
+      },
+      {
+        "rank": 8,
+        "supply_pct": "1.4851",
+        "role": "UNRESOLVED",
+        "old_token_account_rank": 7,
+        "planned_adaptive": true,
+        "actual_history_attempts": 0,
+        "history_stop_reasons": []
+      },
+      {
+        "rank": 9,
+        "supply_pct": "1.2443",
+        "role": "ORDINARY",
+        "old_token_account_rank": 8,
+        "planned_adaptive": true,
+        "actual_history_attempts": 0,
+        "history_stop_reasons": []
+      },
+      {
+        "rank": 10,
+        "supply_pct": "0.8820",
+        "role": "ORDINARY",
+        "old_token_account_rank": 18,
+        "planned_adaptive": false,
+        "actual_history_attempts": 0,
+        "history_stop_reasons": []
+      },
+      {
+        "rank": 11,
+        "supply_pct": "0.8674",
+        "role": "ORDINARY",
+        "old_token_account_rank": null,
+        "planned_adaptive": false,
+        "actual_history_attempts": 0,
+        "history_stop_reasons": []
+      },
+      {
+        "rank": 12,
+        "supply_pct": "0.8299",
+        "role": "ORDINARY",
+        "old_token_account_rank": 14,
+        "planned_adaptive": false,
+        "actual_history_attempts": 0,
+        "history_stop_reasons": []
+      },
+      {
+        "rank": 13,
+        "supply_pct": "0.8055",
+        "role": "ORDINARY",
+        "old_token_account_rank": 15,
+        "planned_adaptive": false,
+        "actual_history_attempts": 0,
+        "history_stop_reasons": []
+      },
+      {
+        "rank": 14,
+        "supply_pct": "0.7856",
+        "role": "ORDINARY",
+        "old_token_account_rank": 16,
+        "planned_adaptive": false,
+        "actual_history_attempts": 0,
+        "history_stop_reasons": []
+      },
+      {
+        "rank": 15,
+        "supply_pct": "0.7730",
+        "role": "UNRESOLVED",
+        "old_token_account_rank": 17,
+        "planned_adaptive": false,
+        "actual_history_attempts": 0,
+        "history_stop_reasons": []
+      },
+      {
+        "rank": 16,
+        "supply_pct": "0.7710",
+        "role": "ORDINARY",
+        "old_token_account_rank": 19,
+        "planned_adaptive": false,
+        "actual_history_attempts": 0,
+        "history_stop_reasons": []
+      },
+      {
+        "rank": 17,
+        "supply_pct": "0.6861",
+        "role": "ORDINARY",
+        "old_token_account_rank": null,
+        "planned_adaptive": false,
+        "actual_history_attempts": 0,
+        "history_stop_reasons": []
+      },
+      {
+        "rank": 18,
+        "supply_pct": "0.6836",
+        "role": "ORDINARY",
+        "old_token_account_rank": null,
+        "planned_adaptive": false,
+        "actual_history_attempts": 0,
+        "history_stop_reasons": []
+      },
+      {
+        "rank": 19,
+        "supply_pct": "0.6821",
+        "role": "UNRESOLVED",
+        "old_token_account_rank": null,
+        "planned_adaptive": false,
+        "actual_history_attempts": 0,
+        "history_stop_reasons": []
+      },
+      {
+        "rank": 20,
+        "supply_pct": "0.6661",
+        "role": "UNRESOLVED",
+        "old_token_account_rank": null,
+        "planned_adaptive": false,
+        "actual_history_attempts": 0,
+        "history_stop_reasons": []
+      }
+    ],
+    "current_material_ordinary_outside_shallow": [
+      7,
+      9
+    ],
+    "current_adaptive_planned": 9,
+    "current_owners_with_any_history_attempt": 6,
+    "new_material_outside_prefix_history_read": false,
+    "captured_transaction_responses": 247,
+    "captured_failed_transactions": 14,
+    "partial_economic_counts": {
+      "trades": 155,
+      "funding": 3,
+      "consolidations": 78,
+      "edges": 157,
+      "history_attempts": 17,
+      "history_windows": 12,
+      "transaction_errors": 0
+    },
+    "duplicate_economic_records": 0,
+    "failed_tx_economic_records": 0,
+    "repeat_partial_hash_equal": true,
+    "partial_sha256": "4b12004e3c5e510452145c2e6f04a6fb5e3cef9d3f37b89d9838fe6a255fd167",
+    "real_rpc_in_audit": 0,
+    "success_report_written": false,
+    "history_complete": false
+  },
+  "provider_console_read_only": {
+    "status": "PASS",
+    "request_and_response_structural_identity": true,
+    "canonical_sha256": [
+      "4fd523be10fafcbd5fd796619d7c33c7efadf3b0206486a2c06fbcec4410cd98",
+      "58146bd5f9e6e0af858d3829c18c378b76a25b15ac1112b0e7d1847c2db511ee"
+    ],
+    "provider_time_bangkok": "2026-11-06 03:43:01",
+    "local_request_started_at_utc": "2026-11-05T20:43:01.361117+00:00",
+    "provider_displayed_response_ms": 0,
+    "local_network_elapsed_seconds": 0.12662545905914158,
+    "duration_denominators_differ": true,
+    "account_login_required": false,
+    "new_rpc_calls": 0,
+    "paid_actions": 0,
+    "api_key_revealed": false,
+    "specific_capacity_rule": "UNRESOLVED",
+    "dashboard_average_CU_s_last5m_observed": 2.7,
+    "dashboard_success_rate_last1h_displayed": "99.8%",
+    "dashboard_invalid_requests_last1h_displayed": 1,
+    "dashboard_throughput_percent_last1h_displayed": "0%",
+    "aggregate_metrics_do_not_disprove_one_rejection": true
+  },
+  "actual_google_chrome": {
+    "tab_id": "1243264091",
+    "kind": "STATIC_SANITIZED_CAPTURE_EVIDENCE_VIEW_NOT_PRODUCT_OR_LIVE_CA_ACCEPTANCE",
+    "source_sha_displayed": "e977cc09023bdfcc9ce80660aedf2d58d2febc5f",
+    "PARTIAL_and_SOURCE_BLOCKED_visible": true,
+    "planned_vs_actual_history_visible": true,
+    "new_material_owner_ranks_7_9_unread_visible": true,
+    "production_NO_GO_visible": true,
+    "screenshot_file": "frank-ca-material-source-blocked-20261106.png",
+    "screenshot_sha256": "9ddea579993ca9f3e6729ff1d0c589ed984e8fe1ff997d716215ab7d3fc07367",
+    "browser_extension_error": "1 preexisting wallet extension Cannot redefine property ethereum; no wallet action; not product error",
+    "qa_server": {
+      "GETs": 2,
+      "POSTs": 0,
+      "real_rpc": 0,
+      "production_writes": 0,
+      "port": 60684,
+      "cleanly_closed": true
+    },
+    "temporary_qa_server_exited": true,
+    "page_kept_open": true,
+    "browser_product_feature_acceptance_this_iteration": "NOT_RUN",
+    "prior_b0dc_checkpoint_Chrome_evidence_retains_old_SHA_scope": true
+  },
+  "runtime_after": {
+    "status": "RUNNING",
+    "pid": 81945,
+    "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "source_drift": false,
+    "consecutive_errors": 0,
+    "raw_pending": 0,
+    "model_unprocessed": 0,
+    "production_trading": "NO_GO",
+    "last_poll_at": "2026-11-05T20:47:51.969184+00:00",
+    "loaded_source_sha256": "c7a453d5a579c9425dd964f1945b887b3d4ebe92d8159cd8db17a85471958085"
+  },
+  "budget_ledger": {
+    "free_existing_source_user_count_limit": "UNLIMITED",
+    "new_iteration_actual_wire": 286,
+    "prior_new_authorization_phase_actual_wire": 443,
+    "new_authorization_phase_total_actual_wire": 729,
+    "historical_original_run_actual_wire_separate": 572,
+    "offline_replay_actual_wire": 0,
+    "no_replay_counts_added_to_real": true
+  },
+  "privacy": {
+    "raw_requests_responses_and_cache": "PRIVATE_OUTSIDE_GIT",
+    "wallet_addresses_rpc_credentials_personal_paths_not_published": true,
+    "hashes_detect_accidental_change_not_signed_trust_root": true,
+    "raw_evidence_needed_for_external_full_replay": true
+  },
+  "side_effects": {
+    "production_writes": 0,
+    "dashboard_install_or_restart": 0,
+    "LaunchAgent_operations": 0,
+    "real_ca_posts": 0,
+    "new_provider_key_or_DAS": 0,
+    "paid_actions": 0,
+    "monitors_or_automations": 0,
+    "mail_or_notifications": 0,
+    "signatures_or_trades": 0,
+    "merges": 0
+  },
+  "remaining_blockers": [
+    "THIS_RUN_GET_SIGNATURES_429_NO_RETRY_AFTER_SPECIFIC_CAPACITY_RULE_UNRESOLVED",
+    "NEW_MATERIAL_ORDINARY_OWNERS_PLANNED_BUT_REAL_HISTORY_NOT_REACHED",
+    "LAST_STANDARD_GPA_AVAILABILITY_CHECK_20261105_151216_UTC_WAS_429_NOT_RECHECKED_THIS_ITERATION",
+    "NO_FULL_MINT_ALL_ACCOUNT_HISTORY_INDEPENDENT_MARKET_NARRATIVE_OR_REPRESENTATIVE_CASE_ACCEPTANCE",
+    "NEW_CANDIDATE_NOT_INSTALLED_OLD_OCTOBER_JOB_ID_ROOT_CAUSE_NOT_PROVEN",
+    "D2_NOV1_DATED_SIGNAL_DELIVERY_LATENCY_AND_MC_USER_SIGNATURE_GATES_REMAIN"
+  ],
+  "verdict": {
+    "code_fix": "PASS",
+    "mac_isolated_offline": "PASS",
+    "github_ci": "PASS",
+    "captured_prefix_replay_and_dedup": "PASS",
+    "bounded_live_run": "PARTIAL_SOURCE_STOPPED",
+    "new_material_owner_real_history": "NOT_REACHED",
+    "full_CA": "PARTIAL",
+    "production": "NO_GO",
+    "investment": "INVEST_NO_GO",
+    "trading": "TRADE_NO_GO",
+    "independent_review": "USER_WAIVED_NOT_INDEPENDENT_APPROVE"
+  },
+  "next_action": "No more requests in this stopped run. Obtain an explanation/resolution for the existing provider capacity rejection before another live acceptance; no paid upgrade/new source/monitor is implied.",
+  "evidence_scripts": {
+    "frank_ca_material_history_probe.py": "87ae8dc4e9256c5b4563527928cbf9ae6b08347274a8e906801a8d2f1202bd0f",
+    "frank_ca_material_history_replay.py": "a721591330a996f0b0712c7660ba237cc8036e4073fae74dbe0dd01da5675ac9",
+    "frank_ca_material_history_audit.py": "5692e21a2eba9b30a8b3c00d3d799a4947a708b1a2398bed5f37cd1731657e94"
+  },
+  "current_status_superseded_by": "frank-dashboard-local-update-20261106.json"
+}

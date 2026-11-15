@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-11-01T01:21:02.972430+00:00",
+  "verdict": "PARTIAL",
+  "scope": "Existing read-only tool maintenance and offline plan reconciliation; no P2/P3 research",
+  "authoritative_rules_main_sha": "237304fbb5e1ba2f396648ff39353e62c9f9c87e",
+  "source": {
+    "integration_sha": "ffa96a78a9cae9902d6ba297d5d2135ecbce28cc",
+    "integration_parent": "4de090643590226ba7ec78e9b6c815bb9d6c7259",
+    "integration_branch": "codex/frank-dashboard-heartbeat-restore-20261031",
+    "f01_imported_source_sha": "0b16f0ea5a3e684af3a5eb12ba12d211a6df8ad8",
+    "original_pr232_fix": {
+      "sha": "7812df52526d12ef205e471b9de2a9556269feef",
+      "parent": "0b16f0ea5a3e684af3a5eb12ba12d211a6df8ad8",
+      "full_result": "1579 passed, 3 skipped, 14 warnings in 81.59s",
+      "post_commit_result": "21 passed in 0.15s; Node 10+10 passed; JS syntax exit 0",
+      "changed_files": 3,
+      "backport_first_full_result": "1 failed / 1578 passed / 3 skipped: backport selected wrong display line; corrected before commit and reran full suite"
+    },
+    "pr244_head": "438bbe20899108a858a513648ab8c8c05b11e05e",
+    "pr244_parent": "94cb52e93264c3da1f5e6184caea36ac2f544cb1",
+    "pr244_state": "Draft/Open/unmerged"
+  },
+  "defect": {
+    "trigger": "Move non-actionable candidates into F01 history",
+    "observed": "First full integration run: 3 failed, 1566 passed, 3 skipped. Two obsolete layout assertions; one exposed dropped historical model/payment context.",
+    "repair": "Retain historical model state and Frank last buy payment in history; explicitly label WAIT/NO_BUY as non-signals; update actual Node VM rendering assertions, without skipping tests.",
+    "original_pr232_delta_files": 3,
+    "integration_delta_files": 8,
+    "baseline_limit": "Integration preserves the deployed Dashboard baseline and heartbeat correction. It does not import all PR232 parent-stack CA changes or establish combined F2/F3 readiness."
+  },
+  "tests": {
+    "platform": "User Mac, Python 3.14.7, pytest 8.3.5",
+    "full_command": "PYTHONPATH=/private/tmp/frank-pr244-evidence-20261031:. /private/tmp/frank-pr244-venv-20261031/bin/python -B -m pytest -q -p no:cacheprovider -p frank_offline_guard tests",
+    "full_result": "1569 passed, 3 skipped, 14 warnings in 83.02s",
+    "skips": "3 unrelated Monster test modules require unavailable numpy",
+    "warnings": "14 existing multithreaded fork deprecation warnings",
+    "post_commit_command": "PYTHONPATH=/private/tmp/frank-pr244-evidence-20261031:. /private/tmp/frank-pr244-venv-20261031/bin/python -B -m pytest -q -p no:cacheprovider -p frank_offline_guard tests/test_frank_f01_source_only.py tests/test_control_health_freshness.py tests/test_mission_control_dashboard.py tests/research/test_delivery_review_integration.py tests/research/test_frank_dashboard_priority_layout.py",
+    "post_commit_result": "70 passed in 0.43s",
+    "node_commands": [
+      "node tests/test_frank_f01_source_only.cjs",
+      "node tests/test_frank_f01_failure_state.cjs",
+      "node --check mission_agent/mission_control/static/app.js"
+    ],
+    "node_results": [
+      "10 passed / 0 failed",
+      "10 passed / 0 failed",
+      "exit 0"
+    ],
+    "counterexamples": [
+      "stale/future/malformed source time",
+      "SELL/closed/unknown position/runtime not LIVE",
+      "mismatched source identity",
+      "required feed 503 clears old recent cards",
+      "older success cannot resurrect cards after newer failure",
+      "older failure cannot clear newer success",
+      "failure/recovery leaves independent modules usable",
+      "historical SELL retains model state and last payment; absent from current cards",
+      "eligible remains empty; no default trade amount or execution claim"
+    ],
+    "ci_workflow_runs_for_integration_and_pr244": 0,
+    "ci_is_not_mac_acceptance": true,
+    "independent_review": "Not performed; user waived review. No independent APPROVE claimed."
+  },
+  "api": {
+    "f01": {
+      "http": 200,
+      "status": "RUNTIME_UNAVAILABLE",
+      "source_recent_count": 0,
+      "excluded_count": 7,
+      "eligible_count": 0,
+      "execution_eligibility": "NOT_ASSESSED_USER_AMOUNT_MISSING",
+      "current_balance_verified": false,
+      "full_chain_verified": false
+    },
+    "d1": {
+      "http": 200,
+      "status": "INDEXED_LOCAL_ONLY",
+      "rows": 96
+    },
+    "d2": {
+      "http": 200,
+      "status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+      "source_observed_at": "2026-10-25T07:06:02.429378+00:00"
+    }
+  },
+  "mac_isolated_browser": {
+    "closed_isolated_listener": true,
+    "isolated_port": 18768,
+    "snapshot_input_files_unchanged": true,
+    "browser_verified": {
+      "recent_cards": 0,
+      "history_rows": 7,
+      "history_model_and_payment_visible": true,
+      "stale_snapshot_runtime_fail_closed": true,
+      "d1_available": true,
+      "d2_available_on_explicit_local_read": true,
+      "d2_page_count": 44
+    },
+    "production_service_lifecycle_calls": 0,
+    "rpc_or_ca_post_calls": 0,
+    "notification_send_calls": 0
+  },
+  "real_source_compatibility_without_network": {
+    "schema_version": 2,
+    "status": "SOURCE_ONLY",
+    "scope": "FRANK_LOCAL_INDEX_SOURCE_ONLY_NO_EXECUTION_QUOTE",
+    "source_recent_count": 0,
+    "excluded_count": 7,
+    "eligible_count": 0,
+    "execution_eligibility": "NOT_ASSESSED_USER_AMOUNT_MISSING",
+    "current_balance_verified": false,
+    "full_chain_verified": false,
+    "live_notification_authorized": false,
+    "historical_rows": 7,
+    "eligible_empty": true,
+    "control_db_unchanged": true,
+    "network_calls": 0,
+    "status_check": "PASS"
+  },
+  "d2_existing_source_pagination": {
+    "observed_at": "2026-11-01T03:32:54.705051+07:00",
+    "status": "PASS",
+    "local_http_gets": 45,
+    "external_rpc_requests": 0,
+    "production_write": false,
+    "source_document_sha256": "0f051e88853679d9cbd66b1852d5be88b04bca680209edb7dcbe578ae5b6a27e",
+    "source_capture_sha256": "7b07a0298cb2209a244cb2103883bff54e3c7a8487985321fdfb29d7a1eb2f5e",
+    "source_observed_at": "2026-10-25T07:06:02.429378+00:00",
+    "imported_mints": 4305,
+    "pages_checked": 44,
+    "all_imported_rows_once": true,
+    "exact_mint_beyond_first_page_matches": true,
+    "current_chain_balance_verified": false,
+    "pnl_verified": false,
+    "usd_value_verified": false,
+    "same_slot_atomic": false
+  },
+  "production_readonly_status": {
+    "observed_at": "2026-11-01T01:18:12.858340+00:00",
+    "counts": {
+      "outbox": 9,
+      "gmail_delivery": 2,
+      "email_content": 2,
+      "signatures": 5940,
+      "v1_seen": 5940,
+      "signals": 7
+    },
+    "health": {
+      "status": "RUNNING",
+      "pid": 3402,
+      "last_successful_poll": "2026-11-01T01:18:00.294434+00:00",
+      "consecutive_errors": 0,
+      "poll_count": 79843,
+      "source_drift": false
+    }
+  },
+  "boundaries": {
+    "new_f01_installed": false,
+    "production_dashboard_sha": "4de090643590226ba7ec78e9b6c815bb9d6c7259",
+    "production_scanner_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "lifecycle_calls_this_iteration": 0,
+    "external_rpc_calls_this_iteration": 0,
+    "ca_post_calls_this_iteration": 0,
+    "mail_or_notification_send_calls_this_iteration": 0,
+    "mc_loop_started": false,
+    "new_monitor_or_automation": false,
+    "merge_or_trade": false,
+    "production": "NO_GO"
+  },
+  "remaining": [
+    "Fresh D2 owner source absent: only 2026-10-25 two-slot snapshot; no real RPC invoked",
+    "No naturally occurring new recognized BUY delivery / post-open latency sample",
+    "MC Loop lacks required user-held signed policy artifact; do not forge or auto-resume",
+    "Broader CA/product integration and multi-person/PnL design not completed; P0/P1 INVEST_NO_GO and P2/P3 freeze remain",
+    "New F01 has isolated acceptance only, not production install"
+  ],
+  "private_log_sha256": {
+    "f01-integration-full.txt": "ddfc19e6c91de523804df7d596d60f69c474346ea397c2361ef1c79d686b5e04",
+    "f01-integration-full-final.txt": "489e54ace262c208ebfc23a2439042d429ba832ace4b5084dee93c45f1313204",
+    "f01-postcommit-targeted.txt": "e480f05c851acdad3c7c9231fc59200580e004dcea443a24c66f95008c82141d",
+    "f01-node-source.txt": "2b3af9bdb02f09e110c13330e39ef9c6dcb00f8b6a15e5d819e1988c34597384",
+    "f01-node-failure.txt": "35764c2be4fb13b8fb4fe5c2079b696893ebff31b1b1b4e39dc36f1e273ad8c2",
+    "f01-snapshot-preparation.json": "fae8cb0142a078741780add46923a6e9cdcda2a4a4cec53e78cb3abd82af3aae",
+    "f01-pr232-full.txt": "e03e2e3098ad1dc3c0f92b1fe5b714d0897da32084ac8771b5ec8dbd3e577b31",
+    "f01-pr232-full-final.txt": "7ae40f3c593d4ce049f9180934da9d7f87be6c030a65bd7b818969a0d0ea17da",
+    "f01-pr232-postcommit.txt": "adea1f3613edb71f4da679d20b2c5581c9602201aa6675b3768673f718464958",
+    "f01-pr232-node-source.txt": "8e233775cc81ff399737485fde0d963c770b0b6409c9216447a0ca720ac0bbdd",
+    "f01-pr232-node-failure.txt": "994be9286d71fa0e14c43311fbb3c7db64d4c25a1d0764e0341713548cc87495"
+  },
+  "sensitive_information_check": {
+    "status": "PASS",
+    "public_diff_sets_scanned": 3,
+    "private_credential_or_rpc_secret_echoes": 0
+  }
+}

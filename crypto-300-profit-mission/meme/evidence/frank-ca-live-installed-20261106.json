@@ -1,0 +1,477 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-06T09:44:30.104509+00:00",
+  "verdict": "PARTIAL_FULL_CA / PASS_BOUNDED_EXECUTION_AND_OFFLINE_AUDIT",
+  "scope": "One authorized manual CA query using existing installed Dashboard and existing clients; not trading, profitability research or complete diligence",
+  "source": {
+    "repository": "lxxlx2/ChatGPT_mission_record",
+    "product_pr": 220,
+    "product_sha": "e977cc09023bdfcc9ce80660aedf2d58d2febc5f",
+    "product_parent": "b0dc014d4512a28257017e16fc22725d9625c757",
+    "pr_base": "4fdf2238a4db2347975689913e49142b760dc091",
+    "scanner_pr": 244,
+    "scanner_pr_head": "438bbe20899108a858a513648ab8c8c05b11e05e",
+    "main_checked": "dd252196d73cf2d4940f834601b596afee6916e3",
+    "main_delta_since_d72dc12": "Only unrelated airdrop/crypto-daily files; no Frank/rules delta",
+    "AGENTS_blob": "6a1217d85e217754dea557bcd4e23982efaf3949",
+    "DEVELOPMENT_RULES_blob": "5e8f89418bf206ee77dec9a803b808262d62a72a",
+    "product_code_changed_this_iteration": false
+  },
+  "authorization": {
+    "user_requested": "Continue mainline, free calls without a total count limit, direct Chrome acceptance, local installation if verified, no extra ports",
+    "single_manual_real_CA_POSTs": 1,
+    "existing_private_RPC_only_for_chain": true,
+    "existing_market_and_narrative_clients_only": true,
+    "new_providers_keys_or_data_clients": 0,
+    "paid_operations": 0,
+    "independent_review_waived_by_user": true,
+    "per_job_budget_unchanged": {
+      "max_wire_attempts": 1200,
+      "max_elapsed_seconds": 1800
+    }
+  },
+  "capture": {
+    "preset": "standard",
+    "job_id": "PRIVATE_NOT_PUBLISHED",
+    "same_previously_used_CA": true,
+    "status": "DONE",
+    "started_at_utc": "2026-11-06T03:51:44.212408+00:00",
+    "finished_at_utc": "2026-11-06T03:59:18.709832+00:00",
+    "elapsed_seconds": 454.4974238872528,
+    "rpc_wire_attempts": 654,
+    "rpc_cache_hits": 243,
+    "rpc_endpoint_failures": 15,
+    "logical_reads_saved": 886,
+    "rpc_logical_reads": 883,
+    "non_rpc_client_logical_reads": 3,
+    "non_rpc_HTTP_wire_count": "NOT_SEPARATELY_CAPTURED",
+    "caught_logical_source_errors": [
+      {
+        "operation": "getProgramAccounts",
+        "code": "HTTP_429",
+        "type": "RPCError"
+      }
+    ],
+    "GPA_attempts_for_failed_logical_read": 6,
+    "other_endpoint_failures_recovered": 9,
+    "other_recovered_failure_types": "NOT_INDIVIDUALLY_CAPTURED",
+    "report_sha256": "62b2b8f7ac9a7f6e323ba831889e601615930b2917674110349cdb7d85ac084d",
+    "checkpoint_sqlite_sha256": "24603e64eabea9f8e1350cda1c00e66b49767b9c11be036e201b6f44c1cb0d8a",
+    "checkpoint_read_chain_head": "d125d13cfa7bad04b957aa66355cbae96f7e4f591010b6f882023d1acb1fc0dd",
+    "checkpoint_bytes_used": 21339232,
+    "live_resume_count": 0,
+    "live_mode": "ORIGINAL_JOB; no real crash/resume performed",
+    "report_matches_exact_job_GET_and_DONE_marker_and_disk": true,
+    "raw_capture_location": "PRIVATE_OUTSIDE_GIT",
+    "GPA_attempt_count_basis": "Fixed single-endpoint transport max_attempts=6 before terminal retryable HTTP_429. Individual per-attempt HTTP status bodies were not captured."
+  },
+  "source_results": {
+    "holder_rows": 20,
+    "owners_scanned": 11,
+    "material_rows_beyond_initial_six": [
+      {
+        "rank": 7,
+        "role": "ORDINARY",
+        "supply_pct": "1.5416",
+        "deep_scanned": true
+      },
+      {
+        "rank": 8,
+        "role": "UNRESOLVED",
+        "supply_pct": "1.4851",
+        "deep_scanned": true
+      },
+      {
+        "rank": 9,
+        "role": "ORDINARY",
+        "supply_pct": "1.3435",
+        "deep_scanned": true
+      },
+      {
+        "rank": 10,
+        "role": "ORDINARY",
+        "supply_pct": "1.2443",
+        "deep_scanned": true
+      },
+      {
+        "rank": 11,
+        "role": "ORDINARY",
+        "supply_pct": "1.0248",
+        "deep_scanned": true
+      }
+    ],
+    "old_material_owner_selection_defect": "LIVE_VALIDATED_FOR_CURRENT_SAMPLE; current material ordinary ranks 7,9,10,11 scanned; not complete history",
+    "holder_rank_source_status": "UNAVAILABLE",
+    "holder_rank_reason": "SOURCE_UNAVAILABLE",
+    "primary_market_status": "OK",
+    "independent_market_status": "OK",
+    "market_comparison": {
+      "metrics": {
+        "pool_liquidity_usd": {
+          "difference": "15.5839",
+          "difference_pct_of_primary": "0.0616",
+          "independent": "25296.0239",
+          "primary": "25280.44",
+          "status": "COMPARED"
+        },
+        "price_usd": {
+          "difference": "4.56845573912116515216582130391410603192780684605491137942058E-8",
+          "difference_pct_of_primary": "0.1071",
+          "independent": "0.0000426856845573912116515216582130391410603192780684605491137942058",
+          "primary": "0.00004264",
+          "status": "COMPARED"
+        }
+      },
+      "provider_asof": "UNVERIFIED",
+      "retrieval_gap_seconds": 0.8043007850646973,
+      "same_chain_snapshot": false,
+      "status": "INDEXER_SNAPSHOTS_COMPARED"
+    },
+    "pool_vault_status": "VAULT_BALANCE_SNAPSHOT",
+    "narrative_status": "PARTIAL",
+    "narrative_claims_count": 2,
+    "narrative_claims_are_official_or_origin_proof": false,
+    "history_windows": 27,
+    "history_stop_reasons": {
+      "PAGE_LIMIT": 16,
+      "PROVIDER_EMPTY_PAGE": 11
+    },
+    "all_history_windows_still_incomplete": true,
+    "report_completeness": {
+      "missing_required": [
+        "contract",
+        "holder_balances",
+        "holder_roles",
+        "wallet_history",
+        "control_attribution",
+        "market",
+        "independent_sources",
+        "narrative"
+      ],
+      "requirements": [
+        {
+          "attempted_sources": [
+            "Finalized getAccountInfo mint parsing"
+          ],
+          "cause": "PARSED_MINT_IS_NOT_FULL_CONTRACT_PROVENANCE",
+          "evidence_paths": [
+            "token_profile",
+            "assessment.chain_permission_status"
+          ],
+          "id": "contract",
+          "next_source": "Verify metadata/update authority and applicable program controls with account/transaction evidence.",
+          "status": "PARTIAL"
+        },
+        {
+          "attempted_sources": [
+            "Finalized supply and Top20 account reads",
+            "Mint-filtered getProgramAccounts"
+          ],
+          "cause": "FULL_MINT_RANK_SOURCE_NOT_VERIFIED",
+          "evidence_paths": [
+            "holder_rankings",
+            "holder_rankings.raw_balance_check",
+            "coverage.snapshot_slots"
+          ],
+          "id": "holder_balances",
+          "next_source": "Use a permitted complete mint-account source within bounds and reconcile actual slots and supply.",
+          "status": "PARTIAL"
+        },
+        {
+          "attempted_sources": [
+            "Owner account metadata, dated role evidence registry and bounded multi-program pool identities"
+          ],
+          "cause": "SPECIAL_ADDRESS_IDENTITIES_NOT_FULLY_VERIFIED",
+          "evidence_paths": [
+            "holder_rankings.normalization_complete",
+            "holders",
+            "pool_holder_roles",
+            "special_address_roles"
+          ],
+          "id": "holder_roles",
+          "next_source": "Verify pool/vault/CEX/treasury roles with dated program/account/transaction evidence.",
+          "status": "PARTIAL"
+        },
+        {
+          "attempted_sources": [
+            "Selected observed token-account history and owner prefunding signature windows; per-account coverage in coverage.owner_account_history"
+          ],
+          "cause": "BOUNDED_HISTORY_NOT_ALL_OWNER_ACCOUNTS",
+          "evidence_paths": [
+            "historical_account_evidence",
+            "coverage.historical_account_history",
+            "coverage.owner_account_history",
+            "coverage.history_windows",
+            "coverage.owners_not_scanned",
+            "trade_evidence",
+            "funding_evidence"
+          ],
+          "id": "wallet_history",
+          "next_source": "Enumerate all material Owner token accounts and reconcile complete acquisition/sale/funding movements.",
+          "status": "PARTIAL"
+        },
+        {
+          "attempted_sources": [
+            "Sampled transfers/funders/signers/consolidations with public-infrastructure exclusions"
+          ],
+          "cause": "BOUNDED_RELATIONS_NOT_COMPLETE_BENEFICIAL_CONTROL",
+          "evidence_paths": [
+            "assessment.cluster_status",
+            "unresolved_relation_edges",
+            "probable_control_clusters"
+          ],
+          "id": "control_attribution",
+          "next_source": "Resolve material unknown relationships using independent non-public evidence; keep inherent uncertainty explicit.",
+          "status": "PARTIAL"
+        },
+        {
+          "attempted_sources": [
+            "DexScreener market reference",
+            "GeckoTerminal exact-pool indexer",
+            "Selected PumpSwap raw vault/Mint accounts in one finalized batch; documented signed virtual reserve arithmetic"
+          ],
+          "cause": "DOCUMENTED_RESERVES_WITHOUT_USD_OR_SNAPSHOT_PARITY",
+          "evidence_paths": [
+            "market",
+            "pool_vaults",
+            "pool_holder_roles"
+          ],
+          "id": "market",
+          "next_source": "Reconcile dated selected-pool reserves and market definitions with an independent permitted source.",
+          "status": "PARTIAL"
+        },
+        {
+          "attempted_sources": [
+            "GeckoTerminal exact selected pool; retrieval timestamps are not provider as-of timestamps"
+          ],
+          "cause": "INDEXER_COMPARISON_NOT_RAW_POOL_OR_HOLDER_PARITY",
+          "evidence_paths": [
+            "market.independent_market",
+            "market.comparison",
+            "pool_vaults.market_comparison"
+          ],
+          "id": "independent_sources",
+          "next_source": "Reconcile actual DEX pool reserves and independent holder evidence at a controlled chain snapshot.",
+          "status": "PARTIAL"
+        },
+        {
+          "attempted_sources": [
+            "Bounded public launchpad/market-hinted website/social HTML reads; no script/login bypass or exhaustive search"
+          ],
+          "cause": "BOUNDED_SOURCE_CLAIMS_NOT_OFFICIAL_RECOGNITION_OR_ORIGIN",
+          "evidence_paths": [
+            "narrative",
+            "market.websites",
+            "market.socials",
+            "assessment.narrative_status"
+          ],
+          "id": "narrative",
+          "next_source": "Verify author/official exact-CA recognition and independently attributable public posts/origin; keep page claims separate.",
+          "status": "PARTIAL"
+        }
+      ],
+      "scope": "MANUAL_CA_DUE_DILIGENCE",
+      "status": "INCOMPLETE_EVIDENCE",
+      "version": 1
+    },
+    "coverage_gaps": [
+      "HISTORICAL_ACCOUNT_CONTEXT_GAPS",
+      "HISTORICAL_ACCOUNT_EVIDENCE_LIMIT",
+      "HOLDER_ENUMERATION_INCOMPLETE",
+      "SPECIAL_NORMALIZATION_UNVERIFIED",
+      "ELIGIBLE_OWNER_RANKS_INCOMPLETE",
+      "SNAPSHOT_SLOT_UNRECONCILED",
+      "OWNER_HISTORY_NOT_SCANNED",
+      "HISTORY_PAGINATION_INCOMPLETE"
+    ]
+  },
+  "offline_audit": {
+    "verdict": "PASS_OFFLINE_CAPTURE_AUDIT",
+    "source_sha": "e977cc09023bdfcc9ce80660aedf2d58d2febc5f",
+    "scope": "Historical logical-response replay; not fresh wire capture or live crash/resume",
+    "report_sha256": "62b2b8f7ac9a7f6e323ba831889e601615930b2917674110349cdb7d85ac084d",
+    "checkpoint_chain_head": "d125d13cfa7bad04b957aa66355cbae96f7e4f591010b6f882023d1acb1fc0dd",
+    "replay_count": 2,
+    "logical_reads_each": 886,
+    "report_business_equal_each": true,
+    "business_report_sha256_each": [
+      "efe55562e795f903d2180611d39480af982d3be304efd3673dbda562cf61448f",
+      "efe55562e795f903d2180611d39480af982d3be304efd3673dbda562cf61448f"
+    ],
+    "excluded_worker_augmentation_root_keys": [
+      "ca_job_id",
+      "assessment_history",
+      "assessment_history_context",
+      "collection_checkpoint"
+    ],
+    "excluded_worker_augmentation_coverage_keys": [
+      "rpc_call_count_scope"
+    ],
+    "locally_derived_timestamps_frozen": [
+      "observed_at",
+      "pool_vaults.observed_at"
+    ],
+    "clock_frozen_to_original_report": true,
+    "cache_ttls_modified": false,
+    "unique_captured_transactions": 784,
+    "captured_failed_transactions": 26,
+    "captured_null_transactions": 0,
+    "counts": {
+      "trade_evidence_checked": 125,
+      "trade_evidence_exact_duplicates": 0,
+      "funding_evidence_checked": 8,
+      "funding_evidence_exact_duplicates": 0,
+      "consolidation_evidence_checked": 122,
+      "consolidation_evidence_exact_duplicates": 0,
+      "edges_checked": 157,
+      "edges_exact_duplicates": 0,
+      "historical_account_evidence_checked": 200,
+      "historical_account_evidence_exact_duplicates": 0,
+      "history_windows_with_preserved_cursor": 27
+    },
+    "new_wire_attempts": 0,
+    "network_attempts_blocked": 0,
+    "live_resume_count": 0
+  },
+  "offline_command": "<EXISTING_PYTHON> -I -B <DOCS_WORKTREE>/crypto-300-profit-mission/meme/evidence/frank_checkpoint_capture_audit_20261106.py --agent <FIXED_E977_AGENT> --capture <PRIVATE_CAPTURE_WITH_CHECKPOINT_REPORT_STATUS>",
+  "offline_script_sha256": "9fe6a8503169a2d6e1ecebcb7fa3d8585e803d35e3a22a4c65c37ef9695d37b7",
+  "pagination_envelope_negative_cases": {
+    "status": "PASS",
+    "source_sha": "e977cc09023bdfcc9ce80660aedf2d58d2febc5f",
+    "checks": [
+      {
+        "field": "pageKey",
+        "value_is_null": false,
+        "result": "REJECTED_NO_COMPLETE_CLAIM"
+      },
+      {
+        "field": "pageKey",
+        "value_is_null": true,
+        "result": "REJECTED_NO_COMPLETE_CLAIM"
+      },
+      {
+        "field": "paginationKey",
+        "value_is_null": false,
+        "result": "REJECTED_NO_COMPLETE_CLAIM"
+      }
+    ],
+    "network": 0,
+    "code_change_required": false
+  },
+  "actual_Chrome": {
+    "url": "http://127.0.0.1:8766/#cluster",
+    "one_query_started_from_actual_UI": true,
+    "done_report_visible": true,
+    "exact_saved_job_reread": true,
+    "saved_job_and_CA_identity_verified_message": true,
+    "incomplete_evidence_visible": true,
+    "old_report_entry_retained": true,
+    "left_open": true,
+    "screenshot": "Shown in active chat; private raw address data not committed",
+    "no_new_listening_ports": true
+  },
+  "production_effect": {
+    "intended_query_outputs_written": [
+      "new dated JSON and Markdown report",
+      "new exact-job report and DONE marker",
+      "new private checkpoint journal",
+      "existing RPC cache",
+      "existing latest.json and assessment-history.json"
+    ],
+    "preexisting_report_files": 28,
+    "preexisting_immutable_report_files_unchanged": 26,
+    "expected_changed_existing_files": [
+      "latest.json",
+      "assessment-history.json"
+    ],
+    "new_report_tree_files": 6,
+    "protected_hashes_unchanged": {
+      "control_db": true,
+      "control_health": true,
+      "d2": true,
+      "plist": true,
+      "rpc_config": true,
+      "follow_policy_v1.approved.json": true,
+      "approved_policy_sha256": true
+    },
+    "installed_runtime_manifest_unchanged": true,
+    "runtime_file_count": 148,
+    "dashboard_pid": 58030,
+    "dashboard_lifecycle_operations_this_iteration": 0,
+    "scanner_pid": 81945,
+    "scanner_code_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "scanner_source_drift": false,
+    "scanner_consecutive_errors": 0,
+    "scanner_pending": {
+      "raw_pending": 0,
+      "model_unprocessed": 0,
+      "gmail_pending": 0,
+      "local_pending": 0
+    },
+    "scanner_lifecycle_operations": 0,
+    "MC_loop_unloaded": true,
+    "notification_or_email_sends_initiated": 0,
+    "wallet_signatures_or_trades": 0,
+    "merges": 0,
+    "new_monitors_or_automations": 0,
+    "rpc_endpoint_or_private_control_path_found_in_report": false
+  },
+  "port_audit": {
+    "Frank_dashboard": {
+      "port": 8766,
+      "pid": 58030
+    },
+    "temporary_Frank_QA_listeners": 0,
+    "unrelated_existing_services_left_untouched": [
+      {
+        "port": 8765,
+        "service": "technocore dashboard",
+        "pid": 3933
+      },
+      {
+        "port": 48721,
+        "service": "existing LiteLLM",
+        "pid": 42362
+      }
+    ],
+    "macOS_system_ports_not_modified": true
+  },
+  "request_accounting": {
+    "free_authorization_phase_prior_RPC": 729,
+    "this_manual_query_RPC": 654,
+    "free_authorization_phase_RPC_total": 1383,
+    "earlier_one_shot_RPC_separate": 572,
+    "offline_replays_new_RPC": 0,
+    "no_additional_GPA_retry_after_this_capture": true
+  },
+  "same_SHA_prior_validation_not_rerun": {
+    "installed_related_python_passed": 81,
+    "full_local_python_passed": 2144,
+    "full_local_python_skipped": 0,
+    "frontend_passed": 159,
+    "CI_run": 42105441705,
+    "CI_python_passed": 2116,
+    "CI_python_skipped": 4,
+    "CI_frontend_passed": 159,
+    "CI_synthetic_browser_cases": 41,
+    "CI_is_not_this_Mac_or_real_source_evidence": true
+  },
+  "remaining_blockers": [
+    "Full mint-account enumeration remains SOURCE_UNAVAILABLE: six-attempt GPA logical read ended HTTP429; individual attempt codes and specific provider rule unresolved",
+    "16/27 captured history windows still PAGE_LIMIT; current/closed accounts and true first acquisition/funding are incomplete",
+    "Special roles, beneficial control, controlled-slot independent holder/pool parity and official narrative/origin remain partial",
+    "Single existing CA does not validate all protocols/Token-2022/large-mint representative cases",
+    "Original October failed job identity and trigger unresolved; this November job does not replace it",
+    "D2 remains historical; no refresh in this iteration",
+    "Qualified notification latency and independent user key/signature artifact still absent; MC Loop stays unloaded"
+  ],
+  "decision": {
+    "software_and_bounded_execution": "PASS",
+    "complete_original_CA_requirements": "PARTIAL / INCOMPLETE_EVIDENCE",
+    "INVEST": "NO_GO",
+    "TRADE": "NO_GO",
+    "next_action": "Stop source retries on this unchanged blocker; retain exact evidence. No new source, paid upgrade, monitor or profitability phase automatically follows."
+  },
+  "later_narrative_context_acceptance_receipt": "frank-ca-narrative-context-20261107.json",
+  "historical_identity_note": "This receipt retains its original source/time/counters. Current product and new capture belong to the later narrative/context receipt."
+}

@@ -1,0 +1,341 @@
+{
+  "schema": "frank_existing_dashboard_readonly_recovery_v1",
+  "updated_at": "2026-11-01T03:21:56.245589+07:00",
+  "scope": "authorized existing-tool maintenance; no P1/P2/P3 research restart",
+  "source_sha": "4de090643590226ba7ec78e9b6c815bb9d6c7259",
+  "parent_sha": "914e9e47fed2e60bc24690fcb083413a64d4e681",
+  "branch": "codex/frank-dashboard-heartbeat-restore-20261031",
+  "independent_review": "not performed at user request",
+  "ci": "not claimed; executed tests are local offline",
+  "defect": {
+    "before": "Historical OK heartbeat was returned as current status even while loop was unloaded.",
+    "after": "Only the API display snapshot is annotated; timezone-aware heartbeat older than 120 seconds is STALE, missing/invalid/future time is UNKNOWN. Recorded status and original file are preserved.",
+    "runtime_source_changes": [
+      "mission_agent/mission_control/server.py",
+      "mission_agent/mission_control/static/app.js"
+    ],
+    "frozen_policy_or_model_changed": false
+  },
+  "offline_tests": {
+    "counterexamples_before_fix": {
+      "failed": 8
+    },
+    "targeted_after_fix": {
+      "passed": 91,
+      "seconds": 5.14
+    },
+    "full_after_fix": {
+      "passed": 1555,
+      "skipped": 3,
+      "warnings": 14,
+      "seconds": 81.8,
+      "skip_reason": "Unrelated Monster modules require numpy",
+      "warning_reason": "Existing multithreaded fork deprecation warnings",
+      "command": "python -B -m pytest -q -p no:cacheprovider -p frank_offline_guard tests"
+    },
+    "committed_head_regression": {
+      "passed": 8,
+      "seconds": 0.06
+    },
+    "frontend_syntax": "node --check mission_agent/mission_control/static/app.js passed"
+  },
+  "production_recovery": {
+    "status": "PASS",
+    "at": "2026-10-31T22:17:42.801551+07:00",
+    "source_sha": "4de090643590226ba7ec78e9b6c815bb9d6c7259",
+    "parent_sha": "914e9e47fed2e60bc24690fcb083413a64d4e681",
+    "dashboard_pid": 11092,
+    "port": 8766,
+    "bind_host": "127.0.0.1",
+    "runtime_api_http": 200,
+    "runtime_api_scanner_pid": 3402,
+    "runtime_api_scanner_source": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "runtime_api_status": "LIVE",
+    "control_health_http": 200,
+    "control_health_status": "STALE",
+    "control_health_recorded_status": "OK",
+    "control_heartbeat_age_seconds": 244809.651,
+    "root_page_http": 200,
+    "page_matches_pinned_source": true,
+    "stale_label_served": true,
+    "control_db_bytes_unchanged": true,
+    "control_health_file_unchanged": true,
+    "loop_remains_unloaded": true,
+    "scanner_pid_unchanged": true,
+    "scanner_healthy": true,
+    "candidate_source_clean": true,
+    "ca_post_requests": 0,
+    "notification_send_calls": 0,
+    "external_rpc_requests_by_audit": 0,
+    "rollback_exercised": false
+  },
+  "control_database_logical_preservation": {
+    "schema_unchanged": true,
+    "tables": {
+      "candidate_latest": {
+        "rows_before": 7,
+        "rows_after": 7,
+        "rows_unchanged": true
+      },
+      "decision_snapshots": {
+        "rows_before": 169,
+        "rows_after": 169,
+        "rows_unchanged": true
+      },
+      "decision_events": {
+        "rows_before": 169,
+        "rows_after": 169,
+        "rows_unchanged": true
+      },
+      "decision_outbox": {
+        "rows_before": 48,
+        "rows_after": 48,
+        "rows_unchanged": true
+      },
+      "gmail_delivery": {
+        "rows_before": 24,
+        "rows_after": 24,
+        "rows_unchanged": true
+      },
+      "local_delivery": {
+        "rows_before": 24,
+        "rows_after": 24,
+        "rows_unchanged": true
+      },
+      "market_cache": {
+        "rows_before": 6,
+        "rows_after": 6,
+        "rows_unchanged": true
+      },
+      "transition_debounce": {
+        "rows_before": 0,
+        "rows_after": 0,
+        "rows_unchanged": true
+      },
+      "follow_observations": {
+        "rows_before": 102626,
+        "rows_after": 102626,
+        "rows_unchanged": true
+      },
+      "outcome_tracks": {
+        "rows_before": 6,
+        "rows_after": 6,
+        "rows_unchanged": true
+      },
+      "outcome_samples": {
+        "rows_before": 1728,
+        "rows_after": 1728,
+        "rows_unchanged": true
+      },
+      "outcome_horizons": {
+        "rows_before": 30,
+        "rows_after": 30,
+        "rows_unchanged": true
+      },
+      "local_delivery_presentation": {
+        "rows_before": 6,
+        "rows_after": 6,
+        "rows_unchanged": true
+      }
+    },
+    "production_sql_write": false,
+    "status": "PASS"
+  },
+  "browser_readonly_verification": {
+    "surface": "local ChatGPT in-app browser",
+    "runtime_text": "Frank 监控正常",
+    "loop_text": "跟单引擎心跳过期",
+    "html_and_javascript_rendered": true,
+    "query_or_notification_controls_clicked": false,
+    "temporary_tab_closed": true,
+    "screenshot_sha256": "92116ad3b9559be8720505bd904a4904c37996ccf901b7cdb134e3810c4a8142",
+    "screenshot_in_public_repository": false,
+    "screenshot_saved_at": "2026-10-31T22:19:11.148171+07:00"
+  },
+  "current_runtime_followup": {
+    "observed_at": "2026-11-01T03:15:57.036229+07:00",
+    "scanner": {
+      "pid": 3402,
+      "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "status": "RUNNING",
+      "poll_count": 79297,
+      "consecutive_errors": 0,
+      "source_drift": false,
+      "raw_pending": 0,
+      "model_unprocessed": 0,
+      "last_successful_poll": "2026-10-31T20:15:44.107542+00:00",
+      "production_trading": "NO_GO"
+    },
+    "external_rpc_by_audit": 0,
+    "production_write": false,
+    "dashboard": {
+      "runtime": {
+        "http_status": 200,
+        "status": "LIVE",
+        "pid": 3402,
+        "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+        "heartbeat_age_seconds": 12.937182903289795
+      },
+      "control-health": {
+        "http_status": 200,
+        "status": "STALE",
+        "recorded_status": "OK",
+        "heartbeat_age_seconds": 262704.036
+      }
+    },
+    "mc_loop_unloaded": true
+  },
+  "post_release_scanner_progress": {
+    "observed_at": "2026-11-01T03:16:07.140514+07:00",
+    "source_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "post_release_added_signatures": 37,
+    "classifications": {
+      "PASSIVE_TRANSFER": 20,
+      "ATA_CREATE": 16,
+      "UNKNOWN_NEEDS_REVIEW": 1
+    },
+    "trade_directions": {},
+    "historical_rows": {
+      "signatures": {
+        "before": 5881,
+        "now": 5918,
+        "original_rows_unchanged": true
+      },
+      "signals": {
+        "before": 7,
+        "now": 7,
+        "original_rows_unchanged": true
+      },
+      "outbox": {
+        "before": 9,
+        "now": 9,
+        "original_rows_unchanged": true
+      },
+      "gmail_delivery": {
+        "before": 2,
+        "now": 2,
+        "original_rows_unchanged": true
+      },
+      "email_content": {
+        "before": 2,
+        "now": 2,
+        "original_rows_unchanged": true
+      },
+      "v1_seen": {
+        "before": 5881,
+        "now": 5918,
+        "original_rows_unchanged": true
+      }
+    },
+    "outbox_counts": [
+      {
+        "channel": "gmail",
+        "status": "SENT_VERIFIED",
+        "count": 2
+      },
+      {
+        "channel": "local",
+        "status": "COMMAND_ACCEPTED",
+        "count": 6
+      },
+      {
+        "channel": "local",
+        "status": "DRY_RUN_AUDIT",
+        "count": 1
+      }
+    ],
+    "gmail_counts": [
+      {
+        "status": "SENT_VERIFIED",
+        "count": 2
+      }
+    ],
+    "external_rpc_requests": 0,
+    "production_sql_write": false,
+    "new_signal_count": 0,
+    "real_buy_notification_acceptance": "NOT_COVERED",
+    "unknown_classification_review": [
+      {
+        "reason": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "wallet_is_signer": false,
+        "wallet_is_authority": false,
+        "mechanical_classification": "UNKNOWN",
+        "trade_is_none": true,
+        "alert_state": "NO"
+      }
+    ]
+  },
+  "all_new_raw_records_checked": {
+    "source_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "checked_at": "2026-11-01T03:16:59.607163+07:00",
+    "rows": 37,
+    "status": "PASS",
+    "external_requests": 0,
+    "production_sql_write": false
+  },
+  "existing_v1_gmail_readiness_and_sent_readback": {
+    "observed_at": "2026-11-01T03:20:04.296408+07:00",
+    "source_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "maximum_network_requests": 4,
+    "maximum_seconds": 40,
+    "network_requests": 4,
+    "request_categories": [
+      "EXISTING_OAUTH_REFRESH",
+      "PROFILE_READ",
+      "EXISTING_SENT_READ",
+      "EXISTING_SENT_READ"
+    ],
+    "send_requests": 0,
+    "production_sql_write": false,
+    "raw_mail_saved": false,
+    "messages": [
+      {
+        "signal_id_sha256": "57c1df9f34d42dd4d233238978dfd3fab1a697f8a601baa010c50a184e61d526",
+        "delivery_mode": "LIVE",
+        "sent_label_present": true,
+        "identity_content_mode_verified": true,
+        "verified_only_in_isolated_db": true
+      },
+      {
+        "signal_id_sha256": "aaa7b31429571d781e3c1aedc1f4a235e8515c9c508a92ada5cbb6d3352c9c56",
+        "delivery_mode": "LIVE",
+        "sent_label_present": true,
+        "identity_content_mode_verified": true,
+        "verified_only_in_isolated_db": true
+      }
+    ],
+    "credential_ready": true,
+    "status": "PASS",
+    "production_history_unchanged": {
+      "gmail_delivery": true,
+      "outbox": true,
+      "email_content": true
+    },
+    "credential_file_unchanged": true,
+    "seconds": 1.957
+  },
+  "limits": [
+    "No new BUY was observed in the indexed post-release rows, so new BUY notification acceptance remains NOT_COVERED.",
+    "Existing historical LIVE Sent readback does not prove a new email was sent.",
+    "MC Loop stays unloaded; no policy signature or approval record was generated.",
+    "No CA POST, new trading, policy change, new monitor or automation was performed."
+  ],
+  "pre_recovery_installed_source_binding": {
+    "source_sha": "914e9e47fed2e60bc24690fcb083413a64d4e681",
+    "canonical_files_checked": 446,
+    "missing": [],
+    "different": [],
+    "port": 8766,
+    "runner_has_bytecode_disabled": false,
+    "runner_sha256": "db52d9331437ed5dfceea102d6722c32957616fac2bf7b67b2dbe2bb75fe480e",
+    "loop_start_planned": false,
+    "ca_post_planned": false,
+    "source_changes_planned": false,
+    "backup_source_files": 446,
+    "status": "PASS"
+  },
+  "runtime_configuration_changes": [
+    "LOCAL_AGENT points to fixed staged source",
+    "PYTHONDONTWRITEBYTECODE=1"
+  ]
+}

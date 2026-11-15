@@ -1,0 +1,40 @@
+# Frank 旧计划核对与只读维护收尾（2026-11-01）
+
+> **最新本机主线验收（2026-11-02 00:08 Asia/Bangkok，取代下方旧候选状态）**：采用Git最新f690fbf6c0beb582fdede50d7b46f126e9ca64ea，未重复推送本地旧试验修复。Mac完整离线1587/3跳过、Node99通过，隔离Chrome安全GET三阶段、双面板失败后筛选清理及恢复PASS；实际Dashboard已切换PID20153，Scanner原PID3402保持LIVE/0错误。当前28份报告、控制库/D2/心跳/plist哈希保留。既有11月1日22:10真实job 2306599a经私有副本损坏拒绝/恢复及实际跨进程GET恢复通过，Chrome选中原任务显示ID/CA核对；未新建真实扫描。该job不替代10月原故障身份，覆盖与原传输根因仍未闭合，整体PARTIAL/研究与实盘NO_GO。详情见同一[分层回执](./evidence/frank-ca-local-acceptance-20261101.json)的mac_latest_head_acceptance_20261102。
+
+> **增量补完（2026-11-01 19:21 Asia/Bangkok）**：源码未变。补完上次留出的20条原始事件离线核验（16被动/4 ATA，0交易行），排除原78条，发布后累计98条；5979签名全部seen，RAW_PENDING/未处理0，四类重复组0。Chrome整合版本D2显示100行/49页、源年龄持续增长。另实际捕获一次F01/顶部Failed to fetch，原有轮询自动恢复且旧机会闭锁；失败请求/传输触发原因仍UNRESOLVED，后台没有同刻新错误日志，不推断RPC故障或做猜测性改码。证据已接到同一[验收回执](./evidence/frank-ca-local-acceptance-20261101.json)，真实RPC/CA POST、服务变更、通知均0。
+
+> **最新维护进展（2026-11-01 19:20 Asia/Bangkok，取代下方旧运行快照）**：重新核对main `f1f848d4e11f26239c0adadf07b1c20256d6e402`及原PR220最新c18fa276整合，根规则未变；采用现有完整功能栈，未重复推送旧试验集成。Chrome发现无效CA时仍残留上一报告，在原PR220两文件最小修复 `15aa995629c503fb9cc4278c18d7957672c05499`，3个反例先红后绿、完整离线1587通过/3跳过、提交后Node81通过。本地Dashboard已运行新SHA，真实Chrome历史→无效→恢复PASS；24份历史报告和控制库/D2/心跳/plist哈希不变，Scanner未重启。c18父版另外完成Chrome合成A/B和空内存恢复，合成POST3、真实RPC/CA POST0；临时服务/端口/标签已清理，实际8766页保留。详见[本轮证据](./evidence/frank-ca-local-acceptance-20261101.json)。旧任务缺身份关联、自然新BUY/通知样本、MC签名工件仍缺；维护PASS，旧规划整体PARTIAL，INVEST_NO_GO / TRADE_NO_GO保持。
+
+> **持续维护后续（2026-11-01 14:13 Asia/Bangkok）**：D2年龄冻结与F01 BUY口径过宽已修复，实际运行 `dd17c9dcc057c79f4984029fff188d88b9b9d45e`。Chrome旧版18秒年龄不变，新版约20秒20700→20718；复用现有5秒刷新、无新增来源GET/timer/RPC，错误/恢复仍PASS，页面保留。完整测试运行版1569、原PR178为1541、原PR232为1579通过，各3无关跳过；提交后前端36通过。原PR同步修复见[最新证据](./evidence/frank-source-age-ca-boundary-20261101.json)。截至14:13，另18条原始记录增量核验PASS，不重复先前60条，共78条。
+>
+> 既有CA历史报告现可GET200，但不带原job ID，无法证明是失败任务结果；旧原始连接触发因素仍未定。PR220最新18e065bd候选及C1依赖未在本轮合入，不用新扫描补造旧任务证据。旧计划整体仍PARTIAL，INVEST_NO_GO / TRADE_NO_GO保持；尚缺原CA任务关联、自然新BUY样本和用户独立签名工件。
+
+> **Chrome后续验收（2026-11-01 08:38 Asia/Bangkok）**：按用户指定在Google Chrome实际验收并保留标签页。发现D2成功查询后无效Mint仍残留旧余额；已在原PR178修复 `9a259359a3e9ede4540e90276f8fef71df0d0bae`，本机运行候选 `700373e59c17f35aa465664e6eff01057fcfa0c9`。4个反例转绿，运行基线1569/原PR基线1541完整离线通过，Chrome有效→无效→恢复、分页/跨页查询PASS。首轮bootstrap返回5后旧HTTP与源码恢复已核验，等待旧job/PID/listener退出后的再次切换PASS；具体launchd错误原因未获独立证明。既有D2来源与控制库字节未变、额外RPC/通知0。
+>
+> 补完Scanner发布后未核验的23条（被动6/ATA16/UNKNOWN1）；不重复先前37条，当前新增60条均完成完整原始与分类账本重放。UNKNOWN无Frank签名或authority，保留未识别，不制造新BUY。详见[Chrome验收、修复与增量证据](./evidence/frank-chrome-d2-query-recovery-20261101.json)。当前仍缺自然新BUY样本和用户独立签名工件，研究NO_GO不变。
+
+> **后续实际进展（2026-11-01 08:27 Asia/Bangkok）**：用户另行明确授权本地环境与既有服务维护并豁免review后，F01已安装固定 `ffa96a78a9cae9902d6ba297d5d2135ecbce28cc`，实际Mac页面PASS；D2已复用现有私有RPC完成一次两请求采集、固定PR60离线完整重放及原子导入，4898 Mint、49页+精确查询PASS。原下表“F01未安装、D2仍10月25日旧源”是08:19快照，已被本段及[新验收证据](./evidence/frank-f01-d2-local-acceptance-20261101.json)取代；原证据保留。
+>
+> 本次有一次维护执行器权限错误：runner被复制为0600，候选未启动；恢复旧字节并改为0700后验证旧服务恢复，再次切换成功。控制库、Scanner和模型均未受改写。当前剩余：自然新BUY/真实通知与首见延迟样本、MC用户独立公钥/签名工件；盈利研究和更大产品规划仍冻结。**既有工具维护PASS；旧规划整体PARTIAL；INVEST_NO_GO / TRADE_NO_GO保持。**
+
+## 08:19 隔离验收原记录（保留，不代表当前运行状态）
+
+当前结论：**PARTIAL；生产 NO_GO；INVEST_NO_GO / TRADE_NO_GO 保持。** 用户已豁免独立 review；本轮没有把缺失真实来源、自然事件或密码学签名写成 PASS。当前经营决定以 [STATUS](./STATUS.md) 为准，旧 TODO 不是新的预算或部署许可。
+
+| 原计划项目 | 已有证据与本轮进展 | 剩余工作 / 结论 |
+| --- | --- | --- |
+| Scanner 复用现有私有 RPC | 原 PR244 HEAD `438bbe20899108a858a513648ab8c8c05b11e05e`；已加载最小运行源码 `1f2c6afc28b9988eaacdc896562ff9a71b78f801`。本轮只读复查 RUNNING、0 连续错误、source_drift=false，签名5940；信号7/outbox9/Gmail2。 | 维护已完成；长期可靠性、新 BUY 实际投递没有因此得到覆盖。先前37条逐笔重放结论不扩展到后来新增签名。 |
+| Dashboard 恢复与旧 Loop 心跳误报 | 运行源码 `4de090643590226ba7ec78e9b6c815bb9d6c7259`；旧心跳显示 STALE；历史控制库保留。 | 已完成原恢复；本轮未重启服务。 |
+| F01 近期与历史分区 | 在当前 Dashboard 精确基线上整合 PR232，固定 `ffa96a78a9cae9902d6ba297d5d2135ecbce28cc`；修复历史模型/支付信息丢失；1569离线通过、70提交后通过、Node20通过。隔离复制真实索引：近期0、历史7、eligible0，旧心跳不可用时闭锁；D1/D2仍可读。原PR232最小修复见下。 | **源码与隔离验收 PASS；未安装新F01。** 隔离副本心跳过期显示离线，不代表实际 Scanner 故障。不是新 BUY 或完整 F2/F3 合并产品验收。 |
+| D1 签名活动 | 现有本地索引 API 可读；隔离副本96条；实际窗口会随时间变化。 | 可用范围是 INDEXED_LOCAL_ONLY，不是全链历史，不据此推断持仓。 |
+| D2 双程序余额 | 既有4305 Mint、44页+跨页精确Mint：45次本地GET通过、无重复、来源SHA稳定；隔离UI显式读取成功。 | **PARTIAL**。来源仍为2026-10-25，slots 461166205 / 461166207，非原子、非当前持续余额、无USD/PnL。需要新的真实来源才能推进；本轮保持NO_REAL_RPC。 |
+| V1 通知与延迟 | 已有凭据及2封历史Sent的只读验证见原恢复证据；本轮Gmail回执仍2、未发信。 | **缺真实自然新BUY事件**，不制造交易或通知；真实首见延迟/新通知验收未完成。 |
+| MC Loop | 保持未加载，Dashboard可单独工作。 | **BLOCKED**：缺少由用户持有私钥形成、绑定policy/code/scope/time的签名策略工件；默认授权和豁免review不能代替该字节工件。不生成/读取用户私钥、不恢复旧默认金额路径。 |
+| CA、五区V3、多人物、收益及P2/P3 | 既有CA功能保留；本轮0 CA POST。集成基线不是PR232全部父栈，不能声称CA job身份修复已随F01装入。 | 较大产品规划仍未完成；P0/P1已正式INVEST_NO_GO结项，预算不结转，不自动重启这些开发/研究。 |
+
+原 PR232 修复 SHA：`7812df52526d12ef205e471b9de2a9556269feef`；精确父提交 `0b16f0ea5a3e684af3a5eb12ba12d211a6df8ad8`；3文件最小修复，保留其原有CA身份保护，完整回归：1579 passed, 3 skipped, 14 warnings in 81.59s。
+
+实际命令、运行环境、反例、原始日志哈希、API与Mac隔离浏览器结果见 [机器可读证据](./evidence/frank-f01-plan-reconciliation-20261101.json)。没有CI冒充Mac实测，没有独立APPROVE、合并、生产安装、真实RPC/CA POST、邮件/通知发送、签名或交易。
+
+下一步只在真实条件改变时推进：新的自然BUY证据、明确限定的真实来源采集范围，或用户自行提供有效签名工件。P1盈利研究若要重开，需单独设定新的目标和预算，不能以“继续旧计划”自动延长。

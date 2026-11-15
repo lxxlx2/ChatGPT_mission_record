@@ -1,0 +1,387 @@
+{
+  "version": 1,
+  "date": "2026-11-14",
+  "timezone": "Asia/Bangkok",
+  "source_sha": "2471467e53cb772202abcc7415b17c1f33defd59",
+  "parent_sha": "e7df038fa2bcc1a49add0019fb9a35718beed3a0",
+  "pr_base_sha": "d43878828c86eacee5be9df8a17d16fc63a74bb6",
+  "iteration_baseline": "81bb338d967d09a9598894cb47976f4f1f994296",
+  "producer_source_sha": "e7df038fa2bcc1a49add0019fb9a35718beed3a0",
+  "executor_and_auditor_commit": "3a32996a0187b697755a25fda01edefbd30deede",
+  "scope_verdict": {
+    "code_and_offline_regression": "PASS",
+    "captured_source_and_business_reference_validation": "PASS_FOR_THIS_CAPTURE",
+    "local_installation_and_real_chrome_get": "PASS",
+    "complete_due_diligence": "PARTIAL / INCOMPLETE_EVIDENCE",
+    "independent_human_or_agent_review": "WAIVED_BY_USER; NOT_CLAIMED",
+    "invest": "NO_GO",
+    "trade": "NO_GO"
+  },
+  "live_job": {
+    "status": "DONE",
+    "error": null,
+    "runtime_seconds": 33062.18474125862,
+    "started_at": 1794607089.1049669,
+    "finished_at": 1794640151.2897081,
+    "report_sha256": "1a94b9d6f31cd48498000a0ac178aa0ec142b36abd329b6982679e3ce81cbb79",
+    "checkpoint_sha256": "17a9d275966a2ad9e0143d93d42d648926a7cff2e2875d77797eada681f00daf",
+    "checkpoint_bytes": 1182298112,
+    "exact_get_equals_saved_report": true,
+    "exact_get_bytes_equal": false,
+    "case_identity_verified": true,
+    "worker_cache_closed": true,
+    "source_file_hash_unchanged": true
+  },
+  "windows": {
+    "phase_windows": {
+      "holder": 19,
+      "funding": 16
+    },
+    "phase_pages": {
+      "holder": 63,
+      "funding": 6073
+    },
+    "phase_signatures": {
+      "holder": 412,
+      "funding": 48392
+    },
+    "max_window_pages": 2763,
+    "started_at_bangkok": "2026-11-14T04:58:09.104967+07:00",
+    "finished_at_bangkok": "2026-11-14T14:09:11.289708+07:00",
+    "duplicate_page_signatures_skipped": 0,
+    "history_window_stop_counts": {
+      "PROVIDER_EMPTY_PAGE": 35
+    }
+  },
+  "first_acquisition_statuses": {
+    "NOT_APPLICABLE_PROTOCOL_POOL": 1,
+    "CONFIRMED_BOUNDED": 4,
+    "NO_MARKET_BUY_IN_COMPLETE_ACCOUNT_HISTORY": 2,
+    "CONFIRMED_ACCOUNT_COMPLETE": 12,
+    "UNRESOLVED": 1
+  },
+  "holder_classification_gaps": {
+    "affected_owners": 5,
+    "observation_records": 57,
+    "reason_counts": {
+      "AMBIGUOUS_USER_EXCHANGE_ASSETS": 24,
+      "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE": 4,
+      "WALLET_NOT_REFERENCED": 29
+    },
+    "unique_owner_signatures": 57,
+    "unique_signatures": 57,
+    "unscoped_records": 0,
+    "version": 1
+  },
+  "independent_stage": {
+    "status": "NEAR_TIME_DIFFERENCES",
+    "scope": "ALL_PROVIDED_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_INDEPENDENT_ENUMERATION",
+    "accounts_compared": 33615,
+    "requested_addresses": 33615,
+    "not_compared": 0,
+    "matches": 33613,
+    "differences": 0,
+    "missing": 2,
+    "batches_completed": 3362,
+    "secondary_wire_attempts": 3362,
+    "provided_account_set_compared": true,
+    "primary_slot_range": [
+      469085430,
+      469095763
+    ],
+    "secondary_slot_range": [
+      469085431,
+      469095765
+    ],
+    "single_common_slot": false,
+    "source_sha": "e7df038fa2bcc1a49add0019fb9a35718beed3a0",
+    "producer_source_sha": "e7df038fa2bcc1a49add0019fb9a35718beed3a0",
+    "verifier_source_sha": "2471467e53cb772202abcc7415b17c1f33defd59",
+    "first_sequence": 97,
+    "read_count": 6724,
+    "previous_anchor_sha256": "6308c887b2cd04a03ece9b53b3aa577f53f785831373263a2748cc4feac2f271",
+    "last_read_sha256": "ed3cfe97868e75dcf720b2be69c56e9d1673f196b03a7fad29e0b96a0e6ebbf4",
+    "raw_capture_sha256": "4aa8e2fe4a11d8571a04443fc7425843e9ecaf46242a80f491fb7f22914642ed",
+    "socket_events": {},
+    "whole_job_status_at_snapshot": "RUNNING",
+    "whole_job_complete": false,
+    "secondary_verdict_frozen": false
+  },
+  "full_replays": {
+    "producer": {
+      "source_sha": "e7df038fa2bcc1a49add0019fb9a35718beed3a0",
+      "report_sha256": "1a94b9d6f31cd48498000a0ac178aa0ec142b36abd329b6982679e3ce81cbb79",
+      "checkpoint_sha256": "17a9d275966a2ad9e0143d93d42d648926a7cff2e2875d77797eada681f00daf",
+      "replayed_reads": 61761,
+      "channels": {
+        "rpc": 58395,
+        "market_client": 1,
+        "independent_market_client": 1,
+        "narrative_client": 2,
+        "secondary_rpc": 3362
+      },
+      "primary_reserved_wire_attempts": 57354,
+      "secondary_reserved_wire_attempts": 3362,
+      "secondary_verdict_frozen": false,
+      "business_differences": [],
+      "socket_events": {},
+      "checkpoint_original_hash_unchanged": true,
+      "normalized_local_timing_or_endpoint_path_count": 2476,
+      "normalization_paths_sha256": "b5c5912939ce26883e21d456b4a27958b1b8c15239a98fc8e89835bc9f80dcb9"
+    },
+    "candidate": {
+      "source_sha": "2471467e53cb772202abcc7415b17c1f33defd59",
+      "report_sha256": "1a94b9d6f31cd48498000a0ac178aa0ec142b36abd329b6982679e3ce81cbb79",
+      "checkpoint_sha256": "17a9d275966a2ad9e0143d93d42d648926a7cff2e2875d77797eada681f00daf",
+      "replayed_reads": 61761,
+      "channels": {
+        "rpc": 58395,
+        "market_client": 1,
+        "independent_market_client": 1,
+        "narrative_client": 2,
+        "secondary_rpc": 3362
+      },
+      "primary_reserved_wire_attempts": 57354,
+      "secondary_reserved_wire_attempts": 3362,
+      "secondary_verdict_frozen": false,
+      "business_differences": [],
+      "socket_events": {},
+      "checkpoint_original_hash_unchanged": true,
+      "normalized_local_timing_or_endpoint_path_count": 2476,
+      "normalization_paths_sha256": "1c658e4c2eb83a199c86f38ef5737fd68fd8460116c8fe096b2d1df45ffb91bd"
+    }
+  },
+  "edge_audit": {
+    "source_sha": "e7df038fa2bcc1a49add0019fb9a35718beed3a0",
+    "report_sha256": "1a94b9d6f31cd48498000a0ac178aa0ec142b36abd329b6982679e3ce81cbb79",
+    "checkpoint_sha256": "17a9d275966a2ad9e0143d93d42d648926a7cff2e2875d77797eada681f00daf",
+    "checkpoint_chain_reads": 61761,
+    "edge_count": 281,
+    "edge_types": {
+      "DIRECT_TOKEN_TRANSFER": 239,
+      "DIRECT_QUOTE_TRANSFER": 10,
+      "COMMON_CONSOLIDATION_UNRESOLVED": 10,
+      "SHARED_INFRA": 21,
+      "COMMON_SIGNER_UNRESOLVED": 1
+    },
+    "raw_instruction_supported_direct_edges": 249,
+    "multi_evidence_supported_derived_edges": 32,
+    "consolidation_raw_rows_checked": 88,
+    "duplicate_edge_records": 0,
+    "invalid_references": 0,
+    "registry_sha256": "40d5ef260f2d56aef284c64e0e02e599b7dede44dd880f05ab8e914b857a5c0a",
+    "registry_real_world_identity_independently_verified": false,
+    "common_control_or_full_history_claimed": false,
+    "socket_events": {},
+    "checkpoint_hash_unchanged": true,
+    "verdict": "PASS_FOR_THIS_CAPTURED_COHORT"
+  },
+  "business_reference_audit": {
+    "duplicate_business_keys": {
+      "trade_evidence": 0,
+      "funding_evidence": 0,
+      "consolidation_evidence": 0
+    },
+    "raw_success_and_signature_time_references_checked": {
+      "trade_evidence": 284,
+      "funding_evidence": 14,
+      "consolidation_evidence": 88
+    },
+    "native_funding_instructions_checked": 14,
+    "native_amount_comparison": "RAW_NONNEGATIVE_INTEGER_TO_REPORT_DECIMAL_STRING",
+    "classification_affected_owners": 5,
+    "affected_owners_not_upgraded_to_complete": true,
+    "configured_rpc_secret_values_absent_from_report": true,
+    "configured_secret_values_checked": 2,
+    "source_calls": 0,
+    "report_sha256": "1a94b9d6f31cd48498000a0ac178aa0ec142b36abd329b6982679e3ce81cbb79"
+  },
+  "tests": {
+    "python": {
+      "args": [
+        "-ra",
+        "-ra",
+        "-ra",
+        "-ra",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_meme_ca_completeness.py",
+        "tests/test_meme_ca_trader_ui.py",
+        "tests/test_meme_ca_writer_contract.py",
+        "tests/test_meme_effective_reserves.py",
+        "tests/test_meme_evidence_sync.py",
+        "tests/test_meme_failed_transfer_evidence.py",
+        "tests/test_meme_first_buy_completeness.py",
+        "tests/test_meme_fm4.py",
+        "tests/test_meme_global_pool_discovery.py",
+        "tests/test_meme_historical_account_scan.py",
+        "tests/test_meme_historical_accounts.py",
+        "tests/test_meme_historical_retention.py",
+        "tests/test_meme_holder_binary.py",
+        "tests/test_meme_holder_ranks.py",
+        "tests/test_meme_independent_check_lifecycle.py",
+        "tests/test_meme_independent_error_evidence.py",
+        "tests/test_meme_independent_full_accounts.py",
+        "tests/test_meme_launch_origin.py",
+        "tests/test_meme_live_readonly_audit.py",
+        "tests/test_meme_market_and_rpc.py",
+        "tests/test_meme_market_parity.py",
+        "tests/test_meme_narrative.py",
+        "tests/test_meme_narrative_story.py",
+        "tests/test_meme_no_pool_roles.py",
+        "tests/test_meme_owner_account_history.py",
+        "tests/test_meme_owner_history_gaps.py",
+        "tests/test_meme_owner_pool_discovery.py",
+        "tests/test_meme_pool_holder_roles.py",
+        "tests/test_meme_pool_market_ratio.py",
+        "tests/test_meme_pool_vaults.py",
+        "tests/test_meme_pr29_release_rehearsal.py",
+        "tests/test_meme_pr29_shadow_readonly.py",
+        "tests/test_meme_review_safety_gates.py",
+        "tests/test_meme_role_coverage.py",
+        "tests/test_meme_source_end_history.py",
+        "tests/test_meme_special_roles.py",
+        "tests/test_meme_top_account_context.py",
+        "tests/test_meme_wallet_cluster.py",
+        "tests/test_meme_wallet_cluster_pagination.py",
+        "tests/test_ca_job_checkpoint.py",
+        "tests/test_ca_origin_checkpoint.py",
+        "tests/test_ca_secondary_checkpoint.py",
+        "tests/test_ca_unlimited_free_jobs.py",
+        "tests/test_frank_ca_job_rpc_budget.py",
+        "tests/test_frank_classifier_candidate_replay.py",
+        "tests/test_frank_fm.py",
+        "tests/test_frank_local_signals.py",
+        "tests/test_frank_user_amount_signal_independence.py",
+        "tests/test_mission_control_dashboard.py"
+      ],
+      "exit_code": 0,
+      "socket_events": {},
+      "source_sha": "2471467e53cb772202abcc7415b17c1f33defd59",
+      "runner": "pytest.main(args) with socket audit denial",
+      "passed": 1044,
+      "seconds": 7.09,
+      "log_sha256": "6bc3a6090238fda5e3ed8a58f7766773d7c49cca623ad3e278baef84c71a0bb1"
+    },
+    "node": {
+      "command": [
+        "node",
+        "--test",
+        "tests/test_frank_ca_get_resume.mjs",
+        "tests/test_frank_ca_report_render.mjs",
+        "tests/test_frank_d2_ingress_ui.mjs",
+        "tests/test_frank_ca_rpc_budget_ui.mjs"
+      ],
+      "passed": 210,
+      "failed": 0,
+      "skipped": 0,
+      "log_sha256": "5527f85d90baa50cd37235b62033b908cc812a4b2c1c216c8805dc68eaec9656"
+    },
+    "syntax_check": "node --check mission_agent/mission_control/static/app.js: PASS",
+    "pr_workflow_runs": []
+  },
+  "installation": {
+    "dashboard_pid": 47976,
+    "saved_exact_jobs_read": 11,
+    "scanner_status": "LIVE",
+    "scanner_pid_unchanged": true,
+    "source_drift": false,
+    "html_js_match_fixed_source": true,
+    "source_recent_count": 0,
+    "history_count": 9,
+    "eligible_count": 0,
+    "d1_http": 200,
+    "d2_http": 200,
+    "d2_source_observed_at": "2026-11-01T01:26:32.578080+00:00",
+    "status": "PASS",
+    "source_sha": "2471467e53cb772202abcc7415b17c1f33defd59",
+    "previous_runtime_reference_sha": "e7df038fa2bcc1a49add0019fb9a35718beed3a0",
+    "previous_git_identity_trusted": true,
+    "executor_sha256": "264cc496839a661c08075fd0daf9ef751a4d1e125fe5368f845121daf8571403",
+    "preserved_report_files": 90,
+    "narrative_note_sha256": "6434329e7be79eaf7412a92972d64060589b04bf7a212eb8225aa9bce5b13174",
+    "narrative_note_bound_to_original_report": true,
+    "narrative_note_unchanged": true,
+    "protected_file_hashes_unchanged": true,
+    "loop_remains_unloaded": true,
+    "real_rpc_or_ca_post": 0,
+    "notification_or_trade": 0,
+    "dashboard_launchagent_only_reloaded": true,
+    "dashboard_launchagent_only_started": false,
+    "rollback_exercised": false
+  },
+  "backup": {
+    "old_source_files": 510,
+    "report_files": 90,
+    "sqlite_backups": [
+      {
+        "name": "mission-control.sqlite",
+        "sha256": "77bbce4033ef030bf3e90c990d3606a49b94657932d679f2627b241b1f796692",
+        "integrity": "ok",
+        "foreign_key_errors": 0
+      },
+      {
+        "name": "sol-normalized-v1.sqlite",
+        "sha256": "bd5932571383c7b3948091dd3039b8560357517490904054d17aec47fa644ed8",
+        "integrity": "ok",
+        "foreign_key_errors": 0
+      },
+      {
+        "name": "wallet-cluster-rpc-cache.sqlite",
+        "sha256": "8f33e607e8d4f337c8ec014e34027f11836892dd9cf0f3da0b5855429d5914b5",
+        "integrity": "ok",
+        "foreign_key_errors": 0
+      }
+    ],
+    "protected_hash_count": 14,
+    "old_and_candidate_actual_handler_saved_jobs_each": 11,
+    "old_and_candidate_actual_handler_browser_notes_each": 1,
+    "no_listener_preflight": "PASS",
+    "socket_operations": 0,
+    "source_requests": 0
+  },
+  "chrome": {
+    "browser": "Google Chrome on Mac",
+    "url": "http://127.0.0.1:8766/#cluster",
+    "original_saved_job_and_mint_matched": true,
+    "candidate_read_interval_visible": true,
+    "all_20_owner_account_selections_visible": true,
+    "all_35_source_end_windows_visible": true,
+    "independent_33615_items_and_two_missing_visible": true,
+    "source_backed_story_and_separate_recognition_visible": true,
+    "exact_job_get_after_hard_refresh": "PASS",
+    "native_accessibility_fallback_used": true,
+    "debugger_attachment_unavailable": true,
+    "new_rpc_or_ca_query_after_installation": 0,
+    "left_existing_tab_open": true,
+    "screenshots": {
+      "chrome-source-end-final.jpg": "78f00d85d03afb2e123b5b0e978e2431877b1bae33b28ab86b7235385bcd7f74",
+      "chrome-source-end-history-final.jpg": "fb927400c378c8b91b7c94f70e095a507e62842da1714d880ac9728a28e16593"
+    }
+  },
+  "report_and_checkpoint_publicly_uploaded": false,
+  "additional_ad_hoc_source_diagnostic_wire_attempts_previously_recorded": 18,
+  "aggregate_wire_quota": null,
+  "aggregate_seconds_quota": null,
+  "source_scope_limits": [
+    "All windows are provider address/cursor ends, not all closed-account discovery or lifetime ownership proof.",
+    "Primary supplies the independent address universe; two missing accounts remain raw null, not zero.",
+    "Independent reads span multiple slots and 2223.589 seconds; no atomic snapshot or independent enumeration claim.",
+    "57 ambiguous observations affect five Owners and are retained, not forced to trades.",
+    "Registry or on-chain roles are not proof of real-world identity or common beneficial control.",
+    "Source-backed narrative is present; exact-CA recognition and global earliest origin remain unverified.",
+    "This 9-hour collection does not refresh every source to completion time; other protocol cohorts remain untested."
+  ],
+  "forbidden_effects": {
+    "merge": 0,
+    "scanner_restart": 0,
+    "loop_start": 0,
+    "notification_or_email": 0,
+    "wallet_signature_or_trade": 0,
+    "new_port": 0,
+    "new_monitor_or_scheduled_task": 0,
+    "paid_upgrade_or_key_creation": 0
+  },
+  "independent_stage_result_confirmed_in_full_done_capture": true
+}

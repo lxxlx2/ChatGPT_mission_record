@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-11-01T01:28:45.163959+00:00",
+  "verdict": "PASS",
+  "verdict_scope": "Authorized existing read-only Dashboard F01 install and one-shot existing private RPC D2 snapshot refresh",
+  "overall_old_plan": "PARTIAL",
+  "user_authorization": "User explicitly granted all necessary local debugging, environment and existing-service maintenance operations and waived independent review in this turn. No funds operation, new research budget or approval artifact fabrication inferred.",
+  "rules_main_sha": "755c058b20a05a14cc0d2d8dd34103f1c29b4450",
+  "dashboard_release": {
+    "status": "PASS",
+    "observed_at": "2026-11-01T01:25:46.371155+00:00",
+    "source_sha": "ffa96a78a9cae9902d6ba297d5d2135ecbce28cc",
+    "parent_sha": "4de090643590226ba7ec78e9b6c815bb9d6c7259",
+    "old_dashboard_pid": 40680,
+    "dashboard_pid": 40693,
+    "scanner_pid_unchanged": true,
+    "scanner_pid": 3402,
+    "scanner_code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "scanner_status": "LIVE",
+    "source_drift": false,
+    "control_health_status": "STALE",
+    "source_recent_count": 0,
+    "history_count": 7,
+    "eligible_count": 0,
+    "current_balance_verified": false,
+    "html_js_match_pinned_source": true,
+    "d1_http": 200,
+    "d2_http": 200,
+    "d2_source_observed_at": "2026-10-25T07:06:02.429378+00:00",
+    "preserved_byte_hashes": {
+      "control_db": true,
+      "control_health": true,
+      "d2_source": true,
+      "plist": true
+    },
+    "old_backup_source_files": 447,
+    "old_backup_import_preflight": "PASS",
+    "loop_remains_unloaded": true,
+    "rpc_or_ca_post_calls_by_release": 0,
+    "notification_send_calls": 0,
+    "rollback_exercised": true,
+    "rollback_detail": "First candidate start failed because maintenance executor changed runner mode to 0600. Original runner bytes were restored; correcting to owner-executable 0700 restored old Dashboard HTTP before a second successful cutover. No database restore.",
+    "runner_before_sha256": "7211284e84e381caf2320b0c841768e3bb1925ac94f2d754a2cfcecf4382bb9c",
+    "runner_after_sha256": "fbcfa19f0facc2163c540388fa06fece92211886efb3ddd2cb12d0a138560cb4",
+    "runner_mode_after": "0700"
+  },
+  "release_preflight": {
+    "old_backup": {
+      "import": "PASS",
+      "candidates": 7,
+      "control_health": "STALE"
+    },
+    "new": {
+      "import": "PASS",
+      "candidates": 7,
+      "control_health": "STALE",
+      "f01_status": "SOURCE_ONLY",
+      "history_count": 7,
+      "recent_count": 0,
+      "eligible_count": 0
+    }
+  },
+  "first_failure_and_old_version_recovery": {
+    "status": "PASS",
+    "old_source_sha": "4de090643590226ba7ec78e9b6c815bb9d6c7259",
+    "restored_dashboard_pid": 40680,
+    "runtime_api_http": 200,
+    "scanner_status": "LIVE",
+    "scanner_pid": 3402,
+    "runner_mode": "0700"
+  },
+  "d2": {
+    "status": "PASS",
+    "imported_at": "2026-11-01T01:27:26.327919+00:00",
+    "collector_sha": "e4529ba7069e5499d12323a7160ceac08c481fae",
+    "exporter_sha": "ffa96a78a9cae9902d6ba297d5d2135ecbce28cc",
+    "source_document_sha256": "ebbc4393f788306860da319256b33fca062d9dfac3dcdb375a7fa651f3b60d96",
+    "source_capture_sha256": "0af29d30ca1eccb79ff2bbffca4e29253f10c8eda4e7fe624c89c688ebe16bba",
+    "source_observed_at": "2026-11-01T01:26:32.578080+00:00",
+    "program_coverage": [
+      {
+        "account_count": 1960,
+        "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "slot": 463906568
+      },
+      {
+        "account_count": 2938,
+        "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "slot": 463906572
+      }
+    ],
+    "mint_count": 4898,
+    "account_count": 4898,
+    "nonzero_mint_count": 4023,
+    "pages_verified": 49,
+    "local_http_gets": 50,
+    "exact_mint_beyond_first_page_matches": true,
+    "all_rows_match_offline_export": true,
+    "raw_full_response_replay": "PASS",
+    "old_source_document_sha256": "0f051e88853679d9cbd66b1852d5be88b04bca680209edb7dcbe578ae5b6a27e",
+    "old_source_backed_up": true,
+    "control_db_unchanged": true,
+    "control_health_unchanged": true,
+    "source_file_mode": "0600",
+    "external_rpc_requests": 2,
+    "rpc_retries": 0,
+    "production_db_writes": 0,
+    "same_slot_atomic": false,
+    "current_chain_balance_verified": false,
+    "usd_value_verified": false,
+    "pnl_verified": false,
+    "mail_or_notification_send_calls": 0,
+    "background_refresh_added": false,
+    "full_wire_receipts": [
+      {
+        "account_count": 1960,
+        "bytes": 1040414,
+        "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "sha256": "ce0a74b17c821d498235897dbbe36d4ca21aec3041809e66a6a87edbb61f12ed",
+        "slot": 463906568
+      },
+      {
+        "account_count": 2938,
+        "bytes": 1711893,
+        "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "sha256": "174ed823e53e75be9fc634ca67440bb61aa6ee610b12fb32e66ff0c254521dd5",
+        "slot": 463906572
+      }
+    ]
+  },
+  "d2_request_ledger": [
+    {
+      "method": "getTokenAccountsByOwner",
+      "request_id": 1,
+      "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "min_context_slot": 461166207,
+      "status": "BODY_RECEIVED",
+      "bytes": 1040414,
+      "elapsed_seconds": 0.605868
+    },
+    {
+      "method": "getTokenAccountsByOwner",
+      "request_id": 2,
+      "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "min_context_slot": 463906568,
+      "status": "BODY_RECEIVED",
+      "bytes": 1711893,
+      "elapsed_seconds": 0.49007
+    }
+  ],
+  "d2_capture_run": {
+    "exit_code": 0,
+    "elapsed_seconds": 1.446477,
+    "retry_count": 0
+  },
+  "final_runtime": {
+    "observed_at": "2026-11-01T01:27:48.732003+00:00",
+    "status": "PASS",
+    "scanner": {
+      "pid": 3402,
+      "status": "LIVE",
+      "consecutive_errors": 0,
+      "source_drift": false,
+      "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "last_successful_poll": "2026-11-01T01:27:31.352552+00:00",
+      "loaded_source_sha256": "c7a453d5a579c9425dd964f1945b887b3d4ebe92d8159cd8db17a85471958085",
+      "poll_count": 79862
+    },
+    "counts": {
+      "signatures": 5941,
+      "v1_seen": 5941,
+      "signals": 7,
+      "outbox": 9,
+      "gmail_delivery": 2,
+      "email_content": 2
+    },
+    "f01": {
+      "status": "SOURCE_ONLY",
+      "source_recent_count": 0,
+      "excluded_count": 7,
+      "eligible_count": 0,
+      "current_balance_verified": false,
+      "full_chain_verified": false,
+      "live_notification_authorized": false
+    },
+    "dashboard_source_clean": true,
+    "dashboard_code_commit": "ffa96a78a9cae9902d6ba297d5d2135ecbce28cc",
+    "loop_remains_unloaded": true
+  },
+  "mac_browser": {
+    "actual_url": "http://127.0.0.1:8766/#signals",
+    "f01_recent_rows": 0,
+    "f01_history_rows": 7,
+    "eligible_count": 0,
+    "historical_model_and_payment_visible": true,
+    "scanner_label": "Frank 监控正常",
+    "loop_label": "跟单引擎心跳过期",
+    "d2_explicit_read_shows_new_source": true,
+    "d2_observed_bangkok": "2026-11-01T08:26:32.578080+07:00",
+    "d2_pages": 49,
+    "temporary_tab_closed": true
+  },
+  "tests": {
+    "previous_unchanged_integration_full": "1569 passed / 3 skipped / 14 warnings; exact ffa96a78a9cae9902d6ba297d5d2135ecbce28cc, source unchanged",
+    "pinned_pr60_command": "PYTHONPATH=/private/tmp/frank-pr244-evidence-20261031:. /private/tmp/frank-pr244-venv-20261031/bin/python -B -m pytest -q -p no:cacheprovider -p frank_offline_guard tests/test_frank_a05_complete_rpc_receipts.py",
+    "pinned_pr60_result": "14 passed in 2.84s",
+    "d2_command": "PYTHONPATH=/private/tmp/frank-pr244-evidence-20261031:. /private/tmp/frank-pr244-venv-20261031/bin/python -B -m pytest -q -p no:cacheprovider -p frank_offline_guard tests/test_frank_d2_owner_at_slot.py tests/test_frank_d2_ingress.py tests/test_frank_d2_private_output.py tests/test_frank_d2_http_route.py tests/test_frank_g2_d1_d2_dashboard.py",
+    "d2_result": "63 passed in 0.58s",
+    "d2_node_command": "node tests/test_frank_d2_ingress_ui.mjs",
+    "d2_node_result": "6 passed / 0 failed",
+    "export_command": "python -I -B scripts/frank_d2_export_ingress.py --pr60-checkout <clean exact e4529ba7069e5499d12323a7160ceac08c481fae checkout> --bundle <private full-wire capture> --output <Git-external private JSON>",
+    "runtime_interpreter": "Python 3.14.7",
+    "independent_review": "Waived by user; not performed; no independent APPROVE claimed",
+    "ci_is_not_mac_test": true
+  },
+  "remaining": {
+    "natural_new_buy": "No newly recognized BUY signal or new delivery; signals7 / outbox9 / Gmail2. No synthetic trade/notification produced; post-open latency sample still absent.",
+    "mc_signature_gate": {
+      "root_owned_public_key_exists": false,
+      "signed_approval_candidate_names": []
+    },
+    "signed_gate_source_sha": "a08c4280b897a7c4306265fe8976024ebd794a7b",
+    "research": "P0/P1 INVEST_NO_GO and TRADE_NO_GO unchanged; no P2/P3/multi-person/PnL/CA expansion"
+  },
+  "safety": {
+    "external_rpc_requests": 2,
+    "rpc_method": "getTokenAccountsByOwner",
+    "rpc_source": "same pre-existing private RPC; no new provider",
+    "rpc_retries": 0,
+    "ca_post_calls": 0,
+    "gmail_or_local_notification_send_calls": 0,
+    "scanner_restarts": 0,
+    "mc_loop_starts": 0,
+    "new_automations_or_monitors": 0,
+    "trades_or_signatures": 0,
+    "merges": 0,
+    "raw_owner_balances_and_full_wire_responses": "Private Git-external directory, 0700 parent and 0600 files; not uploaded",
+    "production_control_db_bytes_unchanged": true,
+    "private_d2_document_replaced_atomically": true
+  },
+  "private_evidence_sha256": {
+    "prepare_f01_release.py": "83bfa0c80cc554d3db938c964959c2c51d0d47dc5d9105146bcdb49be22f6de3",
+    "preflight_f01_release.py": "2a100f0ab6296b1bb3e5624f8cedb082ea3b67132d3b809289865e20ff12eb71",
+    "apply_f01_release.py": "eedebf59eb606774005293c561d4b3557cade82b9443188b4ca404121eec5a33",
+    "f01-release-failure.json": "f114d13528daa721936c293cc1d66e8880d4711fe4f47e0c186a6a68caec0f68",
+    "f01-rollback-verified.json": "c8059c7ac4c0d0ebe2515b6a4c94d29b34a05e02b29a768a981d6c9ff47ac64c",
+    "f01-release-result.json": "8fb4cf1fa97485f606f3ceff83e69c4dded6f89976b38c10ed4327089e7c0a79",
+    "capture_d2_once.py": "5a62fd9d3b5cffba511f022b8a1e845afd957c6f033ed13b7e6c8c890cf5acbe",
+    "d2-live-request-ledger.json": "aecef74d6271f076ebab7e99099dac2dfc120ca8d81f582212058c451d6f06fe",
+    "d2-capture-run-result.json": "242a7aef2c950412edb91f5cde62a841826f1690a79febfac7472d214afbd666",
+    "d2-export-result.txt": "074cfee8e7f066beee63f9e033c75d71d159ee943054bcd4eecf97ca6a0268d9",
+    "import_d2_verified_once.py": "4098bc721aaf351c240165d71d538e06826d947970bcea3b94aa7f8a4868e60b",
+    "d2-fresh-import-result.json": "698f4b6eff8de56a4cc0b5aeb52ebe7d0ff571b44e5cd8abccf7d0c50c1692c8",
+    "d2-pr60-offline.txt": "c1c66132c1c7c4d746e6553dfd90eaeb8c5becabaa233788acd5fbbb791a5d2c",
+    "d2-all-offline.txt": "7aa9881d124fbe3a351a2bd3c84abe56d6b2b2abd0dd188e33f90d28a91ab96f",
+    "d2-node-ui.txt": "1cb5ca100a7d415f6070e8f014a67a5747a66461a98f40fa5789fd3fb711f85f",
+    "f01-d2-final-runtime.json": "d87bda909db25818baf894bb7e7727f9f60add41b7fa09e722b042cf2cd0d455"
+  },
+  "public_secret_check": {
+    "status": "PASS",
+    "private_rpc_or_oauth_echoes": 0,
+    "private_absolute_user_paths": 0
+  }
+}

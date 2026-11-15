@@ -1,0 +1,1477 @@
+{
+  "version": 1,
+  "date": "2026-11-15",
+  "source_sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+  "parent_sha": "2471467e53cb772202abcc7415b17c1f33defd59",
+  "pr_base_sha": "d43878828c86eacee5be9df8a17d16fc63a74bb6",
+  "tools_sha": "a594a05c3f873273512fc88c1d4cc573a8f73264",
+  "phase": "LOCAL_DEPLOYED_FULL_SOURCE_DONE_OFFLINE_REPLAY_AND_CHROME_VERIFIED",
+  "original_57_capture_audit": {
+    "source_sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+    "report_sha256": "1a94b9d6f31cd48498000a0ac178aa0ec142b36abd329b6982679e3ce81cbb79",
+    "checkpoint_sha256": "17a9d275966a2ad9e0143d93d42d648926a7cff2e2875d77797eada681f00daf",
+    "checkpoint_chain_reads": 61761,
+    "observations": 57,
+    "unique_owner_signatures": 57,
+    "raw_transactions": 57,
+    "classification_counts": {
+      "ACTIVE_TRADE": 21,
+      "UNKNOWN_NEEDS_REVIEW": 7,
+      "PASSIVE_TRANSFER": 29
+    },
+    "categories": {
+      "TARGET_MINT_TWO_TOKEN_EXCHANGE": 21,
+      "INSUFFICIENT_RETAINED_EXCHANGE_PROCEEDS": 4,
+      "PASSIVE_TOKEN_OWNER_RECEIPT": 29,
+      "NO_SINGLE_BOUND_MARKET_ROUTE": 2,
+      "MULTIPLE_CHANGED_ASSETS": 1
+    },
+    "default_shared_classifier_unchanged": true,
+    "socket_events": {},
+    "checkpoint_original_hash_unchanged": true,
+    "rows": [
+      {
+        "owner_sha256": "1cc796157f4fe26d43783577b7f5130b783853ec6abb17eeee37467a9c503d47",
+        "signature_sha256": "8316aeb730fee461c5861e022e1c1cc0782e0566bb6b1415b7872cc366afe05d",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6983,
+        "source_read_sha256": "6f976e58008e68891fb2b1f978c0924eeb059c54be0b999b2bfd8190076c182a"
+      },
+      {
+        "owner_sha256": "1cc796157f4fe26d43783577b7f5130b783853ec6abb17eeee37467a9c503d47",
+        "signature_sha256": "348bfdad2e670de620d5554971fc1db9e6608eaf9c2af5e4b860d3ba49efa35e",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6978,
+        "source_read_sha256": "b371ebe552d8afd37d9feb7a33e95727276a5b3e3b78ee7aa6c8bf265633ebc0"
+      },
+      {
+        "owner_sha256": "1cc796157f4fe26d43783577b7f5130b783853ec6abb17eeee37467a9c503d47",
+        "signature_sha256": "de0c75d5afd0befaa88a3dd9f090e20299b01241ab1ce72025154278772bde34",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6982,
+        "source_read_sha256": "4099fbae29680ea2c6e2860061e97290bccf274f0076b363a5f714bcf709ab81"
+      },
+      {
+        "owner_sha256": "1cc796157f4fe26d43783577b7f5130b783853ec6abb17eeee37467a9c503d47",
+        "signature_sha256": "2adb4872e30c2795f84e35e341e6c81787ee07c5fe460665437343a01bbe75be",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6980,
+        "source_read_sha256": "09adc12464e67d5a18ffc995e9d7784608354bedb4afb221e7203cb6a8d28690"
+      },
+      {
+        "owner_sha256": "1cc796157f4fe26d43783577b7f5130b783853ec6abb17eeee37467a9c503d47",
+        "signature_sha256": "d517d95789335fdd05f3a8aaa2cc13ee81711fcbd0edd2727dee30b303dabacc",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6981,
+        "source_read_sha256": "971f7f3e513b071068dbd5bb865b4dab5b92eae51ee3d5e48477a9535127faf1"
+      },
+      {
+        "owner_sha256": "1cc796157f4fe26d43783577b7f5130b783853ec6abb17eeee37467a9c503d47",
+        "signature_sha256": "d8d5dc644f94e23c2539d97026ee7d8e17c010dfac1150ba01b3e659e4fa2b80",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6979,
+        "source_read_sha256": "c70851fa6dd65c00fbcf38880ebe4b537b5bf73f696c83a85a303a8cf7a6a2eb"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "db205a25d972a9c62cb248a31f3fcd30acc06556126569f69da48b747c120634",
+        "before": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "INSUFFICIENT_RETAINED_EXCHANGE_PROCEEDS",
+        "reason": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "seq": 6839,
+        "source_read_sha256": "8a2e420486aba94334d5787519773da2645203542def2940b581d1cfd4163f7d"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "63d6b30cb6fe1e16da18d7e384e3e300de628405428e8c18c0bfc6821656bac0",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6842,
+        "source_read_sha256": "d71cdc546a791863189f8d14b72e4c509e27e5ff90dfafa31771b8907516a5f7"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "1b6bc3ff9cd8e401495957533e26f13381c74556d70c92464f806bd05fc5d1b6",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6835,
+        "source_read_sha256": "c6b227d1cfafd4df430c0815ccc6ca3d7bc0c45b0631580b907a47f5cbd37d79"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "72aa87be31625ff21ea3fd4530b106f414ef53efd0f953f28d5316beec91a4ad",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6830,
+        "source_read_sha256": "04565e0db5e206e660aa176eb0c8b0c4988d3548b194d2f690feb16ca8c629a3"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "9c3ea47329c68a5888227bc12067aa6e3f0f30ca95f92c09c0e5cd59da416f17",
+        "before": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "INSUFFICIENT_RETAINED_EXCHANGE_PROCEEDS",
+        "reason": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "seq": 6841,
+        "source_read_sha256": "3461551ed3a33d9a480c85a443e448c48ba29f6613c2f51a853acb7b958496f0"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "9fa637e018f3c1dc3efb6f30b4bb4588d1ecbca4be2151dfc6b458eb9e287428",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6837,
+        "source_read_sha256": "a10837fa5f88d85f5f4884538101f98a6826cbdec5439a2f9edfc2d00e00b8ef"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "78d121cd4181e5a99c9a2f7a844957608db0abc1e4af2ecc2302c0e5654889b6",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6833,
+        "source_read_sha256": "4dae5ba106e32e6dd14d39c5bf5923f7600c83e415d9de2f30758103ca9f4da5"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "a0dda9651f89babe9e780824a0e59957298e06dfe112bf1d9449ec086d082f2d",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6843,
+        "source_read_sha256": "d4df91df1a33b0c60753d47bdfdf0029d70371db6b1367d5d199426898ab770c"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "a5ac6b2f642e9ebd9d6684a53f73bbde36f255f2c4a0ac71287583fd3bd0f230",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6836,
+        "source_read_sha256": "4b72783481afa501b956f03c946cac55cf37f0d6f752a3994f0c06b42ed6f4e5"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "85262e86f7693362ce610ba1fc18848db949acfaf1cbdb0e8dc0b468a3646f34",
+        "before": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "INSUFFICIENT_RETAINED_EXCHANGE_PROCEEDS",
+        "reason": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "seq": 6838,
+        "source_read_sha256": "22e00c5d9ebab4d47663b981d1a27c7ac1ec8dce63fb0dd299ea844fb71e0bf1"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "432a16792926fdaf37d1049824ebda637610abbc108d04d266bebf57aae3eceb",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6831,
+        "source_read_sha256": "1f8d83d759d90fc4cb089d96dbe422ba0213b4413dda35ec32229e753dd78aac"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "0e618a5b2633614162c6b7a3ef1a4fff4268d2a01277185e5a7d6252591b4285",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6832,
+        "source_read_sha256": "a9186a67f18aa27eb30ad4a832602fdc5cb06bb5d02a0c5dc574de341cf3d315"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "c241a260a6779c55fd94435c6068446770884aa630444ec1dcd08ac29c0b17a6",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 6829,
+        "source_read_sha256": "7af91a0b7aff7fdc7189aa8db1691c102991f646a71cdc3120321f9fc617fb81"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "eb10b1cc3eec4c185ea0bbb6c997976988d98b126d56b6a94d77d969f510a460",
+        "before": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "INSUFFICIENT_RETAINED_EXCHANGE_PROCEEDS",
+        "reason": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "seq": 6840,
+        "source_read_sha256": "43fcf9cb211e49e1a429cd24fcae729d83af7f9a910c8b91e9a35d5e8b760a3d"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "fbf143a212c8cf6383f1143127401bf4e5575672b8243c73f2f8157c8198c3f8",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 7244,
+        "source_read_sha256": "887aa083f8f78fa8035c5cd0045736dc7fffb4b17fa87b6ec419e75d1fd9149e"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "e0b570e3a3733c1d680e8b6b9e90630ccc4a562b834f9e2c25a204f7ae1d533f",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 7250,
+        "source_read_sha256": "4393dd596af8ba15cde680e2e92ff88308183cfae68a687c89a7621d2556e024"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "ce66bc78bbac551a360af13d481e0c7be7d144786c3de72af0d07d263261d3ab",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 7228,
+        "source_read_sha256": "2c9d5b1bb79d4c055c9e57bd6d41c6683e33b76e465d374e6b1dbceb5ee4c91e"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "15caf56cf697e26c1b7365ccbe5e98cc9c1892f34b7293464039b3f873b76ba2",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 7241,
+        "source_read_sha256": "de0f0b5b3c10cdfc2e5dd648188bbcf4f2088646a4c70f3b6452c419f4a54029"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "d4fda34c1219d32f8ab9af1692453dba0dfc7d9e9606d3adfc36d3b226d3d57f",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 46934,
+        "source_read_sha256": "1d1bbe789bf1b2dede8a81f71dad3eeadc750238b6163e8d3bc9335fab8263af"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "665e8a1986d26a8b5c46aa1e7aaa5d5987a74fe5198bfaa362bbdde4217fb645",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 7229,
+        "source_read_sha256": "ccc8caeacb6b76dffd7246d1c17844802892362ef7651cdba98df02ebceb2856"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "1d95157061322e7cbb5bb72534584db701156f85b906e9db998dacb1ef365ae5",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 47031,
+        "source_read_sha256": "93b133c6538486f6e0b87ed8f67a7fddd24d3652297e7ac9686823cee4d54852"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "00e4fc24ae84ed733ee9884c6b32028714c8c7be4a90d0ed31ebbc81b918e96a",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 7248,
+        "source_read_sha256": "d9370b970f3475f989d1d7a83cd919a74b3fdf49e06bd77b3c1d3622ad0e0ac5"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "938a965d60a6fad0b0e6197d1588aa6edd83b3063934aadbd0156182575e00c9",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 7242,
+        "source_read_sha256": "e563f289b3ef9ab45fafef05689058ec6e143cf50003e80934379b57805813be"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "4bec8d8e5d46b918d7764a3ac92eceb95a4a935ace670ffd3ef69880e56325bd",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 7230,
+        "source_read_sha256": "c572c18f82e0eb83e12454d0b4b18ca626042d6171630a38bd0e11c43030452b"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "5b6bb2ce0ce3958dbf4ad2a9957ef61d3e2d342211422aace4190b87cbaf713c",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 7243,
+        "source_read_sha256": "0bb404bf674ddb7da100ac518564d3bc77e070165f18953e2ea880335300646b"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "38697e2601243551a01c6c0ffc46dca1784e808d12c39a3e1ec7c58ecbb8aa4d",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 7247,
+        "source_read_sha256": "5f281dcaaf7e1ce9de4188a3185a9ba5f1c6655cc824548389605720a3324873"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "f9075a8a55b832dc83180ea154afab732a8d132d748dc001e997c34377620144",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "NO_SINGLE_BOUND_MARKET_ROUTE",
+        "reason": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "seq": 46957,
+        "source_read_sha256": "9d9e6b356e173a2a5374d69708a08a1d8cea338a4c92a6ff4700fd9628d6895d"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "f783d85ce78055801c261a9f7ae733825fae613df976348cd03cadbe640a264d",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 7246,
+        "source_read_sha256": "b8f82d88765f4981433ed8f995c2e33b43d8bb60327d548bc92efb82a1b9e0df"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "3ef62f006ed990484f766736ddb8f8b17ccd583232a6876cb2191b329a584409",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "ACTIVE_TRADE",
+        "category": "TARGET_MINT_TWO_TOKEN_EXCHANGE",
+        "reason": "TARGET_MINT_BOUND_TWO_TOKEN_EXCHANGE",
+        "seq": 46962,
+        "source_read_sha256": "ada1fafeab3b3179aff861b889c90e521f304cf9c5e478d630eb3be476cb9342"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "4c0091c8cccfca40b512c0e53e6a450ffb8bfb764a148164cd50374902bd939f",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "NO_SINGLE_BOUND_MARKET_ROUTE",
+        "reason": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "seq": 46961,
+        "source_read_sha256": "e3a13b1c3cee2de1923bb54f39750c4fdb00e6a15a0c5edc77c7f65139631988"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "9809767d063d8833a18e5618b0932b66d566d8650ba3831b7cf2bface81a201f",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 7234,
+        "source_read_sha256": "1f9a23f24ff313ee41e1fa4a6b73b3948c29e6b3503ea438954cc9705c7a3941"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "a745f2ec1cfb80f0e7feb48f4a4fbc71676450ca23671d7811a5cb83a7f43811",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 7237,
+        "source_read_sha256": "bf92eb458dc1df9a017f5b04a7f17d18ecef2666a339f63c8f81b6d07a8ded5d"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "4b670dcbcd2147d1766002186043a42390bbadc1094ddae5cb1c59ca28a2a7c9",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "MULTIPLE_CHANGED_ASSETS",
+        "reason": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "seq": 7231,
+        "source_read_sha256": "545c359eb673b1e3aaa05fea866c77eceabd21744a65803dbeef848c4571785c"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "92b4a463ea314d3f97a2cd29f0209c9136ec743f3f65751e2232db20f9bb0efa",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 7251,
+        "source_read_sha256": "2ce45524cdaa5636d7391edab7ad07e6a9d347d609108fc45b4b62acfb045ed5"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "42b41c7651f8244bccdfabbdfe050af457cbe0bcd0f89d18b2cfc6956d5ed962",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 7249,
+        "source_read_sha256": "231ac680dbc5a5b8119a3af6c49f10b3c8b42b5a663599961cb0cfde79533b6a"
+      },
+      {
+        "owner_sha256": "57f112c54097fa8f1ef35e03f76521260e2c2f43db063802c528102a69373179",
+        "signature_sha256": "4554a69c59028d0899b651a2e959ecfacb62aa5ac9f30f669974e90a083e16b8",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 7269,
+        "source_read_sha256": "439a0bae01849a39eeee3af3cff08b132a731bc62c34135a9804ed4e71ff457b"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "350d51aead0b7b46c5c2831708506fc0ca308997b1bad4cd18534e44dd16001d",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 6902,
+        "source_read_sha256": "bc0e5bba011a34ccc729816fb42542f0e82af41f644f6b69958956ed7b782523"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "ce678dcd01f0b34f0341b67f0c8a1171cd819fa2f24f7ad9f06b7cc5767d7c10",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 6903,
+        "source_read_sha256": "5af411682f93db81f3d7e6e09ab1eeccadb799a8ddb5761e4417e92e52b21727"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "dcde6d901157493abf5d278e21b59f3a4e76741a872100419e2cbfdd801dec6c",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 6900,
+        "source_read_sha256": "b1b408307b690f950ef98c33a33519c6d650072c1897fc080874af2fee796890"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "fa8550631805a9e6a180b029c017e274502059061b4877fb7b613503c839cf33",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 6893,
+        "source_read_sha256": "b2777b9a313327a9d12aab63b6afb5c9ec5ca939efbb5402f9f33da01f5a5683"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "66e5c6f11880c0abe7c5d2783f0861bb47571c2f932f05e4ddccae434af1efee",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 6897,
+        "source_read_sha256": "0788d35c679ee50df4e4023673161aea4d557846da0625bd538d6eaeb6ba42d1"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "44fd4063b4282dd073d27a9a1648e4dcdcb04be019571d1938190d58fe6eccd1",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 6895,
+        "source_read_sha256": "bb9c225d1446b34d96afbd88e1cb876b8408703ece0ef0c978dc09e5d52c0fb8"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "9d7bb9aef0db72c7b3bc24fb6fbe08c7309ec1526b63e76b7d82d13ddc53a952",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 6890,
+        "source_read_sha256": "235d6b8934f9baa18ca3cf7145ece588cdfa73074924b6c11c08654230a6c88a"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "c326fd8a1ab003e54bd67662ce8d0c9d7a64667d553a92d559fc4665102319bc",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 6891,
+        "source_read_sha256": "19d94c32e1d926188ec68013bdf192b593a9d4b0413c93534a071236ef0f97ff"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "e1a45ae2de919bf80bcb023839b25b77cd99aeda4f65bc7fee1eda6843618242",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 6894,
+        "source_read_sha256": "1fc9f931c62c0c9ca08a0416ce0b140b087e3ea81666f174153c5355d7790df8"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "149988df7b5e82cf7fc18d1aba7a79a3c7d6a264423f1702eb3cfc9d8b504f11",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 6901,
+        "source_read_sha256": "705b7cdc31982a1de89107c05f7c8deea1258c7bd519104e953b9f1a098a0982"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "91b2873e597322c74a32da45a493690c209cfbc491e2b0102631d096584ee815",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 6888,
+        "source_read_sha256": "1b0f18b1523e66f5d968f41daebd8d905b60ad396be1b830b25b836f10ba20b3"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "519dbb4e4035ebed3c379320b3395a5cd93611b8beb6c03a84838f87b16ee46d",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 6889,
+        "source_read_sha256": "2105e157f37953122882c3250ccc06d2554ffc6920de9e88f350e7301f531374"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "166ef4edfef4cd7b7f173209a6e13b0c1f70d2521ca59533d8de97a3c51f318e",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 6892,
+        "source_read_sha256": "e2f7646263e6ea7b3760ff373ed10250f3b5403e9eb1922ddc502d1a1147e0c8"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "d1f1d452ede9c39b2447af5d2df68b02afed67933a94d0bb8bd3b0f440672554",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 6896,
+        "source_read_sha256": "45398ece390346b7b6ea2655f29ebb116fad4f29acda9110360d2f7d7440df3d"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "fe55c8de4c7c952c0d3cc41d4532309337f3d7332cfa2e4dc4fc33e8d2b5d985",
+        "before": "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction",
+        "after": "PASSIVE_TRANSFER",
+        "category": "PASSIVE_TOKEN_OWNER_RECEIPT",
+        "reason": "TOKEN_OWNER_CONSERVED_PASSIVE_INBOUND",
+        "seq": 6898,
+        "source_read_sha256": "95069ef52a55216d7acfe5f0565ab5087aed815d67adc293549b9e97276041a3"
+      }
+    ]
+  },
+  "lossless_signature_page_audit": {
+    "fixed_source_epoch_report_sha256": "1a94b9d6f31cd48498000a0ac178aa0ec142b36abd329b6982679e3ce81cbb79",
+    "funding_windows": 16,
+    "signatures": 48392,
+    "old_requests": 6073,
+    "coalesced_1000_requests": 76,
+    "all_windows_keep_provider_empty_end": true,
+    "all_metadata_and_order_equal": true,
+    "source_calls": 0,
+    "windows": [
+      {
+        "window_identity_sha256": "29aaeee06d3f560f0694067eb7ede5d73439f0ef2599e9f38f267f87971c24d6",
+        "signatures": 2,
+        "old_requests": 2,
+        "coalesced_1000_requests": 2,
+        "all_raw_signature_metadata_preserved": true
+      },
+      {
+        "window_identity_sha256": "2a152a093c2fe7921436f579df8c278684c89138898dbe522cfd5703b149b9fc",
+        "signatures": 586,
+        "old_requests": 75,
+        "coalesced_1000_requests": 2,
+        "all_raw_signature_metadata_preserved": true
+      },
+      {
+        "window_identity_sha256": "e55c6f5dbbb446475a029d5c53089b914e0e4739989b748ef6ea431811adbbec",
+        "signatures": 84,
+        "old_requests": 12,
+        "coalesced_1000_requests": 2,
+        "all_raw_signature_metadata_preserved": true
+      },
+      {
+        "window_identity_sha256": "0d6cdc4518e7618cc75d2190e7ce967ef7b59c28d881a5515318140e09c94d4a",
+        "signatures": 1279,
+        "old_requests": 161,
+        "coalesced_1000_requests": 3,
+        "all_raw_signature_metadata_preserved": true
+      },
+      {
+        "window_identity_sha256": "1861cc486dd1232c8cf97ad8ba8a2a14b41898cfdba0d294ac74cd954ccf6ab6",
+        "signatures": 607,
+        "old_requests": 77,
+        "coalesced_1000_requests": 2,
+        "all_raw_signature_metadata_preserved": true
+      },
+      {
+        "window_identity_sha256": "490b3a7e2bc879c6504791056bdf39ac5ca54db995b09b16161ce7a8e40e3778",
+        "signatures": 275,
+        "old_requests": 36,
+        "coalesced_1000_requests": 2,
+        "all_raw_signature_metadata_preserved": true
+      },
+      {
+        "window_identity_sha256": "2fb330c62cdda55fe7bc630400593d99c6232bd9d45cf0ad7b30993c7195bb52",
+        "signatures": 22091,
+        "old_requests": 2763,
+        "coalesced_1000_requests": 24,
+        "all_raw_signature_metadata_preserved": true
+      },
+      {
+        "window_identity_sha256": "6ea1193b32c812c8638754e8c83b1f2aa1ead6190cf6405aee3ab6d1858ebe4c",
+        "signatures": 128,
+        "old_requests": 17,
+        "coalesced_1000_requests": 2,
+        "all_raw_signature_metadata_preserved": true
+      },
+      {
+        "window_identity_sha256": "8fec2ba9d332210be622dbdfe8a1b1b8c9ecdccdac27d5443f274de6ac2add3f",
+        "signatures": 7831,
+        "old_requests": 980,
+        "coalesced_1000_requests": 9,
+        "all_raw_signature_metadata_preserved": true
+      },
+      {
+        "window_identity_sha256": "ff91f9e7739934bc18d2d8132af166d9d6272c318158e04112ce9ef813c8e7f5",
+        "signatures": 1244,
+        "old_requests": 157,
+        "coalesced_1000_requests": 3,
+        "all_raw_signature_metadata_preserved": true
+      },
+      {
+        "window_identity_sha256": "db811384cf1a8353d2ab1762083e0f94dea9cdb44c429b3c73599f57fef3cc58",
+        "signatures": 9,
+        "old_requests": 3,
+        "coalesced_1000_requests": 2,
+        "all_raw_signature_metadata_preserved": true
+      },
+      {
+        "window_identity_sha256": "d10866e1fce5e896fac9640d5f10aae55747ef6ceea2769f457d64d552b8b04f",
+        "signatures": 1068,
+        "old_requests": 135,
+        "coalesced_1000_requests": 3,
+        "all_raw_signature_metadata_preserved": true
+      },
+      {
+        "window_identity_sha256": "2d5f933658acc3e3acb5ab7963e9b6aab129660f89d7f96a5243fc27e0c48219",
+        "signatures": 384,
+        "old_requests": 49,
+        "coalesced_1000_requests": 2,
+        "all_raw_signature_metadata_preserved": true
+      },
+      {
+        "window_identity_sha256": "b7aca40e615a4418f7e654c6874a12924320dff482b79e88bf68bf9a99b17698",
+        "signatures": 3202,
+        "old_requests": 402,
+        "coalesced_1000_requests": 5,
+        "all_raw_signature_metadata_preserved": true
+      },
+      {
+        "window_identity_sha256": "a59a4011346dda8aecc0556aaaa5d7d2f57a3a3c9ff6daee6e7e52e04d1a9c9b",
+        "signatures": 9569,
+        "old_requests": 1198,
+        "coalesced_1000_requests": 11,
+        "all_raw_signature_metadata_preserved": true
+      },
+      {
+        "window_identity_sha256": "565796a3fdf66c2210230bf2d8673754efd8dd65c71cf4d5e24f3f44c33b42f7",
+        "signatures": 33,
+        "old_requests": 6,
+        "coalesced_1000_requests": 2,
+        "all_raw_signature_metadata_preserved": true
+      }
+    ]
+  },
+  "paired_existing_rpc_sample": {
+    "serial": {
+      "seconds": 1.97633366700029,
+      "http_wire_attempts": 4,
+      "logical_transactions": 4,
+      "endpoint_failures": 0,
+      "batch_stats": {
+        "http_batch_attempts": 0,
+        "transaction_subrequests": 0,
+        "fallbacks": 0
+      },
+      "raw_results_sha256": "e17ab723ef6a90ae584e96a4757e7090d425e8bf6c9d33f7555a1ea2ecfef0e8"
+    },
+    "batched": {
+      "seconds": 0.5874698749976233,
+      "http_wire_attempts": 1,
+      "logical_transactions": 4,
+      "endpoint_failures": 0,
+      "batch_stats": {
+        "http_batch_attempts": 1,
+        "transaction_subrequests": 4,
+        "fallbacks": 0
+      },
+      "raw_results_sha256": "e17ab723ef6a90ae584e96a4757e7090d425e8bf6c9d33f7555a1ea2ecfef0e8"
+    },
+    "complete_raw_results_equal": true,
+    "sample_speedup": 3.364144701050902,
+    "not_a_full_cold_ca_runtime_measurement": true
+  },
+  "signatures_1000_existing_rpc_probe": {
+    "requested_page_size": 1000,
+    "returned": 1000,
+    "wire_attempts": 1,
+    "seconds": 0.9058049999875948,
+    "same_anchored_newest_slot": true,
+    "ordered_slots": true,
+    "raw_response_sha256": "880155396532a17573e1ea9b382d30c8bcbb25160a4cafac56391f7bf47ac7ce",
+    "no_total_history_limit": true
+  },
+  "initial_4_transaction_batch_probe": {
+    "http_status": 200,
+    "seconds": 0.5845468330080621,
+    "requested_items": 4,
+    "response_kind": "list",
+    "returned_items": 4,
+    "rpc_error_codes": [],
+    "response_sha256": "dfc553c57654f71b99873d693e31415f153317c7728c209e167b00eb72fe3250",
+    "wire_attempts": 1,
+    "logical_subrequests": 4,
+    "endpoint_identity_sha256": "14760fd5336de8df5db3301558ed1261bd431c98a546472981f68b292ebc9ed3",
+    "ids_match": true,
+    "signatures_match": true
+  },
+  "diagnostic_wire_attempts": 7,
+  "diagnostic_getTransaction_subrequests": 12,
+  "diagnostic_getSignatures_requests": 1,
+  "tests": {
+    "python": {
+      "source_sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+      "args": [
+        "-ra",
+        "-ra",
+        "-ra",
+        "-ra",
+        "-ra",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_meme_ca_completeness.py",
+        "tests/test_meme_ca_trader_ui.py",
+        "tests/test_meme_ca_writer_contract.py",
+        "tests/test_meme_effective_reserves.py",
+        "tests/test_meme_evidence_sync.py",
+        "tests/test_meme_failed_transfer_evidence.py",
+        "tests/test_meme_first_buy_completeness.py",
+        "tests/test_meme_fm4.py",
+        "tests/test_meme_global_pool_discovery.py",
+        "tests/test_meme_historical_account_scan.py",
+        "tests/test_meme_historical_accounts.py",
+        "tests/test_meme_historical_retention.py",
+        "tests/test_meme_holder_binary.py",
+        "tests/test_meme_holder_ranks.py",
+        "tests/test_meme_independent_check_lifecycle.py",
+        "tests/test_meme_independent_error_evidence.py",
+        "tests/test_meme_independent_full_accounts.py",
+        "tests/test_meme_launch_origin.py",
+        "tests/test_meme_live_readonly_audit.py",
+        "tests/test_meme_market_and_rpc.py",
+        "tests/test_meme_market_parity.py",
+        "tests/test_meme_narrative.py",
+        "tests/test_meme_narrative_story.py",
+        "tests/test_meme_no_pool_roles.py",
+        "tests/test_meme_owner_account_history.py",
+        "tests/test_meme_owner_history_gaps.py",
+        "tests/test_meme_owner_pool_discovery.py",
+        "tests/test_meme_pool_holder_roles.py",
+        "tests/test_meme_pool_market_ratio.py",
+        "tests/test_meme_pool_vaults.py",
+        "tests/test_meme_pr29_release_rehearsal.py",
+        "tests/test_meme_pr29_shadow_readonly.py",
+        "tests/test_meme_review_safety_gates.py",
+        "tests/test_meme_role_coverage.py",
+        "tests/test_meme_source_end_history.py",
+        "tests/test_meme_special_roles.py",
+        "tests/test_meme_top_account_context.py",
+        "tests/test_meme_wallet_cluster.py",
+        "tests/test_meme_wallet_cluster_pagination.py",
+        "tests/test_ca_job_checkpoint.py",
+        "tests/test_ca_origin_checkpoint.py",
+        "tests/test_ca_secondary_checkpoint.py",
+        "tests/test_ca_unlimited_free_jobs.py",
+        "tests/test_frank_ca_job_rpc_budget.py",
+        "tests/test_frank_classifier_candidate_replay.py",
+        "tests/test_frank_fm.py",
+        "tests/test_frank_local_signals.py",
+        "tests/test_frank_user_amount_signal_independence.py",
+        "tests/test_mission_control_dashboard.py",
+        "tests/test_meme_history_context_classification.py",
+        "tests/test_meme_transaction_batch.py"
+      ],
+      "exit_code": 0,
+      "socket_events": {},
+      "passed": 1070,
+      "seconds": 7.67,
+      "log_sha256": "b7242d4990bfd1472e822c10af3f92bdc83bd42560a57c285f0f98862b025840"
+    },
+    "node": {
+      "passed": 212,
+      "failed": 0,
+      "skipped": 0,
+      "command": [
+        "node",
+        "--test",
+        "tests/test_frank_ca_get_resume.mjs",
+        "tests/test_frank_ca_report_render.mjs",
+        "tests/test_frank_d2_ingress_ui.mjs",
+        "tests/test_frank_ca_rpc_budget_ui.mjs"
+      ],
+      "log_sha256": "bb11d03c1a217d9dffe322d772decea233bc74721dea8ad0503bb1ae0f05415f"
+    },
+    "syntax": "PASS",
+    "pr_workflow_runs": []
+  },
+  "installation": {
+    "dashboard_pid": 53830,
+    "saved_exact_jobs_read": 11,
+    "scanner_status": "LIVE",
+    "scanner_pid_unchanged": true,
+    "source_drift": false,
+    "html_js_match_fixed_source": true,
+    "source_recent_count": 0,
+    "history_count": 9,
+    "eligible_count": 0,
+    "d1_http": 200,
+    "d2_http": 200,
+    "d2_source_observed_at": "2026-11-01T01:26:32.578080+00:00",
+    "status": "PASS",
+    "source_sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+    "previous_runtime_reference_sha": "2471467e53cb772202abcc7415b17c1f33defd59",
+    "previous_git_identity_trusted": true,
+    "executor_sha256": "f9fc4c5bb7c15b05d9ab1fbbdb207e575f6f72800e5d152f0451caec69826afd",
+    "preserved_report_files": 90,
+    "narrative_note_sha256": "6434329e7be79eaf7412a92972d64060589b04bf7a212eb8225aa9bce5b13174",
+    "narrative_note_bound_to_original_report": true,
+    "narrative_note_unchanged": true,
+    "protected_file_hashes_unchanged": true,
+    "loop_remains_unloaded": true,
+    "real_rpc_or_ca_post": 0,
+    "notification_or_trade": 0,
+    "dashboard_launchagent_only_reloaded": true,
+    "dashboard_launchagent_only_started": false,
+    "rollback_exercised": false
+  },
+  "no_listener_preflight": {
+    "mode": "IN_PROCESS_HANDLER_NO_LISTENER",
+    "status": "PASS",
+    "candidate_source_sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+    "old_source_manifest_sha256": "0354d9264a9f797864cd1a81e81d7ab8250a3ace1e01d7a1be8d1bd06b1758c4",
+    "preflight_helper_sha256": "da3e2c80b66d74ba82a73c24d75ef75aa28102e7d765c0d41205429e23058f83",
+    "old_backup": {
+      "status": "PASS",
+      "mode": "IN_PROCESS_HANDLER_NO_LISTENER",
+      "actual_Handler_GET": true,
+      "actual_response_serialization": true,
+      "html_js_match": true,
+      "css_match": true,
+      "css_assets_checked": 1,
+      "exact_saved_jobs_read": 11,
+      "report_bound_browser_notes_read": 1,
+      "runtime_status": "LIVE",
+      "scanner_pid": 2268,
+      "scanner_code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "source_recent_count": 0,
+      "history_count": 9,
+      "eligible_count": 0,
+      "D1_status": "INDEXED_LOCAL_ONLY",
+      "D2_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+      "external_network_attempts": 0,
+      "socket_operations": 0,
+      "listeners_started": 0,
+      "POSTs": 0,
+      "clean_exit": true
+    },
+    "candidate": {
+      "status": "PASS",
+      "mode": "IN_PROCESS_HANDLER_NO_LISTENER",
+      "actual_Handler_GET": true,
+      "actual_response_serialization": true,
+      "html_js_match": true,
+      "css_match": true,
+      "css_assets_checked": 1,
+      "exact_saved_jobs_read": 11,
+      "report_bound_browser_notes_read": 1,
+      "runtime_status": "LIVE",
+      "scanner_pid": 2268,
+      "scanner_code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "source_recent_count": 0,
+      "history_count": 9,
+      "eligible_count": 0,
+      "D1_status": "INDEXED_LOCAL_ONLY",
+      "D2_status": "BALANCE_AT_OBSERVED_FINALIZED_SLOTS_NOT_LIVE",
+      "external_network_attempts": 0,
+      "socket_operations": 0,
+      "listeners_started": 0,
+      "POSTs": 0,
+      "clean_exit": true
+    }
+  },
+  "new_live_query_snapshot": {
+    "status": "DONE",
+    "progress": "DONE",
+    "error": null,
+    "primary_wire": 3609,
+    "secondary_wire": 3360,
+    "logical_reads": 47811,
+    "cache_hits": 40860,
+    "elapsed_seconds": 2787.7449872493744,
+    "batch_stats": {},
+    "funding_http_batches_observed": 0,
+    "wire_limit": null,
+    "seconds_limit": null,
+    "deadline_at": null
+  },
+  "new_live_query_chrome_manual_submissions": 1,
+  "full_new_query_wallclock_completed": true,
+  "full_cold_query_speedup_proven": false,
+  "paired_sample_test_order": [
+    "serial",
+    "batched"
+  ],
+  "provider_internal_cache_effect_not_isolated": true,
+  "original_9h_profile": {
+    "runtime_seconds": 33062.18474125862,
+    "funding_transaction_reads": 48392,
+    "funding_transaction_seconds": 27340.34,
+    "funding_transaction_fraction_percent": 82.69,
+    "funding_signature_pages": 6073,
+    "funding_signature_seconds": 2968.95,
+    "inter_read_work_seconds": 423.49,
+    "identical_transaction_duplicates": 10,
+    "duplicate_total_read_seconds": 0.0376
+  },
+  "scope": {
+    "shared_classifier_parser_policy_modified": false,
+    "observed_history_truncated": false,
+    "new_total_wire_or_time_quota": false,
+    "new_source_provider_or_key": false,
+    "paid_upgrade": false,
+    "scanner_restart": false,
+    "loop_started": false,
+    "notifications_or_trades": false,
+    "new_port_or_scheduled_monitor": false,
+    "merge": false
+  },
+  "verdict": {
+    "original_57_audit": "PASS_FOR_RAW_57_AUDIT; PARTIAL_FOR_ALL_57_CLASSIFICATION_COMPLETION_50_RESOLVED_7_UNKNOWN",
+    "code_tests": "PASS",
+    "local_installation": "PASS",
+    "new_full_source_and_final_chrome": "PASS_FOR_THIS_SELECTED_ACCOUNT_SOURCE_END_QUERY",
+    "complete_due_diligence": "PARTIAL",
+    "invest": "NO_GO",
+    "trade": "NO_GO",
+    "full_cold_query_latency": "NOT_PROVEN"
+  },
+  "new_source_capture": {
+    "producer_source_sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+    "runtime_seconds": 2787.7449872493744,
+    "started_at": 1794677905.087401,
+    "finished_at": 1794680692.8323882,
+    "status": "DONE",
+    "report_sha256": "3bbf693879c7f98bbd856cc0fb0d3197b72e49c8f3cf4444a7fe7c5d2362588a",
+    "checkpoint_sha256": "a04b5405ebf2a089b8f812b25c2bf1507ed721a14915253995c528fad85439fb",
+    "checkpoint_bytes": 1013469184,
+    "exact_get_values_equal": true,
+    "exact_get_bytes_equal": false,
+    "worker_cache_closed": true,
+    "window_count": 34,
+    "window_stops": {
+      "PROVIDER_EMPTY_PAGE": 34
+    },
+    "phase_windows": {
+      "holder": 19,
+      "funding": 15
+    },
+    "phase_signatures": {
+      "holder": 404,
+      "funding": 40460
+    },
+    "phase_pages": {
+      "holder": 63,
+      "funding": 67
+    },
+    "classification_gaps": {
+      "affected_owners": 3,
+      "observation_records": 10,
+      "reason_counts": {
+        "AMBIGUOUS_USER_EXCHANGE_ASSETS": 3,
+        "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE": 7
+      },
+      "unique_owner_signatures": 10,
+      "unique_signatures": 10,
+      "unscoped_records": 0,
+      "version": 1
+    },
+    "resolution_counts": {
+      "TARGET_MINT_TWO_TOKEN_EXCHANGE": 21,
+      "PASSIVE_TOKEN_OWNER_RECEIPT": 29
+    },
+    "first_acquisition_statuses": {
+      "NOT_APPLICABLE_PROTOCOL_POOL": 1,
+      "CONFIRMED_BOUNDED": 2,
+      "NO_MARKET_BUY_IN_COMPLETE_ACCOUNT_HISTORY": 3,
+      "CONFIRMED_ACCOUNT_COMPLETE": 13,
+      "UNRESOLVED": 1
+    },
+    "batch_stats": null,
+    "independent": {
+      "status": "NEAR_TIME_ALL_MATCH",
+      "accounts_compared": 33594,
+      "matches": 33594,
+      "differences": 0,
+      "missing": 0,
+      "not_compared": 0
+    }
+  },
+  "new_source_full_offline_replay": {
+    "source_sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+    "report_sha256": "3bbf693879c7f98bbd856cc0fb0d3197b72e49c8f3cf4444a7fe7c5d2362588a",
+    "checkpoint_sha256": "a04b5405ebf2a089b8f812b25c2bf1507ed721a14915253995c528fad85439fb",
+    "replayed_reads": 47811,
+    "channels": {
+      "rpc": 44447,
+      "market_client": 1,
+      "independent_market_client": 1,
+      "narrative_client": 2,
+      "secondary_rpc": 3360
+    },
+    "primary_reserved_wire_attempts": 3609,
+    "secondary_reserved_wire_attempts": 3360,
+    "secondary_verdict_frozen": false,
+    "business_differences": [],
+    "socket_events": {},
+    "checkpoint_original_hash_unchanged": true,
+    "normalized_local_timing_or_endpoint_path_count": 2145,
+    "normalization_classes": [
+      "local_result_received_at",
+      "independent_read_gap_seconds",
+      "rpc_endpoint_or_call_scope"
+    ],
+    "full_normalized_path_list_sha256": "8b2250b670af3449ccbdf33fcfc06a8fc9c79d3e804cf8e10c95519f728ea88a"
+  },
+  "new_source_edges_raw_audit": {
+    "source_sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+    "report_sha256": "3bbf693879c7f98bbd856cc0fb0d3197b72e49c8f3cf4444a7fe7c5d2362588a",
+    "checkpoint_sha256": "a04b5405ebf2a089b8f812b25c2bf1507ed721a14915253995c528fad85439fb",
+    "checkpoint_chain_reads": 47811,
+    "edge_count": 265,
+    "edge_types": {
+      "DIRECT_TOKEN_TRANSFER": 234,
+      "DIRECT_QUOTE_TRANSFER": 9,
+      "COMMON_CONSOLIDATION_UNRESOLVED": 6,
+      "SHARED_INFRA": 15,
+      "COMMON_SIGNER_UNRESOLVED": 1
+    },
+    "raw_instruction_supported_direct_edges": 243,
+    "multi_evidence_supported_derived_edges": 22,
+    "consolidation_raw_rows_checked": 87,
+    "duplicate_edge_records": 0,
+    "invalid_references": 0,
+    "registry_sha256": "40d5ef260f2d56aef284c64e0e02e599b7dede44dd880f05ab8e914b857a5c0a",
+    "registry_real_world_identity_independently_verified": false,
+    "common_control_or_full_history_claimed": false,
+    "socket_events": {},
+    "checkpoint_hash_unchanged": true,
+    "verdict": "PASS_FOR_THIS_CAPTURED_COHORT"
+  },
+  "new_source_remaining_gaps_raw_audit": {
+    "source_sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+    "report_sha256": "3bbf693879c7f98bbd856cc0fb0d3197b72e49c8f3cf4444a7fe7c5d2362588a",
+    "checkpoint_sha256": "a04b5405ebf2a089b8f812b25c2bf1507ed721a14915253995c528fad85439fb",
+    "checkpoint_chain_reads": 47811,
+    "observations": 10,
+    "unique_owner_signatures": 10,
+    "raw_transactions": 10,
+    "classification_counts": {
+      "UNKNOWN_NEEDS_REVIEW": 10
+    },
+    "categories": {
+      "INSUFFICIENT_RETAINED_EXCHANGE_PROCEEDS": 7,
+      "NO_SINGLE_BOUND_MARKET_ROUTE": 2,
+      "MULTIPLE_CHANGED_ASSETS": 1
+    },
+    "default_shared_classifier_unchanged": true,
+    "socket_events": {},
+    "checkpoint_original_hash_unchanged": true,
+    "rows": [
+      {
+        "owner_sha256": "56aec93002dee163e5e6dc532564d92ba02216e4d9790e184c948e0dca0bbd8c",
+        "signature_sha256": "6809368feacbc6b145f94d2c2c736c2a85d0a2a22b6b7648d9a9173e00080f12",
+        "before": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "INSUFFICIENT_RETAINED_EXCHANGE_PROCEEDS",
+        "reason": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "seq": 7281,
+        "source_read_sha256": "c1ee6dd69372717d5ce9e748e487a8d30d50f1ebe45f52bfc4b62979504c6c34"
+      },
+      {
+        "owner_sha256": "56aec93002dee163e5e6dc532564d92ba02216e4d9790e184c948e0dca0bbd8c",
+        "signature_sha256": "5c67d9ccede8d9e0260cf2c7fbbf7ccf222eaf243d65e074d200073641f457ee",
+        "before": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "INSUFFICIENT_RETAINED_EXCHANGE_PROCEEDS",
+        "reason": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "seq": 7280,
+        "source_read_sha256": "cfbd4b65ef2775ec5cbcd1ad7484aae85afa40ad42ba14a2bd92bdd21ab235dc"
+      },
+      {
+        "owner_sha256": "56aec93002dee163e5e6dc532564d92ba02216e4d9790e184c948e0dca0bbd8c",
+        "signature_sha256": "ad80b3d9788b07134031aa5736c2cdc985ade03894d322bcf066aaabe27133a0",
+        "before": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "INSUFFICIENT_RETAINED_EXCHANGE_PROCEEDS",
+        "reason": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "seq": 7282,
+        "source_read_sha256": "ab2084ad9abcf3fbe4bca79513b495908663e05692f0e1c4eb91d415eaffa8a5"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "db205a25d972a9c62cb248a31f3fcd30acc06556126569f69da48b747c120634",
+        "before": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "INSUFFICIENT_RETAINED_EXCHANGE_PROCEEDS",
+        "reason": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "seq": 6835,
+        "source_read_sha256": "3419a5acd12828f4d98ae7dfba93d5ee52fca6d730c2107dcf8fbe3adcbc132c"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "9c3ea47329c68a5888227bc12067aa6e3f0f30ca95f92c09c0e5cd59da416f17",
+        "before": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "INSUFFICIENT_RETAINED_EXCHANGE_PROCEEDS",
+        "reason": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "seq": 6837,
+        "source_read_sha256": "74c84d50b4c76043417d8034c958bb7ca59fc4e95099d7fbcc688d5d7aacf87d"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "85262e86f7693362ce610ba1fc18848db949acfaf1cbdb0e8dc0b468a3646f34",
+        "before": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "INSUFFICIENT_RETAINED_EXCHANGE_PROCEEDS",
+        "reason": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "seq": 6834,
+        "source_read_sha256": "8ee1fb5baaf2405f5bdec2f3023f3d1271a8c0f75eac37030f4f655b09ddc309"
+      },
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "eb10b1cc3eec4c185ea0bbb6c997976988d98b126d56b6a94d77d969f510a460",
+        "before": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "INSUFFICIENT_RETAINED_EXCHANGE_PROCEEDS",
+        "reason": "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE",
+        "seq": 6836,
+        "source_read_sha256": "527c654a49ec0cb535edcbaa3b86cff9cdd54d84c04566c4ff97b1d07bf11499"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "f9075a8a55b832dc83180ea154afab732a8d132d748dc001e997c34377620144",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "NO_SINGLE_BOUND_MARKET_ROUTE",
+        "reason": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "seq": 7219,
+        "source_read_sha256": "502863fbd14e68907baa7ec4c0eab20e4b3847ca65d2fcc49c41c1d12564172a"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "4c0091c8cccfca40b512c0e53e6a450ffb8bfb764a148164cd50374902bd939f",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "NO_SINGLE_BOUND_MARKET_ROUTE",
+        "reason": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "seq": 7221,
+        "source_read_sha256": "db80ee7de4f17c20b5d7c7b01e098c0591d953822810a12d91b3c053c8c54baa"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "4b670dcbcd2147d1766002186043a42390bbadc1094ddae5cb1c59ca28a2a7c9",
+        "before": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "after": "UNKNOWN_NEEDS_REVIEW",
+        "category": "MULTIPLE_CHANGED_ASSETS",
+        "reason": "AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "seq": 7214,
+        "source_read_sha256": "62ca398849f67e027c83896c3e7dd614be047c08f75333e36a2565f00ce2b3db"
+      }
+    ]
+  },
+  "epoch_comparison": {
+    "source_sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+    "original_57_resolved_rows_exactly_match_new_report": true,
+    "original_unknown_7_all_retained": true,
+    "new_only_unknown_rows": 3,
+    "new_only_unknown_owners": 1,
+    "new_only_unknown_owner_previously_selected": false,
+    "funding_signature_count_differences": [
+      {
+        "owner_sha256": "9ad17e5073261f16257460b61c52b56ba69d219a1f5050b9f84c1a9becfe201d",
+        "old_signatures": 7831,
+        "new_signatures": null,
+        "initial_before_changed": false
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "old_signatures": 384,
+        "new_signatures": 283,
+        "initial_before_changed": true
+      }
+    ],
+    "all_34_window_stops_provider_empty": true,
+    "all_window_total_page_limits_none": true,
+    "raw_funding_records_checked": 13,
+    "raw_funding_success_signature_time_instruction_match": true,
+    "funding_case_hashes": [
+      {
+        "owner_sha256": "6290a056443e1461b9953b25db47c3e841e3ea0c4c00506664f806a5fcc61e98",
+        "signature_sha256": "d1b177ccadba2dc796ecd0378fcd360e46cbf8d43a8638b8d8ca8a4589872f9d"
+      },
+      {
+        "owner_sha256": "1da81ad5d16a0cf98d60878276f886762b764a649ada54bf4abb4ecf5f76bdf4",
+        "signature_sha256": "7e301c397a8cac6bcc469e0330b426f686cf8cfb3099a79ec64cfeffa94c0338"
+      },
+      {
+        "owner_sha256": "27e446420115a8b563f8c320bfc0dd55358f12c98783917a82d85ce805948045",
+        "signature_sha256": "b86f303add2eef4438a81246a8996de9e7e3acd7c6737021603d1799707e965d"
+      },
+      {
+        "owner_sha256": "fa6a9fea30cf7386e894c61e1e746916ce023ea4213d25b1e1a138bf0da52d18",
+        "signature_sha256": "3622c0ef4fafd540a0f625dcff78d255b5d1646a5eb774799d67d8ad84f86172"
+      },
+      {
+        "owner_sha256": "1cc796157f4fe26d43783577b7f5130b783853ec6abb17eeee37467a9c503d47",
+        "signature_sha256": "4ed8c69c15bb670c0d72a76218f5ecfc928e192f27800c972ecfd623f30699df"
+      },
+      {
+        "owner_sha256": "57a2a7e897182c3e09b5801160c16d0e6fd74027ccc1d0ba7084999034c7fbce",
+        "signature_sha256": "ca2364ea97138493ba22a54741b9c04df94bef33599d0a865d212e1b0640f0af"
+      },
+      {
+        "owner_sha256": "ec1b2a45b2a73949fcad7c9a635694ca964713e2106334946efa1b68a9063ab3",
+        "signature_sha256": "4e6b076e1bfd204bbc692b2f9421e0cf09c726738261b109fd53515ca3c5db4e"
+      },
+      {
+        "owner_sha256": "da3576947e8b3b26f97a60687162a1c965a6d50f2e5d3133143776e2a8d965a6",
+        "signature_sha256": "6c719f07b46c064ff2b685bb42976645ced80057f8baeef94225ddfcea9243f1"
+      },
+      {
+        "owner_sha256": "45c3e80d878dc0703a21e67f14744a3f18e9899b8ca80cfc7c2c8a080199cb4c",
+        "signature_sha256": "5b49246658389fa332bd955620a80326e4b8d2fa27ee985149fff3cc0051709b"
+      },
+      {
+        "owner_sha256": "d3b2853de74a90f6aa44b38d86777568c675a0c66188c598d083efe97d2dbadc",
+        "signature_sha256": "11dfcbefe885bed911e3991470189837e0e2f7adaeb38a3077cc8602c81f41ee"
+      },
+      {
+        "owner_sha256": "209190b308536861ca4f68a6c5446b77fbedce46c019bebfbe15a909e3fd2fb1",
+        "signature_sha256": "d9d55697666ad888bf80787f302e6100ee6fb7262e9f77e0c39f4c3f31f494f6"
+      },
+      {
+        "owner_sha256": "0a96903725ce2bc12e33420fd74fdc16da047f22650e3ff4fcb330b322c0530a",
+        "signature_sha256": "515dae57defa4f1ef0ae64e8aeb637dc1d9f994b2f3cbffab27796c17d4ce2c6"
+      },
+      {
+        "owner_sha256": "fbd402fcc9ed438e5beb77a8d2f8fb7c2cdb9e9a7e2787ce0368b0a0a9c3ebee",
+        "signature_sha256": "ecd80d66b74cde74807b6acf510af87d0ed9af85b9a3286f0409a71c1624ea39"
+      }
+    ],
+    "initial_exploratory_funding_probe_failed_on_string_parsed_instruction": true,
+    "final_funding_probe_exit_code": 0
+  },
+  "new_query_profile": {
+    "by_channel_operation": {
+      "rpc:getAccountInfo": [
+        3,
+        1.2578933238983154
+      ],
+      "market_client:token_snapshot": [
+        1,
+        0.17633390426635742
+      ],
+      "independent_market_client:pool_snapshot": [
+        1,
+        0.7698349952697754
+      ],
+      "narrative_client:collect": [
+        1,
+        1.9340410232543945
+      ],
+      "narrative_client:collect_origin": [
+        1,
+        2.03609299659729
+      ],
+      "rpc:getTokenSupply": [
+        2,
+        0.7064239978790283
+      ],
+      "rpc:getTokenLargestAccounts": [
+        1,
+        1.1973059177398682
+      ],
+      "rpc:getMultipleAccounts": [
+        3446,
+        771.9317095279694
+      ],
+      "rpc:getProgramAccounts": [
+        1,
+        3.418823003768921
+      ],
+      "secondary_rpc:getMultipleAccounts": [
+        3360,
+        1359.1038942337036
+      ],
+      "rpc:getSignaturesForAddress": [
+        130,
+        135.86367440223694
+      ],
+      "rpc:getTransaction": [
+        40864,
+        167.85827565193176
+      ]
+    },
+    "outcomes": {
+      "OK": 47811
+    },
+    "batch_stats": {},
+    "primary_cache_hits": 40860,
+    "primary_wire": 3609,
+    "secondary_wire": 3360
+  },
+  "post_query_preservation": {
+    "tracked_agent_files_verified": 511,
+    "source_clean": true,
+    "served_app_js_matches": true,
+    "old_report_files": 90,
+    "old_report_files_unchanged": 88,
+    "old_report_files_missing": 0,
+    "expected_updated_artifact_roles": [
+      "CURRENT_MINT_LATEST_REPORT",
+      "CURRENT_MINT_ASSESSMENT_HISTORY"
+    ],
+    "non_cache_protected_hashes_unchanged": 13,
+    "existing_rpc_cache_expected_changed": true,
+    "old_exact_job_artifacts_unchanged": true,
+    "existing_browser_narrative_note_unchanged": true
+  },
+  "final_runtime_and_secret_checks": {
+    "scanner": {
+      "status": "LIVE",
+      "pid": 2268,
+      "code_commit": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "source_drift": false,
+      "consecutive_errors": 0,
+      "restart_count": 14,
+      "production_trading": "NO_GO",
+      "new_automation": false,
+      "loaded_source_sha256": "c7a453d5a579c9425dd964f1945b887b3d4ebe92d8159cd8db17a85471958085"
+    },
+    "dashboard_pid": 53830,
+    "dashboard_listener_only_original_127_0_0_1_8766": true,
+    "configured_rpc_urls_checked": 1,
+    "configured_opaque_credential_pieces_checked": 1,
+    "configured_private_rpc_url_or_key_in_report": false,
+    "chrome_screenshot_sha256": "5b6d11c1146e3cada1c91faf1984c6bb3efeb652c8fb7ef9b62c05c9e9563bd1",
+    "chrome_app_error_seen": false,
+    "chrome_extension_injection_errors_seen": true,
+    "loop_status": "UNLOADED_VERIFIED_LAUNCHCTL_EXIT_113"
+  },
+  "chrome": {
+    "browser": "Google Chrome",
+    "url": "http://127.0.0.1:8766/#cluster",
+    "manual_source_submissions": 1,
+    "final_action": "GET existing latest saved report and expand technical evidence",
+    "displayed_source_interval_seconds": 2787.7449872493744,
+    "displayed_classification_resolutions": {
+      "PASSIVE_TOKEN_OWNER_RECEIPT": 29,
+      "TARGET_MINT_TWO_TOKEN_EXCHANGE": 21
+    },
+    "displayed_remaining_gap_records": 10,
+    "displayed_primary_wire": 3609,
+    "displayed_cache_hits": 40860,
+    "all_34_provider_empty_window_rows_rendered": true,
+    "narrative_content_and_separate_claim_status_visible": true,
+    "nonstandard_pair_net_amount_warning_visible": true,
+    "screenshot_sha256": "5b6d11c1146e3cada1c91faf1984c6bb3efeb652c8fb7ef9b62c05c9e9563bd1",
+    "app_errors_observed": false,
+    "unrelated_wallet_extension_injection_errors_observed": true,
+    "left_open": true,
+    "new_source_submissions_during_final_read": 0
+  },
+  "capture_integrity": {
+    "new_done_report_hash_matches": true,
+    "exact_by_id_get_json_values_equal": true,
+    "exact_by_id_get_serialized_bytes_equal": false,
+    "serializer_order_or_whitespace_not_original_bytes": true,
+    "checkpoint_copied_after_worker_closed": true,
+    "checkpoint_original_unchanged_by_replay": true
+  },
+  "performance_interpretation": {
+    "old_seconds": 33062.185,
+    "new_seconds": 2787.7449872493744,
+    "observed_wallclock_ratio": 11.859831208098397,
+    "cold_same_input_controlled_comparison": false,
+    "confounders": [
+      "40860 immutable transaction cache hits",
+      "Top20 changed by one Owner",
+      "removed Owner funding window contained 7831 signatures",
+      "corrected earlier first buy changed one funding window from 384 to 283 signatures"
+    ],
+    "no_history_truncation_used": true,
+    "actual_batch_transport_exercised_in_full_query": false,
+    "actual_batch_transport_exercised_separate_existing_rpc_sample": true,
+    "batch_compute_unit_reduction_claimed": false
+  },
+  "canonical_rules": {
+    "AGENTS_blob": "6a1217d85e217754dea557bcd4e23982efaf3949",
+    "development_rules_blob": "5e8f89418bf206ee77dec9a803b808262d62a72a",
+    "rechecked_date": "2026-11-15"
+  }
+}

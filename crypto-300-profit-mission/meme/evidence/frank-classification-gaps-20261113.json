@@ -1,0 +1,474 @@
+{
+  "version": 1,
+  "date": "2026-11-13",
+  "source_sha": "81bb338d967d09a9598894cb47976f4f1f994296",
+  "parent_and_baseline_sha": "9677da7d0b429a4a69fd270cd0097231e4713507",
+  "source_pr": 252,
+  "source_branch": "codex/frank-gpa-binary-full-mint",
+  "source_pr_base_sha": "d43878828c86eacee5be9df8a17d16fc63a74bb6",
+  "latest_main_read_sha": "316537ce358a02ea0177c9f8c59c8735b9ce16c9",
+  "review_waived_by_user": true,
+  "verdicts": {
+    "original_298_context_audit": "PASS",
+    "owner_scoped_gap_fix": "PASS",
+    "captured_edges_216": "PASS_WITH_SCOPE",
+    "local_install_and_real_Chrome": "PASS",
+    "independent_source_parity": "UNAVAILABLE",
+    "complete_CA_acceptance": "PARTIAL",
+    "invest": "INVEST_NO_GO",
+    "trade": "TRADE_NO_GO"
+  },
+  "original_capture": {
+    "observed_at_bangkok": "2026-11-13T11:24:34+07:00",
+    "baseline_context_audit": {
+      "source_sha": "9677da7d0b429a4a69fd270cd0097231e4713507",
+      "report_sha256": "2f1e663f8a47079609ffa1ad61c9dbe2359667aa48ead0706932390b4d8d4825",
+      "checkpoint_reads_replayed": 1529,
+      "reported_unknown_records": 298,
+      "reproduced_unknown_records": 298,
+      "unique_unknown_signatures": 265,
+      "unique_unknown_owner_signature_pairs": 271,
+      "duplicate_owner_signature_observations": 27,
+      "owners_with_unknown": 5,
+      "all_classification_calls": 549,
+      "reason_counts_records": {
+        "WALLET_NOT_SIGNER_AUTHORITY_UNPROVEN": 234,
+        "AMBIGUOUS_USER_EXCHANGE_ASSETS": 34,
+        "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction": 26,
+        "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE": 4
+      },
+      "reason_counts_unique_owner_signature": {
+        "WALLET_NOT_SIGNER_AUTHORITY_UNPROVEN": 223,
+        "AMBIGUOUS_USER_EXCHANGE_ASSETS": 29,
+        "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction": 15,
+        "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE": 4
+      },
+      "normalize_exception_records": {
+        "null": 272,
+        "IncompleteTransaction:WALLET_NOT_REFERENCED": 26
+      },
+      "normalize_exception_unique_owner_signature": {
+        "null": 256,
+        "IncompleteTransaction:WALLET_NOT_REFERENCED": 15
+      },
+      "mechanical_counts_unique_owner_signature": {
+        "ACTIVE_SWAP_LIKE": 252,
+        "null": 15,
+        "UNKNOWN": 4
+      },
+      "signer_counts_unique_owner_signature": {
+        "False": 223,
+        "True": 33,
+        "None": 15
+      },
+      "target_delta_sign_counts_unique_owner_signature": {
+        "POSITIVE": 110,
+        "NEGATIVE": 146,
+        "UNAVAILABLE": 15
+      },
+      "network_events": {},
+      "checkpoint_sha256_unchanged": true,
+      "comparison_normalizations": [
+        "holder_rankings.raw_balance_check.result_received_at",
+        "special_address_roles.balance_check.result_received_at",
+        "rpc_endpoint"
+      ],
+      "business_diff_keys": [],
+      "first_acquisition_statuses": {
+        "UNRESOLVED": 3,
+        "CONFIRMED_BOUNDED": 9,
+        "NOT_SCANNED": 8
+      },
+      "classification_gap_coverage": null,
+      "replay_scope": "PRIMARY_CAPTURE_CONTEXT_REPLAY; SECONDARY_RESULT_FROZEN_NOT_INDEPENDENTLY_VERIFIED"
+    },
+    "candidate_same_capture_audit": {
+      "source_sha": "81bb338d967d09a9598894cb47976f4f1f994296",
+      "report_sha256": "2f1e663f8a47079609ffa1ad61c9dbe2359667aa48ead0706932390b4d8d4825",
+      "checkpoint_reads_replayed": 1529,
+      "reported_unknown_records": 298,
+      "reproduced_unknown_records": 298,
+      "unique_unknown_signatures": 265,
+      "unique_unknown_owner_signature_pairs": 271,
+      "duplicate_owner_signature_observations": 27,
+      "owners_with_unknown": 5,
+      "all_classification_calls": 549,
+      "reason_counts_records": {
+        "WALLET_NOT_SIGNER_AUTHORITY_UNPROVEN": 234,
+        "AMBIGUOUS_USER_EXCHANGE_ASSETS": 34,
+        "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction": 26,
+        "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE": 4
+      },
+      "reason_counts_unique_owner_signature": {
+        "WALLET_NOT_SIGNER_AUTHORITY_UNPROVEN": 223,
+        "AMBIGUOUS_USER_EXCHANGE_ASSETS": 29,
+        "INCOMPLETE_CHAIN_METADATA:IncompleteTransaction": 15,
+        "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE": 4
+      },
+      "normalize_exception_records": {
+        "null": 272,
+        "IncompleteTransaction:WALLET_NOT_REFERENCED": 26
+      },
+      "normalize_exception_unique_owner_signature": {
+        "null": 256,
+        "IncompleteTransaction:WALLET_NOT_REFERENCED": 15
+      },
+      "mechanical_counts_unique_owner_signature": {
+        "ACTIVE_SWAP_LIKE": 252,
+        "null": 15,
+        "UNKNOWN": 4
+      },
+      "signer_counts_unique_owner_signature": {
+        "False": 223,
+        "True": 33,
+        "None": 15
+      },
+      "target_delta_sign_counts_unique_owner_signature": {
+        "POSITIVE": 110,
+        "NEGATIVE": 146,
+        "UNAVAILABLE": 15
+      },
+      "network_events": {},
+      "checkpoint_sha256_unchanged": true,
+      "comparison_normalizations": [
+        "holder_rankings.raw_balance_check.result_received_at",
+        "special_address_roles.balance_check.result_received_at",
+        "rpc_endpoint"
+      ],
+      "business_diff_keys": [
+        "confirmed_relation_groups",
+        "coverage",
+        "holders",
+        "transaction_errors"
+      ],
+      "first_acquisition_statuses": {
+        "UNRESOLVED": 1,
+        "CONFIRMED_BOUNDED": 4,
+        "NO_MARKET_BUY_IN_COMPLETE_ACCOUNT_HISTORY": 2,
+        "CONFIRMED_ACCOUNT_COMPLETE": 5,
+        "NOT_SCANNED": 8
+      },
+      "classification_gap_coverage": {
+        "version": 1,
+        "observation_records": 298,
+        "unique_owner_signatures": 271,
+        "unique_signatures": 265,
+        "affected_owners": 5,
+        "unscoped_records": 0,
+        "reason_counts": {
+          "WALLET_NOT_SIGNER_AUTHORITY_UNPROVEN": 223,
+          "AMBIGUOUS_USER_EXCHANGE_ASSETS": 29,
+          "WALLET_NOT_REFERENCED": 15,
+          "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE": 4
+        }
+      },
+      "replay_scope": "PRIMARY_CAPTURE_CONTEXT_REPLAY; SECONDARY_RESULT_FROZEN_NOT_INDEPENDENTLY_VERIFIED"
+    },
+    "counterfactual": {
+      "source_sha": "81bb338d967d09a9598894cb47976f4f1f994296",
+      "baseline_sha": "9677da7d0b429a4a69fd270cd0097231e4713507",
+      "replay_reads_each": 1529,
+      "allowed_delta_patterns": [
+        "\\.transaction_errors\\[[0-9]+\\]\\.(owner|token_account|classification_reason|chain_metadata_reason)",
+        "\\.coverage\\.holder_classification_gaps",
+        "\\.holders\\[[0-9]+\\]\\.first_acquisition\\.(status|type|history_scope)",
+        "\\.confirmed_relation_groups\\[[0-9]+\\]\\.first_target_acquisition\\.[1-9A-HJ-NP-Za-km-z]{32,44}\\.(status|history_scope)"
+      ],
+      "all_differences_within_allowed_fields": true,
+      "changed_leaf_count": 947,
+      "trade_funding_consolidation_edges_metrics_assessment_unchanged": true,
+      "source_requests": 0,
+      "secondary_result_frozen_not_verified": true
+    },
+    "edge_admission_audit": {
+      "source_sha": "81bb338d967d09a9598894cb47976f4f1f994296",
+      "report_sha256": "2f1e663f8a47079609ffa1ad61c9dbe2359667aa48ead0706932390b4d8d4825",
+      "checkpoint_sha256": "a7f12f2840e20a7a150e1fea9675dc9078e168ad8f849736f8ad52d976de6ae3",
+      "checkpoint_chain_reads": 1529,
+      "edge_count": 216,
+      "edge_types": {
+        "DIRECT_TOKEN_TRANSFER": 202,
+        "COMMON_CONSOLIDATION_UNRESOLVED": 4,
+        "DIRECT_QUOTE_TRANSFER": 6,
+        "SHARED_INFRA": 3,
+        "COMMON_SIGNER_UNRESOLVED": 1
+      },
+      "raw_instruction_supported_direct_edges": 208,
+      "multi_evidence_supported_derived_edges": 8,
+      "consolidation_raw_rows_checked": 175,
+      "duplicate_edge_records": 0,
+      "invalid_references": 0,
+      "registry_sha256": "40d5ef260f2d56aef284c64e0e02e599b7dede44dd880f05ab8e914b857a5c0a",
+      "registry_real_world_identity_independently_verified": false,
+      "common_control_or_full_history_claimed": false,
+      "socket_events": {},
+      "checkpoint_hash_unchanged": true,
+      "verdict": "PASS_FOR_THIS_CAPTURED_COHORT"
+    },
+    "classification_policy_relaxed": false,
+    "original_capture_files_rewritten": false
+  },
+  "fixes": [
+    "GAPS_BOUND_TO_OWNER_AND_TOKEN_ACCOUNT_AT_SCAN_BOUNDARY",
+    "UNSCOPED_LEGACY_ERRORS_STILL_CONSERVATIVE",
+    "SAFE_CHAIN_METADATA_DIAGNOSTIC_WITHOUT_TRADE_RULE_CHANGES",
+    "OBSERVATIONS_CONTEXTS_SIGNATURES_AND_OWNERS_SEPARATE",
+    "INDEPENDENT_LAST_SAFE_SOURCE_ERROR_SEPARATE_FROM_BUDGET_STOP"
+  ],
+  "tests": {
+    "owner_gap_baseline_new_cases": {
+      "failed": 6,
+      "passed": 1
+    },
+    "ui_baseline_new_cases": {
+      "failed": 3,
+      "passed": 0
+    },
+    "python": {
+      "source_sha": "81bb338d967d09a9598894cb47976f4f1f994296",
+      "args": [
+        "-ra",
+        "-ra",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_meme_first_buy_completeness.py",
+        "tests/test_ca_origin_checkpoint.py",
+        "tests/test_ca_job_checkpoint.py",
+        "tests/test_meme_independent_check_lifecycle.py",
+        "tests/test_frank_ca_job_rpc_budget.py",
+        "tests/test_meme_market_and_rpc.py",
+        "tests/test_meme_wallet_cluster.py",
+        "tests/test_meme_wallet_cluster_pagination.py",
+        "tests/test_meme_holder_ranks.py",
+        "tests/test_meme_holder_binary.py",
+        "tests/test_meme_ca_completeness.py",
+        "tests/test_meme_launch_origin.py",
+        "tests/test_meme_narrative.py",
+        "tests/test_meme_narrative_story.py",
+        "tests/test_meme_pool_holder_roles.py",
+        "tests/test_meme_top_account_context.py",
+        "tests/test_narrative_supplement.py",
+        "tests/test_meme_owner_history_gaps.py",
+        "tests/test_meme_independent_error_evidence.py",
+        "tests/test_frank_classifier_candidate_replay.py",
+        "tests/test_frank_fm.py",
+        "tests/test_frank_local_signals.py",
+        "tests/test_frank_user_amount_signal_independence.py"
+      ],
+      "exit_code": 0,
+      "socket_events": {},
+      "passed": 573,
+      "seconds": 2.98,
+      "file_count": 23,
+      "command": "<existing-review-python> -B, deny all socket.* audit, pytest.main(args)",
+      "source_requests": 0
+    },
+    "node": {
+      "source_sha": "81bb338d967d09a9598894cb47976f4f1f994296",
+      "command": "node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_report_render.mjs tests/test_frank_d2_ingress_ui.mjs tests/test_frank_ca_rpc_budget_ui.mjs",
+      "passed": 205,
+      "failed": 0,
+      "syntax_command": "node --check crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js",
+      "syntax_exit_code": 0
+    },
+    "latest_HEAD_check_runs": 0,
+    "latest_HEAD_workflow_runs_found": 0,
+    "Playwright_not_run_missing_dependency": true,
+    "real_Chrome_separately_executed": true
+  },
+  "local_install": {
+    "source_sha": "81bb338d967d09a9598894cb47976f4f1f994296",
+    "executor_commit": "293b58219db8a5676fb99f06681160e42ebe4973",
+    "executor_sha256": "8f46dc462fda06edcc5e2a2c763447be36cec0817abba2c50c1e242bda2870ed",
+    "old_source_backup_files": 501,
+    "candidate_tracked_agent_files": 503,
+    "report_files_preserved_on_switch": 76,
+    "sqlite_consistent_backups": 3,
+    "integrity_and_FK_passed": true,
+    "protected_hashes_preserved_on_switch": 14,
+    "old_new_Handler_no_listener_each_exact_jobs": 9,
+    "old_new_Handler_bound_supplement_each": 1,
+    "old_new_Handler_socket_operations": 0,
+    "old_new_Handler_POSTs": 0,
+    "dashboard_only_reloaded": true,
+    "port": 8766,
+    "new_ports": 0,
+    "scanner_unchanged_live_no_drift_zero_errors": true,
+    "loop_unloaded": true,
+    "rollback_exercised": false
+  },
+  "new_live_capture": {
+    "source_sha": "81bb338d967d09a9598894cb47976f4f1f994296",
+    "status": "DONE",
+    "observed_at_bangkok": "2026-11-13T17:39:49.955598+07:00",
+    "report_sha256": "eaebeb1cac02e8df3859c40ddd849d6a2c36b27d7d65fcbe7241ad05d00483ff",
+    "checkpoint_sha256": "0405417ad7b4087c8d70c419dd4fff5e6191a43e48dbf53f5a4734f988663bca",
+    "checkpoint_reads": 1387,
+    "checkpoint_head": "65e452129a2f420a89580bea48a47d44b35039f14b425a8f45e55e4a1fd36fdc",
+    "checkpoint_readonly_hash_unchanged": true,
+    "marker_raw_timestamp_get_match": true,
+    "source_errors": 0,
+    "primary_wire": 257,
+    "cache_hits": 1153,
+    "primary_endpoint_failures": 27,
+    "elapsed_seconds": 183.689,
+    "logical_methods": {
+      "rpc:getAccountInfo": 3,
+      "market_client:token_snapshot": 1,
+      "independent_market_client:pool_snapshot": 1,
+      "narrative_client:collect": 1,
+      "narrative_client:collect_origin": 1,
+      "rpc:getTokenSupply": 2,
+      "rpc:getTokenLargestAccounts": 1,
+      "rpc:getMultipleAccounts": 87,
+      "rpc:getProgramAccounts": 1,
+      "rpc:getSignaturesForAddress": 97,
+      "rpc:getTransaction": 1192
+    },
+    "independent": {
+      "status": "UNAVAILABLE",
+      "reason": "RPC_JOB_WIRE_BUDGET_EXHAUSTED",
+      "last_source_error": "HTTP_403",
+      "secondary_wire_attempts": 4,
+      "accounts_compared": null,
+      "matches": null,
+      "differences": null,
+      "missing": null,
+      "primary_slot": null,
+      "secondary_slot": null
+    },
+    "classification_gaps": {
+      "affected_owners": 4,
+      "observation_records": 286,
+      "reason_counts": {
+        "AMBIGUOUS_USER_EXCHANGE_ASSETS": 16,
+        "INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE": 4,
+        "WALLET_NOT_REFERENCED": 15,
+        "WALLET_NOT_SIGNER_AUTHORITY_UNPROVEN": 223
+      },
+      "unique_owner_signatures": 258,
+      "unique_signatures": 252,
+      "unscoped_records": 0,
+      "version": 1
+    },
+    "first_acquisitions": {
+      "UNRESOLVED": 1,
+      "CONFIRMED_BOUNDED": 3,
+      "NO_MARKET_BUY_IN_COMPLETE_ACCOUNT_HISTORY": 2,
+      "CONFIRMED_ACCOUNT_COMPLETE": 5,
+      "NOT_SCANNED": 9
+    },
+    "rankings": {
+      "account_count": 33629,
+      "nonzero_owner_count": 7942,
+      "snapshot_slot": 468895405,
+      "supply_slot": 468895395,
+      "supply_bracket": {
+        "after_slot": 468895620,
+        "before_slot": 468895395,
+        "method": "NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET"
+      },
+      "normalization_complete": false,
+      "metrics": {
+        "GLOBAL_EX_LP_OWNER_TOP10_PCT": "16.7068",
+        "GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT": "16.7068",
+        "GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT": "16.7068",
+        "GLOBAL_OWNER_TOP10_PCT": "58.0139"
+      }
+    },
+    "history_windows": 27,
+    "history_stops": {
+      "PAGE_LIMIT": 15,
+      "PROVIDER_EMPTY_PAGE": 12
+    },
+    "origin_status": "PARTIAL",
+    "origin_posts": 2,
+    "origin_reads": 3,
+    "official_recognition": "UNVERIFIED",
+    "analysis_status": "INCOMPLETE_EVIDENCE",
+    "trade_evidence": 186,
+    "edge_count": 181,
+    "old_report_files": 76,
+    "old_fixed_unchanged": 75,
+    "expected_dynamic_changed": 1,
+    "expected_new_files": 6,
+    "all_noncache_protected_unchanged": true,
+    "protected_changes": [
+      "control_wallet-cluster-rpc-cache.sqlite"
+    ]
+  },
+  "new_live_edge_audit": {
+    "source_sha": "81bb338d967d09a9598894cb47976f4f1f994296",
+    "report_sha256": "eaebeb1cac02e8df3859c40ddd849d6a2c36b27d7d65fcbe7241ad05d00483ff",
+    "checkpoint_sha256": "0405417ad7b4087c8d70c419dd4fff5e6191a43e48dbf53f5a4734f988663bca",
+    "checkpoint_chain_reads": 1387,
+    "edge_count": 181,
+    "edge_types": {
+      "DIRECT_TOKEN_TRANSFER": 168,
+      "COMMON_CONSOLIDATION_UNRESOLVED": 3,
+      "DIRECT_QUOTE_TRANSFER": 6,
+      "SHARED_INFRA": 3,
+      "COMMON_SIGNER_UNRESOLVED": 1
+    },
+    "raw_instruction_supported_direct_edges": 174,
+    "multi_evidence_supported_derived_edges": 7,
+    "consolidation_raw_rows_checked": 166,
+    "duplicate_edge_records": 0,
+    "invalid_references": 0,
+    "registry_sha256": "40d5ef260f2d56aef284c64e0e02e599b7dede44dd880f05ab8e914b857a5c0a",
+    "registry_real_world_identity_independently_verified": false,
+    "common_control_or_full_history_claimed": false,
+    "socket_events": {},
+    "checkpoint_hash_unchanged": true,
+    "verdict": "PASS_FOR_THIS_CAPTURED_COHORT"
+  },
+  "new_live_business_audit": {
+    "source_sha": "81bb338d967d09a9598894cb47976f4f1f994296",
+    "trade_raw_classifier_matches": 186,
+    "funding_raw_matches": 9,
+    "consolidation_rows": 166,
+    "duplicate_business_keys": 0,
+    "private_RPC_or_credential_leaks_in_report_status_checkpoint": false
+  },
+  "browser": {
+    "actual_local_Chrome": true,
+    "url": "http://127.0.0.1:8766/#cluster",
+    "single_CA_POST": true,
+    "new_report_done_visible": true,
+    "deduplicated_classification_panel_visible": true,
+    "last_HTTP403_visible": true,
+    "healthy_owner_complete_and_affected_owner_bounded_visible": true,
+    "exact_new_job_refresh_restored": true,
+    "page_left_open": true,
+    "screenshot_sha256": "2ccba7380b5473afc0f61a5dffef67bad132bfc8dbba1bd88c6548697b59b309"
+  },
+  "effects": {
+    "new_CA_POSTs": 1,
+    "primary_wire": 257,
+    "secondary_wire": 4,
+    "total_RPC_wire_this_run": 261,
+    "primary_cache_hits": 1153,
+    "new_configured_sources_CA_key_paid_ports_monitors_automation": 0,
+    "scanner_restarts_loop_starts_notifications_signatures_trades_merges": 0,
+    "expected_new_report_checkpoint_cache_writes": true
+  },
+  "accounting": {
+    "prior_primary_confirmed_lower_bound": 3851,
+    "current_primary_wire": 257,
+    "primary_confirmed_lower_bound_now": 4108,
+    "current_secondary_wire_separate": 4,
+    "historical_ad_hoc_and_secondary_not_fully_accounted": true,
+    "original_one_shot_572_separate": true
+  },
+  "remaining": [
+    "UNKNOWN_CLASSIFICATIONS_RETAINED_WITH_EXPLICIT_REASON_NOT_FORCED_TO_TRADES_OR_ZERO",
+    "PUBLICNODE_4_ATTEMPTS_NO_PARITY_LAST_ERROR_HTTP403_ONLY; PROVIDER_POLICY_NOT_ESTABLISHED",
+    "CLOSED_ACCOUNTS_AND_FULL_OWNER_HISTORY_NOT_ENUMERATED",
+    "15_WINDOWS_AT_PAGE_LIMIT_IN_NEW_RUN",
+    "ALL_SPECIAL_IDENTITIES_AND_CONTROLLED_INDEPENDENT_SNAPSHOT_UNPROVEN",
+    "OFFICIAL_CA_RECOGNITION_AND_EXHAUSTIVE_GLOBAL_ORIGIN_UNVERIFIED",
+    "ADDITIONAL_PROTOCOL_AND_RISK_REPRESENTATIVE_SAMPLES_NOT_ACCEPTED"
+  ],
+  "source_stop": "NO_MORE_POSTS_OR_PROVIDER_REPLACEMENT_AFTER_THIS_RUN"
+}

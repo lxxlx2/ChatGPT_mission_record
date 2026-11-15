@@ -1,5 +1,7 @@
 # Meme Module — Mandatory Reading Order
 
+Frank 模块当前**决策状态**统一见 [STATUS.md](./STATUS.md)；原始交易、研究报告、Artifact 与固定 SHA 审核仍以各自原始证据为准，STATUS 不替代证据。PR #241/P0 的新状态文件目前只在研究分支，合并到 main 仍需单独授权。
+
 Updated: 2026-10-06
 
 This directory is the entry point for Meme research/validation.
