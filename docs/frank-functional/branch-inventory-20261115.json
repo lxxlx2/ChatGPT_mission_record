@@ -1,0 +1,2100 @@
+{
+  "source_sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+  "main_sha": "921ce04ed3eee3e215a459f6eca8e8add786e646",
+  "all_remote_heads": [
+    {
+      "sha": "92ef63afc03dc43a68bc09e7e7b9163a3a1ca2c6",
+      "branch": "automation/mission-dashboard-only-v2"
+    },
+    {
+      "sha": "c7cbf7cc9903f384b2149130b33b10a75d154dcf",
+      "branch": "automation/project-stage-governance-v2"
+    },
+    {
+      "sha": "91bef016654abc23c5ea7915fa6db1b6a94ffdd1",
+      "branch": "automation/project-sync-v1"
+    },
+    {
+      "sha": "d3fb2d4bb90953e609f831efb8e18960fa47a3a3",
+      "branch": "codex/crypto-monitor-design-20260930"
+    },
+    {
+      "sha": "f1e9be13732a83945cdff8648dc8937ec9a88051",
+      "branch": "codex/f0-live-qualification-result-20261019"
+    },
+    {
+      "sha": "2dcbc4ba1555f1ddf69e72eda3a1ac887085d4b9",
+      "branch": "codex/f0-saved60-lag-offline-result-20261020"
+    },
+    {
+      "sha": "c4073f699bff7744ca623f6adbbab8397a75b3ca",
+      "branch": "codex/frank-ca-c02-token-identity-20261014"
+    },
+    {
+      "sha": "dd17c9dcc057c79f4984029fff188d88b9b9d45e",
+      "branch": "codex/frank-dashboard-heartbeat-restore-20261031"
+    },
+    {
+      "sha": "a20a9f972589e34d2eae435c2ee4696eb53bb1d7",
+      "branch": "codex/frank-f02-manual-source-refresh-20261015"
+    },
+    {
+      "sha": "ac45c5476430bdc5fb0d2d06b9820ab4a3eb314b",
+      "branch": "codex/frank-f02-refresh-progress-20261015"
+    },
+    {
+      "sha": "b6282569a76d50113b30853612e5b4839ca8cd3c",
+      "branch": "codex/frank-f2-one-shot-mac-20261027"
+    },
+    {
+      "sha": "50ac11d3cdd9b8925f955bc3065a7715b959f1ca",
+      "branch": "codex/frank-f3-readonly-probes-20261027"
+    },
+    {
+      "sha": "817839b743752f76138c233786a509c0df9e9fd9",
+      "branch": "codex/frank-g0a-inventory-20261019"
+    },
+    {
+      "sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+      "branch": "codex/frank-gpa-binary-full-mint"
+    },
+    {
+      "sha": "2a1c61b564b6bf8ba4f17b90998aa1f502c6ae8e",
+      "branch": "codex/frank-only-local-signals"
+    },
+    {
+      "sha": "924e5981abf3826363b76c10987da52d5cbc5530",
+      "branch": "codex/frank-operating-model"
+    },
+    {
+      "sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+      "branch": "codex/frank-scanner-rpc-runtime-20261031"
+    },
+    {
+      "sha": "77f37c75a80f170387f710a567bc8526396d320e",
+      "branch": "codex/frank-sol-usd-normalization-review"
+    },
+    {
+      "sha": "800fea10501bebf47d73bfe535d909ac5305f400",
+      "branch": "codex/g2-d1d2-mac-acceptance-evidence"
+    },
+    {
+      "sha": "fc876e31fe6c02a5d149edc70ad8319852cafbba",
+      "branch": "codex/governance-stop-loss-20261028"
+    },
+    {
+      "sha": "bf075780a26696f24ac44b437785913c79dbb847",
+      "branch": "codex/issue165-existing-owner-source-20261023"
+    },
+    {
+      "sha": "436186b708d975b4fe8de2a6d078dd4ddcc817e0",
+      "branch": "codex/issue165-fresh-owner-source-20261023"
+    },
+    {
+      "sha": "c7e1904c9727c77b1eaf14f0ec9178004aafb69b",
+      "branch": "codex/mission-meme-v1-review"
+    },
+    {
+      "sha": "ba8335a93cae9ae11b6aff4d4a5825521098b5d8",
+      "branch": "codex/offline-person-validation"
+    },
+    {
+      "sha": "51b539dd5cb6185e9bc165da6a21f7ebf2e40fc4",
+      "branch": "codex/pr148-first-live-result"
+    },
+    {
+      "sha": "8088097e930dcfac9a2086a803c43d09932f1106",
+      "branch": "codex/pr168-cdf-browser-pass-20261023"
+    },
+    {
+      "sha": "5677d53461d89e5f04f754d98f195f82dd6efb33",
+      "branch": "codex/pr168-mac-browser-evidence-20261023"
+    },
+    {
+      "sha": "315f522016064fd1d7dbc8b518227d599cd63bab",
+      "branch": "codex/pr168-production-evidence-20261023"
+    },
+    {
+      "sha": "0f8208c4c3c0bb98636e7d8887b0a6ce473b6a44",
+      "branch": "codex/pr174-private-preview-evidence-20261023"
+    },
+    {
+      "sha": "61873e7f25098b8c5dc04043b62c7ef1a588bcda",
+      "branch": "codex/pr178-b02-offline-gate-20261024"
+    },
+    {
+      "sha": "602149a1f5581d271666831f8c133623d31dc4f7",
+      "branch": "codex/pr178-conditional-data-import-20261024"
+    },
+    {
+      "sha": "bf10ea7d2018030cfaac493b7a047d92c838f6c2",
+      "branch": "codex/pr178-d2-production-evidence-20261025"
+    },
+    {
+      "sha": "8db74540345eb28718e821ccfd94b313b48e9b23",
+      "branch": "codex/pr178-data-only-import-20261024"
+    },
+    {
+      "sha": "8d2bf3b40a0dc081f0b846f500d6a326ec4a9115",
+      "branch": "codex/pr178-final-r2-evidence-20261024"
+    },
+    {
+      "sha": "db630691b8a28ceb1ca46d47b769a7a88ded3e96",
+      "branch": "codex/pr178-private-child-import-evidence-20261024"
+    },
+    {
+      "sha": "c5315681592f0cec33e0be7db3f01b276fc25759",
+      "branch": "codex/pr178-private-child-review-20261024"
+    },
+    {
+      "sha": "1e7fe91cfc2b24a1ec80ed1a4758f6ddbca18d85",
+      "branch": "codex/pr178-r1r2-readiness-evidence-20261024"
+    },
+    {
+      "sha": "7ed386d542db9a9df1e0729d0c4ed5128d670f75",
+      "branch": "codex/pr178-real-private-staging-20261024"
+    },
+    {
+      "sha": "4a60652254022793c4c47b236b943cc4ea7aa7c1",
+      "branch": "codex/pr178-synthetic-browser-evidence-20261024"
+    },
+    {
+      "sha": "fae13de3cebc61df90c9e47b0a48dded9e158788",
+      "branch": "codex/x-revenue-vertical-slice"
+    },
+    {
+      "sha": "a57372e82d1509c6ce0c59f18007680ddb398521",
+      "branch": "config/meme-live-notifications-20261007"
+    },
+    {
+      "sha": "c8e9da00d5f111c7e79727f4cc8543a88bebced2",
+      "branch": "design/frank-ca-multiperson-completion-plan-20261013"
+    },
+    {
+      "sha": "2f604a162f5a8b67a3690b12d55eef036c3fc4cd",
+      "branch": "design/frank-frontend-studio-preview-20261031"
+    },
+    {
+      "sha": "9b6f7a90fe92ae6eea497d364ebc7f9bf109f042",
+      "branch": "dev/frank-a05-complete-owner-rpc-evidence-20261014"
+    },
+    {
+      "sha": "55b430608d9048360f922a453f77cced479ac810",
+      "branch": "dev/frank-a05-f02-latest-inventory-evidence-20261014"
+    },
+    {
+      "sha": "076f9cabb58cac2d0890fa15cf9906cafe37423b",
+      "branch": "dev/frank-a05-r2-frozen32-offline-reconciliation-20261014"
+    },
+    {
+      "sha": "0010a7b8114bc87728bec3bb8eb9efdff9c1cbe9",
+      "branch": "dev/frank-ca-a03-research-wallet-facts-20261013"
+    },
+    {
+      "sha": "92fbacbc411fb29a628c32d42bc5b6889603b7f6",
+      "branch": "dev/frank-ca-a04-a05-readonly-chain-facts-20261013"
+    },
+    {
+      "sha": "26c40912c146dca3e85eb15d69570999dcc7e24f",
+      "branch": "dev/frank-ca-a04-history-pagination-resume-20261014"
+    },
+    {
+      "sha": "e2fdb48e1e7d98a3f39d3153997b3b76f4d413ae",
+      "branch": "dev/frank-ca-c01-c08-unified-research-no-default-quote-20261013"
+    },
+    {
+      "sha": "516e3335a134c608f477019b79027982f43af32a",
+      "branch": "dev/frank-ca-f01-actionable-view-20261013"
+    },
+    {
+      "sha": "22f7b8f760fea62f1f713d5aaccb9391cae1a26a",
+      "branch": "dev/frank-ca-registry-a00-a02-20261013"
+    },
+    {
+      "sha": "5055515ab8d3b97abb2c7b6e053108756e0bd663",
+      "branch": "dev/frank-current-follow-context-a05-f02-20261017"
+    },
+    {
+      "sha": "b9c279545ab9db0adda04385098415f4f59727a9",
+      "branch": "dev/frank-f01-c02-f02-http-readonly-20261015"
+    },
+    {
+      "sha": "bd4698cd391174e3626b858e6db9ba8347517ff3",
+      "branch": "dev/frank-f01-c02-f02-joined-evidence-20261015"
+    },
+    {
+      "sha": "f9b0082aca2944ec6430bee173018924a6578721",
+      "branch": "dev/frank-f01-c02-f02-pinned-isolated-workspace-20261015"
+    },
+    {
+      "sha": "c24119989b7e752ee925e38c777ceb376ac97f81",
+      "branch": "dev/frank-f02-r1-isolated-readonly-position-api-20261014"
+    },
+    {
+      "sha": "13a2594e222f8425239f39b71170d35aadb4d47c",
+      "branch": "dev/frank-f02-r2-isolated-browser-20261015"
+    },
+    {
+      "sha": "2d2e4d5c52cfa9cf3fc1211871f18d800f445af1",
+      "branch": "dev/frank-f02-r3-offline-session-attestation-20261015"
+    },
+    {
+      "sha": "cdf7bc2605ebee7f78ebbf093910c1356f559826",
+      "branch": "dev/frank-mac-readonly-environment-preflight-20261015"
+    },
+    {
+      "sha": "f2bc8fef67ef894832de38bb0139ffa20eb2be5c",
+      "branch": "docs/frank-automated-browser-evidence-20261016"
+    },
+    {
+      "sha": "61fa9823d93c243881f3a2a5c815e57db79e6190",
+      "branch": "docs/frank-c2a-bootstrap-failure-readonly-forensics-20261026"
+    },
+    {
+      "sha": "39f363d387bea080783b51f1f95ed4788c406e9b",
+      "branch": "docs/frank-d2-dashboard-only-release-readiness-20261024"
+    },
+    {
+      "sha": "31409282e5731554cd4e57862c0047e252310089",
+      "branch": "docs/frank-p1a-c2-release-and-one-quick-acceptance-gate-20261026"
+    },
+    {
+      "sha": "f7fde07e99074cd7ea4cd1e574cfc1df117423af",
+      "branch": "docs/frank-pr112-release-cutover-plan-20261020"
+    },
+    {
+      "sha": "3072ebda80c98c1912447a704b3c29f227c3dd96",
+      "branch": "docs/frank-v2-g1-architecture-contract-20261019"
+    },
+    {
+      "sha": "dd58cac9efba465bd173e19b206a7b11b6a1b25f",
+      "branch": "docs/frank-v3-reconcile-approved-architecture-20261022"
+    },
+    {
+      "sha": "01a40bc5a76e07f66f9b94e66a2778ef9926f9e3",
+      "branch": "docs/meme-current-status-20261007"
+    },
+    {
+      "sha": "16bc10b4fa9c93a7a967db3c08fa075220b882b8",
+      "branch": "docs/mission-module-review-gates-20261014"
+    },
+    {
+      "sha": "17a9f38a1291b0b4412cc1e4af602202019cb011",
+      "branch": "docs/oauth-branding-pages-20261011"
+    },
+    {
+      "sha": "b9fb6e6df9032a0e6f49c1274bb4ba61c9e4c2da",
+      "branch": "evidence/frank-ca-local"
+    },
+    {
+      "sha": "cb6187a8df2c611693d4030555b194501006b24d",
+      "branch": "evidence/frank-pr157-production-dashboard-20261022"
+    },
+    {
+      "sha": "cee14388f29c8f39b6372827f13c64c4cf6ecfcf",
+      "branch": "feat/frank-c02-autocapture-zero-touch-20261018"
+    },
+    {
+      "sha": "6660f2128cd51e30b94d397831841b47a056b758",
+      "branch": "feat/frank-c02-local-archive-discovery-20261019"
+    },
+    {
+      "sha": "e8bc450d836ac46df5224ce7b6fc048ea5720db0",
+      "branch": "feat/frank-f01-current-candidates-history-20261018"
+    },
+    {
+      "sha": "ab528d7fe60d05cb278b6d516b1b06fe0402b788",
+      "branch": "feat/frank-f01-source-context-pane-20261017"
+    },
+    {
+      "sha": "3e8eb8bbd2e84762578fda09e03091cc47d8adb7",
+      "branch": "feat/frank-g2-d1-d2-dashboard-readonly-20261019"
+    },
+    {
+      "sha": "47278b621066f38279cea3feac00463becc24137",
+      "branch": "feat/frank-v2-d1-activity-ledger-gpt-20261019"
+    },
+    {
+      "sha": "72cf75c61fdb220a01b98df0abe81ebc5d248fd4",
+      "branch": "feature/frank-amount-free-intelligence-p1p2-20261020"
+    },
+    {
+      "sha": "0fd028ee443e677f07d968679e159a817b02e378",
+      "branch": "feature/frank-c2a-f1-offline-bootstrap-evidence-20261026"
+    },
+    {
+      "sha": "9c74df6ef6ad6748f6f957813f7de9fb6495dfde",
+      "branch": "feature/frank-c2a-f1b-offline-emergency-rollback-20261026"
+    },
+    {
+      "sha": "dd1035ca29c1d3c4e778325a9d5fd67ed3ed95f3",
+      "branch": "feature/frank-c2a-f1c-offline-release-supervisor-20261026"
+    },
+    {
+      "sha": "a0d936c19b13a0a8450368264888f8b7d6b96d7d",
+      "branch": "feature/frank-c2a-f1d-offline-bounded-process-observer-20261026"
+    },
+    {
+      "sha": "656ed2c96f4210d106d7b1129ec6cf8d7c4586f3",
+      "branch": "feature/frank-ca-get-resume-20261023"
+    },
+    {
+      "sha": "39a500fa0b6c96353f7016f43981f8cf04fee530",
+      "branch": "feature/frank-d2-dashboard-ingress-20261023"
+    },
+    {
+      "sha": "a14846f16e68fd0899ab5506d8c2f0c91272df48",
+      "branch": "feature/frank-d2-owner-at-slot-preview-20261023"
+    },
+    {
+      "sha": "db62f3e2c8c9cab7621e4b3ee263f7ac4e51941c",
+      "branch": "feature/frank-f01-source-only-20261028"
+    },
+    {
+      "sha": "31dd598df248ca15f731913a5cbf82e88b981874",
+      "branch": "feature/frank-option3-activity-feed-20261020"
+    },
+    {
+      "sha": "4fdf2238a4db2347975689913e49142b760dc091",
+      "branch": "feature/frank-p1a-c1-job-rpc-budget-20261025"
+    },
+    {
+      "sha": "d43878828c86eacee5be9df8a17d16fc63a74bb6",
+      "branch": "feature/frank-p1a-ca-job-report-identity-20261026"
+    },
+    {
+      "sha": "38f62c4ed7ea61bbfdbe591a1c34d0706bed61bc",
+      "branch": "feature/frank-review-expiry-ack-20261022"
+    },
+    {
+      "sha": "18427693ac53113f60243b6f9836a868ddbabc37",
+      "branch": "feature/meme-ca-report-v2-20261007"
+    },
+    {
+      "sha": "2f0b6c26e86b4f912be6384ca92cf6feeb7e8ca4",
+      "branch": "feature/meme-ca-report-v3-20261007"
+    },
+    {
+      "sha": "3586da7a75a7bf54a749df2f39891d763a15e83b",
+      "branch": "feature/meme-local-tooling-v2-20261007"
+    },
+    {
+      "sha": "b70245f189a4940eab62288e2da23551f9e31129",
+      "branch": "fix/frank-a05-f02-full-slot-source-order-review-20261014"
+    },
+    {
+      "sha": "063e8bada37534c13e801ea6f63e97d8f5586f4b",
+      "branch": "fix/frank-a05-f02-slotless-program-provenance-20261014"
+    },
+    {
+      "sha": "e4529ba7069e5499d12323a7160ceac08c481fae",
+      "branch": "fix/frank-a05-rpc-transport-integrity-20261014"
+    },
+    {
+      "sha": "f7aa430ffda98051821ac4a35ccf6d5d9b0bc95d",
+      "branch": "fix/frank-c02-pr78-verified-mint-20261016"
+    },
+    {
+      "sha": "58492f0bdf7633594972702a60cf796cb0a56cca",
+      "branch": "fix/frank-c02-pr80-backend-verdict-qa-20261016"
+    },
+    {
+      "sha": "8d425e4d0e9db9f27abd8ad662e4d59e64b57e53",
+      "branch": "fix/frank-c02-pr82-authority-presence-20261016"
+    },
+    {
+      "sha": "292b9bbdfab08fc49cd494ba256c931fc1789ca5",
+      "branch": "fix/frank-c02-unknown-risk-rpc-evidence-card-safari-20261016"
+    },
+    {
+      "sha": "c2cf581196d19e61306148cdfb85ce4857d8f02f",
+      "branch": "fix/frank-ca-a04-claude-p2-p6-p4-coverage-20261014"
+    },
+    {
+      "sha": "4cef47ac63d1a0a2beb9ec7924214a127c97e32f",
+      "branch": "fix/frank-ca-a04-owner-gaps-source-replay-20261014"
+    },
+    {
+      "sha": "e547203c6e4b00c80372c125785c9feb72fb8e87",
+      "branch": "fix/frank-ca-a04-sol-native-gap-policy-20261014"
+    },
+    {
+      "sha": "166bdaa133d7ed799870ca963d2dfa55f2736b17",
+      "branch": "fix/frank-ca-a04-v3-immutable-view-upgrade-20261014"
+    },
+    {
+      "sha": "6e1f8cec197bab30703fb4524c9710191dc25522",
+      "branch": "fix/frank-ca-a04-versioned-generic-tx-20261014"
+    },
+    {
+      "sha": "8898134a8a302e1187138f7fb3da87a554567e6d",
+      "branch": "fix/frank-ca-c02-identity-preview-casefold-review-20261014"
+    },
+    {
+      "sha": "3bd8603921613d5019fb7043ba43bcbea681e59c",
+      "branch": "fix/frank-cross-policy-pending-isolation-20261020"
+    },
+    {
+      "sha": "48f53a71f692f5dc62f67198f4794e79c45402d2",
+      "branch": "fix/frank-dashboard-review-breakdown-20261011"
+    },
+    {
+      "sha": "8a8b4fcc36242c0ba03b03170225f723d847fa53",
+      "branch": "fix/frank-decisions-partial-refresh-20261019"
+    },
+    {
+      "sha": "438bbe20899108a858a513648ab8c8c05b11e05e",
+      "branch": "fix/frank-existing-rpc-timeout-20261029"
+    },
+    {
+      "sha": "db0ea8505fe7ebe27697db9c0fdd7dea5bb0bc0d",
+      "branch": "fix/frank-f01-pr79-card-qa-20261016"
+    },
+    {
+      "sha": "d2eeebc1b49d2bae38e05d7d01f6839e3ba237f4",
+      "branch": "fix/frank-f01-pr81-js-range-20261016"
+    },
+    {
+      "sha": "2459cfdc90987a40809bf67f54a1197e23fa3e85",
+      "branch": "fix/frank-f01-sold-excluded-badge-safari-20261016"
+    },
+    {
+      "sha": "f4007f64dc92c87854e752562ea9e24bbfd78c23",
+      "branch": "fix/frank-f02-later-partial-lower-slot-20261014"
+    },
+    {
+      "sha": "a59e423304cb2081aef359c0649245c7e1d05b48",
+      "branch": "fix/frank-f02-r2-ttl-live-expiry-20261015"
+    },
+    {
+      "sha": "85f1a792dd7d0fbf354c09ac83872887ed301c10",
+      "branch": "fix/frank-gmail-oauth-recovery-20261011"
+    },
+    {
+      "sha": "938fd5cae3aea7d5a1931fa89f2e7999aaa8cbcd",
+      "branch": "fix/frank-mc-loop-stop-readback-20261020"
+    },
+    {
+      "sha": "d998fb5966fac2eee5dbeedca5f78126d1b51b6d",
+      "branch": "fix/frank-pr70-http-source-contract-p2-20261015"
+    },
+    {
+      "sha": "5755b8b96080f21635eaa5354588cbb8f6561ab0",
+      "branch": "fix/frank-pr72-ignored-files-external-manifest-pin-20261015"
+    },
+    {
+      "sha": "673486ce92c7e12f2eab03e0ab15216ed46916b4",
+      "branch": "fix/frank-pr74-fsmonitor-home-isolation-20261016"
+    },
+    {
+      "sha": "10bd106f76e599b299793d53af1d343c966ad56b",
+      "branch": "fix/frank-pr75-clean-filter-passive-preflight-20261016"
+    },
+    {
+      "sha": "95fc00a7ab90b2fa28e34e97ec79b23db7addfa2",
+      "branch": "fix/frank-pr77-price-projection-slot-review-20261016"
+    },
+    {
+      "sha": "ad0ac61c42520caed6a915d4dc90c84e97c45da9",
+      "branch": "fix/frank-pr87-screenshot-evidence-p2-20261016"
+    },
+    {
+      "sha": "925043254d646bccc3570c7c3078b1d23ff12ecd",
+      "branch": "fix/frank-pr89-cross-source-review-p2-20261017"
+    },
+    {
+      "sha": "727d3d1150c88900f4ecd45dfa8d51d6d89c8cea",
+      "branch": "fix/frank-pr91-safe-primary-f01-and-gateway-20261017"
+    },
+    {
+      "sha": "d14eb7c1a910c79f79cee216ca6f9aae47e3db02",
+      "branch": "fix/frank-pr92-mixed-f01-route-p1-20261017"
+    },
+    {
+      "sha": "19d5d8be92b944f1c9814a1f527d233290bf2dfc",
+      "branch": "fix/frank-pr93-executable-quote-binding-p2-20261018"
+    },
+    {
+      "sha": "da5adc0ae63141e8e2b5fb6735224c6405412e6a",
+      "branch": "fix/frank-presentation-history-semantics-20261012"
+    },
+    {
+      "sha": "bb3b9996f97e0cebc2fdf183ca22dac255dd7976",
+      "branch": "fix/frank-remove-unapproved-fixed-notional-20261019"
+    },
+    {
+      "sha": "a08c4280b897a7c4306265fe8976024ebd794a7b",
+      "branch": "fix/frank-user-signed-approval-loop-only-disable-20261020"
+    },
+    {
+      "sha": "5b0b3f88c9f25a4ec5aebc84465b7dcf3a9768b9",
+      "branch": "fix/meme-ca-query-rpc-report-20261007"
+    },
+    {
+      "sha": "ef3b9bec96846e1b3813dc2ce546175778d29ed2",
+      "branch": "fix/meme-ca-query-v3-20261007"
+    },
+    {
+      "sha": "33d43ef3306867a7035dbca5a8f82dde86ff20d2",
+      "branch": "integration/frank-mission-control-reviewed-20261007"
+    },
+    {
+      "sha": "3a685408ebb1c5ae69afad78399289e86cfccba4",
+      "branch": "integration/frank-no-fixed-amount-g2-d1-d2-20261020"
+    },
+    {
+      "sha": "a34d64c7661175742928bcea7652991640796998",
+      "branch": "integration/frank-policy-handover-signed-approval-20261020"
+    },
+    {
+      "sha": "921ce04ed3eee3e215a459f6eca8e8add786e646",
+      "branch": "main"
+    },
+    {
+      "sha": "4ddfe997bee12cd1b542487e040dba4fefa0010e",
+      "branch": "maintenance/mission-august-history-backfill-20261018"
+    },
+    {
+      "sha": "d1272bfd6a42c6b47c710112097abeda55dced5b",
+      "branch": "maintenance/mission-historical-pr-issue-triage-20261018"
+    },
+    {
+      "sha": "88226e19c377cb0a0abdc60bdb60d84599adb1c9",
+      "branch": "maintenance/mission-readme-legacy-naming-20261018"
+    },
+    {
+      "sha": "9c2b938cc4d5f27af4044605db6ab6f8e40bd8af",
+      "branch": "ops/frank-dashboard-only-pinned-rollout-20261012"
+    },
+    {
+      "sha": "bffcfc763d8ce53921b1fd5238e049c864a0a4fc",
+      "branch": "ops/frank-dashboard-pr35-only-rollout-20261012"
+    },
+    {
+      "sha": "4bb0036c93b20be2f1e400a350014f7be10fdf4b",
+      "branch": "ops/frank-decisions-503-readonly-diagnostic-20261019"
+    },
+    {
+      "sha": "b0be1c034202a6aead6622ab1cb0c978a7d5a35d",
+      "branch": "ops/frank-live-funnel-readonly-20261019"
+    },
+    {
+      "sha": "82a050d1fa10b903fc644b80486eb406a940ac5b",
+      "branch": "ops/frank-loop-mac-identity-readonly-20261012"
+    },
+    {
+      "sha": "59cae8a80a3c3b5937324de2490203f853ece366",
+      "branch": "ops/frank-mission-loop-readonly-preflight-20261012"
+    },
+    {
+      "sha": "15a782d841d2cf4d88cb27fa95654bdaefe2e4b9",
+      "branch": "ops/frank-p0-p1-start-20261028"
+    },
+    {
+      "sha": "fca1c9e5ae6af65036bc1adcae56f161847b8e88",
+      "branch": "ops/frank-pr101-safari-evidence-and-c02-archive-20261018"
+    },
+    {
+      "sha": "d58d4e3b0909f2c19166e60d7bf6878671c6afb7",
+      "branch": "ops/frank-pr39-controlled-release-20261013"
+    },
+    {
+      "sha": "36f1a1333380161d9feda79d545669be5358b40f",
+      "branch": "ops/meme-launchd-autostart-20261007"
+    },
+    {
+      "sha": "4cfcc8d16516a75678de72b78dd1f9615b642b2b",
+      "branch": "ops/meme-launchd-tcc-fix-20261007"
+    },
+    {
+      "sha": "9951ec754eb16209fafc4b90d32dfe8032f78062",
+      "branch": "planning/frank-option3-p5-notice-20261022"
+    },
+    {
+      "sha": "419270e96950af7b014dbe70c48b641677eb6f51",
+      "branch": "planning/frank-pr157-readonly-dashboard-release-20261022"
+    },
+    {
+      "sha": "40febd8275c7710a8697af5a0503569a2bb5cb8d",
+      "branch": "qa/frank-f01-pr83-c02-pr84-f02-p73-isolated-20261016"
+    },
+    {
+      "sha": "afe06caa93c284860ce01bb195e8a1bdef43f53f",
+      "branch": "qa/frank-option3-mac-isolated-20261020"
+    },
+    {
+      "sha": "7393ad5eac650982437ac5b4873cf4208853fa0b",
+      "branch": "qa/frank-pr106-mac-safari-decisions-failure-20261019"
+    },
+    {
+      "sha": "b44493e4e3520504ac929703f7dd689e5a05cc91",
+      "branch": "qa/frank-pr157-dashboard-only-release-rehearsal-20261022"
+    },
+    {
+      "sha": "b4571e589034bc555e5bd6be245e1fcc0eae2e2d",
+      "branch": "qa/frank-pr157-mac-acceptance-evidence-20261022"
+    },
+    {
+      "sha": "7d4143d0233758cfb3776d5f35b86e53e9eb749e",
+      "branch": "qa/frank-pr157-mac-integrated-snapshot-20261020"
+    },
+    {
+      "sha": "cfa0ae1e6cdf02dbb200157e3530df6e07e42fd1",
+      "branch": "qa/frank-pr85-approved-mac-safari-localhost-20261016"
+    },
+    {
+      "sha": "68f1267e8b35db4d8fecc84eafd27ca55aa2ee3a",
+      "branch": "qa/frank-pr85-safari-runner-screenshot-base-20261016"
+    },
+    {
+      "sha": "23314fcf415be02b0ea117729a3d6074da0b17f8",
+      "branch": "qa/frank-pr94-real-webkit-ui-acceptance-20261018"
+    },
+    {
+      "sha": "b2404e7d4270ad1fcb1aa2dc787ecf220d57c18f",
+      "branch": "qa/frank-pr94-synthetic-browser-20261018"
+    },
+    {
+      "sha": "d5eb16f8cd684b251014bd915046cf0f19a24a73",
+      "branch": "release/frank-no-default-amount-policy-review-20261020"
+    },
+    {
+      "sha": "885bb86a2b257235f5b5def77db10d4e3d6274d7",
+      "branch": "research/1609sat-metadao-20261105"
+    },
+    {
+      "sha": "5bd7770552da1124e2ec1add702335235bad2804",
+      "branch": "research/address-analysis-oooooyoung-20261018"
+    },
+    {
+      "sha": "62d9578d474cdd7c2c8f70e500d0c1e618470169",
+      "branch": "research/bsc-address-model-v1-20261013"
+    },
+    {
+      "sha": "9c67c6acddd9602778f3a57b4ce9c2236afced4b",
+      "branch": "research/bsc-f0-5m-real-head-capacity-once-20261028"
+    },
+    {
+      "sha": "450a5221e3cac9719f6c8aa032291c41eff933b6",
+      "branch": "research/bsc-f0-adaptive-30m-budget-bounds-20261028"
+    },
+    {
+      "sha": "501d729993d390f9001c6c0c02f6d9a184bd1115",
+      "branch": "research/bsc-f0-adaptive-head-offline-20261020"
+    },
+    {
+      "sha": "0fc72125d69e9f75d3bc52e99677a11604044923",
+      "branch": "research/bsc-f0-adaptive-journal-fake-20261020"
+    },
+    {
+      "sha": "3a826d3eec1433d536c6fed1789997e225f6a8a0",
+      "branch": "research/bsc-f0-adaptive-oneuse-runner-20261020"
+    },
+    {
+      "sha": "9326edc3b78bbd9e19f2d405668bf430432e853a",
+      "branch": "research/bsc-f0-adaptive-source-core-20261020"
+    },
+    {
+      "sha": "c2e7dd6f8b41ea9eca9e8c6214c70f371d691d31",
+      "branch": "research/bsc-f0-anchored-foreground-child-offline-20261028"
+    },
+    {
+      "sha": "566a0851da059427fe05b7ce833469a942e687bd",
+      "branch": "research/bsc-f0-closed-loop-fake-20261023"
+    },
+    {
+      "sha": "5d98c40861693eb5f238fb4a8a94da1f529281d3",
+      "branch": "research/bsc-f0-d1-anchor-recovery-integrity-20261028"
+    },
+    {
+      "sha": "7957a3508bc784be393f11a8b500156251eafde9",
+      "branch": "research/bsc-f0-d1-candidate-budget-wiring-20261025"
+    },
+    {
+      "sha": "dee62174d382654fa89042c72ad62fd0ddd5eb2d",
+      "branch": "research/bsc-f0-d1-child-lifetime-20261024"
+    },
+    {
+      "sha": "08adde4ef8be33d846645d9bd50b479e19f7a3b0",
+      "branch": "research/bsc-f0-d1-concrete-coordinator-offline-20261024"
+    },
+    {
+      "sha": "980121f75626df53508155b09d0776841b2c4f67",
+      "branch": "research/bsc-f0-d1-concrete-https-code-denied-20261024"
+    },
+    {
+      "sha": "a1d33ab0fd7f68db01b67d3d7da6603af1fd6797",
+      "branch": "research/bsc-f0-d1-crash-durability-offline-20261023"
+    },
+    {
+      "sha": "8baa185b00c1a69b1caaf46144122b91aafc1a41",
+      "branch": "research/bsc-f0-d1-hard-stop-once-20261024"
+    },
+    {
+      "sha": "0c119eba9ce69bcfaaa089b6d7e4bfac90948887",
+      "branch": "research/bsc-f0-d1-independent-review-anchor-offline-20261023"
+    },
+    {
+      "sha": "4e12e4f43ca2cc466e6c20b79fcdbc23228dd28f",
+      "branch": "research/bsc-f0-d1-integrated-exit-gate-20261024"
+    },
+    {
+      "sha": "267f25bb6d0d3e16b53a231d770ac957f2ce6c98",
+      "branch": "research/bsc-f0-d1-mac-entry-binding-20261025"
+    },
+    {
+      "sha": "76618f44ca685251e4c7c827083d3d6a93849ac2",
+      "branch": "research/bsc-f0-d1-offline-gate-integration-20261023"
+    },
+    {
+      "sha": "b94d6bbd503e839d39c2129520b9c32cd71392f1",
+      "branch": "research/bsc-f0-d1-physical-source-bridge-20261028"
+    },
+    {
+      "sha": "e65e8bf3ceca4436e8adce9db6a1ce9c037e8e88",
+      "branch": "research/bsc-f0-d1-pinned-evidence-offline-20261023"
+    },
+    {
+      "sha": "23f41ea2f984cb652cc07bbf28d9366d18b61701",
+      "branch": "research/bsc-f0-d1-protected-mac-launch-20261024"
+    },
+    {
+      "sha": "3470cd841a5b4d0cfc625bd4bf88a2abad37cfb4",
+      "branch": "research/bsc-f0-d1-real-sender-contract-20261025"
+    },
+    {
+      "sha": "15ac0ed4dbb839d785546d71b3accd5b232df942",
+      "branch": "research/bsc-f0-d1-real-source-admission-20261025"
+    },
+    {
+      "sha": "30642f27c1d647ff2d961cd3ce18397b3a07dae0",
+      "branch": "research/bsc-f0-d1-real-transport-binding-20261024"
+    },
+    {
+      "sha": "e0af79fcf564aa3d5de826003e8ec0b5f6b49469",
+      "branch": "research/bsc-f0-d1-sendstart-utc-offline-20261024"
+    },
+    {
+      "sha": "17964d878424834ec04535c3866f115cb6f34fe7",
+      "branch": "research/bsc-f0-d1-signed-inventory-oneuse-offline-20261023"
+    },
+    {
+      "sha": "df30baf1d7219ce9c6d7a28a68f5b150856e646d",
+      "branch": "research/bsc-f0-d1-single-real-transport-wiring-20261024"
+    },
+    {
+      "sha": "3db12aa9a0e91b37a68061312764336620d871df",
+      "branch": "research/bsc-f0-d1-source-sealed-http-offline-20261023"
+    },
+    {
+      "sha": "cbe324cda37014eb0756b06c4b40ccc9dda3dc5d",
+      "branch": "research/bsc-f0-d1-supervised-preconnect-ledger-20261024"
+    },
+    {
+      "sha": "01d23060469aa66dd5b98e5715aa5553bf3f1768",
+      "branch": "research/bsc-f0-d1-three-slot-head-anchor-integration-20261027"
+    },
+    {
+      "sha": "35e1cba6cc4b4e841ff6f096bf6ed0af22b2ac8d",
+      "branch": "research/bsc-f0-d1-tls-socket-phase-offline-20261024"
+    },
+    {
+      "sha": "b0b7b1dfda7dd537bcfc1b3ed2e1a8405ec37f72",
+      "branch": "research/bsc-f0-d1-transport-order-20261025"
+    },
+    {
+      "sha": "0d35f0d8679b98795ae74905deeeac7d73bf8cc6",
+      "branch": "research/bsc-f0-d1-trust-bootstrap-decision-20261024"
+    },
+    {
+      "sha": "a469019b596045d8d4cea9afe9a8393e40a10981",
+      "branch": "research/bsc-f0-d1-user-codex-authority-amendment-20261024"
+    },
+    {
+      "sha": "ee8528fb7de98efd40de3ac5035dc29a56cf644b",
+      "branch": "research/bsc-f0-d1-wire-raw-failure-20261025"
+    },
+    {
+      "sha": "8aa21a04fead8e6a6db326ed8dfa244f9f76192c",
+      "branch": "research/bsc-f0-d2-fd-held-one-use-test-only-20261026"
+    },
+    {
+      "sha": "e351ac98c20e60c9dcc890f2d91aaa22b3885910",
+      "branch": "research/bsc-f0-d2-os-bound-registry-readonly-20261026"
+    },
+    {
+      "sha": "1b35156710a860ae579c0e2ff1fd47d8f1052ad5",
+      "branch": "research/bsc-f0-d2-production-release-threat-model-20261026"
+    },
+    {
+      "sha": "8362b4048d45b0bd13be4a6e4b6be35ad737819b",
+      "branch": "research/bsc-f0-d2-production-signature-protocol-spec-20261026"
+    },
+    {
+      "sha": "b3e8fb1e6f6811b7599d86cb26c4d81a0c5bde12",
+      "branch": "research/bsc-f0-d2-real-source-design-20261025"
+    },
+    {
+      "sha": "5b7116047fb6db4b16f6d9eb0878cff2e2c37b5b",
+      "branch": "research/bsc-f0-d2-single-coordinator-physical-slot-20261026"
+    },
+    {
+      "sha": "9c847bb684681b93dc16c206df917d07cb26ef85",
+      "branch": "research/bsc-f0-d2-trusted-account-a6-decision-20261027"
+    },
+    {
+      "sha": "7068312f7e5c1a1bb54fd5c0ab004be74189647c",
+      "branch": "research/bsc-f0-d2a-closed-physical-admission-20261025"
+    },
+    {
+      "sha": "8a0037f7d2c2ab8aa1308fa7be18e62e5e76f7dc",
+      "branch": "research/bsc-f0-d2b-offline-d3-authorization-20261025"
+    },
+    {
+      "sha": "68e02323288a1909f6f9c0b6d96d487b9c0a5da5",
+      "branch": "research/bsc-f0-d2c-test-proof-to-closed-source-20261026"
+    },
+    {
+      "sha": "fff69d569a3a20e908768cccda359bb6439ac051",
+      "branch": "research/bsc-f0-d2d3-normative-protocol-trusted-launch-design-20261027"
+    },
+    {
+      "sha": "9f28b741a2e83de0c3b72d2106dba47d4db4f381",
+      "branch": "research/bsc-f0-head-budget-diagnosis-20261022"
+    },
+    {
+      "sha": "111059087257e792a76516fdd684a127cda52772",
+      "branch": "research/bsc-f0-head-throughput-offline-20261021"
+    },
+    {
+      "sha": "39f12c716e061eb1e51bf4843737a5cd6cef5d8c",
+      "branch": "research/bsc-f0-head-wait-policy-offline-20261022"
+    },
+    {
+      "sha": "b88ba20f78103e334f0d80c1d38cb241777b5a4b",
+      "branch": "research/bsc-f0-initial-head-parent-anchor-offline-20261027"
+    },
+    {
+      "sha": "9efb0510c8d212eafb442c958c03478caaf0f00f",
+      "branch": "research/bsc-f0-journal-transport-split-20261020"
+    },
+    {
+      "sha": "022f6a4668014af051fc3a1e98a254f5149cc3f7",
+      "branch": "research/bsc-f0-l2-d1-offline-20261023"
+    },
+    {
+      "sha": "c86b7dbf7b8f714ee68a793823dda18e9346be22",
+      "branch": "research/bsc-f0-l2-d1-preflight-http-recovery-20261023"
+    },
+    {
+      "sha": "a7fc66ad9601f1bafe7a76a67276cd5c6a1527d6",
+      "branch": "research/bsc-f0-lightweight-readonly-owner-consent-20261027"
+    },
+    {
+      "sha": "a23e58f7a5c28095befec2165c3af611b863e5d0",
+      "branch": "research/bsc-f0-physical-http-response-boundaries-20261026"
+    },
+    {
+      "sha": "6d171335ac79dc66a87e5d4bb8849a5132bb76c1",
+      "branch": "research/bsc-f0-physical-once-foreground-scope-20261028"
+    },
+    {
+      "sha": "101ddcea8bf8cc92a0bdc1ad5e1eac51fa68c2d7",
+      "branch": "research/bsc-f0-real-foreground-once-launcher-20261028"
+    },
+    {
+      "sha": "29157cbc4aaf9165d4401ed695ec8902d4a0b7b7",
+      "branch": "research/bsc-f0-real-http-permit-design-20261023"
+    },
+    {
+      "sha": "e9dfd91afb328a7c32f1accd593941722061df7b",
+      "branch": "research/bsc-f0-saved-source-rate-gate-20261027"
+    },
+    {
+      "sha": "65ef18be395fbbe9cc638199405bb67f7a22871f",
+      "branch": "research/bsc-f0-saved60-lag-diagnostics-offline-20261020"
+    },
+    {
+      "sha": "f3ae8041b0077b6f12d181b52f1ff6e3fded9fb9",
+      "branch": "research/bsc-f0-short60-parent-scope-fix-20261020"
+    },
+    {
+      "sha": "20c1df5ed69200ff24fbd60084c5553111d1eded",
+      "branch": "research/bsc-f0-three-slot-offline-20261022"
+    },
+    {
+      "sha": "0f6ed49b2675b04328be7adb7f1296622e1fccc2",
+      "branch": "research/bsc-f0-three-slot-response-replay-offline-20261022"
+    },
+    {
+      "sha": "8ea622ba59692d1eab09c8d2e0a11fc7cfa7098b",
+      "branch": "research/bsc-forward-f0-24read-authorization-gate-20261020"
+    },
+    {
+      "sha": "cd30f8b69301b53380473a33ebb428351d4c1bce",
+      "branch": "research/bsc-forward-f0-24read-journal-report-collision-20261020"
+    },
+    {
+      "sha": "f7736ca1301720c338db72be9fba0b3d7ff06515",
+      "branch": "research/bsc-forward-f0-bounded-smoke-prototype-20261020"
+    },
+    {
+      "sha": "d71459915b3ea78e1e1660aa97ed0e5472ce7454",
+      "branch": "research/bsc-forward-f0-checked-block-report-offline-20261020"
+    },
+    {
+      "sha": "fed9d88fcdbaeb8acaafafbc066ed50af0cf8b6d",
+      "branch": "research/bsc-forward-f0-eoa-24read-runner-offline-20261020"
+    },
+    {
+      "sha": "33f14bbfa0173d067d01a71dec740aaa40a8e50e",
+      "branch": "research/bsc-forward-f0-eoa-router-offline-preflight-20261020"
+    },
+    {
+      "sha": "91eca250939f17fd0430f2b657e704434f0421eb",
+      "branch": "research/bsc-forward-f0-first-real-smoke-evidence-20261020"
+    },
+    {
+      "sha": "680ec50ffce0e9f104bae1cced64a0bb84aaff55",
+      "branch": "research/bsc-forward-f0-http-wire-offline-20261020"
+    },
+    {
+      "sha": "6c998d7b4c5d0056d675daf0ae70f4e63837c259",
+      "branch": "research/bsc-forward-f0-l1-141-143-integration-20261020"
+    },
+    {
+      "sha": "9a89f6a9ec1e2fcc2874f441d82fc09ec456d345",
+      "branch": "research/bsc-forward-f0-l1-contiguous-offline-20261020"
+    },
+    {
+      "sha": "296aa3f2b8dfb80726f06b3663dede3e2e7c0d5c",
+      "branch": "research/bsc-forward-f0-l1-failure-denominator-20261020"
+    },
+    {
+      "sha": "82705502079c85685fc6a3ccb3cefa9fa027dc33",
+      "branch": "research/bsc-forward-f0-l1-frozen-manifest-binding-20261020"
+    },
+    {
+      "sha": "cea094f38d72f85e71ca63f0aa3837532de3b205",
+      "branch": "research/bsc-forward-f0-l1-injected-bounded-capture-20261020"
+    },
+    {
+      "sha": "a2da7b6af7c5db30f99bf17d2bb876065375292b",
+      "branch": "research/bsc-forward-f0-live-60block-gated-20261020"
+    },
+    {
+      "sha": "1656710a6e0f7bc134956bd23e5338f09ab9f34e",
+      "branch": "research/bsc-forward-f0-live-source-readiness-20261020"
+    },
+    {
+      "sha": "78e4d26ff7cd1074b7c8de44109b4356e5d0409d",
+      "branch": "research/bsc-forward-f0-offline-collector-20261019"
+    },
+    {
+      "sha": "cf88cd9f6568502f5c052ae3befc9cc16cbab98b",
+      "branch": "research/bsc-forward-f0-preparation-20261019"
+    },
+    {
+      "sha": "8d372eeba9e178bae4d4a7578d0657b8351528c3",
+      "branch": "research/bsc-forward-f0-real-router-saved-block-candidates-20261020"
+    },
+    {
+      "sha": "c0a6dca08a57316f70ca7b7e1358c89e262918f4",
+      "branch": "research/bsc-forward-f0-rpc-adapter-offline-20261020"
+    },
+    {
+      "sha": "bf9fbb0a6bbff3a9375c6a937cea52d016104733",
+      "branch": "research/bsc-forward-f0-rpc-bridge-offline-20261020"
+    },
+    {
+      "sha": "fa3dae9b0f221747cb64bb1be21497979985e596",
+      "branch": "research/bsc-forward-f0-smoke-reviewed-permit-20261020"
+    },
+    {
+      "sha": "9134fcd41df49ef836b81c8a040974ad89c1fde1",
+      "branch": "research/bsc-forward-follow-architecture-v1-20261019"
+    },
+    {
+      "sha": "ce46a36cbdea7280eca9a5c43c6528f08a1d2343",
+      "branch": "research/forks-wiki-pre-tge-20261110"
+    },
+    {
+      "sha": "79ae1b91081f9a7fe659eda9cea59fb80eea16e1",
+      "branch": "research/frank-a05-first-program-failstop-20261025"
+    },
+    {
+      "sha": "5272371e177ec4bef272a334534ebb89fe803657",
+      "branch": "research/frank-d2-oct25-private-source-promotion-gate-20261025"
+    },
+    {
+      "sha": "914e9e47fed2e60bc24690fcb083413a64d4e681",
+      "branch": "research/frank-d2-private-child-port-stable-20261024"
+    },
+    {
+      "sha": "a5b7bd985ebd44ae2b661188a62898b11fe431bc",
+      "branch": "research/frank-g0b-once-20261028"
+    },
+    {
+      "sha": "1a047b7171725c5ca7d219a1ebf0f389fd92a396",
+      "branch": "research/frank-g2-intake-dependency-timing-20261019"
+    },
+    {
+      "sha": "61bae6d041b81f3a8fd4391f2be1a0109cb67ac2",
+      "branch": "research/frank-g4-acc-mult-causal-crosswalk-20261028"
+    },
+    {
+      "sha": "598fe2c2a623a7f6e302c03d5c25473fe60a1e09",
+      "branch": "research/frank-g4-forward-quoteability-protocol-20261028"
+    },
+    {
+      "sha": "990188c95291f910fdecbf9c19cff9321219b6a3",
+      "branch": "research/frank-g4-price-one-shot-20261028"
+    },
+    {
+      "sha": "f38059c035e0d2fdd3671aaa2a283af10c5bb877",
+      "branch": "research/frank-p1-ca-current-owner-gates-20261025"
+    },
+    {
+      "sha": "914e9e47fed2e60bc24690fcb083413a64d4e681",
+      "branch": "research/frank-p1a-c1-installed-baseline-20261025"
+    },
+    {
+      "sha": "8fb880e7479172af2f2e5cda25eed16fd213aabb",
+      "branch": "research/frank-p1a-ca-real-flow-failstop-gate-20261025"
+    },
+    {
+      "sha": "899b0ef1bd0a1abff3b8065ac3cbef0f3c172682",
+      "branch": "research/frank-pr31-pr32-pr33-integration-20261011"
+    },
+    {
+      "sha": "f5369e30b324b2a9b414030dff8be31994284dbd",
+      "branch": "research/frank-v2-d1-mainline-20261019"
+    },
+    {
+      "sha": "57c2e0f02a559cc2ac9064ea36e3031442fa075f",
+      "branch": "research/frank-v2-d2-dated-holdings-preview-20261019"
+    },
+    {
+      "sha": "c50e7e2259e85ce89e14641a4e1e98ca3e4a4bc7",
+      "branch": "research/frank-wallet-v2-d0-readonly-20261011"
+    },
+    {
+      "sha": "9c07653486866733dd2463d861b390146ba49b2b",
+      "branch": "research/machine-fun-first-launch-feasibility-20261029"
+    },
+    {
+      "sha": "d09601bcc9957952fa76753013daf927a411e991",
+      "branch": "research/monster-v4-local-discovery-20261010"
+    },
+    {
+      "sha": "ce638dcf57d31f83eb1bb9f7c3bbffee495b25d2",
+      "branch": "research/mori-finance-metadao-20261107"
+    },
+    {
+      "sha": "e682d69747e488db7ce670e9e8f4affe58b6e3aa",
+      "branch": "research/pocketpad-founder-history-20261106"
+    },
+    {
+      "sha": "b593c74e386974922f6df565c0424273e30e3e30",
+      "branch": "research/pocketpad-public-mint-chrome-20261108"
+    },
+    {
+      "sha": "61f99de5802d88666f9696af1e0a656cb32f782a",
+      "branch": "research/reya-v2-tge-status-20261106"
+    },
+    {
+      "sha": "5a1d7535fc9ad6a5ed81c476fcbb8e9394709ef2",
+      "branch": "research/slop-cash-auction-20261105"
+    },
+    {
+      "sha": "70b37041e2d10179420a133ce07961e90c8542fc",
+      "branch": "review/flop-counterparty-redeploy-20260929"
+    },
+    {
+      "sha": "7e3e33621724b88ee1df6e0a7762e16de50e67fd",
+      "branch": "review/flop-counterparty-scan-20260929"
+    },
+    {
+      "sha": "8b2d0739de95acdb33c4073290adbd9afb28914e",
+      "branch": "review/flop-leader-carry-genealogy-20260929"
+    },
+    {
+      "sha": "06bf934861d7e077f8d01b26556de0b8b487f516",
+      "branch": "review/flop-leader-path-20260929"
+    },
+    {
+      "sha": "8b2d0739de95acdb33c4073290adbd9afb28914e",
+      "branch": "review/flop-pivot-solver-20260929"
+    },
+    {
+      "sha": "9fabf3ace2f5b63037e872059894107a579fa4c1",
+      "branch": "review/flop-realize-redeploy-lab-20260929"
+    },
+    {
+      "sha": "1abb8ed4866e7bad746d24186ab98b7bd346062b",
+      "branch": "review/flop-v4-correctness-20260929"
+    },
+    {
+      "sha": "c6ff723533f6181f84ebf869a203bb95cc5dfec8",
+      "branch": "review/flop-v4-correctness-20260929-v2"
+    },
+    {
+      "sha": "e0a5f391b38247aa9496897e337a47af9fe5136e",
+      "branch": "review/flop-v41-strategy-20260929"
+    },
+    {
+      "sha": "01973db2eeb7b1ffd6b004f0543943061df6eae4",
+      "branch": "review/flop-v42-frontier-20260929"
+    },
+    {
+      "sha": "c6b64fa94007228d5035cf764895f92b10ad32d9",
+      "branch": "review/frank-loop-only-rollback-20261012"
+    },
+    {
+      "sha": "64ffe60797d1903d808d7d3223a6fd5704f82a28",
+      "branch": "review/frank-notification-copy-20261012"
+    },
+    {
+      "sha": "3b58dc741fb02f6101abcd0dbe50ba4ee849237a",
+      "branch": "review/frank-pr31-mac-isolated-readonly-acceptance-20261012"
+    },
+    {
+      "sha": "b637361154863f492b31a636de8e77381bc8156b",
+      "branch": "review/frank-pr31-pr32-pr33-integration-20261012"
+    },
+    {
+      "sha": "b7119fa24fc6495d42d5e9c290ed316f57105e92",
+      "branch": "review/frank-pr31-pr32-pr33-mergegate-20261012"
+    },
+    {
+      "sha": "81a6d31b8d95866e7da98d2e54b52379b83bd3a5",
+      "branch": "review/frank-pr33-r4-medium-matrix-20261012"
+    },
+    {
+      "sha": "10b98ee10d5d84ea187041821cd9fe0d977ecf09",
+      "branch": "review/frank-pr33-r4-medium-remediation-20261012"
+    },
+    {
+      "sha": "6348d2f48b13eb2d46932606da6cb7c3be8b99dd",
+      "branch": "review/frank-pr33-r5-classifier-guard-remediation-20261012"
+    },
+    {
+      "sha": "58c1729559c0af65469c1eb4bac87a0ec7baf7c3",
+      "branch": "review/frank-pr33-r5-main-integration-matrix-20261012"
+    },
+    {
+      "sha": "ae854ef8653cb94d6f804b04c83df66fb14cddef",
+      "branch": "review/frank-pr33-second-round-fix-20261012"
+    },
+    {
+      "sha": "d9862bd2da1dc48134903f6cb64c077533e11a08",
+      "branch": "review/frank-pr33-second-round-matrix-20261012"
+    },
+    {
+      "sha": "7d4c3972b3a2f86c794057f1b915e407763417ab",
+      "branch": "review/frank-pr33-third-blockers-fix-20261012"
+    },
+    {
+      "sha": "a3ec6ce9c92a85ea5290080de98c739507ed5f6d",
+      "branch": "review/frank-pr33-third-blockers-matrix-20261012"
+    },
+    {
+      "sha": "93db52248c1c2f8ca92bee4df523025d139d268c",
+      "branch": "review/frank-pr39-controlled-release-20261013"
+    },
+    {
+      "sha": "adc900cef0efc05dde3daaf3507b07a47ebfbbdd",
+      "branch": "review/frank-watchpool-collapse-20261012"
+    },
+    {
+      "sha": "d60336574f39aff8723af18d7fbdac48266a4382",
+      "branch": "review/meme-ca-v3-integrate-main-20261008"
+    },
+    {
+      "sha": "74bc8d176dd2a6f9f3a488831c23b2006f1022ba",
+      "branch": "ui/frank-follow-opportunity-first-20261012"
+    },
+    {
+      "sha": "b1879888c1574e99cbecb4225dc81b13af2edbb2",
+      "branch": "ui/meme-dashboard-cn-ux-20261007"
+    },
+    {
+      "sha": "ecb7838135a12a50c531f6ff3249208793f8dce4",
+      "branch": "ui/meme-dashboard-data-visibility-20261007"
+    }
+  ],
+  "pr_count": 244,
+  "related_named_pr_count": 173,
+  "backend_tree_sets": 83,
+  "missing_legacy_paths": {
+    "crypto-300-profit-mission/local-agent/mission_agent/meme/identity.py": [
+      {
+        "branch": "codex/frank-ca-c02-token-identity-20261014",
+        "sha": "c4073f699bff7744ca623f6adbbab8397a75b3ca"
+      },
+      {
+        "branch": "fix/frank-c02-pr78-verified-mint-20261016",
+        "sha": "f7aa430ffda98051821ac4a35ccf6d5d9b0bc95d"
+      },
+      {
+        "branch": "fix/frank-c02-pr80-backend-verdict-qa-20261016",
+        "sha": "58492f0bdf7633594972702a60cf796cb0a56cca"
+      },
+      {
+        "branch": "fix/frank-c02-pr82-authority-presence-20261016",
+        "sha": "8d425e4d0e9db9f27abd8ad662e4d59e64b57e53"
+      },
+      {
+        "branch": "fix/frank-c02-unknown-risk-rpc-evidence-card-safari-20261016",
+        "sha": "292b9bbdfab08fc49cd494ba256c931fc1789ca5"
+      },
+      {
+        "branch": "fix/frank-ca-c02-identity-preview-casefold-review-20261014",
+        "sha": "8898134a8a302e1187138f7fb3da87a554567e6d"
+      }
+    ],
+    "crypto-300-profit-mission/local-agent/mission_agent/mission_control/person_registry.py": [
+      {
+        "branch": "codex/frank-f02-manual-source-refresh-20261015",
+        "sha": "a20a9f972589e34d2eae435c2ee4696eb53bb1d7"
+      },
+      {
+        "branch": "dev/frank-a05-f02-latest-inventory-evidence-20261014",
+        "sha": "55b430608d9048360f922a453f77cced479ac810"
+      },
+      {
+        "branch": "dev/frank-ca-a03-research-wallet-facts-20261013",
+        "sha": "0010a7b8114bc87728bec3bb8eb9efdff9c1cbe9"
+      },
+      {
+        "branch": "dev/frank-ca-a04-a05-readonly-chain-facts-20261013",
+        "sha": "92fbacbc411fb29a628c32d42bc5b6889603b7f6"
+      },
+      {
+        "branch": "dev/frank-ca-a04-history-pagination-resume-20261014",
+        "sha": "26c40912c146dca3e85eb15d69570999dcc7e24f"
+      },
+      {
+        "branch": "dev/frank-ca-registry-a00-a02-20261013",
+        "sha": "22f7b8f760fea62f1f713d5aaccb9391cae1a26a"
+      },
+      {
+        "branch": "dev/frank-current-follow-context-a05-f02-20261017",
+        "sha": "5055515ab8d3b97abb2c7b6e053108756e0bd663"
+      },
+      {
+        "branch": "feat/frank-c02-autocapture-zero-touch-20261018",
+        "sha": "cee14388f29c8f39b6372827f13c64c4cf6ecfcf"
+      },
+      {
+        "branch": "feat/frank-f01-current-candidates-history-20261018",
+        "sha": "e8bc450d836ac46df5224ce7b6fc048ea5720db0"
+      },
+      {
+        "branch": "feat/frank-f01-source-context-pane-20261017",
+        "sha": "ab528d7fe60d05cb278b6d516b1b06fe0402b788"
+      },
+      {
+        "branch": "fix/frank-a05-f02-full-slot-source-order-review-20261014",
+        "sha": "b70245f189a4940eab62288e2da23551f9e31129"
+      },
+      {
+        "branch": "fix/frank-a05-f02-slotless-program-provenance-20261014",
+        "sha": "063e8bada37534c13e801ea6f63e97d8f5586f4b"
+      },
+      {
+        "branch": "fix/frank-ca-a04-claude-p2-p6-p4-coverage-20261014",
+        "sha": "c2cf581196d19e61306148cdfb85ce4857d8f02f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-owner-gaps-source-replay-20261014",
+        "sha": "4cef47ac63d1a0a2beb9ec7924214a127c97e32f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-sol-native-gap-policy-20261014",
+        "sha": "e547203c6e4b00c80372c125785c9feb72fb8e87"
+      },
+      {
+        "branch": "fix/frank-ca-a04-v3-immutable-view-upgrade-20261014",
+        "sha": "166bdaa133d7ed799870ca963d2dfa55f2736b17"
+      },
+      {
+        "branch": "fix/frank-ca-a04-versioned-generic-tx-20261014",
+        "sha": "6e1f8cec197bab30703fb4524c9710191dc25522"
+      },
+      {
+        "branch": "fix/frank-decisions-partial-refresh-20261019",
+        "sha": "8a8b4fcc36242c0ba03b03170225f723d847fa53"
+      },
+      {
+        "branch": "fix/frank-pr91-safe-primary-f01-and-gateway-20261017",
+        "sha": "727d3d1150c88900f4ecd45dfa8d51d6d89c8cea"
+      },
+      {
+        "branch": "fix/frank-pr92-mixed-f01-route-p1-20261017",
+        "sha": "d14eb7c1a910c79f79cee216ca6f9aae47e3db02"
+      },
+      {
+        "branch": "fix/frank-pr93-executable-quote-binding-p2-20261018",
+        "sha": "19d5d8be92b944f1c9814a1f527d233290bf2dfc"
+      },
+      {
+        "branch": "research/frank-a05-first-program-failstop-20261025",
+        "sha": "79ae1b91081f9a7fe659eda9cea59fb80eea16e1"
+      }
+    ],
+    "crypto-300-profit-mission/local-agent/mission_agent/mission_control/research_wallet_facts.py": [
+      {
+        "branch": "codex/frank-f02-manual-source-refresh-20261015",
+        "sha": "a20a9f972589e34d2eae435c2ee4696eb53bb1d7"
+      },
+      {
+        "branch": "dev/frank-a05-f02-latest-inventory-evidence-20261014",
+        "sha": "55b430608d9048360f922a453f77cced479ac810"
+      },
+      {
+        "branch": "dev/frank-ca-a03-research-wallet-facts-20261013",
+        "sha": "0010a7b8114bc87728bec3bb8eb9efdff9c1cbe9"
+      },
+      {
+        "branch": "dev/frank-ca-a04-a05-readonly-chain-facts-20261013",
+        "sha": "92fbacbc411fb29a628c32d42bc5b6889603b7f6"
+      },
+      {
+        "branch": "dev/frank-ca-a04-history-pagination-resume-20261014",
+        "sha": "26c40912c146dca3e85eb15d69570999dcc7e24f"
+      },
+      {
+        "branch": "dev/frank-current-follow-context-a05-f02-20261017",
+        "sha": "5055515ab8d3b97abb2c7b6e053108756e0bd663"
+      },
+      {
+        "branch": "feat/frank-c02-autocapture-zero-touch-20261018",
+        "sha": "cee14388f29c8f39b6372827f13c64c4cf6ecfcf"
+      },
+      {
+        "branch": "feat/frank-f01-current-candidates-history-20261018",
+        "sha": "e8bc450d836ac46df5224ce7b6fc048ea5720db0"
+      },
+      {
+        "branch": "feat/frank-f01-source-context-pane-20261017",
+        "sha": "ab528d7fe60d05cb278b6d516b1b06fe0402b788"
+      },
+      {
+        "branch": "fix/frank-a05-f02-full-slot-source-order-review-20261014",
+        "sha": "b70245f189a4940eab62288e2da23551f9e31129"
+      },
+      {
+        "branch": "fix/frank-a05-f02-slotless-program-provenance-20261014",
+        "sha": "063e8bada37534c13e801ea6f63e97d8f5586f4b"
+      },
+      {
+        "branch": "fix/frank-ca-a04-claude-p2-p6-p4-coverage-20261014",
+        "sha": "c2cf581196d19e61306148cdfb85ce4857d8f02f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-owner-gaps-source-replay-20261014",
+        "sha": "4cef47ac63d1a0a2beb9ec7924214a127c97e32f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-sol-native-gap-policy-20261014",
+        "sha": "e547203c6e4b00c80372c125785c9feb72fb8e87"
+      },
+      {
+        "branch": "fix/frank-ca-a04-v3-immutable-view-upgrade-20261014",
+        "sha": "166bdaa133d7ed799870ca963d2dfa55f2736b17"
+      },
+      {
+        "branch": "fix/frank-ca-a04-versioned-generic-tx-20261014",
+        "sha": "6e1f8cec197bab30703fb4524c9710191dc25522"
+      },
+      {
+        "branch": "fix/frank-decisions-partial-refresh-20261019",
+        "sha": "8a8b4fcc36242c0ba03b03170225f723d847fa53"
+      },
+      {
+        "branch": "fix/frank-pr91-safe-primary-f01-and-gateway-20261017",
+        "sha": "727d3d1150c88900f4ecd45dfa8d51d6d89c8cea"
+      },
+      {
+        "branch": "fix/frank-pr92-mixed-f01-route-p1-20261017",
+        "sha": "d14eb7c1a910c79f79cee216ca6f9aae47e3db02"
+      },
+      {
+        "branch": "fix/frank-pr93-executable-quote-binding-p2-20261018",
+        "sha": "19d5d8be92b944f1c9814a1f527d233290bf2dfc"
+      },
+      {
+        "branch": "research/frank-a05-first-program-failstop-20261025",
+        "sha": "79ae1b91081f9a7fe659eda9cea59fb80eea16e1"
+      }
+    ],
+    "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_capture_provider.py": [
+      {
+        "branch": "codex/frank-f02-manual-source-refresh-20261015",
+        "sha": "a20a9f972589e34d2eae435c2ee4696eb53bb1d7"
+      },
+      {
+        "branch": "dev/frank-a05-f02-latest-inventory-evidence-20261014",
+        "sha": "55b430608d9048360f922a453f77cced479ac810"
+      },
+      {
+        "branch": "dev/frank-ca-a04-a05-readonly-chain-facts-20261013",
+        "sha": "92fbacbc411fb29a628c32d42bc5b6889603b7f6"
+      },
+      {
+        "branch": "dev/frank-ca-a04-history-pagination-resume-20261014",
+        "sha": "26c40912c146dca3e85eb15d69570999dcc7e24f"
+      },
+      {
+        "branch": "dev/frank-current-follow-context-a05-f02-20261017",
+        "sha": "5055515ab8d3b97abb2c7b6e053108756e0bd663"
+      },
+      {
+        "branch": "feat/frank-c02-autocapture-zero-touch-20261018",
+        "sha": "cee14388f29c8f39b6372827f13c64c4cf6ecfcf"
+      },
+      {
+        "branch": "feat/frank-f01-current-candidates-history-20261018",
+        "sha": "e8bc450d836ac46df5224ce7b6fc048ea5720db0"
+      },
+      {
+        "branch": "feat/frank-f01-source-context-pane-20261017",
+        "sha": "ab528d7fe60d05cb278b6d516b1b06fe0402b788"
+      },
+      {
+        "branch": "fix/frank-a05-f02-full-slot-source-order-review-20261014",
+        "sha": "b70245f189a4940eab62288e2da23551f9e31129"
+      },
+      {
+        "branch": "fix/frank-a05-f02-slotless-program-provenance-20261014",
+        "sha": "063e8bada37534c13e801ea6f63e97d8f5586f4b"
+      },
+      {
+        "branch": "fix/frank-ca-a04-claude-p2-p6-p4-coverage-20261014",
+        "sha": "c2cf581196d19e61306148cdfb85ce4857d8f02f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-owner-gaps-source-replay-20261014",
+        "sha": "4cef47ac63d1a0a2beb9ec7924214a127c97e32f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-sol-native-gap-policy-20261014",
+        "sha": "e547203c6e4b00c80372c125785c9feb72fb8e87"
+      },
+      {
+        "branch": "fix/frank-ca-a04-v3-immutable-view-upgrade-20261014",
+        "sha": "166bdaa133d7ed799870ca963d2dfa55f2736b17"
+      },
+      {
+        "branch": "fix/frank-ca-a04-versioned-generic-tx-20261014",
+        "sha": "6e1f8cec197bab30703fb4524c9710191dc25522"
+      },
+      {
+        "branch": "fix/frank-decisions-partial-refresh-20261019",
+        "sha": "8a8b4fcc36242c0ba03b03170225f723d847fa53"
+      },
+      {
+        "branch": "fix/frank-pr91-safe-primary-f01-and-gateway-20261017",
+        "sha": "727d3d1150c88900f4ecd45dfa8d51d6d89c8cea"
+      },
+      {
+        "branch": "fix/frank-pr92-mixed-f01-route-p1-20261017",
+        "sha": "d14eb7c1a910c79f79cee216ca6f9aae47e3db02"
+      },
+      {
+        "branch": "fix/frank-pr93-executable-quote-binding-p2-20261018",
+        "sha": "19d5d8be92b944f1c9814a1f527d233290bf2dfc"
+      },
+      {
+        "branch": "research/frank-a05-first-program-failstop-20261025",
+        "sha": "79ae1b91081f9a7fe659eda9cea59fb80eea16e1"
+      }
+    ],
+    "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_chain_capture.py": [
+      {
+        "branch": "codex/frank-f02-manual-source-refresh-20261015",
+        "sha": "a20a9f972589e34d2eae435c2ee4696eb53bb1d7"
+      },
+      {
+        "branch": "dev/frank-a05-f02-latest-inventory-evidence-20261014",
+        "sha": "55b430608d9048360f922a453f77cced479ac810"
+      },
+      {
+        "branch": "dev/frank-ca-a04-a05-readonly-chain-facts-20261013",
+        "sha": "92fbacbc411fb29a628c32d42bc5b6889603b7f6"
+      },
+      {
+        "branch": "dev/frank-ca-a04-history-pagination-resume-20261014",
+        "sha": "26c40912c146dca3e85eb15d69570999dcc7e24f"
+      },
+      {
+        "branch": "dev/frank-current-follow-context-a05-f02-20261017",
+        "sha": "5055515ab8d3b97abb2c7b6e053108756e0bd663"
+      },
+      {
+        "branch": "feat/frank-c02-autocapture-zero-touch-20261018",
+        "sha": "cee14388f29c8f39b6372827f13c64c4cf6ecfcf"
+      },
+      {
+        "branch": "feat/frank-f01-current-candidates-history-20261018",
+        "sha": "e8bc450d836ac46df5224ce7b6fc048ea5720db0"
+      },
+      {
+        "branch": "feat/frank-f01-source-context-pane-20261017",
+        "sha": "ab528d7fe60d05cb278b6d516b1b06fe0402b788"
+      },
+      {
+        "branch": "fix/frank-a05-f02-full-slot-source-order-review-20261014",
+        "sha": "b70245f189a4940eab62288e2da23551f9e31129"
+      },
+      {
+        "branch": "fix/frank-a05-f02-slotless-program-provenance-20261014",
+        "sha": "063e8bada37534c13e801ea6f63e97d8f5586f4b"
+      },
+      {
+        "branch": "fix/frank-ca-a04-claude-p2-p6-p4-coverage-20261014",
+        "sha": "c2cf581196d19e61306148cdfb85ce4857d8f02f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-owner-gaps-source-replay-20261014",
+        "sha": "4cef47ac63d1a0a2beb9ec7924214a127c97e32f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-sol-native-gap-policy-20261014",
+        "sha": "e547203c6e4b00c80372c125785c9feb72fb8e87"
+      },
+      {
+        "branch": "fix/frank-ca-a04-v3-immutable-view-upgrade-20261014",
+        "sha": "166bdaa133d7ed799870ca963d2dfa55f2736b17"
+      },
+      {
+        "branch": "fix/frank-ca-a04-versioned-generic-tx-20261014",
+        "sha": "6e1f8cec197bab30703fb4524c9710191dc25522"
+      },
+      {
+        "branch": "fix/frank-decisions-partial-refresh-20261019",
+        "sha": "8a8b4fcc36242c0ba03b03170225f723d847fa53"
+      },
+      {
+        "branch": "fix/frank-pr91-safe-primary-f01-and-gateway-20261017",
+        "sha": "727d3d1150c88900f4ecd45dfa8d51d6d89c8cea"
+      },
+      {
+        "branch": "fix/frank-pr92-mixed-f01-route-p1-20261017",
+        "sha": "d14eb7c1a910c79f79cee216ca6f9aae47e3db02"
+      },
+      {
+        "branch": "fix/frank-pr93-executable-quote-binding-p2-20261018",
+        "sha": "19d5d8be92b944f1c9814a1f527d233290bf2dfc"
+      },
+      {
+        "branch": "research/frank-a05-first-program-failstop-20261025",
+        "sha": "79ae1b91081f9a7fe659eda9cea59fb80eea16e1"
+      }
+    ],
+    "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_economic_ledger.py": [
+      {
+        "branch": "codex/frank-f02-manual-source-refresh-20261015",
+        "sha": "a20a9f972589e34d2eae435c2ee4696eb53bb1d7"
+      },
+      {
+        "branch": "dev/frank-a05-f02-latest-inventory-evidence-20261014",
+        "sha": "55b430608d9048360f922a453f77cced479ac810"
+      },
+      {
+        "branch": "dev/frank-ca-a04-a05-readonly-chain-facts-20261013",
+        "sha": "92fbacbc411fb29a628c32d42bc5b6889603b7f6"
+      },
+      {
+        "branch": "dev/frank-ca-a04-history-pagination-resume-20261014",
+        "sha": "26c40912c146dca3e85eb15d69570999dcc7e24f"
+      },
+      {
+        "branch": "dev/frank-current-follow-context-a05-f02-20261017",
+        "sha": "5055515ab8d3b97abb2c7b6e053108756e0bd663"
+      },
+      {
+        "branch": "feat/frank-c02-autocapture-zero-touch-20261018",
+        "sha": "cee14388f29c8f39b6372827f13c64c4cf6ecfcf"
+      },
+      {
+        "branch": "feat/frank-f01-current-candidates-history-20261018",
+        "sha": "e8bc450d836ac46df5224ce7b6fc048ea5720db0"
+      },
+      {
+        "branch": "feat/frank-f01-source-context-pane-20261017",
+        "sha": "ab528d7fe60d05cb278b6d516b1b06fe0402b788"
+      },
+      {
+        "branch": "fix/frank-a05-f02-full-slot-source-order-review-20261014",
+        "sha": "b70245f189a4940eab62288e2da23551f9e31129"
+      },
+      {
+        "branch": "fix/frank-a05-f02-slotless-program-provenance-20261014",
+        "sha": "063e8bada37534c13e801ea6f63e97d8f5586f4b"
+      },
+      {
+        "branch": "fix/frank-ca-a04-claude-p2-p6-p4-coverage-20261014",
+        "sha": "c2cf581196d19e61306148cdfb85ce4857d8f02f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-owner-gaps-source-replay-20261014",
+        "sha": "4cef47ac63d1a0a2beb9ec7924214a127c97e32f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-sol-native-gap-policy-20261014",
+        "sha": "e547203c6e4b00c80372c125785c9feb72fb8e87"
+      },
+      {
+        "branch": "fix/frank-ca-a04-v3-immutable-view-upgrade-20261014",
+        "sha": "166bdaa133d7ed799870ca963d2dfa55f2736b17"
+      },
+      {
+        "branch": "fix/frank-ca-a04-versioned-generic-tx-20261014",
+        "sha": "6e1f8cec197bab30703fb4524c9710191dc25522"
+      },
+      {
+        "branch": "fix/frank-decisions-partial-refresh-20261019",
+        "sha": "8a8b4fcc36242c0ba03b03170225f723d847fa53"
+      },
+      {
+        "branch": "fix/frank-pr91-safe-primary-f01-and-gateway-20261017",
+        "sha": "727d3d1150c88900f4ecd45dfa8d51d6d89c8cea"
+      },
+      {
+        "branch": "fix/frank-pr92-mixed-f01-route-p1-20261017",
+        "sha": "d14eb7c1a910c79f79cee216ca6f9aae47e3db02"
+      },
+      {
+        "branch": "fix/frank-pr93-executable-quote-binding-p2-20261018",
+        "sha": "19d5d8be92b944f1c9814a1f527d233290bf2dfc"
+      },
+      {
+        "branch": "research/frank-a05-first-program-failstop-20261025",
+        "sha": "79ae1b91081f9a7fe659eda9cea59fb80eea16e1"
+      }
+    ],
+    "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_evidence_store.py": [
+      {
+        "branch": "codex/frank-f02-manual-source-refresh-20261015",
+        "sha": "a20a9f972589e34d2eae435c2ee4696eb53bb1d7"
+      },
+      {
+        "branch": "dev/frank-a05-f02-latest-inventory-evidence-20261014",
+        "sha": "55b430608d9048360f922a453f77cced479ac810"
+      },
+      {
+        "branch": "dev/frank-ca-a04-a05-readonly-chain-facts-20261013",
+        "sha": "92fbacbc411fb29a628c32d42bc5b6889603b7f6"
+      },
+      {
+        "branch": "dev/frank-ca-a04-history-pagination-resume-20261014",
+        "sha": "26c40912c146dca3e85eb15d69570999dcc7e24f"
+      },
+      {
+        "branch": "dev/frank-current-follow-context-a05-f02-20261017",
+        "sha": "5055515ab8d3b97abb2c7b6e053108756e0bd663"
+      },
+      {
+        "branch": "feat/frank-c02-autocapture-zero-touch-20261018",
+        "sha": "cee14388f29c8f39b6372827f13c64c4cf6ecfcf"
+      },
+      {
+        "branch": "feat/frank-f01-current-candidates-history-20261018",
+        "sha": "e8bc450d836ac46df5224ce7b6fc048ea5720db0"
+      },
+      {
+        "branch": "feat/frank-f01-source-context-pane-20261017",
+        "sha": "ab528d7fe60d05cb278b6d516b1b06fe0402b788"
+      },
+      {
+        "branch": "fix/frank-a05-f02-full-slot-source-order-review-20261014",
+        "sha": "b70245f189a4940eab62288e2da23551f9e31129"
+      },
+      {
+        "branch": "fix/frank-a05-f02-slotless-program-provenance-20261014",
+        "sha": "063e8bada37534c13e801ea6f63e97d8f5586f4b"
+      },
+      {
+        "branch": "fix/frank-ca-a04-claude-p2-p6-p4-coverage-20261014",
+        "sha": "c2cf581196d19e61306148cdfb85ce4857d8f02f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-owner-gaps-source-replay-20261014",
+        "sha": "4cef47ac63d1a0a2beb9ec7924214a127c97e32f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-sol-native-gap-policy-20261014",
+        "sha": "e547203c6e4b00c80372c125785c9feb72fb8e87"
+      },
+      {
+        "branch": "fix/frank-ca-a04-v3-immutable-view-upgrade-20261014",
+        "sha": "166bdaa133d7ed799870ca963d2dfa55f2736b17"
+      },
+      {
+        "branch": "fix/frank-ca-a04-versioned-generic-tx-20261014",
+        "sha": "6e1f8cec197bab30703fb4524c9710191dc25522"
+      },
+      {
+        "branch": "fix/frank-decisions-partial-refresh-20261019",
+        "sha": "8a8b4fcc36242c0ba03b03170225f723d847fa53"
+      },
+      {
+        "branch": "fix/frank-pr91-safe-primary-f01-and-gateway-20261017",
+        "sha": "727d3d1150c88900f4ecd45dfa8d51d6d89c8cea"
+      },
+      {
+        "branch": "fix/frank-pr92-mixed-f01-route-p1-20261017",
+        "sha": "d14eb7c1a910c79f79cee216ca6f9aae47e3db02"
+      },
+      {
+        "branch": "fix/frank-pr93-executable-quote-binding-p2-20261018",
+        "sha": "19d5d8be92b944f1c9814a1f527d233290bf2dfc"
+      },
+      {
+        "branch": "research/frank-a05-first-program-failstop-20261025",
+        "sha": "79ae1b91081f9a7fe659eda9cea59fb80eea16e1"
+      }
+    ],
+    "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_full_rpc_evidence.py": [
+      {
+        "branch": "codex/frank-f02-manual-source-refresh-20261015",
+        "sha": "a20a9f972589e34d2eae435c2ee4696eb53bb1d7"
+      },
+      {
+        "branch": "dev/frank-current-follow-context-a05-f02-20261017",
+        "sha": "5055515ab8d3b97abb2c7b6e053108756e0bd663"
+      },
+      {
+        "branch": "feat/frank-c02-autocapture-zero-touch-20261018",
+        "sha": "cee14388f29c8f39b6372827f13c64c4cf6ecfcf"
+      },
+      {
+        "branch": "feat/frank-f01-current-candidates-history-20261018",
+        "sha": "e8bc450d836ac46df5224ce7b6fc048ea5720db0"
+      },
+      {
+        "branch": "feat/frank-f01-source-context-pane-20261017",
+        "sha": "ab528d7fe60d05cb278b6d516b1b06fe0402b788"
+      },
+      {
+        "branch": "fix/frank-decisions-partial-refresh-20261019",
+        "sha": "8a8b4fcc36242c0ba03b03170225f723d847fa53"
+      },
+      {
+        "branch": "fix/frank-pr91-safe-primary-f01-and-gateway-20261017",
+        "sha": "727d3d1150c88900f4ecd45dfa8d51d6d89c8cea"
+      },
+      {
+        "branch": "fix/frank-pr92-mixed-f01-route-p1-20261017",
+        "sha": "d14eb7c1a910c79f79cee216ca6f9aae47e3db02"
+      },
+      {
+        "branch": "fix/frank-pr93-executable-quote-binding-p2-20261018",
+        "sha": "19d5d8be92b944f1c9814a1f527d233290bf2dfc"
+      },
+      {
+        "branch": "research/frank-a05-first-program-failstop-20261025",
+        "sha": "79ae1b91081f9a7fe659eda9cea59fb80eea16e1"
+      }
+    ],
+    "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_history_replay.py": [
+      {
+        "branch": "codex/frank-f02-manual-source-refresh-20261015",
+        "sha": "a20a9f972589e34d2eae435c2ee4696eb53bb1d7"
+      },
+      {
+        "branch": "dev/frank-a05-f02-latest-inventory-evidence-20261014",
+        "sha": "55b430608d9048360f922a453f77cced479ac810"
+      },
+      {
+        "branch": "dev/frank-ca-a04-history-pagination-resume-20261014",
+        "sha": "26c40912c146dca3e85eb15d69570999dcc7e24f"
+      },
+      {
+        "branch": "dev/frank-current-follow-context-a05-f02-20261017",
+        "sha": "5055515ab8d3b97abb2c7b6e053108756e0bd663"
+      },
+      {
+        "branch": "feat/frank-c02-autocapture-zero-touch-20261018",
+        "sha": "cee14388f29c8f39b6372827f13c64c4cf6ecfcf"
+      },
+      {
+        "branch": "feat/frank-f01-current-candidates-history-20261018",
+        "sha": "e8bc450d836ac46df5224ce7b6fc048ea5720db0"
+      },
+      {
+        "branch": "feat/frank-f01-source-context-pane-20261017",
+        "sha": "ab528d7fe60d05cb278b6d516b1b06fe0402b788"
+      },
+      {
+        "branch": "fix/frank-a05-f02-full-slot-source-order-review-20261014",
+        "sha": "b70245f189a4940eab62288e2da23551f9e31129"
+      },
+      {
+        "branch": "fix/frank-a05-f02-slotless-program-provenance-20261014",
+        "sha": "063e8bada37534c13e801ea6f63e97d8f5586f4b"
+      },
+      {
+        "branch": "fix/frank-ca-a04-claude-p2-p6-p4-coverage-20261014",
+        "sha": "c2cf581196d19e61306148cdfb85ce4857d8f02f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-owner-gaps-source-replay-20261014",
+        "sha": "4cef47ac63d1a0a2beb9ec7924214a127c97e32f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-sol-native-gap-policy-20261014",
+        "sha": "e547203c6e4b00c80372c125785c9feb72fb8e87"
+      },
+      {
+        "branch": "fix/frank-ca-a04-v3-immutable-view-upgrade-20261014",
+        "sha": "166bdaa133d7ed799870ca963d2dfa55f2736b17"
+      },
+      {
+        "branch": "fix/frank-ca-a04-versioned-generic-tx-20261014",
+        "sha": "6e1f8cec197bab30703fb4524c9710191dc25522"
+      },
+      {
+        "branch": "fix/frank-decisions-partial-refresh-20261019",
+        "sha": "8a8b4fcc36242c0ba03b03170225f723d847fa53"
+      },
+      {
+        "branch": "fix/frank-pr91-safe-primary-f01-and-gateway-20261017",
+        "sha": "727d3d1150c88900f4ecd45dfa8d51d6d89c8cea"
+      },
+      {
+        "branch": "fix/frank-pr92-mixed-f01-route-p1-20261017",
+        "sha": "d14eb7c1a910c79f79cee216ca6f9aae47e3db02"
+      },
+      {
+        "branch": "fix/frank-pr93-executable-quote-binding-p2-20261018",
+        "sha": "19d5d8be92b944f1c9814a1f527d233290bf2dfc"
+      },
+      {
+        "branch": "research/frank-a05-first-program-failstop-20261025",
+        "sha": "79ae1b91081f9a7fe659eda9cea59fb80eea16e1"
+      }
+    ],
+    "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_instruction_evidence.py": [
+      {
+        "branch": "codex/frank-f02-manual-source-refresh-20261015",
+        "sha": "a20a9f972589e34d2eae435c2ee4696eb53bb1d7"
+      },
+      {
+        "branch": "dev/frank-a05-f02-latest-inventory-evidence-20261014",
+        "sha": "55b430608d9048360f922a453f77cced479ac810"
+      },
+      {
+        "branch": "dev/frank-ca-a04-a05-readonly-chain-facts-20261013",
+        "sha": "92fbacbc411fb29a628c32d42bc5b6889603b7f6"
+      },
+      {
+        "branch": "dev/frank-ca-a04-history-pagination-resume-20261014",
+        "sha": "26c40912c146dca3e85eb15d69570999dcc7e24f"
+      },
+      {
+        "branch": "dev/frank-current-follow-context-a05-f02-20261017",
+        "sha": "5055515ab8d3b97abb2c7b6e053108756e0bd663"
+      },
+      {
+        "branch": "feat/frank-c02-autocapture-zero-touch-20261018",
+        "sha": "cee14388f29c8f39b6372827f13c64c4cf6ecfcf"
+      },
+      {
+        "branch": "feat/frank-f01-current-candidates-history-20261018",
+        "sha": "e8bc450d836ac46df5224ce7b6fc048ea5720db0"
+      },
+      {
+        "branch": "feat/frank-f01-source-context-pane-20261017",
+        "sha": "ab528d7fe60d05cb278b6d516b1b06fe0402b788"
+      },
+      {
+        "branch": "fix/frank-a05-f02-full-slot-source-order-review-20261014",
+        "sha": "b70245f189a4940eab62288e2da23551f9e31129"
+      },
+      {
+        "branch": "fix/frank-a05-f02-slotless-program-provenance-20261014",
+        "sha": "063e8bada37534c13e801ea6f63e97d8f5586f4b"
+      },
+      {
+        "branch": "fix/frank-ca-a04-claude-p2-p6-p4-coverage-20261014",
+        "sha": "c2cf581196d19e61306148cdfb85ce4857d8f02f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-owner-gaps-source-replay-20261014",
+        "sha": "4cef47ac63d1a0a2beb9ec7924214a127c97e32f"
+      },
+      {
+        "branch": "fix/frank-ca-a04-sol-native-gap-policy-20261014",
+        "sha": "e547203c6e4b00c80372c125785c9feb72fb8e87"
+      },
+      {
+        "branch": "fix/frank-ca-a04-v3-immutable-view-upgrade-20261014",
+        "sha": "166bdaa133d7ed799870ca963d2dfa55f2736b17"
+      },
+      {
+        "branch": "fix/frank-ca-a04-versioned-generic-tx-20261014",
+        "sha": "6e1f8cec197bab30703fb4524c9710191dc25522"
+      },
+      {
+        "branch": "fix/frank-decisions-partial-refresh-20261019",
+        "sha": "8a8b4fcc36242c0ba03b03170225f723d847fa53"
+      },
+      {
+        "branch": "fix/frank-pr91-safe-primary-f01-and-gateway-20261017",
+        "sha": "727d3d1150c88900f4ecd45dfa8d51d6d89c8cea"
+      },
+      {
+        "branch": "fix/frank-pr92-mixed-f01-route-p1-20261017",
+        "sha": "d14eb7c1a910c79f79cee216ca6f9aae47e3db02"
+      },
+      {
+        "branch": "fix/frank-pr93-executable-quote-binding-p2-20261018",
+        "sha": "19d5d8be92b944f1c9814a1f527d233290bf2dfc"
+      },
+      {
+        "branch": "research/frank-a05-first-program-failstop-20261025",
+        "sha": "79ae1b91081f9a7fe659eda9cea59fb80eea16e1"
+      }
+    ],
+    "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_inventory_snapshot.py": [
+      {
+        "branch": "codex/frank-f02-manual-source-refresh-20261015",
+        "sha": "a20a9f972589e34d2eae435c2ee4696eb53bb1d7"
+      },
+      {
+        "branch": "dev/frank-a05-f02-latest-inventory-evidence-20261014",
+        "sha": "55b430608d9048360f922a453f77cced479ac810"
+      },
+      {
+        "branch": "dev/frank-current-follow-context-a05-f02-20261017",
+        "sha": "5055515ab8d3b97abb2c7b6e053108756e0bd663"
+      },
+      {
+        "branch": "feat/frank-c02-autocapture-zero-touch-20261018",
+        "sha": "cee14388f29c8f39b6372827f13c64c4cf6ecfcf"
+      },
+      {
+        "branch": "feat/frank-f01-current-candidates-history-20261018",
+        "sha": "e8bc450d836ac46df5224ce7b6fc048ea5720db0"
+      },
+      {
+        "branch": "feat/frank-f01-source-context-pane-20261017",
+        "sha": "ab528d7fe60d05cb278b6d516b1b06fe0402b788"
+      },
+      {
+        "branch": "fix/frank-a05-f02-full-slot-source-order-review-20261014",
+        "sha": "b70245f189a4940eab62288e2da23551f9e31129"
+      },
+      {
+        "branch": "fix/frank-a05-f02-slotless-program-provenance-20261014",
+        "sha": "063e8bada37534c13e801ea6f63e97d8f5586f4b"
+      },
+      {
+        "branch": "fix/frank-decisions-partial-refresh-20261019",
+        "sha": "8a8b4fcc36242c0ba03b03170225f723d847fa53"
+      },
+      {
+        "branch": "fix/frank-pr91-safe-primary-f01-and-gateway-20261017",
+        "sha": "727d3d1150c88900f4ecd45dfa8d51d6d89c8cea"
+      },
+      {
+        "branch": "fix/frank-pr92-mixed-f01-route-p1-20261017",
+        "sha": "d14eb7c1a910c79f79cee216ca6f9aae47e3db02"
+      },
+      {
+        "branch": "fix/frank-pr93-executable-quote-binding-p2-20261018",
+        "sha": "19d5d8be92b944f1c9814a1f527d233290bf2dfc"
+      },
+      {
+        "branch": "research/frank-a05-first-program-failstop-20261025",
+        "sha": "79ae1b91081f9a7fe659eda9cea59fb80eea16e1"
+      }
+    ],
+    "crypto-300-profit-mission/local-agent/mission_agent/mission_control/follow_view.py": [
+      {
+        "branch": "dev/frank-ca-f01-actionable-view-20261013",
+        "sha": "516e3335a134c608f477019b79027982f43af32a"
+      },
+      {
+        "branch": "feat/frank-c02-autocapture-zero-touch-20261018",
+        "sha": "cee14388f29c8f39b6372827f13c64c4cf6ecfcf"
+      },
+      {
+        "branch": "feat/frank-f01-current-candidates-history-20261018",
+        "sha": "e8bc450d836ac46df5224ce7b6fc048ea5720db0"
+      },
+      {
+        "branch": "fix/frank-decisions-partial-refresh-20261019",
+        "sha": "8a8b4fcc36242c0ba03b03170225f723d847fa53"
+      },
+      {
+        "branch": "fix/frank-f01-pr79-card-qa-20261016",
+        "sha": "db0ea8505fe7ebe27697db9c0fdd7dea5bb0bc0d"
+      },
+      {
+        "branch": "fix/frank-f01-pr81-js-range-20261016",
+        "sha": "d2eeebc1b49d2bae38e05d7d01f6839e3ba237f4"
+      },
+      {
+        "branch": "fix/frank-f01-sold-excluded-badge-safari-20261016",
+        "sha": "2459cfdc90987a40809bf67f54a1197e23fa3e85"
+      },
+      {
+        "branch": "fix/frank-pr77-price-projection-slot-review-20261016",
+        "sha": "95fc00a7ab90b2fa28e34e97ec79b23db7addfa2"
+      },
+      {
+        "branch": "fix/frank-pr92-mixed-f01-route-p1-20261017",
+        "sha": "d14eb7c1a910c79f79cee216ca6f9aae47e3db02"
+      },
+      {
+        "branch": "fix/frank-pr93-executable-quote-binding-p2-20261018",
+        "sha": "19d5d8be92b944f1c9814a1f527d233290bf2dfc"
+      }
+    ],
+    "crypto-300-profit-mission/local-agent/mission_agent/mission_control/frank_ca_f02_alignment.py": [
+      {
+        "branch": "dev/frank-current-follow-context-a05-f02-20261017",
+        "sha": "5055515ab8d3b97abb2c7b6e053108756e0bd663"
+      },
+      {
+        "branch": "feat/frank-c02-autocapture-zero-touch-20261018",
+        "sha": "cee14388f29c8f39b6372827f13c64c4cf6ecfcf"
+      },
+      {
+        "branch": "feat/frank-f01-current-candidates-history-20261018",
+        "sha": "e8bc450d836ac46df5224ce7b6fc048ea5720db0"
+      },
+      {
+        "branch": "feat/frank-f01-source-context-pane-20261017",
+        "sha": "ab528d7fe60d05cb278b6d516b1b06fe0402b788"
+      },
+      {
+        "branch": "fix/frank-decisions-partial-refresh-20261019",
+        "sha": "8a8b4fcc36242c0ba03b03170225f723d847fa53"
+      },
+      {
+        "branch": "fix/frank-pr91-safe-primary-f01-and-gateway-20261017",
+        "sha": "727d3d1150c88900f4ecd45dfa8d51d6d89c8cea"
+      },
+      {
+        "branch": "fix/frank-pr92-mixed-f01-route-p1-20261017",
+        "sha": "d14eb7c1a910c79f79cee216ca6f9aae47e3db02"
+      },
+      {
+        "branch": "fix/frank-pr93-executable-quote-binding-p2-20261018",
+        "sha": "19d5d8be92b944f1c9814a1f527d233290bf2dfc"
+      }
+    ],
+    "crypto-300-profit-mission/local-agent/mission_agent/meme/token_report.py": [
+      {
+        "branch": "fix/meme-ca-query-rpc-report-20261007",
+        "sha": "5b0b3f88c9f25a4ec5aebc84465b7dcf3a9768b9"
+      }
+    ]
+  },
+  "warning": "Missing old file does not imply active gap; G1 defers wholesale Sidecar/multi-person. No branch merged."
+}
