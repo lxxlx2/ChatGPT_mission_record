@@ -1,12 +1,12 @@
 # TGE Monitor Current State
-Updated: 2026-11-15 16:00:53 Asia/Bangkok
+Updated: 2026-11-15 16:58:14 Asia/Bangkok
 
-- authoritative_final: airdrop-tge-monitor/runs/2026-11-15/160053-final.md
-- final_commit_sha: 8e07aa69f2e42efd5fec869f0d5a8db36bd8d78a
+- authoritative_final: airdrop-tge-monitor/runs/2026-11-15/165814-final.md
+- final_commit_sha: f9f33a00ccc27c3d0124eb6555798761771be6a5
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 0
 - executed_shard: 0
-- candidate_count: 1 (StandX DUSD VERIFYING)
+- candidate_count: 1 (StandX DUSD VERIFYING; no version-bound issuer receipt)
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
@@ -14,11 +14,11 @@ Updated: 2026-11-15 16:00:53 Asia/Bangkok
 - browser_session: UNAVAILABLE
 - code_execution: CODE_NOT_EXECUTED / MANUAL_EQUIVALENT_ONLY
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (historical AUTOMATION_RUNTIME.md; unchanged)
-- original_readback_shard0: 4/10 generic/historical issuer documents, 0/10 event-specific rights receipts
-- original_readback_urgent5: 2/5 generic issuer pages, 0/5 event-specific rights receipts
+- original_readback_shard0: 0/10 event-specific issuer rights receipts; generic/old official pages 4/10
+- original_readback_urgent5: 0/5 event-specific issuer rights receipts
 
 ## Last meaningful attempts
-- shard0: 2026-11-15 16:00:53 Asia/Bangkok; runs/2026-11-15/160053-final.md (PARTIAL_ONLY)
+- shard0: 2026-11-15 16:58:14 Asia/Bangkok; runs/2026-11-15/165814-final.md (PARTIAL_ONLY)
 - shard1: 2026-11-15 13:00:04 Asia/Bangkok; runs/2026-11-15/130004-final.md (PARTIAL_ONLY)
 - shard2: 2026-11-15 14:03:25 Asia/Bangkok; runs/2026-11-15/140325-final.md (PARTIAL_ONLY)
 - shard3: 2026-11-15 15:02:24 Asia/Bangkok; runs/2026-11-15/150224-final.md (PARTIAL_ONLY)
