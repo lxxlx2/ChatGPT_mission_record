@@ -35,6 +35,7 @@ from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_at
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
 from .wallet_d2_ingress import D2IngressError, query_d2
 from .wallet_activity import activity as read_signed_activity
+from .wallet_activity_paging import activity_page, KINDS as ACTIVITY_KINDS, CURSOR_ERRORS
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .jupiter import JupiterQuoteClient
 
@@ -1066,16 +1067,19 @@ class DashboardState:
                 "notification_authorized": False,
             }
 
-    def frank_signed_activity(self, days: int = 1):
-        """Bounded D1 indexed source facts; never an actionable signal or balance."""
+    def frank_signed_activity(self, days=1, *, page_size=None, cursor=None, kind="ALL", mint=None):
+        """Complete local indexed ranges; optional pages never cap total history."""
         try:
-            result = read_signed_activity(self.frank.database, int(time.time()), days=days)
+            if page_size is None:
+                result = read_signed_activity(self.frank.database, int(time.time()), days=days)
+            else:
+                result = activity_page(self.frank.database, int(time.time()), days=days,
+                                       page_size=page_size, cursor=cursor, kind=kind, mint=mint)
             return {"status": "INDEXED_LOCAL_ONLY", **result}
         except (ValueError, OSError, sqlite3.DatabaseError) as exc:
-            reason = ("INDEX_WINDOW_TOO_LARGE_NOT_TRUNCATED"
-                      if isinstance(exc, ValueError)
-                      and str(exc) == "INDEX_WINDOW_TOO_LARGE_NOT_TRUNCATED"
-                      else "LOCAL_ACTIVITY_SOURCE_UNAVAILABLE")
+            known = CURSOR_ERRORS | {"INDEX_WINDOW_TOO_LARGE_NOT_TRUNCATED", "INVALID_ACTIVITY_RANGE",
+                                     "INVALID_ACTIVITY_PAGE_SIZE", "INVALID_ACTIVITY_KIND", "INVALID_ACTIVITY_MINT"}
+            reason = str(exc) if isinstance(exc, ValueError) and str(exc) in known else "LOCAL_ACTIVITY_SOURCE_UNAVAILABLE"
             return {
                 "status": "UNAVAILABLE", "reason": reason,
                 "scope": "LOCAL_INDEX_ONLY_NOT_COMPLETE_CHAIN",
@@ -1255,13 +1259,31 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"error": "INVALID_D2_QUERY"}, 400)
             return self._json(result)
         if path == "/api/frank-signed-activity":
-            values = parse_qs(urlparse(self.path).query)
-            if set(values) - {"days"} or len(values.get("days", ["1"])) != 1:
+            try:
+                values = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=5)
+            except ValueError:
+                return self._json({"error": "INVALID_ACTIVITY_RANGE"}, 400)
+            if set(values) - {"days", "limit", "cursor", "kind", "mint"} or any(len(v) != 1 for v in values.values()):
                 return self._json({"error": "INVALID_ACTIVITY_RANGE"}, 400)
             days = values.get("days", ["1"])[0]
-            if days not in ("1", "7"):
+            if days not in ("1", "7", "30", "all"):
                 return self._json({"error": "INVALID_ACTIVITY_RANGE"}, 400)
-            return self._json(self.state.frank_signed_activity(int(days)))
+            days = "all" if days == "all" else int(days)
+            if not set(values) - {"days"}:
+                return self._json(self.state.frank_signed_activity(days))
+            limit = values.get("limit", ["100"])[0]
+            kind = values.get("kind", ["ALL"])[0]
+            mint = values.get("mint", [None])[0]
+            cursor = values.get("cursor", [None])[0]
+            if (not limit.isascii() or not limit.isdecimal() or len(limit) > 4
+                    or not 1 <= int(limit) <= 1000 or kind not in ACTIVITY_KINDS
+                    or (mint is not None and not SOLANA_PUBKEY_RE.fullmatch(mint))
+                    or (cursor is not None and not 1 <= len(cursor) <= 4096)):
+                return self._json({"error": "INVALID_ACTIVITY_QUERY"}, 400)
+            result = self.state.frank_signed_activity(days, page_size=int(limit), cursor=cursor, kind=kind, mint=mint)
+            reason = result.get("reason")
+            status = 409 if reason == "ACTIVITY_CURSOR_SOURCE_CHANGED" else 400 if reason in CURSOR_ERRORS else 200
+            return self._json(result, status)
         if path == "/api/trades":
             return self._json(self.state.recent_trades())
         if path == "/api/coverage":
