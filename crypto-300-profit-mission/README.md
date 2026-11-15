@@ -5,6 +5,10 @@ Timezone: Asia/Bangkok
 
 Current mutable facts: [`MISSION_SPEC.md`](MISSION_SPEC.md), [`state/latest.md`](state/latest.md), [`portfolio/current.md`](portfolio/current.md), [`performance/current.md`](performance/current.md). Historical 2026-10-04 scope: [`STATUS_SCOPE_2026-10-04.md`](STATUS_SCOPE_2026-10-04.md).
 
+## 开发主线规则
+
+Frank/Meme V2 必须按 [Mission 开发主线与停止规则](../docs/DEVELOPMENT_MAINLINE_RULES.md) 推进：D0 真数据基线 → D1 事实账本 → D2 持仓/观察池 → D3 跟单辅助及 GMGN 同口径核对 → D4 集成及真实 Mac 整体验收。现有运行进展与 Draft PR 不能替代任何未完成的阶段出口；停止重复已获独立批准的 C02/503 截图和非阻断 P3 循环。
+
 ## Current status
 
 The Mission remains the umbrella `$300 -> $3000` speculative-asset project, but its modules no longer share one active GPT scheduler.
