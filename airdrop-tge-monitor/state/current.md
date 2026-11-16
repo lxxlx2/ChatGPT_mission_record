@@ -1,13 +1,13 @@
 # TGE Monitor Current State
-- last_run: 2026-11-16T07:00:06+07:00
+- last_run: 2026-11-16T07:56:52+07:00
 - schedule: hourly HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-16/070006-final.md
+- run_path: airdrop-tge-monitor/runs/2026-11-16/075652-final.md
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 3
 - executed_shard: 3
 - shard3_original_event_specific_readback: 0/9
 - urgent5_event_specific_original_readback: 0/5
-- candidate_count: 1 (StandX DUSD VERIFYING)
+- candidate_count: 1 (StandX DUSD VERIFYING, issuer receipt still missing)
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
@@ -15,6 +15,8 @@
 - browser_session: UNAVAILABLE
 - code_execution: CODE_NOT_EXECUTED / MANUAL_EQUIVALENT_ONLY
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (historical AUTOMATION_RUNTIME.md, unchanged)
+
+- note: late 07:56 PARTIAL_ONLY duplicate-hour check; no shard completion or attempt pointer advanced
 
 ## Last meaningful attempts
 - shard0: 2026-11-16 04:04:20 Asia/Bangkok (PARTIAL_ONLY)
