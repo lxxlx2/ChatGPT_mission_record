@@ -18,6 +18,29 @@ def key(n):
     return _b58(n.to_bytes(32, "big"))
 
 
+def test_free_batch_records_every_requested_mint_and_shared_raw_receipt():
+    mints=[key(i) for i in range(1,31)]
+    payload=[{"chainId":"solana","pairAddress":key(5000),"baseToken":{"address":mints[0]},
+              "quoteToken":{"address":key(6000)},"priceUsd":"2.5","liquidity":{"usd":10}}]
+    raw=json.dumps(payload).encode(); calls=[]
+    class Response(io.BytesIO):
+        pass
+    client=DexScreenerMarketClient(open_url=lambda req,timeout:(calls.append(req.full_url),Response(raw))[1],clock=lambda:100)
+    records=client.token_snapshots(mints)
+    assert len(records)==30 and [r['mint'] for r in records]==mints and len(calls)==1
+    assert '/tokens/v1/solana/' in calls[0]
+    assert records[0]['status']=='OK' and all(r['reason']=='NO_BASE_TOKEN_PAIR' for r in records[1:])
+    assert len({r['source_ref']['receipt_id'] for r in records})==1
+    assert records[0]['source_ref']['response_sha256']==hashlib.sha256(raw).hexdigest()
+    assert all(r['pair_coverage']=='PROVIDER_RETURNED_BATCH_PAIRS_NOT_EXHAUSTIVE_POOL_ENUMERATION' for r in records)
+
+
+def test_batch_capacity_rejects_31_as_one_wire_but_is_not_total_request_limit():
+    client=DexScreenerMarketClient(open_url=lambda *a,**k:pytest.fail('invalid capacity must not fetch'))
+    with pytest.raises(ValueError,match='CAPACITY'):
+        client.token_snapshots([key(i) for i in range(1,32)])
+
+
 def snapshot(mint, price="2.5", when=100):
     return {"status": "OK", "source": "DEXSCREENER_API", "mint": mint,
             "observed_at": when, "price_usd": price,

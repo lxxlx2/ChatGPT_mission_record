@@ -193,7 +193,7 @@ class ResearchData:
                 result_id = result["snapshot_id"]
                 state = "DONE"
             else:
-                from .market_observations import capture_market
+                from .market_observations import capture_market, normalize_market
                 request = job["request"]
                 if request["scope"] == "mint":
                     mints = [request["mint"]]
@@ -212,21 +212,31 @@ class ResearchData:
                 result_id = str(uuid.uuid4())
                 observations = []
                 unique_mints=sorted(set(mints))
-                for mint in unique_mints:
-                    # Existing token-pairs endpoint documents 300 requests/minute.
-                    # Pace wire work; never limit the number of selected mints.
-                    if observations:
+                batch_method=getattr(self.market_client,"token_snapshots",None)
+                capacity=30 if callable(batch_method) else 1
+                for start in range(0,len(unique_mints),capacity):
+                    group=unique_mints[start:start+capacity]
+                    # Provider batch capacity and request pacing, not total data caps.
+                    if start:
                         time.sleep(.21)
-                    row = capture_market([mint], self.market_client, clock=self.clock)[0]
+                    if callable(batch_method):
+                        snapshots=batch_method(group)
+                        if not isinstance(snapshots,list) or len(snapshots)!=len(group):
+                            raise ValueError("INVALID_MARKET_BATCH_RESPONSE")
+                        group_rows=[normalize_market(m,s,received_at=self.clock()) for m,s in zip(group,snapshots)]
+                    else:
+                        group_rows=capture_market(group,self.market_client,clock=self.clock)
                     evidence = getattr(self.market_client, "last_response_evidence", None)
                     if evidence and evidence.get("source_ref"):
                         self._receipt(evidence["source_ref"], evidence["response_bytes"])
-                    observations.append(row)
+                    observations.extend(group_rows)
                     job["progress"] = {"stage": "MARKET_CAPTURED", "completed_items": len(observations), "total_items": len(unique_mints)}
-                    # Persist per-Mint progress; interrupted jobs leave recoverable verified observations.
+                    # One durable transaction per wire batch; every Mint retained.
                     with self._write() as db:
-                        db.execute("INSERT OR REPLACE INTO frank_market_stage VALUES(?,?,?)", (job_id,mint,canonical(row)))
+                        db.executemany("INSERT OR REPLACE INTO frank_market_stage VALUES(?,?,?)",[(job_id,row["mint"],canonical(row)) for row in group_rows])
                     self._save(job)
+                    if any(row.get("reason") in {"HTTP_401","HTTP_403","HTTP_429"} for row in group_rows):
+                        raise RPCError(next(row["reason"] for row in group_rows if row.get("reason") in {"HTTP_401","HTTP_403","HTTP_429"}))
                 result = {"snapshot_id": result_id, "rows": observations, "observed_at": self.clock(),
                           "scope": request["scope"], "complete": True}
                 state = "DONE" if all(r.get("status") == "OK" for r in observations) else "PARTIAL"

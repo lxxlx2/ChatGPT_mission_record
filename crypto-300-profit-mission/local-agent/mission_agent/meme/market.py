@@ -32,11 +32,11 @@ class DexScreenerMarketClient:
         self.clock=clock
         self.last_response_evidence=None
 
-    def _evidence(self,mint,raw,observed_at):
+    def _evidence(self,mint,raw,observed_at,route=None):
         # Local import keeps this transport usable without importing server or
         # research storage. The ref binds exact HTTP bytes, not a reserialized dict.
         from ..mission_control.source_evidence import build_source_ref
-        params={"chain":"solana","mint":mint,"route":"/token-pairs/v1/solana/"+mint}
+        params={"chain":"solana","mint":mint,"route":route or "/token-pairs/v1/solana/"+mint}
         ref=build_source_ref(provider_identity=BASE,method="GET",params=params,response_bytes=raw,
                              observed_at=observed_at,received_at=observed_at,receipt_id=str(uuid.uuid4()))
         self.last_response_evidence={"response_bytes":raw,"observed_at":observed_at,"method":"GET",
@@ -67,6 +67,9 @@ class DexScreenerMarketClient:
             return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","chain":"solana","mint":mint,
                     "source_ref":(self.last_response_evidence or {}).get('source_ref'),
                     "observed_at":observed_at,"reason":"NETWORK_OR_RESPONSE_INVALID"}
+        return self._snapshot_from_payload(mint,payload,observed_at,source_ref)
+
+    def _snapshot_from_payload(self,mint,payload,observed_at,source_ref):
         if not isinstance(payload,list):
             return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","chain":"solana","mint":mint,
                     "source_ref":source_ref,"observed_at":observed_at,"reason":"RESPONSE_INVALID"}
@@ -134,3 +137,35 @@ class DexScreenerMarketClient:
                 if isinstance(x,dict) and (x.get("platform") or x.get("type") or x.get("handle") or x.get("url"))
             ],
         }
+
+    def token_snapshots(self,mints):
+        """Free provider batch capacity is 30 addresses; never a total Mint cap.
+
+        References cover returned indexed pairs, not independent/exhaustive pool
+        discovery. CA continues to use the single-address token-pairs route.
+        """
+        mints=list(dict.fromkeys(mints))
+        if not mints or len(mints)>30:
+            raise ValueError("INVALID_MARKET_BATCH_CAPACITY")
+        from .holder_ranks import valid_pubkey
+        if not all(valid_pubkey(m) for m in mints):
+            raise ValueError("INVALID_MARKET_BATCH_MINT")
+        self.last_response_evidence=None
+        route="/tokens/v1/solana/"+",".join(mints)
+        req=urllib.request.Request(BASE+route,headers={"Accept":"application/json","User-Agent":"mission-meme-research/2"})
+        observed_at=self.clock(); source_ref=None
+        try:
+            with self.open_url(req,timeout=10) as response:raw=response.read()
+            observed_at=self.clock();source_ref=self._evidence(mints,raw,observed_at,route)
+            payload=json.loads(raw)
+        except urllib.error.HTTPError as exc:
+            observed_at=self.clock()
+            try:source_ref=self._evidence(mints,exc.read(),observed_at,route)
+            except (OSError,TypeError,ValueError):pass
+            return [{"status":"UNAVAILABLE","source":"DEXSCREENER_API","chain":"solana","mint":m,
+                     "source_ref":source_ref,"observed_at":observed_at,"reason":"HTTP_"+str(exc.code)} for m in mints]
+        except (urllib.error.URLError,TimeoutError,OSError,ValueError,TypeError):
+            return [{"status":"UNAVAILABLE","source":"DEXSCREENER_API","chain":"solana","mint":m,
+                     "source_ref":source_ref,"observed_at":observed_at,"reason":"NETWORK_OR_RESPONSE_INVALID"} for m in mints]
+        return [{**self._snapshot_from_payload(m,payload,observed_at,source_ref),
+                 "pair_coverage":"PROVIDER_RETURNED_BATCH_PAIRS_NOT_EXHAUSTIVE_POOL_ENUMERATION"} for m in mints]

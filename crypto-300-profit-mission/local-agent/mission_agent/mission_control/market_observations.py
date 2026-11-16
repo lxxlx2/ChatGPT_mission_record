@@ -80,6 +80,7 @@ def normalize_market(mint, snapshot, *, received_at):
               "source_payload_sha256": None, "source_ref": None,
               "source_hash_kind": "CANONICAL_CLIENT_SNAPSHOT_NOT_RAW_HTTP",
               "identity_basis": "SOLANA_SCOPED_CLIENT_AND_EXACT_PAIR_FIELDS",
+              "pair_coverage": snapshot.get("pair_coverage","PROVIDER_RETURNED_TOKEN_PAIRS") if isinstance(snapshot,dict) else None,
               "currency": "USD", "executable_quote": False}
 
     def unavailable(reason):

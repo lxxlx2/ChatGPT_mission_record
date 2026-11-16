@@ -368,3 +368,20 @@ def test_real_handler_rejects_invalid_position_query_without_starting_work(make_
     status, _ = handler(obj, "/api/frank-positions?" + query)
     assert status == 400 and not obj.root.exists()
 
+
+def test_bulk_market_processes_all_65_mints_in_three_capacity_batches(make_research,monkeypatch):
+    from test_frank_market_observations import snapshot as market_snapshot
+    calls=[]
+    class Batch:
+        def token_snapshots(self,mints):
+            calls.append(list(mints))
+            return [market_snapshot(m,when=100) for m in mints]
+    obj=make_research(mints=[key(i) for i in range(1,66)],market=Batch())
+    monkeypatch.setattr(research_data.time,'sleep',lambda _:None)
+    job=obj.submit('market',{'scope':'observed','idempotency_key':'all65'})
+    obj.executor.run()
+    done=obj.job(job['job_id'])
+    assert done['state']=='DONE'
+    assert [len(group) for group in calls]==[30,30,5]
+    assert done['progress']['completed_items']==65 and len(obj.market_rows())==65
+    assert len(obj._query('SELECT mint FROM frank_market_stage WHERE job_id=?',(job['job_id'],)))==65
