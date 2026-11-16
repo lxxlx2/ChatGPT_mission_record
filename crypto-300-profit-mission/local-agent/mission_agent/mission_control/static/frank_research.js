@@ -4,6 +4,15 @@
   const el = id => document.getElementById('frank-source-' + id);
   if (!el('balance')) return;
   let next = null, lastBalance = null, busy = false, viewEpoch = 0;
+  let sourceClock = null;
+  function refreshAge() {
+    if (!sourceClock) return;
+    const age = Date.now()/1000 - sourceClock.observed;
+    el('age').textContent = age < 0 || !Number.isFinite(age) ? '来源时间异常，当前余额未知' :
+      '当前来源年龄 ' + Math.floor(age) + '秒；' +
+      (age <= 300 && sourceClock.verified ? '捕获余额仍在300秒有效期内' : '已过期或未核实时点，当前余额未知；可手动刷新');
+  }
+  if (typeof window !== 'undefined') window.frankSourceRefreshAge = refreshAge;
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   async function request(path, body) {
     const options = body ? {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)}
@@ -22,6 +31,8 @@
   }
   async function read(cursor = null) {
     const epoch = ++viewEpoch;
+    sourceClock = null;
+    el('age').textContent = '';
     el('rows').innerHTML = '<tr><td colspan="5">正在读取固定来源结果…</td></tr>';
     el('summary').textContent = '正在读取，先前结果不代表本次查询。';
     el('next').disabled = true;
@@ -47,6 +58,8 @@
       murl = part.next_cursor ? '/api/frank-market-observations?limit=1000&cursor=' + encodeURIComponent(part.next_cursor) : null;
     }
     const time = new Date(Number(p.observed_at)*1000).toLocaleString('zh-CN');
+    sourceClock = {observed:Number(p.observed_at), verified:p.current_balance_verified === true};
+    refreshAge();
     const programs = (p.programs || []).map(r => r.program_id.slice(0,8) + ' slot ' + r.slot + ' / ' + r.account_count + '账户').join('；');
     const failure = p.latest_refresh_attempt && p.latest_refresh_attempt.state === 'ERROR'
       ? '；最近刷新失败：' + JSON.stringify(p.latest_refresh_attempt.errors) : '';

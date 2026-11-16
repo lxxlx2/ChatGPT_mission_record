@@ -929,7 +929,8 @@ function renderFrankIntelligence(snapshot) {
   $('frank-intelligence-summary').textContent =
     '已索引研究条目 ' + raw.length + ' 个；当前筛选 ' + visible.length +
     ' 个，展示 ' + shown.length +
-    ' 个。事件仅代表 Frank 本地已索引范围；市场行情未新采集。';
+    ' 个。事件仅代表 Frank 本地已索引范围；' +
+    (snapshot.market_reference === 'CAPTURED_LOCAL_REFERENCES' ? '行情使用已捕获来源，保留原始时间与币种。' : '尚无已捕获行情。');
   root.innerHTML = shown.map(x => {
     const facts = Array.isArray(x.facts) ? x.facts : [];
     const missing = Array.isArray(x.missing) ? x.missing : [];
@@ -1174,6 +1175,7 @@ refreshFrankIntelligence();
 refreshFrankActivity();
 setInterval(() => {
   frankD2RefreshAge();
+  if (typeof window !== 'undefined' && typeof window.frankSourceRefreshAge === 'function') window.frankSourceRefreshAge();
   void refresh();
 },5000);
 setInterval(refreshSignedActivity,60000);
@@ -2492,6 +2494,7 @@ function frankD2Paint(payload) {
     ' · 第 ' + (Number(payload.page) + 1) + '/' + payload.total_pages + ' 页'),
   };
   frankD2RefreshAge();
+  if (typeof window !== 'undefined' && typeof window.frankSourceRefreshAge === 'function') window.frankSourceRefreshAge();
   $('frank-d2-updated').textContent = observed + ' · ' +
     (Array.isArray(payload.program_coverage)
      ? payload.program_coverage.map(p => String(p.slot)).join(' / ') : 'slot 未核实');
