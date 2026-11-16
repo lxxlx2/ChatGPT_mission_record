@@ -1,7 +1,7 @@
 # Current State
-- last_run: 2026-11-17T04:01:44+07:00
+- last_run: 2026-11-17T04:55:44+07:00
 - schedule: hourly HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-17/040144-final.md
+- run_path: airdrop-tge-monitor/runs/2026-11-17/045544-final.md
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 0
 - executed_shard: 0
@@ -16,7 +16,7 @@
 - code_execution: CODE_NOT_EXECUTED / MANUAL_EQUIVALENT_ONLY
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (AUTOMATION_RUNTIME historical, preserved)
 ## Last meaningful attempts
-- shard0: 2026-11-17 04:01:44 Asia/Bangkok (PARTIAL_ONLY)
+- shard0: 2026-11-17 04:55:44 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-17 01:56:07 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-17 02:57:55 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-16 23:16:18 Asia/Bangkok (PARTIAL_ONLY)
