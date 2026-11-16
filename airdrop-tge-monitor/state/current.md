@@ -1,12 +1,12 @@
 # TGE Monitor Current State
-- last_run: 2026-11-16T13:00:46+07:00
+- last_run: 2026-11-16T14:02:37+07:00
 - schedule: hourly HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-16/130046-final.md
+- run_path: airdrop-tge-monitor/runs/2026-11-16/140237-final.md
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 1
-- executed_shard: 1
-- shard1_original_event_specific_readback: 2/9 (Surf old event, Reflect old event; no new version)
-- urgent5_event_specific_original_readback: 2/5 (MetaMask, Claynosaurz old issuer sources)
+- scheduled_shard: 2
+- executed_shard: 2
+- shard2_original_site_readback: 4/10; event_specific_rights_receipts: 0/10
+- urgent5_original_surfaces_readback: 2/5; event_specific_rights_receipts: 0/5
 - candidate_count: 1 (StandX DUSD VERIFYING/SOURCE_GAP)
 - action_gate_pass: 0
 - triggered_events: 0
@@ -19,7 +19,7 @@
 ## Last meaningful attempts
 - shard0: 2026-11-16 04:04:20 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-16 13:00:46 Asia/Bangkok (PARTIAL_ONLY)
-- shard2: 2026-11-16 10:56:40 Asia/Bangkok (PARTIAL_ONLY)
+- shard2: 2026-11-16 14:02:37 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-16 11:55:28 Asia/Bangkok (PARTIAL_ONLY)
 
 ## Unresolved
@@ -29,4 +29,4 @@
 - Cambria Oct29 Base RSGP TGE previously delivered; no new claim proof
 - Exclusions: Abstract, Grass, Backpack, Loopscale, humans& CLOSED; UNICRED completed
 - Space/Spacecoin and Theo/Autheo collision guard
-- next scheduled shard: 2 (14:00)
+- next scheduled shard: 3 (15:00)
