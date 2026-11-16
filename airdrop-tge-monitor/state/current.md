@@ -1,12 +1,12 @@
 # TGE Monitor Current State
-- last_run: 2026-11-16T15:17:06+07:00
+- last_run: 2026-11-16T16:33:01+07:00
 - schedule: hourly HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-16/151706-final.md
+- run_path: airdrop-tge-monitor/runs/2026-11-16/163301-final.md
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 3
-- executed_shard: 3
-- shard3_original_site_readback: 4/9; event_specific_rights_receipts: 0/9
-- urgent5_original_surfaces_readback: 1/5; event_specific_rights_receipts: 0/5
+- scheduled_shard: 0
+- executed_shard: 0
+- shard0_original_event_receipts: 0/10; PARTIAL_ONLY
+- urgent5_original_surfaces_readback: 3/5; event_specific_rights_receipts: 0/5
 - candidate_count: 1 (StandX DUSD VERIFYING/SOURCE_GAP)
 - action_gate_pass: 0
 - triggered_events: 0
@@ -17,7 +17,7 @@
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (AUTOMATION_RUNTIME historical, preserved)
 
 ## Last meaningful attempts
-- shard0: 2026-11-16 04:04:20 Asia/Bangkok (PARTIAL_ONLY)
+- shard0: 2026-11-16 16:33:01 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-16 13:00:46 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-16 14:02:37 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-16 15:17:06 Asia/Bangkok (PARTIAL_ONLY)
@@ -29,4 +29,4 @@
 - Cambria Oct29 Base RSGP TGE previously delivered; no new claim proof
 - Exclusions: Abstract, Grass, Backpack, Loopscale, humans& CLOSED; UNICRED completed
 - Space/Spacecoin and Theo/Autheo collision guard
-- next scheduled shard: 0 (16:00)
+- next scheduled shard: 1 (17:00)
