@@ -1,11 +1,11 @@
 # Current State
-- last_run: 2026-11-17T01:05:21+07:00
+- last_run: 2026-11-17T01:56:07+07:00
 - schedule: hourly HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-17/010521-final.md
+- run_path: airdrop-tge-monitor/runs/2026-11-17/015607-final.md
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 1
 - executed_shard: 1
-- shard1_original_event_receipts: 1/9
+- shard1_original_event_receipts: 2/9
 - urgent5_original_event_receipts: 1/5
 - candidate_count: 1 (StandX DUSD VERIFYING, existing)
 - action_gate_pass: 0
@@ -18,7 +18,7 @@
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (AUTOMATION_RUNTIME historical, preserved)
 ## Last meaningful attempts
 - shard0: 2026-11-17 00:01:27 Asia/Bangkok (PARTIAL_ONLY)
-- shard1: 2026-11-17 01:05:21 Asia/Bangkok (PARTIAL_ONLY)
+- shard1: 2026-11-17 01:56:07 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-16 22:01:58 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-16 23:16:18 Asia/Bangkok (PARTIAL_ONLY)
 ## Unresolved
