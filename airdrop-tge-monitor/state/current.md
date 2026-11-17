@@ -1,12 +1,12 @@
 # Current State
-- last_run: 2026-11-17T10:02:32+07:00
+- last_run: 2026-11-17T10:57:06+07:00
 - schedule: hourly HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-17/100232-final.md
+- run_path: airdrop-tge-monitor/runs/2026-11-17/105706-final.md
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 2
 - executed_shard: 2
 - shard2_original_new_event_receipts: 0/10
-- shard2_project_original_pages_read: 5/10 (Relay, Titan, Reya, Pond, Claynosaurz/HEEBOO pages; not full rights verification)
+- shard2_project_original_pages_read: 3/10 (Relay, Pond, Claynosaurz; no complete rights verification)
 - urgent5_original_new_event_receipts: 0/5
 - candidate_count: 1 (StandX DUSD existing VERIFYING)
 - action_gate_pass: 0
@@ -19,7 +19,7 @@
 ## Last meaningful attempts
 - shard0: 2026-11-17 08:05:29 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-17 09:02:42 Asia/Bangkok (PARTIAL_ONLY)
-- shard2: 2026-11-17 10:02:32 Asia/Bangkok (PARTIAL_ONLY)
+- shard2: 2026-11-17 10:57:06 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-17 07:04:24 Asia/Bangkok (PARTIAL_ONLY)
 ## Unresolved
 - StandX DUSD Nov2 claim VERIFYING/SOURCE_GAP; issuer event-specific original and authenticated claim page unavailable; personal eligibility UNKNOWN
