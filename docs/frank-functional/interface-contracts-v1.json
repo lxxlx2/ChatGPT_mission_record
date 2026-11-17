@@ -906,7 +906,7 @@
     }
   ],
   "current_increment": {
-    "code_sha": "d6b71231f1b3eb43364e0bc075acd70da8cbf2c9",
+    "code_sha": "9f115cbe383da67b8893fb876d122d04bae22c7a",
     "acceptance": "SOURCE_BALANCE_MARKET_ACCEPTANCE_20261117.md",
     "scope": "implemented routes below; other PROPOSED routes unchanged"
   }

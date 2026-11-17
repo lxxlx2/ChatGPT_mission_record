@@ -7,10 +7,10 @@
 
 ## 当前阶段与预算（最多 5 行）
 阶段：W02核心捕获合同、W03、W04完成本轮真实来源/HTTP/Chrome验收；其余按规划逐个实施
-分支：`codex/frank-functional-completion-20261115`，唯一PR253；规划c2e2d8d；源码/安装d6b71231f1b3eb43364e0bc075acd70da8cbf2c9
+分支：`codex/frank-functional-completion-20261115`，唯一PR253；规划c2e2d8d；源码/安装9f115cbe383da67b8893fb876d122d04bae22c7a
 来源：既有私有RPC及既有免费DexScreener；30地址是提供方batch容量，不是总目标配额；无新增任意总调用/时长/页数/Owner上限
 费用/权限：无新增Key、付费升级、独立review等待；无签名/交易/通知/报价/CA POST/新端口/新监控
-运行：Dashboard已固定候选d6、原8766端口；Scanner仍1f2c6af且PID不变、LIVE无漂移/连续错误；Loop未加载
+运行：Dashboard已固定候选9f、原8766端口；Scanner仍1f2c6af且PID不变、LIVE无漂移/连续错误；Loop未加载
 
 ## 本周唯一目标（1 行）
 按[完整技术方案](../../docs/frank-functional/TECHNICAL_PLAN_20261115.md)与[59项实施映射](../../docs/frank-functional/implementation-plan-v1.json)形成整体可用Frank；完成一个功能包就留真实证据，不再反复围绕单CA
@@ -24,9 +24,9 @@
 本轮无权限或review阻断。未启用的真实通知/签名/交易/Loop与已停止收益研究不由本地研发自动恢复；不新增批准步骤
 
 ## 本周已关闭（最多 5 行）
-- [B] 固定d6源码332 Python通过/socket0；217 Node通过；GitHub未返回CI运行记录，未冒充CI通过
-- [B] 初次Owner3次wire/1.577秒；da7集成6419账户/所有137分页独立对账；d6 Chrome6420账户/Mint、47页×容量137集合精确，无漏无重
-- [B] da7全部5526行情目标处理103.534秒：385有价、5138无base币对、3无价，全部留记录；不同采集时间，不标全部同时新鲜；d6真实USDC/USD来源使5个信号参考价可比较
+- [B] 固定9f源码333 Python通过/socket0；218 Node通过；GitHub未返回CI运行记录，未冒充CI通过
+- [B] 初次Owner3次wire/1.577秒；da7集成6419账户/所有137分页独立对账；9f Chrome真实中断/重载同任务恢复DONE取得6447账户/Mint、48页×容量137集合精确，无漏无重
+- [B] da7全部5526行情目标处理103.534秒：385有价、5138无base币对、3无价，全部留记录；不同采集时间，不标全部同时新鲜；d6真实USDC/USD来源使5个信号参考价可比较；9f部署后6源候选参考价比较再次实测
 - [B] Chrome手动余额/行情刷新、过期305秒、分页、首100以外Mint精确查找及部署后复核通过；实际旧版回退HTTP通过，再固定新release；619tracked文件核对，旧control/投递文件hash不变
 - [B] 证据与命令见[本轮验收](../../docs/frank-functional/SOURCE_BALANCE_MARKET_ACCEPTANCE_20261117.md)和[机器记录](../../docs/frank-functional/source-balance-market-acceptance-20261117.json)；W01完整索引历史证据另保留，以上不证明全链/关闭账户/成本PnL或盈利
 

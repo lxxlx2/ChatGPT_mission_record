@@ -2,7 +2,7 @@
 
 日期：2026-11-17 Asia/Bangkok。用户授权免费本地实施、真实来源只读、免review、Chrome统一验收后在8766安装。本轮结论：**这三条功能路径 PASS；可得行情覆盖 PARTIAL；Frank整体仍 PARTIAL。**
 
-运行/完整回归源码：`d6b71231f1b3eb43364e0bc075acd70da8cbf2c9`。主分支产品比较基线仍`ee81a0f44c27eb539c3c874963d311d4e4d5761f`；规划输入`c2e2d8d7bd522cdcfa28249d41029e2ee684dd1d`。全量实源矩阵在`da7c6b3ca2ce351e433ecd9eff0eec3545bd71ae`执行，其后对静态来源年龄显示及USDC/USD参考换算作了必要修复；最终d6重新执行全部回归、Chrome真实刷新及本地运行核验。不能把旧实源报告的code_sha改成d6。
+当前运行/完整回归源码：`9f115cbe383da67b8893fb876d122d04bae22c7a`；此前来源/行情版本为`d6b71231f1b3eb43364e0bc075acd70da8cbf2c9`。主分支产品比较基线仍`ee81a0f44c27eb539c3c874963d311d4e4d5761f`；规划输入`c2e2d8d7bd522cdcfa28249d41029e2ee684dd1d`。全量实源矩阵在`da7c6b3ca2ce351e433ecd9eff0eec3545bd71ae`执行，其后对静态来源年龄显示及USDC/USD参考换算作了必要修复；d6执行完整回归和Chrome实测后，又发现页面重载丢失恢复任务ID；9f补齐并重新执行完整回归及真实中断/重启/Chrome同任务恢复。不能把旧实源报告的code_sha改成d6。
 
 ## 实现内容与接口
 
@@ -21,7 +21,7 @@
 
 ## 实际执行的测试
 
-最终固定d6 detached checkout：**332 Python通过，socket审计事件0；217 Node通过，无失败/跳过。** Python实际隔离runner调用pytest.main并拦截socket；完整参数记录在脱敏验收JSON。下列为在local-agent目录可复跑的等价命令：
+最终固定9f detached checkout：**333 Python通过，socket审计事件0；218 Node通过，无失败/跳过。** Python实际隔离runner调用pytest.main并拦截socket；完整参数记录在脱敏验收JSON。下列为在local-agent目录可复跑的等价命令：
 
 ```sh
 python -B -m pytest -q -p no:cacheprovider \
@@ -38,9 +38,9 @@ node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_report_render
 
 覆盖：raw精度与隐私、双程序/原生SOL、低Decimal precision和超过单账户u64聚合、部分失败/中断/恢复、源绑定变化、幂等合并后重启、同键异body、75Mint分页、错Mint/币对/链、过期/未来/NaN/篡改参考、非1汇率、65Mint按30/30/5全部处理、GET隔离、真实Handler分发、页面无自动POST/全部行情页/晚返回隔离和内容转义。
 
-运行中发现并修复：合并任务的重试key未持久化、恢复进度重复累计、显式snapshot与cursor冲突、源绑定变化仍可能复用旧key、大数scaleb随全局precision舍入、SQLite连接未及时close、行情进度整数组反复写导致平方写放大。每项已有反例。初次Node通配命令包含独立Playwright浏览器脚本，因本环境无该依赖失败；没有把它算通过或安装额外浏览器。之后明确执行上述217个Node场景，真实浏览器用本机Google Chrome完成。
+运行中发现并修复：合并任务的重试key未持久化、恢复进度重复累计、显式snapshot与cursor冲突、源绑定变化仍可能复用旧key、大数scaleb随全局precision舍入、SQLite连接未及时close、行情进度整数组反复写导致平方写放大。每项已有反例。初次Node通配命令包含独立Playwright浏览器脚本，因本环境无该依赖失败；没有把它算通过或安装额外浏览器。之后明确执行上述218个Node场景，真实浏览器用本机Google Chrome完成。
 
-GitHub在d6上查询statuses和PR-triggered workflow runs均为空；CI为**未运行/无记录**，不作为本次Mac证据。
+GitHub在9f上查询statuses和PR-triggered workflow runs均为空；CI为**未运行/无记录**，不作为本次Mac证据。
 
 ## 真实来源、HTTP与Chrome结果
 
@@ -57,9 +57,11 @@ GitHub在d6上查询statuses和PR-triggered workflow runs均为空；CI为**未�
 
 原件、私有DB、Chrome完整画面留在本机，不上传公共仓库。公开摘要与源响应hash见[机器验收记录](source-balance-market-acceptance-20261117.json)。公开方法合同来自[Solana getTokenAccountsByOwner](https://solana.com/docs/rpc/http/gettokenaccountsbyowner)与[DexScreener API reference](https://docs.dexscreener.com/api/reference)；提供方容量30及300请求/分钟用于分块/节奏，不限制总目标。
 
+追加恢复验收：9f上用真实刷新任务在应答后重启Dashboard，任务持久状态为PAUSED且上次成功快照保留；Chrome重新载入并显式读取后恢复按钮可用，点击只恢复同一ID，最终DONE取得6447账户/Mint。最新HTTP按137分页48页与原始响应独立重算相符；首次从无成功快照恢复的场景另由故障注入与Node重载测试覆盖。随后6个实时源候选加USDC参考刷新并在Chrome显示参考价变化。读取/重载不自动POST。
+
 ## 本地发布、回退与剩余项
 
-已安装源码d6到独立release；619个tracked文件逐一与Git blob核对。只使用原8766端口；先同端口候选验收，随后**实际恢复旧ee81启动入口并读回旧app.js精确字节**，再固定d6到原Dashboard LaunchAgent入口。最终进程release身份、响应code_sha、静态字节一致；Chrome部署后再次验收，标签页保持打开。
+当前已安装源码9f到独立release；619个tracked文件逐一与Git blob核对。只使用原8766端口；先同端口候选验收，随后**实际恢复旧ee81启动入口并读回旧app.js精确字节**，再固定d6到原Dashboard LaunchAgent入口；随后同一入口更新到9f恢复修复版，并重新完成333/218回归及Chrome真实恢复/行情验收。最终进程release身份、响应code_sha、静态字节一致；Chrome部署后再次验收，标签页保持打开。
 
 Scanner保持`1f2c6afc28b9988eaacdc896562ff9a71b78f801`且运行PID不变，LIVE/source_drift=false/errors0；Loop未加载。旧control/投递文件hash不变；没有签名、交易、通知、报价、CA POST、新来源提供方、新Key、付费升级、监控或端口。`INVEST_NO_GO / TRADE_NO_GO`保持。
 
