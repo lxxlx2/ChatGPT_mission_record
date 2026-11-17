@@ -41,6 +41,8 @@ from .jupiter import JupiterQuoteClient
 from .research_data import ResearchData, digest as research_digest
 from .wallet_refresh import OwnerRPC
 from .wallet_owner_at_slot import FRANK_WALLET
+from .watch_metadata import WatchMetadataStore, WatchMetadataError
+from .evidence_manifests import EvidenceManifests, ManifestError
 
 
 def _host_is_loopback(host: str, port: int) -> bool:
@@ -853,12 +855,14 @@ class DashboardState:
     def __init__(self, production_root: Path, control_root: Path):
         self.frank = FrankReader(production_root)
         self.control_root = Path(control_root)
+        self.watch_metadata = WatchMetadataStore(self.control_root)
         self.control_db = self.control_root / "mission-control.sqlite"
         self.control_health = self.control_root / "mission-control-health.json"
         self.cluster_jobs = ClusterJobManager(self.control_root, production_root)
         code_sha = os.environ.get("FRANK_DASHBOARD_SOURCE_SHA", "UNPINNED")
         if not re.fullmatch(r"[a-f0-9]{40}", code_sha):
             code_sha = "UNPINNED"
+        self.evidence_manifests = EvidenceManifests(self.control_root, self.frank.database, code_sha=code_sha)
         # Reuse the already configured source; do not create a new provider/key.
         endpoints = self.cluster_jobs.rpc_endpoints
         self.research = ResearchData(
@@ -1203,6 +1207,22 @@ class DashboardState:
         """Separate private D2 GET lane; never changes the old watchlist."""
         return query_d2(self.control_root, mint=mint, page=page)
 
+    def frank_personal_watchlist(self):
+        observed = self.frank_observed_watchlist()
+        revision, preferences = self.watch_metadata.preferences()
+        by_mint = {r["mint"]: r for r in preferences}
+        rows = []
+        for row in observed.get("rows", []):
+            mint = row["mint"]
+            rows.append({**row, "user_metadata": by_mint.pop(mint, None)})
+        # User-selected mints outside the index remain reachable, with no
+        # invented chain, trade or model state.
+        rows.extend({"mint": mint, "watch_state": "USER_ONLY",
+                     "origin_scope": "USER_METADATA_ONLY", "user_metadata": pref}
+                    for mint, pref in by_mint.items())
+        return {**observed, "rows": rows, "metadata_revision": revision,
+                "user_preferences_scope": "USER_VIEW_ONLY_NOT_MODEL_OR_CHAIN"}
+
     def recent_trades(self):
         return self.frank.recent_trades(100)
 
@@ -1271,6 +1291,95 @@ class Handler(BaseHTTPRequestHandler):
         except (OSError,sqlite3.Error):
             return self._json({"error":"LOCAL_RESEARCH_UNAVAILABLE"},503)
 
+    def _watch_get(self, path):
+        if not self._research_origin():
+            return self._json({"error":"SAME_ORIGIN_READ_REQUIRED"},403)
+        try:
+            query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=3)
+            if any(len(v) != 1 for v in query.values()) or set(query)-{"mint","limit","cursor"}:
+                raise ValueError
+            params = {k:v[0] for k,v in query.items()}
+            raw_limit = params.pop("limit", "100")
+            if not re.fullmatch(r"[0-9]{1,4}", raw_limit):
+                raise ValueError
+            store = self.state.watch_metadata
+            if path.endswith("-events"):
+                if "mint" not in params:
+                    raise ValueError
+                return self._json(store.events(**params, limit=int(raw_limit)))
+            return self._json(store.list(**params, limit=int(raw_limit)))
+        except WatchMetadataError as exc:
+            return self._json({"error":exc.code},exc.http_status)
+        except (ValueError,TypeError,UnicodeError,RecursionError):
+            return self._json({"error":"INVALID_METADATA_QUERY"},400)
+        except (OSError,sqlite3.Error):
+            return self._json({"error":"WATCH_METADATA_UNAVAILABLE"},503)
+
+    def _manifest_get(self, path):
+        if not self._research_origin():
+            return self._json({"error":"SAME_ORIGIN_READ_REQUIRED"},403)
+        try:
+            query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=7)
+            if any(len(v)!=1 for v in query.values()):
+                raise ValueError
+            params = {k:v[0] for k,v in query.items()}
+            allowed = {"manifest_id","kind","limit","cursor"}
+            if path.endswith("-activity"):
+                allowed |= {"days","mint"}
+                if "manifest_id" not in params:
+                    raise ValueError
+                days = params.pop("days","all")
+                if days not in {"1","7","30","all"}:
+                    raise ValueError
+                params["days"] = days if days=="all" else int(days)
+            if set(params)-allowed:
+                raise ValueError
+            limit = params.pop("limit","100")
+            if not re.fullmatch(r"[0-9]{1,4}",limit):
+                raise ValueError
+            method = self.state.evidence_manifests.activity if path.endswith("-activity") else self.state.evidence_manifests.manifests
+            return self._json(method(**params,limit=int(limit)))
+        except ManifestError as exc:
+            return self._json({"error":exc.code},exc.http_status)
+        except (ValueError,TypeError,UnicodeError,RecursionError):
+            return self._json({"error":"INVALID_MANIFEST_QUERY"},400)
+        except (OSError,sqlite3.Error):
+            return self._json({"error":"MANIFEST_STORAGE_UNAVAILABLE"},503)
+
+    def do_PATCH(self):
+        if not self._allowed_host():
+            return self.send_error(421, "loopback Host required")
+        path = urlparse(self.path).path
+        prefix = "/api/frank-watch-metadata/"
+        if not path.startswith(prefix):
+            return self.send_error(404)
+        if not self._research_origin(write=True):
+            return self._json({"error":"EXACT_SAME_ORIGIN_REQUIRED"},403)
+        if not _content_type_is_json(self.headers.get("Content-Type")):
+            return self._json({"error":"APPLICATION_JSON_REQUIRED"},415)
+        try:
+            if urlparse(self.path).query:
+                raise ValueError
+            length = int(self.headers.get("Content-Length", "0"))
+            if not 0 < length <= 32768:
+                raise ValueError
+            def pairs(items):
+                obj = {}
+                for k,v in items:
+                    if k in obj:
+                        raise ValueError
+                    obj[k] = v
+                return obj
+            body = json.loads(self.rfile.read(length), object_pairs_hook=pairs,
+                              parse_constant=lambda _: (_ for _ in ()).throw(ValueError()))
+            return self._json(self.state.watch_metadata.update(path[len(prefix):], body))
+        except WatchMetadataError as exc:
+            return self._json({"error":exc.code},exc.http_status)
+        except (ValueError,TypeError,UnicodeError,RecursionError):
+            return self._json({"error":"INVALID_METADATA_REQUEST"},400)
+        except (OSError,sqlite3.Error):
+            return self._json({"error":"WATCH_METADATA_UNAVAILABLE"},503)
+
     def _research_post(self, path):
         if not self._research_origin(write=True):
             return self._json({"error":"EXACT_SAME_ORIGIN_REQUIRED"},403)
@@ -1286,6 +1395,10 @@ class Handler(BaseHTTPRequestHandler):
             body=json.loads(self.rfile.read(length),object_pairs_hook=pairs,
                             parse_constant=lambda _: (_ for _ in ()).throw(ValueError("NONFINITE_JSON")))
             if not isinstance(body,dict):raise ValueError("INVALID_JSON_OBJECT")
+            if path=="/api/frank-evidence-manifests":
+                if set(body)!={"kind","idempotency_key"}:
+                    raise ValueError("INVALID_FIELDS")
+                return self._json(self.state.evidence_manifests.create(**body),201)
             if path=="/api/frank-balance-refresh/resume":
                 if set(body)!={"refresh_id","idempotency_key"}:raise ValueError("INVALID_FIELDS")
                 if not isinstance(body["idempotency_key"],str) or not 1<=len(body["idempotency_key"])<=256 or any(ord(c)<32 for c in body["idempotency_key"]):raise ValueError("INVALID_IDEMPOTENCY_KEY")
@@ -1301,7 +1414,9 @@ class Handler(BaseHTTPRequestHandler):
                     elif "mint" in body:raise ValueError("INVALID_FIELDS")
                 job=self.state.research.submit(kind,body)
             return self._json(job,202)
-        except (ValueError,TypeError,UnicodeError) as exc:
+        except ManifestError as exc:
+            return self._json({"error":exc.code},exc.http_status)
+        except (ValueError,TypeError,UnicodeError,RecursionError) as exc:
             reason=str(exc)
             safe={"INVALID_REQUEST_SIZE","DUPLICATE_JSON_FIELD","NONFINITE_JSON","INVALID_JSON_OBJECT","INVALID_FIELDS","INVALID_SCOPE","INVALID_MINT","INVALID_IDEMPOTENCY_KEY","INVALID_JOB_ID","JOB_NOT_FOUND","IDEMPOTENCY_CONFLICT","SOURCE_BINDING_CHANGED"}
             return self._json({"error":reason if reason in safe else "INVALID_RESEARCH_REQUEST"},409 if reason in {"IDEMPOTENCY_CONFLICT","SOURCE_BINDING_CHANGED"} else 404 if reason=="JOB_NOT_FOUND" else 400)
@@ -1344,6 +1459,10 @@ class Handler(BaseHTTPRequestHandler):
         if not self._allowed_host():
             return self.send_error(421, "loopback Host required")
         path = urlparse(self.path).path
+        if path in {"/api/frank-watch-metadata", "/api/frank-watch-metadata-events"}:
+            return self._watch_get(path)
+        if path in {"/api/frank-evidence-manifests", "/api/frank-evidence-activity"}:
+            return self._manifest_get(path)
         if path == "/api/runtime":
             return self._json(self.state.runtime())
         if path == "/api/control-health":
@@ -1365,6 +1484,15 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"error": "UNSUPPORTED_ACTIVITY_QUERY"}, 400)
             return self._json(self.state.frank_activity_watch())
         if path == "/api/frank-observed-watchlist":
+            if urlparse(self.path).query:
+                if urlparse(self.path).query != "personal=1":
+                    return self._json({"error":"INVALID_METADATA_QUERY"},400)
+                if not self._research_origin():
+                    return self._json({"error":"SAME_ORIGIN_READ_REQUIRED"},403)
+                try:
+                    return self._json(self.state.frank_personal_watchlist())
+                except WatchMetadataError as exc:
+                    return self._json({"error":exc.code},exc.http_status)
             return self._json(self.state.frank_observed_watchlist())
         if path == "/api/frank-d2-at-slot":
             if not self._d2_same_origin_read():
@@ -1465,7 +1593,7 @@ class Handler(BaseHTTPRequestHandler):
         if not _content_type_is_json(self.headers.get("Content-Type")):
             return self._json({"error":"APPLICATION_JSON_REQUIRED"},415)
         path = urlparse(self.path).path
-        if path in {"/api/frank-balance-refresh","/api/frank-balance-refresh/resume","/api/frank-market-refresh"}:
+        if path in {"/api/frank-balance-refresh","/api/frank-balance-refresh/resume","/api/frank-market-refresh","/api/frank-evidence-manifests"}:
             if urlparse(self.path).query:
                 return self._json({"error":"INVALID_QUERY"},400)
             return self._research_post(path)

@@ -166,6 +166,9 @@
           <option value="WATCH_NOW" selected>当前待观察（模型持有/仓位待核）</option>
           <option value="PRIMARY">全部交易及模型历史</option>
           <option value="ALL">全部本地账户活动</option>
+          <option value="USER_FOLLOW">用户关注</option>
+          <option value="USER_HIDDEN">用户隐藏</option>
+          <option value="USER_PINNED">用户收藏</option>
           <option value="PASSIVE_RECEIPT_ONLY">仅被动转入（不代表值得买入）</option>
           <option value="OTHER_ACCOUNT_ACTIVITY">其他账户活动（未核实）</option>
           <option value="SNAPSHOT_NONZERO">链上样本余额非零</option>
@@ -190,8 +193,43 @@
         </table>
       </div>
       <p class="frank-watch-footnote">数据来自 Frank 本地已索引的买卖、模型状态及钱包代币余额变化；这不等于完整链史。被动转入不等于 Frank 主动买入；未核实转出方、实时余额、美元价值与成本均不能自行推断。观察池不触发提醒或交易。</p>
+      <details id="frank-watch-metadata-editor">
+        <summary>收藏、备注与观察选择</summary>
+        <p>关注会加入默认观察，隐藏会从默认观察移除；“全部”和用户隐藏筛选仍可找回。收藏优先排列。备注只保存在本机，不改模型仓位或链上事实。</p>
+        <label for="frank-watch-meta-mint">Mint（留空读取全部保存记录）</label>
+        <input id="frank-watch-meta-mint" type="text" autocomplete="off" placeholder="完整 Solana Mint"/>
+        <button type="button" id="frank-watch-meta-load">读取观察记录</button>
+        <label><input id="frank-watch-meta-pinned" type="checkbox" disabled/>收藏</label>
+        <label for="frank-watch-meta-override">用户观察选择</label>
+        <select id="frank-watch-meta-override" disabled>
+          <option value="DEFAULT">默认观察</option><option value="FOLLOW">用户关注</option><option value="HIDE">用户隐藏</option>
+        </select>
+        <label for="frank-watch-meta-note">备注</label>
+        <textarea id="frank-watch-meta-note" rows="4" maxlength="4000" disabled></textarea>
+        <button type="button" id="frank-watch-meta-save" disabled>保存观察记录</button>
+        <p id="frank-watch-meta-status" role="status">先读取 Mint 后编辑；读取和重载不自动保存。</p>
+        <div class="frank-watch-table-wrap"><table class="frank-watch-table">
+          <thead><tr><th>Mint</th><th>收藏</th><th>备注</th><th>观察选择</th><th>版本</th><th>编辑</th></tr></thead>
+          <tbody id="frank-watch-meta-rows"></tbody>
+        </table></div>
+        <button type="button" id="frank-watch-meta-next" disabled>下一页保存记录</button>
+        <details><summary>该 Mint 变更审计</summary><div id="frank-watch-meta-history"></div></details>
+      </details>
     </section>
 
+    <details class="panel" id="frank-history-manifest">
+      <summary>固定历史证据快照</summary>
+      <p>将已索引历史固定保存，便于纠错前后复核。保留全部源表和交易腿；这是本地索引证据，完整链史、费用归因和成本计算仍需单独核实。</p>
+      <button type="button" id="frank-manifest-create">固定当前本地历史</button>
+      <button type="button" id="frank-manifest-list">读取快照列表</button>
+      <button type="button" id="frank-manifest-more" disabled>下一页快照列表</button>
+      <label for="frank-manifest-id">manifest_id</label><input id="frank-manifest-id" type="text" autocomplete="off"/>
+      <button type="button" id="frank-manifest-read">读取固定历史</button>
+      <button type="button" id="frank-manifest-next" disabled>下一页固定历史</button>
+      <p id="frank-manifest-status" role="status">重载不自动创建或查询。每页容量不限制历史总量。</p>
+      <details><summary>固定版本列表及来源</summary><pre id="frank-manifest-list-data"></pre></details>
+      <details><summary>本页事实与原始交易腿</summary><pre id="frank-manifest-data"></pre></details>
+    </details>
     <details class="panel ended-panel" id="decision-history">
       <summary><div><h2>历史判断记录</h2></div><span class="summary-hint">展开</span></summary>
       <div id="decisions" class="feed"></div>
@@ -323,5 +361,7 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="/static/app.js"></script>
   <script src="/static/frank_research.js?v=source-contract-v1"></script>
+  <script src="/static/frank_watch_metadata.js?v=watch-metadata-v1"></script>
+  <script src="/static/frank_evidence_manifests.js?v=manifest-v1"></script>
 </body>
 </html>

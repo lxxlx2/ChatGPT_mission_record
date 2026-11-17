@@ -138,6 +138,8 @@ flowchart LR
 
 保留 `GET /api/frank-signed-activity?days=1|7|30|all`；加`limit/cursor/kind/mint`为已有候选实现，limit只控制每页1–1000条。默认旧1/7天完整响应不变。游标固定截止、过滤、来源文件身份、初始rowid上界；已有源行可更新，因此不是不可变快照，保留这一兼容合同。用于复核/成本的严格读取选择物化版本：`POST /api/frank-evidence-manifests {kind,idempotency_key}`在一致只读事务内生成不可变规范行集合，`GET /api/frank-evidence-manifests?manifest_id=`读取状态和引用，`GET /api/frank-evidence-activity?manifest_id=&cursor=`只读该固定版本。源行后续更新不会改变既有manifest；新纠错创建新manifest/supersedes，不能默默变更旧版本。大集合分块持久化但完成前不标可用，验证计数/hash后原子发布。
 
+实施澄清（2026-11-17）：纯本地 `activity|facts` manifest 使用同步 `201 COMPLETE`，在一致源快照、全部规范行及哈希落地后原子发布，不额外创建202后台任务。`positions|market` 类型尚未实现，不能伪称支持。固定规范行同时携带未解释的 `raw_trade_legs`，保留重复腿的原始行身份；这不替代新多腿分类、费用/租金归因和supersedes合同。GET及重载不创建快照；POST失败不发布半成品。
+
 新 `GET /api/frank-coverage` 返回indexed最早/最新、已知缺页/解析未决、Scanner观察时间和原始来源引用，不用heartbeat推出零漏扫。多腿投影保留每腿、被动收付/失败/ATA/未知和counterparty，Mint过滤只按钱包自有余额变化与已核实交易腿。
 
 内部合同：`read_activity_page(query, cursor) -> ActivityPage`；`classify_evidence(tx, wallet, parser_version) -> FactRevision[]`；`coverage_for_wallet(wallet, as_of) -> Coverage`。重复签名不重复事实，同签名重解析必须有supersedes；不重算或修改冻结信号。

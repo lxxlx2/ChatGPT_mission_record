@@ -173,16 +173,18 @@
       "acceptance_scenarios": [
         "E04"
       ],
-      "state": "TODO",
+      "state": "IMPLEMENTED_OFFLINE_CHROME_DEPLOY_PENDING",
       "interfaces": [
         "API10",
         "API11",
-        "API27"
+        "API27",
+        "API33"
       ],
       "functions": [
         "FN08"
       ],
-      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
+      "evidence": "WATCH_MANIFEST_ACCEPTANCE_20261117.md"
     },
     {
       "id": "W06",
@@ -195,7 +197,7 @@
         "E01",
         "E05"
       ],
-      "state": "TODO",
+      "state": "PARTIAL_IMMUTABLE_MANIFEST_FOUNDATION_OFFLINE",
       "interfaces": [
         "API01",
         "API02",
@@ -210,7 +212,9 @@
         "FN03",
         "FN14"
       ],
-      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
+      "remaining": "versioned reclassification/supersedes, protocol complex-leg interpretation, fee/rent attribution and history coverage endpoint remain open",
+      "evidence": "WATCH_MANIFEST_ACCEPTANCE_20261117.md"
     },
     {
       "id": "W07",
@@ -942,7 +946,7 @@
       "functions": [
         "FN08"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "OFFLINE_VERIFIED_CHROME_PENDING"
     },
     {
       "id": "POS06",
@@ -970,7 +974,7 @@
       "functions": [
         "FN08"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "OFFLINE_VERIFIED_CHROME_PENDING"
     },
     {
       "id": "POS07",
@@ -2271,15 +2275,17 @@
     },
     "reference": "INDEXED_ACTIVITY_ACCEPTANCE_20261115.md"
   },
-  "current_next": "W05 persistent user watch metadata and W06 versioned trade/history facts; do not repeat one CA; whole-product W14 still pending",
+  "current_next": "Complete W05 Chrome/local acceptance and W06 immutable manifest replay, then W06 complex facts/coverage; W07 costs and W08 risk updates remain open",
   "latest_increment": {
-    "date": "2026-11-17",
-    "code_sha": "9f115cbe383da67b8893fb876d122d04bae22c7a",
-    "acceptance": "SOURCE_BALANCE_MARKET_ACCEPTANCE_20261117.md",
-    "evidence": "source-balance-market-acceptance-20261117.json",
-    "installed": true,
-    "port": 8766,
-    "overall_verdict": "PARTIAL"
+    "work_packages": [
+      "W05",
+      "W06 foundation"
+    ],
+    "state": "OFFLINE_TESTED_NOT_YET_FIXED_SHA_CHROME",
+    "python_related_passed": 408,
+    "node_related_passed": 233,
+    "source_baseline": "d3cd6f7b40fb9354d6c7ec2eb1d4a2a624d6859a",
+    "evidence": "WATCH_MANIFEST_ACCEPTANCE_20261117.md"
   },
   "status_reconciliation": {
     "date": "2026-11-17",

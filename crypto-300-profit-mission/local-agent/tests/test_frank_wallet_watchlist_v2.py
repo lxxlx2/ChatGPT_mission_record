@@ -148,7 +148,7 @@ def test_watch_page_has_source_and_accessibility_labels():
     html = (root / "mission_agent" / "mission_control" / "static" / "index.html").read_text()
     service = (root / "mission_agent" / "mission_control" / "service.py").read_text()
     assert '"/api/frank-observed-watchlist"' in server
-    assert "get('/api/frank-observed-watchlist')" in js
+    assert "get('/api/frank-observed-watchlist?personal=1')" in js
     assert "renderFrankWatchlist(watch)" in js
     assert 'id="watch-search"' in html
     assert 'id="watch-filter"' in html

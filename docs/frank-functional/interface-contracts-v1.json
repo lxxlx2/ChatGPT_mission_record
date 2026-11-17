@@ -242,7 +242,7 @@
       "id": "API10",
       "method": "GET",
       "path": "/api/frank-watch-metadata",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_OFFLINE_PENDING_FIXED_SHA_AND_CHROME",
       "request": {
         "mint": "optional",
         "limit": "optional1..1000",
@@ -265,7 +265,7 @@
       "id": "API11",
       "method": "PATCH",
       "path": "/api/frank-watch-metadata/{mint}",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_OFFLINE_PENDING_FIXED_SHA_AND_CHROME",
       "request": {
         "mint": "path valid pubkey",
         "expected_revision": "required nonnegative integer;0 creates",
@@ -635,9 +635,11 @@
       "id": "API27",
       "method": "GET",
       "path": "/api/frank-observed-watchlist",
-      "implementation_state": "EXISTING_TO_ADAPT",
-      "request": {},
-      "response": "existing observed list + new snapshot/metadata refs; dated repo sample never fresh fallback",
+      "implementation_state": "ADAPTED_OFFLINE_PENDING_CHROME",
+      "request": {
+        "personal": "optional exact1; same-origin read header required; absent preserves legacy payload"
+      },
+      "response": "existing observed facts plus optional user-view pin/override overlay; no notes exposed; unindexed user Mints explicitly USER_ONLY",
       "side_effects": "NONE",
       "work_packages": [
         "W03",
@@ -694,12 +696,12 @@
       "id": "API30",
       "method": "POST",
       "path": "/api/frank-evidence-manifests",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_OFFLINE_PENDING_FIXED_SHA_AND_CHROME",
       "request": {
-        "kind": "activity|positions|market|facts",
+        "kind": "activity|facts implemented; positions/market deferred to their own versioned evidence contracts",
         "idempotency_key": "required"
       },
-      "response": "202 Job materializes immutable normalized source-consistent manifest; source DB only read, no remote fetch",
+      "response": "201 COMPLETE synchronous local consistent capture; all raw source tables/legs plus frozen canonical activity; atomic metadata publication, no remote fetch; failure publishes no manifest",
       "side_effects": "WRITE_DERIVED_CONTROL_ROOT_ONLY",
       "work_packages": [
         "W02",
@@ -717,14 +719,14 @@
       "id": "API31",
       "method": "GET",
       "path": "/api/frank-evidence-manifests",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_OFFLINE_PENDING_FIXED_SHA_AND_CHROME",
       "request": {
         "manifest_id": "optional exact manifest/status",
         "kind": "optional filter",
         "limit": "optional1..1000",
         "cursor": "optional"
       },
-      "response": "manifest[]/Job; IDs/input hashes/row counts/source ages/parser/code/scope, no raw private file paths",
+      "response": "manifest[] + fence/query/source-bound paging; IDs, hashes, row counts, parser/code/scope; no raw private file paths",
       "side_effects": "NONE",
       "work_packages": [
         "W02",
@@ -743,7 +745,7 @@
       "id": "API32",
       "method": "GET",
       "path": "/api/frank-evidence-activity",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_OFFLINE_PENDING_FIXED_SHA_AND_CHROME",
       "request": {
         "manifest_id": "required immutable activity/facts manifest",
         "days": "1|7|30|all; default all",
@@ -752,7 +754,7 @@
         "limit": "optional1..1000",
         "cursor": "optional manifest-bound"
       },
-      "response": "ActivityPage from frozen normalized manifest including original row IDs/raw refs/all legs; corrected live rows do not alter saved query",
+      "response": "immutable canonical ActivityPage plus uninterpreted raw_trade_legs from frozen source; original row IDs, manifest-bound cursor; not a new trade classifier",
       "side_effects": "NONE",
       "work_packages": [
         "W06"
@@ -763,6 +765,28 @@
         "404": "entity not found",
         "409": "revision/idempotency/source binding changed",
         "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API33",
+      "method": "GET",
+      "path": "/api/frank-watch-metadata-events",
+      "implementation_state": "IMPLEMENTED_OFFLINE_PENDING_FIXED_SHA_AND_CHROME",
+      "request": {
+        "mint": "required exact32byte Solana Mint",
+        "limit": "optional1..1000 response capacity",
+        "cursor": "optional DB/revision/query bound"
+      },
+      "response": "append-only before/after user changes with revision/event_id/request_hash/time and complete paging",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W05"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin/Host or custom read header required",
+        "409": "revision/idempotency/query/source conflict",
+        "503": "local storage unavailable; safe code only"
       }
     }
   ],
@@ -906,8 +930,11 @@
     }
   ],
   "current_increment": {
-    "code_sha": "9f115cbe383da67b8893fb876d122d04bae22c7a",
-    "acceptance": "SOURCE_BALANCE_MARKET_ACCEPTANCE_20261117.md",
-    "scope": "implemented routes below; other PROPOSED routes unchanged"
+    "work_packages": [
+      "W05",
+      "W06 foundation"
+    ],
+    "state": "LOCAL_IMPLEMENTATION_AND_OFFLINE_TESTS_COMPLETE;FIXED_SHA_CHROME_DEPLOYMENT_PENDING",
+    "design_adjustment": "API30 synchronous201 for purely local activity/facts capture rather than an extra202job; positions/market manifests not implemented; no total row cap"
   }
 }

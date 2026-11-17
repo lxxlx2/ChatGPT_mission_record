@@ -266,7 +266,7 @@ function getReadFailure(path, phase, status=null) {
 
 async function get(path) {
   let r;
-  try { r=await fetch(path,{cache:'no-store'}); }
+  try { r=await fetch(path,{cache:'no-store',...(path === '/api/frank-observed-watchlist?personal=1' ? {headers:{'X-Frank-Research-Read':'1'}} : {})}); }
   catch (_) { throw getReadFailure(path,'NETWORK'); }
   if (!r.ok) throw getReadFailure(path,'HTTP',r.status);
   try { return await r.json(); }
@@ -351,6 +351,7 @@ const watchLabels = {
   MODEL_STATE_ONLY:'仅有模型记录',
   PASSIVE_RECEIPT_ONLY:'仅有被动转入，未见本地买卖',
   OTHER_ACCOUNT_ACTIVITY:'仅有账户活动，缺少买卖证据',
+  USER_ONLY:'用户添加，尚无本地链上记录',
 };
 
 let walletWatchData = {status:'LOADING',rows:[],summary:{}};
@@ -364,7 +365,11 @@ function renderFrankWatchlist(payload) {
   const search = ($('watch-search')?.value || '').trim().toLowerCase();
   const rows = all.filter(x =>
     (filter === 'ALL' || (
-      filter === 'WATCH_NOW' ? ['MODEL_OPEN', 'NEEDS_INVENTORY_REVIEW', 'WATCH_UNRESOLVED'].includes(x.watch_state) :
+      filter === 'WATCH_NOW' ? (x.user_metadata?.watch_override !== 'HIDE' &&
+        (x.user_metadata?.watch_override === 'FOLLOW' || ['MODEL_OPEN', 'NEEDS_INVENTORY_REVIEW', 'WATCH_UNRESOLVED'].includes(x.watch_state))) :
+      filter === 'USER_FOLLOW' ? x.user_metadata?.watch_override === 'FOLLOW' :
+      filter === 'USER_HIDDEN' ? x.user_metadata?.watch_override === 'HIDE' :
+      filter === 'USER_PINNED' ? x.user_metadata?.pinned === true :
       filter === 'PRIMARY' ? x.origin_scope !== 'SIGNATURE_TOKEN_DELTA_ONLY' :
       filter === 'SNAPSHOT_NONZERO' ? x.snapshot_inventory_state === 'NONZERO_AT_SLOT' :
       filter === 'MODEL_MISMATCH' ? !!x.model_chain_disagreement :
@@ -375,7 +380,7 @@ function renderFrankWatchlist(payload) {
   const sortWeight = (x) => x.snapshot_inventory_state === 'NONZERO_AT_SLOT'
     ? (x.watch_state === 'MODEL_OPEN' ? 0 : 1)
     : (x.watch_state === 'MODEL_OPEN' ? 2 : 3);
-  rows.sort((a,b) => sortWeight(a)-sortWeight(b) ||
+  rows.sort((a,b) => Number(b.user_metadata?.pinned === true)-Number(a.user_metadata?.pinned === true) || sortWeight(a)-sortWeight(b) ||
     (Number(b.last_event_time || 0)-Number(a.last_event_time || 0)));
   $('watch-total-count').textContent = String(summary.total_observed ?? all.length);
   const datedSnapshot = walletWatchData.snapshot_status === 'DATED_POINT_IN_TIME_NOT_LIVE';
@@ -440,6 +445,8 @@ function renderFrankWatchlist(payload) {
       '<td><code title="' + esc(mint) + '">' + esc(short(mint,9,6)) + '</code> ' +
         copyButton(mint,'复制 CA') + '</td>' +
       '<td>' + esc(watchLabels[x.watch_state] || x.watch_state || '待核') +
+        (x.user_metadata?.pinned ? '<div>用户收藏</div>' : '') +
+        (x.user_metadata?.watch_override === 'FOLLOW' ? '<div>用户关注</div>' : x.user_metadata?.watch_override === 'HIDE' ? '<div>用户隐藏</div>' : '') +
         mismatch +
         (x.owner_index_gap_status === 'DATED_ATA_VS_OWNER_INDEX_SCOPE'
           ? '<div class="watch-mismatch">ATA 与主钱包账户键索引覆盖范围不同：' +
@@ -454,9 +461,9 @@ function renderFrankWatchlist(payload) {
             esc(x.owner_index_missing_signatures) +
             ' 条（未区分窗口内外，不能判为索引故障）</div>' : '') +
         '</td>' +
-      '<td>买 ' + esc(x.local_recognized_buys ?? 0) +
-        ' / 卖 ' + esc(x.local_recognized_sells ?? 0) + '</td>' +
-      '<td>' + (x.last_event_side && !signatureIsLatest
+      '<td>' + (x.watch_state === 'USER_ONLY' ? '尚无本地买卖记录' : '买 ' + esc(x.local_recognized_buys ?? 0) +
+        ' / 卖 ' + esc(x.local_recognized_sells ?? 0)) + '</td>' +
+      '<td>' + (x.watch_state === 'USER_ONLY' ? '用户选择，无来源交易' : x.last_event_side && !signatureIsLatest
         ? esc(translated(sideLabel,x.last_event_side,'未知'))
         : '本地账户余额变动（未必是买卖）') +
         ' · ' + esc(last) + '<div class="watch-tx">' + txLink +
@@ -1101,7 +1108,7 @@ async function refresh() {
       get('/api/review-activity'),
       get('/api/decisions').catch(() => null),
       get('/api/coverage'),
-      get('/api/frank-observed-watchlist').catch(() => ({status:'SOURCE_UNAVAILABLE',rows:[],summary:{}})),
+      get('/api/frank-observed-watchlist?personal=1').catch(() => ({status:'SOURCE_UNAVAILABLE',rows:[],summary:{}})),
       get('/api/follow-opportunities').catch(() => null)
     ]);
     if (generation !== refreshGeneration) return;
