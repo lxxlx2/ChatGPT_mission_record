@@ -142,6 +142,8 @@ flowchart LR
 
 新 `GET /api/frank-coverage` 返回indexed最早/最新、已知缺页/解析未决、Scanner观察时间和原始来源引用，不用heartbeat推出零漏扫。多腿投影保留每腿、被动收付/失败/ATA/未知和counterparty，Mint过滤只按钱包自有余额变化与已核实交易腿。
 
+2026-11-18 实施口径。覆盖接口按区块时间读取所选窗口，单列无法归窗的签名。在原索引或扫描器证据不足时，缺口、回填和停止原因保持未知。可以从同源的 v2 事实快照创建新版本，变化记录的 `supersedes_id` 指向旧事实，未变化记录沿用原 ID。新快照缺少某行时，只记为上版独有，旧事实仍可读取。事实投影验证已归档标准化证据，保留原始整数和指令／源表引用。租金和费用分摊需要可核实的账户级证据。
+
 内部合同：`read_activity_page(query, cursor) -> ActivityPage`；`classify_evidence(tx, wallet, parser_version) -> FactRevision[]`；`coverage_for_wallet(wallet, as_of) -> Coverage`。重复签名不重复事实，同签名重解析必须有supersedes；不重算或修改冻结信号。
 
 ### 7.2 新鲜钱包刷新与持仓核对

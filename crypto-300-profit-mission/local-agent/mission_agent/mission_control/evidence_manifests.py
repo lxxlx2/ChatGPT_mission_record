@@ -17,6 +17,7 @@ import uuid
 
 from .wallet_activity import activity, connect
 from .wallet_activity_paging import _where, _encode, _decode, KINDS
+from .wallet_facts import build_fact
 
 
 class ManifestError(ValueError):
@@ -48,7 +49,10 @@ def load_metadata(raw):
                     "as_of","created_at","code_sha","parser_sha256","source_binding",
                     "source_snapshot_sha256","artifact_sha256","counts","canonical_rows_sha256",
                     "raw_source_tables_preserved","immutable_source_snapshot","manifest_sha256"}
-        if (not isinstance(value,dict) or set(value)!=expected or
+        if isinstance(value, dict) and value.get("schema_version") == 2:
+            expected |= {"supersedes_manifest_id", "fact_revision_counts"}
+        if (not isinstance(value,dict) or type(value.get("schema_version")) is not int or
+                value.get("schema_version") not in {1, 2} or set(value)!=expected or
                 value["manifest_sha256"] != digest({k:v for k,v in value.items() if k!="manifest_sha256"})):
             raise ValueError
         return value
@@ -117,12 +121,44 @@ class EvidenceManifests:
         except OSError:
             raise ManifestError("MANIFEST_SOURCE_UNAVAILABLE", 503) from None
 
-    def create(self, kind, idempotency_key):
+    def _parent_facts(self, db, parent_id, binding):
+        if parent_id is None:
+            return {}
+        saved = db.execute("SELECT body FROM manifests WHERE id=?", (parent_id,)).fetchone()
+        if saved is None:
+            raise ManifestError("PARENT_MANIFEST_NOT_FOUND", 404)
+        parent = load_metadata(saved["body"])
+        if parent["kind"] != "facts" or parent["schema_version"] != 2:
+            raise ManifestError("PARENT_FACTS_NOT_AVAILABLE", 409)
+        if parent["source_binding"] != binding:
+            raise ManifestError("PARENT_MANIFEST_SOURCE_CHANGED", 409)
+        path = self.artifacts / (parent_id + ".sqlite")
+        if path.is_symlink() or not path.is_file() or file_hash(path) != parent["artifact_sha256"]:
+            raise ManifestError("MANIFEST_ARTIFACT_INTEGRITY_FAILED", 503)
+        source = connect(path)
+        try:
+            rows = source.execute("SELECT s.wallet, s.signature, p.body "
+                                  "FROM signatures s JOIN frank_manifest_activity p ON p.index_rowid=s.rowid")
+            facts = {}
+            for row in rows:
+                value = json.loads(row["body"])["transaction_fact"]
+                facts[(row["wallet"], row["signature"])] = (value["fact_id"], value["supersedes_id"])
+        finally:
+            source.close()
+        if file_hash(path) != parent["artifact_sha256"]:
+            raise ManifestError("MANIFEST_ARTIFACT_INTEGRITY_FAILED", 503)
+        return facts
+
+    def create(self, kind, idempotency_key, supersedes_manifest_id=None):
         if not isinstance(kind, str) or kind not in {"activity", "facts"}:
             raise ManifestError("INVALID_MANIFEST_KIND")
         if (not isinstance(idempotency_key, str) or not 1 <= len(idempotency_key) <= 256 or
                 any(ord(c)<32 or 0xD800<=ord(c)<=0xDFFF for c in idempotency_key)):
             raise ManifestError("INVALID_MANIFEST_IDEMPOTENCY_KEY")
+        if supersedes_manifest_id is not None:
+            self._id(supersedes_manifest_id)
+            if kind != "facts":
+                raise ManifestError("FACTS_REQUIRED_FOR_SUPERSESSION")
         binding = self._binding()
         artifact = None
         published = False
@@ -130,9 +166,13 @@ class EvidenceManifests:
             with self._db(write=True) as db:
                 prior = db.execute("SELECT * FROM manifests WHERE request_key=?", (idempotency_key,)).fetchone()
                 if prior is not None:
-                    if prior["kind"] != kind or prior["binding"] != binding:
+                    metadata = load_metadata(prior["body"])
+                    if (prior["kind"] != kind or prior["binding"] != binding or
+                            metadata.get("supersedes_manifest_id") != supersedes_manifest_id):
                         raise ManifestError("IDEMPOTENCY_CONFLICT", 409)
-                    return load_metadata(prior["body"])
+                    return metadata
+                parent_facts = self._parent_facts(db, supersedes_manifest_id, binding)
+                revision_counts = {"new": 0, "revised": 0, "unchanged": 0, "parent_only": 0}
                 now = self.clock()
                 if type(now) not in (int, float) or not 1_600_000_000 < now < 4_000_000_000:
                     raise ManifestError("INVALID_MANIFEST_TIMESTAMP")
@@ -165,9 +205,45 @@ class EvidenceManifests:
                     for leg in frozen.execute("SELECT rowid AS source_trade_rowid,* FROM trades ORDER BY rowid"):
                         legs.setdefault((leg["wallet"],leg["signature"]),[]).append(dict(leg))
                     for row in projection["rows"]:
-                        source_row = frozen.execute("SELECT wallet,signature FROM signatures WHERE rowid=?", (row["index_rowid"],)).fetchone()
-                        row["raw_trade_legs"] = legs.get(tuple(source_row), [])
+                        source_row = frozen.execute("SELECT wallet,signature,body FROM signatures WHERE rowid=?", (row["index_rowid"],)).fetchone()
+                        key = (source_row["wallet"], source_row["signature"])
+                        row["raw_trade_legs"] = legs.get(key, [])
                         row["raw_trade_legs_semantics"] = "SOURCE_ROWS_UNINTERPRETED_NOT_NEW_CLASSIFICATION"
+                        if kind == "facts":
+                            try:
+                                source_body = json.loads(source_row["body"] or "{}")
+                            except (ValueError, TypeError, RecursionError):
+                                source_body = None
+                            evidence = source_body.get("evidence") if isinstance(source_body, dict) else None
+                            fact = build_fact(row, evidence, row["raw_trade_legs"])
+                            # Bind identity to the full source key without exposing
+                            # raw values if the indexed wallet/signature is malformed.
+                            payload_sha256 = digest([key, fact])
+                            parent = parent_facts.pop(key, None)
+                            if parent is None:
+                                supersedes = None
+                                fact_id = digest([payload_sha256, None])
+                                revision_counts["new"] += 1
+                            else:
+                                old_id, old_predecessor = parent
+                                if digest([payload_sha256, old_predecessor]) == old_id:
+                                    supersedes = old_predecessor
+                                    fact_id = old_id
+                                    revision_counts["unchanged"] += 1
+                                else:
+                                    supersedes = old_id
+                                    fact_id = digest([payload_sha256, supersedes])
+                                    revision_counts["revised"] += 1
+                            row["transaction_fact"] = {
+                                **fact, "fact_id": fact_id, "supersedes_id": supersedes,
+                                "superseded_reason": "LOCAL_FACT_PAYLOAD_CHANGED" if supersedes else None,
+                            }
+                            # The private artifact retains every original trade
+                            # column. The new fact view publishes only exact
+                            # references and the interpreted, allowlisted legs.
+                            row["raw_trade_legs"] = [{"source_trade_rowid": leg["source_trade_rowid"]}
+                                                     for leg in row["raw_trade_legs"]]
+                            row["raw_trade_legs_semantics"] = "PRIVATE_SOURCE_ROW_REFERENCES"
                         frozen.execute("INSERT INTO frank_manifest_activity VALUES(?,?)", (row["index_rowid"], canonical(row)))
                     counts = {"all_source_signatures": frozen.execute("SELECT count(*) FROM signatures").fetchone()[0],
                               "all_source_trade_legs": frozen.execute("SELECT count(*) FROM trades").fetchone()[0],
@@ -177,8 +253,10 @@ class EvidenceManifests:
                     frozen.close()
                 with artifact.open("rb") as stream:
                     os.fsync(stream.fileno())
-                parser_hash = digest({name:file_hash(Path(__file__).with_name(name)) for name in
-                                      ("wallet_activity.py", "wallet_activity_paging.py", "evidence_manifests.py")})
+                parser_files = ["wallet_activity.py", "wallet_activity_paging.py", "evidence_manifests.py"]
+                if kind == "facts":
+                    parser_files.append("wallet_facts.py")
+                parser_hash = digest({name:file_hash(Path(__file__).with_name(name)) for name in parser_files})
                 metadata = {"schema_version":1, "manifest_id":identity, "kind":kind, "state":"COMPLETE",
                             "scope":"LOCAL_INDEX_ONLY_NOT_COMPLETE_CHAIN", "full_chain_verified":False,
                             "as_of":int(now), "created_at":now, "code_sha":self.code_sha,
@@ -186,6 +264,10 @@ class EvidenceManifests:
                             "source_snapshot_sha256":source_hash, "artifact_sha256":file_hash(artifact),
                             "counts":counts, "canonical_rows_sha256":digest(projection["rows"]),
                             "raw_source_tables_preserved":True, "immutable_source_snapshot":True}
+                if kind == "facts":
+                    revision_counts["parent_only"] = len(parent_facts)
+                    metadata.update(schema_version=2, supersedes_manifest_id=supersedes_manifest_id,
+                                    fact_revision_counts=revision_counts)
                 metadata["manifest_sha256"] = digest(metadata)
                 db.execute("INSERT INTO manifests(id,kind,request_key,binding,body) VALUES(?,?,?,?,?)",
                            (identity, kind, idempotency_key, binding, canonical(metadata)))

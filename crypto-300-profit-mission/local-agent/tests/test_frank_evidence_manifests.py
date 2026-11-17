@@ -65,6 +65,42 @@ def test_source_corrections_and_backfill_cannot_change_saved_rows(store):
     assert second["code_sha"] == "b"*40 and first["code_sha"] == "a"*40
 
 
+def test_fact_revision_preserves_unchanged_ids_and_links_corrections(store):
+    first = store.create("facts", "fact-first")
+    before = {r["index_rowid"]: r["transaction_fact"] for r in all_pages(store, first["manifest_id"])}
+    with sqlite3.connect(store.source) as db:
+        db.execute("UPDATE signatures SET body='{}' WHERE rowid=1")
+        # A row absent from the new source remains recoverable in the parent.
+        db.execute("DELETE FROM signatures WHERE rowid=2")
+        add_row(db, 999)
+    child = store.create("facts", "fact-child", first["manifest_id"])
+    assert child["fact_revision_counts"] == {"new":1, "revised":1, "unchanged":135, "parent_only":1}
+    after = {r["index_rowid"]: r["transaction_fact"] for r in all_pages(store, child["manifest_id"])}
+    assert after[1]["supersedes_id"] == before[1]["fact_id"]
+    assert after[1]["fact_id"] != before[1]["fact_id"]
+    assert after[3] == before[3]
+    assert before[2] and 2 not in after
+    repeated = store.create("facts", "repeated", child["manifest_id"])
+    again = {r["index_rowid"]: r["transaction_fact"] for r in all_pages(store, repeated["manifest_id"])}
+    assert again == after
+    assert repeated["fact_revision_counts"]["revised"] == 0
+    assert {r["index_rowid"]:r["transaction_fact"] for r in all_pages(store, first["manifest_id"])} == before
+    assert store.create("facts", "fact-child", first["manifest_id"]) == child
+    with pytest.raises(ManifestError, match="IDEMPOTENCY_CONFLICT"):
+        store.create("facts", "fact-child", child["manifest_id"])
+
+
+def test_fact_parent_contract_rejects_wrong_kind_or_missing_manifest(store):
+    legacy = store.create("activity", "activity")
+    with pytest.raises(ManifestError, match="PARENT_FACTS_NOT_AVAILABLE"):
+        store.create("facts", "child", legacy["manifest_id"])
+    with pytest.raises(ManifestError, match="PARENT_MANIFEST_NOT_FOUND"):
+        store.create("facts", "child", "a"*32)
+    with pytest.raises(ManifestError, match="FACTS_REQUIRED_FOR_SUPERSESSION"):
+        store.create("activity", "child", legacy["manifest_id"])
+    assert store.manifests()["total_matching"] == 1
+
+
 def test_raw_duplicate_trade_legs_and_source_tables_are_preserved(store):
     with sqlite3.connect(store.source) as db:
         db.execute("INSERT INTO trades SELECT * FROM trades LIMIT 1")
@@ -77,6 +113,19 @@ def test_raw_duplicate_trade_legs_and_source_tables_are_preserved(store):
     with sqlite3.connect(artifact) as db:
         assert db.execute("SELECT count(*) FROM trades").fetchone()[0] == raw_legs
     assert artifact.stat().st_mode & 0o777 == 0o600
+
+
+def test_facts_reference_raw_rows_without_exposing_arbitrary_source_columns(store):
+    with sqlite3.connect(store.source) as db:
+        db.execute("ALTER TABLE trades ADD COLUMN extra TEXT")
+        db.execute("UPDATE trades SET extra='PRIVATE_UNEXPECTED_KEY'")
+    saved = store.create("facts", "facts-private")
+    page = store.activity(saved["manifest_id"], limit=1000)
+    assert "PRIVATE_UNEXPECTED_KEY" not in json.dumps(page)
+    assert [leg for row in page["rows"] for leg in row["raw_trade_legs"]]
+    artifact = store.artifacts / (saved["manifest_id"] + ".sqlite")
+    with sqlite3.connect(artifact) as db:
+        assert db.execute("SELECT extra FROM trades LIMIT 1").fetchone()[0] == "PRIVATE_UNEXPECTED_KEY"
 
 
 def test_committed_wal_content_is_in_capture_without_checkpointing_source(store):
@@ -170,7 +219,7 @@ def test_manifest_list_cursor_freezes_fence_and_preserves_kind_filter(store):
 
 def call(store, path, method="GET", body=None, origin="http://127.0.0.1:8766", read=True):
     obj = object.__new__(Handler)
-    obj.state=SimpleNamespace(evidence_manifests=store)
+    obj.state=SimpleNamespace(evidence_manifests=store, frank=SimpleNamespace(database=store.source))
     obj.path=path;obj.headers=Message();obj.headers["Host"]="127.0.0.1:8766"
     if origin is not None:obj.headers["Origin"]=origin
     if read:obj.headers["X-Frank-Research-Read"]="1"
@@ -190,6 +239,20 @@ def test_http_create_is_complete_201_and_exact_id_get_and_page(store):
     assert call(store,"/api/frank-evidence-manifests?manifest_id="+identity)[1]["rows"] == [metadata]
     code,page=call(store,"/api/frank-evidence-activity?manifest_id="+identity+"&limit=11")
     assert code==200 and len(page["rows"])==11 and page["total_signatures"]==137
+
+
+def test_same_origin_coverage_reads_index_without_opening_derived_store(store, monkeypatch):
+    monkeypatch.setattr("mission_agent.mission_control.server.time.time", lambda: NOW)
+    path = "/api/frank-coverage?days=7"
+    assert call(store, path, read=False)[0] == 403
+    assert call(store, path, origin="http://localhost:8766")[0] == 403
+    for invalid in ("days=7&days=all", "mint=x", "days=", "days=3"):
+        assert call(store, "/api/frank-coverage?" + invalid)[0] == 400
+    status, payload = call(store, path)
+    assert status == 200 and payload["data"]["days"] == 7
+    assert payload["data"]["indexed_signatures"] == 137
+    assert payload["coverage"]["full_chain_verified"] is False
+    assert not store.root.exists()
 
 
 @pytest.mark.parametrize("origin",[None,"http://localhost:8766","http://127.0.0.1:8767"])

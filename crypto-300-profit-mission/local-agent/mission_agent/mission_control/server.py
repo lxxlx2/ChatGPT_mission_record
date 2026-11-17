@@ -43,6 +43,7 @@ from .wallet_refresh import OwnerRPC
 from .wallet_owner_at_slot import FRANK_WALLET
 from .watch_metadata import WatchMetadataStore, WatchMetadataError
 from .evidence_manifests import EvidenceManifests, ManifestError
+from .wallet_coverage import CoverageError, coverage_for_wallet
 
 
 def _host_is_loopback(host: str, port: int) -> bool:
@@ -1346,6 +1347,24 @@ class Handler(BaseHTTPRequestHandler):
         except (OSError,sqlite3.Error):
             return self._json({"error":"MANIFEST_STORAGE_UNAVAILABLE"},503)
 
+    def _history_coverage_get(self):
+        if not self._research_origin():
+            return self._json({"error": "SAME_ORIGIN_READ_REQUIRED"}, 403)
+        try:
+            params = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=1)
+        except ValueError:
+            return self._json({"error": "INVALID_COVERAGE_QUERY"}, 400)
+        if params and set(params) != {"days"}:
+            return self._json({"error": "INVALID_COVERAGE_QUERY"}, 400)
+        days = params.get("days", ["all"])[0]
+        if days not in {"all", "1", "7", "30"}:
+            return self._json({"error": "INVALID_COVERAGE_RANGE"}, 400)
+        try:
+            return self._json(coverage_for_wallet(self.state.frank.database, int(time.time()),
+                                                  days=days if days == "all" else int(days)))
+        except CoverageError as exc:
+            return self._json({"error": exc.code}, exc.http_status)
+
     def do_PATCH(self):
         if not self._allowed_host():
             return self.send_error(421, "loopback Host required")
@@ -1396,7 +1415,8 @@ class Handler(BaseHTTPRequestHandler):
                             parse_constant=lambda _: (_ for _ in ()).throw(ValueError("NONFINITE_JSON")))
             if not isinstance(body,dict):raise ValueError("INVALID_JSON_OBJECT")
             if path=="/api/frank-evidence-manifests":
-                if set(body)!={"kind","idempotency_key"}:
+                required = {"kind", "idempotency_key"}
+                if not required <= set(body) <= required | {"supersedes_manifest_id"}:
                     raise ValueError("INVALID_FIELDS")
                 return self._json(self.state.evidence_manifests.create(**body),201)
             if path=="/api/frank-balance-refresh/resume":
@@ -1463,6 +1483,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._watch_get(path)
         if path in {"/api/frank-evidence-manifests", "/api/frank-evidence-activity"}:
             return self._manifest_get(path)
+        if path == "/api/frank-coverage":
+            return self._history_coverage_get()
         if path == "/api/runtime":
             return self._json(self.state.runtime())
         if path == "/api/control-health":

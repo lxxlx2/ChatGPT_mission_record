@@ -3,10 +3,13 @@
   'use strict';
   const el = name => document.getElementById('frank-manifest-'+name);
   if (!el('create')) return;
-  let epoch=0, busy=false, next=null, selected=null, createKey=null, listNext=null;
+  let epoch=0, busy=false, next=null, selected=null, pendingCreate=null, listNext=null;
   const id=()=>el('id').value.trim();
   function controls(){
-    for(const name of ['create','list','read'])el(name).disabled=busy;
+    for(const name of ['create','create-facts','parent','list','read']){
+      const control=el(name);
+      if(control)control.disabled=busy;
+    }
     el('next').disabled=busy||!next||selected!==id();
     el('more').disabled=busy||!listNext;
   }
@@ -47,21 +50,38 @@
     }catch(_){if(token===epoch){next=null;el('status').textContent='固定快照读取失败；未改读当前索引，旧快照和页面内容保留。';}}
     finally{busy=false;controls();}
   }
-  async function create(){
-    if(busy)return;busy=true;const token=++epoch;controls();createKey ||= crypto.randomUUID();
+  async function create(kind){
+    if(busy)return;
+    const parent=kind==='facts'?(el('parent')?.value||'').trim():'';
+    if(parent&&!/^[a-f0-9]{32}$/.test(parent)){
+      el('status').textContent='请输入完整的来源快照 ID。';
+      return;
+    }
+    if(!pendingCreate||pendingCreate.kind!==kind||pendingCreate.parent!==parent){
+      pendingCreate={kind,parent,key:crypto.randomUUID()};
+    }
+    busy=true;
+    const token=++epoch;
+    controls();
     el('status').textContent='正在固定本地索引；此操作不查询链上来源。';
     try{
-      const result=await request('/api/frank-evidence-manifests',{kind:'activity',idempotency_key:createKey});
+      const payload={kind,idempotency_key:pendingCreate.key};
+      if(parent)payload.supersedes_manifest_id=parent;
+      const result=await request('/api/frank-evidence-manifests',payload);
       if(token!==epoch)return;
       if(result.state!=='COMPLETE'||!/^[a-f0-9]{32}$/.test(result.manifest_id))throw Error('INCOMPLETE');
-      el('id').value=result.manifest_id;selected=null;next=null;createKey=null;
+      el('id').value=result.manifest_id;selected=null;next=null;pendingCreate=null;
       el('data').textContent=JSON.stringify(result,null,2);
-      el('status').textContent='已固定 '+result.counts.frank_activity_rows+' 条本地活动及全部源表；点击读取固定历史分页。';
+      const counts=result.fact_revision_counts;
+      el('status').textContent='已固定 '+result.counts.frank_activity_rows+' 条本地活动'+
+        (counts?'，新增 '+counts.new+' 条交易事实，修订 '+counts.revised+' 条。':'及全部源表。')+
+        ' 点击读取固定历史分页。';
     }catch(_){if(token===epoch)el('status').textContent='固定结果尚未确认；可重试同一创建请求，或读取快照列表核对。';}
     finally{busy=false;controls();}
   }
   el('id').addEventListener('input',()=>{++epoch;selected=null;next=null;controls();});
-  el('create').addEventListener('click',()=>{void create();});
+  el('create').addEventListener('click',()=>{void create('activity');});
+  el('create-facts')?.addEventListener('click',()=>{void create('facts');});
   el('list').addEventListener('click',()=>{void list();});
   el('more').addEventListener('click',()=>{if(listNext)void list(listNext);});
   el('read').addEventListener('click',()=>{void read();});

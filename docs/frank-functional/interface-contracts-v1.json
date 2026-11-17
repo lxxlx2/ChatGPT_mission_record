@@ -66,9 +66,11 @@
       "id": "API02",
       "method": "GET",
       "path": "/api/frank-coverage",
-      "implementation_state": "PROPOSED",
-      "request": {},
-      "response": "Coverage object with indexed min/max, known gaps, backfill and parser unresolved counts, scanner observed_at, source refs; no full-chain inference",
+      "implementation_state": "IMPLEMENTED_PENDING_FIXED_ACCEPTANCE",
+      "request": {
+        "days": "1|7|30|all, default all"
+      },
+      "response": "Local indexed window, timed and untimed counts, class counts, unresolved and detected pending signatures, source hashes and recorded scanner observation. Known gaps and historical backfill are unknown without evidence. No chain completeness inference.",
       "side_effects": "NONE",
       "work_packages": [
         "W02",
@@ -699,9 +701,10 @@
       "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
       "request": {
         "kind": "activity|facts implemented; positions/market deferred to their own versioned evidence contracts",
-        "idempotency_key": "required"
+        "idempotency_key": "required",
+        "supersedes_manifest_id": "optional prior v2 facts manifest of the same source. Bound to the idempotency key."
       },
-      "response": "201 COMPLETE synchronous local consistent capture; all raw source tables/legs plus frozen canonical activity; atomic metadata publication, no remote fetch; failure publishes no manifest",
+      "response": "201 COMPLETE. activity keeps v1. facts v2 includes versioned source-bound facts, revision counts and optional parent. Atomic publication of a local snapshot with private raw source tables.",
       "side_effects": "WRITE_DERIVED_CONTROL_ROOT_ONLY",
       "work_packages": [
         "W02",
@@ -754,7 +757,7 @@
         "limit": "optional1..1000",
         "cursor": "optional manifest-bound"
       },
-      "response": "immutable canonical ActivityPage plus uninterpreted raw_trade_legs from frozen source; original row IDs, manifest-bound cursor; not a new trade classifier",
+      "response": "Immutable activity page. Facts v2 adds typed transaction_fact with exact raw units, component coverage, fact_id, supersedes_id and private source row references. Legacy v1 snapshots are unchanged.",
       "side_effects": "NONE",
       "work_packages": [
         "W06"

@@ -37,6 +37,16 @@ test('unconfirmed capture keeps identical idempotency key on retry',async()=>{
   b.e('create').click();await settle();assert.equal(b.calls[0].opts.body,b.calls[1].opts.body);
   assert.equal(b.e('status').textContent.includes('SECRET'),false);
 });
+test('fact capture validates the parent and sends it only on explicit fact creation',async()=>{
+  const b=browser(()=>({...metadata,fact_revision_counts:{new:0,revised:3}}));
+  b.e('parent').value='not-a-manifest';
+  b.e('create-facts').click();await settle();
+  assert.equal(b.calls.length,0);
+  b.e('parent').value=identity;
+  b.e('create-facts').click();await settle();
+  assert.deepEqual(JSON.parse(b.calls[0].opts.body),{kind:'facts',idempotency_key:'1',supersedes_manifest_id:identity});
+  assert.match(b.e('status').textContent,/修订 3 条/);
+});
 test('snapshot list pages all remain reachable',async()=>{
   const b=browser(path=>({rows:[metadata],total_matching:2,next_cursor:path.includes('cursor=')?null:'next'}));
   b.e('list').click();await settle();b.e('more').click();await settle();
