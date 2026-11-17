@@ -8,6 +8,8 @@
 
 固定产品基线：`ee81a0f44c27eb539c3c874963d311d4e4d5761f`；Scanner独立运行`1f2c6afc28b9988eaacdc896562ff9a71b78f801`；最新main：`921ce04ed3eee3e215a459f6eca8e8add786e646`。保留双组件身份，不能以Dashboard升级冒充Scanner功能已升级。
 
+2026-11-17实施增量：来源捕获合同、全钱包双程序刷新与行情接线已在d6固定源码完成并安装8766；332 Python/socket0、217 Node、真实全钱包/全目标行情及Chrome验收，见[本轮证据](SOURCE_BALANCE_MARKET_ACCEPTANCE_20261117.md)。下表仍是ee81基线，当前变化另由机器清单latest_increment和STATUS追踪；整体仍PARTIAL。
+
 ## 范围及有效需求
 
 前端页面、布局、样式、导航和文案改版排除；后端分页、筛选、持久化、数据语义与API仍属本次。产品可用性独立于收益研究，不自动恢复已终止研究。按当前用户免费、免review、无默认金额、不截断数据要求推进；保留无通知/签名/交易/Loop启动、新来源/端口/监控边界。

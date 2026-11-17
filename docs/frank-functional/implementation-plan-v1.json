@@ -89,7 +89,7 @@
         "E12",
         "E13"
       ],
-      "state": "TODO",
+      "state": "CORE_CAPTURE_CONTRACT_VERIFIED",
       "interfaces": [
         "API02",
         "API30",
@@ -99,7 +99,8 @@
         "FN03",
         "FN14"
       ],
-      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
+      "remaining": "immutable activity manifest and historical coverage endpoints continue with W06"
     },
     {
       "id": "W03",
@@ -111,7 +112,7 @@
         "E02",
         "E13"
       ],
-      "state": "TODO",
+      "state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
       "interfaces": [
         "API03",
         "API04",
@@ -125,7 +126,8 @@
         "FN05",
         "FN06"
       ],
-      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
+      "evidence": "source-balance-market-acceptance-20261117.json"
     },
     {
       "id": "W04",
@@ -137,7 +139,7 @@
       "acceptance_scenarios": [
         "E03"
       ],
-      "state": "TODO",
+      "state": "IMPLEMENTED_SOURCED_REFERENCES_INSTALLED_MARKET_COVERAGE_PARTIAL",
       "interfaces": [
         "API07",
         "API08",
@@ -148,7 +150,8 @@
         "FN07",
         "FN10"
       ],
-      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
+      "evidence": "source-balance-market-acceptance-20261117.json"
     },
     {
       "id": "W05",
@@ -389,7 +392,7 @@
         "E14",
         "E15"
       ],
-      "state": "TODO",
+      "state": "CURRENT_INCREMENT_LOCAL_ACCEPTED_WHOLE_PRODUCT_PENDING",
       "interfaces": [],
       "functions": [],
       "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
@@ -486,7 +489,8 @@
         "FN03",
         "FN14"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "CURRENT_CAPTURE_PATH_VERIFIED_WITH_DECLARED_COVERAGE",
+      "latest_increment_evidence": "source-balance-market-acceptance-20261117.json"
     },
     {
       "id": "SRC04",
@@ -795,7 +799,8 @@
         "FN05",
         "FN06"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "CURRENT_CAPTURE_PATH_VERIFIED_WITH_DECLARED_COVERAGE",
+      "latest_increment_evidence": "source-balance-market-acceptance-20261117.json"
     },
     {
       "id": "POS02",
@@ -828,7 +833,8 @@
         "FN05",
         "FN06"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "CURRENT_CAPTURE_PATH_VERIFIED_WITH_DECLARED_COVERAGE",
+      "latest_increment_evidence": "source-balance-market-acceptance-20261117.json"
     },
     {
       "id": "POS03",
@@ -861,7 +867,8 @@
         "FN05",
         "FN06"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "CURRENT_CAPTURE_PATH_VERIFIED_WITH_DECLARED_COVERAGE",
+      "latest_increment_evidence": "source-balance-market-acceptance-20261117.json"
     },
     {
       "id": "POS04",
@@ -895,7 +902,8 @@
         "FN05",
         "FN06"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "CURRENT_CAPTURE_PATH_VERIFIED_WITH_DECLARED_COVERAGE",
+      "latest_increment_evidence": "source-balance-market-acceptance-20261117.json"
     },
     {
       "id": "POS05",
@@ -1010,7 +1018,8 @@
         "FN07",
         "FN10"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "CURRENT_CAPTURE_PATH_VERIFIED_WITH_DECLARED_COVERAGE",
+      "latest_increment_evidence": "source-balance-market-acceptance-20261117.json"
     },
     {
       "id": "INT01",
@@ -1136,7 +1145,8 @@
         "FN07",
         "FN10"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "CURRENT_CAPTURE_PATH_VERIFIED_WITH_DECLARED_COVERAGE",
+      "latest_increment_evidence": "source-balance-market-acceptance-20261117.json"
     },
     {
       "id": "INT05",
@@ -1816,7 +1826,8 @@
         "FN03",
         "FN14"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "CURRENT_CAPTURE_PATH_VERIFIED_WITH_DECLARED_COVERAGE",
+      "latest_increment_evidence": "source-balance-market-acceptance-20261117.json"
     },
     {
       "id": "RL02",
@@ -1846,7 +1857,8 @@
         "FN03",
         "FN14"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "CURRENT_CAPTURE_PATH_VERIFIED_WITH_DECLARED_COVERAGE",
+      "latest_increment_evidence": "source-balance-market-acceptance-20261117.json"
     },
     {
       "id": "RL03",
@@ -1918,7 +1930,8 @@
         "FN03",
         "FN14"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "CURRENT_CAPTURE_PATH_VERIFIED_WITH_DECLARED_COVERAGE",
+      "latest_increment_evidence": "source-balance-market-acceptance-20261117.json"
     },
     {
       "id": "RL06",
@@ -1949,7 +1962,8 @@
         "FN03",
         "FN14"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "CURRENT_CAPTURE_PATH_VERIFIED_WITH_DECLARED_COVERAGE",
+      "latest_increment_evidence": "source-balance-market-acceptance-20261117.json"
     },
     {
       "id": "RL07",
@@ -2246,5 +2260,14 @@
     },
     "reference": "INDEXED_ACTIVITY_ACCEPTANCE_20261115.md"
   },
-  "current_next": "W02 minimum source/time/coverage contract and read/write boundaries, then W03 actual full-owner refresh; no single-CA repeat loop"
+  "current_next": "W05 persistent user watch metadata and W06 versioned trade/history facts; do not repeat one CA; whole-product W14 still pending",
+  "latest_increment": {
+    "date": "2026-11-17",
+    "code_sha": "d6b71231f1b3eb43364e0bc075acd70da8cbf2c9",
+    "acceptance": "SOURCE_BALANCE_MARKET_ACCEPTANCE_20261117.md",
+    "evidence": "source-balance-market-acceptance-20261117.json",
+    "installed": true,
+    "port": 8766,
+    "overall_verdict": "PARTIAL"
+  }
 }

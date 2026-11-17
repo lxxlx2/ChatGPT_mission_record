@@ -1,39 +1,40 @@
 # Frank STATUS（当前功能分支唯一状态入口）
-更新时间：2026-11-15 Asia/Bangkok
-更新者：Codex；用户要求完整非前端功能审计、独立新分支、实际整体可用；免费/免review授权持续
+更新时间：2026-11-17 Asia/Bangkok
+更新者：Codex；免费/免review、本地研发及验收后部署授权持续
 
 ## 北极星答案（1 行）
-**产品：PARTIAL，整体尚未验收通过；策略研究：INVEST_NO_GO；实盘：TRADE_NO_GO。** 产品可用性与跟单收益证明分开，不能用单CA的DONE、测试数或分类计数代替。
+**来源合同/全钱包余额刷新/行情接线本轮PASS并已本地部署；可得行情覆盖PARTIAL；Frank整体PARTIAL；INVEST_NO_GO / TRADE_NO_GO保持。**
 
 ## 当前阶段与预算（最多 5 行）
-阶段：完整非前端现状清查与整体功能技术方案已就绪；按工作包依赖逐个实施，最后统一测试
-分支：`codex/frank-functional-completion-20261115`，基线产品ee81，Scanner独立1f2c6af；无批量合并旧分支
-来源：已核对305远端HEAD/244PR目录、83模块目录树及71非前端源码配置组合；不声称逐行审核全部无关工程
-费用：免费既有来源，无新增任意总调用/总时长/总页数/Owner数配额；本次为规划，无真实RPC/CA POST
-权限：无review等待；不启用新通知/签名/交易/Loop，不新增来源/端口/监控，尚未部署新后端
+阶段：W02核心捕获合同、W03、W04完成本轮真实来源/HTTP/Chrome验收；其余按规划逐个实施
+分支：`codex/frank-functional-completion-20261115`，唯一PR253；规划c2e2d8d；源码/安装d6b71231f1b3eb43364e0bc075acd70da8cbf2c9
+来源：既有私有RPC及既有免费DexScreener；30地址是提供方batch容量，不是总目标配额；无新增任意总调用/时长/页数/Owner上限
+费用/权限：无新增Key、付费升级、独立review等待；无签名/交易/通知/报价/CA POST/新端口/新监控
+运行：Dashboard已固定候选d6、原8766端口；Scanner仍1f2c6af且PID不变、LIVE无漂移/连续错误；Loop未加载
 
 ## 本周唯一目标（1 行）
-依据[整体功能技术方案](../../docs/frank-functional/TECHNICAL_PLAN_20261115.md)和[59项可执行映射](../../docs/frank-functional/implementation-plan-v1.json)实现可用Frank；前端页面改版排除，原57只作定点回归，完成后统一多场景测试与8766本地Chrome验收
+按[完整技术方案](../../docs/frank-functional/TECHNICAL_PLAN_20261115.md)与[59项实施映射](../../docs/frank-functional/implementation-plan-v1.json)形成整体可用Frank；完成一个功能包就留真实证据，不再反复围绕单CA
 
 ## 正在进行（最多 3 项）
-- [B] **首项索引流水已实现并验证，待后续局部安装**：固定代码7bc564b074aa1fe87d809883d0d1364194a92562支持30/all、无默认5000总行数失败、稳定分页/类型/Mint筛选与来源字段；161禁网Python、212Node和8697签名/76交易Mint实际副本对账通过，见[验收](../../docs/frank-functional/INDEXED_ACTIVITY_ACCEPTANCE_20261115.md)
-- [B] **下一实施W02→W03→W04**：来源/时间/覆盖合同与接口保护后，接新鲜全Owner双Token程序余额，再接有来源和币种/时效验证的行情；运行版D2仍11月1日4898账户历史快照，智能分析4条未接市场
-- [B] **通用CA仍需真实代表矩阵及冷查性能**：当前保存12份报告仅CRAWL；本次多Mint索引验证不等于多CA全流程，协议/生命周期/规模/风险扩展按原要求逐类验证
+- [B] **下一W05：持久观察元数据**，收藏/备注/用户观察选择、版本冲突及审计；不影响链事实/原信号
+- [B] **W06：版本化复杂交易/历史事实**，原币多腿/费用租金、supersedes、不可变历史manifest及覆盖API；为成本账本提供可复核输入
+- [B] **CA通用矩阵仍待实施**，不同真实CA、生命周期/6协议/规模/Token-2022/关系反例与冷暖性能；原CRAWL只作回归，不作为整体分母
 
 ## 等用户授权（最多 3 项）
-当前审计和本地研发无缺失授权/独立review阻断。现行禁止的通知/签名/交易/Loop及已终止研究不自动恢复，也不为本次实施新增批准步骤
+本轮无权限或review阻断。未启用的真实通知/签名/交易/Loop与已停止收益研究不由本地研发自动恢复；不新增批准步骤
 
 ## 本周已关闭（最多 5 行）
-- [B] 审计提交bcfc28e3233e9b34965183e049af4be7410c56b5已固定需求出处、分支目录及59项功能，10项基线缺失/30项部分/14项机制已实现/4延期/1排除；条数不计算完成率
-- [B] 首项代码7bc564b074aa1fe87d809883d0d1364194a92562及全部6文件已GitHub API读回；30天5772条43页、全部8697条64页逐项无丢失/重复，76个交易Mint逐个筛选与独立源行解析相符
-- [B] 实际源副本SHA256 98d27fe8d8cad983bf91fc6eaf4141efac7fa8659ca5c6cb1b8f8409cb7afb05保持；只是已索引记录，未重验底层链分类，不证明全链/余额/PnL或收益
-- [B] W00整体技术方案已写：15工作包、32 HTTP入口合同/14内部函数设计、59项全部映射（54本轮/4延期/1排除）、15统一验收场景；PROPOSED接口尚未实现，规划检查不等于功能测试
+- [B] 固定d6源码332 Python通过/socket0；217 Node通过；GitHub未返回CI运行记录，未冒充CI通过
+- [B] 初次Owner3次wire/1.577秒；da7集成6419账户/所有137分页独立对账；d6 Chrome6420账户/Mint、47页×容量137集合精确，无漏无重
+- [B] da7全部5526行情目标处理103.534秒：385有价、5138无base币对、3无价，全部留记录；不同采集时间，不标全部同时新鲜；d6真实USDC/USD来源使5个信号参考价可比较
+- [B] Chrome手动余额/行情刷新、过期305秒、分页、首100以外Mint精确查找及部署后复核通过；实际旧版回退HTTP通过，再固定新release；619tracked文件核对，旧control/投递文件hash不变
+- [B] 证据与命令见[本轮验收](../../docs/frank-functional/SOURCE_BALANCE_MARKET_ACCEPTANCE_20261117.md)和[机器记录](../../docs/frank-functional/source-balance-market-acceptance-20261117.json)；W01完整索引历史证据另保留，以上不证明全链/关闭账户/成本PnL或盈利
 
 ## 已知但故意不做（C 类清单）
-- 原7条复杂交易未知降为定点回归，不反复整扫一个CA
-- 多人物/多钱包启用、整套旧Sidecar和跨链产品由后续G1延期；旧分支14个缺席模块不自动合入
-- 前端页面/视觉改版排除；后端分页、筛选、收藏持久化、来源及数据语义仍在功能清单
-- 不恢复已停止P1收益研究，不改变冻结V1信号，不通知/签名/交易，不启动Scanner/Loop或新常驻服务
+- 原10月故障归因按用户取消；旧7条复杂交易只作定点回归，不反复整扫一个CA
+- 多人物/多钱包启用、多链、整套旧Sidecar与收益研究按G1延期，不批量合并旧分支
+- 前端视觉/布局改版排除；已补本轮数据操作必要绑定、来源时效和真实参考价显示
+- 不把无币对/无价资产填0或把已估值小计当钱包净值，不声称开放账户快照等于终身历史
 
 ## 历史证据入口
-历史结论保留在[原运维固定状态15a782](https://github.com/lxxlx2/ChatGPT_mission_record/blob/15a782d841d2cf4d88cb27fa95654bdaefe2e4b9/crypto-300-profit-mission/meme/STATUS.md)和[前次单案例验收](https://github.com/lxxlx2/ChatGPT_mission_record/blob/dd69b11d940430d6d1990c3b7f83d1cb0988edf2/crypto-300-profit-mission/meme/FRANK_GAPS_LATENCY_20261115.md)，不将旧时点升级为当前事实。原10月故障归因已按用户取消
+[基线59项审计](../../docs/frank-functional/REQUIREMENTS_AND_GAPS_20261115.md)、[W01索引验收](../../docs/frank-functional/INDEXED_ACTIVITY_ACCEPTANCE_20261115.md)及[原运维固定状态15a782](https://github.com/lxxlx2/ChatGPT_mission_record/blob/15a782d841d2cf4d88cb27fa95654bdaefe2e4b9/crypto-300-profit-mission/meme/STATUS.md)保留旧时点，不覆盖当前事实

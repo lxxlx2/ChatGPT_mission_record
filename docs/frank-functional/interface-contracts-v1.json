@@ -86,7 +86,7 @@
       "id": "API03",
       "method": "POST",
       "path": "/api/frank-balance-refresh",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
       "request": {
         "idempotency_key": "required nonempty string"
       },
@@ -107,7 +107,7 @@
       "id": "API04",
       "method": "GET",
       "path": "/api/frank-balance-refresh",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
       "request": {
         "refresh_id": "required opaque ID"
       },
@@ -128,7 +128,7 @@
       "id": "API05",
       "method": "POST",
       "path": "/api/frank-balance-refresh/resume",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
       "request": {
         "refresh_id": "required ID",
         "idempotency_key": "required string"
@@ -150,14 +150,14 @@
       "id": "API06",
       "method": "GET",
       "path": "/api/frank-positions",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
       "request": {
         "snapshot_id": "optional ID; default latest successful snapshot with actual age",
         "mint": "optional valid pubkey",
         "limit": "optional1..1000",
         "cursor": "optional snapshot-bound"
       },
-      "response": "Position[] + paging: wallet/mint/programs/raw balance/decimals/model/reconciliation/snapshot refs/freshness; partial and zero distinct",
+      "response": "Position[] + paging: wallet/mint/programs/raw balance/decimals/model/reconciliation/snapshot refs/freshness; partial and zero distinct; full open-account snapshot, native SOL separate, source binding conflicts409, unpriced null",
       "side_effects": "NONE",
       "work_packages": [
         "W03",
@@ -175,9 +175,9 @@
       "id": "API07",
       "method": "POST",
       "path": "/api/frank-market-refresh",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
       "request": {
-        "scope": "observed|positions|mint",
+        "scope": "observed|positions|signals|mint; positions=all nonzero captured balances plus SOL market reference; signals=all source candidates plus USDC/USD reference",
         "mint": "required only if scope=mint",
         "idempotency_key": "required"
       },
@@ -198,7 +198,7 @@
       "id": "API08",
       "method": "GET",
       "path": "/api/frank-market-refresh",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
       "request": {
         "refresh_id": "required"
       },
@@ -219,7 +219,7 @@
       "id": "API09",
       "method": "GET",
       "path": "/api/frank-market-observations",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
       "request": {
         "mint": "optional",
         "limit": "optional1..1000",
@@ -358,9 +358,9 @@
       "id": "API15",
       "method": "GET",
       "path": "/api/frank-intelligence",
-      "implementation_state": "EXISTING_TO_ADAPT",
+      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
       "request": {},
-      "response": "legacy envelope + rows using available captured market refs; local pure preview, no implicit fetch or update write",
+      "response": "legacy envelope + rows using available captured market refs; local pure preview, no implicit fetch or update write; comparable USDC reference requires fresh target USD and USDC/USD observations; both source refs retained",
       "side_effects": "NONE",
       "work_packages": [
         "W04",
@@ -803,7 +803,8 @@
       "implementation": "new wallet_refresh orchestration with existing RPC",
       "work_packages": [
         "W03"
-      ]
+      ],
+      "current_implementation": "implemented capture/projection functions in wallet_refresh.py/research_data.py/market_observations.py; see actual source signatures"
     },
     {
       "id": "FN05",
@@ -812,7 +813,8 @@
       "implementation": "reuse verified D2 owner/inventory projections, complete dual program",
       "work_packages": [
         "W03"
-      ]
+      ],
+      "current_implementation": "implemented capture/projection functions in wallet_refresh.py/research_data.py/market_observations.py; see actual source signatures"
     },
     {
       "id": "FN06",
@@ -821,7 +823,8 @@
       "implementation": "extend wallet_reconciliation",
       "work_packages": [
         "W03"
-      ]
+      ],
+      "current_implementation": "implemented capture/projection functions in wallet_refresh.py/research_data.py/market_observations.py; see actual source signatures"
     },
     {
       "id": "FN07",
@@ -830,7 +833,8 @@
       "implementation": "existing market client + new typed currency/time adapter",
       "work_packages": [
         "W04"
-      ]
+      ],
+      "current_implementation": "implemented capture/projection functions in wallet_refresh.py/research_data.py/market_observations.py; see actual source signatures"
     },
     {
       "id": "FN08",
@@ -900,5 +904,10 @@
         "W06"
       ]
     }
-  ]
+  ],
+  "current_increment": {
+    "code_sha": "d6b71231f1b3eb43364e0bc075acd70da8cbf2c9",
+    "acceptance": "SOURCE_BALANCE_MARKET_ACCEPTANCE_20261117.md",
+    "scope": "implemented routes below; other PROPOSED routes unchanged"
+  }
 }
