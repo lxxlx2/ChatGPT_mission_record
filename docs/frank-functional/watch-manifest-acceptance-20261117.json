@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-17",
+  "source_sha": "166f3abde36fd9d6f0a09b447169a00e2e3f7ab0",
+  "source_parent_sha": "d3cd6f7b40fb9354d6c7ec2eb1d4a2a624d6859a",
+  "product_baseline_sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+  "branch": "codex/frank-functional-completion-20261115",
+  "pr": 253,
+  "verdicts": {
+    "W05": "PASS_FOR_IMPLEMENTED_SCOPE_INSTALLED_CHROME_VERIFIED",
+    "W06_immutable_local_index_foundation": "PASS_FOR_IMPLEMENTED_SCOPE",
+    "W06_overall": "PARTIAL",
+    "Frank_overall": "PARTIAL",
+    "investment": "NO_GO",
+    "trades": "NO_GO"
+  },
+  "offline_python": {
+    "passed": 408,
+    "failed": 0,
+    "skipped": 0,
+    "socket_events": [],
+    "args": [
+      "-ra",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_frank_source_evidence.py",
+      "tests/test_frank_wallet_refresh.py",
+      "tests/test_frank_market_observations.py",
+      "tests/test_frank_research_data.py",
+      "tests/test_frank_activity_paging.py",
+      "tests/test_frank_g2_d1_d2_dashboard.py",
+      "tests/test_frank_wallet_watchlist_v2.py",
+      "tests/test_frank_wallet_inventory_v2.py",
+      "tests/test_frank_activity_watch_dashboard.py",
+      "tests/test_frank_intelligence_dashboard_integration.py",
+      "tests/test_frank_amount_free_intelligence.py",
+      "tests/test_mission_control_dashboard.py",
+      "tests/test_frank_d2_http_route.py",
+      "tests/test_frank_d2_ingress.py",
+      "tests/test_meme_market_and_rpc.py",
+      "tests/test_frank_watch_metadata.py",
+      "tests/test_frank_evidence_manifests.py"
+    ],
+    "fixed_detached_checkout_clean": true
+  },
+  "node_vm": {
+    "passed": 233,
+    "failed": 0,
+    "skipped": 0,
+    "files": [
+      "test_frank_ca_get_resume.mjs",
+      "test_frank_ca_report_render.mjs",
+      "test_frank_d2_ingress_ui.mjs",
+      "test_frank_ca_rpc_budget_ui.mjs",
+      "test_frank_research_ui.mjs",
+      "test_frank_watch_metadata_ui.mjs",
+      "test_frank_evidence_manifests_ui.mjs"
+    ]
+  },
+  "existing_snapshot_replay": {
+    "source_sha": "166f3abde36fd9d6f0a09b447169a00e2e3f7ab0",
+    "evidence_layer": "existing consistent local source snapshot replay; NOT live RPC",
+    "input_sha256": "98d27fe8d8cad983bf91fc6eaf4141efac7fa8659ca5c6cb1b8f8409cb7afb05",
+    "manifest_sha256": "c440953881ee55ae89d274b14d631499996041e8c51131c8a3bffca6a042c817",
+    "artifact_sha256": "9c6a72dcb50a231df437eeb6cd8fe5b1537e63b6b992bab43b9f35aeeef810a7",
+    "signature_rows": 8697,
+    "raw_trade_legs": 197,
+    "distinct_trade_mints": 76,
+    "pages": 64,
+    "page_capacity": 137,
+    "capture_seconds": 0.48335474997293204,
+    "all_pages_seconds": 4.384156082989648,
+    "exact_independent_row_and_leg_match": true,
+    "source_bytes_unchanged": true,
+    "socket_events": [],
+    "counts": {
+      "all_source_signatures": 8697,
+      "all_source_trade_legs": 197,
+      "frank_activity_rows": 8697
+    }
+  },
+  "actual_local_index_http_acceptance": {
+    "source_sha": "166f3abde36fd9d6f0a09b447169a00e2e3f7ab0",
+    "evidence_layer": "actual existing local source index captured by Chrome POST; no remote source request",
+    "manifest_sha256": "d67653af2d47182d6ce12a4d307f9f456d22bcf51eba9413dadc9abafeb794ec",
+    "artifact_sha256": "21615a7e0377906733f7f9885d645e4ec06bce2f176a56f844d9374feb43b322",
+    "counts": {
+      "all_source_signatures": 9520,
+      "all_source_trade_legs": 211,
+      "frank_activity_rows": 9520
+    },
+    "distinct_trade_mints": 76,
+    "pages": 70,
+    "page_capacity": 137,
+    "all_pages_seconds": 5.841892666998319,
+    "all_rows_and_raw_legs_match_frozen_source_independently": true,
+    "metadata_restored_to_prior_values": true,
+    "metadata_revision": 3,
+    "audit_events": 3,
+    "scanner_status": "LIVE",
+    "scanner_source_drift": false
+  },
+  "google_chrome": {
+    "method": "native UI with accessibility observations; screenshots unavailable",
+    "port": 8766,
+    "left_open": true,
+    "checks": [
+      "explicit load and multiline inert HTML note save",
+      "pin and FOLLOW saved; default observation includes selected source Mint",
+      "reload blocks save before explicit read and retains version1 afterward",
+      "second HTTP client writes revision2; stale browser save409 preserves draft",
+      "explicit latest read keeps draft; restored prior note/pin/override through browser saves revision3",
+      "audit before/after visible; exactly3 events after reload and service restarts",
+      "local manifest created in Chrome,9520 rows,25per page,next page first source rowid9495",
+      "after actual old/new release switch,metadata revision3 and same9520-row manifest remain readable"
+    ]
+  },
+  "local_deployment": {
+    "source_sha": "166f3abde36fd9d6f0a09b447169a00e2e3f7ab0",
+    "port": 8766,
+    "new_ports": 0,
+    "actual_previous_release_rollback": "PASS",
+    "served_static_exact": true,
+    "process_release_identity": "MATCH",
+    "tracked_files_verified": 627,
+    "legacy_control_delivery_hashes_unchanged": true,
+    "scanner_pid_unchanged": 2268,
+    "scanner_source_drift": false,
+    "scanner_status": "LIVE",
+    "loop_unloaded": true,
+    "real_rpc_calls": 0,
+    "ca_posts": 0,
+    "notifications": 0,
+    "signatures": 0,
+    "trades": 0
+  },
+  "post_deployment": {
+    "source_sha": "166f3abde36fd9d6f0a09b447169a00e2e3f7ab0",
+    "port": 8766,
+    "metadata_revision": 3,
+    "audit_events": 3,
+    "saved_manifest_count": 1,
+    "manifest_rows_after_restart": 9520,
+    "legacy_hashes_unchanged": true,
+    "dashboard_only_existing_port": true,
+    "loop_unloaded_by_all_loaded_labels": true,
+    "screenshot": "unavailable; native accessibility observations retained in tool evidence"
+  },
+  "ci": {
+    "statuses": [],
+    "workflow_runs": [],
+    "conclusion": "NO_CI_RECORD_NOT_CI_PASS"
+  },
+  "remaining": [
+    "W06 versioned classifier revisions/supersedes",
+    "protocol complex-leg fee/rent attribution",
+    "historical completeness and coverage endpoint",
+    "W07 FIFO/native cost/PnL",
+    "W08 persistent risk updates",
+    "W09-W12 CA identity/history/protocol/narrative/large-Mint coverage matrix",
+    "W13 fake-only notification reliability",
+    "W14 whole-product unified acceptance"
+  ],
+  "privacy": "only aggregate counts/hashes/contracts published; raw private artifacts remain local"
+}

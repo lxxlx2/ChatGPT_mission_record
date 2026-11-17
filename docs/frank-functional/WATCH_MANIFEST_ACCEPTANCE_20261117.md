@@ -1,6 +1,7 @@
 # W05 用户观察记录与 W06 不可变本地历史基础
 
-当前阶段：本地实现及离线回归完成，固定提交复验、Chrome和8766部署尚待完成。
+结论：**W05本轮PASS并已在原8766部署；W06不可变历史基础PASS，W06整体及Frank整体PARTIAL。**
+固定源码、独立测试与安装：`166f3abde36fd9d6f0a09b447169a00e2e3f7ab0`。后续仅证据／状态文档提交不改变local-agent字节。
 本轮基线：`d3cd6f7b40fb9354d6c7ec2eb1d4a2a624d6859a`。
 产品基线：`ee81a0f44c27eb539c3c874963d311d4e4d5761f`。仍在原分支与PR253。
 
@@ -22,7 +23,7 @@ API30对本地activity/facts同步完成后返回201 COMPLETE；不额外增加2
 
 ## 已运行离线验证
 
-同一工作目录中相关Python **408通过**、Node **233通过**，无失败／跳过。以下是实际命令；固定SHA复跑和socket审计结果完成后追加，不能将这些工作目录测试当作已安装Chrome验收。
+已从GitHub固定SHA建立独立detached checkout并确认clean，相关Python **408通过**、Node **233通过**，无失败／跳过；Python审计钩子禁止全部socket，记录为0。以下为实际测试参数（Mac隔离Python3.14虚拟环境；执行器再加`-ra`结果摘要参数）。GitHub statuses/workflow均无记录，未标CI通过。Chrome结果单独如下。
 
 ```sh
 python -B -m pytest -q -p no:cacheprovider tests/test_frank_source_evidence.py tests/test_frank_wallet_refresh.py tests/test_frank_market_observations.py tests/test_frank_research_data.py tests/test_frank_activity_paging.py tests/test_frank_g2_d1_d2_dashboard.py tests/test_frank_wallet_watchlist_v2.py tests/test_frank_wallet_inventory_v2.py tests/test_frank_activity_watch_dashboard.py tests/test_frank_intelligence_dashboard_integration.py tests/test_frank_amount_free_intelligence.py tests/test_mission_control_dashboard.py tests/test_frank_d2_http_route.py tests/test_frank_d2_ingress.py tests/test_meme_market_and_rpc.py tests/test_frank_watch_metadata.py tests/test_frank_evidence_manifests.py
@@ -30,6 +31,15 @@ node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_report_render
 ```
 
 反例包括：未建库读取、双线程首写、过期revision、同键变体、注入事务失败、全量138条元数据分页、12条审计分页、错误来源游标、HTML备注、多行备注、延迟响应、超时不明结果重试、重载只读、manifest源行纠错与回填、原始重复交易腿、未checkpoint的WAL、损坏工件和metadata、失败创建、manifest过滤游标和固定fence。
+
+## 实际Mac／HTTP／Chrome与8766交付
+
+- 已有一致本地快照SHA256 `98d27fe8d8cad983bf91fc6eaf4141efac7fa8659ca5c6cb1b8f8409cb7afb05`：8697签名、197条原始交易腿、76个交易Mint，137容量共64页；独立SQLite行身份和每条原始腿完全相等，源文件字节未变，socket0。捕获0.483秒、全部分页4.384秒；这是本地索引操作耗时，不能代表完整CA查询。
+- Chrome显式POST固定当时实际本地索引：9520签名、211原始交易腿、76个交易Mint；HTTP全部70页（容量137）在5.842秒内与固定源工件独立逐行对账，无漏无重。它与上一条旧快照时间和分母不同，均不是本轮真实RPC采集。
+- Google Chrome实际点击：读取／多行及HTML字面备注／收藏／FOLLOW／保存版本1；重载前后审计仍1条；第二HTTP客户端写版本2，旧页面保存409、草稿保留；读取最新2仍保留草稿；在Chrome恢复原值后保存3。备注、收藏与观察选择均恢复验收前值；3次变更审计有意保留。
+- Chrome实际创建固定历史、读取第一页和下一页（第二页首index_rowid9495）；发布重启后，元数据3及原9520条manifest仍可读取／分页。浏览器留在原8766。截图服务不可用，验收依据原生Chrome可访问性观察及独立HTTP／SQLite记录，不虚构截图。
+- 同端口候选预览通过后，实际启动旧9f版本并核对完整旧app.js字节，再发布166f版本并核对627个Git文件、进程release身份和静态字节。仅Dashboard维护；旧control／投递文件hash未变，Scanner PID及源码未变／LIVE无漂移，全部已加载label核对Loop未加载。
+- [机器证据](watch-manifest-acceptance-20261117.json)区分独立离线、既有快照重放、实际本地索引、原生Chrome和本地部署。私有原件不提交公共仓库。
 
 ## 尚未关闭
 

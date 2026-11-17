@@ -173,7 +173,7 @@
       "acceptance_scenarios": [
         "E04"
       ],
-      "state": "IMPLEMENTED_OFFLINE_CHROME_DEPLOY_PENDING",
+      "state": "PASS_LOCAL_INSTALLED_CHROME_VERIFIED",
       "interfaces": [
         "API10",
         "API11",
@@ -184,7 +184,8 @@
         "FN08"
       ],
       "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
-      "evidence": "WATCH_MANIFEST_ACCEPTANCE_20261117.md"
+      "evidence": "WATCH_MANIFEST_ACCEPTANCE_20261117.md",
+      "source_sha": "166f3abde36fd9d6f0a09b447169a00e2e3f7ab0"
     },
     {
       "id": "W06",
@@ -197,7 +198,7 @@
         "E01",
         "E05"
       ],
-      "state": "PARTIAL_IMMUTABLE_MANIFEST_FOUNDATION_OFFLINE",
+      "state": "PARTIAL_IMMUTABLE_MANIFEST_FOUNDATION_INSTALLED",
       "interfaces": [
         "API01",
         "API02",
@@ -214,7 +215,8 @@
       ],
       "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
       "remaining": "versioned reclassification/supersedes, protocol complex-leg interpretation, fee/rent attribution and history coverage endpoint remain open",
-      "evidence": "WATCH_MANIFEST_ACCEPTANCE_20261117.md"
+      "evidence": "WATCH_MANIFEST_ACCEPTANCE_20261117.md",
+      "source_sha": "166f3abde36fd9d6f0a09b447169a00e2e3f7ab0"
     },
     {
       "id": "W07",
@@ -946,7 +948,8 @@
       "functions": [
         "FN08"
       ],
-      "evidence_state": "OFFLINE_VERIFIED_CHROME_PENDING"
+      "evidence_state": "PASS_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "evidence": "watch-manifest-acceptance-20261117.json"
     },
     {
       "id": "POS06",
@@ -974,7 +977,8 @@
       "functions": [
         "FN08"
       ],
-      "evidence_state": "OFFLINE_VERIFIED_CHROME_PENDING"
+      "evidence_state": "PASS_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "evidence": "watch-manifest-acceptance-20261117.json"
     },
     {
       "id": "POS07",
@@ -2275,17 +2279,17 @@
     },
     "reference": "INDEXED_ACTIVITY_ACCEPTANCE_20261115.md"
   },
-  "current_next": "Complete W05 Chrome/local acceptance and W06 immutable manifest replay, then W06 complex facts/coverage; W07 costs and W08 risk updates remain open",
+  "current_next": "W06 versioned classifier/complex legs/fee-rent attribution/coverage; then W07 cost ledger and W08 persistent risk updates; W09-W13 and whole-product W14 remain open",
   "latest_increment": {
     "work_packages": [
       "W05",
       "W06 foundation"
     ],
-    "state": "OFFLINE_TESTED_NOT_YET_FIXED_SHA_CHROME",
+    "state": "INSTALLED_AND_GOOGLE_CHROME_VERIFIED;W06_OVERALL_PARTIAL",
+    "source_sha": "166f3abde36fd9d6f0a09b447169a00e2e3f7ab0",
     "python_related_passed": 408,
     "node_related_passed": 233,
-    "source_baseline": "d3cd6f7b40fb9354d6c7ec2eb1d4a2a624d6859a",
-    "evidence": "WATCH_MANIFEST_ACCEPTANCE_20261117.md"
+    "evidence": "watch-manifest-acceptance-20261117.json"
   },
   "status_reconciliation": {
     "date": "2026-11-17",
