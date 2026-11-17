@@ -206,7 +206,9 @@ class ResearchData:
                     job["selection_scope"] = "ALL_NONZERO_MINTS_IN_CAPTURED_OWNER_SNAPSHOT"
                     job["zero_balance_mints_not_priced"] = sum(int(r["raw_amount"]) == 0 for r in snapshot["rows"])
                 elif request["scope"] == "signals":
-                    mints=self.signal_mints()
+                    from .market_observations import USDC
+                    mints=list(self.signal_mints())+[USDC]
+                    job["selection_scope"]="ALL_SOURCE_SIGNAL_MINTS_PLUS_USDC_USD_REFERENCE"
                 else:
                     mints = self.observed_mints()
                 result_id = str(uuid.uuid4())

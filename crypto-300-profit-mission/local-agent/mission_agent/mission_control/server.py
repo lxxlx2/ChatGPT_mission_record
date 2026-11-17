@@ -1048,19 +1048,27 @@ class DashboardState:
             candidates = self.frank.candidates()
             research = getattr(self, "research", None)
             markets = research.market_rows() if research is not None else {}
+            from .market_observations import comparable_usdc_market
+            comparable={}
+            for candidate in candidates:
+                if not isinstance(candidate,dict):raise ValueError("INVALID_CANDIDATE")
+                value=comparable_usdc_market(candidate.get("mint"),markets,as_of=observed_at,max_age_seconds=60)
+                if value is not None:comparable[candidate["mint"]]=value
             rows = analyze_rows(
                 candidates, as_of=observed_at,
-                max_market_age_seconds=60, market_observations=None,
+                max_market_age_seconds=60, market_observations=comparable,
             )
             for row in rows:
                 reference = markets.get(row["mint"])
                 if reference is not None:
                     row["market_reference"] = reference
-                    # The free market client supplies USD, not USDC. Preserve a
-                    # useful reference without inventing a comparable conversion.
+                    # Display the original USD reference separately. Comparisons
+                    # require the independently captured USDC/USD reference too.
                     row["price"]["reference_currency"] = reference.get("currency")
                     row["price"]["market_price_usd"] = reference.get("price_usd")
-                    row["price"]["comparison_status"] = "USD_USDC_CONVERSION_NOT_VERIFIED"
+                    converted=comparable.get(row["mint"])
+                    row["price"]["comparison_status"] = "SOURCED_REFERENCE_CONVERSION" if converted else "USD_USDC_CONVERSION_UNAVAILABLE"
+                    row["price"]["conversion_evidence"] = converted.get("conversion_evidence") if converted else None
                     row["price"]["reference_observed_at"] = reference.get("observed_at")
                     row["price"]["reference_source"] = reference.get("source")
                     try:
@@ -1069,7 +1077,7 @@ class DashboardState:
                     except (KeyError,TypeError,ValueError):
                         row["price"]["reference_status"] = "UNAVAILABLE"
                     row["missing"] = [x for x in row["missing"] if x != "MARKET_REFERENCE_MISSING"]
-                    row["missing"].append("COMPARABLE_CURRENCY_CONVERSION_UNAVAILABLE")
+                    if not converted:row["missing"].append("COMPARABLE_CURRENCY_CONVERSION_UNAVAILABLE")
         except (OSError, ValueError, TypeError, sqlite3.DatabaseError):
             return {
                 "status": "SOURCE_UNAVAILABLE", "rows": [],

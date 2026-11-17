@@ -881,6 +881,7 @@ const intelligenceEvidenceLabel = {
   POSITION_STATE_UNKNOWN: '模型仓位状态不明',
   VERIFIED_COMPARABLE_FRANK_BUY_PRICE_UNAVAILABLE: 'Frank 买入参考价缺少可靠同口径数据',
   MARKET_REFERENCE_MISSING: '未提供独立可核实的市场价格',
+  COMPARABLE_CURRENCY_CONVERSION_UNAVAILABLE: 'USD参考价与USDC买入价之间缺少时效合格的换算来源',
   MARKET_REFERENCE_MINT_OR_CHAIN_MISMATCH: '市场价格币种或网络不匹配',
   MARKET_REFERENCE_UNVERIFIABLE: '市场价格来源或数值不可核实',
   MARKET_REFERENCE_AFTER_AS_OF: '市场数据晚于查看时点，不允许使用',
@@ -970,8 +971,8 @@ function renderFrankIntelligence(snapshot) {
           esc(price.reference_source || price.market_source || '未采集') + ' · ' +
           esc(frankIntelligenceTimestamp(price.reference_observed_at || price.market_observed_at)))}
         ${price.market_price_usd != null ? metric('独立 USD 参考价',
-          esc(price.market_price_usd) + ' USD/token · ' + esc(price.reference_status),
-          '美元参考不等同USDC，不转换成已证实买价变化或收益。') : ''}
+          esc(price.market_price_usd) + ' USD/token · ' + esc(price.reference_status === 'FRESH_CAPTURE' ? '读取时有效' : '已过期或不可用'),
+          price.conversion_evidence ? '已使用有出处的USDC美元参考换算，仅比较参考价，不代表成交或收益。' : '美元参考不等同USDC；缺少汇率时不计算买价变化。') : ''}
       </div>
       <p class="frank-watch-footnote">不自动交易；未提供用户交易金额，因此未做路由、滑点或可执行评估。</p>
     </article>`;

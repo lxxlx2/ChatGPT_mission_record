@@ -25,6 +25,7 @@ from ..meme.holder_ranks import valid_pubkey
 
 SOURCE = "DEXSCREENER_API"
 CHAIN = "solana"
+USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
 
 
 def _hash(value):
@@ -189,6 +190,32 @@ def _observations(value):
         else:
             grouped[mint] = row
     return grouped
+
+
+def comparable_usdc_market(mint, observations, *, as_of, max_age_seconds=60):
+    """Two sourced USD references produce a USDC reference, never a $1 peg.
+
+    Both exact-mint observations must pass identity/hash/freshness checks. The
+    resulting ratio is an indexer reference, not an execution quote or cost PnL.
+    """
+    evidence=portfolio_valuation([
+        {"mint":mint,"raw_amount":"1","decimals":0},
+        {"mint":USDC,"raw_amount":"1","decimals":0},
+    ],observations,as_of=as_of,max_age_seconds=max_age_seconds)
+    if evidence['covered_positions'] != 2:
+        return None
+    sources=_observations(observations)
+    target,fx=sources[mint],sources[USDC]
+    with localcontext() as ctx:
+        ctx.prec=max(50,len(Decimal(target['price_usd']).as_tuple().digits)+len(Decimal(fx['price_usd']).as_tuple().digits)+20)
+        price=Decimal(target['price_usd'])/Decimal(fx['price_usd'])
+    return {"chain":CHAIN,"mint":mint,"price_usdc_per_token":str(price),
+            "source":"DEXSCREENER_API_SOURCED_USD_TO_USDC_REFERENCE_RATIO",
+            "observed_at":min(target['observed_at'],fx['observed_at']),
+            "conversion_basis":"TARGET_USD_DIVIDED_BY_SOURCED_USDC_USD",
+            "conversion_evidence":{"target_observation_sha256":target['observation_sha256'],
+               "usdc_observation_sha256":fx['observation_sha256'],"usdc_price_usd":fx['price_usd'],
+               "target_source_ref":target.get('source_ref'),"usdc_source_ref":fx.get('source_ref')}}
 
 
 def portfolio_valuation(positions, observations, as_of, max_age_seconds=60):

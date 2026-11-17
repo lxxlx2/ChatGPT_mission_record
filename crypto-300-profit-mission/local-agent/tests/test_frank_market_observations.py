@@ -10,8 +10,28 @@ import pytest
 from mission_agent.meme.holder_ranks import _b58
 from mission_agent.meme.market import DexScreenerMarketClient
 from mission_agent.mission_control.market_observations import (
-    capture_market, normalize_market, portfolio_valuation,
+    capture_market, normalize_market, portfolio_valuation, comparable_usdc_market, USDC,
 )
+
+
+def test_usdc_reference_conversion_uses_actual_non_one_fx_and_keeps_both_proofs():
+    target=normalize_market(key(1),snapshot(key(1),price='2',when=100),received_at=101)
+    fx=normalize_market(USDC,snapshot(USDC,price='0.8',when=99),received_at=101)
+    converted=comparable_usdc_market(key(1),{key(1):target,USDC:fx},as_of=110)
+    assert converted['price_usdc_per_token']=='2.5'
+    assert converted['observed_at']==99
+    assert converted['conversion_evidence']['target_observation_sha256']==target['observation_sha256']
+    assert converted['conversion_evidence']['usdc_observation_sha256']==fx['observation_sha256']
+
+
+@pytest.mark.parametrize('case',['missing','stale','future','tampered'])
+def test_unavailable_fx_never_becomes_assumed_usd_peg(case):
+    target=normalize_market(key(1),snapshot(key(1),when=100),received_at=101)
+    fx=normalize_market(USDC,snapshot(USDC,when=1 if case=='stale' else 120 if case=='future' else 100),received_at=121)
+    if case=='tampered':fx['price_usd']='1'
+    marks={key(1):target}
+    if case!='missing':marks[USDC]=fx
+    assert comparable_usdc_market(key(1),marks,as_of=110,max_age_seconds=60) is None
 
 
 def key(n):
