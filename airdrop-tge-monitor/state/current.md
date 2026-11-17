@@ -1,12 +1,12 @@
 # Current State
-- last_run: 2026-11-17T10:57:06+07:00
+- last_run: 2026-11-17T12:00:52+07:00
 - schedule: hourly HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-17/105706-final.md
+- run_path: airdrop-tge-monitor/runs/2026-11-17/120052-final.md
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 2
-- executed_shard: 2
-- shard2_original_new_event_receipts: 0/10
-- shard2_project_original_pages_read: 3/10 (Relay, Pond, Claynosaurz; no complete rights verification)
+- scheduled_shard: 0
+- executed_shard: 0
+- shard0_original_new_event_receipts: 0/10
+- shard0_original_current_rights_verified: 0/10
 - urgent5_original_new_event_receipts: 0/5
 - candidate_count: 1 (StandX DUSD existing VERIFYING)
 - action_gate_pass: 0
@@ -17,7 +17,7 @@
 - code_execution: CODE_NOT_EXECUTED / MANUAL_EQUIVALENT_ONLY
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (AUTOMATION_RUNTIME historical, preserved)
 ## Last meaningful attempts
-- shard0: 2026-11-17 08:05:29 Asia/Bangkok (PARTIAL_ONLY)
+- shard0: 2026-11-17 12:00:52 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-17 09:02:42 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-17 10:57:06 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-17 07:04:24 Asia/Bangkok (PARTIAL_ONLY)
@@ -29,4 +29,4 @@
 - Crusoe mapped investor rights not verified by public issuer news
 - Exclusions: Abstract, Grass, Backpack, Loopscale, humans& CLOSED; UNICRED completed
 - Space/Spacecoin and Theo/Autheo collision guard
-- next scheduled shard: 3 (11:00)
+- next scheduled shard: 1 (13:00)
