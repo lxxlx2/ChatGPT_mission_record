@@ -1,12 +1,12 @@
 # Current State
-- last_run: 2026-11-17T17:57:53+07:00
+- last_run: 2026-11-17T18:58:19+07:00
 - schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- run_path: airdrop-tge-monitor/runs/2026-11-17/175753-final.md
+- run_path: airdrop-tge-monitor/runs/2026-11-17/185819-final.md
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 1
-- executed_shard: 1
-- shard1_original_new_event_receipts: 0/9
-- shard1_original_current_rights_verified: 0/9
+- scheduled_shard: 2
+- executed_shard: 2
+- shard2_original_new_event_receipts: 0/10
+- shard2_original_current_rights_verified: 0/10
 - urgent5_original_new_event_receipts: 0/5
 - urgent5_original_current_rights_verified: 0/5
 - candidate_count: 1 (StandX DUSD VERIFYING; no new eligible ACTION)
@@ -20,7 +20,7 @@
 ## Last meaningful attempts
 - shard0: 2026-11-17 12:58:31 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-17 17:57:53 Asia/Bangkok (PARTIAL_ONLY)
-- shard2: 2026-11-17 14:01:41 Asia/Bangkok (PARTIAL_ONLY)
+- shard2: 2026-11-17 18:58:19 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-17 15:57:26 Asia/Bangkok (PARTIAL_ONLY)
 ## Unresolved
 - StandX DUSD Nov2 claim VERIFYING/SOURCE_GAP; original X 403 and issuer claim portal inaccessible; personal eligibility UNKNOWN
@@ -30,4 +30,4 @@
 - Crusoe mapped investor rights not verified by public issuer news
 - Exclusions: Abstract, Grass, Backpack, Loopscale, humans& CLOSED; UNICRED completed
 - Space/Spacecoin and Theo/Autheo collision guard
-- next scheduled shard: 2 (18:00)
+- next scheduled shard: 3 (19:00)
