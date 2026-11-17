@@ -1,0 +1,195 @@
+{
+  "schema": "CRYPTO_DAILY_DELIVERY_PENDING_V1",
+  "date": "2026-11-17",
+  "phase": "PREBUILD_08_20",
+  "status": "PARTIAL_QA_NOT_APPROVED",
+  "asof": "2026-11-17T08:22:44+07:00",
+  "report_body": "Crypto Daily Brief｜2026-11-17｜08:20预构建待核验\n报告时区：Asia/Bangkok。当前为预构建草稿，不是正式发送正文。部分来源缺口仍待补核。\n\n一、今日最重要的5件事\n无高置信新增。核心市场数据和ETF部分源已更新，但未取得足以跨市场重大性门槛且完成7天事件家族比对的新独立头条。\n\n二、BTC/ETH/SOL及主要资产\n（1）【2026-11-17约08:23 ICT，Binance官方24小时ticker】BTC 64,629.85 USDT（24h -0.149%，高65,696.16，低63,905.01，成交21,418.92689 BTC）；ETH 1,817.41（+0.535%，高1,866.89，低1,787.11，成交298,836.3711 ETH）；SOL 71.73（+0.589%，高72.92，低69.93，成交2,793,816.136 SOL）。来源：https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT；https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT；https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT\n（2）同期BNB 591.03（-0.139%，高597.91，低583.81），HYPE 68.96（+3.777%，高71.05，低64.84）。均为Binance现货滚动24h快照，非固定收盘价。来源：https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT；https://api.binance.com/api/v3/ticker/24hr?symbol=HYPEUSDT\n\n三、二级市场剧烈波动与持续趋势\n（1）BTC滚动24小时区间63,905.01至65,696.16 USDT；ETH 1,787.11至1,866.89；SOL 69.93至72.92。尚未获取本轮五资产永续费率/OI，不能从现货单时点推导清算规模。来源：Binance官方各币24h ticker。\n\n四、监管与政策\n无高置信新增。未获得相对前次正式日报的官方新法令/监管生效状态。监管来源覆盖待09:20补核。\n\n五、机构、VC、基金、交易所、上市公司、做市商、鲸鱼真实资金动作\n（1）Farside截至本轮美国11月16日BTC ETF表列净流出至少4,650万美元，但IBIT、FBTC等关键发行人栏仍为“-”，不能把暂列总额当完整日终净流出；11月13日完整BTC合计-1.854亿美元。来源：https://farside.co.uk/btc/\n（2）11月16日ETH ETF表暂列-340万美元，多个发行人未报；SOL ETF暂列+1,080万美元，部分发行人仍空白。两者均属未完成汇总，不可定性全市场最终资金流。来源：https://farside.co.uk/eth/；https://farside.co.uk/sol/\n（3）Arkham/Lookonchain本轮尚未取得可独立核验新TXID，不能虚构鲸鱼流向。\n\n六、融资、协议、基础设施、稳定币、RWA、预测市场、AI/Crypto、DePIN及公链生态\n无高置信新增。基础设施、稳定币、RWA、预测市场、DePIN的本轮原始更新核查不完整，留待09:20前补足。\n\n七、空投、积分、TGE、ICO/公售、解锁和实际可参与机会\n（1）【既有正式产品，非今日新增开放】Kraken官方11月12日更新Anthropic IPO Access，确认符合地区资格的客户可通过ANTx/xStocks提交IPO意向，报价为IPO发行价加5% spread，分配不保证；美国、英国、加拿大、日本、澳大利亚、新西兰等被排除。个人资格和当下申购页状态需登录官方账户确认。来源：https://support.kraken.com/gb/articles/anthropic-ipo-access\n（2）Bitget 11月3日官方IPO Prime公告列Anthropic公开轮11月10日16:00 UTC+8开始、截至IPO前一日16:00 UTC+8，最少100 USDT/USDGO、上限25,000、费用5%；VIP轮11月11日已截止。该信息已有历史披露，不能无新版本重复列为今日新新闻；实际当前认购状态仍需官方活动页核验。来源：https://www.bitget.com/support/articles/12560603899381\n（3）TGE/claim个人权益未取得新增官方可执行证据；不重发Cambria、Surf、StandX历史通知。\n\n八、Early / Meme / NFT / 新生态热点\n无高置信新增。NFT/Early/Meme官方合约、发行入口与权益资格尚有来源缺口，不提供未经验证的mint或签名链接。\n\n九、安全、黑客、漏洞、恶意App、脱锚、跑路、清算与重大解锁\n无高置信新增。11月11日Node.js官方高危安全修复及Telegram HTML Widget/QuickJS旧版RCE研究已属既有事件家族，尚无本轮新版本证据，不重复列入新增。六类安全家族与客户端渲染器来源仍需补齐正式回执；不可宣称没有漏洞。Node原始公告：https://nodejs.org/en/blog/vulnerability/november-2026-security-releases/\n\n十、全球局势与跨市场冲击\n（1）11月16日为美国正常股票交易日，但Farside当天多个ETF发行人数据未齐；不能把暂时汇总解读为机构资金全面转向。NYSE交易日：https://www.nyse.com/markets/hours-calendars\n\n十一、未来24至72小时催化\n（1）未来24小时应核实Farside美国11月16日各发行人ETF最终流量，并在09:20刷新Binance五资产行情及永续费率/OI；此为常规数据复核，不属于新的重大事件。\n\n十二、持续趋势与跨市场机会观察清单\n（1）BTC目前24h变动-0.149%、ETH +0.535%、SOL +0.589%，单时点不支持确认趋势反转；需连续成交量、ETF完整流量及衍生品时序交叉验证。来源：Binance官方现货ticker、https://farside.co.uk/btc/\n\n十三、今日行动与风险结论\n（1）日报09:20发布前重新查Gmail Sent并核验官方ETF完整行、重大安全候选、TGE和用户权益，保留未确认标记；无可靠来源时不编造日期、交易哈希或收益。",
+  "report_sections": 13,
+  "qa": "NOT_PROVEN",
+  "ci": "CI_NOT_PROVEN",
+  "source_receipts": [
+    {
+      "lane": "spot",
+      "url": "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "CHECKED",
+      "published_at": null
+    },
+    {
+      "lane": "capital_flows",
+      "url": "https://farside.co.uk/btc/",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "PARTIAL_ISSUER_BLANK",
+      "published_at": "2026-11-16"
+    },
+    {
+      "lane": "capital_flows_eth",
+      "url": "https://farside.co.uk/eth/",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "PARTIAL_ISSUER_BLANK",
+      "published_at": "2026-11-16"
+    },
+    {
+      "lane": "capital_flows_sol",
+      "url": "https://farside.co.uk/sol/",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "PARTIAL_ISSUER_BLANK",
+      "published_at": "2026-11-16"
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "url": "https://support.kraken.com/gb/articles/anthropic-ipo-access",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "CHECKED_EXISTING_FAMILY",
+      "published_at": "2026-11-12"
+    },
+    {
+      "lane": "third_party_ipo_access",
+      "url": "https://www.bitget.com/support/articles/12560603899381",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "CHECKED_EXISTING_FAMILY",
+      "published_at": "2026-11-03"
+    },
+    {
+      "lane": "backend_framework_auth",
+      "url": "https://nodejs.org/en/blog/vulnerability/november-2026-security-releases/",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "CHECKED_PREVIOUS_EVENT_NO_NOVELTY",
+      "published_at": "2026-11-11"
+    },
+    {
+      "lane": "derivatives",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "SOURCE_GAP_PENDING_DEEP_CHECK",
+      "url": null,
+      "published_at": null
+    },
+    {
+      "lane": "onchain",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "SOURCE_GAP_PENDING_DEEP_CHECK",
+      "url": null,
+      "published_at": null
+    },
+    {
+      "lane": "policy",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "SOURCE_GAP_PENDING_DEEP_CHECK",
+      "url": null,
+      "published_at": null
+    },
+    {
+      "lane": "infrastructure",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "SOURCE_GAP_PENDING_DEEP_CHECK",
+      "url": null,
+      "published_at": null
+    },
+    {
+      "lane": "tge",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "SOURCE_GAP_PENDING_DEEP_CHECK",
+      "url": null,
+      "published_at": null
+    },
+    {
+      "lane": "early_nft",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "SOURCE_GAP_PENDING_DEEP_CHECK",
+      "url": null,
+      "published_at": null
+    },
+    {
+      "lane": "security",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "SOURCE_GAP_PENDING_DEEP_CHECK",
+      "url": null,
+      "published_at": null
+    },
+    {
+      "lane": "web_runtime_rce",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "SOURCE_GAP_PENDING_DEEP_CHECK",
+      "url": null,
+      "published_at": null
+    },
+    {
+      "lane": "web_pki_tls",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "SOURCE_GAP_PENDING_DEEP_CHECK",
+      "url": null,
+      "published_at": null
+    },
+    {
+      "lane": "ai_package_supply_chain",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "SOURCE_GAP_PENDING_DEEP_CHECK",
+      "url": null,
+      "published_at": null
+    },
+    {
+      "lane": "cloud_secrets_identity",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "SOURCE_GAP_PENDING_DEEP_CHECK",
+      "url": null,
+      "published_at": null
+    },
+    {
+      "lane": "macro",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "SOURCE_GAP_PENDING_DEEP_CHECK",
+      "url": null,
+      "published_at": null
+    },
+    {
+      "lane": "forward_catalysts",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "SOURCE_GAP_PENDING_DEEP_CHECK",
+      "url": null,
+      "published_at": null
+    },
+    {
+      "lane": "official_x",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "SOURCE_GAP_PENDING_DEEP_CHECK",
+      "url": null,
+      "published_at": null
+    },
+    {
+      "lane": "client_message_renderer_security",
+      "checked_at": "2026-11-17T08:22:44+07:00",
+      "status": "SOURCE_GAP_PENDING_DEEP_CHECK",
+      "url": null,
+      "published_at": null
+    }
+  ],
+  "source_gaps": [
+    "derivatives",
+    "onchain",
+    "policy",
+    "infrastructure",
+    "tge",
+    "early_nft",
+    "security",
+    "web_runtime_rce",
+    "web_pki_tls",
+    "ai_package_supply_chain",
+    "cloud_secrets_identity",
+    "macro",
+    "forward_catalysts",
+    "official_x",
+    "client_message_renderer_security"
+  ],
+  "rules_sha": {
+    "pipeline": "29ffbc1d32ca87a744d2990e8d55639ebb84a6f9",
+    "editorial": "2ed51528d230508ae4e0015762b1d60c9d72e299",
+    "report_spec": "2e70414c8fdb8d23a292cc3bf7797425a403e179",
+    "acceptance": "28f5d9e8a54dd932223cc2a686466f1d12cf597f",
+    "collector": "76e50b322ca551baff0922ca4e4fc721ad422184",
+    "security": "7266f425982aebb695c2ad4b718bf8d3d0b363bf",
+    "delivery": "cff301c7e15451972a415e24e1863f8d5e31360f",
+    "ledger": "58b824f0c31d69cb341b28d51dc465f61e0b14e1"
+  },
+  "notes": "08:20 complete 13-section draft constructed during scheduled run, but mandatory domain receipts and seven-day full body comparison incomplete. Do not send without final review. No Gmail sent in this run."
+}
