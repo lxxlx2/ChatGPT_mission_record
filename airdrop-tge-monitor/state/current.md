@@ -1,14 +1,14 @@
 # Current State
-- last_run: 2026-11-17T08:05:29+07:00
+- last_run: 2026-11-17T09:02:42+07:00
 - schedule: hourly HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-17/080529-final.md
+- run_path: airdrop-tge-monitor/runs/2026-11-17/090242-final.md
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 0
-- executed_shard: 0
-- shard0_original_new_event_receipts: 0/10
-- shard0_project_original_pages_read: 3/10 (strict rights-source coverage partial)
+- scheduled_shard: 1
+- executed_shard: 1
+- shard1_original_new_event_receipts: 0/9
+- shard1_project_original_pages_read: 2/9 (Surf, Reflect; not full rights verification)
 - urgent5_original_new_event_receipts: 0/5
-- candidate_count: 1 (existing StandX DUSD VERIFYING)
+- candidate_count: 1 (StandX DUSD existing VERIFYING)
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
@@ -18,7 +18,7 @@
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (AUTOMATION_RUNTIME historical, preserved)
 ## Last meaningful attempts
 - shard0: 2026-11-17 08:05:29 Asia/Bangkok (PARTIAL_ONLY)
-- shard1: 2026-11-17 05:55:45 Asia/Bangkok (PARTIAL_ONLY)
+- shard1: 2026-11-17 09:02:42 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-17 02:57:55 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-17 07:04:24 Asia/Bangkok (PARTIAL_ONLY)
 ## Unresolved
@@ -29,4 +29,4 @@
 - Crusoe mapped investor rights not verified by public issuer news
 - Exclusions: Abstract, Grass, Backpack, Loopscale, humans& CLOSED; UNICRED completed
 - Space/Spacecoin and Theo/Autheo collision guard
-- next scheduled shard: 1 (09:00)
+- next scheduled shard: 2 (10:00)
