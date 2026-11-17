@@ -1,7 +1,7 @@
 # Current State
-- last_run: 2026-11-17T17:02:31+07:00
+- last_run: 2026-11-17T17:57:53+07:00
 - schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- run_path: airdrop-tge-monitor/runs/2026-11-17/170231-final.md
+- run_path: airdrop-tge-monitor/runs/2026-11-17/175753-final.md
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 1
 - executed_shard: 1
@@ -9,17 +9,17 @@
 - shard1_original_current_rights_verified: 0/9
 - urgent5_original_new_event_receipts: 0/5
 - urgent5_original_current_rights_verified: 0/5
-- candidate_count: 1 (StandX DUSD VERIFYING)
+- candidate_count: 1 (StandX DUSD VERIFYING; no new eligible ACTION)
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
-- browser_session: UNAVAILABLE (originating browser context error)
+- browser_session: UNAVAILABLE (no actual authenticated X tab read)
 - code_execution: CODE_NOT_EXECUTED / MANUAL_EQUIVALENT_ONLY
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (AUTOMATION_RUNTIME historical, preserved)
 ## Last meaningful attempts
 - shard0: 2026-11-17 12:58:31 Asia/Bangkok (PARTIAL_ONLY)
-- shard1: 2026-11-17 17:02:31 Asia/Bangkok (PARTIAL_ONLY)
+- shard1: 2026-11-17 17:57:53 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-17 14:01:41 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-17 15:57:26 Asia/Bangkok (PARTIAL_ONLY)
 ## Unresolved
