@@ -1,14 +1,14 @@
 # Current State
-- last_run: 2026-11-17T14:01:41+07:00
+- last_run: 2026-11-17T15:03:13+07:00
 - schedule: hourly HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-17/140141-final.md
+- run_path: airdrop-tge-monitor/runs/2026-11-17/150313-final.md
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 2
-- executed_shard: 2
-- shard2_original_new_event_receipts: 0/10
-- shard2_original_current_rights_verified: 0/10
+- scheduled_shard: 3
+- executed_shard: 3
+- shard3_original_new_event_receipts: 0/9
+- shard3_original_current_rights_verified: 0/9
 - urgent5_original_new_event_receipts: 0/5
-- candidate_count: 1 (StandX DUSD existing VERIFYING; no new action)
+- candidate_count: 1 (StandX DUSD VERIFYING; no new action)
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
@@ -20,7 +20,7 @@
 - shard0: 2026-11-17 12:58:31 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-17 09:02:42 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-17 14:01:41 Asia/Bangkok (PARTIAL_ONLY)
-- shard3: 2026-11-17 07:04:24 Asia/Bangkok (PARTIAL_ONLY)
+- shard3: 2026-11-17 15:03:13 Asia/Bangkok (PARTIAL_ONLY)
 ## Unresolved
 - StandX DUSD Nov2 claim VERIFYING/SOURCE_GAP; issuer event-specific original and authenticated claim page unavailable; personal eligibility UNKNOWN
 - Concrete extra USDC SOURCE_GAP; HEEBOO/Clay Shares personal allocation unreadable
@@ -29,4 +29,4 @@
 - Crusoe mapped investor rights not verified by public issuer news
 - Exclusions: Abstract, Grass, Backpack, Loopscale, humans& CLOSED; UNICRED completed
 - Space/Spacecoin and Theo/Autheo collision guard
-- next scheduled shard: 3 (15:00)
+- next scheduled shard: 0 (16:00)
