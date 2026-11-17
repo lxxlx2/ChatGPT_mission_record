@@ -1,14 +1,14 @@
 # Current State
-- last_run: 2026-11-17T12:00:52+07:00
+- last_run: 2026-11-17T12:58:31+07:00
 - schedule: hourly HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-17/120052-final.md
+- run_path: airdrop-tge-monitor/runs/2026-11-17/125831-final.md
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 0
 - executed_shard: 0
 - shard0_original_new_event_receipts: 0/10
 - shard0_original_current_rights_verified: 0/10
 - urgent5_original_new_event_receipts: 0/5
-- candidate_count: 1 (StandX DUSD existing VERIFYING)
+- candidate_count: 1 (StandX DUSD existing VERIFYING; no new action)
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
@@ -17,7 +17,7 @@
 - code_execution: CODE_NOT_EXECUTED / MANUAL_EQUIVALENT_ONLY
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (AUTOMATION_RUNTIME historical, preserved)
 ## Last meaningful attempts
-- shard0: 2026-11-17 12:00:52 Asia/Bangkok (PARTIAL_ONLY)
+- shard0: 2026-11-17 12:58:31 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-17 09:02:42 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-17 10:57:06 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-17 07:04:24 Asia/Bangkok (PARTIAL_ONLY)
