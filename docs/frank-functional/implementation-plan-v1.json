@@ -67,7 +67,7 @@
       "acceptance_scenarios": [
         "E01"
       ],
-      "state": "IMPLEMENTED_OFFLINE_VERIFIED_NOT_DEPLOYED",
+      "state": "IMPLEMENTED_OFFLINE_HTTP_VERIFIED_INSTALLED",
       "interfaces": [
         "API01",
         "API28"
@@ -75,7 +75,18 @@
       "functions": [
         "FN01"
       ],
-      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
+      "installed_code_sha": "9f115cbe383da67b8893fb876d122d04bae22c7a",
+      "latest_readonly_check": {
+        "ranges": [
+          "30",
+          "all"
+        ],
+        "page_capacity": 1,
+        "http_status": 200,
+        "scope": "local indexed activity only; earlier full-set replay retained",
+        "new_rpc_calls": 0
+      }
     },
     {
       "id": "W02",
@@ -2269,5 +2280,11 @@
     "installed": true,
     "port": 8766,
     "overall_verdict": "PARTIAL"
+  },
+  "status_reconciliation": {
+    "date": "2026-11-17",
+    "reason": "W01 deployment label lagged behind installed source and actual30/all HTTP routes",
+    "runtime_code_sha": "9f115cbe383da67b8893fb876d122d04bae22c7a",
+    "product_verdict": "PARTIAL"
   }
 }

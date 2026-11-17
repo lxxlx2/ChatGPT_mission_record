@@ -28,7 +28,7 @@
 - [B] 初次Owner3次wire/1.577秒；da7集成6419账户/所有137分页独立对账；9f Chrome真实中断/重载同任务恢复DONE取得6447账户/Mint、48页×容量137集合精确，无漏无重
 - [B] da7全部5526行情目标处理103.534秒：385有价、5138无base币对、3无价，全部留记录；不同采集时间，不标全部同时新鲜；d6真实USDC/USD来源使5个信号参考价可比较；9f部署后6源候选参考价比较再次实测
 - [B] Chrome手动余额/行情刷新、过期305秒、分页、首100以外Mint精确查找及部署后复核通过；实际旧版回退HTTP通过，再固定新release；619tracked文件核对，旧control/投递文件hash不变
-- [B] 证据与命令见[本轮验收](../../docs/frank-functional/SOURCE_BALANCE_MARKET_ACCEPTANCE_20261117.md)和[机器记录](../../docs/frank-functional/source-balance-market-acceptance-20261117.json)；W01完整索引历史证据另保留，以上不证明全链/关闭账户/成本PnL或盈利
+- [B] 证据与命令见[本轮验收](../../docs/frank-functional/SOURCE_BALANCE_MARKET_ACCEPTANCE_20261117.md)和[机器记录](../../docs/frank-functional/source-balance-market-acceptance-20261117.json)；W01完整索引已随9f安装，30/all分页接口本次只读核对均HTTP200；清单旧未部署标签已纠正，以上不证明全链/关闭账户/成本PnL或盈利
 
 ## 已知但故意不做（C 类清单）
 - 原10月故障归因按用户取消；旧7条复杂交易只作定点回归，不反复整扫一个CA

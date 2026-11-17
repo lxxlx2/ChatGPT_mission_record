@@ -306,5 +306,15 @@
     "snapshot_after_resume_accounts": 6447,
     "snapshot_after_resume_mints": 6447,
     "new_source_requests_on_read_or_reload": 0
+  },
+  "status_query_readonly_validation": {
+    "installed_sha": "9f115cbe383da67b8893fb876d122d04bae22c7a",
+    "activity_30_days_page_http": 200,
+    "activity_all_buy_page_http": 200,
+    "positions_http": 200,
+    "positions_state": "STALE_ARCHIVED",
+    "retained_snapshot_mints": 6447,
+    "new_real_rpc_or_ca_posts": 0,
+    "meaning": "deployment label corrected; this probe does not revalidate all-chain history or fresh balances"
   }
 }
