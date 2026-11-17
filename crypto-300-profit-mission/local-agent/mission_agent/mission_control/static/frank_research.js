@@ -42,6 +42,12 @@
     if (cursor) url += '&cursor=' + encodeURIComponent(cursor);
     const p = await request(url);
     if (epoch !== viewEpoch) return;
+    const persisted = p.latest_refresh_attempt;
+    if (persisted && ['PAUSED','ERROR','PARTIAL'].includes(persisted.state)) {
+      lastBalance = persisted.job_id;
+      el('status').textContent = '上次余额任务 ' + persisted.job_id + '：' + persisted.state + '；可显式恢复';
+    } else if (persisted && persisted.state === 'DONE') lastBalance = null;
+    controls(busy);
     next = p.next_cursor || null;
     el('next').disabled = !next;
     if (!p.rows) {

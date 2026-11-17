@@ -385,3 +385,14 @@ def test_bulk_market_processes_all_65_mints_in_three_capacity_batches(make_resea
     assert [len(group) for group in calls]==[30,30,5]
     assert done['progress']['completed_items']==65 and len(obj.market_rows())==65
     assert len(obj._query('SELECT mint FROM frank_market_stage WHERE job_id=?',(job['job_id'],)))==65
+
+
+def test_missing_snapshot_still_discovers_persisted_interrupted_refresh_without_writes(make_research):
+    obj=make_research()
+    job=obj.submit('balance',{'idempotency_key':'first-process'})
+    reopened=make_research(root=obj.root)
+    before=files(obj.root)
+    data=reopened.positions()
+    assert data['rows'] is None and data['latest_refresh_attempt']['job_id']==job['job_id']
+    assert data['latest_refresh_attempt']['state']=='PAUSED'
+    assert files(obj.root)==before and reopened.executor.pending==[]

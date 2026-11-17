@@ -289,7 +289,8 @@ class ResearchData:
                 raise ValueError("CURSOR_QUERY_CHANGED")
             snapshot = self.latest("balance", token["binding"])
         if snapshot is None:
-            return {"status":"UNAVAILABLE", "reason":"BALANCE_SNAPSHOT_NOT_PRESENT", "rows":None, "current_balance_verified":False}
+            return {"status":"UNAVAILABLE", "reason":"BALANCE_SNAPSHOT_NOT_PRESENT", "rows":None,
+                    "current_balance_verified":False, "latest_refresh_attempt":self.latest_attempt("balance")}
         if snapshot.get("source_binding") != self.binding and snapshot_id is None and not cursor:
             raise ValueError("SOURCE_BINDING_CHANGED")
         rows = [dict(r) for r in snapshot["rows"] if mint is None or r["mint"] == mint]

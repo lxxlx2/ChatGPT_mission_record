@@ -30,6 +30,22 @@ test('new source controls do not request source or local state on startup',()=>{
   const b=browser(()=>{throw Error('must not run');});
   assert.equal(b.calls.length,0);
 });
+test('a reloaded page discovers a persisted interrupted first capture and resumes only on click',async()=>{
+  let resumed=false;
+  const b=browser(path=>path==='/api/frank-balance-refresh/resume'?
+    (resumed=true,{job_id:'saved-task',state:'DONE',errors:[]}):
+    {status:'UNAVAILABLE',reason:'BALANCE_SNAPSHOT_NOT_PRESENT',rows:null,
+     latest_refresh_attempt:{job_id:'saved-task',state:resumed?'DONE':'PAUSED'}});
+  b.get('frank-source-resume').disabled=true;
+  b.get('frank-source-read').click();await wait();
+  assert.equal(b.calls.some(c=>c.opts.method==='POST'),false);
+  assert.equal(b.get('frank-source-resume').disabled,false);
+  b.get('frank-source-resume').click();await wait();
+  const posts=b.calls.filter(c=>c.opts.method==='POST');
+  assert.equal(posts.length,1);
+  assert.equal(posts[0].path,'/api/frank-balance-refresh/resume');
+  assert.equal(JSON.parse(posts[0].opts.body).refresh_id,'saved-task');
+});
 test('explicit balance refresh posts once; subsequent status, market and positions are read-only',async()=>{
   const b=browser(path=>path.includes('balance-refresh')?{job_id:'jobA',state:'DONE',progress:{},errors:[]}:
     path.startsWith('/api/frank-positions')?positions():{rows:[],next_cursor:null});
