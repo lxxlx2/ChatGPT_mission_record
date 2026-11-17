@@ -1,13 +1,14 @@
 # Current State
-- last_run: 2026-11-17T05:55:45+07:00
+- last_run: 2026-11-17T07:04:24+07:00
 - schedule: hourly HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-17/055545-final.md
+- run_path: airdrop-tge-monitor/runs/2026-11-17/070424-final.md
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 1
-- executed_shard: 1
-- shard1_original_event_receipts: 1/9 (Surf old issuer article; zero new event)
+- scheduled_shard: 3
+- executed_shard: 3
+- shard3_original_new_event_receipts: 0/9
+- shard3_project_original_pages_read: 3/9
 - urgent5_original_new_event_receipts: 0/5
-- candidate_count: 1 (StandX DUSD VERIFYING, existing)
+- candidate_count: 1 (existing StandX DUSD VERIFYING)
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
@@ -19,13 +20,13 @@
 - shard0: 2026-11-17 04:55:44 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-17 05:55:45 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-17 02:57:55 Asia/Bangkok (PARTIAL_ONLY)
-- shard3: 2026-11-16 23:16:18 Asia/Bangkok (PARTIAL_ONLY)
+- shard3: 2026-11-17 07:04:24 Asia/Bangkok (PARTIAL_ONLY)
 ## Unresolved
-- StandX DUSD Nov2 claim VERIFYING/SOURCE_GAP; original issuer event receipt and authenticated claim page missing; personal eligibility UNKNOWN
+- StandX DUSD Nov2 claim VERIFYING/SOURCE_GAP; issuer event-specific original and authenticated claim page unavailable; personal eligibility UNKNOWN
 - Concrete extra USDC SOURCE_GAP; HEEBOO/Clay Shares personal allocation unreadable
 - SurfBoard Nov13 window already delivered and expired absent verified issuer extension
 - Cambria Oct29 Base RSGP TGE already delivered; no new claim proof
-- Crusoe intermediary investor rights not verified by public issuer news
+- Crusoe mapped investor rights not verified by public issuer news
 - Exclusions: Abstract, Grass, Backpack, Loopscale, humans& CLOSED; UNICRED completed
 - Space/Spacecoin and Theo/Autheo collision guard
-- next scheduled shard: 2 (06:00)
+- next scheduled shard: 0 (08:00)
