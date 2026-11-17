@@ -1,11 +1,11 @@
 # Current State
-- last_run: 2026-11-18T00:59:04+07:00
+- last_run: 2026-11-18T02:03:46+07:00
 - schedule: hourly HH:00 Asia/Bangkok (unchanged)
-- run_path: airdrop-tge-monitor/runs/2026-11-18/005904-final.md
+- run_path: airdrop-tge-monitor/runs/2026-11-18/020346-final.md
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 0
-- executed_shard: 0
-- shard0_original_current_rights_verified: 0/10
+- scheduled_shard: 2
+- executed_shard: 2
+- shard2_original_current_rights_verified: 0/10
 - urgent5_original_current_rights_verified: 0/5
 - candidate_count: 1 (StandX DUSD VERIFYING)
 - action_gate_pass: 0
@@ -17,14 +17,14 @@
 ## Last meaningful attempts
 - shard0: 2026-11-18 00:59:04 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-17 21:59:26 Asia/Bangkok (PARTIAL_ONLY)
-- shard2: 2026-11-17 22:59:00 Asia/Bangkok (PARTIAL_ONLY)
+- shard2: 2026-11-18 02:03:46 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-17 15:57:26 Asia/Bangkok (PARTIAL_ONLY)
 ## Unresolved
-- StandX DUSD Nov2 claim VERIFYING/SOURCE_GAP; issuer original HTTP403, airdrop portal unreadable; eligibility UNKNOWN
-- Concrete extra USDC SOURCE_GAP; HEEBOO/Clay Shares personal allocation unreadable
+- StandX DUSD Nov2 claim VERIFYING/SOURCE_GAP; original issuer event-version unreadable, airdrop portal inaccessible; eligibility UNKNOWN
+- Concrete extra USDC SOURCE_GAP; HEEBOO/Clay Shares individual allocation unreadable
 - SurfBoard Nov13 window delivered and expired absent verified extension
 - Cambria Oct29 Base RSGP TGE delivered; new claim unverified
 - Crusoe mapped investor rights unverified
 - Exclusions: Abstract, Grass, Backpack, Loopscale, humans& CLOSED; UNICRED completed
 - Space/Spacecoin and Theo/Autheo collision guard
-- next scheduled shard: 1 (01:00)
+- next scheduled shard: 3 (03:00)
