@@ -78,12 +78,10 @@ def load_metadata(raw):
                     "as_of","created_at","code_sha","parser_sha256","source_binding",
                     "source_snapshot_sha256","artifact_sha256","counts","canonical_rows_sha256",
                     "raw_source_tables_preserved","immutable_source_snapshot","manifest_sha256"}
-        if isinstance(value, dict) and value.get("schema_version") in (2, 3):
+        if isinstance(value, dict) and value.get("schema_version") == 2:
             expected |= {"supersedes_manifest_id", "fact_revision_counts"}
-        if isinstance(value, dict) and value.get("schema_version") == 3:
-            expected.add("archive_replay_summary")
         if (not isinstance(value,dict) or type(value.get("schema_version")) is not int or
-                value.get("schema_version") not in {1, 2, 3} or set(value)!=expected or
+                value.get("schema_version") not in {1, 2} or set(value)!=expected or
                 value["manifest_sha256"] != digest({k:v for k,v in value.items() if k!="manifest_sha256"})):
             raise ValueError
         return value
@@ -160,7 +158,7 @@ class EvidenceManifests:
         if saved is None:
             raise ManifestError("PARENT_MANIFEST_NOT_FOUND", 404)
         parent = load_metadata(saved["body"])
-        if parent["kind"] != "facts" or parent["schema_version"] not in (2, 3):
+        if parent["kind"] != "facts" or parent["schema_version"] != 2:
             raise ManifestError("PARENT_FACTS_NOT_AVAILABLE", 409)
         if parent["source_binding"] != binding:
             raise ManifestError("PARENT_MANIFEST_SOURCE_CHANGED", 409)
@@ -321,7 +319,7 @@ class EvidenceManifests:
                     metadata.update(schema_version=2, supersedes_manifest_id=supersedes_manifest_id,
                                     fact_revision_counts=revision_counts)
                     if replay_archive:
-                        metadata.update(schema_version=3, archive_replay_summary=archive_summary)
+                        counts["archive_replay"] = archive_summary
                 metadata["manifest_sha256"] = digest(metadata)
                 db.execute("INSERT INTO manifests(id,kind,request_key,binding,body) VALUES(?,?,?,?,?)",
                            (identity, kind, idempotency_key, binding, canonical(metadata)))
@@ -430,8 +428,9 @@ class EvidenceManifests:
                         "scope":metadata["scope"], "full_chain_verified":False,"immutable_source_snapshot":True,
                         "as_of":at,"rows":[json.loads(r["body"]) for r in page],"returned":len(page),
                         "total_signatures":total,"next_cursor":next_cursor,"kind":kind,"mint":mint,"days":days}
-                if "archive_replay_summary" in metadata:
-                    result["archive_replay_summary"] = metadata["archive_replay_summary"]
+                archive_summary = metadata["counts"].get("archive_replay")
+                if archive_summary is not None:
+                    result["archive_replay_summary"] = archive_summary
                 if file_hash(path) != metadata["artifact_sha256"]:
                     raise ManifestError("MANIFEST_ARTIFACT_INTEGRITY_FAILED",503)
                 return result

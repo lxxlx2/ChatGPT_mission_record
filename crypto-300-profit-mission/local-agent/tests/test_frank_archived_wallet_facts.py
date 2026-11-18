@@ -137,7 +137,7 @@ def test_unrelated_program_cannot_establish_account_ownership(sample):
     assert result["fact"] is None and result["status"] == "UNRESOLVED"
 
 
-def test_v3_parent_compatibility_and_frozen_read(sample, tmp_path):
+def test_enriched_facts_keep_the_v2_envelope_and_frozen_read(sample, tmp_path):
     archive, row, _ = sample
     publish(*sample)
     source = tmp_path / "source.sqlite"
@@ -149,18 +149,19 @@ def test_v3_parent_compatibility_and_frozen_read(sample, tmp_path):
     old = EvidenceManifests(tmp_path / "private", source, clock=lambda: NOW)
     v2 = old.create("facts", "old")
     latest = EvidenceManifests(old.root, source, clock=lambda: NOW, archive_root=archive)
-    v3 = latest.create("facts", "new", v2["manifest_id"])
-    assert v2["schema_version"] == 2 and v3["schema_version"] == 3
-    assert v3["fact_revision_counts"]["revised"] == 1
-    assert v3["archive_replay_summary"]["verified"] == 1
-    assert v3["archive_replay_summary"]["executed_native_transfers"] == 1
-    repeat = latest.create("facts", "same", v3["manifest_id"])
+    richer = latest.create("facts", "new", v2["manifest_id"])
+    assert v2["schema_version"] == richer["schema_version"] == 2 and set(v2) == set(richer)
+    assert richer["fact_revision_counts"]["revised"] == 1
+    assert richer["counts"]["archive_replay"]["verified"] == 1
+    assert richer["counts"]["archive_replay"]["executed_native_transfers"] == 1
+    repeat = latest.create("facts", "same", richer["manifest_id"])
     assert repeat["fact_revision_counts"]["unchanged"] == 1
-    frozen = latest.activity(v3["manifest_id"])
+    frozen = latest.activity(richer["manifest_id"])
+    assert frozen["archive_replay_summary"] == richer["counts"]["archive_replay"]
     old_fact = latest.activity(v2["manifest_id"])["rows"][0]["transaction_fact"]
     assert frozen["rows"][0]["transaction_fact"]["supersedes_id"] == old_fact["fact_id"]
     (archive / (SIGNATURE + ".json.gz")).unlink()
-    assert latest.activity(v3["manifest_id"]) == frozen
+    assert latest.activity(richer["manifest_id"]) == frozen
     newer = latest.create("facts", "missing", repeat["manifest_id"])
-    assert newer["archive_replay_summary"]["missing"] == 1
+    assert newer["counts"]["archive_replay"]["missing"] == 1
     assert newer["fact_revision_counts"]["revised"] == 1

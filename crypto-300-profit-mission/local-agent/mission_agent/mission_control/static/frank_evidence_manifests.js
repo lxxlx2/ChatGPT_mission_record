@@ -91,7 +91,7 @@
       const counts=result.fact_revision_counts;
       el('status').textContent='已固定 '+result.counts.frank_activity_rows+' 条本地活动'+
         (counts?'，新增 '+counts.new+' 条交易事实，修订 '+counts.revised+' 条。':'及全部源表。')+
-        archiveSummary(result.archive_replay_summary)+' 点击读取固定历史分页。';
+        archiveSummary(result.counts.archive_replay)+' 点击读取固定历史分页。';
     }catch(_){if(token===epoch)el('status').textContent='固定结果尚未确认；可重试同一创建请求，或读取快照列表核对。';}
     finally{busy=false;controls();}
   }

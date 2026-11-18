@@ -56,9 +56,9 @@ test('snapshot list pages all remain reachable',async()=>{
 test('shows snapshot-wide original coverage on create and when reading a page',async()=>{
   const summary={verified:50,missing:3,mismatched:1,other_unresolved:1,reclassified:4,
     executed_token_transfers:35,executed_native_transfers:19,attempted_transfers:9,confirmed_initial_fundings:8};
-  const b=browser((_,opts)=>({
-    ...(opts.method==='POST'?metadata:page()),archive_replay_summary:summary
-  }));
+  const b=browser((_,opts)=>opts.method==='POST'?
+    {...metadata,counts:{...metadata.counts,archive_replay:summary}}:
+    {...page(),archive_replay_summary:summary});
   b.e('create-facts').click();await settle();
   assert.match(b.e('status').textContent,/已核实 50 笔，归档缺失 3 笔/);
   b.e('read').click();await settle();
