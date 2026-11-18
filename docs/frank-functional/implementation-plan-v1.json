@@ -198,7 +198,7 @@
         "E01",
         "E05"
       ],
-      "state": "PARTIAL_HISTORY_COVERAGE_AND_VERSIONED_FACTS_INSTALLED",
+      "state": "PARTIAL_ARCHIVE_REPLAY_AND_HISTORY_COVERAGE_INSTALLED",
       "interfaces": [
         "API01",
         "API02",
@@ -214,9 +214,9 @@
         "FN14"
       ],
       "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
-      "remaining": "Replay captured raw instructions across protocols to classify complex legs and attribute account rent and route fees. Verify historical backfill, duplicates and cursor recovery against bound source records.",
-      "evidence": "W06_HISTORY_FACTS_ACCEPTANCE_20261118.md",
-      "source_sha": "4ceeb23e96bc63bf5b7537e590b5e10238af90c6",
+      "remaining": "Bind known legacy archives and historical backfill to source records. Prove protocol-level swap pairing, Token-2022 special transfers, closing refunds, rent and route-fee attribution where original evidence supports them.",
+      "evidence": "W06_ARCHIVED_FACTS_ACCEPTANCE_20261118.md",
+      "source_sha": "00f104dad26f5a2d232251f779b7cd6f255e548c",
       "foundation_evidence": "WATCH_MANIFEST_ACCEPTANCE_20261117.md"
     },
     {
@@ -543,8 +543,8 @@
         "FN03",
         "FN14"
       ],
-      "evidence_state": "PARTIAL_FIVE_INDEXED_CLASSES_REPLAYED_CROSS_PROTOCOL_RECLASSIFICATION_OPEN",
-      "latest_increment_evidence": "W06_HISTORY_FACTS_ACCEPTANCE_20261118.md"
+      "evidence_state": "PARTIAL_VERIFIED_ARCHIVE_REPLAY_WITH_ORIGINAL_CLASS_PRESERVED",
+      "latest_increment_evidence": "W06_ARCHIVED_FACTS_ACCEPTANCE_20261118.md"
     },
     {
       "id": "SRC05",
@@ -578,8 +578,8 @@
         "FN03",
         "FN14"
       ],
-      "evidence_state": "PARTIAL_FACTS_V2_REVISION_AND_SOURCE_LEG_PRESERVATION_VERIFIED_COMPLEX_DECODING_OPEN",
-      "latest_increment_evidence": "W06_HISTORY_FACTS_ACCEPTANCE_20261118.md"
+      "evidence_state": "PARTIAL_GROSS_INSTRUCTIONS_AND_FACT_REVISIONS_VERIFIED_PROTOCOL_PAIRING_OPEN",
+      "latest_increment_evidence": "W06_ARCHIVED_FACTS_ACCEPTANCE_20261118.md"
     },
     {
       "id": "SRC06",
@@ -613,8 +613,8 @@
         "FN03",
         "FN14"
       ],
-      "evidence_state": "PARTIAL_NATIVE_FEE_PAYER_AND_RAW_UNITS_VERIFIED_RENT_AND_ROUTE_ALLOCATION_OPEN",
-      "latest_increment_evidence": "W06_HISTORY_FACTS_ACCEPTANCE_20261118.md"
+      "evidence_state": "PARTIAL_NATIVE_FEE_AND_INITIAL_ACCOUNT_FUNDING_VERIFIED_RENT_AND_ROUTE_ALLOCATION_OPEN",
+      "latest_increment_evidence": "W06_ARCHIVED_FACTS_ACCEPTANCE_20261118.md"
     },
     {
       "id": "ACT01",
@@ -2284,16 +2284,16 @@
     },
     "reference": "INDEXED_ACTIVITY_ACCEPTANCE_20261115.md"
   },
-  "current_next": "W06: decode instruction-level legs from existing multi-protocol raw receipts, reconcile account rent and route fees, and verify source-backed backfill/cursor recovery. W07 cost ledger and W08 persistent risk updates follow; W09–W14 remain open.",
+  "current_next": "W06: finish protocol-level evidence and source-backed backfill with cursor recovery. W07 cost ledger should consume only source-confirmed units and carry unresolved amounts. W08–W14 remain open.",
   "latest_increment": {
     "work_packages": [
       "W06"
     ],
-    "state": "INSTALLED_AND_GOOGLE_CHROME_VERIFIED;W06_OVERALL_PARTIAL",
-    "source_sha": "4ceeb23e96bc63bf5b7537e590b5e10238af90c6",
-    "python_related_passed": 430,
-    "node_related_passed": 238,
-    "evidence": "W06_HISTORY_FACTS_ACCEPTANCE_20261118.md"
+    "state": "ARCHIVE_REPLAY_INSTALLED_AND_CHROME_VERIFIED_W06_PARTIAL",
+    "source_sha": "00f104dad26f5a2d232251f779b7cd6f255e548c",
+    "python_related_passed": 444,
+    "node_related_passed": 239,
+    "evidence": "W06_ARCHIVED_FACTS_ACCEPTANCE_20261118.md"
   },
   "status_reconciliation": {
     "date": "2026-11-17",

@@ -703,7 +703,7 @@
         "idempotency_key": "required",
         "supersedes_manifest_id": "optional prior v2 facts manifest of the same source. Bound to the idempotency key."
       },
-      "response": "201 COMPLETE. activity keeps v1. facts v2 includes versioned source-bound facts, revision counts and optional parent. Atomic publication of a local snapshot with private raw source tables.",
+      "response": "201 COMPLETE. activity v1 and facts v2 retain their envelopes. facts v2 includes optional parent, revision counts and counts.archive_replay when the configured local archive is checked. Publication is atomic and the raw tables remain private.",
       "side_effects": "WRITE_DERIVED_CONTROL_ROOT_ONLY",
       "work_packages": [
         "W02",
@@ -756,7 +756,7 @@
         "limit": "optional1..1000",
         "cursor": "optional manifest-bound"
       },
-      "response": "Immutable activity page. Facts v2 adds typed transaction_fact with exact raw units, component coverage, fact_id, supersedes_id and private source row references. Legacy v1 snapshots are unchanged.",
+      "response": "Immutable activity page. Facts v2 adds typed transaction_fact with exact raw units, component coverage, fact_id, supersedes_id and private source row references. An enriched artifact adds transaction_fact.archived_replay and snapshot-wide archive_replay_summary. GET reads frozen rows.",
       "side_effects": "NONE",
       "work_packages": [
         "W06"
@@ -935,9 +935,9 @@
     "work_packages": [
       "W06"
     ],
-    "state": "LOCAL_INSTALLED_CHROME_VERIFIED;W06_OVERALL_PARTIAL",
-    "source_sha": "4ceeb23e96bc63bf5b7537e590b5e10238af90c6",
-    "evidence": "W06_HISTORY_FACTS_ACCEPTANCE_20261118.md",
-    "design_adjustment": "API02 reads the selected local index window. API30 accepts an optional prior v2 facts manifest and preserves fact IDs for unchanged content. API32 serves versioned facts with v1 compatibility. Rent and route fee attribution can remain unresolved."
+    "state": "LOCAL_ARCHIVE_REPLAY_CHROME_VERIFIED_W06_PARTIAL",
+    "source_sha": "00f104dad26f5a2d232251f779b7cd6f255e548c",
+    "evidence": "W06_ARCHIVED_FACTS_ACCEPTANCE_20261118.md",
+    "design_adjustment": "API30 stores covered archive totals inside the existing v2 counts object. Each archived_replay result includes a safe source status and verified facts when available. Prior v2 facts remain valid parents. API32 serves frozen data. Initial account funding and rent attribution remain separate."
   }
 }
