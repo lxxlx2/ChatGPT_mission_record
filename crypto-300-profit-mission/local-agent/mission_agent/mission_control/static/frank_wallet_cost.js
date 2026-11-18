@@ -206,7 +206,8 @@
       '已核实网络费 ' + lamports(fees.network_fee_lamports) +
         ' · 网络费待核交易 ' + labelCount(fees.network_fee_unknown_transactions) + ' 笔',
       '已核实初始注资 ' + lamports(fees.initial_funding_paid_lamports) +
-        ' · 已核实租金支出 ' + lamports(fees.rent_paid_lamports) +
+        ' · 已核实关户转回 ' + lamports(fees.close_refund_received_lamports),
+      '已核实租金支出 ' + lamports(fees.rent_paid_lamports) +
         ' · 已核实租金退款 ' + lamports(fees.rent_refunded_lamports),
       '已估值 Mint ' + labelCount(value.covered_positions) + ' 个 · 未估值 Mint ' +
         (hasUnpricedCount ? labelCount(unpriced.length) + ' 个' : unknown),

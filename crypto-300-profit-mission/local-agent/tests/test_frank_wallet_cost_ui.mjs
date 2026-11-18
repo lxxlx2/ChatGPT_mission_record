@@ -82,7 +82,8 @@ function basis(rows = [asset()], overrides = {}) {
     run_id: run, manifest_id: manifest, as_of: at - 100, created_at: at,
     rows, total_matching: rows.length, returned: rows.length, next_cursor: null,
     fees: {network_fee_lamports: '5000', network_fee_unknown_transactions: 3,
-      initial_funding_paid_lamports: '2039280', rent_paid_lamports: null, rent_refunded_lamports: null},
+      initial_funding_paid_lamports: '2039280', close_refund_received_lamports: '4180000',
+      rent_paid_lamports: null, rent_refunded_lamports: null},
     valuation: {as_of: at, max_age_seconds: 60, covered_positions: 1, unpriced_mints: [otherMint],
       partial_value_usd: '6.01', full_wallet_value_usd: null},
     ...overrides,
@@ -144,7 +145,8 @@ test('large exact quantities, original currencies and unknown total are visible 
   assert.match(text, /DexScreener · 观测于/);
   assert.match(text, /有效期至/);
   const summary = b.e('summary').textContent;
-  assert.match(summary, /已核实初始注资 0\.00203928 SOL · 已核实租金支出 未知/);
+  assert.match(summary, /已核实初始注资 0\.00203928 SOL · 已核实关户转回 0\.00418 SOL/);
+  assert.match(summary, /已核实租金支出 未知 · 已核实租金退款 未知/);
   assert.match(summary, /已估值部分 6\.01 USD · 整钱包价值 未知/);
 
   const row = b.e('rows').children[0];
