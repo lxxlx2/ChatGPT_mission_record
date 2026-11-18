@@ -14,14 +14,30 @@
     el('more').disabled=busy||!listNext;
   }
   async function request(path,body){
-    const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),30000);
+    const controller=new AbortController();
+    // A full local archive replay completes at the pace of the source dataset.
+    const timer=body?.kind==='facts'?null:setTimeout(()=>controller.abort(),30000);
     try{
       const response=await fetch(path,{cache:'no-store',signal:controller.signal,...(body===undefined?
         {headers:{'X-Frank-Research-Read':'1'}}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})});
       const value=await response.json();
       if(!response.ok)throw Error('LOCAL_MANIFEST_REQUEST_FAILED');
       return value;
-    }finally{clearTimeout(timer);}
+    }finally{if(timer!==null)clearTimeout(timer);}
+  }
+  function archiveSummary(summary){
+    if(!summary)return '';
+    const keys=['verified','missing','mismatched','other_unresolved','reclassified',
+      'executed_token_transfers','executed_native_transfers','attempted_transfers','confirmed_initial_fundings'];
+    if(!keys.every(key=>Number.isSafeInteger(summary[key])&&summary[key]>=0)){
+      return ' 原文复核统计暂不可用。';
+    }
+    return ' 整份快照原文复核：已核实 '+summary.verified+' 笔，归档缺失 '+summary.missing+
+      ' 笔，摘要或交易身份不符 '+summary.mismatched+' 笔，其他未核实 '+summary.other_unresolved+
+      ' 笔。已核实交易中，'+summary.reclassified+' 笔的重放分类与原索引不同。'+
+      ' 已执行的代币转账指令 '+summary.executed_token_transfers+' 条、涉及钱包的 SOL 转账指令 '+
+      summary.executed_native_transfers+' 条；失败交易中的转账尝试 '+summary.attempted_transfers+
+      ' 条。核实关联代币账户初始注资 '+summary.confirmed_initial_fundings+' 条。';
   }
   async function list(cursor=null){
     if(busy)return;busy=true;const token=++epoch;controls();
@@ -46,7 +62,7 @@
       if(result.manifest_id!==identity||result.immutable_source_snapshot!==true||!Array.isArray(result.rows))throw Error('INVALID_MANIFEST');
       selected=identity;next=result.next_cursor||null;
       el('data').textContent=JSON.stringify(result,null,2);
-      el('status').textContent='固定本地历史：共 '+result.total_signatures+' 条，本页 '+result.returned+' 条'+(next?'；可继续下一页。':'；已到末页。')+' 不代表完整链史。';
+      el('status').textContent='固定本地历史：共 '+result.total_signatures+' 条，本页 '+result.returned+' 条'+(next?'；可继续下一页。':'；已到末页。')+' 完整链史未核实。'+archiveSummary(result.archive_replay_summary);
     }catch(_){if(token===epoch){next=null;el('status').textContent='固定快照读取失败；未改读当前索引，旧快照和页面内容保留。';}}
     finally{busy=false;controls();}
   }
@@ -63,7 +79,7 @@
     busy=true;
     const token=++epoch;
     controls();
-    el('status').textContent='正在固定本地索引；此操作不查询链上来源。';
+    el('status').textContent=kind==='facts'?'正在固定钱包事实并逐笔核对本地归档，请等待完成。':'正在固定本地索引。';
     try{
       const payload={kind,idempotency_key:pendingCreate.key};
       if(parent)payload.supersedes_manifest_id=parent;
@@ -75,7 +91,7 @@
       const counts=result.fact_revision_counts;
       el('status').textContent='已固定 '+result.counts.frank_activity_rows+' 条本地活动'+
         (counts?'，新增 '+counts.new+' 条交易事实，修订 '+counts.revised+' 条。':'及全部源表。')+
-        ' 点击读取固定历史分页。';
+        archiveSummary(result.archive_replay_summary)+' 点击读取固定历史分页。';
     }catch(_){if(token===epoch)el('status').textContent='固定结果尚未确认；可重试同一创建请求，或读取快照列表核对。';}
     finally{busy=false;controls();}
   }

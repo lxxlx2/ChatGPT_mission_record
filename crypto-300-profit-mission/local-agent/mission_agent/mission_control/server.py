@@ -863,7 +863,8 @@ class DashboardState:
         code_sha = os.environ.get("FRANK_DASHBOARD_SOURCE_SHA", "UNPINNED")
         if not re.fullmatch(r"[a-f0-9]{40}", code_sha):
             code_sha = "UNPINNED"
-        self.evidence_manifests = EvidenceManifests(self.control_root, self.frank.database, code_sha=code_sha)
+        self.evidence_manifests = EvidenceManifests(self.control_root, self.frank.database,
+                                                   archive_root=self.frank.root / "raw", code_sha=code_sha)
         # Reuse the already configured source; do not create a new provider/key.
         endpoints = self.cluster_jobs.rpc_endpoints
         self.research = ResearchData(

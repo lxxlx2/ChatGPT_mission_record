@@ -18,6 +18,7 @@ import uuid
 from .wallet_activity import activity, connect
 from .wallet_activity_paging import _where, _encode, _decode, KINDS
 from .wallet_facts import build_fact
+from .archived_wallet_facts import read_archived_fact
 
 
 class ManifestError(ValueError):
@@ -42,6 +43,34 @@ def file_hash(path):
     return result.hexdigest()
 
 
+def count_archived_replay(summary, replay):
+    reason = replay["reason"]
+    counts = summary["reason_counts"]
+    counts[reason] = counts.get(reason, 0) + 1
+    if replay["status"] != "VERIFIED":
+        if reason == "ARCHIVE_NOT_FOUND":
+            summary["missing"] += 1
+        elif reason in {"ARCHIVE_HASH_MISMATCH", "ARCHIVE_SIGNATURE_MISMATCH", "ARCHIVE_SLOT_MISMATCH",
+                        "ARCHIVE_TIME_MISMATCH", "ARCHIVE_WALLET_MISMATCH"}:
+            summary["mismatched"] += 1
+        else:
+            summary["other_unresolved"] += 1
+        return
+    summary["verified"] += 1
+    summary["reclassified"] += int(replay["indexed_class"] != replay["replayed_class"])
+    fact = replay["fact"]
+    for name, executed in (("token_transfers", "executed_token_transfers"),
+                           ("native_transfers", "executed_native_transfers")):
+        for instruction in fact[name] or []:
+            effect = instruction["instruction_effect"]
+            if effect == "EXECUTED":
+                summary[executed] += 1
+            elif effect == "ATTEMPT_ONLY":
+                summary["attempted_transfers"] += 1
+    summary["confirmed_initial_fundings"] += sum(
+        item["status"] == "CONFIRMED_INITIAL_FUNDING" for item in fact["account_funding"]["items"])
+
+
 def load_metadata(raw):
     try:
         value = json.loads(raw)
@@ -49,10 +78,12 @@ def load_metadata(raw):
                     "as_of","created_at","code_sha","parser_sha256","source_binding",
                     "source_snapshot_sha256","artifact_sha256","counts","canonical_rows_sha256",
                     "raw_source_tables_preserved","immutable_source_snapshot","manifest_sha256"}
-        if isinstance(value, dict) and value.get("schema_version") == 2:
+        if isinstance(value, dict) and value.get("schema_version") in (2, 3):
             expected |= {"supersedes_manifest_id", "fact_revision_counts"}
+        if isinstance(value, dict) and value.get("schema_version") == 3:
+            expected.add("archive_replay_summary")
         if (not isinstance(value,dict) or type(value.get("schema_version")) is not int or
-                value.get("schema_version") not in {1, 2} or set(value)!=expected or
+                value.get("schema_version") not in {1, 2, 3} or set(value)!=expected or
                 value["manifest_sha256"] != digest({k:v for k,v in value.items() if k!="manifest_sha256"})):
             raise ValueError
         return value
@@ -61,8 +92,9 @@ def load_metadata(raw):
 
 
 class EvidenceManifests:
-    def __init__(self, root, source_path, *, clock=time.time, code_sha="UNPINNED"):
+    def __init__(self, root, source_path, *, archive_root=None, clock=time.time, code_sha="UNPINNED"):
         self.root, self.source = Path(root), Path(source_path)
+        self.archive_root = Path(archive_root) if archive_root is not None else None
         self.path = self.root / "frank-evidence-manifests.sqlite"
         self.artifacts = self.root / "frank-evidence-artifacts"
         self.clock = clock
@@ -128,7 +160,7 @@ class EvidenceManifests:
         if saved is None:
             raise ManifestError("PARENT_MANIFEST_NOT_FOUND", 404)
         parent = load_metadata(saved["body"])
-        if parent["kind"] != "facts" or parent["schema_version"] != 2:
+        if parent["kind"] != "facts" or parent["schema_version"] not in (2, 3):
             raise ManifestError("PARENT_FACTS_NOT_AVAILABLE", 409)
         if parent["source_binding"] != binding:
             raise ManifestError("PARENT_MANIFEST_SOURCE_CHANGED", 409)
@@ -173,6 +205,11 @@ class EvidenceManifests:
                     return metadata
                 parent_facts = self._parent_facts(db, supersedes_manifest_id, binding)
                 revision_counts = {"new": 0, "revised": 0, "unchanged": 0, "parent_only": 0}
+                replay_archive = kind == "facts" and self.archive_root is not None
+                archive_summary = {"verified": 0, "missing": 0, "mismatched": 0, "other_unresolved": 0,
+                                   "reason_counts": {}, "reclassified": 0, "executed_token_transfers": 0,
+                                   "executed_native_transfers": 0, "attempted_transfers": 0,
+                                   "confirmed_initial_fundings": 0}
                 now = self.clock()
                 if type(now) not in (int, float) or not 1_600_000_000 < now < 4_000_000_000:
                     raise ManifestError("INVALID_MANIFEST_TIMESTAMP")
@@ -204,7 +241,9 @@ class EvidenceManifests:
                     legs = {}
                     for leg in frozen.execute("SELECT rowid AS source_trade_rowid,* FROM trades ORDER BY rowid"):
                         legs.setdefault((leg["wallet"],leg["signature"]),[]).append(dict(leg))
-                    for row in projection["rows"]:
+                    rows_hash = hashlib.sha256(b"[")
+                    for offset, indexed in enumerate(projection["rows"]):
+                        row = indexed.copy()
                         source_row = frozen.execute("SELECT wallet,signature,body FROM signatures WHERE rowid=?", (row["index_rowid"],)).fetchone()
                         key = (source_row["wallet"], source_row["signature"])
                         row["raw_trade_legs"] = legs.get(key, [])
@@ -216,6 +255,10 @@ class EvidenceManifests:
                                 source_body = None
                             evidence = source_body.get("evidence") if isinstance(source_body, dict) else None
                             fact = build_fact(row, evidence, row["raw_trade_legs"])
+                            if replay_archive:
+                                replay = read_archived_fact(self.archive_root, row)
+                                fact["archived_replay"] = replay
+                                count_archived_replay(archive_summary, replay)
                             # Bind identity to the full source key without exposing
                             # raw values if the indexed wallet/signature is malformed.
                             payload_sha256 = digest([key, fact])
@@ -244,7 +287,12 @@ class EvidenceManifests:
                             row["raw_trade_legs"] = [{"source_trade_rowid": leg["source_trade_rowid"]}
                                                      for leg in row["raw_trade_legs"]]
                             row["raw_trade_legs_semantics"] = "PRIVATE_SOURCE_ROW_REFERENCES"
-                        frozen.execute("INSERT INTO frank_manifest_activity VALUES(?,?)", (row["index_rowid"], canonical(row)))
+                        encoded = canonical(row)
+                        frozen.execute("INSERT INTO frank_manifest_activity VALUES(?,?)", (row["index_rowid"], encoded))
+                        if offset:
+                            rows_hash.update(b",")
+                        rows_hash.update(encoded.encode())
+                    rows_hash.update(b"]")
                     counts = {"all_source_signatures": frozen.execute("SELECT count(*) FROM signatures").fetchone()[0],
                               "all_source_trade_legs": frozen.execute("SELECT count(*) FROM trades").fetchone()[0],
                               "frank_activity_rows": len(projection["rows"])}
@@ -256,18 +304,24 @@ class EvidenceManifests:
                 parser_files = ["wallet_activity.py", "wallet_activity_paging.py", "evidence_manifests.py"]
                 if kind == "facts":
                     parser_files.append("wallet_facts.py")
-                parser_hash = digest({name:file_hash(Path(__file__).with_name(name)) for name in parser_files})
+                if replay_archive:
+                    parser_files.extend(["archived_wallet_facts.py", "archived_account_funding.py", "ata_backfill.py",
+                                         "../frank/parser.py", "../signals/classifier.py", "../signals/policy.py",
+                                         "../hashing.py", "../meme/holder_ranks.py"])
+                parser_hash = digest({name:file_hash(Path(__file__).parent / name) for name in parser_files})
                 metadata = {"schema_version":1, "manifest_id":identity, "kind":kind, "state":"COMPLETE",
                             "scope":"LOCAL_INDEX_ONLY_NOT_COMPLETE_CHAIN", "full_chain_verified":False,
                             "as_of":int(now), "created_at":now, "code_sha":self.code_sha,
                             "parser_sha256":parser_hash, "source_binding":binding,
                             "source_snapshot_sha256":source_hash, "artifact_sha256":file_hash(artifact),
-                            "counts":counts, "canonical_rows_sha256":digest(projection["rows"]),
+                            "counts":counts, "canonical_rows_sha256":rows_hash.hexdigest(),
                             "raw_source_tables_preserved":True, "immutable_source_snapshot":True}
                 if kind == "facts":
                     revision_counts["parent_only"] = len(parent_facts)
                     metadata.update(schema_version=2, supersedes_manifest_id=supersedes_manifest_id,
                                     fact_revision_counts=revision_counts)
+                    if replay_archive:
+                        metadata.update(schema_version=3, archive_replay_summary=archive_summary)
                 metadata["manifest_sha256"] = digest(metadata)
                 db.execute("INSERT INTO manifests(id,kind,request_key,binding,body) VALUES(?,?,?,?,?)",
                            (identity, kind, idempotency_key, binding, canonical(metadata)))
@@ -376,6 +430,8 @@ class EvidenceManifests:
                         "scope":metadata["scope"], "full_chain_verified":False,"immutable_source_snapshot":True,
                         "as_of":at,"rows":[json.loads(r["body"]) for r in page],"returned":len(page),
                         "total_signatures":total,"next_cursor":next_cursor,"kind":kind,"mint":mint,"days":days}
+                if "archive_replay_summary" in metadata:
+                    result["archive_replay_summary"] = metadata["archive_replay_summary"]
                 if file_hash(path) != metadata["artifact_sha256"]:
                     raise ManifestError("MANIFEST_ARTIFACT_INTEGRITY_FAILED",503)
                 return result
