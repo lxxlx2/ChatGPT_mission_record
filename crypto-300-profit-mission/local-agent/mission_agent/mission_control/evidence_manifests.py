@@ -57,6 +57,7 @@ def count_archived_replay(summary, replay):
             summary["other_unresolved"] += 1
         return
     summary["verified"] += 1
+    summary["legacy_verified"] += replay["archive_tier"] == "LEGACY"
     summary["reclassified"] += int(replay["indexed_class"] != replay["replayed_class"])
     fact = replay["fact"]
     for name, executed in (("token_transfers", "executed_token_transfers"),
@@ -69,6 +70,9 @@ def count_archived_replay(summary, replay):
                 summary["attempted_transfers"] += 1
     summary["confirmed_initial_fundings"] += sum(
         item["status"] == "CONFIRMED_INITIAL_FUNDING" for item in fact["account_funding"]["items"])
+    summary["confirmed_close_refunds"] += sum(
+        item["status"] == "CONFIRMED_CLOSE_REFUND" for item in fact["account_close_refunds"])
+    summary["confirmed_wallet_exchanges"] += fact["economic_exchange"] is not None
 
 
 def load_metadata(raw):
@@ -90,9 +94,11 @@ def load_metadata(raw):
 
 
 class EvidenceManifests:
-    def __init__(self, root, source_path, *, archive_root=None, clock=time.time, code_sha="UNPINNED"):
+    def __init__(self, root, source_path, *, archive_root=None, legacy_archive_root=None,
+                 clock=time.time, code_sha="UNPINNED"):
         self.root, self.source = Path(root), Path(source_path)
         self.archive_root = Path(archive_root) if archive_root is not None else None
+        self.legacy_archive_root = Path(legacy_archive_root) if legacy_archive_root is not None else None
         self.path = self.root / "frank-evidence-manifests.sqlite"
         self.artifacts = self.root / "frank-evidence-artifacts"
         self.clock = clock
@@ -204,10 +210,11 @@ class EvidenceManifests:
                 parent_facts = self._parent_facts(db, supersedes_manifest_id, binding)
                 revision_counts = {"new": 0, "revised": 0, "unchanged": 0, "parent_only": 0}
                 replay_archive = kind == "facts" and self.archive_root is not None
-                archive_summary = {"verified": 0, "missing": 0, "mismatched": 0, "other_unresolved": 0,
+                archive_summary = {"verified": 0, "legacy_verified": 0, "missing": 0, "mismatched": 0, "other_unresolved": 0,
                                    "reason_counts": {}, "reclassified": 0, "executed_token_transfers": 0,
                                    "executed_native_transfers": 0, "attempted_transfers": 0,
-                                   "confirmed_initial_fundings": 0}
+                                   "confirmed_initial_fundings": 0, "confirmed_close_refunds": 0,
+                                   "confirmed_wallet_exchanges": 0}
                 now = self.clock()
                 if type(now) not in (int, float) or not 1_600_000_000 < now < 4_000_000_000:
                     raise ManifestError("INVALID_MANIFEST_TIMESTAMP")
@@ -254,7 +261,8 @@ class EvidenceManifests:
                             evidence = source_body.get("evidence") if isinstance(source_body, dict) else None
                             fact = build_fact(row, evidence, row["raw_trade_legs"])
                             if replay_archive:
-                                replay = read_archived_fact(self.archive_root, row)
+                                replay = read_archived_fact(self.archive_root, row,
+                                                            legacy_archive_root=self.legacy_archive_root)
                                 fact["archived_replay"] = replay
                                 count_archived_replay(archive_summary, replay)
                             # Bind identity to the full source key without exposing
@@ -387,6 +395,32 @@ class EvidenceManifests:
             return {"status":"OK", "scope":"LOCAL_INDEX_ONLY_NOT_COMPLETE_CHAIN",
                     "rows":[load_metadata(r["body"]) for r in page], "returned":len(page), "total_matching":total,
                     "next_cursor":_encode({"v":1,"binding":binding,"fence":fence,"after":page[-1]["seq"],"manifest_id":manifest_id,"kind":kind}) if len(rows)>limit else None}
+
+    def cost_input(self, manifest_id):
+        """Load a checksum-bound whole-wallet facts snapshot for a local derivation."""
+        self._id(manifest_id)
+        entries = self.manifests(manifest_id=manifest_id)["rows"]
+        if not entries:
+            raise ManifestError("MANIFEST_NOT_FOUND", 404)
+        metadata = entries[0]
+        if metadata["kind"] != "facts" or metadata["schema_version"] != 2:
+            raise ManifestError("COST_INPUT_FACTS_REQUIRED", 409)
+        path = self.artifacts / (manifest_id + ".sqlite")
+        try:
+            if path.is_symlink() or file_hash(path) != metadata["artifact_sha256"]:
+                raise ValueError("ARTIFACT_DIGEST")
+            db = connect(path)
+            try:
+                db.execute("BEGIN")
+                rows = [json.loads(record[0]) for record in
+                        db.execute("SELECT body FROM frank_manifest_activity ORDER BY index_rowid")]
+            finally:
+                db.close()
+            if len(rows) != metadata["counts"]["frank_activity_rows"] or file_hash(path) != metadata["artifact_sha256"]:
+                raise ValueError("ARTIFACT_DIGEST")
+            return metadata, rows
+        except (OSError, sqlite3.Error, ValueError, TypeError, KeyError, RecursionError):
+            raise ManifestError("MANIFEST_ARTIFACT_INTEGRITY_FAILED", 503) from None
 
     def activity(self, manifest_id, *, days="all", kind="ALL", mint=None, limit=100, cursor=None):
         self._id(manifest_id); self._limit(limit)

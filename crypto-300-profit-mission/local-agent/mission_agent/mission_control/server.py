@@ -44,6 +44,7 @@ from .wallet_owner_at_slot import FRANK_WALLET
 from .watch_metadata import WatchMetadataStore, WatchMetadataError
 from .evidence_manifests import EvidenceManifests, ManifestError
 from .wallet_coverage import CoverageError, coverage_for_wallet
+from .wallet_cost_store import WalletCostStore, CostStoreError
 
 
 def _host_is_loopback(host: str, port: int) -> bool:
@@ -864,7 +865,9 @@ class DashboardState:
         if not re.fullmatch(r"[a-f0-9]{40}", code_sha):
             code_sha = "UNPINNED"
         self.evidence_manifests = EvidenceManifests(self.control_root, self.frank.database,
-                                                   archive_root=self.frank.root / "raw", code_sha=code_sha)
+                                                   archive_root=self.frank.root / "raw",
+                                                   legacy_archive_root=os.environ.get("FRANK_DASHBOARD_LEGACY_ARCHIVE_DIR") or None,
+                                                   code_sha=code_sha)
         # Reuse the already configured source; do not create a new provider/key.
         endpoints = self.cluster_jobs.rpc_endpoints
         self.research = ResearchData(
@@ -880,6 +883,8 @@ class DashboardState:
                 "market_adapter":hashlib.sha256(Path(__file__).resolve().parents[1].joinpath("meme/market.py").read_bytes()).hexdigest()}),
             code_sha=code_sha,
         )
+        self.wallet_cost = WalletCostStore(self.control_root, self.evidence_manifests,
+                                          self.research.market_rows, code_sha=code_sha)
 
     def _control_query(self, sql: str, params=()):
         if not self.control_db.is_file():
@@ -1348,6 +1353,29 @@ class Handler(BaseHTTPRequestHandler):
         except (OSError,sqlite3.Error):
             return self._json({"error":"MANIFEST_STORAGE_UNAVAILABLE"},503)
 
+    def _wallet_cost_get(self, path):
+        if not self._research_origin():
+            return self._json({"error": "SAME_ORIGIN_READ_REQUIRED"}, 403)
+        try:
+            query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=4)
+            if any(len(values) != 1 for values in query.values()):
+                raise ValueError
+            params = {key: values[0] for key, values in query.items()}
+            if path == "/api/frank-cost-rebuild":
+                if set(params) != {"run_id"}:
+                    raise ValueError
+                return self._json(self.state.wallet_cost.get(**params))
+            if set(params) - {"run_id", "mint", "limit", "cursor"}:
+                raise ValueError
+            limit = params.pop("limit", "100")
+            if not re.fullmatch(r"[0-9]{1,4}", limit):
+                raise ValueError
+            return self._json(self.state.wallet_cost.page(**params, limit=int(limit)))
+        except CostStoreError as exc:
+            return self._json({"error": exc.code}, exc.http_status)
+        except (ValueError, TypeError, UnicodeError, RecursionError):
+            return self._json({"error": "INVALID_COST_QUERY"}, 400)
+
     def _history_coverage_get(self):
         if not self._research_origin():
             return self._json({"error": "SAME_ORIGIN_READ_REQUIRED"}, 403)
@@ -1420,6 +1448,10 @@ class Handler(BaseHTTPRequestHandler):
                 if not required <= set(body) <= required | {"supersedes_manifest_id"}:
                     raise ValueError("INVALID_FIELDS")
                 return self._json(self.state.evidence_manifests.create(**body),201)
+            if path == "/api/frank-cost-rebuild":
+                if set(body) != {"input_manifest_id", "idempotency_key"}:
+                    raise ValueError("INVALID_FIELDS")
+                return self._json(self.state.wallet_cost.create(**body), 201)
             if path=="/api/frank-balance-refresh/resume":
                 if set(body)!={"refresh_id","idempotency_key"}:raise ValueError("INVALID_FIELDS")
                 if not isinstance(body["idempotency_key"],str) or not 1<=len(body["idempotency_key"])<=256 or any(ord(c)<32 for c in body["idempotency_key"]):raise ValueError("INVALID_IDEMPOTENCY_KEY")
@@ -1435,7 +1467,7 @@ class Handler(BaseHTTPRequestHandler):
                     elif "mint" in body:raise ValueError("INVALID_FIELDS")
                 job=self.state.research.submit(kind,body)
             return self._json(job,202)
-        except ManifestError as exc:
+        except (ManifestError, CostStoreError) as exc:
             return self._json({"error":exc.code},exc.http_status)
         except (ValueError,TypeError,UnicodeError,RecursionError) as exc:
             reason=str(exc)
@@ -1484,6 +1516,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._watch_get(path)
         if path in {"/api/frank-evidence-manifests", "/api/frank-evidence-activity"}:
             return self._manifest_get(path)
+        if path in {"/api/frank-cost-basis", "/api/frank-cost-rebuild"}:
+            return self._wallet_cost_get(path)
         if path == "/api/frank-coverage":
             return self._history_coverage_get()
         if path == "/api/runtime":
@@ -1616,7 +1650,8 @@ class Handler(BaseHTTPRequestHandler):
         if not _content_type_is_json(self.headers.get("Content-Type")):
             return self._json({"error":"APPLICATION_JSON_REQUIRED"},415)
         path = urlparse(self.path).path
-        if path in {"/api/frank-balance-refresh","/api/frank-balance-refresh/resume","/api/frank-market-refresh","/api/frank-evidence-manifests"}:
+        if path in {"/api/frank-balance-refresh", "/api/frank-balance-refresh/resume", "/api/frank-market-refresh",
+                    "/api/frank-evidence-manifests", "/api/frank-cost-rebuild"}:
             if urlparse(self.path).query:
                 return self._json({"error":"INVALID_QUERY"},400)
             return self._research_post(path)

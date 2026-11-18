@@ -37,7 +37,11 @@
       ' 笔。已核实交易中，'+summary.reclassified+' 笔的重放分类与原索引不同。'+
       ' 已执行的代币转账指令 '+summary.executed_token_transfers+' 条、涉及钱包的 SOL 转账指令 '+
       summary.executed_native_transfers+' 条；失败交易中的转账尝试 '+summary.attempted_transfers+
-      ' 条。核实关联代币账户初始注资 '+summary.confirmed_initial_fundings+' 条。';
+      ' 条。核实关联代币账户初始注资 '+summary.confirmed_initial_fundings+' 条。'+
+      (['legacy_verified','confirmed_close_refunds','confirmed_wallet_exchanges'].every(key=>
+        Number.isSafeInteger(summary[key])&&summary[key]>=0)?
+        ' 旧归档核实 '+summary.legacy_verified+' 笔，确认账户关闭退款 '+summary.confirmed_close_refunds+
+        ' 笔，核实钱包边界单标的交换 '+summary.confirmed_wallet_exchanges+' 笔。':'');
   }
   async function list(cursor=null){
     if(busy)return;busy=true;const token=++epoch;controls();

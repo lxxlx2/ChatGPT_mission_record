@@ -233,6 +233,32 @@
       <details><summary>固定版本列表及来源</summary><pre id="frank-manifest-list-data"></pre></details>
       <details><summary>本页事实与原始交易腿</summary><pre id="frank-manifest-data"></pre></details>
     </details>
+    <details class="panel" id="frank-wallet-cost">
+      <summary>Frank 钱包 FIFO 成本与盈亏</summary>
+      <p>按固定钱包事实和原始计价币种重建成本。参考估值使用本机已捕获的行情。</p>
+      <div class="frank-watch-controls">
+        <label for="frank-cost-manifest">事实快照 ID</label>
+        <input id="frank-cost-manifest" type="text" autocomplete="off" spellcheck="false"/>
+        <button type="button" id="frank-cost-use-manifest">使用上方快照</button>
+        <button type="button" id="frank-cost-rebuild">重建 FIFO 账本</button>
+      </div>
+      <div class="frank-watch-controls">
+        <label for="frank-cost-run">账本 ID（留空读取最新）</label>
+        <input id="frank-cost-run" type="text" autocomplete="off" spellcheck="false"/>
+        <label for="frank-cost-mint">按 Mint 筛选（可选）</label>
+        <input id="frank-cost-mint" type="search" autocomplete="off" spellcheck="false"/>
+        <button type="button" id="frank-cost-read">读取账本</button>
+      </div>
+      <p id="frank-cost-status" role="status">请选择事实快照，或读取已建账本。</p>
+      <div id="frank-cost-summary"></div>
+      <div class="frank-watch-table-wrap" id="frank-cost-table" hidden>
+        <table class="frank-watch-table">
+          <thead><tr><th>Mint</th><th>索引余额与成本覆盖</th><th>剩余原币成本</th><th>已实现盈亏</th><th>参考估值与未实现盈亏</th><th>批次与资金变动</th></tr></thead>
+          <tbody id="frank-cost-rows"></tbody>
+        </table>
+      </div>
+      <button type="button" id="frank-cost-next" disabled>下一页成本</button>
+    </details>
     <details class="panel" id="frank-history-coverage">
       <summary>Frank 钱包历史覆盖</summary>
       <label for="frank-coverage-window">时间范围</label>
@@ -380,5 +406,6 @@
   <script src="/static/frank_watch_metadata.js?v=watch-metadata-v1"></script>
   <script src="/static/frank_evidence_manifests.js?v=manifest-v2"></script>
   <script src="/static/frank_history_coverage.js?v=1"></script>
+  <script src="/static/frank_wallet_cost.js?v=1"></script>
 </body>
 </html>

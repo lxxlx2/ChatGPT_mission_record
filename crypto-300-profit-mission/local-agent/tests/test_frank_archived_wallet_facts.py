@@ -137,6 +137,53 @@ def test_unrelated_program_cannot_establish_account_ownership(sample):
     assert result["fact"] is None and result["status"] == "UNRESOLVED"
 
 
+def test_legacy_archive_only_follows_explicit_root_when_current_is_missing(sample, tmp_path):
+    archive, row, tx = sample
+    publish(*sample)
+    legacy = tmp_path / "legacy"
+    legacy.mkdir()
+    original = archive / (SIGNATURE + ".json.gz")
+    original.rename(legacy / original.name)
+    result = read_archived_fact(archive, row, legacy_archive_root=legacy)
+    assert result["status"] == "VERIFIED" and result["archive_tier"] == "LEGACY"
+    assert str(legacy) not in json.dumps(result)
+    assert read_archived_fact(archive, {**row, "raw_reference": str(legacy / original.name)})["fact"] is None
+    altered = {**tx, "slot": 99}
+    publish(archive, dict(row), altered)
+    assert read_archived_fact(archive, row, legacy_archive_root=legacy)["reason"] == "ARCHIVE_HASH_MISMATCH"
+
+
+def test_explicit_token2022_fee_and_net_keep_raw_amounts(sample):
+    archive, row, tx = sample
+    parsed = tx["transaction"]["message"]["instructions"][2]["parsed"]
+    parsed["type"] = "transferCheckedWithFee"
+    parsed["info"]["feeAmount"] = {"amount": "5", "decimals": 2}
+    publish(*sample)
+    transfers = read_archived_fact(archive, row)["fact"]["token_transfers"]
+    assert len(transfers) == 1
+    assert (transfers[0]["raw_amount"], transfers[0]["explicit_transfer_fee_raw"],
+            transfers[0]["explicit_destination_amount_raw"]) == ("505", "5", "500")
+
+
+@pytest.mark.parametrize("other_flow", [False, True])
+def test_close_refund_requires_isolated_prebalance(sample, other_flow):
+    archive, row, tx = sample
+    account = tx["transaction"]["message"]["accountKeys"][2]["pubkey"]
+    message = tx["transaction"]["message"]
+    message["instructions"] = [ix(TOKEN_2022, "closeAccount", account=account,
+                                  destination=WALLET, owner=WALLET)]
+    if other_flow:
+        message["instructions"].insert(0, ix(SYSTEM, "transfer", source=OTHER, destination=account,
+                                             lamports=12))
+    tx["meta"].update(preBalances=[90000, 15000, 2039280], postBalances=[85000, 2054280, 0],
+                      innerInstructions=[])
+    publish(*sample)
+    result = read_archived_fact(archive, row)["fact"]
+    refund = result["account_close_refunds"][0]
+    assert refund["amount_raw"] == (None if other_flow else "2039280")
+    assert result["rent"]["wallet_refunded_lamports"] is None
+
+
 def test_enriched_facts_keep_the_v2_envelope_and_frozen_read(sample, tmp_path):
     archive, row, _ = sample
     publish(*sample)
