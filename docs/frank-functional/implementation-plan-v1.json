@@ -257,7 +257,7 @@
       "acceptance_scenarios": [
         "E07"
       ],
-      "state": "TODO",
+      "state": "LOCAL_FUNCTION_PASS_PERSISTED_RISK_AND_FIXTURE_QUOTE_CHROME_VERIFIED",
       "interfaces": [
         "API15",
         "API16",
@@ -270,7 +270,10 @@
         "FN10",
         "FN11"
       ],
-      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
+      "source_sha": "0fd546b089b7526046308c5aa9ac60057e0100fd",
+      "evidence": "W08_W09_RISK_AND_IDENTITY_ACCEPTANCE_20261119.md",
+      "remaining": "Live Jupiter availability remains unverified. The browser exercised explicit raw amounts, response binding and real TTL with an offline transport."
     },
     {
       "id": "W09",
@@ -283,7 +286,7 @@
         "E09",
         "E10"
       ],
-      "state": "TODO",
+      "state": "PARTIAL_MINT_IDENTITY_AND_AUTHORITY_VERIFIED",
       "interfaces": [
         "API22",
         "API24"
@@ -291,7 +294,10 @@
       "functions": [
         "FN12"
       ],
-      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
+      "source_sha": "0fd546b089b7526046308c5aa9ac60057e0100fd",
+      "evidence": "W08_W09_RISK_AND_IDENTITY_ACCEPTANCE_20261119.md",
+      "remaining": "Reconcile program-wide holders, special roles, denominators and every candidate pool across the protocol matrix."
     },
     {
       "id": "W10",
@@ -1080,7 +1086,8 @@
         "FN10",
         "FN11"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PASS_EXISTING_RULE_SOURCE_UNCHANGED_WITH_OFFLINE_REGRESSION",
+      "latest_increment_evidence": "W08_W09_RISK_AND_IDENTITY_ACCEPTANCE_20261119.md"
     },
     {
       "id": "INT02",
@@ -1112,7 +1119,8 @@
         "FN10",
         "FN11"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PASS_NO_DEFAULT_AMOUNT_OR_IMPLICIT_QUOTE",
+      "latest_increment_evidence": "W08_W09_RISK_AND_IDENTITY_ACCEPTANCE_20261119.md"
     },
     {
       "id": "INT03",
@@ -1144,7 +1152,8 @@
         "FN10",
         "FN11"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PASS_SOURCE_HISTORY_AND_ELIGIBILITY_LOCAL_VIEW",
+      "latest_increment_evidence": "W08_W09_RISK_AND_IDENTITY_ACCEPTANCE_20261119.md"
     },
     {
       "id": "INT04",
@@ -1206,7 +1215,8 @@
         "FN10",
         "FN11"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PASS_SOURCE_SCOPED_RISK_TRANSITIONS_FAKE_CLOCK",
+      "latest_increment_evidence": "W08_W09_RISK_AND_IDENTITY_ACCEPTANCE_20261119.md"
     },
     {
       "id": "INT06",
@@ -1236,7 +1246,8 @@
         "FN10",
         "FN11"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PASS_DURABLE_LOCAL_DEDUP_RECOVERY_CHROME",
+      "latest_increment_evidence": "W08_W09_RISK_AND_IDENTITY_ACCEPTANCE_20261119.md"
     },
     {
       "id": "INT07",
@@ -1268,7 +1279,8 @@
         "FN10",
         "FN11"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PASS_EXPLICIT_QUOTE_AND_EXPIRY_WITH_FIXTURE_TRANSPORT",
+      "latest_increment_evidence": "W08_W09_RISK_AND_IDENTITY_ACCEPTANCE_20261119.md"
     },
     {
       "id": "CA01",
@@ -1296,7 +1308,8 @@
       "functions": [
         "FN12"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_FINALIZED_MINT_TYPE_AND_OWNER_VERIFIED",
+      "latest_increment_evidence": "W08_W09_RISK_AND_IDENTITY_ACCEPTANCE_20261119.md"
     },
     {
       "id": "CA02",
@@ -1322,7 +1335,8 @@
       "functions": [
         "FN12"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_MINT_AUTHORITY_AND_TOKEN_2022_METADATA_PROVEN",
+      "latest_increment_evidence": "W08_W09_RISK_AND_IDENTITY_ACCEPTANCE_20261119.md"
     },
     {
       "id": "CA03",
@@ -2289,17 +2303,17 @@
     },
     "reference": "INDEXED_ACTIVITY_ACCEPTANCE_20261115.md"
   },
-  "current_next": "W08: durable amount-independent risk updates and quotes. W09–W14 remain open. W06 and W07 are installed, with chain history and live valuation coverage explicitly scoped.",
+  "current_next": "W09: cross-check holders, beneficial owners, exclusion denominators and full pool discovery. W10/W11/W12 follow their evidence dependencies. W13 can proceed in isolation using W08 records. W14 remains open.",
   "latest_increment": {
     "work_packages": [
-      "W06",
-      "W07"
+      "W08",
+      "W09"
     ],
-    "state": "INSTALLED_CHROME_VERIFIED_W06_W07_LOCAL_FUNCTION_PASS",
-    "source_sha": "8575e78b726e4076233409fd565b65f9be2199d9",
-    "python_related_passed": 543,
-    "node_related_passed": 246,
-    "evidence": "W06_W07_FIFO_ACCEPTANCE_20261118.md"
+    "state": "INSTALLED_CHROME_W08_LOCAL_PASS_W09_IDENTITY_PARTIAL",
+    "source_sha": "0fd546b089b7526046308c5aa9ac60057e0100fd",
+    "python_related_passed": 646,
+    "node_related_passed": 248,
+    "evidence": "W08_W09_RISK_AND_IDENTITY_ACCEPTANCE_20261119.md"
   },
   "status_reconciliation": {
     "date": "2026-11-17",

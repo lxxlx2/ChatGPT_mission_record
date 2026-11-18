@@ -359,7 +359,7 @@
       "id": "API15",
       "method": "GET",
       "path": "/api/frank-intelligence",
-      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
       "request": {},
       "response": "legacy envelope + rows using available captured market refs; local pure preview, no implicit fetch or update write; comparable USDC reference requires fresh target USD and USDC/USD observations; both source refs retained",
       "side_effects": "NONE",
@@ -379,12 +379,12 @@
       "id": "API16",
       "method": "POST",
       "path": "/api/frank-intelligence-refresh",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
       "request": {
         "idempotency_key": "required",
         "input_manifest_id": "optional; default captures current fixed local evidence refs"
       },
-      "response": "202 Job; facts/position/market refs fixed at run creation, no fresh quote or automatic market fetch",
+      "response": "201 COMPLETE. Synchronous durable analysis tied to a facts manifest, captured position and market references. Idempotent. Uses local observations only.",
       "side_effects": "WRITE_DERIVED_CONTROL_ROOT_ONLY",
       "work_packages": [
         "W08"
@@ -401,11 +401,11 @@
       "id": "API17",
       "method": "GET",
       "path": "/api/frank-intelligence-refresh",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
       "request": {
         "run_id": "required"
       },
-      "response": "common Job with analysis version/input refs and created vs deduped updates",
+      "response": "Saved completed analysis run with fact cutoff, analysis time, evidence references, version and created versus deduplicated updates.",
       "side_effects": "NONE",
       "work_packages": [
         "W08"
@@ -422,7 +422,7 @@
       "id": "API18",
       "method": "GET",
       "path": "/api/frank-intelligence-updates",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
       "request": {
         "mint": "optional",
         "kind": "optional registered risk kind",
@@ -446,14 +446,14 @@
       "id": "API19",
       "method": "POST",
       "path": "/api/frank-quote",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_INSTALLED_OFFLINE_TRANSPORT_CHROME_VERIFIED",
       "request": {
         "mint": "required valid pubkey",
         "input_mint": "required valid pubkey",
         "input_amount_raw": "required positive integer string, explicit user value",
         "slippage_bps": "required integer; provider-supported range validated"
       },
-      "response": "quote_id/input/route/priceImpact/time/expires/source refs; no transaction payload or signing",
+      "response": "Bound ExactIn quote or NO_ROUTE with source and response digests, raw input and output, projected route and 30-second reference TTL. No transaction or wallet required.",
       "side_effects": "READ_EXISTING_QUOTE_ONLY_NO_SIGN_OR_SEND",
       "work_packages": [
         "W08"
@@ -678,7 +678,7 @@
       "id": "API29",
       "method": "GET",
       "path": "/api/follow-opportunities",
-      "implementation_state": "EXISTING_COMPATIBILITY",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
       "request": {},
       "response": "existing source recent/history/eligibility split, no quote or source BUY suppression",
       "side_effects": "NONE",
@@ -933,12 +933,12 @@
   ],
   "current_increment": {
     "work_packages": [
-      "W06",
-      "W07"
+      "W08",
+      "W09"
     ],
-    "state": "LOCAL_ARCHIVE_AND_FIFO_CHROME_VERIFIED",
-    "source_sha": "8575e78b726e4076233409fd565b65f9be2199d9",
-    "evidence": "W06_W07_FIFO_ACCEPTANCE_20261118.md",
-    "design_adjustment": "Existing API30/32 surfaces preserve old facts and archive scopes. API12 rebuilds synchronously and API13/14 read frozen results. Captured valuation leaves unmatched or stale prices and whole PnL unknown."
+    "state": "CHROME_W08_LOCAL_AND_W09_IDENTITY_VERIFIED",
+    "source_sha": "0fd546b089b7526046308c5aa9ac60057e0100fd",
+    "evidence": "W08_W09_RISK_AND_IDENTITY_ACCEPTANCE_20261119.md",
+    "design_adjustment": "API16 synchronously persists one completed local analysis. API19 explicitly requotes the user input. W09 refuses non-mint and malformed finalized account observations."
   }
 }
