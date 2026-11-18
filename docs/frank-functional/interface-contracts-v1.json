@@ -66,7 +66,7 @@
       "id": "API02",
       "method": "GET",
       "path": "/api/frank-coverage",
-      "implementation_state": "IMPLEMENTED_PENDING_FIXED_ACCEPTANCE",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
       "request": {
         "days": "1|7|30|all, default all"
       },
@@ -77,11 +77,10 @@
         "W06"
       ],
       "errors": {
-        "400": "invalid/unknown/duplicate input",
-        "403": "exact same-origin or Host required for new sensitive/write routes",
-        "404": "entity not found",
-        "409": "revision/idempotency/source binding changed",
-        "503": "source unavailable or throttled; no invented zero"
+        "400": "invalid range or unknown/duplicate query field",
+        "403": "same-origin read guard required",
+        "421": "loopback Host required",
+        "503": "local source unavailable"
       }
     },
     {
@@ -934,11 +933,11 @@
   ],
   "current_increment": {
     "work_packages": [
-      "W05",
-      "W06 foundation"
+      "W06"
     ],
     "state": "LOCAL_INSTALLED_CHROME_VERIFIED;W06_OVERALL_PARTIAL",
-    "source_sha": "166f3abde36fd9d6f0a09b447169a00e2e3f7ab0",
-    "design_adjustment": "API30 synchronous201 activity/facts capture; positions/market deferred; API33 read-only audit; no total row cap"
+    "source_sha": "4ceeb23e96bc63bf5b7537e590b5e10238af90c6",
+    "evidence": "W06_HISTORY_FACTS_ACCEPTANCE_20261118.md",
+    "design_adjustment": "API02 reads the selected local index window. API30 accepts an optional prior v2 facts manifest and preserves fact IDs for unchanged content. API32 serves versioned facts with v1 compatibility. Rent and route fee attribution can remain unresolved."
   }
 }
