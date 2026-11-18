@@ -198,7 +198,7 @@
         "E01",
         "E05"
       ],
-      "state": "PARTIAL_ARCHIVE_REPLAY_AND_HISTORY_COVERAGE_INSTALLED",
+      "state": "LOCAL_FUNCTION_PASS_SOURCE_COVERAGE_BOUNDED",
       "interfaces": [
         "API01",
         "API02",
@@ -214,9 +214,9 @@
         "FN14"
       ],
       "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
-      "remaining": "Bind known legacy archives and historical backfill to source records. Prove protocol-level swap pairing, Token-2022 special transfers, closing refunds, rent and route-fee attribution where original evidence supports them.",
-      "evidence": "W06_ARCHIVED_FACTS_ACCEPTANCE_20261118.md",
-      "source_sha": "00f104dad26f5a2d232251f779b7cd6f255e548c",
+      "remaining": "Complete chain history and per-route fee/rent allocation remain evidence-dependent. Source-backed behavior and recovery are covered by the local acceptance.",
+      "evidence": "W06_W07_FIFO_ACCEPTANCE_20261118.md",
+      "source_sha": "8575e78b726e4076233409fd565b65f9be2199d9",
       "foundation_evidence": "WATCH_MANIFEST_ACCEPTANCE_20261117.md"
     },
     {
@@ -230,7 +230,7 @@
       "acceptance_scenarios": [
         "E06"
       ],
-      "state": "TODO",
+      "state": "LOCAL_FUNCTION_PASS_VALUATION_COVERAGE_BOUNDED",
       "interfaces": [
         "API06",
         "API12",
@@ -241,7 +241,10 @@
       "functions": [
         "FN09"
       ],
-      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
+      "source_sha": "8575e78b726e4076233409fd565b65f9be2199d9",
+      "evidence": "W06_W07_FIFO_ACCEPTANCE_20261118.md",
+      "remaining": "Whole-wallet value/PnL and independent public-platform parity remain unverified. Local captured markets were stale or absent during Chrome acceptance."
     },
     {
       "id": "W08",
@@ -478,7 +481,8 @@
         "FN03",
         "FN14"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PASS_ISOLATED_DURABLE_CURSOR_GAP_DUPLICATE_AND_RESTART",
+      "latest_increment_evidence": "W06_W07_FIFO_ACCEPTANCE_20261118.md"
     },
     {
       "id": "SRC03",
@@ -543,8 +547,8 @@
         "FN03",
         "FN14"
       ],
-      "evidence_state": "PARTIAL_VERIFIED_ARCHIVE_REPLAY_WITH_ORIGINAL_CLASS_PRESERVED",
-      "latest_increment_evidence": "W06_ARCHIVED_FACTS_ACCEPTANCE_20261118.md"
+      "evidence_state": "PASS_BOUND_ARCHIVE_CLASSIFICATION_AND_UNRESOLVED_ROUTE_DISPLAY",
+      "latest_increment_evidence": "W06_W07_FIFO_ACCEPTANCE_20261118.md"
     },
     {
       "id": "SRC05",
@@ -578,8 +582,8 @@
         "FN03",
         "FN14"
       ],
-      "evidence_state": "PARTIAL_GROSS_INSTRUCTIONS_AND_FACT_REVISIONS_VERIFIED_PROTOCOL_PAIRING_OPEN",
-      "latest_increment_evidence": "W06_ARCHIVED_FACTS_ACCEPTANCE_20261118.md"
+      "evidence_state": "PASS_LOCAL_ORIGINAL_INSTRUCTIONS_VERSIONED_EXCHANGES_AND_CORRECTION",
+      "latest_increment_evidence": "W06_W07_FIFO_ACCEPTANCE_20261118.md"
     },
     {
       "id": "SRC06",
@@ -613,8 +617,8 @@
         "FN03",
         "FN14"
       ],
-      "evidence_state": "PARTIAL_NATIVE_FEE_AND_INITIAL_ACCOUNT_FUNDING_VERIFIED_RENT_AND_ROUTE_ALLOCATION_OPEN",
-      "latest_increment_evidence": "W06_ARCHIVED_FACTS_ACCEPTANCE_20261118.md"
+      "evidence_state": "PASS_EXACT_NATIVE_FEES_AND_PROVEN_FUNDING_REFUNDS_UNALLOCATED_RENT_UNKNOWN",
+      "latest_increment_evidence": "W06_W07_FIFO_ACCEPTANCE_20261118.md"
     },
     {
       "id": "ACT01",
@@ -1012,7 +1016,8 @@
       "functions": [
         "FN09"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PASS_NATIVE_FIFO_SOURCE_BOUND_PARTIAL_PNL_CHROME_AND_MAC_VERIFIED",
+      "latest_increment_evidence": "W06_W07_FIFO_ACCEPTANCE_20261118.md"
     },
     {
       "id": "POS08",
@@ -2284,16 +2289,17 @@
     },
     "reference": "INDEXED_ACTIVITY_ACCEPTANCE_20261115.md"
   },
-  "current_next": "W06: finish protocol-level evidence and source-backed backfill with cursor recovery. W07 cost ledger should consume only source-confirmed units and carry unresolved amounts. W08–W14 remain open.",
+  "current_next": "W08: durable amount-independent risk updates and quotes. W09–W14 remain open. W06 and W07 are installed, with chain history and live valuation coverage explicitly scoped.",
   "latest_increment": {
     "work_packages": [
-      "W06"
+      "W06",
+      "W07"
     ],
-    "state": "ARCHIVE_REPLAY_INSTALLED_AND_CHROME_VERIFIED_W06_PARTIAL",
-    "source_sha": "00f104dad26f5a2d232251f779b7cd6f255e548c",
-    "python_related_passed": 444,
-    "node_related_passed": 239,
-    "evidence": "W06_ARCHIVED_FACTS_ACCEPTANCE_20261118.md"
+    "state": "INSTALLED_CHROME_VERIFIED_W06_W07_LOCAL_FUNCTION_PASS",
+    "source_sha": "8575e78b726e4076233409fd565b65f9be2199d9",
+    "python_related_passed": 543,
+    "node_related_passed": 246,
+    "evidence": "W06_W07_FIFO_ACCEPTANCE_20261118.md"
   },
   "status_reconciliation": {
     "date": "2026-11-17",

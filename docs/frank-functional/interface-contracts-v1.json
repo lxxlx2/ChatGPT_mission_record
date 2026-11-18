@@ -292,12 +292,12 @@
       "id": "API12",
       "method": "POST",
       "path": "/api/frank-cost-rebuild",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
       "request": {
         "input_manifest_id": "required fixed fact set reference",
         "idempotency_key": "required"
       },
-      "response": "202 Job; FIFO/original currency accounting version; no source ledger mutation",
+      "response": "201 COMPLETE. Synchronous materialization of an immutable FIFO run keyed by facts manifest and accounting version. Only local derived storage is written.",
       "side_effects": "WRITE_DERIVED_CONTROL_ROOT_ONLY",
       "work_packages": [
         "W07"
@@ -314,11 +314,11 @@
       "id": "API13",
       "method": "GET",
       "path": "/api/frank-cost-rebuild",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
       "request": {
         "run_id": "required"
       },
-      "response": "common Job and cost run input manifest/accounting version",
+      "response": "Completed run metadata including immutable input hash, accounting version, data cutoff, valuation time and coverage.",
       "side_effects": "NONE",
       "work_packages": [
         "W07"
@@ -335,14 +335,14 @@
       "id": "API14",
       "method": "GET",
       "path": "/api/frank-cost-basis",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
       "request": {
         "mint": "optional",
         "run_id": "optional latest with explicit input age",
         "limit": "optional1..1000",
         "cursor": "optional run-bound"
       },
-      "response": "lot/movement/summary page; known and unknown quantity, original currency costs, fees/rent, covered PnL, whole PnL null if uncovered",
+      "response": "Immutable run-bound Mint pages with FIFO lots, movements, exact original-currency totals, network fees, account funding and closure refunds. Covered PnL includes only comparable components. Whole wallet totals stay unknown where coverage is unproven.",
       "side_effects": "NONE",
       "work_packages": [
         "W07"
@@ -703,7 +703,7 @@
         "idempotency_key": "required",
         "supersedes_manifest_id": "optional prior v2 facts manifest of the same source. Bound to the idempotency key."
       },
-      "response": "201 COMPLETE. activity v1 and facts v2 retain their envelopes. facts v2 includes optional parent, revision counts and counts.archive_replay when the configured local archive is checked. Publication is atomic and the raw tables remain private.",
+      "response": "201 COMPLETE. Facts v2 retains its envelope. counts.archive_replay includes configured legacy coverage, archived instructions, source-bound exchanges and closing refunds.",
       "side_effects": "WRITE_DERIVED_CONTROL_ROOT_ONLY",
       "work_packages": [
         "W02",
@@ -933,11 +933,12 @@
   ],
   "current_increment": {
     "work_packages": [
-      "W06"
+      "W06",
+      "W07"
     ],
-    "state": "LOCAL_ARCHIVE_REPLAY_CHROME_VERIFIED_W06_PARTIAL",
-    "source_sha": "00f104dad26f5a2d232251f779b7cd6f255e548c",
-    "evidence": "W06_ARCHIVED_FACTS_ACCEPTANCE_20261118.md",
-    "design_adjustment": "API30 stores covered archive totals inside the existing v2 counts object. Each archived_replay result includes a safe source status and verified facts when available. Prior v2 facts remain valid parents. API32 serves frozen data. Initial account funding and rent attribution remain separate."
+    "state": "LOCAL_ARCHIVE_AND_FIFO_CHROME_VERIFIED",
+    "source_sha": "8575e78b726e4076233409fd565b65f9be2199d9",
+    "evidence": "W06_W07_FIFO_ACCEPTANCE_20261118.md",
+    "design_adjustment": "Existing API30/32 surfaces preserve old facts and archive scopes. API12 rebuilds synchronously and API13/14 read frozen results. Captured valuation leaves unmatched or stale prices and whole PnL unknown."
   }
 }
