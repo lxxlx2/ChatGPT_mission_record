@@ -45,6 +45,9 @@ from .watch_metadata import WatchMetadataStore, WatchMetadataError
 from .evidence_manifests import EvidenceManifests, ManifestError
 from .wallet_coverage import CoverageError, coverage_for_wallet
 from .wallet_cost_store import WalletCostStore, CostStoreError
+from .frank_risk_inputs import build_risk_inputs
+from .frank_risk_runs import FrankRiskRuns, RiskRunError
+from .frank_quote import ExplicitJupiterQuoteClient, FrankQuoteService, QuoteError
 
 
 def _host_is_loopback(host: str, port: int) -> bool:
@@ -885,6 +888,21 @@ class DashboardState:
         )
         self.wallet_cost = WalletCostStore(self.control_root, self.evidence_manifests,
                                           self.research.market_rows, code_sha=code_sha)
+        self.risk_runs = FrankRiskRuns(self.control_root, code_sha=code_sha)
+        self.frank_quote = FrankQuoteService(ExplicitJupiterQuoteClient(None))
+
+    def risk_input(self, manifest_id, request_key):
+        if manifest_id is None:
+            key = "frank-risk:" + hashlib.sha256(request_key.encode()).hexdigest()
+            manifest_id = self.evidence_manifests.create("facts", key)["manifest_id"]
+        metadata, rows = self.evidence_manifests.cost_input(manifest_id)
+        balances = self.research.latest("balance")
+        if (not balances or balances.get("status") != "COMPLETE_WITHIN_SCOPE"
+                or balances.get("wallet") != self.research.wallet
+                or balances.get("source_binding") != self.research.binding):
+            balances = None
+        return build_risk_inputs(metadata, rows, position_snapshot=balances,
+                                 market=self.research.market_rows(), as_of=time.time())
 
     def _control_query(self, sql: str, params=()):
         if not self.control_db.is_file():
@@ -1428,6 +1446,29 @@ class Handler(BaseHTTPRequestHandler):
         except (OSError,sqlite3.Error):
             return self._json({"error":"WATCH_METADATA_UNAVAILABLE"},503)
 
+    def _risk_get(self, path):
+        if not self._research_origin():
+            return self._json({"error": "SAME_ORIGIN_READ_REQUIRED"}, 403)
+        try:
+            query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=4)
+            if any(len(values) != 1 for values in query.values()):
+                raise ValueError
+            params = {key: values[0] for key, values in query.items()}
+            if path == "/api/frank-intelligence-refresh":
+                if set(params) != {"run_id"}:
+                    raise ValueError
+                return self._json(self.state.risk_runs.get(params["run_id"]))
+            if set(params) - {"mint", "kind", "limit", "cursor"}:
+                raise ValueError
+            limit = params.pop("limit", "100")
+            if not re.fullmatch(r"[0-9]{1,4}", limit):
+                raise ValueError
+            return self._json(self.state.risk_runs.page(**params, limit=int(limit)))
+        except RiskRunError as exc:
+            return self._json({"error": exc.code}, exc.http_status)
+        except (ValueError, TypeError, UnicodeError, RecursionError):
+            return self._json({"error": "INVALID_RISK_QUERY"}, 400)
+
     def _research_post(self, path):
         if not self._research_origin(write=True):
             return self._json({"error":"EXACT_SAME_ORIGIN_REQUIRED"},403)
@@ -1452,6 +1493,14 @@ class Handler(BaseHTTPRequestHandler):
                 if set(body) != {"input_manifest_id", "idempotency_key"}:
                     raise ValueError("INVALID_FIELDS")
                 return self._json(self.state.wallet_cost.create(**body), 201)
+            if path == "/api/frank-intelligence-refresh":
+                if "idempotency_key" not in body or set(body) - {"idempotency_key", "input_manifest_id"}:
+                    raise ValueError("INVALID_FIELDS")
+                key = body["idempotency_key"]
+                return self._json(self.state.risk_runs.create(
+                    **body, load_inputs=lambda manifest_id: self.state.risk_input(manifest_id, key)), 201)
+            if path == "/api/frank-quote":
+                return self._json(self.state.frank_quote.create(body))
             if path=="/api/frank-balance-refresh/resume":
                 if set(body)!={"refresh_id","idempotency_key"}:raise ValueError("INVALID_FIELDS")
                 if not isinstance(body["idempotency_key"],str) or not 1<=len(body["idempotency_key"])<=256 or any(ord(c)<32 for c in body["idempotency_key"]):raise ValueError("INVALID_IDEMPOTENCY_KEY")
@@ -1467,7 +1516,7 @@ class Handler(BaseHTTPRequestHandler):
                     elif "mint" in body:raise ValueError("INVALID_FIELDS")
                 job=self.state.research.submit(kind,body)
             return self._json(job,202)
-        except (ManifestError, CostStoreError) as exc:
+        except (ManifestError, CostStoreError, RiskRunError, QuoteError) as exc:
             return self._json({"error":exc.code},exc.http_status)
         except (ValueError,TypeError,UnicodeError,RecursionError) as exc:
             reason=str(exc)
@@ -1536,6 +1585,8 @@ class Handler(BaseHTTPRequestHandler):
             if urlparse(self.path).query:
                 return self._json({"error": "UNSUPPORTED_INTELLIGENCE_QUERY"}, 400)
             return self._json(self.state.frank_intelligence())
+        if path in {"/api/frank-intelligence-refresh", "/api/frank-intelligence-updates"}:
+            return self._risk_get(path)
         if path == "/api/frank-activity-watch":
             if urlparse(self.path).query:
                 return self._json({"error": "UNSUPPORTED_ACTIVITY_QUERY"}, 400)
@@ -1651,7 +1702,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._json({"error":"APPLICATION_JSON_REQUIRED"},415)
         path = urlparse(self.path).path
         if path in {"/api/frank-balance-refresh", "/api/frank-balance-refresh/resume", "/api/frank-market-refresh",
-                    "/api/frank-evidence-manifests", "/api/frank-cost-rebuild"}:
+                    "/api/frank-evidence-manifests", "/api/frank-cost-rebuild",
+                    "/api/frank-intelligence-refresh", "/api/frank-quote"}:
             if urlparse(self.path).query:
                 return self._json({"error":"INVALID_QUERY"},400)
             return self._research_post(path)

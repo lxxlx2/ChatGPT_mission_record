@@ -27,7 +27,7 @@ from ..market.sol_usd import USDC, WSOL
 from .market import DexScreenerMarketClient
 from .market_parity import attach_market_comparison
 from .historical_accounts import observe_token_accounts, HistoricalAccountEvidenceError, MAX_OBSERVATIONS
-from .holder_ranks import collect_mint_holder_ranks, valid_pubkey, valid_enumeration_query, HolderRankSourceError, MAX_RESPONSE_BYTES
+from .holder_ranks import collect_mint_holder_ranks, valid_pubkey, valid_enumeration_query, HolderRankSourceError, MAX_RESPONSE_BYTES, TOKEN_2022_PROGRAM
 
 DEFAULT_RPC = "https://api.mainnet.solana.com"
 DEFAULT_RPC_FALLBACKS = (
@@ -961,41 +961,55 @@ class WalletClusterAnalyzer:
         if program in TOKEN_PROGRAMS:return "TOKEN_ACCOUNT_OWNER_UNRESOLVED","RPC_TOKEN_PROGRAM_OWNED"
         return "PROGRAM_OWNED_UNRESOLVED","RPC_PROGRAM_OWNER:"+str(program)
 
-    @staticmethod
-    def _find_key(value,key):
-        if isinstance(value,dict):
-            if key in value:return True,value.get(key)
-            for child in value.values():
-                found,result=WalletClusterAnalyzer._find_key(child,key)
-                if found:return True,result
-        elif isinstance(value,list):
-            for child in value:
-                found,result=WalletClusterAnalyzer._find_key(child,key)
-                if found:return True,result
-        return False,None
-
     def token_profile(self):
+        source = "SOLANA_FINALIZED_JSON_RPC"
         try:
             result=self.rpc.call("getAccountInfo",[self.mint,{"encoding":"jsonParsed","commitment":"finalized"}],ttl=60)
         except RPCJobBudgetExceeded:
             raise
         except Exception as exc:
             return {"status":"UNAVAILABLE","source":"SOLANA_FINALIZED_JSON_RPC","reason":type(exc).__name__}
-        value=(result or {}).get("value") or {}
+        value = result.get("value") if isinstance(result, dict) else None
+        if not isinstance(value, dict):
+            return {"status": "UNAVAILABLE", "source": source, "reason": "MINT_ACCOUNT_UNAVAILABLE"}
         parsed=((value.get("data") or {}).get("parsed") or {}) if isinstance(value.get("data"),dict) else {}
-        info=parsed.get("info") or {}
-        program=value.get("owner")
-        if program=="TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb":token_program="SPL Token-2022"
-        elif program=="TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA":token_program="SPL Token"
-        else:token_program=program or "UNRESOLVED"
-        found_update,update_authority=self._find_key(parsed,"updateAuthority")
+        info = parsed.get("info") if isinstance(parsed, dict) else None
+        program = value.get("owner")
+        if (not isinstance(program, str) or program not in TOKEN_PROGRAMS
+                or value.get("executable") is not False or not isinstance(info, dict)
+                or parsed.get("type") != "mint"):
+            return {"status": "UNAVAILABLE", "source": source, "reason": "MINT_ACCOUNT_TYPE_UNVERIFIED"}
+        context = result.get("context")
+        slot = context.get("slot") if isinstance(context, dict) else None
+        decimals, supply = info.get("decimals"), info.get("supply")
+        authorities = ("mintAuthority", "freezeAuthority")
+        if (type(slot) is not int or slot <= 0 or type(decimals) is not int or not 0 <= decimals <= 255
+                or not isinstance(supply, str) or not re.fullmatch(r"(?:0|[1-9][0-9]{0,19})", supply)
+                or int(supply) >= 2**64 or info.get("isInitialized") is not True
+                or any(key not in info or (info[key] is not None and not valid_pubkey(info[key]))
+                       for key in authorities)):
+            return {"status": "UNAVAILABLE", "source": source, "reason": "MINT_STATE_UNVERIFIED"}
+        extensions = info.get("extensions", [])
+        if not isinstance(extensions, list):
+            return {"status": "UNAVAILABLE", "source": source, "reason": "MINT_EXTENSIONS_UNVERIFIED"}
+        if program==TOKEN_2022_PROGRAM:token_program="SPL Token-2022"
+        else:token_program="SPL Token"
+        found_update, update_authority = False, None
         extension_names=[];extension_details=[];token_metadata=None
-        for extension in info.get("extensions") or []:
-            if isinstance(extension,dict) and extension.get("extension")=="tokenMetadata" and isinstance(extension.get("state"),dict):
-                st=extension["state"]
-                if st.get("mint")==self.mint and isinstance(st.get("uri"),str) and len(st["uri"])<=512:
-                    token_metadata={"name":str(st.get("name") or "")[:64],"symbol":str(st.get("symbol") or "")[:32],
-                                    "uri":st["uri"].strip(),"update_authority":st.get("updateAuthority"),"mint":self.mint}
+        metadata_states = [
+            extension.get("state") for extension in extensions
+            if isinstance(extension, dict) and extension.get("extension") == "tokenMetadata"
+        ]
+        if program == TOKEN_2022_PROGRAM and len(metadata_states) == 1:
+            st = metadata_states[0]
+            if isinstance(st, dict) and st.get("mint") == self.mint:
+                authority = st.get("updateAuthority")
+                found_update = "updateAuthority" in st and (authority is None or valid_pubkey(authority))
+                update_authority = authority if found_update else None
+                if found_update and isinstance(st.get("uri"), str) and len(st["uri"]) <= 512:
+                    token_metadata = {"name": str(st.get("name") or "")[:64], "symbol": str(st.get("symbol") or "")[:32],
+                                      "uri": st["uri"].strip(), "update_authority": authority, "mint": self.mint}
+        for extension in extensions:
             if isinstance(extension,dict):
                 name=extension.get("extension") or extension.get("type")
                 if name:extension_names.append(str(name))
@@ -1017,7 +1031,8 @@ class WalletClusterAnalyzer:
         risk_flags.extend("ACTIVE_EXTENSION:"+row["name"]+":"+row["reason"] for row in active_extension_risks)
         return {
             "status":"OK",
-            "source":"SOLANA_FINALIZED_JSON_RPC",
+            "source":source,
+            "slot":slot,
             "token_program":token_program,
             "program_id":program,
             "mint_authority":info.get("mintAuthority"),

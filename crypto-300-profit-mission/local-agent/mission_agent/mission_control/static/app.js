@@ -726,7 +726,7 @@ function renderF01History(rows) {
   const box = $('f01-history-cards');
   if (!box) return;
   box.innerHTML = rows.map(x => `<div class="ended-row">
-    <div class="ended-main"><span class="badge no-buy">历史 / 资格未核实</span>
+    <div class="ended-main"><span class="badge no-buy">历史判断</span>
       <strong>${esc(translated(patternLabel,x.pattern,'来源待核'))}</strong>
       <span>最近动作：${esc(translated(sideLabel,x.latest_side,'未知'))} · ${esc(age(x.latest_at))}</span>
     </div>
@@ -1123,8 +1123,8 @@ async function refresh() {
       : '买类候选记录的 BUY 事件时间未知；';
     const staleCount = f01ExcludedReasonCount(f01, 'SOURCE_BUY_STALE_OR_UNVERIFIED');
     $('f01-source-status').textContent = view
-      ? `近期来源信号 ${recent.length} 条；过期或时间待核 ${staleCount} 条；${ageLabel}当前执行资格 0 条；来源窗口 10 分钟。`
-      : 'F01 来源资格暂不可核实或已过期；不展示可跟结论，完整历史候选保留。';
+      ? `近期来源信号 ${recent.length} 条；过期或时间待核 ${staleCount} 条；${ageLabel}来源窗口 10 分钟。`
+      : 'F01 来源暂不可核实或已过期，不展示可跟结论。';
     $('f01-timing-status').textContent = view
       ? recordF01PageObservation(view)
       : '当前来源核验失败；不产生延迟观测样本。本地首次入库时间尚无可靠数据。';
@@ -1159,7 +1159,7 @@ async function refresh() {
 function invalidateF01OnFailure(e) {
   const reason = esc(e?.message || 'UNKNOWN');
   $('f01-source-status').textContent =
-    'F01 来源资格暂不可核实（本轮读取失败，旧结果已作废）；不展示可跟结论，完整历史候选保留。';
+    'F01 来源暂不可核实（本轮读取失败，旧结果已作废），不展示可跟结论。';
   $('f01-timing-status').textContent = '本轮来源核验失败；不产生延迟观测样本。';
   $('candidates').innerHTML =
     `<div class="empty">近期来源信号已失效：本轮 F01 数据读取失败（${reason}），不得作为当前机会。</div>`;

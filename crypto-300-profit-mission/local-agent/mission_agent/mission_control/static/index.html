@@ -27,20 +27,20 @@
         <div><h2>Frank 近期来源信号（只读）</h2><p>仅展示近 10 分钟的本地已索引来源 BUY；不推断实时持仓或可执行价格。交易金额和买卖均由用户决定。</p></div>
         <span id="updated">未刷新</span>
       </div>
-      <p id="f01-source-status" class="frank-watch-footnote">F01 来源与执行资格尚未核实，不展示可跟结论。</p>
+      <p id="f01-source-status" class="frank-watch-footnote">近期来源信号尚未核实，不展示可跟结论。</p>
       <p id="f01-timing-status" class="frank-watch-footnote">本页尚无新事件观测样本；真实索引延迟尚未测量。</p>
       <div id="candidates" class="candidate-list"></div>
     </section>
     <details class="panel ended-panel" id="f01-history">
-      <summary><div><h2>历史和资格未核实候选 <span id="f01-history-count">0</span></h2>
-      <p>WAIT / NO_BUY 不是买入信号；含过期信号、卖出、模型仓位未核实及当前无法确认的候选，不作为跟单建议。</p></div><span class="summary-hint">展开</span></summary>
+      <summary><div><h2>Frank 历史判断 <span id="f01-history-count">0</span></h2>
+      <p>查看过去的模型判断及其依据。</p></div><span class="summary-hint">展开</span></summary>
       <p id="f01-history-cache-note" class="frank-watch-footnote"></p>
       <div id="f01-history-cards" class="candidate-list"></div>
     </details>
     <section class="panel" id="frank-intelligence-panel">
       <div class="panel-title">
         <div>
-          <h2>Frank 智能分析（只读）</h2>
+          <h2>Frank 智能分析（只读预览）</h2>
           <p>复用已有钱包信号与真实交易记录；风险提示依据已核实的动作。不预设交易金额、不发新通知，也不把历史价格或模型仓位当成实时链上事实。</p>
         </div>
         <span id="frank-intelligence-updated">等待本地数据</span>
@@ -54,6 +54,58 @@
       <div class="candidate-list" id="frank-intelligence-cards"></div>
       <p class="frank-watch-footnote">原 ACCUMULATION/MULTIPLE 提醒保持不变。本区所有风险词汇仅用于进一步调查；卖出可证明时才提示复核。当前市场参考价未采集就显示“无法核实”，不计算跟单盈亏或执行滑点。</p>
     </section>
+    <details class="panel" id="frank-risk-updates">
+      <summary>Frank 风险更新记录</summary>
+      <p>根据本机已有事实记录变化。可指定已有事实快照，或留空使用本机可用的事实与行情。</p>
+      <div class="frank-watch-controls">
+        <label for="frank-risk-manifest">事实快照 ID（可选）</label>
+        <input id="frank-risk-manifest" type="text" autocomplete="off" spellcheck="false">
+        <button class="link-btn" type="button" id="frank-risk-use-manifest">使用已选事实快照</button>
+        <button class="link-btn" type="button" id="frank-risk-refresh">计算并记录风险更新</button>
+      </div>
+      <div class="frank-watch-controls">
+        <label for="frank-risk-run">分析运行 ID</label>
+        <input id="frank-risk-run" type="text" autocomplete="off" spellcheck="false">
+        <button class="link-btn" type="button" id="frank-risk-read-run">读取这次分析</button>
+      </div>
+      <p id="frank-risk-run-status" role="status" aria-live="polite"></p>
+      <div id="frank-risk-run-details"></div>
+      <div class="frank-watch-controls">
+        <label for="frank-risk-mint">筛选 Mint（可选）</label>
+        <input id="frank-risk-mint" type="search" autocomplete="off" spellcheck="false">
+        <label for="frank-risk-kind">变化类型</label>
+        <select id="frank-risk-kind">
+          <option value="">全部</option>
+          <option value="SELL_OBSERVED">观察到卖出</option>
+          <option value="POSITION_REDUCTION_OBSERVED">观察到减仓</option>
+          <option value="REENTRY_OBSERVED">观察到重新买入</option>
+          <option value="PRICE_REFERENCE_STALE">参考行情过期</option>
+          <option value="ABOVE_VERIFIED_BUY_REFERENCE">参考价高于已核实买价</option>
+          <option value="EVIDENCE_GAP">证据缺口</option>
+        </select>
+        <button class="link-btn" type="button" id="frank-risk-read-updates">读取风险记录</button>
+      </div>
+      <p id="frank-risk-updates-status" role="status" aria-live="polite"></p>
+      <div id="frank-risk-rows" class="candidate-list"></div>
+      <button class="link-btn" type="button" id="frank-risk-next" disabled>下一页风险记录</button>
+    </details>
+    <details class="panel" id="frank-execution-quote">
+      <summary>执行资格与手动报价</summary>
+      <p id="f01-eligibility-status">执行资格尚未评估。手动报价只提供指定入参的临时路由参考。</p>
+      <div class="frank-watch-controls">
+        <label for="frank-quote-mint">输出 Mint</label>
+        <input id="frank-quote-mint" type="text" autocomplete="off" spellcheck="false">
+        <label for="frank-quote-input-mint">输入 Mint</label>
+        <input id="frank-quote-input-mint" type="text" autocomplete="off" spellcheck="false">
+        <label for="frank-quote-amount">输入金额（原始整数单位）</label>
+        <input id="frank-quote-amount" type="text" inputmode="numeric" autocomplete="off">
+        <label for="frank-quote-slippage">滑点（基点）</label>
+        <input id="frank-quote-slippage" type="text" inputmode="numeric" autocomplete="off">
+        <button class="link-btn" type="button" id="frank-quote-read">请求报价</button>
+      </div>
+      <p id="frank-quote-status" role="status" aria-live="polite"></p>
+      <div id="frank-quote-details"></div>
+    </details>
     <section class="panel" id="frank-activity-panel">
       <div class="panel-title">
         <div>
@@ -407,5 +459,6 @@
   <script src="/static/frank_evidence_manifests.js?v=manifest-v2"></script>
   <script src="/static/frank_history_coverage.js?v=1"></script>
   <script src="/static/frank_wallet_cost.js?v=1"></script>
+  <script src="/static/frank_risk_and_quote.js?v=1"></script>
 </body>
 </html>

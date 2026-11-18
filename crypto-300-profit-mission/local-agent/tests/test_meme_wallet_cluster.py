@@ -214,9 +214,10 @@ def token2022_profile(extension):
     class RPC:
         endpoint="test";calls=0;cache_hits=0
         def call(self,*args,**kwargs):
-            return {"value":{
+            return {"context":{"slot":100}, "value":{
+                "executable":False,
                 "owner":"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
-                "data":{"parsed":{"info":{
+                "data":{"parsed":{"type":"mint","info":{
                     "mintAuthority":None,"freezeAuthority":None,"decimals":6,
                     "supply":"1000000","isInitialized":True,"extensions":[extension],
                 }}},
