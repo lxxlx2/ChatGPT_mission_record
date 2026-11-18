@@ -1,20 +1,20 @@
 # Current TGE monitor state
-- last_run: 2026-11-18T14:57:22+07:00
-- schedule: Asia/Bangkok HH:00 hourly (this execution late at 14:57)
-- latest_final: airdrop-tge-monitor/runs/2026-11-18/145722-final.md
+- last_run: 2026-11-18T16:03:47+07:00
+- schedule: Asia/Bangkok HH:00 hourly (this execution at 16:03)
+- latest_final: airdrop-tge-monitor/runs/2026-11-18/160347-final.md
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 2
-- executed_shard: 2
+- scheduled_shard: 0
+- executed_shard: 0
 - candidate_count: 1
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
-- source_failures: unresolved; see final (not exhaustive)
+- source_failures: >=13 unresolved coverage gaps; see final
 - identity_failures: 0
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (unchanged)
 ## Last meaningful attempts
-- shard0: 2026-11-18 08:05:01 Asia/Bangkok (PARTIAL_ONLY)
+- shard0: 2026-11-18 16:03:47 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-18 13:03:40 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-18 14:57:22 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-18 11:58:12 Asia/Bangkok (PARTIAL_ONLY)
