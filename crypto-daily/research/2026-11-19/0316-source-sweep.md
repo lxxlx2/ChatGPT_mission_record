@@ -1,0 +1,22 @@
+# Crypto collector 2026-11-19 03:16 ICT — bounded actual source receipts
+stage: COLLECTOR_PARTIAL_SOURCE_GAPS
+checked_at: 2026-11-19T03:16:42+07:00 (automation supplied; web fetch within this invocation)
+policy_blobs: PIPELINE_CONTRACT=29ffbc1d32ca87a744d2990e8d55639ebb84a6f9; EDITORIAL_RULESET=2ed51528d230508ae4e0015762b1d60c9d72e299; ledger=58b824f0c31d69cb341b28d51dc465f61e0b14e1. Other required rule files fetched in same invocation. This collector is NOT QA and NOT a sent email.
+Gmail last-seven-day reconciliation: actual Sent readback IDs 1a1ec8b7f6b11ce8 (2026-11-18 formal manual recovery), 1a1ec885bb982d40 (Nov17 backfill), 1a1ec82b241d7040 (Nov16 backfill); all SENT. Therefore do not repeat Nov16-18 and do not claim those dates still undelivered. Nov18 body already covers Anthropic SEC S-1/A3 and the prior Kraken watch, so do not re-promote without fresh material version.
+source_receipts:
+- capital_flows BTC ETF: https://farside.co.uk/btc/ checked 2026-11-19 03:16 ICT; page lists Nov17 total -239.9 USDm, Nov18 all issuer cells dash, displayed total 0.0 placeholder NOT final zero. New trade-date 18th SOURCE_GAP.
+- capital_flows ETH ETF: https://farside.co.uk/eth/ checked same; Nov17 -29.1 USDm, Nov18 dash cells, placeholder 0.0 NOT final.
+- spot: https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT checked same; HTTP 451. ETH and SOL single-symbol URLs inaccessible. SOURCE_GAP; never invent 03:16 price. Binance announcements https://www.binance.com/en/support/announcement checked, Nov18 futures multiple TradFi USD-M perpetual contracts headline (details not independently opened).
+- onchain: https://arkm.com/research checked; most recent visible relevant item Nov12 VanEck European BTC ETN labels; no verified fresh TXID. https://www.lookonchain.com/feeds/78374 was older Oct23 4000 BTC; EXCLUDE stale, not proof of no new whale transactions.
+- third_party_ipo_access: https://support.kraken.com/in/articles/anthropic-ipo-access checked; official updated Nov12, describes Anthropic ANTx tokenized xStocks conditional IPO interest/pre-order, offer price plus 5% spread, allocation not guaranteed; geography/account eligibility dependent. This is CONFIRMED KRAKEN PRODUCT CLAIM, not direct equity or guaranteed underwriting allocation. Already within Nov18 report family; EXCLUDE_REPEAT absent new issuer/platform delta. No independently verified fresh 19th issuer update. No verified current window closure timestamp.
+- backend_framework_auth: https://github.com/laravel/framework/security/advisories checked; Nov11 two moderate signed URL advisories, Oct19 critical TokenGuard already old; no proven fresh high update.
+- web_runtime_rce: https://nodejs.org/zh-cn/blog/vulnerability/november-2026-security-releases checked; Nov11 high CVE-2026-123863/123864/123865 security release; check prior Sent before inclusion, no new Nov19 material version shown. English original not fetched: SOURCE_GAP.
+- policy: https://www.binance.com/en/support/announcement checked Nov18 new article list; regulatory original SEC source not fetched this round SOURCE_GAP.
+- security/web_pki_tls, ai_package_supply_chain, cloud_secrets_identity: no fresh original vendor advisory read in this bounded attempt; SOURCE_GAP, cannot claim cleared.
+- derivatives, tge, early_nft, macro, forward_catalysts, official_x: no sufficient primary original fetched; SOURCE_GAP. No authenticated Browser X session accessed, BROWSER_SESSION_UNAVAILABLE.
+candidate_decisions:
+1. family_key=etf:us:btc:daily, material_version=2026-11-17:-239.9m, source https://farside.co.uk/btc/, INCLUDE_FOR_NOV19_CONSIDERATION only if absent in actual Nov18 report; routine daily data, not global Top5 by itself.
+2. family_key=etf:us:eth:daily, material_version=2026-11-17:-29.1m, same gate.
+3. family_key=ipo:anthropic:kraken:antx, material_version=kraken_support_updated_2026-11-12, EXCLUDE_REPEAT (Nov18 formal already mentions related IPO access), evidence https://support.kraken.com/in/articles/anthropic-ipo-access.
+4. family_key=runtime:node:nov2026, material_version=official_nov11_patch, VERIFY_PREVIOUS_SENT; no demonstrated novel update.
+No email sent in collector window. No QA pass claimed. Keep original task unchanged.
