@@ -1,31 +1,31 @@
 # Current TGE monitor state
-- last_run: 2026-11-19T11:58:39+07:00
+- last_run: 2026-11-19T12:57:57+07:00
 - schedule: Asia/Bangkok HH:00 hourly
-- latest_final: airdrop-tge-monitor/runs/2026-11-19/115839-final.md
+- latest_final: airdrop-tge-monitor/runs/2026-11-19/125757-final.md
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 3
-- executed_shard: 3
-- candidate_count: 1 (StandX DUSD Nov2 VERIFYING; no verified new ACTION)
+- scheduled_shard: 0
+- executed_shard: 0
+- candidate_count: 1 (StandX DUSD VERIFYING, no event-bound issuer receipt)
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
-- source_failures: 12 (event-bound source gaps; latest_final)
+- source_failures: 4 confirmed event-specific gaps (StandX, HEEBOO, Concrete, Clay Shares); other source coverage PARTIAL_ONLY
 - identity_failures: 0
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (unchanged)
 
 ## Last meaningful attempts
-- shard0: 2026-11-19 04:00:43 Asia/Bangkok (PARTIAL_ONLY)
+- shard0: 2026-11-19 12:57:57 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-19 09:04:53 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-19 10:58:50 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-19 11:58:39 Asia/Bangkok (PARTIAL_ONLY)
 
 ## Coverage
-- urgent 5/5 bounded attempted, 0/5 full event-bound source receipts
-- shard3 9/9 bounded attempted, 0/9 full event-bound receipts
+- urgent 5\/5 bounded discovery attempted, 0\/5 full event-bound source receipts
+- shard0 10\/10 bounded discovery attempted, 0\/10 full event-bound receipts
 - readable partial official sources and exact source URLs: latest_final
 - no verified complete advancement; no actionable Gmail event
-- next scheduled shard: 0 (12:00)
+- next scheduled shard: 1 (13:00)
 
 ## Unresolved
 - StandX DUSD Nov2 claim VERIFYING/SOURCE_GAP; allocation UNKNOWN
