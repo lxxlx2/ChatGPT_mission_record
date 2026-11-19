@@ -310,7 +310,7 @@
         "E05",
         "E08"
       ],
-      "state": "TODO",
+      "state": "LOCAL_PASS_REAL_COVERAGE_PARTIAL",
       "interfaces": [
         "API22",
         "API24"
@@ -318,7 +318,8 @@
       "functions": [
         "FN12"
       ],
-      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "W11",
@@ -330,7 +331,7 @@
       "acceptance_scenarios": [
         "E11"
       ],
-      "state": "TODO",
+      "state": "LOCAL_PASS_REAL_COVERAGE_PARTIAL",
       "interfaces": [
         "API22",
         "API24",
@@ -339,7 +340,8 @@
       "functions": [
         "FN12"
       ],
-      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "W12",
@@ -354,7 +356,7 @@
         "E12",
         "E13"
       ],
-      "state": "TODO",
+      "state": "LOCAL_PASS_REAL_COVERAGE_PARTIAL",
       "interfaces": [
         "API22",
         "API23",
@@ -363,7 +365,8 @@
       "functions": [
         "FN12"
       ],
-      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "W13",
@@ -375,7 +378,7 @@
       "acceptance_scenarios": [
         "E14"
       ],
-      "state": "TODO",
+      "state": "LOCAL_PASS_REAL_COVERAGE_PARTIAL",
       "interfaces": [
         "API20",
         "API21"
@@ -383,7 +386,8 @@
       "functions": [
         "FN13"
       ],
-      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "W14",
@@ -419,10 +423,11 @@
         "E14",
         "E15"
       ],
-      "state": "CURRENT_INCREMENT_LOCAL_ACCEPTED_WHOLE_PRODUCT_PENDING",
+      "state": "LOCAL_PASS_REAL_COVERAGE_PARTIAL",
       "interfaces": [],
       "functions": [],
-      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps"
+      "implementation_rule": "finish smallest evidence-backed mainline slice; record actual SHA/tests; no arbitrary data caps",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     }
   ],
   "requirements": [
@@ -1448,7 +1453,8 @@
       "functions": [
         "FN12"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_MARKET_PARITY_REGRESSION_LIVE_SAME_WINDOW_OPEN",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "CA07",
@@ -1475,7 +1481,8 @@
       "functions": [
         "FN12"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_MATERIAL_OWNER_AND_FIRST_BUY_LOCAL_PASS",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "CA08",
@@ -1502,7 +1509,8 @@
       "functions": [
         "FN12"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_ORIGINAL_ASSET_FUNDING_LOCAL_PASS",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "CA09",
@@ -1528,7 +1536,8 @@
       "functions": [
         "FN12"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_RELATION_SCOPING_LOCAL_PASS",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "CA10",
@@ -1556,7 +1565,8 @@
       "functions": [
         "FN12"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_MULTI_MINT_NARRATIVE_FIXTURES_PASS",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "CA11",
@@ -1584,7 +1594,8 @@
       "functions": [
         "FN12"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_LINKED_POST_ID_AND_EXACT_MINT_RECOGNITION_LOCAL_PASS",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "CA12",
@@ -1610,7 +1621,8 @@
       "functions": [
         "FN12"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_SEPARATE_ENUMERATION_AND_VALUE_PARITY_LOCAL_PASS",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "CA13",
@@ -1638,7 +1650,8 @@
       "functions": [
         "FN12"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "LOCAL_CHECKPOINT_RECOVERY_PASS",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "CA14",
@@ -1667,7 +1680,8 @@
       "functions": [
         "FN12"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_COLD_WARM_LOSSLESS_FIXTURES_PASS_LIVE_TIMING_OPEN",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "CA15",
@@ -1688,7 +1702,8 @@
       "acceptance": "不同真实CA覆盖毕业/成熟/LP-heavy/Token-2022/关联与无关，跨6协议/规模；重复CRAWL不替代",
       "interfaces": [],
       "functions": [],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_MULTI_SCENARIO_CHROME_PASS_REAL_MATRIX_OPEN",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "NT01",
@@ -1716,7 +1731,8 @@
       "functions": [
         "FN13"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "LOCAL_V1_IDENTITY_AND_DEDUP_REHEARSAL_PASS",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "NT02",
@@ -1743,7 +1759,8 @@
       "functions": [
         "FN13"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_LOCAL_AND_FAKE_RECEIPT_AUDIT_PASS",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "NT03",
@@ -1768,7 +1785,8 @@
       "functions": [
         "FN13"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "ISOLATED_OPTION3_POLICY_QUEUE_AND_UNCERTAIN_RECEIPT_PASS",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "NT04",
@@ -1794,7 +1812,8 @@
       "functions": [
         "FN13"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "LOCAL_ARCHIVE_REVISION_AND_NO_REQUEUE_PASS",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "NT05",
@@ -1821,7 +1840,8 @@
       "functions": [
         "FN13"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_SEGMENTED_AUDIT_PASS_RECIPIENT_TIMING_UNVERIFIED",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "NT06",
@@ -1926,7 +1946,8 @@
       "acceptance": "磁盘满/SQLite锁/终止点/源替换/重复页全路径保留最后一致状态，恢复无漏无重复",
       "interfaces": [],
       "functions": [],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "LOCAL_CRASH_CURSOR_AND_RECOVERY_PASS",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "RL04",
@@ -1947,7 +1968,8 @@
       "acceptance": "候选与运行Dashboard/Scanner双SHA分列，源库只读；隔离实际回退和8766本地安装可运行",
       "interfaces": [],
       "functions": [],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "LOCAL_PINNED_RUNTIME_AND_ROLLBACK_PASS",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "RL05",
@@ -2030,7 +2052,8 @@
       "acceptance": "按模块选择性集成，旧缺模块映射当前需求；不批量合并，运行清单明确实际功能版本",
       "interfaces": [],
       "functions": [],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "LOCAL_FUNCTION_BRANCH_INTEGRATION_PASS",
+      "latest_increment_evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
     },
     {
       "id": "DF01",
@@ -2306,16 +2329,20 @@
     },
     "reference": "INDEXED_ACTIVITY_ACCEPTANCE_20261115.md"
   },
-  "current_next": "W09 holder supply and observed candidate regressions passed locally; independent full holder/role/pool evidence remains partial. Advance W10 historical and control evidence with distinct scenarios; W11/W12 and W13/W14 remain open.",
+  "current_next": "Local mainline delivered. Real independent holder and pool snapshots, real narrative/history performance matrix and activated delivery evidence remain open under their source or authorization gates.",
   "latest_increment": {
     "work_packages": [
-      "W09"
+      "W10",
+      "W11",
+      "W12",
+      "W13",
+      "W14"
     ],
-    "state": "INSTALLED_CHROME_W09_HOLDER_AND_POOL_FIX_PASS_W09_COVERAGE_PARTIAL",
-    "source_sha": "15edc5060d586550e642ca2737824e5dd7628df6",
-    "python_related_passed": 588,
-    "node_related_passed": 233,
-    "evidence": "W09_HOLDER_POOL_ACCEPTANCE_20261119.md"
+    "state": "LOCAL_MAINLINE_PASS_REAL_SOURCE_COVERAGE_PARTIAL",
+    "source_sha": "2c84dbb16028d1a9259a3155fdb89ebaa6b85546",
+    "mac_python_passed": 2804,
+    "mac_node_passed": 270,
+    "evidence": "FRANK_MAINLINE_ACCEPTANCE_20261119.md"
   },
   "status_reconciliation": {
     "date": "2026-11-17",

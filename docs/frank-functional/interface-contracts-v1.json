@@ -470,7 +470,7 @@
       "id": "API20",
       "method": "POST",
       "path": "/api/frank-notification-archive",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "EXISTING_LOCAL_VERIFIED",
       "request": {
         "notification_id": "required",
         "channel": "required known channel",
@@ -489,14 +489,15 @@
         "403": "exact same-origin or Host required for new sensitive/write routes",
         "404": "entity not found",
         "409": "revision/idempotency/source binding changed",
-        "503": "source unavailable or throttled; no invented zero"
+        "503": "source unavailable or throttled; no invented zero",
+        "415": "application/json required"
       }
     },
     {
       "id": "API21",
       "method": "GET",
       "path": "/api/frank-notification-audit",
-      "implementation_state": "PROPOSED",
+      "implementation_state": "EXISTING_LOCAL_VERIFIED",
       "request": {
         "notification_id": "optional",
         "channel": "optional",

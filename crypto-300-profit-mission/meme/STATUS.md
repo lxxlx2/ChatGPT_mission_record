@@ -3,32 +3,33 @@
 更新者：Codex；免费/免review、本地研发及验收后部署授权持续
 
 ## 北极星答案（1 行）
-**W09 已在本机验收并部署供给、Owner 元数据与已观察池候选的核对修复。独立持有人与池全集仍需证据。Frank 整体为 PARTIAL，生产与交易保持 NO_GO。**
+**Frank 主线本地开发、隔离验收及 Dashboard 升级完成。真实来源完整性为 PARTIAL，生产和交易保持 NO_GO。**
 
 ## 当前阶段与预算（最多 5 行）
-阶段：W09 的 Mint 身份、供给证据和已观察池候选已进入本地 Dashboard。历史与控制证据进入 W10
-分支：`codex/frank-functional-completion-20261115`，PR #253，规划 c2e2d8d，安装源码 `15edc5060d586550e642ca2737824e5dd7628df6`
-来源：本机固定钱包事实、已捕获余额与行情，以及已有 CA RPC 缓存原件
+阶段：完成 W10 历史与资金、W11 叙事、W12 独立枚举、W13 审计和隔离队列、W14 本地发布回退
+分支：`codex/frank-functional-completion-20261115`，PR #253，规划 c2e2d8d，安装源码 `2c84dbb16028d1a9259a3155fdb89ebaa6b85546`
+来源：固定钱包事实、既有余额与行情、三份真实 CA 归档和多场景隔离输入
 费用/权限：使用免费方案，已获本地部署授权。本轮真实 RPC、CA POST、报价、通知、签名与交易调用均为 0
-运行：Dashboard 使用原 8766 端口，648 个文件核对一致。Scanner PID 和受保护控制文件核对通过
+运行：Dashboard 使用原 8766 端口。Scanner PID 和受保护台账摘要在升级前后核对
 
 ## 本周唯一目标（1 行）
 按[完整技术方案](../../docs/frank-functional/TECHNICAL_PLAN_20261115.md)与[59项实施映射](../../docs/frank-functional/implementation-plan-v1.json)形成整体可用Frank；以功能和多样样本验收，不再反复围绕单CA
 
-## 正在进行（最多 3 项）
-- [B] **W09 来源覆盖**。已观察候选无 8 池截断。全量特殊地址、独立持有人／池对账与真实协议储备矩阵仍部分覆盖
-- [B] **W10–W12 CA 通用矩阵**。历史与关系、可信叙事和独立来源核对随取证展开
-- [B] **W13/W14 通知审计和整体验收**。继续隔离可靠性和统一回退测试
+## 真实来源仍待验证
+
+- [B] **W09/W12 来源覆盖**。全量特殊地址、真实独立同槽持有人及池对账、协议储备矩阵和冷暖完整耗时仍缺
+- [B] **W10/W11 代表样本**。已关闭账户全集、真实终身首买、三类真实叙事与传播起源仍缺充分证据
+- [B] **W13 真实送达**。Option3 完成隔离合成队列；真实渠道与收件延迟须按独立授权验收
 
 ## 等用户授权（最多 3 项）
 当前无权限或review阻断。未启用的真实通知/签名/交易/Loop与已停止收益研究不由本地研发自动恢复；不新增批准步骤
 
 ## 本周已关闭（最多 5 行）
+- [B] W10–W14 交付分散持有人历史、同槽首买歧义、可信叙事与认领、独立枚举、通知台账归档及合成恢复。原端口完成 Chrome 验收及本地发布。[主线验收与命令](../../docs/frank-functional/FRANK_MAINLINE_ACCEPTANCE_20261119.md)
 - [B] W09 供给夹逼权限时间、Owner 批次恢复和多池分批。Chrome 验收 105 个合成池候选，并验证旧归档缺证时撤下全局 Top10。[W09 验收与命令](../../docs/frank-functional/W09_HOLDER_POOL_ACCEPTANCE_20261119.md)
 - [B] W08 以 9,708 条固定事实生成 76 个分析条目和 76 条证据缺口。同输入重算新增为 0，安装后读取同一分析。合成报价验证显式输入、路由和自然过期。[W08/W09 验收与命令](../../docs/frank-functional/W08_W09_RISK_AND_IDENTITY_ACCEPTANCE_20261119.md)
 - [B] W06/W07 归档全量核对和原币 FIFO 已验收。完整链史、未归属费用、公开平台对照和整仓估值保留证据边界。[W06/W07 验收](../../docs/frank-functional/W06_W07_FIFO_ACCEPTANCE_20261118.md)
-- [B] W05 收藏、备注、关注和隐藏，以及 W06 首版不可变历史快照已验收。旧版 Chrome 的 9,520 条签名属于该次固定快照。[W05 及快照基础验收](../../docs/frank-functional/WATCH_MANIFEST_ACCEPTANCE_20261117.md) · [机器证据](../../docs/frank-functional/watch-manifest-acceptance-20261117.json)
-- [B] W01–W04 已交付完整索引分页、来源合同、全钱包余额与参考行情。旧版实测覆盖 6,447 个账户、5,526 个行情目标，各项捕获时间见[余额与行情验收](../../docs/frank-functional/SOURCE_BALANCE_MARKET_ACCEPTANCE_20261117.md)。
+- [B] W01–W05 已交付完整索引分页、来源合同、全钱包余额、参考行情、关注与备注。[余额与行情验收](../../docs/frank-functional/SOURCE_BALANCE_MARKET_ACCEPTANCE_20261117.md) · [W05 及快照基础验收](../../docs/frank-functional/WATCH_MANIFEST_ACCEPTANCE_20261117.md)
 
 ## 已知但故意不做（C 类清单）
 - 原10月故障归因按用户取消；旧复杂交易只作定点回归，不反复整扫一个CA
