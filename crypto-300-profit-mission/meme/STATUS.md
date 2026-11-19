@@ -15,6 +15,11 @@
 ## 本周唯一目标（1 行）
 按[完整技术方案](../../docs/frank-functional/TECHNICAL_PLAN_20261115.md)与[59项实施映射](../../docs/frank-functional/implementation-plan-v1.json)形成整体可用Frank；以功能和多样样本验收，不再反复围绕单CA
 
+## 长期主线
+
+- 准确性优先。先纳入正在运行的私有 RPC 接线，再交付逐笔对账与缺口证据，随后验证补采和真实查询耗时。
+- 服务器可迁移交付和多候选人隔离依次展开。当前仍为单 Frank 运行，本地 W14 通过与真实来源验收分别记录。 [三个要求的实施与验收](../../docs/frank-functional/FRANK_ACCURACY_MIGRATION_EXTENSION_PLAN_20261119.md)
+
 ## 真实来源仍待验证
 
 - [B] **W09/W12 来源覆盖**。全量特殊地址、真实独立同槽持有人及池对账、协议储备矩阵和冷暖完整耗时仍缺
