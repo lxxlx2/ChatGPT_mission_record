@@ -264,7 +264,10 @@ def test_restart_does_not_duplicate_signal(tmp_path):
 class RPC:
     def __init__(self,gap=False):self.gap=gap
     def signatures(self,before=None):return [] if self.gap else [{'signature':'new','slot':12},{'signature':'seed','slot':11}]
-    def transaction(self,sig):return tx()
+    def transaction(self,sig):
+        document=tx()
+        document['transaction']['signatures']=[sig]
+        return document
 
 def test_cursor_does_not_advance_on_rpc_gap(tmp_path):
     l=Ledger(tmp_path/'db');l.checkpoint(WALLET,'seed',11);s=Scanner(l,{WALLET:'frank'},tmp_path/'raw',{WALLET:RPC(True)})
