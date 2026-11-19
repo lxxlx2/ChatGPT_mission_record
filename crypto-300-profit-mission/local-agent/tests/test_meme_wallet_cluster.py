@@ -63,6 +63,19 @@ def test_common_funder_plus_sync_can_form_probable_control_cluster():
     assert "SYNC_BUY" in types
 
 
+def test_one_publicly_identified_eoa_batch_is_one_control_evidence_mechanism():
+    a=analyzer();a.registry={"addresses":{"F":{"role":"EOA","source":"fixture"}}}
+    def scan(holder,*args):
+        if holder.owner in {"A","B"}:
+            a.funding.append({"owner":holder.owner,"source":"F","lamports":"1",
+                              "signature":"same-funding-tx","block_time":90})
+    a._scan_holder=scan
+    out=a.analyze()
+    types={e["type"] for e in out["edges"]}
+    assert {"COMMON_FUNDER_EOA","BATCH_FUNDING"} <= types
+    assert not out["probable_control_clusters"]
+
+
 def test_special_lp_is_excluded_but_raw_top10_keeps_it():
     a=analyzer();a.registry={"normalization_complete":True,"addresses":{}};a._scan_holder=lambda *args:100
     out=a.analyze()

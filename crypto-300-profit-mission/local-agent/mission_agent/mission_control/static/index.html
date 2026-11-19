@@ -24,7 +24,7 @@
     <div id="signals-view" class="view-pane active">
     <section class="panel priority-panel" id="follow-opportunities">
       <div class="panel-title">
-        <div><h2>Frank 近期来源信号（只读）</h2><p>仅展示近 10 分钟的本地已索引来源 BUY；不推断实时持仓或可执行价格。交易金额和买卖均由用户决定。</p></div>
+        <div><h2>Frank 近期来源信号（只读）</h2><p>仅展示近 10 分钟的本地已索引来源 BUY。WAIT / NO_BUY 保留在历史判断里。交易金额和买卖均由用户决定。</p></div>
         <span id="updated">未刷新</span>
       </div>
       <p id="f01-source-status" class="frank-watch-footnote">近期来源信号尚未核实，不展示可跟结论。</p>
@@ -105,6 +105,18 @@
       </div>
       <p id="frank-quote-status" role="status" aria-live="polite"></p>
       <div id="frank-quote-details"></div>
+    </details>
+    <details class="panel" id="frank-notification-panel">
+      <summary>Frank 通知审计</summary>
+      <p>核对通知入队、发送尝试、Gmail Sent 回读和归档标记。归档只改变本机备注状态。</p>
+      <div class="frank-watch-controls">
+        <label for="frank-notification-channel">通道</label>
+        <select id="frank-notification-channel"><option value="">全部</option><option value="gmail">Gmail</option><option value="local">本地</option></select>
+        <button class="link-btn" type="button" id="frank-notification-read">读取通知审计</button>
+      </div>
+      <p id="frank-notification-status" role="status" aria-live="polite"></p>
+      <div id="frank-notification-rows" class="candidate-list"></div>
+      <button class="link-btn" type="button" id="frank-notification-next" disabled>下一页通知</button>
     </details>
     <section class="panel" id="frank-activity-panel">
       <div class="panel-title">
@@ -460,5 +472,6 @@
   <script src="/static/frank_history_coverage.js?v=1"></script>
   <script src="/static/frank_wallet_cost.js?v=1"></script>
   <script src="/static/frank_risk_and_quote.js?v=1"></script>
+  <script src="/static/frank_notification_audit.js?v=1"></script>
 </body>
 </html>

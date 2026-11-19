@@ -72,13 +72,26 @@ test('all-account second-provider batches keep source-universe and time limits e
   const output=h.context.renderIndependentCheck({independent_balance_check:{
     version:1,status:'NEAR_TIME_ALL_MATCH',secondary_provider:'PUBLICNODE',
     scope:'ALL_PROVIDED_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_INDEPENDENT_ENUMERATION',
-    accounts_compared:301,matches:301,differences:0,missing:0,rows:[],
+    supplied_set_origin:'PRIMARY_MINT_ENUMERATION',accounts_compared:301,matches:301,differences:0,missing:0,rows:[],
   }});
   assert.match(output,/主来源枚举的全部账户/);
   assert.match(output,/逐批实际 slot/);
-  assert.match(output,/未独立发现其他账户/);
+  assert.match(output,/独立枚举结果尚未取得/);
   assert.match(output,/不能证明原子同快照一致/);
   assert.doesNotMatch(output,/最大代币账户/);
+});
+
+test('independent enumeration uses its own slot and shows set conflict despite matching rereads',()=>{
+  const h=harness();
+  const output=h.context.renderIndependentCheck({independent_balance_check:{
+    version:1,status:'SAME_SLOT_ALL_MATCH',secondary_provider:'PUBLICNODE',
+    scope:'ALL_PROVIDED_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_INDEPENDENT_ENUMERATION',
+    supplied_set_origin:'PRIMARY_MINT_ENUMERATION',accounts_compared:3,matches:3,rows:[],
+    independent_account_set:{status:'SAME_SLOT_DIFFERENCE',primary_slot:19,secondary_slot:19,
+      only_primary:['a'],only_secondary:['b'],changed_owner_or_raw:['c']},
+  }});
+  assert.match(output,/同一 finalized slot 枚举冲突/);
+  assert.match(output,/仅主源 1，  *仅第二源 1|仅主源 1，仅第二源 1/);
 });
 
 test('partial second-provider result preserves completed work without endorsing unread accounts',()=>{

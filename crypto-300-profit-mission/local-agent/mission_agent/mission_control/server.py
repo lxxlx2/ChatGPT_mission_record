@@ -48,6 +48,7 @@ from .wallet_cost_store import WalletCostStore, CostStoreError
 from .frank_risk_inputs import build_risk_inputs
 from .frank_risk_runs import FrankRiskRuns, RiskRunError
 from .frank_quote import ExplicitJupiterQuoteClient, FrankQuoteService, QuoteError
+from .frank_notification_audit import FrankNotificationAudit, NotificationAuditError
 
 
 def _host_is_loopback(host: str, port: int) -> bool:
@@ -282,9 +283,14 @@ class ClusterJobManager:
             return self._public_job(job)
 
     def _independent_rpc(self):
-        # Second free provider for balance parity only (getMultipleAccounts).
+        # A primary fallback may have served the same observations. Avoid
+        # advertising a second provider if it shares any configured primary host.
         url=os.environ.get("SOLANA_RPC_SECONDARY","https://solana-rpc.publicnode.com")
-        if not url or url=="0" or url in self.rpc_endpoints[:1]:return None
+        try:
+            host=urlparse(url).hostname
+            primary_hosts={urlparse(endpoint).hostname for endpoint in self.rpc_endpoints}
+        except ValueError:return None
+        if not host or host in primary_hosts:return None
         # No separate aggregate quota: each logical transport read still has
         # finite retries and timeouts, so access failures terminate normally.
         def create():
@@ -862,6 +868,7 @@ class DashboardState:
         self.control_root = Path(control_root)
         self.watch_metadata = WatchMetadataStore(self.control_root)
         self.control_db = self.control_root / "mission-control.sqlite"
+        self.notification_audit = FrankNotificationAudit(self.frank.database, self.control_db, self.control_root)
         self.control_health = self.control_root / "mission-control-health.json"
         self.cluster_jobs = ClusterJobManager(self.control_root, production_root)
         code_sha = os.environ.get("FRANK_DASHBOARD_SOURCE_SHA", "UNPINNED")
@@ -1501,6 +1508,11 @@ class Handler(BaseHTTPRequestHandler):
                     **body, load_inputs=lambda manifest_id: self.state.risk_input(manifest_id, key)), 201)
             if path == "/api/frank-quote":
                 return self._json(self.state.frank_quote.create(body))
+            if path == "/api/frank-notification-archive":
+                required = {"notification_id", "channel", "archived", "expected_revision", "idempotency_key"}
+                if not required <= set(body) <= required | {"reason"}:
+                    raise ValueError("INVALID_FIELDS")
+                return self._json(self.state.notification_audit.archive(**body))
             if path=="/api/frank-balance-refresh/resume":
                 if set(body)!={"refresh_id","idempotency_key"}:raise ValueError("INVALID_FIELDS")
                 if not isinstance(body["idempotency_key"],str) or not 1<=len(body["idempotency_key"])<=256 or any(ord(c)<32 for c in body["idempotency_key"]):raise ValueError("INVALID_IDEMPOTENCY_KEY")
@@ -1516,7 +1528,7 @@ class Handler(BaseHTTPRequestHandler):
                     elif "mint" in body:raise ValueError("INVALID_FIELDS")
                 job=self.state.research.submit(kind,body)
             return self._json(job,202)
-        except (ManifestError, CostStoreError, RiskRunError, QuoteError) as exc:
+        except (ManifestError, CostStoreError, RiskRunError, QuoteError, NotificationAuditError) as exc:
             return self._json({"error":exc.code},exc.http_status)
         except (ValueError,TypeError,UnicodeError,RecursionError) as exc:
             reason=str(exc)
@@ -1535,6 +1547,23 @@ class Handler(BaseHTTPRequestHandler):
             return False
         origin = self.headers.get("Origin")
         return not origin or origin == "http://" + (self.headers.get("Host") or "")
+
+    def _notification_audit_get(self):
+        if not self._research_origin():
+            return self._json({"error": "SAME_ORIGIN_READ_REQUIRED"}, 403)
+        try:
+            query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=4)
+            if set(query) - {"notification_id", "channel", "limit", "cursor"} or any(len(v) != 1 for v in query.values()):
+                raise ValueError
+            params = {key: values[0] for key, values in query.items()}
+            limit = params.pop("limit", "100")
+            if not re.fullmatch(r"[0-9]{1,4}", limit):
+                raise ValueError
+            return self._json(self.state.notification_audit.page(**params, limit=int(limit)))
+        except NotificationAuditError as exc:
+            return self._json({"error": exc.code}, exc.http_status)
+        except (ValueError, TypeError, UnicodeError, RecursionError):
+            return self._json({"error": "INVALID_NOTIFICATION_QUERY"}, 400)
 
     def _json(self, payload, status=200):
         data = json.dumps(payload, ensure_ascii=False, default=str).encode()
@@ -1561,6 +1590,8 @@ class Handler(BaseHTTPRequestHandler):
         if not self._allowed_host():
             return self.send_error(421, "loopback Host required")
         path = urlparse(self.path).path
+        if path == "/api/frank-notification-audit":
+            return self._notification_audit_get()
         if path in {"/api/frank-watch-metadata", "/api/frank-watch-metadata-events"}:
             return self._watch_get(path)
         if path in {"/api/frank-evidence-manifests", "/api/frank-evidence-activity"}:
@@ -1703,7 +1734,7 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         if path in {"/api/frank-balance-refresh", "/api/frank-balance-refresh/resume", "/api/frank-market-refresh",
                     "/api/frank-evidence-manifests", "/api/frank-cost-rebuild",
-                    "/api/frank-intelligence-refresh", "/api/frank-quote"}:
+                    "/api/frank-intelligence-refresh", "/api/frank-quote", "/api/frank-notification-archive"}:
             if urlparse(self.path).query:
                 return self._json({"error":"INVALID_QUERY"},400)
             return self._research_post(path)

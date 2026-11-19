@@ -1459,6 +1459,7 @@ function quoteAssetLabel(asset) {
 function acquisitionCell(h) {
   const a=h.first_acquisition || {};
   if (a.status==='NOT_SCANNED') return '<span class="muted">未深扫</span>';
+  if (a.history_scope==='EARLIEST_OBSERVED_SLOT_INTRA_SLOT_ORDER_UNVERIFIED') return '<span class="unresolved">同一 slot 内有多笔候选，首买顺序未确认</span>';
   if (a.status==='NOT_APPLICABLE_PROTOCOL_POOL') return '<div class="holder-evidence"><b>已核实协议池／金库</b><small>协议账户的余额流转不作为个人首次买入</small></div>';
   if (a.status==='NO_MARKET_BUY_IN_COMPLETE_ACCOUNT_HISTORY') return '<div class="holder-evidence"><b>非市场买入取得</b><small>当前代币账户全部历史已读完，未见市场买入（转入/空投等）</small></div>';
   if (a.status!=='CONFIRMED_BOUNDED' && a.status!=='CONFIRMED_ACCOUNT_COMPLETE') return '<span class="unresolved">未确认</span>';
@@ -1692,8 +1693,8 @@ function renderLaunchIdentity(report) {
 function renderIndependentCheck(report) {
   const c=report.independent_balance_check;
   if (!c || c.version!==1 || c.status==='NOT_REQUESTED') return '';
+  const safeCode=v=>typeof v==='string' && /^(?:HTTP_[0-9]{3}|RPC_-?[0-9]+|RPC_JOB_(?:TIME|WIRE)_BUDGET_EXHAUSTED|RPC_RATE_LIMITED|RPC_ENVELOPE_INVALID|RPC_POOL_RESPONSE_LIMIT|RPC_HOLDER_RANK_RESPONSE_LIMIT|RPC_ERROR|TimeoutError|URLError|OSError|ValueError|JSONDecodeError|RPCError)$/.test(v);
   if (c.status==='UNAVAILABLE' || c.status==='PARTIAL') {
-    const safeCode=v=>typeof v==='string' && /^(?:HTTP_[0-9]{3}|RPC_-?[0-9]+|RPC_JOB_(?:TIME|WIRE)_BUDGET_EXHAUSTED|RPC_RATE_LIMITED|RPC_ENVELOPE_INVALID|RPC_POOL_RESPONSE_LIMIT|RPC_HOLDER_RANK_RESPONSE_LIMIT|RPC_ERROR|TimeoutError|URLError|OSError|ValueError|JSONDecodeError|RPCError)$/.test(v);
     const last=safeCode(c.last_source_error)?'最后来源错误：'+c.last_source_error+'。':'';
     return '<div class="trust-box"><strong>第二提供方余额复核</strong><p>本轮未完成（'+esc(safeCode(c.reason)?c.reason:'来源不可用')+'）。'+esc(last)+'</p>'+
       (Number.isSafeInteger(c.accounts_compared) && c.accounts_compared>0 ? '<p>已完成 '+esc(c.accounts_compared)+' 项；后续读取失败，成功批次保留在报告中，未核对账户不视为一致。</p>' : '')+'</div>';
@@ -1701,9 +1702,14 @@ function renderIndependentCheck(report) {
   const label={SAME_SLOT_ALL_MATCH:'同一 slot 全部一致',NEAR_TIME_ALL_MATCH:'相邻时间读取全部一致',SAME_SLOT_MISMATCH:'同一 slot 出现不一致',NEAR_TIME_DIFFERENCES:'相邻时间读取存在差异（可能是期间成交）'}[c.status]||c.status;
   const diffs=(c.rows||[]).filter(r=>r.status!=='MATCH').slice(0,8).map(r=>'<li><code>'+esc(short(r.address,6,5))+'</code> 主 '+esc(r.primary_raw??'缺')+' / 第二 '+esc(r.secondary_raw??'缺')+'</li>').join('');
   const batched=c.scope==='ALL_PROVIDED_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_INDEPENDENT_ENUMERATION';
-  const scope=batched ? 'Mint 供给 + 主来源枚举的全部账户' : 'Mint 供给 + 最大代币账户';
+  const scope=batched ? (c.supplied_set_origin==='PRIMARY_MINT_ENUMERATION'?'Mint 供给 + 主来源枚举的全部账户':'Mint 供给 + 本轮提供的地址') : 'Mint 供给 + 最大代币账户';
   const slots=batched ? '逐批实际 slot 见报告；各批次可能来自不同时点。' : 'slot '+esc(c.primary_slot)+' / '+esc(c.secondary_slot)+'。';
-  return '<div class="trust-box"><strong>第二提供方余额复核（'+esc(c.secondary_provider)+'）</strong><p>'+esc(label)+'：比对 '+esc(c.accounts_compared)+' 项（'+scope+'），一致 '+esc(c.matches)+'，差异 '+esc(c.differences)+'，缺失 '+esc(c.missing)+'；'+slots+'</p><p>账户集合来自主来源；第二提供方复核数值，未独立发现其他账户。相邻时间一致不能证明原子同快照一致。</p>'+(diffs?'<ul>'+diffs+'</ul>':'')+'</div>';
+  const e=c.independent_account_set;
+  const enumerationStatus={SAME_SLOT_MATCH:'同一 finalized slot 枚举一致',SAME_SLOT_DIFFERENCE:'同一 finalized slot 枚举冲突',DIFFERENT_SLOTS:'两次枚举来自不同 slot',UNAVAILABLE:'来源未返回可核验结果'};
+  const enumeration=e && Object.hasOwn(enumerationStatus,e.status)
+    ? '第二来源独立枚举：'+enumerationStatus[e.status]+(Number.isSafeInteger(e.secondary_slot)?'。主 / 第二 slot '+e.primary_slot+' / '+e.secondary_slot+'，仅主源 '+(e.only_primary||[]).length+'，仅第二源 '+(e.only_secondary||[]).length+'，余额或 Owner 有差异 '+(e.changed_owner_or_raw||[]).length:'')+(safeCode(e.last_source_error)?'（'+e.last_source_error+'）':'')+'。'
+    : '当前结果来自逐地址复核，独立枚举结果尚未取得。';
+  return '<div class="trust-box"><strong>第二提供方余额复核（'+esc(c.secondary_provider)+'）</strong><p>'+esc(label)+'：比对 '+esc(c.accounts_compared)+' 项（'+scope+'），一致 '+esc(c.matches)+'，差异 '+esc(c.differences)+'，缺失 '+esc(c.missing)+'；'+slots+'</p><p>'+esc(enumeration)+' 相邻时间一致不能证明原子同快照一致。</p>'+(diffs?'<ul>'+diffs+'</ul>':'')+'</div>';
 }
 
 function renderNarrativeOrigin(report) {
@@ -1713,20 +1719,35 @@ function renderNarrativeOrigin(report) {
   const cm=o.creator_metadata;
   const linkStatus={CREATOR_METADATA_LINKS_POST:'创建者写入链上元数据的链接指向下列帖子（创建者自声明，帖子本身未提及 CA）',POST_MENTIONS_EXACT_CA:'已读帖子正文包含精确 CA',UNVERIFIED:'未找到把精确 CA 与帖子绑定的证据'}[o.ca_link_status]||o.ca_link_status;
   const links=cm?Object.entries(cm.links||{}).map(([k,v])=>{const u=safeHttpUrl(v);return u?'<a class="link-btn" href="'+esc(u)+'" target="_blank" rel="noreferrer">'+esc(k)+' ↗</a>':'';}).join(''):'';
-  const posts=(o.posts||[]).slice(0,6).map(p=>{const u=safeHttpUrl(p.url);
-    const rel={LINKED_BY_CREATOR_METADATA:'创建者元数据链接的帖子',LINKED_BY_MARKET_SOCIAL:'市场资料链接的帖子',QUOTED_BY_PREVIOUS:'被上一条帖子引用',REPLIED_TO_BY_PREVIOUS:'被上一条帖子回复'}[p.relation]||p.relation;
+  const posts=(o.posts||[]).map(p=>{const u=safeHttpUrl(p.url);
+    const rel={LINKED_BY_CREATOR_METADATA:'链上元数据链接的帖子',LINKED_BY_MARKET_SOCIAL:'市场资料链接的帖子',LINKED_BY_READ_PAGE:'已读页面链接的帖子',QUOTE:'被另一帖引用',REPLY:'被另一帖回复',QUOTED_BY_PREVIOUS:'被上一条帖子引用',REPLIED_TO_BY_PREVIOUS:'被上一条帖子回复'}[p.relation]||'原帖来源';
     return '<article class="cluster-card"><strong>'+esc(rel)+'</strong><p>@'+esc(p.author||'?')+(p.author_verified?'（已认证）':'')+' · 粉丝 '+esc(p.author_followers??'未知')+' · 发布 '+esc(when(p.created_at))+'</p><p>'+esc(p.text||'')+'</p><p>互动：赞 '+esc(p.likes??'-')+' · 转 '+esc(p.reposts??'-')+' · 引用 '+esc(p.quotes??'-')+' · 浏览 '+esc(p.views??'-')+'；'+(p.exact_ca_mentioned?'正文包含精确 CA':'正文未提及 CA')+'</p>'+(u?'<a class="link-btn" href="'+esc(u)+'" target="_blank" rel="noreferrer">原帖 ↗</a>':'')+'</article>';}).join('');
   const e=o.earliest_traceable;
-  const lag=Number.isFinite(Number(o.linked_post_to_pair_seconds))?'<p>链接帖子发布后约 '+esc(Math.round(o.linked_post_to_pair_seconds))+' 秒出现交易对。</p>':'';
+  const lag=typeof o.linked_post_to_pair_seconds==='number' && Number.isFinite(o.linked_post_to_pair_seconds)?'<p>交易对创建时间与链接发帖时间相差 '+esc(Math.round(o.linked_post_to_pair_seconds))+' 秒。</p>':'';
+  const recognition=o.recognition;
+  const recognitionLabel=recognition?.mint===report.mint?{
+    EXACT_CA_CLAIM_VERIFIED:'链上资料所链接的账号在原帖中明示了本 CA',
+    LINK_ONLY:'链上资料提供链接，尚未看到作者明示认领本 CA',
+    NO_VERIFIABLE_CLAIM:'已读来源中未找到可验证认领',
+    SOURCE_UNAVAILABLE:'认领所需的来源尚不可用',
+  }[recognition.status]:null;
+  const interactions=(o.interactions||[]).filter(row=>row.status==='API_REPORTED_STRUCTURAL_RELATION' && ['QUOTE','REPLY'].includes(row.type)).map(row=>{
+    const from=safeHttpUrl(row.from),to=safeHttpUrl(row.to);
+    return from&&to?'<li><a href="'+esc(from)+'" target="_blank" rel="noreferrer">@'+esc(row.author)+'</a> '+(row.type==='QUOTE'?'引用':'回复')+'了 <a href="'+esc(to)+'" target="_blank" rel="noreferrer">@'+esc(row.target_author)+'</a></li>':'';
+  }).join('');
+  const failures=(o.unresolved_links||[]).length;
   return '<div class="narrative-state"><strong>来源链与 CA 绑定</strong>'+(cm?'<p>创建者链上元数据：'+esc(cm.description||'无描述')+(cm.metadata_mutable===false?'（元数据不可修改）':'')+'</p><div class="narrative-links">'+links+'</div>':'<p>未读取到创建者元数据 JSON。</p>')+
-    '<p>CA 绑定：'+esc(linkStatus)+'。</p>'+(e?'<p>可追溯最早来源：@'+esc(e.author)+' '+esc(when(e.created_at))+'（沿引用/回复链追溯，不是全网检索）。</p>':'')+lag+posts+
+    '<p>CA 绑定：'+esc(linkStatus)+'。</p>'+(recognitionLabel?'<p>CA 认领：'+esc(recognitionLabel)+'。</p>':'')+
+    (e?'<p>可追溯最早来源：@'+esc(e.author)+' '+esc(when(e.created_at))+'（范围为已连接的来源）。</p>':'')+lag+
+    (interactions?'<p>公开接口记录的原帖互动</p><ul>'+interactions+'</ul>':'')+
+    (failures?'<p>尚未核对 '+esc(failures)+' 条链接。</p>':'')+posts+
     '<p>引用、回复关系由公开接口报告；被引用不代表原作者认可或参与该币。</p></div>';
 }
 
 function renderNarrativeSources(report,links) {
   const n=report.narrative;
   if (!n || n.version!==1) return '<div class="narrative-state"><strong>此历史报告未记录外部来源读取</strong><p>仅保留市场附带的链接，未补造帖子、发布时间或官方认领。</p></div><div class="narrative-links">'+links+'</div>';
-  const evidence=Array.isArray(n.evidence) ? n.evidence.filter(r=>r && r.classification==='THIRD_PARTY_CLAIM' && typeof r.excerpt==='string' && /^[a-f0-9]{64}$/.test(r.response_sha256 || '')).slice(0,3) : [];
+  const evidence=Array.isArray(n.evidence) ? n.evidence.filter(r=>r && r.classification==='THIRD_PARTY_CLAIM' && typeof r.excerpt==='string' && /^[a-f0-9]{64}$/.test(r.response_sha256 || '')) : [];
   const dateText=value=>{const stamp=Number(value);return Number.isFinite(stamp)&&stamp>0&&stamp<4102444800 ? new Date(stamp*1000).toLocaleString('zh-CN') : '未记录';};
   const themeLabels=new Set(['AI／模型训练','爬虫／智能体','动物／社区模因','游戏／虚拟世界','文化／艺术','人物／事件关联说法']);
   const actorLabels={ELON_MUSK:'Elon Musk',DONALD_TRUMP:'Donald Trump',VITALIK_BUTERIN:'Vitalik Buterin'};
@@ -1741,13 +1762,13 @@ function renderNarrativeSources(report,links) {
     const url=safeHttpUrl(r.source_url);
     if (!url || !url.startsWith('https://')) return '';
     const story=validStory(r),actors=story && Array.isArray(story.actors_mentioned) ? story.actors_mentioned.filter(x=>Object.hasOwn(actorLabels,x)).map(x=>actorLabels[x]) : [];
-    const posts=story && Array.isArray(story.post_links) ? [...new Set(story.post_links.map(postUrl).filter(Boolean))].slice(0,4) : [];
+    const posts=story && Array.isArray(story.post_links) ? [...new Set(story.post_links.map(postUrl).filter(Boolean))] : [];
     const kind={MARKET_WEBSITE_HINT:'项目资料链接中的陈述',MARKET_SOCIAL_HINT:'社交页面中的陈述',LAUNCHPAD_PAGE:'发射台页面中的陈述'}[r.source_kind] || '来源页面陈述';
     const relations=story ? '<p>人物／事件：'+esc(actors.length ? '已读文本提及 '+actors.join('、')+'；是否实际互动尚未核实' : '已读文本未提取到可识别人物；具体内容见来源摘录')+'</p><p>证据强度：已读取页面陈述；未独立核实原始互动。'+(posts.length ? '保留原帖链接线索，链接目标未读取。' : '本页未提取到可核对的原帖链接。')+'</p>'+posts.map(p=>'<a class="link-btn" href="'+esc(p)+'" target="_blank" rel="noreferrer">原帖链接线索（未核实） ↗</a>').join('') : '<p>此历史报告未记录主题或人物互动分析；保留原来源陈述。</p>';
     return '<article class="cluster-card"><strong>'+esc(kind)+' · 官方归属未核实</strong><p>'+esc(r.title || r.publisher_host || '来源页面')+'</p><p>'+esc(r.excerpt)+'</p>'+relations+'<p>CA 认领：尚未核实。'+esc(r.exact_ca_mentioned===true ? '静态文本或描述中提及精确 CA；仍未核实官方认领' : '精确 CA 未提及；保留页面叙事，归属仍未核实')+'</p><p>作者声明 '+esc(r.author_claim || '未记录')+'；发布时间声明 '+esc(r.published_at_claim || '未记录')+'；本报告首次读取 '+esc(dateText(r.first_seen_at))+'</p><a class="link-btn" href="'+esc(url)+'" target="_blank" rel="noreferrer">来源页面 ↗</a></article>';
   }).join('');
   const reasons={URL_NOT_ALLOWED:'URL 不符合本轮公开 HTTPS 读取范围',DNS_NOT_PUBLIC:'地址解析包含非公开目标，未连接',PUBLIC_IPV4_UNAVAILABLE:'没有可用的公开 IPv4',DNS_UNAVAILABLE:'地址解析失败',REDIRECT_NOT_FOLLOWED:'来源跳转未跟随',NOT_HTML:'来源未返回 HTML',COMPRESSED_BODY_NOT_SUPPORTED:'未读取压缩响应',RESPONSE_LIMIT:'响应超过本轮上限',SOURCE_UNAVAILABLE:'来源未能读取',FETCH_WORKER_FAILED:'来源读取未完成',FETCH_TIMEOUT:'来源读取超时',ACCESS_WALL_OR_SCRIPT_ONLY:'访问墙或脚本页面，未绕过',NO_EXTRACTABLE_CLAIM:'没有可提取的静态页面陈述',SOURCE_LANGUAGE_NOT_SELECTED:'该来源语言不在本轮选择范围',RESPONSE_TEXT_INVALID:'页面文本编码无法读取',SOURCE_LIMIT:'达到本轮来源上限',DUPLICATE_CONTENT:'与已读页面陈述重复，未当作独立佐证'};
-  const attempts=(Array.isArray(n.attempts)?n.attempts:[]).slice(0,7).map(a=>{
+  const attempts=(Array.isArray(n.attempts)?n.attempts:[]).map(a=>{
     const source=safeHttpUrl(a.source_url);
     const reason=a.status==='CLAIM_READ'?'已读取页面陈述':reasons[a.reason] || (/^HTTP_[0-9]{3}$/.test(a.reason || '')?'来源返回 '+a.reason:'未完成来源读取');
     return '<li>'+esc(source || '来源提示')+'：'+esc(reason)+(a.requested===true?'':'（未请求）')+'</li>';
@@ -1942,12 +1963,15 @@ function renderHistoricalAccountEvidence(report) {
 }
 
 function renderOwnerAccountHistory(coverage) {
-  const rows=Array.isArray(coverage.owner_account_history) ? coverage.owner_account_history.filter(r=>r && typeof r==='object').slice(0,40) : [];
+  const rows=Array.isArray(coverage.owner_account_history) ? coverage.owner_account_history.filter(r=>r && typeof r==='object') : [];
   if (!rows.length) return '';
   const sources={VERIFIED_CURRENT_MINT_ACCOUNTS:'本轮当前账户来源已核对',OBSERVED_TOP20_ACCOUNTS:'仅已解析 Top20 样本',SNAPSHOT_OWNER_CONFLICT:'账户快照 Owner 不一致'};
   const reasons={ALL_OBSERVED_SELECTED:'当前观察到的账户均已选择',OWNER_ACCOUNT_LIMIT:'达到单 Owner 账户上限',REPORT_EXTRA_ACCOUNT_LIMIT:'达到本轮额外账户上限'};
+  const material=Object.entries(coverage.additional_material_owners||{});
   return '<details class="cluster-owner-accounts"><summary>Owner 逐账户历史覆盖</summary>'+
     '<p>包括所选当前零余额账户；已关闭账户的完整集合未枚举，历史 Owner 仅覆盖本轮发现证据。选择当前全部账户仍不证明完整经济历史，空页也不证明真实首买。</p>'+
+    (material.length?'<p>全量余额识别出 Top20 账户样本之外的 '+esc(material.length)+' 个重要 Owner。其取得记录和资金证据单列。</p><ul>'+
+      material.map(([owner,data])=>'<li>'+ownerCell(owner)+' · '+esc(data.history_scanned?'已读取账户历史':'本轮暂未读取历史')+acquisitionCell(data)+fundingCell({...data,deep_scanned:data.history_scanned})+'</li>').join('')+'</ul>':'')+
     '<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>Owner</th><th>账户来源</th><th>观察 / 已选择 / 已请求</th><th>所选账户</th><th>未选及停止原因</th></tr></thead><tbody>'+rows.map(r=>{
       const selected=Array.isArray(r.accounts_selected) ? r.accounts_selected : [];
       const queried=Array.isArray(r.accounts_with_windows) ? r.accounts_with_windows : [];
@@ -1957,7 +1981,7 @@ function renderOwnerAccountHistory(coverage) {
 }
 
 function renderClusterHistoryWindows(coverage) {
-  const windows=Array.isArray(coverage.history_windows) ? coverage.history_windows.filter(w=>w && typeof w==='object').slice(0,80) : [];
+  const windows=Array.isArray(coverage.history_windows) ? coverage.history_windows.filter(w=>w && typeof w==='object') : [];
   const reasons={PROVIDER_EMPTY_PAGE:'来源返回空页',PAGE_LIMIT:'达到本轮页数上限',
     SOURCE_UNAVAILABLE:'来源读取失败',CURSOR_STALLED:'来源游标未推进',
     SOURCE_PAGE_CONFLICT:'来源分页冲突',MALFORMED_SIGNATURE_PAGE:'来源页结构异常',
@@ -2007,10 +2031,18 @@ function holderBinaryMassView(c,mint,enumerationHash) {
   return {verified,owners,percent,ranked};
 }
 
+function independentSlotConflict(report,slot) {
+  const e=report.independent_balance_check?.independent_account_set;
+  return Number.isSafeInteger(slot) && slot>0 && e?.status==='SAME_SLOT_DIFFERENCE' &&
+    e.primary_slot===slot && e.secondary_slot===slot;
+}
+
 function renderHolderBinary(report,ranks) {
   const c=ranks.raw_balance_check;
   if (!c || c.status==='NOT_REQUESTED') return '';
-  const {verified,owners,percent}=holderBinaryMassView(c,report.mint,ranks.response_sha256);
+  const view=holderBinaryMassView(c,report.mint,ranks.response_sha256);
+  const {owners,percent}=view;
+  const verified=view.verified && !independentSlotConflict(report,c.snapshot_slot);
   const reasons={TOKEN_2022_MASS_SEMANTICS_UNVERIFIED:'Token-2022 扩展的余额计量尚未核实',SUPPLY_MASS_NOT_RECONCILED:'已读余额尚未覆盖同期供给',ZERO_SUPPLY:'供给为零，未计算百分比',NATIVE_BALANCE_MASS_UNVERIFIED:'原生包装币计量尚未核实',RESPONSE_LIMIT:'二进制响应超过本轮大小上限',RPC_UNAVAILABLE:'二进制账户读取不可用'};
   const rows=owners.filter(row=>row&&typeof row==='object').slice(0,10).map(row=>'<tr><td>'+ownerCell(row.owner || '')+'</td><td>'+esc(row.raw ?? '未核实')+'</td><td>'+esc(row.observed_account_count ?? '未记录')+'</td><td>'+clusterMetricValue(verified?percent(BigInt(row.raw)):'UNRESOLVED')+'</td></tr>').join('');
   return '<div class="trust-box cluster-holder-binary"><strong>同批二进制余额核验</strong><p>枚举 slot '+esc(c.enumeration_slot ?? '未记录')+' / 二进制批次实际 slot '+esc(c.snapshot_slot ?? '未记录')+'。minContextSlot 只设下界，读取结果可能来自缓存。</p>'+
@@ -2033,7 +2065,7 @@ function renderPoolHolderRoles(report,ranks) {
     c.pool_response_sha256===p.response_sha256 && c.holder_response_sha256===h.response_sha256 &&
     c.vault_raw===t.raw && t.token_program===h.program_id && t.decimals===h.decimals && h.mint_supply_raw===t.mint_supply_raw &&
     c.independent_provider===false && c.all_special_roles_normalized===false && uint(c.vault_raw);
-  const mass=identity && holderBinaryMassView(h,report.mint,ranks.response_sha256).verified;
+  const mass=identity && holderBinaryMassView(h,report.mint,ranks.response_sha256).verified && !independentSlotConflict(report,h.snapshot_slot);
   const records=Array.isArray(h.records)?h.records:[];
   const known=identity && (records.some(row=>row && ['MATCH','DIFFERS'].includes(row.status) && row.token_account===t.vault && row.mint===report.mint && row.owner===c.authority && row.raw===t.raw) || (mass && t.raw==='0' && c.vault_binding==='ZERO_VAULT_NOT_SAMPLED'));
   let verified=known && mass && c.metric_status==='SINGLE_VAULT_DEDUCTION_ONLY' && c.mint_supply_raw===h.mint_supply_raw;
@@ -2092,7 +2124,7 @@ function renderSpecialAddressRoles(report,ranks) {
   const title='<div class="trust-box cluster-special-roles"><strong>多池与特殊地址排除核对</strong>';
   const holderOnly=audit.audit_path==='HOLDER_ONLY_NO_BOUND_POOL'?'<p>本轮未核实池身份；已单独核对同批 Mint 与持仓余额。LP 扣除为0只表示没有已核对的金库，不能证明没有池。带日期的归属声明按实际批次 slot 核对，未识别余额仍保留。</p>':'';
   const footer='<p>只排除有记录的账户，按账户扣除后重新聚合 Owner；同 Owner 的其他余额保留。CEX、做市商、锁仓、桥等身份可能无法从链上结构辨认，未标注地址保持未知。已知排除后的精确算术不能代表全部特殊地址已识别。</p>';
-  const mass=holderBinaryMassView(c,report.mint,ranks.response_sha256).verified;
+  const mass=holderBinaryMassView(c,report.mint,ranks.response_sha256).verified && !independentSlotConflict(report,c.snapshot_slot);
   const uint=v=>typeof v==='string' && /^[0-9]{1,20}$/.test(v) && BigInt(v)<=18446744073709551615n;
   const specials=new Set(['LP','AMM_POOL','PROTOCOL_VAULT','ESCROW','VESTING','LOCK','BURN','CEX','BRIDGE','ROUTER','PUBLIC_INFRA','PUBLIC_PROGRAM','MARKET_MAKER']);
   const lp=new Set(['LP','AMM_POOL','PROTOCOL_VAULT']);
@@ -2170,10 +2202,12 @@ function renderHolderRankings(report) {
   const b=r.supply_bracket;
   const basis=holderRankSupplyBasis(r);
   const bracketed=basis==='BRACKETED';
-  const complete=r.status==='COMPLETE_SNAPSHOT' && basis!==null;
+  const independentConflict=independentSlotConflict(report,r.snapshot_slot);
+  const complete=r.status==='COMPLETE_SNAPSHOT' && basis!==null && !independentConflict;
   const supplyBasis=bracketed ? '账户余额总和与跨 slot 供给夹逼已核对（无增发权限，前后供给相等）；非同 slot 原子快照' :
     basis==='SAME_SLOT' ? '账户余额总和与同 slot 供给已核对' : '报告记录余额总和与供给相等，供给与账户的 slot 关系未记录或未核实';
-  const intro=r.status==='COMPLETE_SNAPSHOT' ? supplyBasis+'；钱包归因与历史仍须分别核实' : (reasons[r.reason] || '完整排名来源尚未核实');
+  const intro=independentConflict ? '独立来源在同一 slot 的账户、Owner 或余额存在冲突，精确排名已撤下。' :
+    r.status==='COMPLETE_SNAPSHOT' ? supplyBasis+'；钱包归因与历史仍须分别核实' : (reasons[r.reason] || '完整排名来源尚未核实');
   const labels={GLOBAL_OWNER_TOP10_PCT:'全局 Owner Top10',GLOBAL_EX_LP_OWNER_TOP10_PCT:'全局排除池/Vault 后 Owner Top10',GLOBAL_EX_SPECIAL_OWNER_TOP10_PCT:'全局排除特殊地址后 Owner Top10',GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT:'排除已核实池后 Owner Top10（其他池/CEX/锁仓仍计入）'};
   const cards=Object.keys(labels).map(key=>'<div class="cluster-metric"><span>'+labels[key]+'</span><strong>'+clusterMetricValue(complete && (key==='GLOBAL_OWNER_TOP10_PCT' || key==='GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT' || r.normalization_complete===true || ((r.role_sufficient_top10||{}).metrics||{})[key]===(r.metrics||{})[key]) ? (r.metrics || {})[key] : 'UNRESOLVED')+'</strong></div>').join('');
   const owners=Array.isArray(r.owners) ? r.owners.filter(x=>x && typeof x==='object').slice(0,20) : [];
@@ -2203,7 +2237,8 @@ function renderClusterCompleteness(report) {
   const requirements=valid ? contract.requirements : [];
   const ranks=report.holder_rankings;
   const rankProof=ranks?.status==='COMPLETE_SNAPSHOT' && holderRankSupplyBasis(ranks)!==null;
-  const balanceProof=rankProof || holderBinaryMassView(ranks?.raw_balance_check || {},report.mint,ranks?.response_sha256).verified;
+  const balanceProof=!independentSlotConflict(report,ranks?.snapshot_slot) &&
+    (rankProof || holderBinaryMassView(ranks?.raw_balance_check || {},report.mint,ranks?.response_sha256).verified);
   const reads=report.collection_checkpoint;
   const readInterval=reads?.version===1 && Number.isFinite(reads.source_epoch_started_at) && reads.source_epoch_started_at>0 &&
     Number.isFinite(reads.last_source_read_at) && reads.last_source_read_at>=reads.source_epoch_started_at

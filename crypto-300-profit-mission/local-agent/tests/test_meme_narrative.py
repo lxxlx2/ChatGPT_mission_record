@@ -119,11 +119,11 @@ def test_collection_keeps_failure_and_alternative_claim_separate():
     assert out['search_coverage']=='BOUNDED_HINTS_ONLY'
 
 
-def test_collection_caps_requests_and_never_recurses_through_page_links():
+def test_collection_attempts_all_supplied_roots_without_crawling_unrelated_links():
     calls=[]
     def fetch(url):calls.append(url);return {'status':'OK','body_b64':base64.b64encode(html(description='Source '+url+' describes a fictional cat exploring distant planets.',body='<a href="https://another.example.org/">More</a>')).decode()}
     out=PublicNarrativeClient(fetch=fetch,clock=lambda:100).collect(MINT,{'websites':[URL,'https://two.example.org/','https://three.example.org/'],'socials':[{'platform':'twitter','url':'https://x.com/fixture/status/123'}]})
-    assert len(calls)==3 and len(out['evidence'])==3
+    assert len(calls)==5 and len(out['evidence'])==5
     assert not any('another.example.org' in url for url in calls)
     assert out['exhaustive'] is False
 
@@ -167,7 +167,7 @@ def test_actual_analyzer_uses_public_claims_without_upgrading_official_ca_or_com
     a._scan_holder=lambda *args:None;a._scan_funding=lambda *args:None
     report=a.analyze()
     assert report['narrative']['status']=='PARTIAL'
-    assert report['narrative']['official_recognition']=='UNVERIFIED'
+    assert report['narrative']['official_recognition']=='NO_VERIFIABLE_CLAIM'
     assert report['assessment']['narrative_status']=='EXTERNAL_CLAIMS_PARTIAL'
     assert next(row for row in report['analysis_completeness']['requirements'] if row['id']=='narrative')['status']=='PARTIAL'
     assert report['analysis_completeness']['status']=='INCOMPLETE_EVIDENCE'

@@ -137,28 +137,38 @@ def discover_owner_pool_hint(mint,owner,account,metadata_slot,enumeration_slot,e
             'enumeration_response_sha256':enumeration_hash,'owner_metadata_response_sha256':metadata_hash}
 
 
-def collect_mint_holder_ranks(mint,program,supply,decimals,supply_slot,rpc,role_resolver,*,normalization_declared=False,max_accounts=MAX_ACCOUNTS,special_roles=DEFAULT_SPECIAL,expected_top_accounts=None,largest_slot=None,owner_reader=None,supply_recheck=None,mint_authority_slot=None):
-    if type(supply) is not int or not 0<=supply<=2**64-1 or type(decimals) is not int or not 0<=decimals<=255:raise HolderRankSourceError('SUPPLY_INVALID')
-    if not valid_pubkey(mint) or program not in PROGRAMS:raise HolderRankSourceError('IDENTITY_INVALID')
+def read_mint_account_set(mint,program,decimals,minimum_slot,rpc,*,max_accounts=MAX_ACCOUNTS,ttl=0):
+    if (not valid_pubkey(mint) or program not in PROGRAMS
+            or type(decimals) is not int or not 0<=decimals<=255):
+        raise HolderRankSourceError('IDENTITY_INVALID')
     cfg={'encoding':'base64','dataSlice':dict(BINARY_SLICE),'commitment':'finalized','withContext':True,
          'filters':([{'dataSize':165}] if program==LEGACY_TOKEN_PROGRAM else [])+[{'memcmp':{'offset':0,'bytes':mint}}]}
-    if _slot(supply_slot):cfg['minContextSlot']=supply_slot
-    result=rpc.call('getProgramAccounts',[program,cfg],ttl=30)
+    if _slot(minimum_slot):cfg['minContextSlot']=minimum_slot
+    result=rpc.call('getProgramAccounts',[program,cfg],ttl=ttl)
     if not isinstance(result,dict) or set(result)-{'context','value'} or not isinstance(result.get('context'),dict) or not _slot(result['context'].get('slot')) or not isinstance(result.get('value'),list):
         raise HolderRankSourceError('ENVELOPE_INVALID')
     records=result['value'];snapshot_slot=result['context']['slot']
     if len(records)>max_accounts:raise HolderRankSourceError('ACCOUNT_LIMIT')
-    seen=set();balances={};counts={};nonzero=0;account_balances={};accounts=[]
+    seen=set();accounts=[]
     for row in records:
         if not isinstance(row,dict) or not valid_pubkey(row.get('pubkey')) or row['pubkey'] in seen:raise HolderRankSourceError('ACCOUNT_ROW_INVALID')
         seen.add(row['pubkey']);account=row.get('account')
         if not isinstance(account,dict) or account.get('owner')!=program or account.get('executable') is not False:raise HolderRankSourceError('ACCOUNT_ROW_INVALID')
         raw,owner_key=_binary_row(account,mint,program) if isinstance(account.get('data'),list) else _parsed_row(account,mint,decimals)
-        account_balances[row["pubkey"]]=raw
         accounts.append({"token_account":row["pubkey"],"owner":owner_key,"raw":str(raw),"decimals":decimals})
+    enumeration_hash=hashlib.sha256(json.dumps(result,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    return snapshot_slot,accounts,enumeration_hash
+
+
+def collect_mint_holder_ranks(mint,program,supply,decimals,supply_slot,rpc,role_resolver,*,normalization_declared=False,max_accounts=MAX_ACCOUNTS,special_roles=DEFAULT_SPECIAL,expected_top_accounts=None,largest_slot=None,owner_reader=None,supply_recheck=None,mint_authority_slot=None):
+    if type(supply) is not int or not 0<=supply<=2**64-1 or type(decimals) is not int or not 0<=decimals<=255:raise HolderRankSourceError('SUPPLY_INVALID')
+    snapshot_slot,accounts,enumeration_hash=read_mint_account_set(mint,program,decimals,supply_slot,rpc,max_accounts=max_accounts,ttl=30)
+    balances={};counts={};nonzero=0;account_balances={}
+    for account in accounts:
+        raw=int(account['raw']);owner_key=account['owner']
+        account_balances[account['token_account']]=raw
         if raw:
             nonzero+=1;owner=owner_key;balances[owner]=balances.get(owner,0)+raw;counts[owner]=counts.get(owner,0)+1
-    enumeration_hash=hashlib.sha256(json.dumps(result,sort_keys=True,separators=(',',':')).encode()).hexdigest()
     owner_ids=sorted(balances);roles={};role_slots=[];owner_role_slots={};role_reason=None;pool_hints=[]
     account_owners={r['token_account']:r['owner'] for r in accounts}
     for offset in range(0,len(owner_ids),100):
@@ -209,11 +219,11 @@ def collect_mint_holder_ranks(mint,program,supply,decimals,supply_slot,rpc,role_
              'GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT':pct(top10_ex_owners(all_pool_authorities)) if all_pool_authorities else 'UNRESOLVED'}
     return {'requested':True,'status':'COMPLETE_SNAPSHOT' if complete else 'INCOMPLETE_EVIDENCE','reason':reason,
             'source':'SOLANA_FINALIZED_GET_PROGRAM_ACCOUNTS','mint':mint,'program_id':program,
-            'snapshot_slot':snapshot_slot,'supply_slot':supply_slot,'supply_bracket':supply_bracket,'encoding':cfg['encoding'],'largest_slot':largest_slot,'top20_reconciled':top_reconciled,'owner_metadata_slots':role_slots,
+            'snapshot_slot':snapshot_slot,'supply_slot':supply_slot,'supply_bracket':supply_bracket,'encoding':'base64','largest_slot':largest_slot,'top20_reconciled':top_reconciled,'owner_metadata_slots':role_slots,
             'response_sha256':enumeration_hash,
             'owner_pool_hints':pool_hints,'verified_pool_authorities':sorted(all_pool_authorities),'verified_pool_exclusion_scope':'SELF_AUTHORITY_POOLS_BOUND_IN_THIS_ENUMERATION_OTHER_POOLS_CEX_LOCKS_STAY_INCLUDED','owner_pool_discovery':{'scope':'SELF_AUTHORITY_POOL_OWNERS_NOT_GLOBAL_AUTHORITY_REVERSE_LOOKUP',
                 'retained_hints':len(pool_hints),'hints_not_selected':0,'max_hints':None,'additional_rpc_calls':0},
-            'account_count':len(records),'nonzero_accounts':nonzero,'nonzero_owner_count':len(owners),
+            'account_count':len(accounts),'nonzero_accounts':nonzero,'nonzero_owner_count':len(owners),
             'total_raw':str(total),'supply_raw':str(supply),'decimals':decimals,
             'normalization_complete':role_complete,'owner_metadata_reason':role_reason,'metrics':metrics,'owners':owners,
             'accounts':sorted(accounts,key=lambda r:r['token_account'])}

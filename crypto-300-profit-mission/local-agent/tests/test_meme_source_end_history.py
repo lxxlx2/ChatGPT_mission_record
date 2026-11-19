@@ -102,6 +102,24 @@ def test_all_owners_and_extra_accounts_are_read_without_prefix_or_twelve_account
     assert out['coverage']['owners_not_scanned']==[]
 
 
+def test_material_owner_split_across_accounts_below_top20_is_scanned(monkeypatch):
+    sample_rows=[account(i,200+i,30) for i in range(1,21)]
+    split_rows=[account(i,999,10) for i in range(101,141)]
+    split_owner=key(999);other_account=key(140)
+    a,rpc=analyzer(monkeypatch,records=sample_rows+split_rows,windows={other_account:['old-buy']},
+                   times={'old-buy':7},exhaust_history=True)
+    a.holders=lambda: (1000,0,[Holder(key(i),key(200+i),30,0,'ORDINARY','fixture') for i in range(1,21)])
+    a._snapshot_slots={'supply':100,'largest_accounts':100,'account_batches':[100,100]}
+    a._scan_funding=lambda *args:None
+    out=a.analyze()
+    assert len(out['holders'])==out['coverage']['owners_resolved']==20
+    assert out['coverage']['owners_scanned']==20
+    assert out['coverage']['additional_material_owners'][split_owner]['first_acquisition']['signature']=='old-buy'
+    assert len({address for address,_ in rpc.history})==60
+    assert 'GLOBAL_OWNER_HISTORY_NOT_SCANNED' not in out['coverage']['gaps']
+    assert out['coverage']['scope']=='SOURCE_END_TOP20_AND_MATERIAL_OWNERS_OBSERVED_ACCOUNTS'
+
+
 def raw_transaction(signature,slot,addresses):
     names=[A,*addresses,P]
     balances=[{'accountIndex':i+1,'owner':A,'mint':MINT,'programId':P,

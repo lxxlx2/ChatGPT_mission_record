@@ -12,7 +12,7 @@ from mission_agent.meme.narrative import PublicNarrativeClient, collect_origin
 
 MINT = 'So11111111111111111111111111111111111111112'
 JOB = 'b' * 32
-METADATA = {'status': 'VERIFIED_CHAIN_STATE', 'uri': 'https://metadata.example/token.json',
+METADATA = {'status': 'VERIFIED_CHAIN_STATE', 'mint': MINT, 'uri': 'https://metadata.example/token.json',
             'name': 'Fixture', 'symbol': 'FIX', 'is_mutable': False}
 MARKET = {'status': 'OK', 'source': 'DEXSCREENER_API', 'mint': MINT}
 
@@ -39,11 +39,11 @@ def client(reads):
     def fetch_json(url):
         reads.append(('json', url))
         if url == METADATA['uri']:
-            return {'status': 'OK', 'json': {'name': 'Fixture', 'symbol': 'FIX',
+            return {'status': 'OK', 'response_sha256': 'a'*64, 'json': {'name': 'Fixture', 'symbol': 'FIX',
                     'description': 'A fictional crawler project.',
                     'twitter': 'https://x.com/fixture/status/12345'}}
         assert url == 'https://api.fxtwitter.com/fixture/status/12345'
-        return {'status': 'OK', 'json': {'tweet': {'url': 'https://x.com/fixture/status/12345',
+        return {'status': 'OK', 'response_sha256': 'b'*64, 'json': {'tweet': {'url': 'https://x.com/fixture/status/12345',
                 'id': '12345', 'author': {'screen_name': 'fixture'}, 'created_timestamp': 5,
                 'text': 'A fictional crawler project.'}}}
 
