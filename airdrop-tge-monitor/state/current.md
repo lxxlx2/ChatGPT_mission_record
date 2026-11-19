@@ -1,11 +1,11 @@
 # Current TGE monitor state
-- last_run: 2026-11-19T23:00:34+07:00
+- last_run: 2026-11-19T23:56:31+07:00
 - schedule: Asia/Bangkok HH:00 hourly
-- latest_final: airdrop-tge-monitor/runs/2026-11-19/230034-final.md
+- latest_final: airdrop-tge-monitor/runs/2026-11-19/235631-final.md
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 3
 - executed_shard: 3
-- candidate_count: 2 (StandX DUSD unverified, Fortytwo undated promo-code page unverified)
+- candidate_count: 0 new gate-eligible
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
@@ -20,7 +20,7 @@
 - shard0: 2026-11-19 20:03:29 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-19 21:05:24 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-19 22:00:35 Asia/Bangkok (PARTIAL_ONLY)
-- shard3: 2026-11-19 23:00:34 Asia/Bangkok (PARTIAL_ONLY)
+- shard3: 2026-11-19 23:56:31 Asia/Bangkok (PARTIAL_ONLY)
 
 ## Unresolved
 - StandX DUSD Nov2 claim VERIFYING/SOURCE_GAP; exact new claim version unverified, allocation UNKNOWN
