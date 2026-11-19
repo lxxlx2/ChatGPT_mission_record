@@ -1,7 +1,7 @@
 # Current TGE monitor state
-- last_run: 2026-11-19T07:02:31+07:00
+- last_run: 2026-11-19T07:55:12+07:00
 - schedule: Asia/Bangkok HH:00 hourly
-- latest_final: airdrop-tge-monitor/runs/2026-11-19/070231-final.md
+- latest_final: airdrop-tge-monitor/runs/2026-11-19/075512-final.md
 - run_status: PARTIAL_ONLY
 - scheduled_shard: 3
 - executed_shard: 3
@@ -18,7 +18,7 @@
 - shard0: 2026-11-19 04:00:43 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-19 05:57:44 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-19 02:55:13 Asia/Bangkok (PARTIAL_ONLY)
-- shard3: 2026-11-19 07:02:31 Asia/Bangkok (PARTIAL_ONLY)
+- shard3: 2026-11-19 07:55:12 Asia/Bangkok (PARTIAL_ONLY)
 
 ## Coverage
 - urgent 5/5 discovery attempts, 0/5 fully verified event-bound original rights receipts
