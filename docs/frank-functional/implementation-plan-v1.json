@@ -1362,7 +1362,8 @@
       "functions": [
         "FN12"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_OFFLINE_SUPPLY_AND_FULL_ENUMERATION_REGRESSION_PASS",
+      "latest_increment_evidence": "W09_HOLDER_POOL_ACCEPTANCE_20261119.md"
     },
     {
       "id": "CA04",
@@ -1389,7 +1390,8 @@
       "functions": [
         "FN12"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_ALL_OBSERVED_POOL_CANDIDATES_LOCAL_PASS",
+      "latest_increment_evidence": "W09_HOLDER_POOL_ACCEPTANCE_20261119.md"
     },
     {
       "id": "CA05",
@@ -1416,7 +1418,8 @@
       "functions": [
         "FN12"
       ],
-      "evidence_state": "NOT_RUN_FOR_THIS_PLAN"
+      "evidence_state": "PARTIAL_LAYOUT_FIXTURE_MATRIX_PASS_REAL_RAW_RESERVE_PARITY_OPEN",
+      "latest_increment_evidence": "W09_HOLDER_POOL_ACCEPTANCE_20261119.md"
     },
     {
       "id": "CA06",
@@ -2303,17 +2306,16 @@
     },
     "reference": "INDEXED_ACTIVITY_ACCEPTANCE_20261115.md"
   },
-  "current_next": "W09: cross-check holders, beneficial owners, exclusion denominators and full pool discovery. W10/W11/W12 follow their evidence dependencies. W13 can proceed in isolation using W08 records. W14 remains open.",
+  "current_next": "W09 holder supply and observed candidate regressions passed locally; independent full holder/role/pool evidence remains partial. Advance W10 historical and control evidence with distinct scenarios; W11/W12 and W13/W14 remain open.",
   "latest_increment": {
     "work_packages": [
-      "W08",
       "W09"
     ],
-    "state": "INSTALLED_CHROME_W08_LOCAL_PASS_W09_IDENTITY_PARTIAL",
-    "source_sha": "0fd546b089b7526046308c5aa9ac60057e0100fd",
-    "python_related_passed": 646,
-    "node_related_passed": 248,
-    "evidence": "W08_W09_RISK_AND_IDENTITY_ACCEPTANCE_20261119.md"
+    "state": "INSTALLED_CHROME_W09_HOLDER_AND_POOL_FIX_PASS_W09_COVERAGE_PARTIAL",
+    "source_sha": "15edc5060d586550e642ca2737824e5dd7628df6",
+    "python_related_passed": 588,
+    "node_related_passed": 233,
+    "evidence": "W09_HOLDER_POOL_ACCEPTANCE_20261119.md"
   },
   "status_reconciliation": {
     "date": "2026-11-17",

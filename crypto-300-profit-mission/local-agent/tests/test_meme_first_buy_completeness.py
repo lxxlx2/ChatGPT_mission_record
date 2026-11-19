@@ -105,8 +105,11 @@ def test_successful_exhaustion_still_reports_current_account_scope(monkeypatch,w
     ('NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET','NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'),
 ])
 def test_balance_completeness_names_the_actual_supply_reconciliation(method,cause):
-    ranks={'requested':True,'status':'COMPLETE_SNAPSHOT','normalization_complete':False}
-    if method:ranks['supply_bracket']={'method':method,'before_slot':1,'after_slot':3}
+    ranks={'requested':True,'status':'COMPLETE_SNAPSHOT','normalization_complete':False,
+           'snapshot_slot':2,'supply_slot':2}
+    if method:
+        ranks['supply_slot']=1
+        ranks['supply_bracket']={'method':method,'before_slot':1,'after_slot':3,'mint_authority_slot':1}
     report={'holder_rankings':ranks}
     row=next(r for r in report_completeness(report)['requirements'] if r['id']=='holder_balances')
     assert row['cause']==cause
